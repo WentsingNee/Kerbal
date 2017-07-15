@@ -4,10 +4,13 @@
 #include "..\String_serve.h"
 //#pragma message(__DATE__ "  " __TIME__"  正在编译"__FILE__)
 
-using namespace std;
+#if __cplusplus < 201103L //C++0x
+# pragma message("Matrix 使用了 C++ 11 新特性, 请打开 C++ 11 选项以便使用这些新特性")
+#else
+#include <initializer_list>
+#endif //C++0x
 
-//#ifndef _MATRIX_CPP_
-//#define _MATRIX_CPP_
+using namespace std;
 
 Matrix::Matrix()
 {
@@ -22,8 +25,8 @@ Matrix::Matrix(const int row, const int column, bool if_set0) :
 	//cout<<this<<endl;
 }
 
-Matrix::Matrix(const int row, const int column, const double rand_min, const double rand_max) //构造一个随机矩阵
-{
+Matrix::Matrix(const int row, const int column, const double rand_min, const double rand_max)
+{ //构造一个随机矩阵
 	if (row > 0 && column > 0) {
 		this->row = row;
 		this->column = column;
@@ -89,11 +92,84 @@ Matrix::Matrix(double arr[], int len, bool in_a_row)
 	}
 }
 
+#if __cplusplus < 201103L //C++0x
+//# pragma message("Matrix 为 C++ 11 准备的新特性: 利用初始化列表进行构造")
+#else
+Matrix::Matrix(initializer_list<initializer_list<double>> src)
+{ //利用二维初始化列表进行构造
+  //扫描列数最宽的行
+	unsigned int tmp = 0;
+	for (auto j : src) {
+		if (j.size() > tmp) {
+			tmp = j.size();
+		}
+	}
+
+	const int row_pre = src.size(); //最终定下的行数
+	const int column_pre = tmp; //最终定下的列数
+
+	if (row_pre > 0 && column_pre > 0) {
+		this->row = row_pre;
+		this->column = column_pre;
+
+		//动态开辟一个以p为首地址的、row * column的二维数组
+		p = new double*[row]; //开辟行
+		auto begin_to_src = src.begin();
+		for (int i = 0; i < row; i++) {
+			double *p_to_first = p[i] = new double[column];
+			const initializer_list<double> &list_row = *(begin_to_src + i);
+			auto begin_to_list_row = list_row.begin();
+			for (unsigned int j = 0; j < list_row.size(); j++) {
+				p_to_first[j] = *(begin_to_list_row + j);
+			}
+		}
+	} else {
+		this->row = 0;
+		this->column = 0;
+		this->p = NULL;
+	}
+}
+
+Matrix::Matrix(initializer_list<double> src)
+{ //利用一维初始化列表进行构造
+	const int column_pre = src.size(); //最终定下的列数
+
+	if (column_pre > 0) {
+		this->row = 1;
+		this->column = column_pre;
+
+		//动态开辟一个以p为首地址的、1 * column的二维数组
+		p = new double*[1]; //开辟行
+		double *p_to_first = p[0] = new double[column];
+		for (int i = 0; i < column; i++) {
+			p_to_first[i] = *(src.begin() + i);
+		}
+
+	} else {
+		this->row = 0;
+		this->column = 0;
+		this->p = NULL;
+	}
+}
+
+Matrix::Matrix(Matrix &&src)
+{ //转移构造函数
+	row = src.row;
+	column = src.column;
+	p = src.p;
+
+	src.row = 0;
+	src.column = 0;
+	src.p = NULL;
+}
+
+#endif
+
 Matrix::Matrix(const Matrix &src)
 {
 	//拷贝构造函数
 	//cout<<this<<" cpy= "<<&src<<endl;
-
+	cout << "拷贝构造函数" << endl;
 	if (src.row > 0 && src.column > 0) {
 		this->row = src.row;
 		this->column = src.column;
@@ -118,6 +194,17 @@ Matrix::~Matrix()
 //		delete[] p[i];
 //	delete[] p;
 //	p = NULL;
+}
+
+Matrix Matrix::call(double (*__pf)(double)) const
+{
+	Matrix result(row, column, false);
+	for (int i = 0; i < row; i++) {
+		for (int j = 0; j < column; j++) {
+			result[i][j] = __pf(p[i][j]);
+		}
+	}
+	return result;
 }
 
 void Matrix::print(Frame frame, bool print_corner, ostream &output) const
@@ -582,8 +669,8 @@ Matrix operator||(const Matrix &A, const Matrix &B) throw (invalid_argument)
 	return result;
 }
 
-void operator<<=(Matrix &tar, Matrix &src) //将矩阵src的资产转移给tar
-{
+void operator<<=(Matrix &tar, Matrix &src)
+{ //将矩阵src的资产转移给tar
 	tar.clear();
 	tar.row = src.row;
 	tar.column = src.column;
@@ -655,7 +742,7 @@ Matrix pow(const Matrix &A, const int n)
 	return A ^ n;
 }
 
-double tr(const Matrix &src) throw (invalid_argument)
+double tr(const Matrix &src) throw (invalid_argument) //返回方阵的迹
 {
 	src.test_square();
 	double result = 0;
@@ -776,7 +863,6 @@ void rotate_Z(double sigma, double& x0, double& y0, const double& z0)
 	y0 = y1;
 }
 
-//#endif
 /*void Matrix::print_to_file(char file_name[],bool if_output_frame) const
  {
 

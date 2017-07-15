@@ -169,40 +169,8 @@ class Array_2d
 #if __cplusplus < 201103L //C++0x
 //# pragma message("Array_2d 为 C++ 11 准备的新特性: 利用初始化列表进行构造")
 #else
-		Array_2d(initializer_list<initializer_list<Type>> src)
-		{
-			//扫描列数最宽的行
-			int tmp = 0;
-			for (auto j : src) {
-				if (j.size() > tmp) {
-					tmp = j.size();
-				}
-			}
-
-			const int row_pre = src.size(); //最终定下的行数
-			const int column_pre = tmp; //最终定下的列数
-
-			if (row_pre > 0 && column_pre > 0) {
-				this->row = row_pre;
-				this->column = column_pre;
-
-				//动态开辟一个以p为首地址的、row * column的二维数组
-				p = new Type*[row]; //开辟行
-				auto begin_to_src = src.begin();
-				for (int i = 0; i < row; i++) {
-					Type *p_to_first = p[i] = new Type[column];
-					const initializer_list<Type> &list_row = *(begin_to_src + i);
-					auto begin_to_list_row = list_row.begin();
-					for (int j = 0; j < list_row.size(); j++) {
-						p_to_first[j] = *(begin_to_list_row + j);
-					}
-				}
-			} else {
-				this->row = 0;
-				this->column = 0;
-				this->p = NULL;
-			}
-		}
+		Array_2d(initializer_list<initializer_list<Type>> src); //利用二维初始化列表进行构造
+		Array_2d(initializer_list<Type> src); //利用一维初始化列表进行构造
 #endif
 
 		Array_2d(const Array_2d &src); //拷贝构造函数
@@ -220,10 +188,12 @@ class Array_2d
 
 		void set_element(int row, int column, Type value) throw (out_of_range);
 		template <class T> void set_element(const T *src, int row, int column);
+		Array_2d<Type> call(Type (*__pf)(Type)) const;
+
 		Array_2d<Type>& operator <<(const Type &value) throw (out_of_range); //输入
 		Array_2d<Type>& operator <<(const Array_2d_input_info &value);
-		Array_2d<Type>& operator <<(const string & src) throw (out_of_range);
-		Array_2d<Type>& operator <<(ostream& (*__pf)(ostream&));
+		Array_2d<Type>& operator <<(const string & src) throw (out_of_range); //字符串输入
+		Array_2d<Type>& operator <<(ostream& (*__pf)(ostream&)); //支持endl
 		friend ostream& operator <<(ostream &output, Array_2d<Type> &src) //重载输出
 		{
 			src.print(true, true, output);
@@ -331,7 +301,7 @@ Array_2d<Type>::Array_2d(const int row, const int column, bool if_set0)
 
 template <class Type>
 Array_2d<Type>::Array_2d(Type arr[], int len, bool in_a_row)
-{
+{ //利用一维数组进行构造
 	if (len > 0) {
 		if (in_a_row) {
 			this->row = 1;
@@ -358,6 +328,69 @@ Array_2d<Type>::Array_2d(Type arr[], int len, bool in_a_row)
 		this->p = NULL;
 	}
 }
+
+#if __cplusplus < 201103L //C++0x
+//# pragma message("Array_2d 为 C++ 11 准备的新特性: 利用初始化列表进行构造")
+#else
+template <class Type>
+Array_2d<Type>::Array_2d(initializer_list<initializer_list<Type>> src)
+{ //利用二维初始化列表进行构造
+  //扫描列数最宽的行
+	int tmp = 0;
+	for (auto j : src) {
+		if (j.size() > tmp) {
+			tmp = j.size();
+		}
+	}
+
+	const int row_pre = src.size(); //最终定下的行数
+	const int column_pre = tmp; //最终定下的列数
+
+	if (row_pre > 0 && column_pre > 0) {
+		this->row = row_pre;
+		this->column = column_pre;
+
+		//动态开辟一个以p为首地址的、row * column的二维数组
+		p = new Type*[row]; //开辟行
+		auto begin_to_src = src.begin();
+		for (int i = 0; i < row; i++) {
+			Type *p_to_first = p[i] = new Type[column];
+			const initializer_list<Type> &list_row = *(begin_to_src + i);
+			auto begin_to_list_row = list_row.begin();
+			for (int j = 0; j < list_row.size(); j++) {
+				p_to_first[j] = *(begin_to_list_row + j);
+			}
+		}
+	} else {
+		this->row = 0;
+		this->column = 0;
+		this->p = NULL;
+	}
+}
+
+template <class Type>
+Array_2d<Type>::Array_2d(initializer_list<Type> src)
+{ //利用一维初始化列表进行构造
+	const int column_pre = src.size(); //最终定下的列数
+
+	if (column_pre > 0) {
+		this->row = 1;
+		this->column = column_pre;
+
+		//动态开辟一个以p为首地址的、1 * column的二维数组
+		p = new Type*[1]; //开辟行
+		Type *p_to_first = p[0] = new Type[column];
+		for (int i = 0; i < column; i++) {
+			p_to_first[i] = *(src.begin() + i);
+		}
+
+	} else {
+		this->row = 0;
+		this->column = 0;
+		this->p = NULL;
+	}
+}
+#endif
 
 template <class Type>
 Array_2d<Type>::Array_2d(const Array_2d<Type> &src) //拷贝构造函数
@@ -482,6 +515,18 @@ void Array_2d<Type>::set_element(const T *src, int row, int column) //通过数组赋
 			p[i][j] = src[i][j];
 		}
 	}
+}
+
+template <class Type>
+Array_2d<Type> Array_2d<Type>::call(Type (*__pf)(Type)) const
+{
+	Array_2d<Type> result(row, column, false);
+	for (int i = 0; i < row; i++) {
+		for (int j = 0; j < column; j++) {
+			result[i][j] = __pf(p[i][j]);
+		}
+	}
+	return result;
 }
 
 //利用插入运算符给动态二维数组赋值

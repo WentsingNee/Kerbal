@@ -36,12 +36,23 @@ class Matrix: public Array_2d<double>
 //		Matrix(const int row, const int column, int argc, ...); //利用可变参数表进行构造
 
 		template <class T> Matrix(const T *src, const int row, const int column); //利用二维数组进行构造
-
 		Matrix(double arr[], int len, bool in_a_row = true); //利用一维数组进行构造
+
+#if __cplusplus < 201103L //C++0x
+//# pragma message("Matrix 为 C++ 11 准备的新特性: 利用初始化列表进行构造")
+#else
+		Matrix(initializer_list<initializer_list<double>> src); //利用二维初始化列表进行构造
+		Matrix(initializer_list<double> src); //利用一维初始化列表进行构造
+
+		Matrix(Matrix &&src); //转移构造函数
+#endif
 
 		Matrix(const Matrix &src); //拷贝构造函数
 
 		~Matrix();
+
+		Matrix call(double (*__pf)(double)) const;
+
 		void print(Frame frame = Fr_RtMatrix, bool print_corner = true, ostream &output = cout) const;
 		//void print_to_file(char file_name[],bool if_output_frame) const;
 
@@ -68,17 +79,14 @@ class Matrix: public Array_2d<double>
 		friend Matrix operator&&(const Matrix &A, const Matrix &B) throw (invalid_argument); //将两个矩阵按竖直方向连接
 		friend Matrix operator||(const Matrix &A, const Matrix &B) throw (invalid_argument); //将两个矩阵按水平方向连接
 
-		friend void operator<<=(Matrix &tar, Matrix &src);
+		friend void operator<<=(Matrix &tar, Matrix &src); //将矩阵src的资产转移给tar
 		const Matrix& operator=(const Matrix &src);
 		bool operator==(const Matrix &with) const;
 		bool operator!=(const Matrix &with) const;
 
-//将矩阵src的资产转移给tar
-		//friend ostream& operator<<a
-
 		//计算
 		friend Matrix pow(const Matrix &A, const int n);
-		friend double tr(const Matrix &src) throw (invalid_argument);
+		friend double tr(const Matrix &src) throw (invalid_argument);		//返回方阵的迹
 		friend Matrix Transpose(const Matrix &A);
 		friend Matrix Cofactor(const Matrix &A, const int x, const int y) throw (out_of_range); //构造方阵A的余子式A(x,y)
 		friend bool Matcmp(const Matrix &A, const Matrix &B, double eps);
@@ -89,37 +97,10 @@ class Matrix: public Array_2d<double>
 			swap(A.p, B.p);
 		}
 
-		//返回方阵的迹
-
 		void test_row(const int row_test) const throw (out_of_range);
 		void test_column(const int column_test) const throw (out_of_range);
 		void test_square() const throw (invalid_argument);
 };
-
-//template <class T>
-//Matrix::Matrix(const T &src)   //利用二维数组进行构造
-//{
-//	//cout << this << endl;
-//	if (array_dimension(src) != 2) {
-//		throw 0;
-//	}
-//	int row = array_2d_row(src);
-//	int column = array_2d_column(src);
-//
-//	//动态开辟一个以p为首地址的、row * column的二维数组
-//	p = new double*[row]; //开辟行
-//	for (int i = 0; i <= row - 1; i++)
-//		p[i] = new double[column]; //开辟列
-//
-//	this->row = row;
-//	this->column = column;
-//
-//	for (int i = 0; i <= row - 1; i++) {
-//		for (int j = 0; j <= column - 1; j++) {
-//			p[i][j] = src[i][j];
-//		}
-//	}
-//}
 
 template <class T>
 Matrix::Matrix(const T *src, const int row, const int column) //利用二维数组进行构造
@@ -162,8 +143,8 @@ Matrix Cat(const T &a)
 
 		Matrix result(row_total, column_total);
 		int column_covered = 0;
-		for (int i = 0; i <= arraylen(a) - 1; i++) { //数组循环
-			for (int j = 0; j <= row_total - 1; j++) { //行循环
+		for (int i = 0; i < arraylen(a); i++) { //数组循环
+			for (int j = 0; j < row_total; j++) { //行循环
 				for (int k = 0; k <= a[i].get_column() - 1; k++) { //一个矩阵内的列循环
 					result.set_element(j, column_covered + k, a[i].get_element(j, k));
 				}

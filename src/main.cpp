@@ -45,6 +45,16 @@ int main()
 {
 	program_start(is_debug);
 
+	Matrix m = { { 1, 2 }, { 3, 4 } };
+	cerr << &m << endl;
+	m.print();
+	Matrix n = { { 1, 2 }, { 3, 4 } };
+	cerr << &n << endl;
+	n.print();
+	Matrix s = m * n;
+	cerr << &s << endl;
+	s.print();
+
 	/*int n = 2;
 	 unsigned long t = GetTickCount();
 	 while (n--) {
