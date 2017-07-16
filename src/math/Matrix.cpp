@@ -152,16 +152,17 @@ Matrix::Matrix(initializer_list<double> src)
 	}
 }
 
-Matrix::Matrix(Matrix &&src)
-{ //转移构造函数
-	row = src.row;
-	column = src.column;
-	p = src.p;
-
-	src.row = 0;
-	src.column = 0;
-	src.p = NULL;
-}
+//Matrix::Matrix(Matrix &&src)
+//{ //转移构造函数
+//	row = src.row;
+//	column = src.column;
+//	p = src.p;
+//	p[0][0] = 3.14159;
+//
+//	src.row = 0;
+//	src.column = 0;
+//	src.p = NULL;
+//}
 
 #endif
 
@@ -169,7 +170,6 @@ Matrix::Matrix(const Matrix &src)
 {
 	//拷贝构造函数
 	//cout<<this<<" cpy= "<<&src<<endl;
-	cout << "拷贝构造函数" << endl;
 	if (src.row > 0 && src.column > 0) {
 		this->row = src.row;
 		this->column = src.column;
@@ -180,6 +180,7 @@ Matrix::Matrix(const Matrix &src)
 		for (int i = 0; i < row; i++) {
 			memcpy(p[i] = new double[column], src.p[i], size_of_a_row);
 		}
+		p[0][0] = -3.14159;
 	} else {
 		this->row = 0;
 		this->column = 0;
@@ -717,6 +718,23 @@ const Matrix& Matrix::operator=(const Matrix &src)
 	return *this;
 }
 
+#if __cplusplus < 201103L //C++0x
+//# pragma message("Matrix 为 C++ 11 准备的新特性: 转移赋值运算符")
+#else
+const Matrix& Matrix::operator=(Matrix &&src)
+{ //转移赋值运算符
+	this->clear();
+	row = src.row;
+	column = src.column;
+	p = src.p;
+
+	src.p = NULL;
+	src.row = 0;
+	src.column = 0;
+	return *this;
+}
+#endif
+
 bool Matrix::operator==(const Matrix &with) const
 {
 	if (row != with.row || column != with.column) {
@@ -742,8 +760,8 @@ Matrix pow(const Matrix &A, const int n)
 	return A ^ n;
 }
 
-double tr(const Matrix &src) throw (invalid_argument) //返回方阵的迹
-{
+double tr(const Matrix &src) throw (invalid_argument)
+{ //返回方阵的迹
 	src.test_square();
 	double result = 0;
 	for (int i = 0; i < src.row; i++) {

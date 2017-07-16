@@ -44,7 +44,7 @@ class Matrix: public Array_2d<double>
 		Matrix(initializer_list<initializer_list<double>> src); //利用二维初始化列表进行构造
 		Matrix(initializer_list<double> src); //利用一维初始化列表进行构造
 
-		Matrix(Matrix &&src); //转移构造函数
+//		Matrix(Matrix &&src); //转移构造函数
 #endif
 
 		Matrix(const Matrix &src); //拷贝构造函数
@@ -81,6 +81,12 @@ class Matrix: public Array_2d<double>
 
 		friend void operator<<=(Matrix &tar, Matrix &src); //将矩阵src的资产转移给tar
 		const Matrix& operator=(const Matrix &src);
+#if __cplusplus < 201103L //C++0x
+//# pragma message("Matrix 为 C++ 11 准备的新特性: 转移赋值运算符")
+#else
+		const Matrix& operator=(Matrix &&src);
+#endif
+
 		bool operator==(const Matrix &with) const;
 		bool operator!=(const Matrix &with) const;
 
