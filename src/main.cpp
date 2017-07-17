@@ -24,6 +24,7 @@
 #include "sort.h"
 #include "choose.hpp"
 #include "math\Mapminmax.hpp"
+#include "range.hpp"
 
 using namespace std;
 

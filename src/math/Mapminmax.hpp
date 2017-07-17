@@ -3,7 +3,7 @@
  *
  *  Created on: 2017年7月13日
  *      Author: Peter
- *      Fuction: 提供了对数据归一化与逆归一化的支持
+ *      Fuction: 本文件提供了对数据归一化与逆归一化的支持
  */
 
 #ifndef MAPMINMAX_HPP_

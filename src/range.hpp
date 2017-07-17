@@ -3,7 +3,28 @@
  *
  *  Created on: 2017年7月17日
  *      Author: Peter
- *      Fuction:
+ *      Fuction: 本文件提供了对 range 的支持, 使得可以像 Python 中一样使用 for_each 风格的循环。
+ *      		  本文件需要 C++ 11 及以上版本编译器的支持
+ *
+ * Python 的循环
+ * for i in range(10, 20):
+ *     print(i)
+ *
+ * C++ 11 风格
+ * for (int i : range(10, 20)) {
+ *     cout << i << endl;
+ * }
+ *
+ *
+ * Python 的循环
+ * for i in range(10):
+ *     print(i)
+ *
+ * C++ 11 风格
+ * for (int i : range(10)) {
+ *     cout << i << endl;
+ * }
+ *
  */
 
 #ifndef RANGE_HPP_
