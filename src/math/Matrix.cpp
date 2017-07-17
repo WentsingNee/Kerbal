@@ -544,6 +544,22 @@ Matrix operator*(const double k, const Matrix &A)
 	return result;
 }
 
+Matrix operator*(const Matrix &A, const double k)
+{
+	//矩阵乘数k
+	if (k == 1) {
+		return A;
+	}
+	Matrix result(A);
+	int i, j;
+	for (i = 0; i < A.row; i++) {
+		for (j = 0; j < A.column; j++) {
+			result.p[i][j] *= k;
+		}
+	}
+	return result;
+}
+
 Matrix operator*(const Matrix &A, const Matrix &B) throw (invalid_argument)
 {
 	//矩阵乘矩阵
@@ -571,12 +587,12 @@ Matrix operator*(const Matrix &A, const Matrix &B) throw (invalid_argument)
 
 Matrix dot_product(const Matrix &A, const Matrix &B) throw (invalid_argument)
 {
-	int i, j;
+	//矩阵点乘矩阵
 
 	//检查A,B是否同样大小
-	if (A.row == 1 && A.row == 1) {
+	if (A.row == 1 && A.column == 1) {
 		return A.p[0][0] * B;
-	} else if (B.row == 1 && B.row == 1) {
+	} else if (B.row == 1 && B.column == 1) {
 		return B.p[0][0] * A;
 	} else if (A.row != B.row) {
 		throw invalid_argument("error: row(A) ≠ row(B)");
@@ -587,7 +603,7 @@ Matrix dot_product(const Matrix &A, const Matrix &B) throw (invalid_argument)
 	const int &column = A.column;
 
 	Matrix result(row, column, false);
-
+	int i, j;
 	for (i = 0; i < row; i++) {
 		for (j = 0; j < column; j++) {
 			result.p[i][j] = A.p[i][j] * B.p[i][j];
@@ -603,11 +619,6 @@ Matrix operator^(const Matrix &A, const int n) throw (invalid_argument)
 	if (n <= 0) {
 		throw invalid_argument("unreasonable n:" + to_string(n));
 	}
-//	Matrix tmp(A);
-//	for (int i = 1; i < n; i++) {
-//		tmp = tmp * A;
-//	}
-//	return tmp;
 
 	if (n == 1) {
 		return A;
@@ -627,6 +638,9 @@ Matrix operator^(const Matrix &A, const int n) throw (invalid_argument)
 Matrix operator&&(const Matrix &A, const Matrix &B) throw (invalid_argument)
 {
 	//将两个矩阵按竖直方向连接
+	/*   A
+	 *  ---
+	 *   B  */
 
 	if (A.column != B.column) {
 		throw invalid_argument("串联的矩阵的列数不一致");
@@ -652,6 +666,8 @@ Matrix operator&&(const Matrix &A, const Matrix &B) throw (invalid_argument)
 Matrix operator||(const Matrix &A, const Matrix &B) throw (invalid_argument)
 {
 	//将两个矩阵按水平方向连接
+	/*   A | B   */
+
 	if (A.row != B.row) {
 		throw invalid_argument("串联的矩阵的行数不一致");
 	}
@@ -671,7 +687,8 @@ Matrix operator||(const Matrix &A, const Matrix &B) throw (invalid_argument)
 }
 
 void operator<<=(Matrix &tar, Matrix &src)
-{ //将矩阵src的资产转移给tar
+{
+	//将矩阵src的资产转移给tar
 	tar.clear();
 	tar.row = src.row;
 	tar.column = src.column;
@@ -691,12 +708,12 @@ const Matrix& Matrix::operator=(const Matrix &src)
 				memcpy(p[i], src.p[i], size_of_a_row);
 			}
 		} else { //行数与原来相等, 列数不等
-			for (int i = 0; i < row; i++)
+
+			this->column = src.column;
+			const size_t size_of_a_row = column * sizeof(double);
+			for (int i = 0; i < row; i++) {
 				delete[] p[i];
-			const size_t size_of_a_row = src.column * sizeof(double);
-			for (int i = 0; i < src.row; i++) {
-				p[i] = new double[src.column]; //开辟列
-				memcpy(p[i], src.p[i], size_of_a_row);
+				memcpy(p[i] = new double[column], src.p[i], size_of_a_row);
 			}
 		}
 	} else {
@@ -704,36 +721,37 @@ const Matrix& Matrix::operator=(const Matrix &src)
 			delete[] p[i];
 		delete[] p;
 
-		p = new double*[src.row]; //开辟行
-		const size_t size_of_a_row = src.column * sizeof(double);
-		for (int i = 0; i < src.row; i++) {
-			p[i] = new double[src.column]; //开辟列
-			memcpy(p[i], src.p[i], size_of_a_row);
-		}
-
 		this->row = src.row;
 		this->column = src.column;
+
+		p = new double*[row]; //开辟行
+		const size_t size_of_a_row = column * sizeof(double);
+		for (int i = 0; i < row; i++) {
+			memcpy(p[i] = new double[column], src.p[i], size_of_a_row);
+		}
 	}
 
 	return *this;
 }
 
-#if __cplusplus < 201103L //C++0x
-//# pragma message("Matrix 为 C++ 11 准备的新特性: 转移赋值运算符")
-#else
-const Matrix& Matrix::operator=(Matrix &&src)
-{ //转移赋值运算符
-	this->clear();
-	row = src.row;
-	column = src.column;
-	p = src.p;
-
-	src.p = NULL;
-	src.row = 0;
-	src.column = 0;
-	return *this;
-}
-#endif
+//#if __cplusplus < 201103L //C++0x
+////# pragma message("Matrix 为 C++ 11 准备的新特性: 转移赋值运算符")
+//#else
+//const Matrix& Matrix::operator=(Matrix &&src)
+//{
+//	//转移赋值运算符
+//
+//	this->clear();
+//	row = src.row;
+//	column = src.column;
+//	p = src.p;
+//
+//	src.p = NULL;
+//	src.row = 0;
+//	src.column = 0;
+//	return *this;
+//}
+//#endif
 
 bool Matrix::operator==(const Matrix &with) const
 {
@@ -761,7 +779,8 @@ Matrix pow(const Matrix &A, const int n)
 }
 
 double tr(const Matrix &src) throw (invalid_argument)
-{ //返回方阵的迹
+{
+//返回方阵的迹
 	src.test_square();
 	double result = 0;
 	for (int i = 0; i < src.row; i++) {
@@ -823,63 +842,66 @@ Matrix Cofactor(const Matrix &A, const int x, const int y) throw (out_of_range)
 }
 
 //应用部分
-
-Matrix rotate_X(double sigma)
+namespace rotate
 {
-	double cosine = cos(sigma);
-	double sine = sin(sigma);
-	double a[3][3] = { 1, 0, 0, 0, cosine, -sine, 0, sine, cosine };
-	return Matrix(a, 3, 3);
+	Matrix rotate_X(double sigma)
+	{
+		double cosine = cos(sigma);
+		double sine = sin(sigma);
+		double a[3][3] = { 1, 0, 0, 0, cosine, -sine, 0, sine, cosine };
+		return Matrix(a, 3, 3);
+	}
+
+	Matrix rotate_Y(double sigma)
+	{
+		double cosine = cos(sigma);
+		double sine = sin(sigma);
+		double a[3][3] = { cosine, 0, sine, 0, 1, 0, -sine, 0, cosine };
+		return Matrix(a, 3, 3);
+	}
+
+	Matrix rotate_Z(double sigma)
+	{
+		double cosine = cos(sigma);
+		double sine = sin(sigma);
+		double a[3][3] = { cosine, -sine, 0, sine, cosine, 0, 0, 0, 1 };
+		return Matrix(a, 3, 3);
+	}
+
+	void rotate_X(double sigma, const double& x0, double& y0, double& z0)
+	{
+		double cosine = cos(sigma);
+		double sine = sin(sigma);
+		double y1 = y0 * cosine - z0 * sine;
+		double z1 = y0 * sine + z0 * cosine;
+
+		y0 = y1;
+		z0 = z1;
+	}
+
+	void rotate_Y(double sigma, double& x0, const double& y0, double& z0)
+	{
+		double cosine = cos(sigma);
+		double sine = sin(sigma);
+		double x1 = x0 * cosine + z0 * sine;
+		double z1 = -x0 * sine + z0 * cosine;
+
+		x0 = x1;
+		z0 = z1;
+	}
+
+	void rotate_Z(double sigma, double& x0, double& y0, const double& z0)
+	{
+		double cosine = cos(sigma);
+		double sine = sin(sigma);
+		double x1 = x0 * cosine - y0 * sine;
+		double y1 = x0 * sine + y0 * cosine;
+
+		x0 = x1;
+		y0 = y1;
+	}
 }
-
-Matrix rotate_Y(double sigma)
-{
-	double cosine = cos(sigma);
-	double sine = sin(sigma);
-	double a[3][3] = { cosine, 0, sine, 0, 1, 0, -sine, 0, cosine };
-	return Matrix(a, 3, 3);
-}
-
-Matrix rotate_Z(double sigma)
-{
-	double cosine = cos(sigma);
-	double sine = sin(sigma);
-	double a[3][3] = { cosine, -sine, 0, sine, cosine, 0, 0, 0, 1 };
-	return Matrix(a, 3, 3);
-}
-
-void rotate_X(double sigma, const double& x0, double& y0, double& z0)
-{
-	double cosine = cos(sigma);
-	double sine = sin(sigma);
-	double y1 = y0 * cosine - z0 * sine;
-	double z1 = y0 * sine + z0 * cosine;
-
-	y0 = y1;
-	z0 = z1;
-}
-
-void rotate_Y(double sigma, double& x0, const double& y0, double& z0)
-{
-	double cosine = cos(sigma);
-	double sine = sin(sigma);
-	double x1 = x0 * cosine + z0 * sine;
-	double z1 = -x0 * sine + z0 * cosine;
-
-	x0 = x1;
-	z0 = z1;
-}
-
-void rotate_Z(double sigma, double& x0, double& y0, const double& z0)
-{
-	double cosine = cos(sigma);
-	double sine = sin(sigma);
-	double x1 = x0 * cosine - y0 * sine;
-	double y1 = x0 * sine + y0 * cosine;
-
-	x0 = x1;
-	y0 = y1;
-}
+using namespace rotate;
 
 /*void Matrix::print_to_file(char file_name[],bool if_output_frame) const
  {

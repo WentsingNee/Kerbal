@@ -55,25 +55,25 @@ namespace
 		}
 
 		for (int i = 1; i < index; i++) {
-		va_arg(arg_ptr, int);
+			va_arg(arg_ptr, int);
+		}
+		return va_arg(arg_ptr, int);
 	}
-return va_arg(arg_ptr, int);
-}
 
-template <class T>
-T choose_float(int index, const T &value0, va_list &arg_ptr) throw (invalid_argument)
-{
-if (index < 0) {
-	throw invalid_argument("index<0");
-} else if (index == 0) {
-	return value0;
-}
+	template <class T>
+	T choose_float(int index, const T &value0, va_list &arg_ptr) throw (invalid_argument)
+	{
+		if (index < 0) {
+			throw invalid_argument("index<0");
+		} else if (index == 0) {
+			return value0;
+		}
 
-for (int i = 1; i < index; i++) {
-va_arg(arg_ptr, double);
-}
-return va_arg(arg_ptr, double);
-}
+		for (int i = 1; i < index; i++) {
+			va_arg(arg_ptr, double);
+		}
+		return va_arg(arg_ptr, double);
+	}
 }
 
 char choose(int index, char value0, ...) throw (invalid_argument);
@@ -91,12 +91,12 @@ float choose(int index, float value0, ...) throw (invalid_argument);
 template <class T>
 T choose(int index, initializer_list<T> src) throw (invalid_argument, out_of_range)
 {
-if (index < 0) {
-throw invalid_argument("index<0");
-} else if (index >= src.size()) {
-throw out_of_range("index is out of range");
-}
-return *(src.begin() + index);
+	if (index < 0) {
+		throw invalid_argument("index<0");
+	} else if (index >= src.size()) {
+		throw out_of_range("index is out of range");
+	}
+	return *(src.begin() + index);
 }
 #endif
 
@@ -106,35 +106,35 @@ return *(src.begin() + index);
 namespace //匿名命名空间内的内容对文件外不可见
 {
 //递归终止函数
-int choose_unpack(int total)
-{
-cerr << "end" << endl;
-return 0;
-}
+	int choose_unpack(int total)
+	{
+		cerr << "end" << endl;
+		return 0;
+	}
 
 //展开函数
-template <class T, class ...Args>
-T choose_unpack(int total, T head, Args ... rest)
-{
-if (total == 0) {
-return head;
-} else {
-return (T) choose_unpack(total - 1, rest...);
-}
-}
+	template <class T, class ...Args>
+	T choose_unpack(int total, T head, Args ... rest)
+	{
+		if (total == 0) {
+			return head;
+		} else {
+			return (T) choose_unpack(total - 1, rest...);
+		}
+	}
 }
 
 template <class T, class ...Args>
 T choose_c11(int index, T head, Args ... args) throw (invalid_argument, out_of_range)
 {
-if (index < 0) {
-throw invalid_argument("index<0");
-} else if (index > (int) sizeof...(Args)) {
-throw out_of_range("index is out of range");
-} else if (index == 0) {
-return head;
-}
-return choose_unpack(index - 1, args...);
+	if (index < 0) {
+		throw invalid_argument("index<0");
+	} else if (index > (int) sizeof...(Args)) {
+		throw out_of_range("index is out of range");
+	} else if (index == 0) {
+		return head;
+	}
+	return choose_unpack(index - 1, args...);
 }
 #endif
 

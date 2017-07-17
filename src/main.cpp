@@ -45,13 +45,11 @@ int main()
 {
 	program_start(is_debug);
 
-	Matrix m = { { 1, 2 }, { 3, 4 } };
+	Matrix m = { 1, 2, 3, 4 };
 	m.print();
-	Matrix n = { { 1, 2 }, { 3, 4 } };
-	n.print();
-	Matrix s;
-	s = m + n;
-	s.print();
+	Matrix n = { 11, 22, 33 };
+	m = n;
+	m.print();
 
 	/*int n = 2;
 	 unsigned long t = GetTickCount();

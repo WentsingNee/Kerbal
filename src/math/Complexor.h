@@ -145,6 +145,15 @@ class Complexor //: public Matrix
 
 		friend void print_array_to_file(const Complexor &src, string separator, string file_name, bool if_output_number = false) throw (invalid_argument);
 
+		double* const begin() const
+		{
+			return p;
+		}
+
+		double* const end() const
+		{
+			return p + num;
+		}
 };
 double operator^(const Complexor &a, const Complexor &b) throw (invalid_argument);
 //œÚ¡øº–Ω«

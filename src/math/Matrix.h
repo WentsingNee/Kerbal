@@ -72,8 +72,9 @@ class Matrix: public Array_2d<double>
 		friend Matrix operator+(const Matrix &A, const Matrix &B) throw (invalid_argument);
 		friend Matrix operator-(const Matrix &A, const Matrix &B) throw (invalid_argument);
 		friend Matrix operator*(const double k, const Matrix &A); //数k乘矩阵
+		friend Matrix operator*(const Matrix &A, const double k); //矩阵乘数k
 		friend Matrix operator*(const Matrix &A, const Matrix &B) throw (invalid_argument); //矩阵乘矩阵
-		friend Matrix dot_product(const Matrix &A, const Matrix &B) throw (invalid_argument);
+		friend Matrix dot_product(const Matrix &A, const Matrix &B) throw (invalid_argument); //矩阵点乘矩阵
 		friend Matrix operator^(const Matrix &A, const int n) throw (invalid_argument); //矩阵的幂
 
 		friend Matrix operator&&(const Matrix &A, const Matrix &B) throw (invalid_argument); //将两个矩阵按竖直方向连接
@@ -81,11 +82,13 @@ class Matrix: public Array_2d<double>
 
 		friend void operator<<=(Matrix &tar, Matrix &src); //将矩阵src的资产转移给tar
 		const Matrix& operator=(const Matrix &src);
-#if __cplusplus < 201103L //C++0x
-//# pragma message("Matrix 为 C++ 11 准备的新特性: 转移赋值运算符")
-#else
-		const Matrix& operator=(Matrix &&src);
-#endif
+
+		template <class T> friend Matrix Cat(const T &a);
+//#if __cplusplus < 201103L //C++0x
+////# pragma message("Matrix 为 C++ 11 准备的新特性: 转移赋值运算符")
+//#else
+//		const Matrix& operator=(Matrix &&src);
+//#endif
 
 		bool operator==(const Matrix &with) const;
 		bool operator!=(const Matrix &with) const;
@@ -132,35 +135,30 @@ Matrix::Matrix(const T *src, const int row, const int column) //利用二维数组进行
 template <class T>
 Matrix Cat(const T &a)
 {
-	int row_total;
-	int column_total;
 	if (array_dimension(a) == 1) {
-
-		column_total = a[0].get_column();
-		row_total = a[0].get_row();
-		for (int i = 1; i <= arraylen(a) - 1; i++) {
-			if (a[i].get_row() != row_total) {
-				cerr << "串联的矩阵的维度不一致" << endl;
+		int row_total = a[0].row;
+		int column_total = a[0].column;
+		for (int i = 1; i < arraylen(a); i++) {
+			if (a[i].row != row_total) {
+				cerr << "串联的矩阵的行数不一致" << endl;
 				throw 0;
 			} else {
-				column_total += a[i].get_column();
+				column_total += a[i].column;
 			}
 		}
 
-		Matrix result(row_total, column_total);
-		int column_covered = 0;
-		for (int i = 0; i < arraylen(a); i++) { //数组循环
+		Matrix result(row_total, column_total, false);
+		for (int i = 0, column_covered = 0; i < arraylen(a); i++) { //数组循环
 			for (int j = 0; j < row_total; j++) { //行循环
-				for (int k = 0; k <= a[i].get_column() - 1; k++) { //一个矩阵内的列循环
-					result.set_element(j, column_covered + k, a[i].get_element(j, k));
+				for (int k = 0; k < a[i].get_column(); k++) { //一个矩阵内的列循环
+					result.p[j][column_covered + k] = a[i].p[j][k];
 				}
 			}
-			column_covered += a[i].get_column();
+			column_covered += a[i].column;
 		}
 		return result;
 	} else if (array_dimension(a) == 2) {
-		Matrix result(1, 1);
-		return result;
+		return Matrix(1, 1);
 	} else {
 		throw 0;
 	}
