@@ -23,7 +23,7 @@
 #include "math\Complexor.h"
 #include "sort.h"
 #include "choose.hpp"
-#include "Mapminmax.hpp"
+#include "math\Mapminmax.hpp"
 
 using namespace std;
 

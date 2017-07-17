@@ -3,14 +3,14 @@
  *
  *  Created on: 2017年7月13日
  *      Author: Peter
- *      Fuction:
+ *      Fuction: 提供了对数据归一化与逆归一化的支持
  */
 
 #ifndef MAPMINMAX_HPP_
 #define MAPMINMAX_HPP_
 
 #include <vector>
-#include "math\statistics.h"
+#include "statistics.h"
 
 using namespace std;
 

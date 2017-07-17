@@ -16,7 +16,7 @@
 # pragma message("choose 使用了 C++ 11 新特性, 请打开 C++ 11 选项以便使用这些新特性")
 #else
 # include <initializer_list>
-#endif
+#endif /* End C++0x */
 
 using namespace std;
 
