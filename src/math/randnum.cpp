@@ -4,9 +4,9 @@
 
 using namespace std;
 
-int seed()
+unsigned int seed()
 {
-	int k = GetTickCount() % 1000;
+	unsigned int k = GetTickCount();
 	srand(k);
 	return k;
 }
@@ -29,6 +29,7 @@ double ave_rand(bool if_include_0, bool if_include_1)
 		a[i] = rand();
 		result += a[i] / fenmu;
 	}
+#undef TIMES
 
 	if (result > 1) {
 		return ave_rand(if_include_0, if_include_1);

@@ -39,15 +39,15 @@ int main()
 {
 	program_start(is_debug);
 
+	unsigned int a = 4294967216;
+	print_bit(a);
+	print_16(a);
+
 //	Matrix m = { 1, 2, 3, 4 };
 //	m.print();
 //	Matrix n = { 11, 22, 33 };
 //	m = n;
 //	m.print();
-//
-//	for (auto i : range(10000000)) {
-//		m + n;
-//	}
 
 	/*int n = 2;
 	 unsigned long t = GetTickCount();
@@ -103,6 +103,6 @@ int main()
 //	//cout << c1 << endl;
 //	//cout << c2 << endl;
 	program_will_end();
-//system("pause");
+//	system("pause");
 	return 0;
 }

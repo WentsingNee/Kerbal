@@ -19,12 +19,24 @@ bool program_will_end();
 
 enum Type
 {
-	ty_short, ty_unshort, ty_int, ty_unint, ty_long, ty_unlong, ty_float, ty_double, ty_longdouble, ty_char, ty_bool, ty_else
+	ty_short,
+	ty_unshort,
+	ty_int,
+	ty_unint,
+	ty_long,
+	ty_unlong,
+	ty_float,
+	ty_double,
+	ty_longdouble,
+	ty_char,
+	ty_bool,
+	ty_else
 };
 
 template <class T> Type get_type(const T &a);
 template <class T> bool print_type_infomation(const T &a);
 template <class T> void print_bit(const T &a);
+template <class T> void print_16(const T &a);
 template <class T> string get_typename(const T &a);
 string get_user_name();
 
@@ -136,6 +148,38 @@ void print_bit(const T &a)
 			if (j % 8 == 0)
 				cout << " ";
 		}
+		p--;
+	}
+	cout << endl;
+}
+
+template <class T>
+void print_16(const T &a)
+{
+	unsigned int tmp;
+	static const int BIT_SIZE1 = (8 * (sizeof(tmp) - sizeof(char)));
+	static const int BIT_SIZE2 = (8 * (sizeof(tmp) - sizeof(char)) + 4);
+	char *p = (char *) (&a) + sizeof(T) / sizeof(char) - sizeof(char);
+	for (int i = sizeof(T) / sizeof(char); i >= 1; i--) {
+		tmp = *p;
+		tmp <<= BIT_SIZE1;
+		tmp >>= BIT_SIZE2;
+		if (tmp > 9) {
+			//cout << char('A' + tmp - 10);
+			cout << char(tmp + 55);
+		} else {
+			cout << tmp;
+		}
+
+		tmp = *p;
+		tmp <<= BIT_SIZE2;
+		tmp >>= BIT_SIZE2;
+		if (tmp > 9) {
+			cout << char(tmp + 55);
+		} else {
+			cout << tmp;
+		}
+		cout << " ";
 		p--;
 	}
 	cout << endl;

@@ -14,7 +14,8 @@ using namespace std;
 
 template <class T> int arraylen(const T &array);
 template <class T> void print_array(T a[], int len, string separator = " , ", bool if_output_number = false) throw (invalid_argument);
-template <class T> void print_array_to_file(T a[], int len, string separator, string file_name, bool if_output_number = false) throw (invalid_argument);
+template <class T> void print_array_to_file(T a[], int len, string separator, string file_name, bool if_output_number =
+		false) throw (invalid_argument);
 template <typename T> int array_dimension(const T &a);
 
 template <class T>
@@ -67,7 +68,7 @@ int array_dimension(const T &a)
 
 	int dimension = 0;
 
-	cout << info.name() << endl;
+	cout << name << endl;
 
 	for (int i = 0; i < name.length() - 2;) {
 		//cout<<"i="<<i<<endl;
@@ -121,6 +122,7 @@ namespace
 {
 	void _Array_init()
 	{
+		//remove unused warning
 		(void) MyArray;
 	}
 }
