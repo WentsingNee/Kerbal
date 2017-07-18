@@ -145,39 +145,40 @@ void print_bit(const T &a)
 	for (int i = sizeof(T) / sizeof(char); i >= 1; i--) {
 		for (int j = 8 * sizeof(char) - 1; j >= 0; j--) {
 			cout << ((*p >> j) & 1);
-			if (j % 8 == 0)
-				cout << " ";
 		}
+		cout << " ";
 		p--;
 	}
 	cout << endl;
 }
 
+void print_string_bit(char * const a);
+void print_string_16(char * const a);
+void print_string_bit(string a);
+void print_string_16(string a);
+
 template <class T>
 void print_16(const T &a)
 {
-	unsigned int tmp;
-	static const int BIT_SIZE1 = (8 * (sizeof(tmp) - sizeof(char)));
-	static const int BIT_SIZE2 = (8 * (sizeof(tmp) - sizeof(char)) + 4);
+	unsigned char tmp;
 	char *p = (char *) (&a) + sizeof(T) / sizeof(char) - sizeof(char);
 	for (int i = sizeof(T) / sizeof(char); i >= 1; i--) {
 		tmp = *p;
-		tmp <<= BIT_SIZE1;
-		tmp >>= BIT_SIZE2;
+		tmp >>= 4;
 		if (tmp > 9) {
 			//cout << char('A' + tmp - 10);
 			cout << char(tmp + 55);
 		} else {
-			cout << tmp;
+			cout << char(tmp + '0');
 		}
 
 		tmp = *p;
-		tmp <<= BIT_SIZE2;
-		tmp >>= BIT_SIZE2;
+		tmp <<= 4;
+		tmp >>= 4;
 		if (tmp > 9) {
 			cout << char(tmp + 55);
 		} else {
-			cout << tmp;
+			cout << char(tmp + '0');
 		}
 		cout << " ";
 		p--;

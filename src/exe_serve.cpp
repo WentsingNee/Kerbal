@@ -22,9 +22,9 @@ void program_start(bool is_debug)
 	 */
 
 	/*	cout << __LINE__ << endl;
-	cout << __FILE__ << endl;
-	cout << __DATE__ << endl;
-	cout << __TIME__ << endl;
+	 cout << __FILE__ << endl;
+	 cout << __DATE__ << endl;
+	 cout << __TIME__ << endl;
 	 cout << __STDC__ << endl;*/
 
 	debug = is_debug;
@@ -63,16 +63,55 @@ bool program_will_end()
 //	typeid(a).name()<<endl;
 //}
 
-//template <class T>
-//void print_bit2(T a)
-//{
-//	for(int i=8*sizeof(a)-1; i>=0; i--) {
-//		cout<<( (a>>i)&1 );
-//		if(i%8==0)
-//			cout<<" ";
-//	}
-//	cout<<"\n";
-//}
+void print_string_bit(char * const a)
+{
+	char *p = a;
+	while (*p) {
+		for (int j = 7; j >= 0; j--) {
+			cout << ((*p >> j) & 1);
+		}
+		cout << " ";
+		p++;
+	}
+	cout << endl;
+}
+
+void print_string_16(char * const a)
+{
+	unsigned char tmp;
+	char *p = a;
+	while (*p) {
+		tmp = *p;
+		tmp >>= 4;
+		if (tmp > 9) {
+			//cout << char('A' + tmp - 10);
+			cout << char(tmp + 55);
+		} else {
+			cout << char(tmp + '0');
+		}
+
+		tmp = *p;
+		tmp <<= 4;
+		tmp >>= 4;
+		if (tmp > 9) {
+			cout << char(tmp + 55);
+		} else {
+			cout << char(tmp + '0');
+		}
+		cout << " ";
+		p++;
+	}
+	cout << endl;
+}
+
+void print_string_bit(string a)
+{
+	print_string_bit(&a[0]);
+}
+void print_string_16(string a)
+{
+	print_string_16(&a[0]);
+}
 
 #pragma comment(lib,"Advapi32.lib")
 string get_user_name()

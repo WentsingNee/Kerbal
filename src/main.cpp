@@ -39,9 +39,12 @@ int main()
 {
 	program_start(is_debug);
 
-	unsigned int a = 4294967216;
-	print_bit(a);
-	print_16(a);
+//	print_bit(string("abcdef"));
+//	print_16(string("abcdef"));
+
+//	unsigned char tmp = 0xB8;
+//	print_bit(tmp);
+//	print_16(tmp);
 
 //	Matrix m = { 1, 2, 3, 4 };
 //	m.print();
