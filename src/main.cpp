@@ -24,33 +24,30 @@
 #include "sort.h"
 #include "choose.hpp"
 #include "math\Mapminmax.hpp"
-#include "range.hpp"
+#include "rangerecord.hpp"
 
 using namespace std;
 
 double fun(double x)
 {
-	cout << 123 << x << endl;
 	return sin(x);
 }
 
 #define is_debug true
 
-double fun2(double x)
-{
-	cout << 321 << x << endl;
-	return cos(x);
-}
-
 int main()
 {
 	program_start(is_debug);
 
-	Matrix m = { 1, 2, 3, 4 };
-	m.print();
-	Matrix n = { 11, 22, 33 };
-	m = n;
-	m.print();
+//	Matrix m = { 1, 2, 3, 4 };
+//	m.print();
+//	Matrix n = { 11, 22, 33 };
+//	m = n;
+//	m.print();
+//
+//	for (auto i : range(10000000)) {
+//		m + n;
+//	}
 
 	/*int n = 2;
 	 unsigned long t = GetTickCount();

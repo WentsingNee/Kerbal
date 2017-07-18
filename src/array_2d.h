@@ -211,6 +211,7 @@ class Array_2d
 
 		bool operator==(const Array_2d<Type> &with) const;
 		bool operator!=(const Array_2d<Type> &with) const;
+
 //		static void memcpy(Type* Dst, Type* Src, size_t Size_of_src, bool deep);
 
 //		friend void memcpy(Type* Dst, const Type* Src, size_t Size_of_src)
@@ -221,25 +222,25 @@ class Array_2d
 //			}
 //		}
 
-		safety<Type> begin()
-		{
-			return safety<Type>(this, 0);
-		}
+		/*		safety<Type> begin()
+		 {
+		 return safety<Type>(this, 0);
+		 }
 
-		const safety<Type> begin() const
-		{
-			return safety<Type>(this, 0);
-		}
+		 const safety<Type> begin() const
+		 {
+		 return safety<Type>(this, 0);
+		 }
 
-		safety<Type> end()
-		{
-			return safety<Type>(this, row);
-		}
+		 safety<Type> end()
+		 {
+		 return safety<Type>(this, row);
+		 }
 
-		const safety<Type> end() const
-		{
-			return safety<Type>(this, row);
-		}
+		 const safety<Type> end() const
+		 {
+		 return safety<Type>(this, row);
+		 }*/
 };
 
 template <class Type>
