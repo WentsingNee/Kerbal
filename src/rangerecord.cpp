@@ -7,7 +7,9 @@
  */
 
 #if __cplusplus < 201103L //C++0x
-//# pragma message("range 使用了 C++ 11 新特性, 请打开 C++ 11 选项以便使用这些新特性")
+# pragma message("\n"\
+"			* range 使用了 C++ 11 新特性, 请打开 C++ 11 选项以便使用这些新特性"\
+)
 #else
 
 #include "rangerecord.hpp"
@@ -15,22 +17,20 @@ namespace Range
 {
 	Range_record::Range_record(int to)
 	{
+		this->from = 0;
 		if (to < 0) {
-			this->from = to;
+			this->to = to;
 		} else {
-			this->from = 0;
+			this->to = 0;
 		}
-		this->to = to;
+		this->step = 1;
 	}
 
-	Range_record::Range_record(int from, int to)
+	Range_record::Range_record(int from, int to, int step)
 	{
-		if (from > to) {
-			this->from = to;
-		} else {
-			this->from = from;
-		}
+		this->from = from;
 		this->to = to;
+		this->step = step;
 	}
 
 } /* End of namespace Range */

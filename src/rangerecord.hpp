@@ -30,9 +30,7 @@
 #ifndef RANGERECORD_HPP_
 #define RANGERECORD_HPP_
 
-#if __cplusplus < 201103L //C++0x
-//# pragma message("range 使用了 C++ 11 新特性, 请打开 C++ 11 选项以便使用这些新特性")
-#else
+#if __cplusplus >= 201103L //C++0x
 
 #include <algorithm>
 
@@ -43,65 +41,66 @@ namespace Range
 	class it final
 	{
 		protected:
-			int now;
+		int now, step;
 
-			it(int now)
-			{
-				this->now = now;
-			}
+		it(int now, int step = 1)
+		{
+			this->now = now;
+			this->step = step;
+		}
 
-			friend class Range_record;
+		friend class Range_record;
 
 		public:
-			int operator*() const
-			{
-				return now;
-			}
+		int operator*() const
+		{
+			return now;
+		}
 
-			it& operator++()
-			{
-				//前自增
-				now++;
-				return *this;
-			}
+		it& operator++()
+		{
+			//前自增
+			now += step;
+			return *this;
+		}
 
-			bool operator!=(const it &with) const
-			{
-				return this->now != with.now;
-			}
+		bool operator!=(const it &with) const
+		{
+			return this->now != with.now;
+		}
 	};
 
 	class Range_record final
 	{
 		protected:
-			int from, to;
+		int from, to, step;
 
-			Range_record(int to);
-			Range_record(int from, int to);
+		Range_record(int to);
+		Range_record(int from, int to, int step = 1);
 
-			friend Range_record range(int to);
-			friend Range_record range(int from, int to);
+		friend Range_record range(int to);
+		friend Range_record range(int from, int to, int step);
 
 		public:
-			it begin() const
-			{
-				return it(from);
-			}
+		it begin() const
+		{
+			return it(from, step);
+		}
 
-			it end() const
-			{
-				return it(to);
-			}
+		it end() const
+		{
+			return it(to, step);
+		}
 	};
 
-	inline Range_record range(int from, int to)
+	inline Range_record range(int from, int to, int step = 1)
 	{
-		return Range_record(from, to);
+		return Range_record(from, to, step);
 	}
 
 	inline Range_record range(int to)
 	{
-		return Range_record(0, to);
+		return Range_record(0, to, 1);
 	}
 
 } /* End of namespace Range */

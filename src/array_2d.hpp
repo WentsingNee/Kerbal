@@ -9,13 +9,11 @@
 #include <cstdarg>
 #include <stdexcept>
 
-#if __cplusplus < 201103L //C++0x
-# pragma message("Array_2d 使用了 C++ 11 新特性, 请打开 C++ 11 选项以便使用这些新特性")
-#else
+#if __cplusplus >= 201103L //C++0x
 #include <initializer_list>
 #endif //C++0x
 
-#include "String_serve.h"
+#include "String_serve.hpp"
 
 using namespace std;
 
@@ -36,7 +34,6 @@ template <class Type> class Array_2d;
 template <class Type>
 class safety  //本类用来提供对动态二维数组Array_2d类的下标运算的安全访问
 {
-
 	protected:
 		Array_2d<Type> *p_to_matrix;
 		int row_want_to;
@@ -166,11 +163,9 @@ class Array_2d
 
 		Array_2d(Type arr[], int len, bool in_a_row = true); //利用一维数组进行构造
 
-#if __cplusplus < 201103L //C++0x
-//# pragma message("Array_2d 为 C++ 11 准备的新特性: 利用初始化列表进行构造")
-#else
+#if __cplusplus >= 201103L //C++0x
 		Array_2d(initializer_list<initializer_list<Type>> src); //利用二维初始化列表进行构造
-		Array_2d(initializer_list<Type> src); //利用一维初始化列表进行构造
+		Array_2d(initializer_list<Type> src);//利用一维初始化列表进行构造
 #endif
 
 		Array_2d(const Array_2d &src); //拷贝构造函数
@@ -330,13 +325,14 @@ Array_2d<Type>::Array_2d(Type arr[], int len, bool in_a_row)
 	}
 }
 
-#if __cplusplus < 201103L //C++0x
-//# pragma message("Array_2d 为 C++ 11 准备的新特性: 利用初始化列表进行构造")
-#else
+#if __cplusplus >= 201103L //C++0x
+
 template <class Type>
 Array_2d<Type>::Array_2d(initializer_list<initializer_list<Type>> src)
-{ //利用二维初始化列表进行构造
-  //扫描列数最宽的行
+{
+	//利用二维初始化列表进行构造
+
+	//扫描列数最宽的行
 	int tmp = 0;
 	for (auto j : src) {
 		if (j.size() > tmp) {
@@ -345,14 +341,14 @@ Array_2d<Type>::Array_2d(initializer_list<initializer_list<Type>> src)
 	}
 
 	const int row_pre = src.size(); //最终定下的行数
-	const int column_pre = tmp; //最终定下的列数
+	const int column_pre = tmp;//最终定下的列数
 
 	if (row_pre > 0 && column_pre > 0) {
 		this->row = row_pre;
 		this->column = column_pre;
 
 		//动态开辟一个以p为首地址的、row * column的二维数组
-		p = new Type*[row]; //开辟行
+		p = new Type*[row];//开辟行
 		auto begin_to_src = src.begin();
 		for (int i = 0; i < row; i++) {
 			Type *p_to_first = p[i] = new Type[column];
@@ -371,15 +367,16 @@ Array_2d<Type>::Array_2d(initializer_list<initializer_list<Type>> src)
 
 template <class Type>
 Array_2d<Type>::Array_2d(initializer_list<Type> src)
-{ //利用一维初始化列表进行构造
-	const int column_pre = src.size(); //最终定下的列数
+{
+	//利用一维初始化列表进行构造
+	const int column_pre = src.size();//最终定下的列数
 
 	if (column_pre > 0) {
 		this->row = 1;
 		this->column = column_pre;
 
 		//动态开辟一个以p为首地址的、1 * column的二维数组
-		p = new Type*[1]; //开辟行
+		p = new Type*[1];//开辟行
 		Type *p_to_first = p[0] = new Type[column];
 		for (int i = 0; i < column; i++) {
 			p_to_first[i] = *(src.begin() + i);
@@ -391,7 +388,8 @@ Array_2d<Type>::Array_2d(initializer_list<Type> src)
 		this->p = NULL;
 	}
 }
-#endif
+
+#endif //C++0x
 
 template <class Type>
 Array_2d<Type>::Array_2d(const Array_2d<Type> &src) //拷贝构造函数
@@ -542,7 +540,9 @@ Array_2d<Type>& Array_2d<Type>::operator <<(const Type &value) throw (out_of_ran
 		last_Arry = this;
 		insert_times = 0;
 	} else if (insert_times >= row * column) {
-		throw out_of_range("尝试给[" + to_string(insert_times / column) + "][" + to_string(insert_times % column) + "]赋值" + to_string(value));
+		throw out_of_range(
+				"尝试给[" + to_string(insert_times / column) + "][" + to_string(insert_times % column) + "]赋值"
+						+ to_string(value));
 	}
 
 	//p[insert_times / row][insert_times % row] = value;
@@ -583,7 +583,8 @@ Array_2d<Type>& Array_2d<Type>::operator <<(const string & src) throw (out_of_ra
 
 	while (ss >> tmp) {
 		if (insert_times >= row * column) {
-			throw out_of_range("尝试给[" + to_string(insert_times / column) + "][" + to_string(insert_times % column) + "]赋值");
+			throw out_of_range(
+					"尝试给[" + to_string(insert_times / column) + "][" + to_string(insert_times % column) + "]赋值");
 		}
 		//p[insert_times / row][insert_times % row] = tmp;
 		p[insert_times / column][insert_times % column] = tmp;
@@ -649,7 +650,9 @@ template <class Type>
 inline void Array_2d<Type>::test_row(const int row_test) const throw (out_of_range)
 {
 	if (row_test < 0 || row_test >= this->row) {
-		throw out_of_range("The " + to_string(this->row) + " × " + to_string(this->column) + " Array doesn't have the no." + to_string(row_test) + " row!");
+		throw out_of_range(
+				"The " + to_string(this->row) + " × " + to_string(this->column) + " Array doesn't have the no."
+						+ to_string(row_test) + " row!");
 	}
 }
 
@@ -657,7 +660,9 @@ template <class Type>
 inline void Array_2d<Type>::test_column(const int column_test) const throw (out_of_range)
 {
 	if (column_test < 0 || column_test >= this->column) {
-		throw out_of_range("The " + to_string(this->row) + " × " + to_string(this->column) + " Array doesn't have the no." + to_string(column_test) + " column!");
+		throw out_of_range(
+				"The " + to_string(this->row) + " × " + to_string(this->column) + " Array doesn't have the no."
+						+ to_string(column_test) + " column!");
 	}
 }
 

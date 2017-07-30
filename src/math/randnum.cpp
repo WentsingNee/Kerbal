@@ -1,6 +1,7 @@
 #include <cmath>
-#include "randnum.h"
-#include "basic_math.h"
+#include "randnum.hpp"
+
+#include "basic_math.hpp"
 
 using namespace std;
 

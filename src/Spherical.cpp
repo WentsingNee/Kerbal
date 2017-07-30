@@ -1,7 +1,8 @@
 #include "Spherical.h"
-#include "String_serve.h"
 #include <cmath>
-#include "math\basic_math.h"
+
+#include "math/basic_math.hpp"
+#include "String_serve.hpp"
 
 using namespace std;
 

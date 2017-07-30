@@ -9,6 +9,14 @@
 #include <iostream>
 #include "choose.hpp"
 
+#if __cplusplus < 201103L //C++0x
+# pragma message("\n"\
+"			* choose 使用了 C++ 11 新特性, 请打开 C++ 11 选项以便使用这些新特性\n"\
+"					* choose 为 C++ 11 准备的新特性: 初始化列表风格的 choose 函数\n"\
+"					* choose_c11 为 C++ 11 准备的新特性: 可变参数模板风格的 choose 函数"\
+)
+#endif /* End C++0x */
+
 using namespace std;
 
 char choose(int index, char value0, ...) throw (invalid_argument)

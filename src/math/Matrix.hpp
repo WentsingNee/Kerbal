@@ -7,10 +7,10 @@
 #include <cmath>
 #include <stdarg.h>
 
-#include "basic_math.h"
-#include "..\array_serve.h"
-#include "..\array_2d.h"
-#include "randnum.h"
+#include "../array_2d.hpp"
+#include "../array_serve.hpp"
+#include "basic_math.hpp"
+#include "randnum.hpp"
 
 //#pragma message(__DATE__ "  " __TIME__"  正在编译"__FILE__)
 
@@ -28,7 +28,6 @@ static string Corner_double[] = { " ", " ", " ", " ", "║" };
 
 class Matrix: public Array_2d<double>
 {
-
 	public:
 		Matrix();
 		Matrix(const int row, const int column, bool if_set0 = true);
@@ -38,14 +37,12 @@ class Matrix: public Array_2d<double>
 		template <class T> Matrix(const T *src, const int row, const int column); //利用二维数组进行构造
 		Matrix(double arr[], int len, bool in_a_row = true); //利用一维数组进行构造
 
-#if __cplusplus < 201103L //C++0x
-//# pragma message("Matrix 为 C++ 11 准备的新特性: 利用初始化列表进行构造")
-#else
+#if __cplusplus >= 201103L //C++0x
 		Matrix(initializer_list<initializer_list<double>> src); //利用二维初始化列表进行构造
-		Matrix(initializer_list<double> src); //利用一维初始化列表进行构造
+		Matrix(initializer_list<double> src);//利用一维初始化列表进行构造
 
 //		Matrix(Matrix &&src); //转移构造函数
-#endif
+#endif //C++0x
 
 		Matrix(const Matrix &src); //拷贝构造函数
 
@@ -54,7 +51,28 @@ class Matrix: public Array_2d<double>
 		Matrix call(double (*__pf)(double)) const;
 
 		void print(Frame frame = Fr_RtMatrix, bool print_corner = true, ostream &output = cout) const;
-		//void print_to_file(char file_name[],bool if_output_frame) const;
+		void save(const string &file_name) const throw (runtime_error);
+		friend Matrix load_from(const string &file_name);
+
+//		friend Matrix load(const string &file_name)
+//		{
+//			ifstream fin(&file_name[0], ios::in | ios::binary);
+//			fin.ignore(24);
+//			int row;
+//			int column;
+//
+//			fin.read((char*) &row, 4);
+//			fin.read((char*) &column, 4);
+//
+//			Matrix tmp(row, column, false);
+//			for (int i = 0; i < row; i++) {
+//				for (int j = 0; j < column; j++) {
+//					fin.read((char*) (tmp.p[i] + j), 8);
+//				}
+//			}
+//			fin.close();
+//			return tmp;
+//		}
 
 		void switch_columns(const int column1, const int column2) throw (out_of_range);
 		void k_multiply_a_row(const double k, const int row_dest) throw (out_of_range);
@@ -88,7 +106,7 @@ class Matrix: public Array_2d<double>
 ////# pragma message("Matrix 为 C++ 11 准备的新特性: 转移赋值运算符")
 //#else
 //		const Matrix& operator=(Matrix &&src);
-//#endif
+//#endif //C++0x
 
 		bool operator==(const Matrix &with) const;
 		bool operator!=(const Matrix &with) const;

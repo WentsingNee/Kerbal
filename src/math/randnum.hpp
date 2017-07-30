@@ -3,12 +3,10 @@
 
 //#pragma message(__DATE__ "  " __TIME__"  е§дкБрвы"__FILE__)
 
-#include <iostream>
-#include <stdio.h>
 #include <stdlib.h>
 #include <windows.h>
 #include <cmath>
-#include "statistics.h"
+#include "statistics.hpp"
 
 using namespace std;
 

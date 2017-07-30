@@ -1,13 +1,16 @@
 #include <algorithm>
 
-#include "Matrix.h"
-#include "..\String_serve.h"
+#include "Matrix.hpp"
+
+#include "../String_serve.hpp"
 //#pragma message(__DATE__ "  " __TIME__"  正在编译"__FILE__)
 
 #if __cplusplus < 201103L //C++0x
-# pragma message("Matrix 使用了 C++ 11 新特性, 请打开 C++ 11 选项以便使用这些新特性")
-#else
-#include <initializer_list>
+# pragma message("\n"\
+"			* Matrix 使用了 C++ 11 新特性, 请打开 C++ 11 选项以便使用这些新特性\n"\
+"					* Matrix 为 C++ 11 准备的新特性: 利用一维初始化列表进行构造\n"\
+"					* Matrix 为 C++ 11 准备的新特性: 利用二维初始化列表进行构造"\
+)
 #endif //C++0x
 
 using namespace std;
@@ -92,12 +95,10 @@ Matrix::Matrix(double arr[], int len, bool in_a_row)
 	}
 }
 
-#if __cplusplus < 201103L //C++0x
-//# pragma message("Matrix 为 C++ 11 准备的新特性: 利用初始化列表进行构造")
-#else
+#if __cplusplus >= 201103L //C++0x
 Matrix::Matrix(initializer_list<initializer_list<double>> src)
 { //利用二维初始化列表进行构造
-  //扫描列数最宽的行
+//扫描列数最宽的行
 	unsigned int tmp = 0;
 	for (auto j : src) {
 		if (j.size() > tmp) {
@@ -106,14 +107,14 @@ Matrix::Matrix(initializer_list<initializer_list<double>> src)
 	}
 
 	const int row_pre = src.size(); //最终定下的行数
-	const int column_pre = tmp; //最终定下的列数
+	const int column_pre = tmp;//最终定下的列数
 
 	if (row_pre > 0 && column_pre > 0) {
 		this->row = row_pre;
 		this->column = column_pre;
 
 		//动态开辟一个以p为首地址的、row * column的二维数组
-		p = new double*[row]; //开辟行
+		p = new double*[row];//开辟行
 		auto begin_to_src = src.begin();
 		for (int i = 0; i < row; i++) {
 			double *p_to_first = p[i] = new double[column];
@@ -132,14 +133,14 @@ Matrix::Matrix(initializer_list<initializer_list<double>> src)
 
 Matrix::Matrix(initializer_list<double> src)
 { //利用一维初始化列表进行构造
-	const int column_pre = src.size(); //最终定下的列数
+	const int column_pre = src.size();//最终定下的列数
 
 	if (column_pre > 0) {
 		this->row = 1;
 		this->column = column_pre;
 
 		//动态开辟一个以p为首地址的、1 * column的二维数组
-		p = new double*[1]; //开辟行
+		p = new double*[1];//开辟行
 		double *p_to_first = p[0] = new double[column];
 		for (int i = 0; i < column; i++) {
 			p_to_first[i] = *(src.begin() + i);
@@ -164,7 +165,7 @@ Matrix::Matrix(initializer_list<double> src)
 //	src.p = NULL;
 //}
 
-#endif
+#endif //C++0x
 
 Matrix::Matrix(const Matrix &src)
 {
@@ -180,7 +181,6 @@ Matrix::Matrix(const Matrix &src)
 		for (int i = 0; i < row; i++) {
 			memcpy(p[i] = new double[column], src.p[i], size_of_a_row);
 		}
-		p[0][0] = -3.14159;
 	} else {
 		this->row = 0;
 		this->column = 0;
@@ -255,6 +255,63 @@ void Matrix::print(Frame frame, bool print_corner, ostream &output) const
 		output << " " << row << " × " << column;
 	}
 	output << endl;
+}
+
+void Matrix::save(const string &file_name) const throw (runtime_error)
+{
+	const size_t sizeof_row = sizeof(row);
+	const size_t sizeof_column = sizeof(column);
+	const size_t sizeof_element = sizeof(p[0][0]);
+
+	ofstream fout(&file_name[0], ios::out | ios::binary);
+	//输出位宽信息
+	switch (sizeof(size_t)) {
+		case 4:
+			fout.write((char*) &sizeof_row, 4);
+			fout.write("\0\0\0", 4);
+			fout.write((char*) &sizeof_column, 4);
+			fout.write("\0\0\0", 4);
+			fout.write((char*) &sizeof_element, 4);
+			fout.write("\0\0\0", 4);
+			break;
+		case 8:
+			fout.write((char*) &sizeof_row, 8);
+			fout.write((char*) &sizeof_column, 8);
+			fout.write((char*) &sizeof_element, 8);
+			break;
+		default:
+			fout.close();
+			throw runtime_error("不支持的位宽");
+	}
+
+	fout.write((char*) &row, sizeof(row));
+	fout.write((char*) &column, sizeof(column));
+	for (int i = 0; i < row; i++) {
+		for (int j = 0; j < column; j++) {
+			fout.write((char*) (p[i] + j), sizeof_element);
+		}
+	}
+	fout.close();
+}
+
+Matrix load_from(const string &file_name)
+{
+	ifstream fin(&file_name[0], ios::in | ios::binary);
+	fin.ignore(24);
+	int row;
+	int column;
+
+	fin.read((char*) &row, 4);
+	fin.read((char*) &column, 4);
+
+	Matrix tmp(row, column, false);
+	for (int i = 0; i < row; i++) {
+		for (int j = 0; j < column; j++) {
+			fin.read((char*) (tmp.p[i] + j), 8);
+		}
+	}
+	fin.close();
+	return tmp;
 }
 
 void Matrix::switch_rows(const int row1, const int row2) throw (out_of_range)
@@ -414,7 +471,8 @@ double Matrix::Det() const throw (invalid_argument)
 		case 2:
 			return p[0][0] * p[1][1] - p[0][1] * p[1][0];
 		case 3:
-			return p[0][0] * (p[1][1] * p[2][2] - p[1][2] * p[2][1]) - p[0][1] * (p[1][0] * p[2][2] - p[1][2] * p[2][0]) + p[0][2] * (p[1][0] * p[2][1] - p[1][1] * p[2][0]);
+			return p[0][0] * (p[1][1] * p[2][2] - p[1][2] * p[2][1]) - p[0][1] * (p[1][0] * p[2][2] - p[1][2] * p[2][0])
+					+ p[0][2] * (p[1][0] * p[2][1] - p[1][1] * p[2][0]);
 	}
 
 	double sum = 0.0;
@@ -792,14 +850,18 @@ double tr(const Matrix &src) throw (invalid_argument)
 void Matrix::test_row(const int row_test) const throw (out_of_range)
 {
 	if (row_test < 0 || row_test >= this->row) {
-		throw out_of_range("The " + to_string(this->row) + " × " + to_string(this->column) + " Matrix doesn't have the no." + to_string(row_test) + " row!");
+		throw out_of_range(
+				"The " + to_string(this->row) + " × " + to_string(this->column) + " Matrix doesn't have the no."
+						+ to_string(row_test) + " row!");
 	}
 }
 
 void Matrix::test_column(const int column_test) const throw (out_of_range)
 {
 	if (column_test < 0 || column_test >= this->column) {
-		throw out_of_range("The " + to_string(this->row) + " × " + to_string(this->column) + " Matrix doesn't have the no." + to_string(column_test) + " column!");
+		throw out_of_range(
+				"The " + to_string(this->row) + " × " + to_string(this->column) + " Matrix doesn't have the no."
+						+ to_string(column_test) + " column!");
 	}
 }
 

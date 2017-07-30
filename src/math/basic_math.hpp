@@ -12,9 +12,7 @@
 
 using namespace std;
 
-#if __cplusplus < 201103L
-
-#else
+#if __cplusplus >= 201103L
 const double M_E = 2.7182818284590452354;
 const double M_LOG2E = 1.4426950408889634074;
 const double M_LOG10E = 0.43429448190325182765;
@@ -53,7 +51,5 @@ int gcd(int a, int b); //返回两数的最大公约数
 int lcm(int a, int b); //返回两数的最小公倍数
 bool is_prime(int x);
 string fraction(double a);
-
-
 
 #endif	/* End _BASIC_MATH_H_ */

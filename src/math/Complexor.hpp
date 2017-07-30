@@ -13,15 +13,9 @@
 #include <cstring>
 #include <stdexcept>
 
-#include "Matrix.h"
+#include "Matrix.hpp"
 
 using namespace std;
-
-#if __cplusplus < 201103L //C++0x
-# pragma message("Complexor 使用了 C++ 11 新特性, 请打开 C++ 11 选项以便使用这些新特性")
-#else
-#include <initializer_list>
-#endif //C++0x
 
 class Complexor //: public Matrix
 {
@@ -43,9 +37,8 @@ class Complexor //: public Matrix
 		Complexor(const Matrix &src, int index = 0, const bool vertical = true);
 		Complexor(double src[], const int num, const bool vertical = true);
 
-#if __cplusplus < 201103L //C++0x
-//# pragma message("Complexor 为 C++ 11 准备的新特性: 利用初始化列表进行构造")
-#else
+#if __cplusplus >= 201103L //C++0x
+//Complexor 为 C++ 11 准备的新特性: 利用初始化列表进行构造
 		Complexor(initializer_list<double> a)
 		{
 			num = a.size();
@@ -143,7 +136,8 @@ class Complexor //: public Matrix
 
 		friend double abs(const Complexor &src); //向量的模
 
-		friend void print_array_to_file(const Complexor &src, string separator, string file_name, bool if_output_number = false) throw (invalid_argument);
+		friend void print_array_to_file(const Complexor &src, string separator, string file_name, bool if_output_number =
+				false) throw (invalid_argument);
 
 		double* const begin() const
 		{

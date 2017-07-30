@@ -4,7 +4,8 @@
 #include <iostream>
 #include <stdio.h>
 #include <math.h>
-#include "basic_math.h"
+
+#include "basic_math.hpp"
 
 using namespace std;
 

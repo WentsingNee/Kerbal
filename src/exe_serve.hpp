@@ -1,5 +1,5 @@
-#ifndef EXE_SERVE_H_
-#define EXE_SERVE_H_
+#ifndef EXE_SERVE_HPP_
+#define EXE_SERVE_HPP_
 
 //#pragma message(__DATE__ "  " __TIME__"  е§дкБрвы"__FILE__)
 
@@ -213,4 +213,4 @@ class Object
 
 };
 
-#endif	/* End EXE_SERVE_H_ */
+#endif	/* End EXE_SERVE_HPP_ */

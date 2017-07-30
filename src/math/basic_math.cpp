@@ -1,7 +1,7 @@
-#include "basic_math.h"
-#include "..\String_serve.h"
+#include "basic_math.hpp"
 
 #include <cmath>
+#include "../String_serve.hpp"
 
 using namespace std;
 

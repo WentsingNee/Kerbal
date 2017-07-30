@@ -26,8 +26,9 @@ namespace statistics
 		arr_record.push_back(Record(a, len, MaxValue, MinValue));
 	}
 
-	void Mapminmax::anti_mapminmax(double a[])		//数据逆归一化
+	void Mapminmax::anti_mapminmax(double a[])
 	{
+		//数据逆归一化
 		for (unsigned int i = 0; i < arr_record.size(); i++) {
 			if (arr_record[i].p == a) {
 				int &len = arr_record[i].len;
@@ -43,8 +44,9 @@ namespace statistics
 		}
 	}
 
-	double Mapminmax::anti_mapminmax(double a, double reference[]) throw (invalid_argument)	//数据逆归一化
+	double Mapminmax::anti_mapminmax(double a, double reference[]) throw (invalid_argument)
 	{
+		//数据逆归一化
 		for (unsigned int i = 0; i < arr_record.size(); i++) {
 			if (arr_record[i].p == reference) {
 				double &MaxValue = arr_record[i].max;

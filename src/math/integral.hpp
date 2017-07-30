@@ -6,7 +6,7 @@
 #include <iostream>
 #include <cmath>
 
-#include "statistics.h"
+#include "statistics.hpp"
 
 using namespace std;
 

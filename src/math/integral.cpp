@@ -1,6 +1,7 @@
+#include "integral.hpp"
+
 #include <cmath>
-#include "integral.h"
-#include "basic_math.h"
+#include "basic_math.hpp"
 
 using namespace std;
 

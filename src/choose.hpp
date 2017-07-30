@@ -12,9 +12,7 @@
 #include <cstdarg>
 #include <stdexcept>
 
-#if __cplusplus < 201103L //C++0x
-# pragma message("choose 使用了 C++ 11 新特性, 请打开 C++ 11 选项以便使用这些新特性")
-#else
+#if __cplusplus >= 201103L //C++0x
 # include <initializer_list>
 #endif /* End C++0x */
 
@@ -85,9 +83,8 @@ unsigned short choose(int index, unsigned short value0, ...) throw (invalid_argu
 
 float choose(int index, float value0, ...) throw (invalid_argument);
 
-#if __cplusplus < 201103L //C++0x
-//# pragma message("choose 为 C++ 11 准备的新特性: 初始化列表风格的 choose 函数")
-#else
+#if __cplusplus >= 201103L //C++0x
+//choose 为 C++ 11 准备的新特性: 初始化列表风格的 choose 函数
 template <class T>
 T choose(int index, initializer_list<T> src) throw (invalid_argument, out_of_range)
 {
@@ -98,12 +95,11 @@ T choose(int index, initializer_list<T> src) throw (invalid_argument, out_of_ran
 	}
 	return *(src.begin() + index);
 }
-#endif
+#endif //C++0x
 
-#if __cplusplus < 201103L //C++0x
-//# pragma message("choose_c11 为 C++ 11 准备的新特性: 可变参数模板风格的 choose 函数")
-#else
-namespace //匿名命名空间内的内容对文件外不可见
+#if __cplusplus >= 201103L //C++0x
+//choose_c11 为 C++ 11 准备的新特性: 可变参数模板风格的 choose 函数
+namespace//匿名命名空间内的内容对文件外不可见
 {
 //递归终止函数
 	int choose_unpack(int total)

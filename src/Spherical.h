@@ -8,7 +8,7 @@
 #include <cstdlib>
 #include <cmath>
 
-#include "math\basic_math.h"
+#include "math/basic_math.hpp"
 
 using namespace std;
 

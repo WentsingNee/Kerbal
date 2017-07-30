@@ -1,7 +1,8 @@
 #include <math.h>
 
-#include "statistics.h"
-#include "basic_math.h"
+#include "statistics.hpp"
+
+#include "basic_math.hpp"
 
 double sum(int argc, ...)
 {
