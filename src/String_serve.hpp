@@ -10,7 +10,7 @@ using namespace std;
 namespace _String
 {
 #if __cplusplus < 201103L //C++0x
-	string to_string(double x);
+string to_string(double x);
 #endif //C++0x
 }
 

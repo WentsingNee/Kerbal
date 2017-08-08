@@ -39,7 +39,7 @@ class Matrix: public Array_2d<double>
 
 #if __cplusplus >= 201103L //C++0x
 		Matrix(initializer_list<initializer_list<double>> src); //利用二维初始化列表进行构造
-		Matrix(initializer_list<double> src);//利用一维初始化列表进行构造
+		Matrix(initializer_list<double> src); //利用一维初始化列表进行构造
 
 //		Matrix(Matrix &&src); //转移构造函数
 #endif //C++0x
@@ -53,26 +53,6 @@ class Matrix: public Array_2d<double>
 		void print(Frame frame = Fr_RtMatrix, bool print_corner = true, ostream &output = cout) const;
 		void save(const string &file_name) const throw (runtime_error);
 		friend Matrix load_from(const string &file_name);
-
-//		friend Matrix load(const string &file_name)
-//		{
-//			ifstream fin(&file_name[0], ios::in | ios::binary);
-//			fin.ignore(24);
-//			int row;
-//			int column;
-//
-//			fin.read((char*) &row, 4);
-//			fin.read((char*) &column, 4);
-//
-//			Matrix tmp(row, column, false);
-//			for (int i = 0; i < row; i++) {
-//				for (int j = 0; j < column; j++) {
-//					fin.read((char*) (tmp.p[i] + j), 8);
-//				}
-//			}
-//			fin.close();
-//			return tmp;
-//		}
 
 		void switch_columns(const int column1, const int column2) throw (out_of_range);
 		void k_multiply_a_row(const double k, const int row_dest) throw (out_of_range);
@@ -117,12 +97,6 @@ class Matrix: public Array_2d<double>
 		friend Matrix Transpose(const Matrix &A);
 		friend Matrix Cofactor(const Matrix &A, const int x, const int y) throw (out_of_range); //构造方阵A的余子式A(x,y)
 		friend bool Matcmp(const Matrix &A, const Matrix &B, double eps);
-		friend inline void swap(Matrix &A, Matrix &B)
-		{
-			swap(A.row, B.row);
-			swap(A.column, B.column);
-			swap(A.p, B.p);
-		}
 
 		void test_row(const int row_test) const throw (out_of_range);
 		void test_column(const int column_test) const throw (out_of_range);
@@ -181,6 +155,8 @@ Matrix Cat(const T &a)
 		throw 0;
 	}
 }
+
+Matrix load_from(const string &file_name);
 
 //应用部分
 

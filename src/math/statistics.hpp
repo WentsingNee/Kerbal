@@ -6,7 +6,7 @@
 #include <iostream>
 #include <cmath>
 #include <cstdarg>
-#include <stdexcept>
+#include "../except_C++0x.hpp"
 
 using namespace std;
 

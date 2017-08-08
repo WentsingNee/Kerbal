@@ -7,10 +7,11 @@
 #include <cstdlib>
 #include <cstring>
 #include <cstdarg>
-#include <stdexcept>
+#include "except_C++0x.hpp"
 
 #if __cplusplus >= 201103L //C++0x
-#include <initializer_list>
+# include <initializer_list>
+# pragma GCC diagnostic ignored "-Wdeprecated"
 #endif //C++0x
 
 #include "String_serve.hpp"
@@ -165,7 +166,7 @@ class Array_2d
 
 #if __cplusplus >= 201103L //C++0x
 		Array_2d(initializer_list<initializer_list<Type>> src); //利用二维初始化列表进行构造
-		Array_2d(initializer_list<Type> src);//利用一维初始化列表进行构造
+		Array_2d(initializer_list<Type> src); //利用一维初始化列表进行构造
 #endif
 
 		Array_2d(const Array_2d &src); //拷贝构造函数
@@ -194,13 +195,21 @@ class Array_2d
 			src.print(true, true, output);
 			return output;
 		}
-		void print(bool print_frame, bool print_corner, ostream& output) const;
+		void print(bool print_frame = true, bool print_corner = true, ostream &output = cout) const;
 		//void print_to_file(char file_name[],bool if_output_frame) const;
 
 		safety<Type> operator[](int row) throw (out_of_range);
 		const safety<Type> operator[](int row) const throw (out_of_range);
 
 		size_t get_digit_size() const;
+
+		friend inline void swap(Array_2d<Type> &A, Array_2d<Type> &B)
+		{
+			swap(A.row, B.row);
+			swap(A.column, B.column);
+			swap(A.p, B.p);
+		}
+
 		void test_row(const int row_test) const throw (out_of_range);
 		void test_column(const int column_test) const throw (out_of_range);
 
@@ -341,14 +350,14 @@ Array_2d<Type>::Array_2d(initializer_list<initializer_list<Type>> src)
 	}
 
 	const int row_pre = src.size(); //最终定下的行数
-	const int column_pre = tmp;//最终定下的列数
+	const int column_pre = tmp; //最终定下的列数
 
 	if (row_pre > 0 && column_pre > 0) {
 		this->row = row_pre;
 		this->column = column_pre;
 
 		//动态开辟一个以p为首地址的、row * column的二维数组
-		p = new Type*[row];//开辟行
+		p = new Type*[row]; //开辟行
 		auto begin_to_src = src.begin();
 		for (int i = 0; i < row; i++) {
 			Type *p_to_first = p[i] = new Type[column];
@@ -369,14 +378,14 @@ template <class Type>
 Array_2d<Type>::Array_2d(initializer_list<Type> src)
 {
 	//利用一维初始化列表进行构造
-	const int column_pre = src.size();//最终定下的列数
+	const int column_pre = src.size(); //最终定下的列数
 
 	if (column_pre > 0) {
 		this->row = 1;
 		this->column = column_pre;
 
 		//动态开辟一个以p为首地址的、1 * column的二维数组
-		p = new Type*[1];//开辟行
+		p = new Type*[1]; //开辟行
 		Type *p_to_first = p[0] = new Type[column];
 		for (int i = 0; i < column; i++) {
 			p_to_first[i] = *(src.begin() + i);
@@ -602,8 +611,9 @@ Array_2d<Type>& Array_2d<Type>::operator <<(ostream& (*__pf)(ostream&))
 }
 
 template <class Type>
-void Array_2d<Type>::print(bool print_frame = true, bool print_corner = true, ostream &output = cout) const
+void Array_2d<Type>::print(bool print_frame, bool print_corner, ostream &output) const
 {
+	//void Array_2d<Type>::print(bool print_frame = true, bool print_corner = true, ostream &output = cout) const
 	int i, j;
 	output << resetiosflags(ios::right) << setiosflags(ios::left) << setfill(' '); //清除右对齐, 设置左对齐, 设置不足补空格
 

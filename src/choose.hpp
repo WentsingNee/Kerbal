@@ -10,7 +10,7 @@
 #define CHOOSE_HPP_
 
 #include <cstdarg>
-#include <stdexcept>
+#include "except_C++0x.hpp"
 
 #if __cplusplus >= 201103L //C++0x
 # include <initializer_list>

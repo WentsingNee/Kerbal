@@ -202,7 +202,7 @@ Matrix Matrix::call(double (*__pf)(double)) const
 	Matrix result(row, column, false);
 	for (int i = 0; i < row; i++) {
 		for (int j = 0; j < column; j++) {
-			result[i][j] = __pf(p[i][j]);
+			result.p[i][j] = __pf(p[i][j]);
 		}
 	}
 	return result;

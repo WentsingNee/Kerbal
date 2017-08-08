@@ -11,7 +11,7 @@
 #include <iostream>
 #include <iomanip>
 #include <cstring>
-#include <stdexcept>
+#include "../except_C++0x.hpp"
 
 #include "Matrix.hpp"
 

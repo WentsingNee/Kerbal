@@ -7,12 +7,13 @@
 
 #include <iostream>
 #include <cmath>
-#include <stdexcept>
-#include "String.h"
+#include "../except_C++0x.hpp"
+#include <string>
 
 using namespace std;
 
-#if __cplusplus >= 201103L
+//#if __cplusplus >= 201103L
+#ifndef M_E
 const double M_E = 2.7182818284590452354;
 const double M_LOG2E = 1.4426950408889634074;
 const double M_LOG10E = 0.43429448190325182765;

@@ -2,7 +2,6 @@
 #define _BIG_H_
 
 #include <iostream>
-#include <stdio.h>
 #include <math.h>
 
 #include "basic_math.hpp"
