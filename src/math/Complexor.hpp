@@ -1,7 +1,7 @@
 /*
  * Complexor.h
  *
- *  Created on: 2017Äê5ÔÂ8ÈÕ
+ *  Created on: 2017å¹´5æœˆ8æ—¥
  *      Author: Peter
  */
 
@@ -22,7 +22,7 @@ class Complexor //: public Matrix
 	protected:
 		double *p;
 		int num;
-		bool vertical; //Ä¬ÈÏÁĞÏòÁ¿
+		bool vertical; //é»˜è®¤åˆ—å‘é‡
 
 		void test_index(int num_test) const throw (out_of_range)
 		{
@@ -38,7 +38,7 @@ class Complexor //: public Matrix
 		Complexor(double src[], const int num, const bool vertical = true);
 
 #if __cplusplus >= 201103L //C++0x
-//Complexor Îª C++ 11 ×¼±¸µÄĞÂÌØĞÔ: ÀûÓÃ³õÊ¼»¯ÁĞ±í½øĞĞ¹¹Ôì
+//Complexor ä¸º C++ 11 å‡†å¤‡çš„æ–°ç‰¹æ€§: åˆ©ç”¨åˆå§‹åŒ–åˆ—è¡¨è¿›è¡Œæ„é€ 
 		Complexor(initializer_list<double> a)
 		{
 			num = a.size();
@@ -96,7 +96,7 @@ class Complexor //: public Matrix
 
 		void print() const
 		{
-			cout << resetiosflags(ios::right) << setiosflags(ios::left) << setfill(' '); //Çå³ıÓÒ¶ÔÆë, ÉèÖÃ×ó¶ÔÆë, ÉèÖÃ²»×ã²¹¿Õ¸ñ
+			cout << resetiosflags(ios::right) << setiosflags(ios::left) << setfill(' '); //æ¸…é™¤å³å¯¹é½, è®¾ç½®å·¦å¯¹é½, è®¾ç½®ä¸è¶³è¡¥ç©ºæ ¼
 			cout << "(";
 
 			if (!empty()) {
@@ -118,23 +118,23 @@ class Complexor //: public Matrix
 			return num * sizeof(double);
 		}
 
-		friend Complexor operator+(const Complexor &a, const Complexor &b) throw (invalid_argument); //ÏòÁ¿¼Ó·¨, ·µ»ØÁĞÏòÁ¿
-		friend Complexor operator-(const Complexor &a, const Complexor &b) throw (invalid_argument); //ÏòÁ¿¼õ·¨, ·µ»ØÁĞÏòÁ¿
-		Complexor operator-() const; //·µ»ØÏòÁ¿µÄ·´ÏòÍ¬³¤ÏòÁ¿
+		friend Complexor operator+(const Complexor &a, const Complexor &b) throw (invalid_argument); //å‘é‡åŠ æ³•, è¿”å›åˆ—å‘é‡
+		friend Complexor operator-(const Complexor &a, const Complexor &b) throw (invalid_argument); //å‘é‡å‡æ³•, è¿”å›åˆ—å‘é‡
+		Complexor operator-() const; //è¿”å›å‘é‡çš„åå‘åŒé•¿å‘é‡
 		const Complexor& operator=(const Complexor &src);
 		double& operator[](int index) throw (out_of_range);
 		const double& operator[](int index) const throw (out_of_range);
 
 		friend Complexor Transpose(const Complexor &src);
 
-		friend Complexor operator*(const Matrix &M, const Complexor &V) throw (invalid_argument); //¾ØÕó³ËÒÔÁĞÏòÁ¿, ·µ»ØÏòÁ¿
-		friend Complexor operator*(const Complexor &V, const Matrix &M) throw (invalid_argument); //ĞĞÏòÁ¿³ËÒÔ¾ØÕó, ·µ»ØÏòÁ¿
-		friend double dot_product(const Complexor &a, const Complexor &b) throw (invalid_argument); //ÏòÁ¿µã»ı, ·µ»ØÊµÊı
-		friend Matrix operator*(const Complexor &a, const Complexor &b) throw (invalid_argument); //ÏòÁ¿³ËÒÔÏòÁ¿, ·µ»Ø¾ØÕó
-		friend Complexor operator*(const int &k, const Complexor &b); //Êık³ËÒÔÏòÁ¿
-		friend Complexor operator*(const Complexor &b, const int &k); //ÏòÁ¿³ËÒÔÊık
+		friend Complexor operator*(const Matrix &M, const Complexor &V) throw (invalid_argument); //çŸ©é˜µä¹˜ä»¥åˆ—å‘é‡, è¿”å›å‘é‡
+		friend Complexor operator*(const Complexor &V, const Matrix &M) throw (invalid_argument); //è¡Œå‘é‡ä¹˜ä»¥çŸ©é˜µ, è¿”å›å‘é‡
+		friend double dot_product(const Complexor &a, const Complexor &b) throw (invalid_argument); //å‘é‡ç‚¹ç§¯, è¿”å›å®æ•°
+		friend Matrix operator*(const Complexor &a, const Complexor &b) throw (invalid_argument); //å‘é‡ä¹˜ä»¥å‘é‡, è¿”å›çŸ©é˜µ
+		friend Complexor operator*(const int &k, const Complexor &b); //æ•°kä¹˜ä»¥å‘é‡
+		friend Complexor operator*(const Complexor &b, const int &k); //å‘é‡ä¹˜ä»¥æ•°k
 
-		friend double abs(const Complexor &src); //ÏòÁ¿µÄÄ£
+		friend double abs(const Complexor &src); //å‘é‡çš„æ¨¡
 
 		friend void print_array_to_file(const Complexor &src, string separator, string file_name, bool if_output_number =
 				false) throw (invalid_argument);
@@ -150,7 +150,7 @@ class Complexor //: public Matrix
 		}
 };
 double operator^(const Complexor &a, const Complexor &b) throw (invalid_argument);
-//ÏòÁ¿¼Ğ½Ç
+//å‘é‡å¤¹è§’
 Complexor eqution(Matrix m) throw (invalid_argument);
 
 #endif /* COMPLEXOR_H_ */

@@ -17,12 +17,12 @@ namespace complex
 	class Complex
 	{
 		public:
-			//³ÉÔ±
+			//æˆå‘˜
 			double real;
 			double imag;
 
 			Complex(double real = 0.0, double imag = 0.0)
-			{ //³õÊ¼»¯
+			{ //åˆå§‹åŒ–
 				this->real = real;
 				this->imag = imag;
 			}
@@ -40,13 +40,13 @@ namespace complex
 				}
 			}
 
-			//·½·¨
+			//æ–¹æ³•
 			string to_string() const;
 			void display() const;
-			double moudle() const; //·µ»Ø¸´ÊıµÄÄ£³¤
-			double argz() const; //·µ»Ø¸´ÊıµÄ·ù½Ç
+			double moudle() const; //è¿”å›å¤æ•°çš„æ¨¡é•¿
+			double argz() const; //è¿”å›å¤æ•°çš„å¹…è§’
 
-			//ÔËËã·ûÖØÔØ
+			//è¿ç®—ç¬¦é‡è½½
 			friend Complex operator+(const Complex &a, const Complex &b);
 			friend Complex operator+(const Complex &a, double b);
 			friend Complex operator+(double a, const Complex &b);
@@ -75,24 +75,24 @@ namespace complex
 			friend istream& operator >>(istream &input, Complex &z);
 
 			friend Complex operator-(const Complex &a);
-			friend Complex operator~(const Complex &a); //¼ÆËãÒ»¸ö¸´ÊıµÄ¹²éî¸´Êı
+			friend Complex operator~(const Complex &a); //è®¡ç®—ä¸€ä¸ªå¤æ•°çš„å…±è½­å¤æ•°
 	};
 
 	const Complex imag(0, 1.0);
 
-	//º¯Êı
+	//å‡½æ•°
 
-	Complex trans(double r, double thita); //¸ù¾İÄ£³¤ºÍ·ù½Ç·µ»ØÒ»¸ö¸´Êı
-	Complex zpow(const Complex &z, int n); //¼ÆËãÒ»¸ö¸´ÊıµÄÃİ
-	Complex zln(const Complex &z); //¼ÆËãÒ»¸ö¸´ÊıµÄ×ÔÈ»¶ÔÊıµÄÖ÷ÖµLnz=lnz+2*k*pi*i , lnz=ln|z|+i*argz(z)
+	Complex trans(double r, double thita); //æ ¹æ®æ¨¡é•¿å’Œå¹…è§’è¿”å›ä¸€ä¸ªå¤æ•°
+	Complex zpow(const Complex &z, int n); //è®¡ç®—ä¸€ä¸ªå¤æ•°çš„å¹‚
+	Complex zln(const Complex &z); //è®¡ç®—ä¸€ä¸ªå¤æ•°çš„è‡ªç„¶å¯¹æ•°çš„ä¸»å€¼Lnz=lnz+2*k*pi*i , lnz=ln|z|+i*argz(z)
 	string to_string(const Complex &z);
 
 	void quac_equ(double a, double b, double c, Complex &x1, Complex &x2, short &num) throw (invalid_argument);
-//Ò»Ôª¶ş´Î·½³Ì
+//ä¸€å…ƒäºŒæ¬¡æ–¹ç¨‹
 
 } /* End of namespace complex */
 using namespace complex;
 
-//#pragma message(__DATE__ "  " __TIME__"  ±àÒëÍê³É"__FILE__)
+//#pragma message(__DATE__ "  " __TIME__"  ç¼–è¯‘å®Œæˆ"__FILE__)
 
 #endif	/* End _COMPLEX_H_ */

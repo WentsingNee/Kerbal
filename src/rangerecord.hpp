@@ -1,26 +1,26 @@
 /*
  * range.hpp
  *
- *  Created on: 2017Äê7ÔÂ17ÈÕ
+ *  Created on: 2017å¹´7æœˆ17æ—¥
  *      Author: Peter
- *      Fuction: ±¾ÎÄ¼şÌá¹©ÁË¶Ô range µÄÖ§³Ö, Ê¹µÃ¿ÉÒÔÏñ Python ÖĞÒ»ÑùÊ¹ÓÃ for_each ·ç¸ñµÄÑ­»·¡£
- *      		  ±¾ÎÄ¼şĞèÒª C++ 11 ¼°ÒÔÉÏ°æ±¾±àÒëÆ÷µÄÖ§³Ö
+ *      Fuction: æœ¬æ–‡ä»¶æä¾›äº†å¯¹ range çš„æ”¯æŒ, ä½¿å¾—å¯ä»¥åƒ Python ä¸­ä¸€æ ·ä½¿ç”¨ for_each é£æ ¼çš„å¾ªç¯ã€‚
+ *      		  æœ¬æ–‡ä»¶éœ€è¦ C++ 11 åŠä»¥ä¸Šç‰ˆæœ¬ç¼–è¯‘å™¨çš„æ”¯æŒ
  *
- * Python µÄÑ­»·
+ * Python çš„å¾ªç¯
  * for i in range(10, 20):
  *     print(i)
  *
- * C++ 11 ·ç¸ñ
+ * C++ 11 é£æ ¼
  * for (int i : range(10, 20)) {
  *     cout << i << endl;
  * }
  *
  *
- * Python µÄÑ­»·
+ * Python çš„å¾ªç¯
  * for i in range(10):
  *     print(i)
  *
- * C++ 11 ·ç¸ñ
+ * C++ 11 é£æ ¼
  * for (int i : range(10)) {
  *     cout << i << endl;
  * }
@@ -41,56 +41,56 @@ namespace Range
 	class it final
 	{
 		protected:
-		int now, step;
+			int now, step;
 
-		it(int now, int step = 1)
-		{
-			this->now = now;
-			this->step = step;
-		}
+			it(int now, int step = 1)
+			{
+				this->now = now;
+				this->step = step;
+			}
 
-		friend class Range_record;
+			friend class Range_record;
 
 		public:
-		int operator*() const
-		{
-			return now;
-		}
+			int operator*() const
+			{
+				return now;
+			}
 
-		it& operator++()
-		{
-			//Ç°×ÔÔö
-			now += step;
-			return *this;
-		}
+			it& operator++()
+			{
+				//å‰è‡ªå¢
+				now += step;
+				return *this;
+			}
 
-		bool operator!=(const it &with) const
-		{
-			return this->now != with.now;
-		}
+			bool operator!=(const it &with) const
+			{
+				return this->now != with.now;
+			}
 	};
 
 	class Range_record final
 	{
 		protected:
-		int from, to, step;
+			int from, to, step;
 
-		Range_record(int to);
-		Range_record(int from, int to, int step = 1);
+			Range_record(int to);
+			Range_record(int from, int to, int step = 1);
 
-		friend Range_record range(int to);
-		friend Range_record range(int from, int to, int step);
+			friend Range_record range(int to);
+			friend Range_record range(int from, int to, int step);
 
 		public:
-		it begin() const
-		{
-			return it(from, step);
-		}
+			it begin() const
+			{
+				return it(from, step);
+			}
 
-		it end() const
-		{
-			return it(to, step);
-		}
+			it end() const
+			{
+				return it(to, step);
+			}
 	};
 
 	inline Range_record range(int from, int to, int step = 1)

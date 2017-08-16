@@ -1,7 +1,7 @@
 #ifndef _SORT_H_
 #define _SORT_H_
 
-//#pragma message(__DATE__ "  " __TIME__"  ÕıÔÚ±àÒë"__FILE__)
+//#pragma message(__DATE__ "  " __TIME__"  æ­£åœ¨ç¼–è¯‘"__FILE__)
 
 #include <iostream>
 #include <windows.h>
@@ -9,8 +9,8 @@
 
 using namespace std;
 
-template <class T> unsigned long bubble_sort(T a[], unsigned int len, bool order); //orderÎªÕæ´ÓĞ¡µ½´ó£¬Îª¼Ù´Ó´óµ½Ğ¡
-template <class T> unsigned long merge_sort(T a[], unsigned int len, bool order); //orderÎªÕæ´ÓĞ¡µ½´ó£¬Îª¼Ù´Ó´óµ½Ğ¡
+template <class T> unsigned long bubble_sort(T a[], unsigned int len, bool order); //orderä¸ºçœŸä»å°åˆ°å¤§ï¼Œä¸ºå‡ä»å¤§åˆ°å°
+template <class T> unsigned long merge_sort(T a[], unsigned int len, bool order); //orderä¸ºçœŸä»å°åˆ°å¤§ï¼Œä¸ºå‡ä»å¤§åˆ°å°
 
 template <class T>
 unsigned long bubble_sort(T a[], unsigned int len, bool order)
@@ -18,9 +18,9 @@ unsigned long bubble_sort(T a[], unsigned int len, bool order)
 	unsigned long k = GetTickCount();
 	bool swit = true;
 
-	for (register int i = 1; i < len && swit; i++) {
+	for (int i = 1; i < len && swit; i++) {
 		swit = false;
-		for (register int j = 0; j < len - i; j++) {
+		for (int j = 0; j < len - i; j++) {
 			if (order == (a[j] > a[j + 1])) {
 				swit = true;
 				swap(a[j], a[j + 1]);
@@ -32,7 +32,7 @@ unsigned long bubble_sort(T a[], unsigned int len, bool order)
 }
 
 template <class T>
-void merge(T* a, int len, bool order, T* temp) //orderÎªÕæ´ÓĞ¡µ½´ó£¬Îª¼Ù´Ó´óµ½Ğ¡
+void merge(T* a, int len, bool order, T* temp) //orderä¸ºçœŸä»å°åˆ°å¤§ï¼Œä¸ºå‡ä»å¤§åˆ°å°
 {
 	if (len > 2) {
 		merge(a, len / 2, order, temp);
@@ -65,7 +65,7 @@ void merge(T* a, int len, bool order, T* temp) //orderÎªÕæ´ÓĞ¡µ½´ó£¬Îª¼Ù´Ó´óµ½Ğ¡
 }
 
 template <class T>
-unsigned long merge_sort(T a[], int len, bool order) //orderÎªÕæ´ÓĞ¡µ½´ó£¬Îª¼Ù´Ó´óµ½Ğ¡
+unsigned long merge_sort(T a[], int len, bool order) //orderä¸ºçœŸä»å°åˆ°å¤§ï¼Œä¸ºå‡ä»å¤§åˆ°å°
 {
 	unsigned long k = GetTickCount();
 	T *temp = NULL;
@@ -76,7 +76,7 @@ unsigned long merge_sort(T a[], int len, bool order) //orderÎªÕæ´ÓĞ¡µ½´ó£¬Îª¼Ù´Ó
 	if (len > 2) {
 		temp = new T[len];
 
-		merge(a, len, order, temp); //²»ÒªÔÙ¸Ä³ÉÁ½ÌõÁË£¡£¡£¡
+		merge(a, len, order, temp); //ä¸è¦å†æ”¹æˆä¸¤æ¡äº†ï¼ï¼ï¼
 
 		delete[] temp;
 

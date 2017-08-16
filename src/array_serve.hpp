@@ -1,7 +1,7 @@
 #ifndef _ARRAY_SERVE_H_
 #define _ARRAY_SERVE_H_
 
-//#pragma message(__DATE__ "  " __TIME__"  ÕýÔÚ±àÒë"__FILE__)
+//#pragma message(__DATE__ "  " __TIME__"  æ­£åœ¨ç¼–è¯‘"__FILE__)
 
 #include <iostream>
 #include <string>

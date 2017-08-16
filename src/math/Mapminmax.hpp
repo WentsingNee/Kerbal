@@ -1,9 +1,9 @@
 /*
  * Mapminmax.hpp
  *
- *  Created on: 2017Äê7ÔÂ13ÈÕ
+ *  Created on: 2017å¹´7æœˆ13æ—¥
  *      Author: Peter
- *      Fuction: ±¾ÎÄ¼şÌá¹©ÁË¶ÔÊı¾İ¹éÒ»»¯ÓëÄæ¹éÒ»»¯µÄÖ§³Ö
+ *      Fuction: æœ¬æ–‡ä»¶æä¾›äº†å¯¹æ•°æ®å½’ä¸€åŒ–ä¸é€†å½’ä¸€åŒ–çš„æ”¯æŒ
  */
 
 #ifndef MAPMINMAX_HPP_
@@ -39,7 +39,7 @@ namespace statistics
 			static vector<Record> arr_record;
 		public:
 			static void mapminmax(double a[], int len);
-			static void anti_mapminmax(double a[]);		//Êı¾İÄæ¹éÒ»»¯
+			static void anti_mapminmax(double a[]);		//æ•°æ®é€†å½’ä¸€åŒ–
 			static double anti_mapminmax(double a, double reference[]) throw (invalid_argument);
 	};
 
@@ -48,13 +48,13 @@ using namespace statistics;
 
 inline void mapminmax(double a[], int len)
 {
-	//Êı¾İ¹éÒ»»¯
+	//æ•°æ®å½’ä¸€åŒ–
 	Mapminmax::mapminmax(a, len);
 }
 
 inline void anti_mapminmax(double a[])
 {
-	//Êı¾İÄæ¹éÒ»»¯
+	//æ•°æ®é€†å½’ä¸€åŒ–
 	Mapminmax::anti_mapminmax(a);
 }
 
@@ -65,8 +65,8 @@ inline double anti_mapminmax(double a, double reference[]) throw (invalid_argume
 
 inline double map(double X, double x1, double y1, double x2, double y2)
 {
-//	mapµÄ×÷ÓÃÊÇ½«Ò»¸ö±äÁ¿´ÓËü×Ô¼º±¾ÉíµÄ·¶Î§×ª»¯µ½ÁíÒ»¸ö·¶Î§¡£¿ÉÒÔÎªmap(X,x1,y1,x2,y2)
-//	XÎªÒ»¸öĞèÒª×ª»¯µÄ±äÁ¿¡£x1,y1ÎªÕâ¸ö±äÁ¿±¾À´µÄ·¶Î§¡£x2,y2ÎªÕâ¸ö±äÁ¿ÒªÓ³Éäµ½µÃ·¶Î§¡£
+//	mapçš„ä½œç”¨æ˜¯å°†ä¸€ä¸ªå˜é‡ä»å®ƒè‡ªå·±æœ¬èº«çš„èŒƒå›´è½¬åŒ–åˆ°å¦ä¸€ä¸ªèŒƒå›´ã€‚å¯ä»¥ä¸ºmap(X,x1,y1,x2,y2)
+//	Xä¸ºä¸€ä¸ªéœ€è¦è½¬åŒ–çš„å˜é‡ã€‚x1,y1ä¸ºè¿™ä¸ªå˜é‡æœ¬æ¥çš„èŒƒå›´ã€‚x2,y2ä¸ºè¿™ä¸ªå˜é‡è¦æ˜ å°„åˆ°å¾—èŒƒå›´ã€‚
 	return (X - x1) / (y1 - x1) * (y2 - x2) + x2;
 }
 

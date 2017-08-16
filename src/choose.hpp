@@ -1,9 +1,9 @@
 /*
  * choose.hpp
  *
- *  Created on: 2017Äê7ÔÂ8ÈÕ
+ *  Created on: 2017å¹´7æœˆ8æ—¥
  *      Author: Peter
- *      Fuction: Ìá¹©¶Ô choose º¯ÊıµÄÖ§³Ö
+ *      Fuction: æä¾›å¯¹ choose å‡½æ•°çš„æ”¯æŒ
  */
 
 #ifndef CHOOSE_HPP_
@@ -27,7 +27,7 @@ T choose(int index, T value0, ...) throw (invalid_argument)
 		return value0;
 	}
 
-	va_list arg_ptr; //Ö¸Ïò²ÎÊıµÄÖ¸Õë
+	va_list arg_ptr; //æŒ‡å‘å‚æ•°çš„æŒ‡é’ˆ
 	va_start(arg_ptr, value0);
 
 	for (int i = 1; i < index; i++) {
@@ -38,7 +38,7 @@ T choose(int index, T value0, ...) throw (invalid_argument)
 }
 
 /*
- * ÎªºÎÒªÎª [signed/unsigned]char , [unsigned]short , float ÀàĞÍµ¥¶ÀĞ´ choose º¯Êı, Çë²Î¿¼:
+ * ä¸ºä½•è¦ä¸º [signed/unsigned]char , [unsigned]short , float ç±»å‹å•ç‹¬å†™ choose å‡½æ•°, è¯·å‚è€ƒ:
  * http://www.cppblog.com/ownwaterloo/archive/2009/04/21/unacceptable_type_in_va_arg.html
  */
 namespace
@@ -53,25 +53,25 @@ namespace
 		}
 
 		for (int i = 1; i < index; i++) {
-			va_arg(arg_ptr, int);
-		}
-		return va_arg(arg_ptr, int);
+		va_arg(arg_ptr, int);
 	}
+return va_arg(arg_ptr, int);
+}
 
-	template <class T>
-	T choose_float(int index, const T &value0, va_list &arg_ptr) throw (invalid_argument)
-	{
-		if (index < 0) {
-			throw invalid_argument("index<0");
-		} else if (index == 0) {
-			return value0;
-		}
+template <class T>
+T choose_float(int index, const T &value0, va_list &arg_ptr) throw (invalid_argument)
+{
+if (index < 0) {
+	throw invalid_argument("index<0");
+} else if (index == 0) {
+	return value0;
+}
 
-		for (int i = 1; i < index; i++) {
-			va_arg(arg_ptr, double);
-		}
-		return va_arg(arg_ptr, double);
-	}
+for (int i = 1; i < index; i++) {
+va_arg(arg_ptr, double);
+}
+return va_arg(arg_ptr, double);
+}
 }
 
 char choose(int index, char value0, ...) throw (invalid_argument);
@@ -84,53 +84,53 @@ unsigned short choose(int index, unsigned short value0, ...) throw (invalid_argu
 float choose(int index, float value0, ...) throw (invalid_argument);
 
 #if __cplusplus >= 201103L //C++0x
-//choose Îª C++ 11 ×¼±¸µÄĞÂÌØĞÔ: ³õÊ¼»¯ÁĞ±í·ç¸ñµÄ choose º¯Êı
+//choose ä¸º C++ 11 å‡†å¤‡çš„æ–°ç‰¹æ€§: åˆå§‹åŒ–åˆ—è¡¨é£æ ¼çš„ choose å‡½æ•°
 template <class T>
 T choose(int index, initializer_list<T> src) throw (invalid_argument, out_of_range)
 {
-	if (index < 0) {
-		throw invalid_argument("index<0");
-	} else if (index >= src.size()) {
-		throw out_of_range("index is out of range");
-	}
-	return *(src.begin() + index);
+if (index < 0) {
+throw invalid_argument("index<0");
+} else if (index >= src.size()) {
+throw out_of_range("index is out of range");
+}
+return *(src.begin() + index);
 }
 #endif //C++0x
 
 #if __cplusplus >= 201103L //C++0x
-//choose_c11 Îª C++ 11 ×¼±¸µÄĞÂÌØĞÔ: ¿É±ä²ÎÊıÄ£°å·ç¸ñµÄ choose º¯Êı
-namespace//ÄäÃûÃüÃû¿Õ¼äÄÚµÄÄÚÈİ¶ÔÎÄ¼şÍâ²»¿É¼û
+//choose_c11 ä¸º C++ 11 å‡†å¤‡çš„æ–°ç‰¹æ€§: å¯å˜å‚æ•°æ¨¡æ¿é£æ ¼çš„ choose å‡½æ•°
+namespace //åŒ¿åå‘½åç©ºé—´å†…çš„å†…å®¹å¯¹æ–‡ä»¶å¤–ä¸å¯è§
 {
-//µİ¹éÖÕÖ¹º¯Êı
-	int choose_unpack(int total)
-	{
-		cerr << "end" << endl;
-		return 0;
-	}
+//é€’å½’ç»ˆæ­¢å‡½æ•°
+int choose_unpack(int total)
+{
+cerr << "end" << endl;
+return 0;
+}
 
-//Õ¹¿ªº¯Êı
-	template <class T, class ...Args>
-	T choose_unpack(int total, T head, Args ... rest)
-	{
-		if (total == 0) {
-			return head;
-		} else {
-			return (T) choose_unpack(total - 1, rest...);
-		}
-	}
+//å±•å¼€å‡½æ•°
+template <class T, class ...Args>
+T choose_unpack(int total, T head, Args ... rest)
+{
+if (total == 0) {
+return head;
+} else {
+return (T) choose_unpack(total - 1, rest...);
+}
+}
 }
 
 template <class T, class ...Args>
 T choose_c11(int index, T head, Args ... args) throw (invalid_argument, out_of_range)
 {
-	if (index < 0) {
-		throw invalid_argument("index<0");
-	} else if (index > (int) sizeof...(Args)) {
-		throw out_of_range("index is out of range");
-	} else if (index == 0) {
-		return head;
-	}
-	return choose_unpack(index - 1, args...);
+if (index < 0) {
+throw invalid_argument("index<0");
+} else if (index > (int) sizeof...(Args)) {
+throw out_of_range("index is out of range");
+} else if (index == 0) {
+return head;
+}
+return choose_unpack(index - 1, args...);
 }
 #endif
 

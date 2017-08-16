@@ -10,19 +10,19 @@ double dy(double x, double dx, double (*f)(double))
 	return (*f)(x + dx) - (*f)(x);
 }
 
-double derivative(double x, double (*f)(double), double dx) //µ¼Êı
+double derivative(double x, double (*f)(double), double dx) //å¯¼æ•°
 {
-	//double x, double (*f)(double), double dx Ä¬ÈÏ = 0.001
+	//double x, double (*f)(double), double dx é»˜è®¤ = 0.001
 	//double dx=-0.001;
 	return ((*f)(x + dx) - (*f)(x - dx)) / dx / 2.0;
 }
 
-double ladder(double a, double b, double dx, double (*f)(double)) //ÌİĞÎ·¨»ı·Ö
+double ladder(double a, double b, double dx, double (*f)(double)) //æ¢¯å½¢æ³•ç§¯åˆ†
 {
 	if (a == b) {
 		return 0;
 	}
-	const unsigned int n = fabs(round((b - a) / dx, 0)); //µ÷Õûdx
+	const unsigned int n = fabs(round((b - a) / dx, 0)); //è°ƒæ•´dx
 	dx = (b - a) / n;
 
 	double sum = 0.0, x = a;
@@ -34,29 +34,29 @@ double ladder(double a, double b, double dx, double (*f)(double)) //ÌİĞÎ·¨»ı·Ö
 	return sum * dx;
 }
 
-double simpson(double a, double b, double dx, double (*f)(double)) //ĞÁÆÕÉú¹«Ê½»ı·Ö
+double simpson(double a, double b, double dx, double (*f)(double)) //è¾›æ™®ç”Ÿå…¬å¼ç§¯åˆ†
 {
 	if (a == b) {
 		return 0.0;
 	}
 
-	const unsigned int n = fabs(round((b - a) / dx, 0)); //µ÷Õûdx
+	const unsigned int n = fabs(round((b - a) / dx, 0)); //è°ƒæ•´dx
 	dx = (b - a) / n;
 
 	double sum_odd = 0.0, sum_double = 0.0, x = a;
 	for (unsigned int i = 1; i < n; i++) {
 		x += dx;
 		if (i % 2) {
-			sum_odd += (*f)(x); //iÎªÆæÊı
+			sum_odd += (*f)(x); //iä¸ºå¥‡æ•°
 		} else {
-			sum_double += (*f)(x); //iÎªÅ¼Êı
+			sum_double += (*f)(x); //iä¸ºå¶æ•°
 		}
 	}
 
 	return ((*f)(a) + (*f)(b) + 2 * sum_double + 4 * sum_odd) * dx / 3;
 }
 
-double std_normdist_integral(double b, double dx) //±ê×¼ÕıÌ¬·Ö²¼»ı·Ö
+double std_normdist_integral(double b, double dx) //æ ‡å‡†æ­£æ€åˆ†å¸ƒç§¯åˆ†
 {
 	if (b == 0.0) {
 		return 0.5;
@@ -85,13 +85,13 @@ double std_normdist_integral(double b, double dx) //±ê×¼ÕıÌ¬·Ö²¼»ı·Ö
 	return result;
 }
 
-double B(int n) //¼ÆËã²®Å¬ÀûÊı
+double B(int n) //è®¡ç®—ä¼¯åŠªåˆ©æ•°
 {
 	if (n == 1) {
 		//cout<<"B("<<n<<")=-1/2"<<endl;
 		return -0.5;
 	}
-	if (n % 2) { //nÆæ
+	if (n % 2) { //nå¥‡
 		//cout<<"B("<<n<<")=0"<<endl;
 		return 0.0;
 	}
@@ -99,7 +99,7 @@ double B(int n) //¼ÆËã²®Å¬ÀûÊı
 		//cout<<"B("<<n<<")=1"<<endl;
 		return 1;
 	}
-	//nÎª2£¬4£¬6£¬8£¬10...
+	//nä¸º2ï¼Œ4ï¼Œ6ï¼Œ8ï¼Œ10...
 	double result = 0.0;
 	result += 1.0;		//broad_combine(n+1,0)*B(0)
 	result += (n + 1) / (-2.0);		//broad_combine(n+1,1)*B(1)
@@ -120,7 +120,7 @@ double B(int n) //¼ÆËã²®Å¬ÀûÊı
 	return result;
 }
 
-double Stirling(double x) //Ë¹ÌØÁÖ¹«Ê½
+double Stirling(double x) //æ–¯ç‰¹æ—å…¬å¼
 {
 	return sqrt(2 * M_PI) * exp(-x) * pow(x, x + 0.5);
 }

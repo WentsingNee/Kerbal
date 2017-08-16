@@ -3,7 +3,7 @@
 #ifndef _BASIC_MATH_H_
 #define _BASIC_MATH_H_
 
-//#pragma message(__DATE__ "  " __TIME__"  ÕıÔÚ±àÒë"__FILE__)
+//#pragma message(__DATE__ "  " __TIME__"  æ­£åœ¨ç¼–è¯‘"__FILE__)
 
 #include <iostream>
 #include <cmath>
@@ -30,7 +30,7 @@ const double M_SQRT1_2 = 0.70710678118654752440;
 #endif
 
 double round(double x, int digits);
-inline bool diff(int m, int n) //m,nÊÇ·ñÒìºÅ
+inline bool diff(int m, int n) //m,næ˜¯å¦å¼‚å·
 {
 	return ((unsigned) (m ^ n) >> (8 * sizeof(int) - 1));
 }
@@ -45,11 +45,11 @@ inline float decimal(float a)
 	return a - (int) a;
 }
 
-double baremainder(double x, double y); //·µ»ØÁ½ÊıÏà³ıµÄÓàÊı¡£½á¹ûµÄ·ûºÅÓë³ıÊıÏàÍ¬
+double baremainder(double x, double y); //è¿”å›ä¸¤æ•°ç›¸é™¤çš„ä½™æ•°ã€‚ç»“æœçš„ç¬¦å·ä¸é™¤æ•°ç›¸åŒ
 unsigned short float_num(double a, double digits); //BUG
 double up(double x, int digits);
-int gcd(int a, int b); //·µ»ØÁ½ÊıµÄ×î´ó¹«Ô¼Êı
-int lcm(int a, int b); //·µ»ØÁ½ÊıµÄ×îĞ¡¹«±¶Êı
+int gcd(int a, int b); //è¿”å›ä¸¤æ•°çš„æœ€å¤§å…¬çº¦æ•°
+int lcm(int a, int b); //è¿”å›ä¸¤æ•°çš„æœ€å°å…¬å€æ•°
 bool is_prime(int x);
 string fraction(double a);
 

@@ -10,15 +10,15 @@ void program_start(bool is_debug)
 	start_time = GetTickCount();
 	ios::sync_with_stdio(false);
 	cin.tie(0);
-	cout << PRODUCT_NAME << " [°æ±¾ " << VER_STRING << "]\n" << "(c) " << COMPANY_NAME << "¡£±£ÁôËùÓÐÈ¨Àû¡£" << endl;
+	cout << PRODUCT_NAME << " [ç‰ˆæœ¬ " << VER_STRING << "]\n" << "(c) " << COMPANY_NAME << "ã€‚ä¿ç•™æ‰€æœ‰æƒåˆ©ã€‚" << endl;
 	/*
-	 Microsoft Windows [°æ±¾ 10.0.14393]
-	 (c) 2016 Microsoft Corporation¡£±£ÁôËùÓÐÈ¨Àû¡£
+	 Microsoft Windows [ç‰ˆæœ¬ 10.0.14393]
+	 (c) 2016 Microsoft Corporationã€‚ä¿ç•™æ‰€æœ‰æƒåˆ©ã€‚
 	 */
 
-	cout << "±¾²úÆ·ÊÚÈ¨¸ø" << get_user_name() << "Ê¹ÓÃ\n" << endl;
+	cout << "æœ¬äº§å“æŽˆæƒç»™" << get_user_name() << "ä½¿ç”¨\n" << endl;
 	/*
-	 ±¾²úÆ·ÊÚÈ¨¸øPeterÊ¹ÓÃ
+	 æœ¬äº§å“æŽˆæƒç»™Peterä½¿ç”¨
 	 */
 
 	/*	cout << __LINE__ << endl;
@@ -33,7 +33,7 @@ void program_start(bool is_debug)
 unsigned long show_time_cost()
 {
 	unsigned long time_cost = GetTickCount() - start_time;
-	cout << "\nÔËÐÐºÄÊ± " << time_cost << " ms" << endl;
+	cout << "\nè¿è¡Œè€—æ—¶ " << time_cost << " ms" << endl;
 	return time_cost;
 }
 
@@ -138,7 +138,7 @@ class dbstream
 		{
 			if (debug == true) {
 			} else {
-				cout << "Ö»ÓÐÔÚµ÷ÓÃprogram_startº¯ÊýÊ±,is_debugÖµ´«ÈëµÄÊÇtrue,µ÷ÊÔÊä³öÁ÷²Å»áÊä³öÐÅÏ¢" << endl;
+				cout << "åªæœ‰åœ¨è°ƒç”¨program_startå‡½æ•°æ—¶,is_debugå€¼ä¼ å…¥çš„æ˜¯true,è°ƒè¯•è¾“å‡ºæµæ‰ä¼šè¾“å‡ºä¿¡æ¯" << endl;
 			}
 		}
 		template <class T> friend dbstream& operator <<(dbstream&, T&);

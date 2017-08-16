@@ -3,13 +3,13 @@
 #include "Matrix.hpp"
 
 #include "../String_serve.hpp"
-//#pragma message(__DATE__ "  " __TIME__"  ÕıÔÚ±àÒë"__FILE__)
+//#pragma message(__DATE__ "  " __TIME__"  æ­£åœ¨ç¼–è¯‘"__FILE__)
 
 #if __cplusplus < 201103L //C++0x
 # pragma message("\n"\
-"			* Matrix Ê¹ÓÃÁË C++ 11 ĞÂÌØĞÔ, Çë´ò¿ª C++ 11 Ñ¡ÏîÒÔ±ãÊ¹ÓÃÕâĞ©ĞÂÌØĞÔ\n"\
-"					* Matrix Îª C++ 11 ×¼±¸µÄĞÂÌØĞÔ: ÀûÓÃÒ»Î¬³õÊ¼»¯ÁĞ±í½øĞĞ¹¹Ôì\n"\
-"					* Matrix Îª C++ 11 ×¼±¸µÄĞÂÌØĞÔ: ÀûÓÃ¶şÎ¬³õÊ¼»¯ÁĞ±í½øĞĞ¹¹Ôì"\
+"			* Matrix ä½¿ç”¨äº† C++ 11 æ–°ç‰¹æ€§, è¯·æ‰“å¼€ C++ 11 é€‰é¡¹ä»¥ä¾¿ä½¿ç”¨è¿™äº›æ–°ç‰¹æ€§\n"\
+"					* Matrix ä¸º C++ 11 å‡†å¤‡çš„æ–°ç‰¹æ€§: åˆ©ç”¨ä¸€ç»´åˆå§‹åŒ–åˆ—è¡¨è¿›è¡Œæ„é€ \n"\
+"					* Matrix ä¸º C++ 11 å‡†å¤‡çš„æ–°ç‰¹æ€§: åˆ©ç”¨äºŒç»´åˆå§‹åŒ–åˆ—è¡¨è¿›è¡Œæ„é€ "\
 )
 #endif //C++0x
 
@@ -29,14 +29,14 @@ Matrix::Matrix(const int row, const int column, bool if_set0) :
 }
 
 Matrix::Matrix(const int row, const int column, const double rand_min, const double rand_max)
-{ //¹¹ÔìÒ»¸öËæ»ú¾ØÕó
+{ //æ„é€ ä¸€ä¸ªéšæœºçŸ©é˜µ
 	if (row > 0 && column > 0) {
 		this->row = row;
 		this->column = column;
 
-		p = new double*[row]; //¿ª±ÙĞĞ
+		p = new double*[row]; //å¼€è¾Ÿè¡Œ
 		for (int i = 0; i < row; i++) {
-			double *p_to_first = p[i] = new double[column]; //¿ª±ÙÁĞ
+			double *p_to_first = p[i] = new double[column]; //å¼€è¾Ÿåˆ—
 			for (int j = 0; j < column; j++) {
 				p_to_first[j] = rand_between(rand_min, rand_max);
 			}
@@ -51,13 +51,13 @@ Matrix::Matrix(const int row, const int column, const double rand_min, const dou
 //Matrix::Matrix(const int row, const int column, int argc, ...) :
 //		Array_2d(row, column, false)
 //{
-//	//ÀûÓÃ¿É±ä²ÎÊı±í½øĞĞ¹¹Ôì
+//	//åˆ©ç”¨å¯å˜å‚æ•°è¡¨è¿›è¡Œæ„é€ 
 //
 //	//if(argc>row*column){
 //	//	argc
 //	//}
 //	//cout<<this<<endl;
-//	va_list arg_ptr;	//Ö¸Ïò²ÎÊıµÄÖ¸Õë
+//	va_list arg_ptr;	//æŒ‡å‘å‚æ•°çš„æŒ‡é’ˆ
 //	va_start(arg_ptr, argc);
 //
 //	for (int i = 0; i < row; i++) {
@@ -70,7 +70,7 @@ Matrix::Matrix(const int row, const int column, const double rand_min, const dou
 //}
 
 Matrix::Matrix(double arr[], int len, bool in_a_row)
-{ //ÀûÓÃÒ»Î¬Êı×é½øĞĞ¹¹Ôì
+{ //åˆ©ç”¨ä¸€ç»´æ•°ç»„è¿›è¡Œæ„é€ 
 	if (len > 0) {
 		if (in_a_row) {
 			this->row = 1;
@@ -84,7 +84,7 @@ Matrix::Matrix(double arr[], int len, bool in_a_row)
 
 			p = new double*[row];
 			for (int i = 0; i < row; i++) {
-				p[i] = new double[1]; //¿ª±ÙÁĞ
+				p[i] = new double[1]; //å¼€è¾Ÿåˆ—
 				p[i][0] = arr[i];
 			}
 		}
@@ -97,8 +97,8 @@ Matrix::Matrix(double arr[], int len, bool in_a_row)
 
 #if __cplusplus >= 201103L //C++0x
 Matrix::Matrix(initializer_list<initializer_list<double>> src)
-{ //ÀûÓÃ¶şÎ¬³õÊ¼»¯ÁĞ±í½øĞĞ¹¹Ôì
-//É¨ÃèÁĞÊı×î¿íµÄĞĞ
+{ //åˆ©ç”¨äºŒç»´åˆå§‹åŒ–åˆ—è¡¨è¿›è¡Œæ„é€ 
+//æ‰«æåˆ—æ•°æœ€å®½çš„è¡Œ
 	unsigned int tmp = 0;
 	for (auto j : src) {
 		if (j.size() > tmp) {
@@ -106,15 +106,15 @@ Matrix::Matrix(initializer_list<initializer_list<double>> src)
 		}
 	}
 
-	const int row_pre = src.size(); //×îÖÕ¶¨ÏÂµÄĞĞÊı
-	const int column_pre = tmp;//×îÖÕ¶¨ÏÂµÄÁĞÊı
+	const int row_pre = src.size(); //æœ€ç»ˆå®šä¸‹çš„è¡Œæ•°
+	const int column_pre = tmp; //æœ€ç»ˆå®šä¸‹çš„åˆ—æ•°
 
 	if (row_pre > 0 && column_pre > 0) {
 		this->row = row_pre;
 		this->column = column_pre;
 
-		//¶¯Ì¬¿ª±ÙÒ»¸öÒÔpÎªÊ×µØÖ·µÄ¡¢row * columnµÄ¶şÎ¬Êı×é
-		p = new double*[row];//¿ª±ÙĞĞ
+		//åŠ¨æ€å¼€è¾Ÿä¸€ä¸ªä»¥pä¸ºé¦–åœ°å€çš„ã€row * columnçš„äºŒç»´æ•°ç»„
+		p = new double*[row]; //å¼€è¾Ÿè¡Œ
 		auto begin_to_src = src.begin();
 		for (int i = 0; i < row; i++) {
 			double *p_to_first = p[i] = new double[column];
@@ -132,15 +132,15 @@ Matrix::Matrix(initializer_list<initializer_list<double>> src)
 }
 
 Matrix::Matrix(initializer_list<double> src)
-{ //ÀûÓÃÒ»Î¬³õÊ¼»¯ÁĞ±í½øĞĞ¹¹Ôì
-	const int column_pre = src.size();//×îÖÕ¶¨ÏÂµÄÁĞÊı
+{ //åˆ©ç”¨ä¸€ç»´åˆå§‹åŒ–åˆ—è¡¨è¿›è¡Œæ„é€ 
+	const int column_pre = src.size(); //æœ€ç»ˆå®šä¸‹çš„åˆ—æ•°
 
 	if (column_pre > 0) {
 		this->row = 1;
 		this->column = column_pre;
 
-		//¶¯Ì¬¿ª±ÙÒ»¸öÒÔpÎªÊ×µØÖ·µÄ¡¢1 * columnµÄ¶şÎ¬Êı×é
-		p = new double*[1];//¿ª±ÙĞĞ
+		//åŠ¨æ€å¼€è¾Ÿä¸€ä¸ªä»¥pä¸ºé¦–åœ°å€çš„ã€1 * columnçš„äºŒç»´æ•°ç»„
+		p = new double*[1]; //å¼€è¾Ÿè¡Œ
 		double *p_to_first = p[0] = new double[column];
 		for (int i = 0; i < column; i++) {
 			p_to_first[i] = *(src.begin() + i);
@@ -154,7 +154,7 @@ Matrix::Matrix(initializer_list<double> src)
 }
 
 //Matrix::Matrix(Matrix &&src)
-//{ //×ªÒÆ¹¹Ôìº¯Êı
+//{ //è½¬ç§»æ„é€ å‡½æ•°
 //	row = src.row;
 //	column = src.column;
 //	p = src.p;
@@ -169,15 +169,15 @@ Matrix::Matrix(initializer_list<double> src)
 
 Matrix::Matrix(const Matrix &src)
 {
-	//¿½±´¹¹Ôìº¯Êı
+	//æ‹·è´æ„é€ å‡½æ•°
 	//cout<<this<<" cpy= "<<&src<<endl;
 	if (src.row > 0 && src.column > 0) {
 		this->row = src.row;
 		this->column = src.column;
 
-		const size_t size_of_a_row = column * sizeof(double); //ÕâÒ»ĞĞÎª¼Ó¿ìËÙ¶È¶ø´æÔÚ
+		const size_t size_of_a_row = column * sizeof(double); //è¿™ä¸€è¡Œä¸ºåŠ å¿«é€Ÿåº¦è€Œå­˜åœ¨
 
-		p = new double*[row]; //¿ª±ÙĞĞ
+		p = new double*[row]; //å¼€è¾Ÿè¡Œ
 		for (int i = 0; i < row; i++) {
 			memcpy(p[i] = new double[column], src.p[i], size_of_a_row);
 		}
@@ -190,7 +190,7 @@ Matrix::Matrix(const Matrix &src)
 
 Matrix::~Matrix()
 {
-	//¹é»¹Ò»¸örowĞĞµÄ¶şÎ¬Êı×é
+	//å½’è¿˜ä¸€ä¸ªrowè¡Œçš„äºŒç»´æ•°ç»„
 //	for (int i = 0; i < row; i++)
 //		delete[] p[i];
 //	delete[] p;
@@ -210,7 +210,7 @@ Matrix Matrix::call(double (*__pf)(double)) const
 
 void Matrix::print(Frame frame, bool print_corner, ostream &output) const
 {
-	//Frame frame Ä¬ÈÏ= Fr_RtMatrix, bool print_corner Ä¬ÈÏ= true, ostream &output = output
+	//Frame frame é»˜è®¤= Fr_RtMatrix, bool print_corner é»˜è®¤= true, ostream &output = output
 	int i, j;
 	string *corner = NULL;
 	switch (frame) {
@@ -252,7 +252,7 @@ void Matrix::print(Frame frame, bool print_corner, ostream &output) const
 	}
 	output << " " << corner[3];
 	if (print_corner) {
-		output << " " << row << " ¡Á " << column;
+		output << " " << row << " Ã— " << column;
 	}
 	output << endl;
 }
@@ -264,7 +264,7 @@ void Matrix::save(const string &file_name) const throw (runtime_error)
 	const size_t sizeof_element = sizeof(p[0][0]);
 
 	ofstream fout(&file_name[0], ios::out | ios::binary);
-	//Êä³öÎ»¿íĞÅÏ¢
+	//è¾“å‡ºä½å®½ä¿¡æ¯
 	switch (sizeof(size_t)) {
 		case 4:
 			fout.write((char*) &sizeof_row, 4);
@@ -281,7 +281,7 @@ void Matrix::save(const string &file_name) const throw (runtime_error)
 			break;
 		default:
 			fout.close();
-			throw runtime_error("²»Ö§³ÖµÄÎ»¿í");
+			throw runtime_error("ä¸æ”¯æŒçš„ä½å®½");
 	}
 
 	fout.write((char*) &row, sizeof(row));
@@ -316,13 +316,13 @@ Matrix load_from(const string &file_name)
 
 void Matrix::switch_rows(const int row1, const int row2) throw (out_of_range)
 {
-	//½»»»¾ØÕóµÄÁ½ĞĞ
+	//äº¤æ¢çŸ©é˜µçš„ä¸¤è¡Œ
 
 	this->test_row(row1);
 	this->test_row(row2);
 
 //	void *temp;
-//	const size_t size_of_a_row = column * sizeof(Type); //ÕâÒ»ĞĞÎª¼Ó¿ìËÙ¶È¶ø´æÔÚ
+//	const size_t size_of_a_row = column * sizeof(Type); //è¿™ä¸€è¡Œä¸ºåŠ å¿«é€Ÿåº¦è€Œå­˜åœ¨
 //	temp = malloc(size_of_a_row);
 //	memcpy(temp, p[row1], size_of_a_row);
 //	memcpy(p[row1], p[row2], size_of_a_row);
@@ -356,9 +356,9 @@ void Matrix::k_multiply_a_row_plus_to_another(const double k, const int row_from
 
 void Matrix::optimize_rows() throw (invalid_argument)
 {
-	//½«ĞĞÁĞÊ½Õë¶ÔĞĞ½øĞĞÓÅ»¯
+	//å°†è¡Œåˆ—å¼é’ˆå¯¹è¡Œè¿›è¡Œä¼˜åŒ–
 	test_square();
-	bool k = false; //ÊÇ·ñÈ¡Ïà·´Êı
+	bool k = false; //æ˜¯å¦å–ç›¸åæ•°
 	const int &n = row;
 	for (int i = 1; i < n; i++) {
 		for (int j = 0; j < n - i; j++) {
@@ -378,14 +378,14 @@ void Matrix::optimize_rows() throw (invalid_argument)
 	for (int i = 0; i < n - 1; i++) {
 		if (p[i][0] != 0.0) {
 			double ra = p[i][0] / p[n - 1][0];
-			for (int j = 0; j < n; j++) { //ÁĞÑ­»·
+			for (int j = 0; j < n; j++) { //åˆ—å¾ªç¯
 				p[i][j] -= ra * p[n - 1][j];
 			}
 		}
 	}
 
 	if (k) { //k == true
-		for (int j = 0; j < n; j++) { //ÁĞÑ­»·
+		for (int j = 0; j < n; j++) { //åˆ—å¾ªç¯
 			p[j][0] = -p[j][0];
 		}
 	}
@@ -395,7 +395,7 @@ Matrix optimize_rows(Matrix a) throw (invalid_argument)
 {
 	a.test_square();
 	const int &n = a.row;
-	bool k = false; //ÊÇ·ñÈ¡Ïà·´Êı
+	bool k = false; //æ˜¯å¦å–ç›¸åæ•°
 	for (int i = 1; i < n; i++) {
 		for (int j = 0; j < n - i; j++) {
 			double * &p1 = a.p[j];
@@ -412,14 +412,14 @@ Matrix optimize_rows(Matrix a) throw (invalid_argument)
 	for (int i = 0; i < n - 1; i++) {
 		if (a.p[i][0] != 0.0) {
 			double ra = a.p[i][0] / a.p[n - 1][0];
-			for (int j = 0; j < n; j++) { //ÁĞÑ­»·
+			for (int j = 0; j < n; j++) { //åˆ—å¾ªç¯
 				a.p[i][j] -= ra * a.p[n - 1][j];
 			}
 		}
 	}
 
 	if (k) { //k == true
-		for (int j = 0; j < n; j++) { //ÁĞÑ­»·
+		for (int j = 0; j < n; j++) { //åˆ—å¾ªç¯
 			double *p_to_first = a.p[j];
 			p_to_first[0] = -p_to_first[0];
 		}
@@ -440,15 +440,15 @@ void Matrix::switch_columns(const int column1, const int column2) throw (out_of_
 
 Matrix Matrix::Cofactor(const int row_tar, const int column_tar) const throw (out_of_range)
 {
-	//·µ»ØÒ»¸ö¾ØÕó»®È¥row_tar ĞĞºÍ column_tar ÁĞºóµÄ¾ØÕó
+	//è¿”å›ä¸€ä¸ªçŸ©é˜µåˆ’å»row_tar è¡Œå’Œ column_tar åˆ—åçš„çŸ©é˜µ
 
 	this->test_row(row_tar);
 	this->test_column(column_tar);
 
 	Matrix result(row - 1, column - 1, false);
 
-	const size_t size_of_a_row_of_a_left = column_tar * sizeof(double); //ÕâÒ»ĞĞÎª¼Ó¿ìËÙ¶È¶ø´æÔÚ
-	const size_t size_of_a_row_of_a_right = (column - 1 - column_tar) * sizeof(double); //ÕâÒ»ĞĞÎª¼Ó¿ìËÙ¶È¶ø´æÔÚ
+	const size_t size_of_a_row_of_a_left = column_tar * sizeof(double); //è¿™ä¸€è¡Œä¸ºåŠ å¿«é€Ÿåº¦è€Œå­˜åœ¨
+	const size_t size_of_a_row_of_a_right = (column - 1 - column_tar) * sizeof(double); //è¿™ä¸€è¡Œä¸ºåŠ å¿«é€Ÿåº¦è€Œå­˜åœ¨
 	for (int i = 0; i < row_tar; i++) {
 		memcpy(result.p[i], p[i], size_of_a_row_of_a_left);
 		memcpy(result.p[i] + column_tar, p[i] + column_tar + 1, size_of_a_row_of_a_right);
@@ -478,22 +478,22 @@ double Matrix::Det() const throw (invalid_argument)
 	double sum = 0.0;
 	double det;
 
-	for (register int i = 0; i < n; i++) {
+	for (int i = 0; i < n; i++) {
 		if (p[i][0] != 0.0) { //p[0][i]!=0
 			Matrix daishu(Cofactor(i, 0));
 
 			if (n - 1 >= 4) {
-				//Èç¹û´úÊıÓà×ÓÊ½ÔÚ4½×¼°ÒÔÉÏ,Ôò½øĞĞĞĞÓÅ»¯
+				//å¦‚æœä»£æ•°ä½™å­å¼åœ¨4é˜¶åŠä»¥ä¸Š,åˆ™è¿›è¡Œè¡Œä¼˜åŒ–
 				daishu.optimize_rows();
 				//daishu = optimize_rows(daishu);
 			}
 
 			det = daishu.Det();
 			if (i % 2) {
-				//iÎªÆæÊı
+				//iä¸ºå¥‡æ•°
 				sum -= p[i][0] * det;
 			} else {
-				//iÎªÅ¼Êı
+				//iä¸ºå¶æ•°
 				sum += p[i][0] * det;
 			}
 		}
@@ -503,17 +503,17 @@ double Matrix::Det() const throw (invalid_argument)
 
 Matrix Matrix::Adjugate_matrix() const throw (invalid_argument)
 {
-	//·µ»Ø±¾·½ÕóµÄ°éËæ¾ØÕó
+	//è¿”å›æœ¬æ–¹é˜µçš„ä¼´éšçŸ©é˜µ
 
 	this->test_square();
 	Matrix result(row, column, false);
 	for (int i = 0; i < row; i++) {
 		for (int j = 0; j < column; j++) {
 			if ((i + j) % 2) {
-				//i+jÎªÆæÊı
+				//i+jä¸ºå¥‡æ•°
 				result.p[j][i] = -this->Cofactor(i, j).Det();
 			} else {
-				//i+jÎªÅ¼Êı
+				//i+jä¸ºå¶æ•°
 				result.p[j][i] = this->Cofactor(i, j).Det();
 			}
 		}
@@ -523,7 +523,7 @@ Matrix Matrix::Adjugate_matrix() const throw (invalid_argument)
 
 Matrix Matrix::Inverse_matrix() const throw (invalid_argument)
 {
-	//·µ»Ø±¾·½ÕóµÄÄæ¾ØÕó
+	//è¿”å›æœ¬æ–¹é˜µçš„é€†çŸ©é˜µ
 	this->test_square();
 
 	double D = this->Det();
@@ -535,17 +535,17 @@ Matrix Matrix::Inverse_matrix() const throw (invalid_argument)
 	return k * result;
 }
 
-//ÔËËã·ûÖØÔØ
+//è¿ç®—ç¬¦é‡è½½
 Matrix operator+(const Matrix &A, const Matrix &B) throw (invalid_argument)
 {
 	int i, j;
 
-	//¼ì²éA,BÊÇ·ñÍ¬Ñù´óĞ¡
+	//æ£€æŸ¥A,Bæ˜¯å¦åŒæ ·å¤§å°
 	if (A.row != B.row) {
-		throw invalid_argument("error: row(A) ¡Ù row(B)");
+		throw invalid_argument("error: row(A) â‰  row(B)");
 	}
 	if (A.column != B.column) {
-		throw invalid_argument("error: column(A) ¡Ù column(B)");
+		throw invalid_argument("error: column(A) â‰  column(B)");
 	}
 	const int &row = A.row;
 	const int &column = A.column;
@@ -565,12 +565,12 @@ Matrix operator-(const Matrix &A, const Matrix &B) throw (invalid_argument)
 {
 	int i, j;
 
-	//¼ì²éA,BÊÇ·ñÍ¬Ñù´óĞ¡
+	//æ£€æŸ¥A,Bæ˜¯å¦åŒæ ·å¤§å°
 	if (A.row != B.row) {
-		throw invalid_argument("error: row(A) ¡Ù row(B)");
+		throw invalid_argument("error: row(A) â‰  row(B)");
 	}
 	if (A.column != B.column) {
-		throw invalid_argument("error: column(A) ¡Ù column(B)");
+		throw invalid_argument("error: column(A) â‰  column(B)");
 	}
 	const int &row = A.row;
 	const int &column = A.column;
@@ -588,7 +588,7 @@ Matrix operator-(const Matrix &A, const Matrix &B) throw (invalid_argument)
 
 Matrix operator*(const double k, const Matrix &A)
 {
-	//Êık³Ë¾ØÕó
+	//æ•°kä¹˜çŸ©é˜µ
 	if (k == 1) {
 		return A;
 	}
@@ -604,7 +604,7 @@ Matrix operator*(const double k, const Matrix &A)
 
 Matrix operator*(const Matrix &A, const double k)
 {
-	//¾ØÕó³ËÊık
+	//çŸ©é˜µä¹˜æ•°k
 	if (k == 1) {
 		return A;
 	}
@@ -620,11 +620,11 @@ Matrix operator*(const Matrix &A, const double k)
 
 Matrix operator*(const Matrix &A, const Matrix &B) throw (invalid_argument)
 {
-	//¾ØÕó³Ë¾ØÕó
+	//çŸ©é˜µä¹˜çŸ©é˜µ
 
-	//¼ì²éAµÄÁĞÊıÊÇ·ñµÈÓÚBµÄĞĞÊı
+	//æ£€æŸ¥Açš„åˆ—æ•°æ˜¯å¦ç­‰äºBçš„è¡Œæ•°
 	if (A.column != B.row) {
-		throw invalid_argument("error: column(A) ¡Ù row(B)");
+		throw invalid_argument("error: column(A) â‰  row(B)");
 	}
 	const int &row = A.row;
 	const int &column = B.column;
@@ -645,17 +645,17 @@ Matrix operator*(const Matrix &A, const Matrix &B) throw (invalid_argument)
 
 Matrix dot_product(const Matrix &A, const Matrix &B) throw (invalid_argument)
 {
-	//¾ØÕóµã³Ë¾ØÕó
+	//çŸ©é˜µç‚¹ä¹˜çŸ©é˜µ
 
-	//¼ì²éA,BÊÇ·ñÍ¬Ñù´óĞ¡
+	//æ£€æŸ¥A,Bæ˜¯å¦åŒæ ·å¤§å°
 	if (A.row == 1 && A.column == 1) {
 		return A.p[0][0] * B;
 	} else if (B.row == 1 && B.column == 1) {
 		return B.p[0][0] * A;
 	} else if (A.row != B.row) {
-		throw invalid_argument("error: row(A) ¡Ù row(B)");
+		throw invalid_argument("error: row(A) â‰  row(B)");
 	} else if (A.column != B.column) {
-		throw invalid_argument("error: column(A) ¡Ù column(B)");
+		throw invalid_argument("error: column(A) â‰  column(B)");
 	}
 	const int &row = A.row;
 	const int &column = A.column;
@@ -686,7 +686,7 @@ Matrix operator^(const Matrix &A, const int n) throw (invalid_argument)
 		Matrix tmp(A ^ (n / 2));
 		tmp = tmp * tmp;
 		if (n % 2) {
-			//Ö¸ÊıÎªÆæÊı
+			//æŒ‡æ•°ä¸ºå¥‡æ•°
 			tmp = tmp * A;
 		}
 		return tmp;
@@ -695,13 +695,13 @@ Matrix operator^(const Matrix &A, const int n) throw (invalid_argument)
 
 Matrix operator&&(const Matrix &A, const Matrix &B) throw (invalid_argument)
 {
-	//½«Á½¸ö¾ØÕó°´ÊúÖ±·½ÏòÁ¬½Ó
+	//å°†ä¸¤ä¸ªçŸ©é˜µæŒ‰ç«–ç›´æ–¹å‘è¿æ¥
 	/*   A
 	 *  ---
 	 *   B  */
 
 	if (A.column != B.column) {
-		throw invalid_argument("´®ÁªµÄ¾ØÕóµÄÁĞÊı²»Ò»ÖÂ");
+		throw invalid_argument("ä¸²è”çš„çŸ©é˜µçš„åˆ—æ•°ä¸ä¸€è‡´");
 	}
 
 	const int row_total = A.row + B.row;
@@ -710,11 +710,11 @@ Matrix operator&&(const Matrix &A, const Matrix &B) throw (invalid_argument)
 	Matrix result(row_total, column_total, false);
 
 	const size_t size_of_a_row = column_total * sizeof(double);
-	for (int i = 0; i < A.row; i++) { //ĞĞÑ­»·
+	for (int i = 0; i < A.row; i++) { //è¡Œå¾ªç¯
 		memcpy(result.p[i], A.p[i], size_of_a_row);
 	}
 
-	for (int i = 0; i < B.row; i++) { //ĞĞÑ­»·
+	for (int i = 0; i < B.row; i++) { //è¡Œå¾ªç¯
 		memcpy(result.p[A.row + i], B.p[i], size_of_a_row);
 	}
 
@@ -723,11 +723,11 @@ Matrix operator&&(const Matrix &A, const Matrix &B) throw (invalid_argument)
 
 Matrix operator||(const Matrix &A, const Matrix &B) throw (invalid_argument)
 {
-	//½«Á½¸ö¾ØÕó°´Ë®Æ½·½ÏòÁ¬½Ó
+	//å°†ä¸¤ä¸ªçŸ©é˜µæŒ‰æ°´å¹³æ–¹å‘è¿æ¥
 	/*   A | B   */
 
 	if (A.row != B.row) {
-		throw invalid_argument("´®ÁªµÄ¾ØÕóµÄĞĞÊı²»Ò»ÖÂ");
+		throw invalid_argument("ä¸²è”çš„çŸ©é˜µçš„è¡Œæ•°ä¸ä¸€è‡´");
 	}
 	const int &row_total = A.row;
 	const int column_total = A.column + B.column;
@@ -736,7 +736,7 @@ Matrix operator||(const Matrix &A, const Matrix &B) throw (invalid_argument)
 
 	const size_t size_of_a_row_of_a_left = A.column * sizeof(double);
 	const size_t size_of_a_row_of_a_right = B.column * sizeof(double);
-	for (int i = 0; i < row_total; i++) { //ĞĞÑ­»·
+	for (int i = 0; i < row_total; i++) { //è¡Œå¾ªç¯
 		memcpy(result.p[i], A.p[i], size_of_a_row_of_a_left);
 		memcpy(result.p[i] + A.column, B.p[i], size_of_a_row_of_a_right);
 	}
@@ -746,7 +746,7 @@ Matrix operator||(const Matrix &A, const Matrix &B) throw (invalid_argument)
 
 void operator<<=(Matrix &tar, Matrix &src)
 {
-	//½«¾ØÕósrcµÄ×Ê²ú×ªÒÆ¸øtar
+	//å°†çŸ©é˜µsrcçš„èµ„äº§è½¬ç§»ç»™tar
 	tar.clear();
 	tar.row = src.row;
 	tar.column = src.column;
@@ -760,12 +760,12 @@ const Matrix& Matrix::operator=(const Matrix &src)
 {
 	//cout << this << " = " << &src << endl;
 	if (row == src.row) {
-		if (column == src.column) { //ĞĞ,ÁĞÊı¶¼ÓëÔ­À´ÏàµÈ
+		if (column == src.column) { //è¡Œ,åˆ—æ•°éƒ½ä¸åŸæ¥ç›¸ç­‰
 			const size_t size_of_a_row = src.column * sizeof(double);
 			for (int i = 0; i < src.row; i++) {
 				memcpy(p[i], src.p[i], size_of_a_row);
 			}
-		} else { //ĞĞÊıÓëÔ­À´ÏàµÈ, ÁĞÊı²»µÈ
+		} else { //è¡Œæ•°ä¸åŸæ¥ç›¸ç­‰, åˆ—æ•°ä¸ç­‰
 
 			this->column = src.column;
 			const size_t size_of_a_row = column * sizeof(double);
@@ -782,7 +782,7 @@ const Matrix& Matrix::operator=(const Matrix &src)
 		this->row = src.row;
 		this->column = src.column;
 
-		p = new double*[row]; //¿ª±ÙĞĞ
+		p = new double*[row]; //å¼€è¾Ÿè¡Œ
 		const size_t size_of_a_row = column * sizeof(double);
 		for (int i = 0; i < row; i++) {
 			memcpy(p[i] = new double[column], src.p[i], size_of_a_row);
@@ -793,11 +793,11 @@ const Matrix& Matrix::operator=(const Matrix &src)
 }
 
 //#if __cplusplus < 201103L //C++0x
-////# pragma message("Matrix Îª C++ 11 ×¼±¸µÄĞÂÌØĞÔ: ×ªÒÆ¸³ÖµÔËËã·û")
+////# pragma message("Matrix ä¸º C++ 11 å‡†å¤‡çš„æ–°ç‰¹æ€§: è½¬ç§»èµ‹å€¼è¿ç®—ç¬¦")
 //#else
 //const Matrix& Matrix::operator=(Matrix &&src)
 //{
-//	//×ªÒÆ¸³ÖµÔËËã·û
+//	//è½¬ç§»èµ‹å€¼è¿ç®—ç¬¦
 //
 //	this->clear();
 //	row = src.row;
@@ -838,7 +838,7 @@ Matrix pow(const Matrix &A, const int n)
 
 double tr(const Matrix &src) throw (invalid_argument)
 {
-//·µ»Ø·½ÕóµÄ¼£
+//è¿”å›æ–¹é˜µçš„è¿¹
 	src.test_square();
 	double result = 0;
 	for (int i = 0; i < src.row; i++) {
@@ -851,7 +851,7 @@ void Matrix::test_row(const int row_test) const throw (out_of_range)
 {
 	if (row_test < 0 || row_test >= this->row) {
 		throw out_of_range(
-				"The " + to_string(this->row) + " ¡Á " + to_string(this->column) + " Matrix doesn't have the no."
+				"The " + to_string(this->row) + " Ã— " + to_string(this->column) + " Matrix doesn't have the no."
 						+ to_string(row_test) + " row!");
 	}
 }
@@ -860,7 +860,7 @@ void Matrix::test_column(const int column_test) const throw (out_of_range)
 {
 	if (column_test < 0 || column_test >= this->column) {
 		throw out_of_range(
-				"The " + to_string(this->row) + " ¡Á " + to_string(this->column) + " Matrix doesn't have the no."
+				"The " + to_string(this->row) + " Ã— " + to_string(this->column) + " Matrix doesn't have the no."
 						+ to_string(column_test) + " column!");
 	}
 }
@@ -872,7 +872,7 @@ void Matrix::test_square() const throw (invalid_argument)
 	}
 }
 
-//¼ÆËã
+//è®¡ç®—
 bool Matcmp(const Matrix &A, const Matrix &B, double eps)
 {
 	for (int i = 0; i < A.row; i++) {
@@ -887,7 +887,7 @@ bool Matcmp(const Matrix &A, const Matrix &B, double eps)
 
 Matrix Transpose(const Matrix &A)
 {
-	//·µ»Ø¾ØÕóAµÄ×ªÖÃ¾ØÕó
+	//è¿”å›çŸ©é˜µAçš„è½¬ç½®çŸ©é˜µ
 	Matrix result(A.column, A.row, false);
 	for (int i = 0; i < A.column; i++) {
 		for (int j = 0; j < A.row; j++) {
@@ -899,11 +899,11 @@ Matrix Transpose(const Matrix &A)
 
 Matrix Cofactor(const Matrix &A, const int x, const int y) throw (out_of_range)
 {
-	//¹¹Ôì·½ÕóAµÄÓà×ÓÊ½A(x,y)
+	//æ„é€ æ–¹é˜µAçš„ä½™å­å¼A(x,y)
 	return A.Cofactor(x, y);
 }
 
-//Ó¦ÓÃ²¿·Ö
+//åº”ç”¨éƒ¨åˆ†
 namespace rotate
 {
 	Matrix rotate_X(double sigma)
@@ -969,14 +969,14 @@ using namespace rotate;
  {
 
 
- // ±£´æcoutÁ÷»º³åÇøÖ¸Õë
+ // ä¿å­˜coutæµç¼“å†²åŒºæŒ‡é’ˆ
  streambuf* coutBuf = cout.rdbuf();
 
  ofstream of(file_name);
- // »ñÈ¡ÎÄ¼şout.txtÁ÷»º³åÇøÖ¸Õë
+ // è·å–æ–‡ä»¶out.txtæµç¼“å†²åŒºæŒ‡é’ˆ
  streambuf* fileBuf = of.rdbuf();
 
- // ÉèÖÃcoutÁ÷»º³åÇøÖ¸ÕëÎªout.txtµÄÁ÷»º³åÇøÖ¸Õë
+ // è®¾ç½®coutæµç¼“å†²åŒºæŒ‡é’ˆä¸ºout.txtçš„æµç¼“å†²åŒºæŒ‡é’ˆ
  cout.rdbuf(fileBuf);
 
  this->print();
@@ -984,7 +984,7 @@ using namespace rotate;
  of.flush();
  of.close();
 
- // »Ö¸´coutÔ­À´µÄÁ÷»º³åÇøÖ¸Õë
+ // æ¢å¤coutåŸæ¥çš„æµç¼“å†²åŒºæŒ‡é’ˆ
  cout.rdbuf(coutBuf);
  //cout << "Write Personal Information over..." << endl;
 
@@ -994,18 +994,18 @@ using namespace rotate;
  //	string separator="\t";
  //
  //
- //	cout<<"©°";
+ //	cout<<"â”Œ";
  //	for(j=0; j<=column-1; j++) {
  //		cout<<"\t";
  //	}
- //	cout<<" ©´"<<endl;
+ //	cout<<" â”"<<endl;
  //
  //
  //	for(i=0; i<=row-1; i++) {
  //		//cout<<"\t";
  //		for(j=0; j<=column-1; j++) {
  //			if(j==0) {
- //				cout<<"©¦ ";
+ //				cout<<"â”‚ ";
  //			} else {
  //				cout<<"   ";
  //			}
@@ -1014,19 +1014,19 @@ using namespace rotate;
  //				cout<<" "<<separator;
  //			}
  //		}
- //		cout<<"\t ©¦"<<endl;
+ //		cout<<"\t â”‚"<<endl;
  //	}
  //
  //
- //	cout<<"©¸";
+ //	cout<<"â””";
  //	for(j=0; j<=column-1; j++) {
  //		cout<<"\t";
  //	}
- //	cout<<" ©¼"<<endl;
+ //	cout<<" â”˜"<<endl;
 
  }*/
 
-//²âÊÔĞĞÁĞÊ½¼ÆËã¹¦ÄÜµÄ´úÂë
+//æµ‹è¯•è¡Œåˆ—å¼è®¡ç®—åŠŸèƒ½çš„ä»£ç 
 /*	unsigned long k;
 
  #define N 20

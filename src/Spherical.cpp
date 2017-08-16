@@ -6,7 +6,7 @@
 
 using namespace std;
 
-const double Spherical::R = 6371004; //µØÇò°ë¾¶
+const double Spherical::R = 6371004; //åœ°çƒåŠå¾„
 
 double rad_to_angle(double i)
 {
@@ -18,7 +18,7 @@ double angle(double degree, double min, double sec)
 	return degree + min / 60 + sec / 3600;
 }
 
-//ÔËËã·ûÖØÔØ
+//è¿ç®—ç¬¦é‡è½½
 ostream& operator <<(ostream &output, const Spherical &s)
 {
 	output << to_string(s);
@@ -35,21 +35,21 @@ string to_string(const Spherical &s)
 	string Text = comment + ": ";
 
 	if (longitude > 0) {
-		Text += to_string(longitude) + "¡ãE";
+		Text += to_string(longitude) + "Â°E";
 	} else if (longitude < 0) {
-		Text += to_string(-longitude) + "¡ãW";
+		Text += to_string(-longitude) + "Â°W";
 	} else {
-		Text += to_string(longitude) + "¡ã";
+		Text += to_string(longitude) + "Â°";
 	}
 
 	Text += " , ";
 
 	if (latitude > 0) {
-		Text += to_string(latitude) + "¡ãN";
+		Text += to_string(latitude) + "Â°N";
 	} else if (latitude < 0) {
-		Text += to_string(-latitude) + "¡ãS";
+		Text += to_string(-latitude) + "Â°S";
 	} else {
-		Text += to_string(latitude) + "¡ã";
+		Text += to_string(latitude) + "Â°";
 	}
 
 	Text += " , ";
@@ -58,12 +58,15 @@ string to_string(const Spherical &s)
 	return Text;
 }
 
-double ball_distance(const Spherical &a, const Spherical &b) //·µ»ØÁ½µãÍ¶Ó°ÔÚÇòÃæÉÏµÄ»¡ÏßµÄ³¤¶È
+double ball_distance(const Spherical &a, const Spherical &b) //è¿”å›ä¸¤ç‚¹æŠ•å½±åœ¨çƒé¢ä¸Šçš„å¼§çº¿çš„é•¿åº¦
 {
-	return a.R * acos(sin(a.latitude) * sin(b.latitude) + cos(a.latitude) * cos(b.latitude) * cos(a.longitude - b.longitude));
+	return a.R
+			* acos(
+					sin(a.latitude) * sin(b.latitude)
+							+ cos(a.latitude) * cos(b.latitude) * cos(a.longitude - b.longitude));
 }
 
-double real_distance(const Spherical &a, const Spherical &b) //·µ»Ø¿¼ÂÇµ½Á½µã¼ä¸ß¶È²îµÄÁ½µã¼ä¾àÀë
+double real_distance(const Spherical &a, const Spherical &b) //è¿”å›è€ƒè™‘åˆ°ä¸¤ç‚¹é—´é«˜åº¦å·®çš„ä¸¤ç‚¹é—´è·ç¦»
 {
 	if (a.latitude == b.latitude && a.longitude == b.longitude) {
 		return fabs(a.height - b.height);
@@ -88,9 +91,9 @@ double real_distance(const Spherical &a, const Spherical &b) //·µ»Ø¿¼ÂÇµ½Á½µã¼ä¸
 	return 0.5 * (H * temp2 - h * temp1 + k * log((sigma2 + temp2) / (sigma1 + temp1)));
 }
 
-//·şÎñ
+//æœåŠ¡
 
-double MOD(double x, double y) //·µ»ØÁ½¸¡µãÊıÊıÏà³ıµÄÓàÊı,½á¹ûµÄ·ûºÅÓë³ıÊıÏàÍ¬
+double MOD(double x, double y) //è¿”å›ä¸¤æµ®ç‚¹æ•°æ•°ç›¸é™¤çš„ä½™æ•°,ç»“æœçš„ç¬¦å·ä¸é™¤æ•°ç›¸åŒ
 {
 	int quotient;
 	if (x / y > 0) {

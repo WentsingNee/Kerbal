@@ -1,7 +1,7 @@
 #ifndef EXE_SERVE_HPP_
 #define EXE_SERVE_HPP_
 
-//#pragma message(__DATE__ "  " __TIME__"  ÕýÔÚ±àÒë"__FILE__)
+//#pragma message(__DATE__ "  " __TIME__"  æ­£åœ¨ç¼–è¯‘"__FILE__)
 
 #include <iostream>
 #include <typeinfo>
@@ -131,7 +131,7 @@ bool print_type_infomation(const T &a)
 			break;
 		}
 		default: {
-			cout << "×Ô¶¨ÒåÀàÐÍ" << " size:" << sizeof(T) << endl;
+			cout << "è‡ªå®šä¹‰ç±»åž‹" << " size:" << sizeof(T) << endl;
 			return false;
 		}
 	}

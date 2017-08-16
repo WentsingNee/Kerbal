@@ -1,7 +1,7 @@
 /*
  * Complexor.cpp
  *
- *  Created on: 2017Äê5ÔÂ8ÈÕ
+ *  Created on: 2017å¹´5æœˆ8æ—¥
  *      Author: Peter
  */
 
@@ -11,8 +11,8 @@
 
 #if __cplusplus < 201103L //C++0x
 # pragma message("\n"\
-"			* Complexor Ê¹ÓÃÁË C++ 11 ĞÂÌØĞÔ, Çë´ò¿ª C++ 11 Ñ¡ÏîÒÔ±ãÊ¹ÓÃÕâĞ©ĞÂÌØĞÔ\n"\
-"					* Complexor Îª C++ 11 ×¼±¸µÄĞÂÌØĞÔ: ÀûÓÃ³õÊ¼»¯ÁĞ±í½øĞĞ¹¹Ôì"\
+"			* Complexor ä½¿ç”¨äº† C++ 11 æ–°ç‰¹æ€§, è¯·æ‰“å¼€ C++ 11 é€‰é¡¹ä»¥ä¾¿ä½¿ç”¨è¿™äº›æ–°ç‰¹æ€§\n"\
+"					* Complexor ä¸º C++ 11 å‡†å¤‡çš„æ–°ç‰¹æ€§: åˆ©ç”¨åˆå§‹åŒ–åˆ—è¡¨è¿›è¡Œæ„é€ "\
 )
 #endif //C++0x
 
@@ -105,10 +105,10 @@ void Complexor::clear()
 	num = 0;
 }
 
-Complexor operator+(const Complexor &a, const Complexor &b) throw (invalid_argument) //ÏòÁ¿¼Ó·¨, ·µ»ØÁĞÏòÁ¿
+Complexor operator+(const Complexor &a, const Complexor &b) throw (invalid_argument) //å‘é‡åŠ æ³•, è¿”å›åˆ—å‘é‡
 {
 	if (a.num != b.num) {
-		throw invalid_argument("error: length(a) ¡Ù length(b)");
+		throw invalid_argument("error: length(a) â‰  length(b)");
 	}
 
 	const int &num = a.num;
@@ -119,10 +119,10 @@ Complexor operator+(const Complexor &a, const Complexor &b) throw (invalid_argum
 	return result;
 }
 
-Complexor operator-(const Complexor &a, const Complexor &b) throw (invalid_argument) //ÏòÁ¿¼õ·¨, ·µ»ØÁĞÏòÁ¿
+Complexor operator-(const Complexor &a, const Complexor &b) throw (invalid_argument) //å‘é‡å‡æ³•, è¿”å›åˆ—å‘é‡
 {
 	if (a.num != b.num) {
-		throw invalid_argument("error: length(a) ¡Ù length(b)");
+		throw invalid_argument("error: length(a) â‰  length(b)");
 	}
 
 	const int &num = a.num;
@@ -133,7 +133,7 @@ Complexor operator-(const Complexor &a, const Complexor &b) throw (invalid_argum
 	return result;
 }
 
-Complexor Complexor::operator-() const //·µ»ØÏòÁ¿µÄ·´ÏòÍ¬³¤ÏòÁ¿
+Complexor Complexor::operator-() const //è¿”å›å‘é‡çš„åå‘åŒé•¿å‘é‡
 {
 	Complexor result(num, false, vertical);
 	for (int i = 0; i < num; i++) {
@@ -173,7 +173,7 @@ Complexor Transpose(const Complexor &src)
 	return result;
 }
 
-Complexor operator*(const Matrix &M, const Complexor &V) throw (invalid_argument) //¾ØÕó³ËÒÔÁĞÏòÁ¿
+Complexor operator*(const Matrix &M, const Complexor &V) throw (invalid_argument) //çŸ©é˜µä¹˜ä»¥åˆ—å‘é‡
 {
 	//return M * Transpose(p);
 
@@ -195,7 +195,7 @@ Complexor operator*(const Matrix &M, const Complexor &V) throw (invalid_argument
 	}
 }
 
-Complexor operator*(const Complexor &V, const Matrix &M) throw (invalid_argument) //ĞĞÏòÁ¿³ËÒÔ¾ØÕó
+Complexor operator*(const Complexor &V, const Matrix &M) throw (invalid_argument) //è¡Œå‘é‡ä¹˜ä»¥çŸ©é˜µ
 {
 	if (V.vertical) {
 		throw invalid_argument("V must be a vector in horizontal");
@@ -217,7 +217,7 @@ Complexor operator*(const Complexor &V, const Matrix &M) throw (invalid_argument
 	}
 }
 
-double dot_product(const Complexor &a, const Complexor &b) throw (invalid_argument) //ÏòÁ¿µã»ı
+double dot_product(const Complexor &a, const Complexor &b) throw (invalid_argument) //å‘é‡ç‚¹ç§¯
 {
 	if (a.num != b.num) {
 		throw invalid_argument("num(a)!=num(b)");
@@ -231,7 +231,7 @@ double dot_product(const Complexor &a, const Complexor &b) throw (invalid_argume
 	return result;
 }
 
-Matrix operator*(const Complexor &a, const Complexor &b) throw (invalid_argument) //ÏòÁ¿³ËÒÔÏòÁ¿, ·µ»Ø¾ØÕó
+Matrix operator*(const Complexor &a, const Complexor &b) throw (invalid_argument) //å‘é‡ä¹˜ä»¥å‘é‡, è¿”å›çŸ©é˜µ
 {
 	if (a.vertical == true && b.vertical == false) {
 		const int &m = a.num;
@@ -254,7 +254,7 @@ Matrix operator*(const Complexor &a, const Complexor &b) throw (invalid_argument
 	}
 }
 
-Complexor operator*(const int &k, const Complexor &b) //Êık³ËÒÔÏòÁ¿
+Complexor operator*(const int &k, const Complexor &b) //æ•°kä¹˜ä»¥å‘é‡
 {
 	Complexor result(b);
 	for (int i = 0; i < b.num; i++) {
@@ -263,7 +263,7 @@ Complexor operator*(const int &k, const Complexor &b) //Êık³ËÒÔÏòÁ¿
 	return result;
 }
 
-Complexor operator*(const Complexor &b, const int &k) //ÏòÁ¿³ËÒÔÊık
+Complexor operator*(const Complexor &b, const int &k) //å‘é‡ä¹˜ä»¥æ•°k
 {
 	Complexor result(b);
 	for (int i = 0; i < b.num; i++) {
@@ -272,7 +272,7 @@ Complexor operator*(const Complexor &b, const int &k) //ÏòÁ¿³ËÒÔÊık
 	return result;
 }
 
-double abs(const Complexor &src) //ÏòÁ¿µÄÄ£
+double abs(const Complexor &src) //å‘é‡çš„æ¨¡
 {
 	double sum = 0.0;
 	for (int i = 0; i < src.num; i++) {
@@ -286,7 +286,7 @@ void print_array_to_file(const Complexor &src, string separator, string file_nam
 	print_array_to_file(src.p, src.num, separator, file_name, if_output_number);
 }
 
-double operator^(const Complexor &a, const Complexor &b) throw (invalid_argument) //ÏòÁ¿¼Ğ½Ç
+double operator^(const Complexor &a, const Complexor &b) throw (invalid_argument) //å‘é‡å¤¹è§’
 {
 	return acos(dot_product(a, b) / abs(a) / abs(b));
 }
@@ -296,7 +296,7 @@ Complexor eqution(Matrix m) throw (invalid_argument)
 	const int &row = m.get_row();
 	const int &column = m.get_column() - 1;
 	if (row != column) {
-		throw invalid_argument("²»ºÏ·¨µÄÔö¹ã¾ØÕó");
+		throw invalid_argument("ä¸åˆæ³•çš„å¢å¹¿çŸ©é˜µ");
 	}
 	const int &n = row;
 
@@ -318,7 +318,7 @@ Complexor eqution(Matrix m) throw (invalid_argument)
 		}
 
 		if (max_ele == 0) {
-			throw invalid_argument("²»ºÏ·¨µÄÔö¹ã¾ØÕó");
+			throw invalid_argument("ä¸åˆæ³•çš„å¢å¹¿çŸ©é˜µ");
 		}
 		m.switch_rows(k, i1);
 		m.switch_columns(k, j1);

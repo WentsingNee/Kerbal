@@ -15,7 +15,7 @@ double round(double x, int digits)
 	}
 }
 
-double baremainder(double x, double y) //·µ»ØÁ½ÊýÏà³ýµÄÓàÊý¡£ ½á¹ûµÄ·ûºÅÓë³ýÊýÏàÍ¬¡£
+double baremainder(double x, double y) //è¿”å›žä¸¤æ•°ç›¸é™¤çš„ä½™æ•°ã€‚ ç»“æžœçš„ç¬¦å·ä¸Žé™¤æ•°ç›¸åŒã€‚
 {
 	int quotient;
 	if (x / y > 0) {
@@ -125,7 +125,7 @@ string a_divide_b(double a) throw (int)
 	int i, j;
 	string result = "";
 	try {
-		//¼ì²éa/bÐÍ
+		//æ£€æŸ¥a/båž‹
 		x = fabs(a);
 		fraction(x, i, j);
 		if (a < 0) {
@@ -148,7 +148,7 @@ string a_PI_divide_b(double a) throw (int)
 	int i, j;
 	string result = "";
 	try {
-		//¼ì²éa¦Ð/bÐÍ
+		//æ£€æŸ¥aÏ€/båž‹
 		x = fabs(a) / M_PI;
 		fraction(x, i, j);
 		if (a < 0) {
@@ -156,15 +156,15 @@ string a_PI_divide_b(double a) throw (int)
 		}
 		if (j == 1) {
 			if (i == 1) {
-				result += "¦Ð";
+				result += "Ï€";
 			} else {
-				result += to_string(i) + "¦Ð";
+				result += to_string(i) + "Ï€";
 			}
 		} else {
 			if (i == 1) {
-				result += "¦Ð/" + to_string(j);
+				result += "Ï€/" + to_string(j);
 			} else {
-				result += to_string(i) + "¦Ð/" + to_string(j);
+				result += to_string(i) + "Ï€/" + to_string(j);
 			}
 		}
 		return result;
@@ -179,16 +179,16 @@ string a_divide_b_PI(double a) throw (int)
 	int i, j;
 	string result = "";
 	try {
-		//¼ì²éa/b¦ÐÐÍ
+		//æ£€æŸ¥a/bÏ€åž‹
 		x = fabs(a) * M_PI;
 		fraction(x, i, j);
 		if (a < 0) {
 			result += "-";
 		}
 		if (j == 1) {
-			result += to_string(i) + "/¦Ð";
+			result += to_string(i) + "/Ï€";
 		} else {
-			result += to_string(i) + "/" + to_string(j) + "¦Ð";
+			result += to_string(i) + "/" + to_string(j) + "Ï€";
 		}
 		return result;
 	} catch (int) {
@@ -202,7 +202,7 @@ string a_E_divide_b(double a) throw (int)
 	int i, j;
 	string result = "";
 	try {
-		//¼ì²éae/bÐÍ
+		//æ£€æŸ¥ae/båž‹
 		x = fabs(a) / M_E;
 		fraction(x, i, j);
 		if (a < 0) {
@@ -233,7 +233,7 @@ string a_divide_b_E(double a) throw (int)
 	int i, j;
 	string result = "";
 	try {
-		//¼ì²éa/beÐÍ
+		//æ£€æŸ¥a/beåž‹
 		x = fabs(a) * M_E;
 		fraction(x, i, j);
 		if (a < 0) {
@@ -256,26 +256,26 @@ string sqrt_a_divide_b(double a) throw (int)
 	int i, j;
 	string result = "";
 	try {
-		//¼ì²é¡Ì(a/b)ÐÍ
+		//æ£€æŸ¥âˆš(a/b)åž‹
 		x = a * a;
 		fraction(x, i, j);
 		if (a < 0) {
 			result += "-";
 		}
 		if (j == 1) {
-			result += "¡Ì(" + to_string(i) + ")";
+			result += "âˆš(" + to_string(i) + ")";
 		} else {
 			int temp = sqrt(i);
 			if (temp * temp == i) {
-				//i¿ÉÌá³ö¸ùºÅ
-				result += to_string(temp) + "/¡Ì(" + to_string(j) + ")";
+				//iå¯æå‡ºæ ¹å·
+				result += to_string(temp) + "/âˆš(" + to_string(j) + ")";
 			} else {
 				temp = sqrt(j);
 				if (temp * temp == j) {
-					//j¿ÉÌá³ö¸ùºÅ
-					result += "¡Ì(" + to_string(i) + ")/" + to_string(temp);
+					//jå¯æå‡ºæ ¹å·
+					result += "âˆš(" + to_string(i) + ")/" + to_string(temp);
 				} else {
-					result += "¡Ì(" + to_string(i) + "/" + to_string(j) + ")";
+					result += "âˆš(" + to_string(i) + "/" + to_string(j) + ")";
 				}
 			}
 		}
@@ -357,7 +357,7 @@ string sin_a_divide_b(double a) throw (int)
 	int i, j;
 	string result = "";
 	try {
-		//¼ì²ésin(a/b)ÐÍ,×¢Òâa/b>90Ê±ÎÞ·¨Ê¶±ð
+		//æ£€æŸ¥sin(a/b)åž‹,æ³¨æ„a/b>90æ—¶æ— æ³•è¯†åˆ«
 		x = asin(a) * 180 / M_PI;
 		fraction(x, i, j);
 		if (a < 0) {
@@ -380,7 +380,7 @@ string tan_a_divide_b(double a) throw (int)
 	int i, j;
 	string result = "";
 	try {
-		//¼ì²étan(a/b)ÐÍ,×¢Òâ/*a/b>90Ê±ÎÞ·¨Ê¶±ð*/
+		//æ£€æŸ¥tan(a/b)åž‹,æ³¨æ„/*a/b>90æ—¶æ— æ³•è¯†åˆ«*/
 		x = atan(a) * 180 / M_PI;
 		fraction(x, i, j);
 		if (a < 0) {
@@ -403,7 +403,7 @@ string asin_a_divide_b(double a) throw (int)
 	int i, j;
 	string result = "";
 	try {
-//¼ì²éasin(a/b)ÐÍ
+//æ£€æŸ¥asin(a/b)åž‹
 		x = sin(a);
 		fraction(x, i, j);
 		if (a < 0) {
@@ -426,7 +426,7 @@ string atan_a_divide_b(double a) throw (int)
 	int i, j;
 	string result = "";
 	try {
-//¼ì²éatan(a/b)ÐÍ
+//æ£€æŸ¥atan(a/b)åž‹
 		x = tan(a);
 		fraction(x, i, j);
 		if (a < 0) {
@@ -446,92 +446,92 @@ string atan_a_divide_b(double a) throw (int)
 string fraction(double a)
 {
 	try {
-//¼ì²éa/bÐÍ
+//æ£€æŸ¥a/båž‹
 		return a_divide_b(a);
 	} catch (int) {
 		goto a_PI_divide_b;
 	}
 
 	a_PI_divide_b: try {
-//¼ì²éa¦Ð/bÐÍ
+//æ£€æŸ¥aÏ€/båž‹
 		return a_PI_divide_b(a);
 	} catch (int) {
 		goto a_divide_b_PI;
 	}
 
 	a_divide_b_PI: try {
-//¼ì²éa/b¦ÐÐÍ
+//æ£€æŸ¥a/bÏ€åž‹
 		return a_divide_b_PI(a);
 	} catch (int) {
 		goto a_E_divide_b;
 	}
 
 	a_E_divide_b: try {
-//¼ì²éae/bÐÍ
+//æ£€æŸ¥ae/båž‹
 		return a_E_divide_b(a);
 	} catch (int) {
 		goto a_divide_b_E;
 	}
 
 	a_divide_b_E: try {
-//¼ì²éa/beÐÍ
+//æ£€æŸ¥a/beåž‹
 		return a_divide_b_E(a);
 	} catch (int) {
 		goto sqrt_a_divide_b;
 	}
 
 	sqrt_a_divide_b: try {
-//¼ì²é¡Ì(a/b)ÐÍ
+//æ£€æŸ¥âˆš(a/b)åž‹
 		return sqrt_a_divide_b(a);
 	} catch (int) {
 		goto ln_a_divide_b;
 	}
 
 	ln_a_divide_b: try {
-//¼ì²éln(a/b)ÐÍ
+//æ£€æŸ¥ln(a/b)åž‹
 		return ln_a_divide_b(a);
 	} catch (int) {
 		goto log_2_a_divide_b;
 	}
 
 	log_2_a_divide_b: try {
-//¼ì²éln(a/b)ÐÍ
+//æ£€æŸ¥ln(a/b)åž‹
 		return log_2_a_divide_b(a);
 	} catch (int) {
 		goto log_10_a_divide_b;
 	}
 
 	log_10_a_divide_b: try {
-//¼ì²éln(a/b)ÐÍ
+//æ£€æŸ¥ln(a/b)åž‹
 		return log_10_a_divide_b(a);
 	} catch (int) {
 		goto sin_a_divide_b;
 	}
 
 	sin_a_divide_b: try {
-//¼ì²ésin(a/b)ÐÍ
+//æ£€æŸ¥sin(a/b)åž‹
 		return sin_a_divide_b(a);
 	} catch (int) {
 		goto tan_a_divide_b;
 	}
 
 	tan_a_divide_b: try {
-//¼ì²étan(a/b)ÐÍ
+//æ£€æŸ¥tan(a/b)åž‹
 		return tan_a_divide_b(a);
 	} catch (int) {
-//cout<<"²»ÄÜ²ð·Ö"<<endl;
+//cout<<"ä¸èƒ½æ‹†åˆ†"<<endl;
 		goto asin_a_divide_b;
 	}
 
 	asin_a_divide_b: try {
-//¼ì²éasin(a/b)ÐÍ
+//æ£€æŸ¥asin(a/b)åž‹
 		return asin_a_divide_b(a);
 	} catch (int) {
 		goto atan_a_divide_b;
 	}
 
 	atan_a_divide_b: try {
-//¼ì²éatan(a/b)ÐÍ
+//æ£€æŸ¥atan(a/b)åž‹
 		return atan_a_divide_b(a);
 	} catch (int) {
 		goto fail;
@@ -555,7 +555,7 @@ string fraction(double a)
 	//		if(a<0) {
 	//			cout<<"-";
 	//		}
-	//		return "2/¡Ì(¦Ð)";
+	//		return "2/âˆš(Ï€)";
 	//	} else {
 	//		return to_string(a);
 	//	}
