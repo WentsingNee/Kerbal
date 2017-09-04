@@ -13,9 +13,12 @@
 
 using namespace std;
 
-void program_start(bool is_debug);
+extern unsigned long start_time;
+extern bool debug;
+
+inline void program_start(bool is_debug);
 unsigned long show_time_cost();
-bool program_will_end();
+void program_will_end();
 
 enum Type
 {
@@ -37,8 +40,33 @@ template <class T> Type get_type(const T &a);
 template <class T> bool print_type_infomation(const T &a);
 template <class T> void print_bit(const T &a);
 template <class T> void print_16(const T &a);
-template <class T> string get_typename(const T &a);
+template <class T> inline string get_typename(const T &a);
 string get_user_name();
+
+inline void program_start(bool is_debug)
+{
+	start_time = GetTickCount();
+	ios::sync_with_stdio(false);
+	cin.tie(0);
+	cout << PRODUCT_NAME << "PRODUCT_NAME [版本 " << VER_STRING << "]\n" << "(c) " << COMPANY_NAME << "。保留所有权利。" << endl;
+	/*
+	 Microsoft Windows [版本 10.0.14393]
+	 (c) 2016 Microsoft Corporation。保留所有权利。
+	 */
+
+	cout << "本产品授权给" << get_user_name() << "使用\n" << endl;
+	/*
+	 本产品授权给Peter使用
+	 */
+
+	/*	cout << __LINE__ << endl;
+	 cout << __FILE__ << endl;
+	 cout << __DATE__ << endl;
+	 cout << __TIME__ << endl;
+	 cout << __STDC__ << endl;*/
+
+	debug = is_debug;
+}
 
 template <class T>
 Type get_type(const T &a)
@@ -139,63 +167,70 @@ bool print_type_infomation(const T &a)
 }
 
 template <class T>
-void print_bit(const T &a)
+string bit_of(const T &a)
 {
-	char *p = (char *) (&a) + sizeof(T) / sizeof(char) - sizeof(char);
-	for (int i = sizeof(T) / sizeof(char); i >= 1; i--) {
+	string result = "";
+	char *p = (char *) (&a) + sizeof(T) / sizeof(char);
+	while (p != (char *) (&a)) {
+		--p;
 		for (int j = 8 * sizeof(char) - 1; j >= 0; j--) {
-			cout << ((*p >> j) & 1);
+			if ((*p >> j) & 1) {
+				result += '1';
+			} else {
+				result += '0';
+			}
 		}
-		cout << " ";
-		p--;
+		result += " ";
 	}
-	cout << endl;
+	return result;
 }
 
-void print_string_bit(char * const a);
-void print_string_16(char * const a);
-void print_string_bit(string a);
-void print_string_16(string a);
-
-template <class T>
-void print_16(const T &a)
+string bit_of(const char * const a);
+inline string bit_of(const string &a)
 {
-	unsigned char tmp;
-	char *p = (char *) (&a) + sizeof(T) / sizeof(char) - sizeof(char);
-	for (int i = sizeof(T) / sizeof(char); i >= 1; i--) {
-		tmp = *p;
-		tmp >>= 4;
-		if (tmp > 9) {
-			//cout << char('A' + tmp - 10);
-			cout << char(tmp + 55);
-		} else {
-			cout << char(tmp + '0');
-		}
+	return bit_of(&a[0]);
+}
+string ocx_of(const char * const a);
+inline string ocx_of(const string &a)
+{
+	return ocx_of(&a[0]);
+}
 
-		tmp = *p;
-		tmp <<= 4;
-		tmp >>= 4;
-		if (tmp > 9) {
-			cout << char(tmp + 55);
-		} else {
-			cout << char(tmp + '0');
-		}
-		cout << " ";
-		p--;
-	}
-	cout << endl;
+inline void get_16(char *buffer, const char src)
+{
+	unsigned char tmp = src;
+	tmp >>= 4;
+	buffer[0] = char(tmp > 9 ? tmp + 55 : tmp + '0'); //55 means 'A'-10
+
+	tmp = src;
+	tmp <<= 4;
+	tmp >>= 4;
+	buffer[1] = char(tmp > 9 ? tmp + 55 : tmp + '0');
+	buffer[2] = '\0';
 }
 
 template <class T>
-string get_typename(const T &a)
+string ocx_of(const T &a)
+{
+	char buffer[10];
+	string result = "";
+	char * p = (char *) (&a) + sizeof(T) / sizeof(char);
+	while (p != (char *) (&a)) {
+		--p;
+		get_16(buffer, *p);
+		(result += buffer) += " ";
+	}
+	return result;
+}
+
+template <class T>
+inline string get_typename(const T &a)
 {
 	return string(typeid(a).name());
 }
 
 class Object
 {
-	protected:
-		virtual void Object_init() = 0;
 	public:
 		virtual ~Object()
 		{
@@ -211,6 +246,7 @@ class Object
 			return true;
 		}
 
+		virtual bool eaual(const Object &with) = 0;
 };
 
 #endif	/* End EXE_SERVE_HPP_ */

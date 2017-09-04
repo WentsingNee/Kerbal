@@ -10,7 +10,7 @@
 
 namespace statistics
 {
-	vector<Record> Mapminmax::arr_record = vector<Record>();
+	std::vector<Record> Mapminmax::arr_record = std::vector<Record>();
 
 	void Mapminmax::mapminmax(double a[], int len)
 	{
@@ -44,7 +44,7 @@ namespace statistics
 		}
 	}
 
-	double Mapminmax::anti_mapminmax(double a, double reference[]) throw (invalid_argument)
+	double Mapminmax::anti_mapminmax(double a, double reference[]) throw (std::invalid_argument)
 	{
 		//数据逆归一化
 		for (unsigned int i = 0; i < arr_record.size(); i++) {
@@ -56,7 +56,7 @@ namespace statistics
 				return a / k - b;
 			}
 		}
-		throw invalid_argument("");
+		throw std::invalid_argument("");
 	}
-} /* End of namespace statistics */
+} /* namespace statistics */
 

@@ -5,15 +5,15 @@
 #include <string>
 #include <sstream>
 
-using namespace std;
-
 namespace _String
 {
+	namespace
+	{
+		using namespace std;
+	}
 #if __cplusplus < 201103L //C++0x
 string to_string(double x);
 #endif //C++0x
 }
-
-using namespace _String;
 
 #endif	/* End _STRING_H_ */

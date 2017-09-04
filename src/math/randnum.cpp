@@ -3,7 +3,7 @@
 
 #include "basic_math.hpp"
 
-using namespace std;
+using namespace statistics;
 
 unsigned int seed()
 {
@@ -61,7 +61,7 @@ double normdist_noise(double former, double sigma, double miu)
 	double x, y, y_range_max;
 	x = rand_between(miu - 6 * sigma, miu + 6 * sigma);
 	if (miu * miu / sigma / sigma > 2 * log(2)) {
-		y_range_max = 2.0 * exp(pow(miu / sigma, 2) / (-2)) / sqrt(2 * M_PI) / sigma; //双峰
+		y_range_max = 2.0 * exp(pow(-0.5 * miu / sigma, 2)) / sqrt(2 * M_PI) / sigma; //双峰
 	} else {
 		y_range_max = 1.0 / sqrt(2 * M_PI) / sigma; //单峰
 	}

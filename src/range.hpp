@@ -27,69 +27,66 @@
  *
  */
 
-#ifndef RANGERECORD_HPP_
-#define RANGERECORD_HPP_
+#ifndef RANGE_HPP_
+#define RANGE_HPP_
+
+#include "except_C++0x.hpp"
 
 #if __cplusplus >= 201103L //C++0x
 
-#include <algorithm>
-
-using namespace std;
-
 namespace Range
 {
-	class it final
+	class Range_record;
+	//供Range_iterator使用的前向引用声明
+	class Range_iterator final
 	{
-		protected:
-			int now, step;
-
-			it(int now, int step = 1)
-			{
-				this->now = now;
-				this->step = step;
-			}
-
 			friend class Range_record;
+		protected:
+			int now;
+			const Range_record * parent_ptr;
+
+			Range_iterator(int now, const Range_record &parent);
 
 		public:
-			int operator*() const
-			{
-				return now;
-			}
-
-			it& operator++()
-			{
-				//前自增
-				now += step;
-				return *this;
-			}
-
-			bool operator!=(const it &with) const
-			{
-				return this->now != with.now;
-			}
+			int operator*() const;
+			Range_iterator& operator++();
+			bool operator!=(const Range_iterator &with) const;
 	};
 
 	class Range_record final
 	{
 		protected:
+			friend class Range_iterator;
+
 			int from, to, step;
 
 			Range_record(int to);
-			Range_record(int from, int to, int step = 1);
+			Range_record(int from, int to, int step = 1) throw (std::invalid_argument);
 
 			friend Range_record range(int to);
 			friend Range_record range(int from, int to, int step);
 
 		public:
-			it begin() const
+			Range_iterator begin() const
 			{
-				return it(from, step);
+				if ((from < to && step < 0) || from == to || (from > to && step > 0)) {
+					return end();
+				}
+				return Range_iterator(from, *this);
 			}
 
-			it end() const
+			Range_iterator end() const
 			{
-				return it(to, step);
+				return Range_iterator(to, *this);
+			}
+
+			bool whether_in(int x) const
+			{ //检查游标x是否在范围内
+				if (from < to) {
+					return (from <= x && x < to);
+				} else {
+					return (to < x && x <= from);
+				}
 			}
 	};
 
@@ -103,9 +100,8 @@ namespace Range
 		return Range_record(0, to, 1);
 	}
 
-} /* End of namespace Range */
-using namespace Range;
+} /* namespace Range */
 
 #endif /* End C++0x */
 
-#endif /* End RANGERECORD_HPP_ */
+#endif /* End RANGE_HPP_ */

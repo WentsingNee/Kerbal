@@ -1,9 +1,11 @@
 #include "String_serve.hpp"
 
-using namespace std;
-
 namespace _String
 {
+	namespace
+	{
+		using namespace std;
+	}
 #if __cplusplus < 201103L //C++0x
 string to_string(double x)
 {

@@ -3,8 +3,6 @@
 #include <cmath>
 #include "basic_math.hpp"
 
-using namespace std;
-
 double dy(double x, double dx, double (*f)(double))
 {
 	return (*f)(x + dx) - (*f)(x);
@@ -104,8 +102,8 @@ double B(int n) //计算伯努利数
 	result += 1.0;		//broad_combine(n+1,0)*B(0)
 	result += (n + 1) / (-2.0);		//broad_combine(n+1,1)*B(1)
 
-	for (int k = 2; k <= n - 1; k = k + 2) {
-		result += combine(n + 1, k) * B(k);
+	for (int k = 2; k < n; k += 2) {
+		result += statistics::combine(n + 1, k) * B(k);
 
 //		bc=broad_combine(n+1,k);
 //		co=combine(n+1,k);
@@ -115,7 +113,7 @@ double B(int n) //计算伯努利数
 //			cout<<"****************************\n";
 //		}
 	}
-	result = -result / (n + 1);
+	result /= -(n + 1);
 	//cout << "B(" << n << ")="<<fraction(result)<<endl;
 	return result;
 }

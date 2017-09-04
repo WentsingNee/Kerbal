@@ -8,8 +8,6 @@
 
 #include "statistics.hpp"
 
-using namespace std;
-
 double dy(double x, double dx, double (*f)(double)); //微y
 double derivative(double x, double (*f)(double), double dx = 0.001); //导数
 double ladder(double a, double b, double dx, double (*f)(double)); //梯形法积分

@@ -1,9 +1,12 @@
 #include "Complex.hpp"
 
-using namespace std;
-
 namespace complex
 {
+	namespace
+	{
+		using namespace std;
+	}
+
 	//服务部分
 	string Complex::to_string() const
 	{
@@ -74,6 +77,19 @@ namespace complex
 		return Complex(a + b.real, b.imag);
 	}
 
+	Complex& Complex::operator+=(const Complex &with)
+	{
+		this->real += with.real;
+		this->imag += with.imag;
+		return (*this);
+	}
+
+	Complex& Complex::operator+=(const double &with)
+	{
+		this->real += with;
+		return (*this);
+	}
+
 	Complex operator-(const Complex &a, const Complex &b)
 	{
 		return Complex(a.real - b.real, a.imag - b.imag);
@@ -87,6 +103,19 @@ namespace complex
 	Complex operator-(double a, const Complex &b)
 	{
 		return Complex(a - b.real, -b.imag);
+	}
+
+	Complex& Complex::operator-=(const Complex &with)
+	{
+		this->real -= with.real;
+		this->imag -= with.imag;
+		return (*this);
+	}
+
+	Complex& Complex::operator-=(const double &with)
+	{
+		this->real -= with;
+		return (*this);
 	}
 
 	Complex operator*(const Complex &a, const Complex &b)
@@ -142,12 +171,6 @@ namespace complex
 
 	bool operator==(const Complex &a, const Complex &b)
 	{
-		//	if(a.real==b.real) {
-		//		if(a.imag==b.imag) {
-		//			return true;
-		//		}
-		//	}
-		//	return false;
 		return a.real == b.real && a.imag == b.imag;
 	}
 
@@ -163,12 +186,6 @@ namespace complex
 
 	bool operator!=(const Complex &a, const Complex &b)
 	{
-		//	if(a.real==b.real) {
-		//		if(a.imag==b.imag) {
-		//			return false;
-		//		}
-		//	}
-		//	return true;
 		return a.real != b.real || a.imag != b.imag;
 	}
 
@@ -207,7 +224,7 @@ namespace complex
 		return input;
 	}
 
-	//函数部分
+//函数部分
 
 	Complex trans(double r, double sigma) //根据模长和幅角返回一个复数
 	{
@@ -229,7 +246,7 @@ namespace complex
 		return z.to_string();
 	}
 
-	//应用部分
+//应用部分
 	void quac_equ(double a, double b, double c, Complex &x1, Complex &x2, short &num) throw (invalid_argument)
 	{
 		//一元二次方程

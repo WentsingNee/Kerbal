@@ -8,7 +8,6 @@
 #include <cmath>
 #include "statistics.hpp"
 
-using namespace std;
 
 unsigned int seed();
 

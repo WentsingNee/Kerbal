@@ -1,7 +1,5 @@
 #include "big.hpp"
 
-using namespace std;
-
 namespace big
 {
 	double big_pow(double base, double exponent, int &exponent_result)

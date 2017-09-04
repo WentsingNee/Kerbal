@@ -6,7 +6,6 @@
  *      Fuction:
  */
 
-#include <iostream>
 #include "choose.hpp"
 
 #if __cplusplus < 201103L //C++0x
@@ -17,59 +16,66 @@
 )
 #endif /* End C++0x */
 
-using namespace std;
-
-char choose(int index, char value0, ...) throw (invalid_argument)
+namespace _choose
 {
-	va_list arg_ptr;
-	va_start(arg_ptr, value0);
-	char result = choose_int(index, value0, arg_ptr);
-	va_end(arg_ptr);
-	return result;
-}
+	namespace
+	{
+		using namespace std;
+	}
 
-unsigned char choose(int index, unsigned char value0, ...) throw (invalid_argument)
-{
-	va_list arg_ptr;
-	va_start(arg_ptr, value0);
-	unsigned char result = choose_int(index, value0, arg_ptr);
-	va_end(arg_ptr);
-	return result;
-}
+	char choose(int index, char value0, ...) throw (invalid_argument)
+	{
+		va_list arg_ptr;
+		va_start(arg_ptr, value0);
+		char result = choose_int(index, value0, arg_ptr);
+		va_end(arg_ptr);
+		return result;
+	}
 
-signed char choose(int index, signed char value0, ...) throw (invalid_argument)
-{
-	va_list arg_ptr;
-	va_start(arg_ptr, value0);
-	signed char result = choose_int(index, value0, arg_ptr);
-	va_end(arg_ptr);
-	return result;
-}
+	unsigned char choose(int index, unsigned char value0, ...) throw (invalid_argument)
+	{
+		va_list arg_ptr;
+		va_start(arg_ptr, value0);
+		unsigned char result = choose_int(index, value0, arg_ptr);
+		va_end(arg_ptr);
+		return result;
+	}
 
-short choose(int index, short value0, ...) throw (invalid_argument)
-{
-	va_list arg_ptr;
-	va_start(arg_ptr, value0);
-	short result = choose_int(index, value0, arg_ptr);
-	va_end(arg_ptr);
-	return result;
-}
+	signed char choose(int index, signed char value0, ...) throw (invalid_argument)
+	{
+		va_list arg_ptr;
+		va_start(arg_ptr, value0);
+		signed char result = choose_int(index, value0, arg_ptr);
+		va_end(arg_ptr);
+		return result;
+	}
 
-unsigned short choose(int index, unsigned short value0, ...) throw (invalid_argument)
-{
-	va_list arg_ptr;
-	va_start(arg_ptr, value0);
-	unsigned short result = choose_int(index, value0, arg_ptr);
-	va_end(arg_ptr);
-	return result;
-}
+	short choose(int index, short value0, ...) throw (invalid_argument)
+	{
+		va_list arg_ptr;
+		va_start(arg_ptr, value0);
+		short result = choose_int(index, value0, arg_ptr);
+		va_end(arg_ptr);
+		return result;
+	}
 
-float choose(int index, float value0, ...) throw (invalid_argument)
-{
-	va_list arg_ptr;
-	va_start(arg_ptr, value0);
-	float result = choose_float(index, value0, arg_ptr);
-	va_end(arg_ptr);
-	return result;
-}
+	unsigned short choose(int index, unsigned short value0, ...) throw (invalid_argument)
+	{
+		va_list arg_ptr;
+		va_start(arg_ptr, value0);
+		unsigned short result = choose_int(index, value0, arg_ptr);
+		va_end(arg_ptr);
+		return result;
+	}
+
+	float choose(int index, float value0, ...) throw (invalid_argument)
+	{
+		va_list arg_ptr;
+		va_start(arg_ptr, value0);
+		float result = choose_float(index, value0, arg_ptr);
+		va_end(arg_ptr);
+		return result;
+	}
+
+}/* Namespace _choose */
 

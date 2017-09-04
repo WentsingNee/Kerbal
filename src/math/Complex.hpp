@@ -5,15 +5,18 @@
 #include <string>
 #include <cstdlib>
 #include <cmath>
-#include "../except_C++0x.hpp"
 #include <sstream>
 
+#include "../except_C++0x.hpp"
 #include "../String_serve.hpp"
-
-using namespace std;
 
 namespace complex
 {
+	namespace
+	{
+		using namespace std;
+	}
+
 	class Complex
 	{
 		public:
@@ -50,10 +53,14 @@ namespace complex
 			friend Complex operator+(const Complex &a, const Complex &b);
 			friend Complex operator+(const Complex &a, double b);
 			friend Complex operator+(double a, const Complex &b);
+			Complex& operator+=(const Complex &with);
+			Complex& operator+=(const double &with);
 
 			friend Complex operator-(const Complex &a, const Complex &b);
 			friend Complex operator-(const Complex &a, double b);
 			friend Complex operator-(double a, const Complex &b);
+			Complex& operator-=(const Complex &with);
+			Complex& operator-=(const double &with);
 
 			friend Complex operator*(const Complex &a, const Complex &b);
 			friend Complex operator*(const Complex &a, double b);
@@ -91,7 +98,6 @@ namespace complex
 //一元二次方程
 
 } /* End of namespace complex */
-using namespace complex;
 
 //#pragma message(__DATE__ "  " __TIME__"  编译完成"__FILE__)
 
