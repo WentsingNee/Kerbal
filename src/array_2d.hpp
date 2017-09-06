@@ -79,22 +79,31 @@ namespace array_2d
 				return p_to_matrix->p[row_want_to];
 			}
 
+			const Type* begin() const
+			{
+				return p_to_matrix->p[row_want_to];
+			}
+
 			Type* end()
 			{
 				return p_to_matrix->p[row_want_to] + p_to_matrix->column;
 			}
 
-			safety<Type> operator++(int)
+			const Type* end() const
 			{
-				safety<Type> tmp(*this);
-				row_want_to++;
-				return tmp;
+				return p_to_matrix->p[row_want_to] + p_to_matrix->column;
 			}
 
-			friend bool operator<(const safety<Type> &a, const safety<Type> &b) throw (invalid_argument)
+			safety<Type> operator++()
+			{
+				++row_want_to;
+				return *this;
+			}
+
+			friend bool operator!=(const safety<Type> &a, const safety<Type> &b) throw (invalid_argument)
 			{
 				if (a.p_to_matrix == b.p_to_matrix) {
-					return a.row_want_to < b.row_want_to;
+					return a.row_want_to != b.row_want_to;
 				} else {
 					throw invalid_argument("a and b is not point to same Array_2d");
 				}
@@ -184,10 +193,11 @@ namespace array_2d
 			bool empty() const;
 			void clear();
 
-			int get_row() const;
-			int get_column() const;
-			bool is_const();
-			bool is_const() const;
+			inline int get_row() const;
+			inline int get_column() const;
+			inline const Type** get_data() const;
+			inline bool is_const();
+			inline bool is_const() const;
 
 			const Type& get_element(int row, int column) const throw (out_of_range);
 			Type& get_element(int row, int column) throw (out_of_range);
@@ -225,6 +235,32 @@ namespace array_2d
 
 			bool operator==(const Array_2d<Type> &with) const;
 			bool operator!=(const Array_2d<Type> &with) const;
+
+			friend Array_2d<Type> sub_of(const Array_2d<Type> &src, int up, int down, int left, int right) throw (invalid_argument, out_of_range)
+			{
+				if (up > down || left > right) {
+					throw new invalid_argument("up > down or left > right");
+				}
+
+				src.test_row(up);
+				src.test_row(down);
+				src.test_column(left);
+				src.test_column(right);
+
+				Array_2d<Type> result(down - up + 1, right - left + 1, false);
+				for (int i = 0; i < result.row; ++i) {
+					for (int j = 0; j < result.column; ++j) {
+						result.p[i][j] = src.p[i + up][j + left];
+					}
+				}
+				return result;
+			}
+
+			void do_reflect_row();
+			void do_reflect_column();
+			void do_rotate_180();
+			void do_rotate_90(); // 逆时针转90度
+			void do_rotate_270(); // 逆时针转270度
 
 			/*		safety<Type> begin()
 			 {
@@ -498,25 +534,31 @@ namespace array_2d
 	}
 
 	template <class Type>
-	int Array_2d<Type>::get_row() const
+	inline int Array_2d<Type>::get_row() const
 	{
 		return row;
 	}
 
 	template <class Type>
-	int Array_2d<Type>::get_column() const
+	inline int Array_2d<Type>::get_column() const
 	{
 		return column;
 	}
 
 	template <class Type>
-	bool Array_2d<Type>::is_const()
+	inline const Type** Array_2d<Type>::get_data() const
+	{
+		return p;
+	}
+
+	template <class Type>
+	inline bool Array_2d<Type>::is_const()
 	{
 		return false;
 	}
 
 	template <class Type>
-	bool Array_2d<Type>::is_const() const
+	inline bool Array_2d<Type>::is_const() const
 	{
 		return true;
 	}
@@ -753,6 +795,63 @@ namespace array_2d
 	bool Array_2d<Type>::operator!=(const Array_2d<Type> &with) const
 	{
 		return !(this->operator ==(with));
+	}
+
+	template <class Type>
+	void Array_2d<Type>::do_reflect_row()
+	{
+		for (int i = 0; i < row / 2; ++i) {
+			swap(p[i], p[row - 1 - i]);
+		}
+	}
+
+	template <class Type>
+	void Array_2d<Type>::do_reflect_column()
+	{
+		for (int i = 0; i < row; ++i) {
+			for (int j = 0; j < column / 2; ++j) {
+				swap(p[i][j], p[i][column - 1 - j]);
+			}
+		}
+	}
+
+	template <class Type>
+	void Array_2d<Type>::do_rotate_180()
+	{
+		do_reflect_row();
+		do_reflect_column();
+	}
+
+	template <class Type>
+	void Array_2d<Type>::do_rotate_90()
+	{ // 逆时针转90度
+		int tmp = row;
+		row = column;
+		column = tmp;
+
+		Type **p_former = p;
+		p = new double[row][column];
+		for (int i = 0; i < row; ++i) {
+			for (int j = 0; j < column; ++j) {
+				p[i][j] = p_former[j][row - 1 - i];
+			}
+		}
+	}
+
+	template <class Type>
+	void Array_2d<Type>::do_rotate_270()
+	{ // 逆时针转270度
+		int tmp = row;
+		row = column;
+		column = tmp;
+
+		double **p_former = p;
+		p = new double[row][column];
+		for (int i = 0; i < row; ++i) {
+			for (int j = 0; j < column; ++j) {
+				p[i][j] = p_former[column - 1 - j][i];
+			}
+		}
 	}
 
 }/* Namespace array_2d */

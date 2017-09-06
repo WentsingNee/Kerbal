@@ -236,14 +236,6 @@ namespace matrix
 
 		this->test_row(row1);
 		this->test_row(row2);
-
-//	void *temp;
-//	const size_t size_of_a_row = column * sizeof(Type); //这一行为加快速度而存在
-//	temp = malloc(size_of_a_row);
-//	memcpy(temp, p[row1], size_of_a_row);
-//	memcpy(p[row1], p[row2], size_of_a_row);
-//	memcpy(p[row2], temp, size_of_a_row);
-//	free(temp);
 		swap(p[row1], p[row2]);
 	}
 
@@ -830,7 +822,7 @@ namespace matrix
 		return true;
 	}
 
-	Matrix Transpose(const Matrix &A)
+	Matrix TransposeOf(const Matrix &A)
 	{
 		//返回矩阵A的转置矩阵
 		Matrix result(A.column, A.row, false);

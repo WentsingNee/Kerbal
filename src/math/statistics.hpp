@@ -24,7 +24,7 @@ namespace statistics
 	template <class T> double harave(const T a[], int len); //harmonic mean
 	template <class T> double squave(const T a[], int len); //squ
 	template <class T> double var(const T a[], int len); //方差
-	unsigned __int64 fact(unsigned int n); //计算阶乘, 目前可算到20!
+	unsigned long long fact(unsigned int n); //计算阶乘, 目前可算到20!
 	unsigned long combine(int n, int r) throw (invalid_argument);
 	double normdist(double x, double sigma, double miu); //正态分布的概率密度函数, miu=ave, sigma=expect
 	double std_normdist(double x); //标准正态分布的概率密度函数, miu=ave, sigma=expect

@@ -6,12 +6,25 @@
 #include <iostream>
 #include <typeinfo>
 #include <cstring>
-#include <windows.h>
 #include <string>
 
 #include "advanced_math_private.h"
 
-using namespace std;
+#ifdef __linux
+# include <time.h>
+# include <unistd.h>
+# include <pwd.h>
+inline unsigned long GetTickCount()
+{
+	struct timespec ts;
+	clock_gettime(CLOCK_MONOTONIC, &ts);
+	return (ts.tv_sec * 1000 + ts.tv_nsec / 1000000);
+}
+#endif //__linux
+
+#if (defined __WINDOWS_) || (defined _WIN32)
+# include <windows.h>
+#endif // win
 
 extern unsigned long start_time;
 extern bool debug;
@@ -40,21 +53,21 @@ template <class T> Type get_type(const T &a);
 template <class T> bool print_type_infomation(const T &a);
 template <class T> void print_bit(const T &a);
 template <class T> void print_16(const T &a);
-template <class T> inline string get_typename(const T &a);
-string get_user_name();
+template <class T> inline std::string get_typename(const T &a);
+inline std::string get_user_name();
 
 inline void program_start(bool is_debug)
 {
 	start_time = GetTickCount();
-	ios::sync_with_stdio(false);
-	cin.tie(0);
-	cout << PRODUCT_NAME << "PRODUCT_NAME [版本 " << VER_STRING << "]\n" << "(c) " << COMPANY_NAME << "。保留所有权利。" << endl;
+	std::ios::sync_with_stdio(false);
+	std::cin.tie(0);
+	std::cout << PRODUCT_NAME << " [版本 " << VER_STRING << "]\n" << "(c) " << COMPANY_NAME << "。保留所有权利。" << std::endl;
 	/*
 	 Microsoft Windows [版本 10.0.14393]
 	 (c) 2016 Microsoft Corporation。保留所有权利。
 	 */
 
-	cout << "本产品授权给" << get_user_name() << "使用\n" << endl;
+	std::cout << "本产品授权给" << get_user_name() << "使用\n" << std::endl;
 	/*
 	 本产品授权给Peter使用
 	 */
@@ -103,6 +116,7 @@ Type get_type(const T &a)
 template <class T>
 bool print_type_infomation(const T &a)
 {
+	using namespace std;
 	Type typerecord = get_type(a);
 
 	switch (typerecord) {
@@ -167,9 +181,9 @@ bool print_type_infomation(const T &a)
 }
 
 template <class T>
-string bit_of(const T &a)
+std::string bit_of(const T &a)
 {
-	string result = "";
+	std::string result = "";
 	char *p = (char *) (&a) + sizeof(T) / sizeof(char);
 	while (p != (char *) (&a)) {
 		--p;
@@ -185,13 +199,13 @@ string bit_of(const T &a)
 	return result;
 }
 
-string bit_of(const char * const a);
-inline string bit_of(const string &a)
+std::string bit_of(const char * const a);
+inline std::string bit_of(const std::string &a)
 {
 	return bit_of(&a[0]);
 }
-string ocx_of(const char * const a);
-inline string ocx_of(const string &a)
+std::string ocx_of(const char * const a);
+inline std::string ocx_of(const std::string &a)
 {
 	return ocx_of(&a[0]);
 }
@@ -210,10 +224,10 @@ inline void get_16(char *buffer, const char src)
 }
 
 template <class T>
-string ocx_of(const T &a)
+std::string ocx_of(const T &a)
 {
 	char buffer[10];
-	string result = "";
+	std::string result = "";
 	char * p = (char *) (&a) + sizeof(T) / sizeof(char);
 	while (p != (char *) (&a)) {
 		--p;
@@ -224,10 +238,29 @@ string ocx_of(const T &a)
 }
 
 template <class T>
-inline string get_typename(const T &a)
+inline std::string get_typename(const T &a)
 {
-	return string(typeid(a).name());
+	return std::string(typeid(a).name());
 }
+
+#ifdef __linux
+inline std::string get_user_name()
+{
+	return std::string(getpwuid(getuid())->pw_name);
+}
+#endif
+
+#if (defined __WINDOWS_) || (defined _WIN32)
+#pragma comment(lib,"Advapi32.lib")
+inline std::string get_user_name()
+{
+	char strBuffer[256] = {0};
+	unsigned long dwSize = 256;
+	GetUserName(strBuffer, &dwSize);
+
+	return std::string(strBuffer);
+}
+#endif
 
 class Object
 {

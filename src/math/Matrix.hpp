@@ -98,13 +98,48 @@ namespace matrix
 			//计算
 			friend Matrix pow(const Matrix &A, const int n);
 			friend double tr(const Matrix &src) throw (invalid_argument);		//返回方阵的迹
-			friend Matrix Transpose(const Matrix &A);
+			friend Matrix TransposeOf(const Matrix &A);
 			friend Matrix Cofactor(const Matrix &A, const int x, const int y) throw (out_of_range); //构造方阵A的余子式A(x,y)
 			friend bool Matcmp(const Matrix &A, const Matrix &B, double eps);
 
 			void test_row(const int row_test) const throw (out_of_range);
 			void test_column(const int column_test) const throw (out_of_range);
 			void test_square() const throw (invalid_argument);
+
+			friend Matrix conv2(const Matrix &A, const Matrix &B, int size = 0)
+			{
+				Matrix core = B;
+				core.do_rotate_180();
+				switch (size) {
+					case 0: {
+						Matrix result(A.row + B.row - 1, A.column + B.column - 1, true);
+						for (int i = 0; i < result.row; ++i) {
+							for (int j = 0; j < result.column; ++j) {
+								int c_from, c_to;
+								if (j < core.column) {
+									c_from = 0;
+									c_to = j;
+								} else if (j < A.column) {
+									c_from = 0;
+									c_to = i;
+								} else {
+									c_from = 0;
+									c_to = result.column;
+								}
+							}
+						}
+						return result;
+					}
+					case 1: {
+						Matrix result(A.row, A.column, true);
+						return result;
+					}
+					default: {
+						Matrix result(A.row - B.row + 1, A.column - B.column + 1, true);
+						return result;
+					}
+				}
+			}
 	};
 
 	template <class T>

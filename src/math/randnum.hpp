@@ -4,7 +4,6 @@
 //#pragma message(__DATE__ "  " __TIME__"  正在编译"__FILE__)
 
 #include <stdlib.h>
-#include <windows.h>
 #include <cmath>
 #include "statistics.hpp"
 

@@ -23,9 +23,9 @@ namespace statistics
 		return sum;
 	}
 
-	unsigned __int64 fact(unsigned int n) //计算阶乘, 目前可算到20!
+	unsigned long long fact(unsigned int n) //计算阶乘, 目前可算到20!
 	{
-		unsigned __int64 result = 1;
+		unsigned long long result = 1;
 		if (n >= 2) {
 			for (unsigned int i = 2; i <= n; i++) {
 				result *= i;
