@@ -41,19 +41,19 @@ namespace array_2d
 	{
 		protected:
 			Array_2d<Type> *p_to_matrix;
-			int row_want_to;
+			mutable int row_point_to;
 		public:
-			safety(Array_2d<Type> *p_to_matrix, const int row_want_to)
+			safety(Array_2d<Type> *p_to_matrix, const int row_point_to)
 			{
 				this->p_to_matrix = p_to_matrix;
-				this->row_want_to = row_want_to;
+				this->row_point_to = row_point_to;
 				//cout<<"safe:"<<this<<endl;
 			}
 
 			safety(const Array_2d<Type> * const p2, const int row)
 			{
 				this->p_to_matrix = (Array_2d<Type> *) p2;
-				this->row_want_to = row;
+				this->row_point_to = row;
 				//cout<<"safe:"<<this<<endl;
 			}
 
@@ -76,34 +76,34 @@ namespace array_2d
 
 			Type* begin()
 			{
-				return p_to_matrix->p[row_want_to];
+				return p_to_matrix->p[row_point_to];
 			}
 
 			const Type* begin() const
 			{
-				return p_to_matrix->p[row_want_to];
+				return p_to_matrix->p[row_point_to];
 			}
 
 			Type* end()
 			{
-				return p_to_matrix->p[row_want_to] + p_to_matrix->column;
+				return p_to_matrix->p[row_point_to] + p_to_matrix->column;
 			}
 
 			const Type* end() const
 			{
-				return p_to_matrix->p[row_want_to] + p_to_matrix->column;
+				return p_to_matrix->p[row_point_to] + p_to_matrix->column;
 			}
 
 			safety<Type> operator++()
 			{
-				++row_want_to;
+				++row_point_to;
 				return *this;
 			}
 
 			friend bool operator!=(const safety<Type> &a, const safety<Type> &b) throw (invalid_argument)
 			{
 				if (a.p_to_matrix == b.p_to_matrix) {
-					return a.row_want_to != b.row_want_to;
+					return a.row_point_to != b.row_point_to;
 				} else {
 					throw invalid_argument("a and b is not point to same Array_2d");
 				}
@@ -114,14 +114,14 @@ namespace array_2d
 	Type& safety<Type>::operator[](int column) throw (out_of_range)
 	{
 		p_to_matrix->test_column(column);
-		return p_to_matrix->p[row_want_to][column];
+		return p_to_matrix->p[row_point_to][column];
 	}
 
 	template <class Type>
 	const Type& safety<Type>::operator[](int column) const throw (out_of_range)
 	{
 		p_to_matrix->test_column(column);
-		return p_to_matrix->p[row_want_to][column];
+		return p_to_matrix->p[row_point_to][column];
 	}
 
 	enum Array_2d_input_info
@@ -193,6 +193,8 @@ namespace array_2d
 			bool empty() const;
 			void clear();
 
+			void resize(int new_row, int new_column);
+
 			inline int get_row() const;
 			inline int get_column() const;
 			inline const Type** get_data() const;
@@ -203,7 +205,7 @@ namespace array_2d
 			Type& get_element(int row, int column) throw (out_of_range);
 
 			void set_element(int row, int column, Type value) throw (out_of_range);
-			template <class T> void set_element(const T *src, int row, int column);
+			template <class T> void set_element(const T *src, int row, int column); //根据二维数组设值
 			Array_2d<Type> call(Type (*__pf)(Type)) const;
 
 			Array_2d<Type>& operator <<(const Type &value) throw (out_of_range); //输入
@@ -236,52 +238,55 @@ namespace array_2d
 			bool operator==(const Array_2d<Type> &with) const;
 			bool operator!=(const Array_2d<Type> &with) const;
 
-			friend Array_2d<Type> sub_of(const Array_2d<Type> &src, int up, int down, int left, int right) throw (invalid_argument, out_of_range)
-			{
-				if (up > down || left > right) {
-					throw new invalid_argument("up > down or left > right");
-				}
-
-				src.test_row(up);
-				src.test_row(down);
-				src.test_column(left);
-				src.test_column(right);
-
-				Array_2d<Type> result(down - up + 1, right - left + 1, false);
-				for (int i = 0; i < result.row; ++i) {
-					for (int j = 0; j < result.column; ++j) {
-						result.p[i][j] = src.p[i + up][j + left];
-					}
-				}
-				return result;
-			}
-
 			void do_reflect_row();
 			void do_reflect_column();
 			void do_rotate_180();
 			void do_rotate_90(); // 逆时针转90度
 			void do_rotate_270(); // 逆时针转270度
 
-			/*		safety<Type> begin()
-			 {
-			 return safety<Type>(this, 0);
-			 }
+			safety<Type> begin()
+			{
+				return safety<Type>(this, 0);
+			}
 
-			 const safety<Type> begin() const
-			 {
-			 return safety<Type>(this, 0);
-			 }
+			const safety<Type> begin() const
+			{
+				return safety<Type>(this, 0);
+			}
 
-			 safety<Type> end()
-			 {
-			 return safety<Type>(this, row);
-			 }
+			safety<Type> end()
+			{
+				return safety<Type>(this, row);
+			}
 
-			 const safety<Type> end() const
-			 {
-			 return safety<Type>(this, row);
-			 }*/
+			const safety<Type> end() const
+			{
+				return safety<Type>(this, row);
+			}
+
+			friend Array_2d<Type> sub_of(const Array_2d<Type> &src, int up, int down, int left, int right) throw (invalid_argument, out_of_range);
 	};
+
+	template <class Type>
+	Array_2d<Type> sub_of(const Array_2d<Type> &src, int up, int down, int left, int right) throw (invalid_argument, out_of_range)
+	{
+		if (up > down || left > right) {
+			throw new invalid_argument("up > down or left > right");
+		}
+
+		src.test_row(up);
+		src.test_row(down);
+		src.test_column(left);
+		src.test_column(right);
+
+		Array_2d<Type> result(down - up + 1, right - left + 1, false);
+		for (int i = 0; i < result.row; ++i) {
+			for (int j = 0; j < result.column; ++j) {
+				result.p[i][j] = src.p[i + up][j + left];
+			}
+		}
+		return result;
+	}
 
 	template <class Type>
 	Array_2d<Type>::Array_2d(const int row, const int column, bool if_set0)
@@ -525,12 +530,66 @@ namespace array_2d
 	void Array_2d<Type>::clear()
 	{
 		//归还一个row行的二维数组
-		for (int i = 0; i < row; i++)
+		for (int i = 0; i < row; ++i)
 			delete[] p[i];
 		delete[] p;
 		p = NULL;
 		row = 0;
 		column = 0;
+	}
+
+	template <class Type>
+	void Array_2d<Type>::resize(int new_row, int new_column)
+	{
+		if (new_row <= 0 || new_column <= 0) { //防止非正数
+			this->clear();
+			return;
+		}
+		if (row == new_row) {
+			if (column == new_column) { //大小与原来一致
+				return;
+			} else { //行数相等, 列数不等
+				for (int i = 0; i < row; ++i) {
+					delete[] p[i];
+					p[i] = new Type[new_column];
+				}
+				column = new_column;
+			}
+		} else {
+			if (column == new_column) { //行数不等, 列数相等
+				//TODO 查BUG
+				Type **p_former = p;
+				p = new Type*[new_row];
+				if (new_row < row) { //行数减少
+					for (int i = 0; i < new_row; ++i) {
+						p[i] = p_former[i];
+					}
+					for (int i = new_row; i < row; ++i) {
+						delete[] p_former[i];
+					}
+				} else { //行数增多
+					for (int i = 0; i < row; ++i) {
+						p[i] = p_former[i];
+					}
+					for (int i = row; i < new_row; ++i) {
+						p[i] = new Type[column];
+					}
+				}
+				delete[] p_former; //TODO
+				row = new_row;
+			} else { //行数不等, 列数不等
+				//TODO 查bug
+				for (int i = 0; i < row; ++i)
+					delete[] p[i];
+				delete[] p;
+				row = new_row;
+				column = new_column;
+				p = new Type*[row];
+				for (int i = 0; i < row; ++i) {
+					p[i] = new Type[column];
+				}
+			}
+		}
 	}
 
 	template <class Type>
@@ -564,7 +623,7 @@ namespace array_2d
 	}
 
 	template <class Type>
-	inline const Type& Array_2d<Type>::get_element(int row, int column) const throw (out_of_range)
+	inline Type& Array_2d<Type>::get_element(int row, int column) throw (out_of_range)
 	{
 		test_row(row);
 		test_column(column);
@@ -572,7 +631,7 @@ namespace array_2d
 	}
 
 	template <class Type>
-	inline Type& Array_2d<Type>::get_element(int row, int column) throw (out_of_range)
+	inline const Type& Array_2d<Type>::get_element(int row, int column) const throw (out_of_range)
 	{
 		test_row(row);
 		test_column(column);
@@ -794,7 +853,7 @@ namespace array_2d
 	template <class Type>
 	bool Array_2d<Type>::operator!=(const Array_2d<Type> &with) const
 	{
-		return !(this->operator ==(with));
+		return !(this->operator==(with));
 	}
 
 	template <class Type>
@@ -825,33 +884,39 @@ namespace array_2d
 	template <class Type>
 	void Array_2d<Type>::do_rotate_90()
 	{ // 逆时针转90度
-		int tmp = row;
-		row = column;
-		column = tmp;
+		swap(row, column);
 
 		Type **p_former = p;
-		p = new double[row][column];
+		p = new Type*[row];
 		for (int i = 0; i < row; ++i) {
+			p[i] = new Type[column];
 			for (int j = 0; j < column; ++j) {
 				p[i][j] = p_former[j][row - 1 - i];
 			}
 		}
+		for (int i = 0; i < column; ++i) {
+			delete[] p_former[i];
+		}
+		delete[] p_former;
 	}
 
 	template <class Type>
 	void Array_2d<Type>::do_rotate_270()
 	{ // 逆时针转270度
-		int tmp = row;
-		row = column;
-		column = tmp;
+		swap(row, column);
 
-		double **p_former = p;
-		p = new double[row][column];
+		Type **p_former = p;
+		p = new Type*[row];
 		for (int i = 0; i < row; ++i) {
+			p[i] = new Type[column];
 			for (int j = 0; j < column; ++j) {
 				p[i][j] = p_former[column - 1 - j][i];
 			}
 		}
+		for (int i = 0; i < column; ++i) {
+			delete[] p_former[i];
+		}
+		delete[] p_former;
 	}
 
 }/* Namespace array_2d */

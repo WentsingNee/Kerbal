@@ -43,10 +43,15 @@ int main()
 	using namespace Range;
 	using namespace dbstream;
 
-	const Matrix a = { { 1, 2, 5 }, { 4, 5, 6 }, { 4, 5, 5 } };
-	for (auto &ele : a[0]) {
-		cout << ele << endl;
-	}
+	Matrix a = { { 1, 5, 0, 7, 4 },
+
+	{ 2, 0, 2, 1, 2 },
+
+	{ 4, 5, 3, 0, 1 } };
+
+	Matrix b = { { 1, 2, 3 }, { 2, 1, 6 } };
+
+	conv2(b, a);
 
 	cout << __cplusplus << endl;
 

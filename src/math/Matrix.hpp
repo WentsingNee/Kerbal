@@ -15,10 +15,10 @@
 
 namespace matrix
 {
-//	namespace
-//	{
-//		using namespace std;
-//	}
+	namespace
+	{
+		using namespace std;
+	}
 	using namespace array_2d;
 
 	enum Frame
@@ -53,17 +53,21 @@ namespace matrix
 
 			~Matrix();
 
+			friend Matrix eye(int n); //构造一个单位矩阵
+
 			void print(Frame frame = Fr_RtMatrix, bool print_corner = true, ostream &output = cout) const;
 			void save(const string &file_name) const throw (runtime_error);
 			friend Matrix load_from(const string &file_name);
 
+			void switch_rows(const int row1, const int row2) throw (out_of_range);
 			void switch_columns(const int column1, const int column2) throw (out_of_range);
 			void k_multiply_a_row(const double k, const int row_dest) throw (out_of_range);
 			void k_multiply_a_row_plus_to_another(const double k, const int row_from, const int row_dest) throw (out_of_range);
+			void k_multiply_a_column(const double k, const int column_dest) throw (out_of_range);
+			void k_multiply_a_column_plus_to_another(const double k, const int column_from, const int column_dest) throw (out_of_range);
+
 			void optimize_rows() throw (invalid_argument); //对本矩阵进行优化
 			friend Matrix optimize_rows(Matrix a) throw (invalid_argument);
-			void switch_rows(const int row1, const int row2) throw (out_of_range);
-			Matrix Cofactor(const int row_tar, const int column_tar) const throw (out_of_range); //返回一个矩阵划去row_tar 行和 column_tar 列后的矩阵
 
 			double Det() const throw (invalid_argument);
 			Matrix Adjugate_matrix() const throw (invalid_argument); //返回本方阵的伴随矩阵
@@ -92,54 +96,23 @@ namespace matrix
 //		const Matrix& operator=(Matrix &&src);
 //#endif //C++0x
 
-			bool operator==(const Matrix &with) const;
-			bool operator!=(const Matrix &with) const;
-
 			//计算
-			friend Matrix pow(const Matrix &A, const int n);
+			friend Matrix pow(const Matrix &A, const int n) throw (invalid_argument);
 			friend double tr(const Matrix &src) throw (invalid_argument);		//返回方阵的迹
-			friend Matrix TransposeOf(const Matrix &A);
-			friend Matrix Cofactor(const Matrix &A, const int x, const int y) throw (out_of_range); //构造方阵A的余子式A(x,y)
+			friend Matrix TransposeOf(const Matrix &A); //构造矩阵A的转置矩阵
+			void doTranspose()
+			{
+				this->operator =(TransposeOf(*this));
+			}
+			friend Matrix CofactorOf(const Matrix &A, const int x, const int y) throw (out_of_range); //构造矩阵A的余子式A(x,y)
+			void do_Cofactor(const int row_tar, const int column_tar) throw (out_of_range); //返回一个矩阵划去row_tar 行和 column_tar 列后的矩阵
 			friend bool Matcmp(const Matrix &A, const Matrix &B, double eps);
 
 			void test_row(const int row_test) const throw (out_of_range);
 			void test_column(const int column_test) const throw (out_of_range);
 			void test_square() const throw (invalid_argument);
 
-			friend Matrix conv2(const Matrix &A, const Matrix &B, int size = 0)
-			{
-				Matrix core = B;
-				core.do_rotate_180();
-				switch (size) {
-					case 0: {
-						Matrix result(A.row + B.row - 1, A.column + B.column - 1, true);
-						for (int i = 0; i < result.row; ++i) {
-							for (int j = 0; j < result.column; ++j) {
-								int c_from, c_to;
-								if (j < core.column) {
-									c_from = 0;
-									c_to = j;
-								} else if (j < A.column) {
-									c_from = 0;
-									c_to = i;
-								} else {
-									c_from = 0;
-									c_to = result.column;
-								}
-							}
-						}
-						return result;
-					}
-					case 1: {
-						Matrix result(A.row, A.column, true);
-						return result;
-					}
-					default: {
-						Matrix result(A.row - B.row + 1, A.column - B.column + 1, true);
-						return result;
-					}
-				}
-			}
+			friend Matrix conv2(const Matrix &core, const Matrix &B, int size = 0); //矩阵卷积
 	};
 
 	template <class T>

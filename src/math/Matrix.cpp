@@ -15,10 +15,10 @@
 
 namespace matrix
 {
-//	namespace
-//	{
-//		using namespace std;
-//	}
+	namespace
+	{
+		using namespace std;
+	}
 	using namespace array_2d;
 
 	Matrix::Matrix()
@@ -120,6 +120,15 @@ namespace matrix
 
 	Matrix::~Matrix()
 	{
+	}
+
+	Matrix eye(int n)
+	{ //构造一个单位矩阵
+		Matrix result(n, n, true);
+		for (int i = 0; i < n; ++i) {
+			result.p[i][i] = 1;
+		}
+		return result;
 	}
 
 	void Matrix::print(Frame frame, bool print_corner, ostream &output) const
@@ -346,28 +355,6 @@ namespace matrix
 		}
 	}
 
-	Matrix Matrix::Cofactor(const int row_tar, const int column_tar) const throw (out_of_range)
-	{
-		//返回一个矩阵划去row_tar 行和 column_tar 列后的矩阵
-
-		this->test_row(row_tar);
-		this->test_column(column_tar);
-
-		Matrix result(row - 1, column - 1, false);
-
-		const size_t size_of_a_row_of_a_left = column_tar * sizeof(double); //这一行为加快速度而存在
-		const size_t size_of_a_row_of_a_right = (column - 1 - column_tar) * sizeof(double); //这一行为加快速度而存在
-		for (int i = 0; i < row_tar; i++) {
-			memcpy(result.p[i], p[i], size_of_a_row_of_a_left);
-			memcpy(result.p[i] + column_tar, p[i] + column_tar + 1, size_of_a_row_of_a_right);
-		}
-		for (int i = row_tar + 1; i < row; i++) {
-			memcpy(result.p[i - 1], p[i], size_of_a_row_of_a_left);
-			memcpy(result.p[i - 1] + column_tar, p[i] + column_tar + 1, size_of_a_row_of_a_right);
-		}
-		return result;
-	}
-
 	double Matrix::Det() const throw (invalid_argument)
 	{
 		this->test_square();
@@ -389,7 +376,7 @@ namespace matrix
 
 		for (int i = 0; i < n; i++) {
 			if (p[i][0] != 0.0) { //p[0][i]!=0
-				Matrix daishu(Cofactor(i, 0));
+				Matrix daishu = CofactorOf(*this, i, 0);
 
 				if (n - 1 >= 4) {
 					//如果代数余子式在4阶及以上,则进行行优化
@@ -420,10 +407,10 @@ namespace matrix
 			for (int j = 0; j < column; j++) {
 				if ((i + j) % 2) {
 					//i+j为奇数
-					result.p[j][i] = -this->Cofactor(i, j).Det();
+					result.p[j][i] = -CofactorOf(*this, i, j).Det();
 				} else {
 					//i+j为偶数
-					result.p[j][i] = this->Cofactor(i, j).Det();
+					result.p[j][i] = CofactorOf(*this, i, j).Det();
 				}
 			}
 		}
@@ -610,23 +597,31 @@ namespace matrix
 
 	Matrix operator^(const Matrix &A, const int n) throw (invalid_argument)
 	{
-		A.test_square();
-		if (n <= 0) {
-			throw invalid_argument("unreasonable n:" + to_string(n));
-		}
+		//计算矩阵A的n次方
 
-		if (n == 1) {
-			return A;
-		} else if (n == 2) {
-			return A * A;
-		} else {
-			Matrix tmp(A ^ (n / 2));
-			tmp = tmp * tmp;
-			if (n % 2) {
-				//指数为奇数
-				tmp = tmp * A;
-			}
-			return tmp;
+		A.test_square();
+
+		switch (n) {
+			case 0:
+				return eye(A.row);
+			case 1:
+				return A;
+			case 2:
+				return A * A;
+			default:
+				if (n < 0) {
+//					throw invalid_argument("unreasonable n:" + to_string(n));
+					return A.Inverse_matrix() ^ -n;
+				} else {
+
+					Matrix tmp(A ^ (n / 2));
+					tmp = tmp * tmp;
+					if (n % 2) {
+						//指数为奇数
+						tmp = tmp * A;
+					}
+					return tmp;
+				}
 		}
 	}
 
@@ -748,27 +743,7 @@ namespace matrix
 //}
 //#endif
 
-	bool Matrix::operator==(const Matrix &with) const
-	{
-		if (row != with.row || column != with.column) {
-			return false;
-		}
-		for (int i = 0; i < row; i++) {
-			for (int j = 0; j < column; j++) {
-				if (this->p[i][j] != with.p[i][j]) {
-					return false;
-				}
-			}
-		}
-		return true;
-	}
-
-	bool Matrix::operator!=(const Matrix &with) const
-	{
-		return !(this->operator ==(with));
-	}
-
-	Matrix pow(const Matrix &A, const int n)
+	Matrix pow(const Matrix &A, const int n) throw (invalid_argument)
 	{
 		return A ^ n;
 	}
@@ -809,6 +784,33 @@ namespace matrix
 		}
 	}
 
+	Matrix conv2(const Matrix &core, const Matrix &A, int size)
+	{ //矩阵卷积
+		int i, j;
+		int n, m;
+		Matrix z(A.row + core.row - 1, A.column + core.column - 1, true);
+		Matrix z2(A.row, A.column, true);
+		for (i = 0; i < A.row + core.row - 1; ++i)
+			for (j = 0; j < A.column + core.column - 1; ++j) {
+				for (m = 0; m < A.row; ++m)
+					for (n = 0; n < A.column; ++n)
+						if ((m <= i) && (i < m + core.row) && (n <= j) && (j < n + core.column))
+							z.p[i][j] += A.p[m][n] * core.p[i - m][j - n];
+			}
+		for (i = 0; i < A.row; ++i)
+			for (j = 0; j < A.column; ++j) {
+				z2.p[i][j] = z.p[i + (core.row - 1) / 2][j + (core.column - 1) / 2];
+			}
+		switch (size) {
+			case 0:
+				return z;
+			case 1:
+				return z2;
+			default:
+				return z;
+		}
+	}
+
 //计算
 	bool Matcmp(const Matrix &A, const Matrix &B, double eps)
 	{
@@ -826,21 +828,43 @@ namespace matrix
 	{
 		//返回矩阵A的转置矩阵
 		Matrix result(A.column, A.row, false);
-		for (int i = 0; i < A.column; i++) {
-			for (int j = 0; j < A.row; j++) {
+		for (int i = 0; i < result.row; i++) {
+			for (int j = 0; j < result.column; j++) {
 				result.p[i][j] = A.p[j][i];
 			}
 		}
 		return result;
 	}
 
-	Matrix Cofactor(const Matrix &A, const int x, const int y) throw (out_of_range)
+	Matrix CofactorOf(const Matrix &A, const int row_tar, const int column_tar) throw (out_of_range)
 	{
 		//构造方阵A的余子式A(x,y)
-		return A.Cofactor(x, y);
+
+		A.test_row(row_tar);
+		A.test_column(column_tar);
+
+		Matrix result(A.row - 1, A.column - 1, false);
+
+		const size_t size_of_a_row_of_a_left = column_tar * sizeof(double); //这一行为加快速度而存在
+		const size_t size_of_a_row_of_a_right = (A.column - 1 - column_tar) * sizeof(double); //这一行为加快速度而存在
+		for (int i = 0; i < row_tar; i++) {
+			memcpy(result.p[i], A.p[i], size_of_a_row_of_a_left);
+			memcpy(result.p[i] + column_tar, A.p[i] + column_tar + 1, size_of_a_row_of_a_right);
+		}
+		for (int i = row_tar + 1; i < A.row; i++) {
+			memcpy(result.p[i - 1], A.p[i], size_of_a_row_of_a_left);
+			memcpy(result.p[i - 1] + column_tar, A.p[i] + column_tar + 1, size_of_a_row_of_a_right);
+		}
+		return result;
 	}
 
-	//应用部分
+	void Matrix::do_Cofactor(const int row_tar, const int column_tar) throw (out_of_range)
+	{
+		//返回一个矩阵划去row_tar 行和 column_tar 列后的矩阵
+		this->operator =(CofactorOf(*this, row_tar, column_tar));
+	}
+
+//应用部分
 	namespace rotate_matrix
 	{
 		Matrix rotate_X(double sigma)
