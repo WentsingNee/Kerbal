@@ -32,16 +32,17 @@
 
 #include "except_C++0x.hpp"
 
-#if __cplusplus >= 201103L //C++0x
-
 namespace Range
 {
+
+#if __cplusplus >= 201103L //C++0x
+
 	class Range_record;
 	//供Range_iterator使用的前向引用声明
 	class Range_iterator final
 	{
-			friend class Range_record;
 		protected:
+			friend class Range_record;
 			int now;
 			const Range_record * parent_ptr;
 
@@ -100,8 +101,8 @@ namespace Range
 		return Range_record(0, to, 1);
 	}
 
-} /* namespace Range */
-
 #endif /* End C++0x */
+
+} /* namespace Range */
 
 #endif /* End RANGE_HPP_ */

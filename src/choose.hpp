@@ -25,6 +25,7 @@ namespace _choose
 	}
 
 	//声明
+	/*	choose: 可变参数表风格的 choose 函数*/
 	template <class T> T choose(int index, T value0, ...) throw (invalid_argument);
 
 #if __cplusplus >= 201103L //C++0x
@@ -36,6 +37,8 @@ namespace _choose
 #endif
 
 	/*	实现 */
+
+	/*	choose: 可变参数表风格的 choose 函数的实现*/
 	template <class T>
 	T choose(int index, T value0, ...) throw (invalid_argument)
 	{
@@ -119,11 +122,7 @@ namespace _choose
 //choose_c11 为 C++ 11 准备的新特性: 可变参数模板风格的 choose 函数
 	namespace //匿名命名空间内的内容对文件外不可见
 	{
-		int choose_unpack(int total)
-		{ //递归终止函数
-			std::cerr << "end" << std::endl;
-			return 0;
-		}
+//		int choose_unpack(int total);
 
 		template <class T, class ...Args>
 		T choose_unpack(int total, T head, Args ... rest)
@@ -140,13 +139,14 @@ namespace _choose
 	T choose_c11(int index, T head, Args ... args) throw (invalid_argument, out_of_range)
 	{
 		if (index < 0) {
-			throw invalid_argument("index<0");
+			throw invalid_argument("index < 0");
 		} else if (index > (int) sizeof...(Args)) {
 			throw out_of_range("index is out of range");
 		} else if (index == 0) {
 			return head;
+		} else {
+			return choose_unpack(index - 1, args...);
 		}
-		return choose_unpack(index - 1, args...);
 	}
 #endif
 

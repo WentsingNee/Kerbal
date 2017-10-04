@@ -1,17 +1,10 @@
 #ifndef _MATRIX_H_
 #define _MATRIX_H_
 
-#include <iostream>
 #include <fstream>
-#include <cstdlib>
 #include <cmath>
-#include <stdarg.h>
 
 #include "../array_2d.hpp"
-#include "../array_serve.hpp"
-#include "basic_math.hpp"
-
-//#pragma message(__DATE__ "  " __TIME__"  正在编译"__FILE__)
 
 namespace matrix
 {
@@ -46,7 +39,7 @@ namespace matrix
 			Matrix(initializer_list<initializer_list<double>> src); //利用二维初始化列表进行构造
 			Matrix(initializer_list<double> src); //利用一维初始化列表进行构造
 
-//		Matrix(Matrix &&src); //转移构造函数
+			Matrix(Matrix &&src); //转移构造函数
 #endif //C++0x
 
 			Matrix(const Matrix &src); //拷贝构造函数
@@ -74,17 +67,17 @@ namespace matrix
 			Matrix Inverse_matrix() const throw (invalid_argument); //返回本方阵的逆矩阵,当逆矩阵不存在时抛出异常
 
 			//运算符重载
-			friend Matrix operator+(const Matrix &A, const Matrix &B) throw (invalid_argument);
-			friend Matrix operator-(const Matrix &A, const Matrix &B) throw (invalid_argument);
-			friend Matrix operator*(const double k, const Matrix &A); //数k乘矩阵
-			friend Matrix operator*(const Matrix &A, const double k); //矩阵乘数k
-			friend Matrix operator*(const Matrix &A, const Matrix &B) throw (invalid_argument); //矩阵乘矩阵
-			friend Matrix fma(const Matrix &A, const Matrix &B, const Matrix &C) throw (invalid_argument); //return the result of A*B+C , but much faster
-			friend Matrix dot_product(const Matrix &A, const Matrix &B) throw (invalid_argument); //矩阵点乘矩阵
-			friend Matrix operator^(const Matrix &A, const int n) throw (invalid_argument); //矩阵的幂
+			friend const Matrix operator+(const Matrix &A, const Matrix &B) throw (invalid_argument);
+			friend const Matrix operator-(const Matrix &A, const Matrix &B) throw (invalid_argument);
+			friend const Matrix operator*(const double k, const Matrix &A); //数k乘矩阵
+			friend const Matrix operator*(const Matrix &A, const double k); //矩阵乘数k
+			friend const Matrix operator*(const Matrix &A, const Matrix &B) throw (invalid_argument); //矩阵乘矩阵
+			friend const Matrix fma(const Matrix &A, const Matrix &B, const Matrix &C) throw (invalid_argument); //return the result of A*B+C , but much faster
+			friend const Matrix dot_product(const Matrix &A, const Matrix &B) throw (invalid_argument); //矩阵点乘矩阵
+			friend const Matrix operator^(const Matrix &A, const int n) throw (invalid_argument); //矩阵的幂
 
-			friend Matrix operator&&(const Matrix &A, const Matrix &B) throw (invalid_argument); //将两个矩阵按竖直方向连接
-			friend Matrix operator||(const Matrix &A, const Matrix &B) throw (invalid_argument); //将两个矩阵按水平方向连接
+			friend const Matrix operator&&(const Matrix &A, const Matrix &B) throw (invalid_argument); //将两个矩阵按竖直方向连接
+			friend const Matrix operator||(const Matrix &A, const Matrix &B) throw (invalid_argument); //将两个矩阵按水平方向连接
 
 			friend void operator<<=(Matrix &tar, Matrix &src); //将矩阵src的资产转移给tar
 			Matrix& operator=(const Matrix &src);
@@ -97,14 +90,14 @@ namespace matrix
 //#endif //C++0x
 
 			//计算
-			friend Matrix pow(const Matrix &A, const int n) throw (invalid_argument);
+			friend const Matrix pow(const Matrix &A, const int n) throw (invalid_argument);
 			friend double tr(const Matrix &src) throw (invalid_argument);		//返回方阵的迹
-			friend Matrix TransposeOf(const Matrix &A); //构造矩阵A的转置矩阵
+			friend const Matrix TransposeOf(const Matrix &A); //构造矩阵A的转置矩阵
 			void doTranspose()
 			{
 				this->operator =(TransposeOf(*this));
 			}
-			friend Matrix CofactorOf(const Matrix &A, const int x, const int y) throw (out_of_range); //构造矩阵A的余子式A(x,y)
+			friend const Matrix CofactorOf(const Matrix &A, const int x, const int y) throw (out_of_range); //构造矩阵A的余子式A(x,y)
 			void do_Cofactor(const int row_tar, const int column_tar) throw (out_of_range); //返回一个矩阵划去row_tar 行和 column_tar 列后的矩阵
 			friend bool Matcmp(const Matrix &A, const Matrix &B, double eps);
 
@@ -112,7 +105,7 @@ namespace matrix
 			void test_column(const int column_test) const throw (out_of_range);
 			void test_square() const throw (invalid_argument);
 
-			friend Matrix conv2(const Matrix &core, const Matrix &B, int size = 0); //矩阵卷积
+			friend const Matrix conv2(const Matrix &core, const Matrix &B, int size = 0); //矩阵卷积
 	};
 
 	template <class T>

@@ -12,11 +12,10 @@
 #include <iomanip>
 #include <cstring>
 #include "Matrix.hpp"
+#include "../except_C++0x.hpp"
 
 namespace complexor
 {
-#include "../except_C++0x.hpp"
-
 	using namespace std;
 	using namespace matrix;
 
@@ -95,13 +94,19 @@ namespace complexor
 				return result;
 			}
 
-			void set_element(int index, int value) throw (out_of_range)
+			void set_element(int index, const double &value) throw (out_of_range)
 			{
 				test_index(index);
 				p[index] = value;
 			}
 
-			double& get_element(int index) const throw (out_of_range)
+			double& get_element(int index) throw (out_of_range)
+			{
+				test_index(index);
+				return p[index];
+			}
+
+			const double& get_element(int index) const throw (out_of_range)
 			{
 				test_index(index);
 				return p[index];
@@ -112,24 +117,7 @@ namespace complexor
 				return num;
 			}
 
-			void print() const
-			{
-				cout << resetiosflags(ios::right) << setiosflags(ios::left) << setfill(' '); //清除右对齐, 设置左对齐, 设置不足补空格
-				cout << "(";
-
-				if (!empty()) {
-					cout << "  " << setw(10) << p[0];
-					for (int i = 1; i < num; i++) {
-						cout << ", " << setw(10) << p[i];
-					}
-				}
-
-				cout << " )";
-				if (this->vertical) {
-					cout << " T";
-				}
-				cout << endl;
-			}
+			void print() const;
 
 			size_t get_digit_size() const
 			{

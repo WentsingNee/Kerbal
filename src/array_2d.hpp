@@ -7,12 +7,11 @@
 #include <cstdlib>
 #include <cstring>
 #include "except_C++0x.hpp"
+#include "String_serve.hpp"
 
 #if __cplusplus >= 201103L //C++0x
-# include <initializer_list>
+#	include <initializer_list>
 #endif //C++0x
-
-#include "String_serve.hpp"
 
 template <class T>
 inline int array_2d_row(const T &a) //返回矩阵的行
@@ -23,7 +22,7 @@ inline int array_2d_row(const T &a) //返回矩阵的行
 template <class T>
 inline int array_2d_column(const T &a) //返回矩阵的列
 {
-	return sizeof(a[0]) / siz0eof(a[0][0]);
+	return sizeof(a[0]) / sizeof(a[0][0]);
 }
 
 namespace array_2d
@@ -31,6 +30,7 @@ namespace array_2d
 	namespace
 	{
 		using namespace std;
+		using namespace _String;
 	}
 
 	template <class Type> class Array_2d;
@@ -94,7 +94,7 @@ namespace array_2d
 				return p_to_matrix->p[row_point_to] + p_to_matrix->column;
 			}
 
-			safety<Type> operator++()
+			safety<Type>& operator++()
 			{
 				++row_point_to;
 				return *this;
@@ -151,8 +151,6 @@ namespace array_2d
 			}
 
 			Array_2d(const int row, const int column, bool if_set0 = true);
-//		Array_2d(const int row, const int column, int argc, ...);  //利用可变参数表进行构造
-
 			Array_2d(const int row, const int column, Type (*function)());
 			//动态开辟一个以p为首地址的、row * column的二维数组, 并使用 function() 初始化每个元素
 			Array_2d(const int row, const int column, Type (*function)(int, int));
@@ -264,29 +262,26 @@ namespace array_2d
 				return safety<Type>(this, row);
 			}
 
-			friend Array_2d<Type> sub_of(const Array_2d<Type> &src, int up, int down, int left, int right) throw (invalid_argument, out_of_range);
-	};
+			friend Array_2d<Type> sub_of(const Array_2d<Type> &src, int up, int down, int left, int right) throw (invalid_argument, out_of_range)
+			{
+				if (up > down || left > right) {
+					throw new invalid_argument("up > down or left > right");
+				}
 
-	template <class Type>
-	Array_2d<Type> sub_of(const Array_2d<Type> &src, int up, int down, int left, int right) throw (invalid_argument, out_of_range)
-	{
-		if (up > down || left > right) {
-			throw new invalid_argument("up > down or left > right");
-		}
+				src.test_row(up);
+				src.test_row(down);
+				src.test_column(left);
+				src.test_column(right);
 
-		src.test_row(up);
-		src.test_row(down);
-		src.test_column(left);
-		src.test_column(right);
-
-		Array_2d<Type> result(down - up + 1, right - left + 1, false);
-		for (int i = 0; i < result.row; ++i) {
-			for (int j = 0; j < result.column; ++j) {
-				result.p[i][j] = src.p[i + up][j + left];
+				Array_2d<Type> result(down - up + 1, right - left + 1, false);
+				for (int i = 0; i < result.row; ++i) {
+					for (int j = 0; j < result.column; ++j) {
+						result.p[i][j] = src.p[i + up][j + left];
+					}
+				}
+				return result;
 			}
-		}
-		return result;
-	}
+	};
 
 	template <class Type>
 	Array_2d<Type>::Array_2d(const int row, const int column, bool if_set0)
@@ -314,36 +309,6 @@ namespace array_2d
 			this->p = NULL;
 		}
 	}
-
-//template <class Type>
-//Array_2d<Type>::Array_2d(const int row, const int column, int argc, ...)
-//{
-//	//动态开辟一个以p为首地址的、row * column的二维数组
-//	if (row > 0 && column > 0) {
-//		this->row = row;
-//		this->column = column;
-//
-//		p = new Type*[row]; //开辟行
-//
-////if(argc>row*column){
-////	argc
-////}
-//		va_list arg_ptr; //指向参数的指针
-//		va_start(arg_ptr, argc);
-//
-//		for (int i = 0; i < row; i++) {
-//			p[i] = new Type[column]; //开辟列
-//			for (int j = 0; j < column; j++) {
-//				p[i][j] = va_arg(arg_ptr, Type);
-//			}
-//		}
-//		va_end(arg_ptr);
-//	} else {
-//		this->row = 0;
-//		this->column = 0;
-//		this->p = NULL;
-//	}
-//}
 
 	template <class Type>
 	Array_2d<Type>::Array_2d(const int row, const int column, Type (*function)())
@@ -401,9 +366,10 @@ namespace array_2d
 				p = new Type*[1];
 				p[0] = new Type[column]; //开辟列
 
-				for (int j = 0; j < column; j++) {
-					p[0][j] = arr[j];
-				}
+//				for (int j = 0; j < column; j++) {
+//					p[0][j] = arr[j];
+//				}
+				std::copy(arr, arr + column, p[0]);
 			} else {
 				this->row = len;
 				this->column = 1;
@@ -442,15 +408,11 @@ namespace array_2d
 			this->column = column_pre;
 
 			//动态开辟一个以p为首地址的、row * column的二维数组
-			p = new Type*[row]; //开辟行
+			p = new Type*[row];		//开辟行
+			int i = 0;
 			auto begin_to_src = src.begin();
-			for (int i = 0; i < row; i++) {
-				Type *p_to_first = p[i] = new Type[column];
-				const initializer_list<Type> &list_row = *(begin_to_src + i);
-				auto begin_to_list_row = list_row.begin();
-				for (unsigned int j = 0; j < list_row.size(); j++) {
-					p_to_first[j] = *(begin_to_list_row + j);
-				}
+			for (; i < row; ++i, ++begin_to_src) {
+				std::copy(begin_to_src->begin(), begin_to_src->end(), p[i] = new Type[column]);
 			}
 		} else {
 			this->row = 0;
@@ -463,18 +425,15 @@ namespace array_2d
 	Array_2d<Type>::Array_2d(initializer_list<Type> src)
 	{
 		//利用一维初始化列表进行构造
-		const int column_pre = src.size(); //最终定下的列数
+		const int column_pre = src.size();		//最终定下的列数
 
 		if (column_pre > 0) {
 			this->row = 1;
 			this->column = column_pre;
 
 			//动态开辟一个以p为首地址的、1 * column的二维数组
-			p = new Type*[1]; //开辟行
-			Type *p_to_first = p[0] = new Type[column];
-			for (int i = 0; i < column; i++) {
-				p_to_first[i] = *(src.begin() + i);
-			}
+			p = new Type*[1];		//开辟行
+			std::copy(src.begin(), src.end(), p[0] = new Type[column]);
 
 		} else {
 			this->row = 0;
@@ -494,10 +453,7 @@ namespace array_2d
 
 			p = new Type*[row]; //开辟行
 			for (int i = 0; i < row; i++) {
-				p[i] = new Type[column]; //开辟列
-				for (int j = 0; j < column; j++) {
-					p[i][j] = src.p[i][j];
-				}
+				std::copy(src.p[i], src.p[i] + column, p[i] = new Type[column]);
 			}
 		} else {
 			this->row = 0;
@@ -561,16 +517,18 @@ namespace array_2d
 				Type **p_former = p;
 				p = new Type*[new_row];
 				if (new_row < row) { //行数减少
-					for (int i = 0; i < new_row; ++i) {
-						p[i] = p_former[i];
-					}
+//					for (int i = 0; i < new_row; ++i) {
+//						p[i] = p_former[i];
+//					}
+					std::memcpy(p, p_former, new_row * sizeof(Type*));
 					for (int i = new_row; i < row; ++i) {
 						delete[] p_former[i];
 					}
 				} else { //行数增多
-					for (int i = 0; i < row; ++i) {
-						p[i] = p_former[i];
-					}
+//					for (int i = 0; i < row; ++i) {
+//						p[i] = p_former[i];
+//					}
+					std::memcpy(p, p_former, row * sizeof(Type*));
 					for (int i = row; i < new_row; ++i) {
 						p[i] = new Type[column];
 					}
@@ -607,7 +565,7 @@ namespace array_2d
 	template <class Type>
 	inline const Type** Array_2d<Type>::get_data() const
 	{
-		return p;
+		return (const Type**) (p);
 	}
 
 	template <class Type>
@@ -671,10 +629,7 @@ namespace array_2d
 
 		p = new Type*[row]; //开辟行
 		for (int i = 0; i < row; i++) {
-			p[i] = new Type[column]; //开辟列
-			for (int j = 0; j < column; j++) {
-				p[i][j] = src[i][j];
-			}
+			std::copy(src[i], src[i] + column, p[i] = new Type[column]);
 		}
 	}
 
@@ -842,7 +797,7 @@ namespace array_2d
 		}
 		for (int i = 0; i < row; i++) {
 			for (int j = 0; j < column; j++) {
-				if (this->p[i][j] != with.p[i][j]) {
+				if (!(this->p[i][j] == with.p[i][j])) {
 					return false;
 				}
 			}

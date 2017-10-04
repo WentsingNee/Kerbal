@@ -20,7 +20,7 @@ namespace _choose
 {
 	namespace
 	{
-		using namespace std;
+		using std::invalid_argument;
 	}
 
 	char choose(int index, char value0, ...) throw (invalid_argument)
@@ -76,6 +76,19 @@ namespace _choose
 		va_end(arg_ptr);
 		return result;
 	}
+
+#if __cplusplus >= 201103L //C++0x
+//choose_c11 为 C++ 11 准备的新特性: 可变参数模板风格的 choose 函数
+	namespace //匿名命名空间内的内容对文件外不可见
+	{
+//		int choose_unpack(int total)
+//		{ //递归终止函数, 起到保险兜底的作用
+//			std::cerr << "end" << std::endl;
+//			return 0;
+//		}
+	}/* Namespace */
+
+#endif
 
 }/* Namespace _choose */
 

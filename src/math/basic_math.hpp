@@ -6,7 +6,6 @@
 //#pragma message(__DATE__ "  " __TIME__"  正在编译"__FILE__)
 
 #include <cmath>
-#include "../except_C++0x.hpp"
 #include <string>
 
 #ifndef M_E

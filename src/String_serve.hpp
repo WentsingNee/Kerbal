@@ -8,7 +8,7 @@
 namespace _String
 {
 #if __cplusplus < 201103L //C++0x
-std::string to_string(double x);
+	std::string to_string(double x);
 #endif //C++0x
 }
 

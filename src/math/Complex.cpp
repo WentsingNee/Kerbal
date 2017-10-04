@@ -62,17 +62,17 @@ namespace complex
 	}
 
 	//运算符重载部分
-	Complex operator+(const Complex &a, const Complex &b)
+	const Complex operator+(const Complex &a, const Complex &b)
 	{
 		return Complex(a.real + b.real, a.imag + b.imag);
 	}
 
-	Complex operator+(const Complex &a, double b)
+	const Complex operator+(const Complex &a, double b)
 	{
 		return Complex(a.real + b, a.imag);
 	}
 
-	Complex operator+(double a, const Complex &b)
+	const Complex operator+(double a, const Complex &b)
 	{
 		return Complex(a + b.real, b.imag);
 	}
@@ -90,17 +90,17 @@ namespace complex
 		return (*this);
 	}
 
-	Complex operator-(const Complex &a, const Complex &b)
+	const Complex operator-(const Complex &a, const Complex &b)
 	{
 		return Complex(a.real - b.real, a.imag - b.imag);
 	}
 
-	Complex operator-(const Complex &a, double b)
+	const Complex operator-(const Complex &a, double b)
 	{
 		return Complex(a.real - b, a.imag);
 	}
 
-	Complex operator-(double a, const Complex &b)
+	const Complex operator-(double a, const Complex &b)
 	{
 		return Complex(a - b.real, -b.imag);
 	}
@@ -118,7 +118,7 @@ namespace complex
 		return (*this);
 	}
 
-	Complex operator*(const Complex &a, const Complex &b)
+	const Complex operator*(const Complex &a, const Complex &b)
 	{
 		return Complex(
 
@@ -127,17 +127,34 @@ namespace complex
 		b.real * a.imag + a.real * b.imag);
 	}
 
-	Complex operator*(const Complex &a, double b)
+	const Complex operator*(const Complex &a, double b)
 	{
 		return Complex(a.real * b, a.imag * b);
 	}
 
-	Complex operator*(double a, const Complex &b)
+	const Complex operator*(double a, const Complex &b)
 	{
 		return Complex(a * b.real, a * b.imag);
 	}
 
-	Complex operator/(const Complex &a, const Complex &b) throw (invalid_argument)
+	Complex& Complex::operator*=(const Complex &with)
+	{
+		*this = Complex(
+
+		this->real * with.real - this->imag * with.imag,
+
+		with.real * this->imag + this->real * with.imag);
+		return *this;
+	}
+
+	Complex& Complex::operator*=(const double &with)
+	{
+		this->real *= with;
+		this->imag *= with;
+		return *this;
+	}
+
+	const Complex operator/(const Complex &a, const Complex &b) throw (invalid_argument)
 	{
 		if (b.real == 0 && b.imag == 0) {
 			throw(invalid_argument(string("Complex ") + a.to_string() + string(" is divided by Complex 0+0i")));
@@ -151,7 +168,7 @@ namespace complex
 		(b.real * a.imag - a.real * b.imag) / temp);
 	}
 
-	Complex operator/(const Complex &a, double b) throw (invalid_argument)
+	const Complex operator/(const Complex &a, double b) throw (invalid_argument)
 	{
 		if (b == 0) {
 			throw(invalid_argument(string("Complex ") + a.to_string() + string(" is divided by 0.0")));
@@ -160,13 +177,40 @@ namespace complex
 		return Complex(a.real / b, a.imag / b);
 	}
 
-	Complex operator/(double a, const Complex &b) throw (invalid_argument)
+	const Complex operator/(double a, const Complex &b) throw (invalid_argument)
 	{
 		if (b.real == 0 && b.imag == 0) {
 			throw(invalid_argument(string("double ") + to_string(a) + string(" is divided by Complex 0+0i")));
 		}
 		double temp = b.real * b.real + b.imag * b.imag;
 		return Complex((a * b.real) / temp, (-a * b.imag) / temp);
+	}
+
+	Complex& Complex::operator/=(const Complex &with) throw (invalid_argument)
+	{
+		if (with.real == 0 && with.imag == 0) {
+			throw(invalid_argument(string("Complex ") + this->to_string() + string(" is divided by Complex 0+0i")));
+		}
+		double temp = with.real * with.real + with.imag * with.imag;
+
+		*this = Complex(
+
+		(this->real * with.real + this->imag * with.imag) / temp,
+
+		(with.real * this->imag - this->real * with.imag) / temp);
+
+		return *this;
+	}
+
+	Complex& Complex::operator/=(const double &with) throw (invalid_argument)
+	{
+		if (with == 0) {
+			throw(invalid_argument(string("Complex ") + this->to_string() + string(" is divided by 0.0")));
+		}
+
+		this->real /= with;
+		this->imag /= with;
+		return *this;
 	}
 
 	bool operator==(const Complex &a, const Complex &b)
@@ -199,12 +243,17 @@ namespace complex
 		return a != b.real || 0 != b.imag;
 	}
 
-	Complex operator-(const Complex &a)
+	const Complex operator+(const Complex &a)
+	{
+		return Complex(a);
+	}
+
+	const Complex operator-(const Complex &a)
 	{
 		return Complex(-a.real, -a.imag);
 	}
 
-	Complex operator~(const Complex &a) //计算一个复数的共轭复数
+	const Complex operator~(const Complex &a) //计算一个复数的共轭复数
 	{
 		return Complex(a.real, -a.imag);
 	}
@@ -226,17 +275,17 @@ namespace complex
 
 //函数部分
 
-	Complex trans(double r, double sigma) //根据模长和幅角返回一个复数
+	const Complex trans(double r, double sigma) //根据模长和幅角返回一个复数
 	{
 		return Complex(r * cos(sigma), r * sin(sigma));
 	}
 
-	Complex zpow(const Complex &z, int n) //计算一个复数的幂
+	const Complex zpow(const Complex &z, int n) //计算一个复数的幂
 	{
 		return Complex(z.moudle() * cos(n * z.argz()), z.moudle() * sin(n * z.argz()));
 	}
 
-	Complex zln(const Complex &z) //Lnz=lnz+2*k*pi*i , lnz=ln|z|+i*argz(z)
+	const Complex zln(const Complex &z) //Lnz=lnz+2*k*pi*i , lnz=ln|z|+i*argz(z)
 	{
 		return Complex(log(z.moudle()), z.argz());
 	}

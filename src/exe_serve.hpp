@@ -55,6 +55,7 @@ template <class T> void print_bit(const T &a);
 template <class T> void print_16(const T &a);
 template <class T> inline std::string get_typename(const T &a);
 inline std::string get_user_name();
+inline int get_processors_number();
 
 inline void program_start(bool is_debug)
 {
@@ -251,14 +252,33 @@ inline std::string get_user_name()
 #endif
 
 #if (defined __WINDOWS_) || (defined _WIN32)
-#pragma comment(lib,"Advapi32.lib")
+//#pragma comment(lib,"Advapi32.lib")
 inline std::string get_user_name()
 {
-	char strBuffer[256] = {0};
+	char strBuffer[256] = { 0 };
 	unsigned long dwSize = 256;
 	GetUserName(strBuffer, &dwSize);
 
 	return std::string(strBuffer);
+}
+#endif
+
+#ifdef __linux
+#include<unistd.h>
+inline int get_processors_number()
+{
+	//TODO
+	int num=get_nprocs_conf();
+	return num;
+}
+#endif
+
+#if (defined __WINDOWS_) || (defined _WIN32)
+inline int get_processors_number()
+{
+	SYSTEM_INFO info;
+	GetSystemInfo(&info);
+	return info.dwNumberOfProcessors;
 }
 #endif
 

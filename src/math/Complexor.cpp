@@ -10,7 +10,7 @@
 #include <cmath>
 
 #if __cplusplus < 201103L //C++0x
-# pragma message("\n"\
+#	pragma message("\n"\
 "			* Complexor 使用了 C++ 11 新特性, 请打开 C++ 11 选项以便使用这些新特性\n"\
 "					* Complexor 为 C++ 11 准备的新特性: 利用初始化列表进行构造"\
 )
@@ -144,6 +144,25 @@ namespace complexor
 		delete[] p;
 		p = NULL;
 		num = 0;
+	}
+
+	void Complexor::print() const
+	{
+		cout << resetiosflags(ios::right) << setiosflags(ios::left) << setfill(' '); //清除右对齐, 设置左对齐, 设置不足补空格
+		cout << "(";
+
+		if (!empty()) {
+			cout << "  " << setw(10) << p[0];
+			for (int i = 1; i < num; i++) {
+				cout << ", " << setw(10) << p[i];
+			}
+		}
+
+		cout << " )";
+		if (this->vertical) {
+			cout << " T";
+		}
+		cout << endl;
 	}
 
 	Complexor operator+(const Complexor &a, const Complexor &b) throw (invalid_argument) //向量加法, 方向不同一律返回列向量

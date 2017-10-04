@@ -2,10 +2,12 @@
 
 #include <cmath>
 #include "../String_serve.hpp"
+#include "../except_C++0x.hpp"
 
 namespace
 {
 	using namespace std;
+	using namespace _String;
 }
 
 double baremainder(double numerator, double denominator) //返回两数相除的余数。 结果的符号与除数相同。

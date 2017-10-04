@@ -11,9 +11,9 @@
 #include <stdexcept>
 
 #if __cplusplus >= 201103L //C++0x
-# ifdef __GNUC__
-#  pragma GCC diagnostic ignored "-Wdeprecated"
-# endif
+#	ifdef __GNUC__
+#		pragma GCC diagnostic ignored "-Wdeprecated"
+#	endif
 #endif //C++0x
 
 #endif /* EXCEPT_C__0X_HPP_ */

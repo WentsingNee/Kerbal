@@ -1,8 +1,6 @@
 #ifndef _ARRAY_SERVE_H_
 #define _ARRAY_SERVE_H_
 
-//#pragma message(__DATE__ "  " __TIME__"  正在编译"__FILE__)
-
 #include <iostream>
 #include <string>
 #include <typeinfo>
