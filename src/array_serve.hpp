@@ -15,14 +15,14 @@ namespace array_serve
 		using namespace std;
 	}
 
-	//å£°æ˜
+	//ÉùÃ÷
 	template <class T> int arraylen(const T &array);
 	template <class T> void print_array(T a[], int len, string separator = " , ", bool if_output_number = false) throw (invalid_argument);
 	template <class T> void print_array_to_file(T a[], int len, string separator, string file_name, bool if_output_number =
 			false) throw (invalid_argument);
 	template <typename T> int array_dimension(const T &a);
 
-	//å®ç°
+	//ÊµÏÖ
 	template <class T>
 	int arraylen(const T &array)
 	{

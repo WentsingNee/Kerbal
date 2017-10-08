@@ -10,7 +10,6 @@
 #include "math/Complex.hpp"
 
 #include "array_serve.hpp"
-#include "math/statistics.hpp"
 #include "math/randnum.hpp"
 #include "math/Matrix.hpp"
 #include "choose.hpp"
@@ -25,8 +24,28 @@
 #include "String_serve.hpp"
 #include "Dbstream.hpp"
 #include "range.hpp"
+#include "math/statistics.hpp"
 #include "math/MulMatrix.hpp"
 
+class A
+{
+	public:
+		A()
+		{
+			std::cout << "构造" << std::endl;
+		}
+
+		~A()
+		{
+			std::cout << "析构" << std::endl;
+		}
+	protected:
+
+		A(const A &src)
+		{
+			std::cout << this << "拷贝构造" << &src << std::endl;
+		}
+};
 double fun(double x)
 {
 	return sin(x);
@@ -38,6 +57,9 @@ double fun(double x)
  * 主函数
  * @return 返回值
  */
+
+using namespace complexor;
+
 int main()
 {
 	program_start(is_debug);
@@ -49,87 +71,28 @@ int main()
 	using namespace dbstream;
 	using namespace complex;
 
-	unsigned long t;
-	int i = 1;
-	cout << "正在计算 1800*1800的矩阵 * 1800*1800 的矩阵" << endl;
-	while (1) {
-		Matrix a(1800, 1800, []()->double {return rand_between(-500,500);});
-		Matrix b(1800, 1800, []()->double {return rand_between(-500,500);});
-		cout << "start" << endl;
-		t = GetTickCount();
-		a * b;
-		cout << "第 " << i << " 次计算, 耗时\t" << (GetTickCount() - t) << " ms" << endl;
-		i++;
-	}
+	vector<int> v = { 1, 2, 3 };
 
-//	Matrix a = { { 1, 5, 0, 7, 4 },
-//
-//	{ 2, 0, 2, 1, 2 },
-//
-//	{ 4, 5, 3, 0, 1 } };
-//
-//	Matrix b = { { 1, 2, 3 }, { 2, 1, 6 } };
-//
-//	conv2(b, a);
+	cout << "double" << endl;
+	Complexor<double> a(3, [](int i)->double {
+		return i/2.0;
+	}, true);
+	a.print();
 
-//	cout << __cplusplus << endl;
-//
-//	unsigned long long t = GetTickCount();
-//	try {
-//		MulMatrix a(1000, 1000, [](int i,int j)->double {
-//			return i*10+j;
-//		});
-//		cout << "生成矩阵a耗时" << GetTickCount() - t << endl;
-//		cout << "矩阵a大小" << (sizeof(a) + a.get_digit_size()) / 1024.0 / 1024.0 << " MB" << endl;
-////		a.print();
-//
-//		t = GetTickCount();
-//		MulMatrix b(1000, 1000, [](int i,int j)->double {
-//			return i*10+j;
-//		});
-//		cout << "生成矩阵b耗时" << GetTickCount() - t << endl;
-////		b.print();
-//
-//		t = GetTickCount();
-//		{
-//			MulMatrix c;
-//			c = mul(a, b);
-//			cout << "计算c=a*b耗时" << GetTickCount() - t << endl;
-//			c = matrix::operator *(a, b);
-//			cout << "计算c=a*b耗时" << GetTickCount() - t << endl;
-////			c.print();
-//		}
-//
-//	} catch (const exception &e) {
-//		cerr << e.what() << endl;
-//		throw;
-//	}
+	cout << "double" << endl;
+	Complexor<double> a2 = a;
+	a2.print();
 
-//	unsigned long long t = GetTickCount();
-//	try {
-//		MulMatrix a(3000, 3000, []()->double {
-//			return rand_between(-100,100);
-//		});
-//		cout << "生成矩阵a耗时" << GetTickCount() - t << endl;
-//		cout << "矩阵a大小" << (sizeof(a) + a.get_digit_size()) / 1024.0 / 1024.0 << " MB" << endl;
-//
-//		t = GetTickCount();
-//		MulMatrix b(3000, 3000, []()->double {
-//			return rand_between(-100,100);
-//		});
-//		cout << "生成矩阵b耗时" << GetTickCount() - t << endl;
-//
-//		t = GetTickCount();
-//		{
-//			MulMatrix c;
-//			c = mul(a, b);
-//			cout << "计算c=a*b耗时" << GetTickCount() - t << endl;
-//		}
-//
-//	} catch (const exception &e) {
-//		cerr << e.what() << endl;
-//		throw;
-//	}
+	cout << "double + double" << endl;
+	(a + a2).print();
+
+	cout << "int" << endl;
+	Complexor<int> b(3, [](int i)->int {
+		return i;
+	}, true);
+	b.print();
+	cout << "double * int" << endl;
+	cout << dot_product(a, b) << endl;
 
 //	Matrix a = { { 1, 2, 3 }, { 4, 5, 6 }, { 4, 5, 5 } };
 //	a.save("biout.matrix");
@@ -145,16 +108,6 @@ int main()
 //	b = optimize_rows(a);
 //	b.print();
 
-//	MulMatrix a(2000, 2000, []()->double {return rand_between(-500,500);});
-//	MulMatrix b(2000, 2000, []()->double {return rand_between(-500,500);});
-//	MulMatrix c;
-//	unsigned long t = GetTickCount();
-//	int i = 1;
-//	while (1) {
-//		c = mul(a, b);
-//		cout << i << "\t" << double(GetTickCount() - t) / i << endl;
-//		i++;
-//	}
 	program_will_end();
 //	system("pause");
 	return 0;

@@ -1,7 +1,7 @@
 /*
  * Dbstream.cpp
  *
- *  Created on: 2017å¹´9æœˆ2æ—¥
+ *  Created on: 2017Äê9ÔÂ2ÈÕ
  *      Author: Peter
  */
 
@@ -23,7 +23,7 @@ namespace dbstream
 	{
 		if (debug) {
 		} else {
-			std::cout << "åªæœ‰åœ¨è°ƒç”¨program_startå‡½æ•°æ—¶,is_debugå€¼ä¼ å…¥çš„æ˜¯true,è°ƒè¯•è¾“å‡ºæµæ‰ä¼šè¾“å‡ºä¿¡æ¯" << std::endl;
+			std::cout << "Ö»ÓĞÔÚµ÷ÓÃprogram_startº¯ÊıÊ±,is_debugÖµ´«ÈëµÄÊÇtrue,µ÷ÊÔÊä³öÁ÷²Å»áÊä³öĞÅÏ¢" << std::endl;
 		}
 	}
 

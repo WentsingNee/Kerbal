@@ -1,7 +1,7 @@
 #ifndef EXE_SERVE_HPP_
 #define EXE_SERVE_HPP_
 
-//#pragma message(__DATE__ "  " __TIME__"  æ­£åœ¨ç¼–è¯‘"__FILE__)
+//#pragma message(__DATE__ "  " __TIME__"  ÕýÔÚ±àÒë"__FILE__)
 
 #include <iostream>
 #include <typeinfo>
@@ -62,15 +62,15 @@ inline void program_start(bool is_debug)
 	start_time = GetTickCount();
 	std::ios::sync_with_stdio(false);
 	std::cin.tie(0);
-	std::cout << PRODUCT_NAME << " [ç‰ˆæœ¬ " << VER_STRING << "]\n" << "(c) " << COMPANY_NAME << "ã€‚ä¿ç•™æ‰€æœ‰æƒåˆ©ã€‚" << std::endl;
+	std::cout << PRODUCT_NAME << " [°æ±¾ " << VER_STRING << "]\n" << "(c) " << COMPANY_NAME << "¡£±£ÁôËùÓÐÈ¨Àû¡£" << std::endl;
 	/*
-	 Microsoft Windows [ç‰ˆæœ¬ 10.0.14393]
-	 (c) 2016 Microsoft Corporationã€‚ä¿ç•™æ‰€æœ‰æƒåˆ©ã€‚
+	 Microsoft Windows [°æ±¾ 10.0.14393]
+	 (c) 2016 Microsoft Corporation¡£±£ÁôËùÓÐÈ¨Àû¡£
 	 */
 
-	std::cout << "æœ¬äº§å“æŽˆæƒç»™" << get_user_name() << "ä½¿ç”¨\n" << std::endl;
+	std::cout << "±¾²úÆ·ÊÚÈ¨¸ø" << get_user_name() << "Ê¹ÓÃ\n" << std::endl;
 	/*
-	 æœ¬äº§å“æŽˆæƒç»™Peterä½¿ç”¨
+	 ±¾²úÆ·ÊÚÈ¨¸øPeterÊ¹ÓÃ
 	 */
 
 	/*	cout << __LINE__ << endl;
@@ -174,7 +174,7 @@ bool print_type_infomation(const T &a)
 			break;
 		}
 		default: {
-			cout << "è‡ªå®šä¹‰ç±»åž‹" << " size:" << sizeof(T) << endl;
+			cout << "×Ô¶¨ÒåÀàÐÍ" << " size:" << sizeof(T) << endl;
 			return false;
 		}
 	}

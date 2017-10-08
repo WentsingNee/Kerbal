@@ -1,7 +1,7 @@
 #ifndef _BALL_SPHERICAL_HPP_
 #define _BALL_SPHERICAL_HPP_
 
-//#pragma message(__DATE__ "  " __TIME__"  æ­£åœ¨ç¼–è¯‘"__FILE__)
+//#pragma message(__DATE__ "  " __TIME__"  ÕıÔÚ±àÒë"__FILE__)
 
 #include <iostream>
 #include <string>
@@ -20,7 +20,7 @@ namespace spherical
 	double rad_to_angle(double i);
 	double angle(double degree, double min = 0.0, double sec = 0.0);
 
-	double MOD(double x, double y);   //è¿”å›ä¸¤æ•°ç›¸é™¤çš„ä½™æ•°ã€‚ ç»“æœçš„ç¬¦å·ä¸é™¤æ•°ç›¸åŒã€‚
+	double MOD(double x, double y);   //·µ»ØÁ½ÊıÏà³ıµÄÓàÊı¡£ ½á¹ûµÄ·ûºÅÓë³ıÊıÏàÍ¬¡£
 
 	inline double standard_longitude(double x)
 	{
@@ -35,8 +35,8 @@ namespace spherical
 	class Spherical
 	{
 		public:
-			double longitude, latitude, height;   //ç»åº¦, çº¬åº¦
-			static const double R;   //åœ°çƒåŠå¾„6371004m
+			double longitude, latitude, height;   //¾­¶È, Î³¶È
+			static const double R;   //µØÇò°ë¾¶6371004m
 			string comment;
 
 			Spherical(double longitude, double latitude, double height = 0.0, const string &comment = "")

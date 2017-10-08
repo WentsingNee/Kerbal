@@ -6,7 +6,7 @@ bool debug = true;
 unsigned long show_time_cost()
 {
 	unsigned long time_cost = GetTickCount() - start_time;
-	std::cout << "\nè¿è¡Œè€—æ—¶ " << time_cost << " ms" << std::endl;
+	std::cout << "\nÔËÐÐºÄÊ± " << time_cost << " ms" << std::endl;
 	return time_cost;
 }
 

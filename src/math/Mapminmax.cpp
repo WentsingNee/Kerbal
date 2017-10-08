@@ -1,7 +1,7 @@
 /*
  * Mapminmax.cpp
  *
- *  Created on: 2017å¹´7æœˆ13æ—¥
+ *  Created on: 2017Äê7ÔÂ13ÈÕ
  *      Author: Peter
  *      Fuction:
  */
@@ -28,7 +28,7 @@ namespace statistics
 
 	void Mapminmax::anti_mapminmax(double a[])
 	{
-		//æ•°æ®é€†å½’ä¸€åŒ–
+		//Êı¾İÄæ¹éÒ»»¯
 		for (unsigned int i = 0; i < arr_record.size(); i++) {
 			if (arr_record[i].p == a) {
 				int &len = arr_record[i].len;
@@ -46,7 +46,7 @@ namespace statistics
 
 	double Mapminmax::anti_mapminmax(double a, double reference[]) throw (std::invalid_argument)
 	{
-		//æ•°æ®é€†å½’ä¸€åŒ–
+		//Êı¾İÄæ¹éÒ»»¯
 		for (unsigned int i = 0; i < arr_record.size(); i++) {
 			if (arr_record[i].p == reference) {
 				double &MaxValue = arr_record[i].max;

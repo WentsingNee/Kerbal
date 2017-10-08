@@ -11,6 +11,6 @@ namespace big
 	double big_fact(unsigned int n, int &exponent_result);
 }
 
-//#pragma message(__DATE__ "  " __TIME__"  ç¼–è¯‘å®Œæˆ"__FILE__)
+//#pragma message(__DATE__ "  " __TIME__"  ±àÒëÍê³É"__FILE__)
 
 #endif	/* End _BIG_H_ */

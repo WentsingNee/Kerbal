@@ -13,7 +13,7 @@ namespace spherical
 		using namespace std;
 	}
 
-	const double Spherical::R = 6371004; //åœ°çƒåŠå¾„
+	const double Spherical::R = 6371004; //µØÇò°ë¾¶
 
 	double rad_to_angle(double i)
 	{
@@ -25,7 +25,7 @@ namespace spherical
 		return degree + min / 60 + sec / 3600;
 	}
 
-//è¿ç®—ç¬¦é‡è½½
+//ÔËËã·ûÖØÔØ
 	ostream& operator <<(ostream &output, const Spherical &s)
 	{
 		output << s.to_string();
@@ -43,21 +43,21 @@ namespace spherical
 		string Text = comment + ": ";
 
 		if (longitude > 0) {
-			Text += to_string(longitude) + "Â°E";
+			Text += to_string(longitude) + "¡ãE";
 		} else if (longitude < 0) {
-			Text += to_string(-longitude) + "Â°W";
+			Text += to_string(-longitude) + "¡ãW";
 		} else {
-			Text += to_string(longitude) + "Â°";
+			Text += to_string(longitude) + "¡ã";
 		}
 
 		Text += " , ";
 
 		if (latitude > 0) {
-			Text += to_string(latitude) + "Â°N";
+			Text += to_string(latitude) + "¡ãN";
 		} else if (latitude < 0) {
-			Text += to_string(-latitude) + "Â°S";
+			Text += to_string(-latitude) + "¡ãS";
 		} else {
-			Text += to_string(latitude) + "Â°";
+			Text += to_string(latitude) + "¡ã";
 		}
 
 		Text += " , ";
@@ -66,7 +66,7 @@ namespace spherical
 		return Text;
 	}
 
-	double ball_distance(const Spherical &a, const Spherical &b) //è¿”å›ä¸¤ç‚¹æŠ•å½±åœ¨çƒé¢ä¸Šçš„å¼§çº¿çš„é•¿åº¦
+	double ball_distance(const Spherical &a, const Spherical &b) //·µ»ØÁ½µãÍ¶Ó°ÔÚÇòÃæÉÏµÄ»¡ÏßµÄ³¤¶È
 	{
 		return a.R
 				* acos(
@@ -74,7 +74,7 @@ namespace spherical
 								+ cos(a.latitude) * cos(b.latitude) * cos(a.longitude - b.longitude));
 	}
 
-	double real_distance(const Spherical &a, const Spherical &b) //è¿”å›è€ƒè™‘åˆ°ä¸¤ç‚¹é—´é«˜åº¦å·®çš„ä¸¤ç‚¹é—´è·ç¦»
+	double real_distance(const Spherical &a, const Spherical &b) //·µ»Ø¿¼ÂÇµ½Á½µã¼ä¸ß¶È²îµÄÁ½µã¼ä¾àÀë
 	{
 		if (a.latitude == b.latitude && a.longitude == b.longitude) {
 			return fabs(a.height - b.height);
@@ -100,9 +100,9 @@ namespace spherical
 		}
 	}
 
-//æœåŠ¡
+//·şÎñ
 
-	double MOD(double x, double y) //è¿”å›ä¸¤æµ®ç‚¹æ•°æ•°ç›¸é™¤çš„ä½™æ•°,ç»“æœçš„ç¬¦å·ä¸é™¤æ•°ç›¸åŒ
+	double MOD(double x, double y) //·µ»ØÁ½¸¡µãÊıÊıÏà³ıµÄÓàÊı,½á¹ûµÄ·ûºÅÓë³ıÊıÏàÍ¬
 	{
 		int quotient;
 		if (x / y > 0) {

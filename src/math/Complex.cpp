@@ -7,7 +7,7 @@ namespace complex
 		using namespace std;
 	}
 
-	//æœåŠ¡éƒ¨åˆ†
+	//·şÎñ²¿·Ö
 	string Complex::to_string() const
 	{
 		stringstream output;
@@ -50,18 +50,18 @@ namespace complex
 		cout << this->to_string() << endl;
 	}
 
-	//æ–¹æ³•éƒ¨åˆ†
-	double Complex::moudle() const //è¿”å›å¤æ•°çš„æ¨¡é•¿
+	//·½·¨²¿·Ö
+	double Complex::moudle() const //·µ»Ø¸´ÊıµÄÄ£³¤
 	{
 		return hypot(real, imag);
 	}
 
-	double Complex::argz() const //è¿”å›å¤æ•°çš„å¹…è§’
+	double Complex::argz() const //·µ»Ø¸´ÊıµÄ·ù½Ç
 	{
-		return atan2(imag, real); //å¼§åº¦åˆ¶
+		return atan2(imag, real); //»¡¶ÈÖÆ
 	}
 
-	//è¿ç®—ç¬¦é‡è½½éƒ¨åˆ†
+	//ÔËËã·ûÖØÔØ²¿·Ö
 	const Complex operator+(const Complex &a, const Complex &b)
 	{
 		return Complex(a.real + b.real, a.imag + b.imag);
@@ -253,7 +253,7 @@ namespace complex
 		return Complex(-a.real, -a.imag);
 	}
 
-	const Complex operator~(const Complex &a) //è®¡ç®—ä¸€ä¸ªå¤æ•°çš„å…±è½­å¤æ•°
+	const Complex operator~(const Complex &a) //¼ÆËãÒ»¸ö¸´ÊıµÄ¹²éî¸´Êı
 	{
 		return Complex(a.real, -a.imag);
 	}
@@ -273,14 +273,14 @@ namespace complex
 		return input;
 	}
 
-//å‡½æ•°éƒ¨åˆ†
+//º¯Êı²¿·Ö
 
-	const Complex trans(double r, double sigma) //æ ¹æ®æ¨¡é•¿å’Œå¹…è§’è¿”å›ä¸€ä¸ªå¤æ•°
+	const Complex trans(double r, double sigma) //¸ù¾İÄ£³¤ºÍ·ù½Ç·µ»ØÒ»¸ö¸´Êı
 	{
 		return Complex(r * cos(sigma), r * sin(sigma));
 	}
 
-	const Complex zpow(const Complex &z, int n) //è®¡ç®—ä¸€ä¸ªå¤æ•°çš„å¹‚
+	const Complex zpow(const Complex &z, int n) //¼ÆËãÒ»¸ö¸´ÊıµÄÃİ
 	{
 		return Complex(z.moudle() * cos(n * z.argz()), z.moudle() * sin(n * z.argz()));
 	}
@@ -295,25 +295,25 @@ namespace complex
 		return z.to_string();
 	}
 
-//åº”ç”¨éƒ¨åˆ†
+//Ó¦ÓÃ²¿·Ö
 	void quac_equ(double a, double b, double c, Complex &x1, Complex &x2, short &num) throw (invalid_argument)
 	{
-		//ä¸€å…ƒäºŒæ¬¡æ–¹ç¨‹
+		//Ò»Ôª¶ş´Î·½³Ì
 
 		if (a == 0) {
 			if (b == 0) {
 				if (c == 0) {
 					num = 3;
-					throw invalid_argument("infinite solutions"); //æ— ç©·å¤šè§£
+					throw invalid_argument("infinite solutions"); //ÎŞÇî¶à½â
 				} else {
 					num = 0;
-					throw invalid_argument("no solution"); //æ— è§£
+					throw invalid_argument("no solution"); //ÎŞ½â
 				}
 			} else {
 				//x1=-c/b;
 				num = 1;
 				x1 = Complex(-c / b, 0);
-				throw invalid_argument("only one solution"); //åªæœ‰ä¸€è§£
+				throw invalid_argument("only one solution"); //Ö»ÓĞÒ»½â
 			}
 		} else {
 			num = 2;

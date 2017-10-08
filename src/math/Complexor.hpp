@@ -1,7 +1,7 @@
 /*
  * Complexor.h
  *
- *  Created on: 2017å¹´5æœˆ8æ—¥
+ *  Created on: 2017Äê5ÔÂ8ÈÕ
  *      Author: Peter
  */
 
@@ -19,12 +19,82 @@ namespace complexor
 	using namespace std;
 	using namespace matrix;
 
+	//ÓÑÔªº¯ÊıÉùÃ÷
+	template <class Type> class Complexor;
+
+	template <class Type> const Complexor<Type> operator+(const Complexor<Type> &a, const Complexor<Type> &b) throw (invalid_argument);
+	template <class Type> const Complexor<Type> operator-(const Complexor<Type> &a, const Complexor<Type> &b) throw (invalid_argument);
+
+	template <class Type> const Complexor<Type> TransposeOf(const Complexor<Type> &src);
+
+	template <class Type> const Complexor<Type> operator*(const Matrix &M, const Complexor<Type> &V) throw (invalid_argument);
+	//¾ØÕó³ËÒÔÁĞÏòÁ¿, ·µ»ØÏòÁ¿
+	template <class Type> const Complexor<Type> operator*(const Complexor<Type> &V, const Matrix &M) throw (invalid_argument);
+	//ĞĞÏòÁ¿³ËÒÔ¾ØÕó, ·µ»ØÏòÁ¿
+	template <class Type> const Type dot_product(const Complexor<Type> &a, const Complexor<Type> &b) throw (invalid_argument);
+	//ÏòÁ¿µã»ı, ·µ»ØÊµÊı
+	template <class Type> const Matrix operator*(const Complexor<Type> &a, const Complexor<Type> &b) throw (invalid_argument);
+	//ÏòÁ¿³ËÒÔÏòÁ¿, ·µ»Ø¾ØÕó
+	template <class Type> const Complexor<Type> operator*(const double &k, const Complexor<Type> &b); //Êık³ËÒÔÏòÁ¿
+	template <class Type> const Complexor<Type> operator*(const Complexor<Type> &b, const double &k); //ÏòÁ¿³ËÒÔÊık
+	template <class Type> Type abs(const Complexor<Type> &src); //ÏòÁ¿µÄÄ£
+	template <class Type> Type angle(const Complexor<Type> &a, const Complexor<Type> &b) throw (invalid_argument);
+	//ÏòÁ¿¼Ğ½Ç
+
+	//ÀàÉùÃ÷
+	template <class Type>
 	class Complexor
 	{
 		protected:
-			double *p;
+			Type *p;
 			int num;
-			bool vertical; //é»˜è®¤åˆ—å‘é‡
+			bool vertical; //Ä¬ÈÏÁĞÏòÁ¿
+
+			void mem_init()
+			{
+				try {
+					p = new Type[num];
+				} catch (const bad_alloc &exct) {
+					num = 0;
+					throw;
+				}
+			}
+
+			void resize(int new_num)
+			{ //TODO BUG
+				bool alloc = false;
+				if (alloc) {
+					//new[] delete[]·½°¸
+					Type *p_former = p;
+					try {
+						p = new Type[new_num];
+						std::copy(p_former, p_former + std::min(num, new_num), p);
+						num = new_num;
+						delete[] p_former;
+						p_former = NULL;
+					} catch (const bad_alloc &exct) { //ÄÚ´æ·ÖÅäÊ§°Ü
+						delete[] p_former;
+						num = 0;
+						p_former = NULL;
+						p = NULL;
+						throw;
+					}
+				} else {
+					//alloc·½°¸
+					Type *p_new = (Type*) realloc(p, new_num * sizeof(Type));
+					if (p_new == NULL) { //ÄÚ´æ·ÖÅäÊ§°Ü
+						num = 0;
+						free(p);
+						p = NULL;
+						p_new = NULL;
+						throw bad_alloc();
+					} else { //ÄÚ´æ·ÖÅä³É¹¦
+						p = p_new;
+						num = new_num;
+						p_new = NULL;
+					}
+				}
+			}
 
 			void test_index(int num_test) const throw (out_of_range)
 			{
@@ -35,49 +105,18 @@ namespace complexor
 
 		public:
 			Complexor(const int num = 0, const bool if_set0 = true, const bool vertical = true) throw (bad_alloc);
-			Complexor(const Complexor &src) throw (bad_alloc); //æ‹·è´æ„é€ å‡½æ•°
+			Complexor(const Complexor &src) throw (bad_alloc); //¿½±´¹¹Ôìº¯Êı
 			Complexor(const Matrix &src, int index = 0, const bool vertical = true) throw (bad_alloc);
-			Complexor(const double src[], const int num, const bool vertical = true) throw (bad_alloc);
-			Complexor(const int num, double (*function)(), const bool vertical = true) throw (bad_alloc);
-			Complexor(const int num, double (*function)(int), const bool vertical = true) throw (bad_alloc);
+			Complexor(const Type src[], const int num, const bool vertical = true) throw (bad_alloc);
+			Complexor(const int num, Type (*function)(), const bool vertical = true) throw (bad_alloc);
+			Complexor(const int num, Type (*function)(int), const bool vertical = true) throw (bad_alloc);
 
 #if __cplusplus >= 201103L //C++0x
-			//Complexor ä¸º C++ 11 å‡†å¤‡çš„æ–°ç‰¹æ€§: åˆ©ç”¨åˆå§‹åŒ–åˆ—è¡¨è¿›è¡Œæ„é€ 
-			Complexor(initializer_list<double> a)
-			{
-				num = a.size();
-				p = new double[num];
-				vertical = true;
-
-				int i = 0;
-				for (auto ele : a) {
-					p[i] = ele;
-					i++;
-				}
-			}
+			//Complexor Îª C++ 11 ×¼±¸µÄĞÂÌØĞÔ: ÀûÓÃ³õÊ¼»¯ÁĞ±í½øĞĞ¹¹Ôì
+			Complexor(initializer_list<Type> src);
 #endif //C++0x
 
-			/*explicit */
-			operator Matrix()
-			{
-				try {
-					if (this->vertical) {
-						Matrix result(num, 1, false);
-						for (int i = 0; i < num; i++) {
-							result.get_element(i, 0) = p[i];
-						}
-						return result;
-					} else {
-						Matrix result(1, num, false);
-						for (int i = 0; i < num; i++) {
-							result.get_element(0, i) = p[i];
-						}
-						return result;
-					}
-				} catch (const bad_alloc &exct) {
-					throw exct;
-				}
-			}
+			operator Matrix();
 			virtual ~Complexor();
 			bool is_const();
 			bool is_const() const;
@@ -85,28 +124,21 @@ namespace complexor
 			bool empty() const;
 			void clear();
 
-			Complexor call(double (*__pf)(double))
-			{
-				Complexor result(this->num, false, this->vertical);
-				for (int i = 0; i < num; ++i) {
-					result.p[i] = __pf(this->p[i]);
-				}
-				return result;
-			}
+			const Complexor call(Type (*__pf)(Type));
 
-			void set_element(int index, const double &value) throw (out_of_range)
+			void set_element(int index, const Type &value) throw (out_of_range)
 			{
 				test_index(index);
 				p[index] = value;
 			}
 
-			double& get_element(int index) throw (out_of_range)
+			Type& get_element(int index) throw (out_of_range)
 			{
 				test_index(index);
 				return p[index];
 			}
 
-			const double& get_element(int index) const throw (out_of_range)
+			const Type& get_element(int index) const throw (out_of_range)
 			{
 				test_index(index);
 				return p[index];
@@ -117,59 +149,87 @@ namespace complexor
 				return num;
 			}
 
-			void print() const;
-
-			size_t get_digit_size() const
+			bool is_vertical() const
 			{
-				return num * sizeof(double);
+				return vertical;
 			}
 
-			friend Complexor operator+(const Complexor &a, const Complexor &b) throw (invalid_argument);
-			//å‘é‡åŠ æ³•, æ–¹å‘ä¸åŒä¸€å¾‹è¿”å›åˆ—å‘é‡
-			Complexor& operator+=(const Complexor &with) throw (invalid_argument);  //å‘é‡åŠ æ³•
-			Complexor operator+() const; //è¿”å›å‘é‡çš„åå‘åŒé•¿å‘é‡
-			friend Complexor operator-(const Complexor &a, const Complexor &b) throw (invalid_argument);
-			//å‘é‡å‡æ³•, æ–¹å‘ä¸åŒä¸€å¾‹è¿”å›åˆ—å‘é‡
-			Complexor& operator-=(const Complexor &with) throw (invalid_argument);  //å‘é‡åŠ æ³•
-			Complexor operator-() const; //è¿”å›å‘é‡çš„åå‘åŒé•¿å‘é‡
+			void print() const;
 
-			Complexor& operator=(const Complexor &src);
-			double& operator[](int index) throw (out_of_range);
-			const double& operator[](int index) const throw (out_of_range);
-
-			Complexor& doTranspose();
-			friend Complexor TransposeOf(const Complexor &src);
-
-			friend Complexor operator*(const Matrix &M, const Complexor &V) throw (invalid_argument);
-			//çŸ©é˜µä¹˜ä»¥åˆ—å‘é‡, è¿”å›å‘é‡
-			friend Complexor operator*(const Complexor &V, const Matrix &M) throw (invalid_argument);
-			//è¡Œå‘é‡ä¹˜ä»¥çŸ©é˜µ, è¿”å›å‘é‡
-			friend double dot_product(const Complexor &a, const Complexor &b) throw (invalid_argument);
-			//å‘é‡ç‚¹ç§¯, è¿”å›å®æ•°
-			friend Matrix operator*(const Complexor &a, const Complexor &b) throw (invalid_argument);
-			//å‘é‡ä¹˜ä»¥å‘é‡, è¿”å›çŸ©é˜µ
-			friend Complexor operator*(const int &k, const Complexor &b); //æ•°kä¹˜ä»¥å‘é‡
-			friend Complexor operator*(const Complexor &b, const int &k); //å‘é‡ä¹˜ä»¥æ•°k
-
-			friend double abs(const Complexor &src); //å‘é‡çš„æ¨¡
-
-//			friend void print_array_to_file(const Complexor &src, string separator, string file_name, bool if_output_number =
-//					false) throw (invalid_argument);
-
-			double* const begin() const
+			const Type* get_data() const
 			{
 				return p;
 			}
 
-			double* const end() const
+			size_t get_digit_size() const
+			{
+				return num * sizeof(Type);
+			}
+
+			Complexor& operator=(const Complexor &src);
+			Type& operator[](int index) throw (out_of_range);
+			const Type& operator[](int index) const throw (out_of_range);
+
+			friend const Complexor operator+<>(const Complexor &a, const Complexor &b) throw (invalid_argument);
+			//ÏòÁ¿¼Ó·¨, ·½Ïò²»Í¬Ò»ÂÉ·µ»ØÁĞÏòÁ¿
+			friend const Complexor operator-<>(const Complexor &a, const Complexor &b) throw (invalid_argument);
+			//ÏòÁ¿¼õ·¨, ·½Ïò²»Í¬Ò»ÂÉ·µ»ØÁĞÏòÁ¿
+
+			Complexor& operator+=(const Complexor &with) throw (invalid_argument);  //ÏòÁ¿¼Ó·¨
+			Complexor& operator-=(const Complexor &with) throw (invalid_argument);  //ÏòÁ¿¼Ó·¨
+
+			const Complexor operator+() const; //·µ»ØÏòÁ¿µÄ·´ÏòÍ¬³¤ÏòÁ¿
+			const Complexor operator-() const; //·µ»ØÏòÁ¿µÄ·´ÏòÍ¬³¤ÏòÁ¿
+
+			Complexor& doTranspose();
+			friend const Complexor TransposeOf<>(const Complexor &src);
+
+			friend const Complexor operator*<>(const Matrix &M, const Complexor &V) throw (invalid_argument);
+			//¾ØÕó³ËÒÔÁĞÏòÁ¿, ·µ»ØÏòÁ¿
+			friend const Complexor operator*<>(const Complexor &V, const Matrix &M) throw (invalid_argument);
+			//ĞĞÏòÁ¿³ËÒÔ¾ØÕó, ·µ»ØÏòÁ¿
+			friend const Type dot_product<>(const Complexor &a, const Complexor &b) throw (invalid_argument);
+			//ÏòÁ¿µã»ı, ·µ»ØÊµÊı
+			friend const Matrix operator*<>(const Complexor &a, const Complexor &b) throw (invalid_argument);
+			//ÏòÁ¿³ËÒÔÏòÁ¿, ·µ»Ø¾ØÕó
+			friend const Complexor operator*<>(const double &k, const Complexor &b); //Êık³ËÒÔÏòÁ¿
+			friend const Complexor operator*<>(const Complexor &b, const double &k); //ÏòÁ¿³ËÒÔÊık
+
+			friend Type abs<>(const Complexor &src); //ÏòÁ¿µÄÄ£
+
+//			friend void print_array_to_file(const Complexor &src, string separator, string file_name, bool if_output_number =
+//					false) throw (invalid_argument);
+
+			Type* const begin() const
+			{
+				return p;
+			}
+
+			Type* const end() const
 			{
 				return p + num;
 			}
+
+			friend Type angle<>(const Complexor &a, const Complexor &b) throw (invalid_argument);
+			//ÏòÁ¿¼Ğ½Ç
+//			friend const Complexor<Type> eqution(Matrix m) throw (invalid_argument);
 	};
-	double operator^(const Complexor &a, const Complexor &b) throw (invalid_argument);
-	//å‘é‡å¤¹è§’
-	Complexor eqution(Matrix m) throw (invalid_argument);
+#if __cplusplus >= 201103L //C++0x
+	template <class Type1, class Type2>
+	auto operator+(const Complexor<Type1> &a, const Complexor<Type2> &b) throw (invalid_argument) ->const Complexor<decltype(a[0]+b[0])>;
+	//Á½¸ö²»Í¬ÀàĞÍÏòÁ¿µÄ¼Ó·¨, ·½Ïò²»Í¬Ò»ÂÉ·µ»ØÁĞÏòÁ¿, ×Ô¶¯ÍÆµ¼·µ»ØÀàĞÍ, Àı: Complexor<int> + Complexor<double> = Complexor<double>
+
+	template <class Type1, class Type2>
+	auto operator-(const Complexor<Type1> &a, const Complexor<Type2> &b) throw (invalid_argument)->const Complexor<decltype(a[0]-b[0])>;
+//Á½¸ö²»Í¬ÀàĞÍÏòÁ¿µÄ¼õ·¨, ·½Ïò²»Í¬Ò»ÂÉ·µ»ØÁĞÏòÁ¿, ×Ô¶¯ÍÆµ¼·µ»ØÀàĞÍ, Àı: Complexor<int> - Complexor<double> = Complexor<double>
+
+	template <class Type1, class Type2>
+	auto dot_product(const Complexor<Type1> &a, const Complexor<Type2> &b) throw (invalid_argument) ->const decltype(a[0]*b[0]);
+//ÏòÁ¿µã»ı
+#endif //c++0x
 
 } /* namespace complexor */
 
 #endif /* COMPLEXOR_H_ */
+
+#include "Complexor_base.hpp" /* ÊµÏÖ */

@@ -10,7 +10,7 @@ namespace
 	using namespace _String;
 }
 
-double baremainder(double numerator, double denominator) //è¿”å›žä¸¤æ•°ç›¸é™¤çš„ä½™æ•°ã€‚ ç»“æžœçš„ç¬¦å·ä¸Žé™¤æ•°ç›¸åŒã€‚
+double baremainder(double numerator, double denominator) //·µ»ØÁ½ÊýÏà³ýµÄÓàÊý¡£ ½á¹ûµÄ·ûºÅÓë³ýÊýÏàÍ¬¡£
 {
 	int quotient;
 	if (numerator / denominator > 0) {
@@ -123,7 +123,7 @@ namespace Fraction
 		int i, j;
 		string result = "";
 		try {
-			//æ£€æŸ¥a/båž‹
+			//¼ì²éa/bÐÍ
 			x = fabs(a);
 			fraction(x, i, j);
 			if (a < 0) {
@@ -146,7 +146,7 @@ namespace Fraction
 		int i, j;
 		string result = "";
 		try {
-			//æ£€æŸ¥aÏ€/båž‹
+			//¼ì²éa¦Ð/bÐÍ
 			x = fabs(a) / M_PI;
 			fraction(x, i, j);
 			if (a < 0) {
@@ -154,15 +154,15 @@ namespace Fraction
 			}
 			if (j == 1) {
 				if (i == 1) {
-					result += "Ï€";
+					result += "¦Ð";
 				} else {
-					result += to_string(i) + "Ï€";
+					result += to_string(i) + "¦Ð";
 				}
 			} else {
 				if (i == 1) {
-					result += "Ï€/" + to_string(j);
+					result += "¦Ð/" + to_string(j);
 				} else {
-					result += to_string(i) + "Ï€/" + to_string(j);
+					result += to_string(i) + "¦Ð/" + to_string(j);
 				}
 			}
 			return result;
@@ -177,16 +177,16 @@ namespace Fraction
 		int i, j;
 		string result = "";
 		try {
-			//æ£€æŸ¥a/bÏ€åž‹
+			//¼ì²éa/b¦ÐÐÍ
 			x = fabs(a) * M_PI;
 			fraction(x, i, j);
 			if (a < 0) {
 				result += "-";
 			}
 			if (j == 1) {
-				result += to_string(i) + "/Ï€";
+				result += to_string(i) + "/¦Ð";
 			} else {
-				result += to_string(i) + "/" + to_string(j) + "Ï€";
+				result += to_string(i) + "/" + to_string(j) + "¦Ð";
 			}
 			return result;
 		} catch (int) {
@@ -200,7 +200,7 @@ namespace Fraction
 		int i, j;
 		string result = "";
 		try {
-			//æ£€æŸ¥ae/båž‹
+			//¼ì²éae/bÐÍ
 			x = fabs(a) / M_E;
 			fraction(x, i, j);
 			if (a < 0) {
@@ -231,7 +231,7 @@ namespace Fraction
 		int i, j;
 		string result = "";
 		try {
-			//æ£€æŸ¥a/beåž‹
+			//¼ì²éa/beÐÍ
 			x = fabs(a) * M_E;
 			fraction(x, i, j);
 			if (a < 0) {
@@ -254,26 +254,26 @@ namespace Fraction
 		int i, j;
 		string result = "";
 		try {
-			//æ£€æŸ¥âˆš(a/b)åž‹
+			//¼ì²é¡Ì(a/b)ÐÍ
 			x = a * a;
 			fraction(x, i, j);
 			if (a < 0) {
 				result += "-";
 			}
 			if (j == 1) {
-				result += "âˆš(" + to_string(i) + ")";
+				result += "¡Ì(" + to_string(i) + ")";
 			} else {
 				int temp = sqrt(i);
 				if (temp * temp == i) {
-					//iå¯æå‡ºæ ¹å·
-					result += to_string(temp) + "/âˆš(" + to_string(j) + ")";
+					//i¿ÉÌá³ö¸ùºÅ
+					result += to_string(temp) + "/¡Ì(" + to_string(j) + ")";
 				} else {
 					temp = sqrt(j);
 					if (temp * temp == j) {
-						//jå¯æå‡ºæ ¹å·
-						result += "âˆš(" + to_string(i) + ")/" + to_string(temp);
+						//j¿ÉÌá³ö¸ùºÅ
+						result += "¡Ì(" + to_string(i) + ")/" + to_string(temp);
 					} else {
-						result += "âˆš(" + to_string(i) + "/" + to_string(j) + ")";
+						result += "¡Ì(" + to_string(i) + "/" + to_string(j) + ")";
 					}
 				}
 			}
@@ -355,7 +355,7 @@ namespace Fraction
 		int i, j;
 		string result = "";
 		try {
-			//æ£€æŸ¥sin(a/b)åž‹,æ³¨æ„a/b>90æ—¶æ— æ³•è¯†åˆ«
+			//¼ì²ésin(a/b)ÐÍ,×¢Òâa/b>90Ê±ÎÞ·¨Ê¶±ð
 			x = asin(a) * 180 / M_PI;
 			fraction(x, i, j);
 			if (a < 0) {
@@ -378,7 +378,7 @@ namespace Fraction
 		int i, j;
 		string result = "";
 		try {
-			//æ£€æŸ¥tan(a/b)åž‹,æ³¨æ„/*a/b>90æ—¶æ— æ³•è¯†åˆ«*/
+			//¼ì²étan(a/b)ÐÍ,×¢Òâ/*a/b>90Ê±ÎÞ·¨Ê¶±ð*/
 			x = atan(a) * 180 / M_PI;
 			fraction(x, i, j);
 			if (a < 0) {
@@ -401,7 +401,7 @@ namespace Fraction
 		int i, j;
 		string result = "";
 		try {
-//æ£€æŸ¥asin(a/b)åž‹
+//¼ì²éasin(a/b)ÐÍ
 			x = sin(a);
 			fraction(x, i, j);
 			if (a < 0) {
@@ -424,7 +424,7 @@ namespace Fraction
 		int i, j;
 		string result = "";
 		try {
-//æ£€æŸ¥atan(a/b)åž‹
+//¼ì²éatan(a/b)ÐÍ
 			x = tan(a);
 			fraction(x, i, j);
 			if (a < 0) {
@@ -444,92 +444,92 @@ namespace Fraction
 	string fraction(double a)
 	{
 		try {
-//æ£€æŸ¥a/båž‹
+//¼ì²éa/bÐÍ
 			return a_divide_b(a);
 		} catch (int) {
 			goto a_PI_divide_b;
 		}
 
 		a_PI_divide_b: try {
-//æ£€æŸ¥aÏ€/båž‹
+//¼ì²éa¦Ð/bÐÍ
 			return a_PI_divide_b(a);
 		} catch (int) {
 			goto a_divide_b_PI;
 		}
 
 		a_divide_b_PI: try {
-//æ£€æŸ¥a/bÏ€åž‹
+//¼ì²éa/b¦ÐÐÍ
 			return a_divide_b_PI(a);
 		} catch (int) {
 			goto a_E_divide_b;
 		}
 
 		a_E_divide_b: try {
-//æ£€æŸ¥ae/båž‹
+//¼ì²éae/bÐÍ
 			return a_E_divide_b(a);
 		} catch (int) {
 			goto a_divide_b_E;
 		}
 
 		a_divide_b_E: try {
-//æ£€æŸ¥a/beåž‹
+//¼ì²éa/beÐÍ
 			return a_divide_b_E(a);
 		} catch (int) {
 			goto sqrt_a_divide_b;
 		}
 
 		sqrt_a_divide_b: try {
-//æ£€æŸ¥âˆš(a/b)åž‹
+//¼ì²é¡Ì(a/b)ÐÍ
 			return sqrt_a_divide_b(a);
 		} catch (int) {
 			goto ln_a_divide_b;
 		}
 
 		ln_a_divide_b: try {
-//æ£€æŸ¥ln(a/b)åž‹
+//¼ì²éln(a/b)ÐÍ
 			return ln_a_divide_b(a);
 		} catch (int) {
 			goto log_2_a_divide_b;
 		}
 
 		log_2_a_divide_b: try {
-//æ£€æŸ¥ln(a/b)åž‹
+//¼ì²éln(a/b)ÐÍ
 			return log_2_a_divide_b(a);
 		} catch (int) {
 			goto log_10_a_divide_b;
 		}
 
 		log_10_a_divide_b: try {
-//æ£€æŸ¥ln(a/b)åž‹
+//¼ì²éln(a/b)ÐÍ
 			return log_10_a_divide_b(a);
 		} catch (int) {
 			goto sin_a_divide_b;
 		}
 
 		sin_a_divide_b: try {
-//æ£€æŸ¥sin(a/b)åž‹
+//¼ì²ésin(a/b)ÐÍ
 			return sin_a_divide_b(a);
 		} catch (int) {
 			goto tan_a_divide_b;
 		}
 
 		tan_a_divide_b: try {
-//æ£€æŸ¥tan(a/b)åž‹
+//¼ì²étan(a/b)ÐÍ
 			return tan_a_divide_b(a);
 		} catch (int) {
-//cout<<"ä¸èƒ½æ‹†åˆ†"<<endl;
+//cout<<"²»ÄÜ²ð·Ö"<<endl;
 			goto asin_a_divide_b;
 		}
 
 		asin_a_divide_b: try {
-//æ£€æŸ¥asin(a/b)åž‹
+//¼ì²éasin(a/b)ÐÍ
 			return asin_a_divide_b(a);
 		} catch (int) {
 			goto atan_a_divide_b;
 		}
 
 		atan_a_divide_b: try {
-//æ£€æŸ¥atan(a/b)åž‹
+//¼ì²éatan(a/b)ÐÍ
 			return atan_a_divide_b(a);
 		} catch (int) {
 			goto fail;
@@ -553,7 +553,7 @@ namespace Fraction
 		//		if(a<0) {
 		//			cout<<"-";
 		//		}
-		//		return "2/âˆš(Ï€)";
+		//		return "2/¡Ì(¦Ð)";
 		//	} else {
 		//		return to_string(a);
 		//	}

@@ -1,10 +1,10 @@
 #ifndef _SORT_H_
 #define _SORT_H_
 
-//#pragma message(__DATE__ "  " __TIME__"  æ­£åœ¨ç¼–è¯‘"__FILE__)
+//#pragma message(__DATE__ "  " __TIME__"  ÕıÔÚ±àÒë"__FILE__)
 
 template <class T, class _cmp> void bubble_sort(T a[], unsigned int len, _cmp cmp);
-template <class T> void merge_sort(T a[], unsigned int len, bool order); //orderä¸ºçœŸä»å°åˆ°å¤§ï¼Œä¸ºå‡ä»å¤§åˆ°å°
+template <class T> void merge_sort(T a[], unsigned int len, bool order); //orderÎªÕæ´ÓĞ¡µ½´ó£¬Îª¼Ù´Ó´óµ½Ğ¡
 
 template <class T, class _cmp>
 void bubble_sort(T a[], unsigned int len, _cmp cmp)
@@ -23,7 +23,7 @@ void bubble_sort(T a[], unsigned int len, _cmp cmp)
 }
 
 template <class T>
-void merge(T* a, int len, bool order, T* temp) //orderä¸ºçœŸä»å°åˆ°å¤§ï¼Œä¸ºå‡ä»å¤§åˆ°å°
+void merge(T* a, int len, bool order, T* temp) //orderÎªÕæ´ÓĞ¡µ½´ó£¬Îª¼Ù´Ó´óµ½Ğ¡
 {
 	const int half_len = len / 2;
 	if (half_len) {
@@ -57,12 +57,12 @@ void merge(T* a, int len, bool order, T* temp) //orderä¸ºçœŸä»å°åˆ°å¤§ï¼Œä¸ºå
 }
 
 template <class T>
-void merge_sort(T a[], int len, bool order) //orderä¸ºçœŸä»å°åˆ°å¤§ï¼Œä¸ºå‡ä»å¤§åˆ°å°
+void merge_sort(T a[], int len, bool order) //orderÎªÕæ´ÓĞ¡µ½´ó£¬Îª¼Ù´Ó´óµ½Ğ¡
 {
 	if (len > 2) {
 		T *temp = new T[len];
 
-		merge(a, len, order, temp); //ä¸è¦å†æ”¹æˆä¸¤æ¡äº†ï¼ï¼ï¼
+		merge(a, len, order, temp); //²»ÒªÔÙ¸Ä³ÉÁ½ÌõÁË£¡£¡£¡
 
 		delete[] temp;
 

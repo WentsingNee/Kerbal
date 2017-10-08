@@ -1,14 +1,14 @@
 /*
  * range.cpp
  *
- *  Created on: 2017å¹´7æœˆ17æ—¥
+ *  Created on: 2017Äê7ÔÂ17ÈÕ
  *      Author: Peter
  *      Fuction:
  */
 
 #if __cplusplus < 201103L //C++0x
 # pragma message("\n"\
-"			* range ä½¿ç”¨äº† C++ 11 æ–°ç‰¹æ€§, è¯·æ‰“å¼€ C++ 11 é€‰é¡¹ä»¥ä¾¿ä½¿ç”¨è¿™äº›æ–°ç‰¹æ€§"\
+"			* range Ê¹ÓÃÁË C++ 11 ĞÂÌØĞÔ, Çë´ò¿ª C++ 11 Ñ¡ÏîÒÔ±ãÊ¹ÓÃÕâĞ©ĞÂÌØĞÔ"\
 )
 #else
 
@@ -28,7 +28,7 @@ namespace Range
 
 	Range_iterator& Range_iterator::operator++()
 	{
-		//å‰è‡ªå¢
+		//Ç°×ÔÔö
 		now += parent_ptr->step;
 		return *this;
 	}

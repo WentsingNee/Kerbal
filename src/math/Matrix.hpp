@@ -19,36 +19,38 @@ namespace matrix
 		Fr_RtMatrix, Fr_RdMatrix, Fr_Det, Fr_double, Fr_Null
 	};
 
-	static const string Corner_RtMatrix[] = { "â”Œ", "â”", "â””", "â”˜", "â”‚" };
-	static const string Corner_RdMatrix[] = { "â•­", "â•®", "â•°", "â•¯", "â”‚" };
-	static const string Corner_Det[] = { " ", " ", " ", " ", "â”‚" };
-	static const string Corner_double[] = { " ", " ", " ", " ", "â•‘" };
+	static const string Corner_RtMatrix[] = { "©°", "©´", "©¸", "©¼", "©¦" };
+	static const string Corner_RdMatrix[] = { "¨q", "¨r", "¨t", "¨s", "©¦" };
+	static const string Corner_Det[] = { " ", " ", " ", " ", "©¦" };
+	static const string Corner_double[] = { " ", " ", " ", " ", "¨U" };
 
 	class Matrix: public Array_2d<double>
 	{
 		public:
 			Matrix();
-			Matrix(const int row, const int column, bool if_set0 = true);
-			Matrix(const int row, const int column, double (*function)());
-			Matrix(const int row, const int column, double (*function)(int, int));
+//			Matrix(const int row, const int column, bool if_set0 = true);
+			Matrix(const int row, const int column);
+			Matrix(const int row, const int column, const double &val);
+			Matrix(const int row, const int column, bool para, double (*function)());
+			Matrix(const int row, const int column, bool para, double (*function)(int, int));
 
-			template <class T> Matrix(const T *src, const int row, const int column); //åˆ©ç”¨äºŒç»´æ•°ç»„è¿›è¡Œæ„é€ 
-			Matrix(double arr[], int len, bool in_a_row = true); //åˆ©ç”¨ä¸€ç»´æ•°ç»„è¿›è¡Œæ„é€ 
+			template <class T> Matrix(const T * const src, const int row, const int column); //ÀûÓÃ¶şÎ¬Êı×é½øĞĞ¹¹Ôì
+			Matrix(const double arr[], int len, bool in_a_row = true); //ÀûÓÃÒ»Î¬Êı×é½øĞĞ¹¹Ôì
 
 #if __cplusplus >= 201103L //C++0x
-			Matrix(initializer_list<initializer_list<double>> src); //åˆ©ç”¨äºŒç»´åˆå§‹åŒ–åˆ—è¡¨è¿›è¡Œæ„é€ 
-			Matrix(initializer_list<double> src); //åˆ©ç”¨ä¸€ç»´åˆå§‹åŒ–åˆ—è¡¨è¿›è¡Œæ„é€ 
+			Matrix(initializer_list<initializer_list<double>> src); //ÀûÓÃ¶şÎ¬³õÊ¼»¯ÁĞ±í½øĞĞ¹¹Ôì
+			Matrix(initializer_list<double> src); //ÀûÓÃÒ»Î¬³õÊ¼»¯ÁĞ±í½øĞĞ¹¹Ôì
 
-			Matrix(Matrix &&src); //è½¬ç§»æ„é€ å‡½æ•°
+			Matrix(Matrix &&src); //×ªÒÆ¹¹Ôìº¯Êı
 #endif //C++0x
 
-			Matrix(const Matrix &src); //æ‹·è´æ„é€ å‡½æ•°
+			Matrix(const Matrix &src); //¿½±´¹¹Ôìº¯Êı
 
-			~Matrix();
+			virtual ~Matrix();
 
-			friend Matrix eye(int n); //æ„é€ ä¸€ä¸ªå•ä½çŸ©é˜µ
+			friend const Matrix eye(int n); //¹¹ÔìÒ»¸öµ¥Î»¾ØÕó
 
-			void print(Frame frame = Fr_RtMatrix, bool print_corner = true, ostream &output = cout) const;
+			virtual void print(Frame frame = Fr_RtMatrix, bool print_corner = true, ostream &output = cout) const;
 			void save(const string &file_name) const throw (runtime_error);
 			friend Matrix load_from(const string &file_name);
 
@@ -59,75 +61,52 @@ namespace matrix
 			void k_multiply_a_column(const double k, const int column_dest) throw (out_of_range);
 			void k_multiply_a_column_plus_to_another(const double k, const int column_from, const int column_dest) throw (out_of_range);
 
-			void optimize_rows() throw (invalid_argument); //å¯¹æœ¬çŸ©é˜µè¿›è¡Œä¼˜åŒ–
-			friend Matrix optimize_rows(Matrix a) throw (invalid_argument);
+			void do_optimize_rows() throw (invalid_argument); //¶Ô±¾¾ØÕó½øĞĞÓÅ»¯
 
 			double Det() const throw (invalid_argument);
-			Matrix Adjugate_matrix() const throw (invalid_argument); //è¿”å›æœ¬æ–¹é˜µçš„ä¼´éšçŸ©é˜µ
-			Matrix Inverse_matrix() const throw (invalid_argument); //è¿”å›æœ¬æ–¹é˜µçš„é€†çŸ©é˜µ,å½“é€†çŸ©é˜µä¸å­˜åœ¨æ—¶æŠ›å‡ºå¼‚å¸¸
+			Matrix Adjugate_matrix() const throw (invalid_argument); //·µ»Ø±¾·½ÕóµÄ°éËæ¾ØÕó
+			Matrix Inverse_matrix() const throw (invalid_argument); //·µ»Ø±¾·½ÕóµÄÄæ¾ØÕó,µ±Äæ¾ØÕó²»´æÔÚÊ±Å×³öÒì³£
 
-			//è¿ç®—ç¬¦é‡è½½
+			//ÔËËã·ûÖØÔØ
 			friend const Matrix operator+(const Matrix &A, const Matrix &B) throw (invalid_argument);
 			friend const Matrix operator-(const Matrix &A, const Matrix &B) throw (invalid_argument);
-			friend const Matrix operator*(const double k, const Matrix &A); //æ•°kä¹˜çŸ©é˜µ
-			friend const Matrix operator*(const Matrix &A, const double k); //çŸ©é˜µä¹˜æ•°k
-			friend const Matrix operator*(const Matrix &A, const Matrix &B) throw (invalid_argument); //çŸ©é˜µä¹˜çŸ©é˜µ
+			friend const Matrix operator*(const double k, const Matrix &A); //Êık³Ë¾ØÕó
+			friend const Matrix operator*(const Matrix &A, const double k); //¾ØÕó³ËÊık
+			friend const Matrix operator*(const Matrix &A, const Matrix &B) throw (invalid_argument); //¾ØÕó³Ë¾ØÕó
 			friend const Matrix fma(const Matrix &A, const Matrix &B, const Matrix &C) throw (invalid_argument); //return the result of A*B+C , but much faster
-			friend const Matrix dot_product(const Matrix &A, const Matrix &B) throw (invalid_argument); //çŸ©é˜µç‚¹ä¹˜çŸ©é˜µ
-			friend const Matrix operator^(const Matrix &A, const int n) throw (invalid_argument); //çŸ©é˜µçš„å¹‚
+			friend const Matrix dot_product(const Matrix &A, const Matrix &B) throw (invalid_argument); //¾ØÕóµã³Ë¾ØÕó
+			friend const Matrix operator^(const Matrix &A, const int n) throw (invalid_argument); //¾ØÕóµÄÃİ
 
-			friend const Matrix operator&&(const Matrix &A, const Matrix &B) throw (invalid_argument); //å°†ä¸¤ä¸ªçŸ©é˜µæŒ‰ç«–ç›´æ–¹å‘è¿æ¥
-			friend const Matrix operator||(const Matrix &A, const Matrix &B) throw (invalid_argument); //å°†ä¸¤ä¸ªçŸ©é˜µæŒ‰æ°´å¹³æ–¹å‘è¿æ¥
+			friend const Matrix operator&&(const Matrix &A, const Matrix &B) throw (invalid_argument); //½«Á½¸ö¾ØÕó°´ÊúÖ±·½ÏòÁ¬½Ó
+			friend const Matrix operator||(const Matrix &A, const Matrix &B) throw (invalid_argument); //½«Á½¸ö¾ØÕó°´Ë®Æ½·½ÏòÁ¬½Ó
 
-			friend void operator<<=(Matrix &tar, Matrix &src); //å°†çŸ©é˜µsrcçš„èµ„äº§è½¬ç§»ç»™tar
+			friend void operator<<=(Matrix &tar, Matrix &src); //½«¾ØÕósrcµÄ×Ê²ú×ªÒÆ¸øtar, src±äÎªÓëÔ­À´Í¬Ñù´óĞ¡µÄËæ»ú¾ØÕó
 			Matrix& operator=(const Matrix &src);
 
 			template <class T> friend Matrix Cat(const T &a);
-//#if __cplusplus < 201103L //C++0x
-////# pragma message("Matrix ä¸º C++ 11 å‡†å¤‡çš„æ–°ç‰¹æ€§: è½¬ç§»èµ‹å€¼è¿ç®—ç¬¦")
-//#else
-//		const Matrix& operator=(Matrix &&src);
-//#endif //C++0x
 
-			//è®¡ç®—
+#if __cplusplus >= 201103L //C++0x
+			const Matrix& operator=(Matrix &&src);
+#endif //C++0x
+
+			//¼ÆËã
 			friend const Matrix pow(const Matrix &A, const int n) throw (invalid_argument);
-			friend double tr(const Matrix &src) throw (invalid_argument);		//è¿”å›æ–¹é˜µçš„è¿¹
-			friend const Matrix TransposeOf(const Matrix &A); //æ„é€ çŸ©é˜µAçš„è½¬ç½®çŸ©é˜µ
+			friend double tr(const Matrix &src) throw (invalid_argument); //·µ»Ø·½ÕóµÄ¼£
+			friend const Matrix TransposeOf(const Matrix &A); //¹¹Ôì¾ØÕóAµÄ×ªÖÃ¾ØÕó
 			void doTranspose()
 			{
-				this->operator =(TransposeOf(*this));
+				this->operator=(TransposeOf(*this));
 			}
-			friend const Matrix CofactorOf(const Matrix &A, const int x, const int y) throw (out_of_range); //æ„é€ çŸ©é˜µAçš„ä½™å­å¼A(x,y)
-			void do_Cofactor(const int row_tar, const int column_tar) throw (out_of_range); //è¿”å›ä¸€ä¸ªçŸ©é˜µåˆ’å»row_tar è¡Œå’Œ column_tar åˆ—åçš„çŸ©é˜µ
+			friend const Matrix CofactorOf(const Matrix &A, const int x, const int y) throw (out_of_range); //¹¹Ôì¾ØÕóAµÄÓà×ÓÊ½A(x,y)
+			void do_Cofactor(const int row_tar, const int column_tar) throw (out_of_range); //·µ»ØÒ»¸ö¾ØÕó»®È¥row_tar ĞĞºÍ column_tar ÁĞºóµÄ¾ØÕó
 			friend bool Matcmp(const Matrix &A, const Matrix &B, double eps);
 
-			void test_row(const int row_test) const throw (out_of_range);
-			void test_column(const int column_test) const throw (out_of_range);
+			virtual void test_row(const int row_test) const throw (out_of_range);
+			virtual void test_column(const int column_test) const throw (out_of_range);
 			void test_square() const throw (invalid_argument);
 
-			friend const Matrix conv2(const Matrix &core, const Matrix &B, int size = 0); //çŸ©é˜µå·ç§¯
+			friend const Matrix conv2(const Matrix &core, const Matrix &B, int size = 0); //¾ØÕó¾í»ı
 	};
-
-	template <class T>
-	Matrix::Matrix(const T *src, const int row, const int column) //åˆ©ç”¨äºŒç»´æ•°ç»„è¿›è¡Œæ„é€ 
-	{
-		if (row > 0 && column > 0) {
-			this->row = row;
-			this->column = column;
-
-			const size_t size_of_a_row = column * sizeof(double); //è¿™ä¸€è¡Œä¸ºåŠ å¿«é€Ÿåº¦è€Œå­˜åœ¨
-
-			p = new double*[row]; //å¼€è¾Ÿè¡Œ
-			for (int i = 0; i < row; i++) {
-				p[i] = new double[column]; //å¼€è¾Ÿåˆ—
-				memcpy(p[i], src + i * size_of_a_row, size_of_a_row);
-			}
-		} else {
-			this->row = 0;
-			this->column = 0;
-			this->p = NULL;
-		}
-	}
 
 	template <class T>
 	Matrix Cat(const T &a)
@@ -137,17 +116,17 @@ namespace matrix
 			int column_total = a[0].column;
 			for (int i = 1; i < arraylen(a); i++) {
 				if (a[i].row != row_total) {
-					cerr << "ä¸²è”çš„çŸ©é˜µçš„è¡Œæ•°ä¸ä¸€è‡´" << endl;
+					cerr << "´®ÁªµÄ¾ØÕóµÄĞĞÊı²»Ò»ÖÂ" << endl;
 					throw 0;
 				} else {
 					column_total += a[i].column;
 				}
 			}
 
-			Matrix result(row_total, column_total, false);
-			for (int i = 0, column_covered = 0; i < arraylen(a); i++) { //æ•°ç»„å¾ªç¯
-				for (int j = 0; j < row_total; j++) { //è¡Œå¾ªç¯
-					for (int k = 0; k < a[i].get_column(); k++) { //ä¸€ä¸ªçŸ©é˜µå†…çš„åˆ—å¾ªç¯
+			Matrix result(row_total, column_total);
+			for (int i = 0, column_covered = 0; i < arraylen(a); i++) { //Êı×éÑ­»·
+				for (int j = 0; j < row_total; j++) { //ĞĞÑ­»·
+					for (int k = 0; k < a[i].get_column(); k++) { //Ò»¸ö¾ØÕóÄÚµÄÁĞÑ­»·
 						result.p[j][column_covered + k] = a[i].p[j][k];
 					}
 				}
@@ -163,15 +142,36 @@ namespace matrix
 
 	Matrix load_from(const string &file_name);
 
-//åº”ç”¨éƒ¨åˆ†
+//Ó¦ÓÃ²¿·Ö
 
-	Matrix rotate_X(double sigma);
-	Matrix rotate_Y(double sigma);
-	Matrix rotate_Z(double sigma);
+	const Matrix rotate_X(double sigma);
+	const Matrix rotate_Y(double sigma);
+	const Matrix rotate_Z(double sigma);
 
 	void rotate_X(double sigma, const double& x0, double& y0, double& z0);
 	void rotate_Y(double sigma, double& x0, const double& y0, double& z0);
 	void rotate_Z(double sigma, double& x0, double& y0, const double& z0);
+
+	template <class T>
+	Matrix::Matrix(const T * const src, const int row, const int column) //ÀûÓÃ¶şÎ¬Êı×é½øĞĞ¹¹Ôì
+	{
+		if (row > 0 && column > 0) {
+			this->row = row;
+			this->column = column;
+
+			const size_t size_of_a_row = column * sizeof(double); //ÕâÒ»ĞĞÎª¼Ó¿ìËÙ¶È¶ø´æÔÚ
+
+			p = new double*[row]; //¿ª±ÙĞĞ
+			for (int i = 0; i < row; i++) {
+				p[i] = new double[column]; //¿ª±ÙÁĞ
+				memcpy(p[i], src + i, size_of_a_row);
+			}
+		} else {
+			this->row = 0;
+			this->column = 0;
+			this->p = NULL;
+		}
+	}
 
 } /* namespace matrix */
 

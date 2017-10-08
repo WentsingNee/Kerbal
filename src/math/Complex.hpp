@@ -20,12 +20,12 @@ namespace complex
 	class Complex
 	{
 		public:
-			//æˆå‘˜
+			//³ÉÔ±
 			double real;
 			double imag;
 
 			Complex(double real = 0.0, double imag = 0.0)
-			{ //åˆå§‹åŒ–
+			{ //³õÊ¼»¯
 				this->real = real;
 				this->imag = imag;
 			}
@@ -43,13 +43,13 @@ namespace complex
 				}
 			}
 
-			//æ–¹æ³•
+			//·½·¨
 			string to_string() const;
 			void display() const;
-			double moudle() const; //è¿”å›å¤æ•°çš„æ¨¡é•¿
-			double argz() const; //è¿”å›å¤æ•°çš„å¹…è§’
+			double moudle() const; //·µ»Ø¸´ÊıµÄÄ£³¤
+			double argz() const; //·µ»Ø¸´ÊıµÄ·ù½Ç
 
-			//è¿ç®—ç¬¦é‡è½½
+			//ÔËËã·ûÖØÔØ
 			friend const Complex operator+(const Complex &a, const Complex &b);
 			friend const Complex operator+(const Complex &a, double b);
 			friend const Complex operator+(double a, const Complex &b);
@@ -87,23 +87,23 @@ namespace complex
 
 			friend const Complex operator+(const Complex &a);
 			friend const Complex operator-(const Complex &a);
-			friend const Complex operator~(const Complex &a); //è®¡ç®—ä¸€ä¸ªå¤æ•°çš„å…±è½­å¤æ•°
+			friend const Complex operator~(const Complex &a); //¼ÆËãÒ»¸ö¸´ÊıµÄ¹²éî¸´Êı
 	};
 
 	const Complex imag(0, 1.0);
 
-	//å‡½æ•°
+	//º¯Êı
 
-	const Complex trans(double r, double thita); //æ ¹æ®æ¨¡é•¿å’Œå¹…è§’è¿”å›ä¸€ä¸ªå¤æ•°
-	const Complex zpow(const Complex &z, int n); //è®¡ç®—ä¸€ä¸ªå¤æ•°çš„å¹‚
-	const Complex zln(const Complex &z); //è®¡ç®—ä¸€ä¸ªå¤æ•°çš„è‡ªç„¶å¯¹æ•°çš„ä¸»å€¼Lnz=lnz+2*k*pi*i , lnz=ln|z|+i*argz(z)
+	const Complex trans(double r, double thita); //¸ù¾İÄ£³¤ºÍ·ù½Ç·µ»ØÒ»¸ö¸´Êı
+	const Complex zpow(const Complex &z, int n); //¼ÆËãÒ»¸ö¸´ÊıµÄÃİ
+	const Complex zln(const Complex &z); //¼ÆËãÒ»¸ö¸´ÊıµÄ×ÔÈ»¶ÔÊıµÄÖ÷ÖµLnz=lnz+2*k*pi*i , lnz=ln|z|+i*argz(z)
 	string to_string(const Complex &z);
 
 	void quac_equ(double a, double b, double c, Complex &x1, Complex &x2, short &num) throw (invalid_argument);
-//ä¸€å…ƒäºŒæ¬¡æ–¹ç¨‹
+//Ò»Ôª¶ş´Î·½³Ì
 
 } /* End of namespace complex */
 
-//#pragma message(__DATE__ "  " __TIME__"  ç¼–è¯‘å®Œæˆ"__FILE__)
+//#pragma message(__DATE__ "  " __TIME__"  ±àÒëÍê³É"__FILE__)
 
 #endif	/* End _COMPLEX_H_ */

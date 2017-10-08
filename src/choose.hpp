@@ -1,9 +1,9 @@
 /*
  * choose.hpp
  *
- *  Created on: 2017å¹´7æœˆ8æ—¥
+ *  Created on: 2017Äê7ÔÂ8ÈÕ
  *      Author: Peter
- *      Fuction: æä¾›å¯¹ choose å‡½æ•°çš„æ”¯æŒ
+ *      Fuction: Ìá¹©¶Ô choose º¯ÊıµÄÖ§³Ö
  */
 
 #ifndef CHOOSE_HPP_
@@ -24,21 +24,21 @@ namespace _choose
 		using namespace std;
 	}
 
-	//å£°æ˜
-	/*	choose: å¯å˜å‚æ•°è¡¨é£æ ¼çš„ choose å‡½æ•°*/
+	//ÉùÃ÷
+	/*	choose: ¿É±ä²ÎÊı±í·ç¸ñµÄ choose º¯Êı*/
 	template <class T> T choose(int index, T value0, ...) throw (invalid_argument);
 
 #if __cplusplus >= 201103L //C++0x
-	/*  choose ä¸º C++ 11 å‡†å¤‡çš„æ–°ç‰¹æ€§: åˆå§‹åŒ–åˆ—è¡¨é£æ ¼çš„ choose å‡½æ•°*/
+	/*  choose Îª C++ 11 ×¼±¸µÄĞÂÌØĞÔ: ³õÊ¼»¯ÁĞ±í·ç¸ñµÄ choose º¯Êı*/
 	template <class T> T choose(int index, initializer_list<T> src) throw (invalid_argument, out_of_range);
 
-	/*	choose_c11 ä¸º C++ 11 å‡†å¤‡çš„æ–°ç‰¹æ€§: å¯å˜å‚æ•°æ¨¡æ¿é£æ ¼çš„ choose å‡½æ•°*/
+	/*	choose_c11 Îª C++ 11 ×¼±¸µÄĞÂÌØĞÔ: ¿É±ä²ÎÊıÄ£°å·ç¸ñµÄ choose º¯Êı*/
 	template <class T, class ...Args> T choose_c11(int index, T head, Args ... args) throw (invalid_argument, out_of_range);
 #endif
 
-	/*	å®ç° */
+	/*	ÊµÏÖ */
 
-	/*	choose: å¯å˜å‚æ•°è¡¨é£æ ¼çš„ choose å‡½æ•°çš„å®ç°*/
+	/*	choose: ¿É±ä²ÎÊı±í·ç¸ñµÄ choose º¯ÊıµÄÊµÏÖ*/
 	template <class T>
 	T choose(int index, T value0, ...) throw (invalid_argument)
 	{
@@ -48,7 +48,7 @@ namespace _choose
 			return value0;
 		}
 
-		va_list arg_ptr; //æŒ‡å‘å‚æ•°çš„æŒ‡é’ˆ
+		va_list arg_ptr; //Ö¸Ïò²ÎÊıµÄÖ¸Õë
 		va_start(arg_ptr, value0);
 
 		for (int i = 1; i < index; i++) {
@@ -59,7 +59,7 @@ namespace _choose
 	}
 
 	/*
-	 * ä¸ºä½•è¦ä¸º [signed/unsigned]char , [unsigned]short , float ç±»å‹å•ç‹¬å†™ choose å‡½æ•°, è¯·å‚è€ƒ:
+	 * ÎªºÎÒªÎª [signed/unsigned]char , [unsigned]short , float ÀàĞÍµ¥¶ÀĞ´ choose º¯Êı, Çë²Î¿¼:
 	 * http://www.cppblog.com/ownwaterloo/archive/2009/04/21/unacceptable_type_in_va_arg.html
 	 */
 	namespace
@@ -105,7 +105,7 @@ namespace _choose
 	float choose(int index, float value0, ...) throw (invalid_argument);
 
 #if __cplusplus >= 201103L //C++0x
-//choose ä¸º C++ 11 å‡†å¤‡çš„æ–°ç‰¹æ€§: åˆå§‹åŒ–åˆ—è¡¨é£æ ¼çš„ choose å‡½æ•°
+//choose Îª C++ 11 ×¼±¸µÄĞÂÌØĞÔ: ³õÊ¼»¯ÁĞ±í·ç¸ñµÄ choose º¯Êı
 	template <class T>
 	T choose(int index, initializer_list<T> src) throw (invalid_argument, out_of_range)
 	{
@@ -119,14 +119,14 @@ namespace _choose
 #endif //C++0x
 
 #if __cplusplus >= 201103L //C++0x
-//choose_c11 ä¸º C++ 11 å‡†å¤‡çš„æ–°ç‰¹æ€§: å¯å˜å‚æ•°æ¨¡æ¿é£æ ¼çš„ choose å‡½æ•°
-	namespace //åŒ¿åå‘½åç©ºé—´å†…çš„å†…å®¹å¯¹æ–‡ä»¶å¤–ä¸å¯è§
+//choose_c11 Îª C++ 11 ×¼±¸µÄĞÂÌØĞÔ: ¿É±ä²ÎÊıÄ£°å·ç¸ñµÄ choose º¯Êı
+	namespace //ÄäÃûÃüÃû¿Õ¼äÄÚµÄÄÚÈİ¶ÔÎÄ¼şÍâ²»¿É¼û
 	{
 //		int choose_unpack(int total);
 
 		template <class T, class ...Args>
 		T choose_unpack(int total, T head, Args ... rest)
-		{ //å±•å¼€å‡½æ•°
+		{ //Õ¹¿ªº¯Êı
 			if (total == 0) {
 				return head;
 			} else {

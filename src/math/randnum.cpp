@@ -79,9 +79,9 @@ double normdist_noise(double former, double sigma, double miu)
 	double x, y, y_range_max;
 	x = rand_between(miu - 6 * sigma, miu + 6 * sigma);
 	if (miu * miu / sigma / sigma > 2 * log(2)) {
-		y_range_max = 2.0 * exp(pow(-0.5 * miu / sigma, 2)) / sqrt(2 * M_PI) / sigma; //åŒå³°
+		y_range_max = 2.0 * exp(pow(-0.5 * miu / sigma, 2)) / sqrt(2 * M_PI) / sigma; //Ë«·å
 	} else {
-		y_range_max = 1.0 / sqrt(2 * M_PI) / sigma; //å•å³°
+		y_range_max = 1.0 / sqrt(2 * M_PI) / sigma; //µ¥·å
 	}
 	y = rand_between(0, y_range_max);
 	double y_available = normdist(x, sigma, miu) + normdist(x, sigma, -miu);

@@ -1,19 +1,18 @@
 #ifndef _RANDNUM_H_
 #define _RANDNUM_H_
 
-//#pragma message(__DATE__ "  " __TIME__"  æ­£åœ¨ç¼–è¯‘"__FILE__)
+//#pragma message(__DATE__ "  " __TIME__"  ÕıÔÚ±àÒë"__FILE__)
 
 #include <stdlib.h>
 #include <cmath>
 #include "statistics.hpp"
-
 
 unsigned int seed();
 
 double ave_rand(bool if_include_0, bool if_include_1);
 inline double rand_between(double min, double max)
 {
-	return (max - min) * ave_rand(true, true) + min;
+	return (max - min) * ave_rand(true, false) + min;
 }
 
 inline bool rand_true(double probability)

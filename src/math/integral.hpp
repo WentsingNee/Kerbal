@@ -1,21 +1,21 @@
 #ifndef _INTEGRAL_H_
 #define _INTEGRAL_H_
 
-//#pragma message(__DATE__ "  " __TIME__"  æ­£åœ¨ç¼–è¯‘"__FILE__)
+//#pragma message(__DATE__ "  " __TIME__"  ÕıÔÚ±àÒë"__FILE__)
 
 #include <iostream>
 #include <cmath>
 
 #include "statistics.hpp"
 
-double dy(double x, double dx, double (*f)(double)); //å¾®y
-double derivative(double x, double (*f)(double), double dx = 0.001); //å¯¼æ•°
-double ladder(double a, double b, double dx, double (*f)(double)); //æ¢¯å½¢æ³•ç§¯åˆ†
-double simpson(double a, double b, double dx, double (*f)(double)); //è¾›æ™®ç”Ÿå…¬å¼ç§¯åˆ†
-double std_normdist_integral(double b, double dx); //æ ‡å‡†æ­£æ€åˆ†å¸ƒç§¯åˆ†
+double dy(double x, double dx, double (*f)(double)); //Î¢y
+double derivative(double x, double (*f)(double), double dx = 0.001); //µ¼Êı
+double ladder(double a, double b, double dx, double (*f)(double)); //ÌİĞÎ·¨»ı·Ö
+double simpson(double a, double b, double dx, double (*f)(double)); //ĞÁÆÕÉú¹«Ê½»ı·Ö
+double std_normdist_integral(double b, double dx); //±ê×¼ÕıÌ¬·Ö²¼»ı·Ö
 
-double B(int n); //è®¡ç®—ä¼¯åŠªåˆ©æ•°
-double Stirling(double x); //æ–¯ç‰¹æ—å…¬å¼
+double B(int n); //¼ÆËã²®Å¬ÀûÊı
+double Stirling(double x); //Ë¹ÌØÁÖ¹«Ê½
 double logGamma(double z);
 double Gamma(double z);
 double Beta(double P, double Q);

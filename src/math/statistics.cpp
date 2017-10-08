@@ -13,7 +13,7 @@ namespace statistics
 	double sum(int argc, ...)
 	{
 		double sum = 0.0;
-		va_list arg_ptr; //æŒ‡å‘å‚æ•°çš„æŒ‡é’ˆ
+		va_list arg_ptr; //Ö¸Ïò²ÎÊıµÄÖ¸Õë
 		va_start(arg_ptr, argc);
 		for (int i = 0; i <= argc - 1; i++) {
 			sum += va_arg(arg_ptr, double);
@@ -23,7 +23,7 @@ namespace statistics
 		return sum;
 	}
 
-	unsigned long long fact(unsigned int n) //è®¡ç®—é˜¶ä¹˜, ç›®å‰å¯ç®—åˆ°20!
+	unsigned long long fact(unsigned int n) //¼ÆËã½×³Ë, Ä¿Ç°¿ÉËãµ½20!
 	{
 		unsigned long long result = 1;
 		if (n >= 2) {
@@ -56,19 +56,19 @@ namespace statistics
 		return s;
 	}
 
-	double normdist(double x, double sigma, double miu) //æ­£æ€åˆ†å¸ƒçš„æ¦‚ç‡å¯†åº¦å‡½æ•°, miu=ave, sigma=expect
+	double normdist(double x, double sigma, double miu) //ÕıÌ¬·Ö²¼µÄ¸ÅÂÊÃÜ¶Èº¯Êı, miu=ave, sigma=expect
 	{
 		return exp(pow((x - miu) / sigma, 2) / (-2)) / sqrt(2 * M_PI) / sigma;
 	}
 
-	double std_normdist(double x) //æ ‡å‡†æ­£æ€åˆ†å¸ƒçš„æ¦‚ç‡å¯†åº¦å‡½æ•°, miu=ave, sigma=expect
+	double std_normdist(double x) //±ê×¼ÕıÌ¬·Ö²¼µÄ¸ÅÂÊÃÜ¶Èº¯Êı, miu=ave, sigma=expect
 	{
 		return exp(x * x / (-2)) / sqrt(2 * M_PI);
 	}
 
 	double broad_combine(double a, unsigned int r)
 	{
-		/*è®¡ç®—
+		/*¼ÆËã
 
 		 (  a  )
 		 (  r  )
@@ -85,7 +85,7 @@ namespace statistics
 		return result;
 	}
 
-	double regression(const double x[], const double y[], int len, double &a, double &b) //çº¿æ€§å›å½’
+	double regression(const double x[], const double y[], int len, double &a, double &b) //ÏßĞÔ»Ø¹é
 	{
 		double x_ave = ave(x, len);
 		double y_ave = ave(y, len);

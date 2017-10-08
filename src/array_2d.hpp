@@ -14,13 +14,13 @@
 #endif //C++0x
 
 template <class T>
-inline int array_2d_row(const T &a) //è¿”å›çŸ©é˜µçš„è¡Œ
+inline int array_2d_row(const T &a) //·µ»Ø¾ØÕóµÄĞĞ
 {
 	return sizeof(a) / sizeof(a[0]);
 }
 
 template <class T>
-inline int array_2d_column(const T &a) //è¿”å›çŸ©é˜µçš„åˆ—
+inline int array_2d_column(const T &a) //·µ»Ø¾ØÕóµÄÁĞ
 {
 	return sizeof(a[0]) / sizeof(a[0][0]);
 }
@@ -34,10 +34,10 @@ namespace array_2d
 	}
 
 	template <class Type> class Array_2d;
-//ä¾›safetyä½¿ç”¨çš„çš„å‰å‘ç”³æ˜
+//¹©safetyÊ¹ÓÃµÄµÄÇ°ÏòÉêÃ÷
 
 	template <class Type>
-	class safety  //æœ¬ç±»ç”¨æ¥æä¾›å¯¹åŠ¨æ€äºŒç»´æ•°ç»„Array_2dç±»çš„ä¸‹æ ‡è¿ç®—çš„å®‰å…¨è®¿é—®
+	class safety  //±¾ÀàÓÃÀ´Ìá¹©¶Ô¶¯Ì¬¶şÎ¬Êı×éArray_2dÀàµÄÏÂ±êÔËËãµÄ°²È«·ÃÎÊ
 	{
 		protected:
 			Array_2d<Type> *p_to_matrix;
@@ -57,71 +57,36 @@ namespace array_2d
 				//cout<<"safe:"<<this<<endl;
 			}
 
-			~safety()
+			virtual ~safety()
 			{
 				//cout<<"delete safe:"<<this<<endl;
 			}
 
-			bool is_const()
-			{
-				return false;
-			}
-			bool is_const() const
-			{
-				return true;
-			}
+			inline bool is_const();
+			inline bool is_const() const;
 
-			Type& operator[](int row) throw (out_of_range);
-			const Type& operator[](int row) const throw (out_of_range);
+			inline Type& operator[](int row) throw (out_of_range);
+			inline const Type& operator[](int row) const throw (out_of_range);
 
-			Type* begin()
-			{
-				return p_to_matrix->p[row_point_to];
-			}
+			inline Type* begin();
+			inline const Type* begin() const;
 
-			const Type* begin() const
-			{
-				return p_to_matrix->p[row_point_to];
-			}
+			inline Type* end();
+			inline const Type* end() const;
 
-			Type* end()
-			{
-				return p_to_matrix->p[row_point_to] + p_to_matrix->column;
-			}
+			inline safety<Type>& operator++() const;
 
-			const Type* end() const
-			{
-				return p_to_matrix->p[row_point_to] + p_to_matrix->column;
-			}
-
-			safety<Type>& operator++()
-			{
-				++row_point_to;
-				return *this;
-			}
-
-			friend bool operator!=(const safety<Type> &a, const safety<Type> &b) throw (invalid_argument)
-			{
-				if (a.p_to_matrix == b.p_to_matrix) {
-					return a.row_point_to != b.row_point_to;
-				} else {
-					throw invalid_argument("a and b is not point to same Array_2d");
-				}
-			}
+			inline bool operator!=(const safety<Type> &with) const throw (invalid_argument);
 	};
 
 	template <class Type>
-	Type& safety<Type>::operator[](int column) throw (out_of_range)
+	inline bool safety<Type>::operator!=(const safety<Type> &with) const throw (invalid_argument)
 	{
-		p_to_matrix->test_column(column);
-		return p_to_matrix->p[row_point_to][column];
-	}
-
-	template <class Type>
-	const Type& safety<Type>::operator[](int column) const throw (out_of_range)
-	{
-		p_to_matrix->test_column(column);
-		return p_to_matrix->p[row_point_to][column];
+		if (this->p_to_matrix == with.p_to_matrix) {
+			return this->row_point_to != with.row_point_to;
+		} else {
+			throw invalid_argument("comparation between two iterators not belong to same Array_2d");
+		}
 	}
 
 	enum Array_2d_input_info
@@ -139,7 +104,27 @@ namespace array_2d
 			int row;
 			int column;
 			Type **p = NULL;
+
 			static int insert_times;
+
+			void mem_init()
+			{
+				int i = 0;
+				try {
+					p = new Type*[row]; //¿ª±ÙĞĞ
+					for (i = 0; i < row; i++) {
+						p[i] = new Type[column]; //¿ª±ÙÁĞ
+					}
+				} catch (const bad_alloc &exct) {
+					for (int j = 0; j < i; ++j)
+						delete[] p[j];
+					delete[] p;
+					p = NULL;
+					row = 0;
+					column = 0;
+					throw;
+				}
+			}
 
 		public:
 			friend class safety<Type> ;
@@ -150,42 +135,24 @@ namespace array_2d
 				this->p = NULL;
 			}
 
-			Array_2d(const int row, const int column, bool if_set0 = true);
-			Array_2d(const int row, const int column, Type (*function)());
-			//åŠ¨æ€å¼€è¾Ÿä¸€ä¸ªä»¥pä¸ºé¦–åœ°å€çš„ã€row * columnçš„äºŒç»´æ•°ç»„, å¹¶ä½¿ç”¨ function() åˆå§‹åŒ–æ¯ä¸ªå…ƒç´ 
-			Array_2d(const int row, const int column, Type (*function)(int, int));
-			//åŠ¨æ€å¼€è¾Ÿä¸€ä¸ªä»¥pä¸ºé¦–åœ°å€çš„ã€row * columnçš„äºŒç»´æ•°ç»„, å¹¶ä½¿ç”¨ function(i,j) åˆå§‹åŒ–æ¯ä¸ªå…ƒç´ 
+//			Array_2d(const int row, const int column, bool if_set0 = true);
+			Array_2d(const int row, const int column);
+			Array_2d(const int row, const int column, const Type &val);
+			Array_2d(const int row, const int column, bool para, Type (*function)());
+			//¶¯Ì¬¿ª±ÙÒ»¸öÒÔpÎªÊ×µØÖ·µÄ¡¢row * columnµÄ¶şÎ¬Êı×é, ²¢Ê¹ÓÃ function() ³õÊ¼»¯Ã¿¸öÔªËØ
+			Array_2d(const int row, const int column, bool para, Type (*function)(int, int));
+			//¶¯Ì¬¿ª±ÙÒ»¸öÒÔpÎªÊ×µØÖ·µÄ¡¢row * columnµÄ¶şÎ¬Êı×é, ²¢Ê¹ÓÃ function(i,j) ³õÊ¼»¯Ã¿¸öÔªËØ
 
 			template <class T>
-			Array_2d(const T *src, const int row, const int column)
-			{ //åˆ©ç”¨äºŒç»´æ•°ç»„è¿›è¡Œæ„é€ 
-				if (row > 0 && column > 0) {
-					this->row = row;
-					this->column = column;
-
-					//åŠ¨æ€å¼€è¾Ÿä¸€ä¸ªä»¥pä¸ºé¦–åœ°å€çš„ã€row * columnçš„äºŒç»´æ•°ç»„
-					p = new Type*[row]; //å¼€è¾Ÿè¡Œ
-					for (int i = 0; i < row; i++) {
-						p[i] = new Type[column]; //å¼€è¾Ÿåˆ—
-						for (int j = 0; j < column; j++) {
-							p[i][j] = src[i][j];
-						}
-					}
-				} else {
-					this->row = 0;
-					this->column = 0;
-					this->p = NULL;
-				}
-			}
-
-			Array_2d(Type arr[], int len, bool in_a_row = true); //åˆ©ç”¨ä¸€ç»´æ•°ç»„è¿›è¡Œæ„é€ 
+			Array_2d(const T src[], const int row, const int column); //ÀûÓÃ¶şÎ¬Êı×é½øĞĞ¹¹Ôì
+			Array_2d(const Type arr[], int len, bool in_a_row = true); //ÀûÓÃÒ»Î¬Êı×é½øĞĞ¹¹Ôì
 
 #if __cplusplus >= 201103L //C++0x
-			Array_2d(initializer_list<initializer_list<Type>> src) throw (invalid_argument); //åˆ©ç”¨äºŒç»´åˆå§‹åŒ–åˆ—è¡¨è¿›è¡Œæ„é€ 
-			Array_2d(initializer_list<Type> src); //åˆ©ç”¨ä¸€ç»´åˆå§‹åŒ–åˆ—è¡¨è¿›è¡Œæ„é€ 
+			Array_2d(initializer_list<initializer_list<Type>> src) throw (invalid_argument); //ÀûÓÃ¶şÎ¬³õÊ¼»¯ÁĞ±í½øĞĞ¹¹Ôì
+			Array_2d(initializer_list<Type> src); //ÀûÓÃÒ»Î¬³õÊ¼»¯ÁĞ±í½øĞĞ¹¹Ôì
 #endif //C++0x
 
-			Array_2d(const Array_2d &src); //æ‹·è´æ„é€ å‡½æ•°
+			Array_2d(const Array_2d &src); //¿½±´¹¹Ôìº¯Êı
 
 			virtual ~Array_2d();
 			bool empty() const;
@@ -203,25 +170,25 @@ namespace array_2d
 			Type& get_element(int row, int column) throw (out_of_range);
 
 			void set_element(int row, int column, Type value) throw (out_of_range);
-			template <class T> void set_element(const T *src, int row, int column); //æ ¹æ®äºŒç»´æ•°ç»„è®¾å€¼
-			Array_2d<Type> call(Type (*__pf)(Type)) const;
+			template <class T> void set_element(const T src[], int row, int column); //¸ù¾İ¶şÎ¬Êı×éÉèÖµ
+			const Array_2d<Type> call(Type (*__pf)(Type)) const;
 
-			Array_2d<Type>& operator <<(const Type &value) throw (out_of_range); //è¾“å…¥
-			Array_2d<Type>& operator <<(const Array_2d_input_info &value);
-			Array_2d<Type>& operator <<(const string & src) throw (out_of_range); //å­—ç¬¦ä¸²è¾“å…¥
-			Array_2d<Type>& operator <<(ostream& (*__pf)(ostream&)); //æ”¯æŒendl
-			friend ostream& operator <<(ostream &output, Array_2d<Type> &src) //é‡è½½è¾“å‡º
+			Array_2d<Type>& operator<<(const Type &value) throw (out_of_range); //ÊäÈë
+			Array_2d<Type>& operator<<(const Array_2d_input_info &value);
+			Array_2d<Type>& operator<<(const string & src) throw (out_of_range); //×Ö·û´®ÊäÈë
+			Array_2d<Type>& operator<<(ostream& (*__pf)(ostream&)); //Ö§³Öendl
+			friend ostream& operator<<(ostream &output, Array_2d<Type> &src) //ÖØÔØÊä³ö
 			{
 				src.print(true, true, output);
 				return output;
 			}
-			void print(bool print_frame = true, bool print_corner = true, ostream &output = cout) const;
+			virtual void print(bool print_frame = true, bool print_corner = true, ostream &output = cout) const;
 			//void print_to_file(char file_name[],bool if_output_frame) const;
 
 			safety<Type> operator[](int row) throw (out_of_range);
 			const safety<Type> operator[](int row) const throw (out_of_range);
 
-			size_t get_digit_size() const;
+			virtual size_t get_digit_size() const;
 
 			friend inline void swap(Array_2d<Type> &A, Array_2d<Type> &B)
 			{
@@ -230,17 +197,17 @@ namespace array_2d
 				swap(A.p, B.p);
 			}
 
-			void test_row(const int row_test) const throw (out_of_range);
-			void test_column(const int column_test) const throw (out_of_range);
+			virtual void test_row(const int row_test) const throw (out_of_range);
+			virtual void test_column(const int column_test) const throw (out_of_range);
 
-			bool operator==(const Array_2d<Type> &with) const;
-			bool operator!=(const Array_2d<Type> &with) const;
+			virtual bool operator==(const Array_2d<Type> &with) const;
+			virtual bool operator!=(const Array_2d<Type> &with) const;
 
 			void do_reflect_row();
 			void do_reflect_column();
 			void do_rotate_180();
-			void do_rotate_90(); // é€†æ—¶é’ˆè½¬90åº¦
-			void do_rotate_270(); // é€†æ—¶é’ˆè½¬270åº¦
+			void do_rotate_90(); // ÄæÊ±Õë×ª90¶È
+			void do_rotate_270(); // ÄæÊ±Õë×ª270¶È
 
 			safety<Type> begin()
 			{
@@ -262,45 +229,120 @@ namespace array_2d
 				return safety<Type>(this, row);
 			}
 
-			friend Array_2d<Type> sub_of(const Array_2d<Type> &src, int up, int down, int left, int right) throw (invalid_argument, out_of_range)
-			{
-				if (up > down || left > right) {
-					throw new invalid_argument("up > down or left > right");
-				}
+			const Array_2d<Type> sub_of(int up, int down, int left, int right) const throw (invalid_argument, out_of_range);
 
-				src.test_row(up);
-				src.test_row(down);
-				src.test_column(left);
-				src.test_column(right);
-
-				Array_2d<Type> result(down - up + 1, right - left + 1, false);
-				for (int i = 0; i < result.row; ++i) {
-					for (int j = 0; j < result.column; ++j) {
-						result.p[i][j] = src.p[i + up][j + left];
-					}
-				}
-				return result;
-			}
 	};
 
 	template <class Type>
-	Array_2d<Type>::Array_2d(const int row, const int column, bool if_set0)
+	inline bool safety<Type>::is_const()
 	{
-		//int row, int column, bool if_set0 é»˜è®¤ = true
-		//åŠ¨æ€å¼€è¾Ÿä¸€ä¸ªä»¥pä¸ºé¦–åœ°å€çš„ã€row * columnçš„äºŒç»´æ•°ç»„
+		return false;
+	}
+
+	template <class Type>
+	inline bool safety<Type>::is_const() const
+	{
+		return true;
+	}
+
+	template <class Type>
+	inline Type& safety<Type>::operator[](int column) throw (out_of_range)
+	{
+		p_to_matrix->test_column(column);
+		return p_to_matrix->p[row_point_to][column];
+	}
+
+	template <class Type>
+	inline const Type& safety<Type>::operator[](int column) const throw (out_of_range)
+	{
+		p_to_matrix->test_column(column);
+		return p_to_matrix->p[row_point_to][column];
+	}
+
+	template <class Type>
+	inline Type* safety<Type>::begin()
+	{
+		return p_to_matrix->p[row_point_to];
+	}
+
+	template <class Type>
+	inline const Type* safety<Type>::begin() const
+	{
+		return p_to_matrix->p[row_point_to];
+	}
+
+	template <class Type>
+	inline Type* safety<Type>::end()
+	{
+		return p_to_matrix->p[row_point_to] + p_to_matrix->column;
+	}
+
+	template <class Type>
+	inline const Type* safety<Type>::end() const
+	{
+		return p_to_matrix->p[row_point_to] + p_to_matrix->column;
+	}
+
+	template <class Type>
+	inline safety<Type>& safety<Type>::operator++() const
+	{
+		++row_point_to;
+		return *this;
+	}
+
+//	template <class Type>
+//	Array_2d<Type>::Array_2d(const int row, const int column, bool if_set0)
+//	{
+//		//int row, int column, bool if_set0 Ä¬ÈÏ = true
+//		//¶¯Ì¬¿ª±ÙÒ»¸öÒÔpÎªÊ×µØÖ·µÄ¡¢row * columnµÄ¶şÎ¬Êı×é
+//		if (row > 0 && column > 0) {
+//			this->row = row;
+//			this->column = column;
+//
+//			p = new Type*[row]; //¿ª±ÙĞĞ
+//			if (if_set0) {
+//				const size_t size_of_a_row = column * sizeof(Type); //ÕâÒ»ĞĞÎª¼Ó¿ìËÙ¶È¶ø´æÔÚ
+//				for (int i = 0; i < row; i++) {
+//					memset(p[i] = new Type[column], 0, size_of_a_row);
+//				}
+//			} else {
+//				for (int i = 0; i < row; i++) {
+//					p[i] = new Type[column]; //¿ª±ÙÁĞ
+//				}
+//			}
+//		} else {
+//			this->row = 0;
+//			this->column = 0;
+//			this->p = NULL;
+//		}
+//	}
+
+	template <class Type>
+	Array_2d<Type>::Array_2d(const int row, const int column)
+	{
 		if (row > 0 && column > 0) {
 			this->row = row;
 			this->column = column;
 
-			p = new Type*[row]; //å¼€è¾Ÿè¡Œ
-			if (if_set0) {
-				const size_t size_of_a_row = column * sizeof(Type); //è¿™ä¸€è¡Œä¸ºåŠ å¿«é€Ÿåº¦è€Œå­˜åœ¨
-				for (int i = 0; i < row; i++) {
-					memset(p[i] = new Type[column], 0, size_of_a_row);
-				}
-			} else {
-				for (int i = 0; i < row; i++) {
-					p[i] = new Type[column]; //å¼€è¾Ÿåˆ—
+			mem_init();
+		} else {
+			this->row = 0;
+			this->column = 0;
+			this->p = NULL;
+		}
+	}
+
+	template <class Type>
+	Array_2d<Type>::Array_2d(const int row, const int column, const Type &val)
+	{
+		if (row > 0 && column > 0) {
+			this->row = row;
+			this->column = column;
+
+			mem_init();
+			for (int i = 0; i < row; i++) {
+				for (int j = 0; j < column; j++) {
+					p[i][j] = val;
 				}
 			}
 		} else {
@@ -311,16 +353,15 @@ namespace array_2d
 	}
 
 	template <class Type>
-	Array_2d<Type>::Array_2d(const int row, const int column, Type (*function)())
+	Array_2d<Type>::Array_2d(const int row, const int column, bool para, Type (*function)())
 	{
-		//åŠ¨æ€å¼€è¾Ÿä¸€ä¸ªä»¥pä¸ºé¦–åœ°å€çš„ã€row * columnçš„äºŒç»´æ•°ç»„, å¹¶ä½¿ç”¨ function() åˆå§‹åŒ–æ¯ä¸ªå…ƒç´ 
+		//¶¯Ì¬¿ª±ÙÒ»¸öÒÔpÎªÊ×µØÖ·µÄ¡¢row * columnµÄ¶şÎ¬Êı×é, ²¢Ê¹ÓÃ function() ³õÊ¼»¯Ã¿¸öÔªËØ
 		if (row > 0 && column > 0) {
 			this->row = row;
 			this->column = column;
 
-			p = new Type*[row]; //å¼€è¾Ÿè¡Œ
+			mem_init();
 			for (int i = 0; i < row; i++) {
-				p[i] = new Type[column]; //å¼€è¾Ÿåˆ—
 				for (int j = 0; j < column; j++) {
 					p[i][j] = function();
 				}
@@ -334,16 +375,15 @@ namespace array_2d
 	}
 
 	template <class Type>
-	Array_2d<Type>::Array_2d(const int row, const int column, Type (*function)(int, int))
+	Array_2d<Type>::Array_2d(const int row, const int column, bool para, Type (*function)(int, int))
 	{
-		//åŠ¨æ€å¼€è¾Ÿä¸€ä¸ªä»¥pä¸ºé¦–åœ°å€çš„ã€row * columnçš„äºŒç»´æ•°ç»„, å¹¶ä½¿ç”¨ function(i,j) åˆå§‹åŒ–æ¯ä¸ªå…ƒç´ 
+		//¶¯Ì¬¿ª±ÙÒ»¸öÒÔpÎªÊ×µØÖ·µÄ¡¢row * columnµÄ¶şÎ¬Êı×é, ²¢Ê¹ÓÃ function(i,j) ³õÊ¼»¯Ã¿¸öÔªËØ
 		if (row > 0 && column > 0) {
 			this->row = row;
 			this->column = column;
 
-			p = new Type*[row]; //å¼€è¾Ÿè¡Œ
+			mem_init();
 			for (int i = 0; i < row; i++) {
-				p[i] = new Type[column]; //å¼€è¾Ÿåˆ—
 				for (int j = 0; j < column; j++) {
 					p[i][j] = function(i, j);
 				}
@@ -357,26 +397,42 @@ namespace array_2d
 	}
 
 	template <class Type>
-	Array_2d<Type>::Array_2d(Type arr[], int len, bool in_a_row)
-	{ //åˆ©ç”¨ä¸€ç»´æ•°ç»„è¿›è¡Œæ„é€ 
+	template <class T>
+	Array_2d<Type>::Array_2d(const T src[], const int row, const int column)
+	{ //ÀûÓÃ¶şÎ¬Êı×é½øĞĞ¹¹Ôì
+		if (row > 0 && column > 0) {
+			this->row = row;
+			this->column = column;
+
+			mem_init();
+			for (int i = 0; i < row; i++) {
+				for (int j = 0; j < column; j++) {
+					p[i][j] = src[i][j];
+				}
+			}
+		} else {
+			this->row = 0;
+			this->column = 0;
+			this->p = NULL;
+		}
+	}
+
+	template <class Type>
+	Array_2d<Type>::Array_2d(const Type arr[], int len, bool in_a_row)
+	{ //ÀûÓÃÒ»Î¬Êı×é½øĞĞ¹¹Ôì
 		if (len > 0) {
 			if (in_a_row) {
 				this->row = 1;
 				this->column = len;
-				p = new Type*[1];
-				p[0] = new Type[column]; //å¼€è¾Ÿåˆ—
 
-//				for (int j = 0; j < column; j++) {
-//					p[0][j] = arr[j];
-//				}
+				mem_init();
 				std::copy(arr, arr + column, p[0]);
 			} else {
 				this->row = len;
 				this->column = 1;
 
-				p = new Type*[row];
+				mem_init();
 				for (int i = 0; i < row; i++) {
-					p[i] = new Type[1]; //å¼€è¾Ÿåˆ—
 					p[i][0] = arr[i];
 				}
 			}
@@ -392,13 +448,13 @@ namespace array_2d
 	template <class Type>
 	Array_2d<Type>::Array_2d(initializer_list<initializer_list<Type>> src) throw (invalid_argument)
 	{
-		//åˆ©ç”¨äºŒç»´åˆå§‹åŒ–åˆ—è¡¨è¿›è¡Œæ„é€ 
+		//ÀûÓÃ¶şÎ¬³õÊ¼»¯ÁĞ±í½øĞĞ¹¹Ôì
 
-		const int row_pre = src.size(); //æœ€ç»ˆå®šä¸‹çš„è¡Œæ•°
-		const int column_pre = src.begin()->size(); //æœ€ç»ˆå®šä¸‹çš„åˆ—æ•°
-		//æ‰«æsrcæ¯è¡Œçš„åˆ—æ•°, ä¸ä¸€è‡´åˆ™æŠ›å¼‚å¸¸
-		for (auto j : src) {
-			if (j.size() != (unsigned) column_pre) {
+		const int row_pre = src.size(); //×îÖÕ¶¨ÏÂµÄĞĞÊı
+		const int column_pre = src.begin()->size(); //×îÖÕ¶¨ÏÂµÄÁĞÊı
+		//É¨ÃèsrcÃ¿ĞĞµÄÁĞÊı, ²»Ò»ÖÂÔòÅ×Òì³£
+		for (auto it = src.begin() + 1; it != src.end(); ++it) {
+			if (it->size() != (unsigned) column_pre) {
 				throw invalid_argument("the initializer list is not a standard Array_2d");
 			}
 		}
@@ -407,12 +463,12 @@ namespace array_2d
 			this->row = row_pre;
 			this->column = column_pre;
 
-			//åŠ¨æ€å¼€è¾Ÿä¸€ä¸ªä»¥pä¸ºé¦–åœ°å€çš„ã€row * columnçš„äºŒç»´æ•°ç»„
-			p = new Type*[row];		//å¼€è¾Ÿè¡Œ
+			mem_init();
 			int i = 0;
-			auto begin_to_src = src.begin();
-			for (; i < row; ++i, ++begin_to_src) {
-				std::copy(begin_to_src->begin(), begin_to_src->end(), p[i] = new Type[column]);
+			auto it = src.begin();
+			while (i < row) {
+				std::copy(it->begin(), it->end(), p[i]);
+				++i, ++it;
 			}
 		} else {
 			this->row = 0;
@@ -424,16 +480,15 @@ namespace array_2d
 	template <class Type>
 	Array_2d<Type>::Array_2d(initializer_list<Type> src)
 	{
-		//åˆ©ç”¨ä¸€ç»´åˆå§‹åŒ–åˆ—è¡¨è¿›è¡Œæ„é€ 
-		const int column_pre = src.size();		//æœ€ç»ˆå®šä¸‹çš„åˆ—æ•°
+		//ÀûÓÃÒ»Î¬³õÊ¼»¯ÁĞ±í½øĞĞ¹¹Ôì
+		const int column_pre = src.size();		//×îÖÕ¶¨ÏÂµÄÁĞÊı
 
 		if (column_pre > 0) {
 			this->row = 1;
 			this->column = column_pre;
 
-			//åŠ¨æ€å¼€è¾Ÿä¸€ä¸ªä»¥pä¸ºé¦–åœ°å€çš„ã€1 * columnçš„äºŒç»´æ•°ç»„
-			p = new Type*[1];		//å¼€è¾Ÿè¡Œ
-			std::copy(src.begin(), src.end(), p[0] = new Type[column]);
+			mem_init();
+			std::copy(src.begin(), src.end(), p[0]);
 
 		} else {
 			this->row = 0;
@@ -445,15 +500,15 @@ namespace array_2d
 #endif //C++0x
 
 	template <class Type>
-	Array_2d<Type>::Array_2d(const Array_2d<Type> &src) //æ‹·è´æ„é€ å‡½æ•°
+	Array_2d<Type>::Array_2d(const Array_2d<Type> &src) //¿½±´¹¹Ôìº¯Êı
 	{
 		if (src.row > 0 && src.column > 0) {
 			this->row = src.row;
 			this->column = src.column;
 
-			p = new Type*[row]; //å¼€è¾Ÿè¡Œ
+			mem_init();
 			for (int i = 0; i < row; i++) {
-				std::copy(src.p[i], src.p[i] + column, p[i] = new Type[column]);
+				std::copy(src.p[i], src.p[i] + column, p[i]);
 			}
 		} else {
 			this->row = 0;
@@ -465,11 +520,12 @@ namespace array_2d
 	template <class Type>
 	Array_2d<Type>::~Array_2d() // virtual
 	{
-		//å½’è¿˜ä¸€ä¸ªrowè¡Œçš„äºŒç»´æ•°ç»„
+		//¹é»¹Ò»¸örowĞĞµÄ¶şÎ¬Êı×é
 		for (int i = 0; i < row; i++)
 			delete[] p[i];
 		delete[] p;
 		p = NULL;
+//		cout << "Îö¹¹Êı×é" << endl;
 	}
 
 	template <class Type>
@@ -485,7 +541,7 @@ namespace array_2d
 	template <class Type>
 	void Array_2d<Type>::clear()
 	{
-		//å½’è¿˜ä¸€ä¸ªrowè¡Œçš„äºŒç»´æ•°ç»„
+		//¹é»¹Ò»¸örowĞĞµÄ¶şÎ¬Êı×é
 		for (int i = 0; i < row; ++i)
 			delete[] p[i];
 		delete[] p;
@@ -497,14 +553,14 @@ namespace array_2d
 	template <class Type>
 	void Array_2d<Type>::resize(int new_row, int new_column)
 	{
-		if (new_row <= 0 || new_column <= 0) { //é˜²æ­¢éæ­£æ•°
+		if (new_row <= 0 || new_column <= 0) { //·ÀÖ¹·ÇÕıÊı
 			this->clear();
 			return;
 		}
 		if (row == new_row) {
-			if (column == new_column) { //å¤§å°ä¸åŸæ¥ä¸€è‡´
+			if (column == new_column) { //´óĞ¡ÓëÔ­À´Ò»ÖÂ
 				return;
-			} else { //è¡Œæ•°ç›¸ç­‰, åˆ—æ•°ä¸ç­‰
+			} else { //ĞĞÊıÏàµÈ, ÁĞÊı²»µÈ
 				for (int i = 0; i < row; ++i) {
 					delete[] p[i];
 					p[i] = new Type[new_column];
@@ -512,40 +568,31 @@ namespace array_2d
 				column = new_column;
 			}
 		} else {
-			if (column == new_column) { //è¡Œæ•°ä¸ç­‰, åˆ—æ•°ç›¸ç­‰
-				//TODO æŸ¥BUG
+			if (column == new_column) { //ĞĞÊı²»µÈ, ÁĞÊıÏàµÈ
+				//TODO ²éBUG
 				Type **p_former = p;
 				p = new Type*[new_row];
-				if (new_row < row) { //è¡Œæ•°å‡å°‘
-//					for (int i = 0; i < new_row; ++i) {
-//						p[i] = p_former[i];
-//					}
+				if (new_row < row) { //ĞĞÊı¼õÉÙ
 					std::memcpy(p, p_former, new_row * sizeof(Type*));
 					for (int i = new_row; i < row; ++i) {
 						delete[] p_former[i];
 					}
-				} else { //è¡Œæ•°å¢å¤š
-//					for (int i = 0; i < row; ++i) {
-//						p[i] = p_former[i];
-//					}
+				} else { //ĞĞÊıÔö¶à
 					std::memcpy(p, p_former, row * sizeof(Type*));
 					for (int i = row; i < new_row; ++i) {
 						p[i] = new Type[column];
 					}
 				}
-				delete[] p_former; //TODO
+				delete[] p_former;
 				row = new_row;
-			} else { //è¡Œæ•°ä¸ç­‰, åˆ—æ•°ä¸ç­‰
-				//TODO æŸ¥bug
+			} else { //ĞĞÊı²»µÈ, ÁĞÊı²»µÈ
+				//TODO ²ébug
 				for (int i = 0; i < row; ++i)
 					delete[] p[i];
 				delete[] p;
 				row = new_row;
 				column = new_column;
-				p = new Type*[row];
-				for (int i = 0; i < row; ++i) {
-					p[i] = new Type[column];
-				}
+				mem_init();
 			}
 		}
 	}
@@ -620,23 +667,18 @@ namespace array_2d
 
 	template <class Type>
 	template <class T>
-	void Array_2d<Type>::set_element(const T *src, int row, int column) //é€šè¿‡æ•°ç»„èµ‹å€¼///æ­¤å‡½æ•°å†…æœ‰BUG
+	void Array_2d<Type>::set_element(const T src[], int row, int column) //Í¨¹ıÊı×é¸³Öµ///´Ëº¯ÊıÄÚÓĞBUG
 	{
-		this->clear();
-
-		this->row = row;
-		this->column = column;
-
-		p = new Type*[row]; //å¼€è¾Ÿè¡Œ
+		this->resize(row, column);
 		for (int i = 0; i < row; i++) {
-			std::copy(src[i], src[i] + column, p[i] = new Type[column]);
+			std::copy(src[i], src[i] + column, p[i]);
 		}
 	}
 
 	template <class Type>
-	Array_2d<Type> Array_2d<Type>::call(Type (*__pf)(Type)) const
+	const Array_2d<Type> Array_2d<Type>::call(Type (*__pf)(Type)) const
 	{
-		Array_2d<Type> result(row, column, false);
+		Array_2d<Type> result(row, column);
 		for (int i = 0; i < row; ++i) {
 			for (int j = 0; j < column; ++j) {
 				result.p[i][j] = __pf(this->p[i][j]);
@@ -645,12 +687,12 @@ namespace array_2d
 		return result;
 	}
 
-//åˆ©ç”¨æ’å…¥è¿ç®—ç¬¦ç»™åŠ¨æ€äºŒç»´æ•°ç»„èµ‹å€¼
+//ÀûÓÃ²åÈëÔËËã·û¸ø¶¯Ì¬¶şÎ¬Êı×é¸³Öµ
 	template <class Type>
 	int Array_2d<Type>::insert_times = 0;
 
 	template <class Type>
-	Array_2d<Type>& Array_2d<Type>::operator <<(const Type &value) throw (out_of_range)
+	Array_2d<Type>& Array_2d<Type>::operator<<(const Type &value) throw (out_of_range)
 	{
 		static Array_2d<Type> *last_Arry = NULL;
 		if (last_Arry != this) {
@@ -658,7 +700,7 @@ namespace array_2d
 			insert_times = 0;
 		} else if (insert_times >= row * column) {
 			throw out_of_range(
-					"å°è¯•ç»™[" + to_string(insert_times / column) + "][" + to_string(insert_times % column) + "]èµ‹å€¼"
+					"³¢ÊÔ¸ø[" + to_string(insert_times / column) + "][" + to_string(insert_times % column) + "]¸³Öµ"
 							+ to_string(value));
 		}
 
@@ -670,7 +712,7 @@ namespace array_2d
 	}
 
 	template <class Type>
-	Array_2d<Type>& Array_2d<Type>::operator <<(const Array_2d_input_info &value)
+	Array_2d<Type>& Array_2d<Type>::operator<<(const Array_2d_input_info &value)
 	{
 		switch (value) {
 			case input_info_start:
@@ -682,10 +724,10 @@ namespace array_2d
 		}
 		return *this;
 	}
-//åˆ©ç”¨æ’å…¥è¿ç®—ç¬¦ç»™åŠ¨æ€äºŒç»´æ•°ç»„èµ‹å€¼
+//ÀûÓÃ²åÈëÔËËã·û¸ø¶¯Ì¬¶şÎ¬Êı×é¸³Öµ
 
 	template <class Type>
-	Array_2d<Type>& Array_2d<Type>::operator <<(const string & src) throw (out_of_range)
+	Array_2d<Type>& Array_2d<Type>::operator<<(const string & src) throw (out_of_range)
 	{
 		static Array_2d<Type> *last_Arry = NULL;
 
@@ -701,7 +743,7 @@ namespace array_2d
 		while (ss >> tmp) {
 			if (insert_times >= row * column) {
 				throw out_of_range(
-						"å°è¯•ç»™[" + to_string(insert_times / column) + "][" + to_string(insert_times % column) + "]èµ‹å€¼");
+						"³¢ÊÔ¸ø[" + to_string(insert_times / column) + "][" + to_string(insert_times % column) + "]¸³Öµ");
 			}
 			//p[insert_times / row][insert_times % row] = tmp;
 			p[insert_times / column][insert_times % column] = tmp;
@@ -711,7 +753,7 @@ namespace array_2d
 	}
 
 	template <class Type>
-	Array_2d<Type>& Array_2d<Type>::operator <<(ostream& (*__pf)(ostream&))
+	Array_2d<Type>& Array_2d<Type>::operator<<(ostream& (*__pf)(ostream&))
 	{
 		if (insert_times % column)
 			insert_times = insert_times / column * column + column;
@@ -723,33 +765,33 @@ namespace array_2d
 	{
 		//void Array_2d<Type>::print(bool print_frame = true, bool print_corner = true, ostream &output = cout) const
 		int i, j;
-		output << resetiosflags(ios::right) << setiosflags(ios::left) << setfill(' '); //æ¸…é™¤å³å¯¹é½, è®¾ç½®å·¦å¯¹é½, è®¾ç½®ä¸è¶³è¡¥ç©ºæ ¼
+		output << resetiosflags(ios::right) << setiosflags(ios::left) << setfill(' '); //Çå³ıÓÒ¶ÔÆë, ÉèÖÃ×ó¶ÔÆë, ÉèÖÃ²»×ã²¹¿Õ¸ñ
 
 		if (print_frame) {
-			{ //ä¸Šè¾¹æ¡†
-				output << "â”Œ";
+			{ //ÉÏ±ß¿ò
+				output << "©°";
 				for (j = 0; j < column; j++) {
 					output << "  " << setw(12) << " ";
 				}
-				output << " â”" << endl;
+				output << " ©´" << endl;
 			}
 
 			for (i = 0; i < row; i++) {
-				output << "â”‚";
+				output << "©¦";
 				for (j = 0; j < column; j++) {
 					output << "  " << setw(12) << p[i][j];
 				}
-				output << " â”‚" << endl;
+				output << " ©¦" << endl;
 			}
 
-			{ //ä¸‹è¾¹æ¡†
-				output << "â””";
+			{ //ÏÂ±ß¿ò
+				output << "©¸";
 				for (j = 0; j < column; j++) {
 					output << "  " << setw(12) << " ";
 				}
-				output << " â”˜";
+				output << " ©¼";
 				if (print_corner) {
-					output << " " << row << " Ã— " << column;
+					output << " " << row << " ¡Á " << column;
 				}
 				output << endl;
 			}
@@ -774,7 +816,7 @@ namespace array_2d
 	{
 		if (row_test < 0 || row_test >= this->row) {
 			throw out_of_range(
-					"The " + to_string(this->row) + " Ã— " + to_string(this->column) + " Array doesn't have the no."
+					"The " + to_string(this->row) + " ¡Á " + to_string(this->column) + " Array doesn't have the no."
 							+ to_string(row_test) + " row!");
 		}
 	}
@@ -784,7 +826,7 @@ namespace array_2d
 	{
 		if (column_test < 0 || column_test >= this->column) {
 			throw out_of_range(
-					"The " + to_string(this->row) + " Ã— " + to_string(this->column) + " Array doesn't have the no."
+					"The " + to_string(this->row) + " ¡Á " + to_string(this->column) + " Array doesn't have the no."
 							+ to_string(column_test) + " column!");
 		}
 	}
@@ -838,7 +880,7 @@ namespace array_2d
 
 	template <class Type>
 	void Array_2d<Type>::do_rotate_90()
-	{ // é€†æ—¶é’ˆè½¬90åº¦
+	{ // ÄæÊ±Õë×ª90¶È
 		swap(row, column);
 
 		Type **p_former = p;
@@ -857,7 +899,7 @@ namespace array_2d
 
 	template <class Type>
 	void Array_2d<Type>::do_rotate_270()
-	{ // é€†æ—¶é’ˆè½¬270åº¦
+	{ // ÄæÊ±Õë×ª270¶È
 		swap(row, column);
 
 		Type **p_former = p;
@@ -872,6 +914,25 @@ namespace array_2d
 			delete[] p_former[i];
 		}
 		delete[] p_former;
+	}
+
+	template <class Type>
+	const Array_2d<Type> Array_2d<Type>::sub_of(int up, int down, int left, int right) const throw (invalid_argument, out_of_range)
+	{
+		if (up > down || left > right) {
+			throw new invalid_argument("up > down or left > right");
+		}
+
+		this->test_row(up);
+		this->test_row(down);
+		this->test_column(left);
+		this->test_column(right);
+
+		Array_2d<Type> result(down - up + 1, right - left + 1);
+		for (int i = 0; i < result.row; ++i) {
+			std::copy(p[i + up] + left, p[i + up] + right + 1, result.p[i]);
+		}
+		return result;
 	}
 
 }/* Namespace array_2d */

@@ -1,26 +1,26 @@
 /*
  * range.hpp
  *
- *  Created on: 2017å¹´7æœˆ17æ—¥
+ *  Created on: 2017Äê7ÔÂ17ÈÕ
  *      Author: Peter
- *      Fuction: æœ¬æ–‡ä»¶æä¾›äº†å¯¹ range çš„æ”¯æŒ, ä½¿å¾—å¯ä»¥åƒ Python ä¸­ä¸€æ ·ä½¿ç”¨ for_each é£æ ¼çš„å¾ªç¯ã€‚
- *      		  æœ¬æ–‡ä»¶éœ€è¦ C++ 11 åŠä»¥ä¸Šç‰ˆæœ¬ç¼–è¯‘å™¨çš„æ”¯æŒ
+ *      Fuction: ±¾ÎÄ¼şÌá¹©ÁË¶Ô range µÄÖ§³Ö, Ê¹µÃ¿ÉÒÔÏñ Python ÖĞÒ»ÑùÊ¹ÓÃ for_each ·ç¸ñµÄÑ­»·¡£
+ *      		  ±¾ÎÄ¼şĞèÒª C++ 11 ¼°ÒÔÉÏ°æ±¾±àÒëÆ÷µÄÖ§³Ö
  *
- * Python çš„å¾ªç¯
+ * Python µÄÑ­»·
  * for i in range(10, 20):
  *     print(i)
  *
- * C++ 11 é£æ ¼
+ * C++ 11 ·ç¸ñ
  * for (int i : range(10, 20)) {
  *     cout << i << endl;
  * }
  *
  *
- * Python çš„å¾ªç¯
+ * Python µÄÑ­»·
  * for i in range(10):
  *     print(i)
  *
- * C++ 11 é£æ ¼
+ * C++ 11 ·ç¸ñ
  * for (int i : range(10)) {
  *     cout << i << endl;
  * }
@@ -38,7 +38,7 @@ namespace Range
 #if __cplusplus >= 201103L //C++0x
 
 	class Range_record;
-	//ä¾›Range_iteratorä½¿ç”¨çš„å‰å‘å¼•ç”¨å£°æ˜
+	//¹©Range_iteratorÊ¹ÓÃµÄÇ°ÏòÒıÓÃÉùÃ÷
 	class Range_iterator final
 	{
 		protected:
@@ -82,7 +82,7 @@ namespace Range
 			}
 
 			bool whether_in(int x) const
-			{ //æ£€æŸ¥æ¸¸æ ‡xæ˜¯å¦åœ¨èŒƒå›´å†…
+			{ //¼ì²éÓÎ±êxÊÇ·ñÔÚ·¶Î§ÄÚ
 				if (from < to) {
 					return (from <= x && x < to);
 				} else {

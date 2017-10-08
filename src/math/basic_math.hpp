@@ -3,7 +3,7 @@
 #ifndef _BASIC_MATH_H_
 #define _BASIC_MATH_H_
 
-//#pragma message(__DATE__ "  " __TIME__"  æ­£åœ¨ç¼–è¯‘"__FILE__)
+//#pragma message(__DATE__ "  " __TIME__"  ÕıÔÚ±àÒë"__FILE__)
 
 #include <cmath>
 #include <string>
@@ -35,7 +35,7 @@ inline double round(double x, int digits)
 	return x >= 0 ? result : -result;
 }
 
-inline bool diff(int m, int n) //m,næ˜¯å¦å¼‚å·
+inline bool diff(int m, int n) //m,nÊÇ·ñÒìºÅ
 {
 	return ((unsigned) (m ^ n) >> (8 * sizeof(int) - 1));
 }
@@ -50,11 +50,11 @@ inline float decimal(float a)
 	return a - (int) a;
 }
 
-double baremainder(double numerator, double denominator); //è¿”å›ä¸¤æ•°ç›¸é™¤çš„ä½™æ•°ã€‚ç»“æœçš„ç¬¦å·ä¸é™¤æ•°ç›¸åŒ
+double baremainder(double numerator, double denominator); //·µ»ØÁ½ÊıÏà³ıµÄÓàÊı¡£½á¹ûµÄ·ûºÅÓë³ıÊıÏàÍ¬
 unsigned short float_num(double a, double digits); //BUG
 double up(double x, int digits);
-int gcd(int a, int b); //è¿”å›ä¸¤æ•°çš„æœ€å¤§å…¬çº¦æ•°
-int lcm(int a, int b); //è¿”å›ä¸¤æ•°çš„æœ€å°å…¬å€æ•°
+int gcd(int a, int b); //·µ»ØÁ½ÊıµÄ×î´ó¹«Ô¼Êı
+int lcm(int a, int b); //·µ»ØÁ½ÊıµÄ×îĞ¡¹«±¶Êı
 bool is_prime(int x);
 std::string fraction(double a);
 

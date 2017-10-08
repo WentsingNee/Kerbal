@@ -1,7 +1,7 @@
 #ifndef _STATISTICS_H_
 #define _STATISTICS_H_
 
-//#pragma message(__DATE__ "  " __TIME__"  æ­£åœ¨ç¼–è¯‘"__FILE__)
+//#pragma message(__DATE__ "  " __TIME__"  ÕıÔÚ±àÒë"__FILE__)
 
 #include <iostream>
 #include <cmath>
@@ -23,13 +23,13 @@ namespace statistics
 	template <class T> double geoave(const T a[], int len); //geometric mean
 	template <class T> double harave(const T a[], int len); //harmonic mean
 	template <class T> double squave(const T a[], int len); //squ
-	template <class T> double var(const T a[], int len); //æ–¹å·®
-	unsigned long long fact(unsigned int n); //è®¡ç®—é˜¶ä¹˜, ç›®å‰å¯ç®—åˆ°20!
+	template <class T> double var(const T a[], int len); //·½²î
+	unsigned long long fact(unsigned int n); //¼ÆËã½×³Ë, Ä¿Ç°¿ÉËãµ½20!
 	unsigned long combine(int n, int r) throw (invalid_argument);
-	double normdist(double x, double sigma, double miu); //æ­£æ€åˆ†å¸ƒçš„æ¦‚ç‡å¯†åº¦å‡½æ•°, miu=ave, sigma=expect
-	double std_normdist(double x); //æ ‡å‡†æ­£æ€åˆ†å¸ƒçš„æ¦‚ç‡å¯†åº¦å‡½æ•°, miu=ave, sigma=expect
+	double normdist(double x, double sigma, double miu); //ÕıÌ¬·Ö²¼µÄ¸ÅÂÊÃÜ¶Èº¯Êı, miu=ave, sigma=expect
+	double std_normdist(double x); //±ê×¼ÕıÌ¬·Ö²¼µÄ¸ÅÂÊÃÜ¶Èº¯Êı, miu=ave, sigma=expect
 	double broad_combine(double a, unsigned int r);
-	double regression(const double x[], const double y[], int len, double &a, double &b); //çº¿æ€§å›å½’
+	double regression(const double x[], const double y[], int len, double &a, double &b); //ÏßĞÔ»Ø¹é
 //double tdist_unint_n(double x,unsigned int n);
 
 	template <class T>
@@ -117,7 +117,7 @@ namespace statistics
 	}
 
 	template <class T>
-	double var(const T a[], int len) //æ–¹å·®
+	double var(const T a[], int len) //·½²î
 	{
 		double squsum = 0, sum = 0;
 
