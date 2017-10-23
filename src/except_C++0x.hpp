@@ -16,4 +16,14 @@
 #	endif
 #endif //C++0x
 
+#define instanceof(p_to_vir,classname) (dynamic_cast<classname*>(p_to_vir)==NULL?false:true)
+
+#define TRACE(txt,func) (std::string(txt)+"\n\tat "+std::string(func)+" ("+std::string(__FILE__)+": "+to_string(__LINE__)+")")
+#define RE_THROW(e,func)\
+{\
+	auto tmp = (e);\
+	decltype(tmp) new_e(TRACE((e).what(), "void main"));\
+	throw new_e;\
+}
+
 #endif /* EXCEPT_C__0X_HPP_ */

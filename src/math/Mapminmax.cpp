@@ -10,53 +10,73 @@
 
 namespace statistics
 {
-	std::vector<Record> Mapminmax::arr_record = std::vector<Record>();
-
-	void Mapminmax::mapminmax(double a[], int len)
+	namespace
 	{
-		double MaxValue;
-		double MinValue;
-		max_and_min(a, len, MaxValue, MinValue);
-		double k = 1.0 * 2 / (MaxValue - MinValue);
-		double b = -(MaxValue + MinValue) / 2.0;
-		for (int i = 0; i < len; i++) {
-			a[i] = k * (a[i] + b);
+		Record::Record()
+		{
+			this->len = 0;
+			this->max = 0;
+			this->min = 0;
 		}
 
-		arr_record.push_back(Record(a, len, MaxValue, MinValue));
+		Record::Record(size_t len, double max, double min)
+		{
+			this->len = len;
+			this->max = max;
+			this->min = min;
+		}
 	}
 
-	void Mapminmax::anti_mapminmax(double a[])
+	std::map<double *, Record> Mapminmax::arr_record = std::map<double *, Record>();
+
+	void Mapminmax::mapminmax(double array[], size_t len)
 	{
-		//数据逆归一化
-		for (unsigned int i = 0; i < arr_record.size(); i++) {
-			if (arr_record[i].p == a) {
-				int &len = arr_record[i].len;
-				double &MaxValue = arr_record[i].max;
-				double &MinValue = arr_record[i].min;
-				double k = 1.0 * 2 / (MaxValue - MinValue);
-				double b = -(MaxValue + MinValue) / 2.0;
-				for (int i = 0; i < len; i++) {
-					a[i] = a[i] / k - b;
-				}
-				return;
+		if (arr_record.find(array) == arr_record.end()) { //未找到
+			double MaxValue;
+			double MinValue;
+			max_and_min(array, len, MaxValue, MinValue);
+
+			arr_record[array] = Record(len, MaxValue, MinValue);
+
+			double k = 1.0 * 2 / (MaxValue - MinValue);
+			double b = -(MaxValue + MinValue) / 2.0;
+			for (unsigned int i = 0; i < len; i++) {
+				array[i] = k * (array[i] + b);
 			}
 		}
 	}
 
-	double Mapminmax::anti_mapminmax(double a, double reference[]) throw (std::invalid_argument)
+	void Mapminmax::anti_mapminmax(double array[]) throw (std::invalid_argument)
 	{
 		//数据逆归一化
-		for (unsigned int i = 0; i < arr_record.size(); i++) {
-			if (arr_record[i].p == reference) {
-				double &MaxValue = arr_record[i].max;
-				double &MinValue = arr_record[i].min;
-				double k = 1.0 * 2 / (MaxValue - MinValue);
-				double b = -(MaxValue + MinValue) / 2.0;
-				return a / k - b;
+		std::map<double *, Record>::iterator it = arr_record.find(array);
+		if (it == arr_record.end()) { //未找到
+			throw std::invalid_argument("un mapped");
+		} else { //已找到
+			int len = it->second.len;
+			double MaxValue = it->second.max;
+			double MinValue = it->second.min;
+			double k = 1.0 * 2 / (MaxValue - MinValue);
+			double b = -(MaxValue + MinValue) / 2.0;
+			for (int i = 0; i < len; i++) {
+				array[i] = array[i] / k - b;
 			}
+			arr_record.erase(it);
 		}
-		throw std::invalid_argument("");
+	}
+
+	double Mapminmax::anti_mapminmax(double element, double reference[]) throw (std::invalid_argument)
+	{
+		//数据逆归一化
+		std::map<double *, Record>::iterator it = arr_record.find(reference);
+		if (it == arr_record.end()) { //未找到
+			throw std::invalid_argument("un mapped");
+		} else { //已找到
+			double MaxValue = it->second.max;
+			double MinValue = it->second.min;
+			double k = 1.0 * 2 / (MaxValue - MinValue);
+			double b = -(MaxValue + MinValue) / 2.0;
+			return element / k - b;
+		}
 	}
 } /* namespace statistics */
-

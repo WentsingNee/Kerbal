@@ -29,7 +29,7 @@ inline unsigned long GetTickCount()
 extern unsigned long start_time;
 extern bool debug;
 
-inline void program_start(bool is_debug);
+void program_start(bool is_debug);
 unsigned long show_time_cost();
 void program_will_end();
 
@@ -51,36 +51,11 @@ enum Type
 
 template <class T> Type get_type(const T &a);
 template <class T> bool print_type_infomation(const T &a);
-template <class T> void print_bit(const T &a);
-template <class T> void print_16(const T &a);
+template <class T> std::string bit_of(const T &a);
+template <class T> std::string ocx_of(const T &a);
 template <class T> inline std::string get_typename(const T &a);
 inline std::string get_user_name();
 inline int get_processors_number();
-
-inline void program_start(bool is_debug)
-{
-	start_time = GetTickCount();
-	std::ios::sync_with_stdio(false);
-	std::cin.tie(0);
-	std::cout << PRODUCT_NAME << " [版本 " << VER_STRING << "]\n" << "(c) " << COMPANY_NAME << "。保留所有权利。" << std::endl;
-	/*
-	 Microsoft Windows [版本 10.0.14393]
-	 (c) 2016 Microsoft Corporation。保留所有权利。
-	 */
-
-	std::cout << "本产品授权给" << get_user_name() << "使用\n" << std::endl;
-	/*
-	 本产品授权给Peter使用
-	 */
-
-	/*	cout << __LINE__ << endl;
-	 cout << __FILE__ << endl;
-	 cout << __DATE__ << endl;
-	 cout << __TIME__ << endl;
-	 cout << __STDC__ << endl;*/
-
-	debug = is_debug;
-}
 
 template <class T>
 Type get_type(const T &a)
@@ -205,6 +180,7 @@ inline std::string bit_of(const std::string &a)
 {
 	return bit_of(&a[0]);
 }
+
 std::string ocx_of(const char * const a);
 inline std::string ocx_of(const std::string &a)
 {

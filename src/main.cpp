@@ -27,86 +27,64 @@
 #include "math/statistics.hpp"
 #include "math/MulMatrix.hpp"
 
-class A
-{
-	public:
-		A()
-		{
-			std::cout << "构造" << std::endl;
-		}
-
-		~A()
-		{
-			std::cout << "析构" << std::endl;
-		}
-	protected:
-
-		A(const A &src)
-		{
-			std::cout << this << "拷贝构造" << &src << std::endl;
-		}
-};
-double fun(double x)
-{
-	return sin(x);
-}
-
 #define is_debug true
 
 /**
  * 主函数
  * @return 返回值
  */
-
-using namespace complexor;
-
 int main()
 {
 	program_start(is_debug);
 
-	using namespace std;
+//	using namespace std;
 	using namespace matrix;
 	using namespace complexor;
 	using namespace Range;
 	using namespace dbstream;
 	using namespace complex;
+	using namespace statistics;
 
-	vector<int> v = { 1, 2, 3 };
-
-	cout << "double" << endl;
-	Complexor<double> a(3, [](int i)->double {
-		return i/2.0;
-	}, true);
-	a.print();
-
-	cout << "double" << endl;
-	Complexor<double> a2 = a;
-	a2.print();
-
-	cout << "double + double" << endl;
-	(a + a2).print();
-
-	cout << "int" << endl;
-	Complexor<int> b(3, [](int i)->int {
-		return i;
-	}, true);
-	b.print();
-	cout << "double * int" << endl;
-	cout << dot_product(a, b) << endl;
-
-//	Matrix a = { { 1, 2, 3 }, { 4, 5, 6 }, { 4, 5, 5 } };
-//	a.save("biout.matrix");
-//
-//	for (int i = 0; i < a.get_row(); i++) {
-//		for (int j = 0; j < a.get_column(); j++) {
-//			print_16(a[i][j]);
+//	Matrix c(4, 4);
+//	Complexor<double> t(1);
+//	try {
+//		try {
+//			try {
+//				c * t;
+//			} catch (const invalid_argument &e) {
+//				RE_THROW(e, "void fun");
+//			}
+//		} catch (const invalid_argument &e) {
+//			RE_THROW(e, "void main");
 //		}
+//	} catch (const invalid_argument &e) {
+//		cerr << e.what() << endl;
 //	}
+
+
+//	Matrix t {
 //
-//	Matrix b = load_from("biout.matrix");
-//	b.print();
-//	b = optimize_rows(a);
-//	b.print();
+//	{ 17, 24, 1, 8, 15 },
+//
+//	{ 23, 5, 7, 14, 16 },
+//
+//	{ 4, 6, 13, 20, 22 },
+//
+//	{ 10, 12, 19, 21, 3 },
+//
+//	{ 11, 18, 25, 2, 9 } };
+//
+//	t.print();
+//
+//	Matrix core = { { 1, 3, 1 }, { 0, 5, 0 }, { 2, 1, 2 } };
+
+//	Matrix t(1500, 1500);
+//	Matrix core(100, 100);
+//	conv2(core, t, 2); //.print();
+
+	Matrix a = { 0, 1, 2, 3, 4, 5 };
+	Matrix core = { -1, -2, -3 };
+	conv2(core, a, 2);
 
 	program_will_end();
 //	system("pause");

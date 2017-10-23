@@ -31,8 +31,8 @@ namespace matrix
 //			Matrix(const int row, const int column, bool if_set0 = true);
 			Matrix(const int row, const int column);
 			Matrix(const int row, const int column, const double &val);
-			Matrix(const int row, const int column, bool para, double (*function)());
-			Matrix(const int row, const int column, bool para, double (*function)(int, int));
+			Matrix(double (*function)(), const int row, const int column, bool para);
+			Matrix(double (*function)(int, int), const int row, const int column, bool para);
 
 			template <class T> Matrix(const T * const src, const int row, const int column); //利用二维数组进行构造
 			Matrix(const double arr[], int len, bool in_a_row = true); //利用一维数组进行构造
@@ -48,11 +48,9 @@ namespace matrix
 
 			virtual ~Matrix();
 
-			friend const Matrix eye(int n); //构造一个单位矩阵
-
 			virtual void print(Frame frame = Fr_RtMatrix, bool print_corner = true, ostream &output = cout) const;
 			void save(const string &file_name) const throw (runtime_error);
-			friend Matrix load_from(const string &file_name);
+			static const Matrix load_from(const string &file_name);
 
 			void switch_rows(const int row1, const int row2) throw (out_of_range);
 			void switch_columns(const int column1, const int column2) throw (out_of_range);
@@ -83,13 +81,15 @@ namespace matrix
 			friend void operator<<=(Matrix &tar, Matrix &src); //将矩阵src的资产转移给tar, src变为与原来同样大小的随机矩阵
 			Matrix& operator=(const Matrix &src);
 
-			template <class T> friend Matrix Cat(const T &a);
-
 #if __cplusplus >= 201103L //C++0x
 			const Matrix& operator=(Matrix &&src);
 #endif //C++0x
 
+			template <class T> friend Matrix Cat(const T &a);
+			const Matrix sub_of(int up, int down, int left, int right) const throw (invalid_argument, out_of_range);
+
 			//计算
+			friend const Matrix eye(int n); //构造一个单位矩阵
 			friend const Matrix pow(const Matrix &A, const int n) throw (invalid_argument);
 			friend double tr(const Matrix &src) throw (invalid_argument); //返回方阵的迹
 			friend const Matrix TransposeOf(const Matrix &A); //构造矩阵A的转置矩阵
@@ -139,8 +139,6 @@ namespace matrix
 			throw 0;
 		}
 	}
-
-	Matrix load_from(const string &file_name);
 
 //应用部分
 

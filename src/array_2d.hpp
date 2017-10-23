@@ -138,9 +138,9 @@ namespace array_2d
 //			Array_2d(const int row, const int column, bool if_set0 = true);
 			Array_2d(const int row, const int column);
 			Array_2d(const int row, const int column, const Type &val);
-			Array_2d(const int row, const int column, bool para, Type (*function)());
+			Array_2d(Type (*function)(), const int row, const int column, bool para);
 			//动态开辟一个以p为首地址的、row * column的二维数组, 并使用 function() 初始化每个元素
-			Array_2d(const int row, const int column, bool para, Type (*function)(int, int));
+			Array_2d(Type (*function)(int, int), const int row, const int column, bool para);
 			//动态开辟一个以p为首地址的、row * column的二维数组, 并使用 function(i,j) 初始化每个元素
 
 			template <class T>
@@ -353,7 +353,7 @@ namespace array_2d
 	}
 
 	template <class Type>
-	Array_2d<Type>::Array_2d(const int row, const int column, bool para, Type (*function)())
+	Array_2d<Type>::Array_2d(Type (*function)(), const int row, const int column, bool para)
 	{
 		//动态开辟一个以p为首地址的、row * column的二维数组, 并使用 function() 初始化每个元素
 		if (row > 0 && column > 0) {
@@ -375,7 +375,7 @@ namespace array_2d
 	}
 
 	template <class Type>
-	Array_2d<Type>::Array_2d(const int row, const int column, bool para, Type (*function)(int, int))
+	Array_2d<Type>::Array_2d(Type (*function)(int, int), const int row, const int column, bool para)
 	{
 		//动态开辟一个以p为首地址的、row * column的二维数组, 并使用 function(i,j) 初始化每个元素
 		if (row > 0 && column > 0) {
@@ -919,18 +919,18 @@ namespace array_2d
 	template <class Type>
 	const Array_2d<Type> Array_2d<Type>::sub_of(int up, int down, int left, int right) const throw (invalid_argument, out_of_range)
 	{
-		if (up > down || left > right) {
-			throw new invalid_argument("up > down or left > right");
+		if (up >= down || left >= right) {
+			throw new invalid_argument("up >= down or left >= right");
 		}
 
 		this->test_row(up);
-		this->test_row(down);
+		this->test_row(down - 1);
 		this->test_column(left);
-		this->test_column(right);
+		this->test_column(right - 1);
 
-		Array_2d<Type> result(down - up + 1, right - left + 1);
-		for (int i = 0; i < result.row; ++i) {
-			std::copy(p[i + up] + left, p[i + up] + right + 1, result.p[i]);
+		Array_2d<Type> result(down - up, right - left);
+		for (int i = up; i < down; ++i) {
+			std::copy(p[i] + left, p[i] + right, result.p[i - up]);
 		}
 		return result;
 	}

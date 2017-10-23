@@ -60,41 +60,7 @@ namespace complexor
 				}
 			}
 
-			void resize(int new_num)
-			{ //TODO BUG
-				bool alloc = false;
-				if (alloc) {
-					//new[] delete[]方案
-					Type *p_former = p;
-					try {
-						p = new Type[new_num];
-						std::copy(p_former, p_former + std::min(num, new_num), p);
-						num = new_num;
-						delete[] p_former;
-						p_former = NULL;
-					} catch (const bad_alloc &exct) { //内存分配失败
-						delete[] p_former;
-						num = 0;
-						p_former = NULL;
-						p = NULL;
-						throw;
-					}
-				} else {
-					//alloc方案
-					Type *p_new = (Type*) realloc(p, new_num * sizeof(Type));
-					if (p_new == NULL) { //内存分配失败
-						num = 0;
-						free(p);
-						p = NULL;
-						p_new = NULL;
-						throw bad_alloc();
-					} else { //内存分配成功
-						p = p_new;
-						num = new_num;
-						p_new = NULL;
-					}
-				}
-			}
+			void resize(int new_num);
 
 			void test_index(int num_test) const throw (out_of_range)
 			{
@@ -104,69 +70,53 @@ namespace complexor
 			}
 
 		public:
-			Complexor(const int num = 0, const bool if_set0 = true, const bool vertical = true) throw (bad_alloc);
+//			Complexor(const int num = 0, const bool if_set0 = true, const bool vertical = true) throw (bad_alloc);
+			Complexor(const int num = 0) throw (bad_alloc);
+			Complexor(const int num, const Type &val, const bool vertical = true) throw (bad_alloc);
 			Complexor(const Complexor &src) throw (bad_alloc); //拷贝构造函数
 			Complexor(const Matrix &src, int index = 0, const bool vertical = true) throw (bad_alloc);
 			Complexor(const Type src[], const int num, const bool vertical = true) throw (bad_alloc);
-			Complexor(const int num, Type (*function)(), const bool vertical = true) throw (bad_alloc);
-			Complexor(const int num, Type (*function)(int), const bool vertical = true) throw (bad_alloc);
+			Complexor(Type (*function)(), const int num, const bool vertical = true) throw (bad_alloc);
+			Complexor(Type (*function)(int), const int num, const bool vertical = true) throw (bad_alloc);
 
 #if __cplusplus >= 201103L //C++0x
 			//Complexor 为 C++ 11 准备的新特性: 利用初始化列表进行构造
 			Complexor(initializer_list<Type> src);
+
+			//Complexor 为 C++ 11 准备的新特性: 转移构造函数
+			Complexor(Complexor &&src);
 #endif //C++0x
 
 			operator Matrix();
 			virtual ~Complexor();
-			bool is_const();
-			bool is_const() const;
+			inline bool is_const();
+			inline bool is_const() const;
 
-			bool empty() const;
-			void clear();
+			inline bool empty() const;
+			inline void clear();
 
 			const Complexor call(Type (*__pf)(Type));
 
-			void set_element(int index, const Type &value) throw (out_of_range)
-			{
-				test_index(index);
-				p[index] = value;
-			}
+			inline void set_element(int index, const Type &value) throw (out_of_range);
+			inline Type& get_element(int index) throw (out_of_range);
+			inline const Type& get_element(int index) const throw (out_of_range);
+			inline int get_num() const;
+			inline bool is_vertical() const;
 
-			Type& get_element(int index) throw (out_of_range)
-			{
-				test_index(index);
-				return p[index];
-			}
+			inline const Type* get_data() const;
 
-			const Type& get_element(int index) const throw (out_of_range)
-			{
-				test_index(index);
-				return p[index];
-			}
+			inline Type* const begin() const;
+			inline Type* const end() const;
 
-			int get_num() const
-			{
-				return num;
-			}
+			inline size_t get_digit_size() const;
 
-			bool is_vertical() const
-			{
-				return vertical;
-			}
-
-			void print() const;
-
-			const Type* get_data() const
-			{
-				return p;
-			}
-
-			size_t get_digit_size() const
-			{
-				return num * sizeof(Type);
-			}
+			virtual void print() const;
 
 			Complexor& operator=(const Complexor &src);
+#if __cplusplus >= 201103L //C++0x
+			const Complexor& operator=(Complexor &&src); //转移赋值运算符
+#endif //C++0x
+
 			Type& operator[](int index) throw (out_of_range);
 			const Type& operator[](int index) const throw (out_of_range);
 
@@ -199,16 +149,6 @@ namespace complexor
 
 //			friend void print_array_to_file(const Complexor &src, string separator, string file_name, bool if_output_number =
 //					false) throw (invalid_argument);
-
-			Type* const begin() const
-			{
-				return p;
-			}
-
-			Type* const end() const
-			{
-				return p + num;
-			}
 
 			friend Type angle<>(const Complexor &a, const Complexor &b) throw (invalid_argument);
 			//向量夹角

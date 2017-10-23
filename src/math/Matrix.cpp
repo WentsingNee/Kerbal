@@ -2,6 +2,7 @@
 
 #include "Matrix.hpp"
 #include "../String_serve.hpp"
+#include <windows.h>//测试时间用的
 
 //#pragma message(__DATE__ "  " __TIME__"  正在编译"__FILE__)
 
@@ -49,14 +50,14 @@ namespace matrix
 
 	}
 
-	Matrix::Matrix(const int row, const int column, bool para, double (*function)()) :
-			Array_2d<double>(row, column, para, function)
+	Matrix::Matrix(double (*function)(), const int row, const int column, bool para) :
+			Array_2d<double>(function, row, column, para)
 	{
 
 	}
 
-	Matrix::Matrix(const int row, const int column, bool para, double (*function)(int, int)) :
-			Array_2d<double>(row, column, para, function)
+	Matrix::Matrix(double (*function)(int, int), const int row, const int column, bool para) :
+			Array_2d<double>(function, row, column, para)
 	{
 
 	}
@@ -88,12 +89,12 @@ namespace matrix
 
 #if __cplusplus >= 201103L //C++0x
 	Matrix::Matrix(initializer_list<initializer_list<double>> src) :
-	Array_2d<double>(src)
+			Array_2d<double>(src)
 	{ //利用二维初始化列表进行构造
 	}
 
 	Matrix::Matrix(initializer_list<double> src) :
-	Array_2d<double>(src)
+			Array_2d<double>(src)
 	{ //利用一维初始化列表进行构造
 	}
 
@@ -103,9 +104,9 @@ namespace matrix
 		column = src.column;
 		p = src.p;
 
+		src.p = NULL;
 		src.row = 0;
 		src.column = 0;
-		src.p = NULL;
 	}
 
 #endif //C++0x
@@ -134,15 +135,6 @@ namespace matrix
 	Matrix::~Matrix() // virtual
 	{
 //		cout << "析构矩阵" << endl;
-	}
-
-	const Matrix eye(int n)
-	{ //构造一个单位矩阵
-		Matrix result(n, n, 0);
-		for (int i = 0; i < n; ++i) {
-			result.p[i][i] = 1;
-		}
-		return result;
 	}
 
 	void Matrix::print(Frame frame, bool print_corner, ostream &output) const
@@ -204,49 +196,83 @@ namespace matrix
 
 		ofstream fout(&file_name[0], ios::out | ios::binary);
 		//输出位宽信息
-		switch (sizeof(size_t)) {
-			case 4:
-				fout.write((char*) &sizeof_row, 4);
-				fout.write("\0\0\0", 4);
-				fout.write((char*) &sizeof_column, 4);
-				fout.write("\0\0\0", 4);
-				fout.write((char*) &sizeof_element, 4);
-				fout.write("\0\0\0", 4);
-				break;
-			case 8:
-				fout.write((char*) &sizeof_row, 8);
-				fout.write((char*) &sizeof_column, 8);
-				fout.write((char*) &sizeof_element, 8);
-				break;
-			default:
-				fout.close();
-				throw runtime_error("不支持的位宽");
-		}
 
-		fout.write((char*) &row, sizeof(row));
-		fout.write((char*) &column, sizeof(column));
-		for (int i = 0; i < row; i++) {
-			for (int j = 0; j < column; j++) {
-				fout.write((char*) (p[i] + j), sizeof_element);
+		try {
+			switch (sizeof(size_t)) {
+				case 4: //size_t 32位版本
+					fout.write((char*) &sizeof_row, 4); //输出变量row在内存中所占的长度
+					fout.write("\0\0\0", 4); //不足8位补4个零
+					fout.write((char*) &sizeof_column, 4);
+					fout.write("\0\0\0", 4);
+					fout.write((char*) &sizeof_element, 4);
+					fout.write("\0\0\0", 4);
+					break;
+				case 8: //size_t 64位版本
+					fout.write((char*) &sizeof_row, 8); //输出变量row在内存中所占的长度
+					fout.write((char*) &sizeof_column, 8);
+					fout.write((char*) &sizeof_element, 8);
+					break;
+				default:
+					fout.close();
+					throw runtime_error("不支持的位宽");
 			}
+
+			fout.write((char*) &row, sizeof(row)); //输出矩阵行数
+			fout.write((char*) &column, sizeof(column)); //输出矩阵列数
+			for (int i = 0; i < row; i++) {
+				for (int j = 0; j < column; j++) {
+					fout.write((char*) (p[i] + j), sizeof_element); //输出矩阵元素
+				}
+			}
+		} catch (const __cxxabiv1:: __forced_unwind &) {
+			fout.close();
+			throw;
 		}
 		fout.close();
 	}
 
-	Matrix load_from(const string &file_name)
+	const Matrix Matrix::load_from(const string &file_name)
 	{
 		ifstream fin(&file_name[0], ios::in | ios::binary);
-		fin.ignore(24);
+
+		size_t size_of_row_in_file;
+		size_t size_of_column_in_file;
+		size_t size_of_ele_in_file;
+
+		fin.read((char*) &size_of_row_in_file, 4);
+		fin.ignore(4);
+		fin.read((char*) &size_of_column_in_file, 4);
+		fin.ignore(4);
+		fin.read((char*) &size_of_ele_in_file, 4);
+		fin.ignore(4);
+
+		cout << size_of_row_in_file << endl;
+		cout << size_of_column_in_file << endl;
+		cout << size_of_ele_in_file << endl;
+
+		static const size_t size_of_row = sizeof(row);
+		static const size_t size_of_column = sizeof(column);
+		static const size_t size_of_ele = sizeof(double);
+
+		if (size_of_row != size_of_row_in_file
+
+		|| size_of_column != size_of_column_in_file
+
+		|| size_of_ele != size_of_ele_in_file) {
+
+			throw runtime_error("位宽不兼容");
+
+		}
+
 		int row;
 		int column;
-
-		fin.read((char*) &row, 4);
-		fin.read((char*) &column, 4);
+		fin.read((char*) &row, size_of_row);
+		fin.read((char*) &column, size_of_column);
 
 		Matrix tmp(row, column);
 		for (int i = 0; i < row; i++) {
 			for (int j = 0; j < column; j++) {
-				fin.read((char*) (tmp.p[i] + j), 8);
+				fin.read((char*) (tmp.p[i] + j), size_of_ele);
 			}
 		}
 		fin.close();
@@ -420,10 +446,7 @@ namespace matrix
 
 //运算符重载
 	const Matrix operator+(const Matrix &A, const Matrix &B) throw (invalid_argument)
-	{
-		int i, j;
-
-//检查A,B是否同样大小
+	{ //检查A,B是否同样大小
 		if (A.row != B.row) {
 			throw invalid_argument("error: row(A) ≠ row(B)");
 		}
@@ -435,6 +458,7 @@ namespace matrix
 
 		Matrix result(row, column);
 
+		int i, j;
 		for (i = 0; i < row; i++) {
 			for (j = 0; j < column; j++) {
 				result.p[i][j] = A.p[i][j] + B.p[i][j];
@@ -445,10 +469,7 @@ namespace matrix
 	}
 
 	const Matrix operator-(const Matrix &A, const Matrix &B) throw (invalid_argument)
-	{
-		int i, j;
-
-//检查A,B是否同样大小
+	{ //检查A,B是否同样大小
 		if (A.row != B.row) {
 			throw invalid_argument("error: row(A) ≠ row(B)");
 		}
@@ -460,6 +481,7 @@ namespace matrix
 
 		Matrix result(row, column);
 
+		int i, j;
 		for (i = 0; i < row; i++) {
 			for (j = 0; j < column; j++) {
 				result.p[i][j] = A.p[i][j] - B.p[i][j];
@@ -470,8 +492,7 @@ namespace matrix
 	}
 
 	const Matrix operator*(const double k, const Matrix &A)
-	{
-//数k乘矩阵
+	{ //数k乘矩阵
 		if (k == 1) {
 			return A;
 		}
@@ -486,8 +507,7 @@ namespace matrix
 	}
 
 	const Matrix operator*(const Matrix &A, const double k)
-	{
-//矩阵乘数k
+	{ //矩阵乘数k
 		if (k == 1) {
 			return A;
 		}
@@ -502,8 +522,7 @@ namespace matrix
 	}
 
 	const Matrix operator*(const Matrix &A, const Matrix &B) throw (invalid_argument)
-	{
-//矩阵乘矩阵
+	{ //矩阵乘矩阵
 
 //检查A的列数是否等于B的行数
 		if (A.column != B.row) {
@@ -512,12 +531,11 @@ namespace matrix
 		const int &row = A.row;
 		const int &column = B.column;
 
-		Matrix result(row, column);
+		Matrix result(row, column, 0);
 
 		int i, j, k;
 		for (i = 0; i < row; i++) {
 			for (j = 0; j < column; j++) {
-				result.p[i][j] = 0.0;
 				for (k = 0; k < A.column; k++) {
 					result.p[i][j] += A.p[i][k] * B.p[k][j];
 				}
@@ -528,8 +546,7 @@ namespace matrix
 	}
 
 	const Matrix fma(const Matrix &A, const Matrix &B, const Matrix &C) throw (invalid_argument)
-	{
-// A * B + C
+	{ // A * B + C
 
 //检查A的列数是否等于B的行数
 		if (A.column != B.row) {
@@ -555,8 +572,7 @@ namespace matrix
 	}
 
 	const Matrix dot_product(const Matrix &A, const Matrix &B) throw (invalid_argument)
-	{
-//矩阵点乘矩阵
+	{ //矩阵点乘矩阵
 
 		if (A.row == 1 && A.column == 1) {
 			return A.p[0][0] * B;
@@ -578,6 +594,15 @@ namespace matrix
 			}
 		}
 
+		return result;
+	}
+
+	const Matrix eye(int n)
+	{ //构造一个单位矩阵
+		Matrix result(n, n, 0);
+		for (int i = 0; i < n; ++i) {
+			result.p[i][i] = 1;
+		}
 		return result;
 	}
 
@@ -725,6 +750,24 @@ namespace matrix
 	}
 #endif
 
+	const Matrix Matrix::sub_of(int up, int down, int left, int right) const throw (invalid_argument, out_of_range)
+	{
+		if (up >= down || left >= right) {
+			throw new invalid_argument("up >= down or left >= right");
+		}
+
+		this->test_row(up);
+		this->test_row(down - 1);
+		this->test_column(left);
+		this->test_column(right - 1);
+
+		Matrix result(down - up, right - left);
+		for (int i = up; i < down; ++i) {
+			std::copy(p[i] + left, p[i] + right, result.p[i - up]);
+		}
+		return result;
+	}
+
 	const Matrix pow(const Matrix &A, const int n) throw (invalid_argument)
 	{
 		return A ^ n;
@@ -768,24 +811,39 @@ namespace matrix
 	const Matrix conv2(const Matrix &core, const Matrix &A, int size)
 	{ //矩阵卷积
 		int i, j, m, n;
-		Matrix z(A.row + core.row - 1, A.column + core.column - 1, 0);
-		for (i = 0; i < z.row; ++i)
-			for (j = 0; j < z.column; ++j) {
-				for (m = 0; m < A.row; ++m)
-					if ((m <= i) && (i < m + core.row))
-						for (n = 0; n < A.column; ++n)
-							if ((n <= j) && (j < n + core.column))
-								z.p[i][j] += A.p[m][n] * core.p[i - m][j - n];
-			}
-
-		if (size == 0) {
-			return z;
-		} else if (size == 1) {
-			Matrix z2(A.row, A.column, 0);
-			for (i = 0; i < A.row; ++i)
-				for (j = 0; j < A.column; ++j) {
-					z2.p[i][j] = z.p[i + (core.row - 1) / 2][j + (core.column - 1) / 2];
+		if (size == 2) {
+			Matrix zsmall(A.row - core.row + 1, A.column - core.column + 1, 0);
+			for (i = 0; i < zsmall.row; ++i) {
+				for (m = i; m < i + core.row; ++m) {
+					for (j = 0; j < zsmall.column; ++j) {
+						for (n = j; n < j + core.column; ++n) {
+							zsmall.p[i][j] += A.p[m][n] * core.p[m - i][n - j];
+							cout << A.p[m][n] << "*" << core.p[m - i][n - j] << "   ";
+						}
+						cout << endl;
+					}
 				}
+			}
+			zsmall.print();
+			return zsmall;
+		}
+
+		Matrix z(A.row + core.row - 1, A.column + core.column - 1, 0);
+		for (m = 0; m < A.row; ++m) {
+			for (i = m; i < m + core.row && i < z.row; ++i) {
+				for (n = 0; n < A.column; ++n) {
+					for (j = n; j < n + core.column && j < z.column; ++j) {
+						z.p[i][j] += A.p[m][n] * core.p[i - m][j - n];
+					}
+				}
+			}
+		}
+
+		if (size == 1) {
+
+			Matrix z2 = z.sub_of((core.row - 1) / 2, A.row + (core.row - 1) / 2, (core.column - 1) / 2,
+					A.column + (core.column - 1) / 2);
+
 			return z2;
 		} else {
 			return z;

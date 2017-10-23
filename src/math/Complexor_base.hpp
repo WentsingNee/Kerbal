@@ -23,13 +23,79 @@ namespace complexor
 	template <class Type> class Complexor;
 
 	template <class Type>
-	Complexor<Type>::Complexor(const int num, const bool if_set0, const bool vertical) throw (bad_alloc)
+	void Complexor<Type>::resize(int new_num)
+	{ //TODO BUG
+		bool alloc = false;
+		if (alloc) {
+			//new[] delete[]方案
+			Type *p_former = p;
+			try {
+				p = new Type[new_num];
+				std::copy(p_former, p_former + std::min(num, new_num), p);
+				num = new_num;
+				delete[] p_former;
+				p_former = NULL;
+			} catch (const bad_alloc &exct) { //内存分配失败
+				delete[] p_former;
+				num = 0;
+				p_former = NULL;
+				p = NULL;
+				throw;
+			}
+		} else {
+			//alloc方案
+			Type *p_new = (Type*) realloc(p, new_num * sizeof(Type));
+			if (p_new == NULL) { //内存分配失败
+				num = 0;
+				free (p);
+				p = NULL;
+				p_new = NULL;
+				throw bad_alloc();
+			} else { //内存分配成功
+				p = p_new;
+				num = new_num;
+				p_new = NULL;
+			}
+		}
+	}
+
+//	template <class Type>
+//	Complexor<Type>::Complexor(const int num, const bool if_set0, const bool vertical) throw (bad_alloc)
+//	{
+//		if (num > 0) {
+//			this->num = num;
+//			mem_init();
+//			if (if_set0) {
+//				memset(p, 0, num * sizeof(Type));
+//			}
+//		} else {
+//			this->num = 0;
+//			this->p = NULL;
+//		}
+//		this->vertical = vertical;
+//	}
+
+	template <class Type>
+	Complexor<Type>::Complexor(const int num) throw (bad_alloc)
 	{
 		if (num > 0) {
 			this->num = num;
 			mem_init();
-			if (if_set0) {
-				memset(p, 0, num * sizeof(Type));
+		} else {
+			this->num = 0;
+			this->p = NULL;
+		}
+		this->vertical = true;
+	}
+
+	template <class Type>
+	Complexor<Type>::Complexor(const int num, const Type &val, const bool vertical) throw (bad_alloc)
+	{
+		if (num > 0) {
+			this->num = num;
+			mem_init();
+			for (int i = 0; i < num; ++i) {
+				p[i] = val;
 			}
 		} else {
 			this->num = 0;
@@ -85,7 +151,7 @@ namespace complexor
 	}
 
 	template <class Type>
-	Complexor<Type>::Complexor(const int num, Type (*function)(), const bool vertical) throw (bad_alloc)
+	Complexor<Type>::Complexor(Type (*function)(), const int num, const bool vertical) throw (bad_alloc)
 	{
 		if (num > 0) {
 			this->num = num;
@@ -101,7 +167,7 @@ namespace complexor
 	}
 
 	template <class Type>
-	Complexor<Type>::Complexor(const int num, Type (*function)(int), const bool vertical) throw (bad_alloc)
+	Complexor<Type>::Complexor(Type (*function)(int), const int num, const bool vertical) throw (bad_alloc)
 	{
 		if (num > 0) {
 			this->num = num;
@@ -127,6 +193,20 @@ namespace complexor
 
 		std::copy(src.begin(), src.end(), p);
 	}
+
+	//Complexor 为 C++ 11 准备的新特性: 转移构造函数
+	template <class Type>
+	Complexor<Type>::Complexor(Complexor &&src)
+	{
+		num = src.num;
+		p = src.p;
+
+		src.p = NULL;
+		src.num = 0;
+
+		vertical = src.vertical;
+	}
+
 #endif //C++0x
 
 	template <class Type>
@@ -154,19 +234,19 @@ namespace complexor
 	}
 
 	template <class Type>
-	bool Complexor<Type>::is_const()
+	inline bool Complexor<Type>::is_const()
 	{
 		return false;
 	}
 
 	template <class Type>
-	bool Complexor<Type>::is_const() const
+	inline bool Complexor<Type>::is_const() const
 	{
 		return true;
 	}
 
 	template <class Type>
-	bool Complexor<Type>::empty() const
+	inline bool Complexor<Type>::empty() const
 	{
 		if (num == 0) {
 			return true;
@@ -176,7 +256,7 @@ namespace complexor
 	}
 
 	template <class Type>
-	void Complexor<Type>::clear()
+	inline void Complexor<Type>::clear()
 	{
 		delete[] p;
 		p = NULL;
@@ -191,6 +271,63 @@ namespace complexor
 			result.p[i] = __pf(this->p[i]);
 		}
 		return result;
+	}
+
+	template <class Type>
+	inline void Complexor<Type>::set_element(int index, const Type &value) throw (out_of_range)
+	{
+		test_index(index);
+		p[index] = value;
+	}
+
+	template <class Type>
+	inline Type& Complexor<Type>::get_element(int index) throw (out_of_range)
+	{
+		test_index(index);
+		return p[index];
+	}
+
+	template <class Type>
+	inline const Type& Complexor<Type>::get_element(int index) const throw (out_of_range)
+	{
+		test_index(index);
+		return p[index];
+	}
+
+	template <class Type>
+	inline int Complexor<Type>::get_num() const
+	{
+		return num;
+	}
+
+	template <class Type>
+	inline bool Complexor<Type>::is_vertical() const
+	{
+		return vertical;
+	}
+
+	template <class Type>
+	inline const Type* Complexor<Type>::get_data() const
+	{
+		return p;
+	}
+
+	template <class Type>
+	inline Type* const Complexor<Type>::begin() const
+	{
+		return p;
+	}
+
+	template <class Type>
+	inline Type* const Complexor<Type>::end() const
+	{
+		return p + num;
+	}
+
+	template <class Type>
+	inline size_t Complexor<Type>::get_digit_size() const
+	{
+		return num * sizeof(Type);
 	}
 
 	template <class Type>
@@ -353,6 +490,21 @@ namespace complexor
 		return *this;
 	}
 
+#if __cplusplus >= 201103L //C++0x
+	template <class Type>
+	const Complexor<Type>& Complexor<Type>::operator=(Complexor<Type> &&src)
+	{ //转移赋值运算符
+
+		this->clear();
+		num = src.num;
+		p = src.p;
+
+		src.p = NULL;
+		src.num = 0;
+		return *this;
+	}
+#endif
+
 	template <class Type>
 	Complexor<Type>& Complexor<Type>::doTranspose()
 	{
@@ -364,7 +516,8 @@ namespace complexor
 	const Complexor<Type> TransposeOf(const Complexor<Type> &src)
 	{
 		Complexor<Type> result(src);
-		return result.doTranspose();
+		src.vertical = !src.vertical;
+		return result;
 	}
 
 	template <class Type>
@@ -372,7 +525,7 @@ namespace complexor
 	{
 		if (V.vertical) {
 			if (M.get_column() != V.num) {
-				throw invalid_argument("column(M)!=num(V)");
+				throw invalid_argument(TRACE("column(M)!=num(V)", "operator*"));
 			}
 			const int &m = M.get_row();
 			const int &n = V.num;
