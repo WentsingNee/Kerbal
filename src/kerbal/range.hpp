@@ -85,7 +85,6 @@ namespace kerbal
 #endif /* End C++0x */
 
 	} /* namespace Range */
-	using namespace Range;
 
 } /* namespace kerbal */
 

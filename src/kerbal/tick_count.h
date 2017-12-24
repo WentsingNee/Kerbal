@@ -10,6 +10,8 @@
 
 #ifdef __linux
 #include <time.h>
+# include <unistd.h>
+# include <pwd.h>
 inline unsigned long GetTickCount()
 {
 	struct timespec ts;

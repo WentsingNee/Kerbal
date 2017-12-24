@@ -53,27 +53,8 @@ double normdist_rand(double sigma, double miu) //miu=ave,sigma=expect
 
 	do {
 		x = rand_between(miu - 6 * sigma, miu + 6 * sigma);
-		y = rand_between(0, 1.0 / sqrt(2 * M_PI) / sigma * 1.01);
+		y = rand_between(0, 1.01 / M_SQRT_2PI / sigma);
 		y_available = kerbal::math::statistics::normdist(x, sigma, miu);
 	} while (y > y_available);
 	return x;
-}
-
-double normdist_noise(double former, double sigma, double miu)
-{
-	double x, y, y_range_max;
-	x = rand_between(miu - 6 * sigma, miu + 6 * sigma);
-	if (miu * miu / sigma / sigma > 2 * log(2)) {
-		y_range_max = 2.0 * exp(pow(-0.5 * miu / sigma, 2)) / sqrt(2 * M_PI) / sigma; //Ë«·å
-	} else {
-		y_range_max = 1.0 / sqrt(2 * M_PI) / sigma; //µ¥·å
-	}
-	y = rand_between(0, y_range_max);
-	double y_available = kerbal::math::statistics::normdist(x, sigma, miu)
-			+ kerbal::math::statistics::normdist(x, sigma, -miu);
-	if (y <= y_available) {
-		return former + x;
-	} else {
-		return normdist_noise(former, sigma, miu);
-	}
 }

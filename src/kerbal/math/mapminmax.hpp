@@ -9,7 +9,6 @@
 #ifndef MAPMINMAX_HPP_
 #define MAPMINMAX_HPP_
 
-#include <map>
 #include "../except_C++0x.hpp"
 
 namespace kerbal
@@ -19,58 +18,9 @@ namespace kerbal
 		namespace mapminmax
 		{
 
-			namespace
-			{
-				class Record;
-			}
-
-#if __cplusplus >= 201103L
-#	define CXX_FINAL final
-#else
-#	define CXX_FINAL
-#endif
-
-			class Mapminmax CXX_FINAL
-			{
-
-#undef CXX_FINAL
-
-				protected:
-				typedef std::map<double *, Record> map_type;
-
-				static map_type arr_record;
-
-#if __cplusplus < 201103L
-				Mapminmax()
-				{
-				}
-#else
-				Mapminmax() = delete;
-#endif
-
-				public:
-
-				static void mapminmax(double array[], size_t len);
-				static void anti_mapminmax(double array[]) throw (std::invalid_argument); //数据逆归一化
-				static double anti_mapminmax(double a, double reference[]) throw (std::invalid_argument);
-			};
-
-			inline void mapminmax(double array[], size_t len)
-			{
-				//数据归一化
-				Mapminmax::mapminmax(array, len);
-			}
-
-			inline void anti_mapminmax(double array[])
-			{
-				//数据逆归一化
-				Mapminmax::anti_mapminmax(array);
-			}
-
-			inline double anti_mapminmax(double element, double reference[])
-			{
-				return Mapminmax::anti_mapminmax(element, reference);
-			}
+			void mapminmax(double array[], size_t len);
+			void anti_mapminmax(double array[]) throw (std::invalid_argument);
+			double anti_mapminmax(double element, double reference[]) throw (std::invalid_argument);
 
 			inline double mapto(double X, double x1, double y1, double x2, double y2)
 			{
@@ -84,10 +34,8 @@ namespace kerbal
 			}
 
 		} /* namespace mapminmax */
-		using namespace mapminmax;
 
 	} /* namespace math */
-	using namespace math;
 
 } /* namespace kerbal */
 

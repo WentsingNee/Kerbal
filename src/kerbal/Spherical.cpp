@@ -1,6 +1,6 @@
 #include "Spherical.hpp"
-#include "String_serve.hpp"
 #include <math.h>
+#include "string_serve.hpp"
 
 namespace kerbal
 {
@@ -20,7 +20,7 @@ namespace kerbal
 #if __cplusplus >= 201103L //C++0x
 			using std::to_string;
 #else
-			using _String::to_string;
+			using kerbal::string_serve::to_string;
 #endif //C++0x
 
 			std::string Text = comment + ": ";

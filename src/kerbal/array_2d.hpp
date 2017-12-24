@@ -2,76 +2,66 @@
 #define _ARRAY_2D_HPP_
 
 #include <iostream>
-#include <iomanip>
-#include <sstream>
-#include <cstdlib>
-#include <cstring>
 #include "except_C++0x.hpp"
-#include "String_serve.hpp"
 
 #if __cplusplus >= 201103L //C++0x
 #	include <initializer_list>
 #endif //C++0x
 
-template <class Type, size_t M, size_t N>
-inline size_t array_2d_row(const Type (&arr)[M][N]) //返回二维数组的行
-{
-	return M;
-}
-
-template <class Type, size_t M, size_t N>
-inline size_t array_2d_column(const Type (&arr)[M][N])  //返回二维数组的列
-{
-	return N;
-}
-
 namespace array_2d
 {
-	//前向引用声明
 	template <class Type> class Array_2d;
-
-	template <class Type> inline std::ostream& operator<<(std::ostream &output, const Array_2d<Type> &src); //重载输出
-
-}/* Namespace array_2d */
+}
 
 namespace std
 {
-	template <class Type> void swap(array_2d::Array_2d<Type> &A, array_2d::Array_2d<Type> &B) throw ();
-//前向引用声明
-}/* Namespace std */
+	template <class Type>
+	void swap(array_2d::Array_2d<Type> &A, array_2d::Array_2d<Type> &B) throw ();
+}
 
 namespace array_2d
 {
-	namespace
+	/**
+	 * 计算二维数组的行数
+	 * @param arr 待计算的二维数组
+	 * @return 行数
+	 */
+	template <class Type, size_t M, size_t N>
+	inline size_t array_2d_row(const Type (&arr)[M][N])
 	{
-		using namespace _String;
+		return M;
 	}
 
+	/**
+	 * 计算二维数组的列数
+	 * @param arr 待计算的二维数组
+	 * @return 列数
+	 */
+	template <class Type, size_t M, size_t N>
+	inline size_t array_2d_column(const Type (&arr)[M][N])
+	{
+		return N;
+	}
+
+	template <class Type> class Array_2d;
+	template <class Type> inline std::ostream& operator<<(std::ostream &output, const Array_2d<Type> &src); //重载输出
+
+	/**
+	 * @brief 动态二维数组类的安全下标类
+	 * @author 倪文卿
+	 * @remarks 本类用来提供对动态二维数组Array_2d类的下标运算的安全访问
+	 */
 	template <class Type>
-	class safety  //本类用来提供对动态二维数组Array_2d类的下标运算的安全访问
+	class safety
 	{
 		protected:
 			Array_2d<Type> *p_to_matrix;
 			mutable int row_point_to;
 		public:
-			safety(Array_2d<Type> *p_to_matrix, const int row_point_to)
-			{
-				this->p_to_matrix = p_to_matrix;
-				this->row_point_to = row_point_to;
-				//cout<<"safe:"<<this<<endl;
-			}
+			safety(Array_2d<Type> *p_to_matrix, const int row_point_to);
+			safety(const Array_2d<Type> * const p2, const int row);
 
-			safety(const Array_2d<Type> * const p2, const int row)
-			{
-				this->p_to_matrix = (Array_2d<Type> *) p2;
-				this->row_point_to = row;
-				//cout<<"safe:"<<this<<endl;
-			}
-
-			virtual ~safety()
-			{
-				//cout<<"delete safe:"<<this<<endl;
-			}
+			virtual ~safety();
 
 			inline bool is_const() throw ();
 			inline bool is_const() const throw ();
@@ -90,45 +80,58 @@ namespace array_2d
 			inline bool operator!=(const safety<Type> &with) const throw (std::invalid_argument);
 	};
 
-	template <class Type>
-	inline bool safety<Type>::operator!=(const safety<Type> &with) const throw (std::invalid_argument)
-	{
-		if (this->p_to_matrix == with.p_to_matrix) {
-			return this->row_point_to != with.row_point_to;
-		} else {
-			throw std::invalid_argument("comparation between two iterators not belong to same Array_2d");
-		}
-	}
-
-	enum Array_2d_input_info
-	{
-		input_info_start, input_info_end
-	};
-
-	const Array_2d_input_info begin = input_info_start;
-	const Array_2d_input_info end = input_info_end;
-
+	/**
+	 * @brief 动态二维数组类
+	 * @author 倪文卿
+	 * @remarks 本类提供了对动态二维数组的支持, 相比于 std::vector<std::vector<Type> > , 此类可确保二维数组的每一行拥有相同的元素个数, 且更节省存储空间
+	 */
 	template <class Type>
 	class Array_2d
 	{
 		protected:
+			/** @brief 行数 */
 			int row;
+
+			/** @brief 列数 */
 			int column;
+
+			/** @brief 数据区 */
 			Type **p = NULL;
 
-			static int insert_times;
-
+			/** @brief 内存初始化 */
 			void mem_init();
 
 		public:
 			friend class safety<Type> ;
-			Array_2d() throw () :
-					row(0), column(0), p(NULL)
-			{
-			}
 
+			/**
+			 * @brief 构造一个 0 行 0 列的空二维数组
+			 * @throws 本函数承诺不抛出任何异常
+			 */
+			Array_2d() throw ();
+
+			/**
+			 * @brief 构造一个 row 行 column 列的二维数组, 数组中每个元素的初始值由默认构造函数生成
+			 * @param row 行数
+			 * @param column 列数
+			 */
 			Array_2d(const int row, const int column);
+
+			/**
+			 * @brief 构造一个 row 行 column 列的二维数组, 数组中每个元素的初始值由参数 val 指定
+			 * @param row 行数
+			 * @param column 列数
+			 * @param val 初始值
+			 */
 			Array_2d(const int row, const int column, const Type &val);
+
+			/**
+			 * @brief 构造一个 row 行 column 列的二维数组, 数组中每个元素的初始值通过调用函数 function 获得
+			 * @param function 构造函数
+			 * @param row 行数
+			 * @param column 列数
+			 * @param para
+			 */
 			Array_2d(Type (*function)(), const int row, const int column, bool para);
 			//动态开辟一个以p为首地址的、row * column的二维数组, 并使用 function() 初始化每个元素
 			Array_2d(Type (*function)(int, int), const int row, const int column, bool para);
@@ -147,11 +150,24 @@ namespace array_2d
 			Array_2d(const Array_2d &src); //拷贝构造函数
 
 			virtual ~Array_2d();
+
+			/**
+			 * @brief 查询动态二维数组是否为空数组
+			 * @return 结果
+			 */
 			bool empty() const throw ();
+
+			/**
+			 * @brief 将动态二维数组置为空数组
+			 */
 			void clear() throw ();
 
 			void resize(int new_row, int new_column);
 
+			/**
+			 * @brief 获取动态二维数组的行数
+			 * @return 行数
+			 */
 			inline int get_row() const;
 			inline int get_column() const;
 			inline const Type** get_data() const;
@@ -170,12 +186,16 @@ namespace array_2d
 			const Array_2d<Type> call_of(Type (*__pf)(int, int)) const;
 			const Array_2d<Type> call_of(Type (*__pf)(Type, int, int)) const;
 
-			Array_2d<Type>& operator<<(const Type &value) throw (std::out_of_range); //输入
-			Array_2d<Type>& operator<<(const Array_2d_input_info &value);
-			Array_2d<Type>& operator<<(const std::string & src) throw (std::out_of_range); //字符串输入
-			Array_2d<Type>& operator<<(std::ostream& (*__pf)(std::ostream&)); //支持endl
+			enum print_style
+			{
+				frame_with_corner, frame_only, none
+			};
 
-			virtual void print(bool print_frame = true, bool print_corner = true, std::ostream &output = std::cout) const;
+			template <print_style print_frame = frame_with_corner>
+			void print(std::ostream &output = std::cout) const;
+
+//			virtual void print(bool print_frame = true, bool print_corner = true, std::ostream &output = std::cout) const;
+
 			//void print_to_file(char file_name[],bool if_output_frame) const;
 
 			inline safety<Type> operator[](int row) throw (std::out_of_range);
@@ -203,17 +223,6 @@ namespace array_2d
 
 	};
 }/* Namespace array_2d */
-
-namespace std
-{
-	template <class Type>
-	void swap(array_2d::Array_2d<Type> &A, array_2d::Array_2d<Type> &B) throw ()
-	{
-		std::swap(A.row, B.row);
-		std::swap(A.column, B.column);
-		std::swap(A.p, B.p);
-	}
-}/* Namespace std */
 
 #include "array_2d_base.hpp"
 #endif	/* End _ARRAY_2D_HPP_ */

@@ -8,16 +8,40 @@
 #ifndef ARRAY_2D_BASE_HPP_
 #define ARRAY_2D_BASE_HPP_
 
+#include <iomanip>
+#include <cstring>
+#include "string_serve.hpp"
+
+namespace std
+{
+	template <class Type>
+	void swap(array_2d::Array_2d<Type> &A, array_2d::Array_2d<Type> &B) throw ()
+	{
+		std::swap(A.row, B.row);
+		std::swap(A.column, B.column);
+		std::swap(A.p, B.p);
+	}
+}/* Namespace std */
+
 namespace array_2d
 {
-	template <class Type> class Array_2d;
-	template <class Type> class safety;
 
-#if __cplusplus >= 201103L
-	using std::to_string;
-#else
-	using _String::to_string;
-#endif
+	template <class Type>
+	safety<Type>::safety(Array_2d<Type> *p_to_matrix, const int row_point_to) :
+			p_to_matrix(p_to_matrix), row_point_to(row_point_to)
+	{
+	}
+
+	template <class Type>
+	safety<Type>::safety(const Array_2d<Type> * const p2, const int row) :
+			p_to_matrix((Array_2d<Type> *) p2), row_point_to(row)
+	{
+	}
+
+	template <class Type>
+	safety<Type>::~safety()
+	{
+	}
 
 	template <class Type>
 	inline bool safety<Type>::is_const() throw ()
@@ -77,6 +101,16 @@ namespace array_2d
 	}
 
 	template <class Type>
+	inline bool safety<Type>::operator!=(const safety<Type> &with) const throw (std::invalid_argument)
+	{
+		if (this->p_to_matrix == with.p_to_matrix) {
+			return this->row_point_to != with.row_point_to;
+		} else {
+			throw std::invalid_argument("comparation between two iterators not belong to same Array_2d");
+		}
+	}
+
+	template <class Type>
 	void Array_2d<Type>::mem_init()
 	{
 		int i = 0;
@@ -94,6 +128,12 @@ namespace array_2d
 			column = 0;
 			throw;
 		}
+	}
+
+	template <class Type>
+	Array_2d<Type>::Array_2d() throw () :
+			row(0), column(0), p(NULL)
+	{
 	}
 
 	template <class Type>
@@ -247,7 +287,8 @@ namespace array_2d
 			auto it = src.begin();
 			while (i < row) {
 				std::copy(it->begin(), it->end(), p[i]);
-				++i, ++it;
+				++i;
+				++it;
 			}
 		} else {
 			this->row = 0;
@@ -426,14 +467,14 @@ namespace array_2d
 	inline safety<Type> Array_2d<Type>::operator[](int row) throw (std::out_of_range)
 	{
 		test_row(row);
-		return safety<Type>(this, row);
+		return safety < Type > (this, row);
 	}
 
 	template <class Type>
 	inline const safety<Type> Array_2d<Type>::operator[](int row) const throw (std::out_of_range)
 	{
 		test_row(row);
-		return safety<Type>(this, row);
+		return safety < Type > (this, row);
 	}
 
 	template <class Type>
@@ -462,7 +503,7 @@ namespace array_2d
 
 	template <class Type>
 	template <class T>
-	void Array_2d<Type>::set(const T src[], int row, int column) //通过数组赋值///此函数内有BUG
+	void Array_2d<Type>::set(const T src[], int row, int column) //通过数组赋值///此函数内有 BUG (没有范围判断等)
 	{
 		this->resize(row, column);
 		for (int i = 0; i < row; i++) {
@@ -503,7 +544,7 @@ namespace array_2d
 	template <class Type>
 	const Array_2d<Type> Array_2d<Type>::call_of(Type (*__pf)(Type)) const
 	{
-		Array_2d<Type> result(row, column);
+		Array_2d < Type > result(row, column);
 		for (int i = 0; i < row; ++i) {
 			for (int j = 0; j < column; ++j) {
 				result.p[i][j] = __pf(this->p[i][j]);
@@ -515,7 +556,7 @@ namespace array_2d
 	template <class Type>
 	const Array_2d<Type> Array_2d<Type>::call_of(Type (*__pf)(int, int)) const
 	{
-		Array_2d<Type> result(row, column);
+		Array_2d < Type > result(row, column);
 		for (int i = 0; i < row; ++i) {
 			for (int j = 0; j < column; ++j) {
 				result.p[i][j] = __pf(i, j);
@@ -527,7 +568,7 @@ namespace array_2d
 	template <class Type>
 	const Array_2d<Type> Array_2d<Type>::call_of(Type (*__pf)(Type, int, int)) const
 	{
-		Array_2d<Type> result(row, column);
+		Array_2d < Type > result(row, column);
 		for (int i = 0; i < row; ++i) {
 			for (int j = 0; j < column; ++j) {
 				result.p[i][j] = __pf(this->p[i][j], i, j);
@@ -536,130 +577,136 @@ namespace array_2d
 		return result;
 	}
 
-//利用插入运算符给动态二维数组赋值
-	template <class Type>
-	int Array_2d<Type>::insert_times = 0;
-
-	template <class Type>
-	Array_2d<Type>& Array_2d<Type>::operator<<(const Type &value) throw (std::out_of_range)
-	{
-		static Array_2d<Type> *last_Arry = NULL;
-		if (last_Arry != this) {
-			last_Arry = this;
-			insert_times = 0;
-		} else if (insert_times >= row * column) {
-			throw out_of_range(
-					"尝试给[" + to_string(insert_times / column) + "][" + to_string(insert_times % column) + "]赋值"
-							+ to_string(value));
-		}
-
-		//p[insert_times / row][insert_times % row] = value;
-		p[insert_times / column][insert_times % column] = value;
-
-		insert_times++;
-		return *this;
-	}
-
-	template <class Type>
-	Array_2d<Type>& Array_2d<Type>::operator<<(const Array_2d_input_info &value)
-	{
-		switch (value) {
-			case input_info_start:
-				insert_times = 0;
-				break;
-			case input_info_end:
-				insert_times = 0;
-				break;
-		}
-		return *this;
-	}
-//利用插入运算符给动态二维数组赋值
-
-	template <class Type>
-	Array_2d<Type>& Array_2d<Type>::operator<<(const std::string & src) throw (std::out_of_range)
-	{
-		static Array_2d<Type> *last_Arry = NULL;
-
-		if (last_Arry != this) {
-			last_Arry = this;
-			insert_times = 0;
-		}
-
-		std::stringstream ss;
-		ss << src;
-		Type tmp;
-
-		while (ss >> tmp) {
-			if (insert_times >= row * column) {
-				throw std::out_of_range(
-						"尝试给[" + to_string(insert_times / column) + "][" + to_string(insert_times % column) + "]赋值");
-			}
-			//p[insert_times / row][insert_times % row] = tmp;
-			p[insert_times / column][insert_times % column] = tmp;
-			insert_times++;
-		}
-		return *this;
-	}
-
-	template <class Type>
-	Array_2d<Type>& Array_2d<Type>::operator<<(std::ostream& (*__pf)(std::ostream&))
-	{
-		if (insert_times % column)
-			insert_times = insert_times / column * column + column;
-		return *this;
-	}
-
 	template <class Type>
 	inline std::ostream& operator<<(std::ostream &output, const Array_2d<Type> &src) //重载输出
 	{
-		src.print(true, true, output);
+		src.print < Array_2d < Type > ::frame_with_corner > (output);
 		return output;
 	}
 
 	template <class Type>
-	void Array_2d<Type>::print(bool print_frame, bool print_corner, std::ostream &output) const
+	void Array_2d<Type>::print<Array_2d<Type>::frame_with_corner>(std::ostream &output) const
 	{
-		//void Array_2d<Type>::print(bool print_frame = true, bool print_corner = true, ostream &output = cout) const
 		int i, j;
 		output << std::resetiosflags(std::ios::right) << std::setiosflags(std::ios::left) << std::setfill(' '); //清除右对齐, 设置左对齐, 设置不足补空格
 
-		if (print_frame) {
-			{ //上边框
-				output << "┌";
-				for (j = 0; j < column; j++) {
-					output << "  " << std::setw(12) << " ";
-				}
-				output << " ┐" << std::endl;
+		{ //上边框
+			output << "┌";
+			for (j = 0; j < column; j++) {
+				output << "  " << std::setw(12) << " ";
 			}
+			output << " ┐" << std::endl;
+		}
 
-			for (i = 0; i < row; i++) {
-				output << "│";
-				for (j = 0; j < column; j++) {
-					output << "  " << std::setw(12) << p[i][j];
-				}
-				output << " │" << std::endl;
+		for (i = 0; i < row; i++) {
+			output << "│";
+			for (j = 0; j < column; j++) {
+				output << "  " << std::setw(12) << p[i][j];
 			}
+			output << " │" << std::endl;
+		}
 
-			{ //下边框
-				output << "└";
-				for (j = 0; j < column; j++) {
-					output << "  " << std::setw(12) << " ";
-				}
-				output << " ┘";
-				if (print_corner) {
-					output << " " << row << " × " << column;
-				}
-				output << std::endl;
+		{ //下边框
+			output << "└";
+			for (j = 0; j < column; j++) {
+				output << "  " << std::setw(12) << " ";
 			}
-		} else {
-			for (i = 0; i < row; i++) {
-				for (j = 0; j < column; j++) {
-					output << "  " << std::setw(12) << p[i][j];
-				}
-				output << std::endl;
-			}
+			output << " ┘";
+			output << " " << row << " × " << column;
+			output << std::endl;
 		}
 	}
+
+	template <class Type>
+	void Array_2d<Type>::print<Array_2d<Type>::frame_only>(std::ostream &output) const
+	{
+		int i, j;
+		output << std::resetiosflags(std::ios::right) << std::setiosflags(std::ios::left) << std::setfill(' '); //清除右对齐, 设置左对齐, 设置不足补空格
+
+		{ //上边框
+			output << "┌";
+			for (j = 0; j < column; j++) {
+				output << "  " << std::setw(12) << " ";
+			}
+			output << " ┐" << std::endl;
+		}
+
+		for (i = 0; i < row; i++) {
+			output << "│";
+			for (j = 0; j < column; j++) {
+				output << "  " << std::setw(12) << p[i][j];
+			}
+			output << " │" << std::endl;
+		}
+
+		{ //下边框
+			output << "└";
+			for (j = 0; j < column; j++) {
+				output << "  " << std::setw(12) << " ";
+			}
+			output << " ┘";
+			output << std::endl;
+		}
+	}
+
+	template <class Type>
+	void Array_2d<Type>::print<Array_2d<Type>::none>(std::ostream &output) const
+	{
+		int i, j;
+		output << std::resetiosflags(std::ios::right) << std::setiosflags(std::ios::left) << std::setfill(' '); //清除右对齐, 设置左对齐, 设置不足补空格
+
+		for (i = 0; i < row; i++) {
+			for (j = 0; j < column; j++) {
+				output << "  " << std::setw(12) << p[i][j];
+			}
+			output << std::endl;
+		}
+	}
+
+//	template <class Type>
+//	void Array_2d<Type>::print(bool print_frame, bool print_corner, std::ostream &output) const
+//	{
+//		//void Array_2d<Type>::print(bool print_frame = true, bool print_corner = true, ostream &output = cout) const
+//		int i, j;
+//		output << std::resetiosflags(std::ios::right) << std::setiosflags(std::ios::left) << std::setfill(' '); //清除右对齐, 设置左对齐, 设置不足补空格
+//
+//		if (print_frame) {
+//			{ //上边框
+//				output << "┌";
+//				for (j = 0; j < column; j++) {
+//					output << "  " << std::setw(12) << " ";
+//				}
+//				output << " ┐" << std::endl;
+//			}
+//
+//			for (i = 0; i < row; i++) {
+//				output << "│";
+//				for (j = 0; j < column; j++) {
+//					output << "  " << std::setw(12) << p[i][j];
+//				}
+//				output << " │" << std::endl;
+//			}
+//
+//			{ //下边框
+//				output << "└";
+//				for (j = 0; j < column; j++) {
+//					output << "  " << std::setw(12) << " ";
+//				}
+//				output << " ┘";
+//				if (print_corner) {
+//					output << " " << row << " × " << column;
+//				}
+//				output << std::endl;
+//			}
+//		} else {
+//			for (i = 0; i < row; i++) {
+//				for (j = 0; j < column; j++) {
+//					output << "  " << std::setw(12) << p[i][j];
+//				}
+//				output << std::endl;
+//			}
+//		}
+//	}
 
 	template <class Type>
 	size_t Array_2d<Type>::get_digit_size() const
@@ -670,6 +717,12 @@ namespace array_2d
 	template <class Type>
 	inline void Array_2d<Type>::test_row(const int row_test) const throw (std::out_of_range)
 	{
+#	if __cplusplus >= 201103L
+		using std::to_string;
+#	else
+		using kerbal::string_serve::to_string;
+#	endif
+
 		if (row_test < 0 || row_test >= this->row) {
 			throw std::out_of_range(
 					"The " + to_string(this->row) + " × " + to_string(this->column) + " Array doesn't have the no."
@@ -680,6 +733,12 @@ namespace array_2d
 	template <class Type>
 	inline void Array_2d<Type>::test_column(const int column_test) const throw (std::out_of_range)
 	{
+#	if __cplusplus >= 201103L
+		using std::to_string;
+#	else
+		using kerbal::string_serve::to_string;
+#	endif
+
 		if (column_test < 0 || column_test >= this->column) {
 			throw std::out_of_range(
 					"The " + to_string(this->row) + " × " + to_string(this->column) + " Array doesn't have the no."
@@ -784,7 +843,7 @@ namespace array_2d
 		this->test_column(left);
 		this->test_column(right - 1);
 
-		Array_2d<Type> result(down - up, right - left);
+		Array_2d < Type > result(down - up, right - left);
 		for (int i = up; i < down; ++i) {
 			std::copy(p[i] + left, p[i] + right, result.p[i - up]);
 		}

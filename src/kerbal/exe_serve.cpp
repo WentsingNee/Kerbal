@@ -1,4 +1,5 @@
 #include "exe_serve.hpp"
+#include <iostream>
 
 unsigned long start_time = 0;
 bool debug = true;
@@ -20,21 +21,19 @@ void program_start(bool is_debug)
 #endif
 
 	start_time = GetTickCount();
-	std::ios::sync_with_stdio(false);
-	std::cin.tie(0);
-	std::cout << PRODUCT_NAME << " [版本 " << VER_STRING << " . " << __DATE__ << " . " << __TIME__;
+
+	std::cout << PRODUCT_NAME " [版本 " VER_STRING " . " __DATE__ " . " __TIME__
 #ifdef __GNUC__
-	std::cout << " , 编译 Gcc 版本号 " << __GNUC__ << " ]";
+			" , 编译 Gcc 版本号 " << __GNUC__ << " ]"
 #endif
-	std::cout << std::endl;
-	std::cout << "(c) " << COMPANY_NAME << "。保留所有权利。" << std::endl;
+
+					"\n(c) " COMPANY_NAME "。保留所有权利。\n"
+
+			"本产品授权给 " << get_user_name() << " 使用\n" << std::endl;
+
 	/*
 	 Microsoft Windows [版本 10.0.14393]
 	 (c) 2016 Microsoft Corporation。保留所有权利。
-	 */
-
-	std::cout << "本产品授权给" << get_user_name() << "使用\n" << std::endl;
-	/*
 	 本产品授权给Peter使用
 	 */
 

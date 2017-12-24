@@ -7,6 +7,7 @@
  */
 
 #include "mapminmax.hpp"
+#include <map>
 #include "statistics.hpp"
 
 namespace kerbal
@@ -15,6 +16,7 @@ namespace kerbal
 	{
 		namespace mapminmax
 		{
+
 			namespace
 			{
 				class Record
@@ -26,23 +28,28 @@ namespace kerbal
 
 						Record(size_t len, double max, double min);
 					public:
-						friend class mapminmax::Mapminmax;
+						friend void mapminmax::mapminmax(double array[], size_t len);
+						friend void mapminmax::anti_mapminmax(double array[]) throw (std::invalid_argument);
+						friend double mapminmax::anti_mapminmax(double element, double reference[]) throw (std::invalid_argument);
 				};
 
 				Record::Record(size_t len, double max, double min) :
 						len(len), max(max), min(min)
 				{
 				}
-			}
 
-			Mapminmax::map_type Mapminmax::arr_record;
+				typedef std::map<double *, Record> map_type;
+				map_type arr_record;
 
-			void Mapminmax::mapminmax(double array[], size_t len)
+			}/* namespace anonymous */
+
+			void mapminmax(double array[], size_t len)
 			{
+				//数据归一化
 				if (arr_record.find(array) == arr_record.end()) { //未找到
 					double MaxValue;
 					double MinValue;
-					kerbal::max_and_min(array, len, MaxValue, MinValue);
+					kerbal::math::statistics::max_and_min(array, len, MaxValue, MinValue);
 
 					arr_record.insert(std::make_pair(array, Record(len, MaxValue, MinValue)));
 
@@ -55,10 +62,10 @@ namespace kerbal
 				}
 			}
 
-			void Mapminmax::anti_mapminmax(double array[]) throw (std::invalid_argument)
+			void anti_mapminmax(double array[]) throw (std::invalid_argument)
 			{
 				//数据逆归一化
-				Mapminmax::map_type::iterator it = arr_record.find(array);
+				map_type::iterator it = arr_record.find(array);
 				if (it == arr_record.end()) { //未找到
 					throw std::invalid_argument("un mapped");
 				}
@@ -74,10 +81,10 @@ namespace kerbal
 				arr_record.erase(it);
 			}
 
-			double Mapminmax::anti_mapminmax(double element, double reference[]) throw (std::invalid_argument)
+			double anti_mapminmax(double element, double reference[]) throw (std::invalid_argument)
 			{
 				//数据逆归一化
-				Mapminmax::map_type::iterator it = arr_record.find(reference);
+				map_type::iterator it = arr_record.find(reference);
 				if (it == arr_record.end()) { //未找到
 					throw std::invalid_argument("un mapped");
 				}
@@ -88,10 +95,9 @@ namespace kerbal
 				double b = (record.max + record.min) / 2.0;
 				return element / k + b;
 			}
+
 		} /* namespace mapminmax */
-		using namespace mapminmax;
 
 	} /* namespace math */
-	using namespace math;
 
 } /* namespace kerbal */

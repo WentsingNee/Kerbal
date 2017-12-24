@@ -54,10 +54,25 @@ namespace kerbal
 				return result;
 			}
 
+			namespace
+			{
+				const double SQR_2PI = sqrt(2 * M_PI);
+			}
+
+			double normdist(double x, double sigma, double miu) //正态分布的概率密度函数, miu=ave, sigma=expect
+			{
+				return exp(pow((x - miu) / sigma, 2) / (-2)) / SQR_2PI / sigma;
+			}
+
+			double std_normdist(double x) //标准正态分布的概率密度函数, miu=ave, sigma=expect
+			{
+				return exp(x * x / (-2)) / SQR_2PI;
+			}
+
 			double regression(const double x[], const double y[], int len, double &a, double &b) //线性回归
 			{
-				double x_ave = ave(x, len);
-				double y_ave = ave(y, len);
+				double x_ave = ave(x, x + len);
+				double y_ave = ave(y, y + len);
 				double sum_dist = 0.0, sum_dist_x = 0.0, sum_dist_y = 0.0;
 
 				for (int i = 0; i < len; i++) {
@@ -71,7 +86,7 @@ namespace kerbal
 			}
 
 		}/* namespace statistics */
-		using namespace statistics;
+
 	} /* namespace math */
-	using namespace math;
+
 } /* namespace kerbal */

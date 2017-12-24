@@ -13,9 +13,9 @@
 #include <list>
 
 #if __cplusplus >= 201103L //C++0x
-#	define TRACE(_M_msg,FUNCTION_NAME) (std::string(_M_msg)+"\n\tat "+std::string(FUNCTION_NAME)+" ("+std::string(__FILE__)+": "+to_string(__LINE__)+")")
+#	define TRACE(_M_msg,FUNCTION_NAME) (std::string(_M_msg)+"\n\tat "+std::string(FUNCTION_NAME)+" ("+std::string(__FILE__)+": "+std::to_string(__LINE__)+")")
 #else
-#	define TRACE(_M_msg,FUNCTION_NAME) (std::string(_M_msg)+"\n\tat "+std::string(FUNCTION_NAME)+" ("+std::string(__FILE__)+": "+_String::to_string(__LINE__)+")")
+#	define TRACE(_M_msg,FUNCTION_NAME) (std::string(_M_msg)+"\n\tat "+std::string(FUNCTION_NAME)+" ("+std::string(__FILE__)+": "+kerbal::string_serve::to_string(__LINE__)+")")
 #endif //C++0x
 
 #if __cplusplus >= 201103L //C++0x
@@ -31,42 +31,45 @@
 	}
 #endif //C++0x
 
-namespace traceable
+namespace kerbal
 {
 	
-	class Tr_except: public std::exception
+	namespace traceable
 	{
-		protected:
-			struct Trace
-			{
-				public:
-					std::string func_name;
-					std::string file_name;
-					int line;
 
-					Trace(std::string func_name = "Unknown Function", std::string file_name = "Unknown File", int line =
-							0) :
-							func_name(func_name), file_name(file_name), line(line)
-					{
-					}
-			};
-			std::string _M_msg;
-			mutable std::list<Trace> trace_record;
+		class Tr_except: public std::exception
+		{
+			protected:
+				struct Trace
+				{
+					public:
+						std::string func_name;
+						std::string file_name;
+						int line;
 
-		public:
-//			Tr_except();
-//			Tr_except(const std::string &_M_msg);
-			Tr_except(const std::string &_M_msg = "", const std::string &function_name = "Unknown Function", const std::string &file_name =
-					"Unknown File", int line = 0);
+						Trace(std::string func_name = "Unknown Function", std::string file_name = "Unknown File", int line =
+								0) :
+								func_name(func_name), file_name(file_name), line(line)
+						{
+						}
+				};
+				std::string _M_msg;
+				mutable std::list<Trace> trace_record;
 
-			virtual ~Tr_except() throw ();
-			virtual const char * what() const _GLIBCXX_TXN_SAFE_DYN _GLIBCXX_USE_NOEXCEPT;
-			virtual void print_trace(std::ostream &out = std::cerr) const;
-			virtual void re_throw(const std::string &catch_function_name = "Unknown Function", const std::string &file_name =
-					"Unknown File", int line = 0) const;
+			public:
+				Tr_except(const std::string &_M_msg = "", const std::string &function_name = "Unknown Function", const std::string &file_name =
+						"Unknown File", int line = 0);
 
-	};
+				virtual ~Tr_except() throw ();
+				virtual const char * what() const _GLIBCXX_TXN_SAFE_DYN _GLIBCXX_USE_NOEXCEPT;
+				virtual void print_trace(std::ostream &out = std::cerr) const;
+				virtual void re_throw(const std::string &catch_function_name = "Unknown Function", const std::string &file_name =
+						"Unknown File", int line = 0) const;
 
-} /* namespace traceable */
+		};
+
+	} /* namespace traceable */
+
+}/* namespace kerbal */
 
 #endif /* TR_EXCEPT_TREXCEPT_HPP_ */

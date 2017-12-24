@@ -66,9 +66,9 @@ namespace kerbal
 			}
 
 		} /* namespace dbstream */
-		using namespace dbstream;
+
 	} /* namespace utility */
-	using namespace utility;
+
 } /* namespace kerbal */
 
 #endif /* DBSTREAM_HPP_ */

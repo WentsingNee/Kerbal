@@ -1,8 +1,11 @@
-#include "String_serve.hpp"
+#include "string_serve.hpp"
+
 #include <sstream>
 
-namespace _String
+namespace kerbal
 {
+	namespace string_serve
+	{
 #	if __cplusplus < 201103L //C++0x
 	std::string to_string(double x)
 	{
@@ -14,4 +17,7 @@ namespace _String
 	}
 #	endif //C++0x
 }
+/* namespace string_serve */
+
+}/* namespace kerbal */
 

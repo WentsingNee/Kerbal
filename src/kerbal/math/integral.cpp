@@ -4,21 +4,16 @@
 #include "basic_math.hpp"
 #include "statistics.hpp"
 
-namespace
-{
-	using basic_math::round;
-}
-
 double dy(double x, double dx, double (*f)(double))
 {
-	return (*f)(x + dx) - (*f)(x);
+	return f(x + dx) - f(x);
 }
 
 double derivative(double x, double (*f)(double), double dx) //µ¼Êý
 {
 //double x, double (*f)(double), double dx Ä¬ÈÏ = 0.001
 //double dx=-0.001;
-	return ((*f)(x + dx) - (*f)(x - dx)) / dx / 2.0;
+	return (f(x + dx) - f(x - dx)) / dx / 2.0;
 }
 
 double ladder(double a, double b, double dx, double (*f)(double)) //ÌÝÐÎ·¨»ý·Ö
@@ -26,15 +21,15 @@ double ladder(double a, double b, double dx, double (*f)(double)) //ÌÝÐÎ·¨»ý·Ö
 	if (a == b) {
 		return 0;
 	}
-	const unsigned int n = fabs(round((b - a) / dx, 0)); //µ÷Õûdx
+	const unsigned int n = fabs(kerbal::math::basic_math::round((b - a) / dx, 0)); //µ÷Õûdx
 	dx = (b - a) / n;
 
 	double sum = 0.0, x = a;
 	for (unsigned int i = 1; i < n; i++) {
 		x += dx;
-		sum += (*f)(x);
+		sum += f(x);
 	}
-	sum += ((*f)(a) + (*f)(b)) / 2;
+	sum += (f(a) + f(b)) / 2;
 	return sum * dx;
 }
 
@@ -44,42 +39,42 @@ double simpson(double a, double b, double dx, double (*f)(double)) //ÐÁÆÕÉú¹«Ê½»
 		return 0.0;
 	}
 
-	const unsigned int n = fabs(round((b - a) / dx, 0)); //µ÷Õûdx
+	const unsigned int n = fabs(kerbal::math::basic_math::round((b - a) / dx, 0)); //µ÷Õûdx
 	dx = (b - a) / n;
 
 	double sum_odd = 0.0, sum_double = 0.0, x = a;
 	for (unsigned int i = 1; i < n; i++) {
 		x += dx;
 		if (i % 2) {
-			sum_odd += (*f)(x); //iÎªÆæÊý
+			sum_odd += f(x); //iÎªÆæÊý
 		} else {
-			sum_double += (*f)(x); //iÎªÅ¼Êý
+			sum_double += f(x); //iÎªÅ¼Êý
 		}
 	}
 
-	return ((*f)(a) + (*f)(b) + 2 * sum_double + 4 * sum_odd) * dx / 3;
+	return (f(a) + f(b) + 2 * sum_double + 4 * sum_odd) * dx / 3;
 }
 
-double std_normdist_integral(double b, double dx) //±ê×¼ÕýÌ¬·Ö²¼»ý·Ö
+double normal_integral(double b, double dx) //±ê×¼ÕýÌ¬·Ö²¼»ý·Ö
 {
 	if (b == 0.0) {
 		return 0.5;
 	}
 
-	const unsigned int n = fabs(round(b / dx, 0));
+	const unsigned int n = fabs(kerbal::math::basic_math::round(b / dx, 0));
 	dx = b / n;
 
 	double sum_odd = 0.0, sum_double = 0.0, x = 0.0, result;
 	for (unsigned int i = 1; i < n; i++) {
 		x += dx;
 		if (i % 2 == 0) {
-			sum_double += exp(-x * x / 2);
+			sum_double += exp(x * x / -2);
 		} else {
-			sum_odd += exp(-x * x / 2);
+			sum_odd += exp(x * x / -2);
 		}
 	}
 
-	result = 0.5 + (1 + exp(-b * b / 2) + 2 * sum_double + 4 * sum_odd) * dx / 3 / sqrt(2 * M_PI);
+	result = 0.5 + (1 + exp(-b * b / 2) + 2 * sum_double + 4 * sum_odd) * dx / 3 / M_SQRT_2PI;
 
 	if (result > 1) {
 		return 1.0;
@@ -123,7 +118,7 @@ double B(int n) //¼ÆËã²®Å¬ÀûÊý
 
 double Stirling(double x) //Ë¹ÌØÁÖ¹«Ê½
 {
-	return sqrt(2 * M_PI) * exp(-x) * pow(x, x + 0.5);
+	return M_SQRT_2PI * exp(-x) * pow(x, x + 0.5);
 }
 
 double logGamma(double z)

@@ -1,21 +1,12 @@
 #include <iostream>
-#include <cstdlib>
-#include <cmath>
-#include <cstring>
-#include <string>
-#include <sstream>
-#include <algorithm>
 
 #include "advanced_math_private.h"
 
 #include "kerbal/exe_serve.hpp"
 #include "kerbal/sort.hpp"
 #include "kerbal/Spherical.hpp"
-#include "kerbal/String_serve.hpp"
 #include "kerbal/range.hpp"
 #include "kerbal/Trexcept.hpp"
-#include <iterator>
-#include <vector>
 
 #include "kerbal/math/Complex.hpp"
 #include "kerbal/array_serve.hpp"
@@ -29,18 +20,11 @@
 
 #include "kerbal/choose.hpp"
 #include "kerbal/dbstream.hpp"
+#include "kerbal/string_serve.hpp"
 
 #define is_debug true
 
-//using namespace kerbal;
-using namespace kerbal::Range;
-//using namespace kerbal::utility::dbstream;
-using namespace kerbal::math::complex;
-//using namespace kerbal::math::statistics;
-using namespace traceable;
-
 using namespace std;
-using namespace kerbal::spherical;
 
 /*
  void conv_test()
@@ -73,12 +57,42 @@ using namespace kerbal::spherical;
 
 using namespace _choose;
 
+#define M 100000
+#define N 2000
+double a[M][N];
+
+class A
+{
+	public:
+		enum size
+		{
+			full, mid, mini
+		};
+};
+
 int main()
 {
 	program_start(is_debug);
 
-	cout << _choose::choose(2, 5, 7, 8, 6, 7) << endl;
-	cout << _choose::choose_c11(2, 5.5, 7.5, 8.5, 6.5, 17.5) << endl;
+	double a[][3] = { { 1, 2, 3 }, { 4, 5, 6 }, { 7, 8, 9 } };
+
+	kerbal::math::matrix::Matrix m(a, 3, 3);
+
+	m.kmr(3, 5);
+
+//	double a2[][4] = { { 1, 2, 3, 4 }, { 4, 5, 6, 7 }, { 7, 8, 9, 10 } };
+//
+//	kerbal::math::matrix::Matrix m2(a2, 3, 4);
+//
+//	cout << m << endl;
+//	cout << m2 << endl;
+//
+//	std::swap(m, m2);
+//	cout << m << endl;
+//	cout << m2 << endl;
+
+//	cout << _choose::choose(2, 5, 7, 8, 6, 7) << endl;
+//	cout << _choose::choose_c11(2, 5.5, 7.5, 8.5, 6.5, 17.5) << endl;
 
 	program_will_end();
 //	system("pause");

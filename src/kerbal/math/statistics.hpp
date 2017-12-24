@@ -15,16 +15,27 @@ namespace kerbal
 			template <class T> T maximum(const T a[], int len);
 			template <class T> T minimum(const T a[], int len);
 			template <class T> void max_and_min(const T a[], int len, T& max, T& min);
-			template <class T> double ave(const T a[], int len);
-			template <class T> double geoave(const T a[], int len); //geometric mean
-			template <class T> double harave(const T a[], int len); //harmonic mean
-			template <class T> double squave(const T a[], int len); //squ
-			template <class T> double var(const T a[], int len); //方差
+
+			template <class InputIterator, class Return_type = double>
+			Return_type ave(InputIterator first, InputIterator last);
+
+			template <class InputIterator, class Return_type = double>
+			Return_type geoave(InputIterator first, InputIterator last); //geometric mean
+
+			template <class InputIterator, class Return_type = double>
+			Return_type harave(InputIterator first, InputIterator last); //harmonic mean
+
+			template <class InputIterator, class Return_type = double>
+			Return_type squave(InputIterator first, InputIterator last); //squ
+
+			template <class InputIterator, class Return_type = double>
+			Return_type var(InputIterator first, InputIterator last); //方差
+
 			unsigned long long fact(unsigned int n); //计算阶乘, 目前可算到20!
 			unsigned long combine(int n, int r) throw (std::invalid_argument);
-			inline double normdist(double x, double sigma, double miu); //正态分布的概率密度函数, miu=ave, sigma=expect
-			inline double std_normdist(double x); //标准正态分布的概率密度函数, miu=ave, sigma=expect
 			double broad_combine(double a, unsigned int r);
+			double normdist(double x, double sigma, double miu); //正态分布的概率密度函数, miu=ave, sigma=expect
+			double std_normdist(double x); //标准正态分布的概率密度函数, miu=ave, sigma=expect
 			double regression(const double x[], const double y[], int len, double &a, double &b); //线性回归
 			//double tdist_unint_n(double x,unsigned int n);
 
@@ -68,79 +79,108 @@ namespace kerbal
 				min = *p_to_min;
 			}
 
-			template <class T>
-			double ave(const T a[], int len)
+			template <class InputIterator, class Return_type = double>
+			Return_type ave(InputIterator first, InputIterator last)
 			{
-				double sum = a[0];
+				if (first != last) {
+					Return_type sum = *first;
+					size_t len = 1;
+					++first;
 
-				for (int i = 1; i < len; i++) {
-					sum += a[i];
+					while (first != last) {
+						sum = sum + *first;  // or: init=binary_op(init,*first) for the binary_op version
+						++first;
+						++len;
+					}
+					return (sum / len);
+				} else {
+					throw std::domain_error("divided by zero!");
 				}
-				return (sum / len);
 			}
 
-			template <class T>
-			double geoave(const T a[], int len)
+			template <class InputIterator, class Return_type = double>
+			Return_type geoave(InputIterator first, InputIterator last)
 			{
-				double product = a[0];
+				if (first != last) {
+					Return_type product = *first;
+					size_t len = 1;
+					++first;
 
-				for (int i = 1; i < len; i++) {
-					product *= a[i];
+					while (first != last) {
+						product = product * *first;  // or: init=binary_op(init,*first) for the binary_op version
+						++first;
+						++len;
+					}
+					return pow(product, 1.0 / len);
+				} else {
+					throw std::domain_error("divided by zero!");
 				}
-				return (pow(product, 1.0 / len));
 			}
 
-			template <class T>
-			double harave(const T a[], int len)
+			template <class InputIterator, class Return_type = double>
+			Return_type harave(InputIterator first, InputIterator last)
 			{
-				double sum = 1.0 / a[0];
+				if (first != last) {
+					Return_type sum = (Return_type) (1) / (*first);
+					size_t len = 1;
+					++first;
 
-				for (int i = 1; i < len; i++) {
-					sum += 1.0 / a[i];
+					while (first != last) {
+						Return_type sum = sum + (Return_type) (1) / (*first); // or: init=binary_op(init,*first) for the binary_op version
+						++first;
+						++len;
+					}
+					return (len / sum);
+				} else {
+					throw std::domain_error("divided by zero!");
 				}
-				return (len / sum);
 			}
 
-			template <class T>
-			double squave(const T a[], int len)
+			template <class InputIterator, class Return_type = double>
+			Return_type squave(InputIterator first, InputIterator last)
 			{
-				double sum = 0;
+				if (first != last) {
+					Return_type sum = (*first) * (*first);
+					size_t len = 1;
+					++first;
 
-				for (int i = 0; i < len; i++) {
-					sum += a[i] * a[i];
+					while (first != last) {
+						Return_type sum = sum + (*first) * (*first); // or: init=binary_op(init,*first) for the binary_op version
+						++first;
+						++len;
+					}
+					return sqrt(sum / len);
+				} else {
+					throw std::domain_error("divided by zero!");
 				}
-				return (sqrt(sum / len));
 			}
 
-			template <class T>
-			double var(const T a[], int len) //方差
+			template <class InputIterator, class Return_type = double>
+			Return_type var(InputIterator first, InputIterator last) //方差
 			{
-				double squsum = 0, sum = 0;
+				if (first != last) {
+					Return_type squsum = (*first) * (*first);
+					Return_type sum = *first;
+					size_t len = 1;
 
-				for (int i = 0; i < len; i++) {
-					squsum += a[i] * a[i];
-					sum += a[i];
+					while (first != last) {
+						squsum = squsum + (*first) * (*first);
+						sum = sum + *first;
+						++first;
+						++len;
+					}
+
+					Return_type ave = sum / len;
+					return squsum / len - (ave * ave);
+				} else {
+					throw std::domain_error("divided by zero!");
 				}
-
-				double &ave = sum;
-				ave /= len;
-				return squsum / len - (ave * ave);
-			}
-
-			inline double normdist(double x, double sigma, double miu) //正态分布的概率密度函数, miu=ave, sigma=expect
-			{
-				return exp(pow((x - miu) / sigma, 2) / (-2)) / sqrt(2 * M_PI) / sigma;
-			}
-
-			inline double std_normdist(double x) //标准正态分布的概率密度函数, miu=ave, sigma=expect
-			{
-				return exp(x * x / (-2)) / sqrt(2 * M_PI);
 			}
 
 		}/* namespace statistics */
-		using namespace statistics;
+
 	} /* namespace math */
-	using namespace math;
+
 } /* namespace kerbal */
 
 #endif	/* End _STATISTICS_HPP_ */

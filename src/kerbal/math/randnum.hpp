@@ -7,7 +7,6 @@ double ave_rand(bool if_include_0, bool if_include_1);
 inline double rand_between(double min, double max);
 inline bool rand_true(double probability);
 double normdist_rand(double sigma = 1, double miu = 0);
-double normdist_noise(double former, double sigma, double miu);
 
 inline double rand_between(double min, double max)
 {
