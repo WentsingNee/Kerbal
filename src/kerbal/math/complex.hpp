@@ -11,6 +11,7 @@ namespace kerbal
 {
 	namespace math
 	{
+		namespace complex{
 		class Complex
 		{
 			public:
@@ -90,6 +91,8 @@ namespace kerbal
 
 		//一元二次方程
 		void quac_equ(double a, double b, double c, Complex &x1, Complex &x2, short &num);
+
+		}/* namespace complex */
 
 	}/* namespace math */
 

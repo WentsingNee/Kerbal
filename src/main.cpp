@@ -1,4 +1,5 @@
 #include <iostream>
+#include <complex>
 
 #include "advanced_math_private.h"
 
@@ -74,11 +75,28 @@ int main()
 {
 	program_start(is_debug);
 
-	double a[][3] = { { 1, 2, 3 }, { 4, 5, 6 }, { 7, 8, 9 } };
+	using namespace kerbal::math::matrix;
+	using namespace kerbal::math::complexor;
 
-	kerbal::math::matrix::Matrix m(a, 3, 3);
+	Complexor<double> c = { 1, 2, 4, 5 };
+	Complexor<double> c2 = { 1, -2, 4, 5 };
 
-	m.kmr(3, 5);
+	cout << (c ^ c2) << endl;
+
+	Matrix s = {
+
+	{ 1, 0, 1, 1 },
+
+	{ 2, 5, 1, 0 },
+
+	{ 3, 5, 7, 1 }
+
+	};
+
+	kerbal::math::complexor::Complexor<double> result = kerbal::math::complexor::eqution(s);
+	result.print();
+	s.sub_of(0, 3, 0, 3).print();
+	(s.sub_of(0, 3, 0, 3) * result).print();
 
 //	double a2[][4] = { { 1, 2, 3, 4 }, { 4, 5, 6, 7 }, { 7, 8, 9, 10 } };
 //

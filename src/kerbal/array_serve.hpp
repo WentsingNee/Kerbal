@@ -99,9 +99,9 @@ namespace kerbal
 			}
 
 		} /* Namespace array_serve */
-		using namespace array_serve;
+
 	} /* namespace utility */
-	using namespace utility;
+
 } /* namespace kerbal */
 
 #endif	/* End _ARRAY_SERVE_HPP_ */
