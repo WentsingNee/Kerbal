@@ -273,8 +273,8 @@ namespace kerbal
 			{
 				//利用二维初始化列表进行构造
 
-				const int row_pre = src.size(); //最终定下的行数
-				const int column_pre = src.begin()->size(); //最终定下的列数
+				const int row_pre = src.size();//最终定下的行数
+				const int column_pre = src.begin()->size();//最终定下的列数
 				//扫描src每行的列数, 不一致则抛异常
 				for (auto it = src.begin() + 1; it != src.end(); ++it) {
 					if (it->size() != (unsigned) column_pre) {
@@ -305,7 +305,7 @@ namespace kerbal
 			Array_2d<Type>::Array_2d(std::initializer_list<Type> src)
 			{
 				//利用一维初始化列表进行构造
-				const int column_pre = src.size();		//最终定下的列数
+				const int column_pre = src.size();//最终定下的列数
 
 				if (column_pre > 0) {
 					this->row = 1;
@@ -716,27 +716,27 @@ namespace kerbal
 				}
 			}
 
-			template <class Type>
-			bool Array_2d<Type>::operator==(const Array_2d<Type> &with) const
-			{
-				if (row != with.row || column != with.column) {
-					return false;
-				}
-				for (int i = 0; i < row; i++) {
-					for (int j = 0; j < column; j++) {
-						if (!(this->p[i][j] == with.p[i][j])) {
-							return false;
-						}
-					}
-				}
-				return true;
-			}
-
-			template <class Type>
-			bool Array_2d<Type>::operator!=(const Array_2d<Type> &with) const
-			{
-				return !(this->operator==(with));
-			}
+//			template <class Type>
+//			bool Array_2d<Type>::operator==(const Array_2d<Type> &with) const
+//			{
+//				if (row != with.row || column != with.column) {
+//					return false;
+//				}
+//				for (int i = 0; i < row; i++) {
+//					for (int j = 0; j < column; j++) {
+//						if (!(this->p[i][j] == with.p[i][j])) {
+//							return false;
+//						}
+//					}
+//				}
+//				return true;
+//			}
+//
+//			template <class Type>
+//			bool Array_2d<Type>::operator!=(const Array_2d<Type> &with) const
+//			{
+//				return !(this->operator==(with));
+//			}
 
 			template <class Type>
 			void Array_2d<Type>::do_reflect_row() throw ()

@@ -154,7 +154,7 @@ namespace kerbal
 
 #	if __cplusplus >= 201103L //C++0x
 					Array_2d(std::initializer_list<std::initializer_list<Type>> src) throw (std::invalid_argument); //利用二维初始化列表进行构造
-					Array_2d(std::initializer_list<Type> src); //利用一维初始化列表进行构造
+					Array_2d(std::initializer_list<Type> src);//利用一维初始化列表进行构造
 #	endif //C++0x
 
 					Array_2d(const Array_2d &src); //拷贝构造函数
@@ -201,7 +201,7 @@ namespace kerbal
 						frame_with_corner, frame_only, none
 					};
 
-					virtual void print(Print_style style, std::ostream &output = std::cout) const;
+					virtual void print(Print_style style = frame_with_corner, std::ostream &output = std::cout) const;
 
 					//void print_to_file(char file_name[],bool if_output_frame) const;
 
@@ -217,8 +217,8 @@ namespace kerbal
 					virtual void test_row(const int row_test) const throw (std::out_of_range);
 					virtual void test_column(const int column_test) const throw (std::out_of_range);
 
-					virtual bool operator==(const Array_2d<Type> &with) const;
-					virtual bool operator!=(const Array_2d<Type> &with) const;
+//					virtual bool operator==(const Array_2d<Type> &with) const;
+//					virtual bool operator!=(const Array_2d<Type> &with) const;
 
 					void do_reflect_row() throw ();
 					void do_reflect_column(); //这里有可能会抛出异常, 具体会不会取决于 swap(Type&, Type&)

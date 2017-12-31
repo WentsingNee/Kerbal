@@ -16,6 +16,7 @@ namespace kerbal
 			template <class T> T minimum(const T a[], int len);
 			template <class T> void max_and_min(const T a[], int len, T& max, T& min);
 
+#if __cplusplus >=201103L
 			template <class InputIterator, class Return_type = double>
 			Return_type ave(InputIterator first, InputIterator last);
 
@@ -23,13 +24,44 @@ namespace kerbal
 			Return_type geoave(InputIterator first, InputIterator last); //geometric mean
 
 			template <class InputIterator, class Return_type = double>
+			Return_type harave(InputIterator first, InputIterator last);//harmonic mean
+
+			template <class InputIterator, class Return_type = double>
+			Return_type squave(InputIterator first, InputIterator last);//squ
+
+			template <class InputIterator, class Return_type = double>
+			Return_type var(InputIterator first, InputIterator last);//方差
+#else
+			template <class InputIterator, class Return_type>
+			Return_type ave(InputIterator first, InputIterator last);
+
+			template <class InputIterator, class Return_type>
+			Return_type geoave(InputIterator first, InputIterator last); //geometric mean
+
+			template <class InputIterator, class Return_type>
 			Return_type harave(InputIterator first, InputIterator last); //harmonic mean
 
-			template <class InputIterator, class Return_type = double>
+			template <class InputIterator, class Return_type>
 			Return_type squave(InputIterator first, InputIterator last); //squ
 
-			template <class InputIterator, class Return_type = double>
+			template <class InputIterator, class Return_type>
 			Return_type var(InputIterator first, InputIterator last); //方差
+
+			template <class InputIterator>
+			double ave(InputIterator first, InputIterator last);
+
+			template <class InputIterator>
+			double geoave(InputIterator first, InputIterator last); //geometric mean
+
+			template <class InputIterator>
+			double harave(InputIterator first, InputIterator last); //harmonic mean
+
+			template <class InputIterator>
+			double squave(InputIterator first, InputIterator last); //squ
+
+			template <class InputIterator>
+			double var(InputIterator first, InputIterator last); //方差
+#endif
 
 			unsigned long long fact(unsigned int n); //计算阶乘, 目前可算到20!
 			unsigned long combine(int n, int r) throw (std::invalid_argument);
@@ -79,7 +111,7 @@ namespace kerbal
 				min = *p_to_min;
 			}
 
-			template <class InputIterator, class Return_type = double>
+			template <class InputIterator, class Return_type>
 			Return_type ave(InputIterator first, InputIterator last)
 			{
 				if (first != last) {
@@ -98,7 +130,7 @@ namespace kerbal
 				}
 			}
 
-			template <class InputIterator, class Return_type = double>
+			template <class InputIterator, class Return_type>
 			Return_type geoave(InputIterator first, InputIterator last)
 			{
 				if (first != last) {
@@ -117,7 +149,7 @@ namespace kerbal
 				}
 			}
 
-			template <class InputIterator, class Return_type = double>
+			template <class InputIterator, class Return_type>
 			Return_type harave(InputIterator first, InputIterator last)
 			{
 				if (first != last) {
@@ -136,7 +168,7 @@ namespace kerbal
 				}
 			}
 
-			template <class InputIterator, class Return_type = double>
+			template <class InputIterator, class Return_type>
 			Return_type squave(InputIterator first, InputIterator last)
 			{
 				if (first != last) {
@@ -155,7 +187,7 @@ namespace kerbal
 				}
 			}
 
-			template <class InputIterator, class Return_type = double>
+			template <class InputIterator, class Return_type>
 			Return_type var(InputIterator first, InputIterator last) //方差
 			{
 				if (first != last) {
@@ -176,6 +208,106 @@ namespace kerbal
 					throw std::domain_error("divided by zero!");
 				}
 			}
+
+#if __cplusplus < 201103L
+			template <class InputIterator>
+			double ave(InputIterator first, InputIterator last)
+			{
+				if (first != last) {
+					double sum = *first;
+					size_t len = 1;
+					++first;
+
+					while (first != last) {
+						sum = sum + *first;  // or: init=binary_op(init,*first) for the binary_op version
+						++first;
+						++len;
+					}
+					return (sum / len);
+				} else {
+					throw std::domain_error("divided by zero!");
+				}
+			}
+
+			template <class InputIterator>
+			double geoave(InputIterator first, InputIterator last)
+			{
+				if (first != last) {
+					double product = *first;
+					size_t len = 1;
+					++first;
+
+					while (first != last) {
+						product = product * *first;  // or: init=binary_op(init,*first) for the binary_op version
+						++first;
+						++len;
+					}
+					return pow(product, 1.0 / len);
+				} else {
+					throw std::domain_error("divided by zero!");
+				}
+			}
+
+			template <class InputIterator>
+			double harave(InputIterator first, InputIterator last)
+			{
+				if (first != last) {
+					double sum = (double) (1) / (*first);
+					size_t len = 1;
+					++first;
+
+					while (first != last) {
+						double sum = sum + (double) (1) / (*first); // or: init=binary_op(init,*first) for the binary_op version
+						++first;
+						++len;
+					}
+					return (len / sum);
+				} else {
+					throw std::domain_error("divided by zero!");
+				}
+			}
+
+			template <class InputIterator>
+			double squave(InputIterator first, InputIterator last)
+			{
+				if (first != last) {
+					double sum = (*first) * (*first);
+					size_t len = 1;
+					++first;
+
+					while (first != last) {
+						double sum = sum + (*first) * (*first); // or: init=binary_op(init,*first) for the binary_op version
+						++first;
+						++len;
+					}
+					return sqrt(sum / len);
+				} else {
+					throw std::domain_error("divided by zero!");
+				}
+			}
+
+			template <class InputIterator>
+			double var(InputIterator first, InputIterator last) //方差
+			{
+				if (first != last) {
+					double squsum = (*first) * (*first);
+					double sum = *first;
+					size_t len = 1;
+
+					while (first != last) {
+						squsum = squsum + (*first) * (*first);
+						sum = sum + *first;
+						++first;
+						++len;
+					}
+
+					double ave = sum / len;
+					return squsum / len - (ave * ave);
+				} else {
+					throw std::domain_error("divided by zero!");
+				}
+			}
+#endif
 
 		}/* namespace statistics */
 
