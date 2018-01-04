@@ -1,7 +1,6 @@
 #include "matrix.hpp"
 
 #include <algorithm>
-#include <windows.h>//测试时间用的
 #include "../string_serve.hpp"
 
 #if __cplusplus < 201103L //C++0x
