@@ -23,7 +23,7 @@ namespace kerbal
 
 		}
 
-		const char * Tr_except::what() const _GLIBCXX_TXN_SAFE_DYN _GLIBCXX_USE_NOEXCEPT
+		const char * Tr_except::what() const throw ()
 		{
 			return _M_msg.c_str();
 		}
@@ -41,7 +41,7 @@ namespace kerbal
 			trace_record.push_back(Trace(catch_function_name, file_name, line));
 			throw *this;
 		}
-	
+
 	} /* namespace traceable */
 
 }/* namespace kerbal */

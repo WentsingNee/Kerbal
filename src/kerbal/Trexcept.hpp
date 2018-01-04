@@ -33,7 +33,7 @@
 
 namespace kerbal
 {
-	
+
 	namespace traceable
 	{
 
@@ -61,7 +61,7 @@ namespace kerbal
 						"Unknown File", int line = 0);
 
 				virtual ~Tr_except() throw ();
-				virtual const char * what() const _GLIBCXX_TXN_SAFE_DYN _GLIBCXX_USE_NOEXCEPT;
+				virtual const char * what() const throw ();
 				virtual void print_trace(std::ostream &out = std::cerr) const;
 				virtual void re_throw(const std::string &catch_function_name = "Unknown Function", const std::string &file_name =
 						"Unknown File", int line = 0) const;

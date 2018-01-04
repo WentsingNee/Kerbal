@@ -103,13 +103,13 @@ namespace kerbal
 			void Matrix::print(Matrix::Frame_style frame, bool print_corner, std::ostream &output) const
 			{
 				//Frame frame 默认= Fr_RtMatrix, bool print_corner 默认= true, ostream &output = output
-//			static const std::string Corner_RtMatrix[] = { "┌", "┐", "└", "┘", "│" };
+				//static const std::string Corner_RtMatrix[] = { "┌", "┐", "└", "┘", "│" };
 
-				static const std::string Corner_RdMatrix[] = { "╭", "╮", "╰", "╯", "│" };
-				static const std::string Corner_Det[] = { " ", " ", " ", " ", "│" };
-				static const std::string Corner_double[] = { " ", " ", " ", " ", "║" };
+				static const char Corner_RdMatrix[5][5] = { "╭", "╮", "╰", "╯", "│" };
+				static const char Corner_Det[5][5] = { " ", " ", " ", " ", "│" };
+				static const char Corner_double[5][5] = { " ", " ", " ", " ", "││" };
 
-				const std::string *corner = NULL;
+				const char (*corner)[5] = NULL;
 				switch (frame) {
 					case Matrix::rt_corner:
 						if (print_corner) {
@@ -262,14 +262,14 @@ namespace kerbal
 				return tmp;
 			}
 
-			void Matrix::switch_rows(const int row1, const int row2) throw (std::out_of_range)
+			void Matrix::switch_rows(const int row1, const int row2)
 			{
 				this->test_row(row1);
 				this->test_row(row2);
 				std::swap(p[row1], p[row2]);
 			}
 
-			void Matrix::switch_columns(const int column1, const int column2) throw (std::out_of_range)
+			void Matrix::switch_columns(const int column1, const int column2)
 			{
 				this->test_column(column1);
 				this->test_column(column2);
@@ -279,7 +279,7 @@ namespace kerbal
 				}
 			}
 
-			void Matrix::kmr(const double k, const int row_dest) throw (std::out_of_range)
+			void Matrix::kmr(const double k, const int row_dest)
 			{
 				test_row(row_dest);
 
@@ -288,17 +288,32 @@ namespace kerbal
 				}
 			}
 
-			void Matrix::kmr_plus_to_another(const double k, const int row_from, const int row_dest) throw (std::out_of_range)
+			void Matrix::kmr_plus_to_another(const double k, const int row_from, const int row_dest)
 			{
 				test_row(row_from);
 				test_row(row_dest);
 
-				if (k == 0.0) {
-					return;
-				}
-
 				for (int i = 0; i < column; i++) {
 					p[row_dest][i] += k * p[row_from][i];
+				}
+			}
+
+			void Matrix::kmc(const double k, const int column_dest)
+			{
+				test_column(column_dest);
+
+				for (int i = 0; i < row; i++) {
+					p[i][column_dest] *= k;
+				}
+			}
+
+			void Matrix::kmc_plus_to_another(const double k, const int column_from, const int column_dest)
+			{
+				test_column(column_from);
+				test_column(column_dest);
+
+				for (int i = 0; i < row; i++) {
+					p[i][column_dest] += k * p[i][column_from];
 				}
 			}
 
@@ -426,7 +441,7 @@ namespace kerbal
 			}
 
 //运算符重载
-			const Matrix operator+(const Matrix &A, const Matrix &B) throw (std::invalid_argument)
+			const Matrix operator+(const Matrix &A, const Matrix &B)
 			{ //检查A,B是否同样大小
 				if (A.row != B.row) {
 					throw std::invalid_argument("error: row(A) ≠ row(B)");
@@ -449,7 +464,7 @@ namespace kerbal
 				return result;
 			}
 
-			const Matrix operator-(const Matrix &A, const Matrix &B) throw (std::invalid_argument)
+			const Matrix operator-(const Matrix &A, const Matrix &B)
 			{ //检查A,B是否同样大小
 				if (A.row != B.row) {
 					throw std::invalid_argument("error: row(A) ≠ row(B)");
@@ -472,7 +487,7 @@ namespace kerbal
 				return result;
 			}
 
-			const Matrix operator*(const double k, const Matrix &A) throw ()
+			const Matrix operator*(const double k, const Matrix &A)
 			{ //数k乘矩阵
 				if (k == 1) {
 					return A;
@@ -487,7 +502,7 @@ namespace kerbal
 				return result;
 			}
 
-			const Matrix operator*(const Matrix &A, const double k) throw ()
+			const Matrix operator*(const Matrix &A, const double k)
 			{ //矩阵乘数k
 				if (k == 1) {
 					return A;
@@ -526,10 +541,10 @@ namespace kerbal
 				return result;
 			}
 
-			const Matrix fma(const Matrix &A, const Matrix &B, const Matrix &C) throw (std::invalid_argument)
+			const Matrix fma(const Matrix &A, const Matrix &B, const Matrix &C)
 			{ // A * B + C
 
-//检查A的列数是否等于B的行数
+				//检查A的列数是否等于B的行数
 				if (A.column != B.row) {
 					throw std::invalid_argument("error: column(A) ≠ row(B)");
 				}
@@ -552,7 +567,7 @@ namespace kerbal
 				return result;
 			}
 
-			const Matrix dot_product(const Matrix &A, const Matrix &B) throw (std::invalid_argument)
+			const Matrix dot_product(const Matrix &A, const Matrix &B)
 			{ //矩阵点乘矩阵
 
 				if (A.row == 1 && A.column == 1) {
@@ -587,7 +602,7 @@ namespace kerbal
 				return result;
 			}
 
-			const Matrix operator^(const Matrix &A, const int n) throw (std::invalid_argument)
+			const Matrix operator^(const Matrix &A, const int n)
 			{ //计算矩阵A的n次方
 
 				if (n >= 4) {
@@ -612,7 +627,7 @@ namespace kerbal
 				}
 			}
 
-			const Matrix operator&&(const Matrix &A, const Matrix &B) throw (std::invalid_argument)
+			const Matrix operator&&(const Matrix &A, const Matrix &B)
 			{ //将两个矩阵按竖直方向连接
 				/*   A
 				 *  ---
@@ -638,7 +653,7 @@ namespace kerbal
 				return result;
 			}
 
-			const Matrix operator||(const Matrix &A, const Matrix &B) throw (std::invalid_argument)
+			const Matrix operator||(const Matrix &A, const Matrix &B)
 			{ //将两个矩阵按水平方向连接
 				/*   A | B   */
 
@@ -674,7 +689,7 @@ namespace kerbal
 				return result;
 			}
 
-			Matrix& Matrix::operator+=(const Matrix &with) throw (std::invalid_argument)
+			Matrix& Matrix::operator+=(const Matrix &with)
 			{
 				if (row != with.row) {
 					throw std::invalid_argument("error: row(A) ≠ row(B)");
@@ -692,7 +707,7 @@ namespace kerbal
 				return *this;
 			}
 
-			Matrix& Matrix::operator-=(const Matrix &with) throw (std::invalid_argument)
+			Matrix& Matrix::operator-=(const Matrix &with)
 			{
 				if (row != with.row) {
 					throw std::invalid_argument("error: row(A) ≠ row(B)");
@@ -807,7 +822,7 @@ namespace kerbal
 				return result;
 			}
 
-			const Matrix pow(const Matrix &A, const int n) throw (std::invalid_argument)
+			const Matrix pow(const Matrix &A, const int n)
 			{
 				return A ^ n;
 			}

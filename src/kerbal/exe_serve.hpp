@@ -97,16 +97,17 @@ inline std::string get_user_name()
 
 #ifdef __linux
 #include<unistd.h>
-inline int get_processors_number()
+inline unsigned int get_processors_number()
 {
-	//TODO
-	int num=get_nprocs_conf();
-	return num;
+	unsigned int count = 1; // §Ø§Ñ§Ú§í§â¨m¨j§¨
+	count = sysconf(_SC_NPROCESSORS_CONF);
+	return count;
 }
+
 #endif
 
 #if (defined __WINDOWS_) || (defined _WIN32)
-inline int get_processors_number()
+inline unsigned int get_processors_number()
 {
 	SYSTEM_INFO info;
 	GetSystemInfo(&info);

@@ -13,8 +13,8 @@ namespace kerbal
 
 		inline double rad_to_angle(double rad)
 		{
-			const double M_PI = 3.14159265358979323846;
-			return 180 / M_PI * rad;
+			const double PI = 3.14159265358979323846;
+			return 180 / PI * rad;
 		}
 
 		inline double angle(double degree, double min = 0.0, double sec = 0.0)

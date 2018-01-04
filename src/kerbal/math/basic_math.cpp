@@ -1,6 +1,7 @@
 #include "basic_math.hpp"
 
 #include <cmath>
+#include <stdlib.h>
 #include "../except_C++0x.hpp"
 #include "../string_serve.hpp"
 

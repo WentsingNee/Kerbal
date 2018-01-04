@@ -78,6 +78,15 @@ int main()
 	using namespace kerbal::math::matrix;
 	using namespace kerbal::math::complexor;
 
+	Matrix m = {
+
+	{ 5, 2 },
+
+	{ 6, 7 } };
+
+	m.print(Matrix::Frame_style::double_det);
+	m.print(Matrix::Frame_style::single_det);
+	m.print(Matrix::Frame_style::rd_corner);
 
 //	double a2[][4] = { { 1, 2, 3, 4 }, { 4, 5, 6, 7 }, { 7, 8, 9, 10 } };
 //
