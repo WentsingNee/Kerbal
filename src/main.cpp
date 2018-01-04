@@ -5,22 +5,22 @@
 
 #include "kerbal/exe_serve.hpp"
 #include "kerbal/sort.hpp"
-#include "kerbal/Spherical.hpp"
 #include "kerbal/range.hpp"
 #include "kerbal/Trexcept.hpp"
 
-#include "kerbal/math/Complex.hpp"
+#include "kerbal/math/complex.hpp"
 #include "kerbal/array_serve.hpp"
 #include "kerbal/math/randnum.hpp"
-#include "kerbal/math/Matrix.hpp"
+#include "kerbal/math/matrix.hpp"
 #include "kerbal/math/basic_math.hpp"
-#include "kerbal/math/Complexor.hpp"
+#include "kerbal/math/complexor.hpp"
 #include "kerbal/math/integral.hpp"
-#include "kerbal/math/Mapminmax.hpp"
+#include "kerbal/math/mapminmax.hpp"
 #include "kerbal/math/statistics.hpp"
 
 #include "kerbal/choose.hpp"
 #include "kerbal/dbstream.hpp"
+#include "kerbal/spherical.hpp"
 #include "kerbal/string_serve.hpp"
 
 #define is_debug true

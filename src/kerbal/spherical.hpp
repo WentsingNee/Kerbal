@@ -1,8 +1,6 @@
 #ifndef _SPHERICAL_HPP_
 #define _SPHERICAL_HPP_
 
-//#pragma message(__DATE__ "  " __TIME__"  е§дкБрвы"__FILE__)
-
 #include <ostream>
 #include <string>
 

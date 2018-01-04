@@ -16,7 +16,14 @@ void program_will_end();
 template <class T> std::string bit_of(const T &a);
 template <class T> std::string ocx_of(const T &a);
 inline std::string get_user_name();
+
+#ifdef __linux
 inline int get_processors_number();
+#endif
+
+#if (defined __WINDOWS_) || (defined _WIN32)
+inline unsigned int get_processors_number();
+#endif
 
 template <class T>
 std::string bit_of(const T &a)
@@ -97,7 +104,7 @@ inline std::string get_user_name()
 
 #ifdef __linux
 #include<unistd.h>
-inline unsigned int get_processors_number()
+inline int get_processors_number()
 {
 	unsigned int count = 1; // §Ø§Ñ§Ú§í§â¨m¨j§¨
 	count = sysconf(_SC_NPROCESSORS_CONF);

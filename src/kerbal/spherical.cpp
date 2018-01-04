@@ -1,4 +1,5 @@
-#include "Spherical.hpp"
+#include "spherical.hpp"
+
 #include <math.h>
 #include "string_serve.hpp"
 
