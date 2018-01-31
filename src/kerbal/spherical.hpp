@@ -1,3 +1,9 @@
+/**
+ * @file spherical.hpp
+ * @date 2017-1-1
+ * @author 倪文卿
+ */
+
 #ifndef _SPHERICAL_HPP_
 #define _SPHERICAL_HPP_
 
@@ -11,7 +17,7 @@ namespace kerbal
 
 		inline double rad_to_angle(double rad)
 		{
-			const double PI = 3.14159265358979323846;
+			static const double PI = 3.14159265358979323846;
 			return 180 / PI * rad;
 		}
 
@@ -52,7 +58,8 @@ namespace kerbal
 				double longitude, latitude, height;   //经度, 纬度
 				std::string comment;
 
-				Spherical(double longitude, double latitude, double height = 0.0, const std::string &comment = "");
+				Spherical(double longitude, double latitude, double height = 0.0, const std::string &comment =
+						"");
 
 				void standard()
 				{
@@ -74,7 +81,7 @@ namespace kerbal
 		double real_distance(const Spherical &a, const Spherical &b);
 
 	} /* Namespace spherical */
-	using namespace spherical;
+
 }
 /* Namespace kerbal */
 

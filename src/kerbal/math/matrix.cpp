@@ -1,3 +1,9 @@
+/**
+ * @file matrix.cpp
+ * @date 2017-3-30
+ * @author 倪文卿
+ */
+
 #include "matrix.hpp"
 
 #include <algorithm>
@@ -12,6 +18,13 @@
 "					* Matrix 为 C++ 11 准备的新特性: 转移赋值运算符"\
 )
 #endif //C++0x
+
+#ifdef _OPENMP
+# include <omp.h>
+# pragma message("\n\
+			* " __FILE__ " 已启用 openMP. 版本代码为: " STR2(_OPENMP)\
+)
+#endif
 
 namespace std
 {
@@ -36,35 +49,49 @@ namespace kerbal
 
 			using namespace kerbal::data_struct::array_2d;
 
+			Matrix::Matrix(size_t row, size_t column, Uninit) :
+					Array_2d<double>(row, column, Array_2d<double>::uninit_tag)
+			{
+			}
+
 			Matrix::Matrix() throw () :
 					Array_2d<double>()
 			{
 			}
 
-			Matrix::Matrix(const int row, const int column) :
+			Matrix::Matrix(size_t row, size_t column) :
 					Array_2d<double>(row, column)
 			{
 			}
 
-			Matrix::Matrix(const int row, const int column, const double &val) :
+			Matrix::Matrix(size_t row, size_t column, const double &val) :
 					Array_2d<double>(row, column, val)
 			{
 			}
 
-			Matrix::Matrix(double (*function)(), const int row, const int column, bool para) :
-					Array_2d<double>(function, row, column, para)
+#if __cplusplus < 201103L
+			Matrix::Matrix(double (*function)(), size_t row, size_t column, bool para) :
+			Array_2d<double>(function, row, column, para)
 			{
 			}
 
-			Matrix::Matrix(double (*function)(int, int), const int row, const int column, bool para) :
-					Array_2d<double>(function, row, column, para)
+			Matrix::Matrix(double (*function)(size_t, size_t), size_t row, size_t column, bool para) :
+			Array_2d<double>(function, row, column, para)
 			{
 			}
 
-			Matrix::Matrix(const double arr[], int len, bool in_a_row) :
-					Array_2d<double>(arr, len, in_a_row)
-			{ //利用一维数组进行构造
+#else
+
+			Matrix::Matrix(std::function<double()> fun, size_t row, size_t column, bool para) :
+					Array_2d<double>(fun, row, column, para)
+			{
 			}
+
+			Matrix::Matrix(std::function<double(size_t, size_t)> fun, size_t row, size_t column, bool para) :
+					Array_2d<double>(fun, row, column, para)
+			{
+			}
+#endif
 
 #if __cplusplus >= 201103L //C++0x
 			Matrix::Matrix(std::initializer_list<std::initializer_list<double>> src) :
@@ -77,15 +104,9 @@ namespace kerbal
 			{ //利用一维初始化列表进行构造
 			}
 
-			Matrix::Matrix(Matrix &&src)
+			Matrix::Matrix(Matrix &&src) :
+					Array_2d<double>(src)
 			{ //转移构造函数
-				row = src.row;
-				column = src.column;
-				p = src.p;
-
-				src.p = NULL;
-				src.row = 0;
-				src.column = 0;
 			}
 
 #endif //C++0x
@@ -131,9 +152,10 @@ namespace kerbal
 						break;
 				}
 
-				output << std::resetiosflags(std::ios::right) << std::setiosflags(std::ios::left) << std::setfill(' '); //清除右对齐, 设置左对齐, 设置不足补空格
+				output << std::resetiosflags(std::ios::right) << std::setiosflags(std::ios::left)
+						<< std::setfill(' '); //清除右对齐, 设置左对齐, 设置不足补空格
 
-				int i, j;
+				size_t i, j;
 				output << corner[0];
 				for (j = 0; j < column; j++) {
 					output << "  " << std::setw(12) << " ";
@@ -160,7 +182,8 @@ namespace kerbal
 				output << std::endl;
 			}
 
-			void Matrix::save(std::ofstream & fout) const throw (std::runtime_error, __cxxabiv1:: __forced_unwind)
+			void Matrix::save(std::ofstream & fout) const
+					throw (std::runtime_error, __cxxabiv1:: __forced_unwind)
 			{
 				const size_t sizeof_row = sizeof(row);
 				const size_t sizeof_column = sizeof(column);
@@ -188,8 +211,8 @@ namespace kerbal
 
 					fout.write((const char*) &row, sizeof_row); //输出矩阵行数
 					fout.write((const char*) &column, sizeof_column); //输出矩阵列数
-					for (int i = 0; i < row; i++) {
-						for (int j = 0; j < column; j++) {
+					for (size_t i = 0; i < row; i++) {
+						for (size_t j = 0; j < column; j++) {
 							fout.write((const char*) (p[i] + j), sizeof_element); //输出矩阵元素
 						}
 					}
@@ -199,7 +222,8 @@ namespace kerbal
 				}
 			}
 
-			void Matrix::save(const char * file_name) const throw (std::runtime_error, __cxxabiv1:: __forced_unwind)
+			void Matrix::save(const char * file_name) const
+					throw (std::runtime_error, __cxxabiv1:: __forced_unwind)
 			{
 				std::ofstream fout(file_name, std::ios::out | std::ios::binary);
 				if (!fout) {
@@ -236,14 +260,14 @@ namespace kerbal
 					throw std::runtime_error("位宽不兼容");
 				}
 
-				int row;
-				int column;
+				size_t row;
+				size_t column;
 				fin.read((char*) &row, size_of_row);
 				fin.read((char*) &column, size_of_column);
 
 				Matrix tmp(row, column);
-				for (int i = 0; i < row; i++) {
-					for (int j = 0; j < column; j++) {
+				for (size_t i = 0; i < row; i++) {
+					for (size_t j = 0; j < column; j++) {
 						fin.read((char*) (tmp.p[i] + j), size_of_ele);
 					}
 				}
@@ -261,185 +285,186 @@ namespace kerbal
 				return tmp;
 			}
 
-			void Matrix::switch_rows(const int row1, const int row2)
+			void Matrix::switch_rows(size_t row1, size_t row2)
 			{
 				this->test_row(row1);
 				this->test_row(row2);
 				std::swap(p[row1], p[row2]);
 			}
 
-			void Matrix::switch_columns(const int column1, const int column2)
+			void Matrix::switch_rows(size_t row1, size_t row2, size_t column_index_start)
+			{
+				this->switch_rows(row1, row2, column_index_start, this->column);
+			}
+
+			void Matrix::switch_rows(size_t row1, size_t row2, size_t column_index_start, size_t column_index_end)
+			{
+				this->test_row(row1);
+				this->test_row(row2);
+				this->test_column(column_index_start);
+				this->test_column(column_index_end - 1);
+
+				if ((column_index_end - column_index_start) < this->column / 2) {
+					for (size_t j = column_index_start; j != column_index_end; ++j) {
+						std::swap(this->p[row1][j], this->p[row2][j]);
+					}
+				} else {
+					std::swap(this->p[row1], this->p[row2]);
+					for (size_t j = 0; j != column_index_start; ++j) {
+						std::swap(this->p[row1][j], this->p[row2][j]);
+					}
+					for (size_t j = column_index_end; j != this->column; ++j) {
+						std::swap(this->p[row1][j], this->p[row2][j]);
+					}
+				}
+			}
+
+			void Matrix::switch_columns(size_t column1, size_t column2)
 			{
 				this->test_column(column1);
 				this->test_column(column2);
 
-				for (int i = 0; i < row; i++) {
+				for (size_t i = 0; i != row; ++i) {
 					std::swap(p[i][column1], p[i][column2]);
 				}
 			}
 
-			void Matrix::kmr(const double k, const int row_dest)
+			void Matrix::kmr(double k, size_t row_dest)
 			{
 				test_row(row_dest);
 
-				for (int i = 0; i < column; i++) {
+				for (size_t i = 0; i != column; ++i) {
 					p[row_dest][i] *= k;
 				}
 			}
 
-			void Matrix::kmr_plus_to_another(const double k, const int row_from, const int row_dest)
+			void Matrix::kmr_plus_to_another(double k, size_t row_from, size_t row_dest)
 			{
 				test_row(row_from);
 				test_row(row_dest);
 
-				for (int i = 0; i < column; i++) {
+				for (size_t i = 0; i != column; ++i) {
 					p[row_dest][i] += k * p[row_from][i];
 				}
 			}
 
-			void Matrix::kmc(const double k, const int column_dest)
+			void Matrix::kmc(double k, size_t column_dest)
 			{
 				test_column(column_dest);
 
-				for (int i = 0; i < row; i++) {
+				for (size_t i = 0; i != row; ++i) {
 					p[i][column_dest] *= k;
 				}
 			}
 
-			void Matrix::kmc_plus_to_another(const double k, const int column_from, const int column_dest)
+			void Matrix::kmc_plus_to_another(double k, size_t column_from, size_t column_dest)
 			{
 				test_column(column_from);
 				test_column(column_dest);
 
-				for (int i = 0; i < row; i++) {
+				for (size_t i = 0; i != row; ++i) {
 					p[i][column_dest] += k * p[i][column_from];
 				}
 			}
 
-			void Matrix::do_optimize_rows() throw (std::invalid_argument)
+			void Matrix::do_triu()
 			{
-				//将行列式针对行进行优化
-				test_square();
 				bool k = false; //是否取相反数
-				const int &n = row;
-				for (int i = 1; i < n; i++) {
-					for (int j = 0; j < n - i; j++) {
 
-						if (p[j][0] != 0) {
-							if (p[j + 1][0] == 0 || fabs(p[j][0]) < fabs(p[j + 1][0])) {
-								std::swap(p[j], p[j + 1]);
-								k = !k;
+				for (size_t M = 0; M < this->row - 1 && M < this->column - 1; ++M) {
+					for (size_t i = 1; i < this->row - M; ++i) {
+						for (size_t j = M; i + j < this->row; ++j) {
+							if (p[j + 1][M] != 0) {
+								if (p[j][M] == 0 || fabs(p[j][M]) > fabs(p[j + 1][M])) {
+									this->switch_rows(j, j + 1, M);
+									k = !k;
+								}
 							}
 						}
-
 					}
-				}
 
-				if (p[n - 1][0] != 0) {
-					for (int i = 0; i < n - 1; i++) {
-						if (p[i][0] != 0.0) {
-							double ra = p[i][0] / p[n - 1][0];
-							for (int j = 0; j < n; j++) { //列循环
-								p[i][j] -= ra * p[n - 1][j];
+					if (p[M][M] != 0) {
+						for (size_t i = M + 1; p[i][M] != 0.0 && i < this->row; ++i) {
+							double ra = -p[i][M] / p[M][M];
+							for (size_t j = M; j < this->column; ++j) { //列循环
+								p[i][j] += ra * p[M][j];
 							}
 						}
 					}
 				}
 
 				if (k) { //k == true
-					for (int j = 0; j < n; j++) { //列循环
-						if (p[j][0])
-							p[j][0] = -p[j][0];
+					for (size_t i = 0; p[i][0] != 0.0 && i < this->row; ++i) {
+						p[i][0] = -p[i][0];
 					}
 				}
 			}
 
-			double Matrix::det() const throw (std::invalid_argument)
+			double Matrix::det() const
 			{
 				this->test_square();
 
-#		define n row
-				switch (n) {
-					case 1:
-						return p[0][0];
-					case 2:
-						return p[0][0] * p[1][1] - p[0][1] * p[1][0];
-					case 3:
-						return p[0][0] * (p[1][1] * p[2][2] - p[1][2] * p[2][1])
-								- p[0][1] * (p[1][0] * p[2][2] - p[1][2] * p[2][0])
-								+ p[0][2] * (p[1][0] * p[2][1] - p[1][1] * p[2][0]);
+				Matrix copy = *this;
+				copy.do_triu();
+
+				double sum = 1.0;
+				for (size_t i = 0; i != copy.row; ++i) {
+					sum *= copy.p[i][i];
 				}
 
-				double sum = 0.0;
-
-				if (n >= 5) { //如果代数余子式在4阶及以上, 则对代数余子式进行行优化
-					for (int i = 0; i < n; i += 2) { //i为偶数
-						if (p[i][0] != 0.0) { //p[0][i]!=0
-							Matrix daishu = cofactor_of(*this, i, 0);
-							daishu.do_optimize_rows();
-							sum += p[i][0] * daishu.det(); //i为偶数
-						}
-					}
-					for (int i = 1; i < n; i += 2) { //i为奇数
-						if (p[i][0] != 0.0) { //p[0][i]!=0
-							Matrix daishu = cofactor_of(*this, i, 0);
-							daishu.do_optimize_rows();
-							sum -= p[i][0] * daishu.det(); //i为奇数
-
-						}
-					}
-				} else {
-					for (int i = 0; i < n; i += 2) { //i为偶数
-						if (p[i][0] != 0.0) { //p[0][i]!=0
-							Matrix daishu = cofactor_of(*this, i, 0);
-							sum += p[i][0] * daishu.det(); //i为偶数
-						}
-					}
-					for (int i = 1; i < n; i += 2) { //i为奇数
-						if (p[i][0] != 0.0) { //p[0][i]!=0
-							Matrix daishu = cofactor_of(*this, i, 0);
-							sum -= p[i][0] * daishu.det(); //i为奇数
-						}
-					}
-				}
-#		undef n
 				return sum;
 			}
 
-			Matrix Matrix::Adjugate_matrix() const throw (std::invalid_argument)
-			{
-//返回本方阵的伴随矩阵
+			Matrix Matrix::Adjugate_matrix() const
+			{ //返回本方阵的伴随矩阵
 
 				this->test_square();
 				Matrix result(row, column);
-				for (int i = 0; i < row; i++) {
-					for (int j = 0; j < column; j++) {
+
+				size_t i, j;
+				for (i = 0; i != row; ++i) {
+					for (j = 0; j != column; ++j) {
+						//i+j为偶数
+						result.p[j][i] = cofactor_of(i, j).det();
 						if ((i + j) % 2) {
 							//i+j为奇数
-							result.p[j][i] = -cofactor_of(*this, i, j).det();
-						} else {
-							//i+j为偶数
-							result.p[j][i] = cofactor_of(*this, i, j).det();
+							result.p[j][i] = -result.p[j][i];
 						}
 					}
 				}
 				return result;
 			}
 
-			Matrix Matrix::Inverse_matrix() const throw (std::invalid_argument)
-			{
-//返回本方阵的逆矩阵
-				this->test_square();
+			Matrix Matrix::Inverse_matrix() const
+			{ //返回本方阵的逆矩阵
 
 				double D = this->det();
 				if (D == 0.0) {
 					throw std::invalid_argument("A does not have an inverse matrix");
 				}
 				const double k = 1.0 / D;
-				return Matrix(k * this->Adjugate_matrix());
+				return (k * this->Adjugate_matrix());
 			}
 
-//运算符重载
+			Matrix Matrix::mul_with_trans() const
+			{
+				Matrix result(this->row, this->row);
+
+				size_t i, j, k;
+				double sum;
+				for (i = 0; i != this->row; ++i) {
+					for (j = 0; j != this->row; ++j) {
+						sum = 0.0;
+						for (k = 0; k != this->column; ++k) {
+							sum += this->p[i][k] * this->p[j][k];
+						}
+						result.p[i][j] = sum;
+					}
+				}
+				return result;
+			}
+
+			//运算符重载
 			const Matrix operator+(const Matrix &A, const Matrix &B)
 			{ //检查A,B是否同样大小
 				if (A.row != B.row) {
@@ -448,18 +473,17 @@ namespace kerbal
 				if (A.column != B.column) {
 					throw std::invalid_argument("error: column(A) ≠ column(B)");
 				}
-				const int &row = A.row;
-				const int &column = A.column;
+				const size_t &row = A.row;
+				const size_t &column = A.column;
 
 				Matrix result(row, column);
 
-				int i, j;
-				for (i = 0; i < row; i++) {
-					for (j = 0; j < column; j++) {
+				size_t i, j;
+				for (i = 0; i != row; ++i) {
+					for (j = 0; j != column; ++j) {
 						result.p[i][j] = A.p[i][j] + B.p[i][j];
 					}
 				}
-
 				return result;
 			}
 
@@ -471,18 +495,17 @@ namespace kerbal
 				if (A.column != B.column) {
 					throw std::invalid_argument("error: column(A) ≠ column(B)");
 				}
-				const int &row = A.row;
-				const int &column = A.column;
+				const size_t &row = A.row;
+				const size_t &column = A.column;
 
 				Matrix result(row, column);
 
-				int i, j;
-				for (i = 0; i < row; i++) {
-					for (j = 0; j < column; j++) {
+				size_t i, j;
+				for (i = 0; i != row; ++i) {
+					for (j = 0; j != column; ++j) {
 						result.p[i][j] = A.p[i][j] - B.p[i][j];
 					}
 				}
-
 				return result;
 			}
 
@@ -492,9 +515,9 @@ namespace kerbal
 					return A;
 				}
 				Matrix result(A);
-				int i, j;
-				for (i = 0; i < A.row; i++) {
-					for (j = 0; j < A.column; j++) {
+				size_t i, j;
+				for (i = 0; i != A.row; ++i) {
+					for (j = 0; j != A.column; ++j) {
 						result.p[i][j] *= k;
 					}
 				}
@@ -507,9 +530,9 @@ namespace kerbal
 					return A;
 				}
 				Matrix result(A);
-				int i, j;
-				for (i = 0; i < A.row; i++) {
-					for (j = 0; j < A.column; j++) {
+				size_t i, j;
+				for (i = 0; i != A.row; ++i) {
+					for (j = 0; j != A.column; ++j) {
 						result.p[i][j] *= k;
 					}
 				}
@@ -519,24 +542,45 @@ namespace kerbal
 			const Matrix operator*(const Matrix &A, const Matrix &B) throw (std::invalid_argument)
 			{ //矩阵乘矩阵
 
-//检查A的列数是否等于B的行数
+				//检查A的列数是否等于B的行数
 				if (A.column != B.row) {
 					throw std::invalid_argument("error: column(A) ≠ row(B)");
 				}
-				const int &row = A.row;
-				const int &column = B.column;
 
-				Matrix result(row, column, 0);
+				Matrix result(A.row, B.column);
 
-				int i, j, k;
-				for (i = 0; i < row; i++) {
-					for (j = 0; j < column; j++) {
-						for (k = 0; k < A.column; k++) {
-							result.p[i][j] += A.p[i][k] * B.p[k][j];
+				double sum;
+
+#ifndef _OPENMP
+				size_t i, j, k;
+				for (i = 0; i != A.row; ++i) {
+					for (j = 0; j != B.column; ++j) {
+						sum = 0.0;
+						for (k = 0; k != A.column; ++k) {
+							sum += A.p[i][k] * B.p[k][j];
+						}
+						result.p[i][j] = sum;
+					}
+				}
+#else
+
+#pragma message("\n\
+			* parallel Matrix operator* enable"\
+)
+#				pragma omp parallel
+				{
+#					pragma omp for nowait
+					for (size_t i = 0; i < A.row; ++i) {
+						for (size_t j = 0; j < B.column; ++j) {
+							sum = 0.0;
+							for (size_t k = 0; k != A.column; ++k) {
+								sum += A.p[i][k] * B.p[k][j];
+							}
+							result.p[i][j] = sum;
 						}
 					}
 				}
-//		cout << result.get_data() << endl;
+#endif
 				return result;
 			}
 
@@ -547,20 +591,23 @@ namespace kerbal
 				if (A.column != B.row) {
 					throw std::invalid_argument("error: column(A) ≠ row(B)");
 				}
-				const int &row = A.row;
-				const int &column = B.column;
+				const size_t &row = A.row;
+				const size_t &column = B.column;
 				if (row != C.row || column != C.column) {
 					throw std::invalid_argument("error: size(A*B) ≠ size(C)");
 				}
 
 				Matrix result(C);
 
-				int i, j, k;
-				for (i = 0; i < row; ++i) {
-					for (j = 0; j < column; ++j) {
-						for (k = 0; k < A.column; ++k) {
-							result.p[i][j] += A.p[i][k] * B.p[k][j];
+				size_t i, j, k;
+				double sum;
+				for (i = 0; i != row; ++i) {
+					for (j = 0; j != column; ++j) {
+						sum = 0.0;
+						for (k = 0; k != A.column; ++k) {
+							sum += A.p[i][k] * B.p[k][j];
 						}
+						result.p[i][j] += sum;
 					}
 				}
 				return result;
@@ -578,13 +625,13 @@ namespace kerbal
 				} else if (A.column != B.column) { //检查A,B是否同样大小
 					throw std::invalid_argument("error: column(A) ≠ column(B)");
 				}
-				const int &row = A.row;
-				const int &column = A.column;
+				const size_t &row = A.row;
+				const size_t &column = A.column;
 
 				Matrix result(row, column);
-				int i, j;
-				for (i = 0; i < row; i++) {
-					for (j = 0; j < column; j++) {
+				size_t i, j;
+				for (i = 0; i != row; ++i) {
+					for (j = 0; j != column; ++j) {
 						result.p[i][j] = A.p[i][j] * B.p[i][j];
 					}
 				}
@@ -592,10 +639,10 @@ namespace kerbal
 				return result;
 			}
 
-			const Matrix eye(int n)
+			const Matrix eye(size_t n)
 			{ //构造一个单位矩阵
 				Matrix result(n, n, 0);
-				for (int i = 0; i < n; ++i) {
+				for (size_t i = 0; i != n; ++i) {
 					result.p[i][i] = 1;
 				}
 				return result;
@@ -636,16 +683,16 @@ namespace kerbal
 					throw std::invalid_argument("串联的矩阵的列数不一致");
 				}
 
-				const int row_total = A.row + B.row;
-				const int &column_total = A.column;
+				const size_t row_total = A.row + B.row;
+				const size_t &column_total = A.column;
 
 				Matrix result(row_total, column_total);
 
-				for (int i = 0; i < A.row; i++) { //行循环
+				for (size_t i = 0; i != A.row; ++i) { //行循环
 					std::copy(A.p[i], A.p[i] + column_total, result.p[i]);
 				}
 
-				for (int i = 0; i < B.row; i++) { //行循环
+				for (size_t i = 0; i != B.row; ++i) { //行循环
 					std::copy(B.p[i], B.p[i] + column_total, result.p[A.row + i]);
 				}
 
@@ -659,12 +706,12 @@ namespace kerbal
 				if (A.row != B.row) {
 					throw std::invalid_argument("串联的矩阵的行数不一致");
 				}
-				const int &row_total = A.row;
-				const int column_total = A.column + B.column;
+				const size_t &row_total = A.row;
+				const size_t column_total = A.column + B.column;
 
 				Matrix result(row_total, column_total);
 
-				for (int i = 0; i < row_total; i++) { //行循环
+				for (size_t i = 0; i != row_total; ++i) { //行循环
 					std::copy(A.p[i], A.p[i] + A.column, result.p[i]);
 					std::copy(B.p[i], B.p[i] + B.column, result.p[i] + A.column);
 				}
@@ -680,8 +727,8 @@ namespace kerbal
 			const Matrix Matrix::operator-() const
 			{
 				Matrix result(row, column);
-				for (int i = 0; i < row; ++i) {
-					for (int j = 0; j < column; ++j) {
+				for (size_t i = 0; i != row; ++i) {
+					for (size_t j = 0; j != column; ++j) {
 						result.p[i][j] = -p[i][j];
 					}
 				}
@@ -697,8 +744,8 @@ namespace kerbal
 					throw std::invalid_argument("error: column(A) ≠ column(B)");
 				}
 
-				for (int i = 0; i < row; ++i) {
-					for (int j = 0; j < column; ++j) {
+				for (size_t i = 0; i != row; ++i) {
+					for (size_t j = 0; j != column; ++j) {
 						p[i][j] += with.p[i][j];
 					}
 				}
@@ -715,8 +762,8 @@ namespace kerbal
 					throw std::invalid_argument("error: column(A) ≠ column(B)");
 				}
 
-				for (int i = 0; i < row; ++i) {
-					for (int j = 0; j < column; ++j) {
+				for (size_t i = 0; i != row; ++i) {
+					for (size_t j = 0; j != column; ++j) {
 						p[i][j] -= with.p[i][j];
 					}
 				}
@@ -726,26 +773,13 @@ namespace kerbal
 
 			Matrix& Matrix::operator*=(double k) throw ()
 			{
-				for (int i = 0; i < row; ++i) {
-					for (int j = 0; j < column; ++j) {
+				for (size_t i = 0; i != row; ++i) {
+					for (size_t j = 0; j != column; ++j) {
 						p[i][j] *= k;
 					}
 				}
 
 				return *this;
-			}
-
-			void operator<<=(Matrix &tar, Matrix &src)
-			{ //将矩阵src的资产转移给tar, src变为与原来同样大小的随机矩阵
-				tar.clear();
-				tar.row = src.row;
-				tar.column = src.column;
-				tar.p = src.p;
-
-				src.p = new double*[src.row];
-				for (int i = 0; i < src.row; ++i) {
-					src.p[i] = new double[src.column];
-				}
 			}
 
 			Matrix& Matrix::operator=(const Matrix &src)
@@ -757,20 +791,20 @@ namespace kerbal
 							return *this;
 						}
 						const size_t size_of_a_row = src.column * sizeof(double);
-						for (int i = 0; i < src.row; i++) {
+						for (size_t i = 0; i != src.row; ++i) {
 							memcpy(p[i], src.p[i], size_of_a_row);
 						}
 					} else { //行数与原来相等, 列数不等
 
 						this->column = src.column;
 						const size_t size_of_a_row = column * sizeof(double);
-						for (int i = 0; i < row; i++) {
+						for (size_t i = 0; i != row; ++i) {
 							delete[] p[i];
 							memcpy(p[i] = new double[column], src.p[i], size_of_a_row);
 						}
 					}
 				} else {
-					for (int i = 0; i < row; i++)
+					for (size_t i = 0; i != row; ++i)
 						delete[] p[i];
 					delete[] p;
 
@@ -779,7 +813,7 @@ namespace kerbal
 
 					p = new double*[row]; //开辟行
 					const size_t size_of_a_row = column * sizeof(double);
-					for (int i = 0; i < row; i++) {
+					for (size_t i = 0; i != row; ++i) {
 						memcpy(p[i] = new double[column], src.p[i], size_of_a_row);
 					}
 				}
@@ -803,10 +837,11 @@ namespace kerbal
 			}
 #endif
 
-			const Matrix Matrix::sub_of(int up, int down, int left, int right) const throw (std::invalid_argument, std::out_of_range)
+			const Matrix Matrix::sub_of(size_t up, size_t down, size_t left, size_t right) const
+					throw (std::invalid_argument, std::out_of_range)
 			{
 				if (up >= down || left >= right) {
-					throw new std::invalid_argument("up >= down or left >= right");
+					throw std::invalid_argument("up >= down or left >= right");
 				}
 
 				this->test_row(up);
@@ -815,7 +850,7 @@ namespace kerbal
 				this->test_column(right - 1);
 
 				Matrix result(down - up, right - left);
-				for (int i = up; i < down; ++i) {
+				for (size_t i = up; i < down; ++i) {
 					std::copy(p[i] + left, p[i] + right, result.p[i - up]);
 				}
 				return result;
@@ -826,17 +861,17 @@ namespace kerbal
 				return A ^ n;
 			}
 
-			double tr(const Matrix &src) throw (std::invalid_argument)
+			double Matrix::tr() const
 			{ //返回方阵的迹
-				src.test_square();
+				this->test_square();
 				double result = 0;
-				for (int i = 0; i < src.row; i++) {
-					result += src.p[i][i];
+				for (size_t i = 0; i < this->row; ++i) {
+					result += this->p[i][i];
 				}
 				return result;
 			}
 
-			void Matrix::test_row(const int row_test) const throw (std::out_of_range)
+			void Matrix::test_row(size_t row_test) const throw (std::out_of_range)
 			{
 #			if __cplusplus >= 201103L
 				using std::to_string;
@@ -844,14 +879,15 @@ namespace kerbal
 				using kerbal::string_serve::to_string;
 #			endif
 
-				if (row_test < 0 || row_test >= this->row) {
+				if (row_test >= this->row) {
 					throw std::out_of_range(
 							"The " + to_string(this->row) + " × " + to_string(this->column)
-									+ " Matrix doesn't have the no." + to_string(row_test) + " row!");
+									+ " Matrix doesn't have the no." + to_string(row_test)
+									+ " row!");
 				}
 			}
 
-			void Matrix::test_column(const int column_test) const throw (std::out_of_range)
+			void Matrix::test_column(size_t column_test) const throw (std::out_of_range)
 			{
 #			if __cplusplus >= 201103L
 				using std::to_string;
@@ -859,10 +895,11 @@ namespace kerbal
 				using kerbal::string_serve::to_string;
 #			endif
 
-				if (column_test < 0 || column_test >= this->column) {
+				if (column_test >= this->column) {
 					throw std::out_of_range(
 							"The " + to_string(this->row) + " × " + to_string(this->column)
-									+ " Matrix doesn't have the no." + to_string(column_test) + " column!");
+									+ " Matrix doesn't have the no." + to_string(column_test)
+									+ " column!");
 				}
 			}
 
@@ -875,7 +912,7 @@ namespace kerbal
 
 			const Matrix conv2(const Matrix &core, const Matrix &A, int size)
 			{ //矩阵卷积
-				int i, j, m, n;
+				size_t i, j, m, n;
 				if (size == 2) {
 					Matrix zsmall(A.row - core.row + 1, A.column - core.column + 1, 0);
 					for (i = 0; i < zsmall.row; ++i) {
@@ -906,8 +943,8 @@ namespace kerbal
 
 				if (size == 1) {
 
-					Matrix z2 = z.sub_of((core.row - 1) / 2, A.row + (core.row - 1) / 2, (core.column - 1) / 2,
-							A.column + (core.column - 1) / 2);
+					Matrix z2 = z.sub_of((core.row - 1) / 2, A.row + (core.row - 1) / 2,
+							(core.column - 1) / 2, A.column + (core.column - 1) / 2);
 
 					return z2;
 				} else {
@@ -915,11 +952,35 @@ namespace kerbal
 				}
 			}
 
+			template <>
+			const Matrix conv_2d<Conv_size::max>(const Matrix &core, const Matrix &A)
+			{
+				//矩阵卷积
+				std::cout << "max" << std::endl;
+				return Matrix(1ull, 1ull);
+			}
+
+			template <>
+			const Matrix conv_2d<Conv_size::mid>(const Matrix &core, const Matrix &A)
+			{
+				//矩阵卷积
+				std::cout << "mid" << std::endl;
+				return Matrix(1ull, 1ull);
+			}
+
+			template <>
+			const Matrix conv_2d<Conv_size::small>(const Matrix &core, const Matrix &A)
+			{
+				//矩阵卷积
+				std::cout << "small" << std::endl;
+				return Matrix(1ull, 1ull);
+			}
+
 //计算
 			bool Matcmp(const Matrix &A, const Matrix &B, double eps)
 			{
-				for (int i = 0; i < A.row; i++) {
-					for (int j = 0; j < A.column; j++) {
+				for (size_t i = 0; i != A.row; ++i) {
+					for (size_t j = 0; j != A.column; ++j) {
 						if (fabs(A.p[i][j] - B.p[i][j]) > eps) {
 							return false;
 						}
@@ -932,38 +993,41 @@ namespace kerbal
 			{ //返回矩阵A的转置矩阵
 
 				Matrix result(A.column, A.row);
-				for (int i = 0; i < result.row; i++) {
-					for (int j = 0; j < result.column; j++) {
+				for (size_t i = 0; i != result.row; ++i) {
+					for (size_t j = 0; j != result.column; ++j) {
 						result.p[i][j] = A.p[j][i];
 					}
 				}
 				return result;
 			}
 
-			const Matrix cofactor_of(const Matrix &A, const int row_tar, const int column_tar) throw (std::out_of_range)
-			{ //构造方阵A的余子式A(x,y)
+			const Matrix Matrix::cofactor_of(size_t row_tar, size_t column_tar) const
+					throw (std::out_of_range)
+			{ //返回一个矩阵划去row_tar 行和 column_tar 列后的矩阵
 
-				A.test_row(row_tar);
-				A.test_column(column_tar);
+				test_row(row_tar);
+				test_column(column_tar);
 
-				Matrix result(A.row - 1, A.column - 1);
+				Matrix result(row - 1, column - 1);
 
-				const size_t size_of_a_row_of_a_left = column_tar * sizeof(double); //这一行为加快速度而存在
-				const size_t size_of_a_row_of_a_right = (A.column - 1 - column_tar) * sizeof(double); //这一行为加快速度而存在
-				for (int i = 0; i < row_tar; i++) {
-					memcpy(result.p[i], A.p[i], size_of_a_row_of_a_left);
-					memcpy(result.p[i] + column_tar, A.p[i] + column_tar + 1, size_of_a_row_of_a_right);
+				for (size_t i = 0; i != row_tar; ++i) {
+					std::copy(this->p[i], this->p[i] + column_tar, result.p[i]);
+					std::copy(this->p[i] + column_tar + 1, this->p[i] + this->column,
+							result.p[i] + column_tar);
 				}
-				for (int i = row_tar + 1; i < A.row; i++) {
-					memcpy(result.p[i - 1], A.p[i], size_of_a_row_of_a_left);
-					memcpy(result.p[i - 1] + column_tar, A.p[i] + column_tar + 1, size_of_a_row_of_a_right);
+
+				for (size_t i = row_tar + 1; i != row; ++i) {
+					std::copy(this->p[i], this->p[i] + column_tar, result.p[i - 1]);
+					std::copy(this->p[i] + column_tar + 1, this->p[i] + this->column,
+							result.p[i - 1] + column_tar);
 				}
+
 				return result;
 			}
 
-			void Matrix::do_cofactor(const int row_tar, const int column_tar) throw (std::out_of_range)
+			void Matrix::do_cofactor(size_t row_tar, size_t column_tar) throw (std::out_of_range)
 			{ //返回一个矩阵划去row_tar 行和 column_tar 列后的矩阵
-				*this = cofactor_of(*this, row_tar, column_tar);
+				*this = cofactor_of(row_tar, column_tar);
 			}
 
 //应用部分
@@ -973,7 +1037,7 @@ namespace kerbal
 				double cosine = cos(sigma);
 				double sine = sin(sigma);
 				double a[3][3] = { 1, 0, 0, 0, cosine, -sine, 0, sine, cosine };
-				return Matrix(a, 3, 3);
+				return Matrix(a);
 			}
 
 			const Matrix rotate_Y(double sigma)
@@ -981,7 +1045,7 @@ namespace kerbal
 				double cosine = cos(sigma);
 				double sine = sin(sigma);
 				double a[3][3] = { cosine, 0, sine, 0, 1, 0, -sine, 0, cosine };
-				return Matrix(a, 3, 3);
+				return Matrix(a);
 			}
 
 			const Matrix rotate_Z(double sigma)
@@ -989,7 +1053,7 @@ namespace kerbal
 				double cosine = cos(sigma);
 				double sine = sin(sigma);
 				double a[3][3] = { cosine, -sine, 0, sine, cosine, 0, 0, 0, 1 };
-				return Matrix(a, 3, 3);
+				return Matrix(a);
 			}
 
 			void rotate_X(double sigma, const double& x0, double& y0, double& z0) throw ()

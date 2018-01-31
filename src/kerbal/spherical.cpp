@@ -1,3 +1,9 @@
+/**
+ * @file spherical.cpp
+ * @date 2017-2-20
+ * @author 倪文卿
+ */
+
 #include "spherical.hpp"
 
 #include <math.h>
@@ -11,8 +17,8 @@ namespace kerbal
 		const double Spherical::R = 6371004; //地球半径
 
 		Spherical::Spherical(double longitude, double latitude, double height, const std::string &comment) :
-				longitude(standard_longitude(longitude)), latitude(standard_latitude(latitude)), height(height), comment(
-						comment)
+				longitude(standard_longitude(longitude)), latitude(standard_latitude(latitude)),
+				height(height), comment(comment)
 		{
 		}
 
@@ -55,7 +61,8 @@ namespace kerbal
 			return a.R
 					* acos(
 							sin(a.latitude) * sin(b.latitude)
-									+ cos(a.latitude) * cos(b.latitude) * cos(a.longitude - b.longitude));
+									+ cos(a.latitude) * cos(b.latitude)
+											* cos(a.longitude - b.longitude));
 		}
 
 		double real_distance(const Spherical &a, const Spherical &b) //返回考虑到两点间高度差的两点间距离
@@ -95,6 +102,6 @@ namespace kerbal
 //	printf("real d=%f\n",real_distance(bei,shang));
 
 	} /* Namespace spherical */
-	using namespace spherical;
+
 }
 /* Namespace kerbal */

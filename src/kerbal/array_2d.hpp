@@ -6,6 +6,7 @@
 
 #if __cplusplus >= 201103L //C++0x
 #	include <initializer_list>
+#	include <functional>
 #endif //C++0x
 
 namespace kerbal
@@ -22,7 +23,8 @@ namespace kerbal
 namespace std
 {
 	template <class Type>
-	void swap(kerbal::data_struct::array_2d::Array_2d<Type> &A, kerbal::data_struct::array_2d::Array_2d<Type> &B) throw ();
+	void swap(kerbal::data_struct::array_2d::Array_2d<Type> &A, kerbal::data_struct::array_2d::Array_2d<
+			Type> &B) throw ();
 }
 
 namespace kerbal
@@ -54,41 +56,8 @@ namespace kerbal
 			}
 
 			template <class Type> class Array_2d;
-			template <class Type> inline std::ostream& operator<<(std::ostream &output, const Array_2d<Type> &src); //重载输出
-
-			/**
-			 * @brief 动态二维数组类的安全下标类
-			 * @author 倪文卿
-			 * @remarks 本类用来提供对动态二维数组Array_2d类的下标运算的安全访问
-			 */
-			template <class Type>
-			class safety
-			{
-				protected:
-					Array_2d<Type> *p_to_matrix;
-					mutable int row_point_to;
-				public:
-					safety(Array_2d<Type> *p_to_matrix, const int row_point_to);
-					safety(const Array_2d<Type> * const p2, const int row);
-
-					virtual ~safety();
-
-					inline bool is_const() throw ();
-					inline bool is_const() const throw ();
-
-					inline Type& operator[](int row) throw (std::out_of_range);
-					inline const Type& operator[](int row) const throw (std::out_of_range);
-
-					inline Type* begin();
-					inline const Type* begin() const;
-
-					inline Type* end();
-					inline const Type* end() const;
-
-					inline safety<Type>& operator++() const;
-
-					inline bool operator!=(const safety<Type> &with) const throw (std::invalid_argument);
-			};
+			template <class Type> inline std::ostream& operator<<(std::ostream &output, const Array_2d<
+					Type> &src); //重载输出
 
 			/**
 			 * @brief 动态二维数组类
@@ -99,20 +68,31 @@ namespace kerbal
 			class Array_2d
 			{
 				protected:
-					/** @brief 行数 */
-					int row;
-
-					/** @brief 列数 */
-					int column;
-
 					/** @brief 数据区 */
 					Type **p = NULL;
+
+					/** @brief 行数 */
+					size_t row;
+
+					/** @brief 列数 */
+					size_t column;
 
 					/** @brief 内存初始化 */
 					void mem_init();
 
+					struct Uninit
+					{
+					};
+
+					static Uninit uninit_tag;
+
+					Array_2d(size_t row, size_t column, Uninit);
+
 				public:
-					friend class safety<Type> ;
+
+					typedef Type type;
+					typedef Type& reference;
+					typedef const Type& const_reference;
 
 					/**
 					 * @brief 构造一个 0 行 0 列的空二维数组
@@ -125,7 +105,7 @@ namespace kerbal
 					 * @param row 行数
 					 * @param column 列数
 					 */
-					Array_2d(const int row, const int column);
+					Array_2d(size_t row, size_t column);
 
 					/**
 					 * @brief 构造一个 row 行 column 列的二维数组, 数组中每个元素的初始值由参数 val 指定
@@ -133,8 +113,9 @@ namespace kerbal
 					 * @param column 列数
 					 * @param val 初始值
 					 */
-					Array_2d(const int row, const int column, const Type &val);
+					Array_2d(size_t row, size_t column, const Type &val);
 
+#if __cplusplus < 201103L
 					/**
 					 * @brief 构造一个 row 行 column 列的二维数组, 数组中每个元素的初始值通过调用函数 function 获得
 					 * @param function 构造函数
@@ -142,19 +123,30 @@ namespace kerbal
 					 * @param column 列数
 					 * @param para
 					 */
-					Array_2d(Type (*function)(), const int row, const int column, bool para);
+					Array_2d(Type (*function)(), size_t row, size_t column, bool para=false);
 					//动态开辟一个以p为首地址的、row * column的二维数组, 并使用 function() 初始化每个元素
-					Array_2d(Type (*function)(int, int), const int row, const int column, bool para);
+					Array_2d(Type (*function)(size_t, size_t), size_t row, size_t column, bool para=false);
 					//动态开辟一个以p为首地址的、row * column的二维数组, 并使用 function(i,j) 初始化每个元素
+#else
 
-					template <size_t M, size_t N>
-					Array_2d(const Type (&src)[M][N], const int row, const int column); //利用二维数组进行构造
+					Array_2d(std::function<Type()> fun, size_t row, size_t column, bool para = false);
+					Array_2d(std::function<Type(size_t, size_t)> fun, size_t row, size_t column, bool para =
+							false);
 
-					Array_2d(const Type arr[], int len, bool in_a_row = true); //利用一维数组进行构造
+#endif
+
+					template <typename ForwardIterator>
+					Array_2d(ForwardIterator begin, ForwardIterator end, bool in_row = true); //利用线性迭代器进行构造
+
+					template <size_t LEN>
+					explicit Array_2d(const Type (&src)[LEN], bool in_row = true); //利用一维数组进行构造
+
+					template <size_t ROW, size_t COLUMN>
+					explicit Array_2d(const Type (&src)[ROW][COLUMN]); //利用二维数组进行构造
 
 #	if __cplusplus >= 201103L //C++0x
-					Array_2d(std::initializer_list<std::initializer_list<Type>> src) throw (std::invalid_argument); //利用二维初始化列表进行构造
-					Array_2d(std::initializer_list<Type> src);//利用一维初始化列表进行构造
+					Array_2d(std::initializer_list<std::initializer_list<Type>> src); //利用二维初始化列表进行构造
+					Array_2d(std::initializer_list<Type> src); //利用一维初始化列表进行构造
 #	endif //C++0x
 
 					Array_2d(const Array_2d &src); //拷贝构造函数
@@ -172,53 +164,71 @@ namespace kerbal
 					 */
 					void clear() throw ();
 
-					void resize(int new_row, int new_column);
+					size_t shrink_row(size_t new_row);
+					size_t shrink_column(size_t new_column);
+
+				protected:
+					size_t enlarge_row_buffer(size_t new_row);
+					size_t enlarge_column_buffer(size_t new_column);
+
+				public:
+					void resize(size_t new_row, size_t new_column);
 
 					/**
 					 * @brief 获取动态二维数组的行数
 					 * @return 行数
 					 */
-					inline int get_row() const;
-					inline int get_column() const;
-					inline const Type** get_data() const;
-					inline bool is_const();
-					inline bool is_const() const;
+					size_t get_row() const;
+					size_t get_column() const;
+					const Type** get_data() const;
+					bool is_const();
+					bool is_const() const;
 
-					Type& get(int row, int column) throw (std::out_of_range);
-					const Type& get(int row, int column) const throw (std::out_of_range);
+					Type& get(size_t row, size_t column) throw (std::out_of_range);
+					const Type& get(size_t row, size_t column) const throw (std::out_of_range);
 
-					inline void set(int row, int column, const Type &value) throw (std::out_of_range);
-					template <class T> void set(const T src[], int row, int column); //根据二维数组设值
+					void set(size_t row, size_t column, const Type &value) throw (std::out_of_range);
+
+#if __cplusplus >= 201103L
+					void set(size_t row, size_t column, Type && value);
+#endif
+
+#if __cplusplus < 201103L
 					void do_call(Type (*__pf)(Type));
-					void do_call(Type (*__pf)(int, int));
-					void do_call(Type (*__pf)(Type, int, int));
+					void do_call(Type (*__pf)(size_t, size_t));
+					void do_call(Type (*__pf)(Type, size_t, size_t));
 					const Array_2d<Type> call_of(Type (*__pf)(Type)) const;
-					const Array_2d<Type> call_of(Type (*__pf)(int, int)) const;
-					const Array_2d<Type> call_of(Type (*__pf)(Type, int, int)) const;
+					const Array_2d<Type> call_of(Type (*__pf)(size_t, size_t)) const;
+					const Array_2d<Type> call_of(Type (*__pf)(Type, size_t, size_t)) const;
+#else
+					void do_call(std::function<Type(const Type &)> && __pf);
+					void do_call(std::function<Type(size_t, size_t)> && __pf);
+					void do_call(std::function<Type(const Type &, size_t, size_t)> && __pf);
+					const Array_2d<Type> call_of(std::function<Type(const Type &)> && __pf) const;
+					const Array_2d<Type> call_of(std::function<Type(size_t, size_t)> && __pf) const;
+					const Array_2d<Type> call_of(std::function<Type(const Type &, size_t, size_t)> && __pf) const;
+#endif //c++0x
 
 					enum Print_style
 					{
 						frame_with_corner, frame_only, none
 					};
 
-					virtual void print(Print_style style = frame_with_corner, std::ostream &output = std::cout) const;
+					virtual void print(Print_style style = frame_with_corner, std::ostream &output =
+							std::cout) const;
 
 					//void print_to_file(char file_name[],bool if_output_frame) const;
 
-					inline safety<Type> operator[](int row) throw (std::out_of_range);
-					inline const safety<Type> operator[](int row) const throw (std::out_of_range);
-					inline Type& operator()(int row, int column) throw (std::out_of_range);
-					inline const Type& operator()(int row, int column) const throw (std::out_of_range);
+					Type& operator()(size_t row, size_t column) throw (std::out_of_range);
+					const Type& operator()(size_t row, size_t column) const
+							throw (std::out_of_range);
 
 					virtual size_t get_digit_size() const;
 
 					friend void std::swap<>(Array_2d<Type> &A, Array_2d<Type> &B) throw ();
 
-					virtual void test_row(const int row_test) const throw (std::out_of_range);
-					virtual void test_column(const int column_test) const throw (std::out_of_range);
-
-//					virtual bool operator==(const Array_2d<Type> &with) const;
-//					virtual bool operator!=(const Array_2d<Type> &with) const;
+					virtual void test_row(size_t row_test) const throw (std::out_of_range);
+					virtual void test_column(size_t column_test) const throw (std::out_of_range);
 
 					void do_reflect_row() throw ();
 					void do_reflect_column(); //这里有可能会抛出异常, 具体会不会取决于 swap(Type&, Type&)
@@ -226,7 +236,14 @@ namespace kerbal
 					void do_rotate_90(); // 逆时针转90度
 					void do_rotate_270(); // 逆时针转270度
 
-					const Array_2d<Type> sub_of(int up, int down, int left, int right) const throw (std::invalid_argument, std::out_of_range);
+					Array_2d<Type> reflect_row_of() const;
+					Array_2d<Type> reflect_column_of() const;
+					Array_2d<Type> rotate_180_of() const;
+					Array_2d<Type> rotate_90_of() const; // 逆时针转90度
+					Array_2d<Type> rotate_270_of() const; // 逆时针转270度
+
+					const Array_2d<Type> sub_of(size_t up, size_t down, size_t left, size_t right) const
+							throw (std::invalid_argument, std::out_of_range);
 
 			};
 		}/* Namespace array_2d */

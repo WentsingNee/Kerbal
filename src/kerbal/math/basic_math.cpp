@@ -1,3 +1,9 @@
+/**
+ * @file basic_math.cpp
+ * @date 2017-4-20
+ * @author ÄßÎÄÇä
+ */
+
 #include "basic_math.hpp"
 
 #include <cmath>

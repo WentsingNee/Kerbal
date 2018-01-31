@@ -1,3 +1,9 @@
+/**
+ * @file basic_math.hpp
+ * @date 2017-3-25
+ * @author ÄßÎÄÇä
+ */
+
 #ifndef _BASIC_MATH_H_
 #define _BASIC_MATH_H_
 

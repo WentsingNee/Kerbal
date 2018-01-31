@@ -1,3 +1,9 @@
+/**
+ * @file complex.cpp
+ * @date 2016-12-25
+ * @author ÄßÎÄÇä
+ */
+
 #include "complex.hpp"
 #include <cmath>
 
@@ -172,10 +178,12 @@ namespace kerbal
 				return *this;
 			}
 
-			const Complex operator/(const Complex &a, const Complex &b) throw (std::invalid_argument)
+			const Complex operator/(const Complex &a, const Complex &b)
+					throw (std::invalid_argument)
 			{
 				if (b.real == 0 && b.imag == 0) {
-					throw std::invalid_argument("Complex " + a.to_string() + " is divided by Complex 0+0i");
+					throw std::invalid_argument(
+							"Complex " + a.to_string() + " is divided by Complex 0+0i");
 				}
 				double temp = b.real * b.real + b.imag * b.imag;
 
@@ -198,7 +206,8 @@ namespace kerbal
 			const Complex operator/(double a, const Complex &b) throw (std::invalid_argument)
 			{
 				if (b.real == 0 && b.imag == 0) {
-					throw std::invalid_argument("double " + to_string(a) + " is divided by Complex 0+0i");
+					throw std::invalid_argument(
+							"double " + to_string(a) + " is divided by Complex 0+0i");
 				}
 				double temp = b.real * b.real + b.imag * b.imag;
 				return Complex((a * b.real) / temp, (-a * b.imag) / temp);
@@ -207,7 +216,8 @@ namespace kerbal
 			Complex& Complex::operator/=(const Complex &with) throw (std::invalid_argument)
 			{
 				if (with.real == 0 && with.imag == 0) {
-					throw std::invalid_argument("Complex " + this->to_string() + " is divided by Complex 0+0i");
+					throw std::invalid_argument(
+							"Complex " + this->to_string() + " is divided by Complex 0+0i");
 				}
 				double temp = with.real * with.real + with.imag * with.imag;
 
@@ -223,7 +233,8 @@ namespace kerbal
 			Complex& Complex::operator/=(const double &with) throw (std::invalid_argument)
 			{
 				if (with == 0) {
-					throw std::invalid_argument("Complex " + this->to_string() + " is divided by 0.0");
+					throw std::invalid_argument(
+							"Complex " + this->to_string() + " is divided by 0.0");
 				}
 
 				this->real /= with;

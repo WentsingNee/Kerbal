@@ -11,11 +11,20 @@
 #include <iomanip>
 #include <cstring>
 #include "string_serve.hpp"
+#include <memory>
+
+#ifdef _OPENMP
+# include <omp.h>
+# pragma message("\n\
+			* " __FILE__ " 已启用 openMP. 版本代码为: " STR2(_OPENMP)\
+)
+#endif
 
 namespace std
 {
 	template <class Type>
-	void swap(kerbal::data_struct::array_2d::Array_2d<Type> &A, kerbal::data_struct::array_2d::Array_2d<Type> &B) throw ()
+	void swap(kerbal::data_struct::array_2d::Array_2d<Type> &A, kerbal::data_struct::array_2d::Array_2d<
+			Type> &B) throw ()
 	{
 		std::swap(A.row, B.row);
 		std::swap(A.column, B.column);
@@ -31,254 +40,221 @@ namespace kerbal
 		{
 
 			template <class Type>
-			safety<Type>::safety(Array_2d<Type> *p_to_matrix, const int row_point_to) :
-					p_to_matrix(p_to_matrix), row_point_to(row_point_to)
-			{
-			}
-
-			template <class Type>
-			safety<Type>::safety(const Array_2d<Type> * const p2, const int row) :
-					p_to_matrix((Array_2d<Type> *) p2), row_point_to(row)
-			{
-			}
-
-			template <class Type>
-			safety<Type>::~safety()
-			{
-			}
-
-			template <class Type>
-			inline bool safety<Type>::is_const() throw ()
-			{
-				return false;
-			}
-
-			template <class Type>
-			inline bool safety<Type>::is_const() const throw ()
-			{
-				return true;
-			}
-
-			template <class Type>
-			inline Type& safety<Type>::operator[](int column) throw (std::out_of_range)
-			{
-				p_to_matrix->test_column(column);
-				return p_to_matrix->p[row_point_to][column];
-			}
-
-			template <class Type>
-			inline const Type& safety<Type>::operator[](int column) const throw (std::out_of_range)
-			{
-				p_to_matrix->test_column(column);
-				return p_to_matrix->p[row_point_to][column];
-			}
-
-			template <class Type>
-			inline Type* safety<Type>::begin()
-			{
-				return p_to_matrix->p[row_point_to];
-			}
-
-			template <class Type>
-			inline const Type* safety<Type>::begin() const
-			{
-				return p_to_matrix->p[row_point_to];
-			}
-
-			template <class Type>
-			inline Type* safety<Type>::end()
-			{
-				return p_to_matrix->p[row_point_to] + p_to_matrix->column;
-			}
-
-			template <class Type>
-			inline const Type* safety<Type>::end() const
-			{
-				return p_to_matrix->p[row_point_to] + p_to_matrix->column;
-			}
-
-			template <class Type>
-			inline safety<Type>& safety<Type>::operator++() const
-			{
-				++row_point_to;
-				return *this;
-			}
-
-			template <class Type>
-			inline bool safety<Type>::operator!=(const safety<Type> &with) const throw (std::invalid_argument)
-			{
-				if (this->p_to_matrix == with.p_to_matrix) {
-					return this->row_point_to != with.row_point_to;
-				} else {
-					throw std::invalid_argument("comparation between two iterators not belong to same Array_2d");
-				}
-			}
-
-			template <class Type>
 			void Array_2d<Type>::mem_init()
 			{
-				int i = 0;
-				try {
-					p = new Type*[row]; //开辟行
-					for (i = 0; i < row; i++) {
-						p[i] = new Type[column]; //开辟列
+				if (row != 0 && column != 0) {
+					p = (Type**) malloc(row * sizeof(Type*));
+					if (p == NULL) {
+						throw std::bad_alloc();
 					}
-				} catch (const std::bad_alloc &exct) {
-					for (int j = 0; j < i; ++j)
-						delete[] p[j];
-					delete[] p;
-					p = NULL;
+					for (size_t i = 0; i != row; ++i) {
+						p[i] = (Type*) malloc(column * sizeof(column));
+						if (p[i] == NULL) {
+							while (i != 0) {
+								--i;
+								free (p[i]);
+							}
+							free (p);
+							throw std::bad_alloc();
+						}
+					}
+				} else {
 					row = 0;
 					column = 0;
-					throw;
+					p = NULL;
 				}
+			}
+
+			template <class Type>
+			typename Array_2d<Type>::Uninit Array_2d<Type>::uninit_tag;
+
+			template <class Type>
+			Array_2d<Type>::Array_2d(size_t row, size_t column, Uninit) :
+					p(NULL), row(row), column(column)
+			{
+				mem_init();
 			}
 
 			template <class Type>
 			Array_2d<Type>::Array_2d() throw () :
-					row(0), column(0), p(NULL)
+					p(NULL), row(0), column(0)
 			{
 			}
 
 			template <class Type>
-			Array_2d<Type>::Array_2d(const int row, const int column)
+			Array_2d<Type>::Array_2d(size_t row, size_t column) :
+					p(NULL), row(row), column(column)
 			{
-				if (row > 0 && column > 0) {
-					this->row = row;
-					this->column = column;
-
-					mem_init();
-				} else {
-					this->row = 0;
-					this->column = 0;
-					this->p = NULL;
-				}
-			}
-
-			template <class Type>
-			Array_2d<Type>::Array_2d(const int row, const int column, const Type &val)
-			{
-				if (row > 0 && column > 0) {
-					this->row = row;
-					this->column = column;
-
-					mem_init();
-					for (int i = 0; i < row; i++) {
-						for (int j = 0; j < column; j++) {
-							p[i][j] = val;
-						}
+				mem_init();
+				for (size_t i = 0; i != row; ++i) {
+					for (size_t j = 0; j != column; ++j) {
+						new (p[i] + j) Type();
 					}
-				} else {
-					this->row = 0;
-					this->column = 0;
-					this->p = NULL;
 				}
 			}
 
 			template <class Type>
-			Array_2d<Type>::Array_2d(Type (*function)(), const int row, const int column, bool para)
+			Array_2d<Type>::Array_2d(size_t row, size_t column, const Type &val) :
+					p(NULL), row(row), column(column)
+			{
+				mem_init();
+				for (size_t i = 0; i != row; ++i) {
+					std::uninitialized_fill_n(p[i], column, val);
+				}
+			}
+
+#if __cplusplus < 201103L
+			template <class Type>
+			Array_2d<Type>::Array_2d(Type (*function)(), size_t row, size_t column, bool para) :
+			p(NULL), row(row), column(column)
 			{
 				//动态开辟一个以p为首地址的、row * column的二维数组, 并使用 function() 初始化每个元素
-				if (row > 0 && column > 0) {
-					this->row = row;
-					this->column = column;
-
-					mem_init();
-					for (int i = 0; i < row; i++) {
-						for (int j = 0; j < column; j++) {
-							p[i][j] = function();
-						}
+				mem_init();
+				for (size_t i = 0; i != row; ++i) {
+					for (size_t j = 0; j != column; ++j) {
+						new (p[i] + j) Type(function());
 					}
-
-				} else {
-					this->row = 0;
-					this->column = 0;
-					this->p = NULL;
 				}
 			}
 
 			template <class Type>
-			Array_2d<Type>::Array_2d(Type (*function)(int, int), const int row, const int column, bool para)
+			Array_2d<Type>::Array_2d(Type (*function)(size_t, size_t), size_t row, size_t column, bool para) :
+			p(NULL),row(row), column(column)
 			{
 				//动态开辟一个以p为首地址的、row * column的二维数组, 并使用 function(i,j) 初始化每个元素
-				if (row > 0 && column > 0) {
-					this->row = row;
-					this->column = column;
+				mem_init();
+				for (size_t i = 0; i != row; ++i) {
+					for (size_t j = 0; j != column; ++j) {
+						new (p[i] + j) Type(function(i, j));
+					}
+				}
+			}
+
+#else
+			template <class Type>
+			Array_2d<Type>::Array_2d(std::function<Type()> fun, size_t row, size_t column, bool para) :
+					p(NULL), row(row), column(column)
+			{
+				//动态开辟一个以p为首地址的、row * column的二维数组, 并使用 function() 初始化每个元素
+				mem_init();
+#			ifndef _OPENMP
+				for (size_t i = 0; i != row; ++i) {
+					for (size_t j = 0; j != column; ++j) {
+						new (p[i] + j) Type(fun());
+					}
+				}
+#			else
+
+#pragma message("\n\
+			* parallel constructor enable"\
+)
+
+#				pragma omp parallel for
+				for (size_t i = 0; i < row; ++i) {
+					for (size_t j = 0; j != column; ++j) {
+						new (p[i] + j) Type(fun());
+					}
+				}
+
+#			endif
+			}
+
+			template <class Type>
+			Array_2d<Type>::Array_2d(std::function<Type(size_t, size_t)> fun, size_t row, size_t column, bool para) :
+					p(NULL), row(row), column(column)
+			{
+				//动态开辟一个以p为首地址的、row * column的二维数组, 并使用 function(i,j) 初始化每个元素
+				mem_init();
+				for (size_t i = 0; i != row; ++i) {
+					for (size_t j = 0; j != column; ++j) {
+						new (p[i] + j) Type(fun(i, j));
+					}
+				}
+			}
+#endif
+
+			template <class Type>
+			template <typename ForwardIterator>
+			Array_2d<Type>::Array_2d(ForwardIterator begin, ForwardIterator end, bool in_row) :
+					p(NULL), row(0), column(0)
+			{ //利用线性迭代器进行构造
+
+				const size_t len = std::distance(begin, end);
+
+				if (in_row) {
+					this->row = 1;
+					this->column = len;
 
 					mem_init();
-					for (int i = 0; i < row; i++) {
-						for (int j = 0; j < column; j++) {
-							p[i][j] = function(i, j);
-						}
+					if (column != 0) {
+						std::uninitialized_copy(begin, end, p[0]);
 					}
 
 				} else {
-					this->row = 0;
-					this->column = 0;
-					this->p = NULL;
+					this->row = len;
+					this->column = 1;
+
+					mem_init();
+					for (size_t i = 0; i != row; ++i) {
+						new (p[i]) Type(*begin);
+						++begin;
+					}
 				}
 			}
 
 			template <class Type>
-			template <size_t M, size_t N>
-			Array_2d<Type>::Array_2d(const Type (&src)[M][N], const int row, const int column)
-			{ //利用二维数组进行构造
-				if (row > 0 && column > 0) {
-					this->row = row;
-					this->column = column;
-
-					mem_init();
-					for (int i = 0; i < row; i++) {
-						for (int j = 0; j < column; j++) {
-							p[i][j] = src[i][j];
-						}
-					}
-				} else {
-					this->row = 0;
-					this->column = 0;
-					this->p = NULL;
-				}
-			}
-
-			template <class Type>
-			Array_2d<Type>::Array_2d(const Type arr[], int len, bool in_a_row)
+			template <size_t LEN>
+			Array_2d<Type>::Array_2d(const Type (&src)[LEN], bool in_row) :
+					p(NULL), row(0), column(0)
 			{ //利用一维数组进行构造
-				if (len > 0) {
-					if (in_a_row) {
-						this->row = 1;
-						this->column = len;
 
-						mem_init();
-						std::copy(arr, arr + column, p[0]);
-					} else {
-						this->row = len;
-						this->column = 1;
+				if (in_row) {
+					this->row = 1;
+					this->column = LEN;
 
-						mem_init();
-						for (int i = 0; i < row; i++) {
-							p[i][0] = arr[i];
-						}
-					}
+					mem_init();
+					std::uninitialized_copy(src, src + LEN, p[0]);
+
 				} else {
-					this->row = 0;
-					this->column = 0;
-					this->p = NULL;
+					this->row = LEN;
+					this->column = 1;
+
+					mem_init();
+					const Type *it = src;
+					for (size_t i = 0; i != row; ++i) {
+						new (p[i]) Type(*it);
+						++it;
+					}
+				}
+			}
+
+			template <class Type>
+			template <size_t ROW, size_t COLUMN>
+			Array_2d<Type>::Array_2d(const Type (&src)[ROW][COLUMN]) :
+					p(NULL), row(ROW), column(COLUMN)
+			{ //利用二维数组进行构造
+				mem_init();
+				for (size_t i = 0; i != row; ++i) {
+					for (size_t j = 0; j != column; ++j) {
+						new (p[i] + j) Type(src[i][j]);
+					}
 				}
 			}
 
 #if __cplusplus >= 201103L //C++0x
 
 			template <class Type>
-			Array_2d<Type>::Array_2d(std::initializer_list<std::initializer_list<Type>> src) throw (std::invalid_argument)
+			Array_2d<Type>::Array_2d(std::initializer_list<std::initializer_list<Type>> src)
 			{
 				//利用二维初始化列表进行构造
 
-				const int row_pre = src.size();//最终定下的行数
-				const int column_pre = src.begin()->size();//最终定下的列数
+				const size_t row_pre = src.size(); //最终定下的行数
+				const size_t column_pre = src.begin()->size(); //最终定下的列数
 				//扫描src每行的列数, 不一致则抛异常
 				for (auto it = src.begin() + 1; it != src.end(); ++it) {
 					if (it->size() != (unsigned) column_pre) {
-						throw std::invalid_argument("the initializer list is not a standard Array_2d");
+						throw std::invalid_argument(
+								"the initializer list is not a standard Array_2d");
 					}
 				}
 
@@ -287,7 +263,7 @@ namespace kerbal
 					this->column = column_pre;
 
 					mem_init();
-					int i = 0;
+					size_t i = 0;
 					auto it = src.begin();
 					while (i < row) {
 						std::copy(it->begin(), it->end(), p[i]);
@@ -302,157 +278,215 @@ namespace kerbal
 			}
 
 			template <class Type>
-			Array_2d<Type>::Array_2d(std::initializer_list<Type> src)
-			{
-				//利用一维初始化列表进行构造
-				const int column_pre = src.size();//最终定下的列数
+			Array_2d<Type>::Array_2d(std::initializer_list<Type> src) :
+					p(NULL), row(1), column(src.size())
+			{				//利用一维初始化列表进行构造
 
-				if (column_pre > 0) {
-					this->row = 1;
-					this->column = column_pre;
-
-					mem_init();
-					std::copy(src.begin(), src.end(), p[0]);
-
-				} else {
-					this->row = 0;
-					this->column = 0;
-					this->p = NULL;
-				}
+				mem_init();
+				std::uninitialized_copy(src.begin(), src.end(), p[0]);
 			}
 
 #endif //C++0x
 
 			template <class Type>
-			Array_2d<Type>::Array_2d(const Array_2d<Type> &src) //拷贝构造函数
-			{
-				if (src.row > 0 && src.column > 0) {
-					this->row = src.row;
-					this->column = src.column;
-
-					mem_init();
-					for (int i = 0; i < row; i++) {
-						std::copy(src.p[i], src.p[i] + column, p[i]);
-					}
-				} else {
-					this->row = 0;
-					this->column = 0;
-					this->p = NULL;
+			Array_2d<Type>::Array_2d(const Array_2d<Type> &src) :
+					p(NULL), row(src.row), column(src.column)
+			{ //拷贝构造函数
+				mem_init();
+				for (size_t i = 0; i != row; ++i) {
+					std::uninitialized_copy(src.p[i], src.p[i] + column, p[i]);
 				}
 			}
 
 			template <class Type>
 			Array_2d<Type>::~Array_2d() // virtual
-			{
-				//归还一个row行的二维数组
-				for (int i = 0; i < row; i++)
-					delete[] p[i];
-				delete[] p;
-				p = NULL;
-//		cout << "析构数组" << endl;
+			{ //归还一个row行的二维数组
+				clear();
 			}
 
 			template <class Type>
 			bool Array_2d<Type>::empty() const throw ()
 			{
-				if (row == 0 || column == 0) {
-					return true;
-				} else {
-					return false;
-				}
+				return !(row && column);
 			}
 
 			template <class Type>
 			void Array_2d<Type>::clear() throw ()
 			{
-				//归还一个row行的二维数组
-				for (int i = 0; i < row; ++i)
-					delete[] p[i];
-				delete[] p;
+//				for (size_t i = 0; i != row; ++i) {
+//					for (size_t j = 0; j != column; ++j) {
+//						(p[i] + j)->~Type();
+//					}
+//					free (p[i]);
+//					p[i] = NULL;
+//				}
+				for (size_t i = row; i != 0;) {
+					--i;
+					for (size_t j = column; j != 0;) {
+						--j;
+						(p[i] + j)->~Type();
+					}
+					free (p[i]);
+					p[i] = NULL;
+				}
+				free (p);
 				p = NULL;
 				row = 0;
 				column = 0;
 			}
 
 			template <class Type>
-			void Array_2d<Type>::resize(int new_row, int new_column)
+			size_t Array_2d<Type>::shrink_row(size_t new_row)
 			{
-				if (new_row <= 0 || new_column <= 0) { //防止非正数
-					this->clear();
-					return;
+				if (new_row < this->row) {
+					if (new_row == 0) {
+						this->clear();
+					} else {
+						for (size_t i = row; i != new_row;) {
+							--i;
+							for (size_t j = column; j != 0;) {
+								--j;
+								(p[i] + j)->~Type();
+							}
+							free (p[i]);
+							p[i] = NULL;
+						}
+						this->p = (Type**) realloc(this->p, new_row * sizeof(Type*));
+						this->row = new_row;
+					}
 				}
-				if (row == new_row) {
-					if (column == new_column) { //大小与原来一致
-						return;
-					} else { //行数相等, 列数不等
-						for (int i = 0; i < row; ++i) {
-							delete[] p[i];
-							p[i] = new Type[new_column];
+				return this->row;
+			}
+
+			template <class Type>
+			size_t Array_2d<Type>::shrink_column(size_t new_column)
+			{
+				if (new_column < this->column) {
+					if (new_column == 0) {
+						this->clear();
+					} else {
+						for (size_t i = row; i != 0;) {
+							--i;
+							for (size_t j = column; j != new_column;) {
+								--j;
+								(p[i] + j)->~Type();
+							}
+							p[i] = (Type*) realloc(p[i], new_column * sizeof(Type));
 						}
-						column = new_column;
+						this->column = new_column;
 					}
+				}
+				return this->column;
+			}
+
+			template <class Type>
+			size_t Array_2d<Type>::enlarge_row_buffer(size_t new_row)
+			{
+				return 0;
+			}
+
+			template <class Type>
+			size_t Array_2d<Type>::enlarge_column_buffer(size_t new_column)
+			{
+				if (new_column > this->column) {
+					for (size_t i = 0; i != this->row; ++i) {
+						Type * p_new = (Type*) realloc(p[i], new_column * sizeof(Type));
+						if (p_new == NULL) {
+							//realloc
+							throw std::bad_alloc();
+						}
+						p[i] = p_new;
+					}
+				}
+				return this->column;
+			}
+
+			template <class Type>
+			void Array_2d<Type>::resize(size_t new_row, size_t new_column)
+			{
+//				if (new_row == 0 || new_column == 0) {
+//					this->clear();
+//					return;
+//				}
+//				if (row == new_row) {
+//					if (column == new_column) { //大小与原来一致
+//						return;
+//					} else { //行数相等, 列数不等
+//						for (int i = 0; i < row; ++i) {
+//							delete[] p[i];
+//							p[i] = new Type[new_column];
+//						}
+//						column = new_column;
+//					}
+//				} else {
+//					if (column == new_column) { //行数不等, 列数相等
+//						//TODO 查BUG
+//						Type **p_former = p;
+//						p = new Type*[new_row];
+//						if (new_row < row) { //行数减少
+//							std::memcpy(p, p_former, new_row * sizeof(Type*));
+//							for (int i = new_row; i < row; ++i) {
+//								delete[] p_former[i];
+//							}
+//						} else { //行数增多
+//							std::memcpy(p, p_former, row * sizeof(Type*));
+//							for (int i = row; i < new_row; ++i) {
+//								p[i] = new Type[column];
+//							}
+//						}
+//						delete[] p_former;
+//						row = new_row;
+//					} else { //行数不等, 列数不等
+//						//TODO 查bug
+//						for (int i = 0; i < row; ++i)
+//							delete[] p[i];
+//						delete[] p;
+//						row = new_row;
+//						column = new_column;
+//						mem_init();
+//					}
+//				}
+
+				if (new_row <= this->row) {
+					this->shrink_row(new_row);
 				} else {
-					if (column == new_column) { //行数不等, 列数相等
-						//TODO 查BUG
-						Type **p_former = p;
-						p = new Type*[new_row];
-						if (new_row < row) { //行数减少
-							std::memcpy(p, p_former, new_row * sizeof(Type*));
-							for (int i = new_row; i < row; ++i) {
-								delete[] p_former[i];
-							}
-						} else { //行数增多
-							std::memcpy(p, p_former, row * sizeof(Type*));
-							for (int i = row; i < new_row; ++i) {
-								p[i] = new Type[column];
-							}
-						}
-						delete[] p_former;
-						row = new_row;
-					} else { //行数不等, 列数不等
-						//TODO 查bug
-						for (int i = 0; i < row; ++i)
-							delete[] p[i];
-						delete[] p;
-						row = new_row;
-						column = new_column;
-						mem_init();
-					}
+//					this->enlarge_row_buffer(new_row);
+					//构造
 				}
 			}
 
 			template <class Type>
-			inline int Array_2d<Type>::get_row() const
+			size_t Array_2d<Type>::get_row() const
 			{
 				return row;
 			}
 
 			template <class Type>
-			inline int Array_2d<Type>::get_column() const
+			size_t Array_2d<Type>::get_column() const
 			{
 				return column;
 			}
 
 			template <class Type>
-			inline const Type** Array_2d<Type>::get_data() const
+			const Type** Array_2d<Type>::get_data() const
 			{
 				return (const Type**) (p);
 			}
 
 			template <class Type>
-			inline bool Array_2d<Type>::is_const()
+			bool Array_2d<Type>::is_const()
 			{
 				return false;
 			}
 
 			template <class Type>
-			inline bool Array_2d<Type>::is_const() const
+			bool Array_2d<Type>::is_const() const
 			{
 				return true;
 			}
 
 			template <class Type>
-			inline Type& Array_2d<Type>::get(int row, int column) throw (std::out_of_range)
+			Type& Array_2d<Type>::get(size_t row, size_t column) throw (std::out_of_range)
 			{
 				test_row(row);
 				test_column(column);
@@ -460,7 +494,8 @@ namespace kerbal
 			}
 
 			template <class Type>
-			inline const Type& Array_2d<Type>::get(int row, int column) const throw (std::out_of_range)
+			const Type& Array_2d<Type>::get(size_t row, size_t column) const
+					throw (std::out_of_range)
 			{
 				test_row(row);
 				test_column(column);
@@ -468,114 +503,127 @@ namespace kerbal
 			}
 
 			template <class Type>
-			inline safety<Type> Array_2d<Type>::operator[](int row) throw (std::out_of_range)
-			{
-				test_row(row);
-				return safety < Type > (this, row);
-			}
-
-			template <class Type>
-			inline const safety<Type> Array_2d<Type>::operator[](int row) const throw (std::out_of_range)
-			{
-				test_row(row);
-				return safety < Type > (this, row);
-			}
-
-			template <class Type>
-			inline Type& Array_2d<Type>::operator()(int row, int column) throw (std::out_of_range)
+			Type& Array_2d<Type>::operator()(size_t row, size_t column) throw (std::out_of_range)
 			{
 				test_row(row);
 				test_column(column);
-				return this->p[row][column];
+				return p[row][column];
 			}
 
 			template <class Type>
-			inline const Type& Array_2d<Type>::operator()(int row, int column) const throw (std::out_of_range)
+			const Type& Array_2d<Type>::operator()(size_t row, size_t column) const
+					throw (std::out_of_range)
 			{
 				test_row(row);
 				test_column(column);
-				return this->p[row][column];
+				return p[row][column];
 			}
 
 			template <class Type>
-			inline void Array_2d<Type>::set(int row, int column, const Type &value) throw (std::out_of_range)
+			void Array_2d<Type>::set(size_t row, size_t column, const Type &value)
+					throw (std::out_of_range)
 			{
 				test_row(row);
 				test_column(column);
 				p[row][column] = value;
 			}
 
+#if __cplusplus >= 201103L
 			template <class Type>
-			template <class T>
-			void Array_2d<Type>::set(const T src[], int row, int column) //通过数组赋值///此函数内有 BUG (没有范围判断等)
+			void Array_2d<Type>::set(size_t row, size_t column, Type && value)
 			{
-				this->resize(row, column);
-				for (int i = 0; i < row; i++) {
-					std::copy(src[i], src[i] + column, p[i]);
-				}
+				test_row(row);
+				test_column(column);
+				p[row][column] = value;
 			}
+#endif
 
 			template <class Type>
+#if __cplusplus < 201103L
 			void Array_2d<Type>::do_call(Type (*__pf)(Type))
+#else
+			void Array_2d<Type>::do_call(std::function<Type(const Type &)> && __pf)
+#endif
 			{
-				for (int i = 0; i < row; ++i) {
-					for (int j = 0; j < column; ++j) {
+				for (size_t i = 0; i != row; ++i) {
+					for (size_t j = 0; j != column; ++j) {
 						p[i][j] = __pf(p[i][j]);
 					}
 				}
 			}
 
 			template <class Type>
-			void Array_2d<Type>::do_call(Type (*__pf)(int, int))
+#if __cplusplus < 201103L
+			void Array_2d<Type>::do_call(Type (*__pf)(size_t, size_t))
+#else
+			void Array_2d<Type>::do_call(std::function<Type(size_t, size_t)> && __pf)
+#endif
 			{
-				for (int i = 0; i < row; ++i) {
-					for (int j = 0; j < column; ++j) {
+				for (size_t i = 0; i != row; ++i) {
+					for (size_t j = 0; j != column; ++j) {
 						p[i][j] = __pf(i, j);
 					}
 				}
 			}
 
 			template <class Type>
-			void Array_2d<Type>::do_call(Type (*__pf)(Type, int, int))
+#if __cplusplus < 201103L
+			void Array_2d<Type>::do_call(Type (*__pf)(Type, size_t, size_t))
+#else
+			void Array_2d<Type>::do_call(std::function<Type(const Type &, size_t, size_t)> && __pf)
+#endif
 			{
-				for (int i = 0; i < row; ++i) {
-					for (int j = 0; j < column; ++j) {
+				for (size_t i = 0; i != row; ++i) {
+					for (size_t j = 0; j != column; ++j) {
 						p[i][j] = __pf(p[i][j], i, j);
 					}
 				}
 			}
 
 			template <class Type>
+#if __cplusplus < 201103L
 			const Array_2d<Type> Array_2d<Type>::call_of(Type (*__pf)(Type)) const
+#else
+			const Array_2d<Type> Array_2d<Type>::call_of(std::function<Type(const Type &)> && __pf) const
+#endif
 			{
-				Array_2d < Type > result(row, column);
-				for (int i = 0; i < row; ++i) {
-					for (int j = 0; j < column; ++j) {
-						result.p[i][j] = __pf(this->p[i][j]);
+				Array_2d < Type > result(row, column, Array_2d < Type > ::uninit_tag);
+				for (size_t i = 0; i != row; ++i) {
+					for (size_t j = 0; j != column; ++j) {
+						new (result.p[i] + j) Type(__pf(this->p[i][j]));
 					}
 				}
 				return result;
 			}
 
 			template <class Type>
-			const Array_2d<Type> Array_2d<Type>::call_of(Type (*__pf)(int, int)) const
+#if __cplusplus < 201103L
+			const Array_2d<Type> Array_2d<Type>::call_of(Type (*__pf)(size_t, size_t)) const
+#else
+			const Array_2d<Type> Array_2d<Type>::call_of(std::function<Type(size_t, size_t)> && __pf) const
+#endif
 			{
-				Array_2d < Type > result(row, column);
-				for (int i = 0; i < row; ++i) {
-					for (int j = 0; j < column; ++j) {
-						result.p[i][j] = __pf(i, j);
+				Array_2d < Type > result(row, column, Array_2d < Type > ::uninit_tag);
+				for (size_t i = 0; i != row; ++i) {
+					for (size_t j = 0; j != column; ++j) {
+						new (result.p[i] + j) Type(__pf(i, j));
 					}
 				}
 				return result;
 			}
 
 			template <class Type>
-			const Array_2d<Type> Array_2d<Type>::call_of(Type (*__pf)(Type, int, int)) const
+#if __cplusplus < 201103L
+			const Array_2d<Type> Array_2d<Type>::call_of(Type (*__pf)(Type, size_t, size_t)) const
+#else
+			const Array_2d<Type> Array_2d<Type>::call_of(std::function<
+					Type(const Type &, size_t, size_t)> && __pf) const
+#endif
 			{
-				Array_2d < Type > result(row, column);
-				for (int i = 0; i < row; ++i) {
-					for (int j = 0; j < column; ++j) {
-						result.p[i][j] = __pf(this->p[i][j], i, j);
+				Array_2d < Type > result(row, column, Array_2d < Type > ::uninit_tag);
+				for (size_t i = 0; i != row; ++i) {
+					for (size_t j = 0; j != column; ++j) {
+						new (result.p[i] + j) Type(__pf(this->p[i][j], i, j));
 					}
 				}
 				return result;
@@ -592,8 +640,9 @@ namespace kerbal
 			void Array_2d<Type>::print(Print_style style, std::ostream &output) const
 			{
 				//void Array_2d<Type>::print(bool print_frame = true, bool print_corner = true, ostream &output = cout) const
-				int i, j;
-				output << std::resetiosflags(std::ios::right) << std::setiosflags(std::ios::left) << std::setfill(' '); //清除右对齐, 设置左对齐, 设置不足补空格
+				size_t i, j;
+				output << std::resetiosflags(std::ios::right) << std::setiosflags(std::ios::left)
+						<< std::setfill(' '); //清除右对齐, 设置左对齐, 设置不足补空格
 
 				if (style != none) {
 					{ //上边框
@@ -633,51 +682,6 @@ namespace kerbal
 				}
 			}
 
-//	template <class Type>
-//	void Array_2d<Type>::print(bool print_frame, bool print_corner, std::ostream &output) const
-//	{
-//		//void Array_2d<Type>::print(bool print_frame = true, bool print_corner = true, ostream &output = cout) const
-//		int i, j;
-//		output << std::resetiosflags(std::ios::right) << std::setiosflags(std::ios::left) << std::setfill(' '); //清除右对齐, 设置左对齐, 设置不足补空格
-//
-//		if (print_frame) {
-//			{ //上边框
-//				output << "┌";
-//				for (j = 0; j < column; j++) {
-//					output << "  " << std::setw(12) << " ";
-//				}
-//				output << " ┐" << std::endl;
-//			}
-//
-//			for (i = 0; i < row; i++) {
-//				output << "│";
-//				for (j = 0; j < column; j++) {
-//					output << "  " << std::setw(12) << p[i][j];
-//				}
-//				output << " │" << std::endl;
-//			}
-//
-//			{ //下边框
-//				output << "└";
-//				for (j = 0; j < column; j++) {
-//					output << "  " << std::setw(12) << " ";
-//				}
-//				output << " ┘";
-//				if (print_corner) {
-//					output << " " << row << " × " << column;
-//				}
-//				output << std::endl;
-//			}
-//		} else {
-//			for (i = 0; i < row; i++) {
-//				for (j = 0; j < column; j++) {
-//					output << "  " << std::setw(12) << p[i][j];
-//				}
-//				output << std::endl;
-//			}
-//		}
-//	}
-
 			template <class Type>
 			size_t Array_2d<Type>::get_digit_size() const
 			{
@@ -685,7 +689,7 @@ namespace kerbal
 			}
 
 			template <class Type>
-			inline void Array_2d<Type>::test_row(const int row_test) const throw (std::out_of_range)
+			inline void Array_2d<Type>::test_row(size_t row_test) const throw (std::out_of_range)
 			{
 #	if __cplusplus >= 201103L
 				using std::to_string;
@@ -693,15 +697,17 @@ namespace kerbal
 				using kerbal::string_serve::to_string;
 #	endif
 
-				if (row_test < 0 || row_test >= this->row) {
+				if (row_test >= this->row) {
 					throw std::out_of_range(
 							"The " + to_string(this->row) + " × " + to_string(this->column)
-									+ " Array doesn't have the no." + to_string(row_test) + " row!");
+									+ " Array doesn't have the no." + to_string(row_test)
+									+ " row!");
 				}
 			}
 
 			template <class Type>
-			inline void Array_2d<Type>::test_column(const int column_test) const throw (std::out_of_range)
+			inline void Array_2d<Type>::test_column(size_t column_test) const
+					throw (std::out_of_range)
 			{
 #	if __cplusplus >= 201103L
 				using std::to_string;
@@ -709,39 +715,18 @@ namespace kerbal
 				using kerbal::string_serve::to_string;
 #	endif
 
-				if (column_test < 0 || column_test >= this->column) {
+				if (column_test >= this->column) {
 					throw std::out_of_range(
 							"The " + to_string(this->row) + " × " + to_string(this->column)
-									+ " Array doesn't have the no." + to_string(column_test) + " column!");
+									+ " Array doesn't have the no." + to_string(column_test)
+									+ " column!");
 				}
 			}
-
-//			template <class Type>
-//			bool Array_2d<Type>::operator==(const Array_2d<Type> &with) const
-//			{
-//				if (row != with.row || column != with.column) {
-//					return false;
-//				}
-//				for (int i = 0; i < row; i++) {
-//					for (int j = 0; j < column; j++) {
-//						if (!(this->p[i][j] == with.p[i][j])) {
-//							return false;
-//						}
-//					}
-//				}
-//				return true;
-//			}
-//
-//			template <class Type>
-//			bool Array_2d<Type>::operator!=(const Array_2d<Type> &with) const
-//			{
-//				return !(this->operator==(with));
-//			}
 
 			template <class Type>
 			void Array_2d<Type>::do_reflect_row() throw ()
 			{
-				for (int i = 0; i < row / 2; ++i) {
+				for (size_t i = 0; i < row / 2; ++i) {
 					std::swap(p[i], p[row - 1 - i]);
 				}
 			}
@@ -749,9 +734,10 @@ namespace kerbal
 			template <class Type>
 			void Array_2d<Type>::do_reflect_column()
 			{
-				for (int i = 0; i < row; ++i) {
-					for (int j = 0; j < column / 2; ++j) {
-						std::swap(p[i][j], p[i][column - 1 - j]); //这里有可能会抛出异常, 具体会不会取决于 swap(Type&, Type&)
+				for (size_t i = 0; i < row; ++i) {
+					for (size_t j = 0; j < column / 2; ++j) {
+						//这里有可能会抛出异常, 具体会不会取决于 swap(Type&, Type&)
+						std::swap(p[i][j], p[i][column - 1 - j]);
 					}
 				}
 			}
@@ -766,43 +752,101 @@ namespace kerbal
 			template <class Type>
 			void Array_2d<Type>::do_rotate_90()
 			{ // 逆时针转90度
-				std::swap(row, column);
+				Array_2d < Type > result = this->rotate_90_of();
+				this->clear();
+				this->row = result.row;
+				this->column = result.column;
+				this->p = result.p;
 
-				Type **p_former = p;
-				p = new Type*[row];
-				for (int i = 0; i < row; ++i) {
-					p[i] = new Type[column];
-					for (int j = 0; j < column; ++j) {
-						p[i][j] = p_former[j][row - 1 - i];
-					}
-				}
-				for (int i = 0; i < column; ++i) {
-					delete[] p_former[i];
-				}
-				delete[] p_former;
+				result.p = NULL;
+				result.column = 0;
+				result.row = 0;
 			}
 
 			template <class Type>
 			void Array_2d<Type>::do_rotate_270()
 			{ // 逆时针转270度
-				std::swap(row, column);
+				Array_2d < Type > result = this->rotate_270_of();
+				this->clear();
+				this->row = result.row;
+				this->column = result.column;
+				this->p = result.p;
 
-				Type **p_former = p;
-				p = new Type*[row];
-				for (int i = 0; i < row; ++i) {
-					p[i] = new Type[column];
-					for (int j = 0; j < column; ++j) {
-						p[i][j] = p_former[column - 1 - j][i];
-					}
-				}
-				for (int i = 0; i < column; ++i) {
-					delete[] p_former[i];
-				}
-				delete[] p_former;
+				result.p = NULL;
+				result.column = 0;
+				result.row = 0;
 			}
 
 			template <class Type>
-			const Array_2d<Type> Array_2d<Type>::sub_of(int up, int down, int left, int right) const throw (std::invalid_argument, std::out_of_range)
+			Array_2d<Type> Array_2d<Type>::reflect_row_of() const
+			{
+				Array_2d < Type > result(this->row, this->column, Array_2d < Type > ::uninit_tag);
+
+				for (size_t i = 0; i < this->row; ++i) {
+					std::uninitialized_copy(this->p[this->row - 1 - i],
+							this->p[this->row - 1 - i] + this->column, result.p[i]);
+				}
+				return result;
+			}
+
+			template <class Type>
+			Array_2d<Type> Array_2d<Type>::reflect_column_of() const
+			{
+				Array_2d < Type > result(this->row, this->column, Array_2d < Type > ::uninit_tag);
+
+				for (size_t i = 0; i < this->row; ++i) {
+					for (size_t j = 0; j < this->column; ++j) {
+						new (result.p[i] + j) Type(this->p[i][this->column - 1 - j]);
+					}
+				}
+				return result;
+			}
+
+			template <class Type>
+			Array_2d<Type> Array_2d<Type>::rotate_180_of() const
+			{
+				Array_2d < Type > result(this->row, this->column, Array_2d < Type > ::uninit_tag);
+
+				for (size_t i = 0; i < this->row; ++i) {
+					for (size_t j = 0; j < this->column; ++j) {
+						new (result.p[i] + j) Type(
+								this->p[this->row - 1 - i][this->column - 1 - j]);
+					}
+				}
+				return result;
+			}
+
+			template <class Type>
+			Array_2d<Type> Array_2d<Type>::rotate_90_of() const
+			{
+				// 逆时针转90度
+				Array_2d < Type > result(this->column, this->row, Array_2d < Type > ::uninit_tag);
+
+				for (size_t i = 0; i < this->column; ++i) {
+					for (size_t j = 0; j < this->row; ++j) {
+						new (result.p[i] + j) Type(this->p[j][this->column - 1 - i]);
+					}
+				}
+				return result;
+			}
+
+			template <class Type>
+			Array_2d<Type> Array_2d<Type>::rotate_270_of() const
+			{
+				// 逆时针转270度
+				Array_2d < Type > result(this->column, this->row, Array_2d < Type > ::uninit_tag);
+
+				for (size_t i = 0; i < this->column; ++i) {
+					for (size_t j = 0; j < this->row; ++j) {
+						new (result.p[i] + j) Type(this->p[this->row - 1 - j][i]);
+					}
+				}
+				return result;
+			}
+
+			template <class Type>
+			const Array_2d<Type> Array_2d<Type>::sub_of(size_t up, size_t down, size_t left, size_t right) const
+					throw (std::invalid_argument, std::out_of_range)
 			{
 				if (up >= down || left >= right) {
 					throw new std::invalid_argument("up >= down or left >= right");
@@ -813,9 +857,9 @@ namespace kerbal
 				this->test_column(left);
 				this->test_column(right - 1);
 
-				Array_2d < Type > result(down - up, right - left);
-				for (int i = up; i < down; ++i) {
-					std::copy(p[i] + left, p[i] + right, result.p[i - up]);
+				Array_2d < Type > result(down - up, right - left, Array_2d < Type > ::uninit_tag);
+				for (size_t i = up; i < down; ++i) {
+					std::uninitialized_copy(p[i] + left, p[i] + right, result.p[i - up]);
 				}
 				return result;
 			}

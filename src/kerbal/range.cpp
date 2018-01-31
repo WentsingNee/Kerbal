@@ -16,10 +16,10 @@
 
 namespace kerbal
 {
-	namespace Range
+	namespace range
 	{
-		Range_view::iterator::Range_iterator(int now, const Range_view * const parent_ptr) :
-				now(now), parent_ptr(parent_ptr)
+		Range_view::iterator::iterator(const Range_view * const parent_ptr, int now) :
+				parent_ptr(parent_ptr), now(now)
 		{
 		}
 
@@ -55,15 +55,15 @@ namespace kerbal
 
 		Range_view::iterator Range_view::begin() const
 		{
-			if ((from < to && step < 0) || from == to || (from > to && step > 0)) {
+			if (from == to || (from > to && step > 0) || (from < to && step < 0)) {
 				return end();
 			}
-			return Range_iterator(from, this);
+			return iterator(this, from);
 		}
 
 		Range_view::iterator Range_view::end() const
 		{
-			return Range_iterator(to, this);
+			return iterator(this, to);
 		}
 
 		bool Range_view::whether_in(int x) const
@@ -76,7 +76,6 @@ namespace kerbal
 		}
 
 	} /* namespace Range */
-	using namespace Range;
 
 } /* namespace kerbal */
 

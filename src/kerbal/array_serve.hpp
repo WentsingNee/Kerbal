@@ -20,12 +20,30 @@ namespace kerbal
 			template <class Type, size_t N>
 			inline size_t arraylen(const Type (&array)[N]);
 
+			/**
+			 *
+			 * @param a
+			 * @param len
+			 * @param separator
+			 * @param if_output_number
+			 * @throw std::invalid_argument
+			 */
 			template <class T>
-			void print_array(T a[], int len, const std::string &separator = " , ", bool if_output_number = false) throw (std::invalid_argument);
+			void print_array(T a[], int len, const std::string &separator = " , ", bool if_output_number =
+					false);
 
+			/**
+			 *
+			 * @param a
+			 * @param len
+			 * @param separator
+			 * @param file_name
+			 * @param if_output_number
+			 * @throw std::invalid_argument
+			 */
 			template <class T>
 			void print_array_to_file(T a[], int len, const std::string &separator, const std::string &file_name, bool if_output_number =
-					false) throw (std::invalid_argument);
+					false);
 
 			template <typename T> int array_dimension(const T &a);
 
@@ -37,7 +55,7 @@ namespace kerbal
 			}
 
 			template <class T>
-			void print_array(T a[], int len, const std::string &separator, bool if_output_number) throw (std::invalid_argument)
+			void print_array(T a[], int len, const std::string &separator, bool if_output_number)
 			{
 				if (len > 0) {
 					if (if_output_number == true) {
@@ -58,7 +76,7 @@ namespace kerbal
 			}
 
 			template <class T>
-			void print_array_to_file(T a[], int len, const std::string &separator, const std::string &file_name, bool if_output_number) throw (std::invalid_argument)
+			void print_array_to_file(T a[], int len, const std::string &separator, const std::string &file_name, bool if_output_number)
 			{
 				if (len > 0) {
 					std::ofstream fout(&file_name[0], std::ios::out);

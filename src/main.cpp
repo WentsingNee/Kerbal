@@ -1,12 +1,10 @@
 #include <iostream>
-#include <complex>
 
 #include "advanced_math_private.h"
 
 #include "kerbal/exe_serve.hpp"
 #include "kerbal/sort.hpp"
 #include "kerbal/range.hpp"
-#include "kerbal/Trexcept.hpp"
 
 #include "kerbal/math/complex.hpp"
 #include "kerbal/array_serve.hpp"
@@ -26,6 +24,9 @@
 #define is_debug true
 
 using namespace std;
+using namespace _choose;
+using namespace kerbal::math::matrix;
+using namespace kerbal::math::complexor;
 
 /*
  void conv_test()
@@ -56,51 +57,33 @@ using namespace std;
  }
  */
 
-using namespace _choose;
-
-#define M 100000
-#define N 2000
-double a[M][N];
-
-class A
-{
-	public:
-		enum size
-		{
-			full, mid, mini
-		};
-};
-
 int main()
 {
 	program_start(is_debug);
 
-	using namespace kerbal::math::matrix;
-	using namespace kerbal::math::complexor;
+	unsigned long t = GetTickCount();
+	Matrix m([]() {
+		return rand_between(-0.2,0.2);
+	}, 1500, 1500);
+	Matrix m2([]() {
+		return rand_between(-0.2,0.2);
+	}, 1500, 1500);
+	::omp_set_num_threads(1);
+	m * m2;
+	cout << GetTickCount() - t << endl;
 
-	Matrix m = {
+//	while (1) {
+//		unsigned long t = GetTickCount();
+//		m * m2;
+//		cout << GetTickCount() - t << endl;
+//	}
 
-	{ 5, 2 },
-
-	{ 6, 7 } };
-
-	m.print(Matrix::Frame_style::double_det);
-	m.print(Matrix::Frame_style::single_det);
-	m.print(Matrix::Frame_style::rd_corner);
-
-//	double a2[][4] = { { 1, 2, 3, 4 }, { 4, 5, 6, 7 }, { 7, 8, 9, 10 } };
+//	Matrix m(5, 5, 0);
+//	Matrix m2(5ull, 5ull, 0);
 //
-//	kerbal::math::matrix::Matrix m2(a2, 3, 4);
-//
-//	cout << m << endl;
-//	cout << m2 << endl;
-//
-//	std::swap(m, m2);
-//	cout << m << endl;
-//	cout << m2 << endl;
-
-//	cout << _choose::choose(2, 5, 7, 8, 6, 7) << endl;
-//	cout << _choose::choose_c11(2, 5.5, 7.5, 8.5, 6.5, 17.5) << endl;
+//	conv_2d<Conv_size::max>(m, m2);
+//	conv_2d<Conv_size::mid>(m, m2);
+//	conv_2d<Conv_size::small>(m, m2);
 
 	program_will_end();
 //	system("pause");

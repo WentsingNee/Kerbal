@@ -2,7 +2,7 @@
  * @file matrix.hpp
  * @brief 本文件提供了对基本矩阵计算的支持
  * @author 倪文卿
- * @date 2017-4-30
+ * @date 2017-3-22
  * @copyright 倪文卿
  * @copyright
  <a href="http://thinkspirit.org/">ThinkSpirit Laboratory</a>
@@ -11,8 +11,8 @@
  <img src="ThinkSpirit团队logo.jpg" alt="ThinkSpirit logo" height=40 align ="left" />
  */
 
-#ifndef _MATRIX_H_
-#define _MATRIX_H_
+#ifndef _MATRIX_HPP_
+#define _MATRIX_HPP_
 
 #include <fstream>
 #include <iostream>
@@ -54,12 +54,20 @@ namespace kerbal
 
 			using kerbal::data_struct::array_2d::Array_2d;
 
+			enum Conv_size
+			{
+				max, mid, small
+			};
+
 			/**
 			 * @brief 矩阵类
 			 * @author 倪文卿
 			 */
 			class Matrix: public Array_2d<double>
 			{
+				protected:
+					Matrix(size_t row, size_t column, Uninit);
+
 				public:
 					/**
 					 * @brief 构造一个 0 行 0 列的空矩阵
@@ -72,7 +80,7 @@ namespace kerbal
 					 * @param row 行数
 					 * @param column 列数
 					 */
-					Matrix(const int row, const int column);
+					Matrix(size_t row, size_t column);
 
 					/**
 					 * @brief 构造一个 row 行 * column 列 的矩阵, 矩阵中每个元素的初始值由参数 val 指定
@@ -80,14 +88,40 @@ namespace kerbal
 					 * @param column 列数
 					 * @param val 初始值
 					 */
-					Matrix(const int row, const int column, const double &val);
-					Matrix(double (*function)(), const int row, const int column, bool para);
-					Matrix(double (*function)(int, int), const int row, const int column, bool para);
+					Matrix(size_t row, size_t column, const double &val);
 
-					template <size_t M, size_t N>
-					Matrix(const double (&src)[M][N], const int row, const int column); //利用二维数组进行构造
+#if __cplusplus < 201103L
+					Matrix(double (*function)(), size_t row, size_t column, bool para = false);
+					Matrix(double (*function)(size_t, size_t), size_t row, size_t column, bool para = false);
+#else
+					Matrix(std::function<double()> fun, size_t row, size_t column, bool para = false);
+					Matrix(std::function<double(size_t, size_t)> fun, size_t row, size_t column, bool para =
+							false);
+#endif
 
-					Matrix(const double arr[], int len, bool in_a_row = true); //利用一维数组进行构造
+					/**
+					 * @brief 利用线性迭代器进行构造
+					 * @param begin 起始迭代器
+					 * @param end 终止迭代器
+					 * @param in_row 为真时构造行向量, 为假时构造列向量
+					 */
+					template <typename ForwardIterator>
+					Matrix(ForwardIterator begin, ForwardIterator end, bool in_row = true);
+
+					/**
+					 * @brief 利用一个长度为 LEN 的一维数组进行构造
+					 * @param src 源数组
+					 * @param in_row 为真时构造行向量, 为假时构造列向量
+					 */
+					template <size_t LEN>
+					explicit Matrix(const double (&src)[LEN], bool in_row = true);
+
+					/**
+					 * @brief 利用一个 ROW 行 * COLUMN 列 的二维数组进行构造
+					 * @param src 源数组
+					 */
+					template <size_t ROW, size_t COLUMN>
+					explicit Matrix(const double (&src)[ROW][COLUMN]);
 
 #if __cplusplus >= 201103L //C++0x
 					/**
@@ -104,10 +138,19 @@ namespace kerbal
 					 */
 					Matrix(std::initializer_list<double> src);
 
-					Matrix(Matrix &&src); //转移构造函数
+					/**
+					 * @brief <b>[C++11]</b> 转移构造函数
+					 * @param src 源矩阵
+					 * @warning only supported by C++ 11 or higher
+					 */
+					Matrix(Matrix &&src);
 #endif //C++0x
 
-					Matrix(const Matrix &src); //拷贝构造函数
+					/**
+					 * @brief 拷贝构造函数
+					 * @param src 源矩阵
+					 */
+					Matrix(const Matrix &src);
 
 					/** @brief 析构函数 */
 					virtual ~Matrix();
@@ -134,7 +177,8 @@ namespace kerbal
 					virtual void print(Frame_style frame = rt_corner, bool print_corner = true, std::ostream &output =
 							std::cout) const;
 
-					void save(std::ofstream & fout) const throw (std::runtime_error, __cxxabiv1:: __forced_unwind );
+					void save(std::ofstream & fout) const
+							throw (std::runtime_error, __cxxabiv1:: __forced_unwind );
 					void save(const char * file_name) const throw (std::runtime_error, __cxxabiv1:: __forced_unwind );
 
 					friend const Matrix load_from(std::ifstream & fin) throw (std::runtime_error);
@@ -144,11 +188,15 @@ namespace kerbal
 					 * @brief 交换矩阵的两行
 					 * @param row1 行号1
 					 * @param row2 行号2
-					 * @throw std::out_of_range 若 参数 row1 或 row2 越界, 则抛出此异常
+					 * @throw std::out_of_range 若参数 row1 或 row2 越界, 则抛出此异常
 					 * @par 时间复杂度\n
 					 * 此操作具有 O(1) 阶复杂度
 					 */
-					void switch_rows(const int row1, const int row2);
+					void switch_rows(size_t row1, size_t row2);
+
+					void switch_rows(size_t row1,size_t row2,size_t column_index_start);
+
+					void switch_rows(size_t row1,size_t row2,size_t column_index_start,size_t column_index_end);
 
 					/**
 					 * @brief 交换矩阵的两列
@@ -158,7 +206,7 @@ namespace kerbal
 					 * @par 时间复杂度\n
 					 * 此操作具有 O(row) 阶复杂度. 其中, row 表示被操作矩阵的行数
 					 */
-					void switch_columns(const int column1, const int column2);
+					void switch_columns(size_t column1, size_t column2);
 
 					/**
 					 * @brief 令矩阵中指定行上的每一个元素均乘上系数 k
@@ -166,7 +214,7 @@ namespace kerbal
 					 * @param row_dest 被乘行行号
 					 * @throw std::out_of_range 若参数 row_dest 越界, 则抛出此异常
 					 */
-					void kmr(const double k, const int row_dest);
+					void kmr(double k, size_t row_dest);
 
 					/**
 					 * @brief 将矩阵 row_from 行的 k 倍加到 row_dest 行上
@@ -175,7 +223,7 @@ namespace kerbal
 					 * @param row_dest 被加行行号
 					 * @throw std::out_of_range 若参数 row_from 或 row_dest 越界, 则抛出此异常
 					 */
-					void kmr_plus_to_another(const double k, const int row_from, const int row_dest);
+					void kmr_plus_to_another(double k, size_t row_from, size_t row_dest);
 
 					/**
 					 * @brief 令矩阵中指定列上的每一个元素均乘上系数 k
@@ -183,7 +231,7 @@ namespace kerbal
 					 * @param column_dest 被乘列列号
 					 * @throw std::out_of_range 若参数 column_dest 越界, 则抛出此异常
 					 */
-					void kmc(const double k, const int column_dest);
+					void kmc(double k, size_t column_dest);
 
 					/**
 					 * @brief 将矩阵 column_from 列的 k 倍加到 column_dest 列上
@@ -192,13 +240,41 @@ namespace kerbal
 					 * @param column_dest 被加列列号
 					 * @throw std::out_of_range 若参数 column_from 或 column_dest 越界, 则抛出此异常
 					 */
-					void kmc_plus_to_another(const double k, const int column_from, const int column_dest);
+					void kmc_plus_to_another(double k, size_t column_from, size_t column_dest);
 
-					void do_optimize_rows() throw (std::invalid_argument); //对本矩阵进行优化
+					/**
+					 * @brief 将矩阵变换为上三角矩阵
+					 */
+					void do_triu();
 
-					double det() const throw (std::invalid_argument);
-					Matrix Adjugate_matrix() const throw (std::invalid_argument);//返回本方阵的伴随矩阵
-					Matrix Inverse_matrix() const throw (std::invalid_argument);//返回本方阵的逆矩阵,当逆矩阵不存在时抛出异常
+					/**
+					 * @brief 计算一个矩阵对应的行列式的值
+					 * @return 计算结果
+					 * @throw std::invalid_argument 当矩阵不为方阵时, 抛出此异常
+					 * @par 空间复杂度\n
+					 * 此操作具有 O(row * column) 阶复杂度
+					 */
+					double det()const;
+
+					/**
+					 * @brief 构造本方阵的伴随矩阵
+					 * @return 结果矩阵
+					 * @throw std::invalid_argument 当矩阵不为方阵时, 抛出此异常
+					 */
+					Matrix Adjugate_matrix() const;
+
+					/**
+					 * @brief 构造本方阵的逆矩阵
+					 * @return 结果矩阵
+					 * @throw std::invalid_argument 当逆矩阵不存在时, 抛出此异常
+					 */
+					Matrix Inverse_matrix() const;
+
+					/**
+					 * @brief 计算本矩阵与其转置矩阵的乘积
+					 * @return 结果矩阵
+					 */
+					Matrix mul_with_trans() const;
 
 					//运算符重载
 
@@ -340,7 +416,6 @@ namespace kerbal
 					 */
 					Matrix& operator*=(double k) throw ();
 
-					friend void operator<<=(Matrix &tar, Matrix &src); //将矩阵src的资产转移给tar, src变为与原来同样大小的随机矩阵
 					Matrix& operator=(const Matrix &src);
 
 #if __cplusplus >= 201103L //C++0x
@@ -357,16 +432,26 @@ namespace kerbal
 
 					template <size_t N> friend const Matrix cat(const Matrix (&a)[N]) throw (std::invalid_argument);
 
-					const Matrix sub_of(int up, int down, int left, int right) const throw (std::invalid_argument, std::out_of_range);
-
-					//计算
+					const Matrix sub_of(size_t up, size_t down, size_t left, size_t right) const throw (std::invalid_argument, std::out_of_range);
 
 					/**
 					 * @brief 返回一个 n 阶单位矩阵
 					 * @param n 阶数
 					 * @return n 阶单位矩阵
 					 */
-					friend const Matrix eye(int n); //构造一个单位矩阵
+					friend const Matrix eye(size_t n); //构造一个单位矩阵
+
+#if __cplusplus >= 201103L
+					/**
+					 * @brief <b>[C++11]</b> 构造一个 n 阶对角矩阵, 主对角线上的值依次为 arg0, arg1, arg2 ...
+					 * @param arg0 主对角线上第一个元素的值
+					 * @param args 主对角线上其他元素构成的参数包
+					 * @return 对角矩阵
+					 * @warning only supported by C++ 11 or higher
+					 */
+					template <class ...T>
+					friend const Matrix diag(double arg0, T ... args);
+#endif //c++0x
 
 					/**
 					 * @brief 计算一个矩阵的 n 次幂
@@ -383,24 +468,55 @@ namespace kerbal
 					 */
 					friend const Matrix pow(const Matrix &A, const int n);
 
-					friend double tr(const Matrix &src) throw (std::invalid_argument); //返回方阵的迹
-					friend const Matrix transpose_of(const Matrix &A);//构造矩阵A的转置矩阵
+					/**
+					 * @brief 计算本方阵的迹
+					 * @param src 源矩阵
+					 * @return 计算结果
+					 * @brief std::invalid_argument 当源矩阵不为方阵时, 抛出此异常
+					 */
+					double tr() const;
+
+					friend const Matrix transpose_of(const Matrix &A); //构造矩阵A的转置矩阵
+
 					void do_transpose()
 					{
-						this->operator=(transpose_of(*this));
+						*this = transpose_of(*this);
 					}
-					friend const Matrix cofactor_of(const Matrix &A, const int x, const int y) throw (std::out_of_range); //构造矩阵A的余子式A(x,y)
-					void do_cofactor(const int row_tar, const int column_tar) throw (std::out_of_range);//返回一个矩阵划去row_tar 行和 column_tar 列后的矩阵
+
+					const Matrix cofactor_of(size_t row_tar, size_t column_tar)const throw (std::out_of_range); //构造矩阵A的余子式A(x,y)
+					void do_cofactor(size_t row_tar, size_t column_tar) throw (std::out_of_range);//返回一个矩阵划去row_tar 行和 column_tar 列后的矩阵
+
 					friend bool Matcmp(const Matrix &A, const Matrix &B, double eps);
 
-					virtual void test_row(const int row_test) const throw (std::out_of_range);
-					virtual void test_column(const int column_test) const throw (std::out_of_range);
+					virtual void test_row(size_t row_test) const throw (std::out_of_range);
+					virtual void test_column(size_t column_test) const throw (std::out_of_range);
 					void test_square() const throw (std::invalid_argument);
 
-					friend const Matrix conv2(const Matrix &core, const Matrix &B, int size = 0);//矩阵卷积
+					friend const Matrix conv2(const Matrix &core, const Matrix &A, int size = 0);//矩阵卷积
+
+					template<Conv_size>
+					friend const Matrix conv_2d(const Matrix &core, const Matrix &A);//矩阵卷积
 
 					friend void std::swap(Matrix &a, Matrix &b);
 				};
+
+			template <typename ForwardIterator>
+			Matrix::Matrix(ForwardIterator begin, ForwardIterator end, bool in_row) :
+					Array_2d<double>(begin, end, in_row)
+			{ //利用线性迭代器进行构造
+			}
+
+			template <size_t LEN>
+			Matrix::Matrix(const double (&src)[LEN], bool in_row) :
+					Array_2d<double>(src, in_row)
+			{ //利用一维数组进行构造
+			}
+
+			template <size_t ROW, size_t COLUMN>
+			Matrix::Matrix(const double (&src)[ROW][COLUMN]) :
+					Array_2d<double>(src)
+			{ //利用二维数组进行构造
+			}
 
 			template <size_t N>
 			const Matrix cat(const Matrix (&a)[N]) throw (std::invalid_argument)
@@ -426,7 +542,32 @@ namespace kerbal
 				return result;
 			}
 
+			template <Conv_size>
+			const Matrix conv_2d(const Matrix &core, const Matrix &A); //矩阵卷积
+
+			template <>
+			const Matrix conv_2d<Conv_size::max>(const Matrix &core, const Matrix &A);
+
+			template <>
+			const Matrix conv_2d<Conv_size::mid>(const Matrix &core, const Matrix &A);
+
+			template <>
+			const Matrix conv_2d<Conv_size::small>(const Matrix &core, const Matrix &A);
+
 			//应用部分
+#if __cplusplus >= 201103L
+			template <class ...T>
+			const Matrix diag(double arg0, T ... args)
+			{
+				Matrix result(1 + sizeof...(args), 1 + sizeof...(args), 0);
+				size_t i = 0;
+				for (const double & ele : { arg0, args... }) {
+					result.p[i][i] = ele;
+					++i;
+				}
+				return result;
+			}
+#endif //c++0x
 
 			const Matrix rotate_X(double sigma);
 			const Matrix rotate_Y(double sigma);
@@ -436,16 +577,10 @@ namespace kerbal
 			void rotate_Y(double sigma, double& x0, const double& y0, double& z0) throw ();
 			void rotate_Z(double sigma, double& x0, double& y0, const double& z0) throw ();
 
-			template <size_t M, size_t N>
-			Matrix::Matrix(const double (&src)[M][N], const int row, const int column) :
-					Array_2d<double>(src, row, column)
-			{
-			}
-
 		}/* namespace matrix */
 
 	}/* namespace math */
 
 } /* namespace kerbal */
 
-#endif	/* End _MATRIX_H_ */
+#endif	/* End _MATRIX_HPP_ */

@@ -20,7 +20,7 @@ template <class T, class _cmp>
 void bubble_sort(T *begin, const T *end, _cmp cmp)
 {
 	bool swit = true;
-	const size_t len = end - begin;
+	const size_t len = std::distance(begin, end);
 
 	for (size_t i = 1; i < len && swit; ++i) {
 		swit = false;
@@ -36,7 +36,7 @@ void bubble_sort(T *begin, const T *end, _cmp cmp)
 template <class T, class _cmp>
 void merge(T* begin, const T* end, _cmp cmp, T* temp) //order为真从小到大，为假从大到小
 {
-	const size_t len = end - begin;
+	const size_t len = std::distance(begin, end);
 	const size_t half_len = len / 2;
 	if (half_len) {
 		T* mid = begin + half_len;
@@ -86,7 +86,7 @@ inline void merge_sort(T *begin, const T *end)
 template <class T, class _cmp>
 void merge_sort(T *begin, const T *end, _cmp cmp)
 {
-	const size_t len = end - begin;
+	const size_t len = std::distance(begin, end);
 	if (len > 2) {
 		T *temp = new T[len];
 

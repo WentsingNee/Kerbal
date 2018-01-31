@@ -34,28 +34,29 @@
 
 namespace kerbal
 {
-	namespace Range
+	namespace range
 	{
 
 #if __cplusplus >= 201103L //C++0x
 
-		class Range_view final
+		class Range_view
 		{
 			protected:
 
-				typedef class Range_iterator final
+				typedef class iterator
 				{
 					protected:
 						friend class Range_view;
-						int now;
-						const Range_view * const parent_ptr;
 
-						Range_iterator(int now, const Range_view * const parent_ptr);
+						const Range_view * const parent_ptr;
+						int now;
+
+						iterator(const Range_view * const parent_ptr, int now);
 
 					public:
 						int operator*() const;
-						Range_iterator& operator++();
-						bool operator!=(const Range_iterator &with) const;
+						iterator& operator++();
+						bool operator!=(const iterator &with) const;
 				} iterator;
 
 				int from, to, step;
@@ -67,8 +68,8 @@ namespace kerbal
 				friend Range_view range(int from, int to, int step) throw (std::invalid_argument);
 
 			public:
-				Range_iterator begin() const;
-				Range_iterator end() const;
+				iterator begin() const;
+				iterator end() const;
 				bool whether_in(int x) const;
 		};
 
@@ -84,7 +85,7 @@ namespace kerbal
 
 #endif /* End C++0x */
 
-	} /* namespace Range */
+	} /* namespace range */
 
 } /* namespace kerbal */
 
