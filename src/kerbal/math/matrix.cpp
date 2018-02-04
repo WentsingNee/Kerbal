@@ -10,19 +10,19 @@
 #include "../string_serve.hpp"
 
 #if __cplusplus < 201103L //C++0x
-#	pragma message("\n"\
-"			* Matrix 使用了 C++ 11 新特性, 请打开 C++ 11 选项以便使用这些新特性\n"\
-"					* Matrix 为 C++ 11 准备的新特性: 转移构造函数\n"\
-"					* Matrix 为 C++ 11 准备的新特性: 利用一维初始化列表进行构造\n"\
-"					* Matrix 为 C++ 11 准备的新特性: 利用二维初始化列表进行构造\n"\
-"					* Matrix 为 C++ 11 准备的新特性: 转移赋值运算符"\
+#	pragma message("\n\
+        * Matrix 使用了 C++ 11 新特性, 请打开 C++ 11 选项以便使用这些新特性\n\
+                * Matrix 为 C++ 11 准备的新特性: 转移构造函数\n\
+                * Matrix 为 C++ 11 准备的新特性: 利用一维初始化列表进行构造\n\
+                * Matrix 为 C++ 11 准备的新特性: 利用二维初始化列表进行构造\n\
+                * Matrix 为 C++ 11 准备的新特性: 转移赋值运算符"\
 )
 #endif //C++0x
 
 #ifdef _OPENMP
 # include <omp.h>
 # pragma message("\n\
-			* " __FILE__ " 已启用 openMP. 版本代码为: " STR2(_OPENMP)\
+        * " __FILE__ " 已启用 openMP. 版本代码为: " STR2(_OPENMP)\
 )
 #endif
 
@@ -71,41 +71,41 @@ namespace kerbal
 
 #if __cplusplus < 201103L
 			Matrix::Matrix(double (*function)(), size_t row, size_t column, bool para) :
-			Array_2d<double>(function, row, column, para)
+					Array_2d<double>(function, row, column, para)
 			{
 			}
 
 			Matrix::Matrix(double (*function)(size_t, size_t), size_t row, size_t column, bool para) :
-			Array_2d<double>(function, row, column, para)
+					Array_2d<double>(function, row, column, para)
 			{
 			}
 
 #else
 
 			Matrix::Matrix(std::function<double()> fun, size_t row, size_t column, bool para) :
-					Array_2d<double>(fun, row, column, para)
+			Array_2d<double>(fun, row, column, para)
 			{
 			}
 
 			Matrix::Matrix(std::function<double(size_t, size_t)> fun, size_t row, size_t column, bool para) :
-					Array_2d<double>(fun, row, column, para)
+			Array_2d<double>(fun, row, column, para)
 			{
 			}
 #endif
 
 #if __cplusplus >= 201103L //C++0x
 			Matrix::Matrix(std::initializer_list<std::initializer_list<double>> src) :
-					Array_2d<double>(src)
+			Array_2d<double>(src)
 			{ //利用二维初始化列表进行构造
 			}
 
 			Matrix::Matrix(std::initializer_list<double> src) :
-					Array_2d<double>(src)
+			Array_2d<double>(src)
 			{ //利用一维初始化列表进行构造
 			}
 
 			Matrix::Matrix(Matrix &&src) :
-					Array_2d<double>(src)
+			Array_2d<double>(src)
 			{ //转移构造函数
 			}
 
@@ -211,8 +211,8 @@ namespace kerbal
 
 					fout.write((const char*) &row, sizeof_row); //输出矩阵行数
 					fout.write((const char*) &column, sizeof_column); //输出矩阵列数
-					for (size_t i = 0; i < row; i++) {
-						for (size_t j = 0; j < column; j++) {
+					for (size_t i = 0; i < row; ++i) {
+						for (size_t j = 0; j < column; ++j) {
 							fout.write((const char*) (p[i] + j), sizeof_element); //输出矩阵元素
 						}
 					}
@@ -565,7 +565,7 @@ namespace kerbal
 #else
 
 #pragma message("\n\
-			* parallel Matrix operator* enable"\
+        * parallel Matrix operator* enable"\
 )
 #				pragma omp parallel
 				{
@@ -686,14 +686,14 @@ namespace kerbal
 				const size_t row_total = A.row + B.row;
 				const size_t &column_total = A.column;
 
-				Matrix result(row_total, column_total);
+				Matrix result(row_total, column_total, Array_2d<double>::uninit_tag);
 
 				for (size_t i = 0; i != A.row; ++i) { //行循环
-					std::copy(A.p[i], A.p[i] + column_total, result.p[i]);
+					std::uninitialized_copy(A.p[i], A.p[i] + column_total, result.p[i]);
 				}
 
 				for (size_t i = 0; i != B.row; ++i) { //行循环
-					std::copy(B.p[i], B.p[i] + column_total, result.p[A.row + i]);
+					std::uninitialized_copy(B.p[i], B.p[i] + column_total, result.p[A.row + i]);
 				}
 
 				return result;
@@ -709,11 +709,11 @@ namespace kerbal
 				const size_t &row_total = A.row;
 				const size_t column_total = A.column + B.column;
 
-				Matrix result(row_total, column_total);
+				Matrix result(row_total, column_total, Array_2d<double>::uninit_tag);
 
 				for (size_t i = 0; i != row_total; ++i) { //行循环
-					std::copy(A.p[i], A.p[i] + A.column, result.p[i]);
-					std::copy(B.p[i], B.p[i] + B.column, result.p[i] + A.column);
+					std::uninitialized_copy(A.p[i], A.p[i] + A.column, result.p[i]);
+					std::uninitialized_copy(B.p[i], B.p[i] + B.column, result.p[i] + A.column);
 				}
 
 				return result;
@@ -726,10 +726,10 @@ namespace kerbal
 
 			const Matrix Matrix::operator-() const
 			{
-				Matrix result(row, column);
+				Matrix result(row, column, Array_2d<double>::uninit_tag);
 				for (size_t i = 0; i != row; ++i) {
 					for (size_t j = 0; j != column; ++j) {
-						result.p[i][j] = -p[i][j];
+						new (result.p[i] + j) double(-p[i][j]);
 					}
 				}
 				return result;
@@ -849,9 +849,9 @@ namespace kerbal
 				this->test_column(left);
 				this->test_column(right - 1);
 
-				Matrix result(down - up, right - left);
+				Matrix result(down - up, right - left, Array_2d<double>::uninit_tag);
 				for (size_t i = up; i < down; ++i) {
-					std::copy(p[i] + left, p[i] + right, result.p[i - up]);
+					std::uninitialized_copy(p[i] + left, p[i] + right, result.p[i - up]);
 				}
 				return result;
 			}
@@ -953,7 +953,7 @@ namespace kerbal
 			}
 
 			template <>
-			const Matrix conv_2d<Conv_size::max>(const Matrix &core, const Matrix &A)
+			const Matrix conv_2d<max>(const Matrix &core, const Matrix &A)
 			{
 				//矩阵卷积
 				std::cout << "max" << std::endl;
@@ -961,7 +961,7 @@ namespace kerbal
 			}
 
 			template <>
-			const Matrix conv_2d<Conv_size::mid>(const Matrix &core, const Matrix &A)
+			const Matrix conv_2d<mid>(const Matrix &core, const Matrix &A)
 			{
 				//矩阵卷积
 				std::cout << "mid" << std::endl;
@@ -969,7 +969,7 @@ namespace kerbal
 			}
 
 			template <>
-			const Matrix conv_2d<Conv_size::small>(const Matrix &core, const Matrix &A)
+			const Matrix conv_2d<small>(const Matrix &core, const Matrix &A)
 			{
 				//矩阵卷积
 				std::cout << "small" << std::endl;

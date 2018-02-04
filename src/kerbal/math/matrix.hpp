@@ -92,21 +92,13 @@ namespace kerbal
 
 #if __cplusplus < 201103L
 					Matrix(double (*function)(), size_t row, size_t column, bool para = false);
-					Matrix(double (*function)(size_t, size_t), size_t row, size_t column, bool para = false);
+					Matrix(double (*function)(size_t, size_t), size_t row, size_t column, bool para =
+							false);
 #else
 					Matrix(std::function<double()> fun, size_t row, size_t column, bool para = false);
 					Matrix(std::function<double(size_t, size_t)> fun, size_t row, size_t column, bool para =
 							false);
 #endif
-
-					/**
-					 * @brief 利用线性迭代器进行构造
-					 * @param begin 起始迭代器
-					 * @param end 终止迭代器
-					 * @param in_row 为真时构造行向量, 为假时构造列向量
-					 */
-					template <typename ForwardIterator>
-					Matrix(ForwardIterator begin, ForwardIterator end, bool in_row = true);
 
 					/**
 					 * @brief 利用一个长度为 LEN 的一维数组进行构造
@@ -500,12 +492,6 @@ namespace kerbal
 					friend void std::swap(Matrix &a, Matrix &b);
 				};
 
-			template <typename ForwardIterator>
-			Matrix::Matrix(ForwardIterator begin, ForwardIterator end, bool in_row) :
-					Array_2d<double>(begin, end, in_row)
-			{ //利用线性迭代器进行构造
-			}
-
 			template <size_t LEN>
 			Matrix::Matrix(const double (&src)[LEN], bool in_row) :
 					Array_2d<double>(src, in_row)
@@ -546,13 +532,13 @@ namespace kerbal
 			const Matrix conv_2d(const Matrix &core, const Matrix &A); //矩阵卷积
 
 			template <>
-			const Matrix conv_2d<Conv_size::max>(const Matrix &core, const Matrix &A);
+			const Matrix conv_2d<max>(const Matrix &core, const Matrix &A);
 
 			template <>
-			const Matrix conv_2d<Conv_size::mid>(const Matrix &core, const Matrix &A);
+			const Matrix conv_2d<mid>(const Matrix &core, const Matrix &A);
 
 			template <>
-			const Matrix conv_2d<Conv_size::small>(const Matrix &core, const Matrix &A);
+			const Matrix conv_2d<small>(const Matrix &core, const Matrix &A);
 
 			//应用部分
 #if __cplusplus >= 201103L
@@ -561,7 +547,7 @@ namespace kerbal
 			{
 				Matrix result(1 + sizeof...(args), 1 + sizeof...(args), 0);
 				size_t i = 0;
-				for (const double & ele : { arg0, args... }) {
+				for (const double & ele : {arg0, args...}) {
 					result.p[i][i] = ele;
 					++i;
 				}

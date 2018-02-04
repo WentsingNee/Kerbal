@@ -135,9 +135,6 @@ namespace kerbal
 
 #endif
 
-					template <typename ForwardIterator>
-					Array_2d(ForwardIterator begin, ForwardIterator end, bool in_row = true); //利用线性迭代器进行构造
-
 					template <size_t LEN>
 					explicit Array_2d(const Type (&src)[LEN], bool in_row = true); //利用一维数组进行构造
 

@@ -61,25 +61,13 @@ int main()
 {
 	program_start(is_debug);
 
-	unsigned long t = GetTickCount();
-	Matrix m([]() {
-		return rand_between(-0.2,0.2);
-	}, 1500, 1500);
-	Matrix m2([]() {
-		return rand_between(-0.2,0.2);
-	}, 1500, 1500);
-	::omp_set_num_threads(1);
-	m * m2;
-	cout << GetTickCount() - t << endl;
-
 //	while (1) {
 //		unsigned long t = GetTickCount();
 //		m * m2;
 //		cout << GetTickCount() - t << endl;
 //	}
 
-//	Matrix m(5, 5, 0);
-//	Matrix m2(5ull, 5ull, 0);
+	Matrix m(5, 5, 0);
 //
 //	conv_2d<Conv_size::max>(m, m2);
 //	conv_2d<Conv_size::mid>(m, m2);

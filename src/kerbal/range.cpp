@@ -7,8 +7,8 @@
  */
 
 #if __cplusplus < 201103L //C++0x
-# pragma message("\n"\
-"			* range 使用了 C++ 11 新特性, 请打开 C++ 11 选项以便使用这些新特性"\
+# pragma message("\n\
+        * range 使用了 C++ 11 新特性, 请打开 C++ 11 选项以便使用这些新特性"\
 )
 #else
 

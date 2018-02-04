@@ -16,7 +16,7 @@
 #ifdef _OPENMP
 # include <omp.h>
 # pragma message("\n\
-			* " __FILE__ " 已启用 openMP. 版本代码为: " STR2(_OPENMP)\
+        * " __FILE__ " 已启用 openMP. 版本代码为: " STR2(_OPENMP)\
 )
 #endif
 
@@ -38,6 +38,9 @@ namespace kerbal
 	{
 		namespace array_2d
 		{
+
+			template <class Type>
+			typename Array_2d<Type>::Uninit Array_2d<Type>::uninit_tag;
 
 			template <class Type>
 			void Array_2d<Type>::mem_init()
@@ -64,9 +67,6 @@ namespace kerbal
 					p = NULL;
 				}
 			}
-
-			template <class Type>
-			typename Array_2d<Type>::Uninit Array_2d<Type>::uninit_tag;
 
 			template <class Type>
 			Array_2d<Type>::Array_2d(size_t row, size_t column, Uninit) :
@@ -146,7 +146,7 @@ namespace kerbal
 #			else
 
 #pragma message("\n\
-			* parallel constructor enable"\
+        * parallel constructor enable"\
 )
 
 #				pragma omp parallel for
@@ -172,35 +172,6 @@ namespace kerbal
 				}
 			}
 #endif
-
-			template <class Type>
-			template <typename ForwardIterator>
-			Array_2d<Type>::Array_2d(ForwardIterator begin, ForwardIterator end, bool in_row) :
-					p(NULL), row(0), column(0)
-			{ //利用线性迭代器进行构造
-
-				const size_t len = std::distance(begin, end);
-
-				if (in_row) {
-					this->row = 1;
-					this->column = len;
-
-					mem_init();
-					if (column != 0) {
-						std::uninitialized_copy(begin, end, p[0]);
-					}
-
-				} else {
-					this->row = len;
-					this->column = 1;
-
-					mem_init();
-					for (size_t i = 0; i != row; ++i) {
-						new (p[i]) Type(*begin);
-						++begin;
-					}
-				}
-			}
 
 			template <class Type>
 			template <size_t LEN>
