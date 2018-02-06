@@ -71,41 +71,41 @@ namespace kerbal
 
 #if __cplusplus < 201103L
 			Matrix::Matrix(double (*function)(), size_t row, size_t column, bool para) :
-					Array_2d<double>(function, row, column, para)
+			Array_2d<double>(function, row, column, para)
 			{
 			}
 
 			Matrix::Matrix(double (*function)(size_t, size_t), size_t row, size_t column, bool para) :
-					Array_2d<double>(function, row, column, para)
+			Array_2d<double>(function, row, column, para)
 			{
 			}
 
 #else
 
 			Matrix::Matrix(std::function<double()> fun, size_t row, size_t column, bool para) :
-			Array_2d<double>(fun, row, column, para)
+					Array_2d<double>(fun, row, column, para)
 			{
 			}
 
 			Matrix::Matrix(std::function<double(size_t, size_t)> fun, size_t row, size_t column, bool para) :
-			Array_2d<double>(fun, row, column, para)
+					Array_2d<double>(fun, row, column, para)
 			{
 			}
 #endif
 
 #if __cplusplus >= 201103L //C++0x
 			Matrix::Matrix(std::initializer_list<std::initializer_list<double>> src) :
-			Array_2d<double>(src)
+					Array_2d<double>(src)
 			{ //利用二维初始化列表进行构造
 			}
 
 			Matrix::Matrix(std::initializer_list<double> src) :
-			Array_2d<double>(src)
+					Array_2d<double>(src)
 			{ //利用一维初始化列表进行构造
 			}
 
 			Matrix::Matrix(Matrix &&src) :
-			Array_2d<double>(src)
+					Array_2d<double>(src)
 			{ //转移构造函数
 			}
 
@@ -547,16 +547,14 @@ namespace kerbal
 					throw std::invalid_argument("error: column(A) ≠ row(B)");
 				}
 
-				Matrix result(A.row, B.column);
-
-				double sum;
+				Matrix result(A.row, B.column, Array_2d<double>::uninit_tag);
 
 #ifndef _OPENMP
 				size_t i, j, k;
-				for (i = 0; i != A.row; ++i) {
-					for (j = 0; j != B.column; ++j) {
-						sum = 0.0;
-						for (k = 0; k != A.column; ++k) {
+				for (i = 0; i < A.row; ++i) {
+					for (j = 0; j < B.column; ++j) {
+						double sum = 0.0;
+						for (k = 0; k < A.column; ++k) {
 							sum += A.p[i][k] * B.p[k][j];
 						}
 						result.p[i][j] = sum;
@@ -569,11 +567,11 @@ namespace kerbal
 )
 #				pragma omp parallel
 				{
-#					pragma omp for nowait
+#					pragma omp for
 					for (size_t i = 0; i < A.row; ++i) {
 						for (size_t j = 0; j < B.column; ++j) {
-							sum = 0.0;
-							for (size_t k = 0; k != A.column; ++k) {
+							double sum = 0.0;
+							for (size_t k = 0; k < A.column; ++k) {
 								sum += A.p[i][k] * B.p[k][j];
 							}
 							result.p[i][j] = sum;
@@ -956,8 +954,18 @@ namespace kerbal
 			const Matrix conv_2d<max>(const Matrix &core, const Matrix &A)
 			{
 				//矩阵卷积
-				std::cout << "max" << std::endl;
-				return Matrix(1ull, 1ull);
+				Matrix z(A.row + core.row - 1, A.column + core.column - 1, 0);
+				size_t i, j, m, n;
+				for (m = 0; m < A.row; ++m) {
+					for (i = m; i < m + core.row && i < z.row; ++i) {
+						for (n = 0; n < A.column; ++n) {
+							for (j = n; j < n + core.column && j < z.column; ++j) {
+								z.p[i][j] += A.p[m][n] * core.p[i - m][j - n];
+							}
+						}
+					}
+				}
+				return z;
 			}
 
 			template <>

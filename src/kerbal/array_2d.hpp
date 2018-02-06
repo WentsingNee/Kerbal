@@ -168,9 +168,9 @@ namespace kerbal
 					size_t enlarge_row_buffer(size_t new_row);
 					size_t enlarge_column_buffer(size_t new_column);
 
-				public:
 					void resize(size_t new_row, size_t new_column);
 
+				public:
 					/**
 					 * @brief 获取动态二维数组的行数
 					 * @return 行数

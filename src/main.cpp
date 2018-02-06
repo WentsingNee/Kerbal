@@ -28,50 +28,56 @@ using namespace _choose;
 using namespace kerbal::math::matrix;
 using namespace kerbal::math::complexor;
 
-/*
- void conv_test()
- {
- Matrix t {
+void conv_test()
+{
+	Matrix t {
 
- { 17, 24, 1, 8, 15 },
+	{ 17, 24, 1, 8, 15 },
 
- { 23, 5, 7, 14, 16 },
+	{ 23, 5, 7, 14, 16 },
 
- { 4, 6, 13, 20, 22 },
+	{ 4, 6, 13, 20, 22 },
 
- { 10, 12, 19, 21, 3 },
+	{ 10, 12, 19, 21, 3 },
 
- { 11, 18, 25, 2, 9 } };
+	{ 11, 18, 25, 2, 9 } };
 
- t.print();
+	t.print();
 
- Matrix core = { { 1, 3, 1 }, { 0, 5, 0 }, { 2, 1, 2 } };
+	Matrix core = { { 1, 3, 1 }, { 0, 5, 0 }, { 2, 1, 2 } };
 
- //	Matrix t(1500, 1500);
- //	Matrix core(100, 100);
- //	conv2(core, t, 2); //.print();
- //
- //	Matrix a = { 0, 1, 2, 3, 4, 5 };
- //	Matrix core = { -1, -2, -3 };
- conv2(core, t, 2);
- }
- */
+	//	Matrix t(1500, 1500);
+	//	Matrix core(100, 100);
+	//	conv2(core, t, 2); //.print();
+	//
+	//	Matrix a = { 0, 1, 2, 3, 4, 5 };
+	//	Matrix core = { -1, -2, -3 };
+	kerbal::math::matrix::conv_2d<Conv_size::max>(core, t).print();
+}
 
 int main()
 {
 	program_start(is_debug);
 
-//	while (1) {
-//		unsigned long t = GetTickCount();
-//		m * m2;
-//		cout << GetTickCount() - t << endl;
-//	}
+	conv_test();
 
-	Matrix m(5, 5, 0);
+//	unsigned long t = GetTickCount();
+//	::omp_set_num_threads(2);
+//	Matrix m([]() ->int {
+//		return rand_between(-5,5);
+//	}, 1200, 1200);
+//	cout << GetTickCount() - t << endl;
 //
-//	conv_2d<Conv_size::max>(m, m2);
-//	conv_2d<Conv_size::mid>(m, m2);
-//	conv_2d<Conv_size::small>(m, m2);
+//	Matrix m2([]() ->int {
+//		return rand_between(-5,5);
+//	}, 1200, 1200);
+//
+////	while (1) {
+//	t = GetTickCount();
+//	::omp_set_num_threads(3);
+//	m * m2;
+//	cout << GetTickCount() - t << endl;
+//	}
 
 	program_will_end();
 //	system("pause");
