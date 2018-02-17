@@ -51,7 +51,7 @@ namespace kerbal
 						throw std::bad_alloc();
 					}
 					for (size_t i = 0; i != row; ++i) {
-						p[i] = (Type*) malloc(column * sizeof(column));
+						p[i] = (Type*) malloc(column * sizeof(Type));
 						if (p[i] == NULL) {
 							while (i != 0) {
 								--i;
@@ -744,8 +744,7 @@ namespace kerbal
 
 				for (size_t i = 0; i != row_total; ++i) { //ÐÐÑ­»·
 					std::uninitialized_copy(A.p[i], A.p[i] + A.column, result.p[i]);
-					std::uninitialized_copy(B.p[i], B.p[i] + B.column,
-							result.p[i] + A.column);
+					std::uninitialized_copy(B.p[i], B.p[i] + B.column, result.p[i] + A.column);
 				}
 
 				return result;
