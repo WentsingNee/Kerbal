@@ -137,26 +137,11 @@ namespace kerbal
 			{
 				//动态开辟一个以p为首地址的、row * column的二维数组, 并使用 function() 初始化每个元素
 				mem_init();
-#			ifndef _OPENMP
 				for (size_t i = 0; i != row; ++i) {
 					for (size_t j = 0; j != column; ++j) {
 						new (p[i] + j) Type(fun());
 					}
 				}
-#			else
-
-#			pragma message("\n\
-        * parallel constructor enable"\
-)
-
-#				pragma omp parallel for
-				for (size_t i = 0; i < row; ++i) {
-					for (size_t j = 0; j < column; ++j) {
-						new (p[i] + j) Type(fun());
-					}
-				}
-
-#			endif
 			}
 
 			template <class Type>

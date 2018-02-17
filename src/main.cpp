@@ -61,24 +61,28 @@ int main()
 
 //	conv_test();
 
-	Matrix::vander( { 4, 7, 8 }).print();
+	unsigned long t = GetTickCount();
+	Matrix m([]() {
+		return rand_between(-1.1,1.1);
+	}, 1300, 1300);
+	cout << GetTickCount() - t << " ms" << endl;
 
-	Complexor<double>::softmax( { 1, 2, 3, 4, 1, 2, 3 }).print();
+//	m.print(Matrix::none);
 
-//	unsigned long t = GetTickCount();
-//	::omp_set_num_threads(2);
-//	Matrix m([]() ->int {
-//		return rand_between(-5,5);
-//	}, 1200, 1200);
-//	cout << GetTickCount() - t << endl;
-//
+	t = GetTickCount();
+	::omp_set_num_threads(2);
+	m.det();
+	cout << GetTickCount() - t << " ms" << endl;
+
+//	m.do_triu();
+//	m.print();
+
 //	Matrix m2([]() ->int {
 //		return rand_between(-5,5);
 //	}, 1200, 1200);
 //
 ////	while (1) {
 //	t = GetTickCount();
-//	::omp_set_num_threads(3);
 //	m * m2;
 //	cout << GetTickCount() - t << endl;
 //	}

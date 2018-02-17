@@ -1,49 +1,36 @@
 #include "randnum.hpp"
-#include <stdlib.h>
-#include <cmath>
 
 #include "basic_math.hpp"
 #include "statistics.hpp"
-#include "../tick_count.h"
 
-unsigned int seed()
+time_t seed()
 {
-	unsigned int k = GetTickCount();
+	time_t k = time(NULL);
 	srand(k);
 	return k;
 }
 
-static bool rand_num_first = true;
+#define TIMES 10
+static double weight[TIMES];
+static time_t rand_init();
+static time_t current_seed = rand_init();
 
-double ave_rand(bool if_include_0, bool if_include_1)
+static time_t rand_init()
 {
-	if (rand_num_first == true) {
-		seed();
-		rand_num_first = false;
+	weight[0] = 1.0 / (RAND_MAX + 1);
+	for (unsigned int i = 0; i < TIMES - 1; ++i) {
+		weight[i + 1] = weight[i] / (RAND_MAX + 1);
 	}
+	current_seed = 0;
+	return seed();
+}
 
-	static const int TIMES = 10;
-	static double weight[TIMES + 1] = { 1.0 };
-	static bool ave_rand_first = true;
-	if (ave_rand_first == true) {
-		for (int i = 0; i < TIMES; i++) {
-			weight[i + 1] = weight[i] / RAND_MAX;
-		}
-		ave_rand_first = false;
+double _0_1_rand()
+{
+	double result = 0.0;
+	for (unsigned int i = 0; i < TIMES; ++i) {
+		result += rand() * weight[i];
 	}
-
-	double result;
-	do {
-		result = 0.0;
-		for (int i = 1; i <= TIMES; i++) {
-			result += rand() * weight[i];
-		}
-	} while (result > 1
-
-	|| (result == 0 && if_include_0 == false)
-
-	|| (result == 1 && if_include_1 == false));
-
 	return result;
 }
 

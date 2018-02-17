@@ -372,32 +372,73 @@ namespace kerbal
 
 				const size_t MAX_M = std::min(this->row, this->column) - 1;
 				for (size_t M = 0; M < MAX_M; ++M) {
-					for (size_t i = 1; i < this->row - M; ++i) {
-						for (size_t j = M; i < this->row - j; ++j) {
-							if (p[j + 1][M] != 0) {
-								if (p[j][M] == 0 || fabs(p[j][M]) > fabs(p[j + 1][M])) {
-									this->switch_rows(j, j + 1, M);
-									k = !k;
-								}
-							}
+
+					size_t begin = M;
+					size_t end = this->row - 1;
+					while (begin != end) {
+						while (p[begin][M] != 0 && begin != end) {
+							++begin;
 						}
+						if (begin == end) {
+							break;
+						}
+						std::swap(p[begin], p[end]);
+						k = !k;
+						while (p[end][M] == 0 && begin != end) {
+							--end;
+						}
+
 					}
 
+					++end;
+
 					if (p[M][M] != 0) {
-						for (size_t i = M + 1; i < this->row && p[i][M] != 0.0; ++i) {
+#						pragma omp parallel for
+						for (size_t i = M + 1; i < end; ++i) {
 							double ra = -p[i][M] / p[M][M];
 							for (size_t j = M; j < this->column; ++j) { //列循环
 								p[i][j] += ra * p[M][j];
 							}
+							p[i][M] = 0;
 						}
 					}
 				}
 
-				if (k) { //k == true
-					for (size_t i = 0; i < this->row && p[i][0] != 0.0; ++i) {
-						p[i][0] = -p[i][0];
-					}
+				if (k == true && p[0][0] != 0) { //k == true
+					p[0][0] = -p[0][0];
 				}
+
+//				bool k = false; //是否取相反数
+//
+//				const size_t MAX_M = std::min(this->row, this->column) - 1;
+//				for (size_t M = 0; M < MAX_M; ++M) {
+//					for (size_t i = 1; i < this->row - M; ++i) {
+//						for (size_t j = M; i < this->row - j; ++j) {
+//							if (p[j + 1][M] != 0) {
+//								if (p[j][M] == 0 || fabs(p[j][M]) > fabs(p[j + 1][M])) {
+//									this->switch_rows(j, j + 1);
+//									k = !k;
+//								}
+//							}
+//						}
+//					}
+//
+//					if (p[M][M] != 0) {
+//						for (size_t i = M + 1; i < this->row && p[i][M] != 0.0; ++i) {
+//							double ra = -p[i][M] / p[M][M];
+//							for (size_t j = M; j < this->column; ++j) { //列循环
+//								p[i][j] += ra * p[M][j];
+//							}
+//						}
+//					}
+//				}
+//
+//				if (k) { //k == true
+//					for (size_t i = 0; i < this->row && p[i][0] != 0.0; ++i) {
+//						p[i][0] = -p[i][0];
+//					}
+//				}
+
 			}
 
 			double Matrix::det() const
