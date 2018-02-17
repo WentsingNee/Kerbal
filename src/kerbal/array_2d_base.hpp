@@ -145,13 +145,13 @@ namespace kerbal
 				}
 #			else
 
-#pragma message("\n\
+#			pragma message("\n\
         * parallel constructor enable"\
 )
 
 #				pragma omp parallel for
 				for (size_t i = 0; i < row; ++i) {
-					for (size_t j = 0; j != column; ++j) {
+					for (size_t j = 0; j < column; ++j) {
 						new (p[i] + j) Type(fun());
 					}
 				}
@@ -205,8 +205,8 @@ namespace kerbal
 					p(NULL), row(ROW), column(COLUMN)
 			{ //利用二维数组进行构造
 				mem_init();
-				for (size_t i = 0; i != row; ++i) {
-					for (size_t j = 0; j != column; ++j) {
+				for (size_t i = 0; i < ROW; ++i) {
+					for (size_t j = 0; j < COLUMN; ++j) {
 						new (p[i] + j) Type(src[i][j]);
 					}
 				}
@@ -217,34 +217,29 @@ namespace kerbal
 			template <class Type>
 			Array_2d<Type>::Array_2d(std::initializer_list<std::initializer_list<Type>> src)
 			{
+				//TODO
 				//利用二维初始化列表进行构造
 
 				const size_t row_pre = src.size(); //最终定下的行数
 				const size_t column_pre = src.begin()->size(); //最终定下的列数
 				//扫描src每行的列数, 不一致则抛异常
 				for (auto it = src.begin() + 1; it != src.end(); ++it) {
-					if (it->size() != (unsigned) column_pre) {
+					if (it->size() != column_pre) {
 						throw std::invalid_argument(
 								"the initializer list is not a standard Array_2d");
 					}
 				}
 
-				if (row_pre > 0 && column_pre > 0) {
-					this->row = row_pre;
-					this->column = column_pre;
+				this->row = row_pre;
+				this->column = column_pre;
 
-					mem_init();
-					size_t i = 0;
-					auto it = src.begin();
-					while (i < row) {
-						std::copy(it->begin(), it->end(), p[i]);
-						++i;
-						++it;
-					}
-				} else {
-					this->row = 0;
-					this->column = 0;
-					this->p = NULL;
+				mem_init();
+				size_t i = 0;
+				auto it = src.begin();
+				while (i < row) {
+					std::uninitialized_copy(it->begin(), it->end(), p[i]);
+					++i;
+					++it;
 				}
 			}
 
@@ -284,17 +279,8 @@ namespace kerbal
 			template <class Type>
 			void Array_2d<Type>::clear() throw ()
 			{
-//				for (size_t i = 0; i != row; ++i) {
-//					for (size_t j = 0; j != column; ++j) {
-//						(p[i] + j)->~Type();
-//					}
-//					free (p[i]);
-//					p[i] = NULL;
-//				}
-				for (size_t i = row; i != 0;) {
-					--i;
-					for (size_t j = column; j != 0;) {
-						--j;
+				for (size_t i = 0; i != row; ++i) {
+					for (size_t j = 0; j != column; ++j) {
 						(p[i] + j)->~Type();
 					}
 					free (p[i]);
@@ -313,15 +299,14 @@ namespace kerbal
 					if (new_row == 0) {
 						this->clear();
 					} else {
-						for (size_t i = row; i != new_row;) {
-							--i;
-							for (size_t j = column; j != 0;) {
-								--j;
+						for (size_t i = new_row; i != this->row; ++i) {
+							for (size_t j = 0; j != this->column; ++j) {
 								(p[i] + j)->~Type();
 							}
 							free (p[i]);
 							p[i] = NULL;
 						}
+						//缩减内存应该不会 bad alloc 吧 (存疑)
 						this->p = (Type**) realloc(this->p, new_row * sizeof(Type*));
 						this->row = new_row;
 					}
@@ -336,10 +321,8 @@ namespace kerbal
 					if (new_column == 0) {
 						this->clear();
 					} else {
-						for (size_t i = row; i != 0;) {
-							--i;
-							for (size_t j = column; j != new_column;) {
-								--j;
+						for (size_t i = 0; i != row; ++i) {
+							for (size_t j = new_column; j != column; ++j) {
 								(p[i] + j)->~Type();
 							}
 							p[i] = (Type*) realloc(p[i], new_column * sizeof(Type));
@@ -353,7 +336,24 @@ namespace kerbal
 			template <class Type>
 			size_t Array_2d<Type>::enlarge_row_buffer(size_t new_row)
 			{
-				return 0;
+				if (new_row > this->row) {
+					Type ** p_new = (Type**) realloc(p, new_row * sizeof(Type*));
+					if (p_new == NULL) {
+						//realloc failure
+						throw std::bad_alloc();
+					}
+					this->p = p_new;
+
+					for (size_t i = this->row; i != new_row; ++i) {
+						p[i] = (Type*) malloc(this->column * sizeof(Type));
+						if (p[i] == NULL) {
+							//malloc failure
+							throw std::bad_alloc();
+						}
+					}
+					this->row = new_row;
+				}
+				return this->row;
 			}
 
 			template <class Type>
@@ -363,7 +363,7 @@ namespace kerbal
 					for (size_t i = 0; i != this->row; ++i) {
 						Type * p_new = (Type*) realloc(p[i], new_column * sizeof(Type));
 						if (p_new == NULL) {
-							//realloc
+							//realloc failure
 							throw std::bad_alloc();
 						}
 						p[i] = p_new;
@@ -421,7 +421,14 @@ namespace kerbal
 				if (new_row <= this->row) {
 					this->shrink_row(new_row);
 				} else {
-//					this->enlarge_row_buffer(new_row);
+					this->enlarge_row_buffer(new_row);
+					//构造
+				}
+
+				if (new_column <= this->column) {
+					this->shrink_column(new_column);
+				} else {
+					this->enlarge_column_buffer(new_column);
 					//构造
 				}
 			}
@@ -439,9 +446,9 @@ namespace kerbal
 			}
 
 			template <class Type>
-			const Type** Array_2d<Type>::get_data() const
+			const Type * const * Array_2d<Type>::get_data() const
 			{
-				return (const Type**) (p);
+				return p;
 			}
 
 			template <class Type>
@@ -558,7 +565,7 @@ namespace kerbal
 			const Array_2d<Type> Array_2d<Type>::call_of(std::function<Type(const Type &)> && __pf) const
 #endif
 			{
-				Array_2d < Type > result(row, column, Array_2d < Type > ::uninit_tag);
+				Array_2d result(row, column, uninit_tag);
 				for (size_t i = 0; i != row; ++i) {
 					for (size_t j = 0; j != column; ++j) {
 						new (result.p[i] + j) Type(__pf(this->p[i][j]));
@@ -574,7 +581,7 @@ namespace kerbal
 			const Array_2d<Type> Array_2d<Type>::call_of(std::function<Type(size_t, size_t)> && __pf) const
 #endif
 			{
-				Array_2d < Type > result(row, column, Array_2d < Type > ::uninit_tag);
+				Array_2d result(row, column, uninit_tag);
 				for (size_t i = 0; i != row; ++i) {
 					for (size_t j = 0; j != column; ++j) {
 						new (result.p[i] + j) Type(__pf(i, j));
@@ -591,7 +598,7 @@ namespace kerbal
 					Type(const Type &, size_t, size_t)> && __pf) const
 #endif
 			{
-				Array_2d < Type > result(row, column, Array_2d < Type > ::uninit_tag);
+				Array_2d result(row, column, uninit_tag);
 				for (size_t i = 0; i != row; ++i) {
 					for (size_t j = 0; j != column; ++j) {
 						new (result.p[i] + j) Type(__pf(this->p[i][j], i, j));
@@ -660,7 +667,7 @@ namespace kerbal
 			}
 
 			template <class Type>
-			inline void Array_2d<Type>::test_row(size_t row_test) const throw (std::out_of_range)
+			void Array_2d<Type>::test_row(size_t row_test) const throw (std::out_of_range)
 			{
 #	if __cplusplus >= 201103L
 				using std::to_string;
@@ -677,8 +684,7 @@ namespace kerbal
 			}
 
 			template <class Type>
-			inline void Array_2d<Type>::test_column(size_t column_test) const
-					throw (std::out_of_range)
+			void Array_2d<Type>::test_column(size_t column_test) const throw (std::out_of_range)
 			{
 #	if __cplusplus >= 201103L
 				using std::to_string;
@@ -692,6 +698,57 @@ namespace kerbal
 									+ " Array doesn't have the no." + to_string(column_test)
 									+ " column!");
 				}
+			}
+
+			template <class Type>
+			const Array_2d<Type> Array_2d<Type>::operator&&(const Array_2d & B) const
+			{ //将两个矩阵按竖直方向连接
+				/*   A
+				 *  ---
+				 *   B  */
+
+				const Array_2d & A = *this;
+				if (A.column != B.column) {
+					throw std::invalid_argument("串联的数组的列数不一致");
+				}
+
+				const size_t row_total = A.row + B.row;
+				const size_t &column_total = A.column;
+
+				Array_2d result(row_total, column_total, uninit_tag);
+
+				for (size_t i = 0; i != A.row; ++i) { //行循环
+					std::uninitialized_copy(A.p[i], A.p[i] + column_total, result.p[i]);
+				}
+
+				for (size_t i = 0; i != B.row; ++i) { //行循环
+					std::uninitialized_copy(B.p[i], B.p[i] + column_total, result.p[A.row + i]);
+				}
+
+				return result;
+			}
+
+			template <class Type>
+			const Array_2d<Type> Array_2d<Type>::operator||(const Array_2d & B) const
+			{ //将两个矩阵按水平方向连接
+				/*   A | B   */
+
+				const Array_2d & A = *this;
+				if (A.row != B.row) {
+					throw std::invalid_argument("串联的矩阵的行数不一致");
+				}
+				const size_t &row_total = A.row;
+				const size_t column_total = A.column + B.column;
+
+				Array_2d result(row_total, column_total, uninit_tag);
+
+				for (size_t i = 0; i != row_total; ++i) { //行循环
+					std::uninitialized_copy(A.p[i], A.p[i] + A.column, result.p[i]);
+					std::uninitialized_copy(B.p[i], B.p[i] + B.column,
+							result.p[i] + A.column);
+				}
+
+				return result;
 			}
 
 			template <class Type>
@@ -723,7 +780,7 @@ namespace kerbal
 			template <class Type>
 			void Array_2d<Type>::do_rotate_90()
 			{ // 逆时针转90度
-				Array_2d < Type > result = this->rotate_90_of();
+				Array_2d result(this->rotate_90_of());
 				this->clear();
 				this->row = result.row;
 				this->column = result.column;
@@ -737,7 +794,7 @@ namespace kerbal
 			template <class Type>
 			void Array_2d<Type>::do_rotate_270()
 			{ // 逆时针转270度
-				Array_2d < Type > result = this->rotate_270_of();
+				Array_2d result(this->rotate_270_of());
 				this->clear();
 				this->row = result.row;
 				this->column = result.column;
@@ -751,7 +808,7 @@ namespace kerbal
 			template <class Type>
 			Array_2d<Type> Array_2d<Type>::reflect_row_of() const
 			{
-				Array_2d < Type > result(this->row, this->column, Array_2d < Type > ::uninit_tag);
+				Array_2d result(this->row, this->column, uninit_tag);
 
 				for (size_t i = 0; i < this->row; ++i) {
 					std::uninitialized_copy(this->p[this->row - 1 - i],
@@ -763,7 +820,7 @@ namespace kerbal
 			template <class Type>
 			Array_2d<Type> Array_2d<Type>::reflect_column_of() const
 			{
-				Array_2d < Type > result(this->row, this->column, Array_2d < Type > ::uninit_tag);
+				Array_2d result(this->row, this->column, uninit_tag);
 
 				for (size_t i = 0; i < this->row; ++i) {
 					for (size_t j = 0; j < this->column; ++j) {
@@ -776,7 +833,7 @@ namespace kerbal
 			template <class Type>
 			Array_2d<Type> Array_2d<Type>::rotate_180_of() const
 			{
-				Array_2d < Type > result(this->row, this->column, Array_2d < Type > ::uninit_tag);
+				Array_2d result(this->row, this->column, uninit_tag);
 
 				for (size_t i = 0; i < this->row; ++i) {
 					for (size_t j = 0; j < this->column; ++j) {
@@ -791,7 +848,7 @@ namespace kerbal
 			Array_2d<Type> Array_2d<Type>::rotate_90_of() const
 			{
 				// 逆时针转90度
-				Array_2d < Type > result(this->column, this->row, Array_2d < Type > ::uninit_tag);
+				Array_2d result(this->column, this->row, uninit_tag);
 
 				for (size_t i = 0; i < this->column; ++i) {
 					for (size_t j = 0; j < this->row; ++j) {
@@ -805,7 +862,7 @@ namespace kerbal
 			Array_2d<Type> Array_2d<Type>::rotate_270_of() const
 			{
 				// 逆时针转270度
-				Array_2d < Type > result(this->column, this->row, Array_2d < Type > ::uninit_tag);
+				Array_2d result(this->column, this->row, uninit_tag);
 
 				for (size_t i = 0; i < this->column; ++i) {
 					for (size_t j = 0; j < this->row; ++j) {
@@ -820,7 +877,7 @@ namespace kerbal
 					throw (std::invalid_argument, std::out_of_range)
 			{
 				if (up >= down || left >= right) {
-					throw new std::invalid_argument("up >= down or left >= right");
+					throw std::invalid_argument("up >= down or left >= right");
 				}
 
 				this->test_row(up);
@@ -828,7 +885,7 @@ namespace kerbal
 				this->test_column(left);
 				this->test_column(right - 1);
 
-				Array_2d < Type > result(down - up, right - left, Array_2d < Type > ::uninit_tag);
+				Array_2d result(down - up, right - left, uninit_tag);
 				for (size_t i = up; i < down; ++i) {
 					std::uninitialized_copy(p[i] + left, p[i] + right, result.p[i - up]);
 				}

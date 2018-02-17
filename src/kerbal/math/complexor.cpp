@@ -29,7 +29,7 @@ namespace kerbal
 				const int &row = m.get_row();
 				const int &column = m.get_column() - 1;
 
-				const Type ** mp = m.get_data();
+				const Type * const * mp = m.get_data();
 
 				if (row != column) {
 					throw std::invalid_argument("不合法的增广矩阵");

@@ -14,11 +14,13 @@
 #ifndef _MATRIX_HPP_
 #define _MATRIX_HPP_
 
+#include "../array_2d.hpp"
+
+//#include "complexor.hpp"
+
 #include <fstream>
 #include <iostream>
 #include <cmath>
-
-#include "../array_2d.hpp"
 
 /** @brief kerbal 库 */
 namespace kerbal
@@ -30,6 +32,12 @@ namespace kerbal
 		namespace matrix
 		{
 			class Matrix;
+		}
+
+		namespace complexor
+		{
+			template <typename _Tp>
+			class Complexor;
 		}
 	}
 }
@@ -51,13 +59,8 @@ namespace kerbal
 	{
 		namespace matrix
 		{
-
 			using kerbal::data_struct::array_2d::Array_2d;
-
-			enum Conv_size
-			{
-				max, mid, small
-			};
+			using kerbal::math::complexor::Complexor;
 
 			/**
 			 * @brief 矩阵类
@@ -69,6 +72,9 @@ namespace kerbal
 					Matrix(size_t row, size_t column, Uninit);
 
 				public:
+					template <typename _Up>
+					friend class Complexor;
+
 					/**
 					 * @brief 构造一个 0 行 0 列的空矩阵
 					 * @throw 本构造函数承诺不抛出任何异常
@@ -166,7 +172,7 @@ namespace kerbal
 						none
 					};
 
-					virtual void print(Frame_style frame = rt_corner, bool print_corner = true, std::ostream &output =
+					void print(Frame_style frame = rt_corner, bool print_corner = true, std::ostream &output =
 							std::cout) const;
 
 					void save(std::ofstream & fout) const
@@ -244,7 +250,7 @@ namespace kerbal
 					 * @return 计算结果
 					 * @throw std::invalid_argument 当矩阵不为方阵时, 抛出此异常
 					 * @par 空间复杂度\n
-					 * 此操作具有 O(row * column) 阶复杂度
+					 * 此操作具有 O(row * column) 阶空间复杂度
 					 */
 					double det()const;
 
@@ -263,10 +269,10 @@ namespace kerbal
 					Matrix Inverse_matrix() const;
 
 					/**
-					 * @brief 计算本矩阵与其转置矩阵的乘积
+					 * @brief 计算本矩阵与其本身的转置矩阵的乘积
 					 * @return 结果矩阵
 					 */
-					Matrix mul_with_trans() const;
+					const Matrix mul_with_trans() const;
 
 					//运算符重载
 
@@ -313,6 +319,20 @@ namespace kerbal
 					friend const Matrix dot_product(const Matrix &A, const Matrix &B);
 
 					/**
+					 * @brief 计算矩阵的 n 次幂
+					 * @par 计算规则\n
+					 * - 若 n 为负数, 则计算基数矩阵的逆矩阵的 -n 次幂\n
+					 * - 若 n 为 0, 则返回同样大小的单位矩阵\n
+					 * - 若 n 为 1, 则返回原矩阵的拷贝
+					 * @param n 次数
+					 * @return A 的 n 次幂
+					 * @throw std::invalid_argument 当 n 不等于 1 时, 要求基数矩阵必须为方阵, 否则抛出此异常
+					 * @remark 表达式 A ^ n 完全等效于函数表达式 pow(A, n)
+					 * @see const Matrix pow(const Matrix & A, int n )
+					 */
+					const Matrix operator^(int n) const;
+
+					/**
 					 * @brief 计算一个矩阵的 n 次幂
 					 * @par 计算规则\n
 					 * - 若 n 为负数, 则计算基数矩阵的逆矩阵的 -n 次幂\n
@@ -322,61 +342,13 @@ namespace kerbal
 					 * @param n 次数
 					 * @return A 的 n 次幂
 					 * @throw std::invalid_argument 当 n 不等于 1 时, 要求基数矩阵必须为方阵, 否则抛出此异常
-					 * @remark 表达式 A ^ n 完全等效于函数表达式 pow(A, n)
-					 * @see const Matrix pow(const Matrix & A, const int n )
+					 * @remark 函数表达式 pow(A, n) 完全等效于表达式 A ^ n
+					 * @see const Matrix operator^(const Matrix & A, int n )
 					 */
-					friend const Matrix operator^(const Matrix &A, const int n);
-
-					/**
-					 * @brief 将两个矩阵按竖直方向连接
-					 * @param A 待连接矩阵 A
-					 * @param B 待连接矩阵 B
-					 * @return 连接生成的矩阵
-					 * @par 使用示例\n
-					 * 假设有矩阵\n
-					 * >
-					 * >         | 1 2 |          | 7 4 |
-					 * >     A = | 3 5 |      B = | 4 5 |
-					 * >         | 7 9 |          | 0 1 |
-					 * >
-					 * 则表达式 A && B 返回的结果矩阵 result 为\n
-					 * >
-					 * >              | 1 2 |
-					 * >              | 3 5 |
-					 * >     result = | 7 9 |
-					 * >              | 7 4 |
-					 * >              | 4 5 |
-					 * >              | 0 1 |
-					 * >
-					 *
-					 * @throw std::invalid_argument 当两个待连接的矩阵的列数不一致时, 抛出此异常
-					 * @see const Matrix operator||(const Matrix &A, const Matrix &B)
-					 */
-					friend const Matrix operator&&(const Matrix &A, const Matrix &B);
-
-					/**
-					 * @brief 将两个矩阵按水平方向连接
-					 * @param A 待连接矩阵 A
-					 * @param B 待连接矩阵 B
-					 * @return 连接生成的矩阵
-					 * @par 使用示例\n
-					 * 假设有矩阵\n
-					 * >
-					 * >         | 1 2 |         | 7 4 9 |
-					 * >     A = | 3 5 |     B = | 4 5 6 |
-					 * >         | 7 9 |         | 0 1 2 |
-					 * >
-					 * 则表达式 A || B 返回的结果矩阵 result 为\n
-					 * >
-					 * >              | 1 2 7 4 9 |
-					 * >     result = | 3 5 4 5 6 |
-					 * >              | 7 9 0 1 2 |
-					 * >
-					 *
-					 * @throw std::invalid_argument 当两个待连接的矩阵的行数不一致时, 抛出此异常
-					 * @see const Matrix operator &&(const Matrix &A, const Matrix &B)
-					 */
-					friend const Matrix operator||(const Matrix &A, const Matrix &B);
+					friend inline const Matrix pow(const Matrix &A, int n)
+					{
+						return A ^ n;
+					}
 
 					const Matrix operator+() const;
 					const Matrix operator-() const;
@@ -422,16 +394,17 @@ namespace kerbal
 					const Matrix& operator=(Matrix &&src);
 #endif //C++0x
 
-					template <size_t N> friend const Matrix cat(const Matrix (&a)[N]) throw (std::invalid_argument);
-
-					const Matrix sub_of(size_t up, size_t down, size_t left, size_t right) const throw (std::invalid_argument, std::out_of_range);
+					template <size_t N>
+					friend const Matrix cat(const Matrix (&a)[N]) throw (std::invalid_argument);
 
 					/**
 					 * @brief 返回一个 n 阶单位矩阵
 					 * @param n 阶数
 					 * @return n 阶单位矩阵
 					 */
-					friend const Matrix eye(size_t n); //构造一个单位矩阵
+					static const Matrix eye(size_t n); //构造一个单位矩阵
+
+					static const Matrix vander(const Complexor<double> & src);
 
 #if __cplusplus >= 201103L
 					/**
@@ -442,23 +415,8 @@ namespace kerbal
 					 * @warning only supported by C++ 11 or higher
 					 */
 					template <class ...T>
-					friend const Matrix diag(double arg0, T ... args);
+					static const Matrix diag(double arg0, T ... args);
 #endif //c++0x
-
-					/**
-					 * @brief 计算一个矩阵的 n 次幂
-					 * @par 计算规则\n
-					 * - 若 n 为负数, 则计算基数矩阵的逆矩阵的 -n 次幂\n
-					 * - 若 n 为 0, 则返回同样大小的单位矩阵\n
-					 * - 若 n 为 1, 则返回原矩阵的拷贝
-					 * @param A 基数矩阵
-					 * @param n 次数
-					 * @return A 的 n 次幂
-					 * @throw std::invalid_argument 当 n 不等于 1 时, 要求基数矩阵必须为方阵, 否则抛出此异常
-					 * @remark 函数表达式 pow(A, n) 完全等效于表达式 A ^ n
-					 * @see const Matrix operator^(const Matrix & A, const int n )
-					 */
-					friend const Matrix pow(const Matrix &A, const int n);
 
 					/**
 					 * @brief 计算本方阵的迹
@@ -468,11 +426,11 @@ namespace kerbal
 					 */
 					double tr() const;
 
-					friend const Matrix transpose_of(const Matrix &A); //构造矩阵A的转置矩阵
+					const Matrix transpose_of() const; //构造矩阵A的转置矩阵
 
 					void do_transpose()
 					{
-						*this = transpose_of(*this);
+						*this = this->transpose_of();
 					}
 
 					const Matrix cofactor_of(size_t row_tar, size_t column_tar)const throw (std::out_of_range); //构造矩阵A的余子式A(x,y)
@@ -486,10 +444,27 @@ namespace kerbal
 
 					friend const Matrix conv2(const Matrix &core, const Matrix &A, int size = 0);//矩阵卷积
 
+					enum Conv_size
+					{
+						max, mid, small
+					};
+
 					template<Conv_size>
-					friend const Matrix conv_2d(const Matrix &core, const Matrix &A);//矩阵卷积
+					friend const Matrix conv_2d(const Matrix &core, const Matrix &A); //矩阵卷积
 
 					friend void std::swap(Matrix &a, Matrix &b);
+
+					/**
+					 *
+					 * @param up
+					 * @param down
+					 * @param left
+					 * @param right
+					 * @return
+					 * @throws std::invalid_argument
+					 * @throws std::out_of_range
+					 */
+					const Matrix sub_of(size_t up, size_t down, size_t left, size_t right) const;
 				};
 
 			template <size_t LEN>
@@ -528,26 +503,26 @@ namespace kerbal
 				return result;
 			}
 
-			template <Conv_size>
+			template <Matrix::Conv_size>
 			const Matrix conv_2d(const Matrix &core, const Matrix &A); //矩阵卷积
 
 			template <>
-			const Matrix conv_2d<max>(const Matrix &core, const Matrix &A);
+			const Matrix conv_2d<Matrix::max>(const Matrix &core, const Matrix &A);
 
 			template <>
-			const Matrix conv_2d<mid>(const Matrix &core, const Matrix &A);
+			const Matrix conv_2d<Matrix::mid>(const Matrix &core, const Matrix &A);
 
 			template <>
-			const Matrix conv_2d<small>(const Matrix &core, const Matrix &A);
+			const Matrix conv_2d<Matrix::small>(const Matrix &core, const Matrix &A);
 
 			//应用部分
 #if __cplusplus >= 201103L
 			template <class ...T>
-			const Matrix diag(double arg0, T ... args)
+			const Matrix Matrix::diag(double arg0, T ... args)
 			{
 				Matrix result(1 + sizeof...(args), 1 + sizeof...(args), 0);
 				size_t i = 0;
-				for (const double & ele : {arg0, args...}) {
+				for (const double & ele : { arg0, args... }) {
 					result.p[i][i] = ele;
 					++i;
 				}

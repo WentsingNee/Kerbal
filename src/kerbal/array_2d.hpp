@@ -55,9 +55,8 @@ namespace kerbal
 				return N;
 			}
 
-			template <class Type> class Array_2d;
-			template <class Type> inline std::ostream& operator<<(std::ostream &output, const Array_2d<
-					Type> &src); //重载输出
+			template <class Type>
+			inline std::ostream& operator<<(std::ostream &output, const Array_2d<Type> &src); //重载输出
 
 			/**
 			 * @brief 动态二维数组类
@@ -177,7 +176,8 @@ namespace kerbal
 					 */
 					size_t get_row() const;
 					size_t get_column() const;
-					const Type** get_data() const;
+					const Type * const * get_data() const;
+
 					bool is_const();
 					bool is_const() const;
 
@@ -190,20 +190,24 @@ namespace kerbal
 					void set(size_t row, size_t column, Type && value);
 #endif
 
+					Type& operator()(size_t row, size_t column) throw (std::out_of_range);
+					const Type& operator()(size_t row, size_t column) const
+							throw (std::out_of_range);
+
 #if __cplusplus < 201103L
 					void do_call(Type (*__pf)(Type));
 					void do_call(Type (*__pf)(size_t, size_t));
 					void do_call(Type (*__pf)(Type, size_t, size_t));
-					const Array_2d<Type> call_of(Type (*__pf)(Type)) const;
-					const Array_2d<Type> call_of(Type (*__pf)(size_t, size_t)) const;
-					const Array_2d<Type> call_of(Type (*__pf)(Type, size_t, size_t)) const;
+					const Array_2d call_of(Type (*__pf)(Type)) const;
+					const Array_2d call_of(Type (*__pf)(size_t, size_t)) const;
+					const Array_2d call_of(Type (*__pf)(Type, size_t, size_t)) const;
 #else
 					void do_call(std::function<Type(const Type &)> && __pf);
 					void do_call(std::function<Type(size_t, size_t)> && __pf);
 					void do_call(std::function<Type(const Type &, size_t, size_t)> && __pf);
-					const Array_2d<Type> call_of(std::function<Type(const Type &)> && __pf) const;
-					const Array_2d<Type> call_of(std::function<Type(size_t, size_t)> && __pf) const;
-					const Array_2d<Type> call_of(std::function<Type(const Type &, size_t, size_t)> && __pf) const;
+					const Array_2d call_of(std::function<Type(const Type &)> && __pf) const;
+					const Array_2d call_of(std::function<Type(size_t, size_t)> && __pf) const;
+					const Array_2d call_of(std::function<Type(const Type &, size_t, size_t)> && __pf) const;
 #endif //c++0x
 
 					enum Print_style
@@ -211,14 +215,10 @@ namespace kerbal
 						frame_with_corner, frame_only, none
 					};
 
-					virtual void print(Print_style style = frame_with_corner, std::ostream &output =
+					void print(Print_style style = frame_with_corner, std::ostream &output =
 							std::cout) const;
 
 					//void print_to_file(char file_name[],bool if_output_frame) const;
-
-					Type& operator()(size_t row, size_t column) throw (std::out_of_range);
-					const Type& operator()(size_t row, size_t column) const
-							throw (std::out_of_range);
 
 					virtual size_t get_digit_size() const;
 
@@ -227,19 +227,70 @@ namespace kerbal
 					virtual void test_row(size_t row_test) const throw (std::out_of_range);
 					virtual void test_column(size_t column_test) const throw (std::out_of_range);
 
+					/**
+					 * @brief 将两个矩阵按竖直方向连接
+					 * @param A 待连接矩阵 A
+					 * @param B 待连接矩阵 B
+					 * @return 连接生成的矩阵
+					 * @par 使用示例\n
+					 * 假设有矩阵\n
+					 * >
+					 * >         | 1 2 |          | 7 4 |
+					 * >     A = | 3 5 |      B = | 4 5 |
+					 * >         | 7 9 |          | 0 1 |
+					 * >
+					 * 则表达式 A && B 返回的结果矩阵 result 为\n
+					 * >
+					 * >              | 1 2 |
+					 * >              | 3 5 |
+					 * >     result = | 7 9 |
+					 * >              | 7 4 |
+					 * >              | 4 5 |
+					 * >              | 0 1 |
+					 * >
+					 *
+					 * @throw std::invalid_argument 当两个待连接的矩阵的列数不一致时, 抛出此异常
+					 * @see const Array_2d operator||(const Array_2d & with) const
+					 */
+					const Array_2d operator&&(const Array_2d & with) const;
+
+					/**
+					 * @brief 将两个矩阵按水平方向连接
+					 * @param A 待连接矩阵 A
+					 * @param B 待连接矩阵 B
+					 * @return 连接生成的矩阵
+					 * @par 使用示例\n
+					 * 假设有矩阵\n
+					 * >
+					 * >         | 1 2 |         | 7 4 9 |
+					 * >     A = | 3 5 |     B = | 4 5 6 |
+					 * >         | 7 9 |         | 0 1 2 |
+					 * >
+					 * 则表达式 A || B 返回的结果矩阵 result 为\n
+					 * >
+					 * >              | 1 2 7 4 9 |
+					 * >     result = | 3 5 4 5 6 |
+					 * >              | 7 9 0 1 2 |
+					 * >
+					 *
+					 * @throw std::invalid_argument 当两个待连接的矩阵的行数不一致时, 抛出此异常
+					 * @see const Array_2d operator&&(const Array_2d & with) const
+					 */
+					const Array_2d operator||(const Array_2d & with) const;
+
 					void do_reflect_row() throw ();
 					void do_reflect_column(); //这里有可能会抛出异常, 具体会不会取决于 swap(Type&, Type&)
 					void do_rotate_180();
 					void do_rotate_90(); // 逆时针转90度
 					void do_rotate_270(); // 逆时针转270度
 
-					Array_2d<Type> reflect_row_of() const;
-					Array_2d<Type> reflect_column_of() const;
-					Array_2d<Type> rotate_180_of() const;
-					Array_2d<Type> rotate_90_of() const; // 逆时针转90度
-					Array_2d<Type> rotate_270_of() const; // 逆时针转270度
+					Array_2d reflect_row_of() const;
+					Array_2d reflect_column_of() const;
+					Array_2d rotate_180_of() const;
+					Array_2d rotate_90_of() const; // 逆时针转90度
+					Array_2d rotate_270_of() const; // 逆时针转270度
 
-					const Array_2d<Type> sub_of(size_t up, size_t down, size_t left, size_t right) const
+					const Array_2d sub_of(size_t up, size_t down, size_t left, size_t right) const
 							throw (std::invalid_argument, std::out_of_range);
 
 			};

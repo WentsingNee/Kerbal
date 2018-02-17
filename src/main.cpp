@@ -30,7 +30,7 @@ using namespace kerbal::math::complexor;
 
 void conv_test()
 {
-	Matrix t {
+	Matrix t = {
 
 	{ 17, 24, 1, 8, 15 },
 
@@ -52,14 +52,18 @@ void conv_test()
 	//
 	//	Matrix a = { 0, 1, 2, 3, 4, 5 };
 	//	Matrix core = { -1, -2, -3 };
-	kerbal::math::matrix::conv_2d<Conv_size::max>(core, t).print();
+	kerbal::math::matrix::conv_2d<Matrix::max>(core, t).print();
 }
 
 int main()
 {
 	program_start(is_debug);
 
-	conv_test();
+//	conv_test();
+
+	Matrix::vander( { 4, 7, 8 }).print();
+
+	Complexor<double>::softmax( { 1, 2, 3, 4, 1, 2, 3 }).print();
 
 //	unsigned long t = GetTickCount();
 //	::omp_set_num_threads(2);

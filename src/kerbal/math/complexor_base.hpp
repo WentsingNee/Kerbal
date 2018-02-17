@@ -13,7 +13,6 @@
 #include <iomanip>
 #include <cstring>
 #include "../except_C++0x.hpp"
-#include "matrix.hpp"
 
 #if __cplusplus >= 201103L
 #	include <functional>
@@ -25,11 +24,10 @@ namespace kerbal
 	{
 		namespace complexor
 		{
-
-			template <class Type> class Complexor;
+			using kerbal::math::matrix::Matrix;
 
 			template <class Type>
-			const typename Complexor<Type>::Uninit Complexor<Type>::uninit_tag;
+			typename Complexor<Type>::Uninit Complexor<Type>::uninit_tag;
 
 			template <class Type>
 			Complexor<Type>::Complexor(size_t num, Uninit, bool vertical) :
@@ -279,9 +277,8 @@ namespace kerbal
 			template <class Type>
 			void Complexor<Type>::clear() throw ()
 			{
-				Type *ptr = p + num;
-				while (ptr != p) {
-					(--ptr)->~Type();
+				for (Type *ptr = p; ptr != p + num; ++ptr) {
+					ptr->~Type();
 				}
 				free (p);
 				p = NULL;
@@ -300,7 +297,7 @@ namespace kerbal
 			template <class Type>
 			const Complexor<Type> Complexor<Type>::call_of(Type (*__pf)(Type)) const
 			{
-				Complexor<Type> result(this->num,Complexor<Type>::uninit_tag,this->vertical);
+				Complexor result(this->num,uninit_tag,this->vertical);
 				for (size_t i = 0; i < num; ++i) {
 					new (result.p + i) Type(__pf(this->p[i]));
 				}
@@ -319,8 +316,7 @@ namespace kerbal
 			template <class Type>
 			const Complexor<Type> Complexor<Type>::call_of(std::function<Type(const Type&)> && __pf) const
 			{
-				Complexor < Type
-						> result(this->num, Complexor < Type > ::uninit_tag, this->vertical);
+				Complexor result(this->num, uninit_tag, this->vertical);
 				for (size_t i = 0; i < num; ++i) {
 					new (result.p + i) Type(__pf(this->p[i]));
 				}
@@ -444,10 +440,9 @@ namespace kerbal
 					if (new_num == 0) {
 						this->clear();
 					} else {
-						Type *it = this->p + this->num;
-						const Type * const rend = this->p + new_num;
-						while (it != rend) {
-							(--it)->~Type();
+						const Type * const end = this->p + this->num;
+						for (Type * it = this->p + new_num; it != end; ++it) {
+							it->~Type();
 						}
 						this->p = (Type*) realloc(this->p, new_num * sizeof(Type));
 						this->num = new_num;
@@ -468,7 +463,7 @@ namespace kerbal
 			void Complexor<Type>::print() const
 			{
 				std::cout << std::resetiosflags(std::ios::right) << std::setiosflags(std::ios::left)
-							<< std::setfill(' '); //清除右对齐, 设置左对齐, 设置不足补空格
+						<< std::setfill(' '); //清除右对齐, 设置左对齐, 设置不足补空格
 				std::cout << "(";
 
 				if (!empty()) {
@@ -486,16 +481,13 @@ namespace kerbal
 			}
 
 			template <class Type>
-			const Complexor<Type> Complexor<Type>::operator+(const Complexor<Type> & with) const
+			const Complexor<Type> Complexor<Type>::operator+(const Complexor & with) const
 			{
 				if (this->num != with.num) {
 					throw std::invalid_argument("error: length(a) ≠ length(b)");
 				}
 
-				const size_t &num = this->num;
-
-				Complexor result(num, Complexor < Type > ::uninit_tag,
-						this->vertical || with.vertical);
+				Complexor result(num, uninit_tag, this->vertical || with.vertical);
 				for (size_t i = 0; i < num; ++i) {
 					new (result.p + i) Type(this->p[i] + with.p[i]);
 				}
@@ -503,16 +495,13 @@ namespace kerbal
 			}
 
 			template <class Type>
-			const Complexor<Type> Complexor<Type>::operator-(const Complexor<Type> & with) const
+			const Complexor<Type> Complexor<Type>::operator-(const Complexor & with) const
 			{
 				if (this->num != with.num) {
 					throw std::invalid_argument("error: length(a) ≠ length(b)");
 				}
 
-				const size_t &num = this->num;
-
-				Complexor result(num, Complexor < Type > ::uninit_tag,
-						this->vertical || with.vertical);
+				Complexor result(num, uninit_tag, this->vertical || with.vertical);
 				for (size_t i = 0; i < num; i++) {
 					new (result.p + i) Type(this->p[i] - with.p[i]);
 				}
@@ -590,7 +579,7 @@ namespace kerbal
 			}
 
 			template <class Type>
-			Complexor<Type>& Complexor<Type>::operator*=(double with) throw () //向量乘法
+			Complexor<Type>& Complexor<Type>::operator*=(double with) //向量乘法
 			{
 				for (size_t i = 0; i != num; ++i) {
 					p[i] *= with;
@@ -607,7 +596,7 @@ namespace kerbal
 			template <class Type>
 			const Complexor<Type> Complexor<Type>::operator-() const //返回向量的反向同长向量
 			{
-				Complexor < Type > result(num, Complexor < Type > ::uninit_tag, this->vertical);
+				Complexor result(num, uninit_tag, this->vertical);
 				for (size_t i = 0; i < num; ++i) {
 					new (result.p + i) Type(-p[i]);
 				}
@@ -615,7 +604,7 @@ namespace kerbal
 			}
 
 			template <class Type>
-			Complexor<Type>& Complexor<Type>::operator=(const Complexor<Type> &src)
+			Complexor<Type>& Complexor<Type>::operator=(const Complexor &src)
 			{
 				if (this->num == src.num) {
 					std::copy(src.p, src.p + this->num, this->p);
@@ -657,7 +646,7 @@ namespace kerbal
 
 #if __cplusplus >= 201103L //C++0x
 			template <class Type>
-			const Complexor<Type>& Complexor<Type>::operator=(Complexor<Type> &&src) noexcept
+			const Complexor<Type>& Complexor<Type>::operator=(Complexor &&src) noexcept
 			{ //转移赋值运算符
 
 				this->clear();
@@ -681,7 +670,7 @@ namespace kerbal
 			template <class Type>
 			const Complexor<Type> Complexor<Type>::transpose_of() const
 			{
-				Complexor<Type> result = *this;
+				Complexor result(*this);
 				result.vertical = !result.vertical;
 				return result;
 			}
@@ -779,7 +768,7 @@ namespace kerbal
 			template <class Type>
 			const Complexor<Type> operator*(double k, const Complexor<Type> &b) //数k乘以向量
 			{
-				Complexor<Type> result(b.num, Complexor<Type>::uninit_tag, b.vertical);
+				Complexor<Type> result(b.num, Complexor < Type > ::uninit_tag, b.vertical);
 				for (size_t i = 0; i < b.num; ++i) {
 					new (result.p + i) Type(k * b.p[i]);
 				}
@@ -789,7 +778,7 @@ namespace kerbal
 			template <class Type>
 			const Complexor<Type> operator*(const Complexor<Type> &b, double k) //向量乘以数k
 			{
-				Complexor<Type> result(b.num, Complexor<Type>::uninit_tag, b.vertical);
+				Complexor<Type> result(b.num, Complexor < Type > ::uninit_tag, b.vertical);
 				for (size_t i = 0; i < b.num; ++i) {
 					new (result.p + i) Type(b.p[i] * k);
 				}
@@ -829,9 +818,32 @@ namespace kerbal
 			}
 
 			template <class Type>
-			Type Complexor<Type>::operator^(const Complexor<Type> & with) const
+			Type Complexor<Type>::operator^(const Complexor & with) const
 			{
 				return acos(dot_product(*this, with) / abs(*this) / abs(with));
+			}
+
+			template <class Type>
+			const Complexor<Type> Complexor<Type>::softmax(const Complexor & src)
+			{
+				const Type * p_max = src.p;
+				for (const Type * it = src.p; it != src.p + src.num; ++it) {
+					if (*it > *p_max) {
+						p_max = it;
+					}
+				}
+
+				Type sum = 0;
+				Complexor result(src.num, uninit_tag, src.vertical);
+				for (size_t i = 0; i < src.num; ++i) {
+					new (result.p + i) Type(exp(src.p[i] - *p_max));
+					sum += result.p[i];
+				}
+
+				for (size_t i = 0; i < src.num; ++i) {
+					result.p[i] /= sum;
+				}
+				return result;
 			}
 
 		} /* namespace complexor */

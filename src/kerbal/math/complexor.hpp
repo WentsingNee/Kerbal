@@ -9,8 +9,8 @@
 #define MATH_COMPLEXOR_HPP_
 
 #include <iostream>
+
 #include "matrix.hpp"
-#include "../except_C++0x.hpp"
 
 #if __cplusplus >= 201103L
 #	include <functional>
@@ -20,6 +20,11 @@ namespace kerbal
 {
 	namespace math
 	{
+		namespace matrix
+		{
+			class Matrix;
+		}
+
 		/** @brief 向量计算子库 */
 		namespace complexor
 		{
@@ -72,6 +77,8 @@ namespace kerbal
 
 				protected:
 
+					friend class Matrix;
+
 					/** @brief 数据区 */
 					Type* p;
 
@@ -96,7 +103,7 @@ namespace kerbal
 					{
 					};
 
-					static const Uninit uninit_tag;
+					static Uninit uninit_tag;
 
 					Complexor(size_t num, Uninit uninit_tag, bool vertical = true);
 
@@ -296,9 +303,8 @@ namespace kerbal
 					 * @brief 向量乘法
 					 * @param with
 					 * @return
-					 * @throw 本方法承诺不抛出任何异常
 					 */
-					Complexor& operator*=(double with) throw ();
+					Complexor& operator*=(double with);
 
 					/**
 					 * @brief 返回向量的同向同长向量
@@ -343,6 +349,8 @@ namespace kerbal
 					 * @throw std::invalid_argument 当两个向量维度不同时, 抛出此异常
 					 */
 					Type operator^(const Complexor & with) const;
+
+					static const Complexor softmax(const Complexor & src);
 
 			};
 
@@ -391,6 +399,6 @@ namespace kerbal
 
 } /* namespace kerbal */
 
-#endif /* MATH_COMPLEXOR_HPP_ */
-
 #include "complexor_base.hpp" /* 实现 */
+
+#endif /* MATH_COMPLEXOR_HPP_ */

@@ -5,6 +5,7 @@
  */
 
 #include "matrix.hpp"
+#include "complexor.hpp"
 
 #include <algorithm>
 #include "../string_serve.hpp"
@@ -47,7 +48,7 @@ namespace kerbal
 				using namespace string_serve;
 			}
 
-			using namespace kerbal::data_struct::array_2d;
+//			using namespace kerbal::data_struct::array_2d;
 
 			Matrix::Matrix(size_t row, size_t column, Uninit) :
 					Array_2d<double>(row, column, Array_2d<double>::uninit_tag)
@@ -158,9 +159,9 @@ namespace kerbal
 				size_t i, j;
 				output << corner[0];
 				for (j = 0; j < column; j++) {
-					output << "  " << std::setw(12) << " ";
+					output << "  " << std::setw(12) << ' ';
 				}
-				output << " " << corner[1] << std::endl;
+				output << ' ' << corner[1] << std::endl;
 
 				for (i = 0; i < row; i++) {
 					output << corner[4];
@@ -168,16 +169,16 @@ namespace kerbal
 					for (j = 0; j < column; j++) {
 						output << "  " << std::setw(12) << p[i][j];
 					}
-					output << " " << corner[4] << std::endl;
+					output << ' ' << corner[4] << std::endl;
 				}
 
 				output << corner[2];
 				for (j = 0; j < column; j++) {
-					output << "  " << std::setw(12) << " ";
+					output << "  " << std::setw(12) << ' ';
 				}
-				output << " " << corner[3];
+				output << ' ' << corner[3];
 				if (print_corner) {
-					output << " " << row << " × " << column;
+					output << ' ' << row << " × " << column;
 				}
 				output << std::endl;
 			}
@@ -280,9 +281,7 @@ namespace kerbal
 				if (!fin) {
 					throw std::runtime_error("文件打开失败");
 				}
-				const Matrix tmp = load_from(fin);
-				fin.close();
-				return tmp;
+				return load_from(fin);
 			}
 
 			void Matrix::switch_rows(size_t row1, size_t row2)
@@ -371,9 +370,10 @@ namespace kerbal
 			{
 				bool k = false; //是否取相反数
 
-				for (size_t M = 0; M < this->row - 1 && M < this->column - 1; ++M) {
+				const size_t MAX_M = std::min(this->row, this->column) - 1;
+				for (size_t M = 0; M < MAX_M; ++M) {
 					for (size_t i = 1; i < this->row - M; ++i) {
-						for (size_t j = M; i + j < this->row; ++j) {
+						for (size_t j = M; i < this->row - j; ++j) {
 							if (p[j + 1][M] != 0) {
 								if (p[j][M] == 0 || fabs(p[j][M]) > fabs(p[j + 1][M])) {
 									this->switch_rows(j, j + 1, M);
@@ -384,7 +384,7 @@ namespace kerbal
 					}
 
 					if (p[M][M] != 0) {
-						for (size_t i = M + 1; p[i][M] != 0.0 && i < this->row; ++i) {
+						for (size_t i = M + 1; i < this->row && p[i][M] != 0.0; ++i) {
 							double ra = -p[i][M] / p[M][M];
 							for (size_t j = M; j < this->column; ++j) { //列循环
 								p[i][j] += ra * p[M][j];
@@ -394,7 +394,7 @@ namespace kerbal
 				}
 
 				if (k) { //k == true
-					for (size_t i = 0; p[i][0] != 0.0 && i < this->row; ++i) {
+					for (size_t i = 0; i < this->row && p[i][0] != 0.0; ++i) {
 						p[i][0] = -p[i][0];
 					}
 				}
@@ -404,29 +404,28 @@ namespace kerbal
 			{
 				this->test_square();
 
-				Matrix copy = *this;
+				Matrix copy(*this);
 				copy.do_triu();
 
-				double sum = 1.0;
+				double result = 1.0;
 				for (size_t i = 0; i != copy.row; ++i) {
-					sum *= copy.p[i][i];
+					result *= copy.p[i][i];
 				}
 
-				return sum;
+				return result;
 			}
 
 			Matrix Matrix::Adjugate_matrix() const
 			{ //返回本方阵的伴随矩阵
 
 				this->test_square();
-				Matrix result(row, column);
+				Matrix result(row, column, uninit_tag);
 
-				size_t i, j;
-				for (i = 0; i != row; ++i) {
-					for (j = 0; j != column; ++j) {
+				for (size_t i = 0; i != row; ++i) {
+					for (size_t j = 0; j != column; ++j) {
 						//i+j为偶数
-						result.p[j][i] = cofactor_of(i, j).det();
-						if ((i + j) % 2) {
+						new (result.p[j] + i) double(cofactor_of(i, j).det());
+						if ((i + j) % 2 == 1) {
 							//i+j为奇数
 							result.p[j][i] = -result.p[j][i];
 						}
@@ -438,27 +437,24 @@ namespace kerbal
 			Matrix Matrix::Inverse_matrix() const
 			{ //返回本方阵的逆矩阵
 
-				double D = this->det();
+				const double D = this->det();
 				if (D == 0.0) {
 					throw std::invalid_argument("A does not have an inverse matrix");
 				}
-				const double k = 1.0 / D;
-				return (k * this->Adjugate_matrix());
+				return (1.0 / D * this->Adjugate_matrix());
 			}
 
-			Matrix Matrix::mul_with_trans() const
+			const Matrix Matrix::mul_with_trans() const
 			{
-				Matrix result(this->row, this->row);
+				Matrix result(this->row, this->row, uninit_tag);
 
-				size_t i, j, k;
-				double sum;
-				for (i = 0; i != this->row; ++i) {
-					for (j = 0; j != this->row; ++j) {
-						sum = 0.0;
-						for (k = 0; k != this->column; ++k) {
+				for (size_t i = 0; i != this->row; ++i) {
+					for (size_t j = 0; j != this->row; ++j) {
+						double sum = 0.0;
+						for (size_t k = 0; k != this->column; ++k) {
 							sum += this->p[i][k] * this->p[j][k];
 						}
-						result.p[i][j] = sum;
+						new (result.p[i] + j) double(sum);
 					}
 				}
 				return result;
@@ -478,9 +474,8 @@ namespace kerbal
 
 				Matrix result(row, column);
 
-				size_t i, j;
-				for (i = 0; i != row; ++i) {
-					for (j = 0; j != column; ++j) {
+				for (size_t i = 0; i != row; ++i) {
+					for (size_t j = 0; j != column; ++j) {
 						result.p[i][j] = A.p[i][j] + B.p[i][j];
 					}
 				}
@@ -500,9 +495,8 @@ namespace kerbal
 
 				Matrix result(row, column);
 
-				size_t i, j;
-				for (i = 0; i != row; ++i) {
-					for (j = 0; j != column; ++j) {
+				for (size_t i = 0; i != row; ++i) {
+					for (size_t j = 0; j != column; ++j) {
 						result.p[i][j] = A.p[i][j] - B.p[i][j];
 					}
 				}
@@ -511,14 +505,11 @@ namespace kerbal
 
 			const Matrix operator*(const double k, const Matrix &A)
 			{ //数k乘矩阵
-				if (k == 1) {
-					return A;
-				}
 				Matrix result(A);
-				size_t i, j;
-				for (i = 0; i != A.row; ++i) {
-					for (j = 0; j != A.column; ++j) {
-						result.p[i][j] *= k;
+
+				for (size_t i = 0; i != A.row; ++i) {
+					for (size_t j = 0; j != A.column; ++j) {
+						result.p[i][j] = k * result.p[i][j];
 					}
 				}
 				return result;
@@ -526,14 +517,11 @@ namespace kerbal
 
 			const Matrix operator*(const Matrix &A, const double k)
 			{ //矩阵乘数k
-				if (k == 1) {
-					return A;
-				}
 				Matrix result(A);
-				size_t i, j;
-				for (i = 0; i != A.row; ++i) {
-					for (j = 0; j != A.column; ++j) {
-						result.p[i][j] *= k;
+
+				for (size_t i = 0; i != A.row; ++i) {
+					for (size_t j = 0; j != A.column; ++j) {
+						result.p[i][j] = result.p[i][j] * k;
 					}
 				}
 				return result;
@@ -547,17 +535,16 @@ namespace kerbal
 					throw std::invalid_argument("error: column(A) ≠ row(B)");
 				}
 
-				Matrix result(A.row, B.column, Array_2d<double>::uninit_tag);
+				Matrix result(A.row, B.column, Matrix::uninit_tag);
 
 #ifndef _OPENMP
-				size_t i, j, k;
-				for (i = 0; i < A.row; ++i) {
-					for (j = 0; j < B.column; ++j) {
+				for (size_t i = 0; i < A.row; ++i) {
+					for (size_t j = 0; j < B.column; ++j) {
 						double sum = 0.0;
-						for (k = 0; k < A.column; ++k) {
+						for (size_t k = 0; k < A.column; ++k) {
 							sum += A.p[i][k] * B.p[k][j];
 						}
-						result.p[i][j] = sum;
+						new (result.p[i] + j) double(sum);
 					}
 				}
 #else
@@ -574,7 +561,7 @@ namespace kerbal
 							for (size_t k = 0; k < A.column; ++k) {
 								sum += A.p[i][k] * B.p[k][j];
 							}
-							result.p[i][j] = sum;
+							new (result.p[i] + j) double(sum);
 						}
 					}
 				}
@@ -597,12 +584,10 @@ namespace kerbal
 
 				Matrix result(C);
 
-				size_t i, j, k;
-				double sum;
-				for (i = 0; i != row; ++i) {
-					for (j = 0; j != column; ++j) {
-						sum = 0.0;
-						for (k = 0; k != A.column; ++k) {
+				for (size_t i = 0; i != row; ++i) {
+					for (size_t j = 0; j != column; ++j) {
+						double sum = 0.0;
+						for (size_t k = 0; k != A.column; ++k) {
 							sum += A.p[i][k] * B.p[k][j];
 						}
 						result.p[i][j] += sum;
@@ -627,9 +612,8 @@ namespace kerbal
 				const size_t &column = A.column;
 
 				Matrix result(row, column);
-				size_t i, j;
-				for (i = 0; i != row; ++i) {
-					for (j = 0; j != column; ++j) {
+				for (size_t i = 0; i != row; ++i) {
+					for (size_t j = 0; j != column; ++j) {
 						result.p[i][j] = A.p[i][j] * B.p[i][j];
 					}
 				}
@@ -637,7 +621,7 @@ namespace kerbal
 				return result;
 			}
 
-			const Matrix eye(size_t n)
+			const Matrix Matrix::eye(size_t n)
 			{ //构造一个单位矩阵
 				Matrix result(n, n, 0);
 				for (size_t i = 0; i != n; ++i) {
@@ -646,9 +630,21 @@ namespace kerbal
 				return result;
 			}
 
-			const Matrix operator^(const Matrix &A, const int n)
-			{ //计算矩阵A的n次方
+			const Matrix Matrix::vander(const Complexor<double> & src)
+			{
+				Matrix result(src.num, src.num, uninit_tag);
+				for (size_t j = 0; j < result.column; ++j) {
+					new (result.p[0] + j) double(1);
+					for (size_t i = 1; i < result.row; ++i) {
+						new (result.p[i] + j) double(result.p[i - 1][j] * src.p[j]);
+					}
+				}
+				return result;
+			}
 
+			const Matrix Matrix::operator^(int n) const
+			{ //计算矩阵A的n次方
+				const Matrix & A = *this;
 				if (n >= 4) {
 					Matrix tmp = A ^ (n / 2);
 					tmp = tmp * tmp;
@@ -667,54 +663,16 @@ namespace kerbal
 					return A;
 				} else { //n == 0
 					A.test_square();
-					return eye(A.row);
+					return Matrix::eye(A.row);
 				}
-			}
-
-			const Matrix operator&&(const Matrix &A, const Matrix &B)
-			{ //将两个矩阵按竖直方向连接
-				/*   A
-				 *  ---
-				 *   B  */
-
-				if (A.column != B.column) {
-					throw std::invalid_argument("串联的矩阵的列数不一致");
-				}
-
-				const size_t row_total = A.row + B.row;
-				const size_t &column_total = A.column;
-
-				Matrix result(row_total, column_total, Array_2d<double>::uninit_tag);
-
-				for (size_t i = 0; i != A.row; ++i) { //行循环
-					std::uninitialized_copy(A.p[i], A.p[i] + column_total, result.p[i]);
-				}
-
-				for (size_t i = 0; i != B.row; ++i) { //行循环
-					std::uninitialized_copy(B.p[i], B.p[i] + column_total, result.p[A.row + i]);
-				}
-
-				return result;
-			}
-
-			const Matrix operator||(const Matrix &A, const Matrix &B)
-			{ //将两个矩阵按水平方向连接
-				/*   A | B   */
-
-				if (A.row != B.row) {
-					throw std::invalid_argument("串联的矩阵的行数不一致");
-				}
-				const size_t &row_total = A.row;
-				const size_t column_total = A.column + B.column;
-
-				Matrix result(row_total, column_total, Array_2d<double>::uninit_tag);
-
-				for (size_t i = 0; i != row_total; ++i) { //行循环
-					std::uninitialized_copy(A.p[i], A.p[i] + A.column, result.p[i]);
-					std::uninitialized_copy(B.p[i], B.p[i] + B.column, result.p[i] + A.column);
-				}
-
-				return result;
+//				if (n < 0) {
+//					return this->Inverse_matrix() ^ -n;
+//				} else if (n == 0) {
+//					this->test_square();
+//					return Matrix::eye(this->row);
+//				} else if (n == 1) {
+//					return *this;
+//				}
 			}
 
 			const Matrix Matrix::operator+() const
@@ -724,7 +682,7 @@ namespace kerbal
 
 			const Matrix Matrix::operator-() const
 			{
-				Matrix result(row, column, Array_2d<double>::uninit_tag);
+				Matrix result(row, column, uninit_tag);
 				for (size_t i = 0; i != row; ++i) {
 					for (size_t j = 0; j != column; ++j) {
 						new (result.p[i] + j) double(-p[i][j]);
@@ -835,30 +793,6 @@ namespace kerbal
 			}
 #endif
 
-			const Matrix Matrix::sub_of(size_t up, size_t down, size_t left, size_t right) const
-					throw (std::invalid_argument, std::out_of_range)
-			{
-				if (up >= down || left >= right) {
-					throw std::invalid_argument("up >= down or left >= right");
-				}
-
-				this->test_row(up);
-				this->test_row(down - 1);
-				this->test_column(left);
-				this->test_column(right - 1);
-
-				Matrix result(down - up, right - left, Array_2d<double>::uninit_tag);
-				for (size_t i = up; i < down; ++i) {
-					std::uninitialized_copy(p[i] + left, p[i] + right, result.p[i - up]);
-				}
-				return result;
-			}
-
-			const Matrix pow(const Matrix &A, const int n)
-			{
-				return A ^ n;
-			}
-
 			double Matrix::tr() const
 			{ //返回方阵的迹
 				this->test_square();
@@ -951,7 +885,7 @@ namespace kerbal
 			}
 
 			template <>
-			const Matrix conv_2d<max>(const Matrix &core, const Matrix &A)
+			const Matrix conv_2d<Matrix::max>(const Matrix &core, const Matrix &A)
 			{
 				//矩阵卷积
 				Matrix z(A.row + core.row - 1, A.column + core.column - 1, 0);
@@ -969,19 +903,20 @@ namespace kerbal
 			}
 
 			template <>
-			const Matrix conv_2d<mid>(const Matrix &core, const Matrix &A)
+			const Matrix conv_2d<Matrix::mid>(const Matrix &core, const Matrix &A)
 			{
 				//矩阵卷积
-				std::cout << "mid" << std::endl;
-				return Matrix(1ull, 1ull);
+				return conv_2d<Matrix::max>(core, A).sub_of((core.row - 1) / 2,
+						A.row + (core.row - 1) / 2, (core.column - 1) / 2,
+						A.column + (core.column - 1) / 2);
 			}
 
 			template <>
-			const Matrix conv_2d<small>(const Matrix &core, const Matrix &A)
+			const Matrix conv_2d<Matrix::small>(const Matrix &core, const Matrix &A)
 			{
 				//矩阵卷积
 				std::cout << "small" << std::endl;
-				return Matrix(1ull, 1ull);
+				return Matrix(1, 1);
 			}
 
 //计算
@@ -997,13 +932,13 @@ namespace kerbal
 				return true;
 			}
 
-			const Matrix transpose_of(const Matrix &A)
+			const Matrix Matrix::transpose_of() const
 			{ //返回矩阵A的转置矩阵
 
-				Matrix result(A.column, A.row);
+				Matrix result(this->column, this->row, uninit_tag);
 				for (size_t i = 0; i != result.row; ++i) {
 					for (size_t j = 0; j != result.column; ++j) {
-						result.p[i][j] = A.p[j][i];
+						new (result.p[i] + j) double(this->p[j][i]);
 					}
 				}
 				return result;
@@ -1016,17 +951,17 @@ namespace kerbal
 				test_row(row_tar);
 				test_column(column_tar);
 
-				Matrix result(row - 1, column - 1);
+				Matrix result(row - 1, column - 1, uninit_tag);
 
 				for (size_t i = 0; i != row_tar; ++i) {
-					std::copy(this->p[i], this->p[i] + column_tar, result.p[i]);
-					std::copy(this->p[i] + column_tar + 1, this->p[i] + this->column,
+					std::uninitialized_copy(this->p[i], this->p[i] + column_tar, result.p[i]);
+					std::uninitialized_copy(this->p[i] + column_tar + 1, this->p[i] + this->column,
 							result.p[i] + column_tar);
 				}
 
 				for (size_t i = row_tar + 1; i != row; ++i) {
-					std::copy(this->p[i], this->p[i] + column_tar, result.p[i - 1]);
-					std::copy(this->p[i] + column_tar + 1, this->p[i] + this->column,
+					std::uninitialized_copy(this->p[i], this->p[i] + column_tar, result.p[i - 1]);
+					std::uninitialized_copy(this->p[i] + column_tar + 1, this->p[i] + this->column,
 							result.p[i - 1] + column_tar);
 				}
 
@@ -1036,6 +971,24 @@ namespace kerbal
 			void Matrix::do_cofactor(size_t row_tar, size_t column_tar) throw (std::out_of_range)
 			{ //返回一个矩阵划去row_tar 行和 column_tar 列后的矩阵
 				*this = cofactor_of(row_tar, column_tar);
+			}
+
+			const Matrix Matrix::sub_of(size_t up, size_t down, size_t left, size_t right) const
+			{
+				if (up >= down || left >= right) {
+					throw std::invalid_argument("up >= down or left >= right");
+				}
+
+				this->test_row(up);
+				this->test_row(down - 1);
+				this->test_column(left);
+				this->test_column(right - 1);
+
+				Matrix result(down - up, right - left, uninit_tag);
+				for (size_t i = up; i < down; ++i) {
+					std::uninitialized_copy(p[i] + left, p[i] + right, result.p[i - up]);
+				}
+				return result;
 			}
 
 //应用部分
