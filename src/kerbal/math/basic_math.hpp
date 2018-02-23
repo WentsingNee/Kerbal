@@ -16,23 +16,32 @@ namespace kerbal
 	{
 		namespace constant
 		{
-#ifndef M_E
-			const double M_E = 2.7182818284590452354;
-			const double M_LOG2E = 1.4426950408889634074;
-			const double M_LOG10E = 0.43429448190325182765;
-			const double M_LN2 = 0.69314718055994530942;
-			const double M_LN10 = 2.30258509299404568402;
-			const double M_PI = 3.14159265358979323846;
-			const double M_PI_2 = 1.57079632679489661923;
-			const double M_PI_4 = 0.78539816339744830962;
-			const double M_1_PI = 0.31830988618379067154;
-			const double M_2_PI = 0.63661977236758134308;
-			const double M_2_SQRTPI = 1.12837916709551257390;
-			const double M_SQRT2 = 1.41421356237309504880;
-			const double M_SQRT1_2 = 0.70710678118654752440;
+#ifndef MATH_CONSTANT
+# if __cplusplus < 201103L
+#  define MATH_CONSTANT const
+# else
+#  define MATH_CONSTANT constexpr
+# endif
 #endif
 
-			const double M_SQRT_2PI = sqrt(2 * M_PI);
+#ifndef M_E
+			MATH_CONSTANT double M_E = 2.7182818284590452354;
+			MATH_CONSTANT double M_LOG2E = 1.4426950408889634074;
+			MATH_CONSTANT double M_LOG10E = 0.43429448190325182765;
+			MATH_CONSTANT double M_LN2 = 0.69314718055994530942;
+			MATH_CONSTANT double M_LN10 = 2.30258509299404568402;
+			MATH_CONSTANT double M_PI = 3.14159265358979323846;
+			MATH_CONSTANT double M_PI_2 = 1.57079632679489661923;
+			MATH_CONSTANT double M_PI_4 = 0.78539816339744830962;
+			MATH_CONSTANT double M_1_PI = 0.31830988618379067154;
+			MATH_CONSTANT double M_2_PI = 0.63661977236758134308;
+			MATH_CONSTANT double M_2_SQRTPI = 1.12837916709551257390;
+			MATH_CONSTANT double M_SQRT2 = 1.41421356237309504880;
+			MATH_CONSTANT double M_SQRT1_2 = 0.70710678118654752440;
+#endif
+
+			MATH_CONSTANT double M_SQRT_2PI = sqrt(2 * M_PI);
+			MATH_CONSTANT double M_1_SQRT_2PI = 1.0 / M_SQRT_2PI;
 		}/* namespace constant */
 	}
 }
@@ -44,6 +53,10 @@ namespace kerbal
 	{
 		namespace basic_math
 		{
+			inline double square(double x)
+			{
+				return x * x;
+			}
 
 			inline double round(double x, int digits)
 			{

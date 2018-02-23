@@ -1,5 +1,4 @@
 #include "statistics.hpp"
-#include <math.h>
 
 namespace kerbal
 {
@@ -54,19 +53,14 @@ namespace kerbal
 				return result;
 			}
 
-			namespace
+			double std_normdist(double x) //标准正态分布的概率密度函数, miu=ave, sigma=expect
 			{
-				const double SQR_2PI = sqrt(2 * M_PI);
+				return exp(x * x / (-2)) * M_1_SQRT_2PI;
 			}
 
 			double normdist(double x, double sigma, double miu) //正态分布的概率密度函数, miu=ave, sigma=expect
 			{
-				return exp(pow((x - miu) / sigma, 2) / (-2)) / SQR_2PI / sigma;
-			}
-
-			double std_normdist(double x) //标准正态分布的概率密度函数, miu=ave, sigma=expect
-			{
-				return exp(x * x / (-2)) / SQR_2PI;
+				return std_normdist((x - miu) / sigma) / sigma;
 			}
 
 			double regression(const double x[], const double y[], int len, double &a, double &b) //线性回归
@@ -77,8 +71,8 @@ namespace kerbal
 
 				for (int i = 0; i < len; i++) {
 					sum_dist += (x[i] - x_ave) * (y[i] - y_ave);
-					sum_dist_x += (x[i] - x_ave) * (x[i] - x_ave);
-					sum_dist_y += (y[i] - y_ave) * (y[i] - y_ave);
+					sum_dist_x += basic_math::square(x[i] - x_ave);
+					sum_dist_y += basic_math::square(y[i] - y_ave);
 				}
 				b = sum_dist / sum_dist_x;
 				a = y_ave - b * x_ave;
@@ -90,3 +84,4 @@ namespace kerbal
 	} /* namespace math */
 
 } /* namespace kerbal */
+

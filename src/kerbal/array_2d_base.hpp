@@ -764,29 +764,19 @@ namespace kerbal
 			template <class Type>
 			void Array_2d<Type>::do_rotate_90()
 			{ // 逆时针转90度
-				Array_2d result(this->rotate_90_of());
-				this->clear();
-				this->row = result.row;
-				this->column = result.column;
-				this->p = result.p;
-
-				result.p = NULL;
-				result.column = 0;
-				result.row = 0;
+				const Array_2d& result(this->rotate_90_of());
+				std::swap(const_cast<Type** &>(result.p), this->p);
+				std::swap(const_cast<size_t &>(result.row), this->row);
+				std::swap(const_cast<size_t &>(result.column), this->column);
 			}
 
 			template <class Type>
 			void Array_2d<Type>::do_rotate_270()
 			{ // 逆时针转270度
-				Array_2d result(this->rotate_270_of());
-				this->clear();
-				this->row = result.row;
-				this->column = result.column;
-				this->p = result.p;
-
-				result.p = NULL;
-				result.column = 0;
-				result.row = 0;
+				const Array_2d& result(this->rotate_270_of());
+				std::swap(const_cast<Type** &>(result.p), this->p);
+				std::swap(const_cast<size_t &>(result.row), this->row);
+				std::swap(const_cast<size_t &>(result.column), this->column);
 			}
 
 			template <class Type>

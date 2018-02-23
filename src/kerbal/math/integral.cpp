@@ -1,5 +1,4 @@
 #include "integral.hpp"
-#include <math.h>
 
 #include "basic_math.hpp"
 #include "statistics.hpp"
@@ -74,7 +73,7 @@ double normal_integral(double b, double dx) //标准正态分布积分
 		}
 	}
 
-	result = 0.5 + (1 + exp(-b * b / 2) + 2 * sum_double + 4 * sum_odd) * dx / 3 / M_SQRT_2PI;
+	result = 0.5 + (1 + exp(-b * b / 2) + 2 * sum_double + 4 * sum_odd) * dx / 3 * M_1_SQRT_2PI;
 
 	if (result > 1) {
 		return 1.0;

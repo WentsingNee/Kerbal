@@ -228,7 +228,7 @@ namespace kerbal
 			{
 				std::ofstream fout(file_name, std::ios::out | std::ios::binary);
 				if (!fout) {
-					throw std::runtime_error("文件打开失败");
+					throw std::runtime_error("file open error");
 				}
 				this->save(fout);
 				fout.close();
@@ -266,9 +266,10 @@ namespace kerbal
 				fin.read((char*) &row, size_of_row);
 				fin.read((char*) &column, size_of_column);
 
-				Matrix tmp(row, column);
+				Matrix tmp(row, column, Matrix::uninit_tag);
 				for (size_t i = 0; i < row; i++) {
 					for (size_t j = 0; j < column; j++) {
+						new (tmp.p[i] + j) double(0);
 						fin.read((char*) (tmp.p[i] + j), size_of_ele);
 					}
 				}
@@ -279,7 +280,7 @@ namespace kerbal
 			{
 				std::ifstream fin(file_name, std::ios::in | std::ios::binary);
 				if (!fin) {
-					throw std::runtime_error("文件打开失败");
+					throw std::runtime_error("file open error");
 				}
 				return load_from(fin);
 			}
@@ -368,77 +369,26 @@ namespace kerbal
 
 			void Matrix::do_triu()
 			{
-				bool k = false; //是否取相反数
-
-				const size_t MAX_M = std::min(this->row, this->column) - 1;
-				for (size_t M = 0; M < MAX_M; ++M) {
-
-					size_t begin = M;
-					size_t end = this->row - 1;
-					while (begin != end) {
-						while (p[begin][M] != 0 && begin != end) {
-							++begin;
-						}
-						if (begin == end) {
-							break;
-						}
-						std::swap(p[begin], p[end]);
-						k = !k;
-						while (p[end][M] == 0 && begin != end) {
-							--end;
-						}
-
-					}
-
-					++end;
-
-					if (p[M][M] != 0) {
-#						pragma omp parallel for
-						for (size_t i = M + 1; i < end; ++i) {
-							double ra = -p[i][M] / p[M][M];
-							for (size_t j = M; j < this->column; ++j) { //列循环
-								p[i][j] += ra * p[M][j];
-							}
-							p[i][M] = 0;
-						}
+				for (size_t i = 1; i < this->row; ++i) {
+					for (size_t j = 0; j < std::min(i, this->column); ++j) {
+						this->p[i][j] = 0;
 					}
 				}
+			}
 
-				if (k == true && p[0][0] != 0) { //k == true
-					p[0][0] = -p[0][0];
+			const Matrix Matrix::triu_of() const
+			{
+				Matrix result(this->row, this->column, uninit_tag);
+				for (size_t i = 0; i < this->row; ++i) {
+					size_t j = 0;
+					for (; j < std::min(i, this->column); ++j) {
+						new (result.p[i] + j) double(0);
+					}
+					for (; j < this->column; ++j) {
+						new (result.p[i] + j) double(this->p[i][j]);
+					}
 				}
-
-//				bool k = false; //是否取相反数
-//
-//				const size_t MAX_M = std::min(this->row, this->column) - 1;
-//				for (size_t M = 0; M < MAX_M; ++M) {
-//					for (size_t i = 1; i < this->row - M; ++i) {
-//						for (size_t j = M; i < this->row - j; ++j) {
-//							if (p[j + 1][M] != 0) {
-//								if (p[j][M] == 0 || fabs(p[j][M]) > fabs(p[j + 1][M])) {
-//									this->switch_rows(j, j + 1);
-//									k = !k;
-//								}
-//							}
-//						}
-//					}
-//
-//					if (p[M][M] != 0) {
-//						for (size_t i = M + 1; i < this->row && p[i][M] != 0.0; ++i) {
-//							double ra = -p[i][M] / p[M][M];
-//							for (size_t j = M; j < this->column; ++j) { //列循环
-//								p[i][j] += ra * p[M][j];
-//							}
-//						}
-//					}
-//				}
-//
-//				if (k) { //k == true
-//					for (size_t i = 0; i < this->row && p[i][0] != 0.0; ++i) {
-//						p[i][0] = -p[i][0];
-//					}
-//				}
-
+				return result;
 			}
 
 			double Matrix::det() const
@@ -446,14 +396,37 @@ namespace kerbal
 				this->test_square();
 
 				Matrix copy(*this);
-				copy.do_triu();
+				double result = 1;
 
-				double result = 1.0;
-				for (size_t i = 0; i != copy.row; ++i) {
-					result *= copy.p[i][i];
+				for (size_t M = 0; M < copy.row - 1; ++M) {
+
+					if (copy.p[M][M] == 0) {
+						size_t i;
+						for (i = M + 1; i != copy.row; ++i) {
+							if (copy.p[i][M] != 0) {
+								std::swap(copy.p[M], copy.p[i]);
+								result = -result;
+								break;
+							}
+						}
+						if (i == copy.row) {
+							return 0;
+						}
+					}
+					result *= copy.p[M][M];
+
+#					pragma omp parallel for schedule(dynamic) if(copy.row - M > 32)
+					for (size_t i = M + 1; i < copy.row; ++i) {
+						if (copy.p[i][M] != 0) {
+							double ra = -copy.p[i][M] / copy.p[M][M];
+							copy.p[i][M] = 0;
+							for (size_t j = M + 1; j < copy.column; ++j) { //列循环
+								copy.p[i][j] += ra * copy.p[M][j];
+							}
+						}
+					}
 				}
-
-				return result;
+				return result * copy.p[copy.row - 1][copy.column - 1];
 			}
 
 			Matrix Matrix::Adjugate_matrix() const
@@ -480,7 +453,7 @@ namespace kerbal
 
 				const double D = this->det();
 				if (D == 0.0) {
-					throw std::invalid_argument("A does not have an inverse matrix");
+					throw std::invalid_argument("The matrix does not have an inverse matrix");
 				}
 				return (1.0 / D * this->Adjugate_matrix());
 			}
@@ -513,11 +486,11 @@ namespace kerbal
 				const size_t &row = A.row;
 				const size_t &column = A.column;
 
-				Matrix result(row, column);
+				Matrix result(row, column, Matrix::uninit_tag);
 
 				for (size_t i = 0; i != row; ++i) {
 					for (size_t j = 0; j != column; ++j) {
-						result.p[i][j] = A.p[i][j] + B.p[i][j];
+						new (result.p[i] + j) double(A.p[i][j] + B.p[i][j]);
 					}
 				}
 				return result;
@@ -534,11 +507,11 @@ namespace kerbal
 				const size_t &row = A.row;
 				const size_t &column = A.column;
 
-				Matrix result(row, column);
+				Matrix result(row, column, Matrix::uninit_tag);
 
 				for (size_t i = 0; i != row; ++i) {
 					for (size_t j = 0; j != column; ++j) {
-						result.p[i][j] = A.p[i][j] - B.p[i][j];
+						new (result.p[i] + j) double(A.p[i][j] - B.p[i][j]);
 					}
 				}
 				return result;
@@ -546,11 +519,11 @@ namespace kerbal
 
 			const Matrix operator*(const double k, const Matrix &A)
 			{ //数k乘矩阵
-				Matrix result(A);
+				Matrix result(A.row, A.column, Matrix::uninit_tag);
 
 				for (size_t i = 0; i != A.row; ++i) {
 					for (size_t j = 0; j != A.column; ++j) {
-						result.p[i][j] = k * result.p[i][j];
+						new (result.p[i] + j) double(k * A.p[i][j]);
 					}
 				}
 				return result;
@@ -558,11 +531,11 @@ namespace kerbal
 
 			const Matrix operator*(const Matrix &A, const double k)
 			{ //矩阵乘数k
-				Matrix result(A);
+				Matrix result(A.row, A.column, Matrix::uninit_tag);
 
 				for (size_t i = 0; i != A.row; ++i) {
 					for (size_t j = 0; j != A.column; ++j) {
-						result.p[i][j] = result.p[i][j] * k;
+						new (result.p[i] + j) double(A.p[i][j] * k);
 					}
 				}
 				return result;
@@ -623,15 +596,15 @@ namespace kerbal
 					throw std::invalid_argument("error: size(A*B) ≠ size(C)");
 				}
 
-				Matrix result(C);
+				Matrix result(C.row, C.column, Matrix::uninit_tag);
 
 				for (size_t i = 0; i != row; ++i) {
 					for (size_t j = 0; j != column; ++j) {
-						double sum = 0.0;
+						double sum = C.p[i][j];
 						for (size_t k = 0; k != A.column; ++k) {
 							sum += A.p[i][k] * B.p[k][j];
 						}
-						result.p[i][j] += sum;
+						new (result.p[i] + j) double(sum);
 					}
 				}
 				return result;
@@ -652,10 +625,10 @@ namespace kerbal
 				const size_t &row = A.row;
 				const size_t &column = A.column;
 
-				Matrix result(row, column);
+				Matrix result(row, column, Matrix::uninit_tag);
 				for (size_t i = 0; i != row; ++i) {
 					for (size_t j = 0; j != column; ++j) {
-						result.p[i][j] = A.p[i][j] * B.p[i][j];
+						new (result.p[i] + j) double(A.p[i][j] * B.p[i][j]);
 					}
 				}
 
@@ -781,45 +754,82 @@ namespace kerbal
 
 			Matrix& Matrix::operator=(const Matrix &src)
 			{
-				//cout << this << " = " << &src << endl;
-				if (row == src.row) {
-					if (column == src.column) { //行,列数都与原来相等
-						if (this == &src) { //自己给自己赋值
-							return *this;
-						}
-						const size_t size_of_a_row = src.column * sizeof(double);
-						for (size_t i = 0; i != src.row; ++i) {
-							memcpy(p[i], src.p[i], size_of_a_row);
-						}
-					} else { //行数与原来相等, 列数不等
+				const size_t old_row = this->row;
+				const size_t old_column = this->column;
 
-						this->column = src.column;
-						const size_t size_of_a_row = column * sizeof(double);
-						for (size_t i = 0; i != row; ++i) {
-							delete[] p[i];
-							memcpy(p[i] = new double[column], src.p[i], size_of_a_row);
-						}
-					}
+				if (this->row < src.row) {
+					this->shrink_row(src.row);
 				} else {
-					for (size_t i = 0; i != row; ++i)
-						delete[] p[i];
-					delete[] p;
+					this->enlarge_row_buffer(src.row);
+				}
 
-					this->row = src.row;
-					this->column = src.column;
+				if (this->column < src.column) {
+					this->shrink_column(src.column);
+				} else {
+					this->enlarge_column_buffer(src.column);
+				}
 
-					p = new double*[row]; //开辟行
-					const size_t size_of_a_row = column * sizeof(double);
-					for (size_t i = 0; i != row; ++i) {
-						memcpy(p[i] = new double[column], src.p[i], size_of_a_row);
+				size_t i;
+				for (i = 0; i < std::min(this->row, old_row); ++i) {
+					size_t j;
+					for (j = 0; j < std::min(this->column, old_column); ++j) {
+						p[i][j] = src.p[i][j];
+					}
+
+					for (; j < this->column; ++j) {
+						new (p[i] + j) double(src.p[i][j]);
+					}
+				}
+				for (; i < this->row; ++i) {
+					size_t j;
+					for (j = 0; j < std::min(this->column, old_column); ++j) {
+						p[i][j] = src.p[i][j];
+					}
+
+					for (; j < this->column; ++j) {
+						new (p[i] + j) double(src.p[i][j]);
 					}
 				}
 
 				return *this;
+
+//				if (row == src.row) {
+//					if (column == src.column) { //行,列数都与原来相等
+//						if (this == &src) { //自己给自己赋值
+//							return *this;
+//						}
+//						for (size_t i = 0; i != src.row; ++i) {
+//							std::copy(src.p[i], src.p[i] + src.column, this->p[i]);
+//						}
+//					} else { //行数与原来相等, 列数不等
+//
+//						this->column = src.column;
+//						const size_t size_of_a_row = column * sizeof(double);
+//						for (size_t i = 0; i != row; ++i) {
+//							delete[] p[i];
+//							memcpy(p[i] = new double[column], src.p[i], size_of_a_row);
+//						}
+//					}
+//				} else {
+//					for (size_t i = 0; i != row; ++i)
+//						delete[] p[i];
+//					delete[] p;
+//
+//					this->row = src.row;
+//					this->column = src.column;
+//
+//					p = new double*[row]; //开辟行
+//					const size_t size_of_a_row = column * sizeof(double);
+//					for (size_t i = 0; i != row; ++i) {
+//						memcpy(p[i] = new double[column], src.p[i], size_of_a_row);
+//					}
+//				}
+//
+//				return *this;
 			}
 
 #if __cplusplus >= 201103L //C++0x
-			const Matrix& Matrix::operator=(Matrix &&src)
+			Matrix& Matrix::operator=(Matrix &&src)
 			{ //转移赋值运算符
 
 				this->clear();
@@ -883,59 +893,16 @@ namespace kerbal
 				}
 			}
 
-			const Matrix conv2(const Matrix &core, const Matrix &A, int size)
-			{ //矩阵卷积
-				size_t i, j, m, n;
-				if (size == 2) {
-					Matrix zsmall(A.row - core.row + 1, A.column - core.column + 1, 0);
-					for (i = 0; i < zsmall.row; ++i) {
-						for (m = i; m < i + core.row; ++m) {
-							for (j = 0; j < zsmall.column; ++j) {
-								for (n = j; n < j + core.column; ++n) {
-									zsmall.p[i][j] += A.p[m][n] * core.p[m - i][n - j];
-									std::cout << A.p[m][n] << "*" << core.p[m - i][n - j] << "   ";
-								}
-								std::cout << std::endl;
-							}
-						}
-					}
-					zsmall.print();
-					return zsmall;
-				}
-
-				Matrix z(A.row + core.row - 1, A.column + core.column - 1, 0);
-				for (m = 0; m < A.row; ++m) {
-					for (i = m; i < m + core.row && i < z.row; ++i) {
-						for (n = 0; n < A.column; ++n) {
-							for (j = n; j < n + core.column && j < z.column; ++j) {
-								z.p[i][j] += A.p[m][n] * core.p[i - m][j - n];
-							}
-						}
-					}
-				}
-
-				if (size == 1) {
-
-					Matrix z2 = z.sub_of((core.row - 1) / 2, A.row + (core.row - 1) / 2,
-							(core.column - 1) / 2, A.column + (core.column - 1) / 2);
-
-					return z2;
-				} else {
-					return z;
-				}
-			}
-
 			template <>
 			const Matrix conv_2d<Matrix::max>(const Matrix &core, const Matrix &A)
 			{
 				//矩阵卷积
 				Matrix z(A.row + core.row - 1, A.column + core.column - 1, 0);
-				size_t i, j, m, n;
-				for (m = 0; m < A.row; ++m) {
-					for (i = m; i < m + core.row && i < z.row; ++i) {
-						for (n = 0; n < A.column; ++n) {
-							for (j = n; j < n + core.column && j < z.column; ++j) {
-								z.p[i][j] += A.p[m][n] * core.p[i - m][j - n];
+				for (size_t m = 0; m < A.row; ++m) {
+					for (size_t i = 0; i < core.row; ++i) {
+						for (size_t n = 0; n < A.column; ++n) {
+							for (size_t j = 0; j < core.column; ++j) {
+								z.p[i + m][j + n] += A.p[m][n] * core.p[i][j];
 							}
 						}
 					}
@@ -944,20 +911,48 @@ namespace kerbal
 			}
 
 			template <>
-			const Matrix conv_2d<Matrix::mid>(const Matrix &core, const Matrix &A)
+			const Matrix conv_2d<Matrix::same>(const Matrix &core, const Matrix &A)
 			{
 				//矩阵卷积
-				return conv_2d<Matrix::max>(core, A).sub_of((core.row - 1) / 2,
-						A.row + (core.row - 1) / 2, (core.column - 1) / 2,
-						A.column + (core.column - 1) / 2);
+				const size_t row_start = (core.row) / 2;
+				const size_t column_start = (core.column) / 2;
+
+				//testing
+				Matrix z(A.row + core.row - 1, A.column + core.column - 1, 0);
+				for (size_t m = 0; m < A.row; ++m) {
+					for (size_t i = 0; i < core.row; ++i) {
+						for (size_t n = 0; n < A.column; ++n) {
+							for (size_t j = 0; j < core.column; ++j) {
+								z.p[i + m][j + n] += A.p[m][n] * core.p[i][j];
+							}
+						}
+					}
+				}
+				z.print();
+				//testing
+
+				return conv_2d<Matrix::max>(core, A).sub_of(row_start, A.row + row_start,
+						column_start, A.column + column_start);
 			}
 
 			template <>
-			const Matrix conv_2d<Matrix::small>(const Matrix &core, const Matrix &A)
+			const Matrix conv_2d<Matrix::valid>(const Matrix &core, const Matrix &A)
 			{
 				//矩阵卷积
-				std::cout << "small" << std::endl;
-				return Matrix(1, 1);
+				Matrix result(A.row - core.row + 1, A.column - core.column + 1, Matrix::uninit_tag);
+				for (size_t i = 0; i < result.row; ++i) {
+					for (size_t j = 0; j < result.column; ++j) {
+						double t = 0;
+						for (size_t m = 0; m < core.row; ++m) {
+							for (size_t n = 0; n < core.column; ++n) {
+								t += A.p[m + i][n + j]
+										* core.p[core.row - 1 - m][core.column - 1 - n];
+							}
+						}
+						new (result.p[i] + j) double(t);
+					}
+				}
+				return result;
 			}
 
 //计算
@@ -1009,15 +1004,13 @@ namespace kerbal
 				return result;
 			}
 
-			void Matrix::do_cofactor(size_t row_tar, size_t column_tar) throw (std::out_of_range)
-			{ //返回一个矩阵划去row_tar 行和 column_tar 列后的矩阵
-				*this = cofactor_of(row_tar, column_tar);
-			}
-
 			const Matrix Matrix::sub_of(size_t up, size_t down, size_t left, size_t right) const
 			{
-				if (up >= down || left >= right) {
-					throw std::invalid_argument("up >= down or left >= right");
+				if (up >= down) {
+					throw std::invalid_argument("up >= down");
+				}
+				if (left >= right) {
+					throw std::invalid_argument("left >= right");
 				}
 
 				this->test_row(up);
@@ -1026,8 +1019,39 @@ namespace kerbal
 				this->test_column(right - 1);
 
 				Matrix result(down - up, right - left, uninit_tag);
-				for (size_t i = up; i < down; ++i) {
-					std::uninitialized_copy(p[i] + left, p[i] + right, result.p[i - up]);
+				for (size_t i = 0; i < down - up; ++i) {
+					std::uninitialized_copy(p[i + up] + left, p[i + up] + right, result.p[i]);
+				}
+				return result;
+			}
+
+			const Matrix Matrix::max_pooling_of(size_t core_height, size_t core_width, size_t step_h, size_t step_w) const
+			{
+				const size_t row_result = (this->row - core_height) / step_h + 1;
+				const size_t column_result = (this->column - core_width) / step_w + 1;
+				Matrix result(row_result, column_result, uninit_tag);
+				for (size_t i = 0; i < result.row; ++i) {
+					const size_t h_begin = i * step_h;
+					const size_t h_end = h_begin + core_height;
+
+					for (size_t j = 0; j < result.column; ++j) {
+						const size_t w_begin = j * step_w;
+						const size_t w_end = w_begin + core_width;
+
+						size_t h_of_max = h_begin;
+						size_t w_of_max = w_begin;
+
+						for (size_t fi = h_begin; fi < h_end; ++fi) {
+							for (size_t fj = w_begin; fj < w_end; ++fj) {
+								if (p[fi][fj] > p[h_of_max][w_of_max]) {
+									h_of_max = fi;
+									w_of_max = fj;
+								}
+							}
+						}
+
+						new (result.p[i] + j) double(p[h_of_max][w_of_max]);
+					}
 				}
 				return result;
 			}

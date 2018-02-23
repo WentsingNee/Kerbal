@@ -24,7 +24,7 @@
 #define is_debug true
 
 using namespace std;
-using namespace _choose;
+using namespace kerbal::choose;
 using namespace kerbal::math::matrix;
 using namespace kerbal::math::complexor;
 
@@ -44,7 +44,15 @@ void conv_test()
 
 	t.print();
 
-	Matrix core = { { 1, 3, 1 }, { 0, 5, 0 }, { 2, 1, 2 } };
+	Matrix core = {
+
+	{ 1, 3, -1, -1 },
+
+	{ 4, 5, 0, -1 },
+
+	{ 0, 1, 0, -1 },
+
+	{ 2, 1, 7, -1 } };
 
 	//	Matrix t(1500, 1500);
 	//	Matrix core(100, 100);
@@ -53,7 +61,10 @@ void conv_test()
 	//	Matrix a = { 0, 1, 2, 3, 4, 5 };
 	//	Matrix core = { -1, -2, -3 };
 	kerbal::math::matrix::conv_2d<Matrix::max>(core, t).print();
+	kerbal::math::matrix::conv_2d<Matrix::same>(core, t).print();
+	kerbal::math::matrix::conv_2d<Matrix::valid>(core, t).print();
 }
+#include <stdio.h>
 
 int main()
 {
@@ -61,31 +72,20 @@ int main()
 
 //	conv_test();
 
-	unsigned long t = GetTickCount();
-	Matrix m([]() {
-		return rand_between(-1.1,1.1);
-	}, 1300, 1300);
-	cout << GetTickCount() - t << " ms" << endl;
+	Matrix b([]() {
+		return rand_between(-10,10);
+	}, 2400, 2400);
 
-//	m.print(Matrix::none);
+//	b.print();
 
-	t = GetTickCount();
-	::omp_set_num_threads(2);
-	m.det();
-	cout << GetTickCount() - t << " ms" << endl;
+	b.max_pooling_of(2, 2, 1, 1);	//.print();
 
-//	m.do_triu();
-//	m.print();
-
-//	Matrix m2([]() ->int {
-//		return rand_between(-5,5);
-//	}, 1200, 1200);
+//	Matrix b = { { 1, 2 }, { 3, 4 } };
+//	Matrix c = { { 1, 2 }, { 3, 4 } };
 //
-////	while (1) {
-//	t = GetTickCount();
-//	m * m2;
-//	cout << GetTickCount() - t << endl;
-//	}
+//	Matrix * arr[] = { &a, &b, &c };
+
+//	cout << kerbal::math::matrix::cat(arr) << endl;
 
 	program_will_end();
 //	system("pause");

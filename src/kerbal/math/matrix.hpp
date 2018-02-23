@@ -16,8 +16,6 @@
 
 #include "../array_2d.hpp"
 
-//#include "complexor.hpp"
-
 #include <fstream>
 #include <iostream>
 #include <cmath>
@@ -241,9 +239,15 @@ namespace kerbal
 					void kmc_plus_to_another(double k, size_t column_from, size_t column_dest);
 
 					/**
-					 * @brief 将矩阵变换为上三角矩阵
+					 * @brief 将矩阵的上三角区域内的元素保留原值不变, 其余区域清零
 					 */
 					void do_triu();
+
+					/**
+					 * @brief 提取矩阵的上三角矩阵
+					 * @return
+					 */
+					const Matrix triu_of() const;
 
 					/**
 					 * @brief 计算一个矩阵对应的行列式的值
@@ -328,7 +332,7 @@ namespace kerbal
 					 * @return A 的 n 次幂
 					 * @throw std::invalid_argument 当 n 不等于 1 时, 要求基数矩阵必须为方阵, 否则抛出此异常
 					 * @remark 表达式 A ^ n 完全等效于函数表达式 pow(A, n)
-					 * @see const Matrix pow(const Matrix & A, int n )
+					 * @see friend inline const Matrix pow(const Matrix &A, int n)
 					 */
 					const Matrix operator^(int n) const;
 
@@ -343,7 +347,7 @@ namespace kerbal
 					 * @return A 的 n 次幂
 					 * @throw std::invalid_argument 当 n 不等于 1 时, 要求基数矩阵必须为方阵, 否则抛出此异常
 					 * @remark 函数表达式 pow(A, n) 完全等效于表达式 A ^ n
-					 * @see const Matrix operator^(const Matrix & A, int n )
+					 * @see const Matrix operator^(int n) const
 					 */
 					friend inline const Matrix pow(const Matrix &A, int n)
 					{
@@ -391,11 +395,11 @@ namespace kerbal
 					 * @remark 移动拷贝运算符比拷贝运算符具有更好的运行效率
 					 * @remark 欲详细了解此方法, 您需要了解 C++ 11 中的 <b>移动语义</b>
 					 */
-					const Matrix& operator=(Matrix &&src);
+					Matrix& operator=(Matrix &&src);
 #endif //C++0x
 
 					template <size_t N>
-					friend const Matrix cat(const Matrix (&a)[N]) throw (std::invalid_argument);
+					friend const Matrix cat(const Matrix * const(&a)[N]) throw (std::invalid_argument);
 
 					/**
 					 * @brief 返回一个 n 阶单位矩阵
@@ -430,11 +434,21 @@ namespace kerbal
 
 					void do_transpose()
 					{
-						*this = this->transpose_of();
+						const Matrix& result(transpose_of());
+						std::swap(const_cast<double** &>(result.p), this->p);
+						std::swap(const_cast<size_t &>(result.row), this->row);
+						std::swap(const_cast<size_t &>(result.column), this->column);
 					}
 
 					const Matrix cofactor_of(size_t row_tar, size_t column_tar)const throw (std::out_of_range); //构造矩阵A的余子式A(x,y)
-					void do_cofactor(size_t row_tar, size_t column_tar) throw (std::out_of_range);//返回一个矩阵划去row_tar 行和 column_tar 列后的矩阵
+
+					void do_cofactor(size_t row_tar, size_t column_tar) throw (std::out_of_range)
+					{ //返回一个矩阵划去row_tar 行和 column_tar 列后的矩阵
+						const Matrix& result(cofactor_of(row_tar, column_tar));
+						std::swap(const_cast<double** &>(result.p), this->p);
+						std::swap(const_cast<size_t &>(result.row), this->row);
+						std::swap(const_cast<size_t &>(result.column), this->column);
+					}
 
 					friend bool Matcmp(const Matrix &A, const Matrix &B, double eps);
 
@@ -442,11 +456,9 @@ namespace kerbal
 					virtual void test_column(size_t column_test) const throw (std::out_of_range);
 					void test_square() const throw (std::invalid_argument);
 
-					friend const Matrix conv2(const Matrix &core, const Matrix &A, int size = 0);//矩阵卷积
-
 					enum Conv_size
 					{
-						max, mid, small
+						max, same, valid
 					};
 
 					template<Conv_size>
@@ -465,6 +477,8 @@ namespace kerbal
 					 * @throws std::out_of_range
 					 */
 					const Matrix sub_of(size_t up, size_t down, size_t left, size_t right) const;
+
+					const Matrix max_pooling_of(size_t core_height, size_t core_width, size_t step_h, size_t step_w)const;
 				};
 
 			template <size_t LEN>
@@ -479,26 +493,54 @@ namespace kerbal
 			{ //利用二维数组进行构造
 			}
 
+//			template <size_t N>
+//			const Matrix cat(const Matrix (&a)[N]) throw (std::invalid_argument)
+//			{
+//				size_t row_total = a[0].row;
+//				size_t column_total = a[0].column;
+//
+//				for (size_t i = 1; i < N; ++i) {
+//					if (a[i].row != row_total) {
+//						throw std::invalid_argument("串联的矩阵的行数不一致");
+//					}
+//					column_total += a[i].column;
+//				}
+//
+//				Matrix result(row_total, column_total);
+//				size_t column_covered = 0;
+//				for (const Matrix *it = a; it != a + N; ++it) { //数组循环
+//					for (size_t j = 0; j < row_total; ++j) { //行循环
+//						std::copy(it->p[j], it->p[j] + it->column, result.p[j] + column_covered);
+//					}
+//					column_covered += it->column;
+//				}
+//				return result;
+//			}
+
 			template <size_t N>
-			const Matrix cat(const Matrix (&a)[N]) throw (std::invalid_argument)
+			const Matrix cat(const Matrix * const (&a)[N]) throw (std::invalid_argument)
 			{
-				int row_total = a[0].row;
-				int column_total = a[0].column;
-				for (size_t i = 1; i < N; i++) {
-					if (a[i].row != row_total) {
+				size_t row_total = a[0]->row;
+				size_t column_total = 0;
+
+				typedef const Matrix* const item_type;
+				const item_type * const end = a + N;
+
+				for (const item_type * it = a; it != end; ++it) {
+					if ((*it)->row != row_total) {
 						throw std::invalid_argument("串联的矩阵的行数不一致");
-					} else {
-						column_total += a[i].column;
 					}
+					column_total += (*it)->column;
 				}
 
-				Matrix result(row_total, column_total);
-				int column_covered = 0;
-				for (const Matrix *it = a, *end = a + N; it != end; ++it) { //数组循环
-					for (int j = 0; j < row_total; j++) { //行循环
-						std::copy(it->p[j], it->p[j] + it->column, result.p[j] + column_covered);
+				Matrix result(row_total, column_total, Matrix::uninit_tag);
+				size_t column_covered = 0;
+				for (const item_type * it = a; it != end; ++it) { //数组循环
+					for (size_t i = 0; i < row_total; ++i) { //行循环
+						std::uninitialized_copy((*it)->p[i], (*it)->p[i] + (*it)->column,
+								result.p[i] + column_covered);
 					}
-					column_covered += it->column;
+					column_covered += (*it)->column;
 				}
 				return result;
 			}
@@ -510,10 +552,10 @@ namespace kerbal
 			const Matrix conv_2d<Matrix::max>(const Matrix &core, const Matrix &A);
 
 			template <>
-			const Matrix conv_2d<Matrix::mid>(const Matrix &core, const Matrix &A);
+			const Matrix conv_2d<Matrix::same>(const Matrix &core, const Matrix &A);
 
 			template <>
-			const Matrix conv_2d<Matrix::small>(const Matrix &core, const Matrix &A);
+			const Matrix conv_2d<Matrix::valid>(const Matrix &core, const Matrix &A);
 
 			//应用部分
 #if __cplusplus >= 201103L

@@ -16,94 +16,92 @@
 )
 #endif /* End C++0x */
 
-namespace _choose
+namespace kerbal
 {
-	namespace
+	namespace choose
 	{
-		template <class T>
-		T choose_int(int index, const T &value0, va_list &arg_ptr) throw (std::invalid_argument)
+		namespace
 		{
-			if (index < 0) {
-				throw std::invalid_argument("index<0");
-			} else if (index == 0) {
-				return value0;
+
+			int choose_int(size_t index, int value0, va_list &arg_ptr)
+			{
+				if (index == 0) {
+					return value0;
+				}
+
+				for (size_t i = 1; i < index; ++i) {
+					va_arg(arg_ptr, int);
+				}
+				return va_arg(arg_ptr, int);
 			}
 
-			for (int i = 1; i < index; i++) {
-			va_arg(arg_ptr, int);
+			double choose_float(size_t index, double value0, va_list &arg_ptr)
+			{
+				if (index == 0) {
+					return value0;
+				}
+
+				for (size_t i = 1; i < index; ++i) {
+					va_arg(arg_ptr, double);
+				}
+				return va_arg(arg_ptr, double);
+			}
 		}
-	return va_arg(arg_ptr, int);
-}
 
-template <class T>
-T choose_float(int index, const T &value0, va_list &arg_ptr) throw (std::invalid_argument)
-{
-	if (index < 0) {
-		throw std::invalid_argument("index<0");
-	} else if (index == 0) {
-		return value0;
-	}
+		char choose(size_t index, char value0, ...)
+		{
+			va_list arg_ptr;
+			va_start(arg_ptr, value0);
+			char result = choose_int(index, value0, arg_ptr);
+			va_end(arg_ptr);
+			return result;
+		}
 
-	for (int i = 1; i < index; i++) {
-	va_arg(arg_ptr, double);
-}
-return va_arg(arg_ptr, double);
-}
-}
+		unsigned char choose(size_t index, unsigned char value0, ...)
+		{
+			va_list arg_ptr;
+			va_start(arg_ptr, value0);
+			unsigned char result = choose_int(index, value0, arg_ptr);
+			va_end(arg_ptr);
+			return result;
+		}
 
-char choose(int index, char value0, ...) throw (std::invalid_argument)
-{
-va_list arg_ptr;
-va_start(arg_ptr, value0);
-char result = choose_int(index, value0, arg_ptr);
-va_end(arg_ptr);
-return result;
-}
+		signed char choose(size_t index, signed char value0, ...)
+		{
+			va_list arg_ptr;
+			va_start(arg_ptr, value0);
+			signed char result = choose_int(index, value0, arg_ptr);
+			va_end(arg_ptr);
+			return result;
+		}
 
-unsigned char choose(int index, unsigned char value0, ...) throw (std::invalid_argument)
-{
-va_list arg_ptr;
-va_start(arg_ptr, value0);
-unsigned char result = choose_int(index, value0, arg_ptr);
-va_end(arg_ptr);
-return result;
-}
+		short choose(size_t index, short value0, ...)
+		{
+			va_list arg_ptr;
+			va_start(arg_ptr, value0);
+			short result = choose_int(index, value0, arg_ptr);
+			va_end(arg_ptr);
+			return result;
+		}
 
-signed char choose(int index, signed char value0, ...) throw (std::invalid_argument)
-{
-va_list arg_ptr;
-va_start(arg_ptr, value0);
-signed char result = choose_int(index, value0, arg_ptr);
-va_end(arg_ptr);
-return result;
-}
+		unsigned short choose(size_t index, unsigned short value0, ...)
+		{
+			va_list arg_ptr;
+			va_start(arg_ptr, value0);
+			unsigned short result = choose_int(index, value0, arg_ptr);
+			va_end(arg_ptr);
+			return result;
+		}
 
-short choose(int index, short value0, ...) throw (std::invalid_argument)
-{
-va_list arg_ptr;
-va_start(arg_ptr, value0);
-short result = choose_int(index, value0, arg_ptr);
-va_end(arg_ptr);
-return result;
-}
+		float choose(size_t index, float value0, ...)
+		{
+			va_list arg_ptr;
+			va_start(arg_ptr, value0);
+			float result = choose_float(index, value0, arg_ptr);
+			va_end(arg_ptr);
+			return result;
+		}
 
-unsigned short choose(int index, unsigned short value0, ...) throw (std::invalid_argument)
-{
-va_list arg_ptr;
-va_start(arg_ptr, value0);
-unsigned short result = choose_int(index, value0, arg_ptr);
-va_end(arg_ptr);
-return result;
-}
-
-float choose(int index, float value0, ...) throw (std::invalid_argument)
-{
-va_list arg_ptr;
-va_start(arg_ptr, value0);
-float result = choose_float(index, value0, arg_ptr);
-va_end(arg_ptr);
-return result;
-}
-
-}/* Namespace _choose */
+	}/* Namespace choose */
+}/* Namespace kerbal */
 
