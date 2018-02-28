@@ -1,20 +1,18 @@
-#### Advanced Mathematic Project ####
+## Kerbal ##
 
-<img src="https://coding.net/static/project_icon/scenery-1.png" width="120" height="120" align=center />
+### What is Kerbal? ###
+ Kerbal is a C++ project that contains some mini functions and classes
+which are useful in designing programs.
 
-> #### Math ####
+ Here are some of the modules Kerbal contains.
 
-> -	Array_2d<T>
+- ** Math **
+    - Matrix
+        - implements of Matrix and its options.
+		
+    - Complexor
+        - implements of vector and its options.
 
->     -	Matrix
-
-> -	Complexor
-
--	Complex
--	Array_2d<T>
-    -	Matrix
-    -	Matrix_for_complex
-        -	adsfdsaf
--	Complexor
-
-
+    - randnum
+        - implements of high quality random numbers.
+        
