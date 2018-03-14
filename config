@@ -1,0 +1,8 @@
+[core]
+	symlinks = false
+	repositoryformatversion = 0
+	filemode = false
+	bare = true
+	logallrefupdates = false
+[remote "origin"]
+	url = https://g.sst.st/peter/Kerbal.git
