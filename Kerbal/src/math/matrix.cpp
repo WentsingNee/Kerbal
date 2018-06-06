@@ -31,9 +31,7 @@ namespace std
 {
 	void swap(kerbal::math::matrix::Matrix &a, kerbal::math::matrix::Matrix &b)
 	{
-		swap(a.row, b.row);
-		swap(a.column, b.column);
-		swap(a.p, b.p);
+		a.swap(b);
 	}
 }
 
@@ -290,6 +288,13 @@ namespace kerbal
 				this->test_row(row1);
 				this->test_row(row2);
 				std::swap(p[row1], p[row2]);
+			}
+
+			void Matrix::swap(Matrix & with)
+			{
+				std::swap(this->row, with.row);
+				std::swap(this->column, with.column);
+				std::swap(this->p, with.p);
 			}
 
 			void Matrix::switch_rows(size_t row1, size_t row2, size_t column_index_start)
@@ -668,34 +673,31 @@ namespace kerbal
 			const Matrix Matrix::operator^(int n) const
 			{ //计算矩阵A的n次方
 				const Matrix & A = *this;
-				if (n >= 4) {
-					Matrix tmp = A ^ (n / 2);
-					tmp = tmp * tmp;
-					if (n % 2) {
-						//指数为奇数
-						tmp = tmp * A;
-					}
-					return tmp;
-				} else if (n == 3) {
-					return A * A * A;
-				} else if (n < 0) {
+				if (n < 0) {
 					return A.Inverse_matrix() ^ -n;
-				} else if (n == 2) {
-					return A * A;
-				} else if (n == 1) {
-					return A;
-				} else { //n == 0
-					A.test_square();
-					return Matrix::eye(A.row);
 				}
-//				if (n < 0) {
-//					return this->Inverse_matrix() ^ -n;
-//				} else if (n == 0) {
-//					this->test_square();
-//					return Matrix::eye(this->row);
-//				} else if (n == 1) {
-//					return *this;
-//				}
+
+				if (n == 0) {
+					A.test_square();
+					return eye(A.row);
+				}
+
+				if (n == 1) {
+					return A;
+				}
+
+				Matrix r = A * A;
+
+				n -= 2;
+
+				while (n > 0) {
+					if (n % 2 == 1) {
+						r = r * A;
+					}
+					r = r * r;
+					n /= 2;
+				}
+				return r;
 			}
 
 			const Matrix Matrix::operator+() const

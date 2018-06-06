@@ -8,96 +8,112 @@
 #ifndef SORT_BASE_HPP_
 #define SORT_BASE_HPP_
 
-#include <algorithm>
+#include <iterator>
+#include <memory>
 
-template <class T>
-inline void bubble_sort(T *begin, const T *end)
+namespace kerbal
 {
-	bubble_sort(begin, end, std::less_equal<T>());
-}
+	namespace algorithm
+	{
+		template <typename BidirectionalIterator, typename CompareFunction>
+		void bubble_sort(BidirectionalIterator begin, BidirectionalIterator end, CompareFunction cmp)
+		{
+			typedef BidirectionalIterator it_t;
 
-template <class T, class _cmp>
-void bubble_sort(T *begin, const T *end, _cmp cmp)
-{
-	bool swit = true;
-	const size_t len = std::distance(begin, end);
-
-	for (size_t i = 1; i < len && swit; ++i) {
-		swit = false;
-		for (T *j = begin; i + j < end; ++j) {
-			if (!cmp(*j, *(j + 1))) {
-				swit = true;
-				std::swap(*j, *(j + 1));
+			for (it_t end_end = std::next(begin); end != end_end; --end) {
+				for (it_t j_next, j = begin; (j_next = std::next(j)) != end; j = j_next) {
+					if (cmp(*j_next, *j)) {
+						std::iter_swap(j_next, j);
+					}
+				}
 			}
 		}
-	}
-}
 
-template <class T, class _cmp>
-void merge(T* begin, const T* end, _cmp cmp, T* temp) //order为真从小到大，为假从大到小
-{
-	const size_t len = std::distance(begin, end);
-	const size_t half_len = len / 2;
-	if (half_len) {
-		T* mid = begin + half_len;
-		merge(begin, mid, cmp, temp);
-		merge(mid, end, cmp, temp + half_len);
+		template <typename BidirectionalIterator>
+		inline void bubble_sort(BidirectionalIterator begin, BidirectionalIterator end)
+		{
+			typedef BidirectionalIterator it_t;
+			typedef typename std::iterator_traits<it_t>::value_type type;
 
-		T* p_to_tmp = temp;
-		const T *p_to_1 = begin;
-		const T *p_to_2 = mid;
+			bubble_sort(begin, end, std::less<type>());
+		}
 
-		while (p_to_1 < mid && p_to_2 < end) {
-			if (cmp(*p_to_1, *p_to_2)) {
-				*(p_to_tmp++) = *(p_to_1++);
-			} else {
-				*(p_to_tmp++) = *(p_to_2++);
+		template <typename BidirectionalIterator, typename CompareFunction>
+		void flag_bubble_sort(BidirectionalIterator begin, BidirectionalIterator end, CompareFunction cmp)
+		{
+			typedef BidirectionalIterator it_t;
+
+			bool swit = true;
+
+			for (it_t end_end = std::next(begin); end != end_end && swit; --end) {
+				swit = false;
+				for (it_t j_next, j = begin; (j_next = std::next(j)) != end; j = j_next) {
+					if (cmp(*j_next, *j)) {
+						swit = true;
+						std::iter_swap(j_next, j);
+					}
+				}
 			}
 		}
-//		while (p_to_1 < mid) {
-//			*(p_to_tmp++) = *(p_to_1++);
-//		}
-//		while (p_to_2 < end) {
-//			*(p_to_tmp++) = *(p_to_2++);
-//		}
 
-		//TODO optimize
-		if (p_to_1 < mid) {
-			std::copy(const_cast<T*>(p_to_1), mid, p_to_tmp);
-		} else if (p_to_2 < end) {
-			std::copy(const_cast<T*>(p_to_2), const_cast<T*>(end), p_to_tmp + (mid - p_to_1));
+		template <typename BidirectionalIterator>
+		inline void flag_bubble_sort(BidirectionalIterator begin, BidirectionalIterator end)
+		{
+			typedef BidirectionalIterator it_t;
+			typedef typename std::iterator_traits<it_t>::value_type type;
+
+			flag_bubble_sort(begin, end, std::less<type>());
 		}
 
-		std::copy(temp, temp + len, begin);
-	} else if (len == 2) {
-//		std::cout << begin[0] << "   " << begin[1] << std::endl;
-		if (!cmp(begin[0], begin[1])) {
-			std::swap(begin[0], begin[1]);
+		template <typename RandomAccessIterator, typename CompareFuntion>
+		void merge_sort(RandomAccessIterator begin, RandomAccessIterator end, CompareFuntion cmp)
+		{
+			if (std::next(begin) != end) {
+				typedef RandomAccessIterator it_t;
+				typedef typename std::iterator_traits<it_t>::difference_type diff_t;
+				typedef typename std::iterator_traits<it_t>::value_type type;
+
+				diff_t len = std::distance(begin, end);
+
+				it_t mid = std::next(begin, len / 2);
+				merge_sort(begin, mid, cmp);
+				merge_sort(mid, end, cmp);
+
+				type * p = (type*) malloc(len * sizeof(type));
+
+				it_t i = begin, j = mid;
+				type * k = p;
+				for (; i != mid && j != end;) {
+					if (!cmp(*j, *i)) {
+						new (k) type(*i);
+						++i;
+					} else {
+						new (k) type(*j);
+						++j;
+					}
+					++k;
+				}
+
+				std::uninitialized_copy(i, mid, k);
+				std::uninitialized_copy(j, end, k);
+
+				std::copy(p, p + len, begin);
+
+				for (type * k = p; k != p + len; ++k) {
+					k->~type();
+				}
+				free(p);
+			}
 		}
-	}
-}
 
-template <class T>
-inline void merge_sort(T *begin, const T *end)
-{
-	merge_sort(begin, end, std::less_equal<T>());
-}
-
-template <class T, class _cmp>
-void merge_sort(T *begin, const T *end, _cmp cmp)
-{
-	const size_t len = std::distance(begin, end);
-	if (len > 2) {
-		T *temp = new T[len];
-
-		merge(begin, end, cmp, temp); //不要再改成两条了！！！
-
-		delete[] temp;
-
-	} else if (len == 2) {
-		if (!cmp(begin[0], begin[1])) {
-			std::swap(begin[0], begin[1]);
+		template <typename RandomAccessIterator>
+		void merge_sort(RandomAccessIterator begin, RandomAccessIterator end)
+		{
+			typedef RandomAccessIterator it_t;
+			typedef typename std::iterator_traits<it_t>::value_type type;
+			merge_sort(begin, end, std::less<type>());
 		}
+
 	}
 }
 
