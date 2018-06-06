@@ -191,7 +191,7 @@ namespace kerbal
 
 				Variable& operator=(const std::string & src)
 				{
-					Variable_base<std::string>::operator=(src);
+					father_t1::operator=(src);
 					return *this;
 				}
 
