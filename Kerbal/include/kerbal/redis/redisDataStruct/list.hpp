@@ -287,7 +287,30 @@ namespace kerbal
 					AutoFreeReply reply = command.excute(*pToContext);
 					switch (reply.replyType()) {
 						case Redis_reply_type::STRING: {
-							return reply->str;
+							std::stringstream ss;
+							ss << reply->str;
+							Type res;
+							ss >> res;
+							return res;
+						}
+						case Redis_reply_type::NIL:
+							throw RedisNilException(key);
+						default:
+							throw RedisUnexceptedCaseException();
+					}
+				}
+
+				Type rpop()
+				{
+					RedisCommand command("rpop %s", key);
+					AutoFreeReply reply = command.excute(*pToContext);
+					switch (reply.replyType()) {
+						case Redis_reply_type::STRING: {
+							std::stringstream ss;
+							ss << reply->str;
+							Type res;
+							ss >> res;
+							return res;
 						}
 						case Redis_reply_type::NIL:
 							throw RedisNilException(key);
