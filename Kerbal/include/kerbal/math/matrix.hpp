@@ -187,6 +187,8 @@ namespace kerbal
 					 */
 					static const Matrix load_from(const char * file_name);
 
+					void swap(Matrix & with);
+
 					/**
 					 * @brief 交换矩阵的两行
 					 * @param row1 行号1
@@ -465,8 +467,6 @@ namespace kerbal
 
 					template<Conv_size>
 					friend const Matrix conv_2d(const Matrix &core, const Matrix &A); //矩阵卷积
-
-					friend void std::swap(Matrix &a, Matrix &b);
 
 					/**
 					 *
