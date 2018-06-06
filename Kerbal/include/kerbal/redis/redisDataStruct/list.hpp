@@ -71,6 +71,77 @@ namespace kerbal
 					src = buff;
 					return in;
 				}
+
+				friend std::ostream& operator<<(std::ostream & out, ListReference<Type> src)
+				{
+					return out << (Type) src;
+				}
+		};
+
+		template<typename Type>
+		class ListIterator
+		{
+			protected:
+				const List<Type> * pToList = nullptr;
+				size_t index;
+
+			public:
+				ListIterator(const List<Type> * pToList, size_t index) :
+						pToList(pToList), index(index)
+				{
+				}
+
+				ListReference<Type> operator*() const
+				{
+					return ListReference<Type>(pToList, index);
+				}
+
+				ListIterator& operator++()
+				{
+					++index;
+					return *this;
+				}
+
+				const ListIterator operator++(int)
+				{
+					ListIterator tmp(*this);
+					++index;
+					return tmp;
+				}
+
+				ListIterator& operator--()
+				{
+					--index;
+					return *this;
+				}
+
+				const ListIterator operator--(int)
+				{
+					ListIterator tmp(*this);
+					--index;
+					return tmp;
+				}
+
+				ListIterator operator+(int delta) const
+				{
+					return ListIterator(this->pToList, this->index + delta);
+				}
+
+				ListIterator operator-(int delta) const
+				{
+					return ListIterator(this->pToList, this->index - delta);
+				}
+
+				bool operator==(const ListIterator & with) const
+				{
+					return this->pToList == with.pToList && this->index == with.index;
+				}
+
+				bool operator!=(const ListIterator & with) const
+				{
+					return this->pToList != with.pToList || this->index != with.index;
+				}
+
 		};
 
 		template <typename Type>
@@ -81,6 +152,7 @@ namespace kerbal
 				std::string key;
 
 				friend class ListReference<Type>;
+				friend class ListIterator<Type> ;
 
 			public:
 				List(const Context & conn, const std::string & key) :
@@ -91,6 +163,22 @@ namespace kerbal
 				operator std::vector<Type>()
 				{
 					return Operation().lrange<Type>(*pToContext, key, 0, -1);
+				}
+
+				std::vector<Type> lrange(int begin, int end)
+				{
+					return Operation().lrange<Type>(*pToContext, key, begin, end);
+				}
+
+				const std::vector<Type> lrange(int begin, int end) const
+				{
+					return Operation().lrange<Type>(*pToContext, key, begin, end);
+				}
+
+				bool empty() const
+				{
+					RedisCommand command("exists %s", key);
+					return !command.excute(*pToContext)->integer;
 				}
 
 				size_t size() const
@@ -124,9 +212,88 @@ namespace kerbal
 				}
 
 				template <typename ...Args>
-				size_t push_front(const Type & value, Args ... args)
+				size_t push_front(const Type & head, Args&& ... args)
 				{
-					return this->push_front(value) + this->push_front(args...);
+					std::initializer_list<const Type *> list = { &args... };
+					std::ostringstream ss;
+					ss << head;
+					for (auto ele : list) {
+						ss << ' ' << *ele;
+					}
+					return push_front(ss.str());
+				}
+
+				size_t push_back(const Type & value)
+				{
+					RedisCommand command("rpush %s %s", key, value);
+					AutoFreeReply reply = command.excute(*pToContext);
+					switch (reply.replyType()) {
+						case Redis_reply_type::INTEGER: {
+							return reply->integer;
+						}
+						case Redis_reply_type::NIL:
+							throw RedisNilException(key);
+						default:
+							throw RedisUnexceptedCaseException();
+					}
+				}
+
+				template <typename ...Args>
+				size_t push_back(const Type & head, Args&& ... args)
+				{
+					std::initializer_list<const Type *> list = { &args... };
+					std::ostringstream ss;
+					ss << head;
+					for (auto ele : list) {
+						ss << ' ' << *ele;
+					}
+					return push_back(ss.str());
+				}
+
+				/**
+				 * @brief Prepend a value to a list, only if the list exists
+				 * @since 2.2.0
+				 * @return The size of the list after insert
+				 */
+				size_t lpushx(const Type & value)
+				{
+					RedisCommand command("lpushx %s %s", key, value);
+					AutoFreeReply reply = command.excute(*pToContext);
+					switch (reply.replyType()) {
+						case Redis_reply_type::INTEGER: {
+							return reply->integer;
+						}
+						default:
+							throw RedisUnexceptedCaseException();
+					}
+				}
+
+				size_t rpushx(const Type & value)
+				{
+					RedisCommand command("rpushx %s %s", key, value);
+					AutoFreeReply reply = command.excute(*pToContext);
+					switch (reply.replyType()) {
+						case Redis_reply_type::INTEGER: {
+							return reply->integer;
+						}
+						default:
+							throw RedisUnexceptedCaseException();
+					}
+				}
+
+				Type lpop()
+				{
+					RedisCommand command("lpop %s", key);
+					AutoFreeReply reply = command.excute(*pToContext);
+					switch (reply.replyType()) {
+						case Redis_reply_type::STRING: {
+							return reply->str;
+						}
+						case Redis_reply_type::NIL:
+							throw RedisNilException(key);
+						default:
+							throw RedisUnexceptedCaseException();
+					}
 				}
 
 				const Type operator[](size_t index) const
@@ -139,9 +306,43 @@ namespace kerbal
 					return ListReference<Type>(this, index);
 				}
 
+				ListIterator<Type> begin()
+				{
+					return ListIterator<Type>(this, 0);
+				}
+
+				ListIterator<Type> end()
+				{
+					return ListIterator<Type>(this, this->size());
+				}
+
 				bool clear()
 				{
 					RedisCommand command("del %s", key);
+					AutoFreeReply reply = command.excute(*pToContext);
+					switch (reply.replyType()) {
+						case Redis_reply_type::INTEGER:
+							return reply->integer;
+						default:
+							throw RedisUnexceptedCaseException();
+					}
+				}
+
+				size_t remove(const Type & value)
+				{
+					RedisCommand command("lrem %s 0 %s", key, value);
+					AutoFreeReply reply = command.excute(*pToContext);
+					switch (reply.replyType()) {
+						case Redis_reply_type::INTEGER:
+							return reply->integer;
+						default:
+							throw RedisUnexceptedCaseException();
+					}
+				}
+
+				size_t remove(const Type & value, int count)
+				{
+					RedisCommand command("lrem %s %d %s", key, count, value);
 					AutoFreeReply reply = command.excute(*pToContext);
 					switch (reply.replyType()) {
 						case Redis_reply_type::INTEGER:
