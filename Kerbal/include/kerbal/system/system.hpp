@@ -13,14 +13,12 @@
 #ifndef INCLUDE_KERBAL_SYSTEM_SYSTEM_HPP_
 #define INCLUDE_KERBAL_SYSTEM_SYSTEM_HPP_
 
-#include <string>
-
-#if (defined __WINDOWS_) || (defined _WIN32)
-#  include <windows.h>
+#ifdef __linux
+#	include "linux.hpp"
 #endif
 
-std::string get_user_name();
-
-int get_processors_number();
+#if (defined __WINDOWS_) || (defined _WIN32)
+#	include "windows.hpp"
+#endif
 
 #endif /* INCLUDE_KERBAL_SYSTEM_SYSTEM_HPP_ */

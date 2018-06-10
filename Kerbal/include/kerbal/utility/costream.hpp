@@ -162,7 +162,7 @@ namespace kerbal
 			STD_ERROR_HANDLE);
 #endif //WIN32
 
-			costream<std::cerr> ccerr(LIGHT_RED, INIT);
+//			costream<std::cerr> ccerr(LIGHT_RED, INIT);
 
 			const Color_t color_test_arr[] = {
 				BLACK, RED, GREEN, YELLOW, BLUE, PURPLE, LIGHT_BLUE, WHITE, LIGHT_RED, LIGHT_GREEN,
