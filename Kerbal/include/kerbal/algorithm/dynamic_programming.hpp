@@ -35,13 +35,14 @@ namespace kerbal
 	{
 		template <typename RandomAccessIterator, typename RandomAccessIterator2,
 				typename CompareFunction>
-		size_t __pure_LCS(RandomAccessIterator a_begin, size_t a_len, RandomAccessIterator2 b_begin, size_t b_len, CompareFunction cmp)
+		size_t __pure_LCS(RandomAccessIterator a_begin, size_t a_len, RandomAccessIterator2 b_begin, size_t b_len, CompareFunction cmp, bool has_switched =
+				false)
 		{
 			typedef RandomAccessIterator it_t1;
 			typedef RandomAccessIterator2 it_t2;
-			
+
 			if (a_len > b_len) {
-				return __pure_LCS(b_begin, b_len, a_begin, a_len, cmp);
+				return __pure_LCS(b_begin, b_len, a_begin, a_len, cmp, true);
 			}
 
 			std::vector<size_t> dp(a_len + 1, 0);
@@ -54,7 +55,7 @@ namespace kerbal
 				it_t1 j = a_begin;
 				size_t j_index = 0;
 				for (; j_index != a_len; ++j, ++j_index) {
-					if (cmp(*i, *j)) {
+					if (has_switched ? cmp(*i, *j) : cmp(*j, *i)) {
 						size_t tmp = dp[j_index + 1];
 						dp[j_index + 1] = dp_i1_j1 + 1;
 						dp_i1_j1 = tmp;
@@ -95,8 +96,8 @@ namespace kerbal
 							typename std::iterator_traits<RandomAccessIterator>::value_type,
 							typename std::iterator_traits<RandomAccessIterator2>::value_type>());
 		}
-		
-		
+
+
 		template<typename ForwardIterator, typename CompareFunction>
 		size_t LIS(ForwardIterator begin, ForwardIterator end, CompareFunction cmp)
 		{
@@ -125,7 +126,7 @@ namespace kerbal
 			//	std::cout << std::endl;
 			return ans;
 		}
-		
+
 		template<typename ForwardIterator>
 		size_t LIS(ForwardIterator begin, ForwardIterator end)
 		{
