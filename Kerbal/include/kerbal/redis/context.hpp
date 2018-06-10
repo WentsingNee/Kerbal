@@ -23,12 +23,12 @@ namespace kerbal
 					redisFree(conn);
 				}
 
-				using father_t = std::unique_ptr<redisContext, void (*)(redisContext *)>;
+				using supper_t = std::unique_ptr<redisContext, void (*)(redisContext *)>;
 
 			public:
 
 				Context() :
-						father_t(nullptr, redisContextDealloctor)
+						supper_t(nullptr, redisContextDealloctor)
 				{
 				}
 
@@ -39,13 +39,13 @@ namespace kerbal
 
 				bool connect(const char ip[], int port)
 				{
-					father_t::reset(redisConnect(ip, port));
+					supper_t::reset(redisConnect(ip, port));
 					return (bool)*this;
 				}
 
 				bool connectWithTimeout(const char ip[], int port, const struct timeval tv)
 				{
-					father_t::reset(redisConnectWithTimeout(ip, port, tv));
+					supper_t::reset(redisConnectWithTimeout(ip, port, tv));
 					return (bool)*this;
 				}
 
@@ -80,7 +80,5 @@ namespace kerbal
 		};
 	}
 }
-
-
 
 #endif /* SRC_REDIS_CONTEXT_HPP_ */

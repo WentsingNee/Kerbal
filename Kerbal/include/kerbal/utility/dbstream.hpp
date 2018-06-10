@@ -19,51 +19,50 @@ namespace kerbal
 		namespace dbstream
 		{
 
+			template <std::ostream & out = std::cout>
 			class Dbstream
 			{
 				protected:
 					bool new_line;
-					std::ostream * out;
-
-					friend inline Dbstream& endl(Dbstream& __dbs);
 
 				public:
-					Dbstream();
-					void why_cannot_use();
-					Dbstream& operator<<(Dbstream& (*f)(Dbstream& __os));
+					Dbstream() :
+							new_line(true)
+					{
+					}
+
+					Dbstream& operator<<(Dbstream& (*f)(Dbstream& __os))
+					{
+						f(*this);
+						return *this;
+					}
 
 					template <class T>
-					Dbstream& operator<<(const T &src);
+					Dbstream& operator<<(const T &src)
+					{
+						if (debug) {
+							if (this->new_line) {
+								out << "- ";
+								this->new_line = false;
+							}
+							out << src;
+						}
+						return *this;
+					}
+
+					Dbstream& operator<<(std::ostream& (*__pf)(std::ostream&))
+					{
+						if (debug) {
+							if (this->new_line) {
+								out << "- ";
+								this->new_line = false;
+							}
+							__pf(out);
+							new_line = true;
+						}
+						return *this;
+					}
 			};
-
-			extern Dbstream cdb;
-
-			template <class T>
-			Dbstream& Dbstream::operator<<(const T &src)
-			{
-				if (debug) {
-					if (this->new_line) {
-						*out << "- ";
-						this->new_line = false;
-					}
-					*out << src;
-				}
-				return *this;
-			}
-
-			inline Dbstream& endl(Dbstream& __dbs)
-			{
-				if (debug) {
-					if (__dbs.new_line) {
-						*__dbs.out << "- ";
-					}
-
-					__dbs.new_line = true;
-					*__dbs.out << std::endl;
-
-				}
-				return __dbs;
-			}
 
 		} /* namespace dbstream */
 

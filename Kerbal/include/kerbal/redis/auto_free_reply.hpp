@@ -15,7 +15,7 @@ namespace kerbal
 		/**
 		 * @brief redis 执行结果类型
 		 */
-		enum class Redis_reply_type
+		enum class RedisReplyType
 		{
 			/** @brief 字符串 */
 			STRING = REDIS_REPLY_STRING,
@@ -51,36 +51,36 @@ namespace kerbal
 					freeReplyObject(reply_ptr);
 				}
 
-				using father_t = std::unique_ptr<redisReply, void (*)(redisReply *)>;
+				using supper_t = std::unique_ptr<redisReply, void (*)(redisReply *)>;
 
 			public:
 				AutoFreeReply(redisReply * redis_reply = nullptr) :
-						father_t(redis_reply, redisReplyDealloctor)
+						supper_t(redis_reply, redisReplyDealloctor)
 				{
 				}
 
-				enum Redis_reply_type replyType() const
+				enum RedisReplyType replyType() const
 				{
-					return (Redis_reply_type) this->get()->type;
+					return (RedisReplyType) this->get()->type;
 				}
 		};
 
 
-		inline std::ostream& operator <<(std::ostream & out, Redis_reply_type type)
+		inline std::ostream& operator <<(std::ostream & out, RedisReplyType type)
 		{
-			using Redis_reply_type = Redis_reply_type;
+			using RedisReplyType = RedisReplyType;
 			switch (type) {
-				case Redis_reply_type::STRING:
+				case RedisReplyType::STRING:
 					return out << "STRING";
-				case Redis_reply_type::ARRAY:
+				case RedisReplyType::ARRAY:
 					return out << "ARRAY";
-				case Redis_reply_type::INTEGER:
+				case RedisReplyType::INTEGER:
 					return out << "INTEGER";
-				case Redis_reply_type::NIL:
+				case RedisReplyType::NIL:
 					return out << "NIL";
-				case Redis_reply_type::STATUS:
+				case RedisReplyType::STATUS:
 					return out << "STATUS";
-				case Redis_reply_type::ERROR:
+				case RedisReplyType::ERROR:
 					return out << "ERROR";
 				default:
 					return out << "OTHER UNKNOWN";

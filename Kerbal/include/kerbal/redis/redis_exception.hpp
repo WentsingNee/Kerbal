@@ -40,7 +40,7 @@ namespace kerbal
 				}
 		};
 
-		class RedisUnexceptedCaseException: RedisException
+		class RedisUnexceptedCaseException: public RedisException
 		{
 			public:
 				RedisUnexceptedCaseException() :
@@ -49,7 +49,7 @@ namespace kerbal
 				}
 		};
 
-		class RedisCommandExcuteFailedException: RedisException
+		class RedisCommandExcuteFailedException: public RedisException
 		{
 			public:
 				RedisCommandExcuteFailedException(const std::string & failedInfo) :
@@ -59,7 +59,5 @@ namespace kerbal
 		};
 	}
 }
-
-
 
 #endif /* SRC_REDIS_REDIS_EXCEPTION_HPP_ */
