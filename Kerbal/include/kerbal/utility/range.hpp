@@ -98,7 +98,7 @@ namespace kerbal
 
 					} iterator;
 
-					Type from, to, step;
+					const Type from, to, step;
 
 					Range_view(Type to) :
 							from(0), to(to), step(1)
