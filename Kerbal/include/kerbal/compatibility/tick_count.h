@@ -20,12 +20,8 @@ inline unsigned long GetTickCount()
 }
 #endif
 
-#ifdef __WINDOWS_
-#include <windows.h>
-#endif
-
-#ifdef _WIN32
-#include <windows.h>
+#if (defined __WINDOWS_) || (defined _WIN32)
+#	include <windows.h>
 #endif
 
 #endif /* KERBAL_UTILITY_TICK_COUNT_H_ */
