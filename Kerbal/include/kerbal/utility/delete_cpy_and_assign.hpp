@@ -24,12 +24,12 @@ namespace kerbal
 		class Delete_cpy_and_assign
 		{
 			protected:
-			Delete_cpy_and_assign()
-			{
-			}
+				Delete_cpy_and_assign()
+				{
+				}
 			private:
-			Delete_cpy_and_assign(const Delete_cpy_and_assign&);
-			Delete_cpy_and_assign& operator=(const Delete_cpy_and_assign&);
+				Delete_cpy_and_assign(const Delete_cpy_and_assign&);
+				Delete_cpy_and_assign& operator=(const Delete_cpy_and_assign&);
 		};
 
 #	else
