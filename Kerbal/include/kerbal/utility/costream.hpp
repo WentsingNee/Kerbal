@@ -19,6 +19,8 @@
 #	include <windows.h>
 #endif
 
+#include <kerbal/compatibility/compatibility_macro.hpp>
+
 namespace kerbal
 {
 	namespace utility
@@ -28,28 +30,35 @@ namespace kerbal
 			class Color_t
 			{
 				public:
-					int ID;
+					const int ID;
 
-					Color_t(int ID = -1) :
+					KERBAL_CONSTEXPR Color_t(int ID = -1) :
 							ID(ID)
 					{
 					}
 
-					bool operator==(const Color_t & with) const
+					KERBAL_CONSTEXPR bool operator==(const Color_t & with) const
 					{
 						return this->ID == with.ID;
 					}
 
-					bool operator!=(const Color_t & with) const
+					KERBAL_CONSTEXPR bool operator!=(const Color_t & with) const
 					{
 						return this->ID != with.ID;
 					}
 
-			}const INIT(-1),
+			}
+#		if __cplusplus >= 201103L
+			constexpr
+#		else
+			const
+#		endif
+
+			INIT(-1),
 #ifdef _WIN32
-					BLACK(0), BLUE(1), GREEN(2), LAKE_BLUE(3), RED(4), PURPLE(5), YELLOW(6), WHITE(
-							7), GREY(8), LIGHT_BLUE(9), LIGHT_GREEN(10), LIGHT_LIGHT_GREEN(11),
-					LIGHT_RED(12), LIGHT_PURPLE(13), LIGHT_YELLOW(14), BRIGHT_WHITE(15);
+			BLACK(0), BLUE(1), GREEN(2), LAKE_BLUE(3), RED(4), PURPLE(5), YELLOW(6), WHITE(7),
+			GREY(8), LIGHT_BLUE(9), LIGHT_GREEN(10), LIGHT_LIGHT_GREEN(11),
+			LIGHT_RED(12), LIGHT_PURPLE(13), LIGHT_YELLOW(14), BRIGHT_WHITE(15);
 #endif
 
 #ifdef __linux
@@ -97,7 +106,7 @@ namespace kerbal
 					const Color_t foreground, background;
 
 				public:
-					costream(Color_t foreground = INIT, Color_t background = INIT) :
+					KERBAL_CONSTEXPR costream(Color_t foreground = INIT, Color_t background = INIT) :
 							foreground(foreground), background(background)
 					{
 					}
