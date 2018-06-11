@@ -1,6 +1,7 @@
 /*
  * redis_command.hpp
  *
+ *  Source from: 2018年4月18日建立的 auto_redis.hpp, auto_redis.cpp 文件
  *  Created on: 2018年5月29日
  *      Author: peter
  */
