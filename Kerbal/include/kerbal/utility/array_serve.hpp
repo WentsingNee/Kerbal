@@ -1,119 +1,108 @@
 #ifndef _ARRAY_SERVE_HPP_
 #define _ARRAY_SERVE_HPP_
 
-#include <kerbal/utility/runtime_timer.hpp>
+#include <kerbal/compatibility/compatibility_macro.hpp>
 #include <iostream>
 #include <string>
-#include <typeinfo>
-#include <fstream>
-
 
 namespace kerbal
 {
 	namespace utility
 	{
-
 		namespace array_serve
 		{
+			template <typename Type, size_t N>
+			const Type* begin(const Type (&arr)[N])
+			{
+				return arr;
+			}
 
-			//声明
+			template <typename Type, size_t N>
+			Type* begin(Type (&arr)[N])
+			{
+				return arr;
+			}
+
+			template <typename Type, size_t N>
+			const Type* end(const Type (&arr)[N])
+			{
+				return arr + N;
+			}
+
+			template <typename Type, size_t N>
+			Type* end(Type (&arr)[N])
+			{
+				return arr + N;
+			}
+
 			template <class Type, size_t N>
-			inline size_t arraylen(const Type (&array)[N]);
-
-			/**
-			 *
-			 * @param a
-			 * @param len
-			 * @param separator
-			 * @param if_output_number
-			 * @throw std::invalid_argument
-			 */
-			template <class T>
-			void print_array(T a[], int len, const std::string &separator = " , ", bool if_output_number =
-					false);
-
-			/**
-			 *
-			 * @param a
-			 * @param len
-			 * @param separator
-			 * @param file_name
-			 * @param if_output_number
-			 * @throw std::invalid_argument
-			 */
-			template <class T>
-			void print_array_to_file(T a[], int len, const std::string &separator, const std::string &file_name, bool if_output_number =
-					false);
-
-			template <typename T> int array_dimension(const T &a);
-
-			//实现
-			template <class Type, size_t N>
-			inline size_t arraylen(const Type (&array)[N])
+			KERBAL_CONSTEXPR inline size_t arraylen(const Type (&array)[N])
 			{
 				return N;
 			}
 
-			template <class T>
-			void print_array(T a[], int len, const std::string &separator, bool if_output_number)
+			template <typename InputIterator>
+			std::ostream & print_array(InputIterator begin, InputIterator end, const std::string & separator, bool if_output_number, std::ostream & out =
+					std::cout)
 			{
-				if (len > 0) {
-					if (if_output_number == true) {
-						std::cout << 0 << " : " << a[0];
-						for (int i = 1; i < len; i++) {
-							std::cout << separator << i << " : " << a[i];
-						}
-					} else {
-						std::cout << a[0];
-						for (int i = 1; i < len; i++) {
-							std::cout << separator << a[i];
-						}
-					}
-					std::cout << std::endl;
-				} else if (len < 0) {
-					throw std::invalid_argument("length < 0");
+				if(begin == end)
+				{
+					return out;
 				}
+
+				if (if_output_number == true) {
+					out << 0 << " : " << *begin;
+					size_t i = 1;
+					for (++begin; begin != end; ++begin, ++i) {
+						out << separator << i << " : " << *begin;
+					}
+				} else {
+					out << *begin;
+					for (++begin; begin != end; ++begin) {
+						out << separator << *begin;
+					}
+				}
+				return out;
 			}
 
-			template <class T>
-			void print_array_to_file(T a[], int len, const std::string &separator, const std::string &file_name, bool if_output_number)
+			template <typename Type, Type val>
+			struct integral_constant
 			{
-				if (len > 0) {
-					std::ofstream fout(&file_name[0], std::ios::out);
-					fout << a[0];
-					for (int i = 1; i < len; i++) {
-						fout << separator << a[i];
-					}
-					fout.close();
-				} else if (len < 0) {
-					throw std::invalid_argument("length < 0");
-				}
-			}
+#				if __cplusplus >= 201103L
+					static constexpr Type value = val;
+#				else
+					static const Type value = val;
+#				endif
 
-			template <typename T>
-			int array_dimension(const T &a)
+					typedef Type value_type;
+					typedef integral_constant<Type, val> type;
+
+					KERBAL_CONSTEXPR operator value_type() const
+					{
+						return value;
+					}
+			};
+
+			// rank
+			template <typename >
+			struct rank: public integral_constant<size_t, 0>
 			{
-				const std::type_info &info = typeid(a);
-				const std::string name = info.name();
+			};
 
-				int dimension = 0;
+			template <typename Type, size_t Size>
+			struct rank<Type[Size]> : public integral_constant<size_t, 1 + rank<Type>::value>
+			{
+			};
 
-//		cout << name << endl;
+			template <typename Type>
+			struct rank<Type[]> : public integral_constant<size_t, 1 + rank<Type>::value>
+			{
+			};
 
-				for (int i = 0; i < name.length() - 2;) {
-					//cout<<"i="<<i<<endl;
-					if (name[i] == 'A') {
-						//&&name[i+2]=='_'
-						//i+=3;
-						i++;
-						dimension++;
-					} else {
-						i++;
-					}
-				}
-
-//cout<<dimension<<endl;
-				return dimension;
+			template <typename Type>
+			KERBAL_CONSTEXPR size_t array_dimension(const Type &)
+			{
+				return rank<Type>::value;
 			}
 
 		} /* Namespace array_serve */
