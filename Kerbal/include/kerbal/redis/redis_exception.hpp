@@ -8,6 +8,9 @@
 #ifndef SRC_REDIS_REDIS_EXCEPTION_HPP_
 #define SRC_REDIS_REDIS_EXCEPTION_HPP_
 
+#include <exception>
+#include <sstream>
+
 namespace kerbal
 {
 	namespace redis
@@ -42,9 +45,24 @@ namespace kerbal
 
 		class RedisUnexceptedCaseException: public RedisException
 		{
+			protected:
+				const std::string excute_command;
+
+				static std::string redis_reply_type_cast(RedisReplyType correctType)
+				{
+					std::ostringstream ss;
+					ss << correctType;
+					return ss.str();
+				}
+
 			public:
-				RedisUnexceptedCaseException() :
-						RedisException("an unexcepted situation occured")
+				RedisUnexceptedCaseException(const std::string & excute_command = "(unknown command)") :
+						RedisException("redis returns an unexcepted case when excute command: " + excute_command), excute_command(excute_command)
+				{
+				}
+
+				RedisUnexceptedCaseException(RedisReplyType correctType, const std::string & excute_command = "(unknown command)") :
+						RedisException("redis returns an unexcepted case when excute command: " + excute_command + " , correct type is: " + redis_reply_type_cast(correctType))
 				{
 				}
 		};

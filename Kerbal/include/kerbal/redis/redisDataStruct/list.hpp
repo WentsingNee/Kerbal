@@ -8,8 +8,11 @@
 #ifndef SRC_REDIS_REDISDATASTRUCT_LIST_HPP_
 #define SRC_REDIS_REDISDATASTRUCT_LIST_HPP_
 
-#include <kerbal/redis/auto_free_reply.hpp>
-#include <kerbal/redis/redis_command.hpp>
+#include <string>
+
+#include <kerbal/redis/operation.hpp>
+#include <kerbal/redis/redis_type_traits.hpp>
+#include <kerbal/redis/redis_type_cast.hpp>
 
 namespace kerbal
 {
@@ -52,7 +55,7 @@ namespace kerbal
 						case RedisReplyType::NIL:
 							throw RedisNilException(pToList->key);
 						default:
-							throw RedisUnexceptedCaseException();
+							throw RedisUnexceptedCaseException(reply.replyType());
 					}
 				}
 
@@ -89,7 +92,7 @@ namespace kerbal
 						case RedisReplyType::NIL:
 							throw RedisNilException(supper_t::pToList->key);
 						default:
-							throw RedisUnexceptedCaseException();
+							throw RedisUnexceptedCaseException(reply.replyType());
 					}
 				}
 
@@ -365,7 +368,7 @@ namespace kerbal
 						case RedisReplyType::NIL:
 							throw RedisNilException(key);
 						default:
-							throw RedisUnexceptedCaseException();
+							throw RedisUnexceptedCaseException(reply.replyType());
 					}
 				}
 
@@ -393,7 +396,7 @@ namespace kerbal
 						case RedisReplyType::NIL:
 							throw RedisNilException(key);
 						default:
-							throw RedisUnexceptedCaseException();
+							throw RedisUnexceptedCaseException(reply.replyType());
 					}
 				}
 
@@ -424,7 +427,7 @@ namespace kerbal
 							return reply->integer;
 						}
 						default:
-							throw RedisUnexceptedCaseException();
+							throw RedisUnexceptedCaseException(reply.replyType());
 					}
 				}
 
@@ -438,7 +441,7 @@ namespace kerbal
 							return reply->integer;
 						}
 						default:
-							throw RedisUnexceptedCaseException();
+							throw RedisUnexceptedCaseException(reply.replyType());
 					}
 				}
 
@@ -453,7 +456,7 @@ namespace kerbal
 						case RedisReplyType::NIL:
 							throw RedisNilException(key);
 						default:
-							throw RedisUnexceptedCaseException();
+							throw RedisUnexceptedCaseException(reply.replyType());
 					}
 				}
 
@@ -468,7 +471,7 @@ namespace kerbal
 						case RedisReplyType::NIL:
 							throw RedisNilException(key);
 						default:
-							throw RedisUnexceptedCaseException();
+							throw RedisUnexceptedCaseException(reply.replyType());
 					}
 				}
 
@@ -506,7 +509,7 @@ namespace kerbal
 						case RedisReplyType::INTEGER:
 							return reply->integer;
 						default:
-							throw RedisUnexceptedCaseException();
+							throw RedisUnexceptedCaseException(reply.replyType());
 					}
 				}
 
@@ -519,7 +522,7 @@ namespace kerbal
 						case RedisReplyType::INTEGER:
 							return reply->integer;
 						default:
-							throw RedisUnexceptedCaseException();
+							throw RedisUnexceptedCaseException(reply.replyType());
 					}
 				}
 		};

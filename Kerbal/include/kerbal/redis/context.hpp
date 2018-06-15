@@ -8,6 +8,13 @@
 #ifndef SRC_REDIS_CONTEXT_HPP_
 #define SRC_REDIS_CONTEXT_HPP_
 
+#include <iostream>
+#include <string>
+#include <memory>
+#include <chrono>
+
+#include <hiredis/hiredis.h>
+
 namespace kerbal
 {
 	namespace redis
@@ -40,13 +47,21 @@ namespace kerbal
 				bool connect(const char ip[], int port)
 				{
 					supper_t::reset(redisConnect(ip, port));
-					return (bool)*this;
+					return this->isValid();
 				}
 
 				bool connectWithTimeout(const char ip[], int port, const struct timeval tv)
 				{
 					supper_t::reset(redisConnectWithTimeout(ip, port, tv));
-					return (bool)*this;
+					return this->isValid();
+				}
+
+				bool connectWithTimeout(const char ip[], int port, const std::chrono::milliseconds & ms)
+				{
+					struct timeval tv;
+					tv.tv_sec = ms.count() / 1000;
+					tv.tv_usec = ms.count() % 1000;
+					return connectWithTimeout(ip, port, tv);
 				}
 
 				int reconnect()
@@ -56,12 +71,12 @@ namespace kerbal
 
 				operator bool() const
 				{
-					return this->get() != nullptr && this->get()->err == 0;
+					return this->isValid();
 				}
 
 				bool isValid() const
 				{
-					return (bool) *this;
+					return this->get() != nullptr && this->get()->err == 0;
 				}
 
 				void free()

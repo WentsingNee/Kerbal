@@ -8,11 +8,18 @@
 #ifndef SRC_REDIS_OPERATION_HPP_
 #define SRC_REDIS_OPERATION_HPP_
 
+#include <iostream>
+#include <sstream>
 #include <vector>
 #include <unordered_map>
 #include <map>
+#include <chrono>
 
+#include <kerbal/redis/context.hpp>
+#include <kerbal/redis/auto_free_reply.hpp>
+#include <kerbal/redis/redis_command.hpp>
 #include <kerbal/redis/redis_type_traits.hpp>
+#include <kerbal/redis/redis_type_cast.hpp>
 
 namespace kerbal
 {
@@ -92,7 +99,7 @@ namespace kerbal
 						case RedisReplyType::STATUS:
 							return reply->str;
 						default:
-							throw RedisUnexceptedCaseException();
+							throw RedisUnexceptedCaseException(reply.replyType());
 					}
 				}
 
@@ -116,7 +123,7 @@ namespace kerbal
 						case RedisReplyType::INTEGER:
 							return reply->integer;
 						default:
-							throw RedisUnexceptedCaseException();
+							throw RedisUnexceptedCaseException(reply.replyType());
 					}
 				}
 
@@ -135,7 +142,7 @@ namespace kerbal
 						case RedisReplyType::INTEGER:
 							return reply->integer;
 						default:
-							throw RedisUnexceptedCaseException();
+							throw RedisUnexceptedCaseException(reply.replyType());
 					}
 				}
 
@@ -153,7 +160,7 @@ namespace kerbal
 						case RedisReplyType::INTEGER:
 							return reply->integer;
 						default:
-							throw RedisUnexceptedCaseException();
+							throw RedisUnexceptedCaseException(reply.replyType());
 					}
 				}
 
@@ -172,7 +179,7 @@ namespace kerbal
 						case RedisReplyType::INTEGER:
 							return reply->integer;
 						default:
-							throw RedisUnexceptedCaseException();
+							throw RedisUnexceptedCaseException(reply.replyType());
 					}
 				}
 
@@ -180,6 +187,91 @@ namespace kerbal
 				long long exists(const Context & conn, const std::string & key0, Args&& ... args) const
 				{
 					return exists(conn, key0.c_str(), args...);
+				}
+
+				long long pexpire(const Context & conn, const char key[], const std::chrono::milliseconds & ms)
+				{
+					static RedisCommand cmd("pexpire %%s %%d");
+					AutoFreeReply reply = cmd.excute(conn, key, ms.count());
+					switch (reply.replyType()) {
+						case RedisReplyType::INTEGER:
+							return reply->integer;
+						default:
+							throw RedisUnexceptedCaseException(reply.replyType());
+					}
+				}
+
+				long long pexpire(const Context & conn, const std::string & key, const std::chrono::milliseconds & ms)
+				{
+					return pexpire(conn, key.c_str(), ms);
+				}
+
+				long long expire(const Context & conn, const char key[], const std::chrono::seconds & sec)
+				{
+					static RedisCommand cmd("expire %%s %%d");
+					AutoFreeReply reply = cmd.excute(conn, key, sec.count());
+					switch (reply.replyType()) {
+						case RedisReplyType::INTEGER:
+							return reply->integer;
+						default:
+							throw RedisUnexceptedCaseException(reply.replyType());
+					}
+				}
+
+				long long expire(const Context & conn, const std::string & key, const std::chrono::seconds & sec)
+				{
+					return expire(conn, key.c_str(), sec);
+				}
+
+				long long persist(const Context & conn, const char key[])
+				{
+					static RedisCommand cmd("persist %%s");
+					AutoFreeReply reply = cmd.excute(conn, key);
+					switch (reply.replyType()) {
+						case RedisReplyType::INTEGER:
+							return reply->integer;
+						default:
+							throw RedisUnexceptedCaseException(reply.replyType());
+					}
+				}
+
+				long long persist(const Context & conn, const std::string & key)
+				{
+					return persist(conn, key.c_str());
+				}
+
+				std::chrono::milliseconds pttl(const Context & conn, const char key[]) const
+				{
+					static RedisCommand cmd("pttl %%s");
+					AutoFreeReply reply = cmd.excute(conn, key);
+					switch (reply.replyType()) {
+						case RedisReplyType::INTEGER:
+							return std::chrono::milliseconds(reply->integer);
+						default:
+							throw RedisUnexceptedCaseException(reply.replyType());
+					}
+				}
+
+				std::chrono::milliseconds pttl(const Context & conn, const std::string & key) const
+				{
+					return pttl(conn, key.c_str());
+				}
+
+				std::chrono::seconds ttl(const Context & conn, const char key[]) const
+				{
+					static RedisCommand cmd("ttl %%s");
+					AutoFreeReply reply = cmd.excute(conn, key);
+					switch (reply.replyType()) {
+						case RedisReplyType::INTEGER:
+							return std::chrono::seconds(reply->integer);
+						default:
+							throw RedisUnexceptedCaseException(reply.replyType());
+					}
+				}
+
+				std::chrono::seconds ttl(const Context & conn, const std::string & key) const
+				{
+					return ttl(conn, key.c_str());
 				}
 
 				template <typename Type, typename ... Args>
@@ -195,7 +287,7 @@ namespace kerbal
 						case RedisReplyType::STATUS:
 							return reply->str;
 						default:
-							throw RedisUnexceptedCaseException();
+							throw RedisUnexceptedCaseException(reply.replyType());
 					}
 				}
 
@@ -255,13 +347,13 @@ namespace kerbal
 										res.push_back("");
 										break;
 									default:
-										throw RedisUnexceptedCaseException();
+										throw RedisUnexceptedCaseException(reply.replyType());
 								}
 							}
 							return res;
 						}
 						default:
-							throw RedisUnexceptedCaseException();
+							throw RedisUnexceptedCaseException(reply.replyType());
 					}
 				}
 
@@ -285,7 +377,7 @@ namespace kerbal
 						case RedisReplyType::NIL:
 							throw RedisNilException(key + " : "s + field);
 						default:
-							throw RedisUnexceptedCaseException();
+							throw RedisUnexceptedCaseException(reply.replyType());
 					}
 				}
 
@@ -318,7 +410,7 @@ namespace kerbal
 						case RedisReplyType::STATUS:
 							return reply->str;
 						default:
-							throw RedisUnexceptedCaseException();
+							throw RedisUnexceptedCaseException(reply.replyType());
 					}
 				}
 
@@ -354,7 +446,7 @@ namespace kerbal
 						case RedisReplyType::STATUS:
 							return reply->str;
 						default:
-							throw RedisUnexceptedCaseException();
+							throw RedisUnexceptedCaseException(reply.replyType());
 					}
 				}
 
@@ -391,7 +483,7 @@ namespace kerbal
 							return res;
 						}
 						default:
-							throw RedisUnexceptedCaseException();
+							throw RedisUnexceptedCaseException(reply.replyType());
 					}
 				}
 
@@ -417,7 +509,7 @@ namespace kerbal
 							return res;
 						}
 						default:
-							throw RedisUnexceptedCaseException();
+							throw RedisUnexceptedCaseException(reply.replyType());
 					}
 				}
 
@@ -442,7 +534,7 @@ namespace kerbal
 				case RedisReplyType::NIL:
 					throw RedisNilException(key);
 				default:
-					throw RedisUnexceptedCaseException();
+					throw RedisUnexceptedCaseException(reply.replyType());
 			}
 		}
 
