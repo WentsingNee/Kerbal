@@ -27,7 +27,7 @@ namespace kerbal
 			return t;
 		}
 
-		const char * redis_excute_profect_match(const std::string & t)
+		inline const char * redis_excute_profect_match(const std::string & t)
 		{
 			return t.c_str();
 		}
