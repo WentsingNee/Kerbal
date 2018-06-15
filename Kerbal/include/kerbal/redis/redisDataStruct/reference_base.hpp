@@ -8,6 +8,10 @@
 #ifndef KERBAL_INCLUDE_KERBAL_REDIS_REDISDATASTRUCT_REFERENCE_BASE_HPP_
 #define KERBAL_INCLUDE_KERBAL_REDIS_REDISDATASTRUCT_REFERENCE_BASE_HPP_
 
+#include <string>
+
+#include <kerbal/redis/operation.hpp>
+#include <kerbal/redis/redis_type_cast.hpp>
 
 namespace kerbal
 {
@@ -227,24 +231,6 @@ namespace kerbal
 				{
 					return *this = (Type) (*this) % with;
 				}
-		};
-
-		template<typename Type>
-		struct CheckIsIntegerType : public
-			std::conditional<
-				std::__and_<std::is_integral<Type>, std::__not_ <std::is_same<Type, bool> > >::value,
-				std::true_type,
-				std::false_type>::type
-		{
-		};
-
-		template<typename Type>
-		struct CheckIsRealType : public
-			std::conditional<
-				std::__or_<CheckIsIntegerType<Type>, std::is_floating_point<Type> >::value,
-				std::true_type,
-				std::false_type>::type
-		{
 		};
 
 		template <typename Type>

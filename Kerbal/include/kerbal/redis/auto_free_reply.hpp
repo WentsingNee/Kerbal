@@ -8,6 +8,11 @@
 #ifndef SRC_REDIS_AUTO_FREE_REPLY_HPP_
 #define SRC_REDIS_AUTO_FREE_REPLY_HPP_
 
+#include <iostream>
+#include <memory>
+
+#include <hiredis/hiredis.h>
+
 namespace kerbal
 {
 	namespace redis

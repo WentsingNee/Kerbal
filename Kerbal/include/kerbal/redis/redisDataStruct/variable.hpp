@@ -11,6 +11,8 @@
 #include <iostream>
 #include <type_traits>
 
+#include <kerbal/redis/redisDataStruct/reference_base.hpp>
+
 namespace kerbal
 {
 	namespace redis
