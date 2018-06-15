@@ -11,6 +11,8 @@
 #include <exception>
 #include <sstream>
 
+#include <kerbal/redis/auto_free_reply.hpp>
+
 namespace kerbal
 {
 	namespace redis
