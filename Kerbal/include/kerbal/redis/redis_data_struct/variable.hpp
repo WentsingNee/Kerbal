@@ -5,13 +5,13 @@
  *      Author: peter
  */
 
-#ifndef SRC_REDIS_REDISDATASTRUCT_VARIABLE_HPP_
-#define SRC_REDIS_REDISDATASTRUCT_VARIABLE_HPP_
+#ifndef INCLUDE_KERBAL_REDIS_REDIS_DATA_STRUCT_VARIABLE_HPP_
+#define INCLUDE_KERBAL_REDIS_REDIS_DATA_STRUCT_VARIABLE_HPP_
 
+#include <kerbal/redis/redis_data_struct/reference_base.hpp>
 #include <iostream>
 #include <type_traits>
 
-#include <kerbal/redis/redisDataStruct/reference_base.hpp>
 
 namespace kerbal
 {
@@ -59,4 +59,4 @@ namespace kerbal
 }
 
 
-#endif /* SRC_REDIS_REDISDATASTRUCT_VARIABLE_HPP_ */
+#endif /* INCLUDE_KERBAL_REDIS_REDIS_DATA_STRUCT_VARIABLE_HPP_ */

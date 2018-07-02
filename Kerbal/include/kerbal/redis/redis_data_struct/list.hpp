@@ -5,10 +5,11 @@
  *      Author: peter
  */
 
-#ifndef SRC_REDIS_REDISDATASTRUCT_LIST_HPP_
-#define SRC_REDIS_REDISDATASTRUCT_LIST_HPP_
+#ifndef INCLUDE_KERBAL_REDIS_REDIS_DATA_STRUCT_LIST_HPP_
+#define INCLUDE_KERBAL_REDIS_REDIS_DATA_STRUCT_LIST_HPP_
 
 #include <string>
+#include <iterator>
 
 #include <kerbal/redis/operation.hpp>
 #include <kerbal/redis/redis_type_traits.hpp>
@@ -30,7 +31,7 @@ namespace kerbal
 				size_t index;
 
 			public:
-				ListConstReferenceBase(const List<Type> * pToList, size_t index) :
+				ListConstReferenceBase(const List<Type> * pToList, size_t index) noexcept :
 						pToList(pToList), index(index)
 				{
 				}
@@ -44,13 +45,11 @@ namespace kerbal
 
 				operator Type()
 				{
-					using namespace std;
-
 					static RedisCommand cmd("lindex %%s %%d");
 					AutoFreeReply reply = cmd.excute(*pToList->pToContext, pToList->key, index);
 					switch (reply.replyType()) {
 						case RedisReplyType::STRING: {
-							return redisTypeCast < Type > (reply->str);
+							return redisTypeCast<Type>(reply->str);
 						}
 						case RedisReplyType::NIL:
 							throw RedisNilException(pToList->key);
@@ -72,16 +71,14 @@ namespace kerbal
 				typedef ListConstReferenceBase<Type> supper_t;
 
 			public:
-				ListReferenceBase(const List<Type> * pToList, size_t index) :
+				ListReferenceBase(const List<Type> * pToList, size_t index) noexcept :
 						supper_t(pToList, index)
 				{
 				}
 
 				ListReferenceBase operator=(const Type & src)
 				{
-					using namespace std;
-
-					static RedisCommand command("lset %%s %%d %"s + placeholder_traits < Type > ::value);
+					static RedisCommand command(std::string("lset %%s %%d %") + placeholder_traits<Type>::value);
 					AutoFreeReply reply = command.excute(*supper_t::pToList->pToContext, supper_t::pToList->key,
 												supper_t::index, src);
 					switch (reply.replyType()) {
@@ -98,9 +95,7 @@ namespace kerbal
 
 				friend std::istream& operator>> (std::istream & in, ListReferenceBase<Type> src)
 				{
-					Type buff;
-					in >> buff;
-					src = buff;
+					src = *std::istream_iterator<Type>(in);
 					return in;
 				}
 		};
@@ -112,7 +107,7 @@ namespace kerbal
 				typedef ListReferenceBase<Type> supper_t;
 
 			public:
-				ListRealReference(const List<Type> * pToList, size_t index) :
+				ListRealReference(const List<Type> * pToList, size_t index) noexcept :
 						supper_t(pToList, index)
 				{
 				}
@@ -155,7 +150,7 @@ namespace kerbal
 				typedef ListRealReference<Type> supper_t;
 
 			public:
-				ListIntegerReference(const List<Type> * pToList, size_t index) :
+				ListIntegerReference(const List<Type> * pToList, size_t index) noexcept :
 						supper_t(pToList, index)
 				{
 				}
@@ -211,7 +206,7 @@ namespace kerbal
 								   	   	   	   	   	   	   	   	   	   	   ListReferenceBase<Type> >::type>::type
 						supper_t;
 			public:
-				ListReference(const List<Type> * pToList, size_t index) :
+				ListReference(const List<Type> * pToList, size_t index) noexcept :
 						supper_t(pToList, index)
 				{
 				}
@@ -230,7 +225,7 @@ namespace kerbal
 				typedef ListConstReferenceBase<Type> supper_t;
 
 			public:
-				ListConstReference(const List<Type> * pToList, size_t index) :
+				ListConstReference(const List<Type> * pToList, size_t index) noexcept :
 						supper_t(pToList, index)
 				{
 				}
@@ -244,7 +239,7 @@ namespace kerbal
 				size_t index;
 
 			public:
-				ListIterator(const List<Type> * pToList, size_t index) :
+				ListIterator(const List<Type> * pToList, size_t index) noexcept :
 						pToList(pToList), index(index)
 				{
 				}
@@ -328,19 +323,19 @@ namespace kerbal
 				operator std::vector<Type>()
 				{
 					static Operation opt;
-					return opt.lrange < Type > (*pToContext, key, 0, -1);
+					return opt.lrange<Type>(*pToContext, key, 0, -1);
 				}
 
 				std::vector<Type> lrange(int begin, int end)
 				{
 					static Operation opt;
-					return opt.lrange < Type > (*pToContext, key, begin, end);
+					return opt.lrange<Type>(*pToContext, key, begin, end);
 				}
 
 				const std::vector<Type> lrange(int begin, int end) const
 				{
 					static Operation opt;
-					return opt.lrange < Type > (*pToContext, key, begin, end);
+					return opt.lrange<Type>(*pToContext, key, begin, end);
 				}
 
 				bool empty() const
@@ -356,61 +351,61 @@ namespace kerbal
 					return cmd.excute(*pToContext, key)->integer;
 				}
 
-				size_t push_front(const Type & value)
+			protected:
+				template <typename ...Args>
+				constexpr static void list_member_args_checker(const Type & value0)
 				{
-					using namespace std;
-					static RedisCommand cmd("lpush %%s %"s + placeholder_traits < Type > ::value);
-					AutoFreeReply reply = cmd.excute(*pToContext, key, value);
+				}
+
+				template <typename ...Args>
+				constexpr static void list_member_args_checker(const Type &, Args&& ... args)
+				{
+					list_member_args_checker(args...);
+				}
+
+				template <typename ...Args>
+				static std::string make_list_member_placeholder(const Type &, Args&& ... args)
+				{
+					std::string placeholder_list;
+					placeholder_list.reserve(4 + 4 * sizeof...(args));
+
+					for (size_t i = 0; i < 1 + sizeof...(args); ++i) {
+						placeholder_list += " %";
+						placeholder_list += placeholder_traits<Type>::value;
+					}
+					return placeholder_list;
+				}
+
+			public:
+				template <typename ...Args>
+				size_t push_front(const Type & value0, Args&& ... args)
+				{
+					list_member_args_checker(value0, args...);
+					static RedisCommand cmd("lpush %%s" + make_list_member_placeholder(value0, args...));
+					AutoFreeReply reply = cmd.excute(*pToContext, key, value0, args...);
 					switch (reply.replyType()) {
 						case RedisReplyType::INTEGER: {
 							return reply->integer;
 						}
-						case RedisReplyType::NIL:
-							throw RedisNilException(key);
 						default:
 							throw RedisUnexceptedCaseException(reply.replyType());
 					}
 				}
 
-//				template <typename ...Args>
-//				size_t push_front(const Type & head, Args&& ... args)
-//				{
-//					std::initializer_list<const Type *> list = { &args... };
-//					std::ostringstream ss;
-//					ss << head;
-//					for (auto ele : list) {
-//						ss << ' ' << *ele;
-//					}
-//					return push_front(ss.str());
-//				}
-
-				size_t push_back(const Type & value)
+				template <typename ...Args>
+				size_t push_back(const Type & value0, Args&& ... args)
 				{
-					using namespace std;
-					static RedisCommand cmd("rpush %%s %"s + placeholder_traits < Type > ::value);
-					AutoFreeReply reply = cmd.excute(*pToContext, key, value);
+					list_member_args_checker(value0, args...);
+					static RedisCommand cmd("rpush %%s" + make_list_member_placeholder(value0, args...));
+					AutoFreeReply reply = cmd.excute(*pToContext, key, value0, args...);
 					switch (reply.replyType()) {
 						case RedisReplyType::INTEGER: {
 							return reply->integer;
 						}
-						case RedisReplyType::NIL:
-							throw RedisNilException(key);
 						default:
 							throw RedisUnexceptedCaseException(reply.replyType());
 					}
 				}
-
-//				template <typename ...Args>
-//				size_t push_back(const Type & head, Args&& ... args)
-//				{
-//					std::initializer_list<const Type *> list = { &args... };
-//					std::ostringstream ss;
-//					ss << head;
-//					for (auto ele : list) {
-//						ss << ' ' << *ele;
-//					}
-//					return push_back(ss.str());
-//				}
 
 				/**
 				 * @brief Prepend a value to a list, only if the list exists
@@ -419,8 +414,7 @@ namespace kerbal
 				 */
 				size_t lpushx(const Type & value)
 				{
-					using namespace std;
-					static RedisCommand cmd("lpushx %%s %"s + placeholder_traits < Type > ::value);
+					static RedisCommand cmd(std::string("lpushx %%s %") + placeholder_traits<Type>::value);
 					AutoFreeReply reply = cmd.excute(*pToContext, key, value);
 					switch (reply.replyType()) {
 						case RedisReplyType::INTEGER: {
@@ -433,8 +427,7 @@ namespace kerbal
 
 				size_t rpushx(const Type & value)
 				{
-					using namespace std;
-					static RedisCommand cmd("rpushx %%s %"s + placeholder_traits < Type > ::value);
+					static RedisCommand cmd(std::string("rpushx %%s %") + placeholder_traits<Type>::value);
 					AutoFreeReply reply = cmd.excute(*pToContext, key, value);
 					switch (reply.replyType()) {
 						case RedisReplyType::INTEGER: {
@@ -451,7 +444,22 @@ namespace kerbal
 					AutoFreeReply reply = cmd.excute(*pToContext, key);
 					switch (reply.replyType()) {
 						case RedisReplyType::STRING: {
-							return redisTypeCast < Type > (reply->str);
+							return redisTypeCast<Type>(reply->str);
+						}
+						case RedisReplyType::NIL:
+							throw RedisNilException(key);
+						default:
+							throw RedisUnexceptedCaseException(reply.replyType());
+					}
+				}
+
+				Type blpop(const std::chrono::seconds & sec)
+				{
+					static RedisCommand cmd("blpop %%s %%d");
+					AutoFreeReply reply = cmd.excute(*pToContext, key, sec.count());
+					switch (reply.replyType()) {
+						case RedisReplyType::ARRAY: {
+							return redisTypeCast<Type>(reply->element[1]->str);
 						}
 						case RedisReplyType::NIL:
 							throw RedisNilException(key);
@@ -466,7 +474,7 @@ namespace kerbal
 					AutoFreeReply reply = cmd.excute(*pToContext, key);
 					switch (reply.replyType()) {
 						case RedisReplyType::STRING: {
-							return redisTypeCast < Type > (reply->str);
+							return redisTypeCast<Type>(reply->str);
 						}
 						case RedisReplyType::NIL:
 							throw RedisNilException(key);
@@ -502,8 +510,7 @@ namespace kerbal
 
 				size_t remove(const Type & value)
 				{
-					using namespace std;
-					static RedisCommand cmd("lrem %%s 0 %"s + placeholder_traits < Type > ::value);
+					static RedisCommand cmd(std::string("lrem %%s 0 %") + placeholder_traits<Type>::value);
 					AutoFreeReply reply = cmd.excute(*pToContext, key, value);
 					switch (reply.replyType()) {
 						case RedisReplyType::INTEGER:
@@ -515,8 +522,7 @@ namespace kerbal
 
 				size_t remove(const Type & value, int count)
 				{
-					using namespace std;
-					static RedisCommand cmd("lrem %%s %%d %"s + placeholder_traits < Type > ::value);
+					static RedisCommand cmd(std::string("lrem %%s %%d %") + placeholder_traits<Type>::value);
 					AutoFreeReply reply = cmd.excute(*pToContext, key, count, value);
 					switch (reply.replyType()) {
 						case RedisReplyType::INTEGER:
@@ -529,6 +535,4 @@ namespace kerbal
 	}
 }
 
-
-
-#endif /* SRC_REDIS_REDISDATASTRUCT_LIST_HPP_ */
+#endif /* INCLUDE_KERBAL_REDIS_REDIS_DATA_STRUCT_LIST_HPP_ */

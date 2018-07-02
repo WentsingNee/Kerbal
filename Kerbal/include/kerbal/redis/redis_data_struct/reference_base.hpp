@@ -1,12 +1,12 @@
 /*
- * united_reference.hpp
+ * reference_base.hpp
  *
  *  Created on: 2018年6月7日
  *      Author: peter
  */
 
-#ifndef KERBAL_INCLUDE_KERBAL_REDIS_REDISDATASTRUCT_REFERENCE_BASE_HPP_
-#define KERBAL_INCLUDE_KERBAL_REDIS_REDISDATASTRUCT_REFERENCE_BASE_HPP_
+#ifndef INCLUDE_KERBAL_REDIS_REDIS_DATA_STRUCT_REFERENCE_BASE_HPP_
+#define INCLUDE_KERBAL_REDIS_REDIS_DATA_STRUCT_REFERENCE_BASE_HPP_
 
 #include <string>
 
@@ -48,7 +48,7 @@ namespace kerbal
 					AutoFreeReply reply = command.excute(*pToContext, key);
 					switch (reply.replyType()) {
 						case RedisReplyType::STRING: {
-							return redisTypeCast < Type > (reply->str);
+							return redisTypeCast<Type>(reply->str);
 						}
 						case RedisReplyType::NIL:
 							throw RedisNilException(key);
@@ -82,8 +82,7 @@ namespace kerbal
 
 				ReferenceBase& operator=(const Type & src)
 				{
-					using namespace std;
-					static RedisCommand command("set %%s %"s + placeholder_traits < Type > ::value);
+					static RedisCommand command(std::string("set %%s %") + placeholder_traits<Type>::value);
 					command.excute(*supper_t::pToContext, supper_t::key, src);
 					return *this;
 				}
@@ -283,4 +282,4 @@ namespace kerbal
 }
 
 
-#endif /* KERBAL_INCLUDE_KERBAL_REDIS_REDISDATASTRUCT_REFERENCE_BASE_HPP_ */
+#endif /* INCLUDE_KERBAL_REDIS_REDIS_DATA_STRUCT_REFERENCE_BASE_HPP_ */

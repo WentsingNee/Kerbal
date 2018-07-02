@@ -5,8 +5,8 @@
  *      Author: peter
  */
 
-#ifndef INCLUDE_KERBAL_REDIS_REDISDATASTRUCT_SET_HPP_
-#define INCLUDE_KERBAL_REDIS_REDISDATASTRUCT_SET_HPP_
+#ifndef INCLUDE_KERBAL_REDIS_REDIS_DATA_STRUCT_SET_HPP_
+#define INCLUDE_KERBAL_REDIS_REDIS_DATA_STRUCT_SET_HPP_
 
 #include <set>
 
@@ -61,8 +61,7 @@ namespace kerbal
 
 				bool member_exist(const Type & member) const
 				{
-					using namespace std;
-					static RedisCommand cmd("sismember %%s %"s + placeholder_traits<Type>::value);
+					static RedisCommand cmd(std::string("sismember %%s %") + placeholder_traits<Type>::value);
 					return cmd.excute(*pToContext, key, member)->integer;
 				}
 
@@ -81,13 +80,14 @@ namespace kerbal
 				template <typename ...Args>
 				static std::string make_set_member_placeholder(const Type &, Args&& ... args)
 				{
-					std::ostringstream ss;
-					ss << " %" << placeholder_traits < Type > ::value;
+					std::string placeholder_list;
+					placeholder_list.reserve(4 + 4 * sizeof...(args));
 
-					for (size_t i = 0; i < sizeof...(args); ++i) {
-						ss << " %" << placeholder_traits < Type > ::value;
+					for (size_t i = 0; i < 1 + sizeof...(args); ++i) {
+						placeholder_list += " %";
+						placeholder_list += placeholder_traits<Type>::value;
 					}
-					return ss.str();
+					return placeholder_list;
 				}
 
 			public:
@@ -118,7 +118,7 @@ namespace kerbal
 					AutoFreeReply reply = cmd.excute(*pToContext, key);
 					switch (reply.replyType()) {
 						case RedisReplyType::STRING: {
-							return redisTypeCast < Type > (reply->str);
+							return redisTypeCast<Type>(reply->str);
 						}
 						case RedisReplyType::NIL:
 							throw RedisNilException(key);
@@ -132,4 +132,4 @@ namespace kerbal
 
 
 
-#endif /* INCLUDE_KERBAL_REDIS_REDISDATASTRUCT_SET_HPP_ */
+#endif /* INCLUDE_KERBAL_REDIS_REDIS_DATA_STRUCT_SET_HPP_ */
