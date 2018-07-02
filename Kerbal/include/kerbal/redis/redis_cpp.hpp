@@ -5,8 +5,8 @@
  *      Author: peter
  */
 
-#ifndef SRC_REDIS_CPP_HPP_
-#define SRC_REDIS_CPP_HPP_
+#ifndef INCLUDE_REDIS_REDIS_CPP_HPP_
+#define INCLUDE_REDIS_REDIS_CPP_HPP_
 
 
 namespace kerbal
@@ -17,4 +17,4 @@ namespace kerbal
 	}
 }
 
-#endif /* SRC_REDIS_CPP_HPP_ */
+#endif /* INCLUDE_REDIS_REDIS_CPP_HPP_ */

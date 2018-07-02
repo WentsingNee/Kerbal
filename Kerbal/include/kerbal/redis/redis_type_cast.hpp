@@ -5,8 +5,8 @@
  *      Author: peter
  */
 
-#ifndef KERBAL_INCLUDE_KERBAL_REDIS_REDIS_TYPE_CAST_HPP_
-#define KERBAL_INCLUDE_KERBAL_REDIS_REDIS_TYPE_CAST_HPP_
+#ifndef INCLUDE_KERBAL_REDIS_REDIS_TYPE_CAST_HPP_
+#define INCLUDE_KERBAL_REDIS_REDIS_TYPE_CAST_HPP_
 
 #include <string>
 #include <sstream>
@@ -22,7 +22,16 @@ namespace kerbal
 	namespace redis
 	{
 
-#	if __cplusplus >= 201103L
+#	if __cplusplus < 201103L
+
+		template <typename CastToType>
+		CastToType redisTypeCast(const char * src)
+		{
+			std::istringstream ss(src);
+			return *std::istream_iterator<CastToType>(ss);
+		}
+
+#	else
 
 		template <typename CastToType>
 		typename std::enable_if<!std::is_const<CastToType>::value, CastToType>::type
@@ -38,17 +47,6 @@ namespace kerbal
 		{
 			return redisTypeCast<typename std::remove_const<CastToType>::type>(src);
 		}
-
-#	else
-
-		template <typename CastToType>
-		CastToType redisTypeCast(const char * src)
-		{
-			std::istringstream ss(src);
-			return *std::istream_iterator<CastToType>(ss);
-		}
-
-#	endif
 
 		template <>
 		inline std::string redisTypeCast<std::string>(const char * src)
@@ -107,6 +105,8 @@ namespace kerbal
 			return std::stold(src);
 		}
 
+#	endif //C++11
+
 		template <typename TypeFrom>
 		std::string redisCastToString(const TypeFrom & src)
 		{
@@ -115,7 +115,7 @@ namespace kerbal
 			return ss.str();
 		}
 
-		inline const std::string & redisCastToString(const std::string & src)
+		inline const std::string & redisCastToString(const std::string & src) noexcept
 		{
 			return src;
 		}
@@ -128,4 +128,4 @@ namespace kerbal
 	}
 }
 
-#endif /* KERBAL_INCLUDE_KERBAL_REDIS_REDIS_TYPE_CAST_HPP_ */
+#endif /* INCLUDE_KERBAL_REDIS_REDIS_TYPE_CAST_HPP_ */

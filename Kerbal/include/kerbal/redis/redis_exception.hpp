@@ -5,8 +5,8 @@
  *      Author: peter
  */
 
-#ifndef SRC_REDIS_REDIS_EXCEPTION_HPP_
-#define SRC_REDIS_REDIS_EXCEPTION_HPP_
+#ifndef INCLUDE_REDIS_REDIS_EXCEPTION_HPP_
+#define INCLUDE_REDIS_REDIS_EXCEPTION_HPP_
 
 #include <exception>
 #include <sstream>
@@ -20,7 +20,7 @@ namespace kerbal
 		class RedisException: public std::exception
 		{
 			protected:
-				std::string reason;
+				const std::string reason;
 
 			public:
 				RedisException(const std::string & reason) :
@@ -50,13 +50,6 @@ namespace kerbal
 			protected:
 				const std::string excute_command;
 
-				static std::string redis_reply_type_cast(RedisReplyType correctType)
-				{
-					std::ostringstream ss;
-					ss << correctType;
-					return ss.str();
-				}
-
 			public:
 				RedisUnexceptedCaseException(const std::string & excute_command = "(unknown command)") :
 						RedisException("redis returns an unexcepted case when excute command: " + excute_command), excute_command(excute_command)
@@ -64,7 +57,7 @@ namespace kerbal
 				}
 
 				RedisUnexceptedCaseException(RedisReplyType correctType, const std::string & excute_command = "(unknown command)") :
-						RedisException("redis returns an unexcepted case when excute command: " + excute_command + " , correct type is: " + redis_reply_type_cast(correctType))
+						RedisException("redis returns an unexcepted case when excute command: " + excute_command + " , correct type is: " + redisReplyTypeName(correctType))
 				{
 				}
 		};
@@ -80,4 +73,4 @@ namespace kerbal
 	}
 }
 
-#endif /* SRC_REDIS_REDIS_EXCEPTION_HPP_ */
+#endif /* INCLUDE_REDIS_REDIS_EXCEPTION_HPP_ */

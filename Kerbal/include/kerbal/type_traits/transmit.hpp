@@ -47,63 +47,62 @@ namespace kerbal
 		{
 		};
 
-		template <>
-		struct Transmit<char>
+		template <typename Type>
+		struct Transmit<Type&> : public Transmit_optimize_enable<Type&>
 		{
-				typedef char type;
+		};
+
+		template <typename Type>
+		struct Transmit<const Type&> : public Transmit_optimize_enable<const Type&>
+		{
 		};
 
 		template <>
-		struct Transmit<signed char>
+		struct Transmit<char> : public Transmit_optimize_enable<char>
 		{
-				typedef signed char type;
 		};
 
 		template <>
-		struct Transmit<unsigned char>
+		struct Transmit<signed char> : public Transmit_optimize_enable<signed char>
 		{
-				typedef unsigned char type;
 		};
 
 		template <>
-		struct Transmit<short>
+		struct Transmit<unsigned char> : public Transmit_optimize_enable<unsigned char>
 		{
-				typedef short type;
 		};
 
 		template <>
-		struct Transmit<unsigned short>
+		struct Transmit<short> : public Transmit_optimize_enable<short>
 		{
-				typedef unsigned short type;
 		};
 
 		template <>
-		struct Transmit<int>
+		struct Transmit<unsigned short> : public Transmit_optimize_enable<unsigned short>
 		{
-				typedef int type;
 		};
 
 		template <>
-		struct Transmit<unsigned int>
+		struct Transmit<int> : public Transmit_optimize_enable<int>
 		{
-				typedef unsigned int type;
 		};
 
 		template <>
-		struct Transmit<float>
+		struct Transmit<unsigned int> : public Transmit_optimize_enable<unsigned int>
 		{
-				typedef float type;
 		};
 
 		template <>
-		struct Transmit<unsigned float>
+		struct Transmit<float> : public Transmit_optimize_enable<float>
 		{
-				typedef unsigned int type;
+		};
+
+		template <>
+		struct Transmit<unsigned float> : public Transmit_optimize_enable<unsigned float>
+		{
 		};
 
 	}
 }
-
-
 
 #endif /* INCLUDE_KERBAL_TYPE_TRAITS_TRANSMIT_HPP_ */

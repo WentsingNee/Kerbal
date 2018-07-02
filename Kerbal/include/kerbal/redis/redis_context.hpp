@@ -5,8 +5,8 @@
  *      Author: peter
  */
 
-#ifndef SRC_REDIS_CONTEXT_HPP_
-#define SRC_REDIS_CONTEXT_HPP_
+#ifndef INCLUDE_REDIS_REDIS_CONTEXT_HPP_
+#define INCLUDE_REDIS_REDIS_CONTEXT_HPP_
 
 #include <iostream>
 #include <string>
@@ -22,7 +22,7 @@ namespace kerbal
 		class Context: protected std::unique_ptr<redisContext, void (*)(redisContext *)>
 		{
 			private:
-				static void redisContextDealloctor(redisContext * conn)
+				static void redisContextDealloctor(redisContext * conn) noexcept
 				{
 #if (TRACK_RESOURCE_FREE == true)
 					std::cout << "free redisContext   " << conn << std::endl;
@@ -30,33 +30,33 @@ namespace kerbal
 					redisFree(conn);
 				}
 
-				using supper_t = std::unique_ptr<redisContext, void (*)(redisContext *)>;
+				typedef std::unique_ptr<redisContext, void (*)(redisContext *)> supper_t;
 
 			public:
 
-				Context() :
+				Context() noexcept :
 						supper_t(nullptr, redisContextDealloctor)
 				{
 				}
 
-				void close()
+				void close() noexcept
 				{
 					this->reset(nullptr);
 				}
 
-				bool connect(const char ip[], int port)
+				bool connect(const char ip[], int port) noexcept
 				{
 					supper_t::reset(redisConnect(ip, port));
 					return this->isValid();
 				}
 
-				bool connectWithTimeout(const char ip[], int port, const struct timeval tv)
+				bool connectWithTimeout(const char ip[], int port, const struct timeval tv) noexcept
 				{
 					supper_t::reset(redisConnectWithTimeout(ip, port, tv));
 					return this->isValid();
 				}
 
-				bool connectWithTimeout(const char ip[], int port, const std::chrono::milliseconds & ms)
+				bool connectWithTimeout(const char ip[], int port, const std::chrono::milliseconds & ms) noexcept
 				{
 					struct timeval tv;
 					tv.tv_sec = ms.count() / 1000;
@@ -64,22 +64,22 @@ namespace kerbal
 					return connectWithTimeout(ip, port, tv);
 				}
 
-				int reconnect()
+				int reconnect() noexcept
 				{
 					return redisReconnect(this->get());
 				}
 
-				operator bool() const
+				operator bool() const noexcept
 				{
 					return this->isValid();
 				}
 
-				bool isValid() const
+				bool isValid() const noexcept
 				{
 					return this->get() != nullptr && this->get()->err == 0;
 				}
 
-				void free()
+				void free() noexcept
 				{
 					this->reset(nullptr);
 				}
@@ -96,4 +96,4 @@ namespace kerbal
 	}
 }
 
-#endif /* SRC_REDIS_CONTEXT_HPP_ */
+#endif /* INCLUDE_REDIS_REDIS_CONTEXT_HPP_ */

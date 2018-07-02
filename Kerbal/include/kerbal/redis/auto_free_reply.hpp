@@ -5,8 +5,8 @@
  *      Author: peter
  */
 
-#ifndef SRC_REDIS_AUTO_FREE_REPLY_HPP_
-#define SRC_REDIS_AUTO_FREE_REPLY_HPP_
+#ifndef INCLUDE_REDIS_AUTO_FREE_REPLY_HPP_
+#define INCLUDE_REDIS_AUTO_FREE_REPLY_HPP_
 
 #include <iostream>
 #include <memory>
@@ -42,13 +42,49 @@ namespace kerbal
 
 		};
 
+		template <typename ReturnType = std::string>
+		ReturnType redisReplyTypeName(RedisReplyType type);
+
+		template <>
+		inline const char * redisReplyTypeName(RedisReplyType type)
+		{
+			switch (type) {
+				case RedisReplyType::STRING:
+					return "STRING";
+				case RedisReplyType::ARRAY:
+					return "ARRAY";
+				case RedisReplyType::INTEGER:
+					return "INTEGER";
+				case RedisReplyType::NIL:
+					return "NIL";
+				case RedisReplyType::STATUS:
+					return "STATUS";
+				case RedisReplyType::ERROR:
+					return "ERROR";
+				default:
+					return "OTHER UNKNOWN";
+			}
+		}
+
+		template <>
+		inline std::string redisReplyTypeName(RedisReplyType type)
+		{
+			return redisReplyTypeName<const char *>(type);
+		}
+
+		inline std::ostream& operator <<(std::ostream & out, RedisReplyType type)
+		{
+			return out << redisReplyTypeName<const char *>(type);
+		}
+
+
 		/**
 		 * @brief 一个可以智能释放的 redis reply 指针
 		 */
 		class AutoFreeReply: public std::unique_ptr<redisReply, void (*)(redisReply *)>
 		{
 			private:
-				static void redisReplyDealloctor(redisReply * reply_ptr)
+				static void redisReplyDealloctor(redisReply * reply_ptr) noexcept
 				{
 #if (TRACK_RESOURCE_FREE == true)
 					std::cout << "free redisReply   " << reply_ptr << std::endl;
@@ -56,45 +92,23 @@ namespace kerbal
 					freeReplyObject(reply_ptr);
 				}
 
-				using supper_t = std::unique_ptr<redisReply, void (*)(redisReply *)>;
+				typedef std::unique_ptr<redisReply, void (*)(redisReply *)> supper_t;
 
 			public:
-				AutoFreeReply(redisReply * redis_reply = nullptr) :
+				AutoFreeReply(redisReply * redis_reply = nullptr) noexcept :
 						supper_t(redis_reply, redisReplyDealloctor)
 				{
 				}
 
-				enum RedisReplyType replyType() const
+				enum RedisReplyType replyType() const noexcept
 				{
 					return (RedisReplyType) this->get()->type;
 				}
 		};
-
-
-		inline std::ostream& operator <<(std::ostream & out, RedisReplyType type)
-		{
-			using RedisReplyType = RedisReplyType;
-			switch (type) {
-				case RedisReplyType::STRING:
-					return out << "STRING";
-				case RedisReplyType::ARRAY:
-					return out << "ARRAY";
-				case RedisReplyType::INTEGER:
-					return out << "INTEGER";
-				case RedisReplyType::NIL:
-					return out << "NIL";
-				case RedisReplyType::STATUS:
-					return out << "STATUS";
-				case RedisReplyType::ERROR:
-					return out << "ERROR";
-				default:
-					return out << "OTHER UNKNOWN";
-			}
-		}
 
 	}
 }
 
 
 
-#endif /* SRC_REDIS_AUTO_FREE_REPLY_HPP_ */
+#endif /* INCLUDE_REDIS_AUTO_FREE_REPLY_HPP_ */

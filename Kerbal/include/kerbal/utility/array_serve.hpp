@@ -1,7 +1,7 @@
 #ifndef _ARRAY_SERVE_HPP_
 #define _ARRAY_SERVE_HPP_
 
-#include <kerbal/compatibility/compatibility_macro.hpp>
+#include <kerbal/type_traits/type_traits.hpp>
 #include <iostream>
 #include <string>
 
@@ -65,37 +65,19 @@ namespace kerbal
 				return out;
 			}
 
-			template <typename Type, Type val>
-			struct integral_constant
-			{
-#				if __cplusplus >= 201103L
-					static constexpr Type value = val;
-#				else
-					static const Type value = val;
-#				endif
-
-					typedef Type value_type;
-					typedef integral_constant<Type, val> type;
-
-					KERBAL_CONSTEXPR operator value_type() const
-					{
-						return value;
-					}
-			};
-
 			// rank
 			template <typename >
-			struct rank: public integral_constant<size_t, 0>
+			struct rank: public kerbal::type_traits::integral_constant<size_t, 0>
 			{
 			};
 
 			template <typename Type, size_t Size>
-			struct rank<Type[Size]> : public integral_constant<size_t, 1 + rank<Type>::value>
+			struct rank<Type[Size]> : public kerbal::type_traits::integral_constant<size_t, 1 + rank<Type>::value>
 			{
 			};
 
 			template <typename Type>
-			struct rank<Type[]> : public integral_constant<size_t, 1 + rank<Type>::value>
+			struct rank<Type[]> : public kerbal::type_traits::integral_constant<size_t, 1 + rank<Type>::value>
 			{
 			};
 
