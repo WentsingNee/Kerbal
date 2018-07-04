@@ -68,15 +68,33 @@ namespace kerbal
 				template <typename Type, typename ...Args>
 				static constexpr void redis_excute_allow_type_checker(const Type &, Args&& ... args) noexcept
 				{
-					static_assert(is_redis_excute_allow_type<Type>::value, "RedisCommand.excute doesn't allow args type");
+					static_assert(redis_type_traits<Type>::is_excute_allow_type, "RedisCommand.excute doesn't allow args type");
 					redis_excute_allow_type_checker(args...);
 				}
 
+#if __cplusplus < 201103L
 				template <typename T>
 				static constexpr const T& cast_to_va_arg_compatible_type(const T& t) noexcept
 				{
 					return t;
 				}
+#else
+				template <typename T>
+				static constexpr
+				typename std::enable_if<std::is_enum<T>::value, int>::type
+				cast_to_va_arg_compatible_type(const T& t) noexcept
+				{
+					return (int)t;
+				}
+
+				template <typename T>
+				static constexpr
+				typename std::enable_if<!std::is_enum<T>::value, const T&>::type
+				cast_to_va_arg_compatible_type(const T& t) noexcept
+				{
+					return t;
+				}
+#endif
 
 				static const char * cast_to_va_arg_compatible_type(const std::string & t) noexcept
 				{
@@ -89,6 +107,8 @@ namespace kerbal
 				}
 
 			public:
+				
+#			ifndef __cpp_concepts
 				template <typename ...Args>
 				AutoFreeReply excute(const Context & conn, Args && ...args)
 				{
@@ -103,6 +123,20 @@ namespace kerbal
 					}
 					return reply;
 				}
+#			else
+				template <Redis_excute_allowed_type ...Args>
+				AutoFreeReply excute(const Context & conn, Args && ...args)
+				{
+					AutoFreeReply reply = (redisReply *) redisCommand(conn.get(), cmd.c_str(), cast_to_va_arg_compatible_type(args)...);
+					if (reply.replyType() == RedisReplyType::ERROR) {
+						throw RedisCommandExcuteFailedException(std::string("redis reply error: ") + reply->str);
+					}
+					if (reply == nullptr) {
+						throw RedisException("redis reply null exception");
+					}
+					return reply;
+				}
+#			endif
 		};
 	}
 }

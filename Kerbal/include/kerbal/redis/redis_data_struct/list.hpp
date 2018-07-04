@@ -78,7 +78,7 @@ namespace kerbal
 
 				ListReferenceBase operator=(const Type & src)
 				{
-					static RedisCommand command(std::string("lset %%s %%d %") + placeholder_traits<Type>::value);
+					static RedisCommand command(std::string("lset %%s %%d %") + redis_type_traits<Type>::placeholder);
 					AutoFreeReply reply = command.excute(*supper_t::pToList->pToContext, supper_t::pToList->key,
 												supper_t::index, src);
 					switch (reply.replyType()) {
@@ -371,7 +371,7 @@ namespace kerbal
 
 					for (size_t i = 0; i < 1 + sizeof...(args); ++i) {
 						placeholder_list += " %";
-						placeholder_list += placeholder_traits<Type>::value;
+						placeholder_list += redis_type_traits<Type>::placeholder;
 					}
 					return placeholder_list;
 				}
@@ -414,7 +414,7 @@ namespace kerbal
 				 */
 				size_t lpushx(const Type & value)
 				{
-					static RedisCommand cmd(std::string("lpushx %%s %") + placeholder_traits<Type>::value);
+					static RedisCommand cmd(std::string("lpushx %%s %") + redis_type_traits<Type>::placeholder);
 					AutoFreeReply reply = cmd.excute(*pToContext, key, value);
 					switch (reply.replyType()) {
 						case RedisReplyType::INTEGER: {
@@ -427,7 +427,7 @@ namespace kerbal
 
 				size_t rpushx(const Type & value)
 				{
-					static RedisCommand cmd(std::string("rpushx %%s %") + placeholder_traits<Type>::value);
+					static RedisCommand cmd(std::string("rpushx %%s %") + redis_type_traits<Type>::placeholder);
 					AutoFreeReply reply = cmd.excute(*pToContext, key, value);
 					switch (reply.replyType()) {
 						case RedisReplyType::INTEGER: {
@@ -510,7 +510,7 @@ namespace kerbal
 
 				size_t remove(const Type & value)
 				{
-					static RedisCommand cmd(std::string("lrem %%s 0 %") + placeholder_traits<Type>::value);
+					static RedisCommand cmd(std::string("lrem %%s 0 %") + redis_type_traits<Type>::placeholder);
 					AutoFreeReply reply = cmd.excute(*pToContext, key, value);
 					switch (reply.replyType()) {
 						case RedisReplyType::INTEGER:
@@ -522,7 +522,7 @@ namespace kerbal
 
 				size_t remove(const Type & value, int count)
 				{
-					static RedisCommand cmd(std::string("lrem %%s %%d %") + placeholder_traits<Type>::value);
+					static RedisCommand cmd(std::string("lrem %%s %%d %") + redis_type_traits<Type>::placeholder);
 					AutoFreeReply reply = cmd.excute(*pToContext, key, count, value);
 					switch (reply.replyType()) {
 						case RedisReplyType::INTEGER:

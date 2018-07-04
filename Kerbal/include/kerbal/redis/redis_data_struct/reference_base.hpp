@@ -82,7 +82,7 @@ namespace kerbal
 
 				ReferenceBase& operator=(const Type & src)
 				{
-					static RedisCommand command(std::string("set %%s %") + placeholder_traits<Type>::value);
+					static RedisCommand command(std::string("set %%s %") + redis_type_traits<Type>::placeholder);
 					command.excute(*supper_t::pToContext, supper_t::key, src);
 					return *this;
 				}
