@@ -68,7 +68,7 @@ namespace kerbal
 				template <typename Type, typename ...Args>
 				static constexpr void redis_excute_allow_type_checker(const Type &, Args&& ... args) noexcept
 				{
-					static_assert(redis_type_traits<Type>::is_excute_allow_type, "RedisCommand.excute doesn't allow args type");
+					static_assert(redis_type_traits<Type>::is_excute_allowed_type, "RedisCommand.excute doesn't allow args type");
 					redis_excute_allow_type_checker(args...);
 				}
 
