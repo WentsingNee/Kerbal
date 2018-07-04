@@ -35,13 +35,13 @@ namespace kerbal
 				template <typename Type>
 				static void make_excute_args_template(std::ostringstream & templ, const RedisUnitedStringHelper &, const Type &)
 				{
-					templ << " %%s %" << placeholder_traits<Type>::value;
+					templ << " %%s %" << redis_type_traits<Type>::placeholder;
 				}
 
 				template <typename Type, typename ... Args>
 				static void make_excute_args_template(std::ostringstream & templ, const RedisUnitedStringHelper &, const Type &, Args&& ... args)
 				{
-					templ << " %%s %" << placeholder_traits<Type>::value;
+					templ << " %%s %" << redis_type_traits<Type>::placeholder;
 					make_excute_args_template(templ, args...);
 				}
 
@@ -123,7 +123,7 @@ namespace kerbal
 				template <typename ValueType>
 				std::string set(const Context & conn, RedisUnitedStringHelper key, const ValueType & value)
 				{
-					static RedisCommand cmd(std::string("set %%s %") + placeholder_traits<ValueType>::value);
+					static RedisCommand cmd(std::string("set %%s %") + redis_type_traits<ValueType>::placeholder);
 					AutoFreeReply reply = cmd.excute(conn, key, value);
 					switch (reply.replyType()) {
 						case RedisReplyType::STATUS:
@@ -354,7 +354,7 @@ namespace kerbal
 				template <typename ValueType>
 				int hset(const Context & conn, RedisUnitedStringHelper key, RedisUnitedStringHelper field, const ValueType & value)
 				{
-					static RedisCommand cmd(std::string("hset %%s %%s %") + placeholder_traits<ValueType>::value);
+					static RedisCommand cmd(std::string("hset %%s %%s %") + redis_type_traits<ValueType>::placeholder);
 					AutoFreeReply reply = cmd.excute(conn, key, field, value);
 					switch (reply.replyType()) {
 						case RedisReplyType::INTEGER:

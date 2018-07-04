@@ -61,7 +61,7 @@ namespace kerbal
 
 				bool member_exist(const Type & member) const
 				{
-					static RedisCommand cmd(std::string("sismember %%s %") + placeholder_traits<Type>::value);
+					static RedisCommand cmd(std::string("sismember %%s %") + redis_type_traits<Type>::placeholder);
 					return cmd.excute(*pToContext, key, member)->integer;
 				}
 
@@ -85,7 +85,7 @@ namespace kerbal
 
 					for (size_t i = 0; i < 1 + sizeof...(args); ++i) {
 						placeholder_list += " %";
-						placeholder_list += placeholder_traits<Type>::value;
+						placeholder_list += redis_type_traits<Type>::placeholder;
 					}
 					return placeholder_list;
 				}
