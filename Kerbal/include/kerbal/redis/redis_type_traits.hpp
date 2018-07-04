@@ -16,50 +16,6 @@ namespace kerbal
 {
 	namespace redis
 	{
-		struct true_type
-		{
-				static constexpr bool value = true;
-		};
-
-		struct false_type
-		{
-				static constexpr bool value = false;
-		};
-
-		template<typename>
-		struct is_redis_key_type;
-
-		template <typename Type>
-		struct is_redis_key_type: public false_type
-		{
-		};
-
-		template <>
-		struct is_redis_key_type<std::string> : public true_type
-		{
-		};
-
-		template <size_t N>
-		struct is_redis_key_type<char[N]> : public true_type
-		{
-		};
-		template <>
-		struct is_redis_key_type<char*> : public true_type
-		{
-		};
-		template <size_t N>
-		struct is_redis_key_type<const char[N]> : public true_type
-		{
-		};
-		template <>
-		struct is_redis_key_type<const char*> : public true_type
-		{
-		};
-		template <>
-		struct is_redis_key_type<RedisUnitedStringHelper> : public true_type
-		{
-		};
-
 
 #if __cplusplus < 201103L
 		struct not_redis_key_type
@@ -93,6 +49,27 @@ namespace kerbal
 					is_excute_allowed_type = 1
 				}
 		};
+
+		template <bool is_key_type>
+		struct excute_allowed_type;
+
+		template <>
+		struct excute_allowed_type<false>: public not_redis_key_type
+		{
+				enum
+				{
+					is_excute_allowed_type = 1
+				}
+		};
+
+		template <>
+		struct excute_allowed_type<true>: public redis_key_type
+		{
+				enum
+				{
+					is_excute_allowed_type = 1
+				}
+		};
 #else
 		struct not_redis_key_type
 		{
@@ -109,7 +86,17 @@ namespace kerbal
 				static constexpr bool is_excute_allowed_type = false;
 		};
 
-		struct excute_allowed_type
+		template <bool is_key_type>
+		struct excute_allowed_type;
+
+		template <>
+		struct excute_allowed_type<false>: public not_redis_key_type
+		{
+				static constexpr bool is_excute_allowed_type = true;
+		};
+
+		template <>
+		struct excute_allowed_type<true>: public redis_key_type
 		{
 				static constexpr bool is_excute_allowed_type = true;
 		};
@@ -161,97 +148,97 @@ namespace kerbal
 		};
 
 		template <>
-		struct redis_type_traits<RedisUnitedStringHelper> : public excute_allowed_type, string_type_placeholder
+		struct redis_type_traits<RedisUnitedStringHelper> : public excute_allowed_type<true>, string_type_placeholder
 		{
 		};
 		template <>
-		struct redis_type_traits<std::string> : public excute_allowed_type, string_type_placeholder
+		struct redis_type_traits<std::string> : public excute_allowed_type<true>, string_type_placeholder
 		{
 		};
 		template <>
-		struct redis_type_traits<char*> : public excute_allowed_type, string_type_placeholder
+		struct redis_type_traits<char*> : public excute_allowed_type<true>, string_type_placeholder
 		{
 		};
 		template <>
-		struct redis_type_traits<const char*> : public excute_allowed_type, string_type_placeholder
+		struct redis_type_traits<const char*> : public excute_allowed_type<true>, string_type_placeholder
 		{
 		};
 		template <>
-		struct redis_type_traits<char[]> : public excute_allowed_type, string_type_placeholder
+		struct redis_type_traits<char[]> : public excute_allowed_type<true>, string_type_placeholder
 		{
 		};
 		template <size_t N>
-		struct redis_type_traits<char[N]> : public excute_allowed_type, string_type_placeholder
+		struct redis_type_traits<char[N]> : public excute_allowed_type<true>, string_type_placeholder
 		{
 		};
 
 		template <>
-		struct redis_type_traits<bool> : public excute_allowed_type
+		struct redis_type_traits<bool> : public excute_allowed_type<false>
 		{
 				static constexpr placeholder_type placeholder = "%d";
 		};
 
 		template <>
-		struct redis_type_traits<char> : public excute_allowed_type
+		struct redis_type_traits<char> : public excute_allowed_type<false>
 		{
 				static constexpr placeholder_type placeholder = "%s";
 		};
 		template <>
-		struct redis_type_traits<signed char> : public excute_allowed_type
+		struct redis_type_traits<signed char> : public excute_allowed_type<false>
 		{
 				static constexpr placeholder_type placeholder = "%s";
 		};
 		template <>
-		struct redis_type_traits<unsigned char> : public excute_allowed_type
+		struct redis_type_traits<unsigned char> : public excute_allowed_type<false>
 		{
 				static constexpr placeholder_type placeholder = "%s";
 		};
 
 		template <>
-		struct redis_type_traits<int> : public excute_allowed_type
+		struct redis_type_traits<int> : public excute_allowed_type<false>
 		{
 				static constexpr placeholder_type placeholder = "%d";
 		};
 		template <>
-		struct redis_type_traits<unsigned int> : public excute_allowed_type
+		struct redis_type_traits<unsigned int> : public excute_allowed_type<false>
 		{
 				static constexpr placeholder_type placeholder = "%u";
 		};
 
 		template <>
-		struct redis_type_traits<long> : public excute_allowed_type
+		struct redis_type_traits<long> : public excute_allowed_type<false>
 		{
 				static constexpr placeholder_type placeholder = "%ld";
 		};
 		template <>
-		struct redis_type_traits<unsigned long> : public excute_allowed_type
+		struct redis_type_traits<unsigned long> : public excute_allowed_type<false>
 		{
 				static constexpr placeholder_type placeholder = "%lu";
 		};
 
 		template <>
-		struct redis_type_traits<long long> : public excute_allowed_type
+		struct redis_type_traits<long long> : public excute_allowed_type<false>
 		{
 				static constexpr placeholder_type placeholder = "%lld";
 		};
 		template <>
-		struct redis_type_traits<unsigned long long> : public excute_allowed_type
+		struct redis_type_traits<unsigned long long> : public excute_allowed_type<false>
 		{
 				static constexpr placeholder_type placeholder = "%llu";
 		};
 
 		template <>
-		struct redis_type_traits<float> : public excute_allowed_type
+		struct redis_type_traits<float> : public excute_allowed_type<false>
 		{
 				static constexpr placeholder_type placeholder = "%f";
 		};
 		template <>
-		struct redis_type_traits<double> : public excute_allowed_type
+		struct redis_type_traits<double> : public excute_allowed_type<false>
 		{
 				static constexpr placeholder_type placeholder = "%f";
 		};
 		template <>
-		struct redis_type_traits<long double> : public excute_allowed_type
+		struct redis_type_traits<long double> : public excute_allowed_type<false>
 		{
 				static constexpr placeholder_type placeholder = "%f";
 		};
@@ -266,8 +253,8 @@ namespace kerbal
 		struct CheckIsIntegerType : public
 			std::conditional<
 				std::is_integral<Type>::value && !std::is_same<Type, bool>::value ,
-				true_type,
-				false_type>::type
+				std::true_type,
+				std::false_type>::type
 		{
 		};
 
@@ -275,8 +262,8 @@ namespace kerbal
 		struct CheckIsRealType : public
 			std::conditional<
 				CheckIsIntegerType<Type>::value || std::is_floating_point<Type>::value,
-				true_type,
-				false_type>::type
+				std::true_type,
+				std::false_type>::type
 		{
 		};
 
