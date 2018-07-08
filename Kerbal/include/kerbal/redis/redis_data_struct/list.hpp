@@ -39,14 +39,14 @@ namespace kerbal
 				bool exists() const
 				{
 					static RedisCommand cmd("llen %%s");
-					size_t len = cmd.excute(*pToList->pToContext, pToList->key)->integer;
+					size_t len = cmd.execute(*pToList->pToContext, pToList->key)->integer;
 					return -len <= index && index < len;
 				}
 
 				operator Type()
 				{
 					static RedisCommand cmd("lindex %%s %%d");
-					AutoFreeReply reply = cmd.excute(*pToList->pToContext, pToList->key, index);
+					AutoFreeReply reply = cmd.execute(*pToList->pToContext, pToList->key, index);
 					switch (reply.replyType()) {
 						case RedisReplyType::STRING: {
 							return redisTypeCast<Type>(reply->str);
@@ -54,7 +54,7 @@ namespace kerbal
 						case RedisReplyType::NIL:
 							throw RedisNilException(pToList->key);
 						default:
-							throw RedisUnexceptedCaseException(reply.replyType());
+							throw RedisUnexpectedCaseException(reply.replyType());
 					}
 				}
 
@@ -79,7 +79,7 @@ namespace kerbal
 				ListReferenceBase operator=(const Type & src)
 				{
 					static RedisCommand command(std::string("lset %%s %%d %") + redis_type_traits<Type>::placeholder);
-					AutoFreeReply reply = command.excute(*supper_t::pToList->pToContext, supper_t::pToList->key,
+					AutoFreeReply reply = command.execute(*supper_t::pToList->pToContext, supper_t::pToList->key,
 												supper_t::index, src);
 					switch (reply.replyType()) {
 						case RedisReplyType::STATUS: {
@@ -89,7 +89,7 @@ namespace kerbal
 						case RedisReplyType::NIL:
 							throw RedisNilException(supper_t::pToList->key);
 						default:
-							throw RedisUnexceptedCaseException(reply.replyType());
+							throw RedisUnexpectedCaseException(reply.replyType());
 					}
 				}
 
@@ -346,7 +346,7 @@ namespace kerbal
 
 				size_t size() const
 				{
-					//llen 命令执行结果仅会返回 error 或 integer (error 情形已由 excute 方法处理)
+					//llen 命令执行结果仅会返回 error 或 integer (error 情形已由 execute 方法处理)
 					static RedisCommand cmd("llen %%s");
 					return cmd.excute(*pToContext, key)->integer;
 				}
@@ -382,13 +382,13 @@ namespace kerbal
 				{
 					list_member_args_checker(value0, args...);
 					static RedisCommand cmd("lpush %%s" + make_list_member_placeholder(value0, args...));
-					AutoFreeReply reply = cmd.excute(*pToContext, key, value0, args...);
+					AutoFreeReply reply = cmd.execute(*pToContext, key, value0, args...);
 					switch (reply.replyType()) {
 						case RedisReplyType::INTEGER: {
 							return reply->integer;
 						}
 						default:
-							throw RedisUnexceptedCaseException(reply.replyType());
+							throw RedisUnexpectedCaseException(reply.replyType());
 					}
 				}
 
@@ -397,13 +397,13 @@ namespace kerbal
 				{
 					list_member_args_checker(value0, args...);
 					static RedisCommand cmd("rpush %%s" + make_list_member_placeholder(value0, args...));
-					AutoFreeReply reply = cmd.excute(*pToContext, key, value0, args...);
+					AutoFreeReply reply = cmd.execute(*pToContext, key, value0, args...);
 					switch (reply.replyType()) {
 						case RedisReplyType::INTEGER: {
 							return reply->integer;
 						}
 						default:
-							throw RedisUnexceptedCaseException(reply.replyType());
+							throw RedisUnexpectedCaseException(reply.replyType());
 					}
 				}
 
@@ -415,33 +415,33 @@ namespace kerbal
 				size_t lpushx(const Type & value)
 				{
 					static RedisCommand cmd(std::string("lpushx %%s %") + redis_type_traits<Type>::placeholder);
-					AutoFreeReply reply = cmd.excute(*pToContext, key, value);
+					AutoFreeReply reply = cmd.execute(*pToContext, key, value);
 					switch (reply.replyType()) {
 						case RedisReplyType::INTEGER: {
 							return reply->integer;
 						}
 						default:
-							throw RedisUnexceptedCaseException(reply.replyType());
+							throw RedisUnexpectedCaseException(reply.replyType());
 					}
 				}
 
 				size_t rpushx(const Type & value)
 				{
 					static RedisCommand cmd(std::string("rpushx %%s %") + redis_type_traits<Type>::placeholder);
-					AutoFreeReply reply = cmd.excute(*pToContext, key, value);
+					AutoFreeReply reply = cmd.execute(*pToContext, key, value);
 					switch (reply.replyType()) {
 						case RedisReplyType::INTEGER: {
 							return reply->integer;
 						}
 						default:
-							throw RedisUnexceptedCaseException(reply.replyType());
+							throw RedisUnexpectedCaseException(reply.replyType());
 					}
 				}
 
 				Type lpop()
 				{
 					static RedisCommand cmd("lpop %%s");
-					AutoFreeReply reply = cmd.excute(*pToContext, key);
+					AutoFreeReply reply = cmd.execute(*pToContext, key);
 					switch (reply.replyType()) {
 						case RedisReplyType::STRING: {
 							return redisTypeCast<Type>(reply->str);
@@ -449,14 +449,14 @@ namespace kerbal
 						case RedisReplyType::NIL:
 							throw RedisNilException(key);
 						default:
-							throw RedisUnexceptedCaseException(reply.replyType());
+							throw RedisUnexpectedCaseException(reply.replyType());
 					}
 				}
 
 				Type blpop(const std::chrono::seconds & sec)
 				{
 					static RedisCommand cmd("blpop %%s %%d");
-					AutoFreeReply reply = cmd.excute(*pToContext, key, sec.count());
+					AutoFreeReply reply = cmd.execute(*pToContext, key, sec.count());
 					switch (reply.replyType()) {
 						case RedisReplyType::ARRAY: {
 							return redisTypeCast<Type>(reply->element[1]->str);
@@ -464,14 +464,14 @@ namespace kerbal
 						case RedisReplyType::NIL:
 							throw RedisNilException(key);
 						default:
-							throw RedisUnexceptedCaseException(reply.replyType());
+							throw RedisUnexpectedCaseException(reply.replyType());
 					}
 				}
 
 				Type rpop()
 				{
 					static RedisCommand cmd("rpop %%s");
-					AutoFreeReply reply = cmd.excute(*pToContext, key);
+					AutoFreeReply reply = cmd.execute(*pToContext, key);
 					switch (reply.replyType()) {
 						case RedisReplyType::STRING: {
 							return redisTypeCast<Type>(reply->str);
@@ -479,7 +479,7 @@ namespace kerbal
 						case RedisReplyType::NIL:
 							throw RedisNilException(key);
 						default:
-							throw RedisUnexceptedCaseException(reply.replyType());
+							throw RedisUnexpectedCaseException(reply.replyType());
 					}
 				}
 
@@ -511,24 +511,24 @@ namespace kerbal
 				size_t remove(const Type & value)
 				{
 					static RedisCommand cmd(std::string("lrem %%s 0 %") + redis_type_traits<Type>::placeholder);
-					AutoFreeReply reply = cmd.excute(*pToContext, key, value);
+					AutoFreeReply reply = cmd.execute(*pToContext, key, value);
 					switch (reply.replyType()) {
 						case RedisReplyType::INTEGER:
 							return reply->integer;
 						default:
-							throw RedisUnexceptedCaseException(reply.replyType());
+							throw RedisUnexpectedCaseException(reply.replyType());
 					}
 				}
 
 				size_t remove(const Type & value, int count)
 				{
 					static RedisCommand cmd(std::string("lrem %%s %%d %") + redis_type_traits<Type>::placeholder);
-					AutoFreeReply reply = cmd.excute(*pToContext, key, count, value);
+					AutoFreeReply reply = cmd.execute(*pToContext, key, count, value);
 					switch (reply.replyType()) {
 						case RedisReplyType::INTEGER:
 							return reply->integer;
 						default:
-							throw RedisUnexceptedCaseException(reply.replyType());
+							throw RedisUnexpectedCaseException(reply.replyType());
 					}
 				}
 		};

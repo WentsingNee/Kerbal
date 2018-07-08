@@ -45,7 +45,7 @@ namespace kerbal
 				operator Type() const
 				{
 					RedisCommand command("get %%s");
-					AutoFreeReply reply = command.excute(*pToContext, key);
+					AutoFreeReply reply = command.execute(*pToContext, key);
 					switch (reply.replyType()) {
 						case RedisReplyType::STRING: {
 							return redisTypeCast<Type>(reply->str);
@@ -53,7 +53,7 @@ namespace kerbal
 						case RedisReplyType::NIL:
 							throw RedisNilException(key);
 						default:
-							throw RedisUnexceptedCaseException();
+							throw RedisUnexpectedCaseException(reply.replyType());
 					}
 				}
 
@@ -83,7 +83,7 @@ namespace kerbal
 				ReferenceBase& operator=(const Type & src)
 				{
 					static RedisCommand command(std::string("set %%s %") + redis_type_traits<Type>::placeholder);
-					command.excute(*supper_t::pToContext, supper_t::key, src);
+					command.execute(*supper_t::pToContext, supper_t::key, src);
 					return *this;
 				}
 
@@ -170,14 +170,14 @@ namespace kerbal
 				IntegerReference& operator++()
 				{
 					RedisCommand command("incr %%s");
-					AutoFreeReply reply = command.excute(*this->pToContext, this->key);
+					AutoFreeReply reply = command.execute(*this->pToContext, this->key);
 					switch (reply.replyType()) {
 						case RedisReplyType::INTEGER:
 							return *this;
 						case RedisReplyType::NIL:
 							throw RedisNilException(this->key);
 						default:
-							throw RedisUnexceptedCaseException();
+							throw RedisUnexpectedCaseException();
 					}
 				}
 
@@ -192,7 +192,7 @@ namespace kerbal
 						case RedisReplyType::NIL:
 							throw RedisNilException(this->key);
 						default:
-							throw RedisUnexceptedCaseException();
+							throw RedisUnexpectedCaseException();
 					}
 				}
 
@@ -206,7 +206,7 @@ namespace kerbal
 						case RedisReplyType::NIL:
 							throw RedisNilException(this->key);
 						default:
-							throw RedisUnexceptedCaseException();
+							throw RedisUnexpectedCaseException();
 					}
 				}
 
@@ -214,14 +214,14 @@ namespace kerbal
 				{
 					Type tmp = *this;
 					RedisCommand command("decr %%s");
-					AutoFreeReply reply = command.excute(*this->pToContext, this->key);
+					AutoFreeReply reply = command.execute(*this->pToContext, this->key);
 					switch (reply.replyType()) {
 						case RedisReplyType::INTEGER:
 							return tmp;
 						case RedisReplyType::NIL:
 							throw RedisNilException(this->key);
 						default:
-							throw RedisUnexceptedCaseException();
+							throw RedisUnexpectedCaseException();
 					}
 				}
 

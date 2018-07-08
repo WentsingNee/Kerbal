@@ -33,7 +33,7 @@ namespace kerbal
 				operator std::set<Type>()
 				{
 					static RedisCommand cmd("smembers %%s");
-					AutoFreeReply reply = cmd.excute(*pToContext, key);
+					AutoFreeReply reply = cmd.execute(*pToContext, key);
 					switch (reply.replyType()) {
 						case RedisReplyType::ARRAY: {
 							std::set<Type> set;
@@ -43,7 +43,7 @@ namespace kerbal
 							return set;
 						}
 						default:
-							throw RedisUnexceptedCaseException(reply.replyType());
+							throw RedisUnexpectedCaseException(reply.replyType());
 					}
 				}
 
@@ -56,13 +56,13 @@ namespace kerbal
 				size_t size() const
 				{
 					static RedisCommand cmd("scard %%s");
-					return cmd.excute(*pToContext, key)->integer;
+					return cmd.execute(*pToContext, key)->integer;
 				}
 
 				bool member_exist(const Type & member) const
 				{
 					static RedisCommand cmd(std::string("sismember %%s %") + redis_type_traits<Type>::placeholder);
-					return cmd.excute(*pToContext, key, member)->integer;
+					return cmd.execute(*pToContext, key, member)->integer;
 				}
 
 			protected:
@@ -97,7 +97,7 @@ namespace kerbal
 					//notes: never get nil result when excuting sadd
 					set_member_args_checker(value0, args...);
 					static RedisCommand cmd("sadd %%s" + make_set_member_placeholder(value0, args...));
-					return cmd.excute(*pToContext, key, value0, args...)->integer;
+					return cmd.execute(*pToContext, key, value0, args...)->integer;
 				}
 
 				template <typename ...Args>
@@ -115,7 +115,7 @@ namespace kerbal
 				Type pop()
 				{
 					static RedisCommand cmd("spop %%s");
-					AutoFreeReply reply = cmd.excute(*pToContext, key);
+					AutoFreeReply reply = cmd.execute(*pToContext, key);
 					switch (reply.replyType()) {
 						case RedisReplyType::STRING: {
 							return redisTypeCast<Type>(reply->str);
@@ -123,7 +123,7 @@ namespace kerbal
 						case RedisReplyType::NIL:
 							throw RedisNilException(key);
 						default:
-							throw RedisUnexceptedCaseException();
+							throw RedisUnexpectedCaseException();
 					}
 				}
 		};
