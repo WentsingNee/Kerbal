@@ -348,7 +348,7 @@ namespace kerbal
 				{
 					//llen 命令执行结果仅会返回 error 或 integer (error 情形已由 execute 方法处理)
 					static RedisCommand cmd("llen %%s");
-					return cmd.excute(*pToContext, key)->integer;
+					return cmd.execute(*pToContext, key)->integer;
 				}
 
 			protected:

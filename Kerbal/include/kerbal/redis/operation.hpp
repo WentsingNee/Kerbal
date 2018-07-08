@@ -33,23 +33,23 @@ namespace kerbal
 		{
 			protected:
 				template <typename Type>
-				static void make_excute_args_template(std::ostringstream & templ, const RedisUnitedStringHelper &, const Type &)
+				static void make_execute_args_template(std::ostringstream & templ, const RedisUnitedStringHelper &, const Type &)
 				{
 					templ << " %%s %" << redis_type_traits<Type>::placeholder;
 				}
 
 				template <typename Type, typename ... Args>
-				static void make_excute_args_template(std::ostringstream & templ, const RedisUnitedStringHelper &, const Type &, Args&& ... args)
+				static void make_execute_args_template(std::ostringstream & templ, const RedisUnitedStringHelper &, const Type &, Args&& ... args)
 				{
 					templ << " %%s %" << redis_type_traits<Type>::placeholder;
-					make_excute_args_template(templ, args...);
+					make_execute_args_template(templ, args...);
 				}
 
 				template <typename Type, typename ... Args>
-				static std::string make_excute_args_template(const RedisUnitedStringHelper & key0, const Type & value0, Args&& ... args)
+				static std::string make_execute_args_template(const RedisUnitedStringHelper & key0, const Type & value0, Args&& ... args)
 				{
 					std::ostringstream templ;
-					make_excute_args_template(templ, key0, value0, args...);
+					make_execute_args_template(templ, key0, value0, args...);
 					return templ.str();
 				}
 
@@ -266,7 +266,7 @@ namespace kerbal
 				template <typename Type, typename ... Args>
 				std::string mset(const Context & conn, RedisUnitedStringHelper key0, const Type & value0, Args&& ... args)
 				{
-					static RedisCommand cmd("mset" + make_excute_args_template(key0, value0, args...));
+					static RedisCommand cmd("mset" + make_execute_args_template(key0, value0, args...));
 					AutoFreeReply reply = cmd.execute(conn, key0, value0, args...);
 					switch (reply.replyType()) {
 						case RedisReplyType::STATUS:
@@ -278,10 +278,10 @@ namespace kerbal
 
 //			protected:
 //				template <typename Type, typename ... Args>
-//				bool mget_excute(const Context & conn, const char templ[], const char key0[], Args&& ... args)
+//				bool mget_execute(const Context & conn, const char templ[], const char key0[], Args&& ... args)
 //				{
 //					RedisCommand cmd(templ);
-//					AutoFreeReply reply = cmd.execute(conn, key0, redis_excute_profect_match(args)...);
+//					AutoFreeReply reply = cmd.execute(conn, key0, redis_execute_profect_match(args)...);
 //					switch (reply.replyType()) {
 //						case RedisReplyType::STATUS:
 //							return reply->str;
@@ -299,7 +299,7 @@ namespace kerbal
 //					for (size_t i = 0; i < sizeof...(args); ++i) {
 //						templ += " %%s";
 //					}
-//					return mget_excute(conn, templ.c_str(), key0, value0, args...);
+//					return mget_execute(conn, templ.c_str(), key0, value0, args...);
 //				}
 
 
@@ -367,7 +367,7 @@ namespace kerbal
 				template <typename Type, typename ... Args>
 				std::string hmset(const Context & conn, RedisUnitedStringHelper key, RedisUnitedStringHelper field0, const Type & value0, Args&& ... args)
 				{
-					static RedisCommand cmd("hmset %%s" + make_excute_args_template(field0, value0, args...));
+					static RedisCommand cmd("hmset %%s" + make_execute_args_template(field0, value0, args...));
 					AutoFreeReply reply = cmd.execute(conn, key, field0, value0, args...);
 					switch (reply.replyType()) {
 						case RedisReplyType::STATUS:
