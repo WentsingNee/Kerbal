@@ -106,7 +106,7 @@ namespace kerbal
 					//notes: never get nil result when excuting srem
 					set_element_args_checker(value0, args...);
 					static RedisCommand cmd("srem %%s" + make_set_member_placeholder(value0, args...));
-					return cmd.excute(*pToContext, key, value0, args...)->integer;
+					return cmd.execute(*pToContext, key, value0, args...)->integer;
 				}
 
 				/**
