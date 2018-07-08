@@ -93,7 +93,7 @@ namespace kerbal
 		{
 			public:
 				RedisCommandExecuteFailedException(const std::string & failedInfo) :
-						RedisException("redis command excute failed : " + failedInfo)
+						RedisException("redis command execute failed : " + failedInfo)
 				{
 				}
 		};

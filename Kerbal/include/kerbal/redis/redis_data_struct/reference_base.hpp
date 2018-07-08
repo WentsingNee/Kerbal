@@ -185,7 +185,7 @@ namespace kerbal
 				{
 					Type tmp = *this;
 					RedisCommand command("incr %%s");
-					AutoFreeReply reply = command.excute(*this->pToContext, this->key);
+					AutoFreeReply reply = command.execute(*this->pToContext, this->key);
 					switch (reply.replyType()) {
 						case RedisReplyType::INTEGER:
 							return tmp;
@@ -199,7 +199,7 @@ namespace kerbal
 				IntegerReference& operator--()
 				{
 					RedisCommand command("decr %%s");
-					AutoFreeReply reply = command.excute(*this->pToContext, this->key);
+					AutoFreeReply reply = command.execute(*this->pToContext, this->key);
 					switch (reply.replyType()) {
 						case RedisReplyType::INTEGER:
 							return *this;
