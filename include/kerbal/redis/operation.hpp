@@ -205,7 +205,7 @@ namespace kerbal
 
 				long long pexpire(const Context & conn, RedisUnitedStringHelper key, const std::chrono::milliseconds & ms)
 				{
-					static RedisCommand cmd("pexpire %%s %%d");
+					static RedisCommand cmd("pexpire %%s %%lld");
 					AutoFreeReply reply = cmd.execute(conn, key, ms.count());
 					switch (reply.replyType()) {
 						case RedisReplyType::INTEGER:
@@ -217,7 +217,7 @@ namespace kerbal
 
 				long long expire(const Context & conn, RedisUnitedStringHelper key, const std::chrono::seconds & sec)
 				{
-					static RedisCommand cmd("expire %%s %%d");
+					static RedisCommand cmd("expire %%s %%lld");
 					AutoFreeReply reply = cmd.execute(conn, key, sec.count());
 					switch (reply.replyType()) {
 						case RedisReplyType::INTEGER:
