@@ -22,22 +22,22 @@ namespace kerbal
 		 */
 		enum class RedisReplyType
 		{
-			/** @brief 字符串 */
+			/// @brief String
 			STRING = REDIS_REPLY_STRING,
 
-			/** @brief 数组，例如 mget 返回值 */
+			/// @brief Array，like the reply type of command 'mget'
 			ARRAY = REDIS_REPLY_ARRAY,
 
-			/** @brief 数字类型 */
+			/// @brief Integer
 			INTEGER = REDIS_REPLY_INTEGER,
 
-			/** @brief 空 */
+			/// @brief Nil
 			NIL = REDIS_REPLY_NIL,
 
-			/** @brief 状态，例如set成功返回的‘OK’ */
+			/// @brief Status，like the reply of ‘OK’ if command 'set' executed successfully
 			STATUS = REDIS_REPLY_STATUS,
 
-			/** @brief 执行失败 */
+			/// @brief Error if redis command execute failed
 			ERROR = REDIS_REPLY_ERROR
 
 		};
@@ -79,7 +79,7 @@ namespace kerbal
 
 
 		/**
-		 * @brief 一个可以智能释放的 redis reply 指针
+		 * @brief An auto-free redis reply.
 		 */
 		class AutoFreeReply: public std::unique_ptr<redisReply, void (*)(redisReply *)>
 		{
@@ -100,6 +100,11 @@ namespace kerbal
 				{
 				}
 
+				/**
+				 * @brief Get the type of reply.
+				 * @return The type of reply.
+				 * @throws The method never throws any exception.
+				 */
 				enum RedisReplyType replyType() const noexcept
 				{
 					return (RedisReplyType) this->get()->type;

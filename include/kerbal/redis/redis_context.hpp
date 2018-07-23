@@ -19,6 +19,9 @@ namespace kerbal
 {
 	namespace redis
 	{
+		/**
+		 * @brief An auto-closed redis context.
+		 */
 		class Context: protected std::unique_ptr<redisContext, void (*)(redisContext *)>
 		{
 			private:
@@ -34,11 +37,19 @@ namespace kerbal
 
 			public:
 
+				/**
+				 * @brief Construct an empty context.
+				 * @throws The constructor will never throw any exception.
+				 */
 				Context() noexcept :
 						supper_t(nullptr, redisContextDealloctor)
 				{
 				}
 
+				/**
+				 * @brief Close the context.
+				 * @throws The constructor will never throw any exception.
+				 */
 				void close() noexcept
 				{
 					this->reset(nullptr);
@@ -69,11 +80,19 @@ namespace kerbal
 					return redisReconnect(this->get());
 				}
 
+				/**
+				 * @brief Test whether the context is valid.
+				 * @throws The constructor will never throw any exception.
+				 */
 				operator bool() const noexcept
 				{
 					return this->isValid();
 				}
 
+				/**
+				 * @brief Test whether the context is valid.
+				 * @return True if valid, false otherwise.
+				 */
 				bool isValid() const noexcept
 				{
 					return this->get() != nullptr && this->get()->err == 0;
@@ -84,6 +103,10 @@ namespace kerbal
 					this->reset(nullptr);
 				}
 
+				/**
+				 * @brief Get the string which describes the error.
+				 * @return Error string
+				 */
 				std::string errstr() const
 				{
 					return this->get()->errstr;
