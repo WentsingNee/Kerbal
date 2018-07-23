@@ -300,6 +300,10 @@ namespace kerbal
 		template <typename Type>
 		class ConstReferenceBase;
 
+		/**
+		 * @brief
+		 * @tparam Type
+		 */
 		template <typename Type>
 		class List
 		{
@@ -315,35 +319,63 @@ namespace kerbal
 				friend class ListIterator<Type>;
 
 			public:
+				/**
+				 * @brief Establish reference to a list object.
+				 * @param conn An accessible redis context
+				 * @param key The redis list object's key name
+				 */
 				List(const Context & conn, const std::string & key) :
 						pToContext(&conn), key(key)
 				{
 				}
 
+				/**
+				 * @brief Cast the referenced list object to an instance of std::vector.
+				 */
 				operator std::vector<Type>()
 				{
 					static Operation opt;
 					return opt.lrange<Type>(*pToContext, key, 0, -1);
 				}
 
+				/**
+				 * @brief Fetch the elements in range [begin, end) of the referenced list object.
+				 * @param begin The start index
+				 * @param end The end index + 1
+				 * @return An instance of std::vector contains elements in range [begin, end)
+				 */
 				std::vector<Type> lrange(int begin, int end)
 				{
 					static Operation opt;
 					return opt.lrange<Type>(*pToContext, key, begin, end);
 				}
 
+				/**
+				 * @brief Fetch the elements in range [begin, end) of the referenced list object.
+				 * @param begin The start index
+				 * @param end The end index + 1
+				 * @return An constant instance of std::vector contains elements in range [begin, end)
+				 */
 				const std::vector<Type> lrange(int begin, int end) const
 				{
 					static Operation opt;
 					return opt.lrange<Type>(*pToContext, key, begin, end);
 				}
 
+				/**
+				 * @brief Test whether the referenced list object is empty.
+				 * @return True if empty, false if not empty
+				 */
 				bool empty() const
 				{
 					static Operation opt;
 					return !opt.exists(*pToContext, key);
 				}
 
+				/**
+				 * @brief Count how many elements in the referenced list object.
+				 * @return Elements number in the referenced list object
+				 */
 				size_t size() const
 				{
 					//llen 命令执行结果仅会返回 error 或 integer (error 情形已由 execute 方法处理)
@@ -408,9 +440,9 @@ namespace kerbal
 				}
 
 				/**
-				 * @brief Prepend a value to a list, only if the list exists
-				 * @since 2.2.0
-				 * @return The size of the list after insert
+				 * @brief Prepend a value to a list, only if the referenced list object exists.
+				 * @param value The value to be prepended
+				 * @return The size of the referenced list object after insert
 				 */
 				size_t lpushx(const Type & value)
 				{
