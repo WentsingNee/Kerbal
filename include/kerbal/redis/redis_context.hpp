@@ -22,7 +22,7 @@ namespace kerbal
 		/**
 		 * @brief An auto-closed redis context.
 		 */
-		class Context: protected std::unique_ptr<redisContext, void (*)(redisContext *)>
+		class RedisContext: protected std::shared_ptr<redisContext>
 		{
 			private:
 				static void redisContextDealloctor(redisContext * conn) noexcept
@@ -33,7 +33,7 @@ namespace kerbal
 					redisFree(conn);
 				}
 
-				typedef std::unique_ptr<redisContext, void (*)(redisContext *)> supper_t;
+				typedef std::shared_ptr<redisContext> supper_t;
 
 			public:
 
@@ -41,38 +41,42 @@ namespace kerbal
 				 * @brief Construct an empty context.
 				 * @throws The constructor will never throw any exception.
 				 */
-				Context() noexcept :
-						supper_t(nullptr, redisContextDealloctor)
+				RedisContext() noexcept :
+						supper_t(nullptr)
 				{
 				}
 
-				/**
-				 * @brief Close the context.
-				 * @throws The constructor will never throw any exception.
-				 */
-				void close() noexcept
+				RedisContext(const char ip[], int port) noexcept
 				{
-					this->reset(nullptr);
+					redisContext * tmp = redisConnect(ip, port);
+					if (tmp == nullptr) {
+						reset();
+					} else {
+						reset(tmp, redisContextDealloctor);
+					}
 				}
 
-				bool connect(const char ip[], int port) noexcept
+				RedisContext(const char ip[], int port, const struct timeval tv) noexcept
 				{
-					supper_t::reset(redisConnect(ip, port));
-					return this->isValid();
+					redisContext * tmp = redisConnectWithTimeout(ip, port, tv);
+					if (tmp == nullptr) {
+						reset();
+					} else {
+						reset(tmp, redisContextDealloctor);
+					}
 				}
 
-				bool connectWithTimeout(const char ip[], int port, const struct timeval tv) noexcept
-				{
-					supper_t::reset(redisConnectWithTimeout(ip, port, tv));
-					return this->isValid();
-				}
-
-				bool connectWithTimeout(const char ip[], int port, const std::chrono::milliseconds & ms) noexcept
+				RedisContext(const char ip[], int port, const std::chrono::milliseconds & ms) noexcept
 				{
 					struct timeval tv;
 					tv.tv_sec = ms.count() / 1000;
 					tv.tv_usec = ms.count() % 1000;
-					return connectWithTimeout(ip, port, tv);
+					redisContext * tmp = redisConnectWithTimeout(ip, port, tv);
+					if (tmp == nullptr) {
+						reset();
+					} else {
+						reset(tmp, redisContextDealloctor);
+					}
 				}
 
 				int reconnect() noexcept
@@ -98,11 +102,6 @@ namespace kerbal
 					return this->get() != nullptr && this->get()->err == 0;
 				}
 
-				void free() noexcept
-				{
-					this->reset(nullptr);
-				}
-
 				/**
 				 * @brief Get the string which describes the error.
 				 * @return Error string
@@ -115,7 +114,27 @@ namespace kerbal
 				friend class Option;
 				friend class RedisCommand;
 
+				using supper_t::operator ->;
+
 		};
+
+		inline RedisContext getContext(const char ip[], int port) noexcept
+		{
+			return RedisContext(ip, port);
+		}
+
+		inline RedisContext getContext(const char ip[], int port, const struct timeval tv) noexcept
+		{
+			return RedisContext(ip, port, tv);
+		}
+
+		inline RedisContext getContext(const char ip[], int port, const std::chrono::milliseconds & ms) noexcept
+		{
+			struct timeval tv;
+			tv.tv_sec = ms.count() / 1000;
+			tv.tv_usec = ms.count() % 1000;
+			return RedisContext(ip, port, tv);
+		}
 	}
 }
 

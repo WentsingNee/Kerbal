@@ -61,8 +61,8 @@ namespace kerbal
 				ContextPoolReference(const ContextPoolReference&) = delete;
 				~ContextPoolReference() noexcept;
 
-				operator kerbal::redis::Context&() noexcept;
-				operator const kerbal::redis::Context&() const noexcept;
+				operator kerbal::redis::RedisContext&() noexcept;
+				operator const kerbal::redis::RedisContext&() const noexcept;
 
 				void convert();
 				void release();
@@ -74,7 +74,7 @@ namespace kerbal
 		{
 			protected:
 				const size_t N;
-				Context pool[50];
+				RedisContext pool[50];
 				pid_t pids[50];
 
 			public:
@@ -82,7 +82,7 @@ namespace kerbal
 						N(N)
 				{
 					for (size_t i = 0; i < N; ++i) {
-						pool[i].connectWithTimeout(ip, port, ms);
+						pool[i] = getContext(ip, port, ms);
 						if (!pool[i]) {
 							throw ContextPoolInitFailedException(i, pool[i].errstr());
 						}
@@ -142,12 +142,12 @@ namespace kerbal
 			this->convert();
 		}
 
-		inline ContextPoolReference::operator Context&() noexcept
+		inline ContextPoolReference::operator RedisContext&() noexcept
 		{
 			return p_to_pool->pool[n];
 		}
 
-		inline ContextPoolReference::operator const Context&() const noexcept
+		inline ContextPoolReference::operator const RedisContext&() const noexcept
 		{
 			return p_to_pool->pool[n];
 		}
