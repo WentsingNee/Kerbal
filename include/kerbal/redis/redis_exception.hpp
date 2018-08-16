@@ -11,7 +11,7 @@
 #include <exception>
 #include <sstream>
 
-#include <kerbal/redis/auto_free_reply.hpp>
+#include <kerbal/redis/redis_reply.hpp>
 
 namespace kerbal
 {

@@ -9,297 +9,13 @@
 #define INCLUDE_KERBAL_REDIS_REDIS_DATA_STRUCT_LIST_HPP_
 
 #include <string>
-#include <iterator>
 
-#include <kerbal/redis/operation.hpp>
-#include <kerbal/redis/redis_type_traits.hpp>
-#include <kerbal/redis/redis_type_cast.hpp>
+#include <kerbal/redis/redis_data_struct/list_referene_base.hpp>
 
 namespace kerbal
 {
 	namespace redis
 	{
-
-		template <typename Type>
-		class List;
-
-		template <typename Type>
-		class ListConstReferenceBase
-		{
-			protected:
-				const List<Type> * pToList = nullptr;
-				size_t index;
-
-			public:
-				ListConstReferenceBase(const List<Type> * pToList, size_t index) noexcept :
-						pToList(pToList), index(index)
-				{
-				}
-
-				bool exists() const
-				{
-					static RedisCommand cmd("llen %%s");
-					size_t len = cmd.execute(*pToList->pToContext, pToList->key)->integer;
-					return -len <= index && index < len;
-				}
-
-				operator Type()
-				{
-					static RedisCommand cmd("lindex %%s %%d");
-					AutoFreeReply reply = cmd.execute(*pToList->pToContext, pToList->key, index);
-					switch (reply.replyType()) {
-						case RedisReplyType::STRING: {
-							return redisTypeCast<Type>(reply->str);
-						}
-						case RedisReplyType::NIL:
-							throw RedisNilException(pToList->key);
-						default:
-							throw RedisUnexpectedCaseException(reply.replyType());
-					}
-				}
-
-				friend std::ostream& operator<<(std::ostream & out, ListConstReferenceBase<Type> src)
-				{
-					return out << (Type) src;
-				}
-		};
-
-		template <typename Type>
-		class ListReferenceBase : public ListConstReferenceBase<Type>
-		{
-			protected:
-				typedef ListConstReferenceBase<Type> supper_t;
-
-			public:
-				ListReferenceBase(const List<Type> * pToList, size_t index) noexcept :
-						supper_t(pToList, index)
-				{
-				}
-
-				ListReferenceBase operator=(const Type & src)
-				{
-					static RedisCommand command(std::string("lset %%s %%d %") + redis_type_traits<Type>::placeholder);
-					AutoFreeReply reply = command.execute(*supper_t::pToList->pToContext, supper_t::pToList->key,
-												supper_t::index, src);
-					switch (reply.replyType()) {
-						case RedisReplyType::STATUS: {
-							//TODO failed
-							return *this;
-						}
-						case RedisReplyType::NIL:
-							throw RedisNilException(supper_t::pToList->key);
-						default:
-							throw RedisUnexpectedCaseException(reply.replyType());
-					}
-				}
-
-				friend std::istream& operator>> (std::istream & in, ListReferenceBase<Type> src)
-				{
-					src = *std::istream_iterator<Type>(in);
-					return in;
-				}
-		};
-
-		template<typename Type>
-		class ListRealReference: public ListReferenceBase<Type>
-		{
-			protected:
-				typedef ListReferenceBase<Type> supper_t;
-
-			public:
-				ListRealReference(const List<Type> * pToList, size_t index) noexcept :
-						supper_t(pToList, index)
-				{
-				}
-
-				ListRealReference& operator=(const Type & src)
-				{
-					supper_t::operator=(src);
-					return *this;
-				}
-
-				template <typename AnotherType>
-				ListRealReference& operator+=(const AnotherType & with)
-				{
-					return *this = (Type) (*this) + with;
-				}
-
-				template <typename AnotherType>
-				ListRealReference& operator-=(const AnotherType & with)
-				{
-					return *this = (Type) (*this) - with;
-				}
-
-				template <typename AnotherType>
-				ListRealReference& operator*=(const AnotherType & with)
-				{
-					return *this = (Type) (*this) * with;
-				}
-
-				template <typename AnotherType>
-				ListRealReference& operator/=(const AnotherType & with)
-				{
-					return *this = (Type) (*this) / with;
-				}
-		};
-
-		template<typename Type>
-		class ListIntegerReference: public ListRealReference<Type>
-		{
-			protected:
-				typedef ListRealReference<Type> supper_t;
-
-			public:
-				ListIntegerReference(const List<Type> * pToList, size_t index) noexcept :
-						supper_t(pToList, index)
-				{
-				}
-
-				ListIntegerReference& operator=(const Type & src)
-				{
-					supper_t::operator=(src);
-					return *this;
-				}
-
-				ListIntegerReference& operator++()
-				{
-					supper_t::operator=((Type) (*this) + 1);
-					return *this;
-				}
-
-				const Type operator++(int)
-				{
-					Type tmp = *this;
-					supper_t::operator=((Type) (*this) + 1);
-					return tmp;
-				}
-
-				ListIntegerReference& operator--()
-				{
-					supper_t::operator=((Type) (*this) - 1);
-					return *this;
-				}
-
-				const Type operator--(int)
-				{
-					Type tmp = *this;
-					supper_t::operator=((Type) (*this) - 1);
-					return tmp;
-				}
-
-				template <typename AnotherType>
-				ListIntegerReference& operator%=(const AnotherType & with)
-				{
-					return *this = (Type) (*this) % with;
-				}
-		};
-
-		template <typename Type>
-		class ListReference : public
-			std::conditional<CheckIsIntegerType<Type>::value, ListIntegerReference<Type>,
-			typename std::conditional<CheckIsRealType<Type>::value, ListRealReference<Type>,
-																			ListReferenceBase<Type> >::type>::type
-		{
-			protected:
-				typedef typename std::conditional<CheckIsIntegerType<Type>::value, ListIntegerReference<Type>,
-								   typename std::conditional<CheckIsRealType<Type>::value, ListRealReference<Type>,
-								   	   	   	   	   	   	   	   	   	   	   ListReferenceBase<Type> >::type>::type
-						supper_t;
-			public:
-				ListReference(const List<Type> * pToList, size_t index) noexcept :
-						supper_t(pToList, index)
-				{
-				}
-
-				ListReference& operator=(const Type & src)
-				{
-					supper_t::operator=(src);
-					return *this;
-				}
-		};
-
-		template <typename Type>
-		class ListConstReference : public ListConstReferenceBase<Type>
-		{
-			protected:
-				typedef ListConstReferenceBase<Type> supper_t;
-
-			public:
-				ListConstReference(const List<Type> * pToList, size_t index) noexcept :
-						supper_t(pToList, index)
-				{
-				}
-		};
-
-		template<typename Type>
-		class ListIterator
-		{
-			protected:
-				const List<Type> * pToList = nullptr;
-				size_t index;
-
-			public:
-				ListIterator(const List<Type> * pToList, size_t index) noexcept :
-						pToList(pToList), index(index)
-				{
-				}
-
-				ListReference<Type> operator*() const
-				{
-					return ListReference<Type>(pToList, index);
-				}
-
-				ListIterator& operator++()
-				{
-					++index;
-					return *this;
-				}
-
-				const ListIterator operator++(int)
-				{
-					ListIterator tmp(*this);
-					++index;
-					return tmp;
-				}
-
-				ListIterator& operator--()
-				{
-					--index;
-					return *this;
-				}
-
-				const ListIterator operator--(int)
-				{
-					ListIterator tmp(*this);
-					--index;
-					return tmp;
-				}
-
-				ListIterator operator+(int delta) const
-				{
-					return ListIterator(this->pToList, this->index + delta);
-				}
-
-				ListIterator operator-(int delta) const
-				{
-					return ListIterator(this->pToList, this->index - delta);
-				}
-
-				bool operator==(const ListIterator & with) const
-				{
-					return this->pToList == with.pToList && this->index == with.index;
-				}
-
-				bool operator!=(const ListIterator & with) const
-				{
-					return this->pToList != with.pToList || this->index != with.index;
-				}
-
-		};
-
-		template <typename Type>
-		class ConstReferenceBase;
-
 		/**
 		 * @brief
 		 * @tparam Type
@@ -308,10 +24,11 @@ namespace kerbal
 		class List
 		{
 			public:
+				typedef Type value_type;
 				typedef ListIterator<Type> iterator;
 
 			protected:
-				const Context * pToContext = nullptr;
+				Operation opt;
 				std::string key;
 
 				friend class ListConstReferenceBase<Type> ;
@@ -324,8 +41,8 @@ namespace kerbal
 				 * @param conn An accessible redis context
 				 * @param key The redis list object's key name
 				 */
-				List(const Context & conn, const std::string & key) :
-						pToContext(&conn), key(key)
+				List(const RedisContext & conn, const std::string & key) :
+						opt(conn), key(key)
 				{
 				}
 
@@ -334,8 +51,7 @@ namespace kerbal
 				 */
 				operator std::vector<Type>()
 				{
-					static Operation opt;
-					return opt.lrange<Type>(*pToContext, key, 0, -1);
+					return opt.lrange<Type>(key, 0, -1);
 				}
 
 				/**
@@ -346,8 +62,7 @@ namespace kerbal
 				 */
 				std::vector<Type> lrange(int begin, int end)
 				{
-					static Operation opt;
-					return opt.lrange<Type>(*pToContext, key, begin, end);
+					return opt.lrange<Type>(key, begin, end);
 				}
 
 				/**
@@ -358,8 +73,7 @@ namespace kerbal
 				 */
 				const std::vector<Type> lrange(int begin, int end) const
 				{
-					static Operation opt;
-					return opt.lrange<Type>(*pToContext, key, begin, end);
+					return opt.lrange<Type>(key, begin, end);
 				}
 
 				/**
@@ -368,8 +82,7 @@ namespace kerbal
 				 */
 				bool empty() const
 				{
-					static Operation opt;
-					return !opt.exists(*pToContext, key);
+					return !opt.exists(key);
 				}
 
 				/**
@@ -379,8 +92,8 @@ namespace kerbal
 				size_t size() const
 				{
 					//llen 命令执行结果仅会返回 error 或 integer (error 情形已由 execute 方法处理)
-					static RedisCommand cmd("llen %%s");
-					return cmd.execute(*pToContext, key)->integer;
+					static RedisCommand cmd("llen %s");
+					return cmd.execute(opt.getContext(), key)->integer;
 				}
 
 			protected:
@@ -399,10 +112,10 @@ namespace kerbal
 				static std::string make_list_member_placeholder(const Type &, Args&& ... args)
 				{
 					std::string placeholder_list;
-					placeholder_list.reserve(4 + 4 * sizeof...(args));
+					placeholder_list.reserve(3 + 3 * sizeof...(args));
 
 					for (size_t i = 0; i < 1 + sizeof...(args); ++i) {
-						placeholder_list += " %";
+						placeholder_list += " ";
 						placeholder_list += redis_type_traits<Type>::placeholder;
 					}
 					return placeholder_list;
@@ -413,8 +126,8 @@ namespace kerbal
 				size_t push_front(const Type & value0, Args&& ... args)
 				{
 					list_member_args_checker(value0, args...);
-					static RedisCommand cmd("lpush %%s" + make_list_member_placeholder(value0, args...));
-					AutoFreeReply reply = cmd.execute(*pToContext, key, value0, args...);
+					static RedisCommand cmd("lpush %s" + make_list_member_placeholder(value0, args...));
+					RedisReply reply = cmd.execute(opt.getContext(), key, value0, args...);
 					switch (reply.replyType()) {
 						case RedisReplyType::INTEGER: {
 							return reply->integer;
@@ -428,8 +141,8 @@ namespace kerbal
 				size_t push_back(const Type & value0, Args&& ... args)
 				{
 					list_member_args_checker(value0, args...);
-					static RedisCommand cmd("rpush %%s" + make_list_member_placeholder(value0, args...));
-					AutoFreeReply reply = cmd.execute(*pToContext, key, value0, args...);
+					static RedisCommand cmd("rpush %s" + make_list_member_placeholder(value0, args...));
+					RedisReply reply = cmd.execute(opt.getContext(), key, value0, args...);
 					switch (reply.replyType()) {
 						case RedisReplyType::INTEGER: {
 							return reply->integer;
@@ -444,10 +157,10 @@ namespace kerbal
 				 * @param value The value to be prepended
 				 * @return The size of the referenced list object after insert
 				 */
-				size_t lpushx(const Type & value)
+				size_t push_front_x(const Type & value)
 				{
-					static RedisCommand cmd(std::string("lpushx %%s %") + redis_type_traits<Type>::placeholder);
-					AutoFreeReply reply = cmd.execute(*pToContext, key, value);
+					static RedisCommand cmd(std::string("lpushx %s ") + redis_type_traits<Type>::placeholder);
+					RedisReply reply = cmd.execute(opt.getContext(), key, value);
 					switch (reply.replyType()) {
 						case RedisReplyType::INTEGER: {
 							return reply->integer;
@@ -457,10 +170,10 @@ namespace kerbal
 					}
 				}
 
-				size_t rpushx(const Type & value)
+				size_t push_back_x(const Type & value)
 				{
-					static RedisCommand cmd(std::string("rpushx %%s %") + redis_type_traits<Type>::placeholder);
-					AutoFreeReply reply = cmd.execute(*pToContext, key, value);
+					static RedisCommand cmd(std::string("rpushx %s ") + redis_type_traits<Type>::placeholder);
+					RedisReply reply = cmd.execute(opt.getContext(), key, value);
 					switch (reply.replyType()) {
 						case RedisReplyType::INTEGER: {
 							return reply->integer;
@@ -470,10 +183,10 @@ namespace kerbal
 					}
 				}
 
-				Type lpop()
+				Type pop_front()
 				{
-					static RedisCommand cmd("lpop %%s");
-					AutoFreeReply reply = cmd.execute(*pToContext, key);
+					static RedisCommand cmd("lpop %s");
+					RedisReply reply = cmd.execute(opt.getContext(), key);
 					switch (reply.replyType()) {
 						case RedisReplyType::STRING: {
 							return redisTypeCast<Type>(reply->str);
@@ -485,10 +198,10 @@ namespace kerbal
 					}
 				}
 
-				Type blpop(const std::chrono::seconds & sec)
+				Type block_pop_front(const std::chrono::seconds & sec)
 				{
-					static RedisCommand cmd("blpop %%s %%d");
-					AutoFreeReply reply = cmd.execute(*pToContext, key, sec.count());
+					static RedisCommand cmd("blpop %s %d");
+					RedisReply reply = cmd.execute(opt.getContext(), key, sec.count());
 					switch (reply.replyType()) {
 						case RedisReplyType::ARRAY: {
 							return redisTypeCast<Type>(reply->element[1]->str);
@@ -500,13 +213,28 @@ namespace kerbal
 					}
 				}
 
-				Type rpop()
+				Type pop_back()
 				{
-					static RedisCommand cmd("rpop %%s");
-					AutoFreeReply reply = cmd.execute(*pToContext, key);
+					static RedisCommand cmd("rpop %s");
+					RedisReply reply = cmd.execute(opt.getContext(), key);
 					switch (reply.replyType()) {
 						case RedisReplyType::STRING: {
 							return redisTypeCast<Type>(reply->str);
+						}
+						case RedisReplyType::NIL:
+							throw RedisNilException(key);
+						default:
+							throw RedisUnexpectedCaseException(reply.replyType());
+					}
+				}
+
+				Type block_pop_back(const std::chrono::seconds & sec)
+				{
+					static RedisCommand cmd("brpop %s %d");
+					RedisReply reply = cmd.execute(opt.getContext(), key, sec.count());
+					switch (reply.replyType()) {
+						case RedisReplyType::ARRAY: {
+							return redisTypeCast<Type>(reply->element[1]->str);
 						}
 						case RedisReplyType::NIL:
 							throw RedisNilException(key);
@@ -537,25 +265,13 @@ namespace kerbal
 
 				bool clear()
 				{
-					return Operation().del(*pToContext, key);
+					return opt.del(key);
 				}
 
-				size_t remove(const Type & value)
+				size_t remove(const Type & value, int count = 0)
 				{
-					static RedisCommand cmd(std::string("lrem %%s 0 %") + redis_type_traits<Type>::placeholder);
-					AutoFreeReply reply = cmd.execute(*pToContext, key, value);
-					switch (reply.replyType()) {
-						case RedisReplyType::INTEGER:
-							return reply->integer;
-						default:
-							throw RedisUnexpectedCaseException(reply.replyType());
-					}
-				}
-
-				size_t remove(const Type & value, int count)
-				{
-					static RedisCommand cmd(std::string("lrem %%s %%d %") + redis_type_traits<Type>::placeholder);
-					AutoFreeReply reply = cmd.execute(*pToContext, key, count, value);
+					static RedisCommand cmd(std::string("lrem %s %d ") + redis_type_traits<Type>::placeholder);
+					RedisReply reply = cmd.execute(opt.getContext(), key, count, value);
 					switch (reply.replyType()) {
 						case RedisReplyType::INTEGER:
 							return reply->integer;

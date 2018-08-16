@@ -5,8 +5,8 @@
  *      Author: peter
  */
 
-#ifndef INCLUDE_REDIS_AUTO_FREE_REPLY_HPP_
-#define INCLUDE_REDIS_AUTO_FREE_REPLY_HPP_
+#ifndef INCLUDE_REDIS_REDIS_REPLY_HPP_
+#define INCLUDE_REDIS_REDIS_REPLY_HPP_
 
 #include <iostream>
 #include <memory>
@@ -81,7 +81,7 @@ namespace kerbal
 		/**
 		 * @brief An auto-free redis reply.
 		 */
-		class AutoFreeReply: public std::unique_ptr<redisReply, void (*)(redisReply *)>
+		class RedisReply: protected std::unique_ptr<redisReply, void (*)(redisReply *)>
 		{
 			private:
 				static void redisReplyDealloctor(redisReply * reply_ptr) noexcept
@@ -94,9 +94,22 @@ namespace kerbal
 
 				typedef std::unique_ptr<redisReply, void (*)(redisReply *)> supper_t;
 
-			public:
-				AutoFreeReply(redisReply * redis_reply = nullptr) noexcept :
+			protected:
+				RedisReply(redisReply * redis_reply) noexcept :
 						supper_t(redis_reply, redisReplyDealloctor)
+				{
+				}
+
+				friend class RedisCommand;
+
+			public:
+				RedisReply() noexcept :
+						supper_t(nullptr, redisReplyDealloctor)
+				{
+				}
+
+				RedisReply(std::nullptr_t) noexcept :
+						supper_t(nullptr, redisReplyDealloctor)
 				{
 				}
 
@@ -109,6 +122,14 @@ namespace kerbal
 				{
 					return (RedisReplyType) this->get()->type;
 				}
+
+				bool operator==(std::nullptr_t)
+				{
+					return this->get() == nullptr;
+				}
+
+				using supper_t::operator ->;
+
 		};
 
 	}
@@ -116,4 +137,4 @@ namespace kerbal
 
 
 
-#endif /* INCLUDE_REDIS_AUTO_FREE_REPLY_HPP_ */
+#endif /* INCLUDE_REDIS_REDIS_REPLY_HPP_ */

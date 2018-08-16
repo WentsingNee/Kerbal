@@ -12,10 +12,8 @@
 #include <string>
 #include <kerbal/redis/redis_type_traits.hpp>
 #include <kerbal/redis/redis_context.hpp>
-#include <kerbal/redis/auto_free_reply.hpp>
+#include <kerbal/redis/redis_reply.hpp>
 #include <kerbal/redis/redis_exception.hpp>
-
-#include <boost/format.hpp>
 
 namespace kerbal
 {
@@ -29,38 +27,46 @@ namespace kerbal
 
 				friend class RedisUnexpectedCaseException;
 
-#if __cplusplus < 201703L
-				template <typename ...Args>
-				static std::string format_va_args(const RedisUnitedStringHelper & templ, Args&& ...args)
-				{
-					boost::format fmt(templ.c_str());
-					std::initializer_list<char> { (fmt % std::forward<Args>(args), '\0')... };
-					return fmt.str();
-				}
-#else //C++17 fold expressions
-				template <typename ...Args>
-				static std::string format_va_args(const RedisUnitedStringHelper & templ, Args&& ...args) {
-					return (boost::format(templ.c_str()) % ... % std::forward<Args>(args) ).str();
-				}
-#endif
-
 			public:
 				RedisCommand() :
 						cmd()
 				{
 				}
 
-				template <typename ...Args>
-				RedisCommand(const RedisUnitedStringHelper & command, Args&& ...args) :
-						cmd(format_va_args(command, args...))
+				RedisCommand(const std::string & command) :
+						cmd(command)
 				{
 				}
 
-				template <typename ...Args>
-				void resetCommand(const RedisUnitedStringHelper & command, Args&& ...args)
+#if __cplusplus >= 201103L
+				RedisCommand(std::string && command) :
+						cmd(std::move(command))
 				{
-					cmd = format_va_args(command, args...);
 				}
+#endif
+
+				RedisCommand(const char * command) :
+						cmd(command)
+				{
+				}
+
+				void resetCommand(const std::string & command)
+				{
+					cmd = command;
+				}
+
+#if __cplusplus >= 201103L
+				void resetCommand(std::string && command)
+				{
+					cmd = std::move(command);
+				}
+#endif
+
+				void resetCommand(const char * command)
+				{
+					cmd.assign(command);
+				}
+
 
 			protected:
 				static void redis_execute_allow_type_checker() noexcept
@@ -111,11 +117,11 @@ namespace kerbal
 			public:
 
 				template <typename ...Args>
-				AutoFreeReply execute(const Context & conn, Args && ...args)
+				RedisReply execute(const RedisContext & conn, Args && ...args)
 				{
-					redis_execute_allow_type_checker(args...);
-
-					AutoFreeReply reply = (redisReply *) redisCommand(conn.get(), cmd.c_str(), cast_to_va_arg_compatible_type(std::forward<Args>(args))...);
+					redis_execute_allow_type_checker(std::forward<Args>(args)...);
+					RedisReply reply = (redisReply *) redisCommand(conn.get(), cmd.c_str(),
+							cast_to_va_arg_compatible_type(std::forward<Args>(args))...);
 					if (reply.replyType() == RedisReplyType::ERROR) {
 						throw RedisCommandExecuteFailedException(std::string("redis reply error: ") + reply->str);
 					}

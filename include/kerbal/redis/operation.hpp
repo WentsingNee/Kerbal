@@ -15,10 +15,11 @@
 #include <unordered_map>
 #include <map>
 #include <chrono>
+#include <tuple>
 
-#include <kerbal/redis/auto_free_reply.hpp>
 #include <kerbal/redis/redis_command.hpp>
 #include <kerbal/redis/redis_context.hpp>
+#include <kerbal/redis/redis_reply.hpp>
 #include <kerbal/redis/redis_type_traits.hpp>
 #include <kerbal/redis/redis_type_cast.hpp>
 #include <kerbal/redis/united_string_helper.hpp>
@@ -29,36 +30,87 @@ namespace kerbal
 	{
 		namespace optional_ns = std;
 
+		template <int i>
+		class mget_helper;
+
+		template <>
+		class mget_helper<0>
+		{
+				friend class Operation;
+
+				friend class mget_helper<1> ;
+
+				template <typename ...Types>
+				mget_helper(std::tuple<Types...> & res, const RedisReply & reply)
+				{
+					switch ((RedisReplyType) (reply->element[0]->type)) {
+						case RedisReplyType::STRING:
+							typedef typename std::remove_reference<decltype(std::get<0>(res))>::type ele_type;
+							std::get<0>(res) = redisTypeCast<ele_type>(reply->element[0]->str);
+							break;
+						case RedisReplyType::NIL:
+							throw RedisNilException(std::to_string(0));
+						default:
+							throw RedisUnexpectedCaseException(reply.replyType());
+					}
+				}
+		};
+
+		template <int i>
+		class mget_helper
+		{
+				friend class Operation;
+
+				friend class mget_helper<i + 1> ;
+
+				template <typename ...Types>
+				mget_helper(std::tuple<Types...> & res, const RedisReply & reply)
+				{
+					switch ((RedisReplyType) (reply->element[i]->type)) {
+						case RedisReplyType::STRING:
+							typedef typename std::remove_reference<decltype(std::get<i>(res))>::type ele_type;
+							std::get<i>(res) = redisTypeCast<ele_type>(reply->element[i]->str);
+							break;
+						case RedisReplyType::NIL:
+							throw RedisNilException(std::to_string(i));
+						default:
+							throw RedisUnexpectedCaseException(reply.replyType());
+					}
+
+					mget_helper<i - 1>(res, reply);
+				}
+		};
+
 		class Operation
 		{
 			protected:
 				template <typename Type>
 				static void make_execute_args_template(std::ostringstream & templ, const RedisUnitedStringHelper &, const Type &)
 				{
-					templ << " %%s %" << redis_type_traits<Type>::placeholder;
+					templ << " %s " << redis_type_traits<Type>::placeholder;
 				}
 
 				template <typename Type, typename ... Args>
 				static void make_execute_args_template(std::ostringstream & templ, const RedisUnitedStringHelper &, const Type &, Args&& ... args)
 				{
-					templ << " %%s %" << redis_type_traits<Type>::placeholder;
-					make_execute_args_template(templ, args...);
+					templ << " %s " << redis_type_traits<Type>::placeholder;
+					make_execute_args_template(templ, std::forward<Args>(args)...);
 				}
 
 				template <typename Type, typename ... Args>
 				static std::string make_execute_args_template(const RedisUnitedStringHelper & key0, const Type & value0, Args&& ... args)
 				{
 					std::ostringstream templ;
-					make_execute_args_template(templ, key0, value0, args...);
+					make_execute_args_template(templ, key0, value0, std::forward<Args>(args)...);
 					return templ.str();
 				}
 
 				static std::string make_key_args_template(size_t args_size)
 				{
 					std::string templ;
-					templ.reserve(4 * args_size);
+					templ.reserve(3 * args_size);
 					for (size_t i = 0; i < args_size; ++i) {
-						templ += " %%s";
+						templ += " %s";
 					}
 					return templ;
 				}
@@ -73,16 +125,46 @@ namespace kerbal
 				constexpr static void redis_key_list_type_checker(const Type &, Args&& ... args)
 				{
 					static_assert(redis_type_traits<Type>::is_key_type, "not allowed key type");
-					redis_key_list_type_checker(args...);
+					redis_key_list_type_checker(std::forward<Args>(args)...);
 				}
 
+				RedisContext conn;
 
 			public:
-				template<typename ReturnType = std::list<std::string> >
-				ReturnType keys(const Context & conn, RedisUnitedStringHelper key) const
+
+				Operation(const RedisContext & conn) :
+						conn(conn)
 				{
-					static RedisCommand cmd("keys %%s");
-					AutoFreeReply reply = cmd.execute(conn, key);
+				}
+
+				RedisContext& getContext()
+				{
+					return conn;
+				}
+
+				const RedisContext& getContext() const
+				{
+					return conn;
+				}
+
+				std::string type(RedisUnitedStringHelper key) const
+				{
+					static RedisCommand cmd("type %s");
+					RedisReply reply = cmd.execute(conn, key);
+					switch (reply.replyType()) {
+						case RedisReplyType::STRING: {
+							return reply->str;
+						}
+						default:
+							throw RedisUnexpectedCaseException(reply.replyType());
+					}
+				}
+
+				template <typename ReturnType = std::list<std::string> >
+				ReturnType keys(RedisUnitedStringHelper key) const
+				{
+					static RedisCommand cmd("keys %s");
+					RedisReply reply = cmd.execute(conn, key);
 					switch (reply.replyType()) {
 						case RedisReplyType::ARRAY: {
 							ReturnType res;
@@ -106,10 +188,10 @@ namespace kerbal
 				}
 
 				template <typename ValueType = std::string>
-				ValueType get(const Context & conn, RedisUnitedStringHelper key) const
+				ValueType get(RedisUnitedStringHelper key) const
 				{
-					static RedisCommand cmd("get %%s");
-					AutoFreeReply reply = cmd.execute(conn, key);
+					static RedisCommand cmd("get %s");
+					RedisReply reply = cmd.execute(conn, key);
 					switch (reply.replyType()) {
 						case RedisReplyType::STRING:
 							return redisTypeCast<ValueType>(reply->str);
@@ -121,10 +203,10 @@ namespace kerbal
 				}
 
 				template <typename ValueType>
-				std::string set(const Context & conn, RedisUnitedStringHelper key, const ValueType & value)
+				std::string set(RedisUnitedStringHelper key, const ValueType & value)
 				{
-					static RedisCommand cmd(std::string("set %%s %") + redis_type_traits<ValueType>::placeholder);
-					AutoFreeReply reply = cmd.execute(conn, key, value);
+					static RedisCommand cmd(std::string("set %s ") + redis_type_traits<ValueType>::placeholder);
+					RedisReply reply = cmd.execute(conn, key, value);
 					switch (reply.replyType()) {
 						case RedisReplyType::STATUS:
 							return reply->str;
@@ -134,15 +216,15 @@ namespace kerbal
 				}
 
 				template <typename ValueType>
-				std::string set(const Context & conn, const std::pair<std::string, ValueType> & key_value)
+				std::string set(const std::pair<std::string, ValueType> & key_value)
 				{
 					return set(conn, key_value.first, key_value.second);
 				}
 
-				std::string rename(const Context & conn, RedisUnitedStringHelper key, RedisUnitedStringHelper newKey)
+				std::string rename(RedisUnitedStringHelper key, RedisUnitedStringHelper newKey)
 				{
-					static RedisCommand cmd("rename %%s %%s");
-					AutoFreeReply reply = cmd.execute(conn, key, newKey);
+					static RedisCommand cmd("rename %s %s");
+					RedisReply reply = cmd.execute(conn, key, newKey);
 					switch (reply.replyType()) {
 						case RedisReplyType::STATUS:
 							return reply->str;
@@ -151,10 +233,10 @@ namespace kerbal
 					}
 				}
 
-				bool del(const Context & conn, RedisUnitedStringHelper key)
+				bool del(RedisUnitedStringHelper key)
 				{
-					static RedisCommand cmd("del %%s");
-					AutoFreeReply reply = cmd.execute(conn, key);
+					static RedisCommand cmd("del %s");
+					RedisReply reply = cmd.execute(conn, key);
 					switch (reply.replyType()) {
 						case RedisReplyType::INTEGER:
 							return reply->integer;
@@ -164,11 +246,11 @@ namespace kerbal
 				}
 
 				template <typename ... Args>
-				long long del(const Context & conn, RedisUnitedStringHelper key0, Args&& ... args)
+				long long del(RedisUnitedStringHelper key0, Args&& ... keys)
 				{
-					redis_key_list_type_checker(key0, args...);
-					static RedisCommand cmd("del %%s" + make_key_args_template(sizeof...(args)));
-					AutoFreeReply reply = cmd.execute(conn, key0, args...);
+					redis_key_list_type_checker(key0, std::forward<Args>(keys)...);
+					static RedisCommand cmd("del %s" + make_key_args_template(sizeof...(keys)));
+					RedisReply reply = cmd.execute(conn, key0, std::forward<Args>(keys)...);
 					switch (reply.replyType()) {
 						case RedisReplyType::INTEGER:
 							return reply->integer;
@@ -177,10 +259,10 @@ namespace kerbal
 					}
 				}
 
-				bool exists(const Context & conn, RedisUnitedStringHelper key) const
+				bool exists(RedisUnitedStringHelper key) const
 				{
-					static RedisCommand cmd("exists %%s");
-					AutoFreeReply reply = cmd.execute(conn, key);
+					static RedisCommand cmd("exists %s");
+					RedisReply reply = cmd.execute(conn, key);
 					switch (reply.replyType()) {
 						case RedisReplyType::INTEGER:
 							return reply->integer;
@@ -191,17 +273,16 @@ namespace kerbal
 
 				/**
 				 * @brief Check how many objects exists.
-				 * @param conn Available redis context
 				 * @param key0 the first object's key
 				 * @param args the remaining objects' key
 				 * @return Existed object number.
 				 */
 				template <typename ... Args>
-				long long exists(const Context & conn, RedisUnitedStringHelper key0, Args&& ... args) const
+				long long exists(RedisUnitedStringHelper key0, Args&& ... keys) const
 				{
-					redis_key_list_type_checker(key0, args...);
-					static RedisCommand cmd("exists %%s" + make_key_args_template(sizeof...(args)));
-					AutoFreeReply reply = cmd.execute(conn, key0, args...);
+					redis_key_list_type_checker(key0, std::forward<Args>(keys)...);
+					static RedisCommand cmd("exists %s" + make_key_args_template(sizeof...(keys)));
+					RedisReply reply = cmd.execute(conn, key0, std::forward<Args>(keys)...);
 					switch (reply.replyType()) {
 						case RedisReplyType::INTEGER:
 							return reply->integer;
@@ -210,10 +291,10 @@ namespace kerbal
 					}
 				}
 
-				long long pexpire(const Context & conn, RedisUnitedStringHelper key, const std::chrono::milliseconds & ms)
+				long long pexpire(RedisUnitedStringHelper key, const std::chrono::milliseconds & ms)
 				{
-					static RedisCommand cmd("pexpire %%s %%lld");
-					AutoFreeReply reply = cmd.execute(conn, key, ms.count());
+					static RedisCommand cmd("pexpire %s %lld");
+					RedisReply reply = cmd.execute(conn, key, ms.count());
 					switch (reply.replyType()) {
 						case RedisReplyType::INTEGER:
 							return reply->integer;
@@ -222,10 +303,10 @@ namespace kerbal
 					}
 				}
 
-				long long expire(const Context & conn, RedisUnitedStringHelper key, const std::chrono::seconds & sec)
+				long long expire(RedisUnitedStringHelper key, const std::chrono::seconds & sec)
 				{
-					static RedisCommand cmd("expire %%s %%lld");
-					AutoFreeReply reply = cmd.execute(conn, key, sec.count());
+					static RedisCommand cmd("expire %s %lld");
+					RedisReply reply = cmd.execute(conn, key, sec.count());
 					switch (reply.replyType()) {
 						case RedisReplyType::INTEGER:
 							return reply->integer;
@@ -234,10 +315,10 @@ namespace kerbal
 					}
 				}
 
-				long long persist(const Context & conn, RedisUnitedStringHelper key)
+				long long persist(RedisUnitedStringHelper key)
 				{
-					static RedisCommand cmd("persist %%s");
-					AutoFreeReply reply = cmd.execute(conn, key);
+					static RedisCommand cmd("persist %s");
+					RedisReply reply = cmd.execute(conn, key);
 					switch (reply.replyType()) {
 						case RedisReplyType::INTEGER:
 							return reply->integer;
@@ -246,10 +327,10 @@ namespace kerbal
 					}
 				}
 
-				std::chrono::milliseconds pttl(const Context & conn, RedisUnitedStringHelper key) const
+				std::chrono::milliseconds pttl(RedisUnitedStringHelper key) const
 				{
-					static RedisCommand cmd("pttl %%s");
-					AutoFreeReply reply = cmd.execute(conn, key);
+					static RedisCommand cmd("pttl %s");
+					RedisReply reply = cmd.execute(conn, key);
 					switch (reply.replyType()) {
 						case RedisReplyType::INTEGER:
 							return std::chrono::milliseconds(reply->integer);
@@ -258,10 +339,10 @@ namespace kerbal
 					}
 				}
 
-				std::chrono::seconds ttl(const Context & conn, RedisUnitedStringHelper key) const
+				std::chrono::seconds ttl(RedisUnitedStringHelper key) const
 				{
-					static RedisCommand cmd("ttl %%s");
-					AutoFreeReply reply = cmd.execute(conn, key);
+					static RedisCommand cmd("ttl %s");
+					RedisReply reply = cmd.execute(conn, key);
 					switch (reply.replyType()) {
 						case RedisReplyType::INTEGER:
 							return std::chrono::seconds(reply->integer);
@@ -271,10 +352,10 @@ namespace kerbal
 				}
 
 				template <typename Type, typename ... Args>
-				std::string mset(const Context & conn, RedisUnitedStringHelper key0, const Type & value0, Args&& ... args)
+				std::string mset(RedisUnitedStringHelper key0, const Type & value0, Args&& ... args)
 				{
-					static RedisCommand cmd("mset" + make_execute_args_template(key0, value0, args...));
-					AutoFreeReply reply = cmd.execute(conn, key0, value0, args...);
+					static RedisCommand cmd("mset" + make_execute_args_template(key0, value0, std::forward<Args>(args)...));
+					RedisReply reply = cmd.execute(conn, key0, value0, std::forward<Args>(args)...);
 					switch (reply.replyType()) {
 						case RedisReplyType::STATUS:
 							return reply->str;
@@ -283,43 +364,36 @@ namespace kerbal
 					}
 				}
 
-//			protected:
-//				template <typename Type, typename ... Args>
-//				bool mget_execute(const Context & conn, const char templ[], const char key0[], Args&& ... args)
-//				{
-//					RedisCommand cmd(templ);
-//					AutoFreeReply reply = cmd.execute(conn, key0, redis_execute_profect_match(args)...);
-//					switch (reply.replyType()) {
-//						case RedisReplyType::STATUS:
-//							return reply->str;
-//						default:
-//							throw RedisUnexpectedCaseException();
-//					}
-//				}
-//
-//			public:
-//
-//				template <typename Type, typename ... Args>
-//				std::tuple<Type, Args...> mget(const Context & conn, const char key0[], Args&& ... args)
-//				{
-//					std::string templ = "mget %%s";
-//					for (size_t i = 0; i < sizeof...(args); ++i) {
-//						templ += " %%s";
-//					}
-//					return mget_execute(conn, templ.c_str(), key0, value0, args...);
-//				}
-
-
 			public:
+
+				template <typename ...Types, typename ... Args>
+				std::tuple<Types...> mget_tuple(RedisUnitedStringHelper key0, Args&& ... keys)
+				{
+					static_assert(sizeof...(Types) != sizeof...(Args), "Mismatched arguments number");
+					redis_key_list_type_checker(key0, std::forward<Args>(keys)...);
+
+					static RedisCommand cmd("mget %s" + make_key_args_template(sizeof...(keys)));
+					RedisReply reply = cmd.execute(conn, key0, std::forward<Args>(keys)...);
+					switch (reply.replyType()) {
+						case RedisReplyType::ARRAY: {
+							std::tuple<Types...> res;
+							mget_helper<sizeof...(Types) - 1>(res, reply);
+							return res;
+						}
+						default:
+							throw RedisUnexpectedCaseException(reply.replyType());
+					}
+				}
+
 
 				template <typename ... Args>
 				std::vector<std::string>
-				mget(const Context & conn, RedisUnitedStringHelper key0, Args&& ... args) const
+				mget(RedisUnitedStringHelper key0, Args&& ... keys) const
 				{
-					redis_key_list_type_checker(key0, args...);
+					redis_key_list_type_checker(key0, std::forward<Args>(keys)...);
 
-					static RedisCommand cmd("mget %%s" + make_key_args_template(sizeof...(args)));
-					AutoFreeReply reply = cmd.execute(conn, key0, args...);
+					static RedisCommand cmd("mget %s" + make_key_args_template(sizeof...(keys)));
+					RedisReply reply = cmd.execute(conn, key0, std::forward<Args>(keys)...);
 					switch (reply.replyType()) {
 						case RedisReplyType::ARRAY: {
 							std::vector<std::string> res;
@@ -344,10 +418,10 @@ namespace kerbal
 				}
 
 				template <typename ReturnType = std::string>
-				ReturnType hget(const Context & conn, RedisUnitedStringHelper key, RedisUnitedStringHelper field) const
+				ReturnType hget(RedisUnitedStringHelper key, RedisUnitedStringHelper field) const
 				{
-					static RedisCommand cmd("hget %%s %%s");
-					AutoFreeReply reply = cmd.execute(conn, key, field);
+					static RedisCommand cmd("hget %s %s");
+					RedisReply reply = cmd.execute(conn, key, field);
 					switch (reply.replyType()) {
 						case RedisReplyType::STRING:
 							return redisTypeCast<ReturnType>(reply->str);
@@ -359,10 +433,10 @@ namespace kerbal
 				}
 
 				template <typename ValueType>
-				int hset(const Context & conn, RedisUnitedStringHelper key, RedisUnitedStringHelper field, const ValueType & value)
+				int hset(RedisUnitedStringHelper key, RedisUnitedStringHelper field, const ValueType & value)
 				{
-					static RedisCommand cmd(std::string("hset %%s %%s %") + redis_type_traits<ValueType>::placeholder);
-					AutoFreeReply reply = cmd.execute(conn, key, field, value);
+					static RedisCommand cmd(std::string("hset %s %s ") + redis_type_traits<ValueType>::placeholder);
+					RedisReply reply = cmd.execute(conn, key, field, value);
 					switch (reply.replyType()) {
 						case RedisReplyType::INTEGER:
 							return reply->integer;
@@ -372,10 +446,10 @@ namespace kerbal
 				}
 
 				template <typename Type, typename ... Args>
-				std::string hmset(const Context & conn, RedisUnitedStringHelper key, RedisUnitedStringHelper field0, const Type & value0, Args&& ... args)
+				std::string hmset(RedisUnitedStringHelper key, RedisUnitedStringHelper field0, const Type & value0, Args&& ... args)
 				{
-					static RedisCommand cmd("hmset %%s" + make_execute_args_template(field0, value0, args...));
-					AutoFreeReply reply = cmd.execute(conn, key, field0, value0, args...);
+					static RedisCommand cmd("hmset %s" + make_execute_args_template(field0, value0, std::forward<Args>(args)...));
+					RedisReply reply = cmd.execute(conn, key, field0, value0, std::forward<Args>(args)...);
 					switch (reply.replyType()) {
 						case RedisReplyType::STATUS:
 							return reply->str;
@@ -384,11 +458,42 @@ namespace kerbal
 					}
 				}
 
-				std::unordered_map<std::string, std::string>
-				hgetall(const Context & conn, RedisUnitedStringHelper key) const
+				template <typename ... Args>
+				std::vector<std::string>
+				hmget(RedisUnitedStringHelper key, RedisUnitedStringHelper field0, Args&& ... field)
 				{
-					static RedisCommand cmd("hgetall %%s");
-					AutoFreeReply reply = cmd.execute(conn, key);
+					redis_key_list_type_checker(field0, std::forward<Args>(field)...);
+
+					static RedisCommand cmd("hmget %s %s" + make_key_args_template(sizeof...(field)));
+					RedisReply reply = cmd.execute(conn, key, field0, std::forward<Args>(field)...);
+					switch (reply.replyType()) {
+						case RedisReplyType::ARRAY: {
+							std::vector<std::string> res;
+							res.reserve(reply->elements);
+							for (size_t i = 0; i < reply->elements; ++i) {
+								switch ((RedisReplyType)(reply->element[i]->type)) {
+									case RedisReplyType::STRING:
+										res.push_back(reply->element[i]->str);
+										break;
+									case RedisReplyType::NIL:
+										res.push_back("");
+										break;
+									default:
+										throw RedisUnexpectedCaseException(reply.replyType());
+								}
+							}
+							return res;
+						}
+						default:
+							throw RedisUnexpectedCaseException(reply.replyType());
+					}
+				}
+
+				std::unordered_map<std::string, std::string>
+				hgetall(RedisUnitedStringHelper key) const
+				{
+					static RedisCommand cmd("hgetall %s");
+					RedisReply reply = cmd.execute(conn, key);
 					switch (reply.replyType()) {
 						case RedisReplyType::ARRAY: {
 							std::unordered_map<std::string, std::string> res;
@@ -405,10 +510,10 @@ namespace kerbal
 
 				template<typename Type = std::string>
 				std::vector<Type>
-				lrange(const Context & conn, RedisUnitedStringHelper key, int start, int end = -1) const
+				lrange(RedisUnitedStringHelper key, int start, int end = -1) const
 				{
-					static RedisCommand cmd("lrange %%s %%d %%d");
-					AutoFreeReply reply = cmd.execute(conn, key, start, end);
+					static RedisCommand cmd("lrange %s %d %d");
+					RedisReply reply = cmd.execute(conn, key, start, end);
 					switch (reply.replyType()) {
 						case RedisReplyType::ARRAY: {
 							std::vector<Type> res;

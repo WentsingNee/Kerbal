@@ -21,19 +21,20 @@ namespace kerbal
 		class Set
 		{
 			protected:
-				const Context * pToContext = nullptr;
+				RedisContext conn;
+				Operation opt;
 				std::string key;
 
 			public:
-				Set(const Context & conn, const std::string & key) :
-						pToContext(&conn), key(key)
+				Set(const RedisContext & conn, const std::string & key) :
+						conn(conn), opt(conn), key(key)
 				{
 				}
 
 				operator std::set<Type>()
 				{
-					static RedisCommand cmd("smembers %%s");
-					AutoFreeReply reply = cmd.execute(*pToContext, key);
+					static RedisCommand cmd("smembers %s");
+					RedisReply reply = cmd.execute(conn, key);
 					switch (reply.replyType()) {
 						case RedisReplyType::ARRAY: {
 							std::set<Type> set;
@@ -49,20 +50,19 @@ namespace kerbal
 
 				bool empty() const
 				{
-					static Operation opt;
-					return !opt.exists(*pToContext, key);
+					return !opt.exists(key);
 				}
 
 				size_t size() const
 				{
-					static RedisCommand cmd("scard %%s");
-					return cmd.execute(*pToContext, key)->integer;
+					static RedisCommand cmd("scard %s");
+					return cmd.execute(conn, key)->integer;
 				}
 
 				bool member_exist(const Type & member) const
 				{
-					static RedisCommand cmd(std::string("sismember %%s %") + redis_type_traits<Type>::placeholder);
-					return cmd.execute(*pToContext, key, member)->integer;
+					static RedisCommand cmd(std::string("sismember %s ") + redis_type_traits<Type>::placeholder);
+					return cmd.execute(conn, key, member)->integer;
 				}
 
 			protected:
@@ -81,10 +81,10 @@ namespace kerbal
 				static std::string make_set_member_placeholder(const Type &, Args&& ... args)
 				{
 					std::string placeholder_list;
-					placeholder_list.reserve(4 + 4 * sizeof...(args));
+					placeholder_list.reserve(3 + 3 * sizeof...(args));
 
 					for (size_t i = 0; i < 1 + sizeof...(args); ++i) {
-						placeholder_list += " %";
+						placeholder_list += " ";
 						placeholder_list += redis_type_traits<Type>::placeholder;
 					}
 					return placeholder_list;
@@ -96,8 +96,8 @@ namespace kerbal
 				{
 					//notes: never get nil result when excuting sadd
 					set_member_args_checker(value0, args...);
-					static RedisCommand cmd("sadd %%s" + make_set_member_placeholder(value0, args...));
-					return cmd.execute(*pToContext, key, value0, args...)->integer;
+					static RedisCommand cmd("sadd %s" + make_set_member_placeholder(value0, args...));
+					return cmd.execute(conn, key, value0, args...)->integer;
 				}
 
 				template <typename ...Args>
@@ -105,8 +105,8 @@ namespace kerbal
 				{
 					//notes: never get nil result when excuting srem
 					set_element_args_checker(value0, args...);
-					static RedisCommand cmd("srem %%s" + make_set_member_placeholder(value0, args...));
-					return cmd.execute(*pToContext, key, value0, args...)->integer;
+					static RedisCommand cmd("srem %s" + make_set_member_placeholder(value0, args...));
+					return cmd.execute(conn, key, value0, args...)->integer;
 				}
 
 				/**
@@ -114,8 +114,8 @@ namespace kerbal
 				 */
 				Type pop()
 				{
-					static RedisCommand cmd("spop %%s");
-					AutoFreeReply reply = cmd.execute(*pToContext, key);
+					static RedisCommand cmd("spop %s");
+					RedisReply reply = cmd.execute(conn, key);
 					switch (reply.replyType()) {
 						case RedisReplyType::STRING: {
 							return redisTypeCast<Type>(reply->str);

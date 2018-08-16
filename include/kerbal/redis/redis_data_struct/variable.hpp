@@ -25,12 +25,12 @@ namespace kerbal
 				typedef Reference<Type> supper_t;
 
 			public:
-				Variable(const Context & conn, const char key[]) :
+				Variable(const RedisContext & conn, const char key[]) :
 						supper_t(conn, key)
 				{
 				}
 
-				Variable(const Context & conn, const std::string & key) :
+				Variable(const RedisContext & conn, const std::string & key) :
 						supper_t(conn, key)
 				{
 				}
@@ -49,7 +49,7 @@ namespace kerbal
 				typedef ConstReference<Type> supper_t;
 
 			public:
-				ConstVariable(const Context & conn, const std::string & key) :
+				ConstVariable(const RedisContext & conn, const std::string & key) :
 						supper_t(conn, key)
 				{
 				}

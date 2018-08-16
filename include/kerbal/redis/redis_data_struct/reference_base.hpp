@@ -22,30 +22,29 @@ namespace kerbal
 		class ConstReferenceBase
 		{
 			protected:
-				const Context * pToContext = nullptr;
+				Operation opt;
 				std::string key;
 
+				ConstReferenceBase(const RedisContext & conn, const char key[]) :
+						opt(conn), key(key)
+				{
+				}
+
+				ConstReferenceBase(const RedisContext & conn, const std::string & key) :
+						opt(conn), key(key)
+				{
+				}
+
 			public:
-				ConstReferenceBase(const Context & conn, const char key[]) :
-						pToContext(&conn), key(key)
-				{
-				}
-
-				ConstReferenceBase(const Context & conn, const std::string & key) :
-						pToContext(&conn), key(key)
-				{
-				}
-
 				bool exists() const
 				{
-					static Operation opt;
-					return opt.exists(*pToContext, key);
+					return opt.exists(key);
 				}
 
 				operator Type() const
 				{
-					RedisCommand command("get %%s");
-					AutoFreeReply reply = command.execute(*pToContext, key);
+					RedisCommand command("get %s");
+					RedisReply reply = command.execute(opt.getContext(), key);
 					switch (reply.replyType()) {
 						case RedisReplyType::STRING: {
 							return redisTypeCast<Type>(reply->str);
@@ -66,27 +65,28 @@ namespace kerbal
 		template<typename Type>
 		class ReferenceBase: public ConstReferenceBase<Type>
 		{
-			protected:
+			private:
 				typedef ConstReferenceBase<Type> supper_t;
 
-			public:
-				ReferenceBase(const Context & conn, const char key[]) :
+			protected:
+				ReferenceBase(const RedisContext & conn, const char key[]) :
 						supper_t(conn, key)
 				{
 				}
 
-				ReferenceBase(const Context & conn, const std::string & key) :
+				ReferenceBase(const RedisContext & conn, const std::string & key) :
 						supper_t(conn, key)
 				{
 				}
 
 				ReferenceBase& operator=(const Type & src)
 				{
-					static RedisCommand command(std::string("set %%s %") + redis_type_traits<Type>::placeholder);
-					command.execute(*supper_t::pToContext, supper_t::key, src);
+					static RedisCommand command(std::string("set %s ") + redis_type_traits<Type>::placeholder);
+					command.execute(this->opt.getContext(), this->key, src);
 					return *this;
 				}
 
+			public:
 				friend std::istream& operator>>(std::istream& in, ReferenceBase & src)
 				{
 					Type buff;
@@ -96,81 +96,160 @@ namespace kerbal
 				}
 		};
 
-		template<typename Type>
-		class RealReference: public ReferenceBase<Type>
+		class BoolReferenceBase: public ReferenceBase<bool>
 		{
+			private:
+				typedef ReferenceBase<bool> supper_t;
+
 			protected:
+				BoolReferenceBase(const RedisContext & conn, const char key[]) :
+						supper_t(conn, key)
+				{
+				}
+
+				BoolReferenceBase(const RedisContext & conn, const std::string & key) :
+						supper_t(conn, key)
+				{
+				}
+
+				BoolReferenceBase& operator=(bool src)
+				{
+					supper_t::operator =(src);
+					return *this;
+				}
+		};
+
+		template<typename Type>
+		class RealReferenceBase: public ReferenceBase<Type>
+		{
+			private:
 				typedef ReferenceBase<Type> supper_t;
 
-			public:
-				RealReference(const Context & conn, const char key[]) :
+			protected:
+				RealReferenceBase(const RedisContext & conn, const char key[]) :
 						supper_t(conn, key)
 				{
 				}
 
-				RealReference(const Context & conn, const std::string & key) :
+				RealReferenceBase(const RedisContext & conn, const std::string & key) :
 						supper_t(conn, key)
 				{
 				}
 
-				RealReference& operator=(const Type & src)
+				RealReferenceBase& operator=(const Type & src)
 				{
 					supper_t::operator=(src);
 					return *this;
 				}
 
+			public:
 				template <typename AnotherType>
-				RealReference& operator+=(const AnotherType & with)
+				RealReferenceBase& operator+=(const AnotherType & with)
 				{
-					return *this = (Type) (*this) + with;
+					RedisCommand command(std::string("incrbyfloat %s ") + redis_type_traits<Type>::placeholder);
+					RedisReply reply = command.execute(this->opt.getContext(), this->key, with);
+					switch (reply.replyType()) {
+						case RedisReplyType::STRING:
+							return *this;
+						case RedisReplyType::NIL:
+							throw RedisNilException(this->key);
+						default:
+							throw RedisUnexpectedCaseException();
+					}
 				}
 
 				template <typename AnotherType>
-				RealReference& operator-=(const AnotherType & with)
+				RealReferenceBase& operator-=(const AnotherType & with)
 				{
-					return *this = (Type) (*this) - with;
+					RedisCommand command(std::string("decrbyfloat %s ") + redis_type_traits<Type>::placeholder);
+					RedisReply reply = command.execute(this->opt.getContext(), this->key, with);
+					switch (reply.replyType()) {
+						case RedisReplyType::STRING:
+							return *this;
+						case RedisReplyType::NIL:
+							throw RedisNilException(this->key);
+						default:
+							throw RedisUnexpectedCaseException();
+					}
 				}
 
 				template <typename AnotherType>
-				RealReference& operator*=(const AnotherType & with)
+				RealReferenceBase& operator*=(const AnotherType & with)
 				{
 					return *this = (Type) (*this) * with;
 				}
 
 				template <typename AnotherType>
-				RealReference& operator/=(const AnotherType & with)
+				RealReferenceBase& operator/=(const AnotherType & with)
 				{
 					return *this = (Type) (*this) / with;
 				}
 		};
 
 		template<typename Type>
-		class IntegerReference: public RealReference<Type>
+		class IntegerReferenceBase: public RealReferenceBase<Type>
 		{
+			private:
+				typedef RealReferenceBase<Type> supper_t;
+
 			protected:
-				typedef RealReference<Type> supper_t;
-
-			public:
-				IntegerReference(const Context & conn, const char key[]) :
+				IntegerReferenceBase(const RedisContext & conn, const char key[]) :
 						supper_t(conn, key)
 				{
 				}
 
-				IntegerReference(const Context & conn, const std::string & key) :
+				IntegerReferenceBase(const RedisContext & conn, const std::string & key) :
 						supper_t(conn, key)
 				{
 				}
 
-				IntegerReference& operator=(const Type & src)
+				IntegerReferenceBase& operator=(const Type & src)
 				{
 					supper_t::operator=(src);
 					return *this;
 				}
 
-				IntegerReference& operator++()
+			public:
+				template <typename AnotherType>
+				IntegerReferenceBase& operator+=(const AnotherType & with)
 				{
-					RedisCommand command("incr %%s");
-					AutoFreeReply reply = command.execute(*this->pToContext, this->key);
+					RedisCommand command(std::string("incrby %s ") + redis_type_traits<Type>::placeholder);
+					RedisReply reply = command.execute(this->opt.getContext(), this->key, with);
+					switch (reply.replyType()) {
+						case RedisReplyType::INTEGER:
+							return *this;
+						case RedisReplyType::NIL:
+							throw RedisNilException(this->key);
+						default:
+							throw RedisUnexpectedCaseException();
+					}
+				}
+
+				template <typename AnotherType>
+				IntegerReferenceBase& operator-=(const AnotherType & with)
+				{
+					RedisCommand command(std::string("decrby %s ") + redis_type_traits<Type>::placeholder);
+					RedisReply reply = command.execute(this->opt.getContext(), this->key, with);
+					switch (reply.replyType()) {
+						case RedisReplyType::INTEGER:
+							return *this;
+						case RedisReplyType::NIL:
+							throw RedisNilException(this->key);
+						default:
+							throw RedisUnexpectedCaseException();
+					}
+				}
+
+				template <typename AnotherType>
+				IntegerReferenceBase& operator%=(const AnotherType & with)
+				{
+					return *this = (Type) (*this) % with;
+				}
+
+				IntegerReferenceBase& operator++()
+				{
+					RedisCommand command("incr %s");
+					RedisReply reply = command.execute(this->opt.getContext(), this->key);
 					switch (reply.replyType()) {
 						case RedisReplyType::INTEGER:
 							return *this;
@@ -184,22 +263,14 @@ namespace kerbal
 				const Type operator++(int)
 				{
 					Type tmp = *this;
-					RedisCommand command("incr %%s");
-					AutoFreeReply reply = command.execute(*this->pToContext, this->key);
-					switch (reply.replyType()) {
-						case RedisReplyType::INTEGER:
-							return tmp;
-						case RedisReplyType::NIL:
-							throw RedisNilException(this->key);
-						default:
-							throw RedisUnexpectedCaseException();
-					}
+					++(*this);
+					return tmp;
 				}
 
-				IntegerReference& operator--()
+				IntegerReferenceBase& operator--()
 				{
-					RedisCommand command("decr %%s");
-					AutoFreeReply reply = command.execute(*this->pToContext, this->key);
+					RedisCommand command("decr %s");
+					RedisReply reply = command.execute(this->opt.getContext(), this->key);
 					switch (reply.replyType()) {
 						case RedisReplyType::INTEGER:
 							return *this;
@@ -213,11 +284,107 @@ namespace kerbal
 				const Type operator--(int)
 				{
 					Type tmp = *this;
-					RedisCommand command("decr %%s");
-					AutoFreeReply reply = command.execute(*this->pToContext, this->key);
+					--(*this);
+					return tmp;
+				}
+		};
+
+		class ConstStringReferenceBase: public ConstReferenceBase<std::string>
+		{
+			private:
+				typedef ConstReferenceBase<std::string> supper_t;
+
+			protected:
+				ConstStringReferenceBase(const RedisContext & conn, const char key[]) :
+						supper_t(conn, key)
+				{
+				}
+
+				ConstStringReferenceBase(const RedisContext & conn, const std::string & key) :
+						supper_t(conn, key)
+				{
+				}
+
+			public:
+				std::string operator+(const ConstStringReferenceBase & with) const
+				{
+					return (std::string) (*this) + (std::string) (with);
+				}
+
+				size_t length() const
+				{
+					RedisCommand command("strlen %s");
+					RedisReply reply = command.execute(opt.getContext(), this->key);
 					switch (reply.replyType()) {
 						case RedisReplyType::INTEGER:
-							return tmp;
+							return reply->integer;
+						case RedisReplyType::NIL:
+							throw RedisNilException(this->key);
+						default:
+							throw RedisUnexpectedCaseException();
+					}
+				}
+		};
+
+		class StringReferenceBase: public ConstStringReferenceBase
+		{
+			private:
+				typedef ConstStringReferenceBase supper_t;
+
+			protected:
+				StringReferenceBase(const RedisContext & conn, const char key[]) :
+						supper_t(conn, key)
+				{
+				}
+
+				StringReferenceBase(const RedisContext & conn, const std::string & key) :
+						supper_t(conn, key)
+				{
+				}
+
+				StringReferenceBase& operator=(const char * with)
+				{
+					RedisCommand command("set %s %s");
+					RedisReply reply = command.execute(opt.getContext(), key, with);
+					switch (reply.replyType()) {
+						case RedisReplyType::STATUS: {
+							return *this;
+						}
+						case RedisReplyType::NIL:
+							throw RedisNilException(key);
+						default:
+							throw RedisUnexpectedCaseException(reply.replyType());
+					}
+				}
+
+				StringReferenceBase& operator=(const std::string & with)
+				{
+					RedisCommand command("set %s %s");
+					RedisReply reply = command.execute(opt.getContext(), key, with);
+					switch (reply.replyType()) {
+						case RedisReplyType::STATUS: {
+							return *this;
+						}
+						case RedisReplyType::NIL:
+							throw RedisNilException(key);
+						default:
+							throw RedisUnexpectedCaseException(reply.replyType());
+					}
+				}
+
+				StringReferenceBase& operator=(const StringReferenceBase & with)
+				{
+					return *this = (std::string) (with);
+				}
+
+			public:
+				StringReferenceBase& operator+=(const char * with)
+				{
+					RedisCommand command("append %s %s");
+					RedisReply reply = command.execute(opt.getContext(), this->key, with);
+					switch (reply.replyType()) {
+						case RedisReplyType::INTEGER:
+							return *this;
 						case RedisReplyType::NIL:
 							throw RedisNilException(this->key);
 						default:
@@ -225,31 +392,89 @@ namespace kerbal
 					}
 				}
 
-				template <typename AnotherType>
-				IntegerReference& operator%=(const AnotherType & with)
+				StringReferenceBase& operator+=(const std::string & with)
 				{
-					return *this = (Type) (*this) % with;
+					return *this += with.c_str();
+				}
+
+				StringReferenceBase& operator+=(const StringReferenceBase & with)
+				{
+					return *this += (std::string) with;
+				}
+
+				friend std::istream& operator>>(std::istream& in, StringReferenceBase& to)
+				{
+					std::string buff;
+					in >> buff;
+					to = buff;
+					return in;
 				}
 		};
 
 		template <typename Type>
-		class Reference : public
-			std::conditional<CheckIsIntegerType<Type>::value, IntegerReference<Type>,
-			typename std::conditional<CheckIsRealType<Type>::value, RealReference<Type>,
-																ReferenceBase<Type> >::type>::type
+		struct ReferenceBaseChooser;
+
+		template <>
+		struct ReferenceBaseChooser<bool>
 		{
-			protected:
-				typedef typename std::conditional<CheckIsIntegerType<Type>::value, IntegerReference<Type>,
-								   typename std::conditional<CheckIsRealType<Type>::value, RealReference<Type>,
-																			ReferenceBase<Type> >::type>::type
-						supper_t;
+				typedef BoolReferenceBase type;
+		};
+
+		template <>
+		struct ReferenceBaseChooser<float>
+		{
+				typedef RealReferenceBase<float> type;
+		};
+
+		template <>
+		struct ReferenceBaseChooser<double>
+		{
+				typedef RealReferenceBase<double> type;
+		};
+
+		template <>
+		struct ReferenceBaseChooser<int>
+		{
+				typedef IntegerReferenceBase<int> type;
+		};
+
+		template <>
+		struct ReferenceBaseChooser<unsigned int>
+		{
+				typedef IntegerReferenceBase<unsigned int> type;
+		};
+
+		template <>
+		struct ReferenceBaseChooser<long>
+		{
+				typedef IntegerReferenceBase<long> type;
+		};
+
+		template <>
+		struct ReferenceBaseChooser<unsigned long>
+		{
+				typedef IntegerReferenceBase<unsigned long> type;
+		};
+
+		template <>
+		struct ReferenceBaseChooser<std::string>
+		{
+				typedef StringReferenceBase type;
+		};
+
+		template <typename Type>
+		class Reference: public ReferenceBaseChooser<Type>::type
+		{
+			private:
+				typedef typename ReferenceBaseChooser<Type>::type supper_t;
+
 			public:
-				Reference(const Context & conn, const char key[]) :
+				Reference(const RedisContext & conn, const char key[]) :
 						supper_t(conn, key)
 				{
 				}
 
-				Reference(const Context & conn, const std::string & key) :
+				Reference(const RedisContext & conn, const std::string & key) :
 						supper_t(conn, key)
 				{
 				}
@@ -264,16 +489,34 @@ namespace kerbal
 		template <typename Type>
 		class ConstReference : public ConstReferenceBase<Type>
 		{
-			protected:
+			private:
 				typedef ConstReferenceBase<Type> supper_t;
 
 			public:
-				ConstReference(const Context & conn, const char key[]) :
+				ConstReference(const RedisContext & conn, const char key[]) :
 						supper_t(conn, key)
 				{
 				}
 
-				ConstReference(const Context & conn, const std::string & key) :
+				ConstReference(const RedisContext & conn, const std::string & key) :
+						supper_t(conn, key)
+				{
+				}
+		};
+
+		template <>
+		class ConstReference<std::string> : public ConstStringReferenceBase
+		{
+			private:
+				typedef ConstStringReferenceBase supper_t;
+
+			public:
+				ConstReference(const RedisContext & conn, const char key[]) :
+						supper_t(conn, key)
+				{
+				}
+
+				ConstReference(const RedisContext & conn, const std::string & key) :
 						supper_t(conn, key)
 				{
 				}
