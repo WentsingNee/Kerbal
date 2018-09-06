@@ -68,20 +68,8 @@ namespace kerbal
 			public:
 				const std::string execute_command;
 
-				RedisUnexpectedCaseException(const std::string & execute_command = "(unknown command)") :
-						RedisException("redis returns an unexpected case when execute command: " + execute_command), execute_command(execute_command)
-				{
-				}
-
-				RedisUnexpectedCaseException(RedisReplyType correctType, const std::string & execute_command = "(unknown command)") :
-						RedisException("redis returns an unexpected case when execute command: " + execute_command + " , correct type is: " + redisReplyTypeName(correctType)), execute_command(execute_command)
-				{
-				}
-
-				template <typename ...Args>
-				RedisUnexpectedCaseException(RedisReplyType correctType, const std::string & execute_command, Args && ...args) :
-						RedisException("redis returns an unexpected case when execute command: " + format_va_args(execute_command, std::forward<Args>(args)...).str() + " , correct type is: " + redisReplyTypeName(correctType)),
-						execute_command(format_va_args(execute_command, std::forward<Args>(args)...).str())
+				RedisUnexpectedCaseException(RedisReplyType unexpectedType, const std::string & execute_command = "(unknown command)") :
+						RedisException("redis returns an unexpected type: " + redisReplyTypeName(unexpectedType) + " when execute command: " + execute_command), execute_command(execute_command)
 				{
 				}
 		};
