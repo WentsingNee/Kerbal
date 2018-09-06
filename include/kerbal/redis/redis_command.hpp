@@ -39,10 +39,12 @@ namespace kerbal
 				}
 
 #if __cplusplus >= 201103L
+
 				RedisCommand(std::string && command) :
 						cmd(std::move(command))
 				{
 				}
+
 #endif
 
 				RedisCommand(const char * command) :
@@ -56,10 +58,12 @@ namespace kerbal
 				}
 
 #if __cplusplus >= 201103L
+
 				void resetCommand(std::string && command)
 				{
 					cmd = std::move(command);
 				}
+
 #endif
 
 				void resetCommand(const char * command)
@@ -67,6 +71,10 @@ namespace kerbal
 					cmd.assign(command);
 				}
 
+				const std::string & getCommand() const
+				{
+					return cmd;
+				}
 
 			protected:
 				static void redis_execute_allow_type_checker() noexcept
@@ -74,9 +82,10 @@ namespace kerbal
 				}
 
 				template <typename Type, typename ...Args>
-				static constexpr void redis_execute_allow_type_checker(const Type &, Args&& ... args) noexcept
+				static constexpr void redis_execute_allow_type_checker(const Type &, Args && ... args) noexcept
 				{
-					static_assert(redis_type_traits<Type>::is_execute_allowed_type, "RedisCommand.execute doesn't allow args type");
+					static_assert(redis_type_traits<Type>::is_execute_allowed_type,
+									"RedisCommand.execute doesn't allow args type");
 					redis_execute_allow_type_checker(std::forward<Args>(args)...);
 				}
 
@@ -87,21 +96,23 @@ namespace kerbal
 					return t;
 				}
 #else
+
 				template <typename T>
 				static constexpr
 				typename std::enable_if<std::is_enum<T>::value, int>::type
-				cast_to_va_arg_compatible_type(const T& t) noexcept
+				cast_to_va_arg_compatible_type(const T & t) noexcept
 				{
-					return (int)t;
+					return (int) t;
 				}
 
 				template <typename T>
 				static constexpr
-				typename std::enable_if<!std::is_enum<T>::value, const T&>::type
-				cast_to_va_arg_compatible_type(const T& t) noexcept
+				typename std::enable_if<!std::is_enum<T>::value, const T &>::type
+				cast_to_va_arg_compatible_type(const T & t) noexcept
 				{
 					return t;
 				}
+
 #endif
 
 				static const char * cast_to_va_arg_compatible_type(const std::string & t) noexcept
@@ -121,7 +132,7 @@ namespace kerbal
 				{
 					redis_execute_allow_type_checker(std::forward<Args>(args)...);
 					RedisReply reply = (redisReply *) redisCommand(conn.get(), cmd.c_str(),
-							cast_to_va_arg_compatible_type(std::forward<Args>(args))...);
+								cast_to_va_arg_compatible_type( std::forward<Args>(args))...);
 					if (reply.replyType() == RedisReplyType::ERROR) {
 						throw RedisCommandExecuteFailedException(std::string("redis reply error: ") + reply->str);
 					}

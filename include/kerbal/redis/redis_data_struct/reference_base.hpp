@@ -154,7 +154,7 @@ namespace kerbal
 						case RedisReplyType::NIL:
 							throw RedisNilException(this->key);
 						default:
-							throw RedisUnexpectedCaseException();
+							throw RedisUnexpectedCaseException(reply.replyType());
 					}
 				}
 
@@ -169,7 +169,7 @@ namespace kerbal
 						case RedisReplyType::NIL:
 							throw RedisNilException(this->key);
 						default:
-							throw RedisUnexpectedCaseException();
+							throw RedisUnexpectedCaseException(reply.replyType());
 					}
 				}
 
@@ -221,7 +221,7 @@ namespace kerbal
 						case RedisReplyType::NIL:
 							throw RedisNilException(this->key);
 						default:
-							throw RedisUnexpectedCaseException();
+							throw RedisUnexpectedCaseException(reply.replyType());
 					}
 				}
 
@@ -236,7 +236,7 @@ namespace kerbal
 						case RedisReplyType::NIL:
 							throw RedisNilException(this->key);
 						default:
-							throw RedisUnexpectedCaseException();
+							throw RedisUnexpectedCaseException(reply.replyType());
 					}
 				}
 
@@ -256,7 +256,7 @@ namespace kerbal
 						case RedisReplyType::NIL:
 							throw RedisNilException(this->key);
 						default:
-							throw RedisUnexpectedCaseException();
+							throw RedisUnexpectedCaseException(reply.replyType());
 					}
 				}
 
@@ -277,7 +277,7 @@ namespace kerbal
 						case RedisReplyType::NIL:
 							throw RedisNilException(this->key);
 						default:
-							throw RedisUnexpectedCaseException();
+							throw RedisUnexpectedCaseException(reply.replyType());
 					}
 				}
 
@@ -321,7 +321,7 @@ namespace kerbal
 						case RedisReplyType::NIL:
 							throw RedisNilException(this->key);
 						default:
-							throw RedisUnexpectedCaseException();
+							throw RedisUnexpectedCaseException(reply.replyType());
 					}
 				}
 		};
@@ -388,7 +388,7 @@ namespace kerbal
 						case RedisReplyType::NIL:
 							throw RedisNilException(this->key);
 						default:
-							throw RedisUnexpectedCaseException();
+							throw RedisUnexpectedCaseException(reply.replyType());
 					}
 				}
 
