@@ -123,7 +123,7 @@ namespace kerbal
 						case RedisReplyType::NIL:
 							throw RedisNilException(key);
 						default:
-							throw RedisUnexpectedCaseException();
+							throw RedisUnexpectedCaseException(reply.replyType());
 					}
 				}
 		};
