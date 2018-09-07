@@ -132,17 +132,17 @@ namespace kerbal
 
 			public:
 
-				Operation(const RedisContext & conn) :
+				Operation(const RedisContext & conn) noexcept :
 						conn(conn)
 				{
 				}
 
-				RedisContext& getContext()
+				RedisContext& getContext() noexcept
 				{
 					return conn;
 				}
 
-				const RedisContext& getContext() const
+				const RedisContext& getContext() const noexcept
 				{
 					return conn;
 				}
