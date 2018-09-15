@@ -10,6 +10,10 @@
 
 #include <string>
 
+#if __cplusplus >= 201103L
+#   include <initializer_list>
+#endif
+
 namespace kerbal
 {
 	namespace range
@@ -66,11 +70,21 @@ namespace kerbal
 		}
 
 		template <typename IterableType>
-		Join_view<typename IterableType::const_iterator>
+		Join_view<typename IterableType::iterator>
 		make_join_view(const std::string & joint, const IterableType & src)
 		{
-			return Join_view<typename IterableType::const_iterator>(joint, src.cbegin(), src.cend());
+			return Join_view<typename IterableType::iterator>(joint, src.begin(), src.end());
 		}
+        
+#   if __cplusplus >= 201103L
+        template <typename Type>
+        Join_view<typename std::initializer_list<Type>::iterator>
+        make_join_view(const std::string & joint, std::initializer_list<Type> src)
+        {
+            return Join_view<typename std::initializer_list<Type>::iterator>(joint, src.begin(), src.end());
+        }
+
+#   endif
 
 #	if __cplusplus >= 201103L
 		class Join_literals_helper
@@ -90,11 +104,17 @@ namespace kerbal
 					return Join_view<InputIterator>(joint, start, finish);
 				}
 
-				template <typename IterableType>
-				Join_view<typename IterableType::const_iterator> operator()(const IterableType & src)
-				{
-					return Join_view<typename IterableType::const_iterator>(joint, src.cbegin(), src.cend());
-				}
+                template <typename IterableType>
+                Join_view<typename IterableType::iterator> operator()(const IterableType & src)
+                {
+                    return Join_view<typename IterableType::iterator>(joint, src.begin(), src.end());
+                }
+            
+                template <typename Type>
+                Join_view<typename std::initializer_list<Type>::iterator> operator()(std::initializer_list<Type> src)
+                {
+                    return Join_view<typename std::initializer_list<Type>::iterator>(joint, src.begin(), src.end());
+                }
 		};
 
 		Join_literals_helper operator "" _join(const char s[], long unsigned int)
