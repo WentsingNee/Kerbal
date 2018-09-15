@@ -13,49 +13,33 @@
 #ifndef INCLUDE_KERBAL_ALGORITHM_DYNAMIC_PROGRAMMING_HPP_
 #define INCLUDE_KERBAL_ALGORITHM_DYNAMIC_PROGRAMMING_HPP_
 
+#include <algorithm>
 #include <vector>
 #include <functional>
 #include <cctype>
 
-namespace kerbal
-{
-	template <typename _Tp, typename _Up = _Tp>
-	struct diff_type_equal_to: public std::binary_function<_Tp, _Up, bool>
-	{
-			bool operator()(const _Tp& __x, const _Up& __y) const
-			{
-				return __x == __y;
-			}
-	};
-}
+#include "binary_type_operator.hpp"
 
 namespace kerbal
 {
 	namespace algorithm
 	{
-		template <typename RandomAccessIterator, typename RandomAccessIterator2,
-				typename CompareFunction>
-		size_t __pure_LCS(RandomAccessIterator a_begin, size_t a_len, RandomAccessIterator2 b_begin, size_t b_len, CompareFunction cmp, bool has_switched =
-				false)
+		template <typename ForwardIterator1, typename InputIterator2, typename CompareFunction>
+		size_t LCS_n(ForwardIterator1 a_begin, size_t a_len, InputIterator2 b_begin, size_t b_len, CompareFunction cmp)
 		{
-			typedef RandomAccessIterator it_t1;
-			typedef RandomAccessIterator2 it_t2;
+			typedef ForwardIterator1 iterator1;
+			typedef InputIterator2 iterator2;
 
-			if (a_len > b_len) {
-				return __pure_LCS(b_begin, b_len, a_begin, a_len, cmp, true);
-			}
+			typedef std::vector<size_t> dp_type;
+			dp_type dp(a_len + 1, 0);
 
-			std::vector<size_t> dp(a_len + 1, 0);
-
-			size_t i_index = 0;
-			it_t2 i = b_begin;
-			for (; i_index != b_len; ++i, ++i_index) {
+			iterator2 & i = b_begin;
+			for (size_t i_index = 0; true;) {
 				size_t dp_i1_j1 = 0;
 
-				it_t1 j = a_begin;
-				size_t j_index = 0;
-				for (; j_index != a_len; ++j, ++j_index) {
-					if (has_switched ? cmp(*i, *j) : cmp(*j, *i)) {
+				iterator1 j = a_begin;
+				for (size_t j_index = 0; j_index < a_len; ++j_index) {
+					if (cmp(*j, *i)) {
 						size_t tmp = dp[j_index + 1];
 						dp[j_index + 1] = dp_i1_j1 + 1;
 						dp_i1_j1 = tmp;
@@ -65,78 +49,224 @@ namespace kerbal
 							dp[j_index + 1] = dp[j_index];
 						}
 					}
+					++j;
+				}
+				++i_index;
+				if (i_index < b_len) {
+					++i;
+				} else {
+					break;
+				}
+			}
+			return dp.back();
+		}
+
+		template <typename ForwardIterator1, typename InputIterator2>
+		size_t LCS_n(ForwardIterator1 a_begin, size_t a_len, InputIterator2 b_begin, size_t b_len)
+		{
+			typedef typename std::iterator_traits<ForwardIterator1>::value_type value_type1;
+			typedef typename std::iterator_traits<InputIterator2>::value_type value_type2;
+			return LCS_n(a_begin, a_len, b_begin, b_len,
+					kerbal::algorithm::binary_type_equal_to<value_type1, value_type2>());
+		}
+
+		template <typename ForwardIterator1, typename InputIterator2, typename CompareFunction>
+		size_t LCS(ForwardIterator1 a_begin, ForwardIterator1 a_end, InputIterator2 b_begin, InputIterator2 b_end, CompareFunction cmp)
+		{
+			typedef ForwardIterator1 iterator1;
+			typedef InputIterator2 iterator2;
+
+			typedef std::vector<size_t> dp_type;
+			dp_type dp(std::distance(a_begin, a_end) + 1, 0);
+
+			for (iterator2 i = b_begin; i != b_end; ++i) {
+				size_t dp_i1_j1 = 0;
+
+				dp_type::iterator k = dp.begin();
+				dp_type::iterator k_next = dp.begin() + 1;
+				for (iterator1 j = a_begin; j != a_end; ++j) {
+					if (cmp(*j, *i)) {
+						size_t tmp = *k_next;
+						*k_next = dp_i1_j1 + 1;
+						dp_i1_j1 = tmp;
+					} else {
+						dp_i1_j1 = *k_next;
+						if (*k > *k_next) {
+							*k_next = *k;
+						}
+					}
+					++k;
+					++k_next;
 				}
 
 			}
 			return dp.back();
 		}
 
-		template <typename RandomAccessIterator, typename RandomAccessIterator2>
-		size_t __pure_LCS(RandomAccessIterator a_begin, size_t a_len, RandomAccessIterator2 b_begin, size_t b_len)
+		template <typename ForwardIterator1, typename InputIterator2>
+		size_t LCS(ForwardIterator1 a_begin, ForwardIterator1 a_end, InputIterator2 b_begin, InputIterator2 b_end)
 		{
-			return __pure_LCS(a_begin, a_len, b_begin, b_len,
-					kerbal::diff_type_equal_to<
-							typename std::iterator_traits<RandomAccessIterator>::value_type,
-							typename std::iterator_traits<RandomAccessIterator2>::value_type>());
+			typedef typename std::iterator_traits<ForwardIterator1>::value_type value_type1;
+			typedef typename std::iterator_traits<InputIterator2>::value_type value_type2;
+			return LCS(a_begin, a_end, b_begin, b_end,
+					kerbal::algorithm::binary_type_equal_to<value_type1, value_type2>());
 		}
 
-		template <typename RandomAccessIterator, typename RandomAccessIterator2,
-				typename CompareFunction>
-		size_t LCS(RandomAccessIterator a_begin, RandomAccessIterator a_end, RandomAccessIterator2 b_begin, RandomAccessIterator2 b_end, CompareFunction cmp)
+		template <typename InputIterator, typename CompareFunction>
+		size_t LIS(InputIterator begin, InputIterator end, CompareFunction cmp)
 		{
-			return __pure_LCS(a_begin, distance(a_begin, a_end), b_begin, distance(b_begin, b_end),
-					cmp);
-		}
+			if (begin == end) {
+				return 0;
+			}
 
-		template <typename RandomAccessIterator, typename RandomAccessIterator2>
-		size_t LCS(RandomAccessIterator a_begin, RandomAccessIterator a_end, RandomAccessIterator2 b_begin, RandomAccessIterator2 b_end)
-		{
-			return __pure_LCS(a_begin, distance(a_begin, a_end), b_begin, distance(b_begin, b_end),
-					kerbal::diff_type_equal_to<
-							typename std::iterator_traits<RandomAccessIterator>::value_type,
-							typename std::iterator_traits<RandomAccessIterator2>::value_type>());
-		}
+			typedef InputIterator iterator;
+			struct iter_cmp
+			{
+					CompareFunction cmp;
 
-
-		template<typename ForwardIterator, typename CompareFunction>
-		size_t LIS(ForwardIterator begin, ForwardIterator end, CompareFunction cmp)
-		{
-			typedef ForwardIterator it_t;
-			std::vector<size_t> d;
-
-			size_t ans = 0;
-
-			for(it_t i = begin; i != end; ++i) {
-				d.push_back(1);
-
-				it_t j = begin;
-				std::vector<size_t>::iterator dj = d.begin();
-				for(; j != i; ++j, ++dj) {
-					if(cmp(*j, *i) && *dj + 1 > d.back()) {
-						d.back() = *dj + 1;
+					iter_cmp(CompareFunction cmp) :
+							cmp(cmp)
+					{
 					}
-				}
-				if(d.back() > ans) {
-					ans = d.back();
+					;
+					bool operator()(iterator a, iterator b)
+					{
+						return cmp(*a, *b);
+					}
+			} _iter_cmp(cmp);
+
+			std::vector<iterator> low;
+			low.push_back(begin);
+			++begin;
+			for (; begin != end; ++begin) {
+				if (cmp(*low.back(), *begin)) {
+					low.push_back(begin);
+				} else {
+					*std::lower_bound(low.begin(), low.end(), begin, _iter_cmp) = begin;
 				}
 			}
-			//	for(auto ele : d) {
-			//		std::cout << ele << " ";
-			//	}
-			//	std::cout << std::endl;
-			return ans;
+			return low.size();
 		}
 
-		template<typename ForwardIterator>
-		size_t LIS(ForwardIterator begin, ForwardIterator end)
+		template <typename InputIterator>
+		size_t LIS(InputIterator begin, InputIterator end)
 		{
-			typedef ForwardIterator it_t;
-			typedef typename std::iterator_traits<it_t>::value_type type;
-			return LIS(begin, end, std::less<type>());
+			typedef typename std::iterator_traits<InputIterator>::value_type value_type;
+			return LIS(begin, end, std::less<value_type>());
 		}
 
+		template <typename ForwardIterator1, typename InputIterator2, typename Compare>
+		size_t edit_distance(ForwardIterator1 a_begin, ForwardIterator1 a_end, InputIterator2 b_begin, InputIterator2 b_end, Compare equal)
+		{
+			typedef ForwardIterator1 iterator1;
+			typedef InputIterator2 iterator2;
 
-	}
-}
+			typedef std::vector<size_t> dp_type;
+			dp_type dp(std::distance(a_begin, a_end) + 1);
+			for (size_t i = 0; i < dp.size(); ++i) {
+				dp[i] = i;
+			}
+
+			size_t i_index = 0;
+			for (iterator2 & i = b_begin; i != b_end; ++i) {
+				size_t dp_i1_j1 = i_index;
+				++i_index;
+
+				dp_type::iterator k_prev = dp.begin();
+				dp_type::iterator k = dp.begin() + 1;
+				*k_prev = i_index;
+
+				for (iterator1 j = a_begin; j != a_end; ++j) {
+					size_t modify = dp_i1_j1 + (equal(*j, *i) == true ? 0 : 1);
+					dp_i1_j1 = *k;
+
+					if (*k_prev < *k) {
+						*k = *k_prev;
+					}
+					++(*k);
+
+					if (modify < *k) {
+						*k = modify;
+					}
+
+					k_prev = k;
+					++k;
+				}
+			}
+
+			return dp.back();
+		}
+
+		template <typename ForwardIterator1, typename InputIterator2>
+		size_t edit_distance(ForwardIterator1 a_begin, ForwardIterator1 a_end, InputIterator2 b_begin, InputIterator2 b_end)
+		{
+			typedef typename std::iterator_traits<ForwardIterator1>::value_type value_type1;
+			typedef typename std::iterator_traits<InputIterator2>::value_type value_type2;
+			return edit_distance(a_begin, a_end, b_begin, b_end,
+					kerbal::algorithm::binary_type_equal_to<value_type1, value_type2>());
+		}
+
+		template <typename ForwardIterator1, typename InputIterator2, typename Compare>
+		size_t edit_distance_n(ForwardIterator1 a_begin, size_t a_len, InputIterator2 b_begin, size_t b_len, Compare equal)
+		{
+			typedef ForwardIterator1 iterator1;
+			typedef InputIterator2 iterator2;
+
+			typedef std::vector<size_t> dp_type;
+			dp_type dp(a_len + 1);
+			for (size_t i = 0; i < dp.size(); ++i) {
+				dp[i] = i;
+			}
+
+			size_t i_index = 0;
+			for (iterator2 & i = b_begin; true;) {
+				size_t dp_i1_j1 = i_index;
+				++i_index;
+
+				dp_type::iterator k_prev = dp.begin();
+				dp_type::iterator k = dp.begin() + 1;
+				*k_prev = i_index;
+
+				iterator1 j = a_begin;
+				for (size_t j_index = 0; j_index < a_len; ++j_index) {
+					size_t modify = dp_i1_j1 + (equal(*j, *i) == true ? 0 : 1);
+					dp_i1_j1 = *k;
+
+					if (*k_prev < *k) {
+						*k = *k_prev;
+					}
+					++(*k);
+
+					if (modify < *k) {
+						*k = modify;
+					}
+
+					k_prev = k;
+					++k;
+					++j;
+				}
+
+				if (i_index < b_len) {
+					++i;
+				} else {
+					break;
+				}
+			}
+
+			return dp.back();
+		}
+
+		template <typename ForwardIterator1, typename InputIterator2>
+		size_t edit_distance_n(ForwardIterator1 a_begin, size_t a_len, InputIterator2 b_begin, size_t b_len)
+		{
+			typedef typename std::iterator_traits<ForwardIterator1>::value_type value_type1;
+			typedef typename std::iterator_traits<InputIterator2>::value_type value_type2;
+			return edit_distance_n(a_begin, a_len, b_begin, b_len,
+					kerbal::algorithm::binary_type_equal_to<value_type1, value_type2>());
+		}
+
+	} /* namespace algorithm */
+
+} /* namespace kerbal */
 
 #endif /* INCLUDE_KERBAL_ALGORITHM_DYNAMIC_PROGRAMMING_HPP_ */
