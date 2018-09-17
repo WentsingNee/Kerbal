@@ -81,6 +81,48 @@ namespace kerbal
 				typedef Tp type;
 		};
 
+#	if __cplusplus >= 201103L
+
+		template <unsigned long long N, typename Type0, typename ... Args>
+		struct type_chooser;
+
+		template <typename Type0, typename ... Args>
+		struct type_chooser<0, Type0, Args...>
+		{
+				typedef Type0 type;
+		};
+
+		template <unsigned long long N, typename Type0, typename ... Args>
+		struct type_chooser
+		{
+				static_assert(N <= sizeof...(Args), "N is larger than the number of template type arguments");
+				typedef typename type_chooser<N - 1, Args...>::type type;
+		};
+
+#	endif
+
+		template <bool condition, typename TrueType, typename FalseType>
+		struct conditional
+		{
+				typedef TrueType type;
+		};
+
+		template <typename TrueType, typename FalseType>
+		struct conditional<false, TrueType, FalseType>
+		{
+				typedef FalseType type;
+		};
+
+		template <typename Tp, typename Up>
+		struct is_same : public kerbal::type_traits::false_type
+		{
+		};
+
+		template <typename Tp>
+		struct is_same<Tp, Tp> : public kerbal::type_traits::true_type
+		{
+		};
+
 	}
 }
 

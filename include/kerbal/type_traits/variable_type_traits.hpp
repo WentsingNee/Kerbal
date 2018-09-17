@@ -21,13 +21,13 @@ namespace kerbal
 		{
 
 			template <typename Tp>
-			KERBAL_CONSTEXPR bool is_same(const Tp &, const Tp &)
+			KERBAL_CONSTEXPR bool is_same(Tp &, Tp &)
 			{
 				return true;
 			}
 
 			template <typename Tp, typename Up>
-			KERBAL_CONSTEXPR bool is_same(const Tp &, const Up &)
+			KERBAL_CONSTEXPR bool is_same(Tp &, Up &)
 			{
 				return false;
 			}
@@ -83,21 +83,21 @@ namespace kerbal
 			}
 
 			template <typename Tp>
-			KERBAL_CONSTEXPR bool is_pointer_helper(const Tp &)
+			KERBAL_CONSTEXPR bool is_pointer(Tp const &)
 			{
 				return false;
 			}
 
 			template <typename Tp>
-			KERBAL_CONSTEXPR bool is_pointer_helper(Tp *)
+			KERBAL_CONSTEXPR bool is_pointer(Tp * const &)
 			{
 				return true;
 			}
 
 			template <typename Tp>
-			KERBAL_CONSTEXPR bool is_pointer(const Tp & src)
+			KERBAL_CONSTEXPR bool is_pointer(Tp * const volatile &)
 			{
-				return is_pointer_helper(src) && !is_array(src);
+				return true;
 			}
 
 		}
