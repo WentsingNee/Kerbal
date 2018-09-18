@@ -14,7 +14,11 @@
 #define INCLUDE_KERBAL_DATA_STRUCT_AUTO_QUEUE_HPP_
 
 #include <cctype>
-#include <initializer_list>
+#include <stdexcept>
+
+#if __cplusplus >= 201103L
+#	include <initializer_list>
+#endif
 
 namespace kerbal
 {
@@ -31,52 +35,10 @@ namespace kerbal
 				typedef Tp* pointer;
 				typedef const Tp* const_pointer;
 
-//			private:
-//				typedef class iterator
-//				{
-//					public:
-//						typedef Auto_queue::value_type value_type;
-//						typedef Auto_queue::const_type const_type;
-//						typedef Auto_queue::reference reference;
-//						typedef Auto_queue::const_reference const_reference;
-//						typedef Auto_queue::pointer pointer;
-//						typedef Auto_queue::const_pointer const_pointer;
-//
-//					private:
-//						pointer current;
-//
-//					public:
-//						explicit iterator(pointer current);
-//
-//						reference operator*() const;
-//						pointer operator->() const;
-//
-//						//前自增
-//						iterator& operator++();
-//						//后自增
-//						iterator operator++(int);
-//						iterator& operator--();
-//						iterator operator--(int);
-//
-//						iterator operator+(int delta);
-//						iterator operator-(int delta);
-//
-//						const iterator operator+(int delta) const;
-//						const iterator operator-(int delta) const;
-//
-//						bool operator==(const iterator & with) const;
-//						bool operator!=(const iterator & with) const;
-//						bool operator<(const iterator & with) const;
-//						bool operator<=(const iterator & with) const;
-//						bool operator>(const iterator & with) const;
-//						bool operator>=(const iterator & with) const;
-//
-//				} iterator;
-
 			private:
 				union
 				{
-						value_type p[N];
+						value_type p[N + 1];
 				};
 
 				pointer begin;
