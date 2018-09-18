@@ -14,6 +14,7 @@
 #define INCLUDE_KERBAL_DATA_STRUCT_AUTO_ARRAY_HPP_
 
 #include <cctype>
+#include <stdexcept>
 
 #if __cplusplus >= 201103L
 #	include <initializer_list>
@@ -69,16 +70,8 @@ namespace kerbal
 				typedef const_equal_c_array& const_equal_c_array_reference;
 
 				/// @brief Iterator to Auto_array.
-				typedef class iterator
+				typedef class iterator : public std::iterator<std::random_access_iterator_tag, Auto_array::value_type>
 				{
-					public:
-						typedef Auto_array::value_type value_type;
-						typedef Auto_array::const_type const_type;
-						typedef Auto_array::reference reference;
-						typedef Auto_array::const_reference const_reference;
-						typedef Auto_array::pointer pointer;
-						typedef Auto_array::const_pointer const_pointer;
-
 					private:
 						pointer current;
 
@@ -113,16 +106,8 @@ namespace kerbal
 				} iterator;
 
 				/// @brief Const_iterator to Auto_array.
-				typedef class const_iterator
+				typedef class const_iterator : public std::iterator<std::random_access_iterator_tag, Auto_array::const_type>
 				{
-					public:
-						typedef Auto_array::const_type value_type;
-						typedef Auto_array::const_type const_type;
-						typedef Auto_array::const_reference reference;
-						typedef Auto_array::const_reference const_reference;
-						typedef Auto_array::const_pointer pointer;
-						typedef Auto_array::const_pointer const_pointer;
-
 					private:
 						const_pointer current;
 
@@ -155,16 +140,8 @@ namespace kerbal
 				} const_iterator;
 
 				/// @brief Reverse_iterator to Auto_array.
-				typedef class reverse_iterator
+				typedef class reverse_iterator : public std::iterator<std::random_access_iterator_tag, Auto_array::value_type>
 				{
-					public:
-						typedef Auto_array::value_type value_type;
-						typedef Auto_array::const_type const_type;
-						typedef Auto_array::reference reference;
-						typedef Auto_array::const_reference const_reference;
-						typedef Auto_array::pointer pointer;
-						typedef Auto_array::const_pointer const_pointer;
-
 					private:
 						pointer current;
 
@@ -199,16 +176,8 @@ namespace kerbal
 				} reverse_iterator;
 
 				/// @brief Const_reverse_iterator to Auto_array.
-				typedef class const_reverse_iterator
+				typedef class const_reverse_iterator : public std::iterator<std::random_access_iterator_tag, Auto_array::const_type>
 				{
-					public:
-						typedef Auto_array::const_type value_type;
-						typedef Auto_array::const_type const_type;
-						typedef Auto_array::const_reference reference;
-						typedef Auto_array::const_reference const_reference;
-						typedef Auto_array::const_pointer pointer;
-						typedef Auto_array::const_pointer const_pointer;
-
 					private:
 						const_pointer current;
 
@@ -410,7 +379,7 @@ namespace kerbal
 				 * @brief 返回与该 Auto_array 所等价的 C 风格数组类型的引用, 方便与专门为 C 风格数组类型设计的 API 交互
 				 * @return 与该 Auto_array 所等价的 C 风格数组类型的引用
 				 * @warning 必须保证数组元素存满时才可调用此方法
-				 * @throw std::exception 当数组未满就调用此方法时, 抛出此异常
+				 * @throw std::exception Throw this exception when call this method while the array is not full
 				 */
 				equal_c_array_reference c_arr();
 				const_equal_c_array_reference const_c_arr() const;

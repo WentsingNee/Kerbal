@@ -22,28 +22,28 @@ namespace kerbal
 		typename Auto_queue<Tp, N>::pointer
 		Auto_queue<Tp, N>::next(pointer poi)
 		{
-			return (poi == p + N - 1) ? p : poi + 1;
+			return (poi == p + N) ? p : poi + 1;
 		}
 
 		template <typename Tp, size_t N>
 		typename Auto_queue<Tp, N>::const_pointer
 		Auto_queue<Tp, N>::next(const_pointer poi) const
 		{
-			return (poi == p + N - 1) ? p : poi + 1;
+			return (poi == p + N) ? p : poi + 1;
 		}
 
 		template <typename Tp, size_t N>
 		typename Auto_queue<Tp, N>::pointer
 		Auto_queue<Tp, N>::prev(pointer poi)
 		{
-			return (poi == p) ? p + N - 1 : poi - 1;
+			return (poi == p) ? p + N : poi - 1;
 		}
 
 		template <typename Tp, size_t N>
 		typename Auto_queue<Tp, N>::const_pointer
 		Auto_queue<Tp, N>::prev(const_pointer poi) const
 		{
-			return (poi == p) ? p + N - 1 : poi - 1;
+			return (poi == p) ? p + N : poi - 1;
 		}
 
 		template <typename Tp, size_t N>
@@ -56,14 +56,10 @@ namespace kerbal
 		Auto_queue<Tp, N>::Auto_queue(const Auto_queue & src) :
 				begin(p), end(p)
 		{
-			pointer i = begin;
-			const_pointer j = src.begin;
-
-			for (; j != src.end; i = this->next(i), j = src.next(j)) {
-				new (i) value_type(*j);
+			for (const_pointer j = src.begin; j != src.end; j = src.next(j)) {
+				new (end) value_type(*j);
+				end = this->next(end);
 			}
-
-			end = i;
 		}
 
 		template <typename Tp, size_t N>
@@ -71,12 +67,10 @@ namespace kerbal
 		Auto_queue<Tp, N>::Auto_queue(ForwardIterator src_begin, ForwardIterator src_end) :
 				begin(p), end(p)
 		{
-			pointer i = begin;
-			for (; src_begin != src_end && i != p + N; i = this->next(i), ++src_begin) {
-				new (i) value_type(*begin);
+			for (; src_begin != src_end && end != p + N; ++src_begin) {
+				new (end) value_type(*src_begin);
+				end = this->next(end);
 			}
-
-			end = i;
 		}
 
 #	if __cplusplus >= 201103L
@@ -95,12 +89,22 @@ namespace kerbal
 		{
 			clear();
 		}
+		
+		template <typename Tp, size_t N>
+		Auto_queue<Tp, N>& operator=(const Auto_queue<Tp, N> & src)
+		{
+			this->clear();
+			for (const_pointer j = src.begin; j != src.end; j = src.next(j)) {
+				new (end) value_type(*j);
+				end = this->next(end);
+			}
+		}
 
 		template <typename Tp, size_t N>
 		void Auto_queue<Tp, N>::push(const_reference val)
 		{
 			if (full()) {
-				throw std::exception();
+				throw std::logic_error("auto queue has been full!");
 			}
 
 			new (end) value_type(val);
@@ -108,32 +112,32 @@ namespace kerbal
 		}
 
 		template <typename Tp, size_t N>
-		void Auto_queue<Tp, N>::Auto_queue<Tp, N>::pop()
+		void Auto_queue<Tp, N>::pop()
 		{
 			if (empty()) {
-				throw std::exception();
+				throw std::logic_error("auto queue has been empty!");
 			}
 
-			end = this->prev(end);
-			end->~value_type();
+			begin->~value_type();
+			begin = this->next(begin);
 		}
 
 
 		template <typename Tp, size_t N>
 		void Auto_queue<Tp, N>::clear()
 		{
-			for (pointer i = begin; i != end; i = this->next(i)) {
-				i->~value_type();
+			for (; begin != end; begin = this->next(begin)) {
+				begin->~value_type();
 			}
 		}
 
 		template <typename Tp, size_t N>
 		size_t Auto_queue<Tp, N>::size() const
 		{
-			if (begin < end) {
+			if (begin <= end) {
 				return end - begin;
 			} else {
-				return N - (begin - end);
+				return N + 1 - (begin - end);
 			}
 		}
 
@@ -146,7 +150,7 @@ namespace kerbal
 		template <typename Tp, size_t N>
 		bool Auto_queue<Tp, N>::full() const
 		{
-
+			return this->size() == N;
 		}
 
 		template <typename Tp, size_t N>
@@ -154,7 +158,7 @@ namespace kerbal
 		Auto_queue<Tp, N>::front()
 		{
 			if (empty()) {
-				throw std::exception();
+				throw std::logic_error("empty queue!");
 			}
 			return *begin;
 		}
@@ -164,18 +168,30 @@ namespace kerbal
 		Auto_queue<Tp, N>::front() const
 		{
 			if (empty()) {
-				throw std::exception();
+				throw std::logic_error("empty queue!");
 			}
 			return *begin;
 		}
 
 		template <typename Tp, size_t N>
 		typename Auto_queue<Tp, N>::reference
-		Auto_queue<Tp, N>::back();
+		Auto_queue<Tp, N>::back()
+		{
+			if (empty()) {
+				throw std::logic_error("empty queue!");
+			}
+			return *this->prev(end);
+		}
 
 		template <typename Tp, size_t N>
 		typename Auto_queue<Tp, N>::const_reference
-		Auto_queue<Tp, N>::back() const;
+		Auto_queue<Tp, N>::back() const
+		{
+			if (empty()) {
+				throw std::logic_error("empty queue!");
+			}
+			return *this->prev(end);
+		}
 
 	}
 }
