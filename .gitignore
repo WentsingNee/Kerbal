@@ -5,3 +5,5 @@
 /.cproject
 >>>>>>> branch 'master' of https://git.coding.net/WentsingNee/Kerbal.git
 /doc/
+/cmake-build-debug/
+/CMakeLists.txt
