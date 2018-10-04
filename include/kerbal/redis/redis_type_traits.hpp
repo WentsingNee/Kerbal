@@ -10,174 +10,244 @@
 
 #include <string>
 #include <type_traits>
-#include <kerbal/type_traits/type_traits.hpp>
 #include <kerbal/redis/united_string_helper.hpp>
-
-#include <chrono>
 
 namespace kerbal
 {
 	namespace redis
 	{
 
+#if __cplusplus < 201103L
+		struct not_redis_key_type
+		{
+				enum
+				{
+					is_key_type = 0
+				}
+		};
+
+		struct redis_key_type
+		{
+				enum
+				{
+					is_key_type = 1
+				}
+		};
+
+		struct execute_disallowed_type: public not_redis_key_type
+		{
+				enum
+				{
+					is_execute_allowed_type = 0
+				}
+		};
+
+		struct execute_allowed_type
+		{
+				enum
+				{
+					is_execute_allowed_type = 1
+				}
+		};
+
+		template <bool is_key_type>
+		struct execute_allowed_type;
+
+		template <>
+		struct execute_allowed_type<false>: public not_redis_key_type
+		{
+				enum
+				{
+					is_execute_allowed_type = 1
+				}
+		};
+
+		template <>
+		struct execute_allowed_type<true>: public redis_key_type
+		{
+				enum
+				{
+					is_execute_allowed_type = 1
+				}
+		};
+#else
+		struct not_redis_key_type
+		{
+				static constexpr bool is_key_type = false;
+		};
+
+		struct redis_key_type
+		{
+				static constexpr bool is_key_type = true;
+		};
+
+		struct execute_disallowed_type: public not_redis_key_type
+		{
+				static constexpr bool is_execute_allowed_type = false;
+		};
+
+		template <bool is_key_type>
+		struct execute_allowed_type;
+
+		template <>
+		struct execute_allowed_type<false>: public not_redis_key_type
+		{
+				static constexpr bool is_execute_allowed_type = true;
+		};
+
+		template <>
+		struct execute_allowed_type<true>: public redis_key_type
+		{
+				static constexpr bool is_execute_allowed_type = true;
+		};
+#endif
+
+
+#	if __cplusplus < 201703L
+		typedef const char * placeholder_type;
+#	else
+		typedef char placeholder_type[];
+#	endif
+
+
+		struct string_type_placeholder
+		{
+				static constexpr placeholder_type placeholder = "%s";
+		};
+
 		template <typename Type>
-		struct is_redis_key_type : kerbal::type_traits::false_type
-		{
-			using namespace std::chrono;
-			auto s = 5min;
-		};
+		struct redis_type_traits;
 
-		template <>
-		struct is_redis_key_type<std::string> : kerbal::type_traits::true_type
+#if __cplusplus < 201103L
+		template <typename Type>
+		struct redis_type_traits : public execute_disallowed_type
 		{
 		};
-
-		template <size_t N>
-		struct is_redis_key_type<char[N]> : kerbal::type_traits::true_type
+#else
+		template <typename Type>
+		struct redis_type_traits : public std::conditional<std::is_enum<Type>::value,
+															redis_type_traits<int>,
+															execute_disallowed_type>::type
 		{
 		};
-
-		template <>
-		struct is_redis_key_type<char*> : kerbal::type_traits::true_type
-		{
-		};
-
-		template <size_t N>
-		struct is_redis_key_type<const char[N]> : kerbal::type_traits::true_type
-		{
-		};
-
-		template <>
-		struct is_redis_key_type<const char*> : kerbal::type_traits::true_type
-		{
-		};
-
+#endif
 
 		template <typename Type>
-		struct is_redis_excute_allow_type : kerbal::type_traits::conditional<is_redis_key_type<Type>::value,
-											kerbal::type_traits::true_type,
-											kerbal::type_traits::false_type>::type
+		struct redis_type_traits<const Type> : public redis_type_traits<Type>
+		{
+		};
+
+		template <typename Type>
+		struct redis_type_traits<Type&> : public redis_type_traits<Type>
+		{
+		};
+
+		template <typename Type>
+		struct redis_type_traits<const Type&> : public redis_type_traits<Type>
 		{
 		};
 
 		template <>
-		struct is_redis_excute_allow_type<int> : kerbal::type_traits::true_type
+		struct redis_type_traits<RedisUnitedStringHelper> : public execute_allowed_type<true>, string_type_placeholder
 		{
 		};
-
 		template <>
-		struct is_redis_excute_allow_type<unsigned int> : kerbal::type_traits::true_type
+		struct redis_type_traits<std::string> : public execute_allowed_type<true>, string_type_placeholder
 		{
 		};
-
 		template <>
-		struct is_redis_excute_allow_type<long> : kerbal::type_traits::true_type
+		struct redis_type_traits<char*> : public execute_allowed_type<true>, string_type_placeholder
 		{
 		};
-
 		template <>
-		struct is_redis_excute_allow_type<unsigned long> : kerbal::type_traits::true_type
+		struct redis_type_traits<const char*> : public execute_allowed_type<true>, string_type_placeholder
 		{
 		};
-
 		template <>
-		struct is_redis_excute_allow_type<long long> : kerbal::type_traits::true_type
+		struct redis_type_traits<char[]> : public execute_allowed_type<true>, string_type_placeholder
 		{
 		};
-
-		template <>
-		struct is_redis_excute_allow_type<unsigned long long> : kerbal::type_traits::true_type
-		{
-		};
-
-		template <>
-		struct is_redis_excute_allow_type<float> : kerbal::type_traits::true_type
-		{
-		};
-
-		template <>
-		struct is_redis_excute_allow_type<double> : kerbal::type_traits::true_type
-		{
-		};
-
-		template <>
-		struct is_redis_excute_allow_type<long double> : kerbal::type_traits::true_type
-		{
-		};
-
-
-		template <typename >
-		struct placeholder_traits;
-
-		template <>
-		struct placeholder_traits<std::string>
-		{
-				static constexpr char value[] = "%s";
-		};
-
-		template <>
-		struct placeholder_traits<const char *>
-		{
-				static constexpr char value[] = "%s";
-		};
-
 		template <size_t N>
-		struct placeholder_traits<char[N]>
+		struct redis_type_traits<char[N]> : public execute_allowed_type<true>, string_type_placeholder
 		{
-				static constexpr char value[] = "%s";
-		};
-
-		template <size_t N>
-		struct placeholder_traits<const char[N]>
-		{
-				static constexpr char value[] = "%s";
 		};
 
 		template <>
-		struct placeholder_traits<int>
+		struct redis_type_traits<bool> : public execute_allowed_type<false>
 		{
-				static constexpr char value[] = "%d";
+				static constexpr placeholder_type placeholder = "%d";
+		};
+
+		template <>
+		struct redis_type_traits<char> : public execute_allowed_type<false>
+		{
+				static constexpr placeholder_type placeholder = "%s";
 		};
 		template <>
-		struct placeholder_traits<unsigned int>
+		struct redis_type_traits<signed char> : public execute_allowed_type<false>
 		{
-				static constexpr char value[] = "%u";
+				static constexpr placeholder_type placeholder = "%s";
 		};
 		template <>
-		struct placeholder_traits<long>
+		struct redis_type_traits<unsigned char> : public execute_allowed_type<false>
 		{
-				static constexpr char value[] = "%ld";
+				static constexpr placeholder_type placeholder = "%s";
+		};
+
+		template <>
+		struct redis_type_traits<int> : public execute_allowed_type<false>
+		{
+				static constexpr placeholder_type placeholder = "%d";
 		};
 		template <>
-		struct placeholder_traits<unsigned long>
+		struct redis_type_traits<unsigned int> : public execute_allowed_type<false>
 		{
-				static constexpr char value[] = "%lu";
+				static constexpr placeholder_type placeholder = "%u";
+		};
+
+		template <>
+		struct redis_type_traits<long> : public execute_allowed_type<false>
+		{
+				static constexpr placeholder_type placeholder = "%ld";
 		};
 		template <>
-		struct placeholder_traits<long long>
+		struct redis_type_traits<unsigned long> : public execute_allowed_type<false>
 		{
-				static constexpr char value[] = "%lld";
+				static constexpr placeholder_type placeholder = "%lu";
+		};
+
+		template <>
+		struct redis_type_traits<long long> : public execute_allowed_type<false>
+		{
+				static constexpr placeholder_type placeholder = "%lld";
 		};
 		template <>
-		struct placeholder_traits<unsigned long long>
+		struct redis_type_traits<unsigned long long> : public execute_allowed_type<false>
 		{
-				static constexpr char value[] = "%llu";
+				static constexpr placeholder_type placeholder = "%llu";
+		};
+
+		template <>
+		struct redis_type_traits<float> : public execute_allowed_type<false>
+		{
+				static constexpr placeholder_type placeholder = "%f";
 		};
 		template <>
-		struct placeholder_traits<float>
+		struct redis_type_traits<double> : public execute_allowed_type<false>
 		{
-				static constexpr char value[] = "%f";
+				static constexpr placeholder_type placeholder = "%f";
 		};
 		template <>
-		struct placeholder_traits<double>
+		struct redis_type_traits<long double> : public execute_allowed_type<false>
 		{
-				static constexpr char value[] = "%f";
+				static constexpr placeholder_type placeholder = "%f";
 		};
-		template <>
-		struct placeholder_traits<long double>
-		{
-				static constexpr char value[] = "%f";
-		};
+
+
+#	ifdef __cpp_concepts
+		template <typename Type>
+		concept bool Redis_execute_allowed_type = redis_type_traits<Type>::is_execute_allowed_type;
+#	endif
 
 		template<typename Type>
 		struct CheckIsIntegerType : public
@@ -197,10 +267,6 @@ namespace kerbal
 		{
 		};
 
-#	ifdef __cpp_concepts
-		template <typename Type>
-		concept bool Redis_execute_allowed_type = redis_type_traits<Type>::is_execute_allowed_type;
-#	endif
 
 	}
 }

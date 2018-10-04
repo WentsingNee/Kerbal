@@ -23,5 +23,14 @@
 #	define KERBAL_CONSTEXPR
 #endif
 
+#ifdef KERBAL_NOEXCEPT
+#	undef KERBAL_NOEXCEPT
+#endif
+#if __cplusplus >= 201103L
+#	define KERBAL_NOEXCEPT noexcept
+#else
+#	define KERBAL_NOEXCEPT throw()
+#endif
+
 
 #endif /* INCLUDE_KERBAL_COMPATIBILITY_COMPATIBILITY_MACRO_HPP_ */

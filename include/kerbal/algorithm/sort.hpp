@@ -165,15 +165,14 @@ namespace kerbal
 		template <typename RandomAccessIterator, typename CompareFuntion>
 		void merge_sort(RandomAccessIterator begin, RandomAccessIterator end, CompareFuntion cmp)
 		{
-			using kerbal::algorithm::next;
 			typedef RandomAccessIterator iterator;
 			typedef typename std::iterator_traits<iterator>::difference_type difference_type;
 			typedef typename std::iterator_traits<iterator>::value_type type;
 
-			if (next(begin) != end) {
+			if (kerbal::algorithm::next(begin) != end) {
 				difference_type len = std::distance(begin, end);
 
-				iterator mid = next(begin, len / 2);
+				iterator mid = kerbal::algorithm::next(begin, len / 2);
 				merge_sort(begin, mid, cmp);
 				merge_sort(mid, end, cmp);
 
@@ -204,7 +203,7 @@ namespace kerbal
 					std::copy(p, k, begin);
 
 				} catch (...) {
-					for (type * it = p; i != k; ++i) {
+					for (type * it = p; it != k; ++it) {
 						it->~type();
 					}
 					free(p);
