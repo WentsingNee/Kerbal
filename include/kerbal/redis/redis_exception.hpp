@@ -60,17 +60,6 @@ namespace kerbal
 				}
 		};
 
-		class RedisHgetNilException: public RedisNilException
-		{
-			public:
-				const std::string fieldName;
-
-				RedisHgetNilException(const std::string & keyName, const std::string & fieldName) :
-					RedisNilException(keyName), fieldName(fieldName)
-				{
-				}
-		};
-
 		/**
 		 * @brief Exception occurred when hiredis returns an unexpected reply type.
 		 */
@@ -79,8 +68,7 @@ namespace kerbal
 			public:
 				const std::string execute_command;
 
-				RedisUnexpectedCaseException(RedisReplyType unexpectedType,
-						const std::string & execute_command = "(unknown command)") :
+				RedisUnexpectedCaseException(RedisReplyType unexpectedType, const std::string & execute_command = "(unknown command)") :
 						RedisException("redis returns an unexpected type: " + redisReplyTypeName(unexpectedType) + " when execute command: " + execute_command), execute_command(execute_command)
 				{
 				}

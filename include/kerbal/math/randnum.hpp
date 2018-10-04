@@ -1,14 +1,109 @@
 #ifndef _RANDNUM_HPP_
 #define _RANDNUM_HPP_
 
+#include <kerbal/utility/functor.hpp>
 #include <utility>
-#include <kerbal/utility/real_functor.hpp>
 #include <time.h>
+#include <fstream>
+#include <limits>
 
 namespace kerbal
 {
 	namespace math
 	{
+
+		template <typename ReturnType, ReturnType a, ReturnType c, ReturnType m>
+		class linear_congruential_engine
+		{
+			public:
+				typedef ReturnType result_type;
+
+			private:
+				result_type state_value;
+
+			public:
+
+				explicit linear_congruential_engine(const result_type & seed = 0u) noexcept :
+						state_value(seed % m == 0u ? 1u : seed)
+				{
+				}
+
+				result_type operator()() noexcept
+				{
+					state_value = (a * state_value + c) % m;
+					return state_value;
+				}
+
+				void discard(unsigned long long times) noexcept
+				{
+					for (; times != 0ULL; --times) {
+						state_value = (a * state_value + c) % m;
+					}
+				}
+
+				void seed(const result_type & seed = 0u)
+				{
+					state_value = (seed % m == 0u ? 1u : seed);
+				}
+
+				static constexpr result_type min() noexcept
+				{
+					return c == 0u ? 1u : 0u;
+				}
+
+				static constexpr result_type max() noexcept
+				{
+					return m - 1u;
+				}
+		};
+
+		typedef linear_congruential_engine<size_t, 16807UL, 0UL, 2147483647UL> default_linear_congruential_engine;
+
+		template <typename ReturnType>
+		class dev_random_engine
+		{
+			public:
+				typedef ReturnType result_type;
+
+			private:
+				std::ifstream fin;
+
+			public:
+
+				explicit dev_random_engine(const std::string & fpath) :
+						fin(fpath)
+				{
+					if (!fin) {
+						throw std::runtime_error("random device open failed");
+					}
+				}
+
+				result_type operator()()
+				{
+					result_type ret;
+					fin.read(reinterpret_cast<char*>(&ret), sizeof(result_type));
+
+					return ret;
+				}
+
+				void discard(unsigned long long times)
+				{
+					for (; times != 0ULL; --times) {
+						fin.ignore(sizeof(result_type));
+					}
+				}
+
+				static constexpr result_type min() noexcept
+				{
+					return std::numeric_limits<result_type>::min();
+				}
+
+				static constexpr result_type max() noexcept
+				{
+					return std::numeric_limits<result_type>::max();
+				}
+		};
+
 		namespace randnum
 		{
 
@@ -27,18 +122,18 @@ namespace kerbal
 			}
 
 			template <typename type = double>
-			struct rand_type_between: public kerbal::utility::Functor<type>
+			struct rand_type_between: public kerbal::utility::functor<type>
 			{
 					rand_type_between(const type & min, const type & max)
 					{
 						do {
-							kerbal::utility::Functor<type>::value = (type) rand_between(min, max);
-						} while (kerbal::utility::Functor<type>::value == max);
+							kerbal::utility::functor<type>::value = (type) rand_between(min, max);
+						} while (kerbal::utility::functor<type>::value == max);
 					}
 			};
 
 			template <>
-			struct rand_type_between<double> : public kerbal::utility::Functor<double>
+			struct rand_type_between<double> : public kerbal::utility::functor<double>
 			{
 					rand_type_between(double min, double max) :
 							init(rand_between(min, max))
