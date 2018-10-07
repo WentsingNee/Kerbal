@@ -6,9 +6,9 @@
 #include <iostream>
 #include <string>
 #include <kerbal/compatibility/tick_count.h>
-#include <kerbal/utility/delete_cpy_and_assign.hpp>
+#include <kerbal/utility/noncopyable.hpp>
 
-class runtime_timer: virtual public kerbal::utility::Delete_cpy_and_assign<runtime_timer>
+class runtime_timer: virtual public kerbal::utility::nonassignable, public kerbal::utility::noncopyable
 {
 	protected:
 		const unsigned long start_time;

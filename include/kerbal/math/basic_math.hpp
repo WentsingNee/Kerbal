@@ -91,28 +91,92 @@ namespace kerbal
 			/**
 			 * @brief 计算两数相除的余数。结果的符号与除数相同
 			 */
-			double baremainder(double numerator, double denominator);
+			inline double baremainder(double numerator, double denominator)
+			{
+				int quotient;
+				double rate = numerator / denominator;
+				if (rate > 0) {
+					quotient = rate;
+				} else {
+					quotient = (int) (rate) - 1;
+				}
+				return numerator - denominator * quotient;
+			}
 
-			unsigned short float_num(double a, double digits); //BUG
-			double up(double x, int digits);
+			inline unsigned short float_num(double a, double digits) //BUG
+			{
+				return abs((int) (10 * decimal(a * pow(10, -digits))));
+			}
+
+			inline double up(double x, int digits)
+			{
+				if (x >= 0) {
+
+					if (float_num(x, digits - 1) <= 4) {
+						x += 5 * pow(10, digits - 1);
+					}
+
+					return (int) (x * pow(10, -digits) + 0.5) / pow(10, -digits);
+				} else {
+					return -(int) (-x * pow(10, -digits) + 0.5) / pow(10, -digits);
+				}
+			}
 
 			/**
 			 * @brief 返回两数的最大公约数
 			 */
-			int gcd(int a, int b);
+			inline int gcd(int a, int b)
+			{
+				int temp;
+				while (b) {
+					temp = b;
+					b = a % b;
+					a = temp;
+				}
+				return a;
+			}
 
 			/**
 			 * @brief 返回两数的最小公倍数
 			 */
-			int lcm(int a, int b);
+			inline int lcm(int a, int b)
+			{
+				return a / gcd(a, b) * b;
+			}
 
 			/**
 			 * @brief 判断一个数是否为素数
 			 */
-			bool is_prime(int x);
+			inline bool is_prime(int x)
+			{
+				for (int i = 2; i * i <= x; ++i) {
+					if ((x % i) == 0) {
+						return false;
+					}
+				}
+				return true;
+			}
 
-			double big_pow(double base, double exponent, int &exponent_result);
-			double big_fact(unsigned int n, int &exponent_result);
+			inline double big_pow(double base, double exponent, int &exponent_result)
+			{
+				double exponent_temp = exponent * log10(base);
+				exponent_result = (int) (exponent_temp);
+				return pow(10, decimal(exponent_temp));
+			}
+
+			inline double big_fact(unsigned int n, int &exponent_result)
+			{
+				unsigned int i;
+				double exponent_temp = 0;
+
+				if (n >= 2) {
+					for (i = 2; i <= n; i++) {
+						exponent_temp += log10(i);
+					}
+				}
+				exponent_result = (int) (exponent_temp);
+				return pow(10, decimal(exponent_temp));
+			}
 
 			std::string fraction(double a);
 

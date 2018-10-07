@@ -1,5 +1,5 @@
 /**
- * @file		auto_array.hpp
+ * @file		static_array.hpp
  * @brief
  * @date		2018年4月28日
  * @author		Peter
@@ -10,8 +10,8 @@
  <a href="http://www.nuist.edu.cn/">Nanjing University of Information Science & Technology</a>
  */
 
-#ifndef INCLUDE_KERBAL_DATA_STRUCT_AUTO_ARRAY_HPP_
-#define INCLUDE_KERBAL_DATA_STRUCT_AUTO_ARRAY_HPP_
+#ifndef INCLUDE_KERBAL_DATA_STRUCT_STATIC_ARRAY_HPP_
+#define INCLUDE_KERBAL_DATA_STRUCT_STATIC_ARRAY_HPP_
 
 #include <cctype>
 #include <stdexcept>
@@ -41,7 +41,7 @@ namespace kerbal
 		 * @tparam N The maximum number of elements that the array can hold.
 		 */
 		template <typename Tp, size_t N>
-		class Auto_array
+		class static_array
 		{
 			public:
 
@@ -70,7 +70,7 @@ namespace kerbal
 				typedef const_equal_c_array& const_equal_c_array_reference;
 
 				/// @brief Iterator to Auto_array.
-				typedef class iterator : public std::iterator<std::random_access_iterator_tag, Auto_array::value_type>
+				typedef class iterator : public std::iterator<std::random_access_iterator_tag, static_array::value_type>
 				{
 					private:
 						pointer current;
@@ -78,7 +78,7 @@ namespace kerbal
 					public:
 						explicit iterator(pointer current);
 
-						operator typename Auto_array::const_iterator();
+						operator typename static_array::const_iterator();
 
 						reference operator*() const;
 						pointer operator->() const;
@@ -90,11 +90,13 @@ namespace kerbal
 						iterator& operator--();
 						iterator operator--(int);
 
-						iterator operator+(int delta);
-						iterator operator-(int delta);
+						iterator operator+(const typename iterator::difference_type & delta) const;
+						iterator operator-(const typename iterator::difference_type & delta) const;
 
-						const iterator operator+(int delta) const;
-						const iterator operator-(int delta) const;
+						typename iterator::difference_type operator-(const iterator & with) const;
+
+						iterator& operator+=(const typename iterator::difference_type & delta);
+						iterator& operator-=(const typename iterator::difference_type & delta);
 
 						bool operator==(const iterator & with) const;
 						bool operator!=(const iterator & with) const;
@@ -106,7 +108,7 @@ namespace kerbal
 				} iterator;
 
 				/// @brief Const_iterator to Auto_array.
-				typedef class const_iterator : public std::iterator<std::random_access_iterator_tag, Auto_array::const_type>
+				typedef class const_iterator : public std::iterator<std::random_access_iterator_tag, static_array::const_type>
 				{
 					private:
 						const_pointer current;
@@ -124,11 +126,13 @@ namespace kerbal
 						const_iterator& operator--();
 						const_iterator operator--(int);
 
-						const_iterator operator+(int delta);
-						const_iterator operator-(int delta);
+						const_iterator operator+(const typename const_iterator::difference_type & delta) const;
+						const_iterator operator-(const typename const_iterator::difference_type & delta) const;
 
-						const const_iterator operator+(int delta) const;
-						const const_iterator operator-(int delta) const;
+						typename const_iterator::difference_type operator-(const const_iterator & with) const;
+
+						const_iterator& operator+=(const typename const_iterator::difference_type & delta);
+						const_iterator& operator-=(const typename const_iterator::difference_type & delta);
 
 						bool operator==(const const_iterator & with) const;
 						bool operator!=(const const_iterator & with) const;
@@ -140,7 +144,7 @@ namespace kerbal
 				} const_iterator;
 
 				/// @brief Reverse_iterator to Auto_array.
-				typedef class reverse_iterator : public std::iterator<std::random_access_iterator_tag, Auto_array::value_type>
+				typedef class reverse_iterator : public std::iterator<std::random_access_iterator_tag, static_array::value_type>
 				{
 					private:
 						pointer current;
@@ -148,7 +152,7 @@ namespace kerbal
 					public:
 						explicit reverse_iterator(pointer current);
 
-						operator typename Auto_array::const_reverse_iterator();
+						operator typename static_array::const_reverse_iterator();
 
 						reference operator*() const;
 						pointer operator->() const;
@@ -176,7 +180,7 @@ namespace kerbal
 				} reverse_iterator;
 
 				/// @brief Const_reverse_iterator to Auto_array.
-				typedef class const_reverse_iterator : public std::iterator<std::random_access_iterator_tag, Auto_array::const_type>
+				typedef class const_reverse_iterator : public std::iterator<std::random_access_iterator_tag, static_array::const_type>
 				{
 					private:
 						const_pointer current;
@@ -232,13 +236,13 @@ namespace kerbal
 
 			public:
 				/** @brief Empty container constructor (Default constructor) */
-				Auto_array();
+				static_array();
 
 				/**
 				 * @brief Copy constructor
 				 * @param src Another Auto_array object of the same type (must have the same template arguments type and N)
 				 */
-				Auto_array(const Auto_array & src);
+				static_array(const static_array & src);
 
 #			if __cplusplus >= 201103L
 
@@ -248,7 +252,7 @@ namespace kerbal
 				 * @warning Compile terminate if the length of the initializer list large than the arg N of the Auto_array
 				 * @warning The constructor only be provided under the environment of C++11 standard
 				 */
-				Auto_array(std::initializer_list<value_type> src);
+				static_array(std::initializer_list<value_type> src);
 #			endif
 
 				/**
@@ -260,12 +264,12 @@ namespace kerbal
 				 *          will be used. The others will be ignored.
 				 */
 				template<typename InputIterator>
-				Auto_array(InputIterator begin, InputIterator end);
+				static_array(InputIterator begin, InputIterator end);
 
 				/**
 				 * @brief 析构函数
 				 */
-				~Auto_array();
+				~static_array();
 
 				/**
 				 * @brief Assign the array by using n value(s).
@@ -284,7 +288,7 @@ namespace kerbal
 				template <typename InputIterator>
 				void assign(InputIterator begin, InputIterator end);
 
-				Auto_array& operator=(const Auto_array & src);
+				static_array& operator=(const static_array & src);
 
 #if __cplusplus >= 201103L
 				/**
@@ -292,7 +296,7 @@ namespace kerbal
 				 * @param src the initializer list
 				 * @return the reference to the array be assigned
 				 */
-				Auto_array& operator=(std::initializer_list<value_type> src);
+				static_array& operator=(std::initializer_list<value_type> src);
 #endif
 
 				/**
@@ -306,6 +310,14 @@ namespace kerbal
 				 * @param src
 				 */
 				void push_back(const value_type & src);
+
+#			if __cplusplus >= 201103L
+				/**
+				 * @brief 在数组末尾插入参数 src 指定的元素
+				 * @param src
+				 */
+				void push_back(value_type && src);
+#			endif
 
 				/**
 				 * @brief 移除数组末尾的元素
@@ -406,7 +418,7 @@ namespace kerbal
 				 * @brief Swap the array with another one.
 				 * @param with another array to be swaped with
 				 */
-				void swap(Auto_array & with);
+				void swap(static_array & with);
 
 				/**
 				 * @brief Judege whether the array is empty.
@@ -445,18 +457,18 @@ namespace kerbal
 				template<typename JudgeFunction>
 				const_reverse_iterator rfind_if(JudgeFunction judge_function) const;
 
-				bool operator==(const Auto_array & with) const;
-				bool operator!=(const Auto_array & with) const;
-				bool operator<(const Auto_array & with) const;
-				bool operator<=(const Auto_array & with) const;
-				bool operator>(const Auto_array & with) const;
-				bool operator>=(const Auto_array & with) const;
+				bool operator==(const static_array & with) const;
+				bool operator!=(const static_array & with) const;
+				bool operator<(const static_array & with) const;
+				bool operator<=(const static_array & with) const;
+				bool operator>(const static_array & with) const;
+				bool operator>=(const static_array & with) const;
 		};
 
 	}
 }
 
-#include <kerbal/data_struct/auto_container_base/auto_array_base.hpp>
-#include <kerbal/data_struct/auto_container_base/auto_array_iterator.hpp>
+#include <kerbal/data_struct/static_container_base/static_array_base.hpp>
+#include <kerbal/data_struct/static_container_base/static_array_iterator.hpp>
 
-#endif /* INCLUDE_KERBAL_DATA_STRUCT_AUTO_ARRAY_HPP_ */
+#endif /* INCLUDE_KERBAL_DATA_STRUCT_STATIC_ARRAY_HPP_ */

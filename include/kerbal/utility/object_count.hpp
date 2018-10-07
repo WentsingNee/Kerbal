@@ -9,75 +9,68 @@
 #define INCLUDE_KERBAL_UTILITY_OBJECT_COUNT_HPP_
 
 #include <cstddef>
+#include <kerbal/utility/noncopyable.hpp>
 
 namespace kerbal
 {
 	namespace utility
 	{
 		template <typename ObjectType, typename CountingType = size_t>
-		struct Object_count
+		struct object_count : virtual public kerbal::utility::nonassignable, public kerbal::utility::noncopyable
 		{
 			public:
 				typedef CountingType counting_type;
 
-				typedef class CountingTypePackage
+				typedef class counting_type_wrapper
 				{
 					protected:
-						friend class Object_count;
+						friend class object_count;
 						CountingType c;
 
 					public:
-						CountingTypePackage() :
+						counting_type_wrapper() :
 								c(0)
 						{
 						}
 
 					protected:
 
-#					if __cplusplus >= 201103L
-						CountingTypePackage(const CountingTypePackage&) = delete;
-						CountingTypePackage& operator=(const CountingTypePackage&) = delete;
-#					else
-						CountingTypePackage(const CountingTypePackage&);
-						CountingTypePackage& operator=(const CountingTypePackage&);
-#					endif
-
-						CountingTypePackage& operator++()
+						counting_type_wrapper& operator++()
 						{
 							++c;
 							return *this;
 						}
 
-						CountingTypePackage operator++(int)
+						counting_type_wrapper operator++(int)
 						{
-							CountingTypePackage tmp(*this);
+							counting_type_wrapper tmp(*this);
 							++c;
 							return tmp;
 						}
 
-						CountingTypePackage& operator--()
+						counting_type_wrapper& operator--()
 						{
 							--c;
 							return *this;
 						}
 
-						CountingTypePackage operator--(int)
+						counting_type_wrapper operator--(int)
 						{
-							CountingTypePackage tmp(*this);
+							counting_type_wrapper tmp(*this);
 							--c;
 							return tmp;
 						}
-				} CountingTypePackage;
+				} counting_type_wrapper;
 
-				static CountingTypePackage count;
+				static counting_type_wrapper count;
 
 			protected:
-				Object_count()
+				object_count()
 				{
 					++count;
 				}
 
-				~Object_count()
+				~object_count()
 				{
 					--count;
 				}
@@ -91,8 +84,8 @@ namespace kerbal
 
 		template <typename ObjectType, typename CountingType>
 		extern
-		typename Object_count<ObjectType, CountingType>::CountingTypePackage
-		Object_count<ObjectType, CountingType>::count;
+		typename object_count<ObjectType, CountingType>::counting_type_wrapper
+		object_count<ObjectType, CountingType>::count;
 
 	} /* namespace utility */
 
