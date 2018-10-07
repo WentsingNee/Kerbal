@@ -13,44 +13,13 @@
 #ifndef INCLUDE_KERBAL_TYPE_TRAITS_TYPE_TRAITS_HPP_
 #define INCLUDE_KERBAL_TYPE_TRAITS_TYPE_TRAITS_HPP_
 
+#include <cstddef>
 #include <kerbal/compatibility/compatibility_macro.hpp>
 
 namespace kerbal
 {
 	namespace type_traits
 	{
-
-#	if __cplusplus < 201103L
-
-		struct false_type
-		{
-				enum
-				{
-					value = 0
-				};
-		};
-
-		struct true_type
-		{
-				enum
-				{
-					value = 1
-				};
-		};
-
-#	else
-
-		struct false_type
-		{
-			static constexpr bool value = false;
-		};
-
-		struct true_type
-		{
-			static constexpr bool value = true;
-		};
-
-#	endif
 
 		template <typename Type, Type val>
 		struct integral_constant
@@ -68,6 +37,14 @@ namespace kerbal
 				{
 					return value;
 				}
+		};
+
+		struct false_type : integral_constant<bool, false>
+		{
+		};
+
+		struct true_type : integral_constant<bool, true>
+		{
 		};
 
 		template <bool condition, typename Tp = void>
@@ -114,12 +91,128 @@ namespace kerbal
 		};
 
 		template <typename Tp, typename Up>
-		struct is_same : public kerbal::type_traits::false_type
+		struct is_same : kerbal::type_traits::false_type
 		{
 		};
 
 		template <typename Tp>
-		struct is_same<Tp, Tp> : public kerbal::type_traits::true_type
+		struct is_same<Tp, Tp> : kerbal::type_traits::true_type
+		{
+		};
+
+		template <typename Tp>
+		struct is_reference : kerbal::type_traits::false_type
+		{
+		};
+
+		template <typename Tp>
+		struct is_reference<Tp&> : kerbal::type_traits::true_type
+		{
+		};
+
+#	if __cplusplus >= 201103L
+
+		template <typename Tp>
+		struct is_reference<Tp&&> : kerbal::type_traits::true_type
+		{
+		};
+
+#	endif
+
+		template <typename Tp>
+		struct remove_reference
+		{
+				typedef Tp type;
+		};
+
+		template <typename Tp>
+		struct remove_reference<Tp&>
+		{
+				typedef Tp type;
+		};
+
+#	if __cplusplus >= 201103L
+
+		template <typename Tp>
+		struct remove_reference<Tp&&>
+		{
+				typedef Tp type;
+		};
+
+#	endif
+
+		template <typename >
+		struct is_const: kerbal::type_traits::false_type
+		{
+		};
+
+		template <typename Tp>
+		struct is_const<Tp const> : kerbal::type_traits::true_type
+		{
+		};
+
+		/// is_volatile
+		template <typename >
+		struct is_volatile: kerbal::type_traits::false_type
+		{
+		};
+
+		template <typename Tp>
+		struct is_volatile<Tp volatile> : kerbal::type_traits::true_type
+		{
+		};
+
+		template <typename Tp>
+		struct remove_const
+		{
+				typedef Tp type;
+		};
+
+		template <typename Tp>
+		struct remove_const<Tp const>
+		{
+				typedef Tp type;
+		};
+
+		template <typename Tp>
+		struct remove_volatile
+		{
+				typedef Tp type;
+		};
+
+		template <typename Tp>
+		struct remove_volatile<Tp volatile>
+		{
+				typedef Tp type;
+		};
+
+		template <typename Tp>
+		struct remove_cv
+		{
+				typedef typename remove_const<typename remove_volatile<Tp>::type>::type type;
+		};
+
+		template <typename Type>
+		struct is_char_array : kerbal::type_traits::conditional<
+										kerbal::type_traits::is_reference<Type>::value,
+										is_char_array<typename kerbal::type_traits::remove_reference<Type>::type>,
+										kerbal::type_traits::false_type
+								>::type
+		{
+		};
+
+		template <>
+		struct is_char_array<char[]> : kerbal::type_traits::true_type
+		{
+		};
+
+		template <size_t N>
+		struct is_char_array<char[N]> : kerbal::type_traits::true_type
+		{
+		};
+
+		template <size_t N>
+		struct is_char_array<const char[N]> : kerbal::type_traits::true_type
 		{
 		};
 

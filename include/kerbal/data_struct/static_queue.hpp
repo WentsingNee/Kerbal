@@ -1,5 +1,5 @@
 /**
- * @file		auto_queue.hpp
+ * @file		static_queue.hpp
  * @brief
  * @date		2018年5月17日
  * @author		Peter
@@ -10,8 +10,8 @@
  <a href="http://www.nuist.edu.cn/">Nanjing University of Information Science & Technology</a>
  */
 
-#ifndef INCLUDE_KERBAL_DATA_STRUCT_AUTO_QUEUE_HPP_
-#define INCLUDE_KERBAL_DATA_STRUCT_AUTO_QUEUE_HPP_
+#ifndef INCLUDE_KERBAL_DATA_STRUCT_STATIC_QUEUE_HPP_
+#define INCLUDE_KERBAL_DATA_STRUCT_STATIC_QUEUE_HPP_
 
 #include <cctype>
 #include <stdexcept>
@@ -25,7 +25,7 @@ namespace kerbal
 	namespace data_struct
 	{
 		template <typename Tp, size_t N>
-		class Auto_queue
+		class static_queue
 		{
 			public:
 				typedef Tp value_type;
@@ -52,22 +52,22 @@ namespace kerbal
 				const_pointer prev(const_pointer poi) const;
 
 			public:
-				Auto_queue();
+				static_queue();
 
-				Auto_queue(const Auto_queue & src);
+				static_queue(const static_queue & src);
 
 				template <typename ForwardIterator>
-				Auto_queue(ForwardIterator begin, ForwardIterator end);
+				static_queue(ForwardIterator begin, ForwardIterator end);
 
 #			if __cplusplus >= 201103L
 
-				Auto_queue(std::initializer_list<value_type> src);
+				static_queue(std::initializer_list<value_type> src);
 
 #			endif
 
-				~Auto_queue();
+				~static_queue();
 
-				Auto_queue& operator=(const Auto_queue & src);
+				static_queue& operator=(const static_queue & src);
 
 				void push(const_reference val);
 
@@ -89,12 +89,12 @@ namespace kerbal
 
 				const_reference back() const;
 
-				void swap(Auto_queue& with);
+				void swap(static_queue& with);
 
 		};
 	}
 }
 
-#include <kerbal/data_struct/auto_container_base/auto_queue_base.hpp>
+#include <kerbal/data_struct/static_container_base/static_queue_base.hpp>
 
-#endif /* INCLUDE_KERBAL_DATA_STRUCT_AUTO_QUEUE_HPP_ */
+#endif /* INCLUDE_KERBAL_DATA_STRUCT_STATIC_QUEUE_HPP_ */

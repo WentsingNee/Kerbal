@@ -1,5 +1,5 @@
 /**
- * @file		auto_stack.hpp
+ * @file		static_stack.hpp
  * @brief
  * @date		2018年5月2日
  * @author		Peter
@@ -10,10 +10,10 @@
  <a href="http://www.nuist.edu.cn/">Nanjing University of Information Science & Technology</a>
  */
 
-#ifndef INCLUDE_KERBAL_DATA_STRUCT_AUTO_STACK_HPP_
-#define INCLUDE_KERBAL_DATA_STRUCT_AUTO_STACK_HPP_
+#ifndef INCLUDE_KERBAL_DATA_STRUCT_STATIC_STACK_HPP_
+#define INCLUDE_KERBAL_DATA_STRUCT_STATIC_STACK_HPP_
 
-#include <kerbal/data_struct/auto_array.hpp>
+#include <kerbal/data_struct/static_array.hpp>
 
 namespace kerbal
 {
@@ -29,7 +29,7 @@ namespace kerbal
 		 * @tparam N The maximum number of elements that the stack can hold.
 		 */
 		template <typename Tp, size_t N>
-		class Auto_stack
+		class static_stack
 		{
 			public:
 				typedef Tp value_type;
@@ -40,21 +40,21 @@ namespace kerbal
 				typedef const Tp* const_pointer;
 
 			private:
-				kerbal::data_struct::Auto_array<Tp, N> p;
+				kerbal::data_struct::static_array<Tp, N> p;
 
 			public:
-				Auto_stack() :
+				static_stack() :
 						p()
 				{
 				}
 
 #if __cplusplus >= 201103L
-				Auto_stack(std::initializer_list<value_type> src) :
+				static_stack(std::initializer_list<value_type> src) :
 						p(src)
 				{
 				}
 #endif
-				Auto_stack& operator=(const Auto_stack& src)
+				static_stack& operator=(const static_stack& src)
 				{
 					this->p = src.p;
 					return *this;
@@ -100,7 +100,7 @@ namespace kerbal
 					return p.back();
 				}
 
-				void swap(Auto_stack & with)
+				void swap(static_stack & with)
 				{
 					p.swap(with.p);
 				}
@@ -114,29 +114,29 @@ namespace kerbal
 				 * Judge whether the stack is equal to the other one.
 				 * @param with another stack
 				 */
-				bool operator==(const Auto_stack & with) const
+				bool operator==(const static_stack & with) const
 				{
 					return p == with.p;
 				}
 
-				bool operator!=(const Auto_stack & with) const
+				bool operator!=(const static_stack & with) const
 				{
 					return p != with.p;
 				}
 
-				bool operator<(const Auto_stack & with) const
+				bool operator<(const static_stack & with) const
 				{
 					return p < with.p;
 				}
-				bool operator<=(const Auto_stack & with) const
+				bool operator<=(const static_stack & with) const
 				{
 					return p <= with.p;
 				}
-				bool operator>(const Auto_stack & with) const
+				bool operator>(const static_stack & with) const
 				{
 					return p > with.p;
 				}
-				bool operator>=(const Auto_stack & with) const
+				bool operator>=(const static_stack & with) const
 				{
 					return p >= with.p;
 				}
@@ -146,4 +146,4 @@ namespace kerbal
 	}
 }
 
-#endif /* INCLUDE_KERBAL_DATA_STRUCT_AUTO_STACK_HPP_ */
+#endif /* INCLUDE_KERBAL_DATA_STRUCT_STATIC_STACK_HPP_ */

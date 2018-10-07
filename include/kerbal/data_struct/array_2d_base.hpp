@@ -279,7 +279,7 @@ namespace kerbal
 			}
 
 			template <class Type>
-			size_t Array_2d<Type>::shrink_row(size_t new_row)
+			size_type Array_2d<Type>::shrink_row(size_type new_row)
 			{
 				if (new_row < this->row) {
 					if (new_row == 0) {
@@ -301,7 +301,7 @@ namespace kerbal
 			}
 
 			template <class Type>
-			size_t Array_2d<Type>::shrink_column(size_t new_column)
+			size_type Array_2d<Type>::shrink_column(size_type new_column)
 			{
 				if (new_column < this->column) {
 					if (new_column == 0) {
@@ -320,7 +320,7 @@ namespace kerbal
 			}
 
 			template <class Type>
-			size_t Array_2d<Type>::enlarge_row_buffer(size_t new_row)
+			size_type Array_2d<Type>::enlarge_row_buffer(size_type new_row)
 			{
 				if (new_row > this->row) {
 					Type ** p_new = (Type**) realloc(p, new_row * sizeof(Type*));
@@ -343,7 +343,7 @@ namespace kerbal
 			}
 
 			template <class Type>
-			size_t Array_2d<Type>::enlarge_column_buffer(size_t new_column)
+			size_type Array_2d<Type>::enlarge_column_buffer(size_type new_column)
 			{
 				if (new_column > this->column) {
 					for (size_t i = 0; i != this->row; ++i) {
@@ -359,7 +359,7 @@ namespace kerbal
 			}
 
 			template <class Type>
-			void Array_2d<Type>::resize(size_t new_row, size_t new_column)
+			void Array_2d<Type>::resize(size_type new_row, size_type new_column)
 			{
 //				if (new_row == 0 || new_column == 0) {
 //					this->clear();
@@ -420,13 +420,13 @@ namespace kerbal
 			}
 
 			template <class Type>
-			size_t Array_2d<Type>::get_row() const
+			size_type Array_2d<Type>::get_row() const
 			{
 				return row;
 			}
 
 			template <class Type>
-			size_t Array_2d<Type>::get_column() const
+			size_type Array_2d<Type>::get_column() const
 			{
 				return column;
 			}
@@ -435,18 +435,6 @@ namespace kerbal
 			const Type * const * Array_2d<Type>::get_data() const
 			{
 				return p;
-			}
-
-			template <class Type>
-			bool Array_2d<Type>::is_const()
-			{
-				return false;
-			}
-
-			template <class Type>
-			bool Array_2d<Type>::is_const() const
-			{
-				return true;
 			}
 
 			template <class Type>

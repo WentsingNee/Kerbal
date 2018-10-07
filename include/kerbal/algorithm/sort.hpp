@@ -169,8 +169,56 @@ namespace kerbal
 			typedef typename std::iterator_traits<iterator>::difference_type difference_type;
 			typedef typename std::iterator_traits<iterator>::value_type type;
 
+<<<<<<< HEAD
 			if (begin == end) {
 				return;
+=======
+			if (kerbal::algorithm::next(begin) != end) {
+				difference_type len = std::distance(begin, end);
+
+				iterator mid = kerbal::algorithm::next(begin, len / 2);
+				merge_sort(begin, mid, cmp);
+				merge_sort(mid, end, cmp);
+
+				type * const p = (type*) malloc(len * sizeof(type));
+
+				iterator i = begin, j = mid;
+				type * k = p;
+				try {
+					for (; i != mid && j != end;) {
+						if (!cmp(*j, *i)) {
+							new (k) type(*i);
+							++i;
+						} else {
+							new (k) type(*j);
+							++j;
+						}
+						++k;
+					}
+					for (; i != mid; ++i) {
+						new (k) type(*i);
+						++k;
+					}
+					for (; j != end; ++j) {
+						new (k) type(*j);
+						++k;
+					}
+
+					std::copy(p, k, begin);
+
+				} catch (...) {
+					for (type * it = p; it != k; ++it) {
+						it->~type();
+					}
+					free(p);
+					throw;
+				}
+
+				for (type * it = p; it != k; ++it) {
+					it->~type();
+				}
+				free(p);
+>>>>>>> branch 'master' of https://git.coding.net/WentsingNee/Kerbal.git
 			}
 
 			if (kerbal::algorithm::next(begin) == end) {

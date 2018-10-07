@@ -92,6 +92,7 @@ namespace kerbal
 					typedef Type type;
 					typedef Type& reference;
 					typedef const Type& const_reference;
+					typedef size_t size_type;
 
 					/**
 					 * @brief 构造一个 0 行 0 列的空二维数组
@@ -160,26 +161,23 @@ namespace kerbal
 					 */
 					void clear() throw ();
 
-					size_t shrink_row(size_t new_row);
-					size_t shrink_column(size_t new_column);
+					size_type shrink_row(size_type new_row);
+					size_type shrink_column(size_type new_column);
 
 				protected:
-					size_t enlarge_row_buffer(size_t new_row);
-					size_t enlarge_column_buffer(size_t new_column);
+					size_type enlarge_row_buffer(size_type new_row);
+					size_type enlarge_column_buffer(size_type new_column);
 
-					void resize(size_t new_row, size_t new_column);
+					void resize(size_type new_row, size_type new_column);
 
 				public:
 					/**
 					 * @brief 获取动态二维数组的行数
 					 * @return 行数
 					 */
-					size_t get_row() const;
-					size_t get_column() const;
+					size_type get_row() const;
+					size_type get_column() const;
 					const Type * const * get_data() const;
-
-					bool is_const();
-					bool is_const() const;
 
 					Type& get(size_t row, size_t column) throw (std::out_of_range);
 					const Type& get(size_t row, size_t column) const throw (std::out_of_range);
