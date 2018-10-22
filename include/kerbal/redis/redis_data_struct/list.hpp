@@ -98,12 +98,12 @@ namespace kerbal
 
 			protected:
 				template <typename ...Args>
-				constexpr static void list_member_args_checker(const Type & value0)
+				static void list_member_args_checker(const Type & value0)
 				{
 				}
 
 				template <typename ...Args>
-				constexpr static void list_member_args_checker(const Type &, Args&& ... args)
+				static void list_member_args_checker(const Type &, Args&& ... args)
 				{
 					list_member_args_checker(args...);
 				}
