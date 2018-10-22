@@ -116,13 +116,13 @@ namespace kerbal
 				}
 
 				template <typename Type>
-				constexpr static void redis_key_list_type_checker(const Type &)
+				static void redis_key_list_type_checker(const Type &)
 				{
 					static_assert(redis_type_traits<Type>::is_key_type, "not allowed key type");
 				}
 
 				template <typename Type, typename ... Args>
-				constexpr static void redis_key_list_type_checker(const Type &, Args&& ... args)
+				static void redis_key_list_type_checker(const Type &, Args&& ... args)
 				{
 					static_assert(redis_type_traits<Type>::is_key_type, "not allowed key type");
 					redis_key_list_type_checker(std::forward<Args>(args)...);
