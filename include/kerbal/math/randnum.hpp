@@ -124,11 +124,19 @@ namespace kerbal
 			template <typename type = double>
 			struct rand_type_between: public kerbal::utility::functor<type>
 			{
-					rand_type_between(const type & min, const type & max)
+				private:
+					static type get(const type & min, const type & max)
 					{
+						type val;
 						do {
-							kerbal::utility::functor<type>::value = (type) rand_between(min, max);
-						} while (kerbal::utility::functor<type>::value == max);
+							val = (type) rand_between(min, max);
+						} while (val == max);
+						return val;
+					}
+				public:	
+					rand_type_between(const type & min, const type & max) :
+							kerbal::utility::functor<type>(get(min, max))
+					{
 					}
 			};
 

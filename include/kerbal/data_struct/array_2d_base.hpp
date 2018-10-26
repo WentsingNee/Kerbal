@@ -279,7 +279,8 @@ namespace kerbal
 			}
 
 			template <class Type>
-			size_type Array_2d<Type>::shrink_row(size_type new_row)
+			typename Array_2d<Type>::size_type
+			Array_2d<Type>::shrink_row(size_type new_row)
 			{
 				if (new_row < this->row) {
 					if (new_row == 0) {
@@ -301,7 +302,8 @@ namespace kerbal
 			}
 
 			template <class Type>
-			size_type Array_2d<Type>::shrink_column(size_type new_column)
+			typename Array_2d<Type>::size_type
+			Array_2d<Type>::shrink_column(size_type new_column)
 			{
 				if (new_column < this->column) {
 					if (new_column == 0) {
@@ -320,7 +322,8 @@ namespace kerbal
 			}
 
 			template <class Type>
-			size_type Array_2d<Type>::enlarge_row_buffer(size_type new_row)
+			typename Array_2d<Type>::size_type
+			Array_2d<Type>::enlarge_row_buffer(size_type new_row)
 			{
 				if (new_row > this->row) {
 					Type ** p_new = (Type**) realloc(p, new_row * sizeof(Type*));
@@ -343,7 +346,8 @@ namespace kerbal
 			}
 
 			template <class Type>
-			size_type Array_2d<Type>::enlarge_column_buffer(size_type new_column)
+			typename Array_2d<Type>::size_type
+			Array_2d<Type>::enlarge_column_buffer(size_type new_column)
 			{
 				if (new_column > this->column) {
 					for (size_t i = 0; i != this->row; ++i) {
@@ -420,13 +424,15 @@ namespace kerbal
 			}
 
 			template <class Type>
-			size_type Array_2d<Type>::get_row() const
+			typename Array_2d<Type>::size_type
+			Array_2d<Type>::get_row() const
 			{
 				return row;
 			}
 
 			template <class Type>
-			size_type Array_2d<Type>::get_column() const
+			typename Array_2d<Type>::size_type
+			Array_2d<Type>::get_column() const
 			{
 				return column;
 			}
