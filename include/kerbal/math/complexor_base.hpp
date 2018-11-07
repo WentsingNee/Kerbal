@@ -714,7 +714,7 @@ namespace kerbal
 				const size_t &n = M.get_column();
 
 				Complexor<Type> result(n, 0, false); //TODO Matrix 模板化后这里需要改写下
-				const double** const Mp = M.get_data();
+				const double* const* const Mp = M.get_data();
 				for (size_t i = 0; i < n; i++) {
 					for (size_t j = 0; j < m; j++) {
 						result.p[i] += V.p[j] * Mp[j][i];
