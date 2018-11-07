@@ -17,7 +17,7 @@ namespace kerbal
 
 		class noncopyable
 		{
-			private:
+			protected:
 				noncopyable()
 				{
 				}

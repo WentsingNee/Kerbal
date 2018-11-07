@@ -151,7 +151,6 @@ namespace kerbal
 		{
 		};
 
-		/// is_volatile
 		template <typename >
 		struct is_volatile: kerbal::type_traits::false_type
 		{
@@ -192,27 +191,73 @@ namespace kerbal
 				typedef typename remove_const<typename remove_volatile<Tp>::type>::type type;
 		};
 
-		template <typename Type>
-		struct is_char_array : kerbal::type_traits::conditional<
-										kerbal::type_traits::is_reference<Type>::value,
-										is_char_array<typename kerbal::type_traits::remove_reference<Type>::type>,
-										kerbal::type_traits::false_type
-								>::type
+		template <typename Tp>
+		struct remove_cvref
+		{
+				typedef typename remove_cv<typename remove_reference<Tp>::type>::type type;
+		};
+
+		template <typename>
+		struct is_array : kerbal::type_traits::false_type
 		{
 		};
 
+		template <typename Tp>
+		struct is_array<Tp[]> : kerbal::type_traits::true_type
+		{
+		};
+
+		template <typename Tp, size_t N>
+		struct is_array<Tp[N]> : kerbal::type_traits::true_type
+		{
+		};
+
+		template <typename>
+		struct array_traits;
+
+		template <typename Tp>
+		struct array_traits<Tp[]>
+		{
+				typedef Tp value_type;
+		};
+
+		template <typename Tp, size_t N>
+		struct array_traits<Tp[N]> : kerbal::type_traits::array_traits<Tp[]>
+		{
+				typedef Tp value_type;
+#				if __cplusplus >= 201103L
+					static constexpr size_t size = N;
+#				else
+					static const size_t size = N;
+#				endif
+		};
+
+		///@private
+		template <typename>
+		struct __is_char_array_helper : kerbal::type_traits::false_type
+		{
+		};
+
+		///@private
 		template <>
-		struct is_char_array<char[]> : kerbal::type_traits::true_type
+		struct __is_char_array_helper<char[]> : kerbal::type_traits::true_type
 		{
 		};
 
+		///@private
 		template <size_t N>
-		struct is_char_array<char[N]> : kerbal::type_traits::true_type
+		struct __is_char_array_helper<char[N]> : kerbal::type_traits::true_type
 		{
 		};
 
+		///@private
 		template <size_t N>
-		struct is_char_array<const char[N]> : kerbal::type_traits::true_type
+		struct __is_char_array_helper<const char[N]> : kerbal::type_traits::true_type
+		{
+		};
+
+		template <typename Type>
+		struct is_char_array : __is_char_array_helper<typename kerbal::type_traits::remove_cvref<Type>::type>
 		{
 		};
 
