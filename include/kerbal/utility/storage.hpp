@@ -27,6 +27,11 @@ namespace kerbal
 				using std::chrono::duration<size_type, Ratio>::duration;
 				using supper_t::count;
 
+				storage() :
+						supper_t()
+				{
+				}
+
 				storage(const supper_t & src) :
 						supper_t(src)
 				{
