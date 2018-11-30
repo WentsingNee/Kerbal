@@ -9,14 +9,14 @@
 #define INCLUDE_KERBAL_UTILITY_STORAGE_HPP_
 
 #include <chrono>
-#include <cstdint>
+#include <stdint.h>
 #include <kerbal/type_traits/type_traits.hpp>
 
 namespace kerbal
 {
 	namespace utility
 	{
-		template <typename size_type, typename Ratio>
+		template <typename size_type, typename Ratio = std::ratio<1, 1>>
 		class storage : public std::chrono::duration<size_type, Ratio>
 		{
 			public:
@@ -38,10 +38,23 @@ namespace kerbal
 				}
 		};
 
-		typedef storage<std::int64_t, std::ratio<1, 1> > Byte;
-		typedef storage<std::int64_t, std::ratio<1024, 1> > KB;
-		typedef storage<std::int64_t, std::ratio<1024 * 1024, 1> > MB;
-		typedef storage<std::int64_t, std::ratio<1024 * 1024 * 1024, 1> > GB;
+		typedef std::ratio<1024, 1> kibi;
+		typedef std::ratio<1024 * 1024, 1> mebi;
+		typedef std::ratio<1024 * 1024 * 1024, 1> gibi;
+
+		typedef storage<std::int64_t> Byte;
+		typedef storage<std::int64_t, std::kilo> KB;
+		typedef storage<std::int64_t, std::mega> MB;
+		typedef storage<std::int64_t, std::giga> GB;
+
+		typedef storage<std::int64_t, kibi> KiB;
+		typedef storage<std::int64_t, mebi> MiB;
+		typedef storage<std::int64_t, gibi> GiB;
+
+		constexpr Byte operator""_Byte(unsigned long long x)
+		{
+			return Byte(x);
+		}
 
 		constexpr KB operator""_KB(unsigned long long x)
 		{
@@ -56,6 +69,21 @@ namespace kerbal
 		constexpr GB operator""_GB(unsigned long long x)
 		{
 			return GB(x);
+		}
+
+		constexpr KiB operator""_KiB(unsigned long long x)
+		{
+			return KiB(x);
+		}
+
+		constexpr MiB operator""_MiB(unsigned long long x)
+		{
+			return MiB(x);
+		}
+
+		constexpr GiB operator""_GiB(unsigned long long x)
+		{
+			return GiB(x);
 		}
 
 		template <typename>
