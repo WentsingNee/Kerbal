@@ -47,6 +47,16 @@ namespace kerbal
 				{
 				}
 
+				operator string_type() const
+				{
+					switch (status) {
+						case c_style:
+							return s;
+						case string_style:
+							return *str;
+					}
+				}
+
 				basic_string_ref& operator=(const_pointer s) KERBAL_NOEXCEPT
 				{
 					this->s = s;
@@ -68,8 +78,16 @@ namespace kerbal
 							return s;
 						case string_style:
 							return str->c_str();
-						default:
-							throw std::exception();
+					}
+				}
+
+				size_t length() const
+				{
+					switch (status) {
+						case c_style:
+							return CharTraits::length(s);
+						case string_style:
+							return CharTraits::length(str->c_str());
 					}
 				}
 
@@ -80,8 +98,6 @@ namespace kerbal
 							return out << str_ref.s;
 						case string_style:
 							return out << str_ref.str;
-						default:
-							throw std::exception();
 					}
 				}
 		};

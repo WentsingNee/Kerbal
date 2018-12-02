@@ -27,52 +27,16 @@ namespace kerbal
 		/**
 		 * @brief redis 执行结果类型
 		 */
-		class reply_type_cmp
-		{
-			public:
-
-				enum
-				{
-					/// @brief String
-					STRING = REDIS_REPLY_STRING,
-
-					/// @brief Array，like the reply type of command 'mget'
-					ARRAY = REDIS_REPLY_ARRAY,
-
-					/// @brief Integer
-					INTEGER = REDIS_REPLY_INTEGER,
-
-					/// @brief Nil
-					NIL = REDIS_REPLY_NIL,
-
-					/// @brief Status，like the reply of ‘OK’ if command 'set' executed successfully
-					STATUS = REDIS_REPLY_STATUS,
-
-					/// @brief Error if redis command execute failed
-					ERROR = REDIS_REPLY_ERROR
-				};
-		};
-
 		enum reply_type
 		{
-			/// @brief String
-			STRING = REDIS_REPLY_STRING,
-
-			/// @brief Array，like the reply type of command 'mget'
-			ARRAY = REDIS_REPLY_ARRAY,
-
-			/// @brief Integer
-			INTEGER = REDIS_REPLY_INTEGER,
-
-			/// @brief Nil
-			NIL = REDIS_REPLY_NIL,
-
-			/// @brief Status，like the reply of ‘OK’ if command 'set' executed successfully
-			STATUS = REDIS_REPLY_STATUS,
-
-			/// @brief Error if redis command execute failed
-			ERROR = REDIS_REPLY_ERROR
+			STRING = REDIS_REPLY_STRING, ///< @brief String
+			ARRAY = REDIS_REPLY_ARRAY, ///< @brief Array，like the reply type of command 'mget'
+			INTEGER = REDIS_REPLY_INTEGER, ///< @brief Integer
+			NIL = REDIS_REPLY_NIL, ///< @brief Nil
+			STATUS = REDIS_REPLY_STATUS, ///< @brief Status, like the reply of ‘OK’ if command 'set' executed successfully
+			ERROR = REDIS_REPLY_ERROR ///< @brief Error if redis command execute failed
 		};
+
 
 #else
 		/**
@@ -80,24 +44,12 @@ namespace kerbal
 		 */
 		enum class reply_type
 		{
-			/// @brief String
-			STRING = REDIS_REPLY_STRING,
-
-			/// @brief Array，like the reply type of command 'mget'
-			ARRAY = REDIS_REPLY_ARRAY,
-
-			/// @brief Integer
-			INTEGER = REDIS_REPLY_INTEGER,
-
-			/// @brief Nil
-			NIL = REDIS_REPLY_NIL,
-
-			/// @brief Status，like the reply of ‘OK’ if command 'set' executed successfully
-			STATUS = REDIS_REPLY_STATUS,
-
-			/// @brief Error if redis command execute failed
-			ERROR = REDIS_REPLY_ERROR
-
+			STRING = REDIS_REPLY_STRING, ///< @brief String
+			ARRAY = REDIS_REPLY_ARRAY, ///< @brief Array，like the reply type of command 'mget'
+			INTEGER = REDIS_REPLY_INTEGER, ///< @brief Integer
+			NIL = REDIS_REPLY_NIL, ///< @brief Nil
+			STATUS = REDIS_REPLY_STATUS, ///< @brief Status, like the reply of ‘OK’ if command 'set' executed successfully
+			ERROR = REDIS_REPLY_ERROR ///< @brief Error if redis command execute failed
 		};
 
 		using reply_type_cmp = reply_type;
@@ -122,8 +74,6 @@ namespace kerbal
 					return "STATUS";
 				case reply_type::ERROR:
 					return "ERROR";
-				default:
-					return "OTHER UNKNOWN";
 			}
 		}
 
@@ -138,7 +88,7 @@ namespace kerbal
 			return out << reply_type_name<const char *>(type);
 		}
 
-		class reply: virtual public kerbal::utility::nonassignable, public kerbal::utility::noncopyable
+		class reply: kerbal::utility::nonassignable, kerbal::utility::noncopyable
 		{
 			private:
 				typedef ::redisReply raw_redis_reply_t;
@@ -158,12 +108,12 @@ namespace kerbal
 
 #			if __cplusplus >= 201103L
 
-				reply(std::nullptr_t) noexcept :
+				constexpr reply(std::nullptr_t) noexcept :
 						reply_ptr(nullptr)
 				{
 				}
 
-				reply(reply && src) KERBAL_NOEXCEPT :
+				reply(reply && src) noexcept :
 						reply_ptr(src.reply_ptr)
 				{
 					src.reply_ptr = nullptr;
@@ -184,7 +134,7 @@ namespace kerbal
 					return *this;
 				}
 
-				reply& operator=(reply && src) KERBAL_NOEXCEPT
+				reply& operator=(reply && src) noexcept
 				{
 					clear();
 					this->reply_ptr = src.reply_ptr;
@@ -207,9 +157,9 @@ namespace kerbal
 				 * @return The type of reply.
 				 * @throws The method never throws any exception.
 				 */
-				enum reply_type type() const KERBAL_NOEXCEPT
+				reply_type type() const KERBAL_NOEXCEPT
 				{
-					return (reply_type) this->reply_ptr->type;
+					return reply_type(this->reply_ptr->type);
 				}
 
 				const raw_redis_reply_t * get() const KERBAL_NOEXCEPT
@@ -227,6 +177,11 @@ namespace kerbal
 				bool operator==(std::nullptr_t) noexcept
 				{
 					return this->get() == nullptr;
+				}
+
+				bool operator!=(std::nullptr_t) noexcept
+				{
+					return this->get() != nullptr;
 				}
 
 #			endif

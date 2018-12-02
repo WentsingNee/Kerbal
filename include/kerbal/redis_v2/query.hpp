@@ -13,6 +13,8 @@
 #include <kerbal/redis_v2/connection.hpp>
 #include <kerbal/redis_v2/reply.hpp>
 #include <kerbal/redis_v2/type_traits.hpp>
+#include <kerbal/utility/string_ref.hpp>
+#include <kerbal/compatibility/va_arg_compatible_cast.hpp>
 
 namespace kerbal
 {
@@ -31,53 +33,23 @@ namespace kerbal
 				{
 				}
 
-				template <typename T>
-				static KERBAL_CONSTEXPR const T& cast_to_va_arg_compatible_type(const T& t) noexcept
+				query(const char * s) :
+						supper_t(s, std::ostringstream::out | std::ostringstream::ate)
 				{
-					return t;
 				}
 
-				static KERBAL_CONSTEXPR const char * cast_to_va_arg_compatible_type(const std::string & t) noexcept
+				query(const std::string & s) :
+						supper_t(s, std::ostringstream::out | std::ostringstream::ate)
 				{
-					return t.c_str();
 				}
 
-//				static KERBAL_CONSTEXPR const char * cast_to_va_arg_compatible_type(const RedisUnitedStringHelper & t) noexcept
-//				{
-//					return t.c_str();
-//				}
-
-#if __cplusplus >= 201103L
-
-				template <typename T>
-				static constexpr T&& cast_to_va_arg_compatible_type(T&& t) noexcept
-				{
-					return t;
-				}
-
-				template <typename T>
-				static constexpr const char * cast_to_va_arg_compatible_type(std::string&& t) noexcept
-				{
-					return t.c_str();
-				}
-
-#endif
 
 #			if __cplusplus >= 201103L
-				template <typename ...Args,
-							typename = typename kerbal::type_traits::enable_if<is_redis_execute_list<Args...>::value>::type>
-				reply execute(const connection & conn, Args && ...args)
+				template <typename ...Args>
+				typename kerbal::type_traits::enable_if<is_redis_execute_list<Args...>::value, reply>::type
+				execute(const connection & conn, Args && ...args) const
 				{
-					reply reply((redisReply *) redisCommand((::redisContext*)conn.get(), this->str().c_str(),
-													cast_to_va_arg_compatible_type(std::forward<Args>(args))...));
-								
-					if (reply == nullptr) {
-//						throw RedisException("redis reply null exception");
-					}
-					if (reply.type() == reply_type::ERROR) {
-//						throw RedisCommandExecuteFailedException(std::string("redis reply error: ") + reply->str);
-					}
-					return reply;
+					return conn.execute(this->str(), std::forward<Args>(args)...);
 				}
 #			endif
 
