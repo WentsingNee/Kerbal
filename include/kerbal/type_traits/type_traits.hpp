@@ -90,6 +90,13 @@ namespace kerbal
 				typedef FalseType type;
 		};
 
+		template <bool condition>
+		struct conditional_boolean : kerbal::type_traits::conditional<condition,
+											kerbal::type_traits::true_type,
+											kerbal::type_traits::false_type>::type
+		{
+		};
+
 		template <typename Tp, typename Up>
 		struct is_same : kerbal::type_traits::false_type
 		{
@@ -260,6 +267,165 @@ namespace kerbal
 		struct is_char_array : __is_char_array_helper<typename kerbal::type_traits::remove_cvref<Type>::type>
 		{
 		};
+
+
+		template <typename>
+		struct is_floating_point : kerbal::type_traits::false_type
+		{
+		};
+
+		template <>
+		struct is_floating_point<float> : kerbal::type_traits::true_type
+		{
+		};
+
+		template <>
+		struct is_floating_point<double> : kerbal::type_traits::true_type
+		{
+		};
+
+		template <>
+		struct is_floating_point<long double> : kerbal::type_traits::true_type
+		{
+		};
+
+		template <typename>
+		struct is_integral : kerbal::type_traits::false_type
+		{
+		};
+
+		template <>
+		struct is_integral<bool> : kerbal::type_traits::true_type
+		{
+		};
+
+		template <>
+		struct is_integral<char> : kerbal::type_traits::true_type
+		{
+		};
+
+		template <>
+		struct is_integral<signed char> : kerbal::type_traits::true_type
+		{
+		};
+
+		template <>
+		struct is_integral<short> : kerbal::type_traits::true_type
+		{
+		};
+
+		template <>
+		struct is_integral<int> : kerbal::type_traits::true_type
+		{
+		};
+
+		template <>
+		struct is_integral<long> : kerbal::type_traits::true_type
+		{
+		};
+
+		template <>
+		struct is_integral<long long> : kerbal::type_traits::true_type
+		{
+		};
+
+		template <>
+		struct is_integral<unsigned char> : kerbal::type_traits::true_type
+		{
+		};
+
+		template <>
+		struct is_integral<unsigned short> : kerbal::type_traits::true_type
+		{
+		};
+
+		template <>
+		struct is_integral<unsigned int> : kerbal::type_traits::true_type
+		{
+		};
+
+		template <>
+		struct is_integral<unsigned long> : kerbal::type_traits::true_type
+		{
+		};
+
+		template <>
+		struct is_integral<unsigned long long> : kerbal::type_traits::true_type
+		{
+		};
+
+		template<class T>
+		struct is_arithmetic: kerbal::type_traits::conditional_boolean<is_integral<T>::value || is_floating_point<T>::value>::type
+		{
+		};
+
+		template <typename >
+		struct __is_pointer_helper: kerbal::type_traits::false_type
+		{
+		};
+
+		template <typename T>
+		struct __is_pointer_helper<T*> : kerbal::type_traits::true_type
+		{
+		};
+
+		/// is_pointer
+		template <typename T>
+		struct is_pointer: kerbal::type_traits::__is_pointer_helper<typename kerbal::type_traits::remove_cv<T>::type>::type
+		{
+		};
+
+#	if __cplusplus >= 201103L
+
+		template <typename ...Args>
+		struct __and_;
+
+		template <>
+		struct __and_<> : kerbal::type_traits::true_type
+		{
+		};
+
+		template <typename T>
+		struct __and_<T> : kerbal::type_traits::conditional_boolean<T::value>::type
+		{
+		};
+
+		template <typename T, typename ...Args>
+		struct __and_<T, Args...> : kerbal::type_traits::conditional<T::value, __and_ <Args...>, kerbal::type_traits::false_type>::type
+		{
+		};
+
+		template <typename ...Args>
+		struct __or_;
+
+		template <>
+		struct __or_<> : kerbal::type_traits::true_type
+		{
+		};
+
+		template <typename T>
+		struct __or_<T> : kerbal::type_traits::conditional_boolean<T::value>::type
+		{
+		};
+
+		template <typename T, typename ...Args>
+		struct __or_<T, Args...> : kerbal::type_traits::conditional<T::value, kerbal::type_traits::true_type, __or_ <Args...>>::type
+		{
+		};
+
+
+		template <template <typename> typename Traits, typename ...Types>
+		struct for_all_types : kerbal::type_traits::__and_<Traits<Types>...>
+		{
+		};
+
+		template <template <typename> typename Traits, typename ...Types>
+		struct has_types : kerbal::type_traits::__or_<Traits<Types>...>
+		{
+		};
+
+
+#	endif
 
 	}
 }
