@@ -362,15 +362,13 @@ namespace kerbal
 		};
 
 		template <typename Tp>
-		struct remove_cv
+		struct remove_cv: kerbal::type_traits::remove_const<typename kerbal::type_traits::remove_volatile<Tp>::type>
 		{
-				typedef typename remove_const<typename remove_volatile<Tp>::type>::type type;
 		};
 
 		template <typename Tp>
-		struct remove_cvref
+		struct remove_cvref: kerbal::type_traits::remove_cv<typename kerbal::type_traits::remove_reference<Tp>::type>
 		{
-				typedef typename remove_cv<typename remove_reference<Tp>::type>::type type;
 		};
 
 		template <typename>
@@ -451,6 +449,20 @@ namespace kerbal
 		{
 		};
 
+#	if __cplusplus >= 201103L
+
+		template <>
+		struct __is_integral_helper<char16_t> : kerbal::type_traits::true_type
+		{
+		};
+
+		template <>
+		struct __is_integral_helper<char32_t> : kerbal::type_traits::true_type
+		{
+		};
+
+#	endif
+
 		template <>
 		struct __is_integral_helper<signed char> : kerbal::type_traits::true_type
 		{
@@ -461,7 +473,12 @@ namespace kerbal
 		{
 		};
 
-				template <>
+		template <>
+		struct __is_integral_helper<int> : kerbal::type_traits::true_type
+		{
+		};
+
+		template <>
 		struct __is_integral_helper<long> : kerbal::type_traits::true_type
 		{
 		};
@@ -501,8 +518,8 @@ namespace kerbal
 		{
 		};
 
-		template<class T>
-		struct is_arithmetic: kerbal::type_traits::disjunction<is_integral<T>, is_floating_point<T> >::type
+		template <class T>
+		struct is_arithmetic: kerbal::type_traits::disjunction<is_integral<T>, is_floating_point<T> >
 		{
 		};
 
