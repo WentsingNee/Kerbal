@@ -97,7 +97,133 @@ namespace kerbal
 		{
 		};
 
-		template <typename Tp, typename Up>
+#	if __cplusplus < 201103L
+
+		template <typename Tp0 = kerbal::type_traits::true_type,
+					typename Tp1 = kerbal::type_traits::true_type,
+					typename Tp2 = kerbal::type_traits::true_type,
+					typename Tp3 = kerbal::type_traits::true_type,
+					typename Tp4 = kerbal::type_traits::true_type,
+					typename Tp5 = kerbal::type_traits::true_type,
+					typename Tp6 = kerbal::type_traits::true_type,
+					typename Tp7 = kerbal::type_traits::true_type,
+					typename Tp8 = kerbal::type_traits::true_type,
+					typename Tp9 = kerbal::type_traits::true_type,
+					typename Tp10 = kerbal::type_traits::true_type,
+					typename Tp11 = kerbal::type_traits::true_type,
+					typename Tp12 = kerbal::type_traits::true_type,
+					typename Tp13 = kerbal::type_traits::true_type,
+					typename Tp14 = kerbal::type_traits::true_type
+		>
+		struct conjunction : kerbal::type_traits::conditional<Tp0::value, conjunction<Tp1, Tp2, Tp3, Tp4, Tp5, Tp6, Tp7, Tp8, Tp9, Tp10, Tp11, Tp12, Tp13, Tp14>, kerbal::type_traits::false_type>::type
+		{
+		};
+
+		template <>
+		struct conjunction <>: kerbal::type_traits::true_type
+		{
+		};
+
+
+		template <typename Tp0 = kerbal::type_traits::false_type,
+					typename Tp1 = kerbal::type_traits::false_type,
+					typename Tp2 = kerbal::type_traits::false_type,
+					typename Tp3 = kerbal::type_traits::false_type,
+					typename Tp4 = kerbal::type_traits::false_type,
+					typename Tp5 = kerbal::type_traits::false_type,
+					typename Tp6 = kerbal::type_traits::false_type,
+					typename Tp7 = kerbal::type_traits::false_type,
+					typename Tp8 = kerbal::type_traits::false_type,
+					typename Tp9 = kerbal::type_traits::false_type,
+					typename Tp10 = kerbal::type_traits::false_type,
+					typename Tp11 = kerbal::type_traits::false_type,
+					typename Tp12 = kerbal::type_traits::false_type,
+					typename Tp13 = kerbal::type_traits::false_type,
+					typename Tp14 = kerbal::type_traits::false_type
+		>
+		struct disjunction : kerbal::type_traits::conditional<Tp0::value, kerbal::type_traits::true_type, disjunction<Tp1, Tp2, Tp3, Tp4, Tp5, Tp6, Tp7, Tp8, Tp9, Tp10, Tp11, Tp12, Tp13, Tp14> >::type
+		{
+		};
+
+		template <>
+		struct disjunction <>: kerbal::type_traits::true_type
+		{
+		};
+
+		/**
+		 * @brief gcc 一个神奇的特性, 没有这个特化, disjunction<kerbal::type_traits::false_type> 会直接
+		 * 套用 disjunction <>, 即 value 为 true; 而 disjunction<std::false_type> 工作正常
+		 */
+		template <typename Tp1,
+					typename Tp2,
+					typename Tp3,
+					typename Tp4,
+					typename Tp5,
+					typename Tp6,
+					typename Tp7,
+					typename Tp8,
+					typename Tp9,
+					typename Tp10,
+					typename Tp11,
+					typename Tp12,
+					typename Tp13,
+					typename Tp14
+		>
+		struct disjunction <kerbal::type_traits::false_type, Tp1, Tp2, Tp3, Tp4, Tp5, Tp6, Tp7, Tp8, Tp9, Tp10, Tp11, Tp12, Tp13, Tp14> : kerbal::type_traits::false_type
+		{
+		};
+
+
+		template <typename Tp>
+		struct disjunction <Tp>: kerbal::type_traits::conditional_boolean<Tp::value>::type
+		{
+		};
+
+#	else
+
+		template <typename ...Args>
+		struct conjunction;
+
+		template <>
+		struct conjunction<> : kerbal::type_traits::true_type
+		{
+		};
+
+		template <typename T>
+		struct conjunction<T> : kerbal::type_traits::conditional_boolean<T::value>::type
+		{
+		};
+
+		template <typename T, typename ...Args>
+		struct conjunction<T, Args...> : kerbal::type_traits::conditional<T::value, conjunction <Args...>, kerbal::type_traits::false_type>::type
+		{
+		};
+
+		template <typename ...Args>
+		struct disjunction;
+
+		template <>
+		struct disjunction<> : kerbal::type_traits::true_type
+		{
+		};
+
+		template <typename T>
+		struct disjunction<T> : kerbal::type_traits::conditional_boolean<T::value>::type
+		{
+		};
+
+		template <typename T, typename ...Args>
+		struct disjunction<T, Args...> : kerbal::type_traits::conditional<T::value, kerbal::type_traits::true_type, disjunction <Args...>>::type
+		{
+		};
+
+#	endif
+
+#	if __cplusplus < 201103L
+
+		template <typename Tp, typename Up, typename = Up, typename = Up, typename = Up,
+					typename = Up, typename = Up, typename = Up, typename = Up, typename = Up,
+					typename = Up, typename = Up, typename = Up, typename = Up, typename = Up>
 		struct is_same : kerbal::type_traits::false_type
 		{
 		};
@@ -107,20 +233,63 @@ namespace kerbal
 		{
 		};
 
-		template <typename Tp>
-		struct is_reference : kerbal::type_traits::false_type
+#	else
+
+		template <typename Tp, typename Up, typename ... Types>
+		struct is_same: kerbal::type_traits::conjunction<kerbal::type_traits::is_same<Tp, Up>,
+														kerbal::type_traits::is_same<Up, Types...> >
+		{
+		};
+
+		template <typename Tp, typename Up>
+		struct is_same<Tp, Up> : kerbal::type_traits::false_type
 		{
 		};
 
 		template <typename Tp>
-		struct is_reference<Tp&> : kerbal::type_traits::true_type
+		struct is_same<Tp, Tp> : kerbal::type_traits::true_type
+		{
+		};
+
+#endif
+		template <typename>
+		struct is_lvalue_reference : kerbal::type_traits::false_type
+		{
+		};
+
+		template <typename Tp>
+		struct is_lvalue_reference<Tp&> : kerbal::type_traits::true_type
 		{
 		};
 
 #	if __cplusplus >= 201103L
 
+		template <typename>
+		struct is_rvalue_reference : kerbal::type_traits::false_type
+		{
+		};
+
 		template <typename Tp>
-		struct is_reference<Tp&&> : kerbal::type_traits::true_type
+		struct is_rvalue_reference<Tp&&> : kerbal::type_traits::true_type
+		{
+		};
+
+#	endif
+
+#	if __cplusplus < 201103L
+
+		template <typename Tp>
+		struct is_reference : kerbal::type_traits::is_lvalue_reference<Tp>
+		{
+		};
+
+#	else
+
+		template <typename Tp>
+		struct is_reference : kerbal::type_traits::disjunction<
+									kerbal::type_traits::is_lvalue_reference<Tp>,
+									kerbal::type_traits::is_rvalue_reference<Tp>
+								>
 		{
 		};
 
@@ -239,123 +408,101 @@ namespace kerbal
 #				endif
 		};
 
-		///@private
-		template <typename>
-		struct __is_char_array_helper : kerbal::type_traits::false_type
-		{
-		};
 
-		///@private
-		template <>
-		struct __is_char_array_helper<char[]> : kerbal::type_traits::true_type
-		{
-		};
-
-		///@private
-		template <size_t N>
-		struct __is_char_array_helper<char[N]> : kerbal::type_traits::true_type
-		{
-		};
-
-		///@private
-		template <size_t N>
-		struct __is_char_array_helper<const char[N]> : kerbal::type_traits::true_type
-		{
-		};
-
-		template <typename Type>
-		struct is_char_array : __is_char_array_helper<typename kerbal::type_traits::remove_cvref<Type>::type>
-		{
-		};
-
-
-		template <typename>
-		struct is_floating_point : kerbal::type_traits::false_type
+		template <typename >
+		struct __is_floating_point_helper: kerbal::type_traits::false_type
 		{
 		};
 
 		template <>
-		struct is_floating_point<float> : kerbal::type_traits::true_type
+		struct __is_floating_point_helper<float> : kerbal::type_traits::true_type
 		{
 		};
 
 		template <>
-		struct is_floating_point<double> : kerbal::type_traits::true_type
+		struct __is_floating_point_helper<double> : kerbal::type_traits::true_type
 		{
 		};
 
 		template <>
-		struct is_floating_point<long double> : kerbal::type_traits::true_type
+		struct __is_floating_point_helper<long double> : kerbal::type_traits::true_type
+		{
+		};
+
+		template <typename Tp>
+		struct is_floating_point: kerbal::type_traits::__is_floating_point_helper<
+															typename kerbal::type_traits::remove_cv<Tp>::type
+														>
 		{
 		};
 
 		template <typename>
-		struct is_integral : kerbal::type_traits::false_type
+		struct __is_integral_helper : kerbal::type_traits::false_type
 		{
 		};
 
 		template <>
-		struct is_integral<bool> : kerbal::type_traits::true_type
+		struct __is_integral_helper<bool> : kerbal::type_traits::true_type
 		{
 		};
 
 		template <>
-		struct is_integral<char> : kerbal::type_traits::true_type
+		struct __is_integral_helper<char> : kerbal::type_traits::true_type
 		{
 		};
 
 		template <>
-		struct is_integral<signed char> : kerbal::type_traits::true_type
+		struct __is_integral_helper<signed char> : kerbal::type_traits::true_type
 		{
 		};
 
 		template <>
-		struct is_integral<short> : kerbal::type_traits::true_type
+		struct __is_integral_helper<short> : kerbal::type_traits::true_type
+		{
+		};
+
+				template <>
+		struct __is_integral_helper<long> : kerbal::type_traits::true_type
 		{
 		};
 
 		template <>
-		struct is_integral<int> : kerbal::type_traits::true_type
+		struct __is_integral_helper<long long> : kerbal::type_traits::true_type
 		{
 		};
 
 		template <>
-		struct is_integral<long> : kerbal::type_traits::true_type
+		struct __is_integral_helper<unsigned char> : kerbal::type_traits::true_type
 		{
 		};
 
 		template <>
-		struct is_integral<long long> : kerbal::type_traits::true_type
+		struct __is_integral_helper<unsigned short> : kerbal::type_traits::true_type
 		{
 		};
 
 		template <>
-		struct is_integral<unsigned char> : kerbal::type_traits::true_type
+		struct __is_integral_helper<unsigned int> : kerbal::type_traits::true_type
 		{
 		};
 
 		template <>
-		struct is_integral<unsigned short> : kerbal::type_traits::true_type
+		struct __is_integral_helper<unsigned long> : kerbal::type_traits::true_type
 		{
 		};
 
 		template <>
-		struct is_integral<unsigned int> : kerbal::type_traits::true_type
+		struct __is_integral_helper<unsigned long long> : kerbal::type_traits::true_type
 		{
 		};
 
-		template <>
-		struct is_integral<unsigned long> : kerbal::type_traits::true_type
-		{
-		};
-
-		template <>
-		struct is_integral<unsigned long long> : kerbal::type_traits::true_type
+		template <typename Tp>
+		struct is_integral: kerbal::type_traits::__is_integral_helper<typename kerbal::type_traits::remove_cv<Tp>::type>
 		{
 		};
 
 		template<class T>
-		struct is_arithmetic: kerbal::type_traits::conditional_boolean<is_integral<T>::value || is_floating_point<T>::value>::type
+		struct is_arithmetic: kerbal::type_traits::disjunction<is_integral<T>, is_floating_point<T> >::type
 		{
 		};
 
@@ -369,7 +516,6 @@ namespace kerbal
 		{
 		};
 
-		/// is_pointer
 		template <typename T>
 		struct is_pointer: kerbal::type_traits::__is_pointer_helper<typename kerbal::type_traits::remove_cv<T>::type>::type
 		{
@@ -377,53 +523,15 @@ namespace kerbal
 
 #	if __cplusplus >= 201103L
 
-		template <typename ...Args>
-		struct __and_;
-
-		template <>
-		struct __and_<> : kerbal::type_traits::true_type
-		{
-		};
-
-		template <typename T>
-		struct __and_<T> : kerbal::type_traits::conditional_boolean<T::value>::type
-		{
-		};
-
-		template <typename T, typename ...Args>
-		struct __and_<T, Args...> : kerbal::type_traits::conditional<T::value, __and_ <Args...>, kerbal::type_traits::false_type>::type
-		{
-		};
-
-		template <typename ...Args>
-		struct __or_;
-
-		template <>
-		struct __or_<> : kerbal::type_traits::true_type
-		{
-		};
-
-		template <typename T>
-		struct __or_<T> : kerbal::type_traits::conditional_boolean<T::value>::type
-		{
-		};
-
-		template <typename T, typename ...Args>
-		struct __or_<T, Args...> : kerbal::type_traits::conditional<T::value, kerbal::type_traits::true_type, __or_ <Args...>>::type
-		{
-		};
-
-
 		template <template <typename> typename Traits, typename ...Types>
-		struct for_all_types : kerbal::type_traits::__and_<Traits<Types>...>
+		struct for_all_types : kerbal::type_traits::conjunction<Traits<Types>...>
 		{
 		};
 
 		template <template <typename> typename Traits, typename ...Types>
-		struct has_types : kerbal::type_traits::__or_<Traits<Types>...>
+		struct has_types : kerbal::type_traits::disjunction<Traits<Types>...>
 		{
 		};
-
 
 #	endif
 
