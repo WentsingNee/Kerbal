@@ -61,9 +61,7 @@ namespace kerbal
 		};
 
 		template <typename Type>
-		struct __is_redis_execute_allow_type_helper : kerbal::type_traits::conditional<is_redis_key_type<Type>::value,
-											kerbal::type_traits::true_type,
-											kerbal::type_traits::false_type>::type
+		struct __is_redis_execute_allow_type_helper : kerbal::type_traits::conditional_boolean<is_redis_key_type<Type>::value>
 		{
 		};
 
@@ -116,13 +114,42 @@ namespace kerbal
 		struct is_redis_execute_allow_type : __is_redis_execute_allow_type_helper<typename kerbal::type_traits::remove_cvref<Type>::type>
 		{
 		};
+		
+		///@private
+		template <typename>
+		struct __is_char_array_helper : kerbal::type_traits::false_type
+		{
+		};
+
+		///@private
+		template <>
+		struct __is_char_array_helper<char[]> : kerbal::type_traits::true_type
+		{
+		};
+
+		///@private
+		template <size_t N>
+		struct __is_char_array_helper<char[N]> : kerbal::type_traits::true_type
+		{
+		};
+
+		///@private
+		template <size_t N>
+		struct __is_char_array_helper<const char[N]> : kerbal::type_traits::true_type
+		{
+		};
+
+		template <typename Type>
+		struct __is_char_array : __is_char_array_helper<typename kerbal::type_traits::remove_cvref<Type>::type>
+		{
+		};
 
 		template <typename Type>
 		KERBAL_CONSTEXPR
 		typename kerbal::type_traits::enable_if<!kerbal::type_traits::is_reference<Type>::value &&
 												!kerbal::type_traits::is_const<Type>::value &&
 												!kerbal::type_traits::is_volatile<Type>::value &&
-												!kerbal::type_traits::is_char_array<Type>::value, const char *>::type
+												!(__is_char_array<Type>::value), const char *>::type
 		placeholder_traits();
 
 		template <typename Type>
@@ -130,7 +157,7 @@ namespace kerbal
 		typename kerbal::type_traits::enable_if<(kerbal::type_traits::is_reference<Type>::value ||
 												kerbal::type_traits::is_const<Type>::value ||
 												kerbal::type_traits::is_volatile<Type>::value) &&
-												!kerbal::type_traits::is_char_array<Type>::value, const char *>::type
+												!__is_char_array<Type>::value, const char *>::type
 		placeholder_traits()
 		{
 			return placeholder_traits<typename kerbal::type_traits::remove_cv<typename kerbal::type_traits::remove_reference<Type>::type>::type>();
@@ -138,7 +165,7 @@ namespace kerbal
 
 		template <typename Type>
 		KERBAL_CONSTEXPR
-		typename kerbal::type_traits::enable_if<kerbal::type_traits::is_char_array<Type>::value, const char *>::type
+		typename kerbal::type_traits::enable_if<__is_char_array<Type>::value, const char *>::type
 		placeholder_traits()
 		{
 			return placeholder_traits<const char*>();
@@ -240,17 +267,8 @@ namespace kerbal
 
 #	endif
 
-
 		template <typename CastToType>
-		typename kerbal::type_traits::enable_if<!kerbal::type_traits::is_const<CastToType>::value, CastToType>::type
-		redis_type_cast(const char * src)
-		{
-			std::istringstream ss(src);
-			return *std::istream_iterator<CastToType>(ss);
-		}
-
-		template <typename CastToType>
-		typename kerbal::type_traits::enable_if<kerbal::type_traits::is_const<CastToType>::value, CastToType>::type
+		CastToType
 		redis_type_cast(const char * src)
 		{
 			return redis_type_cast<typename kerbal::type_traits::remove_const<CastToType>::type>(src);
