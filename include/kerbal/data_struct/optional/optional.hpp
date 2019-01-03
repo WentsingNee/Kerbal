@@ -162,13 +162,13 @@ namespace kerbal
 
 #	if __cplusplus >= 201103L
 
-				optional(value_type && src) :
+				explicit optional(value_type && src) :
 						supper_t(std::forward<value_type>(src)), initialized(true)
 				{
 				}
 
 				template <typename Up>
-				optional(Up && src,
+				explicit optional(Up && src,
 						typename kerbal::type_traits::enable_if<!is_optional<Up>::value && !is_nullopt<Up>::value, int>::type = 0) :
 						supper_t(std::forward<Up>(src)), initialized(true)
 				{

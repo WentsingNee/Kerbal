@@ -23,18 +23,51 @@ namespace kerbal
 	namespace redis_v2
 	{
 
-#if __cpp_concepts >= 201507L
+#if __cplusplus >= 201103L
+
+		template <typename Tp, typename = void>
+		struct is_reservable : kerbal::type_traits::false_type
+		{
+		};
+
+		template <typename Tp>
+		struct is_reservable<Tp, decltype(std::declval<Tp>().reserve(0)) > : kerbal::type_traits::true_type
+		{
+		};
+
+#endif
+
+#ifndef KERBAL_REDIS_V2_ENABLE_CONCEPTS
+#	if defined(__cpp_concepts) && (__cpp_concepts >= 201507L)
+#		define KERBAL_REDIS_V2_ENABLE_CONCEPTS __cpp_concepts
+#	else
+#		define KERBAL_REDIS_V2_ENABLE_CONCEPTS 0
+#	endif
+#endif
+
+#if KERBAL_REDIS_V2_ENABLE_CONCEPTS >= 201507L
+
+#	if __cplusplus >= 201103L
+
 		template <typename Container>
-		concept bool Reservable = requires(Container & container, size_t size) {
+		concept bool Reservable = is_reservable<Container>::value;
+
+#	else
+
+		template <typename Container>
+		concept bool Reservable = requires(Container & container, size_t size)
+		{
 			container.reserve(size);
 		};
+
+#	endif
+
 #endif
 
 		template <typename Type>
 		struct is_optional : kerbal::data_struct::is_optional<Type>
 		{
 		};
-
 
 
 #if __cplusplus >= 201103L
@@ -46,6 +79,7 @@ namespace kerbal
 		class mget_helper<0>
 		{
 				friend class operation;
+				friend class hash;
 
 				friend class mget_helper<1>;
 
@@ -92,6 +126,7 @@ namespace kerbal
 		class mget_helper
 		{
 				friend class operation;
+				friend class hash;
 
 				friend class mget_helper<i + 1> ;
 
@@ -169,25 +204,42 @@ namespace kerbal
 			private:
 				connection & conn;
 
+
+#if KERBAL_REDIS_V2_ENABLE_CONCEPTS >= 201507L
+
 				template <typename Container>
-				static void reserve(Container &, size_t)
+				static void reserve_if_could(Container &, size_t)
 				{
 				}
 
-#if __cpp_concepts < 201507L
+				template <Reservable Container>
+				static void reserve_if_could(Container & container, size_t size)
+				{
+					container.reserve(size);
+				}
 
-				template <typename ElementType, typename Allocator>
-				static void reserve(std::vector<ElementType, Allocator> & container, size_t size)
+#elif __cplusplus >= 201103L
+
+				template <typename Container>
+				static
+				typename kerbal::type_traits::enable_if<!is_reservable<Container>::value>::type
+				reserve_if_could(Container &, size_t)
+				{
+				}
+
+				template <typename Container>
+				static
+				typename kerbal::type_traits::enable_if<is_reservable<Container>::value>::type
+				reserve_if_could(Container & container, size_t size)
 				{
 					container.reserve(size);
 				}
 
 #else
 
-				template <Reservable Container>
-				static void reserve(Container & container, size_t size)
+				template <typename Container>
+				static void reserve_if_could(Container &, size_t)
 				{
-					container.reserve(size);
 				}
 
 #endif
@@ -280,7 +332,7 @@ namespace kerbal
 					switch (_reply.type()) {
 						case reply_type::ARRAY: {
 							ReturnType res;
-							reserve(res, _reply->elements);
+							reserve_if_could(res, _reply->elements);
 							for (size_t i = 0; i < _reply->elements; ++i) {
 								switch (_reply->element[i]->type) {
 									case reply_type::STRING:
@@ -319,7 +371,7 @@ namespace kerbal
 #						endif
 				>
 				typename kerbal::type_traits::enable_if<
-							is_optional<ValueType>::value &&
+							kerbal::data_struct::is_optional<ValueType>::value &&
 							kerbal::redis_v2::is_redis_execute_allow_type<typename kerbal::data_struct::optional_traits<ValueType>::value_type>::value,
 				ValueType>::type
 				get(const kerbal::utility::string_ref & key) const
@@ -338,7 +390,7 @@ namespace kerbal
 
 				template <typename ValueType>
 				typename kerbal::type_traits::enable_if<
-						!is_optional<ValueType>::value && kerbal::redis_v2::is_redis_execute_allow_type<ValueType>::value,
+						!kerbal::data_struct::is_optional<ValueType>::value && kerbal::redis_v2::is_redis_execute_allow_type<ValueType>::value,
 				ValueType>::type
 				get(const kerbal::utility::string_ref & key) const
 				{
@@ -512,14 +564,51 @@ namespace kerbal
 				template <typename ValueType>
 				typename kerbal::type_traits::enable_if<
 						kerbal::redis_v2::is_redis_execute_allow_type<ValueType>::value,
-				std::string>::type
+				kerbal::data_struct::optional<std::string> >::type
+				getset(const kerbal::utility::string_ref & key, const ValueType & value)
+				{
+					return this->getset<kerbal::data_struct::optional<std::string>, ValueType >(key, value);
+				}
+
+				/**
+				 * @brief Set the string value of a key and return its old value.
+				 */
+				template <typename ReturnType, typename ValueType>
+				typename kerbal::type_traits::enable_if<
+						kerbal::data_struct::is_optional<ReturnType>::value &&
+						kerbal::redis_v2::is_redis_execute_allow_type<ValueType>::value,
+				ReturnType>::type
 				getset(const kerbal::utility::string_ref & key, const ValueType & value)
 				{
 					static query _query(std::string("getset %s ") + placeholder_traits<ValueType>());
-					reply _reply = _query.execute(conn, key.c_str(), value.c_str());
+					reply _reply = _query.execute(conn, key.c_str(), value);
 					switch (_reply.type()) {
-						case reply_type::STATUS:
-							return _reply->str;
+						case reply_type::STRING:
+							return redis_type_cast<typename ReturnType::value_type>(_reply->str);
+						case reply_type::NIL:
+							return ReturnType();
+						default:
+							throw unexpected_case_exception(_reply.type(), _query.str());
+					}
+				}
+
+				/**
+				 * @brief Set the string value of a key and return its old value.
+				 */
+				template <typename ReturnType, typename ValueType>
+				typename kerbal::type_traits::enable_if<
+						!kerbal::data_struct::is_optional<ReturnType>::value &&
+						kerbal::redis_v2::is_redis_execute_allow_type<ValueType>::value,
+				ReturnType>::type
+				getset(const kerbal::utility::string_ref & key, const ValueType & value)
+				{
+					static query _query(std::string("getset %s ") + placeholder_traits<ValueType>());
+					reply _reply = _query.execute(conn, key.c_str(), value);
+					switch (_reply.type()) {
+						case reply_type::STRING:
+							return redis_type_cast<ReturnType>(_reply->str);
+						case reply_type::NIL:
+							return ReturnType();
 						default:
 							throw unexpected_case_exception(_reply.type(), _query.str());
 					}
@@ -532,10 +621,23 @@ namespace kerbal
 				typename kerbal::type_traits::enable_if<
 						kerbal::redis_v2::is_redis_key_type<KeyType>::value &&
 						kerbal::redis_v2::is_redis_execute_allow_type<ValueType>::value,
-				std::string>::type
+				kerbal::data_struct::optional<std::string> >::type
 				getset(const std::pair<KeyType, ValueType> & key_value)
 				{
-					return getset(conn, key_value.first, key_value.second);
+					return this->getset<kerbal::data_struct::optional<std::string> >(key_value.first, key_value.second);
+				}
+
+				/**
+				 * @brief Set the string value of a key and return its old value.
+				 */
+				template <typename ReturnType, typename KeyType, typename ValueType>
+				typename kerbal::type_traits::enable_if<
+						kerbal::redis_v2::is_redis_key_type<KeyType>::value &&
+						kerbal::redis_v2::is_redis_execute_allow_type<ValueType>::value,
+				ReturnType>::type
+				getset(const std::pair<KeyType, ValueType> & key_value)
+				{
+					return this->getset<ReturnType, ValueType>(key_value.first, key_value.second);
 				}
 
 
@@ -908,7 +1010,7 @@ namespace kerbal
 					switch (_reply.type()) {
 						case reply_type::ARRAY: {
 							ReturnType res;
-							reserve(res, _reply->elements);
+							reserve_if_could(res, _reply->elements);
 							for (size_t i = 0; i < _reply->elements; ++i) {
 								switch ((reply_type)(_reply->element[i]->type)) {
 									case reply_type::STRING:
@@ -950,7 +1052,7 @@ namespace kerbal
 					switch (_reply.type()) {
 						case reply_type::ARRAY: {
 							ReturnType res;
-							reserve(res, _reply->elements);
+							reserve_if_could(res, _reply->elements);
 							for (size_t i = 0; i < _reply->elements; ++i) {
 								switch ((reply_type)(_reply->element[i]->type)) {
 									case reply_type::STRING:

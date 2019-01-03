@@ -10,6 +10,7 @@
 
 #include <string>
 #include <cstring>
+#include <vector>
 #include <stdexcept>
 
 #if __cplusplus >= 201103L

@@ -13,6 +13,21 @@
 #ifndef INCLUDE_KERBAL_TYPE_TRAITS_TYPE_TRAITS_HPP_
 #define INCLUDE_KERBAL_TYPE_TRAITS_TYPE_TRAITS_HPP_
 
+#include <kerbal/ts/modules_ts/modules_ts.hpp>
+
+#ifdef KERBAL_ENABLE_CLANGPP_MODULES
+
+export module kerbal.type_traits;
+export namespace kerbal
+{
+	namespace type_traits
+	{
+
+	}
+}
+
+#endif
+
 #include <cstddef>
 #include <kerbal/compatibility/compatibility_macro.hpp>
 
@@ -21,6 +36,7 @@ namespace kerbal
 	namespace type_traits
 	{
 
+		MODULE_EXPORT
 		template <typename Type, Type val>
 		struct integral_constant
 		{
@@ -39,19 +55,23 @@ namespace kerbal
 				}
 		};
 
+		MODULE_EXPORT
 		struct false_type : integral_constant<bool, false>
 		{
 		};
 
+		MODULE_EXPORT
 		struct true_type : integral_constant<bool, true>
 		{
 		};
 
+		MODULE_EXPORT
 		template <bool condition, typename Tp = void>
 		struct enable_if
 		{
 		};
 
+		MODULE_EXPORT
 		template <typename Tp>
 		struct enable_if<true, Tp>
 		{
@@ -78,18 +98,21 @@ namespace kerbal
 
 #	endif
 
+		MODULE_EXPORT
 		template <bool condition, typename TrueType, typename FalseType>
 		struct conditional
 		{
 				typedef TrueType type;
 		};
 
+		MODULE_EXPORT
 		template <typename TrueType, typename FalseType>
 		struct conditional<false, TrueType, FalseType>
 		{
 				typedef FalseType type;
 		};
 
+		MODULE_EXPORT
 		template <bool condition>
 		struct conditional_boolean : kerbal::type_traits::conditional<condition,
 											kerbal::type_traits::true_type,
@@ -181,37 +204,45 @@ namespace kerbal
 
 #	else
 
+		MODULE_EXPORT
 		template <typename ...Args>
 		struct conjunction;
 
+		MODULE_EXPORT
 		template <>
 		struct conjunction<> : kerbal::type_traits::true_type
 		{
 		};
 
+		MODULE_EXPORT
 		template <typename T>
 		struct conjunction<T> : kerbal::type_traits::conditional_boolean<T::value>::type
 		{
 		};
 
+		MODULE_EXPORT
 		template <typename T, typename ...Args>
 		struct conjunction<T, Args...> : kerbal::type_traits::conditional<T::value, conjunction <Args...>, kerbal::type_traits::false_type>::type
 		{
 		};
 
+		MODULE_EXPORT
 		template <typename ...Args>
 		struct disjunction;
 
+		MODULE_EXPORT
 		template <>
 		struct disjunction<> : kerbal::type_traits::true_type
 		{
 		};
 
+		MODULE_EXPORT
 		template <typename T>
 		struct disjunction<T> : kerbal::type_traits::conditional_boolean<T::value>::type
 		{
 		};
 
+		MODULE_EXPORT
 		template <typename T, typename ...Args>
 		struct disjunction<T, Args...> : kerbal::type_traits::conditional<T::value, kerbal::type_traits::true_type, disjunction <Args...>>::type
 		{
@@ -235,28 +266,33 @@ namespace kerbal
 
 #	else
 
+		MODULE_EXPORT
 		template <typename Tp, typename Up, typename ... Types>
 		struct is_same: kerbal::type_traits::conjunction<kerbal::type_traits::is_same<Tp, Up>,
 														kerbal::type_traits::is_same<Up, Types...> >
 		{
 		};
 
+		MODULE_EXPORT
 		template <typename Tp, typename Up>
 		struct is_same<Tp, Up> : kerbal::type_traits::false_type
 		{
 		};
 
+		MODULE_EXPORT
 		template <typename Tp>
 		struct is_same<Tp, Tp> : kerbal::type_traits::true_type
 		{
 		};
 
 #endif
+		MODULE_EXPORT
 		template <typename>
 		struct is_lvalue_reference : kerbal::type_traits::false_type
 		{
 		};
 
+		MODULE_EXPORT
 		template <typename Tp>
 		struct is_lvalue_reference<Tp&> : kerbal::type_traits::true_type
 		{
@@ -264,11 +300,13 @@ namespace kerbal
 
 #	if __cplusplus >= 201103L
 
+		MODULE_EXPORT
 		template <typename>
 		struct is_rvalue_reference : kerbal::type_traits::false_type
 		{
 		};
 
+		MODULE_EXPORT
 		template <typename Tp>
 		struct is_rvalue_reference<Tp&&> : kerbal::type_traits::true_type
 		{
@@ -285,6 +323,7 @@ namespace kerbal
 
 #	else
 
+		MODULE_EXPORT
 		template <typename Tp>
 		struct is_reference : kerbal::type_traits::disjunction<
 									kerbal::type_traits::is_lvalue_reference<Tp>,
@@ -295,12 +334,14 @@ namespace kerbal
 
 #	endif
 
+		MODULE_EXPORT
 		template <typename Tp>
 		struct remove_reference
 		{
 				typedef Tp type;
 		};
 
+		MODULE_EXPORT
 		template <typename Tp>
 		struct remove_reference<Tp&>
 		{
@@ -309,6 +350,7 @@ namespace kerbal
 
 #	if __cplusplus >= 201103L
 
+		MODULE_EXPORT
 		template <typename Tp>
 		struct remove_reference<Tp&&>
 		{
@@ -317,84 +359,100 @@ namespace kerbal
 
 #	endif
 
+		MODULE_EXPORT
 		template <typename >
 		struct is_const: kerbal::type_traits::false_type
 		{
 		};
 
+		MODULE_EXPORT
 		template <typename Tp>
 		struct is_const<Tp const> : kerbal::type_traits::true_type
 		{
 		};
 
+		MODULE_EXPORT
 		template <typename >
 		struct is_volatile: kerbal::type_traits::false_type
 		{
 		};
 
+		MODULE_EXPORT
 		template <typename Tp>
 		struct is_volatile<Tp volatile> : kerbal::type_traits::true_type
 		{
 		};
 
+		MODULE_EXPORT
 		template <typename Tp>
 		struct remove_const
 		{
 				typedef Tp type;
 		};
 
+		MODULE_EXPORT
 		template <typename Tp>
 		struct remove_const<Tp const>
 		{
 				typedef Tp type;
 		};
 
+		MODULE_EXPORT
 		template <typename Tp>
 		struct remove_volatile
 		{
 				typedef Tp type;
 		};
 
+		MODULE_EXPORT
 		template <typename Tp>
 		struct remove_volatile<Tp volatile>
 		{
 				typedef Tp type;
 		};
 
+		MODULE_EXPORT
 		template <typename Tp>
 		struct remove_cv: kerbal::type_traits::remove_const<typename kerbal::type_traits::remove_volatile<Tp>::type>
 		{
 		};
 
+		MODULE_EXPORT
 		template <typename Tp>
 		struct remove_cvref: kerbal::type_traits::remove_cv<typename kerbal::type_traits::remove_reference<Tp>::type>
 		{
 		};
 
+		MODULE_EXPORT
 		template <typename>
 		struct is_array : kerbal::type_traits::false_type
 		{
 		};
 
+		MODULE_EXPORT
 		template <typename Tp>
 		struct is_array<Tp[]> : kerbal::type_traits::true_type
 		{
 		};
 
+		MODULE_EXPORT
 		template <typename Tp, size_t N>
 		struct is_array<Tp[N]> : kerbal::type_traits::true_type
 		{
 		};
 
+		MODULE_EXPORT
 		template <typename>
 		struct array_traits;
 
+		MODULE_EXPORT
 		template <typename Tp>
 		struct array_traits<Tp[]>
 		{
 				typedef Tp value_type;
 		};
 
+		MODULE_EXPORT
 		template <typename Tp, size_t N>
 		struct array_traits<Tp[N]> : kerbal::type_traits::array_traits<Tp[]>
 		{
@@ -427,6 +485,7 @@ namespace kerbal
 		{
 		};
 
+		MODULE_EXPORT
 		template <typename Tp>
 		struct is_floating_point: kerbal::type_traits::__is_floating_point_helper<
 															typename kerbal::type_traits::remove_cv<Tp>::type
@@ -513,11 +572,13 @@ namespace kerbal
 		{
 		};
 
+		MODULE_EXPORT
 		template <typename Tp>
 		struct is_integral: kerbal::type_traits::__is_integral_helper<typename kerbal::type_traits::remove_cv<Tp>::type>
 		{
 		};
 
+		MODULE_EXPORT
 		template <class T>
 		struct is_arithmetic: kerbal::type_traits::disjunction<is_integral<T>, is_floating_point<T> >
 		{
@@ -533,18 +594,83 @@ namespace kerbal
 		{
 		};
 
+		MODULE_EXPORT
 		template <typename T>
 		struct is_pointer: kerbal::type_traits::__is_pointer_helper<typename kerbal::type_traits::remove_cv<T>::type>::type
 		{
 		};
 
-#	if __cplusplus >= 201103L
+#	if __cplusplus < 201103L
 
+		struct __for_all_types_has_types_empty_args_helper
+		{
+		};
+
+		template <template <typename> typename Traits,
+										typename T0 = __for_all_types_has_types_empty_args_helper,
+										typename T1 = T0,
+										typename T2 = T0,
+										typename T3 = T0,
+										typename T4 = T0,
+										typename T5 = T0,
+										typename T6 = T0,
+										typename T7 = T0,
+										typename T8 = T0,
+										typename T9 = T0,
+										typename T10 = T0,
+										typename T11 = T0,
+										typename T12 = T0,
+										typename T13 = T0,
+										typename T14 = T0>
+		struct for_all_types : kerbal::type_traits::conjunction<
+			Traits<T0>, Traits<T1>, Traits<T2>, Traits<T3>, Traits<T4>,
+			Traits<T5>, Traits<T6>, Traits<T7>, Traits<T8>, Traits<T9>,
+			Traits<T10>, Traits<T11>, Traits<T12>, Traits<T13>, Traits<T14> >
+		{
+		};
+
+		template <template <typename> typename Traits>
+		struct for_all_types<Traits, __for_all_types_has_types_empty_args_helper> : kerbal::type_traits::true_type
+		{
+		};
+
+		template <template <typename> typename Traits,
+										typename T0 = __for_all_types_has_types_empty_args_helper,
+										typename T1 = T0,
+										typename T2 = T0,
+										typename T3 = T0,
+										typename T4 = T0,
+										typename T5 = T0,
+										typename T6 = T0,
+										typename T7 = T0,
+										typename T8 = T0,
+										typename T9 = T0,
+										typename T10 = T0,
+										typename T11 = T0,
+										typename T12 = T0,
+										typename T13 = T0,
+										typename T14 = T0>
+		struct has_types : kerbal::type_traits::disjunction<
+			Traits<T0>, Traits<T1>, Traits<T2>, Traits<T3>, Traits<T4>,
+			Traits<T5>, Traits<T6>, Traits<T7>, Traits<T8>, Traits<T9>,
+			Traits<T10>, Traits<T11>, Traits<T12>, Traits<T13>, Traits<T14> >
+		{
+		};
+
+		template <template <typename> typename Traits>
+		struct has_types<Traits, __for_all_types_has_types_empty_args_helper> : kerbal::type_traits::true_type
+		{
+		};
+
+#	else
+
+		MODULE_EXPORT
 		template <template <typename> typename Traits, typename ...Types>
 		struct for_all_types : kerbal::type_traits::conjunction<Traits<Types>...>
 		{
 		};
 
+		MODULE_EXPORT
 		template <template <typename> typename Traits, typename ...Types>
 		struct has_types : kerbal::type_traits::disjunction<Traits<Types>...>
 		{
