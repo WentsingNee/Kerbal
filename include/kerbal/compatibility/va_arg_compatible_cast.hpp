@@ -39,12 +39,12 @@ namespace kerbal
 		    return s;
 		}
 
-		const char * va_arg_compatible_cast(const std::string & s) KERBAL_NOEXCEPT
+		inline const char * va_arg_compatible_cast(const std::string & s) KERBAL_NOEXCEPT
 		{
 			return s.c_str();
 		}
 
-		const char * va_arg_compatible_cast(const kerbal::utility::string_ref & s) KERBAL_NOEXCEPT
+		inline const char * va_arg_compatible_cast(const kerbal::utility::string_ref & s) KERBAL_NOEXCEPT
 		{
 			return s.c_str();
 		}
@@ -67,12 +67,12 @@ namespace kerbal
 			return NULL;
 		}
 
-		const char * va_arg_compatible_cast(std::string&& s) noexcept
+		inline const char * va_arg_compatible_cast(std::string&& s) noexcept
 		{
 			return s.c_str();
 		}
 
-		const char * va_arg_compatible_cast(kerbal::utility::string_ref&& s) noexcept
+		inline const char * va_arg_compatible_cast(kerbal::utility::string_ref&& s) noexcept
 		{
 			return s.c_str();
 		}

@@ -413,7 +413,7 @@ namespace kerbal
 				set(const kerbal::utility::string_ref & key, const ValueType & value)
 				{
 					static query _query(std::string("set %s ") + placeholder_traits<ValueType>());
-					reply _reply = _query.execute(conn, key.c_str(), value.c_str());
+					reply _reply = _query.execute(conn, key.c_str(), value);
 					switch (_reply.type()) {
 						case reply_type::STATUS:
 							return _reply->str;
@@ -442,7 +442,7 @@ namespace kerbal
 				setnx(const kerbal::utility::string_ref & key, const ValueType & value)
 				{
 					static query _query(std::string("setnx %s ") + placeholder_traits<ValueType>());
-					reply _reply = _query.execute(conn, key.c_str(), value.c_str());
+					reply _reply = _query.execute(conn, key.c_str(), value);
 					switch (_reply.type()) {
 						case reply_type::STATUS:
 							return _reply->str;
@@ -473,8 +473,8 @@ namespace kerbal
 				std::string>::type
 				setex(const kerbal::utility::string_ref & key, int seconds, const ValueType & value)
 				{
-					static query _query(std::string("setex %d %s ") + placeholder_traits<ValueType>());
-					reply _reply = _query.execute(conn, key.c_str(), seconds, value.c_str());
+					static query _query(std::string("setex %s %d ") + placeholder_traits<ValueType>());
+					reply _reply = _query.execute(conn, key.c_str(), seconds, value);
 					switch (_reply.type()) {
 						case reply_type::STATUS:
 							return _reply->str;
@@ -492,7 +492,7 @@ namespace kerbal
 				std::string>::type
 				setex(const kerbal::utility::string_ref & key, const timeval & seconds, const ValueType & value)
 				{
-					setex(key, seconds.tv_sec, value);
+					return setex(key, seconds.tv_sec, value);
 				}
 
 #	if __cplusplus >= 201103L
@@ -506,7 +506,7 @@ namespace kerbal
 				std::string>::type
 				setex(const kerbal::utility::string_ref & key, std::chrono::seconds sec, const ValueType & value)
 				{
-					setex(key, sec.count(), value);
+					return setex(key, sec.count(), value);
 				}
 
 #	endif
@@ -520,8 +520,8 @@ namespace kerbal
 				std::string>::type
 				psetex(const kerbal::utility::string_ref & key, int millisec, const ValueType & value)
 				{
-					static query _query(std::string("psetex %d %s ") + placeholder_traits<ValueType>());
-					reply _reply = _query.execute(conn, key.c_str(), millisec, value.c_str());
+					static query _query(std::string("psetex %s %d ") + placeholder_traits<ValueType>());
+					reply _reply = _query.execute(conn, key.c_str(), millisec, value);
 					switch (_reply.type()) {
 						case reply_type::STATUS:
 							return _reply->str;
