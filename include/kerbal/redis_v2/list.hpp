@@ -143,57 +143,26 @@ namespace kerbal
 
 #	endif
 
-#		if __cplusplus < 201103L
+#	if __cplusplus >= 201103L
 
-				kerbal::data_struct::optional<std::string> blpop(const std::chrono::seconds & sec) const
-				{
-					return this->blpop<kerbal::data_struct::optional<std::string> >(sec);
-				}
-
-#		endif
-
-				template <typename ValueType
-#						if __cplusplus >= 201103L
-								= kerbal::data_struct::optional<std::string>
-#						endif
-				>
-				typename kerbal::type_traits::enable_if<
-							kerbal::data_struct::is_optional<ValueType>::value &&
-							kerbal::redis_v2::is_redis_execute_allow_type<typename kerbal::data_struct::optional_traits<ValueType>::value_type>::value,
-				ValueType>::type
-				blpop(const std::chrono::seconds & sec) const
-				{
-					std::string argv[] = { "blpop", this->bind_key, sec.count()};
-					reply _reply = bind_conn->argv_execute(begin(argv), end(argv));
-					switch (_reply.type()) {
-						case reply_type::ARRAY:
-							return redis_type_cast<typename ValueType::value_type>(_reply->element[1]->str);
-						case reply_type::NIL:
-							return ValueType();
-						default:
-							throw unexpected_case_exception(_reply.type(), argv);
-					}
-				}
-
-				template <typename ValueType>
+				template <typename ValueType = std::string>
 				typename kerbal::type_traits::enable_if<
 						!kerbal::data_struct::is_optional<ValueType>::value && kerbal::redis_v2::is_redis_execute_allow_type<ValueType>::value,
 				ValueType>::type
 				blpop(const std::chrono::seconds & sec) const
 				{
-					std::string argv[] = { "blpop", this->bind_key, sec.count() };
-					reply _reply = bind_conn->argv_execute(begin(argv), end(argv));
+					reply _reply = bind_conn->execute("blpop %s %lld", this->bind_key, sec.count());
 					switch (_reply.type()) {
 						case reply_type::ARRAY:
 							return redis_type_cast<ValueType>(_reply->element[1]->str);
-						case reply_type::NIL:
-							return ValueType();
 						default:
-							throw unexpected_case_exception(_reply.type(), argv);
+							throw unexpected_case_exception(_reply.type(), "blpop %s %lld");
 					}
 				}
 
 		};
+
+#	endif
 
 	} /* namespace redis_v2 */
 
