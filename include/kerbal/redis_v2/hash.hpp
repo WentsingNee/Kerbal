@@ -40,6 +40,57 @@ namespace kerbal
 				{
 				}
 
+#		if __cplusplus < 201103L
+
+				kerbal::data_struct::optional<std::string> hget(const kerbal::utility::string_ref & key) const
+				{
+					return this->hget<kerbal::data_struct::optional<std::string> >(key);
+				}
+
+#		endif
+
+				template <typename ValueType
+#						if __cplusplus >= 201103L
+								= kerbal::data_struct::optional<std::string>
+#						endif
+				>
+				typename kerbal::type_traits::enable_if<
+							kerbal::data_struct::is_optional<ValueType>::value &&
+							kerbal::redis_v2::is_redis_execute_allow_type<typename kerbal::data_struct::optional_traits<ValueType>::value_type>::value,
+				ValueType>::type
+				hget(const kerbal::utility::string_ref & field) const
+				{
+					kerbal::utility::string_ref args[] = { "hget", bind_key, field };
+					reply _reply = bind_conn->argv_execute(begin(args), end(args));
+					switch (_reply.type()) {
+						case reply_type::STRING:
+							return ValueType(redis_type_cast<typename ValueType::value_type>(_reply->str));
+						case reply_type::NIL:
+							return ValueType();
+						default:
+							throw unexpected_case_exception(_reply.type(), args);
+					}
+				}
+
+				template <typename ValueType>
+				typename kerbal::type_traits::enable_if<
+						!kerbal::data_struct::is_optional<ValueType>::value && kerbal::redis_v2::is_redis_execute_allow_type<ValueType>::value,
+				ValueType>::type
+				hget(const kerbal::utility::string_ref & field) const
+				{
+					kerbal::utility::string_ref args[] = { "hget", bind_key, field };
+					reply _reply = bind_conn->argv_execute(begin(args), end(args));
+					switch (_reply.type()) {
+						case reply_type::STRING:
+							return redis_type_cast<ValueType>(_reply->str);
+						case reply_type::NIL:
+							return ValueType();
+						default:
+							throw unexpected_case_exception(_reply.type(), args);
+					}
+				}
+
+
 				template <typename ValueType>
 				long long hset(const kerbal::utility::string_ref & field, const ValueType & value )
 				{
@@ -47,8 +98,8 @@ namespace kerbal
 					kerbal::utility::string_ref argv[] = { "hset", bind_key, field, str_of_value };
 					reply _reply = bind_conn->argv_execute(begin(argv), end(argv));
 					switch (_reply.type()) {
-						case reply_type::STATUS:
-							return _reply->str;
+						case reply_type::INTEGER:
+							return _reply->integer;
 						default:
 							throw unexpected_case_exception(_reply.type(), argv);
 					}
@@ -102,8 +153,86 @@ namespace kerbal
 
 #	endif
 
+#if KERBAL_REDIS_V2_ENABLE_CONCEPTS >= 201507L
 
-#	if __cplusplus >= 201103L
+				template <typename Container>
+				static void reserve_if_could(Container &, size_t)
+				{
+				}
+
+				template <Reservable Container>
+				static void reserve_if_could(Container & container, size_t size)
+				{
+					container.reserve(size);
+				}
+
+#elif __cplusplus >= 201103L
+
+				template <typename Container>
+				static
+				typename kerbal::type_traits::enable_if<!is_reservable<Container>::value>::type
+				reserve_if_could(Container &, size_t)
+				{
+				}
+
+				template <typename Container>
+				static
+				typename kerbal::type_traits::enable_if<is_reservable<Container>::value>::type
+				reserve_if_could(Container & container, size_t size)
+				{
+					container.reserve(size);
+				}
+
+#else
+
+				template <typename Container>
+				static void reserve_if_could(Container &, size_t)
+				{
+				}
+
+#endif
+
+
+#		if __cplusplus >= 201103L
+				template <typename ... Args>
+				typename kerbal::type_traits::enable_if<
+					is_redis_key_list<Args...>::value,
+				std::vector<kerbal::data_struct::optional<std::string>>>::type
+				hmget(const kerbal::utility::string_ref & key0, Args&& ... keys) const
+				{
+					return hmget<std::vector<kerbal::data_struct::optional<std::string>>>(key0, std::forward<Args>(keys)...);
+				}
+
+				template <typename ReturnType, typename ... Args>
+				typename kerbal::type_traits::enable_if<
+					is_redis_key_list<Args...>::value,
+				ReturnType>::type
+				hmget(const kerbal::utility::string_ref & key0, Args&& ... keys) const
+				{
+					kerbal::utility::string_ref args[] = { "hmget", this->bind_key, key0, keys... };
+					reply _reply = bind_conn->argv_execute(begin(args), end(args));
+					switch (_reply.type()) {
+						case reply_type::ARRAY: {
+							ReturnType res;
+							reserve_if_could(res, _reply->elements);
+							for (size_t i = 0; i < _reply->elements; ++i) {
+								switch ((reply_type)(_reply->element[i]->type)) {
+									case reply_type::STRING:
+										res.emplace_back(_reply->element[i]->str);
+										break;
+									case reply_type::NIL:
+										res.emplace_back();
+										break;
+									default:
+										throw unexpected_case_exception(_reply.type(), args);
+								}
+							}
+							return res;
+						}
+						default:
+							throw unexpected_case_exception(_reply.type(), args);
+					}
+				}
 
 				template <typename ...Types, typename ... Args>
 				typename mget_tuple_return_t<1 + sizeof...(Args) - sizeof...(Types), Types...>::type
