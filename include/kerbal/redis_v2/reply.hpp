@@ -59,7 +59,7 @@ namespace kerbal
 		ReturnType reply_type_name(reply_type type);
 
 		template <>
-		inline const char * reply_type_name(reply_type type) KERBAL_NOEXCEPT
+		inline const char * reply_type_name(reply_type type)
 		{
 			switch (type) {
 				case reply_type::STRING:

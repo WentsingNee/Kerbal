@@ -163,14 +163,6 @@ namespace kerbal
 			return placeholder_traits<typename kerbal::type_traits::remove_cv<typename kerbal::type_traits::remove_reference<Type>::type>::type>();
 		}
 
-		template <typename Type>
-		KERBAL_CONSTEXPR
-		typename kerbal::type_traits::enable_if<__is_char_array<Type>::value, const char *>::type
-		placeholder_traits()
-		{
-			return placeholder_traits<const char*>();
-		}
-
 		template <>
 		KERBAL_CONSTEXPR const char * placeholder_traits<std::string>()
 		{
@@ -181,6 +173,14 @@ namespace kerbal
 		KERBAL_CONSTEXPR const char * placeholder_traits<const char *>()
 		{
 			return "%s";
+		}
+
+		template <typename Type>
+		KERBAL_CONSTEXPR
+		typename kerbal::type_traits::enable_if<__is_char_array<Type>::value, const char *>::type
+		placeholder_traits()
+		{
+			return placeholder_traits<const char*>();
 		}
 
 		template <>
@@ -267,14 +267,22 @@ namespace kerbal
 
 #	endif
 
-		template <typename CastToType>
-		CastToType
-		redis_type_cast(const char * src)
-		{
-			return redis_type_cast<typename kerbal::type_traits::remove_const<CastToType>::type>(src);
-		}
+        template <typename CastToType>
+        typename kerbal::type_traits::enable_if<!kerbal::type_traits::is_const<CastToType>::value, CastToType>::type
+        redis_type_cast(const char * src)
+        {
+            std::istringstream ss(src);
+            return *std::istream_iterator<CastToType>(ss);
+        }
 
-		template <>
+        template <typename CastToType>
+        typename kerbal::type_traits::enable_if<kerbal::type_traits::is_const<CastToType>::value, CastToType>::type
+        redis_type_cast(const char * src)
+        {
+            return redis_type_cast<typename kerbal::type_traits::remove_const<CastToType>::type>(src);
+        }
+
+        template <>
 		inline std::string redis_type_cast<std::string>(const char * src)
 		{
 			return src;

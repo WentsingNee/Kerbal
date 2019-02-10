@@ -24,7 +24,7 @@ namespace kerbal
 				typedef typename supper_t::rep rep;
 				typedef typename supper_t::period period;
 
-				using std::chrono::duration<size_type, Ratio>::duration;
+				using supper_t::duration;
 				using supper_t::count;
 
 				storage() :

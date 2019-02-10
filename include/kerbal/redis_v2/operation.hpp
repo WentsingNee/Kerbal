@@ -299,14 +299,14 @@ namespace kerbal
 
 				std::string type(const kerbal::utility::string_ref & key) const
 				{
-					static query _query("type %s");
-					reply _reply = _query.execute(conn, key.c_str());
+					kerbal::utility::string_ref args[] = { "type", key };
+					reply _reply = conn.argv_execute(begin(args), end(args));
 					switch (_reply.type()) {
 						case reply_type::STRING: {
 							return _reply->str;
 						}
 						default:
-							throw unexpected_case_exception(_reply.type(), _query.str());
+							throw unexpected_case_exception(_reply.type(), args);
 					}
 				}
 
@@ -327,8 +327,8 @@ namespace kerbal
 				>
 				ReturnType keys(const kerbal::utility::string_ref & key) const
 				{
-					static query _query("keys %s");
-					reply _reply = _query.execute(conn, key.c_str());
+					kerbal::utility::string_ref args[] = { "keys", key };
+					reply _reply = conn.argv_execute(begin(args), end(args));
 					switch (_reply.type()) {
 						case reply_type::ARRAY: {
 							ReturnType res;
@@ -346,19 +346,19 @@ namespace kerbal
 #								endif
 										break;
 									default:
-										throw unexpected_case_exception(_reply.type(), _query.str());
+										throw unexpected_case_exception(_reply.type(), args);
 								}
 							}
 							return res;
 						}
 						default:
-							throw unexpected_case_exception(_reply.type(), _query.str());
+							throw unexpected_case_exception(_reply.type(), args);
 					}
 				}
 
 #		if __cplusplus < 201103L
 
-				kerbal::data_struct::optional<std::string> keys(const kerbal::utility::string_ref & key) const
+				kerbal::data_struct::optional<std::string> get(const kerbal::utility::string_ref & key) const
 				{
 					return this->get<kerbal::data_struct::optional<std::string> >(key);
 				}
@@ -376,15 +376,15 @@ namespace kerbal
 				ValueType>::type
 				get(const kerbal::utility::string_ref & key) const
 				{
-					static query _query("get %s");
-					reply _reply = _query.execute(conn, key.c_str());
+					kerbal::utility::string_ref args[] = { "get", key };
+					reply _reply = conn.argv_execute(begin(args), end(args));
 					switch (_reply.type()) {
 						case reply_type::STRING:
-							return redis_type_cast<typename ValueType::value_type>(_reply->str);
+							return ValueType(redis_type_cast<typename ValueType::value_type>(_reply->str));
 						case reply_type::NIL:
 							return ValueType();
 						default:
-							throw unexpected_case_exception(_reply.type(), _query.str());
+							throw unexpected_case_exception(_reply.type(), args);
 					}
 				}
 
@@ -394,15 +394,15 @@ namespace kerbal
 				ValueType>::type
 				get(const kerbal::utility::string_ref & key) const
 				{
-					static query _query("get %s");
-					reply _reply = _query.execute(conn, key.c_str());
+					kerbal::utility::string_ref args[] = { "get", key };
+					reply _reply = conn.argv_execute(begin(args), end(args));
 					switch (_reply.type()) {
 						case reply_type::STRING:
 							return redis_type_cast<ValueType>(_reply->str);
 						case reply_type::NIL:
 							return ValueType();
 						default:
-							throw unexpected_case_exception(_reply.type(), _query.str());
+							throw unexpected_case_exception(_reply.type(), args);
 					}
 				}
 
@@ -412,13 +412,13 @@ namespace kerbal
 				std::string>::type
 				set(const kerbal::utility::string_ref & key, const ValueType & value)
 				{
-					static query _query(std::string("set %s ") + placeholder_traits<ValueType>());
-					reply _reply = _query.execute(conn, key.c_str(), value);
+					kerbal::utility::string_ref args[] = { "set", key, redis_cast_to_string(value) };
+					reply _reply = conn.argv_execute(begin(args), end(args));
 					switch (_reply.type()) {
 						case reply_type::STATUS:
 							return _reply->str;
 						default:
-							throw unexpected_case_exception(_reply.type(), _query.str());
+							throw unexpected_case_exception(_reply.type(), args);
 					}
 				}
 
@@ -441,13 +441,13 @@ namespace kerbal
 				std::string>::type
 				setnx(const kerbal::utility::string_ref & key, const ValueType & value)
 				{
-					static query _query(std::string("setnx %s ") + placeholder_traits<ValueType>());
-					reply _reply = _query.execute(conn, key.c_str(), value);
+					kerbal::utility::string_ref args[] = { "setnx", key, redis_cast_to_string(value) };
+					reply _reply = conn.argv_execute(begin(args), end(args));
 					switch (_reply.type()) {
 						case reply_type::STATUS:
 							return _reply->str;
 						default:
-							throw unexpected_case_exception(_reply.type(), _query.str());
+							throw unexpected_case_exception(_reply.type(), args);
 					}
 				}
 
@@ -473,13 +473,13 @@ namespace kerbal
 				std::string>::type
 				setex(const kerbal::utility::string_ref & key, int seconds, const ValueType & value)
 				{
-					static query _query(std::string("setex %s %d ") + placeholder_traits<ValueType>());
-					reply _reply = _query.execute(conn, key.c_str(), seconds, value);
+					kerbal::utility::string_ref args[] = { "setex", key, redis_cast_to_string(seconds), redis_cast_to_string(value) };
+					reply _reply = conn.argv_execute(begin(args), end(args));
 					switch (_reply.type()) {
 						case reply_type::STATUS:
 							return _reply->str;
 						default:
-							throw unexpected_case_exception(_reply.type(), _query.str());
+							throw unexpected_case_exception(_reply.type(), args);
 					}
 				}
 
@@ -520,13 +520,13 @@ namespace kerbal
 				std::string>::type
 				psetex(const kerbal::utility::string_ref & key, int millisec, const ValueType & value)
 				{
-					static query _query(std::string("psetex %s %d ") + placeholder_traits<ValueType>());
-					reply _reply = _query.execute(conn, key.c_str(), millisec, value);
+					kerbal::utility::string_ref args[] = { "psetex", key, redis_cast_to_string(millisec), redis_cast_to_string(value) };
+					reply _reply = conn.argv_execute(begin(args), end(args));
 					switch (_reply.type()) {
 						case reply_type::STATUS:
 							return _reply->str;
 						default:
-							throw unexpected_case_exception(_reply.type(), _query.str());
+							throw unexpected_case_exception(_reply.type(), args);
 					}
 				}
 
@@ -580,15 +580,15 @@ namespace kerbal
 				ReturnType>::type
 				getset(const kerbal::utility::string_ref & key, const ValueType & value)
 				{
-					static query _query(std::string("getset %s ") + placeholder_traits<ValueType>());
-					reply _reply = _query.execute(conn, key.c_str(), value);
+					kerbal::utility::string_ref args[] = { "getset", key, redis_cast_to_string(value) };
+					reply _reply = conn.argv_execute(begin(args), end(args));
 					switch (_reply.type()) {
 						case reply_type::STRING:
 							return redis_type_cast<typename ReturnType::value_type>(_reply->str);
 						case reply_type::NIL:
 							return ReturnType();
 						default:
-							throw unexpected_case_exception(_reply.type(), _query.str());
+							throw unexpected_case_exception(_reply.type(), args);
 					}
 				}
 
@@ -602,15 +602,15 @@ namespace kerbal
 				ReturnType>::type
 				getset(const kerbal::utility::string_ref & key, const ValueType & value)
 				{
-					static query _query(std::string("getset %s ") + placeholder_traits<ValueType>());
-					reply _reply = _query.execute(conn, key.c_str(), value);
+					kerbal::utility::string_ref args[] = { "getset", key, redis_cast_to_string(value) };
+					reply _reply = conn.argv_execute(begin(args), end(args));
 					switch (_reply.type()) {
 						case reply_type::STRING:
 							return redis_type_cast<ReturnType>(_reply->str);
 						case reply_type::NIL:
 							return ReturnType();
 						default:
-							throw unexpected_case_exception(_reply.type(), _query.str());
+							throw unexpected_case_exception(_reply.type(), args);
 					}
 				}
 
@@ -738,49 +738,49 @@ namespace kerbal
 
 				std::string rename(const kerbal::utility::string_ref & key, const kerbal::utility::string_ref & newKey)
 				{
-					static query _query("rename %s %s");
-					reply _reply = _query.execute(conn, key.c_str(), newKey.c_str());
+					kerbal::utility::string_ref args[] = { "rename", key, newKey};
+					reply _reply = conn.argv_execute(begin(args), end(args));
 					switch (_reply.type()) {
 						case reply_type::STATUS:
 							return _reply->str;
 						default:
-							throw unexpected_case_exception(_reply.type(), _query.str());
+							throw unexpected_case_exception(_reply.type(), args);
 					}
 				}
 
 				bool del(const kerbal::utility::string_ref & key0)
 				{
-					static query _query("del %s");
-					reply _reply = _query.execute(conn, key0.c_str());
+					kerbal::utility::string_ref args[] = { "del", key0};
+					reply _reply = conn.argv_execute(begin(args), end(args));
 					switch (_reply.type()) {
 						case reply_type::INTEGER:
 							return _reply->integer;
 						default:
-							throw unexpected_case_exception(_reply.type(), _query.str());
+							throw unexpected_case_exception(_reply.type(), args);
 					}
 				}
 
 				bool del(const kerbal::utility::string_ref & key0, const kerbal::utility::string_ref & key1)
 				{
-					static query _query("del %s %s");
-					reply _reply = _query.execute(conn, key0.c_str(), key1.c_str());
+					kerbal::utility::string_ref args[] = { "del", key0, key1};
+					reply _reply = conn.argv_execute(begin(args), end(args));
 					switch (_reply.type()) {
 						case reply_type::INTEGER:
 							return _reply->integer;
 						default:
-							throw unexpected_case_exception(_reply.type(), _query.str());
+							throw unexpected_case_exception(_reply.type(), args);
 					}
 				}
 
 				bool del(const kerbal::utility::string_ref & key0, const kerbal::utility::string_ref & key1, const kerbal::utility::string_ref & key2)
 				{
-					static query _query("del %s %s %s");
-					reply _reply = _query.execute(conn, key0.c_str(), key1.c_str(), key2.c_str());
+					kerbal::utility::string_ref args[] = { "del", key0, key1, key2};
+					reply _reply = conn.argv_execute(begin(args), end(args));
 					switch (_reply.type()) {
 						case reply_type::INTEGER:
 							return _reply->integer;
 						default:
-							throw unexpected_case_exception(_reply.type(), _query.str());
+							throw unexpected_case_exception(_reply.type(), args);
 					}
 				}
 
@@ -823,37 +823,37 @@ namespace kerbal
 
 				bool exists(const kerbal::utility::string_ref & key0) const
 				{
-					static query _query("exists %s");
-					reply _reply = _query.execute(conn, key0.c_str());
+					kerbal::utility::string_ref args[] = { "exists", key0};
+					reply _reply = conn.argv_execute(begin(args), end(args));
 					switch (_reply.type()) {
 						case reply_type::INTEGER:
 							return _reply->integer;
 						default:
-							throw unexpected_case_exception(_reply.type(), _query.str());
+							throw unexpected_case_exception(_reply.type(), args);
 					}
 				}
 
 				long long exists(const kerbal::utility::string_ref & key0, const kerbal::utility::string_ref & key1) const
 				{
-					static query _query("exists %s %s");
-					reply _reply = _query.execute(conn, key0.c_str(), key1.c_str());
+					kerbal::utility::string_ref args[] = { "exists", key0, key1};
+					reply _reply = conn.argv_execute(begin(args), end(args));
 					switch (_reply.type()) {
 						case reply_type::INTEGER:
 							return _reply->integer;
 						default:
-							throw unexpected_case_exception(_reply.type(), _query.str());
+							throw unexpected_case_exception(_reply.type(), args);
 					}
 				}
 
 				long long exists(const kerbal::utility::string_ref & key0, const kerbal::utility::string_ref & key1, const kerbal::utility::string_ref & key2) const
 				{
-					static query _query("exists %s %s %s");
-					reply _reply = _query.execute(conn, key0.c_str(), key1.c_str(), key2.c_str());
+					kerbal::utility::string_ref args[] = { "exists", key0, key1, key2};
+					reply _reply = conn.argv_execute(begin(args), end(args));
 					switch (_reply.type()) {
 						case reply_type::INTEGER:
 							return _reply->integer;
 						default:
-							throw unexpected_case_exception(_reply.type(), _query.str());
+							throw unexpected_case_exception(_reply.type(), args);
 					}
 				}
 
@@ -902,25 +902,25 @@ namespace kerbal
 
 				long long pexpire(const kerbal::utility::string_ref & key, long long milliseconds)
 				{
-					static query _query("pexpire %s %lld");
-					reply _reply = _query.execute(conn, key.c_str(), milliseconds);
+					kerbal::utility::string_ref args[] = { "pexpire", key, redis_cast_to_string(milliseconds)};
+					reply _reply = conn.argv_execute(begin(args), end(args));
 					switch (_reply.type()) {
 						case reply_type::INTEGER:
 							return _reply->integer;
 						default:
-							throw unexpected_case_exception(_reply.type(), _query.str());
+							throw unexpected_case_exception(_reply.type(), args);
 					}
 				}
 
 				long long expire(const kerbal::utility::string_ref & key, long long seconds)
 				{
-					static query _query("expire %s %lld");
-					reply _reply = _query.execute(conn, key.c_str(), seconds);
+					kerbal::utility::string_ref args[] = { "expire", key, redis_cast_to_string(seconds)};
+					reply _reply = conn.argv_execute(begin(args), end(args));
 					switch (_reply.type()) {
 						case reply_type::INTEGER:
 							return _reply->integer;
 						default:
-							throw unexpected_case_exception(_reply.type(), _query.str());
+							throw unexpected_case_exception(_reply.type(), args);
 					}
 				}
 
@@ -951,37 +951,37 @@ namespace kerbal
 				 */
 				long long persist(const kerbal::utility::string_ref & key)
 				{
-					static query _query("persist %s");
-					reply _reply = _query.execute(conn, key.c_str());
+					kerbal::utility::string_ref args[] = { "persist", key};
+					reply _reply = conn.argv_execute(begin(args), end(args));
 					switch (_reply.type()) {
 						case reply_type::INTEGER:
 							return _reply->integer;
 						default:
-							throw unexpected_case_exception(_reply.type(), _query.str());
+							throw unexpected_case_exception(_reply.type(), args);
 					}
 				}
 
 				long long pttl(const kerbal::utility::string_ref & key) const
 				{
-					static query _query("pttl %s");
-					reply _reply = _query.execute(conn, key.c_str());
+					kerbal::utility::string_ref args[] = { "pttl", key};
+					reply _reply = conn.argv_execute(begin(args), end(args));
 					switch (_reply.type()) {
 						case reply_type::INTEGER:
 							return _reply->integer;
 						default:
-							throw unexpected_case_exception(_reply.type(), _query.str());
+							throw unexpected_case_exception(_reply.type(), args);
 					}
 				}
 
 				long long ttl(const kerbal::utility::string_ref & key) const
 				{
-					static query _query("ttl %s");
-					reply _reply = _query.execute(conn, key.c_str());
+					kerbal::utility::string_ref args[] = { "ttl", key};
+					reply _reply = conn.argv_execute(begin(args), end(args));
 					switch (_reply.type()) {
 						case reply_type::INTEGER:
 							return _reply->integer;
 						default:
-							throw unexpected_case_exception(_reply.type(), _query.str());
+							throw unexpected_case_exception(_reply.type(), args);
 					}
 				}
 
