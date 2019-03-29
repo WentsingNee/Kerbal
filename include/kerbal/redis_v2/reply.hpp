@@ -88,7 +88,7 @@ namespace kerbal
 			return out << reply_type_name<const char *>(type);
 		}
 
-		class reply: kerbal::utility::nonassignable, kerbal::utility::noncopyable
+		class reply: kerbal::utility::noncopyable
 		{
 			private:
 				typedef ::redisReply raw_redis_reply_t;

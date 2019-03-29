@@ -8,7 +8,7 @@
 #include <kerbal/compatibility/tick_count.h>
 #include <kerbal/utility/noncopyable.hpp>
 
-class runtime_timer: virtual public kerbal::utility::nonassignable, public kerbal::utility::noncopyable
+class runtime_timer: public kerbal::utility::noncopyable
 {
 	protected:
 		const unsigned long start_time;

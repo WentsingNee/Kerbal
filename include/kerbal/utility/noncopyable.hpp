@@ -15,18 +15,18 @@ namespace kerbal
 
 #	if __cplusplus < 201103L
 
-		class noncopyable
+		class noncopyconstuctible
 		{
 			protected:
-				noncopyable()
+				noncopyconstuctible()
 				{
 				}
 
-				~noncopyable()
+				~noncopyconstuctible()
 				{
 				}
 
-				noncopyable(const noncopyable&);
+				noncopyconstuctible(const noncopyconstuctible&);
 		};
 
 		class nonassignable
@@ -37,14 +37,14 @@ namespace kerbal
 
 #	else
 
-		class noncopyable
+		class noncopyconstuctible
 		{
 			protected:
-				noncopyable() noexcept = default;
-				~noncopyable() noexcept = default;
+				noncopyconstuctible() noexcept = default;
+				~noncopyconstuctible() noexcept = default;
 
 			private:
-				noncopyable(const noncopyable&) noexcept = delete;
+				noncopyconstuctible(const noncopyconstuctible&) noexcept = delete;
 		};
 
 		class nonassignable
@@ -54,6 +54,10 @@ namespace kerbal
 		};
 
 #	endif
+
+		class noncopyable : public noncopyconstuctible, public nonassignable
+		{
+		};
 
 	}/* namespace utility */
 
