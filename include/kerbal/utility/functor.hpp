@@ -21,7 +21,7 @@ namespace kerbal
 	{
 
 		template <typename Type>
-		class functor: virtual public kerbal::utility::nonassignable, public kerbal::utility::noncopyable
+		class functor: public kerbal::utility::noncopyable
 		{
 			public:
 				typedef Type return_type;
@@ -47,7 +47,7 @@ namespace kerbal
 		};
 
 		template <typename Type>
-		class functor<const Type> : virtual public kerbal::utility::nonassignable, public kerbal::utility::noncopyable
+		class functor<const Type> : public kerbal::utility::noncopyable
 		{
 			public:
 				typedef const Type return_type;
@@ -73,7 +73,7 @@ namespace kerbal
 		};
 
 		template <typename Type>
-		class functor<Type &> : virtual public kerbal::utility::nonassignable, public kerbal::utility::noncopyable
+		class functor<Type &> : public kerbal::utility::noncopyable
 		{
 			public:
 				typedef Type & return_type;
@@ -97,7 +97,7 @@ namespace kerbal
 		};
 
 		template <>
-		class functor<void> : virtual public kerbal::utility::nonassignable, public kerbal::utility::noncopyable
+		class functor<void> : public kerbal::utility::noncopyable
 		{
 			protected:
 

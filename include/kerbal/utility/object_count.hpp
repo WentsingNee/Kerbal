@@ -16,7 +16,7 @@ namespace kerbal
 	namespace utility
 	{
 		template <typename ObjectType, typename CountingType = size_t>
-		struct object_count : virtual public kerbal::utility::nonassignable, public kerbal::utility::noncopyable
+		struct object_count : public kerbal::utility::noncopyable
 		{
 			public:
 				typedef CountingType counting_type;
