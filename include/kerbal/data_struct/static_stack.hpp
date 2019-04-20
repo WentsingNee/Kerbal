@@ -28,7 +28,7 @@ namespace kerbal
 		 * @tparam Tp Type of the elements.
 		 * @tparam N The maximum number of elements that the stack can hold.
 		 */
-		template <typename Tp, size_t N>
+		template <typename Tp, std::size_t N, typename Sequence = kerbal::data_struct::static_array<Tp, N> >
 		class static_stack
 		{
 			public:
@@ -36,73 +36,94 @@ namespace kerbal
 				typedef const Tp const_type;
 				typedef Tp& reference;
 				typedef const Tp& const_reference;
-				typedef Tp* pointer;
-				typedef const Tp* const_pointer;
+				typedef Sequence container_type;
+
+#		if __cplusplus >= 201103L
+				typedef value_type&& rvalue_reference;
+				typedef const value_type&& const_rvalue_reference;
+#		endif
+
+				typedef typename Sequence::size_type size_type;
 
 			private:
-				kerbal::data_struct::static_array<Tp, N> p;
+				Sequence c;
 
 			public:
 				static_stack() :
-						p()
+						c()
 				{
 				}
 
 #if __cplusplus >= 201103L
 				static_stack(std::initializer_list<value_type> src) :
-						p(src)
+						c(src)
 				{
 				}
 #endif
-				static_stack& operator=(const static_stack& src)
-				{
-					this->p = src.p;
-					return *this;
-				}
-
-				void push(const value_type & val)
-				{
-					p.push_back(val);
-				}
-
-				void pop()
-				{
-					p.pop_back();
-				}
-
-				void clear()
-				{
-					p.clear();
-				}
-
-				size_t size() const
-				{
-					return p.size();
-				}
 
 				bool empty() const
 				{
-					return p.empty();
+					return c.empty();
 				}
 
 				bool full() const
 				{
-					return p.full();
+					return c.full();
+				}
+
+				size_type size() const
+				{
+					return c.size();
+				}
+
+				KERBAL_CONSTEXPR size_type max_size() const
+				{
+					return c.max_size();
 				}
 
 				reference top()
 				{
-					return p.back();
+					return c.back();
 				}
 
 				const_reference top() const
 				{
-					return p.back();
+					return c.back();
+				}
+
+				void push(const_reference val)
+				{
+					c.push_back(val);
+				}
+
+#if __cplusplus >= 201103L
+				void push(rvalue_reference val)
+				{
+					c.push_back(val);
+				}
+#endif
+
+#if __cplusplus >= 201103L
+				template <typename ... Args>
+				void emplace(Args&&... args)
+				{
+					c.emplace_back(std::forward<Args>(args)...);
+				}
+#endif
+
+				void pop()
+				{
+					c.pop_back();
+				}
+
+				void clear()
+				{
+					c.clear();
 				}
 
 				void swap(static_stack & with)
 				{
-					p.swap(with.p);
+					c.swap(with.c);
 				}
 
 				/**
@@ -112,33 +133,33 @@ namespace kerbal
 
 				/**
 				 * Judge whether the stack is equal to the other one.
-				 * @param with another stack
+				 * @param rhs another stack
 				 */
-				bool operator==(const static_stack & with) const
+				bool operator==(const static_stack & rhs) const
 				{
-					return p == with.p;
+					return c == rhs.c;
 				}
 
-				bool operator!=(const static_stack & with) const
+				bool operator!=(const static_stack & rhs) const
 				{
-					return p != with.p;
+					return c != rhs.c;
 				}
 
-				bool operator<(const static_stack & with) const
+				bool operator<(const static_stack & rhs) const
 				{
-					return p < with.p;
+					return c < rhs.c;
 				}
-				bool operator<=(const static_stack & with) const
+				bool operator<=(const static_stack & rhs) const
 				{
-					return p <= with.p;
+					return c <= rhs.c;
 				}
-				bool operator>(const static_stack & with) const
+				bool operator>(const static_stack & rhs) const
 				{
-					return p > with.p;
+					return c > rhs.c;
 				}
-				bool operator>=(const static_stack & with) const
+				bool operator>=(const static_stack & rhs) const
 				{
-					return p >= with.p;
+					return c >= rhs.c;
 				}
 
 				// @} group compare

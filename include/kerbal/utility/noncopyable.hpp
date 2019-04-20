@@ -51,6 +51,7 @@ namespace kerbal
 		{
 			private:
 				nonassignable& operator=(const nonassignable &) noexcept = delete;
+				nonassignable& operator=(nonassignable &&) noexcept = delete;
 		};
 
 #	endif
