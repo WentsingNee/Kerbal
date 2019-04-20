@@ -13,6 +13,7 @@
 #ifndef INCLUDE_KERBAL_DATA_STRUCT_STATIC_ARRAY_HPP_
 #define INCLUDE_KERBAL_DATA_STRUCT_STATIC_ARRAY_HPP_
 
+#include <kerbal/data_struct/raw_storage.hpp>
 #include <cctype>
 #include <stdexcept>
 
@@ -30,13 +31,15 @@ namespace kerbal
 		/**
 		 * @brief Array with flexible length that stored on automatic storage duration
 		 * @details The class is an encapsulation class of array that could be stored on
-		 *          automatic storage duration. It is more effective than std::vector because
-		 *          std::vector store elements on heap storage duration (that's required memory
-		 *          allocate and deallocate). Meanwhile the Auto_array has more flexibility
-		 *          than std::array because std::array has fixed length and doesn't support
-		 *          options like insert or erase. For further, std::array and c-style array
-		 *          must call default constructor when it was declared. However, as we
-		 *          all know, sometimes the default construct options are unnecessary.
+		 *          automatic storage duration. It is more effective than std::vector
+		 *          (especially when type parameter Tp is trivial type) because std::vector
+		 *          store elements on heap storage duration (that's required memory allocation
+		 *          and deallocation). Meanwhile the static_array has more flexibility
+		 *          than std::array for the reason that std::array has fixed length and
+		 *          doesn't support operations like `insert` and `erase`. For further,
+		 *          std::array and c-style array must call default constructor for initialization
+		 *          when it was declared. However, as we all know, sometimes the default construct
+		 *          operations are unnecessary.
 		 * @tparam Tp Type of the elements.
 		 * @tparam N The maximum number of elements that the array can hold.
 		 */
@@ -63,13 +66,21 @@ namespace kerbal
 				/// @brief Constant pointer type to the elements.
 				typedef const Tp* const_pointer;
 
+#		if __cplusplus >= 201103L
+				typedef value_type&& rvalue_reference;
+				typedef const value_type&& const_rvalue_reference;
+#		endif
+
+				typedef std::size_t size_type;
+				typedef std::ptrdiff_t difference_type;
+
 				/// @brief 与该 Auto_array 所等价的 C 风格数组的类型, 即 Tp[N]
 				typedef value_type equal_c_array[N];
 				typedef equal_c_array& equal_c_array_reference;
 				typedef const value_type const_equal_c_array[N];
 				typedef const_equal_c_array& const_equal_c_array_reference;
 
-				/// @brief Iterator to Auto_array.
+				/// @brief Iterator to static_array.
 				typedef class iterator : public std::iterator<std::random_access_iterator_tag, static_array::value_type>
 				{
 					private:
@@ -78,16 +89,16 @@ namespace kerbal
 					public:
 						explicit iterator(pointer current);
 
-						operator typename static_array::const_iterator();
-
 						reference operator*() const;
 						pointer operator->() const;
 
-						//前自增
+						/// @brief 前自增
 						iterator& operator++();
-						//后自增
+						/// @brief 后自增
 						iterator operator++(int);
+						/// @brief 前自减
 						iterator& operator--();
+						/// @brief 后自减
 						iterator operator--(int);
 
 						iterator operator+(const typename iterator::difference_type & delta) const;
@@ -107,7 +118,7 @@ namespace kerbal
 
 				} iterator;
 
-				/// @brief Const_iterator to Auto_array.
+				/// @brief Const_iterator to static_array.
 				typedef class const_iterator : public std::iterator<std::random_access_iterator_tag, static_array::const_type>
 				{
 					private:
@@ -143,7 +154,7 @@ namespace kerbal
 
 				} const_iterator;
 
-				/// @brief Reverse_iterator to Auto_array.
+				/// @brief Reverse_iterator to static_array.
 				typedef class reverse_iterator : public std::iterator<std::random_access_iterator_tag, static_array::value_type>
 				{
 					private:
@@ -151,8 +162,6 @@ namespace kerbal
 
 					public:
 						explicit reverse_iterator(pointer current);
-
-						operator typename static_array::const_reverse_iterator();
 
 						reference operator*() const;
 						pointer operator->() const;
@@ -179,7 +188,7 @@ namespace kerbal
 
 				} reverse_iterator;
 
-				/// @brief Const_reverse_iterator to Auto_array.
+				/// @brief Const_reverse_iterator to static_array.
 				typedef class const_reverse_iterator : public std::iterator<std::random_access_iterator_tag, static_array::const_type>
 				{
 					private:
@@ -213,26 +222,16 @@ namespace kerbal
 
 				} const_reverse_iterator;
 
-#if __cplusplus >= 201103L
-				/** @brief The maximum number of elements that the array can hold. */
-				static constexpr size_t max_size = N;
-#else
-				/** @brief The maximum number of elements that the array can hold. */
-				static const size_t max_size;
-#endif
-
 			private:
 
-				/**
-				 * @note 使用一层匿名联合体包裹抑制调用构造函数
-				 */
-				union
-				{
-						/// data
-						value_type p[N];
-				};
+				typedef kerbal::data_struct::raw_storage<Tp[N]> storage_type;
 
-				pointer p_to_end;
+				/**
+				 * @brief 数据存储区
+				 */
+				storage_type storage;
+
+				typename storage_type::element::const_pointer p_to_end;
 
 			public:
 				/** @brief Empty container constructor (Default constructor) */
@@ -271,23 +270,6 @@ namespace kerbal
 				 */
 				~static_array();
 
-				/**
-				 * @brief Assign the array by using n value(s).
-				 * @param n numbers of the value(s)
-				 * @param val value
-				 */
-				void assign(size_t n, const value_type & val);
-
-				/**
-				 * @brief Assign the array by using a range of elements.
-				 * @param begin the iterator that points to the range begin
-				 * @param end the iterator that points to the range end
-				 * @tparam InputIterator An input iterator type that points to elements of a type
-				 * @warning 若区间长度超出 Auto_array 所能存放的最大元素数目, 超过部分将自动截断
-				 */
-				template <typename InputIterator>
-				void assign(InputIterator begin, InputIterator end);
-
 				static_array& operator=(const static_array & src);
 
 #if __cplusplus >= 201103L
@@ -300,23 +282,132 @@ namespace kerbal
 #endif
 
 				/**
-				 *
-				 * @param src
+				 * @brief Assign the array by using n value(s).
+				 * @param n numbers of the value(s)
+				 * @param val value
 				 */
-				void insert(const_iterator pos, const_reference val);
+				void assign(size_type n, const value_type & val);
+
+				/**
+				 * @brief Assign the array by using a range of elements.
+				 * @param begin the iterator that points to the range begin
+				 * @param end the iterator that points to the range end
+				 * @tparam InputIterator An input iterator type that points to elements of a type
+				 * @warning 若区间长度超出 Auto_array 所能存放的最大元素数目, 超过部分将自动截断
+				 */
+				template <typename InputIterator>
+				void assign(InputIterator begin, InputIterator end);
+
+#if __cplusplus >= 201103L
+				/**
+				 * @brief Assign the array by using the content of an initializer list
+				 * @param src the initializer list
+				 */
+				void assign(std::initializer_list<value_type> src);
+#endif
+
+				/** @brief 返回指向数组首元素的迭代器 */
+				iterator begin();
+
+				const_iterator begin() const;
+
+				/** @brief 返回指向数组末尾元素的后一个元素位置的迭代器 */
+				const_iterator end() const;
+
+				const_iterator cbegin() const;
+				const_iterator cend() const;
+
+				reverse_iterator rbegin();
+				const_reverse_iterator rbegin() const;
+				const_reverse_iterator rend() const;
+
+				const_reverse_iterator crbegin() const;
+				const_reverse_iterator crend() const;
+
+				/**
+				 * @brief Count the number of the elements that the array has contained.
+				 * @return the number of the elements that the array has contained
+				 */
+				size_type size() const;
+
+				/**
+				 * @brief Returns the size() of the largest possible static_array.
+				 */
+				KERBAL_CONSTEXPR size_type max_size() const KERBAL_NOEXCEPT
+				{
+					return N;
+				}
+
+				/**
+				 * @brief Judge whether the array is empty.
+				 * @return If the array is empty, return true, otherwise return false
+				 */
+				bool empty() const;
+
+				/**
+				 * @brief Judge whether the array has been full.
+				 * @return If the array has been full, return true, otherwise return false
+				 */
+				bool full() const;
+
+				reference operator[](size_type index);
+				const_reference operator[](size_type index) const;
+
+				reference at(size_type index);
+				const_reference at(size_type index) const;
+
+				/**
+				 * @brief Get the reference of the element at the beginning of the array.
+				 * @return the reference of the element at the beginning of the array
+				 * @throw std::out_of_range Throw this exception if the array is empty.
+				 */
+				reference front();
+
+				/**
+				 * @brief Get the const_reference of the element at the beginning of the array.
+				 * @return the const_reference of the element at the beginning of the array
+				 * @throw std::out_of_range Throw this exception if the array is empty.
+				 */
+				const_reference front() const;
+
+				/**
+				 * @brief Get the reference of the element at the end of the array.
+				 * @return the reference of the element at the end of the array
+				 * @throw std::out_of_range Throw this exception if the array is empty.
+				 */
+				reference back();
+
+				/**
+				 * @brief Get the const_reference of the element at the end of the array.
+				 * @return the const_reference of the element at the end of the array
+				 * @throw std::out_of_range Throw this exception if the array is empty.
+				 */
+				const_reference back() const;
+
+				/**
+				 * @brief 返回与该 Auto_array 所等价的 C 风格数组类型的引用, 方便与专门为 C 风格数组类型设计的 API 交互
+				 * @return 与该 Auto_array 所等价的 C 风格数组类型的引用
+				 * @warning 必须保证数组元素存满时才可调用此方法
+				 * @throw std::exception Throw this exception when call this method while the array is not full
+				 */
+				equal_c_array_reference c_arr();
+				const_equal_c_array_reference c_arr() const;
+				const_equal_c_array_reference const_c_arr() const;
+
+				const_pointer data() const;
 
 				/**
 				 * @brief 在数组末尾插入参数 src 指定的元素
 				 * @param src
 				 */
-				void push_back(const value_type & src);
+				void push_back(const_reference src);
 
 #			if __cplusplus >= 201103L
 				/**
 				 * @brief 在数组末尾插入参数 src 指定的元素
 				 * @param src
 				 */
-				void push_back(value_type && src);
+				void push_back(rvalue_reference src);
 #			endif
 
 				/**
@@ -326,77 +417,38 @@ namespace kerbal
 
 				/**
 				 * @brief 在数组首部插入参数 src 指定的元素
+				 * @param src
 				 */
-				void push_front(const value_type & src);
+				void push_front(const_reference src);
+
+#			if __cplusplus >= 201103L
+				/**
+				 * @brief 在数组首部插入参数 src 指定的元素
+				 * @param src
+				 */
+				void push_front(rvalue_reference src);
+#			endif
 
 				/**
 				 * @brief 移除数组首部的元素
 				 */
 				void pop_front();
 
-				/**
-				 * @brief Get the reference of the element at the beginning of the array.
-				 * @return the reference of the element at the beginning of the array
-				 * @throw std::exception Throw this exception if the array is empty.
-				 */
-				reference front();
+				void insert(const_iterator pos, const_reference val);
+
+#			if __cplusplus >= 201103L
+				void insert(const_iterator pos, rvalue_reference val);
+#			endif
+
+				void erase(const_iterator pos);
+
+				void erase(const_iterator begin, const_iterator end);
 
 				/**
-				 * @brief Get the const_reference of the element at the beginning of the array.
-				 * @return the const_reference of the element at the beginning of the array
-				 * @throw std::exception Throw this exception if the array is empty.
+				 * @brief Swap the array with another one.
+				 * @param with another array to be swaped with
 				 */
-				const_reference front() const;
-
-				/**
-				 * @brief Get the reference of the element at the end of the array.
-				 * @return the reference of the element at the end of the array
-				 * @throw std::exception Throw this exception if the array is empty.
-				 */
-				reference back();
-
-				/**
-				 * @brief Get the const_reference of the element at the end of the array.
-				 * @return the const_reference of the element at the end of the array
-				 * @throw std::exception Throw this exception if the array is empty.
-				 */
-				const_reference back() const;
-
-				reference operator[](size_t index);
-				const_reference operator[](size_t index) const;
-
-				/** @brief 返回指向数组首元素的迭代器 */
-				iterator begin();
-				/** @brief 返回指向数组末尾元素的后一个元素位置的迭代器 */
-				iterator end();
-
-				const_iterator begin() const;
-				const_iterator end() const;
-
-				const_iterator cbegin() const;
-				const_iterator cend() const;
-
-				reverse_iterator rbegin();
-				reverse_iterator rend();
-
-				const_reverse_iterator rbegin() const;
-				const_reverse_iterator rend() const;
-
-				const_reverse_iterator crbegin() const;
-				const_reverse_iterator crend() const;
-
-//				bool is_valid_iterator(const iterator & it) const;
-
-				/**
-				 * @brief 返回与该 Auto_array 所等价的 C 风格数组类型的引用, 方便与专门为 C 风格数组类型设计的 API 交互
-				 * @return 与该 Auto_array 所等价的 C 风格数组类型的引用
-				 * @warning 必须保证数组元素存满时才可调用此方法
-				 * @throw std::exception Throw this exception when call this method while the array is not full
-				 */
-				equal_c_array_reference c_arr();
-				const_equal_c_array_reference const_c_arr() const;
-
-				const_pointer data() const;
+				void swap(static_array & with);
 
 				/**
 				 * @brief Clear all the elements in the array.
@@ -412,57 +464,14 @@ namespace kerbal
 				 * @brief Fill all the blank positions at the end of array by copying the argument val.
 				 * @param val
 				 */
-				void fill(const value_type & val);
+				void fill(const_reference val);
 
-				/**
-				 * @brief Swap the array with another one.
-				 * @param with another array to be swaped with
-				 */
-				void swap(static_array & with);
-
-				/**
-				 * @brief Judege whether the array is empty.
-				 * @return If the array is empty, return true, otherwise return false
-				 */
-				bool empty() const;
-
-				/**
-				 * @brief Judege whether the array has been full.
-				 * @return If the array has been full, return true, otherwise return false
-				 */
-				bool full() const;
-
-				/**
-				 * @brief Count the number of the elements that the array has contained.
-				 * @return the number of the elements that the array has contained
-				 */
-				size_t size() const;
-
-
-				iterator find(const value_type & src);
-				const_iterator find(const value_type & src) const;
-
-				reverse_iterator rfind(const value_type & src);
-				const_reverse_iterator rfind(const value_type & src) const;
-
-				template<typename JudgeFunction>
-				iterator find_if(JudgeFunction judge_function);
-
-				template<typename JudgeFunction>
-				const_iterator find_if(JudgeFunction judge_function) const;
-
-				template<typename JudgeFunction>
-				reverse_iterator rfind_if(JudgeFunction judge_function);
-
-				template<typename JudgeFunction>
-				const_reverse_iterator rfind_if(JudgeFunction judge_function) const;
-
-				bool operator==(const static_array & with) const;
-				bool operator!=(const static_array & with) const;
-				bool operator<(const static_array & with) const;
-				bool operator<=(const static_array & with) const;
-				bool operator>(const static_array & with) const;
-				bool operator>=(const static_array & with) const;
+				bool operator==(const static_array & rhs) const;
+				bool operator!=(const static_array & rhs) const;
+				bool operator<(const static_array & rhs) const;
+				bool operator<=(const static_array & rhs) const;
+				bool operator>(const static_array & rhs) const;
+				bool operator>=(const static_array & rhs) const;
 		};
 
 	}

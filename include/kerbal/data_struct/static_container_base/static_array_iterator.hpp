@@ -29,12 +29,6 @@ namespace kerbal
 		}
 
 		template <typename Tp, size_t N>
-		static_array<Tp, N>::iterator::operator const_iterator()
-		{
-			return const_iterator(current);
-		}
-
-		template <typename Tp, size_t N>
 		typename static_array<Tp, N>::reference
 		static_array<Tp, N>::iterator::operator*() const
 		{
@@ -297,13 +291,6 @@ namespace kerbal
 				current(current)
 		{
 		}
-
-		template <typename Tp, size_t N>
-		static_array<Tp, N>::reverse_iterator::operator typename static_array::const_reverse_iterator()
-		{
-			return const_reverse_iterator(current);
-		}
-
 
 		template <typename Tp, size_t N>
 		typename static_array<Tp, N>::reference
