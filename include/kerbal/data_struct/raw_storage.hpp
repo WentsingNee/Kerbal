@@ -196,12 +196,14 @@ namespace kerbal
 
 				pointer raw_pointer() KERBAL_NOEXCEPT
 				{
-					return reinterpret_cast<pointer>(&(this->storage));
+//					return reinterpret_cast<pointer>(&(this->storage));
+					return reinterpret_cast<pointer>(this->storage.__data);
 				}
 
 				const_pointer raw_pointer() const KERBAL_NOEXCEPT
 				{
-					return reinterpret_cast<const_pointer>(&(this->storage));
+//					return reinterpret_cast<const_pointer>(&(this->storage));
+					return reinterpret_cast<const_pointer>(this->storage.__data);
 				}
 
 
