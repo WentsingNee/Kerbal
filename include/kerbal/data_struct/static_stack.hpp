@@ -126,44 +126,66 @@ namespace kerbal
 					c.swap(with.c);
 				}
 
-				/**
-				 * @addtogroup compare
-				 * @{
-				 */
+				template <size_t M>
+				friend bool operator==(const static_stack<Tp, M> & lhs, const static_stack<Tp, N> & rhs);
 
-				/**
-				 * Judge whether the stack is equal to the other one.
-				 * @param rhs another stack
-				 */
-				bool operator==(const static_stack & rhs) const
-				{
-					return c == rhs.c;
-				}
+				template <size_t M>
+				friend bool operator!=(const static_stack<Tp, M> & lhs, const static_stack<Tp, N> & rhs);
 
-				bool operator!=(const static_stack & rhs) const
-				{
-					return c != rhs.c;
-				}
+				template <size_t M>
+				friend bool operator<(const static_stack<Tp, M> & lhs, const static_stack<Tp, N> & rhs);
 
-				bool operator<(const static_stack & rhs) const
-				{
-					return c < rhs.c;
-				}
-				bool operator<=(const static_stack & rhs) const
-				{
-					return c <= rhs.c;
-				}
-				bool operator>(const static_stack & rhs) const
-				{
-					return c > rhs.c;
-				}
-				bool operator>=(const static_stack & rhs) const
-				{
-					return c >= rhs.c;
-				}
+				template <size_t M>
+				friend bool operator<=(const static_stack<Tp, M> & lhs, const static_stack<Tp, N> & rhs);
 
-				// @} group compare
+				template <size_t M>
+				friend bool operator>(const static_stack<Tp, M> & lhs, const static_stack<Tp, N> & rhs);
+
+				template <size_t M>
+				friend bool operator>=(const static_stack<Tp, M> & lhs, const static_stack<Tp, N> & rhs);
+
 		};
+
+		/**
+		 * Judge whether the stack is equal to the other one.
+		 * @param rhs another stack
+		 */
+		template <typename Tp, size_t M, size_t N>
+		bool operator==(const static_stack<Tp, M> & lhs, const static_stack<Tp, N> & rhs)
+		{
+			return lhs.c == rhs.c;
+		}
+
+		template <typename Tp, size_t M, size_t N>
+		bool operator!=(const static_stack<Tp, M> & lhs, const static_stack<Tp, N> & rhs)
+		{
+			return lhs.c != rhs.c;
+		}
+
+		template <typename Tp, size_t M, size_t N>
+		bool operator<(const static_stack<Tp, M> & lhs, const static_stack<Tp, N> & rhs)
+		{
+			return lhs.c < rhs.c;
+		}
+
+		template <typename Tp, size_t M, size_t N>
+		bool operator<=(const static_stack<Tp, M> & lhs, const static_stack<Tp, N> & rhs)
+		{
+			return lhs.c <= rhs.c;
+		}
+
+		template <typename Tp, size_t M, size_t N>
+		bool operator>(const static_stack<Tp, M> & lhs, const static_stack<Tp, N> & rhs)
+		{
+			return lhs.c > rhs.c;
+		}
+
+		template <typename Tp, size_t M, size_t N>
+		bool operator>=(const static_stack<Tp, M> & lhs, const static_stack<Tp, N> & rhs)
+		{
+			return lhs.c >= rhs.c;
+		}
+
 	}
 }
 
