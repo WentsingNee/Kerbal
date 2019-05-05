@@ -45,6 +45,9 @@ namespace kerbal
 
 				typedef typename Sequence::size_type size_type;
 
+				typedef typename Sequence::const_iterator const_iterator;
+				typedef typename Sequence::const_reverse_iterator const_reverse_iterator;
+
 			private:
 				Sequence c;
 
@@ -114,6 +117,46 @@ namespace kerbal
 				void pop()
 				{
 					c.pop_back();
+				}
+
+				const_iterator begin() const
+				{
+					return c.cbegin();
+				}
+
+				const_iterator end() const
+				{
+					return c.cend();
+				}
+
+				const_iterator cbegin() const
+				{
+					return c.cbegin();
+				}
+
+				const_iterator cend() const
+				{
+					return c.cend();
+				}
+
+				const_reverse_iterator rbegin() const
+				{
+					return c.crbegin();
+				}
+
+				const_reverse_iterator rend() const
+				{
+					return c.crend();
+				}
+
+				const_reverse_iterator crbegin() const
+				{
+					return c.crbegin();
+				}
+
+				const_reverse_iterator crend() const
+				{
+					return c.crend();
 				}
 
 				void clear()
