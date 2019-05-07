@@ -178,7 +178,7 @@ namespace kerbal
 		typename static_array<Tp, N>::iterator
 		static_array<Tp, N>::end()
 		{
-			return iterator(this->p_to_end);
+			return iterator(const_cast<storage_type*>(this->p_to_end));
 		}
 
 		template <typename Tp, size_t N>
