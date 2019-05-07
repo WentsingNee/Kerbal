@@ -17,7 +17,7 @@
 #include <kerbal/data_struct/static_container_base/static_container_exception.hpp>
 #include <kerbal/algorithm/iterator.hpp>
 
-#include <cctype>
+#include <cstddef>
 #include <stdexcept>
 
 #if __cplusplus >= 201103L
