@@ -16,6 +16,7 @@
 #include <kerbal/data_struct/raw_storage.hpp>
 #include <kerbal/data_struct/static_container_base/static_container_exception.hpp>
 #include <kerbal/algorithm/iterator.hpp>
+#include <kerbal/type_traits/type_traits_details/enable_if.hpp>
 
 #include <cstddef>
 #include <stdexcept>
@@ -55,19 +56,19 @@ namespace kerbal
 				typedef Tp value_type;
 
 				/// @brief Constant type of the elements.
-				typedef const Tp const_type;
+				typedef const value_type const_type;
 
 				/// @brief Reference of the elements.
-				typedef Tp& reference;
+				typedef value_type& reference;
 
 				/// @brief Constant reference of the elements.
-				typedef const Tp& const_reference;
+				typedef const value_type& const_reference;
 
 				/// @brief Pointer type to the elements.
-				typedef Tp* pointer;
+				typedef value_type* pointer;
 
 				/// @brief Constant pointer type to the elements.
-				typedef const Tp* const_pointer;
+				typedef const value_type* const_pointer;
 
 #		if __cplusplus >= 201103L
 				typedef value_type&& rvalue_reference;
@@ -77,7 +78,7 @@ namespace kerbal
 				typedef std::size_t size_type;
 				typedef std::ptrdiff_t difference_type;
 
-				/// @brief 与该 static_array 所等价的 C 风格数组的类型, 即 Tp[N]
+				/// @brief 与该 static_array 所等价的 C 风格数组的类型, 即 value_type[N]
 				typedef value_type equal_c_array[N];
 				typedef equal_c_array& equal_c_array_reference;
 				typedef const value_type const_equal_c_array[N];
@@ -85,7 +86,7 @@ namespace kerbal
 
 			private:
 
-				typedef kerbal::data_struct::raw_storage<Tp> storage_type;
+				typedef kerbal::data_struct::raw_storage<value_type> storage_type;
 
 				/**
 				 * @brief 数据存储区
@@ -221,12 +222,13 @@ namespace kerbal
 				 * @warning If the range contains elements more than N, only the first N elements
 				 *          will be used. The others will be ignored.
 				 */
-				template <typename InputIterator, typename =
+				template <typename InputIterator>
+				static_array(InputIterator first, InputIterator last,
 						typename kerbal::type_traits::enable_if<
 								kerbal::algorithm::is_compatible_iterator_type_of<InputIterator, std::input_iterator_tag>::value
-						>::type
-				>
-				static_array(InputIterator first, InputIterator last);
+								, int
+						>::type = 0
+				);
 
 				/**
 				 * @brief 析构函数
@@ -235,14 +237,14 @@ namespace kerbal
 
 				static_array& operator=(const static_array & src);
 
-#if __cplusplus >= 201103L
+#	if __cplusplus >= 201103L
 				/**
 				 * @brief Assign the array by using the content of an initializer list
 				 * @param src the initializer list
 				 * @return the reference to the array be assigned
 				 */
 				static_array& operator=(std::initializer_list<value_type> src);
-#endif
+#	endif
 
 				/**
 				 * @brief Assign the array by using n value(s).

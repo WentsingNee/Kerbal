@@ -13,6 +13,14 @@
 #ifndef INCLUDE_KERBAL_DATA_STRUCT_STATIC_CONTAINER_BASE_STATIC_ARRAY_BASE_HPP_
 #define INCLUDE_KERBAL_DATA_STRUCT_STATIC_CONTAINER_BASE_STATIC_ARRAY_BASE_HPP_
 
+#include <cstring>
+
+#if __cplusplus >= 201103L
+#	include <type_traits>
+#endif
+
+#include <kerbal/type_traits/type_traits_details/fundamental_deduction.hpp>
+#include <kerbal/type_traits/type_traits_details/pointer_deduction.hpp>
 
 namespace kerbal
 {
@@ -25,17 +33,70 @@ namespace kerbal
 		{
 		}
 
+		template <bool enable_memecpy_optimization>
+		struct __static_array_copy_details;
+
+		template <>
+		struct __static_array_copy_details<false>
+		{
+				template <typename storage_type, typename size_type>
+				void
+				operator()(storage_type dest[], const storage_type * & p_to_end,
+						const storage_type src[], size_type src_length) const
+				{
+					size_type i = 0;
+					while (i < src_length) {
+						dest[i].construct(src[i].raw_value());
+						++p_to_end;
+						++i;
+					}
+				}
+		};
+
+		template <>
+		struct __static_array_copy_details<true>
+		{
+				template <typename storage_type, typename size_type>
+				void
+				operator()(storage_type dest[], const storage_type * & p_to_end,
+						const storage_type src[], size_type src_length) const
+				{
+					::memcpy(dest, src, src_length * sizeof(storage_type));
+					p_to_end = dest + src_length;
+				}
+		};
+
 		template <typename Tp, size_t N>
 		static_array<Tp, N>::static_array(const static_array & src) :
 				p_to_end(storage + 0)
 		{
-			const_iterator begin = src.cbegin();
-			const_iterator end = src.cend();
-			while (begin != end) {
-				this->__construct_the_last(*begin);
-				++begin;
+
+#	if __cplusplus < 201103L
+
+
+			if (N < 16 || src.size() < 16) {
+				// if the length is less than 16, doesn't need to take memecpy optimization into consideration
+				__static_array_copy_details<false>()(this->storage, this->p_to_end, src.storage, src.size());
+			} else {
+				__static_array_copy_details<
+					kerbal::type_traits::is_fundamental<value_type>::value ||
+					kerbal::type_traits::is_pointer<value_type>::value
+				>
+				()(this->storage, this->p_to_end, src.storage, src.size());
 			}
+
+#	else
+			if (N < 16 || src.size() < 16) {
+				// if the length is less than 16, doesn't need to take memecpy optimization into consideration
+				__static_array_copy_details<false>()(this->storage, this->p_to_end, src.storage, src.size());
+			} else {
+				__static_array_copy_details<std::is_trivially_copyable<value_type>::value>
+				()(this->storage, this->p_to_end, src.storage, src.size());
+			}
+#	endif
+
 		}
+
 
 #	if __cplusplus >= 201103L
 
@@ -49,8 +110,13 @@ namespace kerbal
 #	endif
 
 		template <typename Tp, size_t N>
-		template <typename InputIterator, typename>
-		static_array<Tp, N>::static_array(InputIterator first, InputIterator last) :
+		template <typename InputIterator>
+		static_array<Tp, N>::static_array(InputIterator first, InputIterator last,
+				typename kerbal::type_traits::enable_if<
+						kerbal::algorithm::is_compatible_iterator_type_of<InputIterator, std::input_iterator_tag>::value
+						, int
+				>::type
+		) :
 				p_to_end(storage + 0)
 		{
 			while (first != last && !this->full()) {
@@ -151,7 +217,7 @@ namespace kerbal
 				// X X X X O O O
 				// T T T T T T T T T
 				while (assign_index != N && first != last) {
-					this->__construct_at(assign_index, first);
+					this->__construct_at(assign_index, *first);
 					++assign_index;
 					++this->p_to_end;
 					++first;
