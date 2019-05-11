@@ -30,8 +30,10 @@ namespace kerbal
 
 		MODULE_EXPORT
 		template <typename Tp, typename Up, typename ... Types>
-		struct is_same: kerbal::type_traits::conditional_boolean<kerbal::type_traits::is_same<Tp, Up>::value &&
-														kerbal::type_traits::is_same<Up, Types...>::value >
+		struct is_same: kerbal::type_traits::conditional_boolean<
+									kerbal::type_traits::is_same<Tp, Up>::value &&
+									kerbal::type_traits::is_same<Up, Types...>::value
+							>
 		{
 		};
 

@@ -42,6 +42,13 @@ namespace kerbal
 		struct remove_cvref: kerbal::type_traits::remove_cv<typename kerbal::type_traits::remove_reference<Tp>::type>
 		{
 		};
+
+		MODULE_EXPORT
+		template <typename Tp>
+		struct add_cv: kerbal::type_traits::add_const<typename kerbal::type_traits::add_volatile<Tp>::type>
+		{
+		};
+
 	}
 }
 

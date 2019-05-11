@@ -57,9 +57,9 @@ namespace kerbal
 		MODULE_EXPORT
 		template <typename Tp>
 		struct is_reference : kerbal::type_traits::conditional_boolean<
-									kerbal::type_traits::is_lvalue_reference<Tp>::value ||
-									kerbal::type_traits::is_rvalue_reference<Tp>::value
-								>
+											kerbal::type_traits::is_lvalue_reference<Tp>::value ||
+											kerbal::type_traits::is_rvalue_reference<Tp>::value
+									>
 		{
 		};
 
@@ -86,6 +86,26 @@ namespace kerbal
 		struct remove_reference<Tp&&>
 		{
 				typedef Tp type;
+		};
+
+#	endif
+
+		MODULE_EXPORT
+		/// add_lvalue_reference
+		template <typename Tp>
+		struct add_lvalue_reference
+		{
+				typedef Tp& type;
+		};
+
+#	if __cplusplus >= 201103L
+
+		MODULE_EXPORT
+		/// add_rvalue_reference
+		template <typename Tp>
+		struct add_rvalue_reference
+		{
+				typedef Tp&& type;
 		};
 
 #	endif

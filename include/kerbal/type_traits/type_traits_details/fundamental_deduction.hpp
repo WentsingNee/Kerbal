@@ -23,19 +23,19 @@ namespace kerbal
 	namespace type_traits
 	{
 		template <typename >
-		struct __is_void_helper: public kerbal::type_traits::false_type
+		struct __is_void_helper: kerbal::type_traits::false_type
 		{
 		};
 
 		template <>
-		struct __is_void_helper<void> : public kerbal::type_traits::true_type
+		struct __is_void_helper<void> : kerbal::type_traits::true_type
 		{
 		};
 
 		/// is_void
 		MODULE_EXPORT
 		template <typename Tp>
-		struct is_void: public __is_void_helper<typename kerbal::type_traits::remove_cv<Tp>::type>::type
+		struct is_void: __is_void_helper<typename kerbal::type_traits::remove_cv<Tp>::type>
 		{
 		};
 
@@ -62,8 +62,8 @@ namespace kerbal
 		MODULE_EXPORT
 		template <typename Tp>
 		struct is_floating_point: kerbal::type_traits::__is_floating_point_helper<
-															typename kerbal::type_traits::remove_cv<Tp>::type
-														>
+												typename kerbal::type_traits::remove_cv<Tp>::type
+										>
 		{
 		};
 
@@ -148,13 +148,18 @@ namespace kerbal
 
 		MODULE_EXPORT
 		template <typename Tp>
-		struct is_integral: kerbal::type_traits::__is_integral_helper<typename kerbal::type_traits::remove_cv<Tp>::type>
+		struct is_integral: kerbal::type_traits::__is_integral_helper<
+										typename kerbal::type_traits::remove_cv<Tp>::type
+								>
 		{
 		};
 
 		MODULE_EXPORT
 		template <class Tp>
-		struct is_arithmetic: kerbal::type_traits::conditional_boolean<is_integral<Tp>::value || is_floating_point<Tp>::value >
+		struct is_arithmetic: kerbal::type_traits::conditional_boolean<
+											is_integral<Tp>::value ||
+											is_floating_point<Tp>::value
+									>
 		{
 		};
 
@@ -162,18 +167,21 @@ namespace kerbal
 		/// is_fundamental
 		MODULE_EXPORT
 		template <typename Tp>
-		struct is_fundamental: public kerbal::type_traits::conditional_boolean<
-												is_arithmetic<Tp>::value || is_void<Tp>::value
-											>::type
+		struct is_fundamental: kerbal::type_traits::conditional_boolean<
+											is_arithmetic<Tp>::value ||
+											is_void<Tp>::value
+									>
 		{
 		};
 #	else
 		/// is_fundamental
 		MODULE_EXPORT
 		template <typename Tp>
-		struct is_fundamental: public kerbal::type_traits::conditional_boolean<
-												is_arithmetic<Tp>::value || is_void<Tp>::value || std::is_null_pointer<Tp>::value
-											>::type
+		struct is_fundamental: kerbal::type_traits::conditional_boolean<
+											is_arithmetic<Tp>::value ||
+											is_void<Tp>::value ||
+											std::is_null_pointer<Tp>::value
+									>
 		{
 		};
 #	endif
