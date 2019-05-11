@@ -25,7 +25,10 @@ namespace kerbal
 		template <typename Iterator, typename IteratorTag>
 		struct iterator_is_type_of: public kerbal::type_traits::conditional_boolean<
 				kerbal::type_traits::is_same<
-						typename std::iterator_traits<Iterator>::iterator_category, IteratorTag>::value>
+						typename std::iterator_traits<Iterator>::iterator_category,
+						IteratorTag
+				>::value
+		>
 		{
 		};
 
@@ -33,18 +36,22 @@ namespace kerbal
 		struct is_compatible_iterator_type_of;
 
 		template <typename Iterator>
-		struct is_compatible_iterator_type_of<Iterator, std::random_access_iterator_tag>: public kerbal::type_traits::conditional_boolean<
+		struct is_compatible_iterator_type_of<Iterator, std::random_access_iterator_tag>: public
+			kerbal::type_traits::conditional_boolean<
 				kerbal::type_traits::is_same<
-					typename std::iterator_traits<Iterator>::iterator_category, std::random_access_iterator_tag
+					typename std::iterator_traits<Iterator>::iterator_category,
+					std::random_access_iterator_tag
 				>::value
 			>
 		{
 		};
 
 		template <typename Iterator>
-		struct is_compatible_iterator_type_of<Iterator, std::bidirectional_iterator_tag>: public kerbal::type_traits::conditional_boolean<
+		struct is_compatible_iterator_type_of<Iterator, std::bidirectional_iterator_tag>: public
+			kerbal::type_traits::conditional_boolean<
 				kerbal::type_traits::is_same<
-					typename std::iterator_traits<Iterator>::iterator_category, std::bidirectional_iterator_tag
+					typename std::iterator_traits<Iterator>::iterator_category,
+					std::bidirectional_iterator_tag
 				>::value
 					||
 				kerbal::algorithm::is_compatible_iterator_type_of<Iterator, std::random_access_iterator_tag>::value
@@ -53,9 +60,11 @@ namespace kerbal
 		};
 
 		template <typename Iterator>
-		struct is_compatible_iterator_type_of<Iterator, std::forward_iterator_tag>: public kerbal::type_traits::conditional_boolean<
+		struct is_compatible_iterator_type_of<Iterator, std::forward_iterator_tag>: public
+			kerbal::type_traits::conditional_boolean<
 				kerbal::type_traits::is_same<
-					typename std::iterator_traits<Iterator>::iterator_category, std::forward_iterator_tag
+					typename std::iterator_traits<Iterator>::iterator_category,
+					std::forward_iterator_tag
 				>::value
 					||
 				kerbal::algorithm::is_compatible_iterator_type_of<Iterator, std::bidirectional_iterator_tag>::value
@@ -64,9 +73,11 @@ namespace kerbal
 		};
 
 		template <typename Iterator>
-		struct is_compatible_iterator_type_of<Iterator, std::input_iterator_tag>: public kerbal::type_traits::conditional_boolean<
+		struct is_compatible_iterator_type_of<Iterator, std::input_iterator_tag>: public
+			kerbal::type_traits::conditional_boolean<
 				kerbal::type_traits::is_same<
-					typename std::iterator_traits<Iterator>::iterator_category, std::input_iterator_tag
+					typename std::iterator_traits<Iterator>::iterator_category,
+					std::input_iterator_tag
 				>::value
 					||
 				kerbal::algorithm::is_compatible_iterator_type_of<Iterator, std::forward_iterator_tag>::value
