@@ -98,9 +98,20 @@ namespace kerbal
 					this->insert(begin, end);
 				}
 
+				template <typename InputIterator>
+				typename kerbal::type_traits::enable_if<
+						kerbal::algorithm::is_compatible_iterator_type_of<InputIterator, std::input_iterator_tag>::value
+				>::type
+				assign(InputIterator begin, InputIterator end, key_compare kc)
+				{
+					this->clear();
+					this->kc = kc;
+					this->insert(begin, end);
+				}
+
 				void assign(const static_flatset & src)
 				{
-					this->assign(src.cbegin(), src.cend());
+					this->assign(src.cbegin(), src.cend(), src.kc);
 				}
 
 #	if __cplusplus >= 201103L
@@ -108,6 +119,11 @@ namespace kerbal
 				void assign(std::initializer_list<value_type> src)
 				{
 					this->assign(src.begin(), src.end());
+				}
+
+				void assign(std::initializer_list<value_type> src, key_compare kc)
+				{
+					this->assign(src.begin(), src.end(), kc);
 				}
 
 #	endif
@@ -212,12 +228,10 @@ namespace kerbal
 				void insert(InputIterator begin, InputIterator end)
 				{
 					while (begin != end && !c.full()) {
-						{
-							const_reference src = *begin;
-							const_iterator first = kerbal::algorithm::lower_bound(this->cbegin(), this->cend(), src, kc);
-							if (first == this->cend() || kc(src, *first)) { // src < *first
-								c.insert(first, src);
-							}
+						const_reference src = *begin;
+						const_iterator first = kerbal::algorithm::lower_bound(this->cbegin(), this->cend(), src, kc);
+						if (first == this->cend() || kc(src, *first)) { // src < *first
+							c.insert(first, src);
 						}
 						++begin;
 					}
