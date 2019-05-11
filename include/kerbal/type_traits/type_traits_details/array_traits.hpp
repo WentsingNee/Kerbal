@@ -51,7 +51,6 @@ namespace kerbal
 		template <typename Tp, size_t N>
 		struct array_traits<Tp[N]> : kerbal::type_traits::array_traits<Tp[]>
 		{
-				typedef Tp value_type;
 #				if __cplusplus >= 201103L
 					static constexpr size_t size = N;
 #				else

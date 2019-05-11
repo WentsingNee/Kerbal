@@ -35,7 +35,11 @@ namespace kerbal
 					typename Tp13 = kerbal::type_traits::true_type,
 					typename Tp14 = kerbal::type_traits::true_type
 		>
-		struct conjunction : kerbal::type_traits::conditional<Tp0::value, conjunction<Tp1, Tp2, Tp3, Tp4, Tp5, Tp6, Tp7, Tp8, Tp9, Tp10, Tp11, Tp12, Tp13, Tp14>, kerbal::type_traits::false_type>::type
+		struct conjunction : kerbal::type_traits::conditional<
+											Tp0::value,
+											conjunction<Tp1, Tp2, Tp3, Tp4, Tp5, Tp6, Tp7, Tp8, Tp9, Tp10, Tp11, Tp12, Tp13, Tp14>,
+											kerbal::type_traits::false_type
+									>::type
 		{
 		};
 
@@ -61,7 +65,11 @@ namespace kerbal
 					typename Tp13 = kerbal::type_traits::false_type,
 					typename Tp14 = kerbal::type_traits::false_type
 		>
-		struct disjunction : kerbal::type_traits::conditional<Tp0::value, kerbal::type_traits::true_type, disjunction<Tp1, Tp2, Tp3, Tp4, Tp5, Tp6, Tp7, Tp8, Tp9, Tp10, Tp11, Tp12, Tp13, Tp14> >::type
+		struct disjunction : kerbal::type_traits::conditional<
+											Tp0::value,
+											kerbal::type_traits::true_type,
+											disjunction<Tp1, Tp2, Tp3, Tp4, Tp5, Tp6, Tp7, Tp8, Tp9, Tp10, Tp11, Tp12, Tp13, Tp14>
+									>::type
 		{
 		};
 
@@ -89,13 +97,14 @@ namespace kerbal
 					typename Tp13,
 					typename Tp14
 		>
-		struct disjunction <kerbal::type_traits::false_type, Tp1, Tp2, Tp3, Tp4, Tp5, Tp6, Tp7, Tp8, Tp9, Tp10, Tp11, Tp12, Tp13, Tp14> : kerbal::type_traits::false_type
+		struct disjunction <kerbal::type_traits::false_type, Tp1, Tp2, Tp3, Tp4, Tp5, Tp6, Tp7, Tp8, Tp9, Tp10, Tp11, Tp12, Tp13, Tp14> :
+				kerbal::type_traits::false_type
 		{
 		};
 
 
 		template <typename Tp>
-		struct disjunction <Tp>: kerbal::type_traits::conditional_boolean<Tp::value>::type
+		struct disjunction <Tp>: kerbal::type_traits::conditional_boolean<Tp::value>
 		{
 		};
 
@@ -112,14 +121,18 @@ namespace kerbal
 		};
 
 		MODULE_EXPORT
-		template <typename T>
-		struct conjunction<T> : kerbal::type_traits::conditional_boolean<T::value>::type
+		template <typename Tp>
+		struct conjunction<Tp> : kerbal::type_traits::conditional_boolean<Tp::value>
 		{
 		};
 
 		MODULE_EXPORT
-		template <typename T, typename ...Args>
-		struct conjunction<T, Args...> : kerbal::type_traits::conditional<T::value, conjunction <Args...>, kerbal::type_traits::false_type>::type
+		template <typename Tp, typename ...Args>
+		struct conjunction<Tp, Args...> : kerbal::type_traits::conditional<
+															Tp::value,
+															conjunction <Args...>,
+															kerbal::type_traits::false_type
+													>::type
 		{
 		};
 
@@ -134,14 +147,18 @@ namespace kerbal
 		};
 
 		MODULE_EXPORT
-		template <typename T>
-		struct disjunction<T> : kerbal::type_traits::conditional_boolean<T::value>::type
+		template <typename Tp>
+		struct disjunction<Tp> : kerbal::type_traits::conditional_boolean<Tp::value>
 		{
 		};
 
 		MODULE_EXPORT
-		template <typename T, typename ...Args>
-		struct disjunction<T, Args...> : kerbal::type_traits::conditional<T::value, kerbal::type_traits::true_type, disjunction <Args...>>::type
+		template <typename Tp, typename ...Args>
+		struct disjunction<Tp, Args...> : kerbal::type_traits::conditional<
+															Tp::value,
+															kerbal::type_traits::true_type,
+															disjunction <Args...>
+													>::type
 		{
 		};
 
