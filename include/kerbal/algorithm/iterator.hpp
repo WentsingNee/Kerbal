@@ -14,7 +14,6 @@
 #define INCLUDE_KERBAL_ALGORITHM_ITERATOR_HPP_
 
 #include <iterator>
-#include <kerbal/type_traits/type_traits.hpp>
 #include <kerbal/type_traits/type_traits_details/enable_if.hpp>
 #include <kerbal/type_traits/type_traits_details/is_same.hpp>
 
@@ -100,6 +99,63 @@ namespace kerbal
 		InputIterator next(InputIterator it)
 		{
 			std::advance(it, 1);
+			return it;
+		}
+
+		template <typename InputIterator, typename Distance>
+		typename kerbal::type_traits::enable_if<
+				iterator_is_type_of<InputIterator, std::input_iterator_tag>::value,
+				InputIterator>::type
+		advance_at_most(InputIterator & it, Distance dist, InputIterator end)
+		{
+			typename std::iterator_traits<InputIterator>::difference_type __d = dist;
+			while (__d-- && it != end) {
+				++it;
+			}
+		}
+
+		template <typename ForwardIterator, typename Distance>
+		typename kerbal::type_traits::enable_if<
+				iterator_is_type_of<ForwardIterator, std::forward_iterator_tag>::value,
+				ForwardIterator>::type
+		advance_at_most(ForwardIterator & it, Distance dist, ForwardIterator end)
+		{
+			typename std::iterator_traits<ForwardIterator>::difference_type __d = dist;
+			while (__d-- && it != end) {
+				++it;
+			}
+		}
+
+		template <typename BidirectionalIterator, typename Distance>
+		typename kerbal::type_traits::enable_if<
+				iterator_is_type_of<BidirectionalIterator, std::bidirectional_iterator_tag>::value,
+				BidirectionalIterator>::type
+		advance_at_most(BidirectionalIterator & it, Distance dist, BidirectionalIterator end)
+		{
+			typename std::iterator_traits<BidirectionalIterator>::difference_type __d = dist;
+			while (__d-- && it != end) {
+				++it;
+			}
+		}
+
+		template <typename RandomAccessIterator, typename Distance>
+		typename kerbal::type_traits::enable_if<
+				iterator_is_type_of<RandomAccessIterator, std::random_access_iterator_tag>::value,
+				RandomAccessIterator>::type
+		advance_at_most(RandomAccessIterator & it, Distance dist, RandomAccessIterator end)
+		{
+			typename std::iterator_traits<RandomAccessIterator>::difference_type __d = dist;
+			if (__d < std::distance(it, end)) {
+				it += __d;
+			} else {
+				it = end;
+			}
+		}
+
+		template <typename InputIterator, typename Distance>
+		InputIterator next_at_most(InputIterator it, Distance dist, InputIterator end)
+		{
+			advance_at_most(it, dist, end);
 			return it;
 		}
 
