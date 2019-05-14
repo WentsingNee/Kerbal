@@ -13,12 +13,14 @@
 #ifndef INCLUDE_KERBAL_ALGORITHM_DYNAMIC_PROGRAMMING_HPP_
 #define INCLUDE_KERBAL_ALGORITHM_DYNAMIC_PROGRAMMING_HPP_
 
-#include <algorithm>
 #include <vector>
 #include <functional>
-#include <cctype>
+#include <cstddef>
 
-#include "binary_type_operator.hpp"
+#include <kerbal/algorithm/binary_type_operator.hpp>
+#include <kerbal/algorithm/search.hpp>
+#include <kerbal/type_traits/type_traits_details/enable_if.hpp>
+#include <kerbal/type_traits/type_traits_details/is_same.hpp>
 
 namespace kerbal
 {
@@ -112,8 +114,12 @@ namespace kerbal
 					kerbal::algorithm::binary_type_equal_to<value_type1, value_type2>());
 		}
 
-		template <typename InputIterator, typename CompareFunction>
-		size_t LIS(InputIterator begin, InputIterator end, CompareFunction cmp)
+		template <typename InputIterator, typename CompareFunction, typename Container>
+		typename
+		kerbal::type_traits::enable_if<
+				kerbal::type_traits::is_same<typename Container::value_type, InputIterator>::value,
+		size_t>::type
+		LIS(InputIterator begin, InputIterator end, CompareFunction cmp, Container & low)
 		{
 			if (begin == end) {
 				return 0;
@@ -128,24 +134,31 @@ namespace kerbal
 							cmp(cmp)
 					{
 					}
-					;
+
 					bool operator()(iterator a, iterator b)
 					{
 						return cmp(*a, *b);
 					}
 			} _iter_cmp(cmp);
 
-			std::vector<iterator> low;
 			low.push_back(begin);
 			++begin;
 			for (; begin != end; ++begin) {
 				if (cmp(*low.back(), *begin)) {
 					low.push_back(begin);
 				} else {
-					*std::lower_bound(low.begin(), low.end(), begin, _iter_cmp) = begin;
+					*kerbal::algorithm::ordered_range_lower_bound(low.begin(), low.end(), begin, _iter_cmp) = begin;
 				}
 			}
 			return low.size();
+		}
+
+		template <typename InputIterator, typename CompareFunction>
+		size_t LIS(InputIterator begin, InputIterator end, CompareFunction cmp)
+		{
+			typedef InputIterator iterator;
+			std::vector<iterator> low;
+			return LIS(begin, end, cmp, low);
 		}
 
 		template <typename InputIterator>
