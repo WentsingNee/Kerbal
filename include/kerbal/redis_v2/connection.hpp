@@ -22,6 +22,9 @@
 #include <kerbal/compatibility/va_arg_compatible_cast.hpp>
 #include <kerbal/redis_v2/exception.hpp>
 #include <kerbal/redis_v2/type_traits.hpp>
+#include <kerbal/type_traits/type_traits_details/enable_if.hpp>
+#include <kerbal/type_traits/type_traits_details/is_same.hpp>
+#include <kerbal/type_traits/type_traits_details/cv_deduction.hpp>
 
 namespace kerbal
 {

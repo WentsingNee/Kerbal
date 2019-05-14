@@ -15,6 +15,9 @@
 #include <kerbal/data_struct/optional/optional.hpp>
 #include <kerbal/utility/array_serve.hpp>
 #include <kerbal/utility/string_ref.hpp>
+#include <kerbal/type_traits/type_traits_details/enable_if.hpp>
+#include <kerbal/type_traits/type_traits_details/integral_constant.hpp>
+#include <kerbal/type_traits/type_traits_details/type_chooser.hpp>
 #include <vector>
 
 namespace kerbal

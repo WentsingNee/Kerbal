@@ -10,7 +10,9 @@
 
 #include <kerbal/compatibility/compatibility_macro.hpp>
 #include <kerbal/utility/string_ref.hpp>
-#include <kerbal/type_traits/type_traits.hpp>
+#include <kerbal/type_traits/type_traits_details/enable_if.hpp>
+#include <kerbal/type_traits/type_traits_details/fundamental_deduction.hpp>
+#include <kerbal/type_traits/type_traits_details/pointer_deduction.hpp>
 #include <string>
 
 namespace kerbal
@@ -19,15 +21,14 @@ namespace kerbal
 	namespace compatibility
 	{
 
-//		template <typename T>
-//		const T& va_arg_compatible_cast(const T& t);
-
 		template <typename T>
 		KERBAL_CONSTEXPR
-//		typename kerbal::type_traits::enable_if<
-//							kerbal::type_traits::is_arithmetic<T>::value || kerbal::type_traits::is_pointer<T>::value,
-//						const T&>::type
-		const T &
+		typename
+		kerbal::type_traits::enable_if<
+				kerbal::type_traits::is_arithmetic<T>::value ||
+				kerbal::type_traits::is_pointer<T>::value,
+			const T&
+		>::type
 		va_arg_compatible_cast(const T& t) KERBAL_NOEXCEPT
 		{
 			return t;
@@ -36,7 +37,7 @@ namespace kerbal
 		template <size_t N>
 		KERBAL_CONSTEXPR const char* va_arg_compatible_cast(const char (&s)[N]) KERBAL_NOEXCEPT
 		{
-		    return s;
+			return s;
 		}
 
 		inline const char * va_arg_compatible_cast(const std::string & s) KERBAL_NOEXCEPT
@@ -53,10 +54,12 @@ namespace kerbal
 
 		template <typename T>
 		constexpr
-//		typename kerbal::type_traits::enable_if<
-//							kerbal::type_traits::is_arithmetic<T>::value || kerbal::type_traits::is_pointer<T>::value,
-//						T&&>::type
-		T&&
+		typename
+		kerbal::type_traits::enable_if<
+				kerbal::type_traits::is_arithmetic<T>::value ||
+				kerbal::type_traits::is_pointer<T>::value,
+			T&&
+		>::type
 		va_arg_compatible_cast(T&& t) noexcept
 		{
 			return std::forward<T>(t);

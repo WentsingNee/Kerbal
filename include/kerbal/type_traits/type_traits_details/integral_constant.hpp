@@ -9,7 +9,8 @@
 #define INCLUDE_KERBAL_TYPE_TRAITS_TYPE_TRAITS_DETAILS_INTEGRAL_CONSTANT_HPP_
 
 #include <kerbal/ts/modules_ts/modules_ts.hpp>
-#include <kerbal/compatibility/compatibility_macro.hpp>
+#include <kerbal/compatibility/constexpr.hpp>
+#include <kerbal/compatibility/noexcept.hpp>
 
 namespace kerbal
 {
@@ -30,7 +31,7 @@ namespace kerbal
 				typedef Type value_type;
 				typedef integral_constant<Type, val> type;
 
-				KERBAL_CONSTEXPR operator value_type() const
+				KERBAL_CONSTEXPR operator value_type() const KERBAL_NOEXCEPT
 				{
 					return value;
 				}

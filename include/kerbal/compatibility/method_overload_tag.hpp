@@ -1,0 +1,28 @@
+/*
+ * method_overload_tag.hpp
+ *
+ *  Created on: 2019年5月11日
+ *      Author: peter
+ */
+
+#ifndef INCLUDE_KERBAL_COMPATIBILITY_METHOD_OVERLOAD_TAG_HPP_
+#define INCLUDE_KERBAL_COMPATIBILITY_METHOD_OVERLOAD_TAG_HPP_
+
+#ifndef KERBAL_REFERENCE_OVERLOAD_TAG
+#	if __cplusplus < 201103L
+#		define KERBAL_REFERENCE_OVERLOAD_TAG
+#	else
+#		define KERBAL_REFERENCE_OVERLOAD_TAG &
+#	endif
+#endif
+
+#ifndef KERBAL_CONST_REFERENCE_OVERLOAD_TAG
+#	if __cplusplus < 201103L
+#		define KERBA_CONSTL_REFERENCE_OVERLOAD_TAG const
+#	else
+#		define KERBAL_CONST_REFERENCE_OVERLOAD_TAG const &
+#	endif
+#endif
+
+
+#endif /* INCLUDE_KERBAL_COMPATIBILITY_METHOD_OVERLOAD_TAG_HPP_ */
