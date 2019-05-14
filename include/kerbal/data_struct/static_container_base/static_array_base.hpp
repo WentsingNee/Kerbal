@@ -39,15 +39,15 @@ namespace kerbal
 		template <>
 		struct __static_array_copy_details<false>
 		{
-				template <typename storage_type, typename size_type>
+				template <typename Tp, size_t N>
 				void
-				operator()(storage_type dest[], const storage_type * & p_to_end,
-						const storage_type src[], size_type src_length) const
+				operator()(static_array<Tp, N> & self,
+						const typename static_array<Tp, N>::storage_type src[], typename static_array<Tp, N>::size_type src_length) const
 				{
-					size_type i = 0;
+					typename static_array<Tp, N>::size_type i = 0;
 					while (i < src_length) {
-						dest[i].construct(src[i].raw_value());
-						++p_to_end;
+						self.__construct_at(i, src[i].raw_value());
+						++self.p_to_end;
 						++i;
 					}
 				}
@@ -56,13 +56,13 @@ namespace kerbal
 		template <>
 		struct __static_array_copy_details<true>
 		{
-				template <typename storage_type, typename size_type>
+				template <typename Tp, size_t N>
 				void
-				operator()(storage_type dest[], const storage_type * & p_to_end,
-						const storage_type src[], size_type src_length) const
+				operator()(static_array<Tp, N> & self,
+						const typename static_array<Tp, N>::storage_type src[], typename static_array<Tp, N>::size_type src_length) const
 				{
-					::memcpy(dest, src, src_length * sizeof(storage_type));
-					p_to_end = dest + src_length;
+					::memcpy(self.storage, src, src_length * sizeof(typename static_array<Tp, N>::storage_type));
+					self.p_to_end = self.storage + src_length;
 				}
 		};
 
@@ -70,31 +70,18 @@ namespace kerbal
 		static_array<Tp, N>::static_array(const static_array & src) :
 				p_to_end(storage + 0)
 		{
-
-#	if __cplusplus < 201103L
-
-
-			if (N < 16 || src.size() < 16) {
-				// if the length is less than 16, doesn't need to take memecpy optimization into consideration
-				__static_array_copy_details<false>()(this->storage, this->p_to_end, src.storage, src.size());
-			} else {
-				__static_array_copy_details<
-					kerbal::type_traits::is_fundamental<value_type>::value ||
-					kerbal::type_traits::is_pointer<value_type>::value
-				>
-				()(this->storage, this->p_to_end, src.storage, src.size());
-			}
-
-#	else
-			if (N < 16 || src.size() < 16) {
-				// if the length is less than 16, doesn't need to take memecpy optimization into consideration
-				__static_array_copy_details<false>()(this->storage, this->p_to_end, src.storage, src.size());
-			} else {
-				__static_array_copy_details<std::is_trivially_copyable<value_type>::value>
-				()(this->storage, this->p_to_end, src.storage, src.size());
-			}
-#	endif
-
+//			__static_array_copy_details<false>
+//						()(*this, src.storage, src.size());
+#		if __cplusplus < 201103L
+			__static_array_copy_details<
+				kerbal::type_traits::is_fundamental<value_type>::value ||
+				kerbal::type_traits::is_pointer<value_type>::value
+			>
+			()(*this, src.storage, src.size());
+#		else
+			__static_array_copy_details<std::is_trivially_copy_constructible<value_type>::value>
+			()(*this, src.storage, src.size());
+#		endif
 		}
 
 
@@ -109,6 +96,37 @@ namespace kerbal
 
 #	endif
 
+
+		template <bool enable_memecpy_optimization>
+		struct __static_array_range_copy_details;
+
+		template <>
+		struct __static_array_range_copy_details<false>
+		{
+				template <typename Tp, size_t N, typename InputIterator>
+				void
+				operator()(static_array<Tp, N> & self, InputIterator first, InputIterator last) const
+				{
+					while (first != last && !self.full()) {
+						self.__construct_at(self.end(), *first);
+						++self.p_to_end;
+						++first;
+					}
+				}
+		};
+
+		template <>
+		struct __static_array_range_copy_details<true>
+		{
+				template <typename Tp, size_t N, typename InputIterator>
+				void
+				operator()(static_array<Tp, N> & self, InputIterator first, InputIterator last) const
+				{
+					::memcpy(self.storage, first, (last - first) * sizeof(typename static_array<Tp, N>::storage_type));
+					self.p_to_end = self.storage + (last - first);
+				}
+		};
+
 		template <typename Tp, size_t N>
 		template <typename InputIterator>
 		static_array<Tp, N>::static_array(InputIterator first, InputIterator last,
@@ -119,10 +137,23 @@ namespace kerbal
 		) :
 				p_to_end(storage + 0)
 		{
-			while (first != last && !this->full()) {
-				this->__construct_the_last(*first);
-				++first;
-			}
+//			__static_array_range_copy_details<false>()(*this, first, last);
+			__static_array_range_copy_details<
+			(
+				kerbal::type_traits::is_same<pointer, InputIterator>::value ||
+				kerbal::type_traits::is_same<const_pointer, InputIterator>::value
+			)
+			&&
+			(
+#			if __cplusplus < 201103L
+				kerbal::type_traits::is_fundamental<value_type>::value ||
+				kerbal::type_traits::is_pointer<value_type>::value
+#			else
+				std::is_trivially_copy_constructible<value_type>::value
+#			endif
+			)
+			>
+			()(*this, first, last);
 		}
 
 		template <typename Tp, size_t N>
@@ -147,46 +178,92 @@ namespace kerbal
 		}
 #	endif
 
+		template <bool enable_memecpy_optimization>
+		struct __static_array_n_assign_details;
+
+		template <>
+		struct __static_array_n_assign_details<false>
+		{
+				template <typename Tp, size_t N>
+				void
+				operator()(static_array<Tp, N> & self,
+						typename static_array<Tp, N>::size_type n, const typename static_array<Tp, N>::value_type & val) const
+				{
+					typedef typename static_array<Tp, N>::size_type size_type;
+
+					const size_type new_size = n;
+					const size_type previous_size = self.size();
+
+					if (previous_size <= new_size) {
+						/*
+						 * a a a x x x x x
+						 * b b b b b b x x
+						 */
+						size_type assign_index = 0;
+						while (assign_index != previous_size) {
+							self[assign_index] = val;
+							++assign_index;
+						}
+						while (assign_index != new_size) {
+							self.__construct_at(self.end(), val);
+							++self.p_to_end;
+							++assign_index;
+						}
+					} else {
+						/*
+						 * a a a a a a x x
+						 * b b b x x x x x
+						 */
+						size_type destroy_index = previous_size;
+						while (destroy_index != new_size) {
+							--destroy_index;
+							self.__destroy_at(destroy_index);
+							--self.p_to_end; // = self.storage.raw_pointer_at(destroy_index);
+						}
+						size_type assign_index = 0;
+						while (assign_index != new_size) {
+							self[assign_index] = val;
+							++assign_index;
+						}
+					}
+				}
+		};
+		template <bool enable_memecpy_optimization>
+		struct __static_array_n_assign_details;
+
+		template <>
+		struct __static_array_n_assign_details<true>
+		{
+				template <typename Tp, size_t N>
+				void
+				operator()(static_array<Tp, N> & self,
+						typename static_array<Tp, N>::size_type n, const typename static_array<Tp, N>::value_type & val) const
+				{
+					typedef typename static_array<Tp, N>::size_type size_type;
+					for (size_type i = 0; i < n; ++i) {
+						self[i] = val;
+					}
+					self.p_to_end = self.storage + n;
+				}
+		};
+
 		template <typename Tp, size_t N>
 		void static_array<Tp, N>::assign(size_type n, const value_type & val)
 		{
 			if (n > N) {
 				n = N;
 			}
-			const size_type new_size = n;
-			const size_type previous_size = this->size();
-
-			if (previous_size <= new_size) {
-				/*
-				 * a a a x x x x x
-				 * b b b b b b x x
-				 */
-				size_type assign_index = 0;
-				while (assign_index != previous_size) {
-					(*this)[assign_index] = val;
-					++assign_index;
-				}
-				while (assign_index != new_size) {
-					this->__construct_the_last(val);
-					++assign_index;
-				}
-			} else {
-				/*
-				 * a a a a a a x x
-				 * b b b x x x x x
-				 */
-				size_type destroy_index = previous_size;
-				while (destroy_index != new_size) {
-					--destroy_index;
-					this->__destroy_at(destroy_index);
-					--this->p_to_end; // = this->storage.raw_pointer_at(destroy_index);
-				}
-				size_type assign_index = 0;
-				while (assign_index != new_size) {
-					(*this)[assign_index] = val;
-					++assign_index;
-				}
-			}
+//			__static_array_n_assign_details<false>()(*this, n, val);
+			__static_array_n_assign_details<
+#			if __cplusplus < 201103L
+				kerbal::type_traits::is_fundamental<value_type>::value ||
+				kerbal::type_traits::is_pointer<value_type>::value
+#			else
+				std::is_trivially_copy_constructible<value_type>::value &&
+				std::is_trivially_copy_assignable<value_type>::value
+#			endif
+			>
+			()(*this, n, val);
 		}
 
 		template <typename Tp, size_t N>
@@ -397,32 +474,32 @@ namespace kerbal
 			return *this->crbegin();
 		}
 
-//		template <typename Tp, size_t N>
-//		typename static_array<Tp, N>::equal_c_array_reference
-//		static_array<Tp, N>::c_arr()
-//		{
-//			if (!full()) {
-//				throw std::exception();
-//			}
-//			return this->storage.raw_value();
-//		}
-//
-//		template <typename Tp, size_t N>
-//		typename static_array<Tp, N>::const_equal_c_array_reference
-//		static_array<Tp, N>::const_c_arr() const
-//		{
-//			if (!full()) {
-//				throw std::exception();
-//			}
-//			return this->storage.raw_value();
-//		}
-//
-//		template <typename Tp, size_t N>
-//		typename static_array<Tp, N>::const_pointer
-//		static_array<Tp, N>::data() const
-//		{
-//			return this->storage.raw_value_at(0);
-//		}
+		template <typename Tp, size_t N>
+		typename static_array<Tp, N>::equal_c_array_reference
+		static_array<Tp, N>::c_arr()
+		{
+			if (!full()) {
+				throw std::exception();
+			}
+			return reinterpret_cast<equal_c_array_reference>(this->storage);
+		}
+
+		template <typename Tp, size_t N>
+		typename static_array<Tp, N>::const_equal_c_array_reference
+		static_array<Tp, N>::const_c_arr() const
+		{
+			if (!full()) {
+				throw std::exception();
+			}
+			return reinterpret_cast<equal_c_array_reference>(this->storage);
+		}
+
+		template <typename Tp, size_t N>
+		typename static_array<Tp, N>::const_pointer
+		static_array<Tp, N>::data() const
+		{
+			return reinterpret_cast<const_pointer>(&(this->storage[0]));
+		}
 
 		template <typename Tp, size_t N>
 		void static_array<Tp, N>::push_back(const_reference src)
@@ -501,17 +578,19 @@ namespace kerbal
 			if (pos == this->cend()) {
 				// A A A O O O
 				//          ^
-				this->__construct_the_last(val);
+				this->__construct_at(this->end(), val);
+				++this->p_to_end;
 			} else {
 				const size_type previous_size = this->size(); // 6
 
 				// A A A X Y Z O O O
 				//          ^      $
 #	if __cplusplus < 201103L
-				this->__construct_the_last(this->back());
+				this->__construct_at(this->end(), this->back());\
 #	else
-				this->__construct_the_last(std::move(this->back()));
+				this->__construct_at(this->end(), std::move(this->back()));
 #	endif
+				++this->p_to_end;
 
 				// A A A X Y Z Z O O
 				//          ^
@@ -547,11 +626,13 @@ namespace kerbal
 			if (pos == this->cend()) {
 				// A A A O O O
 				//          ^
-				this->__construct_the_last(std::forward<Args>(args)...);
+				this->__construct_at(this->end(), std::forward<Args>(args)...);
+				++this->p_to_end;
 			} else {
 				const size_type previous_size = this->size(); // 6
 
-				this->__construct_the_last(std::move((*this)[previous_size - 1]));
+				this->__construct_at(this->end(), std::move((*this)[previous_size - 1]));
+				++this->p_to_end;
 				// A A A X Y Z Z O O
 				//          ^
 
@@ -741,33 +822,8 @@ namespace kerbal
 			(itor.current)->construct(std::forward<Args>(args)...);
 		}
 
-
 #	endif
 
-		template <typename Tp, size_t N>
-		void static_array<Tp, N>::__construct_the_last(const_reference val)
-		{
-			this->__construct_at(this->size(), val);
-			++this->p_to_end;
-		}
-
-#	if __cplusplus >= 201103L
-		template <typename Tp, size_t N>
-		void static_array<Tp, N>::__construct_the_last(rvalue_reference val)
-		{
-			this->__construct_at(this->size(), std::move(val));
-			++this->p_to_end;
-		}
-
-		template <typename Tp, size_t N>
-		template <typename ...Args>
-		void static_array<Tp, N>::__construct_the_last(Args&& ...args)
-		{
-			this->__construct_at(this->size(), std::forward<Args>(args)...);
-			++this->p_to_end;
-		}
-
-#	endif
 
 		template <typename Tp, size_t N>
 		void static_array<Tp, N>::__destroy_at(size_type index)
