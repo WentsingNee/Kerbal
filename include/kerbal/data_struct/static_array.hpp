@@ -32,6 +32,15 @@ namespace kerbal
 	 */
 	namespace data_struct
 	{
+		template <bool enable_memecpy_optimization>
+		struct __static_array_copy_details;
+
+		template <bool enable_memecpy_optimization>
+		struct __static_array_range_copy_details;
+
+		template <bool enable_memecpy_optimization>
+		struct __static_array_n_assign_details;
+
 		/**
 		 * @brief Array with flexible length that stored on automatic storage duration
 		 * @details The class is an encapsulation class of array that could be stored on
@@ -197,6 +206,9 @@ namespace kerbal
 				/** @brief Empty container constructor (Default constructor) */
 				static_array();
 
+				friend struct __static_array_copy_details<false>;
+				friend struct __static_array_copy_details<true>;
+
 				/**
 				 * @brief Copy constructor
 				 * @param src Another static_array object of the same type (must have the same template arguments type and N)
@@ -213,6 +225,9 @@ namespace kerbal
 				 */
 				static_array(std::initializer_list<value_type> src);
 #			endif
+
+				friend struct __static_array_range_copy_details<false>;
+				friend struct __static_array_range_copy_details<true>;
 
 				/**
 				 * @brief Range constructor
@@ -245,6 +260,9 @@ namespace kerbal
 				 */
 				static_array& operator=(std::initializer_list<value_type> src);
 #	endif
+
+				friend struct __static_array_n_assign_details<false>;
+				friend struct __static_array_n_assign_details<true>;
 
 				/**
 				 * @brief Assign the array by using n value(s).
@@ -374,11 +392,11 @@ namespace kerbal
 				 * @warning 必须保证数组元素存满时才可调用此方法
 				 * @throw std::exception Throw this exception when call this method while the array is not full
 				 */
-//				equal_c_array_reference c_arr();
-//				const_equal_c_array_reference c_arr() const;
-//				const_equal_c_array_reference const_c_arr() const;
-//
-//				const_pointer data() const;
+				equal_c_array_reference c_arr();
+				const_equal_c_array_reference c_arr() const;
+				const_equal_c_array_reference const_c_arr() const;
+
+				const_pointer data() const;
 
 				/**
 				 * @brief 在数组末尾插入参数 src 指定的元素
@@ -505,16 +523,6 @@ namespace kerbal
 				template <typename ... Args>
 				void __construct_at(iterator, Args&& ...);
 #	endif
-
-
-				void __construct_the_last(const_reference);
-
-#			if __cplusplus >= 201103L
-				void __construct_the_last(rvalue_reference);
-
-				template <typename ...Args>
-				void __construct_the_last(Args&& ...args);
-#			endif
 
 				void __destroy_at(size_type);
 
