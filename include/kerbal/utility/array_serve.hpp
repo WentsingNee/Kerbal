@@ -1,7 +1,7 @@
 #ifndef _ARRAY_SERVE_HPP_
 #define _ARRAY_SERVE_HPP_
 
-#include <kerbal/type_traits/type_traits.hpp>
+#include <kerbal/type_traits/type_traits_details/integral_constant.hpp>
 #include <iostream>
 #include <string>
 

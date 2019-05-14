@@ -14,6 +14,7 @@
 #include <kerbal/redis_v2/reply.hpp>
 #include <kerbal/redis_v2/type_traits.hpp>
 #include <kerbal/utility/string_ref.hpp>
+#include <kerbal/type_traits/type_traits_details/enable_if.hpp>
 #include <kerbal/compatibility/va_arg_compatible_cast.hpp>
 
 namespace kerbal

@@ -10,7 +10,9 @@
 
 #include <chrono>
 #include <stdint.h>
-#include <kerbal/type_traits/type_traits.hpp>
+#include <kerbal/type_traits/type_traits_details/cv_deduction.hpp>
+#include <kerbal/type_traits/type_traits_details/enable_if.hpp>
+#include <kerbal/type_traits/type_traits_details/integral_constant.hpp>
 
 namespace kerbal
 {

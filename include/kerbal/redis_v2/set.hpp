@@ -9,6 +9,7 @@
 #define INCLUDE_KERBAL_REDIS_V2_SET_HPP_
 
 #include <kerbal/redis_v2/connection.hpp>
+#include <kerbal/type_traits/type_traits_details/enable_if.hpp>
 
 namespace kerbal
 {

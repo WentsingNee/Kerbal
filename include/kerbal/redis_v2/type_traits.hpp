@@ -11,7 +11,10 @@
 #include <string>
 #include <iterator>
 #include <sstream>
-#include <kerbal/type_traits/type_traits.hpp>
+#include <kerbal/type_traits/type_traits_details/batch_traits.hpp>
+#include <kerbal/type_traits/type_traits_details/conditional.hpp>
+#include <kerbal/type_traits/type_traits_details/cv_deduction.hpp>
+#include <kerbal/type_traits/type_traits_details/integral_constant.hpp>
 #include <kerbal/utility/string_ref.hpp>
 
 namespace kerbal
@@ -267,22 +270,22 @@ namespace kerbal
 
 #	endif
 
-        template <typename CastToType>
-        typename kerbal::type_traits::enable_if<!kerbal::type_traits::is_const<CastToType>::value, CastToType>::type
-        redis_type_cast(const char * src)
-        {
-            std::istringstream ss(src);
-            return *std::istream_iterator<CastToType>(ss);
-        }
+		template <typename CastToType>
+		typename kerbal::type_traits::enable_if<!kerbal::type_traits::is_const<CastToType>::value, CastToType>::type
+		redis_type_cast(const char * src)
+		{
+			std::istringstream ss(src);
+			return *std::istream_iterator<CastToType>(ss);
+		}
 
-        template <typename CastToType>
-        typename kerbal::type_traits::enable_if<kerbal::type_traits::is_const<CastToType>::value, CastToType>::type
-        redis_type_cast(const char * src)
-        {
-            return redis_type_cast<typename kerbal::type_traits::remove_const<CastToType>::type>(src);
-        }
+		template <typename CastToType>
+		typename kerbal::type_traits::enable_if<kerbal::type_traits::is_const<CastToType>::value, CastToType>::type
+		redis_type_cast(const char * src)
+		{
+			return redis_type_cast<typename kerbal::type_traits::remove_const<CastToType>::type>(src);
+		}
 
-        template <>
+		template <>
 		inline std::string redis_type_cast<std::string>(const char * src)
 		{
 			return src;
