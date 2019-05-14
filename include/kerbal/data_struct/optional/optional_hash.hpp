@@ -8,34 +8,36 @@
 #ifndef INCLUDE_KERBAL_DATA_STRUCT_OPTIONAL_OPTIONAL_HASH_HPP_
 #define INCLUDE_KERBAL_DATA_STRUCT_OPTIONAL_OPTIONAL_HASH_HPP_
 
+#include <cstddef>
+#include <kerbal/type_traits/type_traits_details/enable_if.hpp>
+#include <kerbal/data_struct/optional/optional_type_traits.hpp>
+#include <kerbal/data_struct/hash.hpp>
+
 namespace kerbal
 {
 
 	namespace data_struct
 	{
 
-		template <typename>
-		struct optional;
-
-		template <typename Type, typename BindHash = std::hash<Type>, size_t NulloptHash = static_cast<size_t>(-3333)>
+		template <typename OptionalType, typename ValueTypeBindHash, size_t NulloptHash>
 		struct optional_hash
 		{
-				size_t operator()(const optional<Type> & val) const
+				size_t operator()(const OptionalType & val) const
 				{
 					if (val.has_value()) {
-						static const BindHash hs;
-						return hs(val.ignored_get());
+						return ValueTypeBindHash()(val.ignored_get());
 					} else {
 						return NulloptHash;
 					}
 				}
 		};
 
-		template <typename Type, typename BindHash = std::hash<typename optional_traits<Type>::value_type>, size_t NulloptHash = static_cast<size_t>(-3333)>
-		struct hash;
+		template <typename>
+		struct optional;
 
-		template <typename Type, typename BindHash, size_t NulloptHash>
-		struct hash<optional<Type>, BindHash, NulloptHash> : public optional_hash<Type, BindHash, NulloptHash>
+		template <typename ValueType>
+		struct hash<optional<ValueType> > :
+				public optional_hash<optional<ValueType>, hash<ValueType>, static_cast<size_t>(-3333)>
 		{
 		};
 

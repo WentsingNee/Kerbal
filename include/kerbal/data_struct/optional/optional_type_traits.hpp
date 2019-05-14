@@ -8,28 +8,18 @@
 #ifndef INCLUDE_KERBAL_DATA_STRUCT_OPTIONAL_OPTIONAL_TYPE_TRAITS_HPP_
 #define INCLUDE_KERBAL_DATA_STRUCT_OPTIONAL_OPTIONAL_TYPE_TRAITS_HPP_
 
-#include <kerbal/type_traits/type_traits.hpp>
+#include <kerbal/data_struct/optional/optional_settings.hpp>
+#include <kerbal/type_traits/type_traits_details/conditional.hpp>
+#include <kerbal/type_traits/type_traits_details/cv_deduction.hpp>
+#include <kerbal/type_traits/type_traits_details/integral_constant.hpp>
 
-namespace std
-{
-	template <typename Type>
-	class optional;
+#if KERBAL_OPTIONAL_ENABLE_SUPPORT_TO_STD_OPTIONAL==1
+#	include <kerbal/data_struct/optional/std_optional_type_traits.hpp>
+#endif
 
-	struct nullopt_t;
-
-	template <typename Type>
-	class hash;
-
-}
-
-namespace boost
-{
-	template <typename Type>
-	class optional;
-
-	class none_t;
-}
-
+#if KERBAL_OPTIONAL_ENABLE_SUPPORT_TO_BOOST_OPTIONAL==1
+#	include <kerbal/data_struct/optional/boost_optional_type_traits.hpp>
+#endif
 
 namespace kerbal
 {
@@ -55,46 +45,16 @@ namespace kerbal
 		{
 		};
 
-		///@private
 		template <typename Type>
-		struct __is_std_optional_helper: kerbal::type_traits::false_type
-		{
-		};
-
-		///@private
-		template <typename Type>
-		struct __is_std_optional_helper<std::optional<Type> > : kerbal::type_traits::true_type
-		{
-		};
-
-		template <typename Type>
-		struct is_std_optional: __is_std_optional_helper<typename kerbal::type_traits::remove_cvref<Type>::type>
-		{
-		};
-
-		///@private
-		template <typename Type>
-		struct __is_boost_optional_helper: kerbal::type_traits::false_type
-		{
-		};
-
-		///@private
-		template <typename Type>
-		struct __is_boost_optional_helper<boost::optional<Type> > : kerbal::type_traits::true_type
-		{
-		};
-
-		template <typename Type>
-		struct is_boost_optional: __is_boost_optional_helper<typename kerbal::type_traits::remove_cvref<Type>::type>
-		{
-		};
-
-		template <typename Type>
-		struct is_optional: kerbal::type_traits::conditional<
-				is_kerbal_optional<Type>::value || is_std_optional<Type>::value || is_boost_optional<Type>::value,
-				kerbal::type_traits::true_type,
-				kerbal::type_traits::false_type
-			>::type
+		struct is_optional: kerbal::type_traits::conditional_boolean<
+					is_kerbal_optional<Type>::value
+#	if KERBAL_OPTIONAL_ENABLE_SUPPORT_TO_STD_OPTIONAL==1
+					|| is_std_optional<Type>::value
+#	endif
+#	if KERBAL_OPTIONAL_ENABLE_SUPPORT_TO_BOOST_OPTIONAL==1
+					|| is_boost_optional<Type>::value
+#	endif
+			>
 		{
 		};
 
@@ -119,60 +79,26 @@ namespace kerbal
 		};
 
 		template <typename Type>
-		struct std_optional_traits;
-
-		template <typename Type>
-		struct std_optional_traits<std::optional<Type> >
-		{
-				typedef typename std::optional<Type>::value_type value_type;
-				typedef typename std::optional<Type>::reference reference;
-				typedef typename std::optional<Type>::const_reference const_reference;
-				typedef typename std::optional<Type>::pointer pointer;
-				typedef typename std::optional<Type>::const_pointer const_pointer;
-
-#	if __cplusplus >= 201103L
-				typedef Type&& rvalue_reference;
-				typedef const Type&& const_rvalue_reference;
-#	endif
-
-		};
-
-		template <typename Type>
-		struct boost_optional_traits;
-
-		template <typename Type>
-		struct boost_optional_traits<std::optional<Type> >
-		{
-				typedef typename boost::optional<Type>::value_type value_type;
-				typedef typename boost::optional<Type>::reference reference;
-				typedef typename boost::optional<Type>::const_reference const_reference;
-				typedef typename boost::optional<Type>::pointer pointer;
-				typedef typename boost::optional<Type>::const_pointer const_pointer;
-
-#	if __cplusplus >= 201103L
-				typedef Type&& rvalue_reference;
-				typedef const Type&& const_rvalue_reference;
-#	endif
-
-		};
-
-		template <typename Type>
 		struct optional_traits;
 
 		template <typename Type>
-		struct optional_traits<kerbal::data_struct::optional<Type> > : public kerbal_optional_traits<kerbal::data_struct::optional<Type> >
+		struct optional_traits<kerbal::data_struct::optional<Type> > : public kerbal::data_struct::kerbal_optional_traits<kerbal::data_struct::optional<Type> >
 		{
 		};
 
+#	if KERBAL_OPTIONAL_ENABLE_SUPPORT_TO_STD_OPTIONAL==1
 		template <typename Type>
 		struct optional_traits<std::optional<Type> > : public std_optional_traits<std::optional<Type> >
 		{
 		};
+#	endif
 
+#	if KERBAL_OPTIONAL_ENABLE_SUPPORT_TO_BOOST_OPTIONAL==1
 		template <typename Type>
 		struct optional_traits<boost::optional<Type> > : public boost_optional_traits<boost::optional<Type> >
 		{
 		};
+#	endif
 
 	} /* namespace data_struct */
 
