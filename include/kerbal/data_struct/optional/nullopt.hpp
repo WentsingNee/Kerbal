@@ -9,7 +9,10 @@
 #define INCLUDE_KERBAL_DATA_STRUCT_OPTIONAL_NULLOPT_HPP_
 
 #include <kerbal/compatibility/compatibility_macro.hpp>
-#include <kerbal/type_traits/type_traits.hpp>
+#include <kerbal/type_traits/type_traits_details/cv_deduction.hpp>
+#include <kerbal/type_traits/type_traits_details/enable_if.hpp>
+#include <kerbal/type_traits/type_traits_details/integral_constant.hpp>
+#include <kerbal/data_struct/optional/optional_settings.hpp>
 
 namespace kerbal
 {
@@ -28,15 +31,19 @@ namespace kerbal
 		{
 		};
 
+#	if KERBAL_OPTIONAL_ENABLE_SUPPORT_TO_STD_OPTIONAL==1
 		template <>
 		struct __is_nullopt_helper<std::nullopt_t > : kerbal::type_traits::true_type
 		{
 		};
+#	endif
 
+#	if KERBAL_OPTIONAL_ENABLE_SUPPORT_TO_BOOST_OPTIONAL==1
 		template <>
 		struct __is_nullopt_helper<boost::none_t > : kerbal::type_traits::true_type
 		{
 		};
+#	endif
 
 		template <typename Type>
 		struct is_nullopt: __is_nullopt_helper<typename kerbal::type_traits::remove_cvref<Type>::type>
