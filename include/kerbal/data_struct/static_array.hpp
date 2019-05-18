@@ -41,6 +41,12 @@ namespace kerbal
 		template <bool enable_memecpy_optimization>
 		struct __static_array_n_assign_details;
 
+		template <bool enable_memecpy_optimization>
+		struct __static_array_insert_details;
+
+		template <bool enable_memecpy_optimization>
+		struct __static_array_erase_details;
+
 		/**
 		 * @brief Array with flexible length that stored on automatic storage duration
 		 * @details The class is an encapsulation class of array that could be stored on
@@ -443,6 +449,10 @@ namespace kerbal
 				 */
 				void pop_front();
 
+
+				friend struct __static_array_insert_details<false>;
+				friend struct __static_array_insert_details<true>;
+
 				iterator insert(const_iterator pos, const_reference val);
 
 #			if __cplusplus >= 201103L
@@ -452,9 +462,12 @@ namespace kerbal
 				iterator emplace(const_iterator pos, Args&& ...args);
 #			endif
 
-				void erase(const_iterator pos);
+				friend struct __static_array_erase_details<false>;
+				friend struct __static_array_erase_details<true>;
 
-//				void erase(const_iterator begin, const_iterator end);
+				iterator erase(const_iterator pos);
+
+//				iterator erase(const_iterator begin, const_iterator end);
 
 				/**
 				 * @brief Swap the array with another one.
