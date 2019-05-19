@@ -128,10 +128,17 @@ namespace kerbal
 		};
 
 		template <typename Tp, size_t N>
-		template <typename InputIterator>
-		static_array<Tp, N>::static_array(InputIterator first, InputIterator last,
+		static_array<Tp, N>::static_array(size_type n, const_reference val) :
+				p_to_end(storage + 0)
+		{
+			this->assign(n, val);
+		}
+
+		template <typename Tp, size_t N>
+		template <typename InputCompatibleIterator>
+		static_array<Tp, N>::static_array(InputCompatibleIterator first, InputCompatibleIterator last,
 				typename kerbal::type_traits::enable_if<
-						kerbal::algorithm::is_compatible_iterator_type_of<InputIterator, std::input_iterator_tag>::value
+						kerbal::type_traits::is_input_compatible_iterator<InputCompatibleIterator>::value
 						, int
 				>::type
 		) :
@@ -140,8 +147,8 @@ namespace kerbal
 //			__static_array_range_copy_details<false>()(*this, first, last);
 			__static_array_range_copy_details<
 			(
-				kerbal::type_traits::is_same<pointer, InputIterator>::value ||
-				kerbal::type_traits::is_same<const_pointer, InputIterator>::value
+				kerbal::type_traits::is_same<pointer, InputCompatibleIterator>::value ||
+				kerbal::type_traits::is_same<const_pointer, InputCompatibleIterator>::value
 			)
 			&&
 			(
@@ -265,11 +272,11 @@ namespace kerbal
 		}
 
 		template <typename Tp, size_t N>
-		template <typename InputIterator>
+		template <typename InputCompatibleIterator>
 		typename kerbal::type_traits::enable_if<
-				kerbal::algorithm::is_compatible_iterator_type_of<InputIterator, std::input_iterator_tag>::value
+				kerbal::type_traits::is_input_compatible_iterator<InputCompatibleIterator>::value
 		>::type
-		static_array<Tp, N>::assign(InputIterator first, InputIterator last)
+		static_array<Tp, N>::assign(InputCompatibleIterator first, InputCompatibleIterator last)
 		{
 			const size_type previous_size = this->size();
 			size_type assign_index = 0;

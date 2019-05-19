@@ -13,167 +13,154 @@
 #ifndef INCLUDE_KERBAL_ALGORITHM_ITERATOR_HPP_
 #define INCLUDE_KERBAL_ALGORITHM_ITERATOR_HPP_
 
-#include <iterator>
-#include <kerbal/type_traits/type_traits_details/enable_if.hpp>
-#include <kerbal/type_traits/type_traits_details/is_same.hpp>
+#include <kerbal/type_traits/iterator_traits.hpp>
 
 namespace kerbal
 {
 	namespace algorithm
 	{
 
-		template <typename Iterator, typename IteratorTag>
-		struct iterator_is_type_of: public kerbal::type_traits::conditional_boolean<
-				kerbal::type_traits::is_same<
-						typename std::iterator_traits<Iterator>::iterator_category,
-						IteratorTag
-				>::value
-		>
-		{
-		};
-
-		template <typename Iterator, typename IteratorTag>
-		struct is_compatible_iterator_type_of;
-
-		template <typename Iterator>
-		struct is_compatible_iterator_type_of<Iterator, std::random_access_iterator_tag>: public
-			kerbal::type_traits::conditional_boolean<
-				kerbal::type_traits::is_same<
-					typename std::iterator_traits<Iterator>::iterator_category,
-					std::random_access_iterator_tag
-				>::value
-			>
-		{
-		};
-
-		template <typename Iterator>
-		struct is_compatible_iterator_type_of<Iterator, std::bidirectional_iterator_tag>: public
-			kerbal::type_traits::conditional_boolean<
-				kerbal::type_traits::is_same<
-					typename std::iterator_traits<Iterator>::iterator_category,
-					std::bidirectional_iterator_tag
-				>::value
-					||
-				kerbal::algorithm::is_compatible_iterator_type_of<Iterator, std::random_access_iterator_tag>::value
-			>
-		{
-		};
-
-		template <typename Iterator>
-		struct is_compatible_iterator_type_of<Iterator, std::forward_iterator_tag>: public
-			kerbal::type_traits::conditional_boolean<
-				kerbal::type_traits::is_same<
-					typename std::iterator_traits<Iterator>::iterator_category,
-					std::forward_iterator_tag
-				>::value
-					||
-				kerbal::algorithm::is_compatible_iterator_type_of<Iterator, std::bidirectional_iterator_tag>::value
-			>
-		{
-		};
-
-		template <typename Iterator>
-		struct is_compatible_iterator_type_of<Iterator, std::input_iterator_tag>: public
-			kerbal::type_traits::conditional_boolean<
-				kerbal::type_traits::is_same<
-					typename std::iterator_traits<Iterator>::iterator_category,
-					std::input_iterator_tag
-				>::value
-					||
-				kerbal::algorithm::is_compatible_iterator_type_of<Iterator, std::forward_iterator_tag>::value
-			>
-		{
-		};
-
-		template <typename BidirectionalIterator, typename Distance>
-		BidirectionalIterator prev(BidirectionalIterator it, Distance dist)
+		template <typename BidirectionalCompatibleIterator, typename Distance>
+		typename kerbal::type_traits::enable_if<
+				kerbal::type_traits::is_birectional_compatible_iterator<BidirectionalCompatibleIterator>::value,
+		BidirectionalCompatibleIterator>::type prev(BidirectionalCompatibleIterator it, Distance dist)
 		{
 			std::advance(it, -dist);
 			return it;
 		}
 
-		template <typename InputIterator, typename Distance>
-		InputIterator next(InputIterator it, Distance dist)
+		template <typename InputCompatibleIterator, typename Distance>
+		typename kerbal::type_traits::enable_if<
+				kerbal::type_traits::is_input_compatible_iterator<InputCompatibleIterator>::value,
+		InputCompatibleIterator>::type next(InputCompatibleIterator it, Distance dist)
 		{
 			std::advance(it, dist);
 			return it;
 		}
 
-		template <typename BidirectionalIterator>
-		BidirectionalIterator prev(BidirectionalIterator it)
+		template <typename BidirectionalCompatibleIterator>
+		typename kerbal::type_traits::enable_if<
+				kerbal::type_traits::is_birectional_compatible_iterator<BidirectionalCompatibleIterator>::value,
+		BidirectionalCompatibleIterator>::type prev(BidirectionalCompatibleIterator it)
 		{
 			std::advance(it, -1);
 			return it;
 		}
 
-		template <typename InputIterator>
-		InputIterator next(InputIterator it)
+		template <typename InputCompatibleIterator>
+		typename kerbal::type_traits::enable_if<
+				kerbal::type_traits::is_input_compatible_iterator<InputCompatibleIterator>::value,
+		InputCompatibleIterator>::type next(InputCompatibleIterator it)
 		{
 			std::advance(it, 1);
 			return it;
 		}
 
-		template <typename InputIterator, typename Distance>
+		template <typename InputButNotBidirectionalCompatibleIterator, typename Distance>
 		typename kerbal::type_traits::enable_if<
-				iterator_is_type_of<InputIterator, std::input_iterator_tag>::value,
-				InputIterator>::type
-		advance_at_most(InputIterator & it, Distance dist, InputIterator end)
+				kerbal::type_traits::is_input_compatible_iterator<InputButNotBidirectionalCompatibleIterator>::value
+				&&
+				!kerbal::type_traits::is_birectional_compatible_iterator<InputButNotBidirectionalCompatibleIterator>::value,
+		typename std::iterator_traits<InputButNotBidirectionalCompatibleIterator>::difference_type>::type
+		advance_at_most(InputButNotBidirectionalCompatibleIterator & it, Distance dist, InputButNotBidirectionalCompatibleIterator end)
 		{
-			typename std::iterator_traits<InputIterator>::difference_type __d = dist;
-			while (__d-- && it != end) {
+			typedef typename std::iterator_traits<InputButNotBidirectionalCompatibleIterator>::difference_type difference_type;
+			difference_type i = 0;
+			while (i < dist && it != end) {
 				++it;
+				++i;
 			}
-		}
-
-		template <typename ForwardIterator, typename Distance>
-		typename kerbal::type_traits::enable_if<
-				iterator_is_type_of<ForwardIterator, std::forward_iterator_tag>::value,
-				ForwardIterator>::type
-		advance_at_most(ForwardIterator & it, Distance dist, ForwardIterator end)
-		{
-			typename std::iterator_traits<ForwardIterator>::difference_type __d = dist;
-			while (__d-- && it != end) {
-				++it;
-			}
+			return i;
 		}
 
 		template <typename BidirectionalIterator, typename Distance>
 		typename kerbal::type_traits::enable_if<
-				iterator_is_type_of<BidirectionalIterator, std::bidirectional_iterator_tag>::value,
-				BidirectionalIterator>::type
+				kerbal::type_traits::is_bidirectional_iterator<BidirectionalIterator>::value,
+		typename std::iterator_traits<BidirectionalIterator>::difference_type>::type
 		advance_at_most(BidirectionalIterator & it, Distance dist, BidirectionalIterator end)
 		{
-			typename std::iterator_traits<BidirectionalIterator>::difference_type __d = dist;
-			while (__d-- && it != end) {
+			typedef typename std::iterator_traits<BidirectionalIterator>::difference_type difference_type;
+			difference_type i = 0;
+			while (i < dist && it != end) {
 				++it;
+				++i;
 			}
+			return i;
 		}
 
 		template <typename RandomAccessIterator, typename Distance>
 		typename kerbal::type_traits::enable_if<
-				iterator_is_type_of<RandomAccessIterator, std::random_access_iterator_tag>::value,
-				RandomAccessIterator>::type
+				kerbal::type_traits::is_random_access_iterator<RandomAccessIterator>::value,
+		typename std::iterator_traits<RandomAccessIterator>::difference_type>::type
 		advance_at_most(RandomAccessIterator & it, Distance dist, RandomAccessIterator end)
 		{
-			typename std::iterator_traits<RandomAccessIterator>::difference_type __d = dist;
-			if (__d < std::distance(it, end)) {
+			typedef typename std::iterator_traits<RandomAccessIterator>::difference_type difference_type;
+			difference_type __d = dist;
+			difference_type most_dist = std::distance(it, end);
+			if (__d < most_dist) {
 				it += __d;
 			} else {
 				it = end;
+				__d = most_dist;
 			}
+			return __d;
 		}
 
-		template <typename InputIterator, typename Distance>
-		InputIterator next_at_most(InputIterator it, Distance dist, InputIterator end)
+		template <typename InputCompatibleIterator, typename Distance>
+		typename kerbal::type_traits::enable_if<
+				kerbal::type_traits::is_input_compatible_iterator<InputCompatibleIterator>::value,
+		InputCompatibleIterator>::type next_at_most(InputCompatibleIterator it, Distance dist, InputCompatibleIterator end)
 		{
 			advance_at_most(it, dist, end);
 			return it;
 		}
 
+		template <typename BidirectionalIterator, typename Distance>
+		typename kerbal::type_traits::enable_if<
+				kerbal::type_traits::is_bidirectional_iterator<BidirectionalIterator>::value,
+		typename std::iterator_traits<BidirectionalIterator>::difference_type>::type
+		retreat_at_most(BidirectionalIterator & it, Distance dist, BidirectionalIterator begin)
+		{
+			typedef typename std::iterator_traits<BidirectionalIterator>::difference_type difference_type;
+			difference_type i = 0;
+			while (i < dist && it != begin) {
+				--it;
+				++i;
+			}
+			return i;
+		}
+
+		template <typename RandomAccessIterator, typename Distance>
+		typename kerbal::type_traits::enable_if<
+				kerbal::type_traits::is_random_access_iterator<RandomAccessIterator>::value,
+		typename std::iterator_traits<RandomAccessIterator>::difference_type>::type
+		retreat_at_most(RandomAccessIterator & it, Distance dist, RandomAccessIterator begin)
+		{
+			typedef typename std::iterator_traits<RandomAccessIterator>::difference_type difference_type;
+			difference_type __d = dist;
+			difference_type most_dist = std::distance(begin, it);
+			if (__d < most_dist) {
+				it -= __d;
+			} else {
+				it = begin;
+				__d = most_dist;
+			}
+			return __d;
+		}
+
+		template <typename BidirectionalCompatibleIterator, typename Distance>
+		typename kerbal::type_traits::enable_if<
+				kerbal::type_traits::is_birectional_compatible_iterator<BidirectionalCompatibleIterator>::value,
+		BidirectionalCompatibleIterator>::type prev_at_most(BidirectionalCompatibleIterator it, Distance dist, BidirectionalCompatibleIterator begin)
+		{
+			retreat_at_most(it, dist, begin);
+			return it;
+		}
+
 		template <typename ForwardIterator>
 		typename kerbal::type_traits::enable_if<
-				iterator_is_type_of<ForwardIterator, std::forward_iterator_tag>::value,
-				ForwardIterator>::type
+				kerbal::type_traits::is_forward_iterator<ForwardIterator>::value,
+		ForwardIterator>::type
 		midden_iterator(ForwardIterator begin, ForwardIterator end)
 		{
 			typedef ForwardIterator iterator;
@@ -190,9 +177,8 @@ namespace kerbal
 
 		template <typename ForwardIterator>
 		typename kerbal::type_traits::enable_if<
-				iterator_is_type_of<ForwardIterator, std::forward_iterator_tag>::value,
-				std::pair<ForwardIterator,
-						typename std::iterator_traits<ForwardIterator>::difference_type> >::type
+				kerbal::type_traits::is_forward_iterator<ForwardIterator>::value,
+		std::pair<ForwardIterator, typename std::iterator_traits<ForwardIterator>::difference_type> >::type
 		midden_iterator_with_distance(ForwardIterator begin, ForwardIterator end)
 		{
 			typedef ForwardIterator iterator;
@@ -212,8 +198,8 @@ namespace kerbal
 
 		template <typename BidirectionalIterator>
 		typename kerbal::type_traits::enable_if<
-				iterator_is_type_of<BidirectionalIterator, std::bidirectional_iterator_tag>::value,
-				BidirectionalIterator>::type
+				kerbal::type_traits::is_bidirectional_iterator<BidirectionalIterator>::value,
+		BidirectionalIterator>::type
 		midden_iterator(BidirectionalIterator begin, BidirectionalIterator end)
 		{
 			typedef BidirectionalIterator iterator;
@@ -222,7 +208,7 @@ namespace kerbal
 				if (begin != end) {
 					++begin;
 				} else {
-					return begin;
+					break;
 				}
 			}
 			return begin;
@@ -230,9 +216,8 @@ namespace kerbal
 
 		template <typename BidirectionalIterator>
 		typename kerbal::type_traits::enable_if<
-				iterator_is_type_of<BidirectionalIterator, std::bidirectional_iterator_tag>::value,
-				std::pair<BidirectionalIterator,
-						typename std::iterator_traits<BidirectionalIterator>::difference_type> >::type
+				kerbal::type_traits::is_bidirectional_iterator<BidirectionalIterator>::value,
+		std::pair<BidirectionalIterator, typename std::iterator_traits<BidirectionalIterator>::difference_type> >::type
 		midden_iterator_with_distance(BidirectionalIterator begin, BidirectionalIterator end)
 		{
 			typedef BidirectionalIterator iterator;
@@ -244,7 +229,7 @@ namespace kerbal
 					++begin;
 					++dist;
 				} else {
-					return std::make_pair(begin, dist);
+					break;
 				}
 			}
 			return std::make_pair(begin, dist);
@@ -252,19 +237,19 @@ namespace kerbal
 
 		template <typename RandomAccessIterator>
 		typename kerbal::type_traits::enable_if<
-				iterator_is_type_of<RandomAccessIterator, std::random_access_iterator_tag>::value,
-				RandomAccessIterator>::type
+				kerbal::type_traits::is_random_access_iterator<RandomAccessIterator>::value,
+		RandomAccessIterator>::type
 		midden_iterator(RandomAccessIterator begin, RandomAccessIterator end)
 		{
 			typedef RandomAccessIterator iterator;
-			return begin + (end - begin) / 2;
+			typename std::iterator_traits<iterator>::difference_type dist(end - begin);
+			return begin + dist / 2;
 		}
 
 		template <typename RandomAccessIterator>
 		typename kerbal::type_traits::enable_if<
-				iterator_is_type_of<RandomAccessIterator, std::random_access_iterator_tag>::value,
-				std::pair<RandomAccessIterator,
-						typename std::iterator_traits<RandomAccessIterator>::difference_type> >::type
+				kerbal::type_traits::is_random_access_iterator<RandomAccessIterator>::value,
+		std::pair<RandomAccessIterator, typename std::iterator_traits<RandomAccessIterator>::difference_type> >::type
 		midden_iterator_with_distance(RandomAccessIterator begin, RandomAccessIterator end)
 		{
 			typedef RandomAccessIterator iterator;

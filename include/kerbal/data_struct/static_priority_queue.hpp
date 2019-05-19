@@ -55,23 +55,23 @@ namespace kerbal
 				{
 				}
 
-				template <typename InputIterator, typename =
+				template <typename InputCompatibleIterator, typename =
 						typename kerbal::type_traits::enable_if<
-								kerbal::algorithm::is_compatible_iterator_type_of<InputIterator, std::input_iterator_tag>::value
+								kerbal::type_traits::is_input_compatible_iterator<InputCompatibleIterator>::value
 						>::type
 				>
-				static_priority_queue(InputIterator first, InputIterator last) :
+				static_priority_queue(InputCompatibleIterator first, InputCompatibleIterator last) :
 						c(first, last), kc()
 				{
 					std::make_heap(c.begin(), c.end(), this->kc);
 				}
 
-				template <typename InputIterator, typename =
+				template <typename InputCompatibleIterator, typename =
 						typename kerbal::type_traits::enable_if<
-								kerbal::algorithm::is_compatible_iterator_type_of<InputIterator, std::input_iterator_tag>::value
+								kerbal::type_traits::is_input_compatible_iterator<InputCompatibleIterator>::value
 						>::type
 				>
-				static_priority_queue(InputIterator first, InputIterator last, key_compare kc) :
+				static_priority_queue(InputCompatibleIterator first, InputCompatibleIterator last, key_compare kc) :
 						c(first, last), kc(kc)
 				{
 					std::make_heap(c.begin(), c.end(), this->kc);

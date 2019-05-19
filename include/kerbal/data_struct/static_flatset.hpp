@@ -54,23 +54,23 @@ namespace kerbal
 				{
 				}
 
-				template <typename InputIterator, typename =
+				template <typename InputCompatibleIterator, typename =
 						typename kerbal::type_traits::enable_if<
-								kerbal::algorithm::is_compatible_iterator_type_of<InputIterator, std::input_iterator_tag>::value
+								kerbal::type_traits::is_input_compatible_iterator<InputCompatibleIterator>::value
 						>::type
 				>
-				static_flatset(InputIterator begin, InputIterator end) :
+				static_flatset(InputCompatibleIterator begin, InputCompatibleIterator end) :
 					c(), kc()
 				{
 					this->insert(begin, end);
 				}
 
-				template <typename InputIterator, typename =
+				template <typename InputCompatibleIterator, typename =
 						typename kerbal::type_traits::enable_if<
-								kerbal::algorithm::is_compatible_iterator_type_of<InputIterator, std::input_iterator_tag>::value
+								kerbal::type_traits::is_input_compatible_iterator<InputCompatibleIterator>::value
 						>::type
 				>
-				static_flatset(InputIterator begin, InputIterator end, key_compare kc) :
+				static_flatset(InputCompatibleIterator begin, InputCompatibleIterator end, key_compare kc) :
 					c(), kc(kc)
 				{
 					this->insert(begin, end);
@@ -88,21 +88,21 @@ namespace kerbal
 				}
 #endif
 
-				template <typename InputIterator>
+				template <typename InputCompatibleIterator>
 				typename kerbal::type_traits::enable_if<
-						kerbal::algorithm::is_compatible_iterator_type_of<InputIterator, std::input_iterator_tag>::value
+						kerbal::type_traits::is_input_compatible_iterator<InputCompatibleIterator>::value
 				>::type
-				assign(InputIterator begin, InputIterator end)
+				assign(InputCompatibleIterator begin, InputCompatibleIterator end)
 				{
 					this->clear();
 					this->insert(begin, end);
 				}
 
-				template <typename InputIterator>
+				template <typename InputCompatibleIterator>
 				typename kerbal::type_traits::enable_if<
-						kerbal::algorithm::is_compatible_iterator_type_of<InputIterator, std::input_iterator_tag>::value
+						kerbal::type_traits::is_input_compatible_iterator<InputCompatibleIterator>::value
 				>::type
-				assign(InputIterator begin, InputIterator end, key_compare kc)
+				assign(InputCompatibleIterator begin, InputCompatibleIterator end, key_compare kc)
 				{
 					this->clear();
 					this->kc = kc;
@@ -191,36 +191,146 @@ namespace kerbal
 
 				const_iterator lower_bound(const_reference val) const
 				{
-					return kerbal::algorithm::lower_bound(this->cbegin(), this->cend(), val, kc);
+					return kerbal::algorithm::lower_bound(this->cbegin(), this->cend(), val, this->kc);
+				}
+
+				const_iterator upper_bound(const_reference val) const
+				{
+					return kerbal::algorithm::upper_bound(this->cbegin(), this->cend(), val, this->kc);
+				}
+
+				const_iterator lower_bound(const_reference val, const_iterator hint) const
+				{
+					return kerbal::algorithm::lower_bound_hint(this->cbegin(), this->cend(), val, hint, this->kc);
 				}
 
 				const_iterator find(const_reference val) const
 				{
-					const_iterator __i = this->lower_bound(val);
-					return kc(val, *__i) ? this->cend() : __i;
+					const_iterator i = this->lower_bound(val);
+					const_iterator end_it = this->cend();
+					if (i != end_it && this->kc(val, *i)) {
+						i = end_it;
+					}
+					return i;
 				}
+
+				const_iterator find(const_reference val, const_iterator hint) const
+				{
+					const_iterator i = this->lower_bound(val, hint);
+					const_iterator end_it = this->cend();
+					if (i != end_it && this->kc(val, *i)) {
+						i = end_it;
+					}
+					return i;
+				}
+
+				bool contains(const_reference val) const
+				{
+					const_iterator __i = this->lower_bound(val);
+					if (__i == this->cend()) {
+						return false;
+					}
+					return this->kc(val, *__i) ? false : true;
+				}
+
+				bool contains(const_reference val, const_iterator hint) const
+				{
+					const_iterator __i = this->lower_bound(val, hint);
+					if (__i == this->cend()) {
+						return false;
+					}
+					return this->kc(val, *__i) ? false : true;
+				}
+
+				size_type count(const_reference val) const
+				{
+					return this->contains(val) ? 1 : 0;
+				}
+
+				size_type count(const_reference val, const_iterator hint) const
+				{
+					return this->contains(val, hint) ? 1 : 0;
+				}
+
+#		if __cplusplus >= 201103L
+
+				template <typename ... Args>
+				std::pair<const_iterator, bool> emplace(Args&& ... args)
+				{
+					value_type val(std::forward<Args>(args)...);
+					std::pair<const_iterator, bool> ret(this->lower_bound(val), false); // first, inserted
+					const_iterator & first = ret.first;
+					bool & inserted = ret.second;
+					if (first == this->cend() || this->kc(val, *first)) { // src < *first
+						first = const_iterator(c.insert(first, std::move(val)));
+						inserted = true;
+					}
+					return ret;
+				}
+
+				template <typename ... Args>
+				std::pair<const_iterator, bool> emplace_hint(const_iterator hint, Args&& ... args)
+				{
+					value_type val(std::forward<Args>(args)...);
+					std::pair<const_iterator, bool> ret(this->lower_bound(val, hint), false); // first, inserted
+					const_iterator & first = ret.first;
+					bool & inserted = ret.second;
+					if (first == this->cend() || this->kc(val, *first)) { // src < *first
+						first = const_iterator(c.insert(first, std::move(val)));
+						inserted = true;
+					}
+					return ret;
+				}
+
+#		endif
 
 				std::pair<const_iterator, bool> insert(const_reference src)
 				{
-					const_iterator first = kerbal::algorithm::lower_bound(this->cbegin(), this->cend(), src, kc);
-					bool inserted = false;
-					if (first == this->cend() || kc(src, *first)) { // src < *first
+					std::pair<const_iterator, bool> ret(this->lower_bound(src), false); // first, inserted
+					const_iterator & first = ret.first;
+					bool & inserted = ret.second;
+					if (first == this->cend() || this->kc(src, *first)) { // src < *first
 						first = const_iterator(c.insert(first, src));
 						inserted = true;
 					}
-					return std::pair<const_iterator, bool>(first, inserted);
+					return ret;
+				}
+
+				std::pair<const_iterator, bool> insert(const_iterator hint, const_reference src)
+				{
+					std::pair<const_iterator, bool> ret(this->lower_bound(src, hint), false); // first, inserted
+					const_iterator & first = ret.first;
+					bool & inserted = ret.second;
+					if (first == this->cend() || this->kc(src, *first)) { // src < *first
+						first = const_iterator(c.insert(first, src));
+						inserted = true;
+					}
+					return ret;
 				}
 
 #	if __cplusplus >= 201103L
 				std::pair<const_iterator, bool> insert(rvalue_reference src)
 				{
-					const_iterator first = kerbal::algorithm::lower_bound(this->cbegin(), this->cend(), src, kc);
-					bool inserted = false;
+					std::pair<const_iterator, bool> ret(this->lower_bound(src), false); // first, inserted
+					const_iterator & first = ret.first;
+					bool & inserted = ret.second;
 					if (first == this->cend() || this->kc(src, *first)) { // src < *first
-						first = c.insert(first, std::move(src));
+						first = const_iterator(c.insert(first, std::move(src)));
 						inserted = true;
 					}
-					return std::pair<const_iterator, bool>(first, inserted);
+					return ret;
+				}
+
+				std::pair<const_iterator, bool> insert(const_iterator hint, rvalue_reference src)
+				{
+					std::pair<const_iterator, bool> ret(this->lower_bound(src, hint), false); // first, inserted
+					const_iterator & first = ret.first;
+					bool & inserted = ret.second;
+					if (first == this->cend() || this->kc(src, *first)) { // src < *first
+						first = const_iterator(c.insert(first, std::move(src)));
+						inserted = true;
+					}
+					return ret;
 				}
 #	endif
 
@@ -229,9 +339,23 @@ namespace kerbal
 				{
 					while (begin != end && !c.full()) {
 						const_reference src = *begin;
-						const_iterator first = kerbal::algorithm::lower_bound(this->cbegin(), this->cend(), src, kc);
-						if (first == this->cend() || kc(src, *first)) { // src < *first
+						const_iterator first = this->lower_bound(src);
+						if (first == this->cend() || this->kc(src, *first)) { // src < *first
 							c.insert(first, src);
+						}
+						++begin;
+					}
+				}
+
+				template <typename InputIterator>
+				void nearly_ordered_insert(InputIterator begin, InputIterator end)
+				{
+					const_iterator first = this->cbegin();
+					while (begin != end && !c.full()) {
+						const_reference src = *begin;
+						first = this->lower_bound(src, first);
+						if (first == this->cend() || this->kc(src, *first)) { // src < *first
+							first = c.insert(first, src);
 						}
 						++begin;
 					}
@@ -247,9 +371,22 @@ namespace kerbal
 					return c.erase(this->find(val));
 				}
 
+				const_iterator erase(const_iterator hint, const_reference val)
+				{
+					return c.erase(this->find(val, hint));
+				}
+
 				size_type size() const
 				{
 					return c.size();
+				}
+
+				/**
+				 * @brief Returns the size() of the largest possible static_array.
+				 */
+				KERBAL_CONSTEXPR size_type max_size() const KERBAL_NOEXCEPT
+				{
+					return c.max_size();
 				}
 
 				bool empty() const
@@ -268,6 +405,12 @@ namespace kerbal
 				const key_compare & key_comp() const
 				{
 					return kc;
+				}
+
+				void swap(static_flatset & ano)
+				{
+					this->c.swap(ano.c);
+					std::swap(this->kc, ano.kc);
 				}
 
 				template <size_t M>
