@@ -9,6 +9,7 @@
 #define INCLUDE_KERBAL_TYPE_TRAITS_TYPE_TRAITS_DETAILS_REFERENCE_DEDUCTION_HPP_
 
 #include <kerbal/ts/modules_ts/modules_ts.hpp>
+#include <kerbal/type_traits/type_traits_details/conditional.hpp>
 #include <kerbal/type_traits/type_traits_details/integral_constant.hpp>
 
 namespace kerbal
