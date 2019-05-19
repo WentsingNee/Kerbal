@@ -235,6 +235,8 @@ namespace kerbal
 				friend struct __static_array_range_copy_details<false>;
 				friend struct __static_array_range_copy_details<true>;
 
+				static_array(size_type n, const_reference val);
+
 				/**
 				 * @brief Range constructor
 				 * @param begin the iterator that points to the range begin
@@ -243,10 +245,10 @@ namespace kerbal
 				 * @warning If the range contains elements more than N, only the first N elements
 				 *          will be used. The others will be ignored.
 				 */
-				template <typename InputIterator>
-				static_array(InputIterator first, InputIterator last,
+				template <typename InputCompatibleIterator>
+				static_array(InputCompatibleIterator first, InputCompatibleIterator last,
 						typename kerbal::type_traits::enable_if<
-								kerbal::algorithm::is_compatible_iterator_type_of<InputIterator, std::input_iterator_tag>::value
+								kerbal::type_traits::is_input_compatible_iterator<InputCompatibleIterator>::value
 								, int
 						>::type = 0
 				);
@@ -275,7 +277,7 @@ namespace kerbal
 				 * @param n numbers of the value(s)
 				 * @param val value
 				 */
-				void assign(size_type n, const value_type & val);
+				void assign(size_type n, const_reference val);
 
 				/**
 				 * @brief Assign the array by using a range of elements.
@@ -284,11 +286,11 @@ namespace kerbal
 				 * @tparam InputIterator An input iterator type that points to elements of a type
 				 * @warning 若区间长度超出 static_array 所能存放的最大元素数目, 超过部分将自动截断
 				 */
-				template <typename InputIterator>
+				template <typename InputCompatibleIterator>
 				typename kerbal::type_traits::enable_if<
-						kerbal::algorithm::is_compatible_iterator_type_of<InputIterator, std::input_iterator_tag>::value
+						kerbal::type_traits::is_input_compatible_iterator<InputCompatibleIterator>::value
 				>::type
-				assign(InputIterator begin, InputIterator end);
+				assign(InputCompatibleIterator begin, InputCompatibleIterator end);
 
 #if __cplusplus >= 201103L
 				/**
