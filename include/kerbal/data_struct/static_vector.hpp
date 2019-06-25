@@ -1,5 +1,5 @@
 /**
- * @file		static_array.hpp
+ * @file		static_vector.hpp
  * @brief
  * @date		2018年4月28日
  * @author		Peter
@@ -53,7 +53,7 @@ namespace kerbal
 		 *          automatic storage duration. It is more effective than std::vector
 		 *          (especially when type parameter Tp is trivial type) because std::vector
 		 *          store elements on heap storage duration (that's required memory allocation
-		 *          and deallocation). Meanwhile the static_array has more flexibility
+		 *          and deallocation). Meanwhile the static_vector has more flexibility
 		 *          than std::array for the reason that std::array has fixed length and
 		 *          doesn't support operations like `insert` and `erase`. For further,
 		 *          std::array and c-style array must call default constructor for initialization
@@ -63,7 +63,7 @@ namespace kerbal
 		 * @tparam N The maximum number of elements that the array can hold.
 		 */
 		template <typename Tp, size_t N>
-		class static_array
+		class static_vector
 		{
 			public:
 
@@ -93,7 +93,7 @@ namespace kerbal
 				typedef std::size_t size_type;
 				typedef std::ptrdiff_t difference_type;
 
-				/// @brief 与该 static_array 所等价的 C 风格数组的类型, 即 value_type[N]
+				/// @brief 与该 static_vector 所等价的 C 风格数组的类型, 即 value_type[N]
 				typedef value_type equal_c_array[N];
 				typedef equal_c_array& equal_c_array_reference;
 				typedef const value_type const_equal_c_array[N];
@@ -113,13 +113,13 @@ namespace kerbal
 			public:
 				class const_iterator;
 
-				/// @brief Iterator to static_array.
-				typedef class iterator : public std::iterator<std::random_access_iterator_tag, static_array::value_type>
+				/// @brief Iterator to static_vector.
+				typedef class iterator : public std::iterator<std::random_access_iterator_tag, static_vector::value_type>
 				{
 					private:
 						storage_type* current;
-						friend class static_array;
-						friend class static_array::const_iterator;
+						friend class static_vector;
+						friend class static_vector::const_iterator;
 
 					public:
 						explicit iterator(storage_type* current) KERBAL_NOEXCEPT :
@@ -127,8 +127,8 @@ namespace kerbal
 						{
 						}
 
-						static_array::reference operator*() const;
-						static_array::pointer operator->() const;
+						static_vector::reference operator*() const;
+						static_vector::pointer operator->() const;
 
 						/// @brief 前自增
 						iterator& operator++();
@@ -156,13 +156,13 @@ namespace kerbal
 
 				} iterator;
 
-				/// @brief Const iterator to static_array.
-				typedef class const_iterator : public std::iterator<std::random_access_iterator_tag, static_array::const_type>
+				/// @brief Const iterator to static_vector.
+				typedef class const_iterator : public std::iterator<std::random_access_iterator_tag, static_vector::const_type>
 				{
 					private:
 						const storage_type* current;
 
-						friend class static_array;
+						friend class static_vector;
 
 					public:
 						explicit const_iterator(const storage_type* current) KERBAL_NOEXCEPT :
@@ -175,8 +175,8 @@ namespace kerbal
 						{
 						}
 
-						static_array::const_reference operator*() const;
-						static_array::const_pointer operator->() const;
+						static_vector::const_reference operator*() const;
+						static_vector::const_pointer operator->() const;
 
 						//前自增
 						const_iterator& operator++();
@@ -202,40 +202,40 @@ namespace kerbal
 
 				} const_iterator;
 
-				/// @brief Const reverse iterator to static_array.
+				/// @brief Constant reverse iterator to static_vector.
 				typedef std::reverse_iterator<const_iterator> const_reverse_iterator;
 
-				/// @brief Reverse iterator to static_array.
+				/// @brief Reverse iterator to static_vector.
 				typedef std::reverse_iterator<iterator> reverse_iterator;
 
 			public:
 				/** @brief Empty container constructor (Default constructor) */
-				static_array();
+				static_vector();
 
 				friend struct __static_array_copy_details<false>;
 				friend struct __static_array_copy_details<true>;
 
 				/**
 				 * @brief Copy constructor
-				 * @param src Another static_array object of the same type (must have the same template arguments type and N)
+				 * @param src Another static_vector object of the same type (must have the same template arguments type and N)
 				 */
-				static_array(const static_array & src);
+				static_vector(const static_vector & src);
 
 #			if __cplusplus >= 201103L
 
 				/**
 				 * @brief Construct the array by coping the contents in initializer list
 				 * @param src An initializer list
-				 * @warning Compile terminate if the length of the initializer list large than the arg N of the static_array
+				 * @warning Compile terminate if the length of the initializer list large than the arg N of the static_vector
 				 * @warning The constructor only be provided under the environment of C++11 standard
 				 */
-				static_array(std::initializer_list<value_type> src);
+				static_vector(std::initializer_list<value_type> src);
 #			endif
 
 				friend struct __static_array_range_copy_details<false>;
 				friend struct __static_array_range_copy_details<true>;
 
-				static_array(size_type n, const_reference val);
+				static_vector(size_type n, const_reference val);
 
 				/**
 				 * @brief Range constructor
@@ -246,7 +246,7 @@ namespace kerbal
 				 *          will be used. The others will be ignored.
 				 */
 				template <typename InputCompatibleIterator>
-				static_array(InputCompatibleIterator first, InputCompatibleIterator last,
+				static_vector(InputCompatibleIterator first, InputCompatibleIterator last,
 						typename kerbal::type_traits::enable_if<
 								kerbal::type_traits::is_input_compatible_iterator<InputCompatibleIterator>::value
 								, int
@@ -256,9 +256,9 @@ namespace kerbal
 				/**
 				 * @brief 析构函数
 				 */
-				~static_array();
+				~static_vector();
 
-				static_array& operator=(const static_array & src);
+				static_vector& operator=(const static_vector & src);
 
 #	if __cplusplus >= 201103L
 				/**
@@ -266,7 +266,7 @@ namespace kerbal
 				 * @param src the initializer list
 				 * @return the reference to the array be assigned
 				 */
-				static_array& operator=(std::initializer_list<value_type> src);
+				static_vector& operator=(std::initializer_list<value_type> src);
 #	endif
 
 				friend struct __static_array_n_assign_details<false>;
@@ -284,7 +284,7 @@ namespace kerbal
 				 * @param begin the iterator that points to the range begin
 				 * @param end the iterator that points to the range end
 				 * @tparam InputIterator An input iterator type that points to elements of a type
-				 * @warning 若区间长度超出 static_array 所能存放的最大元素数目, 超过部分将自动截断
+				 * @warning 若区间长度超出 static_vector 所能存放的最大元素数目, 超过部分将自动截断
 				 */
 				template <typename InputCompatibleIterator>
 				typename kerbal::type_traits::enable_if<
@@ -331,7 +331,7 @@ namespace kerbal
 				size_type size() const KERBAL_NOEXCEPT;
 
 				/**
-				 * @brief Returns the size() of the largest possible static_array.
+				 * @brief Returns the size() of the largest possible static_vector.
 				 */
 				KERBAL_CONSTEXPR size_type max_size() const KERBAL_NOEXCEPT
 				{
@@ -395,8 +395,8 @@ namespace kerbal
 				const_reference back() const;
 
 				/**
-				 * @brief 返回与该 static_array 所等价的 C 风格数组类型的引用, 方便与专门为 C 风格数组类型设计的 API 交互
-				 * @return 与该 static_array 所等价的 C 风格数组类型的引用
+				 * @brief 返回与该 static_vector 所等价的 C 风格数组类型的引用, 方便与专门为 C 风格数组类型设计的 API 交互
+				 * @return 与该 static_vector 所等价的 C 风格数组类型的引用
 				 * @warning 必须保证数组元素存满时才可调用此方法
 				 * @throw std::exception Throw this exception when call this method while the array is not full
 				 */
@@ -475,7 +475,7 @@ namespace kerbal
 				 * @brief Swap the array with another one.
 				 * @param with another array to be swaped with
 				 */
-				void swap(static_array & with);
+				void swap(static_vector & with);
 
 				/**
 				 * @brief Clear all the elements in the array.
@@ -547,14 +547,14 @@ namespace kerbal
 		};
 
 		template <typename Tp, size_t M, size_t N>
-		bool operator==(const static_array<Tp, M> & lhs, const static_array<Tp, N> & rhs)
+		bool operator==(const static_vector<Tp, M> & lhs, const static_vector<Tp, N> & rhs)
 		{
 			if (lhs.size() != rhs.size()) {
 				return false;
 			}
-			typename static_array<Tp, M>::const_iterator i = lhs.cbegin();
-			typename static_array<Tp, M>::const_iterator const i_end = lhs.cend();
-			typename static_array<Tp, N>::const_iterator j = rhs.cbegin();
+			typename static_vector<Tp, M>::const_iterator i = lhs.cbegin();
+			typename static_vector<Tp, M>::const_iterator const i_end = lhs.cend();
+			typename static_vector<Tp, N>::const_iterator j = rhs.cbegin();
 			while (i != i_end) { // size are equal and j will not out of range
 				if (*i == *j) {
 					++i;
@@ -567,14 +567,14 @@ namespace kerbal
 		}
 
 		template <typename Tp, size_t M, size_t N>
-		bool operator!=(const static_array<Tp, M> & lhs, const static_array<Tp, N> & rhs)
+		bool operator!=(const static_vector<Tp, M> & lhs, const static_vector<Tp, N> & rhs)
 		{
 			if (lhs.size() != rhs.size()) {
 				return true;
 			}
-			typename static_array<Tp, M>::const_iterator i = lhs.cbegin();
-			typename static_array<Tp, M>::const_iterator const i_end = lhs.cend();
-			typename static_array<Tp, N>::const_iterator j = rhs.cbegin();
+			typename static_vector<Tp, M>::const_iterator i = lhs.cbegin();
+			typename static_vector<Tp, M>::const_iterator const i_end = lhs.cend();
+			typename static_vector<Tp, N>::const_iterator j = rhs.cbegin();
 			while (i != i_end) {
 				if (*i != *j) {
 					return true;
@@ -587,24 +587,24 @@ namespace kerbal
 		}
 
 		template <typename Tp, size_t M, size_t N>
-		bool operator<(const static_array<Tp, M> & lhs, const static_array<Tp, N> & rhs)
+		bool operator<(const static_vector<Tp, M> & lhs, const static_vector<Tp, N> & rhs)
 		{
 			return std::lexicographical_compare(lhs.cbegin(), lhs.cend(), rhs.cbegin(), rhs.cend());
 		}
 
 		template <typename Tp, size_t M, size_t N>
-		bool operator<=(const static_array<Tp, M> & lhs, const static_array<Tp, N> & rhs);
+		bool operator<=(const static_vector<Tp, M> & lhs, const static_vector<Tp, N> & rhs);
 
 		template <typename Tp, size_t M, size_t N>
-		bool operator>(const static_array<Tp, M> & lhs, const static_array<Tp, N> & rhs);
+		bool operator>(const static_vector<Tp, M> & lhs, const static_vector<Tp, N> & rhs);
 
 		template <typename Tp, size_t M, size_t N>
-		bool operator>=(const static_array<Tp, M> & lhs, const static_array<Tp, N> & rhs);
+		bool operator>=(const static_vector<Tp, M> & lhs, const static_vector<Tp, N> & rhs);
 
 	}
 }
 
-#include <kerbal/data_struct/static_container_base/static_array_base.hpp>
-#include <kerbal/data_struct/static_container_base/static_array_iterator.hpp>
+#include <kerbal/data_struct/static_container_base/static_vector_base.hpp>
+#include <kerbal/data_struct/static_container_base/static_vector_iterator.hpp>
 
 #endif /* INCLUDE_KERBAL_DATA_STRUCT_STATIC_ARRAY_HPP_ */

@@ -8,7 +8,7 @@
 #ifndef INCLUDE_KERBAL_DATA_STRUCT_STATIC_FLATSET_HPP_
 #define INCLUDE_KERBAL_DATA_STRUCT_STATIC_FLATSET_HPP_
 
-#include <kerbal/data_struct/static_array.hpp>
+#include <kerbal/data_struct/static_vector.hpp>
 #include <kerbal/algorithm/search.hpp>
 #include <algorithm>
 
@@ -17,7 +17,7 @@ namespace kerbal
 	namespace data_struct
 	{
 
-		template <typename Tp, std::size_t N, typename KeyCompare = std::less<Tp>, typename Sequence = kerbal::data_struct::static_array<Tp, N> >
+		template <typename Tp, std::size_t N, typename KeyCompare = std::less<Tp>, typename Sequence = kerbal::data_struct::static_vector<Tp, N> >
 		class static_flatset
 		{
 			public:
@@ -382,7 +382,7 @@ namespace kerbal
 				}
 
 				/**
-				 * @brief Returns the size() of the largest possible static_array.
+				 * @brief Returns the size() of the largest possible static_vector.
 				 */
 				KERBAL_CONSTEXPR size_type max_size() const KERBAL_NOEXCEPT
 				{

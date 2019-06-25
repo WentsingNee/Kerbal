@@ -8,7 +8,7 @@
 #ifndef INCLUDE_KERBAL_DATA_STRUCT_STATIC_PRIORITY_QUEUE_HPP_
 #define INCLUDE_KERBAL_DATA_STRUCT_STATIC_PRIORITY_QUEUE_HPP_
 
-#include <kerbal/data_struct/static_array.hpp>
+#include <kerbal/data_struct/static_vector.hpp>
 
 #include <queue>
 
@@ -18,7 +18,7 @@ namespace kerbal
 	{
 
 		template <typename Tp, size_t N, typename KeyCompare = std::less<Tp>,
-					typename Sequence = kerbal::data_struct::static_array<Tp, N> >
+					typename Sequence = kerbal::data_struct::static_vector<Tp, N> >
 		class static_priority_queue
 		{
 			public:

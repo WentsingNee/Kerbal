@@ -13,7 +13,7 @@
 #ifndef INCLUDE_KERBAL_DATA_STRUCT_STATIC_STACK_HPP_
 #define INCLUDE_KERBAL_DATA_STRUCT_STATIC_STACK_HPP_
 
-#include <kerbal/data_struct/static_array.hpp>
+#include <kerbal/data_struct/static_vector.hpp>
 
 namespace kerbal
 {
@@ -28,7 +28,7 @@ namespace kerbal
 		 * @tparam Tp Type of the elements.
 		 * @tparam N The maximum number of elements that the stack can hold.
 		 */
-		template <typename Tp, std::size_t N, typename Sequence = kerbal::data_struct::static_array<Tp, N> >
+		template <typename Tp, std::size_t N, typename Sequence = kerbal::data_struct::static_vector<Tp, N> >
 		class static_stack
 		{
 			public:
