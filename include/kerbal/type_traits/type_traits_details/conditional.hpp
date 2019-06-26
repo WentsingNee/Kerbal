@@ -33,10 +33,7 @@ namespace kerbal
 
 		MODULE_EXPORT
 		template <bool condition>
-		struct conditional_boolean : kerbal::type_traits::conditional<condition,
-													kerbal::type_traits::true_type,
-													kerbal::type_traits::false_type
-											>::type
+		struct conditional_boolean : kerbal::type_traits::bool_constant<condition>
 		{
 		};
 

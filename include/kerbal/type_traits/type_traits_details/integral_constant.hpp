@@ -47,6 +47,20 @@ namespace kerbal
 		{
 		};
 
+		MODULE_EXPORT
+		template <bool>
+		struct bool_constant;
+
+		template <>
+		struct bool_constant<true> : kerbal::type_traits::true_type
+		{
+		};
+
+		template <>
+		struct bool_constant<false> : kerbal::type_traits::false_type
+		{
+		};
+
 	}
 }
 
