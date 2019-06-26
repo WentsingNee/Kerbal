@@ -16,6 +16,7 @@
 #include <kerbal/type_traits/type_traits_details/is_same.hpp>
 #include <kerbal/type_traits/type_traits_details/enable_if.hpp>
 #include <kerbal/type_traits/type_traits_details/pointer_deduction.hpp>
+#include <kerbal/compatibility/constexpr.hpp>
 
 #include <kerbal/ts/modules_ts/modules_ts.hpp>
 
@@ -234,6 +235,16 @@ namespace kerbal
 				>
 		{
 		};
+
+		MODULE_EXPORT
+		template <typename Tp>
+		inline
+		KERBAL_CONSTEXPR
+		typename iterator_traits<Tp>::iterator_category
+		iterator_category(const Tp&)
+		{
+			return typename std::iterator_traits<Tp>::iterator_category();
+		}
 
 	}
 }

@@ -28,13 +28,11 @@ namespace kerbal
 		 * 			  otherwise the returned iterator satisfies the condition that the all items before it are less than
 		 * 			  or equal than @p value and the all items after it are greater than or equal than @p value.
 		 */
-		template <typename ForwardCompatibleIterator, typename Tp, typename Comparator>
-		typename kerbal::type_traits::enable_if<
-				kerbal::type_traits::is_forward_compatible_iterator<ForwardCompatibleIterator>::value,
-		ForwardCompatibleIterator>::type
-		binary_search(ForwardCompatibleIterator first, ForwardCompatibleIterator last, const Tp & value, Comparator comparator)
+		template <typename ForwardIterator, typename Tp, typename Comparator>
+		ForwardIterator
+		binary_search(ForwardIterator first, ForwardIterator last, const Tp & value, Comparator comparator)
 		{
-			typedef ForwardCompatibleIterator iterator;
+			typedef ForwardIterator iterator;
 			while (first != last) {
 				iterator middle = kerbal::algorithm::midden_iterator(first, last);
 				if (comparator(*middle, value)) { // *middle < value
@@ -49,13 +47,11 @@ namespace kerbal
 			return first;
 		}
 
-		template <typename ForwardCompatibleIterator, typename Tp>
-		typename kerbal::type_traits::enable_if<
-				kerbal::type_traits::is_forward_compatible_iterator<ForwardCompatibleIterator>::value,
-		ForwardCompatibleIterator>::type
-		binary_search(ForwardCompatibleIterator first, ForwardCompatibleIterator last, const Tp & value)
+		template <typename ForwardIterator, typename Tp>
+		ForwardIterator
+		binary_search(ForwardIterator first, ForwardIterator last, const Tp & value)
 		{
-			typedef ForwardCompatibleIterator iterator;
+			typedef ForwardIterator iterator;
 			typedef typename std::iterator_traits<iterator>::value_type type;
 			return kerbal::algorithm::binary_search(first, last, value, kerbal::algorithm::binary_type_less<type, type>());
 		}
@@ -64,15 +60,12 @@ namespace kerbal
 		 * @return first if value is not in the range and value is less than any values in the range
 		 * 			  last if value is not in the range and value is greater than any values in the range
 		 */
-		template <typename ForwardButNotRandomAccessCompatibleIterator, typename Tp, typename Comparator>
-		typename kerbal::type_traits::enable_if<
-				kerbal::type_traits::is_forward_compatible_iterator<ForwardButNotRandomAccessCompatibleIterator>::value
-				&&
-				!kerbal::type_traits::is_random_access_compatible_iterator<ForwardButNotRandomAccessCompatibleIterator>::value,
-		ForwardButNotRandomAccessCompatibleIterator>::type
-		lower_bound(ForwardButNotRandomAccessCompatibleIterator first, ForwardButNotRandomAccessCompatibleIterator last, const Tp & value, Comparator comparator)
+		template <typename ForwardIterator, typename Tp, typename Comparator>
+		ForwardIterator
+		__lower_bound(ForwardIterator first, ForwardIterator last, const Tp & value, Comparator comparator,
+				std::forward_iterator_tag)
 		{
-			typedef ForwardButNotRandomAccessCompatibleIterator iterator;
+			typedef ForwardIterator iterator;
 			while (first != last) {
 				iterator middle = kerbal::algorithm::midden_iterator(first, last);
 				if (comparator(*middle, value)) { // *middle < value
@@ -85,18 +78,17 @@ namespace kerbal
 			return first;
 		}
 
-		template <typename RandomAccessCompatibleIterator, typename Tp, typename Comparator>
-		typename kerbal::type_traits::enable_if<
-				kerbal::type_traits::is_random_access_compatible_iterator<RandomAccessCompatibleIterator>::value,
-		RandomAccessCompatibleIterator>::type
-		lower_bound(RandomAccessCompatibleIterator first, RandomAccessCompatibleIterator last, const Tp & value, Comparator comparator)
+		template <typename RandomAccessIterator, typename Tp, typename Comparator>
+		RandomAccessIterator
+		__lower_bound(RandomAccessIterator first, RandomAccessIterator last, const Tp & value, Comparator comparator,
+				std::random_access_iterator_tag)
 		{
-			typedef RandomAccessCompatibleIterator iterator;
+			typedef RandomAccessIterator iterator;
 			typedef typename std::iterator_traits<iterator>::difference_type difference_type;
-			difference_type len = static_cast<difference_type>(last - first);
+			difference_type len(last - first);
 
 			while (len) {
-				difference_type step = len >> 1;
+				difference_type step(len >> 1);
 				iterator middle(first);
 				middle += step;
 
@@ -110,24 +102,27 @@ namespace kerbal
 			return first;
 		}
 
-		template <typename ForwardCompatibleIterator, typename Tp>
-		typename kerbal::type_traits::enable_if<
-				kerbal::type_traits::is_forward_compatible_iterator<ForwardCompatibleIterator>::value,
-		ForwardCompatibleIterator>::type
-		lower_bound(ForwardCompatibleIterator first, ForwardCompatibleIterator last, const Tp & value)
+		template <typename ForwardIterator, typename Tp, typename Comparator>
+		ForwardIterator
+		lower_bound(ForwardIterator first, ForwardIterator last, const Tp & value, Comparator comparator)
 		{
-			typedef ForwardCompatibleIterator iterator;
+			return kerbal::algorithm::__lower_bound(first, last, value, comparator, kerbal::type_traits::iterator_category(first));
+		}
+
+		template <typename ForwardIterator, typename Tp>
+		ForwardIterator
+		lower_bound(ForwardIterator first, ForwardIterator last, const Tp & value)
+		{
+			typedef ForwardIterator iterator;
 			typedef typename std::iterator_traits<iterator>::value_type type;
 			return kerbal::algorithm::lower_bound(first, last, value, kerbal::algorithm::binary_type_less<type, Tp>());
 		}
 
-		template <typename ForwardCompatibleIterator, typename Tp, typename Comparator>
-		typename kerbal::type_traits::enable_if<
-				kerbal::type_traits::is_forward_compatible_iterator<ForwardCompatibleIterator>::value,
-		ForwardCompatibleIterator>::type
-		upper_bound(ForwardCompatibleIterator first, ForwardCompatibleIterator last, const Tp & value, Comparator comparator)
+		template <typename ForwardIterator, typename Tp, typename Comparator>
+		ForwardIterator
+		upper_bound(ForwardIterator first, ForwardIterator last, const Tp & value, Comparator comparator)
 		{
-			typedef ForwardCompatibleIterator iterator;
+			typedef ForwardIterator iterator;
 			while (first != last) {
 				iterator middle = kerbal::algorithm::midden_iterator(first, last);
 				if (comparator(value, *middle)) { // *middle > value
@@ -140,40 +135,31 @@ namespace kerbal
 			return first;
 		}
 
-		template <typename ForwardCompatibleIterator, typename Tp>
-		typename kerbal::type_traits::enable_if<
-				kerbal::type_traits::is_forward_compatible_iterator<ForwardCompatibleIterator>::value,
-		ForwardCompatibleIterator>::type
-		upper_bound(ForwardCompatibleIterator first, ForwardCompatibleIterator last, const Tp & value)
+		template <typename ForwardIterator, typename Tp>
+		ForwardIterator
+		upper_bound(ForwardIterator first, ForwardIterator last, const Tp & value)
 		{
-			typedef ForwardCompatibleIterator iterator;
+			typedef ForwardIterator iterator;
 			typedef typename std::iterator_traits<iterator>::value_type type;
 			return kerbal::algorithm::upper_bound(first, last, value, kerbal::algorithm::binary_type_less<Tp, type>());
 		}
 
-		template <typename InputButNotRandomAccessCompatibleIterator, typename Tp, typename Comparator>
-		typename kerbal::type_traits::enable_if<
-			kerbal::type_traits::is_input_compatible_iterator<InputButNotRandomAccessCompatibleIterator>::value
-			&&
-			!kerbal::type_traits::is_random_access_compatible_iterator<InputButNotRandomAccessCompatibleIterator>::value,
-		InputButNotRandomAccessCompatibleIterator>::type
-		ordered_range_lower_bound(InputButNotRandomAccessCompatibleIterator first, InputButNotRandomAccessCompatibleIterator last, const Tp & value, Comparator comparator)
+		template <typename InputIterator, typename Tp, typename Comparator>
+		InputIterator
+		__ordered_range_lower_bound(InputIterator first, InputIterator last, const Tp & value, Comparator comparator,
+				std::input_iterator_tag)
 		{
-			while (first != last) {
-				if (comparator(*first, value)) {
-					++first;
-				} else {
-					break;
-				}
+			while (static_cast<bool>(first != last) &&
+					static_cast<bool>(comparator(*first, value))) {
+				++first;
 			}
 			return first;
 		}
 
-		template <typename RandomAccessCompatibleIterator, typename Tp, typename Comparator>
-		typename kerbal::type_traits::enable_if<
-				kerbal::type_traits::is_random_access_compatible_iterator<RandomAccessCompatibleIterator>::value,
-		RandomAccessCompatibleIterator>::type
-		ordered_range_lower_bound(RandomAccessCompatibleIterator first, RandomAccessCompatibleIterator last, const Tp & value, Comparator comparator)
+		template <typename RandomAccessIterator, typename Tp, typename Comparator>
+		RandomAccessIterator
+		__ordered_range_lower_bound(RandomAccessIterator first, RandomAccessIterator last, const Tp & value, Comparator comparator,
+				std::random_access_iterator_tag)
 		{
 			return kerbal::algorithm::lower_bound(first, last, value, comparator);
 		}
@@ -183,93 +169,101 @@ namespace kerbal
 		 * @details Call kerbal::algorithm::lower_bound if the iterators to range are random access iterator,
 		 *             otherwise directly search the range.
 		 */
-		template <typename InputCompatibleIterator, typename Tp>
-		typename kerbal::type_traits::enable_if<
-				kerbal::type_traits::is_input_compatible_iterator<InputCompatibleIterator>::value,
-		InputCompatibleIterator>::type
-		ordered_range_lower_bound(InputCompatibleIterator first, InputCompatibleIterator last, const Tp & value)
+		template <typename InputIterator, typename Tp, typename Comparator>
+		InputIterator
+		ordered_range_lower_bound(InputIterator first, InputIterator last, const Tp & value, Comparator comparator)
 		{
-			typedef InputCompatibleIterator iterator;
+			return kerbal::algorithm::__ordered_range_lower_bound(first, last, value, comparator,
+					kerbal::type_traits::iterator_category(first));
+		}
+
+		template <typename InputIterator, typename Tp>
+		InputIterator
+		ordered_range_lower_bound(InputIterator first, InputIterator last, const Tp & value)
+		{
+			typedef InputIterator iterator;
 			typedef typename std::iterator_traits<iterator>::value_type type;
 			return kerbal::algorithm::ordered_range_lower_bound(first, last, value, kerbal::algorithm::binary_type_less<type, Tp>());
 		}
 
-		template <typename InputButNotRandomAccessCompatibleIterator, typename Tp, typename Comparator>
-		typename kerbal::type_traits::enable_if<
-				kerbal::type_traits::is_input_compatible_iterator<InputButNotRandomAccessCompatibleIterator>::value
-				&&
-				!kerbal::type_traits::is_random_access_compatible_iterator<InputButNotRandomAccessCompatibleIterator>::value,
-		InputButNotRandomAccessCompatibleIterator>::type
-		ordered_range_upper_bound(InputButNotRandomAccessCompatibleIterator first, InputButNotRandomAccessCompatibleIterator last, const Tp & value, Comparator comparator)
+		template <typename InputIterator, typename Tp, typename Comparator>
+		InputIterator
+		__ordered_range_upper_bound(InputIterator first, InputIterator last, const Tp & value, Comparator comparator,
+				std::input_iterator_tag)
 		{
-			while (first != last) {
+			while (static_cast<bool>(first != last) && !static_cast<bool>(comparator(value, *first))) {
 				if (comparator(value, *first)) { // *first > value
 					return first;
 				} else {
 					++first;
 				}
 			}
-			return last;
+			return first;
 		}
 
-		template <typename RandomAccessCompatibleIterator, typename Tp, typename Comparator>
-		typename kerbal::type_traits::enable_if<
-				kerbal::type_traits::is_random_access_compatible_iterator<RandomAccessCompatibleIterator>::value,
-		RandomAccessCompatibleIterator>::type
-		ordered_range_upper_bound(RandomAccessCompatibleIterator first, RandomAccessCompatibleIterator last, const Tp & value, Comparator comparator)
+		template <typename RandomAccessIterator, typename Tp, typename Comparator>
+		RandomAccessIterator
+		__ordered_range_upper_bound(RandomAccessIterator first, RandomAccessIterator last, const Tp & value, Comparator comparator,
+				std::random_access_iterator_tag)
 		{
 			return kerbal::algorithm::upper_bound(first, last, value, comparator);
 		}
 
-		template <typename RandomAccessCompatibleIterator, typename Tp>
-		typename kerbal::type_traits::enable_if<
-				kerbal::type_traits::is_random_access_compatible_iterator<RandomAccessCompatibleIterator>::value,
-		RandomAccessCompatibleIterator>::type
-		ordered_range_upper_bound(RandomAccessCompatibleIterator first, RandomAccessCompatibleIterator last, const Tp & value)
+		template <typename InputIterator, typename Tp, typename Comparator>
+		InputIterator
+		ordered_range_upper_bound(InputIterator first, InputIterator last, const Tp & value, Comparator comparator)
 		{
-			typedef RandomAccessCompatibleIterator iterator;
+			return kerbal::algorithm::__ordered_range_upper_bound(first, last, value, comparator,
+					kerbal::type_traits::iterator_category(first));
+		}
+
+		template <typename InputIterator, typename Tp>
+		InputIterator
+		ordered_range_upper_bound(InputIterator first, InputIterator last, const Tp & value)
+		{
+			typedef InputIterator iterator;
 			typedef typename std::iterator_traits<iterator>::value_type type;
 			return kerbal::algorithm::ordered_range_upper_bound(first, last, value, kerbal::algorithm::binary_type_less<Tp, type>());
 		}
 
-		template <typename ForwardButNotBidirectionalCompatibleIterator, typename Tp, typename Comparator>
-		typename kerbal::type_traits::enable_if<
-				kerbal::type_traits::is_forward_compatible_iterator<ForwardButNotBidirectionalCompatibleIterator>::value
-				&&
-				!kerbal::type_traits::is_birectional_compatible_iterator<ForwardButNotBidirectionalCompatibleIterator>::value,
-		ForwardButNotBidirectionalCompatibleIterator>::type
-		lower_bound_hint(ForwardButNotBidirectionalCompatibleIterator first, ForwardButNotBidirectionalCompatibleIterator last, const Tp& value, ForwardButNotBidirectionalCompatibleIterator hint, Comparator comparator)
+		template <typename ForwardIterator, typename Tp, typename Comparator>
+		ForwardIterator
+		__lower_bound_hint(ForwardIterator first, ForwardIterator last, const Tp& value,
+				ForwardIterator hint, Comparator comparator, std::forward_iterator_tag)
 		{
-//			return kerbal::algorithm::lower_bound(first, last, value, comparator);
+			typedef ForwardIterator iterator;
 
-			typedef ForwardButNotBidirectionalCompatibleIterator iterator;
-
-			if (hint == last || comparator(*hint, value) == false) { // hint == last or *hint >= value
-				return kerbal::algorithm::lower_bound(first, hint, value, comparator);
-			}
-			// for the next, hint != last && *hint < value
-			int forward_steps = 1;
-			iterator partition_iter(hint);
-			for (int i = 0; i < 3; ++i) {
-				kerbal::algorithm::advance_at_most(partition_iter, forward_steps, last);
-				if (partition_iter == last || comparator(*partition_iter, value) == false) {
-					return kerbal::algorithm::lower_bound(hint, partition_iter, value, comparator);
+			if (hint == last) {
+				// hint == last
+			} else if (!static_cast<bool>(comparator(*hint, value))) { // *hint >= value
+				last = hint; // both are right if last = hint or last = next(hint)
+			} else { // *hint < value
+				++hint;
+				first = hint;
+				// for the next, hint != last && *hint < value
+				int forward_steps = 1;
+				for (int i = 0; i < 3; ++i) {
+					kerbal::algorithm::advance_at_most(hint, forward_steps, last);
+					if (hint == last) {
+						break;
+					} else if (!static_cast<bool>(comparator(*hint, value))) {
+						last = hint;
+						break;
+					}
+					++hint;
+					first = hint;
+					forward_steps *= 2;
 				}
-				hint = partition_iter;
-				forward_steps *= 2;
 			}
-			return kerbal::algorithm::lower_bound(hint, last, value, comparator);
+			return kerbal::algorithm::lower_bound(first, last, value, comparator);
 		}
 
-		template <typename BidirectionalCompatibleIterator, typename Tp, typename Comparator>
-		typename kerbal::type_traits::enable_if<
-				kerbal::type_traits::is_birectional_compatible_iterator<BidirectionalCompatibleIterator>::value,
-		BidirectionalCompatibleIterator>::type
-		lower_bound_hint(BidirectionalCompatibleIterator first, BidirectionalCompatibleIterator last, const Tp& value, BidirectionalCompatibleIterator hint, Comparator comparator)
+		template <typename BidirectionalIterator, typename Tp, typename Comparator>
+		BidirectionalIterator
+		__lower_bound_hint(BidirectionalIterator first, BidirectionalIterator last, const Tp& value,
+				BidirectionalIterator hint, Comparator comparator, std::bidirectional_iterator_tag)
 		{
-//			return kerbal::algorithm::lower_bound(first, last, value, comparator);
-
-			typedef BidirectionalCompatibleIterator iterator;
+			typedef BidirectionalIterator iterator;
 
 			if (hint == last || comparator(*hint, value) == false) { // hint == last or *hint >= value
 				int backward_steps = 1;
@@ -299,13 +293,19 @@ namespace kerbal
 			}
 		}
 
-		template <typename ForwardCompatibleIterator, typename Tp>
-		typename kerbal::type_traits::enable_if<
-				kerbal::type_traits::is_forward_compatible_iterator<ForwardCompatibleIterator>::value,
-		ForwardCompatibleIterator>::type
-		lower_bound_hint(ForwardCompatibleIterator first, ForwardCompatibleIterator last, const Tp& value, ForwardCompatibleIterator hint)
+		template <typename ForwardIterator, typename Tp, typename Comparator>
+		ForwardIterator
+		lower_bound_hint(ForwardIterator first, ForwardIterator last, const Tp& value, ForwardIterator hint, Comparator comparator)
 		{
-			typedef ForwardCompatibleIterator iterator;
+			return kerbal::algorithm::__lower_bound_hint(first, last, value, hint, comparator,
+					kerbal::type_traits::iterator_category(first));
+		}
+
+		template <typename ForwardIterator, typename Tp>
+		ForwardIterator
+		lower_bound_hint(ForwardIterator first, ForwardIterator last, const Tp& value, ForwardIterator hint)
+		{
+			typedef ForwardIterator iterator;
 			typedef typename std::iterator_traits<iterator>::value_type type;
 			return lower_bound_hint(first, last, value, hint, kerbal::algorithm::binary_type_less<type, Tp>());
 		}
