@@ -51,7 +51,7 @@ namespace kerbal
 		MODULE_EXPORT
 		/// remove_pointer
 		template <typename Tp>
-		struct remove_pointer: public __remove_pointer_helper<Tp, typename remove_cv<Tp>::type>
+		struct remove_pointer: __remove_pointer_helper<Tp, typename remove_cv<Tp>::type>
 		{
 		};
 

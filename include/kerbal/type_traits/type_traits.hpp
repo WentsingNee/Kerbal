@@ -40,6 +40,7 @@ export namespace kerbal
 #include <kerbal/type_traits/type_traits_details/is_function.hpp>
 #include <kerbal/type_traits/type_traits_details/is_same.hpp>
 #include <kerbal/type_traits/type_traits_details/logical.hpp>
+#include <kerbal/type_traits/type_traits_details/member_pointer_deduction.hpp>
 #include <kerbal/type_traits/type_traits_details/pointer_deduction.hpp>
 #include <kerbal/type_traits/type_traits_details/reference_deduction.hpp>
 #include <kerbal/type_traits/type_traits_details/type_chooser.hpp>

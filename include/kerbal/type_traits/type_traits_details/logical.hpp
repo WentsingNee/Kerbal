@@ -17,6 +17,12 @@ namespace kerbal
 	namespace type_traits
 	{
 
+		MODULE_EXPORT
+		template <typename Tp>
+		struct negation: kerbal::type_traits::bool_constant<!Tp::value>
+		{
+		};
+
 #	if __cplusplus < 201103L
 
 		template <typename Tp0 = kerbal::type_traits::true_type,
@@ -49,7 +55,7 @@ namespace kerbal
 		};
 
 
-		template <typename Tp0 = kerbal::type_traits::false_type,
+		template <typename Tp0 = kerbal::type_traits::true_type,
 					typename Tp1 = kerbal::type_traits::false_type,
 					typename Tp2 = kerbal::type_traits::false_type,
 					typename Tp3 = kerbal::type_traits::false_type,
@@ -78,33 +84,8 @@ namespace kerbal
 		{
 		};
 
-		/**
-		 * @brief gcc 一个神奇的特性, 没有这个特化, disjunction<kerbal::type_traits::false_type> 会直接
-		 * 套用 disjunction <>, 即 value 为 true; 而 disjunction<std::false_type> 工作正常
-		 */
-		template <typename Tp1,
-					typename Tp2,
-					typename Tp3,
-					typename Tp4,
-					typename Tp5,
-					typename Tp6,
-					typename Tp7,
-					typename Tp8,
-					typename Tp9,
-					typename Tp10,
-					typename Tp11,
-					typename Tp12,
-					typename Tp13,
-					typename Tp14
-		>
-		struct disjunction <kerbal::type_traits::false_type, Tp1, Tp2, Tp3, Tp4, Tp5, Tp6, Tp7, Tp8, Tp9, Tp10, Tp11, Tp12, Tp13, Tp14> :
-				kerbal::type_traits::false_type
-		{
-		};
-
-
 		template <typename Tp>
-		struct disjunction <Tp>: kerbal::type_traits::conditional_boolean<Tp::value>
+		struct disjunction <Tp>: kerbal::type_traits::bool_constant<Tp::value>
 		{
 		};
 
@@ -117,12 +98,6 @@ namespace kerbal
 		MODULE_EXPORT
 		template <>
 		struct conjunction<> : kerbal::type_traits::true_type
-		{
-		};
-
-		MODULE_EXPORT
-		template <typename Tp>
-		struct conjunction<Tp> : kerbal::type_traits::conditional_boolean<Tp::value>
 		{
 		};
 
@@ -148,7 +123,7 @@ namespace kerbal
 
 		MODULE_EXPORT
 		template <typename Tp>
-		struct disjunction<Tp> : kerbal::type_traits::conditional_boolean<Tp::value>
+		struct disjunction<Tp> : kerbal::type_traits::bool_constant<Tp::value>
 		{
 		};
 

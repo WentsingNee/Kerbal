@@ -20,6 +20,30 @@ namespace kerbal
 
 		MODULE_EXPORT
 		template <typename>
+		struct is_unbounded_array : kerbal::type_traits::false_type
+		{
+		};
+
+		MODULE_EXPORT
+		template <typename Tp>
+		struct is_unbounded_array<Tp[]> : kerbal::type_traits::true_type
+		{
+		};
+
+		MODULE_EXPORT
+		template <typename>
+		struct is_bounded_array : kerbal::type_traits::false_type
+		{
+		};
+
+		MODULE_EXPORT
+		template <typename Tp, size_t N>
+		struct is_bounded_array<Tp[N]> : kerbal::type_traits::true_type
+		{
+		};
+
+		MODULE_EXPORT
+		template <typename>
 		struct is_array : kerbal::type_traits::false_type
 		{
 		};
@@ -37,25 +61,99 @@ namespace kerbal
 		};
 
 		MODULE_EXPORT
-		template <typename>
-		struct array_traits;
+		template <typename Tp, size_t i = 0>
+		struct extent: kerbal::type_traits::integral_constant<size_t, 0>
+		{
+		};
 
 		MODULE_EXPORT
 		template <typename Tp>
-		struct array_traits<Tp[]>
+		struct extent<Tp[], 0> : kerbal::type_traits::integral_constant<size_t, 0>
 		{
-				typedef Tp value_type;
+		};
+
+		MODULE_EXPORT
+		template <typename Tp, size_t i>
+		struct extent<Tp[], i> : kerbal::type_traits::extent<Tp, i - 1>
+		{
 		};
 
 		MODULE_EXPORT
 		template <typename Tp, size_t N>
-		struct array_traits<Tp[N]> : kerbal::type_traits::array_traits<Tp[]>
+		struct extent<Tp[N], 0> : kerbal::type_traits::integral_constant<size_t, N>
 		{
-#				if __cplusplus >= 201103L
-					static constexpr size_t size = N;
-#				else
-					static const size_t size = N;
-#				endif
+		};
+
+		MODULE_EXPORT
+		template <typename Tp, size_t N, size_t i>
+		struct extent<Tp[N], i> : kerbal::type_traits::extent<Tp, i - 1>
+		{
+		};
+
+
+		/// rank
+		MODULE_EXPORT
+		template <typename >
+		struct rank: kerbal::type_traits::integral_constant<size_t, 0>
+		{
+		};
+
+		MODULE_EXPORT
+		template <typename Tp, size_t N>
+		struct rank<Tp[N]> : kerbal::type_traits::integral_constant<
+										size_t,
+										1 + rank<Tp>::value
+								>
+		{
+		};
+
+		MODULE_EXPORT
+		template <typename Tp>
+		struct rank<Tp[]> : kerbal::type_traits::integral_constant<
+										size_t,
+										1 + rank<Tp>::value
+								>
+		{
+		};
+
+		MODULE_EXPORT
+		template <typename Tp>
+		struct remove_extent
+		{
+				typedef Tp type;
+		};
+
+		MODULE_EXPORT
+		template <typename Tp, size_t N>
+		struct remove_extent<Tp[N]>
+		{
+				typedef Tp type;
+		};
+
+		MODULE_EXPORT
+		template <typename Tp>
+		struct remove_extent<Tp[]>
+		{
+				typedef Tp type;
+		};
+
+		MODULE_EXPORT
+		template <typename Tp>
+		struct remove_all_extents
+		{
+				typedef Tp type;
+		};
+
+		MODULE_EXPORT
+		template <typename Tp, size_t N>
+		struct remove_all_extents<Tp[N]> : kerbal::type_traits::remove_all_extents<Tp>
+		{
+		};
+
+		MODULE_EXPORT
+		template <typename Tp>
+		struct remove_all_extents<Tp[]> : kerbal::type_traits::remove_all_extents<Tp>
+		{
 		};
 
 	}
