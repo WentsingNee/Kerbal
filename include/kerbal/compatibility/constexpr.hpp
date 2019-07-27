@@ -16,4 +16,12 @@
 #	endif
 #endif
 
+#ifndef KERBAL_CONSTEXPR14
+#	if __cplusplus >= 201402L
+#		define KERBAL_CONSTEXPR14 constexpr
+#	else
+#		define KERBAL_CONSTEXPR14
+#	endif
+#endif
+
 #endif /* INCLUDE_KERBAL_COMPATIBILITY_CONSTEXPR_HPP_ */

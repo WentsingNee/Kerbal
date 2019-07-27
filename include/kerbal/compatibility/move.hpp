@@ -38,6 +38,17 @@ namespace kerbal
 
 #	endif
 
+#	if __cplusplus >= 201103L
+
+		template <typename _Tp>
+		constexpr	typename kerbal::type_traits::remove_reference<_Tp>::type&&
+		move(_Tp&& __t) noexcept
+		{
+			return static_cast<typename kerbal::type_traits::remove_reference<_Tp>::type&&>(__t);
+		}
+
+#	endif
+
 	}
 }
 
