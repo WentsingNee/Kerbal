@@ -34,6 +34,7 @@ export namespace kerbal
 #include <kerbal/type_traits/type_traits_details/conditional.hpp>
 #include <kerbal/type_traits/type_traits_details/const_deduction.hpp>
 #include <kerbal/type_traits/type_traits_details/cv_deduction.hpp>
+#include <kerbal/type_traits/type_traits_details/decay.hpp>
 #include <kerbal/type_traits/type_traits_details/enable_if.hpp>
 #include <kerbal/type_traits/type_traits_details/fundamental_deduction.hpp>
 #include <kerbal/type_traits/type_traits_details/integral_constant.hpp>
