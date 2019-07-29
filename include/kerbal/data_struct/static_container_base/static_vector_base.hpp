@@ -10,15 +10,17 @@
  <a href="http://www.nuist.edu.cn/">Nanjing University of Information Science & Technology</a>
  */
 
-#ifndef INCLUDE_KERBAL_DATA_STRUCT_STATIC_CONTAINER_BASE_STATIC_VECTOR_BASE_HPP_
-#define INCLUDE_KERBAL_DATA_STRUCT_STATIC_CONTAINER_BASE_STATIC_VECTOR_BASE_HPP_
+#ifndef KERBAL_DATA_STRUCT_STATIC_CONTAINER_BASE_STATIC_VECTOR_BASE_HPP_
+#define KERBAL_DATA_STRUCT_STATIC_CONTAINER_BASE_STATIC_VECTOR_BASE_HPP_
 
 #include <cstring>
+#include <algorithm>
 
 #if __cplusplus >= 201103L
 #	include <type_traits>
 #endif
 
+#include <kerbal/compatibility/move.hpp>
 #include <kerbal/type_traits/type_traits_details/fundamental_deduction.hpp>
 #include <kerbal/type_traits/type_traits_details/pointer_deduction.hpp>
 
@@ -27,61 +29,88 @@ namespace kerbal
 	namespace data_struct
 	{
 
+		template <typename BidirectionalIterator>
+		void __static_vector_right_shift_once(BidirectionalIterator first, BidirectionalIterator last)
+		{
+			// A B C D D
+			//  ^       $
+			// A A B C D
+			BidirectionalIterator prev_last(last);
+			--prev_last;
+			while (first != last) {
+				*last = kerbal::compatibility::to_xvalue(*prev_last);
+				last = prev_last;
+				--prev_last;
+			}
+		}
+
+		template <typename BidirectionalIterator>
+		void __static_vector_left_shift_once(BidirectionalIterator first, BidirectionalIterator last)
+		{
+			// A A B C D #
+			//     ^         $
+			// A B C D D
+			BidirectionalIterator first_next(first);
+			--first;
+			while (first_next != last) {
+				*first = kerbal::compatibility::to_xvalue(*first_next);
+				first = first_next;
+				++first_next;
+			}
+		}
+
 		template <typename Tp, size_t N>
-		static_vector<Tp, N>::static_vector() :
+		static_vector<Tp, N>::static_vector() KERBAL_NOEXCEPT :
 				p_to_end(storage + 0)
 		{
 		}
 
-		template <bool enable_mem_optimization>
-		struct __static_array_copy_details;
-
-		template <>
-		struct __static_array_copy_details<false>
+		template <typename Tp, size_t N>
+		void static_vector<Tp, N>::__copy_constructor(const static_vector & src, kerbal::type_traits::false_type)
 		{
-				template <typename Tp, size_t N>
-				void
-				operator()(static_vector<Tp, N> & self,
-						const typename static_vector<Tp, N>::storage_type src[], typename static_vector<Tp, N>::size_type src_length) const
-				{
-					typename static_vector<Tp, N>::size_type i = 0;
-					while (i < src_length) {
-						self.__construct_at(i, src[i].raw_value());
-						++self.p_to_end;
-						++i;
-					}
-				}
-		};
+			const_iterator src_begin = src.cbegin();
+			const const_iterator src_end = src.cend();
+			while (src_begin != src_end) {
+				this->push_back(*src_begin);
+				++src_begin;
+			}
+		}
 
-		template <>
-		struct __static_array_copy_details<true>
+		template <typename Tp, size_t N>
+		void static_vector<Tp, N>::__copy_constructor(const static_vector & src, kerbal::type_traits::true_type)
 		{
-				template <typename Tp, size_t N>
-				void
-				operator()(static_vector<Tp, N> & self,
-						const typename static_vector<Tp, N>::storage_type src[], typename static_vector<Tp, N>::size_type src_length) const
-				{
-					::memcpy(self.storage, src, src_length * sizeof(typename static_vector<Tp, N>::storage_type));
-					self.p_to_end = self.storage + src_length;
-				}
-		};
+			size_type src_length = src.size();
+			::memcpy(this->storage, src.storage, src_length * sizeof(storage_type));
+			this->p_to_end = this->storage + src_length;
+		}
 
 		template <typename Tp, size_t N>
 		static_vector<Tp, N>::static_vector(const static_vector & src) :
 				p_to_end(storage + 0)
 		{
-//			__static_array_copy_details<false>
-//						()(*this, src.storage, src.size());
+
 #		if __cplusplus < 201103L
-			__static_array_copy_details<
-				kerbal::type_traits::is_fundamental<value_type>::value ||
-				kerbal::type_traits::is_pointer<value_type>::value
-			>
-			()(*this, src.storage, src.size());
+
+			struct enable_optimization:
+					kerbal::type_traits::bool_constant<
+						kerbal::type_traits::is_fundamental<remove_all_extents_t>::value ||
+						kerbal::type_traits::is_pointer<remove_all_extents_t>::value
+					>
+			{
+			};
+
 #		else
-			__static_array_copy_details<std::is_trivially_copy_constructible<value_type>::value>
-			()(*this, src.storage, src.size());
+
+			struct enable_optimization:
+					kerbal::type_traits::bool_constant<
+						std::is_trivially_copy_constructible<remove_all_extents_t>::value
+					>
+			{
+			};
+
 #		endif
+
+			this->__copy_constructor(src, enable_optimization());
 		}
 
 
@@ -91,41 +120,49 @@ namespace kerbal
 		static_vector<Tp, N>::static_vector(std::initializer_list<value_type> src) :
 				static_vector(src.begin(), src.end())
 		{
-//			static_assert(N >= src.size(), "you must enlarge the static_vector length");
+		}
+
+
+		template <typename Tp, size_t N>
+		void static_vector<Tp, N>::__move_constructor(static_vector && src, kerbal::type_traits::false_type)
+		{
+			iterator src_begin = src.begin();
+			const iterator src_end = src.end();
+			while (src_begin != src_end) {
+				this->push_back(std::move(*src_begin)); // move construct
+				++src_begin;
+			}
+		}
+
+		template <typename Tp, size_t N>
+		void static_vector<Tp, N>::__move_constructor(static_vector && src, kerbal::type_traits::true_type)
+		{
+			this->__copy_constructor(src, kerbal::type_traits::true_type());
+		}
+
+		template <typename Tp, size_t N>
+		static_vector<Tp, N>::static_vector(static_vector && src) :
+				p_to_end(storage + 0)
+		{
+
+			struct enable_optimization: kerbal::type_traits::bool_constant<
+					std::is_trivially_move_constructible<remove_all_extents_t>::value
+				>
+			{
+			};
+
+			this->__move_constructor(src, enable_optimization());
 		}
 
 #	endif
 
-
-		template <bool enable_mem_optimization>
-		struct __static_array_range_copy_details;
-
-		template <>
-		struct __static_array_range_copy_details<false>
+		template <typename Tp, size_t N>
+		static_vector<Tp, N>::static_vector(size_type n) :
+				p_to_end(storage + 0)
 		{
-				template <typename Tp, size_t N, typename InputIterator>
-				void
-				operator()(static_vector<Tp, N> & self, InputIterator first, InputIterator last) const
-				{
-					while (first != last && !self.full()) {
-						self.__construct_at(self.end(), *first);
-						++self.p_to_end;
-						++first;
-					}
-				}
-		};
-
-		template <>
-		struct __static_array_range_copy_details<true>
-		{
-				template <typename Tp, size_t N, typename InputIterator>
-				void
-				operator()(static_vector<Tp, N> & self, InputIterator first, InputIterator last) const
-				{
-					::memcpy(self.storage, first, (last - first) * sizeof(typename static_vector<Tp, N>::storage_type));
-					self.p_to_end = self.storage + (last - first);
-				}
-		};
+			value_type val;
+			this->assign(n, val);
+		}
 
 		template <typename Tp, size_t N>
 		static_vector<Tp, N>::static_vector(size_type n, const_reference val) :
@@ -135,32 +172,67 @@ namespace kerbal
 		}
 
 		template <typename Tp, size_t N>
-		template <typename InputCompatibleIterator>
-		static_vector<Tp, N>::static_vector(InputCompatibleIterator first, InputCompatibleIterator last,
+		template <typename InputIterator>
+		void static_vector<Tp, N>::__range_copy_constructor(InputIterator first, InputIterator last, kerbal::type_traits::false_type)
+		{
+			while (!this->full() && static_cast<bool>(first != last)) {
+				this->push_back(*first);
+				++first;
+			}
+		}
+
+		template <typename Tp, size_t N>
+		template <typename InputIterator>
+		void static_vector<Tp, N>::__range_copy_constructor(InputIterator first, InputIterator last, kerbal::type_traits::true_type)
+		{
+			while (!this->full() && static_cast<bool>(first != last)) {
+				this->push_back(*first);
+				++first;
+			}
+		}
+
+		template <typename Tp, size_t N>
+		void static_vector<Tp, N>::__range_copy_constructor(const_pointer first, const_pointer last, kerbal::type_traits::true_type)
+		{
+			size_type size = last - first;
+			if (size > N) {
+				size = N;
+			}
+			::memcpy(this->storage, first, size * sizeof(storage_type));
+			this->p_to_end = this->storage + size;
+		}
+
+		template <typename Tp, size_t N>
+		template <typename InputIterator>
+		static_vector<Tp, N>::static_vector(InputIterator first, InputIterator last,
 				typename kerbal::type_traits::enable_if<
-						kerbal::type_traits::is_input_compatible_iterator<InputCompatibleIterator>::value
+						kerbal::type_traits::is_input_compatible_iterator<InputIterator>::value
 						, int
 				>::type
 		) :
 				p_to_end(storage + 0)
 		{
-//			__static_array_range_copy_details<false>()(*this, first, last);
-			__static_array_range_copy_details<
-			(
-				kerbal::type_traits::is_same<pointer, InputCompatibleIterator>::value ||
-				kerbal::type_traits::is_same<const_pointer, InputCompatibleIterator>::value
-			)
-			&&
-			(
+
 #		if __cplusplus < 201103L
-				kerbal::type_traits::is_fundamental<value_type>::value ||
-				kerbal::type_traits::is_pointer<value_type>::value
+
+			struct enable_optimization: kerbal::type_traits::bool_constant<
+					kerbal::type_traits::is_fundamental<remove_all_extents_t>::value ||
+					kerbal::type_traits::is_pointer<remove_all_extents_t>::value
+				>
+			{
+			};
+
 #		else
-				std::is_trivially_copy_constructible<value_type>::value
+
+			struct enable_optimization: kerbal::type_traits::bool_constant<
+					std::is_trivially_copy_constructible<remove_all_extents_t>::value
+				>
+			{
+			};
+
 #		endif
-			)
-			>
-			()(*this, first, last);
+
+			this->__range_copy_constructor(first, last, enable_optimization());
 		}
 
 		template <typename Tp, size_t N>
@@ -185,90 +257,70 @@ namespace kerbal
 		}
 #	endif
 
-		template <bool enable_mem_optimization>
-		struct __static_array_n_assign_details;
-
-		template <>
-		struct __static_array_n_assign_details<false>
+		template <typename Tp, size_t N>
+		void static_vector<Tp, N>::__assign(size_type new_size, const_reference val, kerbal::type_traits::false_type)
 		{
-				template <typename Tp, size_t N>
-				void
-				operator()(static_vector<Tp, N> & self,
-						typename static_vector<Tp, N>::size_type n, const typename static_vector<Tp, N>::value_type & val) const
-				{
-					typedef typename static_vector<Tp, N>::size_type size_type;
+			size_type previous_size = this->size();
 
-					const size_type new_size = n;
-					const size_type previous_size = self.size();
+			if (previous_size <= new_size) {
+				/*
+				 * a a a x x x x x
+				 * b b b b b b x x
+				 */
 
-					if (previous_size <= new_size) {
-						/*
-						 * a a a x x x x x
-						 * b b b b b b x x
-						 */
-						size_type assign_index = 0;
-						while (assign_index != previous_size) {
-							self[assign_index] = val;
-							++assign_index;
-						}
-						while (assign_index != new_size) {
-							self.__construct_at(self.end(), val);
-							++self.p_to_end;
-							++assign_index;
-						}
-					} else {
-						/*
-						 * a a a a a a x x
-						 * b b b x x x x x
-						 */
-						size_type destroy_index = previous_size;
-						while (destroy_index != new_size) {
-							--destroy_index;
-							self.__destroy_at(destroy_index);
-							--self.p_to_end;
-						}
-						size_type assign_index = 0;
-						while (assign_index != new_size) {
-							self[assign_index] = val;
-							++assign_index;
-						}
-					}
+				std::fill(this->begin(), this->end(), val);
+				while (previous_size != new_size) {
+					this->push_back(val);
+					++previous_size;
 				}
-		};
-
-		template <>
-		struct __static_array_n_assign_details<true>
-		{
-				template <typename Tp, size_t N>
-				void
-				operator()(static_vector<Tp, N> & self,
-						typename static_vector<Tp, N>::size_type n, const typename static_vector<Tp, N>::value_type & val) const
-				{
-					typedef typename static_vector<Tp, N>::size_type size_type;
-					for (size_type i = 0; i < n; ++i) {
-						self[i] = val;
-					}
-					self.p_to_end = self.storage + n;
-				}
-		};
+			} else {
+				/*
+				 * a a a a a a x x
+				 * b b b x x x x x
+				 */
+				this->erase(this->nth(new_size), this->end());
+				std::fill(this->begin(), this->end(), val);
+			}
+		}
 
 		template <typename Tp, size_t N>
-		void static_vector<Tp, N>::assign(size_type n, const value_type & val)
+		void static_vector<Tp, N>::__assign(size_type new_size, const_reference val, kerbal::type_traits::true_type)
 		{
-			if (n > N) {
-				n = N;
+			std::fill(this->begin(), this->nth(new_size), val);
+			this->p_to_end = this->storage + new_size;
+		}
+
+		template <typename Tp, size_t N>
+		void static_vector<Tp, N>::assign(size_type new_size, const value_type & val)
+		{
+			if (new_size > N) {
+				new_size = N;
 			}
-//			__static_array_n_assign_details<false>()(*this, n, val);
-			__static_array_n_assign_details<
+
 #		if __cplusplus < 201103L
-				kerbal::type_traits::is_fundamental<value_type>::value ||
-				kerbal::type_traits::is_pointer<value_type>::value
+
+			struct enable_optimization:
+					kerbal::type_traits::bool_constant<
+						kerbal::type_traits::is_fundamental<remove_all_extents_t>::value ||
+						kerbal::type_traits::is_pointer<remove_all_extents_t>::value
+					>
+			{
+			};
+
 #		else
-				std::is_trivially_copy_constructible<value_type>::value &&
-				std::is_trivially_copy_assignable<value_type>::value
+
+			struct enable_optimization:
+					kerbal::type_traits::bool_constant<
+						std::is_trivially_copy_constructible<remove_all_extents_t>::value &&
+						std::is_trivially_copy_assignable<remove_all_extents_t>::value &&
+						std::is_trivially_destructible<remove_all_extents_t>::value
+					>
+			{
+			};
+
 #		endif
-			>
-			()(*this, n, val);
+
+			this->__assign(new_size, val, enable_optimization());
 		}
 
 		template <typename Tp, size_t N>
@@ -278,44 +330,39 @@ namespace kerbal
 		>::type
 		static_vector<Tp, N>::assign(InputCompatibleIterator first, InputCompatibleIterator last)
 		{
-			const size_type previous_size = this->size();
-			size_type assign_index = 0;
-			while (assign_index != previous_size && first != last) {
-				(*this)[assign_index] = *first;
-				++assign_index;
+			iterator assign_it = this->begin();
+			while (assign_it != this->end() && static_cast<bool>(first != last)) {
+				*assign_it = *first;
+				++assign_it;
 				++first;
 			}
 
-			if (assign_index != previous_size) { // namely: begin == end
+			if (assign_it != this->end()) { // namely: first == last
 				// X X X X O O O
 				// T T
-				size_type destroy_index = previous_size;
-				while (destroy_index != assign_index) {
-					--destroy_index;
-					this->__destroy_at(destroy_index);
-					--this->p_to_end;
-				}
+				this->erase(assign_it, this->end());
 			} else {
 				// X X X X O O O
 				// T T T T T T T T T
-				while (assign_index != N && first != last) {
-					this->__construct_at(assign_index, *first);
-					++assign_index;
-					++this->p_to_end;
+				while (!this->full() && static_cast<bool>(first != last)) {
+					this->push_back(*first);
 					++first;
 				}
 			}
 		}
 
 #	if __cplusplus >= 201103L
+
 		template <typename Tp, size_t N>
 		void static_vector<Tp, N>::assign(std::initializer_list<value_type> src)
 		{
 			assign(src.begin(), src.end());
 		}
+
 #	endif
 
 		template <typename Tp, size_t N>
+		KERBAL_CONSTEXPR
 		typename static_vector<Tp, N>::iterator
 		static_vector<Tp, N>::begin() KERBAL_NOEXCEPT
 		{
@@ -323,6 +370,7 @@ namespace kerbal
 		}
 
 		template <typename Tp, size_t N>
+		KERBAL_CONSTEXPR
 		typename static_vector<Tp, N>::iterator
 		static_vector<Tp, N>::end() KERBAL_NOEXCEPT
 		{
@@ -330,6 +378,7 @@ namespace kerbal
 		}
 
 		template <typename Tp, size_t N>
+		KERBAL_CONSTEXPR
 		typename static_vector<Tp, N>::const_iterator
 		static_vector<Tp, N>::begin() const KERBAL_NOEXCEPT
 		{
@@ -337,6 +386,7 @@ namespace kerbal
 		}
 
 		template <typename Tp, size_t N>
+		KERBAL_CONSTEXPR
 		typename static_vector<Tp, N>::const_iterator
 		static_vector<Tp, N>::end() const KERBAL_NOEXCEPT
 		{
@@ -344,6 +394,7 @@ namespace kerbal
 		}
 
 		template <typename Tp, size_t N>
+		KERBAL_CONSTEXPR
 		typename static_vector<Tp, N>::const_iterator
 		static_vector<Tp, N>::cbegin() const KERBAL_NOEXCEPT
 		{
@@ -351,6 +402,7 @@ namespace kerbal
 		}
 
 		template <typename Tp, size_t N>
+		KERBAL_CONSTEXPR
 		typename static_vector<Tp, N>::const_iterator
 		static_vector<Tp, N>::cend() const KERBAL_NOEXCEPT
 		{
@@ -509,7 +561,8 @@ namespace kerbal
 		template <typename Tp, size_t N>
 		void static_vector<Tp, N>::push_back(const_reference src)
 		{
-			this->insert(this->cend(), src);
+			this->__construct_at(this->end(), src);
+			++this->p_to_end;
 		}
 
 #	if __cplusplus >= 201103L
@@ -524,14 +577,16 @@ namespace kerbal
 		typename static_vector<Tp, N>::reference
 		static_vector<Tp, N>::emplace_back(Args&& ...args)
 		{
-			return *this->emplace(this->cend(), std::forward<Args>(args)...);
+			this->__construct_at(this->end(), std::forward<Args>(args)...);
+			++this->p_to_end;
+			return this->back();
 		}
 #	endif
 
 		template <typename Tp, size_t N>
 		void static_vector<Tp, N>::pop_back()
 		{
-			this->__destroy_at(this->size() - 1);
+			this->__destroy_at(this->nth(this->size() - 1));
 			--this->p_to_end;
 		}
 
@@ -565,89 +620,82 @@ namespace kerbal
 			this->erase(this->cbegin());
 		}
 
-		template <bool enable_mem_optimization>
-		struct __static_array_insert_details;
-
-		template <>
-		struct __static_array_insert_details<false>
+		template <typename Tp, size_t N>
+		typename static_vector<Tp, N>::iterator
+		static_vector<Tp, N>::__insert(const_iterator pos, const_reference val, kerbal::type_traits::false_type)
 		{
-				template <typename Tp, size_t N>
-				void
-				operator()(static_vector<Tp, N> & self,
-						typename static_vector<Tp, N>::size_type pos,
-						typename static_vector<Tp, N>::const_reference val) const
-				{
-					if (pos == self.size()) {
-						// A A A O O O
-						//          ^
-						self.__construct_at(pos, val);
-						++self.p_to_end;
-					} else {
-						typedef typename static_vector<Tp, N>::size_type size_type;
+			const size_type pos_index = this->index_of(pos);
+			if (pos == this->cend()) {
+				// if *this is empty, the only valid iterator pos is equal to cend()!
 
-						// A A A X Y Z O O O
-						//          ^      $
-#			if __cplusplus < 201103L
-						self.__construct_at(self.end(), self.back());
-#			else
-						self.__construct_at(self.end(), std::move(self.back()));
-#			endif
-						++self.p_to_end;
+				// A A A O O O
+				//          ^
+				this->push_back(val); // copy construct
+			} else {
+				// *this couldn't be empty otherwise the argument pos is invalid
 
-						// A A A X Y Z Z O O
-						//          ^
+				// A A A X Y Z O O O
+				//          ^      $
+				this->push_back(kerbal::compatibility::to_xvalue(this->back())); // move construct
 
-						size_type i = self.size() - 1;
-						while (--i != pos) {
-#			if __cplusplus < 201103L
-							self[i] = self[i - 1];
-#			else
-							self[i] = std::move(self[i - 1]);
-#			endif
-						}
-
-						self[pos] = val;
-					}
-				}
-		};
-
-		template <>
-		struct __static_array_insert_details<true>
-		{
-				template <typename Tp, size_t N>
-				void
-				operator()(static_vector<Tp, N> & self,
-						typename static_vector<Tp, N>::size_type pos,
-						typename static_vector<Tp, N>::const_reference val) const
-				{
-					typedef typename static_vector<Tp, N>::value_type value_type;
-					::memmove(self.storage + pos + 1, self.storage + pos,
-							(self.size() - pos) * sizeof(value_type));
-					self[pos] = val;
-					++self.p_to_end;
-				}
-		};
+				// after repeat the last element
+				// A A A X Y Z Z O O
+				//          ^
+				__static_vector_right_shift_once(pos, kerbal::algorithm::prev(this->end(), 2)); // move assign
+				// A A A X X Y Z O O
+				//          ^
+				(*this)[pos_index] = val; // copy assign
+			}
+			return this->nth(pos_index);
+		}
 
 		template <typename Tp, size_t N>
 		typename static_vector<Tp, N>::iterator
-		static_vector<Tp, N>::insert(const const_iterator pos, const_reference val)
+		static_vector<Tp, N>::__insert(const_iterator pos, const_reference val, kerbal::type_traits::true_type)
 		{
-			size_type n = pos - this->cbegin();
-//			__static_array_insert_details<false>()(*this, n, val);
-			__static_array_insert_details<
+			const size_type pos_index = this->index_of(pos);
+
+			std::memmove(this->storage + pos_index + 1, this->storage + pos_index,
+					(this->size() - pos_index) * sizeof(value_type));
+			++this->p_to_end;
+			(*this)[pos_index] = val;
+			return this->nth(pos_index);
+		}
+
+		template <typename Tp, size_t N>
+		typename static_vector<Tp, N>::iterator
+		static_vector<Tp, N>::insert(const_iterator pos, const_reference val)
+		{
+
 #		if __cplusplus < 201103L
-				kerbal::type_traits::is_fundamental<value_type>::value ||
-				kerbal::type_traits::is_pointer<value_type>::value
+
+			struct enable_optimization:
+					kerbal::type_traits::bool_constant<
+						kerbal::type_traits::is_fundamental<remove_all_extents_t>::value ||
+						kerbal::type_traits::is_pointer<remove_all_extents_t>::value
+					>
+			{
+			};
+
 #		else
-				std::is_trivially_constructible<value_type>::value &&
-				std::is_trivially_move_assignable<value_type>::value
+
+			struct enable_optimization:
+					kerbal::type_traits::bool_constant<
+						std::is_trivially_copy_constructible<remove_all_extents_t>::value &&
+						std::is_trivially_move_constructible<remove_all_extents_t>::value &&
+						std::is_trivially_copy_assignable<remove_all_extents_t>::value &&
+						std::is_trivially_move_assignable<remove_all_extents_t>::value
+					>
+			{
+			};
+
 #		endif
-			>
-			()(*this, n, val);
-			return iterator(this->begin() + n);
+
+			return this->__insert(pos, val, enable_optimization());
 		}
 
 #	if __cplusplus >= 201103L
+
 		template <typename Tp, size_t N>
 		typename static_vector<Tp, N>::iterator
 		static_vector<Tp, N>::insert(const_iterator pos, rvalue_reference val)
@@ -658,154 +706,199 @@ namespace kerbal
 		template <typename Tp, size_t N>
 		template <typename ... Args>
 		typename static_vector<Tp, N>::iterator
-		static_vector<Tp, N>::emplace(const const_iterator pos, Args&& ...args)
+		static_vector<Tp, N>::__emplace(const const_iterator pos, kerbal::type_traits::false_type, Args&& ...args)
 		{
+			iterator non_const_pos = this->nth(this->index_of(pos));
 			if (pos == this->cend()) {
 				// A A A O O O
 				//          ^
-				this->__construct_at(this->end(), std::forward<Args>(args)...);
-				++this->p_to_end;
+				this->emplace_back(std::forward<Args>(args)...); // construct by args
 			} else {
-				const size_type previous_size = this->size(); // 6
-
-				this->__construct_at(this->end(), std::move((*this)[previous_size - 1]));
-				++this->p_to_end;
+				this->push_back(std::move(this->back())); // move construct
 				// A A A X Y Z Z O O
 				//          ^
-
-				const size_type insert_index = pos - this->cbegin();
-				size_type new_pos_index = previous_size;
-				while (--new_pos_index != insert_index) {
-					(*this)[new_pos_index] = std::move((*this)[new_pos_index - 1]);
-				}
-				(*this)[insert_index] = value_type { std::forward<Args>(args)... };
+				__static_vector_right_shift_once(pos, kerbal::algorithm::prev(this->end(), 2)); // move assign
+				// A A A X X Y Z O O
+				//          ^
+				*non_const_pos = value_type(std::forward<Args>(args)...); // move assign, construct by args
 			}
-			return this->begin() + (pos - this->cbegin());
+			return non_const_pos;
 		}
+
+		template <typename Tp, size_t N>
+		template <typename ... Args>
+		typename static_vector<Tp, N>::iterator
+		static_vector<Tp, N>::__emplace(const const_iterator pos, kerbal::type_traits::true_type, Args&& ...args)
+		{
+			const size_type pos_index = this->index_of(pos);
+
+			std::memmove(this->storage + pos_index + 1, this->storage + pos_index,
+					(this->size() - pos_index) * sizeof(value_type));
+			++this->p_to_end;
+			iterator non_const_pos = this->nth(pos_index);
+			*non_const_pos = value_type(std::forward<Args>(args)...);
+			return non_const_pos;
+		}
+
+		template <typename Tp, size_t N>
+		template <typename ... Args>
+		typename static_vector<Tp, N>::iterator
+		static_vector<Tp, N>::emplace(const const_iterator pos, Args&& ...args)
+		{
+			struct enable_optimization: kerbal::type_traits::bool_constant<
+					std::is_nothrow_constructible<value_type, Args...>::value &&
+					std::is_trivially_move_constructible<remove_all_extents_t>::value &&
+					std::is_trivially_move_assignable<remove_all_extents_t>::value
+				>
+			{
+			};
+
+			return this->__emplace(pos, enable_optimization(), std::forward<Args>(args)...);
+		}
+
 #	endif
 
-
-		template <bool enable_mem_optimization>
-		struct __static_array_erase_details;
-
-		template <>
-		struct __static_array_erase_details<false>
+		// pre-condition: pos != cend()
+		template <typename Tp, size_t N>
+		typename static_vector<Tp, N>::iterator
+		static_vector<Tp, N>::__erase(const_iterator pos, kerbal::type_traits::false_type)
 		{
-				template <typename Tp, size_t N>
-				void
-				operator()(static_vector<Tp, N> & self,
-						typename static_vector<Tp, N>::size_type pos) const
-				{
-					typedef typename static_vector<Tp, N>::size_type size_type;
-					for (size_type i = pos; i + 1 < self.size(); ++i) {
-#				if __cplusplus < 201103L
-						self[i] = self[i + 1];
-#				else
-						self[i] = std::move(self[i + 1]);
-#				endif
-					}
-					if (self.size() != 0) {
-						self.__destroy_at(self.size() - 1);
-					}
-					--self.p_to_end;
-				}
-		};
+			size_type pos_index = this->index_of(pos);
+			__static_vector_left_shift_once(this->nth(pos_index) + 1, this->end());
+			this->pop_back();
+			return this->nth(pos_index);
+		}
 
-		template <>
-		struct __static_array_erase_details<true>
+		// pre-condition: pos != cend()
+		template <typename Tp, size_t N>
+		typename static_vector<Tp, N>::iterator
+		static_vector<Tp, N>::__erase(const_iterator pos, kerbal::type_traits::true_type)
 		{
-				template <typename Tp, size_t N>
-				void
-				operator()(static_vector<Tp, N> & self,
-						typename static_vector<Tp, N>::size_type pos) const
-				{
-					if (pos == self.size()) {
-						return;
-					}
-					typedef typename static_vector<Tp, N>::value_type value_type;
-					::memmove(self.storage + pos, self.storage + pos + 1,
-							(self.size() - pos - 1) * sizeof(value_type));
-					--self.p_to_end;
-				}
-		};
+			size_type pos_index = this->index_of(pos);
+			std::memmove(this->storage + pos_index, this->storage + pos_index + 1,
+					(this->size() - pos_index - 1) * sizeof(value_type));
+			--this->p_to_end;
+			return this->nth(pos_index);
+		}
 
 		template <typename Tp, size_t N>
 		typename static_vector<Tp, N>::iterator
 		static_vector<Tp, N>::erase(const_iterator pos)
 		{
-			size_type n = pos - this->cbegin();
-//			__static_array_erase_details<false>()(*this, n);
-			__static_array_erase_details<
-#			if __cplusplus < 201103L
-				kerbal::type_traits::is_fundamental<value_type>::value ||
-				kerbal::type_traits::is_pointer<value_type>::value
-#			else
-				std::is_trivially_destructible<value_type>::value &&
-				std::is_trivially_move_assignable<value_type>::value
-#			endif
-			>
-			()(*this, n);
-			return iterator(this->storage + n);
+			if (pos == this->cend()) {
+				return this->nth(this->index_of(pos));
+			}
+
+#		if __cplusplus < 201103L
+
+			struct enable_optimization:
+					kerbal::type_traits::bool_constant<
+						kerbal::type_traits::is_fundamental<remove_all_extents_t>::value ||
+						kerbal::type_traits::is_pointer<remove_all_extents_t>::value
+					>
+			{
+			};
+
+#		else
+
+			struct enable_optimization:
+					kerbal::type_traits::bool_constant<
+						std::is_trivially_destructible<remove_all_extents_t>::value &&
+						std::is_trivially_move_assignable<remove_all_extents_t>::value
+					>
+			{
+			};
+
+#		endif
+
+			return this->__erase(pos, enable_optimization());
 		}
-//
-//		template <typename Tp, size_t N>
-//		void static_vector<Tp, N>::erase(const_iterator begin, const_iterator end);
+
+		template <typename Tp, size_t N>
+		typename static_vector<Tp, N>::iterator
+		static_vector<Tp, N>::erase(const_iterator first, const_iterator last)
+		{
+			while (first != last) {
+				--last;
+				this->erase(last);
+			}
+			return this->nth(this->index_of(first));
+		}
 
 		template <typename Tp, size_t N>
 		void static_vector<Tp, N>::swap(static_vector & with)
 		{
-			bool condition = this->size() < with.size();
-			static_vector & s_arr = condition ? *this : with;
-			static_vector & l_arr = condition ? with : *this;
-
-			const size_type s_size = s_arr.size();
-			const size_type l_size = l_arr.size();
-
-			size_type i = 0;
-			size_type j = 0;
-			while (i != s_size) {
-				std::swap(s_arr[i], l_arr[j]);
-				++i;
-				++j;
+			if (this->size() > with.size()) {
+				with.swap(*this);
 			}
 
-			while (j != l_size) {
-#	if __cplusplus < 201103L
-				s_arr.__construct_at(i, l_arr[j]);
-#	else
-				s_arr.__construct_at(i, std::move(l_arr[j]));
-#	endif
-				++i;
-				++s_arr.p_to_end;
-				++j;
+			static_vector & s_arr = *this;
+			static_vector & l_arr = with;
+
+			iterator s_it = s_arr.begin();
+			iterator l_it = l_arr.begin();
+			for (const iterator s_end = s_arr.end(); s_it != s_end;) {
+				std::iter_swap(s_it, l_it);
+				++s_it;
+				++l_it;
+			}
+			const iterator l_it_tmp = l_it;
+			const iterator l_end = l_arr.end();
+			while (l_it != l_end) {
+				s_arr.push_back(kerbal::compatibility::to_xvalue(*l_it));
+				++l_it;
 			}
 
-			size_type destroy_index = l_arr.size();
-			while (destroy_index > s_size) {
-				--destroy_index;
-				l_arr.__destroy_at(destroy_index);
-				--l_arr.p_to_end;
+			l_arr.erase(l_it_tmp, l_end);
+		}
+
+		template <typename Tp, size_t N>
+		void static_vector<Tp, N>::__clear(kerbal::type_traits::false_type)
+		{
+			while (!this->empty()) {
+				this->pop_back();
 			}
+		}
+
+		template <typename Tp, size_t N>
+		void static_vector<Tp, N>::__clear(kerbal::type_traits::true_type)
+		{
+			this->p_to_end = this->storage + 0;
 		}
 
 		template <typename Tp, size_t N>
 		void static_vector<Tp, N>::clear()
 		{
-			size_type destroy_index = this->size();
-			while (destroy_index > 0) {
-				--destroy_index;
-				this->__destroy_at(destroy_index);
-				--this->p_to_end;
-			}
+
+#		if __cplusplus < 201103L
+
+			struct enable_optimization:
+					kerbal::type_traits::bool_constant<
+						kerbal::type_traits::is_fundamental<remove_all_extents_t>::value ||
+						kerbal::type_traits::is_pointer<remove_all_extents_t>::value
+					>
+			{
+			};
+
+#		else
+
+			struct enable_optimization:
+					kerbal::type_traits::bool_constant<
+						std::is_trivially_destructible<remove_all_extents_t>::value
+					>
+			{
+			};
+
+#		endif
+
+			this->__clear(enable_optimization());
 		}
 
 		template <typename Tp, size_t N>
 		void static_vector<Tp, N>::fill()
 		{
-			size_type assign_index = this->size();
-			while (assign_index != N) {
-				this->__construct_at(assign_index);
-				++assign_index;
+			while (!this->full()) {
+				this->__construct_at(this->end());
 				++this->p_to_end;
 			}
 		}
@@ -813,55 +906,12 @@ namespace kerbal
 		template <typename Tp, size_t N>
 		void static_vector<Tp, N>::fill(const_reference val)
 		{
-			size_type assign_index = this->size();
-			while (assign_index != N) {
-				this->__construct_at(assign_index, val);
-				++assign_index;
-				++this->p_to_end;
+			while (!this->full()) {
+				this->push_back(val);
 			}
 		}
 
 #	if __cplusplus < 201103L
-		template <typename Tp, size_t N>
-		void static_vector<Tp, N>::__construct_at(size_type index)
-		{
-			this->storage[index].construct();
-		}
-
-		template <typename Tp, size_t N>
-		template <typename T0>
-		void static_vector<Tp, N>::__construct_at(size_type index, const T0& v0)
-		{
-			this->storage[index].construct(v0);
-		}
-
-		template <typename Tp, size_t N>
-		template <typename T0, typename T1>
-		void static_vector<Tp, N>::__construct_at(size_type index, const T0& v0, const T1& v1)
-		{
-			this->storage[index].construct(v0, v1);
-		}
-
-		template <typename Tp, size_t N>
-		template <typename T0, typename T1, typename T2>
-		void static_vector<Tp, N>::__construct_at(size_type index, const T0& v0, const T1& v1, const T2& v2)
-		{
-			this->storage[index].construct(v0, v1, v2);
-		}
-
-		template <typename Tp, size_t N>
-		template <typename T0, typename T1, typename T2, typename T3>
-		void static_vector<Tp, N>::__construct_at(size_type index, const T0& v0, const T1& v1, const T2& v2, const T3& v3)
-		{
-			this->storage[index].construct(v0, v1, v2, v3);
-		}
-
-		template <typename Tp, size_t N>
-		template <typename T0, typename T1, typename T2, typename T3, typename T4>
-		void static_vector<Tp, N>::__construct_at(size_type index, const T0& v0, const T1& v1, const T2& v2, const T3& v3, const T4& v4)
-		{
-			this->storage[index].construct(v0, v1, v2, v3, v4);
-		}
 
 		template <typename Tp, size_t N>
 		void static_vector<Tp, N>::__construct_at(iterator itor)
@@ -908,26 +958,12 @@ namespace kerbal
 
 		template <typename Tp, size_t N>
 		template <typename ... Args>
-		void static_vector<Tp, N>::__construct_at(size_type index, Args&& ...args)
-		{
-			this->storage[index].construct(std::forward<Args>(args)...);
-		}
-
-		template <typename Tp, size_t N>
-		template <typename ... Args>
 		void static_vector<Tp, N>::__construct_at(iterator itor, Args&& ...args)
 		{
 			(itor.current)->construct(std::forward<Args>(args)...);
 		}
 
 #	endif
-
-
-		template <typename Tp, size_t N>
-		void static_vector<Tp, N>::__destroy_at(size_type index)
-		{
-			this->storage[index].destroy();
-		}
 
 		template <typename Tp, size_t N>
 		void static_vector<Tp, N>::__destroy_at(iterator itor)
@@ -938,4 +974,4 @@ namespace kerbal
 	}
 }
 
-#endif /* INCLUDE_KERBAL_DATA_STRUCT_STATIC_CONTAINER_BASE_STATIC_VECTOR_BASE_HPP_ */
+#endif /* KERBAL_DATA_STRUCT_STATIC_CONTAINER_BASE_STATIC_VECTOR_BASE_HPP_ */
