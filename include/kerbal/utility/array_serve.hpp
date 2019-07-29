@@ -1,7 +1,7 @@
 #ifndef _ARRAY_SERVE_HPP_
 #define _ARRAY_SERVE_HPP_
 
-#include <kerbal/type_traits/type_traits_details/integral_constant.hpp>
+#include <kerbal/type_traits/type_traits_details/array_traits.hpp>
 #include <iostream>
 #include <string>
 
@@ -65,26 +65,10 @@ namespace kerbal
 				return out;
 			}
 
-			// rank
-			template <typename >
-			struct rank: public kerbal::type_traits::integral_constant<size_t, 0>
-			{
-			};
-
-			template <typename Type, size_t Size>
-			struct rank<Type[Size]> : public kerbal::type_traits::integral_constant<size_t, 1 + rank<Type>::value>
-			{
-			};
-
-			template <typename Type>
-			struct rank<Type[]> : public kerbal::type_traits::integral_constant<size_t, 1 + rank<Type>::value>
-			{
-			};
-
 			template <typename Type>
 			KERBAL_CONSTEXPR size_t array_dimension(const Type &)
 			{
-				return rank<Type>::value;
+				return kerbal::type_traits::rank<Type>::value;
 			}
 
 		} /* Namespace array_serve */
