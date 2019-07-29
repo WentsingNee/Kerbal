@@ -43,7 +43,38 @@ namespace kerbal
 				Sequence c;
 				key_compare kc;
 
+				/**
+				 * @brief Returns the comparison object with which the %set was constructed.
+				 */
+				Sequence & __sequence()
+				{
+					return this->c;
+				}
+
+				const Sequence & __sequence() const
+				{
+					return this->c;
+				}
+
+				key_compare & __key_comp()
+				{
+					return this->kc;
+				}
+
+				const key_compare & __key_comp() const
+				{
+					return this->kc;
+				}
+
 			public:
+				/**
+				 * @brief Returns the comparison object with which the %set was constructed.
+				 */
+				const key_compare & key_comp() const
+				{
+					return this->kc;
+				}
+
 				static_flatset() :
 						c(), kc()
 				{
@@ -60,7 +91,7 @@ namespace kerbal
 						>::type
 				>
 				static_flatset(InputCompatibleIterator begin, InputCompatibleIterator end) :
-					c(), kc()
+						c(), kc()
 				{
 					this->insert(begin, end);
 				}
@@ -71,7 +102,7 @@ namespace kerbal
 						>::type
 				>
 				static_flatset(InputCompatibleIterator begin, InputCompatibleIterator end, key_compare kc) :
-					c(), kc(kc)
+						c(), kc(kc)
 				{
 					this->insert(begin, end);
 				}
@@ -105,13 +136,13 @@ namespace kerbal
 				assign(InputCompatibleIterator begin, InputCompatibleIterator end, key_compare kc)
 				{
 					this->clear();
-					this->kc = kc;
+					this->__key_comp() = kc;
 					this->insert(begin, end);
 				}
 
 				void assign(const static_flatset & src)
 				{
-					this->assign(src.cbegin(), src.cend(), src.kc);
+					this->assign(src.cbegin(), src.cend(), src.key_comp());
 				}
 
 #	if __cplusplus >= 201103L
@@ -146,69 +177,69 @@ namespace kerbal
 
 				void clear()
 				{
-					c.clear();
+					this->__sequence().clear();
 				}
 
 				const_iterator begin() const
 				{
-					return c.cbegin();
+					return this->__sequence().cbegin();
 				}
 
 				const_iterator end() const
 				{
-					return c.cend();
+					return this->__sequence().cend();
 				}
 
 				const_iterator cbegin() const
 				{
-					return c.cbegin();
+					return this->__sequence().cbegin();
 				}
 
 				const_iterator cend() const
 				{
-					return c.cend();
+					return this->__sequence().cend();
 				}
 
 				const_reverse_iterator rbegin() const
 				{
-					return c.crbegin();
+					return this->__sequence().crbegin();
 				}
 
 				const_reverse_iterator rend() const
 				{
-					return c.crend();
+					return this->__sequence().crend();
 				}
 
 				const_reverse_iterator crbegin() const
 				{
-					return c.crbegin();
+					return this->__sequence().crbegin();
 				}
 
 				const_reverse_iterator crend() const
 				{
-					return c.crend();
+					return this->__sequence().crend();
 				}
 
 				const_iterator lower_bound(const_reference val) const
 				{
-					return kerbal::algorithm::lower_bound(this->cbegin(), this->cend(), val, this->kc);
+					return kerbal::algorithm::lower_bound(this->cbegin(), this->cend(), val, this->__key_comp());
 				}
 
 				const_iterator upper_bound(const_reference val) const
 				{
-					return kerbal::algorithm::upper_bound(this->cbegin(), this->cend(), val, this->kc);
+					return kerbal::algorithm::upper_bound(this->cbegin(), this->cend(), val, this->__key_comp());
 				}
 
 				const_iterator lower_bound(const_reference val, const_iterator hint) const
 				{
-					return kerbal::algorithm::lower_bound_hint(this->cbegin(), this->cend(), val, hint, this->kc);
+					return kerbal::algorithm::lower_bound_hint(this->cbegin(), this->cend(), val, hint, this->__key_comp());
 				}
 
 				const_iterator find(const_reference val) const
 				{
 					const_iterator i = this->lower_bound(val);
 					const_iterator end_it = this->cend();
-					if (i != end_it && this->kc(val, *i)) {
+					if (i != end_it && this->__key_comp()(val, *i)) {
 						i = end_it;
 					}
 					return i;
@@ -218,7 +249,7 @@ namespace kerbal
 				{
 					const_iterator i = this->lower_bound(val, hint);
 					const_iterator end_it = this->cend();
-					if (i != end_it && this->kc(val, *i)) {
+					if (i != end_it && this->__key_comp()(val, *i)) {
 						i = end_it;
 					}
 					return i;
@@ -230,7 +261,7 @@ namespace kerbal
 					if (__i == this->cend()) {
 						return false;
 					}
-					return this->kc(val, *__i) ? false : true;
+					return this->__key_comp()(val, *__i) ? false : true;
 				}
 
 				bool contains(const_reference val, const_iterator hint) const
@@ -239,7 +270,7 @@ namespace kerbal
 					if (__i == this->cend()) {
 						return false;
 					}
-					return this->kc(val, *__i) ? false : true;
+					return this->__key_comp()(val, *__i) ? false : true;
 				}
 
 				size_type count(const_reference val) const
@@ -261,8 +292,8 @@ namespace kerbal
 					std::pair<const_iterator, bool> ret(this->lower_bound(val), false); // first, inserted
 					const_iterator & first = ret.first;
 					bool & inserted = ret.second;
-					if (first == this->cend() || this->kc(val, *first)) { // src < *first
-						first = const_iterator(c.insert(first, std::move(val)));
+					if (first == this->cend() || this->__key_comp()(val, *first)) { // src < *first
+						first = const_iterator(this->__sequence().insert(first, std::move(val)));
 						inserted = true;
 					}
 					return ret;
@@ -275,8 +306,8 @@ namespace kerbal
 					std::pair<const_iterator, bool> ret(this->lower_bound(val, hint), false); // first, inserted
 					const_iterator & first = ret.first;
 					bool & inserted = ret.second;
-					if (first == this->cend() || this->kc(val, *first)) { // src < *first
-						first = const_iterator(c.insert(first, std::move(val)));
+					if (first == this->cend() || this->__key_comp()(val, *first)) { // src < *first
+						first = const_iterator(this->__sequence().insert(first, std::move(val)));
 						inserted = true;
 					}
 					return ret;
@@ -289,8 +320,8 @@ namespace kerbal
 					std::pair<const_iterator, bool> ret(this->lower_bound(src), false); // first, inserted
 					const_iterator & first = ret.first;
 					bool & inserted = ret.second;
-					if (first == this->cend() || this->kc(src, *first)) { // src < *first
-						first = const_iterator(c.insert(first, src));
+					if (first == this->cend() || this->__key_comp()(src, *first)) { // src < *first
+						first = const_iterator(this->__sequence().insert(first, src));
 						inserted = true;
 					}
 					return ret;
@@ -301,8 +332,8 @@ namespace kerbal
 					std::pair<const_iterator, bool> ret(this->lower_bound(src, hint), false); // first, inserted
 					const_iterator & first = ret.first;
 					bool & inserted = ret.second;
-					if (first == this->cend() || this->kc(src, *first)) { // src < *first
-						first = const_iterator(c.insert(first, src));
+					if (first == this->cend() || this->__key_comp()(src, *first)) { // src < *first
+						first = const_iterator(this->__sequence().insert(first, src));
 						inserted = true;
 					}
 					return ret;
@@ -314,8 +345,8 @@ namespace kerbal
 					std::pair<const_iterator, bool> ret(this->lower_bound(src), false); // first, inserted
 					const_iterator & first = ret.first;
 					bool & inserted = ret.second;
-					if (first == this->cend() || this->kc(src, *first)) { // src < *first
-						first = const_iterator(c.insert(first, std::move(src)));
+					if (first == this->cend() || this->__key_comp()(src, *first)) { // src < *first
+						first = const_iterator(this->__sequence().insert(first, std::move(src)));
 						inserted = true;
 					}
 					return ret;
@@ -326,8 +357,8 @@ namespace kerbal
 					std::pair<const_iterator, bool> ret(this->lower_bound(src, hint), false); // first, inserted
 					const_iterator & first = ret.first;
 					bool & inserted = ret.second;
-					if (first == this->cend() || this->kc(src, *first)) { // src < *first
-						first = const_iterator(c.insert(first, std::move(src)));
+					if (first == this->cend() || this->__key_comp()(src, *first)) { // src < *first
+						first = const_iterator(this->__sequence().insert(first, std::move(src)));
 						inserted = true;
 					}
 					return ret;
@@ -337,11 +368,11 @@ namespace kerbal
 				template <typename InputIterator>
 				void insert(InputIterator begin, InputIterator end)
 				{
-					while (begin != end && !c.full()) {
+					while (begin != end && !this->full()) {
 						const_reference src = *begin;
 						const_iterator first = this->lower_bound(src);
-						if (first == this->cend() || this->kc(src, *first)) { // src < *first
-							c.insert(first, src);
+						if (first == this->cend() || this->__key_comp()(src, *first)) { // src < *first
+							this->__sequence().insert(first, src);
 						}
 						++begin;
 					}
@@ -351,11 +382,11 @@ namespace kerbal
 				void nearly_ordered_insert(InputIterator begin, InputIterator end)
 				{
 					const_iterator first = this->cbegin();
-					while (begin != end && !c.full()) {
+					while (begin != end && !this->full()) {
 						const_reference src = *begin;
 						first = this->lower_bound(src, first);
-						if (first == this->cend() || this->kc(src, *first)) { // src < *first
-							first = c.insert(first, src);
+						if (first == this->cend() || this->__key_comp()(src, *first)) { // src < *first
+							first = this->__sequence().insert(first, src);
 						}
 						++begin;
 					}
@@ -363,22 +394,24 @@ namespace kerbal
 
 				const_iterator erase(const_iterator iterator)
 				{
-					return c.erase(iterator);
+					return ((iterator == this->cend()) ? this->cend() : this->__sequence().erase(iterator));
 				}
 
 				const_iterator erase(const_reference val)
 				{
-					return c.erase(this->find(val));
+					const_iterator __i = this->find(val);
+					return ((__i == this->cend()) ? this->cend() : this->__sequence().erase(__i));
 				}
 
 				const_iterator erase(const_iterator hint, const_reference val)
 				{
-					return c.erase(this->find(val, hint));
+					const_iterator __i = this->find(val, hint);
+					return ((__i == this->cend()) ? this->cend() : this->__sequence().erase(__i));
 				}
 
 				size_type size() const
 				{
-					return c.size();
+					return this->__sequence().size();
 				}
 
 				/**
@@ -386,31 +419,23 @@ namespace kerbal
 				 */
 				KERBAL_CONSTEXPR size_type max_size() const KERBAL_NOEXCEPT
 				{
-					return c.max_size();
+					return this->__sequence().max_size();
 				}
 
 				bool empty() const
 				{
-					return c.empty();
+					return this->__sequence().empty();
 				}
 
 				bool full() const
 				{
-					return c.full();
-				}
-
-				/**
-				 * @brief Returns the comparison object with which the %set was constructed.
-				 */
-				const key_compare & key_comp() const
-				{
-					return kc;
+					return this->__sequence().full();
 				}
 
 				void swap(static_flatset & ano)
 				{
-					this->c.swap(ano.c);
-					std::swap(this->kc, ano.kc);
+					this->__sequence().swap(ano.__sequence());
+					std::swap(this->__key_comp(), ano.__key_comp());
 				}
 
 				template <size_t M>
@@ -436,37 +461,37 @@ namespace kerbal
 		template <typename Tp, size_t M, size_t N>
 		bool operator==(const static_flatset<Tp, M> & lhs, const static_flatset<Tp, N> & rhs)
 		{
-			return lhs.c == rhs.c;
+			return lhs.__sequence() == rhs.__sequence();
 		}
 
 		template <typename Tp, size_t M, size_t N>
 		bool operator!=(const static_flatset<Tp, M> & lhs, const static_flatset<Tp, N> & rhs)
 		{
-			return lhs.c != rhs.c;
+			return lhs.__sequence() != rhs.__sequence();
 		}
 
 		template <typename Tp, size_t M, size_t N>
 		bool operator<(const static_flatset<Tp, M> & lhs, const static_flatset<Tp, N> & rhs)
 		{
-			return lhs.c < rhs.c;
+			return lhs.__sequence() < rhs.__sequence();
 		}
 
 		template <typename Tp, size_t M, size_t N>
 		bool operator<=(const static_flatset<Tp, M> & lhs, const static_flatset<Tp, N> & rhs)
 		{
-			return lhs.c <= rhs.c;
+			return lhs.__sequence() <= rhs.__sequence();
 		}
 
 		template <typename Tp, size_t M, size_t N>
 		bool operator>(const static_flatset<Tp, M> & lhs, const static_flatset<Tp, N> & rhs)
 		{
-			return lhs.c > rhs.c;
+			return lhs.__sequence() > rhs.__sequence();
 		}
 
 		template <typename Tp, size_t M, size_t N>
 		bool operator>=(const static_flatset<Tp, M> & lhs, const static_flatset<Tp, N> & rhs)
 		{
-			return lhs.c >= rhs.c;
+			return lhs.__sequence() >= rhs.__sequence();
 		}
 
 	}
