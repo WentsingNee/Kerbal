@@ -12,7 +12,7 @@
 #include <kerbal/redis_v2/exception.hpp>
 #include <kerbal/redis_v2/query.hpp>
 #include <kerbal/redis_v2/reply.hpp>
-#include <kerbal/data_struct/optional/optional.hpp>
+#include <kerbal/optional/optional.hpp>
 #include <kerbal/utility/array_serve.hpp>
 #include <kerbal/utility/string_ref.hpp>
 #include <kerbal/type_traits/type_traits_details/enable_if.hpp>
@@ -68,7 +68,7 @@ namespace kerbal
 #endif
 
 		template <typename Type>
-		struct is_optional : kerbal::data_struct::is_optional<Type>
+		struct is_optional : kerbal::optional::is_optional<Type>
 		{
 		};
 
@@ -181,7 +181,7 @@ namespace kerbal
 		class mget_tuple_return_t;
 		
 		template <int blank, typename ...Types>
-		class mget_tuple_return_t : public mget_tuple_return_t<blank - 1 >= 0 ? blank - 1 : -1, Types..., kerbal::data_struct::optional<std::string>>
+		class mget_tuple_return_t : public mget_tuple_return_t<blank - 1 >= 0 ? blank - 1 : -1, Types..., kerbal::optional::optional<std::string>>
 		{
 		};
 
@@ -361,21 +361,21 @@ namespace kerbal
 
 #		if __cplusplus < 201103L
 
-				kerbal::data_struct::optional<std::string> get(const kerbal::utility::string_ref & key) const
+				kerbal::optional::optional<std::string> get(const kerbal::utility::string_ref & key) const
 				{
-					return this->get<kerbal::data_struct::optional<std::string> >(key);
+					return this->get<kerbal::optional::optional<std::string> >(key);
 				}
 
 #		endif
 
 				template <typename ValueType
 #						if __cplusplus >= 201103L
-								= kerbal::data_struct::optional<std::string>
+								= kerbal::optional::optional<std::string>
 #						endif
 				>
 				typename kerbal::type_traits::enable_if<
-							kerbal::data_struct::is_optional<ValueType>::value &&
-							kerbal::redis_v2::is_redis_execute_allow_type<typename kerbal::data_struct::optional_traits<ValueType>::value_type>::value,
+							kerbal::optional::is_optional<ValueType>::value &&
+							kerbal::redis_v2::is_redis_execute_allow_type<typename kerbal::optional::optional_traits<ValueType>::value_type>::value,
 				ValueType>::type
 				get(const kerbal::utility::string_ref & key) const
 				{
@@ -393,7 +393,7 @@ namespace kerbal
 
 				template <typename ValueType>
 				typename kerbal::type_traits::enable_if<
-						!kerbal::data_struct::is_optional<ValueType>::value && kerbal::redis_v2::is_redis_execute_allow_type<ValueType>::value,
+						!kerbal::optional::is_optional<ValueType>::value && kerbal::redis_v2::is_redis_execute_allow_type<ValueType>::value,
 				ValueType>::type
 				get(const kerbal::utility::string_ref & key) const
 				{
@@ -567,10 +567,10 @@ namespace kerbal
 				template <typename ValueType>
 				typename kerbal::type_traits::enable_if<
 						kerbal::redis_v2::is_redis_execute_allow_type<ValueType>::value,
-				kerbal::data_struct::optional<std::string> >::type
+				kerbal::optional::optional<std::string> >::type
 				getset(const kerbal::utility::string_ref & key, const ValueType & value)
 				{
-					return this->getset<kerbal::data_struct::optional<std::string>, ValueType >(key, value);
+					return this->getset<kerbal::optional::optional<std::string>, ValueType >(key, value);
 				}
 
 				/**
@@ -578,7 +578,7 @@ namespace kerbal
 				 */
 				template <typename ReturnType, typename ValueType>
 				typename kerbal::type_traits::enable_if<
-						kerbal::data_struct::is_optional<ReturnType>::value &&
+						kerbal::optional::is_optional<ReturnType>::value &&
 						kerbal::redis_v2::is_redis_execute_allow_type<ValueType>::value,
 				ReturnType>::type
 				getset(const kerbal::utility::string_ref & key, const ValueType & value)
@@ -600,7 +600,7 @@ namespace kerbal
 				 */
 				template <typename ReturnType, typename ValueType>
 				typename kerbal::type_traits::enable_if<
-						!kerbal::data_struct::is_optional<ReturnType>::value &&
+						!kerbal::optional::is_optional<ReturnType>::value &&
 						kerbal::redis_v2::is_redis_execute_allow_type<ValueType>::value,
 				ReturnType>::type
 				getset(const kerbal::utility::string_ref & key, const ValueType & value)
@@ -624,10 +624,10 @@ namespace kerbal
 				typename kerbal::type_traits::enable_if<
 						kerbal::redis_v2::is_redis_key_type<KeyType>::value &&
 						kerbal::redis_v2::is_redis_execute_allow_type<ValueType>::value,
-				kerbal::data_struct::optional<std::string> >::type
+				kerbal::optional::optional<std::string> >::type
 				getset(const std::pair<KeyType, ValueType> & key_value)
 				{
-					return this->getset<kerbal::data_struct::optional<std::string> >(key_value.first, key_value.second);
+					return this->getset<kerbal::optional::optional<std::string> >(key_value.first, key_value.second);
 				}
 
 				/**
@@ -991,10 +991,10 @@ namespace kerbal
 				template <typename InputIterator>
 				typename kerbal::type_traits::enable_if<
 						kerbal::redis_v2::is_redis_key_type<typename std::iterator_traits<InputIterator>::value_type>::value,
-				std::vector<kerbal::data_struct::optional<std::string> > >::type
+				std::vector<kerbal::optional::optional<std::string> > >::type
 				mget(InputIterator begin, InputIterator end) const
 				{
-					return this->mget<std::vector<kerbal::data_struct::optional<std::string> > >(begin, end);
+					return this->mget<std::vector<kerbal::optional::optional<std::string> > >(begin, end);
 				}
 
 				template <typename ReturnType, typename InputIterator>
@@ -1038,10 +1038,10 @@ namespace kerbal
 				template <typename ... Args>
 				typename kerbal::type_traits::enable_if<
 					is_redis_key_list<Args...>::value,
-				std::vector<kerbal::data_struct::optional<std::string>>>::type
+				std::vector<kerbal::optional::optional<std::string>>>::type
 				mget(const kerbal::utility::string_ref & key0, Args&& ... keys) const
 				{
-					return mget<std::vector<kerbal::data_struct::optional<std::string>>>(key0, std::forward<Args>(keys)...);
+					return mget<std::vector<kerbal::optional::optional<std::string>>>(key0, std::forward<Args>(keys)...);
 				}
 
 				template <typename ReturnType, typename ... Args>

@@ -147,7 +147,7 @@ namespace kerbal
 
 				template <typename ValueType = std::string>
 				typename kerbal::type_traits::enable_if<
-						!kerbal::data_struct::is_optional<ValueType>::value && kerbal::redis_v2::is_redis_execute_allow_type<ValueType>::value,
+						!kerbal::optional::is_optional<ValueType>::value && kerbal::redis_v2::is_redis_execute_allow_type<ValueType>::value,
 				ValueType>::type
 				blpop(const std::chrono::seconds & sec) const
 				{

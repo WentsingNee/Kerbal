@@ -1,22 +1,26 @@
-/*
- * optional_hash.hpp
- *
- *  Created on: 2018年11月7日
- *      Author: peter
+/**
+ * @file       optional_hash.hpp
+ * @brief
+ * @date       2018-11-7
+ * @author     peter
+ * @copyright
+ *      peter of [ThinkSpirit Laboratory](http://thinkspirit.org/)
+ *   of [Nanjing University of Information Science & Technology](http://www.nuist.edu.cn/)
+ *   all rights reserved
  */
 
-#ifndef INCLUDE_KERBAL_DATA_STRUCT_OPTIONAL_OPTIONAL_HASH_HPP_
-#define INCLUDE_KERBAL_DATA_STRUCT_OPTIONAL_OPTIONAL_HASH_HPP_
+#ifndef KERBAL_OPTIONAL_OPTIONAL_HASH_HPP_
+#define KERBAL_OPTIONAL_OPTIONAL_HASH_HPP_
 
 #include <cstddef>
 #include <kerbal/type_traits/type_traits_details/enable_if.hpp>
-#include <kerbal/data_struct/optional/optional_type_traits.hpp>
+#include <kerbal/optional/optional_type_traits.hpp>
 #include <kerbal/data_struct/hash.hpp>
 
 namespace kerbal
 {
 
-	namespace data_struct
+	namespace optional
 	{
 
 		template <typename OptionalType, typename ValueTypeBindHash, size_t NulloptHash>
@@ -41,9 +45,9 @@ namespace kerbal
 		{
 		};
 
-	} /* namespace data_struct */
+	} /* namespace optional */
 
 } /* namespace kerbal */
 
 
-#endif /* INCLUDE_KERBAL_DATA_STRUCT_OPTIONAL_OPTIONAL_HASH_HPP_ */
+#endif /* KERBAL_OPTIONAL_OPTIONAL_HASH_HPP_ */

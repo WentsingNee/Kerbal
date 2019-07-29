@@ -42,21 +42,21 @@ namespace kerbal
 
 #		if __cplusplus < 201103L
 
-				kerbal::data_struct::optional<std::string> hget(const kerbal::utility::string_ref & key) const
+				kerbal::optional::optional<std::string> hget(const kerbal::utility::string_ref & key) const
 				{
-					return this->hget<kerbal::data_struct::optional<std::string> >(key);
+					return this->hget<kerbal::optional::optional<std::string> >(key);
 				}
 
 #		endif
 
 				template <typename ValueType
 #						if __cplusplus >= 201103L
-								= kerbal::data_struct::optional<std::string>
+								= kerbal::optional::optional<std::string>
 #						endif
 				>
 				typename kerbal::type_traits::enable_if<
-							kerbal::data_struct::is_optional<ValueType>::value &&
-							kerbal::redis_v2::is_redis_execute_allow_type<typename kerbal::data_struct::optional_traits<ValueType>::value_type>::value,
+							kerbal::optional::is_optional<ValueType>::value &&
+							kerbal::redis_v2::is_redis_execute_allow_type<typename kerbal::optional::optional_traits<ValueType>::value_type>::value,
 				ValueType>::type
 				hget(const kerbal::utility::string_ref & field) const
 				{
@@ -74,7 +74,7 @@ namespace kerbal
 
 				template <typename ValueType>
 				typename kerbal::type_traits::enable_if<
-						!kerbal::data_struct::is_optional<ValueType>::value && kerbal::redis_v2::is_redis_execute_allow_type<ValueType>::value,
+						!kerbal::optional::is_optional<ValueType>::value && kerbal::redis_v2::is_redis_execute_allow_type<ValueType>::value,
 				ValueType>::type
 				hget(const kerbal::utility::string_ref & field) const
 				{
@@ -197,10 +197,10 @@ namespace kerbal
 				template <typename ... Args>
 				typename kerbal::type_traits::enable_if<
 					is_redis_key_list<Args...>::value,
-				std::vector<kerbal::data_struct::optional<std::string>>>::type
+				std::vector<kerbal::optional::optional<std::string>>>::type
 				hmget(const kerbal::utility::string_ref & key0, Args&& ... keys) const
 				{
-					return hmget<std::vector<kerbal::data_struct::optional<std::string>>>(key0, std::forward<Args>(keys)...);
+					return hmget<std::vector<kerbal::optional::optional<std::string>>>(key0, std::forward<Args>(keys)...);
 				}
 
 				template <typename ReturnType, typename ... Args>

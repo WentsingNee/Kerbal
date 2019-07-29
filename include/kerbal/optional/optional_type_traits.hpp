@@ -1,29 +1,33 @@
-/*
- * optional_type_traits.hpp
- *
- *  Created on: 2018年10月28日
- *      Author: peter
+/**
+ * @file       optional_type_traits.hpp
+ * @brief
+ * @date       2018-10-28
+ * @author     peter
+ * @copyright
+ *      peter of [ThinkSpirit Laboratory](http://thinkspirit.org/)
+ *   of [Nanjing University of Information Science & Technology](http://www.nuist.edu.cn/)
+ *   all rights reserved
  */
 
-#ifndef INCLUDE_KERBAL_DATA_STRUCT_OPTIONAL_OPTIONAL_TYPE_TRAITS_HPP_
-#define INCLUDE_KERBAL_DATA_STRUCT_OPTIONAL_OPTIONAL_TYPE_TRAITS_HPP_
+#ifndef KERBAL_OPTIONAL_OPTIONAL_TYPE_TRAITS_HPP_
+#define KERBAL_OPTIONAL_OPTIONAL_TYPE_TRAITS_HPP_
 
-#include <kerbal/data_struct/optional/optional_settings.hpp>
+#include <kerbal/optional/optional_settings.hpp>
 #include <kerbal/type_traits/type_traits_details/conditional.hpp>
 #include <kerbal/type_traits/type_traits_details/cv_deduction.hpp>
 #include <kerbal/type_traits/type_traits_details/integral_constant.hpp>
 
 #if KERBAL_OPTIONAL_ENABLE_SUPPORT_TO_STD_OPTIONAL==1
-#	include <kerbal/data_struct/optional/std_optional_type_traits.hpp>
+#	include <kerbal/optional/std_optional_type_traits.hpp>
 #endif
 
 #if KERBAL_OPTIONAL_ENABLE_SUPPORT_TO_BOOST_OPTIONAL==1
-#	include <kerbal/data_struct/optional/boost_optional_type_traits.hpp>
+#	include <kerbal/optional/boost_optional_type_traits.hpp>
 #endif
 
 namespace kerbal
 {
-	namespace data_struct
+	namespace optional
 	{
 		template <typename>
 		struct optional;
@@ -36,12 +40,12 @@ namespace kerbal
 
 		///@private
 		template <typename Type>
-		struct __is_kerbal_optional_helper<kerbal::data_struct::optional<Type> > : kerbal::type_traits::true_type
+		struct __is_kerbal_optional_helper<kerbal::optional::optional<Type> > : kerbal::type_traits::true_type
 		{
 		};
 
 		template <typename Type>
-		struct is_kerbal_optional: __is_kerbal_optional_helper<typename kerbal::type_traits::remove_cvref<Type>::type>
+		struct is_kerbal_optional: __is_kerbal_optional_helper<typename kerbal::type_traits::remove_cv<Type>::type>
 		{
 		};
 
@@ -63,17 +67,17 @@ namespace kerbal
 		struct kerbal_optional_traits;
 
 		template <typename Type>
-		struct kerbal_optional_traits<kerbal::data_struct::optional<Type> >
+		struct kerbal_optional_traits<kerbal::optional::optional<Type> >
 		{
-				typedef typename kerbal::data_struct::optional<Type>::value_type value_type;
-				typedef typename kerbal::data_struct::optional<Type>::reference reference;
-				typedef typename kerbal::data_struct::optional<Type>::const_reference const_reference;
-				typedef typename kerbal::data_struct::optional<Type>::pointer pointer;
-				typedef typename kerbal::data_struct::optional<Type>::const_pointer const_pointer;
+				typedef typename kerbal::optional::optional<Type>::value_type value_type;
+				typedef typename kerbal::optional::optional<Type>::reference reference;
+				typedef typename kerbal::optional::optional<Type>::const_reference const_reference;
+				typedef typename kerbal::optional::optional<Type>::pointer pointer;
+				typedef typename kerbal::optional::optional<Type>::const_pointer const_pointer;
 
 #	if __cplusplus >= 201103L
-				typedef typename kerbal::data_struct::optional<Type>::rvalue_reference rvalue_reference;
-				typedef typename kerbal::data_struct::optional<Type>::const_rvalue_reference const_rvalue_reference;
+				typedef typename kerbal::optional::optional<Type>::rvalue_reference rvalue_reference;
+				typedef typename kerbal::optional::optional<Type>::const_rvalue_reference const_rvalue_reference;
 #	endif
 
 		};
@@ -82,7 +86,7 @@ namespace kerbal
 		struct optional_traits;
 
 		template <typename Type>
-		struct optional_traits<kerbal::data_struct::optional<Type> > : public kerbal::data_struct::kerbal_optional_traits<kerbal::data_struct::optional<Type> >
+		struct optional_traits<kerbal::optional::optional<Type> > : public kerbal::optional::kerbal_optional_traits<kerbal::optional::optional<Type> >
 		{
 		};
 
@@ -100,9 +104,9 @@ namespace kerbal
 		};
 #	endif
 
-	} /* namespace data_struct */
+	} /* namespace optional */
 
 } /* namespace kerbal */
 
 
-#endif /* INCLUDE_KERBAL_DATA_STRUCT_OPTIONAL_OPTIONAL_TYPE_TRAITS_HPP_ */
+#endif /* KERBAL_OPTIONAL_OPTIONAL_TYPE_TRAITS_HPP_ */

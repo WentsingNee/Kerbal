@@ -1,26 +1,27 @@
 /**
  * @file       optional_compare.hpp
- * @brief      
- * @date       2019年5月14日
+ * @brief
+ * @date       2019-5-14
  * @author     peter
  * @copyright
  *      peter of [ThinkSpirit Laboratory](http://thinkspirit.org/)
  *   of [Nanjing University of Information Science & Technology](http://www.nuist.edu.cn/)
  *   all rights reserved
  */
-#ifndef INCLUDE_KERBAL_DATA_STRUCT_OPTIONAL_OPTIONAL_COMPARE_HPP_
-#define INCLUDE_KERBAL_DATA_STRUCT_OPTIONAL_OPTIONAL_COMPARE_HPP_
 
-#include <kerbal/data_struct/optional/optional.hpp>
+#ifndef KERBAL_OPTIONAL_OPTIONAL_COMPARE_HPP_
+#define KERBAL_OPTIONAL_OPTIONAL_COMPARE_HPP_
+
+#include <kerbal/optional/optional.hpp>
 
 namespace kerbal
 {
-	namespace data_struct
+	namespace optional
 	{
 
 		/**
 		 * @defgroup optional_compare
-		 * Compare with kerbal::data_struct::optional
+		 * Compare with kerbal::optional::optional
 		 * @{
 		 */
 		template <typename Tp, typename Up>
@@ -69,7 +70,7 @@ namespace kerbal
 
 		/**
 		 * @defgroup optional_compare
-		 * Compare with std::nullopt, kerbal::data_struct::nullopt
+		 * Compare with std::nullopt, kerbal::optional::nullopt
 		 * @{
 		 */
 		template <typename Tp, typename NulloptType>
@@ -266,10 +267,8 @@ namespace kerbal
 		 * @}
 		 */
 
-	} /* namespace data_struct */
+	} /* namespace optional */
 
 } /* namespace kerbal */
 
-
-
-#endif /* INCLUDE_KERBAL_DATA_STRUCT_OPTIONAL_OPTIONAL_COMPARE_HPP_ */
+#endif /* KERBAL_OPTIONAL_OPTIONAL_COMPARE_HPP_ */

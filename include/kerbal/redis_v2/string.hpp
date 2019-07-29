@@ -119,7 +119,7 @@ namespace kerbal
 
 				template <typename ReturnType
 #	if __cplsuplus >= 201103L
-							= kerbal::data_struct::optional<std::string>
+							= kerbal::optional::optional<std::string>
 #	endif
 				>
 				ReturnType get() const

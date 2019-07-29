@@ -1,27 +1,31 @@
-/*
- * optional.hpp
- *
- *  Created on: 2018年10月4日
- *      Author: peter
+/**
+ * @file       optional.hpp
+ * @brief
+ * @date       2018-10-4
+ * @author     peter
+ * @copyright
+ *      peter of [ThinkSpirit Laboratory](http://thinkspirit.org/)
+ *   of [Nanjing University of Information Science & Technology](http://www.nuist.edu.cn/)
+ *   all rights reserved
  */
 
-#ifndef INCLUDE_KERBAL_DATA_STRUCT_OPTIONAL_OPTIONAL_HPP
-#define INCLUDE_KERBAL_DATA_STRUCT_OPTIONAL_OPTIONAL_HPP
+#ifndef KERBAL_OPTIONAL_OPTIONAL_HPP
+#define KERBAL_OPTIONAL_OPTIONAL_HPP
 
-#include <kerbal/data_struct/optional/bad_optional_access.hpp>
-#include <kerbal/data_struct/optional/raw_optional.hpp>
-#include <kerbal/data_struct/optional/optional_type_traits.hpp>
-#include <kerbal/data_struct/optional/nullopt.hpp>
+#include <kerbal/optional/bad_optional_access.hpp>
+#include <kerbal/data_struct/raw_storage.hpp>
+#include <kerbal/optional/optional_type_traits.hpp>
+#include <kerbal/optional/nullopt.hpp>
 #include <kerbal/compatibility/compatibility_macro.hpp>
 #include <kerbal/type_traits/type_traits_details/enable_if.hpp>
 
 namespace kerbal
 {
-	namespace data_struct
+	namespace optional
 	{
 
 		template <typename Type>
-		class optional: protected raw_optional<Type>
+		class optional: protected kerbal::data_struct::raw_storage<Type>
 		{
 			public:
 				typedef Type value_type;
@@ -43,13 +47,6 @@ namespace kerbal
 				///@brief 标记该实例是否含值.
 				bool initialized;
 
-				///@~English
-				///@brief supper type
-				///
-				///@~Chinese
-				///@brief 父类型
-				typedef raw_optional <Type> supper_t;
-
 			public:
 
 				/**
@@ -59,13 +56,13 @@ namespace kerbal
 				 * @~Chinese
 				 * @brief 默认构造函数.
 				 */
-				optional() KERBAL_NOEXCEPT :
+				KERBAL_CONSTEXPR optional() KERBAL_NOEXCEPT :
 						initialized(false)
 				{
 				}
 
 				template <typename NulloptType>
-				explicit optional(const NulloptType &,
+				explicit KERBAL_CONSTEXPR optional(const NulloptType &,
 						typename kerbal::type_traits::enable_if<is_nullopt<NulloptType>::value, int>::type = 0) KERBAL_NOEXCEPT :
 						initialized(false)
 				{
@@ -80,16 +77,18 @@ namespace kerbal
 				 * @brief 从当前类型的一个实例拷贝构造.
 				 * @param src 源值
 				 */
-				explicit optional(const value_type & src) :
-						supper_t(src), initialized(true)
+				explicit KERBAL_CONSTEXPR optional(const value_type & src) :
+						initialized(false)
 				{
+					this->construct(src);
+					this->initialized = true;
 				}
 
 				/**
 				 * @~English
 				 * @brief Copy from an instance of another type.
 				 * @param src value from
-				 * @note The second parameter play an role of concept traits.
+				 * @note The second parameter plays an role of concept traits.
 				 *
 				 * @~Chinese
 				 * @brief 从不同类型的一个实例拷贝构造.
@@ -97,10 +96,12 @@ namespace kerbal
 				 * @note 第二个参数起到概念约束的作用, 无实义.
 				 */
 				template <typename Up>
-				explicit optional(const Up & src,
+				explicit KERBAL_CONSTEXPR optional(const Up & src,
 						typename kerbal::type_traits::enable_if<!is_optional<Up>::value && !is_nullopt<Up>::value, int>::type = 0) :
-						supper_t(src), initialized(true)
+						initialized(false)
 				{
+					this->construct(src);
+					this->initialized = true;
 				}
 
 				/**
@@ -108,7 +109,7 @@ namespace kerbal
 				 * @brief Copy from an instance of std::optional<...>, boost::optional<...> or
 				 * 		  any other type Up which makes assert of is_optional<Up>::value is true .
 				 * @param src value from
-				 * @note The second parameter play an role of concept traits.
+				 * @note The second parameter plays an role of concept traits.
 				 *
 				 * @~Chinese
 				 * @brief 从一个 std::optional<...>, boost::optional<...> 或其他任何使 is_optional<Up>::value
@@ -117,30 +118,30 @@ namespace kerbal
 				 * @note 第二个参数起到概念约束的作用, 无实义.
 				 */
 				template <typename Up>
-				explicit optional(const Up & src,
+				explicit KERBAL_CONSTEXPR optional(const Up & src,
 						typename kerbal::type_traits::enable_if<is_optional<Up>::value, int>::type = 0) :
 						initialized(false)
 				{
-					if ((bool)(src)) {
-						supper_t::construct(*src);
+					if (src) {
+						this->construct(*src);
 						this->initialized = true;
 					}
 				}
 
 				/**
 				 * @~English
-				 * @brief Copy from an instance of optional<value_type>.
+				 * @brief Copy from an instance of optional.
 				 * @param src value from
 				 *
 				 * @~Chinese
-				 * @brief 从一个 optional<value_type> 类型的实例拷贝构造.
+				 * @brief 从一个 optional 类型的实例拷贝构造.
 				 * @param src 源值
 				 */
-				optional(const optional<value_type> & src) :
+				KERBAL_CONSTEXPR optional(const optional & src) :
 						initialized(false)
 				{
-					if (src.initialized) {
-						supper_t::construct(src.ignored_get());
+					if (src) {
+						this->construct(src.ignored_get());
 						this->initialized = true;
 					}
 				}
@@ -150,28 +151,32 @@ namespace kerbal
 				 * @param src value from
 				 */
 				template <typename Up>
-				explicit optional(const optional<Up> & src) :
+				explicit KERBAL_CONSTEXPR optional(const optional<Up> & src) :
 						initialized(false)
 				{
-					if (src.has_value()) {
-						supper_t::construct(src.ignored_get());
+					if (src) {
+						this->construct(src.ignored_get());
 						this->initialized = true;
 					}
 				}
 
 #	if __cplusplus >= 201103L
 
-				explicit optional(value_type && src) :
-						supper_t(std::forward<value_type>(src)), initialized(true)
+				explicit KERBAL_CONSTEXPR optional(value_type && src) :
+						initialized(false)
 				{
+					this->construct(std::move(src));
+					this->initialized = true;
 				}
 
 				template <typename Up>
 				explicit optional(Up && src,
 						typename kerbal::type_traits::enable_if<
 							!is_optional<Up>::value && !is_nullopt<Up>::value, int>::type = 0) :
-						supper_t(std::forward<Up>(src)), initialized(true)
+						initialized(false)
 				{
+					this->construct(src);
+					this->initialized = true;
 				}
 
 				template <typename Up>
@@ -179,8 +184,8 @@ namespace kerbal
 						typename kerbal::type_traits::enable_if<is_optional<Up>::value, int>::type = 0) :
 						initialized(false)
 				{
-					if ((bool)(src)) {
-						supper_t::construct(std::forward<decltype(*src)>(*src));
+					if (src) {
+						this->construct(*src);
 						this->initialized = true;
 					}
 				}
@@ -188,8 +193,8 @@ namespace kerbal
 				optional(optional<value_type> && src) :
 						initialized(false)
 				{
-					if (src.initialized) {
-						supper_t::construct(std::forward<value_type>(src.raw_value()));
+					if (src) {
+						this->construct(src.raw_value());
 						this->initialized = true;
 					}
 				}
@@ -198,8 +203,8 @@ namespace kerbal
 				optional(optional<Up> && src) :
 						initialized(false)
 				{
-					if (src.has_value()) {
-						supper_t::construct(std::forward<Up>(src.ignored_get()));
+					if (src) {
+						this->construct(src.ignored_get());
 						this->initialized = true;
 					}
 				}
@@ -226,7 +231,7 @@ namespace kerbal
 				 * @brief 测试该实例是否含值.
 				 * @return 若含值, 返回 true.
 				 */
-				bool has_value() const KERBAL_NOEXCEPT
+				KERBAL_CONSTEXPR bool has_value() const KERBAL_NOEXCEPT
 				{
 					return this->initialized;
 				}
@@ -240,12 +245,12 @@ namespace kerbal
 				 * @brief 测试该实例是否不含值.
 				 * @return 若不含值, 返回 true.
 				 */
-				bool empty() const KERBAL_NOEXCEPT
+				KERBAL_CONSTEXPR bool empty() const KERBAL_NOEXCEPT
 				{
 					return this->initialized == false;
 				}
 
-				explicit operator bool() const KERBAL_NOEXCEPT
+				explicit KERBAL_CONSTEXPR operator bool() const KERBAL_NOEXCEPT
 				{
 					return this->has_value();
 				}
@@ -260,12 +265,12 @@ namespace kerbal
 					return *this;
 				}
 
-				optional& operator=(const value_type & src)
+				optional& operator=(const_reference src)
 				{
-					if (this->initialized) {
-						supper_t::raw_value() = src;
+					if (this->has_value()) {
+						this->raw_value() = src;
 					} else {
-						supper_t::construct(src);
+						this->construct(src);
 						this->initialized = true;
 					}
 					return *this;
@@ -277,10 +282,10 @@ namespace kerbal
 				optional&>::type
 				operator=(const Up & src)
 				{
-					if (this->initialized) {
-						supper_t::raw_value() = src;
+					if (this->has_value()) {
+						this->raw_value() = src;
 					} else {
-						supper_t::construct(src);
+						this->construct(src);
 						this->initialized = true;
 					}
 					return *this;
@@ -290,13 +295,13 @@ namespace kerbal
 				typename kerbal::type_traits::enable_if<is_optional<Up>::value, optional&>::type
 				operator=(const Up & src)
 				{
-					if (this->initialized && (bool) (src)) {
-						supper_t::raw_value() = *src;
-					} else if (this->initialized && !(bool) (src)) {
-						supper_t::destroy();
+					if (this->has_value() && static_cast<bool>(src)) {
+						this->raw_value() = *src;
+					} else if (this->has_value() && !static_cast<bool>(src)) {
+						this->destroy();
 						this->initialized = false;
-					} else if (!this->initialized && (bool) (src)) {
-						supper_t::construct(*src);
+					} else if (!this->has_value() && static_cast<bool>(src)) {
+						this->construct(*src);
 						this->initialized = true;
 					}
 					return *this;
@@ -304,13 +309,13 @@ namespace kerbal
 
 				optional& operator=(const optional<value_type> & src)
 				{
-					if (this->initialized && src.initialized) {
-						supper_t::raw_value() = src.supper_t::raw_value();
-					} else if (this->initialized && !src.initialized) {
-						supper_t::destroy();
+					if (this->has_value() && src.has_value()) {
+						this->raw_value() = src.ignored_get();
+					} else if (this->has_value() && !src.has_value()) {
+						this->destroy();
 						this->initialized = false;
-					} else if (!this->initialized && src.initialized) {
-						supper_t::construct(src.supper_t::raw_value());
+					} else if (!this->has_value() && src.has_value()) {
+						this->construct(src.ignored_get());
 						this->initialized = true;
 					}
 					return *this;
@@ -319,13 +324,13 @@ namespace kerbal
 				template <typename Up>
 				optional& operator=(const optional<Up> & src)
 				{
-					if (this->initialized && src.has_value()) {
-						supper_t::raw_value() = src.ignored_get();
-					} else if (this->initialized && !src.has_value()) {
-						supper_t::destroy();
+					if (this->has_value() && src.has_value()) {
+						this->raw_value() = src.ignored_get();
+					} else if (this->has_value() && !src.has_value()) {
+						this->destroy();
 						this->initialized = false;
-					} else if (!this->initialized && src.has_value()) {
-						supper_t::construct(src.ignored_get());
+					} else if (!this->has_value() && src.has_value()) {
+						this->construct(src.ignored_get());
 						this->initialized = true;
 					}
 					return *this;
@@ -335,10 +340,10 @@ namespace kerbal
 
 				optional& operator=(value_type && src)
 				{
-					if (this->initialized) {
-						supper_t::raw_value() = std::forward<value_type>(src);
+					if (this->has_value()) {
+						this->raw_value() = std::move(src);
 					} else {
-						supper_t::construct(std::forward<value_type>(src));
+						this->construct(std::move(src));
 						this->initialized = true;
 					}
 					return *this;
@@ -350,10 +355,10 @@ namespace kerbal
 				optional&>::type
 				operator=(Up && src)
 				{
-					if (this->initialized) {
-						supper_t::raw_value() = std::forward<Up>(src);
+					if (this->has_value()) {
+						this->raw_value() = std::forward<Up>(src);
 					} else {
-						supper_t::construct(std::forward<Up>(src));
+						this->construct(std::forward<Up>(src));
 						this->initialized = true;
 					}
 					return *this;
@@ -363,13 +368,13 @@ namespace kerbal
 				typename kerbal::type_traits::enable_if<is_optional<Up>::value, optional&>::type
 				operator=(Up && src)
 				{
-					if (this->initialized && (bool)(src)) {
-						supper_t::raw_value() = std::forward<decltype(*src)>(*src);
-					} else if (this->initialized && !(bool)(src)) {
-						supper_t::destroy();
+					if (this->has_value() && static_cast<bool>(src)) {
+						this->raw_value() = *src;
+					} else if (this->has_value() && !static_cast<bool>(src)) {
+						this->destroy();
 						this->initialized = false;
-					} else if (!this->initialized && (bool)(src)) {
-						supper_t::construct(std::forward<decltype(*src)>(*src));
+					} else if (!this->has_value() && static_cast<bool>(src)) {
+						this->construct(*src);
 						this->initialized = true;
 					}
 					return *this;
@@ -377,13 +382,13 @@ namespace kerbal
 
 				optional& operator=(optional<value_type> && src)
 				{
-					if (this->initialized && src.initialized) {
-						supper_t::raw_value() = std::forward<value_type>(src.raw_value());
-					} else if (this->initialized && !src.initialized) {
-						supper_t::destroy();
+					if (this->has_value() && src.has_value()) {
+						this->raw_value() = src.raw_value();
+					} else if (this->has_value() && !src.has_value()) {
+						this->destroy();
 						this->initialized = false;
-					} else if (!this->initialized && src.initialized) {
-						supper_t::construct(std::forward<value_type>(src.raw_value()));
+					} else if (!this->has_value() && src.has_value()) {
+						this->construct(src.raw_value());
 						this->initialized = true;
 					}
 					return *this;
@@ -392,13 +397,13 @@ namespace kerbal
 				template <typename Up>
 				optional& operator=(optional<Up> && src)
 				{
-					if (this->initialized && src.has_value()) {
-						supper_t::raw_value() = std::forward<Up>(src.ignored_get());
-					} else if (this->initialized && !src.has_value()) {
-						supper_t::destroy();
+					if (this->has_value() && src.has_value()) {
+						this->raw_value() = src.ignored_get();
+					} else if (this->has_value() && !src.has_value()) {
+						this->destroy();
 						this->initialized = false;
-					} else if (!this->initialized && src.has_value()) {
-						supper_t::construct(std::forward<Up>(src.ignored_get()));
+					} else if (!this->has_value() && src.has_value()) {
+						this->construct(src.ignored_get());
 						this->initialized = true;
 					}
 					return *this;
@@ -411,7 +416,7 @@ namespace kerbal
 				optional& emplace()
 				{
 					clear();
-					supper_t::construct();
+					this->construct();
 					this->initialized = true;
 					return *this;
 				}
@@ -420,7 +425,7 @@ namespace kerbal
 				optional& emplace(const Arg0 & arg0)
 				{
 					clear();
-					supper_t::construct(arg0);
+					this->construct(arg0);
 					this->initialized = true;
 					return *this;
 				}
@@ -429,7 +434,7 @@ namespace kerbal
 				optional& emplace(const Arg0 & arg0, const Arg1& arg1)
 				{
 					clear();
-					supper_t::construct(arg0, arg1);
+					this->construct(arg0, arg1);
 					this->initialized = true;
 					return *this;
 				}
@@ -438,7 +443,7 @@ namespace kerbal
 				optional& emplace(const Arg0 & arg0, const Arg1& arg1, const Arg2 & arg2)
 				{
 					clear();
-					supper_t::construct(arg0, arg1, arg2);
+					this->construct(arg0, arg1, arg2);
 					this->initialized = true;
 					return *this;
 				}
@@ -448,7 +453,7 @@ namespace kerbal
 				optional& emplace(const Arg0 & arg0, const Arg1& arg1, const Arg2 & arg2, const Arg3& arg3)
 				{
 					clear();
-					supper_t::construct(arg0, arg1, arg2, arg3);
+					this->construct(arg0, arg1, arg2, arg3);
 					this->initialized = true;
 					return *this;
 				}
@@ -457,7 +462,7 @@ namespace kerbal
 				optional& emplace(const Arg0 & arg0, const Arg1& arg1, const Arg2 & arg2, const Arg3& arg3, const Arg4 & arg4)
 				{
 					clear();
-					supper_t::construct(arg0, arg1, arg2, arg3, arg4);
+					this->construct(arg0, arg1, arg2, arg3, arg4);
 					this->initialized = true;
 					return *this;
 				}
@@ -484,7 +489,7 @@ namespace kerbal
 				optional& emplace(Args && ... args)
 				{
 					clear();
-					supper_t::construct(std::forward<Args>(args)...);
+					this->construct(std::forward<Args>(args)...);
 					this->initialized = true;
 					return *this;
 				}
@@ -493,31 +498,31 @@ namespace kerbal
 
 				void clear()
 				{
-					if (this->initialized) {
-						supper_t::destroy();
+					if (this->has_value()) {
+						this->destroy();
 						this->initialized = false;
 					}
 				}
 
 				reference value() KERBAL_REFERENCE_OVERLOAD_TAG
 				{
-					if (!initialized) {
-						throw bad_optional_access();
+					if (!this->has_value()) {
+						bad_optional_access::throw_this_exception();
 					}
 					return ignored_get();
 				}
 
 				const_reference value() const KERBAL_REFERENCE_OVERLOAD_TAG
 				{
-					if (!initialized) {
-						throw bad_optional_access();
+					if (!this->has_value()) {
+						bad_optional_access::throw_this_exception();
 					}
 					return ignored_get();
 				}
 
 				reference value_or(reference ano) KERBAL_REFERENCE_OVERLOAD_TAG KERBAL_NOEXCEPT
 				{
-					if (!initialized) {
+					if (!this->has_value()) {
 						return ano;
 					}
 					return ignored_get();
@@ -525,7 +530,7 @@ namespace kerbal
 
 				const_reference value_or(const_reference ano) const KERBAL_REFERENCE_OVERLOAD_TAG KERBAL_NOEXCEPT
 				{
-					if (!initialized) {
+					if (!this->has_value()) {
 						return ano;
 					}
 					return ignored_get();
@@ -533,12 +538,12 @@ namespace kerbal
 
 				reference ignored_get() KERBAL_REFERENCE_OVERLOAD_TAG KERBAL_NOEXCEPT
 				{
-					return supper_t::raw_value();
+					return this->raw_value();
 				}
 
 				const_reference ignored_get() const KERBAL_REFERENCE_OVERLOAD_TAG KERBAL_NOEXCEPT
 				{
-					return supper_t::raw_value();
+					return this->raw_value();
 				}
 
 				reference operator*() KERBAL_REFERENCE_OVERLOAD_TAG
@@ -555,7 +560,7 @@ namespace kerbal
 
 				rvalue_reference value() &&
 				{
-					if (!initialized) {
+					if (!this->has_value()) {
 						throw bad_optional_access();
 					}
 					return std::move(ignored_get());
@@ -563,7 +568,7 @@ namespace kerbal
 
 				const_rvalue_reference value() const &&
 				{
-					if (!initialized) {
+					if (!this->has_value()) {
 						throw bad_optional_access();
 					}
 					return std::move(ignored_get());
@@ -571,12 +576,12 @@ namespace kerbal
 
 				rvalue_reference ignored_get() && noexcept
 				{
-					return std::move(supper_t::raw_value());
+					return std::move(this->raw_value());
 				}
 
 				const_rvalue_reference ignored_get() const && noexcept
 				{
-					return std::move(supper_t::raw_value());
+					return std::move(this->raw_value());
 				}
 
 				rvalue_reference operator*() &&
@@ -594,28 +599,28 @@ namespace kerbal
 
 				pointer get_pointer()
 				{
-					if (!initialized) {
-						throw bad_optional_access();
+					if (!this->has_value()) {
+						bad_optional_access::throw_this_exception();
 					}
-					return supper_t::raw_pointer();
+					return this->raw_pointer();
 				}
 
 				const_pointer get_pointer() const
 				{
-					if (!initialized) {
-						throw bad_optional_access();
+					if (!this->has_value()) {
+						bad_optional_access::throw_this_exception();
 					}
-					return supper_t::raw_pointer();
+					return this->raw_pointer();
 				}
 
 				pointer ignored_get_pointer()
 				{
-					return supper_t::raw_pointer();
+					return this->raw_pointer();
 				}
 
 				const_pointer ignored_get_pointer() const
 				{
-					return supper_t::raw_pointer();
+					return this->raw_pointer();
 				}
 
 				pointer operator->()
@@ -630,9 +635,9 @@ namespace kerbal
 
 				void swap(optional & with)
 				{
-					if (this->initialized && with.initialized) {
-						std::swap(this->supper_t::raw_value(), with.supper_t::raw_value());
-					} else if (this->initialized && !with.initialized) {
+					if (this->has_value() && with.has_value()) {
+						std::swap(this->raw_value(), with.raw_value());
+					} else if (this->has_value() && !with.has_value()) {
 
 #		if __cplusplus < 201103L
 						with.construct(this->raw_value());
@@ -642,7 +647,7 @@ namespace kerbal
 						with.initialized = true;
 						this->destroy();
 						this->initialized = false;
-					} else if (!this->initialized && with.initialized) {
+					} else if (!this->has_value() && with.has_value()) {
 
 #		if __cplusplus < 201103L
 						this->construct(with.raw_value());
@@ -656,17 +661,17 @@ namespace kerbal
 				}
 		};
 
-	} /* namespace data_struct */
+	} /* namespace optional */
 
 } /* namespace kerbal */
 
 namespace std
 {
 	template <typename Type>
-	void swap(kerbal::data_struct::optional<Type> & a, kerbal::data_struct::optional<Type> & b) KERBAL_NOEXCEPT
+	void swap(kerbal::optional::optional<Type> & a, kerbal::optional::optional<Type> & b) KERBAL_NOEXCEPT
 	{
 		a.swap(b);
 	}
 }
 
-#endif /* INCLUDE_KERBAL_DATA_STRUCT_OPTIONAL_OPTIONAL_HPP */
+#endif /* KERBAL_OPTIONAL_OPTIONAL_HPP */

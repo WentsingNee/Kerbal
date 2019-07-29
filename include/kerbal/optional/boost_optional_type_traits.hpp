@@ -1,28 +1,26 @@
-/*
- * boost_optional_type_traits.hpp
- *
- *  Created on: 2019年5月5日
- *      Author: peter
+/**
+ * @file       boost_optional_type_traits.hpp
+ * @brief
+ * @date       2019-5-5
+ * @author     peter
+ * @copyright
+ *      peter of [ThinkSpirit Laboratory](http://thinkspirit.org/)
+ *   of [Nanjing University of Information Science & Technology](http://www.nuist.edu.cn/)
+ *   all rights reserved
  */
 
-#ifndef INCLUDE_KERBAL_DATA_STRUCT_OPTIONAL_BOOST_OPTIONAL_TYPE_TRAITS_HPP_
-#define INCLUDE_KERBAL_DATA_STRUCT_OPTIONAL_BOOST_OPTIONAL_TYPE_TRAITS_HPP_
+#ifndef KERBAL_OPTIONAL_BOOST_OPTIONAL_TYPE_TRAITS_HPP_
+#define KERBAL_OPTIONAL_BOOST_OPTIONAL_TYPE_TRAITS_HPP_
 
-#include <kerbal/data_struct/optional/optional_settings.hpp>
+#include <kerbal/optional/optional_settings.hpp>
+#include <kerbal/type_traits/type_traits_details/integral_constant.hpp>
+#include <kerbal/type_traits/type_traits_details/cv_deduction.hpp>
 
 #if KERBAL_OPTIONAL_ENABLE_SUPPORT_TO_BOOST_OPTIONAL==1
 
-namespace boost
-{
-	template <typename Type>
-	class optional;
-
-	class none_t;
-}
-
 namespace kerbal
 {
-	namespace data_struct
+	namespace optional
 	{
 
 		///@private
@@ -38,7 +36,7 @@ namespace kerbal
 		};
 
 		template <typename Type>
-		struct is_boost_optional: __is_boost_optional_helper<typename kerbal::type_traits::remove_cvref<Type>::type>
+		struct is_boost_optional: __is_boost_optional_helper<typename kerbal::type_traits::remove_cv<Type>::type>
 		{
 		};
 
@@ -61,10 +59,10 @@ namespace kerbal
 
 		};
 
-	} /* namespace data_struct */
+	} /* namespace optional */
 
 } /* namespace kerbal */
 
 #endif
 
-#endif /* INCLUDE_KERBAL_DATA_STRUCT_OPTIONAL_BOOST_OPTIONAL_TYPE_TRAITS_HPP_ */
+#endif /* KERBAL_OPTIONAL_BOOST_OPTIONAL_TYPE_TRAITS_HPP_ */
