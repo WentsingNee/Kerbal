@@ -13,6 +13,8 @@
 #ifndef INCLUDE_KERBAL_ALGORITHM_BINARY_TYPE_OPERATOR_HPP_
 #define INCLUDE_KERBAL_ALGORITHM_BINARY_TYPE_OPERATOR_HPP_
 
+#include <kerbal/compatibility/constexpr.hpp>
+#include <kerbal/compatibility/noexcept.hpp>
 
 namespace kerbal
 {
@@ -21,7 +23,8 @@ namespace kerbal
 		template <typename Tp, typename Up>
 		struct binary_type_equal_to
 		{
-				bool operator()(const Tp & x, const Up & y) const
+				KERBAL_CONSTEXPR
+				bool operator()(const Tp & x, const Up & y) const KERBAL_CONDITIONAL_NOEXCEPT(noexcept(x == y))
 				{
 					return x == y;
 				}
@@ -30,7 +33,8 @@ namespace kerbal
 		template <typename Tp, typename Up>
 		struct binary_type_not_equal_to
 		{
-				bool operator()(const Tp & x, const Up & y) const
+				KERBAL_CONSTEXPR
+				bool operator()(const Tp & x, const Up & y) const KERBAL_CONDITIONAL_NOEXCEPT(noexcept(x != y))
 				{
 					return x != y;
 				}
@@ -39,7 +43,8 @@ namespace kerbal
 		template <typename Tp, typename Up>
 		struct binary_type_greater
 		{
-				bool operator()(const Tp & x, const Up & y) const
+				KERBAL_CONSTEXPR
+				bool operator()(const Tp & x, const Up & y) const KERBAL_CONDITIONAL_NOEXCEPT(noexcept(x > y))
 				{
 					return x > y;
 				}
@@ -48,7 +53,8 @@ namespace kerbal
 		template <typename Tp, typename Up>
 		struct binary_type_less
 		{
-				bool operator()(const Tp & x, const Up & y) const
+				KERBAL_CONSTEXPR
+				bool operator()(const Tp & x, const Up & y) const KERBAL_CONDITIONAL_NOEXCEPT(noexcept(x < y))
 				{
 					return x < y;
 				}
@@ -57,7 +63,8 @@ namespace kerbal
 		template <typename Tp, typename Up>
 		struct binary_type_greater_equal
 		{
-				bool operator()(const Tp & x, const Up & y) const
+				KERBAL_CONSTEXPR
+				bool operator()(const Tp & x, const Up & y) const KERBAL_CONDITIONAL_NOEXCEPT(noexcept(x >= y))
 				{
 					return x >= y;
 				}
@@ -66,7 +73,8 @@ namespace kerbal
 		template <typename Tp, typename Up>
 		struct binary_type_less_equal
 		{
-				bool operator()(const Tp & x, const Up & y) const
+				KERBAL_CONSTEXPR
+				bool operator()(const Tp & x, const Up & y) const KERBAL_CONDITIONAL_NOEXCEPT(noexcept(x <= y))
 				{
 					return x <= y;
 				}
