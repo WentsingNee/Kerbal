@@ -1,28 +1,30 @@
 /**
  * @file       iterator_traits.hpp
- * @brief      
- * @date       2019年5月19日
+ * @brief
+ * @date       2019-5-19
  * @author     peter
  * @copyright
  *      peter of [ThinkSpirit Laboratory](http://thinkspirit.org/)
  *   of [Nanjing University of Information Science & Technology](http://www.nuist.edu.cn/)
  *   all rights reserved
  */
-#ifndef INCLUDE_KERBAL_TYPE_TRAITS_ITERATOR_TRAITS_HPP_
-#define INCLUDE_KERBAL_TYPE_TRAITS_ITERATOR_TRAITS_HPP_
+
+#ifndef KERBAL_ITERATOR_ITERATOR_TRAITS_HPP_
+#define KERBAL_ITERATOR_ITERATOR_TRAITS_HPP_
 
 #include <iterator>
+#include <kerbal/compatibility/constexpr.hpp>
+#include <kerbal/compatibility/noexcept.hpp>
 #include <kerbal/type_traits/type_traits_details/integral_constant.hpp>
 #include <kerbal/type_traits/type_traits_details/is_same.hpp>
 #include <kerbal/type_traits/type_traits_details/enable_if.hpp>
 #include <kerbal/type_traits/type_traits_details/pointer_deduction.hpp>
-#include <kerbal/compatibility/constexpr.hpp>
 
 #include <kerbal/ts/modules_ts/modules_ts.hpp>
 
 namespace kerbal
 {
-	namespace type_traits
+	namespace iterator
 	{
 
 		// _GLIBCXX_RESOLVE_LIB_DEFECTS
@@ -32,27 +34,27 @@ namespace kerbal
 		{
 		};
 
-		template <typename _Iterator>
-		struct __iterator_traits<_Iterator,
+		template <typename Iterator>
+		struct __iterator_traits<Iterator,
 			typename kerbal::type_traits::__void_type<
-				typename _Iterator::iterator_category,
-				typename _Iterator::value_type,
-				typename _Iterator::difference_type,
-				typename _Iterator::pointer,
-				typename _Iterator::reference
+				typename Iterator::iterator_category,
+				typename Iterator::value_type,
+				typename Iterator::difference_type,
+				typename Iterator::pointer,
+				typename Iterator::reference
 			>::type
 		>
 		{
-				typedef typename _Iterator::iterator_category iterator_category;
-				typedef typename _Iterator::value_type value_type;
-				typedef typename _Iterator::difference_type difference_type;
-				typedef typename _Iterator::pointer pointer;
-				typedef typename _Iterator::reference reference;
+				typedef typename Iterator::iterator_category iterator_category;
+				typedef typename Iterator::value_type value_type;
+				typedef typename Iterator::difference_type difference_type;
+				typedef typename Iterator::pointer pointer;
+				typedef typename Iterator::reference reference;
 		};
 
 		MODULE_EXPORT
-		template <typename _Iterator>
-		struct iterator_traits: public __iterator_traits<_Iterator>
+		template <typename Iterator>
+		struct iterator_traits: public __iterator_traits<Iterator>
 		{
 		};
 
@@ -89,7 +91,7 @@ namespace kerbal
 		struct __is_output_iterator<Tp,
 				typename kerbal::type_traits::enable_if<
 					kerbal::type_traits::is_same<
-						typename kerbal::type_traits::iterator_traits<Tp>::iterator_category,
+						typename kerbal::iterator::iterator_traits<Tp>::iterator_category,
 						typename std::output_iterator_tag
 					>::value
 				>::type> : kerbal::type_traits::true_type
@@ -111,7 +113,7 @@ namespace kerbal
 		struct __is_input_iterator<Tp,
 				typename kerbal::type_traits::enable_if<
 					kerbal::type_traits::is_same<
-						typename kerbal::type_traits::iterator_traits<Tp>::iterator_category,
+						typename kerbal::iterator::iterator_traits<Tp>::iterator_category,
 						typename std::input_iterator_tag
 					>::value
 				>::type> : kerbal::type_traits::true_type
@@ -133,7 +135,7 @@ namespace kerbal
 		struct __is_forward_iterator<Tp,
 				typename kerbal::type_traits::enable_if<
 					kerbal::type_traits::is_same<
-						typename kerbal::type_traits::iterator_traits<Tp>::iterator_category,
+						typename kerbal::iterator::iterator_traits<Tp>::iterator_category,
 						typename std::forward_iterator_tag
 					>::value
 				>::type> : kerbal::type_traits::true_type
@@ -155,7 +157,7 @@ namespace kerbal
 		struct __is_bidirectional_iterator<Tp,
 				typename kerbal::type_traits::enable_if<
 					kerbal::type_traits::is_same<
-						typename kerbal::type_traits::iterator_traits<Tp>::iterator_category,
+						typename kerbal::iterator::iterator_traits<Tp>::iterator_category,
 						typename std::bidirectional_iterator_tag
 					>::value
 				>::type> : kerbal::type_traits::true_type
@@ -177,7 +179,7 @@ namespace kerbal
 		struct __is_random_access_iterator<Tp,
 				typename kerbal::type_traits::enable_if<
 					kerbal::type_traits::is_same<
-						typename kerbal::type_traits::iterator_traits<Tp>::iterator_category,
+						typename kerbal::iterator::iterator_traits<Tp>::iterator_category,
 						typename std::random_access_iterator_tag
 					>::value
 				>::type> : kerbal::type_traits::true_type
@@ -240,13 +242,14 @@ namespace kerbal
 		template <typename Tp>
 		inline
 		KERBAL_CONSTEXPR
-		typename iterator_traits<Tp>::iterator_category
-		iterator_category(const Tp&)
+		typename kerbal::iterator::iterator_traits<Tp>::iterator_category
+		iterator_category(const Tp&) KERBAL_CONDITIONAL_NOEXCEPT(noexcept(typename kerbal::iterator::iterator_traits<Tp>::iterator_category()))
 		{
-			return typename std::iterator_traits<Tp>::iterator_category();
+			return typename kerbal::iterator::iterator_traits<Tp>::iterator_category();
 		}
 
-	}
-}
+	} // namespace iterator
 
-#endif /* INCLUDE_KERBAL_TYPE_TRAITS_ITERATOR_TRAITS_HPP_ */
+} // namespace kerbal
+
+#endif /* KERBAL_ITERATOR_ITERATOR_TRAITS_HPP_ */

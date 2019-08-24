@@ -23,15 +23,15 @@ namespace kerbal
 		 */
 
 		template <typename DerivedIterator, typename Pointer, typename StorageType>
-		typename static_vector_iterator_base<DerivedIterator, Pointer, StorageType>::iterator_base_t::reference
-		static_vector_iterator_base<DerivedIterator, Pointer, StorageType>::operator*() const KERBAL_NOEXCEPT
+		typename __stavec_iterbase<DerivedIterator, Pointer, StorageType>::iterator_base_t::reference
+		__stavec_iterbase<DerivedIterator, Pointer, StorageType>::operator*() const KERBAL_NOEXCEPT
 		{
 			return current->raw_value();
 		}
 
 		template <typename DerivedIterator, typename Pointer, typename StorageType>
 		DerivedIterator&
-		static_vector_iterator_base<DerivedIterator, Pointer, StorageType>::operator++() KERBAL_NOEXCEPT
+		__stavec_iterbase<DerivedIterator, Pointer, StorageType>::operator++() KERBAL_NOEXCEPT
 		{
 			++this->current;
 			return static_cast<DerivedIterator&>(*this);
@@ -39,7 +39,7 @@ namespace kerbal
 
 		template <typename DerivedIterator, typename Pointer, typename StorageType>
 		DerivedIterator&
-		static_vector_iterator_base<DerivedIterator, Pointer, StorageType>::operator--() KERBAL_NOEXCEPT
+		__stavec_iterbase<DerivedIterator, Pointer, StorageType>::operator--() KERBAL_NOEXCEPT
 		{
 			--this->current;
 			return static_cast<DerivedIterator&>(*this);
@@ -47,31 +47,31 @@ namespace kerbal
 
 		template <typename DerivedIterator, typename Pointer, typename StorageType>
 		DerivedIterator
-		static_vector_iterator_base<DerivedIterator, Pointer, StorageType>::operator+
-				(const typename static_vector_iterator_base::difference_type & delta) const KERBAL_NOEXCEPT
+		__stavec_iterbase<DerivedIterator, Pointer, StorageType>::operator+
+				(const typename __stavec_iterbase::difference_type & delta) const KERBAL_NOEXCEPT
 		{
 			return DerivedIterator(this->current + delta);
 		}
 
 		template <typename DerivedIterator, typename Pointer, typename StorageType>
 		DerivedIterator
-		static_vector_iterator_base<DerivedIterator, Pointer, StorageType>::operator-
-				(const typename static_vector_iterator_base::difference_type & delta) const KERBAL_NOEXCEPT
+		__stavec_iterbase<DerivedIterator, Pointer, StorageType>::operator-
+				(const typename __stavec_iterbase::difference_type & delta) const KERBAL_NOEXCEPT
 		{
 			return DerivedIterator(this->current - delta);
 		}
 
 		template <typename DerivedIterator, typename Pointer, typename StorageType>
 		KERBAL_CONSTEXPR
-		typename static_vector_iterator_base<DerivedIterator, Pointer, StorageType>::difference_type
-		static_vector_iterator_base<DerivedIterator, Pointer, StorageType>::operator-(const DerivedIterator & with) const KERBAL_NOEXCEPT
+		typename __stavec_iterbase<DerivedIterator, Pointer, StorageType>::difference_type
+		__stavec_iterbase<DerivedIterator, Pointer, StorageType>::operator-(const DerivedIterator & with) const KERBAL_NOEXCEPT
 		{
 			return this->current - with.current;
 		}
 
 		template <typename DerivedIterator, typename Pointer, typename StorageType>
 		DerivedIterator&
-		static_vector_iterator_base<DerivedIterator, Pointer, StorageType>::operator+=(const typename static_vector_iterator_base::difference_type & delta) KERBAL_NOEXCEPT
+		__stavec_iterbase<DerivedIterator, Pointer, StorageType>::operator+=(const typename __stavec_iterbase::difference_type & delta) KERBAL_NOEXCEPT
 		{
 			this->current += delta;
 			return *this;
@@ -79,7 +79,7 @@ namespace kerbal
 
 		template <typename DerivedIterator, typename Pointer, typename StorageType>
 		DerivedIterator&
-		static_vector_iterator_base<DerivedIterator, Pointer, StorageType>::operator-=(const typename static_vector_iterator_base::difference_type & delta) KERBAL_NOEXCEPT
+		__stavec_iterbase<DerivedIterator, Pointer, StorageType>::operator-=(const typename __stavec_iterbase::difference_type & delta) KERBAL_NOEXCEPT
 		{
 			this->current -= delta;
 			return *this;

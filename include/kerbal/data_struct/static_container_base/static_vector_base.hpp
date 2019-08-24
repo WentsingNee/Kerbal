@@ -1,7 +1,7 @@
 /**
  * @file		static_vector_base.hpp
  * @brief
- * @date		2018年4月28日
+ * @date		2018-4-28
  * @author		Peter
  * @copyright	Peter
  * @copyright
@@ -21,8 +21,10 @@
 #endif
 
 #include <kerbal/compatibility/move.hpp>
+#include <kerbal/iterator/iterator.hpp>
 #include <kerbal/type_traits/type_traits_details/fundamental_deduction.hpp>
 #include <kerbal/type_traits/type_traits_details/pointer_deduction.hpp>
+#include <kerbal/utility/throw_this_exception.hpp>
 
 namespace kerbal
 {
@@ -206,7 +208,7 @@ namespace kerbal
 		template <typename InputIterator>
 		static_vector<Tp, N>::static_vector(InputIterator first, InputIterator last,
 				typename kerbal::type_traits::enable_if<
-						kerbal::type_traits::is_input_compatible_iterator<InputIterator>::value
+						kerbal::iterator::is_input_compatible_iterator<InputIterator>::value
 						, int
 				>::type
 		) :
@@ -326,7 +328,7 @@ namespace kerbal
 		template <typename Tp, size_t N>
 		template <typename InputCompatibleIterator>
 		typename kerbal::type_traits::enable_if<
-				kerbal::type_traits::is_input_compatible_iterator<InputCompatibleIterator>::value
+				kerbal::iterator::is_input_compatible_iterator<InputCompatibleIterator>::value
 		>::type
 		static_vector<Tp, N>::assign(InputCompatibleIterator first, InputCompatibleIterator last)
 		{
@@ -362,7 +364,7 @@ namespace kerbal
 #	endif
 
 		template <typename Tp, size_t N>
-		KERBAL_CONSTEXPR
+		KERBAL_CONSTEXPR14
 		typename static_vector<Tp, N>::iterator
 		static_vector<Tp, N>::begin() KERBAL_NOEXCEPT
 		{
@@ -370,7 +372,7 @@ namespace kerbal
 		}
 
 		template <typename Tp, size_t N>
-		KERBAL_CONSTEXPR
+		KERBAL_CONSTEXPR14
 		typename static_vector<Tp, N>::iterator
 		static_vector<Tp, N>::end() KERBAL_NOEXCEPT
 		{
@@ -378,7 +380,7 @@ namespace kerbal
 		}
 
 		template <typename Tp, size_t N>
-		KERBAL_CONSTEXPR
+		KERBAL_CONSTEXPR14
 		typename static_vector<Tp, N>::const_iterator
 		static_vector<Tp, N>::begin() const KERBAL_NOEXCEPT
 		{
@@ -386,7 +388,7 @@ namespace kerbal
 		}
 
 		template <typename Tp, size_t N>
-		KERBAL_CONSTEXPR
+		KERBAL_CONSTEXPR14
 		typename static_vector<Tp, N>::const_iterator
 		static_vector<Tp, N>::end() const KERBAL_NOEXCEPT
 		{
@@ -394,7 +396,7 @@ namespace kerbal
 		}
 
 		template <typename Tp, size_t N>
-		KERBAL_CONSTEXPR
+		KERBAL_CONSTEXPR14
 		typename static_vector<Tp, N>::const_iterator
 		static_vector<Tp, N>::cbegin() const KERBAL_NOEXCEPT
 		{
@@ -402,7 +404,7 @@ namespace kerbal
 		}
 
 		template <typename Tp, size_t N>
-		KERBAL_CONSTEXPR
+		KERBAL_CONSTEXPR14
 		typename static_vector<Tp, N>::const_iterator
 		static_vector<Tp, N>::cend() const KERBAL_NOEXCEPT
 		{
@@ -488,7 +490,7 @@ namespace kerbal
 		static_vector<Tp, N>::at(size_type index)
 		{
 			if (index >= size()) {
-				throw std::out_of_range("range check fail in static_array");
+				kerbal::utility::throw_this_exception_helper<std::out_of_range>::throw_this_exception("range check fail in static_array");
 			}
 			return (*this)[index];
 		}
@@ -498,7 +500,7 @@ namespace kerbal
 		static_vector<Tp, N>::at(size_type index) const
 		{
 			if (index >= size()) {
-				throw std::out_of_range("range check fail in static_array");
+				kerbal::utility::throw_this_exception_helper<std::out_of_range>::throw_this_exception("range check fail in static_array");
 			}
 			return (*this)[index];
 		}
@@ -536,7 +538,7 @@ namespace kerbal
 		static_vector<Tp, N>::c_arr()
 		{
 			if (!full()) {
-				throw std::exception();
+				kerbal::utility::throw_this_exception_helper<std::logic_error>::throw_this_exception("static vector is not full");
 			}
 			return reinterpret_cast<equal_c_array_reference>(this->storage);
 		}
@@ -546,7 +548,7 @@ namespace kerbal
 		static_vector<Tp, N>::const_c_arr() const
 		{
 			if (!full()) {
-				throw std::exception();
+				kerbal::utility::throw_this_exception_helper<std::logic_error>::throw_this_exception("static vector is not full");
 			}
 			return reinterpret_cast<equal_c_array_reference>(this->storage);
 		}
@@ -641,7 +643,7 @@ namespace kerbal
 				// after repeat the last element
 				// A A A X Y Z Z O O
 				//          ^
-				__static_vector_right_shift_once(pos, kerbal::algorithm::prev(this->end(), 2)); // move assign
+				__static_vector_right_shift_once(pos, kerbal::iterator::prev(this->end(), 2)); // move assign
 				// A A A X X Y Z O O
 				//          ^
 				(*this)[pos_index] = val; // copy assign
@@ -717,7 +719,7 @@ namespace kerbal
 				this->push_back(std::move(this->back())); // move construct
 				// A A A X Y Z Z O O
 				//          ^
-				__static_vector_right_shift_once(pos, kerbal::algorithm::prev(this->end(), 2)); // move assign
+				__static_vector_right_shift_once(pos, kerbal::iterator::prev(this->end(), 2)); // move assign
 				// A A A X X Y Z O O
 				//          ^
 				*non_const_pos = value_type(std::forward<Args>(args)...); // move assign, construct by args

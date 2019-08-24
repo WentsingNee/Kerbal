@@ -1,15 +1,15 @@
 /*
  * search.hpp
  *
- *  Created on: 2019年4月25日
+ *  Created on: 2019-4-25
  *      Author: peter
  */
 
-#ifndef INCLUDE_KERBAL_ALGORITHM_SEARCH_HPP_
-#define INCLUDE_KERBAL_ALGORITHM_SEARCH_HPP_
+#ifndef KERBAL_ALGORITHM_SEARCH_HPP_
+#define KERBAL_ALGORITHM_SEARCH_HPP_
 
-#include <kerbal/algorithm/iterator.hpp>
 #include <kerbal/algorithm/binary_type_operator.hpp>
+#include <kerbal/iterator/iterator.hpp>
 
 namespace kerbal
 {
@@ -34,7 +34,7 @@ namespace kerbal
 		{
 			typedef ForwardIterator iterator;
 			while (first != last) {
-				iterator middle = kerbal::algorithm::midden_iterator(first, last);
+				iterator middle = kerbal::iterator::midden_iterator(first, last);
 				if (comparator(*middle, value)) { // *middle < value
 					first = middle;
 					++first;
@@ -52,8 +52,8 @@ namespace kerbal
 		binary_search(ForwardIterator first, ForwardIterator last, const Tp & value)
 		{
 			typedef ForwardIterator iterator;
-			typedef typename std::iterator_traits<iterator>::value_type type;
-			return kerbal::algorithm::binary_search(first, last, value, kerbal::algorithm::binary_type_less<type, type>());
+			typedef typename kerbal::iterator::iterator_traits<iterator>::value_type type;
+			return kerbal::algorithm::binary_search(first, last, value, std::less<type>());
 		}
 
 		/**
@@ -67,7 +67,7 @@ namespace kerbal
 		{
 			typedef ForwardIterator iterator;
 			while (first != last) {
-				iterator middle = kerbal::algorithm::midden_iterator(first, last);
+				iterator middle = kerbal::iterator::midden_iterator(first, last);
 				if (comparator(*middle, value)) { // *middle < value
 					first = middle;
 					++first;
@@ -84,7 +84,7 @@ namespace kerbal
 				std::random_access_iterator_tag)
 		{
 			typedef RandomAccessIterator iterator;
-			typedef typename std::iterator_traits<iterator>::difference_type difference_type;
+			typedef typename kerbal::iterator::iterator_traits<iterator>::difference_type difference_type;
 			difference_type len(last - first);
 
 			while (len) {
@@ -106,7 +106,7 @@ namespace kerbal
 		ForwardIterator
 		lower_bound(ForwardIterator first, ForwardIterator last, const Tp & value, Comparator comparator)
 		{
-			return kerbal::algorithm::__lower_bound(first, last, value, comparator, kerbal::type_traits::iterator_category(first));
+			return kerbal::algorithm::__lower_bound(first, last, value, comparator, kerbal::iterator::iterator_category(first));
 		}
 
 		template <typename ForwardIterator, typename Tp>
@@ -114,7 +114,7 @@ namespace kerbal
 		lower_bound(ForwardIterator first, ForwardIterator last, const Tp & value)
 		{
 			typedef ForwardIterator iterator;
-			typedef typename std::iterator_traits<iterator>::value_type type;
+			typedef typename kerbal::iterator::iterator_traits<iterator>::value_type type;
 			return kerbal::algorithm::lower_bound(first, last, value, kerbal::algorithm::binary_type_less<type, Tp>());
 		}
 
@@ -124,7 +124,7 @@ namespace kerbal
 		{
 			typedef ForwardIterator iterator;
 			while (first != last) {
-				iterator middle = kerbal::algorithm::midden_iterator(first, last);
+				iterator middle = kerbal::iterator::midden_iterator(first, last);
 				if (comparator(value, *middle)) { // *middle > value
 					last = middle;
 				} else { // *middle <= value, namely !(*middle > value)
@@ -140,7 +140,7 @@ namespace kerbal
 		upper_bound(ForwardIterator first, ForwardIterator last, const Tp & value)
 		{
 			typedef ForwardIterator iterator;
-			typedef typename std::iterator_traits<iterator>::value_type type;
+			typedef typename kerbal::iterator::iterator_traits<iterator>::value_type type;
 			return kerbal::algorithm::upper_bound(first, last, value, kerbal::algorithm::binary_type_less<Tp, type>());
 		}
 
@@ -174,7 +174,7 @@ namespace kerbal
 		ordered_range_lower_bound(InputIterator first, InputIterator last, const Tp & value, Comparator comparator)
 		{
 			return kerbal::algorithm::__ordered_range_lower_bound(first, last, value, comparator,
-					kerbal::type_traits::iterator_category(first));
+					kerbal::iterator::iterator_category(first));
 		}
 
 		template <typename InputIterator, typename Tp>
@@ -182,7 +182,7 @@ namespace kerbal
 		ordered_range_lower_bound(InputIterator first, InputIterator last, const Tp & value)
 		{
 			typedef InputIterator iterator;
-			typedef typename std::iterator_traits<iterator>::value_type type;
+			typedef typename kerbal::iterator::iterator_traits<iterator>::value_type type;
 			return kerbal::algorithm::ordered_range_lower_bound(first, last, value, kerbal::algorithm::binary_type_less<type, Tp>());
 		}
 
@@ -192,11 +192,8 @@ namespace kerbal
 				std::input_iterator_tag)
 		{
 			while (static_cast<bool>(first != last) && !static_cast<bool>(comparator(value, *first))) {
-				if (comparator(value, *first)) { // *first > value
-					return first;
-				} else {
-					++first;
-				}
+				// value >= *first
+				++first;
 			}
 			return first;
 		}
@@ -214,7 +211,7 @@ namespace kerbal
 		ordered_range_upper_bound(InputIterator first, InputIterator last, const Tp & value, Comparator comparator)
 		{
 			return kerbal::algorithm::__ordered_range_upper_bound(first, last, value, comparator,
-					kerbal::type_traits::iterator_category(first));
+					kerbal::iterator::iterator_category(first));
 		}
 
 		template <typename InputIterator, typename Tp>
@@ -222,7 +219,7 @@ namespace kerbal
 		ordered_range_upper_bound(InputIterator first, InputIterator last, const Tp & value)
 		{
 			typedef InputIterator iterator;
-			typedef typename std::iterator_traits<iterator>::value_type type;
+			typedef typename kerbal::iterator::iterator_traits<iterator>::value_type type;
 			return kerbal::algorithm::ordered_range_upper_bound(first, last, value, kerbal::algorithm::binary_type_less<Tp, type>());
 		}
 
@@ -243,7 +240,7 @@ namespace kerbal
 				// for the next, hint != last && *hint < value
 				int forward_steps = 1;
 				for (int i = 0; i < 3; ++i) {
-					kerbal::algorithm::advance_at_most(hint, forward_steps, last);
+					kerbal::iterator::advance_at_most(hint, forward_steps, last);
 					if (hint == last) {
 						break;
 					} else if (!static_cast<bool>(comparator(*hint, value))) {
@@ -269,7 +266,7 @@ namespace kerbal
 				int backward_steps = 1;
 				iterator partition_iter(hint);
 				for (int i = 0; i < 3; ++i) {
-					kerbal::algorithm::retreat_at_most(partition_iter, backward_steps, first);
+					kerbal::iterator::retreat_at_most(partition_iter, backward_steps, first);
 					if (partition_iter == first || comparator(*partition_iter, value) == true) {
 						return kerbal::algorithm::lower_bound(partition_iter, hint, value, comparator);
 					}
@@ -282,7 +279,7 @@ namespace kerbal
 				int forward_steps = 1;
 				iterator partition_iter(hint);
 				for (int i = 0; i < 3; ++i) {
-					kerbal::algorithm::advance_at_most(partition_iter, forward_steps, last);
+					kerbal::iterator::advance_at_most(partition_iter, forward_steps, last);
 					if (partition_iter == last || comparator(*partition_iter, value) == false) {
 						return kerbal::algorithm::lower_bound(hint, partition_iter, value, comparator);
 					}
@@ -298,7 +295,7 @@ namespace kerbal
 		lower_bound_hint(ForwardIterator first, ForwardIterator last, const Tp& value, ForwardIterator hint, Comparator comparator)
 		{
 			return kerbal::algorithm::__lower_bound_hint(first, last, value, hint, comparator,
-					kerbal::type_traits::iterator_category(first));
+					kerbal::iterator::iterator_category(first));
 		}
 
 		template <typename ForwardIterator, typename Tp>
@@ -306,7 +303,7 @@ namespace kerbal
 		lower_bound_hint(ForwardIterator first, ForwardIterator last, const Tp& value, ForwardIterator hint)
 		{
 			typedef ForwardIterator iterator;
-			typedef typename std::iterator_traits<iterator>::value_type type;
+			typedef typename kerbal::iterator::iterator_traits<iterator>::value_type type;
 			return lower_bound_hint(first, last, value, hint, kerbal::algorithm::binary_type_less<type, Tp>());
 		}
 
@@ -314,4 +311,4 @@ namespace kerbal
 
 } /* namespace kerbal */
 
-#endif /* INCLUDE_KERBAL_ALGORITHM_SEARCH_HPP_ */
+#endif /* KERBAL_ALGORITHM_SEARCH_HPP_ */

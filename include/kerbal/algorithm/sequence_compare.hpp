@@ -12,8 +12,9 @@
 #ifndef KERBAL_ALGORITHM_SEQUENCE_COMPARE_HPP_
 #define KERBAL_ALGORITHM_SEQUENCE_COMPARE_HPP_
 
-#include <kerbal/algorithm/iterator.hpp>
 #include <kerbal/algorithm/binary_type_operator.hpp>
+#include <kerbal/iterator/iterator.hpp>
+#include <kerbal/iterator/iterator_traits.hpp>
 #include <kerbal/compatibility/constexpr.hpp>
 #include <kerbal/compatibility/noexcept.hpp>
 
@@ -52,14 +53,14 @@ namespace kerbal
 				RandomAccessIterator2 b_first, RandomAccessIterator2 b_last, Compare cmp,
 				std::random_access_iterator_tag, std::random_access_iterator_tag)
 				KERBAL_CONDITIONAL_NOEXCEPT(
-						noexcept(static_cast<bool>(kerbal::algorithm::distance(a_first, a_last) != kerbal::algorithm::distance(b_first, b_last))) &&
+						noexcept(static_cast<bool>(kerbal::iterator::distance(a_first, a_last) != kerbal::iterator::distance(b_first, b_last))) &&
 						noexcept(static_cast<bool>(a_first != a_last)) &&
 						noexcept(static_cast<bool>(cmp(*a_first, *b_first))) &&
 						noexcept(++a_first) &&
 						noexcept(++b_first)
 				)
 		{
-			if (kerbal::algorithm::distance(a_first, a_last) != kerbal::algorithm::distance(b_first, b_last)) {
+			if (kerbal::iterator::distance(a_first, a_last) != kerbal::iterator::distance(b_first, b_last)) {
 				return false;
 			}
 			while (a_first != a_last) { // size are equal and b will not out of range
@@ -78,13 +79,13 @@ namespace kerbal
 				InputIterator2 b_first, InputIterator2 b_last, Compare cmp)
 				KERBAL_CONDITIONAL_NOEXCEPT(
 						noexcept(__sequence_equal_to(a_first, a_last, b_first, b_last, cmp,
-								kerbal::type_traits::iterator_category(a_first),
-								kerbal::type_traits::iterator_category(b_first)))
+								kerbal::iterator::iterator_category(a_first),
+								kerbal::iterator::iterator_category(b_first)))
 				)
 		{
 			return __sequence_equal_to(a_first, a_last, b_first, b_last, cmp,
-					kerbal::type_traits::iterator_category(a_first),
-					kerbal::type_traits::iterator_category(b_first));
+					kerbal::iterator::iterator_category(a_first),
+					kerbal::iterator::iterator_category(b_first));
 		}
 
 		template <typename InputIterator1, typename InputIterator2>
@@ -93,15 +94,15 @@ namespace kerbal
 				KERBAL_CONDITIONAL_NOEXCEPT(
 						noexcept(sequence_equal_to(a_first, a_last, b_first, b_last,
 								binary_type_equal_to<
-									typename kerbal::type_traits::iterator_traits<InputIterator1>::value_type,
-									typename kerbal::type_traits::iterator_traits<InputIterator2>::value_type
+									typename kerbal::iterator::iterator_traits<InputIterator1>::value_type,
+									typename kerbal::iterator::iterator_traits<InputIterator2>::value_type
 								>()))
 				)
 		{
 			typedef InputIterator1 iterator1;
 			typedef InputIterator2 iterator2;
-			typedef typename kerbal::type_traits::iterator_traits<iterator1>::value_type Tp;
-			typedef typename kerbal::type_traits::iterator_traits<iterator2>::value_type Up;
+			typedef typename kerbal::iterator::iterator_traits<iterator1>::value_type Tp;
+			typedef typename kerbal::iterator::iterator_traits<iterator2>::value_type Up;
 			return sequence_equal_to(a_first, a_last, b_first, b_last, binary_type_equal_to<Tp, Up>());
 		}
 
@@ -126,7 +127,7 @@ namespace kerbal
 				RandomAccessIterator2 b_first, RandomAccessIterator2 b_last, Compare cmp,
 				std::random_access_iterator_tag, std::random_access_iterator_tag)
 		{
-			if (std::distance(a_first, a_last) != std::distance(b_first, b_last)) {
+			if (kerbal::iterator::distance(a_first, a_last) != kerbal::iterator::distance(b_first, b_last)) {
 				return true;
 			}
 			while (a_first != a_last) { // size are equal and b will not out of range
@@ -145,8 +146,8 @@ namespace kerbal
 				InputIterator2 b_first, InputIterator2 b_last, Compare cmp)
 		{
 			return __sequence_not_equal_to(a_first, a_last, b_first, b_last, cmp,
-					kerbal::type_traits::iterator_category(a_first),
-					kerbal::type_traits::iterator_category(b_first));
+					kerbal::iterator::iterator_category(a_first),
+					kerbal::iterator::iterator_category(b_first));
 		}
 
 		template <typename InputIterator1, typename InputIterator2>
@@ -155,8 +156,8 @@ namespace kerbal
 		{
 			typedef InputIterator1 iterator1;
 			typedef InputIterator2 iterator2;
-			typedef typename kerbal::type_traits::iterator_traits<iterator1>::value_type Tp;
-			typedef typename kerbal::type_traits::iterator_traits<iterator2>::value_type Up;
+			typedef typename kerbal::iterator::iterator_traits<iterator1>::value_type Tp;
+			typedef typename kerbal::iterator::iterator_traits<iterator2>::value_type Up;
 			return sequence_not_equal_to(a_first, a_last, b_first, b_last, binary_type_not_equal_to<Tp, Up>());
 		}
 
@@ -199,8 +200,8 @@ namespace kerbal
 		{
 			typedef InputIterator1 iterator1;
 			typedef InputIterator2 iterator2;
-			typedef typename kerbal::type_traits::iterator_traits<iterator1>::value_type Tp;
-//			typedef typename kerbal::type_traits::iterator_traits<iterator2>::value_type Up;
+			typedef typename kerbal::iterator::iterator_traits<iterator1>::value_type Tp;
+//			typedef typename kerbal::iterator::iterator_traits<iterator2>::value_type Up;
 			return sequence_less(a_first, a_last, b_first, b_last, std::less<Tp>());
 		}
 
@@ -229,8 +230,8 @@ namespace kerbal
 		{
 			typedef InputIterator1 iterator1;
 			typedef InputIterator2 iterator2;
-			typedef typename kerbal::type_traits::iterator_traits<iterator1>::value_type Tp;
-//			typedef typename kerbal::type_traits::iterator_traits<iterator2>::value_type Up;
+			typedef typename kerbal::iterator::iterator_traits<iterator1>::value_type Tp;
+//			typedef typename kerbal::iterator::iterator_traits<iterator2>::value_type Up;
 			return sequence_greater(a_first, a_last, b_first, b_last, std::greater<Tp>());
 		}
 
@@ -260,8 +261,8 @@ namespace kerbal
 		{
 			typedef InputIterator1 iterator1;
 			typedef InputIterator2 iterator2;
-			typedef typename kerbal::type_traits::iterator_traits<iterator1>::value_type Tp;
-//			typedef typename kerbal::type_traits::iterator_traits<iterator2>::value_type Up;
+			typedef typename kerbal::iterator::iterator_traits<iterator1>::value_type Tp;
+//			typedef typename kerbal::iterator::iterator_traits<iterator2>::value_type Up;
 			return sequence_less_equal(a_first, a_last, b_first, b_last, std::less_equal<Tp>());
 		}
 
@@ -291,8 +292,8 @@ namespace kerbal
 		{
 			typedef InputIterator1 iterator1;
 			typedef InputIterator2 iterator2;
-			typedef typename kerbal::type_traits::iterator_traits<iterator1>::value_type Tp;
-//			typedef typename kerbal::type_traits::iterator_traits<iterator2>::value_type Up;
+			typedef typename kerbal::iterator::iterator_traits<iterator1>::value_type Tp;
+//			typedef typename kerbal::iterator::iterator_traits<iterator2>::value_type Up;
 			return sequence_greater_equal(a_first, a_last, b_first, b_last, std::greater_equal<Tp>());
 		}
 

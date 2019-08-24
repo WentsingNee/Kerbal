@@ -13,12 +13,12 @@
 #ifndef KERBAL_DATA_STRUCT_STATIC_VECTOR_HPP_
 #define KERBAL_DATA_STRUCT_STATIC_VECTOR_HPP_
 
-#include <kerbal/algorithm/iterator.hpp>
 #include <kerbal/algorithm/sequence_compare.hpp>
 #include <kerbal/compatibility/constexpr.hpp>
 #include <kerbal/compatibility/noexcept.hpp>
 #include <kerbal/data_struct/raw_storage.hpp>
 #include <kerbal/data_struct/static_container_base/static_container_exception.hpp>
+#include <kerbal/iterator/iterator_traits.hpp>
 #include <kerbal/operators/dereferenceable.hpp>
 #include <kerbal/operators/equality_comparable.hpp>
 #include <kerbal/operators/incr_decr.hpp>
@@ -41,31 +41,31 @@ namespace kerbal
 	namespace data_struct
 	{
 
-		template <typename DerivedIterator, typename Pointer>
-		struct static_vector_iterator_base_traits
+		template <typename Pointer>
+		struct __stavec_iterbase_traits
 		{
 			private:
-				typedef kerbal::type_traits::iterator_traits<Pointer>		__traits_type;
+				typedef kerbal::iterator::iterator_traits<Pointer>		__traits_type;
 
 			public:
-				typedef typename __traits_type::iterator_category iterator_category;
-				typedef typename __traits_type::value_type  	value_type;
-				typedef typename __traits_type::difference_type 	difference_type;
-				typedef typename __traits_type::pointer   	pointer;
-				typedef typename __traits_type::reference 	reference;
+				typedef typename __traits_type::iterator_category		iterator_category;
+				typedef typename __traits_type::value_type				value_type;
+				typedef typename __traits_type::difference_type			difference_type;
+				typedef typename __traits_type::pointer					pointer;
+				typedef typename __traits_type::reference				reference;
 
 				typedef std::iterator<
-					std::random_access_iterator_tag,
-					value_type,
-					difference_type,
-					pointer,
-					reference
+						std::random_access_iterator_tag,
+						value_type,
+						difference_type,
+						pointer,
+						reference
 				> type;
 		};
 
 		template <typename DerivedIterator, typename Pointer, typename StorageType>
-		class static_vector_iterator_base:
-				public static_vector_iterator_base_traits<DerivedIterator, Pointer>::type,
+		class __stavec_iterbase:
+				public __stavec_iterbase_traits<Pointer>::type,
 				public kerbal::operators::dereferenceable<DerivedIterator, Pointer>,
 				public kerbal::operators::equality_comparable<DerivedIterator>,
 				public kerbal::operators::less_than_comparable<DerivedIterator>,
@@ -73,7 +73,7 @@ namespace kerbal
 				public kerbal::operators::decrementable<DerivedIterator>
 		{
 			private:
-				typedef typename static_vector_iterator_base_traits<DerivedIterator, Pointer>::type iterator_base_t;
+				typedef typename __stavec_iterbase_traits<Pointer>::type iterator_base_t;
 
 			protected:
 				typedef StorageType storage_type_for_iterator;
@@ -81,7 +81,7 @@ namespace kerbal
 				storage_type_for_iterator* current;
 
 			public:
-				explicit KERBAL_CONSTEXPR static_vector_iterator_base(storage_type_for_iterator* current) KERBAL_NOEXCEPT :
+				explicit KERBAL_CONSTEXPR __stavec_iterbase(storage_type_for_iterator* current) KERBAL_NOEXCEPT :
 						current(current)
 				{
 				}
@@ -91,13 +91,13 @@ namespace kerbal
 				DerivedIterator& operator++() KERBAL_NOEXCEPT;
 				DerivedIterator& operator--() KERBAL_NOEXCEPT;
 
-				DerivedIterator operator+(const typename static_vector_iterator_base::difference_type & delta) const KERBAL_NOEXCEPT;
-				DerivedIterator operator-(const typename static_vector_iterator_base::difference_type & delta) const KERBAL_NOEXCEPT;
+				DerivedIterator operator+(const typename __stavec_iterbase::difference_type & delta) const KERBAL_NOEXCEPT;
+				DerivedIterator operator-(const typename __stavec_iterbase::difference_type & delta) const KERBAL_NOEXCEPT;
 
-				KERBAL_CONSTEXPR typename static_vector_iterator_base::difference_type operator-(const DerivedIterator & with) const KERBAL_NOEXCEPT;
+				KERBAL_CONSTEXPR typename __stavec_iterbase::difference_type operator-(const DerivedIterator & with) const KERBAL_NOEXCEPT;
 
-				DerivedIterator& operator+=(const typename static_vector_iterator_base::difference_type & delta) KERBAL_NOEXCEPT;
-				DerivedIterator& operator-=(const typename static_vector_iterator_base::difference_type & delta) KERBAL_NOEXCEPT;
+				DerivedIterator& operator+=(const typename __stavec_iterbase::difference_type & delta) KERBAL_NOEXCEPT;
+				DerivedIterator& operator-=(const typename __stavec_iterbase::difference_type & delta) KERBAL_NOEXCEPT;
 
 				friend KERBAL_CONSTEXPR bool operator<(const DerivedIterator & lhs, const DerivedIterator & rhs) KERBAL_NOEXCEPT
 				{
@@ -110,45 +110,54 @@ namespace kerbal
 				}
 		};
 
+		template <typename ValueType>
+		class __stavec_kiter;
 
-//		template <typename Pointer, typename StorageType>
-//		class const_iterator;
-//
-//		/// @brief Iterator to static_vector.
-//		template <typename Pointer, typename StorageType>
-//		class iterator: public static_vector_iterator_base<iterator, Pointer, StorageType>
-//		{
-//			private:
-//				friend class static_vector;
-//				friend class const_iterator;
-//				typedef static_vector_iterator_base<iterator, Pointer, StorageType> supper_t;
-//
-//			public:
-//				explicit KERBAL_CONSTEXPR iterator(storage_type* current) KERBAL_NOEXCEPT :
-//						supper_t(current)
-//				{
-//				}
-//		};
-//
-//		/// @brief Iterator to static_vector.
-//		template <typename Pointer, typename StorageType>
-//		class const_iterator: public static_vector_iterator_base<const_iterator, Pointer, StorageType>
-//		{
-//			private:
-//				friend class static_vector;
-//				typedef static_vector_iterator_base<const_iterator, Pointer, StorageType> supper_t;
-//
-//			public:
-//				explicit KERBAL_CONSTEXPR const_iterator(const storage_type* current) KERBAL_NOEXCEPT :
-//						supper_t(current)
-//				{
-//				}
-//
-//				KERBAL_CONSTEXPR const_iterator (const iterator & current) KERBAL_NOEXCEPT :
-//						supper_t(current.current)
-//				{
-//				}
-//		};
+		/// @brief Iterator to static_vector.
+		template <typename ValueType>
+		class __stavec_iter: public __stavec_iterbase<__stavec_iter<ValueType>, ValueType*,
+									kerbal::data_struct::raw_storage<ValueType> >
+		{
+			private:
+				template <typename Tp, size_t N>
+				friend class static_vector;
+
+				friend class __stavec_kiter<ValueType>;
+
+				typedef kerbal::data_struct::raw_storage<ValueType> storage_type;
+				typedef __stavec_iterbase<__stavec_iter<ValueType>, ValueType*, storage_type> supper_t;
+
+			public:
+				explicit KERBAL_CONSTEXPR __stavec_iter(storage_type* current) KERBAL_NOEXCEPT :
+						supper_t(current)
+				{
+				}
+		};
+
+		/// @brief Iterator to static_vector.
+		template <typename ValueType>
+		class __stavec_kiter: public __stavec_iterbase<__stavec_kiter<ValueType>, const ValueType*,
+									const kerbal::data_struct::raw_storage<ValueType> >
+		{
+			private:
+				template <typename Tp, size_t N>
+				friend class static_vector;
+
+				typedef const kerbal::data_struct::raw_storage<ValueType> storage_type;
+				typedef __stavec_iterbase<__stavec_kiter<ValueType>, const ValueType*, storage_type> supper_t;
+				typedef __stavec_iter<ValueType> iterator;
+
+			public:
+				explicit KERBAL_CONSTEXPR __stavec_kiter(const storage_type* current) KERBAL_NOEXCEPT :
+						supper_t(current)
+				{
+				}
+
+				KERBAL_CONSTEXPR __stavec_kiter(const iterator & current) KERBAL_NOEXCEPT :
+						supper_t(current.current)
+				{
+				}
+		};
 
 		/**
 		 * @brief Array with flexible length that stored on automatic storage duration
@@ -203,7 +212,7 @@ namespace kerbal
 				typedef const_equal_c_array& const_equal_c_array_reference;
 
 			private:
-				typedef kerbal::type_traits::remove_all_extents<value_type> remove_all_extents_t;
+				typedef typename kerbal::type_traits::remove_all_extents<value_type>::type remove_all_extents_t;
 
 				typedef kerbal::data_struct::raw_storage<value_type> storage_type;
 
@@ -216,45 +225,12 @@ namespace kerbal
 
 			public:
 
-				class const_iterator;
-
 				/// @brief Iterator to static_vector.
-				class iterator: public static_vector_iterator_base<iterator, pointer, storage_type>
-				{
-					private:
-						friend class static_vector;
-						friend class static_vector::const_iterator;
-						typedef static_vector_iterator_base<iterator, pointer, storage_type> supper_t;
-
-					public:
-						explicit KERBAL_CONSTEXPR iterator(storage_type* current) KERBAL_NOEXCEPT :
-								supper_t(current)
-						{
-						}
-				};
-
-				/// @brief Iterator to static_vector.
-				class const_iterator: public static_vector_iterator_base<const_iterator, const_pointer, const storage_type>
-				{
-					private:
-						friend class static_vector;
-						typedef static_vector_iterator_base<const_iterator, const_pointer, const storage_type> supper_t;
-
-					public:
-						explicit KERBAL_CONSTEXPR const_iterator(const storage_type* current) KERBAL_NOEXCEPT :
-								supper_t(current)
-						{
-						}
-
-						KERBAL_CONSTEXPR const_iterator (const iterator & current) KERBAL_NOEXCEPT :
-								supper_t(current.current)
-						{
-						}
-				};
-
+				typedef __stavec_iter<value_type> iterator;
+				/// @brief Constant iterator to static_vector.
+				typedef __stavec_kiter<value_type> const_iterator;
 				/// @brief Reverse iterator to static_vector.
 				typedef std::reverse_iterator<iterator> reverse_iterator;
-
 				/// @brief Constant reverse iterator to static_vector.
 				typedef std::reverse_iterator<const_iterator> const_reverse_iterator;
 
@@ -320,7 +296,7 @@ namespace kerbal
 				template <typename InputIterator>
 				static_vector(InputIterator first, InputIterator last,
 						typename kerbal::type_traits::enable_if<
-								kerbal::type_traits::is_input_compatible_iterator<InputIterator>::value
+								kerbal::iterator::is_input_compatible_iterator<InputIterator>::value
 								, int
 						>::type = 0
 				);
@@ -364,7 +340,7 @@ namespace kerbal
 				 */
 				template <typename InputCompatibleIterator>
 				typename kerbal::type_traits::enable_if<
-						kerbal::type_traits::is_input_compatible_iterator<InputCompatibleIterator>::value
+						kerbal::iterator::is_input_compatible_iterator<InputCompatibleIterator>::value
 				>::type
 				assign(InputCompatibleIterator begin, InputCompatibleIterator end);
 
@@ -377,19 +353,19 @@ namespace kerbal
 #endif
 
 				/** @brief 返回指向数组首元素的迭代器 */
-				KERBAL_CONSTEXPR iterator begin() KERBAL_NOEXCEPT;
+				KERBAL_CONSTEXPR14 iterator begin() KERBAL_NOEXCEPT;
 
 				/** @brief 返回指向数组末尾元素的后一个元素位置的迭代器 */
-				KERBAL_CONSTEXPR iterator end() KERBAL_NOEXCEPT;
+				KERBAL_CONSTEXPR14 iterator end() KERBAL_NOEXCEPT;
 
-				KERBAL_CONSTEXPR const_iterator begin() const KERBAL_NOEXCEPT;
+				KERBAL_CONSTEXPR14 const_iterator begin() const KERBAL_NOEXCEPT;
 
 				/** @brief 返回指向数组末尾元素的后一个元素位置的迭代器 */
-				KERBAL_CONSTEXPR const_iterator end() const KERBAL_NOEXCEPT;
+				KERBAL_CONSTEXPR14 const_iterator end() const KERBAL_NOEXCEPT;
 
-				KERBAL_CONSTEXPR const_iterator cbegin() const KERBAL_NOEXCEPT;
+				KERBAL_CONSTEXPR14 const_iterator cbegin() const KERBAL_NOEXCEPT;
 
-				KERBAL_CONSTEXPR const_iterator cend() const KERBAL_NOEXCEPT;
+				KERBAL_CONSTEXPR14 const_iterator cend() const KERBAL_NOEXCEPT;
 
 				reverse_iterator rbegin() KERBAL_NOEXCEPT;
 				reverse_iterator rend() KERBAL_NOEXCEPT;
@@ -443,7 +419,7 @@ namespace kerbal
 				void alert_empty() const
 				{
 					if (empty()) {
-						throw kerbal::data_struct::static_container_empty_exception();
+						kerbal::data_struct::static_container_empty_exception::throw_this_exception();
 					}
 				}
 
@@ -456,7 +432,7 @@ namespace kerbal
 				void alert_full() const
 				{
 					if (full()) {
-						throw kerbal::data_struct::static_container_full_exception(N);
+						kerbal::data_struct::static_container_full_exception::throw_this_exception(N);
 					}
 				}
 
