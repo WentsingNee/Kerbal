@@ -14,7 +14,6 @@
 
 #include <kerbal/compatibility/compatibility_macro.hpp>
 #include <kerbal/type_traits/aligned_storage.hpp>
-#include <kerbal/type_traits/container_typedef.hpp>
 #include <kerbal/type_traits/type_traits_details/array_traits.hpp>
 #include <kerbal/type_traits/type_traits_details/enable_if.hpp>
 #include <kerbal/utility/noncopyable.hpp>
@@ -61,8 +60,33 @@ namespace kerbal
 
 		template <typename ValueType>
 		class __rawst_base<ValueType, true>
-						: kerbal::utility::noncopyable, public kerbal::type_traits::container_typedef<ValueType>
+						: kerbal::utility::noncopyable
 		{
+			public:
+
+				/// @brief Type of the elements.
+				typedef ValueType value_type;
+
+				/// @brief Constant type of the elements.
+				typedef const value_type const_type;
+
+				/// @brief Reference of the elements.
+				typedef value_type& reference;
+
+				/// @brief Constant reference of the elements.
+				typedef const value_type& const_reference;
+
+				/// @brief Pointer type to the elements.
+				typedef value_type* pointer;
+
+				/// @brief Constant pointer type to the elements.
+				typedef const value_type* const_pointer;
+
+#		if __cplusplus >= 201103L
+				typedef value_type&& rvalue_reference;
+				typedef const value_type&& const_rvalue_reference;
+#		endif
+
 			protected:
 
 				typedef ValueType storage_type;
@@ -119,8 +143,33 @@ namespace kerbal
 
 		template <typename ValueType>
 		class __rawst_base<ValueType, false>
-						: kerbal::utility::noncopyable, public kerbal::type_traits::container_typedef<ValueType>
+						: kerbal::utility::noncopyable
 		{
+			public:
+
+				/// @brief Type of the elements.
+				typedef ValueType value_type;
+
+				/// @brief Constant type of the elements.
+				typedef const value_type const_type;
+
+				/// @brief Reference of the elements.
+				typedef value_type& reference;
+
+				/// @brief Constant reference of the elements.
+				typedef const value_type& const_reference;
+
+				/// @brief Pointer type to the elements.
+				typedef value_type* pointer;
+
+				/// @brief Constant pointer type to the elements.
+				typedef const value_type* const_pointer;
+
+#		if __cplusplus >= 201103L
+				typedef value_type&& rvalue_reference;
+				typedef const value_type&& const_rvalue_reference;
+#		endif
+
 			protected:
 
 				typedef
@@ -178,6 +227,31 @@ namespace kerbal
 		template <typename Type>
 		class __rawst_agent<Type, true>: public kerbal::data_struct::__rawst_base<Type>
 		{
+			public:
+
+				/// @brief Type of the elements.
+				typedef Type value_type;
+
+				/// @brief Constant type of the elements.
+				typedef const value_type const_type;
+
+				/// @brief Reference of the elements.
+				typedef value_type& reference;
+
+				/// @brief Constant reference of the elements.
+				typedef const value_type& const_reference;
+
+				/// @brief Pointer type to the elements.
+				typedef value_type* pointer;
+
+				/// @brief Constant pointer type to the elements.
+				typedef const value_type* const_pointer;
+
+#		if __cplusplus >= 201103L
+				typedef value_type&& rvalue_reference;
+				typedef const value_type&& const_rvalue_reference;
+#		endif
+
 			public:
 
 #		if __cplusplus >= 201103L
@@ -251,6 +325,31 @@ namespace kerbal
 		template <typename Type, size_t N>
 		class __rawst_agent<Type[N], true>: public kerbal::data_struct::__rawst_base<Type[N]>
 		{
+			public:
+
+				/// @brief Type of the elements.
+				typedef Type value_type;
+
+				/// @brief Constant type of the elements.
+				typedef const value_type const_type;
+
+				/// @brief Reference of the elements.
+				typedef value_type& reference;
+
+				/// @brief Constant reference of the elements.
+				typedef const value_type& const_reference;
+
+				/// @brief Pointer type to the elements.
+				typedef value_type* pointer;
+
+				/// @brief Constant pointer type to the elements.
+				typedef const value_type* const_pointer;
+
+#		if __cplusplus >= 201103L
+				typedef value_type&& rvalue_reference;
+				typedef const value_type&& const_rvalue_reference;
+#		endif
+
 			private:
 				template <typename Up, size_t M>
 				KERBAL_CONSTEXPR14
@@ -295,6 +394,31 @@ namespace kerbal
 		class __rawst_agent<Type, false>:
 				public kerbal::data_struct::__rawst_base<Type>
 		{
+			public:
+
+				/// @brief Type of the elements.
+				typedef Type value_type;
+
+				/// @brief Constant type of the elements.
+				typedef const value_type const_type;
+
+				/// @brief Reference of the elements.
+				typedef value_type& reference;
+
+				/// @brief Constant reference of the elements.
+				typedef const value_type& const_reference;
+
+				/// @brief Pointer type to the elements.
+				typedef value_type* pointer;
+
+				/// @brief Constant pointer type to the elements.
+				typedef const value_type* const_pointer;
+
+#		if __cplusplus >= 201103L
+				typedef value_type&& rvalue_reference;
+				typedef const value_type&& const_rvalue_reference;
+#		endif
+
 			public:
 
 #		if __cplusplus >= 201103L
@@ -366,6 +490,31 @@ namespace kerbal
 		class __rawst_agent<Type[N], false>:
 				public kerbal::data_struct::__rawst_base<Type[N]>
 		{
+			public:
+
+				/// @brief Type of the elements.
+				typedef Type value_type;
+
+				/// @brief Constant type of the elements.
+				typedef const value_type const_type;
+
+				/// @brief Reference of the elements.
+				typedef value_type& reference;
+
+				/// @brief Constant reference of the elements.
+				typedef const value_type& const_reference;
+
+				/// @brief Pointer type to the elements.
+				typedef value_type* pointer;
+
+				/// @brief Constant pointer type to the elements.
+				typedef const value_type* const_pointer;
+
+#		if __cplusplus >= 201103L
+				typedef value_type&& rvalue_reference;
+				typedef const value_type&& const_rvalue_reference;
+#		endif
+
 			private:
 
 				template <typename Up, size_t M>

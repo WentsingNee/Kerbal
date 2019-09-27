@@ -20,6 +20,7 @@
 #	include <type_traits>
 #endif
 
+#include <kerbal/algorithm/modifiers.hpp>
 #include <kerbal/compatibility/move.hpp>
 #include <kerbal/iterator/iterator.hpp>
 #include <kerbal/type_traits/type_traits_details/fundamental_deduction.hpp>
@@ -70,20 +71,45 @@ namespace kerbal
 		template <typename Tp, size_t N>
 		void static_vector<Tp, N>::__copy_constructor(const static_vector & src, kerbal::type_traits::false_type)
 		{
-			const_iterator src_begin = src.cbegin();
-			const const_iterator src_end = src.cend();
-			while (src_begin != src_end) {
-				this->push_back(*src_begin);
-				++src_begin;
-			}
+			struct each : public self_helper
+			{
+					KERBAL_CONSTEXPR
+					each(static_vector & self) KERBAL_NOEXCEPT :
+						self_helper(self)
+					{
+					}
+
+					void operator()(static_vector::const_reference src)
+					{
+						this->self.push_back(src);
+					}
+			};
+			kerbal::algorithm::for_each(src.cbegin(), src.cend(), each(*this));
 		}
 
 		template <typename Tp, size_t N>
 		void static_vector<Tp, N>::__copy_constructor(const static_vector & src, kerbal::type_traits::true_type)
 		{
-			size_type src_length = src.size();
-			::memcpy(this->storage, src.storage, src_length * sizeof(storage_type));
-			this->p_to_end = this->storage + src_length;
+			size_t i;
+
+			struct each : public self_helper
+			{
+					size_t & i;
+
+					KERBAL_CONSTEXPR
+					each(static_vector & self, size_t & i) KERBAL_NOEXCEPT :
+						self_helper(self), i(i)
+					{
+					}
+
+					void operator()(static_vector::const_reference src)
+					{
+						this->self[i] = src;
+						++i;
+					}
+			};
+			kerbal::algorithm::for_each(src.cbegin(), src.cend(), each(*this, i));
+			this->p_to_end = this->storage + i;
 		}
 
 		template <typename Tp, size_t N>
@@ -105,7 +131,8 @@ namespace kerbal
 
 			struct enable_optimization:
 					kerbal::type_traits::bool_constant<
-						std::is_trivially_copy_constructible<remove_all_extents_t>::value
+						std::is_trivially_copy_constructible<remove_all_extents_t>::value &&
+						std::is_trivially_copy_assignable<remove_all_extents_t>::value
 					>
 			{
 			};
@@ -270,7 +297,7 @@ namespace kerbal
 				 * b b b b b b x x
 				 */
 
-				std::fill(this->begin(), this->end(), val);
+				kerbal::algorithm::fill(this->begin(), this->end(), val);
 				while (previous_size != new_size) {
 					this->push_back(val);
 					++previous_size;
@@ -281,14 +308,14 @@ namespace kerbal
 				 * b b b x x x x x
 				 */
 				this->erase(this->nth(new_size), this->end());
-				std::fill(this->begin(), this->end(), val);
+				kerbal::algorithm::fill(this->begin(), this->end(), val);
 			}
 		}
 
 		template <typename Tp, size_t N>
 		void static_vector<Tp, N>::__assign(size_type new_size, const_reference val, kerbal::type_traits::true_type)
 		{
-			std::fill(this->begin(), this->nth(new_size), val);
+			kerbal::algorithm::fill(this->begin(), this->nth(new_size), val);
 			this->p_to_end = this->storage + new_size;
 		}
 
@@ -603,7 +630,7 @@ namespace kerbal
 		template <typename Tp, size_t N>
 		void static_vector<Tp, N>::push_front(rvalue_reference src)
 		{
-			this->emplace_front(this->cbegin(), src);
+			this->emplace_front(src);
 		}
 
 		template <typename Tp, size_t N>

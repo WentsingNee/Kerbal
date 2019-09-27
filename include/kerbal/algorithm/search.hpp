@@ -1,14 +1,19 @@
-/*
- * search.hpp
- *
- *  Created on: 2019-4-25
- *      Author: peter
+/**
+ * @file       search.hpp
+ * @brief
+ * @date       2019-4-25
+ * @author     Peter
+ * @copyright
+ *      Peter of [ThinkSpirit Laboratory](http://thinkspirit.org/)
+ *   of [Nanjing University of Information Science & Technology](http://www.nuist.edu.cn/)
+ *   all rights reserved
  */
 
 #ifndef KERBAL_ALGORITHM_SEARCH_HPP_
 #define KERBAL_ALGORITHM_SEARCH_HPP_
 
-#include <kerbal/algorithm/binary_type_operator.hpp>
+#include <kerbal/algorithm/binary_type_predicate.hpp>
+#include <kerbal/algorithm/querier.hpp>
 #include <kerbal/iterator/iterator.hpp>
 
 namespace kerbal

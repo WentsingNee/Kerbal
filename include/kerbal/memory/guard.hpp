@@ -16,6 +16,7 @@
 #include <kerbal/memory/default_delete.hpp>
 #include <kerbal/utility/noncopyable.hpp>
 
+#include <cstddef>
 #if __cplusplus >= 201103L
 # include <type_traits>
 # include <kerbal/compatibility/move.hpp>

@@ -1,10 +1,10 @@
 /**
  * @file       kmp.hpp
  * @brief
- * @date       May 11 2019
- * @author     [WentsingNee](http://github.com/WentsingNee)
+ * @date       2019-5-11
+ * @author     Peter
  * @copyright
- *      WentsingNee of [ThinkSpirit Laboratory](http://thinkspirit.org/)
+ *      Peter of [ThinkSpirit Laboratory](http://thinkspirit.org/)
  *   of [Nanjing University of Information Science & Technology](http://www.nuist.edu.cn/)
  *   all rights reserved
  */
@@ -12,13 +12,14 @@
 #ifndef KERBAL_ALGORITHM_KMP_HPP_
 #define KERBAL_ALGORITHM_KMP_HPP_
 
-#include <vector>
-#include <cstring>
 #include <kerbal/iterator/iterator.hpp>
 #include <kerbal/iterator/iterator_traits.hpp>
 #include <kerbal/type_traits/type_traits_details/cv_deduction.hpp>
 #include <kerbal/type_traits/type_traits_details/enable_if.hpp>
 #include <kerbal/type_traits/type_traits_details/is_same.hpp>
+
+#include <vector>
+#include <cstring>
 
 namespace kerbal
 {

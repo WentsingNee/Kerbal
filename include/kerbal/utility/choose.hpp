@@ -14,8 +14,9 @@
 #define INCLUDE_KERBAL_UTILITY_CHOOSE_HPP_
 
 #include <stdarg.h>
-#include <cctype>
+#include <cstddef>
 
+#include <stdexcept>
 #if __cplusplus >= 201103L //c++0x
 #	include <initializer_list>
 #endif //c++0x

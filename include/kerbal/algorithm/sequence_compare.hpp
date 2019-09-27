@@ -2,9 +2,9 @@
  * @file       sequence_compare.hpp
  * @brief      
  * @date       2019-6-6
- * @author     peter
+ * @author     Peter
  * @copyright
- *      peter of [ThinkSpirit Laboratory](http://thinkspirit.org/)
+ *      Peter of [ThinkSpirit Laboratory](http://thinkspirit.org/)
  *   of [Nanjing University of Information Science & Technology](http://www.nuist.edu.cn/)
  *   all rights reserved
  */
@@ -12,7 +12,7 @@
 #ifndef KERBAL_ALGORITHM_SEQUENCE_COMPARE_HPP_
 #define KERBAL_ALGORITHM_SEQUENCE_COMPARE_HPP_
 
-#include <kerbal/algorithm/binary_type_operator.hpp>
+#include <kerbal/algorithm/binary_type_predicate.hpp>
 #include <kerbal/iterator/iterator.hpp>
 #include <kerbal/iterator/iterator_traits.hpp>
 #include <kerbal/compatibility/constexpr.hpp>

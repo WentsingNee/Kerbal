@@ -29,8 +29,8 @@ namespace kerbal
 
 #		if __cplusplus >= 201103L
 
-					[[noreturn]]
 					template <typename ... Args>
+					[[noreturn]]
 					static void throw_this_exception(Args&& ... args)
 					{
 						throw Exception(std::forward<Args>(args)...);
@@ -67,8 +67,8 @@ namespace kerbal
 
 #		if __cplusplus >= 201103L
 
-					[[noreturn]]
 					template <typename ... Args>
+					[[noreturn]]
 					static void throw_this_exception(Args&& ...) noexcept
 					{
 						std::abort();

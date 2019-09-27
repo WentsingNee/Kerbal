@@ -177,6 +177,18 @@ namespace kerbal
 		template <typename Tp, size_t N>
 		class static_vector
 		{
+			private:
+				struct self_helper
+				{
+					static_vector & self;
+
+					KERBAL_CONSTEXPR
+					self_helper(static_vector & self) KERBAL_NOEXCEPT :
+								self(self)
+					{
+					}
+				};
+
 			public:
 
 				/// @brief Type of the elements.

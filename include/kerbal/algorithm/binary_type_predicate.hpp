@@ -1,17 +1,16 @@
 /**
- * @file		binary_type_operator.hpp
+ * @file       binary_type_predicate.hpp
  * @brief
- * @date		2018年9月7日
- * @author		Peter
- * @copyright	Peter
+ * @date       2018-9-7
+ * @author     Peter
  * @copyright
- <a href="http://thinkspirit.org/">ThinkSpirit Laboratory</a>
- of
- <a href="http://www.nuist.edu.cn/">Nanjing University of Information Science & Technology</a>
+ *      Peter of [ThinkSpirit Laboratory](http://thinkspirit.org/)
+ *   of [Nanjing University of Information Science & Technology](http://www.nuist.edu.cn/)
+ *   all rights reserved
  */
 
-#ifndef INCLUDE_KERBAL_ALGORITHM_BINARY_TYPE_OPERATOR_HPP_
-#define INCLUDE_KERBAL_ALGORITHM_BINARY_TYPE_OPERATOR_HPP_
+#ifndef KERBAL_ALGORITHM_BINARY_TYPE_PREDICATE_HPP_
+#define KERBAL_ALGORITHM_BINARY_TYPE_PREDICATE_HPP_
 
 #include <kerbal/compatibility/constexpr.hpp>
 #include <kerbal/compatibility/noexcept.hpp>
@@ -85,4 +84,4 @@ namespace kerbal
 } /* namespace kerbal */
 
 
-#endif /* INCLUDE_KERBAL_ALGORITHM_BINARY_TYPE_OPERATOR_HPP_ */
+#endif /* KERBAL_ALGORITHM_BINARY_TYPE_PREDICATE_HPP_ */
