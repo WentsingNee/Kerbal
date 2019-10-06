@@ -2,9 +2,9 @@
  * @file       addressof.hpp
  * @brief      
  * @date       2019-7-13
- * @author     peter
+ * @author     Peter
  * @copyright
- *      peter of [ThinkSpirit Laboratory](http://thinkspirit.org/)
+ *      Peter of [ThinkSpirit Laboratory](http://thinkspirit.org/)
  *   of [Nanjing University of Information Science & Technology](http://www.nuist.edu.cn/)
  *   all rights reserved
  */
@@ -20,8 +20,8 @@ namespace kerbal
 	namespace utility
 	{
 		template <typename Tp>
-		KERBAL_CONSTEXPR Tp* addressof(Tp& arg) KERBAL_NOEXCEPT
-		{	// WARNING! Not constexpr accually!
+		Tp* addressof(Tp& arg) KERBAL_NOEXCEPT
+		{
 			return reinterpret_cast<Tp*>(
 					&const_cast<char&>(
 							reinterpret_cast<const volatile char&>(arg)));
