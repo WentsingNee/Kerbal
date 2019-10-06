@@ -2,9 +2,9 @@
  * @file       less_than_comparable.hpp
  * @brief      
  * @date       2019-7-14
- * @author     peter
+ * @author     Peter
  * @copyright
- *      peter of [ThinkSpirit Laboratory](http://thinkspirit.org/)
+ *      Peter of [ThinkSpirit Laboratory](http://thinkspirit.org/)
  *   of [Nanjing University of Information Science & Technology](http://www.nuist.edu.cn/)
  *   all rights reserved
  */
@@ -22,19 +22,22 @@ namespace kerbal
 		template <typename Tp>
 		struct less_than_comparable
 		{
-				friend KERBAL_CONSTEXPR bool operator>(const Tp & lhs, const Tp & rhs)
+				friend KERBAL_CONSTEXPR
+				bool operator>(const Tp & lhs, const Tp & rhs)
 						KERBAL_CONDITIONAL_NOEXCEPT(noexcept(static_cast<bool>(rhs < rhs)))
 				{
 					return static_cast<bool>(rhs < lhs);
 				}
 
-				friend KERBAL_CONSTEXPR bool operator<=(const Tp & lhs, const Tp & rhs)
+				friend KERBAL_CONSTEXPR
+				bool operator<=(const Tp & lhs, const Tp & rhs)
 						KERBAL_CONDITIONAL_NOEXCEPT(noexcept(static_cast<bool>(rhs < lhs)))
 				{
 					return !static_cast<bool>(rhs < lhs);
 				}
 
-				friend KERBAL_CONSTEXPR bool operator>=(const Tp & lhs, const Tp & rhs)
+				friend KERBAL_CONSTEXPR
+				bool operator>=(const Tp & lhs, const Tp & rhs)
 						KERBAL_CONDITIONAL_NOEXCEPT(noexcept(static_cast<bool>(lhs < rhs)))
 				{
 					return !static_cast<bool>(lhs < rhs);
