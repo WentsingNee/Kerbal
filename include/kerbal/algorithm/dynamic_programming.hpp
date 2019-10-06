@@ -12,19 +12,20 @@
 #ifndef KERBAL_ALGORITHM_DYNAMIC_PROGRAMMING_HPP_
 #define KERBAL_ALGORITHM_DYNAMIC_PROGRAMMING_HPP_
 
-#include <vector>
-#include <functional>
-#include <cstddef>
-
 #include <kerbal/algorithm/binary_type_predicate.hpp>
 #include <kerbal/algorithm/modifiers.hpp>
 #include <kerbal/algorithm/search.hpp>
 #include <kerbal/compatibility/constexpr.hpp>
+#include <kerbal/data_struct/nonmember_container_access.hpp>
 #include <kerbal/iterator/iterator.hpp>
-#include <kerbal/utility/array_serve.hpp>
+
+#include <cstddef>
+#include <functional>
+#include <vector>
 
 namespace kerbal
 {
+
 	namespace algorithm
 	{
 
@@ -131,7 +132,7 @@ namespace kerbal
 					*back_inserter = first; ++back_inserter; ++index_of_back;
 				} else {
 					*kerbal::algorithm::ordered_range_lower_bound(
-							kerbal::utility::array_serve::begin(buffer), kerbal::utility::array_serve::end(buffer), first, _iter_cmp) = first;
+							kerbal::data_struct::begin(buffer), kerbal::data_struct::end(buffer), first, _iter_cmp) = first;
 				}
 			}
 			return index_of_back + 1;
