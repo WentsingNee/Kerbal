@@ -17,6 +17,7 @@
 #include <kerbal/algorithm/search.hpp>
 #include <kerbal/compatibility/constexpr.hpp>
 #include <kerbal/data_struct/nonmember_container_access.hpp>
+#include <kerbal/iterator/general_back_inserter.hpp>
 #include <kerbal/iterator/iterator.hpp>
 
 #include <cstddef>
@@ -29,26 +30,27 @@ namespace kerbal
 	namespace algorithm
 	{
 
-		// warning: dp buffer must have a length >= distance(a_first, a_last) + 1
+		// warning: Buffer must have the size >= distance(a_first, a_last) + 1
 		template <typename ForwardIterator1, typename InputIterator2,
-					typename BinaryPredicate, typename BufferIterator>
+					typename BinaryTypeEqualTo, typename  ForwardBufferIterator>
 		KERBAL_CONSTEXPR14
 		size_t longest_common_subsequence(ForwardIterator1 a_first, ForwardIterator1 a_last,
-											InputIterator2 b_first, InputIterator2 b_last, BinaryPredicate equal_to,
-											BufferIterator dp)
+											InputIterator2 b_first, InputIterator2 b_last, BinaryTypeEqualTo equal_to,
+											ForwardBufferIterator buffer_first)
 		{
 			typedef ForwardIterator1 iterator1;
 			typedef InputIterator2 iterator2;
+			typedef ForwardBufferIterator buffer_iterator;
 
-			BufferIterator dp_back_iter(kerbal::iterator::next(dp, std::distance(a_first, a_last)));
-			kerbal::algorithm::fill(dp, kerbal::iterator::next(dp_back_iter),
+			buffer_iterator buffer_back_iter(kerbal::iterator::next(buffer_first, kerbal::iterator::distance(a_first, a_last)));
+			kerbal::algorithm::fill(buffer_first, kerbal::iterator::next(buffer_back_iter),
 									static_cast<size_t>(0));
 
 			for (iterator2 i(b_first); i != b_last; ++i) {
-				size_t dp_i1_j1 = 0;
+				size_t dp_i1_j1 = 0; // dp[i - 1][j - 1]
 
-				BufferIterator k(dp);
-				BufferIterator k_next(kerbal::iterator::next(dp));
+				buffer_iterator k(buffer_first);
+				buffer_iterator k_next(kerbal::iterator::next(buffer_first));
 				for (iterator1 j(a_first); j != a_last; ++j) {
 					if (equal_to(*j, *i)) {
 						size_t tmp = *k_next;
@@ -65,21 +67,21 @@ namespace kerbal
 				}
 
 			}
-			return *dp_back_iter;
+			return *buffer_back_iter;
 		}
 
-		template <typename ForwardIterator1, typename InputIterator2, typename BinaryPredicate>
+		template <typename ForwardIterator1, typename InputIterator2, typename BinaryTypeEqualTo>
 		size_t longest_common_subsequence(ForwardIterator1 a_first, ForwardIterator1 a_last,
-										InputIterator2 b_first, InputIterator2 b_last, BinaryPredicate equal_to)
+										InputIterator2 b_first, InputIterator2 b_last, BinaryTypeEqualTo equal_to)
 		{
 			typedef typename kerbal::iterator::iterator_traits<ForwardIterator1>::difference_type difference_type;
 			difference_type buffer_size_need(kerbal::iterator::distance(a_first, a_last) + 1);
 			if (buffer_size_need > 128) {
-				std::vector<size_t> dp(buffer_size_need);
-				return kerbal::algorithm::longest_common_subsequence(a_first, a_last, b_first, b_last, equal_to, dp.begin());
+				std::vector<size_t> buffer(buffer_size_need);
+				return kerbal::algorithm::longest_common_subsequence(a_first, a_last, b_first, b_last, equal_to, buffer.begin());
 			} else {
-				size_t dp[128];
-				return kerbal::algorithm::longest_common_subsequence(a_first, a_last, b_first, b_last, equal_to, dp);
+				size_t buffer[128];
+				return kerbal::algorithm::longest_common_subsequence(a_first, a_last, b_first, b_last, equal_to, buffer + 0);
 			}
 		}
 
@@ -96,22 +98,22 @@ namespace kerbal
 
 
 
-		template <typename InputIterator, typename BinaryPredicate, typename Container, typename BackInserter>
+		template <typename ForwardIterator, typename Compare, typename Container, typename BackInserter>
 		KERBAL_CONSTEXPR14
-		size_t __longest_increasing_subsequence(InputIterator first, InputIterator last,
-												BinaryPredicate cmp, Container & buffer, BackInserter back_inserter)
+		size_t __longest_increasing_subsequence(ForwardIterator first, ForwardIterator last, Compare cmp,
+													Container & buffer, BackInserter back_inserter)
 		{
 			if (first == last) {
 				return 0;
 			}
 
-			typedef InputIterator iterator;
+			typedef ForwardIterator iterator;
 			struct iter_cmp
 			{
-					BinaryPredicate cmp;
+					Compare cmp;
 
 					KERBAL_CONSTEXPR
-					iter_cmp(BinaryPredicate cmp) :
+					iter_cmp(Compare cmp) :
 								cmp(cmp)
 					{
 					}
@@ -138,90 +140,69 @@ namespace kerbal
 			return index_of_back + 1;
 		}
 
-		template <typename InputIterator, typename BinaryPredicate, typename Container>
-		size_t longest_increasing_subsequence(InputIterator first, InputIterator last,
-												BinaryPredicate cmp, Container & buffer)
-		{
-			return kerbal::algorithm::__longest_increasing_subsequence(first, last, cmp, buffer, std::back_inserter(buffer));
-		}
-
-		//warning: buffer must have a length >= distance(first, last)
-		template <typename InputIterator, typename BinaryPredicate, typename Container>
+		//warning: buffer must have capacity >= distance(first, last)
+		template <typename ForwardIterator, typename Compare, typename Container>
 		KERBAL_CONSTEXPR14
-		size_t longest_increasing_subsequence(InputIterator first, InputIterator last,
-												BinaryPredicate cmp, InputIterator buffer[])
+		size_t longest_increasing_subsequence(ForwardIterator first, ForwardIterator last, Compare cmp,
+												Container & buffer)
 		{
-			return kerbal::algorithm::__longest_increasing_subsequence(first, last, cmp, buffer, buffer);
+			return kerbal::algorithm::__longest_increasing_subsequence(first, last, cmp, buffer, kerbal::iterator::general_inserter(buffer));
 		}
 
-		template <typename InputIterator, typename BinaryPredicate>
-		size_t __longest_increasing_subsequence(InputIterator first, InputIterator last,
-													BinaryPredicate cmp, std::input_iterator_tag)
+		template <typename ForwardIterator, typename Compare>
+		size_t longest_increasing_subsequence(ForwardIterator first, ForwardIterator last, Compare cmp)
 		{
-			typedef InputIterator iterator;
-			std::vector<iterator> buffer;
-			buffer.reserve(128);
-			return kerbal::algorithm::longest_increasing_subsequence(first, last, cmp, buffer);
-		}
-
-		template <typename RandomAccessIterator, typename BinaryPredicate>
-		size_t __longest_increasing_subsequence(RandomAccessIterator first, RandomAccessIterator last,
-													BinaryPredicate cmp, std::random_access_iterator_tag)
-		{
-			typedef RandomAccessIterator iterator;
+			typedef ForwardIterator iterator;
 			typedef typename kerbal::iterator::iterator_traits<iterator>::difference_type difference_type;
+
 			difference_type buffer_size_need(kerbal::iterator::distance(first, last));
-			if (buffer_size_need > 128) {
+			if (buffer_size_need > 32) {
 				std::vector<iterator> buffer;
 				buffer.reserve(buffer_size_need);
 				return kerbal::algorithm::longest_increasing_subsequence(first, last, cmp, buffer);
 			} else {
-				iterator buffer[128];
+				iterator buffer[32];
 				return kerbal::algorithm::longest_increasing_subsequence(first, last, cmp, buffer);
 			}
 		}
 
-		template <typename InputIterator, typename BinaryPredicate>
-		size_t longest_increasing_subsequence(InputIterator first, InputIterator last, BinaryPredicate cmp)
+		template <typename ForwardIterator>
+		size_t longest_increasing_subsequence(ForwardIterator first, ForwardIterator last)
 		{
-			return kerbal::algorithm::__longest_increasing_subsequence(first, last, cmp, kerbal::iterator::iterator_category(first));
-		}
-
-		template <typename InputIterator>
-		size_t longest_increasing_subsequence(InputIterator first, InputIterator last)
-		{
-			typedef InputIterator iterator;
+			typedef ForwardIterator iterator;
 			typedef typename std::iterator_traits<iterator>::value_type value_type;
 			return kerbal::algorithm::longest_increasing_subsequence(first, last, std::less<value_type>());
 		}
 
 
 
-
-		template <typename ForwardIterator1, typename InputIterator2, typename BinaryPredicate>
+		// warning: buffer must have the size >= std::distance(a_first, a_last) + 1
+		template <typename ForwardIterator1, typename InputIterator2,
+					typename BinaryTypeEqualTo, typename ForwardBufferIterator>
+		KERBAL_CONSTEXPR14
 		size_t edit_distance(ForwardIterator1 a_first, ForwardIterator1 a_last,
-								InputIterator2 b_first, InputIterator2 b_last, BinaryPredicate equal)
+								InputIterator2 b_first, InputIterator2 b_last,
+								BinaryTypeEqualTo equal, ForwardBufferIterator buffer_first)
 		{
 			typedef ForwardIterator1 iterator1;
 			typedef InputIterator2 iterator2;
+			typedef ForwardBufferIterator buffer_iterator;
 
-			typedef std::vector<size_t> dp_type;
-			dp_type dp(std::distance(a_first, a_last) + 1);
-			for (size_t i = 0; i < dp.size(); ++i) {
-				dp[i] = i;
-			}
+			buffer_iterator buffer_back_iter(kerbal::iterator::next(buffer_first, kerbal::iterator::distance(a_first, a_last)));
+			kerbal::algorithm::iota(buffer_first, kerbal::iterator::next(buffer_back_iter),
+									static_cast<size_t>(0));
 
 			size_t i_index = 0;
 			for (; b_first != b_last; ++b_first) {
 				size_t dp_i1_j1 = i_index;
 				++i_index;
 
-				dp_type::iterator k_prev = dp.begin();
-				dp_type::iterator k = dp.begin() + 1;
+				buffer_iterator k_prev(buffer_first);
+				buffer_iterator k(kerbal::iterator::next(buffer_first));
 				*k_prev = i_index;
 
-				for (iterator1 j = a_first; j != a_last; ++j) {
-					size_t modify = dp_i1_j1 + (equal(*j, *b_first) == true ? 0 : 1);
+				for (iterator1 j(a_first); j != a_last; ++j) {
+					size_t modify = dp_i1_j1 + (equal(*j, *b_first) ? 0 : 1);
 					dp_i1_j1 = *k;
 
 					if (*k_prev < *k) {
@@ -238,7 +219,24 @@ namespace kerbal
 				}
 			}
 
-			return dp.back();
+			return *buffer_back_iter;
+		}
+
+		template <typename ForwardIterator1, typename InputIterator2, typename BinaryTypeEqualTo>
+		size_t edit_distance(ForwardIterator1 a_first, ForwardIterator1 a_last,
+								InputIterator2 b_first, InputIterator2 b_last,
+								BinaryTypeEqualTo equal)
+		{
+			typedef typename kerbal::iterator::iterator_traits<ForwardIterator1>::difference_type difference_type;
+
+			difference_type buffer_size_need(kerbal::iterator::distance(a_first, a_last) + 1);
+			if (buffer_size_need > 32) {
+				std::vector<size_t> buffer(buffer_size_need);
+				return kerbal::algorithm::edit_distance(a_first, a_last, b_first, b_last, equal, buffer.begin());
+			} else {
+				size_t buffer[32];
+				return kerbal::algorithm::edit_distance(a_first, a_last, b_first, b_last, equal, buffer + 0);
+			}
 		}
 
 		template <typename ForwardIterator1, typename InputIterator2>
@@ -247,7 +245,7 @@ namespace kerbal
 		{
 			typedef typename std::iterator_traits<ForwardIterator1>::value_type value_type1;
 			typedef typename std::iterator_traits<InputIterator2>::value_type value_type2;
-			return edit_distance(a_first, a_last, b_first, b_last,
+			return kerbal::algorithm::edit_distance(a_first, a_last, b_first, b_last,
 					kerbal::algorithm::binary_type_equal_to<value_type1, value_type2>());
 		}
 

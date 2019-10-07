@@ -567,6 +567,59 @@ namespace kerbal
 			return out;
 		}
 
+		template <typename ForwardIterator, typename Tp>
+		KERBAL_CONSTEXPR14
+		void __iota(ForwardIterator first, ForwardIterator last, Tp value, std::forward_iterator_tag)
+		{
+			while (first != last) {
+				*first = value;
+				++first;
+				++value;
+			}
+		}
+
+		template <typename RandomAccessIterator, typename Tp>
+		KERBAL_CONSTEXPR14
+		void __iota(RandomAccessIterator first, RandomAccessIterator last, Tp value, std::random_access_iterator_tag)
+		{
+			typedef RandomAccessIterator iterator;
+			typedef typename kerbal::iterator::iterator_traits<iterator>::difference_type difference_type;
+
+#	define EACH() do {\
+				*first = value;\
+				++first;\
+				++value;\
+			} while (false)
+
+			for (difference_type trip_count(kerbal::iterator::distance(first, last) >> 2); trip_count > 0; --trip_count) {
+				EACH();
+				EACH();
+				EACH();
+				EACH();
+			}
+
+			difference_type remain(kerbal::iterator::distance(first, last));
+			if (remain == 3) {
+				EACH();
+			}
+			if (remain >= 2) {
+				EACH();
+			}
+			if (remain >= 1) {
+				EACH();
+			}
+
+#	undef EACH
+
+		}
+
+		template <typename ForwardIterator, typename Tp>
+		KERBAL_CONSTEXPR14
+		void iota(ForwardIterator first, ForwardIterator last, const Tp & value)
+		{
+			kerbal::algorithm::__iota(first, last, value, kerbal::iterator::iterator_category(first));
+		}
+
 	} /* namespace algorithm */
 
 } /* namespace kerbal */
