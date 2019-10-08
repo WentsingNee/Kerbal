@@ -20,6 +20,10 @@
 #include <kerbal/iterator/iterator.hpp>
 #include <kerbal/iterator/iterator_traits.hpp>
 
+#if __cplusplus >= 201103L
+# include <type_traits>
+#endif
+
 namespace kerbal
 {
 	namespace algorithm
@@ -27,12 +31,91 @@ namespace kerbal
 
 		template <typename Tp>
 		KERBAL_CONSTEXPR14
-		void
-		swap(Tp & lhs, Tp & rhs)
+		void swap(Tp & lhs, Tp & rhs)
+							KERBAL_CONDITIONAL_NOEXCEPT(
+									std::is_nothrow_move_constructible<Tp>::value &&
+									std::is_nothrow_move_assignable<Tp>::value
+							)
 		{
 			Tp t(kerbal::compatibility::to_xvalue(lhs));
-			lhs = rhs;
-			rhs = t;
+			lhs = kerbal::compatibility::to_xvalue(rhs);
+			rhs = kerbal::compatibility::to_xvalue(t);
+		}
+
+		template <typename ForwardIterator1, typename ForwardIterator2>
+		KERBAL_CONSTEXPR14
+		void iter_swap(ForwardIterator1 lhs, ForwardIterator2 rhs)
+							KERBAL_CONDITIONAL_NOEXCEPT(
+									noexcept(kerbal::algorithm::swap(*lhs, *rhs))
+							)
+		{
+			kerbal::algorithm::swap(*lhs, *rhs);
+		}
+
+		template <typename ForwardIterator1, typename ForwardIterator2>
+		KERBAL_CONSTEXPR14
+		ForwardIterator2
+		__range_swap(ForwardIterator1 a_first, ForwardIterator1 a_last, ForwardIterator2 b_first,
+						std::forward_iterator_tag)
+											KERBAL_CONDITIONAL_NOEXCEPT(
+													noexcept(static_cast<bool>(a_first != a_last)) &&
+													noexcept(kerbal::algorithm::iter_swap(a_first, b_first)) &&
+													noexcept(++a_first) &&
+													noexcept(++b_first)
+											)
+		{
+			while (a_first != a_last) {
+				kerbal::algorithm::iter_swap(a_first, b_first);
+				++a_first;
+				++b_first;
+			}
+			return b_first;
+		}
+
+		template <typename RandomAccessIterator1, typename ForwardIterator2>
+		KERBAL_CONSTEXPR14
+		ForwardIterator2
+		__range_swap(RandomAccessIterator1 a_first, RandomAccessIterator1 a_last, ForwardIterator2 b_first,
+						std::random_access_iterator_tag)
+		{
+			typedef RandomAccessIterator1 iterator;
+			typedef typename kerbal::iterator::iterator_traits<iterator>::difference_type difference_type;
+
+#	define EACH() do {\
+				kerbal::algorithm::iter_swap(a_first, b_first);\
+				++a_first;\
+				++b_first;\
+			} while (false)
+
+			for (difference_type trip_count(kerbal::iterator::distance(a_first, a_last) >> 2); trip_count > 0; --trip_count) {
+				EACH();
+				EACH();
+				EACH();
+				EACH();
+			}
+			difference_type remain(kerbal::iterator::distance(a_first, a_last));
+			if (remain == 3) {
+				EACH();
+			}
+			if (remain >= 2) {
+				EACH();
+			}
+			if (remain >= 1) {
+				EACH();
+			}
+
+#	undef EACH
+
+			return b_first;
+		}
+
+		template <typename ForwardIterator1, typename ForwardIterator2>
+		KERBAL_CONSTEXPR14
+		ForwardIterator2
+		range_swap(ForwardIterator1 a_first, ForwardIterator1 a_last, ForwardIterator2 b_first)
+		{
+			return kerbal::algorithm::__range_swap(a_first, a_last, b_first,
+									kerbal::iterator::iterator_category(a_first));
 		}
 
 		template <typename Tp, size_t N>
@@ -40,34 +123,67 @@ namespace kerbal
 		void
 		swap(Tp (&lhs)[N], Tp (&rhs)[N])
 		{
-			size_t i = 0;
-			for (size_t trip_count(N >> 2); trip_count > 0; --trip_count) {
-				kerbal::algorithm::swap(lhs[i], rhs[i]); ++i;
-				kerbal::algorithm::swap(lhs[i], rhs[i]); ++i;
-				kerbal::algorithm::swap(lhs[i], rhs[i]); ++i;
-				kerbal::algorithm::swap(lhs[i], rhs[i]); ++i;
-			}
-			size_t remain(N - i);
-			if (remain == 3) {
-				kerbal::algorithm::swap(lhs[i], rhs[i]); ++i;
-			}
-			if (remain >= 2) {
-				kerbal::algorithm::swap(lhs[i], rhs[i]); ++i;
-			}
-			if (remain >= 1) {
-				kerbal::algorithm::swap(lhs[i], rhs[i]); ++i;
-			}
+			kerbal::algorithm::range_swap(lhs + 0, lhs + N, rhs + 0);
 		}
 
-		template <typename ForwardIterator1, typename ForwardIterator2>
+
+
+		template <typename InputIterator, typename InputIteratorEnd, typename OutputIterator>
 		KERBAL_CONSTEXPR14
-		void
-		iter_swap(ForwardIterator1 lhs, ForwardIterator2 rhs)
-							KERBAL_CONDITIONAL_NOEXCEPT(
-									noexcept(std::swap(*lhs, *rhs))
-							)
+		OutputIterator
+		__copy(InputIterator first, InputIteratorEnd last, OutputIterator to,
+				std::input_iterator_tag)
+										KERBAL_CONDITIONAL_NOEXCEPT(
+												noexcept(static_cast<bool>(first != last)) &&
+												noexcept(*to = *first) &&
+												noexcept(++to) &&
+												noexcept(++first)
+										)
 		{
-			kerbal::algorithm::swap(*lhs, *rhs);
+			while (first != last) {
+				*to = *first;
+				++to;
+				++first;
+			}
+			return to;
+		}
+
+		template <typename RandomAccessIterator, typename RandomAccessIteratorEnd, typename OutputIterator>
+		KERBAL_CONSTEXPR14
+		OutputIterator
+		__copy(RandomAccessIterator first, RandomAccessIteratorEnd last, OutputIterator to,
+				std::random_access_iterator_tag)
+		{
+			typedef RandomAccessIterator iterator;
+			typedef typename kerbal::iterator::iterator_traits<iterator>::difference_type difference_type;
+
+#	define EACH() do {\
+				*to = *first;\
+				++to;\
+				++first;\
+			} while(false)
+
+			for (difference_type trip_count(kerbal::iterator::distance(first, last) >> 2); trip_count > 0; --trip_count) {
+				EACH();
+				EACH();
+				EACH();
+				EACH();
+			}
+
+			difference_type remain(kerbal::iterator::distance(first, last));
+			if (remain == 3) {
+				EACH();
+			}
+			if (remain >= 2) {
+				EACH();
+			}
+			if (remain >= 1) {
+				EACH();
+			}
+
+#	undef EACH
+
+			return to;
 		}
 
 		template <typename InputIterator, typename OutputIterator>
@@ -75,28 +191,71 @@ namespace kerbal
 		OutputIterator
 		copy(InputIterator first, InputIterator last, OutputIterator to)
 		{
-			typedef InputIterator iterator;
-			typedef typename kerbal::iterator::iterator_traits<iterator>::reference reference;
+			return kerbal::algorithm::__copy(first, last, to, kerbal::iterator::iterator_category(first));
+		}
 
-			struct each
-			{
-					OutputIterator & to;
 
-					KERBAL_CONSTEXPR
-					each(OutputIterator & to) :
-							to(to)
-					{
-					}
 
-					KERBAL_CONSTEXPR14
-					void operator()(const reference val)
-					{
-						*to = val;
-						++to;
-					}
-			};
+		template <typename InputIterator, typename OutputIterator, typename UnaryPredicate>
+		KERBAL_CONSTEXPR14
+		OutputIterator
+		__copy_if(InputIterator first, InputIterator last, OutputIterator to,
+				UnaryPredicate pred, std::input_iterator_tag)
+										KERBAL_CONDITIONAL_NOEXCEPT(
+												noexcept(static_cast<bool>(first != last)) &&
+												noexcept(static_cast<bool>(pred(*first))) &&
+												noexcept(*to = *first) &&
+												noexcept(++to) &&
+												noexcept(++first)
+										)
+		{
+			while (first != last) {
+				if (pred(*first)) {
+					*to = *first;
+					++to;
+				}
+				++first;
+			}
+			return to;
+		}
 
-			kerbal::algorithm::for_each(first, last, each(to));
+		template <typename RandomAccessIterator, typename OutputIterator, typename UnaryPredicate>
+		KERBAL_CONSTEXPR14
+		OutputIterator
+		__copy_if(RandomAccessIterator first, RandomAccessIterator last, OutputIterator to,
+				UnaryPredicate pred, std::random_access_iterator_tag)
+		{
+			typedef RandomAccessIterator iterator;
+			typedef typename kerbal::iterator::iterator_traits<iterator>::difference_type difference_type;
+
+#	define EACH() do {\
+				if (pred(*first)) {\
+					*to = *first;\
+					++to;\
+				}\
+				++first;\
+			} while(false)
+
+			for (difference_type trip_count(kerbal::iterator::distance(first, last) >> 2); trip_count > 0; --trip_count) {
+				EACH();
+				EACH();
+				EACH();
+				EACH();
+			}
+
+			difference_type remain(kerbal::iterator::distance(first, last));
+			if (remain == 3) {
+				EACH();
+			}
+			if (remain >= 2) {
+				EACH();
+			}
+			if (remain >= 1) {
+				EACH();
+			}
+
+#	undef EACH
+
 			return to;
 		}
 
@@ -105,32 +264,67 @@ namespace kerbal
 		OutputIterator
 		copy_if(InputIterator first, InputIterator last, OutputIterator to, UnaryPredicate pred)
 		{
-			typedef InputIterator iterator;
-			typedef typename kerbal::iterator::iterator_traits<iterator>::reference reference;
+			return kerbal::algorithm::__copy_if(first, last, to, pred, kerbal::iterator::iterator_category(first));
+		}
 
-			struct each
-			{
-					OutputIterator & to;
-					UnaryPredicate pred;
 
-					KERBAL_CONSTEXPR
-					each(OutputIterator & to, UnaryPredicate pred) :
-							to(to), pred(pred)
-					{
-					}
 
-					KERBAL_CONSTEXPR14
-					void operator()(const reference val)
-					{
-						if (this->pred(val)) {
-							*to = val;
-							++to;
-						}
-					}
-			};
+		template <typename BidirectionalIterator, typename OutputIterator>
+		KERBAL_CONSTEXPR14
+		OutputIterator
+		__copy_backward(BidirectionalIterator first, BidirectionalIterator last, OutputIterator to_last,
+						std::bidirectional_iterator_tag)
+													KERBAL_CONDITIONAL_NOEXCEPT(
+															noexcept(static_cast<bool>(first != last)) &&
+															noexcept(--last) &&
+															noexcept(--to_last) &&
+															noexcept(*to_last = *last)
+													)
+		{
+			while (first != last) {
+				--last;
+				--to_last;
+				*to_last = *last;
+			}
+			return to_last;
+		}
 
-			kerbal::algorithm::for_each(first, last, each(to, pred));
-			return to;
+		template <typename RandomAccessIterator, typename OutputIterator>
+		KERBAL_CONSTEXPR14
+		OutputIterator
+		__copy_backward(RandomAccessIterator first, RandomAccessIterator last, OutputIterator to_last,
+						std::random_access_iterator_tag)
+		{
+			typedef RandomAccessIterator iterator;
+			typedef typename kerbal::iterator::iterator_traits<RandomAccessIterator>::difference_type difference_type;
+
+#	define EACH() do {\
+				--last;\
+				--to_last;\
+				*to_last = *last;\
+			} while (false)
+
+			for (difference_type trip_count(kerbal::iterator::distance(first, last) >> 2); trip_count > 0; --trip_count) {
+				EACH();
+				EACH();
+				EACH();
+				EACH();
+			}
+
+			difference_type remain(kerbal::iterator::distance(first, last));
+			if (remain == 3) {
+				EACH();
+			}
+			if (remain >= 2) {
+				EACH();
+			}
+			if (remain >= 1) {
+				EACH();
+			}
+
+#	undef EACH
+
+			return to_last;
 		}
 
 		template <typename BidirectionalIterator, typename OutputIterator>
@@ -138,28 +332,64 @@ namespace kerbal
 		OutputIterator
 		copy_backward(BidirectionalIterator first, BidirectionalIterator last, OutputIterator to_last)
 		{
-			typedef BidirectionalIterator iterator;
-			typedef typename kerbal::iterator::iterator_traits<iterator>::reference reference;
+			return kerbal::algorithm::__copy_backward(first, last, to_last, kerbal::iterator::iterator_category(first));
+		}
 
-			struct each
-			{
-					OutputIterator & to_last;
 
-					KERBAL_CONSTEXPR
-					each(OutputIterator & to_last) :
-						to_last(to_last)
-					{
-					}
 
-					KERBAL_CONSTEXPR14
-					void operator()(const reference val)
-					{
-						--to_last;
-						*to_last = val;
-					}
-			};
+		template <typename BidirectionalIterator, typename OutputIterator, typename UnaryPredicate>
+		KERBAL_CONSTEXPR14
+		OutputIterator
+		__copy_backward_if(BidirectionalIterator first, BidirectionalIterator last, OutputIterator to_last,
+							UnaryPredicate pred, std::bidirectional_iterator_tag)
+		{
+			while (first != last) {
+				--last;
+				if (pred(*last)) {
+					--to_last;
+					*to_last = *last;
+				}
+			}
+			return to_last;
+		}
 
-			kerbal::algorithm::rfor_each(first, last, each(to_last));
+		template <typename RandomAccessIterator, typename OutputIterator, typename UnaryPredicate>
+		KERBAL_CONSTEXPR14
+		OutputIterator
+		__copy_backward_if(RandomAccessIterator first, RandomAccessIterator last, OutputIterator to_last,
+							UnaryPredicate pred, std::random_access_iterator_tag)
+		{
+			typedef RandomAccessIterator iterator;
+			typedef typename kerbal::iterator::iterator_traits<RandomAccessIterator>::difference_type difference_type;
+
+#	define EACH() do {\
+				--last;\
+				if (pred(*last)) {\
+					--to_last;\
+					*to_last = *last;\
+				}\
+			} while (false)
+
+			for (difference_type trip_count(kerbal::iterator::distance(first, last) >> 2); trip_count > 0; --trip_count) {
+				EACH();
+				EACH();
+				EACH();
+				EACH();
+			}
+
+			difference_type remain(kerbal::iterator::distance(first, last));
+			if (remain == 3) {
+				EACH();
+			}
+			if (remain >= 2) {
+				EACH();
+			}
+			if (remain >= 1) {
+				EACH();
+			}
+
+#	undef EACH
+
 			return to_last;
 		}
 
@@ -167,34 +397,61 @@ namespace kerbal
 		KERBAL_CONSTEXPR14
 		OutputIterator
 		copy_backward_if(BidirectionalIterator first, BidirectionalIterator last,
-						OutputIterator to_last, UnaryPredicate pred)
+							OutputIterator to_last, UnaryPredicate pred)
 		{
-			typedef BidirectionalIterator iterator;
-			typedef typename kerbal::iterator::iterator_traits<iterator>::reference reference;
+			return kerbal::algorithm::__copy_backward_if(first, last, to_last, pred, kerbal::iterator::iterator_category(first));
+		}
 
-			struct each
-			{
-					OutputIterator & to_last;
-					UnaryPredicate pred;
 
-					KERBAL_CONSTEXPR
-					each(OutputIterator & to_last, UnaryPredicate pred) :
-						to_last(to_last), pred(pred)
-					{
-					}
 
-					KERBAL_CONSTEXPR14
-					void operator()(const reference val)
-					{
-						if (this->pred(val)) {
-							--to_last;
-							*to_last = val;
-						}
-					}
-			};
+		template <typename InputIterator, typename OutputIterator>
+		KERBAL_CONSTEXPR14
+		OutputIterator
+		__move(InputIterator first, InputIterator last, OutputIterator to, std::input_iterator_tag)
+		{
+			 while (first != last) {
+				*to = kerbal::compatibility::to_xvalue(*first);
+				++to;
+				++first;
+			 }
+			return to;
+		}
 
-			kerbal::algorithm::rfor_each(first, last, each(to_last, pred));
-			return to_last;
+		template <typename RandomAccessIterator, typename OutputIterator>
+		KERBAL_CONSTEXPR14
+		OutputIterator
+		__move(RandomAccessIterator first, RandomAccessIterator last, OutputIterator to, std::random_access_iterator_tag)
+		{
+			typedef RandomAccessIterator iterator;
+			typedef typename kerbal::iterator::iterator_traits<iterator>::difference_type difference_type;
+
+#	define EACH() do {\
+				*to = kerbal::compatibility::to_xvalue(*first);\
+				++to;\
+				++first;\
+			} while(false)
+
+			for (difference_type trip_count(kerbal::iterator::distance(first, last) >> 2); trip_count > 0; --trip_count) {
+				EACH();
+				EACH();
+				EACH();
+				EACH();
+			}
+
+			difference_type remain(kerbal::iterator::distance(first, last));
+			if (remain == 3) {
+				EACH();
+			}
+			if (remain >= 2) {
+				EACH();
+			}
+			if (remain >= 1) {
+				EACH();
+			}
+
+#	undef EACH
+
+			return to;
 		}
 
 		template <typename InputIterator, typename OutputIterator>
@@ -202,29 +459,61 @@ namespace kerbal
 		OutputIterator
 		move(InputIterator first, InputIterator last, OutputIterator to)
 		{
-			typedef InputIterator iterator;
-			typedef typename kerbal::iterator::iterator_traits<iterator>::reference reference;
+			return kerbal::algorithm::__move(first, last, to, kerbal::iterator::iterator_category(first));
+		}
 
-			struct each
-			{
-					OutputIterator & to;
 
-					KERBAL_CONSTEXPR
-					each(OutputIterator & to) :
-							to(to)
-					{
-					}
 
-					KERBAL_CONSTEXPR14
-					void operator()(const reference val)
-					{
-						*to = kerbal::compatibility::to_xvalue(val);
-						++to;
-					}
-			};
+		template <typename BidirectionalIterator, typename OutputIterator>
+		KERBAL_CONSTEXPR14
+		OutputIterator
+		__move_backward(BidirectionalIterator first, BidirectionalIterator last, OutputIterator to_last,
+						std::bidirectional_iterator_tag)
+		{
+			while (first != last) {
+				--last;
+				--to_last;
+				*to_last = kerbal::compatibility::to_xvalue(*last);
+			}
+			return to_last;
+		}
 
-			kerbal::algorithm::for_each(first, last, each(to));
-			return to;
+		template <typename RandomAccessIterator, typename OutputIterator>
+		KERBAL_CONSTEXPR14
+		OutputIterator
+		__move_backward(RandomAccessIterator first, RandomAccessIterator last, OutputIterator to_last,
+						std::random_access_iterator_tag)
+		{
+			typedef RandomAccessIterator iterator;
+			typedef typename kerbal::iterator::iterator_traits<RandomAccessIterator>::difference_type difference_type;
+
+#	define EACH() do {\
+				--last;\
+				--to_last;\
+				*to_last = kerbal::compatibility::to_xvalue(*last);\
+			} while (false)
+
+			for (difference_type trip_count(kerbal::iterator::distance(first, last) >> 2); trip_count > 0; --trip_count) {
+				EACH();
+				EACH();
+				EACH();
+				EACH();
+			}
+
+			difference_type remain(kerbal::iterator::distance(first, last));
+			if (remain == 3) {
+				EACH();
+			}
+			if (remain >= 2) {
+				EACH();
+			}
+			if (remain >= 1) {
+				EACH();
+			}
+
+#	undef EACH
+
+			return to_last;
 		}
 
 		template <typename BidirectionalIterator, typename OutputIterator>
@@ -232,30 +521,10 @@ namespace kerbal
 		OutputIterator
 		move_backward(BidirectionalIterator first, BidirectionalIterator last, OutputIterator to_last)
 		{
-			typedef BidirectionalIterator iterator;
-			typedef typename kerbal::iterator::iterator_traits<iterator>::reference reference;
-
-			struct each
-			{
-					OutputIterator & to_last;
-
-					KERBAL_CONSTEXPR
-					each(OutputIterator & to_last) :
-						to_last(to_last)
-					{
-					}
-
-					KERBAL_CONSTEXPR14
-					void operator()(const reference val)
-					{
-						--to_last;
-						*to_last = kerbal::compatibility::to_xvalue(val);
-					}
-			};
-
-			kerbal::algorithm::rfor_each(first, last, each(to_last));
-			return to_last;
+			return kerbal::algorithm::__move_backward(first, last, to_last, kerbal::iterator::iterator_category(first));
 		}
+
+
 
 		template <typename InputIterator1, typename InputIterator2, typename OutputIterator, typename CompareFuntion>
 		KERBAL_CONSTEXPR14
@@ -263,6 +532,18 @@ namespace kerbal
 		merge(InputIterator1 a_first, InputIterator1 a_last,
 			InputIterator2 b_first, InputIterator2 b_last,
 			OutputIterator to, CompareFuntion cmp)
+									KERBAL_CONDITIONAL_NOEXCEPT(
+											noexcept(static_cast<bool>(a_first != a_last)) &&
+											noexcept(static_cast<bool>(b_first != b_last)) &&
+											noexcept(static_cast<bool>(cmp(*b_first, *a_first))) &&
+											noexcept(*to = *b_first) &&
+											noexcept(++to) &&
+											noexcept(++b_first) &&
+											noexcept(*to = *a_first) &&
+											noexcept(++a_first) &&
+											noexcept(kerbal::algorithm::copy(a_first, a_last, to)) &&
+											noexcept(kerbal::algorithm::copy(b_first, b_last, to))
+									)
 		{
 			while (a_first != a_last) {
 				if (b_first != b_last) {
@@ -298,8 +579,9 @@ namespace kerbal
 
 		template <typename ForwardIterator, typename UnaryPredicate>
 		KERBAL_CONSTEXPR14
-		ForwardIterator __partition(ForwardIterator first, ForwardIterator last, UnaryPredicate pred,
-				std::forward_iterator_tag)
+		ForwardIterator
+		__partition(ForwardIterator first, ForwardIterator last,
+					UnaryPredicate pred, std::forward_iterator_tag)
 		{
 			first = kerbal::algorithm::find_if_not(first, last, pred);
 			if (first != last) {
@@ -317,9 +599,9 @@ namespace kerbal
 
 		template <typename BidirectionalIterator, typename UnaryPredicate>
 		KERBAL_CONSTEXPR14
-		BidirectionalIterator __partition(BidirectionalIterator first, BidirectionalIterator last,
-				UnaryPredicate pred,
-				std::bidirectional_iterator_tag)
+		BidirectionalIterator
+		__partition(BidirectionalIterator first, BidirectionalIterator last,
+					UnaryPredicate pred, std::bidirectional_iterator_tag)
 		{
 			while (true) {
 				while (true) {
@@ -357,9 +639,11 @@ namespace kerbal
 			return kerbal::algorithm::__partition(first, last, pred, kerbal::iterator::iterator_category(first));
 		}
 
+
+
 		template <typename BidirectionalIterator>
 		KERBAL_CONSTEXPR14
-		void reverse(BidirectionalIterator first, BidirectionalIterator last)
+		void __reverse(BidirectionalIterator first, BidirectionalIterator last, std::bidirectional_iterator_tag)
 		{
 			while (first != last) {
 				--last;
@@ -371,6 +655,112 @@ namespace kerbal
 				}
 			}
 		}
+
+		template <typename RandomAccessIterator>
+		KERBAL_CONSTEXPR14
+		void __reverse(RandomAccessIterator first, RandomAccessIterator last, std::random_access_iterator_tag)
+		{
+			typedef RandomAccessIterator iterator;
+			typedef typename kerbal::iterator::iterator_traits<RandomAccessIterator>::difference_type difference_type;
+
+#	define EACH() do {\
+				--last;\
+				kerbal::algorithm::iter_swap(first, last);\
+				++first;\
+			} while (false)
+
+			for (difference_type trip_count(kerbal::iterator::distance(first, last) >> 3); trip_count > 0; --trip_count) {
+				EACH();
+				EACH();
+				EACH();
+				EACH();
+			}
+
+			difference_type remain(kerbal::iterator::distance(first, last));
+			if (remain >= 6) {
+				EACH();
+			}
+			if (remain >= 4) {
+				EACH();
+			}
+			if (remain >= 2) {
+				EACH();
+			}
+
+#	undef EACH
+
+		}
+
+		template <typename BidirectionalIterator>
+		KERBAL_CONSTEXPR14
+		void reverse(BidirectionalIterator first, BidirectionalIterator last)
+		{
+			kerbal::algorithm::__reverse(first, last, kerbal::iterator::iterator_category(first));
+		}
+
+
+
+		template <typename BidirectionalIterator, typename OutputIterator>
+		KERBAL_CONSTEXPR14
+		OutputIterator
+		__reverse_copy(BidirectionalIterator first, BidirectionalIterator last, OutputIterator to,
+						std::bidirectional_iterator_tag)
+		{
+			while (first != last) {
+				--last;
+				*to = *last;
+				++to;
+			}
+			return to;
+		}
+
+		template <typename RandomAccessIterator, typename OutputIterator>
+		KERBAL_CONSTEXPR14
+		OutputIterator
+		__reverse_copy(RandomAccessIterator first, RandomAccessIterator last, OutputIterator to,
+						std::random_access_iterator_tag)
+		{
+			typedef RandomAccessIterator iterator;
+			typedef typename kerbal::iterator::iterator_traits<RandomAccessIterator>::difference_type difference_type;
+
+#	define EACH() do {\
+				--last;\
+				*to = *last;\
+				++to;\
+			} while (false)
+
+			for (difference_type trip_count(kerbal::iterator::distance(first, last) >> 2); trip_count > 0; --trip_count) {
+				EACH();
+				EACH();
+				EACH();
+				EACH();
+			}
+
+			difference_type remain(kerbal::iterator::distance(first, last));
+			if (remain == 3) {
+				EACH();
+			}
+			if (remain >= 2) {
+				EACH();
+			}
+			if (remain >= 1) {
+				EACH();
+			}
+
+#	undef EACH
+
+			return to;
+		}
+
+		template <typename BidirectionalIterator, typename OutputIterator>
+		KERBAL_CONSTEXPR14
+		OutputIterator
+		reverse_copy(BidirectionalIterator first, BidirectionalIterator last, OutputIterator to)
+		{
+			return kerbal::algorithm::__reverse_copy(first, last, to, kerbal::iterator::iterator_category(first));
+		}
+
+
 
 		template <typename ForwardIterator>
 		KERBAL_CONSTEXPR14
@@ -413,80 +803,52 @@ namespace kerbal
 			return __send_adv_iterator_to_last(first, new_first, last);
 		}
 
+		template <typename ForwardIterator, typename OutputIterator>
+		KERBAL_CONSTEXPR14
+		ForwardIterator rotate_copy(ForwardIterator first, ForwardIterator mid, ForwardIterator last, OutputIterator to)
+		{
+			to = kerbal::algorithm::copy(mid, last, to);
+			return kerbal::algorithm::copy(first, mid, to);
+		}
+
+
+
 		template <typename ForwardIterator, typename UnaryPredicate, typename Tp>
 		KERBAL_CONSTEXPR14
-		void replace_if(ForwardIterator first, ForwardIterator last, UnaryPredicate pred, const Tp & new_val)
+		void __replace_if(ForwardIterator first, ForwardIterator last, UnaryPredicate pred,
+							const Tp & new_val, std::forward_iterator_tag)
 		{
-			typedef ForwardIterator iterator;
-			typedef typename kerbal::iterator::iterator_traits<iterator>::reference reference;
-
-			struct each
-			{
-				UnaryPredicate pred;
-				const Tp & new_val;
-
-				KERBAL_CONSTEXPR
-				each(UnaryPredicate pred, const Tp & new_val) :
-						pred(pred), new_val(new_val)
-				{
+			while (first != last) {
+				if (pred(*first)) {
+					*first = new_val;
 				}
-
-				KERBAL_CONSTEXPR14
-				void operator()(reference old) const
-				{
-					if (this->pred(old)) {
-						old = this->new_val;
-					}
-				}
-			};
-			kerbal::algorithm::for_each(first, last, each(pred, new_val));
-		}
-
-		template <typename ForwardIterator, typename Tp>
-		KERBAL_CONSTEXPR14
-		void replace(ForwardIterator first, ForwardIterator last, const Tp & old_val, const Tp & new_val)
-		{
-			kerbal::algorithm::replace_if(first, last,
-					kerbal::algorithm::__right_bind_euqal_to_val<Tp, Tp>(old_val), new_val);
-		}
-
-		template <typename ForwardIterator1, typename ForwardIterator2>
-		KERBAL_CONSTEXPR14
-		ForwardIterator2
-		__range_swap(ForwardIterator1 a_first, ForwardIterator1 a_last, ForwardIterator2 b_first,
-						std::forward_iterator_tag)
-		{
-			while (a_first != a_last) {
-				kerbal::algorithm::iter_swap(a_first, b_first);
-				++a_first;
-				++b_first;
+				++first;
 			}
-			return b_first;
 		}
 
-		template <typename RandomAccessIterator1, typename ForwardIterator2>
+		template <typename RandomAccessIterator, typename UnaryPredicate, typename Tp>
 		KERBAL_CONSTEXPR14
-		ForwardIterator2
-		__range_swap(RandomAccessIterator1 a_first, RandomAccessIterator1 a_last, ForwardIterator2 b_first,
-						std::random_access_iterator_tag)
+		void __replace_if(RandomAccessIterator first, RandomAccessIterator last, UnaryPredicate pred,
+							const Tp & new_val, std::random_access_iterator_tag)
 		{
-			typedef RandomAccessIterator1 iterator;
+			typedef RandomAccessIterator iterator;
 			typedef typename kerbal::iterator::iterator_traits<iterator>::difference_type difference_type;
 
-#		define EACH()\
-		do {\
-			kerbal::algorithm::iter_swap(a_first, b_first);\
-			++a_first;\
-			++b_first;\
-		} while (false)
+#	define EACH() do {\
+				if (pred(*first)) {\
+					*first = new_val;\
+				}\
+				++first;\
+			} while(false)
 
-			for (difference_type trip_count(kerbal::iterator::distance(a_first, a_last) >> 2); trip_count > 0; --trip_count) {
+			for (difference_type trip_count(kerbal::iterator::distance(first, last) >> 2); trip_count > 0; --trip_count) {
 				EACH();
 				EACH();
 				EACH();
 				EACH();
 			}
-			difference_type remain(kerbal::iterator::distance(a_first, a_last));
+
+			difference_type remain(kerbal::iterator::distance(first, last));
 			if (remain == 3) {
 				EACH();
 			}
@@ -497,74 +859,141 @@ namespace kerbal
 				EACH();
 			}
 
-#		undef EACH
+#	undef EACH
 
-			return b_first;
 		}
 
-		template <typename ForwardIterator1, typename ForwardIterator2>
+		template <typename ForwardIterator, typename UnaryPredicate, typename Tp>
 		KERBAL_CONSTEXPR14
-		ForwardIterator2
-		range_swap(ForwardIterator1 a_first, ForwardIterator1 a_last, ForwardIterator2 b_first)
+		void replace_if(ForwardIterator first, ForwardIterator last, UnaryPredicate pred, const Tp & new_val)
 		{
-			return kerbal::algorithm::__range_swap(a_first, a_last, b_first,
-									kerbal::iterator::iterator_category(a_first));
+			kerbal::algorithm::__replace_if(first, last, pred, new_val, kerbal::iterator::iterator_category(first));
+		}
+
+
+
+		template <typename ForwardIterator, typename Tp>
+		KERBAL_CONSTEXPR14
+		void replace(ForwardIterator first, ForwardIterator last, const Tp & old_val, const Tp & new_val)
+		{
+			kerbal::algorithm::replace_if(first, last,
+					kerbal::algorithm::__right_bind_euqal_to_val<Tp, Tp>(old_val), new_val);
+		}
+
+
+
+		template <typename ForwardIterator, typename Tp>
+		KERBAL_CONSTEXPR14
+		void __fill(ForwardIterator first, ForwardIterator last, const Tp & val, std::forward_iterator_tag)
+		{
+			while (first != last) {
+				*first = val;
+				++first;
+			}
+		}
+
+		template <typename RandomAccessIterator, typename Tp>
+		KERBAL_CONSTEXPR14
+		void __fill(RandomAccessIterator first, RandomAccessIterator last, const Tp & val, std::random_access_iterator_tag)
+		{
+			typedef RandomAccessIterator iterator;
+			typedef typename kerbal::iterator::iterator_traits<iterator>::difference_type difference_type;
+
+#	define EACH() do {\
+				*first = val;\
+				++first;\
+			} while (false)
+
+			for (difference_type trip_count(kerbal::iterator::distance(first, last) >> 2); trip_count > 0; --trip_count) {
+				EACH();
+				EACH();
+				EACH();
+				EACH();
+			}
+
+			difference_type remain(kerbal::iterator::distance(first, last));
+			if (remain == 3) {
+				EACH();
+			}
+			if (remain >= 2) {
+				EACH();
+			}
+			if (remain >= 1) {
+				EACH();
+			}
+
+#	undef EACH
+
 		}
 
 		template <typename ForwardIterator, typename Tp>
 		KERBAL_CONSTEXPR14
 		void fill(ForwardIterator first, ForwardIterator last, const Tp & val)
 		{
-			typedef ForwardIterator iterator;
-			typedef typename kerbal::iterator::iterator_traits<iterator>::reference reference;
-
-			struct each
-			{
-					const Tp & val;
-
-					KERBAL_CONSTEXPR
-					each(const Tp & val) KERBAL_NOEXCEPT :
-							val(val)
-					{
-					}
-
-					KERBAL_CONSTEXPR14
-					void operator()(reference old_val) const
-					{
-						old_val = this->val;
-					}
-			};
-			kerbal::algorithm::for_each(first, last, each(val));
+			kerbal::algorithm::__fill(first, last, val, kerbal::iterator::iterator_category(first));
 		}
 
-		template <typename ForwardIterator, typename OutputIterator, typename UnaryOperation>
+
+
+		template <typename InputIterator, typename OutputIterator, typename UnaryOperation>
 		KERBAL_CONSTEXPR14
 		OutputIterator
-		transform(ForwardIterator first, ForwardIterator last, OutputIterator out, UnaryOperation unary_op)
+		__transform(InputIterator first, InputIterator last, OutputIterator out,
+					UnaryOperation unary_op, std::input_iterator_tag)
 		{
-			typedef ForwardIterator iterator;
-			typedef typename kerbal::iterator::iterator_traits<iterator>::reference reference;
-
-			struct each
-			{
-					OutputIterator & out;
-					UnaryOperation unary_op;
-
-					KERBAL_CONSTEXPR
-					each(OutputIterator & out, UnaryOperation unary_op) KERBAL_NOEXCEPT :
-							out(out), unary_op(unary_op)
-					{
-					}
-
-					KERBAL_CONSTEXPR14
-					void operator()(const reference val)
-					{
-						*this->out = this->unary_op(val);
-						++this->out;
-					}
-			};
-			kerbal::algorithm::for_each(first, last, each(out, unary_op));
+			while (first != last) {
+				*out = unary_op(*first);
+				++out;
+				++first;
+			}
 			return out;
+		}
+
+		template <typename RandomAccessIterator, typename OutputIterator, typename UnaryOperation>
+		KERBAL_CONSTEXPR14
+		OutputIterator
+		__transform(RandomAccessIterator first, RandomAccessIterator last, OutputIterator out,
+					UnaryOperation unary_op, std::random_access_iterator_tag)
+		{
+			typedef RandomAccessIterator iterator;
+			typedef typename kerbal::iterator::iterator_traits<iterator>::difference_type difference_type;
+
+#	define EACH() do {\
+				*out = unary_op(*first);\
+				++out;\
+				++first;\
+			} while (false)
+
+			for (difference_type trip_count(kerbal::iterator::distance(first, last) >> 2); trip_count > 0; --trip_count) {
+				EACH();
+				EACH();
+				EACH();
+				EACH();
+			}
+
+			difference_type remain(kerbal::iterator::distance(first, last));
+			if (remain == 3) {
+				EACH();
+			}
+			if (remain >= 2) {
+				EACH();
+			}
+			if (remain >= 1) {
+				EACH();
+			}
+
+
+#	undef EACH
+
+			return out;
+		}
+
+		template <typename InputIterator, typename OutputIterator, typename UnaryOperation>
+		KERBAL_CONSTEXPR14
+		OutputIterator
+		transform(InputIterator first, InputIterator last, OutputIterator out, UnaryOperation unary_op)
+		{
+			return kerbal::algorithm::__transform(first, last, out, unary_op, kerbal::iterator::iterator_category(first));
 		}
 
 	} /* namespace algorithm */
