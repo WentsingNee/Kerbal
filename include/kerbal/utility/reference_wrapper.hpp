@@ -2,9 +2,9 @@
  * @file       reference_wrapper.hpp
  * @brief      
  * @date       2019-7-26
- * @author     peter
+ * @author     Peter
  * @copyright
- *      peter of [ThinkSpirit Laboratory](http://thinkspirit.org/)
+ *      Peter of [ThinkSpirit Laboratory](http://thinkspirit.org/)
  *   of [Nanjing University of Information Science & Technology](http://www.nuist.edu.cn/)
  *   all rights reserved
  */
@@ -14,7 +14,6 @@
 
 #include <kerbal/compatibility/constexpr.hpp>
 #include <kerbal/compatibility/noexcept.hpp>
-#include <kerbal/utility/addressof.hpp>
 
 namespace kerbal
 {
@@ -27,28 +26,25 @@ namespace kerbal
 				typedef Tp type;
 
 			private:
-				Tp * ptr;
+				Tp & val;
 
 			public:
-				KERBAL_CONSTEXPR reference_wrapper(Tp & val) KERBAL_NOEXCEPT :
-						ptr(kerbal::utility::addressof(val))
+				KERBAL_CONSTEXPR
+				reference_wrapper(Tp & val) KERBAL_NOEXCEPT :
+									val(val)
 				{
 				}
 
-			# if __cplusplus >= 201103L
-			
-				constexpr reference_wrapper& operator=(const reference_wrapper&) noexcept = default;
-
-			# endif
-
-				KERBAL_CONSTEXPR operator Tp& () const KERBAL_NOEXCEPT
+				KERBAL_CONSTEXPR
+				operator Tp&() const KERBAL_NOEXCEPT
 				{
-					return *ptr;
+					return this->val;
 				}
-				
-				KERBAL_CONSTEXPR Tp& get() const KERBAL_NOEXCEPT
+
+				KERBAL_CONSTEXPR
+				Tp& get() const KERBAL_NOEXCEPT
 				{
-					return *ptr;
+					return this->val;
 				}
 		};
 		

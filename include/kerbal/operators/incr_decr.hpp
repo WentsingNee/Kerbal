@@ -2,9 +2,9 @@
  * @file       incr_decr.hpp
  * @brief      
  * @date       2019-7-14
- * @author     peter
+ * @author     Peter
  * @copyright
- *      peter of [ThinkSpirit Laboratory](http://thinkspirit.org/)
+ *      Peter of [ThinkSpirit Laboratory](http://thinkspirit.org/)
  *   of [Nanjing University of Information Science & Technology](http://www.nuist.edu.cn/)
  *   all rights reserved
  */
@@ -26,7 +26,8 @@ namespace kerbal
 		template <typename Tp>
 		struct incrementable
 		{
-				friend KERBAL_CONSTEXPR14 Tp operator++(Tp& x, int)
+				friend KERBAL_CONSTEXPR14
+				Tp operator++(Tp& x, int)
 						KERBAL_CONDITIONAL_NOEXCEPT(
 								std::is_nothrow_copy_constructible<Tp>::value &&
 								noexcept(++x)
@@ -41,7 +42,8 @@ namespace kerbal
 		template <class Tp>
 		struct decrementable
 		{
-				friend KERBAL_CONSTEXPR14 Tp operator--(Tp& x, int)
+				friend KERBAL_CONSTEXPR14
+				Tp operator--(Tp& x, int)
 						KERBAL_CONDITIONAL_NOEXCEPT(
 								std::is_nothrow_copy_constructible<Tp>::value &&
 								noexcept(--x)

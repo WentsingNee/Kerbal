@@ -14,6 +14,7 @@
 
 #include <kerbal/iterator/iterator.hpp>
 #include <kerbal/iterator/iterator_traits.hpp>
+#include <kerbal/iterator/general_back_inserter.hpp>
 #include <kerbal/type_traits/type_traits_details/cv_deduction.hpp>
 #include <kerbal/type_traits/type_traits_details/enable_if.hpp>
 #include <kerbal/type_traits/type_traits_details/is_same.hpp>
@@ -23,13 +24,25 @@
 
 namespace kerbal
 {
+
 	namespace algorithm
 	{
 
+		/**
+		 * @brief Generate the next array.
+		 *
+		 * @param pattern_first    Begin iterator direct to pattern string.
+		 * @param pattern_last     End iterator direct to pattern string.
+		 * @param next_container   Array, vector, etc. stored the result.
+		 * @param pattern_first    General back inserter of next_container
+		 *                         (std::back_inserter(container) for STL compatible container,
+		 *                          pointer direct to first element for C-array).
+		 *
+		 */
 		template <typename ForwardIterator, typename NextContainer, typename EqualPredict, typename BackInsertIterator>
 		KERBAL_CONSTEXPR14
 		ForwardIterator
-		longest_matched_suffix_prefix(ForwardIterator pattern_first, ForwardIterator pattern_last,
+		__longest_matched_suffix_prefix(ForwardIterator pattern_first, ForwardIterator pattern_last,
 				const NextContainer & next_container, EqualPredict equal_predict, BackInsertIterator back_inserter)
 		{
 			typedef ForwardIterator pattern_iterator;
@@ -66,18 +79,8 @@ namespace kerbal
 		longest_matched_suffix_prefix(ForwardIterator pattern_first, ForwardIterator pattern_last,
 				NextContainer & next_container, EqualPredict equal_predict)
 		{
-			return kerbal::algorithm::longest_matched_suffix_prefix
-					(pattern_first, pattern_last, next_container, equal_predict, std::back_inserter(next_container));
-		}
-
-		template <typename ForwardIterator, typename NextContainerValueType, typename EqualPredict>
-		KERBAL_CONSTEXPR14
-		ForwardIterator
-		longest_matched_suffix_prefix(ForwardIterator pattern_first, ForwardIterator pattern_last,
-				NextContainerValueType next_container[], EqualPredict equal_predict)
-		{
-			return kerbal::algorithm::longest_matched_suffix_prefix
-					(pattern_first, pattern_last, next_container, equal_predict, next_container);
+			return kerbal::algorithm::__longest_matched_suffix_prefix
+					(pattern_first, pattern_last, next_container, equal_predict, kerbal::iterator::general_inserter(next_container));
 		}
 
 		template <typename ForwardIterator, typename NextContainer>
@@ -152,19 +155,8 @@ namespace kerbal
 			ForwardPatternIterator pattern_first, ForwardPatternIterator pattern_last, EqualPredict equal_predict,
 			std::forward_iterator_tag /*pattern_iterator_type*/)
 		{
-			std::vector<size_t> lsp;
-			lsp.reserve(32);
-			kerbal::algorithm::longest_matched_suffix_prefix(pattern_first, pattern_last, lsp, equal_predict);
-			return kerbal::algorithm::kmp(host_first, host_last, pattern_first, pattern_last, equal_predict, lsp);
-		}
-
-		template <typename BidirectionalHostIterator, typename RandomAccessPatternIterator, typename EqualPredict>
-		BidirectionalHostIterator
-		__kmp_lsp_buffer_agent(BidirectionalHostIterator host_first, BidirectionalHostIterator host_last,
-			RandomAccessPatternIterator pattern_first, RandomAccessPatternIterator pattern_last, EqualPredict equal_predict,
-			std::random_access_iterator_tag /*pattern_iterator_type*/)
-		{
-			typedef typename kerbal::iterator::iterator_traits<RandomAccessPatternIterator>::difference_type pattern_difference_type;
+			typedef ForwardPatternIterator pattern_iterator;
+			typedef typename kerbal::iterator::iterator_traits<pattern_iterator>::difference_type pattern_difference_type;
 			pattern_difference_type pattern_length(kerbal::iterator::distance(pattern_first, pattern_last));
 			if (pattern_length < 32) {
 				size_t lsp[32];
