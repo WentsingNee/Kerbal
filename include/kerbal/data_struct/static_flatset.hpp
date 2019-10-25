@@ -10,6 +10,10 @@
 
 #include <kerbal/data_struct/static_vector.hpp>
 #include <kerbal/algorithm/search.hpp>
+#include <kerbal/iterator/iterator.hpp>
+#include <kerbal/iterator/iterator_traits.hpp>
+#include <kerbal/utility/compressed_pair.hpp>
+
 #include <algorithm>
 
 namespace kerbal
@@ -21,49 +25,48 @@ namespace kerbal
 		class static_flatset
 		{
 			public:
-				typedef Tp value_type;
-				typedef const Tp const_type;
-				typedef Tp& reference;
-				typedef const Tp& const_reference;
-				typedef Sequence container_type;
+				typedef Tp						value_type;
+				typedef const Tp				const_type;
+				typedef Tp&					reference;
+				typedef const Tp&				const_reference;
+				typedef Sequence				container_type;
 
 #		if __cplusplus >= 201103L
-				typedef value_type&& rvalue_reference;
-				typedef const value_type&& const_rvalue_reference;
+				typedef value_type&&			rvalue_reference;
+				typedef const value_type&&		const_rvalue_reference;
 #		endif
 
-				typedef typename Sequence::size_type size_type;
+				typedef typename Sequence::size_type					size_type;
 
-				typedef typename Sequence::const_iterator const_iterator;
-				typedef typename Sequence::const_reverse_iterator const_reverse_iterator;
+				typedef typename Sequence::const_iterator				const_iterator;
+				typedef typename Sequence::const_reverse_iterator		const_reverse_iterator;
 
-				typedef KeyCompare key_compare;
+				typedef KeyCompare				key_compare;
 
 			private:
-				Sequence c;
-				key_compare kc;
+				kerbal::utility::compressed_pair<Sequence, key_compare> __data;
 
 				/**
 				 * @brief Returns the comparison object with which the %set was constructed.
 				 */
 				Sequence & __sequence()
 				{
-					return this->c;
+					return this->__data.first();
 				}
 
 				const Sequence & __sequence() const
 				{
-					return this->c;
+					return this->__data.first();
 				}
 
 				key_compare & __key_comp()
 				{
-					return this->kc;
+					return this->__data.second();
 				}
 
 				const key_compare & __key_comp() const
 				{
-					return this->kc;
+					return this->__data.second();
 				}
 
 			public:
@@ -72,39 +75,51 @@ namespace kerbal
 				 */
 				const key_compare & key_comp() const
 				{
-					return this->kc;
+					return this->__data.second();
 				}
 
 				static_flatset() :
-						c(), kc()
+						__data()
 				{
 				}
 
 				explicit static_flatset(key_compare kc) :
-						c(), kc(kc)
+						__data(kerbal::utility::compressed_pair_default_construct_tag(), kc)
 				{
 				}
 
-				template <typename InputCompatibleIterator, typename =
+				template <typename InputIterator, typename =
 						typename kerbal::type_traits::enable_if<
-								kerbal::type_traits::is_input_compatible_iterator<InputCompatibleIterator>::value
+								kerbal::iterator::is_input_compatible_iterator<InputIterator>::value
 						>::type
 				>
-				static_flatset(InputCompatibleIterator begin, InputCompatibleIterator end) :
-						c(), kc()
+				static_flatset(InputIterator first, InputIterator last) :
+						__data()
 				{
-					this->insert(begin, end);
+					try {
+						this->__sequence().assign(first, last);
+						std::sort(this->__sequence().begin(), this->__sequence().end());
+					} catch (...) {
+						this->clear();
+						throw;
+					}
 				}
 
-				template <typename InputCompatibleIterator, typename =
+				template <typename InputIterator, typename =
 						typename kerbal::type_traits::enable_if<
-								kerbal::type_traits::is_input_compatible_iterator<InputCompatibleIterator>::value
+								kerbal::iterator::is_input_compatible_iterator<InputIterator>::value
 						>::type
 				>
-				static_flatset(InputCompatibleIterator begin, InputCompatibleIterator end, key_compare kc) :
-						c(), kc(kc)
+				static_flatset(InputIterator first, InputIterator last, key_compare kc) :
+						__data(kerbal::utility::compressed_pair_default_construct_tag(), kc)
 				{
-					this->insert(begin, end);
+					try {
+						this->__sequence().assign(first, last);
+						std::sort(this->__sequence().begin(), this->__sequence().end());
+					} catch (...) {
+						this->clear();
+						throw;
+					}
 				}
 
 #if __cplusplus >= 201103L
@@ -119,25 +134,25 @@ namespace kerbal
 				}
 #endif
 
-				template <typename InputCompatibleIterator>
+				template <typename InputIterator>
 				typename kerbal::type_traits::enable_if<
-						kerbal::type_traits::is_input_compatible_iterator<InputCompatibleIterator>::value
+						kerbal::iterator::is_input_compatible_iterator<InputIterator>::value
 				>::type
-				assign(InputCompatibleIterator begin, InputCompatibleIterator end)
+				assign(InputIterator first, InputIterator last)
 				{
 					this->clear();
-					this->insert(begin, end);
+					this->insert(first, last);
 				}
 
-				template <typename InputCompatibleIterator>
+				template <typename InputIterator>
 				typename kerbal::type_traits::enable_if<
-						kerbal::type_traits::is_input_compatible_iterator<InputCompatibleIterator>::value
+						kerbal::iterator::is_input_compatible_iterator<InputIterator>::value
 				>::type
-				assign(InputCompatibleIterator begin, InputCompatibleIterator end, key_compare kc)
+				assign(InputIterator first, InputIterator last, key_compare kc)
 				{
 					this->clear();
 					this->__key_comp() = kc;
-					this->insert(begin, end);
+					this->insert(first, last);
 				}
 
 				void assign(const static_flatset & src)

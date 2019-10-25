@@ -45,14 +45,14 @@ namespace kerbal
 		struct __stavec_iterbase_traits
 		{
 			private:
-				typedef kerbal::iterator::iterator_traits<Pointer>		__traits_type;
+				typedef kerbal::iterator::iterator_traits<Pointer>		iterator_traits;
 
 			public:
-				typedef typename __traits_type::iterator_category		iterator_category;
-				typedef typename __traits_type::value_type				value_type;
-				typedef typename __traits_type::difference_type			difference_type;
-				typedef typename __traits_type::pointer					pointer;
-				typedef typename __traits_type::reference				reference;
+				typedef typename iterator_traits::iterator_category	iterator_category;
+				typedef typename iterator_traits::value_type			value_type;
+				typedef typename iterator_traits::difference_type		difference_type;
+				typedef typename iterator_traits::pointer				pointer;
+				typedef typename iterator_traits::reference			reference;
 
 				typedef std::iterator<
 						std::random_access_iterator_tag,
@@ -113,10 +113,13 @@ namespace kerbal
 		template <typename ValueType>
 		class __stavec_kiter;
 
-		/// @brief Iterator to static_vector.
+		// Iterator to static_vector.
 		template <typename ValueType>
-		class __stavec_iter: public __stavec_iterbase<__stavec_iter<ValueType>, ValueType*,
-									kerbal::data_struct::raw_storage<ValueType> >
+		class __stavec_iter: public __stavec_iterbase<
+												__stavec_iter<ValueType>,
+												ValueType*,
+												kerbal::data_struct::raw_storage<ValueType>
+										>
 		{
 			private:
 				template <typename Tp, size_t N>
@@ -134,10 +137,13 @@ namespace kerbal
 				}
 		};
 
-		/// @brief Iterator to static_vector.
+		// Constant iterator to static_vector.
 		template <typename ValueType>
-		class __stavec_kiter: public __stavec_iterbase<__stavec_kiter<ValueType>, const ValueType*,
-									const kerbal::data_struct::raw_storage<ValueType> >
+		class __stavec_kiter: public __stavec_iterbase<
+												__stavec_kiter<ValueType>,
+												const ValueType*,
+												const kerbal::data_struct::raw_storage<ValueType>
+										>
 		{
 			private:
 				template <typename Tp, size_t N>
@@ -177,18 +183,6 @@ namespace kerbal
 		template <typename Tp, size_t N>
 		class static_vector
 		{
-			private:
-				struct self_helper
-				{
-					static_vector & self;
-
-					KERBAL_CONSTEXPR
-					self_helper(static_vector & self) KERBAL_NOEXCEPT :
-								self(self)
-					{
-					}
-				};
-
 			public:
 
 				/// @brief Type of the elements.
@@ -252,7 +246,7 @@ namespace kerbal
 
 			private:
 				void __copy_constructor(const static_vector & src, kerbal::type_traits::false_type);
-				void __copy_constructor(const static_vector & src, kerbal::type_traits::true_type);
+				void __copy_constructor(const static_vector & src, kerbal::type_traits::true_type) KERBAL_NOEXCEPT;
 
 			public:
 				/**
@@ -273,7 +267,7 @@ namespace kerbal
 
 			private:
 				void __move_constructor(static_vector && src, kerbal::type_traits::false_type);
-				void __move_constructor(static_vector && src, kerbal::type_traits::true_type);
+				void __move_constructor(static_vector && src, kerbal::type_traits::true_type) noexcept;
 
 			public:
 				static_vector(static_vector && src);
@@ -287,13 +281,16 @@ namespace kerbal
 			private:
 
 				template <typename InputIterator>
-				void __range_copy_constructor(InputIterator first, InputIterator last, kerbal::type_traits::false_type);
+				void __range_copy_constructor(InputIterator first, InputIterator last, std::input_iterator_tag, kerbal::type_traits::false_type);
 
 				template <typename InputIterator>
-				void __range_copy_constructor(InputIterator first, InputIterator last, kerbal::type_traits::true_type);
+				void __range_copy_constructor(InputIterator first, InputIterator last, std::input_iterator_tag, kerbal::type_traits::true_type) KERBAL_NOEXCEPT;
 
-				void __range_copy_constructor(const_pointer first, const_pointer last, kerbal::type_traits::true_type);
+				template <typename RandomAccessIterator>
+				void __range_copy_constructor(RandomAccessIterator first, RandomAccessIterator last, std::random_access_iterator_tag, kerbal::type_traits::false_type);
 
+				template <typename RandomAccessIterator>
+				void __range_copy_constructor(RandomAccessIterator first, RandomAccessIterator last, std::random_access_iterator_tag, kerbal::type_traits::true_type) KERBAL_NOEXCEPT;
 
 			public:
 
@@ -350,11 +347,11 @@ namespace kerbal
 				 * @tparam InputIterator An input iterator type that points to elements of a type
 				 * @warning 若区间长度超出 static_vector 所能存放的最大元素数目, 超过部分将自动截断
 				 */
-				template <typename InputCompatibleIterator>
+				template <typename InputIterator>
 				typename kerbal::type_traits::enable_if<
-						kerbal::iterator::is_input_compatible_iterator<InputCompatibleIterator>::value
+						kerbal::iterator::is_input_compatible_iterator<InputIterator>::value
 				>::type
-				assign(InputCompatibleIterator begin, InputCompatibleIterator end);
+				assign(InputIterator begin, InputIterator end);
 
 #if __cplusplus >= 201103L
 				/**
@@ -503,8 +500,27 @@ namespace kerbal
 				 */
 				void push_back(rvalue_reference src);
 
+#			endif
+
+#			if __cplusplus >= 201103L
+
 				template <typename ... Args>
 				reference emplace_back(Args&& ...args);
+
+#			else
+
+				template <typename >
+				reference emplace_back();
+
+				template <typename Arg0>
+				reference emplace_back(const Arg0& arg0);
+
+				template <typename Arg0, typename Arg1>
+				reference emplace_back(const Arg0& arg0, const Arg1& arg1);
+
+				template <typename Arg0, typename Arg1, typename Arg2>
+				reference emplace_back(const Arg0& arg0, const Arg1& arg1, const Arg2& arg2);
+
 #			endif
 
 				/**
@@ -535,35 +551,17 @@ namespace kerbal
 				 */
 				void pop_front();
 
-			private:
-				iterator __insert(const_iterator pos, const_reference val, kerbal::type_traits::false_type);
-				iterator __insert(const_iterator pos, const_reference val, kerbal::type_traits::true_type);
-
-			public:
 				iterator insert(const_iterator pos, const_reference val);
 
 #			if __cplusplus >= 201103L
 
 				iterator insert(const_iterator pos, rvalue_reference val);
 
-			private:
-				template <typename ... Args>
-				iterator __emplace(const_iterator pos, kerbal::type_traits::false_type, Args&& ...args);
-
-				template <typename ... Args>
-				iterator __emplace(const_iterator pos, kerbal::type_traits::true_type, Args&& ...args);
-
-			public:
 				template <typename ... Args>
 				iterator emplace(const_iterator pos, Args&& ...args);
 
 #			endif
 
-			private:
-				iterator __erase(const_iterator pos, kerbal::type_traits::false_type);
-				iterator __erase(const_iterator pos, kerbal::type_traits::true_type);
-
-			public:
 				iterator erase(const_iterator pos);
 
 				iterator erase(const_iterator begin, const_iterator end);
@@ -576,7 +574,7 @@ namespace kerbal
 
 			private:
 				void __clear(kerbal::type_traits::false_type);
-				void __clear(kerbal::type_traits::true_type);
+				void __clear(kerbal::type_traits::true_type) KERBAL_NOEXCEPT;
 
 			public:
 				/**

@@ -74,7 +74,7 @@ namespace kerbal
 		__stavec_iterbase<DerivedIterator, Pointer, StorageType>::operator+=(const typename __stavec_iterbase::difference_type & delta) KERBAL_NOEXCEPT
 		{
 			this->current += delta;
-			return *this;
+			return static_cast<DerivedIterator&>(*this);
 		}
 
 		template <typename DerivedIterator, typename Pointer, typename StorageType>
@@ -82,7 +82,7 @@ namespace kerbal
 		__stavec_iterbase<DerivedIterator, Pointer, StorageType>::operator-=(const typename __stavec_iterbase::difference_type & delta) KERBAL_NOEXCEPT
 		{
 			this->current -= delta;
-			return *this;
+			return static_cast<DerivedIterator&>(*this);
 		}
 
 	}

@@ -62,24 +62,12 @@ namespace kerbal
 		class __rawst_base<ValueType, true>
 						: kerbal::utility::noncopyable
 		{
-			public:
-
-				/// @brief Type of the elements.
+			protected:
 				typedef ValueType value_type;
-
-				/// @brief Constant type of the elements.
 				typedef const value_type const_type;
-
-				/// @brief Reference of the elements.
 				typedef value_type& reference;
-
-				/// @brief Constant reference of the elements.
 				typedef const value_type& const_reference;
-
-				/// @brief Pointer type to the elements.
 				typedef value_type* pointer;
-
-				/// @brief Constant pointer type to the elements.
 				typedef const value_type* const_pointer;
 
 #		if __cplusplus >= 201103L
@@ -87,17 +75,19 @@ namespace kerbal
 				typedef const value_type&& const_rvalue_reference;
 #		endif
 
-			protected:
-
 				typedef ValueType storage_type;
 
 				storage_type storage;
 
-			public:
-
 #		if __cplusplus >= 201103L
 				constexpr __rawst_base() noexcept = default;
+#		else
+				__rawst_base() KERBAL_NOEXCEPT
+				{
+				}
 #		endif
+
+			public:
 
 				KERBAL_CONSTEXPR14 // note: mustn't be constexpr11 otherwise the compile can't distinguish this method with the const version
 				reference raw_value() KERBAL_REFERENCE_OVERLOAD_TAG KERBAL_NOEXCEPT
@@ -145,24 +135,12 @@ namespace kerbal
 		class __rawst_base<ValueType, false>
 						: kerbal::utility::noncopyable
 		{
-			public:
-
-				/// @brief Type of the elements.
+			protected:
 				typedef ValueType value_type;
-
-				/// @brief Constant type of the elements.
 				typedef const value_type const_type;
-
-				/// @brief Reference of the elements.
 				typedef value_type& reference;
-
-				/// @brief Constant reference of the elements.
 				typedef const value_type& const_reference;
-
-				/// @brief Pointer type to the elements.
 				typedef value_type* pointer;
-
-				/// @brief Constant pointer type to the elements.
 				typedef const value_type* const_pointer;
 
 #		if __cplusplus >= 201103L
@@ -170,19 +148,21 @@ namespace kerbal
 				typedef const value_type&& const_rvalue_reference;
 #		endif
 
-			protected:
-
 				typedef
 					typename kerbal::type_traits::aligned_storage<sizeof(ValueType), KERBAL_ALIGNOF(ValueType)>::type
 				storage_type;
 
 				storage_type storage;
 
-			public:
-
 #		if __cplusplus >= 201103L
 				constexpr __rawst_base() noexcept = default;
+#		else
+				__rawst_base() KERBAL_NOEXCEPT
+				{
+				}
 #		endif
+
+			public:
 
 				reference raw_value() KERBAL_REFERENCE_OVERLOAD_TAG KERBAL_NOEXCEPT
 				{
@@ -227,37 +207,20 @@ namespace kerbal
 		template <typename Type>
 		class __rawst_agent<Type, true>: public kerbal::data_struct::__rawst_base<Type>
 		{
-			public:
-
-				/// @brief Type of the elements.
+			protected:
 				typedef Type value_type;
-
-				/// @brief Constant type of the elements.
-				typedef const value_type const_type;
-
-				/// @brief Reference of the elements.
 				typedef value_type& reference;
 
-				/// @brief Constant reference of the elements.
-				typedef const value_type& const_reference;
-
-				/// @brief Pointer type to the elements.
-				typedef value_type* pointer;
-
-				/// @brief Constant pointer type to the elements.
-				typedef const value_type* const_pointer;
-
-#		if __cplusplus >= 201103L
-				typedef value_type&& rvalue_reference;
-				typedef const value_type&& const_rvalue_reference;
-#		endif
-
-			public:
 
 #		if __cplusplus >= 201103L
 				constexpr __rawst_agent() noexcept = default;
+#		else
+				__rawst_agent() KERBAL_NOEXCEPT
+				{
+				}
 #		endif
 
+			public:
 
 #		if __cplusplus < 201103L
 
@@ -325,61 +288,16 @@ namespace kerbal
 		template <typename Type, size_t N>
 		class __rawst_agent<Type[N], true>: public kerbal::data_struct::__rawst_base<Type[N]>
 		{
-			public:
-
-				/// @brief Type of the elements.
-				typedef Type value_type;
-
-				/// @brief Constant type of the elements.
-				typedef const value_type const_type;
-
-				/// @brief Reference of the elements.
-				typedef value_type& reference;
-
-				/// @brief Constant reference of the elements.
-				typedef const value_type& const_reference;
-
-				/// @brief Pointer type to the elements.
-				typedef value_type* pointer;
-
-				/// @brief Constant pointer type to the elements.
-				typedef const value_type* const_pointer;
-
-#		if __cplusplus >= 201103L
-				typedef value_type&& rvalue_reference;
-				typedef const value_type&& const_rvalue_reference;
-#		endif
-
-			private:
-				template <typename Up, size_t M>
-				KERBAL_CONSTEXPR14
-				typename kerbal::type_traits::enable_if<kerbal::type_traits::rank<Up>::value >= 1>::type
-				static __init_array(Up (&arr) [M]) KERBAL_NOEXCEPT
-				{
-					for (size_t i = 0; i != M; ++i) {
-						__init_array(arr[i]);
-					}
-				}
-
-				template <typename Up, size_t M>
-				KERBAL_CONSTEXPR14
-				typename kerbal::type_traits::enable_if<kerbal::type_traits::rank<Up>::value == 0>::type
-				static __init_array(Up (&arr) [M]) KERBAL_NOEXCEPT
-				{
-					for (size_t i = 0; i != M; ++i) {
-						arr[i] = Up();
-					}
-				}
-
-			public:
+			protected:
 
 #		if __cplusplus >= 201103L
 				constexpr __rawst_agent() noexcept = default;
 #		endif
 
+			public:
+
 				KERBAL_CONSTEXPR14 reference construct() KERBAL_NOEXCEPT
 				{
-					__init_array(this->raw_value());
 					return this->raw_value();
 				}
 
@@ -394,39 +312,21 @@ namespace kerbal
 		class __rawst_agent<Type, false>:
 				public kerbal::data_struct::__rawst_base<Type>
 		{
-			public:
-
-				/// @brief Type of the elements.
+			protected:
 				typedef Type value_type;
-
-				/// @brief Constant type of the elements.
-				typedef const value_type const_type;
-
-				/// @brief Reference of the elements.
 				typedef value_type& reference;
-
-				/// @brief Constant reference of the elements.
-				typedef const value_type& const_reference;
-
-				/// @brief Pointer type to the elements.
-				typedef value_type* pointer;
-
-				/// @brief Constant pointer type to the elements.
-				typedef const value_type* const_pointer;
-
-#		if __cplusplus >= 201103L
-				typedef value_type&& rvalue_reference;
-				typedef const value_type&& const_rvalue_reference;
-#		endif
-
-			public:
 
 #		if __cplusplus >= 201103L
 				constexpr __rawst_agent() noexcept = default;
+#		else
+				__rawst_agent() KERBAL_NOEXCEPT
+				{
+				}
 #		endif
 
+			public:
 
-		# if __cplusplus < 201103L
+#		if __cplusplus < 201103L
 
 				reference construct()
 				{
@@ -469,7 +369,7 @@ namespace kerbal
 					return this->raw_value();
 				}
 
-		# else
+#		else
 
 				template <typename ... Args>
 				reference construct(Args&&... args)
@@ -478,7 +378,7 @@ namespace kerbal
 					return this->raw_value();
 				}
 
-		# endif
+#		endif
 
 				void destroy()
 				{
@@ -490,8 +390,62 @@ namespace kerbal
 		class __rawst_agent<Type[N], false>:
 				public kerbal::data_struct::__rawst_base<Type[N]>
 		{
+			protected:
+				typedef Type value_type [N];
+				typedef value_type& reference;
+
+			private:
+				template <typename Up, size_t M>
+				typename kerbal::type_traits::enable_if<kerbal::type_traits::rank<Up>::value >= 1>::type
+				static __des_array(Up (&arr) [M])
+				{
+					size_t i = M;
+					while (i-- != 0) {
+						__des_array(arr[i]);
+					}
+				}
+
+				template <typename Up, size_t M>
+				typename kerbal::type_traits::enable_if<kerbal::type_traits::rank<Up>::value == 0>::type
+				static __des_array(Up (&arr) [M])
+				{
+					size_t i = M;
+					while (i-- != 0) {
+						(arr + i)->~Up();
+					}
+				}
+
+			protected:
+
+#		if __cplusplus >= 201103L
+				constexpr __rawst_agent() noexcept = default;
+#		else
+				__rawst_agent() KERBAL_NOEXCEPT
+				{
+				}
+#		endif
+
 			public:
 
+				reference construct()
+				{
+					for (size_t i = 0; i != N; ++i) {
+						new (&this->raw_value()[i]) Type();
+					}
+					return this->raw_value();
+				}
+
+				void destroy()
+				{
+					__des_array(this->raw_value());
+				}
+
+		};
+
+		template <typename Type>
+		class raw_storage: public kerbal::data_struct::__rawst_agent<Type>
+		{
+			public:
 				/// @brief Type of the elements.
 				typedef Type value_type;
 
@@ -515,52 +469,6 @@ namespace kerbal
 				typedef const value_type&& const_rvalue_reference;
 #		endif
 
-			private:
-
-				template <typename Up, size_t M>
-				typename kerbal::type_traits::enable_if<kerbal::type_traits::rank<Up>::value >= 1>::type
-				static __des_array(Up (&arr) [M])
-				{
-					size_t i = M;
-					while (i-- != 0) {
-						__des_array(arr[i]);
-					}
-				}
-
-				template <typename Up, size_t M>
-				typename kerbal::type_traits::enable_if<kerbal::type_traits::rank<Up>::value == 0>::type
-				static __des_array(Up (&arr) [M])
-				{
-					size_t i = M;
-					while (i-- != 0) {
-						(arr + i)->~Up();
-					}
-				}
-
-			public:
-
-#		if __cplusplus >= 201103L
-				constexpr __rawst_agent() noexcept = default;
-#		endif
-
-				reference construct()
-				{
-					for (size_t i = 0; i != N; ++i) {
-						new (&this->raw_value()[i]) Type();
-					}
-					return this->raw_value();
-				}
-
-				void destroy()
-				{
-					__des_array(this->raw_value());
-				}
-
-		};
-
-		template <typename Type>
-		class raw_storage: public kerbal::data_struct::__rawst_agent<Type>
-		{
 		};
 
 	} // namespace data_struct
