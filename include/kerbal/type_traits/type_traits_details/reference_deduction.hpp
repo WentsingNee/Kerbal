@@ -99,6 +99,14 @@ namespace kerbal
 				typedef Tp& type;
 		};
 
+		MODULE_EXPORT
+		/// add_lvalue_reference
+		template <typename Tp>
+		struct add_lvalue_reference<Tp&>
+		{
+				typedef Tp& type;
+		};
+
 #	if __cplusplus >= 201103L
 
 		MODULE_EXPORT
@@ -110,6 +118,22 @@ namespace kerbal
 		};
 
 #	endif
+
+		MODULE_EXPORT
+		/// add_const_lvalue_reference
+		template <typename Tp>
+		struct add_const_lvalue_reference
+		{
+				typedef const Tp& type;
+		};
+
+		MODULE_EXPORT
+		/// add_const_lvalue_reference
+		template <typename Tp>
+		struct add_const_lvalue_reference<Tp&>
+		{
+				typedef Tp& type;
+		};
 
 	}
 }
