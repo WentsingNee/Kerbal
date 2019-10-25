@@ -1,22 +1,23 @@
 /**
  * @file       hash.hpp
  * @brief      
- * @date       2019年5月14日
+ * @date       2019-5-14
  * @author     peter
  * @copyright
  *      peter of [ThinkSpirit Laboratory](http://thinkspirit.org/)
  *   of [Nanjing University of Information Science & Technology](http://www.nuist.edu.cn/)
  *   all rights reserved
  */
-#ifndef INCLUDE_KERBAL_DATA_STRUCT_HASH_HPP_
-#define INCLUDE_KERBAL_DATA_STRUCT_HASH_HPP_
+
+#ifndef KERBAL_HASH_HASH_HPP_
+#define KERBAL_HASH_HASH_HPP_
 
 #include <cstddef>
 #include <kerbal/type_traits/type_traits_details/enable_if.hpp>
 #include <kerbal/type_traits/type_traits_details/fundamental_deduction.hpp>
-#include <kerbal/type_traits/type_traits_details/pointer_deduction.hpp>
 #include <kerbal/compatibility/constexpr.hpp>
 #include <kerbal/compatibility/noexcept.hpp>
+#include <kerbal/utility/addressof.hpp>
 
 namespace kerbal
 {
@@ -51,7 +52,6 @@ namespace kerbal
 		{
 		};
 
-
 		template <>
 		struct hash<char> : integral_hash<char>
 		{
@@ -77,27 +77,12 @@ namespace kerbal
 		};
 
 		template <>
-		struct hash<short> : integral_hash<short>
-		{
-		};
-
-		template <>
-		struct hash<int> : integral_hash<int>
-		{
-		};
-
-		template <>
-		struct hash<long> : integral_hash<long>
-		{
-		};
-
-		template <>
-		struct hash<long long> : integral_hash<long long>
-		{
-		};
-
-		template <>
 		struct hash<unsigned char> : integral_hash<unsigned char>
+		{
+		};
+
+		template <>
+		struct hash<short> : integral_hash<short>
 		{
 		};
 
@@ -107,7 +92,17 @@ namespace kerbal
 		};
 
 		template <>
+		struct hash<int> : integral_hash<int>
+		{
+		};
+
+		template <>
 		struct hash<unsigned int> : integral_hash<unsigned int>
+		{
+		};
+
+		template <>
+		struct hash<long> : integral_hash<long>
 		{
 		};
 
@@ -117,21 +112,17 @@ namespace kerbal
 		};
 
 		template <>
+		struct hash<long long> : integral_hash<long long>
+		{
+		};
+
+		template <>
 		struct hash<unsigned long long> : integral_hash<unsigned long long>
 		{
 		};
 
-		template <typename Tp>
-		struct hash<Tp*> : public hash_base<size_t, Tp*>
-		{
-				size_t operator()(Tp* p) const KERBAL_NOEXCEPT
-				{
-					return reinterpret_cast<size_t>(p);
-				}
-		};
-
-		template <typename Tp>
-		struct stdlibcxx_bytes_hash: hash_base<size_t, Tp>
+		template <typename Tp, size_t seed = static_cast<size_t>(0xc70f6907UL)>
+		struct stdlibcxx_bytes_hash : hash_base<size_t, Tp>
 		{
 			private:
 				static size_t unaligned_load(const char* p) KERBAL_NOEXCEPT
@@ -139,7 +130,7 @@ namespace kerbal
 					return *reinterpret_cast<const size_t*>(p);
 				}
 
-				static size_t _Hash_bytes(const void* ptr, size_t len, size_t seed) KERBAL_NOEXCEPT
+				static size_t _Hash_bytes(const void* ptr, size_t len) KERBAL_NOEXCEPT
 				{
 					const size_t m = 0x5bd1e995;
 					size_t hash = seed ^ len;
@@ -176,20 +167,55 @@ namespace kerbal
 				}
 
 			public:
-				size_t operator()(const Tp & val,
-						 size_t seed = static_cast<size_t>(0xc70f6907UL)) const KERBAL_NOEXCEPT
+				size_t operator()(const Tp & val) const KERBAL_NOEXCEPT
 				{
-					const void * start = reinterpret_cast<const void*>(&val);
-					return _Hash_bytes(start, sizeof(Tp), seed);
+					const void * start = reinterpret_cast<const void*>(kerbal::utility::addressof(val));
+					return _Hash_bytes(start, sizeof(Tp));
+				}
+		};
+
+		template <>
+		struct hash<float> : hash_base<size_t, float>
+		{
+				size_t operator()(float val) const KERBAL_NOEXCEPT
+				{
+					return val == 0.0 ? 0 : stdlibcxx_bytes_hash<float>()(val);
+				}
+		};
+
+		template <>
+		struct hash<double> : hash_base<size_t, double>
+		{
+				size_t operator()(double val) const KERBAL_NOEXCEPT
+				{
+					return val == 0.0 ? 0 : stdlibcxx_bytes_hash<double>()(val);
+				}
+		};
+
+		template <>
+		struct hash<long double> : hash_base<size_t, long double>
+		{
+				size_t operator()(long double val) const KERBAL_NOEXCEPT
+				{
+					return val == 0.0 ? 0 : stdlibcxx_bytes_hash<long double>()(val);
 				}
 		};
 
 		template <typename Tp>
+		struct hash<Tp*> : hash_base<size_t, Tp*>
+		{
+				size_t operator()(Tp* p) const KERBAL_NOEXCEPT
+				{
+					return reinterpret_cast<size_t>(p);
+				}
+		};
+
+		template <typename Tp, size_t seed = static_cast<size_t>(0xc70f6907UL)>
 		struct shallow_hash : hash_base<size_t, Tp>
 		{
-				size_t operator()(const Tp & val, size_t seed = 0xc70f6907UL) const KERBAL_NOEXCEPT
+				size_t operator()(const Tp & val) const KERBAL_NOEXCEPT
 				{
-					const char * start = reinterpret_cast<const char*>(&val);
+					const char * start = reinterpret_cast<const char*>(kerbal::utility::addressof(val));
 					size_t ret = 0;
 					hash<char> hs;
 					for (size_t i = 0; i < sizeof(Tp); ++i) {
@@ -199,36 +225,9 @@ namespace kerbal
 				}
 		};
 
-		template <>
-		struct hash<float>
-		{
-				size_t operator()(float val) const KERBAL_NOEXCEPT
-				{
-					return val == 0.0 ? 0 : stdlibcxx_bytes_hash<float>()(val);
-				}
-		};
-
-		template <>
-		struct hash<double>
-		{
-				size_t operator()(double val) const KERBAL_NOEXCEPT
-				{
-					return val == 0.0 ? 0 : stdlibcxx_bytes_hash<double>()(val);
-				}
-		};
-
-		template <>
-		struct hash<long double>
-		{
-				size_t operator()(long double val) const KERBAL_NOEXCEPT
-				{
-					return val == 0.0 ? 0 : stdlibcxx_bytes_hash<long double>()(val);
-				}
-		};
-
 	} /* namespace data_struct */
 
 } /* namespace kerbal */
 
 
-#endif /* INCLUDE_KERBAL_DATA_STRUCT_HASH_HPP_ */
+#endif /* KERBAL_HASH_HASH_HPP_ */
