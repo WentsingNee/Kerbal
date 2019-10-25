@@ -20,11 +20,13 @@ namespace kerbal
 	namespace utility
 	{
 		template <typename Tp>
+		KERBAL_CONSTEXPR
 		Tp* addressof(Tp& arg) KERBAL_NOEXCEPT
 		{
-			return reinterpret_cast<Tp*>(
-					&const_cast<char&>(
-							reinterpret_cast<const volatile char&>(arg)));
+			return static_cast<Tp*>(
+						static_cast<void*>(
+							&const_cast<char&>(
+								(const volatile char&)(val))));
 		}
 
 #	if __cplusplus >= 201103L
