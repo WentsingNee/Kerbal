@@ -127,7 +127,7 @@ namespace kerbal
 
 			private:
 				first_type __first;
-				typedef typename kerbal::type_traits::remove_cv<Up>::type supper_t;
+				typedef typename kerbal::type_traits::remove_cv<Up>::type super;
 
 				typedef typename kerbal::type_traits::add_lvalue_reference<first_type>::type             __first_type_ref;
 				typedef typename kerbal::type_traits::add_lvalue_reference<second_type>::type            __second_type_ref;
@@ -141,7 +141,7 @@ namespace kerbal
 												std::is_nothrow_default_constructible<first_type>::value &&
 												std::is_nothrow_default_constructible<second_type>::value
 										) :
-										supper_t(), __first()
+										super(), __first()
 				{
 				}
 
@@ -151,7 +151,7 @@ namespace kerbal
 												std::is_nothrow_default_constructible<first_type>::value &&
 												std::is_nothrow_copy_constructible<second_type>::value
 										) :
-										supper_t(__second), __first()
+										super(__second), __first()
 				{
 				}
 
@@ -161,7 +161,7 @@ namespace kerbal
 												std::is_nothrow_copy_constructible<first_type>::value &&
 												std::is_nothrow_default_constructible<second_type>::value
 										) :
-										supper_t(), __first(__first)
+										super(), __first(__first)
 				{
 				}
 
@@ -171,7 +171,7 @@ namespace kerbal
 												std::is_nothrow_copy_constructible<first_type>::value &&
 												std::is_nothrow_copy_constructible<second_type>::value
 										) :
-										supper_t(__second), __first(__first)
+										super(__second), __first(__first)
 				{
 				}
 
@@ -432,7 +432,7 @@ namespace kerbal
 				typedef Up second_type;
 
 			private:
-				typedef kerbal::utility::__compressed_pair_impl<Tp, Up, __compressed_pair_policy_switch<Tp, Up>::value > supper_t;
+				typedef kerbal::utility::__compressed_pair_impl<Tp, Up, __compressed_pair_policy_switch<Tp, Up>::value > super;
 
 				typedef typename kerbal::type_traits::add_const_lvalue_reference<first_type>::type       __first_type_const_ref;
 				typedef typename kerbal::type_traits::add_const_lvalue_reference<second_type>::type      __second_type_const_ref;
@@ -444,7 +444,7 @@ namespace kerbal
 										std::is_nothrow_default_constructible<first_type>::value &&
 										std::is_nothrow_default_constructible<second_type>::value
 								) :
-								supper_t()
+								super()
 				{
 				}
 
@@ -454,7 +454,7 @@ namespace kerbal
 										std::is_nothrow_default_constructible<first_type>::value &&
 										std::is_nothrow_copy_constructible<second_type>::value
 								) :
-								supper_t(tag, __second)
+								super(tag, __second)
 				{
 				}
 
@@ -464,7 +464,7 @@ namespace kerbal
 										std::is_nothrow_copy_constructible<first_type>::value &&
 										std::is_nothrow_default_constructible<second_type>::value
 								) :
-								supper_t(__first, tag)
+								super(__first, tag)
 				{
 				}
 
@@ -474,7 +474,7 @@ namespace kerbal
 										std::is_nothrow_copy_constructible<first_type>::value &&
 										std::is_nothrow_copy_constructible<second_type>::value
 								) :
-								supper_t(__first, __second)
+								super(__first, __second)
 				{
 				}
 

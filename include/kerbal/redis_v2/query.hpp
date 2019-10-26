@@ -26,21 +26,21 @@ namespace kerbal
 		class query : public std::ostringstream
 		{
 			private:
-				typedef std::ostringstream supper_t;
+				typedef std::ostringstream super;
 
 			public:
 				query() :
-						supper_t()
+						super()
 				{
 				}
 
 				query(const char * s) :
-						supper_t(s, std::ostringstream::out | std::ostringstream::ate)
+						super(s, std::ostringstream::out | std::ostringstream::ate)
 				{
 				}
 
 				query(const std::string & s) :
-						supper_t(s, std::ostringstream::out | std::ostringstream::ate)
+						super(s, std::ostringstream::out | std::ostringstream::ate)
 				{
 				}
 

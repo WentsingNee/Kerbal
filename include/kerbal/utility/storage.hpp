@@ -22,20 +22,20 @@ namespace kerbal
 		class storage : public std::chrono::duration<size_type, Ratio>
 		{
 			public:
-				typedef std::chrono::duration<size_type, Ratio> supper_t;
-				typedef typename supper_t::rep rep;
-				typedef typename supper_t::period period;
+				typedef std::chrono::duration<size_type, Ratio> super;
+				typedef typename super::rep rep;
+				typedef typename super::period period;
 
-				using supper_t::duration;
-				using supper_t::count;
+				using super::duration;
+				using super::count;
 
 				storage() :
-						supper_t()
+						super()
 				{
 				}
 
-				storage(const supper_t & src) :
-						supper_t(src)
+				storage(const super & src) :
+						super(src)
 				{
 				}
 		};
@@ -108,7 +108,7 @@ namespace kerbal
 		typename kerbal::type_traits::enable_if<is_storage<ToStor>::value, ToStor>::type
 		storage_cast(const storage<size_type, Ratio>& __d)
 		{
-			return ToStor(std::chrono::duration_cast<typename ToStor::supper_t>(__d));
+			return ToStor(std::chrono::duration_cast<typename ToStor::super>(__d));
 		}
 	}
 }

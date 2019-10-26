@@ -128,11 +128,11 @@ namespace kerbal
 				friend class __stavec_kiter<ValueType>;
 
 				typedef kerbal::data_struct::raw_storage<ValueType> storage_type;
-				typedef __stavec_iterbase<__stavec_iter<ValueType>, ValueType*, storage_type> supper_t;
+				typedef __stavec_iterbase<__stavec_iter<ValueType>, ValueType*, storage_type> super;
 
 			public:
 				explicit KERBAL_CONSTEXPR __stavec_iter(storage_type* current) KERBAL_NOEXCEPT :
-						supper_t(current)
+						super(current)
 				{
 				}
 		};
@@ -150,17 +150,17 @@ namespace kerbal
 				friend class static_vector;
 
 				typedef const kerbal::data_struct::raw_storage<ValueType> storage_type;
-				typedef __stavec_iterbase<__stavec_kiter<ValueType>, const ValueType*, storage_type> supper_t;
+				typedef __stavec_iterbase<__stavec_kiter<ValueType>, const ValueType*, storage_type> super;
 				typedef __stavec_iter<ValueType> iterator;
 
 			public:
 				explicit KERBAL_CONSTEXPR __stavec_kiter(const storage_type* current) KERBAL_NOEXCEPT :
-						supper_t(current)
+						super(current)
 				{
 				}
 
 				KERBAL_CONSTEXPR __stavec_kiter(const iterator & current) KERBAL_NOEXCEPT :
-						supper_t(current.current)
+						super(current.current)
 				{
 				}
 		};
