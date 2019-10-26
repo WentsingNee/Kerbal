@@ -273,7 +273,6 @@ namespace kerbal
 		BidirectionalIterator
 		__midden_iterator(BidirectionalIterator first, BidirectionalIterator last, std::bidirectional_iterator_tag)
 		{
-			typedef BidirectionalIterator iterator;
 			while (first != last) {
 				--last;
 				if (first != last) {

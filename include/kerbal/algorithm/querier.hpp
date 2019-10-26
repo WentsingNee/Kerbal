@@ -242,7 +242,7 @@ namespace kerbal
 		__rfor_each(RandomAccessIterator first, RandomAccessIterator last, UnaryFunction f, std::random_access_iterator_tag)
 		{
 			typedef RandomAccessIterator iterator;
-			typedef typename kerbal::iterator::iterator_traits<RandomAccessIterator>::difference_type difference_type;
+			typedef typename kerbal::iterator::iterator_traits<iterator>::difference_type difference_type;
 
 #	define EACH() do {\
 				--last;\

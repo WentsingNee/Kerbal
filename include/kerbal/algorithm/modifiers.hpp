@@ -296,7 +296,7 @@ namespace kerbal
 						std::random_access_iterator_tag)
 		{
 			typedef RandomAccessIterator iterator;
-			typedef typename kerbal::iterator::iterator_traits<RandomAccessIterator>::difference_type difference_type;
+			typedef typename kerbal::iterator::iterator_traits<iterator>::difference_type difference_type;
 
 #	define EACH() do {\
 				--last;\
@@ -360,7 +360,7 @@ namespace kerbal
 							UnaryPredicate pred, std::random_access_iterator_tag)
 		{
 			typedef RandomAccessIterator iterator;
-			typedef typename kerbal::iterator::iterator_traits<RandomAccessIterator>::difference_type difference_type;
+			typedef typename kerbal::iterator::iterator_traits<iterator>::difference_type difference_type;
 
 #	define EACH() do {\
 				--last;\
@@ -485,7 +485,7 @@ namespace kerbal
 						std::random_access_iterator_tag)
 		{
 			typedef RandomAccessIterator iterator;
-			typedef typename kerbal::iterator::iterator_traits<RandomAccessIterator>::difference_type difference_type;
+			typedef typename kerbal::iterator::iterator_traits<iterator>::difference_type difference_type;
 
 #	define EACH() do {\
 				--last;\
@@ -661,7 +661,7 @@ namespace kerbal
 		void __reverse(RandomAccessIterator first, RandomAccessIterator last, std::random_access_iterator_tag)
 		{
 			typedef RandomAccessIterator iterator;
-			typedef typename kerbal::iterator::iterator_traits<RandomAccessIterator>::difference_type difference_type;
+			typedef typename kerbal::iterator::iterator_traits<iterator>::difference_type difference_type;
 
 #	define EACH() do {\
 				--last;\
@@ -721,7 +721,7 @@ namespace kerbal
 						std::random_access_iterator_tag)
 		{
 			typedef RandomAccessIterator iterator;
-			typedef typename kerbal::iterator::iterator_traits<RandomAccessIterator>::difference_type difference_type;
+			typedef typename kerbal::iterator::iterator_traits<iterator>::difference_type difference_type;
 
 #	define EACH() do {\
 				--last;\
