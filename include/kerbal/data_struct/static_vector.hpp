@@ -509,7 +509,6 @@ namespace kerbal
 
 #			else
 
-				template <typename >
 				reference emplace_back();
 
 				template <typename Arg0>

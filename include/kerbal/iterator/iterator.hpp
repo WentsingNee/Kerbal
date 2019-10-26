@@ -126,7 +126,7 @@ namespace kerbal
 		}
 
 		template <typename BidirectionalIterator>
-		KERBAL_CONSTEXPR
+		KERBAL_CONSTEXPR14
 		BidirectionalIterator prev(BidirectionalIterator it)
 				KERBAL_CONDITIONAL_NOEXCEPT(noexcept(--it))
 		{
@@ -143,7 +143,7 @@ namespace kerbal
 		}
 
 		template <typename InputIterator>
-		KERBAL_CONSTEXPR
+		KERBAL_CONSTEXPR14
 		InputIterator next(InputIterator it)
 				KERBAL_CONDITIONAL_NOEXCEPT(noexcept(--it))
 		{
@@ -290,10 +290,7 @@ namespace kerbal
 		RandomAccessIterator
 		__midden_iterator(RandomAccessIterator first, RandomAccessIterator last, std::random_access_iterator_tag)
 		{
-			typedef RandomAccessIterator iterator;
-			typedef typename kerbal::iterator::iterator_traits<iterator>::difference_type difference_type;
-			difference_type dist(last - first);
-			return first + dist / 2;
+			return first + (last - first) / 2;
 		}
 
 		template <typename ForwardIterator>
