@@ -20,6 +20,7 @@
 
 namespace kerbal
 {
+
 	namespace algorithm
 	{
 
@@ -302,7 +303,7 @@ namespace kerbal
 			typedef RandomAccessIterator iterator;
 			typedef typename kerbal::iterator::iterator_traits<iterator>::difference_type difference_type;
 
-			size_t cnt;
+			size_t cnt = 0;
 
 #	define EACH() do {\
 				if (pred(*first)) {\
@@ -408,7 +409,7 @@ namespace kerbal
 			typedef ForwardIterator iterator;
 			typedef typename kerbal::iterator::iterator_traits<iterator>::value_type value_type;
 
-			return kerbal::algorithm::adjacent_find(first, last, std::equal_to<value_type>());
+			return kerbal::algorithm::adjacent_find(first, last, kerbal::algorithm::binary_type_equal_to<value_type, value_type>());
 		}
 
 		template <typename InputIterator, typename UnaryPredicate>
@@ -427,8 +428,8 @@ namespace kerbal
 		}
 
 
-	} /* namespace algorithm */
+	} //namespace algorithm
 
-} /* namespace kerbal */
+} //namespace kerbal
 
 #endif /* KERBAL_ALGORITHM_QUERIER_HPP_ */

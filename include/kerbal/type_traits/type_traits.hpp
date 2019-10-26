@@ -45,6 +45,7 @@ export namespace kerbal
 #include <kerbal/type_traits/type_traits_details/pointer_deduction.hpp>
 #include <kerbal/type_traits/type_traits_details/reference_deduction.hpp>
 #include <kerbal/type_traits/type_traits_details/type_chooser.hpp>
+#include <kerbal/type_traits/type_traits_details/void_type.hpp>
 #include <kerbal/type_traits/type_traits_details/volatile_deduction.hpp>
 
 namespace kerbal

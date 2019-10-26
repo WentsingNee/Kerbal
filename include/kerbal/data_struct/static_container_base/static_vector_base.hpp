@@ -343,13 +343,13 @@ namespace kerbal
 		template <typename Tp, size_t N>
 		static_vector<Tp, N>::~static_vector()
 		{
-			clear();
+			this->clear();
 		}
 
 		template <typename Tp, size_t N>
 		static_vector<Tp, N>& static_vector<Tp, N>::operator=(const static_vector & src)
 		{
-			assign(src.cbegin(), src.cend());
+			this->assign(src.cbegin(), src.cend());
 			return *this;
 		}
 
@@ -357,7 +357,7 @@ namespace kerbal
 		template <typename Tp, size_t N>
 		static_vector<Tp, N>& static_vector<Tp, N>::operator=(std::initializer_list<value_type> src)
 		{
-			assign(src.begin(), src.end());
+			this->assign(src.begin(), src.end());
 			return *this;
 		}
 #	endif
@@ -461,7 +461,7 @@ namespace kerbal
 		template <typename Tp, size_t N>
 		void static_vector<Tp, N>::assign(std::initializer_list<value_type> src)
 		{
-			assign(src.begin(), src.end());
+			this->assign(src.begin(), src.end());
 		}
 
 #	endif
