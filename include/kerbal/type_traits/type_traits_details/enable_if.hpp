@@ -16,37 +16,6 @@ namespace kerbal
 	namespace type_traits
 	{
 
-#	if __cplusplus < 201103L
-		template <
-				typename T0 = void,
-				typename = T0,
-				typename = T0,
-				typename = T0,
-				typename = T0,
-				typename = T0,
-				typename = T0,
-				typename = T0,
-				typename = T0,
-				typename = T0,
-				typename = T0,
-				typename = T0,
-				typename = T0,
-				typename = T0>
-		struct __void_type
-		{
-				typedef void type;
-		};
-#	else
-
-		MODULE_EXPORT
-		template <typename ... Args>
-		struct __void_type
-		{
-				typedef void type;
-		};
-
-#	endif
-
 		MODULE_EXPORT
 		template <bool condition, typename Tp = void>
 		struct enable_if

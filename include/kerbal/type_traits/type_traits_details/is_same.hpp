@@ -19,9 +19,10 @@ namespace kerbal
 
 #	if __cplusplus < 201103L
 
-		template <typename Tp, typename Up, typename = Up, typename = Up, typename = Up,
-					typename = Up, typename = Up, typename = Up, typename = Up, typename = Up,
-					typename = Up, typename = Up, typename = Up, typename = Up, typename = Up>
+		template <
+				typename Tp,   typename Up  , typename = Up, typename = Up, typename = Up,
+				typename = Up, typename = Up, typename = Up, typename = Up, typename = Up,
+				typename = Up, typename = Up, typename = Up, typename = Up, typename = Up>
 		struct is_same : kerbal::type_traits::false_type
 		{
 		};

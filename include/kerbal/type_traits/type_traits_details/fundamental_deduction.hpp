@@ -14,7 +14,7 @@
 #include <kerbal/type_traits/type_traits_details/cv_deduction.hpp>
 
 #if __cplusplus >= 201103L
-#	include <type_traits>
+#	include <cstddef>
 #endif
 
 namespace kerbal
@@ -157,30 +157,56 @@ namespace kerbal
 		MODULE_EXPORT
 		template <class Tp>
 		struct is_arithmetic: kerbal::type_traits::conditional_boolean<
-											is_integral<Tp>::value ||
-											is_floating_point<Tp>::value
+											kerbal::type_traits::is_integral<Tp>::value ||
+											kerbal::type_traits::is_floating_point<Tp>::value
 									>
 		{
 		};
+
+#	if __cplusplus >= 201103L
+
+		template <class Tp>
+		struct __is_null_pointer_helper: kerbal::type_traits::false_type
+		{
+		};
+
+		template <>
+		struct __is_null_pointer_helper<std::nullptr_t>: kerbal::type_traits::true_type
+		{
+		};
+
+		/// is_null_pointer
+		MODULE_EXPORT
+		template <class Tp>
+		struct is_null_pointer: kerbal::type_traits::__is_null_pointer_helper<
+									typename kerbal::type_traits::remove_cv<Tp>::type
+								>
+		{
+		};
+
+#	endif
+
 
 #	if __cplusplus < 201103L
 		/// is_fundamental
 		MODULE_EXPORT
 		template <typename Tp>
 		struct is_fundamental: kerbal::type_traits::conditional_boolean<
-											is_arithmetic<Tp>::value ||
-											is_void<Tp>::value
+											kerbal::type_traits::is_arithmetic<Tp>::value ||
+											kerbal::type_traits::is_void<Tp>::value
 									>
 		{
 		};
+
 #	else
+
 		/// is_fundamental
 		MODULE_EXPORT
 		template <typename Tp>
 		struct is_fundamental: kerbal::type_traits::conditional_boolean<
-											is_arithmetic<Tp>::value ||
-											is_void<Tp>::value ||
-											std::is_null_pointer<Tp>::value
+											kerbal::type_traits::is_arithmetic<Tp>::value ||
+											kerbal::type_traits::is_void<Tp>::value ||
+											kerbal::type_traits::is_null_pointer<Tp>::value
 									>
 		{
 		};
