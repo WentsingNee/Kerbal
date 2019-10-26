@@ -289,6 +289,8 @@ namespace kerbal
 		class __rawst_agent<Type[N], true>: public kerbal::data_struct::__rawst_base<Type[N]>
 		{
 			protected:
+				typedef Type value_type [N];
+				typedef value_type& reference;
 
 #		if __cplusplus >= 201103L
 				constexpr __rawst_agent() noexcept = default;
