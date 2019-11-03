@@ -1,15 +1,19 @@
-/*
- * static_flatset.hpp
- *
- *  Created on: 2019年4月22日
- *      Author: peter
+/**
+ * @file       static_flatset.hpp
+ * @brief
+ * @date       2019-4-22
+ * @author     Peter
+ * @copyright
+ *      Peter of [ThinkSpirit Laboratory](http://thinkspirit.org/)
+ *   of [Nanjing University of Information Science & Technology](http://www.nuist.edu.cn/)
+ *   all rights reserved
  */
 
-#ifndef INCLUDE_KERBAL_DATA_STRUCT_STATIC_FLATSET_HPP_
-#define INCLUDE_KERBAL_DATA_STRUCT_STATIC_FLATSET_HPP_
+#ifndef KERBAL_CONTAINER_STATIC_FLATSET_HPP_
+#define KERBAL_CONTAINER_STATIC_FLATSET_HPP_
 
-#include <kerbal/data_struct/static_vector.hpp>
 #include <kerbal/algorithm/search.hpp>
+#include <kerbal/container/static_vector.hpp>
 #include <kerbal/iterator/iterator.hpp>
 #include <kerbal/iterator/iterator_traits.hpp>
 #include <kerbal/utility/compressed_pair.hpp>
@@ -18,10 +22,10 @@
 
 namespace kerbal
 {
-	namespace data_struct
+	namespace container
 	{
 
-		template <typename Tp, std::size_t N, typename KeyCompare = std::less<Tp>, typename Sequence = kerbal::data_struct::static_vector<Tp, N> >
+		template <typename Tp, std::size_t N, typename KeyCompare = std::less<Tp>, typename Sequence = kerbal::container::static_vector<Tp, N> >
 		class static_flatset
 		{
 			public:
@@ -513,4 +517,4 @@ namespace kerbal
 }
 
 
-#endif /* INCLUDE_KERBAL_DATA_STRUCT_STATIC_FLATSET_HPP_ */
+#endif /* KERBAL_CONTAINER_STATIC_FLATSET_HPP_ */

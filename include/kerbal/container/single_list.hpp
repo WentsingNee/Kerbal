@@ -12,21 +12,22 @@
 #ifndef KERBAL_CONTAINER_SINGLE_LIST_HPP_
 #define KERBAL_CONTAINER_SINGLE_LIST_HPP_
 
-#include <memory>
-
-#if __cplusplus >= 201103L
-#	include <initializer_list>
-#endif
-
+#include <kerbal/algorithm/sequence_compare.hpp>
 #include <kerbal/compatibility/constexpr.hpp>
-#include <kerbal/compatibility/noexcept.hpp>
 #include <kerbal/compatibility/method_overload_tag.hpp>
+#include <kerbal/compatibility/noexcept.hpp>
 #include <kerbal/iterator/iterator_traits.hpp>
 #include <kerbal/operators/dereferenceable.hpp>
 #include <kerbal/operators/equality_comparable.hpp>
 #include <kerbal/operators/incr_decr.hpp>
 #include <kerbal/type_traits/type_traits_details/enable_if.hpp>
 #include <kerbal/utility/noncopyable.hpp>
+
+#include <memory>
+
+#if __cplusplus >= 201103L
+#	include <initializer_list>
+#endif
 
 namespace kerbal
 {
@@ -141,14 +142,14 @@ namespace kerbal
 					typedef kerbal::iterator::iterator_traits<Pointer>		iterator_traits;
 
 				public:
-					typedef typename iterator_traits::iterator_category	iterator_category;
+					typedef std::forward_iterator_tag						iterator_category;
 					typedef typename iterator_traits::value_type			value_type;
 					typedef typename iterator_traits::difference_type		difference_type;
 					typedef typename iterator_traits::pointer				pointer;
-					typedef typename iterator_traits::reference			reference;
+					typedef typename iterator_traits::reference				reference;
 
 					typedef std::iterator<
-							std::forward_iterator_tag,
+							iterator_category,
 							value_type,
 							difference_type,
 							pointer,
@@ -243,8 +244,9 @@ namespace kerbal
 					{
 					}
 
+				public:
 					KERBAL_CONSTEXPR
-					explicit __sl_kiter(const __sl_iter<Tp>& iter) KERBAL_NOEXCEPT :
+					__sl_kiter(const __sl_iter<Tp>& iter) KERBAL_NOEXCEPT :
 							super(iter.current)
 					{
 					}
@@ -357,6 +359,8 @@ namespace kerbal
 
 #		endif
 
+				void assign(const single_list & src);
+
 				void assign(size_type count, const_reference val);
 
 				template <typename InputIterator>
@@ -366,6 +370,8 @@ namespace kerbal
 				assign(InputIterator first, InputIterator last);
 
 #		if __cplusplus >= 201103L
+
+				void assign(single_list&& src);
 
 				void assign(std::initializer_list<value_type> src);
 
@@ -377,15 +383,15 @@ namespace kerbal
 				reference back();
 				const_reference back() const;
 
-				/** @brief 返回指向数组首元素的迭代器 */
+				/** @brief 返回指向首元素的迭代器 */
 				iterator begin() KERBAL_NOEXCEPT;
 
-				/** @brief 返回指向数组末尾元素的后一个元素位置的迭代器 */
+				/** @brief 返回指向尾元素的后一个元素位置的迭代器 */
 				iterator end() KERBAL_NOEXCEPT;
 
 				const_iterator begin() const KERBAL_NOEXCEPT;
 
-				/** @brief 返回指向数组末尾元素的后一个元素位置的迭代器 */
+				/** @brief 返回指向末尾元素的后一个元素位置的迭代器 */
 				const_iterator end() const KERBAL_NOEXCEPT;
 
 				const_iterator cbegin() const KERBAL_NOEXCEPT;
@@ -412,17 +418,17 @@ namespace kerbal
 
 			public:
 				/**
-				 * @brief 在数组末尾插入参数 src 指定的元素
-				 * @param src
+				 * @brief 在末尾插入参数 val 指定的元素
+				 * @param val
 				 */
-				void push_back(const_reference src);
+				void push_back(const_reference val);
 
 #		if __cplusplus >= 201103L
 				/**
-				 * @brief 在数组末尾插入参数 src 指定的元素
-				 * @param src
+				 * @brief 在末尾插入参数 val 指定的元素
+				 * @param val
 				 */
-				void push_back(rvalue_reference src);
+				void push_back(rvalue_reference val);
 
 				template <typename ... Args>
 				reference emplace_back(Args&& ...args);
@@ -432,7 +438,13 @@ namespace kerbal
 				reference emplace_back();
 
 				template <typename Arg0>
-				reference emplace_back(const Arg0 & arg0);
+				reference emplace_back(const Arg0& arg0);
+
+				template <typename Arg0, typename Arg1>
+				reference emplace_back(const Arg0& arg0, const Arg1& arg1);
+
+				template <typename Arg0, typename Arg1, typename Arg2>
+				reference emplace_back(const Arg0& arg0, const Arg1& arg1, const Arg2& arg2);
 
 #		endif
 
@@ -441,27 +453,40 @@ namespace kerbal
 
 			public:
 				/**
-				 * @brief 在数组首部插入参数 src 指定的元素
-				 * @param src
+				 * @brief 在首部插入参数 val 指定的元素
+				 * @param val
 				 */
-				void push_front(const_reference src);
+				void push_front(const_reference val);
 
 #		if __cplusplus >= 201103L
 				/**
-				 * @brief 在数组首部插入参数 src 指定的元素
+				 * @brief 在首部插入参数 val 指定的元素
 				 * @param src
 				 */
-				void push_front(rvalue_reference src);
+				void push_front(rvalue_reference val);
 
 				template <typename ... Args>
 				reference emplace_front(Args&& ...args);
 
+#		else
+
+				reference emplace_front();
+
+				template <typename Arg0>
+				reference emplace_front(const Arg0& arg0);
+
+				template <typename Arg0, typename Arg1>
+				reference emplace_front(const Arg0& arg0, const Arg1& arg1);
+
+				template <typename Arg0, typename Arg1, typename Arg2>
+				reference emplace_front(const Arg0& arg0, const Arg1& arg1, const Arg2& arg2);
+
 #		endif
 
-				/**
-				 * @brief 移除数组首部的元素
-				 */
-				void pop_front();
+			private:
+				iterator __node_insert_helper(const_iterator pos, node * p) KERBAL_NOEXCEPT;
+
+			public:
 
 				iterator insert(const_iterator pos, const_reference val);
 
@@ -472,16 +497,40 @@ namespace kerbal
 				template <typename ... Args>
 				iterator emplace(const_iterator pos, Args&& ...args);
 
+#		else
+
+				iterator emplace(const_iterator pos);
+
+				template <typename Arg0>
+				iterator emplace(const_iterator pos, const Arg0& arg0);
+
+				template <typename Arg0, typename Arg1>
+				iterator emplace(const_iterator pos, const Arg0& arg0, const Arg1& arg1);
+
+				template <typename Arg0, typename Arg1, typename Arg2>
+				iterator emplace(const_iterator pos, const Arg0& arg0, const Arg1& arg1, const Arg2& arg2);
+
 #		endif
 
-				iterator erase(const_iterator it);
+				/**
+				 * @brief 移除首部的元素
+				 */
+				void pop_front();
+
+				iterator erase(const_iterator pos);
 
 				iterator erase(const_iterator first, const_iterator last);
 
 				void clear();
 
+				void resize(size_type count);
+
+				void resize(size_type count, const_reference value);
+
+				void swap(single_list & ano);
 
 			private:
+				void __consecutive_destroy_node(node *start);
 
 #		if __cplusplus >= 201103L
 
@@ -493,18 +542,55 @@ namespace kerbal
 				node* __alloc_new_node();
 
 				template <typename Arg0>
-				node* __alloc_new_node(const Arg0 & arg0);
+				node* __alloc_new_node(const Arg0& arg0);
 
 				template <typename Arg0, typename Arg1>
-				node* __alloc_new_node(const Arg0 & arg0, const Arg1 & arg1);
+				node* __alloc_new_node(const Arg0& arg0, const Arg1& arg1);
 
 				template <typename Arg0, typename Arg1, typename Arg2>
-				node* __alloc_new_node(const Arg0 & arg0, const Arg1 & arg1, const Arg2 & arg2);
+				node* __alloc_new_node(const Arg0& arg0, const Arg1& arg1, const Arg2& arg2);
 
 #		endif
 
 
 		};
+
+
+		template <typename Tp, typename Allocator>
+		bool operator==(const single_list<Tp, Allocator> & lhs, const single_list<Tp, Allocator> & rhs)
+		{
+			return kerbal::algorithm::sequence_equal_to(lhs.cbegin(), lhs.cend(), rhs.cbegin(), rhs.cend());
+		}
+
+		template <typename Tp, typename Allocator>
+		bool operator!=(const single_list<Tp, Allocator> & lhs, const single_list<Tp, Allocator> & rhs)
+		{
+			return kerbal::algorithm::sequence_not_equal_to(lhs.cbegin(), lhs.cend(), rhs.cbegin(), rhs.cend());
+		}
+
+		template <typename Tp, typename Allocator>
+		bool operator<(const single_list<Tp, Allocator> & lhs, const single_list<Tp, Allocator> & rhs)
+		{
+			return kerbal::algorithm::sequence_less(lhs.cbegin(), lhs.cend(), rhs.cbegin(), rhs.cend());
+		}
+
+		template <typename Tp, typename Allocator>
+		bool operator>(const single_list<Tp, Allocator> & lhs, const single_list<Tp, Allocator> & rhs)
+		{
+			return kerbal::algorithm::sequence_greater(lhs.cbegin(), lhs.cend(), rhs.cbegin(), rhs.cend());
+		}
+
+		template <typename Tp, typename Allocator>
+		bool operator<=(const single_list<Tp, Allocator> & lhs, const single_list<Tp, Allocator> & rhs)
+		{
+			return kerbal::algorithm::sequence_less_equal(lhs.cbegin(), lhs.cend(), rhs.cbegin(), rhs.cend());
+		}
+
+		template <typename Tp, typename Allocator>
+		bool operator>=(const single_list<Tp, Allocator> & lhs, const single_list<Tp, Allocator> & rhs)
+		{
+			return kerbal::algorithm::sequence_greater_equal(lhs.cbegin(), lhs.cend(), rhs.cbegin(), rhs.cend());
+		}
 
 	} //namespace container
 

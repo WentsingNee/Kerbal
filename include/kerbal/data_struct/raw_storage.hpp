@@ -12,7 +12,9 @@
 #ifndef KERBAL_DATA_STRUCT_RAW_STORAGE_HPP_
 #define KERBAL_DATA_STRUCT_RAW_STORAGE_HPP_
 
-#include <kerbal/compatibility/compatibility_macro.hpp>
+#include <kerbal/compatibility/constexpr.hpp>
+#include <kerbal/compatibility/method_overload_tag.hpp>
+#include <kerbal/compatibility/noexcept.hpp>
 #include <kerbal/type_traits/aligned_storage.hpp>
 #include <kerbal/type_traits/type_traits_details/array_traits.hpp>
 #include <kerbal/type_traits/type_traits_details/enable_if.hpp>
@@ -24,6 +26,7 @@
 # include <type_traits>
 #else
 # include <kerbal/type_traits/type_traits_details/fundamental_deduction.hpp>
+# include <kerbal/type_traits/type_traits_details/pointer_deduction.hpp>
 #endif
 
 namespace kerbal

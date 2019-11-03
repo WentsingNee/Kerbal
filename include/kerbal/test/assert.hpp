@@ -10,7 +10,7 @@
  */
 
 #ifndef KERBAL_TEST_ASSERT_HPP_
-#define KERBAL_TEST_TEST_CASE_VECTOR_HPP_
+#define KERBAL_TEST_ASSERT_HPP_
 
 #include <cstdio>
 #include <cstdlib>

@@ -1,23 +1,22 @@
 /**
- * @file		static_stack.hpp
+ * @file       static_stack.hpp
  * @brief
- * @date		2018年5月2日
- * @author		Peter
- * @copyright	Peter
+ * @date       2018-5-2
+ * @author     Peter
  * @copyright
- <a href="http://thinkspirit.org/">ThinkSpirit Laboratory</a>
- of
- <a href="http://www.nuist.edu.cn/">Nanjing University of Information Science & Technology</a>
+ *      Peter of [ThinkSpirit Laboratory](http://thinkspirit.org/)
+ *   of [Nanjing University of Information Science & Technology](http://www.nuist.edu.cn/)
+ *   all rights reserved
  */
 
-#ifndef INCLUDE_KERBAL_DATA_STRUCT_STATIC_STACK_HPP_
-#define INCLUDE_KERBAL_DATA_STRUCT_STATIC_STACK_HPP_
+#ifndef KERBAL_CONTAINER_STATIC_STACK_HPP_
+#define KERBAL_CONTAINER_STATIC_STACK_HPP_
 
-#include <kerbal/data_struct/static_vector.hpp>
+#include <kerbal/container/static_vector.hpp>
 
 namespace kerbal
 {
-	namespace data_struct
+	namespace container
 	{
 		/**
 		 * @brief Stack with flexible length that stored on automatic storage duration
@@ -28,7 +27,7 @@ namespace kerbal
 		 * @tparam Tp Type of the elements.
 		 * @tparam N The maximum number of elements that the stack can hold.
 		 */
-		template <typename Tp, std::size_t N, typename Sequence = kerbal::data_struct::static_vector<Tp, N> >
+		template <typename Tp, std::size_t N, typename Sequence = kerbal::container::static_vector<Tp, N> >
 		class static_stack
 		{
 			public:
@@ -232,4 +231,4 @@ namespace kerbal
 	}
 }
 
-#endif /* INCLUDE_KERBAL_DATA_STRUCT_STATIC_STACK_HPP_ */
+#endif /* KERBAL_CONTAINER_STATIC_STACK_HPP_ */

@@ -9,15 +9,18 @@
  *   all rights reserved
  */
 
-#ifndef KERBAL_DATA_STRUCT_NONMEMBER_CONTAINER_ACCESS_HPP_
-#define KERBAL_DATA_STRUCT_NONMEMBER_CONTAINER_ACCESS_HPP_
+#ifndef KERBAL_CONTAINER_NONMEMBER_CONTAINER_ACCESS_HPP_
+#define KERBAL_CONTAINER_NONMEMBER_CONTAINER_ACCESS_HPP_
 
 #include <kerbal/compatibility/constexpr.hpp>
 #include <kerbal/compatibility/noexcept.hpp>
 
+#include <cstddef>
+
 namespace kerbal
 {
-	namespace data_struct
+
+	namespace container
 	{
 
 #	if __cplusplus >= 201103L
@@ -97,14 +100,14 @@ namespace kerbal
 #	else
 
 		template <typename Container>
-		typename Tp::iterator
+		typename Container::iterator
 		begin(Container & container)
 		{
 			return container.begin();
 		}
 
 		template <typename Container>
-		typename Tp::const_iterator
+		typename Container::const_iterator
 		begin(const Container & container)
 		{
 			return container.begin();
@@ -209,8 +212,8 @@ namespace kerbal
 			return false;
 		}
 
-	} // namespace data_struct
+	} // namespace container
 
 } // namespace kerbal
 
-#endif /* KERBAL_DATA_STRUCT_NONMEMBER_CONTAINER_ACCESS_HPP_ */
+#endif /* KERBAL_CONTAINER_NONMEMBER_CONTAINER_ACCESS_HPP_ */

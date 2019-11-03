@@ -1,21 +1,20 @@
 /**
- * @file		static_queue_base.hpp
+ * @file       static_queue.impl.hpp
  * @brief
- * @date		2018年5月17日
- * @author		Peter
- * @copyright	Peter
+ * @date       2018-5-17
+ * @author     Peter
  * @copyright
- <a href="http://thinkspirit.org/">ThinkSpirit Laboratory</a>
- of
- <a href="http://www.nuist.edu.cn/">Nanjing University of Information Science & Technology</a>
+ *      Peter of [ThinkSpirit Laboratory](http://thinkspirit.org/)
+ *   of [Nanjing University of Information Science & Technology](http://www.nuist.edu.cn/)
+ *   all rights reserved
  */
 
-#ifndef INCLUDE_KERBAL_DATA_STRUCT_STATIC_CONTAINER_BASE_STATIC_QUEUE_BASE_HPP_
-#define INCLUDE_KERBAL_DATA_STRUCT_STATIC_CONTAINER_BASE_STATIC_QUEUE_BASE_HPP_
+#ifndef KERBAL_CONTAINER_IMPL_STATIC_QUEUE_IMPL_HPP_
+#define KERBAL_CONTAINER_IMPL_STATIC_QUEUE_IMPL_HPP_
 
 namespace kerbal
 {
-	namespace data_struct
+	namespace container
 	{
 
 		template <typename Tp, size_t N>
@@ -196,4 +195,4 @@ namespace kerbal
 	}
 }
 
-#endif /* INCLUDE_KERBAL_DATA_STRUCT_STATIC_CONTAINER_BASE_STATIC_QUEUE_BASE_HPP_ */
+#endif /* KERBAL_CONTAINER_IMPL_STATIC_QUEUE_IMPL_HPP_ */

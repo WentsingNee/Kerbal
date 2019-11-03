@@ -1,17 +1,16 @@
 /**
- * @file		static_queue.hpp
+ * @file       static_queue.hpp
  * @brief
- * @date		2018年5月17日
- * @author		Peter
- * @copyright	Peter
+ * @date       2018-5-17
+ * @author     Peter
  * @copyright
- <a href="http://thinkspirit.org/">ThinkSpirit Laboratory</a>
- of
- <a href="http://www.nuist.edu.cn/">Nanjing University of Information Science & Technology</a>
+ *      Peter of [ThinkSpirit Laboratory](http://thinkspirit.org/)
+ *   of [Nanjing University of Information Science & Technology](http://www.nuist.edu.cn/)
+ *   all rights reserved
  */
 
-#ifndef INCLUDE_KERBAL_DATA_STRUCT_STATIC_QUEUE_HPP_
-#define INCLUDE_KERBAL_DATA_STRUCT_STATIC_QUEUE_HPP_
+#ifndef KERBAL_CONTAINER_STATIC_QUEUE_HPP_
+#define KERBAL_CONTAINER_STATIC_QUEUE_HPP_
 
 #include <cctype>
 #include <stdexcept>
@@ -22,7 +21,7 @@
 
 namespace kerbal
 {
-	namespace data_struct
+	namespace container
 	{
 		template <typename Tp, size_t N>
 		class static_queue
@@ -95,6 +94,6 @@ namespace kerbal
 	}
 }
 
-#include <kerbal/data_struct/static_container_base/static_queue_base.hpp>
+#include <kerbal/container/impl/static_queue.impl.hpp>
 
-#endif /* INCLUDE_KERBAL_DATA_STRUCT_STATIC_QUEUE_HPP_ */
+#endif /* KERBAL_CONTAINER_STATIC_QUEUE_HPP_ */

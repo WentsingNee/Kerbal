@@ -199,7 +199,7 @@ namespace kerbal
 				InputIterator2 b_first, InputIterator2 b_last)
 		{
 			typedef InputIterator1 iterator1;
-			typedef InputIterator2 iterator2;
+//			typedef InputIterator2 iterator2;
 			typedef typename kerbal::iterator::iterator_traits<iterator1>::value_type Tp;
 //			typedef typename kerbal::iterator::iterator_traits<iterator2>::value_type Up;
 			return sequence_less(a_first, a_last, b_first, b_last, std::less<Tp>());
@@ -229,7 +229,7 @@ namespace kerbal
 				InputIterator2 b_first, InputIterator2 b_last)
 		{
 			typedef InputIterator1 iterator1;
-			typedef InputIterator2 iterator2;
+//			typedef InputIterator2 iterator2;
 			typedef typename kerbal::iterator::iterator_traits<iterator1>::value_type Tp;
 //			typedef typename kerbal::iterator::iterator_traits<iterator2>::value_type Up;
 			return sequence_greater(a_first, a_last, b_first, b_last, kerbal::algorithm::binary_type_greater<Tp, Tp>());
@@ -260,7 +260,7 @@ namespace kerbal
 				InputIterator2 b_first, InputIterator2 b_last)
 		{
 			typedef InputIterator1 iterator1;
-			typedef InputIterator2 iterator2;
+//			typedef InputIterator2 iterator2;
 			typedef typename kerbal::iterator::iterator_traits<iterator1>::value_type Tp;
 //			typedef typename kerbal::iterator::iterator_traits<iterator2>::value_type Up;
 			return sequence_less_equal(a_first, a_last, b_first, b_last, kerbal::algorithm::binary_type_less_equal<Tp, Tp>());
@@ -291,7 +291,7 @@ namespace kerbal
 				InputIterator2 b_first, InputIterator2 b_last)
 		{
 			typedef InputIterator1 iterator1;
-			typedef InputIterator2 iterator2;
+//			typedef InputIterator2 iterator2;
 			typedef typename kerbal::iterator::iterator_traits<iterator1>::value_type Tp;
 //			typedef typename kerbal::iterator::iterator_traits<iterator2>::value_type Up;
 			return sequence_greater_equal(a_first, a_last, b_first, b_last, kerbal::algorithm::binary_type_greater_equal<Tp, Tp>());

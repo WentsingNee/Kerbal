@@ -145,7 +145,7 @@ namespace kerbal
 		template <typename InputIterator>
 		KERBAL_CONSTEXPR14
 		InputIterator next(InputIterator it)
-				KERBAL_CONDITIONAL_NOEXCEPT(noexcept(--it))
+				KERBAL_CONDITIONAL_NOEXCEPT(noexcept(++it))
 		{
 			++it;
 			return it;

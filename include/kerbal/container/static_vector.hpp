@@ -1,23 +1,22 @@
 /**
- * @file		static_vector.hpp
+ * @file       static_vector.hpp
  * @brief
- * @date		2018年4月28日
- * @author		Peter
- * @copyright	Peter
+ * @date       2018-4-28
+ * @author     Peter
  * @copyright
- <a href="http://thinkspirit.org/">ThinkSpirit Laboratory</a>
- of
- <a href="http://www.nuist.edu.cn/">Nanjing University of Information Science & Technology</a>
+ *      Peter of [ThinkSpirit Laboratory](http://thinkspirit.org/)
+ *   of [Nanjing University of Information Science & Technology](http://www.nuist.edu.cn/)
+ *   all rights reserved
  */
 
-#ifndef KERBAL_DATA_STRUCT_STATIC_VECTOR_HPP_
-#define KERBAL_DATA_STRUCT_STATIC_VECTOR_HPP_
+#ifndef KERBAL_CONTAINER_STATIC_VECTOR_HPP_
+#define KERBAL_CONTAINER_STATIC_VECTOR_HPP_
 
 #include <kerbal/algorithm/sequence_compare.hpp>
 #include <kerbal/compatibility/constexpr.hpp>
 #include <kerbal/compatibility/noexcept.hpp>
+#include <kerbal/container/static_container_exception.hpp>
 #include <kerbal/data_struct/raw_storage.hpp>
-#include <kerbal/data_struct/static_container_base/static_container_exception.hpp>
 #include <kerbal/iterator/iterator_traits.hpp>
 #include <kerbal/operators/dereferenceable.hpp>
 #include <kerbal/operators/equality_comparable.hpp>
@@ -35,10 +34,8 @@
 
 namespace kerbal
 {
-	/**
-	 * @brief data structure
-	 */
-	namespace data_struct
+
+	namespace container
 	{
 
 		template <typename Pointer>
@@ -428,7 +425,7 @@ namespace kerbal
 				void alert_empty() const
 				{
 					if (empty()) {
-						kerbal::data_struct::static_container_empty_exception::throw_this_exception();
+						kerbal::container::static_container_empty_exception::throw_this_exception();
 					}
 				}
 
@@ -441,7 +438,7 @@ namespace kerbal
 				void alert_full() const
 				{
 					if (full()) {
-						kerbal::data_struct::static_container_full_exception::throw_this_exception(N);
+						kerbal::container::static_container_full_exception::throw_this_exception(N);
 					}
 				}
 
@@ -664,7 +661,7 @@ namespace kerbal
 	}
 }
 
-#include <kerbal/data_struct/static_container_base/static_vector_base.hpp>
-#include <kerbal/data_struct/static_container_base/static_vector_iterator.hpp>
+#include <kerbal/container/impl/static_vector.impl.hpp>
+#include <kerbal/container/impl/static_vector_iterator.impl.hpp>
 
-#endif /* KERBAL_DATA_STRUCT_STATIC_VECTOR_HPP_ */
+#endif /* KERBAL_CONTAINER_STATIC_VECTOR_HPP_ */

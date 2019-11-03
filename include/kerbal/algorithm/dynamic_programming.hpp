@@ -16,7 +16,7 @@
 #include <kerbal/algorithm/modifiers.hpp>
 #include <kerbal/algorithm/search.hpp>
 #include <kerbal/compatibility/constexpr.hpp>
-#include <kerbal/data_struct/nonmember_container_access.hpp>
+#include <kerbal/container/nonmember_container_access.hpp>
 #include <kerbal/iterator/general_back_inserter.hpp>
 #include <kerbal/iterator/iterator.hpp>
 
@@ -134,7 +134,7 @@ namespace kerbal
 					*back_inserter = first; ++back_inserter; ++index_of_back;
 				} else {
 					*kerbal::algorithm::ordered_range_lower_bound(
-							kerbal::data_struct::begin(buffer), kerbal::data_struct::end(buffer), first, _iter_cmp) = first;
+							kerbal::container::begin(buffer), kerbal::container::end(buffer), first, _iter_cmp) = first;
 				}
 			}
 			return index_of_back + 1;

@@ -1,19 +1,24 @@
-/*
- * static_container_exception.hpp
- *
- *  Created on: 2019-4-20
- *      Author: peter
+/**
+ * @file       static_container_exception.hpp
+ * @brief
+ * @date       2019-4-20
+ * @author     Peter
+ * @copyright
+ *      Peter of [ThinkSpirit Laboratory](http://thinkspirit.org/)
+ *   of [Nanjing University of Information Science & Technology](http://www.nuist.edu.cn/)
+ *   all rights reserved
  */
 
-#ifndef ERBAL_DATA_STRUCT_STATIC_CONTAINER_BASE_STATIC_CONTAINER_EXCEPTION_HPP_
-#define ERBAL_DATA_STRUCT_STATIC_CONTAINER_BASE_STATIC_CONTAINER_EXCEPTION_HPP_
+#ifndef KERBAL_CONTAINER_STATIC_CONTAINER_EXCEPTION_HPP_
+#define KERBAL_CONTAINER_STATIC_CONTAINER_EXCEPTION_HPP_
+
+#include <kerbal/utility/throw_this_exception.hpp>
 
 #include <stdexcept>
-#include <kerbal/utility/throw_this_exception.hpp>
 
 namespace kerbal
 {
-	namespace data_struct
+	namespace container
 	{
 
 		class static_container_empty_exception:
@@ -43,8 +48,8 @@ namespace kerbal
 				}
 		};
 
-	} // namespace data_struct
+	} // namespace container
 
 } // namespace kerbal
 
-#endif /* ERBAL_DATA_STRUCT_STATIC_CONTAINER_BASE_STATIC_CONTAINER_EXCEPTION_HPP_ */
+#endif /* KERBAL_CONTAINER_STATIC_CONTAINER_EXCEPTION_HPP_ */

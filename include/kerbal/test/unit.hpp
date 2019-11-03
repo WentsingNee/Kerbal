@@ -53,11 +53,11 @@ namespace kerbal
 				const char * case_name = item.case_name;
 				const char * case_description = item.case_description;
 
-				printf("%d    %s    %s\n", i, case_name, case_description);
+				printf("%lu    %s    %s\n", i, case_name, case_description);
 			}
 			puts("Please select the test case num: ");
-			size_type i;
-			scanf("%lld", i);
+			size_type i = 0;
+			scanf("%lu", &i);
 			kerbal::test::unit_info::running_result res = register_list[i].case_call_ptr(argc, argv);
 		}
 
@@ -68,21 +68,25 @@ namespace kerbal
 			typedef typename register_list_type::size_type size_type;
 			typedef typename register_list_type::const_reference const_reference;
 			for (size_type i = 0; i < register_list.size(); ++i) {
+
 				const_reference item = register_list[i];
 				const char * case_name = item.case_name;
 				unit_info::test_unit_type case_call_ptr = item.case_call_ptr;
 				const char * case_description = item.case_description;
+				printf("running test case[%lu]: %s (%s)\n", i, case_name, case_description);
+
 				kerbal::test::unit_info::running_result res = case_call_ptr(argc, argv);
 				switch (res) {
 					case kerbal::test::unit_info::test_passed: {
-						printf("test case: %s (%s) pass\n", case_name, case_description);
+						printf("test case[%lu]: %s (%s) pass\n", i, case_name, case_description);
 						break;
 					}
 					case kerbal::test::unit_info::test_failed: {
-						printf("test case: %s (%s) failed\n", case_name, case_description);
+						printf("test case[%lu]: %s (%s) failed\n", i, case_name, case_description);
 						break;
 					}
 				}
+				printf("\n\n");
 			}
 		}
 
