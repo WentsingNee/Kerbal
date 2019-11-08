@@ -1,6 +1,6 @@
 /**
  * @file       static_ordered.hpp
- * @brief      
+ * @brief
  * @date       2019-8-24
  * @author     Peter
  * @copyright
@@ -9,18 +9,19 @@
  *   all rights reserved
  */
 
-#ifndef KERBAL_DATA_STRUCT_STATIC_CONTAINER_BASE_STATIC_ORDERED_HPP_
-#define KERBAL_DATA_STRUCT_STATIC_CONTAINER_BASE_STATIC_ORDERED_HPP_
+#ifndef KERBAL_CONTAINER_STATIC_ORDERED_HPP_
+#define KERBAL_CONTAINER_STATIC_ORDERED_HPP_
 
-#include <kerbal/data_struct/static_vector.hpp>
 #include <kerbal/algorithm/search.hpp>
+#include <kerbal/container/static_vector.hpp>
 #include <kerbal/utility/compressed_pair.hpp>
 
-#include <algorithm>
+#include <utility>
 
 namespace kerbal
 {
-	namespace data_struct
+
+	namespace container
 	{
 
 		template <typename Key, typename Entity>
@@ -60,16 +61,16 @@ namespace kerbal
 				}
 		};
 
-		template <typename Key, typename Entity, size_t N,
+		template <typename Entity, size_t N, typename Key = Entity,
 			typename KeyCompare = std::less<Key>, typename Extract = default_extract<Key, Entity> >
 		class static_ordered
 		{
 			public:
-				typedef kerbal::data_struct::static_vector<Entity, N> Sequence;
+				typedef kerbal::container::static_vector<Entity, N> Sequence;
 				typedef KeyCompare				key_compare;
 				typedef Entity					value_type;
 				typedef const Entity			const_type;
-				typedef Entity&				reference;
+				typedef Entity&					reference;
 				typedef const Entity&			const_reference;
 				typedef Sequence				container_type;
 
@@ -80,7 +81,9 @@ namespace kerbal
 
 				typedef typename Sequence::size_type				size_type;
 
+				typedef typename Sequence::iterator					iterator;
 				typedef typename Sequence::const_iterator			const_iterator;
+				typedef typename Sequence::reverse_iterator			reverse_iterator;
 				typedef typename Sequence::const_reverse_iterator	const_reverse_iterator;
 
 			protected:
@@ -135,154 +138,149 @@ namespace kerbal
 				}
 
 
-				static_ordered() :
-						__data()
-				{
-				}
+				static_ordered();
 
-				explicit static_ordered(key_compare kc) :
-						__data(kerbal::utility::compressed_pair_default_construct_tag(), kc)
-				{
-				}
+				explicit static_ordered(key_compare kc);
 
-				void clear()
-				{
-					this->__sequence().clear();
-				}
+				template <typename InputIterator, typename =
+						typename kerbal::type_traits::enable_if<
+								kerbal::iterator::is_input_compatible_iterator<InputIterator>::value
+						>::type
+				>
+				static_ordered(InputIterator first, InputIterator last);
 
-				const_iterator begin() const
-				{
-					return this->__sequence().cbegin();
-				}
+				template <typename InputIterator, typename =
+						typename kerbal::type_traits::enable_if<
+								kerbal::iterator::is_input_compatible_iterator<InputIterator>::value
+						>::type
+				>
+				static_ordered(InputIterator first, InputIterator last, key_compare kc);
 
-				const_iterator end() const
-				{
-					return this->__sequence().cend();
-				}
+				iterator begin();
 
-				const_iterator cbegin() const
-				{
-					return this->__sequence().cbegin();
-				}
+				const_iterator begin() const;
 
-				const_iterator cend() const
-				{
-					return this->__sequence().cend();
-				}
+				iterator end();
 
-				const_reverse_iterator rbegin() const
-				{
-					return this->__sequence().crbegin();
-				}
+				const_iterator end() const;
 
-				const_reverse_iterator rend() const
-				{
-					return this->__sequence().crend();
-				}
+				const_iterator cbegin() const;
 
-				const_reverse_iterator crbegin() const
-				{
-					return this->__sequence().crbegin();
-				}
+				const_iterator cend() const;
 
-				const_reverse_iterator crend() const
-				{
-					return this->__sequence().crend();
-				}
+				reverse_iterator rbegin();
 
-				size_type size() const
-				{
-					return this->__sequence().size();
-				}
+				const_reverse_iterator rbegin() const;
+
+				reverse_iterator rend();
+
+				const_reverse_iterator rend() const;
+
+				const_reverse_iterator crbegin() const;
+
+				const_reverse_iterator crend() const;
+
+				size_type size() const;
 
 				/**
 				 * @brief Returns the size() of the largest possible static_vector.
 				 */
-				KERBAL_CONSTEXPR size_type max_size() const KERBAL_NOEXCEPT
-				{
-					return this->__sequence().max_size();
-				}
+				KERBAL_CONSTEXPR size_type max_size() const KERBAL_NOEXCEPT;
 
-				bool empty() const
-				{
-					return this->__sequence().empty();
-				}
+				bool empty() const;
 
-				bool full() const
-				{
-					return this->__sequence().full();
-				}
+				bool full() const;
 
-				const_iterator lower_bound(const Key& key) const
-				{
-					return kerbal::algorithm::lower_bound(this->cbegin(), this->cend(), key, lower_bound_kc_adapter());
-				}
+				const_iterator lower_bound(const Key& key) const;
 
-				const_iterator lower_bound(const Key& key, const_iterator hint) const
-				{
-					return kerbal::algorithm::lower_bound_hint(this->cbegin(), this->cend(), key, hint, lower_bound_kc_adapter());
-				}
+				const_iterator lower_bound(const Key& key, const_iterator hint) const;
 
-				const_iterator upper_bound(const Key& key) const
-				{
-					return kerbal::algorithm::upper_bound(this->cbegin(), this->cend(), key, upper_bound_kc_adapter());
-				}
+				const_iterator upper_bound(const Key& key) const;
 
-				std::pair<const_iterator, const_iterator> equal_range(const Key & key) const
-				{
-					return std::make_pair(this->lower_bound(key), this->upper_bound(key));
-				}
+				//const_iterator upper_bound(const Key& key, const_iterator hint) const;
 
-				const_iterator find(const Key& key) const
+				std::pair<const_iterator, const_iterator> equal_range(const Key & key) const;
+
+				const_iterator find(const Key& key) const;
+
+				const_iterator find(const Key& key, const_iterator hint) const;
+
+				size_type count(const Key& key) const;
+
+				size_type count(const Key& key, const_iterator hint) const;
+
+				bool contains(const Key& key) const;
+
+				bool contains(const Key& key, const_iterator hint) const;
+
+#		if __cplusplus >= 201103L
+
+				template <typename ... Args>
+				std::pair<iterator, bool> unique_emplace(Args&& ... args);
+
+				template <typename ... Args>
+				std::pair<iterator, bool> unique_emplace_hint(const_iterator hint, Args&& ... args);
+
+#		endif
+
+				std::pair<iterator, bool> unique_insert(const_reference src);
+
+				std::pair<iterator, bool> unique_insert(const_iterator hint, const_reference src);
+
+#	if __cplusplus >= 201103L
+
+				std::pair<iterator, bool> unique_insert(rvalue_reference src);
+
+				std::pair<iterator, bool> unique_insert(const_iterator hint, rvalue_reference src);
+#	endif
+
+				template <typename InputIterator>
+				void unique_insert(InputIterator first, InputIterator last);
+
+#		if __cplusplus >= 201103L
+
+				template <typename ... Args>
+				iterator emplace(Args&& ... args);
+
+				template <typename ... Args>
+				iterator emplace_hint(const_iterator hint, Args&& ... args);
+
+#		endif
+
+				iterator insert(const_reference src);
+
+				iterator insert(const_iterator hint, const_reference src);
+
+#	if __cplusplus >= 201103L
+
+				iterator insert(rvalue_reference src);
+
+				iterator insert(const_iterator hint, rvalue_reference src);
+#	endif
+
+				template <typename InputIterator>
+				void insert(InputIterator first, InputIterator last)
 				{
-					const_iterator i = this->lower_bound(key);
-					const_iterator end_it = this->cend();
-					if (i != end_it && this->__key_comp()(key, Extract()(*i))) {
-						i = end_it;
+					while (first != last && !this->full()) {
+						this->insert(*first);
+						++first;
 					}
-					return i;
 				}
 
-				const_iterator find(const Key& key, const_iterator hint) const
-				{
-					const_iterator i = this->lower_bound(key, hint);
-					const_iterator end_it = this->cend();
-					if (i != end_it && this->__key_comp()(key, Extract()(*i))) {
-						i = end_it;
-					}
-					return i;
-				}
+				const_iterator erase(const_iterator pos);
 
-				size_type count(const Key& key) const
-				{
-					return kerbal::iterator::distance(this->lower_bound(key), this->upper_bound(key));
-				}
+				const_iterator erase(const_iterator first, const_iterator last);
 
-				size_type count(const Key& key, const_iterator hint) const
-				{
-					return kerbal::iterator::distance(this->lower_bound(key, hint), this->upper_bound(key));
-				}
+				size_type erase(const_reference val);
 
-				bool contains(const Key& key) const
-				{
-					return this->find(key) != this->cend();
-				}
-
-				bool contains(const Key& key, const_iterator hint) const
-				{
-					return this->find(key, hint) != this->cend();
-				}
-
-				const_iterator erase(const_iterator iterator)
-				{
-					return ((iterator == this->cend()) ? this->cend() : this->__sequence().erase(iterator));
-				}
+				void clear();
 
 		};
 
-	} // namespace data_struct
+	} // namespace container
 
 } // namespace kerbal
 
+#include <kerbal/container/impl/static_ordered.impl.hpp>
 
-#endif /* KERBAL_DATA_STRUCT_STATIC_CONTAINER_BASE_STATIC_ORDERED_HPP_ */
+#endif /* KERBAL_CONTAINER_STATIC_ORDERED_HPP_ */
