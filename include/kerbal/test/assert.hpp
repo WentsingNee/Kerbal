@@ -20,7 +20,7 @@ do {\
 	if ((lhs) != (rhs)) \
 	{ \
 		puts("CHECK EQUAL FAILED!"); \
-		puts("details: " << std::endl; \
+		puts("details: "); \
 		puts("    left statement: " #lhs); \
 		puts("    right statement: " #rhs); \
 		printf("    location: " __FILE__ ":%d\n", __LINE__); \

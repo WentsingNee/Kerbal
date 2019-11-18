@@ -175,7 +175,7 @@ namespace kerbal
 
 		MODULE_EXPORT
 		template <typename Tp>
-		struct is_input_iterator: kerbal::iterator::__is_output_iterator_helper<typename kerbal::type_traits::remove_cv<Tp>::type>
+		struct is_input_iterator: kerbal::iterator::__is_input_iterator_helper<typename kerbal::type_traits::remove_cv<Tp>::type>
 		{
 		};
 
@@ -209,7 +209,7 @@ namespace kerbal
 
 		MODULE_EXPORT
 		template <typename Tp>
-		struct is_forward_iterator: kerbal::iterator::__is_output_iterator_helper<typename kerbal::type_traits::remove_cv<Tp>::type>
+		struct is_forward_iterator: kerbal::iterator::__is_forward_iterator_helper<typename kerbal::type_traits::remove_cv<Tp>::type>
 		{
 		};
 
@@ -243,7 +243,7 @@ namespace kerbal
 
 		MODULE_EXPORT
 		template <typename Tp>
-		struct is_bidirectional_iterator: kerbal::iterator::__is_output_iterator_helper<typename kerbal::type_traits::remove_cv<Tp>::type>
+		struct is_bidirectional_iterator: kerbal::iterator::__is_bidirectional_iterator_helper<typename kerbal::type_traits::remove_cv<Tp>::type>
 		{
 		};
 
@@ -277,7 +277,7 @@ namespace kerbal
 
 		MODULE_EXPORT
 		template <typename Tp>
-		struct is_random_access_iterator: kerbal::iterator::__is_output_iterator_helper<typename kerbal::type_traits::remove_cv<Tp>::type>
+		struct is_random_access_iterator: kerbal::iterator::__is_random_access_iterator_helper<typename kerbal::type_traits::remove_cv<Tp>::type>
 		{
 		};
 

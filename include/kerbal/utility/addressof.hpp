@@ -26,7 +26,7 @@ namespace kerbal
 			return static_cast<Tp*>(
 						static_cast<void*>(
 							&const_cast<char&>(
-								(const volatile char&)(val))));
+								(const volatile char&)(arg))));
 		}
 
 #	if __cplusplus >= 201103L

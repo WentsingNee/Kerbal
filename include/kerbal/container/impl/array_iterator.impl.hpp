@@ -83,7 +83,7 @@ namespace kerbal
 			__arr_iterbase<DerivedIterator, Pointer>::operator+=(const typename __arr_iterbase::difference_type & delta) KERBAL_NOEXCEPT
 			{
 				this->current += delta;
-				return *this;
+				return static_cast<DerivedIterator&>(*this);
 			}
 
 			template <typename DerivedIterator, typename Pointer>
@@ -92,7 +92,7 @@ namespace kerbal
 			__arr_iterbase<DerivedIterator, Pointer>::operator-=(const typename __arr_iterbase::difference_type & delta) KERBAL_NOEXCEPT
 			{
 				this->current -= delta;
-				return *this;
+				return static_cast<DerivedIterator&>(*this);
 			}
 
 		} //namespace detail

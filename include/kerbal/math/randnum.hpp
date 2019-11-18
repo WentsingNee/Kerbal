@@ -1,7 +1,6 @@
 #ifndef _RANDNUM_HPP_
 #define _RANDNUM_HPP_
 
-#include <kerbal/utility/functor.hpp>
 #include <utility>
 #include <time.h>
 #include <fstream>

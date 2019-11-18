@@ -26,25 +26,25 @@ namespace kerbal
 				typedef Tp type;
 
 			private:
-				Tp & val;
+				Tp * ptr;
 
 			public:
 				KERBAL_CONSTEXPR
 				reference_wrapper(Tp & val) KERBAL_NOEXCEPT :
-									val(val)
+									ptr(&val)
 				{
 				}
 
 				KERBAL_CONSTEXPR
 				operator Tp&() const KERBAL_NOEXCEPT
 				{
-					return this->val;
+					return *this->ptr;
 				}
 
 				KERBAL_CONSTEXPR
 				Tp& get() const KERBAL_NOEXCEPT
 				{
-					return this->val;
+					return *this->ptr;
 				}
 		};
 		

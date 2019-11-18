@@ -59,8 +59,11 @@ namespace kerbal
 					typedef Tp value_type;
 					typedef Tp& reference;
 					typedef const Tp& const_reference;
-					typedef Tp&& rvalue_reference;
-					typedef const Tp&& const_rvalue_reference;
+
+#		if __cplusplus >= 201103L
+					typedef value_type&& rvalue_reference;
+					typedef const value_type&& const_rvalue_reference;
+#		endif
 
 					template <typename Up, typename Allocator>
 					friend class kerbal::container::single_list;

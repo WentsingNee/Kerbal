@@ -23,13 +23,17 @@ namespace kerbal
 	namespace container
 	{
 
-#	if __cplusplus < 201103L
-
 		template <typename Tp, size_t N>
 		KERBAL_CONSTEXPR array<Tp, N>::array()
+#	if __cplusplus >= 201103L
+					: storage{}
+#	endif
 		{
 		}
 
+#	if __cplusplus >= 201103L
+
+#	else
 		template <typename Tp, size_t N>
 		array<Tp, N>::array(const array & src)
 		{
@@ -76,7 +80,9 @@ namespace kerbal
 			this->assign(first, last);
 		}
 
-#	if __cplusplus < 201103L
+#	if __cplusplus >= 201103L
+
+#	else
 
 		template <typename Tp, size_t N>
 		array<Tp, N>& array<Tp, N>::operator=(const array & src)
@@ -86,6 +92,7 @@ namespace kerbal
 		}
 
 #	endif
+
 
 #	if __cplusplus >= 201103L
 

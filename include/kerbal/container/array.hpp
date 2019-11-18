@@ -217,18 +217,14 @@ namespace kerbal
 
 			public:
 				/** @brief Initialize the array with default value (Default constructor) */
-#			if __cplusplus >= 201103L
-				KERBAL_CONSTEXPR array() = default;
-#			else
-				array();
-#			endif
+				KERBAL_CONSTEXPR array();
 
 				/**
 				 * @brief Copy constructor
 				 * @param src Another array object of the same type (must have the same template arguments type and N)
 				 */
 #			if __cplusplus >= 201103L
-				KERBAL_CONSTEXPR array(const array & src) = default;
+				array(const array & src) = default;
 #			else
 				array(const array & src);
 #			endif
@@ -267,7 +263,7 @@ namespace kerbal
 				);
 
 #			if __cplusplus >= 201103L
-				KERBAL_CONSTEXPR array& operator=(const array & src) = default;
+				array& operator=(const array & src) = default;
 #			else
 				array& operator=(const array & src);
 #			endif
@@ -282,7 +278,7 @@ namespace kerbal
 				KERBAL_CONSTEXPR14
 				array& operator=(std::initializer_list<value_type> src);
 
-				KERBAL_CONSTEXPR array& operator=(array && src) = default;
+				array& operator=(array && src) = default;
 
 #	endif
 
