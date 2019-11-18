@@ -12,7 +12,7 @@
 #ifndef KERBAL_CONTAINER_IMPL_STATIC_VECTOR_IMPL_HPP_
 #define KERBAL_CONTAINER_IMPL_STATIC_VECTOR_IMPL_HPP_
 
-#include <kerbal/algorithm/modifiers.hpp>
+#include <kerbal/algorithm/modifier.hpp>
 #include <kerbal/compatibility/move.hpp>
 #include <kerbal/iterator/iterator.hpp>
 #include <kerbal/type_traits/type_traits_details/fundamental_deduction.hpp>

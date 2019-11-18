@@ -13,7 +13,7 @@
 #define KERBAL_ALGORITHM_DYNAMIC_PROGRAMMING_HPP_
 
 #include <kerbal/algorithm/binary_type_predicate.hpp>
-#include <kerbal/algorithm/modifiers.hpp>
+#include <kerbal/algorithm/modifier.hpp>
 #include <kerbal/algorithm/search.hpp>
 #include <kerbal/compatibility/constexpr.hpp>
 #include <kerbal/container/nonmember_container_access.hpp>

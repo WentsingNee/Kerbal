@@ -13,7 +13,7 @@
 #define KERBAL_HASH_HASH_BASE_SHA1_BASE_HPP_
 
 #include <kerbal/algorithm/querier.hpp>
-#include <kerbal/algorithm/modifiers.hpp>>
+#include <kerbal/algorithm/modifier.hpp>
 #include <kerbal/iterator/iterator.hpp>
 
 namespace kerbal

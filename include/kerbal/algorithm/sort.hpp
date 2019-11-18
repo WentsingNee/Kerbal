@@ -12,7 +12,7 @@
 #ifndef KERBAL_ALGORITHM_SORT_HPP_
 #define KERBAL_ALGORITHM_SORT_HPP_
 
-#include <kerbal/algorithm/modifiers.hpp>
+#include <kerbal/algorithm/modifier.hpp>
 #include <kerbal/algorithm/search.hpp>
 #include <kerbal/compatibility/constexpr.hpp>
 #include <kerbal/compatibility/move.hpp>

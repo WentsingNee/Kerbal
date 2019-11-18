@@ -1,5 +1,5 @@
 /**
- * @file       modifiers.hpp
+ * @file       modifier.hpp
  * @brief
  * @date       2019-9-22
  * @author     Peter
@@ -9,8 +9,8 @@
  *   all rights reserved
  */
 
-#ifndef KERBAL_ALGORITHM_MODIFIERS_HPP_
-#define KERBAL_ALGORITHM_MODIFIERS_HPP_
+#ifndef KERBAL_ALGORITHM_MODIFIER_HPP_
+#define KERBAL_ALGORITHM_MODIFIER_HPP_
 
 #include <kerbal/algorithm/binary_type_predicate.hpp>
 #include <kerbal/algorithm/querier.hpp>
@@ -1053,4 +1053,4 @@ namespace kerbal
 
 } /* namespace kerbal */
 
-#endif /* KERBAL_ALGORITHM_MODIFIERS_HPP_ */
+#endif /* KERBAL_ALGORITHM_MODIFIER_HPP_ */

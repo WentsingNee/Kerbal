@@ -13,7 +13,7 @@
 #define KERBAL_CONTAINER_IMPL_ARRAY_IMPL_HPP_
 
 
-#include <kerbal/algorithm/modifiers.hpp>
+#include <kerbal/algorithm/modifier.hpp>
 #include <kerbal/compatibility/move.hpp>
 #include <kerbal/utility/throw_this_exception.hpp>
 
