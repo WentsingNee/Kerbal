@@ -62,7 +62,11 @@ namespace kerbal
 
 		MODULE_EXPORT
 		template <typename Tp, size_t i = 0>
-		struct extent: kerbal::type_traits::integral_constant<size_t, 0>
+		struct extent;
+
+		MODULE_EXPORT
+		template <typename Tp>
+		struct extent<Tp, 0>: kerbal::type_traits::integral_constant<size_t, 0>
 		{
 		};
 

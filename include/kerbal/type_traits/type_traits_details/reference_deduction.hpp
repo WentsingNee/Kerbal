@@ -70,14 +70,14 @@ namespace kerbal
 		template <typename Tp>
 		struct remove_reference
 		{
-				typedef Tp type;
+			typedef Tp type;
 		};
 
 		MODULE_EXPORT
 		template <typename Tp>
 		struct remove_reference<Tp&>
 		{
-				typedef Tp type;
+			typedef Tp type;
 		};
 
 #	if __cplusplus >= 201103L
@@ -134,6 +134,32 @@ namespace kerbal
 		{
 				typedef Tp& type;
 		};
+
+		MODULE_EXPORT
+		template <typename From, typename To>
+		struct copy_lvalue_reference:
+					kerbal::type_traits::conditional<
+						kerbal::type_traits::is_lvalue_reference<From>::value,
+						kerbal::type_traits::add_lvalue_reference<To>,
+						To
+					>
+		{
+		};
+
+#	if __cplusplus >= 201103L
+
+		MODULE_EXPORT
+		template <typename From, typename To>
+		struct copy_rvalue_reference:
+				kerbal::type_traits::conditional<
+						kerbal::type_traits::is_rvalue_reference<From>::value,
+						kerbal::type_traits::add_rvalue_reference<To>,
+						To
+				>
+		{
+		};
+
+#	endif
 
 	}
 }

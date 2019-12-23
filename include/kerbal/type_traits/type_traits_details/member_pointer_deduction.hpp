@@ -13,7 +13,7 @@
 
 #include <kerbal/ts/modules_ts/modules_ts.hpp>
 #include <kerbal/type_traits/type_traits_details/cv_deduction.hpp>
-#include <kerbal/type_traits/type_traits_details/is_function.hpp>
+#include <kerbal/type_traits/type_traits_details/function_deduction.hpp>
 
 namespace kerbal
 {

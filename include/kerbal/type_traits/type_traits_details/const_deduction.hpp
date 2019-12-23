@@ -9,6 +9,7 @@
 #define INCLUDE_KERBAL_TYPE_TRAITS_TYPE_TRAITS_DETAILS_CONST_DEDUCTION_HPP_
 
 #include <kerbal/ts/modules_ts/modules_ts.hpp>
+#include <kerbal/type_traits/type_traits_details/conditional.hpp>
 #include <kerbal/type_traits/type_traits_details/integral_constant.hpp>
 
 namespace kerbal
@@ -62,6 +63,17 @@ namespace kerbal
 		struct add_const<Tp&>
 		{
 				typedef Tp& type;
+		};
+
+		MODULE_EXPORT
+		template <typename From, typename To>
+		struct copy_const:
+					kerbal::type_traits::conditional<
+						kerbal::type_traits::is_const<From>::value,
+						kerbal::type_traits::add_const<To>,
+						To
+					>
+		{
 		};
 
 	}

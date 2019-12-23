@@ -9,9 +9,9 @@
 #define INCLUDE_KERBAL_TYPE_TRAITS_TYPE_TRAITS_DETAILS_FUNDAMENTAL_DEDUCTION_HPP_
 
 #include <kerbal/ts/modules_ts/modules_ts.hpp>
-#include <kerbal/type_traits/type_traits_details/integral_constant.hpp>
 #include <kerbal/type_traits/type_traits_details/conditional.hpp>
 #include <kerbal/type_traits/type_traits_details/cv_deduction.hpp>
+#include <kerbal/type_traits/type_traits_details/integral_constant.hpp>
 
 #if __cplusplus >= 201103L
 #	include <cstddef>
@@ -210,7 +210,14 @@ namespace kerbal
 									>
 		{
 		};
+
 #	endif
+
+		MODULE_EXPORT
+		template <typename Tp>
+		struct is_compound: kerbal::type_traits::conditional_boolean<!is_fundamental<Tp>::value>
+		{
+		};
 
 	}
 }

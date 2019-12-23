@@ -14,6 +14,8 @@
 
 #include <kerbal/ts/modules_ts/modules_ts.hpp>
 
+#include <cstddef>
+
 namespace kerbal
 {
 
@@ -23,7 +25,7 @@ namespace kerbal
 #	if __cplusplus >= 201103L
 
 		MODULE_EXPORT
-		template <unsigned long long N, typename Type0, typename ... Args>
+		template <size_t N, typename Type0, typename ... Args>
 		struct type_chooser;
 
 		MODULE_EXPORT
@@ -34,7 +36,7 @@ namespace kerbal
 		};
 
 		MODULE_EXPORT
-		template <unsigned long long N, typename Type0, typename ... Args>
+		template <size_t N, typename Type0, typename ... Args>
 		struct type_chooser
 		{
 				static_assert(N <= sizeof...(Args), "N is larger than the number of template type arguments");

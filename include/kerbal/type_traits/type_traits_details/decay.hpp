@@ -17,7 +17,7 @@
 #include <kerbal/type_traits/type_traits_details/array_traits.hpp>
 #include <kerbal/type_traits/type_traits_details/conditional.hpp>
 #include <kerbal/type_traits/type_traits_details/cv_deduction.hpp>
-#include <kerbal/type_traits/type_traits_details/is_function.hpp>
+#include <kerbal/type_traits/type_traits_details/function_deduction.hpp>
 #include <kerbal/type_traits/type_traits_details/pointer_deduction.hpp>
 #include <kerbal/type_traits/type_traits_details/reference_deduction.hpp>
 
@@ -26,6 +26,28 @@ namespace kerbal
 
 	namespace type_traits
 	{
+		template <typename _Up,
+				bool _IsArray = kerbal::type_traits::is_array<_Up>::value,
+				bool _IsFunction = kerbal::type_traits::is_function<_Up>::value>
+		struct __decay_selector;
+
+		template <typename _Up>
+		struct __decay_selector<_Up, false, false>
+		{
+			typedef typename kerbal::type_traits::remove_cv<_Up>::type type;
+		};
+
+		template <typename _Up>
+		struct __decay_selector<_Up, true, false>
+		{
+			typedef typename kerbal::type_traits::remove_extent<_Up>::type *type;
+		};
+
+		template <typename _Up>
+		struct __decay_selector<_Up, false, true>
+		{
+			typedef typename kerbal::type_traits::add_pointer<_Up>::type type;
+		};
 
 		MODULE_EXPORT
 		template <typename Tp>
@@ -35,15 +57,7 @@ namespace kerbal
 				typedef typename kerbal::type_traits::remove_reference<Tp>::type U;
 
 			public:
-				typedef typename kerbal::type_traits::conditional<
-					kerbal::type_traits::is_array<U>::value,
-					typename kerbal::type_traits::remove_extent<U>::type*,
-					typename kerbal::type_traits::conditional<
-						kerbal::type_traits::is_function<U>::value,
-						typename kerbal::type_traits::add_pointer<U>::type,
-						typename kerbal::type_traits::remove_cv<U>::type
-					>::type
-				>::type type;
+				typedef typename __decay_selector<U>::type type;
 		};
 	}
 }

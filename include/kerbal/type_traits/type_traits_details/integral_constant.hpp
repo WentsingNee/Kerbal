@@ -37,6 +37,15 @@ namespace kerbal
 				}
 		};
 
+#	if __cplusplus >= 201103L
+		template <typename Type, Type val>
+		constexpr Type integral_constant<Type, val>::value;
+#	else
+		template <typename Type, Type val>
+		const Type integral_constant<Type, val>::value;
+#	endif
+
+
 		MODULE_EXPORT
 		struct false_type : integral_constant<bool, false>
 		{
