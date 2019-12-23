@@ -12,77 +12,151 @@
 #ifndef KERBAL_CONTAINER_IMPL_STATIC_VECTOR_ITERATOR_IMPL_HPP_
 #define KERBAL_CONTAINER_IMPL_STATIC_VECTOR_ITERATOR_IMPL_HPP_
 
+#include <kerbal/compatibility/constexpr.hpp>
+#include <kerbal/compatibility/noexcept.hpp>
+#include <kerbal/iterator/iterator_traits.hpp>
+#include <kerbal/operators/addable.hpp>
+#include <kerbal/operators/dereferenceable.hpp>
+#include <kerbal/operators/equality_comparable.hpp>
+#include <kerbal/operators/incr_decr.hpp>
+#include <kerbal/operators/less_than_comparable.hpp>
+#include <kerbal/operators/subtractable.hpp>
 
 namespace kerbal
 {
 	namespace container
 	{
-		/*
-		 * iterator_base
-		 */
 
 		template <typename DerivedIterator, typename Pointer, typename StorageType>
-		typename __stavec_iterbase<DerivedIterator, Pointer, StorageType>::iterator_base_t::reference
-		__stavec_iterbase<DerivedIterator, Pointer, StorageType>::operator*() const KERBAL_NOEXCEPT
+		class __stavec_iterbase:
+				public std::iterator<
+						std::random_access_iterator_tag,
+						typename kerbal::iterator::iterator_traits<Pointer>::value_type,
+						typename kerbal::iterator::iterator_traits<Pointer>::difference_type,
+						typename kerbal::iterator::iterator_traits<Pointer>::pointer,
+						typename kerbal::iterator::iterator_traits<Pointer>::reference
+				>,
+				public kerbal::operators::addable<DerivedIterator, typename kerbal::iterator::iterator_traits<Pointer>::difference_type>,
+				public kerbal::operators::addable_left<DerivedIterator, typename kerbal::iterator::iterator_traits<Pointer>::difference_type>,
+				public kerbal::operators::dereferenceable<DerivedIterator, Pointer>,
+				public kerbal::operators::equality_comparable<DerivedIterator>,
+				public kerbal::operators::less_than_comparable<DerivedIterator>,
+				public kerbal::operators::incrementable<DerivedIterator>,
+				public kerbal::operators::decrementable<DerivedIterator>,
+				public kerbal::operators::subtractable<DerivedIterator, typename kerbal::iterator::iterator_traits<Pointer>::difference_type>
 		{
-			return current->raw_value();
-		}
+			protected:
+				typedef StorageType storage_type_for_iterator;
 
-		template <typename DerivedIterator, typename Pointer, typename StorageType>
-		DerivedIterator&
-		__stavec_iterbase<DerivedIterator, Pointer, StorageType>::operator++() KERBAL_NOEXCEPT
-		{
-			++this->current;
-			return static_cast<DerivedIterator&>(*this);
-		}
+				storage_type_for_iterator* current;
 
-		template <typename DerivedIterator, typename Pointer, typename StorageType>
-		DerivedIterator&
-		__stavec_iterbase<DerivedIterator, Pointer, StorageType>::operator--() KERBAL_NOEXCEPT
-		{
-			--this->current;
-			return static_cast<DerivedIterator&>(*this);
-		}
+			public:
+				explicit KERBAL_CONSTEXPR __stavec_iterbase(storage_type_for_iterator* current) KERBAL_NOEXCEPT :
+						current(current)
+				{
+				}
 
-		template <typename DerivedIterator, typename Pointer, typename StorageType>
-		DerivedIterator
-		__stavec_iterbase<DerivedIterator, Pointer, StorageType>::operator+
-				(const typename __stavec_iterbase::difference_type & delta) const KERBAL_NOEXCEPT
-		{
-			return DerivedIterator(this->current + delta);
-		}
+				typename __stavec_iterbase::reference operator*() const KERBAL_NOEXCEPT
+				{
+					return current->raw_value();
+				}
 
-		template <typename DerivedIterator, typename Pointer, typename StorageType>
-		DerivedIterator
-		__stavec_iterbase<DerivedIterator, Pointer, StorageType>::operator-
-				(const typename __stavec_iterbase::difference_type & delta) const KERBAL_NOEXCEPT
-		{
-			return DerivedIterator(this->current - delta);
-		}
+				friend KERBAL_CONSTEXPR
+				typename __stavec_iterbase::difference_type
+				operator-(const DerivedIterator & lhs, const DerivedIterator & rhs) KERBAL_NOEXCEPT
+				{
+					return lhs.current - rhs.current;
+				}
 
-		template <typename DerivedIterator, typename Pointer, typename StorageType>
-		KERBAL_CONSTEXPR
-		typename __stavec_iterbase<DerivedIterator, Pointer, StorageType>::difference_type
-		__stavec_iterbase<DerivedIterator, Pointer, StorageType>::operator-(const DerivedIterator & with) const KERBAL_NOEXCEPT
-		{
-			return this->current - with.current;
-		}
+				DerivedIterator& operator++() KERBAL_NOEXCEPT
+				{
+					++this->current;
+					return static_cast<DerivedIterator&>(*this);
+				}
 
-		template <typename DerivedIterator, typename Pointer, typename StorageType>
-		DerivedIterator&
-		__stavec_iterbase<DerivedIterator, Pointer, StorageType>::operator+=(const typename __stavec_iterbase::difference_type & delta) KERBAL_NOEXCEPT
-		{
-			this->current += delta;
-			return static_cast<DerivedIterator&>(*this);
-		}
+				DerivedIterator& operator--() KERBAL_NOEXCEPT
+				{
+					--this->current;
+					return static_cast<DerivedIterator&>(*this);
+				}
 
-		template <typename DerivedIterator, typename Pointer, typename StorageType>
-		DerivedIterator&
-		__stavec_iterbase<DerivedIterator, Pointer, StorageType>::operator-=(const typename __stavec_iterbase::difference_type & delta) KERBAL_NOEXCEPT
+				DerivedIterator& operator+=(const typename __stavec_iterbase::difference_type & delta) KERBAL_NOEXCEPT
+				{
+					this->current += delta;
+					return static_cast<DerivedIterator&>(*this);
+				}
+
+				DerivedIterator& operator-=(const typename __stavec_iterbase::difference_type & delta) KERBAL_NOEXCEPT
+				{
+					this->current -= delta;
+					return static_cast<DerivedIterator&>(*this);
+				}
+
+				friend KERBAL_CONSTEXPR bool operator<(const DerivedIterator & lhs, const DerivedIterator & rhs) KERBAL_NOEXCEPT
+				{
+					return lhs.current < rhs.current;
+				}
+
+				friend KERBAL_CONSTEXPR bool operator==(const DerivedIterator & lhs, const DerivedIterator & rhs) KERBAL_NOEXCEPT
+				{
+					return lhs.current == rhs.current;
+				}
+		};
+
+		template <typename ValueType>
+		class __stavec_kiter;
+
+		// Iterator to static_vector.
+		template <typename ValueType>
+		class __stavec_iter: public __stavec_iterbase<
+												__stavec_iter<ValueType>,
+												ValueType*,
+												kerbal::data_struct::raw_storage<ValueType>
+										>
 		{
-			this->current -= delta;
-			return static_cast<DerivedIterator&>(*this);
-		}
+			private:
+				template <typename Tp, size_t N>
+				friend class static_vector;
+
+				friend class __stavec_kiter<ValueType>;
+
+				typedef kerbal::data_struct::raw_storage<ValueType> storage_type;
+				typedef __stavec_iterbase<__stavec_iter<ValueType>, ValueType*, storage_type> super;
+
+			public:
+				explicit KERBAL_CONSTEXPR __stavec_iter(storage_type* current) KERBAL_NOEXCEPT :
+						super(current)
+				{
+				}
+		};
+
+		// Constant iterator to static_vector.
+		template <typename ValueType>
+		class __stavec_kiter: public __stavec_iterbase<
+												__stavec_kiter<ValueType>,
+												const ValueType*,
+												const kerbal::data_struct::raw_storage<ValueType>
+										>
+		{
+			private:
+				template <typename Tp, size_t N>
+				friend class static_vector;
+
+				typedef const kerbal::data_struct::raw_storage<ValueType> storage_type;
+				typedef __stavec_iterbase<__stavec_kiter<ValueType>, const ValueType*, storage_type> super;
+				typedef __stavec_iter<ValueType> iterator;
+
+			public:
+				explicit KERBAL_CONSTEXPR __stavec_kiter(const storage_type* current) KERBAL_NOEXCEPT :
+						super(current)
+				{
+				}
+
+				KERBAL_CONSTEXPR __stavec_kiter(const iterator & current) KERBAL_NOEXCEPT :
+						super(current.current)
+				{
+				}
+		};
 
 	}
 }

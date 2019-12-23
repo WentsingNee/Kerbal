@@ -37,6 +37,7 @@ namespace kerbal
 		{
 		}
 
+		// maybe throw exception while copying
 		template <typename Tp, size_t N>
 		void static_vector<Tp, N>::__copy_constructor(const static_vector & src, kerbal::type_traits::false_type)
 		{
@@ -54,6 +55,7 @@ namespace kerbal
 			}
 		}
 
+		// will not throw exception while copying
 		template <typename Tp, size_t N>
 		void static_vector<Tp, N>::__copy_constructor(const static_vector & src, kerbal::type_traits::true_type) KERBAL_NOEXCEPT
 		{
@@ -211,7 +213,12 @@ namespace kerbal
 		static_vector<Tp, N>::static_vector(size_type n, const_reference val) :
 				p_to_end(storage + 0)
 		{
-			this->assign(n, val);
+			try {
+				this->assign(n, val);
+			} catch (...) {
+				this->clear();
+				throw;
+			}
 		}
 
 
@@ -382,7 +389,7 @@ namespace kerbal
 				 * a a a a a a x x
 				 * b b b x x x x x
 				 */
-				this->erase(this->nth(new_size), this->end());
+				this->shrink_back_to(this->nth(new_size));
 				kerbal::algorithm::fill(this->begin(), this->end(), val);
 			}
 		}
@@ -444,7 +451,7 @@ namespace kerbal
 			if (assign_it != this->end()) { // namely: first == last
 				// X X X X O O O
 				// T T
-				this->erase(assign_it, this->end());
+				this->shrink_back_to(assign_it);
 			} else {
 				// X X X X O O O
 				// T T T T T T T T T
@@ -592,7 +599,7 @@ namespace kerbal
 		static_vector<Tp, N>::at(size_type index)
 		{
 			if (index >= size()) {
-				kerbal::utility::throw_this_exception_helper<std::out_of_range>::throw_this_exception("range check fail in static_array");
+				kerbal::utility::throw_this_exception_helper<std::out_of_range>::throw_this_exception((const char*)"range check fail in static_array");
 			}
 			return (*this)[index];
 		}
@@ -602,7 +609,7 @@ namespace kerbal
 		static_vector<Tp, N>::at(size_type index) const
 		{
 			if (index >= size()) {
-				kerbal::utility::throw_this_exception_helper<std::out_of_range>::throw_this_exception("range check fail in static_array");
+				kerbal::utility::throw_this_exception_helper<std::out_of_range>::throw_this_exception((const char*)"range check fail in static_array");
 			}
 			return (*this)[index];
 		}
@@ -640,7 +647,7 @@ namespace kerbal
 		static_vector<Tp, N>::c_arr()
 		{
 			if (!full()) {
-				kerbal::utility::throw_this_exception_helper<std::logic_error>::throw_this_exception("static vector is not full");
+				kerbal::utility::throw_this_exception_helper<std::logic_error>::throw_this_exception((const char*)"static vector is not full");
 			}
 			return reinterpret_cast<equal_c_array_reference>(this->storage);
 		}
@@ -650,7 +657,7 @@ namespace kerbal
 		static_vector<Tp, N>::const_c_arr() const
 		{
 			if (!full()) {
-				kerbal::utility::throw_this_exception_helper<std::logic_error>::throw_this_exception("static vector is not full");
+				kerbal::utility::throw_this_exception_helper<std::logic_error>::throw_this_exception((const char*)"static vector is not full");
 			}
 			return reinterpret_cast<equal_c_array_reference>(this->storage);
 		}
@@ -737,6 +744,48 @@ namespace kerbal
 		{
 			this->__destroy_at(this->nth(this->size() - 1));
 			--this->p_to_end;
+		}
+
+		template <typename Tp, size_t N>
+		void static_vector<Tp, N>::__shrink_back_to(const_iterator to, kerbal::type_traits::false_type)
+		{
+			while (this->end() > to) {
+				this->pop_back();
+			}
+		}
+
+		template <typename Tp, size_t N>
+		void static_vector<Tp, N>::__shrink_back_to(const_iterator to, kerbal::type_traits::true_type) KERBAL_NOEXCEPT
+		{
+			this->p_to_end = this->storage + this->index_of(to);
+		}
+
+		template <typename Tp, size_t N>
+		void static_vector<Tp, N>::shrink_back_to(const_iterator to)
+		{
+
+#		if __cplusplus < 201103L
+
+			struct enable_optimization:
+					kerbal::type_traits::bool_constant<
+						kerbal::type_traits::is_fundamental<remove_all_extents_t>::value ||
+						kerbal::type_traits::is_pointer<remove_all_extents_t>::value
+					>
+			{
+			};
+
+#		else
+
+			struct enable_optimization:
+					kerbal::type_traits::bool_constant<
+						std::is_trivially_destructible<remove_all_extents_t>::value
+					>
+			{
+			};
+
+#		endif
+
+			this->__shrink_back_to(to, enable_optimization());
 		}
 
 		template <typename Tp, size_t N>
@@ -856,9 +905,7 @@ namespace kerbal
 			kerbal::algorithm::move(mutable_last, this->end(), mutable_first);
 
 			iterator new_end = this->end() - (mutable_last - mutable_first);
-			while (new_end != this->end()) {
-				this->pop_back();
-			}
+			this->shrink_back_to(new_end);
 			return mutable_first;
 		}
 
@@ -881,49 +928,13 @@ namespace kerbal
 				s_arr.push_back(kerbal::compatibility::to_xvalue(*l_it));
 			}
 
-			l_arr.erase(l_arr.nth(s_len), l_end);
-		}
-
-		template <typename Tp, size_t N>
-		void static_vector<Tp, N>::__clear(kerbal::type_traits::false_type)
-		{
-			while (!this->empty()) {
-				this->pop_back();
-			}
-		}
-
-		template <typename Tp, size_t N>
-		void static_vector<Tp, N>::__clear(kerbal::type_traits::true_type) KERBAL_NOEXCEPT
-		{
-			this->p_to_end = this->storage + 0;
+			l_arr.shrink_back_to(l_arr.nth(s_len));
 		}
 
 		template <typename Tp, size_t N>
 		void static_vector<Tp, N>::clear()
 		{
-
-#		if __cplusplus < 201103L
-
-			struct enable_optimization:
-					kerbal::type_traits::bool_constant<
-						kerbal::type_traits::is_fundamental<remove_all_extents_t>::value ||
-						kerbal::type_traits::is_pointer<remove_all_extents_t>::value
-					>
-			{
-			};
-
-#		else
-
-			struct enable_optimization:
-					kerbal::type_traits::bool_constant<
-						std::is_trivially_destructible<remove_all_extents_t>::value
-					>
-			{
-			};
-
-#		endif
-
-			this->__clear(enable_optimization());
+			this->shrink_back_to(this->cbegin());
 		}
 
 		template <typename Tp, size_t N>

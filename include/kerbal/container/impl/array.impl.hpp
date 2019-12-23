@@ -17,6 +17,10 @@
 #include <kerbal/compatibility/move.hpp>
 #include <kerbal/utility/throw_this_exception.hpp>
 
+#if __cplusplus >= 201103L
+#	include <initializer_list>
+#endif
+
 namespace kerbal
 {
 

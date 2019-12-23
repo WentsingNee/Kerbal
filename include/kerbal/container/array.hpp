@@ -16,10 +16,6 @@
 #include <kerbal/compatibility/constexpr.hpp>
 #include <kerbal/compatibility/noexcept.hpp>
 #include <kerbal/iterator/iterator_traits.hpp>
-#include <kerbal/operators/dereferenceable.hpp>
-#include <kerbal/operators/equality_comparable.hpp>
-#include <kerbal/operators/incr_decr.hpp>
-#include <kerbal/operators/less_than_comparable.hpp>
 #include <kerbal/type_traits/type_traits_details/array_traits.hpp>
 #include <kerbal/type_traits/type_traits_details/enable_if.hpp>
 
@@ -30,134 +26,13 @@
 #	include <initializer_list>
 #endif
 
+#include <kerbal/container/impl/array_iterator.impl.hpp>
+
 namespace kerbal
 {
 
 	namespace container
 	{
-
-		template <typename Tp, size_t N>
-		class array;
-
-		namespace detail
-		{
-
-			template <typename Pointer>
-			struct __arr_iterbase_traits
-			{
-				private:
-					typedef kerbal::iterator::iterator_traits<Pointer>		__traits_type;
-
-				public:
-					typedef typename __traits_type::iterator_category		iterator_category;
-					typedef typename __traits_type::value_type				value_type;
-					typedef typename __traits_type::difference_type			difference_type;
-					typedef typename __traits_type::pointer					pointer;
-					typedef typename __traits_type::reference				reference;
-
-					typedef std::iterator<
-							std::random_access_iterator_tag,
-							value_type,
-							difference_type,
-							pointer,
-							reference
-					> type;
-			};
-
-			template <typename DerivedIterator, typename Pointer>
-			class __arr_iterbase:
-					public __arr_iterbase_traits<Pointer>::type,
-					public kerbal::operators::dereferenceable<DerivedIterator, Pointer>,
-					public kerbal::operators::equality_comparable<DerivedIterator>,
-					public kerbal::operators::less_than_comparable<DerivedIterator>,
-					public kerbal::operators::incrementable<DerivedIterator>,
-					public kerbal::operators::decrementable<DerivedIterator>
-			{
-				private:
-					typedef typename __arr_iterbase_traits<Pointer>::type iterator_base_t;
-
-					Pointer current;
-
-				public:
-					explicit KERBAL_CONSTEXPR __arr_iterbase(Pointer current) KERBAL_NOEXCEPT :
-							current(current)
-					{
-					}
-
-					KERBAL_CONSTEXPR
-					typename iterator_base_t::reference operator*() const KERBAL_NOEXCEPT;
-
-					KERBAL_CONSTEXPR14 DerivedIterator& operator++() KERBAL_NOEXCEPT;
-					KERBAL_CONSTEXPR14 DerivedIterator& operator--() KERBAL_NOEXCEPT;
-
-					KERBAL_CONSTEXPR DerivedIterator operator+(const typename __arr_iterbase::difference_type & delta) const KERBAL_NOEXCEPT;
-					KERBAL_CONSTEXPR DerivedIterator operator-(const typename __arr_iterbase::difference_type & delta) const KERBAL_NOEXCEPT;
-
-					KERBAL_CONSTEXPR
-					typename __arr_iterbase::difference_type operator-(const DerivedIterator & with) const KERBAL_NOEXCEPT;
-
-					KERBAL_CONSTEXPR14 DerivedIterator& operator+=(const typename __arr_iterbase::difference_type & delta) KERBAL_NOEXCEPT;
-					KERBAL_CONSTEXPR14 DerivedIterator& operator-=(const typename __arr_iterbase::difference_type & delta) KERBAL_NOEXCEPT;
-
-					friend KERBAL_CONSTEXPR
-					bool operator<(const DerivedIterator & lhs, const DerivedIterator & rhs) KERBAL_NOEXCEPT
-					{
-						return lhs.current < rhs.current;
-					}
-
-					friend KERBAL_CONSTEXPR
-					bool operator==(const DerivedIterator & lhs, const DerivedIterator & rhs) KERBAL_NOEXCEPT
-					{
-						return lhs.current == rhs.current;
-					}
-			};
-
-			template <typename ValueType>
-			class __arr_kiter;
-
-			/// @brief Iterator to array.
-			template <typename ValueType>
-			class __arr_iter: public __arr_iterbase<__arr_iter<ValueType>, ValueType*>
-			{
-				private:
-					template <typename Tp, size_t N>
-					friend class kerbal::container::array;
-
-					friend class __arr_kiter<ValueType>;
-
-					typedef __arr_iterbase<__arr_iter<ValueType>, ValueType*> super;
-
-				public:
-					explicit KERBAL_CONSTEXPR __arr_iter(ValueType* current) KERBAL_NOEXCEPT :
-							super(current)
-					{
-					}
-			};
-
-			/// @brief Iterator to array.
-			template <typename ValueType>
-			class __arr_kiter: public __arr_iterbase<__arr_kiter<ValueType>, const ValueType*>
-			{
-				private:
-					template <typename Tp, size_t N>
-					friend class kerbal::container::array;
-
-					typedef __arr_iterbase<__arr_kiter<ValueType>, const ValueType*> super;
-					typedef __arr_iter<ValueType> iterator;
-
-				public:
-					explicit KERBAL_CONSTEXPR __arr_kiter(const ValueType* current) KERBAL_NOEXCEPT :
-							super(current)
-					{
-					}
-
-					KERBAL_CONSTEXPR __arr_kiter(const iterator & current) KERBAL_NOEXCEPT :
-							super(current.current)
-					{
-					}
-			};
-
-		} //namespace detail
 
 		template <typename Tp, size_t N>
 		class array
@@ -223,13 +98,13 @@ namespace kerbal
 				 * @brief Copy constructor
 				 * @param src Another array object of the same type (must have the same template arguments type and N)
 				 */
-#			if __cplusplus >= 201103L
+#		if __cplusplus >= 201103L
 				array(const array & src) = default;
-#			else
+#		else
 				array(const array & src);
-#			endif
+#		endif
 
-#			if __cplusplus >= 201103L
+#		if __cplusplus >= 201103L
 
 				/**
 				 * @brief Construct the array by coping the contents in initializer list
@@ -241,7 +116,7 @@ namespace kerbal
 
 				KERBAL_CONSTEXPR array(array && src) = default;
 
-#			endif
+#		endif
 
 				KERBAL_CONSTEXPR14 array(size_type n, const_reference val);
 
@@ -262,13 +137,13 @@ namespace kerbal
 						>::type = 0
 				);
 
-#			if __cplusplus >= 201103L
+#		if __cplusplus >= 201103L
 				array& operator=(const array & src) = default;
-#			else
+#		else
 				array& operator=(const array & src);
-#			endif
+#		endif
 
-#	if __cplusplus >= 201103L
+#		if __cplusplus >= 201103L
 
 				/**
 				 * @brief Assign the array by using the content of an initializer list
@@ -280,7 +155,7 @@ namespace kerbal
 
 				array& operator=(array && src) = default;
 
-#	endif
+#		endif
 
 				/**
 				 * @brief Assign the array by using n value(s).
@@ -304,14 +179,14 @@ namespace kerbal
 				KERBAL_CONSTEXPR14
 				assign(InputIterator first, InputIterator last);
 
-#if __cplusplus >= 201103L
+#		if __cplusplus >= 201103L
 				/**
 				 * @brief Assign the array by using the content of an initializer list
 				 * @param src the initializer list
 				 */
 				KERBAL_CONSTEXPR14
 				void assign(std::initializer_list<value_type> src);
-#endif
+#		endif
 
 				/** @brief 返回指向数组首元素的迭代器 */
 				KERBAL_CONSTEXPR14 iterator begin() KERBAL_NOEXCEPT;
@@ -420,13 +295,25 @@ namespace kerbal
 		};
 
 		template <typename Tp, size_t M, size_t N>
-		KERBAL_CONSTEXPR14 bool operator==(const array<Tp, M> & lhs, const array<Tp, N> & rhs)
+		KERBAL_CONSTEXPR bool operator==(const array<Tp, M> & lhs, const array<Tp, N> & rhs) KERBAL_NOEXCEPT
+		{
+			return false;
+		}
+
+		template <typename Tp, size_t M, size_t N>
+		KERBAL_CONSTEXPR bool operator!=(const array<Tp, M> & lhs, const array<Tp, N> & rhs) KERBAL_NOEXCEPT
+		{
+			return true;
+		}
+
+		template <typename Tp, size_t N>
+		KERBAL_CONSTEXPR14 bool operator==(const array<Tp, N> & lhs, const array<Tp, N> & rhs)
 		{
 			return kerbal::algorithm::sequence_equal_to(lhs.cbegin(), lhs.cend(), rhs.cbegin(), rhs.cend());
 		}
 
-		template <typename Tp, size_t M, size_t N>
-		KERBAL_CONSTEXPR14 bool operator!=(const array<Tp, M> & lhs, const array<Tp, N> & rhs)
+		template <typename Tp, size_t N>
+		KERBAL_CONSTEXPR14 bool operator!=(const array<Tp, N> & lhs, const array<Tp, N> & rhs)
 		{
 			return kerbal::algorithm::sequence_not_equal_to(lhs.cbegin(), lhs.cend(), rhs.cbegin(), rhs.cend());
 		}
@@ -460,6 +347,5 @@ namespace kerbal
 } //namespace kerbal
 
 #include <kerbal/container/impl/array.impl.hpp>
-#include <kerbal/container/impl/array_iterator.impl.hpp>
 
 #endif /* KERBAL_CONTAINER_ARRAY_HPP_ */
