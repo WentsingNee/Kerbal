@@ -42,6 +42,9 @@ namespace kerbal
 				typedef Tp first_type;
 				typedef Up second_type;
 
+				typedef kerbal::type_traits::false_type is_first_compressed;
+				typedef kerbal::type_traits::false_type is_second_compressed;
+
 			private:
 				first_type __first;
 				second_type __second;
@@ -93,6 +96,7 @@ namespace kerbal
 				}
 
 			public:
+
 				KERBAL_CONSTEXPR14
 				__first_type_ref first() KERBAL_NOEXCEPT
 				{
@@ -124,6 +128,9 @@ namespace kerbal
 			public:
 				typedef Tp first_type;
 				typedef Up second_type;
+
+				typedef kerbal::type_traits::false_type is_first_compressed;
+				typedef kerbal::type_traits::true_type  is_second_compressed;
 
 			private:
 				first_type __first;
@@ -176,6 +183,7 @@ namespace kerbal
 				}
 
 			public:
+
 				KERBAL_CONSTEXPR14
 				__first_type_ref first() KERBAL_NOEXCEPT
 				{
@@ -207,6 +215,9 @@ namespace kerbal
 			public:
 				typedef Tp first_type;
 				typedef Up second_type;
+
+				typedef kerbal::type_traits::true_type  is_first_compressed;
+				typedef kerbal::type_traits::false_type is_second_compressed;
 
 			private:
 				second_type __second;
@@ -291,6 +302,9 @@ namespace kerbal
 			public:
 				typedef Tp first_type;
 				typedef Up second_type;
+
+				typedef kerbal::type_traits::true_type is_first_compressed;
+				typedef kerbal::type_traits::true_type is_second_compressed;
 
 			private:
 				typedef typename kerbal::type_traits::add_lvalue_reference<first_type>::type             __first_type_ref;
