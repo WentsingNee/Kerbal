@@ -14,6 +14,7 @@
 
 #include <kerbal/compatibility/noexcept.hpp>
 #include <kerbal/memory/default_delete.hpp>
+#include <kerbal/utility/declval.hpp>
 #include <kerbal/utility/noncopyable.hpp>
 
 #include <cstddef>
@@ -58,7 +59,7 @@ namespace kerbal
 
 #			endif
 
-				~guard() KERBAL_CONDITIONAL_NOEXCEPT(noexcept(this->reset()))
+				~guard() KERBAL_CONDITIONAL_NOEXCEPT(noexcept(kerbal::utility::declthis<guard>()->reset()))
 				{
 					this->reset();
 				}
@@ -70,7 +71,8 @@ namespace kerbal
 					return p;
 				}
 
-				void reset() KERBAL_CONDITIONAL_NOEXCEPT(noexcept(this->deleter(this->ptr)))
+				void reset() KERBAL_CONDITIONAL_NOEXCEPT(noexcept(
+						kerbal::utility::declthis<guard>()->deleter(kerbal::utility::declthis<guard>()->ptr)))
 				{
 					this->deleter(this->ptr);
 					this->ptr = NULL;
@@ -110,7 +112,7 @@ namespace kerbal
 
 #			endif
 
-				~guard() KERBAL_CONDITIONAL_NOEXCEPT(noexcept(this->reset()))
+				~guard() KERBAL_CONDITIONAL_NOEXCEPT(noexcept(kerbal::utility::declthis<guard>()->reset()))
 				{
 					this->reset();
 				}
@@ -122,7 +124,8 @@ namespace kerbal
 					return p;
 				}
 
-				void reset() KERBAL_CONDITIONAL_NOEXCEPT(noexcept(this->deleter(this->ptr)))
+				void reset() KERBAL_CONDITIONAL_NOEXCEPT(noexcept(
+						kerbal::utility::declthis<guard>()->deleter(kerbal::utility::declthis<guard>()->ptr)))
 				{
 					this->deleter(this->ptr);
 					this->ptr = NULL;
