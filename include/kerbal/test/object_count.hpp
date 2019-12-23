@@ -8,14 +8,15 @@
 #ifndef KERBAL_TEST_OBJECT_COUNT_HPP_
 #define KERBAL_TEST_OBJECT_COUNT_HPP_
 
-#include <cstddef>
 #include <kerbal/utility/noncopyable.hpp>
+
+#include <cstddef>
 
 namespace kerbal
 {
 	namespace test
 	{
-		template <typename ObjectType, typename CountingType = size_t>
+		template <typename ObjectType, typename CountingType = std::ptrdiff_t >
 		class object_count: kerbal::utility::noncopyable
 		{
 			public:

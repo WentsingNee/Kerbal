@@ -12,7 +12,7 @@
 #ifndef KERBAL_TEST_TEST_HPP_
 #define KERBAL_TEST_TEST_HPP_
 
-#include <kerbal/test/unit.hpp>
-#include <kerbal/test/assert.hpp>
+#include <kerbal/test/object_count.hpp>
+#include <kerbal/test/test_case.hpp>
 
 #endif /* KERBAL_TEST_TEST_HPP_ */
