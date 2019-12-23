@@ -111,7 +111,7 @@ namespace kerbal
 					return s;
 				}
 
-				KERBAL_CONSTEXPR const unsigned char * c_str() const KERBAL_NOEXCEPT
+				KERBAL_CONSTEXPR14 const unsigned char * c_str() const KERBAL_NOEXCEPT
 				{
 					return this->hash;
 				}
@@ -235,6 +235,6 @@ namespace kerbal
 
 } // namespace kerbal
 
-#include <kerbal/hash/hash_base/sha1_base.hpp>
+#include <kerbal/hash/impl/sha1.impl.hpp>
 
 #endif /* KERBAL_HASH_SHA1_HPP_ */

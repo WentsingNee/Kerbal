@@ -1,5 +1,5 @@
 /**
- * @file       sha1_base.hpp
+ * @file       sha1.impl.hpp
  * @brief
  * @date       2019-9-28
  * @author     Peter
@@ -9,8 +9,8 @@
  *   all rights reserved
  */
 
-#ifndef KERBAL_HASH_HASH_BASE_SHA1_BASE_HPP_
-#define KERBAL_HASH_HASH_BASE_SHA1_BASE_HPP_
+#ifndef KERBAL_HASH_IMPL_SHA1_IMPL_HPP_
+#define KERBAL_HASH_IMPL_SHA1_IMPL_HPP_
 
 #include <kerbal/algorithm/querier.hpp>
 #include <kerbal/algorithm/modifier.hpp>
@@ -283,14 +283,14 @@ namespace kerbal
 		__SHA1_context_base2<Son>::digest() KERBAL_NOEXCEPT
 		{
 			const unsigned char finalcount[8] = {
-					(this->count[1] >> 24) & 255,
-					(this->count[1] >> 16) & 255,
-					(this->count[1] >> 8) & 255,
-					(this->count[1] >> 0) & 255,
-					(this->count[0] >> 24) & 255,
-					(this->count[0] >> 16) & 255,
-					(this->count[0] >> 8) & 255,
-					(this->count[0] >> 0) & 255,
+					static_cast<unsigned char>(this->count[1] >> 24),
+					static_cast<unsigned char>(this->count[1] >> 16),
+					static_cast<unsigned char>(this->count[1] >> 8),
+					static_cast<unsigned char>(this->count[1] >> 0),
+					static_cast<unsigned char>(this->count[0] >> 24),
+					static_cast<unsigned char>(this->count[0] >> 16),
+					static_cast<unsigned char>(this->count[0] >> 8),
+					static_cast<unsigned char>(this->count[0] >> 0),
 			}; /* Endian independent */
 
 			{
@@ -312,4 +312,4 @@ namespace kerbal
 
 } // namespace kerbal
 
-#endif /* KERBAL_HASH_HASH_BASE_SHA1_BASE_HPP_ */
+#endif /* KERBAL_HASH_IMPL_SHA1_IMPL_HPP_ */
