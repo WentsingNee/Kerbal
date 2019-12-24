@@ -102,9 +102,9 @@ namespace kerbal
 			public:
 
 				/// @brief Iterator to static_vector.
-				typedef __stavec_iter<value_type> iterator;
+				typedef detail::__stavec_iter<value_type> iterator;
 				/// @brief Constant iterator to static_vector.
-				typedef __stavec_kiter<value_type> const_iterator;
+				typedef detail::__stavec_kiter<value_type> const_iterator;
 				/// @brief Reverse iterator to static_vector.
 				typedef std::reverse_iterator<iterator> reverse_iterator;
 				/// @brief Constant reverse iterator to static_vector.

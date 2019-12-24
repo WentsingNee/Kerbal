@@ -23,18 +23,20 @@ namespace kerbal
 		class linked_stack
 		{
 			public:
-				typedef Tp value_type;
-				typedef const Tp const_type;
-				typedef Tp& reference;
-				typedef const Tp& const_reference;
-				typedef Sequence container_type;
+				typedef Tp						value_type;
+				typedef const value_type		const_type;
+				typedef value_type&				reference;
+				typedef const value_type&		const_reference;
+				typedef value_type*				pointer;
+				typedef const value_type*		const_pointer;
 
 #		if __cplusplus >= 201103L
-				typedef value_type&& rvalue_reference;
-				typedef const value_type&& const_rvalue_reference;
+				typedef value_type&&			rvalue_reference;
+				typedef const value_type&&		const_rvalue_reference;
 #		endif
 
-				typedef typename Sequence::size_type size_type;
+				typedef typename Sequence::size_type				size_type;
+				typedef typename Sequence::difference_type			difference_type;
 
 			private:
 				Sequence c;
@@ -75,7 +77,7 @@ namespace kerbal
 					c.push_front(val);
 				}
 
-#if __cplusplus >= 201103L
+#		if __cplusplus >= 201103L
 				void push(rvalue_reference val)
 				{
 					c.push_front(val);
@@ -86,7 +88,7 @@ namespace kerbal
 				{
 					c.emplace_front(std::forward<Args>(args)...);
 				}
-#endif
+#		endif
 
 				void pop()
 				{
@@ -103,61 +105,44 @@ namespace kerbal
 					c.swap(with.c);
 				}
 
-				friend bool operator==(const linked_stack<Tp, Sequence> & lhs, const linked_stack<Tp, Sequence> & rhs);
+				/**
+				 * Judge whether the stack is equal to the other one.
+				 * @param rhs another stack
+				 */
+				friend bool operator==(const linked_stack<Tp, Sequence> & lhs, const linked_stack<Tp, Sequence> & rhs)
+				{
+					return lhs.c == rhs.c;
+				}
 
-				friend bool operator!=(const linked_stack<Tp, Sequence> & lhs, const linked_stack<Tp, Sequence> & rhs);
+				friend bool operator!=(const linked_stack<Tp, Sequence> & lhs, const linked_stack<Tp, Sequence> & rhs)
+				{
+					return lhs.c != rhs.c;
+				}
 
-				friend bool operator<(const linked_stack<Tp, Sequence> & lhs, const linked_stack<Tp, Sequence> & rhs);
+				friend bool operator<(const linked_stack<Tp, Sequence> & lhs, const linked_stack<Tp, Sequence> & rhs)
+				{
+					return lhs.c < rhs.c;
+				}
 
-				friend bool operator<=(const linked_stack<Tp, Sequence> & lhs, const linked_stack<Tp, Sequence> & rhs);
+				friend bool operator<=(const linked_stack<Tp, Sequence> & lhs, const linked_stack<Tp, Sequence> & rhs)
+				{
+					return lhs.c <= rhs.c;
+				}
 
-				friend bool operator>(const linked_stack<Tp, Sequence> & lhs, const linked_stack<Tp, Sequence> & rhs);
+				friend bool operator>(const linked_stack<Tp, Sequence> & lhs, const linked_stack<Tp, Sequence> & rhs)
+				{
+					return lhs.c > rhs.c;
+				}
 
-				friend bool operator>=(const linked_stack<Tp, Sequence> & lhs, const linked_stack<Tp, Sequence> & rhs);
+				friend bool operator>=(const linked_stack<Tp, Sequence> & lhs, const linked_stack<Tp, Sequence> & rhs)
+				{
+					return lhs.c >= rhs.c;
+				}
 
 		};
 
-		/**
-		 * Judge whether the stack is equal to the other one.
-		 * @param rhs another stack
-		 */
-		template <typename Tp, typename Sequence>
-		bool operator==(const linked_stack<Tp, Sequence> & lhs, const linked_stack<Tp, Sequence> & rhs)
-		{
-			return lhs.c == rhs.c;
-		}
+	} // namespace container
 
-		template <typename Tp, typename Sequence>
-		bool operator!=(const linked_stack<Tp, Sequence> & lhs, const linked_stack<Tp, Sequence> & rhs)
-		{
-			return lhs.c != rhs.c;
-		}
-
-		template <typename Tp, typename Sequence>
-		bool operator<(const linked_stack<Tp, Sequence> & lhs, const linked_stack<Tp, Sequence> & rhs)
-		{
-			return lhs.c < rhs.c;
-		}
-
-		template <typename Tp, typename Sequence>
-		bool operator<=(const linked_stack<Tp, Sequence> & lhs, const linked_stack<Tp, Sequence> & rhs)
-		{
-			return lhs.c <= rhs.c;
-		}
-
-		template <typename Tp, typename Sequence>
-		bool operator>(const linked_stack<Tp, Sequence> & lhs, const linked_stack<Tp, Sequence> & rhs)
-		{
-			return lhs.c > rhs.c;
-		}
-
-		template <typename Tp, typename Sequence>
-		bool operator>=(const linked_stack<Tp, Sequence> & lhs, const linked_stack<Tp, Sequence> & rhs)
-		{
-			return lhs.c >= rhs.c;
-		}
-
-	}
-}
+} // namespace kerbal
 
 #endif /* KERBAL_CONTAINER_LINKED_STACK_HPP_ */

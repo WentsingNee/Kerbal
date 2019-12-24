@@ -72,7 +72,7 @@ namespace kerbal
 			{
 				public:
 					typedef KeyCompare				key_compare;
-
+					typedef Key						key_type;
 					typedef Entity					value_type;
 					typedef const value_type		const_type;
 					typedef value_type&				reference;
@@ -96,8 +96,6 @@ namespace kerbal
 				protected:
 					kerbal::utility::compressed_pair<Sequence, key_compare> __data;
 
-
-				public:
 					/**
 					 * @brief Returns the comparison object with which the %set was constructed.
 					 */
@@ -138,7 +136,7 @@ namespace kerbal
 							{
 							}
 
-							bool operator()(const_reference item, const Key& key) const
+							bool operator()(const_reference item, const key_type & key) const
 							{
 								return self->__key_comp()(Extract()(item), key);
 							}
@@ -156,7 +154,7 @@ namespace kerbal
 							{
 							}
 
-							bool operator()(const Key& key, const_reference item) const
+							bool operator()(const key_type & key, const_reference item) const
 							{
 								return self->__key_comp()(key, Extract()(item));
 							}
@@ -196,6 +194,7 @@ namespace kerbal
 						return value_compare(this);
 					}
 
+				protected:
 					__flat_ordered_base() :
 							__data()
 					{
@@ -253,6 +252,7 @@ namespace kerbal
 
 #			endif
 
+				public:
 					template <typename InputIterator>
 					typename kerbal::type_traits::enable_if<
 							kerbal::iterator::is_input_compatible_iterator<InputIterator>::value
@@ -382,140 +382,182 @@ namespace kerbal
 						return this->__sequence().empty();
 					}
 
-					bool full() const
-					{
-						return this->__sequence().full();
-					}
-
-					iterator lower_bound(const Key& key)
+					iterator lower_bound(const key_type & key)
 					{
 						return kerbal::algorithm::lower_bound(this->begin(), this->end(), key,
 															  lower_bound_kc_adapter(this));
 					}
 
-					const_iterator lower_bound(const Key& key) const
+					const_iterator lower_bound(const key_type & key) const
 					{
 						return kerbal::algorithm::lower_bound(this->cbegin(), this->cend(), key,
 															  lower_bound_kc_adapter(this));
 					}
 
-					iterator lower_bound(const Key& key, const_iterator hint)
+					iterator lower_bound(const key_type & key, const_iterator hint)
 					{
 						return kerbal::algorithm::lower_bound_hint(this->begin(), this->end(), key,
 																   this->nth(this->index_of(hint)),
 																			 lower_bound_kc_adapter(this));
 					}
 
-					const_iterator lower_bound(const Key& key, const_iterator hint) const
+					const_iterator lower_bound(const key_type & key, const_iterator hint) const
 					{
 						return kerbal::algorithm::lower_bound_hint(this->cbegin(), this->cend(), key, hint,
 																   lower_bound_kc_adapter(this));
 					}
 
 
-					iterator upper_bound(const Key& key)
+					iterator upper_bound(const key_type & key)
 					{
 						return kerbal::algorithm::upper_bound(this->begin(), this->end(), key,
 															  upper_bound_kc_adapter(this));
 					}
 
-					const_iterator upper_bound(const Key& key) const
+					const_iterator upper_bound(const key_type & key) const
 					{
 						return kerbal::algorithm::upper_bound(this->cbegin(), this->cend(), key,
 															  upper_bound_kc_adapter(this));
 					}
 
-					iterator upper_bound(const Key& key, const_iterator hint)
+					iterator upper_bound(const key_type & key, const_iterator hint)
 					{
 						return kerbal::algorithm::upper_bound(this->begin(), this->end(), key,
 															  upper_bound_kc_adapter(this));
 					}
 
-					const_iterator upper_bound(const Key& key, const_iterator hint) const
+					const_iterator upper_bound(const key_type & key, const_iterator hint) const
 					{
 						return kerbal::algorithm::upper_bound(this->cbegin(), this->cend(), key,
 															  upper_bound_kc_adapter(this));
 					}
 
-					std::pair<iterator, iterator> equal_range(const Key& key)
+					std::pair<iterator, iterator> equal_range(const key_type & key)
 					{
 						return std::make_pair(this->lower_bound(key), this->upper_bound(key));
 					}
 
-					std::pair<const_iterator, const_iterator> equal_range(const Key& key) const
+					std::pair<const_iterator, const_iterator> equal_range(const key_type & key) const
 					{
 						return std::make_pair(this->lower_bound(key), this->upper_bound(key));
 					}
 
-					const_iterator find(const Key& key) const
+				protected:
+					const_iterator __find_helper(const_iterator lower_bound_pos, const key_type & key) const
 					{
-						const_iterator i = this->lower_bound(key);
 						const_iterator end_it = this->cend();
-						if (i != end_it && this->__key_comp()(key, Extract()(*i))) {
-							i = end_it;
-						}
-						return i;
-					}
-
-					const_iterator find(const Key& key, const_iterator hint) const
-					{
-						const_iterator i = this->lower_bound(key, hint);
-						const_iterator end_it = this->cend();
-						if (i != end_it && this->__key_comp()(key, Extract()(*i))) {
-							i = end_it;
-						}
-						return i;
-					}
-
-					size_type count(const Key& key) const
-					{
-						std::pair<const_iterator, const_iterator> p(this->equal_range(key));
-						return kerbal::iterator::distance(p.first, p.second);
-					}
-
-					size_type count(const Key& key, const_iterator hint) const
-					{
-						std::pair<const_iterator, const_iterator> p(this->equal_range(key));
-						return kerbal::iterator::distance(p.first, p.second);
-					}
-
-					bool contains(const Key& key) const
-					{
-						return this->find(key) != this->cend();
-					}
-
-					bool contains(const Key& key, const_iterator hint) const
-					{
-						return this->find(key, hint) != this->cend();
-					}
-
-				private:
-					void __unique_insert_helper(std::pair<iterator, bool> & ret, const_reference src)
-					{
-						iterator & pos = ret.first;
-						bool & inserted = ret.second;
-						Extract extract;
-						if (pos == this->cend() || this->__key_comp()(extract(src), extract(*pos))) { // src < *pos
-							pos = this->__sequence().insert(pos, src);
-							inserted = true;
+						if (lower_bound_pos != end_it && this->__key_comp()(key, Extract()(*lower_bound_pos))) {
+							// key < *lower_bound_pos
+							/*
+							* 1 1 1 3 3 3
+							*       ^
+							*/
+							return end_it;
+						} else {
+							return lower_bound_pos;
 						}
 					}
 
 				public:
+					const_iterator find(const key_type & key) const
+					{
+						return this->__find_helper(this->lower_bound(key), key);
+					}
 
-					std::pair<iterator, bool> unique_insert(const_reference src);
+					const_iterator find(const key_type & key, const_iterator hint) const
+					{
+						return this->__find_helper(this->lower_bound(key, hint), key);
+					}
 
-					std::pair<iterator, bool> unique_insert(const_iterator hint, const_reference src);
+					size_type count(const key_type & key) const
+					{
+						std::pair<const_iterator, const_iterator> p(this->equal_range(key));
+						return kerbal::iterator::distance(p.first, p.second);
+					}
+
+					size_type count(const key_type & key, const_iterator hint) const
+					{
+						std::pair<const_iterator, const_iterator> p(this->equal_range(key, hint));
+						return kerbal::iterator::distance(p.first, p.second);
+					}
+
+					bool contains(const key_type & key) const
+					{
+						return this->find(key) != this->cend();
+					}
+
+					bool contains(const key_type & key, const_iterator hint) const
+					{
+						return this->find(key, hint) != this->cend();
+					}
+
+				protected:
+					std::pair<iterator, bool>
+					__unique_insert_helper(iterator lower_bound_pos, const_reference src)
+					{
+						Extract extract;
+						bool inserted = false;
+						if (static_cast<bool>(lower_bound_pos == this->cend()) ||
+							static_cast<bool>(this->__key_comp()(extract(src), extract(*lower_bound_pos)))) {
+							// src < *lower_bound_pos
+							lower_bound_pos = this->__sequence().insert(lower_bound_pos, src);
+							inserted = true;
+						} else {
+							inserted = false;
+						}
+						return std::make_pair(lower_bound_pos, inserted);
+					}
+
+				public:
+					std::pair<iterator, bool> unique_insert(const_reference src)
+					{
+						return this->__unique_insert_helper(this->lower_bound(Extract()(src)), src);
+					}
+
+					std::pair<iterator, bool> unique_insert(const_iterator hint, const_reference src)
+					{
+						return this->__unique_insert_helper(this->lower_bound(Extract()(src), hint), src);
+					}
 
 #			if __cplusplus >= 201103L
 
-					std::pair<iterator, bool> unique_insert(rvalue_reference src);
+				protected:
+					std::pair<iterator, bool>
+					__unique_insert_helper(iterator lower_bound_pos, rvalue_reference src)
+					{
+						Extract extract;
+						bool inserted = false;
+						if (static_cast<bool>(lower_bound_pos == this->cend()) ||
+							static_cast<bool>(this->__key_comp()(extract(src), extract(*lower_bound_pos)))) {
+							// src < *lower_bound_pos
+							lower_bound_pos = this->__sequence().insert(lower_bound_pos, std::move(src));
+							inserted = true;
+						} else {
+							inserted = false;
+						}
+						return std::make_pair(lower_bound_pos, inserted);
+					}
 
-					std::pair<iterator, bool> unique_insert(const_iterator hint, rvalue_reference src);
+				public:
+					std::pair<iterator, bool> unique_insert(rvalue_reference src)
+					{
+						return this->__unique_insert_helper(this->lower_bound(Extract()(src)), src);
+					}
+
+					std::pair<iterator, bool> unique_insert(const_iterator hint, rvalue_reference src)
+					{
+						return this->__unique_insert_helper(this->lower_bound(Extract()(src), hint), src);
+					}
 #			endif
 
 					template <typename InputIterator>
-					void unique_insert(InputIterator first, InputIterator last);
+					void unique_insert(InputIterator first, InputIterator last)
+					{
+						while (first != last && !this->full()) {
+							this->unique_insert(*first);
+							++first;
+						}
+					}
 
 					iterator insert(const_reference src)
 					{
@@ -556,7 +598,7 @@ namespace kerbal
 
 					const_iterator erase(const_iterator pos)
 					{
-						return this->__sequence().erase(pos);
+						return pos == this->__sequence().end() ? pos : this->__sequence().erase(pos);
 					}
 
 					const_iterator erase(const_iterator first, const_iterator last)
@@ -564,7 +606,7 @@ namespace kerbal
 						return this->__sequence().erase(first, last);
 					}
 
-					size_type erase(const Key& key)
+					size_type erase(const key_type & key)
 					{
 						std::pair<iterator, iterator> p(this->equal_range(key));
 						size_type dis(kerbal::iterator::distance(p.first, p.second));
@@ -572,14 +614,10 @@ namespace kerbal
 						return dis;
 					}
 
-					const_iterator erase_one(const Key& key)
+					const_iterator erase_one(const key_type & key)
 					{
-						return this->__sequence().erase(this->find(key));
+						return this->erase(this->find(key));
 					}
-
-					const_iterator erase_lower_bound_one(const Key& key);
-
-					const_iterator erase_upper_bound_one(const Key& key);
 
 					void clear()
 					{
@@ -587,152 +625,6 @@ namespace kerbal
 					}
 
 			};
-
-
-#		if __cplusplus >= 201103L
-
-	/*
-			template <typename Entity, typename Key, typename KeyCompare, typename Extract, typename Sequence>
-			template <typename ... Args>
-			std::pair<
-				typename __flat_ordered_base<Entity, Key, KeyCompare, Extract, Sequence>::iterator,
-				bool
-			>
-			__flat_ordered_base<Entity, Key, KeyCompare, Extract, Sequence>::unique_emplace(Args&& ... args)
-			{
-				value_type val(std::forward<Args>(args)...);
-				std::pair<iterator, bool> ret(this->lower_bound(Extract()(val)), false); // first, inserted
-				iterator & first = ret.first;
-				bool & inserted = ret.second;
-				if (first == this->cend() || this->__key_comp()(val, *first)) { // src < *first
-					first = this->__sequence().insert(first, std::move(val));
-					inserted = true;
-				}
-				return ret;
-			}
-
-			template <typename Entity, typename Key, typename KeyCompare, typename Extract, typename Sequence>
-			template <typename ... Args>
-			std::pair<
-				typename __flat_ordered_base<Entity, Key, KeyCompare, Extract, Sequence>::iterator,
-				bool
-			>
-			__flat_ordered_base<Entity, Key, KeyCompare, Extract, Sequence>::unique_emplace_hint(const_iterator hint, Args&& ... args)
-			{
-				value_type val(std::forward<Args>(args)...);
-				std::pair<iterator, bool> ret(this->lower_bound(Extract()(val), hint), false); // first, inserted
-				iterator & first = ret.first;
-				bool & inserted = ret.second;
-				if (first == this->cend() || this->__key_comp()(val, *first)) { // src < *first
-					first = this->__sequence().insert(first, std::move(val));
-					inserted = true;
-				}
-				return ret;
-			}
-	*/
-
-#		endif
-
-			template <typename Entity, typename Key, typename KeyCompare, typename Extract, typename Sequence>
-			std::pair<
-					typename __flat_ordered_base<Entity, Key, KeyCompare, Extract, Sequence>::iterator,
-					bool
-			>
-			__flat_ordered_base<Entity, Key, KeyCompare, Extract, Sequence>::unique_insert(const_reference src)
-			{
-				std::pair<iterator, bool> ret(this->lower_bound(Extract()(src)), false); // pos, inserted
-				iterator & pos = ret.first;
-				bool & inserted = ret.second;
-				if (pos == this->cend() || this->__key_comp()(Extract()(src), Extract()(*pos))) { // src < *pos
-					pos = this->__sequence().insert(pos, src);
-					inserted = true;
-				}
-				return ret;
-			}
-
-			template <typename Entity, typename Key, typename KeyCompare, typename Extract, typename Sequence>
-			std::pair<
-					typename __flat_ordered_base<Entity, Key, KeyCompare, Extract, Sequence>::iterator,
-					bool
-			>
-			__flat_ordered_base<Entity, Key, KeyCompare, Extract, Sequence>::unique_insert(const_iterator hint, const_reference src)
-			{
-				std::pair<iterator, bool> ret(this->lower_bound(Extract()(src), hint), false); // pos, inserted
-				iterator & pos = ret.first;
-				bool & inserted = ret.second;
-				if (pos == this->cend() || this->__key_comp()(Extract()(src), Extract()(*pos))) { // src < *pos
-					pos = this->__sequence().insert(pos, src);
-					inserted = true;
-				}
-				return ret;
-			}
-
-#		if __cplusplus >= 201103L
-
-			template <typename Entity, typename Key, typename KeyCompare, typename Extract, typename Sequence>
-			std::pair<
-					typename __flat_ordered_base<Entity, Key, KeyCompare, Extract, Sequence>::iterator,
-					bool
-			>
-			__flat_ordered_base<Entity, Key, KeyCompare, Extract, Sequence>::unique_insert(rvalue_reference src)
-			{
-				std::pair<iterator, bool> ret(this->lower_bound(Extract()(src)), false); // pos, inserted
-				iterator & pos = ret.first;
-				bool & inserted = ret.second;
-				if (pos == this->cend() || this->__key_comp()(Extract()(src), Extract()(*pos))) { // src < *pos
-					pos = this->__sequence().insert(pos, std::move(src));
-					inserted = true;
-				}
-				return ret;
-			}
-
-			template <typename Entity, typename Key, typename KeyCompare, typename Extract, typename Sequence>
-			std::pair<
-					typename __flat_ordered_base<Entity, Key, KeyCompare, Extract, Sequence>::iterator,
-					bool
-			>
-			__flat_ordered_base<Entity, Key, KeyCompare, Extract, Sequence>::unique_insert(const_iterator hint, rvalue_reference src)
-			{
-				std::pair<iterator, bool> ret(this->lower_bound(Extract()(src), hint), false); // pos, inserted
-				iterator & pos = ret.first;
-				bool & inserted = ret.second;
-				if (pos == this->cend() || this->__key_comp()(Extract()(src), Extract()(*pos))) { // src < *pos
-					pos = this->__sequence().insert(pos, std::move(src));
-					inserted = true;
-				}
-				return ret;
-			}
-#		endif
-
-			template <typename Entity, typename Key, typename KeyCompare, typename Extract, typename Sequence>
-			template <typename InputIterator>
-			void __flat_ordered_base<Entity, Key, KeyCompare, Extract, Sequence>::unique_insert(InputIterator first, InputIterator last)
-			{
-				while (first != last && !this->full()) {
-					this->unique_insert(*first);
-					++first;
-				}
-			}
-
-			template <typename Entity, typename Key, typename KeyCompare, typename Extract, typename Sequence>
-			typename __flat_ordered_base<Entity, Key, KeyCompare, Extract, Sequence>::const_iterator
-			__flat_ordered_base<Entity, Key, KeyCompare, Extract, Sequence>::erase_lower_bound_one(const Key& key)
-			{
-				const_iterator i(this->lower_bound(key));
-				const_iterator end_it(this->cend());
-				if (i != end_it && this->__key_comp()(key, Extract()(*i))) {
-					return end_it;
-				}
-				return this->__sequence().erase(i);
-			}
-
-//			template <typename Entity, typename Key, typename KeyCompare, typename Extract, typename Sequence>
-//			typename __flat_ordered_base<Entity, Key, KeyCompare, Extract, Sequence>::const_iterator
-//			__flat_ordered_base<Entity, Key, KeyCompare, Extract, Sequence>::erase_upper_bound_one(const Key& key)
-//			{
-//				const_iterator pos(this->upper_bound(key));
-//				return this->.erase(pos);
-//			}
 
 
 		} // namespace detail

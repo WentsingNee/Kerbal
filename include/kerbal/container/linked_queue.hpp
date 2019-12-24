@@ -23,18 +23,20 @@ namespace kerbal
 		class linked_queue
 		{
 			public:
-				typedef Tp value_type;
-				typedef const Tp const_type;
-				typedef Tp& reference;
-				typedef const Tp& const_reference;
-				typedef Sequence container_type;
+				typedef Tp						value_type;
+				typedef const value_type		const_type;
+				typedef value_type&				reference;
+				typedef const value_type&		const_reference;
+				typedef value_type*				pointer;
+				typedef const value_type*		const_pointer;
 
 #		if __cplusplus >= 201103L
-				typedef value_type&& rvalue_reference;
-				typedef const value_type&& const_rvalue_reference;
+				typedef value_type&&			rvalue_reference;
+				typedef const value_type&&		const_rvalue_reference;
 #		endif
 
-				typedef typename Sequence::size_type size_type;
+				typedef typename Sequence::size_type				size_type;
+				typedef typename Sequence::difference_type			difference_type;
 
 			private:
 				Sequence c;
@@ -45,12 +47,12 @@ namespace kerbal
 				{
 				}
 
-#if __cplusplus >= 201103L
+#		if __cplusplus >= 201103L
 				linked_queue(std::initializer_list<value_type> src) :
 						c(src)
 				{
 				}
-#endif
+#		endif
 
 				bool empty() const
 				{
@@ -92,7 +94,7 @@ namespace kerbal
 					c.push_back(val);
 				}
 
-#if __cplusplus >= 201103L
+#		if __cplusplus >= 201103L
 				void push_back(rvalue_reference val)
 				{
 					c.push_back(val);
@@ -103,7 +105,7 @@ namespace kerbal
 				{
 					c.emplace_back(std::forward<Args>(args)...);
 				}
-#endif
+#		endif
 
 				void pop_front()
 				{
@@ -120,67 +122,44 @@ namespace kerbal
 					c.swap(with.c);
 				}
 
-				template <typename Sequence>
-				friend bool operator==(const linked_queue<Tp, Sequence> & lhs, const linked_queue<Tp, Sequence> & rhs);
+				/**
+				 * Judge whether the queue is equal to the other one.
+				 * @param rhs another queue
+				 */
+				friend bool operator==(const linked_queue<Tp, Sequence> & lhs, const linked_queue<Tp, Sequence> & rhs)
+				{
+					return lhs.c == rhs.c;
+				}
 
-				template <typename Sequence>
-				friend bool operator!=(const linked_queue<Tp, Sequence> & lhs, const linked_queue<Tp, Sequence> & rhs);
+				friend bool operator!=(const linked_queue<Tp, Sequence> & lhs, const linked_queue<Tp, Sequence> & rhs)
+				{
+					return lhs.c != rhs.c;
+				}
 
-				template <typename Sequence>
-				friend bool operator<(const linked_queue<Tp, Sequence> & lhs, const linked_queue<Tp, Sequence> & rhs);
+				friend bool operator<(const linked_queue<Tp, Sequence> & lhs, const linked_queue<Tp, Sequence> & rhs)
+				{
+					return lhs.c < rhs.c;
+				}
 
-				template <typename Sequence>
-				friend bool operator<=(const linked_queue<Tp, Sequence> & lhs, const linked_queue<Tp, Sequence> & rhs);
+				friend bool operator<=(const linked_queue<Tp, Sequence> & lhs, const linked_queue<Tp, Sequence> & rhs)
+				{
+					return lhs.c <= rhs.c;
+				}
 
-				template <typename Sequence>
-				friend bool operator>(const linked_queue<Tp, Sequence> & lhs, const linked_queue<Tp, Sequence> & rhs);
+				friend bool operator>(const linked_queue<Tp, Sequence> & lhs, const linked_queue<Tp, Sequence> & rhs)
+				{
+					return lhs.c > rhs.c;
+				}
 
-				template <typename Sequence>
-				friend bool operator>=(const linked_queue<Tp, Sequence> & lhs, const linked_queue<Tp, Sequence> & rhs);
+				friend bool operator>=(const linked_queue<Tp, Sequence> & lhs, const linked_queue<Tp, Sequence> & rhs)
+				{
+					return lhs.c >= rhs.c;
+				}
 
 		};
 
-		/**
-		 * Judge whether the queue is equal to the other one.
-		 * @param rhs another queue
-		 */
-		template <typename Tp, typename Sequence>
-		bool operator==(const linked_queue<Tp, Sequence> & lhs, const linked_queue<Tp, Sequence> & rhs)
-		{
-			return lhs.c == rhs.c;
-		}
+	} // namespace container
 
-		template <typename Tp, typename Sequence>
-		bool operator!=(const linked_queue<Tp, Sequence> & lhs, const linked_queue<Tp, Sequence> & rhs)
-		{
-			return lhs.c != rhs.c;
-		}
-
-		template <typename Tp, typename Sequence>
-		bool operator<(const linked_queue<Tp, Sequence> & lhs, const linked_queue<Tp, Sequence> & rhs)
-		{
-			return lhs.c < rhs.c;
-		}
-
-		template <typename Tp, typename Sequence>
-		bool operator<=(const linked_queue<Tp, Sequence> & lhs, const linked_queue<Tp, Sequence> & rhs)
-		{
-			return lhs.c <= rhs.c;
-		}
-
-		template <typename Tp, typename Sequence>
-		bool operator>(const linked_queue<Tp, Sequence> & lhs, const linked_queue<Tp, Sequence> & rhs)
-		{
-			return lhs.c > rhs.c;
-		}
-
-		template <typename Tp, typename Sequence>
-		bool operator>=(const linked_queue<Tp, Sequence> & lhs, const linked_queue<Tp, Sequence> & rhs)
-		{
-			return lhs.c >= rhs.c;
-		}
-
-	}
-}
+} // namespace kerbal
 
 #endif /* KERBAL_CONTAINER_LINKED_QUEUE_HPP_ */

@@ -27,7 +27,7 @@ namespace kerbal
 			typename KeyCompare = std::less<Key>, typename Extract = default_extract<Key, Entity> >
 		class static_ordered:
 				public kerbal::container::detail::__flat_ordered_base<
-						Entity, Key, KeyCompare, Extract, typename kerbal::container::static_vector<Entity, N>
+						Entity, Key, KeyCompare, Extract, kerbal::container::static_vector<Entity, N>
 				>
 		{
 			public:
@@ -39,27 +39,27 @@ namespace kerbal
 								> super;
 
 			public:
-				typedef KeyCompare				key_compare;
-
-				typedef Entity					value_type;
-				typedef const value_type		const_type;
-				typedef value_type&				reference;
-				typedef const value_type&		const_reference;
-				typedef value_type*				pointer;
-				typedef const value_type*		const_pointer;
+				typedef typename super::key_compare			key_compare;
+				typedef typename super::key_type			key_type;
+				typedef typename super::value_type			value_type;
+				typedef typename super::const_type			const_type;
+				typedef typename super::reference			reference;
+				typedef typename super::const_reference		const_reference;
+				typedef typename super::pointer				pointer;
+				typedef typename super::const_pointer		const_pointer;
 
 #		if __cplusplus >= 201103L
-				typedef value_type&&			rvalue_reference;
-				typedef const value_type&&		const_rvalue_reference;
+				typedef typename super::rvalue_reference			rvalue_reference;
+				typedef typename super::const_rvalue_reference		const_rvalue_reference;
 #		endif
 
-				typedef typename Sequence::size_type				size_type;
-				typedef typename Sequence::difference_type			difference_type;
+				typedef typename super::size_type					size_type;
+				typedef typename super::difference_type				difference_type;
 
-				typedef typename Sequence::iterator					iterator;
-				typedef typename Sequence::const_iterator			const_iterator;
-				typedef typename Sequence::reverse_iterator			reverse_iterator;
-				typedef typename Sequence::const_reverse_iterator	const_reverse_iterator;
+				typedef typename super::iterator					iterator;
+				typedef typename super::const_iterator				const_iterator;
+				typedef typename super::reverse_iterator			reverse_iterator;
+				typedef typename super::const_reverse_iterator		const_reverse_iterator;
 
 				static_ordered() :
 						super()
@@ -91,7 +91,7 @@ namespace kerbal
 				{
 				}
 
-#if		__cplusplus >= 201103L
+#		if __cplusplus >= 201103L
 
 				static_ordered(std::initializer_list<value_type> src) :
 						super(src)
@@ -126,6 +126,11 @@ namespace kerbal
 
 #		endif
 
+				bool full() const
+				{
+					return this->__sequence().full();
+				}
+
 				void swap(static_ordered & ano)
 				{
 					this->__sequence().swap(ano.__sequence());
@@ -133,60 +138,48 @@ namespace kerbal
 				}
 
 				template <size_t M>
-				friend bool operator==(const static_ordered<Entity, M, Key, KeyCompare, Extract> & lhs, const static_ordered<Entity, N, Key, KeyCompare, Extract> & rhs);
+				friend bool operator==(const static_ordered<Entity, M, Key, KeyCompare, Extract> & lhs,
+										const static_ordered<Entity, N, Key, KeyCompare, Extract> & rhs)
+				{
+					return lhs.__sequence() == rhs.__sequence();
+				}
 
 				template <size_t M>
-				friend bool operator!=(const static_ordered<Entity, M, Key, KeyCompare, Extract> & lhs, const static_ordered<Entity, N, Key, KeyCompare, Extract> & rhs);
+				friend bool operator!=(const static_ordered<Entity, M, Key, KeyCompare, Extract> & lhs,
+										const static_ordered<Entity, N, Key, KeyCompare, Extract> & rhs)
+				{
+					return lhs.__sequence() != rhs.__sequence();
+				}
 
 				template <size_t M>
-				friend bool operator<(const static_ordered<Entity, M, Key, KeyCompare, Extract> & lhs, const static_ordered<Entity, N, Key, KeyCompare, Extract> & rhs);
+				friend bool operator<(const static_ordered<Entity, M, Key, KeyCompare, Extract> & lhs,
+										const static_ordered<Entity, N, Key, KeyCompare, Extract> & rhs)
+				{
+					return lhs.__sequence() < rhs.__sequence();
+				}
 
 				template <size_t M>
-				friend bool operator<=(const static_ordered<Entity, M, Key, KeyCompare, Extract> & lhs, const static_ordered<Entity, N, Key, KeyCompare, Extract> & rhs);
+				friend bool operator<=(const static_ordered<Entity, M, Key, KeyCompare, Extract> & lhs,
+										const static_ordered<Entity, N, Key, KeyCompare, Extract> & rhs)
+				{
+					return lhs.__sequence() <= rhs.__sequence();
+				}
 
 				template <size_t M>
-				friend bool operator>(const static_ordered<Entity, M, Key, KeyCompare, Extract> & lhs, const static_ordered<Entity, N, Key, KeyCompare, Extract> & rhs);
+				friend bool operator>(const static_ordered<Entity, M, Key, KeyCompare, Extract> & lhs,
+										const static_ordered<Entity, N, Key, KeyCompare, Extract> & rhs)
+				{
+					return lhs.__sequence() > rhs.__sequence();
+				}
 
 				template <size_t M>
-				friend bool operator>=(const static_ordered<Entity, M, Key, KeyCompare, Extract> & lhs, const static_ordered<Entity, N, Key, KeyCompare, Extract> & rhs);
+				friend bool operator>=(const static_ordered<Entity, M, Key, KeyCompare, Extract> & lhs,
+										const static_ordered<Entity, N, Key, KeyCompare, Extract> & rhs)
+				{
+					return lhs.__sequence() >= rhs.__sequence();
+				}
 
 		};
-
-		template <typename Entity, size_t M, size_t N, typename Key, typename KeyCompare, typename Extract>
-		bool operator==(const static_ordered<Entity, M, Key, KeyCompare, Extract> & lhs, const static_ordered<Entity, N, Key, KeyCompare, Extract> & rhs)
-		{
-			return lhs.__sequence() == rhs.__sequence();
-		}
-
-		template <typename Entity, size_t M, size_t N, typename Key, typename KeyCompare, typename Extract>
-		bool operator!=(const static_ordered<Entity, M, Key, KeyCompare, Extract> & lhs, const static_ordered<Entity, N, Key, KeyCompare, Extract> & rhs)
-		{
-			return lhs.__sequence() != rhs.__sequence();
-		}
-
-		template <typename Entity, size_t M, size_t N, typename Key, typename KeyCompare, typename Extract>
-		bool operator<(const static_ordered<Entity, M, Key, KeyCompare, Extract> & lhs, const static_ordered<Entity, N, Key, KeyCompare, Extract> & rhs)
-		{
-			return lhs.__sequence() < rhs.__sequence();
-		}
-
-		template <typename Entity, size_t M, size_t N, typename Key, typename KeyCompare, typename Extract>
-		bool operator<=(const static_ordered<Entity, M, Key, KeyCompare, Extract> & lhs, const static_ordered<Entity, N, Key, KeyCompare, Extract> & rhs)
-		{
-			return lhs.__sequence() <= rhs.__sequence();
-		}
-
-		template <typename Entity, size_t M, size_t N, typename Key, typename KeyCompare, typename Extract>
-		bool operator>(const static_ordered<Entity, M, Key, KeyCompare, Extract> & lhs, const static_ordered<Entity, N, Key, KeyCompare, Extract> & rhs)
-		{
-			return lhs.__sequence() > rhs.__sequence();
-		}
-
-		template <typename Entity, size_t M, size_t N, typename Key, typename KeyCompare, typename Extract>
-		bool operator>=(const static_ordered<Entity, M, Key, KeyCompare, Extract> & lhs, const static_ordered<Entity, N, Key, KeyCompare, Extract> & rhs)
-		{
-			return lhs.__sequence() >= rhs.__sequence();
-		}
 
 	} // namespace container
 

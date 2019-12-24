@@ -154,7 +154,7 @@ namespace kerbal
 			return container.empty();
 		}
 
-#	endif
+#	endif // __cplusplus >= 201103L
 
 		template <typename Tp, size_t N>
 		KERBAL_CONSTEXPR
