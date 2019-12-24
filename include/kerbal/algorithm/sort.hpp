@@ -42,7 +42,7 @@ namespace kerbal
 				iterator j_next(kerbal::iterator::next(j));
 				while (j_next != last) {
 					if (cmp(*j_next, *j)) {
-						std::iter_swap(j_next, j);
+						kerbal::algorithm::iter_swap(j_next, j);
 					}
 					j = j_next;
 					++j_next;

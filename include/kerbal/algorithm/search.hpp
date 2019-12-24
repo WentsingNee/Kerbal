@@ -74,8 +74,7 @@ namespace kerbal
 			while (first != last) {
 				iterator middle = kerbal::iterator::midden_iterator(first, last);
 				if (comparator(*middle, value)) { // *middle < value
-					first = middle;
-					++first;
+					first = kerbal::iterator::next(middle);
 				} else { // *middle >= value
 					last = middle;
 				}
@@ -94,9 +93,7 @@ namespace kerbal
 
 			while (len) {
 				difference_type step(len >> 1);
-				iterator middle(first);
-				middle += step;
-
+				iterator middle(kerbal::iterator::next(first, step));
 				if (comparator(*middle, value)) {
 					first = ++middle;
 					len -= step + 1;
@@ -133,8 +130,7 @@ namespace kerbal
 				if (comparator(value, *middle)) { // *middle > value
 					last = middle;
 				} else { // *middle <= value, namely !(*middle > value)
-					first = middle;
-					++first;
+					first = kerbal::iterator::next(middle);
 				}
 			}
 			return first;

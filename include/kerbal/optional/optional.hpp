@@ -13,10 +13,13 @@
 #define KERBAL_OPTIONAL_OPTIONAL_HPP
 
 #include <kerbal/optional/bad_optional_access.hpp>
-#include <kerbal/data_struct/raw_storage.hpp>
 #include <kerbal/optional/optional_type_traits.hpp>
 #include <kerbal/optional/nullopt.hpp>
-#include <kerbal/compatibility/compatibility_macro.hpp>
+
+#include <kerbal/compatibility/constexpr.hpp>
+#include <kerbal/compatibility/move.hpp>
+#include <kerbal/compatibility/noexcept.hpp>
+#include <kerbal/data_struct/raw_storage.hpp>
 #include <kerbal/type_traits/type_traits_details/enable_if.hpp>
 
 namespace kerbal
@@ -77,7 +80,7 @@ namespace kerbal
 				 * @brief 从当前类型的一个实例拷贝构造.
 				 * @param src 源值
 				 */
-				explicit KERBAL_CONSTEXPR optional(const value_type & src) :
+				explicit optional(const value_type & src) :
 						initialized(false)
 				{
 					this->construct(src);
@@ -96,7 +99,7 @@ namespace kerbal
 				 * @note 第二个参数起到概念约束的作用, 无实义.
 				 */
 				template <typename Up>
-				explicit KERBAL_CONSTEXPR optional(const Up & src,
+				explicit optional(const Up & src,
 						typename kerbal::type_traits::enable_if<!is_optional<Up>::value && !is_nullopt<Up>::value, int>::type = 0) :
 						initialized(false)
 				{
@@ -118,7 +121,7 @@ namespace kerbal
 				 * @note 第二个参数起到概念约束的作用, 无实义.
 				 */
 				template <typename Up>
-				explicit KERBAL_CONSTEXPR optional(const Up & src,
+				explicit optional(const Up & src,
 						typename kerbal::type_traits::enable_if<is_optional<Up>::value, int>::type = 0) :
 						initialized(false)
 				{
@@ -137,7 +140,7 @@ namespace kerbal
 				 * @brief 从一个 optional 类型的实例拷贝构造.
 				 * @param src 源值
 				 */
-				KERBAL_CONSTEXPR optional(const optional & src) :
+				optional(const optional & src) :
 						initialized(false)
 				{
 					if (src) {
@@ -151,7 +154,7 @@ namespace kerbal
 				 * @param src value from
 				 */
 				template <typename Up>
-				explicit KERBAL_CONSTEXPR optional(const optional<Up> & src) :
+				explicit optional(const optional<Up> & src) :
 						initialized(false)
 				{
 					if (src) {
@@ -162,7 +165,7 @@ namespace kerbal
 
 #	if __cplusplus >= 201103L
 
-				explicit KERBAL_CONSTEXPR optional(value_type && src) :
+				explicit optional(value_type && src) :
 						initialized(false)
 				{
 					this->construct(std::move(src));
@@ -638,22 +641,12 @@ namespace kerbal
 					if (this->has_value() && with.has_value()) {
 						std::swap(this->raw_value(), with.raw_value());
 					} else if (this->has_value() && !with.has_value()) {
-
-#		if __cplusplus < 201103L
-						with.construct(this->raw_value());
-#		else
-						with.construct(std::move(this->raw_value()));
-#		endif
+						with.construct(kerbal::compatibility::to_xvalue(this->raw_value()));
 						with.initialized = true;
 						this->destroy();
 						this->initialized = false;
 					} else if (!this->has_value() && with.has_value()) {
-
-#		if __cplusplus < 201103L
-						this->construct(with.raw_value());
-#		else
-						this->construct(std::move(with.raw_value()));
-#		endif
+						this->construct(kerbal::compatibility::to_xvalue(with.raw_value()));
 						this->initialized = true;
 						with.destroy();
 						with.initialized = false;

@@ -428,6 +428,66 @@ namespace kerbal
 		}
 
 
+
+		template <typename ForwardIterator, typename BinaryPredicate>
+		KERBAL_CONSTEXPR14
+		ForwardIterator __min_element(ForwardIterator first, ForwardIterator last, BinaryPredicate pred, std::forward_iterator_tag)
+		{
+			typedef ForwardIterator iterator;
+
+			iterator mini(first);
+			if (first != last) {
+				++first;
+				while (first != last) {
+					if (pred(*first, *mini)) {
+						mini = first;
+					}
+					++first;
+				}
+			}
+			return mini;
+		}
+
+		template <typename RandomAccessIterator, typename BinaryPredicate>
+		KERBAL_CONSTEXPR14
+		RandomAccessIterator __min_element(RandomAccessIterator first, RandomAccessIterator last, BinaryPredicate pred, std::random_access_iterator_tag)
+		{
+			typedef RandomAccessIterator iterator;
+			typedef typename kerbal::iterator::iterator_traits<iterator>::difference_type difference_type;
+
+			typedef RandomAccessIterator iterator;
+
+			iterator mini(first);
+			if (first != last) {
+				++first;
+				while (first != last) {
+					if (pred(*first, *mini)) {
+						mini = first;
+					}
+					++first;
+				}
+			}
+			return mini;
+		}
+
+		template <typename ForwardIterator, typename BinaryPredicate>
+		KERBAL_CONSTEXPR14
+		ForwardIterator min_element(ForwardIterator first, ForwardIterator last, BinaryPredicate pred)
+		{
+			return kerbal::algorithm::__min_element(first, last, pred, kerbal::iterator::iterator_category(first));
+		}
+
+		template <typename ForwardIterator>
+		KERBAL_CONSTEXPR14
+		ForwardIterator min_element(ForwardIterator first, ForwardIterator last)
+		{
+			typedef ForwardIterator iterator;
+			typedef typename kerbal::iterator::iterator_traits<iterator>::value_type value_type;
+
+			return kerbal::algorithm::min_element(first, last, kerbal::algorithm::binary_type_less<value_type, value_type>());
+		}
+
+
 	} //namespace algorithm
 
 } //namespace kerbal
