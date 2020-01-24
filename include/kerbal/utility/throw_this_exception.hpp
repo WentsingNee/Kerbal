@@ -16,6 +16,10 @@
 #include <kerbal/compatibility/noexcept.hpp>
 #include <utility>
 
+#if !__cpp_exceptions
+#include <cstdlib>
+#endif
+
 namespace kerbal
 {
 	namespace utility
