@@ -389,6 +389,62 @@ namespace kerbal
 			return __distance_less_than(first, last, dist, kerbal::iterator::iterator_category(first));
 		}
 
+		template <typename ForwardIterator, typename Distance>
+		KERBAL_CONSTEXPR14
+		bool __distance_equal_to(ForwardIterator first, ForwardIterator last, Distance dist, std::forward_iterator_tag)
+		{
+			typedef ForwardIterator iterator;
+			typedef typename kerbal::iterator::iterator_traits<iterator>::difference_type difference_type;
+			difference_type __n(0);
+			while (static_cast<bool>(first != last) && static_cast<bool>(__n < dist)) {
+				++first;
+				++__n;
+			}
+			return static_cast<bool>(first == last) && static_cast<bool>(__n == dist);
+		}
+
+		template <typename RandomAccessIterator, typename Distance>
+		KERBAL_CONSTEXPR
+		bool __distance_equal_to(RandomAccessIterator first, RandomAccessIterator last, Distance dist, std::random_access_iterator_tag)
+		{
+			return static_cast<bool>(kerbal::iterator::distance(first, last) == dist);
+		}
+
+		template <typename ForwardIterator, typename Distance>
+		KERBAL_CONSTEXPR
+		bool distance_equal_to(ForwardIterator first, ForwardIterator last, Distance dist)
+		{
+			return __distance_equal_to(first, last, dist, kerbal::iterator::iterator_category(first));
+		}
+
+		template <typename ForwardIterator, typename Distance>
+		KERBAL_CONSTEXPR14
+		bool __distance_greater_than(ForwardIterator first, ForwardIterator last, Distance dist, std::forward_iterator_tag)
+		{
+			typedef ForwardIterator iterator;
+			typedef typename kerbal::iterator::iterator_traits<iterator>::difference_type difference_type;
+			difference_type __n(0);
+			while (static_cast<bool>(first != last) && static_cast<bool>(__n < dist)) {
+				++first;
+				++__n;
+			}
+			return static_cast<bool>(first != last) && static_cast<bool>(__n == dist);
+		}
+
+		template <typename RandomAccessIterator, typename Distance>
+		KERBAL_CONSTEXPR
+		bool __distance_greater_than(RandomAccessIterator first, RandomAccessIterator last, Distance dist, std::random_access_iterator_tag)
+		{
+			return static_cast<bool>(kerbal::iterator::distance(first, last) > dist);
+		}
+
+		template <typename ForwardIterator, typename Distance>
+		KERBAL_CONSTEXPR
+		bool distance_greater_than(ForwardIterator first, ForwardIterator last, Distance dist)
+		{
+			return __distance_greater_than(first, last, dist, kerbal::iterator::iterator_category(first));
+		}
+
 	} // namespace iterator
 
 } // namespace kerbal
