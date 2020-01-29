@@ -54,32 +54,20 @@ namespace kerbal
 		class static_vector
 		{
 			public:
-
-				/// @brief Type of the elements.
-				typedef Tp value_type;
-
-				/// @brief Constant type of the elements.
-				typedef const value_type const_type;
-
-				/// @brief Reference of the elements.
-				typedef value_type& reference;
-
-				/// @brief Constant reference of the elements.
-				typedef const value_type& const_reference;
-
-				/// @brief Pointer type to the elements.
-				typedef value_type* pointer;
-
-				/// @brief Constant pointer type to the elements.
-				typedef const value_type* const_pointer;
+				typedef Tp							value_type;
+				typedef const value_type			const_type;
+				typedef value_type&					reference;
+				typedef const value_type&			const_reference;
+				typedef value_type*					pointer;
+				typedef const value_type*			const_pointer;
 
 #		if __cplusplus >= 201103L
-				typedef value_type&& rvalue_reference;
-				typedef const value_type&& const_rvalue_reference;
+				typedef value_type&&				rvalue_reference;
+				typedef const value_type&&			const_rvalue_reference;
 #		endif
 
-				typedef std::size_t size_type;
-				typedef std::ptrdiff_t difference_type;
+				typedef std::size_t					size_type;
+				typedef std::ptrdiff_t				difference_type;
 
 				/// @brief 与该 static_vector 所等价的 C 风格数组的类型, 即 value_type[N]
 				typedef value_type equal_c_array[N];
