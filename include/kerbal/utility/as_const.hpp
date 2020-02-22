@@ -24,7 +24,7 @@ namespace kerbal
 
 		template <typename Tp>
 		KERBAL_CONSTEXPR
-		typename kerbal::type_traits::add_const<Tp>&
+		typename kerbal::type_traits::add_const<Tp>::type &
 		as_const(Tp& ref) KERBAL_NOEXCEPT
 		{
 			return ref;
