@@ -41,11 +41,9 @@
 #define KERBAL_HASH_SHA1_HPP_
 
 #include <kerbal/compatibility/constexpr.hpp>
+#include <kerbal/compatibility/fixed_width_integer.hpp>
 #include <kerbal/compatibility/noexcept.hpp>
 
-#if __cplusplus >= 201103L
-#	include <cstdint>
-#endif
 #include <ostream>
 #include <string>
 
@@ -54,11 +52,7 @@ namespace kerbal
 	namespace hash
 	{
 
-#	if __cplusplus >= 201103L
-		typedef std::uint32_t uint32_t;
-#	else
-		typedef u_int32_t uint32_t;
-#	endif
+		using kerbal::compatibility::uint32_t;
 
 
 		class SHA1_result

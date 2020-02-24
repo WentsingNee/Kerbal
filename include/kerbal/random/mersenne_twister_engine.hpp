@@ -13,6 +13,7 @@
 #define KERBAL_RANDOM_MERSENNE_TWISTER_ENGINE_HPP_
 
 #include <kerbal/compatibility/constexpr.hpp>
+#include <kerbal/compatibility/fixed_width_integer.hpp>
 #include <kerbal/compatibility/noexcept.hpp>
 #include <kerbal/type_traits/type_traits_details/integral_constant.hpp>
 
@@ -144,12 +145,12 @@ namespace kerbal
 		};
 
 
-		typedef kerbal::random::mersenne_twister_engine<unsigned int, 32, 624, 397, 31,
+		typedef kerbal::random::mersenne_twister_engine<kerbal::compatibility::uint32_t, 32, 624, 397, 31,
 				0x9908b0dfUL, 11, 0xffffffffUL, 7,
 				0x9d2c5680UL, 15,
 				0xefc60000UL, 18, 1812433253UL> mt19937;
 
-		typedef kerbal::random::mersenne_twister_engine<unsigned long long, 64, 312, 156, 31,
+		typedef kerbal::random::mersenne_twister_engine<kerbal::compatibility::uint64_t, 64, 312, 156, 31,
 				0xb5026f5aa96619e9ULL, 29, 0x5555555555555555ULL, 17,
 				0x71d67fffeda60000ULL, 37,
 				0xfff7eee000000000ULL, 43, 6364136223846793005ULL> mt19937_64;
