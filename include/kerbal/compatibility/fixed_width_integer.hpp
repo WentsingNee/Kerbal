@@ -9,8 +9,8 @@
  *   all rights reserved
  */
 
-#ifndef KERBAL_FIXED_WIDTH_INTEGER_HPP
-#define KERBAL_FIXED_WIDTH_INTEGER_HPP
+#ifndef KERBAL_COMPATIBILITY_FIXED_WIDTH_INTEGER_HPP
+#define KERBAL_COMPATIBILITY_FIXED_WIDTH_INTEGER_HPP
 
 #include <kerbal/compatibility/static_assert.hpp>
 #include <kerbal/type_traits/type_traits_details/conditional.hpp>
@@ -96,4 +96,4 @@ namespace kerbal
 	}
 }
 
-#endif //KERBAL_FIXED_WIDTH_INTEGER_HPP
+#endif //KERBAL_COMPATIBILITY_FIXED_WIDTH_INTEGER_HPP

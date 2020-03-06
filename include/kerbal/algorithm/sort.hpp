@@ -12,12 +12,18 @@
 #ifndef KERBAL_ALGORITHM_SORT_HPP_
 #define KERBAL_ALGORITHM_SORT_HPP_
 
+#include <kerbal/algorithm/binary_search.hpp>
+#include <kerbal/algorithm/heap.hpp>
 #include <kerbal/algorithm/modifier.hpp>
-#include <kerbal/algorithm/search.hpp>
+#include <kerbal/algorithm/querier.hpp>
 #include <kerbal/compatibility/constexpr.hpp>
+#include <kerbal/compatibility/fixed_width_integer.hpp>
 #include <kerbal/compatibility/move.hpp>
 #include <kerbal/compatibility/noexcept.hpp>
+#include <kerbal/compatibility/static_assert.hpp>
 #include <kerbal/iterator/iterator.hpp>
+#include <kerbal/type_traits/type_traits_details/is_same.hpp>
+#include <kerbal/type_traits/type_traits_details/volatile_deduction.hpp>
 
 #include <stack>
 #include <memory>
@@ -27,17 +33,13 @@ namespace kerbal
 	namespace algorithm
 	{
 
-		template <typename BidirectionalIterator, typename CompareFunction>
+		template <typename ForwardIterator, typename Compare>
 		KERBAL_CONSTEXPR14
-		void bubble_sort(BidirectionalIterator first, BidirectionalIterator last, CompareFunction cmp)
+		void bubble_sort(ForwardIterator first, ForwardIterator last, Compare cmp)
 		{
-			if (first == last) {
-				return;
-			}
+			typedef ForwardIterator iterator;
 
-			typedef BidirectionalIterator iterator;
-
-			for (iterator last_of_each_loop(kerbal::iterator::next(first)); last != last_of_each_loop; --last) {
+			while (first != last) {
 				iterator j(first);
 				iterator j_next(kerbal::iterator::next(j));
 				while (j_next != last) {
@@ -47,51 +49,286 @@ namespace kerbal
 					j = j_next;
 					++j_next;
 				}
+				last = j;
 			}
 		}
 
-		template <typename BidirectionalIterator>
+		template <typename ForwardIterator>
 		KERBAL_CONSTEXPR14
-		void bubble_sort(BidirectionalIterator first, BidirectionalIterator last)
+		void bubble_sort(ForwardIterator first, ForwardIterator last)
 		{
-			typedef BidirectionalIterator iterator;
+			typedef ForwardIterator iterator;
 			typedef typename kerbal::iterator::iterator_traits<iterator>::value_type value_type;
 
 			kerbal::algorithm::bubble_sort(first, last, std::less<value_type>());
 		}
 
-		template <typename BidirectionalIterator, typename CompareFunction>
+		template <typename ForwardIterator, typename Compare>
 		KERBAL_CONSTEXPR14
-		void flag_bubble_sort(BidirectionalIterator first, BidirectionalIterator last, CompareFunction cmp)
+		void flag_bubble_sort(ForwardIterator first, ForwardIterator last, Compare cmp)
 		{
-			typedef BidirectionalIterator iterator;
+			typedef ForwardIterator iterator;
 
 			bool swit = true;
 
-			for (iterator last_of_each_loop(kerbal::iterator::next(first));
-					static_cast<bool>(last != last_of_each_loop) && swit; --last) {
-				swit = false;
+			while (static_cast<bool>(first != last) && swit) {
 				iterator j(first);
 				iterator j_next(kerbal::iterator::next(j));
+				swit = false;
 				while (j_next != last) {
 					if (cmp(*j_next, *j)) {
 						swit = true;
-						std::iter_swap(j_next, j);
+						kerbal::algorithm::iter_swap(j_next, j);
 					}
 					j = j_next;
 					++j_next;
 				}
+				last = j;
 			}
+
+		}
+
+		template <typename ForwardIterator>
+		KERBAL_CONSTEXPR14
+		void flag_bubble_sort(ForwardIterator first, ForwardIterator last)
+		{
+			typedef ForwardIterator iterator;
+			typedef typename kerbal::iterator::iterator_traits<iterator>::value_type value_type;
+
+			kerbal::algorithm::flag_bubble_sort(first, last, std::less<value_type>());
+		}
+
+		template <typename ForwardIterator, typename Compare>
+		KERBAL_CONSTEXPR14
+		void selection_sort(ForwardIterator first, ForwardIterator last, Compare cmp)
+		{
+			typedef ForwardIterator iterator;
+
+			while (first != last) {
+				iterator j(kerbal::algorithm::min_element(first, last, cmp));
+				if (first != j) {
+					if (cmp(*j, *first)) {
+						kerbal::algorithm::iter_swap(j, first);
+					}
+				}
+				++first;
+			}
+		}
+
+		template <typename ForwardIterator>
+		KERBAL_CONSTEXPR14
+		void selection_sort(ForwardIterator first, ForwardIterator last)
+		{
+			typedef ForwardIterator iterator;
+			typedef typename kerbal::iterator::iterator_traits<iterator>::value_type value_type;
+
+			kerbal::algorithm::selection_sort(first, last, std::less<value_type>());
+		}
+
+		namespace detail
+		{
+
+			template <typename Tp>
+			struct __pigeonhole_sort_transform;
+
+			template <typename Tp>
+			struct __pigeonhole_sort_anti_transform;
+
+			template <>
+			struct __pigeonhole_sort_transform<bool>
+			{
+					KERBAL_CONSTEXPR
+					size_t operator()(bool value) const
+					{
+						return value ? 1 : 0;
+					}
+			};
+
+			template <>
+			struct __pigeonhole_sort_anti_transform<bool>
+			{
+					KERBAL_CONSTEXPR
+					bool operator()(size_t index) const
+					{
+						return index ? true : false;
+					}
+			};
+
+			template <>
+			struct __pigeonhole_sort_transform<kerbal::compatibility::int8_t>
+			{
+					KERBAL_CONSTEXPR
+					size_t operator()(kerbal::compatibility::int8_t value) const
+					{
+						return value + 128;
+					}
+			};
+
+			template <>
+			struct __pigeonhole_sort_anti_transform<kerbal::compatibility::int8_t>
+			{
+					KERBAL_CONSTEXPR
+					kerbal::compatibility::int8_t operator()(size_t index) const
+					{
+						return index - 128;
+					}
+			};
+
+			template <>
+			struct __pigeonhole_sort_transform<kerbal::compatibility::uint8_t>
+			{
+					KERBAL_CONSTEXPR
+					size_t operator()(kerbal::compatibility::uint8_t value) const
+					{
+						return value;
+					}
+			};
+
+			template <>
+			struct __pigeonhole_sort_anti_transform<kerbal::compatibility::uint8_t>
+			{
+					KERBAL_CONSTEXPR
+					kerbal::compatibility::uint8_t operator()(size_t index) const
+					{
+						return index;
+					}
+			};
+
+		}
+
+		template <typename ForwardIterator>
+		KERBAL_CONSTEXPR14
+		void pigeonhole_sort(ForwardIterator first, ForwardIterator last, kerbal::type_traits::false_type) // less
+		{
+			typedef ForwardIterator iterator;
+			typedef typename kerbal::iterator::iterator_traits<iterator>::value_type value_type;
+			typedef typename kerbal::type_traits::remove_volatile<value_type>::type remove_volatile_type;
+			typedef kerbal::type_traits::is_same<remove_volatile_type, bool> is_bool_t;
+			typedef kerbal::type_traits::is_same<remove_volatile_type, kerbal::compatibility::int8_t> is_int8_t;
+			typedef kerbal::type_traits::is_same<remove_volatile_type, kerbal::compatibility::uint8_t> is_uint8_t;
+			KERBAL_STATIC_ASSERT((is_bool_t::value || is_int8_t::value || is_uint8_t::value),
+								"pigeonhole sort only accept bool, int8_t or uint8_t");
+
+			typedef kerbal::type_traits::integral_constant<size_t, is_bool_t::value ? 2 : 256> cnt_array_size;
+			size_t cnt[cnt_array_size::value] = {0};
+
+			detail::__pigeonhole_sort_transform<remove_volatile_type> transform;
+			detail::__pigeonhole_sort_anti_transform<remove_volatile_type> anti_transform;
+			for (iterator i(first); i != last; ++i) {
+				++cnt[transform(*i)];
+			}
+
+			for (size_t i = 0; i < cnt_array_size::value; ++i) {
+				remove_volatile_type current = anti_transform(i);
+				for (size_t j = 0; j < cnt[i]; ++j) {
+					*first = current;
+					++first;
+				}
+			}
+		}
+
+		template <typename ForwardIterator>
+		KERBAL_CONSTEXPR14
+		void pigeonhole_sort(ForwardIterator first, ForwardIterator last, kerbal::type_traits::true_type) // greater
+		{
+			typedef ForwardIterator iterator;
+			typedef typename kerbal::iterator::iterator_traits<iterator>::value_type value_type;
+			typedef typename kerbal::type_traits::remove_volatile<value_type>::type remove_volatile_type;
+			typedef kerbal::type_traits::is_same<remove_volatile_type, bool> is_bool_t;
+			typedef kerbal::type_traits::is_same<remove_volatile_type, kerbal::compatibility::int8_t> is_int8_t;
+			typedef kerbal::type_traits::is_same<remove_volatile_type, kerbal::compatibility::uint8_t> is_uint8_t;
+			KERBAL_STATIC_ASSERT((is_bool_t::value || is_int8_t::value || is_uint8_t::value),
+								"pigeonhole sort only accept bool, int8_t or uint8_t");
+
+			typedef kerbal::type_traits::integral_constant<size_t, is_bool_t::value ? 2 : 256> cnt_array_size;
+			size_t cnt[cnt_array_size::value] = {0};
+
+			detail::__pigeonhole_sort_transform<remove_volatile_type> transform;
+			detail::__pigeonhole_sort_anti_transform<remove_volatile_type> anti_transform;
+			for (iterator i(first); i != last; ++i) {
+				++cnt[transform(*i)];
+			}
+
+			size_t i = cnt_array_size::value;
+			while (i > 0) {
+				--i;
+				remove_volatile_type current = anti_transform(i);
+				for (size_t j = 0; j < cnt[i]; ++j) {
+					*first = current;
+					++first;
+				}
+			}
+		}
+
+		template <typename ForwardIterator>
+		KERBAL_CONSTEXPR14
+		void pigeonhole_sort(ForwardIterator first, ForwardIterator last) // less
+		{
+			kerbal::algorithm::pigeonhole_sort(first, last, kerbal::type_traits::false_type());
+		}
+
+
+		template <typename BidirectionalIterator, typename Compare>
+		KERBAL_CONSTEXPR14
+		void heap_sort(BidirectionalIterator first, BidirectionalIterator last, Compare compare)
+		{
+			typedef BidirectionalIterator iterator;
+			typedef typename kerbal::iterator::iterator_traits<iterator>::value_type value_type;
+			kerbal::algorithm::make_heap(first, last, compare);
+			kerbal::algorithm::sort_heap(first, last, compare);
 		}
 
 		template <typename BidirectionalIterator>
 		KERBAL_CONSTEXPR14
-		void flag_bubble_sort(BidirectionalIterator first, BidirectionalIterator last)
+		void heap_sort(BidirectionalIterator first, BidirectionalIterator last)
 		{
 			typedef BidirectionalIterator iterator;
 			typedef typename kerbal::iterator::iterator_traits<iterator>::value_type value_type;
+			kerbal::algorithm::heap_sort(first, last, std::less<value_type>());
+		}
 
-			kerbal::algorithm::flag_bubble_sort(first, last, std::less<value_type>());
+
+		/*
+		 * return first + len
+		 */
+		template <typename ForwardIterator, typename ForwardIterator2, typename Compare>
+		KERBAL_CONSTEXPR14
+		ForwardIterator merge_sort_n_afford_buffer(ForwardIterator first, typename kerbal::iterator::iterator_traits<ForwardIterator>::difference_type len, ForwardIterator2 buffer, Compare cmp)
+		{
+			typedef ForwardIterator iterator;
+			typedef ForwardIterator2 buffer_iterator;
+			typedef typename kerbal::iterator::iterator_traits<iterator>::difference_type difference_type;
+
+			if (len == 0) {
+				return first;
+			}
+			if (len == 1) {
+				return kerbal::iterator::next(first);
+			}
+			if (len == 2) {
+				iterator i(kerbal::iterator::next(first));
+				if (cmp(*i, *first)) {
+					kerbal::algorithm::iter_swap(first, i);
+				}
+				return kerbal::iterator::next(i);
+			}
+
+			difference_type half_len = len / 2;
+			iterator mid = kerbal::algorithm::merge_sort_n_afford_buffer(first, half_len, buffer, cmp);
+			buffer_iterator buffer_mid(kerbal::iterator::next(buffer, half_len));
+			iterator last = kerbal::algorithm::merge_sort_n_afford_buffer(mid, len - half_len, buffer_mid, cmp);
+			kerbal::algorithm::move(first, mid, buffer);
+			kerbal::algorithm::merge(buffer, buffer_mid, mid, last, first, cmp);
+			return last;
+		}
+
+		template <typename ForwardIterator, typename ForwardIterator2>
+		KERBAL_CONSTEXPR14
+		ForwardIterator merge_sort_n_afford_buffer(ForwardIterator first, typename kerbal::iterator::iterator_traits<ForwardIterator>::difference_type len, ForwardIterator2 buffer)
+		{
+			typedef ForwardIterator iterator;
+			typedef typename kerbal::iterator::iterator_traits<iterator>::value_type value_type;
+			return kerbal::algorithm::merge_sort_n_afford_buffer(first, len, buffer, std::less<value_type>());
 		}
 
 		template <typename ForwardIterator, typename ForwardIterator2, typename Compare>
@@ -101,22 +338,8 @@ namespace kerbal
 			typedef ForwardIterator iterator;
 			typedef typename kerbal::iterator::iterator_traits<iterator>::difference_type difference_type;
 
-			if (first == last) {
-				return;
-			}
-
-			if (kerbal::iterator::next(first) == last) {
-				return;
-			}
-
-			std::pair<iterator, difference_type> pair(kerbal::iterator::midden_iterator_with_distance(first, last));
-			iterator const & mid = pair.first;
-			difference_type const & len = pair.second;
-			kerbal::algorithm::merge_sort_afford_buffer(first, mid, buffer, cmp);
-			kerbal::algorithm::merge_sort_afford_buffer(mid, last, kerbal::iterator::next(buffer, len / 2), cmp);
-
-			kerbal::algorithm::merge(first, mid, mid, last, buffer, cmp);
-			kerbal::algorithm::move(buffer, kerbal::iterator::next(buffer, len), first);
+			difference_type len(kerbal::iterator::distance(first, last));
+			kerbal::algorithm::merge_sort_n_afford_buffer(first, len, buffer, cmp);
 		}
 
 		template <typename ForwardIterator, typename ForwardIterator2>
@@ -129,44 +352,94 @@ namespace kerbal
 		}
 
 		template <typename ForwardIterator, typename Allocator, typename Compare>
-		void merge_sort_afford_allocator(ForwardIterator first, ForwardIterator last, Allocator & allocator, Compare cmp)
+		ForwardIterator merge_sort_n_afford_allocator(ForwardIterator first, typename kerbal::iterator::iterator_traits<ForwardIterator>::difference_type len, Allocator & allocator, Compare cmp)
 		{
 			typedef ForwardIterator iterator;
 			typedef typename kerbal::iterator::iterator_traits<iterator>::difference_type difference_type;
 			typedef typename kerbal::iterator::iterator_traits<iterator>::value_type value_type;
-			difference_type const len = kerbal::iterator::distance(first, last);
 
-			value_type * const p = allocator.allocate(len);
-			value_type * k = p;
+			difference_type buffer_length(len / 2);
+			value_type * const buffer = allocator.allocate(buffer_length);
+			value_type * k = buffer;
+
+			typedef typename Allocator::value_type allocator_value_type;
 
 			struct dealloc_helper
 			{
 					Allocator & allocator;
 					difference_type const & len;
-					value_type * const & p;
+					value_type * const & buffer;
 					value_type * & k;
 
-					dealloc_helper(Allocator & allocator, difference_type const & len, value_type * const & p, value_type * & k) :
-							allocator(allocator), len(len), p(p), k(k)
+					dealloc_helper(Allocator & allocator, difference_type const & len, value_type * const & buffer, value_type * & k) :
+							allocator(allocator), len(len), buffer(buffer), k(k)
 					{
 					}
 
 					~dealloc_helper()
 					{
-						while (k != p) {
+						while (k != buffer) {
 							--k;
-							k->~type();
+//							allocator.destroy(k);
+							k->~allocator_value_type();
 						}
-						allocator.deallocate(p, len);
+						allocator.deallocate(buffer, len);
 					}
-			} auto_deallocator(allocator, len, p, k);
+			} auto_deallocator(allocator, buffer_length, buffer, k);
 
-			while (k != p + len) {
+/*
+			while (k != buffer + buffer_length) {
 				allocator.construct(k);
 				++k;
 			}
+*/
 
-			kerbal::algorithm::merge_sort_afford_buffer(first, last, p, cmp);
+#	define EACH() do {\
+				/*allocator.construct(k);\*/\
+				new (k) allocator_value_type ();\
+				++k;\
+			} while(false)
+
+			for (difference_type trip_count(buffer_length >> 2); trip_count > 0; --trip_count) {
+				EACH();
+				EACH();
+				EACH();
+				EACH();
+			}
+
+			difference_type remain(buffer + buffer_length - k);
+			if (remain == 3) {
+				EACH();
+			}
+			if (remain >= 2) {
+				EACH();
+			}
+			if (remain >= 1) {
+				EACH();
+			}
+
+#	undef EACH
+
+			return kerbal::algorithm::merge_sort_n_afford_buffer(first, buffer_length, buffer, cmp);
+		}
+
+		template <typename ForwardIterator, typename Allocator>
+		ForwardIterator merge_sort_n_afford_allocator(ForwardIterator first, typename kerbal::iterator::iterator_traits<ForwardIterator>::difference_type len, Allocator & allocator)
+		{
+			typedef ForwardIterator iterator;
+			typedef typename kerbal::iterator::iterator_traits<iterator>::difference_type difference_type;
+			typedef typename kerbal::iterator::iterator_traits<iterator>::value_type value_type;
+			return kerbal::algorithm::merge_sort_n_afford_allocator(first, len, allocator, std::less<value_type>());
+		}
+
+		template <typename ForwardIterator, typename Allocator, typename Compare>
+		void merge_sort_afford_allocator(ForwardIterator first, ForwardIterator last, Allocator & allocator, Compare cmp)
+		{
+			typedef ForwardIterator iterator;
+			typedef typename kerbal::iterator::iterator_traits<iterator>::difference_type difference_type;
+			typedef typename kerbal::iterator::iterator_traits<iterator>::value_type value_type;
+			difference_type const len(kerbal::iterator::distance(first, last));
+			kerbal::algorithm::merge_sort_n_afford_allocator(first, len, allocator, cmp);
 		}
 
 		template <typename ForwardIterator, typename Allocator>
@@ -194,9 +467,9 @@ namespace kerbal
 			kerbal::algorithm::merge_sort(first, last, std::less<value_type>());
 		}
 
-		template <typename BidirectionalIterator, typename CompareFunction>
+		template <typename BidirectionalIterator, typename Compare>
 		KERBAL_CONSTEXPR14
-		void insertion_sort(BidirectionalIterator first, BidirectionalIterator last, CompareFunction cmp)
+		void insertion_sort(BidirectionalIterator first, BidirectionalIterator last, Compare cmp)
 		{
 			typedef BidirectionalIterator iterator;
 			typedef typename kerbal::iterator::iterator_traits<iterator>::value_type value_type;
@@ -243,9 +516,9 @@ namespace kerbal
 				}
 		};
 
-		template <typename BidirectionalIterator, typename CompareFunction>
+		template <typename BidirectionalIterator, typename Compare>
 		KERBAL_CONSTEXPR14
-		void quick_sort(BidirectionalIterator first, BidirectionalIterator last, CompareFunction cmp)
+		void quick_sort(BidirectionalIterator first, BidirectionalIterator last, Compare cmp)
 		{
 			typedef BidirectionalIterator iterator;
 			typedef typename kerbal::iterator::iterator_traits<iterator>::difference_type difference_type;
@@ -274,7 +547,7 @@ namespace kerbal
 
 			}
 
-			const iterator partition_point(kerbal::algorithm::partition(first, back, __quick_sort_U<iterator, CompareFunction>(back, cmp)));
+			const iterator partition_point(kerbal::algorithm::partition(first, back, __quick_sort_U<iterator, Compare>(back, cmp)));
 
 			if (partition_point != back) {
 				if (cmp(*back, *partition_point)) {
@@ -295,9 +568,9 @@ namespace kerbal
 			kerbal::algorithm::quick_sort(first, last, std::less<value_type>());
 		}
 
-		template <typename BidirectionalIterator, typename CompareFunction, typename StackBuffer>
+		template <typename BidirectionalIterator, typename Compare, typename StackBuffer>
 		KERBAL_CONSTEXPR14
-		void __nonrecursive_qsort(BidirectionalIterator first, BidirectionalIterator last, CompareFunction cmp)
+		void __nonrecursive_qsort(BidirectionalIterator first, BidirectionalIterator last, Compare cmp)
 		{
 			typedef BidirectionalIterator iterator;
 			typedef typename kerbal::iterator::iterator_traits<iterator>::difference_type difference_type;
@@ -329,7 +602,7 @@ namespace kerbal
 					std::iter_swap(back, mid);
 				}
 
-				const iterator partition_point(kerbal::algorithm::partition(first, back, __quick_sort_U<iterator, CompareFunction>(back, cmp)));
+				const iterator partition_point(kerbal::algorithm::partition(first, back, __quick_sort_U<iterator, Compare>(back, cmp)));
 
 				if (partition_point != back) {
 					if (cmp(*back, *partition_point)) {
@@ -341,13 +614,13 @@ namespace kerbal
 			}
 		}
 
-		template <typename BidirectionalIterator, typename CompareFunction>
-		void nonrecursive_qsort(BidirectionalIterator first, BidirectionalIterator last, CompareFunction cmp)
+		template <typename BidirectionalIterator, typename Compare>
+		void nonrecursive_qsort(BidirectionalIterator first, BidirectionalIterator last, Compare cmp)
 		{
 			typedef BidirectionalIterator iterator;
 
 			kerbal::algorithm::__nonrecursive_qsort
-				<BidirectionalIterator, CompareFunction, std::stack<std::pair<iterator, iterator> > >
+				<BidirectionalIterator, Compare, std::stack<std::pair<iterator, iterator> > >
 			(first, last, cmp);
 		}
 
@@ -360,9 +633,9 @@ namespace kerbal
 			kerbal::algorithm::nonrecursive_qsort(first, last, std::less<value_type>());
 		}
 
-		template <typename ForwardIterator, typename CompareFunction>
+		template <typename ForwardIterator, typename Compare>
 		KERBAL_CONSTEXPR14
-		ForwardIterator is_sorted_until(ForwardIterator first, ForwardIterator last, CompareFunction cmp)
+		ForwardIterator is_sorted_until(ForwardIterator first, ForwardIterator last, Compare cmp)
 		{
 			if (first != last) {
 				ForwardIterator nxt(kerbal::iterator::next(first));
@@ -386,9 +659,9 @@ namespace kerbal
 			return kerbal::algorithm::is_sorted_until(first, last, std::less<value_type>());
 		}
 
-		template <typename ForwardIterator, typename CompareFunction>
+		template <typename ForwardIterator, typename Compare>
 		KERBAL_CONSTEXPR14
-		bool is_sorted(ForwardIterator first, ForwardIterator last, CompareFunction cmp)
+		bool is_sorted(ForwardIterator first, ForwardIterator last, Compare cmp)
 		{
 			return static_cast<bool>(kerbal::algorithm::is_sorted_until(first, last, cmp) == last);
 		}

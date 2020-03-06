@@ -15,8 +15,6 @@
 #include <kerbal/container/flat_ordered.hpp>
 #include <kerbal/container/impl/flat_set_base.hpp>
 
-#include <algorithm>
-
 namespace kerbal
 {
 
@@ -24,8 +22,8 @@ namespace kerbal
 	{
 
 		template <typename Tp, typename KeyCompare = std::less<Tp>, typename Allocator = std::allocator<Tp> >
-		class flat_set:
-				public kerbal::container::detail::__flat_set_base<Tp, kerbal::container::flat_ordered<Tp, Tp, KeyCompare, default_extract<Tp, Tp>, Allocator> >
+		class flat_set
+				: public kerbal::container::detail::__flat_set_base<Tp, kerbal::container::flat_ordered<Tp, Tp, KeyCompare, default_extract<Tp, Tp>, Allocator> >
 		{
 			private:
 				typedef kerbal::container::flat_ordered<Tp, Tp, KeyCompare, default_extract<Tp, Tp>, Allocator> Ordered;
@@ -85,6 +83,7 @@ namespace kerbal
 				}
 
 #		if __cplusplus >= 201103L
+
 				flat_set(std::initializer_list<value_type> src) :
 						super(src)
 				{
@@ -94,6 +93,7 @@ namespace kerbal
 						super(src, kc)
 				{
 				}
+
 #		endif
 
 				void assign(const flat_set & src)
@@ -172,8 +172,8 @@ namespace kerbal
 		};
 
 		template <typename Tp, typename KeyCompare = std::less<Tp>, typename Allocator = std::allocator<Tp> >
-		class flat_multiset:
-				public kerbal::container::detail::__flat_multiset_base<Tp, kerbal::container::flat_ordered<Tp, Tp, KeyCompare, default_extract<Tp, Tp>, Allocator> >
+		class flat_multiset
+				: public kerbal::container::detail::__flat_multiset_base<Tp, kerbal::container::flat_ordered<Tp, Tp, KeyCompare, default_extract<Tp, Tp>, Allocator> >
 		{
 			private:
 				typedef kerbal::container::flat_ordered<Tp, Tp, KeyCompare, default_extract<Tp, Tp>, Allocator> Ordered;
@@ -233,6 +233,7 @@ namespace kerbal
 				}
 
 #		if __cplusplus >= 201103L
+
 				flat_multiset(std::initializer_list<value_type> src) :
 						super(src)
 				{
@@ -242,6 +243,7 @@ namespace kerbal
 						super(src, kc)
 				{
 				}
+
 #		endif
 
 				void assign(const flat_multiset & src)

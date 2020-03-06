@@ -81,6 +81,60 @@ namespace kerbal
 
 		template <typename Container>
 		KERBAL_CONSTEXPR
+		auto rbegin(Container & container)
+					KERBAL_CONDITIONAL_NOEXCEPT(noexcept(container.rbegin()))
+					-> decltype(container.rbegin())
+		{
+			return container.rbegin();
+		}
+
+		template <typename Container>
+		KERBAL_CONSTEXPR
+		auto rbegin(const Container & container)
+					KERBAL_CONDITIONAL_NOEXCEPT(noexcept(container.rbegin()))
+					-> decltype(container.rbegin())
+		{
+			return container.rbegin();
+		}
+
+		template <typename Container>
+		KERBAL_CONSTEXPR
+		auto crbegin(const Container & container)
+					KERBAL_CONDITIONAL_NOEXCEPT(noexcept(container.crbegin()))
+					-> decltype(container.crbegin())
+		{
+			return container.crbegin();
+		}
+
+		template <typename Container>
+		KERBAL_CONSTEXPR
+		auto rend(Container & container)
+					KERBAL_CONDITIONAL_NOEXCEPT(noexcept(container.rend()))
+					-> decltype(container.rend())
+		{
+			return container.rend();
+		}
+
+		template <typename Container>
+		KERBAL_CONSTEXPR
+		auto rend(const Container & container)
+					KERBAL_CONDITIONAL_NOEXCEPT(noexcept(container.rend()))
+					-> decltype(container.rend())
+		{
+			return container.rend();
+		}
+
+		template <typename Container>
+		KERBAL_CONSTEXPR
+		auto crend(const Container & container)
+					KERBAL_CONDITIONAL_NOEXCEPT(noexcept(container.crend()))
+					-> decltype(container.crend())
+		{
+			return container.crend();
+		}
+
+		template <typename Container>
+		KERBAL_CONSTEXPR
 		auto size(const Container & container)
 					KERBAL_CONDITIONAL_NOEXCEPT(noexcept(container.size()))
 					-> decltype(container.size())
@@ -117,7 +171,7 @@ namespace kerbal
 		typename Container::const_iterator
 		cbegin(const Container & container)
 		{
-			return container.cbegin();
+			return container.begin();
 		}
 
 		template <typename Container>
@@ -138,7 +192,49 @@ namespace kerbal
 		typename Container::const_iterator
 		cend(const Container & container)
 		{
-			return container.cend();
+			return container.end();
+		}
+
+		template <typename Container>
+		typename Container::reverse_iterator
+		rbegin(Container & container)
+		{
+			return container.rbegin();
+		}
+
+		template <typename Container>
+		typename Container::const_reverse_iterator
+		rbegin(const Container & container)
+		{
+			return container.rbegin();
+		}
+
+		template <typename Container>
+		typename Container::const_reverse_iterator
+		crbegin(const Container & container)
+		{
+			return container.rbegin();
+		}
+
+		template <typename Container>
+		typename Container::reverse_iterator
+		rend(Container & container)
+		{
+			return container.rend();
+		}
+
+		template <typename Container>
+		typename Container::const_reverse_iterator
+		rend(const Container & container)
+		{
+			return container.rend();
+		}
+
+		template <typename Container>
+		typename Container::const_reverse_iterator
+		crend(const Container & container)
+		{
+			return container.rend();
 		}
 
 		template <typename Container>

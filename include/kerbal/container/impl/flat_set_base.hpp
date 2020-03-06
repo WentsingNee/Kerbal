@@ -12,7 +12,7 @@
 #ifndef KERBAL_CONTAINER_IMPL_FLAT_SET_BASE_HPP_
 #define KERBAL_CONTAINER_IMPL_FLAT_SET_BASE_HPP_
 
-#include <kerbal/algorithm/search.hpp>
+#include <kerbal/algorithm/binary_search.hpp>
 #include <kerbal/iterator/iterator.hpp>
 #include <kerbal/iterator/iterator_traits.hpp>
 #include <kerbal/type_traits/type_traits_details/enable_if.hpp>
@@ -92,71 +92,7 @@ namespace kerbal
 					{
 					}
 
-					template <typename InputIterator>
-					__flat_set_common_base(InputIterator first, InputIterator last,
-							typename kerbal::type_traits::enable_if<
-								kerbal::iterator::is_input_compatible_iterator<InputIterator>::value,
-								int
-							>::type = 0) :
-							__data(first, last)
-					{
-					}
-
-					template <typename InputIterator>
-					__flat_set_common_base(InputIterator first, InputIterator last, key_compare kc,
-							typename kerbal::type_traits::enable_if<
-								kerbal::iterator::is_input_compatible_iterator<InputIterator>::value,
-								int
-							>::type = 0) :
-							__data(first, last, kc)
-					{
-					}
-
-#			if __cplusplus >= 201103L
-					__flat_set_common_base(std::initializer_list<value_type> src) :
-							__data(src.begin(), src.end())
-					{
-					}
-
-					__flat_set_common_base(std::initializer_list<value_type> src, key_compare kc) :
-							__data(src.begin(), src.end(), kc)
-					{
-					}
-#			endif
-
 				public:
-
-					template <typename InputIterator>
-					typename kerbal::type_traits::enable_if<
-							kerbal::iterator::is_input_compatible_iterator<InputIterator>::value
-					>::type
-					assign(InputIterator first, InputIterator last)
-					{
-						this->__ordered_agent().assign(first, last);
-					}
-
-					template <typename InputIterator>
-					typename kerbal::type_traits::enable_if<
-							kerbal::iterator::is_input_compatible_iterator<InputIterator>::value
-					>::type
-					assign(InputIterator first, InputIterator last, key_compare kc)
-					{
-						this->__ordered_agent().assign(first, last, kc);
-					}
-
-#			if __cplusplus >= 201103L
-
-					void assign(std::initializer_list<value_type> src)
-					{
-						this->assign(src.begin(), src.end());
-					}
-
-					void assign(std::initializer_list<value_type> src, key_compare kc)
-					{
-						this->assign(src.begin(), src.end(), kc);
-					}
-
-#			endif
 
 					const_iterator begin() const
 					{
@@ -329,8 +265,9 @@ namespace kerbal
 								kerbal::iterator::is_input_compatible_iterator<InputIterator>::value,
 								int
 							>::type = 0) :
-							super(first, last)
+							super()
 					{
+						this->assign(first, last);
 					}
 
 					template <typename InputIterator>
@@ -339,18 +276,19 @@ namespace kerbal
 								kerbal::iterator::is_input_compatible_iterator<InputIterator>::value,
 								int
 							>::type = 0) :
-							super(first, last, kc)
+							super(kc)
 					{
+						this->assign(first, last);
 					}
 
 #			if __cplusplus >= 201103L
 					__flat_set_base(std::initializer_list<value_type> src) :
-							super(src.begin(), src.end())
+							__flat_set_base(src.begin(), src.end())
 					{
 					}
 
 					__flat_set_base(std::initializer_list<value_type> src, key_compare kc) :
-							super(src.begin(), src.end(), kc)
+							__flat_set_base(src.begin(), src.end(), kc)
 					{
 					}
 #			endif
@@ -366,6 +304,41 @@ namespace kerbal
 					{
 						return this->contains(key, hint) ? 1 : 0;
 					}
+
+					template <typename InputIterator>
+					typename kerbal::type_traits::enable_if<
+							kerbal::iterator::is_input_compatible_iterator<InputIterator>::value
+					>::type
+					assign(InputIterator first, InputIterator last)
+					{
+						this->clear();
+						this->insert(first, last);
+					}
+
+					template <typename InputIterator>
+					typename kerbal::type_traits::enable_if<
+							kerbal::iterator::is_input_compatible_iterator<InputIterator>::value
+					>::type
+					assign(InputIterator first, InputIterator last, key_compare kc)
+					{
+						this->clear();
+						this->__key_comp() = kc;
+						this->insert(first, last);
+					}
+
+#			if __cplusplus >= 201103L
+
+					void assign(std::initializer_list<value_type> src)
+					{
+						this->assign(src.begin(), src.end());
+					}
+
+					void assign(std::initializer_list<value_type> src, key_compare kc)
+					{
+						this->assign(src.begin(), src.end(), kc);
+					}
+
+#			endif
 
 					std::pair<const_iterator, bool> insert(const_reference src)
 					{
@@ -453,8 +426,9 @@ namespace kerbal
 								kerbal::iterator::is_input_compatible_iterator<InputIterator>::value,
 								int
 							>::type = 0) :
-							super(first, last)
+							super()
 					{
+						this->assign(first, last);
 					}
 
 					template <typename InputIterator>
@@ -463,18 +437,19 @@ namespace kerbal
 								kerbal::iterator::is_input_compatible_iterator<InputIterator>::value,
 								int
 							>::type = 0) :
-							super(first, last, kc)
+							super(kc)
 					{
+						this->assign(first, last);
 					}
 
 #			if __cplusplus >= 201103L
 					__flat_multiset_base(std::initializer_list<value_type> src) :
-							super(src.begin(), src.end())
+							__flat_multiset_base(src.begin(), src.end())
 					{
 					}
 
 					__flat_multiset_base(std::initializer_list<value_type> src, key_compare kc) :
-							super(src.begin(), src.end(), kc)
+							__flat_multiset_base(src.begin(), src.end(), kc)
 					{
 					}
 #			endif
@@ -491,24 +466,56 @@ namespace kerbal
 						return this->__ordered_agent().count(key, hint);
 					}
 
-					std::pair<const_iterator, bool> insert(const_reference src)
+					template <typename InputIterator>
+					typename kerbal::type_traits::enable_if<
+							kerbal::iterator::is_input_compatible_iterator<InputIterator>::value
+					>::type
+					assign(InputIterator first, InputIterator last)
+					{
+						this->__ordered_agent().assign(first, last);
+					}
+
+					template <typename InputIterator>
+					typename kerbal::type_traits::enable_if<
+							kerbal::iterator::is_input_compatible_iterator<InputIterator>::value
+					>::type
+					assign(InputIterator first, InputIterator last, key_compare kc)
+					{
+						this->__ordered_agent().assign(first, last, kc);
+					}
+
+#			if __cplusplus >= 201103L
+
+					void assign(std::initializer_list<value_type> src)
+					{
+						this->assign(src.begin(), src.end());
+					}
+
+					void assign(std::initializer_list<value_type> src, key_compare kc)
+					{
+						this->assign(src.begin(), src.end(), kc);
+					}
+
+#			endif
+
+					const_iterator insert(const_reference src)
 					{
 						return this->__ordered_agent().insert(src);
 					}
 
-					std::pair<const_iterator, bool> insert(const_iterator hint, const_reference src)
+					const_iterator insert(const_iterator hint, const_reference src)
 					{
 						return this->__ordered_agent().insert(hint, src);
 					}
 
 #			if __cplusplus >= 201103L
 
-					std::pair<const_iterator, bool> insert(rvalue_reference src)
+					const_iterator insert(rvalue_reference src)
 					{
 						return this->__ordered_agent().insert(std::move(src));
 					}
 
-					std::pair<const_iterator, bool> insert(const_iterator hint, rvalue_reference src)
+					const_iterator insert(const_iterator hint, rvalue_reference src)
 					{
 						return this->__ordered_agent().insert(hint, std::move(src));
 					}
@@ -521,7 +528,7 @@ namespace kerbal
 						this->__ordered_agent().insert(first, last);
 					}
 
-					const_iterator erase(const key_type & key)
+					size_type erase(const key_type & key)
 					{
 						return this->__ordered_agent().erase(key);
 					}

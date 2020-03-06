@@ -12,9 +12,9 @@
 #ifndef KERBAL_ALGORITHM_DYNAMIC_PROGRAMMING_HPP_
 #define KERBAL_ALGORITHM_DYNAMIC_PROGRAMMING_HPP_
 
+#include <kerbal/algorithm/binary_search.hpp>
 #include <kerbal/algorithm/binary_type_predicate.hpp>
 #include <kerbal/algorithm/modifier.hpp>
-#include <kerbal/algorithm/search.hpp>
 #include <kerbal/compatibility/constexpr.hpp>
 #include <kerbal/container/nonmember_container_access.hpp>
 #include <kerbal/iterator/general_back_inserter.hpp>
@@ -133,7 +133,7 @@ namespace kerbal
 				if (cmp(buffer[index_of_back], *first)) {
 					*back_inserter = first; ++back_inserter; ++index_of_back;
 				} else {
-					*kerbal::algorithm::ordered_range_lower_bound(
+					*kerbal::algorithm::lower_bound(
 							kerbal::container::begin(buffer), kerbal::container::end(buffer), first, _iter_cmp) = first;
 				}
 			}

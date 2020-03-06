@@ -105,6 +105,8 @@ namespace kerbal
 
 #		endif
 
+				using super::assign;
+
 				void assign(const flat_ordered& src)
 				{
 					this->assign(src.cbegin(), src.cend(), src.key_comp());
@@ -184,6 +186,5 @@ namespace kerbal
 	} // namespace container
 
 } // namespace kerbal
-
 
 #endif /* KERBAL_CONTAINER_FLAT_ORDERED_HPP_ */

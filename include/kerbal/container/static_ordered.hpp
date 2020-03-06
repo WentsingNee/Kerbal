@@ -105,6 +105,8 @@ namespace kerbal
 
 #		endif
 
+				using super::assign;
+
 				void assign(const static_ordered& src)
 				{
 					this->assign(src.cbegin(), src.cend(), src.key_comp());

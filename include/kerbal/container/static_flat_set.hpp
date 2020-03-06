@@ -12,8 +12,8 @@
 #ifndef KERBAL_CONTAINER_STATIC_FLAT_SET_HPP_
 #define KERBAL_CONTAINER_STATIC_FLAT_SET_HPP_
 
-#include <kerbal/container/static_ordered.hpp>
 #include <kerbal/container/impl/flat_set_base.hpp>
+#include <kerbal/container/static_ordered.hpp>
 
 namespace kerbal
 {
@@ -22,8 +22,8 @@ namespace kerbal
 	{
 
 		template <typename Tp, std::size_t N, typename KeyCompare = std::less<Tp> >
-		class static_flat_set:
-				public kerbal::container::detail::__flat_set_base<Tp, kerbal::container::static_ordered<Tp, N, Tp, KeyCompare> >
+		class static_flat_set
+				: public kerbal::container::detail::__flat_set_base<Tp, kerbal::container::static_ordered<Tp, N, Tp, KeyCompare> >
 		{
 			private:
 				typedef kerbal::container::static_ordered<Tp, N, Tp, KeyCompare> Ordered;
@@ -83,6 +83,7 @@ namespace kerbal
 				}
 
 #		if __cplusplus >= 201103L
+
 				static_flat_set(std::initializer_list<value_type> src) :
 						super(src)
 				{
@@ -92,6 +93,7 @@ namespace kerbal
 						super(src, kc)
 				{
 				}
+
 #		endif
 
 				void assign(const static_flat_set & src)
@@ -170,33 +172,33 @@ namespace kerbal
 		};
 
 		template <typename Tp, std::size_t N, typename KeyCompare = std::less<Tp> >
-		class static_flat_multiset:
-				public kerbal::container::detail::__flat_multiset_base<Tp, kerbal::container::static_ordered<Tp, N, Tp, KeyCompare> >
+		class static_flat_multiset
+				: public kerbal::container::detail::__flat_multiset_base<Tp, kerbal::container::static_ordered<Tp, N, Tp, KeyCompare> >
 		{
 			private:
 				typedef kerbal::container::static_ordered<Tp, N, Tp, KeyCompare> Ordered;
 				typedef kerbal::container::detail::__flat_multiset_base<Tp, Ordered> super;
 
 			public:
-				typedef typename super::key_compare key_compare;
-				typedef typename super::key_type key_type;
-				typedef typename super::value_type value_type;
-				typedef typename super::const_type const_type;
-				typedef typename super::reference reference;
-				typedef typename super::const_reference const_reference;
-				typedef typename super::pointer pointer;
-				typedef typename super::const_pointer const_pointer;
+				typedef typename super::key_compare			key_compare;
+				typedef typename super::key_type			key_type;
+				typedef typename super::value_type			value_type;
+				typedef typename super::const_type			const_type;
+				typedef typename super::reference			reference;
+				typedef typename super::const_reference		const_reference;
+				typedef typename super::pointer				pointer;
+				typedef typename super::const_pointer		const_pointer;
 
 #		if __cplusplus >= 201103L
-				typedef typename super::rvalue_reference rvalue_reference;
-				typedef typename super::const_rvalue_reference const_rvalue_reference;
+				typedef typename super::rvalue_reference			rvalue_reference;
+				typedef typename super::const_rvalue_reference		const_rvalue_reference;
 #		endif
 
-				typedef typename super::size_type size_type;
-				typedef typename super::difference_type difference_type;
+				typedef typename super::size_type					size_type;
+				typedef typename super::difference_type				difference_type;
 
-				typedef typename super::const_iterator const_iterator;
-				typedef typename super::const_reverse_iterator const_reverse_iterator;
+				typedef typename super::const_iterator				const_iterator;
+				typedef typename super::const_reverse_iterator		const_reverse_iterator;
 
 			public:
 
@@ -276,43 +278,43 @@ namespace kerbal
 				}
 
 				template <size_t M>
-				friend bool operator==(const static_flat_multiset<Tp, M, KeyCompare>& lhs,
-										const static_flat_multiset<Tp, N, KeyCompare>& rhs)
+				friend bool operator==(const static_flat_multiset<Tp, M, KeyCompare> & lhs,
+										const static_flat_multiset<Tp, N, KeyCompare> & rhs)
 				{
 					return lhs.__ordered_agent() == rhs.__ordered_agent();
 				}
 
 				template <size_t M>
-				friend bool operator!=(const static_flat_multiset<Tp, M, KeyCompare>& lhs,
-										const static_flat_multiset<Tp, N, KeyCompare>& rhs)
+				friend bool operator!=(const static_flat_multiset<Tp, M, KeyCompare> & lhs,
+										const static_flat_multiset<Tp, N, KeyCompare> & rhs)
 				{
 					return lhs.__ordered_agent() != rhs.__ordered_agent();
 				}
 
 				template <size_t M>
-				friend bool operator<(const static_flat_multiset<Tp, M, KeyCompare>& lhs,
-										const static_flat_multiset<Tp, N, KeyCompare>& rhs)
+				friend bool operator<(const static_flat_multiset<Tp, M, KeyCompare> & lhs,
+										const static_flat_multiset<Tp, N, KeyCompare> & rhs)
 				{
 					return lhs.__ordered_agent() < rhs.__ordered_agent();
 				}
 
 				template <size_t M>
-				friend bool operator<=(const static_flat_multiset<Tp, M, KeyCompare>& lhs,
-										const static_flat_multiset<Tp, N, KeyCompare>& rhs)
+				friend bool operator<=(const static_flat_multiset<Tp, M, KeyCompare> & lhs,
+										const static_flat_multiset<Tp, N, KeyCompare> & rhs)
 				{
 					return lhs.__ordered_agent() <= rhs.__ordered_agent();
 				}
 
 				template <size_t M>
-				friend bool operator>(const static_flat_multiset<Tp, M, KeyCompare>& lhs,
-										const static_flat_multiset<Tp, N, KeyCompare>& rhs)
+				friend bool operator>(const static_flat_multiset<Tp, M, KeyCompare> & lhs,
+										const static_flat_multiset<Tp, N, KeyCompare> & rhs)
 				{
 					return lhs.__ordered_agent() > rhs.__ordered_agent();
 				}
 
 				template <size_t M>
-				friend bool operator>=(const static_flat_multiset<Tp, M, KeyCompare>& lhs,
-										const static_flat_multiset<Tp, N, KeyCompare>& rhs)
+				friend bool operator>=(const static_flat_multiset<Tp, M, KeyCompare> & lhs,
+										const static_flat_multiset<Tp, N, KeyCompare> & rhs)
 				{
 					return lhs.__ordered_agent() >= rhs.__ordered_agent();
 				}

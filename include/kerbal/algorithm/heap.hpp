@@ -249,11 +249,11 @@ namespace kerbal
 			kerbal::algorithm::push_heap(first, last);
 		}
 
-		template <typename ForwardIterator>
+		template <typename BidirectionalIterator>
 		KERBAL_CONSTEXPR14
-		void make_heap(ForwardIterator first, ForwardIterator last)
+		void make_heap(BidirectionalIterator first, BidirectionalIterator last)
 		{
-			typedef ForwardIterator iterator;
+			typedef BidirectionalIterator iterator;
 			typedef typename kerbal::iterator::iterator_traits<iterator>::value_type value_type;
 			kerbal::algorithm::make_heap(first, last, std::less<value_type>());
 		}

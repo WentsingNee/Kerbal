@@ -56,13 +56,13 @@ namespace kerbal
 			class __sl_node: public __sl_node_base
 			{
 				private:
-					typedef Tp value_type;
-					typedef Tp& reference;
-					typedef const Tp& const_reference;
+					typedef Tp						value_type;
+					typedef Tp&						reference;
+					typedef const Tp&				const_reference;
 
 #		if __cplusplus >= 201103L
-					typedef value_type&& rvalue_reference;
-					typedef const value_type&& const_rvalue_reference;
+					typedef value_type&&			rvalue_reference;
+					typedef const value_type&&		const_rvalue_reference;
 #		endif
 
 					template <typename Up, typename Allocator>
@@ -74,7 +74,8 @@ namespace kerbal
 
 					template <typename ... Args>
 					KERBAL_CONSTEXPR
-					explicit __sl_node(Args&& ... args): __value(std::forward<Args>(args)...)
+					explicit __sl_node(Args&& ... args)
+							: __value(std::forward<Args>(args)...)
 					{
 					}
 
@@ -261,39 +262,28 @@ namespace kerbal
 		class single_list
 		{
 			public:
-				/// @brief Type of the elements.
-				typedef Tp value_type;
-
-				/// @brief Constant type of the elements.
-				typedef const value_type const_type;
-
-				/// @brief Reference of the elements.
-				typedef value_type& reference;
-
-				/// @brief Constant reference of the elements.
-				typedef const value_type& const_reference;
-
-				/// @brief Pointer type to the elements.
-				typedef value_type* pointer;
-
-				/// @brief Constant pointer type to the elements.
-				typedef const value_type* const_pointer;
+				typedef Tp							value_type;
+				typedef const value_type			const_type;
+				typedef value_type&					reference;
+				typedef const value_type&			const_reference;
+				typedef value_type*					pointer;
+				typedef const value_type*			const_pointer;
 
 #		if __cplusplus >= 201103L
-				typedef value_type&& rvalue_reference;
-				typedef const value_type&& const_rvalue_reference;
+				typedef value_type&&				rvalue_reference;
+				typedef const value_type&&			const_rvalue_reference;
 #		endif
 
-				typedef std::size_t size_type;
-				typedef std::ptrdiff_t difference_type;
+				typedef std::size_t					size_type;
+				typedef std::ptrdiff_t				difference_type;
 
-				typedef kerbal::container::detail::__sl_iter<value_type>  iterator;
-				typedef kerbal::container::detail::__sl_kiter<value_type> const_iterator;
+				typedef kerbal::container::detail::__sl_iter<value_type>		iterator;
+				typedef kerbal::container::detail::__sl_kiter<value_type>		const_iterator;
 
 			private:
-				typedef kerbal::container::detail::__sl_node_base __sl_node_base;
-				typedef kerbal::container::detail::__sl_node<value_type> node;
-				typedef typename Allocator::template rebind<node>::other node_allocator_type;
+				typedef kerbal::container::detail::__sl_node_base				__sl_node_base;
+				typedef kerbal::container::detail::__sl_node<value_type>		node;
+				typedef typename Allocator::template rebind<node>::other		node_allocator_type;
 
 				__sl_node_base __head;
 				iterator __last;

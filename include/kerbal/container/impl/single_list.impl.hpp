@@ -537,21 +537,25 @@ namespace kerbal
 		void single_list<Tp, Allocator>::swap(single_list & ano)
 		{
 			kerbal::algorithm::swap(this->__head.next, ano.__head.next);
-            bool is_this_empty = this->empty();
-            bool is_ano_empty = ano.empty();
-            if (is_this_empty && is_ano_empty) {
-                this->__last = this->begin();
-                ano.__last = ano.begin();
-            } else if (is_this_empty && !is_ano_empty) {
-                this->__last = ano.__last;
-                ano.__last = ano.begin();
-            } else if (!is_this_empty && is_ano_empty) {
-                ano.__last = this->__last;
-                this->__last = this->begin();
-            } else { //!is_this_empty && !is_ano_empty
-                kerbal::algorithm::swap(this->__last, ano.__last);
-            }
-            kerbal::algorithm::swap(this->alloc, ano.alloc);
+			bool is_this_empty = this->empty();
+			bool is_ano_empty = ano.empty();
+			if (is_this_empty) {
+				if (is_ano_empty) { //is_this_empty && is_ano_empty
+					this->__last = this->begin();
+					ano.__last = ano.begin();
+				} else { //is_this_empty && !is_ano_empty
+					this->__last = ano.__last;
+					ano.__last = ano.begin();
+				}
+			} else {
+				if (is_ano_empty) { //!is_this_empty && is_ano_empty
+					ano.__last = this->__last;
+					this->__last = this->begin();
+				} else { //!is_this_empty && !is_ano_empty
+					kerbal::algorithm::swap(this->__last, ano.__last);
+				}
+			}
+			kerbal::algorithm::swap(this->alloc, ano.alloc);
 		}
 
 		template <typename Tp, typename Allocator>
@@ -581,15 +585,21 @@ namespace kerbal
 
 #	else
 
+#define __alloc_new_node_body(args...) \
+		{ \
+			node *p = this->alloc.allocate(1); \
+			kerbal::memory::guard<node, release_uninit_res> gd(p, release_uninit_res(this->alloc)); \
+			new (p) node(args); \
+			gd.release(); \
+			return p; \
+		}
+
+
 		template <typename Tp, typename Allocator>
 		typename single_list<Tp, Allocator>::node*
 		single_list<Tp, Allocator>::__alloc_new_node()
 		{
-			node *p = this->alloc.allocate(1);
-			kerbal::memory::guard<node, release_uninit_res> gd(p, release_uninit_res(this->alloc));
-			new (p) node();
-			gd.release();
-			return p;
+			__alloc_new_node_body();
 		}
 
 		template <typename Tp, typename Allocator>
@@ -597,11 +607,7 @@ namespace kerbal
 		typename single_list<Tp, Allocator>::node*
 		single_list<Tp, Allocator>::__alloc_new_node(const Arg0 & arg0)
 		{
-			node *p = this->alloc.allocate(1);
-			kerbal::memory::guard<node, release_uninit_res> gd(p, release_uninit_res(this->alloc));
-			new (p) node(arg0);
-			gd.release();
-			return p;
+			__alloc_new_node_body(arg0);
 		}
 
 		template <typename Tp, typename Allocator>
@@ -609,11 +615,7 @@ namespace kerbal
 		typename single_list<Tp, Allocator>::node*
 		single_list<Tp, Allocator>::__alloc_new_node(const Arg0 & arg0, const Arg1 & arg1)
 		{
-			node *p = this->alloc.allocate(1);
-			kerbal::memory::guard<node, release_uninit_res> gd(p, release_uninit_res(this->alloc));
-			new (p) node(arg0, arg1);
-			gd.release();
-			return p;
+			__alloc_new_node_body(arg0, arg1);
 		}
 
 		template <typename Tp, typename Allocator>
@@ -621,12 +623,10 @@ namespace kerbal
 		typename single_list<Tp, Allocator>::node*
 		single_list<Tp, Allocator>::__alloc_new_node(const Arg0 & arg0, const Arg1 & arg1, const Arg2 & arg2)
 		{
-			node *p = this->alloc.allocate(1);
-			kerbal::memory::guard<node, release_uninit_res> gd(p, release_uninit_res(this->alloc));
-			new (p) node(arg0, arg1, arg2);
-			gd.release();
-			return p;
+			__alloc_new_node_body(arg0, arg1, arg2);
 		}
+
+#undef __alloc_new_node_body
 
 #	endif
 
