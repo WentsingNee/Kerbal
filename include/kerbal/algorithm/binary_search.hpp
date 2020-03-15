@@ -14,6 +14,7 @@
 
 #include <kerbal/algorithm/binary_type_predicate.hpp>
 #include <kerbal/algorithm/querier.hpp>
+#include <kerbal/compatibility/constexpr.hpp>
 #include <kerbal/iterator/iterator.hpp>
 
 
@@ -23,6 +24,7 @@ namespace kerbal
 	{
 
 		template <typename ForwardIterator, typename Tp, typename Comparator>
+		KERBAL_CONSTEXPR14
 		ForwardIterator
 		__lower_bound(ForwardIterator first, ForwardIterator last, const Tp & value, Comparator comparator,
 					  std::forward_iterator_tag)
@@ -48,6 +50,7 @@ namespace kerbal
 		}
 
 		template <typename RandomAccessIterator, typename Tp, typename Comparator>
+		KERBAL_CONSTEXPR14
 		RandomAccessIterator
 		__lower_bound(RandomAccessIterator first, RandomAccessIterator last, const Tp & value, Comparator comparator,
 					  std::random_access_iterator_tag)
@@ -73,6 +76,7 @@ namespace kerbal
 		 * @param comparator requires: comparator(value_type, Tp)
 		 */
 		template <typename ForwardIterator, typename Tp, typename Comparator>
+		KERBAL_CONSTEXPR14
 		ForwardIterator
 		lower_bound(ForwardIterator first, ForwardIterator last, const Tp & value, Comparator comparator)
 		{
@@ -80,6 +84,7 @@ namespace kerbal
 		}
 
 		template <typename ForwardIterator, typename Tp>
+		KERBAL_CONSTEXPR14
 		ForwardIterator
 		lower_bound(ForwardIterator first, ForwardIterator last, const Tp & value)
 		{
@@ -89,6 +94,7 @@ namespace kerbal
 		}
 
 		template <typename ForwardIterator, typename Tp, typename Comparator>
+		KERBAL_CONSTEXPR14
 		ForwardIterator
 		__upper_bound(ForwardIterator first, ForwardIterator last, const Tp & value, Comparator comparator,
 					  std::forward_iterator_tag)
@@ -101,6 +107,7 @@ namespace kerbal
 		}
 
 		template <typename RandomAccessIterator, typename Tp, typename Comparator>
+		KERBAL_CONSTEXPR14
 		RandomAccessIterator
 		__upper_bound(RandomAccessIterator first, RandomAccessIterator last, const Tp & value, Comparator comparator,
 					  std::random_access_iterator_tag)
@@ -128,6 +135,7 @@ namespace kerbal
 		 * @param comparator requires: comparator(Tp, value_type)
 		 */
 		template <typename ForwardIterator, typename Tp, typename Comparator>
+		KERBAL_CONSTEXPR14
 		ForwardIterator
 		upper_bound(ForwardIterator first, ForwardIterator last, const Tp & value, Comparator comparator)
 		{
@@ -135,6 +143,7 @@ namespace kerbal
 		}
 
 		template <typename ForwardIterator, typename Tp>
+		KERBAL_CONSTEXPR14
 		ForwardIterator
 		upper_bound(ForwardIterator first, ForwardIterator last, const Tp & value)
 		{
@@ -148,6 +157,7 @@ namespace kerbal
 		 * @param comparator requires: comparator(value_type, Tp) && comparator(Tp, value_type)
 		 */
 		template <typename ForwardIterator, typename Tp, typename Comparator>
+		KERBAL_CONSTEXPR14
 		std::pair<ForwardIterator, ForwardIterator>
 		equal_range(ForwardIterator first, ForwardIterator last, const Tp & value, Comparator comparator)
 		{
@@ -156,6 +166,7 @@ namespace kerbal
 		}
 
 		template <typename ForwardIterator, typename Tp>
+		KERBAL_CONSTEXPR14
 		std::pair<ForwardIterator, ForwardIterator>
 		equal_range(ForwardIterator first, ForwardIterator last, const Tp & value)
 		{
@@ -167,6 +178,7 @@ namespace kerbal
 		 * @param comparator requires: comparator(value_type, Tp) && comparator(Tp, value_type)
 		 */
 		template <typename ForwardIterator, typename Tp, typename Comparator>
+		KERBAL_CONSTEXPR14
 		bool binary_search(ForwardIterator first, ForwardIterator last, const Tp& value, Comparator comparator)
 		{
 			typedef ForwardIterator iterator;
@@ -175,6 +187,7 @@ namespace kerbal
 		}
 
 		template <typename ForwardIterator, typename Tp>
+		KERBAL_CONSTEXPR14
 		bool binary_search(ForwardIterator first, ForwardIterator last, const Tp & value)
 		{
 			typedef ForwardIterator iterator;
@@ -184,6 +197,7 @@ namespace kerbal
 
 
 		template <typename ForwardIterator, typename Tp, typename Comparator>
+		KERBAL_CONSTEXPR14
 		ForwardIterator
 		__lower_bound_hint(ForwardIterator first, ForwardIterator last, const Tp& value,
 						   ForwardIterator hint, Comparator comparator, std::forward_iterator_tag)
@@ -201,6 +215,7 @@ namespace kerbal
 		}
 
 		template <typename RandomAccessIterator, typename Tp, typename Comparator>
+		KERBAL_CONSTEXPR14
 		RandomAccessIterator
 		__lower_bound_hint(RandomAccessIterator first, RandomAccessIterator last, const Tp& value,
 						   RandomAccessIterator hint, Comparator comparator, std::random_access_iterator_tag)
@@ -223,6 +238,7 @@ namespace kerbal
 		}
 
 		template <typename ForwardIterator, typename Tp, typename Comparator>
+		KERBAL_CONSTEXPR14
 		ForwardIterator
 		lower_bound_hint(ForwardIterator first, ForwardIterator last, const Tp& value, ForwardIterator hint, Comparator comparator)
 		{
@@ -231,6 +247,7 @@ namespace kerbal
 		}
 
 		template <typename ForwardIterator, typename Tp>
+		KERBAL_CONSTEXPR14
 		ForwardIterator
 		lower_bound_hint(ForwardIterator first, ForwardIterator last, const Tp& value, ForwardIterator hint)
 		{

@@ -243,10 +243,10 @@ namespace kerbal
 
 			iterator current_adjust(first);
 			while (current_adjust != last) {
-				kerbal::algorithm::push_heap(first, current_adjust);
+				kerbal::algorithm::push_heap(first, current_adjust, cmp);
 				++current_adjust;
 			}
-			kerbal::algorithm::push_heap(first, last);
+			kerbal::algorithm::push_heap(first, last, cmp);
 		}
 
 		template <typename BidirectionalIterator>

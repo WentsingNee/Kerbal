@@ -313,11 +313,10 @@ namespace kerbal
 				return kerbal::iterator::next(i);
 			}
 
-			difference_type half_len = len / 2;
-			iterator mid = kerbal::algorithm::merge_sort_n_afford_buffer(first, half_len, buffer, cmp);
-			buffer_iterator buffer_mid(kerbal::iterator::next(buffer, half_len));
-			iterator last = kerbal::algorithm::merge_sort_n_afford_buffer(mid, len - half_len, buffer_mid, cmp);
-			kerbal::algorithm::move(first, mid, buffer);
+			difference_type first_half_len = len / 2;
+			iterator mid(kerbal::algorithm::merge_sort_n_afford_buffer(first, first_half_len, buffer, cmp));
+			iterator last(kerbal::algorithm::merge_sort_n_afford_buffer(mid, len - first_half_len, buffer, cmp));
+			buffer_iterator buffer_mid(kerbal::algorithm::move(first, mid, buffer));
 			kerbal::algorithm::merge(buffer, buffer_mid, mid, last, first, cmp);
 			return last;
 		}
@@ -367,12 +366,12 @@ namespace kerbal
 			struct dealloc_helper
 			{
 					Allocator & allocator;
-					difference_type const & len;
+					difference_type const & buffer_length;
 					value_type * const & buffer;
 					value_type * & k;
 
-					dealloc_helper(Allocator & allocator, difference_type const & len, value_type * const & buffer, value_type * & k) :
-							allocator(allocator), len(len), buffer(buffer), k(k)
+					dealloc_helper(Allocator & allocator, difference_type const & buffer_length, value_type * const & buffer, value_type * & k) KERBAL_NOEXCEPT :
+							allocator(allocator), buffer_length(buffer_length), buffer(buffer), k(k)
 					{
 					}
 
@@ -383,9 +382,9 @@ namespace kerbal
 //							allocator.destroy(k);
 							k->~allocator_value_type();
 						}
-						allocator.deallocate(buffer, len);
+						allocator.deallocate(buffer, buffer_length);
 					}
-			} auto_deallocator(allocator, buffer_length, buffer, k);
+			} auto_dealloc_helper(allocator, buffer_length, buffer, k);
 
 /*
 			while (k != buffer + buffer_length) {
@@ -420,14 +419,13 @@ namespace kerbal
 
 #	undef EACH
 
-			return kerbal::algorithm::merge_sort_n_afford_buffer(first, buffer_length, buffer, cmp);
+			return kerbal::algorithm::merge_sort_n_afford_buffer(first, len, buffer, cmp);
 		}
 
 		template <typename ForwardIterator, typename Allocator>
 		ForwardIterator merge_sort_n_afford_allocator(ForwardIterator first, typename kerbal::iterator::iterator_traits<ForwardIterator>::difference_type len, Allocator & allocator)
 		{
 			typedef ForwardIterator iterator;
-			typedef typename kerbal::iterator::iterator_traits<iterator>::difference_type difference_type;
 			typedef typename kerbal::iterator::iterator_traits<iterator>::value_type value_type;
 			return kerbal::algorithm::merge_sort_n_afford_allocator(first, len, allocator, std::less<value_type>());
 		}
