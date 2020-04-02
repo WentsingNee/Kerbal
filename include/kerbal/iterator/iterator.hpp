@@ -157,7 +157,8 @@ namespace kerbal
 		__advance_at_most(InputIterator & it, Distance dist, InputIterator last,
 				std::input_iterator_tag)
 		{
-			typedef typename kerbal::iterator::iterator_traits<InputIterator>::difference_type difference_type;
+			typedef InputIterator iterator;
+			typedef typename kerbal::iterator::iterator_traits<iterator>::difference_type difference_type;
 			difference_type i(0);
 			while (static_cast<bool>(i < dist) && static_cast<bool>(it != last)) {
 				++it;
@@ -172,7 +173,8 @@ namespace kerbal
 		__advance_at_most(RandomAccessIterator & it, Distance dist, RandomAccessIterator last,
 				std::random_access_iterator_tag)
 		{
-			typedef typename kerbal::iterator::iterator_traits<RandomAccessIterator>::difference_type difference_type;
+			typedef RandomAccessIterator iterator;
+			typedef typename kerbal::iterator::iterator_traits<iterator>::difference_type difference_type;
 			difference_type __d(dist);
 			difference_type most_dist(kerbal::iterator::distance(it, last));
 			if (__d < most_dist) {
@@ -206,7 +208,8 @@ namespace kerbal
 		__retreat_at_most(BidirectionalIterator & it, Distance dist, BidirectionalIterator first,
 				std::bidirectional_iterator_tag)
 		{
-			typedef typename kerbal::iterator::iterator_traits<BidirectionalIterator>::difference_type difference_type;
+			typedef BidirectionalIterator iterator;
+			typedef typename kerbal::iterator::iterator_traits<iterator>::difference_type difference_type;
 			difference_type i(0);
 			while (static_cast<bool>(i < dist) && static_cast<bool>(it != first)) {
 				--it;
@@ -221,7 +224,8 @@ namespace kerbal
 		__retreat_at_most(RandomAccessIterator & it, Distance dist, RandomAccessIterator first,
 				std::random_access_iterator_tag)
 		{
-			typedef typename kerbal::iterator::iterator_traits<RandomAccessIterator>::difference_type difference_type;
+			typedef RandomAccessIterator iterator;
+			typedef typename kerbal::iterator::iterator_traits<iterator>::difference_type difference_type;
 			difference_type __d(dist);
 			difference_type most_dist(kerbal::iterator::distance(first, it));
 			if (__d < most_dist) {
@@ -301,6 +305,7 @@ namespace kerbal
 		}
 
 		template <typename ForwardIterator>
+		KERBAL_CONSTEXPR14
 		std::pair<ForwardIterator, typename kerbal::iterator::iterator_traits<ForwardIterator>::difference_type>
 		__midden_iterator_with_distance(ForwardIterator first, ForwardIterator last, std::forward_iterator_tag)
 		{
@@ -324,6 +329,7 @@ namespace kerbal
 		}
 
 		template <typename BidirectionalIterator>
+		KERBAL_CONSTEXPR14
 		std::pair<BidirectionalIterator, typename kerbal::iterator::iterator_traits<BidirectionalIterator>::difference_type>
 		__midden_iterator_with_distance(BidirectionalIterator first, BidirectionalIterator last, std::bidirectional_iterator_tag)
 		{
@@ -345,6 +351,7 @@ namespace kerbal
 		}
 
 		template <typename RandomAccessIterator>
+		KERBAL_CONSTEXPR14
 		std::pair<RandomAccessIterator, typename kerbal::iterator::iterator_traits<RandomAccessIterator>::difference_type>
 		__midden_iterator_with_distance(RandomAccessIterator first, RandomAccessIterator last, std::random_access_iterator_tag)
 		{
@@ -355,6 +362,7 @@ namespace kerbal
 		}
 
 		template <typename ForwardIterator>
+		KERBAL_CONSTEXPR14
 		std::pair<ForwardIterator, typename kerbal::iterator::iterator_traits<ForwardIterator>::difference_type>
 		midden_iterator_with_distance(ForwardIterator first, ForwardIterator last)
 		{

@@ -9,8 +9,8 @@
  *   all rights reserved
  */
 
-#ifndef KERBAL_ITERATOR_ITERATOR_TRAITS_HPP_
-#define KERBAL_ITERATOR_ITERATOR_TRAITS_HPP_
+#ifndef KERBAL_ITERATOR_ITERATOR_TRAITS_HPP
+#define KERBAL_ITERATOR_ITERATOR_TRAITS_HPP
 
 #include <iterator>
 #include <kerbal/compatibility/constexpr.hpp>
@@ -27,8 +27,6 @@ namespace kerbal
 	namespace iterator
 	{
 
-		// _GLIBCXX_RESOLVE_LIB_DEFECTS
-		// 2408. SFINAE-friendly common_type/iterator_traits is missing in C++14
 		template <typename, typename = kerbal::type_traits::void_type<>::type >
 		struct __iterator_traits_helper
 		{
@@ -46,11 +44,11 @@ namespace kerbal
 				>::type
 			>
 		{
-				typedef typename Iterator::iterator_category   iterator_category;
-				typedef typename Iterator::value_type          value_type;
-				typedef typename Iterator::difference_type     difference_type;
-				typedef typename Iterator::pointer             pointer;
-				typedef typename Iterator::reference           reference;
+				typedef typename Iterator::iterator_category	iterator_category;
+				typedef typename Iterator::value_type			value_type;
+				typedef typename Iterator::difference_type		difference_type;
+				typedef typename Iterator::pointer				pointer;
+				typedef typename Iterator::reference			reference;
 		};
 
 		MODULE_EXPORT
@@ -64,11 +62,11 @@ namespace kerbal
 		template <typename Tp>
 		struct iterator_traits<Tp*>
 		{
-				typedef std::random_access_iterator_tag     iterator_category;
-				typedef Tp                                  value_type;
-				typedef std::ptrdiff_t                      difference_type;
-				typedef Tp*                                 pointer;
-				typedef Tp&                                 reference;
+				typedef std::random_access_iterator_tag		iterator_category;
+				typedef Tp									value_type;
+				typedef std::ptrdiff_t						difference_type;
+				typedef Tp*									pointer;
+				typedef Tp&									reference;
 		};
 
 		MODULE_EXPORT
@@ -76,11 +74,11 @@ namespace kerbal
 		template <typename Tp>
 		struct iterator_traits<const Tp*>
 		{
-				typedef std::random_access_iterator_tag     iterator_category;
-				typedef Tp                                  value_type;
-				typedef std::ptrdiff_t                      difference_type;
-				typedef const Tp*                           pointer;
-				typedef const Tp&                           reference;
+				typedef std::random_access_iterator_tag		iterator_category;
+				typedef Tp									value_type;
+				typedef std::ptrdiff_t						difference_type;
+				typedef const Tp*							pointer;
+				typedef const Tp&							reference;
 		};
 
 
@@ -334,4 +332,4 @@ namespace kerbal
 
 } // namespace kerbal
 
-#endif /* KERBAL_ITERATOR_ITERATOR_TRAITS_HPP_ */
+#endif // KERBAL_ITERATOR_ITERATOR_TRAITS_HPP
