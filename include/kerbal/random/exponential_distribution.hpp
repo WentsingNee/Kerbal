@@ -1,5 +1,5 @@
 /**
- * @file       bernoulli_distribution.hpp
+ * @file       exponential_distribution.hpp
  * @brief
  * @date       2019-11-23
  * @author     Peter
@@ -9,47 +9,52 @@
  *   all rights reserved
  */
 
-#ifndef KERBAL_RANDOM_BERNOULLI_DISTRIBUTIONE_HPP_
-#define KERBAL_RANDOM_BERNOULLI_DISTRIBUTIONE_HPP_
+#ifndef KERBAL_RANDOM_EXPONENTIAL_DISTRIBUTION_HPP_
+#define KERBAL_RANDOM_EXPONENTIAL_DISTRIBUTION_HPP_
 
 #include <kerbal/compatibility/constexpr.hpp>
 #include <kerbal/compatibility/noexcept.hpp>
+#include <kerbal/random/uniform_real_distribution.hpp>
+
+#include <cmath>
+#include <limits>
 
 namespace kerbal
 {
 	namespace random
 	{
 
-		class bernoulli_distribution
+		template <typename RealType = double>
+		class exponential_distribution
 		{
 			public:
-				typedef bool result_type;
+				typedef RealType result_type;
 
 			private:
-				double probability;
+				RealType lambda;
 
 			public:
 
-				KERBAL_CONSTEXPR bernoulli_distribution(double probability = 0.5) KERBAL_NOEXCEPT :
-						probability(probability)
+				KERBAL_CONSTEXPR exponential_distribution(RealType lambda = 1.0) KERBAL_NOEXCEPT :
+						lambda(lambda)
 				{
 				}
 
 				template <typename Engine>
-				KERBAL_CONSTEXPR14
 				result_type operator()(Engine & eg) KERBAL_NOEXCEPT
 				{
-					return (eg() - eg.min() < this->probability * (eg.max() - eg.min())) ? false : true;
+					kerbal::random::uniform_real_distribution<result_type> dis;
+					return -std::log(result_type(1) - dis(eg)) / this->lambda;
 				}
 
 				KERBAL_CONSTEXPR result_type min() const KERBAL_NOEXCEPT
 				{
-					return false;
+					return 0;
 				}
 
 				KERBAL_CONSTEXPR result_type max() const KERBAL_NOEXCEPT
 				{
-					return true;
+					return std::numeric_limits<result_type>::max();
 				}
 
 		};
@@ -58,4 +63,4 @@ namespace kerbal
 
 } // namespace kerbal
 
-#endif	/* KERBAL_RANDOM_BERNOULLI_DISTRIBUTIONE_HPP_ */
+#endif	/* KERBAL_RANDOM_EXPONENTIAL_DISTRIBUTION_HPP_ */

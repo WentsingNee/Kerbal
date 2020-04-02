@@ -13,6 +13,7 @@
 #define KERBAL_RANDOM_LINEAR_CONGRUENTIAL_ENGINE_HPP_
 
 #include <kerbal/compatibility/constexpr.hpp>
+#include <kerbal/compatibility/fixed_width_integer.hpp>
 #include <kerbal/compatibility/noexcept.hpp>
 
 namespace kerbal
@@ -67,11 +68,24 @@ namespace kerbal
 				{
 					return m - 1u;
 				}
+
+				KERBAL_CONSTEXPR
+				bool operator==(const linear_congruential_engine & rhs) const
+				{
+					return this->state_value == rhs.state_value;
+				}
+
+				KERBAL_CONSTEXPR
+				bool operator!=(const linear_congruential_engine & rhs) const
+				{
+					return this->state_value != rhs.state_value;
+				}
+
 		};
 
-		typedef kerbal::random::linear_congruential_engine<unsigned int, 16807UL, 0UL, 2147483647UL>
+		typedef kerbal::random::linear_congruential_engine<kerbal::compatibility::uint32_t, 16807UL, 0UL, 2147483647UL>
 										minstd_rand0;
-		typedef kerbal::random::linear_congruential_engine<unsigned int, 48271, 0, 2147483647>
+		typedef kerbal::random::linear_congruential_engine<kerbal::compatibility::uint32_t, 48271, 0, 2147483647>
 										minstd_rand;
 
 	} // namespace random

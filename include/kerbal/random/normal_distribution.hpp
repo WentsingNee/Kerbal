@@ -18,6 +18,7 @@
 
 #include <cmath>
 #include <utility>
+#include <limits>
 
 namespace kerbal
 {
@@ -63,15 +64,16 @@ namespace kerbal
 					return std_normal_distribution(eg) * stddev + mean;
 				}
 
-//				KERBAL_CONSTEXPR result_type min() const KERBAL_NOEXCEPT
-//				{
-//					return this->a;
-//				}
-//
-//				KERBAL_CONSTEXPR result_type max() const KERBAL_NOEXCEPT
-//				{
-//					return this->b;
-//				}
+				KERBAL_CONSTEXPR result_type min() const KERBAL_NOEXCEPT
+				{
+					return std::numeric_limits<result_type>::min();
+				}
+
+				KERBAL_CONSTEXPR result_type max() const KERBAL_NOEXCEPT
+				{
+					return std::numeric_limits<result_type>::max();
+				}
+
 		};
 
 	} // namespace random

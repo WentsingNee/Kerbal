@@ -65,6 +65,19 @@ namespace kerbal
 				{
 					return std::numeric_limits<result_type>::max();
 				}
+
+				KERBAL_CONSTEXPR
+				bool operator==(const istream_engine & rhs) const
+				{
+					return false;
+				}
+
+				KERBAL_CONSTEXPR14
+				bool operator!=(const istream_engine & rhs) const
+				{
+					return true;
+				}
+
 		};
 
 	} // namespace random

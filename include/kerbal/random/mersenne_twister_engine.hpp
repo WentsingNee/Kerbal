@@ -12,9 +12,11 @@
 #ifndef KERBAL_RANDOM_MERSENNE_TWISTER_ENGINE_HPP_
 #define KERBAL_RANDOM_MERSENNE_TWISTER_ENGINE_HPP_
 
+#include <kerbal/algorithm/sequence_compare.hpp>
 #include <kerbal/compatibility/constexpr.hpp>
 #include <kerbal/compatibility/fixed_width_integer.hpp>
 #include <kerbal/compatibility/noexcept.hpp>
+#include <kerbal/container/nonmember_container_access.hpp>
 #include <kerbal/type_traits/type_traits_details/integral_constant.hpp>
 
 #include <cstddef>
@@ -79,8 +81,6 @@ namespace kerbal
 					}
 					result_type y = (this->mt[N - 1] & UPPER_MASK) | (this->mt[0] & LOWER_MASK);
 					this->mt[N - 1] = this->mt[M - 1] ^ (y >> 1) ^ mag01[y & 0x1UL];
-
-					this->mti = 0;
 				}
 
 
@@ -104,6 +104,7 @@ namespace kerbal
 				{
 					if (this->mti == N) {
 						this->twist(); /* generate N words at one time */
+						this->mti = 0;
 					}
 					result_type y = this->mt[this->mti++];
 					y ^= (y >> U) & D;
@@ -117,7 +118,8 @@ namespace kerbal
 				void discard() KERBAL_NOEXCEPT
 				{
 					if (this->mti == N) {
-						this->twist(); /* generate N words at one time */
+						this->twist();
+						this->mti = 0;
 					}
 					this->mti++;
 				}
@@ -125,9 +127,13 @@ namespace kerbal
 				KERBAL_CONSTEXPR14
 				void discard(unsigned long long z) KERBAL_NOEXCEPT
 				{
-					for (unsigned long long i = 0; i < z; ++i) {
+					for (unsigned long long i = 0; i < z / N; ++i) {
+						this->twist();
+					}
+					for (unsigned long long i = 0; i < z % N; ++i) {
 						if (this->mti == N) {
-							this->twist(); /* generate N words at one time */
+							this->twist();
+							this->mti = 0;
 						}
 						this->mti++;
 					}
@@ -142,6 +148,31 @@ namespace kerbal
 				{
 					return UIntType(UIntType(1) << W) - 1;
 				}
+
+				KERBAL_CONSTEXPR14
+				bool operator==(const mersenne_twister_engine & rhs) const
+				{
+					return static_cast<bool>(
+								kerbal::algorithm::sequence_equal_to(
+									kerbal::container::cbegin(this->mt),
+									kerbal::container::cend(this->mt),
+									kerbal::container::cbegin(rhs.mt),
+									kerbal::container::cend(rhs.mt)
+							)) && this->mti == rhs.mti;
+				}
+
+				KERBAL_CONSTEXPR14
+				bool operator!=(const mersenne_twister_engine & rhs) const
+				{
+					return static_cast<bool>(
+								kerbal::algorithm::sequence_not_equal_to(
+									kerbal::container::cbegin(this->mt),
+									kerbal::container::cend(this->mt),
+									kerbal::container::cbegin(rhs.mt),
+									kerbal::container::cend(rhs.mt)
+							)) || this->mti != rhs.mti;
+				}
+
 		};
 
 

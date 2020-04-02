@@ -46,7 +46,7 @@ namespace kerbal
 				template <typename Engine>
 				KERBAL_CONSTEXPR result_type operator()(Engine & eg) const
 				{
-					return static_cast<result_type>(eg()) / (Engine::max() - Engine::min())
+					return static_cast<result_type>(eg()) / (eg.max() - eg.min())
 							* (b - a) + a;
 				}
 
@@ -59,6 +59,7 @@ namespace kerbal
 				{
 					return this->b;
 				}
+
 		};
 
 	} // namespace random
