@@ -1,12 +1,16 @@
-/*
- * noexcept.hpp
- *
- *  Created on: 2019年5月11日
- *      Author: peter
+/**
+ * @file       noexcept.hpp
+ * @brief
+ * @date       2019-5-11
+ * @author     Peter
+ * @copyright
+ *      Peter of [ThinkSpirit Laboratory](http://thinkspirit.org/)
+ *   of [Nanjing University of Information Science & Technology](http://www.nuist.edu.cn/)
+ *   all rights reserved
  */
 
-#ifndef INCLUDE_KERBAL_COMPATIBILITY_NOEXCEPT_HPP_
-#define INCLUDE_KERBAL_COMPATIBILITY_NOEXCEPT_HPP_
+#ifndef KERBAL_COMPATIBILITY_NOEXCEPT_HPP
+#define KERBAL_COMPATIBILITY_NOEXCEPT_HPP
 
 #ifndef KERBAL_NOEXCEPT
 #	if __cplusplus >= 201103L
@@ -18,11 +22,15 @@
 
 
 #ifndef KERBAL_CONDITIONAL_NOEXCEPT
-#	if __cplusplus >= 201103L
-#		define KERBAL_CONDITIONAL_NOEXCEPT(cond) noexcept(cond)
+#	if __cpp_exceptions
+#		if __cplusplus >= 201103L
+#			define KERBAL_CONDITIONAL_NOEXCEPT(cond) noexcept(cond)
+#		else
+#			define KERBAL_CONDITIONAL_NOEXCEPT(cond)
+#		endif
 #	else
-#		define KERBAL_CONDITIONAL_NOEXCEPT(cond)
+#		define KERBAL_CONDITIONAL_NOEXCEPT(cond) KERBAL_NOEXCEPT
 #	endif
 #endif
 
-#endif /* INCLUDE_KERBAL_COMPATIBILITY_NOEXCEPT_HPP_ */
+#endif // KERBAL_COMPATIBILITY_NOEXCEPT_HPP
