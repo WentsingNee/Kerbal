@@ -140,7 +140,7 @@ namespace kerbal
 		struct copy_lvalue_reference:
 					kerbal::type_traits::conditional<
 						kerbal::type_traits::is_lvalue_reference<From>::value,
-						kerbal::type_traits::add_lvalue_reference<To>,
+						typename kerbal::type_traits::add_lvalue_reference<To>::type,
 						To
 					>
 		{
@@ -160,6 +160,18 @@ namespace kerbal
 		};
 
 #	endif
+
+//		MODULE_EXPORT
+//		template <typename From, typename To>
+//		struct copy_const_lvalue_reference:
+//				kerbal::type_traits::conditional<
+//						kerbal::type_traits::is_const_lvalue_reference<From>::value,
+//						kerbal::type_traits::add_const_lvalue_reference<To>,
+//						To
+//				>
+//		{
+//		};
+
 
 	}
 }

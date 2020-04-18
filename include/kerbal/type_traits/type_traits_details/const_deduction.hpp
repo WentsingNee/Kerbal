@@ -70,7 +70,7 @@ namespace kerbal
 		struct copy_const:
 					kerbal::type_traits::conditional<
 						kerbal::type_traits::is_const<From>::value,
-						kerbal::type_traits::add_const<To>,
+						typename kerbal::type_traits::add_const<To>::type,
 						To
 					>
 		{

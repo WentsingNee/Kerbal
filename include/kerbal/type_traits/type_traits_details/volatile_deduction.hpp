@@ -70,7 +70,7 @@ namespace kerbal
 		struct copy_volatile:
 				kerbal::type_traits::conditional<
 						kerbal::type_traits::is_volatile<From>::value,
-						kerbal::type_traits::add_volatile<To>,
+						typename kerbal::type_traits::add_volatile<To>::type,
 						To
 				>
 		{
