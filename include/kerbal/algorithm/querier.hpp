@@ -9,8 +9,8 @@
  *   all rights reserved
  */
 
-#ifndef KERBAL_ALGORITHM_QUERIER_HPP_
-#define KERBAL_ALGORITHM_QUERIER_HPP_
+#ifndef KERBAL_ALGORITHM_QUERIER_HPP
+#define KERBAL_ALGORITHM_QUERIER_HPP
 
 #include <kerbal/algorithm/binary_type_predicate.hpp>
 #include <kerbal/compatibility/constexpr.hpp>
@@ -160,7 +160,7 @@ namespace kerbal
 		KERBAL_CONSTEXPR14
 		bool none_of(InputIterator first, InputIterator last, UnaryPredicate pred)
 		{
-			return !kerbal::algorithm::any_of(first, last, pred);;
+			return !kerbal::algorithm::any_of(first, last, pred);
 		}
 
 
@@ -616,4 +616,4 @@ namespace kerbal
 
 } //namespace kerbal
 
-#endif /* KERBAL_ALGORITHM_QUERIER_HPP_ */
+#endif // KERBAL_ALGORITHM_QUERIER_HPP
