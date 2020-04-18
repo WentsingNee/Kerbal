@@ -9,8 +9,8 @@
  *   all rights reserved
  */
 
-#ifndef KERBAL_CONTAINER_STATIC_VECTOR_HPP_
-#define KERBAL_CONTAINER_STATIC_VECTOR_HPP_
+#ifndef KERBAL_CONTAINER_STATIC_VECTOR_HPP
+#define KERBAL_CONTAINER_STATIC_VECTOR_HPP
 
 #include <kerbal/algorithm/sequence_compare.hpp>
 #include <kerbal/compatibility/constexpr.hpp>
@@ -72,6 +72,7 @@ namespace kerbal
 				/// @brief 与该 static_vector 所等价的 C 风格数组的类型, 即 value_type[N]
 				typedef value_type equal_c_array[N];
 				typedef equal_c_array& equal_c_array_reference;
+				typedef const equal_c_array& equal_const_c_array_reference;
 				typedef const value_type const_equal_c_array[N];
 				typedef const_equal_c_array& const_equal_c_array_reference;
 
@@ -527,4 +528,4 @@ namespace kerbal
 
 #include <kerbal/container/impl/static_vector.impl.hpp>
 
-#endif /* KERBAL_CONTAINER_STATIC_VECTOR_HPP_ */
+#endif // KERBAL_CONTAINER_STATIC_VECTOR_HPP

@@ -9,8 +9,8 @@
  *   all rights reserved
  */
 
-#ifndef KERBAL_CONTAINER_IMPL_STATIC_VECTOR_IMPL_HPP_
-#define KERBAL_CONTAINER_IMPL_STATIC_VECTOR_IMPL_HPP_
+#ifndef KERBAL_CONTAINER_IMPL_STATIC_VECTOR_IMPL_HPP
+#define KERBAL_CONTAINER_IMPL_STATIC_VECTOR_IMPL_HPP
 
 #include <kerbal/algorithm/modifier.hpp>
 #include <kerbal/compatibility/move.hpp>
@@ -24,6 +24,8 @@
 #if __cplusplus >= 201103L
 #	include <type_traits>
 #endif
+
+#include <kerbal/container/static_vector.hpp>
 
 namespace kerbal
 {
@@ -191,7 +193,7 @@ namespace kerbal
 			{
 			};
 
-			this->__move_constructor(src, enable_optimization());
+			this->__move_constructor(std::move(src), enable_optimization());
 		}
 
 #	endif
@@ -524,7 +526,7 @@ namespace kerbal
 		typename static_vector<Tp, N>::reverse_iterator
 		static_vector<Tp, N>::rbegin() KERBAL_NOEXCEPT
 		{
-			return reverse_iterator(this->begin() + this->size());
+			return reverse_iterator(this->end());
 		}
 
 		template <typename Tp, size_t N>
@@ -654,12 +656,22 @@ namespace kerbal
 
 		template <typename Tp, size_t N>
 		typename static_vector<Tp, N>::const_equal_c_array_reference
+		static_vector<Tp, N>::c_arr() const
+		{
+			if (!full()) {
+				kerbal::utility::throw_this_exception_helper<std::logic_error>::throw_this_exception((const char*)"static vector is not full");
+			}
+			return reinterpret_cast<const_equal_c_array_reference>(this->storage);
+		}
+
+		template <typename Tp, size_t N>
+		typename static_vector<Tp, N>::const_equal_c_array_reference
 		static_vector<Tp, N>::const_c_arr() const
 		{
 			if (!full()) {
 				kerbal::utility::throw_this_exception_helper<std::logic_error>::throw_this_exception((const char*)"static vector is not full");
 			}
-			return reinterpret_cast<equal_c_array_reference>(this->storage);
+			return reinterpret_cast<equal_const_c_array_reference>(this->storage);
 		}
 
 		template <typename Tp, size_t N>
@@ -1016,4 +1028,4 @@ namespace kerbal
 	}
 }
 
-#endif /* KERBAL_CONTAINER_IMPL_STATIC_VECTOR_IMPL_HPP_ */
+#endif // KERBAL_CONTAINER_IMPL_STATIC_VECTOR_IMPL_HPP

@@ -9,14 +9,18 @@
  *   all rights reserved
  */
 
-#ifndef KERBAL_CONTAINER_STATIC_PRIORITY_QUEUE_HPP_
-#define KERBAL_CONTAINER_STATIC_PRIORITY_QUEUE_HPP_
+#ifndef KERBAL_CONTAINER_STATIC_PRIORITY_QUEUE_HPP
+#define KERBAL_CONTAINER_STATIC_PRIORITY_QUEUE_HPP
 
+#include <kerbal/algorithm/heap.hpp>
 #include <kerbal/container/static_vector.hpp>
 #include <kerbal/iterator/iterator_traits.hpp>
 #include <kerbal/type_traits/type_traits_details/enable_if.hpp>
 
-#include <queue>
+#if __cplusplus >= 201103L
+#	include <initializer_list>
+#endif
+
 
 namespace kerbal
 {
@@ -28,72 +32,78 @@ namespace kerbal
 		class static_priority_queue
 		{
 			public:
-				typedef Tp value_type;
-				typedef const Tp const_type;
-				typedef Tp& reference;
-				typedef const Tp& const_reference;
-				typedef Sequence container_type;
+				typedef Sequence					container_type;
+				typedef KeyCompare					value_compare;
+
+				typedef Tp							value_type;
+				typedef const value_type			const_type;
+				typedef value_type&					reference;
+				typedef const value_type&			const_reference;
+				typedef value_type*					pointer;
+				typedef const value_type*			const_pointer;
 
 #		if __cplusplus >= 201103L
-				typedef value_type&& rvalue_reference;
-				typedef const value_type&& const_rvalue_reference;
+				typedef value_type&&				rvalue_reference;
+				typedef const value_type&&			const_rvalue_reference;
 #		endif
 
-				typedef typename Sequence::size_type size_type;
+				typedef typename Sequence::size_type				size_type;
+				typedef typename Sequence::difference_type			difference_type;
 
-				typedef typename Sequence::const_iterator const_iterator;
-				typedef typename Sequence::const_reverse_iterator const_reverse_iterator;
+				typedef typename Sequence::const_iterator			const_iterator;
+				typedef typename Sequence::const_reverse_iterator	const_reverse_iterator;
 
-				typedef KeyCompare key_compare;
 
 			private:
 				Sequence c;
-				key_compare kc;
+				value_compare vc;
 
 			public:
 				static_priority_queue() :
-						c(), kc()
+						c(), vc()
 				{
 				}
 
-				explicit static_priority_queue(key_compare kc) :
-						c(), kc(kc)
+				explicit static_priority_queue(value_compare kc) :
+						c(), vc(kc)
 				{
 				}
 
-				template <typename InputIterator, typename =
+				template <typename InputIterator>
+				static_priority_queue(InputIterator first, InputIterator last,
 						typename kerbal::type_traits::enable_if<
-								kerbal::iterator::is_input_compatible_iterator<InputIterator>::value
-						>::type
-				>
-				static_priority_queue(InputIterator first, InputIterator last) :
-						c(first, last), kc()
+								kerbal::iterator::is_input_compatible_iterator<InputIterator>::value,
+								int
+						>::type = 0) :
+						c(first, last), vc()
 				{
-					std::make_heap(c.begin(), c.end(), this->kc);
+					kerbal::algorithm::make_heap(c.begin(), c.end(), this->vc);
 				}
 
-				template <typename InputIterator, typename =
+				template <typename InputIterator>
+				static_priority_queue(InputIterator first, InputIterator last, value_compare kc,
 						typename kerbal::type_traits::enable_if<
-								kerbal::iterator::is_input_compatible_iterator<InputIterator>::value
-						>::type
-				>
-				static_priority_queue(InputIterator first, InputIterator last, key_compare kc) :
-						c(first, last), kc(kc)
+								kerbal::iterator::is_input_compatible_iterator<InputIterator>::value,
+								int
+						>::type = 0) :
+						c(first, last), vc(kc)
 				{
-					std::make_heap(c.begin(), c.end(), this->kc);
+					kerbal::algorithm::make_heap(c.begin(), c.end(), this->vc);
 				}
 
-#if __cplusplus >= 201103L
+#		if __cplusplus >= 201103L
+
 				static_priority_queue(std::initializer_list<value_type> src) :
 						static_priority_queue(src.begin(), src.end())
 				{
 				}
 
-				static_priority_queue(std::initializer_list<value_type> src, key_compare kc) :
-						static_priority_queue(src.begin(), src.end(), kc)
+				static_priority_queue(std::initializer_list<value_type> src, value_compare vc) :
+						static_priority_queue(src.begin(), src.end(), vc)
 				{
 				}
-#endif
+
+#		endif
 
 				bool empty() const
 				{
@@ -118,7 +128,7 @@ namespace kerbal
 				void push(const_reference val)
 				{
 					c.push_back(val);
-					std::push_heap(c.begin(), c.end(), kc);
+					kerbal::algorithm::push_heap(c.begin(), c.end(), vc);
 				}
 
 				template <typename InputIterator>
@@ -131,23 +141,25 @@ namespace kerbal
 				}
 
 #		if __cplusplus >= 201103L
+
 				void push(rvalue_reference val)
 				{
 					c.push_back(std::move(val));
-					std::push_heap(c.begin(), c.end(), kc);
+					kerbal::algorithm::push_heap(c.begin(), c.end(), vc);
 				}
 
 				template <typename ... Args>
 				void emplace(Args&&... args)
 				{
 					c.emplace_back(std::forward<Args>(args)...);
-					std::push_heap(c.begin(), c.end(), kc);
+					kerbal::algorithm::push_heap(c.begin(), c.end(), vc);
 				}
+
 #		endif
 
 				void pop()
 				{
-					std::pop_heap(c.begin(), c.end(), kc);
+					kerbal::algorithm::pop_heap(c.begin(), c.end(), vc);
 					c.pop_back();
 				}
 
@@ -201,4 +213,4 @@ namespace kerbal
 	}
 }
 
-#endif /* KERBAL_CONTAINER_STATIC_PRIORITY_QUEUE_HPP_ */
+#endif // KERBAL_CONTAINER_STATIC_PRIORITY_QUEUE_HPP

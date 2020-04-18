@@ -9,8 +9,8 @@
  *   all rights reserved
  */
 
-#ifndef KERBAL_CONTAINER_LINKED_STACK_HPP_
-#define KERBAL_CONTAINER_LINKED_STACK_HPP_
+#ifndef KERBAL_CONTAINER_LINKED_STACK_HPP
+#define KERBAL_CONTAINER_LINKED_STACK_HPP
 
 #include <kerbal/container/single_list.hpp>
 
@@ -42,16 +42,19 @@ namespace kerbal
 				Sequence c;
 
 			public:
-				linked_stack() :
-						c()
+				KERBAL_CONSTEXPR20
+				linked_stack()
+						: c()
 				{
 				}
 
+				KERBAL_CONSTEXPR20
 				bool empty() const
 				{
 					return c.empty();
 				}
 
+				KERBAL_CONSTEXPR20
 				size_type size() const
 				{
 					return c.size();
@@ -62,44 +65,54 @@ namespace kerbal
 					return c.max_size();
 				}
 
+				KERBAL_CONSTEXPR20
 				reference top()
 				{
 					return c.front();
 				}
 
+				KERBAL_CONSTEXPR20
 				const_reference top() const
 				{
 					return c.front();
 				}
 
+				KERBAL_CONSTEXPR20
 				void push(const_reference val)
 				{
 					c.push_front(val);
 				}
 
 #		if __cplusplus >= 201103L
+
+				KERBAL_CONSTEXPR20
 				void push(rvalue_reference val)
 				{
-					c.push_front(val);
+					c.push_front(std::move(val));
 				}
 
 				template <typename ... Args>
+				KERBAL_CONSTEXPR20
 				void emplace(Args&&... args)
 				{
 					c.emplace_front(std::forward<Args>(args)...);
 				}
+
 #		endif
 
+				KERBAL_CONSTEXPR20
 				void pop()
 				{
 					c.pop_front();
 				}
 
+				KERBAL_CONSTEXPR20
 				void clear()
 				{
 					c.clear();
 				}
 
+				KERBAL_CONSTEXPR20
 				void swap(linked_stack & with)
 				{
 					c.swap(with.c);
@@ -109,31 +122,37 @@ namespace kerbal
 				 * Judge whether the stack is equal to the other one.
 				 * @param rhs another stack
 				 */
+				KERBAL_CONSTEXPR20
 				friend bool operator==(const linked_stack<Tp, Sequence> & lhs, const linked_stack<Tp, Sequence> & rhs)
 				{
 					return lhs.c == rhs.c;
 				}
 
+				KERBAL_CONSTEXPR20
 				friend bool operator!=(const linked_stack<Tp, Sequence> & lhs, const linked_stack<Tp, Sequence> & rhs)
 				{
 					return lhs.c != rhs.c;
 				}
 
+				KERBAL_CONSTEXPR20
 				friend bool operator<(const linked_stack<Tp, Sequence> & lhs, const linked_stack<Tp, Sequence> & rhs)
 				{
 					return lhs.c < rhs.c;
 				}
 
+				KERBAL_CONSTEXPR20
 				friend bool operator<=(const linked_stack<Tp, Sequence> & lhs, const linked_stack<Tp, Sequence> & rhs)
 				{
 					return lhs.c <= rhs.c;
 				}
 
+				KERBAL_CONSTEXPR20
 				friend bool operator>(const linked_stack<Tp, Sequence> & lhs, const linked_stack<Tp, Sequence> & rhs)
 				{
 					return lhs.c > rhs.c;
 				}
 
+				KERBAL_CONSTEXPR20
 				friend bool operator>=(const linked_stack<Tp, Sequence> & lhs, const linked_stack<Tp, Sequence> & rhs)
 				{
 					return lhs.c >= rhs.c;
@@ -141,8 +160,22 @@ namespace kerbal
 
 		};
 
+#	if __cplusplus >= 201703L
+
+#	if __has_include(<memory_resource>)
+
+		namespace pmr
+		{
+			template <typename Tp>
+			using linked_stack = kerbal::container::linked_stack<Tp, kerbal::container::pmr::single_list<Tp> >;
+		}
+
+#	endif
+
+#	endif
+
 	} // namespace container
 
 } // namespace kerbal
 
-#endif /* KERBAL_CONTAINER_LINKED_STACK_HPP_ */
+#endif // KERBAL_CONTAINER_LINKED_STACK_HPP

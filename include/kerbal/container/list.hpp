@@ -1,7 +1,7 @@
 /**
- * @file       single_list.hpp
- * @brief      
- * @date       2019-7-14
+ * @file       list.hpp
+ * @brief
+ * @date       2020-02-24
  * @author     Peter
  * @copyright
  *      Peter of [ThinkSpirit Laboratory](http://thinkspirit.org/)
@@ -9,8 +9,8 @@
  *   all rights reserved
  */
 
-#ifndef KERBAL_CONTAINER_SINGLE_LIST_HPP
-#define KERBAL_CONTAINER_SINGLE_LIST_HPP
+#ifndef KERBAL_CONTAINER_LIST_HPP
+#define KERBAL_CONTAINER_LIST_HPP
 
 #include <kerbal/algorithm/sequence_compare.hpp>
 #include <kerbal/compatibility/constexpr.hpp>
@@ -31,8 +31,8 @@
 #	endif
 #endif
 
-#include <kerbal/container/impl/single_list_iterator.impl.hpp>
-#include <kerbal/container/impl/single_list_node.impl.hpp>
+#include <kerbal/container/impl/list_iterator.impl.hpp>
+#include <kerbal/container/impl/list_node.impl.hpp>
 
 namespace kerbal
 {
@@ -41,7 +41,7 @@ namespace kerbal
 	{
 
 		template <typename Tp, typename Allocator = std::allocator<Tp> >
-		class single_list
+		class list
 		{
 			public:
 				typedef Tp							value_type;
@@ -59,12 +59,14 @@ namespace kerbal
 				typedef std::size_t					size_type;
 				typedef std::ptrdiff_t				difference_type;
 
-				typedef kerbal::container::detail::sl_iter<value_type>		iterator;
-				typedef kerbal::container::detail::sl_kiter<value_type>		const_iterator;
+				typedef kerbal::container::detail::list_iter<Tp>			iterator;
+				typedef kerbal::container::detail::list_kiter<Tp>			const_iterator;
+				typedef std::reverse_iterator<iterator>						reverse_iterator;
+				typedef std::reverse_iterator<const_iterator>				const_reverse_iterator;
 
 			private:
-				typedef kerbal::container::detail::sl_node_base				node_base;
-				typedef kerbal::container::detail::sl_node<value_type>		node;
+				typedef kerbal::container::detail::list_node_base				node_base;
+				typedef kerbal::container::detail::list_node<value_type>		node;
 
 				typedef kerbal::memory::allocator_traits<Allocator>								tp_allocator_traits;
 				typedef typename tp_allocator_traits::template rebind_alloc<node>::other		node_allocator_type;
@@ -72,7 +74,6 @@ namespace kerbal
 
 			private:
 				node_base head_node;
-				iterator last_iter;
 				node_allocator_type alloc;
 
 				struct release_uninit_res
@@ -94,30 +95,30 @@ namespace kerbal
 
 			public:
 				KERBAL_CONSTEXPR20
-				single_list() KERBAL_CONDITIONAL_NOEXCEPT(
+				list() KERBAL_CONDITIONAL_NOEXCEPT(
 						std::is_nothrow_default_constructible<node_allocator_type>::value
 				);
 
 				KERBAL_CONSTEXPR20
-				explicit single_list(const Allocator& alloc) KERBAL_CONDITIONAL_NOEXCEPT(
+				explicit list(const Allocator& alloc) KERBAL_CONDITIONAL_NOEXCEPT(
 						std::is_nothrow_copy_constructible<node_allocator_type>::value
 				);
 
 				KERBAL_CONSTEXPR20
-				single_list(const single_list & src);
+				list(const list & src);
 
 				KERBAL_CONSTEXPR20
-				single_list(const single_list & src, const Allocator& alloc);
+				list(const list & src, const Allocator& alloc);
 
 				KERBAL_CONSTEXPR20
-				explicit single_list(size_type n, const Allocator& alloc = Allocator());
+				explicit list(size_type n, const Allocator& alloc = Allocator());
 
 				KERBAL_CONSTEXPR20
-				single_list(size_type n, const_reference val, const Allocator& alloc = Allocator());
+				list(size_type n, const_reference val, const Allocator& alloc = Allocator());
 
 				template <typename InputIterator>
 				KERBAL_CONSTEXPR20
-				single_list(InputIterator first, InputIterator last, const Allocator& alloc = Allocator(),
+				list(InputIterator first, InputIterator last, const Allocator& alloc = Allocator(),
 						typename kerbal::type_traits::enable_if<
 								kerbal::iterator::is_input_compatible_iterator<InputIterator>::value
 								, int
@@ -127,60 +128,60 @@ namespace kerbal
 #		if __cplusplus >= 201103L
 
 				KERBAL_CONSTEXPR20
-				single_list(single_list && src);
+				list(list && src);
 
 				KERBAL_CONSTEXPR20
-				single_list(single_list && src, const Allocator& alloc);
+				list(list && src, const Allocator& alloc);
 
 				KERBAL_CONSTEXPR20
-				single_list(std::initializer_list<value_type> src, const Allocator& alloc = Allocator());
+				list(std::initializer_list<value_type> src, const Allocator& alloc = Allocator());
 
 #		endif
 
 				KERBAL_CONSTEXPR20
-				~single_list();
+				~list();
 
 			//===================
 			//assign
 
 				KERBAL_CONSTEXPR20
-				single_list& operator=(const single_list & src) KERBAL_CONDITIONAL_NOEXCEPT(
-						noexcept(kerbal::utility::declthis<single_list>()->assign(src))
+				list& operator=(const list & src) KERBAL_CONDITIONAL_NOEXCEPT(
+						noexcept(kerbal::utility::declthis<list>()->assign(src))
 				);
 
 #		if __cplusplus >= 201103L
 
 				KERBAL_CONSTEXPR20
-				single_list& operator=(single_list && src) KERBAL_CONDITIONAL_NOEXCEPT(
-						noexcept(kerbal::utility::declthis<single_list>()->assign(std::move(src)))
+				list& operator=(list && src) KERBAL_CONDITIONAL_NOEXCEPT(
+						noexcept(kerbal::utility::declthis<list>()->assign(std::move(src)))
 				);
 
 				KERBAL_CONSTEXPR20
-				single_list& operator=(std::initializer_list<value_type> src) KERBAL_CONDITIONAL_NOEXCEPT(
-						noexcept(kerbal::utility::declthis<single_list>()->assign(src))
+				list& operator=(std::initializer_list<value_type> src) KERBAL_CONDITIONAL_NOEXCEPT(
+						noexcept(kerbal::utility::declthis<list>()->assign(src))
 				);
 
 #		endif
 
 				KERBAL_CONSTEXPR20
-				void assign(const single_list & src) KERBAL_CONDITIONAL_NOEXCEPT(
-						noexcept(kerbal::utility::declthis<single_list>()->assign(src.cbegin(), src.cend()))
+				void assign(const list & src) KERBAL_CONDITIONAL_NOEXCEPT(
+						noexcept(kerbal::utility::declthis<list>()->assign(src.cbegin(), src.cend()))
 				);
 
 				KERBAL_CONSTEXPR20
 				void assign(size_type count, const_reference val);
 
 				template <typename InputIterator>
-				KERBAL_CONSTEXPR20
 				typename kerbal::type_traits::enable_if<
 						kerbal::iterator::is_input_compatible_iterator<InputIterator>::value
 				>::type
+				KERBAL_CONSTEXPR20
 				assign(InputIterator first, InputIterator last);
 
 #		if __cplusplus >= 201103L
 
 				KERBAL_CONSTEXPR20
-				void assign(single_list&& src);
+				void assign(list&& src);
 
 				KERBAL_CONSTEXPR20
 				void assign(std::initializer_list<value_type> src);
@@ -222,6 +223,24 @@ namespace kerbal
 
 				KERBAL_CONSTEXPR20
 				const_iterator cend() const KERBAL_NOEXCEPT;
+
+				KERBAL_CONSTEXPR20
+				reverse_iterator rbegin() KERBAL_NOEXCEPT;
+
+				KERBAL_CONSTEXPR20
+				reverse_iterator rend() KERBAL_NOEXCEPT;
+
+				KERBAL_CONSTEXPR20
+				const_reverse_iterator rbegin() const KERBAL_NOEXCEPT;
+
+				KERBAL_CONSTEXPR20
+				const_reverse_iterator rend() const KERBAL_NOEXCEPT;
+
+				KERBAL_CONSTEXPR20
+				const_reverse_iterator crbegin() const KERBAL_NOEXCEPT;
+
+				KERBAL_CONSTEXPR20
+				const_reverse_iterator crend() const KERBAL_NOEXCEPT;
 
 				KERBAL_CONSTEXPR20
 				iterator nth(size_type index) KERBAL_NOEXCEPT;
@@ -318,6 +337,9 @@ namespace kerbal
 				iterator insert(const_iterator pos, const_reference val);
 
 				KERBAL_CONSTEXPR20
+				iterator insert(const_iterator pos, size_type n);
+
+				KERBAL_CONSTEXPR20
 				iterator insert(const_iterator pos, size_type n, const_reference val);
 
 				template <typename InputIterator>
@@ -366,6 +388,9 @@ namespace kerbal
 				void pop_front();
 
 				KERBAL_CONSTEXPR20
+				void pop_back();
+
+				KERBAL_CONSTEXPR20
 				iterator erase(const_iterator pos);
 
 				KERBAL_CONSTEXPR20
@@ -384,12 +409,78 @@ namespace kerbal
 				void resize(size_type count, const_reference value);
 
 				KERBAL_CONSTEXPR20
-				void swap(single_list & ano);
+				void swap(list & ano);
+
+				KERBAL_CONSTEXPR20
+				size_type remove(const_reference val);
+
+				template <typename UnaryPredicate>
+				KERBAL_CONSTEXPR20
+				size_type remove_if(UnaryPredicate predicate);
+
+				KERBAL_CONSTEXPR20
+				void splice(const_iterator pos, list& other) KERBAL_NOEXCEPT;
+
+				KERBAL_CONSTEXPR20
+				void splice(const_iterator pos, list& other, const_iterator opos) KERBAL_NOEXCEPT;
+
+				KERBAL_CONSTEXPR20
+				void splice(const_iterator pos, list& other, const_iterator first, const_iterator last) KERBAL_NOEXCEPT;
+
+#		if __cplusplus >= 201103L
+
+				KERBAL_CONSTEXPR20
+				void splice(const_iterator pos, list&& other) KERBAL_NOEXCEPT;
+
+#		endif
+
+				KERBAL_CONSTEXPR20
+				list& operator+=(const list& with);
+
+#		if __cplusplus >= 201103L
+
+				KERBAL_CONSTEXPR20
+				list& operator+=(list&& with);
+
+				KERBAL_CONSTEXPR20
+				list& operator+=(std::initializer_list<value_type> with);
+
+#		endif
+
+				template <typename , typename >
+				KERBAL_CONSTEXPR20
+				friend
+				list operator+(const list& lhs, const list& rhs);
+
+#		if __cplusplus >= 201103L
+
+				template <typename , typename >
+				KERBAL_CONSTEXPR20
+				friend
+				list operator+(const list& lhs, list&& rhs);
+
+				template <typename , typename >
+				KERBAL_CONSTEXPR20
+				friend
+				list operator+(list&& lhs, const list& rhs);
+
+				template <typename , typename >
+				KERBAL_CONSTEXPR20
+				friend
+				list operator+(list&& lhs, list&& rhs);
+
+#		endif
 
 			//===================
 			//private
 
 			private:
+				KERBAL_CONSTEXPR14
+				void __init_node_base() KERBAL_NOEXCEPT
+				{
+					this->head_node.prev = &this->head_node;
+					this->head_node.next = &this->head_node;
+				}
 
 #		if __cplusplus >= 201103L
 
@@ -401,7 +492,7 @@ namespace kerbal
 				KERBAL_CONSTEXPR20
 				node* __build_new_node_helper(kerbal::type_traits::true_type, Args&& ... args)
 						KERBAL_CONDITIONAL_NOEXCEPT(
-								noexcept(node_allocator_traits::allocate(kerbal::utility::declthis<single_list>()->alloc, 1))
+								noexcept(node_allocator_traits::allocate(kerbal::utility::declthis<list>()->alloc, 1))
 						)
 				;
 
@@ -457,30 +548,28 @@ namespace kerbal
 				__build_new_nodes_range_unguarded(InputIterator first, InputIterator last);
 
 				KERBAL_CONSTEXPR20
-				void __destroy_node(node_base * p_node_base) KERBAL_CONDITIONAL_NOEXCEPT(
-						noexcept(node_allocator_traits::destroy(kerbal::utility::declthis<single_list>()->alloc, kerbal::utility::declval<node*>())) &&
-						noexcept(node_allocator_traits::deallocate(kerbal::utility::declthis<single_list>()->alloc, kerbal::utility::declval<node*>(), 1))
-				);
+				void __destroy_node(node_base * p_node_base)
+						KERBAL_CONDITIONAL_NOEXCEPT(
+								noexcept(node_allocator_traits::destroy(kerbal::utility::declthis<list>()->alloc, kerbal::utility::declval<node*>())) &&
+								noexcept(node_allocator_traits::deallocate(kerbal::utility::declthis<list>()->alloc, kerbal::utility::declval<node*>(), 1))
+						)
+				;
 
 				KERBAL_CONSTEXPR20
-				void __consecutive_destroy_node(node_base * start) KERBAL_CONDITIONAL_NOEXCEPT(
-						noexcept(kerbal::utility::declthis<single_list>()->__destroy_node(kerbal::utility::declval<node_base*>()))
-				);
+				void __consecutive_destroy_node(node_base * start)
+						KERBAL_CONDITIONAL_NOEXCEPT(
+								noexcept(kerbal::utility::declthis<list>()->__destroy_node(kerbal::utility::declval<node_base*>()))
+						)
+				;
 
 				KERBAL_CONSTEXPR20
-				void __hook_back(node_base * p) KERBAL_NOEXCEPT;
+				static void __hook(const_iterator pos, node_base * p) KERBAL_NOEXCEPT;
 
 				KERBAL_CONSTEXPR20
-				void __hook_front(node_base * p) KERBAL_NOEXCEPT;
+				static void __hook(const_iterator pos, node_base * start, node_base * back) KERBAL_NOEXCEPT;
 
 				KERBAL_CONSTEXPR20
-				void __hook(const_iterator pos, node_base * p) KERBAL_NOEXCEPT;
-
-				KERBAL_CONSTEXPR20
-				void __hook(const_iterator pos, node_base * start, node_base * back) KERBAL_NOEXCEPT;
-
-				KERBAL_CONSTEXPR20
-				static void __swap_with_empty(single_list& not_empty_list, single_list& empty_list) KERBAL_NOEXCEPT;
+				static void __swap_with_empty(list& not_empty_list, list& empty_list) KERBAL_NOEXCEPT;
 
 		};
 
@@ -488,15 +577,15 @@ namespace kerbal
 
 		template <typename InputIterator, typename Alloc =
 					std::allocator<typename kerbal::iterator::iterator_traits<InputIterator>::value_type> >
-		single_list(InputIterator, InputIterator, Alloc = Alloc())
-				-> single_list<typename kerbal::iterator::iterator_traits<InputIterator>::value_type, Alloc>;
+		list(InputIterator, InputIterator, Alloc = Alloc())
+				-> list<typename kerbal::iterator::iterator_traits<InputIterator>::value_type, Alloc>;
 
 #	if __has_include(<memory_resource>)
 
 		namespace pmr
 		{
 			template <typename Tp>
-			using single_list = kerbal::container::single_list<Tp, std::pmr::polymorphic_allocator<Tp> >;
+			using list = kerbal::container::list<Tp, std::pmr::polymorphic_allocator<Tp> >;
 		}
 
 #	endif
@@ -506,42 +595,42 @@ namespace kerbal
 
 		template <typename Tp, typename Allocator>
 		KERBAL_CONSTEXPR20
-		bool operator==(const single_list<Tp, Allocator> & lhs, const single_list<Tp, Allocator> & rhs)
+		bool operator==(const list<Tp, Allocator> & lhs, const list<Tp, Allocator> & rhs)
 		{
 			return kerbal::algorithm::sequence_equal_to(lhs.cbegin(), lhs.cend(), rhs.cbegin(), rhs.cend());
 		}
 
 		template <typename Tp, typename Allocator>
 		KERBAL_CONSTEXPR20
-		bool operator!=(const single_list<Tp, Allocator> & lhs, const single_list<Tp, Allocator> & rhs)
+		bool operator!=(const list<Tp, Allocator> & lhs, const list<Tp, Allocator> & rhs)
 		{
 			return kerbal::algorithm::sequence_not_equal_to(lhs.cbegin(), lhs.cend(), rhs.cbegin(), rhs.cend());
 		}
 
 		template <typename Tp, typename Allocator>
 		KERBAL_CONSTEXPR20
-		bool operator<(const single_list<Tp, Allocator> & lhs, const single_list<Tp, Allocator> & rhs)
+		bool operator<(const list<Tp, Allocator> & lhs, const list<Tp, Allocator> & rhs)
 		{
 			return kerbal::algorithm::sequence_less(lhs.cbegin(), lhs.cend(), rhs.cbegin(), rhs.cend());
 		}
 
 		template <typename Tp, typename Allocator>
 		KERBAL_CONSTEXPR20
-		bool operator>(const single_list<Tp, Allocator> & lhs, const single_list<Tp, Allocator> & rhs)
+		bool operator>(const list<Tp, Allocator> & lhs, const list<Tp, Allocator> & rhs)
 		{
 			return kerbal::algorithm::sequence_greater(lhs.cbegin(), lhs.cend(), rhs.cbegin(), rhs.cend());
 		}
 
 		template <typename Tp, typename Allocator>
 		KERBAL_CONSTEXPR20
-		bool operator<=(const single_list<Tp, Allocator> & lhs, const single_list<Tp, Allocator> & rhs)
+		bool operator<=(const list<Tp, Allocator> & lhs, const list<Tp, Allocator> & rhs)
 		{
 			return kerbal::algorithm::sequence_less_equal(lhs.cbegin(), lhs.cend(), rhs.cbegin(), rhs.cend());
 		}
 
 		template <typename Tp, typename Allocator>
 		KERBAL_CONSTEXPR20
-		bool operator>=(const single_list<Tp, Allocator> & lhs, const single_list<Tp, Allocator> & rhs)
+		bool operator>=(const list<Tp, Allocator> & lhs, const list<Tp, Allocator> & rhs)
 		{
 			return kerbal::algorithm::sequence_greater_equal(lhs.cbegin(), lhs.cend(), rhs.cbegin(), rhs.cend());
 		}
@@ -550,6 +639,6 @@ namespace kerbal
 
 } // namespace kerbal
 
-#include <kerbal/container/impl/single_list.impl.hpp>
+#include <kerbal/container/impl/list.impl.hpp>
 
-#endif // KERBAL_CONTAINER_SINGLE_LIST_HPP
+#endif // KERBAL_CONTAINER_LIST_HPP

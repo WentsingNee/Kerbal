@@ -21,6 +21,8 @@
 #	include <initializer_list>
 #endif
 
+#include <kerbal/container/array.hpp>
+
 namespace kerbal
 {
 
