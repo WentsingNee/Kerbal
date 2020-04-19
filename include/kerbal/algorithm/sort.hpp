@@ -740,7 +740,7 @@ namespace kerbal
 						++section_first;
 					}
 				}
-			} while (gap_policy(stride));
+			} while (gap_reduce_policy(stride));
 		}
 
 		template <typename BidirectionalIterator, typename Compare>
