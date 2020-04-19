@@ -1,31 +1,32 @@
 /**
  * @file       decay.hpp
- * @brief      
+ * @brief
  * @date       2019-7-24
- * @author     peter
+ * @author     Peter
  * @copyright
- *      peter of [ThinkSpirit Laboratory](http://thinkspirit.org/)
+ *      Peter of [ThinkSpirit Laboratory](http://thinkspirit.org/)
  *   of [Nanjing University of Information Science & Technology](http://www.nuist.edu.cn/)
  *   all rights reserved
  */
 
-#ifndef KERBAL_TYPE_TRAITS_TYPE_TRAITS_DETAILS_DECAY_HPP_
-#define KERBAL_TYPE_TRAITS_TYPE_TRAITS_DETAILS_DECAY_HPP_
+#ifndef KERBAL_TYPE_TRAITS_DECAY_HPP
+#define KERBAL_TYPE_TRAITS_DECAY_HPP
 
 #include <kerbal/ts/modules_ts/modules_ts.hpp>
 
-#include <kerbal/type_traits/type_traits_details/array_traits.hpp>
-#include <kerbal/type_traits/type_traits_details/conditional.hpp>
-#include <kerbal/type_traits/type_traits_details/cv_deduction.hpp>
-#include <kerbal/type_traits/type_traits_details/function_deduction.hpp>
-#include <kerbal/type_traits/type_traits_details/pointer_deduction.hpp>
-#include <kerbal/type_traits/type_traits_details/reference_deduction.hpp>
+#include <kerbal/type_traits/array_traits.hpp>
+#include <kerbal/type_traits/conditional.hpp>
+#include <kerbal/type_traits/cv_deduction.hpp>
+#include <kerbal/type_traits/function_deduction.hpp>
+#include <kerbal/type_traits/pointer_deduction.hpp>
+#include <kerbal/type_traits/reference_deduction.hpp>
 
 namespace kerbal
 {
 
 	namespace type_traits
 	{
+
 		template <typename _Up,
 				bool _IsArray = kerbal::type_traits::is_array<_Up>::value,
 				bool _IsFunction = kerbal::type_traits::is_function<_Up>::value>
@@ -59,7 +60,9 @@ namespace kerbal
 			public:
 				typedef typename __decay_selector<U>::type type;
 		};
-	}
-}
 
-#endif /* KERBAL_TYPE_TRAITS_TYPE_TRAITS_DETAILS_DECAY_HPP_ */
+	} // namespace type_traits
+
+} // namespace kerbal
+
+#endif // KERBAL_TYPE_TRAITS_DECAY_HPP

@@ -13,9 +13,9 @@
 #define KERBAL_OPTIONAL_OPTIONAL_TYPE_TRAITS_HPP_
 
 #include <kerbal/optional/optional_settings.hpp>
-#include <kerbal/type_traits/type_traits_details/conditional.hpp>
-#include <kerbal/type_traits/type_traits_details/cv_deduction.hpp>
-#include <kerbal/type_traits/type_traits_details/integral_constant.hpp>
+#include <kerbal/type_traits/conditional.hpp>
+#include <kerbal/type_traits/cv_deduction.hpp>
+#include <kerbal/type_traits/integral_constant.hpp>
 
 #if KERBAL_OPTIONAL_ENABLE_SUPPORT_TO_STD_OPTIONAL==1
 #	include <kerbal/optional/std_optional_type_traits.hpp>

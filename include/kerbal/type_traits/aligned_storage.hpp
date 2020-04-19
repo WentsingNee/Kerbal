@@ -1,12 +1,18 @@
-/*
- * aligned_storage.hpp
- *
- *  Created on: 2019年4月19日
- *      Author: peter
+/**
+ * @file       aligned_storage.hpp
+ * @brief
+ * @date       2019-4-19
+ * @author     Peter
+ * @copyright
+ *      Peter of [ThinkSpirit Laboratory](http://thinkspirit.org/)
+ *   of [Nanjing University of Information Science & Technology](http://www.nuist.edu.cn/)
+ *   all rights reserved
  */
 
-#ifndef INCLUDE_KERBAL_TYPE_TRAITS_ALIGNED_STORAGE_HPP_
-#define INCLUDE_KERBAL_TYPE_TRAITS_ALIGNED_STORAGE_HPP_
+#ifndef KERBAL_TYPE_TRAITS_ALIGNED_STORAGE_HPP
+#define KERBAL_TYPE_TRAITS_ALIGNED_STORAGE_HPP
+
+#include <cstddef>
 
 #if __cplusplus >= 201103L
 #	include <type_traits>
@@ -30,19 +36,20 @@
 
 namespace kerbal
 {
+
 	namespace type_traits
 	{
 
 #if __cplusplus >= 201103L
 
-		template <std::size_t _Len, std::size_t _Align>
+		template <size_t _Len, size_t _Align>
 		struct aligned_storage: public std::aligned_storage<_Len, _Align>
 		{
 		};
 
 #else
 
-		template <std::size_t _Len, std::size_t _Align>
+		template <size_t _Len, size_t _Align>
 		struct aligned_storage
 		{
 			union type
@@ -58,4 +65,4 @@ namespace kerbal
 
 } // namespace kerbal
 
-#endif /* INCLUDE_KERBAL_TYPE_TRAITS_ALIGNED_STORAGE_HPP_ */
+#endif // KERBAL_TYPE_TRAITS_ALIGNED_STORAGE_HPP

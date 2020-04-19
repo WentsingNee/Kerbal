@@ -17,7 +17,7 @@
 #include <kerbal/compatibility/fixed_width_integer.hpp>
 #include <kerbal/compatibility/noexcept.hpp>
 #include <kerbal/container/nonmember_container_access.hpp>
-#include <kerbal/type_traits/type_traits_details/integral_constant.hpp>
+#include <kerbal/type_traits/integral_constant.hpp>
 
 #include <cstddef>
 

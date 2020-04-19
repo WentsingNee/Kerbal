@@ -15,9 +15,9 @@
 #include <iterator>
 #include <kerbal/compatibility/constexpr.hpp>
 #include <kerbal/compatibility/noexcept.hpp>
-#include <kerbal/type_traits/type_traits_details/cv_deduction.hpp>
-#include <kerbal/type_traits/type_traits_details/integral_constant.hpp>
-#include <kerbal/type_traits/type_traits_details/void_type.hpp>
+#include <kerbal/type_traits/cv_deduction.hpp>
+#include <kerbal/type_traits/integral_constant.hpp>
+#include <kerbal/type_traits/void_type.hpp>
 
 #include <kerbal/ts/modules_ts/modules_ts.hpp>
 

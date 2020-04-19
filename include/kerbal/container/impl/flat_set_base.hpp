@@ -15,7 +15,7 @@
 #include <kerbal/algorithm/binary_search.hpp>
 #include <kerbal/iterator/iterator.hpp>
 #include <kerbal/iterator/iterator_traits.hpp>
-#include <kerbal/type_traits/type_traits_details/enable_if.hpp>
+#include <kerbal/type_traits/enable_if.hpp>
 
 namespace kerbal
 {

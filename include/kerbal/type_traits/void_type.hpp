@@ -9,8 +9,8 @@
  *   all rights reserved
  */
 
-#ifndef KERBAL_TYPE_TRAITS_TYPE_TRAITS_DETAILS_VOID_TYPE_HPP_
-#define KERBAL_TYPE_TRAITS_TYPE_TRAITS_DETAILS_VOID_TYPE_HPP_
+#ifndef KERBAL_TYPE_TRAITS_VOID_TYPE_HPP
+#define KERBAL_TYPE_TRAITS_VOID_TYPE_HPP
 
 #include <kerbal/ts/modules_ts/modules_ts.hpp>
 
@@ -42,7 +42,8 @@ namespace kerbal
 
 #	endif
 
-	}
-}
+	} // namespace type_traits
 
-#endif /* KERBAL_TYPE_TRAITS_TYPE_TRAITS_DETAILS_VOID_TYPE_HPP_ */
+} // namespace kerbal
+
+#endif // KERBAL_TYPE_TRAITS_VOID_TYPE_HPP

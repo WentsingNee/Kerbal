@@ -13,8 +13,8 @@
 #define KERBAL_TYPE_TRAITS_SIGN_DEDUCTION_HPP
 
 #include <kerbal/ts/modules_ts/modules_ts.hpp>
-#include <kerbal/type_traits/type_traits_details/cv_deduction.hpp>
-#include <kerbal/type_traits/type_traits_details/fundamental_deduction.hpp>
+#include <kerbal/type_traits/cv_deduction.hpp>
+#include <kerbal/type_traits/fundamental_deduction.hpp>
 #include <kerbal/type_traits/type_identity.hpp>
 
 #if __cplusplus >= 201103L

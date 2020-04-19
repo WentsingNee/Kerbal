@@ -11,7 +11,7 @@
 #ifndef INCLUDE_KERBAL_COMPATIBILITY_MOVE_HPP_
 #define INCLUDE_KERBAL_COMPATIBILITY_MOVE_HPP_
 
-#include <kerbal/type_traits/type_traits_details/reference_deduction.hpp>
+#include <kerbal/type_traits/reference_deduction.hpp>
 
 namespace kerbal
 {

@@ -14,7 +14,7 @@
 #define KERBAL_UTILITY_DECLVAL_HPP
 
 #include <kerbal/compatibility/noexcept.hpp>
-#include <kerbal/type_traits/type_traits_details/reference_deduction.hpp>
+#include <kerbal/type_traits/reference_deduction.hpp>
 
 namespace kerbal
 {

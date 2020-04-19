@@ -20,7 +20,7 @@
 #include <kerbal/compatibility/move.hpp>
 #include <kerbal/compatibility/noexcept.hpp>
 #include <kerbal/data_struct/raw_storage.hpp>
-#include <kerbal/type_traits/type_traits_details/enable_if.hpp>
+#include <kerbal/type_traits/enable_if.hpp>
 
 namespace kerbal
 {

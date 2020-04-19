@@ -1,17 +1,21 @@
-/*
- * fundamental_deduction.hpp
- *
- *  Created on: 2019年5月9日
- *      Author: peter
+/**
+ * @file       fundamental_deduction.hpp
+ * @brief
+ * @date       2019-5-9
+ * @author     Peter
+ * @copyright
+ *      Peter of [ThinkSpirit Laboratory](http://thinkspirit.org/)
+ *   of [Nanjing University of Information Science & Technology](http://www.nuist.edu.cn/)
+ *   all rights reserved
  */
 
-#ifndef INCLUDE_KERBAL_TYPE_TRAITS_TYPE_TRAITS_DETAILS_FUNDAMENTAL_DEDUCTION_HPP_
-#define INCLUDE_KERBAL_TYPE_TRAITS_TYPE_TRAITS_DETAILS_FUNDAMENTAL_DEDUCTION_HPP_
+#ifndef KERBAL_TYPE_TRAITS_FUNDAMENTAL_DEDUCTION_HPP
+#define KERBAL_TYPE_TRAITS_FUNDAMENTAL_DEDUCTION_HPP
 
 #include <kerbal/ts/modules_ts/modules_ts.hpp>
-#include <kerbal/type_traits/type_traits_details/conditional.hpp>
-#include <kerbal/type_traits/type_traits_details/cv_deduction.hpp>
-#include <kerbal/type_traits/type_traits_details/integral_constant.hpp>
+#include <kerbal/type_traits/conditional.hpp>
+#include <kerbal/type_traits/cv_deduction.hpp>
+#include <kerbal/type_traits/integral_constant.hpp>
 
 #if __cplusplus >= 201103L
 #	include <cstddef>
@@ -22,6 +26,7 @@ namespace kerbal
 
 	namespace type_traits
 	{
+
 		template <typename >
 		struct __is_void_helper: kerbal::type_traits::false_type
 		{
@@ -219,6 +224,8 @@ namespace kerbal
 		{
 		};
 
-	}
-}
-#endif /* INCLUDE_KERBAL_TYPE_TRAITS_TYPE_TRAITS_DETAILS_FUNDAMENTAL_DEDUCTION_HPP_ */
+	} // namespace type_traits
+
+} // namespace kerbal
+
+#endif // KERBAL_TYPE_TRAITS_FUNDAMENTAL_DEDUCTION_HPP

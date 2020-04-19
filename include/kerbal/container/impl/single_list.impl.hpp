@@ -708,6 +708,7 @@ namespace kerbal
 		}
 
 		template <typename Tp, typename Allocator>
+		KERBAL_CONSTEXPR20
 		void single_list<Tp, Allocator>::resize(size_type count)
 		{
 			const_iterator it(this->cbegin());
@@ -720,6 +721,7 @@ namespace kerbal
 		}
 
 		template <typename Tp, typename Allocator>
+		KERBAL_CONSTEXPR20
 		void single_list<Tp, Allocator>::resize(size_type count, const_reference value)
 		{
 			const_iterator it(this->cbegin());

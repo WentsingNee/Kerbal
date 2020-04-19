@@ -16,6 +16,8 @@
 #include <kerbal/algorithm/modifier.hpp>
 #include <kerbal/iterator/iterator.hpp>
 
+#include <kerbal/hash/sha1.hpp>
+
 namespace kerbal
 {
 	namespace hash
@@ -37,6 +39,7 @@ namespace kerbal
 		}
 
 		KERBAL_CONSTEXPR14
+		inline
 		uint32_t __SHA1_context_base::blk(uint32_t block_l[16], int i) KERBAL_NOEXCEPT
 		{
 			return block_l[i & 15] = __roll_uint32(
@@ -45,6 +48,7 @@ namespace kerbal
 		}
 
 		KERBAL_CONSTEXPR14
+		inline
 		void __SHA1_context_base::R0(uint32_t block_l[16], uint32_t v, uint32_t & w, uint32_t x, uint32_t y, uint32_t & z, int i) KERBAL_NOEXCEPT
 		{
 			z += (block_l[i] = blk0<BYTE_ORDER>(block_l, i));
@@ -54,6 +58,7 @@ namespace kerbal
 		}
 
 		KERBAL_CONSTEXPR14
+		inline
 		void __SHA1_context_base::R1(uint32_t block_l[16], uint32_t v, uint32_t & w, uint32_t x, uint32_t y, uint32_t & z, int i) KERBAL_NOEXCEPT
 		{
 			z += (block_l[i & 15] = blk(block_l, i));
@@ -63,6 +68,7 @@ namespace kerbal
 		}
 
 		KERBAL_CONSTEXPR14
+		inline
 		void __SHA1_context_base::R2(uint32_t block_l[16], uint32_t v, uint32_t & w, uint32_t x, uint32_t y, uint32_t & z, int i) KERBAL_NOEXCEPT
 		{
 			z += (block_l[i & 15] = blk(block_l, i));
@@ -72,6 +78,7 @@ namespace kerbal
 		}
 
 		KERBAL_CONSTEXPR14
+		inline
 		void __SHA1_context_base::R3(uint32_t block_l[16], uint32_t v, uint32_t & w, uint32_t x, uint32_t y, uint32_t & z, int i) KERBAL_NOEXCEPT
 		{
 			z += (block_l[i & 15] = blk(block_l, i));
@@ -81,6 +88,7 @@ namespace kerbal
 		}
 
 		KERBAL_CONSTEXPR14
+		inline
 		void __SHA1_context_base::R4(uint32_t block_l[16], uint32_t v, uint32_t & w, uint32_t x, uint32_t y, uint32_t & z, int i) KERBAL_NOEXCEPT
 		{
 			z += (block_l[i & 15] = blk(block_l, i));
@@ -115,6 +123,7 @@ namespace kerbal
 #	endif
 
 		KERBAL_CONSTEXPR14
+		inline
 		void SHA1_context<SHA1_policy::size>::__transform(const uint32_t block[16]) KERBAL_NOEXCEPT
 		{
 			uint32_t l[16] = {};
@@ -155,6 +164,7 @@ namespace kerbal
 		}
 
 		KERBAL_CONSTEXPR14
+		inline
 		void SHA1_context<SHA1_policy::fast>::__transform(const uint32_t block[16]) KERBAL_NOEXCEPT
 		{
 			uint32_t l[16] = {};

@@ -16,8 +16,8 @@
 #include <kerbal/compatibility/constexpr.hpp>
 #include <kerbal/compatibility/noexcept.hpp>
 #include <kerbal/iterator/iterator_traits.hpp>
-#include <kerbal/type_traits/type_traits_details/array_traits.hpp>
-#include <kerbal/type_traits/type_traits_details/enable_if.hpp>
+#include <kerbal/type_traits/array_traits.hpp>
+#include <kerbal/type_traits/enable_if.hpp>
 
 #include <cstddef>
 #include <stdexcept>

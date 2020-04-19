@@ -9,18 +9,20 @@
  *   all rights reserved
  */
 
-#ifndef KERBAL_UTILITY_COMPRESSED_PAIR_HPP_
-#define KERBAL_UTILITY_COMPRESSED_PAIR_HPP_
+#ifndef KERBAL_UTILITY_COMPRESSED_PAIR_HPP
+#define KERBAL_UTILITY_COMPRESSED_PAIR_HPP
 
 #include <kerbal/compatibility/constexpr.hpp>
+#include <kerbal/compatibility/method_overload_tag.hpp>
 #include <kerbal/compatibility/noexcept.hpp>
-#include <kerbal/type_traits/type_traits_details/cv_deduction.hpp>
-#include <kerbal/type_traits/type_traits_details/integral_constant.hpp>
-#include <kerbal/type_traits/type_traits_details/logical.hpp>
+#include <kerbal/type_traits/cv_deduction.hpp>
+#include <kerbal/type_traits/integral_constant.hpp>
+#include <kerbal/type_traits/logical.hpp>
+
+#include <utility>
 
 #if __cplusplus >= 201103L
 # include <type_traits>
-# include <utility>
 #endif
 
 namespace kerbal
@@ -32,8 +34,33 @@ namespace kerbal
 		{
 		};
 
+		template <typename Tp, typename Up>
+		struct compressed_pair;
+
 		template <typename Tp, typename Up, int>
 		struct __compressed_pair_impl;
+
+		template <typename Tp, typename Up>
+		struct __compressed_pair_inner_typedef_helper
+		{
+			public:
+				typedef Tp first_type;
+				typedef Up second_type;
+
+			protected:
+				typedef typename kerbal::type_traits::add_lvalue_reference<first_type>::type             __first_type_ref;
+				typedef typename kerbal::type_traits::add_lvalue_reference<second_type>::type            __second_type_ref;
+				typedef typename kerbal::type_traits::add_const_lvalue_reference<first_type>::type       __first_type_const_ref;
+				typedef typename kerbal::type_traits::add_const_lvalue_reference<second_type>::type      __second_type_const_ref;
+
+#		if __cplusplus >= 201103L
+				typedef typename kerbal::type_traits::add_rvalue_reference<first_type>::type             __first_type_rref;
+				typedef typename kerbal::type_traits::add_rvalue_reference<second_type>::type            __second_type_rref;
+#		endif
+
+				template <typename __Tp, typename __Up, int>
+				friend struct __compressed_pair_impl;
+		};
 
 		template <typename Tp, typename Up>
 		struct __compressed_pair_impl<Tp, Up, 0>
@@ -49,11 +76,19 @@ namespace kerbal
 				first_type __first;
 				second_type __second;
 
+			private:
+				typedef __compressed_pair_inner_typedef_helper<first_type, second_type> inner_typedef_helper;
+
 			protected:
-				typedef typename kerbal::type_traits::add_lvalue_reference<first_type>::type             __first_type_ref;
-				typedef typename kerbal::type_traits::add_lvalue_reference<second_type>::type            __second_type_ref;
-				typedef typename kerbal::type_traits::add_const_lvalue_reference<first_type>::type       __first_type_const_ref;
-				typedef typename kerbal::type_traits::add_const_lvalue_reference<second_type>::type      __second_type_const_ref;
+				typedef typename inner_typedef_helper::__first_type_ref             __first_type_ref;
+				typedef typename inner_typedef_helper::__second_type_ref            __second_type_ref;
+				typedef typename inner_typedef_helper::__first_type_const_ref       __first_type_const_ref;
+				typedef typename inner_typedef_helper::__second_type_const_ref      __second_type_const_ref;
+
+#		if __cplusplus >= 201103L
+				typedef typename inner_typedef_helper::__first_type_rref             __first_type_rref;
+				typedef typename inner_typedef_helper::__second_type_rref            __second_type_rref;
+#		endif
 
 				KERBAL_CONSTEXPR
 				__compressed_pair_impl()
@@ -65,61 +100,158 @@ namespace kerbal
 				{
 				}
 
-				KERBAL_CONSTEXPR
-				__compressed_pair_impl(compressed_pair_default_construct_tag, __second_type_const_ref __second)
-										KERBAL_CONDITIONAL_NOEXCEPT(
-												std::is_nothrow_default_constructible<first_type>::value &&
-												std::is_nothrow_copy_constructible<second_type>::value
-										) :
-										__first(), __second(__second)
-				{
-				}
+#		if __cplusplus < 201103L
 
+				template <typename Tp2, typename Up2>
 				KERBAL_CONSTEXPR
-				__compressed_pair_impl(__first_type_const_ref __first, compressed_pair_default_construct_tag)
-										KERBAL_CONDITIONAL_NOEXCEPT(
-												std::is_nothrow_copy_constructible<first_type>::value &&
-												std::is_nothrow_default_constructible<second_type>::value
-										) :
-										__first(__first), __second()
-				{
-				}
-
-				KERBAL_CONSTEXPR
-				__compressed_pair_impl(__first_type_const_ref __first, __second_type_const_ref __second)
-										KERBAL_CONDITIONAL_NOEXCEPT(
-												std::is_nothrow_copy_constructible<first_type>::value &&
-												std::is_nothrow_copy_constructible<second_type>::value
-										) :
+				__compressed_pair_impl(const Tp2 & __first, const Up2 & __second) :
 										__first(__first), __second(__second)
 				{
 				}
 
+				template <typename Up2>
+				KERBAL_CONSTEXPR
+				__compressed_pair_impl(compressed_pair_default_construct_tag, const Up2 & __second) :
+										__first(), __second(__second)
+				{
+				}
+
+				template <typename Tp2>
+				KERBAL_CONSTEXPR
+				__compressed_pair_impl(const Tp2 & __first, compressed_pair_default_construct_tag) :
+										__first(__first), __second()
+				{
+				}
+
+#		else
+
+				template <typename Tp2, typename Up2>
+				KERBAL_CONSTEXPR
+				__compressed_pair_impl(Tp2&& __first, Up2&& __second)
+										KERBAL_CONDITIONAL_NOEXCEPT(
+												(std::is_nothrow_constructible<first_type, Tp2>::value) &&
+												(std::is_nothrow_constructible<second_type, Up2>::value)
+										) :
+										__first(std::forward<Tp2>(__first)), __second(std::forward<Up2>(__second))
+				{
+				}
+
+				template <typename Up2>
+				KERBAL_CONSTEXPR
+				__compressed_pair_impl(compressed_pair_default_construct_tag, Up2&& __second)
+										KERBAL_CONDITIONAL_NOEXCEPT(
+												std::is_nothrow_default_constructible<first_type>::value &&
+												(std::is_nothrow_constructible<second_type, Up2>::value)
+										) :
+										__first(), __second(std::forward<Up2>(__second))
+				{
+				}
+
+				template <typename Tp2>
+				KERBAL_CONSTEXPR
+				__compressed_pair_impl(Tp2&& __first, compressed_pair_default_construct_tag)
+										KERBAL_CONDITIONAL_NOEXCEPT(
+												(std::is_nothrow_constructible<first_type, Tp2>::value) &&
+												std::is_nothrow_default_constructible<second_type>::value
+										) :
+										__first(std::forward<Tp2>(__first)), __second()
+				{
+				}
+
+
+#		endif
+
+				template <typename Tp2, typename Up2>
+				KERBAL_CONSTEXPR14
+				__compressed_pair_impl(const kerbal::utility::compressed_pair<Tp2, Up2> & pair)
+										KERBAL_CONDITIONAL_NOEXCEPT(
+												(std::is_nothrow_constructible<first_type, const Tp2 &>::value) &&
+												(std::is_nothrow_constructible<second_type, const Up2 &>::value)
+										) :
+										__first(pair.first()), __second(pair.second())
+				{
+				}
+
+				template <typename Tp2, typename Up2>
+				KERBAL_CONSTEXPR14
+				__compressed_pair_impl(const std::pair<Tp2, Up2> & pair)
+										KERBAL_CONDITIONAL_NOEXCEPT(
+												(std::is_nothrow_constructible<first_type, const Tp2 &>::value) &&
+												(std::is_nothrow_constructible<second_type, const Up2 &>::value)
+										) :
+										__first(pair.first), __second(pair.second)
+				{
+				}
+
+
+#		if __cplusplus >= 201103L
+
+				template <typename Tp2, typename Up2>
+				KERBAL_CONSTEXPR14
+				__compressed_pair_impl(kerbal::utility::compressed_pair<Tp2, Up2> && pair)
+										KERBAL_CONDITIONAL_NOEXCEPT(
+												(std::is_nothrow_constructible<first_type, Tp2 &&>::value) &&
+												(std::is_nothrow_constructible<second_type, Up2 &&>::value)
+										) :
+										__first(std::forward<Tp2>(pair.first())), __second(std::forward<Up2>(pair.second()))
+				{
+				}
+
+				template <typename Tp2, typename Up2>
+				KERBAL_CONSTEXPR14
+				__compressed_pair_impl(std::pair<Tp2, Up2> && pair)
+										KERBAL_CONDITIONAL_NOEXCEPT(
+												(std::is_nothrow_constructible<first_type, Tp2 &&>::value) &&
+												(std::is_nothrow_constructible<second_type, Up2 &&>::value)
+										) :
+										__first(std::forward<Tp2>(pair.first)), __second(std::forward<Up2>(pair.second))
+				{
+				}
+
+#		endif
+
 			public:
 
 				KERBAL_CONSTEXPR14
-				__first_type_ref first() KERBAL_NOEXCEPT
+				__first_type_ref first() KERBAL_REFERENCE_OVERLOAD_TAG KERBAL_NOEXCEPT
 				{
 					return this->__first;
 				}
 
 				KERBAL_CONSTEXPR14
-				__first_type_const_ref first() const KERBAL_NOEXCEPT
+				__first_type_const_ref first() KERBAL_CONST_REFERENCE_OVERLOAD_TAG KERBAL_NOEXCEPT
 				{
 					return this->__first;
 				}
 
 				KERBAL_CONSTEXPR14
-				__second_type_ref second() KERBAL_NOEXCEPT
+				__second_type_ref second() KERBAL_REFERENCE_OVERLOAD_TAG KERBAL_NOEXCEPT
 				{
 					return this->__second;
 				}
 
 				KERBAL_CONSTEXPR14
-				__second_type_const_ref second() const KERBAL_NOEXCEPT
+				__second_type_const_ref second() KERBAL_CONST_REFERENCE_OVERLOAD_TAG KERBAL_NOEXCEPT
 				{
 					return this->__second;
 				}
+
+#		if __cplusplus >= 201103L
+
+				KERBAL_CONSTEXPR14
+				__first_type_rref first() && KERBAL_NOEXCEPT
+				{
+					return std::move(this->__first);
+				}
+
+				KERBAL_CONSTEXPR14
+				__second_type_rref second() && KERBAL_NOEXCEPT
+				{
+					return std::move(this->__second);
+				}
+
+#		endif
+
 		};
 
 		template <typename Tp, typename Up>
@@ -136,77 +268,183 @@ namespace kerbal
 				first_type __first;
 				typedef typename kerbal::type_traits::remove_cv<Up>::type super;
 
-				typedef typename kerbal::type_traits::add_lvalue_reference<first_type>::type             __first_type_ref;
-				typedef typename kerbal::type_traits::add_lvalue_reference<second_type>::type            __second_type_ref;
-				typedef typename kerbal::type_traits::add_const_lvalue_reference<first_type>::type       __first_type_const_ref;
-				typedef typename kerbal::type_traits::add_const_lvalue_reference<second_type>::type      __second_type_const_ref;
+			private:
+				typedef __compressed_pair_inner_typedef_helper<first_type, second_type> inner_typedef_helper;
+
+			protected:
+				typedef typename inner_typedef_helper::__first_type_ref             __first_type_ref;
+				typedef typename inner_typedef_helper::__second_type_ref            __second_type_ref;
+				typedef typename inner_typedef_helper::__first_type_const_ref       __first_type_const_ref;
+				typedef typename inner_typedef_helper::__second_type_const_ref      __second_type_const_ref;
+
+#		if __cplusplus >= 201103L
+				typedef typename inner_typedef_helper::__first_type_rref             __first_type_rref;
+				typedef typename inner_typedef_helper::__second_type_rref            __second_type_rref;
+#		endif
 
 			protected:
 				KERBAL_CONSTEXPR
 				__compressed_pair_impl()
 										KERBAL_CONDITIONAL_NOEXCEPT(
 												std::is_nothrow_default_constructible<first_type>::value &&
-												std::is_nothrow_default_constructible<second_type>::value
+												std::is_nothrow_default_constructible<super>::value
 										) :
 										super(), __first()
 				{
 				}
 
-				KERBAL_CONSTEXPR
-				__compressed_pair_impl(compressed_pair_default_construct_tag, __second_type_const_ref __second)
-										KERBAL_CONDITIONAL_NOEXCEPT(
-												std::is_nothrow_default_constructible<first_type>::value &&
-												std::is_nothrow_copy_constructible<second_type>::value
-										) :
-										super(__second), __first()
-				{
-				}
 
-				KERBAL_CONSTEXPR
-				__compressed_pair_impl(__first_type_const_ref __first, compressed_pair_default_construct_tag)
-										KERBAL_CONDITIONAL_NOEXCEPT(
-												std::is_nothrow_copy_constructible<first_type>::value &&
-												std::is_nothrow_default_constructible<second_type>::value
-										) :
-										super(), __first(__first)
-				{
-				}
+#		if __cplusplus < 201103L
 
+				template <typename Tp2, typename Up2>
 				KERBAL_CONSTEXPR
-				__compressed_pair_impl(__first_type_const_ref __first, __second_type_const_ref __second)
-										KERBAL_CONDITIONAL_NOEXCEPT(
-												std::is_nothrow_copy_constructible<first_type>::value &&
-												std::is_nothrow_copy_constructible<second_type>::value
-										) :
+				__compressed_pair_impl(const Tp2 & __first, const Up2 & __second) :
 										super(__second), __first(__first)
 				{
 				}
 
+				template <typename Up2>
+				KERBAL_CONSTEXPR
+				__compressed_pair_impl(compressed_pair_default_construct_tag, const Up2 & __second) :
+										super(__second), __first()
+				{
+				}
+
+				template <typename Tp2>
+				KERBAL_CONSTEXPR
+				__compressed_pair_impl(const Tp2 & __first, compressed_pair_default_construct_tag) :
+										super(), __first(__first)
+				{
+				}
+
+#		else
+
+				template <typename Tp2, typename Up2>
+				KERBAL_CONSTEXPR
+				__compressed_pair_impl(Tp2&& __first, Up2&& __second)
+										KERBAL_CONDITIONAL_NOEXCEPT(
+												(std::is_nothrow_constructible<first_type, Tp2>::value) &&
+												(std::is_nothrow_constructible<super, Up2>::value)
+										) :
+										super(std::forward<Up2>(__second)), __first(std::forward<Tp2>(__first))
+				{
+				}
+
+				template <typename Up2>
+				KERBAL_CONSTEXPR
+				__compressed_pair_impl(compressed_pair_default_construct_tag, Up2&& __second)
+										KERBAL_CONDITIONAL_NOEXCEPT(
+												std::is_nothrow_default_constructible<first_type>::value &&
+												(std::is_nothrow_constructible<super, Up2>::value)
+										) :
+										super(std::forward<Up2>(__second)), __first()
+				{
+				}
+
+				template <typename Tp2>
+				KERBAL_CONSTEXPR
+				__compressed_pair_impl(Tp2&& __first, compressed_pair_default_construct_tag)
+										KERBAL_CONDITIONAL_NOEXCEPT(
+												(std::is_nothrow_constructible<first_type, Tp2>::value) &&
+												std::is_nothrow_default_constructible<super>::value
+										) :
+										super(), __first(std::forward<Tp2>(__first))
+				{
+				}
+
+#		endif
+
+				template <typename Tp2, typename Up2>
+				KERBAL_CONSTEXPR14
+				__compressed_pair_impl(const kerbal::utility::compressed_pair<Tp2, Up2> & pair)
+										KERBAL_CONDITIONAL_NOEXCEPT(
+												(std::is_nothrow_constructible<first_type, const Tp2 &>::value) &&
+												(std::is_nothrow_constructible<super, const Up2 &>::value)
+										) :
+										super(pair.second()), __first(pair.first())
+				{
+				}
+
+				template <typename Tp2, typename Up2>
+				KERBAL_CONSTEXPR14
+				__compressed_pair_impl(const std::pair<Tp2, Up2> & pair)
+										KERBAL_CONDITIONAL_NOEXCEPT(
+												(std::is_nothrow_constructible<first_type, const Tp2 &>::value) &&
+												(std::is_nothrow_constructible<super, const Up2 &>::value)
+										) :
+										super(pair.second), __first(pair.first)
+				{
+				}
+
+
+#		if __cplusplus >= 201103L
+
+				template <typename Tp2, typename Up2>
+				KERBAL_CONSTEXPR14
+				__compressed_pair_impl(kerbal::utility::compressed_pair<Tp2, Up2> && pair)
+										KERBAL_CONDITIONAL_NOEXCEPT(
+												(std::is_nothrow_constructible<first_type, Tp2 &&>::value) &&
+												(std::is_nothrow_constructible<super, Up2 &&>::value)
+										) :
+										super(std::forward<Tp2>(pair.second())), __first(std::forward<Up2>(pair.first()))
+				{
+				}
+
+				template <typename Tp2, typename Up2>
+				KERBAL_CONSTEXPR14
+				__compressed_pair_impl(std::pair<Tp2, Up2> && pair)
+										KERBAL_CONDITIONAL_NOEXCEPT(
+												(std::is_nothrow_constructible<first_type, Tp2 &&>::value) &&
+												(std::is_nothrow_constructible<super, Up2 &&>::value)
+										) :
+										super(std::forward<Tp2>(pair.second)), __first(std::forward<Up2>(pair.first))
+				{
+				}
+
+#		endif
+
 			public:
 
 				KERBAL_CONSTEXPR14
-				__first_type_ref first() KERBAL_NOEXCEPT
+				__first_type_ref first() KERBAL_REFERENCE_OVERLOAD_TAG KERBAL_NOEXCEPT
 				{
 					return this->__first;
 				}
 
 				KERBAL_CONSTEXPR14
-				__first_type_const_ref first() const KERBAL_NOEXCEPT
+				__first_type_const_ref first() KERBAL_CONST_REFERENCE_OVERLOAD_TAG KERBAL_NOEXCEPT
 				{
 					return this->__first;
 				}
 
 				KERBAL_CONSTEXPR14
-				__second_type_ref second() KERBAL_NOEXCEPT
+				__second_type_ref second() KERBAL_REFERENCE_OVERLOAD_TAG KERBAL_NOEXCEPT
 				{
 					return static_cast<__second_type_ref>(*this);
 				}
 
 				KERBAL_CONSTEXPR14
-				__second_type_const_ref second() const KERBAL_NOEXCEPT
+				__second_type_const_ref second() KERBAL_CONST_REFERENCE_OVERLOAD_TAG KERBAL_NOEXCEPT
 				{
 					return static_cast<__second_type_const_ref>(*this);
 				}
+
+#		if __cplusplus >= 201103L
+
+				KERBAL_CONSTEXPR14
+				__first_type_rref first() && KERBAL_NOEXCEPT
+				{
+					return std::move(this->__first);
+				}
+
+				KERBAL_CONSTEXPR14
+				__second_type_rref second() && KERBAL_NOEXCEPT
+				{
+					return static_cast<__second_type_rref>(*this);
+				}
+
+#		endif
+
 		};
 
 		template <typename Tp, typename Up>
@@ -220,78 +458,187 @@ namespace kerbal
 				typedef kerbal::type_traits::false_type is_second_compressed;
 
 			private:
+				typedef typename kerbal::type_traits::remove_cv<Tp>::type super;
 				second_type __second;
 
-				typedef typename kerbal::type_traits::add_lvalue_reference<first_type>::type             __first_type_ref;
-				typedef typename kerbal::type_traits::add_lvalue_reference<second_type>::type            __second_type_ref;
-				typedef typename kerbal::type_traits::add_const_lvalue_reference<first_type>::type       __first_type_const_ref;
-				typedef typename kerbal::type_traits::add_const_lvalue_reference<second_type>::type      __second_type_const_ref;
+			private:
+				typedef __compressed_pair_inner_typedef_helper<first_type, second_type> inner_typedef_helper;
+
+			protected:
+				typedef typename inner_typedef_helper::__first_type_ref             __first_type_ref;
+				typedef typename inner_typedef_helper::__second_type_ref            __second_type_ref;
+				typedef typename inner_typedef_helper::__first_type_const_ref       __first_type_const_ref;
+				typedef typename inner_typedef_helper::__second_type_const_ref      __second_type_const_ref;
+
+#		if __cplusplus >= 201103L
+				typedef typename inner_typedef_helper::__first_type_rref             __first_type_rref;
+				typedef typename inner_typedef_helper::__second_type_rref            __second_type_rref;
+#		endif
 
 			protected:
 				KERBAL_CONSTEXPR
 				__compressed_pair_impl()
 										KERBAL_CONDITIONAL_NOEXCEPT(
-												std::is_nothrow_default_constructible<first_type>::value &&
+												std::is_nothrow_default_constructible<super>::value &&
 												std::is_nothrow_default_constructible<second_type>::value
 										) :
-								Tp(), __second()
+										super(), __second()
 				{
 				}
 
+#		if __cplusplus < 201103L
+
+				template <typename Tp2, typename Up2>
 				KERBAL_CONSTEXPR
-				__compressed_pair_impl(compressed_pair_default_construct_tag, __second_type_const_ref __second)
+				__compressed_pair_impl(const Tp2 & __first, const Up2 & __second) :
+										super(__first), __second(__second)
+				{
+				}
+
+				template <typename Up2>
+				KERBAL_CONSTEXPR
+				__compressed_pair_impl(compressed_pair_default_construct_tag, const Up2 & __second) :
+										super(), __second(__second)
+				{
+				}
+
+				template <typename Tp2>
+				KERBAL_CONSTEXPR
+				__compressed_pair_impl(const Tp2 & __first, compressed_pair_default_construct_tag) :
+										super(__first), __second()
+				{
+				}
+
+#		else
+
+				template <typename Tp2, typename Up2>
+				KERBAL_CONSTEXPR
+				__compressed_pair_impl(Tp2&& __first, Up2&& __second)
 										KERBAL_CONDITIONAL_NOEXCEPT(
-												std::is_nothrow_default_constructible<first_type>::value &&
-												std::is_nothrow_copy_constructible<second_type>::value
+												(std::is_nothrow_constructible<super, Tp2>::value) &&
+												(std::is_nothrow_constructible<second_type, Up2>::value)
 										) :
-								Tp(), __second(__second)
+										super(std::forward<Tp2>(__first)), __second(std::forward<Up2>(__second))
 				{
 				}
 
+				template <typename Up2>
 				KERBAL_CONSTEXPR
-				__compressed_pair_impl(__first_type_const_ref __first, compressed_pair_default_construct_tag)
+				__compressed_pair_impl(compressed_pair_default_construct_tag, Up2&& __second)
 										KERBAL_CONDITIONAL_NOEXCEPT(
-												std::is_nothrow_copy_constructible<first_type>::value &&
+												std::is_nothrow_default_constructible<super>::value &&
+												(std::is_nothrow_constructible<second_type, Up2>::value)
+										) :
+										super(), __second(std::forward<Up2>(__second))
+				{
+				}
+
+				template <typename Tp2>
+				KERBAL_CONSTEXPR
+				__compressed_pair_impl(Tp2&& __first, compressed_pair_default_construct_tag)
+										KERBAL_CONDITIONAL_NOEXCEPT(
+												(std::is_nothrow_constructible<super, Tp2>::value) &&
 												std::is_nothrow_default_constructible<second_type>::value
 										) :
-								Tp(__first), __second()
+										super(std::forward<Tp2>(__first)), __second()
 				{
 				}
 
-				KERBAL_CONSTEXPR
-				__compressed_pair_impl(__first_type_const_ref __first, __second_type_const_ref __second)
+
+#		endif
+
+				template <typename Tp2, typename Up2>
+				KERBAL_CONSTEXPR14
+				__compressed_pair_impl(const kerbal::utility::compressed_pair<Tp2, Up2> & pair)
 										KERBAL_CONDITIONAL_NOEXCEPT(
-												std::is_nothrow_copy_constructible<first_type>::value &&
-												std::is_nothrow_copy_constructible<second_type>::value
+												(std::is_nothrow_constructible<super, const Tp2 &>::value) &&
+												(std::is_nothrow_constructible<second_type, const Up2 &>::value)
 										) :
-								Tp(__first), __second(__second)
+										super(pair.first()), __second(pair.second())
 				{
 				}
+
+				template <typename Tp2, typename Up2>
+				KERBAL_CONSTEXPR14
+				__compressed_pair_impl(const std::pair<Tp2, Up2> & pair)
+										KERBAL_CONDITIONAL_NOEXCEPT(
+												(std::is_nothrow_constructible<super, const Tp2 &>::value) &&
+												(std::is_nothrow_constructible<second_type, const Up2 &>::value)
+										) :
+										super(pair.first), __second(pair.second)
+				{
+				}
+
+
+#		if __cplusplus >= 201103L
+
+				template <typename Tp2, typename Up2>
+				KERBAL_CONSTEXPR14
+				__compressed_pair_impl(kerbal::utility::compressed_pair<Tp2, Up2> && pair)
+										KERBAL_CONDITIONAL_NOEXCEPT(
+												(std::is_nothrow_constructible<super, Tp2 &&>::value) &&
+												(std::is_nothrow_constructible<second_type, Up2 &&>::value)
+										) :
+										super(std::forward<Tp2>(pair.first())), __second(std::forward<Up2>(pair.second()))
+				{
+				}
+
+				template <typename Tp2, typename Up2>
+				KERBAL_CONSTEXPR14
+				__compressed_pair_impl(std::pair<Tp2, Up2> && pair)
+										KERBAL_CONDITIONAL_NOEXCEPT(
+												(std::is_nothrow_constructible<super, Tp2 &&>::value) &&
+												(std::is_nothrow_constructible<second_type, Up2 &&>::value)
+										) :
+										super(std::forward<Tp2>(pair.first)), __second(std::forward<Up2>(pair.second))
+				{
+				}
+
+#		endif
+
 
 			public:
+
 				KERBAL_CONSTEXPR14
-				__first_type_ref first() KERBAL_NOEXCEPT
+				__first_type_ref first() KERBAL_REFERENCE_OVERLOAD_TAG KERBAL_NOEXCEPT
 				{
 					return static_cast<__first_type_ref>(*this);
 				}
 
 				KERBAL_CONSTEXPR14
-				__first_type_const_ref first() const KERBAL_NOEXCEPT
+				__first_type_const_ref first() KERBAL_CONST_REFERENCE_OVERLOAD_TAG KERBAL_NOEXCEPT
 				{
 					return static_cast<__first_type_const_ref>(*this);
 				}
 
 				KERBAL_CONSTEXPR14
-				__second_type_ref second() KERBAL_NOEXCEPT
+				__second_type_ref second() KERBAL_REFERENCE_OVERLOAD_TAG KERBAL_NOEXCEPT
 				{
 					return this->__second;
 				}
 
 				KERBAL_CONSTEXPR14
-				__second_type_const_ref second() const KERBAL_NOEXCEPT
+				__second_type_const_ref second() KERBAL_CONST_REFERENCE_OVERLOAD_TAG KERBAL_NOEXCEPT
 				{
 					return this->__second;
 				}
+
+#		if __cplusplus >= 201103L
+
+				KERBAL_CONSTEXPR14
+				__first_type_rref first() && KERBAL_NOEXCEPT
+				{
+					return static_cast<__first_type_rref>(*this);
+				}
+
+				KERBAL_CONSTEXPR14
+				__second_type_rref second() && KERBAL_NOEXCEPT
+				{
+					return std::move(this->__second);
+				}
+
+#		endif
+
 		};
 
 		template <typename Tp, typename Up>
@@ -307,76 +654,186 @@ namespace kerbal
 				typedef kerbal::type_traits::true_type is_second_compressed;
 
 			private:
-				typedef typename kerbal::type_traits::add_lvalue_reference<first_type>::type             __first_type_ref;
-				typedef typename kerbal::type_traits::add_lvalue_reference<second_type>::type            __second_type_ref;
-				typedef typename kerbal::type_traits::add_const_lvalue_reference<first_type>::type       __first_type_const_ref;
-				typedef typename kerbal::type_traits::add_const_lvalue_reference<second_type>::type      __second_type_const_ref;
+				typedef typename kerbal::type_traits::remove_cv<Tp>::type super1;
+				typedef typename kerbal::type_traits::remove_cv<Up>::type super2;
+
+			private:
+				typedef __compressed_pair_inner_typedef_helper<first_type, second_type> inner_typedef_helper;
+
+			protected:
+				typedef typename inner_typedef_helper::__first_type_ref             __first_type_ref;
+				typedef typename inner_typedef_helper::__second_type_ref            __second_type_ref;
+				typedef typename inner_typedef_helper::__first_type_const_ref       __first_type_const_ref;
+				typedef typename inner_typedef_helper::__second_type_const_ref      __second_type_const_ref;
+
+#		if __cplusplus >= 201103L
+				typedef typename inner_typedef_helper::__first_type_rref             __first_type_rref;
+				typedef typename inner_typedef_helper::__second_type_rref            __second_type_rref;
+#		endif
 
 			protected:
 				KERBAL_CONSTEXPR
 				__compressed_pair_impl()
 										KERBAL_CONDITIONAL_NOEXCEPT(
-												std::is_nothrow_default_constructible<first_type>::value &&
-												std::is_nothrow_default_constructible<second_type>::value
+												std::is_nothrow_default_constructible<super1>::value &&
+												std::is_nothrow_default_constructible<super2>::value
 										) :
-								Tp(), Up()
+										super1(), super2()
 				{
 				}
 
+#		if __cplusplus < 201103L
+
+				template <typename Tp2, typename Up2>
 				KERBAL_CONSTEXPR
-				__compressed_pair_impl(compressed_pair_default_construct_tag, __second_type_const_ref __second)
-										KERBAL_CONDITIONAL_NOEXCEPT(
-												std::is_nothrow_default_constructible<first_type>::value &&
-												std::is_nothrow_copy_constructible<second_type>::value
-										) :
-								Tp(), Up(__second)
+				__compressed_pair_impl(const Tp2 & __first, const Up2 & __second) :
+										super1(__first), super2(__second)
 				{
 				}
 
+				template <typename Up2>
 				KERBAL_CONSTEXPR
-				__compressed_pair_impl(__first_type_const_ref __first, compressed_pair_default_construct_tag)
-										KERBAL_CONDITIONAL_NOEXCEPT(
-												std::is_nothrow_copy_constructible<first_type>::value &&
-												std::is_nothrow_default_constructible<second_type>::value
-										) :
-								Tp(__first), Up()
+				__compressed_pair_impl(compressed_pair_default_construct_tag, const Up2 & __second) :
+										super1(), super2(__second)
 				{
 				}
 
+				template <typename Tp2>
 				KERBAL_CONSTEXPR
-				__compressed_pair_impl(__first_type_const_ref __first, __second_type_const_ref __second)
-										KERBAL_CONDITIONAL_NOEXCEPT(
-												std::is_nothrow_copy_constructible<first_type>::value &&
-												std::is_nothrow_copy_constructible<second_type>::value
-										) :
-								Tp(__first), Up(__second)
+				__compressed_pair_impl(const Tp2 & __first, compressed_pair_default_construct_tag) :
+										super1(__first), super2()
 				{
 				}
+
+#		else
+
+				template <typename Tp2, typename Up2>
+				KERBAL_CONSTEXPR
+				__compressed_pair_impl(Tp2&& __first, Up2&& __second)
+										KERBAL_CONDITIONAL_NOEXCEPT(
+												(std::is_nothrow_constructible<super1, Tp2>::value) &&
+												(std::is_nothrow_constructible<super2, Up2>::value)
+										) :
+										super1(std::forward<Tp2>(__first)), super2(std::forward<Up2>(__second))
+				{
+				}
+
+				template <typename Up2>
+				KERBAL_CONSTEXPR
+				__compressed_pair_impl(compressed_pair_default_construct_tag, Up2&& __second)
+										KERBAL_CONDITIONAL_NOEXCEPT(
+												std::is_nothrow_default_constructible<super1>::value &&
+												(std::is_nothrow_constructible<super2, Up2>::value)
+										) :
+										super1(), super2(std::forward<Up2>(__second))
+				{
+				}
+
+				template <typename Tp2>
+				KERBAL_CONSTEXPR
+				__compressed_pair_impl(Tp2&& __first, compressed_pair_default_construct_tag)
+										KERBAL_CONDITIONAL_NOEXCEPT(
+												(std::is_nothrow_constructible<super1, Tp2>::value) &&
+												std::is_nothrow_default_constructible<super2>::value
+										) :
+										super1(std::forward<Tp2>(__first)), super2()
+				{
+				}
+
+#		endif
+
+				template <typename Tp2, typename Up2>
+				KERBAL_CONSTEXPR14
+				__compressed_pair_impl(const kerbal::utility::compressed_pair<Tp2, Up2> & pair)
+										KERBAL_CONDITIONAL_NOEXCEPT(
+												(std::is_nothrow_constructible<super1, const Tp2 &>::value) &&
+												(std::is_nothrow_constructible<super2, const Up2 &>::value)
+										) :
+										super1(pair.first()), super2(pair.second())
+				{
+				}
+
+				template <typename Tp2, typename Up2>
+				KERBAL_CONSTEXPR14
+				__compressed_pair_impl(const std::pair<Tp2, Up2> & pair)
+										KERBAL_CONDITIONAL_NOEXCEPT(
+												(std::is_nothrow_constructible<super1, const Tp2 &>::value) &&
+												(std::is_nothrow_constructible<super2, const Up2 &>::value)
+										) :
+										super1(pair.first), super2(pair.second)
+				{
+				}
+
+
+#		if __cplusplus >= 201103L
+
+				template <typename Tp2, typename Up2>
+				KERBAL_CONSTEXPR14
+				__compressed_pair_impl(kerbal::utility::compressed_pair<Tp2, Up2> && pair)
+										KERBAL_CONDITIONAL_NOEXCEPT(
+												(std::is_nothrow_constructible<super1, Tp2 &&>::value) &&
+												(std::is_nothrow_constructible<super2, Up2 &&>::value)
+										) :
+										super1(std::forward<Tp2>(pair.first())), super2(std::forward<Up2>(pair.second()))
+				{
+				}
+
+				template <typename Tp2, typename Up2>
+				KERBAL_CONSTEXPR14
+				__compressed_pair_impl(std::pair<Tp2, Up2> && pair)
+										KERBAL_CONDITIONAL_NOEXCEPT(
+												(std::is_nothrow_constructible<super1, Tp2 &&>::value) &&
+												(std::is_nothrow_constructible<super2, Up2 &&>::value)
+										) :
+										super1(std::forward<Tp2>(pair.first)), super2(std::forward<Up2>(pair.second))
+				{
+				}
+
+#		endif
+
 
 			public:
+
 				KERBAL_CONSTEXPR14
-				__first_type_ref first() KERBAL_NOEXCEPT
+				__first_type_ref first() KERBAL_REFERENCE_OVERLOAD_TAG KERBAL_NOEXCEPT
 				{
 					return static_cast<__first_type_ref>(*this);
 				}
 
 				KERBAL_CONSTEXPR14
-				__first_type_const_ref first() const KERBAL_NOEXCEPT
+				__first_type_const_ref first() KERBAL_CONST_REFERENCE_OVERLOAD_TAG KERBAL_NOEXCEPT
 				{
 					return static_cast<__first_type_const_ref>(*this);
 				}
 
 				KERBAL_CONSTEXPR14
-				__second_type_ref second() KERBAL_NOEXCEPT
+				__second_type_ref second() KERBAL_REFERENCE_OVERLOAD_TAG KERBAL_NOEXCEPT
 				{
 					return static_cast<__second_type_ref>(*this);
 				}
 
 				KERBAL_CONSTEXPR14
-				__second_type_const_ref second() const KERBAL_NOEXCEPT
+				__second_type_const_ref second() KERBAL_CONST_REFERENCE_OVERLOAD_TAG KERBAL_NOEXCEPT
 				{
 					return static_cast<__second_type_const_ref>(*this);
 				}
+
+#		if __cplusplus >= 201103L
+
+				KERBAL_CONSTEXPR14
+				__first_type_rref first() && KERBAL_NOEXCEPT
+				{
+					return static_cast<__first_type_rref>(*this);
+				}
+
+				KERBAL_CONSTEXPR14
+				__second_type_rref second() && KERBAL_NOEXCEPT
+				{
+					return static_cast<__second_type_rref>(*this);
+				}
+
+#		endif
+
 		};
 
 		template <typename Tp, typename Up, bool, bool>
@@ -448,62 +905,191 @@ namespace kerbal
 			private:
 				typedef kerbal::utility::__compressed_pair_impl<Tp, Up, __compressed_pair_policy_switch<Tp, Up>::value > super;
 
-				typedef typename kerbal::type_traits::add_const_lvalue_reference<first_type>::type       __first_type_const_ref;
-				typedef typename kerbal::type_traits::add_const_lvalue_reference<second_type>::type      __second_type_const_ref;
+			protected:
+				typedef typename super::__first_type_ref             __first_type_ref;
+				typedef typename super::__second_type_ref            __second_type_ref;
+				typedef typename super::__first_type_const_ref       __first_type_const_ref;
+				typedef typename super::__second_type_const_ref      __second_type_const_ref;
+
+#		if __cplusplus >= 201103L
+				typedef typename super::__first_type_rref             __first_type_rref;
+				typedef typename super::__second_type_rref            __second_type_rref;
+#		endif
 
 			public:
 				KERBAL_CONSTEXPR
 				compressed_pair()
 								KERBAL_CONDITIONAL_NOEXCEPT(
-										std::is_nothrow_default_constructible<first_type>::value &&
-										std::is_nothrow_default_constructible<second_type>::value
+										std::is_nothrow_default_constructible<super>::value
 								) :
 								super()
 				{
 				}
 
+#		if __cplusplus < 201103L
+
+				template <typename Tp2, typename Up2>
 				KERBAL_CONSTEXPR
-				compressed_pair(compressed_pair_default_construct_tag tag, __second_type_const_ref __second)
-								KERBAL_CONDITIONAL_NOEXCEPT(
-										std::is_nothrow_default_constructible<first_type>::value &&
-										std::is_nothrow_copy_constructible<second_type>::value
-								) :
+				compressed_pair(const Tp2 & __first, const Up2 & __second) :
+								super(__first, __second)
+				{
+				}
+
+				template <typename Up2>
+				KERBAL_CONSTEXPR
+				compressed_pair(compressed_pair_default_construct_tag tag, const Up2 & __second) :
 								super(tag, __second)
 				{
 				}
 
+				template <typename Tp2>
 				KERBAL_CONSTEXPR
-				compressed_pair(__first_type_const_ref __first, compressed_pair_default_construct_tag tag)
-								KERBAL_CONDITIONAL_NOEXCEPT(
-										std::is_nothrow_copy_constructible<first_type>::value &&
-										std::is_nothrow_default_constructible<second_type>::value
-								) :
+				compressed_pair(const Tp2 & __first, compressed_pair_default_construct_tag tag) :
 								super(__first, tag)
 				{
 				}
 
+#		else
+
+				template <typename Tp2, typename Up2>
 				KERBAL_CONSTEXPR
-				compressed_pair(__first_type_const_ref __first, __second_type_const_ref __second)
+				compressed_pair(Tp2&& __first, Up2&& __second)
 								KERBAL_CONDITIONAL_NOEXCEPT(
-										std::is_nothrow_copy_constructible<first_type>::value &&
-										std::is_nothrow_copy_constructible<second_type>::value
+										(std::is_nothrow_constructible<super, Tp2, Up2>::value)
 								) :
-								super(__first, __second)
+								super(std::forward<Tp2>(__first), std::forward<Up2>(__second))
 				{
+				}
+
+				template <typename Up2>
+				KERBAL_CONSTEXPR
+				compressed_pair(compressed_pair_default_construct_tag tag, Up2&& __second)
+								KERBAL_CONDITIONAL_NOEXCEPT(
+										(std::is_nothrow_constructible<super, compressed_pair_default_construct_tag, Up2>::value)
+								) :
+								super(tag, std::forward<Up2>(__second))
+				{
+				}
+
+				template <typename Tp2>
+				KERBAL_CONSTEXPR
+				compressed_pair(Tp2&& __first, compressed_pair_default_construct_tag tag)
+								KERBAL_CONDITIONAL_NOEXCEPT(
+										(std::is_nothrow_constructible<super, Tp2, compressed_pair_default_construct_tag>::value)
+								) :
+								super(std::forward<Tp2>(__first), tag)
+				{
+				}
+
+#		endif
+
+				template <typename Tp2, typename Up2>
+				KERBAL_CONSTEXPR14
+				compressed_pair(const kerbal::utility::compressed_pair<Tp2, Up2> & pair)
+								KERBAL_CONDITIONAL_NOEXCEPT(
+										(std::is_nothrow_constructible<super, const kerbal::utility::compressed_pair<Tp2, Up2> &>::value)
+								) :
+								super(pair)
+				{
+				}
+
+				template <typename Tp2, typename Up2>
+				KERBAL_CONSTEXPR14
+				compressed_pair(const std::pair<Tp2, Up2> & pair)
+								KERBAL_CONDITIONAL_NOEXCEPT(
+										(std::is_nothrow_constructible<super, const std::pair<Tp2, Up2> &>::value)
+								) :
+								super(pair)
+				{
+				}
+
+
+#		if __cplusplus >= 201103L
+
+				template <typename Tp2, typename Up2>
+				KERBAL_CONSTEXPR14
+				compressed_pair(kerbal::utility::compressed_pair<Tp2, Up2> && pair)
+								KERBAL_CONDITIONAL_NOEXCEPT(
+										(std::is_nothrow_constructible<super, kerbal::utility::compressed_pair<Tp2, Up2> &&>::value)
+								) :
+								super(std::forward<kerbal::utility::compressed_pair<Tp2, Up2> >(pair))
+				{
+				}
+
+				template <typename Tp2, typename Up2>
+				KERBAL_CONSTEXPR14
+				compressed_pair(std::pair<Tp2, Up2> && pair)
+								KERBAL_CONDITIONAL_NOEXCEPT(
+										(std::is_nothrow_constructible<super, std::pair<Tp2, Up2> &&>::value)
+								) :
+								super(std::forward<std::pair<Tp2, Up2> >(pair))
+				{
+				}
+
+#		endif
+
+				void swap(compressed_pair & other)
+				{
+					std::swap(this->first(), other.first());
+					std::swap(this->second(), other.second());
 				}
 
 		};
 
 		template <typename Tp, typename Up>
+		bool operator==(const kerbal::utility::compressed_pair<Tp, Up>& lhs, const kerbal::utility::compressed_pair<Tp, Up>& rhs)
+		{
+			return lhs.first == rhs.first && lhs.second == rhs.second;
+		}
+
+		template <typename Tp, typename Up>
+		bool operator!=(const kerbal::utility::compressed_pair<Tp, Up>& lhs, const kerbal::utility::compressed_pair<Tp, Up>& rhs)
+		{
+			return lhs.first != rhs.first || lhs.second != rhs.second;
+		}
+
+		template <typename Tp, typename Up>
+		bool operator<(const kerbal::utility::compressed_pair<Tp, Up>& lhs, const kerbal::utility::compressed_pair<Tp, Up>& rhs)
+		{
+			return lhs.first < rhs.first
+				|| (!(rhs.first < lhs.first) && lhs.second < rhs.second);
+		}
+
+		template <typename Tp, typename Up>
+		bool operator>(const kerbal::utility::compressed_pair<Tp, Up>& lhs, const kerbal::utility::compressed_pair<Tp, Up>& rhs)
+		{
+			return rhs < lhs;
+		}
+
+		template <typename Tp, typename Up>
+		bool operator<=(const kerbal::utility::compressed_pair<Tp, Up>& lhs, const kerbal::utility::compressed_pair<Tp, Up>& rhs)
+		{
+			return !(rhs < lhs);
+		}
+
+		template <typename Tp, typename Up>
+		bool operator>=(const kerbal::utility::compressed_pair<Tp, Up>& lhs, const kerbal::utility::compressed_pair<Tp, Up>& rhs)
+		{
+			return !(lhs < rhs);
+		}
+
+		template <typename Tp, typename Up>
+		KERBAL_CONSTEXPR
 		kerbal::utility::compressed_pair<Tp, Up>
 		make_compressed_pair(const Tp & first, const Up & second)
-										KERBAL_CONDITIONAL_NOEXCEPT(
-												std::is_nothrow_copy_constructible<Tp>::value &&
-												std::is_nothrow_copy_constructible<Up>::value
-										)
+								KERBAL_CONDITIONAL_NOEXCEPT(
+										(std::is_nothrow_constructible<kerbal::utility::compressed_pair<Tp, Up>, const Tp &, const Up &>::value)
+								)
 		{
 			return kerbal::utility::compressed_pair<Tp, Up>(first, second);
 		}
+
+#	if __cplusplus >= 201703L
+
+		template <typename Tp, typename Up>
+		compressed_pair(const Tp &, const Up &) -> compressed_pair<Tp, Up>;
+
+#	endif
 
 	} // namespace utility
 
@@ -644,4 +1230,4 @@ namespace std
 
 #endif
 
-#endif /* KERBAL_UTILITY_COMPRESSED_PAIR_HPP_ */
+#endif // KERBAL_UTILITY_COMPRESSED_PAIR_HPP

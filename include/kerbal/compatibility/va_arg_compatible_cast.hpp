@@ -10,9 +10,9 @@
 
 #include <kerbal/compatibility/compatibility_macro.hpp>
 #include <kerbal/utility/string_ref.hpp>
-#include <kerbal/type_traits/type_traits_details/enable_if.hpp>
-#include <kerbal/type_traits/type_traits_details/fundamental_deduction.hpp>
-#include <kerbal/type_traits/type_traits_details/pointer_deduction.hpp>
+#include <kerbal/type_traits/enable_if.hpp>
+#include <kerbal/type_traits/fundamental_deduction.hpp>
+#include <kerbal/type_traits/pointer_deduction.hpp>
 #include <string>
 
 namespace kerbal

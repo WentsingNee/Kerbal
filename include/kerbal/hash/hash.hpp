@@ -13,8 +13,8 @@
 #define KERBAL_HASH_HASH_HPP_
 
 #include <cstddef>
-#include <kerbal/type_traits/type_traits_details/enable_if.hpp>
-#include <kerbal/type_traits/type_traits_details/fundamental_deduction.hpp>
+#include <kerbal/type_traits/enable_if.hpp>
+#include <kerbal/type_traits/fundamental_deduction.hpp>
 #include <kerbal/compatibility/constexpr.hpp>
 #include <kerbal/compatibility/noexcept.hpp>
 #include <kerbal/utility/addressof.hpp>

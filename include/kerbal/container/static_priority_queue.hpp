@@ -15,7 +15,7 @@
 #include <kerbal/algorithm/heap.hpp>
 #include <kerbal/container/static_vector.hpp>
 #include <kerbal/iterator/iterator_traits.hpp>
-#include <kerbal/type_traits/type_traits_details/enable_if.hpp>
+#include <kerbal/type_traits/enable_if.hpp>
 
 #if __cplusplus >= 201103L
 #	include <initializer_list>

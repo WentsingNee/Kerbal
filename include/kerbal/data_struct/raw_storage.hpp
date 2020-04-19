@@ -16,8 +16,8 @@
 #include <kerbal/compatibility/method_overload_tag.hpp>
 #include <kerbal/compatibility/noexcept.hpp>
 #include <kerbal/type_traits/aligned_storage.hpp>
-#include <kerbal/type_traits/type_traits_details/array_traits.hpp>
-#include <kerbal/type_traits/type_traits_details/enable_if.hpp>
+#include <kerbal/type_traits/array_traits.hpp>
+#include <kerbal/type_traits/enable_if.hpp>
 #include <kerbal/utility/noncopyable.hpp>
 
 #include <utility>
@@ -25,8 +25,8 @@
 #if __cplusplus >= 201103L
 # include <type_traits>
 #else
-# include <kerbal/type_traits/type_traits_details/fundamental_deduction.hpp>
-# include <kerbal/type_traits/type_traits_details/pointer_deduction.hpp>
+# include <kerbal/type_traits/fundamental_deduction.hpp>
+# include <kerbal/type_traits/pointer_deduction.hpp>
 #endif
 
 namespace kerbal
@@ -451,27 +451,16 @@ namespace kerbal
 		class raw_storage: public kerbal::data_struct::__rawst_agent<Type>
 		{
 			public:
-				/// @brief Type of the elements.
-				typedef Type value_type;
-
-				/// @brief Constant type of the elements.
-				typedef const value_type const_type;
-
-				/// @brief Reference of the elements.
-				typedef value_type& reference;
-
-				/// @brief Constant reference of the elements.
-				typedef const value_type& const_reference;
-
-				/// @brief Pointer type to the elements.
-				typedef value_type* pointer;
-
-				/// @brief Constant pointer type to the elements.
-				typedef const value_type* const_pointer;
+				typedef Type						value_type;
+				typedef const value_type			const_type;
+				typedef value_type&					reference;
+				typedef const value_type&			const_reference;
+				typedef value_type*					pointer;
+				typedef const value_type*			const_pointer;
 
 #		if __cplusplus >= 201103L
-				typedef value_type&& rvalue_reference;
-				typedef const value_type&& const_rvalue_reference;
+				typedef value_type&&				rvalue_reference;
+				typedef const value_type&&			const_rvalue_reference;
 #		endif
 
 		};

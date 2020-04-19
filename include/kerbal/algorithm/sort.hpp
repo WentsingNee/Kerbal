@@ -24,9 +24,9 @@
 #include <kerbal/iterator/iterator.hpp>
 #include <kerbal/iterator/stride_iterator.hpp>
 #include <kerbal/memory/allocator_traits.hpp>
-#include <kerbal/type_traits/type_traits_details/is_same.hpp>
+#include <kerbal/type_traits/is_same.hpp>
 #include <kerbal/type_traits/sign_deduction.hpp>
-#include <kerbal/type_traits/type_traits_details/volatile_deduction.hpp>
+#include <kerbal/type_traits/volatile_deduction.hpp>
 
 #include <stack>
 #include <memory>

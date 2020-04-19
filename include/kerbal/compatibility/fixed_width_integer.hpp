@@ -13,8 +13,8 @@
 #define KERBAL_COMPATIBILITY_FIXED_WIDTH_INTEGER_HPP
 
 #include <kerbal/compatibility/static_assert.hpp>
-#include <kerbal/type_traits/type_traits_details/conditional.hpp>
-#include <kerbal/type_traits/type_traits_details/is_same.hpp>
+#include <kerbal/type_traits/conditional.hpp>
+#include <kerbal/type_traits/is_same.hpp>
 
 #include <climits>
 

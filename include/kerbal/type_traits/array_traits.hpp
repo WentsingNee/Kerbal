@@ -1,16 +1,20 @@
-/*
- * array_traits.hpp
- *
- *  Created on: 2019年5月5日
- *      Author: peter
+/**
+ * @file       array_traits.hpp
+ * @brief
+ * @date       2019-5-5
+ * @author     Peter
+ * @copyright
+ *      Peter of [ThinkSpirit Laboratory](http://thinkspirit.org/)
+ *   of [Nanjing University of Information Science & Technology](http://www.nuist.edu.cn/)
+ *   all rights reserved
  */
 
-#ifndef INCLUDE_KERBAL_TYPE_TRAITS_TYPE_TRAITS_DETAILS_ARRAY_TRAITS_HPP_
-#define INCLUDE_KERBAL_TYPE_TRAITS_TYPE_TRAITS_DETAILS_ARRAY_TRAITS_HPP_
+#ifndef KERBAL_TYPE_TRAITS_ARRAY_TRAITS_HPP
+#define KERBAL_TYPE_TRAITS_ARRAY_TRAITS_HPP
 
 #include <kerbal/ts/modules_ts/modules_ts.hpp>
 #include <cstddef>
-#include <kerbal/type_traits/type_traits_details/integral_constant.hpp>
+#include <kerbal/type_traits/integral_constant.hpp>
 
 namespace kerbal
 {
@@ -160,7 +164,8 @@ namespace kerbal
 		{
 		};
 
-	}
-}
+	} // namespace type_traits
 
-#endif /* INCLUDE_KERBAL_TYPE_TRAITS_TYPE_TRAITS_DETAILS_ARRAY_TRAITS_HPP_ */
+} // namespace kerbal
+
+#endif // KERBAL_TYPE_TRAITS_ARRAY_TRAITS_HPP

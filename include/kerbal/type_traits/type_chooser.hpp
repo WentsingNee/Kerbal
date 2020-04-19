@@ -1,16 +1,16 @@
 /**
  * @file       type_chooser.hpp
- * @brief      
- * @date       2019年5月14日
- * @author     peter
+ * @brief
+ * @date       2019-5-14
+ * @author     Peter
  * @copyright
- *      peter of [ThinkSpirit Laboratory](http://thinkspirit.org/)
+ *      Peter of [ThinkSpirit Laboratory](http://thinkspirit.org/)
  *   of [Nanjing University of Information Science & Technology](http://www.nuist.edu.cn/)
  *   all rights reserved
  */
-#ifndef INCLUDE_KERBAL_TYPE_TRAITS_TYPE_TRAITS_DETAILS_TYPE_CHOOSER_HPP_
-#define INCLUDE_KERBAL_TYPE_TRAITS_TYPE_TRAITS_DETAILS_TYPE_CHOOSER_HPP_
 
+#ifndef KERBAL_TYPE_TRAITS_TYPE_CHOOSER_HPP
+#define KERBAL_TYPE_TRAITS_TYPE_CHOOSER_HPP
 
 #include <kerbal/ts/modules_ts/modules_ts.hpp>
 
@@ -45,7 +45,8 @@ namespace kerbal
 
 #	endif
 
-	}
-}
+	} // namespace type_traits
 
-#endif /* INCLUDE_KERBAL_TYPE_TRAITS_TYPE_TRAITS_DETAILS_TYPE_CHOOSER_HPP_ */
+} // namespace kerbal
+
+#endif // KERBAL_TYPE_TRAITS_TYPE_CHOOSER_HPP

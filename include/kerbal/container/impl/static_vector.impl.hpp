@@ -15,8 +15,8 @@
 #include <kerbal/algorithm/modifier.hpp>
 #include <kerbal/compatibility/move.hpp>
 #include <kerbal/iterator/iterator.hpp>
-#include <kerbal/type_traits/type_traits_details/fundamental_deduction.hpp>
-#include <kerbal/type_traits/type_traits_details/pointer_deduction.hpp>
+#include <kerbal/type_traits/fundamental_deduction.hpp>
+#include <kerbal/type_traits/pointer_deduction.hpp>
 #include <kerbal/utility/throw_this_exception.hpp>
 
 #include <algorithm>

@@ -1,12 +1,16 @@
-/*
- * integral_constant.hpp
- *
- *  Created on: 2019年4月29日
- *      Author: peter
+/**
+ * @file       integral_constant.hpp
+ * @brief
+ * @date       2019-4-29
+ * @author     Peter
+ * @copyright
+ *      Peter of [ThinkSpirit Laboratory](http://thinkspirit.org/)
+ *   of [Nanjing University of Information Science & Technology](http://www.nuist.edu.cn/)
+ *   all rights reserved
  */
 
-#ifndef INCLUDE_KERBAL_TYPE_TRAITS_TYPE_TRAITS_DETAILS_INTEGRAL_CONSTANT_HPP_
-#define INCLUDE_KERBAL_TYPE_TRAITS_TYPE_TRAITS_DETAILS_INTEGRAL_CONSTANT_HPP_
+#ifndef KERBAL_TYPE_TRAITS_INTEGRAL_CONSTANT_HPP
+#define KERBAL_TYPE_TRAITS_INTEGRAL_CONSTANT_HPP
 
 #include <kerbal/ts/modules_ts/modules_ts.hpp>
 #include <kerbal/compatibility/constexpr.hpp>
@@ -70,7 +74,8 @@ namespace kerbal
 		{
 		};
 
-	}
-}
+	} // namespace type_traits
 
-#endif /* INCLUDE_KERBAL_TYPE_TRAITS_TYPE_TRAITS_DETAILS_INTEGRAL_CONSTANT_HPP_ */
+} // namespace kerbal
+
+#endif // KERBAL_TYPE_TRAITS_INTEGRAL_CONSTANT_HPP

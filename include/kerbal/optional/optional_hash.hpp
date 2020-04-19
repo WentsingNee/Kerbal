@@ -13,9 +13,9 @@
 #define KERBAL_OPTIONAL_OPTIONAL_HASH_HPP_
 
 #include <cstddef>
-#include <kerbal/type_traits/type_traits_details/enable_if.hpp>
+#include <kerbal/type_traits/enable_if.hpp>
 #include <kerbal/optional/optional_type_traits.hpp>
-#include <kerbal/data_struct/hash.hpp>
+#include <kerbal/hash/hash.hpp>
 
 namespace kerbal
 {

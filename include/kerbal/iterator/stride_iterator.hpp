@@ -19,7 +19,7 @@
 #include <kerbal/operators/dereferenceable.hpp>
 #include <kerbal/operators/incr_decr.hpp>
 #include <kerbal/operators/subtractable.hpp>
-#include <kerbal/type_traits/type_traits_details/pointer_deduction.hpp>
+#include <kerbal/type_traits/pointer_deduction.hpp>
 
 namespace kerbal
 {

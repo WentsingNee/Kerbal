@@ -15,8 +15,8 @@
 #include <kerbal/algorithm/binary_search.hpp>
 #include <kerbal/iterator/iterator.hpp>
 #include <kerbal/iterator/iterator_traits.hpp>
-#include <kerbal/type_traits/type_traits_details/enable_if.hpp>
-#include <kerbal/type_traits/type_traits_details/is_same.hpp>
+#include <kerbal/type_traits/enable_if.hpp>
+#include <kerbal/type_traits/is_same.hpp>
 #include <kerbal/utility/as_const.hpp>
 #include <kerbal/utility/compressed_pair.hpp>
 
