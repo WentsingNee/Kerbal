@@ -9,8 +9,8 @@
  *   all rights reserved
  */
 
-#ifndef KERBAL_CONTAINER_IMPL_FLAT_ORDERED_BASE_HPP_
-#define KERBAL_CONTAINER_IMPL_FLAT_ORDERED_BASE_HPP_
+#ifndef KERBAL_CONTAINER_IMPL_FLAT_ORDERED_BASE_HPP
+#define KERBAL_CONTAINER_IMPL_FLAT_ORDERED_BASE_HPP
 
 #include <kerbal/algorithm/binary_search.hpp>
 #include <kerbal/iterator/iterator.hpp>
@@ -594,7 +594,7 @@ namespace kerbal
 
 				protected:
 					std::pair<iterator, bool>
-					__unique_insert_helper(iterator lower_bound_pos, const_reference src)
+					__try_insert_helper(iterator lower_bound_pos, const_reference src)
 					{
 						Extract extract;
 						bool inserted = false;
@@ -610,21 +610,21 @@ namespace kerbal
 					}
 
 				public:
-					std::pair<iterator, bool> unique_insert(const_reference src)
+					std::pair<iterator, bool> try_insert(const_reference src)
 					{
-						return this->__unique_insert_helper(this->lower_bound(Extract()(src)), src);
+						return this->__try_insert_helper(this->lower_bound(Extract()(src)), src);
 					}
 
-					std::pair<iterator, bool> unique_insert(const_iterator hint, const_reference src)
+					std::pair<iterator, bool> try_insert(const_iterator hint, const_reference src)
 					{
-						return this->__unique_insert_helper(this->lower_bound(Extract()(src), hint), src);
+						return this->__try_insert_helper(this->lower_bound(Extract()(src), hint), src);
 					}
 
 #			if __cplusplus >= 201103L
 
 				protected:
 					std::pair<iterator, bool>
-					__unique_insert_helper(iterator lower_bound_pos, rvalue_reference src)
+					__try_insert_helper(iterator lower_bound_pos, rvalue_reference src)
 					{
 						Extract extract;
 						bool inserted = false;
@@ -640,24 +640,29 @@ namespace kerbal
 					}
 
 				public:
-					std::pair<iterator, bool> unique_insert(rvalue_reference src)
+					std::pair<iterator, bool> try_insert(rvalue_reference src)
 					{
-						return this->__unique_insert_helper(this->lower_bound(Extract()(src)), src);
+						return this->__try_insert_helper(this->lower_bound(Extract()(src)), src);
 					}
 
-					std::pair<iterator, bool> unique_insert(const_iterator hint, rvalue_reference src)
+					std::pair<iterator, bool> try_insert(const_iterator hint, rvalue_reference src)
 					{
-						return this->__unique_insert_helper(this->lower_bound(Extract()(src), hint), src);
+						return this->__try_insert_helper(this->lower_bound(Extract()(src), hint), src);
 					}
 #			endif
 
 					template <typename InputIterator>
-					void unique_insert(InputIterator first, InputIterator last)
+					typename kerbal::type_traits::enable_if<
+							kerbal::iterator::is_input_compatible_iterator<InputIterator>::value,
+							InputIterator
+					>::type
+					try_insert(InputIterator first, InputIterator last)
 					{
-						while (first != last /*&& !this->full()*/) {
-							this->unique_insert(*first);
+						while (first != last && this->size() != this->max_size()) {
+							this->try_insert(*first);
 							++first;
 						}
+						return first;
 					}
 
 					iterator insert(const_reference src)
@@ -687,7 +692,8 @@ namespace kerbal
 
 					template <typename InputIterator>
 					typename kerbal::type_traits::enable_if<
-							kerbal::iterator::is_input_compatible_iterator<InputIterator>::value
+							kerbal::iterator::is_input_compatible_iterator<InputIterator>::value,
+							InputIterator
 					>::type
 					insert(InputIterator first, InputIterator last)
 					{
@@ -695,6 +701,7 @@ namespace kerbal
 							this->insert(*first);
 							++first;
 						}
+						return first;
 					}
 
 					const_iterator erase(const_iterator pos)
@@ -735,4 +742,4 @@ namespace kerbal
 } // namespace kerbal
 
 
-#endif /* KERBAL_CONTAINER_IMPL_FLAT_ORDERED_BASE_HPP_ */
+#endif // KERBAL_CONTAINER_IMPL_FLAT_ORDERED_BASE_HPP

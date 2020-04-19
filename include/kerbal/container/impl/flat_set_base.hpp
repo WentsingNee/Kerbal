@@ -9,8 +9,8 @@
  *   all rights reserved
  */
 
-#ifndef KERBAL_CONTAINER_IMPL_FLAT_SET_BASE_HPP_
-#define KERBAL_CONTAINER_IMPL_FLAT_SET_BASE_HPP_
+#ifndef KERBAL_CONTAINER_IMPL_FLAT_SET_BASE_HPP
+#define KERBAL_CONTAINER_IMPL_FLAT_SET_BASE_HPP
 
 #include <kerbal/algorithm/binary_search.hpp>
 #include <kerbal/iterator/iterator.hpp>
@@ -342,24 +342,24 @@ namespace kerbal
 
 					std::pair<const_iterator, bool> insert(const_reference src)
 					{
-						return this->__ordered_agent().unique_insert(src);
+						return this->__ordered_agent().try_insert(src);
 					}
 
 					std::pair<const_iterator, bool> insert(const_iterator hint, const_reference src)
 					{
-						return this->__ordered_agent().unique_insert(hint, src);
+						return this->__ordered_agent().try_insert(hint, src);
 					}
 
 #			if __cplusplus >= 201103L
 
 					std::pair<const_iterator, bool> insert(rvalue_reference src)
 					{
-						return this->__ordered_agent().unique_insert(std::move(src));
+						return this->__ordered_agent().try_insert(std::move(src));
 					}
 
 					std::pair<const_iterator, bool> insert(const_iterator hint, rvalue_reference src)
 					{
-						return this->__ordered_agent().unique_insert(hint, std::move(src));
+						return this->__ordered_agent().try_insert(hint, std::move(src));
 					}
 
 #			endif
@@ -367,7 +367,7 @@ namespace kerbal
 					template <typename InputIterator>
 					void insert(InputIterator first, InputIterator last)
 					{
-						this->__ordered_agent().unique_insert(first, last);
+						this->__ordered_agent().try_insert(first, last);
 					}
 
 					const_iterator erase(const key_type & key)
@@ -542,4 +542,4 @@ namespace kerbal
 } // namespace kerbal
 
 
-#endif /* KERBAL_CONTAINER_IMPL_FLAT_SET_BASE_HPP_ */
+#endif // KERBAL_CONTAINER_IMPL_FLAT_SET_BASE_HPP
