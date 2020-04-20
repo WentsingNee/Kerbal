@@ -468,16 +468,16 @@ namespace kerbal
 				);
 
 				KERBAL_CONSTEXPR20
-				void __hook_back(node_base * p) KERBAL_NOEXCEPT;
+				void __hook_node_back(node_base * p) KERBAL_NOEXCEPT;
 
 				KERBAL_CONSTEXPR20
-				void __hook_front(node_base * p) KERBAL_NOEXCEPT;
+				void __hook_node_front(node_base * p) KERBAL_NOEXCEPT;
 
 				KERBAL_CONSTEXPR20
-				void __hook(const_iterator pos, node_base * p) KERBAL_NOEXCEPT;
+				void __hook_node(const_iterator pos, node_base * p) KERBAL_NOEXCEPT;
 
 				KERBAL_CONSTEXPR20
-				void __hook(const_iterator pos, node_base * start, node_base * back) KERBAL_NOEXCEPT;
+				void __hook_node(const_iterator pos, node_base * start, node_base * back) KERBAL_NOEXCEPT;
 
 				KERBAL_CONSTEXPR20
 				static void __swap_with_empty(single_list& not_empty_list, single_list& empty_list) KERBAL_NOEXCEPT;

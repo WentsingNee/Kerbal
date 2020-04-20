@@ -70,7 +70,7 @@ namespace kerbal
 				return;
 			}
 			std::pair<node*, node*> p(this->__build_n_new_nodes_unguarded(n));
-			this->__hook(this->cbegin(), p.first, p.second);
+			this->__hook_node(this->cbegin(), p.first, p.second);
 		}
 
 		template <typename Tp, typename Allocator>
@@ -82,7 +82,7 @@ namespace kerbal
 				return;
 			}
 			std::pair<node*, node*> p(this->__build_n_new_nodes_unguarded(n, val));
-			this->__hook(this->cbegin(), p.first, p.second);
+			this->__hook_node(this->cbegin(), p.first, p.second);
 		}
 
 		template <typename Tp, typename Allocator>
@@ -414,7 +414,7 @@ namespace kerbal
 		single_list<Tp, Allocator>::emplace_front(Args&& ... args)
 		{
 			node *p = this->__build_new_node(std::forward<Args>(args)...);
-			this->__hook_front(p);
+			this->__hook_node_front(p);
 			return p->value;
 		}
 
@@ -425,7 +425,7 @@ namespace kerbal
 		single_list<Tp, Allocator>::emplace_front()
 		{
 			node *p = this->__build_new_node();
-			this->__hook_front(p);
+			this->__hook_node_front(p);
 			return p->value;
 		}
 
@@ -435,7 +435,7 @@ namespace kerbal
 		single_list<Tp, Allocator>::emplace_front(const Arg0& arg0)
 		{
 			node *p = this->__build_new_node(arg0);
-			this->__hook_front(p);
+			this->__hook_node_front(p);
 			return p->value;
 		}
 
@@ -445,7 +445,7 @@ namespace kerbal
 		single_list<Tp, Allocator>::emplace_front(const Arg0& arg0, const Arg1& arg1)
 		{
 			node *p = this->__build_new_node(arg0, arg1);
-			this->__hook_front(p);
+			this->__hook_node_front(p);
 			return p->value;
 		}
 
@@ -455,7 +455,7 @@ namespace kerbal
 		single_list<Tp, Allocator>::emplace_front(const Arg0& arg0, const Arg1& arg1, const Arg2& arg2)
 		{
 			node *p = this->__build_new_node(arg0, arg1, arg2);
-			this->__hook_front(p);
+			this->__hook_node_front(p);
 			return p->value;
 		}
 
@@ -488,7 +488,7 @@ namespace kerbal
 		single_list<Tp, Allocator>::emplace_back(Args&& ... args)
 		{
 			node *p = this->__build_new_node(std::forward<Args>(args)...);
-			this->__hook_back(p);
+			this->__hook_node_back(p);
 			return p->value;
 		}
 
@@ -499,7 +499,7 @@ namespace kerbal
 		single_list<Tp, Allocator>::emplace_back()
 		{
 			node *p = this->__build_new_node();
-			this->__hook_back(p);
+			this->__hook_node_back(p);
 			return p->value;
 		}
 
@@ -509,7 +509,7 @@ namespace kerbal
 		single_list<Tp, Allocator>::emplace_back(const Arg0& arg0)
 		{
 			node *p = this->__build_new_node(arg0);
-			this->__hook_back(p);
+			this->__hook_node_back(p);
 			return p->value;
 		}
 
@@ -519,7 +519,7 @@ namespace kerbal
 		single_list<Tp, Allocator>::emplace_back(const Arg0& arg0, const Arg1& arg1)
 		{
 			node *p = this->__build_new_node(arg0, arg1);
-			this->__hook_back(p);
+			this->__hook_node_back(p);
 			return p->value;
 		}
 
@@ -529,7 +529,7 @@ namespace kerbal
 		single_list<Tp, Allocator>::emplace_back(const Arg0& arg0, const Arg1& arg1, const Arg2& arg2)
 		{
 			node *p = this->__build_new_node(arg0, arg1, arg2);
-			this->__hook_back(p);
+			this->__hook_node_back(p);
 			return p->value;
 		}
 
@@ -552,7 +552,7 @@ namespace kerbal
 				return pos.cast_to_mutable();
 			}
 			std::pair<node*, node*> range(this->__build_n_new_nodes_unguarded(n, val));
-			this->__hook(pos, range.first, range.second);
+			this->__hook_node(pos, range.first, range.second);
 			return pos.cast_to_mutable();
 		}
 
@@ -569,7 +569,7 @@ namespace kerbal
 				return pos.cast_to_mutable();
 			}
 			std::pair<node*, node*> range(this->__build_new_nodes_range_unguarded(first, last));
-			this->__hook(pos, range.first, range.second);
+			this->__hook_node(pos, range.first, range.second);
 			return pos.cast_to_mutable();
 		}
 
@@ -602,7 +602,7 @@ namespace kerbal
 		single_list<Tp, Allocator>::emplace(const_iterator pos, Args&& ... args)
 		{
 			node *p = this->__build_new_node(std::forward<Args>(args)...);
-			this->__hook(pos, p);
+			this->__hook_node(pos, p);
 			return pos.cast_to_mutable();
 		}
 
@@ -613,7 +613,7 @@ namespace kerbal
 		single_list<Tp, Allocator>::emplace(const_iterator pos)
 		{
 			node *p = this->__build_new_node();
-			this->__hook(pos, p);
+			this->__hook_node(pos, p);
 			return pos.cast_to_mutable();
 		}
 
@@ -623,7 +623,7 @@ namespace kerbal
 		single_list<Tp, Allocator>::emplace(const_iterator pos, const Arg0& arg0)
 		{
 			node *p = this->__build_new_node(arg0);
-			this->__hook(pos, p);
+			this->__hook_node(pos, p);
 			return pos.cast_to_mutable();
 		}
 
@@ -633,7 +633,7 @@ namespace kerbal
 		single_list<Tp, Allocator>::emplace(const_iterator pos, const Arg0& arg0, const Arg1& arg1)
 		{
 			node *p = this->__build_new_node(arg0, arg1);
-			this->__hook(pos, p);
+			this->__hook_node(pos, p);
 			return pos.cast_to_mutable();
 		}
 
@@ -643,7 +643,7 @@ namespace kerbal
 		single_list<Tp, Allocator>::emplace(const_iterator pos, const Arg0& arg0, const Arg1& arg1, const Arg2& arg2)
 		{
 			node *p = this->__build_new_node(arg0, arg1, arg2);
-			this->__hook(pos, p);
+			this->__hook_node(pos, p);
 			return pos.cast_to_mutable();
 		}
 
@@ -987,7 +987,7 @@ namespace kerbal
 		// pre-cond: if pos == cend then p->next == NULL;
 		template <typename Tp, typename Allocator>
 		KERBAL_CONSTEXPR20
-		void single_list<Tp, Allocator>::__hook_back(node_base * p) KERBAL_NOEXCEPT
+		void single_list<Tp, Allocator>::__hook_node_back(node_base * p) KERBAL_NOEXCEPT
 		{
 			node_base * prev = this->last_iter.current;
 			prev->next = p;
@@ -996,14 +996,14 @@ namespace kerbal
 
 		template <typename Tp, typename Allocator>
 		KERBAL_CONSTEXPR20
-		void single_list<Tp, Allocator>::__hook_front(node_base * p) KERBAL_NOEXCEPT
+		void single_list<Tp, Allocator>::__hook_node_front(node_base * p) KERBAL_NOEXCEPT
 		{
-			this->__hook(this->begin(), p);
+			this->__hook_node(this->begin(), p);
 		}
 
 		template <typename Tp, typename Allocator>
 		KERBAL_CONSTEXPR20
-		void single_list<Tp, Allocator>::__hook(const_iterator pos, node_base * p) KERBAL_NOEXCEPT
+		void single_list<Tp, Allocator>::__hook_node(const_iterator pos, node_base * p) KERBAL_NOEXCEPT
 		{
 			if (pos != this->cend()) {
 				iterator pos_mut(pos.cast_to_mutable());
@@ -1011,14 +1011,14 @@ namespace kerbal
 				p->next = prev->next;
 				prev->next = p;
 			} else {
-				this->__hook_back(p);
+				this->__hook_node_back(p);
 			}
 		}
 
 		// pre-cond: if pos == cend then back->next == NULL;
 		template <typename Tp, typename Allocator>
 		KERBAL_CONSTEXPR20
-		void single_list<Tp, Allocator>::__hook(const_iterator pos, node_base * start, node_base * back) KERBAL_NOEXCEPT
+		void single_list<Tp, Allocator>::__hook_node(const_iterator pos, node_base * start, node_base * back) KERBAL_NOEXCEPT
 		{
 			iterator pos_mut(pos.cast_to_mutable());
 			node_base * prev = pos_mut.current;
