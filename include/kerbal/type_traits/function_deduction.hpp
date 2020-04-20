@@ -661,7 +661,7 @@ namespace kerbal
 
 		MODULE_EXPORT
 		template <typename Ret, typename ... Args>
-		struct is_function<Ret(Args... ...)>: kerbal::type_traits::true_type {};
+		struct is_function<Ret(Args..., ...)>: kerbal::type_traits::true_type {};
 
 		MODULE_EXPORT
 		template <typename Ret, typename ... Args>
@@ -669,7 +669,7 @@ namespace kerbal
 
 		MODULE_EXPORT
 		template <typename Ret, typename ... Args>
-		struct is_function<Ret(Args... ...) const>: kerbal::type_traits::true_type {};
+		struct is_function<Ret(Args..., ...) const>: kerbal::type_traits::true_type {};
 
 		MODULE_EXPORT
 		template <typename Ret, typename ... Args>
@@ -677,7 +677,7 @@ namespace kerbal
 
 		MODULE_EXPORT
 		template <typename Ret, typename ... Args>
-		struct is_function<Ret(Args... ...) volatile>: kerbal::type_traits::true_type {};
+		struct is_function<Ret(Args..., ...) volatile>: kerbal::type_traits::true_type {};
 
 		MODULE_EXPORT
 		template <typename Ret, typename ... Args>
@@ -685,7 +685,7 @@ namespace kerbal
 
 		MODULE_EXPORT
 		template <typename Ret, typename ... Args>
-		struct is_function<Ret(Args... ...) const volatile>: kerbal::type_traits::true_type {};
+		struct is_function<Ret(Args..., ...) const volatile>: kerbal::type_traits::true_type {};
 
 		MODULE_EXPORT
 		template <typename Ret, typename ... Args>
@@ -693,7 +693,7 @@ namespace kerbal
 
 		MODULE_EXPORT
 		template <typename Ret, typename ... Args>
-		struct is_function<Ret(Args... ...) &>: kerbal::type_traits::true_type {};
+		struct is_function<Ret(Args..., ...) &>: kerbal::type_traits::true_type {};
 
 		MODULE_EXPORT
 		template <typename Ret, typename ... Args>
@@ -701,7 +701,7 @@ namespace kerbal
 
 		MODULE_EXPORT
 		template <typename Ret, typename ... Args>
-		struct is_function<Ret(Args... ...) const &>: kerbal::type_traits::true_type {};
+		struct is_function<Ret(Args..., ...) const &>: kerbal::type_traits::true_type {};
 
 		MODULE_EXPORT
 		template <typename Ret, typename ... Args>
@@ -709,7 +709,7 @@ namespace kerbal
 
 		MODULE_EXPORT
 		template <typename Ret, typename ... Args>
-		struct is_function<Ret(Args... ...) volatile &>: kerbal::type_traits::true_type {};
+		struct is_function<Ret(Args..., ...) volatile &>: kerbal::type_traits::true_type {};
 
 		MODULE_EXPORT
 		template <typename Ret, typename ... Args>
@@ -717,7 +717,7 @@ namespace kerbal
 
 		MODULE_EXPORT
 		template <typename Ret, typename ... Args>
-		struct is_function<Ret(Args... ...) const volatile &>: kerbal::type_traits::true_type {};
+		struct is_function<Ret(Args..., ...) const volatile &>: kerbal::type_traits::true_type {};
 
 		MODULE_EXPORT
 		template <typename Ret, typename ... Args>
@@ -725,7 +725,7 @@ namespace kerbal
 
 		MODULE_EXPORT
 		template <typename Ret, typename ... Args>
-		struct is_function<Ret(Args... ...) &&>: kerbal::type_traits::true_type {};
+		struct is_function<Ret(Args..., ...) &&>: kerbal::type_traits::true_type {};
 
 		MODULE_EXPORT
 		template <typename Ret, typename ... Args>
@@ -733,7 +733,7 @@ namespace kerbal
 
 		MODULE_EXPORT
 		template <typename Ret, typename ... Args>
-		struct is_function<Ret(Args... ...) const &&>: kerbal::type_traits::true_type {};
+		struct is_function<Ret(Args..., ...) const &&>: kerbal::type_traits::true_type {};
 
 		MODULE_EXPORT
 		template <typename Ret, typename ... Args>
@@ -741,7 +741,7 @@ namespace kerbal
 
 		MODULE_EXPORT
 		template <typename Ret, typename ... Args>
-		struct is_function<Ret(Args... ...) volatile &&>: kerbal::type_traits::true_type {};
+		struct is_function<Ret(Args..., ...) volatile &&>: kerbal::type_traits::true_type {};
 
 		MODULE_EXPORT
 		template <typename Ret, typename ... Args>
@@ -749,7 +749,7 @@ namespace kerbal
 
 		MODULE_EXPORT
 		template <typename Ret, typename ... Args>
-		struct is_function<Ret(Args... ...) const volatile &&>: kerbal::type_traits::true_type {};
+		struct is_function<Ret(Args..., ...) const volatile &&>: kerbal::type_traits::true_type {};
 
 #		if __cplusplus >= 201703L
 
@@ -759,7 +759,7 @@ namespace kerbal
 
 		MODULE_EXPORT
 		template <typename Ret, typename ... Args>
-		struct is_function<Ret(Args... ...) noexcept>: kerbal::type_traits::true_type {};
+		struct is_function<Ret(Args..., ...) noexcept>: kerbal::type_traits::true_type {};
 
 		MODULE_EXPORT
 		template <typename Ret, typename ... Args>
@@ -767,7 +767,7 @@ namespace kerbal
 
 		MODULE_EXPORT
 		template <typename Ret, typename ... Args>
-		struct is_function<Ret(Args... ...) const noexcept>: kerbal::type_traits::true_type {};
+		struct is_function<Ret(Args..., ...) const noexcept>: kerbal::type_traits::true_type {};
 
 		MODULE_EXPORT
 		template <typename Ret, typename ... Args>
@@ -775,7 +775,7 @@ namespace kerbal
 
 		MODULE_EXPORT
 		template <typename Ret, typename ... Args>
-		struct is_function<Ret(Args... ...) volatile noexcept>: kerbal::type_traits::true_type {};
+		struct is_function<Ret(Args..., ...) volatile noexcept>: kerbal::type_traits::true_type {};
 
 		MODULE_EXPORT
 		template <typename Ret, typename ... Args>
@@ -783,7 +783,7 @@ namespace kerbal
 
 		MODULE_EXPORT
 		template <typename Ret, typename ... Args>
-		struct is_function<Ret(Args... ...) const volatile noexcept>: kerbal::type_traits::true_type {};
+		struct is_function<Ret(Args..., ...) const volatile noexcept>: kerbal::type_traits::true_type {};
 
 		MODULE_EXPORT
 		template <typename Ret, typename ... Args>
@@ -791,7 +791,7 @@ namespace kerbal
 
 		MODULE_EXPORT
 		template <typename Ret, typename ... Args>
-		struct is_function<Ret(Args... ...) & noexcept>: kerbal::type_traits::true_type {};
+		struct is_function<Ret(Args..., ...) & noexcept>: kerbal::type_traits::true_type {};
 
 		MODULE_EXPORT
 		template <typename Ret, typename ... Args>
@@ -799,7 +799,7 @@ namespace kerbal
 
 		MODULE_EXPORT
 		template <typename Ret, typename ... Args>
-		struct is_function<Ret(Args... ...) const & noexcept>: kerbal::type_traits::true_type {};
+		struct is_function<Ret(Args..., ...) const & noexcept>: kerbal::type_traits::true_type {};
 
 		MODULE_EXPORT
 		template <typename Ret, typename ... Args>
@@ -807,7 +807,7 @@ namespace kerbal
 
 		MODULE_EXPORT
 		template <typename Ret, typename ... Args>
-		struct is_function<Ret(Args... ...) volatile & noexcept>: kerbal::type_traits::true_type {};
+		struct is_function<Ret(Args..., ...) volatile & noexcept>: kerbal::type_traits::true_type {};
 
 		MODULE_EXPORT
 		template <typename Ret, typename ... Args>
@@ -815,7 +815,7 @@ namespace kerbal
 
 		MODULE_EXPORT
 		template <typename Ret, typename ... Args>
-		struct is_function<Ret(Args... ...) const volatile & noexcept>: kerbal::type_traits::true_type {};
+		struct is_function<Ret(Args..., ...) const volatile & noexcept>: kerbal::type_traits::true_type {};
 
 		MODULE_EXPORT
 		template <typename Ret, typename ... Args>
@@ -823,7 +823,7 @@ namespace kerbal
 
 		MODULE_EXPORT
 		template <typename Ret, typename ... Args>
-		struct is_function<Ret(Args... ...) && noexcept>: kerbal::type_traits::true_type {};
+		struct is_function<Ret(Args..., ...) && noexcept>: kerbal::type_traits::true_type {};
 
 		MODULE_EXPORT
 		template <typename Ret, typename ... Args>
@@ -831,7 +831,7 @@ namespace kerbal
 
 		MODULE_EXPORT
 		template <typename Ret, typename ... Args>
-		struct is_function<Ret(Args... ...) const && noexcept>: kerbal::type_traits::true_type {};
+		struct is_function<Ret(Args..., ...) const && noexcept>: kerbal::type_traits::true_type {};
 
 		MODULE_EXPORT
 		template <typename Ret, typename ... Args>
@@ -839,7 +839,7 @@ namespace kerbal
 
 		MODULE_EXPORT
 		template <typename Ret, typename ... Args>
-		struct is_function<Ret(Args... ...) volatile && noexcept>: kerbal::type_traits::true_type {};
+		struct is_function<Ret(Args..., ...) volatile && noexcept>: kerbal::type_traits::true_type {};
 
 		MODULE_EXPORT
 		template <typename Ret, typename ... Args>
@@ -847,7 +847,7 @@ namespace kerbal
 
 		MODULE_EXPORT
 		template <typename Ret, typename ... Args>
-		struct is_function<Ret(Args... ...) const volatile && noexcept>: kerbal::type_traits::true_type {};
+		struct is_function<Ret(Args..., ...) const volatile && noexcept>: kerbal::type_traits::true_type {};
 
 #		endif // __cplusplus >= 201703L
 

@@ -2342,7 +2342,7 @@ namespace kerbal
 
 		MODULE_EXPORT
 		template <typename Ret, typename ... Args>
-		struct function_traits<Ret(Args... ...)>
+		struct function_traits<Ret(Args..., ...)>
 		{
 				typedef kerbal::type_traits::true_type			has_var_list;
 				typedef kerbal::type_traits::false_type			is_const;
@@ -2384,7 +2384,7 @@ namespace kerbal
 
 		MODULE_EXPORT
 		template <typename Ret, typename ... Args>
-		struct function_traits<Ret(Args... ...) const>
+		struct function_traits<Ret(Args..., ...) const>
 		{
 				typedef kerbal::type_traits::true_type			has_var_list;
 				typedef kerbal::type_traits::true_type			is_const;
@@ -2426,7 +2426,7 @@ namespace kerbal
 
 		MODULE_EXPORT
 		template <typename Ret, typename ... Args>
-		struct function_traits<Ret(Args... ...) volatile>
+		struct function_traits<Ret(Args..., ...) volatile>
 		{
 				typedef kerbal::type_traits::true_type			has_var_list;
 				typedef kerbal::type_traits::false_type			is_const;
@@ -2468,7 +2468,7 @@ namespace kerbal
 
 		MODULE_EXPORT
 		template <typename Ret, typename ... Args>
-		struct function_traits<Ret(Args... ...) const volatile>
+		struct function_traits<Ret(Args..., ...) const volatile>
 		{
 				typedef kerbal::type_traits::true_type			has_var_list;
 				typedef kerbal::type_traits::true_type			is_const;
@@ -2510,7 +2510,7 @@ namespace kerbal
 
 		MODULE_EXPORT
 		template <typename Ret, typename ... Args>
-		struct function_traits<Ret(Args... ...) &>
+		struct function_traits<Ret(Args..., ...) &>
 		{
 				typedef kerbal::type_traits::true_type			has_var_list;
 				typedef kerbal::type_traits::false_type			is_const;
@@ -2552,7 +2552,7 @@ namespace kerbal
 
 		MODULE_EXPORT
 		template <typename Ret, typename ... Args>
-		struct function_traits<Ret(Args... ...) const &>
+		struct function_traits<Ret(Args..., ...) const &>
 		{
 				typedef kerbal::type_traits::true_type			has_var_list;
 				typedef kerbal::type_traits::true_type			is_const;
@@ -2594,7 +2594,7 @@ namespace kerbal
 
 		MODULE_EXPORT
 		template <typename Ret, typename ... Args>
-		struct function_traits<Ret(Args... ...) volatile &>
+		struct function_traits<Ret(Args..., ...) volatile &>
 		{
 				typedef kerbal::type_traits::true_type			has_var_list;
 				typedef kerbal::type_traits::false_type			is_const;
@@ -2636,7 +2636,7 @@ namespace kerbal
 
 		MODULE_EXPORT
 		template <typename Ret, typename ... Args>
-		struct function_traits<Ret(Args... ...) const volatile &>
+		struct function_traits<Ret(Args..., ...) const volatile &>
 		{
 				typedef kerbal::type_traits::true_type			has_var_list;
 				typedef kerbal::type_traits::true_type			is_const;
@@ -2678,7 +2678,7 @@ namespace kerbal
 
 		MODULE_EXPORT
 		template <typename Ret, typename ... Args>
-		struct function_traits<Ret(Args... ...) &&>
+		struct function_traits<Ret(Args..., ...) &&>
 		{
 				typedef kerbal::type_traits::true_type			has_var_list;
 				typedef kerbal::type_traits::false_type			is_const;
@@ -2720,7 +2720,7 @@ namespace kerbal
 
 		MODULE_EXPORT
 		template <typename Ret, typename ... Args>
-		struct function_traits<Ret(Args... ...) const &&>
+		struct function_traits<Ret(Args..., ...) const &&>
 		{
 				typedef kerbal::type_traits::true_type			has_var_list;
 				typedef kerbal::type_traits::true_type			is_const;
@@ -2762,7 +2762,7 @@ namespace kerbal
 
 		MODULE_EXPORT
 		template <typename Ret, typename ... Args>
-		struct function_traits<Ret(Args... ...) volatile &&>
+		struct function_traits<Ret(Args..., ...) volatile &&>
 		{
 				typedef kerbal::type_traits::true_type			has_var_list;
 				typedef kerbal::type_traits::false_type			is_const;
@@ -2804,7 +2804,7 @@ namespace kerbal
 
 		MODULE_EXPORT
 		template <typename Ret, typename ... Args>
-		struct function_traits<Ret(Args... ...) const volatile &&>
+		struct function_traits<Ret(Args..., ...) const volatile &&>
 		{
 				typedef kerbal::type_traits::true_type			has_var_list;
 				typedef kerbal::type_traits::true_type			is_const;
@@ -2846,7 +2846,7 @@ namespace kerbal
 
 		MODULE_EXPORT
 		template <typename Ret, typename ... Args>
-		struct function_traits<Ret(Args... ...) noexcept>
+		struct function_traits<Ret(Args..., ...) noexcept>
 		{
 				typedef kerbal::type_traits::true_type			has_var_list;
 				typedef kerbal::type_traits::false_type			is_const;
@@ -2884,7 +2884,7 @@ namespace kerbal
 
 		MODULE_EXPORT
 		template <typename Ret, typename ... Args>
-		struct function_traits<Ret(Args... ...) const noexcept>
+		struct function_traits<Ret(Args..., ...) const noexcept>
 		{
 				typedef kerbal::type_traits::true_type			has_var_list;
 				typedef kerbal::type_traits::true_type			is_const;
@@ -2922,7 +2922,7 @@ namespace kerbal
 
 		MODULE_EXPORT
 		template <typename Ret, typename ... Args>
-		struct function_traits<Ret(Args... ...) volatile noexcept>
+		struct function_traits<Ret(Args..., ...) volatile noexcept>
 		{
 				typedef kerbal::type_traits::true_type			has_var_list;
 				typedef kerbal::type_traits::false_type			is_const;
@@ -2960,7 +2960,7 @@ namespace kerbal
 
 		MODULE_EXPORT
 		template <typename Ret, typename ... Args>
-		struct function_traits<Ret(Args... ...) const volatile noexcept>
+		struct function_traits<Ret(Args..., ...) const volatile noexcept>
 		{
 				typedef kerbal::type_traits::true_type			has_var_list;
 				typedef kerbal::type_traits::true_type			is_const;
@@ -2998,7 +2998,7 @@ namespace kerbal
 
 		MODULE_EXPORT
 		template <typename Ret, typename ... Args>
-		struct function_traits<Ret(Args... ...) & noexcept>
+		struct function_traits<Ret(Args..., ...) & noexcept>
 		{
 				typedef kerbal::type_traits::true_type			has_var_list;
 				typedef kerbal::type_traits::false_type			is_const;
@@ -3036,7 +3036,7 @@ namespace kerbal
 
 		MODULE_EXPORT
 		template <typename Ret, typename ... Args>
-		struct function_traits<Ret(Args... ...) const & noexcept>
+		struct function_traits<Ret(Args..., ...) const & noexcept>
 		{
 				typedef kerbal::type_traits::true_type			has_var_list;
 				typedef kerbal::type_traits::true_type			is_const;
@@ -3074,7 +3074,7 @@ namespace kerbal
 
 		MODULE_EXPORT
 		template <typename Ret, typename ... Args>
-		struct function_traits<Ret(Args... ...) volatile & noexcept>
+		struct function_traits<Ret(Args..., ...) volatile & noexcept>
 		{
 				typedef kerbal::type_traits::true_type			has_var_list;
 				typedef kerbal::type_traits::false_type			is_const;
@@ -3112,7 +3112,7 @@ namespace kerbal
 
 		MODULE_EXPORT
 		template <typename Ret, typename ... Args>
-		struct function_traits<Ret(Args... ...) const volatile & noexcept>
+		struct function_traits<Ret(Args..., ...) const volatile & noexcept>
 		{
 				typedef kerbal::type_traits::true_type			has_var_list;
 				typedef kerbal::type_traits::true_type			is_const;
@@ -3150,7 +3150,7 @@ namespace kerbal
 
 		MODULE_EXPORT
 		template <typename Ret, typename ... Args>
-		struct function_traits<Ret(Args... ...) && noexcept>
+		struct function_traits<Ret(Args..., ...) && noexcept>
 		{
 				typedef kerbal::type_traits::true_type			has_var_list;
 				typedef kerbal::type_traits::false_type			is_const;
@@ -3188,7 +3188,7 @@ namespace kerbal
 
 		MODULE_EXPORT
 		template <typename Ret, typename ... Args>
-		struct function_traits<Ret(Args... ...) const && noexcept>
+		struct function_traits<Ret(Args..., ...) const && noexcept>
 		{
 				typedef kerbal::type_traits::true_type			has_var_list;
 				typedef kerbal::type_traits::true_type			is_const;
@@ -3226,7 +3226,7 @@ namespace kerbal
 
 		MODULE_EXPORT
 		template <typename Ret, typename ... Args>
-		struct function_traits<Ret(Args... ...) volatile && noexcept>
+		struct function_traits<Ret(Args..., ...) volatile && noexcept>
 		{
 				typedef kerbal::type_traits::true_type			has_var_list;
 				typedef kerbal::type_traits::false_type			is_const;
@@ -3264,7 +3264,7 @@ namespace kerbal
 
 		MODULE_EXPORT
 		template <typename Ret, typename ... Args>
-		struct function_traits<Ret(Args... ...) const volatile && noexcept>
+		struct function_traits<Ret(Args..., ...) const volatile && noexcept>
 		{
 				typedef kerbal::type_traits::true_type			has_var_list;
 				typedef kerbal::type_traits::true_type			is_const;

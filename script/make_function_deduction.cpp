@@ -73,7 +73,7 @@ struct is_function<Ret(Args...%s)%s%s%s>: kerbal::type_traits::true_type {};
 		for (const auto & ref : {""s, " &"s, " &&"s}) {
 			for (const auto & v : {""s, " volatile"s}) {
 				for (const auto& c : {""s, " const"s}) {
-					for (const auto& var_arg : {""s, " ..."s}) {
+					for (const auto& var_arg : {""s, ", ..."s}) {
 						fmt::fprintf(cout, fmts, var_arg, c, v, ref);
 					}
 				}
@@ -92,7 +92,7 @@ struct is_function<Ret(Args...%s)%s%s%s noexcept>: kerbal::type_traits::true_typ
 			for (const auto & ref : {""s, " &"s, " &&"s}) {
 				for (const auto & v : {""s, " volatile"s}) {
 					for (const auto& c : {""s, " const"s}) {
-						for (const auto& var_arg : {""s, " ..."s}) {
+						for (const auto& var_arg : {""s, ", ..."s}) {
 							fmt::fprintf(cout, fmts, var_arg, c, v, ref);
 						}
 					}
