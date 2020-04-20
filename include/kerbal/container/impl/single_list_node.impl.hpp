@@ -61,7 +61,7 @@ namespace kerbal
 
 				protected:
 					KERBAL_CONSTEXPR
-					sl_node_base() KERBAL_NOEXCEPT :
+					explicit sl_node_base() KERBAL_NOEXCEPT :
 							next(NULL)
 					{
 					}
@@ -135,7 +135,7 @@ namespace kerbal
 
 #		else
 
-					sl_node(kerbal::utility::in_place_t)
+					explicit sl_node(kerbal::utility::in_place_t)
 							: super(), value()
 					{
 					}
@@ -147,13 +147,13 @@ namespace kerbal
 					}
 
 					template <typename Arg0, typename Arg1>
-					sl_node(kerbal::utility::in_place_t, const Arg0 & arg0, const Arg1 & arg1)
+					explicit sl_node(kerbal::utility::in_place_t, const Arg0 & arg0, const Arg1 & arg1)
 							: super(), value(arg0, arg1)
 					{
 					}
 
 					template <typename Arg0, typename Arg1, typename Arg2>
-					sl_node(kerbal::utility::in_place_t, const Arg0 & arg0, const Arg1 & arg1, const Arg2 & arg2)
+					explicit sl_node(kerbal::utility::in_place_t, const Arg0 & arg0, const Arg1 & arg1, const Arg2 & arg2)
 							: super(), value(arg0, arg1, arg2)
 					{
 					}
