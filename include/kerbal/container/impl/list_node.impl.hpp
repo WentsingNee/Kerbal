@@ -72,7 +72,7 @@ namespace kerbal
 					}
 
 					KERBAL_CONSTEXPR
-					list_node_base(init_list_node_ptr_to_self_tag) KERBAL_NOEXCEPT :
+					explicit list_node_base(init_list_node_ptr_to_self_tag) KERBAL_NOEXCEPT :
 							prev(this), next(this)
 					{
 					}
@@ -146,7 +146,7 @@ namespace kerbal
 
 #		else
 
-					list_node(kerbal::utility::in_place_t)
+					explicit list_node(kerbal::utility::in_place_t)
 							: super(), value()
 					{
 					}
@@ -158,13 +158,13 @@ namespace kerbal
 					}
 
 					template <typename Arg0, typename Arg1>
-					list_node(kerbal::utility::in_place_t, const Arg0 & arg0, const Arg1 & arg1)
+					explicit list_node(kerbal::utility::in_place_t, const Arg0 & arg0, const Arg1 & arg1)
 							: super(), value(arg0, arg1)
 					{
 					}
 
 					template <typename Arg0, typename Arg1, typename Arg2>
-					list_node(kerbal::utility::in_place_t, const Arg0 & arg0, const Arg1 & arg1, const Arg2 & arg2)
+					explicit list_node(kerbal::utility::in_place_t, const Arg0 & arg0, const Arg1 & arg1, const Arg2 & arg2)
 							: super(), value(arg0, arg1, arg2)
 					{
 					}

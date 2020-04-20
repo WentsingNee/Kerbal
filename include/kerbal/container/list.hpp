@@ -563,10 +563,10 @@ namespace kerbal
 				;
 
 				KERBAL_CONSTEXPR20
-				static void __hook(const_iterator pos, node_base * p) KERBAL_NOEXCEPT;
+				static void __hook_node(const_iterator pos, node_base * p) KERBAL_NOEXCEPT;
 
 				KERBAL_CONSTEXPR20
-				static void __hook(const_iterator pos, node_base * start, node_base * back) KERBAL_NOEXCEPT;
+				static void __hook_node(const_iterator pos, node_base * start, node_base * back) KERBAL_NOEXCEPT;
 
 				KERBAL_CONSTEXPR20
 				static void __swap_with_empty(list& not_empty_list, list& empty_list) KERBAL_NOEXCEPT;
