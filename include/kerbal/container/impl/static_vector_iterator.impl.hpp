@@ -121,7 +121,7 @@ namespace kerbal
 
 					KERBAL_CONSTEXPR14 reference operator[](const difference_type & dist) const KERBAL_NOEXCEPT
 					{
-						return *(*this + dist);
+						return *(static_cast<const DerivedIterator&>(*this) + dist);
 					}
 
 					friend KERBAL_CONSTEXPR bool operator<(const DerivedIterator & lhs, const DerivedIterator & rhs) KERBAL_NOEXCEPT

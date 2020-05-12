@@ -23,8 +23,13 @@
 
 namespace kerbal
 {
+
 	namespace iterator
 	{
+
+		template <typename Iter>
+		class stride_iterator;
+
 		namespace detail
 		{
 
@@ -34,17 +39,18 @@ namespace kerbal
 			template <typename Iter>
 			class __stride_iterator<Iter, std::forward_iterator_tag> :
 					public kerbal::operators::dereferenceable<
-							__stride_iterator<Iter, std::forward_iterator_tag>,
+							kerbal::iterator::stride_iterator<Iter>,
 							typename kerbal::iterator::iterator_traits<Iter>::pointer
 					>, // it->
 					public kerbal::operators::incrementable<
-							__stride_iterator<Iter, std::forward_iterator_tag>
+							kerbal::iterator::stride_iterator<Iter>
 					> // it++
 			{
 				private:
+					typedef kerbal::iterator::stride_iterator<Iter> derived;
 					typedef kerbal::iterator::iterator_traits<Iter> iterator_traits;
 
-				public:
+				protected:
 					typedef std::forward_iterator_tag						iterator_category;
 					typedef typename iterator_traits::value_type			value_type;
 					typedef typename iterator_traits::difference_type		difference_type;
@@ -59,14 +65,14 @@ namespace kerbal
 
 				public:
 					KERBAL_CONSTEXPR
-					__stride_iterator(const Iter& current, const Iter& end, const difference_type& stride, const difference_type& out = 0) :
-							stride(stride), out(out), current(current), end(end)
+					explicit __stride_iterator(const Iter& current, const Iter& end, const difference_type& stride, const difference_type& out = 0)
+							: stride(stride), out(out), current(current), end(end)
 					{
 					}
 
 					KERBAL_CONSTEXPR
-					__stride_iterator(const Iter&, const Iter& current, const Iter& end, const difference_type& stride, const difference_type& out = 0) :
-							stride(stride), out(out), current(current), end(end)
+					explicit __stride_iterator(const Iter&, const Iter& current, const Iter& end, const difference_type& stride, const difference_type& out = 0)
+							: stride(stride), out(out), current(current), end(end)
 					{
 					}
 
@@ -94,21 +100,21 @@ namespace kerbal
 					}
 
 				public:
-					KERBAL_CONSTEXPR14 __stride_iterator& operator++()
+					KERBAL_CONSTEXPR14 derived& operator++()
 					{
 						this->advance();
-						return *this;
+						return static_cast<derived&>(*this);
 					}
 
 					friend KERBAL_CONSTEXPR
-					bool operator==(const __stride_iterator& lhs, const __stride_iterator& rhs)
+					bool operator==(const derived& lhs, const derived& rhs)
 					{
 						return static_cast<bool>(lhs.current == rhs.current) &&
 								static_cast<bool>(lhs.out == rhs.out);
 					}
 
 					friend KERBAL_CONSTEXPR
-					bool operator!=(const __stride_iterator& lhs, const __stride_iterator& rhs)
+					bool operator!=(const derived& lhs, const derived& rhs)
 					{
 						return static_cast<bool>(lhs.current != rhs.current) ||
 							   static_cast<bool>(lhs.out != rhs.out);
@@ -119,16 +125,15 @@ namespace kerbal
 			class __stride_iterator<Iter, std::bidirectional_iterator_tag> :
 					public __stride_iterator<Iter, std::forward_iterator_tag>,
 					public kerbal::operators::decrementable<
-							__stride_iterator<Iter, std::bidirectional_iterator_tag>
+							kerbal::iterator::stride_iterator<Iter>
 					> // it--
 			{
 				private:
 					typedef __stride_iterator<Iter, std::forward_iterator_tag> super;
-
-				private:
+					typedef kerbal::iterator::stride_iterator<Iter> derived;
 					typedef kerbal::iterator::iterator_traits<Iter> iterator_traits;
 
-				public:
+				protected:
 					typedef std::bidirectional_iterator_tag					iterator_category;
 					typedef typename iterator_traits::value_type			value_type;
 					typedef typename iterator_traits::difference_type		difference_type;
@@ -140,13 +145,12 @@ namespace kerbal
 
 				public:
 					KERBAL_CONSTEXPR
-					__stride_iterator(const Iter& begin, const Iter& current, const Iter& end, const difference_type& stride, const difference_type& out = 0) :
-							super(current, end, stride, out), begin(begin)
+					explicit __stride_iterator(const Iter& begin, const Iter& current, const Iter& end, const difference_type& stride, const difference_type& out = 0)
+							: super(current, end, stride, out), begin(begin)
 					{
 					}
 
 				protected:
-
 					KERBAL_CONSTEXPR14 void retreat(difference_type times = 1)
 					{
 						difference_type strides = times * this->stride;
@@ -164,10 +168,10 @@ namespace kerbal
 					}
 
 				public:
-					KERBAL_CONSTEXPR14 __stride_iterator& operator--()
+					KERBAL_CONSTEXPR14 derived& operator--()
 					{
 						this->retreat();
-						return *this;
+						return static_cast<derived&>(*this);
 					}
 			};
 
@@ -175,25 +179,24 @@ namespace kerbal
 			class __stride_iterator<Iter, std::random_access_iterator_tag> :
 					public __stride_iterator<Iter, std::bidirectional_iterator_tag>,
 					public kerbal::operators::addable<
-							__stride_iterator<Iter, std::random_access_iterator_tag>,
+							kerbal::iterator::stride_iterator<Iter>,
 							typename kerbal::iterator::iterator_traits<Iter>::difference_type
 					>, // it + N
 					public kerbal::operators::addable_left<
-							__stride_iterator<Iter, std::random_access_iterator_tag>,
+							kerbal::iterator::stride_iterator<Iter>,
 							typename kerbal::iterator::iterator_traits<Iter>::difference_type
 					>, // N + it
 					public kerbal::operators::subtractable<
-							__stride_iterator<Iter, std::random_access_iterator_tag>,
+							kerbal::iterator::stride_iterator<Iter>,
 							typename kerbal::iterator::iterator_traits<Iter>::difference_type
 					> // it - N
 			{
 				private:
 					typedef __stride_iterator<Iter, std::bidirectional_iterator_tag> super;
-
-				private:
+					typedef kerbal::iterator::stride_iterator<Iter> derived;
 					typedef kerbal::iterator::iterator_traits<Iter> iterator_traits;
 
-				public:
+				protected:
 					typedef std::random_access_iterator_tag					iterator_category;
 					typedef typename iterator_traits::value_type			value_type;
 					typedef typename iterator_traits::difference_type		difference_type;
@@ -203,8 +206,8 @@ namespace kerbal
 
 				public:
 					KERBAL_CONSTEXPR
-					__stride_iterator(const Iter& begin, const Iter& current, const Iter& end, const difference_type& stride, const difference_type& out = 0) :
-							super(begin, current, end, stride, out)
+					explicit __stride_iterator(const Iter& begin, const Iter& current, const Iter& end, const difference_type& stride, const difference_type& out = 0)
+							: super(begin, current, end, stride, out)
 					{
 					}
 
@@ -213,32 +216,32 @@ namespace kerbal
 					 */
 					friend KERBAL_CONSTEXPR14
 					difference_type
-					operator-(const __stride_iterator& lhs, const __stride_iterator& rhs)
+					operator-(const derived& lhs, const derived& rhs)
 					{
 						difference_type dist(kerbal::iterator::distance(rhs.current, lhs.current) - rhs.out + lhs.out);
 						dist /= lhs.stride;
 						return dist;
 					}
 
-					KERBAL_CONSTEXPR14 __stride_iterator& operator+=(const difference_type& delta)
+					KERBAL_CONSTEXPR14 derived& operator+=(const difference_type& delta)
 					{
 						this->advance(delta);
-						return *this;
+						return static_cast<derived&>(*this);
 					}
 
-					KERBAL_CONSTEXPR14 __stride_iterator& operator-=(const difference_type& delta)
+					KERBAL_CONSTEXPR14 derived& operator-=(const difference_type& delta)
 					{
 						this->retreat(delta);
-						return *this;
+						return static_cast<derived&>(*this);
 					}
 
 					KERBAL_CONSTEXPR14 reference operator[](const difference_type& dist) const
 					{
-						return *(*this + dist);
+						return *(static_cast<const derived&>(*this) + dist);
 					}
 
 					friend KERBAL_CONSTEXPR14
-					bool operator<(const __stride_iterator& lhs, const __stride_iterator& rhs)
+					bool operator<(const derived& lhs, const derived& rhs)
 					{
 						if (lhs.current < rhs.current) {
 							return true;
@@ -249,7 +252,7 @@ namespace kerbal
 					}
 
 					friend KERBAL_CONSTEXPR14
-					bool operator<=(const __stride_iterator& lhs, const __stride_iterator& rhs)
+					bool operator<=(const derived& lhs, const derived& rhs)
 					{
 						if (lhs.current < rhs.current) {
 							return true;
@@ -260,7 +263,7 @@ namespace kerbal
 					}
 
 					friend KERBAL_CONSTEXPR14
-					bool operator>(const __stride_iterator& lhs, const __stride_iterator& rhs)
+					bool operator>(const derived& lhs, const derived& rhs)
 					{
 						if (lhs.current < rhs.current) {
 							return false;
@@ -271,7 +274,7 @@ namespace kerbal
 					}
 
 					friend KERBAL_CONSTEXPR14
-					bool operator>=(const __stride_iterator& lhs, const __stride_iterator& rhs)
+					bool operator>=(const derived& lhs, const derived& rhs)
 					{
 						if (lhs.current < rhs.current) {
 							return false;
@@ -300,17 +303,28 @@ namespace kerbal
 
 			public:
 				KERBAL_CONSTEXPR
-				stride_iterator(const Iter& begin, const Iter& current, const Iter& end, const difference_type& stride, const difference_type& out = 0) :
+				explicit stride_iterator(const Iter& begin, const Iter& current, const Iter& end, const difference_type& stride, const difference_type& out = 0) :
 						super(begin, current, end, stride, out)
 				{
 				}
 
 		};
 
+#	if __cplusplus >= 201703L
+
+		template <typename Iter>
+		stride_iterator(
+				Iter, Iter, Iter,
+				const typename kerbal::iterator::iterator_traits<Iter>::difference_type&,
+				const typename kerbal::iterator::iterator_traits<Iter>::difference_type& = 0)
+		-> stride_iterator<Iter>;
+
+#	endif
+
 		template <typename Iter>
 		KERBAL_CONSTEXPR
 		stride_iterator<Iter>
-		make_stride_iterator(const Iter& begin, const Iter& current, const Iter& end,
+		make_stride_iterator(Iter begin, Iter current, Iter end,
 							const typename kerbal::iterator::iterator_traits<Iter>::difference_type& stride,
 							const typename kerbal::iterator::iterator_traits<Iter>::difference_type& out = 0)
 		{

@@ -9,8 +9,8 @@
  *   all rights reserved
  */
 
-#ifndef KERBAL_ITERATOR_ITERATOR_HPP_
-#define KERBAL_ITERATOR_ITERATOR_HPP_
+#ifndef KERBAL_ITERATOR_ITERATOR_HPP
+#define KERBAL_ITERATOR_ITERATOR_HPP
 
 #include <kerbal/compatibility/constexpr.hpp>
 #include <kerbal/compatibility/noexcept.hpp>
@@ -119,36 +119,90 @@ namespace kerbal
 
 		template <typename BidirectionalIterator, typename Distance>
 		KERBAL_CONSTEXPR14
-		BidirectionalIterator prev(BidirectionalIterator it, Distance dist)
+		BidirectionalIterator __prev(BidirectionalIterator it, Distance dist, std::bidirectional_iterator_tag)
 		{
 			kerbal::iterator::advance(it, -dist);
 			return it;
 		}
 
+		template <typename RandomAccessIterator, typename Distance>
+		KERBAL_CONSTEXPR
+		RandomAccessIterator __prev(RandomAccessIterator it, Distance dist, std::random_access_iterator_tag)
+		{
+			return it - dist;
+		}
+
+		template <typename BidirectionalIterator, typename Distance>
+		KERBAL_CONSTEXPR
+		BidirectionalIterator prev(BidirectionalIterator it, Distance dist)
+		{
+			return kerbal::iterator::__prev(it, dist, kerbal::iterator::iterator_category(it));
+		}
+
 		template <typename BidirectionalIterator>
 		KERBAL_CONSTEXPR14
-		BidirectionalIterator prev(BidirectionalIterator it)
-				KERBAL_CONDITIONAL_NOEXCEPT(noexcept(--it))
+		BidirectionalIterator __prev(BidirectionalIterator it, std::bidirectional_iterator_tag)
 		{
 			--it;
 			return it;
 		}
 
+		template <typename RandomAccessIterator>
+		KERBAL_CONSTEXPR
+		RandomAccessIterator __prev(RandomAccessIterator it, std::random_access_iterator_tag)
+		{
+			return it - 1;
+		}
+
+		template <typename BidirectionalIterator>
+		KERBAL_CONSTEXPR
+		BidirectionalIterator prev(BidirectionalIterator it)
+		{
+			return kerbal::iterator::__prev(it, kerbal::iterator::iterator_category(it));
+		}
+
 		template <typename InputIterator, typename Distance>
 		KERBAL_CONSTEXPR14
-		InputIterator next(InputIterator it, Distance dist)
+		InputIterator __next(InputIterator it, Distance dist, std::input_iterator_tag)
 		{
 			kerbal::iterator::advance(it, dist);
 			return it;
 		}
 
+		template <typename RandomAccessIterator, typename Distance>
+		KERBAL_CONSTEXPR
+		RandomAccessIterator __next(RandomAccessIterator it, Distance dist, std::random_access_iterator_tag)
+		{
+			return it + dist;
+		}
+
+		template <typename InputIterator, typename Distance>
+		KERBAL_CONSTEXPR
+		InputIterator next(InputIterator it, Distance dist)
+		{
+			return kerbal::iterator::__next(it, dist, kerbal::iterator::iterator_category(it));
+		}
+
 		template <typename InputIterator>
 		KERBAL_CONSTEXPR14
-		InputIterator next(InputIterator it)
-				KERBAL_CONDITIONAL_NOEXCEPT(noexcept(++it))
+		InputIterator __next(InputIterator it, std::input_iterator_tag)
 		{
 			++it;
 			return it;
+		}
+
+		template <typename RandomAccessIterator>
+		KERBAL_CONSTEXPR
+		RandomAccessIterator __next(RandomAccessIterator it, std::random_access_iterator_tag)
+		{
+			return it + 1;
+		}
+
+		template <typename InputIterator>
+		KERBAL_CONSTEXPR
+		InputIterator next(InputIterator it)
+		{
+			return kerbal::iterator::__next(it, kerbal::iterator::iterator_category(it));
 		}
 
 		template <typename InputIterator, typename Distance>
@@ -457,4 +511,4 @@ namespace kerbal
 
 } // namespace kerbal
 
-#endif /* KERBAL_ITERATOR_ITERATOR_HPP_ */
+#endif // KERBAL_ITERATOR_ITERATOR_HPP
