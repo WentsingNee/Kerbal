@@ -145,9 +145,9 @@ namespace kerbal
 				}
 			}
 
-			template <typename ForwardIterator, typename remove_volatile_type>
+			template <typename RandomAccessIterator, typename remove_volatile_type>
 			KERBAL_CONSTEXPR14
-			void __pigeonhole_sort_back_fill_n(ForwardIterator & first, size_t cnt, remove_volatile_type current, std::random_access_iterator_tag)
+			void __pigeonhole_sort_back_fill_n(RandomAccessIterator & first, size_t cnt, remove_volatile_type current, std::random_access_iterator_tag)
 			{
 
 #	define EACH() do {\
@@ -635,6 +635,42 @@ namespace kerbal
 
 		template <typename BidirectionalIterator, typename Compare>
 		KERBAL_CONSTEXPR14
+		void directly_insertion_sort(BidirectionalIterator first, BidirectionalIterator last, Compare cmp)
+		{
+			typedef BidirectionalIterator iterator;
+			typedef typename kerbal::iterator::iterator_traits<iterator>::value_type value_type;
+
+			for (iterator i(first); i != last; ++i) {
+				iterator insert_pos(i);
+				while (insert_pos != first) {
+					--insert_pos;
+					if (!static_cast<bool>(cmp(*i, *insert_pos))) {
+						// *i >= *insert_pos
+						++insert_pos;
+						break;
+					}
+				}
+				if (insert_pos != i) {
+					value_type value(kerbal::compatibility::to_xvalue(*i));
+					kerbal::algorithm::move_backward(insert_pos, i, kerbal::iterator::next(i));
+					*insert_pos = kerbal::compatibility::to_xvalue(value);
+				}
+			}
+		}
+
+		template <typename BidirectionalIterator>
+		KERBAL_CONSTEXPR14
+		void directly_insertion_sort(BidirectionalIterator first, BidirectionalIterator last)
+		{
+			typedef BidirectionalIterator iterator;
+			typedef typename kerbal::iterator::iterator_traits<iterator>::value_type value_type;
+
+			kerbal::algorithm::directly_insertion_sort(first, last, std::less<value_type>());
+		}
+
+
+		template <typename BidirectionalIterator, typename Compare>
+		KERBAL_CONSTEXPR14
 		void insertion_sort(BidirectionalIterator first, BidirectionalIterator last, Compare cmp)
 		{
 			typedef BidirectionalIterator iterator;
@@ -664,8 +700,8 @@ namespace kerbal
 		template <typename differece_type>
 		struct shell_sort_reduce_by_half_policy
 		{
-				KERBAL_CONSTEXPR14
-				differece_type init_stride(differece_type dist) const
+				KERBAL_CONSTEXPR
+				static differece_type init_stride(differece_type dist)
 				{
 					return dist / 2;
 				}
@@ -685,7 +721,7 @@ namespace kerbal
 		struct shell_sort_hibbard_policy
 		{
 				KERBAL_CONSTEXPR14
-				differece_type init_stride(differece_type dist) const
+				static differece_type init_stride(differece_type dist)
 				{
 					if (dist == 0) {
 						return 0;
@@ -715,6 +751,56 @@ namespace kerbal
 				}
 		};
 
+		template <typename differece_type>
+		struct shell_sort_minimun_limit_hibbard_policy
+		{
+			differece_type limit;
+
+			KERBAL_CONSTEXPR
+			explicit shell_sort_minimun_limit_hibbard_policy(differece_type limit = 8)
+					: limit(limit)
+			{
+			}
+
+			KERBAL_CONSTEXPR14
+			differece_type init_stride(differece_type dist) const
+			{
+				if (dist == 0) {
+					return 0;
+				}
+
+				if (dist <= limit) {
+					return 1;
+				}
+
+				int cnt = 0;
+				while ((dist >> cnt) != 1) {
+					++cnt;
+				}
+				for (int i = 0; i < cnt; ++i) {
+					dist |= static_cast<differece_type>(1) << i;
+				}
+				/*
+					dist |= mask(cnt);
+				 */
+				return dist;
+			}
+
+			KERBAL_CONSTEXPR14
+			bool operator()(differece_type & stride) const
+			{
+				if (stride == 0 || stride == 1) {
+					return false;
+				}
+				if (stride <= limit) {
+					stride = 1;
+					return true;
+				}
+				stride = (stride + 1) / 2 - 1;
+				return true;
+			}
+		};
+
 		template <typename BidirectionalIterator, typename Compare, typename GapReducePolicy>
 		KERBAL_CONSTEXPR14
 		void shell_sort(BidirectionalIterator first, BidirectionalIterator last, Compare cmp, GapReducePolicy gap_reduce_policy)
@@ -726,17 +812,16 @@ namespace kerbal
 			difference_type stride(gap_reduce_policy.init_stride(dist));
 			do {
 				if (stride == 1) {
-					kerbal::algorithm::insertion_sort(first, last, cmp);
+					kerbal::algorithm::directly_insertion_sort(first, last, cmp);
+					break;
 				} else {
 					iterator section_first(first); // first + i
 					for (difference_type i = 0; i < stride; ++i) {
 						kerbal::iterator::stride_iterator<iterator> stride_first(first, section_first, last, stride);
-						difference_type out = 0;
-						if ((dist - i) % stride != 0) {
-							out = stride - (dist - i) % stride;
-						}
+						difference_type m((dist - i) % stride);
+						difference_type out((m != 0) ? (stride - m) : 0);
 						kerbal::iterator::stride_iterator<iterator> stride_last(first, last, last, stride, out);
-						kerbal::algorithm::insertion_sort(stride_first, stride_last, cmp);
+						kerbal::algorithm::directly_insertion_sort(stride_first, stride_last, cmp);
 						++section_first;
 					}
 				}
@@ -776,13 +861,15 @@ namespace kerbal
 					const iterator& back;
 					CompareFunction& cmp;
 
-					KERBAL_CONSTEXPR __quick_sort_U(const iterator& back, CompareFunction& cmp) KERBAL_NOEXCEPT :
+					KERBAL_CONSTEXPR
+					__quick_sort_U(const iterator& back, CompareFunction& cmp) KERBAL_NOEXCEPT :
 							back(back), cmp(cmp)
 					{
 					}
 
-					KERBAL_CONSTEXPR bool operator()(const_reference val) const
-					KERBAL_CONDITIONAL_NOEXCEPT(noexcept(cmp(val, *back)))
+					KERBAL_CONSTEXPR
+					bool operator()(const_reference val) const
+							KERBAL_CONDITIONAL_NOEXCEPT(noexcept(cmp(val, *back)))
 					{
 						return cmp(val, *back);
 					}
@@ -790,8 +877,10 @@ namespace kerbal
 
 			template <typename BidirectionalIterator, typename Compare>
 			KERBAL_CONSTEXPR14
-			void __quick_sort_adjust_pivot(BidirectionalIterator first, BidirectionalIterator mid, BidirectionalIterator back, Compare cmp)
+			void __quick_sort_adjust_pivot(BidirectionalIterator first, BidirectionalIterator back, Compare cmp)
 			{
+				typedef BidirectionalIterator iterator;
+				iterator mid(kerbal::iterator::midden_iterator(first, back));
 				if (cmp(*first, *mid)) {
 					if (cmp(*mid, *back)) {
 						// first < mid < back
@@ -838,20 +927,18 @@ namespace kerbal
 		void quick_sort(BidirectionalIterator first, BidirectionalIterator last, Compare cmp)
 		{
 			typedef BidirectionalIterator iterator;
-			typedef typename kerbal::iterator::iterator_traits<iterator>::difference_type difference_type;
 
 			if (!kerbal::iterator::distance_greater_than(first, last, 16)) { // dist <= 16
 				kerbal::algorithm::insertion_sort(first, last, cmp);
 				return;
 			}
 
+//			if (first == last) {
+//				return;
+//			}
+
 			iterator back(kerbal::iterator::prev(last));
-
-			{
-				iterator mid(kerbal::iterator::midden_iterator(first, last));
-				detail::__quick_sort_adjust_pivot(first, mid, back, cmp);
-			}
-
+			detail::__quick_sort_adjust_pivot(first, back, cmp);
 			iterator partition_point(kerbal::algorithm::partition(first, back, detail::__quick_sort_U<iterator, Compare>(back, cmp)));
 
 			if (partition_point != back) {
@@ -878,7 +965,6 @@ namespace kerbal
 		void __nonrecursive_qsort(BidirectionalIterator first, BidirectionalIterator last, Compare cmp)
 		{
 			typedef BidirectionalIterator iterator;
-			typedef typename kerbal::iterator::iterator_traits<iterator>::difference_type difference_type;
 
 			StackBuffer st;
 			st.push(std::make_pair(first, last));
@@ -894,12 +980,7 @@ namespace kerbal
 				}
 
 				iterator back(kerbal::iterator::prev(last));
-
-				{
-					iterator mid(kerbal::iterator::midden_iterator(first, last));
-					detail::__quick_sort_adjust_pivot(first, mid, back, cmp);
-				}
-
+				detail::__quick_sort_adjust_pivot(first, back, cmp);
 				iterator partition_point(kerbal::algorithm::partition(first, back, detail::__quick_sort_U<iterator, Compare>(back, cmp)));
 
 				if (partition_point != back) {
@@ -930,6 +1011,72 @@ namespace kerbal
 
 			kerbal::algorithm::nonrecursive_qsort(first, last, std::less<value_type>());
 		}
+
+
+
+		namespace detail
+		{
+			template <typename Size>
+			KERBAL_CONSTEXPR14
+			Size __lg(Size n)
+			{
+				Size k = 0;
+				while (n > 1) {
+					++k;
+					n >>= 1;
+				}
+				return k;
+			}
+		}
+
+		template <typename BidirectionalIterator, typename Compare>
+		KERBAL_CONSTEXPR14
+		void __intro_sort(BidirectionalIterator first, BidirectionalIterator last, Compare cmp, size_t depth_limit)
+		{
+			typedef BidirectionalIterator iterator;
+			typedef typename kerbal::iterator::iterator_traits<iterator>::difference_type difference_type;
+
+			if (!kerbal::iterator::distance_greater_than(first, last, 16)) { // dist <= 16
+				kerbal::algorithm::insertion_sort(first, last, cmp);
+				return;
+			}
+
+			if (depth_limit == 0) {
+				kerbal::algorithm::heap_sort(first, last, cmp);
+				return;
+			}
+
+			iterator back(kerbal::iterator::prev(last));
+			detail::__quick_sort_adjust_pivot(first, back, cmp);
+			iterator partition_point(kerbal::algorithm::partition(first, back, detail::__quick_sort_U<iterator, Compare>(back, cmp)));
+
+			if (partition_point != back) {
+				if (cmp(*back, *partition_point)) {
+					std::iter_swap(back, partition_point);
+				}
+				kerbal::algorithm::__intro_sort(kerbal::iterator::next(partition_point), last, cmp, depth_limit - 1);
+			}
+			kerbal::algorithm::__intro_sort(first, partition_point, cmp, depth_limit - 1);
+		}
+
+		template <typename BidirectionalIterator, typename Compare>
+		KERBAL_CONSTEXPR14
+		void intro_sort(BidirectionalIterator first, BidirectionalIterator last, Compare cmp)
+		{
+			kerbal::algorithm::__intro_sort(first, last, cmp, detail::__lg(kerbal::iterator::distance(first, last)));
+		}
+
+		template <typename BidirectionalIterator>
+		KERBAL_CONSTEXPR14
+		void intro_sort(BidirectionalIterator first, BidirectionalIterator last)
+		{
+			typedef BidirectionalIterator iterator;
+			typedef typename kerbal::iterator::iterator_traits<iterator>::value_type value_type;
+
+			kerbal::algorithm::intro_sort(first, last, std::less<value_type>());
+		}
+
+
 
 		template <typename ForwardIterator, typename Compare>
 		KERBAL_CONSTEXPR14
