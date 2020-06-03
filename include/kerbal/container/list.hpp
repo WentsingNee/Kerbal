@@ -139,7 +139,9 @@ namespace kerbal
 #		endif
 
 				KERBAL_CONSTEXPR20
-				~list();
+				~list() KERBAL_CONDITIONAL_NOEXCEPT(
+						noexcept(kerbal::utility::declthis<list>()->clear())
+				);
 
 			//===================
 			//assign
@@ -337,9 +339,6 @@ namespace kerbal
 				iterator insert(const_iterator pos, const_reference val);
 
 				KERBAL_CONSTEXPR20
-				iterator insert(const_iterator pos, size_type n);
-
-				KERBAL_CONSTEXPR20
 				iterator insert(const_iterator pos, size_type n, const_reference val);
 
 				template <typename InputIterator>
@@ -400,7 +399,11 @@ namespace kerbal
 			//operation
 
 				KERBAL_CONSTEXPR20
-				void clear();
+				void clear() KERBAL_CONDITIONAL_NOEXCEPT(noexcept(
+						kerbal::utility::declthis<list>()->erase(
+								kerbal::utility::declthis<list>()->cbegin(), kerbal::utility::declthis<list>()->cend()
+						)
+				));
 
 				KERBAL_CONSTEXPR20
 				void resize(size_type count);

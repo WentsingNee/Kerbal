@@ -712,11 +712,14 @@ namespace kerbal
 		void single_list<Tp, Allocator>::resize(size_type count)
 		{
 			const_iterator it(this->cbegin());
-			difference_type size = kerbal::iterator::advance_at_most(it, count, this->cend());
+			const_iterator cend(this->cend());
+			difference_type size = kerbal::iterator::advance_at_most(it, count, cend);
 			if (size == count) {
-				this->erase(it, this->cend());
+				this->erase(it, cend);
 			} else {
-				this->insert(this->cend(), count - size);
+				// note: count - size != 0
+				std::pair<node*, node*> range(this->__build_n_new_nodes_unguarded(count - size));
+				this->__hook_node(cend, range.first, range.second);
 			}
 		}
 

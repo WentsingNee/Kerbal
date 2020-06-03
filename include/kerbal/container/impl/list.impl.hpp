@@ -131,6 +131,9 @@ namespace kerbal
 		template <typename Tp, typename Allocator>
 		KERBAL_CONSTEXPR20
 		list<Tp, Allocator>::~list()
+				KERBAL_CONDITIONAL_NOEXCEPT(
+						noexcept(kerbal::utility::declthis<list>()->clear())
+				)
 		{
 			this->clear();
 		}
@@ -574,19 +577,6 @@ namespace kerbal
 		template <typename Tp, typename Allocator>
 		KERBAL_CONSTEXPR20
 		typename list<Tp, Allocator>::iterator
-		list<Tp, Allocator>::insert(const_iterator pos, size_type n)
-		{
-			if (n == 0) {
-				return pos.cast_to_mutable();
-			}
-			std::pair<node*, node*> range(this->__build_n_new_nodes_unguarded(n));
-			__hook_node(pos, range.first, range.second);
-			return iterator(range.first);
-		}
-
-		template <typename Tp, typename Allocator>
-		KERBAL_CONSTEXPR20
-		typename list<Tp, Allocator>::iterator
 		list<Tp, Allocator>::insert(const_iterator pos, size_type n, const_reference val)
 		{
 			if (n == 0) {
@@ -743,6 +733,11 @@ namespace kerbal
 		template <typename Tp, typename Allocator>
 		KERBAL_CONSTEXPR20
 		void list<Tp, Allocator>::clear()
+				KERBAL_CONDITIONAL_NOEXCEPT(noexcept(
+					kerbal::utility::declthis<list>()->erase(
+							kerbal::utility::declthis<list>()->cbegin(), kerbal::utility::declthis<list>()->cend()
+					)
+				))
 		{
 			this->erase(this->cbegin(), this->cend());
 		}
@@ -752,11 +747,14 @@ namespace kerbal
 		void list<Tp, Allocator>::resize(size_type count)
 		{
 			const_iterator it(this->cbegin());
-			difference_type size = kerbal::iterator::advance_at_most(it, count, this->cend());
+			const_iterator cend(this->cend());
+			difference_type size = kerbal::iterator::advance_at_most(it, count, cend);
 			if (size == count) {
-				this->erase(it, this->cend());
+				this->erase(it, cend);
 			} else {
-				this->insert(this->cend(), count - size);
+				// note: count - size != 0
+				std::pair<node*, node*> range(this->__build_n_new_nodes_unguarded(count - size));
+				__hook_node(cend, range.first, range.second);
 			}
 		}
 
