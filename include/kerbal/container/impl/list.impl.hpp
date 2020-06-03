@@ -130,7 +130,7 @@ namespace kerbal
 
 		template <typename Tp, typename Allocator>
 		KERBAL_CONSTEXPR20
-		list<Tp, Allocator>::~list()
+		list<Tp, Allocator>::~list() KERBAL_CONDITIONAL_NOEXCEPT(noexcept(clear()))
 		{
 			this->clear();
 		}
@@ -143,7 +143,7 @@ namespace kerbal
 		list<Tp, Allocator>&
 		list<Tp, Allocator>::operator=(const list& src)
 				KERBAL_CONDITIONAL_NOEXCEPT(
-						noexcept(kerbal::utility::declthis<list>()->assign(src))
+						noexcept(assign(src))
 				)
 		{
 			this->assign(src);
@@ -157,7 +157,7 @@ namespace kerbal
 		list<Tp, Allocator>&
 		list<Tp, Allocator>::operator=(list&& src)
 				KERBAL_CONDITIONAL_NOEXCEPT(
-						noexcept(kerbal::utility::declthis<list>()->assign(std::move(src)))
+						noexcept(assign(std::move(src)))
 				)
 		{
 			this->assign(std::move(src));
@@ -169,7 +169,7 @@ namespace kerbal
 		list<Tp, Allocator>&
 		list<Tp, Allocator>::operator=(std::initializer_list<value_type> src)
 				KERBAL_CONDITIONAL_NOEXCEPT(
-						noexcept(kerbal::utility::declthis<list>()->assign(src))
+						noexcept(assign(src))
 				)
 		{
 			this->assign(src);
@@ -182,7 +182,7 @@ namespace kerbal
 		KERBAL_CONSTEXPR20
 		void list<Tp, Allocator>::assign(const list& src)
 				KERBAL_CONDITIONAL_NOEXCEPT(
-						noexcept(kerbal::utility::declthis<list>()->assign(src.cbegin(), src.cend()))
+						noexcept(assign(src.cbegin(), src.cend()))
 				)
 		{
 			this->assign(src.cbegin(), src.cend());
@@ -574,19 +574,6 @@ namespace kerbal
 		template <typename Tp, typename Allocator>
 		KERBAL_CONSTEXPR20
 		typename list<Tp, Allocator>::iterator
-		list<Tp, Allocator>::insert(const_iterator pos, size_type n)
-		{
-			if (n == 0) {
-				return pos.cast_to_mutable();
-			}
-			std::pair<node*, node*> range(this->__build_n_new_nodes_unguarded(n));
-			__hook_node(pos, range.first, range.second);
-			return iterator(range.first);
-		}
-
-		template <typename Tp, typename Allocator>
-		KERBAL_CONSTEXPR20
-		typename list<Tp, Allocator>::iterator
 		list<Tp, Allocator>::insert(const_iterator pos, size_type n, const_reference val)
 		{
 			if (n == 0) {
@@ -743,6 +730,7 @@ namespace kerbal
 		template <typename Tp, typename Allocator>
 		KERBAL_CONSTEXPR20
 		void list<Tp, Allocator>::clear()
+				KERBAL_CONDITIONAL_NOEXCEPT(noexcept(erase(cbegin(), cend())))
 		{
 			this->erase(this->cbegin(), this->cend());
 		}
@@ -752,11 +740,14 @@ namespace kerbal
 		void list<Tp, Allocator>::resize(size_type count)
 		{
 			const_iterator it(this->cbegin());
-			difference_type size = kerbal::iterator::advance_at_most(it, count, this->cend());
+			const_iterator cend(this->cend());
+			difference_type size = kerbal::iterator::advance_at_most(it, count, cend);
 			if (size == count) {
-				this->erase(it, this->cend());
+				this->erase(it, cend);
 			} else {
-				this->insert(this->cend(), count - size);
+				// note: count - size != 0
+				std::pair<node*, node*> range(this->__build_n_new_nodes_unguarded(count - size));
+				__hook_node(cend, range.first, range.second);
 			}
 		}
 
@@ -979,7 +970,7 @@ namespace kerbal
 		typename list<Tp, Allocator>::node*
 		list<Tp, Allocator>::__build_new_node_helper(kerbal::type_traits::true_type, Args&& ... args)
 							KERBAL_CONDITIONAL_NOEXCEPT(
-								noexcept(node_allocator_traits::allocate(kerbal::utility::declthis<list>()->alloc, 1))
+								noexcept(node_allocator_traits::allocate(alloc, 1))
 							)
 		{
 			node *p = node_allocator_traits::allocate(this->alloc, 1);
@@ -1164,8 +1155,8 @@ namespace kerbal
 		KERBAL_CONSTEXPR20
 		void list<Tp, Allocator>::__destroy_node(node_base* p_node_base)
 				KERBAL_CONDITIONAL_NOEXCEPT(
-						noexcept(node_allocator_traits::destroy(kerbal::utility::declthis<list>()->alloc, kerbal::utility::declval<node*>())) &&
-						noexcept(node_allocator_traits::deallocate(kerbal::utility::declthis<list>()->alloc, kerbal::utility::declval<node*>(), 1))
+						noexcept(node_allocator_traits::destroy(alloc, kerbal::utility::declval<node*>())) &&
+						noexcept(node_allocator_traits::deallocate(alloc, kerbal::utility::declval<node*>(), 1))
 				)
 		{
 			node * p_node = &p_node_base->template reinterpret_as<Tp>();
@@ -1177,7 +1168,7 @@ namespace kerbal
 		KERBAL_CONSTEXPR20
 		void list<Tp, Allocator>::__consecutive_destroy_node(node_base * start)
 				KERBAL_CONDITIONAL_NOEXCEPT(
-						noexcept(kerbal::utility::declthis<list>()->__destroy_node(kerbal::utility::declval<node_base*>()))
+						noexcept(__destroy_node(kerbal::utility::declval<node_base*>()))
 				)
 		{
 			node_base * current_node_base = start;

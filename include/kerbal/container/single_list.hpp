@@ -145,26 +145,26 @@ namespace kerbal
 
 				KERBAL_CONSTEXPR20
 				single_list& operator=(const single_list & src) KERBAL_CONDITIONAL_NOEXCEPT(
-						noexcept(kerbal::utility::declthis<single_list>()->assign(src))
+						noexcept(assign(src))
 				);
 
 #		if __cplusplus >= 201103L
 
 				KERBAL_CONSTEXPR20
 				single_list& operator=(single_list && src) KERBAL_CONDITIONAL_NOEXCEPT(
-						noexcept(kerbal::utility::declthis<single_list>()->assign(std::move(src)))
+						noexcept(assign(std::move(src)))
 				);
 
 				KERBAL_CONSTEXPR20
 				single_list& operator=(std::initializer_list<value_type> src) KERBAL_CONDITIONAL_NOEXCEPT(
-						noexcept(kerbal::utility::declthis<single_list>()->assign(src))
+						noexcept(assign(src))
 				);
 
 #		endif
 
 				KERBAL_CONSTEXPR20
 				void assign(const single_list & src) KERBAL_CONDITIONAL_NOEXCEPT(
-						noexcept(kerbal::utility::declthis<single_list>()->assign(src.cbegin(), src.cend()))
+						noexcept(assign(src.cbegin(), src.cend()))
 				);
 
 				KERBAL_CONSTEXPR20
@@ -401,7 +401,7 @@ namespace kerbal
 				KERBAL_CONSTEXPR20
 				node* __build_new_node_helper(kerbal::type_traits::true_type, Args&& ... args)
 						KERBAL_CONDITIONAL_NOEXCEPT(
-								noexcept(node_allocator_traits::allocate(kerbal::utility::declthis<single_list>()->alloc, 1))
+								noexcept(node_allocator_traits::allocate(alloc, 1))
 						)
 				;
 
@@ -458,13 +458,13 @@ namespace kerbal
 
 				KERBAL_CONSTEXPR20
 				void __destroy_node(node_base * p_node_base) KERBAL_CONDITIONAL_NOEXCEPT(
-						noexcept(node_allocator_traits::destroy(kerbal::utility::declthis<single_list>()->alloc, kerbal::utility::declval<node*>())) &&
-						noexcept(node_allocator_traits::deallocate(kerbal::utility::declthis<single_list>()->alloc, kerbal::utility::declval<node*>(), 1))
+						noexcept(node_allocator_traits::destroy(alloc, kerbal::utility::declval<node*>())) &&
+						noexcept(node_allocator_traits::deallocate(alloc, kerbal::utility::declval<node*>(), 1))
 				);
 
 				KERBAL_CONSTEXPR20
 				void __consecutive_destroy_node(node_base * start) KERBAL_CONDITIONAL_NOEXCEPT(
-						noexcept(kerbal::utility::declthis<single_list>()->__destroy_node(kerbal::utility::declval<node_base*>()))
+						noexcept(__destroy_node(kerbal::utility::declval<node_base*>()))
 				);
 
 				KERBAL_CONSTEXPR20

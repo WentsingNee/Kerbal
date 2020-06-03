@@ -139,33 +139,33 @@ namespace kerbal
 #		endif
 
 				KERBAL_CONSTEXPR20
-				~list();
+				~list() KERBAL_CONDITIONAL_NOEXCEPT(noexcept(clear()));
 
 			//===================
 			//assign
 
 				KERBAL_CONSTEXPR20
 				list& operator=(const list & src) KERBAL_CONDITIONAL_NOEXCEPT(
-						noexcept(kerbal::utility::declthis<list>()->assign(src))
+						noexcept(assign(src))
 				);
 
 #		if __cplusplus >= 201103L
 
 				KERBAL_CONSTEXPR20
 				list& operator=(list && src) KERBAL_CONDITIONAL_NOEXCEPT(
-						noexcept(kerbal::utility::declthis<list>()->assign(std::move(src)))
+						noexcept(assign(std::move(src)))
 				);
 
 				KERBAL_CONSTEXPR20
 				list& operator=(std::initializer_list<value_type> src) KERBAL_CONDITIONAL_NOEXCEPT(
-						noexcept(kerbal::utility::declthis<list>()->assign(src))
+						noexcept(assign(src))
 				);
 
 #		endif
 
 				KERBAL_CONSTEXPR20
 				void assign(const list & src) KERBAL_CONDITIONAL_NOEXCEPT(
-						noexcept(kerbal::utility::declthis<list>()->assign(src.cbegin(), src.cend()))
+						noexcept(assign(src.cbegin(), src.cend()))
 				);
 
 				KERBAL_CONSTEXPR20
@@ -337,9 +337,6 @@ namespace kerbal
 				iterator insert(const_iterator pos, const_reference val);
 
 				KERBAL_CONSTEXPR20
-				iterator insert(const_iterator pos, size_type n);
-
-				KERBAL_CONSTEXPR20
 				iterator insert(const_iterator pos, size_type n, const_reference val);
 
 				template <typename InputIterator>
@@ -400,7 +397,7 @@ namespace kerbal
 			//operation
 
 				KERBAL_CONSTEXPR20
-				void clear();
+				void clear() KERBAL_CONDITIONAL_NOEXCEPT(noexcept(erase(cbegin(), cend())));
 
 				KERBAL_CONSTEXPR20
 				void resize(size_type count);
@@ -492,7 +489,7 @@ namespace kerbal
 				KERBAL_CONSTEXPR20
 				node* __build_new_node_helper(kerbal::type_traits::true_type, Args&& ... args)
 						KERBAL_CONDITIONAL_NOEXCEPT(
-								noexcept(node_allocator_traits::allocate(kerbal::utility::declthis<list>()->alloc, 1))
+								noexcept(node_allocator_traits::allocate(alloc, 1))
 						)
 				;
 
@@ -550,15 +547,15 @@ namespace kerbal
 				KERBAL_CONSTEXPR20
 				void __destroy_node(node_base * p_node_base)
 						KERBAL_CONDITIONAL_NOEXCEPT(
-								noexcept(node_allocator_traits::destroy(kerbal::utility::declthis<list>()->alloc, kerbal::utility::declval<node*>())) &&
-								noexcept(node_allocator_traits::deallocate(kerbal::utility::declthis<list>()->alloc, kerbal::utility::declval<node*>(), 1))
+								noexcept(node_allocator_traits::destroy(alloc, kerbal::utility::declval<node*>())) &&
+								noexcept(node_allocator_traits::deallocate(alloc, kerbal::utility::declval<node*>(), 1))
 						)
 				;
 
 				KERBAL_CONSTEXPR20
 				void __consecutive_destroy_node(node_base * start)
 						KERBAL_CONDITIONAL_NOEXCEPT(
-								noexcept(kerbal::utility::declthis<list>()->__destroy_node(kerbal::utility::declval<node_base*>()))
+								noexcept(__destroy_node(kerbal::utility::declval<node_base*>()))
 						)
 				;
 
