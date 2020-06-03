@@ -9,8 +9,8 @@
  *   all rights reserved
  */
 
-#ifndef KERBAL_ALGORITHM_HEAP_HPP_
-#define KERBAL_ALGORITHM_HEAP_HPP_
+#ifndef KERBAL_ALGORITHM_HEAP_HPP
+#define KERBAL_ALGORITHM_HEAP_HPP
 
 #include <kerbal/algorithm/modifier.hpp>
 #include <kerbal/iterator/iterator.hpp>
@@ -31,10 +31,7 @@ namespace kerbal
 			typedef typename kerbal::iterator::iterator_traits<iterator>::difference_type difference_type;
 
 			difference_type dist(kerbal::iterator::distance(first, parent) + 1);
-			if (dist < kerbal::iterator::distance(parent, last)) {
-				return kerbal::iterator::next(parent, dist);
-			}
-			return last;
+			return kerbal::iterator::next_at_most(parent, dist, last);
 		}
 
 		template <typename ForwardIterator>
@@ -258,8 +255,8 @@ namespace kerbal
 			kerbal::algorithm::make_heap(first, last, std::less<value_type>());
 		}
 
-	} /* namespace algorithm */
+	} // namespace algorithm
 
-} /* namespace kerbal */
+} // namespace kerbal
 
-#endif /* KERBAL_ALGORITHM_HEAP_HPP_ */
+#endif // KERBAL_ALGORITHM_HEAP_HPP
