@@ -28,12 +28,12 @@ namespace kerbal
 		{
 			typedef ForwardIterator iterator;
 			typedef typename kerbal::iterator::iterator_traits<iterator>::difference_type difference_type;
-			difference_type __n(0);
+			difference_type d(0);
 			while (first != last) {
 				++first;
-				++__n;
+				++d;
 			}
-			return __n;
+			return d;
 		}
 
 		template <typename RandomAccessIterator>
@@ -120,6 +120,9 @@ namespace kerbal
 		template <typename BidirectionalIterator, typename Distance>
 		KERBAL_CONSTEXPR14
 		BidirectionalIterator __prev(BidirectionalIterator it, Distance dist, std::bidirectional_iterator_tag)
+				KERBAL_CONDITIONAL_NOEXCEPT(
+						noexcept(kerbal::iterator::advance(it, -dist))
+				)
 		{
 			kerbal::iterator::advance(it, -dist);
 			return it;
@@ -128,6 +131,9 @@ namespace kerbal
 		template <typename RandomAccessIterator, typename Distance>
 		KERBAL_CONSTEXPR
 		RandomAccessIterator __prev(RandomAccessIterator it, Distance dist, std::random_access_iterator_tag)
+				KERBAL_CONDITIONAL_NOEXCEPT(
+						noexcept(it - dist)
+				)
 		{
 			return it - dist;
 		}
@@ -135,6 +141,9 @@ namespace kerbal
 		template <typename BidirectionalIterator, typename Distance>
 		KERBAL_CONSTEXPR
 		BidirectionalIterator prev(BidirectionalIterator it, Distance dist)
+				KERBAL_CONDITIONAL_NOEXCEPT(
+						noexcept(kerbal::iterator::__prev(it, dist, kerbal::iterator::iterator_category(it)))
+				)
 		{
 			return kerbal::iterator::__prev(it, dist, kerbal::iterator::iterator_category(it));
 		}
@@ -142,6 +151,9 @@ namespace kerbal
 		template <typename BidirectionalIterator>
 		KERBAL_CONSTEXPR14
 		BidirectionalIterator __prev(BidirectionalIterator it, std::bidirectional_iterator_tag)
+				KERBAL_CONDITIONAL_NOEXCEPT(
+						noexcept(--it)
+				)
 		{
 			--it;
 			return it;
@@ -150,6 +162,9 @@ namespace kerbal
 		template <typename RandomAccessIterator>
 		KERBAL_CONSTEXPR
 		RandomAccessIterator __prev(RandomAccessIterator it, std::random_access_iterator_tag)
+				KERBAL_CONDITIONAL_NOEXCEPT(
+						noexcept(it - 1)
+				)
 		{
 			return it - 1;
 		}
@@ -157,6 +172,9 @@ namespace kerbal
 		template <typename BidirectionalIterator>
 		KERBAL_CONSTEXPR
 		BidirectionalIterator prev(BidirectionalIterator it)
+				KERBAL_CONDITIONAL_NOEXCEPT(
+						noexcept(kerbal::iterator::__prev(it, kerbal::iterator::iterator_category(it)))
+				)
 		{
 			return kerbal::iterator::__prev(it, kerbal::iterator::iterator_category(it));
 		}
@@ -164,6 +182,9 @@ namespace kerbal
 		template <typename InputIterator, typename Distance>
 		KERBAL_CONSTEXPR14
 		InputIterator __next(InputIterator it, Distance dist, std::input_iterator_tag)
+				KERBAL_CONDITIONAL_NOEXCEPT(
+						noexcept(kerbal::iterator::advance(it, dist))
+				)
 		{
 			kerbal::iterator::advance(it, dist);
 			return it;
@@ -172,6 +193,9 @@ namespace kerbal
 		template <typename RandomAccessIterator, typename Distance>
 		KERBAL_CONSTEXPR
 		RandomAccessIterator __next(RandomAccessIterator it, Distance dist, std::random_access_iterator_tag)
+				KERBAL_CONDITIONAL_NOEXCEPT(
+						noexcept(it + dist)
+				)
 		{
 			return it + dist;
 		}
@@ -179,6 +203,9 @@ namespace kerbal
 		template <typename InputIterator, typename Distance>
 		KERBAL_CONSTEXPR
 		InputIterator next(InputIterator it, Distance dist)
+				KERBAL_CONDITIONAL_NOEXCEPT(
+						noexcept(kerbal::iterator::__next(it, dist, kerbal::iterator::iterator_category(it)))
+				)
 		{
 			return kerbal::iterator::__next(it, dist, kerbal::iterator::iterator_category(it));
 		}
@@ -186,6 +213,9 @@ namespace kerbal
 		template <typename InputIterator>
 		KERBAL_CONSTEXPR14
 		InputIterator __next(InputIterator it, std::input_iterator_tag)
+				KERBAL_CONDITIONAL_NOEXCEPT(
+						noexcept(++it)
+				)
 		{
 			++it;
 			return it;
@@ -194,6 +224,9 @@ namespace kerbal
 		template <typename RandomAccessIterator>
 		KERBAL_CONSTEXPR
 		RandomAccessIterator __next(RandomAccessIterator it, std::random_access_iterator_tag)
+				KERBAL_CONDITIONAL_NOEXCEPT(
+						noexcept(it + 1)
+				)
 		{
 			return it + 1;
 		}
@@ -201,6 +234,9 @@ namespace kerbal
 		template <typename InputIterator>
 		KERBAL_CONSTEXPR
 		InputIterator next(InputIterator it)
+				KERBAL_CONDITIONAL_NOEXCEPT(
+						noexcept(kerbal::iterator::__next(it, kerbal::iterator::iterator_category(it)))
+				)
 		{
 			return kerbal::iterator::__next(it, kerbal::iterator::iterator_category(it));
 		}
@@ -213,12 +249,12 @@ namespace kerbal
 		{
 			typedef InputIterator iterator;
 			typedef typename kerbal::iterator::iterator_traits<iterator>::difference_type difference_type;
-			difference_type i(0);
-			while (static_cast<bool>(i < dist) && static_cast<bool>(it != last)) {
+			difference_type d(0);
+			while (static_cast<bool>(d < dist) && static_cast<bool>(it != last)) {
 				++it;
-				++i;
+				++d;
 			}
-			return i;
+			return d;
 		}
 
 		template <typename RandomAccessIterator, typename Distance>
@@ -229,15 +265,15 @@ namespace kerbal
 		{
 			typedef RandomAccessIterator iterator;
 			typedef typename kerbal::iterator::iterator_traits<iterator>::difference_type difference_type;
-			difference_type __d(dist);
+			difference_type d(dist);
 			difference_type most_dist(kerbal::iterator::distance(it, last));
-			if (__d < most_dist) {
-				it += __d;
+			if (d < most_dist) {
+				it += d;
 			} else {
 				it = last;
-				__d = most_dist;
+				d = most_dist;
 			}
-			return __d;
+			return d;
 		}
 
 		template <typename InputIterator, typename Distance>
@@ -264,12 +300,12 @@ namespace kerbal
 		{
 			typedef BidirectionalIterator iterator;
 			typedef typename kerbal::iterator::iterator_traits<iterator>::difference_type difference_type;
-			difference_type i(0);
-			while (static_cast<bool>(i < dist) && static_cast<bool>(it != first)) {
+			difference_type d(0);
+			while (static_cast<bool>(d < dist) && static_cast<bool>(it != first)) {
 				--it;
-				++i;
+				++d;
 			}
-			return i;
+			return d;
 		}
 
 		template <typename RandomAccessIterator, typename Distance>
@@ -280,15 +316,15 @@ namespace kerbal
 		{
 			typedef RandomAccessIterator iterator;
 			typedef typename kerbal::iterator::iterator_traits<iterator>::difference_type difference_type;
-			difference_type __d(dist);
+			difference_type d(dist);
 			difference_type most_dist(kerbal::iterator::distance(first, it));
-			if (__d < most_dist) {
-				it -= __d;
+			if (d < most_dist) {
+				it -= d;
 			} else {
 				it = first;
-				__d = most_dist;
+				d = most_dist;
 			}
-			return __d;
+			return d;
 		}
 
 		template <typename BidirectionalIterator, typename Distance>
@@ -429,12 +465,12 @@ namespace kerbal
 		{
 			typedef ForwardIterator iterator;
 			typedef typename kerbal::iterator::iterator_traits<iterator>::difference_type difference_type;
-			difference_type __n(0);
-			while (static_cast<bool>(first != last) && static_cast<bool>(__n < dist)) {
+			difference_type d(0);
+			while (static_cast<bool>(first != last) && static_cast<bool>(d < dist)) {
 				++first;
-				++__n;
+				++d;
 			}
-			return static_cast<bool>(__n < dist);
+			return static_cast<bool>(d < dist);
 		}
 
 		template <typename RandomAccessIterator, typename Distance>
@@ -457,12 +493,12 @@ namespace kerbal
 		{
 			typedef ForwardIterator iterator;
 			typedef typename kerbal::iterator::iterator_traits<iterator>::difference_type difference_type;
-			difference_type __n(0);
-			while (static_cast<bool>(first != last) && static_cast<bool>(__n < dist)) {
+			difference_type d(0);
+			while (static_cast<bool>(first != last) && static_cast<bool>(d < dist)) {
 				++first;
-				++__n;
+				++d;
 			}
-			return static_cast<bool>(first == last) && static_cast<bool>(__n == dist);
+			return static_cast<bool>(first == last) && static_cast<bool>(d == dist);
 		}
 
 		template <typename RandomAccessIterator, typename Distance>
@@ -485,12 +521,12 @@ namespace kerbal
 		{
 			typedef ForwardIterator iterator;
 			typedef typename kerbal::iterator::iterator_traits<iterator>::difference_type difference_type;
-			difference_type __n(0);
-			while (static_cast<bool>(first != last) && static_cast<bool>(__n < dist)) {
+			difference_type d(0);
+			while (static_cast<bool>(first != last) && static_cast<bool>(d < dist)) {
 				++first;
-				++__n;
+				++d;
 			}
-			return static_cast<bool>(first != last) && static_cast<bool>(__n == dist);
+			return static_cast<bool>(first != last) && static_cast<bool>(d == dist);
 		}
 
 		template <typename RandomAccessIterator, typename Distance>
