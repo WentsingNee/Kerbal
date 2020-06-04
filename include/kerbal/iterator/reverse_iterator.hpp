@@ -223,6 +223,7 @@ namespace kerbal
 			{
 				private:
 					typedef __reverse_iterator<Iter, std::bidirectional_iterator_tag> super;
+					typedef __reverse_iterator this_type;
 					typedef kerbal::iterator::reverse_iterator<Iter> derived;
 					typedef kerbal::iterator::iterator_traits<Iter> iterator_traits;
 
@@ -259,14 +260,14 @@ namespace kerbal
 					}
 
 					KERBAL_CONSTEXPR14 derived& operator+=(const difference_type& delta)
-							KERBAL_CONDITIONAL_NOEXCEPT(noexcept(this->iter -= delta))
+							KERBAL_CONDITIONAL_NOEXCEPT(noexcept(kerbal::utility::declthis<this_type>()->iter -= delta))
 					{
 						this->iter -= delta;
 						return static_cast<derived&>(*this);
 					}
 
 					KERBAL_CONSTEXPR14 derived& operator-=(const difference_type& delta)
-							KERBAL_CONDITIONAL_NOEXCEPT(noexcept(this->iter += delta))
+							KERBAL_CONDITIONAL_NOEXCEPT(noexcept(kerbal::utility::declthis<this_type>()->iter += delta))
 					{
 						this->iter += delta;
 						return static_cast<derived&>(*this);
