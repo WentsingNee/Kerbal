@@ -18,6 +18,7 @@
 #include <kerbal/container/static_container_exception.hpp>
 #include <kerbal/data_struct/raw_storage.hpp>
 #include <kerbal/iterator/iterator_traits.hpp>
+#include <kerbal/iterator/reverse_iterator.hpp>
 #include <kerbal/type_traits/array_traits.hpp>
 #include <kerbal/type_traits/enable_if.hpp>
 
@@ -70,11 +71,11 @@ namespace kerbal
 				typedef std::ptrdiff_t				difference_type;
 
 				/// @brief 与该 static_vector 所等价的 C 风格数组的类型, 即 value_type[N]
-				typedef value_type equal_c_array[N];
-				typedef equal_c_array& equal_c_array_reference;
-				typedef const equal_c_array& equal_const_c_array_reference;
-				typedef const value_type const_equal_c_array[N];
-				typedef const_equal_c_array& const_equal_c_array_reference;
+				typedef value_type				equal_c_array[N];
+				typedef equal_c_array&			equal_c_array_reference;
+				typedef const equal_c_array&	equal_const_c_array_reference;
+				typedef const value_type		const_equal_c_array[N];
+				typedef const_equal_c_array&	const_equal_c_array_reference;
 
 			private:
 				typedef typename kerbal::type_traits::remove_all_extents<value_type>::type remove_all_extents_t;
@@ -91,13 +92,13 @@ namespace kerbal
 			public:
 
 				/// @brief Iterator to static_vector.
-				typedef detail::__stavec_iter<value_type> iterator;
+				typedef detail::__stavec_iter<value_type>					iterator;
 				/// @brief Constant iterator to static_vector.
-				typedef detail::__stavec_kiter<value_type> const_iterator;
+				typedef detail::__stavec_kiter<value_type>					const_iterator;
 				/// @brief Reverse iterator to static_vector.
-				typedef std::reverse_iterator<iterator> reverse_iterator;
+				typedef kerbal::iterator::reverse_iterator<iterator>		reverse_iterator;
 				/// @brief Constant reverse iterator to static_vector.
-				typedef std::reverse_iterator<const_iterator> const_reverse_iterator;
+				typedef kerbal::iterator::reverse_iterator<const_iterator>	const_reverse_iterator;
 
 			public:
 				/** @brief Empty container constructor (Default constructor) */

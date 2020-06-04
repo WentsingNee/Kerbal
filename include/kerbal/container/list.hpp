@@ -15,6 +15,7 @@
 #include <kerbal/algorithm/sequence_compare.hpp>
 #include <kerbal/compatibility/constexpr.hpp>
 #include <kerbal/compatibility/noexcept.hpp>
+#include <kerbal/iterator/reverse_iterator.hpp>
 #include <kerbal/memory/allocator_traits.hpp>
 #include <kerbal/type_traits/enable_if.hpp>
 #include <kerbal/utility/declval.hpp>
@@ -61,8 +62,8 @@ namespace kerbal
 
 				typedef kerbal::container::detail::list_iter<Tp>			iterator;
 				typedef kerbal::container::detail::list_kiter<Tp>			const_iterator;
-				typedef std::reverse_iterator<iterator>						reverse_iterator;
-				typedef std::reverse_iterator<const_iterator>				const_reverse_iterator;
+				typedef kerbal::iterator::reverse_iterator<iterator>		reverse_iterator;
+				typedef kerbal::iterator::reverse_iterator<const_iterator>	const_reverse_iterator;
 
 			private:
 				typedef kerbal::container::detail::list_node_base				node_base;

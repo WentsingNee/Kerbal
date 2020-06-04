@@ -16,6 +16,7 @@
 #include <kerbal/compatibility/constexpr.hpp>
 #include <kerbal/compatibility/noexcept.hpp>
 #include <kerbal/iterator/iterator_traits.hpp>
+#include <kerbal/iterator/reverse_iterator.hpp>
 #include <kerbal/type_traits/array_traits.hpp>
 #include <kerbal/type_traits/enable_if.hpp>
 
@@ -86,9 +87,9 @@ namespace kerbal
 				/// @brief Constant iterator to array.
 				typedef kerbal::container::detail::__arr_kiter<value_type> const_iterator;
 				/// @brief Reverse iterator to array.
-				typedef std::reverse_iterator<iterator> reverse_iterator;
+				typedef kerbal::iterator::reverse_iterator<iterator> reverse_iterator;
 				/// @brief Constant reverse iterator to array.
-				typedef std::reverse_iterator<const_iterator> const_reverse_iterator;
+				typedef kerbal::iterator::reverse_iterator<const_iterator> const_reverse_iterator;
 
 			public:
 				/** @brief Initialize the array with default value (Default constructor) */
@@ -203,14 +204,14 @@ namespace kerbal
 
 				KERBAL_CONSTEXPR const_iterator cend() const KERBAL_NOEXCEPT;
 
-				reverse_iterator rbegin() KERBAL_NOEXCEPT;
-				reverse_iterator rend() KERBAL_NOEXCEPT;
+				KERBAL_CONSTEXPR14 reverse_iterator rbegin() KERBAL_NOEXCEPT;
+				KERBAL_CONSTEXPR14 reverse_iterator rend() KERBAL_NOEXCEPT;
 
-				const_reverse_iterator rbegin() const KERBAL_NOEXCEPT;
-				const_reverse_iterator rend() const KERBAL_NOEXCEPT;
+				KERBAL_CONSTEXPR14 const_reverse_iterator rbegin() const KERBAL_NOEXCEPT;
+				KERBAL_CONSTEXPR14 const_reverse_iterator rend() const KERBAL_NOEXCEPT;
 
-				const_reverse_iterator crbegin() const KERBAL_NOEXCEPT;
-				const_reverse_iterator crend() const KERBAL_NOEXCEPT;
+				KERBAL_CONSTEXPR const_reverse_iterator crbegin() const KERBAL_NOEXCEPT;
+				KERBAL_CONSTEXPR const_reverse_iterator crend() const KERBAL_NOEXCEPT;
 
 				KERBAL_CONSTEXPR14 iterator nth(size_type index) KERBAL_NOEXCEPT;
 				KERBAL_CONSTEXPR14 const_iterator nth(size_type index) const KERBAL_NOEXCEPT;
@@ -260,13 +261,13 @@ namespace kerbal
 				 * @brief Get the reference of the element at the end of the array.
 				 * @return the reference of the element at the end of the array.
 				 */
-				reference back();
+				KERBAL_CONSTEXPR14 reference back();
 
 				/**
 				 * @brief Get the const_reference of the element at the end of the array.
 				 * @return the const_reference of the element at the end of the array.
 				 */
-				const_reference back() const;
+				KERBAL_CONSTEXPR14 const_reference back() const;
 
 				/**
 				 * @brief 返回与该 array 所等价的 C 风格数组类型的引用, 方便与专门为 C 风格数组类型设计的 API 交互
