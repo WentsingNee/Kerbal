@@ -9,8 +9,8 @@
  *   all rights reserved
  */
 
-#ifndef KERBAL_RANDOM_NORMAL_DISTRIBUTION_HPP_
-#define KERBAL_RANDOM_NORMAL_DISTRIBUTION_HPP_
+#ifndef KERBAL_RANDOM_NORMAL_DISTRIBUTION_HPP
+#define KERBAL_RANDOM_NORMAL_DISTRIBUTION_HPP
 
 #include <kerbal/compatibility/constexpr.hpp>
 #include <kerbal/compatibility/noexcept.hpp>
@@ -39,8 +39,8 @@ namespace kerbal
 				static double std_normal_distribution(Engine & eg) KERBAL_NOEXCEPT
 				{
 					KERBAL_CONSTEXPR const double M_2PI = 6.283185307179586476925286766559;
-					kerbal::random::uniform_real_distribution<double> real_distribution(0.0, 1.0);
-					double u = real_distribution(eg), v = real_distribution(eg);
+					kerbal::random::uniform_real_distribution<result_type> real_distribution(0.0, 1.0);
+					result_type u(real_distribution(eg)), v(real_distribution(eg));
 					return ::sqrt(-2 * ::log(1.0 - u)) * ::sin(M_2PI * v); // sq(-2 log(u)) * sin(2 pi v)
 				}
 
@@ -80,4 +80,4 @@ namespace kerbal
 
 } // namespace kerbal
 
-#endif //KERBAL_RANDOM_NORMAL_DISTRIBUTION_HPP_
+#endif // KERBAL_RANDOM_NORMAL_DISTRIBUTION_HPP

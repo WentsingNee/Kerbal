@@ -9,8 +9,8 @@
  *   all rights reserved
  */
 
-#ifndef KERBAL_RANDOM_MERSENNE_TWISTER_ENGINE_HPP_
-#define KERBAL_RANDOM_MERSENNE_TWISTER_ENGINE_HPP_
+#ifndef KERBAL_RANDOM_MERSENNE_TWISTER_ENGINE_HPP
+#define KERBAL_RANDOM_MERSENNE_TWISTER_ENGINE_HPP
 
 #include <kerbal/algorithm/sequence_compare.hpp>
 #include <kerbal/compatibility/constexpr.hpp>
@@ -64,22 +64,22 @@ namespace kerbal
 				KERBAL_CONSTEXPR14
 				void twist() KERBAL_NOEXCEPT
 				{
-					const UIntType UPPER_MASK = (~UIntType()) << R; // most significant w-r bits
-					const UIntType LOWER_MASK = ~UPPER_MASK; // least significant r bits
+					typedef kerbal::type_traits::integral_constant<UIntType, (~UIntType()) << R> UPPER_MASK; // most significant w-r bits
+					typedef kerbal::type_traits::integral_constant<UIntType, ~UPPER_MASK::value> LOWER_MASK; // least significant r bits
 
 					const UIntType mag01[2] = {0x0UL, A};
 
 					size_t i = 0;
 
 					for (i = 0; i < N - M; ++i) {
-						result_type y = (this->mt[i] & UPPER_MASK) | (this->mt[i + 1] & LOWER_MASK);
+						result_type y = (this->mt[i] & UPPER_MASK::value) | (this->mt[i + 1] & LOWER_MASK::value);
 						this->mt[i] = this->mt[i + M] ^ (y >> 1) ^ mag01[y & 0x1UL];
 					}
 					for (; i < N - 1; ++i) {
-						result_type y = (this->mt[i] & UPPER_MASK) | (this->mt[i + 1] & LOWER_MASK);
+						result_type y = (this->mt[i] & UPPER_MASK::value) | (this->mt[i + 1] & LOWER_MASK::value);
 						this->mt[i] = this->mt[i + (M - N)] ^ (y >> 1) ^ mag01[y & 0x1UL];
 					}
-					result_type y = (this->mt[N - 1] & UPPER_MASK) | (this->mt[0] & LOWER_MASK);
+					result_type y = (this->mt[N - 1] & UPPER_MASK::value) | (this->mt[0] & LOWER_MASK::value);
 					this->mt[N - 1] = this->mt[M - 1] ^ (y >> 1) ^ mag01[y & 0x1UL];
 				}
 
@@ -130,12 +130,13 @@ namespace kerbal
 					for (unsigned long long i = 0; i < z / N; ++i) {
 						this->twist();
 					}
-					for (unsigned long long i = 0; i < z % N; ++i) {
-						if (this->mti == N) {
-							this->twist();
-							this->mti = 0;
-						}
-						this->mti++;
+					unsigned long long i = z % N;
+					size_t left = N - this->mti;
+					if (i <= left) {
+						this->mti += i;
+					} else {
+						this->twist();
+						this->mti = i - left;
 					}
 				}
 
@@ -152,25 +153,25 @@ namespace kerbal
 				KERBAL_CONSTEXPR14
 				bool operator==(const mersenne_twister_engine & rhs) const
 				{
-					return static_cast<bool>(
+					return this->mti == rhs.mti && static_cast<bool>(
 								kerbal::algorithm::sequence_equal_to(
 									kerbal::container::cbegin(this->mt),
 									kerbal::container::cend(this->mt),
 									kerbal::container::cbegin(rhs.mt),
 									kerbal::container::cend(rhs.mt)
-							)) && this->mti == rhs.mti;
+							));
 				}
 
 				KERBAL_CONSTEXPR14
 				bool operator!=(const mersenne_twister_engine & rhs) const
 				{
-					return static_cast<bool>(
+					return this->mti != rhs.mti || static_cast<bool>(
 								kerbal::algorithm::sequence_not_equal_to(
 									kerbal::container::cbegin(this->mt),
 									kerbal::container::cend(this->mt),
 									kerbal::container::cbegin(rhs.mt),
 									kerbal::container::cend(rhs.mt)
-							)) || this->mti != rhs.mti;
+							));
 				}
 
 		};
@@ -191,4 +192,4 @@ namespace kerbal
 
 } // namespace kerbal
 
-#endif	/* KERBAL_RANDOM_MERSENNE_TWISTER_ENGINE_HPP_ */
+#endif // KERBAL_RANDOM_MERSENNE_TWISTER_ENGINE_HPP
