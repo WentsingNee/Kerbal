@@ -23,6 +23,7 @@
 
 namespace kerbal
 {
+
 	namespace random
 	{
 
@@ -87,9 +88,8 @@ namespace kerbal
 			public:
 				KERBAL_CONSTEXPR14
 				explicit mersenne_twister_engine(const result_type& seed = DEFAULT_SEED::value) KERBAL_NOEXCEPT
-							 : mti(N)
+						: mt{seed}, mti(N)
 				{
-					this->mt[0] = seed;
 					for (size_t i = 1; i < N; ++i) {
 						UIntType x = this->mt[i - 1];
 						x ^= x >> (W - 2);
