@@ -145,26 +145,26 @@ namespace kerbal
 
 				KERBAL_CONSTEXPR20
 				single_list& operator=(const single_list & src) KERBAL_CONDITIONAL_NOEXCEPT(
-						noexcept(assign(src))
+						noexcept(kerbal::utility::declthis<single_list>()->assign(src))
 				);
 
 #		if __cplusplus >= 201103L
 
 				KERBAL_CONSTEXPR20
 				single_list& operator=(single_list && src) KERBAL_CONDITIONAL_NOEXCEPT(
-						noexcept(assign(std::move(src)))
+						noexcept(kerbal::utility::declthis<single_list>()->assign(std::move(src)))
 				);
 
 				KERBAL_CONSTEXPR20
 				single_list& operator=(std::initializer_list<value_type> src) KERBAL_CONDITIONAL_NOEXCEPT(
-						noexcept(assign(src))
+						noexcept(kerbal::utility::declthis<single_list>()->assign(src))
 				);
 
 #		endif
 
 				KERBAL_CONSTEXPR20
 				void assign(const single_list & src) KERBAL_CONDITIONAL_NOEXCEPT(
-						noexcept(assign(src.cbegin(), src.cend()))
+						noexcept(kerbal::utility::declthis<single_list>()->assign(src.cbegin(), src.cend()))
 				);
 
 				KERBAL_CONSTEXPR20

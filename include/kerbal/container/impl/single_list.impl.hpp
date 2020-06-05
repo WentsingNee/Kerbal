@@ -16,6 +16,7 @@
 #include <kerbal/algorithm/sequence_compare.hpp>
 #include <kerbal/iterator/iterator.hpp>
 #include <kerbal/memory/guard.hpp>
+#include <kerbal/utility/declval.hpp>
 
 #include <kerbal/container/single_list.hpp>
 
@@ -142,7 +143,7 @@ namespace kerbal
 		KERBAL_CONSTEXPR20
 		single_list<Tp, Allocator>&
 		single_list<Tp, Allocator>::operator=(const single_list& src)
-				KERBAL_CONDITIONAL_NOEXCEPT(noexcept(assign(src)))
+				KERBAL_CONDITIONAL_NOEXCEPT(noexcept(kerbal::utility::declthis<single_list>()->assign(src)))
 		{
 			this->assign(src);
 			return *this;
@@ -155,7 +156,7 @@ namespace kerbal
 		single_list<Tp, Allocator>&
 		single_list<Tp, Allocator>::operator=(single_list&& src)
 				KERBAL_CONDITIONAL_NOEXCEPT(
-						noexcept(assign(std::move(src)))
+						noexcept(kerbal::utility::declthis<single_list>()->assign(std::move(src)))
 				)
 		{
 			this->assign(std::move(src));
@@ -166,7 +167,7 @@ namespace kerbal
 		KERBAL_CONSTEXPR20
 		single_list<Tp, Allocator>&
 		single_list<Tp, Allocator>::operator=(std::initializer_list<value_type> src)
-				KERBAL_CONDITIONAL_NOEXCEPT(noexcept(assign(src)))
+				KERBAL_CONDITIONAL_NOEXCEPT(noexcept(kerbal::utility::declthis<single_list>()->assign(src)))
 		{
 			this->assign(src);
 			return *this;
@@ -178,7 +179,7 @@ namespace kerbal
 		KERBAL_CONSTEXPR20
 		void single_list<Tp, Allocator>::assign(const single_list& src)
 				KERBAL_CONDITIONAL_NOEXCEPT(
-						noexcept(assign(src.cbegin(), src.cend()))
+						noexcept(kerbal::utility::declthis<single_list>()->assign(src.cbegin(), src.cend()))
 				)
 		{
 			this->assign(src.cbegin(), src.cend());
