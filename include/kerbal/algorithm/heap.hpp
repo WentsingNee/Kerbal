@@ -23,15 +23,14 @@ namespace kerbal
 	{
 
 		template <typename RandomAccessIterator>
-		KERBAL_CONSTEXPR14
+		KERBAL_CONSTEXPR
 		RandomAccessIterator
 		__heap_left_son(RandomAccessIterator first, RandomAccessIterator parent, RandomAccessIterator last, std::random_access_iterator_tag)
 		{
 			typedef RandomAccessIterator iterator;
 			typedef typename kerbal::iterator::iterator_traits<iterator>::difference_type difference_type;
 
-			difference_type dist(kerbal::iterator::distance(first, parent) + 1);
-			return kerbal::iterator::next_at_most(parent, dist, last);
+			return kerbal::iterator::next_at_most(parent, kerbal::iterator::distance(first, parent) + 1, last);
 		}
 
 		template <typename ForwardIterator>
@@ -58,7 +57,7 @@ namespace kerbal
 		}
 
 		template <typename ForwardIterator>
-		KERBAL_CONSTEXPR14
+		KERBAL_CONSTEXPR
 		ForwardIterator
 		__heap_left_son(ForwardIterator first, ForwardIterator parent, ForwardIterator last)
 		{

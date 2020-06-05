@@ -18,6 +18,7 @@
 
 namespace kerbal
 {
+
 	namespace iterator
 	{
 
@@ -148,6 +149,8 @@ namespace kerbal
 			return kerbal::iterator::__prev(it, dist, kerbal::iterator::iterator_category(it));
 		}
 
+
+
 		template <typename BidirectionalIterator>
 		KERBAL_CONSTEXPR14
 		BidirectionalIterator __prev(BidirectionalIterator it, std::bidirectional_iterator_tag)
@@ -178,6 +181,8 @@ namespace kerbal
 		{
 			return kerbal::iterator::__prev(it, kerbal::iterator::iterator_category(it));
 		}
+
+
 
 		template <typename InputIterator, typename Distance>
 		KERBAL_CONSTEXPR14
@@ -210,6 +215,8 @@ namespace kerbal
 			return kerbal::iterator::__next(it, dist, kerbal::iterator::iterator_category(it));
 		}
 
+
+
 		template <typename InputIterator>
 		KERBAL_CONSTEXPR14
 		InputIterator __next(InputIterator it, std::input_iterator_tag)
@@ -240,6 +247,8 @@ namespace kerbal
 		{
 			return kerbal::iterator::__next(it, kerbal::iterator::iterator_category(it));
 		}
+
+
 
 		template <typename InputIterator, typename Distance>
 		KERBAL_CONSTEXPR14
@@ -284,13 +293,37 @@ namespace kerbal
 			return __advance_at_most(it, dist, last, kerbal::iterator::iterator_category(it));
 		}
 
-		template <typename InputIterator, typename Distance>
+
+
+		template <typename ForwardIterator, typename Distance>
 		KERBAL_CONSTEXPR14
-		InputIterator next_at_most(InputIterator it, Distance dist, InputIterator last)
+		ForwardIterator __next_at_most(ForwardIterator it, Distance dist, ForwardIterator last, std::forward_iterator_tag)
 		{
-			kerbal::iterator::advance_at_most(it, dist, last);
+			typedef ForwardIterator iterator;
+			typedef typename kerbal::iterator::iterator_traits<iterator>::difference_type difference_type;
+			difference_type d(0);
+			while (static_cast<bool>(d < dist) && static_cast<bool>(it != last)) {
+				++it;
+				++d;
+			}
 			return it;
 		}
+
+		template <typename RandomAccessIterator, typename Distance>
+		KERBAL_CONSTEXPR
+		RandomAccessIterator __next_at_most(RandomAccessIterator it, Distance dist, RandomAccessIterator last, std::random_access_iterator_tag)
+		{
+			return dist < kerbal::iterator::distance(it, last) ? it + dist : last;
+		}
+
+		template <typename ForwardIterator, typename Distance>
+		KERBAL_CONSTEXPR
+		ForwardIterator next_at_most(ForwardIterator it, Distance dist, ForwardIterator last)
+		{
+			return kerbal::iterator::__next_at_most(it, dist, last, kerbal::iterator::iterator_category(it));
+		}
+
+
 
 		template <typename BidirectionalIterator, typename Distance>
 		KERBAL_CONSTEXPR14
@@ -335,13 +368,39 @@ namespace kerbal
 			return __retreat_at_most(it, dist, first, kerbal::iterator::iterator_category(it));
 		}
 
+
+
 		template <typename BidirectionalIterator, typename Distance>
 		KERBAL_CONSTEXPR14
-		BidirectionalIterator prev_at_most(BidirectionalIterator it, Distance dist, BidirectionalIterator first)
+		BidirectionalIterator __prev_at_most(BidirectionalIterator it, Distance dist, BidirectionalIterator first,
+				std::bidirectional_iterator_tag)
 		{
-			kerbal::iterator::retreat_at_most(it, dist, first);
+			typedef BidirectionalIterator iterator;
+			typedef typename kerbal::iterator::iterator_traits<iterator>::difference_type difference_type;
+			difference_type d(0);
+			while (static_cast<bool>(d < dist) && static_cast<bool>(it != first)) {
+				--it;
+				++d;
+			}
 			return it;
 		}
+
+		template <typename RandomAccessIterator, typename Distance>
+		KERBAL_CONSTEXPR
+		RandomAccessIterator __prev_at_most(RandomAccessIterator it, Distance dist, RandomAccessIterator first,
+				std::random_access_iterator_tag)
+		{
+			return dist < kerbal::iterator::distance(first, it) ? it - dist : first;
+		}
+
+		template <typename BidirectionalIterator, typename Distance>
+		KERBAL_CONSTEXPR
+		BidirectionalIterator prev_at_most(BidirectionalIterator it, Distance dist, BidirectionalIterator first)
+		{
+			return kerbal::iterator::__prev_at_most(it, dist, first, kerbal::iterator::iterator_category(it));
+		}
+
+
 
 		template <typename ForwardIterator>
 		KERBAL_CONSTEXPR14
@@ -393,6 +452,8 @@ namespace kerbal
 		{
 			return __midden_iterator(first, last, kerbal::iterator::iterator_category(first));
 		}
+
+
 
 		template <typename ForwardIterator>
 		KERBAL_CONSTEXPR14
@@ -459,6 +520,8 @@ namespace kerbal
 			return __midden_iterator_with_distance(first, last, kerbal::iterator::iterator_category(first));
 		}
 
+
+
 		template <typename ForwardIterator, typename Distance>
 		KERBAL_CONSTEXPR14
 		bool __distance_less_than(ForwardIterator first, ForwardIterator last, Distance dist, std::forward_iterator_tag)
@@ -487,6 +550,8 @@ namespace kerbal
 			return __distance_less_than(first, last, dist, kerbal::iterator::iterator_category(first));
 		}
 
+
+
 		template <typename ForwardIterator, typename Distance>
 		KERBAL_CONSTEXPR14
 		bool __distance_equal_to(ForwardIterator first, ForwardIterator last, Distance dist, std::forward_iterator_tag)
@@ -514,6 +579,8 @@ namespace kerbal
 		{
 			return __distance_equal_to(first, last, dist, kerbal::iterator::iterator_category(first));
 		}
+
+
 
 		template <typename ForwardIterator, typename Distance>
 		KERBAL_CONSTEXPR14
