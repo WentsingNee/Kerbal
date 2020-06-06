@@ -464,7 +464,7 @@ namespace kerbal
 
 				KERBAL_CONSTEXPR20
 				void __consecutive_destroy_node(node_base * start) KERBAL_CONDITIONAL_NOEXCEPT(
-						noexcept(__destroy_node(kerbal::utility::declval<node_base*>()))
+						noexcept(kerbal::utility::declthis<single_list>()->__destroy_node(kerbal::utility::declval<node_base*>()))
 				);
 
 				KERBAL_CONSTEXPR20
