@@ -25,6 +25,7 @@
 
 namespace kerbal
 {
+
 	namespace container
 	{
 
@@ -64,7 +65,8 @@ namespace kerbal
 					typedef typename iterator_traits::reference				reference;
 
 				public:
-					explicit KERBAL_CONSTEXPR __stavec_iterbase(storage_type_for_iterator* current) KERBAL_NOEXCEPT :
+					KERBAL_CONSTEXPR
+					explicit __stavec_iterbase(storage_type_for_iterator* current) KERBAL_NOEXCEPT :
 							current(current)
 					{
 					}
@@ -72,18 +74,21 @@ namespace kerbal
 					//===================
 					//forward iterator interface
 
+					KERBAL_CONSTEXPR14
 					reference operator*() const KERBAL_NOEXCEPT
 					{
 						return current->raw_value();
 					}
 
+					KERBAL_CONSTEXPR14
 					DerivedIterator& operator++() KERBAL_NOEXCEPT
 					{
 						++this->current;
 						return static_cast<DerivedIterator&>(*this);
 					}
 
-					friend KERBAL_CONSTEXPR bool operator==(const DerivedIterator & lhs, const DerivedIterator & rhs) KERBAL_NOEXCEPT
+					friend KERBAL_CONSTEXPR
+					bool operator==(const DerivedIterator & lhs, const DerivedIterator & rhs) KERBAL_NOEXCEPT
 					{
 						return lhs.current == rhs.current;
 					}
@@ -91,6 +96,7 @@ namespace kerbal
 					//===================
 					//bidirectional iterator interface
 
+					KERBAL_CONSTEXPR14
 					DerivedIterator& operator--() KERBAL_NOEXCEPT
 					{
 						--this->current;
@@ -107,24 +113,28 @@ namespace kerbal
 						return lhs.current - rhs.current;
 					}
 
+					KERBAL_CONSTEXPR14
 					DerivedIterator& operator+=(const difference_type & delta) KERBAL_NOEXCEPT
 					{
 						this->current += delta;
 						return static_cast<DerivedIterator&>(*this);
 					}
 
+					KERBAL_CONSTEXPR14
 					DerivedIterator& operator-=(const difference_type & delta) KERBAL_NOEXCEPT
 					{
 						this->current -= delta;
 						return static_cast<DerivedIterator&>(*this);
 					}
 
-					KERBAL_CONSTEXPR14 reference operator[](const difference_type & dist) const KERBAL_NOEXCEPT
+					KERBAL_CONSTEXPR14
+					reference operator[](const difference_type & dist) const KERBAL_NOEXCEPT
 					{
 						return *(static_cast<const DerivedIterator&>(*this) + dist);
 					}
 
-					friend KERBAL_CONSTEXPR bool operator<(const DerivedIterator & lhs, const DerivedIterator & rhs) KERBAL_NOEXCEPT
+					friend KERBAL_CONSTEXPR
+					bool operator<(const DerivedIterator & lhs, const DerivedIterator & rhs) KERBAL_NOEXCEPT
 					{
 						return lhs.current < rhs.current;
 					}
@@ -151,7 +161,8 @@ namespace kerbal
 					typedef __stavec_iterbase<__stavec_iter<ValueType>, ValueType*, storage_type> super;
 
 				public:
-					explicit KERBAL_CONSTEXPR __stavec_iter(storage_type* current) KERBAL_NOEXCEPT :
+					KERBAL_CONSTEXPR
+					explicit __stavec_iter(storage_type* current) KERBAL_NOEXCEPT :
 							super(current)
 					{
 					}
@@ -174,12 +185,14 @@ namespace kerbal
 					typedef __stavec_iter<ValueType> iterator;
 
 				public:
-					explicit KERBAL_CONSTEXPR __stavec_kiter(const storage_type* current) KERBAL_NOEXCEPT :
+					KERBAL_CONSTEXPR
+					explicit __stavec_kiter(const storage_type* current) KERBAL_NOEXCEPT :
 							super(current)
 					{
 					}
 
-					KERBAL_CONSTEXPR __stavec_kiter(const iterator & current) KERBAL_NOEXCEPT :
+					KERBAL_CONSTEXPR
+					__stavec_kiter(const iterator & current) KERBAL_NOEXCEPT :
 							super(current.current)
 					{
 					}

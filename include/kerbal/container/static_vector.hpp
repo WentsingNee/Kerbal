@@ -16,19 +16,18 @@
 #include <kerbal/compatibility/constexpr.hpp>
 #include <kerbal/compatibility/noexcept.hpp>
 #include <kerbal/container/static_container_exception.hpp>
-#include <kerbal/data_struct/raw_storage.hpp>
 #include <kerbal/iterator/iterator_traits.hpp>
 #include <kerbal/iterator/reverse_iterator.hpp>
 #include <kerbal/type_traits/array_traits.hpp>
 #include <kerbal/type_traits/enable_if.hpp>
 
 #include <cstddef>
-#include <stdexcept>
 
 #if __cplusplus >= 201103L
 #	include <initializer_list>
 #endif
 
+#include <kerbal/container/detail/static_vector_base.hpp>
 #include <kerbal/container/impl/static_vector_iterator.impl.hpp>
 
 namespace kerbal
@@ -36,6 +35,7 @@ namespace kerbal
 
 	namespace container
 	{
+
 		/**
 		 * @brief Array with flexible length that stored on automatic storage duration
 		 * @details The class is an encapsulation class of array that could be stored on
@@ -52,8 +52,11 @@ namespace kerbal
 		 * @tparam N The maximum number of elements that the array can hold.
 		 */
 		template <typename Tp, size_t N>
-		class static_vector
+		class static_vector: protected kerbal::container::detail::static_vector_base<Tp, N>
 		{
+			private:
+				typedef kerbal::container::detail::static_vector_base<Tp, N> super;
+
 			public:
 				typedef Tp							value_type;
 				typedef const value_type			const_type;
@@ -80,14 +83,7 @@ namespace kerbal
 			private:
 				typedef typename kerbal::type_traits::remove_all_extents<value_type>::type remove_all_extents_t;
 
-				typedef kerbal::data_struct::raw_storage<value_type> storage_type;
-
-				/**
-				 * @brief 数据存储区
-				 */
-				storage_type storage[N];
-
-				const storage_type* p_to_end;
+				typedef typename super::storage_type	storage_type;
 
 			public:
 
@@ -101,21 +97,18 @@ namespace kerbal
 				typedef kerbal::iterator::reverse_iterator<const_iterator>	const_reverse_iterator;
 
 			public:
+				KERBAL_CONSTEXPR
 				/** @brief Empty container constructor (Default constructor) */
 				static_vector() KERBAL_NOEXCEPT;
 
-			private:
-				void __copy_constructor(const static_vector & src, kerbal::type_traits::false_type);
-				void __copy_constructor(const static_vector & src, kerbal::type_traits::true_type) KERBAL_NOEXCEPT;
-
-			public:
 				/**
 				 * @brief Copy constructor
 				 * @param src Another static_vector object of the same type (must have the same template arguments type and N)
 				 */
+				KERBAL_CONSTEXPR14
 				static_vector(const static_vector & src);
 
-#			if __cplusplus >= 201103L
+#		if __cplusplus >= 201103L
 
 				/**
 				 * @brief Construct the array by coping the contents in initializer list
@@ -123,34 +116,29 @@ namespace kerbal
 				 * @warning Compile terminate if the length of the initializer list large than the arg N of the static_vector
 				 * @warning The constructor only be provided under the environment of C++11 standard
 				 */
+				KERBAL_CONSTEXPR14
 				static_vector(std::initializer_list<value_type> src);
 
-			private:
-				void __move_constructor(static_vector && src, kerbal::type_traits::false_type);
-				void __move_constructor(static_vector && src, kerbal::type_traits::true_type) noexcept;
-
-			public:
+				KERBAL_CONSTEXPR14
 				static_vector(static_vector && src);
 
-#			endif
+#		endif
 
+				KERBAL_CONSTEXPR14
 				explicit static_vector(size_type n);
 
+				KERBAL_CONSTEXPR14
 				static_vector(size_type n, const_reference val);
 
 			private:
 
 				template <typename InputIterator>
-				void __range_copy_constructor(InputIterator first, InputIterator last, std::input_iterator_tag, kerbal::type_traits::false_type);
-
-				template <typename InputIterator>
-				void __range_copy_constructor(InputIterator first, InputIterator last, std::input_iterator_tag, kerbal::type_traits::true_type) KERBAL_NOEXCEPT;
+				KERBAL_CONSTEXPR14
+				void __range_copy_constructor(InputIterator first, InputIterator last, std::input_iterator_tag) KERBAL_NOEXCEPT;
 
 				template <typename RandomAccessIterator>
-				void __range_copy_constructor(RandomAccessIterator first, RandomAccessIterator last, std::random_access_iterator_tag, kerbal::type_traits::false_type);
-
-				template <typename RandomAccessIterator>
-				void __range_copy_constructor(RandomAccessIterator first, RandomAccessIterator last, std::random_access_iterator_tag, kerbal::type_traits::true_type) KERBAL_NOEXCEPT;
+				KERBAL_CONSTEXPR14
+				void __range_copy_constructor(RandomAccessIterator first, RandomAccessIterator last, std::random_access_iterator_tag) KERBAL_NOEXCEPT;
 
 			public:
 
@@ -163,6 +151,7 @@ namespace kerbal
 				 *          will be used. The others will be ignored.
 				 */
 				template <typename InputIterator>
+				KERBAL_CONSTEXPR14
 				static_vector(InputIterator first, InputIterator last,
 						typename kerbal::type_traits::enable_if<
 								kerbal::iterator::is_input_compatible_iterator<InputIterator>::value
@@ -170,25 +159,27 @@ namespace kerbal
 						>::type = 0
 				);
 
-				/**
-				 * @brief 析构函数
-				 */
-				~static_vector();
-
+				KERBAL_CONSTEXPR14
 				static_vector& operator=(const static_vector & src);
 
-#	if __cplusplus >= 201103L
+#		if __cplusplus >= 201103L
+
 				/**
 				 * @brief Assign the array by using the content of an initializer list
 				 * @param src the initializer list
 				 * @return the reference to the array be assigned
 				 */
+				KERBAL_CONSTEXPR14
 				static_vector& operator=(std::initializer_list<value_type> src);
-#	endif
+
+#		endif
 
 			private:
 
+				KERBAL_CONSTEXPR14
 				void __assign(size_type new_size, const_reference val, kerbal::type_traits::false_type enable_mem_optimization);
+
+				KERBAL_CONSTEXPR14
 				void __assign(size_type new_size, const_reference val, kerbal::type_traits::true_type enable_mem_optimization);
 
 			public:
@@ -198,6 +189,7 @@ namespace kerbal
 				 * @param new_size numbers of the value(s)
 				 * @param val value
 				 */
+				KERBAL_CONSTEXPR14
 				void assign(size_type new_size, const_reference val);
 
 				/**
@@ -208,58 +200,81 @@ namespace kerbal
 				 * @warning 若区间长度超出 static_vector 所能存放的最大元素数目, 超过部分将自动截断
 				 */
 				template <typename InputIterator>
+				KERBAL_CONSTEXPR14
 				typename kerbal::type_traits::enable_if<
 						kerbal::iterator::is_input_compatible_iterator<InputIterator>::value
 				>::type
 				assign(InputIterator begin, InputIterator end);
 
-#if __cplusplus >= 201103L
+#		if __cplusplus >= 201103L
+
 				/**
 				 * @brief Assign the array by using the content of an initializer list
 				 * @param src the initializer list
 				 */
+				KERBAL_CONSTEXPR14
 				void assign(std::initializer_list<value_type> src);
-#endif
+
+#		endif
 
 				/** @brief 返回指向数组首元素的迭代器 */
-				KERBAL_CONSTEXPR14 iterator begin() KERBAL_NOEXCEPT;
+				KERBAL_CONSTEXPR14
+				iterator begin() KERBAL_NOEXCEPT;
 
 				/** @brief 返回指向数组末尾元素的后一个元素位置的迭代器 */
-				KERBAL_CONSTEXPR14 iterator end() KERBAL_NOEXCEPT;
+				KERBAL_CONSTEXPR14
+				iterator end() KERBAL_NOEXCEPT;
 
-				KERBAL_CONSTEXPR14 const_iterator begin() const KERBAL_NOEXCEPT;
+				KERBAL_CONSTEXPR14
+				const_iterator begin() const KERBAL_NOEXCEPT;
 
 				/** @brief 返回指向数组末尾元素的后一个元素位置的迭代器 */
-				KERBAL_CONSTEXPR14 const_iterator end() const KERBAL_NOEXCEPT;
+				KERBAL_CONSTEXPR14
+				const_iterator end() const KERBAL_NOEXCEPT;
 
-				KERBAL_CONSTEXPR14 const_iterator cbegin() const KERBAL_NOEXCEPT;
+				KERBAL_CONSTEXPR
+				const_iterator cbegin() const KERBAL_NOEXCEPT;
 
-				KERBAL_CONSTEXPR14 const_iterator cend() const KERBAL_NOEXCEPT;
+				KERBAL_CONSTEXPR
+				const_iterator cend() const KERBAL_NOEXCEPT;
 
+				KERBAL_CONSTEXPR14
 				reverse_iterator rbegin() KERBAL_NOEXCEPT;
+
+				KERBAL_CONSTEXPR14
 				reverse_iterator rend() KERBAL_NOEXCEPT;
 
+				KERBAL_CONSTEXPR14
 				const_reverse_iterator rbegin() const KERBAL_NOEXCEPT;
+
+				KERBAL_CONSTEXPR14
 				const_reverse_iterator rend() const KERBAL_NOEXCEPT;
 
+				KERBAL_CONSTEXPR
 				const_reverse_iterator crbegin() const KERBAL_NOEXCEPT;
+
+				KERBAL_CONSTEXPR
 				const_reverse_iterator crend() const KERBAL_NOEXCEPT;
 
+				KERBAL_CONSTEXPR14
 				iterator nth(size_type index)
 				{
 					return this->begin() + index;
 				}
 
+				KERBAL_CONSTEXPR14
 				const_iterator nth(size_type index) const
 				{
 					return this->cbegin() + index;
 				}
 
+				KERBAL_CONSTEXPR14
 				size_type index_of(iterator it)
 				{
 					return it - this->begin();
 				}
 
+				KERBAL_CONSTEXPR
 				size_type index_of(const_iterator it) const
 				{
 					return it - this->cbegin();
@@ -269,12 +284,14 @@ namespace kerbal
 				 * @brief Count the number of the elements that the array has contained.
 				 * @return the number of the elements that the array has contained
 				 */
+				KERBAL_CONSTEXPR
 				size_type size() const KERBAL_NOEXCEPT;
 
 				/**
 				 * @brief Returns the size() of the largest possible static_vector.
 				 */
-				KERBAL_CONSTEXPR size_type max_size() const KERBAL_NOEXCEPT
+				KERBAL_CONSTEXPR
+				size_type max_size() const KERBAL_NOEXCEPT
 				{
 					return N;
 				}
@@ -283,6 +300,7 @@ namespace kerbal
 				 * @brief Judge whether the array is empty.
 				 * @return If the array is empty, return true, otherwise return false
 				 */
+				KERBAL_CONSTEXPR
 				bool empty() const KERBAL_NOEXCEPT;
 
 				void alert_empty() const
@@ -296,6 +314,7 @@ namespace kerbal
 				 * @brief Judge whether the array has been full.
 				 * @return If the array has been full, return true, otherwise return false
 				 */
+				KERBAL_CONSTEXPR
 				bool full() const KERBAL_NOEXCEPT;
 
 				void alert_full() const
@@ -305,7 +324,10 @@ namespace kerbal
 					}
 				}
 
+				KERBAL_CONSTEXPR14
 				reference operator[](size_type index) KERBAL_NOEXCEPT;
+
+				KERBAL_CONSTEXPR14
 				const_reference operator[](size_type index) const KERBAL_NOEXCEPT;
 
 				reference at(size_type index);
@@ -315,24 +337,28 @@ namespace kerbal
 				 * @brief Get the reference of the element at the beginning of the array.
 				 * @return the reference of the element at the beginning of the array.
 				 */
+				KERBAL_CONSTEXPR14
 				reference front();
 
 				/**
 				 * @brief Get the const_reference of the element at the beginning of the array.
 				 * @return the const_reference of the element at the beginning of the array.
 				 */
+				KERBAL_CONSTEXPR14
 				const_reference front() const;
 
 				/**
 				 * @brief Get the reference of the element at the end of the array.
 				 * @return the reference of the element at the end of the array.
 				 */
+				KERBAL_CONSTEXPR14
 				reference back();
 
 				/**
 				 * @brief Get the const_reference of the element at the end of the array.
 				 * @return the const_reference of the element at the end of the array.
 				 */
+				KERBAL_CONSTEXPR14
 				const_reference back() const;
 
 				/**
@@ -351,23 +377,27 @@ namespace kerbal
 				 * @brief 在数组末尾插入参数 src 指定的元素
 				 * @param src
 				 */
+				KERBAL_CONSTEXPR14
 				void push_back(const_reference src);
 
-#			if __cplusplus >= 201103L
+#		if __cplusplus >= 201103L
+
 				/**
 				 * @brief 在数组末尾插入参数 src 指定的元素
 				 * @param src
 				 */
+				KERBAL_CONSTEXPR14
 				void push_back(rvalue_reference src);
 
-#			endif
+#		endif
 
-#			if __cplusplus >= 201103L
+#		if __cplusplus >= 201103L
 
 				template <typename ... Args>
+				KERBAL_CONSTEXPR14
 				reference emplace_back(Args&& ...args);
 
-#			else
+#		else
 
 				reference emplace_back();
 
@@ -380,84 +410,101 @@ namespace kerbal
 				template <typename Arg0, typename Arg1, typename Arg2>
 				reference emplace_back(const Arg0& arg0, const Arg1& arg1, const Arg2& arg2);
 
-#			endif
+#		endif
 
 				/**
 				 * @brief 移除数组末尾的元素
 				 */
+				KERBAL_CONSTEXPR14
 				void pop_back();
 
 			private:
+				KERBAL_CONSTEXPR14
 				void __shrink_back_to(const_iterator to, kerbal::type_traits::false_type);
 
+				KERBAL_CONSTEXPR14
 				void __shrink_back_to(const_iterator to, kerbal::type_traits::true_type) KERBAL_NOEXCEPT;
 
 			public:
+				KERBAL_CONSTEXPR14
 				void shrink_back_to(const_iterator to);
 
 				/**
 				 * @brief 在数组首部插入参数 src 指定的元素
 				 * @param src
 				 */
+				KERBAL_CONSTEXPR14
 				void push_front(const_reference src);
 
-#			if __cplusplus >= 201103L
+#		if __cplusplus >= 201103L
 				/**
 				 * @brief 在数组首部插入参数 src 指定的元素
 				 * @param src
 				 */
+				KERBAL_CONSTEXPR14
 				void push_front(rvalue_reference src);
 
 				template <typename ... Args>
+				KERBAL_CONSTEXPR14
 				reference emplace_front(Args&& ...args);
 
-#			endif
+#		endif
 
 				/**
 				 * @brief 移除数组首部的元素
 				 */
+				KERBAL_CONSTEXPR14
 				void pop_front();
 
+				KERBAL_CONSTEXPR14
 				iterator insert(const_iterator pos, const_reference val);
 
-#			if __cplusplus >= 201103L
+#		if __cplusplus >= 201103L
 
+				KERBAL_CONSTEXPR14
 				iterator insert(const_iterator pos, rvalue_reference val);
 
 				template <typename ... Args>
+				KERBAL_CONSTEXPR14
 				iterator emplace(const_iterator pos, Args&& ...args);
 
-#			endif
+#		endif
 
+				KERBAL_CONSTEXPR14
 				iterator erase(const_iterator pos);
 
+				KERBAL_CONSTEXPR14
 				iterator erase(const_iterator begin, const_iterator end);
 
 				/**
 				 * @brief Swap the array with another one.
 				 * @param with another array to be swaped with
 				 */
+				KERBAL_CONSTEXPR14
 				void swap(static_vector & with);
 
 				/**
 				 * @brief Clear all the elements in the array.
 				 */
+				KERBAL_CONSTEXPR14
 				void clear();
 
 				/**
 				 * @brief Fill all the blank positions at the end of array by using default constructor of the element type.
 				 */
+				KERBAL_CONSTEXPR14
 				void fill();
 
 				/**
 				 * @brief Fill all the blank positions at the end of array by copying the argument val.
 				 * @param val
 				 */
+				KERBAL_CONSTEXPR14
 				void fill(const_reference val);
 
 			private:
 
-#	if __cplusplus < 201103L
+#		if __cplusplus < 201103L
 
 				void __construct_at(iterator);
 
@@ -477,55 +524,64 @@ namespace kerbal
 				void __construct_at(iterator, const T0&, const T1&, const T2&, const T3&, const T4&);
 
 
-#	else
+#		else
 
 				template <typename ... Args>
+				KERBAL_CONSTEXPR14
 				void __construct_at(iterator, Args&& ...);
-#	endif
 
+#		endif
+
+				KERBAL_CONSTEXPR14
 				void __destroy_at(iterator);
-
 
 		};
 
 		template <typename Tp, size_t M, size_t N>
+		KERBAL_CONSTEXPR14
 		bool operator==(const static_vector<Tp, M> & lhs, const static_vector<Tp, N> & rhs)
 		{
 			return kerbal::algorithm::sequence_equal_to(lhs.cbegin(), lhs.cend(), rhs.cbegin(), rhs.cend());
 		}
 
 		template <typename Tp, size_t M, size_t N>
+		KERBAL_CONSTEXPR14
 		bool operator!=(const static_vector<Tp, M> & lhs, const static_vector<Tp, N> & rhs)
 		{
 			return kerbal::algorithm::sequence_not_equal_to(lhs.cbegin(), lhs.cend(), rhs.cbegin(), rhs.cend());
 		}
 
 		template <typename Tp, size_t M, size_t N>
+		KERBAL_CONSTEXPR14
 		bool operator<(const static_vector<Tp, M> & lhs, const static_vector<Tp, N> & rhs)
 		{
 			return kerbal::algorithm::sequence_less(lhs.cbegin(), lhs.cend(), rhs.cbegin(), rhs.cend());
 		}
 
 		template <typename Tp, size_t M, size_t N>
+		KERBAL_CONSTEXPR14
 		bool operator<=(const static_vector<Tp, M> & lhs, const static_vector<Tp, N> & rhs)
 		{
 			return kerbal::algorithm::sequence_less_equal(lhs.cbegin(), lhs.cend(), rhs.cbegin(), rhs.cend());
 		}
 
 		template <typename Tp, size_t M, size_t N>
+		KERBAL_CONSTEXPR14
 		bool operator>(const static_vector<Tp, M> & lhs, const static_vector<Tp, N> & rhs)
 		{
 			return kerbal::algorithm::sequence_greater(lhs.cbegin(), lhs.cend(), rhs.cbegin(), rhs.cend());
 		}
 
 		template <typename Tp, size_t M, size_t N>
+		KERBAL_CONSTEXPR14
 		bool operator>=(const static_vector<Tp, M> & lhs, const static_vector<Tp, N> & rhs)
 		{
 			return kerbal::algorithm::sequence_greater_equal(lhs.cbegin(), lhs.cend(), rhs.cbegin(), rhs.cend());
 		}
 
-	}
-}
+	} // namespace container
+
+} // namespace kerbal
 
 #include <kerbal/container/impl/static_vector.impl.hpp>
 
