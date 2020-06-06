@@ -1133,100 +1133,100 @@ namespace std
 	template <>
 	struct __kerbal_compressed_pair_get<0>
 	{
-			template <typename _Tp1, typename _Tp2>
-			static constexpr _Tp1&
-			__get(kerbal::utility::compressed_pair<_Tp1, _Tp2>& __pair) noexcept
+			template <typename Tp, typename Up>
+			static constexpr Tp&
+			__get(kerbal::utility::compressed_pair<Tp, Up>& __pair) noexcept
 			{
 				return __pair.first();
 			}
 
-			template <typename _Tp1, typename _Tp2>
-			static constexpr _Tp1&&
-			__move_get(kerbal::utility::compressed_pair<_Tp1, _Tp2>&& __pair) noexcept
+			template <typename Tp, typename Up>
+			static constexpr Tp&&
+			__move_get(kerbal::utility::compressed_pair<Tp, Up>&& __pair) noexcept
 			{
-				return std::forward<_Tp1>(__pair.first());
+				return std::forward<Tp>(__pair.first());
 			}
 
-			template <typename _Tp1, typename _Tp2>
-			static constexpr const _Tp1&
-			__const_get(const kerbal::utility::compressed_pair<_Tp1, _Tp2>& __pair) noexcept
+			template <typename Tp, typename Up>
+			static constexpr const Tp&
+			__const_get(const kerbal::utility::compressed_pair<Tp, Up>& __pair) noexcept
 			{
 				return __pair.first();
 			}
 
-			template <typename _Tp1, typename _Tp2>
-			static constexpr const _Tp1&&
-			__const_move_get(const kerbal::utility::compressed_pair<_Tp1, _Tp2>&& __pair) noexcept
+			template <typename Tp, typename Up>
+			static constexpr const Tp&&
+			__const_move_get(const kerbal::utility::compressed_pair<Tp, Up>&& __pair) noexcept
 			{
-				return std::forward<const _Tp1>(__pair.first());
+				return std::forward<const Tp>(__pair.first());
 			}
 	};
 
 	template <>
 	struct __kerbal_compressed_pair_get<1>
 	{
-			template <typename _Tp1, typename _Tp2>
-			static constexpr _Tp2&
-			__get(kerbal::utility::compressed_pair<_Tp1, _Tp2>& __pair) noexcept
+			template <typename Tp, typename Up>
+			static constexpr Up&
+			__get(kerbal::utility::compressed_pair<Tp, Up>& __pair) noexcept
 			{
 				return __pair.second();
 			}
 
-			template <typename _Tp1, typename _Tp2>
-			static constexpr _Tp2&&
-			__move_get(kerbal::utility::compressed_pair<_Tp1, _Tp2>&& __pair) noexcept
+			template <typename Tp, typename Up>
+			static constexpr Up&&
+			__move_get(kerbal::utility::compressed_pair<Tp, Up>&& __pair) noexcept
 			{
-				return std::forward<_Tp2>(__pair.second());
+				return std::forward<Up>(__pair.second());
 			}
 
-			template <typename _Tp1, typename _Tp2>
-			static constexpr const _Tp2&
-			__const_get(const kerbal::utility::compressed_pair<_Tp1, _Tp2>& __pair) noexcept
+			template <typename Tp, typename Up>
+			static constexpr const Up&
+			__const_get(const kerbal::utility::compressed_pair<Tp, Up>& __pair) noexcept
 			{
 				return __pair.second();
 			}
 
-			template <typename _Tp1, typename _Tp2>
-			static constexpr const _Tp2&&
-			__const_move_get(const kerbal::utility::compressed_pair<_Tp1, _Tp2>&& __pair) noexcept
+			template <typename Tp, typename Up>
+			static constexpr const Up&&
+			__const_move_get(const kerbal::utility::compressed_pair<Tp, Up>&& __pair) noexcept
 			{
-				return std::forward<const _Tp2>(__pair.second());
+				return std::forward<const Up>(__pair.second());
 			}
 	};
 
-	template <std::size_t _Int, class _Tp1, class _Tp2>
+	template <std::size_t _Int, typename Tp, typename Up>
 	constexpr
 	auto&
-	get(kerbal::utility::compressed_pair<_Tp1, _Tp2>& __in) noexcept
+	get(kerbal::utility::compressed_pair<Tp, Up>& pair) noexcept
 	{
-		return __kerbal_compressed_pair_get<_Int>::__get(__in);
+		return __kerbal_compressed_pair_get<_Int>::__get(pair);
 	}
 
-	template <std::size_t _Int, class _Tp1, class _Tp2>
+	template <std::size_t _Int, typename Tp, typename Up>
 	constexpr
 	auto&&
-	get(kerbal::utility::compressed_pair<_Tp1, _Tp2>&& __in) noexcept
+	get(kerbal::utility::compressed_pair<Tp, Up>&& pair) noexcept
 	{
-		return __kerbal_compressed_pair_get<_Int>::__move_get(std::move(__in));
+		return __kerbal_compressed_pair_get<_Int>::__move_get(std::move(pair));
 	}
 
-	template <std::size_t _Int, class _Tp1, class _Tp2>
+	template <std::size_t _Int, typename Tp, typename Up>
 	constexpr
 	const auto&
-	get(const kerbal::utility::compressed_pair<_Tp1, _Tp2>& __in) noexcept
+	get(const kerbal::utility::compressed_pair<Tp, Up>& pair) noexcept
 	{
-		return __kerbal_compressed_pair_get<_Int>::__const_get(__in);
+		return __kerbal_compressed_pair_get<_Int>::__const_get(pair);
 	}
 
-	template <std::size_t _Int, class _Tp1, class _Tp2>
+	template <std::size_t _Int, typename Tp, typename Up>
 	constexpr
 	const auto&&
-	get(const kerbal::utility::compressed_pair<_Tp1, _Tp2>&& __in) noexcept
+	get(const kerbal::utility::compressed_pair<Tp, Up>&& pair) noexcept
 	{
-		return __kerbal_compressed_pair_get<_Int>::__const_move_get(std::move(__in));
+		return __kerbal_compressed_pair_get<_Int>::__const_move_get(std::move(pair));
 	}
 
-}
+} // namespace std
 
 #endif
 
