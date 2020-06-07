@@ -796,7 +796,7 @@ namespace kerbal
 		}
 
 		template <typename RandomAccessIterator>
-		KERBAL_CONSTEXPR14
+		KERBAL_CONSTEXPR
 		RandomAccessIterator
 		__send_adv_iterator_to_last(RandomAccessIterator first, RandomAccessIterator adv, RandomAccessIterator last,
 										std::random_access_iterator_tag)
@@ -805,7 +805,7 @@ namespace kerbal
 		}
 
 		template <typename RandomAccessIterator>
-		KERBAL_CONSTEXPR14
+		KERBAL_CONSTEXPR
 		RandomAccessIterator
 		__send_adv_iterator_to_last(RandomAccessIterator first, RandomAccessIterator adv, RandomAccessIterator last)
 		{
