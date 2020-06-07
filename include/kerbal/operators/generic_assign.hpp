@@ -13,10 +13,10 @@
 #define KERBAL_OPERATORS_GENERIC_ASSIGN_HPP
 
 #include <kerbal/compatibility/constexpr.hpp>
-#include <kerbal/compatibility/move.hpp>
 #include <kerbal/compatibility/noexcept.hpp>
 
 #include <cstddef>
+#include <utility>
 
 #if __cplusplus >= 201103L
 #	include <type_traits>
@@ -46,7 +46,7 @@ namespace kerbal
 		KERBAL_CONSTEXPR14
 		Tp& generic_assign(Tp& lhs, Up&& rhs)
 								KERBAL_CONDITIONAL_NOEXCEPT(
-										noexcept(lhs = kerbal::compatibility::move(rhs))
+										noexcept(lhs = std::forward<Up>(rhs))
 								)
 		;
 
@@ -84,10 +84,10 @@ namespace kerbal
 		KERBAL_CONSTEXPR14
 		Tp& generic_assign(Tp & lhs, Up && rhs)
 								KERBAL_CONDITIONAL_NOEXCEPT(
-										noexcept(lhs = kerbal::compatibility::move(rhs))
+										noexcept(lhs = std::forward<Up>(rhs))
 								)
 		{
-			lhs = kerbal::compatibility::move(rhs);
+			lhs = std::forward<Up>(rhs);
 			return lhs;
 		}
 
@@ -97,7 +97,7 @@ namespace kerbal
 			)[N]
 		{
 			for (size_t i = 0; i < N; ++i) {
-				kerbal::operators::generic_assign(lhs[i], kerbal::compatibility::move(rhs[i]));
+				kerbal::operators::generic_assign(lhs[i], std::forward<Up>(rhs[i]));
 			}
 			return lhs;
 		}
