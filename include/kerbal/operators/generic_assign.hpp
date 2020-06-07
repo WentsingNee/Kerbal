@@ -13,6 +13,7 @@
 #define KERBAL_OPERATORS_GENERIC_ASSIGN_HPP
 
 #include <kerbal/compatibility/constexpr.hpp>
+#include <kerbal/compatibility/move.hpp>
 #include <kerbal/compatibility/noexcept.hpp>
 
 #include <cstddef>
@@ -29,15 +30,38 @@ namespace kerbal
 
 		template <typename Tp, typename Up>
 		KERBAL_CONSTEXPR14
-		Tp& generic_assign(Tp& lhs, const Up& rhs);
+		Tp& generic_assign(Tp& lhs, const Up& rhs)
+								KERBAL_CONDITIONAL_NOEXCEPT(
+										noexcept(lhs = rhs)
+								)
+		;
 
 		template <typename Tp, typename Up, size_t N>
 		KERBAL_CONSTEXPR14
 		Tp (& generic_assign(Tp (& lhs)[N], const Up (& rhs)[N]))[N];
 
+#	if __cplusplus >= 201103L
+
+		template <typename Tp, typename Up>
+		KERBAL_CONSTEXPR14
+		Tp& generic_assign(Tp& lhs, Up&& rhs)
+								KERBAL_CONDITIONAL_NOEXCEPT(
+										noexcept(lhs = kerbal::compatibility::move(rhs))
+								)
+		;
+
+		template <typename Tp, typename Up, size_t N>
+		KERBAL_CONSTEXPR14
+		Tp (& generic_assign(Tp (& lhs)[N], Up (&& rhs)[N]))[N];
+
+#	endif
+
 		template <typename Tp, typename Up>
 		KERBAL_CONSTEXPR14
 		Tp& generic_assign(Tp & lhs, const Up & rhs)
+								KERBAL_CONDITIONAL_NOEXCEPT(
+										noexcept(lhs = rhs)
+								)
 		{
 			lhs = rhs;
 			return lhs;
@@ -53,6 +77,32 @@ namespace kerbal
 			}
 			return lhs;
 		}
+
+#	if __cplusplus >= 201103L
+
+		template <typename Tp, typename Up>
+		KERBAL_CONSTEXPR14
+		Tp& generic_assign(Tp & lhs, Up && rhs)
+								KERBAL_CONDITIONAL_NOEXCEPT(
+										noexcept(lhs = kerbal::compatibility::move(rhs))
+								)
+		{
+			lhs = kerbal::compatibility::move(rhs);
+			return lhs;
+		}
+
+		template <typename Tp, typename Up, size_t N>
+		KERBAL_CONSTEXPR14
+		Tp (& generic_assign(Tp (& lhs)[N], Up (&& rhs)[N])
+			)[N]
+		{
+			for (size_t i = 0; i < N; ++i) {
+				kerbal::operators::generic_assign(lhs[i], kerbal::compatibility::move(rhs[i]));
+			}
+			return lhs;
+		}
+
+#	endif
 
 	} // namespace operators
 
