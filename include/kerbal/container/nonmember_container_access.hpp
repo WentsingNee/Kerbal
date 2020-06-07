@@ -14,6 +14,7 @@
 
 #include <kerbal/compatibility/constexpr.hpp>
 #include <kerbal/compatibility/noexcept.hpp>
+#include <kerbal/iterator/reverse_iterator.hpp>
 
 #include <cstddef>
 
@@ -261,13 +262,6 @@ namespace kerbal
 
 		template <typename Tp, size_t N>
 		KERBAL_CONSTEXPR
-		const Tp* begin(const Tp (&arr)[N]) KERBAL_NOEXCEPT
-		{
-			return arr;
-		}
-
-		template <typename Tp, size_t N>
-		KERBAL_CONSTEXPR
 		const Tp* cbegin(Tp (&arr)[N]) KERBAL_NOEXCEPT
 		{
 			return arr;
@@ -282,16 +276,41 @@ namespace kerbal
 
 		template <typename Tp, size_t N>
 		KERBAL_CONSTEXPR
-		const Tp* end(const Tp (&arr)[N]) KERBAL_NOEXCEPT
+		const Tp* cend(Tp (&arr)[N]) KERBAL_NOEXCEPT
 		{
 			return arr + N;
 		}
 
 		template <typename Tp, size_t N>
 		KERBAL_CONSTEXPR
-		const Tp* cend(Tp (&arr)[N]) KERBAL_NOEXCEPT
+		kerbal::iterator::reverse_iterator<Tp*>
+		rbegin(Tp (&arr)[N]) KERBAL_NOEXCEPT
 		{
-			return arr + N;
+			return kerbal::iterator::reverse_iterator<Tp*>(arr + N);
+		}
+
+		template <typename Tp, size_t N>
+		KERBAL_CONSTEXPR
+		kerbal::iterator::reverse_iterator<const Tp*>
+		crbegin(Tp (&arr)[N]) KERBAL_NOEXCEPT
+		{
+			return kerbal::iterator::reverse_iterator<const Tp*>(arr + N);
+		}
+
+		template <typename Tp, size_t N>
+		KERBAL_CONSTEXPR
+		kerbal::iterator::reverse_iterator<Tp*>
+		rend(Tp (&arr)[N]) KERBAL_NOEXCEPT
+		{
+			return kerbal::iterator::reverse_iterator<Tp*>(arr);
+		}
+
+		template <typename Tp, size_t N>
+		KERBAL_CONSTEXPR
+		kerbal::iterator::reverse_iterator<const Tp*>
+		crend(Tp (&arr)[N]) KERBAL_NOEXCEPT
+		{
+			return kerbal::iterator::reverse_iterator<const Tp*>(arr);
 		}
 
 		template <typename Tp, size_t N>
