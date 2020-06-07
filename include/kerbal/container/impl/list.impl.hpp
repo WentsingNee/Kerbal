@@ -842,13 +842,7 @@ namespace kerbal
 		KERBAL_CONSTEXPR20
 		void list<Tp, Allocator>::splice(const_iterator pos, list& other) KERBAL_NOEXCEPT
 		{
-
-#	if __cplusplus >= 201103L
-			this->splice(pos, std::move(other));
-#	else
 			this->splice(pos, other, other.cbegin(), other.cend());
-#	endif
-
 		}
 
 		template <typename Tp, typename Allocator>
@@ -873,9 +867,10 @@ namespace kerbal
 			iterator last_mut(last.cast_to_mutable());
 			node_base * start = first_mut.current;
 			node_base * end = last_mut.current;
+			node_base * back = end->prev;
 			start->prev->next = end;
 			end->prev = start->prev;
-			__hook_node(pos, start, end->prev);
+			__hook_node(pos, start, back);
 		}
 
 #	if __cplusplus >= 201103L
