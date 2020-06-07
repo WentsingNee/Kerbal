@@ -9,8 +9,8 @@
  *   all rights reserved
  */
 
-#ifndef KERBAL_ALGORITHM_MODIFIER_HPP_
-#define KERBAL_ALGORITHM_MODIFIER_HPP_
+#ifndef KERBAL_ALGORITHM_MODIFIER_HPP
+#define KERBAL_ALGORITHM_MODIFIER_HPP
 
 #include <kerbal/algorithm/binary_type_predicate.hpp>
 #include <kerbal/algorithm/querier.hpp>
@@ -21,11 +21,12 @@
 #include <kerbal/iterator/iterator_traits.hpp>
 
 #if __cplusplus >= 201103L
-# include <type_traits>
+#	include <type_traits>
 #endif
 
 namespace kerbal
 {
+
 	namespace algorithm
 	{
 
@@ -597,6 +598,41 @@ namespace kerbal
 			return first;
 		}
 
+		namespace detail
+		{
+
+			template <typename BidirectionalIterator, typename UnaryPredicate>
+			KERBAL_CONSTEXPR14
+			bool __partition_move_first_iter(BidirectionalIterator &first, BidirectionalIterator &last,
+											 UnaryPredicate &pred, std::bidirectional_iterator_tag)
+			{
+				while (first != last) {
+					if (pred(*first)) {
+						++first;
+					} else {
+						return false;
+					}
+				}
+				return true;
+			}
+
+			template <typename BidirectionalIterator, typename UnaryPredicate>
+			KERBAL_CONSTEXPR14
+			bool __partition_move_last_iter(BidirectionalIterator &first, BidirectionalIterator &last,
+											UnaryPredicate &pred, std::bidirectional_iterator_tag)
+			{
+				while (first != last) {
+					if (pred(*last)) {
+						return false;
+					} else {
+						--last;
+					}
+				}
+				return true;
+			}
+
+		} // namespace detail
+
 		template <typename BidirectionalIterator, typename UnaryPredicate>
 		KERBAL_CONSTEXPR14
 		BidirectionalIterator
@@ -604,28 +640,12 @@ namespace kerbal
 					UnaryPredicate pred, std::bidirectional_iterator_tag)
 		{
 			while (true) {
-				while (true) {
-					if (first != last) {
-						if (pred(*first)) {
-							++first;
-						} else {
-							break;
-						}
-					} else {
-						return first;
-					}
+				if (kerbal::algorithm::detail::__partition_move_first_iter(first, last, pred, kerbal::iterator::iterator_category(first))) {
+					return first;
 				}
 				--last;
-				while (true) {
-					if (first != last) {
-						if (!bool(pred(*last))) {
-							--last;
-						} else {
-							break;
-						}
-					} else {
-						return first;
-					}
+				if (kerbal::algorithm::detail::__partition_move_last_iter(first, last, pred, kerbal::iterator::iterator_category(first))) {
+					return first;
 				}
 				kerbal::algorithm::iter_swap(first, last);
 				++first;
@@ -1049,8 +1069,8 @@ namespace kerbal
 			kerbal::algorithm::__iota(first, last, value, kerbal::iterator::iterator_category(first));
 		}
 
-	} /* namespace algorithm */
+	} // namespace algorithm
 
-} /* namespace kerbal */
+} // namespace kerbal
 
-#endif /* KERBAL_ALGORITHM_MODIFIER_HPP_ */
+#endif // KERBAL_ALGORITHM_MODIFIER_HPP
