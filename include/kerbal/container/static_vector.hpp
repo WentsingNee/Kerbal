@@ -459,10 +459,16 @@ namespace kerbal
 				KERBAL_CONSTEXPR14
 				iterator insert(const_iterator pos, const_reference val);
 
+				KERBAL_CONSTEXPR14
+				iterator emplace(const_iterator pos, const_reference src);
+
 #		if __cplusplus >= 201103L
 
 				KERBAL_CONSTEXPR14
 				iterator insert(const_iterator pos, rvalue_reference val);
+
+				KERBAL_CONSTEXPR14
+				iterator emplace(const_iterator pos, rvalue_reference src);
 
 				template <typename ... Args>
 				KERBAL_CONSTEXPR14

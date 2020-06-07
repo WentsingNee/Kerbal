@@ -16,6 +16,7 @@
 #include <kerbal/algorithm/sequence_compare.hpp>
 #include <kerbal/iterator/iterator.hpp>
 #include <kerbal/memory/guard.hpp>
+#include <kerbal/operators/generic_assign.hpp>
 
 #include <kerbal/container/list.hpp>
 
@@ -199,7 +200,7 @@ namespace kerbal
 			size_type i = 0;
 			while (i != count) {
 				if (it != this->cend()) {
-					*it = val;
+					kerbal::operators::generic_assign(*it, val); // *it = val;
 					++i;
 					++it;
 				} else {
@@ -221,7 +222,7 @@ namespace kerbal
 			iterator it(this->begin());
 			while (first != last) {
 				if (it != this->cend()) {
-					*it = *first;
+					kerbal::operators::generic_assign(*it, *first); // *it = *first;
 					++first;
 					++it;
 				} else {

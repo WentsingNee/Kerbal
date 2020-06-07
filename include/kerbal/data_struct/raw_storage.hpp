@@ -14,7 +14,9 @@
 
 #include <kerbal/compatibility/constexpr.hpp>
 #include <kerbal/compatibility/method_overload_tag.hpp>
+#include <kerbal/compatibility/move.hpp>
 #include <kerbal/compatibility/noexcept.hpp>
+#include <kerbal/operators/generic_assign.hpp>
 #include <kerbal/type_traits/aligned_storage.hpp>
 #include <kerbal/type_traits/array_traits.hpp>
 #include <kerbal/type_traits/enable_if.hpp>
@@ -215,6 +217,11 @@ namespace kerbal
 		{
 			protected:
 				typedef Type value_type;
+				typedef const value_type&		const_reference;
+
+#		if __cplusplus >= 201103L
+				typedef value_type&&			rvalue_reference;
+#		endif
 
 				KERBAL_CONSTEXPR
 				__rawst_agent() KERBAL_NOEXCEPT
@@ -222,6 +229,12 @@ namespace kerbal
 				}
 
 			public:
+
+				KERBAL_CONSTEXPR14
+				void construct(const_reference src) KERBAL_NOEXCEPT
+				{
+					this->raw_value() = src;
+				}
 
 #		if __cplusplus < 201103L
 
@@ -262,6 +275,12 @@ namespace kerbal
 
 #		else
 
+				KERBAL_CONSTEXPR14
+				void construct(rvalue_reference src) noexcept
+				{
+					this->raw_value() = kerbal::compatibility::move(src);
+				}
+
 				template <typename ... Args>
 				KERBAL_CONSTEXPR14
 				void construct(Args&&... args) noexcept
@@ -283,6 +302,11 @@ namespace kerbal
 		{
 			protected:
 				typedef Type value_type [N];
+				typedef const value_type&		const_reference;
+
+#		if __cplusplus >= 201103L
+				typedef value_type&&			rvalue_reference;
+#		endif
 
 				KERBAL_CONSTEXPR
 				__rawst_agent() KERBAL_NOEXCEPT
@@ -295,6 +319,26 @@ namespace kerbal
 				void construct() KERBAL_NOEXCEPT
 				{
 				}
+
+				KERBAL_CONSTEXPR14
+				void construct(const_reference src) KERBAL_NOEXCEPT
+				{
+					for (size_t i = 0; i < N; ++i) {
+						kerbal::operators::generic_assign(this->storage[i], src[i]);
+					}
+				}
+
+#		if __cplusplus >= 201103L
+
+				KERBAL_CONSTEXPR14
+				void construct(rvalue_reference src) KERBAL_NOEXCEPT
+				{
+					for (size_t i = 0; i < N; ++i) {
+						kerbal::operators::generic_assign(this->storage[i], kerbal::compatibility::move(src[i]));
+					}
+				}
+
+#		endif
 
 				KERBAL_CONSTEXPR14
 				void destroy() KERBAL_NOEXCEPT
@@ -386,6 +430,11 @@ namespace kerbal
 
 			protected:
 				typedef Type value_type [N];
+				typedef const value_type&		const_reference;
+
+#		if __cplusplus >= 201103L
+				typedef value_type&&			rvalue_reference;
+#		endif
 
 			private:
 				template <typename Up, size_t M>
@@ -434,6 +483,40 @@ namespace kerbal
 						new (&this->raw_value()[i]) Type();
 					}
 				}
+
+				void construct(const_reference src)
+				{
+					for (size_t i = 0; i != N; ++i) {
+						new (&this->raw_value()[i]) Type(src[i]);
+					}
+				}
+
+				template <typename Up>
+				void construct(const Up (&src)[N])
+				{
+					for (size_t i = 0; i != N; ++i) {
+						new (&this->raw_value()[i]) Type(src[i]);
+					}
+				}
+
+#		if __cplusplus >= 201103L
+
+				void construct(rvalue_reference src)
+				{
+					for (size_t i = 0; i != N; ++i) {
+						new (&this->raw_value()[i]) Type(kerbal::compatibility::move(src[i]));
+					}
+				}
+
+				template <typename Up>
+				void construct(Up (&&src)[N])
+				{
+					for (size_t i = 0; i != N; ++i) {
+						new (&this->raw_value()[i]) Type(std::forward<Up>(src[i]));
+					}
+				}
+
+#		endif
 
 				void destroy()
 												KERBAL_CONDITIONAL_NOEXCEPT(

@@ -15,9 +15,10 @@
 #include <kerbal/algorithm/modifier.hpp>
 #include <kerbal/compatibility/move.hpp>
 #include <kerbal/iterator/iterator.hpp>
-#include <kerbal/utility/throw_this_exception.hpp>
+#include <kerbal/operators/generic_assign.hpp>
 #include <kerbal/type_traits/enable_if.hpp>
 #include <kerbal/type_traits/integral_constant.hpp>
+#include <kerbal/utility/throw_this_exception.hpp>
 
 #include <stdexcept>
 #include <utility> // std::forward
@@ -319,7 +320,7 @@ namespace kerbal
 		{
 			iterator assign_it = this->begin();
 			while (assign_it != this->end() && static_cast<bool>(first != last)) {
-				*assign_it = *first;
+				kerbal::operators::generic_assign(*assign_it, *first); // *assign_it = *first;
 				++assign_it;
 				++first;
 			}
@@ -712,7 +713,7 @@ namespace kerbal
 		KERBAL_CONSTEXPR14
 		void static_vector<Tp, N>::push_front(rvalue_reference src)
 		{
-			this->emplace_front(src);
+			this->emplace_front(kerbal::compatibility::move(src));
 		}
 
 		template <typename Tp, size_t N>
@@ -758,7 +759,30 @@ namespace kerbal
 				kerbal::algorithm::move_backward(mutable_pos, this->end() - 2, this->end() - 1); // move assign
 				// A A A X X Y Z O O
 				//          ^
-				*mutable_pos = val; // copy assign
+				kerbal::operators::generic_assign(*mutable_pos, val); // *mutable_pos == val // copy assign
+			}
+			return mutable_pos;
+		}
+
+		template <typename Tp, size_t N>
+		KERBAL_CONSTEXPR14
+		typename static_vector<Tp, N>::iterator
+		static_vector<Tp, N>::emplace(const const_iterator pos, const_reference src)
+		{
+			iterator mutable_pos = this->nth(this->index_of(pos));
+			if (pos == this->cend()) {
+				// A A A O O O
+				//          ^
+				this->emplace_back(src); // construct by src
+			} else {
+				this->push_back(kerbal::compatibility::to_xvalue(this->back())); // move construct
+				// A A A X Y Z Z O O
+				//          ^
+				kerbal::algorithm::move_backward(mutable_pos, this->end() - 2, this->end() - 1); // move assign
+				// A A A X X Y Z O O
+				//          ^
+				kerbal::operators::generic_assign(*mutable_pos, src);
+				// *mutable_pos = src; // move assign, construct by src
 			}
 			return mutable_pos;
 		}
@@ -771,6 +795,29 @@ namespace kerbal
 		static_vector<Tp, N>::insert(const_iterator pos, rvalue_reference val)
 		{
 			return this->emplace(pos, kerbal::compatibility::move(val));
+		}
+
+		template <typename Tp, size_t N>
+		KERBAL_CONSTEXPR14
+		typename static_vector<Tp, N>::iterator
+		static_vector<Tp, N>::emplace(const const_iterator pos, rvalue_reference src)
+		{
+			iterator mutable_pos = this->nth(this->index_of(pos));
+			if (pos == this->cend()) {
+				// A A A O O O
+				//          ^
+				this->emplace_back(kerbal::compatibility::move(src)); // construct by src
+			} else {
+				this->push_back(kerbal::compatibility::move(this->back())); // move construct
+				// A A A X Y Z Z O O
+				//          ^
+				kerbal::algorithm::move_backward(mutable_pos, this->end() - 2, this->end() - 1); // move assign
+				// A A A X X Y Z O O
+				//          ^
+				kerbal::operators::generic_assign(*mutable_pos, std::move(src));
+				// *mutable_pos = std::move(src); // move assign, construct by src
+			}
+			return mutable_pos;
 		}
 
 		template <typename Tp, size_t N>
@@ -791,7 +838,8 @@ namespace kerbal
 				kerbal::algorithm::move_backward(mutable_pos, this->end() - 2, this->end() - 1); // move assign
 				// A A A X X Y Z O O
 				//          ^
-				*mutable_pos = value_type(std::forward<Args>(args)...); // move assign, construct by args
+				kerbal::operators::generic_assign(*mutable_pos, value_type(std::forward<Args>(args)...));
+				// *mutable_pos = value_type(std::forward<Args>(args)...); // move assign, construct by args
 			}
 			return mutable_pos;
 		}
@@ -939,7 +987,8 @@ namespace kerbal
 			(itor.current)->destroy();
 		}
 
-	}
-}
+	} // namespace container
+
+} // namespace kerbal
 
 #endif // KERBAL_CONTAINER_IMPL_STATIC_VECTOR_IMPL_HPP

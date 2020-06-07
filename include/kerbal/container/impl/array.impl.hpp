@@ -9,12 +9,13 @@
  *   all rights reserved
  */
 
-#ifndef KERBAL_CONTAINER_IMPL_ARRAY_IMPL_HPP_
-#define KERBAL_CONTAINER_IMPL_ARRAY_IMPL_HPP_
+#ifndef KERBAL_CONTAINER_IMPL_ARRAY_IMPL_HPP
+#define KERBAL_CONTAINER_IMPL_ARRAY_IMPL_HPP
 
 
 #include <kerbal/algorithm/modifier.hpp>
 #include <kerbal/compatibility/move.hpp>
+#include <kerbal/operators/generic_assign.hpp>
 #include <kerbal/utility/throw_this_exception.hpp>
 
 #if __cplusplus >= 201103L
@@ -134,7 +135,7 @@ namespace kerbal
 		{
 			iterator assign_it = this->begin();
 			while (assign_it != this->end() && static_cast<bool>(first != last)) {
-				*assign_it = *first;
+				kerbal::operators::generic_assign(*assign_it, *first); // *assign_it = *first;
 				++assign_it;
 				++first;
 			}
@@ -411,4 +412,4 @@ namespace kerbal
 
 } //namespace kerbal
 
-#endif /* KERBAL_CONTAINER_IMPL_ARRAY_IMPL_HPP_ */
+#endif // KERBAL_CONTAINER_IMPL_ARRAY_IMPL_HPP
