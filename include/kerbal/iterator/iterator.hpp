@@ -14,7 +14,9 @@
 
 #include <kerbal/compatibility/constexpr.hpp>
 #include <kerbal/compatibility/noexcept.hpp>
+#include <kerbal/compatibility/static_assert.hpp>
 #include <kerbal/iterator/iterator_traits.hpp>
+#include <kerbal/type_traits/sign_deduction.hpp>
 
 namespace kerbal
 {
@@ -66,35 +68,63 @@ namespace kerbal
 		KERBAL_CONSTEXPR14
 		void __advance(ForwardIterator & it, Distance dist, std::forward_iterator_tag)
 				KERBAL_CONDITIONAL_NOEXCEPT(
-						noexcept(static_cast<bool>(dist--)) && noexcept(++it)
+						noexcept(static_cast<bool>(dist != 0)) &&
+						noexcept(--dist) &&
+						noexcept(++it)
 				)
 		{
-			while (dist--) {
+			KERBAL_STATIC_ASSERT(kerbal::type_traits::is_unsigned<Distance>::value,
+								"Distance must be unsigned type");
+			while (dist != 0) {
+				--dist;
 				++it;
 			}
 		}
 
 		template <typename BidirectionalIterator, typename Distance>
 		KERBAL_CONSTEXPR14
-		void __advance(BidirectionalIterator & it, Distance dist, std::bidirectional_iterator_tag)
+		void __advance(BidirectionalIterator & it, Distance dist, std::bidirectional_iterator_tag, kerbal::type_traits::false_type)
 				KERBAL_CONDITIONAL_NOEXCEPT(
 						noexcept(static_cast<bool>(dist < 0)) &&
 						noexcept(dist = -dist) &&
-						noexcept(static_cast<bool>(dist--)) &&
+						noexcept(static_cast<bool>(dist != 0)) &&
+						noexcept(--dist) &&
 						noexcept(--it) &&
 						noexcept(++it)
 				)
 		{
 			if (dist < 0) {
 				dist = -dist;
-				while (dist--) {
+				while (dist != 0) {
+					--dist;
 					--it;
 				}
 			} else {
-				while (dist--) {
+				while (dist != 0) {
+					--dist;
 					++it;
 				}
 			}
+		}
+
+		template <typename BidirectionalIterator, typename Distance>
+		KERBAL_CONSTEXPR14
+		void __advance(BidirectionalIterator & it, Distance dist, std::bidirectional_iterator_tag, kerbal::type_traits::true_type)
+				KERBAL_CONDITIONAL_NOEXCEPT(
+						noexcept(kerbal::iterator::__advance(it, dist, std::forward_iterator_tag()))
+				)
+		{
+			kerbal::iterator::__advance(it, dist, std::forward_iterator_tag());
+		}
+
+		template <typename BidirectionalIterator, typename Distance>
+		KERBAL_CONSTEXPR14
+		void __advance(BidirectionalIterator & it, Distance dist, std::bidirectional_iterator_tag tag)
+				KERBAL_CONDITIONAL_NOEXCEPT(
+						noexcept(kerbal::iterator::__advance(it, dist, tag, kerbal::type_traits::is_unsigned<Distance>()))
+				)
+		{
+			kerbal::iterator::__advance(it, dist, tag, kerbal::type_traits::is_unsigned<Distance>());
 		}
 
 		template <typename RandomAccessIterator, typename Distance>
