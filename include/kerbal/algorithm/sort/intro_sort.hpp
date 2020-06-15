@@ -13,9 +13,9 @@
 #define KERBAL_ALGORITHM_SORT_INTRO_SORT_HPP
 
 #include <kerbal/algorithm/modifier.hpp>
+#include <kerbal/algorithm/sort/detail/quick_sort_pivot.hpp>
 #include <kerbal/algorithm/sort/heap_sort.hpp>
 #include <kerbal/algorithm/sort/insertion_sort.hpp>
-#include <kerbal/algorithm/sort/quick_sort.hpp>
 #include <kerbal/compatibility/constexpr.hpp>
 #include <kerbal/iterator/iterator.hpp>
 
