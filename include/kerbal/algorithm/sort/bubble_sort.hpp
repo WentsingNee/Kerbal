@@ -1,7 +1,7 @@
 /**
  * @file       bubble_sort.hpp
  * @brief
- * @date       2020-5-30
+ * @date       2020-5-30, can be traced back to at latest 2017-2-21
  * @author     Peter
  * @copyright
  *      Peter of [ThinkSpirit Laboratory](http://thinkspirit.org/)

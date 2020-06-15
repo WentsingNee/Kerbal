@@ -1,7 +1,7 @@
 /**
  * @file       quick_sort.hpp
  * @brief
- * @date       2020-5-30
+ * @date       2020-5-30, can be traced back to at latest 2018-9-5
  * @author     Peter
  * @copyright
  *      Peter of [ThinkSpirit Laboratory](http://thinkspirit.org/)
