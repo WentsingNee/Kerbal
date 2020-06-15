@@ -17,6 +17,8 @@
 #include <kerbal/compatibility/noexcept.hpp>
 #include <kerbal/compatibility/static_assert.hpp>
 
+#include <cstddef>
+
 #if __cplusplus >= 201103L
 #	include <type_traits>
 #endif
@@ -53,7 +55,7 @@ namespace kerbal
 				KERBAL_CONSTEXPR
 				explicit discard_block_engine(const result_type & seed)
 							KERBAL_CONDITIONAL_NOEXCEPT(
-								std::is_nothrow_constructible<Engine, result_type>::value
+								(std::is_nothrow_constructible<Engine, result_type>::value)
 							)
 							: engine(seed), state_value(0)
 				{
