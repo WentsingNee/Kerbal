@@ -16,6 +16,7 @@
 #include <kerbal/optional/optional_type_traits.hpp>
 #include <kerbal/optional/nullopt.hpp>
 
+#include <kerbal/algorithm/swap.hpp>
 #include <kerbal/compatibility/constexpr.hpp>
 #include <kerbal/compatibility/move.hpp>
 #include <kerbal/compatibility/noexcept.hpp>
@@ -639,7 +640,7 @@ namespace kerbal
 				void swap(optional & with)
 				{
 					if (this->has_value() && with.has_value()) {
-						std::swap(this->raw_value(), with.raw_value());
+						kerbal::algorithm::swap(this->raw_value(), with.raw_value());
 					} else if (this->has_value() && !with.has_value()) {
 						with.construct(kerbal::compatibility::to_xvalue(this->raw_value()));
 						with.initialized = true;

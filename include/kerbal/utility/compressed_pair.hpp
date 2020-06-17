@@ -12,6 +12,7 @@
 #ifndef KERBAL_UTILITY_COMPRESSED_PAIR_HPP
 #define KERBAL_UTILITY_COMPRESSED_PAIR_HPP
 
+#include <kerbal/algorithm/swap.hpp>
 #include <kerbal/compatibility/constexpr.hpp>
 #include <kerbal/compatibility/method_overload_tag.hpp>
 #include <kerbal/compatibility/noexcept.hpp>
@@ -27,6 +28,7 @@
 
 namespace kerbal
 {
+
 	namespace utility
 	{
 
@@ -1030,8 +1032,8 @@ namespace kerbal
 
 				void swap(compressed_pair & other)
 				{
-					std::swap(this->first(), other.first());
-					std::swap(this->second(), other.second());
+					kerbal::algorithm::swap(this->first(), other.first());
+					kerbal::algorithm::swap(this->second(), other.second());
 				}
 
 		};

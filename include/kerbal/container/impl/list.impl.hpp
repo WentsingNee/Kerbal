@@ -12,6 +12,7 @@
 #ifndef KERBAL_CONTAINER_IMPL_LIST_IMPL_HPP
 #define KERBAL_CONTAINER_IMPL_LIST_IMPL_HPP
 
+#include <kerbal/algorithm/swap.hpp>
 #include <kerbal/compatibility/move.hpp>
 #include <kerbal/algorithm/modifier.hpp>
 #include <kerbal/algorithm/sequence_compare.hpp>

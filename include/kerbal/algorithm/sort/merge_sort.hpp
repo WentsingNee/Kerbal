@@ -13,6 +13,7 @@
 #define KERBAL_ALGORITHM_SORT_MERGE_SORT_HPP
 
 #include <kerbal/algorithm/modifier.hpp>
+#include <kerbal/algorithm/swap.hpp>
 #include <kerbal/compatibility/constexpr.hpp>
 #include <kerbal/iterator/iterator.hpp>
 #include <kerbal/memory/allocator_traits.hpp>

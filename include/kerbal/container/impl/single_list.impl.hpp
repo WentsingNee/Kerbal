@@ -12,8 +12,7 @@
 #ifndef KERBAL_CONTAINER_IMPL_SINGLE_LIST_IMPL_HPP
 #define KERBAL_CONTAINER_IMPL_SINGLE_LIST_IMPL_HPP
 
-#include <kerbal/algorithm/modifier.hpp>
-#include <kerbal/algorithm/sequence_compare.hpp>
+#include <kerbal/algorithm/swap.hpp>
 #include <kerbal/iterator/iterator.hpp>
 #include <kerbal/memory/guard.hpp>
 #include <kerbal/utility/declval.hpp>

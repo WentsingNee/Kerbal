@@ -12,7 +12,7 @@
 #ifndef KERBAL_ALGORITHM_SORT_DETAIL_QUICK_SORT_PIVOT_HPP
 #define KERBAL_ALGORITHM_SORT_DETAIL_QUICK_SORT_PIVOT_HPP
 
-#include <kerbal/algorithm/modifier.hpp>
+#include <kerbal/algorithm/swap.hpp>
 #include <kerbal/compatibility/constexpr.hpp>
 #include <kerbal/compatibility/noexcept.hpp>
 #include <kerbal/iterator/iterator.hpp>
@@ -61,7 +61,7 @@ namespace kerbal
 					if (cmp(*mid, *back)) {
 						// first < mid < back
 						// 0 1 2
-						std::iter_swap(mid, back);
+						kerbal::algorithm::iter_swap(mid, back);
 						// 0 2 1
 					} else {
 						if (cmp(*first, *back)) {
@@ -70,7 +70,7 @@ namespace kerbal
 						} else {
 							// back < first < mid
 							// 1 2 0
-							std::iter_swap(first, back);
+							kerbal::algorithm::iter_swap(first, back);
 							// 0 2 1
 						}
 					}
@@ -78,7 +78,7 @@ namespace kerbal
 					if (cmp(*first, *back)) {
 						// mid < first < back
 						// 1 0 2
-						std::iter_swap(first, back);
+						kerbal::algorithm::iter_swap(first, back);
 						// 2 0 1
 					} else {
 						if (cmp(*mid, *back)) {
@@ -88,11 +88,11 @@ namespace kerbal
 						} else {
 							// back < mid < first
 							// 2 1 0
-							std::iter_swap(mid, back);
+							kerbal::algorithm::iter_swap(mid, back);
 							// 2 0 1
 						}
 					}
-					std::iter_swap(first, mid);
+					kerbal::algorithm::iter_swap(first, mid);
 					// 0 2 1
 				}
 			}

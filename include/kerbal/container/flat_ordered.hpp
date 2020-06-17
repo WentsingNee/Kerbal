@@ -12,6 +12,7 @@
 #ifndef KERBAL_CONTAINER_FLAT_ORDERED_HPP_
 #define KERBAL_CONTAINER_FLAT_ORDERED_HPP_
 
+#include <kerbal/algorithm/swap.hpp>
 #include <kerbal/container/impl/flat_ordered_base.hpp>
 
 #include <cstddef>
@@ -136,7 +137,7 @@ namespace kerbal
 				void swap(flat_ordered & ano)
 				{
 					this->__sequence().swap(ano.__sequence());
-					std::swap(this->__key_comp(), ano.__key_comp());
+					kerbal::algorithm::swap(this->__key_comp(), ano.__key_comp());
 				}
 
 				template <typename Allocator2>

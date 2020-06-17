@@ -13,6 +13,7 @@
 #define KERBAL_CONTAINER_IMPL_STATIC_VECTOR_IMPL_HPP
 
 #include <kerbal/algorithm/modifier.hpp>
+#include <kerbal/algorithm/swap.hpp>
 #include <kerbal/compatibility/move.hpp>
 #include <kerbal/iterator/iterator.hpp>
 #include <kerbal/operators/generic_assign.hpp>

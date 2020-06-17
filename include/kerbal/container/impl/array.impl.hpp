@@ -12,8 +12,8 @@
 #ifndef KERBAL_CONTAINER_IMPL_ARRAY_IMPL_HPP
 #define KERBAL_CONTAINER_IMPL_ARRAY_IMPL_HPP
 
-
 #include <kerbal/algorithm/modifier.hpp>
+#include <kerbal/algorithm/swap.hpp>
 #include <kerbal/compatibility/move.hpp>
 #include <kerbal/operators/generic_assign.hpp>
 #include <kerbal/utility/throw_this_exception.hpp>

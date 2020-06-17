@@ -13,6 +13,7 @@
 #define KERBAL_ALGORITHM_SORT_QUICK_SORT_HPP
 
 #include <kerbal/algorithm/modifier.hpp>
+#include <kerbal/algorithm/swap.hpp>
 #include <kerbal/algorithm/sort/detail/quick_sort_pivot.hpp>
 #include <kerbal/algorithm/sort/insertion_sort.hpp>
 #include <kerbal/compatibility/constexpr.hpp>
@@ -44,7 +45,7 @@ namespace kerbal
 
 			if (partition_point != back) {
 				if (cmp(*back, *partition_point)) {
-					std::iter_swap(back, partition_point);
+					kerbal::algorithm::iter_swap(back, partition_point);
 				}
 				kerbal::algorithm::quick_sort(kerbal::iterator::next(partition_point), last, cmp);
 			}
@@ -86,7 +87,7 @@ namespace kerbal
 
 				if (partition_point != back) {
 					if (cmp(*back, *partition_point)) {
-						std::iter_swap(back, partition_point);
+						kerbal::algorithm::iter_swap(back, partition_point);
 					}
 					st.push(std::make_pair(kerbal::iterator::next(partition_point), last));
 				}

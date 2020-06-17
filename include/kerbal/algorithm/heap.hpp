@@ -12,7 +12,7 @@
 #ifndef KERBAL_ALGORITHM_HEAP_HPP
 #define KERBAL_ALGORITHM_HEAP_HPP
 
-#include <kerbal/algorithm/modifier.hpp>
+#include <kerbal/algorithm/swap.hpp>
 #include <kerbal/iterator/iterator.hpp>
 #include <kerbal/iterator/iterator_traits.hpp>
 
