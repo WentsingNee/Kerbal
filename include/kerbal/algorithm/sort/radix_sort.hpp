@@ -16,6 +16,7 @@
 #include <kerbal/iterator/iterator.hpp>
 #include <kerbal/type_traits/sign_deduction.hpp>
 
+#include <climits>
 #include <vector>
 
 namespace kerbal
