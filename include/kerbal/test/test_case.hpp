@@ -127,9 +127,6 @@ namespace kerbal
 
 #define KERBAL_TEST_CASE_END
 
-/*if (kerbal::test::compare_and_out((lhs), (rhs))) { \*/
-/*if ((lhs) != (rhs)) { \*/
-
 
 #if __cplusplus >= 201103L
 
@@ -186,6 +183,15 @@ do {\
 } while (false);
 
 #endif
+
+
+#include <kerbal/compatibility/static_assert.hpp>
+
+#define KERBAL_TEST_CHECK_EQUAL_STATIC(lhs, rhs) do {\
+	KERBAL_STATIC_ASSERT((lhs) == (rhs), "Check failed!"); \
+	KERBAL_TEST_CHECK_EQUAL(lhs, rhs); \
+} while(false);
+
 
 #include <kerbal/test/impl/test_case.impl.hpp>
 
