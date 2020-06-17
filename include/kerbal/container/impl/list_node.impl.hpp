@@ -35,6 +35,10 @@ namespace kerbal
 
 		namespace detail
 		{
+
+			template <typename Tp, typename Allocator, bool>
+			class list_base;
+
 			template <typename Tp>
 			class list_node;
 
@@ -53,6 +57,9 @@ namespace kerbal
 				private:
 					template <typename Up, typename Allocator>
 					friend class kerbal::container::list;
+
+					template <typename Up, typename Allocator, bool B>
+					friend class kerbal::container::detail::list_base;
 
 					template <typename Up>
 					friend class list_iter;

@@ -32,6 +32,7 @@
 #	endif
 #endif
 
+#include <kerbal/container/detail/list_base.hpp>
 #include <kerbal/container/impl/list_iterator.impl.hpp>
 #include <kerbal/container/impl/list_node.impl.hpp>
 
@@ -42,8 +43,11 @@ namespace kerbal
 	{
 
 		template <typename Tp, typename Allocator = std::allocator<Tp> >
-		class list
+		class list: protected kerbal::container::detail::list_base<Tp, Allocator>
 		{
+			private:
+				typedef kerbal::container::detail::list_base<Tp, Allocator> super;
+
 			public:
 				typedef Tp							value_type;
 				typedef const value_type			const_type;
@@ -70,12 +74,12 @@ namespace kerbal
 				typedef kerbal::container::detail::list_node<value_type>		node;
 
 				typedef kerbal::memory::allocator_traits<Allocator>								tp_allocator_traits;
-				typedef typename tp_allocator_traits::template rebind_alloc<node>::other		node_allocator_type;
+				typedef typename super::node_allocator_type										node_allocator_type;
 				typedef typename tp_allocator_traits::template rebind_traits<node>::other		node_allocator_traits;
 
 			private:
-				node_base head_node;
-				node_allocator_type alloc;
+
+				using super::alloc;
 
 				struct release_uninit_res
 				{
@@ -96,14 +100,10 @@ namespace kerbal
 
 			public:
 				KERBAL_CONSTEXPR20
-				list() KERBAL_CONDITIONAL_NOEXCEPT(
-						std::is_nothrow_default_constructible<node_allocator_type>::value
-				);
+				list();
 
 				KERBAL_CONSTEXPR20
-				explicit list(const Allocator& alloc) KERBAL_CONDITIONAL_NOEXCEPT(
-						std::is_nothrow_copy_constructible<node_allocator_type>::value
-				);
+				explicit list(const Allocator& alloc);
 
 				KERBAL_CONSTEXPR20
 				list(const list & src);
@@ -156,7 +156,7 @@ namespace kerbal
 
 				KERBAL_CONSTEXPR20
 				list& operator=(list && src) KERBAL_CONDITIONAL_NOEXCEPT(
-						noexcept(kerbal::utility::declthis<list>()->assign(std::move(src)))
+						noexcept(kerbal::utility::declthis<list>()->assign(kerbal::compatibility::move(src)))
 				);
 
 				KERBAL_CONSTEXPR20
@@ -496,7 +496,7 @@ namespace kerbal
 				KERBAL_CONSTEXPR20
 				node* __build_new_node_helper(kerbal::type_traits::true_type, Args&& ... args)
 						KERBAL_CONDITIONAL_NOEXCEPT(
-								noexcept(node_allocator_traits::allocate(kerbal::utility::declthis<list>()->alloc, 1))
+								noexcept(node_allocator_traits::allocate(kerbal::utility::declthis<list>()->alloc(), 1))
 						)
 				;
 
@@ -554,8 +554,8 @@ namespace kerbal
 				KERBAL_CONSTEXPR20
 				void __destroy_node(node_base * p_node_base)
 						KERBAL_CONDITIONAL_NOEXCEPT(
-								noexcept(node_allocator_traits::destroy(kerbal::utility::declthis<list>()->alloc, kerbal::utility::declval<node*>())) &&
-								noexcept(node_allocator_traits::deallocate(kerbal::utility::declthis<list>()->alloc, kerbal::utility::declval<node*>(), 1))
+								noexcept(node_allocator_traits::destroy(kerbal::utility::declthis<list>()->alloc(), kerbal::utility::declval<node*>())) &&
+								noexcept(node_allocator_traits::deallocate(kerbal::utility::declthis<list>()->alloc(), kerbal::utility::declval<node*>(), 1))
 						)
 				;
 
@@ -597,44 +597,44 @@ namespace kerbal
 #	endif
 
 
-		template <typename Tp, typename Allocator>
+		template <typename Tp, typename Allocator, typename Allocator2>
 		KERBAL_CONSTEXPR20
-		bool operator==(const list<Tp, Allocator> & lhs, const list<Tp, Allocator> & rhs)
+		bool operator==(const list<Tp, Allocator> & lhs, const list<Tp, Allocator2> & rhs)
 		{
 			return kerbal::algorithm::sequence_equal_to(lhs.cbegin(), lhs.cend(), rhs.cbegin(), rhs.cend());
 		}
 
-		template <typename Tp, typename Allocator>
+		template <typename Tp, typename Allocator, typename Allocator2>
 		KERBAL_CONSTEXPR20
-		bool operator!=(const list<Tp, Allocator> & lhs, const list<Tp, Allocator> & rhs)
+		bool operator!=(const list<Tp, Allocator> & lhs, const list<Tp, Allocator2> & rhs)
 		{
 			return kerbal::algorithm::sequence_not_equal_to(lhs.cbegin(), lhs.cend(), rhs.cbegin(), rhs.cend());
 		}
 
-		template <typename Tp, typename Allocator>
+		template <typename Tp, typename Allocator, typename Allocator2>
 		KERBAL_CONSTEXPR20
-		bool operator<(const list<Tp, Allocator> & lhs, const list<Tp, Allocator> & rhs)
+		bool operator<(const list<Tp, Allocator> & lhs, const list<Tp, Allocator2> & rhs)
 		{
 			return kerbal::algorithm::sequence_less(lhs.cbegin(), lhs.cend(), rhs.cbegin(), rhs.cend());
 		}
 
-		template <typename Tp, typename Allocator>
+		template <typename Tp, typename Allocator, typename Allocator2>
 		KERBAL_CONSTEXPR20
-		bool operator>(const list<Tp, Allocator> & lhs, const list<Tp, Allocator> & rhs)
+		bool operator>(const list<Tp, Allocator> & lhs, const list<Tp, Allocator2> & rhs)
 		{
 			return kerbal::algorithm::sequence_greater(lhs.cbegin(), lhs.cend(), rhs.cbegin(), rhs.cend());
 		}
 
-		template <typename Tp, typename Allocator>
+		template <typename Tp, typename Allocator, typename Allocator2>
 		KERBAL_CONSTEXPR20
-		bool operator<=(const list<Tp, Allocator> & lhs, const list<Tp, Allocator> & rhs)
+		bool operator<=(const list<Tp, Allocator> & lhs, const list<Tp, Allocator2> & rhs)
 		{
 			return kerbal::algorithm::sequence_less_equal(lhs.cbegin(), lhs.cend(), rhs.cbegin(), rhs.cend());
 		}
 
-		template <typename Tp, typename Allocator>
+		template <typename Tp, typename Allocator, typename Allocator2>
 		KERBAL_CONSTEXPR20
-		bool operator>=(const list<Tp, Allocator> & lhs, const list<Tp, Allocator> & rhs)
+		bool operator>=(const list<Tp, Allocator> & lhs, const list<Tp, Allocator2> & rhs)
 		{
 			return kerbal::algorithm::sequence_greater_equal(lhs.cbegin(), lhs.cend(), rhs.cbegin(), rhs.cend());
 		}

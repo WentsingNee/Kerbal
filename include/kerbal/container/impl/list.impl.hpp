@@ -12,11 +12,13 @@
 #ifndef KERBAL_CONTAINER_IMPL_LIST_IMPL_HPP
 #define KERBAL_CONTAINER_IMPL_LIST_IMPL_HPP
 
+#include <kerbal/compatibility/move.hpp>
 #include <kerbal/algorithm/modifier.hpp>
 #include <kerbal/algorithm/sequence_compare.hpp>
 #include <kerbal/iterator/iterator.hpp>
 #include <kerbal/memory/guard.hpp>
 #include <kerbal/operators/generic_assign.hpp>
+#include <kerbal/utility/in_place.hpp>
 
 #include <kerbal/container/list.hpp>
 
@@ -29,27 +31,21 @@ namespace kerbal
 		template <typename Tp, typename Allocator>
 		KERBAL_CONSTEXPR20
 		list<Tp, Allocator>::list()
-					KERBAL_CONDITIONAL_NOEXCEPT(
-							std::is_nothrow_default_constructible<node_allocator_type>::value
-					)
-				: head_node(detail::init_list_node_ptr_to_self_tag()), alloc()
+				: super(detail::init_list_node_ptr_to_self_tag())
 		{
 		}
 
 		template <typename Tp, typename Allocator>
 		KERBAL_CONSTEXPR20
 		list<Tp, Allocator>::list(const Allocator& alloc)
-					KERBAL_CONDITIONAL_NOEXCEPT(
-							std::is_nothrow_copy_constructible<node_allocator_type>::value
-					)
-				: head_node(detail::init_list_node_ptr_to_self_tag()), alloc(alloc)
+				: super(detail::init_list_node_ptr_to_self_tag(), alloc)
 		{
 		}
 
 		template <typename Tp, typename Allocator>
 		KERBAL_CONSTEXPR20
 		list<Tp, Allocator>::list(const list& src)
-				: head_node(detail::init_list_node_ptr_to_self_tag()), alloc()
+				: super(detail::init_list_node_ptr_to_self_tag())
 		{
 			this->insert(this->cend(), src.cbegin(), src.cend());
 		}
@@ -57,7 +53,7 @@ namespace kerbal
 		template <typename Tp, typename Allocator>
 		KERBAL_CONSTEXPR20
 		list<Tp, Allocator>::list(const list& src, const Allocator& alloc)
-				: head_node(detail::init_list_node_ptr_to_self_tag()), alloc(alloc)
+				: super(detail::init_list_node_ptr_to_self_tag(), alloc)
 		{
 			this->insert(this->cend(), src.cbegin(), src.cend());
 		}
@@ -65,7 +61,7 @@ namespace kerbal
 		template <typename Tp, typename Allocator>
 		KERBAL_CONSTEXPR20
 		list<Tp, Allocator>::list(size_type n, const Allocator& alloc)
-				: head_node(detail::init_list_node_ptr_to_self_tag()), alloc(alloc)
+				: super(detail::init_list_node_ptr_to_self_tag(), alloc)
 		{
 			if (n == 0) {
 				return;
@@ -77,7 +73,7 @@ namespace kerbal
 		template <typename Tp, typename Allocator>
 		KERBAL_CONSTEXPR20
 		list<Tp, Allocator>::list(size_type n, const_reference val, const Allocator& alloc)
-				: head_node(detail::init_list_node_ptr_to_self_tag()), alloc(alloc)
+				: super(detail::init_list_node_ptr_to_self_tag(), alloc)
 		{
 			if (n == 0) {
 				return;
@@ -93,7 +89,7 @@ namespace kerbal
 				typename kerbal::type_traits::enable_if<
 						kerbal::iterator::is_input_compatible_iterator<InputIterator>::value, int
 				>::type)
-				: head_node(detail::init_list_node_ptr_to_self_tag()), alloc(alloc)
+				: super(detail::init_list_node_ptr_to_self_tag(), alloc)
 		{
 			this->insert(this->cend(), first, last);
 		}
@@ -103,7 +99,7 @@ namespace kerbal
 		template <typename Tp, typename Allocator>
 		KERBAL_CONSTEXPR20
 		list<Tp, Allocator>::list(list&& src)
-				: head_node(detail::init_list_node_ptr_to_self_tag()), alloc(std::move(src.alloc))
+				: super(detail::init_list_node_ptr_to_self_tag(), kerbal::compatibility::move(src.alloc()))
 		{
 			if (!src.empty()) {
 				__swap_with_empty(src, *this);
@@ -113,7 +109,7 @@ namespace kerbal
 		template <typename Tp, typename Allocator>
 		KERBAL_CONSTEXPR20
 		list<Tp, Allocator>::list(list&& src, const Allocator& alloc)
-				: head_node(detail::init_list_node_ptr_to_self_tag()), alloc(alloc)
+				: super(detail::init_list_node_ptr_to_self_tag(), alloc)
 		{
 			if (!src.empty()) {
 				__swap_with_empty(src, *this);
@@ -161,10 +157,10 @@ namespace kerbal
 		list<Tp, Allocator>&
 		list<Tp, Allocator>::operator=(list&& src)
 				KERBAL_CONDITIONAL_NOEXCEPT(
-						noexcept(kerbal::utility::declthis<list>()->assign(std::move(src)))
+						noexcept(kerbal::utility::declthis<list>()->assign(kerbal::compatibility::move(src)))
 				)
 		{
-			this->assign(std::move(src));
+			this->assign(kerbal::compatibility::move(src));
 			return *this;
 		}
 
@@ -452,7 +448,7 @@ namespace kerbal
 		KERBAL_CONSTEXPR20
 		void list<Tp, Allocator>::push_front(rvalue_reference val)
 		{
-			this->emplace_front(std::move(val));
+			this->emplace_front(kerbal::compatibility::move(val));
 		}
 
 #	endif
@@ -516,7 +512,7 @@ namespace kerbal
 		KERBAL_CONSTEXPR20
 		void list<Tp, Allocator>::push_back(rvalue_reference val)
 		{
-			this->emplace_back(std::move(val));
+			this->emplace_back(kerbal::compatibility::move(val));
 		}
 
 #	endif
@@ -612,7 +608,7 @@ namespace kerbal
 		typename list<Tp, Allocator>::iterator
 		list<Tp, Allocator>::insert(const_iterator pos, rvalue_reference val)
 		{
-			return this->emplace(pos, std::move(val));
+			return this->emplace(pos, kerbal::compatibility::move(val));
 		}
 
 		template <typename Tp, typename Allocator>
@@ -778,7 +774,7 @@ namespace kerbal
 		{
 			bool is_this_empty = this->empty();
 			bool is_ano_empty = ano.empty();
-			kerbal::algorithm::swap(this->alloc, ano.alloc);
+			kerbal::algorithm::swap(this->alloc(), ano.alloc());
 			if (is_this_empty) {
 				if (!is_ano_empty) {
 					// this->empty() && !ano.empty()
@@ -898,7 +894,7 @@ namespace kerbal
 		KERBAL_CONSTEXPR20
 		list<Tp, Allocator>& list<Tp, Allocator>::operator+=(list&& with)
 		{
-			this->splice(this->cend(), std::move(with));
+			this->splice(this->cend(), kerbal::compatibility::move(with));
 			return *this;
 		}
 
@@ -928,7 +924,7 @@ namespace kerbal
 		list<Tp, Allocator> operator+(const list<Tp, Allocator>& lhs, list<Tp, Allocator>&& rhs)
 		{
 			list<Tp, Allocator> r(lhs);
-			r += std::move(rhs);
+			r += kerbal::compatibility::move(rhs);
 			return r;
 		}
 
@@ -936,7 +932,7 @@ namespace kerbal
 		KERBAL_CONSTEXPR20
 		list<Tp, Allocator> operator+(list<Tp, Allocator>&& lhs, const list<Tp, Allocator>& rhs)
 		{
-			list<Tp, Allocator> r(std::move(lhs));
+			list<Tp, Allocator> r(kerbal::compatibility::move(lhs));
 			r += rhs;
 			return r;
 		}
@@ -945,8 +941,8 @@ namespace kerbal
 		KERBAL_CONSTEXPR20
 		list<Tp, Allocator> operator+(list<Tp, Allocator>&& lhs, list<Tp, Allocator>&& rhs)
 		{
-			list<Tp, Allocator> r(std::move(lhs));
-			r += std::move(rhs);
+			list<Tp, Allocator> r(kerbal::compatibility::move(lhs));
+			r += kerbal::compatibility::move(rhs);
 			return r;
 		}
 
@@ -960,9 +956,9 @@ namespace kerbal
 		typename list<Tp, Allocator>::node*
 		list<Tp, Allocator>::__build_new_node_helper(kerbal::type_traits::false_type, Args&& ...args)
 		{
-			node *p = node_allocator_traits::allocate(this->alloc, 1);
-			kerbal::memory::guard<node, release_uninit_res> gd(p, release_uninit_res(this->alloc));
-			node_allocator_traits::construct(this->alloc, p, kerbal::utility::in_place_t(), std::forward<Args>(args)...);
+			node *p = node_allocator_traits::allocate(this->alloc(), 1);
+			kerbal::memory::guard<node, release_uninit_res> gd(p, release_uninit_res(this->alloc()));
+			node_allocator_traits::construct(this->alloc(), p, kerbal::utility::in_place_t(), std::forward<Args>(args)...);
 			gd.release();
 			return p;
 		}
@@ -973,11 +969,11 @@ namespace kerbal
 		typename list<Tp, Allocator>::node*
 		list<Tp, Allocator>::__build_new_node_helper(kerbal::type_traits::true_type, Args&& ... args)
 							KERBAL_CONDITIONAL_NOEXCEPT(
-								noexcept(node_allocator_traits::allocate(kerbal::utility::declthis<list>()->alloc, 1))
+								noexcept(node_allocator_traits::allocate(kerbal::utility::declthis<list>()->alloc(), 1))
 							)
 		{
-			node *p = node_allocator_traits::allocate(this->alloc, 1);
-			node_allocator_traits::construct(this->alloc, p, kerbal::utility::in_place_t(), std::forward<Args>(args)...);
+			node *p = node_allocator_traits::allocate(this->alloc(), 1);
+			node_allocator_traits::construct(this->alloc(), p, kerbal::utility::in_place_t(), std::forward<Args>(args)...);
 			return p;
 		}
 
@@ -997,9 +993,9 @@ namespace kerbal
 
 #define __build_new_node_body(args...) \
 		{ \
-			node *p = node_allocator_traits::allocate(this->alloc, 1); \
-			kerbal::memory::guard<node, release_uninit_res> gd(p, release_uninit_res(this->alloc)); \
-			node_allocator_traits::construct(this->alloc, p, args); \
+			node *p = node_allocator_traits::allocate(this->alloc(), 1); \
+			kerbal::memory::guard<node, release_uninit_res> gd(p, release_uninit_res(this->alloc())); \
+			node_allocator_traits::construct(this->alloc(), p, args); \
 			gd.release(); \
 			return p; \
 		}
@@ -1158,13 +1154,13 @@ namespace kerbal
 		KERBAL_CONSTEXPR20
 		void list<Tp, Allocator>::__destroy_node(node_base* p_node_base)
 				KERBAL_CONDITIONAL_NOEXCEPT(
-						noexcept(node_allocator_traits::destroy(kerbal::utility::declthis<list>()->alloc, kerbal::utility::declval<node*>())) &&
-						noexcept(node_allocator_traits::deallocate(kerbal::utility::declthis<list>()->alloc, kerbal::utility::declval<node*>(), 1))
+						noexcept(node_allocator_traits::destroy(kerbal::utility::declthis<list>()->alloc(), kerbal::utility::declval<node*>())) &&
+						noexcept(node_allocator_traits::deallocate(kerbal::utility::declthis<list>()->alloc(), kerbal::utility::declval<node*>(), 1))
 				)
 		{
 			node * p_node = &p_node_base->template reinterpret_as<Tp>();
-			node_allocator_traits::destroy(this->alloc, p_node);
-			node_allocator_traits::deallocate(this->alloc, p_node, 1);
+			node_allocator_traits::destroy(this->alloc(), p_node);
+			node_allocator_traits::deallocate(this->alloc(), p_node, 1);
 		}
 
 		template <typename Tp, typename Allocator>
