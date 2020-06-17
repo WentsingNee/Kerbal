@@ -177,10 +177,10 @@ namespace kerbal
 			private:
 
 				KERBAL_CONSTEXPR14
-				void __assign(size_type new_size, const_reference val, kerbal::type_traits::false_type enable_mem_optimization);
+				void __assign(size_type new_size, const_reference val, kerbal::type_traits::false_type enable_optimization);
 
 				KERBAL_CONSTEXPR14
-				void __assign(size_type new_size, const_reference val, kerbal::type_traits::true_type enable_mem_optimization);
+				void __assign(size_type new_size, const_reference val, kerbal::type_traits::true_type enable_optimization);
 
 			public:
 
@@ -194,8 +194,8 @@ namespace kerbal
 
 				/**
 				 * @brief Assign the array by using a range of elements.
-				 * @param begin the iterator that points to the range begin
-				 * @param end the iterator that points to the range end
+				 * @param first the iterator that points to the range begin
+				 * @param last the iterator that points to the range end
 				 * @tparam InputIterator An input iterator type that points to elements of a type
 				 * @warning 若区间长度超出 static_vector 所能存放的最大元素数目, 超过部分将自动截断
 				 */
@@ -204,7 +204,7 @@ namespace kerbal
 				typename kerbal::type_traits::enable_if<
 						kerbal::iterator::is_input_compatible_iterator<InputIterator>::value
 				>::type
-				assign(InputIterator begin, InputIterator end);
+				assign(InputIterator first, InputIterator last);
 
 #		if __cplusplus >= 201103L
 
