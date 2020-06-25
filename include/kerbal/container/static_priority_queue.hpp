@@ -13,6 +13,7 @@
 #define KERBAL_CONTAINER_STATIC_PRIORITY_QUEUE_HPP
 
 #include <kerbal/algorithm/heap.hpp>
+#include <kerbal/compatibility/move.hpp>
 #include <kerbal/container/static_vector.hpp>
 #include <kerbal/iterator/iterator_traits.hpp>
 #include <kerbal/type_traits/enable_if.hpp>
@@ -163,7 +164,7 @@ namespace kerbal
 				KERBAL_CONSTEXPR14
 				void push(rvalue_reference val)
 				{
-					c.push_back(std::move(val));
+					c.push_back(kerbal::compatibility::move(val));
 					kerbal::algorithm::push_heap(c.begin(), c.end(), vc);
 				}
 

@@ -13,6 +13,7 @@
 #define KERBAL_CONTAINER_IMPL_FLAT_ORDERED_BASE_HPP
 
 #include <kerbal/algorithm/binary_search.hpp>
+#include <kerbal/compatibility/move.hpp>
 #include <kerbal/iterator/iterator.hpp>
 #include <kerbal/iterator/iterator_traits.hpp>
 #include <kerbal/type_traits/enable_if.hpp>
@@ -479,9 +480,8 @@ namespace kerbal
 
 					iterator lower_bound(const key_type & key, const_iterator hint)
 					{
-						return kerbal::algorithm::lower_bound_hint(this->begin(), this->end(), key,
-																   this->nth(this->index_of(hint)),
-																			 lower_bound_kc_adapter(this));
+						return kerbal::algorithm::lower_bound_hint(this->begin(), this->end(), key, hint.cast_to_mutable(),
+																	 lower_bound_kc_adapter(this));
 					}
 
 					const_iterator lower_bound(const key_type & key, const_iterator hint) const
@@ -631,7 +631,7 @@ namespace kerbal
 						if (static_cast<bool>(lower_bound_pos == this->cend()) ||
 							static_cast<bool>(this->__key_comp()(extract(src), extract(*lower_bound_pos)))) {
 							// src < *lower_bound_pos
-							lower_bound_pos = this->__sequence().insert(lower_bound_pos, std::move(src));
+							lower_bound_pos = this->__sequence().insert(lower_bound_pos, kerbal::compatibility::move(src));
 							inserted = true;
 						} else {
 							inserted = false;
@@ -680,13 +680,13 @@ namespace kerbal
 					iterator insert(rvalue_reference src)
 					{
 						iterator pos(this->upper_bound(Extract()(src)));
-						return this->__sequence().insert(pos, std::move(src));
+						return this->__sequence().insert(pos, kerbal::compatibility::move(src));
 					}
 
 					iterator insert(const_iterator hint, rvalue_reference src)
 					{
 						iterator pos(this->upper_bound(Extract()(src), hint));
-						return this->__sequence().insert(pos, std::move(src));
+						return this->__sequence().insert(pos, kerbal::compatibility::move(src));
 					}
 #			endif
 

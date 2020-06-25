@@ -123,6 +123,8 @@ namespace kerbal
 
 					friend class list_kiter<Tp>;
 
+					typedef list_iter<Tp> iterator;
+
 				private:
 					typedef kerbal::iterator::iterator_traits<const Tp*>	iterator_traits;
 
@@ -147,7 +149,7 @@ namespace kerbal
 
 				public:
 					KERBAL_CONSTEXPR
-					list_kiter(const list_iter<Tp> & iter) KERBAL_NOEXCEPT :
+					list_kiter(const iterator & iter) KERBAL_NOEXCEPT :
 							current(iter.current)
 					{
 					}
@@ -187,10 +189,9 @@ namespace kerbal
 
 				protected:
 					KERBAL_CONSTEXPR14
-					list_iter<Tp>
-					cast_to_mutable() const KERBAL_NOEXCEPT
+					iterator cast_to_mutable() const KERBAL_NOEXCEPT
 					{
-						return list_iter<Tp>(const_cast<kerbal::container::detail::list_node_base*>(this->current));
+						return iterator(const_cast<kerbal::container::detail::list_node_base*>(this->current));
 					}
 
 			};

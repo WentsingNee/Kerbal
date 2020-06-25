@@ -13,6 +13,7 @@
 #define KERBAL_CONTAINER_IMPL_FLAT_SET_BASE_HPP
 
 #include <kerbal/algorithm/binary_search.hpp>
+#include <kerbal/compatibility/move.hpp>
 #include <kerbal/iterator/iterator.hpp>
 #include <kerbal/iterator/iterator_traits.hpp>
 #include <kerbal/type_traits/enable_if.hpp>
@@ -354,12 +355,12 @@ namespace kerbal
 
 					std::pair<const_iterator, bool> insert(rvalue_reference src)
 					{
-						return this->__ordered_agent().try_insert(std::move(src));
+						return this->__ordered_agent().try_insert(kerbal::compatibility::move(src));
 					}
 
 					std::pair<const_iterator, bool> insert(const_iterator hint, rvalue_reference src)
 					{
-						return this->__ordered_agent().try_insert(hint, std::move(src));
+						return this->__ordered_agent().try_insert(hint, kerbal::compatibility::move(src));
 					}
 
 #			endif
@@ -512,12 +513,12 @@ namespace kerbal
 
 					const_iterator insert(rvalue_reference src)
 					{
-						return this->__ordered_agent().insert(std::move(src));
+						return this->__ordered_agent().insert(kerbal::compatibility::move(src));
 					}
 
 					const_iterator insert(const_iterator hint, rvalue_reference src)
 					{
-						return this->__ordered_agent().insert(hint, std::move(src));
+						return this->__ordered_agent().insert(hint, kerbal::compatibility::move(src));
 					}
 
 #			endif

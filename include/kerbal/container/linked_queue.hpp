@@ -122,7 +122,7 @@ namespace kerbal
 				KERBAL_CONSTEXPR20
 				void push_back(rvalue_reference val)
 				{
-					c.push_back(std::move(val));
+					c.push_back(kerbal::compatibility::move(val));
 				}
 
 				template <typename ... Args>

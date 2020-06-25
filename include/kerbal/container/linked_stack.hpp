@@ -88,7 +88,7 @@ namespace kerbal
 				KERBAL_CONSTEXPR20
 				void push(rvalue_reference val)
 				{
-					c.push_front(std::move(val));
+					c.push_front(kerbal::compatibility::move(val));
 				}
 
 				template <typename ... Args>

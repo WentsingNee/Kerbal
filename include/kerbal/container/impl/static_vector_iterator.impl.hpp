@@ -180,8 +180,8 @@ namespace kerbal
 					template <typename Tp, size_t N>
 					friend class kerbal::container::static_vector;
 
-					typedef const kerbal::data_struct::raw_storage<ValueType> storage_type;
-					typedef __stavec_iterbase<__stavec_kiter<ValueType>, const ValueType*, storage_type> super;
+					typedef kerbal::data_struct::raw_storage<ValueType> storage_type;
+					typedef __stavec_iterbase<__stavec_kiter<ValueType>, const ValueType*, const storage_type> super;
 					typedef __stavec_iter<ValueType> iterator;
 
 				public:
@@ -196,6 +196,14 @@ namespace kerbal
 							super(current.current)
 					{
 					}
+
+				protected:
+					KERBAL_CONSTEXPR14
+					iterator cast_to_mutable() const KERBAL_NOEXCEPT
+					{
+						return iterator(const_cast<storage_type*>(this->current));
+					}
+
 			};
 
 		} //namespace detail

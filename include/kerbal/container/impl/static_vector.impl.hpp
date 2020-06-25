@@ -740,7 +740,7 @@ namespace kerbal
 		typename static_vector<Tp, N>::iterator
 		static_vector<Tp, N>::insert(const_iterator pos, const_reference val)
 		{
-			iterator mutable_pos = this->nth(this->index_of(pos));
+			iterator mutable_pos(pos.cast_to_mutable());
 			if (pos == this->cend()) {
 				// if *this is empty, the only valid iterator pos is equal to cend()!
 
@@ -770,7 +770,7 @@ namespace kerbal
 		typename static_vector<Tp, N>::iterator
 		static_vector<Tp, N>::emplace(const const_iterator pos, const_reference src)
 		{
-			iterator mutable_pos = this->nth(this->index_of(pos));
+			iterator mutable_pos(pos.cast_to_mutable());
 			if (pos == this->cend()) {
 				// A A A O O O
 				//          ^
@@ -803,7 +803,7 @@ namespace kerbal
 		typename static_vector<Tp, N>::iterator
 		static_vector<Tp, N>::emplace(const const_iterator pos, rvalue_reference src)
 		{
-			iterator mutable_pos = this->nth(this->index_of(pos));
+			iterator mutable_pos(pos.cast_to_mutable());
 			if (pos == this->cend()) {
 				// A A A O O O
 				//          ^
@@ -815,8 +815,8 @@ namespace kerbal
 				kerbal::algorithm::move_backward(mutable_pos, this->end() - 2, this->end() - 1); // move assign
 				// A A A X X Y Z O O
 				//          ^
-				kerbal::operators::generic_assign(*mutable_pos, std::move(src));
-				// *mutable_pos = std::move(src); // move assign, construct by src
+				kerbal::operators::generic_assign(*mutable_pos, kerbal::compatibility::move(src));
+				// *mutable_pos = kerbal::compatibility::move(src); // move assign, construct by src
 			}
 			return mutable_pos;
 		}
@@ -827,7 +827,7 @@ namespace kerbal
 		typename static_vector<Tp, N>::iterator
 		static_vector<Tp, N>::emplace(const const_iterator pos, Args&& ...args)
 		{
-			iterator mutable_pos = this->nth(this->index_of(pos));
+			iterator mutable_pos(pos.cast_to_mutable());
 			if (pos == this->cend()) {
 				// A A A O O O
 				//          ^
@@ -852,12 +852,13 @@ namespace kerbal
 		typename static_vector<Tp, N>::iterator
 		static_vector<Tp, N>::erase(const_iterator pos)
 		{
+			iterator mutable_pos(pos.cast_to_mutable());
+
 			if (pos == this->cend()) {
-				return this->nth(this->index_of(pos));
+				return mutable_pos;
 			}
 
 			// pre-condition: pos != cend()
-			iterator mutable_pos(this->nth(this->index_of(pos)));
 			kerbal::algorithm::move(mutable_pos + 1, this->end(), mutable_pos);
 			this->pop_back();
 			return mutable_pos;
@@ -868,8 +869,8 @@ namespace kerbal
 		typename static_vector<Tp, N>::iterator
 		static_vector<Tp, N>::erase(const_iterator first, const_iterator last)
 		{
-			iterator mutable_first = this->nth(this->index_of(first));
-			iterator mutable_last = this->nth(this->index_of(last));
+			iterator mutable_first(first.cast_to_mutable());
+			iterator mutable_last(last.cast_to_mutable());
 
 			kerbal::algorithm::move(mutable_last, this->end(), mutable_first);
 

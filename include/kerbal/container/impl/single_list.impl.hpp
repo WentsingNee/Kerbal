@@ -102,7 +102,7 @@ namespace kerbal
 		template <typename Tp, typename Allocator>
 		KERBAL_CONSTEXPR20
 		single_list<Tp, Allocator>::single_list(single_list && src)
-				: head_node(), last_iter(this->begin()), alloc(std::move(src.alloc))
+				: head_node(), last_iter(this->begin()), alloc(kerbal::compatibility::move(src.alloc))
 		{
 			if (!src.empty()) {
 				__swap_with_empty(src, *this);
@@ -155,10 +155,10 @@ namespace kerbal
 		single_list<Tp, Allocator>&
 		single_list<Tp, Allocator>::operator=(single_list&& src)
 				KERBAL_CONDITIONAL_NOEXCEPT(
-						noexcept(kerbal::utility::declthis<single_list>()->assign(std::move(src)))
+						noexcept(kerbal::utility::declthis<single_list>()->assign(kerbal::compatibility::move(src)))
 				)
 		{
-			this->assign(std::move(src));
+			this->assign(kerbal::compatibility::move(src));
 			return *this;
 		}
 
@@ -396,7 +396,7 @@ namespace kerbal
 		KERBAL_CONSTEXPR20
 		void single_list<Tp, Allocator>::push_front(rvalue_reference val)
 		{
-			this->emplace_front(std::move(val));
+			this->emplace_front(kerbal::compatibility::move(val));
 		}
 
 #	endif
@@ -470,7 +470,7 @@ namespace kerbal
 		KERBAL_CONSTEXPR20
 		void single_list<Tp, Allocator>::push_back(rvalue_reference val)
 		{
-			this->emplace_back(std::move(val));
+			this->emplace_back(kerbal::compatibility::move(val));
 		}
 
 #	endif
@@ -576,7 +576,7 @@ namespace kerbal
 		typename single_list<Tp, Allocator>::iterator
 		single_list<Tp, Allocator>::insert(const_iterator pos, rvalue_reference val)
 		{
-			return this->emplace(pos, std::move(val));
+			return this->emplace(pos, kerbal::compatibility::move(val));
 		}
 
 		template <typename Tp, typename Allocator>

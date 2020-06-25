@@ -177,6 +177,14 @@ namespace kerbal
 							super(current.current)
 					{
 					}
+
+				protected:
+					KERBAL_CONSTEXPR14
+					iterator cast_to_mutable() const KERBAL_NOEXCEPT
+					{
+						return iterator(const_cast<ValueType*>(this->current));
+					}
+
 			};
 
 		} //namespace detail

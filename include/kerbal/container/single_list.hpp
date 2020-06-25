@@ -14,6 +14,7 @@
 
 #include <kerbal/algorithm/sequence_compare.hpp>
 #include <kerbal/compatibility/constexpr.hpp>
+#include <kerbal/compatibility/move.hpp>
 #include <kerbal/compatibility/noexcept.hpp>
 #include <kerbal/memory/allocator_traits.hpp>
 #include <kerbal/type_traits/enable_if.hpp>
@@ -152,7 +153,7 @@ namespace kerbal
 
 				KERBAL_CONSTEXPR20
 				single_list& operator=(single_list && src) KERBAL_CONDITIONAL_NOEXCEPT(
-						noexcept(kerbal::utility::declthis<single_list>()->assign(std::move(src)))
+						noexcept(kerbal::utility::declthis<single_list>()->assign(kerbal::compatibility::move(src)))
 				);
 
 				KERBAL_CONSTEXPR20
