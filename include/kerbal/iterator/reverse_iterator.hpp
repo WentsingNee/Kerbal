@@ -78,7 +78,7 @@ namespace kerbal
 					}
 
 				public:
-					KERBAL_CONSTEXPR
+					KERBAL_CONSTEXPR14
 					reference operator*() const
 					{
 						return *kerbal::iterator::prev(iter);
@@ -116,7 +116,7 @@ namespace kerbal
 					}
 
 				public:
-					KERBAL_CONSTEXPR
+					KERBAL_CONSTEXPR14
 					reference operator*() const
 					{
 						return *iter;
@@ -136,6 +136,7 @@ namespace kerbal
 			class __reverse_iterator<Iter, std::bidirectional_iterator_tag> :
 					public kerbal::iterator::detail::__reverse_iterator_base<Iter>,
 
+					//input iterator interface
 					public kerbal::operators::dereferenceable<
 							kerbal::iterator::reverse_iterator<Iter>,
 							typename kerbal::iterator::iterator_traits<Iter>::pointer
@@ -144,6 +145,7 @@ namespace kerbal
 							kerbal::iterator::reverse_iterator<Iter>
 					>, // it++
 
+					//bidirectional iterator interface
 					public kerbal::operators::decrementable<
 							kerbal::iterator::reverse_iterator<Iter>
 					> // it--
@@ -151,57 +153,67 @@ namespace kerbal
 				private:
 					typedef kerbal::iterator::detail::__reverse_iterator_base<Iter> super;
 					typedef __reverse_iterator this_type;
-					typedef kerbal::iterator::reverse_iterator<Iter> derived;
-					typedef kerbal::iterator::iterator_traits<Iter> iterator_traits;
+					typedef kerbal::iterator::reverse_iterator<Iter> reverse_iterator;
+					typedef kerbal::iterator::iterator_traits<Iter> base_iterator_traits;
 
 				protected:
-					typedef std::bidirectional_iterator_tag					iterator_category;
-					typedef typename iterator_traits::value_type			value_type;
-					typedef typename iterator_traits::difference_type		difference_type;
-					typedef typename iterator_traits::pointer				pointer;
-					typedef typename iterator_traits::reference				reference;
+					typedef std::bidirectional_iterator_tag						iterator_category;
+					typedef typename base_iterator_traits::value_type			value_type;
+					typedef typename base_iterator_traits::difference_type		difference_type;
+					typedef typename base_iterator_traits::pointer				pointer;
+					typedef typename base_iterator_traits::reference			reference;
 
 				protected:
 					KERBAL_CONSTEXPR
-					explicit __reverse_iterator() :
-							super()
+					explicit __reverse_iterator()
+							: super()
 					{
 					}
 
 					KERBAL_CONSTEXPR
-					explicit __reverse_iterator(const Iter& iter) :
-							super(iter)
+					explicit __reverse_iterator(const Iter& iter)
+							: super(iter)
 					{
 					}
 
 				public:
-					KERBAL_CONSTEXPR14 derived& operator++()
+
+					//===================
+					//input iterator interface
+
+					KERBAL_CONSTEXPR14
+					reverse_iterator& operator++()
 							KERBAL_CONDITIONAL_NOEXCEPT(noexcept(--(kerbal::utility::declthis<this_type>()->iter)))
 					{
 						--this->iter;
-						return static_cast<derived&>(*this);
-					}
-
-					KERBAL_CONSTEXPR14 derived& operator--()
-							KERBAL_CONDITIONAL_NOEXCEPT(noexcept(++kerbal::utility::declthis<this_type>()->iter))
-					{
-						++this->iter;
-						return static_cast<derived&>(*this);
+						return static_cast<reverse_iterator&>(*this);
 					}
 
 					friend KERBAL_CONSTEXPR
-					bool operator==(const derived& lhs, const derived& rhs)
+					bool operator==(const reverse_iterator& lhs, const reverse_iterator& rhs)
 							KERBAL_CONDITIONAL_NOEXCEPT(noexcept(lhs.iter == rhs.iter))
 					{
 						return lhs.iter == rhs.iter;
 					}
 
 					friend KERBAL_CONSTEXPR
-					bool operator!=(const derived& lhs, const derived& rhs)
+					bool operator!=(const reverse_iterator& lhs, const reverse_iterator& rhs)
 							KERBAL_CONDITIONAL_NOEXCEPT(noexcept(lhs.iter != rhs.iter))
 					{
 						return lhs.iter != rhs.iter;
 					}
+
+					//===================
+					//bidirectional iterator interface
+
+					KERBAL_CONSTEXPR14
+					reverse_iterator& operator--()
+					KERBAL_CONDITIONAL_NOEXCEPT(noexcept(++kerbal::utility::declthis<this_type>()->iter))
+					{
+						++this->iter;
+						return static_cast<reverse_iterator&>(*this);
+					}
+
 			};
 
 			template <typename Iter>
@@ -224,15 +236,15 @@ namespace kerbal
 				private:
 					typedef __reverse_iterator<Iter, std::bidirectional_iterator_tag> super;
 					typedef __reverse_iterator this_type;
-					typedef kerbal::iterator::reverse_iterator<Iter> derived;
-					typedef kerbal::iterator::iterator_traits<Iter> iterator_traits;
+					typedef kerbal::iterator::reverse_iterator<Iter> reverse_iterator;
+					typedef kerbal::iterator::iterator_traits<Iter> base_iterator_traits;
 
 				protected:
-					typedef std::random_access_iterator_tag					iterator_category;
-					typedef typename iterator_traits::value_type			value_type;
-					typedef typename iterator_traits::difference_type		difference_type;
-					typedef typename iterator_traits::pointer				pointer;
-					typedef typename iterator_traits::reference				reference;
+					typedef std::random_access_iterator_tag						iterator_category;
+					typedef typename base_iterator_traits::value_type			value_type;
+					typedef typename base_iterator_traits::difference_type		difference_type;
+					typedef typename base_iterator_traits::pointer				pointer;
+					typedef typename base_iterator_traits::reference			reference;
 
 				protected:
 					KERBAL_CONSTEXPR
@@ -253,54 +265,57 @@ namespace kerbal
 					 */
 					friend KERBAL_CONSTEXPR
 					difference_type
-					operator-(const derived& lhs, const derived& rhs)
+					operator-(const reverse_iterator& lhs, const reverse_iterator& rhs)
 							KERBAL_CONDITIONAL_NOEXCEPT(noexcept(rhs.iter - lhs.iter))
 					{
 						return rhs.iter - lhs.iter;
 					}
 
-					KERBAL_CONSTEXPR14 derived& operator+=(const difference_type& delta)
+					KERBAL_CONSTEXPR14
+					reverse_iterator& operator+=(const difference_type& delta)
 							KERBAL_CONDITIONAL_NOEXCEPT(noexcept(kerbal::utility::declthis<this_type>()->iter -= delta))
 					{
 						this->iter -= delta;
-						return static_cast<derived&>(*this);
+						return static_cast<reverse_iterator&>(*this);
 					}
 
-					KERBAL_CONSTEXPR14 derived& operator-=(const difference_type& delta)
+					KERBAL_CONSTEXPR14
+					reverse_iterator& operator-=(const difference_type& delta)
 							KERBAL_CONDITIONAL_NOEXCEPT(noexcept(kerbal::utility::declthis<this_type>()->iter += delta))
 					{
 						this->iter += delta;
-						return static_cast<derived&>(*this);
+						return static_cast<reverse_iterator&>(*this);
 					}
 
-					KERBAL_CONSTEXPR reference operator[](const difference_type& dist) const
+					KERBAL_CONSTEXPR14
+					reference operator[](const difference_type& dist) const
 					{
-						return *(static_cast<const derived&>(*this) + dist);
+						return *(static_cast<const reverse_iterator&>(*this) + dist);
 					}
 
 					friend KERBAL_CONSTEXPR
-					bool operator<(const derived& lhs, const derived& rhs)
+					bool operator<(const reverse_iterator& lhs, const reverse_iterator& rhs)
 							KERBAL_CONDITIONAL_NOEXCEPT(noexcept(lhs.iter > rhs.iter))
 					{
 						return lhs.iter > rhs.iter;
 					}
 
 					friend KERBAL_CONSTEXPR
-					bool operator<=(const derived& lhs, const derived& rhs)
+					bool operator<=(const reverse_iterator& lhs, const reverse_iterator& rhs)
 							KERBAL_CONDITIONAL_NOEXCEPT(noexcept(lhs.iter >= rhs.iter))
 					{
 						return lhs.iter >= rhs.iter;
 					}
 
 					friend KERBAL_CONSTEXPR
-					bool operator>(const derived& lhs, const derived& rhs)
+					bool operator>(const reverse_iterator& lhs, const reverse_iterator& rhs)
 							KERBAL_CONDITIONAL_NOEXCEPT(noexcept(lhs.iter < rhs.iter))
 					{
 						return lhs.iter < rhs.iter;
 					}
 
 					friend KERBAL_CONSTEXPR
-					bool operator>=(const derived& lhs, const derived& rhs)
+					bool operator>=(const reverse_iterator& lhs, const reverse_iterator& rhs)
 							KERBAL_CONDITIONAL_NOEXCEPT(noexcept(lhs.iter <= rhs.iter))
 					{
 						return lhs.iter <= rhs.iter;
