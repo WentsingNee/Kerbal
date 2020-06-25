@@ -9,34 +9,41 @@
  *   all rights reserved
  */
 
-#ifndef KERBAL_ALGORITHM_SEQUENCE_COMPARE_HPP_
-#define KERBAL_ALGORITHM_SEQUENCE_COMPARE_HPP_
+#ifndef KERBAL_ALGORITHM_SEQUENCE_COMPARE_HPP
+#define KERBAL_ALGORITHM_SEQUENCE_COMPARE_HPP
 
 #include <kerbal/algorithm/binary_type_predicate.hpp>
-#include <kerbal/iterator/iterator.hpp>
-#include <kerbal/iterator/iterator_traits.hpp>
 #include <kerbal/compatibility/constexpr.hpp>
 #include <kerbal/compatibility/noexcept.hpp>
+#include <kerbal/compatibility/static_assert.hpp>
+#include <kerbal/container/nonmember_container_access.hpp>
+#include <kerbal/iterator/iterator.hpp>
+#include <kerbal/iterator/iterator_traits.hpp>
+#include <kerbal/type_traits/const_deduction.hpp>
+#include <kerbal/type_traits/is_same.hpp>
 
 namespace kerbal
 {
+
 	namespace algorithm
 	{
 
-		template <typename InputIterator1, typename InputIterator2, typename Compare>
-		KERBAL_CONSTEXPR14 bool __sequence_equal_to(InputIterator1 a_first, InputIterator1 a_last,
-				InputIterator2 b_first, InputIterator2 b_last, Compare cmp,
-				std::input_iterator_tag, std::input_iterator_tag)
+		template <typename InputIterator1, typename InputIterator2, typename BinaryTypeEqualToPredicate>
+		KERBAL_CONSTEXPR14
+		bool __sequence_equal_to(InputIterator1 a_first, InputIterator1 a_last,
+								InputIterator2 b_first, InputIterator2 b_last,
+								BinaryTypeEqualToPredicate equal_to,
+								std::input_iterator_tag, std::input_iterator_tag)
 				KERBAL_CONDITIONAL_NOEXCEPT(
 						noexcept(static_cast<bool>(a_first != a_last)) &&
 						noexcept(static_cast<bool>(b_first != b_last)) &&
-						noexcept(static_cast<bool>(cmp(*a_first, *b_first))) &&
+						noexcept(static_cast<bool>(equal_to(*a_first, *b_first))) &&
 						noexcept(++a_first) &&
 						noexcept(++b_first)
 				)
 		{
 			while (static_cast<bool>(a_first != a_last) && static_cast<bool>(b_first != b_last)) {
-				if (cmp(*a_first, *b_first)) { // namely *a == *b
+				if (equal_to(*a_first, *b_first)) { // namely *a == *b
 					++a_first;
 					++b_first;
 				} else {
@@ -48,14 +55,16 @@ namespace kerbal
 			// a_first != a_last || b_first != b_last => false
 		}
 
-		template <typename RandomAccessIterator1, typename RandomAccessIterator2, typename Compare>
-		KERBAL_CONSTEXPR14 bool __sequence_equal_to(RandomAccessIterator1 a_first, RandomAccessIterator1 a_last,
-				RandomAccessIterator2 b_first, RandomAccessIterator2 b_last, Compare cmp,
-				std::random_access_iterator_tag, std::random_access_iterator_tag)
+		template <typename RandomAccessIterator1, typename RandomAccessIterator2, typename BinaryTypeEqualToPredicate>
+		KERBAL_CONSTEXPR14
+		bool __sequence_equal_to(RandomAccessIterator1 a_first, RandomAccessIterator1 a_last,
+								RandomAccessIterator2 b_first, RandomAccessIterator2 b_last,
+								BinaryTypeEqualToPredicate equal_to,
+								std::random_access_iterator_tag, std::random_access_iterator_tag)
 				KERBAL_CONDITIONAL_NOEXCEPT(
 						noexcept(static_cast<bool>(kerbal::iterator::distance(a_first, a_last) != kerbal::iterator::distance(b_first, b_last))) &&
 						noexcept(static_cast<bool>(a_first != a_last)) &&
-						noexcept(static_cast<bool>(cmp(*a_first, *b_first))) &&
+						noexcept(static_cast<bool>(equal_to(*a_first, *b_first))) &&
 						noexcept(++a_first) &&
 						noexcept(++b_first)
 				)
@@ -63,34 +72,71 @@ namespace kerbal
 			if (kerbal::iterator::distance(a_first, a_last) != kerbal::iterator::distance(b_first, b_last)) {
 				return false;
 			}
-			while (a_first != a_last) { // size are equal and b will not out of range
-				if (cmp(*a_first, *b_first)) { // namely *a == *b
-					++a_first;
-					++b_first;
-				} else {
-					return false;
-				}
+
+//			while (a_first != a_last) { // size are equal and b will not out of range
+//				if (equal_to(*a_first, *b_first)) { // namely *a == *b
+//					++a_first;
+//					++b_first;
+//				} else {
+//					return false;
+//				}
+//			}
+
+			typedef RandomAccessIterator1 iterator1;
+			typedef typename kerbal::iterator::iterator_traits<iterator1>::difference_type difference_type;
+
+#	define EACH() do {\
+				if (equal_to(*a_first, *b_first)) { /* namely *a == *b*/\
+					++a_first;\
+					++b_first;\
+				} else {\
+					return false;\
+				}\
+			} while (false)
+
+			for (difference_type trip_count(kerbal::iterator::distance(a_first, a_last) >> 2); trip_count > 0; --trip_count) {
+				EACH();
+				EACH();
+				EACH();
+				EACH();
 			}
+
+			difference_type remain(kerbal::iterator::distance(a_first, a_last));
+			if (remain == 3) {
+				EACH();
+			}
+			if (remain >= 2) {
+				EACH();
+			}
+			if (remain >= 1) {
+				EACH();
+			}
+
+#	undef EACH
+
 			return true;
 		}
 
-		template <typename InputIterator1, typename InputIterator2, typename Compare>
-		KERBAL_CONSTEXPR bool sequence_equal_to(InputIterator1 a_first, InputIterator1 a_last,
-				InputIterator2 b_first, InputIterator2 b_last, Compare cmp)
+		template <typename InputIterator1, typename InputIterator2, typename BinaryTypeEqualToPredicate>
+		KERBAL_CONSTEXPR14
+		bool sequence_equal_to(InputIterator1 a_first, InputIterator1 a_last,
+								InputIterator2 b_first, InputIterator2 b_last,
+								BinaryTypeEqualToPredicate equal_to)
 				KERBAL_CONDITIONAL_NOEXCEPT(
-						noexcept(__sequence_equal_to(a_first, a_last, b_first, b_last, cmp,
+						noexcept(__sequence_equal_to(a_first, a_last, b_first, b_last, equal_to,
 								kerbal::iterator::iterator_category(a_first),
 								kerbal::iterator::iterator_category(b_first)))
 				)
 		{
-			return __sequence_equal_to(a_first, a_last, b_first, b_last, cmp,
+			return __sequence_equal_to(a_first, a_last, b_first, b_last, equal_to,
 					kerbal::iterator::iterator_category(a_first),
 					kerbal::iterator::iterator_category(b_first));
 		}
 
 		template <typename InputIterator1, typename InputIterator2>
-		KERBAL_CONSTEXPR bool sequence_equal_to(InputIterator1 a_first, InputIterator1 a_last,
-				InputIterator2 b_first, InputIterator2 b_last)
+		KERBAL_CONSTEXPR14
+		bool sequence_equal_to(InputIterator1 a_first, InputIterator1 a_last,
+								InputIterator2 b_first, InputIterator2 b_last)
 				KERBAL_CONDITIONAL_NOEXCEPT(
 						noexcept(sequence_equal_to(a_first, a_last, b_first, b_last,
 								binary_type_equal_to<
@@ -106,13 +152,75 @@ namespace kerbal
 			return sequence_equal_to(a_first, a_last, b_first, b_last, binary_type_equal_to<Tp, Up>());
 		}
 
-		template <typename InputIterator1, typename InputIterator2, typename Compare>
-		KERBAL_CONSTEXPR14 bool __sequence_not_equal_to(InputIterator1 a_first, InputIterator1 a_last,
-				InputIterator2 b_first, InputIterator2 b_last, Compare cmp,
-				std::input_iterator_tag, std::input_iterator_tag)
+		template <typename Container1, typename Container2, typename BinaryTypeEqualToPredicate>
+		KERBAL_CONSTEXPR14
+		bool sequence_equal_to(const Container1 & container1, const Container2 & container2,
+								BinaryTypeEqualToPredicate equal_to)
+		{
+			return sequence_equal_to(
+					kerbal::container::cbegin(container1), kerbal::container::cend(container1),
+					kerbal::container::cbegin(container2), kerbal::container::cend(container2),
+					equal_to
+			);
+		}
+
+		template <typename Container1, typename Container2>
+		KERBAL_CONSTEXPR14
+		bool sequence_equal_to(const Container1 & container1, const Container2 & container2)
+		{
+			return sequence_equal_to(
+					kerbal::container::cbegin(container1), kerbal::container::cend(container1),
+					kerbal::container::cbegin(container2), kerbal::container::cend(container2)
+			);
+		}
+
+		template <typename Tp, typename Up, size_t N, typename BinaryTypeEqualToPredicate>
+		KERBAL_CONSTEXPR14
+		bool sequence_equal_to(const Tp (&a)[N], const Up (&b)[N],
+								BinaryTypeEqualToPredicate equal_to)
+		{
+			return sequence_equal_to(
+					a, a + N,
+					b, b + N,
+					equal_to
+			);
+		}
+
+		template <typename Tp, typename Up, size_t N>
+		KERBAL_CONSTEXPR14
+		bool sequence_equal_to(const Tp (&a)[N], const Up (&b)[N])
+		{
+			return sequence_equal_to(
+					a, a + N,
+					b, b + N
+			);
+		}
+
+		template <typename Tp, typename Up, size_t M, size_t N, typename BinaryTypeEqualToPredicate>
+		KERBAL_CONSTEXPR
+		bool sequence_equal_to(const Tp (&a)[M], const Up (&b)[N], BinaryTypeEqualToPredicate) KERBAL_NOEXCEPT
+		{
+			return false;
+		}
+
+		template <typename Tp, typename Up, size_t M, size_t N>
+		KERBAL_CONSTEXPR
+		bool sequence_equal_to(const Tp (&a)[N], const Up (&b)[N]) KERBAL_NOEXCEPT
+		{
+			return false;
+		}
+
+
+
+		template <typename InputIterator1, typename InputIterator2, typename BinaryTypeNotEqualToPredicate>
+		KERBAL_CONSTEXPR14
+		bool __sequence_not_equal_to(InputIterator1 a_first, InputIterator1 a_last,
+									InputIterator2 b_first, InputIterator2 b_last,
+									BinaryTypeNotEqualToPredicate not_equal_to,
+									std::input_iterator_tag, std::input_iterator_tag)
 		{
 			while (static_cast<bool>(a_first != a_last) && static_cast<bool>(b_first != b_last)) {
-				if (cmp(*a_first, *b_first)) { // namely *a != *b
+				if (not_equal_to(*a_first, *b_first)) { // namely *a != *b
 					return true;
 				} else {
 					++a_first;
@@ -122,37 +230,76 @@ namespace kerbal
 			return (static_cast<bool>(a_first != a_last) || static_cast<bool>(b_first != b_last));
 		}
 
-		template <typename RandomAccessIterator1, typename RandomAccessIterator2, typename Compare>
-		KERBAL_CONSTEXPR14 bool __sequence_not_equal_to(RandomAccessIterator1 a_first, RandomAccessIterator1 a_last,
-				RandomAccessIterator2 b_first, RandomAccessIterator2 b_last, Compare cmp,
-				std::random_access_iterator_tag, std::random_access_iterator_tag)
+		template <typename RandomAccessIterator1, typename RandomAccessIterator2, typename BinaryTypeNotEqualToPredicate>
+		KERBAL_CONSTEXPR14
+		bool __sequence_not_equal_to(RandomAccessIterator1 a_first, RandomAccessIterator1 a_last,
+									RandomAccessIterator2 b_first, RandomAccessIterator2 b_last,
+									BinaryTypeNotEqualToPredicate not_equal_to,
+									std::random_access_iterator_tag, std::random_access_iterator_tag)
 		{
 			if (kerbal::iterator::distance(a_first, a_last) != kerbal::iterator::distance(b_first, b_last)) {
 				return true;
 			}
-			while (a_first != a_last) { // size are equal and b will not out of range
-				if (cmp(*a_first, *b_first)) { // namely *a != *b
-					return true;
-				} else {
-					++a_first;
-					++b_first;
-				}
+
+//			while (a_first != a_last) { // size are equal and b will not out of range
+//				if (not_equal_to(*a_first, *b_first)) { // namely *a != *b
+//					return true;
+//				} else {
+//					++a_first;
+//					++b_first;
+//				}
+//			}
+
+			typedef RandomAccessIterator1 iterator1;
+			typedef typename kerbal::iterator::iterator_traits<iterator1>::difference_type difference_type;
+
+#	define EACH() do {\
+				if (not_equal_to(*a_first, *b_first)) { /* namely *a != *b*/\
+					return true;\
+				} else {\
+					++a_first;\
+					++b_first;\
+				}\
+			} while (false)
+
+			for (difference_type trip_count(kerbal::iterator::distance(a_first, a_last) >> 2); trip_count > 0; --trip_count) {
+				EACH();
+				EACH();
+				EACH();
+				EACH();
 			}
+
+			difference_type remain(kerbal::iterator::distance(a_first, a_last));
+			if (remain == 3) {
+				EACH();
+			}
+			if (remain >= 2) {
+				EACH();
+			}
+			if (remain >= 1) {
+				EACH();
+			}
+
+#	undef EACH
+
 			return false;
 		}
 
-		template <typename InputIterator1, typename InputIterator2, typename Compare>
-		KERBAL_CONSTEXPR bool sequence_not_equal_to(InputIterator1 a_first, InputIterator1 a_last,
-				InputIterator2 b_first, InputIterator2 b_last, Compare cmp)
+		template <typename InputIterator1, typename InputIterator2, typename BinaryTypeNotEqualToPredicate>
+		KERBAL_CONSTEXPR14
+		bool sequence_not_equal_to(InputIterator1 a_first, InputIterator1 a_last,
+									InputIterator2 b_first, InputIterator2 b_last,
+									BinaryTypeNotEqualToPredicate not_equal_to)
 		{
-			return __sequence_not_equal_to(a_first, a_last, b_first, b_last, cmp,
+			return __sequence_not_equal_to(a_first, a_last, b_first, b_last, not_equal_to,
 					kerbal::iterator::iterator_category(a_first),
 					kerbal::iterator::iterator_category(b_first));
 		}
 
 		template <typename InputIterator1, typename InputIterator2>
-		KERBAL_CONSTEXPR bool sequence_not_equal_to(InputIterator1 a_first, InputIterator1 a_last,
-				InputIterator2 b_first, InputIterator2 b_last)
+		KERBAL_CONSTEXPR14
+		bool sequence_not_equal_to(InputIterator1 a_first, InputIterator1 a_last,
+									InputIterator2 b_first, InputIterator2 b_last)
 		{
 			typedef InputIterator1 iterator1;
 			typedef InputIterator2 iterator2;
@@ -161,14 +308,76 @@ namespace kerbal
 			return sequence_not_equal_to(a_first, a_last, b_first, b_last, binary_type_not_equal_to<Tp, Up>());
 		}
 
-		template <typename InputIterator1, typename InputIterator2, typename Compare>
-		KERBAL_CONSTEXPR14 bool sequence_less(InputIterator1 a_first, InputIterator1 a_last,
-				InputIterator2 b_first, InputIterator2 b_last, Compare cmp)
+		template <typename Container1, typename Container2, typename BinaryTypeNotEqualToPredicate>
+		KERBAL_CONSTEXPR14
+		bool sequence_not_equal_to(const Container1 & container1, const Container2 & container2,
+									BinaryTypeNotEqualToPredicate not_equal_to)
+		{
+			return sequence_not_equal_to(
+					kerbal::container::cbegin(container1), kerbal::container::cend(container1),
+					kerbal::container::cbegin(container2), kerbal::container::cend(container2),
+					not_equal_to
+			);
+		}
+
+		template <typename Container1, typename Container2>
+		KERBAL_CONSTEXPR14
+		bool sequence_not_equal_to(const Container1 & container1, const Container2 & container2)
+		{
+			return sequence_not_equal_to(
+					kerbal::container::cbegin(container1), kerbal::container::cend(container1),
+					kerbal::container::cbegin(container2), kerbal::container::cend(container2)
+			);
+		}
+
+		template <typename Tp, typename Up, size_t N, typename BinaryTypeNotEqualToPredicate>
+		KERBAL_CONSTEXPR14
+		bool sequence_not_equal_to(const Tp (&a)[N], const Up (&b)[N],
+									BinaryTypeNotEqualToPredicate not_equal_to)
+		{
+			return sequence_not_equal_to(
+					a, a + N,
+					b, b + N,
+					not_equal_to
+			);
+		}
+
+		template <typename Tp, typename Up, size_t N>
+		KERBAL_CONSTEXPR14
+		bool sequence_not_equal_to(const Tp (&a)[N], const Up (&b)[N])
+		{
+			return sequence_equal_to(
+					a, a + N,
+					b, b + N
+			);
+		}
+
+		template <typename Tp, typename Up, size_t M, size_t N, typename BinaryTypeNotEqualToPredicate>
+		KERBAL_CONSTEXPR
+		bool sequence_not_equal_to(const Tp (&a)[M], const Up (&b)[N], BinaryTypeNotEqualToPredicate) KERBAL_NOEXCEPT
+		{
+			return true;
+		}
+
+		template <typename Tp, typename Up, size_t M, size_t N>
+		KERBAL_CONSTEXPR
+		bool sequence_not_equal_to(const Tp (&a)[N], const Up (&b)[N]) KERBAL_NOEXCEPT
+		{
+			return true;
+		}
+
+
+
+		template <typename InputIterator1, typename InputIterator2, typename LessPredicate>
+		KERBAL_CONSTEXPR14
+		bool sequence_less(InputIterator1 a_first, InputIterator1 a_last,
+							InputIterator2 b_first, InputIterator2 b_last,
+							LessPredicate less)
 		{
 			while (static_cast<bool>(a_first != a_last) && static_cast<bool>(b_first != b_last)) {
-				if (cmp(*a_first, *b_first)) { // namely *a < *b
+				if (less(*a_first, *b_first)) { // namely *a < *b
 					return true;
-				} else if (cmp(*b_first, *a_first)) { // namely *a > *b
+				} else if (less(*b_first, *a_first)) { // namely *a > *b
 					return false;
 				} else { // namely *a == *b
 					++a_first;
@@ -195,24 +404,55 @@ namespace kerbal
 		}
 
 		template <typename InputIterator1, typename InputIterator2>
-		KERBAL_CONSTEXPR bool sequence_less(InputIterator1 a_first, InputIterator1 a_last,
-				InputIterator2 b_first, InputIterator2 b_last)
+		KERBAL_CONSTEXPR14
+		bool sequence_less(InputIterator1 a_first, InputIterator1 a_last,
+							InputIterator2 b_first, InputIterator2 b_last)
 		{
 			typedef InputIterator1 iterator1;
-//			typedef InputIterator2 iterator2;
+			typedef InputIterator2 iterator2;
 			typedef typename kerbal::iterator::iterator_traits<iterator1>::value_type Tp;
-//			typedef typename kerbal::iterator::iterator_traits<iterator2>::value_type Up;
+			typedef typename kerbal::iterator::iterator_traits<iterator2>::value_type Up;
+			typedef typename kerbal::type_traits::remove_const<Tp>::type remove_const_tp;
+			typedef typename kerbal::type_traits::remove_const<Up>::type remove_const_up;
+			KERBAL_STATIC_ASSERT((kerbal::type_traits::is_same<remove_const_tp, remove_const_up>::value),
+								"InputIterator1 and InputIterator2 must point to same type!");
 			return sequence_less(a_first, a_last, b_first, b_last, std::less<Tp>());
 		}
 
-		template <typename InputIterator1, typename InputIterator2, typename Compare>
-		KERBAL_CONSTEXPR14 bool sequence_greater(InputIterator1 a_first, InputIterator1 a_last,
-				InputIterator2 b_first, InputIterator2 b_last, Compare cmp)
+		template <typename Container1, typename Container2, typename LessPredicate>
+		KERBAL_CONSTEXPR14
+		bool sequence_less(const Container1 & container1, const Container2 & container2,
+							LessPredicate less)
+		{
+			return sequence_less(
+					kerbal::container::cbegin(container1), kerbal::container::cend(container1),
+					kerbal::container::cbegin(container2), kerbal::container::cend(container2),
+					less
+			);
+		}
+
+		template <typename Container1, typename Container2>
+		KERBAL_CONSTEXPR14
+		bool sequence_less(const Container1 & container1, const Container2 & container2)
+		{
+			return sequence_less(
+					kerbal::container::cbegin(container1), kerbal::container::cend(container1),
+					kerbal::container::cbegin(container2), kerbal::container::cend(container2)
+			);
+		}
+
+
+
+		template <typename InputIterator1, typename InputIterator2, typename GreaterPredicate>
+		KERBAL_CONSTEXPR14
+		bool sequence_greater(InputIterator1 a_first, InputIterator1 a_last,
+							InputIterator2 b_first, InputIterator2 b_last,
+							GreaterPredicate greater)
 		{
 			while (static_cast<bool>(a_first != a_last) && static_cast<bool>(b_first != b_last)) {
-				if (cmp(*a_first, *b_first)) { // namely *a > *b
+				if (greater(*a_first, *b_first)) { // namely *a > *b
 					return true;
-				} else if (cmp(*b_first, *a_first)) { // namely *a < *b
+				} else if (greater(*b_first, *a_first)) { // namely *a < *b
 					return false;
 				} else { // namely *a == *b
 					++a_first;
@@ -225,23 +465,54 @@ namespace kerbal
 		}
 
 		template <typename InputIterator1, typename InputIterator2>
-		KERBAL_CONSTEXPR bool sequence_greater(InputIterator1 a_first, InputIterator1 a_last,
-				InputIterator2 b_first, InputIterator2 b_last)
+		KERBAL_CONSTEXPR14
+		bool sequence_greater(InputIterator1 a_first, InputIterator1 a_last,
+							InputIterator2 b_first, InputIterator2 b_last)
 		{
 			typedef InputIterator1 iterator1;
-//			typedef InputIterator2 iterator2;
+			typedef InputIterator2 iterator2;
 			typedef typename kerbal::iterator::iterator_traits<iterator1>::value_type Tp;
-//			typedef typename kerbal::iterator::iterator_traits<iterator2>::value_type Up;
-			return sequence_greater(a_first, a_last, b_first, b_last, kerbal::algorithm::binary_type_greater<Tp, Tp>());
+			typedef typename kerbal::iterator::iterator_traits<iterator2>::value_type Up;
+			typedef typename kerbal::type_traits::remove_const<Tp>::type remove_const_tp;
+			typedef typename kerbal::type_traits::remove_const<Up>::type remove_const_up;
+			KERBAL_STATIC_ASSERT((kerbal::type_traits::is_same<remove_const_tp, remove_const_up>::value),
+								 "InputIterator1 and InputIterator2 must point to same type!");
+			return sequence_greater(a_first, a_last, b_first, b_last, std::greater<Tp>());
 		}
 
-		template <typename InputIterator1, typename InputIterator2, typename Compare>
-		KERBAL_CONSTEXPR14 bool sequence_less_equal(InputIterator1 a_first, InputIterator1 a_last,
-				InputIterator2 b_first, InputIterator2 b_last, Compare cmp)
+		template <typename Container1, typename Container2, typename GreaterPredicate>
+		KERBAL_CONSTEXPR14
+		bool sequence_greater(const Container1 & container1, const Container2 & container2,
+							GreaterPredicate greater)
+		{
+			return sequence_greater(
+					kerbal::container::cbegin(container1), kerbal::container::cend(container1),
+					kerbal::container::cbegin(container2), kerbal::container::cend(container2),
+					greater
+			);
+		}
+
+		template <typename Container1, typename Container2>
+		KERBAL_CONSTEXPR14
+		bool sequence_greater(const Container1 & container1, const Container2 & container2)
+		{
+			return sequence_greater(
+					kerbal::container::cbegin(container1), kerbal::container::cend(container1),
+					kerbal::container::cbegin(container2), kerbal::container::cend(container2)
+			);
+		}
+
+
+
+		template <typename InputIterator1, typename InputIterator2, typename LessEqualPredicate>
+		KERBAL_CONSTEXPR14
+		bool sequence_less_equal(InputIterator1 a_first, InputIterator1 a_last,
+								InputIterator2 b_first, InputIterator2 b_last,
+								LessEqualPredicate less_equal)
 		{
 			while (static_cast<bool>(a_first != a_last) && static_cast<bool>(b_first != b_last)) {
-				if (cmp(*a_first, *b_first)) { // namely *a <= *b
-					if (cmp(*b_first, *a_first)) { // namely *a >= *b
+				if (less_equal(*a_first, *b_first)) { // namely *a <= *b
+					if (less_equal(*b_first, *a_first)) { // namely *a >= *b
 						// namely *a == *b
 						++a_first;
 						++b_first;
@@ -256,23 +527,54 @@ namespace kerbal
 		}
 
 		template <typename InputIterator1, typename InputIterator2>
-		KERBAL_CONSTEXPR bool sequence_less_equal(InputIterator1 a_first, InputIterator1 a_last,
-				InputIterator2 b_first, InputIterator2 b_last)
+		KERBAL_CONSTEXPR14
+		bool sequence_less_equal(InputIterator1 a_first, InputIterator1 a_last,
+								InputIterator2 b_first, InputIterator2 b_last)
 		{
 			typedef InputIterator1 iterator1;
-//			typedef InputIterator2 iterator2;
+			typedef InputIterator2 iterator2;
 			typedef typename kerbal::iterator::iterator_traits<iterator1>::value_type Tp;
-//			typedef typename kerbal::iterator::iterator_traits<iterator2>::value_type Up;
-			return sequence_less_equal(a_first, a_last, b_first, b_last, kerbal::algorithm::binary_type_less_equal<Tp, Tp>());
+			typedef typename kerbal::iterator::iterator_traits<iterator2>::value_type Up;
+			typedef typename kerbal::type_traits::remove_const<Tp>::type remove_const_tp;
+			typedef typename kerbal::type_traits::remove_const<Up>::type remove_const_up;
+			KERBAL_STATIC_ASSERT((kerbal::type_traits::is_same<remove_const_tp, remove_const_up>::value),
+								 "InputIterator1 and InputIterator2 must point to same type!");
+			return sequence_less_equal(a_first, a_last, b_first, b_last, std::less_equal<Tp>());
 		}
 
-		template <typename InputIterator1, typename InputIterator2, typename Compare>
-		KERBAL_CONSTEXPR14 bool sequence_greater_equal(InputIterator1 a_first, InputIterator1 a_last,
-				InputIterator2 b_first, InputIterator2 b_last, Compare cmp)
+		template <typename Container1, typename Container2, typename LessEqualPredicate>
+		KERBAL_CONSTEXPR14
+		bool sequence_less_equal(const Container1 & container1, const Container2 & container2,
+								LessEqualPredicate less_equal)
+		{
+			return sequence_less_equal(
+					kerbal::container::cbegin(container1), kerbal::container::cend(container1),
+					kerbal::container::cbegin(container2), kerbal::container::cend(container2),
+					less_equal
+			);
+		}
+
+		template <typename Container1, typename Container2>
+		KERBAL_CONSTEXPR14
+		bool sequence_less_equal(const Container1 & container1, const Container2 & container2)
+		{
+			return sequence_less_equal(
+					kerbal::container::cbegin(container1), kerbal::container::cend(container1),
+					kerbal::container::cbegin(container2), kerbal::container::cend(container2)
+			);
+		}
+
+
+
+		template <typename InputIterator1, typename InputIterator2, typename GreaterEqualPredicate>
+		KERBAL_CONSTEXPR14
+		bool sequence_greater_equal(InputIterator1 a_first, InputIterator1 a_last,
+									InputIterator2 b_first, InputIterator2 b_last,
+									GreaterEqualPredicate greater_equal)
 		{
 			while (static_cast<bool>(a_first != a_last) && static_cast<bool>(b_first != b_last)) {
-				if (cmp(*a_first, *b_first)) { // namely *a >= *b
-					if (cmp(*b_first, *a_first)) { // namely *a <= *b
+				if (greater_equal(*a_first, *b_first)) { // namely *a >= *b
+					if (greater_equal(*b_first, *a_first)) { // namely *a <= *b
 						// namely *a == *b
 						++a_first;
 						++b_first;
@@ -287,19 +589,45 @@ namespace kerbal
 		}
 
 		template <typename InputIterator1, typename InputIterator2>
-		KERBAL_CONSTEXPR bool sequence_greater_equal(InputIterator1 a_first, InputIterator1 a_last,
-				InputIterator2 b_first, InputIterator2 b_last)
+		KERBAL_CONSTEXPR14
+		bool sequence_greater_equal(InputIterator1 a_first, InputIterator1 a_last,
+									InputIterator2 b_first, InputIterator2 b_last)
 		{
 			typedef InputIterator1 iterator1;
-//			typedef InputIterator2 iterator2;
+			typedef InputIterator2 iterator2;
 			typedef typename kerbal::iterator::iterator_traits<iterator1>::value_type Tp;
-//			typedef typename kerbal::iterator::iterator_traits<iterator2>::value_type Up;
-			return sequence_greater_equal(a_first, a_last, b_first, b_last, kerbal::algorithm::binary_type_greater_equal<Tp, Tp>());
+			typedef typename kerbal::iterator::iterator_traits<iterator2>::value_type Up;
+			typedef typename kerbal::type_traits::remove_const<Tp>::type remove_const_tp;
+			typedef typename kerbal::type_traits::remove_const<Up>::type remove_const_up;
+			KERBAL_STATIC_ASSERT((kerbal::type_traits::is_same<remove_const_tp, remove_const_up>::value),
+								 "InputIterator1 and InputIterator2 must point to same type!");
+			return sequence_greater_equal(a_first, a_last, b_first, b_last, std::greater_equal<Tp>());
 		}
 
-	}
+		template <typename Container1, typename Container2, typename GreaterEqualPredicate>
+		KERBAL_CONSTEXPR14
+		bool sequence_greater_equal(const Container1 & container1, const Container2 & container2,
+									GreaterEqualPredicate greater_equal)
+		{
+			return sequence_greater_equal(
+					kerbal::container::cbegin(container1), kerbal::container::cend(container1),
+					kerbal::container::cbegin(container2), kerbal::container::cend(container2),
+					greater_equal
+			);
+		}
 
-}
+		template <typename Container1, typename Container2>
+		KERBAL_CONSTEXPR14
+		bool sequence_greater_equal(const Container1 & container1, const Container2 & container2)
+		{
+			return sequence_greater_equal(
+					kerbal::container::cbegin(container1), kerbal::container::cend(container1),
+					kerbal::container::cbegin(container2), kerbal::container::cend(container2)
+			);
+		}
 
+	} // namespace algorithm
 
-#endif /* KERBAL_ALGORITHM_SEQUENCE_COMPARE_HPP_ */
+} // namespace kerbal
+
+#endif // KERBAL_ALGORITHM_SEQUENCE_COMPARE_HPP
