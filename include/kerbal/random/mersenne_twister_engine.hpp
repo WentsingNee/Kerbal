@@ -17,6 +17,7 @@
 #include <kerbal/compatibility/fixed_width_integer.hpp>
 #include <kerbal/compatibility/noexcept.hpp>
 #include <kerbal/container/nonmember_container_access.hpp>
+#include <kerbal/numeric/bit.hpp>
 #include <kerbal/type_traits/integral_constant.hpp>
 
 #include <cstddef>
@@ -176,7 +177,7 @@ namespace kerbal
 
 				static KERBAL_CONSTEXPR result_type max() KERBAL_NOEXCEPT
 				{
-					return UIntType(UIntType(1) << W) - 1;
+					return kerbal::numeric::mask<result_type>(W);
 				}
 
 				KERBAL_CONSTEXPR14
