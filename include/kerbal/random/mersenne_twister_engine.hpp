@@ -85,12 +85,9 @@ namespace kerbal
 				}
 
 
-#		if __cplusplus >= 201103L
-
-			public:
+			private:
 				KERBAL_CONSTEXPR14
-				explicit mersenne_twister_engine(const result_type& seed = DEFAULT_SEED::value) KERBAL_NOEXCEPT
-						: mt{seed}, mti(N)
+				void init_mt()
 				{
 					for (size_t i = 1; i < N; ++i) {
 						UIntType x = this->mt[i - 1];
@@ -99,25 +96,37 @@ namespace kerbal
 						x += i;
 						this->mt[i] = x;
 					}
+				}
+
+			public:
+
+#		if __cplusplus >= 201103L
+
+				KERBAL_CONSTEXPR14
+				explicit mersenne_twister_engine(result_type seed = DEFAULT_SEED::value) KERBAL_NOEXCEPT
+						: mt{seed}, mti(N)
+				{
+					this->init_mt();
 				}
 
 #		else
 
-			public:
-				explicit mersenne_twister_engine(const result_type& seed = DEFAULT_SEED::value) KERBAL_NOEXCEPT
+				explicit mersenne_twister_engine(result_type seed = DEFAULT_SEED::value) KERBAL_NOEXCEPT
 						: mti(N)
 				{
 					this->mt[0] = seed;
-					for (size_t i = 1; i < N; ++i) {
-						UIntType x = this->mt[i - 1];
-						x ^= x >> (W - 2);
-						x *= F;
-						x += i;
-						this->mt[i] = x;
-					}
+					this->init_mt();
 				}
 
 #		endif
+
+				KERBAL_CONSTEXPR14
+				void seed(result_type seed = DEFAULT_SEED::value) KERBAL_NOEXCEPT
+				{
+					this->mt[0] = seed;
+					this->mti = N;
+					this->init_mt();
+				}
 
 				KERBAL_CONSTEXPR14
 				result_type operator()() KERBAL_NOEXCEPT
