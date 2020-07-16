@@ -12,6 +12,7 @@
 #ifndef KERBAL_DATA_STRUCT_RAW_STORAGE_HPP
 #define KERBAL_DATA_STRUCT_RAW_STORAGE_HPP
 
+#include <kerbal/compatibility/alignof.hpp>
 #include <kerbal/compatibility/constexpr.hpp>
 #include <kerbal/compatibility/method_overload_tag.hpp>
 #include <kerbal/compatibility/move.hpp>
