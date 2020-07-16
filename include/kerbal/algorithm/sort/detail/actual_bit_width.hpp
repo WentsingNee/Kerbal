@@ -16,6 +16,7 @@
 #include <kerbal/type_traits/cv_deduction.hpp>
 
 #include <climits>
+#include <cstddef>
 
 namespace kerbal
 {

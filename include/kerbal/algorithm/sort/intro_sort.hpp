@@ -48,7 +48,7 @@ namespace kerbal
 			typedef typename kerbal::iterator::iterator_traits<iterator>::difference_type difference_type;
 
 			if (!kerbal::iterator::distance_greater_than(first, last, 16)) { // dist <= 16
-				kerbal::algorithm::insertion_sort(first, last, cmp);
+				kerbal::algorithm::directly_insertion_sort(first, last, cmp);
 				return;
 			}
 
@@ -58,7 +58,7 @@ namespace kerbal
 			}
 
 			iterator back(kerbal::iterator::prev(last));
-			detail::__quick_sort_adjust_pivot(first, back, cmp);
+			detail::__quick_sort_select_pivot(first, back, cmp);
 			iterator partition_point(kerbal::algorithm::partition(first, back, detail::__quick_sort_compare_with_pivot<iterator, Compare>(back, cmp)));
 
 			if (partition_point != back) {

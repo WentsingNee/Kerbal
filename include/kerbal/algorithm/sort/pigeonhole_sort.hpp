@@ -105,7 +105,7 @@ namespace kerbal
 				typedef kerbal::type_traits::integral_constant<size_t, 1 << VALUE_TYPE_BIT_WIDTH::value> cnt_array_size;
 
 				for (size_t i = 0; i < cnt_array_size::value; ++i) {
-					value_type current = i;
+					value_type current(static_cast<value_type>(i));
 					__pigeonhole_sort_back_fill_n(first, cnt[i], current);
 				}
 			}
@@ -124,7 +124,7 @@ namespace kerbal
 				size_t i = cnt_array_size::value;
 				while (i > 0) {
 					--i;
-					value_type current = i;
+					value_type current(static_cast<value_type>(i));
 					__pigeonhole_sort_back_fill_n(first, cnt[i], current);
 				}
 			}
@@ -141,11 +141,11 @@ namespace kerbal
 				typedef kerbal::type_traits::integral_constant<size_t, 1 << VALUE_TYPE_BIT_WIDTH::value> cnt_array_size;
 
 				for (size_t i = cnt_array_size::value / 2; i < cnt_array_size::value; ++i) {
-					value_type current = i;
+					value_type current(static_cast<value_type>(i));
 					__pigeonhole_sort_back_fill_n(first, cnt[i], current);
 				}
 				for (size_t i = 0; i < cnt_array_size::value / 2; ++i) {
-					value_type current = i;
+					value_type current(static_cast<value_type>(i));
 					__pigeonhole_sort_back_fill_n(first, cnt[i], current);
 				}
 			}
@@ -165,7 +165,7 @@ namespace kerbal
 					size_t i = cnt_array_size::value / 2;
 					while (i > 0) {
 						--i;
-						value_type current = i;
+						value_type current(static_cast<value_type>(i));
 						__pigeonhole_sort_back_fill_n(first, cnt[i], current);
 					}
 				}
@@ -173,7 +173,7 @@ namespace kerbal
 					size_t i = cnt_array_size::value;
 					while (i > cnt_array_size::value / 2) {
 						--i;
-						value_type current = i;
+						value_type current(static_cast<value_type>(i));
 						__pigeonhole_sort_back_fill_n(first, cnt[i], current);
 					}
 				}

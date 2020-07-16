@@ -53,7 +53,7 @@ namespace kerbal
 
 			template <typename BidirectionalIterator, typename Compare>
 			KERBAL_CONSTEXPR14
-			void __quick_sort_adjust_pivot(BidirectionalIterator first, BidirectionalIterator back, Compare cmp)
+			void __quick_sort_select_pivot(BidirectionalIterator first, BidirectionalIterator back, Compare cmp)
 			{
 				typedef BidirectionalIterator iterator;
 				iterator mid(kerbal::iterator::midden_iterator(first, back));

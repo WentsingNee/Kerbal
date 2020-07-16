@@ -40,7 +40,7 @@ namespace kerbal
 			}
 
 			iterator back(kerbal::iterator::prev(last));
-			detail::__quick_sort_adjust_pivot(first, back, cmp);
+			detail::__quick_sort_select_pivot(first, back, cmp);
 			iterator partition_point(kerbal::algorithm::partition(first, back, detail::__quick_sort_compare_with_pivot<iterator, Compare>(back, cmp)));
 
 			if (partition_point != back) {
@@ -82,7 +82,7 @@ namespace kerbal
 				}
 
 				iterator back(kerbal::iterator::prev(last));
-				detail::__quick_sort_adjust_pivot(first, back, cmp);
+				detail::__quick_sort_select_pivot(first, back, cmp);
 				iterator partition_point(kerbal::algorithm::partition(first, back, detail::__quick_sort_compare_with_pivot<iterator, Compare>(back, cmp)));
 
 				if (partition_point != back) {
