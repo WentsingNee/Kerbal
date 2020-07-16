@@ -706,12 +706,24 @@ namespace kerbal
 
 					const_iterator erase(const_iterator pos)
 					{
+
+#			if __cplusplus >= 201103L
 						return pos == this->__sequence().end() ? pos : this->__sequence().erase(pos);
+#			else
+						iterator pos_mut(this->__sequence().begin() + (pos - this->__sequence().begin()));
+						return pos == this->__sequence().end() ? pos : this->__sequence().erase(pos_mut);
+#			endif
 					}
 
 					const_iterator erase(const_iterator first, const_iterator last)
 					{
+#			if __cplusplus >= 201103L
 						return this->__sequence().erase(first, last);
+#			else
+						iterator first_mut(this->__sequence().begin() + (first - this->__sequence().begin()));
+						iterator last_mut(this->__sequence().begin() + (last - this->__sequence().begin()));
+						return this->__sequence().erase(first_mut, last_mut);
+#			endif
 					}
 
 					size_type erase(const key_type & key)
