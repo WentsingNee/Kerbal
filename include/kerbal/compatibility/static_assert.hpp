@@ -9,42 +9,50 @@
  *   all rights reserved
  */
 
-#ifndef KERBAL_COMPATIBILITY_STATIC_ASSERT_HPP_
-#define KERBAL_COMPATIBILITY_STATIC_ASSERT_HPP_
+#ifndef KERBAL_COMPATIBILITY_STATIC_ASSERT_HPP
+#define KERBAL_COMPATIBILITY_STATIC_ASSERT_HPP
 
 #if __cplusplus >= 201103L
+
 #	define KERBAL_STATIC_ASSERT(condition, msg)\
 	static_assert(condition, msg)
 
 #else
 
+#include <kerbal/type_traits/integral_constant.hpp>
+
 namespace kerbal
 {
+
 	namespace compatibility
 	{
-		template <bool condition>
-		struct __static_assert_helper
+
+		template <bool>
+		struct static_assert_helper
 		{
 		};
 
 		template <>
-		struct __static_assert_helper<true>
+		struct static_assert_helper<true>: kerbal::type_traits::true_type
 		{
-			typedef const char * type;
+		};
+
+		template <bool>
+		struct static_assert_test
+		{
 		};
 
 	}
 
 }
 
-#define __KERBAL_JOIN_LINE(m, line) m ## line
-#define __KERBAL_JOIN_LINE_HELPER(m, line) __KERBAL_JOIN_LINE(m, line)
-#define KERBAL_JOIN_LINE(m) __KERBAL_JOIN_LINE_HELPER(m, __LINE__)
-
+#include <kerbal/macro/join_line.hpp>
 
 #define KERBAL_STATIC_ASSERT(condition, msg)\
-typedef typename kerbal::compatibility::__static_assert_helper<static_cast<bool>(condition)>::type KERBAL_JOIN_LINE(__KERBAL_STATIC_ASSERT_TYPEDEF) __attribute__((unused))
+typedef kerbal::compatibility::static_assert_test< \
+			kerbal::compatibility::static_assert_helper<static_cast<bool>(condition)>::value \
+		> KERBAL_JOIN_LINE(__KERBAL_STATIC_ASSERT_TYPEDEF) __attribute__((unused))
 
 #endif
 
-#endif /* KERBAL_COMPATIBILITY_STATIC_ASSERT_HPP_ */
+#endif // KERBAL_COMPATIBILITY_STATIC_ASSERT_HPP
