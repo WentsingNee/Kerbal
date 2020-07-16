@@ -9,19 +9,23 @@
  *   all rights reserved
  */
 
-#ifndef KERBAL_OPERATORS_DEREFERENCEABLE_HPP_
-#define KERBAL_OPERATORS_DEREFERENCEABLE_HPP_
+#ifndef KERBAL_OPERATORS_DEREFERENCEABLE_HPP
+#define KERBAL_OPERATORS_DEREFERENCEABLE_HPP
 
+#include <kerbal/compatibility/constexpr.hpp>
 #include <kerbal/compatibility/noexcept.hpp>
 #include <kerbal/utility/declval.hpp>
 
 namespace kerbal
 {
+
 	namespace operators
 	{
+
 		template <typename Tp, typename Ptr>
 		struct dereferenceable
 		{
+				KERBAL_CONSTEXPR14
 				Ptr operator->() const
 						KERBAL_CONDITIONAL_NOEXCEPT(
 								noexcept(&(*static_cast<const Tp&>(*
@@ -37,4 +41,4 @@ namespace kerbal
 
 } // namespace kerbal
 
-#endif /* KERBAL_OPERATORS_DEREFERENCEABLE_HPP_ */
+#endif // KERBAL_OPERATORS_DEREFERENCEABLE_HPP

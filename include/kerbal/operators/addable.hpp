@@ -9,13 +9,15 @@
  *   all rights reserved
  */
 
-#ifndef KERBAL_OPERATORS_ADDABLE_HPP_
-#define KERBAL_OPERATORS_ADDABLE_HPP_
+#ifndef KERBAL_OPERATORS_ADDABLE_HPP
+#define KERBAL_OPERATORS_ADDABLE_HPP
 
 #include <kerbal/compatibility/constexpr.hpp>
+#include <kerbal/compatibility/noexcept.hpp>
 
 namespace kerbal
 {
+
 	namespace operators
 	{
 
@@ -24,6 +26,7 @@ namespace kerbal
 		{
 				KERBAL_CONSTEXPR14
 				friend Tp operator+(Tp lhs, const Up& rhs)
+						KERBAL_CONDITIONAL_NOEXCEPT(noexcept(lhs += rhs))
 				{
 					lhs += rhs;
 					return lhs;
@@ -35,6 +38,7 @@ namespace kerbal
 		{
 				KERBAL_CONSTEXPR14
 				friend Tp operator+(const Up & lhs, const Tp & rhs)
+						KERBAL_CONDITIONAL_NOEXCEPT(noexcept(rhs + lhs))
 				{
 					return rhs + lhs;
 				}
@@ -44,4 +48,4 @@ namespace kerbal
 
 } // namespace kerbal
 
-#endif /* KERBAL_OPERATORS_ADDABLE_HPP_ */
+#endif // KERBAL_OPERATORS_ADDABLE_HPP

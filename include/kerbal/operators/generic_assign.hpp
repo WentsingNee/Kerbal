@@ -28,6 +28,8 @@ namespace kerbal
 	namespace operators
 	{
 
+		// forward declare
+
 		template <typename Tp, typename Up>
 		KERBAL_CONSTEXPR14
 		Tp& generic_assign(Tp& lhs, const Up& rhs)
@@ -55,6 +57,10 @@ namespace kerbal
 		Tp (& generic_assign(Tp (& lhs)[N], Up (&& rhs)[N]))[N];
 
 #	endif
+
+
+
+		// implement
 
 		template <typename Tp, typename Up>
 		KERBAL_CONSTEXPR14

@@ -9,8 +9,8 @@
  *   all rights reserved
  */
 
-#ifndef KERBAL_OPERATORS_INCR_DECR_HPP_
-#define KERBAL_OPERATORS_INCR_DECR_HPP_
+#ifndef KERBAL_OPERATORS_INCR_DECR_HPP
+#define KERBAL_OPERATORS_INCR_DECR_HPP
 
 #include <kerbal/compatibility/constexpr.hpp>
 #include <kerbal/compatibility/noexcept.hpp>
@@ -21,13 +21,15 @@
 
 namespace kerbal
 {
+
 	namespace operators
 	{
+
 		template <typename Tp>
 		struct incrementable
 		{
-				friend KERBAL_CONSTEXPR14
-				Tp operator++(Tp& x, int)
+				KERBAL_CONSTEXPR14
+				friend Tp operator++(Tp& x, int)
 						KERBAL_CONDITIONAL_NOEXCEPT(
 								std::is_nothrow_copy_constructible<Tp>::value &&
 								noexcept(++x)
@@ -42,8 +44,8 @@ namespace kerbal
 		template <class Tp>
 		struct decrementable
 		{
-				friend KERBAL_CONSTEXPR14
-				Tp operator--(Tp& x, int)
+				KERBAL_CONSTEXPR14
+				friend Tp operator--(Tp& x, int)
 						KERBAL_CONDITIONAL_NOEXCEPT(
 								std::is_nothrow_copy_constructible<Tp>::value &&
 								noexcept(--x)
@@ -59,4 +61,4 @@ namespace kerbal
 
 } // namespace kerbal
 
-#endif /* KERBAL_OPERATORS_INCR_DECR_HPP_ */
+#endif // KERBAL_OPERATORS_INCR_DECR_HPP
