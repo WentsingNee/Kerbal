@@ -9,8 +9,8 @@
  *   all rights reserved
  */
 
-#ifndef KERBAL_TEST_TEST_CASE_HPP_
-#define KERBAL_TEST_TEST_CASE_HPP_
+#ifndef KERBAL_TEST_TEST_CASE_HPP
+#define KERBAL_TEST_TEST_CASE_HPP
 
 #include <kerbal/compatibility/noexcept.hpp>
 
@@ -21,6 +21,7 @@
 
 namespace kerbal
 {
+
 	namespace test
 	{
 
@@ -196,4 +197,4 @@ do {\
 #include <kerbal/test/impl/test_case.impl.hpp>
 
 
-#endif /* KERBAL_TEST_TEST_CASE_HPP_ */
+#endif // KERBAL_TEST_TEST_CASE_HPP

@@ -1,23 +1,27 @@
-/*
- * object_count.hpp
- *
- *  Created on: 2018-9-6
- *      Author: peter
+/**
+ * @file       object_count.hpp
+ * @brief
+ * @date       2018-9-6
+ * @author     Peter
+ * @copyright
+ *      Peter of [ThinkSpirit Laboratory](http://thinkspirit.org/)
+ *   of [Nanjing University of Information Science & Technology](http://www.nuist.edu.cn/)
+ *   all rights reserved
  */
 
-#ifndef KERBAL_TEST_OBJECT_COUNT_HPP_
-#define KERBAL_TEST_OBJECT_COUNT_HPP_
-
-#include <kerbal/utility/noncopyable.hpp>
+#ifndef KERBAL_TEST_OBJECT_COUNT_HPP
+#define KERBAL_TEST_OBJECT_COUNT_HPP
 
 #include <cstddef>
 
 namespace kerbal
 {
+
 	namespace test
 	{
+
 		template <typename ObjectType, typename CountingType = std::ptrdiff_t >
-		class object_count: kerbal::utility::noncopyable
+		class object_count
 		{
 			public:
 				typedef CountingType counting_type;
@@ -35,6 +39,11 @@ namespace kerbal
 					++ref();
 				}
 
+				object_count(const object_count&)
+				{
+					++ref();
+				}
+
 				~object_count()
 				{
 					--ref();
@@ -47,9 +56,8 @@ namespace kerbal
 				}
 		};
 
-	} /* namespace test */
+	} // namespace test
 
-} /* namespace kerbal */
+} // namespace kerbal
 
-
-#endif /* KERBAL_TEST_OBJECT_COUNT_HPP_ */
+#endif // KERBAL_TEST_OBJECT_COUNT_HPP

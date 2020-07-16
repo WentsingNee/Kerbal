@@ -11,8 +11,8 @@
 
  // originate from file exe_serve.hpp
 
-#ifndef KERBAL_TEST_RUNTIME_TIMER_HPP_
-#define KERBAL_TEST_RUNTIME_TIMER_HPP_
+#ifndef KERBAL_TEST_RUNTIME_TIMER_HPP
+#define KERBAL_TEST_RUNTIME_TIMER_HPP
 
 #include <kerbal/compatibility/tick_count.h>
 #include <kerbal/utility/noncopyable.hpp>
@@ -45,5 +45,4 @@ namespace kerbal
 
 } //namespace kerbal
 
-
-#endif	/* End KERBAL_TEST_RUNTIME_TIMER_HPP_ */
+#endif // KERBAL_TEST_RUNTIME_TIMER_HPP

@@ -9,10 +9,10 @@
  *   all rights reserved
  */
 
-#ifndef KERBAL_TEST_TEST_HPP_
-#define KERBAL_TEST_TEST_HPP_
+#ifndef KERBAL_TEST_TEST_HPP
+#define KERBAL_TEST_TEST_HPP
 
 #include <kerbal/test/object_count.hpp>
 #include <kerbal/test/test_case.hpp>
 
-#endif /* KERBAL_TEST_TEST_HPP_ */
+#endif // KERBAL_TEST_TEST_HPP
