@@ -920,6 +920,24 @@ namespace kerbal
 			return kerbal::algorithm::__transform(first, last, out, unary_op, kerbal::iterator::iterator_category(first));
 		}
 
+		template <typename InputIterator1, typename InputIterator2, typename OutputIterator, typename BinaryOperation >
+		KERBAL_CONSTEXPR14
+		OutputIterator
+		transform(InputIterator1 a_first, InputIterator1 a_last, InputIterator2 b_first,
+				  OutputIterator out, BinaryOperation binary_op)
+		{
+			while (a_first != a_last) {
+				kerbal::operators::generic_assign(*out, binary_op(*a_first, *b_first));
+				// *out = binary_op(*a_first, *b_first);
+				++out;
+				++a_first;
+				++b_first;
+			}
+			return out;
+		}
+
+
+
 		template <typename ForwardIterator, typename Tp>
 		KERBAL_CONSTEXPR14
 		void __iota(ForwardIterator first, ForwardIterator last, Tp value, std::forward_iterator_tag)

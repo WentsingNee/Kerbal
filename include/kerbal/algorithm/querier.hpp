@@ -18,6 +18,8 @@
 #include <kerbal/compatibility/noexcept.hpp>
 #include <kerbal/iterator/iterator.hpp>
 
+#include <functional> // std::less etc
+
 namespace kerbal
 {
 
