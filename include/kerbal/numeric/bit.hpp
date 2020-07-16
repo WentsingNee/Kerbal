@@ -29,11 +29,17 @@ namespace kerbal
 	{
 
 		template <typename Tp>
+		struct bitarray_result_len:
+				kerbal::type_traits::integral_constant<size_t, sizeof(Tp) * CHAR_BIT>
+		{
+		};
+
+		template <typename Tp>
 		KERBAL_CONSTEXPR14
-		kerbal::container::array<bool, sizeof(Tp) * CHAR_BIT>
+		kerbal::container::array<bool, bitarray_result_len<Tp>::value>
 		bitarray(Tp x) KERBAL_NOEXCEPT
 		{
-			typedef kerbal::type_traits::integral_constant<size_t, sizeof(Tp) * CHAR_BIT> BIT_ARRAY_LEN;
+			typedef bitarray_result_len<Tp> BIT_ARRAY_LEN;
 			kerbal::container::array<bool, BIT_ARRAY_LEN::value> r;
 			for (int i = 0; i < BIT_ARRAY_LEN::value; ++i) {
 				r[BIT_ARRAY_LEN::value - 1 - i] = ((x >> i) & 1);
@@ -42,11 +48,17 @@ namespace kerbal
 		}
 
 		template <typename Tp>
+		struct octarray_result_len:
+				kerbal::type_traits::integral_constant<size_t, sizeof(Tp) * CHAR_BIT / 3 + (sizeof(Tp) * CHAR_BIT % 3 != 0)>
+		{
+		};
+
+		template <typename Tp>
 		KERBAL_CONSTEXPR14
-		kerbal::container::array<char, sizeof(Tp) * CHAR_BIT / 3 + (sizeof(Tp) * CHAR_BIT % 3 != 0)>
+		kerbal::container::array<char, octarray_result_len<Tp>::value>
 		octarray(Tp x) KERBAL_NOEXCEPT
 		{
-			typedef kerbal::type_traits::integral_constant<size_t, sizeof(Tp) * CHAR_BIT / 3 + (sizeof(Tp) * CHAR_BIT % 3 != 0)> OCT_ARRAY_LEN;
+			typedef octarray_result_len<Tp> OCT_ARRAY_LEN;
 			kerbal::container::array<char, OCT_ARRAY_LEN::value> r;
 			for (int i = 0; i < OCT_ARRAY_LEN::value; ++i) {
 				char current = (x >> (i * 3)) & 7;
@@ -57,11 +69,17 @@ namespace kerbal
 		}
 
 		template <typename Tp>
+		struct hexarray_result_len:
+				kerbal::type_traits::integral_constant<size_t, sizeof(Tp) * CHAR_BIT / 4 + (sizeof(Tp) * CHAR_BIT % 4 != 0)>
+		{
+		};
+
+		template <typename Tp>
 		KERBAL_CONSTEXPR14
-		kerbal::container::array<char, sizeof(Tp) * CHAR_BIT / 4 + (sizeof(Tp) * CHAR_BIT % 4 != 0)>
+		kerbal::container::array<char, hexarray_result_len<Tp>::value>
 		hexarray(Tp x) KERBAL_NOEXCEPT
 		{
-			typedef kerbal::type_traits::integral_constant<size_t, sizeof(Tp) * CHAR_BIT / 4 + (sizeof(Tp) * CHAR_BIT % 4 != 0)> HEX_ARRAY_LEN;
+			typedef hexarray_result_len<Tp> HEX_ARRAY_LEN;
 			kerbal::container::array<char, HEX_ARRAY_LEN::value> r;
 			for (int i = 0; i < HEX_ARRAY_LEN::value; ++i) {
 				char current = (x >> (i * 4)) & 0xf;
@@ -79,7 +97,7 @@ namespace kerbal
 
 		template <typename Unsigned>
 		KERBAL_CONSTEXPR14
-		bool __popcount(Unsigned x, kerbal::type_traits::false_type) KERBAL_NOEXCEPT
+		int __popcount(Unsigned x, kerbal::type_traits::false_type) KERBAL_NOEXCEPT
 		{
 			int cnt = 0;
 			while (x) {
@@ -91,7 +109,7 @@ namespace kerbal
 
 		template <typename Signed>
 		KERBAL_CONSTEXPR14
-		bool __popcount(Signed x, kerbal::type_traits::true_type) KERBAL_NOEXCEPT
+		int __popcount(Signed x, kerbal::type_traits::true_type) KERBAL_NOEXCEPT
 		{
 			typedef typename kerbal::type_traits::make_unsigned<Signed>::type unsigned_t;
 			unsigned_t u = static_cast<unsigned_t>(x);
@@ -211,20 +229,24 @@ namespace kerbal
 		Signed __rotl(Signed x, int s, kerbal::type_traits::true_type) KERBAL_NOEXCEPT
 		{
 			typedef typename kerbal::type_traits::make_unsigned<Signed>::type unsigned_t;
+			typedef kerbal::type_traits::integral_constant<size_t, sizeof(Signed) * CHAR_BIT> BIT_WIDTH;
+#	define __u static_cast<unsigned_t>(x)
 			return s == 0 ?
 					x :
 					s > 0 ?
-					(static_cast<unsigned_t>(x) << s | (static_cast<unsigned_t>(x) >> ((sizeof(Signed) * CHAR_BIT) - s))) :
-					(static_cast<unsigned_t>(x) >> -s | (static_cast<unsigned_t>(x) << ((sizeof(Signed) * CHAR_BIT) - (-s)))); // rotr(x, -s);
+					(__u << s | (__u >> (BIT_WIDTH::value - s))) :
+					(__u >> -s | (__u << (BIT_WIDTH::value - (-s)))); // rotr(x, -s);
+#	undef __u
 		}
 
 		template <typename Unsigned>
 		KERBAL_CONSTEXPR
 		Unsigned __rotl(Unsigned x, int s, kerbal::type_traits::false_type) KERBAL_NOEXCEPT
 		{
+			typedef kerbal::type_traits::integral_constant<size_t, sizeof(Unsigned) * CHAR_BIT> BIT_WIDTH;
 			return s == 0 ?
 					 x :
-					 (x << s | (x >> ((sizeof(Unsigned) * CHAR_BIT) - s)));
+					 (x << s | (x >> (BIT_WIDTH::value - s)));
 		}
 
 		template <typename Tp>
