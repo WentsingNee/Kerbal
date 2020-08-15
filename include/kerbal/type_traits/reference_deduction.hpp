@@ -121,6 +121,14 @@ namespace kerbal
 				typedef Tp&& type;
 		};
 
+		MODULE_EXPORT
+		/// add_rvalue_reference
+		template <typename Tp>
+		struct add_const_rvalue_reference
+		{
+				typedef const Tp&& type;
+		};
+
 #	endif
 
 		MODULE_EXPORT

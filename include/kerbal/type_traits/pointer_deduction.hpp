@@ -62,20 +62,7 @@ namespace kerbal
 		{
 		};
 
-		//		MODULE_EXPORT
-//		template <typename >
-//		struct pointer_rank: kerbal::type_traits::integral_constant<size_t, 0>
-//		{
-//		};
-//
-//		MODULE_EXPORT
-//		template <typename Tp>
-//		struct pointer_rank<Tp*> : kerbal::type_traits::integral_constant<
-//				size_t,
-//				1 + pointer_rank<Tp>::value
-//		>
-//		{
-//		};
+
 
 		template <typename Tp, bool is_pointer>
 		struct __pointer_rank_helper;
