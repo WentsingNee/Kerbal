@@ -482,89 +482,6 @@ namespace kerbal
 			return kerbal::algorithm::merge(a_first, a_last, b_first, b_last, to, kerbal::algorithm::binary_type_equal_to<type2, type1>());
 		}
 
-		template <typename ForwardIterator, typename UnaryPredicate>
-		KERBAL_CONSTEXPR14
-		ForwardIterator
-		__partition(ForwardIterator first, ForwardIterator last,
-					UnaryPredicate pred, std::forward_iterator_tag)
-		{
-			first = kerbal::algorithm::find_if_not(first, last, pred);
-			if (first != last) {
-				ForwardIterator adv(kerbal::iterator::next(first));
-				while (adv != last) {
-					if (pred(*adv)) {
-						kerbal::algorithm::iter_swap(first, adv);
-						++first;
-					}
-					++adv;
-				}
-			}
-			return first;
-		}
-
-		namespace detail
-		{
-
-			template <typename BidirectionalIterator, typename UnaryPredicate>
-			KERBAL_CONSTEXPR14
-			bool __partition_move_first_iter(BidirectionalIterator &first, BidirectionalIterator &last,
-											 UnaryPredicate &pred, std::bidirectional_iterator_tag)
-			{
-				while (first != last) {
-					if (pred(*first)) {
-						++first;
-					} else {
-						return false;
-					}
-				}
-				return true;
-			}
-
-			template <typename BidirectionalIterator, typename UnaryPredicate>
-			KERBAL_CONSTEXPR14
-			bool __partition_move_last_iter(BidirectionalIterator &first, BidirectionalIterator &last,
-											UnaryPredicate &pred, std::bidirectional_iterator_tag)
-			{
-				while (first != last) {
-					if (pred(*last)) {
-						return false;
-					} else {
-						--last;
-					}
-				}
-				return true;
-			}
-
-		} // namespace detail
-
-		template <typename BidirectionalIterator, typename UnaryPredicate>
-		KERBAL_CONSTEXPR14
-		BidirectionalIterator
-		__partition(BidirectionalIterator first, BidirectionalIterator last,
-					UnaryPredicate pred, std::bidirectional_iterator_tag)
-		{
-			while (true) {
-				if (kerbal::algorithm::detail::__partition_move_first_iter(first, last, pred, kerbal::iterator::iterator_category(first))) {
-					return first;
-				}
-				--last;
-				if (kerbal::algorithm::detail::__partition_move_last_iter(first, last, pred, kerbal::iterator::iterator_category(first))) {
-					return first;
-				}
-				kerbal::algorithm::iter_swap(first, last);
-				++first;
-			}
-		}
-
-		template <typename ForwardIterator, typename UnaryPredicate>
-		KERBAL_CONSTEXPR14
-		ForwardIterator partition(ForwardIterator first, ForwardIterator last, UnaryPredicate pred)
-		{
-			return kerbal::algorithm::__partition(first, last, pred, kerbal::iterator::iterator_category(first));
-		}
-
-
-
 		template <typename BidirectionalIterator>
 		KERBAL_CONSTEXPR14
 		void __reverse(BidirectionalIterator first, BidirectionalIterator last, std::bidirectional_iterator_tag)
@@ -989,6 +906,44 @@ namespace kerbal
 		void iota(ForwardIterator first, ForwardIterator last, const Tp & value)
 		{
 			kerbal::algorithm::__iota(first, last, value, kerbal::iterator::iterator_category(first));
+		}
+
+
+
+		template <typename ForwardIterator, typename BinaryPredict>
+		KERBAL_CONSTEXPR14
+		ForwardIterator
+		unique(ForwardIterator first, ForwardIterator last, BinaryPredict equal)
+		{
+			typedef ForwardIterator iterator;
+
+			if (first == last) {
+				return last;
+			}
+
+			iterator result(first);
+			++first;
+			while (first != last) {
+				if (!static_cast<bool>(equal(*result, *first))) {
+					++result;
+					if (result != first) {
+						kerbal::operators::generic_assign(*result, *first); //*result = *first;
+					}
+				}
+				++first;
+			}
+			++result;
+			return result;
+		}
+
+		template <typename ForwardIterator>
+		KERBAL_CONSTEXPR14
+		ForwardIterator
+		unique(ForwardIterator first, ForwardIterator last)
+		{
+			typedef ForwardIterator iterator;
+			typedef typename kerbal::iterator::iterator_traits<iterator>::value_type value_type;
+			return kerbal::algorithm::unique(first, last, std::equal_to<value_type>());
 		}
 
 	} // namespace algorithm

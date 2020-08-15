@@ -27,9 +27,10 @@ namespace kerbal
 
 		namespace detail
 		{
+
 			template <typename Size>
 			KERBAL_CONSTEXPR14
-			Size __lg(Size n)
+			Size lg(Size n)
 			{
 				Size k = 0;
 				while (n > 1) {
@@ -38,43 +39,45 @@ namespace kerbal
 				}
 				return k;
 			}
-		}
 
-		template <typename BidirectionalIterator, typename Compare>
-		KERBAL_CONSTEXPR14
-		void __intro_sort(BidirectionalIterator first, BidirectionalIterator last, Compare cmp, size_t depth_limit)
-		{
-			typedef BidirectionalIterator iterator;
-			typedef typename kerbal::iterator::iterator_traits<iterator>::difference_type difference_type;
+			template <typename BidirectionalIterator, typename Compare>
+			KERBAL_CONSTEXPR14
+			void intro_sort(BidirectionalIterator first, BidirectionalIterator last, Compare cmp, size_t depth_limit)
+			{
+				typedef BidirectionalIterator iterator;
+				typedef typename kerbal::iterator::iterator_traits<iterator>::difference_type difference_type;
 
-			if (!kerbal::iterator::distance_greater_than(first, last, 16)) { // dist <= 16
-				kerbal::algorithm::directly_insertion_sort(first, last, cmp);
-				return;
-			}
+				while (kerbal::iterator::distance_greater_than(first, last, 16)) {
+					if (depth_limit == 0) {
+						kerbal::algorithm::heap_sort(first, last, cmp);
+						return;
+					}
 
-			if (depth_limit == 0) {
-				kerbal::algorithm::heap_sort(first, last, cmp);
-				return;
-			}
+					--depth_limit;
 
-			iterator back(kerbal::iterator::prev(last));
-			detail::__quick_sort_select_pivot(first, back, cmp);
-			iterator partition_point(kerbal::algorithm::partition(first, back, detail::__quick_sort_compare_with_pivot<iterator, Compare>(back, cmp)));
+					iterator back(kerbal::iterator::prev(last));
+					detail::quick_sort_select_pivot(first, back, cmp);
+					iterator partition_point(detail::quick_sort_partition(first, back, *back, cmp));
 
-			if (partition_point != back) {
-				if (cmp(*back, *partition_point)) {
-					kerbal::algorithm::iter_swap(back, partition_point);
+					if (partition_point != back) {
+						if (cmp(*back, *partition_point)) {
+							kerbal::algorithm::iter_swap(back, partition_point);
+						}
+						detail::intro_sort(kerbal::iterator::next(partition_point), last, cmp, depth_limit);
+					}
+					last = partition_point;
 				}
-				kerbal::algorithm::__intro_sort(kerbal::iterator::next(partition_point), last, cmp, depth_limit - 1);
+				// dist <= 16
+				kerbal::algorithm::directly_insertion_sort(first, last, cmp);
 			}
-			kerbal::algorithm::__intro_sort(first, partition_point, cmp, depth_limit - 1);
-		}
+
+		} // namespace detail
 
 		template <typename BidirectionalIterator, typename Compare>
 		KERBAL_CONSTEXPR14
 		void intro_sort(BidirectionalIterator first, BidirectionalIterator last, Compare cmp)
 		{
-			kerbal::algorithm::__intro_sort(first, last, cmp, detail::__lg(kerbal::iterator::distance(first, last)));
+			detail::intro_sort(first, last, cmp, 2 * detail::lg(kerbal::iterator::distance(first, last)));
 		}
 
 		template <typename BidirectionalIterator>

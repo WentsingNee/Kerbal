@@ -130,10 +130,118 @@ namespace kerbal
 		template <typename InputIterator, typename Type>
 		KERBAL_CONSTEXPR14
 		InputIterator
+		__find(InputIterator first, InputIterator last, const Type & value, std::input_iterator_tag)
+		{
+			while (first != last) {
+				if (*first == value) {
+					break;
+				}
+				++first;
+			}
+			return first;
+		}
+
+		template <typename RandomAccessIterator, typename Type>
+		KERBAL_CONSTEXPR14
+		RandomAccessIterator
+		__find(RandomAccessIterator first, RandomAccessIterator last, const Type & value, std::random_access_iterator_tag)
+		{
+			typedef RandomAccessIterator iterator;
+			typedef typename kerbal::iterator::iterator_traits<iterator>::difference_type difference_type;
+
+#	define EACH() do {\
+				if (*first == value) {\
+					return first;\
+				}\
+				++first;\
+			} while (false)
+
+			for (difference_type trip_count(kerbal::iterator::distance(first, last) >> 2); trip_count > 0; --trip_count) {
+				EACH();
+				EACH();
+				EACH();
+				EACH();
+			}
+
+			difference_type remain(kerbal::iterator::distance(first, last));
+			if (remain == 3) {
+				EACH();
+			}
+			if (remain >= 2) {
+				EACH();
+			}
+			if (remain >= 1) {
+				EACH();
+			}
+
+#	undef EACH
+
+			return first;
+		}
+
+		template <typename InputIterator, typename Type>
+		KERBAL_CONSTEXPR14
+		InputIterator
 		find(InputIterator first, InputIterator last, const Type & value)
 		{
 			typedef typename kerbal::iterator::iterator_traits<InputIterator>::value_type iter_value_type;
-			return kerbal::algorithm::find_if(first, last, __right_bind_euqal_to_val<iter_value_type, Type>(value));
+			return kerbal::algorithm::__find(first, last, value, kerbal::iterator::iterator_category(first));
+		}
+
+
+
+		template <typename InputIterator, typename UnaryPredicate>
+		KERBAL_CONSTEXPR14
+		InputIterator
+		__find_if_not(InputIterator first, InputIterator last, UnaryPredicate pred, std::input_iterator_tag)
+		{
+			while (first != last) {
+				if (pred(*first)) {
+					++first;
+				} else {
+					break;
+				}
+			}
+			return first;
+		}
+
+		template <typename RandomAccessIterator, typename UnaryPredicate>
+		KERBAL_CONSTEXPR14
+		RandomAccessIterator
+		__find_if_not(RandomAccessIterator first, RandomAccessIterator last, UnaryPredicate pred, std::random_access_iterator_tag)
+		{
+			typedef RandomAccessIterator iterator;
+			typedef typename kerbal::iterator::iterator_traits<iterator>::difference_type difference_type;
+
+#	define EACH() do {\
+				if (pred(*first)) {\
+					++first;\
+				} else {\
+					break;\
+				}\
+			} while (false)
+
+			for (difference_type trip_count(kerbal::iterator::distance(first, last) >> 2); trip_count > 0; --trip_count) {
+				EACH();
+				EACH();
+				EACH();
+				EACH();
+			}
+
+			difference_type remain(kerbal::iterator::distance(first, last));
+			if (remain == 3) {
+				EACH();
+			}
+			if (remain >= 2) {
+				EACH();
+			}
+			if (remain >= 1) {
+				EACH();
+			}
+
+#	undef EACH
+
+			return first;
 		}
 
 		template <typename InputIterator, typename UnaryPredicate>
@@ -141,7 +249,7 @@ namespace kerbal
 		InputIterator
 		find_if_not(InputIterator first, InputIterator last, UnaryPredicate pred)
 		{
-			return kerbal::algorithm::find_if(first, last, negate<UnaryPredicate&>(pred));
+			return kerbal::algorithm::__find_if_not(first, last, pred, kerbal::iterator::iterator_category(first));
 		}
 
 		template <typename InputIterator, typename UnaryPredicate>
@@ -348,10 +456,63 @@ namespace kerbal
 
 		template <typename InputIterator, typename Type>
 		KERBAL_CONSTEXPR14
+		size_t __count(InputIterator first, InputIterator last, const Type & value, std::input_iterator_tag)
+		{
+			size_t cnt = 0;
+			while (first != last) {
+				if (*first == value) {
+					++cnt;
+				}
+				++first;
+			}
+			return cnt;
+		}
+
+		template <typename RandomAccessIterator, typename Type>
+		KERBAL_CONSTEXPR14
+		size_t __count(RandomAccessIterator first, RandomAccessIterator last, const Type & value, std::random_access_iterator_tag)
+		{
+			typedef RandomAccessIterator iterator;
+			typedef typename kerbal::iterator::iterator_traits<iterator>::difference_type difference_type;
+
+			size_t cnt = 0;
+
+#	define EACH() do {\
+				if (*first == value) {\
+					++cnt;\
+				}\
+				++first;\
+			} while (false)
+
+			for (difference_type trip_count(kerbal::iterator::distance(first, last) >> 2); trip_count > 0; --trip_count) {
+				EACH();
+				EACH();
+				EACH();
+				EACH();
+			}
+
+			difference_type remain(kerbal::iterator::distance(first, last));
+			if (remain == 3) {
+				EACH();
+			}
+			if (remain >= 2) {
+				EACH();
+			}
+			if (remain >= 1) {
+				EACH();
+			}
+
+#	undef EACH
+
+			return cnt;
+		}
+
+		template <typename InputIterator, typename Type>
+		KERBAL_CONSTEXPR14
 		size_t count(InputIterator first, InputIterator last, const Type & value)
 		{
 			typedef typename kerbal::iterator::iterator_traits<InputIterator>::value_type iter_value_type;
-			return kerbal::algorithm::count_if(first, last, kerbal::algorithm::__right_bind_euqal_to_val<iter_value_type, Type>(value));
+			return kerbal::algorithm::__count(first, last, value, kerbal::iterator::iterator_category(first));
 		}
 
 		template <typename InputIterator, typename ForwardIterator, typename BinaryPredicate>
@@ -412,21 +573,6 @@ namespace kerbal
 			typedef typename kerbal::iterator::iterator_traits<iterator>::value_type value_type;
 
 			return kerbal::algorithm::adjacent_find(first, last, kerbal::algorithm::binary_type_equal_to<value_type, value_type>());
-		}
-
-		template <typename InputIterator, typename UnaryPredicate>
-		KERBAL_CONSTEXPR14
-		InputIterator is_partitioned_until(InputIterator first, InputIterator last, UnaryPredicate pred)
-		{
-			first = kerbal::algorithm::find_if_not(first, last, pred);
-			return kerbal::algorithm::find_if(first, last, pred);
-		}
-
-		template <typename InputIterator, typename UnaryPredicate>
-		KERBAL_CONSTEXPR14
-		bool is_partitioned(InputIterator first, InputIterator last, UnaryPredicate pred)
-		{
-			return static_cast<bool>(kerbal::algorithm::is_partitioned_until(first, last, pred) == last);
 		}
 
 

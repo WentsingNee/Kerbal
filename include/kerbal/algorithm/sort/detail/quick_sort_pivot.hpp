@@ -27,33 +27,9 @@ namespace kerbal
 		namespace detail
 		{
 
-			template <typename Iterator, typename CompareFunction>
-			struct __quick_sort_compare_with_pivot
-			{
-					typedef Iterator iterator;
-					typedef typename kerbal::iterator::iterator_traits<iterator>::value_type value_type;
-					typedef const value_type& const_reference;
-
-					const iterator& pivot;
-					CompareFunction& cmp;
-
-					KERBAL_CONSTEXPR
-					__quick_sort_compare_with_pivot(const iterator& pivot, CompareFunction& cmp) KERBAL_NOEXCEPT
-							: pivot(pivot), cmp(cmp)
-					{
-					}
-
-					KERBAL_CONSTEXPR
-					bool operator()(const_reference val) const
-					KERBAL_CONDITIONAL_NOEXCEPT(noexcept(cmp(val, *pivot)))
-					{
-						return cmp(val, *pivot);
-					}
-			};
-
 			template <typename BidirectionalIterator, typename Compare>
 			KERBAL_CONSTEXPR14
-			void __quick_sort_select_pivot(BidirectionalIterator first, BidirectionalIterator back, Compare cmp)
+			void quick_sort_select_pivot(BidirectionalIterator first, BidirectionalIterator back, Compare cmp)
 			{
 				typedef BidirectionalIterator iterator;
 				iterator mid(kerbal::iterator::midden_iterator(first, back));
@@ -96,6 +72,58 @@ namespace kerbal
 					// 0 2 1
 				}
 			}
+
+
+
+			template <typename BidirectionalIterator, typename Tp, typename Compare>
+			KERBAL_CONSTEXPR14
+			bool quick_sort_partition_move_first_iter(BidirectionalIterator &first, BidirectionalIterator &last,
+													const Tp & pivot, Compare & cmp)
+			{
+				while (first != last) {
+					if (cmp(*first, pivot)) {
+						++first;
+					} else {
+						return false;
+					}
+				}
+				return true;
+			}
+
+			template <typename BidirectionalIterator, typename Tp, typename Compare>
+			KERBAL_CONSTEXPR14
+			bool quick_sort_partition_move_last_iter(BidirectionalIterator &first, BidirectionalIterator &last,
+													const Tp & pivot, Compare & cmp)
+			{
+				while (first != last) {
+					if (cmp(pivot, *last)) {
+						--last;
+					} else {
+						return false;
+					}
+				}
+				return true;
+			}
+
+			template <typename BidirectionalIterator, typename Tp, typename Compare>
+			KERBAL_CONSTEXPR14
+			BidirectionalIterator
+			quick_sort_partition(BidirectionalIterator first, BidirectionalIterator last,
+								const Tp & pivot, Compare & cmp)
+			{
+				while (true) {
+					if (kerbal::algorithm::detail::quick_sort_partition_move_first_iter(first, last, pivot, cmp)) {
+						return first;
+					}
+					--last;
+					if (kerbal::algorithm::detail::quick_sort_partition_move_last_iter(first, last, pivot, cmp)) {
+						return first;
+					}
+					kerbal::algorithm::iter_swap(first, last);
+					++first;
+				}
+			}
+
 
 		} // namespace detail
 
