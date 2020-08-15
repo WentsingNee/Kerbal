@@ -1,5 +1,5 @@
 /**
- * @file       array_iterator.impl.hpp
+ * @file       array_iterator.hpp
  * @brief
  * @date       2019-10-24
  * @author     Peter
@@ -9,8 +9,8 @@
  *   all rights reserved
  */
 
-#ifndef KERBAL_CONTAINER_IMPL_ARRAY_ITERATOR_IMPL_HPP
-#define KERBAL_CONTAINER_IMPL_ARRAY_ITERATOR_IMPL_HPP
+#ifndef KERBAL_CONTAINER_DETAIL_ARRAY_ITERATOR_HPP
+#define KERBAL_CONTAINER_DETAIL_ARRAY_ITERATOR_HPP
 
 #include <kerbal/compatibility/constexpr.hpp>
 #include <kerbal/compatibility/noexcept.hpp>
@@ -65,7 +65,8 @@ namespace kerbal
 					typedef typename iterator_traits::reference				reference;
 
 				public:
-					explicit KERBAL_CONSTEXPR __arr_iterbase(Pointer current) KERBAL_NOEXCEPT :
+					KERBAL_CONSTEXPR
+					explicit __arr_iterbase(Pointer current) KERBAL_NOEXCEPT :
 							current(current)
 					{
 					}
@@ -79,7 +80,8 @@ namespace kerbal
 						return *this->current;
 					}
 
-					KERBAL_CONSTEXPR14 DerivedIterator& operator++() KERBAL_NOEXCEPT
+					KERBAL_CONSTEXPR14
+					DerivedIterator& operator++() KERBAL_NOEXCEPT
 					{
 						++this->current;
 						return static_cast<DerivedIterator&>(*this);
@@ -94,7 +96,8 @@ namespace kerbal
 					//===================
 					//bidirectional iterator interface
 
-					KERBAL_CONSTEXPR14 DerivedIterator& operator--() KERBAL_NOEXCEPT
+					KERBAL_CONSTEXPR14
+					DerivedIterator& operator--() KERBAL_NOEXCEPT
 					{
 						--this->current;
 						return static_cast<DerivedIterator&>(*this);
@@ -110,19 +113,22 @@ namespace kerbal
 						return lhs.current - rhs.current;
 					}
 
-					KERBAL_CONSTEXPR14 DerivedIterator& operator+=(const difference_type & delta) KERBAL_NOEXCEPT
+					KERBAL_CONSTEXPR14
+					DerivedIterator& operator+=(const difference_type & delta) KERBAL_NOEXCEPT
 					{
 						this->current += delta;
 						return static_cast<DerivedIterator&>(*this);
 					}
 
-					KERBAL_CONSTEXPR14 DerivedIterator& operator-=(const difference_type & delta) KERBAL_NOEXCEPT
+					KERBAL_CONSTEXPR14
+					DerivedIterator& operator-=(const difference_type & delta) KERBAL_NOEXCEPT
 					{
 						this->current -= delta;
 						return static_cast<DerivedIterator&>(*this);
 					}
 
-					KERBAL_CONSTEXPR14 reference operator[](const difference_type & dist) const KERBAL_NOEXCEPT
+					KERBAL_CONSTEXPR14
+					reference operator[](const difference_type & dist) const KERBAL_NOEXCEPT
 					{
 						return *(static_cast<const DerivedIterator&>(*this) + dist);
 					}
@@ -168,12 +174,14 @@ namespace kerbal
 					typedef __arr_iter<ValueType> iterator;
 
 				public:
-					explicit KERBAL_CONSTEXPR __arr_kiter(const ValueType* current) KERBAL_NOEXCEPT :
+					KERBAL_CONSTEXPR
+					explicit __arr_kiter(const ValueType* current) KERBAL_NOEXCEPT :
 							super(current)
 					{
 					}
 
-					KERBAL_CONSTEXPR __arr_kiter(const iterator & current) KERBAL_NOEXCEPT :
+					KERBAL_CONSTEXPR
+					__arr_kiter(const iterator & current) KERBAL_NOEXCEPT :
 							super(current.current)
 					{
 					}
@@ -194,4 +202,4 @@ namespace kerbal
 } //namespace kerbal
 
 
-#endif // KERBAL_CONTAINER_IMPL_ARRAY_ITERATOR_IMPL_HPP
+#endif // KERBAL_CONTAINER_DETAIL_ARRAY_ITERATOR_HPP

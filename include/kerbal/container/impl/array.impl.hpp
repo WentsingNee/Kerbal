@@ -31,7 +31,8 @@ namespace kerbal
 	{
 
 		template <typename Tp, size_t N>
-		KERBAL_CONSTEXPR array<Tp, N>::array()
+		KERBAL_CONSTEXPR
+		array<Tp, N>::array()
 #	if __cplusplus >= 201103L
 					: storage{}
 #	endif
@@ -53,7 +54,8 @@ namespace kerbal
 #	if __cplusplus >= 201103L
 
 		template <typename Tp, size_t N>
-		KERBAL_CONSTEXPR14 array<Tp, N>::array(std::initializer_list<value_type> src) :
+		KERBAL_CONSTEXPR14
+		array<Tp, N>::array(std::initializer_list<value_type> src) :
 				array(src.begin(), src.end())
 		{
 		}
@@ -62,7 +64,8 @@ namespace kerbal
 
 
 		template <typename Tp, size_t N>
-		KERBAL_CONSTEXPR14 array<Tp, N>::array(size_type n, const_reference val)
+		KERBAL_CONSTEXPR14
+		array<Tp, N>::array(size_type n, const_reference val)
 #	if __cplusplus >= 201103L
 					: storage{}
 #	endif

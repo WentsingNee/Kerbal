@@ -9,8 +9,8 @@
  *   all rights reserved
  */
 
-#ifndef KERBAL_CONTAINER_ARRAY_HPP_
-#define KERBAL_CONTAINER_ARRAY_HPP_
+#ifndef KERBAL_CONTAINER_ARRAY_HPP
+#define KERBAL_CONTAINER_ARRAY_HPP
 
 #include <kerbal/algorithm/sequence_compare.hpp>
 #include <kerbal/compatibility/constexpr.hpp>
@@ -27,7 +27,7 @@
 #	include <initializer_list>
 #endif
 
-#include <kerbal/container/impl/array_iterator.impl.hpp>
+#include <kerbal/container/detail/array_iterator.hpp>
 
 namespace kerbal
 {
@@ -113,13 +113,16 @@ namespace kerbal
 				 * @warning Compile terminate if the length of the initializer list large than the arg N of the array
 				 * @warning The constructor only be provided under the environment of C++11 standard
 				 */
-				KERBAL_CONSTEXPR14 array(std::initializer_list<value_type> src);
+				KERBAL_CONSTEXPR14
+				array(std::initializer_list<value_type> src);
 
-				KERBAL_CONSTEXPR array(array && src) = default;
+				KERBAL_CONSTEXPR
+				array(array && src) = default;
 
 #		endif
 
-				KERBAL_CONSTEXPR14 array(size_type n, const_reference val);
+				KERBAL_CONSTEXPR14
+				array(size_type n, const_reference val);
 
 				/**
 				 * @brief Range constructor
@@ -190,45 +193,68 @@ namespace kerbal
 #		endif
 
 				/** @brief 返回指向数组首元素的迭代器 */
-				KERBAL_CONSTEXPR14 iterator begin() KERBAL_NOEXCEPT;
+				KERBAL_CONSTEXPR14
+				iterator begin() KERBAL_NOEXCEPT;
 
 				/** @brief 返回指向数组末尾元素的后一个元素位置的迭代器 */
-				KERBAL_CONSTEXPR14 iterator end() KERBAL_NOEXCEPT;
+				KERBAL_CONSTEXPR14
+				iterator end() KERBAL_NOEXCEPT;
 
-				KERBAL_CONSTEXPR14 const_iterator begin() const KERBAL_NOEXCEPT;
+				KERBAL_CONSTEXPR14
+				const_iterator begin() const KERBAL_NOEXCEPT;
 
 				/** @brief 返回指向数组末尾元素的后一个元素位置的迭代器 */
-				KERBAL_CONSTEXPR14 const_iterator end() const KERBAL_NOEXCEPT;
+				KERBAL_CONSTEXPR14
+				const_iterator end() const KERBAL_NOEXCEPT;
 
-				KERBAL_CONSTEXPR const_iterator cbegin() const KERBAL_NOEXCEPT;
+				KERBAL_CONSTEXPR
+				const_iterator cbegin() const KERBAL_NOEXCEPT;
 
-				KERBAL_CONSTEXPR const_iterator cend() const KERBAL_NOEXCEPT;
+				KERBAL_CONSTEXPR
+				const_iterator cend() const KERBAL_NOEXCEPT;
 
-				KERBAL_CONSTEXPR14 reverse_iterator rbegin() KERBAL_NOEXCEPT;
-				KERBAL_CONSTEXPR14 reverse_iterator rend() KERBAL_NOEXCEPT;
+				KERBAL_CONSTEXPR14
+				reverse_iterator rbegin() KERBAL_NOEXCEPT;
 
-				KERBAL_CONSTEXPR14 const_reverse_iterator rbegin() const KERBAL_NOEXCEPT;
-				KERBAL_CONSTEXPR14 const_reverse_iterator rend() const KERBAL_NOEXCEPT;
+				KERBAL_CONSTEXPR14
+				reverse_iterator rend() KERBAL_NOEXCEPT;
 
-				KERBAL_CONSTEXPR const_reverse_iterator crbegin() const KERBAL_NOEXCEPT;
-				KERBAL_CONSTEXPR const_reverse_iterator crend() const KERBAL_NOEXCEPT;
+				KERBAL_CONSTEXPR14
+				const_reverse_iterator rbegin() const KERBAL_NOEXCEPT;
 
-				KERBAL_CONSTEXPR14 iterator nth(size_type index) KERBAL_NOEXCEPT;
-				KERBAL_CONSTEXPR14 const_iterator nth(size_type index) const KERBAL_NOEXCEPT;
+				KERBAL_CONSTEXPR14
+				const_reverse_iterator rend() const KERBAL_NOEXCEPT;
 
-				KERBAL_CONSTEXPR14 size_type index_of(iterator it) KERBAL_NOEXCEPT;
-				KERBAL_CONSTEXPR size_type index_of(const_iterator it) const KERBAL_NOEXCEPT;
+				KERBAL_CONSTEXPR
+				const_reverse_iterator crbegin() const KERBAL_NOEXCEPT;
+
+				KERBAL_CONSTEXPR
+				const_reverse_iterator crend() const KERBAL_NOEXCEPT;
+
+				KERBAL_CONSTEXPR14
+				iterator nth(size_type index) KERBAL_NOEXCEPT;
+
+				KERBAL_CONSTEXPR14
+				const_iterator nth(size_type index) const KERBAL_NOEXCEPT;
+
+				KERBAL_CONSTEXPR14
+				size_type index_of(iterator it) KERBAL_NOEXCEPT;
+
+				KERBAL_CONSTEXPR
+				size_type index_of(const_iterator it) const KERBAL_NOEXCEPT;
 
 				/**
 				 * @brief Count the number of the elements that the array has contained.
 				 * @return the number of the elements that the array has contained
 				 */
-				KERBAL_CONSTEXPR size_type size() const KERBAL_NOEXCEPT;
+				KERBAL_CONSTEXPR
+				size_type size() const KERBAL_NOEXCEPT;
 
 				/**
 				 * @brief Returns the size() of the largest possible array.
 				 */
-				KERBAL_CONSTEXPR size_type max_size() const KERBAL_NOEXCEPT
+				KERBAL_CONSTEXPR
+				size_type max_size() const KERBAL_NOEXCEPT
 				{
 					return N;
 				}
@@ -237,37 +263,46 @@ namespace kerbal
 				 * @brief Judge whether the array is empty.
 				 * @return If the array is empty, return true, otherwise return false
 				 */
-				KERBAL_CONSTEXPR bool empty() const KERBAL_NOEXCEPT;
+				KERBAL_CONSTEXPR
+				bool empty() const KERBAL_NOEXCEPT;
 
-				KERBAL_CONSTEXPR14 reference operator[](size_type index) KERBAL_NOEXCEPT;
-				KERBAL_CONSTEXPR14 const_reference operator[](size_type index) const KERBAL_NOEXCEPT;
+				KERBAL_CONSTEXPR14
+				reference operator[](size_type index) KERBAL_NOEXCEPT;
+
+				KERBAL_CONSTEXPR14
+				const_reference operator[](size_type index) const KERBAL_NOEXCEPT;
 
 				reference at(size_type index);
+
 				const_reference at(size_type index) const;
 
 				/**
 				 * @brief Get the reference of the element at the beginning of the array.
 				 * @return the reference of the element at the beginning of the array.
 				 */
-				KERBAL_CONSTEXPR14 reference front();
+				KERBAL_CONSTEXPR14
+				reference front();
 
 				/**
 				 * @brief Get the const_reference of the element at the beginning of the array.
 				 * @return the const_reference of the element at the beginning of the array.
 				 */
-				KERBAL_CONSTEXPR14 const_reference front() const;
+				KERBAL_CONSTEXPR14
+				const_reference front() const;
 
 				/**
 				 * @brief Get the reference of the element at the end of the array.
 				 * @return the reference of the element at the end of the array.
 				 */
-				KERBAL_CONSTEXPR14 reference back();
+				KERBAL_CONSTEXPR14
+				reference back();
 
 				/**
 				 * @brief Get the const_reference of the element at the end of the array.
 				 * @return the const_reference of the element at the end of the array.
 				 */
-				KERBAL_CONSTEXPR14 const_reference back() const;
+				KERBAL_CONSTEXPR14
+				const_reference back() const;
 
 				/**
 				 * @brief 返回与该 array 所等价的 C 风格数组类型的引用, 方便与专门为 C 风格数组类型设计的 API 交互
@@ -275,70 +310,86 @@ namespace kerbal
 				 * @warning 必须保证数组元素存满时才可调用此方法
 				 * @throw std::exception Throw this exception when call this method while the array is not full
 				 */
-				KERBAL_CONSTEXPR14 equal_c_array_reference c_arr();
-				KERBAL_CONSTEXPR14 const_equal_c_array_reference c_arr() const;
-				KERBAL_CONSTEXPR const_equal_c_array_reference const_c_arr() const;
+				KERBAL_CONSTEXPR14
+				equal_c_array_reference c_arr();
 
-				KERBAL_CONSTEXPR const_pointer data() const;
+				KERBAL_CONSTEXPR14
+				const_equal_c_array_reference c_arr() const;
+
+				KERBAL_CONSTEXPR
+				const_equal_c_array_reference const_c_arr() const;
+
+				KERBAL_CONSTEXPR
+				const_pointer data() const;
 
 				/**
 				 * @brief Swap the array with another one.
 				 * @param with another array to be swaped with
 				 */
-				KERBAL_CONSTEXPR14 void swap(array & with);
+				KERBAL_CONSTEXPR14
+				void swap(array & with);
 
 				/**
 				 * @brief Fill all the blank positions at the end of array by copying the argument val.
 				 * @param val
 				 */
-				KERBAL_CONSTEXPR14 void fill(const_reference val);
+				KERBAL_CONSTEXPR14
+				void fill(const_reference val);
 
 		};
 
 		template <typename Tp, size_t M, size_t N>
-		KERBAL_CONSTEXPR bool operator==(const array<Tp, M> & lhs, const array<Tp, N> & rhs) KERBAL_NOEXCEPT
+		KERBAL_CONSTEXPR
+		bool operator==(const array<Tp, M> & lhs, const array<Tp, N> & rhs) KERBAL_NOEXCEPT
 		{
 			return false;
 		}
 
 		template <typename Tp, size_t M, size_t N>
-		KERBAL_CONSTEXPR bool operator!=(const array<Tp, M> & lhs, const array<Tp, N> & rhs) KERBAL_NOEXCEPT
+		KERBAL_CONSTEXPR
+		bool operator!=(const array<Tp, M> & lhs, const array<Tp, N> & rhs) KERBAL_NOEXCEPT
 		{
 			return true;
 		}
 
 		template <typename Tp, size_t N>
-		KERBAL_CONSTEXPR14 bool operator==(const array<Tp, N> & lhs, const array<Tp, N> & rhs)
+		KERBAL_CONSTEXPR14
+		bool operator==(const array<Tp, N> & lhs, const array<Tp, N> & rhs)
 		{
 			return kerbal::algorithm::sequence_equal_to(lhs.cbegin(), lhs.cend(), rhs.cbegin(), rhs.cend());
 		}
 
 		template <typename Tp, size_t N>
-		KERBAL_CONSTEXPR14 bool operator!=(const array<Tp, N> & lhs, const array<Tp, N> & rhs)
+		KERBAL_CONSTEXPR14
+		bool operator!=(const array<Tp, N> & lhs, const array<Tp, N> & rhs)
 		{
 			return kerbal::algorithm::sequence_not_equal_to(lhs.cbegin(), lhs.cend(), rhs.cbegin(), rhs.cend());
 		}
 
 		template <typename Tp, size_t M, size_t N>
-		KERBAL_CONSTEXPR14 bool operator<(const array<Tp, M> & lhs, const array<Tp, N> & rhs)
+		KERBAL_CONSTEXPR14
+		bool operator<(const array<Tp, M> & lhs, const array<Tp, N> & rhs)
 		{
 			return kerbal::algorithm::sequence_less(lhs.cbegin(), lhs.cend(), rhs.cbegin(), rhs.cend());
 		}
 
 		template <typename Tp, size_t M, size_t N>
-		KERBAL_CONSTEXPR14 bool operator<=(const array<Tp, M> & lhs, const array<Tp, N> & rhs)
+		KERBAL_CONSTEXPR14
+		bool operator<=(const array<Tp, M> & lhs, const array<Tp, N> & rhs)
 		{
 			return kerbal::algorithm::sequence_less_equal(lhs.cbegin(), lhs.cend(), rhs.cbegin(), rhs.cend());
 		}
 
 		template <typename Tp, size_t M, size_t N>
-		KERBAL_CONSTEXPR14 bool operator>(const array<Tp, M> & lhs, const array<Tp, N> & rhs)
+		KERBAL_CONSTEXPR14
+		bool operator>(const array<Tp, M> & lhs, const array<Tp, N> & rhs)
 		{
 			return kerbal::algorithm::sequence_greater(lhs.cbegin(), lhs.cend(), rhs.cbegin(), rhs.cend());
 		}
 
 		template <typename Tp, size_t M, size_t N>
-		KERBAL_CONSTEXPR14 bool operator>=(const array<Tp, M> & lhs, const array<Tp, N> & rhs)
+		KERBAL_CONSTEXPR14
+		bool operator>=(const array<Tp, M> & lhs, const array<Tp, N> & rhs)
 		{
 			return kerbal::algorithm::sequence_greater_equal(lhs.cbegin(), lhs.cend(), rhs.cbegin(), rhs.cend());
 		}
@@ -349,4 +400,4 @@ namespace kerbal
 
 #include <kerbal/container/impl/array.impl.hpp>
 
-#endif /* KERBAL_CONTAINER_ARRAY_HPP_ */
+#endif // KERBAL_CONTAINER_ARRAY_HPP
