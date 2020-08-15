@@ -16,6 +16,7 @@
 #include <kerbal/compatibility/constexpr.hpp>
 #include <kerbal/iterator/iterator.hpp>
 #include <kerbal/iterator/stride_iterator.hpp>
+#include <kerbal/numeric/bit.hpp>
 
 namespace kerbal
 {
@@ -44,6 +45,26 @@ namespace kerbal
 		};
 
 		template <typename differece_type>
+		struct shell_sort_q_policy
+		{
+				KERBAL_CONSTEXPR
+				static differece_type init_stride(differece_type dist)
+				{
+					return dist / 4;
+				}
+
+				KERBAL_CONSTEXPR14
+				bool operator()(differece_type & stride) const
+				{
+					if (stride == 0 || stride == 1) {
+						return false;
+					}
+					stride /= 4;
+					return true;
+				}
+		};
+
+		template <typename differece_type>
 		struct shell_sort_hibbard_policy
 		{
 				KERBAL_CONSTEXPR14
@@ -57,12 +78,7 @@ namespace kerbal
 					while ((dist >> cnt) != 1) {
 						++cnt;
 					}
-					for (int i = 0; i < cnt; ++i) {
-						dist |= static_cast<differece_type>(1) << i;
-					}
-					/*
-						dist |= mask(cnt);
-					 */
+					dist |= kerbal::numeric::mask<differece_type>(cnt);
 					return dist;
 				}
 
@@ -103,12 +119,7 @@ namespace kerbal
 				while ((dist >> cnt) != 1) {
 					++cnt;
 				}
-				for (int i = 0; i < cnt; ++i) {
-					dist |= static_cast<differece_type>(1) << i;
-				}
-				/*
-					dist |= mask(cnt);
-				 */
+				dist |= kerbal::numeric::mask<differece_type>(cnt);
 				return dist;
 			}
 

@@ -32,15 +32,7 @@ namespace kerbal
 			typedef typename kerbal::iterator::iterator_traits<iterator>::value_type value_type;
 
 			for (iterator i(first); i != last; ++i) {
-				iterator insert_pos(i);
-				while (insert_pos != first) {
-					--insert_pos;
-					if (!static_cast<bool>(cmp(*i, *insert_pos))) {
-						// *i >= *insert_pos
-						++insert_pos;
-						break;
-					}
-				}
+				iterator insert_pos(kerbal::algorithm::upper_bound_backward(first, i, *i, cmp));
 				if (insert_pos != i) {
 					value_type value(kerbal::compatibility::to_xvalue(*i));
 					kerbal::algorithm::move_backward(insert_pos, i, kerbal::iterator::next(i));

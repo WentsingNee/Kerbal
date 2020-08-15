@@ -23,6 +23,7 @@
 #include <kerbal/algorithm/sort/radix_sort.hpp>
 #include <kerbal/algorithm/sort/selection_sort.hpp>
 #include <kerbal/algorithm/sort/shell_sort.hpp>
+#include <kerbal/algorithm/sort/sort.hpp>
 #include <kerbal/algorithm/sort/stable_sort.hpp>
 
 #endif // KERBAL_ALGORITHM_SORT_HPP
