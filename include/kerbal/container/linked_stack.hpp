@@ -16,6 +16,7 @@
 
 namespace kerbal
 {
+
 	namespace container
 	{
 
@@ -35,6 +36,8 @@ namespace kerbal
 				typedef const value_type&&		const_rvalue_reference;
 #		endif
 
+				typedef typename Sequence::allocator_type			allocator_type;
+
 				typedef typename Sequence::size_type				size_type;
 				typedef typename Sequence::difference_type			difference_type;
 
@@ -45,6 +48,13 @@ namespace kerbal
 				KERBAL_CONSTEXPR20
 				linked_stack()
 						: c()
+				{
+				}
+
+				KERBAL_CONSTEXPR20
+				explicit
+				linked_stack(const allocator_type & alloc)
+						: c(alloc)
 				{
 				}
 
