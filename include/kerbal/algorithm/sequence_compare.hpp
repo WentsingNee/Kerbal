@@ -22,6 +22,8 @@
 #include <kerbal/type_traits/const_deduction.hpp>
 #include <kerbal/type_traits/is_same.hpp>
 
+#include <functional>
+
 namespace kerbal
 {
 
