@@ -12,7 +12,14 @@
 #ifndef KERBAL_NUMERIC_BIT_HPP
 #define KERBAL_NUMERIC_BIT_HPP
 
-#include <climits>
+#include <kerbal/config/compiler_id.hpp>
+#include <kerbal/config/compiler_version.hpp>
+
+#if KERBAL_COMPILER_ID == KERBAL_COMPILER_ID_GNU
+#	include <kerbal/config/compiler_private/gnu/builtin_detection.hpp>
+#elif KERBAL_COMPILER_ID == KERBAL_COMPILER_ID_CLANG
+#	include <kerbal/config/compiler_private/clang/builtin_detection.hpp>
+#endif
 
 #include <kerbal/compatibility/constexpr.hpp>
 #include <kerbal/compatibility/noexcept.hpp>
@@ -107,20 +114,53 @@ namespace kerbal
 			return cnt;
 		}
 
+#if KERBAL_COMPILER_ID == KERBAL_COMPILER_ID_CLANG
+
+#	if KERBAL_CLANG_PRIVATE_HAS_BUILTIN(__builtin_popcount)
+
+		KERBAL_CONSTEXPR
+		int __popcount(unsigned int x, kerbal::type_traits::false_type) KERBAL_NOEXCEPT
+		{
+			return __builtin_popcount(x);
+		}
+
+#	endif
+
+#	if KERBAL_CLANG_PRIVATE_HAS_BUILTIN(__builtin_popcountl)
+
+		KERBAL_CONSTEXPR
+		int _popcount(unsigned long x, kerbal::type_traits::false_type) KERBAL_NOEXCEPT
+		{
+			return __builtin_popcountl(x);
+		}
+
+#	endif
+
+#	if KERBAL_CLANG_PRIVATE_HAS_BUILTIN(__builtin_popcountll)
+
+		KERBAL_CONSTEXPR
+		int __popcount(unsigned long long x, kerbal::type_traits::false_type) KERBAL_NOEXCEPT
+		{
+			return __builtin_popcountll(x);
+		}
+
+#	endif
+
+#endif
+
 		template <typename Signed>
-		KERBAL_CONSTEXPR14
+		KERBAL_CONSTEXPR
 		int __popcount(Signed x, kerbal::type_traits::true_type) KERBAL_NOEXCEPT
 		{
 			typedef typename kerbal::type_traits::make_unsigned<Signed>::type unsigned_t;
-			unsigned_t u = static_cast<unsigned_t>(x);
-			return __popcount(u, kerbal::type_traits::false_type());
+			return __popcount(static_cast<unsigned_t>(x), kerbal::type_traits::false_type());
 		}
 
 		/**
 		 * Counts the number of 1 bits in the value of x.
 		 */
 		template <typename Tp>
-		KERBAL_CONSTEXPR14
+		KERBAL_CONSTEXPR
 		int popcount(Tp x) KERBAL_NOEXCEPT
 		{
 			return kerbal::numeric::__popcount(x, kerbal::type_traits::is_signed<Tp>());
@@ -217,7 +257,7 @@ namespace kerbal
 
 		template <typename Tp>
 		KERBAL_CONSTEXPR
-		bool get(Tp x, int pos) KERBAL_NOEXCEPT
+		bool get_bit(Tp x, int pos) KERBAL_NOEXCEPT
 		{
 			return (x >> pos) & 1;
 		}
