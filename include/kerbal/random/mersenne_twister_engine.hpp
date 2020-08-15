@@ -66,7 +66,7 @@ namespace kerbal
 				KERBAL_CONSTEXPR14
 				void twist() KERBAL_NOEXCEPT
 				{
-					typedef kerbal::type_traits::integral_constant<UIntType, (~UIntType()) << R> UPPER_MASK; // most significant w-r bits
+					typedef kerbal::type_traits::integral_constant<UIntType, (~static_cast<UIntType>(0)) << R> UPPER_MASK; // most significant w-r bits
 					typedef kerbal::type_traits::integral_constant<UIntType, ~UPPER_MASK::value> LOWER_MASK; // least significant r bits
 
 					const UIntType mag01[2] = {0x0UL, A};
@@ -183,25 +183,15 @@ namespace kerbal
 				KERBAL_CONSTEXPR14
 				bool operator==(const mersenne_twister_engine & rhs) const
 				{
-					return this->mti == rhs.mti && static_cast<bool>(
-								kerbal::algorithm::sequence_equal_to(
-									kerbal::container::cbegin(this->mt),
-									kerbal::container::cend(this->mt),
-									kerbal::container::cbegin(rhs.mt),
-									kerbal::container::cend(rhs.mt)
-							));
+					return this->mti == rhs.mti &&
+							static_cast<bool>(kerbal::algorithm::sequence_equal_to(this->mt, rhs.mt));
 				}
 
 				KERBAL_CONSTEXPR14
 				bool operator!=(const mersenne_twister_engine & rhs) const
 				{
-					return this->mti != rhs.mti || static_cast<bool>(
-								kerbal::algorithm::sequence_not_equal_to(
-									kerbal::container::cbegin(this->mt),
-									kerbal::container::cend(this->mt),
-									kerbal::container::cbegin(rhs.mt),
-									kerbal::container::cend(rhs.mt)
-							));
+					return this->mti != rhs.mti ||
+							static_cast<bool>(kerbal::algorithm::sequence_not_equal_to(this->mt, rhs.mt));
 				}
 
 		};
