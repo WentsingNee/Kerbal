@@ -13,6 +13,7 @@
 #define KERBAL_CONTAINER_STATIC_VECTOR_HPP
 
 #include <kerbal/algorithm/sequence_compare.hpp>
+#include <kerbal/assign/ilist.hpp>
 #include <kerbal/compatibility/constexpr.hpp>
 #include <kerbal/compatibility/noexcept.hpp>
 #include <kerbal/container/static_container_exception.hpp>
@@ -28,7 +29,7 @@
 #endif
 
 #include <kerbal/container/detail/static_vector_base.hpp>
-#include <kerbal/container/impl/static_vector_iterator.impl.hpp>
+#include <kerbal/container/detail/static_vector_iterator.hpp>
 
 namespace kerbal
 {
@@ -118,6 +119,13 @@ namespace kerbal
 				 */
 				KERBAL_CONSTEXPR14
 				static_vector(std::initializer_list<value_type> src);
+#		else
+
+				static_vector(const kerbal::assign::assign_list<value_type> & src);
+
+#		endif
+
+#		if __cplusplus >= 201103L
 
 				KERBAL_CONSTEXPR14
 				static_vector(static_vector && src);
@@ -172,6 +180,11 @@ namespace kerbal
 				KERBAL_CONSTEXPR14
 				static_vector& operator=(std::initializer_list<value_type> src);
 
+#		else
+
+				KERBAL_CONSTEXPR14
+				static_vector& operator=(const kerbal::assign::assign_list<value_type> & src);
+
 #		endif
 
 			private:
@@ -214,6 +227,11 @@ namespace kerbal
 				 */
 				KERBAL_CONSTEXPR14
 				void assign(std::initializer_list<value_type> src);
+
+#		else
+
+				KERBAL_CONSTEXPR14
+				void assign(const kerbal::assign::assign_list<value_type> & src);
 
 #		endif
 
@@ -429,38 +447,16 @@ namespace kerbal
 				KERBAL_CONSTEXPR14
 				void shrink_back_to(const_iterator to);
 
-				/**
-				 * @brief 在数组首部插入参数 src 指定的元素
-				 * @param src
-				 */
-				KERBAL_CONSTEXPR14
-				void push_front(const_reference src);
-
-#		if __cplusplus >= 201103L
-				/**
-				 * @brief 在数组首部插入参数 src 指定的元素
-				 * @param src
-				 */
-				KERBAL_CONSTEXPR14
-				void push_front(rvalue_reference src);
-
-				template <typename ... Args>
-				KERBAL_CONSTEXPR14
-				reference emplace_front(Args&& ...args);
-
-#		endif
-
-				/**
-				 * @brief 移除数组首部的元素
-				 */
-				KERBAL_CONSTEXPR14
-				void pop_front();
 
 				KERBAL_CONSTEXPR14
 				iterator insert(const_iterator pos, const_reference val);
 
 				KERBAL_CONSTEXPR14
-				iterator emplace(const_iterator pos, const_reference src);
+				iterator insert(size_type count, const_reference val);
+
+				template <typename InputIterator>
+				KERBAL_CONSTEXPR14
+				iterator insert(const_iterator pos, const_reference first, const_reference last);
 
 #		if __cplusplus >= 201103L
 
@@ -468,11 +464,31 @@ namespace kerbal
 				iterator insert(const_iterator pos, rvalue_reference val);
 
 				KERBAL_CONSTEXPR14
-				iterator emplace(const_iterator pos, rvalue_reference src);
+				iterator insert(const_iterator pos, std::initializer_list<Tp> ilist);
+
+#		endif
+
+				KERBAL_CONSTEXPR14
+				iterator emplace(const_iterator pos, const_reference src);
+
+#		if __cplusplus >= 201103L
 
 				template <typename ... Args>
 				KERBAL_CONSTEXPR14
 				iterator emplace(const_iterator pos, Args&& ...args);
+
+#		else
+
+				iterator emplace(const_iterator pos);
+
+				template <typename Arg0>
+				iterator emplace(const_iterator pos, const Arg0& arg0);
+
+				template <typename Arg0, typename Arg1>
+				iterator emplace(const_iterator pos, const Arg0& arg0, const Arg1& arg1);
+
+				template <typename Arg0, typename Arg1, typename Arg2>
+				iterator emplace(const_iterator pos, const Arg0& arg0, const Arg1& arg1, const Arg2& arg2);
 
 #		endif
 
@@ -507,6 +523,16 @@ namespace kerbal
 				 */
 				KERBAL_CONSTEXPR14
 				void fill(const_reference val);
+
+				template <size_t M>
+				KERBAL_CONSTEXPR14
+				static_vector<Tp, N + M>
+				operator+(const static_vector<Tp, M> & rhs) const;
+
+				template <size_t M>
+				KERBAL_CONSTEXPR14
+				static_vector<Tp, N>
+				operator*(const static_vector<Tp, M> & rhs) const;
 
 			private:
 

@@ -17,6 +17,7 @@
 #include <kerbal/compatibility/move.hpp>
 #include <kerbal/iterator/iterator.hpp>
 #include <kerbal/operators/generic_assign.hpp>
+#include <kerbal/type_traits/can_be_pseudo_destructible.hpp>
 #include <kerbal/type_traits/enable_if.hpp>
 #include <kerbal/type_traits/integral_constant.hpp>
 #include <kerbal/utility/throw_this_exception.hpp>
@@ -92,6 +93,23 @@ namespace kerbal
 				static_vector(src.begin(), src.end())
 		{
 		}
+
+#	else
+
+		template <typename Tp, size_t N>
+		KERBAL_CONSTEXPR14
+		static_vector<Tp, N>::static_vector(const kerbal::assign::assign_list<value_type> & src)
+				: super()
+		{
+			this->__range_copy_constructor(src.cbegin(), src.cend(),
+												kerbal::iterator::iterator_category(src.cbegin()));
+		}
+
+#	endif
+
+
+
+#	if __cplusplus >= 201103L
 
 		template <typename Tp, size_t N>
 		KERBAL_CONSTEXPR14
@@ -240,6 +258,16 @@ namespace kerbal
 			return *this;
 		}
 
+#	else
+
+		template <typename Tp, size_t N>
+		KERBAL_CONSTEXPR14
+		static_vector<Tp, N>& static_vector<Tp, N>::operator=(const kerbal::assign::assign_list<value_type> & src)
+		{
+			this->assign(src.cbegin(), src.cend());
+			return *this;
+		}
+
 #	endif
 
 		template <typename Tp, size_t N>
@@ -347,6 +375,15 @@ namespace kerbal
 		void static_vector<Tp, N>::assign(std::initializer_list<value_type> src)
 		{
 			this->assign(src.begin(), src.end());
+		}
+
+#	else
+
+		template <typename Tp, size_t N>
+		KERBAL_CONSTEXPR14
+		void static_vector<Tp, N>::assign(const kerbal::assign::assign_list<value_type> & src)
+		{
+			this->assign(src.cbegin(), src.cend());
 		}
 
 #	endif
@@ -676,63 +713,7 @@ namespace kerbal
 		KERBAL_CONSTEXPR14
 		void static_vector<Tp, N>::shrink_back_to(const_iterator to)
 		{
-
-#		if __cplusplus < 201103L
-
-			struct enable_optimization:
-					kerbal::type_traits::bool_constant<
-						kerbal::type_traits::is_fundamental<remove_all_extents_t>::value ||
-						kerbal::type_traits::is_pointer<remove_all_extents_t>::value
-					>
-			{
-			};
-
-#		else
-
-			struct enable_optimization:
-					kerbal::type_traits::bool_constant<
-						std::is_trivially_destructible<remove_all_extents_t>::value
-					>
-			{
-			};
-
-#		endif
-
-			this->__shrink_back_to(to, enable_optimization());
-		}
-
-		template <typename Tp, size_t N>
-		KERBAL_CONSTEXPR14
-		void static_vector<Tp, N>::push_front(const_reference src)
-		{
-			this->insert(this->cbegin(), src);
-		}
-
-#	if __cplusplus >= 201103L
-
-		template <typename Tp, size_t N>
-		KERBAL_CONSTEXPR14
-		void static_vector<Tp, N>::push_front(rvalue_reference src)
-		{
-			this->emplace_front(kerbal::compatibility::move(src));
-		}
-
-		template <typename Tp, size_t N>
-		template <typename ... Args>
-		KERBAL_CONSTEXPR14
-		typename static_vector<Tp, N>::reference
-		static_vector<Tp, N>::emplace_front(Args&& ...args)
-		{
-			return *this->emplace(this->cbegin(), std::forward<Args>(args)...);
-		}
-
-#	endif
-
-		template <typename Tp, size_t N>
-		KERBAL_CONSTEXPR14
-		void static_vector<Tp, N>::pop_front()
-		{
-			this->erase(this->cbegin());
+			this->__shrink_back_to(to, kerbal::type_traits::can_be_pseudo_destructible<value_type>());
 		}
 
 		template <typename Tp, size_t N>
@@ -765,29 +746,6 @@ namespace kerbal
 			return mutable_pos;
 		}
 
-		template <typename Tp, size_t N>
-		KERBAL_CONSTEXPR14
-		typename static_vector<Tp, N>::iterator
-		static_vector<Tp, N>::emplace(const const_iterator pos, const_reference src)
-		{
-			iterator mutable_pos(pos.cast_to_mutable());
-			if (pos == this->cend()) {
-				// A A A O O O
-				//          ^
-				this->emplace_back(src); // construct by src
-			} else {
-				this->push_back(kerbal::compatibility::to_xvalue(this->back())); // move construct
-				// A A A X Y Z Z O O
-				//          ^
-				kerbal::algorithm::move_backward(mutable_pos, this->end() - 2, this->end() - 1); // move assign
-				// A A A X X Y Z O O
-				//          ^
-				kerbal::operators::generic_assign(*mutable_pos, src);
-				// *mutable_pos = src; // move assign, construct by src
-			}
-			return mutable_pos;
-		}
-
 #	if __cplusplus >= 201103L
 
 		template <typename Tp, size_t N>
@@ -798,28 +756,10 @@ namespace kerbal
 			return this->emplace(pos, kerbal::compatibility::move(val));
 		}
 
-		template <typename Tp, size_t N>
-		KERBAL_CONSTEXPR14
-		typename static_vector<Tp, N>::iterator
-		static_vector<Tp, N>::emplace(const const_iterator pos, rvalue_reference src)
-		{
-			iterator mutable_pos(pos.cast_to_mutable());
-			if (pos == this->cend()) {
-				// A A A O O O
-				//          ^
-				this->emplace_back(kerbal::compatibility::move(src)); // construct by src
-			} else {
-				this->push_back(kerbal::compatibility::move(this->back())); // move construct
-				// A A A X Y Z Z O O
-				//          ^
-				kerbal::algorithm::move_backward(mutable_pos, this->end() - 2, this->end() - 1); // move assign
-				// A A A X X Y Z O O
-				//          ^
-				kerbal::operators::generic_assign(*mutable_pos, kerbal::compatibility::move(src));
-				// *mutable_pos = kerbal::compatibility::move(src); // move assign, construct by src
-			}
-			return mutable_pos;
-		}
+#	endif
+
+
+#	if __cplusplus >= 201103L
 
 		template <typename Tp, size_t N>
 		template <typename ... Args>
@@ -844,6 +784,53 @@ namespace kerbal
 			}
 			return mutable_pos;
 		}
+
+#	else
+
+#	define EMPLACE_BODY(args...) do { \
+			iterator mutable_pos(pos.cast_to_mutable()); \
+			if (pos == this->cend()) { \
+				this->emplace_back(args); \
+			} else { \
+				this->push_back(kerbal::compatibility::to_xvalue(this->back())); \
+				kerbal::algorithm::move_backward(mutable_pos, this->end() - 2, this->end() - 1); \
+				kerbal::operators::generic_assign(*mutable_pos, value_type(args)); \
+			} \
+			return mutable_pos; \
+		} while (false)
+
+		template <typename Tp, size_t N>
+		typename static_vector<Tp, N>::iterator
+		static_vector<Tp, N>::emplace(const_iterator pos)
+		{
+			EMPLACE_BODY();
+		}
+
+		template <typename Tp, size_t N>
+		template <typename Arg0>
+		typename static_vector<Tp, N>::iterator
+		static_vector<Tp, N>::emplace(const_iterator pos, const Arg0 & arg0)
+		{
+			EMPLACE_BODY(arg0);
+		}
+
+		template <typename Tp, size_t N>
+		template <typename Arg0, typename Arg1>
+		typename static_vector<Tp, N>::iterator
+		static_vector<Tp, N>::emplace(const_iterator pos, const Arg0& arg0, const Arg1& arg1)
+		{
+			EMPLACE_BODY(arg0, arg1);
+		}
+
+		template <typename Tp, size_t N>
+		template <typename Arg0, typename Arg1, typename Arg2>
+		typename static_vector<Tp, N>::iterator
+		static_vector<Tp, N>::emplace(const_iterator pos, const Arg0& arg0, const Arg1& arg1, const Arg2& arg2)
+		{
+			EMPLACE_BODY(arg0, arg1, arg2);
+		}
+
+#	undef EMPLACE_BODY
 
 #	endif
 
@@ -925,6 +912,38 @@ namespace kerbal
 			while (!this->full()) {
 				this->push_back(val);
 			}
+		}
+
+		template <typename Tp, size_t N>
+		template <size_t M>
+		KERBAL_CONSTEXPR14
+		static_vector<Tp, N + M>
+		static_vector<Tp, N>::operator+(const static_vector<Tp, M>& rhs) const
+		{
+			static_vector<Tp, N + M> r(this->cbegin(), this->cend());
+			typename static_vector<Tp, M>::const_iterator it(rhs.cbegin());
+			typename static_vector<Tp, M>::const_iterator end(rhs.cend());
+			while (it != end) {
+				r.push_back(*it);
+				++it;
+			}
+			return r;
+		}
+
+		template <typename Tp, size_t N>
+		template <size_t M>
+		KERBAL_CONSTEXPR14
+		static_vector<Tp, N>
+		static_vector<Tp, N>::operator*(const static_vector<Tp, M>& rhs) const
+		{
+			static_vector<Tp, N> r(*this);
+			typename static_vector<Tp, M>::const_iterator it(rhs.cbegin());
+			typename static_vector<Tp, M>::const_iterator end(rhs.cend());
+			while (!r.full() && it != end) {
+				r.push_back(*it);
+				++it;
+			}
+			return r;
 		}
 
 #	if __cplusplus < 201103L

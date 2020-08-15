@@ -13,8 +13,8 @@
 #define KERBAL_CONTAINER_DETAIL_STATIC_QUEUE_BASE_HPP
 
 #include <kerbal/compatibility/constexpr.hpp>
-#include <kerbal/container/detail/static_container_trivially_destructible_traits.hpp>
 #include <kerbal/data_struct/raw_storage.hpp>
+#include <kerbal/type_traits/can_be_pseudo_destructible.hpp>
 
 #include <cstddef>
 
@@ -49,7 +49,7 @@ namespace kerbal
 			};
 
 			template <typename Tp, size_t N, bool is_trivially_destructible =
-					kerbal::container::detail::static_container_trivially_destructible_traits<Tp>::value>
+					kerbal::type_traits::can_be_pseudo_destructible<Tp>::value>
 			class static_queue_base;
 
 			template <typename Tp, size_t N>

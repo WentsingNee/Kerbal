@@ -1,5 +1,5 @@
 /**
- * @file       static_vector_iterator.impl.hpp
+ * @file       static_vector_iterator.hpp
  * @brief
  * @date       2018-5-16
  * @author     Peter
@@ -9,8 +9,8 @@
  *   all rights reserved
  */
 
-#ifndef KERBAL_CONTAINER_IMPL_STATIC_VECTOR_ITERATOR_IMPL_HPP
-#define KERBAL_CONTAINER_IMPL_STATIC_VECTOR_ITERATOR_IMPL_HPP
+#ifndef KERBAL_CONTAINER_DETAIL_STATIC_VECTOR_ITERATOR_HPP
+#define KERBAL_CONTAINER_DETAIL_STATIC_VECTOR_ITERATOR_HPP
 
 #include <kerbal/compatibility/constexpr.hpp>
 #include <kerbal/compatibility/noexcept.hpp>
@@ -212,4 +212,4 @@ namespace kerbal
 
 } //namespace kerbal
 
-#endif // KERBAL_CONTAINER_IMPL_STATIC_VECTOR_ITERATOR_IMPL_HPP
+#endif // KERBAL_CONTAINER_DETAIL_STATIC_VECTOR_ITERATOR_HPP
