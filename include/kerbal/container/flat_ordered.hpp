@@ -9,11 +9,11 @@
  *   all rights reserved
  */
 
-#ifndef KERBAL_CONTAINER_FLAT_ORDERED_HPP_
-#define KERBAL_CONTAINER_FLAT_ORDERED_HPP_
+#ifndef KERBAL_CONTAINER_FLAT_ORDERED_HPP
+#define KERBAL_CONTAINER_FLAT_ORDERED_HPP
 
 #include <kerbal/algorithm/swap.hpp>
-#include <kerbal/container/impl/flat_ordered_base.hpp>
+#include <kerbal/container/detail/flat_ordered_base.hpp>
 
 #include <cstddef>
 #include <vector>
@@ -53,6 +53,8 @@ namespace kerbal
 				typedef typename super::rvalue_reference			rvalue_reference;
 				typedef typename super::const_rvalue_reference		const_rvalue_reference;
 #		endif
+
+				typedef Allocator					allocator_type;
 
 				typedef typename super::size_type					size_type;
 				typedef typename super::difference_type				difference_type;
@@ -188,4 +190,4 @@ namespace kerbal
 
 } // namespace kerbal
 
-#endif /* KERBAL_CONTAINER_FLAT_ORDERED_HPP_ */
+#endif // KERBAL_CONTAINER_FLAT_ORDERED_HPP

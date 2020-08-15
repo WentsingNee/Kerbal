@@ -9,8 +9,8 @@
  *   all rights reserved
  */
 
-#ifndef KERBAL_CONTAINER_IMPL_FLAT_SET_BASE_HPP
-#define KERBAL_CONTAINER_IMPL_FLAT_SET_BASE_HPP
+#ifndef KERBAL_CONTAINER_DETAIL_FLAT_SET_BASE_HPP
+#define KERBAL_CONTAINER_DETAIL_FLAT_SET_BASE_HPP
 
 #include <kerbal/algorithm/binary_search.hpp>
 #include <kerbal/compatibility/move.hpp>
@@ -543,4 +543,4 @@ namespace kerbal
 } // namespace kerbal
 
 
-#endif // KERBAL_CONTAINER_IMPL_FLAT_SET_BASE_HPP
+#endif // KERBAL_CONTAINER_DETAIL_FLAT_SET_BASE_HPP

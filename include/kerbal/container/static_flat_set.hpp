@@ -9,10 +9,10 @@
  *   all rights reserved
  */
 
-#ifndef KERBAL_CONTAINER_STATIC_FLAT_SET_HPP_
-#define KERBAL_CONTAINER_STATIC_FLAT_SET_HPP_
+#ifndef KERBAL_CONTAINER_STATIC_FLAT_SET_HPP
+#define KERBAL_CONTAINER_STATIC_FLAT_SET_HPP
 
-#include <kerbal/container/impl/flat_set_base.hpp>
+#include <kerbal/container/detail/flat_set_base.hpp>
 #include <kerbal/container/static_ordered.hpp>
 
 namespace kerbal
@@ -111,7 +111,7 @@ namespace kerbal
 
 				static_flat_set& operator=(std::initializer_list<value_type> src)
 				{
-					this->assign(src);
+					this->super::assign(src);
 					return *this;
 				}
 
@@ -261,7 +261,7 @@ namespace kerbal
 
 				static_flat_multiset& operator=(std::initializer_list<value_type> src)
 				{
-					this->assign(src);
+					this->super::assign(src);
 					return *this;
 				}
 
@@ -326,4 +326,4 @@ namespace kerbal
 } // namespace kerbal
 
 
-#endif /* KERBAL_CONTAINER_STATIC_FLAT_SET_HPP_ */
+#endif // KERBAL_CONTAINER_STATIC_FLAT_SET_HPP

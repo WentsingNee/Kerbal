@@ -9,11 +9,11 @@
  *   all rights reserved
  */
 
-#ifndef KERBAL_CONTAINER_STATIC_ORDERED_HPP_
-#define KERBAL_CONTAINER_STATIC_ORDERED_HPP_
+#ifndef KERBAL_CONTAINER_STATIC_ORDERED_HPP
+#define KERBAL_CONTAINER_STATIC_ORDERED_HPP
 
 #include <kerbal/algorithm/swap.hpp>
-#include <kerbal/container/impl/flat_ordered_base.hpp>
+#include <kerbal/container/detail/flat_ordered_base.hpp>
 #include <kerbal/container/static_vector.hpp>
 
 #include <cstddef>
@@ -188,4 +188,4 @@ namespace kerbal
 
 } // namespace kerbal
 
-#endif /* KERBAL_CONTAINER_STATIC_ORDERED_HPP_ */
+#endif // KERBAL_CONTAINER_STATIC_ORDERED_HPP

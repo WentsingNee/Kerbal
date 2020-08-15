@@ -9,10 +9,12 @@
  *   all rights reserved
  */
 
-#ifndef KERBAL_CONTAINER_IMPL_FLAT_ORDERED_BASE_HPP
-#define KERBAL_CONTAINER_IMPL_FLAT_ORDERED_BASE_HPP
+#ifndef KERBAL_CONTAINER_DETAIL_FLAT_ORDERED_BASE_HPP
+#define KERBAL_CONTAINER_DETAIL_FLAT_ORDERED_BASE_HPP
 
 #include <kerbal/algorithm/binary_search.hpp>
+#include <kerbal/algorithm/modifier.hpp>
+#include <kerbal/algorithm/sort.hpp>
 #include <kerbal/compatibility/move.hpp>
 #include <kerbal/iterator/iterator.hpp>
 #include <kerbal/iterator/iterator_traits.hpp>
@@ -21,7 +23,6 @@
 #include <kerbal/utility/as_const.hpp>
 #include <kerbal/utility/compressed_pair.hpp>
 
-#include <algorithm>
 #include <utility>
 
 namespace kerbal
@@ -124,7 +125,7 @@ namespace kerbal
 
 					void __sort()
 					{
-						std::sort(this->__sequence().begin(), this->__sequence().end(), this->value_comp());
+						kerbal::algorithm::sort(this->__sequence().begin(), this->__sequence().end(), this->value_comp());
 					}
 
 					friend struct lower_bound_kc_adapter;
@@ -456,7 +457,8 @@ namespace kerbal
 						return this->__sequence().size();
 					}
 
-					KERBAL_CONSTEXPR size_type max_size() const KERBAL_NOEXCEPT
+					KERBAL_CONSTEXPR
+					size_type max_size() const KERBAL_NOEXCEPT
 					{
 						return this->__sequence().max_size();
 					}
@@ -505,13 +507,13 @@ namespace kerbal
 
 					iterator upper_bound(const key_type & key, const_iterator hint)
 					{
-						return kerbal::algorithm::upper_bound(this->begin(), this->end(), key,
+						return kerbal::algorithm::upper_bound_hint(this->begin(), this->end(), key, hint,
 															  upper_bound_kc_adapter(this));
 					}
 
 					const_iterator upper_bound(const key_type & key, const_iterator hint) const
 					{
-						return kerbal::algorithm::upper_bound(this->cbegin(), this->cend(), key,
+						return kerbal::algorithm::upper_bound_hint(this->cbegin(), this->cend(), key, hint,
 															  upper_bound_kc_adapter(this));
 					}
 
@@ -594,62 +596,83 @@ namespace kerbal
 
 				protected:
 					std::pair<iterator, bool>
-					__try_insert_helper(iterator lower_bound_pos, const_reference src)
+					__try_insert_helper(iterator ub, const_reference src)
 					{
 						Extract extract;
 						bool inserted = false;
-						if (static_cast<bool>(lower_bound_pos == this->cend()) ||
-							static_cast<bool>(this->__key_comp()(extract(src), extract(*lower_bound_pos)))) {
-							// src < *lower_bound_pos
-							lower_bound_pos = this->__sequence().insert(lower_bound_pos, src);
+						if (static_cast<bool>(ub == this->cbegin()) ||
+							static_cast<bool>(this->__key_comp()(extract(*kerbal::iterator::prev(ub)), extract(src)))) {
+							// ub[-1] < src
+							ub = this->__sequence().insert(ub, src);
 							inserted = true;
 						} else {
 							inserted = false;
 						}
-						return std::make_pair(lower_bound_pos, inserted);
+						return std::make_pair(ub, inserted);
 					}
 
 				public:
 					std::pair<iterator, bool> try_insert(const_reference src)
 					{
-						return this->__try_insert_helper(this->lower_bound(Extract()(src)), src);
+						return this->__try_insert_helper(this->upper_bound(Extract()(src)), src);
 					}
 
 					std::pair<iterator, bool> try_insert(const_iterator hint, const_reference src)
 					{
-						return this->__try_insert_helper(this->lower_bound(Extract()(src), hint), src);
+						return this->__try_insert_helper(this->upper_bound(Extract()(src), hint), src);
 					}
 
 #			if __cplusplus >= 201103L
 
 				protected:
 					std::pair<iterator, bool>
-					__try_insert_helper(iterator lower_bound_pos, rvalue_reference src)
+					__try_insert_helper(iterator ub, rvalue_reference src)
 					{
 						Extract extract;
 						bool inserted = false;
-						if (static_cast<bool>(lower_bound_pos == this->cend()) ||
-							static_cast<bool>(this->__key_comp()(extract(src), extract(*lower_bound_pos)))) {
-							// src < *lower_bound_pos
-							lower_bound_pos = this->__sequence().insert(lower_bound_pos, kerbal::compatibility::move(src));
+						if (static_cast<bool>(ub == this->cbegin()) ||
+							static_cast<bool>(this->__key_comp()(extract(*kerbal::iterator::prev(ub)), extract(src)))) {
+							// ub[-1] < src
+							ub = this->__sequence().insert(ub, src);
 							inserted = true;
 						} else {
 							inserted = false;
 						}
-						return std::make_pair(lower_bound_pos, inserted);
+						return std::make_pair(ub, inserted);
 					}
 
 				public:
 					std::pair<iterator, bool> try_insert(rvalue_reference src)
 					{
-						return this->__try_insert_helper(this->lower_bound(Extract()(src)), src);
+						return this->__try_insert_helper(this->upper_bound(Extract()(src)), src);
 					}
 
 					std::pair<iterator, bool> try_insert(const_iterator hint, rvalue_reference src)
 					{
-						return this->__try_insert_helper(this->lower_bound(Extract()(src), hint), src);
+						return this->__try_insert_helper(this->upper_bound(Extract()(src), hint), src);
 					}
+
 #			endif
+
+					struct equal_adapter
+					{
+						private:
+							const __flat_ordered_base * self;
+
+						public:
+							KERBAL_CONSTEXPR
+							explicit equal_adapter(const __flat_ordered_base * self) KERBAL_NOEXCEPT
+									: self(self)
+							{
+							}
+
+							bool operator()(const_reference lhs, const_reference rhs) const
+							{
+								Extract e;
+								return !static_cast<bool>(self->__key_comp()(e(lhs), e(rhs))) &&
+										!static_cast<bool>(self->__key_comp()(e(rhs), e(lhs)));
+							}
+					};
 
 					template <typename InputIterator>
 					typename kerbal::type_traits::enable_if<
@@ -658,6 +681,16 @@ namespace kerbal
 					>::type
 					try_insert(InputIterator first, InputIterator last)
 					{
+						while (first != last && this->size() != this->max_size()) {
+							this->__sequence().push_back(*first);
+							++first;
+						}
+						this->__sort();
+						iterator unique_last(kerbal::algorithm::unique(
+											this->__sequence().begin(),
+											this->__sequence().end(), equal_adapter(this)));
+						this->__sequence().erase(unique_last, this->__sequence().end());
+
 						while (first != last && this->size() != this->max_size()) {
 							this->try_insert(*first);
 							++first;
@@ -688,6 +721,7 @@ namespace kerbal
 						iterator pos(this->upper_bound(Extract()(src), hint));
 						return this->__sequence().insert(pos, kerbal::compatibility::move(src));
 					}
+
 #			endif
 
 					template <typename InputIterator>
@@ -710,20 +744,25 @@ namespace kerbal
 #			if __cplusplus >= 201103L
 						return pos == this->__sequence().end() ? pos : this->__sequence().erase(pos);
 #			else
-						iterator pos_mut(this->__sequence().begin() + (pos - this->__sequence().begin()));
+						iterator b(this->__sequence().begin());
+						iterator pos_mut(b + (pos - b));
 						return pos == this->__sequence().end() ? pos : this->__sequence().erase(pos_mut);
 #			endif
+
 					}
 
 					const_iterator erase(const_iterator first, const_iterator last)
 					{
+
 #			if __cplusplus >= 201103L
 						return this->__sequence().erase(first, last);
 #			else
-						iterator first_mut(this->__sequence().begin() + (first - this->__sequence().begin()));
-						iterator last_mut(this->__sequence().begin() + (last - this->__sequence().begin()));
+						iterator b(this->__sequence().begin());
+						iterator first_mut(b + (first - b));
+						iterator last_mut(b + (last - b));
 						return this->__sequence().erase(first_mut, last_mut);
 #			endif
+
 					}
 
 					size_type erase(const key_type & key)
@@ -754,4 +793,4 @@ namespace kerbal
 } // namespace kerbal
 
 
-#endif // KERBAL_CONTAINER_IMPL_FLAT_ORDERED_BASE_HPP
+#endif // KERBAL_CONTAINER_DETAIL_FLAT_ORDERED_BASE_HPP
