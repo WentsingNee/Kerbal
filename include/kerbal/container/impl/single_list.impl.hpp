@@ -15,6 +15,7 @@
 #include <kerbal/algorithm/swap.hpp>
 #include <kerbal/iterator/iterator.hpp>
 #include <kerbal/memory/guard.hpp>
+#include <kerbal/operators/generic_assign.hpp>
 #include <kerbal/utility/declval.hpp>
 
 #include <kerbal/container/single_list.hpp>
@@ -63,6 +64,18 @@ namespace kerbal
 
 		template <typename Tp, typename Allocator>
 		KERBAL_CONSTEXPR20
+		single_list<Tp, Allocator>::single_list(size_type n)
+				: head_node(), last_iter(this->begin()), alloc()
+		{
+			if (n == 0) {
+				return;
+			}
+			std::pair<node*, node*> p(this->__build_n_new_nodes_unguarded(n));
+			this->__hook_node(this->cbegin(), p.first, p.second);
+		}
+
+		template <typename Tp, typename Allocator>
+		KERBAL_CONSTEXPR20
 		single_list<Tp, Allocator>::single_list(size_type n, const Allocator& alloc)
 				: head_node(), last_iter(this->begin()), alloc(alloc)
 		{
@@ -70,6 +83,18 @@ namespace kerbal
 				return;
 			}
 			std::pair<node*, node*> p(this->__build_n_new_nodes_unguarded(n));
+			this->__hook_node(this->cbegin(), p.first, p.second);
+		}
+
+		template <typename Tp, typename Allocator>
+		KERBAL_CONSTEXPR20
+		single_list<Tp, Allocator>::single_list(size_type n, const_reference val)
+				: head_node(), last_iter(this->begin()), alloc()
+		{
+			if (n == 0) {
+				return;
+			}
+			std::pair<node*, node*> p(this->__build_n_new_nodes_unguarded(n, val));
 			this->__hook_node(this->cbegin(), p.first, p.second);
 		}
 
@@ -83,6 +108,18 @@ namespace kerbal
 			}
 			std::pair<node*, node*> p(this->__build_n_new_nodes_unguarded(n, val));
 			this->__hook_node(this->cbegin(), p.first, p.second);
+		}
+
+		template <typename Tp, typename Allocator>
+		template <typename InputIterator>
+		KERBAL_CONSTEXPR20
+		single_list<Tp, Allocator>::single_list(InputIterator first, InputIterator last,
+				typename kerbal::type_traits::enable_if<
+						kerbal::iterator::is_input_compatible_iterator<InputIterator>::value, int
+				>::type)
+				: head_node(), last_iter(this->begin()), alloc()
+		{
+			this->insert(this->cbegin(), first, last);
 		}
 
 		template <typename Tp, typename Allocator>
@@ -117,6 +154,13 @@ namespace kerbal
 			if (!src.empty()) {
 				__swap_with_empty(src, *this);
 			}
+		}
+
+		template <typename Tp, typename Allocator>
+		KERBAL_CONSTEXPR20
+		single_list<Tp, Allocator>::single_list(std::initializer_list<value_type> src)
+				: single_list(src.begin(), src.end())
+		{
 		}
 
 		template <typename Tp, typename Allocator>
@@ -192,7 +236,7 @@ namespace kerbal
 			size_type i = 0;
 			while (i != count) {
 				if (it != this->cend()) {
-					*it = val;
+					kerbal::operators::generic_assign(*it, val); // *it = val;
 					++i;
 					++it;
 				} else {
@@ -214,7 +258,7 @@ namespace kerbal
 			iterator it(this->begin());
 			while (first != last) {
 				if (it != this->cend()) {
-					*it = *first;
+					kerbal::operators::generic_assign(*it, *first); // *it = *first;
 					++first;
 					++it;
 				} else {

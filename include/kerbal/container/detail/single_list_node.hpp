@@ -1,5 +1,5 @@
 /**
- * @file       single_list_node.impl.hpp
+ * @file       single_list_node.hpp
  * @brief
  * @date       2020-03-21
  * @author     Peter
@@ -9,9 +9,10 @@
  *   all rights reserved
  */
 
-#ifndef KERBAL_CONTAINER_IMPL_SINGLE_LIST_NODE_IMPL_HPP
-#define KERBAL_CONTAINER_IMPL_SINGLE_LIST_NODE_IMPL_HPP
+#ifndef KERBAL_CONTAINER_DETAIL_SINGLE_LIST_NODE_HPP
+#define KERBAL_CONTAINER_DETAIL_SINGLE_LIST_NODE_HPP
 
+#include <kerbal/algorithm/modifier.hpp>
 #include <kerbal/compatibility/constexpr.hpp>
 #include <kerbal/compatibility/method_overload_tag.hpp>
 #include <kerbal/compatibility/noexcept.hpp>
@@ -21,6 +22,8 @@
 #include <cstddef>
 
 #if __cplusplus >= 201103L
+#	include <kerbal/type_traits/integral_constant.hpp>
+#	include <kerbal/utility/integer_sequence.hpp>
 #	include <utility> // forward
 #endif
 
@@ -104,6 +107,9 @@ namespace kerbal
 			class sl_node: public sl_node_base
 			{
 				private:
+					typedef sl_node_base super;
+
+				private:
 					template <typename Up, typename Allocator>
 					friend class kerbal::container::single_list;
 
@@ -115,9 +121,6 @@ namespace kerbal
 
 				private:
 					Tp value;
-
-				private:
-					typedef sl_node_base super;
 
 				public:
 
@@ -162,10 +165,91 @@ namespace kerbal
 
 			};
 
+			template <typename Tp, size_t N>
+			class sl_node<Tp[N]>: public sl_node_base
+			{
+				private:
+					typedef sl_node_base super;
+
+				private:
+					template <typename Up, typename Allocator>
+					friend class kerbal::container::single_list;
+
+					template <typename Up>
+					friend class sl_iter;
+
+					template <typename Up>
+					friend class sl_kiter;
+
+				private:
+					Tp value[N];
+
+#		if __cplusplus >= 201103L
+
+				private:
+
+					typedef kerbal::type_traits::integral_constant<size_t, 32> BRACE_INIT_LIMIT;
+
+					template <typename Up, size_t ... I>
+					KERBAL_CONSTEXPR
+					explicit sl_node(const Up (&arg)[N], kerbal::utility::integer_sequence<size_t, I...>)
+							: super(), value{arg[I]...}
+					{
+					}
+
+					template <typename Up>
+					KERBAL_CONSTEXPR
+					explicit sl_node(const Up (&arg) [N], kerbal::type_traits::true_type) // for N < BRACE_INIT_LIMIT
+							: sl_node(arg, kerbal::utility::make_index_sequence<N>())
+					{
+					}
+
+					template <typename Up>
+					KERBAL_CONSTEXPR14
+					explicit sl_node(const Up (&arg) [N], kerbal::type_traits::false_type) // for N >= BRACE_INIT_LIMIT
+							: sl_node(arg, kerbal::utility::make_index_sequence<BRACE_INIT_LIMIT::value>())
+					{
+						kerbal::algorithm::copy(arg + BRACE_INIT_LIMIT::value, arg + N, this->value + BRACE_INIT_LIMIT::value);
+					}
+
+				public:
+
+					KERBAL_CONSTEXPR
+					explicit sl_node(kerbal::utility::in_place_t)
+							: super(), value{}
+					{
+					}
+
+					template <typename Up>
+					KERBAL_CONSTEXPR
+					explicit sl_node(kerbal::utility::in_place_t, const Up (&arg) [N])
+							: sl_node(arg, kerbal::type_traits::bool_constant<N < BRACE_INIT_LIMIT::value>())
+					{
+					}
+
+#		else
+
+				public:
+
+					explicit sl_node(kerbal::utility::in_place_t)
+							: super()
+					{
+					}
+
+					template <typename Up>
+					explicit sl_node(kerbal::utility::in_place_t, const Up (&arg) [N])
+					{
+						kerbal::algorithm::copy(arg, arg + N, this->value);
+					}
+
+#		endif
+
+			};
+
 		} // namespace detail
 
 	} // namespace container
 
 } // namespace kerbal
 
-#endif // KERBAL_CONTAINER_IMPL_SINGLE_LIST_NODE_IMPL_HPP
+#endif // KERBAL_CONTAINER_DETAIL_SINGLE_LIST_NODE_HPP

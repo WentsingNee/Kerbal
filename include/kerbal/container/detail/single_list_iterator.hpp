@@ -1,5 +1,5 @@
 /**
- * @file       single_list_iterator.impl.hpp
+ * @file       single_list_iterator.hpp
  * @brief
  * @date       2020-03-21
  * @author     Peter
@@ -9,10 +9,10 @@
  *   all rights reserved
  */
 
-#ifndef KERBAL_CONTAINER_IMPL_SINGLE_LIST_ITERATOR_IMPL_HPP
-#define KERBAL_CONTAINER_IMPL_SINGLE_LIST_ITERATOR_IMPL_HPP
+#ifndef KERBAL_CONTAINER_DETAIL_SINGLE_LIST_ITERATOR_HPP
+#define KERBAL_CONTAINER_DETAIL_SINGLE_LIST_ITERATOR_HPP
 
-#include <kerbal/container/impl/single_list_node.impl.hpp>
+#include <kerbal/container/detail/single_list_node.hpp>
 
 #include <kerbal/operators/dereferenceable.hpp>
 #include <kerbal/operators/equality_comparable.hpp>
@@ -183,4 +183,4 @@ namespace kerbal
 
 } // namespace kerbal
 
-#endif // KERBAL_CONTAINER_IMPL_SINGLE_LIST_ITERATOR_IMPL_HPP
+#endif // KERBAL_CONTAINER_DETAIL_SINGLE_LIST_ITERATOR_HPP

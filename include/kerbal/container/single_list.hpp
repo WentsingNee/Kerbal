@@ -32,8 +32,8 @@
 #	endif
 #endif
 
-#include <kerbal/container/impl/single_list_iterator.impl.hpp>
-#include <kerbal/container/impl/single_list_node.impl.hpp>
+#include <kerbal/container/detail/single_list_iterator.hpp>
+#include <kerbal/container/detail/single_list_node.hpp>
 
 namespace kerbal
 {
@@ -64,12 +64,16 @@ namespace kerbal
 				typedef kerbal::container::detail::sl_kiter<value_type>		const_iterator;
 
 			private:
-				typedef kerbal::container::detail::sl_node_base				node_base;
-				typedef kerbal::container::detail::sl_node<value_type>		node;
+				typedef kerbal::container::detail::sl_node_base			node_base;
+				typedef kerbal::container::detail::sl_node<value_type>	node;
 
-				typedef kerbal::memory::allocator_traits<Allocator>								tp_allocator_traits;
-				typedef typename tp_allocator_traits::template rebind_alloc<node>::other		node_allocator_type;
-				typedef typename tp_allocator_traits::template rebind_traits<node>::other		node_allocator_traits;
+			public:
+				typedef Allocator		allocator_type;
+
+			private:
+				typedef kerbal::memory::allocator_traits<allocator_type>					tp_allocator_traits;
+				typedef typename tp_allocator_traits::template rebind_alloc<node>::other	node_allocator_type;
+				typedef typename tp_allocator_traits::template rebind_traits<node>::other	node_allocator_traits;
 
 			private:
 				node_base head_node;
@@ -111,14 +115,29 @@ namespace kerbal
 				single_list(const single_list & src, const Allocator& alloc);
 
 				KERBAL_CONSTEXPR20
-				explicit single_list(size_type n, const Allocator& alloc = Allocator());
+				explicit single_list(size_type n);
 
 				KERBAL_CONSTEXPR20
-				single_list(size_type n, const_reference val, const Allocator& alloc = Allocator());
+				explicit single_list(size_type n, const Allocator& alloc);
+
+				KERBAL_CONSTEXPR20
+				single_list(size_type n, const_reference val);
+
+				KERBAL_CONSTEXPR20
+				single_list(size_type n, const_reference val, const Allocator& alloc);
 
 				template <typename InputIterator>
 				KERBAL_CONSTEXPR20
-				single_list(InputIterator first, InputIterator last, const Allocator& alloc = Allocator(),
+				single_list(InputIterator first, InputIterator last,
+						typename kerbal::type_traits::enable_if<
+								kerbal::iterator::is_input_compatible_iterator<InputIterator>::value
+								, int
+						>::type = 0
+				);
+
+				template <typename InputIterator>
+				KERBAL_CONSTEXPR20
+				single_list(InputIterator first, InputIterator last, const Allocator& alloc,
 						typename kerbal::type_traits::enable_if<
 								kerbal::iterator::is_input_compatible_iterator<InputIterator>::value
 								, int
@@ -134,7 +153,10 @@ namespace kerbal
 				single_list(single_list && src, const Allocator& alloc);
 
 				KERBAL_CONSTEXPR20
-				single_list(std::initializer_list<value_type> src, const Allocator& alloc = Allocator());
+				single_list(std::initializer_list<value_type> src);
+
+				KERBAL_CONSTEXPR20
+				single_list(std::initializer_list<value_type> src, const Allocator& alloc);
 
 #		endif
 
@@ -245,7 +267,8 @@ namespace kerbal
 				KERBAL_CONSTEXPR20
 				size_type size() const KERBAL_NOEXCEPT;
 
-				KERBAL_CONSTEXPR size_type max_size() const KERBAL_NOEXCEPT
+				KERBAL_CONSTEXPR
+				size_type max_size() const KERBAL_NOEXCEPT
 				{
 					return static_cast<size_type>(-1);
 				}
