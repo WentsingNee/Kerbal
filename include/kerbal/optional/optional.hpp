@@ -66,7 +66,7 @@ namespace kerbal
 				}
 
 				template <typename NulloptType>
-				explicit KERBAL_CONSTEXPR optional(const NulloptType &,
+				KERBAL_CONSTEXPR optional(const NulloptType &,
 						typename kerbal::type_traits::enable_if<is_nullopt<NulloptType>::value, int>::type = 0) KERBAL_NOEXCEPT :
 						initialized(false)
 				{
