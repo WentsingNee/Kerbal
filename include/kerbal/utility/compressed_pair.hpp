@@ -60,6 +60,8 @@ namespace kerbal
 #		if __cplusplus >= 201103L
 				typedef typename kerbal::type_traits::add_rvalue_reference<first_type>::type			first_type_rvalue_reference;
 				typedef typename kerbal::type_traits::add_rvalue_reference<second_type>::type			second_type_rvalue_reference;
+				typedef typename kerbal::type_traits::add_const_rvalue_reference<first_type>::type		first_type_const_rvalue_reference;
+				typedef typename kerbal::type_traits::add_const_rvalue_reference<second_type>::type		second_type_const_rvalue_reference;
 #		endif
 
 				template <typename __Tp, typename __Up, int>
@@ -86,8 +88,10 @@ namespace kerbal
 				typedef typename inner_typedef_helper::second_type_const_reference		second_type_const_reference;
 
 #		if __cplusplus >= 201103L
-				typedef typename inner_typedef_helper::first_type_rvalue_reference		first_type_rvalue_reference;
-				typedef typename inner_typedef_helper::second_type_rvalue_reference		second_type_rvalue_reference;
+				typedef typename inner_typedef_helper::first_type_rvalue_reference			first_type_rvalue_reference;
+				typedef typename inner_typedef_helper::second_type_rvalue_reference			second_type_rvalue_reference;
+				typedef typename inner_typedef_helper::first_type_const_rvalue_reference	first_type_const_rvalue_reference;
+				typedef typename inner_typedef_helper::second_type_const_rvalue_reference	second_type_const_rvalue_reference;
 #		endif
 
 			private:
@@ -276,6 +280,18 @@ namespace kerbal
 					return kerbal::compatibility::move(this->__second);
 				}
 
+				KERBAL_CONSTEXPR14
+				first_type_const_rvalue_reference first() const && KERBAL_NOEXCEPT
+				{
+					return kerbal::compatibility::move(this->__first);
+				}
+
+				KERBAL_CONSTEXPR14
+				second_type_const_rvalue_reference second() const && KERBAL_NOEXCEPT
+				{
+					return kerbal::compatibility::move(this->__second);
+				}
+
 #		endif
 
 		};
@@ -300,8 +316,10 @@ namespace kerbal
 				typedef typename inner_typedef_helper::second_type_const_reference		second_type_const_reference;
 
 #		if __cplusplus >= 201103L
-				typedef typename inner_typedef_helper::first_type_rvalue_reference		first_type_rvalue_reference;
-				typedef typename inner_typedef_helper::second_type_rvalue_reference		second_type_rvalue_reference;
+				typedef typename inner_typedef_helper::first_type_rvalue_reference			first_type_rvalue_reference;
+				typedef typename inner_typedef_helper::second_type_rvalue_reference			second_type_rvalue_reference;
+				typedef typename inner_typedef_helper::first_type_const_rvalue_reference	first_type_const_rvalue_reference;
+				typedef typename inner_typedef_helper::second_type_const_rvalue_reference	second_type_const_rvalue_reference;
 #		endif
 
 			private:
@@ -490,6 +508,18 @@ namespace kerbal
 					return static_cast<second_type_rvalue_reference>(*this);
 				}
 
+				KERBAL_CONSTEXPR14
+				first_type_const_rvalue_reference first() const && KERBAL_NOEXCEPT
+				{
+					return kerbal::compatibility::move(this->__first);
+				}
+
+				KERBAL_CONSTEXPR14
+				second_type_const_rvalue_reference second() const && KERBAL_NOEXCEPT
+				{
+					return static_cast<second_type_const_rvalue_reference>(*this);
+				}
+
 #		endif
 
 		};
@@ -514,8 +544,10 @@ namespace kerbal
 				typedef typename inner_typedef_helper::second_type_const_reference		second_type_const_reference;
 
 #		if __cplusplus >= 201103L
-				typedef typename inner_typedef_helper::first_type_rvalue_reference		first_type_rvalue_reference;
-				typedef typename inner_typedef_helper::second_type_rvalue_reference		second_type_rvalue_reference;
+				typedef typename inner_typedef_helper::first_type_rvalue_reference			first_type_rvalue_reference;
+				typedef typename inner_typedef_helper::second_type_rvalue_reference			second_type_rvalue_reference;
+				typedef typename inner_typedef_helper::first_type_const_rvalue_reference	first_type_const_rvalue_reference;
+				typedef typename inner_typedef_helper::second_type_const_rvalue_reference	second_type_const_rvalue_reference;
 #		endif
 
 			private:
@@ -704,6 +736,18 @@ namespace kerbal
 					return kerbal::compatibility::move(this->__second);
 				}
 
+				KERBAL_CONSTEXPR14
+				first_type_const_rvalue_reference first() const && KERBAL_NOEXCEPT
+				{
+					return static_cast<first_type_const_rvalue_reference>(*this);
+				}
+
+				KERBAL_CONSTEXPR14
+				second_type_const_rvalue_reference second() const && KERBAL_NOEXCEPT
+				{
+					return kerbal::compatibility::move(this->__second);
+				}
+
 #		endif
 
 		};
@@ -730,8 +774,10 @@ namespace kerbal
 				typedef typename inner_typedef_helper::second_type_const_reference		second_type_const_reference;
 
 #		if __cplusplus >= 201103L
-				typedef typename inner_typedef_helper::first_type_rvalue_reference		first_type_rvalue_reference;
-				typedef typename inner_typedef_helper::second_type_rvalue_reference		second_type_rvalue_reference;
+				typedef typename inner_typedef_helper::first_type_rvalue_reference			first_type_rvalue_reference;
+				typedef typename inner_typedef_helper::second_type_rvalue_reference			second_type_rvalue_reference;
+				typedef typename inner_typedef_helper::first_type_const_rvalue_reference	first_type_const_rvalue_reference;
+				typedef typename inner_typedef_helper::second_type_const_rvalue_reference	second_type_const_rvalue_reference;
 #		endif
 
 			private:
@@ -919,6 +965,18 @@ namespace kerbal
 					return static_cast<second_type_rvalue_reference>(*this);
 				}
 
+				KERBAL_CONSTEXPR14
+				first_type_const_rvalue_reference first() const && KERBAL_NOEXCEPT
+				{
+					return static_cast<first_type_const_rvalue_reference>(*this);
+				}
+
+				KERBAL_CONSTEXPR14
+				second_type_const_rvalue_reference second() const && KERBAL_NOEXCEPT
+				{
+					return static_cast<second_type_const_rvalue_reference>(*this);
+				}
+
 #		endif
 
 		};
@@ -963,6 +1021,76 @@ namespace kerbal
 		{
 		};
 
+
+
+		template <size_t I, typename CompressedPair>
+		struct compressed_pair_method_get_return_type;
+
+		template <typename Tp, typename Up>
+		struct compressed_pair_method_get_return_type<0, kerbal::utility::compressed_pair<Tp, Up> >
+		{
+				typedef typename kerbal::utility::compressed_pair<Tp, Up>::first_type_reference type;
+		};
+
+		template <typename Tp, typename Up>
+		struct compressed_pair_method_get_return_type<1, kerbal::utility::compressed_pair<Tp, Up> >
+		{
+				typedef typename kerbal::utility::compressed_pair<Tp, Up>::second_type_reference type;
+		};
+
+
+
+		template <size_t I, typename CompressedPair>
+		struct compressed_pair_const_method_get_return_type;
+
+		template <typename Tp, typename Up>
+		struct compressed_pair_const_method_get_return_type<0, kerbal::utility::compressed_pair<Tp, Up> >
+		{
+				typedef typename kerbal::utility::compressed_pair<Tp, Up>::first_type_const_reference type;
+		};
+
+		template <typename Tp, typename Up>
+		struct compressed_pair_const_method_get_return_type<1, kerbal::utility::compressed_pair<Tp, Up> >
+		{
+				typedef typename kerbal::utility::compressed_pair<Tp, Up>::second_type_const_reference type;
+		};
+
+
+
+		template <size_t I, typename CompressedPair>
+		struct compressed_pair_rvalue_method_get_return_type;
+
+		template <typename Tp, typename Up>
+		struct compressed_pair_rvalue_method_get_return_type<0, kerbal::utility::compressed_pair<Tp, Up> >
+		{
+				typedef typename kerbal::utility::compressed_pair<Tp, Up>::first_type_rvalue_reference type;
+		};
+
+		template <typename Tp, typename Up>
+		struct compressed_pair_rvalue_method_get_return_type<1, kerbal::utility::compressed_pair<Tp, Up> >
+		{
+				typedef typename kerbal::utility::compressed_pair<Tp, Up>::second_type_rvalue_reference type;
+		};
+
+
+
+		template <size_t I, typename CompressedPair>
+		struct compressed_pair_const_rvalue_method_get_return_type;
+
+		template <typename Tp, typename Up>
+		struct compressed_pair_const_rvalue_method_get_return_type<0, kerbal::utility::compressed_pair<Tp, Up> >
+		{
+				typedef typename kerbal::utility::compressed_pair<Tp, Up>::first_type_const_rvalue_reference type;
+		};
+
+		template <typename Tp, typename Up>
+		struct compressed_pair_const_rvalue_method_get_return_type<1, kerbal::utility::compressed_pair<Tp, Up> >
+		{
+				typedef typename kerbal::utility::compressed_pair<Tp, Up>::second_type_const_rvalue_reference type;
+		};
+
+
+
 		template <typename Tp, typename Up>
 		struct compressed_pair : public kerbal::utility::__compressed_pair_impl<Tp, Up, __compressed_pair_policy_switch<Tp, Up>::value >
 		{
@@ -982,6 +1110,8 @@ namespace kerbal
 #		if __cplusplus >= 201103L
 				typedef typename super::first_type_rvalue_reference				first_type_rvalue_reference;
 				typedef typename super::second_type_rvalue_reference			second_type_rvalue_reference;
+				typedef typename super::first_type_const_rvalue_reference		first_type_const_rvalue_reference;
+				typedef typename super::second_type_const_rvalue_reference		second_type_const_rvalue_reference;
 #		endif
 
 			public:
@@ -1122,43 +1252,67 @@ namespace kerbal
 					kerbal::algorithm::swap(this->second(), other.second());
 				}
 
+				template <size_t I>
+				KERBAL_CONSTEXPR14
+				typename kerbal::utility::compressed_pair_method_get_return_type<I, compressed_pair>::type
+				get() KERBAL_REFERENCE_OVERLOAD_TAG KERBAL_NOEXCEPT;
+
+				template <size_t I>
+				KERBAL_CONSTEXPR14
+				typename kerbal::utility::compressed_pair_const_method_get_return_type<I, compressed_pair>::type
+				get() KERBAL_CONST_REFERENCE_OVERLOAD_TAG KERBAL_NOEXCEPT;
+
+#		if __cplusplus >= 201103L
+
+				template <size_t I>
+				KERBAL_CONSTEXPR14
+				typename kerbal::utility::compressed_pair_rvalue_method_get_return_type<I, compressed_pair>::type
+				get() && noexcept;
+
+				template <size_t I>
+				KERBAL_CONSTEXPR14
+				typename kerbal::utility::compressed_pair_const_rvalue_method_get_return_type<I, compressed_pair>::type
+				get() const && noexcept;
+
+#		endif
+
 		};
 
 		template <typename Tp, typename Up>
 		bool operator==(const kerbal::utility::compressed_pair<Tp, Up>& lhs, const kerbal::utility::compressed_pair<Tp, Up>& rhs)
 		{
-			return lhs.first == rhs.first && lhs.second == rhs.second;
+			return static_cast<bool>(lhs.first == rhs.first) && static_cast<bool>(lhs.second == rhs.second);
 		}
 
 		template <typename Tp, typename Up>
 		bool operator!=(const kerbal::utility::compressed_pair<Tp, Up>& lhs, const kerbal::utility::compressed_pair<Tp, Up>& rhs)
 		{
-			return lhs.first != rhs.first || lhs.second != rhs.second;
+			return static_cast<bool>(lhs.first != rhs.first) || static_cast<bool>(lhs.second != rhs.second);
 		}
 
 		template <typename Tp, typename Up>
 		bool operator<(const kerbal::utility::compressed_pair<Tp, Up>& lhs, const kerbal::utility::compressed_pair<Tp, Up>& rhs)
 		{
-			return lhs.first < rhs.first
-				|| (!(rhs.first < lhs.first) && lhs.second < rhs.second);
+			return static_cast<bool>(lhs.first < rhs.first)
+				|| (!static_cast<bool>(rhs.first < lhs.first) && static_cast<bool>(lhs.second < rhs.second));
 		}
 
 		template <typename Tp, typename Up>
 		bool operator>(const kerbal::utility::compressed_pair<Tp, Up>& lhs, const kerbal::utility::compressed_pair<Tp, Up>& rhs)
 		{
-			return rhs < lhs;
+			return static_cast<bool>(rhs < lhs);
 		}
 
 		template <typename Tp, typename Up>
 		bool operator<=(const kerbal::utility::compressed_pair<Tp, Up>& lhs, const kerbal::utility::compressed_pair<Tp, Up>& rhs)
 		{
-			return !(rhs < lhs);
+			return !static_cast<bool>((rhs < lhs));
 		}
 
 		template <typename Tp, typename Up>
 		bool operator>=(const kerbal::utility::compressed_pair<Tp, Up>& lhs, const kerbal::utility::compressed_pair<Tp, Up>& rhs)
 		{
-			return !(lhs < rhs);
+			return !static_cast<bool>((lhs < rhs));
 		}
 
 		template <typename Tp, typename Up>
@@ -1188,8 +1342,11 @@ namespace kerbal
 namespace std
 {
 
-	template <std::size_t, typename>
-	struct tuple_element;
+	template <typename Tp, typename Up>
+	struct tuple_size<kerbal::utility::compressed_pair<Tp, Up> >
+			: std::integral_constant<size_t, 2>
+	{
+	};
 
 	template <typename Tp, typename Up>
 	struct tuple_element<0, kerbal::utility::compressed_pair<Tp, Up> >
@@ -1215,106 +1372,157 @@ namespace std
 			typedef const Up type;
 	};
 
-	template <std::size_t _Int>
-	struct __kerbal_compressed_pair_get;
+	template <std::size_t I>
+	struct kerbal_compressed_pair_get;
 
 	template <>
-	struct __kerbal_compressed_pair_get<0>
+	struct kerbal_compressed_pair_get<0>
 	{
 			template <typename Tp, typename Up>
 			static constexpr Tp&
-			__get(kerbal::utility::compressed_pair<Tp, Up>& __pair) noexcept
+			__get(kerbal::utility::compressed_pair<Tp, Up>& p) noexcept
 			{
-				return __pair.first();
+				return p.first();
 			}
 
 			template <typename Tp, typename Up>
 			static constexpr Tp&&
-			__move_get(kerbal::utility::compressed_pair<Tp, Up>&& __pair) noexcept
+			__move_get(kerbal::utility::compressed_pair<Tp, Up>&& p) noexcept
 			{
-				return std::forward<Tp>(__pair.first());
+				return std::forward<Tp>(p.first());
 			}
 
 			template <typename Tp, typename Up>
 			static constexpr const Tp&
-			__const_get(const kerbal::utility::compressed_pair<Tp, Up>& __pair) noexcept
+			__const_get(const kerbal::utility::compressed_pair<Tp, Up>& p) noexcept
 			{
-				return __pair.first();
+				return p.first();
 			}
 
 			template <typename Tp, typename Up>
 			static constexpr const Tp&&
-			__const_move_get(const kerbal::utility::compressed_pair<Tp, Up>&& __pair) noexcept
+			__const_move_get(const kerbal::utility::compressed_pair<Tp, Up>&& p) noexcept
 			{
-				return std::forward<const Tp>(__pair.first());
+				return std::forward<const Tp>(p.first());
 			}
 	};
 
 	template <>
-	struct __kerbal_compressed_pair_get<1>
+	struct kerbal_compressed_pair_get<1>
 	{
 			template <typename Tp, typename Up>
 			static constexpr Up&
-			__get(kerbal::utility::compressed_pair<Tp, Up>& __pair) noexcept
+			__get(kerbal::utility::compressed_pair<Tp, Up>& p) noexcept
 			{
-				return __pair.second();
+				return p.second();
 			}
 
 			template <typename Tp, typename Up>
 			static constexpr Up&&
-			__move_get(kerbal::utility::compressed_pair<Tp, Up>&& __pair) noexcept
+			__move_get(kerbal::utility::compressed_pair<Tp, Up>&& p) noexcept
 			{
-				return std::forward<Up>(__pair.second());
+				return std::forward<Up>(p.second());
 			}
 
 			template <typename Tp, typename Up>
 			static constexpr const Up&
-			__const_get(const kerbal::utility::compressed_pair<Tp, Up>& __pair) noexcept
+			__const_get(const kerbal::utility::compressed_pair<Tp, Up>& p) noexcept
 			{
-				return __pair.second();
+				return p.second();
 			}
 
 			template <typename Tp, typename Up>
 			static constexpr const Up&&
-			__const_move_get(const kerbal::utility::compressed_pair<Tp, Up>&& __pair) noexcept
+			__const_move_get(const kerbal::utility::compressed_pair<Tp, Up>&& p) noexcept
 			{
-				return std::forward<const Up>(__pair.second());
+				return std::forward<const Up>(p.second());
 			}
 	};
 
-	template <std::size_t _Int, typename Tp, typename Up>
+	template <std::size_t I, typename Tp, typename Up>
 	constexpr
 	auto&
 	get(kerbal::utility::compressed_pair<Tp, Up>& pair) noexcept
 	{
-		return __kerbal_compressed_pair_get<_Int>::__get(pair);
+		return kerbal_compressed_pair_get<I>::__get(pair);
 	}
 
-	template <std::size_t _Int, typename Tp, typename Up>
+	template <std::size_t I, typename Tp, typename Up>
 	constexpr
 	auto&&
 	get(kerbal::utility::compressed_pair<Tp, Up>&& pair) noexcept
 	{
-		return __kerbal_compressed_pair_get<_Int>::__move_get(kerbal::compatibility::move(pair));
+		return kerbal_compressed_pair_get<I>::__move_get(kerbal::compatibility::move(pair));
 	}
 
-	template <std::size_t _Int, typename Tp, typename Up>
+	template <std::size_t I, typename Tp, typename Up>
 	constexpr
 	const auto&
 	get(const kerbal::utility::compressed_pair<Tp, Up>& pair) noexcept
 	{
-		return __kerbal_compressed_pair_get<_Int>::__const_get(pair);
+		return kerbal_compressed_pair_get<I>::__const_get(pair);
 	}
 
-	template <std::size_t _Int, typename Tp, typename Up>
+	template <std::size_t I, typename Tp, typename Up>
 	constexpr
 	const auto&&
 	get(const kerbal::utility::compressed_pair<Tp, Up>&& pair) noexcept
 	{
-		return __kerbal_compressed_pair_get<_Int>::__const_move_get(kerbal::compatibility::move(pair));
+		return kerbal_compressed_pair_get<I>::__const_move_get(kerbal::compatibility::move(pair));
 	}
 
 } // namespace std
+
+namespace kerbal
+{
+
+	namespace utility
+	{
+
+		template <typename Tp, typename Up>
+		template <size_t I>
+		KERBAL_CONSTEXPR14
+		typename kerbal::utility::compressed_pair_method_get_return_type<I, compressed_pair<Tp, Up> >::type
+		compressed_pair<Tp, Up>::get() KERBAL_REFERENCE_OVERLOAD_TAG KERBAL_NOEXCEPT
+		{
+			return std::get<I>(*this);
+		}
+
+		template <typename Tp, typename Up>
+		template <size_t I>
+		KERBAL_CONSTEXPR14
+		typename kerbal::utility::compressed_pair_const_method_get_return_type<I, compressed_pair<Tp, Up> >::type
+		compressed_pair<Tp, Up>::get() KERBAL_CONST_REFERENCE_OVERLOAD_TAG KERBAL_NOEXCEPT
+		{
+			return std::get<I>(*this);
+		}
+
+#	if __cplusplus >= 201103L
+
+		template <typename Tp, typename Up>
+		template <size_t I>
+		KERBAL_CONSTEXPR14
+		typename kerbal::utility::compressed_pair_rvalue_method_get_return_type<I, compressed_pair<Tp, Up> >::type
+		compressed_pair<Tp, Up>::get() && noexcept
+		{
+			return std::get<I>(static_cast<compressed_pair&&>(*this));
+		}
+
+		template <typename Tp, typename Up>
+		template <size_t I>
+		KERBAL_CONSTEXPR14
+		typename kerbal::utility::compressed_pair_const_rvalue_method_get_return_type<I, compressed_pair<Tp, Up> >::type
+		compressed_pair<Tp, Up>::get() const && noexcept
+		{
+			return std::get<I>(static_cast<const compressed_pair&&>(*this));
+		}
+
+#	endif
+
+
+	} // namespace utility
+
+} // namespace kerbal
 
 #endif
 

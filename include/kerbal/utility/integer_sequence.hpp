@@ -69,11 +69,11 @@ namespace kerbal
 			template <typename T, T N>
 			struct make_integer_sequence_helper_loop<T, N, true>
 			{
-					typedef integer_sequence<T, 0> type;
+					typedef integer_sequence<T> type;
 			};
 
 			template <typename T, T N>
-			struct make_integer_sequence_helper: make_integer_sequence_helper_loop<T, N, N == 1>
+			struct make_integer_sequence_helper: make_integer_sequence_helper_loop<T, N, N == 0>
 			{
 			};
 
@@ -84,6 +84,7 @@ namespace kerbal
 
 		template <typename T, T N>
 		using make_integer_sequence = typename kerbal::utility::detail::make_integer_sequence_helper<T, N>::type;
+		// kerbal::utility::integer_sequence<T, /* a sequence 0, 1, 2, ..., N-1 */ >;
 
 		template <size_t N>
 		using make_index_sequence = kerbal::utility::make_integer_sequence<size_t, N>;
