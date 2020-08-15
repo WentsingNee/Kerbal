@@ -31,7 +31,7 @@ namespace kerbal
 
 #		if __cplusplus >= 201103L
 
-			template <typename Tp, typename ... Args, template <typename, typename ...> typename PtrTem>
+			template <typename Tp, typename ... Args, template <typename, typename ...> class PtrTem>
 			struct pointer_element_type_traits_impl<PtrTem<Tp, Args...> >
 			{
 					typedef Tp type;
@@ -82,7 +82,7 @@ namespace kerbal
 
 #		if __cplusplus >= 201103L
 
-			template <typename Tp, typename ... Args, typename Up, template <typename, typename ...> typename PtrTem>
+			template <typename Tp, typename ... Args, typename Up, template <typename, typename ...> class PtrTem>
 			struct pointer_traits_rebind_helper<PtrTem<Tp, Args...>, Up>
 			{
 					typedef PtrTem<Up, Args...> type;

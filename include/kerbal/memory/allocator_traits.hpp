@@ -296,7 +296,7 @@ namespace kerbal
 
 #		if __cplusplus >= 201103L
 
-			template <typename Tp, typename ... Args, typename Up, template <typename, typename ...> typename AllocTem>
+			template <typename Tp, typename ... Args, typename Up, template <typename, typename ...> class AllocTem>
 			struct pointer_traits_rebind_impl<AllocTem<Tp, Args...>, Up>
 			{
 					typedef AllocTem<Up, Args...> type;
