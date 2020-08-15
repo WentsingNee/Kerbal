@@ -9,97 +9,120 @@
  *   all rights reserved
  */
 
-#ifndef KERBAL_HASH_IMPL_SHA1_IMPL_HPP_
-#define KERBAL_HASH_IMPL_SHA1_IMPL_HPP_
+#ifndef KERBAL_HASH_IMPL_SHA1_IMPL_HPP
+#define KERBAL_HASH_IMPL_SHA1_IMPL_HPP
 
-#include <kerbal/algorithm/querier.hpp>
 #include <kerbal/algorithm/modifier.hpp>
+#include <kerbal/compatibility/static_assert.hpp>
 #include <kerbal/iterator/iterator.hpp>
+#include <kerbal/numeric/bit.hpp>
+#include <kerbal/type_traits/is_same.hpp>
 
 #include <kerbal/hash/sha1.hpp>
 
 namespace kerbal
 {
+
 	namespace hash
 	{
 
 		template <>
-		KERBAL_CONSTEXPR
-		uint32_t __SHA1_context_base::blk0<LITTLE_ENDIAN>(const uint32_t l[16], int i) KERBAL_NOEXCEPT
+		KERBAL_CONSTEXPR14
+		uint32_t SHA1_context_base::blk0<LITTLE_ENDIAN>(uint32_t l[16], size_t i) KERBAL_NOEXCEPT
 		{
-			return (__roll_uint32(l[i], 24) & 0xFF00FF00) |
-					(__roll_uint32(l[i], 8) & 0x00FF00FF);
+			return l[i] = (kerbal::numeric::rotl(l[i], 24) & 0xFF00FF00u) |
+					(kerbal::numeric::rotl(l[i], 8) & 0x00FF00FFu);
 		}
 
 		template <>
-		KERBAL_CONSTEXPR
-		uint32_t __SHA1_context_base::blk0<BIG_ENDIAN>(const uint32_t l[16], int i) KERBAL_NOEXCEPT
+		KERBAL_CONSTEXPR14
+		uint32_t SHA1_context_base::blk0<BIG_ENDIAN>(uint32_t l[16], size_t i) KERBAL_NOEXCEPT
 		{
 			return l[i];
 		}
 
-		KERBAL_CONSTEXPR14
+		KERBAL_CONSTEXPR
 		inline
-		uint32_t __SHA1_context_base::blk(uint32_t block_l[16], int i) KERBAL_NOEXCEPT
+		uint32_t SHA1_context_base::blk(const uint32_t l[16], size_t i) KERBAL_NOEXCEPT
 		{
-			return block_l[i & 15] = __roll_uint32(
-					block_l[(i + 13) & 15] ^ block_l[(i + 8) & 15]
-							^ block_l[(i + 2) & 15] ^ block_l[i & 15], 1);
+			return kerbal::numeric::rotl(
+					l[(i + 13) & 15u] ^ l[(i + 8) & 15u] ^ l[(i + 2) & 15u] ^ l[i & 15u]
+					, 1);
 		}
 
 		KERBAL_CONSTEXPR14
 		inline
-		void __SHA1_context_base::R0(uint32_t block_l[16], uint32_t v, uint32_t & w, uint32_t x, uint32_t y, uint32_t & z, int i) KERBAL_NOEXCEPT
+		void SHA1_context_base::R0(uint32_t block_l[16], uint32_t v, uint32_t & w, uint32_t x, uint32_t y, uint32_t & z, size_t i) KERBAL_NOEXCEPT
 		{
-			z += (block_l[i] = blk0<BYTE_ORDER>(block_l, i));
-			z += __roll_uint32(v, 5);
+			z += blk0<BYTE_ORDER>(block_l, i);
+			z += kerbal::numeric::rotl(v, 5);
 			z += ((w & (x ^ y)) ^ y) + 0x5A827999;
-			w = __roll_uint32(w, 30);
+			w = kerbal::numeric::rotl(w, 30);
 		}
 
 		KERBAL_CONSTEXPR14
 		inline
-		void __SHA1_context_base::R1(uint32_t block_l[16], uint32_t v, uint32_t & w, uint32_t x, uint32_t y, uint32_t & z, int i) KERBAL_NOEXCEPT
+		void SHA1_context_base::R1(uint32_t block_l[16], uint32_t v, uint32_t & w, uint32_t x, uint32_t y, uint32_t & z, size_t i) KERBAL_NOEXCEPT
 		{
-			z += (block_l[i & 15] = blk(block_l, i));
-			z += __roll_uint32(v, 5);
+			z += (block_l[i & 15u] = blk(block_l, i));
+			z += kerbal::numeric::rotl(v, 5);
 			z += ((w & (x ^ y)) ^ y) + 0x5A827999;
-			w = __roll_uint32(w, 30);
+			w = kerbal::numeric::rotl(w, 30);
 		}
 
 		KERBAL_CONSTEXPR14
 		inline
-		void __SHA1_context_base::R2(uint32_t block_l[16], uint32_t v, uint32_t & w, uint32_t x, uint32_t y, uint32_t & z, int i) KERBAL_NOEXCEPT
+		void SHA1_context_base::R2(uint32_t block_l[16], uint32_t v, uint32_t & w, uint32_t x, uint32_t y, uint32_t & z, size_t i) KERBAL_NOEXCEPT
 		{
-			z += (block_l[i & 15] = blk(block_l, i));
-			z += __roll_uint32(v, 5);
+			z += (block_l[i & 15u] = blk(block_l, i));
+			z += kerbal::numeric::rotl(v, 5);
 			z += (w ^ x ^ y) + 0x6ED9EBA1;
-			w = __roll_uint32(w, 30);
+			w = kerbal::numeric::rotl(w, 30);
 		}
 
 		KERBAL_CONSTEXPR14
 		inline
-		void __SHA1_context_base::R3(uint32_t block_l[16], uint32_t v, uint32_t & w, uint32_t x, uint32_t y, uint32_t & z, int i) KERBAL_NOEXCEPT
+		void SHA1_context_base::R3(uint32_t block_l[16], uint32_t v, uint32_t & w, uint32_t x, uint32_t y, uint32_t & z, size_t i) KERBAL_NOEXCEPT
 		{
-			z += (block_l[i & 15] = blk(block_l, i));
-			z += __roll_uint32(v, 5);
+			z += (block_l[i & 15u] = blk(block_l, i));
+			z += kerbal::numeric::rotl(v, 5);
 			z += (((w | x) & y) | (w & x)) + 0x8F1BBCDC;
-			w = __roll_uint32(w, 30);
+			w = kerbal::numeric::rotl(w, 30);
 		}
 
 		KERBAL_CONSTEXPR14
 		inline
-		void __SHA1_context_base::R4(uint32_t block_l[16], uint32_t v, uint32_t & w, uint32_t x, uint32_t y, uint32_t & z, int i) KERBAL_NOEXCEPT
+		void SHA1_context_base::R4(uint32_t block_l[16], uint32_t v, uint32_t & w, uint32_t x, uint32_t y, uint32_t & z, size_t i) KERBAL_NOEXCEPT
 		{
-			z += (block_l[i & 15] = blk(block_l, i));
-			z += __roll_uint32(v, 5);
+			z += (block_l[i & 15u] = blk(block_l, i));
+			z += kerbal::numeric::rotl(v, 5);
 			z += (w ^ x ^ y) + 0xCA62C1D6;
-			w = __roll_uint32(w, 30);
+			w = kerbal::numeric::rotl(w, 30);
 		}
+
+//#if BYTE_ORDER == LITTLE_ENDIAN
+//#define blk0(l, i) l[(i)]=((kerbal::numeric::rotl(l[i],24)&0xFF00FF00u) \
+//    |(kerbal::numeric::rotl(l[i],8)&0x00FF00FFu))
+//#elif BYTE_ORDER == BIG_ENDIAN
+//#define blk0(l, i) l[i]
+//#else
+//#error "Endianness not defined!"
+//#endif
+//
+//#define blk(l, i) l[(i)&15u]=(kerbal::numeric::rotl(l[(i+13)&15u]^l[(i+8)&15u] \
+//    ^l[(i+2)&15u]^l[i&15u],1))
+//
+//
+//#define R0(l,v,w,x,y,z,i) z+=((w&(x^y))^y)+(blk0(l, i))+0x5A827999+kerbal::numeric::rotl(v,5);w=kerbal::numeric::rotl(w,30);
+//#define R1(l,v,w,x,y,z,i) z+=((w&(x^y))^y)+(blk(l, i))+0x5A827999+kerbal::numeric::rotl(v,5);w=kerbal::numeric::rotl(w,30);
+//#define R2(l,v,w,x,y,z,i) z+=(w^x^y)+(blk(l, i))+0x6ED9EBA1+kerbal::numeric::rotl(v,5);w=kerbal::numeric::rotl(w,30);
+//#define R3(l,v,w,x,y,z,i) z+=(((w|x)&y)|(w&x))+(blk(l, i))+0x8F1BBCDC+kerbal::numeric::rotl(v,5);w=kerbal::numeric::rotl(w,30);
+//#define R4(l,v,w,x,y,z,i) z+=(w^x^y)+(blk(l, i))+0xCA62C1D6+kerbal::numeric::rotl(v,5);w=kerbal::numeric::rotl(w,30);
 
 #	if __cplusplus >= 201103L
 
-		constexpr __SHA1_context_base::__SHA1_context_base() noexcept :
+		constexpr
+		SHA1_context_base::SHA1_context_base() noexcept :
 				state { 0x67452301, 0xEFCDAB89, 0x98BADCFE, 0x10325476, 0xC3D2E1F0 },
 				count { 0, 0 }, buffer { }
 		{
@@ -107,7 +130,7 @@ namespace kerbal
 
 #	else
 
-		__SHA1_context_base::__SHA1_context_base() KERBAL_NOEXCEPT
+		SHA1_context_base::SHA1_context_base() KERBAL_NOEXCEPT
 		{
 			this->state[0] = 0x67452301;
 			this->state[1] = 0xEFCDAB89;
@@ -122,12 +145,20 @@ namespace kerbal
 
 #	endif
 
+		KERBAL_CONSTEXPR
+		inline uint32_t char4tolong1(const unsigned char c[4])
+		{
+			return (c[3] << 24u) + (c[2] << 16u) + (c[1] << 8u) + c[0];
+		}
+
 		KERBAL_CONSTEXPR14
 		inline
-		void SHA1_context<SHA1_policy::size>::__transform(const uint32_t block[16]) KERBAL_NOEXCEPT
+		void SHA1_transform_overload<SHA1_policy::size>::transform(const unsigned char buffer[64]) KERBAL_NOEXCEPT
 		{
 			uint32_t l[16] = {};
-			kerbal::algorithm::copy(block, block + 16, l);
+			for (int i = 0; i < 16; ++i) {
+				l[i] = char4tolong1(buffer + 4 * i);
+			}
 
 			/* Copy context->state[] to working vars */
 			uint32_t a = this->state[0];
@@ -136,22 +167,22 @@ namespace kerbal
 			uint32_t d = this->state[3];
 			uint32_t e = this->state[4];
 
-			for (int i = 0; i < 15; i += 5) {
+			for (size_t i = 0; i < 15; i += 5) {
 				R0(l, a, b, c, d, e, i + 0); R0(l, e, a, b, c, d, i + 1); R0(l, d, e, a, b, c, i + 2); R0(l, c, d, e, a, b, i + 3); R0(l, b, c, d, e, a, i + 4);
 			}
-			R0(l, a, b, c, d, e, 15);
+			R0(l, a, b, c, d, e, 15u);
 
-			R1(l, e, a, b, c, d, 16); R1(l, d, e, a, b, c, 17); R1(l, c, d, e, a, b, 18); R1(l, b, c, d, e, a, 19);
+			R1(l, e, a, b, c, d, 16u); R1(l, d, e, a, b, c, 17u); R1(l, c, d, e, a, b, 18u); R1(l, b, c, d, e, a, 19u);
 
-			for (int i = 20; i < 40; i += 5) {
+			for (size_t i = 20; i < 40; i += 5) {
 				R2(l, a, b, c, d, e, i + 0); R2(l, e, a, b, c, d, i + 1); R2(l, d, e, a, b, c, i + 2); R2(l, c, d, e, a, b, i + 3); R2(l, b, c, d, e, a, i + 4);
 			}
 
-			for (int i = 40; i < 60; i += 5) {
+			for (size_t i = 40; i < 60; i += 5) {
 				R3(l, a, b, c, d, e, i + 0); R3(l, e, a, b, c, d, i + 1); R3(l, d, e, a, b, c, i + 2); R3(l, c, d, e, a, b, i + 3); R3(l, b, c, d, e, a, i + 4);
 			}
 
-			for (int i = 60; i < 80; i += 5) {
+			for (size_t i = 60; i < 80; i += 5) {
 				R4(l, a, b, c, d, e, i + 0); R4(l, e, a, b, c, d, i + 1); R4(l, d, e, a, b, c, i + 2); R4(l, c, d, e, a, b, i + 3); R4(l, b, c, d, e, a, i + 4);
 			}
 
@@ -165,10 +196,12 @@ namespace kerbal
 
 		KERBAL_CONSTEXPR14
 		inline
-		void SHA1_context<SHA1_policy::fast>::__transform(const uint32_t block[16]) KERBAL_NOEXCEPT
+		void SHA1_transform_overload<SHA1_policy::fast>::transform(const unsigned char buffer[64]) KERBAL_NOEXCEPT
 		{
 			uint32_t l[16] = {};
-			kerbal::algorithm::copy(block, block + 16, l);
+			for (int i = 0; i < 16; ++i) {
+				l[i] = char4tolong1(buffer + 4 * i);
+			}
 
 			/* Copy context->state[] to working vars */
 			uint32_t a = this->state[0];
@@ -177,27 +210,27 @@ namespace kerbal
 			uint32_t d = this->state[3];
 			uint32_t e = this->state[4];
 
-			R0(l, a, b, c, d, e,  0); R0(l, e, a, b, c, d,  1); R0(l, d, e, a, b, c,  2); R0(l, c, d, e, a, b,  3); R0(l, b, c, d, e, a,  4);
-			R0(l, a, b, c, d, e,  5); R0(l, e, a, b, c, d,  6); R0(l, d, e, a, b, c,  7); R0(l, c, d, e, a, b,  8); R0(l, b, c, d, e, a,  9);
-			R0(l, a, b, c, d, e, 10); R0(l, e, a, b, c, d, 11); R0(l, d, e, a, b, c, 12); R0(l, c, d, e, a, b, 13); R0(l, b, c, d, e, a, 14);
-			R0(l, a, b, c, d, e, 15);
+			R0(l, a, b, c, d, e,  0u); R0(l, e, a, b, c, d,  1u); R0(l, d, e, a, b, c,  2u); R0(l, c, d, e, a, b,  3u); R0(l, b, c, d, e, a,  4u);
+			R0(l, a, b, c, d, e,  5u); R0(l, e, a, b, c, d,  6u); R0(l, d, e, a, b, c,  7u); R0(l, c, d, e, a, b,  8u); R0(l, b, c, d, e, a,  9u);
+			R0(l, a, b, c, d, e, 10u); R0(l, e, a, b, c, d, 11u); R0(l, d, e, a, b, c, 12u); R0(l, c, d, e, a, b, 13u); R0(l, b, c, d, e, a, 14u);
+			R0(l, a, b, c, d, e, 15u);
 
-			R1(l, e, a, b, c, d, 16); R1(l, d, e, a, b, c, 17); R1(l, c, d, e, a, b, 18); R1(l, b, c, d, e, a, 19);
+			R1(l, e, a, b, c, d, 16u); R1(l, d, e, a, b, c, 17u); R1(l, c, d, e, a, b, 18u); R1(l, b, c, d, e, a, 19u);
 
-			R2(l, a, b, c, d, e, 20); R2(l, e, a, b, c, d, 21); R2(l, d, e, a, b, c, 22); R2(l, c, d, e, a, b, 23); R2(l, b, c, d, e, a, 24);
-			R2(l, a, b, c, d, e, 25); R2(l, e, a, b, c, d, 26); R2(l, d, e, a, b, c, 27); R2(l, c, d, e, a, b, 28); R2(l, b, c, d, e, a, 29);
-			R2(l, a, b, c, d, e, 30); R2(l, e, a, b, c, d, 31); R2(l, d, e, a, b, c, 32); R2(l, c, d, e, a, b, 33); R2(l, b, c, d, e, a, 34);
-			R2(l, a, b, c, d, e, 35); R2(l, e, a, b, c, d, 36); R2(l, d, e, a, b, c, 37); R2(l, c, d, e, a, b, 38); R2(l, b, c, d, e, a, 39);
+			R2(l, a, b, c, d, e, 20u); R2(l, e, a, b, c, d, 21u); R2(l, d, e, a, b, c, 22u); R2(l, c, d, e, a, b, 23u); R2(l, b, c, d, e, a, 24u);
+			R2(l, a, b, c, d, e, 25u); R2(l, e, a, b, c, d, 26u); R2(l, d, e, a, b, c, 27u); R2(l, c, d, e, a, b, 28u); R2(l, b, c, d, e, a, 29u);
+			R2(l, a, b, c, d, e, 30u); R2(l, e, a, b, c, d, 31u); R2(l, d, e, a, b, c, 32u); R2(l, c, d, e, a, b, 33u); R2(l, b, c, d, e, a, 34u);
+			R2(l, a, b, c, d, e, 35u); R2(l, e, a, b, c, d, 36u); R2(l, d, e, a, b, c, 37u); R2(l, c, d, e, a, b, 38u); R2(l, b, c, d, e, a, 39u);
 
-			R3(l, a, b, c, d, e, 40); R3(l, e, a, b, c, d, 41); R3(l, d, e, a, b, c, 42); R3(l, c, d, e, a, b, 43); R3(l, b, c, d, e, a, 44);
-			R3(l, a, b, c, d, e, 45); R3(l, e, a, b, c, d, 46); R3(l, d, e, a, b, c, 47); R3(l, c, d, e, a, b, 48); R3(l, b, c, d, e, a, 49);
-			R3(l, a, b, c, d, e, 50); R3(l, e, a, b, c, d, 51); R3(l, d, e, a, b, c, 52); R3(l, c, d, e, a, b, 53); R3(l, b, c, d, e, a, 54);
-			R3(l, a, b, c, d, e, 55); R3(l, e, a, b, c, d, 56); R3(l, d, e, a, b, c, 57); R3(l, c, d, e, a, b, 58); R3(l, b, c, d, e, a, 59);
+			R3(l, a, b, c, d, e, 40u); R3(l, e, a, b, c, d, 41u); R3(l, d, e, a, b, c, 42u); R3(l, c, d, e, a, b, 43u); R3(l, b, c, d, e, a, 44u);
+			R3(l, a, b, c, d, e, 45u); R3(l, e, a, b, c, d, 46u); R3(l, d, e, a, b, c, 47u); R3(l, c, d, e, a, b, 48u); R3(l, b, c, d, e, a, 49u);
+			R3(l, a, b, c, d, e, 50u); R3(l, e, a, b, c, d, 51u); R3(l, d, e, a, b, c, 52u); R3(l, c, d, e, a, b, 53u); R3(l, b, c, d, e, a, 54u);
+			R3(l, a, b, c, d, e, 55u); R3(l, e, a, b, c, d, 56u); R3(l, d, e, a, b, c, 57u); R3(l, c, d, e, a, b, 58u); R3(l, b, c, d, e, a, 59u);
 
-			R4(l, a, b, c, d, e, 60); R4(l, e, a, b, c, d, 61); R4(l, d, e, a, b, c, 62); R4(l, c, d, e, a, b, 63); R4(l, b, c, d, e, a, 64);
-			R4(l, a, b, c, d, e, 65); R4(l, e, a, b, c, d, 66); R4(l, d, e, a, b, c, 67); R4(l, c, d, e, a, b, 68); R4(l, b, c, d, e, a, 69);
-			R4(l, a, b, c, d, e, 70); R4(l, e, a, b, c, d, 71); R4(l, d, e, a, b, c, 72); R4(l, c, d, e, a, b, 73); R4(l, b, c, d, e, a, 74);
-			R4(l, a, b, c, d, e, 75); R4(l, e, a, b, c, d, 76); R4(l, d, e, a, b, c, 77); R4(l, c, d, e, a, b, 78); R4(l, b, c, d, e, a, 79);
+			R4(l, a, b, c, d, e, 60u); R4(l, e, a, b, c, d, 61u); R4(l, d, e, a, b, c, 62u); R4(l, c, d, e, a, b, 63u); R4(l, b, c, d, e, a, 64u);
+			R4(l, a, b, c, d, e, 65u); R4(l, e, a, b, c, d, 66u); R4(l, d, e, a, b, c, 67u); R4(l, c, d, e, a, b, 68u); R4(l, b, c, d, e, a, 69u);
+			R4(l, a, b, c, d, e, 70u); R4(l, e, a, b, c, d, 71u); R4(l, d, e, a, b, c, 72u); R4(l, c, d, e, a, b, 73u); R4(l, b, c, d, e, a, 74u);
+			R4(l, a, b, c, d, e, 75u); R4(l, e, a, b, c, d, 76u); R4(l, d, e, a, b, c, 77u); R4(l, c, d, e, a, b, 78u); R4(l, b, c, d, e, a, 79u);
 
 			/* Add the working vars back into context.state[] */
 			this->state[0] += a;
@@ -207,57 +240,38 @@ namespace kerbal
 			this->state[4] += e;
 		}
 
-		KERBAL_CONSTEXPR
-		inline uint32_t char4tolong1(unsigned char c[4])
-		{
-			return (c[3] << 24) + (c[2] << 16) + (c[1] << 8) + c[0];
-		}
-
-		template <typename Son>
-		template <typename ForwardIterator>
+		template <typename Policy>
+		template <typename RandomAccessIterator>
 		KERBAL_CONSTEXPR14
-		void __SHA1_context_base2<Son>::update(ForwardIterator first, ForwardIterator last) KERBAL_NOEXCEPT
+		void SHA1_context<Policy>::update_helper(RandomAccessIterator first, RandomAccessIterator last,
+													std::random_access_iterator_tag) KERBAL_NOEXCEPT
 		{
-			typedef ForwardIterator iterator;
+			typedef RandomAccessIterator iterator;
 			typedef typename kerbal::iterator::iterator_traits<iterator>::difference_type difference_type;
 
-			difference_type len(kerbal::iterator::distance(first, last));
+			difference_type len(last - first);
 
-			uint32_t j = (static_cast<uint32_t>(this->count[0]) >> 3) & 63;
+			uint32_t j = (this->count[0] / 8) % 64;
 
-			iterator adv(first);
-			difference_type d(kerbal::iterator::advance_at_most(adv, 64 - j, last));
-			kerbal::algorithm::copy(first, adv, this->buffer + j);
-			first = adv;
+			if (len >= 64 - j) {
+				iterator next = first + (64 - j);
+				kerbal::algorithm::copy(first, next, this->buffer + j);
+				first = next;
 
-			if (d == 64 - j) {
+				this->transform(this->buffer);
 
-				uint32_t l[16] = {};
+				while (last - first >= 64) {
+					unsigned char c[64] = {};
+					next = first + 64;
+					kerbal::algorithm::copy(first, next, c);
 
-				{
-					for (int i = 0; i < 16; ++i) {
-						l[i] = char4tolong1(this->buffer + 4 * i);
-					}
-					this->__transform__redistribute(l);
+					first = next;
+					this->transform(c);
 				}
-
-				while (kerbal::iterator::advance_at_most(adv, 64, last) == 64) {
-
-					for (int i = 0; i < 16; ++i) {
-						unsigned char c[4] = {}; {
-							c[0] = *first; ++first;
-							c[1] = *first; ++first;
-							c[2] = *first; ++first;
-							c[3] = *first; ++first;
-						}
-						l[i] = char4tolong1(c);
-					}
-
-					this->__transform__redistribute(l);
-				}
-				kerbal::algorithm::copy(first, last, this->buffer);
-
+				j = 0;
 			}
+
+			kerbal::algorithm::copy(first, last, this->buffer + j);
 
 			j = this->count[0];
 			this->count[0] += len << 3;
@@ -287,12 +301,24 @@ namespace kerbal
 //			memcpy(&context->buffer[j], &data[i], len - i);
 //		}
 
-		template <typename Son>
+		template <typename Policy>
+		template <typename ForwardIterator>
 		KERBAL_CONSTEXPR14
-		typename __SHA1_context_base2<Son>::result
-		__SHA1_context_base2<Son>::digest() KERBAL_NOEXCEPT
+		void SHA1_context<Policy>::update(ForwardIterator first, ForwardIterator last) KERBAL_NOEXCEPT
 		{
-			const unsigned char finalcount[8] = {
+			typedef ForwardIterator iterator;
+			typedef typename kerbal::iterator::iterator_traits<iterator>::value_type value_type;
+			KERBAL_STATIC_ASSERT((kerbal::type_traits::is_same<value_type, unsigned char>::value), "Iterator must refers to unsigned char");
+
+			this->update_helper(first, last, kerbal::iterator::iterator_category(first));
+		}
+
+		template <typename Policy>
+		KERBAL_CONSTEXPR14
+		typename SHA1_context<Policy>::result
+		SHA1_context<Policy>::digest() KERBAL_NOEXCEPT
+		{
+			const unsigned char final_count[8] = {
 					static_cast<unsigned char>(this->count[1] >> 24),
 					static_cast<unsigned char>(this->count[1] >> 16),
 					static_cast<unsigned char>(this->count[1] >> 8),
@@ -304,16 +330,17 @@ namespace kerbal
 			}; /* Endian independent */
 
 			{
-				unsigned char c = 0200;
-				const unsigned char * p = &c;
+				unsigned char p[1] = {0200};
 				this->update(p, p + 1);
 				while ((this->count[0] & 504) != 448) {
-					c = 0000;
+					// 504 = 0b111111000
+					// 448 = 0b111000000
+					p[0] = 0000;
 					this->update(p, p + 1);
 				}
 			}
 
-			this->update(finalcount, finalcount + 8); /* Should cause a SHA1Transform() */
+			this->update(final_count, final_count + 8); /* Should cause a SHA1Transform() */
 
 			return result(this->state);
 		}
@@ -322,4 +349,4 @@ namespace kerbal
 
 } // namespace kerbal
 
-#endif /* KERBAL_HASH_IMPL_SHA1_IMPL_HPP_ */
+#endif // KERBAL_HASH_IMPL_SHA1_IMPL_HPP
