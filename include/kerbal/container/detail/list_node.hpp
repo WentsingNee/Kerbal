@@ -1,5 +1,5 @@
 /**
- * @file       list_node.impl.hpp
+ * @file       list_node.hpp
  * @brief
  * @date       2020-03-21
  * @author     Peter
@@ -9,9 +9,12 @@
  *   all rights reserved
  */
 
-#ifndef KERBAL_CONTAINER_IMPL_LIST_NODE_IMPL_HPP
-#define KERBAL_CONTAINER_IMPL_LIST_NODE_IMPL_HPP
+#ifndef KERBAL_CONTAINER_DETAIL_LIST_NODE_HPP
+#define KERBAL_CONTAINER_DETAIL_LIST_NODE_HPP
 
+#include <kerbal/container/fwd/list.fwd.hpp>
+
+#include <kerbal/algorithm/modifier.hpp>
 #include <kerbal/compatibility/constexpr.hpp>
 #include <kerbal/compatibility/method_overload_tag.hpp>
 #include <kerbal/compatibility/noexcept.hpp>
@@ -21,6 +24,8 @@
 #include <cstddef>
 
 #if __cplusplus >= 201103L
+#	include <kerbal/type_traits/integral_constant.hpp>
+#	include <kerbal/utility/integer_sequence.hpp>
 #	include <utility> // forward
 #endif
 
@@ -30,23 +35,8 @@ namespace kerbal
 	namespace container
 	{
 
-		template <typename Tp, typename Allocator>
-		class list;
-
 		namespace detail
 		{
-
-			template <typename Tp, typename Allocator, bool>
-			class list_base;
-
-			template <typename Tp>
-			class list_node;
-
-			template <typename Tp>
-			class list_iter;
-
-			template <typename Tp>
-			class list_kiter;
 
 			struct init_list_node_ptr_to_self_tag
 			{
@@ -55,16 +45,25 @@ namespace kerbal
 			class list_node_base: kerbal::utility::noncopyable
 			{
 				private:
-					template <typename Up, typename Allocator>
-					friend class kerbal::container::list;
+					friend class kerbal::container::detail::list_type_unrelated;
 
-					template <typename Up, typename Allocator, bool B>
+					template <typename Tp>
+					friend class kerbal::container::detail::list_allocator_unrelated;
+
+					template <typename Tp, typename Allocator, bool B>
 					friend class kerbal::container::detail::list_base;
 
-					template <typename Up>
+					template <typename Tp, typename Allocator>
+					friend class kerbal::container::list;
+
+					friend class list_iter_type_unrelated;
+
+					friend class list_kiter_type_unrelated;
+
+					template <typename Tp>
 					friend class list_iter;
 
-					template <typename Up>
+					template <typename Tp>
 					friend class list_kiter;
 
 				private:
@@ -122,6 +121,11 @@ namespace kerbal
 			class list_node: public list_node_base
 			{
 				private:
+					typedef list_node_base super;
+
+				private:
+					friend class kerbal::container::detail::list_allocator_unrelated<Tp>;
+
 					template <typename Up, typename Allocator>
 					friend class kerbal::container::list;
 
@@ -133,9 +137,6 @@ namespace kerbal
 
 				private:
 					Tp value;
-
-				private:
-					typedef list_node_base super;
 
 				public:
 
@@ -180,10 +181,94 @@ namespace kerbal
 
 			};
 
+			template <typename Tp, size_t N>
+			class list_node<Tp[N]>: public list_node_base
+			{
+				private:
+					typedef list_node_base super;
+
+				private:
+					friend class kerbal::container::detail::list_allocator_unrelated<Tp[N]>;
+
+					template <typename Up, typename Allocator>
+					friend class kerbal::container::list;
+
+					template <typename Up>
+					friend class list_iter;
+
+					template <typename Up>
+					friend class list_kiter;
+
+				private:
+					Tp value[N];
+
+#		if __cplusplus >= 201103L
+
+				private:
+
+					typedef kerbal::type_traits::integral_constant<size_t, 32> BRACE_INIT_LIMIT;
+
+					template <typename Up, size_t ... I>
+					KERBAL_CONSTEXPR
+					explicit list_node(const Up (&arg)[N], kerbal::utility::integer_sequence<size_t, I...>)
+							: super(), value{arg[I]...}
+					{
+					}
+
+					template <typename Up>
+					KERBAL_CONSTEXPR
+					explicit list_node(const Up (&arg) [N], kerbal::type_traits::true_type) // for N < BRACE_INIT_LIMIT
+							: list_node(arg, kerbal::utility::make_index_sequence<N>())
+					{
+					}
+
+					template <typename Up>
+					KERBAL_CONSTEXPR14
+					explicit list_node(const Up (&arg) [N], kerbal::type_traits::false_type) // for N >= BRACE_INIT_LIMIT
+							: list_node(arg, kerbal::utility::make_index_sequence<BRACE_INIT_LIMIT::value>())
+					{
+						kerbal::algorithm::copy(arg + BRACE_INIT_LIMIT::value, arg + N, this->value + BRACE_INIT_LIMIT::value);
+					}
+
+				public:
+
+					KERBAL_CONSTEXPR
+					explicit list_node(kerbal::utility::in_place_t)
+							: super(), value{}
+					{
+					}
+
+					template <typename Up>
+					KERBAL_CONSTEXPR
+					explicit list_node(kerbal::utility::in_place_t, const Up (&arg) [N])
+							: list_node(arg, kerbal::type_traits::bool_constant<N < BRACE_INIT_LIMIT::value>())
+					{
+					}
+
+#		else
+
+				public:
+
+					explicit list_node(kerbal::utility::in_place_t)
+							: super()
+					{
+					}
+
+					template <typename Up>
+					explicit list_node(kerbal::utility::in_place_t, const Up (&arg) [N])
+							: super()
+					{
+						kerbal::algorithm::copy(arg, arg + N, this->value);
+					}
+
+#		endif
+
+			};
+
 		} // namespace detail
 
 	} // namespace container
 
 } // namespace kerbal
 
-#endif // KERBAL_CONTAINER_IMPL_LIST_NODE_IMPL_HPP
+#endif // KERBAL_CONTAINER_DETAIL_LIST_NODE_HPP
