@@ -696,16 +696,14 @@ namespace kerbal
 		list<Tp, Allocator>::erase(const_iterator first, const_iterator last)
 		{
 			iterator last_mut(last.cast_to_mutable());
-			if (first == last) {
-				return last_mut;
+			if (first != last) {
+				iterator first_mut(first.cast_to_mutable());
+				std::pair<node_base *, node_base *> range(this->list_type_unrelated::__unhook_node(first_mut, last_mut));
+				node_base * start = range.first;
+				node_base * back = range.second;
+				back->next = NULL;
+				this->__consecutive_destroy_node(start);
 			}
-			iterator first_mut(first.cast_to_mutable());
-			node_base * start = first_mut.current;
-			node_base * end = last_mut.current;
-			end->prev->next = NULL;
-			end->prev = start->prev;
-			start->prev->next = end;
-			this->__consecutive_destroy_node(start);
 			return last_mut;
 		}
 
@@ -799,23 +797,23 @@ namespace kerbal
 
 		template <typename Tp, typename Allocator>
 		KERBAL_CONSTEXPR20
-		void list<Tp, Allocator>::splice(const_iterator pos, list& other) KERBAL_NOEXCEPT
+		void list<Tp, Allocator>::splice(const_iterator pos, list & other) KERBAL_NOEXCEPT
 		{
-			list_allocator_unrelated::splice(pos, other);
+			list_type_unrelated::splice(pos, other);
 		}
 
 		template <typename Tp, typename Allocator>
 		KERBAL_CONSTEXPR20
-		void list<Tp, Allocator>::splice(const_iterator pos, list&, const_iterator opos) KERBAL_NOEXCEPT
+		void list<Tp, Allocator>::splice(const_iterator pos, list &, const_iterator opos) KERBAL_NOEXCEPT
 		{
-			list_allocator_unrelated::splice(pos, opos);
+			list_type_unrelated::splice(pos, opos);
 		}
 
 		template <typename Tp, typename Allocator>
 		KERBAL_CONSTEXPR20
-		void list<Tp, Allocator>::splice(const_iterator pos, list&, const_iterator first, const_iterator last) KERBAL_NOEXCEPT
+		void list<Tp, Allocator>::splice(const_iterator pos, list &, const_iterator first, const_iterator last) KERBAL_NOEXCEPT
 		{
-			list_allocator_unrelated::splice(pos, first, last);
+			list_type_unrelated::splice(pos, first, last);
 		}
 
 #	if __cplusplus >= 201103L
@@ -824,7 +822,7 @@ namespace kerbal
 		KERBAL_CONSTEXPR20
 		void list<Tp, Allocator>::splice(const_iterator pos, list&& other) KERBAL_NOEXCEPT
 		{
-			list_allocator_unrelated::splice(pos, kerbal::compatibility::move(other));
+			list_type_unrelated::splice(pos, other);
 		}
 
 #	endif

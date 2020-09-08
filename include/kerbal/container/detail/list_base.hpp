@@ -106,10 +106,13 @@ namespace kerbal
 					void reverse() KERBAL_NOEXCEPT;
 
 					KERBAL_CONSTEXPR20
-					void splice(basic_const_iterator pos, basic_const_iterator opos) KERBAL_NOEXCEPT;
+					static void splice(basic_const_iterator pos, list_type_unrelated & other) KERBAL_NOEXCEPT;
 
 					KERBAL_CONSTEXPR20
-					void splice(basic_const_iterator pos, basic_const_iterator first, basic_const_iterator last) KERBAL_NOEXCEPT;
+					static void splice(basic_const_iterator pos, basic_const_iterator opos) KERBAL_NOEXCEPT;
+
+					KERBAL_CONSTEXPR20
+					static void splice(basic_const_iterator pos, basic_const_iterator first, basic_const_iterator last) KERBAL_NOEXCEPT;
 
 				//===================
 				//private
@@ -130,11 +133,14 @@ namespace kerbal
 					KERBAL_CONSTEXPR20
 					static node_base * __unhook_node(basic_iterator pos) KERBAL_NOEXCEPT;
 
+					// pre-cond: first != last;
 					KERBAL_CONSTEXPR20
-					void __unhook_node(node_base * start, node_base * back) KERBAL_NOEXCEPT;
+					static
+					std::pair<node_base *, node_base *>
+					__unhook_node(basic_iterator first, basic_iterator last) KERBAL_NOEXCEPT;
 
 					KERBAL_CONSTEXPR20
-					static void __swap_with_empty(list_type_unrelated& not_empty_list, list_type_unrelated& empty_list) KERBAL_NOEXCEPT;
+					static void __swap_with_empty(list_type_unrelated & not_empty_list, list_type_unrelated & empty_list) KERBAL_NOEXCEPT;
 
 			};
 
@@ -332,22 +338,6 @@ namespace kerbal
 
 					KERBAL_CONSTEXPR20
 					void swap_allocator_unrelated(list_allocator_unrelated & ano) KERBAL_NOEXCEPT;
-
-					KERBAL_CONSTEXPR20
-					void splice(const_iterator pos, list_allocator_unrelated & other) KERBAL_NOEXCEPT;
-
-					KERBAL_CONSTEXPR20
-					void splice(const_iterator pos, const_iterator opos) KERBAL_NOEXCEPT;
-
-					KERBAL_CONSTEXPR20
-					void splice(const_iterator pos, const_iterator first, const_iterator last) KERBAL_NOEXCEPT;
-
-#			if __cplusplus >= 201103L
-
-					KERBAL_CONSTEXPR20
-					void splice(const_iterator pos, list_allocator_unrelated && other) KERBAL_NOEXCEPT;
-
-#			endif
 
 			};
 

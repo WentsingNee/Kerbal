@@ -462,13 +462,13 @@ namespace kerbal
 				size_type remove_if(UnaryPredicate predicate);
 
 				KERBAL_CONSTEXPR20
-				void splice(const_iterator pos, list& other) KERBAL_NOEXCEPT;
+				void splice(const_iterator pos, list & other) KERBAL_NOEXCEPT;
 
 				KERBAL_CONSTEXPR20
-				void splice(const_iterator pos, list& other, const_iterator opos) KERBAL_NOEXCEPT;
+				void splice(const_iterator pos, list & other, const_iterator opos) KERBAL_NOEXCEPT;
 
 				KERBAL_CONSTEXPR20
-				void splice(const_iterator pos, list& other, const_iterator first, const_iterator last) KERBAL_NOEXCEPT;
+				void splice(const_iterator pos, list & other, const_iterator first, const_iterator last) KERBAL_NOEXCEPT;
 
 #		if __cplusplus >= 201103L
 

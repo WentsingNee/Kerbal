@@ -91,6 +91,12 @@ namespace kerbal
 			}
 
 			KERBAL_CONSTEXPR20
+			void list_type_unrelated::splice(basic_const_iterator pos, list_type_unrelated & other) KERBAL_NOEXCEPT
+			{
+				list_type_unrelated::splice(pos, other.basic_begin(), other.basic_end());
+			}
+
+			KERBAL_CONSTEXPR20
 			void list_type_unrelated::splice(basic_const_iterator pos, basic_const_iterator opos) KERBAL_NOEXCEPT
 			{
 				basic_iterator opos_mut(opos.cast_to_mutable());
@@ -104,13 +110,10 @@ namespace kerbal
 				if (first == last) {
 					return;
 				}
-				basic_iterator first_mut(first.cast_to_mutable());
-				basic_iterator last_mut(last.cast_to_mutable());
-				node_base * start = first_mut.current;
-				node_base * end = last_mut.current;
-				node_base * back = end->prev;
-				start->prev->next = end;
-				end->prev = start->prev;
+
+				std::pair<node_base *, node_base *> range(list_type_unrelated::__unhook_node(first.cast_to_mutable(), last.cast_to_mutable()));
+				node_base * start = range.first;
+				node_base * back = range.second;
 				list_type_unrelated::__hook_node(pos, start, back);
 			}
 
@@ -156,12 +159,16 @@ namespace kerbal
 
 			KERBAL_CONSTEXPR20
 			inline
-			void list_type_unrelated::__unhook_node(node_base * start, node_base * back) KERBAL_NOEXCEPT
+			std::pair<list_type_unrelated::node_base *, list_type_unrelated::node_base *>
+			list_type_unrelated::__unhook_node(basic_iterator first, basic_iterator last) KERBAL_NOEXCEPT
 			{
-				node_base * pre = start->prev;
-				node_base * end = back->next;
-				end->prev = pre;
-				pre->next = end;
+				node_base * start = first.current;
+				node_base * prev = start->prev;
+				node_base * end = last.current;
+				node_base * back = end->prev;
+				end->prev = prev;
+				prev->next = end;
+				return std::pair<node_base *, node_base *>(start, back);
 			}
 
 			KERBAL_CONSTEXPR20
@@ -616,38 +623,6 @@ namespace kerbal
 					}
 				}
 			}
-
-			template <typename Tp>
-			KERBAL_CONSTEXPR20
-			void list_allocator_unrelated<Tp>::splice(const_iterator pos, list_allocator_unrelated & other) KERBAL_NOEXCEPT
-			{
-				this->splice(pos, other.cbegin(), other.cend());
-			}
-
-			template <typename Tp>
-			KERBAL_CONSTEXPR20
-			void list_allocator_unrelated<Tp>::splice(const_iterator pos, const_iterator opos) KERBAL_NOEXCEPT
-			{
-				list_type_unrelated::splice(pos, opos);
-			}
-
-			template <typename Tp>
-			KERBAL_CONSTEXPR20
-			void list_allocator_unrelated<Tp>::splice(const_iterator pos, const_iterator first, const_iterator last) KERBAL_NOEXCEPT
-			{
-				list_type_unrelated::splice(pos, first, last);
-			}
-
-#		if __cplusplus >= 201103L
-
-			template <typename Tp>
-			KERBAL_CONSTEXPR20
-			void list_allocator_unrelated<Tp>::splice(const_iterator pos, list_allocator_unrelated && other) KERBAL_NOEXCEPT
-			{
-				this->splice(pos, other.cbegin(), other.cend());
-			}
-
-#		endif
 
 		} // namespace detail
 
