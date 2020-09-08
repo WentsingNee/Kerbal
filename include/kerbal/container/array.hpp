@@ -13,6 +13,7 @@
 #define KERBAL_CONTAINER_ARRAY_HPP
 
 #include <kerbal/algorithm/sequence_compare.hpp>
+#include <kerbal/assign/ilist.hpp>
 #include <kerbal/compatibility/constexpr.hpp>
 #include <kerbal/compatibility/noexcept.hpp>
 #include <kerbal/iterator/iterator_traits.hpp>
@@ -116,6 +117,15 @@ namespace kerbal
 				KERBAL_CONSTEXPR14
 				array(std::initializer_list<value_type> src);
 
+#		else
+
+				template <typename Up>
+				array(const kerbal::assign::assign_list<Up> & src);
+
+#		endif
+
+#		if __cplusplus >= 201103L
+
 				KERBAL_CONSTEXPR
 				array(array && src) = default;
 
@@ -157,6 +167,15 @@ namespace kerbal
 				KERBAL_CONSTEXPR14
 				array& operator=(std::initializer_list<value_type> src);
 
+#		else
+
+				template <typename Up>
+				array& operator=(const kerbal::assign::assign_list<Up> & src);
+
+#		endif
+
+#		if __cplusplus >= 201103L
+
 				array& operator=(array && src) = default;
 
 #		endif
@@ -190,6 +209,12 @@ namespace kerbal
 				 */
 				KERBAL_CONSTEXPR14
 				void assign(std::initializer_list<value_type> src);
+
+#		else
+
+				template <typename Up>
+				void assign(const kerbal::assign::assign_list<Up> & src);
+
 #		endif
 
 				/** @brief 返回指向数组首元素的迭代器 */
@@ -308,19 +333,18 @@ namespace kerbal
 				 * @brief 返回与该 array 所等价的 C 风格数组类型的引用, 方便与专门为 C 风格数组类型设计的 API 交互
 				 * @return 与该 array 所等价的 C 风格数组类型的引用
 				 * @warning 必须保证数组元素存满时才可调用此方法
-				 * @throw std::exception Throw this exception when call this method while the array is not full
 				 */
 				KERBAL_CONSTEXPR14
-				equal_c_array_reference c_arr();
+				equal_c_array_reference c_arr() KERBAL_NOEXCEPT;
 
 				KERBAL_CONSTEXPR14
-				const_equal_c_array_reference c_arr() const;
+				const_equal_c_array_reference c_arr() const KERBAL_NOEXCEPT;
 
 				KERBAL_CONSTEXPR
-				const_equal_c_array_reference const_c_arr() const;
+				const_equal_c_array_reference const_c_arr() const KERBAL_NOEXCEPT;
 
 				KERBAL_CONSTEXPR
-				const_pointer data() const;
+				const_pointer data() const KERBAL_NOEXCEPT;
 
 				/**
 				 * @brief Swap the array with another one.
@@ -340,14 +364,14 @@ namespace kerbal
 
 		template <typename Tp, size_t M, size_t N>
 		KERBAL_CONSTEXPR
-		bool operator==(const array<Tp, M> & lhs, const array<Tp, N> & rhs) KERBAL_NOEXCEPT
+		bool operator==(const array<Tp, M> &, const array<Tp, N> &) KERBAL_NOEXCEPT
 		{
 			return false;
 		}
 
 		template <typename Tp, size_t M, size_t N>
 		KERBAL_CONSTEXPR
-		bool operator!=(const array<Tp, M> & lhs, const array<Tp, N> & rhs) KERBAL_NOEXCEPT
+		bool operator!=(const array<Tp, M> &, const array<Tp, N> &) KERBAL_NOEXCEPT
 		{
 			return true;
 		}

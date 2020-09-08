@@ -60,6 +60,15 @@ namespace kerbal
 		{
 		}
 
+#	else
+
+		template <typename Tp, size_t N>
+		template <typename Up>
+		array<Tp, N>::array(const kerbal::assign::assign_list<Up> & src)
+		{
+			this->assign(src.cbegin(), src.cend());
+		}
+
 #	endif
 
 
@@ -114,6 +123,17 @@ namespace kerbal
 			return *this;
 		}
 
+#	else
+
+		template <typename Tp, size_t N>
+		template <typename Up>
+		array<Tp, N>& array<Tp, N>::operator=(const kerbal::assign::assign_list<Up> & src)
+		{
+			this->assign(src.begin(), src.end());
+			return *this;
+		}
+
+
 #	endif
 
 
@@ -149,6 +169,15 @@ namespace kerbal
 		template <typename Tp, size_t N>
 		KERBAL_CONSTEXPR14
 		void array<Tp, N>::assign(std::initializer_list<value_type> src)
+		{
+			this->assign(src.begin(), src.end());
+		}
+
+#	else
+
+		template <typename Tp, size_t N>
+		template <typename Up>
+		void array<Tp, N>::assign(const kerbal::assign::assign_list<Up> & src)
 		{
 			this->assign(src.begin(), src.end());
 		}
@@ -368,7 +397,7 @@ namespace kerbal
 		template <typename Tp, size_t N>
 		KERBAL_CONSTEXPR14
 		typename array<Tp, N>::equal_c_array_reference
-		array<Tp, N>::c_arr()
+		array<Tp, N>::c_arr() KERBAL_NOEXCEPT
 		{
 			return this->storage;
 		}
@@ -376,7 +405,7 @@ namespace kerbal
 		template <typename Tp, size_t N>
 		KERBAL_CONSTEXPR14
 		typename array<Tp, N>::const_equal_c_array_reference
-		array<Tp, N>::c_arr() const
+		array<Tp, N>::c_arr() const KERBAL_NOEXCEPT
 		{
 			return this->storage;
 		}
@@ -384,7 +413,7 @@ namespace kerbal
 		template <typename Tp, size_t N>
 		KERBAL_CONSTEXPR
 		typename array<Tp, N>::const_equal_c_array_reference
-		array<Tp, N>::const_c_arr() const
+		array<Tp, N>::const_c_arr() const KERBAL_NOEXCEPT
 		{
 			return this->storage;
 		}
@@ -392,7 +421,7 @@ namespace kerbal
 		template <typename Tp, size_t N>
 		KERBAL_CONSTEXPR
 		typename array<Tp, N>::const_pointer
-		array<Tp, N>::data() const
+		array<Tp, N>::data() const KERBAL_NOEXCEPT
 		{
 			return this->storage + 0;
 		}
