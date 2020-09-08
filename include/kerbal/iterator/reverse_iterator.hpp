@@ -20,6 +20,8 @@
 #include <kerbal/operators/dereferenceable.hpp>
 #include <kerbal/operators/incr_decr.hpp>
 #include <kerbal/operators/subtractable.hpp>
+#include <kerbal/type_traits/cv_deduction.hpp>
+#include <kerbal/type_traits/integral_constant.hpp>
 
 #if __cplusplus >= 201103L
 #	include <type_traits>
@@ -38,23 +40,33 @@ namespace kerbal
 		{
 
 			template <typename BidirectionalIterator>
-			struct is_inplace: kerbal::type_traits::false_type
+			struct reverse_iterator_base_is_inplace : kerbal::type_traits::false_type
 			{
 			};
 
 			template <typename Tp>
-			struct is_inplace<Tp*>: kerbal::type_traits::true_type
+			struct reverse_iterator_base_is_inplace<Tp*> : kerbal::type_traits::true_type
 			{
 			};
 
-			template <typename BidirectionalIterator, bool inplace = is_inplace<BidirectionalIterator>::value>
-			class __reverse_iterator_base
+			template <typename BidirectionalIterator,
+						bool inplace = reverse_iterator_base_is_inplace<
+										typename kerbal::type_traits::remove_cv<BidirectionalIterator>::type
+									>::value>
+			class __reverse_iterator_base;
+
+
+			template <typename BidirectionalIterator>
+			class __reverse_iterator_base<BidirectionalIterator, false>
 			{
 				private:
 					typedef BidirectionalIterator iterator_type;
 					typedef kerbal::iterator::iterator_traits<iterator_type> iterator_traits;
 
 					typedef typename iterator_traits::reference				reference;
+
+				public:
+					typedef kerbal::type_traits::false_type					is_inplace_base;
 
 				protected:
 					iterator_type iter;
@@ -99,6 +111,9 @@ namespace kerbal
 					typedef kerbal::iterator::iterator_traits<iterator_type> iterator_traits;
 
 					typedef typename iterator_traits::reference				reference;
+
+				public:
+					typedef kerbal::type_traits::true_type					is_inplace_base;
 
 				protected:
 					iterator_type iter;
