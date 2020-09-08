@@ -12,6 +12,8 @@
 #ifndef KERBAL_CONTAINER_DETAIL_SINGLE_LIST_NODE_HPP
 #define KERBAL_CONTAINER_DETAIL_SINGLE_LIST_NODE_HPP
 
+#include <kerbal/container/fwd/single_list.fwd.hpp>
+
 #include <kerbal/algorithm/modifier.hpp>
 #include <kerbal/compatibility/constexpr.hpp>
 #include <kerbal/compatibility/method_overload_tag.hpp>
@@ -33,30 +35,28 @@ namespace kerbal
 	namespace container
 	{
 
-		template <typename Tp, typename Allocator>
-		class single_list;
-
 		namespace detail
 		{
-			template <typename Tp>
-			class sl_node;
-
-			template <typename Tp>
-			class sl_iter;
-
-			template <typename Tp>
-			class sl_kiter;
 
 			class sl_node_base: kerbal::utility::noncopyable
 			{
 				private:
-					template <typename Up, typename Allocator>
+					friend class kerbal::container::detail::sl_type_unrelated;
+
+					template <typename Tp>
+					friend class kerbal::container::detail::sl_allocator_unrelated;
+
+					template <typename Tp, typename Allocator>
 					friend class kerbal::container::single_list;
 
-					template <typename Up>
+					friend class sl_iter_type_unrelated;
+
+					friend class sl_kiter_type_unrelated;
+
+					template <typename Tp>
 					friend class sl_iter;
 
-					template <typename Up>
+					template <typename Tp>
 					friend class sl_kiter;
 
 				private:
@@ -110,14 +110,14 @@ namespace kerbal
 					typedef sl_node_base super;
 
 				private:
+					friend class kerbal::container::detail::sl_allocator_unrelated<Tp>;
+
 					template <typename Up, typename Allocator>
 					friend class kerbal::container::single_list;
 
-					template <typename Up>
-					friend class sl_iter;
+					friend class kerbal::container::detail::sl_iter<Tp>;
 
-					template <typename Up>
-					friend class sl_kiter;
+					friend class kerbal::container::detail::sl_kiter<Tp>;
 
 				private:
 					Tp value;
@@ -172,14 +172,14 @@ namespace kerbal
 					typedef sl_node_base super;
 
 				private:
+					friend class kerbal::container::detail::sl_allocator_unrelated<Tp[N]>;
+
 					template <typename Up, typename Allocator>
 					friend class kerbal::container::single_list;
 
-					template <typename Up>
-					friend class sl_iter;
+					friend class kerbal::container::detail::sl_iter<Tp[N]>;
 
-					template <typename Up>
-					friend class sl_kiter;
+					friend class kerbal::container::detail::sl_kiter<Tp[N]>;
 
 				private:
 					Tp value[N];
@@ -238,6 +238,7 @@ namespace kerbal
 
 					template <typename Up>
 					explicit sl_node(kerbal::utility::in_place_t, const Up (&arg) [N])
+							: super()
 					{
 						kerbal::algorithm::copy(arg, arg + N, this->value);
 					}
