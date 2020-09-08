@@ -25,7 +25,7 @@
 #include <utility>
 
 #if __cplusplus >= 201103L
-# include <type_traits>
+#	include <type_traits>
 #endif
 
 namespace kerbal
@@ -39,10 +39,10 @@ namespace kerbal
 		};
 
 		template <typename Tp, typename Up>
-		struct compressed_pair;
+		class compressed_pair;
 
 		template <typename Tp, typename Up, int>
-		struct __compressed_pair_impl;
+		class __compressed_pair_impl;
 
 		template <typename Tp, typename Up>
 		struct __compressed_pair_inner_typedef_helper
@@ -65,11 +65,11 @@ namespace kerbal
 #		endif
 
 				template <typename __Tp, typename __Up, int>
-				friend struct __compressed_pair_impl;
+				friend class __compressed_pair_impl;
 		};
 
 		template <typename Tp, typename Up>
-		struct __compressed_pair_impl<Tp, Up, 0>
+		class __compressed_pair_impl<Tp, Up, 0>
 		{
 			public:
 				typedef Tp first_type;
@@ -297,7 +297,7 @@ namespace kerbal
 		};
 
 		template <typename Tp, typename Up>
-		struct __compressed_pair_impl<Tp, Up, 1> : private kerbal::type_traits::remove_cv<Up>::type
+		class __compressed_pair_impl<Tp, Up, 1> : private kerbal::type_traits::remove_cv<Up>::type
 		{
 			public:
 				typedef Tp first_type;
@@ -525,7 +525,7 @@ namespace kerbal
 		};
 
 		template <typename Tp, typename Up>
-		struct __compressed_pair_impl<Tp, Up, 2> : private kerbal::type_traits::remove_cv<Tp>::type
+		class __compressed_pair_impl<Tp, Up, 2> : private kerbal::type_traits::remove_cv<Tp>::type
 		{
 			public:
 				typedef Tp first_type;
@@ -753,7 +753,7 @@ namespace kerbal
 		};
 
 		template <typename Tp, typename Up>
-		struct __compressed_pair_impl<Tp, Up, 3> :
+		class __compressed_pair_impl<Tp, Up, 3> :
 													private kerbal::type_traits::remove_cv<Tp>::type,
 													private kerbal::type_traits::remove_cv<Up>::type
 		{
@@ -1092,7 +1092,7 @@ namespace kerbal
 
 
 		template <typename Tp, typename Up>
-		struct compressed_pair : public kerbal::utility::__compressed_pair_impl<Tp, Up, __compressed_pair_policy_switch<Tp, Up>::value >
+		class compressed_pair: public kerbal::utility::__compressed_pair_impl<Tp, Up, __compressed_pair_policy_switch<Tp, Up>::value >
 		{
 			public:
 				typedef Tp first_type;
@@ -1525,5 +1525,78 @@ namespace kerbal
 } // namespace kerbal
 
 #endif
+
+
+/*
+
+ note: constructor for compressed_pair
+
+	KERBAL_CONSTEXPR
+	compressed_pair();
+
+#if __cplusplus < 201103L
+
+	KERBAL_CONSTEXPR
+	compressed_pair(first_type_const_reference __first, second_type_const_reference __second);
+
+	KERBAL_CONSTEXPR
+	compressed_pair(compressed_pair_default_construct_tag tag, second_type_const_reference __second);
+
+	KERBAL_CONSTEXPR
+	compressed_pair(first_type_const_reference __first, compressed_pair_default_construct_tag tag);
+
+	template <typename Tp2, typename Up2>
+	KERBAL_CONSTEXPR
+	compressed_pair(const Tp2 & __first, const Up2 & __second);
+
+	template <typename Up2>
+	KERBAL_CONSTEXPR
+	compressed_pair(compressed_pair_default_construct_tag tag, const Up2 & __second);
+
+	template <typename Tp2>
+	KERBAL_CONSTEXPR
+	compressed_pair(const Tp2 & __first, compressed_pair_default_construct_tag tag);
+
+#else
+
+	template <typename Tp2, typename Up2>
+	KERBAL_CONSTEXPR
+	compressed_pair(Tp2&& __first, Up2&& __second);
+
+	template <typename Up2>
+	KERBAL_CONSTEXPR
+	compressed_pair(compressed_pair_default_construct_tag tag, Up2&& __second);
+
+	template <typename Tp2>
+	KERBAL_CONSTEXPR
+	compressed_pair(Tp2&& __first, compressed_pair_default_construct_tag tag);
+
+#endif
+
+	template <typename Tp2, typename Up2>
+	KERBAL_CONSTEXPR14
+	explicit
+	compressed_pair(const kerbal::utility::compressed_pair<Tp2, Up2> & pair);
+
+	template <typename Tp2, typename Up2>
+	KERBAL_CONSTEXPR14
+	explicit
+	compressed_pair(const std::pair<Tp2, Up2> & pair);
+
+
+#if __cplusplus >= 201103L
+
+	template <typename Tp2, typename Up2>
+	KERBAL_CONSTEXPR14
+	compressed_pair(kerbal::utility::compressed_pair<Tp2, Up2> && pair);
+
+	template <typename Tp2, typename Up2>
+	KERBAL_CONSTEXPR14
+	compressed_pair(std::pair<Tp2, Up2> && pair);
+
+#endif
+
+*/
+
 
 #endif // KERBAL_UTILITY_COMPRESSED_PAIR_HPP
