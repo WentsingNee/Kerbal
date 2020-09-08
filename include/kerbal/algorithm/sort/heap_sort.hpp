@@ -26,8 +26,6 @@ namespace kerbal
 		KERBAL_CONSTEXPR14
 		void heap_sort(BidirectionalIterator first, BidirectionalIterator last, Compare compare)
 		{
-			typedef BidirectionalIterator iterator;
-			typedef typename kerbal::iterator::iterator_traits<iterator>::value_type value_type;
 			kerbal::algorithm::make_heap(first, last, compare);
 			kerbal::algorithm::sort_heap(first, last, compare);
 		}

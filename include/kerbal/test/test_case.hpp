@@ -62,7 +62,7 @@ namespace kerbal
 		struct test_case
 		{
 
-				typedef void (*call_ptr_t) (int, char*[], kerbal::test::assert_record&);
+				typedef void (*call_ptr_t) (kerbal::test::assert_record&);
 
 				const char * name;
 				call_ptr_t call_ptr;
@@ -121,9 +121,9 @@ namespace kerbal
 #define __KERBAL_TEST_REGISTER_UNIT_TAG(LINE) __KERBAL_TEST_REGISTER_UNIT_TAG_HLEPER(LINE)
 
 #define KERBAL_TEST_CASE(name, description) \
-	void name(int args, char* argv[], kerbal::test::assert_record&); \
+	void name(kerbal::test::assert_record&); \
 	static const int __KERBAL_TEST_REGISTER_UNIT_TAG(__LINE__) = (__register_test_suit(#name, name, description), 0); \
-	void name(int args, char* argv[], kerbal::test::assert_record& record)
+	void name(kerbal::test::assert_record& record)
 
 
 #define KERBAL_TEST_CASE_END
@@ -191,6 +191,11 @@ do {\
 #define KERBAL_TEST_CHECK_EQUAL_STATIC(lhs, rhs) do {\
 	KERBAL_STATIC_ASSERT((lhs) == (rhs), "Check failed!"); \
 	KERBAL_TEST_CHECK_EQUAL(lhs, rhs); \
+} while(false);
+
+#define KERBAL_TEST_CHECK_STATIC(statement) do {\
+	KERBAL_STATIC_ASSERT(static_cast<bool>(statement), "Check failed!"); \
+	KERBAL_TEST_CHECK(statement); \
 } while(false);
 
 

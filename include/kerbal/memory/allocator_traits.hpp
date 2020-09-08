@@ -361,7 +361,7 @@ namespace kerbal
 				private:
 					template <typename T, typename ... Args>
 					KERBAL_CONSTEXPR20
-					static void __construct(kerbal::type_traits::false_type, Alloc& alloc, T* p, Args&& ... args)
+					static void __construct(kerbal::type_traits::false_type, Alloc&, T* p, Args&& ... args)
 					{
 #			if KERBAL_ENABLE_CONSTEXPR20
 						std::construct_at(p, std::forward<Args>(args)...);
@@ -427,7 +427,7 @@ namespace kerbal
 				private:
 					template <typename T>
 					KERBAL_CONSTEXPR20
-					static void __destroy(kerbal::type_traits::false_type, Alloc & alloc, T * p)
+					static void __destroy(kerbal::type_traits::false_type, Alloc &, T * p)
 											KERBAL_CONDITIONAL_NOEXCEPT(
 													std::is_nothrow_destructible<T>::value
 											)
@@ -546,25 +546,25 @@ namespace kerbal
 				}
 
 				template <typename T>
-				static void construct(Alloc & alloc, T * p)
+				static void construct(Alloc &, T * p)
 				{
 					::new(static_cast<void*>(p)) T();
 				}
 
 				template <typename T, typename Arg0>
-				static void construct(Alloc & alloc, T * p, const Arg0& arg0)
+				static void construct(Alloc &, T * p, const Arg0& arg0)
 				{
 					::new(static_cast<void*>(p)) T(arg0);
 				}
 
 				template <typename T, typename Arg0, typename Arg1>
-				static void construct(Alloc & alloc, T * p, const Arg0& arg0, const Arg1& arg1)
+				static void construct(Alloc &, T * p, const Arg0& arg0, const Arg1& arg1)
 				{
 					::new(static_cast<void*>(p)) T(arg0, arg1);
 				}
 
 				template <typename T, typename Arg0, typename Arg1, typename Arg2>
-				static void construct(Alloc & alloc, T * p, const Arg0& arg0, const Arg1& arg1, const Arg2& arg2)
+				static void construct(Alloc &, T * p, const Arg0& arg0, const Arg1& arg1, const Arg2& arg2)
 				{
 					::new(static_cast<void*>(p)) T(arg0, arg1, arg2);
 				}

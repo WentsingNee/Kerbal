@@ -183,7 +183,6 @@ namespace kerbal
 		{
 			typedef ForwardIterator iterator;
 			typedef typename kerbal::iterator::iterator_traits<iterator>::difference_type difference_type;
-			typedef typename kerbal::iterator::iterator_traits<iterator>::value_type value_type;
 			difference_type const len(kerbal::iterator::distance(first, last));
 			kerbal::algorithm::merge_sort_n_afford_allocator(first, len, allocator, cmp);
 		}

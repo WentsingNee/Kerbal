@@ -345,7 +345,6 @@ namespace kerbal
 								RandomAccessIterator hint, Comparator comparator, std::random_access_iterator_tag)
 			{
 				typedef RandomAccessIterator iterator;
-				typedef typename kerbal::iterator::iterator_traits<iterator>::difference_type difference_type;
 
 				if (hint == last) {
 				} else if (comparator(*hint, value)) { // *hint < value
@@ -443,7 +442,6 @@ namespace kerbal
 							RandomAccessIterator hint, Comparator comparator, std::random_access_iterator_tag)
 			{
 				typedef RandomAccessIterator iterator;
-				typedef typename kerbal::iterator::iterator_traits<iterator>::difference_type difference_type;
 
 				if (hint == last) {
 				} else if (comparator(value, *hint)) { // *hint > value

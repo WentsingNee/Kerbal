@@ -315,14 +315,14 @@ namespace kerbal
 
 		template <typename Tp, size_t N>
 		KERBAL_CONSTEXPR
-		size_t size(const Tp (&arr)[N]) KERBAL_NOEXCEPT
+		size_t size(const Tp (&)[N]) KERBAL_NOEXCEPT
 		{
 			return N;
 		}
 
 		template <typename Tp, size_t N>
 		KERBAL_CONSTEXPR
-		bool empty(const Tp (&arr)[N]) KERBAL_NOEXCEPT
+		bool empty(const Tp (&)[N]) KERBAL_NOEXCEPT
 		{
 			return false;
 		}

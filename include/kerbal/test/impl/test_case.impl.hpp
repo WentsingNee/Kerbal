@@ -45,10 +45,9 @@ namespace kerbal
 		}
 
 		inline
-		void run_test_case(size_t case_id, int argc, char* argv[])
+		void run_test_case(size_t case_id, int, char*[])
 		{
 			register_list_type & register_list = __get_register_list();
-			typedef register_list_type::size_type size_type;
 			typedef register_list_type::const_reference const_reference;
 
 			const_reference item = register_list[case_id];
@@ -60,7 +59,7 @@ namespace kerbal
 			kerbal::test::assert_record record;
 
 			try {
-				call_ptr(argc, argv, record);
+				call_ptr(record);
 			} catch (...) {
 				record.items.back().result = running_result::EXCEPTION;
 				printf("test case[%zu]: %s (%s): EXCEPTION\n", case_id, name, description);
@@ -70,7 +69,7 @@ namespace kerbal
 			int success = 0;
 			int failure = 0;
 
-			for (int i = 0; i < record.items.size(); ++i) {
+			for (std::vector<assert_item>::size_type i = 0; i < record.items.size(); ++i) {
 				switch (record.items[i].result) {
 					case kerbal::test::running_result::SUCCESS: {
 						++success;
@@ -104,8 +103,8 @@ namespace kerbal
 		{
 			register_list_type & register_list = __get_register_list();
 
-			typedef typename register_list_type::size_type size_type;
-			typedef typename register_list_type::const_reference const_reference;
+			typedef register_list_type::size_type size_type;
+			typedef register_list_type::const_reference const_reference;
 			for (size_type i = 0; i < register_list.size(); ++i) {
 				const_reference item = register_list[i];
 				const char * case_name = item.name;
@@ -123,7 +122,7 @@ namespace kerbal
 		void run_all_test_case(int argc, char* argv[])
 		{
 			register_list_type & register_list = __get_register_list();
-			typedef typename register_list_type::size_type size_type;
+			typedef register_list_type::size_type size_type;
 
 			for (size_type i = 0; i < register_list.size(); ++i) {
 				run_test_case(i, argc, argv);

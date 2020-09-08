@@ -184,7 +184,6 @@ namespace kerbal
 		InputIterator
 		find(InputIterator first, InputIterator last, const Type & value)
 		{
-			typedef typename kerbal::iterator::iterator_traits<InputIterator>::value_type iter_value_type;
 			return kerbal::algorithm::__find(first, last, value, kerbal::iterator::iterator_category(first));
 		}
 
@@ -511,7 +510,6 @@ namespace kerbal
 		KERBAL_CONSTEXPR14
 		size_t count(InputIterator first, InputIterator last, const Type & value)
 		{
-			typedef typename kerbal::iterator::iterator_traits<InputIterator>::value_type iter_value_type;
 			return kerbal::algorithm::__count(first, last, value, kerbal::iterator::iterator_category(first));
 		}
 
