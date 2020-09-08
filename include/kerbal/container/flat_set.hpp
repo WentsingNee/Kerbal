@@ -23,11 +23,11 @@ namespace kerbal
 
 		template <typename Tp, typename KeyCompare = std::less<Tp>, typename Allocator = std::allocator<Tp> >
 		class flat_set
-				: public kerbal::container::detail::__flat_set_base<Tp, kerbal::container::flat_ordered<Tp, Tp, KeyCompare, default_extract<Tp, Tp>, Allocator> >
+				: public kerbal::container::detail::flat_set_base<Tp, kerbal::container::flat_ordered<Tp, Tp, KeyCompare, default_extract<Tp, Tp>, Allocator> >
 		{
 			private:
 				typedef kerbal::container::flat_ordered<Tp, Tp, KeyCompare, default_extract<Tp, Tp>, Allocator> Ordered;
-				typedef kerbal::container::detail::__flat_set_base<Tp, Ordered> super;
+				typedef kerbal::container::detail::flat_set_base<Tp, Ordered> super;
 
 			public:
 				typedef typename super::key_compare			key_compare;
@@ -100,7 +100,7 @@ namespace kerbal
 
 				void assign(const flat_set & src)
 				{
-					this->__ordered_agent().assign(src.__ordered_agent());
+					this->ordered.assign(src.ordered);
 				}
 
 				flat_set& operator=(const flat_set & src)
@@ -121,65 +121,65 @@ namespace kerbal
 
 				void reserve(size_type new_cap)
 				{
-					this->__ordered_agent().reserve(new_cap);
+					this->ordered.reserve(new_cap);
 				}
 
 				void swap(flat_set & ano)
 				{
-					this->__ordered_agent().swap(ano.__ordered_agent());
+					this->ordered.swap(ano.ordered);
 				}
 
 				template <typename Allocator2>
 				friend bool operator==(const flat_set<Tp, KeyCompare, Allocator> & lhs,
 										const flat_set<Tp, KeyCompare, Allocator2> & rhs)
 				{
-					return lhs.__ordered_agent() == rhs.__ordered_agent();
+					return lhs.ordered == rhs.ordered;
 				}
 
 				template <typename Allocator2>
 				friend bool operator!=(const flat_set<Tp, KeyCompare, Allocator> & lhs,
 										const flat_set<Tp, KeyCompare, Allocator2> & rhs)
 				{
-					return lhs.__ordered_agent() != rhs.__ordered_agent();
+					return lhs.ordered != rhs.ordered;
 				}
 
 				template <typename Allocator2>
 				friend bool operator<(const flat_set<Tp, KeyCompare, Allocator> & lhs,
 										const flat_set<Tp, KeyCompare, Allocator2> & rhs)
 				{
-					return lhs.__ordered_agent() < rhs.__ordered_agent();
+					return lhs.ordered < rhs.ordered;
 				}
 
 				template <typename Allocator2>
 				friend bool operator<=(const flat_set<Tp, KeyCompare, Allocator> & lhs,
 										const flat_set<Tp, KeyCompare, Allocator2> & rhs)
 				{
-					return lhs.__ordered_agent() <= rhs.__ordered_agent();
+					return lhs.ordered <= rhs.ordered;
 				}
 
 				template <typename Allocator2>
 				friend bool operator>(const flat_set<Tp, KeyCompare, Allocator> & lhs,
 										const flat_set<Tp, KeyCompare, Allocator2> & rhs)
 				{
-					return lhs.__ordered_agent() > rhs.__ordered_agent();
+					return lhs.ordered > rhs.ordered;
 				}
 
 				template <typename Allocator2>
 				friend bool operator>=(const flat_set<Tp, KeyCompare, Allocator> & lhs,
 										const flat_set<Tp, KeyCompare, Allocator2> & rhs)
 				{
-					return lhs.__ordered_agent() >= rhs.__ordered_agent();
+					return lhs.ordered >= rhs.ordered;
 				}
 
 		};
 
 		template <typename Tp, typename KeyCompare = std::less<Tp>, typename Allocator = std::allocator<Tp> >
 		class flat_multiset
-				: public kerbal::container::detail::__flat_multiset_base<Tp, kerbal::container::flat_ordered<Tp, Tp, KeyCompare, default_extract<Tp, Tp>, Allocator> >
+				: public kerbal::container::detail::flat_multiset_base<Tp, kerbal::container::flat_ordered<Tp, Tp, KeyCompare, default_extract<Tp, Tp>, Allocator> >
 		{
 			private:
 				typedef kerbal::container::flat_ordered<Tp, Tp, KeyCompare, default_extract<Tp, Tp>, Allocator> Ordered;
-				typedef kerbal::container::detail::__flat_multiset_base<Tp, Ordered> super;
+				typedef kerbal::container::detail::flat_multiset_base<Tp, Ordered> super;
 
 			public:
 				typedef typename super::key_compare			key_compare;
@@ -250,7 +250,7 @@ namespace kerbal
 
 				void assign(const flat_multiset & src)
 				{
-					this->__ordered_agent().assign(src.__ordered_agent());
+					this->ordered.assign(src.ordered);
 				}
 
 				flat_multiset& operator=(const flat_multiset & src)
@@ -271,54 +271,54 @@ namespace kerbal
 
 				void reserve(size_type new_cap)
 				{
-					this->__ordered_agent().reserve(new_cap);
+					this->ordered.reserve(new_cap);
 				}
 
 				void swap(flat_multiset & ano)
 				{
-					this->__ordered_agent().swap(ano.__ordered_agent());
+					this->ordered.swap(ano.ordered);
 				}
 
 				template <typename Allocator2>
 				friend bool operator==(const flat_multiset<Tp, KeyCompare, Allocator> & lhs,
 										const flat_multiset<Tp, KeyCompare, Allocator2> & rhs)
 				{
-					return lhs.__ordered_agent() == rhs.__ordered_agent();
+					return lhs.ordered == rhs.ordered;
 				}
 
 				template <typename Allocator2>
 				friend bool operator!=(const flat_multiset<Tp, KeyCompare, Allocator> & lhs,
 										const flat_multiset<Tp, KeyCompare, Allocator2> & rhs)
 				{
-					return lhs.__ordered_agent() != rhs.__ordered_agent();
+					return lhs.ordered != rhs.ordered;
 				}
 
 				template <typename Allocator2>
 				friend bool operator<(const flat_multiset<Tp, KeyCompare, Allocator> & lhs,
 										const flat_multiset<Tp, KeyCompare, Allocator2> & rhs)
 				{
-					return lhs.__ordered_agent() < rhs.__ordered_agent();
+					return lhs.ordered < rhs.ordered;
 				}
 
 				template <typename Allocator2>
 				friend bool operator<=(const flat_multiset<Tp, KeyCompare, Allocator> & lhs,
 										const flat_multiset<Tp, KeyCompare, Allocator2> & rhs)
 				{
-					return lhs.__ordered_agent() <= rhs.__ordered_agent();
+					return lhs.ordered <= rhs.ordered;
 				}
 
 				template <typename Allocator2>
 				friend bool operator>(const flat_multiset<Tp, KeyCompare, Allocator> & lhs,
 										const flat_multiset<Tp, KeyCompare, Allocator2> & rhs)
 				{
-					return lhs.__ordered_agent() > rhs.__ordered_agent();
+					return lhs.ordered > rhs.ordered;
 				}
 
 				template <typename Allocator2>
 				friend bool operator>=(const flat_multiset<Tp, KeyCompare, Allocator> & lhs,
 										const flat_multiset<Tp, KeyCompare, Allocator2> & rhs)
 				{
-					return lhs.__ordered_agent() >= rhs.__ordered_agent();
+					return lhs.ordered >= rhs.ordered;
 				}
 
 		};

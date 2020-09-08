@@ -23,11 +23,11 @@ namespace kerbal
 
 		template <typename Tp, std::size_t N, typename KeyCompare = std::less<Tp> >
 		class static_flat_set
-				: public kerbal::container::detail::__flat_set_base<Tp, kerbal::container::static_ordered<Tp, N, Tp, KeyCompare> >
+				: public kerbal::container::detail::flat_set_base<Tp, kerbal::container::static_ordered<Tp, N, Tp, KeyCompare> >
 		{
 			private:
 				typedef kerbal::container::static_ordered<Tp, N, Tp, KeyCompare> Ordered;
-				typedef kerbal::container::detail::__flat_set_base<Tp, Ordered> super;
+				typedef kerbal::container::detail::flat_set_base<Tp, Ordered> super;
 
 			public:
 				typedef typename super::key_compare			key_compare;
@@ -52,17 +52,20 @@ namespace kerbal
 
 			public:
 
+				KERBAL_CONSTEXPR
 				static_flat_set() :
 						super()
 				{
 				}
 
+				KERBAL_CONSTEXPR
 				explicit static_flat_set(key_compare kc) :
 						super(kc)
 				{
 				}
 
 				template <typename InputIterator>
+				KERBAL_CONSTEXPR14
 				static_flat_set(InputIterator first, InputIterator last,
 						typename kerbal::type_traits::enable_if<
 							kerbal::iterator::is_input_compatible_iterator<InputIterator>::value,
@@ -73,6 +76,7 @@ namespace kerbal
 				}
 
 				template <typename InputIterator>
+				KERBAL_CONSTEXPR14
 				static_flat_set(InputIterator first, InputIterator last, key_compare kc,
 						typename kerbal::type_traits::enable_if<
 							kerbal::iterator::is_input_compatible_iterator<InputIterator>::value,
@@ -84,11 +88,13 @@ namespace kerbal
 
 #		if __cplusplus >= 201103L
 
+				KERBAL_CONSTEXPR14
 				static_flat_set(std::initializer_list<value_type> src) :
 						super(src)
 				{
 				}
 
+				KERBAL_CONSTEXPR14
 				static_flat_set(std::initializer_list<value_type> src, key_compare kc) :
 						super(src, kc)
 				{
@@ -96,11 +102,13 @@ namespace kerbal
 
 #		endif
 
+				KERBAL_CONSTEXPR14
 				void assign(const static_flat_set & src)
 				{
-					this->__ordered_agent().assign(src.__ordered_agent());
+					this->ordered.assign(src.ordered);
 				}
 
+				KERBAL_CONSTEXPR14
 				static_flat_set& operator=(const static_flat_set & src)
 				{
 					this->assign(src);
@@ -109,6 +117,7 @@ namespace kerbal
 
 #		if __cplusplus >= 201103L
 
+				KERBAL_CONSTEXPR14
 				static_flat_set& operator=(std::initializer_list<value_type> src)
 				{
 					this->super::assign(src);
@@ -117,67 +126,75 @@ namespace kerbal
 
 #		endif
 
+				KERBAL_CONSTEXPR
 				bool full() const
 				{
-					return this->__ordered_agent().full();
+					return this->ordered.full();
 				}
 
+				KERBAL_CONSTEXPR14
 				void swap(static_flat_set & ano)
 				{
-					this->__ordered_agent().swap(ano.__ordered_agent());
+					this->ordered.swap(ano.ordered);
 				}
 
 				template <size_t M>
+				KERBAL_CONSTEXPR14
 				friend bool operator==(const static_flat_set<Tp, M, KeyCompare> & lhs,
 										const static_flat_set<Tp, N, KeyCompare> & rhs)
 				{
-					return lhs.__ordered_agent() == rhs.__ordered_agent();
+					return lhs.ordered == rhs.ordered;
 				}
 
 				template <size_t M>
+				KERBAL_CONSTEXPR14
 				friend bool operator!=(const static_flat_set<Tp, M, KeyCompare> & lhs,
 										const static_flat_set<Tp, N, KeyCompare> & rhs)
 				{
-					return lhs.__ordered_agent() != rhs.__ordered_agent();
+					return lhs.ordered != rhs.ordered;
 				}
 
 				template <size_t M>
+				KERBAL_CONSTEXPR14
 				friend bool operator<(const static_flat_set<Tp, M, KeyCompare> & lhs,
 										const static_flat_set<Tp, N, KeyCompare> & rhs)
 				{
-					return lhs.__ordered_agent() < rhs.__ordered_agent();
+					return lhs.ordered < rhs.ordered;
 				}
 
 				template <size_t M>
+				KERBAL_CONSTEXPR14
 				friend bool operator<=(const static_flat_set<Tp, M, KeyCompare> & lhs,
 										const static_flat_set<Tp, N, KeyCompare> & rhs)
 				{
-					return lhs.__ordered_agent() <= rhs.__ordered_agent();
+					return lhs.ordered <= rhs.ordered;
 				}
 
 				template <size_t M>
+				KERBAL_CONSTEXPR14
 				friend bool operator>(const static_flat_set<Tp, M, KeyCompare> & lhs,
 										const static_flat_set<Tp, N, KeyCompare> & rhs)
 				{
-					return lhs.__ordered_agent() > rhs.__ordered_agent();
+					return lhs.ordered > rhs.ordered;
 				}
 
 				template <size_t M>
+				KERBAL_CONSTEXPR14
 				friend bool operator>=(const static_flat_set<Tp, M, KeyCompare> & lhs,
 										const static_flat_set<Tp, N, KeyCompare> & rhs)
 				{
-					return lhs.__ordered_agent() >= rhs.__ordered_agent();
+					return lhs.ordered >= rhs.ordered;
 				}
 
 		};
 
 		template <typename Tp, std::size_t N, typename KeyCompare = std::less<Tp> >
 		class static_flat_multiset
-				: public kerbal::container::detail::__flat_multiset_base<Tp, kerbal::container::static_ordered<Tp, N, Tp, KeyCompare> >
+				: public kerbal::container::detail::flat_multiset_base<Tp, kerbal::container::static_ordered<Tp, N, Tp, KeyCompare> >
 		{
 			private:
 				typedef kerbal::container::static_ordered<Tp, N, Tp, KeyCompare> Ordered;
-				typedef kerbal::container::detail::__flat_multiset_base<Tp, Ordered> super;
+				typedef kerbal::container::detail::flat_multiset_base<Tp, Ordered> super;
 
 			public:
 				typedef typename super::key_compare			key_compare;
@@ -202,17 +219,20 @@ namespace kerbal
 
 			public:
 
+				KERBAL_CONSTEXPR
 				static_flat_multiset() :
 						super()
 				{
 				}
 
+				KERBAL_CONSTEXPR
 				explicit static_flat_multiset(key_compare kc) :
 						super(kc)
 				{
 				}
 
 				template <typename InputIterator>
+				KERBAL_CONSTEXPR14
 				static_flat_multiset(InputIterator first, InputIterator last,
 						typename kerbal::type_traits::enable_if<
 							kerbal::iterator::is_input_compatible_iterator<InputIterator>::value,
@@ -223,6 +243,7 @@ namespace kerbal
 				}
 
 				template <typename InputIterator>
+				KERBAL_CONSTEXPR14
 				static_flat_multiset(InputIterator first, InputIterator last, key_compare kc,
 						typename kerbal::type_traits::enable_if<
 							kerbal::iterator::is_input_compatible_iterator<InputIterator>::value,
@@ -234,11 +255,13 @@ namespace kerbal
 
 #		if __cplusplus >= 201103L
 
+				KERBAL_CONSTEXPR14
 				static_flat_multiset(std::initializer_list<value_type> src) :
 						super(src)
 				{
 				}
 
+				KERBAL_CONSTEXPR14
 				static_flat_multiset(std::initializer_list<value_type> src, key_compare kc) :
 						super(src, kc)
 				{
@@ -246,11 +269,13 @@ namespace kerbal
 
 #		endif
 
+				KERBAL_CONSTEXPR14
 				void assign(const static_flat_multiset& src)
 				{
-					this->__ordered_agent().assign(src.__ordered_agent());
+					this->ordered.assign(src.ordered);
 				}
 
+				KERBAL_CONSTEXPR14
 				static_flat_multiset& operator=(const static_flat_multiset& src)
 				{
 					this->assign(src);
@@ -259,6 +284,7 @@ namespace kerbal
 
 #		if __cplusplus >= 201103L
 
+				KERBAL_CONSTEXPR14
 				static_flat_multiset& operator=(std::initializer_list<value_type> src)
 				{
 					this->super::assign(src);
@@ -267,56 +293,64 @@ namespace kerbal
 
 #		endif
 
+				KERBAL_CONSTEXPR
 				bool full() const
 				{
-					return this->__ordered_agent().full();
+					return this->ordered.full();
 				}
 
+				KERBAL_CONSTEXPR14
 				void swap(static_flat_multiset& ano)
 				{
-					this->__ordered_agent().swap(ano.__ordered_agent());
+					this->ordered.swap(ano.ordered);
 				}
 
 				template <size_t M>
+				KERBAL_CONSTEXPR14
 				friend bool operator==(const static_flat_multiset<Tp, M, KeyCompare> & lhs,
 										const static_flat_multiset<Tp, N, KeyCompare> & rhs)
 				{
-					return lhs.__ordered_agent() == rhs.__ordered_agent();
+					return lhs.ordered == rhs.ordered;
 				}
 
 				template <size_t M>
+				KERBAL_CONSTEXPR14
 				friend bool operator!=(const static_flat_multiset<Tp, M, KeyCompare> & lhs,
 										const static_flat_multiset<Tp, N, KeyCompare> & rhs)
 				{
-					return lhs.__ordered_agent() != rhs.__ordered_agent();
+					return lhs.ordered != rhs.ordered;
 				}
 
 				template <size_t M>
+				KERBAL_CONSTEXPR14
 				friend bool operator<(const static_flat_multiset<Tp, M, KeyCompare> & lhs,
 										const static_flat_multiset<Tp, N, KeyCompare> & rhs)
 				{
-					return lhs.__ordered_agent() < rhs.__ordered_agent();
+					return lhs.ordered < rhs.ordered;
 				}
 
 				template <size_t M>
+				KERBAL_CONSTEXPR14
 				friend bool operator<=(const static_flat_multiset<Tp, M, KeyCompare> & lhs,
 										const static_flat_multiset<Tp, N, KeyCompare> & rhs)
 				{
-					return lhs.__ordered_agent() <= rhs.__ordered_agent();
+					return lhs.ordered <= rhs.ordered;
 				}
 
 				template <size_t M>
+				KERBAL_CONSTEXPR14
 				friend bool operator>(const static_flat_multiset<Tp, M, KeyCompare> & lhs,
 										const static_flat_multiset<Tp, N, KeyCompare> & rhs)
 				{
-					return lhs.__ordered_agent() > rhs.__ordered_agent();
+					return lhs.ordered > rhs.ordered;
 				}
 
 				template <size_t M>
+				KERBAL_CONSTEXPR14
 				friend bool operator>=(const static_flat_multiset<Tp, M, KeyCompare> & lhs,
 										const static_flat_multiset<Tp, N, KeyCompare> & rhs)
 				{
-					return lhs.__ordered_agent() >= rhs.__ordered_agent();
+					return lhs.ordered >= rhs.ordered;
 				}
 
 		};

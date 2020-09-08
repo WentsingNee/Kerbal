@@ -28,7 +28,7 @@ namespace kerbal
 		{
 
 			template <typename Tp, typename Ordered>
-			class __flat_set_common_base
+			class flat_set_common_base
 			{
 				public:
 					typedef typename Ordered::key_compare			key_compare;
@@ -53,180 +53,200 @@ namespace kerbal
 
 				protected:
 
-					Ordered __data;
+					Ordered ordered;
 
-					Ordered& __ordered_agent()
+					KERBAL_CONSTEXPR14
+					key_compare& key_comp_obj()
 					{
-						return this->__data;
+						return ordered.key_comp_obj();
 					}
 
-					const Ordered& __ordered_agent() const
+					KERBAL_CONSTEXPR14
+					const key_compare& key_comp_obj() const
 					{
-						return this->__data;
-					}
-
-					key_compare& __key_comp()
-					{
-						return this->__ordered_agent().__key_comp();
-					}
-
-					const key_compare& __key_comp() const
-					{
-						return this->__ordered_agent().__key_comp();
+						return ordered.key_comp_obj();
 					}
 
 				public:
 
+					KERBAL_CONSTEXPR14
 					const key_compare& key_comp() const
 					{
-						return this->__ordered_agent().key_comp();
+						return ordered.key_comp();
 					}
 
 				protected:
-					__flat_set_common_base() :
-							__data()
+					KERBAL_CONSTEXPR
+					flat_set_common_base() :
+							ordered()
 					{
 					}
 
-					explicit __flat_set_common_base(key_compare kc) :
-							__data(kc)
+					KERBAL_CONSTEXPR
+					explicit flat_set_common_base(key_compare kc) :
+							ordered(kc)
 					{
 					}
 
 				public:
 
+					KERBAL_CONSTEXPR14
 					const_iterator begin() const
 					{
-						return this->__ordered_agent().begin();
+						return ordered.begin();
 					}
 
+					KERBAL_CONSTEXPR14
 					const_iterator end() const
 					{
-						return this->__ordered_agent().end();
+						return ordered.end();
 					}
 
+					KERBAL_CONSTEXPR14
 					const_iterator cbegin() const
 					{
-						return this->__ordered_agent().cbegin();
+						return ordered.cbegin();
 					}
 
+					KERBAL_CONSTEXPR14
 					const_iterator cend() const
 					{
-						return this->__ordered_agent().cend();
+						return ordered.cend();
 					}
 
+					KERBAL_CONSTEXPR14
 					const_reverse_iterator rbegin() const
 					{
-						return this->__ordered_agent().rbegin();
+						return ordered.rbegin();
 					}
 
+					KERBAL_CONSTEXPR14
 					const_reverse_iterator rend() const
 					{
-						return this->__ordered_agent().rend();
+						return ordered.rend();
 					}
 
+					KERBAL_CONSTEXPR14
 					const_reverse_iterator crbegin() const
 					{
-						return this->__ordered_agent().crbegin();
+						return ordered.crbegin();
 					}
 
+					KERBAL_CONSTEXPR14
 					const_reverse_iterator crend() const
 					{
-						return this->__ordered_agent().crend();
+						return ordered.crend();
 					}
 
+					KERBAL_CONSTEXPR14
 					const_iterator nth(size_type index) const
 					{
-						return this->__ordered_agent().nth(index);
+						return ordered.nth(index);
 					}
 
+					KERBAL_CONSTEXPR
 					size_type index_of(const_iterator it) const
 					{
-						return this->__ordered_agent().index_of(it);
+						return ordered.index_of(it);
 					}
 
+					KERBAL_CONSTEXPR
 					size_type size() const
 					{
-						return this->__ordered_agent().size();
+						return ordered.size();
 					}
 
-					KERBAL_CONSTEXPR size_type max_size() const KERBAL_NOEXCEPT
+					KERBAL_CONSTEXPR
+					size_type max_size() const KERBAL_NOEXCEPT
 					{
-						return this->__ordered_agent().max_size();
+						return ordered.max_size();
 					}
 
+					KERBAL_CONSTEXPR
 					bool empty() const
 					{
-						return this->__ordered_agent().empty();
+						return ordered.empty();
 					}
 
+					KERBAL_CONSTEXPR14
 					const_iterator lower_bound(const key_type & key) const
 					{
-						return this->__ordered_agent().lower_bound(key);
+						return ordered.lower_bound(key);
 					}
 
+					KERBAL_CONSTEXPR14
 					const_iterator lower_bound(const key_type & key, const_iterator hint) const
 					{
-						return this->__ordered_agent().lower_bound(key, hint);
+						return ordered.lower_bound(key, hint);
 					}
 
+					KERBAL_CONSTEXPR14
 					const_iterator upper_bound(const key_type & key) const
 					{
-						return this->__ordered_agent().upper_bound(key);
+						return ordered.upper_bound(key);
 					}
 
+					KERBAL_CONSTEXPR14
 					const_iterator upper_bound(const key_type & key, const_iterator hint) const
 					{
-						return this->__ordered_agent().upper_bound(key, hint);
+						return ordered.upper_bound(key, hint);
 					}
 
+					KERBAL_CONSTEXPR14
 					std::pair<const_iterator, const_iterator> equal_range(const key_type & key) const
 					{
-						return this->__ordered_agent().equal_range(key);
+						return ordered.equal_range(key);
 					}
 
+					KERBAL_CONSTEXPR14
 					const_iterator find(const key_type & key) const
 					{
-						return this->__ordered_agent().find(key);
+						return ordered.find(key);
 					}
 
+					KERBAL_CONSTEXPR14
 					const_iterator find(const key_type & key, const_iterator hint) const
 					{
-						return this->__ordered_agent().find(key, hint);
+						return ordered.find(key, hint);
 					}
 
+					KERBAL_CONSTEXPR14
 					bool contains(const key_type & key) const
 					{
-						return this->__ordered_agent().contains(key);
+						return ordered.contains(key);
 					}
 
+					KERBAL_CONSTEXPR14
 					bool contains(const key_type & key, const_iterator hint) const
 					{
-						return this->__ordered_agent().contains(key, hint);
+						return ordered.contains(key, hint);
 					}
 
+					KERBAL_CONSTEXPR14
 					const_iterator erase(const_iterator pos)
 					{
-						return this->__ordered_agent().erase(pos);
+						return ordered.erase(pos);
 					}
 
+					KERBAL_CONSTEXPR14
 					const_iterator erase(const_iterator first, const_iterator last)
 					{
-						return this->__ordered_agent().erase(first, last);
+						return ordered.erase(first, last);
 					}
 
+					KERBAL_CONSTEXPR14
 					void clear()
 					{
-						this->__ordered_agent().clear();
+						ordered.clear();
 					}
 
 			};
 
 			template <typename Tp, typename Ordered>
-			class __flat_set_base: public __flat_set_common_base<Tp, Ordered>
+			class flat_set_base: public flat_set_common_base<Tp, Ordered>
 			{
 				private:
-					typedef __flat_set_common_base<Tp, Ordered> super;
+					typedef flat_set_common_base<Tp, Ordered> super;
 
 				public:
 					typedef typename super::key_compare			key_compare;
@@ -250,19 +270,22 @@ namespace kerbal
 					typedef typename super::const_reverse_iterator		const_reverse_iterator;
 
 				protected:
-					__flat_set_base() :
+					KERBAL_CONSTEXPR
+					flat_set_base() :
 							super()
 					{
 					}
 
-					explicit __flat_set_base(key_compare kc) :
+					KERBAL_CONSTEXPR
+					explicit flat_set_base(key_compare kc) :
 							super(kc)
 					{
 					}
 
 					template <typename InputIterator>
-					__flat_set_base(InputIterator first, InputIterator last,
-							typename kerbal::type_traits::enable_if<
+					KERBAL_CONSTEXPR14
+					flat_set_base(InputIterator first, InputIterator last,
+								  typename kerbal::type_traits::enable_if<
 								kerbal::iterator::is_input_compatible_iterator<InputIterator>::value,
 								int
 							>::type = 0) :
@@ -272,8 +295,9 @@ namespace kerbal
 					}
 
 					template <typename InputIterator>
-					__flat_set_base(InputIterator first, InputIterator last, key_compare kc,
-							typename kerbal::type_traits::enable_if<
+					KERBAL_CONSTEXPR14
+					flat_set_base(InputIterator first, InputIterator last, key_compare kc,
+								  typename kerbal::type_traits::enable_if<
 								kerbal::iterator::is_input_compatible_iterator<InputIterator>::value,
 								int
 							>::type = 0) :
@@ -283,30 +307,37 @@ namespace kerbal
 					}
 
 #			if __cplusplus >= 201103L
-					__flat_set_base(std::initializer_list<value_type> src) :
-							__flat_set_base(src.begin(), src.end())
+
+					KERBAL_CONSTEXPR14
+					flat_set_base(std::initializer_list<value_type> src) :
+							flat_set_base(src.begin(), src.end())
 					{
 					}
 
-					__flat_set_base(std::initializer_list<value_type> src, key_compare kc) :
-							__flat_set_base(src.begin(), src.end(), kc)
+					KERBAL_CONSTEXPR14
+					flat_set_base(std::initializer_list<value_type> src, key_compare kc) :
+							flat_set_base(src.begin(), src.end(), kc)
 					{
 					}
+
 #			endif
 
 				public:
 
+					KERBAL_CONSTEXPR14
 					size_type count(const key_type & key) const
 					{
 						return this->contains(key) ? 1 : 0;
 					}
 
+					KERBAL_CONSTEXPR14
 					size_type count(const key_type & key, const_iterator hint) const
 					{
 						return this->contains(key, hint) ? 1 : 0;
 					}
 
 					template <typename InputIterator>
+					KERBAL_CONSTEXPR14
 					typename kerbal::type_traits::enable_if<
 							kerbal::iterator::is_input_compatible_iterator<InputIterator>::value
 					>::type
@@ -317,23 +348,26 @@ namespace kerbal
 					}
 
 					template <typename InputIterator>
+					KERBAL_CONSTEXPR14
 					typename kerbal::type_traits::enable_if<
 							kerbal::iterator::is_input_compatible_iterator<InputIterator>::value
 					>::type
 					assign(InputIterator first, InputIterator last, key_compare kc)
 					{
 						this->clear();
-						this->__key_comp() = kc;
+						this->key_comp_obj() = kc;
 						this->insert(first, last);
 					}
 
 #			if __cplusplus >= 201103L
 
+					KERBAL_CONSTEXPR14
 					void assign(std::initializer_list<value_type> src)
 					{
 						this->assign(src.begin(), src.end());
 					}
 
+					KERBAL_CONSTEXPR14
 					void assign(std::initializer_list<value_type> src, key_compare kc)
 					{
 						this->assign(src.begin(), src.end(), kc);
@@ -341,41 +375,48 @@ namespace kerbal
 
 #			endif
 
+					KERBAL_CONSTEXPR14
 					std::pair<const_iterator, bool> insert(const_reference src)
 					{
-						return this->__ordered_agent().try_insert(src);
+						return this->ordered.try_insert(src);
 					}
 
+					KERBAL_CONSTEXPR14
 					std::pair<const_iterator, bool> insert(const_iterator hint, const_reference src)
 					{
-						return this->__ordered_agent().try_insert(hint, src);
+						return this->ordered.try_insert(hint, src);
 					}
 
 #			if __cplusplus >= 201103L
 
+					KERBAL_CONSTEXPR14
 					std::pair<const_iterator, bool> insert(rvalue_reference src)
 					{
-						return this->__ordered_agent().try_insert(kerbal::compatibility::move(src));
+						return this->ordered.try_insert(kerbal::compatibility::move(src));
 					}
 
+					KERBAL_CONSTEXPR14
 					std::pair<const_iterator, bool> insert(const_iterator hint, rvalue_reference src)
 					{
-						return this->__ordered_agent().try_insert(hint, kerbal::compatibility::move(src));
+						return this->ordered.try_insert(hint, kerbal::compatibility::move(src));
 					}
 
 #			endif
 
 					template <typename InputIterator>
+					KERBAL_CONSTEXPR14
 					void insert(InputIterator first, InputIterator last)
 					{
-						this->__ordered_agent().try_insert(first, last);
+						this->ordered.try_insert(first, last);
 					}
 
+					KERBAL_CONSTEXPR14
 					const_iterator erase(const key_type & key)
 					{
-						return this->__ordered_agent().erase_one(key);
+						return this->ordered.erase_one(key);
 					}
 
+					KERBAL_CONSTEXPR14
 					const_iterator erase(const_iterator hint, const key_type & key)
 					{
 						return this->erase(this->find(key, hint));
@@ -384,10 +425,10 @@ namespace kerbal
 			};
 
 			template <typename Tp, typename Ordered>
-			class __flat_multiset_base : public __flat_set_common_base<Tp, Ordered>
+			class flat_multiset_base : public flat_set_common_base<Tp, Ordered>
 			{
 				private:
-					typedef __flat_set_common_base<Tp, Ordered> super;
+					typedef flat_set_common_base<Tp, Ordered> super;
 
 				public:
 					typedef typename super::key_compare			key_compare;
@@ -411,19 +452,22 @@ namespace kerbal
 					typedef typename super::const_reverse_iterator		const_reverse_iterator;
 
 				protected:
-					__flat_multiset_base() :
+					KERBAL_CONSTEXPR
+					flat_multiset_base() :
 							super()
 					{
 					}
 
-					explicit __flat_multiset_base(key_compare kc) :
+					KERBAL_CONSTEXPR
+					explicit flat_multiset_base(key_compare kc) :
 							super(kc)
 					{
 					}
 
 					template <typename InputIterator>
-					__flat_multiset_base(InputIterator first, InputIterator last,
-							typename kerbal::type_traits::enable_if<
+					KERBAL_CONSTEXPR14
+					flat_multiset_base(InputIterator first, InputIterator last,
+									   typename kerbal::type_traits::enable_if<
 								kerbal::iterator::is_input_compatible_iterator<InputIterator>::value,
 								int
 							>::type = 0) :
@@ -433,8 +477,9 @@ namespace kerbal
 					}
 
 					template <typename InputIterator>
-					__flat_multiset_base(InputIterator first, InputIterator last, key_compare kc,
-							typename kerbal::type_traits::enable_if<
+					KERBAL_CONSTEXPR14
+					flat_multiset_base(InputIterator first, InputIterator last, key_compare kc,
+									   typename kerbal::type_traits::enable_if<
 								kerbal::iterator::is_input_compatible_iterator<InputIterator>::value,
 								int
 							>::type = 0) :
@@ -444,54 +489,64 @@ namespace kerbal
 					}
 
 #			if __cplusplus >= 201103L
-					__flat_multiset_base(std::initializer_list<value_type> src) :
-							__flat_multiset_base(src.begin(), src.end())
+
+					KERBAL_CONSTEXPR14
+					flat_multiset_base(std::initializer_list<value_type> src) :
+							flat_multiset_base(src.begin(), src.end())
 					{
 					}
 
-					__flat_multiset_base(std::initializer_list<value_type> src, key_compare kc) :
-							__flat_multiset_base(src.begin(), src.end(), kc)
+					KERBAL_CONSTEXPR14
+					flat_multiset_base(std::initializer_list<value_type> src, key_compare kc) :
+							flat_multiset_base(src.begin(), src.end(), kc)
 					{
 					}
+
 #			endif
 
 				public:
 
+					KERBAL_CONSTEXPR14
 					size_type count(const key_type & key) const
 					{
-						return this->__ordered_agent().count(key);
+						return this->ordered.count(key);
 					}
 
+					KERBAL_CONSTEXPR14
 					size_type count(const key_type & key, const_iterator hint) const
 					{
-						return this->__ordered_agent().count(key, hint);
+						return this->ordered.count(key, hint);
 					}
 
 					template <typename InputIterator>
+					KERBAL_CONSTEXPR14
 					typename kerbal::type_traits::enable_if<
 							kerbal::iterator::is_input_compatible_iterator<InputIterator>::value
 					>::type
 					assign(InputIterator first, InputIterator last)
 					{
-						this->__ordered_agent().assign(first, last);
+						this->ordered.assign(first, last);
 					}
 
 					template <typename InputIterator>
+					KERBAL_CONSTEXPR14
 					typename kerbal::type_traits::enable_if<
 							kerbal::iterator::is_input_compatible_iterator<InputIterator>::value
 					>::type
 					assign(InputIterator first, InputIterator last, key_compare kc)
 					{
-						this->__ordered_agent().assign(first, last, kc);
+						this->ordered.assign(first, last, kc);
 					}
 
 #			if __cplusplus >= 201103L
 
+					KERBAL_CONSTEXPR14
 					void assign(std::initializer_list<value_type> src)
 					{
 						this->assign(src.begin(), src.end());
 					}
 
+					KERBAL_CONSTEXPR14
 					void assign(std::initializer_list<value_type> src, key_compare kc)
 					{
 						this->assign(src.begin(), src.end(), kc);
@@ -499,39 +554,45 @@ namespace kerbal
 
 #			endif
 
+					KERBAL_CONSTEXPR14
 					const_iterator insert(const_reference src)
 					{
-						return this->__ordered_agent().insert(src);
+						return this->ordered.insert(src);
 					}
 
+					KERBAL_CONSTEXPR14
 					const_iterator insert(const_iterator hint, const_reference src)
 					{
-						return this->__ordered_agent().insert(hint, src);
+						return this->ordered.insert(hint, src);
 					}
 
 #			if __cplusplus >= 201103L
 
+					KERBAL_CONSTEXPR14
 					const_iterator insert(rvalue_reference src)
 					{
-						return this->__ordered_agent().insert(kerbal::compatibility::move(src));
+						return this->ordered.insert(kerbal::compatibility::move(src));
 					}
 
+					KERBAL_CONSTEXPR14
 					const_iterator insert(const_iterator hint, rvalue_reference src)
 					{
-						return this->__ordered_agent().insert(hint, kerbal::compatibility::move(src));
+						return this->ordered.insert(hint, kerbal::compatibility::move(src));
 					}
 
 #			endif
 
 					template <typename InputIterator>
+					KERBAL_CONSTEXPR14
 					void insert(InputIterator first, InputIterator last)
 					{
-						this->__ordered_agent().insert(first, last);
+						this->ordered.insert(first, last);
 					}
 
+					KERBAL_CONSTEXPR14
 					size_type erase(const key_type & key)
 					{
-						return this->__ordered_agent().erase(key);
+						return this->ordered.erase(key);
 					}
 
 			};

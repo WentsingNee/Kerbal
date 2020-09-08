@@ -27,7 +27,7 @@ namespace kerbal
 		template <typename Entity, size_t N, typename Key = Entity,
 			typename KeyCompare = std::less<Key>, typename Extract = default_extract<Key, Entity> >
 		class static_ordered:
-				public kerbal::container::detail::__flat_ordered_base<
+				public kerbal::container::detail::flat_ordered_base<
 						Entity, Key, KeyCompare, Extract, kerbal::container::static_vector<Entity, N>
 				>
 		{
@@ -35,7 +35,7 @@ namespace kerbal
 				typedef kerbal::container::static_vector<Entity, N> Sequence;
 
 			private:
-				typedef kerbal::container::detail::__flat_ordered_base<
+				typedef kerbal::container::detail::flat_ordered_base<
 										Entity, Key, KeyCompare, Extract, Sequence
 								> super;
 
@@ -62,17 +62,20 @@ namespace kerbal
 				typedef typename super::reverse_iterator			reverse_iterator;
 				typedef typename super::const_reverse_iterator		const_reverse_iterator;
 
+				KERBAL_CONSTEXPR
 				static_ordered() :
 						super()
 				{
 				}
 
+				KERBAL_CONSTEXPR
 				explicit static_ordered(key_compare kc) :
 						super(kc)
 				{
 				}
 
 				template <typename InputIterator>
+				KERBAL_CONSTEXPR14
 				static_ordered(InputIterator first, InputIterator last,
 						typename kerbal::type_traits::enable_if<
 							kerbal::iterator::is_input_compatible_iterator<InputIterator>::value,
@@ -83,6 +86,7 @@ namespace kerbal
 				}
 
 				template <typename InputIterator>
+				KERBAL_CONSTEXPR14
 				static_ordered(InputIterator first, InputIterator last, key_compare kc,
 						typename kerbal::type_traits::enable_if<
 							kerbal::iterator::is_input_compatible_iterator<InputIterator>::value,
@@ -94,11 +98,13 @@ namespace kerbal
 
 #		if __cplusplus >= 201103L
 
+				KERBAL_CONSTEXPR14
 				static_ordered(std::initializer_list<value_type> src) :
 						super(src)
 				{
 				}
 
+				KERBAL_CONSTEXPR14
 				static_ordered(std::initializer_list<value_type> src, key_compare kc) :
 						super(src, kc)
 				{
@@ -108,11 +114,13 @@ namespace kerbal
 
 				using super::assign;
 
+				KERBAL_CONSTEXPR14
 				void assign(const static_ordered& src)
 				{
-					this->assign(src.cbegin(), src.cend(), src.key_comp());
+					this->assign(src.cbegin(), src.cend(), src.key_comp_obj());
 				}
 
+				KERBAL_CONSTEXPR14
 				static_ordered& operator=(const static_ordered & src)
 				{
 					this->assign(src);
@@ -121,6 +129,7 @@ namespace kerbal
 
 #		if __cplusplus >= 201103L
 
+				KERBAL_CONSTEXPR14
 				static_ordered& operator=(std::initializer_list<value_type> src)
 				{
 					this->assign(src);
@@ -129,57 +138,65 @@ namespace kerbal
 
 #		endif
 
+				KERBAL_CONSTEXPR
 				bool full() const
 				{
-					return this->__sequence().full();
+					return this->sequence.full();
 				}
 
+				KERBAL_CONSTEXPR14
 				void swap(static_ordered & ano)
 				{
-					this->__sequence().swap(ano.__sequence());
-					kerbal::algorithm::swap(this->__key_comp(), ano.__key_comp());
+					this->sequence.swap(ano.sequence);
+					kerbal::algorithm::swap(this->key_comp_obj(), ano.key_comp_obj());
 				}
 
 				template <size_t M>
+				KERBAL_CONSTEXPR14
 				friend bool operator==(const static_ordered<Entity, M, Key, KeyCompare, Extract> & lhs,
 										const static_ordered<Entity, N, Key, KeyCompare, Extract> & rhs)
 				{
-					return lhs.__sequence() == rhs.__sequence();
+					return lhs.sequence == rhs.sequence;
 				}
 
 				template <size_t M>
+				KERBAL_CONSTEXPR14
 				friend bool operator!=(const static_ordered<Entity, M, Key, KeyCompare, Extract> & lhs,
 										const static_ordered<Entity, N, Key, KeyCompare, Extract> & rhs)
 				{
-					return lhs.__sequence() != rhs.__sequence();
+					return lhs.sequence != rhs.sequence;
 				}
 
 				template <size_t M>
+				KERBAL_CONSTEXPR14
 				friend bool operator<(const static_ordered<Entity, M, Key, KeyCompare, Extract> & lhs,
 										const static_ordered<Entity, N, Key, KeyCompare, Extract> & rhs)
 				{
-					return lhs.__sequence() < rhs.__sequence();
+					return lhs.sequence < rhs.sequence;
 				}
 
 				template <size_t M>
+				KERBAL_CONSTEXPR14
 				friend bool operator<=(const static_ordered<Entity, M, Key, KeyCompare, Extract> & lhs,
 										const static_ordered<Entity, N, Key, KeyCompare, Extract> & rhs)
 				{
-					return lhs.__sequence() <= rhs.__sequence();
+					return lhs.sequence <= rhs.sequence;
 				}
 
 				template <size_t M>
+				KERBAL_CONSTEXPR14
 				friend bool operator>(const static_ordered<Entity, M, Key, KeyCompare, Extract> & lhs,
 										const static_ordered<Entity, N, Key, KeyCompare, Extract> & rhs)
 				{
-					return lhs.__sequence() > rhs.__sequence();
+					return lhs.sequence > rhs.sequence;
 				}
 
 				template <size_t M>
+				KERBAL_CONSTEXPR14
 				friend bool operator>=(const static_ordered<Entity, M, Key, KeyCompare, Extract> & lhs,
 										const static_ordered<Entity, N, Key, KeyCompare, Extract> & rhs)
 				{
-					return lhs.__sequence() >= rhs.__sequence();
+					return lhs.sequence >= rhs.sequence;
 				}
 
 		};
