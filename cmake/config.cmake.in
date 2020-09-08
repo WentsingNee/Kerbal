@@ -19,6 +19,14 @@ if ("CXX" IN_LIST __enabled_lang)
     if (OpenMP_FOUND)
         include("${CMAKE_CURRENT_LIST_DIR}/@PROJECT_NAME@Targets-kerbal-omp.cmake")
     endif ()
+
+    ## kerbal-parallel
+
+    find_package(Threads)
+    if (Threads_FOUND)
+        include("${CMAKE_CURRENT_LIST_DIR}/@PROJECT_NAME@Targets-kerbal-parallel.cmake")
+    endif ()
+
 endif ()
 unset(__enabled_lang)
 
