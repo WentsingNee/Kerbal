@@ -31,6 +31,10 @@
 #	define KERBAL_ARCHITECTURE_ARM 2
 #endif
 
+#ifndef KERBAL_ARCHITECTURE_AARCH64
+#	define KERBAL_ARCHITECTURE_AARCH64 3
+#endif
+
 #ifndef KERBAL_ARCHITECTURE
 
 #	if KERBAL_COMPILER_ID == KERBAL_COMPILER_ID_GNU
@@ -51,6 +55,14 @@
 #			endif
 #		endif
 
+#		if defined(__aarch64__)
+#			if defined(KERBAL_ARCHITECTURE) && KERBAL_ARCHITECTURE != KERBAL_ARCHITECTURE_AARCH64
+#				warning "Macro KERBAL_ARCHITECTURE has defined!"
+#			else
+#				define KERBAL_ARCHITECTURE KERBAL_ARCHITECTURE_AARCH64
+#			endif
+#		endif
+
 #	elif KERBAL_COMPILER_ID == KERBAL_COMPILER_ID_CLANG
 
 #		if defined(__amd64__)
@@ -58,6 +70,22 @@
 #				warning "Macro KERBAL_ARCHITECTURE has defined!"
 #			else
 #				define KERBAL_ARCHITECTURE KERBAL_ARCHITECTURE_AMD64
+#			endif
+#		endif
+
+#		if defined(__arm__)
+#			if defined(KERBAL_ARCHITECTURE) && KERBAL_ARCHITECTURE != KERBAL_ARCHITECTURE_ARM
+#				warning "Macro KERBAL_ARCHITECTURE has defined!"
+#			else
+#				define KERBAL_ARCHITECTURE KERBAL_ARCHITECTURE_ARM
+#			endif
+#		endif
+
+#		if defined(__aarch64__)
+#			if defined(KERBAL_ARCHITECTURE) && KERBAL_ARCHITECTURE != KERBAL_ARCHITECTURE_AARCH64
+#				warning "Macro KERBAL_ARCHITECTURE has defined!"
+#			else
+#				define KERBAL_ARCHITECTURE KERBAL_ARCHITECTURE_AARCH64
 #			endif
 #		endif
 
