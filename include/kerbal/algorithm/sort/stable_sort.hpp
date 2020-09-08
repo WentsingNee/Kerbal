@@ -28,6 +28,48 @@ namespace kerbal
 	namespace algorithm
 	{
 
+		namespace detail
+		{
+
+			template <typename ForwardIterator, typename Compare>
+			KERBAL_CONSTEXPR14
+			bool stable_sort_n_afford_buffer_small_size(ForwardIterator & first,
+														typename kerbal::iterator::iterator_traits<ForwardIterator>::difference_type len,
+														Compare, std::forward_iterator_tag)
+			{
+				typedef ForwardIterator iterator;
+				typedef typename kerbal::iterator::iterator_traits<iterator>::difference_type difference_type;
+
+				if (len == 0) {
+					return true;
+				}
+				if (len == 1) {
+					++first;
+					return true;
+				}
+				return false;
+			}
+
+			template <typename ForwardIterator, typename Compare>
+			KERBAL_CONSTEXPR14
+			bool stable_sort_n_afford_buffer_small_size(ForwardIterator & first,
+														typename kerbal::iterator::iterator_traits<ForwardIterator>::difference_type len,
+														Compare cmp, std::bidirectional_iterator_tag)
+			{
+				typedef ForwardIterator iterator;
+				typedef typename kerbal::iterator::iterator_traits<iterator>::difference_type difference_type;
+
+				if (len <= 16) {
+					iterator last(kerbal::iterator::next(first, len));
+					kerbal::algorithm::directly_insertion_sort(first, last, cmp);
+					first = last;
+					return true;
+				}
+				return false;
+			}
+
+		} // namespace detail
+
 		/*
 		 * return first + len
 		 */
@@ -41,10 +83,8 @@ namespace kerbal
 			typedef ForwardIterator2 buffer_iterator;
 			typedef typename kerbal::iterator::iterator_traits<iterator>::difference_type difference_type;
 
-			if (len <= 16) {
-				iterator last(kerbal::iterator::next(first, len));
-				kerbal::algorithm::directly_insertion_sort(first, last, cmp);
-				return last;
+			if (detail::stable_sort_n_afford_buffer_small_size(first, len, cmp, kerbal::iterator::iterator_category(first))) {
+				return first;
 			}
 
 			const difference_type first_half_len = len / 2;
@@ -61,7 +101,7 @@ namespace kerbal
 			const iterator d_end(kerbal::algorithm::stable_sort_n_afford_buffer(c_end, d, buffer, cmp));
 			const buffer_iterator buffer_end(kerbal::algorithm::merge(b_end, c_end, c_end, d_end, buffer, cmp));
 
-			const iterator t(kerbal::iterator::next(b_end, second_half_len - first_half_len));
+			const iterator t(kerbal::iterator::next(b_end, static_cast<size_t>(second_half_len - first_half_len)));
 			kerbal::algorithm::merge(first, a_end, a_end, b_end, t, cmp);
 
 			kerbal::algorithm::detail::merge_sort_merge(buffer, buffer_end, t, d_end, first, cmp);
@@ -188,7 +228,6 @@ namespace kerbal
 		{
 			typedef ForwardIterator iterator;
 			typedef typename kerbal::iterator::iterator_traits<iterator>::difference_type difference_type;
-			typedef typename kerbal::iterator::iterator_traits<iterator>::value_type value_type;
 			difference_type len(kerbal::iterator::distance(first, last));
 			kerbal::algorithm::stable_sort_n_afford_allocator(first, len, allocator, cmp);
 		}
