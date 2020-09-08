@@ -75,10 +75,42 @@ namespace kerbal
 
 			}
 
-			// pre-cond: if pos == cend then p->next == NULL;
 			KERBAL_CONSTEXPR20
 			inline
-			void sl_type_unrelated::__hook_node_back(node_base* p) KERBAL_NOEXCEPT
+			void sl_type_unrelated::splice(basic_const_iterator pos, sl_type_unrelated & other)
+																							KERBAL_NOEXCEPT
+			{
+				this->splice(pos, other, other.basic_begin(), other.basic_end());
+			}
+
+			KERBAL_CONSTEXPR20
+			inline
+			void sl_type_unrelated::splice(basic_const_iterator pos, sl_type_unrelated & other, basic_const_iterator opos)
+																							KERBAL_NOEXCEPT
+			{
+				node_base * p = other.__unhook_node(opos.cast_to_mutable());
+				p->next = NULL;
+				this->__hook_node(pos, p);
+			}
+
+			KERBAL_CONSTEXPR20
+			inline
+			void sl_type_unrelated::splice(basic_const_iterator pos, sl_type_unrelated & other,
+											basic_const_iterator first, basic_const_iterator last) KERBAL_NOEXCEPT
+			{
+				if (first == last) {
+					return;
+				}
+				std::pair<node_base *, node_base *> range(other.__unhook_node(first.cast_to_mutable(), last.cast_to_mutable()));
+				node_base * start = range.first;
+				node_base * back = range.second;
+				back->next = NULL;
+				this->__hook_node(pos, start, back);
+			}
+
+			KERBAL_CONSTEXPR20
+			inline
+			void sl_type_unrelated::__hook_node_back(node_base * p) KERBAL_NOEXCEPT
 			{
 				node_base * prev = this->last_iter.current;
 				prev->next = p;
@@ -87,43 +119,90 @@ namespace kerbal
 
 			KERBAL_CONSTEXPR20
 			inline
-			void sl_type_unrelated::__hook_node_front(node_base* p) KERBAL_NOEXCEPT
+			void sl_type_unrelated::__hook_node_not_back(basic_iterator pos, node_base * p) KERBAL_NOEXCEPT
 			{
-				this->__hook_node(this->basic_begin(), p);
+				node_base * prev = pos.current;
+				p->next = prev->next;
+				prev->next = p;
 			}
 
 			KERBAL_CONSTEXPR20
 			inline
-			void sl_type_unrelated::__hook_node(basic_const_iterator pos, node_base* p) KERBAL_NOEXCEPT
+			void sl_type_unrelated::__hook_node(basic_const_iterator pos, node_base * p) KERBAL_NOEXCEPT
 			{
 				basic_iterator pos_mut(pos.cast_to_mutable());
 				if (pos_mut != this->basic_end()) {
-					node_base * prev = pos_mut.current;
-					p->next = prev->next;
-					prev->next = p;
+					__hook_node_not_back(pos_mut, p);
 				} else {
 					this->__hook_node_back(p);
 				}
 			}
 
-			// pre-cond: if pos == cend then back->next == NULL;
 			KERBAL_CONSTEXPR20
 			inline
-			void sl_type_unrelated::__hook_node(basic_const_iterator pos, node_base* start, node_base* back) KERBAL_NOEXCEPT
+			void sl_type_unrelated::__hook_node_back(node_base * start, node_base * back) KERBAL_NOEXCEPT
 			{
-				basic_iterator pos_mut(pos.cast_to_mutable());
-				node_base * prev = pos_mut.current;
-				if (pos_mut != this->basic_end()) {
-					back->next = prev->next;
-				} else {
-					this->last_iter = basic_iterator(back);
-				}
+				node_base * prev = this->last_iter.current;
+				this->last_iter = basic_iterator(back);
 				prev->next = start;
 			}
 
 			KERBAL_CONSTEXPR20
 			inline
-			void sl_type_unrelated::swap_with_empty(sl_type_unrelated& not_empty_list, sl_type_unrelated& empty_list) KERBAL_NOEXCEPT
+			void sl_type_unrelated::__hook_node_not_back(basic_iterator pos, node_base * start, node_base * back) KERBAL_NOEXCEPT
+			{
+				node_base * prev = pos.current;
+				back->next = prev->next;
+				prev->next = start;
+			}
+
+			KERBAL_CONSTEXPR20
+			inline
+			void sl_type_unrelated::__hook_node(basic_const_iterator pos, node_base * start, node_base * back) KERBAL_NOEXCEPT
+			{
+				basic_iterator pos_mut(pos.cast_to_mutable());
+				if (pos_mut != this->basic_end()) {
+					__hook_node_not_back(pos_mut, start, back);
+				} else {
+					this->__hook_node_back(start, back);
+				}
+			}
+
+			KERBAL_CONSTEXPR20
+			inline
+			sl_node_base *
+			sl_type_unrelated::__unhook_node(basic_iterator pos) KERBAL_NOEXCEPT
+			{
+				node_base * prev = pos.current;
+				node_base * p = prev->next;
+				prev->next = p->next;
+				if (p->next == NULL) { // is back node
+					this->last_iter = pos;
+				}
+				return p;
+			}
+
+			KERBAL_CONSTEXPR20
+			inline
+			std::pair<sl_type_unrelated::node_base *, sl_type_unrelated::node_base *>
+			sl_type_unrelated::__unhook_node(basic_iterator first, basic_iterator last) KERBAL_NOEXCEPT
+			{
+				node_base * prev = first.current;
+				node_base * start = prev->next;
+				node_base * back = last.current;
+
+				prev->next = back->next;
+
+				if (back->next == NULL) {
+					this->last_iter = first;
+				}
+
+				return std::pair<node_base *, node_base *>(start, back);
+			}
+
+			KERBAL_CONSTEXPR20
+			inline
+			void sl_type_unrelated::swap_with_empty(sl_type_unrelated & not_empty_list, sl_type_unrelated & empty_list) KERBAL_NOEXCEPT
 			{
 				empty_list.head_node.next = not_empty_list.head_node.next;
 				not_empty_list.head_node.next = NULL;

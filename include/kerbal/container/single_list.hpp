@@ -429,6 +429,17 @@ namespace kerbal
 				using sl_allocator_unrelated::iter_swap_fast;
 
 
+
+				KERBAL_CONSTEXPR20
+				void splice(const_iterator pos, single_list & other) KERBAL_NOEXCEPT;
+
+				KERBAL_CONSTEXPR20
+				void splice(const_iterator pos, single_list & other, const_iterator opos) KERBAL_NOEXCEPT;
+
+				KERBAL_CONSTEXPR20
+				void splice(const_iterator pos, single_list & other, const_iterator first, const_iterator last) KERBAL_NOEXCEPT;
+
+
 			//===================
 			//private
 

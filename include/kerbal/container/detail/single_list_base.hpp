@@ -94,34 +94,50 @@ namespace kerbal
 					void reverse(basic_iterator first, basic_iterator last) KERBAL_NOEXCEPT;
 
 					KERBAL_CONSTEXPR20
-					void splice(basic_iterator pos, sl_type_unrelated & other, basic_iterator opos) KERBAL_NOEXCEPT;
+					void splice(basic_const_iterator pos, sl_type_unrelated & other) KERBAL_NOEXCEPT;
 
 					KERBAL_CONSTEXPR20
-					void splice(basic_iterator pos, sl_type_unrelated & other, basic_iterator first, basic_iterator last) KERBAL_NOEXCEPT;
+					void splice(basic_const_iterator pos, sl_type_unrelated & other, basic_const_iterator opos) KERBAL_NOEXCEPT;
+
+					KERBAL_CONSTEXPR20
+					void splice(basic_const_iterator pos, sl_type_unrelated & other,
+								basic_const_iterator first, basic_const_iterator last) KERBAL_NOEXCEPT;
 
 				//===================
 				//private
 
+					// pre-cond: p->next == NULL;
 					KERBAL_CONSTEXPR20
 					void __hook_node_back(node_base * p) KERBAL_NOEXCEPT;
 
 					KERBAL_CONSTEXPR20
-					void __hook_node_front(node_base * p) KERBAL_NOEXCEPT;
+					static void __hook_node_not_back(basic_iterator pos, node_base * p) KERBAL_NOEXCEPT;
 
+					// pre-cond: if pos == cend then p->next == NULL;
 					KERBAL_CONSTEXPR20
 					void __hook_node(basic_const_iterator pos, node_base * p) KERBAL_NOEXCEPT;
 
+					// pre-cond: back->next == NULL;
+					KERBAL_CONSTEXPR20
+					void __hook_node_back(node_base * start, node_base * back) KERBAL_NOEXCEPT;
+
+					KERBAL_CONSTEXPR20
+					static void __hook_node_not_back(basic_iterator pos, node_base * start, node_base * back) KERBAL_NOEXCEPT;
+
+					// pre-cond: if pos == cend then back->next == NULL;
 					KERBAL_CONSTEXPR20
 					void __hook_node(basic_const_iterator pos, node_base * start, node_base * back) KERBAL_NOEXCEPT;
 
 					KERBAL_CONSTEXPR20
 					node_base * __unhook_node(basic_iterator pos) KERBAL_NOEXCEPT;
 
+					// pre-cond: first != last;
 					KERBAL_CONSTEXPR20
-					void __unhook_node(node_base * start, node_base * back) KERBAL_NOEXCEPT;
+					std::pair<node_base *, node_base *>
+					__unhook_node(basic_iterator first, basic_iterator last) KERBAL_NOEXCEPT;
 
 					KERBAL_CONSTEXPR20
-					void swap_with_empty(sl_type_unrelated& not_empty_list, sl_type_unrelated& empty_list) KERBAL_NOEXCEPT;
+					static void swap_with_empty(sl_type_unrelated & not_empty_list, sl_type_unrelated & empty_list) KERBAL_NOEXCEPT;
 
 			};
 

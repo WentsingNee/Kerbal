@@ -418,7 +418,7 @@ namespace kerbal
 		single_list<Tp, Allocator>::emplace_front(Args&& ... args)
 		{
 			node *p = this->__build_new_node(std::forward<Args>(args)...);
-			this->__hook_node_front(p);
+			this->__hook_node(this->basic_begin(), p);
 			return p->value;
 		}
 
@@ -429,7 +429,7 @@ namespace kerbal
 		single_list<Tp, Allocator>::emplace_front()
 		{
 			node *p = this->__build_new_node();
-			this->__hook_node_front(p);
+			this->__hook_node(this->basic_begin(), p);
 			return p->value;
 		}
 
@@ -439,7 +439,7 @@ namespace kerbal
 		single_list<Tp, Allocator>::emplace_front(const Arg0& arg0)
 		{
 			node *p = this->__build_new_node(arg0);
-			this->__hook_node_front(p);
+			this->__hook_node(this->basic_begin(), p);
 			return p->value;
 		}
 
@@ -449,7 +449,7 @@ namespace kerbal
 		single_list<Tp, Allocator>::emplace_front(const Arg0& arg0, const Arg1& arg1)
 		{
 			node *p = this->__build_new_node(arg0, arg1);
-			this->__hook_node_front(p);
+			this->__hook_node(this->basic_begin(), p);
 			return p->value;
 		}
 
@@ -459,7 +459,7 @@ namespace kerbal
 		single_list<Tp, Allocator>::emplace_front(const Arg0& arg0, const Arg1& arg1, const Arg2& arg2)
 		{
 			node *p = this->__build_new_node(arg0, arg1, arg2);
-			this->__hook_node_front(p);
+			this->__hook_node(this->basic_begin(), p);
 			return p->value;
 		}
 
@@ -683,12 +683,7 @@ namespace kerbal
 		single_list<Tp, Allocator>::erase(const_iterator pos)
 		{
 			iterator pos_mut(pos.cast_to_mutable());
-			node_base * prev = pos_mut.current;
-			node_base * p = prev->next;
-			prev->next = p->next;
-			if (p->next == NULL) { // is back node
-				this->last_iter = pos_mut;
-			}
+			node_base * p = sl_type_unrelated::__unhook_node(pos_mut);
 			this->__destroy_node(p);
 			return pos_mut;
 		}
@@ -698,21 +693,15 @@ namespace kerbal
 		typename single_list<Tp, Allocator>::iterator
 		single_list<Tp, Allocator>::erase(const_iterator first, const_iterator last)
 		{
-			iterator last_mut(last.cast_to_mutable());
-			if (first == last) {
-				return last_mut;
-			}
 			iterator first_mut(first.cast_to_mutable());
-			node_base * prev = first_mut.current;
-			node_base * start = prev->next;
-			node_base * back = last_mut.current;
-			node_base * next = back->next;
-			prev->next = next;
-			if (next == NULL) { // is back node
-				this->last_iter = first_mut;
+			iterator last_mut(last.cast_to_mutable());
+			if (first != last) {
+				std::pair<node_base *, node_base *> range(this->sl_type_unrelated::__unhook_node(first_mut, last_mut));
+				node_base * start = range.first;
+				node_base * back = range.second;
+				back->next = NULL;
+				this->__consecutive_destroy_node(start);
 			}
-			back->next = NULL;
-			this->__consecutive_destroy_node(start);
 			return first_mut;
 		}
 
@@ -762,6 +751,28 @@ namespace kerbal
 			this->swap_allocator_helper<propagate_on_container_swap::value>();
 
 			sl_allocator_unrelated::swap_allocator_unrelated(ano);
+		}
+
+		template <typename Tp, typename Allocator>
+		KERBAL_CONSTEXPR20
+		void single_list<Tp, Allocator>::splice(const_iterator pos, single_list & other) KERBAL_NOEXCEPT
+		{
+			this->sl_type_unrelated::splice(pos, other);
+		}
+
+		template <typename Tp, typename Allocator>
+		KERBAL_CONSTEXPR20
+		void single_list<Tp, Allocator>::splice(const_iterator pos, single_list & other, const_iterator opos) KERBAL_NOEXCEPT
+		{
+			this->sl_type_unrelated::splice(pos, other, opos);
+		}
+
+		template <typename Tp, typename Allocator>
+		KERBAL_CONSTEXPR20
+		void single_list<Tp, Allocator>::splice(const_iterator pos, single_list & other,
+												const_iterator first, const_iterator last) KERBAL_NOEXCEPT
+		{
+			this->sl_type_unrelated::splice(pos, other, first, last);
 		}
 
 #	if __cplusplus >= 201103L
