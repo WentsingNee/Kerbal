@@ -30,6 +30,7 @@
 #	include <type_traits>
 #else
 #	include <kerbal/type_traits/fundamental_deduction.hpp>
+#	include <kerbal/type_traits/member_pointer_deduction.hpp>
 #	include <kerbal/type_traits/pointer_deduction.hpp>
 #endif
 
@@ -47,7 +48,7 @@ namespace kerbal
 		template <typename Type>
 		struct is_trivial_stored_type:
 				kerbal::type_traits::bool_constant<
-						std::is_pod<typename kerbal::type_traits::remove_all_extents<Type>::type>::value
+						std::is_trivial<Type>::value
 				>
 		{
 		};
@@ -58,6 +59,7 @@ namespace kerbal
 		struct is_trivial_stored_type:
 				kerbal::type_traits::bool_constant<
 					kerbal::type_traits::is_fundamental<typename kerbal::type_traits::remove_all_extents<Type>::type>::value ||
+					kerbal::type_traits::is_member_pointer<typename kerbal::type_traits::remove_all_extents<Type>::type>::value ||
 					kerbal::type_traits::is_pointer<typename kerbal::type_traits::remove_all_extents<Type>::type>::value
 				>
 		{
