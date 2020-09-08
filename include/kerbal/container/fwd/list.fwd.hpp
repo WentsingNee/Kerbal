@@ -30,7 +30,7 @@ namespace kerbal
 			class list_allocator_unrelated;
 
 			template <typename Tp, typename Allocator, bool>
-			class list_base;
+			class list_allocator_overload;
 
 			class list_node_base;
 

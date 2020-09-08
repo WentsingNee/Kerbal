@@ -18,6 +18,7 @@
 #include <kerbal/operators/equality_comparable.hpp>
 #include <kerbal/operators/incr_decr.hpp>
 #include <kerbal/iterator/iterator_traits.hpp>
+#include <kerbal/iterator/reverse_iterator.hpp>
 
 #include <kerbal/container/detail/list_node.hpp>
 
@@ -38,12 +39,6 @@ namespace kerbal
 					public kerbal::operators::decrementable<list_iter_type_unrelated> // it--
 			{
 					friend class kerbal::container::detail::list_type_unrelated;
-
-					template <typename Tp>
-					friend class kerbal::container::detail::list_allocator_unrelated;
-
-					template <typename Tp, typename Allocator>
-					friend class kerbal::container::list;
 
 					friend class kerbal::container::detail::list_kiter_type_unrelated;
 
@@ -96,13 +91,10 @@ namespace kerbal
 					//bidirectional iterator interface
 					public kerbal::operators::decrementable<list_kiter_type_unrelated> // it--
 			{
+				private:
 					friend class kerbal::container::detail::list_type_unrelated;
 
-					template <typename Tp>
-					friend class kerbal::container::detail::list_allocator_unrelated;
-
-					template <typename Tp, typename Allocator>
-					friend class kerbal::container::list;
+					typedef list_iter_type_unrelated basic_iterator;
 
 				public:
 					typedef std::bidirectional_iterator_tag					iterator_category;
@@ -120,8 +112,9 @@ namespace kerbal
 					{
 					}
 
+				public:
 					KERBAL_CONSTEXPR
-					list_kiter_type_unrelated(const list_iter_type_unrelated & iter) KERBAL_NOEXCEPT :
+					list_kiter_type_unrelated(const basic_iterator & iter) KERBAL_NOEXCEPT :
 							current(iter.current)
 					{
 					}
@@ -148,9 +141,9 @@ namespace kerbal
 					}
 
 					KERBAL_CONSTEXPR14
-					list_iter_type_unrelated cast_to_mutable() const KERBAL_NOEXCEPT
+					basic_iterator cast_to_mutable() const KERBAL_NOEXCEPT
 					{
-						return list_iter_type_unrelated(const_cast<kerbal::container::detail::list_node_base*>(this->current));
+						return basic_iterator(const_cast<kerbal::container::detail::list_node_base*>(this->current));
 					}
 
 			};
@@ -316,6 +309,40 @@ namespace kerbal
 		} // namespace detail
 
 	} // namespace container
+
+	namespace iterator
+	{
+
+		namespace detail
+		{
+
+			template <>
+			struct reverse_iterator_base_is_inplace<kerbal::container::detail::list_iter_type_unrelated>:
+					kerbal::type_traits::true_type
+			{
+			};
+
+			template <>
+			struct reverse_iterator_base_is_inplace<kerbal::container::detail::list_kiter_type_unrelated>:
+					kerbal::type_traits::true_type
+			{
+			};
+
+			template <typename Tp>
+			struct reverse_iterator_base_is_inplace<kerbal::container::detail::list_iter<Tp> >:
+					kerbal::type_traits::true_type
+			{
+			};
+
+			template <typename Tp>
+			struct reverse_iterator_base_is_inplace<kerbal::container::detail::list_kiter<Tp> >:
+					kerbal::type_traits::true_type
+			{
+			};
+
+		} // namespace detail
+
+	} // namespace iterator
 
 } // namespace kerbal
 
