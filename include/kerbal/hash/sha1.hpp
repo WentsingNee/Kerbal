@@ -166,11 +166,7 @@ namespace kerbal
 				void update(ForwardIterator first, ForwardIterator last) KERBAL_NOEXCEPT;
 
 				KERBAL_CONSTEXPR14
-				void update(unsigned char * first, unsigned char * last) KERBAL_NOEXCEPT
-				{
-					this->update(static_cast<const unsigned char *>(first),
-								static_cast<const unsigned char *>(last));
-				}
+				void update(const unsigned char * first, const unsigned char * last) KERBAL_NOEXCEPT;
 
 				/**
 				 * Add padding and return the message digest.

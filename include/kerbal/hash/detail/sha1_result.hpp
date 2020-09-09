@@ -58,25 +58,25 @@ namespace kerbal
 				friend
 				std::ostream& operator<<(std::ostream& out, const SHA1_result & result)
 				{
-					char tmp[3];
-					tmp[2] = '\0';
+					char tmp[41];
+					tmp[40] = '\0';
 					for (size_t i = 0; i < 20; ++i) {
-						tmp[0] = to_ocx(static_cast<char>(result.hash[i] >> 4u));
-						tmp[1] = to_ocx(static_cast<char>(result.hash[i] % 16u));
-						out << tmp;
+						tmp[i * 2 + 0] = to_ocx(static_cast<char>(result.hash[i] >> 4u));
+						tmp[i * 2 + 1] = to_ocx(static_cast<char>(result.hash[i] % 16u));
 					}
+					out << tmp;
 					return out;
 				}
 
 				operator std::string() const
 				{
-					std::string s;
-					s.reserve(40);
+					char tmp[41];
+					tmp[40] = '\0';
 					for (size_t i = 0; i < 20; ++i) {
-						s.push_back(to_ocx(static_cast<char>(hash[i] >> 4u)));
-						s.push_back(to_ocx(static_cast<char>(hash[i] % 16u)));
+						tmp[i * 2 + 0] = to_ocx(static_cast<char>(hash[i] >> 4u));
+						tmp[i * 2 + 1] = to_ocx(static_cast<char>(hash[i] % 16u));
 					}
-					return s;
+					return std::string(tmp);
 				}
 
 				KERBAL_CONSTEXPR14
