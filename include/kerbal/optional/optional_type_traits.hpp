@@ -30,7 +30,7 @@ namespace kerbal
 	namespace optional
 	{
 		template <typename>
-		struct optional;
+		class optional;
 
 		///@private
 		template <typename Type>

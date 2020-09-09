@@ -2,20 +2,19 @@
  * @file       optional_hash.hpp
  * @brief
  * @date       2018-11-7
- * @author     peter
+ * @author     Peter
  * @copyright
- *      peter of [ThinkSpirit Laboratory](http://thinkspirit.org/)
+ *      Peter of [ThinkSpirit Laboratory](http://thinkspirit.org/)
  *   of [Nanjing University of Information Science & Technology](http://www.nuist.edu.cn/)
  *   all rights reserved
  */
 
-#ifndef KERBAL_OPTIONAL_OPTIONAL_HASH_HPP_
-#define KERBAL_OPTIONAL_OPTIONAL_HASH_HPP_
+#ifndef KERBAL_OPTIONAL_OPTIONAL_HASH_HPP
+#define KERBAL_OPTIONAL_OPTIONAL_HASH_HPP
+
+#include <kerbal/hash/hash.hpp>
 
 #include <cstddef>
-#include <kerbal/type_traits/enable_if.hpp>
-#include <kerbal/optional/optional_type_traits.hpp>
-#include <kerbal/hash/hash.hpp>
 
 namespace kerbal
 {
@@ -37,17 +36,26 @@ namespace kerbal
 		};
 
 		template <typename>
-		struct optional;
+		class optional;
+
+	} // namespace optional
+
+	namespace hash
+	{
 
 		template <typename ValueType>
-		struct hash<optional<ValueType> > :
-				public optional_hash<optional<ValueType>, hash<ValueType>, static_cast<size_t>(-3333)>
+		struct hash<kerbal::optional::optional<ValueType> > :
+				public kerbal::optional::optional_hash<
+							kerbal::optional::optional<ValueType>,
+							kerbal::hash::hash<ValueType>,
+							static_cast<size_t>(-3333)
+						>
 		{
 		};
 
-	} /* namespace optional */
+	} // namespace hash
 
-} /* namespace kerbal */
+} // namespace kerbal
 
 
-#endif /* KERBAL_OPTIONAL_OPTIONAL_HASH_HPP_ */
+#endif // KERBAL_OPTIONAL_OPTIONAL_HASH_HPP
