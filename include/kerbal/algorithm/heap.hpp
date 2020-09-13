@@ -22,84 +22,202 @@ namespace kerbal
 	namespace algorithm
 	{
 
-		template <typename RandomAccessIterator>
-		KERBAL_CONSTEXPR
-		RandomAccessIterator
-		__heap_left_son(RandomAccessIterator first, RandomAccessIterator parent, RandomAccessIterator last, std::random_access_iterator_tag)
+		namespace detail
 		{
-			typedef RandomAccessIterator iterator;
-			typedef typename kerbal::iterator::iterator_traits<iterator>::difference_type difference_type;
 
-			return kerbal::iterator::next_at_most(parent, kerbal::iterator::distance(first, parent) + 1, last);
-		}
-
-		template <typename ForwardIterator>
-		KERBAL_CONSTEXPR14
-		ForwardIterator
-		__heap_left_son(ForwardIterator first, ForwardIterator parent, ForwardIterator last, std::forward_iterator_tag)
-		{
-			if (parent == last) {
-				return last;
-			}
-
-			typedef ForwardIterator iterator;
-			iterator adv(kerbal::iterator::next(parent));
-
-			while (first != parent) {
-				if (adv != last) {
-					++adv;
-				} else {
+			template <typename ForwardIterator>
+			KERBAL_CONSTEXPR14
+			ForwardIterator
+			heap_left_son(ForwardIterator first, ForwardIterator parent, ForwardIterator last,
+							std::forward_iterator_tag)
+			{
+				if (parent == last) {
 					return last;
 				}
-				++first;
-			}
-			return adv;
-		}
 
-		template <typename ForwardIterator>
-		KERBAL_CONSTEXPR
-		ForwardIterator
-		__heap_left_son(ForwardIterator first, ForwardIterator parent, ForwardIterator last)
-		{
-			return kerbal::algorithm::__heap_left_son(first, parent, last, kerbal::iterator::iterator_category(first));
-		}
+				typedef ForwardIterator iterator;
+				iterator adv(kerbal::iterator::next(parent));
 
-		template <typename ForwardIterator, typename Compare>
-		KERBAL_CONSTEXPR14
-		void __adjust_top_down(ForwardIterator first, ForwardIterator last, Compare cmp)
-		{
-			typedef ForwardIterator iterator;
-
-			iterator current_adjust(first);
-			iterator left_son(kerbal::algorithm::__heap_left_son(first, current_adjust, last));
-			while (left_son != last) {
-				iterator right_son(kerbal::iterator::next(left_son));
-				if (right_son != last) { // current adjust have both left and right son
-					iterator & max_one(cmp(*left_son, *right_son) ? right_son : left_son);
-					if (cmp(*current_adjust, *max_one)) { // current < max_one
-						kerbal::algorithm::iter_swap(current_adjust, max_one);
-						current_adjust = max_one;
-						left_son = kerbal::algorithm::__heap_left_son(first, current_adjust, last);
+				while (first != parent) {
+					if (adv != last) {
+						++adv;
 					} else {
+						return last;
+					}
+					++first;
+				}
+				return adv;
+			}
+
+			template <typename RandomAccessIterator>
+			KERBAL_CONSTEXPR
+			RandomAccessIterator
+			heap_left_son(RandomAccessIterator first, RandomAccessIterator parent, RandomAccessIterator last,
+							std::random_access_iterator_tag)
+			{
+				typedef RandomAccessIterator iterator;
+				typedef typename kerbal::iterator::iterator_traits<iterator>::difference_type difference_type;
+
+				return kerbal::iterator::next_at_most(parent, kerbal::iterator::distance(first, parent) + 1, last);
+			}
+
+			template <typename ForwardIterator>
+			KERBAL_CONSTEXPR
+			ForwardIterator
+			heap_left_son(ForwardIterator first, ForwardIterator parent, ForwardIterator last)
+			{
+				return kerbal::algorithm::detail::heap_left_son(first, parent, last, kerbal::iterator::iterator_category(first));
+			}
+
+			/**
+			 * @require first != last
+			 */
+			template <typename ForwardIterator, typename Compare>
+			KERBAL_CONSTEXPR14
+			void adjust_down_unguarded(ForwardIterator first, ForwardIterator current_adjust, ForwardIterator last,
+										Compare cmp, std::forward_iterator_tag)
+			{
+				typedef ForwardIterator iterator;
+				typedef typename kerbal::iterator::iterator_traits<iterator>::difference_type difference_type;
+
+				difference_type step = kerbal::iterator::distance(first, current_adjust);
+				iterator left_son(kerbal::algorithm::detail::heap_left_son(first, current_adjust, last));
+				while (left_son != last) {
+					iterator right_son(kerbal::iterator::next(left_son));
+					if (right_son != last) { // current adjust have both left and right son
+						bool max_one_is_right = cmp(*left_son, *right_son);
+						iterator max_one(max_one_is_right ? right_son : left_son);
+						if (cmp(*current_adjust, *max_one)) { // current < max_one
+							kerbal::algorithm::iter_swap(current_adjust, max_one);
+							current_adjust = max_one;
+							step += max_one_is_right;
+							left_son = kerbal::iterator::next_at_most(current_adjust, step + 1, last);
+							step = step * 2 + 1;
+						} else {
+							break;
+						}
+					} else { // current adjust only have left son
+						if (cmp(*current_adjust, *left_son)) { // current < left
+							kerbal::algorithm::iter_swap(current_adjust, left_son);
+						}
 						break;
 					}
-				} else { // current adjust only have left son
-					if (cmp(*current_adjust, *left_son)) { // current < left
-						kerbal::algorithm::iter_swap(current_adjust, left_son);
-					}
-					break;
 				}
 			}
-		}
 
-		template <typename ForwardIterator>
-		KERBAL_CONSTEXPR14
-		void __adjust_top_down(ForwardIterator first, ForwardIterator last)
-		{
-			typedef ForwardIterator iterator;
-			typedef typename kerbal::iterator::iterator_traits<iterator>::value_type value_type;
-			kerbal::algorithm::__adjust_top_down(first, last, std::less<value_type>());
-		}
+			template <typename RandomAccessIterator, typename Compare>
+			KERBAL_CONSTEXPR14
+			void adjust_down_unguarded(RandomAccessIterator first, RandomAccessIterator current_adjust,
+										RandomAccessIterator last, Compare cmp, std::random_access_iterator_tag)
+			{
+				typedef RandomAccessIterator iterator;
+
+				iterator left_son(kerbal::algorithm::detail::heap_left_son(first, current_adjust, last));
+				while (left_son != last) {
+					iterator right_son(kerbal::iterator::next(left_son));
+					if (right_son != last) { // current adjust have both left and right son
+						iterator max_one(cmp(*left_son, *right_son) ? right_son : left_son);
+						if (cmp(*current_adjust, *max_one)) { // current < max_one
+							kerbal::algorithm::iter_swap(current_adjust, max_one);
+							current_adjust = max_one;
+							left_son = kerbal::algorithm::detail::heap_left_son(first, current_adjust, last);
+						} else {
+							break;
+						}
+					} else { // current adjust only have left son
+						if (cmp(*current_adjust, *left_son)) { // current < left
+							kerbal::algorithm::iter_swap(current_adjust, left_son);
+						}
+						break;
+					}
+				}
+			}
+
+			template <typename ForwardIterator, typename Compare>
+			KERBAL_CONSTEXPR14
+			void adjust_down_unguarded(ForwardIterator first, ForwardIterator current_adjust, ForwardIterator last,
+										Compare cmp)
+			{
+				adjust_down_unguarded(first, current_adjust, last, cmp, kerbal::iterator::iterator_category(first));
+			}
+
+			/**
+			 * @require first != last
+			 */
+			template <typename ForwardIterator, typename Compare>
+			KERBAL_CONSTEXPR14
+			void adjust_top_down_unguarded(ForwardIterator first, ForwardIterator last, Compare cmp,
+											std::forward_iterator_tag)
+			{
+				typedef ForwardIterator iterator;
+				typedef typename kerbal::iterator::iterator_traits<iterator>::difference_type difference_type;
+
+				iterator current_adjust(first);
+				difference_type step = 1;
+				iterator left_son(kerbal::iterator::next(current_adjust));
+				while (left_son != last) {
+					iterator right_son(kerbal::iterator::next(left_son));
+					if (right_son != last) { // current adjust have both left and right son
+						bool max_one_is_right = cmp(*left_son, *right_son);
+						iterator max_one(max_one_is_right ? right_son : left_son);
+						if (cmp(*current_adjust, *max_one)) { // current < max_one
+							kerbal::algorithm::iter_swap(current_adjust, max_one);
+							current_adjust = max_one;
+							step += max_one_is_right;
+							left_son = kerbal::iterator::next_at_most(current_adjust, step + 1, last);
+							step = step * 2 + 1;
+						} else {
+							break;
+						}
+					} else { // current adjust only have left son
+						if (cmp(*current_adjust, *left_son)) { // current < left
+							kerbal::algorithm::iter_swap(current_adjust, left_son);
+						}
+						break;
+					}
+				}
+			}
+
+			/**
+			 * @require first != last
+			 */
+			template <typename RandomAccessIterator, typename Compare>
+			KERBAL_CONSTEXPR14
+			void adjust_top_down_unguarded(RandomAccessIterator first, RandomAccessIterator last, Compare cmp,
+											std::random_access_iterator_tag)
+			{
+				typedef RandomAccessIterator iterator;
+
+				iterator current_adjust(first);
+				iterator left_son(kerbal::iterator::next(current_adjust));
+				while (left_son != last) {
+					iterator right_son(kerbal::iterator::next(left_son));
+					if (right_son != last) { // current adjust have both left and right son
+						iterator max_one(cmp(*left_son, *right_son) ? right_son : left_son);
+						if (cmp(*current_adjust, *max_one)) { // current < max_one
+							kerbal::algorithm::iter_swap(current_adjust, max_one);
+							current_adjust = max_one;
+							left_son = kerbal::algorithm::detail::heap_left_son(first, current_adjust, last);
+						} else {
+							break;
+						}
+					} else { // current adjust only have left son
+						if (cmp(*current_adjust, *left_son)) { // current < left
+							kerbal::algorithm::iter_swap(current_adjust, left_son);
+						}
+						break;
+					}
+				}
+			}
+
+			template <typename ForwardIterator, typename Compare>
+			KERBAL_CONSTEXPR14
+			void adjust_top_down_unguarded(ForwardIterator first, ForwardIterator last, Compare cmp)
+			{
+				kerbal::algorithm::detail::adjust_top_down_unguarded(first, last, cmp, kerbal::iterator::iterator_category(first));
+			}
+
+		} // namespace detail
 
 		template <typename BidirectionalIterator, typename Compare>
 		KERBAL_CONSTEXPR14
@@ -139,7 +257,7 @@ namespace kerbal
 				--last;
 				if (first != last) {
 					kerbal::algorithm::iter_swap(first, last);
-					kerbal::algorithm::__adjust_top_down(first, last, cmp);
+					kerbal::algorithm::detail::adjust_top_down_unguarded(first, last, cmp);
 				}
 			}
 		}
@@ -161,11 +279,11 @@ namespace kerbal
 			if (first == last) {
 				return;
 			}
-			iterator end(kerbal::iterator::next(first));
-			while (end != last) {
+			iterator next_after_first(kerbal::iterator::next(first));
+			while (next_after_first != last) {
 				--last;
 				kerbal::algorithm::iter_swap(first, last);
-				kerbal::algorithm::__adjust_top_down(first, last, cmp);
+				kerbal::algorithm::detail::adjust_top_down_unguarded(first, last, cmp);
 			}
 		}
 
