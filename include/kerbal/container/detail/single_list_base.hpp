@@ -94,6 +94,9 @@ namespace kerbal
 					void reverse(basic_iterator first, basic_iterator last) KERBAL_NOEXCEPT;
 
 					KERBAL_CONSTEXPR20
+					void reverse() KERBAL_NOEXCEPT;
+
+					KERBAL_CONSTEXPR20
 					void splice(basic_const_iterator pos, sl_type_unrelated & other) KERBAL_NOEXCEPT;
 
 					KERBAL_CONSTEXPR20
@@ -257,6 +260,12 @@ namespace kerbal
 
 					KERBAL_CONSTEXPR20
 					void iter_swap_fast(iterator a, iterator b);
+
+					KERBAL_CONSTEXPR20
+					void reverse(iterator first, iterator last) KERBAL_NOEXCEPT;
+
+					KERBAL_CONSTEXPR20
+					void reverse() KERBAL_NOEXCEPT;
 
 					KERBAL_CONSTEXPR20
 					void swap_allocator_unrelated(sl_allocator_unrelated & ano) KERBAL_NOEXCEPT;

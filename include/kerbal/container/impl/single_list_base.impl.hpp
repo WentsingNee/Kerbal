@@ -72,7 +72,33 @@ namespace kerbal
 			inline
 			void sl_type_unrelated::reverse(basic_iterator first, basic_iterator last) KERBAL_NOEXCEPT
 			{
+				if (first == last) {
+					return;
+				}
 
+				basic_iterator a(first); ++a;
+				basic_iterator b(a); ++b;
+				basic_iterator e(last); ++e;
+
+				if (last == this->basic_end()) {
+					this->last_iter = a;
+				}
+
+				while (a != last) {
+					a.current->next = e.current;
+					e = a;
+					a = b;
+					++b;
+				}
+				first.current->next = a.current;
+				a.current->next = e.current;
+			}
+
+			KERBAL_CONSTEXPR20
+			inline
+			void sl_type_unrelated::reverse() KERBAL_NOEXCEPT
+			{
+				this->reverse(this->basic_begin(), this->basic_end());
 			}
 
 			KERBAL_CONSTEXPR20
@@ -389,6 +415,20 @@ namespace kerbal
 
 				apply_helper::apply(*this, a, b, policy());
 
+			}
+
+			template <typename Tp>
+			KERBAL_CONSTEXPR20
+			void sl_allocator_unrelated<Tp>::reverse(iterator first, iterator last) KERBAL_NOEXCEPT
+			{
+				sl_type_unrelated::reverse(first, last);
+			}
+
+			template <typename Tp>
+			KERBAL_CONSTEXPR20
+			void sl_allocator_unrelated<Tp>::reverse() KERBAL_NOEXCEPT
+			{
+				sl_type_unrelated::reverse();
 			}
 
 			template <typename Tp>
