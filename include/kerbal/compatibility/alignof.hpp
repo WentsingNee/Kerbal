@@ -28,7 +28,8 @@
 
 #	elif KERBAL_COMPILER_ID == KERBAL_COMPILER_ID_CLANG
 
-#		include <kerbal/config/compiler_private/clang/feature_and_extension_detection.hpp>
+#		include <kerbal/config/compiler_private/clang/feature_detection.hpp>
+#		include <kerbal/config/compiler_private/clang/extension_detection.hpp>
 
 // https://clang.llvm.org/docs/LanguageExtensions.html#c-11-alignment-specifiers
 
@@ -70,6 +71,7 @@
 #	define KERBAL_ALIGNOF_SUPPORTED 1
 #else
 #	define KERBAL_ALIGNOF_SUPPORTED 0
+#	warning "KERBAL_ALIGNOF is not supported"
 #endif
 
 #endif // KERBAL_COMPATIBILITY_ALIGNOF_HPP

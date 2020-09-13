@@ -71,6 +71,7 @@
 
 #	ifndef KERBAL_COMPILER_ID
 #		define KERBAL_COMPILER_ID KERBAL_COMPILER_ID_UNKNOWN
+#		warning "Unknown compiler"
 #	endif
 
 #endif

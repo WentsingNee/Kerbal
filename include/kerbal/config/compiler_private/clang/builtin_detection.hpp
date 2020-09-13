@@ -15,7 +15,7 @@
 #include <kerbal/config/compiler_id.hpp>
 
 #if KERBAL_COMPILER_ID != KERBAL_COMPILER_ID_CLANG
-#	error "KERBAL_COMPILER_ID doesn't match requirement!"
+#	include <kerbal/config/detail/unexpected_compiler_error.hpp>
 #endif
 
 // https://clang.llvm.org/docs/LanguageExtensions.html#feature-checking-macros

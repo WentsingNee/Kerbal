@@ -15,7 +15,7 @@
 #include <kerbal/config/compiler_id.hpp>
 
 #if KERBAL_COMPILER_ID != KERBAL_COMPILER_ID_GNU
-#	error "KERBAL_COMPILER_ID doesn't match requirement!"
+#	include <kerbal/config/detail/unexpected_compiler_error.hpp>
 #endif
 
 // https://gcc.gnu.org/onlinedocs/cpp/_005f_005fhas_005fbuiltin.html#g_t_005f_005fhas_005fbuiltin

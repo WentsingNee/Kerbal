@@ -137,6 +137,7 @@
 
 #	ifndef KERBAL_ARCHITECTURE
 #		define KERBAL_ARCHITECTURE KERBAL_ARCHITECTURE_UNKNOWN
+#		warning "Unknown architecture"
 #	endif
 
 #endif // ifndef KERBAL_ARCHITECTURE
