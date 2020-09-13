@@ -510,6 +510,8 @@ namespace kerbal
 
 				while (a != NULL) {
 					if (mid != last) {
+
+#			if __cpp_exceptions
 						bool flag = false;
 						try {
 							flag = static_cast<bool>(cmp(*mid, a->value));
@@ -517,6 +519,11 @@ namespace kerbal
 							super::__hook_node(mid, a, a_back);
 							throw;
 						}
+#			else
+						bool flag = static_cast<bool>(cmp(*mid, a->value));
+#			endif // __cpp_exceptions
+
+
 						if (flag) {
 							++mid;
 						} else {

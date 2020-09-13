@@ -813,15 +813,25 @@ namespace kerbal
 		typename single_list<Tp, Allocator>::node*
 		single_list<Tp, Allocator>::__build_new_node(Args&& ... args)
 		{
-			typedef kerbal::type_traits::conditional_boolean<
+			typedef
+#	if __cpp_exceptions
+			kerbal::type_traits::conditional_boolean<
 					std::is_nothrow_constructible<Tp, Args...>::value
-			> nothrow_while_construct;
+			>
+#	else
+			kerbal::type_traits::true_type
+#	endif // __cpp_exceptions
+			nothrow_while_construct;
+
 			return this->__build_new_node_helper(nothrow_while_construct(), std::forward<Args>(args)...);
 		}
 
 #	else
 
-#define __build_new_node_body(args...) \
+
+#if __cpp_exceptions
+
+#	define __build_new_node_body(args...) \
 		{ \
 			node *p = node_allocator_traits::allocate(this->alloc(), 1); \
 			try { \
@@ -832,6 +842,17 @@ namespace kerbal
 			} \
 			return p; \
 		}
+
+#else
+
+#	define __build_new_node_body(args...) \
+		{ \
+			node *p = node_allocator_traits::allocate(this->alloc(), 1); \
+			node_allocator_traits::construct(this->alloc(), p, args); \
+			return p; \
+		}
+
+#endif // __cpp_exceptions
 
 
 		template <typename Tp, typename Allocator>
@@ -880,7 +901,9 @@ namespace kerbal
 			size_t cnt = 0;
 			node * const start = this->__build_new_node(std::forward<Args>(args)...);
 			node * back = start;
+#		if __cpp_exceptions
 			try {
+#		endif // __cpp_exceptions
 				++cnt;
 				while (cnt != n) {
 					node* new_node = this->__build_new_node(std::forward<Args>(args)...);
@@ -889,16 +912,20 @@ namespace kerbal
 					++cnt;
 				}
 				return std::pair<node*, node*>(start, back);
+#		if __cpp_exceptions
 			} catch (...) {
 				this->__consecutive_destroy_node(start);
 				throw;
 			}
+#		endif // __cpp_exceptions
 		}
 
 #	else
 
 
-#define __build_n_new_nodes_unguarded_body(args...) \
+#if __cpp_exceptions
+
+#	define __build_n_new_nodes_unguarded_body(args...) \
 		{ \
 			size_t cnt = 0; \
 			node * const start = this->__build_new_node(args); \
@@ -917,6 +944,25 @@ namespace kerbal
 				throw; \
 			} \
 		}
+
+#else
+
+#	define __build_n_new_nodes_unguarded_body(args...) \
+		{ \
+			size_t cnt = 0; \
+			node * const start = this->__build_new_node(args); \
+			node * back = start; \
+			++cnt; \
+			while (cnt != n) { \
+				node* new_node = this->__build_new_node(args); \
+				back->next = new_node; \
+				back = new_node; \
+				++cnt; \
+			} \
+			return std::pair<node*, node*>(start, back); \
+		}
+
+#endif
 
 
 		template <typename Tp, typename Allocator>
@@ -965,7 +1011,9 @@ namespace kerbal
 		{
 			node * const start = this->__build_new_node(*first);
 			node * back = start;
+#		if __cpp_exceptions
 			try {
+#		endif // __cpp_exceptions
 				++first;
 				while (first != last) {
 					node* new_node = this->__build_new_node(*first);
@@ -974,10 +1022,12 @@ namespace kerbal
 					++first;
 				}
 				return std::pair<node*, node*>(start, back);
+#		if __cpp_exceptions
 			} catch (...) {
 				this->__consecutive_destroy_node(start);
 				throw;
 			}
+#		endif // __cpp_exceptions
 		}
 
 #	if __cplusplus >= 201103L
@@ -989,7 +1039,9 @@ namespace kerbal
 		{
 			node * const start = this->__build_new_node(kerbal::compatibility::move(*first));
 			node * back = start;
+#		if __cpp_exceptions
 			try {
+#		endif // __cpp_exceptions
 				++first;
 				while (first != last) {
 					node* new_node = this->__build_new_node(kerbal::compatibility::move(*first));
@@ -998,10 +1050,12 @@ namespace kerbal
 					++first;
 				}
 				return std::pair<node*, node*>(start, back);
+#		if __cpp_exceptions
 			} catch (...) {
 				this->__consecutive_destroy_node(start);
 				throw;
 			}
+#		endif // __cpp_exceptions
 		}
 
 #	endif
