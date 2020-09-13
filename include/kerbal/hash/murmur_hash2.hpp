@@ -84,7 +84,7 @@ namespace kerbal
 				}
 
 				template <typename ForwardIterator>
-				KERBAL_CONSTEXPR
+				KERBAL_CONSTEXPR14
 				static result_type char4tolong1(ForwardIterator & it)
 				{
 					typedef ForwardIterator iterator;
