@@ -19,6 +19,8 @@
 #	include <kerbal/config/compiler_private/gnu/builtin_detection.hpp>
 #elif KERBAL_COMPILER_ID == KERBAL_COMPILER_ID_CLANG
 #	include <kerbal/config/compiler_private/clang/builtin_detection.hpp>
+#elif KERBAL_COMPILER_ID == KERBAL_COMPILER_ID_ICC
+#	include <kerbal/config/compiler_private/icc/builtin_detection.hpp>
 #endif
 
 #include <kerbal/compatibility/constexpr.hpp>
@@ -48,7 +50,7 @@ namespace kerbal
 		{
 			typedef bitarray_result_len<Tp> BIT_ARRAY_LEN;
 			kerbal::container::array<bool, BIT_ARRAY_LEN::value> r;
-			for (int i = 0; i < BIT_ARRAY_LEN::value; ++i) {
+			for (typename BIT_ARRAY_LEN::value_type i = 0; i < BIT_ARRAY_LEN::value; ++i) {
 				r[BIT_ARRAY_LEN::value - 1 - i] = ((x >> i) & 1);
 			}
 			return r;
@@ -67,7 +69,7 @@ namespace kerbal
 		{
 			typedef octarray_result_len<Tp> OCT_ARRAY_LEN;
 			kerbal::container::array<char, OCT_ARRAY_LEN::value> r;
-			for (int i = 0; i < OCT_ARRAY_LEN::value; ++i) {
+			for (typename OCT_ARRAY_LEN::value_type i = 0; i < OCT_ARRAY_LEN::value; ++i) {
 				char current = (x >> (i * 3)) & 7;
 				current += '0';
 				r[OCT_ARRAY_LEN::value - 1 - i] = current;
@@ -88,7 +90,7 @@ namespace kerbal
 		{
 			typedef hexarray_result_len<Tp> HEX_ARRAY_LEN;
 			kerbal::container::array<char, HEX_ARRAY_LEN::value> r;
-			for (int i = 0; i < HEX_ARRAY_LEN::value; ++i) {
+			for (typename HEX_ARRAY_LEN::value_type i = 0; i < HEX_ARRAY_LEN::value; ++i) {
 				char current = (x >> (i * 4)) & 0xf;
 				if (current < 10) {
 					current += '0';
@@ -114,39 +116,83 @@ namespace kerbal
 			return cnt;
 		}
 
-#if KERBAL_COMPILER_ID == KERBAL_COMPILER_ID_CLANG
 
-#	if KERBAL_CLANG_PRIVATE_HAS_BUILTIN(__builtin_popcount)
+#	if KERBAL_COMPILER_ID == KERBAL_COMPILER_ID_GNU
+#		if KERBAL_GNU_PRIVATE_HAS_BUILTIN(__builtin_popcount)
+#			define KERBAL_BUILTIN_POPCOUNT(x) __builtin_popcount(x)
+#		endif
+#	elif KERBAL_COMPILER_ID == KERBAL_COMPILER_ID_CLANG
+#		if KERBAL_CLANG_PRIVATE_HAS_BUILTIN(__builtin_popcount)
+#			define KERBAL_BUILTIN_POPCOUNT(x) __builtin_popcount(x)
+#		endif
+#	elif KERBAL_COMPILER_ID == KERBAL_COMPILER_ID_ICC
+#		if KERBAL_ICC_PRIVATE_HAS_BUILTIN(__builtin_popcount)
+#			define KERBAL_BUILTIN_POPCOUNT(x) __builtin_popcount(x)
+#		endif
+#	endif
+
+
+#	if KERBAL_COMPILER_ID == KERBAL_COMPILER_ID_GNU
+#		if KERBAL_GNU_PRIVATE_HAS_BUILTIN(__builtin_popcountl)
+#			define KERBAL_BUILTIN_POPCOUNTL(x) __builtin_popcountl(x)
+#		endif
+#	elif KERBAL_COMPILER_ID == KERBAL_COMPILER_ID_CLANG
+#		if KERBAL_CLANG_PRIVATE_HAS_BUILTIN(__builtin_popcountl)
+#			define KERBAL_BUILTIN_POPCOUNTL(x) __builtin_popcountl(x)
+#		endif
+#	elif KERBAL_COMPILER_ID == KERBAL_COMPILER_ID_ICC
+#		if KERBAL_ICC_PRIVATE_HAS_BUILTIN(__builtin_popcountl)
+#			define KERBAL_BUILTIN_POPCOUNTL(x) __builtin_popcountl(x)
+#		endif
+#	endif
+
+
+#	if KERBAL_COMPILER_ID == KERBAL_COMPILER_ID_GNU
+#		if KERBAL_GNU_PRIVATE_HAS_BUILTIN(__builtin_popcountll)
+#			define KERBAL_BUILTIN_POPCOUNTLL(x) __builtin_popcountll(x)
+#		endif
+#	elif KERBAL_COMPILER_ID == KERBAL_COMPILER_ID_CLANG
+#		if KERBAL_CLANG_PRIVATE_HAS_BUILTIN(__builtin_popcountll)
+#			define KERBAL_BUILTIN_POPCOUNTLL(x) __builtin_popcountll(x)
+#		endif
+#	elif KERBAL_COMPILER_ID == KERBAL_COMPILER_ID_ICC
+#		if KERBAL_ICC_PRIVATE_HAS_BUILTIN(__builtin_popcountll)
+#			define KERBAL_BUILTIN_POPCOUNTLL(x) __builtin_popcountll(x)
+#		endif
+#	endif
+
+
+#	if defined(KERBAL_BUILTIN_POPCOUNT)
 
 		KERBAL_CONSTEXPR
 		int __popcount(unsigned int x, kerbal::type_traits::false_type) KERBAL_NOEXCEPT
 		{
-			return __builtin_popcount(x);
+			return KERBAL_BUILTIN_POPCOUNT(x);
 		}
 
 #	endif
 
-#	if KERBAL_CLANG_PRIVATE_HAS_BUILTIN(__builtin_popcountl)
+
+#	if defined(KERBAL_BUILTIN_POPCOUNTL)
 
 		KERBAL_CONSTEXPR
-		int _popcount(unsigned long x, kerbal::type_traits::false_type) KERBAL_NOEXCEPT
+		int __popcount(unsigned long x, kerbal::type_traits::false_type) KERBAL_NOEXCEPT
 		{
-			return __builtin_popcountl(x);
+			return KERBAL_BUILTIN_POPCOUNTL(x);
 		}
 
 #	endif
 
-#	if KERBAL_CLANG_PRIVATE_HAS_BUILTIN(__builtin_popcountll)
+
+#	if defined(KERBAL_BUILTIN_POPCOUNTLL)
 
 		KERBAL_CONSTEXPR
 		int __popcount(unsigned long long x, kerbal::type_traits::false_type) KERBAL_NOEXCEPT
 		{
-			return __builtin_popcountll(x);
+			return KERBAL_BUILTIN_POPCOUNTLL(x);
 		}
 
 #	endif
-
-#endif
 
 		template <typename Signed>
 		KERBAL_CONSTEXPR
