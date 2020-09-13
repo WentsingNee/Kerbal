@@ -287,7 +287,7 @@ namespace kerbal
 
 		template <typename Tp>
 		KERBAL_CONSTEXPR
-		Tp set0(Tp x, int pos) KERBAL_NOEXCEPT
+		Tp reset_bit(Tp x, int pos) KERBAL_NOEXCEPT
 		{
 			typedef typename kerbal::type_traits::make_unsigned<Tp>::type unsigned_t;
 			return x & ~(static_cast<unsigned_t>(1) << pos);
@@ -295,10 +295,34 @@ namespace kerbal
 
 		template <typename Tp>
 		KERBAL_CONSTEXPR
-		Tp set1(Tp x, int pos) KERBAL_NOEXCEPT
+		Tp reset_left_n(Tp x, int n) KERBAL_NOEXCEPT
+		{
+			typedef typename kerbal::type_traits::make_unsigned<Tp>::type unsigned_t;
+			return x & ~kerbal::numeric::mask<unsigned_t>(sizeof(unsigned_t) * CHAR_BIT - n);
+		}
+
+		template <typename Tp>
+		KERBAL_CONSTEXPR
+		Tp reset_right_n(Tp x, int n) KERBAL_NOEXCEPT
+		{
+			typedef typename kerbal::type_traits::make_unsigned<Tp>::type unsigned_t;
+			return x & ~kerbal::numeric::mask<unsigned_t>(n);
+		}
+
+		template <typename Tp>
+		KERBAL_CONSTEXPR
+		Tp set_bit(Tp x, int pos) KERBAL_NOEXCEPT
 		{
 			typedef typename kerbal::type_traits::make_unsigned<Tp>::type unsigned_t;
 			return x | (static_cast<unsigned_t>(1) << pos);
+		}
+
+		template <typename Tp>
+		KERBAL_CONSTEXPR
+		Tp set_right_n(Tp x, int n) KERBAL_NOEXCEPT
+		{
+			typedef typename kerbal::type_traits::make_unsigned<Tp>::type unsigned_t;
+			return x | kerbal::numeric::mask<unsigned_t>(n);
 		}
 
 		template <typename Tp>

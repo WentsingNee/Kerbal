@@ -228,7 +228,16 @@ namespace kerbal
 				{
 					size_t idx = pos / BITS_PER_BLOCK::value;
 					size_t ofs = pos % BITS_PER_BLOCK::value;
-					m_block[idx] = kerbal::numeric::set0(m_block[idx], ofs);
+					m_block[idx] = kerbal::numeric::reset_bit(m_block[idx], ofs);
+					return *this;
+				}
+
+				KERBAL_CONSTEXPR14
+				static_bitset& reset(size_type pos, size_type len) KERBAL_NOEXCEPT
+				{
+					for (size_type i = pos; i < len; ++i) {
+						this->reset(i);
+					}
 					return *this;
 				}
 
@@ -244,7 +253,7 @@ namespace kerbal
 				{
 					size_t idx = pos / BITS_PER_BLOCK::value;
 					size_t ofs = pos % BITS_PER_BLOCK::value;
-					m_block[idx] = kerbal::numeric::set1(m_block[idx], ofs);
+					m_block[idx] = kerbal::numeric::set_bit(m_block[idx], ofs);
 					return *this;
 				}
 
@@ -365,9 +374,9 @@ namespace kerbal
 
 		};
 
-	}
+	} // namespace bitset
 
-} //namespace kerbal
+} // namespace kerbal
 
 
 #endif // KERBAL_BITSET_STATIC_BITSET_HPP

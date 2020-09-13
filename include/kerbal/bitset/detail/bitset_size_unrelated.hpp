@@ -43,7 +43,7 @@ namespace kerbal
 					typedef size_t										block_width_type;
 
 				protected:
-					typedef kerbal::type_traits::integral_constant<block_type, ~static_cast<block_type>(0)> ALL_ONE;
+					typedef kerbal::type_traits::integral_constant<block_type, static_cast<block_type>(~static_cast<block_type>(0))> ALL_ONE;
 
 					KERBAL_CONSTEXPR14
 					static bool all_trunk(const block_type m_block[], block_width_type trunk_size) KERBAL_NOEXCEPT
