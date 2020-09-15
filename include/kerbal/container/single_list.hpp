@@ -13,6 +13,7 @@
 #define KERBAL_CONTAINER_SINGLE_LIST_HPP
 
 #include <kerbal/algorithm/sequence_compare.hpp>
+#include <kerbal/assign/ilist.hpp>
 #include <kerbal/compatibility/constexpr.hpp>
 #include <kerbal/compatibility/move.hpp>
 #include <kerbal/compatibility/noexcept.hpp>
@@ -32,6 +33,7 @@
 #	endif
 #endif
 
+#include <kerbal/container/detail/single_list_base.hpp>
 #include <kerbal/container/detail/single_list_iterator.hpp>
 #include <kerbal/container/detail/single_list_node.hpp>
 
@@ -42,71 +44,62 @@ namespace kerbal
 	{
 
 		template <typename Tp, typename Allocator = std::allocator<Tp> >
-		class single_list
+		class single_list:
+				protected kerbal::container::detail::sl_allocator_unrelated<Tp>,
+				protected kerbal::container::detail::sl_allocator_overload<Tp, Allocator>
 		{
+			private:
+				typedef kerbal::container::detail::sl_type_unrelated						sl_type_unrelated;
+				typedef kerbal::container::detail::sl_allocator_unrelated<Tp>				sl_allocator_unrelated;
+				typedef kerbal::container::detail::sl_allocator_overload<Tp, Allocator>		sl_allocator_overload;
+
 			public:
-				typedef Tp							value_type;
-				typedef const value_type			const_type;
-				typedef value_type&					reference;
-				typedef const value_type&			const_reference;
-				typedef value_type*					pointer;
-				typedef const value_type*			const_pointer;
+				typedef typename sl_allocator_unrelated::value_type					value_type;
+				typedef typename sl_allocator_unrelated::const_type					const_type;
+				typedef typename sl_allocator_unrelated::reference					reference;
+				typedef typename sl_allocator_unrelated::const_reference			const_reference;
+				typedef typename sl_allocator_unrelated::pointer					pointer;
+				typedef typename sl_allocator_unrelated::const_pointer				const_pointer;
 
 #		if __cplusplus >= 201103L
-				typedef value_type&&				rvalue_reference;
-				typedef const value_type&&			const_rvalue_reference;
+				typedef typename sl_allocator_unrelated::rvalue_reference			rvalue_reference;
+				typedef typename sl_allocator_unrelated::const_rvalue_reference		const_rvalue_reference;
 #		endif
 
-				typedef std::size_t					size_type;
-				typedef std::ptrdiff_t				difference_type;
+				typedef typename sl_allocator_unrelated::size_type					size_type;
+				typedef typename sl_allocator_unrelated::difference_type			difference_type;
 
-				typedef kerbal::container::detail::sl_iter<value_type>		iterator;
-				typedef kerbal::container::detail::sl_kiter<value_type>		const_iterator;
+				typedef typename sl_allocator_unrelated::iterator					iterator;
+				typedef typename sl_allocator_unrelated::const_iterator				const_iterator;
 
 			private:
-				typedef kerbal::container::detail::sl_node_base			node_base;
-				typedef kerbal::container::detail::sl_node<value_type>	node;
+				typedef typename sl_allocator_unrelated::node_base					node_base;
+				typedef typename sl_allocator_unrelated::node						node;
 
 			public:
-				typedef Allocator		allocator_type;
+				typedef Allocator															allocator_type;
 
 			private:
 				typedef kerbal::memory::allocator_traits<allocator_type>					tp_allocator_traits;
-				typedef typename tp_allocator_traits::template rebind_alloc<node>::other	node_allocator_type;
+				typedef typename sl_allocator_overload::node_allocator_type					node_allocator_type;
 				typedef typename tp_allocator_traits::template rebind_traits<node>::other	node_allocator_traits;
 
 			private:
-				node_base head_node;
-				iterator last_iter;
-				node_allocator_type alloc;
 
-				struct release_uninit_res
-				{
-						node_allocator_type& alloc;
-
-						KERBAL_CONSTEXPR
-						explicit release_uninit_res(node_allocator_type& alloc) KERBAL_NOEXCEPT :
-								alloc(alloc)
-						{
-						}
-
-						KERBAL_CONSTEXPR14
-						void operator()(node *p) KERBAL_NOEXCEPT
-						{
-							node_allocator_traits::deallocate(this->alloc, p, 1);
-						}
-				};
+				using sl_allocator_overload::alloc;
 
 			public:
 				KERBAL_CONSTEXPR20
 				single_list() KERBAL_CONDITIONAL_NOEXCEPT(
-						std::is_nothrow_default_constructible<node_allocator_type>::value
+						std::is_nothrow_default_constructible<sl_allocator_unrelated>::value &&
+						std::is_nothrow_default_constructible<sl_allocator_overload>::value
 				);
 
 				KERBAL_CONSTEXPR20
-				explicit single_list(const Allocator& alloc) KERBAL_CONDITIONAL_NOEXCEPT(
-						std::is_nothrow_copy_constructible<node_allocator_type>::value
-				);
+				explicit single_list(const Allocator& alloc) KERBAL_CONDITIONAL_NOEXCEPT((
+						std::is_nothrow_default_constructible<sl_allocator_unrelated>::value &&
+						std::is_nothrow_constructible<sl_allocator_overload, const Allocator&>::value
+				));
 
 				KERBAL_CONSTEXPR20
 				single_list(const single_list & src);
@@ -149,14 +142,46 @@ namespace kerbal
 				KERBAL_CONSTEXPR20
 				single_list(single_list && src);
 
+			private:
+
+				KERBAL_CONSTEXPR20
+				void move_constructor_with_afforded_allocator_allocator_equal(single_list && src);
+
+				KERBAL_CONSTEXPR20
+				void move_constructor_with_afforded_allocator_allocator_not_equal(single_list && src);
+
+				template <bool is_allocator_always_equal>
+				KERBAL_CONSTEXPR20
+				typename kerbal::type_traits::enable_if<!is_allocator_always_equal>::type
+				move_constructor_with_afforded_allocator_helper(single_list && src);
+
+				template <bool is_allocator_always_equal>
+				KERBAL_CONSTEXPR20
+				typename kerbal::type_traits::enable_if<is_allocator_always_equal>::type
+				move_constructor_with_afforded_allocator_helper(single_list && src);
+
+			public:
+
 				KERBAL_CONSTEXPR20
 				single_list(single_list && src, const Allocator& alloc);
+
+#		endif
+
+#		if __cplusplus >= 201103L
 
 				KERBAL_CONSTEXPR20
 				single_list(std::initializer_list<value_type> src);
 
 				KERBAL_CONSTEXPR20
 				single_list(std::initializer_list<value_type> src, const Allocator& alloc);
+
+#		else
+
+				template <typename Up>
+				single_list(const kerbal::assign::assign_list<Up> & src);
+
+				template <typename Up>
+				single_list(const kerbal::assign::assign_list<Up> & src, const Allocator& alloc);
 
 #		endif
 
@@ -178,10 +203,19 @@ namespace kerbal
 						noexcept(kerbal::utility::declthis<single_list>()->assign(kerbal::compatibility::move(src)))
 				);
 
+#		endif
+
+#		if __cplusplus >= 201103L
+
 				KERBAL_CONSTEXPR20
 				single_list& operator=(std::initializer_list<value_type> src) KERBAL_CONDITIONAL_NOEXCEPT(
 						noexcept(kerbal::utility::declthis<single_list>()->assign(src))
 				);
+
+#		else
+
+				template <typename Up>
+				single_list& operator=(const kerbal::assign::assign_list<Up> & src);
 
 #		endif
 
@@ -205,73 +239,44 @@ namespace kerbal
 				KERBAL_CONSTEXPR20
 				void assign(single_list&& src);
 
+#		endif
+
+#		if __cplusplus >= 201103L
+
 				KERBAL_CONSTEXPR20
 				void assign(std::initializer_list<value_type> src);
+
+#		else
+
+				template <typename Up>
+				void assign(const kerbal::assign::assign_list<Up> & src);
 
 #		endif
 
 			//===================
 			//element access
 
-				KERBAL_CONSTEXPR20
-				reference front() KERBAL_NOEXCEPT;
-
-				KERBAL_CONSTEXPR20
-				const_reference front() const KERBAL_NOEXCEPT;
-
-				KERBAL_CONSTEXPR20
-				reference back() KERBAL_NOEXCEPT;
-
-				KERBAL_CONSTEXPR20
-				const_reference back() const KERBAL_NOEXCEPT;
+				using sl_allocator_unrelated::front;
+				using sl_allocator_unrelated::back;
 
 			//===================
 			//iterator
 
-				KERBAL_CONSTEXPR20
-				iterator begin() KERBAL_NOEXCEPT;
+				using sl_allocator_unrelated::begin;
+				using sl_allocator_unrelated::end;
 
-				KERBAL_CONSTEXPR20
-				iterator end() KERBAL_NOEXCEPT;
+				using sl_allocator_unrelated::cbegin;
+				using sl_allocator_unrelated::cend;
 
-				KERBAL_CONSTEXPR20
-				const_iterator begin() const KERBAL_NOEXCEPT;
-
-				KERBAL_CONSTEXPR20
-				const_iterator end() const KERBAL_NOEXCEPT;
-
-				KERBAL_CONSTEXPR20
-				const_iterator cbegin() const KERBAL_NOEXCEPT;
-
-				KERBAL_CONSTEXPR20
-				const_iterator cend() const KERBAL_NOEXCEPT;
-
-				KERBAL_CONSTEXPR20
-				iterator nth(size_type index) KERBAL_NOEXCEPT;
-
-				KERBAL_CONSTEXPR20
-				const_iterator nth(size_type index) const KERBAL_NOEXCEPT;
-
-				KERBAL_CONSTEXPR20
-				size_type index_of(iterator it) KERBAL_NOEXCEPT;
-
-				KERBAL_CONSTEXPR20
-				size_type index_of(const_iterator it) const KERBAL_NOEXCEPT;
+				using sl_allocator_unrelated::nth;
+				using sl_allocator_unrelated::index_of;
 
 			//===================
 			//capacity
 
-				KERBAL_CONSTEXPR20
-				bool empty() const KERBAL_NOEXCEPT;
-
-				KERBAL_CONSTEXPR20
-				size_type size() const KERBAL_NOEXCEPT;
-
-				KERBAL_CONSTEXPR
-				size_type max_size() const KERBAL_NOEXCEPT
-				{
-					return static_cast<size_type>(-1);
-				}
+				using sl_allocator_unrelated::empty;
+				using sl_allocator_unrelated::size;
+				using sl_allocator_unrelated::max_size;
 
 			//===================
 			//insert
@@ -357,8 +362,17 @@ namespace kerbal
 				KERBAL_CONSTEXPR20
 				iterator insert(const_iterator pos, rvalue_reference val);
 
+#		endif
+
+#		if __cplusplus >= 201103L
+
 				KERBAL_CONSTEXPR20
 				iterator insert(const_iterator pos, std::initializer_list<value_type> src);
+
+#		else
+
+				template <typename Up>
+				iterator insert(const_iterator pos, const kerbal::assign::assign_list<Up> & src);
 
 #		endif
 
@@ -410,6 +424,23 @@ namespace kerbal
 				KERBAL_CONSTEXPR20
 				void swap(single_list & ano);
 
+				using sl_allocator_unrelated::iter_swap_unstable;
+				using sl_allocator_unrelated::iter_swap;
+				using sl_allocator_unrelated::iter_swap_fast;
+
+				using sl_allocator_unrelated::reverse;
+
+
+				KERBAL_CONSTEXPR20
+				void splice(const_iterator pos, single_list & other) KERBAL_NOEXCEPT;
+
+				KERBAL_CONSTEXPR20
+				void splice(const_iterator pos, single_list & other, const_iterator opos) KERBAL_NOEXCEPT;
+
+				KERBAL_CONSTEXPR20
+				void splice(const_iterator pos, single_list & other, const_iterator first, const_iterator last) KERBAL_NOEXCEPT;
+
+
 			//===================
 			//private
 
@@ -425,7 +456,7 @@ namespace kerbal
 				KERBAL_CONSTEXPR20
 				node* __build_new_node_helper(kerbal::type_traits::true_type, Args&& ... args)
 						KERBAL_CONDITIONAL_NOEXCEPT(
-								noexcept(node_allocator_traits::allocate(alloc, 1))
+								noexcept(node_allocator_traits::allocate(kerbal::utility::declthis<single_list>()->alloc(), 1))
 						)
 				;
 
@@ -473,38 +504,50 @@ namespace kerbal
 				 * @warning Especial case: first == last
 				 */
 				template <typename InputIterator>
+				KERBAL_CONSTEXPR20
 				typename kerbal::type_traits::enable_if<
 						kerbal::iterator::is_input_compatible_iterator<InputIterator>::value,
 						std::pair<node*, node*>
 				>::type
-				KERBAL_CONSTEXPR20
 				__build_new_nodes_range_unguarded(InputIterator first, InputIterator last);
 
-				KERBAL_CONSTEXPR20
-				void __destroy_node(node_base * p_node_base) KERBAL_CONDITIONAL_NOEXCEPT(
-						noexcept(node_allocator_traits::destroy(alloc, kerbal::utility::declval<node*>())) &&
-						noexcept(node_allocator_traits::deallocate(alloc, kerbal::utility::declval<node*>(), 1))
-				);
+#		if __cplusplus >= 201103L
 
 				KERBAL_CONSTEXPR20
-				void __consecutive_destroy_node(node_base * start) KERBAL_CONDITIONAL_NOEXCEPT(
-						noexcept(kerbal::utility::declthis<single_list>()->__destroy_node(kerbal::utility::declval<node_base*>()))
-				);
+				std::pair<node*, node*>
+				__build_new_nodes_range_unguarded_move(iterator first, iterator last);
+
+#		endif
 
 				KERBAL_CONSTEXPR20
-				void __hook_node_back(node_base * p) KERBAL_NOEXCEPT;
+				void __destroy_node(node_base * p_node_base)
+						KERBAL_CONDITIONAL_NOEXCEPT(
+							noexcept(node_allocator_traits::destroy(kerbal::utility::declthis<single_list>()->alloc(), kerbal::utility::declval<node*>())) &&
+							noexcept(node_allocator_traits::deallocate(kerbal::utility::declthis<single_list>()->alloc(), kerbal::utility::declval<node*>(), 1))
+						)
+				;
 
 				KERBAL_CONSTEXPR20
-				void __hook_node_front(node_base * p) KERBAL_NOEXCEPT;
+				void __consecutive_destroy_node(node_base * start)
+					 	KERBAL_CONDITIONAL_NOEXCEPT(
+							noexcept(kerbal::utility::declthis<single_list>()->__destroy_node(kerbal::utility::declval<node_base*>()))
+						)
+				;
 
+				template <bool propagate_on_container_swap>
 				KERBAL_CONSTEXPR20
-				void __hook_node(const_iterator pos, node_base * p) KERBAL_NOEXCEPT;
+				typename kerbal::type_traits::enable_if<!propagate_on_container_swap>::type
+				swap_allocator_helper()
+				{
+				}
 
+				template <bool propagate_on_container_swap>
 				KERBAL_CONSTEXPR20
-				void __hook_node(const_iterator pos, node_base * start, node_base * back) KERBAL_NOEXCEPT;
-
-				KERBAL_CONSTEXPR20
-				static void __swap_with_empty(single_list& not_empty_list, single_list& empty_list) KERBAL_NOEXCEPT;
+				typename kerbal::type_traits::enable_if<propagate_on_container_swap>::type
+				swap_allocator_helper(single_list & ano)
+				{
+					kerbal::algorithm::swap(this->alloc(), ano.alloc());
+				}
 
 		};
 
@@ -514,6 +557,9 @@ namespace kerbal
 					std::allocator<typename kerbal::iterator::iterator_traits<InputIterator>::value_type> >
 		single_list(InputIterator, InputIterator, Alloc = Alloc())
 				-> single_list<typename kerbal::iterator::iterator_traits<InputIterator>::value_type, Alloc>;
+
+		template <typename Tp, typename Alloc = std::allocator<Tp> >
+		single_list(std::initializer_list<Tp> src, Alloc = Alloc()) -> single_list<Tp, Alloc>;
 
 #	if __has_include(<memory_resource>)
 

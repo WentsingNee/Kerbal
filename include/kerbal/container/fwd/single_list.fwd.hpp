@@ -1,7 +1,7 @@
 /**
- * @file       list.fwd.hpp
+ * @file       single_list.fwd.hpp
  * @brief
- * @date       2020-08-15
+ * @date       2020-08-31
  * @author     Peter
  * @copyright
  *      Peter of [ThinkSpirit Laboratory](http://thinkspirit.org/)
@@ -9,8 +9,8 @@
  *   all rights reserved
  */
 
-#ifndef KERBAL_CONTAINER_FWD_LIST_FWD_HPP
-#define KERBAL_CONTAINER_FWD_LIST_FWD_HPP
+#ifndef KERBAL_CONTAINER_FWD_SINGLE_LIST_FWD_HPP
+#define KERBAL_CONTAINER_FWD_SINGLE_LIST_FWD_HPP
 
 namespace kerbal
 {
@@ -19,33 +19,33 @@ namespace kerbal
 	{
 
 		template <typename Tp, typename Allocator>
-		class list;
+		class single_list;
 
 		namespace detail
 		{
 
-			class list_type_unrelated;
+			class sl_type_unrelated;
 
 			template <typename Tp>
-			class list_allocator_unrelated;
+			class sl_allocator_unrelated;
 
 			template <typename Tp, typename Allocator, bool>
-			class list_allocator_overload;
+			class sl_allocator_overload;
 
-			class list_node_base;
-
-			template <typename Tp>
-			class list_node;
-
-			class list_iter_type_unrelated;
-
-			class list_kiter_type_unrelated;
+			class sl_node_base;
 
 			template <typename Tp>
-			class list_iter;
+			class sl_node;
+
+			class sl_iter_type_unrelated;
+
+			class sl_kiter_type_unrelated;
 
 			template <typename Tp>
-			class list_kiter;
+			class sl_iter;
+
+			template <typename Tp>
+			class sl_kiter;
 
 		} // namespace detail
 
@@ -53,4 +53,4 @@ namespace kerbal
 
 } // namespace kerbal
 
-#endif // KERBAL_CONTAINER_FWD_LIST_FWD_HPP
+#endif // KERBAL_CONTAINER_FWD_SINGLE_LIST_FWD_HPP

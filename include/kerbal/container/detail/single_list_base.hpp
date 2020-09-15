@@ -1,7 +1,7 @@
 /**
- * @file       list_base.hpp
+ * @file       single_list_base.hpp
  * @brief
- * @date       2020-6-13
+ * @date       2020-08-31
  * @author     Peter
  * @copyright
  *      Peter of [ThinkSpirit Laboratory](http://thinkspirit.org/)
@@ -9,21 +9,18 @@
  *   all rights reserved
  */
 
-#ifndef KERBAL_CONTAINER_DETAIL_LIST_BASE_HPP
-#define KERBAL_CONTAINER_DETAIL_LIST_BASE_HPP
-
-#include <kerbal/container/fwd/list.fwd.hpp>
+#ifndef KERBAL_CONTAINER_DETAIL_SINGLE_LIST_BASE_HPP
+#define KERBAL_CONTAINER_DETAIL_SINGLE_LIST_BASE_HPP
 
 #include <kerbal/compatibility/constexpr.hpp>
 #include <kerbal/compatibility/move.hpp>
 #include <kerbal/compatibility/noexcept.hpp>
-#include <kerbal/iterator/reverse_iterator.hpp>
 #include <kerbal/memory/allocator_traits.hpp>
 #include <kerbal/type_traits/can_be_empty_base.hpp>
 #include <kerbal/type_traits/cv_deduction.hpp>
 
-#include <kerbal/container/detail/list_node.hpp>
-#include <kerbal/container/detail/list_iterator.hpp>
+#include <kerbal/container/detail/single_list_node.hpp>
+#include <kerbal/container/detail/single_list_iterator.hpp>
 
 namespace kerbal
 {
@@ -34,54 +31,48 @@ namespace kerbal
 		namespace detail
 		{
 
-			class list_type_unrelated
+			class sl_type_unrelated
 			{
 				protected:
 					typedef std::size_t					size_type;
 					typedef std::ptrdiff_t				difference_type;
 
-					typedef kerbal::container::detail::list_node_base					node_base;
-					typedef kerbal::container::detail::list_iter_type_unrelated			basic_iterator;
-					typedef kerbal::container::detail::list_kiter_type_unrelated		basic_const_iterator;
+					typedef kerbal::container::detail::sl_node_base					node_base;
+					typedef kerbal::container::detail::sl_iter_type_unrelated		basic_iterator;
+					typedef kerbal::container::detail::sl_kiter_type_unrelated		basic_const_iterator;
 
 				protected:
 					node_base head_node;
+					basic_iterator last_iter;
 
-					KERBAL_CONSTEXPR
-					list_type_unrelated() KERBAL_NOEXCEPT
-							: head_node()
-					{
-					}
-
-					KERBAL_CONSTEXPR
-					explicit list_type_unrelated(init_list_node_ptr_to_self_tag tag)
-								KERBAL_NOEXCEPT
-							: head_node(tag)
+					KERBAL_CONSTEXPR14
+					sl_type_unrelated() KERBAL_NOEXCEPT
+							: head_node(), last_iter(this->basic_begin())
 					{
 					}
 
 					KERBAL_CONSTEXPR14
 					basic_iterator basic_begin() KERBAL_NOEXCEPT
 					{
-						return basic_iterator(this->head_node.next);
+						return basic_iterator(&this->head_node);
 					}
 
 					KERBAL_CONSTEXPR14
 					basic_const_iterator basic_begin() const KERBAL_NOEXCEPT
 					{
-						return basic_const_iterator(this->head_node.next);
+						return basic_const_iterator(&this->head_node);
 					}
 
 					KERBAL_CONSTEXPR14
 					basic_iterator basic_end() KERBAL_NOEXCEPT
 					{
-						return basic_iterator(&this->head_node);
+						return basic_iterator(this->last_iter);
 					}
 
 					KERBAL_CONSTEXPR14
 					basic_const_iterator basic_end() const KERBAL_NOEXCEPT
 					{
-						return basic_const_iterator(&this->head_node);
+						return basic_const_iterator(this->last_iter);
 					}
 
 				//===================
@@ -97,62 +88,71 @@ namespace kerbal
 				//operation
 
 					KERBAL_CONSTEXPR20
-					static void iter_swap(basic_iterator a, basic_iterator b) KERBAL_NOEXCEPT;
+					void iter_swap(basic_iterator a, basic_iterator b) KERBAL_NOEXCEPT;
 
 					KERBAL_CONSTEXPR20
-					static void reverse(basic_iterator first, basic_iterator last) KERBAL_NOEXCEPT;
+					void reverse(basic_iterator first, basic_iterator last) KERBAL_NOEXCEPT;
 
 					KERBAL_CONSTEXPR20
 					void reverse() KERBAL_NOEXCEPT;
 
 					KERBAL_CONSTEXPR20
-					static void splice(basic_const_iterator pos, list_type_unrelated & other) KERBAL_NOEXCEPT;
+					void splice(basic_const_iterator pos, sl_type_unrelated & other) KERBAL_NOEXCEPT;
 
 					KERBAL_CONSTEXPR20
-					static void splice(basic_const_iterator pos, basic_const_iterator opos) KERBAL_NOEXCEPT;
+					void splice(basic_const_iterator pos, sl_type_unrelated & other, basic_const_iterator opos) KERBAL_NOEXCEPT;
 
 					KERBAL_CONSTEXPR20
-					static void splice(basic_const_iterator pos, basic_const_iterator first, basic_const_iterator last) KERBAL_NOEXCEPT;
+					void splice(basic_const_iterator pos, sl_type_unrelated & other,
+								basic_const_iterator first, basic_const_iterator last) KERBAL_NOEXCEPT;
 
 				//===================
 				//private
 
-					KERBAL_CONSTEXPR14
-					void __init_node_base() KERBAL_NOEXCEPT
-					{
-						this->head_node.prev = &this->head_node;
-						this->head_node.next = &this->head_node;
-					}
+					// pre-cond: p->next == NULL;
+					KERBAL_CONSTEXPR20
+					void __hook_node_back(node_base * p) KERBAL_NOEXCEPT;
 
 					KERBAL_CONSTEXPR20
-					static void __hook_node(basic_const_iterator pos, node_base * p) KERBAL_NOEXCEPT;
+					static void __hook_node_not_back(basic_iterator pos, node_base * p) KERBAL_NOEXCEPT;
+
+					// pre-cond: if pos == cend then p->next == NULL;
+					KERBAL_CONSTEXPR20
+					void __hook_node(basic_const_iterator pos, node_base * p) KERBAL_NOEXCEPT;
+
+					// pre-cond: back->next == NULL;
+					KERBAL_CONSTEXPR20
+					void __hook_node_back(node_base * start, node_base * back) KERBAL_NOEXCEPT;
 
 					KERBAL_CONSTEXPR20
-					static void __hook_node(basic_const_iterator pos, node_base * start, node_base * back) KERBAL_NOEXCEPT;
+					static void __hook_node_not_back(basic_iterator pos, node_base * start, node_base * back) KERBAL_NOEXCEPT;
+
+					// pre-cond: if pos == cend then back->next == NULL;
+					KERBAL_CONSTEXPR20
+					void __hook_node(basic_const_iterator pos, node_base * start, node_base * back) KERBAL_NOEXCEPT;
 
 					KERBAL_CONSTEXPR20
-					static node_base * __unhook_node(basic_iterator pos) KERBAL_NOEXCEPT;
+					node_base * __unhook_node(basic_iterator pos) KERBAL_NOEXCEPT;
 
 					// pre-cond: first != last;
 					KERBAL_CONSTEXPR20
-					static
 					std::pair<node_base *, node_base *>
 					__unhook_node(basic_iterator first, basic_iterator last) KERBAL_NOEXCEPT;
 
 					KERBAL_CONSTEXPR20
-					static void __swap_with_empty(list_type_unrelated & not_empty_list, list_type_unrelated & empty_list) KERBAL_NOEXCEPT;
+					static void swap_with_empty(sl_type_unrelated & not_empty_list, sl_type_unrelated & empty_list) KERBAL_NOEXCEPT;
 
 			};
 
 			template <typename Tp>
-			class list_allocator_unrelated:
-					protected list_type_unrelated
+			class sl_allocator_unrelated:
+					protected sl_type_unrelated
 			{
 				private:
-					typedef list_type_unrelated super;
+					typedef sl_type_unrelated super;
 
 					template <typename Up, typename Allocator>
-					friend class kerbal::container::list;
+					friend class kerbal::container::single_list;
 
 				protected:
 					typedef Tp							value_type;
@@ -170,13 +170,11 @@ namespace kerbal
 					typedef std::size_t					size_type;
 					typedef std::ptrdiff_t				difference_type;
 
-					typedef kerbal::container::detail::list_iter<Tp>			iterator;
-					typedef kerbal::container::detail::list_kiter<Tp>			const_iterator;
-					typedef kerbal::iterator::reverse_iterator<iterator>		reverse_iterator;
-					typedef kerbal::iterator::reverse_iterator<const_iterator>	const_reverse_iterator;
+					typedef kerbal::container::detail::sl_iter<Tp>			iterator;
+					typedef kerbal::container::detail::sl_kiter<Tp>			const_iterator;
 
-					typedef kerbal::container::detail::list_node_base			node_base;
-					typedef kerbal::container::detail::list_node<value_type>	node;
+					typedef kerbal::container::detail::sl_node_base			node_base;
+					typedef kerbal::container::detail::sl_node<value_type>	node;
 
 
 				protected:
@@ -187,14 +185,8 @@ namespace kerbal
 
 #			else
 
-					list_allocator_unrelated() KERBAL_NOEXCEPT
+					sl_allocator_unrelated() KERBAL_NOEXCEPT
 							: super()
-					{
-					}
-
-					explicit list_allocator_unrelated(init_list_node_ptr_to_self_tag tag)
-								KERBAL_NOEXCEPT
-							: super(tag)
 					{
 					}
 
@@ -237,24 +229,6 @@ namespace kerbal
 					const_iterator cend() const KERBAL_NOEXCEPT;
 
 					KERBAL_CONSTEXPR20
-					reverse_iterator rbegin() KERBAL_NOEXCEPT;
-
-					KERBAL_CONSTEXPR20
-					reverse_iterator rend() KERBAL_NOEXCEPT;
-
-					KERBAL_CONSTEXPR20
-					const_reverse_iterator rbegin() const KERBAL_NOEXCEPT;
-
-					KERBAL_CONSTEXPR20
-					const_reverse_iterator rend() const KERBAL_NOEXCEPT;
-
-					KERBAL_CONSTEXPR20
-					const_reverse_iterator crbegin() const KERBAL_NOEXCEPT;
-
-					KERBAL_CONSTEXPR20
-					const_reverse_iterator crend() const KERBAL_NOEXCEPT;
-
-					KERBAL_CONSTEXPR20
 					iterator nth(size_type index) KERBAL_NOEXCEPT;
 
 					KERBAL_CONSTEXPR20
@@ -288,66 +262,22 @@ namespace kerbal
 					void iter_swap_fast(iterator a, iterator b);
 
 					KERBAL_CONSTEXPR20
-					void reverse_unstable(iterator first, iterator last) KERBAL_NOEXCEPT;
-
-					KERBAL_CONSTEXPR20
-					void reverse_unstable() KERBAL_NOEXCEPT;
-
-					KERBAL_CONSTEXPR20
 					void reverse(iterator first, iterator last) KERBAL_NOEXCEPT;
 
 					KERBAL_CONSTEXPR20
 					void reverse() KERBAL_NOEXCEPT;
 
 					KERBAL_CONSTEXPR20
-					void reverse_fast(iterator first, iterator last) KERBAL_NOEXCEPT;
-
-					KERBAL_CONSTEXPR20
-					void reverse_fast() KERBAL_NOEXCEPT;
-
-					template <typename BinaryPredict>
-					KERBAL_CONSTEXPR20
-					void merge(list_allocator_unrelated & other, BinaryPredict cmp);
-
-					KERBAL_CONSTEXPR20
-					void merge(list_allocator_unrelated & other);
-
-				private:
-					template <typename BinaryPredict>
-					KERBAL_CONSTEXPR20
-					void merge_sort_merge(iterator first, iterator mid, iterator last, BinaryPredict cmp);
-
-					template <typename BinaryPredict>
-					KERBAL_CONSTEXPR20
-					iterator merge_sort_n(iterator first, difference_type len, BinaryPredict cmp);
-
-				protected:
-					template <typename BinaryPredict>
-					KERBAL_CONSTEXPR20
-					void sort(iterator first, iterator last, BinaryPredict cmp);
-
-					KERBAL_CONSTEXPR20
-					void sort(iterator first, iterator last);
-
-					template <typename BinaryPredict>
-					KERBAL_CONSTEXPR20
-					void sort(BinaryPredict cmp);
-
-					KERBAL_CONSTEXPR20
-					void sort();
-
-					KERBAL_CONSTEXPR20
-					void swap_allocator_unrelated(list_allocator_unrelated & ano) KERBAL_NOEXCEPT;
+					void swap_allocator_unrelated(sl_allocator_unrelated & ano) KERBAL_NOEXCEPT;
 
 			};
 
-
 			template <typename Tp, typename Allocator>
-			struct list_node_allocator_helper
+			struct sl_node_allocator_helper
 			{
 				private:
 					typedef Tp														value_type;
-					typedef kerbal::container::detail::list_node<value_type>		node;
+					typedef kerbal::container::detail::sl_node<value_type>			node;
 					typedef kerbal::memory::allocator_traits<Allocator>				tp_allocator_traits;
 
 				public:
@@ -356,19 +286,19 @@ namespace kerbal
 
 			template <typename Tp, typename Allocator, bool allocator_can_be_empty_base =
 								kerbal::type_traits::can_be_empty_base<Allocator>::value >
-			class list_allocator_overload;
+			class sl_allocator_overload;
 
 			template <typename Tp, typename Allocator>
-			class list_allocator_overload<Tp, Allocator, false>
+			class sl_allocator_overload<Tp, Allocator, false>
 			{
 				protected:
-					typedef typename list_node_allocator_helper<Tp, Allocator>::type	node_allocator_type;
+					typedef typename sl_node_allocator_helper<Tp, Allocator>::type	node_allocator_type;
 
 				protected:
 					node_allocator_type node_allocator;
 
 					KERBAL_CONSTEXPR
-					list_allocator_overload()
+					sl_allocator_overload()
 								KERBAL_CONDITIONAL_NOEXCEPT(
 										std::is_nothrow_default_constructible<node_allocator_type>::value
 								)
@@ -377,7 +307,7 @@ namespace kerbal
 					}
 
 					KERBAL_CONSTEXPR
-					explicit list_allocator_overload(const Allocator & allocator)
+					explicit sl_allocator_overload(const Allocator & allocator)
 								KERBAL_CONDITIONAL_NOEXCEPT(
 										(std::is_nothrow_constructible<node_allocator_type, const Allocator&>::value)
 								)
@@ -388,7 +318,7 @@ namespace kerbal
 #			if __cplusplus >= 201103L
 
 					KERBAL_CONSTEXPR
-					explicit list_allocator_overload(Allocator && allocator)
+					explicit sl_allocator_overload(Allocator && allocator)
 								KERBAL_CONDITIONAL_NOEXCEPT(
 										(std::is_nothrow_constructible<node_allocator_type, Allocator&&>::value)
 								)
@@ -413,23 +343,23 @@ namespace kerbal
 			};
 
 			template <typename Tp, typename Allocator>
-			class list_allocator_overload<Tp, Allocator, true>:
+			class sl_allocator_overload<Tp, Allocator, true>:
 					private kerbal::type_traits::remove_cv<
-							typename list_node_allocator_helper<Tp, Allocator>::type
+							typename sl_node_allocator_helper<Tp, Allocator>::type
 					>::type
 			{
 				private:
 					typedef typename kerbal::type_traits::remove_cv<
-							typename list_node_allocator_helper<Tp, Allocator>::type
+							typename sl_node_allocator_helper<Tp, Allocator>::type
 					>::type super;
 
 				protected:
-					typedef typename list_node_allocator_helper<Tp, Allocator>::type	node_allocator_type;
+					typedef typename sl_node_allocator_helper<Tp, Allocator>::type	node_allocator_type;
 
 				protected:
 
 					KERBAL_CONSTEXPR
-					list_allocator_overload()
+					sl_allocator_overload()
 								KERBAL_CONDITIONAL_NOEXCEPT(
 										std::is_nothrow_default_constructible<super>::value
 								)
@@ -438,7 +368,7 @@ namespace kerbal
 					}
 
 					KERBAL_CONSTEXPR
-					explicit list_allocator_overload(const Allocator & allocator)
+					explicit sl_allocator_overload(const Allocator & allocator)
 								KERBAL_CONDITIONAL_NOEXCEPT(
 										(std::is_nothrow_constructible<super, const Allocator&>::value)
 								)
@@ -449,7 +379,7 @@ namespace kerbal
 #			if __cplusplus >= 201103L
 
 					KERBAL_CONSTEXPR
-					explicit list_allocator_overload(Allocator && allocator)
+					explicit sl_allocator_overload(Allocator && allocator)
 								KERBAL_CONDITIONAL_NOEXCEPT(
 										(std::is_nothrow_constructible<super, Allocator&&>::value)
 								)
@@ -473,12 +403,13 @@ namespace kerbal
 
 			};
 
+
 		} // namespace detail
 
 	} // namespace container
 
 } // namespace kerbal
 
-#include <kerbal/container/impl/list_base.impl.hpp>
+#include <kerbal/container/impl/single_list_base.impl.hpp>
 
-#endif // KERBAL_CONTAINER_DETAIL_LIST_BASE_HPP
+#endif // KERBAL_CONTAINER_DETAIL_SINGLE_LIST_BASE_HPP

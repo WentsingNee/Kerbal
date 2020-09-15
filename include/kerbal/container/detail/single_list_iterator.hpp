@@ -19,31 +19,144 @@
 #include <kerbal/operators/incr_decr.hpp>
 #include <kerbal/iterator/iterator_traits.hpp>
 
+#include <kerbal/container/detail/single_list_node.hpp>
+
 namespace kerbal
 {
 
 	namespace container
 	{
 
-		template <typename Tp, typename Allocator>
-		class single_list;
-
 		namespace detail
 		{
-			template <typename Tp>
-			class sl_iter;
 
-			template <typename Tp>
-			class sl_kiter;
+			class sl_iter_type_unrelated:
+					//forward iterator interface
+					public kerbal::operators::equality_comparable<sl_iter_type_unrelated>, // it != jt
+					public kerbal::operators::incrementable<sl_iter_type_unrelated> // it++
+			{
+					friend class kerbal::container::detail::sl_type_unrelated;
+
+					friend class kerbal::container::detail::sl_kiter_type_unrelated;
+
+					template <typename Tp>
+					friend class kerbal::container::detail::sl_iter;
+
+					template <typename Tp>
+					friend class kerbal::container::detail::sl_kiter;
+
+				public:
+					typedef std::bidirectional_iterator_tag					iterator_category;
+					typedef std::ptrdiff_t									difference_type;
+
+				protected:
+					typedef kerbal::container::detail::sl_node_base			node_base;
+					typedef node_base*										ptr_to_node_base;
+					ptr_to_node_base current;
+
+				protected:
+					KERBAL_CONSTEXPR
+					explicit sl_iter_type_unrelated(ptr_to_node_base current) KERBAL_NOEXCEPT :
+							current(current)
+					{
+					}
+
+				protected:
+					KERBAL_CONSTEXPR
+					ptr_to_node_base refer_node_ptr() const KERBAL_NOEXCEPT
+					{
+						return this->current->next;
+					}
+
+					KERBAL_CONSTEXPR14
+					sl_iter_type_unrelated& operator++() KERBAL_NOEXCEPT
+					{
+						this->current = this->current->next;
+						return *this;
+					}
+
+					friend KERBAL_CONSTEXPR
+					bool operator==(const sl_iter_type_unrelated & lhs, const sl_iter_type_unrelated & rhs) KERBAL_NOEXCEPT
+					{
+						return lhs.current == rhs.current;
+					}
+
+			};
+
+			class sl_kiter_type_unrelated:
+					//forward iterator interface
+					public kerbal::operators::equality_comparable<sl_kiter_type_unrelated>, // it != jt
+					public kerbal::operators::incrementable<sl_kiter_type_unrelated> // it++
+			{
+				private:
+					friend class kerbal::container::detail::sl_type_unrelated;
+
+					typedef sl_iter_type_unrelated basic_iterator;
+
+				public:
+					typedef std::bidirectional_iterator_tag					iterator_category;
+					typedef std::ptrdiff_t									difference_type;
+
+				protected:
+					typedef const kerbal::container::detail::sl_node_base		node_base;
+					typedef node_base*											ptr_to_node_base;
+					ptr_to_node_base current;
+
+				protected:
+					KERBAL_CONSTEXPR
+					explicit sl_kiter_type_unrelated(ptr_to_node_base current) KERBAL_NOEXCEPT :
+							current(current)
+					{
+					}
+
+				public:
+					KERBAL_CONSTEXPR
+					sl_kiter_type_unrelated(const basic_iterator & iter) KERBAL_NOEXCEPT :
+							current(iter.current)
+					{
+					}
+
+				protected:
+					KERBAL_CONSTEXPR
+					ptr_to_node_base refer_node_ptr() const KERBAL_NOEXCEPT
+					{
+						return this->current->next;
+					}
+
+					KERBAL_CONSTEXPR14
+					sl_kiter_type_unrelated& operator++() KERBAL_NOEXCEPT
+					{
+						this->current = this->current->next;
+						return *this;
+					}
+
+					friend KERBAL_CONSTEXPR
+					bool operator==(const sl_kiter_type_unrelated & lhs, const sl_kiter_type_unrelated & rhs) KERBAL_NOEXCEPT
+					{
+						return lhs.current == rhs.current;
+					}
+
+					KERBAL_CONSTEXPR14
+					basic_iterator cast_to_mutable() const KERBAL_NOEXCEPT
+					{
+						return basic_iterator(const_cast<kerbal::container::detail::sl_node_base*>(this->current));
+					}
+
+			};
 
 			template <typename Tp>
 			class sl_iter:
+					sl_iter_type_unrelated,
 					//forward iterator interface
 					public kerbal::operators::dereferenceable<sl_iter<Tp>, Tp*>, // it->
 					public kerbal::operators::equality_comparable<sl_iter<Tp> >, // it != jt
 					public kerbal::operators::incrementable<sl_iter<Tp> > // it++
 			{
 				private:
+					typedef sl_iter_type_unrelated super;
+
+					friend class kerbal::container::detail::sl_allocator_unrelated<Tp>;
+
 					template <typename Up, typename Allocator>
 					friend class kerbal::container::single_list;
 
@@ -59,22 +172,17 @@ namespace kerbal
 					typedef typename iterator_traits::pointer				pointer;
 					typedef typename iterator_traits::reference				reference;
 
-				private:
-					typedef kerbal::container::detail::sl_node_base			node_base;
-					typedef node_base*										ptr_to_node_base;
-					ptr_to_node_base current;
-
 				protected:
 					KERBAL_CONSTEXPR
 					explicit sl_iter(ptr_to_node_base current) KERBAL_NOEXCEPT :
-							current(current)
+							super(current)
 					{
 					}
 
 					KERBAL_CONSTEXPR
-					ptr_to_node_base refer_node_ptr() const KERBAL_NOEXCEPT
+					explicit sl_iter(const detail::sl_iter_type_unrelated & iter) KERBAL_NOEXCEPT :
+							super(iter.current)
 					{
-						return this->current->next;
 					}
 
 				public:
@@ -90,30 +198,35 @@ namespace kerbal
 					KERBAL_CONSTEXPR14
 					sl_iter& operator++() KERBAL_NOEXCEPT
 					{
-						this->current = this->current->next;
+						super::operator++();
 						return *this;
 					}
 
 					friend KERBAL_CONSTEXPR
 					bool operator==(const sl_iter & lhs, const sl_iter & rhs) KERBAL_NOEXCEPT
 					{
-						return lhs.refer_node_ptr() == rhs.refer_node_ptr();
+						return (const super&)lhs == (const super&)rhs;
 					}
 
 			};
 
 			template <typename Tp>
 			class sl_kiter:
+					sl_kiter_type_unrelated,
 					//forward iterator interface
 					public kerbal::operators::dereferenceable<sl_kiter<Tp>, const Tp*>, // it->
 					public kerbal::operators::equality_comparable<sl_kiter<Tp> >, // it != jt
 					public kerbal::operators::incrementable<sl_kiter<Tp> > // it++
 			{
 				private:
+					typedef sl_kiter_type_unrelated super;
+
+					friend class kerbal::container::detail::sl_allocator_unrelated<Tp>;
+
 					template <typename Up, typename Allocator>
 					friend class kerbal::container::single_list;
 
-					friend class sl_iter<Tp>;
+					typedef sl_iter<Tp> iterator;
 
 				private:
 					typedef kerbal::iterator::iterator_traits<const Tp*>	iterator_traits;
@@ -125,22 +238,23 @@ namespace kerbal
 					typedef typename iterator_traits::pointer				pointer;
 					typedef typename iterator_traits::reference				reference;
 
-				private:
-					typedef const kerbal::container::detail::sl_node_base		node_base;
-					typedef node_base*											ptr_to_node_base;
-					ptr_to_node_base current;
-
 				protected:
 					KERBAL_CONSTEXPR
 					explicit sl_kiter(ptr_to_node_base current) KERBAL_NOEXCEPT :
-							current(current)
+							super(current)
+					{
+					}
+
+					KERBAL_CONSTEXPR
+					explicit sl_kiter(const detail::sl_iter_type_unrelated & iter) KERBAL_NOEXCEPT :
+							super(iter.current)
 					{
 					}
 
 				public:
 					KERBAL_CONSTEXPR
-					sl_kiter(const sl_iter<Tp> & iter) KERBAL_NOEXCEPT :
-							current(iter.current)
+					sl_kiter(const iterator & iter) KERBAL_NOEXCEPT :
+							super(iter.current)
 					{
 					}
 
@@ -151,28 +265,27 @@ namespace kerbal
 					KERBAL_CONSTEXPR14
 					reference operator*() const KERBAL_NOEXCEPT
 					{
-						return this->current->next->template reinterpret_as<Tp>().value;
+						return this->refer_node_ptr()->template reinterpret_as<Tp>().value;
 					}
 
 					KERBAL_CONSTEXPR14
 					sl_kiter& operator++() KERBAL_NOEXCEPT
 					{
-						this->current = this->current->next;
+						super::operator++();
 						return *this;
 					}
 
 					friend KERBAL_CONSTEXPR
 					bool operator==(const sl_kiter & lhs, const sl_kiter & rhs) KERBAL_NOEXCEPT
 					{
-						return lhs.current == rhs.current;
+						return (const super&)lhs == (const super&)rhs;
 					}
 
 				protected:
 					KERBAL_CONSTEXPR14
-					sl_iter<Tp>
-					cast_to_mutable() const KERBAL_NOEXCEPT
+					iterator cast_to_mutable() const KERBAL_NOEXCEPT
 					{
-						return sl_iter<Tp>(const_cast<kerbal::container::detail::sl_node_base*>(this->current));
+						return iterator(const_cast<kerbal::container::detail::sl_node_base*>(this->current));
 					}
 
 			};

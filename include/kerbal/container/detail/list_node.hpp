@@ -50,9 +50,6 @@ namespace kerbal
 					template <typename Tp>
 					friend class kerbal::container::detail::list_allocator_unrelated;
 
-					template <typename Tp, typename Allocator, bool B>
-					friend class kerbal::container::detail::list_base;
-
 					template <typename Tp, typename Allocator>
 					friend class kerbal::container::list;
 
@@ -129,11 +126,9 @@ namespace kerbal
 					template <typename Up, typename Allocator>
 					friend class kerbal::container::list;
 
-					template <typename Up>
-					friend class list_iter;
+					friend class kerbal::container::detail::list_iter<Tp>;
 
-					template <typename Up>
-					friend class list_kiter;
+					friend class kerbal::container::detail::list_kiter<Tp>;
 
 				private:
 					Tp value;
@@ -193,11 +188,9 @@ namespace kerbal
 					template <typename Up, typename Allocator>
 					friend class kerbal::container::list;
 
-					template <typename Up>
-					friend class list_iter;
+					friend class kerbal::container::detail::list_iter<Tp[N]>;
 
-					template <typename Up>
-					friend class list_kiter;
+					friend class kerbal::container::detail::list_kiter<Tp[N]>;
 
 				private:
 					Tp value[N];
