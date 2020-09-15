@@ -119,7 +119,7 @@ namespace kerbal
 			kerbal::algorithm::nonrecursive_qsort(first, last, std::less<value_type>());
 		}
 
-#	if defined(ENABLE_PMR_NONRECURSIVE_QSORT) && ENABLE_PMR_NONRECURSIVE_QSORT
+#	if ENABLE_PMR_NONRECURSIVE_QSORT
 
 		namespace pmr
 		{
