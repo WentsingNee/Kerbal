@@ -82,15 +82,15 @@ namespace kerbal
 				KERBAL_STATIC_ASSERT(!(kerbal::type_traits::is_same<type, void>::value), "doesn't support this width");
 		};
 
-		typedef typename __fixed_width_interger_helper<8>::type    int8_t;
-		typedef typename __fixed_width_interger_helper<16>::type   int16_t;
-		typedef typename __fixed_width_interger_helper<32>::type   int32_t;
-		typedef typename __fixed_width_interger_helper<64>::type   int64_t;
+		typedef __fixed_width_interger_helper<8>::type		int8_t;
+		typedef __fixed_width_interger_helper<16>::type		int16_t;
+		typedef __fixed_width_interger_helper<32>::type		int32_t;
+		typedef __fixed_width_interger_helper<64>::type		int64_t;
 
-		typedef typename __fixed_width_unsigned_interger_helper<8>::type    uint8_t;
-		typedef typename __fixed_width_unsigned_interger_helper<16>::type   uint16_t;
-		typedef typename __fixed_width_unsigned_interger_helper<32>::type   uint32_t;
-		typedef typename __fixed_width_unsigned_interger_helper<64>::type   uint64_t;
+		typedef __fixed_width_unsigned_interger_helper<8>::type		uint8_t;
+		typedef __fixed_width_unsigned_interger_helper<16>::type	uint16_t;
+		typedef __fixed_width_unsigned_interger_helper<32>::type	uint32_t;
+		typedef __fixed_width_unsigned_interger_helper<64>::type	uint64_t;
 
 
 	}
