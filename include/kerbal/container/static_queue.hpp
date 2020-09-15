@@ -146,6 +146,69 @@ namespace kerbal
 					this->iend = this->next(this->iend);
 				}
 
+
+#		if __cplusplus >= 201103L
+
+				KERBAL_CONSTEXPR14
+				void push(rvalue_reference val)
+				{
+					this->storage[this->iend].construct(kerbal::compatibility::move(val));
+					this->iend = this->next(this->iend);
+				}
+
+#		endif
+
+#		if __cplusplus >= 201103L
+
+				template <typename ... Args>
+				KERBAL_CONSTEXPR14
+				reference emplace(Args&& ... args)
+				{
+					this->storage[this->iend].construct(std::forward<Args>(args)...);
+					size_type iback = this->iend;
+					this->iend = this->next(this->iend);
+					return this->storage[iback];
+				}
+
+#		else
+
+				reference emplace()
+				{
+					this->storage[this->iend].construct();
+					size_type iback = this->iend;
+					this->iend = this->next(this->iend);
+					return this->storage[iback];
+				}
+
+				template <typename Arg0>
+				reference emplace(const Arg0& arg0)
+				{
+					this->storage[this->iend].construct(arg0);
+					size_type iback = this->iend;
+					this->iend = this->next(this->iend);
+					return this->storage[iback];
+				}
+
+				template <typename Arg0, typename Arg1>
+				reference emplace(const Arg0& arg0, const Arg1& arg1)
+				{
+					this->storage[this->iend].construct(arg0, arg1);
+					size_type iback = this->iend;
+					this->iend = this->next(this->iend);
+					return this->storage[iback];
+				}
+
+				template <typename Arg0, typename Arg1, typename Arg2>
+				reference emplace(const Arg0& arg0, const Arg1& arg1, const Arg2& arg2)
+				{
+					this->storage[this->iend].construct(arg0, arg1, arg2);
+					size_type iback = this->iend;
+					this->iend = this->next(this->iend);
+					return this->storage[iback];
+				}
+
+#		endif
+
 				KERBAL_CONSTEXPR14
 				void pop()
 				{

@@ -126,9 +126,34 @@ namespace kerbal
 
 				template <typename ... Args>
 				KERBAL_CONSTEXPR14
-				void emplace(Args&&... args)
+				reference emplace(Args&& ... args)
 				{
-					c.emplace_back(std::forward<Args>(args)...);
+					return c.emplace_back(std::forward<Args>(args)...);
+				}
+
+#		else
+
+				reference emplace()
+				{
+					return c.emplace_back();
+				}
+
+				template <typename Arg0>
+				reference emplace(const Arg0& arg0)
+				{
+					return c.emplace_back(arg0);
+				}
+
+				template <typename Arg0, typename Arg1>
+				reference emplace(const Arg0& arg0, const Arg1& arg1)
+				{
+					return c.emplace_back(arg0, arg1);
+				}
+
+				template <typename Arg0, typename Arg1, typename Arg2>
+				reference emplace(const Arg0& arg0, const Arg1& arg1, const Arg2& arg2)
+				{
+					return c.emplace_back(arg0, arg1, arg2);
 				}
 
 #		endif

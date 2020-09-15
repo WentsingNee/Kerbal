@@ -70,7 +70,8 @@ namespace kerbal
 					return c.size();
 				}
 
-				KERBAL_CONSTEXPR size_type max_size() const
+				KERBAL_CONSTEXPR
+				size_type max_size() const
 				{
 					return c.max_size();
 				}
@@ -101,11 +102,40 @@ namespace kerbal
 					c.push_front(kerbal::compatibility::move(val));
 				}
 
+#		endif
+
+#		if __cplusplus >= 201103L
+
 				template <typename ... Args>
 				KERBAL_CONSTEXPR20
-				void emplace(Args&&... args)
+				reference emplace(Args&& ... args)
 				{
-					c.emplace_front(std::forward<Args>(args)...);
+					return c.emplace_front(std::forward<Args>(args)...);
+				}
+
+#		else
+
+				reference emplace()
+				{
+					return c.emplace_front();
+				}
+
+				template <typename Arg0>
+				reference emplace(const Arg0& arg0)
+				{
+					return c.emplace_front(arg0);
+				}
+
+				template <typename Arg0, typename Arg1>
+				reference emplace(const Arg0& arg0, const Arg1& arg1)
+				{
+					return c.emplace_front(arg0, arg1);
+				}
+
+				template <typename Arg0, typename Arg1, typename Arg2>
+				reference emplace(const Arg0& arg0, const Arg1& arg1, const Arg2& arg2)
+				{
+					return c.emplace_front(arg0, arg1, arg2);
 				}
 
 #		endif

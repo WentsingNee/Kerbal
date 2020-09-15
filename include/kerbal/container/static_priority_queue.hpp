@@ -168,11 +168,44 @@ namespace kerbal
 					kerbal::algorithm::push_heap(c.begin(), c.end(), vc);
 				}
 
+#		endif
+
+#		if __cplusplus >= 201103L
+
 				template <typename ... Args>
 				KERBAL_CONSTEXPR14
-				void emplace(Args&&... args)
+				void emplace(Args&& ... args)
 				{
 					c.emplace_back(std::forward<Args>(args)...);
+					kerbal::algorithm::push_heap(c.begin(), c.end(), vc);
+				}
+
+#		else
+
+				void emplace()
+				{
+					c.emplace_back();
+					kerbal::algorithm::push_heap(c.begin(), c.end(), vc);
+				}
+
+				template <typename Arg0>
+				void emplace(const Arg0& arg0)
+				{
+					c.emplace_back(arg0);
+					kerbal::algorithm::push_heap(c.begin(), c.end(), vc);
+				}
+
+				template <typename Arg0, typename Arg1>
+				void emplace(const Arg0& arg0, const Arg1& arg1)
+				{
+					c.emplace_back(arg0, arg1);
+					kerbal::algorithm::push_heap(c.begin(), c.end(), vc);
+				}
+
+				template <typename Arg0, typename Arg1, typename Arg2>
+				void emplace(const Arg0& arg0, const Arg1& arg1, const Arg2& arg2)
+				{
+					c.emplace_back(arg0, arg1, arg2);
 					kerbal::algorithm::push_heap(c.begin(), c.end(), vc);
 				}
 
@@ -190,6 +223,7 @@ namespace kerbal
 				void swap(static_priority_queue<Tp, M> & with)
 				{
 					c.swap(with);
+					kerbal::algorithm::swap(this->vc, with.vc);
 				}
 
 				KERBAL_CONSTEXPR
