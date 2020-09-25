@@ -452,6 +452,8 @@ namespace kerbal
 				using list_allocator_unrelated::reverse_unstable;
 				using list_allocator_unrelated::reverse_fast;
 
+				using list_allocator_unrelated::rotate;
+
 				using list_allocator_unrelated::sort;
 
 				KERBAL_CONSTEXPR20

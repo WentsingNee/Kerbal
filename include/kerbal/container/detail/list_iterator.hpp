@@ -42,9 +42,6 @@ namespace kerbal
 
 					friend class kerbal::container::detail::list_kiter_type_unrelated;
 
-					template <typename Tp>
-					friend class list_kiter;
-
 				public:
 					typedef std::bidirectional_iterator_tag					iterator_category;
 					typedef std::ptrdiff_t									difference_type;
@@ -185,6 +182,12 @@ namespace kerbal
 					{
 					}
 
+					KERBAL_CONSTEXPR
+					explicit list_iter(const list_iter_type_unrelated & iter) KERBAL_NOEXCEPT :
+							super(iter)
+					{
+					}
+
 				public:
 					//===================
 					//forward iterator interface
@@ -254,6 +257,12 @@ namespace kerbal
 					KERBAL_CONSTEXPR
 					explicit list_kiter(ptr_to_node_base current) KERBAL_NOEXCEPT :
 							super(current)
+					{
+					}
+
+					KERBAL_CONSTEXPR
+					explicit list_kiter(const list_kiter_type_unrelated & iter) KERBAL_NOEXCEPT :
+							super(iter)
 					{
 					}
 

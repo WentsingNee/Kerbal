@@ -106,6 +106,11 @@ namespace kerbal
 					void reverse() KERBAL_NOEXCEPT;
 
 					KERBAL_CONSTEXPR20
+					static
+					basic_iterator
+					rotate(basic_iterator first, basic_iterator n_first, basic_iterator last) KERBAL_NOEXCEPT;
+
+					KERBAL_CONSTEXPR20
 					static void splice(basic_const_iterator pos, list_type_unrelated & other) KERBAL_NOEXCEPT;
 
 					KERBAL_CONSTEXPR20
@@ -139,8 +144,13 @@ namespace kerbal
 					std::pair<node_base *, node_base *>
 					__unhook_node(basic_iterator first, basic_iterator last) KERBAL_NOEXCEPT;
 
+					// pre-cond: `not_empty_list` and `empty_list` are lists of same type
 					KERBAL_CONSTEXPR20
 					static void __swap_with_empty(list_type_unrelated & not_empty_list, list_type_unrelated & empty_list) KERBAL_NOEXCEPT;
+
+					// pre-cond: lhs and rhs are lists of same type
+					KERBAL_CONSTEXPR20
+					static void __swap_type_unrelated(list_type_unrelated & lhs, list_type_unrelated & rhs) KERBAL_NOEXCEPT;
 
 			};
 
@@ -305,6 +315,9 @@ namespace kerbal
 					KERBAL_CONSTEXPR20
 					void reverse_fast() KERBAL_NOEXCEPT;
 
+					KERBAL_CONSTEXPR20
+					iterator rotate(const_iterator first, const_iterator n_first, const_iterator last) KERBAL_NOEXCEPT;
+
 					template <typename BinaryPredict>
 					KERBAL_CONSTEXPR20
 					void merge(list_allocator_unrelated & other, BinaryPredict cmp);
@@ -335,9 +348,6 @@ namespace kerbal
 
 					KERBAL_CONSTEXPR20
 					void sort();
-
-					KERBAL_CONSTEXPR20
-					void swap_allocator_unrelated(list_allocator_unrelated & ano) KERBAL_NOEXCEPT;
 
 			};
 

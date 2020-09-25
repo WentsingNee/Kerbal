@@ -755,7 +755,7 @@ namespace kerbal
 			typedef typename node_allocator_traits::propagate_on_container_swap propagate_on_container_swap;
 			this->swap_allocator_helper<propagate_on_container_swap::value>();
 
-			list_allocator_unrelated::swap_allocator_unrelated(ano);
+			list_type_unrelated::__swap_type_unrelated(*this, ano);
 		}
 
 		template <typename Tp, typename Allocator>

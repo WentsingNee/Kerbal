@@ -91,12 +91,32 @@ namespace kerbal
 			}
 
 			KERBAL_CONSTEXPR20
+			inline
+			list_type_unrelated::basic_iterator
+			list_type_unrelated::rotate(basic_iterator first, basic_iterator n_first, basic_iterator last) KERBAL_NOEXCEPT
+			{
+				if (first == n_first) {
+					return last;
+				}
+
+				if (n_first == last) {
+					return first;
+				}
+
+				std::pair<node_base *, node_base *> left_range(__unhook_node(first, n_first));
+				__hook_node(last, left_range.first, left_range.second);
+				return first;
+			}
+
+			KERBAL_CONSTEXPR20
+			inline
 			void list_type_unrelated::splice(basic_const_iterator pos, list_type_unrelated & other) KERBAL_NOEXCEPT
 			{
 				list_type_unrelated::splice(pos, other.basic_begin(), other.basic_end());
 			}
 
 			KERBAL_CONSTEXPR20
+			inline
 			void list_type_unrelated::splice(basic_const_iterator pos, basic_const_iterator opos) KERBAL_NOEXCEPT
 			{
 				basic_iterator opos_mut(opos.cast_to_mutable());
@@ -105,6 +125,7 @@ namespace kerbal
 			}
 
 			KERBAL_CONSTEXPR20
+			inline
 			void list_type_unrelated::splice(basic_const_iterator pos, basic_const_iterator first, basic_const_iterator last) KERBAL_NOEXCEPT
 			{
 				if (first == last) {
@@ -180,6 +201,33 @@ namespace kerbal
 				empty_list.head_node.next = not_empty_list.head_node.next;
 				empty_list.head_node.next->prev = &empty_list.head_node;
 				not_empty_list.__init_node_base();
+			}
+
+			KERBAL_CONSTEXPR20
+			inline
+			void list_type_unrelated::__swap_type_unrelated(list_type_unrelated & lhs, list_type_unrelated & rhs) KERBAL_NOEXCEPT
+			{
+				bool is_rhs_empty = rhs.empty();
+				if (lhs.empty()) {
+					if (!is_rhs_empty) {
+						// lhs.empty() && !rhs.empty()
+						__swap_with_empty(rhs, lhs);
+					}
+				} else {
+					if (is_rhs_empty) {
+						// !lhs.empty() and rhs.empty()
+						__swap_with_empty(lhs, rhs);
+					} else {
+						// !lhs.empty() and !rhs.empty()
+						kerbal::algorithm::swap(lhs.head_node.prev, rhs.head_node.prev);
+						lhs.head_node.prev->next = &lhs.head_node;
+						rhs.head_node.prev->next = &rhs.head_node;
+
+						kerbal::algorithm::swap(lhs.head_node.next, rhs.head_node.next);
+						lhs.head_node.next->prev = &lhs.head_node;
+						rhs.head_node.next->prev = &rhs.head_node;
+					}
+				}
 			}
 
 
@@ -490,6 +538,14 @@ namespace kerbal
 
 			template <typename Tp>
 			KERBAL_CONSTEXPR20
+			typename list_allocator_unrelated<Tp>::iterator
+			list_allocator_unrelated<Tp>::rotate(const_iterator first, const_iterator n_first, const_iterator last) KERBAL_NOEXCEPT
+			{
+				return iterator(list_type_unrelated::rotate(first.cast_to_mutable(), n_first.cast_to_mutable(), last.cast_to_mutable()));
+			}
+
+			template <typename Tp>
+			KERBAL_CONSTEXPR20
 			void list_allocator_unrelated<Tp>::merge(list_allocator_unrelated& other)
 			{
 				this->merge(other, std::less<value_type>());
@@ -516,7 +572,7 @@ namespace kerbal
 						try {
 							flag = static_cast<bool>(cmp(*mid, a->value));
 						} catch (...) {
-							super::__hook_node(mid, a, a_back);
+							__hook_node(mid, a, a_back);
 							throw;
 						}
 #			else
@@ -528,11 +584,11 @@ namespace kerbal
 							++mid;
 						} else {
 							node_base * t = a->next;
-							super::__hook_node(mid, a);
+							__hook_node(mid, a);
 							a = static_cast<node*>(t);
 						}
 					} else {
-						super::__hook_node(mid, a, a_back);
+						__hook_node(mid, a, a_back);
 						return;
 					}
 				}
@@ -601,34 +657,6 @@ namespace kerbal
 			void list_allocator_unrelated<Tp>::sort()
 			{
 				this->sort(this->begin(), this->end());
-			}
-
-			template <typename Tp>
-			KERBAL_CONSTEXPR20
-			void list_allocator_unrelated<Tp>::swap_allocator_unrelated(list_allocator_unrelated & ano) KERBAL_NOEXCEPT
-			{
-				bool is_this_empty = this->empty();
-				bool is_ano_empty = ano.empty();
-				if (is_this_empty) {
-					if (!is_ano_empty) {
-						// this->empty() && !ano.empty()
-						__swap_with_empty(ano, *this);
-					}
-				} else {
-					if (is_ano_empty) {
-						// !this->empty() and ano.empty()
-						__swap_with_empty(*this, ano);
-					} else {
-						// !this->empty() and !ano.empty()
-						kerbal::algorithm::swap(this->head_node.prev, ano.head_node.prev);
-						this->head_node.prev->next = &this->head_node;
-						ano.head_node.prev->next = &ano.head_node;
-
-						kerbal::algorithm::swap(this->head_node.next, ano.head_node.next);
-						this->head_node.next->prev = &this->head_node;
-						ano.head_node.next->prev = &ano.head_node;
-					}
-				}
 			}
 
 		} // namespace detail
