@@ -117,7 +117,7 @@ namespace kerbal
 				KERBAL_CONSTEXPR14
 				void push(rvalue_reference val)
 				{
-					c.push_back(val);
+					c.push_back(kerbal::compatibility::move(val));
 				}
 
 #		endif

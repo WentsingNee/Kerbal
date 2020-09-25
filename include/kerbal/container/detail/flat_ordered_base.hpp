@@ -774,8 +774,6 @@ namespace kerbal
 							// ub[-1] < src
 							ub = sequence.insert(ub, src);
 							inserted = true;
-						} else {
-							inserted = false;
 						}
 						return std::make_pair(ub, inserted);
 					}
@@ -805,10 +803,8 @@ namespace kerbal
 						if (static_cast<bool>(ub == this->cbegin()) ||
 							static_cast<bool>(this->key_comp_obj()(extract(*kerbal::iterator::prev(ub)), extract(src)))) {
 							// ub[-1] < src
-							ub = sequence.insert(ub, src);
+							ub = sequence.insert(ub, kerbal::compatibility::move(src));
 							inserted = true;
-						} else {
-							inserted = false;
 						}
 						return std::make_pair(ub, inserted);
 					}
@@ -817,13 +813,13 @@ namespace kerbal
 					KERBAL_CONSTEXPR14
 					std::pair<iterator, bool> try_insert(rvalue_reference src)
 					{
-						return this->__try_insert_helper(this->upper_bound(Extract()(src)), src);
+						return this->__try_insert_helper(this->upper_bound(Extract()(src)), kerbal::compatibility::move(src));
 					}
 
 					KERBAL_CONSTEXPR14
 					std::pair<iterator, bool> try_insert(const_iterator hint, rvalue_reference src)
 					{
-						return this->__try_insert_helper(this->upper_bound(Extract()(src), hint), src);
+						return this->__try_insert_helper(this->upper_bound(Extract()(src), hint), kerbal::compatibility::move(src));
 					}
 
 #			endif
