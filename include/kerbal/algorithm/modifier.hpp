@@ -685,8 +685,8 @@ namespace kerbal
 							++first;
 							++n_first;
 						}
-						right_len = right_len % left_len;
-						left_len = left_len - right_len;
+						right_len %= left_len;
+						left_len -= right_len;
 						n_first = last - right_len;
 						// next loop: rotate(left, n_first', last)
 					} else {
@@ -701,8 +701,8 @@ namespace kerbal
 							--last;
 							kerbal::algorithm::iter_swap(n_first, last);
 						}
-						left_len = left_len % right_len;
-						right_len = right_len - left_len;
+						left_len %= right_len;
+						right_len -= left_len;
 						n_first = first + left_len;
 						// next loop: rotate(first, n_first', right)
 					}

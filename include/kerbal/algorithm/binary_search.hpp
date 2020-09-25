@@ -308,8 +308,6 @@ namespace kerbal
 			lower_bound_hint(ForwardIterator first, ForwardIterator last, const Tp& value,
 								ForwardIterator hint, Comparator comparator, std::forward_iterator_tag)
 			{
-				typedef ForwardIterator iterator;
-
 				if (hint == last) {
 				} else if (comparator(*hint, value)) { // *hint < value
 					first = kerbal::iterator::next(hint);
@@ -326,8 +324,6 @@ namespace kerbal
 			lower_bound_hint(BidirectionalIterator first, BidirectionalIterator last, const Tp& value,
 								BidirectionalIterator hint, Comparator comparator, std::bidirectional_iterator_tag)
 			{
-				typedef BidirectionalIterator iterator;
-
 				if (hint == last) {
 				} else if (comparator(*hint, value)) { //*hint < value
 					++hint;
@@ -405,8 +401,6 @@ namespace kerbal
 			upper_bound_hint(ForwardIterator first, ForwardIterator last, const Tp& value,
 								ForwardIterator hint, Comparator comparator, std::forward_iterator_tag)
 			{
-				typedef ForwardIterator iterator;
-
 				if (hint == last) {
 				} else if (comparator(value, *hint)) { // *hint > value
 					last = hint;
@@ -423,8 +417,6 @@ namespace kerbal
 			upper_bound_hint(BidirectionalIterator first, BidirectionalIterator last, const Tp& value,
 							BidirectionalIterator hint, Comparator comparator, std::bidirectional_iterator_tag)
 			{
-				typedef BidirectionalIterator iterator;
-
 				if (hint == last) {
 				} else if (comparator(value, *hint)) { // *hint > value
 				} else { // *hint <= value

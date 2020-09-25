@@ -37,9 +37,6 @@ namespace kerbal
 														typename kerbal::iterator::iterator_traits<ForwardIterator>::difference_type len,
 														Compare, std::forward_iterator_tag)
 			{
-				typedef ForwardIterator iterator;
-				typedef typename kerbal::iterator::iterator_traits<iterator>::difference_type difference_type;
-
 				if (len == 0) {
 					return true;
 				}
@@ -57,7 +54,6 @@ namespace kerbal
 														Compare cmp, std::bidirectional_iterator_tag)
 			{
 				typedef ForwardIterator iterator;
-				typedef typename kerbal::iterator::iterator_traits<iterator>::difference_type difference_type;
 
 				if (len <= 16) {
 					iterator last(kerbal::iterator::next(first, len));

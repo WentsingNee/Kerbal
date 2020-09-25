@@ -96,12 +96,20 @@ namespace kerbal
 
 		} // namespace detail
 
+		template <typename ValueType>
+		struct is_radix_sort_acceptable_type:
+				kerbal::type_traits::is_integral<ValueType>
+		{
+		};
+
 		template <typename ForwardIterator, typename Order, size_t RADIX_BIT_WIDTH>
 		void radix_sort(ForwardIterator first, ForwardIterator last,
 						Order order, kerbal::type_traits::integral_constant<size_t, RADIX_BIT_WIDTH> /*radix_bit_width*/)
 		{
 			typedef ForwardIterator iterator;
 			typedef typename kerbal::iterator::iterator_traits<iterator>::value_type value_type;
+
+			KERBAL_STATIC_ASSERT(is_radix_sort_acceptable_type<value_type>::value, "radix_sort only accepts integral type");
 
 			typedef kerbal::type_traits::integral_constant<size_t, 1 << RADIX_BIT_WIDTH> BUCKETS_NUM;
 			std::vector<value_type> buckets[2][BUCKETS_NUM::value];
@@ -143,31 +151,16 @@ namespace kerbal
 															buckets[(ROUNDS::value + 1) % 2], BUCKETS_NUM::value);
 		}
 
-		template <typename ValueType>
-		struct is_radix_sort_acceptable_type:
-				kerbal::type_traits::is_integral<ValueType>
-		{
-		};
-
 		template <typename ForwardIterator, typename Order>
-		void radix_sort(ForwardIterator first, ForwardIterator last, Order order)
+		void radix_sort(ForwardIterator first, ForwardIterator last, Order /*order*/)
 		{
-			typedef ForwardIterator iterator;
-			typedef typename kerbal::iterator::iterator_traits<iterator>::value_type value_type;
-
-			KERBAL_STATIC_ASSERT(is_radix_sort_acceptable_type<value_type>::value, "radix_sort only accepts integral type");
-
-			kerbal::algorithm::radix_sort(first, last, order, kerbal::type_traits::integral_constant<size_t, CHAR_BIT>());
+			kerbal::algorithm::radix_sort(first, last, kerbal::type_traits::bool_constant<Order::value>(),
+											kerbal::type_traits::integral_constant<size_t, CHAR_BIT>());
 		}
 
 		template <typename ForwardIterator>
 		void radix_sort(ForwardIterator first, ForwardIterator last)
 		{
-			typedef ForwardIterator iterator;
-			typedef typename kerbal::iterator::iterator_traits<iterator>::value_type value_type;
-
-			KERBAL_STATIC_ASSERT(is_radix_sort_acceptable_type<value_type>::value, "radix_sort only accepts integral type");
-
 			kerbal::algorithm::radix_sort(first, last, type_traits::false_type());
 		}
 

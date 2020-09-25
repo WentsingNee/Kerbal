@@ -58,6 +58,13 @@ namespace kerbal
 			difference_type first_half_len = len / 2;
 			iterator mid(kerbal::algorithm::merge_sort_n_afford_buffer(first, first_half_len, buffer, cmp));
 			iterator last(kerbal::algorithm::merge_sort_n_afford_buffer(mid, len - first_half_len, buffer, cmp));
+
+			// <=> first = kerbal::algorithm::upper_bound(first, mid, *mid, cmp );
+			while (static_cast<bool>(first != mid) && !static_cast<bool>(cmp(*mid, *first))) {
+				// *mid >= *first
+				++first;
+			}
+
 			buffer_iterator buffer_mid(kerbal::algorithm::copy(first, mid, buffer));
 			kerbal::algorithm::detail::merge_sort_merge(buffer, buffer_mid, mid, last, first, cmp);
 			return last;
