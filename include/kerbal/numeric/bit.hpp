@@ -165,6 +165,7 @@ namespace kerbal
 #	if defined(KERBAL_BUILTIN_POPCOUNT)
 
 		KERBAL_CONSTEXPR
+		inline
 		int __popcount(unsigned int x, kerbal::type_traits::false_type) KERBAL_NOEXCEPT
 		{
 			return KERBAL_BUILTIN_POPCOUNT(x);
@@ -176,6 +177,7 @@ namespace kerbal
 #	if defined(KERBAL_BUILTIN_POPCOUNTL)
 
 		KERBAL_CONSTEXPR
+		inline
 		int __popcount(unsigned long x, kerbal::type_traits::false_type) KERBAL_NOEXCEPT
 		{
 			return KERBAL_BUILTIN_POPCOUNTL(x);
@@ -187,6 +189,7 @@ namespace kerbal
 #	if defined(KERBAL_BUILTIN_POPCOUNTLL)
 
 		KERBAL_CONSTEXPR
+		inline
 		int __popcount(unsigned long long x, kerbal::type_traits::false_type) KERBAL_NOEXCEPT
 		{
 			return KERBAL_BUILTIN_POPCOUNTLL(x);
