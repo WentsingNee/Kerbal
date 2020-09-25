@@ -55,7 +55,7 @@
 
 #	if defined(_MSC_VER)
 #		if defined(KERBAL_COMPILER_ID) && KERBAL_COMPILER_ID != KERBAL_COMPILER_ID_MSVC
-#			warning "Macro KERBAL_COMPILER_ID has defined!"
+#			pragma message ("Kerbal Warning: " "Macro KERBAL_COMPILER_ID has defined!")
 #		else
 #			define KERBAL_COMPILER_ID KERBAL_COMPILER_ID_MSVC
 #		endif
@@ -69,9 +69,17 @@
 #		endif
 #	endif
 
+
 #	ifndef KERBAL_COMPILER_ID
+
 #		define KERBAL_COMPILER_ID KERBAL_COMPILER_ID_UNKNOWN
-#		warning "Unknown compiler"
+
+#		if KERBAL_COMPILER_ID == KERBAL_COMPILER_ID_MSVC
+#			pragma message ("Kerbal Warning: " "Unknown compiler")
+#		else
+#			warning "Kerbal Warning: " "Unknown compiler"
+#		endif
+
 #	endif
 
 #endif

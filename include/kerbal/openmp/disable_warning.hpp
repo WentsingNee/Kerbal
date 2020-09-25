@@ -13,7 +13,14 @@
 #define KERBAL_OPENMP_DISABLE_WARNING_HPP
 
 #if !defined(_OPENMP)
-#	warning "openMP is disable"
+#	include <kerbal/config/compiler_id.hpp>
+
+#	if KERBAL_COMPILER_ID == KERBAL_COMPILER_ID_MSVC
+#		pragma message ("Kerbal Warning: " "openMP is disable")
+#	else
+#		warning "Kerbal Warning: " "openMP is disable"
+#	endif
+
 #endif
 
 #endif // KERBAL_OPENMP_DISABLE_WARNING_HPP

@@ -66,12 +66,19 @@
 
 #endif
 
-#undef  KERBAL_ALIGNOF_SUPPORTED
-#ifdef  KERBAL_ALIGNOF
+#undef KERBAL_ALIGNOF_SUPPORTED
+#ifdef KERBAL_ALIGNOF
 #	define KERBAL_ALIGNOF_SUPPORTED 1
 #else
+
 #	define KERBAL_ALIGNOF_SUPPORTED 0
-#	warning "KERBAL_ALIGNOF is not supported"
+
+#	if KERBAL_COMPILER_ID == KERBAL_COMPILER_ID_MSVC
+#		pragma message ("Kerbal Warning: " "KERBAL_ALIGNOF is not supported")
+#	else
+#		warning "Kerbal Warning: " "KERBAL_ALIGNOF is not supported"
+#	endif
+
 #endif
 
 #endif // KERBAL_COMPATIBILITY_ALIGNOF_HPP

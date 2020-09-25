@@ -66,12 +66,19 @@
 
 #endif
 
-#undef  KERBAL_ALIGNAS_SUPPORTED
-#ifdef  KERBAL_ALIGNAS
+#undef KERBAL_ALIGNAS_SUPPORTED
+#ifdef KERBAL_ALIGNAS
 #	define KERBAL_ALIGNAS_SUPPORTED 1
 #else
+
 #	define KERBAL_ALIGNAS_SUPPORTED 0
-#	warning "KERBAL_ALIGNAS is not supported"
+
+#	if KERBAL_COMPILER_ID == KERBAL_COMPILER_ID_MSVC
+#		pragma message ("Kerbal Warning: " "KERBAL_ALIGNAS is not supported")
+#	else
+#		warning "Kerbal Warning: " "KERBAL_ALIGNAS is not supported"
+#	endif
+
 #endif
 
 #endif // KERBAL_COMPATIBILITY_ALIGNAS_HPP

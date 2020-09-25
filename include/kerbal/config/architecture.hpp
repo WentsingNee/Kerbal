@@ -93,7 +93,7 @@
 
 #		if defined(_M_IX86)
 #			if defined(KERBAL_ARCHITECTURE) && KERBAL_ARCHITECTURE != KERBAL_ARCHITECTURE_X86
-#				warning "Macro KERBAL_ARCHITECTURE has defined!"
+#				pragma message ("Kerbal Warning: " "Macro KERBAL_ARCHITECTURE has defined!")
 #			else
 #				define KERBAL_ARCHITECTURE KERBAL_ARCHITECTURE_X86
 #			endif
@@ -101,7 +101,7 @@
 
 #		if defined(_M_AMD64)
 #			if defined(KERBAL_ARCHITECTURE) && KERBAL_ARCHITECTURE != KERBAL_ARCHITECTURE_AMD64
-#				warning "Macro KERBAL_ARCHITECTURE has defined!"
+#				pragma message ("Kerbal Warning: " "Macro KERBAL_ARCHITECTURE has defined!")
 #			else
 #				define KERBAL_ARCHITECTURE KERBAL_ARCHITECTURE_AMD64
 #			endif
@@ -109,7 +109,7 @@
 
 #		if defined(_M_ARM)
 #			if defined(KERBAL_ARCHITECTURE) && KERBAL_ARCHITECTURE != KERBAL_ARCHITECTURE_ARM
-#				warning "Macro KERBAL_ARCHITECTURE has defined!"
+#				pragma message ("Kerbal Warning: " "Macro KERBAL_ARCHITECTURE has defined!")
 #			else
 #				define KERBAL_ARCHITECTURE KERBAL_ARCHITECTURE_ARM
 #			endif
@@ -135,9 +135,17 @@
 
 #	endif
 
+
 #	ifndef KERBAL_ARCHITECTURE
+
 #		define KERBAL_ARCHITECTURE KERBAL_ARCHITECTURE_UNKNOWN
-#		warning "Unknown architecture"
+
+#		if KERBAL_COMPILER_ID == KERBAL_COMPILER_ID_MSVC
+#			pragma message ("Kerbal Warning: " "Unknown architecture")
+#		else
+#			warning "Kerbal Warning: " "Unknown architecture"
+#		endif
+
 #	endif
 
 #endif // ifndef KERBAL_ARCHITECTURE
