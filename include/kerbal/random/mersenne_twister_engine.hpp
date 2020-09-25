@@ -73,13 +73,13 @@ namespace kerbal
 
 					size_t i = 0;
 
-					for (i = 0; i < N - M; ++i) {
+					for (; i < N - M; ++i) {
 						result_type y = (this->mt[i] & UPPER_MASK::value) | (this->mt[i + 1] & LOWER_MASK::value);
 						this->mt[i] = this->mt[i + M] ^ (y >> 1) ^ mag01[y & 0x1UL];
 					}
 					for (; i < N - 1; ++i) {
 						result_type y = (this->mt[i] & UPPER_MASK::value) | (this->mt[i + 1] & LOWER_MASK::value);
-						this->mt[i] = this->mt[i + (M - N)] ^ (y >> 1) ^ mag01[y & 0x1UL];
+						this->mt[i] = this->mt[i - (N - M)] ^ (y >> 1) ^ mag01[y & 0x1UL];
 					}
 					result_type y = (this->mt[N - 1] & UPPER_MASK::value) | (this->mt[0] & LOWER_MASK::value);
 					this->mt[N - 1] = this->mt[M - 1] ^ (y >> 1) ^ mag01[y & 0x1UL];
@@ -88,7 +88,7 @@ namespace kerbal
 
 			private:
 				KERBAL_CONSTEXPR14
-				void init_mt()
+				void init_mt() KERBAL_NOEXCEPT
 				{
 					for (size_t i = 1; i < N; ++i) {
 						UIntType x = this->mt[i - 1];
@@ -181,14 +181,14 @@ namespace kerbal
 				}
 
 				KERBAL_CONSTEXPR14
-				bool operator==(const mersenne_twister_engine & rhs) const
+				bool operator==(const mersenne_twister_engine & rhs) const KERBAL_NOEXCEPT
 				{
 					return this->mti == rhs.mti &&
 							static_cast<bool>(kerbal::algorithm::sequence_equal_to(this->mt, rhs.mt));
 				}
 
 				KERBAL_CONSTEXPR14
-				bool operator!=(const mersenne_twister_engine & rhs) const
+				bool operator!=(const mersenne_twister_engine & rhs) const KERBAL_NOEXCEPT
 				{
 					return this->mti != rhs.mti ||
 							static_cast<bool>(kerbal::algorithm::sequence_not_equal_to(this->mt, rhs.mt));
@@ -196,6 +196,15 @@ namespace kerbal
 
 		};
 
+
+//		template <
+//				typename UIntType,
+//				size_t W, size_t N, size_t M, size_t R,
+//				UIntType A, size_t U, UIntType D, size_t S,
+//				UIntType B, size_t T,
+//				UIntType C, size_t L, UIntType F
+//		>
+//		class mersenne_twister_engine;
 
 		typedef kerbal::random::mersenne_twister_engine<kerbal::compatibility::uint32_t, 32, 624, 397, 31,
 				0x9908b0dfUL, 11, 0xffffffffUL, 7,
