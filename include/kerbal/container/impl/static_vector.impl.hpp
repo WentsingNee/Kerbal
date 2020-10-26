@@ -157,8 +157,7 @@ namespace kerbal
 				super()
 		{
 			// if any exception thrown, static_vector_base will do the cleanup job
-			value_type val;
-			this->assign(n, val);
+			this->assign(n, value_type());
 		}
 
 		template <typename Tp, size_t N>
