@@ -118,7 +118,8 @@ namespace kerbal
 				static_vector(std::initializer_list<value_type> src);
 #		else
 
-				static_vector(const kerbal::assign::assign_list<value_type> & src);
+				template <typename Up>
+				static_vector(const kerbal::assign::assign_list<Up> & src);
 
 #		endif
 
@@ -179,8 +180,8 @@ namespace kerbal
 
 #		else
 
-				KERBAL_CONSTEXPR14
-				static_vector& operator=(const kerbal::assign::assign_list<value_type> & src);
+				template <typename Up>
+				static_vector& operator=(const kerbal::assign::assign_list<Up> & src);
 
 #		endif
 
@@ -227,8 +228,8 @@ namespace kerbal
 
 #		else
 
-				KERBAL_CONSTEXPR14
-				void assign(const kerbal::assign::assign_list<value_type> & src);
+				template <typename Up>
+				void assign(const kerbal::assign::assign_list<Up> & src);
 
 #		endif
 

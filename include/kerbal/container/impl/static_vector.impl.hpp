@@ -97,8 +97,8 @@ namespace kerbal
 #	else
 
 		template <typename Tp, size_t N>
-		KERBAL_CONSTEXPR14
-		static_vector<Tp, N>::static_vector(const kerbal::assign::assign_list<value_type> & src)
+		template <typename Up>
+		static_vector<Tp, N>::static_vector(const kerbal::assign::assign_list<Up> & src)
 				: super()
 		{
 			this->__range_copy_constructor(src.cbegin(), src.cend(),
@@ -261,8 +261,8 @@ namespace kerbal
 #	else
 
 		template <typename Tp, size_t N>
-		KERBAL_CONSTEXPR14
-		static_vector<Tp, N>& static_vector<Tp, N>::operator=(const kerbal::assign::assign_list<value_type> & src)
+		template <typename Up>
+		static_vector<Tp, N>& static_vector<Tp, N>::operator=(const kerbal::assign::assign_list<Up> & src)
 		{
 			this->assign(src.cbegin(), src.cend());
 			return *this;
@@ -380,8 +380,8 @@ namespace kerbal
 #	else
 
 		template <typename Tp, size_t N>
-		KERBAL_CONSTEXPR14
-		void static_vector<Tp, N>::assign(const kerbal::assign::assign_list<value_type> & src)
+		template <typename Up>
+		void static_vector<Tp, N>::assign(const kerbal::assign::assign_list<Up> & src)
 		{
 			this->assign(src.cbegin(), src.cend());
 		}
