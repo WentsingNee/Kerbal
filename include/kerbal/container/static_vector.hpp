@@ -378,7 +378,7 @@ namespace kerbal
 				const_equal_c_array_reference c_arr() const;
 				const_equal_c_array_reference const_c_arr() const;
 
-				const_pointer data() const;
+				const_pointer data() const KERBAL_NOEXCEPT;
 
 				KERBAL_CONSTEXPR14
 				void push_back(const_reference src);

@@ -605,7 +605,7 @@ namespace kerbal
 
 		template <typename Tp, size_t N>
 		typename static_vector<Tp, N>::const_pointer
-		static_vector<Tp, N>::data() const
+		static_vector<Tp, N>::data() const KERBAL_NOEXCEPT
 		{
 			return reinterpret_cast<const_pointer>(&(this->storage[0]));
 		}
