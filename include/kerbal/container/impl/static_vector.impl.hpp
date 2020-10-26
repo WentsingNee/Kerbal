@@ -764,7 +764,7 @@ namespace kerbal
 		template <typename ... Args>
 		KERBAL_CONSTEXPR14
 		typename static_vector<Tp, N>::iterator
-		static_vector<Tp, N>::emplace(const const_iterator pos, Args&& ...args)
+		static_vector<Tp, N>::emplace(const_iterator pos, Args&& ...args)
 		{
 			iterator mutable_pos(pos.cast_to_mutable());
 			if (pos == this->cend()) {
