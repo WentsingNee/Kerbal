@@ -74,7 +74,6 @@ namespace kerbal
 				typedef std::size_t					size_type;
 				typedef std::ptrdiff_t				difference_type;
 
-				/// @brief 与该 static_vector 所等价的 C 风格数组的类型, 即 value_type[N]
 				typedef value_type				equal_c_array[N];
 				typedef equal_c_array&			equal_c_array_reference;
 				typedef const equal_c_array&	equal_const_c_array_reference;
@@ -114,8 +113,6 @@ namespace kerbal
 				/**
 				 * @brief Construct the array by coping the contents in initializer list
 				 * @param src An initializer list
-				 * @warning Compile terminate if the length of the initializer list large than the arg N of the static_vector
-				 * @warning The constructor only be provided under the environment of C++11 standard
 				 */
 				KERBAL_CONSTEXPR14
 				static_vector(std::initializer_list<value_type> src);
@@ -235,18 +232,15 @@ namespace kerbal
 
 #		endif
 
-				/** @brief 返回指向数组首元素的迭代器 */
 				KERBAL_CONSTEXPR14
 				iterator begin() KERBAL_NOEXCEPT;
 
-				/** @brief 返回指向数组末尾元素的后一个元素位置的迭代器 */
 				KERBAL_CONSTEXPR14
 				iterator end() KERBAL_NOEXCEPT;
 
 				KERBAL_CONSTEXPR14
 				const_iterator begin() const KERBAL_NOEXCEPT;
 
-				/** @brief 返回指向数组末尾元素的后一个元素位置的迭代器 */
 				KERBAL_CONSTEXPR14
 				const_iterator end() const KERBAL_NOEXCEPT;
 
@@ -379,31 +373,17 @@ namespace kerbal
 				KERBAL_CONSTEXPR14
 				const_reference back() const;
 
-				/**
-				 * @brief 返回与该 static_vector 所等价的 C 风格数组类型的引用, 方便与专门为 C 风格数组类型设计的 API 交互
-				 * @return 与该 static_vector 所等价的 C 风格数组类型的引用
-				 * @warning 必须保证数组元素存满时才可调用此方法
-				 * @throw std::exception Throw this exception when call this method while the array is not full
-				 */
 				equal_c_array_reference c_arr();
 				const_equal_c_array_reference c_arr() const;
 				const_equal_c_array_reference const_c_arr() const;
 
 				const_pointer data() const;
 
-				/**
-				 * @brief 在数组末尾插入参数 src 指定的元素
-				 * @param src
-				 */
 				KERBAL_CONSTEXPR14
 				void push_back(const_reference src);
 
 #		if __cplusplus >= 201103L
 
-				/**
-				 * @brief 在数组末尾插入参数 src 指定的元素
-				 * @param src
-				 */
 				KERBAL_CONSTEXPR14
 				void push_back(rvalue_reference src);
 
@@ -430,9 +410,6 @@ namespace kerbal
 
 #		endif
 
-				/**
-				 * @brief 移除数组末尾的元素
-				 */
 				KERBAL_CONSTEXPR14
 				void pop_back();
 
