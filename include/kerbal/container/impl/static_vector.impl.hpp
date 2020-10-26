@@ -867,12 +867,8 @@ namespace kerbal
 
 		template <typename Tp, size_t N>
 		KERBAL_CONSTEXPR14
-		void static_vector<Tp, N>::swap(static_vector & with)
+		void static_vector<Tp, N>::swap_helper(static_vector & with)
 		{
-			if (this->size() > with.size()) {
-				with.swap(*this);
-			}
-
 			static_vector & s_arr = *this;
 			static_vector & l_arr = with;
 
@@ -886,6 +882,17 @@ namespace kerbal
 			}
 
 			l_arr.shrink_back_to(l_arr.nth(s_len));
+		}
+
+		template <typename Tp, size_t N>
+		KERBAL_CONSTEXPR14
+		void static_vector<Tp, N>::swap(static_vector & with)
+		{
+			if (this->size() > with.size()) {
+				with.swap_helper(*this);
+			} else {
+				this->swap_helper(with);
+			}
 		}
 
 		template <typename Tp, size_t N>

@@ -473,6 +473,11 @@ namespace kerbal
 				KERBAL_CONSTEXPR14
 				iterator erase(const_iterator begin, const_iterator end);
 
+			private:
+				KERBAL_CONSTEXPR14
+				void swap_helper(static_vector & with);
+
+			public:
 				/**
 				 * @brief Swap the array with another one.
 				 * @param with another array to be swaped with
