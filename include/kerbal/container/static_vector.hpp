@@ -446,9 +446,6 @@ namespace kerbal
 
 #		endif
 
-				KERBAL_CONSTEXPR14
-				iterator emplace(const_iterator pos, const_reference src);
-
 #		if __cplusplus >= 201103L
 
 				template <typename ... Args>
