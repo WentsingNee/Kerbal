@@ -18,7 +18,6 @@
 #include <kerbal/compatibility/move.hpp>
 #include <kerbal/iterator/iterator.hpp>
 #include <kerbal/operators/generic_assign.hpp>
-#include <kerbal/utility/in_place.hpp>
 
 #include <kerbal/container/list.hpp>
 
@@ -80,7 +79,7 @@ namespace kerbal
 			if (n == 0) {
 				return;
 			}
-			std::pair<node*, node*> p(this->__build_n_new_nodes_unguarded(n));
+			std::pair<node*, node*> p(this->__build_n_new_nodes_unguarded(this->alloc(), n));
 			list_type_unrelated::__hook_node(this->cend(), p.first, p.second);
 		}
 
@@ -92,7 +91,7 @@ namespace kerbal
 			if (n == 0) {
 				return;
 			}
-			std::pair<node*, node*> p(this->__build_n_new_nodes_unguarded(n));
+			std::pair<node*, node*> p(this->__build_n_new_nodes_unguarded(this->alloc(), n));
 			list_type_unrelated::__hook_node(this->cend(), p.first, p.second);
 		}
 
@@ -104,7 +103,7 @@ namespace kerbal
 			if (n == 0) {
 				return;
 			}
-			std::pair<node*, node*> p(this->__build_n_new_nodes_unguarded(n, val));
+			std::pair<node*, node*> p(this->__build_n_new_nodes_unguarded(this->alloc(), n, val));
 			list_type_unrelated::__hook_node(this->cend(), p.first, p.second);
 		}
 
@@ -116,7 +115,7 @@ namespace kerbal
 			if (n == 0) {
 				return;
 			}
-			std::pair<node*, node*> p(this->__build_n_new_nodes_unguarded(n, val));
+			std::pair<node*, node*> p(this->__build_n_new_nodes_unguarded(this->alloc(), n, val));
 			list_type_unrelated::__hook_node(this->cend(), p.first, p.second);
 		}
 
@@ -173,7 +172,7 @@ namespace kerbal
 		KERBAL_CONSTEXPR20
 		void list<Tp, Allocator>::move_constructor_with_afforded_allocator_allocator_not_equal(list && src)
 		{
-			std::pair<node*, node*> range(this->__build_new_nodes_range_unguarded_move(src.begin(), src.end()));
+			std::pair<node*, node*> range(this->__build_new_nodes_range_unguarded_move(this->alloc(), src.begin(), src.end()));
 			list_type_unrelated::__hook_node(this->cend(), range.first, range.second);
 		}
 
@@ -550,7 +549,7 @@ namespace kerbal
 			if (n == 0) {
 				return pos.cast_to_mutable();
 			}
-			std::pair<node*, node*> range(this->__build_n_new_nodes_unguarded(n, val));
+			std::pair<node*, node*> range(this->__build_n_new_nodes_unguarded(this->alloc(), n, val));
 			list_type_unrelated::__hook_node(pos, range.first, range.second);
 			return iterator(range.first);
 		}
@@ -567,7 +566,7 @@ namespace kerbal
 			if (first == last) {
 				return pos.cast_to_mutable();
 			}
-			std::pair<node*, node*> range(this->__build_new_nodes_range_unguarded(first, last));
+			std::pair<node*, node*> range(this->__build_new_nodes_range_unguarded(this->alloc(), first, last));
 			list_type_unrelated::__hook_node(pos, range.first, range.second);
 			return iterator(range.first);
 		}
@@ -614,7 +613,7 @@ namespace kerbal
 		typename list<Tp, Allocator>::iterator
 		list<Tp, Allocator>::emplace(const_iterator pos, Args&& ... args)
 		{
-			node *p = this->__build_new_node(std::forward<Args>(args)...);
+			node *p = this->__build_new_node(this->alloc(), std::forward<Args>(args)...);
 			list_type_unrelated::__hook_node(pos, p);
 			return iterator(p);
 		}
@@ -625,7 +624,7 @@ namespace kerbal
 		typename list<Tp, Allocator>::iterator
 		list<Tp, Allocator>::emplace(const_iterator pos)
 		{
-			node *p = this->__build_new_node();
+			node *p = this->__build_new_node(this->alloc());
 			list_type_unrelated::__hook_node(pos, p);
 			return iterator(p);
 		}
@@ -635,7 +634,7 @@ namespace kerbal
 		typename list<Tp, Allocator>::iterator
 		list<Tp, Allocator>::emplace(const_iterator pos, const Arg0& arg0)
 		{
-			node *p = this->__build_new_node(arg0);
+			node *p = this->__build_new_node(this->alloc(), arg0);
 			list_type_unrelated::__hook_node(pos, p);
 			return iterator(p);
 		}
@@ -645,7 +644,7 @@ namespace kerbal
 		typename list<Tp, Allocator>::iterator
 		list<Tp, Allocator>::emplace(const_iterator pos, const Arg0& arg0, const Arg1& arg1)
 		{
-			node *p = this->__build_new_node(arg0, arg1);
+			node *p = this->__build_new_node(this->alloc(), arg0, arg1);
 			list_type_unrelated::__hook_node(pos, p);
 			return iterator(p);
 		}
@@ -655,7 +654,7 @@ namespace kerbal
 		typename list<Tp, Allocator>::iterator
 		list<Tp, Allocator>::emplace(const_iterator pos, const Arg0& arg0, const Arg1& arg1, const Arg2& arg2)
 		{
-			node *p = this->__build_new_node(arg0, arg1, arg2);
+			node *p = this->__build_new_node(this->alloc(), arg0, arg1, arg2);
 			list_type_unrelated::__hook_node(pos, p);
 			return iterator(p);
 		}
@@ -686,7 +685,7 @@ namespace kerbal
 		{
 			iterator pos_mut(pos.cast_to_mutable());
 			node_base * p = list_type_unrelated::__unhook_node(pos_mut++);
-			this->__destroy_node(p);
+			this->__destroy_node(this->alloc(), p);
 			return pos_mut;
 		}
 
@@ -702,7 +701,7 @@ namespace kerbal
 				node_base * start = range.first;
 				node_base * back = range.second;
 				back->next = NULL;
-				this->__consecutive_destroy_node(start);
+				this->__consecutive_destroy_node(this->alloc(), start);
 			}
 			return last_mut;
 		}
@@ -730,7 +729,7 @@ namespace kerbal
 				this->erase(it, cend);
 			} else {
 				// note: count - size != 0
-				std::pair<node*, node*> range(this->__build_n_new_nodes_unguarded(count - size));
+				std::pair<node*, node*> range(this->__build_n_new_nodes_unguarded(this->alloc(), count - size));
 				list_type_unrelated::__hook_node(cend, range.first, range.second);
 			}
 		}
@@ -752,8 +751,7 @@ namespace kerbal
 		KERBAL_CONSTEXPR20
 		void list<Tp, Allocator>::swap(list& ano)
 		{
-			typedef typename node_allocator_traits::propagate_on_container_swap propagate_on_container_swap;
-			this->swap_allocator_helper<propagate_on_container_swap::value>();
+			this->list_allocator_overload::swap_allocator_if_propagate(ano);
 
 			list_type_unrelated::__swap_type_unrelated(*this, ano);
 		}
@@ -894,325 +892,6 @@ namespace kerbal
 		}
 
 #	endif
-
-#	if __cplusplus >= 201103L
-
-		template <typename Tp, typename Allocator>
-		template <typename ... Args>
-		KERBAL_CONSTEXPR20
-		typename list<Tp, Allocator>::node*
-		list<Tp, Allocator>::__build_new_node_helper(kerbal::type_traits::false_type, Args&& ...args)
-		{
-			node *p = node_allocator_traits::allocate(this->alloc(), 1);
-			try {
-				node_allocator_traits::construct(this->alloc(), p, kerbal::utility::in_place_t(), std::forward<Args>(args)...);
-			} catch (...) {
-				node_allocator_traits::deallocate(this->alloc(), p, 1);
-				throw;
-			}
-			return p;
-		}
-
-		template <typename Tp, typename Allocator>
-		template <typename ... Args>
-		KERBAL_CONSTEXPR20
-		typename list<Tp, Allocator>::node*
-		list<Tp, Allocator>::__build_new_node_helper(kerbal::type_traits::true_type, Args&& ... args)
-							KERBAL_CONDITIONAL_NOEXCEPT(
-								noexcept(node_allocator_traits::allocate(kerbal::utility::declthis<list>()->alloc(), 1))
-							)
-		{
-			node *p = node_allocator_traits::allocate(this->alloc(), 1);
-			node_allocator_traits::construct(this->alloc(), p, kerbal::utility::in_place_t(), std::forward<Args>(args)...);
-			return p;
-		}
-
-		template <typename Tp, typename Allocator>
-		template <typename ... Args>
-		KERBAL_CONSTEXPR20
-		typename list<Tp, Allocator>::node*
-		list<Tp, Allocator>::__build_new_node(Args&& ... args)
-		{
-			typedef
-#	if __cpp_exceptions
-			kerbal::type_traits::conditional_boolean<
-					std::is_nothrow_constructible<Tp, Args...>::value
-			>
-#	else
-			kerbal::type_traits::true_type
-#	endif // __cpp_exceptions
-			nothrow_while_construct;
-
-			return this->__build_new_node_helper(nothrow_while_construct(), std::forward<Args>(args)...);
-		}
-
-#	else
-
-
-#if __cpp_exceptions
-
-#	define __build_new_node_body(args...) \
-		{ \
-			node *p = node_allocator_traits::allocate(this->alloc(), 1); \
-			try { \
-				node_allocator_traits::construct(this->alloc(), p, args); \
-			} catch (...) { \
-				node_allocator_traits::deallocate(this->alloc(), p, 1); \
-				throw; \
-			} \
-			return p; \
-		}
-
-#else
-
-#	define __build_new_node_body(args...) \
-		{ \
-			node *p = node_allocator_traits::allocate(this->alloc(), 1); \
-			node_allocator_traits::construct(this->alloc(), p, args); \
-			return p; \
-		}
-
-#endif // __cpp_exceptions
-
-
-		template <typename Tp, typename Allocator>
-		typename list<Tp, Allocator>::node*
-		list<Tp, Allocator>::__build_new_node()
-		{
-			__build_new_node_body(kerbal::utility::in_place_t());
-		}
-
-		template <typename Tp, typename Allocator>
-		template <typename Arg0>
-		typename list<Tp, Allocator>::node*
-		list<Tp, Allocator>::__build_new_node(const Arg0 & arg0)
-		{
-			__build_new_node_body(kerbal::utility::in_place_t(), arg0);
-		}
-
-		template <typename Tp, typename Allocator>
-		template <typename Arg0, typename Arg1>
-		typename list<Tp, Allocator>::node*
-		list<Tp, Allocator>::__build_new_node(const Arg0 & arg0, const Arg1 & arg1)
-		{
-			__build_new_node_body(kerbal::utility::in_place_t(), arg0, arg1);
-		}
-
-		template <typename Tp, typename Allocator>
-		template <typename Arg0, typename Arg1, typename Arg2>
-		typename list<Tp, Allocator>::node*
-		list<Tp, Allocator>::__build_new_node(const Arg0 & arg0, const Arg1 & arg1, const Arg2 & arg2)
-		{
-			__build_new_node_body(kerbal::utility::in_place_t(), arg0, arg1, arg2);
-		}
-
-#undef __build_new_node_body
-
-#	endif
-
-#	if __cplusplus >= 201103L
-
-		template <typename Tp, typename Allocator>
-		template <typename... Args>
-		KERBAL_CONSTEXPR20
-		std::pair<typename list<Tp, Allocator>::node*, typename list<Tp, Allocator>::node*>
-		list<Tp, Allocator>::__build_n_new_nodes_unguarded(size_type n, Args&& ... args)
-		{
-			size_t cnt = 0;
-			node * const start = this->__build_new_node(std::forward<Args>(args)...);
-			node * back = start;
-#		if __cpp_exceptions
-			try {
-#		endif // __cpp_exceptions
-				++cnt;
-				while (cnt != n) {
-					node* new_node = this->__build_new_node(std::forward<Args>(args)...);
-					new_node->prev = back;
-					back->next = new_node;
-					back = new_node;
-					++cnt;
-				}
-				return std::pair<node*, node*>(start, back);
-#		if __cpp_exceptions
-			} catch (...) {
-				this->__consecutive_destroy_node(start);
-				throw;
-			}
-#		endif // __cpp_exceptions
-		}
-
-#	else
-
-
-#if __cpp_exceptions
-
-#	define __build_n_new_nodes_unguarded_body(args...) \
-		{ \
-			size_t cnt = 0; \
-			node * const start = this->__build_new_node(args); \
-			node * back = start; \
-			try { \
-				++cnt; \
-				while (cnt != n) { \
-					node* new_node = this->__build_new_node(args); \
-					new_node->prev = back; \
-					back->next = new_node; \
-					back = new_node; \
-					++cnt; \
-				} \
-				return std::pair<node*, node*>(start, back); \
-			} catch (...) { \
-				this->__consecutive_destroy_node(start); \
-				throw; \
-			} \
-		}
-
-#else
-
-#	define __build_n_new_nodes_unguarded_body(args...) \
-		{ \
-			size_t cnt = 0; \
-			node * const start = this->__build_new_node(args); \
-			node * back = start; \
-			++cnt; \
-			while (cnt != n) { \
-				node* new_node = this->__build_new_node(args); \
-				new_node->prev = back; \
-				back->next = new_node; \
-				back = new_node; \
-				++cnt; \
-			} \
-			return std::pair<node*, node*>(start, back); \
-		}
-
-#endif
-
-
-		template <typename Tp, typename Allocator>
-		std::pair<typename list<Tp, Allocator>::node*, typename list<Tp, Allocator>::node*>
-		list<Tp, Allocator>::__build_n_new_nodes_unguarded(size_type n)
-		{
-			__build_n_new_nodes_unguarded_body();
-		}
-
-		template <typename Tp, typename Allocator>
-		template <typename Arg0>
-		std::pair<typename list<Tp, Allocator>::node*, typename list<Tp, Allocator>::node*>
-		list<Tp, Allocator>::__build_n_new_nodes_unguarded(size_type n, const Arg0 & arg0)
-		{
-			__build_n_new_nodes_unguarded_body(arg0);
-		}
-
-		template <typename Tp, typename Allocator>
-		template <typename Arg0, typename Arg1>
-		std::pair<typename list<Tp, Allocator>::node*, typename list<Tp, Allocator>::node*>
-		list<Tp, Allocator>::__build_n_new_nodes_unguarded(size_type n, const Arg0 & arg0, const Arg1 & arg1)
-		{
-			__build_n_new_nodes_unguarded_body(arg0, arg1);
-		}
-
-		template <typename Tp, typename Allocator>
-		template <typename Arg0, typename Arg1, typename Arg2>
-		std::pair<typename list<Tp, Allocator>::node*, typename list<Tp, Allocator>::node*>
-		list<Tp, Allocator>::__build_n_new_nodes_unguarded(size_type n, const Arg0 & arg0, const Arg1 & arg1, const Arg2 & arg2)
-		{
-			__build_n_new_nodes_unguarded_body(arg0, arg1, arg2);
-		}
-
-#undef __build_n_new_nodes_unguarded_body
-
-#	endif
-
-		template <typename Tp, typename Allocator>
-		template <typename InputIterator>
-		KERBAL_CONSTEXPR20
-		typename kerbal::type_traits::enable_if<
-				kerbal::iterator::is_input_compatible_iterator<InputIterator>::value,
-				std::pair<typename list<Tp, Allocator>::node*, typename list<Tp, Allocator>::node*>
-		>::type
-		list<Tp, Allocator>::__build_new_nodes_range_unguarded(InputIterator first, InputIterator last)
-		{
-			node * const start = this->__build_new_node(*first);
-			node * back = start;
-#		if __cpp_exceptions
-			try {
-#		endif // __cpp_exceptions
-				++first;
-				while (first != last) {
-					node* new_node = this->__build_new_node(*first);
-					new_node->prev = back;
-					back->next = new_node;
-					back = new_node;
-					++first;
-				}
-				return std::pair<node*, node*>(start, back);
-#		if __cpp_exceptions
-			} catch (...) {
-				this->__consecutive_destroy_node(start);
-				throw;
-			}
-#		endif // __cpp_exceptions
-		}
-
-#	if __cplusplus >= 201103L
-
-		template <typename Tp, typename Allocator>
-		KERBAL_CONSTEXPR20
-		std::pair<typename list<Tp, Allocator>::node*, typename list<Tp, Allocator>::node*>
-		list<Tp, Allocator>::__build_new_nodes_range_unguarded_move(iterator first, iterator last)
-		{
-			node * const start = this->__build_new_node(kerbal::compatibility::move(*first));
-			node * back = start;
-#		if __cpp_exceptions
-			try {
-#		endif // __cpp_exceptions
-				++first;
-				while (first != last) {
-					node* new_node = this->__build_new_node(kerbal::compatibility::move(*first));
-					new_node->prev = back;
-					back->next = new_node;
-					back = new_node;
-					++first;
-				}
-				return std::pair<node*, node*>(start, back);
-#		if __cpp_exceptions
-			} catch (...) {
-				this->__consecutive_destroy_node(start);
-				throw;
-			}
-#		endif // __cpp_exceptions
-		}
-
-#	endif
-
-		template <typename Tp, typename Allocator>
-		KERBAL_CONSTEXPR20
-		void list<Tp, Allocator>::__destroy_node(node_base* p_node_base)
-				KERBAL_CONDITIONAL_NOEXCEPT(
-						noexcept(node_allocator_traits::destroy(kerbal::utility::declthis<list>()->alloc(), kerbal::utility::declval<node*>())) &&
-						noexcept(node_allocator_traits::deallocate(kerbal::utility::declthis<list>()->alloc(), kerbal::utility::declval<node*>(), 1))
-				)
-		{
-			node * p_node = &p_node_base->template reinterpret_as<Tp>();
-			node_allocator_traits::destroy(this->alloc(), p_node);
-			node_allocator_traits::deallocate(this->alloc(), p_node, 1);
-		}
-
-		template <typename Tp, typename Allocator>
-		KERBAL_CONSTEXPR20
-		void list<Tp, Allocator>::__consecutive_destroy_node(node_base * start)
-				KERBAL_CONDITIONAL_NOEXCEPT(
-						noexcept(kerbal::utility::declthis<list>()->__destroy_node(kerbal::utility::declval<node_base*>()))
-				)
-		{
-			node_base * current_node_base = start;
-			while (current_node_base != NULL) {
-				node_base * next = current_node_base->next;
-				this->__destroy_node(current_node_base);
-				current_node_base = next;
-			}
-		}
-
 
 	} // namespace container
 

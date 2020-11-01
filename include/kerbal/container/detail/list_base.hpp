@@ -14,13 +14,22 @@
 
 #include <kerbal/container/fwd/list.fwd.hpp>
 
+#include <kerbal/algorithm/swap.hpp>
 #include <kerbal/compatibility/constexpr.hpp>
 #include <kerbal/compatibility/move.hpp>
 #include <kerbal/compatibility/noexcept.hpp>
 #include <kerbal/iterator/reverse_iterator.hpp>
 #include <kerbal/memory/allocator_traits.hpp>
-#include <kerbal/type_traits/can_be_empty_base.hpp>
-#include <kerbal/type_traits/cv_deduction.hpp>
+#include <kerbal/type_traits/enable_if.hpp>
+#include <kerbal/utility/declval.hpp>
+#include <kerbal/utility/in_place.hpp>
+#include <kerbal/utility/member_compress_helper.hpp>
+
+#if __cplusplus >= 201703L
+#	if __has_include(<memory_resource>)
+#		include <memory_resource>
+#	endif
+#endif
 
 #include <kerbal/container/detail/list_node.hpp>
 #include <kerbal/container/detail/list_iterator.hpp>
@@ -349,6 +358,128 @@ namespace kerbal
 					KERBAL_CONSTEXPR20
 					void sort();
 
+#			if __cplusplus >= 201103L
+
+#				if __cpp_exceptions
+
+					template <bool nothrow_while_construct, typename NodeAllocator, typename ... Args>
+					KERBAL_CONSTEXPR20
+					static
+					typename kerbal::type_traits::enable_if<!nothrow_while_construct, node*>::type
+					__build_new_node_impl(NodeAllocator & alloc, Args&& ... args);
+
+					template <bool nothrow_while_construct, typename NodeAllocator, typename ... Args>
+					KERBAL_CONSTEXPR20
+					static
+					typename kerbal::type_traits::enable_if<nothrow_while_construct, node*>::type
+					__build_new_node_impl(NodeAllocator & alloc, Args&& ... args)
+							KERBAL_CONDITIONAL_NOEXCEPT(
+									noexcept(kerbal::memory::allocator_traits<NodeAllocator>::allocate(alloc, 1))
+							)
+					;
+
+#				endif
+
+					template <typename NodeAllocator, typename ... Args>
+					KERBAL_CONSTEXPR20
+					static node* __build_new_node(NodeAllocator & alloc, Args&& ... args);
+
+#			else
+
+					template <typename NodeAllocator>
+					static node* __build_new_node(NodeAllocator & alloc);
+
+					template <typename NodeAllocator, typename Arg0>
+					static node* __build_new_node(NodeAllocator & alloc, const Arg0& arg0);
+
+					template <typename NodeAllocator, typename Arg0, typename Arg1>
+					static node* __build_new_node(NodeAllocator & alloc, const Arg0& arg0, const Arg1& arg1);
+
+					template <typename NodeAllocator, typename Arg0, typename Arg1, typename Arg2>
+					static node* __build_new_node(NodeAllocator & alloc, const Arg0& arg0, const Arg1& arg1, const Arg2& arg2);
+
+#			endif
+
+#			if __cplusplus >= 201103L
+
+					template <typename NodeAllocator, typename ... Args>
+					KERBAL_CONSTEXPR20
+					static
+					std::pair<node*, node*> __build_n_new_nodes_unguarded(NodeAllocator & alloc, size_type n, Args&& ...args);
+
+#			else
+
+					template <typename NodeAllocator>
+					static
+					std::pair<node*, node*> __build_n_new_nodes_unguarded(NodeAllocator & alloc, size_type n);
+
+					template <typename NodeAllocator, typename Arg0>
+					static
+					std::pair<node*, node*> __build_n_new_nodes_unguarded(NodeAllocator & alloc, size_type n, const Arg0& arg0);
+
+					template <typename NodeAllocator, typename Arg0, typename Arg1>
+					static
+					std::pair<node*, node*> __build_n_new_nodes_unguarded(NodeAllocator & alloc, size_type n, const Arg0& arg0, const Arg1& arg1);
+
+					template <typename NodeAllocator, typename Arg0, typename Arg1, typename Arg2>
+					static
+					std::pair<node*, node*> __build_n_new_nodes_unguarded(NodeAllocator & alloc, size_type n, const Arg0& arg0, const Arg1& arg1, const Arg2& arg2);
+
+#			endif
+
+					/*
+					 * @warning Especial case: first == last
+					 */
+					template <typename NodeAllocator, typename InputIterator>
+					KERBAL_CONSTEXPR20
+					static
+					typename kerbal::type_traits::enable_if<
+							kerbal::iterator::is_input_compatible_iterator<InputIterator>::value,
+							std::pair<node*, node*>
+					>::type
+					__build_new_nodes_range_unguarded(NodeAllocator & alloc, InputIterator first, InputIterator last);
+
+#			if __cplusplus >= 201103L
+
+					template <typename NodeAllocator>
+					KERBAL_CONSTEXPR20
+					static
+					std::pair<node*, node*>
+					__build_new_nodes_range_unguarded_move(NodeAllocator & alloc, iterator first, iterator last);
+
+#			endif
+
+					template <typename NodeAllocator>
+					KERBAL_CONSTEXPR20
+					static void __destroy_node(NodeAllocator & alloc, node_base * p_node_base)
+							KERBAL_CONDITIONAL_NOEXCEPT(
+								noexcept(kerbal::memory::allocator_traits<NodeAllocator>::destroy(alloc, kerbal::utility::declval<node*>())) &&
+								noexcept(kerbal::memory::allocator_traits<NodeAllocator>::deallocate(alloc, kerbal::utility::declval<node*>(), 1))
+							)
+					;
+
+					template <typename NodeAllocator>
+					KERBAL_CONSTEXPR20
+					static void __consecutive_destroy_node(NodeAllocator & alloc, node_base * start)
+							KERBAL_CONDITIONAL_NOEXCEPT(
+								noexcept(kerbal::utility::declthis<list_allocator_unrelated>()->__destroy_node(alloc, kerbal::utility::declval<node_base*>()))
+							)
+					;
+
+#			if __cplusplus >= 201703L
+#				if __has_include(<memory_resource>)
+
+					template <typename Node>
+					KERBAL_CONSTEXPR20
+					static void __consecutive_destroy_node(std::pmr::polymorphic_allocator<Node> & alloc, node_base * start)
+							KERBAL_CONDITIONAL_NOEXCEPT(
+									noexcept(kerbal::utility::declthis<list_allocator_unrelated>()->__destroy_node(alloc, kerbal::utility::declval<node_base*>()))
+							)
+					;
+
+#				endif
+#			endif
+
 			};
 
 
@@ -358,83 +489,37 @@ namespace kerbal
 				private:
 					typedef Tp														value_type;
 					typedef kerbal::container::detail::list_node<value_type>		node;
-					typedef kerbal::memory::allocator_traits<Allocator>				tp_allocator_traits;
 
 				public:
-					typedef typename tp_allocator_traits::template rebind_alloc<node>::other	type;
+					typedef kerbal::memory::allocator_traits<Allocator>							tp_allocator_traits;
+					typedef typename tp_allocator_traits::template rebind_alloc<node>::other	node_allocator_type;
+					typedef typename tp_allocator_traits::template rebind_traits<node>::other	node_allocator_traits;
 			};
 
-			template <typename Tp, typename Allocator, bool allocator_can_be_empty_base =
-								kerbal::type_traits::can_be_empty_base<Allocator>::value >
-			class list_allocator_overload;
 
 			template <typename Tp, typename Allocator>
-			class list_allocator_overload<Tp, Allocator, false>
-			{
-				protected:
-					typedef typename list_node_allocator_helper<Tp, Allocator>::type	node_allocator_type;
-
-				protected:
-					node_allocator_type node_allocator;
-
-					KERBAL_CONSTEXPR
-					list_allocator_overload()
-								KERBAL_CONDITIONAL_NOEXCEPT(
-										std::is_nothrow_default_constructible<node_allocator_type>::value
-								)
-							: node_allocator()
-					{
-					}
-
-					KERBAL_CONSTEXPR
-					explicit list_allocator_overload(const Allocator & allocator)
-								KERBAL_CONDITIONAL_NOEXCEPT(
-										(std::is_nothrow_constructible<node_allocator_type, const Allocator&>::value)
-								)
-							: node_allocator(allocator)
-					{
-					}
-
-#			if __cplusplus >= 201103L
-
-					KERBAL_CONSTEXPR
-					explicit list_allocator_overload(Allocator && allocator)
-								KERBAL_CONDITIONAL_NOEXCEPT(
-										(std::is_nothrow_constructible<node_allocator_type, Allocator&&>::value)
-								)
-							: node_allocator(kerbal::compatibility::move(allocator))
-					{
-					}
-
-#			endif
-
-					KERBAL_CONSTEXPR14
-					node_allocator_type& alloc() KERBAL_NOEXCEPT
-					{
-						return this->node_allocator;
-					}
-
-					KERBAL_CONSTEXPR14
-					const node_allocator_type& alloc() const KERBAL_NOEXCEPT
-					{
-						return this->node_allocator;
-					}
-
-			};
-
-			template <typename Tp, typename Allocator>
-			class list_allocator_overload<Tp, Allocator, true>:
-					private kerbal::type_traits::remove_cv<
-							typename list_node_allocator_helper<Tp, Allocator>::type
-					>::type
+			class list_allocator_overload:
+					private kerbal::utility::member_compress_helper<
+							typename list_node_allocator_helper<Tp, Allocator>::node_allocator_type
+					>
 			{
 				private:
-					typedef typename kerbal::type_traits::remove_cv<
-							typename list_node_allocator_helper<Tp, Allocator>::type
-					>::type super;
+					typedef kerbal::utility::member_compress_helper<
+							typename list_node_allocator_helper<Tp, Allocator>::node_allocator_type
+					> super;
+
+				private:
+					typedef kerbal::container::detail::list_node_allocator_helper<Tp, Allocator>
+																						list_node_allocator_helper;
 
 				protected:
-					typedef typename list_node_allocator_helper<Tp, Allocator>::type	node_allocator_type;
+					typedef typename list_node_allocator_helper::tp_allocator_traits	tp_allocator_traits;
+					typedef typename list_node_allocator_helper::node_allocator_type	node_allocator_type;
+					typedef typename list_node_allocator_helper::node_allocator_traits	node_allocator_traits;
+
+				private:
+					typedef kerbal::container::detail::list_node_base					node_base;
+					typedef kerbal::container::detail::list_node<Tp>					node;
 
 				protected:
 
@@ -443,7 +528,7 @@ namespace kerbal
 								KERBAL_CONDITIONAL_NOEXCEPT(
 										std::is_nothrow_default_constructible<super>::value
 								)
-							: super()
+							: super(kerbal::utility::in_place_t())
 					{
 					}
 
@@ -452,7 +537,7 @@ namespace kerbal
 								KERBAL_CONDITIONAL_NOEXCEPT(
 										(std::is_nothrow_constructible<super, const Allocator&>::value)
 								)
-							: super(allocator)
+							: super(kerbal::utility::in_place_t(), allocator)
 					{
 					}
 
@@ -463,7 +548,7 @@ namespace kerbal
 								KERBAL_CONDITIONAL_NOEXCEPT(
 										(std::is_nothrow_constructible<super, Allocator&&>::value)
 								)
-							: super(kerbal::compatibility::move(allocator))
+							: super(kerbal::utility::in_place_t(), kerbal::compatibility::move(allocator))
 					{
 					}
 
@@ -472,13 +557,39 @@ namespace kerbal
 					KERBAL_CONSTEXPR14
 					node_allocator_type& alloc() KERBAL_NOEXCEPT
 					{
-						return static_cast<super&>(*this);
+						return super::member();
 					}
 
 					KERBAL_CONSTEXPR14
 					const node_allocator_type& alloc() const KERBAL_NOEXCEPT
 					{
-						return static_cast<const super&>(*this);
+						return super::member();
+					}
+
+				private:
+
+					template <bool propagate_on_container_swap>
+					KERBAL_CONSTEXPR20
+					typename kerbal::type_traits::enable_if<!propagate_on_container_swap>::type
+					swap_allocator_impl(list_allocator_overload &) KERBAL_NOEXCEPT
+					{
+					}
+
+					template <bool propagate_on_container_swap>
+					KERBAL_CONSTEXPR20
+					typename kerbal::type_traits::enable_if<propagate_on_container_swap>::type
+					swap_allocator_impl(list_allocator_overload & ano)
+					{
+						kerbal::algorithm::swap(this->alloc(), ano.alloc());
+					}
+
+				protected:
+
+					KERBAL_CONSTEXPR20
+					void swap_allocator_if_propagate(list_allocator_overload & ano)
+					{
+						typedef typename node_allocator_traits::propagate_on_container_swap propagate_on_container_swap;
+						this->swap_allocator_impl<propagate_on_container_swap::value>(ano);
 					}
 
 			};
