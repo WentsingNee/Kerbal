@@ -349,18 +349,58 @@ namespace kerbal
 			return kerbal::algorithm::is_heap(first, last, std::less<value_type>());
 		}
 
+		namespace detail
+		{
+
+			template <typename BidirectionalIterator, typename Compare>
+			KERBAL_CONSTEXPR14
+			void make_heap(BidirectionalIterator first, BidirectionalIterator last, Compare cmp, std::bidirectional_iterator_tag)
+			{
+				typedef BidirectionalIterator iterator;
+
+				iterator current_adjust(first);
+				while (current_adjust != last) {
+					kerbal::algorithm::push_heap(first, current_adjust, cmp);
+					++current_adjust;
+				}
+				kerbal::algorithm::push_heap(first, last, cmp);
+			}
+
+			template <typename RandomAccessIterator, typename Compare>
+			KERBAL_CONSTEXPR14
+			void make_heap(RandomAccessIterator first, RandomAccessIterator last, Compare cmp, std::random_access_iterator_tag)
+			{
+				typedef RandomAccessIterator iterator;
+				typedef typename kerbal::iterator::iterator_traits<iterator>::difference_type difference_type;
+
+				difference_type dist(kerbal::iterator::distance(first, last));
+
+				if (dist == 0) {
+					return;
+				}
+
+				iterator current_adjust(first + ((dist - 1) / 2));
+				if (dist % 2 == 0) {
+					iterator back(last - 1);
+					if (cmp(*current_adjust, *back)) { //back' < parent back
+						kerbal::algorithm::iter_swap(back, current_adjust);
+					}
+				}
+
+				while (current_adjust != first) {
+					--current_adjust;
+					kerbal::algorithm::detail::adjust_down_unguarded(first, current_adjust, last, cmp);
+				}
+
+			}
+
+		} // namespace detail
+
 		template <typename BidirectionalIterator, typename Compare>
 		KERBAL_CONSTEXPR14
 		void make_heap(BidirectionalIterator first, BidirectionalIterator last, Compare cmp)
 		{
-			typedef BidirectionalIterator iterator;
-
-			iterator current_adjust(first);
-			while (current_adjust != last) {
-				kerbal::algorithm::push_heap(first, current_adjust, cmp);
-				++current_adjust;
-			}
-			kerbal::algorithm::push_heap(first, last, cmp);
+			kerbal::algorithm::detail::make_heap(first, last, cmp, kerbal::iterator::iterator_category(first));
 		}
 
 		template <typename BidirectionalIterator>
