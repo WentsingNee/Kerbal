@@ -74,7 +74,7 @@ namespace kerbal
 						return 0;
 					}
 
-					int cnt = 0;
+					unsigned int cnt = 0;
 					while ((dist >> cnt) != 1) {
 						++cnt;
 					}
@@ -115,7 +115,7 @@ namespace kerbal
 					return 1;
 				}
 
-				int cnt = 0;
+				unsigned int cnt = 0;
 				while ((dist >> cnt) != 1) {
 					++cnt;
 				}
