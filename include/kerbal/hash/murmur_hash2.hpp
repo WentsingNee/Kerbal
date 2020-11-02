@@ -161,7 +161,6 @@ namespace kerbal
 				template <typename T>
 				result_type digest(T * first, T * last) const
 				{
-					typedef T * iterator;
 					const unsigned char * start = (const unsigned char *)(first);
 					const unsigned char * end = (const unsigned char *)(last);
 					return this->digest_helper(start, end, kerbal::type_traits::type_identity<unsigned char>());
