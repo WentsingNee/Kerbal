@@ -20,6 +20,7 @@
 #include <kerbal/iterator/reverse_iterator.hpp>
 #include <kerbal/memory/allocator_traits.hpp>
 #include <kerbal/type_traits/enable_if.hpp>
+#include <kerbal/type_traits/integral_constant.hpp>
 #include <kerbal/utility/declval.hpp>
 
 #include <memory>
@@ -78,6 +79,9 @@ namespace kerbal
 			private:
 				typedef typename list_allocator_unrelated::node_base					node_base;
 				typedef typename list_allocator_unrelated::node							node;
+
+			public:
+				typedef kerbal::type_traits::integral_constant<size_t, sizeof(node)>	NODE_SIZE;
 
 			public:
 				typedef Allocator														allocator_type;
