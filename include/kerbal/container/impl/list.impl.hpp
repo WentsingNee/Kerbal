@@ -757,6 +757,21 @@ namespace kerbal
 		}
 
 		template <typename Tp, typename Allocator>
+		template <typename BinaryPredict>
+		KERBAL_CONSTEXPR20
+		void list<Tp, Allocator>::merge(list & other, BinaryPredict cmp)
+		{
+			list_allocator_unrelated::merge(other, cmp);
+		}
+
+		template <typename Tp, typename Allocator>
+		KERBAL_CONSTEXPR20
+		void list<Tp, Allocator>::merge(list & other)
+		{
+			list_allocator_unrelated::merge(other);
+		}
+
+		template <typename Tp, typename Allocator>
 		KERBAL_CONSTEXPR20
 		typename list<Tp, Allocator>::size_type
 		list<Tp, Allocator>::remove(const_reference val)

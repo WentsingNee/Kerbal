@@ -546,6 +546,27 @@ namespace kerbal
 			}
 
 			template <typename Tp>
+			template <typename BinaryPredict>
+			KERBAL_CONSTEXPR20
+			void list_allocator_unrelated<Tp>::merge(list_allocator_unrelated& other, BinaryPredict cmp)
+			{
+				const_iterator it(this->cbegin());
+				const_iterator other_it(other.cbegin());
+				while (it != this->cend()) {
+					if (other_it != other.cend()) {
+						if (cmp(*other_it, *it)) { // other_it < it
+							splice(it, other_it++);
+						} else { // other_it >= it
+							++it;
+						}
+					} else {
+						return;
+					}
+				}
+				splice(it, other);
+			}
+
+			template <typename Tp>
 			KERBAL_CONSTEXPR20
 			void list_allocator_unrelated<Tp>::merge(list_allocator_unrelated& other)
 			{
