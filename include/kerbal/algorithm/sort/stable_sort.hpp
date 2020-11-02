@@ -15,6 +15,7 @@
 #include <kerbal/algorithm/modifier.hpp>
 #include <kerbal/algorithm/sort/insertion_sort.hpp>
 #include <kerbal/compatibility/constexpr.hpp>
+#include <kerbal/compatibility/static_assert.hpp>
 #include <kerbal/iterator/iterator.hpp>
 #include <kerbal/memory/allocator_traits.hpp>
 
@@ -150,6 +151,9 @@ namespace kerbal
 			value_type * k = buffer;
 
 			typedef typename Allocator::value_type allocator_value_type;
+
+			KERBAL_STATIC_ASSERT((kerbal::type_traits::is_same<value_type, allocator_value_type>::value),
+								 "the afforded allocator doesn't provide the support of type which the iterator refers to");
 
 			struct dealloc_helper
 			{

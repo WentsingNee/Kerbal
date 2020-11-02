@@ -15,7 +15,9 @@
 #include <kerbal/algorithm/binary_type_predicate.hpp>
 #include <kerbal/algorithm/querier.hpp>
 #include <kerbal/compatibility/constexpr.hpp>
+#include <kerbal/compatibility/static_assert.hpp>
 #include <kerbal/iterator/iterator.hpp>
+#include <kerbal/type_traits/cv_deduction.hpp>
 
 
 namespace kerbal
@@ -294,6 +296,13 @@ namespace kerbal
 		{
 			typedef ForwardIterator iterator;
 			typedef typename kerbal::iterator::iterator_traits<iterator>::value_type value_type;
+			KERBAL_STATIC_ASSERT((
+					kerbal::type_traits::is_same<
+							kerbal::type_traits::remove_cv<value_type>,
+							kerbal::type_traits::remove_cv<Tp>
+					>::value),
+					"the range iterator doesn't refer to the same type as `value`"
+			);
 			return kerbal::algorithm::binary_search(first, last, value, std::less<Tp>());
 		}
 
@@ -502,6 +511,13 @@ namespace kerbal
 		{
 			typedef ForwardIterator iterator;
 			typedef typename kerbal::iterator::iterator_traits<iterator>::value_type value_type;
+			KERBAL_STATIC_ASSERT((
+					kerbal::type_traits::is_same<
+							kerbal::type_traits::remove_cv<value_type>,
+							kerbal::type_traits::remove_cv<Tp>
+					>::value),
+					"the range iterator doesn't refer to the same type as `value`"
+			);
 			return kerbal::algorithm::binary_search_hint(first, last, value, hint, std::less<Tp>());
 		}
 
