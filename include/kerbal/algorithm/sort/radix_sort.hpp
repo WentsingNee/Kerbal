@@ -123,6 +123,7 @@ namespace kerbal
 //				buckets[1][i].reserve(dist);
 //			}
 
+			// first round
 			for (iterator it(first); it != last; ++it) {
 				int bucket_id = *it % BUCKETS_NUM::value;
 				buckets[0][bucket_id].push_back(*it);
