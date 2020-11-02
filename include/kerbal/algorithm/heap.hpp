@@ -55,9 +55,6 @@ namespace kerbal
 			heap_left_son(RandomAccessIterator first, RandomAccessIterator parent, RandomAccessIterator last,
 							std::random_access_iterator_tag)
 			{
-				typedef RandomAccessIterator iterator;
-				typedef typename kerbal::iterator::iterator_traits<iterator>::difference_type difference_type;
-
 				return kerbal::iterator::next_at_most(parent, kerbal::iterator::distance(first, parent) + 1, last);
 			}
 
