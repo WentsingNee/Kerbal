@@ -185,32 +185,11 @@ namespace kerbal
 				KERBAL_CONSTEXPR14
 				bool any(size_type l, size_type r) const KERBAL_NOEXCEPT;
 
-			private:
-
-				template <bool c>
-				KERBAL_CONSTEXPR14
-				typename kerbal::type_traits::enable_if<!c, bool>::type
-				none_helper() const KERBAL_NOEXCEPT
-				{
-					return bitset_size_unrelated::none_trunk(m_block, BLOCK_SIZE::value - 1) &&
-							(static_cast<block_type>(m_block[BLOCK_SIZE::value - 1] << WASTE_SIZE::value) == 0);
-				}
-
-				template <bool c>
-				KERBAL_CONSTEXPR14
-				typename kerbal::type_traits::enable_if<c, bool>::type
-				none_helper() const KERBAL_NOEXCEPT
-				{
-					return bitset_size_unrelated::none_trunk(m_block, BLOCK_SIZE::value);
-				}
-
-			public:
-
 				// Checks if none of the bits are set to true
 				KERBAL_CONSTEXPR14
 				bool none() const KERBAL_NOEXCEPT
 				{
-					return none_helper<IS_DIVISIBLE::value>();
+					return !this->any();
 				}
 
 				KERBAL_CONSTEXPR14
