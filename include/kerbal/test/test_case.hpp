@@ -80,16 +80,6 @@ namespace kerbal
 				{
 				}
 
-#			if __cplusplus >= 201103L
-				~test_case() noexcept = default;
-#			else
-
-				~test_case() KERBAL_NOEXCEPT
-				{
-				}
-
-#			endif
-
 		};
 
 		typedef std::vector<test_case> register_list_type;
