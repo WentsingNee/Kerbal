@@ -116,7 +116,6 @@ namespace kerbal
 	void name(kerbal::test::assert_record& record)
 
 
-#define KERBAL_TEST_CASE_END
 
 
 #if __cplusplus >= 201103L
