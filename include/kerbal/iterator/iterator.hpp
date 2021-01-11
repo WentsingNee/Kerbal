@@ -282,13 +282,10 @@ namespace kerbal
 
 		template <typename InputIterator, typename Distance>
 		KERBAL_CONSTEXPR14
-		typename kerbal::iterator::iterator_traits<InputIterator>::difference_type
-		__advance_at_most(InputIterator & it, Distance dist, InputIterator last,
+		Distance __advance_at_most(InputIterator & it, Distance dist, InputIterator last,
 				std::input_iterator_tag)
 		{
-			typedef InputIterator iterator;
-			typedef typename kerbal::iterator::iterator_traits<iterator>::difference_type difference_type;
-			difference_type d(0);
+			Distance d(0);
 			while (static_cast<bool>(d < dist) && static_cast<bool>(it != last)) {
 				++it;
 				++d;
@@ -298,27 +295,22 @@ namespace kerbal
 
 		template <typename RandomAccessIterator, typename Distance>
 		KERBAL_CONSTEXPR14
-		typename kerbal::iterator::iterator_traits<RandomAccessIterator>::difference_type
-		__advance_at_most(RandomAccessIterator & it, Distance dist, RandomAccessIterator last,
+		Distance __advance_at_most(RandomAccessIterator & it, Distance dist, RandomAccessIterator last,
 				std::random_access_iterator_tag)
 		{
-			typedef RandomAccessIterator iterator;
-			typedef typename kerbal::iterator::iterator_traits<iterator>::difference_type difference_type;
-			difference_type d(dist);
-			difference_type most_dist(kerbal::iterator::distance(it, last));
-			if (d < most_dist) {
-				it += d;
+			Distance most_dist(kerbal::iterator::distance(it, last));
+			if (dist < most_dist) {
+				it += dist;
 			} else {
 				it = last;
-				d = most_dist;
+				dist = most_dist;
 			}
-			return d;
+			return dist;
 		}
 
 		template <typename InputIterator, typename Distance>
 		KERBAL_CONSTEXPR14
-		typename kerbal::iterator::iterator_traits<InputIterator>::difference_type
-		advance_at_most(InputIterator & it, Distance dist, InputIterator last)
+		Distance advance_at_most(InputIterator & it, Distance dist, InputIterator last)
 		{
 			return __advance_at_most(it, dist, last, kerbal::iterator::iterator_category(it));
 		}
@@ -357,13 +349,10 @@ namespace kerbal
 
 		template <typename BidirectionalIterator, typename Distance>
 		KERBAL_CONSTEXPR14
-		typename kerbal::iterator::iterator_traits<BidirectionalIterator>::difference_type
-		__retreat_at_most(BidirectionalIterator & it, Distance dist, BidirectionalIterator first,
+		Distance __retreat_at_most(BidirectionalIterator & it, Distance dist, BidirectionalIterator first,
 				std::bidirectional_iterator_tag)
 		{
-			typedef BidirectionalIterator iterator;
-			typedef typename kerbal::iterator::iterator_traits<iterator>::difference_type difference_type;
-			difference_type d(0);
+			Distance d(0);
 			while (static_cast<bool>(d < dist) && static_cast<bool>(it != first)) {
 				--it;
 				++d;
@@ -373,27 +362,22 @@ namespace kerbal
 
 		template <typename RandomAccessIterator, typename Distance>
 		KERBAL_CONSTEXPR14
-		typename kerbal::iterator::iterator_traits<RandomAccessIterator>::difference_type
-		__retreat_at_most(RandomAccessIterator & it, Distance dist, RandomAccessIterator first,
+		Distance __retreat_at_most(RandomAccessIterator & it, Distance dist, RandomAccessIterator first,
 				std::random_access_iterator_tag)
 		{
-			typedef RandomAccessIterator iterator;
-			typedef typename kerbal::iterator::iterator_traits<iterator>::difference_type difference_type;
-			difference_type d(dist);
-			difference_type most_dist(kerbal::iterator::distance(first, it));
-			if (d < most_dist) {
-				it -= d;
+			Distance most_dist(kerbal::iterator::distance(first, it));
+			if (dist < most_dist) {
+				it -= dist;
 			} else {
 				it = first;
-				d = most_dist;
+				dist = most_dist;
 			}
-			return d;
+			return dist;
 		}
 
 		template <typename BidirectionalIterator, typename Distance>
 		KERBAL_CONSTEXPR14
-		typename kerbal::iterator::iterator_traits<BidirectionalIterator>::difference_type
-		retreat_at_most(BidirectionalIterator & it, Distance dist, BidirectionalIterator first)
+		Distance retreat_at_most(BidirectionalIterator & it, Distance dist, BidirectionalIterator first)
 		{
 			return __retreat_at_most(it, dist, first, kerbal::iterator::iterator_category(it));
 		}
