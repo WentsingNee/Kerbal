@@ -13,6 +13,8 @@
 #define KERBAL_TEST_TEST_CASE_HPP
 
 #include <kerbal/compatibility/noexcept.hpp>
+#include <kerbal/compatibility/static_assert.hpp>
+#include <kerbal/macro/join_line.hpp>
 
 #include <cstdio>
 #include <cstdlib>
@@ -117,12 +119,10 @@ namespace kerbal
 
 } // namespace kerbal
 
-#define __KERBAL_TEST_REGISTER_UNIT_TAG_HLEPER(LINE) __kerbal_test_register_unit_tag ## LINE
-#define __KERBAL_TEST_REGISTER_UNIT_TAG(LINE) __KERBAL_TEST_REGISTER_UNIT_TAG_HLEPER(LINE)
 
 #define KERBAL_TEST_CASE(name, description) \
 	void name(kerbal::test::assert_record&); \
-	static const int __KERBAL_TEST_REGISTER_UNIT_TAG(__LINE__) = (__register_test_suit(#name, name, description), 0); \
+	static const int KERBAL_JOIN_LINE(__kerbal_test_register_unit_tag) = (__register_test_suit(#name, name, description), 0); \
 	void name(kerbal::test::assert_record& record)
 
 
@@ -185,8 +185,6 @@ do {\
 
 #endif
 
-
-#include <kerbal/compatibility/static_assert.hpp>
 
 #define KERBAL_TEST_CHECK_EQUAL_STATIC(lhs, rhs) do {\
 	KERBAL_STATIC_ASSERT((lhs) == (rhs), "Check failed!"); \
