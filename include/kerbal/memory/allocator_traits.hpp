@@ -17,11 +17,11 @@
 #include <kerbal/type_traits/void_type.hpp>
 #include <kerbal/utility/declval.hpp>
 
-#include <memory>
-
 #if __cplusplus >= 201103L
-#	include <utility> // forward
+#	include <kerbal/utility/forward.hpp>
 #endif
+
+#include <memory>
 
 
 namespace kerbal
@@ -364,9 +364,9 @@ namespace kerbal
 					static void __construct(kerbal::type_traits::false_type, Alloc&, T* p, Args&& ... args)
 					{
 #			if KERBAL_ENABLE_CONSTEXPR20
-						std::construct_at(p, std::forward<Args>(args)...);
+						std::construct_at(p, kerbal::utility::forward<Args>(args)...);
 #			else
-						::new(static_cast<void*>(p)) T(std::forward<Args>(args)...);
+						::new(static_cast<void*>(p)) T(kerbal::utility::forward<Args>(args)...);
 #			endif
 					}
 
@@ -374,10 +374,10 @@ namespace kerbal
 					KERBAL_CONSTEXPR14
 					static void __construct(kerbal::type_traits::true_type, Alloc& alloc, T* p, Args&& ... args)
 													KERBAL_CONDITIONAL_NOEXCEPT(
-															noexcept(alloc.construct(p, std::forward<Args>(args)...))
+															noexcept(alloc.construct(p, kerbal::utility::forward<Args>(args)...))
 													)
 					{
-						alloc.construct(p, std::forward<Args>(args)...);
+						alloc.construct(p, kerbal::utility::forward<Args>(args)...);
 					}
 
 				public:
@@ -386,7 +386,7 @@ namespace kerbal
 					static void construct(Alloc& alloc, T* p, Args&& ... args)
 					{
 						__construct(allocator_has_construct<Alloc, T, Args...>(), alloc, p,
-									std::forward<Args>(args)...);
+									kerbal::utility::forward<Args>(args)...);
 					}
 
 			};
@@ -534,7 +534,7 @@ namespace kerbal
 				KERBAL_CONSTEXPR14
 				static void construct(Alloc & alloc, T * p, Args&& ... args)
 				{
-					kerbal::memory::detail::allocator_traits_construct_helper<Alloc>::construct(alloc, p, std::forward<Args>(args)...);
+					kerbal::memory::detail::allocator_traits_construct_helper<Alloc>::construct(alloc, p, kerbal::utility::forward<Args>(args)...);
 				}
 
 #		else
