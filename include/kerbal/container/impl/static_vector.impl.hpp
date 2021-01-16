@@ -22,8 +22,11 @@
 #include <kerbal/type_traits/integral_constant.hpp>
 #include <kerbal/utility/throw_this_exception.hpp>
 
+#if __cplusplus >= 201103L
+#	include <kerbal/utility/forward.hpp>
+#endif
+
 #include <stdexcept>
-#include <utility> // std::forward
 
 #if __cplusplus >= 201103L
 #	include <type_traits>
@@ -636,7 +639,7 @@ namespace kerbal
 		typename static_vector<Tp, N>::reference
 		static_vector<Tp, N>::emplace_back(Args&& ...args)
 		{
-			this->__construct_at(this->end(), std::forward<Args>(args)...);
+			this->__construct_at(this->end(), kerbal::utility::forward<Args>(args)...);
 			++this->len;
 			return this->back();
 		}
@@ -770,7 +773,7 @@ namespace kerbal
 			if (pos == this->cend()) {
 				// A A A O O O
 				//          ^
-				this->emplace_back(std::forward<Args>(args)...); // construct by args
+				this->emplace_back(kerbal::utility::forward<Args>(args)...); // construct by args
 			} else {
 				this->push_back(kerbal::compatibility::move(this->back())); // move construct
 				// A A A X Y Z Z O O
@@ -778,8 +781,8 @@ namespace kerbal
 				kerbal::algorithm::move_backward(mutable_pos, this->end() - 2, this->end() - 1); // move assign
 				// A A A X X Y Z O O
 				//          ^
-				kerbal::operators::generic_assign(*mutable_pos, value_type(std::forward<Args>(args)...));
-				// *mutable_pos = value_type(std::forward<Args>(args)...); // move assign, construct by args
+				kerbal::operators::generic_assign(*mutable_pos, value_type(kerbal::utility::forward<Args>(args)...));
+				// *mutable_pos = value_type(kerbal::utility::forward<Args>(args)...); // move assign, construct by args
 			}
 			return mutable_pos;
 		}
@@ -1002,7 +1005,7 @@ namespace kerbal
 		KERBAL_CONSTEXPR14
 		void static_vector<Tp, N>::__construct_at(iterator itor, Args&& ...args)
 		{
-			(itor.current)->construct(std::forward<Args>(args)...);
+			(itor.current)->construct(kerbal::utility::forward<Args>(args)...);
 		}
 
 #	endif
