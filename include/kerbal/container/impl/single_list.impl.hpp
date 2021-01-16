@@ -17,6 +17,12 @@
 #include <kerbal/operators/generic_assign.hpp>
 #include <kerbal/utility/declval.hpp>
 
+#if __cplusplus >= 201103L
+#	include <kerbal/utility/forward.hpp>
+#endif
+
+#include <utility> // std::pair
+
 #include <kerbal/container/single_list.hpp>
 
 namespace kerbal
@@ -417,7 +423,7 @@ namespace kerbal
 		typename single_list<Tp, Allocator>::reference
 		single_list<Tp, Allocator>::emplace_front(Args&& ... args)
 		{
-			node *p = this->__build_new_node(std::forward<Args>(args)...);
+			node *p = this->__build_new_node(kerbal::utility::forward<Args>(args)...);
 			this->__hook_node(this->basic_begin(), p);
 			return p->value;
 		}
@@ -491,7 +497,7 @@ namespace kerbal
 		typename single_list<Tp, Allocator>::reference
 		single_list<Tp, Allocator>::emplace_back(Args&& ... args)
 		{
-			node *p = this->__build_new_node(std::forward<Args>(args)...);
+			node *p = this->__build_new_node(kerbal::utility::forward<Args>(args)...);
 			this->__hook_node_back(p);
 			return p->value;
 		}
@@ -619,7 +625,7 @@ namespace kerbal
 		typename single_list<Tp, Allocator>::iterator
 		single_list<Tp, Allocator>::emplace(const_iterator pos, Args&& ... args)
 		{
-			node *p = this->__build_new_node(std::forward<Args>(args)...);
+			node *p = this->__build_new_node(kerbal::utility::forward<Args>(args)...);
 			this->__hook_node(pos, p);
 			return pos.cast_to_mutable();
 		}
@@ -785,7 +791,7 @@ namespace kerbal
 		{
 			node *p = node_allocator_traits::allocate(this->alloc(), 1);
 			try {
-				node_allocator_traits::construct(this->alloc(), p, kerbal::utility::in_place_t(), std::forward<Args>(args)...);
+				node_allocator_traits::construct(this->alloc(), p, kerbal::utility::in_place_t(), kerbal::utility::forward<Args>(args)...);
 			} catch (...) {
 				node_allocator_traits::deallocate(this->alloc(), p, 1);
 				throw;
@@ -803,7 +809,7 @@ namespace kerbal
 							)
 		{
 			node *p = node_allocator_traits::allocate(this->alloc(), 1);
-			node_allocator_traits::construct(this->alloc(), p, kerbal::utility::in_place_t(), std::forward<Args>(args)...);
+			node_allocator_traits::construct(this->alloc(), p, kerbal::utility::in_place_t(), kerbal::utility::forward<Args>(args)...);
 			return p;
 		}
 
@@ -823,7 +829,7 @@ namespace kerbal
 #	endif // __cpp_exceptions
 			nothrow_while_construct;
 
-			return this->__build_new_node_helper(nothrow_while_construct(), std::forward<Args>(args)...);
+			return this->__build_new_node_helper(nothrow_while_construct(), kerbal::utility::forward<Args>(args)...);
 		}
 
 #	else
@@ -899,14 +905,14 @@ namespace kerbal
 		single_list<Tp, Allocator>::__build_n_new_nodes_unguarded(size_type n, Args&& ... args)
 		{
 			size_t cnt = 0;
-			node * const start = this->__build_new_node(std::forward<Args>(args)...);
+			node * const start = this->__build_new_node(kerbal::utility::forward<Args>(args)...);
 			node * back = start;
 #		if __cpp_exceptions
 			try {
 #		endif // __cpp_exceptions
 				++cnt;
 				while (cnt != n) {
-					node* new_node = this->__build_new_node(std::forward<Args>(args)...);
+					node* new_node = this->__build_new_node(kerbal::utility::forward<Args>(args)...);
 					back->next = new_node;
 					back = new_node;
 					++cnt;
