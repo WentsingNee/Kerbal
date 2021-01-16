@@ -16,6 +16,10 @@
 #include <kerbal/compatibility/move.hpp>
 #include <kerbal/compatibility/noexcept.hpp>
 
+#if __cplusplus >= 201103L
+#	include <kerbal/utility/forward.hpp>
+#endif
+
 #include <cstddef>
 
 #if __cplusplus >= 201103L
@@ -164,7 +168,7 @@ namespace kerbal
 				KERBAL_CONSTEXPR14
 				reference emplace(Args&& ... args)
 				{
-					this->storage[this->iend].construct(std::forward<Args>(args)...);
+					this->storage[this->iend].construct(kerbal::utility::forward<Args>(args)...);
 					size_type iback = this->iend;
 					this->iend = this->next(this->iend);
 					return this->storage[iback];
