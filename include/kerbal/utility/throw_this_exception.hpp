@@ -14,7 +14,10 @@
 
 #include <kerbal/compatibility/constexpr.hpp>
 #include <kerbal/compatibility/noexcept.hpp>
-#include <utility>
+
+#if __cplusplus >= 201103L
+#	include <kerbal/utility/forward.hpp>
+#endif
 
 #if !__cpp_exceptions
 #include <cstdlib>
@@ -37,7 +40,7 @@ namespace kerbal
 					[[noreturn]]
 					static void throw_this_exception(Args&& ... args)
 					{
-						throw Exception(std::forward<Args>(args)...);
+						throw Exception(kerbal::utility::forward<Args>(args)...);
 					}
 
 #		else
