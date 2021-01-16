@@ -14,6 +14,10 @@
 
 #include <kerbal/container/single_list.hpp>
 
+#if __cplusplus >= 201103L
+#	include <kerbal/utility/forward.hpp>
+#endif
+
 namespace kerbal
 {
 
@@ -143,7 +147,7 @@ namespace kerbal
 				KERBAL_CONSTEXPR20
 				reference emplace(Args&& ... args)
 				{
-					return c.emplace_back(std::forward<Args>(args)...);
+					return c.emplace_back(kerbal::utility::forward<Args>(args)...);
 				}
 
 #		else
