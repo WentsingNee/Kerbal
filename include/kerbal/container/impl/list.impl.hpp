@@ -22,6 +22,11 @@
 #include <kerbal/container/list.hpp>
 
 #if __cplusplus >= 201103L
+#	include <kerbal/utility/forward.hpp>
+#endif
+
+#include <utility> // std::pair
+#if __cplusplus >= 201103L
 #	include <type_traits>
 #else
 #	include <kerbal/type_traits/fundamental_deduction.hpp>
@@ -431,7 +436,7 @@ namespace kerbal
 		typename list<Tp, Allocator>::reference
 		list<Tp, Allocator>::emplace_front(Args&& ... args)
 		{
-			return *this->emplace(this->cbegin(), std::forward<Args>(args)...);
+			return *this->emplace(this->cbegin(), kerbal::utility::forward<Args>(args)...);
 		}
 
 #	else
@@ -495,7 +500,7 @@ namespace kerbal
 		typename list<Tp, Allocator>::reference
 		list<Tp, Allocator>::emplace_back(Args&& ... args)
 		{
-			return *this->emplace(this->cend(), std::forward<Args>(args)...);
+			return *this->emplace(this->cend(), kerbal::utility::forward<Args>(args)...);
 		}
 
 #	else
@@ -613,7 +618,7 @@ namespace kerbal
 		typename list<Tp, Allocator>::iterator
 		list<Tp, Allocator>::emplace(const_iterator pos, Args&& ... args)
 		{
-			node *p = this->__build_new_node(this->alloc(), std::forward<Args>(args)...);
+			node *p = this->__build_new_node(this->alloc(), kerbal::utility::forward<Args>(args)...);
 			list_type_unrelated::__hook_node(pos, p);
 			return iterator(p);
 		}
