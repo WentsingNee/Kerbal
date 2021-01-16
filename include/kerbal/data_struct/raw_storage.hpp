@@ -24,7 +24,9 @@
 #include <kerbal/utility/declval.hpp>
 #include <kerbal/utility/noncopyable.hpp>
 
-#include <utility>
+#if __cplusplus >= 201103L
+#	include <kerbal/utility/forward.hpp>
+#endif
 
 #if __cplusplus >= 201103L
 #	include <type_traits>
@@ -288,7 +290,7 @@ namespace kerbal
 				KERBAL_CONSTEXPR14
 				void construct(Args&&... args) noexcept
 				{
-					this->raw_value() = value_type(std::forward<Args>(args)...);
+					this->raw_value() = value_type(kerbal::utility::forward<Args>(args)...);
 				}
 
 #		endif
@@ -410,7 +412,7 @@ namespace kerbal
 												(std::is_nothrow_constructible<value_type, Args...>::value)
 										)
 				{
-					new (this->raw_pointer()) value_type(std::forward<Args>(args)...);
+					new (this->raw_pointer()) value_type(kerbal::utility::forward<Args>(args)...);
 				}
 
 #		endif
@@ -515,7 +517,7 @@ namespace kerbal
 				void construct(Up (&&src)[N])
 				{
 					for (size_t i = 0; i != N; ++i) {
-						new (&this->raw_value()[i]) Type(std::forward<Up>(src[i]));
+						new (&this->raw_value()[i]) Type(kerbal::utility::forward<Up>(src[i]));
 					}
 				}
 
