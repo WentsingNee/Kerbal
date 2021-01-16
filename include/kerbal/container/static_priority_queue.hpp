@@ -19,6 +19,10 @@
 #include <kerbal/type_traits/enable_if.hpp>
 
 #if __cplusplus >= 201103L
+#	include <kerbal/utility/forward.hpp>
+#endif
+
+#if __cplusplus >= 201103L
 #	include <initializer_list>
 #endif
 
@@ -176,7 +180,7 @@ namespace kerbal
 				KERBAL_CONSTEXPR14
 				void emplace(Args&& ... args)
 				{
-					c.emplace_back(std::forward<Args>(args)...);
+					c.emplace_back(kerbal::utility::forward<Args>(args)...);
 					kerbal::algorithm::push_heap(c.begin(), c.end(), vc);
 				}
 
