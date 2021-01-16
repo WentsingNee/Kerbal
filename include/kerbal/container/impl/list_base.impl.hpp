@@ -18,6 +18,10 @@
 #include <kerbal/iterator/iterator.hpp>
 #include <kerbal/utility/in_place.hpp>
 
+#if __cplusplus >= 201103L
+#	include <kerbal/utility/forward.hpp>
+#endif
+
 namespace kerbal
 {
 
@@ -697,7 +701,7 @@ namespace kerbal
 				typedef kerbal::memory::allocator_traits<NodeAllocator> node_allocator_traits;
 				node * p = node_allocator_traits::allocate(alloc, 1);
 				try {
-					node_allocator_traits::construct(alloc, p, kerbal::utility::in_place_t(), std::forward<Args>(args)...);
+					node_allocator_traits::construct(alloc, p, kerbal::utility::in_place_t(), kerbal::utility::forward<Args>(args)...);
 				} catch (...) {
 					node_allocator_traits::deallocate(alloc, p, 1);
 					throw;
@@ -718,7 +722,7 @@ namespace kerbal
 			{
 				typedef kerbal::memory::allocator_traits<NodeAllocator> node_allocator_traits;
 				node * p = node_allocator_traits::allocate(alloc, 1);
-				node_allocator_traits::construct(alloc, p, kerbal::utility::in_place_t(), std::forward<Args>(args)...);
+				node_allocator_traits::construct(alloc, p, kerbal::utility::in_place_t(), kerbal::utility::forward<Args>(args)...);
 				return p;
 			}
 
@@ -734,12 +738,12 @@ namespace kerbal
 						noexcept(
 								node_allocator_traits::construct(
 										alloc, kerbal::utility::declval<node*>(),
-										kerbal::utility::in_place_t(), std::forward<Args>(args)...
+										kerbal::utility::in_place_t(), kerbal::utility::forward<Args>(args)...
 								)
 						)
 				> nothrow_while_construct;
 
-				return __build_new_node_impl<nothrow_while_construct::value>(alloc, std::forward<Args>(args)...);
+				return __build_new_node_impl<nothrow_while_construct::value>(alloc, kerbal::utility::forward<Args>(args)...);
 			}
 
 #		else // __cpp_exceptions
@@ -752,7 +756,7 @@ namespace kerbal
 			{
 				typedef kerbal::memory::allocator_traits<NodeAllocator> node_allocator_traits;
 				node * p = node_allocator_traits::allocate(alloc, 1);
-				node_allocator_traits::construct(alloc, p, kerbal::utility::in_place_t(), std::forward<Args>(args)...);
+				node_allocator_traits::construct(alloc, p, kerbal::utility::in_place_t(), kerbal::utility::forward<Args>(args)...);
 				return p;
 			}
 
@@ -837,14 +841,14 @@ namespace kerbal
 			list_allocator_unrelated<Tp>::__build_n_new_nodes_unguarded(NodeAllocator & alloc, size_type n, Args&& ... args)
 			{
 				size_t cnt = 0;
-				node * const start = __build_new_node(alloc, std::forward<Args>(args)...);
+				node * const start = __build_new_node(alloc, kerbal::utility::forward<Args>(args)...);
 				node * back = start;
 #		if __cpp_exceptions
 				try {
 #		endif // __cpp_exceptions
 					++cnt;
 					while (cnt != n) {
-						node * new_node = __build_new_node(alloc, std::forward<Args>(args)...);
+						node * new_node = __build_new_node(alloc, kerbal::utility::forward<Args>(args)...);
 						new_node->prev = back;
 						back->next = new_node;
 						back = new_node;
