@@ -23,6 +23,11 @@
 #include <kerbal/data_struct/raw_storage.hpp>
 #include <kerbal/type_traits/enable_if.hpp>
 
+#if __cplusplus >= 201103L
+#	include <kerbal/utility/forward.hpp>
+#endif
+
+
 namespace kerbal
 {
 	namespace optional
@@ -360,9 +365,9 @@ namespace kerbal
 				operator=(Up && src)
 				{
 					if (this->has_value()) {
-						this->raw_value() = std::forward<Up>(src);
+						this->raw_value() = kerbal::utility::forward<Up>(src);
 					} else {
-						this->construct(std::forward<Up>(src));
+						this->construct(kerbal::utility::forward<Up>(src));
 						this->initialized = true;
 					}
 					return *this;
@@ -493,7 +498,7 @@ namespace kerbal
 				optional& emplace(Args && ... args)
 				{
 					clear();
-					this->construct(std::forward<Args>(args)...);
+					this->construct(kerbal::utility::forward<Args>(args)...);
 					this->initialized = true;
 					return *this;
 				}
