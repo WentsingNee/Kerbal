@@ -21,13 +21,13 @@
 #include <kerbal/utility/in_place.hpp>
 #include <kerbal/utility/noncopyable.hpp>
 
-#include <cstddef>
-
 #if __cplusplus >= 201103L
 #	include <kerbal/type_traits/integral_constant.hpp>
+#	include <kerbal/utility/forward.hpp>
 #	include <kerbal/utility/integer_sequence.hpp>
-#	include <utility> // forward
 #endif
+
+#include <cstddef>
 
 namespace kerbal
 {
@@ -132,7 +132,7 @@ namespace kerbal
 										KERBAL_CONDITIONAL_NOEXCEPT(
 												(std::is_nothrow_constructible<Tp, Args...>::value)
 										)
-							: super(), value(std::forward<Args>(args)...)
+							: super(), value(kerbal::utility::forward<Args>(args)...)
 					{
 					}
 
