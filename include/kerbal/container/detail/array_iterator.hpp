@@ -12,6 +12,8 @@
 #ifndef KERBAL_CONTAINER_DETAIL_ARRAY_ITERATOR_HPP
 #define KERBAL_CONTAINER_DETAIL_ARRAY_ITERATOR_HPP
 
+#include <kerbal/container/fwd/array.fwd.hpp>
+
 #include <kerbal/compatibility/constexpr.hpp>
 #include <kerbal/compatibility/noexcept.hpp>
 #include <kerbal/iterator/iterator_traits.hpp>

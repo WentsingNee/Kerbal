@@ -12,6 +12,8 @@
 #ifndef KERBAL_CONTAINER_ARRAY_HPP
 #define KERBAL_CONTAINER_ARRAY_HPP
 
+#include <kerbal/container/fwd/array.fwd.hpp>
+
 #include <kerbal/algorithm/sequence_compare.hpp>
 #include <kerbal/assign/ilist.hpp>
 #include <kerbal/compatibility/constexpr.hpp>
