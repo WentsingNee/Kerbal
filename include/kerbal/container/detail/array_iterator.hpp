@@ -17,6 +17,7 @@
 #include <kerbal/compatibility/constexpr.hpp>
 #include <kerbal/compatibility/noexcept.hpp>
 #include <kerbal/iterator/iterator_traits.hpp>
+#include <kerbal/iterator/reverse_iterator.hpp>
 #include <kerbal/operators/addable.hpp>
 #include <kerbal/operators/dereferenceable.hpp>
 #include <kerbal/operators/equality_comparable.hpp>
@@ -30,9 +31,6 @@ namespace kerbal
 
 	namespace container
 	{
-
-		template <typename Tp, size_t N>
-		class array;
 
 		namespace detail
 		{
@@ -142,9 +140,6 @@ namespace kerbal
 					}
 			};
 
-			template <typename ValueType>
-			class __arr_kiter;
-
 			/// @brief Iterator to array.
 			template <typename ValueType>
 			class __arr_iter: public __arr_iterbase<__arr_iter<ValueType>, ValueType*>
@@ -200,6 +195,28 @@ namespace kerbal
 		} //namespace detail
 
 	} //namespace container
+
+	namespace iterator
+	{
+
+		namespace detail
+		{
+
+			template <typename Tp>
+			struct reverse_iterator_base_is_inplace<kerbal::container::detail::__arr_iter<Tp> >:
+					kerbal::type_traits::true_type
+			{
+			};
+
+			template <typename Tp>
+			struct reverse_iterator_base_is_inplace<kerbal::container::detail::__arr_kiter<Tp> >:
+					kerbal::type_traits::true_type
+			{
+			};
+
+		} // namespace detail
+
+	} // namespace iterator
 
 } //namespace kerbal
 
