@@ -30,37 +30,12 @@ namespace kerbal
 	namespace container
 	{
 
+#	if __cplusplus < 201103L
+
 		template <typename Tp, size_t N>
-		KERBAL_CONSTEXPR
 		array<Tp, N>::array()
-#	if __cplusplus >= 201103L
-					: storage{}
-#	endif
 		{
 		}
-
-#	if __cplusplus >= 201103L
-
-#	else
-		template <typename Tp, size_t N>
-		array<Tp, N>::array(const array & src)
-		{
-			kerbal::algorithm::copy(src.storage, src.storage + N, this->storage);
-		}
-
-#	endif
-
-
-#	if __cplusplus >= 201103L
-
-		template <typename Tp, size_t N>
-		KERBAL_CONSTEXPR14
-		array<Tp, N>::array(std::initializer_list<value_type> src) :
-				array(src.begin(), src.end())
-		{
-		}
-
-#	else
 
 		template <typename Tp, size_t N>
 		template <typename Up>
@@ -69,62 +44,6 @@ namespace kerbal
 			this->assign(src.cbegin(), src.cend());
 		}
 
-#	endif
-
-
-		template <typename Tp, size_t N>
-		KERBAL_CONSTEXPR14
-		array<Tp, N>::array(size_type n, const_reference val)
-#	if __cplusplus >= 201103L
-					: storage{}
-#	endif
-		{
-			this->assign(n, val);
-		}
-
-
-		template <typename Tp, size_t N>
-		template <typename InputIterator>
-		KERBAL_CONSTEXPR14
-		array<Tp, N>::array(InputIterator first, InputIterator last,
-				typename kerbal::type_traits::enable_if<
-						kerbal::iterator::is_input_compatible_iterator<InputIterator>::value
-						, int
-				>::type
-		)
-#	if __cplusplus >= 201103L
-					: storage{}
-#	endif
-		{
-			this->assign(first, last);
-		}
-
-#	if __cplusplus >= 201103L
-
-#	else
-
-		template <typename Tp, size_t N>
-		array<Tp, N>& array<Tp, N>::operator=(const array & src)
-		{
-			this->assign(src.cbegin(), src.cend());
-			return *this;
-		}
-
-#	endif
-
-
-#	if __cplusplus >= 201103L
-
-		template <typename Tp, size_t N>
-		KERBAL_CONSTEXPR14
-		array<Tp, N>& array<Tp, N>::operator=(std::initializer_list<value_type> src)
-		{
-			this->assign(src.begin(), src.end());
-			return *this;
-		}
-
-#	else
-
 		template <typename Tp, size_t N>
 		template <typename Up>
 		array<Tp, N>& array<Tp, N>::operator=(const kerbal::assign::assign_list<Up> & src)
@@ -132,7 +51,6 @@ namespace kerbal
 			this->assign(src.begin(), src.end());
 			return *this;
 		}
-
 
 #	endif
 
@@ -189,7 +107,7 @@ namespace kerbal
 		typename array<Tp, N>::iterator
 		array<Tp, N>::begin() KERBAL_NOEXCEPT
 		{
-			return iterator(this->storage + 0);
+			return iterator(this->_K_data + 0);
 		}
 
 		template <typename Tp, size_t N>
@@ -197,7 +115,7 @@ namespace kerbal
 		typename array<Tp, N>::iterator
 		array<Tp, N>::end() KERBAL_NOEXCEPT
 		{
-			return iterator(this->storage + N);
+			return iterator(this->_K_data + N);
 		}
 
 		template <typename Tp, size_t N>
@@ -221,7 +139,7 @@ namespace kerbal
 		typename array<Tp, N>::const_iterator
 		array<Tp, N>::cbegin() const KERBAL_NOEXCEPT
 		{
-			return const_iterator(this->storage + 0);
+			return const_iterator(this->_K_data + 0);
 		}
 
 		template <typename Tp, size_t N>
@@ -229,7 +147,7 @@ namespace kerbal
 		typename array<Tp, N>::const_iterator
 		array<Tp, N>::cend() const KERBAL_NOEXCEPT
 		{
-			return const_iterator(this->storage + N);
+			return const_iterator(this->_K_data + N);
 		}
 
 		template <typename Tp, size_t N>
@@ -331,7 +249,7 @@ namespace kerbal
 		typename array<Tp, N>::reference
 		array<Tp, N>::operator[](size_type index) KERBAL_NOEXCEPT
 		{
-			return this->storage[index];
+			return this->_K_data[index];
 		}
 
 		template <typename Tp, size_t N>
@@ -339,7 +257,7 @@ namespace kerbal
 		typename array<Tp, N>::const_reference
 		array<Tp, N>::operator[](size_type index) const KERBAL_NOEXCEPT
 		{
-			return this->storage[index];
+			return this->_K_data[index];
 		}
 
 		template <typename Tp, size_t N>
@@ -367,7 +285,7 @@ namespace kerbal
 		typename array<Tp, N>::reference
 		array<Tp, N>::front()
 		{
-			return this->storage[0];
+			return this->_K_data[0];
 		}
 
 		template <typename Tp, size_t N>
@@ -375,7 +293,7 @@ namespace kerbal
 		typename array<Tp, N>::const_reference
 		array<Tp, N>::front() const
 		{
-			return this->storage[0];
+			return this->_K_data[0];
 		}
 
 		template <typename Tp, size_t N>
@@ -383,7 +301,7 @@ namespace kerbal
 		typename array<Tp, N>::reference
 		array<Tp, N>::back()
 		{
-			return this->storage[N - 1];
+			return this->_K_data[N - 1];
 		}
 
 		template <typename Tp, size_t N>
@@ -391,7 +309,7 @@ namespace kerbal
 		typename array<Tp, N>::const_reference
 		array<Tp, N>::back() const
 		{
-			return this->storage[N - 1];
+			return this->_K_data[N - 1];
 		}
 
 		template <typename Tp, size_t N>
@@ -399,7 +317,7 @@ namespace kerbal
 		typename array<Tp, N>::equal_c_array_reference
 		array<Tp, N>::c_arr() KERBAL_NOEXCEPT
 		{
-			return this->storage;
+			return this->_K_data;
 		}
 
 		template <typename Tp, size_t N>
@@ -407,7 +325,7 @@ namespace kerbal
 		typename array<Tp, N>::const_equal_c_array_reference
 		array<Tp, N>::c_arr() const KERBAL_NOEXCEPT
 		{
-			return this->storage;
+			return this->_K_data;
 		}
 
 		template <typename Tp, size_t N>
@@ -415,7 +333,7 @@ namespace kerbal
 		typename array<Tp, N>::const_equal_c_array_reference
 		array<Tp, N>::const_c_arr() const KERBAL_NOEXCEPT
 		{
-			return this->storage;
+			return this->_K_data;
 		}
 
 		template <typename Tp, size_t N>
@@ -423,14 +341,14 @@ namespace kerbal
 		typename array<Tp, N>::const_pointer
 		array<Tp, N>::data() const KERBAL_NOEXCEPT
 		{
-			return this->storage + 0;
+			return this->_K_data + 0;
 		}
 
 		template <typename Tp, size_t N>
 		KERBAL_CONSTEXPR14
 		void array<Tp, N>::swap(array & with)
 		{
-			kerbal::algorithm::swap(this->storage, with.storage);
+			kerbal::algorithm::swap(this->_K_data, with._K_data);
 		}
 
 		template <typename Tp, size_t N>

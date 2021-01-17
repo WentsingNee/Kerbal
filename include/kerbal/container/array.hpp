@@ -69,22 +69,6 @@ namespace kerbal
 				typedef std::size_t size_type;
 				typedef std::ptrdiff_t difference_type;
 
-				/// @brief 与该 array 所等价的 C 风格数组的类型, 即 value_type[N]
-				typedef value_type equal_c_array[N];
-				typedef equal_c_array& equal_c_array_reference;
-				typedef const value_type const_equal_c_array[N];
-				typedef const_equal_c_array& const_equal_c_array_reference;
-
-			private:
-				typedef typename kerbal::type_traits::remove_all_extents<value_type>::type remove_all_extents_t;
-
-				/**
-				 * @brief 数据存储区
-				 */
-				value_type storage[N];
-
-			public:
-
 				/// @brief Iterator to array.
 				typedef kerbal::container::detail::__arr_iter<value_type> iterator;
 				/// @brief Constant iterator to array.
@@ -94,91 +78,27 @@ namespace kerbal
 				/// @brief Constant reverse iterator to array.
 				typedef kerbal::iterator::reverse_iterator<const_iterator> const_reverse_iterator;
 
+				/// @brief 与该 array 所等价的 C 风格数组的类型, 即 value_type[N]
+				typedef value_type equal_c_array[N];
+				typedef equal_c_array& equal_c_array_reference;
+				typedef const value_type const_equal_c_array[N];
+				typedef const_equal_c_array& const_equal_c_array_reference;
+
 			public:
+				value_type _K_data[N];
+
+			public:
+
+#		if __cplusplus < 201103L
+
 				/** @brief Initialize the array with default value (Default constructor) */
-				KERBAL_CONSTEXPR array();
-
-				/**
-				 * @brief Copy constructor
-				 * @param src Another array object of the same type (must have the same template arguments type and N)
-				 */
-#		if __cplusplus >= 201103L
-				array(const array & src) = default;
-#		else
-				array(const array & src);
-#		endif
-
-#		if __cplusplus >= 201103L
-
-				/**
-				 * @brief Construct the array by coping the contents in initializer list
-				 * @param src An initializer list
-				 * @warning Compile terminate if the length of the initializer list large than the arg N of the array
-				 * @warning The constructor only be provided under the environment of C++11 standard
-				 */
-				KERBAL_CONSTEXPR14
-				array(std::initializer_list<value_type> src);
-
-#		else
+				array();
 
 				template <typename Up>
 				array(const kerbal::assign::assign_list<Up> & src);
 
-#		endif
-
-#		if __cplusplus >= 201103L
-
-				KERBAL_CONSTEXPR
-				array(array && src) = default;
-
-#		endif
-
-				KERBAL_CONSTEXPR14
-				array(size_type n, const_reference val);
-
-				/**
-				 * @brief Range constructor
-				 * @param begin the iterator that points to the range begin
-				 * @param end the iterator that points to the range end
-				 * @tparam InputIterator An input iterator type that points to elements of a type
-				 * @warning If the range contains elements more than N, only the first N elements
-				 *          will be used. The others will be ignored.
-				 */
-				template <typename InputIterator>
-				KERBAL_CONSTEXPR14
-				array(InputIterator first, InputIterator last,
-						typename kerbal::type_traits::enable_if<
-								kerbal::iterator::is_input_compatible_iterator<InputIterator>::value
-								, int
-						>::type = 0
-				);
-
-#		if __cplusplus >= 201103L
-				array& operator=(const array & src) = default;
-#		else
-				array& operator=(const array & src);
-#		endif
-
-#		if __cplusplus >= 201103L
-
-				/**
-				 * @brief Assign the array by using the content of an initializer list
-				 * @param src the initializer list
-				 * @return the reference to the array be assigned
-				 */
-				KERBAL_CONSTEXPR14
-				array& operator=(std::initializer_list<value_type> src);
-
-#		else
-
 				template <typename Up>
 				array& operator=(const kerbal::assign::assign_list<Up> & src);
-
-#		endif
-
-#		if __cplusplus >= 201103L
-
-				array& operator=(array && src) = default;
 
 #		endif
 
