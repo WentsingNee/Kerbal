@@ -259,7 +259,8 @@ namespace kerbal
 					return this->initialized == false;
 				}
 
-				explicit KERBAL_CONSTEXPR operator bool() const KERBAL_NOEXCEPT
+				KERBAL_CONSTEXPR
+				operator bool() const KERBAL_NOEXCEPT
 				{
 					return this->has_value();
 				}
