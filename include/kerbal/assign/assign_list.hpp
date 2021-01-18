@@ -89,6 +89,7 @@ namespace kerbal
 
 		};
 
+		inline
 		assign_list<void>
 		make_assign_list()
 		{
