@@ -41,10 +41,24 @@ namespace kerbal
 		{
 		};
 
+		template <typename Alloc>
+		struct allocator_could_use_pointer_def : kerbal::memory::allocator_has_def_pointer<Alloc>
+		{
+		};
+
+#	if __cplusplus >= 201703L
+
+		template <typename T>
+		struct allocator_could_use_pointer_def<std::allocator<T> >: kerbal::type_traits::false_type
+		{
+		};
+
+#	endif
+
 		namespace detail
 		{
 
-			template <typename Alloc, bool = kerbal::memory::allocator_has_def_pointer<Alloc>::value>
+			template <typename Alloc, bool = kerbal::memory::allocator_could_use_pointer_def<Alloc>::value>
 			struct allocator_pointer_traits_helper
 			{
 					typedef typename Alloc::value_type* type;
@@ -69,10 +83,24 @@ namespace kerbal
 		{
 		};
 
+		template <typename Alloc>
+		struct allocator_could_use_const_pointer_def : kerbal::memory::allocator_has_def_const_pointer<Alloc>
+		{
+		};
+
+#	if __cplusplus >= 201703L
+
+		template <typename T>
+		struct allocator_could_use_const_pointer_def<std::allocator<T> >: kerbal::type_traits::false_type
+		{
+		};
+
+#	endif
+
 		namespace detail
 		{
 
-			template <typename Alloc, bool = kerbal::memory::allocator_has_def_const_pointer<Alloc>::value>
+			template <typename Alloc, bool = kerbal::memory::allocator_could_use_const_pointer_def<Alloc>::value>
 			struct allocator_const_pointer_traits_helper
 			{
 				private:
@@ -288,6 +316,20 @@ namespace kerbal
 		{
 		};
 
+		template <typename Alloc, typename Up>
+		struct allocator_could_use_rebind_alloc : kerbal::memory::allocator_has_def_rebind_alloc<Alloc, Up>
+		{
+		};
+
+#	if __cplusplus >= 201703L
+
+		template <typename Tp, typename Up>
+		struct allocator_could_use_rebind_alloc<std::allocator<Tp>, Up>: kerbal::type_traits::false_type
+		{
+		};
+
+#	endif
+
 		namespace detail
 		{
 
@@ -312,7 +354,7 @@ namespace kerbal
 
 #		endif // __cplusplus >= 201103L
 
-			template <typename Alloc, typename Up, bool = kerbal::memory::allocator_has_def_rebind_alloc<Alloc, Up>::value>
+			template <typename Alloc, typename Up, bool = kerbal::memory::allocator_could_use_rebind_alloc<Alloc, Up>::value>
 			struct allocator_traits_rebind_alloc_helper: pointer_traits_rebind_impl<Alloc, Up>
 			{
 			};
@@ -352,6 +394,20 @@ namespace kerbal
 		{
 		};
 
+		template <typename Alloc, typename T, typename ... Args>
+		struct allocator_could_use_construct : kerbal::memory::allocator_has_construct<Alloc, T, Args...>
+		{
+		};
+
+#	if __cplusplus >= 201703L
+
+		template <typename T, typename ... Args>
+		struct allocator_could_use_construct<std::allocator<T>, T, Args...>: kerbal::type_traits::false_type
+		{
+		};
+
+#	endif
+
 		namespace detail
 		{
 
@@ -385,7 +441,7 @@ namespace kerbal
 					KERBAL_CONSTEXPR14
 					static void construct(Alloc& alloc, T* p, Args&& ... args)
 					{
-						__construct(allocator_has_construct<Alloc, T, Args...>(), alloc, p,
+						__construct(allocator_could_use_construct<Alloc, T, Args...>(), alloc, p,
 									kerbal::utility::forward<Args>(args)...);
 					}
 
@@ -412,6 +468,20 @@ namespace kerbal
 		>::type >: kerbal::type_traits::true_type
 		{
 		};
+
+		template <typename Alloc, typename T>
+		struct allocator_could_use_destroy : kerbal::memory::allocator_has_destroy<Alloc, T>
+		{
+		};
+
+#	if __cplusplus >= 201703L
+
+		template <typename T>
+		struct allocator_could_use_destroy<std::allocator<T>, T>: kerbal::type_traits::false_type
+		{
+		};
+
+#	endif
 
 #	endif // __cplusplus >= 201103L
 
@@ -450,10 +520,10 @@ namespace kerbal
 					KERBAL_CONSTEXPR14
 					static void destroy(Alloc & alloc, T * p)
 											KERBAL_CONDITIONAL_NOEXCEPT(
-													noexcept(__destroy(allocator_has_destroy<Alloc, T>(), alloc, p))
+													noexcept(__destroy(allocator_could_use_destroy<Alloc, T>(), alloc, p))
 											)
 					{
-						__destroy(allocator_has_destroy<Alloc, T>(), alloc, p);
+						__destroy(allocator_could_use_destroy<Alloc, T>(), alloc, p);
 					}
 
 #		else
