@@ -12,13 +12,15 @@
 #ifndef KERBAL_ITERATOR_ITERATOR_TRAITS_HPP
 #define KERBAL_ITERATOR_ITERATOR_TRAITS_HPP
 
-#include <iterator>
 #include <kerbal/compatibility/constexpr.hpp>
 #include <kerbal/compatibility/noexcept.hpp>
 #include <kerbal/type_traits/cv_deduction.hpp>
 #include <kerbal/type_traits/integral_constant.hpp>
 #include <kerbal/type_traits/is_same.hpp>
 #include <kerbal/type_traits/void_type.hpp>
+
+#include <iterator>
+#include <cstddef>
 
 #include <kerbal/ts/modules_ts/modules_ts.hpp>
 
