@@ -16,12 +16,12 @@
 #include <kerbal/compatibility/noexcept.hpp>
 #include <kerbal/utility/reference_wrapper.hpp>
 
-#include <utility>
 #include <istream>
 #include <limits>
 
 namespace kerbal
 {
+
 	namespace random
 	{
 
@@ -67,13 +67,13 @@ namespace kerbal
 				}
 
 				KERBAL_CONSTEXPR
-				bool operator==(const istream_engine & rhs) const
+				bool operator==(const istream_engine & /*rhs*/) const
 				{
 					return false;
 				}
 
 				KERBAL_CONSTEXPR14
-				bool operator!=(const istream_engine & rhs) const
+				bool operator!=(const istream_engine & /*rhs*/) const
 				{
 					return true;
 				}

@@ -17,11 +17,11 @@
 #include <kerbal/random/uniform_real_distribution.hpp>
 
 #include <cmath>
-#include <utility>
 #include <limits>
 
 namespace kerbal
 {
+
 	namespace random
 	{
 
@@ -41,7 +41,7 @@ namespace kerbal
 					KERBAL_CONSTEXPR const double M_2PI = 6.283185307179586476925286766559;
 					kerbal::random::uniform_real_distribution<result_type> real_distribution(0.0, 1.0);
 					result_type u(real_distribution(eg)), v(real_distribution(eg));
-					return ::sqrt(-2 * ::log(1.0 - u)) * ::sin(M_2PI * v); // sq(-2 log(u)) * sin(2 pi v)
+					return std::sqrt(-2 * std::log(1.0 - u)) * std::sin(M_2PI * v); // sq(-2 log(u)) * sin(2 pi v)
 				}
 
 			public:
