@@ -292,7 +292,7 @@ namespace kerbal
 			typedef typename kerbal::type_traits::make_unsigned<Tp>::type unsigned_t;
 			return n == sizeof(unsigned_t) * CHAR_BIT ?
 					~static_cast<unsigned_t>(0) :
-					~(~static_cast<unsigned_t>(0) << n);
+					~(static_cast<unsigned_t>(~static_cast<unsigned_t>(0)) << n);
 		}
 
 		template <typename Tp>
