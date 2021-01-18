@@ -17,6 +17,7 @@
 #include <kerbal/compatibility/method_overload_tag.hpp>
 #include <kerbal/compatibility/move.hpp>
 #include <kerbal/compatibility/noexcept.hpp>
+#include <kerbal/operators/generic_assign.hpp>
 #include <kerbal/type_traits/is_same.hpp>
 #include <kerbal/utility/member_compress_helper.hpp>
 
@@ -306,8 +307,8 @@ namespace kerbal
 				KERBAL_CONSTEXPR14
 				compressed_pair& operator=(const kerbal::utility::compressed_pair<Tp2, Up2> & pair)
 				{
-					this->first() = pair.first();
-					this->second() = pair.second();
+					kerbal::operators::generic_assign(this->first(), pair.first());
+					kerbal::operators::generic_assign(this->second(), pair.second());
 					return *this;
 				}
 
@@ -317,8 +318,8 @@ namespace kerbal
 				KERBAL_CONSTEXPR14
 				compressed_pair& operator=(kerbal::utility::compressed_pair<Tp2, Up2> && pair)
 				{
-					this->first() = kerbal::compatibility::move(pair.first());
-					this->second() = kerbal::compatibility::move(pair.second());
+					kerbal::operators::generic_assign(this->first(), kerbal::compatibility::move(pair.first()));
+					kerbal::operators::generic_assign(this->second(), kerbal::compatibility::move(pair.second()));
 					return *this;
 				}
 

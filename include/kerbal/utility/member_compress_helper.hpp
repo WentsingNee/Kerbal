@@ -16,6 +16,7 @@
 #include <kerbal/compatibility/method_overload_tag.hpp>
 #include <kerbal/compatibility/move.hpp>
 #include <kerbal/compatibility/noexcept.hpp>
+#include <kerbal/operators/generic_assign.hpp>
 #include <kerbal/type_traits/can_be_empty_base.hpp>
 #include <kerbal/type_traits/conditional.hpp>
 #include <kerbal/type_traits/cv_deduction.hpp>
@@ -359,7 +360,7 @@ namespace kerbal
 				template <typename U>
 				void assign(const U & arg)
 				{
-					this->member() = arg;
+					kerbal::operators::generic_assign(this->member(), arg);
 				}
 
 #		else
@@ -368,10 +369,13 @@ namespace kerbal
 				KERBAL_CONSTEXPR14
 				void assign(U && arg)
 						KERBAL_CONDITIONAL_NOEXCEPT(
-								noexcept(kerbal::utility::declthis<member_compress_helper>()->member() = kerbal::utility::forward<U>(arg))
+								noexcept(kerbal::operators::generic_assign(
+										kerbal::utility::declthis<member_compress_helper>()->member(),
+										kerbal::utility::forward<U>(arg)
+								))
 						)
 				{
-					this->member() = kerbal::utility::forward<U>(arg);
+					kerbal::operators::generic_assign(this->member(), kerbal::utility::forward<U>(arg));
 				}
 
 #		endif
@@ -381,10 +385,13 @@ namespace kerbal
 				KERBAL_CONSTEXPR14
 				member_compress_helper& operator=(const member_compress_helper<U, J> & arg)
 						KERBAL_CONDITIONAL_NOEXCEPT(
-								noexcept(kerbal::utility::declthis<member_compress_helper>()->member() = arg.member())
+								noexcept(kerbal::operators::generic_assign(
+										kerbal::utility::declthis<member_compress_helper>()->member(),
+										arg.member()
+								))
 						)
 				{
-					this->member() = arg.member();
+					kerbal::operators::generic_assign(this->member(), arg.member());
 					return *this;
 				}
 
@@ -397,10 +404,13 @@ namespace kerbal
 				KERBAL_CONSTEXPR14
 				member_compress_helper& operator=(member_compress_helper<U, J> && arg)
 						KERBAL_CONDITIONAL_NOEXCEPT(
-								noexcept(kerbal::utility::declthis<member_compress_helper>()->member() = kerbal::compatibility::move(arg.member()))
+								noexcept(kerbal::operators::generic_assign(
+										kerbal::utility::declthis<member_compress_helper>()->member(),
+										kerbal::compatibility::move(arg.member())
+								))
 						)
 				{
-					this->member() = kerbal::compatibility::move(arg.member());
+					kerbal::operators::generic_assign(this->member(), kerbal::compatibility::move(arg.member()));
 					return *this;
 				}
 
@@ -451,16 +461,19 @@ namespace kerbal
 				KERBAL_CONSTEXPR14
 				void assign(T & arg)
 				{
-					this->member() = arg;
+					kerbal::operators::generic_assign(this->member(), arg);
 				}
 
 				KERBAL_CONSTEXPR14
 				member_compress_helper& operator=(const member_compress_helper & arg)
 						KERBAL_CONDITIONAL_NOEXCEPT(
-								noexcept(kerbal::utility::declthis<member_compress_helper>()->member() = arg.member())
+								noexcept(kerbal::operators::generic_assign(
+										kerbal::utility::declthis<member_compress_helper>()->member(),
+										arg.member()
+								))
 						)
 				{
-					this->member() = arg.member();
+					kerbal::operators::generic_assign(this->member(), arg.member());
 					return *this;
 				}
 
@@ -468,10 +481,13 @@ namespace kerbal
 				KERBAL_CONSTEXPR14
 				member_compress_helper& operator=(const member_compress_helper<U, J> & arg)
 						KERBAL_CONDITIONAL_NOEXCEPT(
-								noexcept(kerbal::utility::declthis<member_compress_helper>()->member() = arg.member())
+								noexcept(kerbal::operators::generic_assign(
+										kerbal::utility::declthis<member_compress_helper>()->member(),
+										arg.member()
+								))
 						)
 				{
-					this->member() = arg.member();
+					kerbal::operators::generic_assign(this->member(), arg.member());
 					return *this;
 				}
 
