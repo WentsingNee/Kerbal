@@ -712,7 +712,8 @@ namespace kerbal
 			template <typename Tp>
 			template <bool nothrow_while_construct, typename NodeAllocator, typename ... Args>
 			KERBAL_CONSTEXPR20
-			typename kerbal::type_traits::enable_if<nothrow_while_construct,
+			typename kerbal::type_traits::enable_if<
+					nothrow_while_construct,
 					typename list_allocator_unrelated<Tp>::node*
 			>::type
 			list_allocator_unrelated<Tp>::__build_new_node_impl(NodeAllocator & alloc, Args&& ... args)
@@ -868,6 +869,7 @@ namespace kerbal
 
 #if __cpp_exceptions
 
+// args = {alloc, arg0, arg1...}
 #	define __build_n_new_nodes_unguarded_body(args...) \
 		{ \
 			size_t cnt = 0; \
@@ -891,6 +893,7 @@ namespace kerbal
 
 #else
 
+// args = {alloc, arg0, arg1...}
 #	define __build_n_new_nodes_unguarded_body(args...) \
 		{ \
 			size_t cnt = 0; \
@@ -1068,7 +1071,7 @@ namespace kerbal
 				} else {
 					node_base * current_node_base = start;
 					while (current_node_base != NULL) {
-						node_base *next = current_node_base->next;
+						node_base * next = current_node_base->next;
 						__destroy_node(alloc, current_node_base);
 						current_node_base = next;
 					}
