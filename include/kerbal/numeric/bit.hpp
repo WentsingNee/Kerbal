@@ -49,7 +49,12 @@ namespace kerbal
 		bitarray(Tp x) KERBAL_NOEXCEPT
 		{
 			typedef bitarray_result_len<Tp> BIT_ARRAY_LEN;
-			kerbal::container::array<bool, BIT_ARRAY_LEN::value> r;
+			kerbal::container::array<bool, BIT_ARRAY_LEN::value> r
+#		if __cplusplus >= 201402L
+				= {}
+#		endif
+			;
+
 			for (typename BIT_ARRAY_LEN::value_type i = 0; i < BIT_ARRAY_LEN::value; ++i) {
 				r[BIT_ARRAY_LEN::value - 1 - i] = ((x >> i) & 1);
 			}
@@ -68,7 +73,12 @@ namespace kerbal
 		octarray(Tp x) KERBAL_NOEXCEPT
 		{
 			typedef octarray_result_len<Tp> OCT_ARRAY_LEN;
-			kerbal::container::array<char, OCT_ARRAY_LEN::value> r;
+			kerbal::container::array<char, OCT_ARRAY_LEN::value> r
+#		if __cplusplus >= 201402L
+				= {}
+#		endif
+			;
+
 			for (typename OCT_ARRAY_LEN::value_type i = 0; i < OCT_ARRAY_LEN::value; ++i) {
 				char current = (x >> (i * 3)) & 7;
 				current += '0';
@@ -89,7 +99,12 @@ namespace kerbal
 		hexarray(Tp x) KERBAL_NOEXCEPT
 		{
 			typedef hexarray_result_len<Tp> HEX_ARRAY_LEN;
-			kerbal::container::array<char, HEX_ARRAY_LEN::value> r;
+			kerbal::container::array<char, HEX_ARRAY_LEN::value> r
+#		if __cplusplus >= 201402L
+				= {}
+#		endif
+			;
+
 			for (typename HEX_ARRAY_LEN::value_type i = 0; i < HEX_ARRAY_LEN::value; ++i) {
 				char current = (x >> (i * 4)) & 0xf;
 				if (current < 10) {
