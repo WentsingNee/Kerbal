@@ -76,7 +76,7 @@ namespace kerbal
 
 		template <typename ValueType>
 		class __rawst_base<ValueType, true>
-						: kerbal::utility::noncopyable
+						: private kerbal::utility::noncopyable
 		{
 			protected:
 				typedef ValueType				value_type;
@@ -147,7 +147,7 @@ namespace kerbal
 
 		template <typename ValueType>
 		class __rawst_base<ValueType, false>
-						: kerbal::utility::noncopyable
+						: private kerbal::utility::noncopyable
 		{
 			protected:
 				typedef ValueType				value_type;
