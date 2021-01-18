@@ -12,14 +12,10 @@
 #ifndef KERBAL_CONTAINER_IMPL_LIST_IMPL_HPP
 #define KERBAL_CONTAINER_IMPL_LIST_IMPL_HPP
 
-#include <kerbal/algorithm/swap.hpp>
-#include <kerbal/algorithm/modifier.hpp>
-#include <kerbal/algorithm/sequence_compare.hpp>
 #include <kerbal/compatibility/move.hpp>
 #include <kerbal/iterator/iterator.hpp>
 #include <kerbal/operators/generic_assign.hpp>
-
-#include <kerbal/container/list.hpp>
+#include <kerbal/utility/declval.hpp>
 
 #if __cplusplus >= 201103L
 #	include <kerbal/utility/forward.hpp>
@@ -27,10 +23,11 @@
 
 #include <utility> // std::pair
 #if __cplusplus >= 201103L
+#	include <initializer_list>
 #	include <type_traits>
-#else
-#	include <kerbal/type_traits/fundamental_deduction.hpp>
 #endif
+
+#include <kerbal/container/list.hpp>
 
 namespace kerbal
 {
