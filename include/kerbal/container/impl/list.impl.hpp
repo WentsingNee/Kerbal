@@ -741,7 +741,7 @@ namespace kerbal
 		void list<Tp, Allocator>::resize(size_type count, const_reference value)
 		{
 			const_iterator it(this->cbegin());
-			difference_type size = kerbal::iterator::advance_at_most(it, count, this->cend());
+			size_type size(kerbal::iterator::advance_at_most(it, count, this->cend()));
 			if (size == count) {
 				this->erase(it, this->cend());
 			} else {
