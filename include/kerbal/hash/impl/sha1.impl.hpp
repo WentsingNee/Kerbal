@@ -28,6 +28,7 @@ namespace kerbal
 
 		template <>
 		KERBAL_CONSTEXPR14
+		inline
 		uint32_t SHA1_context_base::blk0<LITTLE_ENDIAN>(uint32_t l[16], size_t i) KERBAL_NOEXCEPT
 		{
 			return l[i] = (kerbal::numeric::rotl(l[i], 24) & 0xFF00FF00u) |
@@ -36,6 +37,7 @@ namespace kerbal
 
 		template <>
 		KERBAL_CONSTEXPR14
+		inline
 		uint32_t SHA1_context_base::blk0<BIG_ENDIAN>(uint32_t l[16], size_t i) KERBAL_NOEXCEPT
 		{
 			return l[i];
