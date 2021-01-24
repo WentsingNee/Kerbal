@@ -19,13 +19,12 @@
 #include <kerbal/compatibility/noexcept.hpp>
 #include <kerbal/iterator/iterator.hpp>
 #include <kerbal/iterator/iterator_traits.hpp>
-#include <kerbal/type_traits/can_be_empty_base.hpp>
-#include <kerbal/type_traits/cv_deduction.hpp>
 #include <kerbal/type_traits/enable_if.hpp>
 #include <kerbal/type_traits/is_same.hpp>
 #include <kerbal/utility/as_const.hpp>
+#include <kerbal/utility/member_compress_helper.hpp>
 
-#include <utility>
+#include <utility> // std::pair
 
 #if __cplusplus >= 201103L
 #	include <type_traits>
@@ -77,59 +76,12 @@ namespace kerbal
 		namespace detail
 		{
 
-			template <typename KeyCompare, bool can_be_empty_base = kerbal::type_traits::can_be_empty_base<KeyCompare>::value >
-			class flat_ordered_key_compare_overload;
-
 			template <typename KeyCompare>
-			class flat_ordered_key_compare_overload<KeyCompare, false>
-			{
-				protected:
-					typedef KeyCompare				key_compare;
-
-				protected:
-					key_compare kc;
-
-				protected:
-					KERBAL_CONSTEXPR
-					flat_ordered_key_compare_overload()
-									KERBAL_CONDITIONAL_NOEXCEPT(
-										std::is_nothrow_default_constructible<key_compare>::value
-									)
-							: kc()
-					{
-					}
-
-					KERBAL_CONSTEXPR
-					explicit
-					flat_ordered_key_compare_overload(const key_compare & kc)
-									KERBAL_CONDITIONAL_NOEXCEPT(
-										std::is_nothrow_copy_constructible<key_compare>::value
-									)
-							: kc(kc)
-					{
-					}
-
-					KERBAL_CONSTEXPR14
-					key_compare& key_comp_obj() KERBAL_NOEXCEPT
-					{
-						return this->kc;
-					}
-
-					KERBAL_CONSTEXPR14
-					const key_compare& key_comp_obj() const KERBAL_NOEXCEPT
-					{
-						return this->kc;
-					}
-
-			};
-
-
-			template <typename KeyCompare>
-			class flat_ordered_key_compare_overload<KeyCompare, true>
-					: private kerbal::type_traits::remove_cv<KeyCompare>::type
+			class flat_ordered_key_compare_overload:
+					private kerbal::utility::member_compress_helper<KeyCompare>
 			{
 				private:
-					typedef typename kerbal::type_traits::remove_cv<KeyCompare>::type super;
+					typedef kerbal::utility::member_compress_helper<KeyCompare> super;
 
 				protected:
 					typedef KeyCompare				key_compare;
@@ -140,7 +92,7 @@ namespace kerbal
 									KERBAL_CONDITIONAL_NOEXCEPT(
 										std::is_nothrow_default_constructible<super>::value
 									)
-							: super()
+							: super(kerbal::utility::in_place_t())
 					{
 					}
 
@@ -150,20 +102,20 @@ namespace kerbal
 									KERBAL_CONDITIONAL_NOEXCEPT(
 										std::is_nothrow_copy_constructible<super>::value
 									)
-							: super(kc)
+							: super(kerbal::utility::in_place_t(), kc)
 					{
 					}
 
 					KERBAL_CONSTEXPR14
 					key_compare& key_comp_obj() KERBAL_NOEXCEPT
 					{
-						return static_cast<super&>(*this);
+						return super::member();
 					}
 
 					KERBAL_CONSTEXPR14
 					const key_compare& key_comp_obj() const KERBAL_NOEXCEPT
 					{
-						return static_cast<const super&>(*this);
+						return super::member();
 					}
 
 			};
