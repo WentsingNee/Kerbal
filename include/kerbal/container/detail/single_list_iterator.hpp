@@ -12,7 +12,7 @@
 #ifndef KERBAL_CONTAINER_DETAIL_SINGLE_LIST_ITERATOR_HPP
 #define KERBAL_CONTAINER_DETAIL_SINGLE_LIST_ITERATOR_HPP
 
-#include <kerbal/container/detail/single_list_node.hpp>
+#include <kerbal/container/fwd/single_list.fwd.hpp>
 
 #include <kerbal/operators/dereferenceable.hpp>
 #include <kerbal/operators/equality_comparable.hpp>
@@ -39,14 +39,8 @@ namespace kerbal
 
 					friend class kerbal::container::detail::sl_kiter_type_unrelated;
 
-					template <typename Tp>
-					friend class kerbal::container::detail::sl_iter;
-
-					template <typename Tp>
-					friend class kerbal::container::detail::sl_kiter;
-
 				public:
-					typedef std::bidirectional_iterator_tag					iterator_category;
+					typedef std::forward_iterator_tag						iterator_category;
 					typedef std::ptrdiff_t									difference_type;
 
 				protected:
@@ -94,7 +88,7 @@ namespace kerbal
 					typedef sl_iter_type_unrelated basic_iterator;
 
 				public:
-					typedef std::bidirectional_iterator_tag					iterator_category;
+					typedef std::forward_iterator_tag						iterator_category;
 					typedef std::ptrdiff_t									difference_type;
 
 				protected:
@@ -181,7 +175,7 @@ namespace kerbal
 
 					KERBAL_CONSTEXPR
 					explicit sl_iter(const detail::sl_iter_type_unrelated & iter) KERBAL_NOEXCEPT :
-							super(iter.current)
+							super(iter)
 					{
 					}
 
@@ -247,7 +241,7 @@ namespace kerbal
 
 					KERBAL_CONSTEXPR
 					explicit sl_kiter(const detail::sl_iter_type_unrelated & iter) KERBAL_NOEXCEPT :
-							super(iter.current)
+							super(iter)
 					{
 					}
 

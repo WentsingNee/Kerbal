@@ -1,6 +1,6 @@
 /**
  * @file       single_list.hpp
- * @brief      
+ * @brief
  * @date       2019-7-14
  * @author     Peter
  * @copyright
@@ -77,6 +77,9 @@ namespace kerbal
 				typedef typename sl_allocator_unrelated::node						node;
 
 			public:
+				typedef kerbal::type_traits::integral_constant<size_t, sizeof(node)>	NODE_SIZE;
+
+			public:
 				typedef Allocator															allocator_type;
 
 			private:
@@ -140,12 +143,14 @@ namespace kerbal
 #		if __cplusplus >= 201103L
 
 				KERBAL_CONSTEXPR20
-				single_list(single_list && src);
+				single_list(single_list && src) KERBAL_NOEXCEPT((
+						std::is_nothrow_constructible<sl_allocator_overload, node_allocator_type&&>::value
+				));
 
 			private:
 
 				KERBAL_CONSTEXPR20
-				void move_constructor_with_afforded_allocator_allocator_equal(single_list && src);
+				void move_constructor_with_afforded_allocator_allocator_equal(single_list && src) KERBAL_NOEXCEPT;
 
 				KERBAL_CONSTEXPR20
 				void move_constructor_with_afforded_allocator_allocator_not_equal(single_list && src);
@@ -158,7 +163,7 @@ namespace kerbal
 				template <bool is_allocator_always_equal>
 				KERBAL_CONSTEXPR20
 				typename kerbal::type_traits::enable_if<is_allocator_always_equal>::type
-				move_constructor_with_afforded_allocator_helper(single_list && src);
+				move_constructor_with_afforded_allocator_helper(single_list && src) KERBAL_NOEXCEPT;
 
 			public:
 
@@ -186,7 +191,13 @@ namespace kerbal
 #		endif
 
 				KERBAL_CONSTEXPR20
-				~single_list();
+				~single_list() KERBAL_CONDITIONAL_NOEXCEPT(
+						noexcept(kerbal::utility::declthis<single_list>()->_K_consecutive_destroy_node(
+								kerbal::utility::declthis<single_list>()->alloc(),
+								kerbal::utility::declthis<single_list>()->head_node.next
+						)) &&
+						std::is_nothrow_destructible<sl_allocator_overload>::value
+				);
 
 			//===================
 			//assign
@@ -413,7 +424,12 @@ namespace kerbal
 			//operation
 
 				KERBAL_CONSTEXPR20
-				void clear();
+				void clear() KERBAL_CONDITIONAL_NOEXCEPT(
+						noexcept(kerbal::utility::declthis<single_list>()->_K_consecutive_destroy_node(
+								kerbal::utility::declthis<single_list>()->alloc(),
+								kerbal::utility::declthis<single_list>()->head_node.next
+						))
+				);
 
 				KERBAL_CONSTEXPR20
 				void resize(size_type count);
@@ -439,115 +455,6 @@ namespace kerbal
 
 				KERBAL_CONSTEXPR20
 				void splice(const_iterator pos, single_list & other, const_iterator first, const_iterator last) KERBAL_NOEXCEPT;
-
-
-			//===================
-			//private
-
-			private:
-
-#		if __cplusplus >= 201103L
-
-				template <typename ... Args>
-				KERBAL_CONSTEXPR20
-				node* __build_new_node_helper(kerbal::type_traits::false_type, Args&& ... args);
-
-				template <typename ... Args>
-				KERBAL_CONSTEXPR20
-				node* __build_new_node_helper(kerbal::type_traits::true_type, Args&& ... args)
-						KERBAL_CONDITIONAL_NOEXCEPT(
-								noexcept(node_allocator_traits::allocate(kerbal::utility::declthis<single_list>()->alloc(), 1))
-						)
-				;
-
-				template <typename ... Args>
-				KERBAL_CONSTEXPR20
-				node* __build_new_node(Args&& ... args);
-
-#		else
-
-				node* __build_new_node();
-
-				template <typename Arg0>
-				node* __build_new_node(const Arg0& arg0);
-
-				template <typename Arg0, typename Arg1>
-				node* __build_new_node(const Arg0& arg0, const Arg1& arg1);
-
-				template <typename Arg0, typename Arg1, typename Arg2>
-				node* __build_new_node(const Arg0& arg0, const Arg1& arg1, const Arg2& arg2);
-
-#		endif
-
-#		if __cplusplus >= 201103L
-
-				template <typename ... Args>
-				KERBAL_CONSTEXPR20
-				std::pair<node*, node*> __build_n_new_nodes_unguarded(size_type n, Args&& ...args);
-
-#		else
-
-				std::pair<node*, node*> __build_n_new_nodes_unguarded(size_type n);
-
-				template <typename Arg0>
-				std::pair<node*, node*> __build_n_new_nodes_unguarded(size_type n, const Arg0& arg0);
-
-				template <typename Arg0, typename Arg1>
-				std::pair<node*, node*> __build_n_new_nodes_unguarded(size_type n, const Arg0& arg0, const Arg1& arg1);
-
-				template <typename Arg0, typename Arg1, typename Arg2>
-				std::pair<node*, node*> __build_n_new_nodes_unguarded(size_type n, const Arg0& arg0, const Arg1& arg1, const Arg2& arg2);
-
-#		endif
-
-				/*
-				 * @warning Especial case: first == last
-				 */
-				template <typename InputIterator>
-				KERBAL_CONSTEXPR20
-				typename kerbal::type_traits::enable_if<
-						kerbal::iterator::is_input_compatible_iterator<InputIterator>::value,
-						std::pair<node*, node*>
-				>::type
-				__build_new_nodes_range_unguarded(InputIterator first, InputIterator last);
-
-#		if __cplusplus >= 201103L
-
-				KERBAL_CONSTEXPR20
-				std::pair<node*, node*>
-				__build_new_nodes_range_unguarded_move(iterator first, iterator last);
-
-#		endif
-
-				KERBAL_CONSTEXPR20
-				void __destroy_node(node_base * p_node_base)
-						KERBAL_CONDITIONAL_NOEXCEPT(
-							noexcept(node_allocator_traits::destroy(kerbal::utility::declthis<single_list>()->alloc(), kerbal::utility::declval<node*>())) &&
-							noexcept(node_allocator_traits::deallocate(kerbal::utility::declthis<single_list>()->alloc(), kerbal::utility::declval<node*>(), 1))
-						)
-				;
-
-				KERBAL_CONSTEXPR20
-				void __consecutive_destroy_node(node_base * start)
-					 	KERBAL_CONDITIONAL_NOEXCEPT(
-							noexcept(kerbal::utility::declthis<single_list>()->__destroy_node(kerbal::utility::declval<node_base*>()))
-						)
-				;
-
-				template <bool propagate_on_container_swap>
-				KERBAL_CONSTEXPR20
-				typename kerbal::type_traits::enable_if<!propagate_on_container_swap>::type
-				swap_allocator_helper()
-				{
-				}
-
-				template <bool propagate_on_container_swap>
-				KERBAL_CONSTEXPR20
-				typename kerbal::type_traits::enable_if<propagate_on_container_swap>::type
-				swap_allocator_helper(single_list & ano)
-				{
-					kerbal::algorithm::swap(this->alloc(), ano.alloc());
-				}
 
 		};
 
