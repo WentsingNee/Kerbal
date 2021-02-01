@@ -196,7 +196,11 @@ namespace kerbal
 
 				KERBAL_CONSTEXPR20
 				~list() KERBAL_CONDITIONAL_NOEXCEPT(
-						noexcept(kerbal::utility::declthis<list>()->clear())
+						noexcept(kerbal::utility::declthis<list>()->__consecutive_destroy_node(
+								kerbal::utility::declthis<list>()->alloc(),
+								kerbal::utility::declthis<list>()->head_node.next
+						)) &&
+						std::is_nothrow_destructible<list_allocator_overload>::value
 				);
 
 			//===================
