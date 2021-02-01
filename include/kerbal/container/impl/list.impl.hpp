@@ -771,14 +771,14 @@ namespace kerbal
 		KERBAL_CONSTEXPR20
 		void list<Tp, Allocator>::merge(list & other, BinaryPredict cmp)
 		{
-			list_allocator_unrelated::merge(other, cmp);
+			list_allocator_unrelated::merge(static_cast<list_allocator_unrelated&>(other), cmp);
 		}
 
 		template <typename Tp, typename Allocator>
 		KERBAL_CONSTEXPR20
 		void list<Tp, Allocator>::merge(list & other)
 		{
-			list_allocator_unrelated::merge(other);
+			list_allocator_unrelated::merge(static_cast<list_allocator_unrelated&>(other));
 		}
 
 		template <typename Tp, typename Allocator>
@@ -788,7 +788,8 @@ namespace kerbal
 		{
 			size_type i = 0;
 			const_iterator it = this->cbegin();
-			while (it != this->cend()) {
+			const_iterator const cend(this->cend());
+			while (it != cend) {
 				if (*it == val) {
 					it = this->erase(it);
 					++i;
@@ -806,8 +807,9 @@ namespace kerbal
 		list<Tp, Allocator>::remove_if(UnaryPredicate predicate)
 		{
 			size_type i = 0;
-			const_iterator it = this->cbegin();
-			while (it != this->cend()) {
+			const_iterator it(this->cbegin());
+			const_iterator const cend(this->cend());
+			while (it != cend) {
 				if (predicate(*it)) {
 					it = this->erase(it);
 					++i;

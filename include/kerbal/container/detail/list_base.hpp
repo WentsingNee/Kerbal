@@ -25,6 +25,9 @@
 #include <kerbal/utility/in_place.hpp>
 #include <kerbal/utility/member_compress_helper.hpp>
 
+#include <cstddef>
+#include <utility> // std::pair
+
 #if __cplusplus >= 201703L
 #	if __has_include(<memory_resource>)
 #		include <memory_resource>
@@ -56,11 +59,19 @@ namespace kerbal
 				protected:
 					node_base head_node;
 
-					KERBAL_CONSTEXPR
+#			if __cplusplus < 201103L
+
 					list_type_unrelated() KERBAL_NOEXCEPT
 							: head_node()
 					{
 					}
+
+#			else
+
+					list_type_unrelated() noexcept = default;
+
+#			endif
+
 
 					KERBAL_CONSTEXPR
 					explicit list_type_unrelated(init_list_node_ptr_to_self_tag tag)
@@ -169,6 +180,10 @@ namespace kerbal
 			{
 				private:
 					typedef list_type_unrelated super;
+					typedef list_type_unrelated list_type_unrelated;
+
+					template <typename Up, typename Allocator>
+					friend struct list_node_allocator_helper;
 
 					template <typename Up, typename Allocator>
 					friend class kerbal::container::list;
@@ -186,15 +201,15 @@ namespace kerbal
 					typedef const value_type&&			const_rvalue_reference;
 #			endif
 
-					typedef std::size_t					size_type;
-					typedef std::ptrdiff_t				difference_type;
+					typedef list_type_unrelated::size_type						size_type;
+					typedef list_type_unrelated::difference_type				difference_type;
 
 					typedef kerbal::container::detail::list_iter<Tp>			iterator;
 					typedef kerbal::container::detail::list_kiter<Tp>			const_iterator;
 					typedef kerbal::iterator::reverse_iterator<iterator>		reverse_iterator;
 					typedef kerbal::iterator::reverse_iterator<const_iterator>	const_reverse_iterator;
 
-					typedef kerbal::container::detail::list_node_base			node_base;
+					typedef list_type_unrelated::node_base						node_base;
 					typedef kerbal::container::detail::list_node<value_type>	node;
 
 
@@ -487,8 +502,9 @@ namespace kerbal
 			struct list_node_allocator_helper
 			{
 				private:
-					typedef Tp														value_type;
-					typedef kerbal::container::detail::list_node<value_type>		node;
+					typedef kerbal::container::detail::list_allocator_unrelated<Tp>		list_allocator_unrelated;
+					typedef typename list_allocator_unrelated::value_type				value_type;
+					typedef typename list_allocator_unrelated::node						node;
 
 				public:
 					typedef kerbal::memory::allocator_traits<Allocator>							tp_allocator_traits;
@@ -516,10 +532,6 @@ namespace kerbal
 					typedef typename list_node_allocator_helper::tp_allocator_traits	tp_allocator_traits;
 					typedef typename list_node_allocator_helper::node_allocator_type	node_allocator_type;
 					typedef typename list_node_allocator_helper::node_allocator_traits	node_allocator_traits;
-
-				private:
-					typedef kerbal::container::detail::list_node_base					node_base;
-					typedef kerbal::container::detail::list_node<Tp>					node;
 
 				protected:
 
