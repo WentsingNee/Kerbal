@@ -35,16 +35,15 @@ namespace kerbal
 	namespace container
 	{
 
+#	if __cplusplus < 201103L
+
 		template <typename Tp, typename Allocator>
-		KERBAL_CONSTEXPR20
 		single_list<Tp, Allocator>::single_list()
-					KERBAL_CONDITIONAL_NOEXCEPT(
-							std::is_nothrow_default_constructible<sl_allocator_unrelated>::value &&
-							std::is_nothrow_default_constructible<sl_allocator_overload>::value
-					)
 				: sl_allocator_unrelated(), sl_allocator_overload()
 		{
 		}
+
+#	endif
 
 		template <typename Tp, typename Allocator>
 		KERBAL_CONSTEXPR20

@@ -221,6 +221,7 @@ namespace kerbal
 				return p;
 			}
 
+			// pre-cond: first != last;
 			KERBAL_CONSTEXPR20
 			inline
 			std::pair<sl_type_unrelated::node_base *, sl_type_unrelated::node_base *>
@@ -457,13 +458,6 @@ namespace kerbal
 			void sl_allocator_unrelated<Tp>::reverse(iterator first, iterator last) KERBAL_NOEXCEPT
 			{
 				sl_type_unrelated::reverse(first, last);
-			}
-
-			template <typename Tp>
-			KERBAL_CONSTEXPR20
-			void sl_allocator_unrelated<Tp>::reverse() KERBAL_NOEXCEPT
-			{
-				sl_type_unrelated::reverse();
 			}
 
 #	if __cplusplus >= 201103L

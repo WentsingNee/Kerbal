@@ -12,11 +12,14 @@
 #ifndef KERBAL_CONTAINER_SINGLE_LIST_HPP
 #define KERBAL_CONTAINER_SINGLE_LIST_HPP
 
+#include <kerbal/container/fwd/single_list.fwd.hpp>
+
 #include <kerbal/algorithm/sequence_compare.hpp>
 #include <kerbal/assign/ilist.hpp>
 #include <kerbal/compatibility/constexpr.hpp>
 #include <kerbal/compatibility/move.hpp>
 #include <kerbal/compatibility/noexcept.hpp>
+#include <kerbal/iterator/iterator_traits.hpp>
 #include <kerbal/memory/allocator_traits.hpp>
 #include <kerbal/type_traits/enable_if.hpp>
 #include <kerbal/utility/declval.hpp>
@@ -25,6 +28,7 @@
 
 #if __cplusplus >= 201103L
 #	include <initializer_list>
+#	include <type_traits>
 #endif
 
 #if __cplusplus >= 201703L
@@ -92,11 +96,16 @@ namespace kerbal
 				using sl_allocator_overload::alloc;
 
 			public:
-				KERBAL_CONSTEXPR20
-				single_list() KERBAL_CONDITIONAL_NOEXCEPT(
-						std::is_nothrow_default_constructible<sl_allocator_unrelated>::value &&
-						std::is_nothrow_default_constructible<sl_allocator_overload>::value
-				);
+
+#		if __cplusplus < 201103L
+
+				single_list();
+
+#		else
+
+				single_list() = default;
+
+#		endif
 
 				KERBAL_CONSTEXPR20
 				explicit single_list(const Allocator& alloc) KERBAL_CONDITIONAL_NOEXCEPT((

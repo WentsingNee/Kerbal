@@ -24,6 +24,9 @@
 #include <kerbal/utility/in_place.hpp>
 #include <kerbal/utility/member_compress_helper.hpp>
 
+#include <cstddef>
+#include <utility> // std::pair
+
 #if __cplusplus >= 201703L
 #	if __has_include(<memory_resource>)
 #		include <memory_resource>
@@ -75,6 +78,12 @@ namespace kerbal
 					}
 
 					KERBAL_CONSTEXPR14
+					basic_const_iterator basic_cbegin() const KERBAL_NOEXCEPT
+					{
+						return basic_const_iterator(&this->head_node);
+					}
+
+					KERBAL_CONSTEXPR14
 					basic_iterator basic_end() KERBAL_NOEXCEPT
 					{
 						return basic_iterator(this->last_iter);
@@ -82,6 +91,12 @@ namespace kerbal
 
 					KERBAL_CONSTEXPR14
 					basic_const_iterator basic_end() const KERBAL_NOEXCEPT
+					{
+						return basic_const_iterator(this->last_iter);
+					}
+
+					KERBAL_CONSTEXPR14
+					basic_const_iterator basic_cend() const KERBAL_NOEXCEPT
 					{
 						return basic_const_iterator(this->last_iter);
 					}
@@ -162,13 +177,17 @@ namespace kerbal
 
 			template <typename Tp>
 			class sl_allocator_unrelated:
-					protected sl_type_unrelated
+					protected kerbal::container::detail::sl_type_unrelated
 			{
 				private:
-					typedef sl_type_unrelated super;
+					typedef kerbal::container::detail::sl_type_unrelated		super;
+					typedef kerbal::container::detail::sl_type_unrelated		sl_type_unrelated;
 
 					template <typename Up, typename Allocator>
 					friend class kerbal::container::single_list;
+
+					template <typename Up, typename Allocator>
+					friend struct sl_node_allocator_helper;
 
 				protected:
 					typedef Tp							value_type;
@@ -183,13 +202,13 @@ namespace kerbal
 					typedef const value_type&&			const_rvalue_reference;
 #			endif
 
-					typedef std::size_t					size_type;
-					typedef std::ptrdiff_t				difference_type;
+					typedef sl_type_unrelated::size_type					size_type;
+					typedef sl_type_unrelated::difference_type				difference_type;
 
 					typedef kerbal::container::detail::sl_iter<Tp>			iterator;
 					typedef kerbal::container::detail::sl_kiter<Tp>			const_iterator;
 
-					typedef kerbal::container::detail::sl_node_base			node_base;
+					typedef sl_type_unrelated::node_base					node_base;
 					typedef kerbal::container::detail::sl_node<value_type>	node;
 
 
@@ -279,9 +298,6 @@ namespace kerbal
 
 					KERBAL_CONSTEXPR20
 					void reverse(iterator first, iterator last) KERBAL_NOEXCEPT;
-
-					KERBAL_CONSTEXPR20
-					void reverse() KERBAL_NOEXCEPT;
 
 #			if __cplusplus >= 201103L
 
@@ -412,8 +428,9 @@ namespace kerbal
 			struct sl_node_allocator_helper
 			{
 				private:
-					typedef Tp														value_type;
-					typedef kerbal::container::detail::sl_node<value_type>			node;
+					typedef kerbal::container::detail::sl_allocator_unrelated<Tp>		sl_allocator_unrelated;
+					typedef typename sl_allocator_unrelated::value_type					value_type;
+					typedef typename sl_allocator_unrelated::node						node;
 
 				public:
 					typedef kerbal::memory::allocator_traits<Allocator>							tp_allocator_traits;
