@@ -14,6 +14,9 @@
 
 #include <kerbal/container/fwd/single_list.fwd.hpp>
 
+#include <kerbal/container/detail/single_list_node.hpp>
+#include <kerbal/container/detail/single_list_iterator.hpp>
+
 #include <kerbal/algorithm/swap.hpp>
 #include <kerbal/compatibility/constexpr.hpp>
 #include <kerbal/compatibility/move.hpp>
@@ -32,9 +35,6 @@
 #		include <memory_resource>
 #	endif
 #endif
-
-#include <kerbal/container/detail/single_list_node.hpp>
-#include <kerbal/container/detail/single_list_iterator.hpp>
 
 namespace kerbal
 {
@@ -64,6 +64,9 @@ namespace kerbal
 							: head_node(), last_iter(this->basic_begin())
 					{
 					}
+
+				//===================
+				// iterator
 
 					KERBAL_CONSTEXPR14
 					basic_iterator basic_begin() KERBAL_NOEXCEPT
@@ -102,7 +105,7 @@ namespace kerbal
 					}
 
 				//===================
-				//capacity
+				// capacity
 
 					KERBAL_CONSTEXPR20
 					bool empty() const KERBAL_NOEXCEPT;
@@ -111,7 +114,7 @@ namespace kerbal
 					size_type size() const KERBAL_NOEXCEPT;
 
 				//===================
-				//operation
+				// operation
 
 					KERBAL_CONSTEXPR20
 					void iter_swap(basic_iterator a, basic_iterator b) KERBAL_NOEXCEPT;
@@ -133,7 +136,7 @@ namespace kerbal
 								basic_const_iterator first, basic_const_iterator last) KERBAL_NOEXCEPT;
 
 				//===================
-				//private
+				// private
 
 					// pre-cond: p->next == NULL;
 					KERBAL_CONSTEXPR20
@@ -228,7 +231,7 @@ namespace kerbal
 #			endif
 
 				//===================
-				//element access
+				// element access
 
 					KERBAL_CONSTEXPR20
 					reference front() KERBAL_NOEXCEPT;
@@ -243,7 +246,7 @@ namespace kerbal
 					const_reference back() const KERBAL_NOEXCEPT;
 
 				//===================
-				//iterator
+				// iterator
 
 					KERBAL_CONSTEXPR20
 					iterator begin() KERBAL_NOEXCEPT;
@@ -276,7 +279,7 @@ namespace kerbal
 					size_type index_of(const_iterator it) const KERBAL_NOEXCEPT;
 
 				//===================
-				//capacity
+				// capacity
 
 					KERBAL_CONSTEXPR
 					size_type max_size() const KERBAL_NOEXCEPT
@@ -285,7 +288,7 @@ namespace kerbal
 					}
 
 				//===================
-				//operation
+				// operation
 
 					KERBAL_CONSTEXPR20
 					void iter_swap_unstable(iterator a, iterator b);
@@ -298,6 +301,10 @@ namespace kerbal
 
 					KERBAL_CONSTEXPR20
 					void reverse(iterator first, iterator last) KERBAL_NOEXCEPT;
+
+
+				//===================
+				// private
 
 #			if __cplusplus >= 201103L
 
@@ -452,7 +459,7 @@ namespace kerbal
 
 				private:
 					typedef kerbal::container::detail::sl_node_allocator_helper<Tp, Allocator>
-							sl_node_allocator_helper;
+																						sl_node_allocator_helper;
 
 				protected:
 					typedef typename sl_node_allocator_helper::tp_allocator_traits		tp_allocator_traits;
@@ -471,7 +478,8 @@ namespace kerbal
 					}
 
 					KERBAL_CONSTEXPR
-					explicit sl_allocator_overload(const Allocator & allocator)
+					explicit
+					sl_allocator_overload(const Allocator & allocator)
 								KERBAL_CONDITIONAL_NOEXCEPT(
 										(std::is_nothrow_constructible<super, const Allocator&>::value)
 								)
@@ -482,7 +490,8 @@ namespace kerbal
 #			if __cplusplus >= 201103L
 
 					KERBAL_CONSTEXPR
-					explicit sl_allocator_overload(Allocator && allocator)
+					explicit
+					sl_allocator_overload(Allocator && allocator)
 								KERBAL_CONDITIONAL_NOEXCEPT(
 										(std::is_nothrow_constructible<super, Allocator&&>::value)
 								)

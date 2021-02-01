@@ -460,6 +460,10 @@ namespace kerbal
 				sl_type_unrelated::reverse(first, last);
 			}
 
+
+			//===================
+			// private
+
 #	if __cplusplus >= 201103L
 
 #		if __cpp_exceptions
