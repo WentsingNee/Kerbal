@@ -437,11 +437,11 @@ namespace kerbal
 			//operation
 
 				KERBAL_CONSTEXPR20
-				void clear() KERBAL_CONDITIONAL_NOEXCEPT(noexcept(
-						kerbal::utility::declthis<list>()->erase(
+				void clear() KERBAL_CONDITIONAL_NOEXCEPT(
+						noexcept(kerbal::utility::declthis<list>()->erase(
 								kerbal::utility::declthis<list>()->cbegin(), kerbal::utility::declthis<list>()->cend()
-						)
-				));
+						))
+				);
 
 				KERBAL_CONSTEXPR20
 				void resize(size_type count);

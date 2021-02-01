@@ -719,11 +719,11 @@ namespace kerbal
 		template <typename Tp, typename Allocator>
 		KERBAL_CONSTEXPR20
 		void list<Tp, Allocator>::clear()
-				KERBAL_CONDITIONAL_NOEXCEPT(noexcept(
-					kerbal::utility::declthis<list>()->erase(
-							kerbal::utility::declthis<list>()->cbegin(), kerbal::utility::declthis<list>()->cend()
-					)
-				))
+				KERBAL_CONDITIONAL_NOEXCEPT(
+						noexcept(kerbal::utility::declthis<list>()->erase(
+								kerbal::utility::declthis<list>()->cbegin(), kerbal::utility::declthis<list>()->cend()
+						))
+				)
 		{
 			this->erase(this->cbegin(), this->cend());
 		}
