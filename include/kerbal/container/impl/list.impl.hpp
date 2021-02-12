@@ -870,11 +870,24 @@ namespace kerbal
 			return *this;
 		}
 
+#	endif
+
+#	if __cplusplus >= 201103L
+
 		template <typename Tp, typename Allocator>
 		KERBAL_CONSTEXPR20
 		list<Tp, Allocator>& list<Tp, Allocator>::operator+=(std::initializer_list<value_type> with)
 		{
 			this->insert(this->cend(), with.begin(), with.end());
+			return *this;
+		}
+
+#	else
+
+		template <typename Tp, typename Allocator>
+		list<Tp, Allocator>& list<Tp, Allocator>::operator+=(const kerbal::assign::assign_list<value_type> & with)
+		{
+			this->insert(this->cend(), with.cbegin(), with.cend());
 			return *this;
 		}
 
