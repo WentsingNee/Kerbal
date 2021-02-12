@@ -117,22 +117,22 @@ namespace kerbal
 				// operation
 
 					KERBAL_CONSTEXPR20
-					void iter_swap(basic_iterator a, basic_iterator b) KERBAL_NOEXCEPT;
+					void _K_iter_swap(basic_iterator a, basic_iterator b) KERBAL_NOEXCEPT;
 
 					KERBAL_CONSTEXPR20
-					void reverse(basic_iterator first, basic_iterator last) KERBAL_NOEXCEPT;
+					void _K_reverse(basic_iterator first, basic_iterator last) KERBAL_NOEXCEPT;
 
 					KERBAL_CONSTEXPR20
 					void reverse() KERBAL_NOEXCEPT;
 
 					KERBAL_CONSTEXPR20
-					void splice(basic_const_iterator pos, sl_type_unrelated & other) KERBAL_NOEXCEPT;
+					void _K_splice(basic_const_iterator pos, sl_type_unrelated & other) KERBAL_NOEXCEPT;
 
 					KERBAL_CONSTEXPR20
-					void splice(basic_const_iterator pos, sl_type_unrelated & other, basic_const_iterator opos) KERBAL_NOEXCEPT;
+					void _K_splice(basic_const_iterator pos, sl_type_unrelated & other, basic_const_iterator opos) KERBAL_NOEXCEPT;
 
 					KERBAL_CONSTEXPR20
-					void splice(basic_const_iterator pos, sl_type_unrelated & other,
+					void _K_splice(basic_const_iterator pos, sl_type_unrelated & other,
 								basic_const_iterator first, basic_const_iterator last) KERBAL_NOEXCEPT;
 
 				//===================
@@ -298,6 +298,8 @@ namespace kerbal
 
 					KERBAL_CONSTEXPR20
 					void iter_swap_fast(iterator a, iterator b);
+
+					using sl_type_unrelated::reverse;
 
 					KERBAL_CONSTEXPR20
 					void reverse(iterator first, iterator last) KERBAL_NOEXCEPT;

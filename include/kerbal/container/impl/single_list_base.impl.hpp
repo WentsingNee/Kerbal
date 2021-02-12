@@ -63,7 +63,7 @@ namespace kerbal
 
 			KERBAL_CONSTEXPR20
 			inline
-			void sl_type_unrelated::iter_swap(basic_iterator a, basic_iterator b) KERBAL_NOEXCEPT
+			void sl_type_unrelated::_K_iter_swap(basic_iterator a, basic_iterator b) KERBAL_NOEXCEPT
 			{
 				node_base * pre_a = a.current;
 				node_base * pre_b = b.current;
@@ -80,7 +80,7 @@ namespace kerbal
 
 			KERBAL_CONSTEXPR20
 			inline
-			void sl_type_unrelated::reverse(basic_iterator first, basic_iterator last) KERBAL_NOEXCEPT
+			void sl_type_unrelated::_K_reverse(basic_iterator first, basic_iterator last) KERBAL_NOEXCEPT
 			{
 				if (first == last) {
 					return;
@@ -108,20 +108,20 @@ namespace kerbal
 			inline
 			void sl_type_unrelated::reverse() KERBAL_NOEXCEPT
 			{
-				this->reverse(this->basic_begin(), this->basic_end());
+				this->_K_reverse(this->basic_begin(), this->basic_end());
 			}
 
 			KERBAL_CONSTEXPR20
 			inline
-			void sl_type_unrelated::splice(basic_const_iterator pos, sl_type_unrelated & other)
+			void sl_type_unrelated::_K_splice(basic_const_iterator pos, sl_type_unrelated & other)
 																							KERBAL_NOEXCEPT
 			{
-				this->splice(pos, other, other.basic_begin(), other.basic_end());
+				this->_K_splice(pos, other, other.basic_begin(), other.basic_end());
 			}
 
 			KERBAL_CONSTEXPR20
 			inline
-			void sl_type_unrelated::splice(basic_const_iterator pos, sl_type_unrelated & other, basic_const_iterator opos)
+			void sl_type_unrelated::_K_splice(basic_const_iterator pos, sl_type_unrelated & other, basic_const_iterator opos)
 																							KERBAL_NOEXCEPT
 			{
 				node_base * p = other._K_unhook_node(opos.cast_to_mutable());
@@ -131,7 +131,7 @@ namespace kerbal
 
 			KERBAL_CONSTEXPR20
 			inline
-			void sl_type_unrelated::splice(basic_const_iterator pos, sl_type_unrelated & other,
+			void sl_type_unrelated::_K_splice(basic_const_iterator pos, sl_type_unrelated & other,
 											basic_const_iterator first, basic_const_iterator last) KERBAL_NOEXCEPT
 			{
 				if (first == last) {
@@ -407,7 +407,7 @@ namespace kerbal
 			KERBAL_CONSTEXPR20
 			void sl_allocator_unrelated<Tp>::iter_swap(iterator a, iterator b) KERBAL_NOEXCEPT
 			{
-				detail::sl_type_unrelated::iter_swap(a, b);
+				sl_type_unrelated::_K_iter_swap(a, b);
 			}
 
 			template <typename Tp>
@@ -457,7 +457,7 @@ namespace kerbal
 			KERBAL_CONSTEXPR20
 			void sl_allocator_unrelated<Tp>::reverse(iterator first, iterator last) KERBAL_NOEXCEPT
 			{
-				sl_type_unrelated::reverse(first, last);
+				sl_type_unrelated::_K_reverse(first, last);
 			}
 
 

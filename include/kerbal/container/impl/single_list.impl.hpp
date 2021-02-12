@@ -780,14 +780,14 @@ namespace kerbal
 		KERBAL_CONSTEXPR20
 		void single_list<Tp, Allocator>::splice(const_iterator pos, single_list & other) KERBAL_NOEXCEPT
 		{
-			this->sl_type_unrelated::splice(pos, other);
+			this->sl_type_unrelated::_K_splice(pos, other);
 		}
 
 		template <typename Tp, typename Allocator>
 		KERBAL_CONSTEXPR20
 		void single_list<Tp, Allocator>::splice(const_iterator pos, single_list & other, const_iterator opos) KERBAL_NOEXCEPT
 		{
-			this->sl_type_unrelated::splice(pos, other, opos);
+			this->sl_type_unrelated::_K_splice(pos, other, opos);
 		}
 
 		template <typename Tp, typename Allocator>
@@ -795,7 +795,7 @@ namespace kerbal
 		void single_list<Tp, Allocator>::splice(const_iterator pos, single_list & other,
 												const_iterator first, const_iterator last) KERBAL_NOEXCEPT
 		{
-			this->sl_type_unrelated::splice(pos, other, first, last);
+			this->sl_type_unrelated::_K_splice(pos, other, first, last);
 		}
 
 	} // namespace container
