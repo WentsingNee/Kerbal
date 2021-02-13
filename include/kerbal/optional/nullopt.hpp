@@ -12,7 +12,8 @@
 #ifndef KERBAL_OPTIONAL_NULLOPT_HPP_
 #define KERBAL_OPTIONAL_NULLOPT_HPP_
 
-#include <kerbal/compatibility/compatibility_macro.hpp>
+#include <kerbal/compatibility/constexpr.hpp>
+#include <kerbal/compatibility/noexcept.hpp>
 #include <kerbal/optional/optional_settings.hpp>
 #include <kerbal/operators/equality_comparable.hpp>
 #include <kerbal/operators/less_than_comparable.hpp>

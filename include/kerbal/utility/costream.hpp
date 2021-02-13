@@ -20,7 +20,7 @@
 #	include <windows.h>
 #endif
 
-#include <kerbal/compatibility/compatibility_macro.hpp>
+#include <kerbal/compatibility/constexpr.hpp>
 #include <kerbal/config/compiler_id.hpp>
 
 namespace kerbal
