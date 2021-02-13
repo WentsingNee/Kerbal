@@ -16,10 +16,12 @@
 #include <iostream>
 
 #ifdef _WIN32
+#	define NOMINMAX
 #	include <windows.h>
 #endif
 
 #include <kerbal/compatibility/compatibility_macro.hpp>
+#include <kerbal/config/compiler_id.hpp>
 
 namespace kerbal
 {
@@ -48,7 +50,7 @@ namespace kerbal
 					}
 
 			}
-#		if __cplusplus >= 201103L
+#		if __cplusplus >= 201103L && KERBAL_COMPILER_ID != KERBAL_COMPILER_ID_MSVC
 			constexpr
 #		else
 			const
