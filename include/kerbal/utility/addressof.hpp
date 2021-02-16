@@ -9,8 +9,8 @@
  *   all rights reserved
  */
 
-#ifndef KERBAL_UTILITY_ADDRESSOF_HPP_
-#define KERBAL_UTILITY_ADDRESSOF_HPP_
+#ifndef KERBAL_UTILITY_ADDRESSOF_HPP
+#define KERBAL_UTILITY_ADDRESSOF_HPP
 
 #include <kerbal/compatibility/constexpr.hpp>
 #include <kerbal/compatibility/noexcept.hpp>
@@ -40,4 +40,4 @@ namespace kerbal
 
 } // namespace kerbal
 
-#endif /* KERBAL_UTILITY_ADDRESSOF_HPP_ */
+#endif // KERBAL_UTILITY_ADDRESSOF_HPP

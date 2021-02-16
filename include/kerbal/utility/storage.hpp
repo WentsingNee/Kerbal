@@ -1,23 +1,34 @@
-/*
- * memory_storage.hpp
- *
- *  Created on: 2018年6月18日
- *      Author: peter
+/**
+ * @file       storage.hpp
+ * @brief
+ * @date       2018-6-18
+ * @author     Peter
+ * @copyright
+ *      Peter of [ThinkSpirit Laboratory](http://thinkspirit.org/)
+ *   of [Nanjing University of Information Science & Technology](http://www.nuist.edu.cn/)
+ *   all rights reserved
  */
 
-#ifndef INCLUDE_KERBAL_UTILITY_STORAGE_HPP_
-#define INCLUDE_KERBAL_UTILITY_STORAGE_HPP_
+#ifndef KERBAL_UTILITY_STORAGE_HPP
+#define KERBAL_UTILITY_STORAGE_HPP
 
-#include <chrono>
-#include <stdint.h>
+#if __cplusplus < 201103L
+#	error This file requires compiler and library support for the ISO C++ 2011 standard.
+#endif
+
 #include <kerbal/type_traits/cv_deduction.hpp>
 #include <kerbal/type_traits/enable_if.hpp>
 #include <kerbal/type_traits/integral_constant.hpp>
 
+#include <chrono>
+#include <cstdint>
+
 namespace kerbal
 {
+
 	namespace utility
 	{
+
 		template <typename size_type, typename Ratio = std::ratio<1, 1>>
 		class storage : public std::chrono::duration<size_type, Ratio>
 		{
@@ -110,9 +121,9 @@ namespace kerbal
 		{
 			return ToStor(std::chrono::duration_cast<typename ToStor::super>(__d));
 		}
-	}
-}
 
+	} // namespace utility
 
+} // namespace kerbal
 
-#endif /* INCLUDE_KERBAL_UTILITY_STORAGE_HPP_ */
+#endif // KERBAL_UTILITY_STORAGE_HPP

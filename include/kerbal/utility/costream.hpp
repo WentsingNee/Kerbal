@@ -1,17 +1,16 @@
 /**
- * @file		costream.hpp
+ * @file       costream.hpp
  * @brief
- * @date		2018年2月27日
- * @author		Peter
- * @copyright	Peter
+ * @date       2018-2-27
+ * @author     Peter
  * @copyright
- <a href="http://thinkspirit.org/">ThinkSpirit Laboratory</a>
- of
- <a href="http://www.nuist.edu.cn/">Nanjing University of Information Science & Technology</a>
+ *      Peter of [ThinkSpirit Laboratory](http://thinkspirit.org/)
+ *   of [Nanjing University of Information Science & Technology](http://www.nuist.edu.cn/)
+ *   all rights reserved
  */
 
-#ifndef INCLUDE_KERBAL_UTILITY_COSTREAM_HPP_
-#define INCLUDE_KERBAL_UTILITY_COSTREAM_HPP_
+#ifndef INCLUDE_KERBAL_UTILITY_COSTREAM_HPP
+#define INCLUDE_KERBAL_UTILITY_COSTREAM_HPP
 
 #include <iostream>
 
@@ -25,10 +24,13 @@
 
 namespace kerbal
 {
+
 	namespace utility
 	{
+
 		namespace costream
 		{
+
 			class Color_t
 			{
 				public:
@@ -179,10 +181,10 @@ namespace kerbal
 				BLACK, RED, GREEN, YELLOW, BLUE, PURPLE, LIGHT_BLUE, WHITE, LIGHT_RED, LIGHT_GREEN,
 				LIGHT_YELLOW, LAKE_BLUE, LIGHT_PURPLE, GREY, LIGHT_LIGHT_GREEN, BRIGHT_WHITE };
 
-		}/* namespace costream */
+		} // namespace costream
 
-	}/* namespace utility */
+	} // namespace utility
 
-}/* namespace kerbal */
+} // namespace kerbal
 
-#endif /* INCLUDE_KERBAL_UTILITY_COSTREAM_HPP_ */
+#endif // KERBAL_UTILITY_COSTREAM_HPP

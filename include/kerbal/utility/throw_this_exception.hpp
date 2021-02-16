@@ -2,15 +2,15 @@
  * @file       throw_this_exception.hpp
  * @brief      
  * @date       2019-7-29
- * @author     peter
+ * @author     Peter
  * @copyright
- *      peter of [ThinkSpirit Laboratory](http://thinkspirit.org/)
+ *      Peter of [ThinkSpirit Laboratory](http://thinkspirit.org/)
  *   of [Nanjing University of Information Science & Technology](http://www.nuist.edu.cn/)
  *   all rights reserved
  */
 
-#ifndef KERBAL_UTILITY_THROW_THIS_EXCEPTION_HPP_
-#define KERBAL_UTILITY_THROW_THIS_EXCEPTION_HPP_
+#ifndef KERBAL_UTILITY_THROW_THIS_EXCEPTION_HPP
+#define KERBAL_UTILITY_THROW_THIS_EXCEPTION_HPP
 
 #include <kerbal/compatibility/constexpr.hpp>
 #include <kerbal/compatibility/noexcept.hpp>
@@ -20,13 +20,15 @@
 #endif
 
 #if !__cpp_exceptions
-#include <cstdlib>
+#	include <cstdlib> // std::abort
 #endif
 
 namespace kerbal
 {
+
 	namespace utility
 	{
+
 		template <typename Exception>
 		class throw_this_exception_helper
 		{
@@ -116,4 +118,4 @@ namespace kerbal
 
 } // namespace kerbal
 
-#endif /* KERBAL_UTILITY_THROW_THIS_EXCEPTION_HPP_ */
+#endif // KERBAL_UTILITY_THROW_THIS_EXCEPTION_HPP

@@ -9,7 +9,6 @@
  *   all rights reserved
  */
 
-
 #ifndef KERBAL_UTILITY_DECLVAL_HPP
 #define KERBAL_UTILITY_DECLVAL_HPP
 
@@ -18,6 +17,7 @@
 
 namespace kerbal
 {
+
 	namespace utility
 	{
 
@@ -39,8 +39,8 @@ namespace kerbal
 		Tp*
 		declthis() KERBAL_NOEXCEPT;
 
+	} // namespace utility
 
-	}
-}
+} // namespace kerbal
 
-#endif //KERBAL_UTILITY_DECLVAL_HPP
+#endif // KERBAL_UTILITY_DECLVAL_HPP

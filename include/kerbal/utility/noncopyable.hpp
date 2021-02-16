@@ -9,11 +9,12 @@
  *   all rights reserved
  */
 
-#ifndef KERBAL_UTILITY_NONCOPYABLE_HPP_
-#define KERBAL_UTILITY_NONCOPYABLE_HPP_
+#ifndef KERBAL_UTILITY_NONCOPYABLE_HPP
+#define KERBAL_UTILITY_NONCOPYABLE_HPP
 
 namespace kerbal
 {
+
 	namespace utility
 	{
 
@@ -90,4 +91,4 @@ namespace kerbal
 
 } // namespace kerbal
 
-#endif /* KERBAL_UTILITY_NONCOPYABLE_HPP_ */
+#endif // KERBAL_UTILITY_NONCOPYABLE_HPP
