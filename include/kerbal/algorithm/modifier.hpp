@@ -482,6 +482,8 @@ namespace kerbal
 			return kerbal::algorithm::merge(a_first, a_last, b_first, b_last, to, kerbal::algorithm::binary_type_equal_to<type2, type1>());
 		}
 
+
+
 		template <typename BidirectionalIterator>
 		KERBAL_CONSTEXPR14
 		void __reverse(BidirectionalIterator first, BidirectionalIterator last, std::bidirectional_iterator_tag)
@@ -510,21 +512,21 @@ namespace kerbal
 				++first;\
 			} while (false)
 
-			for (difference_type trip_count(kerbal::iterator::distance(first, last) >> 3); trip_count > 0; --trip_count) {
+			difference_type trip_count(kerbal::iterator::distance(first, last) >> 1);
+			difference_type remain(trip_count & 3);
+			for (trip_count >>= 2; trip_count > 0; --trip_count) {
 				EACH();
 				EACH();
 				EACH();
 				EACH();
 			}
 
-			difference_type remain(kerbal::iterator::distance(first, last));
-			if (remain >= 6) {
-				EACH();
-			}
-			if (remain >= 4) {
-				EACH();
-			}
 			if (remain >= 2) {
+				EACH();
+				EACH();
+				remain -= 2;
+			}
+			if (remain >= 1) {
 				EACH();
 			}
 
@@ -570,19 +572,19 @@ namespace kerbal
 				++to;\
 			} while (false)
 
-			for (difference_type trip_count(kerbal::iterator::distance(first, last) >> 2); trip_count > 0; --trip_count) {
+			difference_type trip_count(kerbal::iterator::distance(first, last));
+			difference_type remain(trip_count & 3);
+			for (trip_count >>= 2; trip_count > 0; --trip_count) {
 				EACH();
 				EACH();
 				EACH();
 				EACH();
 			}
 
-			difference_type remain(kerbal::iterator::distance(first, last));
-			if (remain == 3) {
-				EACH();
-			}
 			if (remain >= 2) {
 				EACH();
+				EACH();
+				remain -= 2;
 			}
 			if (remain >= 1) {
 				EACH();
@@ -761,19 +763,19 @@ namespace kerbal
 				++first;\
 			} while(false)
 
-			for (difference_type trip_count(kerbal::iterator::distance(first, last) >> 2); trip_count > 0; --trip_count) {
+			difference_type trip_count(kerbal::iterator::distance(first, last));
+			difference_type remain(trip_count & 3);
+			for (trip_count >>= 2; trip_count > 0; --trip_count) {
 				EACH();
 				EACH();
 				EACH();
 				EACH();
 			}
 
-			difference_type remain(kerbal::iterator::distance(first, last));
-			if (remain == 3) {
-				EACH();
-			}
 			if (remain >= 2) {
 				EACH();
+				EACH();
+				remain -= 2;
 			}
 			if (remain >= 1) {
 				EACH();
@@ -824,19 +826,19 @@ namespace kerbal
 				++first;\
 			} while (false)
 
-			for (difference_type trip_count(kerbal::iterator::distance(first, last) >> 2); trip_count > 0; --trip_count) {
+			difference_type trip_count(kerbal::iterator::distance(first, last));
+			difference_type remain(trip_count & 3);
+			for (trip_count >>= 2; trip_count > 0; --trip_count) {
 				EACH();
 				EACH();
 				EACH();
 				EACH();
 			}
 
-			difference_type remain(kerbal::iterator::distance(first, last));
-			if (remain == 3) {
-				EACH();
-			}
 			if (remain >= 2) {
 				EACH();
+				EACH();
+				remain -= 2;
 			}
 			if (remain >= 1) {
 				EACH();
@@ -884,19 +886,19 @@ namespace kerbal
 				++first;\
 			} while (false)
 
-			for (difference_type trip_count(kerbal::iterator::distance(first, last) >> 2); trip_count > 0; --trip_count) {
+			difference_type trip_count(kerbal::iterator::distance(first, last));
+			difference_type remain(trip_count & 3);
+			for (trip_count >>= 2; trip_count > 0; --trip_count) {
 				EACH();
 				EACH();
 				EACH();
 				EACH();
 			}
 
-			difference_type remain(kerbal::iterator::distance(first, last));
-			if (remain == 3) {
-				EACH();
-			}
 			if (remain >= 2) {
 				EACH();
+				EACH();
+				remain -= 2;
 			}
 			if (remain >= 1) {
 				EACH();
@@ -958,19 +960,19 @@ namespace kerbal
 				++value;\
 			} while (false)
 
-			for (difference_type trip_count(kerbal::iterator::distance(first, last) >> 2); trip_count > 0; --trip_count) {
+			difference_type trip_count(kerbal::iterator::distance(first, last));
+			difference_type remain(trip_count & 3);
+			for (trip_count >>= 2; trip_count > 0; --trip_count) {
 				EACH();
 				EACH();
 				EACH();
 				EACH();
 			}
 
-			difference_type remain(kerbal::iterator::distance(first, last));
-			if (remain == 3) {
-				EACH();
-			}
 			if (remain >= 2) {
 				EACH();
+				EACH();
+				remain -= 2;
 			}
 			if (remain >= 1) {
 				EACH();
