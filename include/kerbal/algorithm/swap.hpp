@@ -101,18 +101,19 @@ namespace kerbal
 				++b_first;\
 			} while (false)
 
-			for (difference_type trip_count(kerbal::iterator::distance(a_first, a_last) >> 2); trip_count > 0; --trip_count) {
+			difference_type trip_count(kerbal::iterator::distance(a_first, a_last));
+			difference_type remain(trip_count & 3);
+			for (trip_count >>= 2; trip_count > 0; --trip_count) {
 				EACH();
 				EACH();
 				EACH();
 				EACH();
 			}
-			difference_type remain(kerbal::iterator::distance(a_first, a_last));
-			if (remain == 3) {
-				EACH();
-			}
+
 			if (remain >= 2) {
 				EACH();
+				EACH();
+				remain -= 2;
 			}
 			if (remain >= 1) {
 				EACH();
