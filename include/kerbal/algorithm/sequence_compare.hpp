@@ -63,29 +63,14 @@ namespace kerbal
 								RandomAccessIterator2 b_first, RandomAccessIterator2 b_last,
 								BinaryTypeEqualToPredicate equal_to,
 								std::random_access_iterator_tag, std::random_access_iterator_tag)
-				KERBAL_CONDITIONAL_NOEXCEPT(
-						noexcept(static_cast<bool>(kerbal::iterator::distance(a_first, a_last) != kerbal::iterator::distance(b_first, b_last))) &&
-						noexcept(static_cast<bool>(a_first != a_last)) &&
-						noexcept(static_cast<bool>(equal_to(*a_first, *b_first))) &&
-						noexcept(++a_first) &&
-						noexcept(++b_first)
-				)
 		{
-			if (kerbal::iterator::distance(a_first, a_last) != kerbal::iterator::distance(b_first, b_last)) {
-				return false;
-			}
-
-//			while (a_first != a_last) { // size are equal and b will not out of range
-//				if (equal_to(*a_first, *b_first)) { // namely *a == *b
-//					++a_first;
-//					++b_first;
-//				} else {
-//					return false;
-//				}
-//			}
-
 			typedef RandomAccessIterator1 iterator1;
 			typedef typename kerbal::iterator::iterator_traits<iterator1>::difference_type difference_type;
+
+			difference_type trip_count(kerbal::iterator::distance(a_first, a_last));
+			if (trip_count != kerbal::iterator::distance(b_first, b_last)) {
+				return false;
+			}
 
 #	define EACH() do {\
 				if (equal_to(*a_first, *b_first)) { /* namely *a == *b*/\
@@ -96,19 +81,18 @@ namespace kerbal
 				}\
 			} while (false)
 
-			for (difference_type trip_count(kerbal::iterator::distance(a_first, a_last) >> 2); trip_count > 0; --trip_count) {
+			difference_type remain(trip_count & 3);
+			for (trip_count >>= 2; trip_count > 0; --trip_count) {
 				EACH();
 				EACH();
 				EACH();
 				EACH();
 			}
 
-			difference_type remain(kerbal::iterator::distance(a_first, a_last));
-			if (remain == 3) {
-				EACH();
-			}
 			if (remain >= 2) {
 				EACH();
+				EACH();
+				remain -= 2;
 			}
 			if (remain >= 1) {
 				EACH();
@@ -239,21 +223,13 @@ namespace kerbal
 									BinaryTypeNotEqualToPredicate not_equal_to,
 									std::random_access_iterator_tag, std::random_access_iterator_tag)
 		{
-			if (kerbal::iterator::distance(a_first, a_last) != kerbal::iterator::distance(b_first, b_last)) {
-				return true;
-			}
-
-//			while (a_first != a_last) { // size are equal and b will not out of range
-//				if (not_equal_to(*a_first, *b_first)) { // namely *a != *b
-//					return true;
-//				} else {
-//					++a_first;
-//					++b_first;
-//				}
-//			}
-
 			typedef RandomAccessIterator1 iterator1;
 			typedef typename kerbal::iterator::iterator_traits<iterator1>::difference_type difference_type;
+
+			difference_type trip_count(kerbal::iterator::distance(a_first, a_last));
+			if (trip_count != kerbal::iterator::distance(b_first, b_last)) {
+				return true;
+			}
 
 #	define EACH() do {\
 				if (not_equal_to(*a_first, *b_first)) { /* namely *a != *b*/\
@@ -264,19 +240,18 @@ namespace kerbal
 				}\
 			} while (false)
 
-			for (difference_type trip_count(kerbal::iterator::distance(a_first, a_last) >> 2); trip_count > 0; --trip_count) {
+			difference_type remain(trip_count & 3);
+			for (trip_count >>= 2; trip_count > 0; --trip_count) {
 				EACH();
 				EACH();
 				EACH();
 				EACH();
 			}
 
-			difference_type remain(kerbal::iterator::distance(a_first, a_last));
-			if (remain == 3) {
-				EACH();
-			}
 			if (remain >= 2) {
 				EACH();
+				EACH();
+				remain -= 2;
 			}
 			if (remain >= 1) {
 				EACH();
