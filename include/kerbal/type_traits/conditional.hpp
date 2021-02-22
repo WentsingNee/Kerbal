@@ -35,12 +35,6 @@ namespace kerbal
 				typedef FalseType type;
 		};
 
-		MODULE_EXPORT
-		template <bool condition>
-		struct conditional_boolean : kerbal::type_traits::bool_constant<condition>
-		{
-		};
-
 	} // namespace type_traits
 
 } // namespace kerbal
