@@ -13,7 +13,6 @@
 #define KERBAL_OPTIONAL_OPTIONAL_TYPE_TRAITS_HPP_
 
 #include <kerbal/optional/optional_settings.hpp>
-#include <kerbal/type_traits/conditional.hpp>
 #include <kerbal/type_traits/cv_deduction.hpp>
 #include <kerbal/type_traits/integral_constant.hpp>
 
@@ -50,7 +49,7 @@ namespace kerbal
 		};
 
 		template <typename Type>
-		struct is_optional: kerbal::type_traits::conditional_boolean<
+		struct is_optional: kerbal::type_traits::bool_constant<
 					is_kerbal_optional<Type>::value
 #	if KERBAL_OPTIONAL_ENABLE_SUPPORT_TO_STD_OPTIONAL==1
 					|| is_std_optional<Type>::value

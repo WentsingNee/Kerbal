@@ -13,7 +13,6 @@
 #define KERBAL_TYPE_TRAITS_CAN_BE_EMPTY_BASE_HPP
 
 #include <kerbal/ts/modules_ts/modules_ts.hpp>
-#include <kerbal/type_traits/conditional.hpp>
 #include <kerbal/type_traits/integral_constant.hpp>
 
 #if __cplusplus >= 201402L
@@ -29,8 +28,9 @@ namespace kerbal
 
 #	if __cplusplus >= 201402L
 
+		MODULE_EXPORT
 		template <typename Tp>
-		struct can_be_empty_base : kerbal::type_traits::conditional_boolean<
+		struct can_be_empty_base : kerbal::type_traits::bool_constant<
 										!std::is_final<Tp>::value && std::is_empty<Tp>::value
 									>
 		{

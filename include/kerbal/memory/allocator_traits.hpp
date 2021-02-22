@@ -237,7 +237,7 @@ namespace kerbal
 
 			template <typename Alloc>
 			struct allocator_propagate_on_container_copy_assignment_traits_helper<Alloc, true>
-					: kerbal::type_traits::conditional_boolean<
+					: kerbal::type_traits::bool_constant<
 							Alloc::propagate_on_container_copy_assignment::value
 					>
 			{
@@ -267,7 +267,7 @@ namespace kerbal
 
 			template <typename Alloc>
 			struct allocator_propagate_on_container_move_assignment_traits_helper<Alloc, true>
-					: kerbal::type_traits::conditional_boolean<
+					: kerbal::type_traits::bool_constant<
 							Alloc::propagate_on_container_move_assignment::value
 					>
 			{
@@ -297,7 +297,7 @@ namespace kerbal
 
 			template <typename Alloc>
 			struct allocator_propagate_on_container_swap_traits_helper<Alloc, true>
-					: kerbal::type_traits::conditional_boolean<
+					: kerbal::type_traits::bool_constant<
 							Alloc::propagate_on_container_swap::value
 					>
 			{

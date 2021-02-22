@@ -17,6 +17,7 @@
 #include <kerbal/algorithm/swap.hpp>
 #include <kerbal/iterator/iterator.hpp>
 #include <kerbal/type_traits/enable_if.hpp>
+#include <kerbal/type_traits/integral_constant.hpp>
 #include <kerbal/utility/in_place.hpp>
 
 #if __cplusplus >= 201103L
@@ -514,7 +515,7 @@ namespace kerbal
 			{
 				typedef kerbal::memory::allocator_traits<NodeAllocator> node_allocator_traits;
 				typedef
-				kerbal::type_traits::conditional_boolean<
+				kerbal::type_traits::bool_constant<
 						noexcept(
 								node_allocator_traits::construct(
 										alloc, kerbal::utility::declval<node*>(),

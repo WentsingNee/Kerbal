@@ -272,7 +272,7 @@ namespace kerbal
 		MODULE_EXPORT
 		template <typename Tp>
 		struct is_bidirectional_compatible_iterator:
-				kerbal::type_traits::conditional_boolean<
+				kerbal::type_traits::bool_constant<
 					kerbal::iterator::is_random_access_compatible_iterator<Tp>::value ||
 					kerbal::iterator::is_bidirectional_iterator<Tp>::value
 				>
@@ -282,7 +282,7 @@ namespace kerbal
 		MODULE_EXPORT
 		template <typename Tp>
 		struct is_forward_compatible_iterator:
-				kerbal::type_traits::conditional_boolean<
+				kerbal::type_traits::bool_constant<
 					kerbal::iterator::is_bidirectional_compatible_iterator<Tp>::value ||
 					kerbal::iterator::is_forward_iterator<Tp>::value
 				>
@@ -292,7 +292,7 @@ namespace kerbal
 		MODULE_EXPORT
 		template <typename Tp>
 		struct is_input_compatible_iterator:
-				kerbal::type_traits::conditional_boolean<
+				kerbal::type_traits::bool_constant<
 					kerbal::iterator::is_forward_compatible_iterator<Tp>::value ||
 					kerbal::iterator::is_input_iterator<Tp>::value
 				>

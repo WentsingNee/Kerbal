@@ -61,7 +61,7 @@ namespace kerbal
 
 		MODULE_EXPORT
 		template <typename Tp>
-		struct is_reference : kerbal::type_traits::conditional_boolean<
+		struct is_reference : kerbal::type_traits::bool_constant<
 											kerbal::type_traits::is_lvalue_reference<Tp>::value ||
 											kerbal::type_traits::is_rvalue_reference<Tp>::value
 									>

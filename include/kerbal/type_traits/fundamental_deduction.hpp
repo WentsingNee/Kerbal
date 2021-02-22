@@ -13,7 +13,6 @@
 #define KERBAL_TYPE_TRAITS_FUNDAMENTAL_DEDUCTION_HPP
 
 #include <kerbal/ts/modules_ts/modules_ts.hpp>
-#include <kerbal/type_traits/conditional.hpp>
 #include <kerbal/type_traits/cv_deduction.hpp>
 #include <kerbal/type_traits/integral_constant.hpp>
 
@@ -161,7 +160,7 @@ namespace kerbal
 
 		MODULE_EXPORT
 		template <class Tp>
-		struct is_arithmetic: kerbal::type_traits::conditional_boolean<
+		struct is_arithmetic: kerbal::type_traits::bool_constant<
 											kerbal::type_traits::is_integral<Tp>::value ||
 											kerbal::type_traits::is_floating_point<Tp>::value
 									>
@@ -196,7 +195,7 @@ namespace kerbal
 		/// is_fundamental
 		MODULE_EXPORT
 		template <typename Tp>
-		struct is_fundamental: kerbal::type_traits::conditional_boolean<
+		struct is_fundamental: kerbal::type_traits::bool_constant<
 											kerbal::type_traits::is_arithmetic<Tp>::value ||
 											kerbal::type_traits::is_void<Tp>::value
 									>
@@ -208,7 +207,7 @@ namespace kerbal
 		/// is_fundamental
 		MODULE_EXPORT
 		template <typename Tp>
-		struct is_fundamental: kerbal::type_traits::conditional_boolean<
+		struct is_fundamental: kerbal::type_traits::bool_constant<
 											kerbal::type_traits::is_arithmetic<Tp>::value ||
 											kerbal::type_traits::is_void<Tp>::value ||
 											kerbal::type_traits::is_null_pointer<Tp>::value
@@ -220,7 +219,7 @@ namespace kerbal
 
 		MODULE_EXPORT
 		template <typename Tp>
-		struct is_compound: kerbal::type_traits::conditional_boolean<!is_fundamental<Tp>::value>
+		struct is_compound: kerbal::type_traits::bool_constant<!is_fundamental<Tp>::value>
 		{
 		};
 
