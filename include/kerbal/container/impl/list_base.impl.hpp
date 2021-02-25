@@ -16,7 +16,9 @@
 
 #include <kerbal/algorithm/swap.hpp>
 #include <kerbal/iterator/iterator.hpp>
+#include <kerbal/type_traits/conditional.hpp>
 #include <kerbal/type_traits/integral_constant.hpp>
+#include <kerbal/utility/declval.hpp>
 #include <kerbal/utility/in_place.hpp>
 
 #if __cplusplus >= 201103L
@@ -546,22 +548,101 @@ namespace kerbal
 			template <typename Tp>
 			template <typename BinaryPredict>
 			KERBAL_CONSTEXPR20
-			void list_allocator_unrelated<Tp>::_K_merge(list_allocator_unrelated & other, BinaryPredict cmp)
+			void list_allocator_unrelated<Tp>::_K_merge_impl(list_allocator_unrelated & other, BinaryPredict cmp, MERGE_NOTHROW_VER) KERBAL_NOEXCEPT
 			{
 				const_iterator it(this->cbegin());
+				const_iterator const end(this->cend());
 				const_iterator other_it(other.cbegin());
-				while (it != this->cend()) {
-					if (other_it != other.cend()) {
-						if (cmp(*other_it, *it)) { // other_it < it
-							_K_splice(it, other_it++);
-						} else { // other_it >= it
+				const_iterator const other_end(other.cend());
+				while (it != end) {
+					if (other_it != other_end) {
+						if (cmp(*other_it, *it)) { // *other_it < *it
+							node_base * p = other_it.cast_to_mutable().current;
+							++other_it;
+							this->_K_hook_node(it, p);
+						} else { // *other_it >= *it
 							++it;
 						}
 					} else {
+						other._K_init_node_base();
 						return;
 					}
 				}
-				_K_splice(it, other);
+				// node: it has made sure that the remain range is not empty
+				node_base * remain_start = other_it.cast_to_mutable().current;
+				node_base * remain_back = other.head_node.prev;
+				this->_K_hook_node(end, remain_start, remain_back);
+				other._K_init_node_base();
+			}
+
+#		if __cpp_exceptions
+
+			template <typename Tp>
+			template <typename BinaryPredict>
+			KERBAL_CONSTEXPR20
+			void list_allocator_unrelated<Tp>::_K_merge_impl(list_allocator_unrelated & other, BinaryPredict cmp, MERGE_MAY_THROW_VER)
+			{
+				const_iterator it(this->cbegin());
+				const_iterator const end(this->cend());
+				const_iterator other_it(other.cbegin());
+				const_iterator const other_end(other.cend());
+				try {
+					while (it != end) {
+						if (other_it != other_end) {
+							if (cmp(*other_it, *it)) { // *other_it < *it, waring: may throw!!!
+								node_base * p = other_it.cast_to_mutable().current;
+								++other_it;
+								this->_K_hook_node(it, p);
+							} else { // *other_it >= *it
+								++it;
+							}
+						} else {
+							other._K_init_node_base();
+							return;
+						}
+					}
+				} catch (...) {
+					node_base * p = other_it.cast_to_mutable().current;
+					p->prev = &other.head_node;
+					other.head_node.next = p;
+					throw;
+				}
+				// node: it has made sure that the remain range is not empty
+				node_base * remain_start = other_it.cast_to_mutable().current;
+				node_base * remain_back = other.head_node.prev;
+				this->_K_hook_node(end, remain_start, remain_back);
+				other._K_init_node_base();
+			}
+
+#		endif
+
+			template <typename Tp>
+			template <typename BinaryPredict>
+			KERBAL_CONSTEXPR20
+			void list_allocator_unrelated<Tp>::_K_merge(list_allocator_unrelated & other, BinaryPredict cmp)
+			{
+
+#		if __cpp_exceptions
+
+#			if __cplusplus >= 201103L
+
+				typedef typename kerbal::type_traits::conditional<
+					noexcept(cmp(
+							kerbal::utility::declval<const_reference>(),
+							kerbal::utility::declval<const_reference>())),
+					MERGE_NOTHROW_VER,
+					MERGE_MAY_THROW_VER
+				>::type MERGE_VERSION;
+
+#			else
+				typedef MERGE_MAY_THROW_VER MERGE_VERSION;
+#			endif
+#		else
+				typedef MERGE_NOTHROW_VER MERGE_VERSION;
+#		endif
+
+				this->_K_merge_impl(other, cmp, MERGE_VERSION());
+
 			}
 
 			template <typename Tp>

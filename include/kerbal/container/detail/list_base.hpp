@@ -24,6 +24,7 @@
 #include <kerbal/iterator/reverse_iterator.hpp>
 #include <kerbal/memory/allocator_traits.hpp>
 #include <kerbal/type_traits/enable_if.hpp>
+#include <kerbal/type_traits/integral_constant.hpp>
 #include <kerbal/utility/declval.hpp>
 #include <kerbal/utility/in_place.hpp>
 #include <kerbal/utility/member_compress_helper.hpp>
@@ -344,6 +345,26 @@ namespace kerbal
 					KERBAL_CONSTEXPR20
 					iterator rotate(const_iterator first, const_iterator n_first, const_iterator last) KERBAL_NOEXCEPT;
 
+				private:
+
+					typedef kerbal::type_traits::integral_constant<int, 0> MERGE_NOTHROW_VER;
+
+#				if __cpp_exceptions
+					typedef kerbal::type_traits::integral_constant<int, 1> MERGE_MAY_THROW_VER;
+#				endif
+
+					template <typename BinaryPredict>
+					KERBAL_CONSTEXPR20
+					void _K_merge_impl(list_allocator_unrelated & other, BinaryPredict cmp, MERGE_NOTHROW_VER) KERBAL_NOEXCEPT;
+
+#				if __cpp_exceptions
+					template <typename BinaryPredict>
+					KERBAL_CONSTEXPR20
+					void _K_merge_impl(list_allocator_unrelated & other, BinaryPredict cmp, MERGE_MAY_THROW_VER);
+#				endif
+
+
+				protected:
 					template <typename BinaryPredict>
 					KERBAL_CONSTEXPR20
 					void _K_merge(list_allocator_unrelated & other, BinaryPredict cmp);
