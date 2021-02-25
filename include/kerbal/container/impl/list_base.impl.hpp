@@ -28,6 +28,8 @@
 #endif
 
 #include <utility> // std::pair
+#include <climits> // CHAR_BIT
+
 
 namespace kerbal
 {
@@ -1372,9 +1374,217 @@ namespace kerbal
 			template <typename Tp>
 			template <typename BinaryPredict>
 			KERBAL_CONSTEXPR20
-			void list_allocator_unrelated<Tp>::_K_sort(iterator first, iterator last, BinaryPredict cmp)
+			void list_allocator_unrelated<Tp>::merge_sort(iterator first, iterator last, BinaryPredict cmp)
 			{
 				merge_sort_n(first, kerbal::iterator::distance(first, last), cmp);
+			}
+
+			template <typename Tp>
+			template <bool is_radix_sort_acceptable_type>
+			KERBAL_CONSTEXPR20
+			typename kerbal::type_traits::enable_if<is_radix_sort_acceptable_type>::type
+			list_allocator_unrelated<Tp>::radix_sort_back_fill(
+					const_iterator insert_pos, kerbal::type_traits::false_type /*unsigned*/,
+					list_allocator_unrelated buckets[], std::size_t BUCKETS_NUM) KERBAL_NOEXCEPT
+			{
+				for (std::size_t i = 0; i < BUCKETS_NUM; ++i) {
+					_K_splice(insert_pos, buckets[i]);
+				}
+			}
+
+			template <typename Tp>
+			template <bool is_radix_sort_acceptable_type>
+			KERBAL_CONSTEXPR20
+			typename kerbal::type_traits::enable_if<is_radix_sort_acceptable_type>::type
+			list_allocator_unrelated<Tp>::radix_sort_back_fill(
+					const_iterator insert_pos, kerbal::type_traits::true_type /*signed*/,
+					list_allocator_unrelated buckets[], std::size_t BUCKETS_NUM) KERBAL_NOEXCEPT
+			{
+				for (std::size_t i = BUCKETS_NUM / 2; i < BUCKETS_NUM; ++i) {
+					_K_splice(insert_pos, buckets[i]);
+				}
+				for (std::size_t i = 0; i < BUCKETS_NUM / 2; ++i) {
+					_K_splice(insert_pos, buckets[i]);
+				}
+			}
+
+			template <typename Tp>
+			template <std::size_t RADIX_BIT_WIDTH>
+			KERBAL_CONSTEXPR20
+			void list_allocator_unrelated<Tp>::radix_sort(
+					iterator first, iterator last, kerbal::type_traits::false_type asc,
+					kerbal::type_traits::integral_constant<std::size_t, RADIX_BIT_WIDTH>) KERBAL_NOEXCEPT
+			{
+				typedef kerbal::type_traits::integral_constant<std::size_t, 1 << RADIX_BIT_WIDTH> BUCKETS_NUM;
+				list_allocator_unrelated buckets[2][BUCKETS_NUM::value];
+
+				for (int i = 0; i < 2; ++i) {
+					for (std::size_t j = 0; j < BUCKETS_NUM::value; ++j) {
+						buckets[i][j]._K_init_node_base();
+					}
+				}
+
+				typedef kerbal::type_traits::integral_constant<std::size_t, sizeof(value_type) * CHAR_BIT> VALUE_TYPE_BIT_WIDTH;
+				typedef kerbal::type_traits::integral_constant<std::size_t, VALUE_TYPE_BIT_WIDTH::value / RADIX_BIT_WIDTH + (VALUE_TYPE_BIT_WIDTH::value % RADIX_BIT_WIDTH != 0)> ROUNDS;
+
+				// first round
+				for (const_iterator it(first); it != last; ) {
+					int bucket_id = *it % BUCKETS_NUM::value;
+					list_allocator_unrelated & bucket_in = buckets[0][bucket_id];
+					bucket_in._K_splice(bucket_in.cend(), it++);
+				}
+
+				for (std::size_t round = 1; round < ROUNDS::value; ++round) {
+					list_allocator_unrelated (& buckets_from)[BUCKETS_NUM::value] = buckets[(round + 1) % 2];
+					list_allocator_unrelated (& buckets_to)[BUCKETS_NUM::value] = buckets[round % 2];
+
+					for (std::size_t i = 0; i < BUCKETS_NUM::value; ++i) {
+						list_allocator_unrelated & bucket_out = buckets_from[i];
+						const_iterator it(bucket_out.begin());
+						const_iterator const cend(bucket_out.end());
+						while (it != cend) {
+							int bucket_id = (*it >> (RADIX_BIT_WIDTH * round)) % BUCKETS_NUM::value;
+							list_allocator_unrelated & bucket_in = buckets_to[bucket_id];
+							bucket_in._K_splice(bucket_in.cend(), it++);
+						}
+					}
+				}
+
+				radix_sort_back_fill<true>(
+						last, kerbal::type_traits::is_signed<value_type>(),
+						buckets[(ROUNDS::value + 1) % 2], BUCKETS_NUM::value);
+			}
+
+			template <typename Tp>
+			template <std::size_t RADIX_BIT_WIDTH>
+			KERBAL_CONSTEXPR20
+			void list_allocator_unrelated<Tp>::radix_sort(
+					iterator first, iterator last, kerbal::type_traits::true_type desc,
+					kerbal::type_traits::integral_constant<std::size_t, RADIX_BIT_WIDTH>) KERBAL_NOEXCEPT
+			{
+				typedef kerbal::type_traits::integral_constant<std::size_t, 1 << RADIX_BIT_WIDTH> BUCKETS_NUM;
+				list_allocator_unrelated buckets[2][BUCKETS_NUM::value];
+
+				for (int i = 0; i < 2; ++i) {
+					for (std::size_t j = 0; j < BUCKETS_NUM::value; ++j) {
+						buckets[i][j]._K_init_node_base();
+					}
+				}
+
+				typedef kerbal::type_traits::integral_constant<std::size_t, sizeof(value_type) * CHAR_BIT> VALUE_TYPE_BIT_WIDTH;
+				typedef kerbal::type_traits::integral_constant<std::size_t, VALUE_TYPE_BIT_WIDTH::value / RADIX_BIT_WIDTH + (VALUE_TYPE_BIT_WIDTH::value % RADIX_BIT_WIDTH != 0)> ROUNDS;
+
+				// first round
+				for (const_iterator it(first); it != last; ) {
+					int bucket_id = BUCKETS_NUM::value - 1 - *it % BUCKETS_NUM::value;
+					list_allocator_unrelated & bucket_in = buckets[0][bucket_id];
+					bucket_in._K_splice(bucket_in.cend(), it++);
+				}
+
+				for (std::size_t round = 1; round < ROUNDS::value; ++round) {
+					list_allocator_unrelated (& buckets_from)[BUCKETS_NUM::value] = buckets[(round + 1) % 2];
+					list_allocator_unrelated (& buckets_to)[BUCKETS_NUM::value] = buckets[round % 2];
+
+					for (std::size_t i = 0; i < BUCKETS_NUM::value; ++i) {
+						list_allocator_unrelated & bucket_out = buckets_from[i];
+						const_iterator it(bucket_out.begin());
+						const_iterator const cend(bucket_out.end());
+						while (it != cend) {
+							int bucket_id = BUCKETS_NUM::value - 1 - (*it >> (RADIX_BIT_WIDTH * round)) % BUCKETS_NUM::value;
+							list_allocator_unrelated & bucket_in = buckets_to[bucket_id];
+							bucket_in._K_splice(bucket_in.cend(), it++);
+						}
+					}
+				}
+
+				radix_sort_back_fill<true>(
+						last, kerbal::type_traits::is_signed<value_type>(),
+						buckets[(ROUNDS::value + 1) % 2], BUCKETS_NUM::value);
+			}
+
+			template <typename Tp>
+			template <typename Order>
+			KERBAL_CONSTEXPR20
+			void list_allocator_unrelated<Tp>::radix_sort(iterator first, iterator last, Order /*order*/) KERBAL_NOEXCEPT
+			{
+				radix_sort(first, last, kerbal::type_traits::bool_constant<Order::value>(),
+						   kerbal::type_traits::integral_constant<std::size_t, CHAR_BIT>());
+			}
+
+			template <typename Tp>
+			template <bool is_radix_sort_acceptable_type>
+			KERBAL_CONSTEXPR20
+			typename kerbal::type_traits::enable_if<is_radix_sort_acceptable_type>::type
+			list_allocator_unrelated<Tp>::radix_sort(iterator first, iterator last) KERBAL_NOEXCEPT
+			{
+				radix_sort(first, last, kerbal::type_traits::false_type());
+			}
+
+			template <typename Tp>
+			template <bool is_radix_sort_acceptable_type, typename BinaryPredict>
+			KERBAL_CONSTEXPR20
+			typename kerbal::type_traits::enable_if<is_radix_sort_acceptable_type>::type
+			list_allocator_unrelated<Tp>::sort_method_overload(iterator first, iterator last, BinaryPredict cmp)
+			{
+				merge_sort(first, last, cmp);
+			}
+
+			template <typename Tp>
+			template <bool is_radix_sort_acceptable_type>
+			KERBAL_CONSTEXPR20
+			typename kerbal::type_traits::enable_if<is_radix_sort_acceptable_type>::type
+			list_allocator_unrelated<Tp>::sort_method_overload(iterator first, iterator last, std::less<value_type> /*cmp*/)
+			{
+				radix_sort(first, last, kerbal::type_traits::false_type());
+			}
+
+			template <typename Tp>
+			template <bool is_radix_sort_acceptable_type>
+			KERBAL_CONSTEXPR20
+			typename kerbal::type_traits::enable_if<is_radix_sort_acceptable_type>::type
+			list_allocator_unrelated<Tp>::sort_method_overload(iterator first, iterator last, std::greater<value_type> /*cmp*/)
+			{
+				radix_sort(first, last, kerbal::type_traits::true_type());
+			}
+
+#		if __cplusplus >= 201402L
+
+			template <typename Tp>
+			template <bool is_radix_sort_acceptable_type>
+			KERBAL_CONSTEXPR20
+			typename kerbal::type_traits::enable_if<is_radix_sort_acceptable_type>::type
+			list_allocator_unrelated<Tp>::sort_method_overload(iterator first, iterator last, std::less<void> /*cmp*/)
+			{
+				radix_sort(first, last, kerbal::type_traits::false_type());
+			}
+
+			template <typename Tp>
+			template <bool is_radix_sort_acceptable_type>
+			KERBAL_CONSTEXPR20
+			typename kerbal::type_traits::enable_if<is_radix_sort_acceptable_type>::type
+			list_allocator_unrelated<Tp>::sort_method_overload(iterator first, iterator last, std::greater<void> /*cmp*/)
+			{
+				radix_sort(first, last, kerbal::type_traits::true_type());
+			}
+
+#		endif
+
+			template <typename Tp>
+			template <bool is_radix_sort_acceptable_type, typename BinaryPredict>
+			KERBAL_CONSTEXPR20
+			typename kerbal::type_traits::enable_if<!is_radix_sort_acceptable_type>::type
+			list_allocator_unrelated<Tp>::sort_method_overload(iterator first, iterator last, BinaryPredict cmp)
+			{
+				merge_sort(first, last, cmp);
+			}
+
+			template <typename Tp>
+			template <typename BinaryPredict>
+			KERBAL_CONSTEXPR20
+			void list_allocator_unrelated<Tp>::_K_sort(iterator first, iterator last, BinaryPredict cmp)
+			{
+//				merge_sort(first, last, cmp);
+				sort_method_overload<IS_LIST_RADIX_SORT_ACCEPTABLE_TYPE::value>(first, last, cmp);
 			}
 
 			template <typename Tp>

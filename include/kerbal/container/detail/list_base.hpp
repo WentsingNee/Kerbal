@@ -250,6 +250,8 @@ namespace kerbal
 
 #			if __cplusplus >= 201103L
 
+					list_allocator_unrelated() = default; // for g++ early version
+
 					using super::super;
 
 #			else
@@ -662,6 +664,7 @@ namespace kerbal
 
 
 				protected:
+
 					template <typename BinaryPredict>
 					KERBAL_CONSTEXPR20
 					void _K_merge(list_allocator_unrelated & other, BinaryPredict cmp);
@@ -669,7 +672,9 @@ namespace kerbal
 					KERBAL_CONSTEXPR20
 					void _K_merge(list_allocator_unrelated & other);
 
+
 				private:
+
 					typedef kerbal::type_traits::integral_constant<int, 0> MSM_VER_NOTHROW;
 
 #				if __cpp_exceptions
@@ -695,6 +700,99 @@ namespace kerbal
 					static iterator merge_sort_n(iterator first, difference_type len, BinaryPredict cmp);
 
 				protected:
+
+					template <typename BinaryPredict>
+					KERBAL_CONSTEXPR20
+					static void merge_sort(iterator first, iterator last, BinaryPredict cmp);
+
+
+				private:
+
+					typedef kerbal::type_traits::bool_constant<
+							kerbal::type_traits::is_integral<value_type>::value &&
+							sizeof(value_type) <= 4
+					> IS_LIST_RADIX_SORT_ACCEPTABLE_TYPE;
+
+					template <bool is_radix_sort_acceptable_type>
+					KERBAL_CONSTEXPR20
+					typename kerbal::type_traits::enable_if<is_radix_sort_acceptable_type>::type
+					static radix_sort_back_fill(const_iterator insert_pos, kerbal::type_traits::false_type /*unsigned*/,
+												list_allocator_unrelated buckets[], std::size_t BUCKETS_NUM) KERBAL_NOEXCEPT;
+
+					template <bool is_radix_sort_acceptable_type>
+					KERBAL_CONSTEXPR20
+					typename kerbal::type_traits::enable_if<is_radix_sort_acceptable_type>::type
+					static radix_sort_back_fill(const_iterator insert_pos, kerbal::type_traits::true_type /*signed*/,
+												list_allocator_unrelated buckets[], std::size_t BUCKETS_NUM) KERBAL_NOEXCEPT;
+
+					template <std::size_t RADIX_BIT_WIDTH>
+					KERBAL_CONSTEXPR20
+					static void radix_sort(iterator first, iterator last, kerbal::type_traits::false_type asc,
+										   kerbal::type_traits::integral_constant<std::size_t, RADIX_BIT_WIDTH>) KERBAL_NOEXCEPT;
+
+					template <std::size_t RADIX_BIT_WIDTH>
+					KERBAL_CONSTEXPR20
+					static void radix_sort(iterator first, iterator last, kerbal::type_traits::true_type desc,
+										   kerbal::type_traits::integral_constant<std::size_t, RADIX_BIT_WIDTH>) KERBAL_NOEXCEPT;
+
+				protected:
+
+					template <typename Order>
+					KERBAL_CONSTEXPR20
+					static void radix_sort(iterator first, iterator last, Order order) KERBAL_NOEXCEPT;
+
+					template <bool is_radix_sort_acceptable_type>
+					KERBAL_CONSTEXPR20
+					static
+					typename kerbal::type_traits::enable_if<is_radix_sort_acceptable_type>::type
+					radix_sort(iterator first, iterator last) KERBAL_NOEXCEPT;
+
+
+				private:
+
+					template <bool is_radix_sort_acceptable_type, typename BinaryPredict>
+					KERBAL_CONSTEXPR20
+					static
+					typename kerbal::type_traits::enable_if<is_radix_sort_acceptable_type>::type
+					sort_method_overload(iterator first, iterator last, BinaryPredict cmp);
+
+					template <bool is_radix_sort_acceptable_type>
+					KERBAL_CONSTEXPR20
+					static
+					typename kerbal::type_traits::enable_if<is_radix_sort_acceptable_type>::type
+					sort_method_overload(iterator first, iterator last, std::less<value_type> cmp);
+
+					template <bool is_radix_sort_acceptable_type>
+					KERBAL_CONSTEXPR20
+					static
+					typename kerbal::type_traits::enable_if<is_radix_sort_acceptable_type>::type
+					sort_method_overload(iterator first, iterator last, std::greater<value_type> cmp);
+
+#			if __cplusplus >= 201402L
+
+					template <bool is_radix_sort_acceptable_type>
+					KERBAL_CONSTEXPR20
+					static
+					typename kerbal::type_traits::enable_if<is_radix_sort_acceptable_type>::type
+					sort_method_overload(iterator first, iterator last, std::less<void> cmp);
+
+					template <bool is_radix_sort_acceptable_type>
+					KERBAL_CONSTEXPR20
+					static
+					typename kerbal::type_traits::enable_if<is_radix_sort_acceptable_type>::type
+					sort_method_overload(iterator first, iterator last, std::greater<void> cmp);
+
+#			endif
+
+					template <bool is_radix_sort_acceptable_type, typename BinaryPredict>
+					KERBAL_CONSTEXPR20
+					static
+					typename kerbal::type_traits::enable_if<!is_radix_sort_acceptable_type>::type
+					sort_method_overload(iterator first, iterator last, BinaryPredict cmp);
+
+
+				protected:
+
 					template <typename BinaryPredict>
 					KERBAL_CONSTEXPR20
 					static void _K_sort(iterator first, iterator last, BinaryPredict cmp);
@@ -708,6 +806,7 @@ namespace kerbal
 
 					KERBAL_CONSTEXPR20
 					void sort();
+
 
 				private:
 
