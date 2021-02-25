@@ -693,10 +693,7 @@ namespace kerbal
 		typename list<Tp, Allocator>::iterator
 		list<Tp, Allocator>::erase(const_iterator pos)
 		{
-			iterator pos_mut(pos.cast_to_mutable());
-			node_base * p = list_type_unrelated::_K_unhook_node(pos_mut++);
-			this->_K_destroy_node(this->alloc(), p);
-			return pos_mut;
+			return list_allocator_unrelated::_K_erase(this->alloc(), pos);
 		}
 
 		template <typename Tp, typename Allocator>
@@ -704,16 +701,7 @@ namespace kerbal
 		typename list<Tp, Allocator>::iterator
 		list<Tp, Allocator>::erase(const_iterator first, const_iterator last)
 		{
-			iterator last_mut(last.cast_to_mutable());
-			if (first != last) {
-				iterator first_mut(first.cast_to_mutable());
-				std::pair<node_base *, node_base *> range(this->list_type_unrelated::_K_unhook_node(first_mut, last_mut));
-				node_base * start = range.first;
-				node_base * back = range.second;
-				back->next = NULL;
-				this->_K_consecutive_destroy_node(this->alloc(), start);
-			}
-			return last_mut;
+			return list_allocator_unrelated::_K_erase(this->alloc(), first, last);
 		}
 
 		template <typename Tp, typename Allocator>
@@ -786,18 +774,7 @@ namespace kerbal
 		typename list<Tp, Allocator>::size_type
 		list<Tp, Allocator>::remove(const_reference val)
 		{
-			size_type i = 0;
-			const_iterator it = this->cbegin();
-			const_iterator const cend(this->cend());
-			while (it != cend) {
-				if (*it == val) {
-					it = this->erase(it);
-					++i;
-				} else {
-					++it;
-				}
-			}
-			return i;
+			return list_allocator_unrelated::_K_remove(this->alloc(), val);
 		}
 
 		template <typename Tp, typename Allocator>
@@ -806,18 +783,7 @@ namespace kerbal
 		typename list<Tp, Allocator>::size_type
 		list<Tp, Allocator>::remove_if(UnaryPredicate predicate)
 		{
-			size_type i = 0;
-			const_iterator it(this->cbegin());
-			const_iterator const cend(this->cend());
-			while (it != cend) {
-				if (predicate(*it)) {
-					it = this->erase(it);
-					++i;
-				} else {
-					++it;
-				}
-			}
-			return i;
+			return list_allocator_unrelated::_K_remove_if(this->alloc(), predicate);
 		}
 
 		template <typename Tp, typename Allocator>

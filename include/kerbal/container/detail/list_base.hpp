@@ -314,6 +314,17 @@ namespace kerbal
 					}
 
 				//===================
+				//erase
+
+					template <typename NodeAllocator>
+					KERBAL_CONSTEXPR20
+					iterator _K_erase(NodeAllocator & alloc, const_iterator pos);
+
+					template <typename NodeAllocator>
+					KERBAL_CONSTEXPR20
+					iterator _K_erase(NodeAllocator & alloc, const_iterator first, const_iterator last);
+
+				//===================
 				// operation
 
 					KERBAL_CONSTEXPR20
@@ -395,6 +406,39 @@ namespace kerbal
 
 					KERBAL_CONSTEXPR20
 					void sort();
+
+				private:
+
+					struct remove_predict
+					{
+							const_reference val;
+
+							KERBAL_CONSTEXPR14
+							explicit remove_predict(const_reference val) KERBAL_NOEXCEPT
+									: val(val)
+							{
+							}
+
+							KERBAL_CONSTEXPR14
+							bool operator()(const_reference with) const
+									KERBAL_CONDITIONAL_NOEXCEPT(
+											noexcept(val == with)
+									)
+							{
+								return val == with;
+							}
+					};
+
+				protected:
+
+					template <typename NodeAllocator>
+					KERBAL_CONSTEXPR20
+					size_type _K_remove(NodeAllocator & alloc, const_reference val);
+
+					template <typename NodeAllocator, typename UnaryPredicate>
+					KERBAL_CONSTEXPR20
+					size_type _K_remove_if(NodeAllocator & alloc, UnaryPredicate predicate);
+
 
 				//===================
 				// private

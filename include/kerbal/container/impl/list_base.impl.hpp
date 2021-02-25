@@ -25,6 +25,8 @@
 #	include <kerbal/utility/forward.hpp>
 #endif
 
+#include <utility> // std::pair
+
 namespace kerbal
 {
 
@@ -411,6 +413,40 @@ namespace kerbal
 			//operation
 
 			template <typename Tp>
+			template <typename NodeAllocator>
+			KERBAL_CONSTEXPR20
+			typename list_allocator_unrelated<Tp>::iterator
+			list_allocator_unrelated<Tp>::_K_erase(NodeAllocator & alloc, const_iterator pos)
+			{
+				iterator pos_mut(pos.cast_to_mutable());
+				node_base * p = list_type_unrelated::_K_unhook_node(pos_mut++);
+				this->_K_destroy_node(alloc, p);
+				return pos_mut;
+			}
+
+			template <typename Tp>
+			template <typename NodeAllocator>
+			KERBAL_CONSTEXPR20
+			typename list_allocator_unrelated<Tp>::iterator
+			list_allocator_unrelated<Tp>::_K_erase(NodeAllocator & alloc, const_iterator first, const_iterator last)
+			{
+				iterator last_mut(last.cast_to_mutable());
+				if (first != last) {
+					iterator first_mut(first.cast_to_mutable());
+					std::pair<node_base *, node_base *> range(list_type_unrelated::_K_unhook_node(first_mut, last_mut));
+					node_base * start = range.first;
+					node_base * back = range.second;
+					back->next = NULL;
+					this->_K_consecutive_destroy_node(alloc, start);
+				}
+				return last_mut;
+			}
+
+
+			//===================
+			//operation
+
+			template <typename Tp>
 			KERBAL_CONSTEXPR20
 			void list_allocator_unrelated<Tp>::iter_swap_unstable(iterator a, iterator b)
 			{
@@ -759,6 +795,39 @@ namespace kerbal
 			{
 				this->sort(this->begin(), this->end());
 			}
+
+			template <typename Tp>
+			template <typename NodeAllocator>
+			KERBAL_CONSTEXPR20
+			typename list_allocator_unrelated<Tp>::size_type
+			list_allocator_unrelated<Tp>::_K_remove(NodeAllocator & alloc, const_reference val)
+			{
+				return _K_remove_if(alloc, remove_predict(val));
+			}
+
+			template <typename Tp>
+			template <typename NodeAllocator, typename UnaryPredicate>
+			KERBAL_CONSTEXPR20
+			typename list_allocator_unrelated<Tp>::size_type
+			list_allocator_unrelated<Tp>::_K_remove_if(NodeAllocator & alloc, UnaryPredicate predicate)
+			{
+				size_type i = 0;
+				const_iterator it(this->cbegin());
+				const_iterator const cend(this->cend());
+				while (it != cend) {
+					if (predicate(*it)) {
+						it = this->_K_erase(alloc, it);
+						++i;
+					} else {
+						++it;
+					}
+				}
+				return i;
+			}
+
+
+			//===================
+			// private
 
 #	if __cplusplus >= 201103L
 
