@@ -721,7 +721,7 @@ namespace kerbal
 		void list<Tp, Allocator>::resize(size_type count)
 		{
 			const_iterator it(this->cbegin());
-			const_iterator cend(this->cend());
+			const_iterator const cend(this->cend());
 			size_type size(kerbal::iterator::advance_at_most(it, count, cend));
 			if (size == count) {
 				this->erase(it, cend);
@@ -737,11 +737,12 @@ namespace kerbal
 		void list<Tp, Allocator>::resize(size_type count, const_reference value)
 		{
 			const_iterator it(this->cbegin());
-			size_type size(kerbal::iterator::advance_at_most(it, count, this->cend()));
+			const_iterator const cend(this->cend());
+			size_type size(kerbal::iterator::advance_at_most(it, count, cend));
 			if (size == count) {
-				this->erase(it, this->cend());
+				this->erase(it, cend);
 			} else {
-				this->insert(this->cend(), count - size, value);
+				this->insert(cend, count - size, value);
 			}
 		}
 
