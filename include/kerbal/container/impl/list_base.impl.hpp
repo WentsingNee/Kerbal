@@ -825,6 +825,58 @@ namespace kerbal
 				return i;
 			}
 
+			template <typename Tp>
+			template <typename NodeAllocator>
+			KERBAL_CONSTEXPR20
+			typename list_allocator_unrelated<Tp>::size_type
+			list_allocator_unrelated<Tp>::_K_unique(NodeAllocator & alloc)
+			{
+				return this->_K_unique(alloc, this->cbegin(), this->cend());
+			}
+
+			template <typename Tp>
+			template <typename NodeAllocator, typename BinaryPredicate>
+			KERBAL_CONSTEXPR20
+			typename list_allocator_unrelated<Tp>::size_type
+			list_allocator_unrelated<Tp>::_K_unique(NodeAllocator & alloc, BinaryPredicate pred)
+			{
+				return this->_K_unique(alloc, this->cbegin(), this->cend(), pred);
+			}
+
+			template <typename Tp>
+			template <typename NodeAllocator>
+			KERBAL_CONSTEXPR20
+			typename list_allocator_unrelated<Tp>::size_type
+			list_allocator_unrelated<Tp>::_K_unique(NodeAllocator & alloc, const_iterator first, const_iterator last)
+			{
+				return this->_K_unique(alloc, first, last, std::equal_to<value_type>());
+			}
+
+			template <typename Tp>
+			template <typename NodeAllocator, typename BinaryPredicate>
+			KERBAL_CONSTEXPR20
+			typename list_allocator_unrelated<Tp>::size_type
+			list_allocator_unrelated<Tp>::_K_unique(NodeAllocator & alloc, const_iterator first, const_iterator last, BinaryPredicate pred)
+			{
+				size_type r = 0;
+
+				if (first != last) {
+					const_iterator forward(first); ++forward;
+
+					while (forward != last) {
+						if (pred(*first, *forward)) {
+							this->_K_erase(alloc, forward++);
+							++r;
+						} else {
+							first = forward;
+							++forward;
+						}
+					}
+				}
+
+				return r;
+			}
+
 
 			//===================
 			// private

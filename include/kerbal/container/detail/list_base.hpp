@@ -439,6 +439,22 @@ namespace kerbal
 					KERBAL_CONSTEXPR20
 					size_type _K_remove_if(NodeAllocator & alloc, UnaryPredicate predicate);
 
+					template <typename NodeAllocator>
+					KERBAL_CONSTEXPR20
+					size_type _K_unique(NodeAllocator & alloc);
+
+					template <typename NodeAllocator, typename BinaryPredicate>
+					KERBAL_CONSTEXPR20
+					size_type _K_unique(NodeAllocator & alloc, BinaryPredicate pred);
+
+					template <typename NodeAllocator>
+					KERBAL_CONSTEXPR20
+					size_type _K_unique(NodeAllocator & alloc, const_iterator first, const_iterator last);
+
+					template <typename NodeAllocator, typename BinaryPredicate>
+					KERBAL_CONSTEXPR20
+					size_type _K_unique(NodeAllocator & alloc, const_iterator first, const_iterator last, BinaryPredicate pred);
+
 
 				//===================
 				// private

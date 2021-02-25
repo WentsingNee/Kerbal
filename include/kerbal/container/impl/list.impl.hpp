@@ -789,6 +789,40 @@ namespace kerbal
 
 		template <typename Tp, typename Allocator>
 		KERBAL_CONSTEXPR20
+		typename list<Tp, Allocator>::size_type
+		list<Tp, Allocator>::unique()
+		{
+			return list_allocator_unrelated::_K_unique(this->alloc());
+		}
+
+		template <typename Tp, typename Allocator>
+		template <typename BinaryPredicate>
+		KERBAL_CONSTEXPR20
+		typename list<Tp, Allocator>::size_type
+		list<Tp, Allocator>::unique(BinaryPredicate pred)
+		{
+			return list_allocator_unrelated::_K_unique(this->alloc(), pred);
+		}
+
+		template <typename Tp, typename Allocator>
+		KERBAL_CONSTEXPR20
+		typename list<Tp, Allocator>::size_type
+		list<Tp, Allocator>::unique(const_iterator first, const_iterator last)
+		{
+			return list_allocator_unrelated::_K_unique(this->alloc(), first, last);
+		}
+
+		template <typename Tp, typename Allocator>
+		template <typename BinaryPredicate>
+		KERBAL_CONSTEXPR20
+		typename list<Tp, Allocator>::size_type
+		list<Tp, Allocator>::unique(const_iterator first, const_iterator last, BinaryPredicate pred)
+		{
+			return list_allocator_unrelated::_K_unique(this->alloc(), first, last, pred);
+		}
+
+		template <typename Tp, typename Allocator>
+		KERBAL_CONSTEXPR20
 		void list<Tp, Allocator>::splice(const_iterator pos, list & other) KERBAL_NOEXCEPT
 		{
 			list_type_unrelated::_K_splice(pos, other);

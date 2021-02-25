@@ -479,6 +479,20 @@ namespace kerbal
 				size_type remove_if(UnaryPredicate predicate);
 
 				KERBAL_CONSTEXPR20
+				size_type unique();
+
+				template <typename BinaryPredicate>
+				KERBAL_CONSTEXPR20
+				size_type unique(BinaryPredicate pred);
+
+				KERBAL_CONSTEXPR20
+				size_type unique(const_iterator first, const_iterator last);
+
+				template <typename BinaryPredicate>
+				KERBAL_CONSTEXPR20
+				size_type unique(const_iterator first, const_iterator last, BinaryPredicate pred);
+
+				KERBAL_CONSTEXPR20
 				void splice(const_iterator pos, list & other) KERBAL_NOEXCEPT;
 
 				KERBAL_CONSTEXPR20
