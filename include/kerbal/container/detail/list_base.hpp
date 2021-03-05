@@ -97,6 +97,12 @@ namespace kerbal
 					}
 
 					KERBAL_CONSTEXPR14
+					basic_const_iterator basic_cbegin() const KERBAL_NOEXCEPT
+					{
+						return basic_const_iterator(this->head_node.next);
+					}
+
+					KERBAL_CONSTEXPR14
 					basic_iterator basic_end() KERBAL_NOEXCEPT
 					{
 						return basic_iterator(&this->head_node);
@@ -104,6 +110,12 @@ namespace kerbal
 
 					KERBAL_CONSTEXPR14
 					basic_const_iterator basic_end() const KERBAL_NOEXCEPT
+					{
+						return basic_const_iterator(&this->head_node);
+					}
+
+					KERBAL_CONSTEXPR14
+					basic_const_iterator basic_cend() const KERBAL_NOEXCEPT
 					{
 						return basic_const_iterator(&this->head_node);
 					}
