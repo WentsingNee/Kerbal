@@ -80,18 +80,19 @@ namespace kerbal
 				++first;\
 			} while (false)
 
-				for (size_t trip_count(cnt >> 2); trip_count > 0; --trip_count) {
+				size_t trip_count(cnt);
+				size_t remain(trip_count & 3);
+				for (trip_count >>= 2; trip_count > 0; --trip_count) {
 					EACH();
 					EACH();
 					EACH();
 					EACH();
 				}
-				size_t remain(cnt % 4);
-				if (remain == 3) {
-					EACH();
-				}
+
 				if (remain >= 2) {
 					EACH();
+					EACH();
+					remain -= 2;
 				}
 				if (remain >= 1) {
 					EACH();
