@@ -590,8 +590,8 @@ namespace kerbal
 				const_iterator const end(this->cend());
 				const_iterator other_it(other.cbegin());
 				const_iterator const other_end(other.cend());
-				while (it != end) {
-					if (other_it != other_end) {
+				while (other_it != other_end) {
+					if (it != end) {
 						if (cmp(*other_it, *it)) { // *other_it < *it
 							node_base * p = other_it.cast_to_mutable().current;
 							++other_it;
@@ -600,14 +600,13 @@ namespace kerbal
 							++it;
 						}
 					} else {
-						other._K_init_node_base();
-						return;
+						// node: it has made sure that the remain range is not empty
+						node_base * remain_start = other_it.cast_to_mutable().current;
+						node_base * remain_back = other.head_node.prev;
+						this->_K_hook_node(end, remain_start, remain_back);
+						break;
 					}
 				}
-				// node: it has made sure that the remain range is not empty
-				node_base * remain_start = other_it.cast_to_mutable().current;
-				node_base * remain_back = other.head_node.prev;
-				this->_K_hook_node(end, remain_start, remain_back);
 				other._K_init_node_base();
 			}
 
@@ -623,8 +622,8 @@ namespace kerbal
 				const_iterator other_it(other.cbegin());
 				const_iterator const other_end(other.cend());
 				try {
-					while (it != end) {
-						if (other_it != other_end) {
+					while (other_it != other_end) {
+						if (it != end) {
 							if (cmp(*other_it, *it)) { // *other_it < *it, waring: may throw!!!
 								node_base * p = other_it.cast_to_mutable().current;
 								++other_it;
@@ -633,8 +632,11 @@ namespace kerbal
 								++it;
 							}
 						} else {
-							other._K_init_node_base();
-							return;
+							// node: it has made sure that the remain range is not empty
+							node_base * remain_start = other_it.cast_to_mutable().current;
+							node_base * remain_back = other.head_node.prev;
+							this->_K_hook_node(end, remain_start, remain_back);
+							break;
 						}
 					}
 				} catch (...) {
@@ -643,10 +645,6 @@ namespace kerbal
 					other.head_node.next = p;
 					throw;
 				}
-				// node: it has made sure that the remain range is not empty
-				node_base * remain_start = other_it.cast_to_mutable().current;
-				node_base * remain_back = other.head_node.prev;
-				this->_K_hook_node(end, remain_start, remain_back);
 				other._K_init_node_base();
 			}
 
