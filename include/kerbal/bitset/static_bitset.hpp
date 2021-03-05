@@ -87,7 +87,7 @@ namespace kerbal
 
 				static_bitset() KERBAL_NOEXCEPT
 				{
-					kerbal::algorithm::fill(m_block, m_block + BLOCK_SIZE::value, static_cast<block_type>(0));
+					this->reset();
 				}
 
 #		endif
@@ -115,7 +115,12 @@ namespace kerbal
 				kerbal::container::array<bool, N>
 				bitarray() const KERBAL_NOEXCEPT
 				{
-					kerbal::container::array<bool, N> r;
+					kerbal::container::array<bool, N> r
+#				if __cplusplus >= 201402L
+						= {}
+#				endif
+					;
+
 					for (size_type i = 0; i < N; ++i) {
 						r[i] = test(i);
 					}
@@ -130,8 +135,7 @@ namespace kerbal
 				all_helper() const KERBAL_NOEXCEPT
 				{
 					return bitset_size_unrelated::all_trunk(m_block, BLOCK_SIZE::value - 1) &&
-							(static_cast<block_type>((~m_block[BLOCK_SIZE::value - 1]) <<
-									(BITS_PER_BLOCK::value - N % BITS_PER_BLOCK::value)) == 0);
+							(static_cast<block_type>((~m_block[BLOCK_SIZE::value - 1]) << WASTE_SIZE::value) == 0);
 				}
 
 				template <bool c>
