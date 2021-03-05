@@ -192,12 +192,32 @@ namespace kerbal
 
 		} // namespace detail
 
+
+		namespace detail
+		{
+
+			template <typename ValueType, bool IsIntegral = kerbal::type_traits::is_integral<ValueType>::value>
+			struct is_pigeonhole_sort_acceptable_type_helper;
+
+			template <typename ValueType>
+			struct is_pigeonhole_sort_acceptable_type_helper<ValueType, false> :
+					kerbal::type_traits::false_type
+			{
+			};
+
+			template <typename ValueType>
+			struct is_pigeonhole_sort_acceptable_type_helper<ValueType, true> :
+					kerbal::type_traits::bool_constant<
+							kerbal::algorithm::detail::actual_bit_width<ValueType>::value <= 16
+					>
+			{
+			};
+
+		} // namespace detail
+
 		template <typename ValueType>
 		struct is_pigeonhole_sort_acceptable_type:
-				kerbal::type_traits::bool_constant<
-						kerbal::type_traits::is_integral<ValueType>::value &&
-						kerbal::algorithm::detail::actual_bit_width<ValueType>::value <= 16
-				>
+				detail::is_pigeonhole_sort_acceptable_type_helper<ValueType>
 		{
 		};
 
