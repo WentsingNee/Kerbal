@@ -39,14 +39,14 @@ namespace kerbal
 			//===================
 			//capacity
 
-			KERBAL_CONSTEXPR20
+			KERBAL_CONSTEXPR14
 			inline
 			bool list_type_unrelated::empty() const KERBAL_NOEXCEPT
 			{
 				return this->basic_begin() == this->basic_end();
 			}
 
-			KERBAL_CONSTEXPR20
+			KERBAL_CONSTEXPR14
 			inline
 			list_type_unrelated::size_type
 			list_type_unrelated::size() const KERBAL_NOEXCEPT
@@ -64,7 +64,7 @@ namespace kerbal
 			//===================
 			//operation
 
-			KERBAL_CONSTEXPR20
+			KERBAL_CONSTEXPR14
 			inline
 			void list_type_unrelated::_K_iter_swap(basic_iterator a, basic_iterator b) KERBAL_NOEXCEPT
 			{
@@ -76,7 +76,7 @@ namespace kerbal
 				kerbal::algorithm::swap(pa->next->prev, pb->next->prev);
 			}
 
-			KERBAL_CONSTEXPR20
+			KERBAL_CONSTEXPR14
 			inline
 			void list_type_unrelated::_K_reverse(basic_iterator first, basic_iterator last) KERBAL_NOEXCEPT
 			{
@@ -93,14 +93,14 @@ namespace kerbal
 				pre_first->next = rit;
 			}
 
-			KERBAL_CONSTEXPR20
+			KERBAL_CONSTEXPR14
 			inline
 			void list_type_unrelated::reverse() KERBAL_NOEXCEPT
 			{
 				_K_reverse(this->basic_begin(), this->basic_end());
 			}
 
-			KERBAL_CONSTEXPR20
+			KERBAL_CONSTEXPR14
 			inline
 			list_type_unrelated::basic_iterator
 			list_type_unrelated::_K_rotate(basic_iterator first, basic_iterator n_first, basic_iterator last) KERBAL_NOEXCEPT
@@ -118,14 +118,14 @@ namespace kerbal
 				return first;
 			}
 
-			KERBAL_CONSTEXPR20
+			KERBAL_CONSTEXPR14
 			inline
 			void list_type_unrelated::_K_splice(basic_const_iterator pos, list_type_unrelated & other) KERBAL_NOEXCEPT
 			{
 				list_type_unrelated::_K_splice(pos, other.basic_begin(), other.basic_end());
 			}
 
-			KERBAL_CONSTEXPR20
+			KERBAL_CONSTEXPR14
 			inline
 			void list_type_unrelated::_K_splice(basic_const_iterator pos, basic_const_iterator opos) KERBAL_NOEXCEPT
 			{
@@ -134,7 +134,7 @@ namespace kerbal
 				list_type_unrelated::_K_hook_node(pos, p);
 			}
 
-			KERBAL_CONSTEXPR20
+			KERBAL_CONSTEXPR14
 			inline
 			void list_type_unrelated::_K_splice(basic_const_iterator pos, basic_const_iterator first, basic_const_iterator last) KERBAL_NOEXCEPT
 			{
@@ -151,7 +151,7 @@ namespace kerbal
 			//===================
 			//private
 
-			KERBAL_CONSTEXPR20
+			KERBAL_CONSTEXPR14
 			inline
 			void list_type_unrelated::_K_hook_node(basic_const_iterator pos, node_base * p) KERBAL_NOEXCEPT
 			{
@@ -163,7 +163,7 @@ namespace kerbal
 				next->prev = p;
 			}
 
-			KERBAL_CONSTEXPR20
+			KERBAL_CONSTEXPR14
 			inline
 			void list_type_unrelated::_K_hook_node(basic_const_iterator pos, node_base * start, node_base * back) KERBAL_NOEXCEPT
 			{
@@ -177,7 +177,7 @@ namespace kerbal
 				next->prev = back;
 			}
 
-			KERBAL_CONSTEXPR20
+			KERBAL_CONSTEXPR14
 			inline
 			list_type_unrelated::node_base *
 			list_type_unrelated::_K_unhook_node(basic_iterator pos) KERBAL_NOEXCEPT
@@ -188,7 +188,7 @@ namespace kerbal
 				return p;
 			}
 
-			KERBAL_CONSTEXPR20
+			KERBAL_CONSTEXPR14
 			inline
 			std::pair<list_type_unrelated::node_base *, list_type_unrelated::node_base *>
 			list_type_unrelated::_K_unhook_node(basic_iterator first, basic_iterator last) KERBAL_NOEXCEPT
@@ -202,7 +202,7 @@ namespace kerbal
 				return std::pair<node_base *, node_base *>(start, back);
 			}
 
-			KERBAL_CONSTEXPR20
+			KERBAL_CONSTEXPR14
 			inline
 			void list_type_unrelated::_K_swap_with_empty(list_type_unrelated& not_empty_list, list_type_unrelated& empty_list) KERBAL_NOEXCEPT
 			{
@@ -213,7 +213,7 @@ namespace kerbal
 				not_empty_list._K_init_node_base();
 			}
 
-			KERBAL_CONSTEXPR20
+			KERBAL_CONSTEXPR14
 			inline
 			void list_type_unrelated::_K_swap_type_unrelated(list_type_unrelated & lhs, list_type_unrelated & rhs) KERBAL_NOEXCEPT
 			{

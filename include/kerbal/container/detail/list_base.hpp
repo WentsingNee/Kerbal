@@ -123,36 +123,36 @@ namespace kerbal
 				//===================
 				// capacity
 
-					KERBAL_CONSTEXPR20
+					KERBAL_CONSTEXPR14
 					bool empty() const KERBAL_NOEXCEPT;
 
-					KERBAL_CONSTEXPR20
+					KERBAL_CONSTEXPR14
 					size_type size() const KERBAL_NOEXCEPT;
 
 				//===================
 				// operation
 
-					KERBAL_CONSTEXPR20
+					KERBAL_CONSTEXPR14
 					static void _K_iter_swap(basic_iterator a, basic_iterator b) KERBAL_NOEXCEPT;
 
-					KERBAL_CONSTEXPR20
+					KERBAL_CONSTEXPR14
 					static void _K_reverse(basic_iterator first, basic_iterator last) KERBAL_NOEXCEPT;
 
-					KERBAL_CONSTEXPR20
+					KERBAL_CONSTEXPR14
 					void reverse() KERBAL_NOEXCEPT;
 
-					KERBAL_CONSTEXPR20
+					KERBAL_CONSTEXPR14
 					static
 					basic_iterator
 					_K_rotate(basic_iterator first, basic_iterator n_first, basic_iterator last) KERBAL_NOEXCEPT;
 
-					KERBAL_CONSTEXPR20
+					KERBAL_CONSTEXPR14
 					static void _K_splice(basic_const_iterator pos, list_type_unrelated & other) KERBAL_NOEXCEPT;
 
-					KERBAL_CONSTEXPR20
+					KERBAL_CONSTEXPR14
 					static void _K_splice(basic_const_iterator pos, basic_const_iterator opos) KERBAL_NOEXCEPT;
 
-					KERBAL_CONSTEXPR20
+					KERBAL_CONSTEXPR14
 					static void _K_splice(basic_const_iterator pos, basic_const_iterator first, basic_const_iterator last) KERBAL_NOEXCEPT;
 
 				//===================
@@ -165,27 +165,27 @@ namespace kerbal
 						this->head_node.next = &this->head_node;
 					}
 
-					KERBAL_CONSTEXPR20
+					KERBAL_CONSTEXPR14
 					static void _K_hook_node(basic_const_iterator pos, node_base * p) KERBAL_NOEXCEPT;
 
-					KERBAL_CONSTEXPR20
+					KERBAL_CONSTEXPR14
 					static void _K_hook_node(basic_const_iterator pos, node_base * start, node_base * back) KERBAL_NOEXCEPT;
 
-					KERBAL_CONSTEXPR20
+					KERBAL_CONSTEXPR14
 					static node_base * _K_unhook_node(basic_iterator pos) KERBAL_NOEXCEPT;
 
 					// pre-cond: first != last;
-					KERBAL_CONSTEXPR20
+					KERBAL_CONSTEXPR14
 					static
 					std::pair<node_base *, node_base *>
 					_K_unhook_node(basic_iterator first, basic_iterator last) KERBAL_NOEXCEPT;
 
 					// pre-cond: `not_empty_list` and `empty_list` are lists of same type
-					KERBAL_CONSTEXPR20
+					KERBAL_CONSTEXPR14
 					static void _K_swap_with_empty(list_type_unrelated & not_empty_list, list_type_unrelated & empty_list) KERBAL_NOEXCEPT;
 
 					// pre-cond: lhs and rhs are lists of same type
-					KERBAL_CONSTEXPR20
+					KERBAL_CONSTEXPR14
 					static void _K_swap_type_unrelated(list_type_unrelated & lhs, list_type_unrelated & rhs) KERBAL_NOEXCEPT;
 
 			};
