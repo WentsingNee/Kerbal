@@ -12,7 +12,6 @@
 #ifndef KERBAL_ALGORITHM_SORT_SORT_HPP
 #define KERBAL_ALGORITHM_SORT_SORT_HPP
 
-#include <kerbal/algorithm/sort/detail/actual_bit_width.hpp>
 #include <kerbal/algorithm/sort/intro_sort.hpp>
 #include <kerbal/algorithm/sort/pigeonhole_sort.hpp>
 #include <kerbal/algorithm/sort/radix_sort.hpp>
