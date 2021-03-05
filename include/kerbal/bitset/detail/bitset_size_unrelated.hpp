@@ -100,37 +100,6 @@ namespace kerbal
 					}
 
 					KERBAL_CONSTEXPR14
-					static bool none_trunk(const block_type m_block[], block_width_type trunk_size) KERBAL_NOEXCEPT
-					{
-
-#				define EACH(idx) if (m_block[idx]) {return false;}
-
-						for (size_t i = 0; i + 4 <= trunk_size; i += 4) {
-							EACH(i);
-							EACH(i + 1);
-							EACH(i + 2);
-							EACH(i + 3);
-						}
-
-						switch (trunk_size % 4) {
-							case 3:
-								EACH(trunk_size - 3);
-							case 2:
-								EACH(trunk_size - 2);
-							case 1:
-								EACH(trunk_size - 1);
-						}
-
-#				undef EACH
-
-						return true;
-
-//						return kerbal::algorithm::none_of(a, a + trunk_size, [](m_block_type x){
-//							return x;
-//						});
-					}
-
-					KERBAL_CONSTEXPR14
 					static void flip(block_type m_block[], block_width_type block_width) KERBAL_NOEXCEPT
 					{
 
