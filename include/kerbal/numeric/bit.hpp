@@ -118,6 +118,7 @@ namespace kerbal
 		}
 
 
+# if CHAR_BIT != 8
 
 		template <typename Unsigned>
 		KERBAL_CONSTEXPR14
@@ -130,6 +131,133 @@ namespace kerbal
 			}
 			return cnt;
 		}
+
+# else
+
+		namespace detail
+		{
+
+			template <typename T, int W>
+			struct _0x3333_loop;
+
+			template <typename T>
+			struct _0x3333_loop<T, 1> :
+					public kerbal::type_traits::integral_constant<T, 0x33>
+			{
+			};
+
+			template <typename T, int W>
+			struct _0x3333_loop :
+					public kerbal::type_traits::integral_constant<
+							T,
+							_0x3333_loop<T, W - 1>::value + (static_cast<T>(0x33) << (W - 1) * 8)
+					>
+			{
+			};
+
+			template <typename T>
+			struct _0x3333 :
+					public _0x3333_loop<T, sizeof(T)>
+			{
+			};
+
+
+			template <typename T, int W>
+			struct _0x5555_loop;
+
+			template <typename T>
+			struct _0x5555_loop<T, 1> :
+					public kerbal::type_traits::integral_constant<T, 0x55>
+			{
+			};
+
+			template <typename T, int W>
+			struct _0x5555_loop :
+					public kerbal::type_traits::integral_constant<
+							T,
+							_0x5555_loop<T, W - 1>::value + (static_cast<T>(0x55) << (W - 1) * 8)
+					>
+			{
+			};
+
+			template <typename T>
+			struct _0x5555 :
+					public _0x5555_loop<T, sizeof(T)>
+			{
+			};
+
+
+			template <typename T, int W>
+			struct _0x0f0f_loop;
+
+			template <typename T>
+			struct _0x0f0f_loop<T, 1> :
+					public kerbal::type_traits::integral_constant<T, 0x0f>
+			{
+			};
+
+			template <typename T, int W>
+			struct _0x0f0f_loop :
+					public kerbal::type_traits::integral_constant<
+							T,
+							_0x0f0f_loop<T, W - 1>::value + (static_cast<T>(0xf) << (W - 1) * 8)
+					>
+			{
+			};
+
+			template <typename T>
+			struct _0x0f0f :
+					public _0x0f0f_loop<T, sizeof(T)>
+			{
+			};
+
+
+			template <typename T, int W>
+			struct _0x0101_loop;
+
+			template <typename T>
+			struct _0x0101_loop<T, 1> :
+					public kerbal::type_traits::integral_constant<T, 0x01>
+			{
+			};
+
+			template <typename T, int W>
+			struct _0x0101_loop :
+					public kerbal::type_traits::integral_constant<
+							T,
+							_0x0101_loop<T, W - 1>::value + (static_cast<T>(1) << (W - 1) * 8)
+					>
+			{
+			};
+
+			template <typename T>
+			struct _0x0101 :
+					public _0x0101_loop<T, sizeof(T)>
+			{
+			};
+
+		} // namespace detail
+
+
+		// optimized-swar algorithm
+		template <typename Unsigned>
+		KERBAL_CONSTEXPR14
+		int __popcount(Unsigned x, kerbal::type_traits::false_type) KERBAL_NOEXCEPT
+		{
+			x = x - ((x >> 1) & detail::_0x5555<Unsigned>::value);
+			// x = (x & detail::_0x5555<Unsigned>::value) + ((x >> 1) & detail::_0x5555<Unsigned>::value);
+
+			x = (x & detail::_0x3333<Unsigned>::value) + ((x >> 2) & detail::_0x3333<Unsigned>::value);
+
+			x = ((x >> 4) + x) & detail::_0x0f0f<Unsigned>::value;
+			// x = (x & detail::_0x0f0f<Unsigned>::value) + ((x >> 4) & detail::_0x0f0f<Unsigned>::value);
+
+			x = static_cast<Unsigned>(x * detail::_0x0101<Unsigned>::value) >> (8 * (sizeof(Unsigned) - 1));
+			return x;
+		}
+
+
+#endif
 
 
 #	if KERBAL_COMPILER_ID == KERBAL_COMPILER_ID_GNU
