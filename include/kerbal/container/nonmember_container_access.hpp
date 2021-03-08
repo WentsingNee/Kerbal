@@ -9,11 +9,12 @@
  *   all rights reserved
  */
 
-#ifndef KERBAL_CONTAINER_NONMEMBER_CONTAINER_ACCESS_HPP_
-#define KERBAL_CONTAINER_NONMEMBER_CONTAINER_ACCESS_HPP_
+#ifndef KERBAL_CONTAINER_NONMEMBER_CONTAINER_ACCESS_HPP
+#define KERBAL_CONTAINER_NONMEMBER_CONTAINER_ACCESS_HPP
 
 #include <kerbal/compatibility/constexpr.hpp>
 #include <kerbal/compatibility/noexcept.hpp>
+#include <kerbal/iterator/iterator.hpp>
 #include <kerbal/iterator/reverse_iterator.hpp>
 
 #include <cstddef>
@@ -152,6 +153,42 @@ namespace kerbal
 			return container.empty();
 		}
 
+		template <typename Container>
+		KERBAL_CONSTEXPR14
+		auto nth(Container & container, typename Container::size_type index)
+					KERBAL_CONDITIONAL_NOEXCEPT(noexcept(kerbal::iterator::next(kerbal::container::begin(container), index)))
+					-> decltype(kerbal::iterator::next(kerbal::container::begin(container), index))
+		{
+			return kerbal::iterator::next(kerbal::container::begin(container), index);
+		}
+
+		template <typename Container>
+		KERBAL_CONSTEXPR14
+		auto nth(const Container & container, typename Container::size_type index)
+					KERBAL_CONDITIONAL_NOEXCEPT(noexcept(kerbal::iterator::next(kerbal::container::cbegin(container), index)))
+					-> decltype(kerbal::iterator::next(kerbal::container::cbegin(container), index))
+		{
+			return kerbal::iterator::next(kerbal::container::cbegin(container), index);
+		}
+
+		template <typename Container>
+		KERBAL_CONSTEXPR14
+		auto index_of(Container & container, typename Container::iterator it)
+					KERBAL_CONDITIONAL_NOEXCEPT(noexcept(kerbal::iterator::distance(kerbal::container::begin(container), it)))
+					-> decltype(kerbal::iterator::distance(kerbal::container::begin(container), it))
+		{
+			return kerbal::iterator::distance(kerbal::container::begin(container), it);
+		}
+
+		template <typename Container>
+		KERBAL_CONSTEXPR14
+		auto index_of(const Container & container, typename Container::const_iterator it)
+					KERBAL_CONDITIONAL_NOEXCEPT(noexcept(kerbal::iterator::distance(kerbal::container::cbegin(container), it)))
+					-> decltype(kerbal::iterator::distance(kerbal::container::cbegin(container), it))
+		{
+			return kerbal::iterator::distance(kerbal::container::cbegin(container), it);
+		}
+
 #	else
 
 		template <typename Container>
@@ -251,6 +288,34 @@ namespace kerbal
 			return container.empty();
 		}
 
+		template <typename Container>
+		typename Container::iterator
+		nth(Container & container, typename Container::size_type index)
+		{
+			return kerbal::iterator::next(kerbal::container::begin(container), index);
+		}
+
+		template <typename Container>
+		typename Container::const_iterator
+		nth(const Container & container, typename Container::size_type index)
+		{
+			return kerbal::iterator::next(kerbal::container::cbegin(container), index);
+		}
+
+		template <typename Container>
+		typename Container::size_type
+		index_of(Container & container, typename Container::iterator it)
+		{
+			return kerbal::iterator::distance(kerbal::container::begin(container), it);
+		}
+
+		template <typename Container>
+		typename Container::size_type
+		index_of(const Container & container, typename Container::const_iterator it)
+		{
+			return kerbal::iterator::distance(kerbal::container::cbegin(container), it);
+		}
+
 #	endif // __cplusplus >= 201103L
 
 		template <typename Tp, size_t N>
@@ -327,8 +392,36 @@ namespace kerbal
 			return false;
 		}
 
+		template <typename Tp, size_t N>
+		KERBAL_CONSTEXPR14
+		Tp* nth(Tp (&arr)[N], std::size_t index) KERBAL_NOEXCEPT
+		{
+			return arr + index;
+		}
+
+		template <typename Tp, size_t N>
+		KERBAL_CONSTEXPR14
+		const Tp* nth(const Tp (&arr)[N], std::size_t index) KERBAL_NOEXCEPT
+		{
+			return arr + index;
+		}
+
+		template <typename Tp, size_t N>
+		KERBAL_CONSTEXPR14
+		std::size_t index_of(Tp (&arr)[N], Tp * it) KERBAL_NOEXCEPT
+		{
+			return it - arr;
+		}
+
+		template <typename Tp, size_t N>
+		KERBAL_CONSTEXPR14
+		std::size_t index_of(const Tp (&arr)[N], const Tp * it) KERBAL_NOEXCEPT
+		{
+			return it - arr;
+		}
+
 	} // namespace container
 
 } // namespace kerbal
 
-#endif /* KERBAL_CONTAINER_NONMEMBER_CONTAINER_ACCESS_HPP_ */
+#endif // KERBAL_CONTAINER_NONMEMBER_CONTAINER_ACCESS_HPP
