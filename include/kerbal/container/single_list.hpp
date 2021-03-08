@@ -108,7 +108,8 @@ namespace kerbal
 #		endif
 
 				KERBAL_CONSTEXPR20
-				explicit single_list(const Allocator& alloc) KERBAL_CONDITIONAL_NOEXCEPT((
+				explicit
+				single_list(const Allocator& alloc) KERBAL_CONDITIONAL_NOEXCEPT((
 						std::is_nothrow_default_constructible<sl_allocator_unrelated>::value &&
 						std::is_nothrow_constructible<sl_allocator_overload, const Allocator&>::value
 				));
@@ -120,10 +121,12 @@ namespace kerbal
 				single_list(const single_list & src, const Allocator& alloc);
 
 				KERBAL_CONSTEXPR20
-				explicit single_list(size_type n);
+				explicit
+				single_list(size_type n);
 
 				KERBAL_CONSTEXPR20
-				explicit single_list(size_type n, const Allocator& alloc);
+				explicit
+				single_list(size_type n, const Allocator& alloc);
 
 				KERBAL_CONSTEXPR20
 				single_list(size_type n, const_reference val);

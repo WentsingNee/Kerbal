@@ -103,7 +103,8 @@ namespace kerbal
 				);
 
 				KERBAL_CONSTEXPR20
-				explicit list(const Allocator& alloc) KERBAL_CONDITIONAL_NOEXCEPT((
+				explicit
+				list(const Allocator& alloc) KERBAL_CONDITIONAL_NOEXCEPT((
 						std::is_nothrow_default_constructible<list_allocator_unrelated>::value &&
 						std::is_nothrow_constructible<list_allocator_overload, const Allocator&>::value
 				));
@@ -115,10 +116,12 @@ namespace kerbal
 				list(const list & src, const Allocator& alloc);
 
 				KERBAL_CONSTEXPR20
-				explicit list(size_type n);
+				explicit
+				list(size_type n);
 
 				KERBAL_CONSTEXPR20
-				explicit list(size_type n, const Allocator& alloc);
+				explicit
+				list(size_type n, const Allocator& alloc);
 
 				KERBAL_CONSTEXPR20
 				list(size_type n, const_reference val);
