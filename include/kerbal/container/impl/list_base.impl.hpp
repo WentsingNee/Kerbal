@@ -448,21 +448,21 @@ namespace kerbal
 
 			template <typename Tp>
 			KERBAL_CONSTEXPR20
-			void list_allocator_unrelated<Tp>::iter_swap_unstable(iterator a, iterator b)
+			void list_allocator_unrelated<Tp>::_K_iter_swap_unstable(iterator a, iterator b)
 			{
 				kerbal::algorithm::iter_swap(a, b);
 			}
 
 			template <typename Tp>
 			KERBAL_CONSTEXPR20
-			void list_allocator_unrelated<Tp>::iter_swap(iterator a, iterator b) KERBAL_NOEXCEPT
+			void list_allocator_unrelated<Tp>::_K_iter_swap(iterator a, iterator b) KERBAL_NOEXCEPT
 			{
 				list_type_unrelated::_K_iter_swap(a, b);
 			}
 
 			template <typename Tp>
 			KERBAL_CONSTEXPR20
-			void list_allocator_unrelated<Tp>::iter_swap_fast(iterator a, iterator b)
+			void list_allocator_unrelated<Tp>::_K_iter_swap_fast(iterator a, iterator b)
 			{
 
 #		if __cplusplus >= 201103L
@@ -487,25 +487,25 @@ namespace kerbal
 				struct apply_helper
 				{
 						KERBAL_CONSTEXPR20
-						static void apply(list_allocator_unrelated & l, iterator a, iterator b, kerbal::type_traits::false_type) KERBAL_NOEXCEPT
+						static void apply(iterator a, iterator b, kerbal::type_traits::false_type) KERBAL_NOEXCEPT
 						{
-							l.iter_swap(a, b);
+							_K_iter_swap(a, b);
 						}
 
 						KERBAL_CONSTEXPR20
-						static void apply(list_allocator_unrelated & l, iterator a, iterator b, kerbal::type_traits::true_type)
+						static void apply(iterator a, iterator b, kerbal::type_traits::true_type)
 						{
-							l.iter_swap_unstable(a, b);
+							_K_iter_swap_unstable(a, b);
 						}
 				};
 
-				apply_helper::apply(*this, a, b, policy());
+				apply_helper::apply(a, b, policy());
 
 			}
 
 			template <typename Tp>
 			KERBAL_CONSTEXPR20
-			void list_allocator_unrelated<Tp>::reverse_unstable(iterator first, iterator last) KERBAL_NOEXCEPT
+			void list_allocator_unrelated<Tp>::_K_reverse_unstable(iterator first, iterator last) KERBAL_NOEXCEPT
 			{
 				kerbal::algorithm::reverse(first, last);
 			}
@@ -514,19 +514,19 @@ namespace kerbal
 			KERBAL_CONSTEXPR20
 			void list_allocator_unrelated<Tp>::reverse_unstable() KERBAL_NOEXCEPT
 			{
-				this->reverse_unstable(this->begin(), this->end());
+				_K_reverse_unstable(this->begin(), this->end());
 			}
 
 			template <typename Tp>
 			KERBAL_CONSTEXPR20
-			void list_allocator_unrelated<Tp>::reverse(iterator first, iterator last) KERBAL_NOEXCEPT
+			void list_allocator_unrelated<Tp>::_K_reverse(iterator first, iterator last) KERBAL_NOEXCEPT
 			{
 				list_type_unrelated::_K_reverse(first, last);
 			}
 
 			template <typename Tp>
 			KERBAL_CONSTEXPR20
-			void list_allocator_unrelated<Tp>::reverse_fast(iterator first, iterator last) KERBAL_NOEXCEPT
+			void list_allocator_unrelated<Tp>::_K_reverse_fast(iterator first, iterator last) KERBAL_NOEXCEPT
 			{
 
 #		if __cplusplus >= 201103L
@@ -551,26 +551,26 @@ namespace kerbal
 				struct apply_helper
 				{
 						KERBAL_CONSTEXPR20
-						static void apply(list_allocator_unrelated & l, iterator first, iterator last, kerbal::type_traits::false_type) KERBAL_NOEXCEPT
+						static void apply(iterator first, iterator last, kerbal::type_traits::false_type) KERBAL_NOEXCEPT
 						{
-							l.reverse(first, last);
+							_K_reverse(first, last);
 						}
 
 						KERBAL_CONSTEXPR20
-						static void apply(list_allocator_unrelated & l, iterator first, iterator last, kerbal::type_traits::true_type) KERBAL_NOEXCEPT
+						static void apply(iterator first, iterator last, kerbal::type_traits::true_type) KERBAL_NOEXCEPT
 						{
-							l.reverse_unstable(first, last);
+							_K_reverse_unstable(first, last);
 						}
 				};
 
-				apply_helper::apply(*this, first, last, policy());
+				apply_helper::apply(first, last, policy());
 			};
 
 			template <typename Tp>
 			KERBAL_CONSTEXPR20
 			void list_allocator_unrelated<Tp>::reverse_fast() KERBAL_NOEXCEPT
 			{
-				this->reverse_fast(this->begin(), this->end());
+				_K_reverse_fast(this->begin(), this->end());
 			}
 
 			template <typename Tp>
@@ -745,7 +745,7 @@ namespace kerbal
 					iterator i(kerbal::iterator::next(first));
 					iterator r(kerbal::iterator::next(i));
 					if (cmp(*i, *first)) {
-						this->iter_swap(first, i);
+						_K_iter_swap(first, i);
 					}
 					return r;
 				}

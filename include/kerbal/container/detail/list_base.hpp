@@ -340,27 +340,27 @@ namespace kerbal
 				// operation
 
 					KERBAL_CONSTEXPR20
-					void iter_swap_unstable(iterator a, iterator b);
+					static void _K_iter_swap_unstable(iterator a, iterator b);
 
 					KERBAL_CONSTEXPR20
-					void iter_swap(iterator a, iterator b) KERBAL_NOEXCEPT;
+					static void _K_iter_swap(iterator a, iterator b) KERBAL_NOEXCEPT;
 
 					KERBAL_CONSTEXPR20
-					void iter_swap_fast(iterator a, iterator b);
+					static void _K_iter_swap_fast(iterator a, iterator b);
 
 					KERBAL_CONSTEXPR20
-					void reverse_unstable(iterator first, iterator last) KERBAL_NOEXCEPT;
+					static void _K_reverse_unstable(iterator first, iterator last) KERBAL_NOEXCEPT;
 
 					KERBAL_CONSTEXPR20
 					void reverse_unstable() KERBAL_NOEXCEPT;
 
 					KERBAL_CONSTEXPR20
-					void reverse(iterator first, iterator last) KERBAL_NOEXCEPT;
+					static void _K_reverse(iterator first, iterator last) KERBAL_NOEXCEPT;
 
 					using list_type_unrelated::reverse;
 
 					KERBAL_CONSTEXPR20
-					void reverse_fast(iterator first, iterator last) KERBAL_NOEXCEPT;
+					static void _K_reverse_fast(iterator first, iterator last) KERBAL_NOEXCEPT;
 
 					KERBAL_CONSTEXPR20
 					void reverse_fast() KERBAL_NOEXCEPT;
