@@ -344,14 +344,13 @@ namespace kerbal
 		void list<Tp, Allocator>::assign(size_type count, const_reference val)
 		{
 			iterator it(this->begin());
-			size_type i = 0;
-			while (i != count) {
+			while (count != 0) {
 				if (it != this->cend()) {
 					kerbal::operators::generic_assign(*it, val); // *it = val;
-					++i;
+					--count;
 					++it;
 				} else {
-					this->insert(this->cend(), count - i, val);
+					this->insert(this->cend(), count, val);
 					return;
 				}
 			}
