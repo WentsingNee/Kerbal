@@ -820,12 +820,29 @@ namespace kerbal
 		}
 
 		template <typename Tp, typename Allocator>
+		KERBAL_CONSTEXPR20
+		typename list<Tp, Allocator>::size_type
+		list<Tp, Allocator>::remove(const_iterator first, const_iterator last, const_reference val)
+		{
+			return list_allocator_unrelated::_K_remove(this->alloc(), first, last, val);
+		}
+
+		template <typename Tp, typename Allocator>
 		template <typename UnaryPredicate>
 		KERBAL_CONSTEXPR20
 		typename list<Tp, Allocator>::size_type
 		list<Tp, Allocator>::remove_if(UnaryPredicate predicate)
 		{
 			return list_allocator_unrelated::_K_remove_if(this->alloc(), predicate);
+		}
+
+		template <typename Tp, typename Allocator>
+		template <typename UnaryPredicate>
+		KERBAL_CONSTEXPR20
+		typename list<Tp, Allocator>::size_type
+		list<Tp, Allocator>::remove_if(const_iterator first, const_iterator last, UnaryPredicate predicate)
+		{
+			return list_allocator_unrelated::_K_remove_if(this->alloc(), first, last, predicate);
 		}
 
 		template <typename Tp, typename Allocator>

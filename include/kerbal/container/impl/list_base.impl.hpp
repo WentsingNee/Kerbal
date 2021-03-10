@@ -800,7 +800,16 @@ namespace kerbal
 			typename list_allocator_unrelated<Tp>::size_type
 			list_allocator_unrelated<Tp>::_K_remove(NodeAllocator & alloc, const_reference val)
 			{
-				return _K_remove_if(alloc, remove_predict(val));
+				return _K_remove(alloc, this->cbegin(), this->cend(), val);
+			}
+
+			template <typename Tp>
+			template <typename NodeAllocator>
+			KERBAL_CONSTEXPR20
+			typename list_allocator_unrelated<Tp>::size_type
+			list_allocator_unrelated<Tp>::_K_remove(NodeAllocator & alloc, const_iterator first, const_iterator last, const_reference val)
+			{
+				return _K_remove_if(alloc, first, last, remove_predict(val));
 			}
 
 			template <typename Tp>
@@ -809,15 +818,24 @@ namespace kerbal
 			typename list_allocator_unrelated<Tp>::size_type
 			list_allocator_unrelated<Tp>::_K_remove_if(NodeAllocator & alloc, UnaryPredicate predicate)
 			{
+				return _K_remove_if(alloc, this->cbegin(), this->cend(), predicate);
+			}
+
+			template <typename Tp>
+			template <typename NodeAllocator, typename UnaryPredicate>
+			KERBAL_CONSTEXPR20
+			typename list_allocator_unrelated<Tp>::size_type
+			list_allocator_unrelated<Tp>::_K_remove_if(NodeAllocator & alloc, const_iterator first, const_iterator last, UnaryPredicate predicate)
+			{
 				size_type i = 0;
-				const_iterator it(this->cbegin());
-				const_iterator const cend(this->cend());
-				while (it != cend) {
-					if (predicate(*it)) {
-						it = this->_K_erase(alloc, it);
+				while (first != last) {
+					if (predicate(*first)) {
+						node_base * p = _K_unhook_node(first++.cast_to_mutable());
+						_K_destroy_node(alloc, p);
+						// <=> first = _K_erase(alloc, first);
 						++i;
 					} else {
-						++it;
+						++first;
 					}
 				}
 				return i;
