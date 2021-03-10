@@ -571,11 +571,38 @@ namespace kerbal
 							)
 					;
 
+				private:
+					typedef kerbal::type_traits::integral_constant<int, 0>		CNSCTV_DES_VER_DEFAULT;
+					typedef kerbal::type_traits::integral_constant<int, 1>		CNSCTV_DES_VER_DESTROY_BUT_NO_DEALLOCATE;
+					typedef kerbal::type_traits::integral_constant<int, 2>		CNSCTV_DES_VER_NO_DESTROY;
+
+					template <typename NodeAllocator>
+					KERBAL_CONSTEXPR20
+					static void _K_consecutive_destroy_node_impl(NodeAllocator & alloc, node_base * start, CNSCTV_DES_VER_DEFAULT)
+							KERBAL_CONDITIONAL_NOEXCEPT(
+								noexcept(_K_destroy_node(alloc, kerbal::utility::declval<node_base*>()))
+							)
+					;
+
+					template <typename NodeAllocator>
+					KERBAL_CONSTEXPR20
+					static void _K_consecutive_destroy_node_impl(NodeAllocator & alloc, node_base * start, CNSCTV_DES_VER_DESTROY_BUT_NO_DEALLOCATE)
+							KERBAL_CONDITIONAL_NOEXCEPT(
+								noexcept(kerbal::memory::allocator_traits<NodeAllocator>::destroy(alloc, kerbal::utility::declval<node*>()))
+							)
+					;
+
+					template <typename NodeAllocator>
+					KERBAL_CONSTEXPR20
+					static void _K_consecutive_destroy_node_impl(NodeAllocator & alloc, node_base * start, CNSCTV_DES_VER_NO_DESTROY) KERBAL_NOEXCEPT;
+
+				protected:
+
 					template <typename NodeAllocator>
 					KERBAL_CONSTEXPR20
 					static void _K_consecutive_destroy_node(NodeAllocator & alloc, node_base * start)
 							KERBAL_CONDITIONAL_NOEXCEPT(
-								noexcept(kerbal::utility::declthis<list_allocator_unrelated>()->_K_destroy_node(alloc, kerbal::utility::declval<node_base*>()))
+								noexcept(_K_consecutive_destroy_node_impl(alloc, start, CNSCTV_DES_VER_DEFAULT()))
 							)
 					;
 
@@ -586,7 +613,12 @@ namespace kerbal
 					KERBAL_CONSTEXPR20
 					static void _K_consecutive_destroy_node(std::pmr::polymorphic_allocator<Node> & alloc, node_base * start)
 							KERBAL_CONDITIONAL_NOEXCEPT(
-									noexcept(kerbal::utility::declthis<list_allocator_unrelated>()->_K_destroy_node(alloc, kerbal::utility::declval<node_base*>()))
+								(
+									!std::is_trivially_destructible<Tp>::value ?
+									noexcept(_K_consecutive_destroy_node_impl(alloc, start, CNSCTV_DES_VER_DESTROY_BUT_NO_DEALLOCATE())) :
+									true
+								) &&
+								noexcept(_K_consecutive_destroy_node_impl(alloc, start, CNSCTV_DES_VER_DEFAULT()))
 							)
 					;
 
