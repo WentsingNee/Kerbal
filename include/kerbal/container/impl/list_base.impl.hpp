@@ -847,7 +847,7 @@ namespace kerbal
 			typename list_allocator_unrelated<Tp>::size_type
 			list_allocator_unrelated<Tp>::_K_unique(NodeAllocator & alloc)
 			{
-				return this->_K_unique(alloc, this->cbegin(), this->cend());
+				return _K_unique(alloc, this->cbegin(), this->cend());
 			}
 
 			template <typename Tp>
@@ -856,7 +856,7 @@ namespace kerbal
 			typename list_allocator_unrelated<Tp>::size_type
 			list_allocator_unrelated<Tp>::_K_unique(NodeAllocator & alloc, BinaryPredicate pred)
 			{
-				return this->_K_unique(alloc, this->cbegin(), this->cend(), pred);
+				return _K_unique(alloc, this->cbegin(), this->cend(), pred);
 			}
 
 			template <typename Tp>
@@ -865,7 +865,7 @@ namespace kerbal
 			typename list_allocator_unrelated<Tp>::size_type
 			list_allocator_unrelated<Tp>::_K_unique(NodeAllocator & alloc, const_iterator first, const_iterator last)
 			{
-				return this->_K_unique(alloc, first, last, std::equal_to<value_type>());
+				return _K_unique(alloc, first, last, std::equal_to<value_type>());
 			}
 
 			template <typename Tp>
@@ -881,7 +881,9 @@ namespace kerbal
 
 					while (forward != last) {
 						if (pred(*first, *forward)) {
-							this->_K_erase(alloc, forward++);
+							node_base * p = list_type_unrelated::_K_unhook_node(forward++.cast_to_mutable());
+							_K_destroy_node(alloc, p);
+							// <=> _K_erase(alloc, forward++);
 							++r;
 						} else {
 							first = forward;
