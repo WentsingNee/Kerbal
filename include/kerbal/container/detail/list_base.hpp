@@ -326,15 +326,15 @@ namespace kerbal
 					}
 
 				//===================
-				//erase
+				// erase
 
 					template <typename NodeAllocator>
 					KERBAL_CONSTEXPR20
-					iterator _K_erase(NodeAllocator & alloc, const_iterator pos);
+					static iterator _K_erase(NodeAllocator & alloc, const_iterator pos);
 
 					template <typename NodeAllocator>
 					KERBAL_CONSTEXPR20
-					iterator _K_erase(NodeAllocator & alloc, const_iterator first, const_iterator last);
+					static iterator _K_erase(NodeAllocator & alloc, const_iterator first, const_iterator last);
 
 				//===================
 				// operation

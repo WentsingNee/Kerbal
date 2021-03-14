@@ -420,7 +420,7 @@ namespace kerbal
 			{
 				iterator pos_mut(pos.cast_to_mutable());
 				node_base * p = list_type_unrelated::_K_unhook_node(pos_mut++);
-				this->_K_destroy_node(alloc, p);
+				_K_destroy_node(alloc, p);
 				return pos_mut;
 			}
 
@@ -437,7 +437,7 @@ namespace kerbal
 					node_base * start = range.first;
 					node_base * back = range.second;
 					back->next = NULL;
-					this->_K_consecutive_destroy_node(alloc, start);
+					_K_consecutive_destroy_node(alloc, start);
 				}
 				return last_mut;
 			}
