@@ -370,20 +370,20 @@ namespace kerbal
 
 				private:
 
-					typedef kerbal::type_traits::integral_constant<int, 0> MERGE_NOTHROW_VER;
+					typedef kerbal::type_traits::integral_constant<int, 0> MERGE_VER_NOTHROW;
 
 #				if __cpp_exceptions
-					typedef kerbal::type_traits::integral_constant<int, 1> MERGE_MAY_THROW_VER;
+					typedef kerbal::type_traits::integral_constant<int, 1> MERGE_VER_MAY_THROW;
 #				endif
 
 					template <typename BinaryPredict>
 					KERBAL_CONSTEXPR20
-					void _K_merge_impl(list_allocator_unrelated & other, BinaryPredict cmp, MERGE_NOTHROW_VER) KERBAL_NOEXCEPT;
+					void _K_merge_impl(list_allocator_unrelated & other, BinaryPredict cmp, MERGE_VER_NOTHROW) KERBAL_NOEXCEPT;
 
 #				if __cpp_exceptions
 					template <typename BinaryPredict>
 					KERBAL_CONSTEXPR20
-					void _K_merge_impl(list_allocator_unrelated & other, BinaryPredict cmp, MERGE_MAY_THROW_VER);
+					void _K_merge_impl(list_allocator_unrelated & other, BinaryPredict cmp, MERGE_VER_MAY_THROW);
 #				endif
 
 

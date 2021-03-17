@@ -584,7 +584,7 @@ namespace kerbal
 			template <typename Tp>
 			template <typename BinaryPredict>
 			KERBAL_CONSTEXPR20
-			void list_allocator_unrelated<Tp>::_K_merge_impl(list_allocator_unrelated & other, BinaryPredict cmp, MERGE_NOTHROW_VER) KERBAL_NOEXCEPT
+			void list_allocator_unrelated<Tp>::_K_merge_impl(list_allocator_unrelated & other, BinaryPredict cmp, MERGE_VER_NOTHROW) KERBAL_NOEXCEPT
 			{
 				const_iterator it(this->cbegin());
 				const_iterator const end(this->cend());
@@ -615,7 +615,7 @@ namespace kerbal
 			template <typename Tp>
 			template <typename BinaryPredict>
 			KERBAL_CONSTEXPR20
-			void list_allocator_unrelated<Tp>::_K_merge_impl(list_allocator_unrelated & other, BinaryPredict cmp, MERGE_MAY_THROW_VER)
+			void list_allocator_unrelated<Tp>::_K_merge_impl(list_allocator_unrelated & other, BinaryPredict cmp, MERGE_VER_MAY_THROW)
 			{
 				const_iterator it(this->cbegin());
 				const_iterator const end(this->cend());
@@ -664,15 +664,15 @@ namespace kerbal
 					noexcept(cmp(
 							kerbal::utility::declval<const_reference>(),
 							kerbal::utility::declval<const_reference>())),
-					MERGE_NOTHROW_VER,
-					MERGE_MAY_THROW_VER
+					MERGE_VER_NOTHROW,
+					MERGE_VER_MAY_THROW
 				>::type MERGE_VERSION;
 
 #			else
-				typedef MERGE_MAY_THROW_VER MERGE_VERSION;
+				typedef MERGE_VER_MAY_THROW MERGE_VERSION;
 #			endif
 #		else
-				typedef MERGE_NOTHROW_VER MERGE_VERSION;
+				typedef MERGE_VER_NOTHROW MERGE_VERSION;
 #		endif
 
 				this->_K_merge_impl(other, cmp, MERGE_VERSION());
