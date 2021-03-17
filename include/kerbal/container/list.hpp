@@ -456,26 +456,26 @@ namespace kerbal
 				void swap(list & ano);
 
 				KERBAL_CONSTEXPR20
-				void iter_swap_unstable(iterator a, iterator b);
+				void iter_swap_unstable(const_iterator a, const_iterator b);
 
 				KERBAL_CONSTEXPR20
-				void iter_swap(iterator a, iterator b) KERBAL_NOEXCEPT;
+				void iter_swap(const_iterator a, const_iterator b) KERBAL_NOEXCEPT;
 
 				KERBAL_CONSTEXPR20
-				void iter_swap_fast(iterator a, iterator b);
+				void iter_swap_fast(const_iterator a, const_iterator b);
 
 				KERBAL_CONSTEXPR20
-				void reverse_unstable(iterator a, iterator b) KERBAL_NOEXCEPT;
+				void reverse_unstable(const_iterator a, const_iterator b) KERBAL_NOEXCEPT;
 
 				using list_allocator_unrelated::reverse_unstable;
 
 				KERBAL_CONSTEXPR20
-				void reverse(iterator a, iterator b);
+				void reverse(const_iterator a, const_iterator b);
 
 				using list_allocator_unrelated::reverse;
 
 				KERBAL_CONSTEXPR20
-				void reverse_fast(iterator a, iterator b);
+				void reverse_fast(const_iterator a, const_iterator b);
 
 				using list_allocator_unrelated::reverse_fast;
 

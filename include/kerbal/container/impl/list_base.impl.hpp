@@ -66,10 +66,10 @@ namespace kerbal
 
 			KERBAL_CONSTEXPR14
 			inline
-			void list_type_unrelated::_K_iter_swap(basic_iterator a, basic_iterator b) KERBAL_NOEXCEPT
+			void list_type_unrelated::_K_iter_swap(basic_const_iterator a, basic_const_iterator b) KERBAL_NOEXCEPT
 			{
-				node_base * pa = a.current;
-				node_base * pb = b.current;
+				node_base * pa = a.cast_to_mutable().current;
+				node_base * pb = b.cast_to_mutable().current;
 				kerbal::algorithm::swap(pa->prev, pb->prev);
 				kerbal::algorithm::swap(pa->prev->next, pb->prev->next);
 				kerbal::algorithm::swap(pa->next, pb->next);
@@ -78,44 +78,50 @@ namespace kerbal
 
 			KERBAL_CONSTEXPR14
 			inline
-			void list_type_unrelated::_K_reverse(basic_iterator first, basic_iterator last) KERBAL_NOEXCEPT
+			void list_type_unrelated::_K_reverse(basic_const_iterator first, basic_const_iterator last) KERBAL_NOEXCEPT
 			{
-				node_base * pre_first = first.current->prev;
-				node_base * rit = last.current;
-				while (first != last) {
-					node_base * p = first.current;
-					++first;
+				basic_iterator first_mut(first.cast_to_mutable());
+				basic_iterator last_mut(last.cast_to_mutable());
+				node_base * before_first = first_mut.current->prev;
+				node_base * rit = last_mut.current;
+				while (first_mut != last_mut) {
+					node_base * p = first_mut.current;
+					++first_mut;
 					p->next = rit;
 					rit->prev = p;
 					rit = p;
 				}
-				rit->prev = pre_first;
-				pre_first->next = rit;
+				rit->prev = before_first;
+				before_first->next = rit;
 			}
 
 			KERBAL_CONSTEXPR14
 			inline
 			void list_type_unrelated::reverse() KERBAL_NOEXCEPT
 			{
-				_K_reverse(this->basic_begin(), this->basic_end());
+				_K_reverse(this->basic_cbegin(), this->basic_cend());
 			}
 
 			KERBAL_CONSTEXPR14
 			inline
 			list_type_unrelated::basic_iterator
-			list_type_unrelated::_K_rotate(basic_iterator first, basic_iterator n_first, basic_iterator last) KERBAL_NOEXCEPT
+			list_type_unrelated::_K_rotate(basic_const_iterator first, basic_const_iterator n_first, basic_const_iterator last) KERBAL_NOEXCEPT
 			{
+				basic_iterator first_mut(first.cast_to_mutable());
+				basic_iterator n_first_mut(n_first.cast_to_mutable());
+				basic_iterator last_mut(last.cast_to_mutable());
+
 				if (first == n_first) {
-					return last;
+					return last_mut;
 				}
 
 				if (n_first == last) {
-					return first;
+					return first_mut;
 				}
 
-				std::pair<node_base *, node_base *> left_range(_K_unhook_node(first, n_first));
-				_K_hook_node(last, left_range.first, left_range.second);
-				return first;
+				std::pair<node_base *, node_base *> left_range(_K_unhook_node(first_mut, n_first_mut));
+				_K_hook_node(last_mut, left_range.first, left_range.second);
+				return first_mut;
 			}
 
 			KERBAL_CONSTEXPR14
@@ -448,21 +454,21 @@ namespace kerbal
 
 			template <typename Tp>
 			KERBAL_CONSTEXPR20
-			void list_allocator_unrelated<Tp>::_K_iter_swap_unstable(iterator a, iterator b)
+			void list_allocator_unrelated<Tp>::_K_iter_swap_unstable(const_iterator a, const_iterator b)
 			{
-				kerbal::algorithm::iter_swap(a, b);
+				kerbal::algorithm::iter_swap(a.cast_to_mutable(), b.cast_to_mutable());
 			}
 
 			template <typename Tp>
 			KERBAL_CONSTEXPR20
-			void list_allocator_unrelated<Tp>::_K_iter_swap(iterator a, iterator b) KERBAL_NOEXCEPT
+			void list_allocator_unrelated<Tp>::_K_iter_swap(const_iterator a, const_iterator b) KERBAL_NOEXCEPT
 			{
 				list_type_unrelated::_K_iter_swap(a, b);
 			}
 
 			template <typename Tp>
 			KERBAL_CONSTEXPR20
-			void list_allocator_unrelated<Tp>::_K_iter_swap_fast(iterator a, iterator b)
+			void list_allocator_unrelated<Tp>::_K_iter_swap_fast(const_iterator a, const_iterator b)
 			{
 
 #		if __cplusplus >= 201103L
@@ -487,13 +493,13 @@ namespace kerbal
 				struct apply_helper
 				{
 						KERBAL_CONSTEXPR20
-						static void apply(iterator a, iterator b, kerbal::type_traits::false_type) KERBAL_NOEXCEPT
+						static void apply(const_iterator a, const_iterator b, kerbal::type_traits::false_type) KERBAL_NOEXCEPT
 						{
 							_K_iter_swap(a, b);
 						}
 
 						KERBAL_CONSTEXPR20
-						static void apply(iterator a, iterator b, kerbal::type_traits::true_type)
+						static void apply(const_iterator a, const_iterator b, kerbal::type_traits::true_type)
 						{
 							_K_iter_swap_unstable(a, b);
 						}
@@ -505,28 +511,28 @@ namespace kerbal
 
 			template <typename Tp>
 			KERBAL_CONSTEXPR20
-			void list_allocator_unrelated<Tp>::_K_reverse_unstable(iterator first, iterator last) KERBAL_NOEXCEPT
+			void list_allocator_unrelated<Tp>::_K_reverse_unstable(const_iterator first, const_iterator last) KERBAL_NOEXCEPT
 			{
-				kerbal::algorithm::reverse(first, last);
+				kerbal::algorithm::reverse(first.cast_to_mutable(), last.cast_to_mutable());
 			}
 
 			template <typename Tp>
 			KERBAL_CONSTEXPR20
 			void list_allocator_unrelated<Tp>::reverse_unstable() KERBAL_NOEXCEPT
 			{
-				_K_reverse_unstable(this->begin(), this->end());
+				_K_reverse_unstable(this->cbegin(), this->cend());
 			}
 
 			template <typename Tp>
 			KERBAL_CONSTEXPR20
-			void list_allocator_unrelated<Tp>::_K_reverse(iterator first, iterator last) KERBAL_NOEXCEPT
+			void list_allocator_unrelated<Tp>::_K_reverse(const_iterator first, const_iterator last) KERBAL_NOEXCEPT
 			{
 				list_type_unrelated::_K_reverse(first, last);
 			}
 
 			template <typename Tp>
 			KERBAL_CONSTEXPR20
-			void list_allocator_unrelated<Tp>::_K_reverse_fast(iterator first, iterator last) KERBAL_NOEXCEPT
+			void list_allocator_unrelated<Tp>::_K_reverse_fast(const_iterator first, const_iterator last) KERBAL_NOEXCEPT
 			{
 
 #		if __cplusplus >= 201103L
@@ -551,13 +557,13 @@ namespace kerbal
 				struct apply_helper
 				{
 						KERBAL_CONSTEXPR20
-						static void apply(iterator first, iterator last, kerbal::type_traits::false_type) KERBAL_NOEXCEPT
+						static void apply(const_iterator first, const_iterator last, kerbal::type_traits::false_type) KERBAL_NOEXCEPT
 						{
 							_K_reverse(first, last);
 						}
 
 						KERBAL_CONSTEXPR20
-						static void apply(iterator first, iterator last, kerbal::type_traits::true_type) KERBAL_NOEXCEPT
+						static void apply(const_iterator first, const_iterator last, kerbal::type_traits::true_type) KERBAL_NOEXCEPT
 						{
 							_K_reverse_unstable(first, last);
 						}
@@ -570,7 +576,7 @@ namespace kerbal
 			KERBAL_CONSTEXPR20
 			void list_allocator_unrelated<Tp>::reverse_fast() KERBAL_NOEXCEPT
 			{
-				_K_reverse_fast(this->begin(), this->end());
+				_K_reverse_fast(this->cbegin(), this->cend());
 			}
 
 			template <typename Tp>
@@ -578,7 +584,7 @@ namespace kerbal
 			typename list_allocator_unrelated<Tp>::iterator
 			list_allocator_unrelated<Tp>::rotate(const_iterator first, const_iterator n_first, const_iterator last) KERBAL_NOEXCEPT
 			{
-				return iterator(list_type_unrelated::_K_rotate(first.cast_to_mutable(), n_first.cast_to_mutable(), last.cast_to_mutable()));
+				return iterator(list_type_unrelated::_K_rotate(first, n_first, last));
 			}
 
 			template <typename Tp>

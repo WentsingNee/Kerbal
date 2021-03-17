@@ -756,42 +756,42 @@ namespace kerbal
 
 		template <typename Tp, typename Allocator>
 		KERBAL_CONSTEXPR20
-		void list<Tp, Allocator>::iter_swap_unstable(iterator a, iterator b)
+		void list<Tp, Allocator>::iter_swap_unstable(const_iterator a, const_iterator b)
 		{
 			list_allocator_unrelated::_K_iter_swap_unstable(a, b);
 		}
 
 		template <typename Tp, typename Allocator>
 		KERBAL_CONSTEXPR20
-		void list<Tp, Allocator>::iter_swap(iterator a, iterator b) KERBAL_NOEXCEPT
+		void list<Tp, Allocator>::iter_swap(const_iterator a, const_iterator b) KERBAL_NOEXCEPT
 		{
 			list_allocator_unrelated::_K_iter_swap(a, b);
 		}
 
 		template <typename Tp, typename Allocator>
 		KERBAL_CONSTEXPR20
-		void list<Tp, Allocator>::iter_swap_fast(iterator a, iterator b)
+		void list<Tp, Allocator>::iter_swap_fast(const_iterator a, const_iterator b)
 		{
 			list_allocator_unrelated::_K_iter_swap_fast(a, b);
 		}
 
 		template <typename Tp, typename Allocator>
 		KERBAL_CONSTEXPR20
-		void list<Tp, Allocator>::reverse_unstable(iterator a, iterator b) KERBAL_NOEXCEPT
+		void list<Tp, Allocator>::reverse_unstable(const_iterator a, const_iterator b) KERBAL_NOEXCEPT
 		{
 			list_allocator_unrelated::_K_reverse_unstable(a, b);
 		}
 
 		template <typename Tp, typename Allocator>
 		KERBAL_CONSTEXPR20
-		void list<Tp, Allocator>::reverse(iterator a, iterator b)
+		void list<Tp, Allocator>::reverse(const_iterator a, const_iterator b)
 		{
 			list_allocator_unrelated::_K_reverse(a, b);
 		}
 
 		template <typename Tp, typename Allocator>
 		KERBAL_CONSTEXPR20
-		void list<Tp, Allocator>::reverse_fast(iterator a, iterator b)
+		void list<Tp, Allocator>::reverse_fast(const_iterator a, const_iterator b)
 		{
 			list_allocator_unrelated::_K_reverse_fast(a, b);
 		}

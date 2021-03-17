@@ -133,10 +133,10 @@ namespace kerbal
 				// operation
 
 					KERBAL_CONSTEXPR14
-					static void _K_iter_swap(basic_iterator a, basic_iterator b) KERBAL_NOEXCEPT;
+					static void _K_iter_swap(basic_const_iterator a, basic_const_iterator b) KERBAL_NOEXCEPT;
 
 					KERBAL_CONSTEXPR14
-					static void _K_reverse(basic_iterator first, basic_iterator last) KERBAL_NOEXCEPT;
+					static void _K_reverse(basic_const_iterator first, basic_const_iterator last) KERBAL_NOEXCEPT;
 
 					KERBAL_CONSTEXPR14
 					void reverse() KERBAL_NOEXCEPT;
@@ -144,7 +144,7 @@ namespace kerbal
 					KERBAL_CONSTEXPR14
 					static
 					basic_iterator
-					_K_rotate(basic_iterator first, basic_iterator n_first, basic_iterator last) KERBAL_NOEXCEPT;
+					_K_rotate(basic_const_iterator first, basic_const_iterator n_first, basic_const_iterator last) KERBAL_NOEXCEPT;
 
 					KERBAL_CONSTEXPR14
 					static void _K_splice(basic_const_iterator pos, list_type_unrelated & other) KERBAL_NOEXCEPT;
@@ -340,27 +340,27 @@ namespace kerbal
 				// operation
 
 					KERBAL_CONSTEXPR20
-					static void _K_iter_swap_unstable(iterator a, iterator b);
+					static void _K_iter_swap_unstable(const_iterator a, const_iterator b);
 
 					KERBAL_CONSTEXPR20
-					static void _K_iter_swap(iterator a, iterator b) KERBAL_NOEXCEPT;
+					static void _K_iter_swap(const_iterator a, const_iterator b) KERBAL_NOEXCEPT;
 
 					KERBAL_CONSTEXPR20
-					static void _K_iter_swap_fast(iterator a, iterator b);
+					static void _K_iter_swap_fast(const_iterator a, const_iterator b);
 
 					KERBAL_CONSTEXPR20
-					static void _K_reverse_unstable(iterator first, iterator last) KERBAL_NOEXCEPT;
+					static void _K_reverse_unstable(const_iterator first, const_iterator last) KERBAL_NOEXCEPT;
 
 					KERBAL_CONSTEXPR20
 					void reverse_unstable() KERBAL_NOEXCEPT;
 
 					KERBAL_CONSTEXPR20
-					static void _K_reverse(iterator first, iterator last) KERBAL_NOEXCEPT;
+					static void _K_reverse(const_iterator first, const_iterator last) KERBAL_NOEXCEPT;
 
 					using list_type_unrelated::reverse;
 
 					KERBAL_CONSTEXPR20
-					static void _K_reverse_fast(iterator first, iterator last) KERBAL_NOEXCEPT;
+					static void _K_reverse_fast(const_iterator first, const_iterator last) KERBAL_NOEXCEPT;
 
 					KERBAL_CONSTEXPR20
 					void reverse_fast() KERBAL_NOEXCEPT;
