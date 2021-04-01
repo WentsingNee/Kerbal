@@ -140,7 +140,7 @@ namespace kerbal
 
 			template <typename Tp>
 			class sl_iter:
-					sl_iter_type_unrelated,
+					protected sl_iter_type_unrelated,
 					//forward iterator interface
 					public kerbal::operators::dereferenceable<sl_iter<Tp>, Tp*>, // it->
 					public kerbal::operators::equality_comparable<sl_iter<Tp> >, // it != jt
@@ -206,7 +206,7 @@ namespace kerbal
 
 			template <typename Tp>
 			class sl_kiter:
-					sl_kiter_type_unrelated,
+					protected sl_kiter_type_unrelated,
 					//forward iterator interface
 					public kerbal::operators::dereferenceable<sl_kiter<Tp>, const Tp*>, // it->
 					public kerbal::operators::equality_comparable<sl_kiter<Tp> >, // it != jt
