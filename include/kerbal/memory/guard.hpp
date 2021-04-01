@@ -9,8 +9,8 @@
  *   all rights reserved
  */
 
-#ifndef KERBAL_MEMORY_GUARD_HPP_
-#define KERBAL_MEMORY_GUARD_HPP_
+#ifndef KERBAL_MEMORY_GUARD_HPP
+#define KERBAL_MEMORY_GUARD_HPP
 
 #include <kerbal/compatibility/noexcept.hpp>
 #include <kerbal/memory/default_delete.hpp>
@@ -18,15 +18,19 @@
 #include <kerbal/utility/noncopyable.hpp>
 
 #include <cstddef>
+
 #if __cplusplus >= 201103L
 # include <type_traits>
 # include <kerbal/compatibility/move.hpp>
 #endif
 
+
 namespace kerbal
 {
+
 	namespace memory
 	{
+
 		template <typename Tp, typename Deleter = kerbal::memory::default_delete<Tp> >
 		class guard: kerbal::utility::noncopyable
 		{
@@ -40,26 +44,38 @@ namespace kerbal
 				Deleter deleter;
 
 			public:
-				guard(pointer ptr) KERBAL_CONDITIONAL_NOEXCEPT(std::is_trivially_default_constructible<deleter_type>::value) :
-					ptr(ptr), deleter()
+				guard(pointer ptr)
+						KERBAL_CONDITIONAL_NOEXCEPT(
+								std::is_trivially_default_constructible<deleter_type>::value
+						)
+						: ptr(ptr), deleter()
 				{
 				}
 
-				guard(pointer ptr, const deleter_type& deleter) KERBAL_CONDITIONAL_NOEXCEPT(std::is_trivially_copy_constructible<deleter_type>::value) :
-					ptr(ptr), deleter(deleter)
+				guard(pointer ptr, const deleter_type& deleter)
+						KERBAL_CONDITIONAL_NOEXCEPT(
+								std::is_trivially_copy_constructible<deleter_type>::value
+						)
+						: ptr(ptr), deleter(deleter)
 				{
 				}
 
 #			if __cplusplus >= 201103L
 
-				guard(pointer ptr, deleter_type&& deleter) KERBAL_CONDITIONAL_NOEXCEPT(std::is_trivially_move_constructible<deleter_type>::value) :
-					ptr(ptr), deleter(kerbal::compatibility::move(deleter))
+				guard(pointer ptr, deleter_type&& deleter)
+						KERBAL_CONDITIONAL_NOEXCEPT(
+								std::is_trivially_move_constructible<deleter_type>::value
+						)
+						: ptr(ptr), deleter(kerbal::compatibility::move(deleter))
 				{
 				}
 
 #			endif
 
-				~guard() KERBAL_CONDITIONAL_NOEXCEPT(noexcept(kerbal::utility::declthis<guard>()->reset()))
+				~guard()
+						KERBAL_CONDITIONAL_NOEXCEPT(
+								noexcept(kerbal::utility::declthis<guard>()->reset())
+						)
 				{
 					this->reset();
 				}
@@ -71,8 +87,10 @@ namespace kerbal
 					return p;
 				}
 
-				void reset() KERBAL_CONDITIONAL_NOEXCEPT(noexcept(
-						kerbal::utility::declthis<guard>()->deleter(kerbal::utility::declthis<guard>()->ptr)))
+				void reset()
+						KERBAL_CONDITIONAL_NOEXCEPT(
+								noexcept(kerbal::utility::declthis<guard>()->deleter(kerbal::utility::declthis<guard>()->ptr))
+						)
 				{
 					this->deleter(this->ptr);
 					this->ptr = NULL;
@@ -93,26 +111,36 @@ namespace kerbal
 				Deleter deleter;
 
 			public:
-				guard(pointer ptr) KERBAL_CONDITIONAL_NOEXCEPT(std::is_trivially_default_constructible<deleter_type>::value) :
-					ptr(ptr), deleter()
+				guard(pointer ptr)
+						KERBAL_CONDITIONAL_NOEXCEPT(
+								std::is_trivially_default_constructible<deleter_type>::value
+						)
+						: ptr(ptr), deleter()
 				{
 				}
 
-				guard(pointer ptr, const deleter_type& deleter) KERBAL_CONDITIONAL_NOEXCEPT(std::is_trivially_copy_constructible<deleter_type>::value) :
-					ptr(ptr), deleter(deleter)
+				guard(pointer ptr, const deleter_type& deleter)
+						KERBAL_CONDITIONAL_NOEXCEPT(
+								std::is_trivially_copy_constructible<deleter_type>::value
+						)
+						: ptr(ptr), deleter(deleter)
 				{
 				}
 
 #			if __cplusplus >= 201103L
 
-				guard(pointer ptr, deleter_type&& deleter) KERBAL_CONDITIONAL_NOEXCEPT(std::is_trivially_move_constructible<deleter_type>::value) :
-					ptr(ptr), deleter(kerbal::compatibility::move(deleter))
+				guard(pointer ptr, deleter_type&& deleter)
+						KERBAL_CONDITIONAL_NOEXCEPT(
+								std::is_trivially_move_constructible<deleter_type>::value
+						)
+						: ptr(ptr), deleter(kerbal::compatibility::move(deleter))
 				{
 				}
 
 #			endif
 
-				~guard() KERBAL_CONDITIONAL_NOEXCEPT(noexcept(kerbal::utility::declthis<guard>()->reset()))
+				~guard()
+						KERBAL_CONDITIONAL_NOEXCEPT(noexcept(kerbal::utility::declthis<guard>()->reset()))
 				{
 					this->reset();
 				}
@@ -124,8 +152,10 @@ namespace kerbal
 					return p;
 				}
 
-				void reset() KERBAL_CONDITIONAL_NOEXCEPT(noexcept(
-						kerbal::utility::declthis<guard>()->deleter(kerbal::utility::declthis<guard>()->ptr)))
+				void reset()
+						KERBAL_CONDITIONAL_NOEXCEPT(
+							noexcept(kerbal::utility::declthis<guard>()->deleter(kerbal::utility::declthis<guard>()->ptr))
+						)
 				{
 					this->deleter(this->ptr);
 					this->ptr = NULL;
@@ -137,4 +167,4 @@ namespace kerbal
 
 } // namespace kerbal
 
-#endif /* KERBAL_MEMORY_GUARD_HPP_ */
+#endif // KERBAL_MEMORY_GUARD_HPP

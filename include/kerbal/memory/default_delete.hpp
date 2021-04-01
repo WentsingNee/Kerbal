@@ -9,8 +9,8 @@
  *   all rights reserved
  */
 
-#ifndef KERBAL_MEMORY_DEFALUT_DELETE_HPP_
-#define KERBAL_MEMORY_DEFALUT_DELETE_HPP_
+#ifndef KERBAL_MEMORY_DEFALUT_DELETE_HPP
+#define KERBAL_MEMORY_DEFALUT_DELETE_HPP
 
 #include <kerbal/compatibility/constexpr.hpp>
 #include <kerbal/compatibility/noexcept.hpp>
@@ -20,10 +20,13 @@
 # include <type_traits>
 #endif
 
+
 namespace kerbal
 {
+
 	namespace memory
 	{
+
 		template <typename Tp>
 		struct default_delete
 		{
@@ -40,10 +43,12 @@ namespace kerbal
 #	endif
 
 			template <typename Up>
-			KERBAL_CONSTEXPR default_delete(const default_delete<Up> &) KERBAL_NOEXCEPT
+			KERBAL_CONSTEXPR
+			default_delete(const default_delete<Up> &) KERBAL_NOEXCEPT
 			{
 			}
 
+			KERBAL_CONSTEXPR20
 			void operator()(Tp* ptr) const KERBAL_CONDITIONAL_NOEXCEPT(std::is_trivially_destructible<Tp>::value)
 			{
 				delete ptr;
@@ -67,10 +72,12 @@ namespace kerbal
 #	endif
 
 			template <typename Up>
-			KERBAL_CONSTEXPR default_delete(const default_delete<Up[]> &) KERBAL_NOEXCEPT
+			KERBAL_CONSTEXPR
+			default_delete(const default_delete<Up[]> &) KERBAL_NOEXCEPT
 			{
 			}
 
+			KERBAL_CONSTEXPR20
 			void operator()(Tp* ptr) const KERBAL_CONDITIONAL_NOEXCEPT(std::is_trivially_destructible<Tp>::value)
 			{
 				delete[] ptr;
@@ -81,4 +88,4 @@ namespace kerbal
 
 } // namespace kerbal
 
-#endif /* KERBAL_MEMORY_DEFALUT_DELETER_HPP_ */
+#endif // KERBAL_MEMORY_DEFALUT_DELETER_HPP
