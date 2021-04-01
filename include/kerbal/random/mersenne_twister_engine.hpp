@@ -16,8 +16,9 @@
 #include <kerbal/compatibility/constexpr.hpp>
 #include <kerbal/compatibility/fixed_width_integer.hpp>
 #include <kerbal/compatibility/noexcept.hpp>
+#include <kerbal/compatibility/static_assert.hpp>
 #include <kerbal/container/nonmember_container_access.hpp>
-#include <kerbal/numeric/bit.hpp>
+#include <kerbal/numeric/numeric_limits.hpp>
 #include <kerbal/type_traits/integral_constant.hpp>
 
 #include <cstddef>
@@ -37,27 +38,56 @@ namespace kerbal
 		>
 		class mersenne_twister_engine
 		{
+			private:
+				KERBAL_STATIC_ASSERT(0 < M,     "the following relations shall hold: 0 < M");
+				KERBAL_STATIC_ASSERT(M <= N,    "the following relations shall hold: M <= N");
+				KERBAL_STATIC_ASSERT(2 * U < W, "the following relations shall hold: 2 * U < W");
+				KERBAL_STATIC_ASSERT(R <= W,    "the following relations shall hold: R <= W");
+				KERBAL_STATIC_ASSERT(U <= W,    "the following relations shall hold: U <= W");
+				KERBAL_STATIC_ASSERT(S <= W,    "the following relations shall hold: S <= W");
+				KERBAL_STATIC_ASSERT(T <= W,    "the following relations shall hold: T <= W");
+				KERBAL_STATIC_ASSERT(L <= W,    "the following relations shall hold: L <= W");
+				KERBAL_STATIC_ASSERT(W <= kerbal::numeric::numeric_limits<UIntType>::DIGITS::value,
+						"the following relations shall hold: w <= numeric_limits<UIntType>::digits");
+
+				// (1 << W) - 1u
+				struct _1_shift_W_minus_1 :
+						public kerbal::type_traits::integral_constant<
+							UIntType,
+							W == kerbal::numeric::numeric_limits<UIntType>::DIGITS::value ?
+								~static_cast<UIntType>(0u) :
+								((static_cast<UIntType>(1u) << W) - 1u)
+						>
+				{
+				};
+
+				KERBAL_STATIC_ASSERT(A <= _1_shift_W_minus_1::value, "the following relations shall hold: A <= (1u << W) - 1u");
+				KERBAL_STATIC_ASSERT(B <= _1_shift_W_minus_1::value, "the following relations shall hold: B <= (1u << W) - 1u");
+				KERBAL_STATIC_ASSERT(C <= _1_shift_W_minus_1::value, "the following relations shall hold: C <= (1u << W) - 1u");
+				KERBAL_STATIC_ASSERT(D <= _1_shift_W_minus_1::value, "the following relations shall hold: D <= (1u << W) - 1u");
+				KERBAL_STATIC_ASSERT(F <= _1_shift_W_minus_1::value, "the following relations shall hold: F <= (1u << W) - 1u");
+
 			public:
 				typedef UIntType result_type;
 
-				typedef kerbal::type_traits::integral_constant<size_t, W> WORD_SIZE;
-				typedef kerbal::type_traits::integral_constant<size_t, N> STATE_SIZE;
-				typedef kerbal::type_traits::integral_constant<size_t, M> SHIFT_SIZE;
-				typedef kerbal::type_traits::integral_constant<size_t, R> MASK_BITS;
+				typedef kerbal::type_traits::integral_constant<size_t, W>		WORD_SIZE;
+				typedef kerbal::type_traits::integral_constant<size_t, N>		STATE_SIZE;
+				typedef kerbal::type_traits::integral_constant<size_t, M>		SHIFT_SIZE;
+				typedef kerbal::type_traits::integral_constant<size_t, R>		MASK_BITS;
 
-				typedef kerbal::type_traits::integral_constant<UIntType, A> XOR_MASK;
-				typedef kerbal::type_traits::integral_constant<size_t, U> TEMPERING_U;
-				typedef kerbal::type_traits::integral_constant<UIntType, D> TEMPERING_D;
-				typedef kerbal::type_traits::integral_constant<size_t, S> TEMPERING_S;
+				typedef kerbal::type_traits::integral_constant<UIntType, A>		XOR_MASK;
+				typedef kerbal::type_traits::integral_constant<size_t, U>		TEMPERING_U;
+				typedef kerbal::type_traits::integral_constant<UIntType, D>		TEMPERING_D;
+				typedef kerbal::type_traits::integral_constant<size_t, S>		TEMPERING_S;
 
-				typedef kerbal::type_traits::integral_constant<UIntType, B> TEMPERING_B;
-				typedef kerbal::type_traits::integral_constant<size_t, T> TEMPERING_T;
+				typedef kerbal::type_traits::integral_constant<UIntType, B>		TEMPERING_B;
+				typedef kerbal::type_traits::integral_constant<size_t, T>		TEMPERING_T;
 
-				typedef kerbal::type_traits::integral_constant<UIntType, C> TEMPERING_C;
-				typedef kerbal::type_traits::integral_constant<size_t, L> TEMPERING_L;
-				typedef kerbal::type_traits::integral_constant<UIntType, F> INITIALIZATION_MULTIPLIER;
+				typedef kerbal::type_traits::integral_constant<UIntType, C>		TEMPERING_C;
+				typedef kerbal::type_traits::integral_constant<size_t, L>		TEMPERING_L;
+				typedef kerbal::type_traits::integral_constant<UIntType, F>		INITIALIZATION_MULTIPLIER;
 
-				typedef kerbal::type_traits::integral_constant<UIntType, 5489u> DEFAULT_SEED;
+				typedef kerbal::type_traits::integral_constant<UIntType, 5489u>		DEFAULT_SEED;
 
 			private:
 				UIntType mt[N];
@@ -170,14 +200,16 @@ namespace kerbal
 					}
 				}
 
-				static KERBAL_CONSTEXPR result_type min() KERBAL_NOEXCEPT
+				KERBAL_CONSTEXPR
+				static result_type min() KERBAL_NOEXCEPT
 				{
-					return 0;
+					return 0u;
 				}
 
-				static KERBAL_CONSTEXPR result_type max() KERBAL_NOEXCEPT
+				KERBAL_CONSTEXPR
+				static result_type max() KERBAL_NOEXCEPT
 				{
-					return kerbal::numeric::mask<result_type>(W);
+					return _1_shift_W_minus_1::value;
 				}
 
 				KERBAL_CONSTEXPR14
