@@ -166,6 +166,17 @@ namespace kerbal
 				}
 
 				KERBAL_CONSTEXPR14
+				result_type next() KERBAL_NOEXCEPT
+				{
+					result_type y = this->mt[this->mti++];
+					y ^= (y >> U) & D;
+					y ^= (y << S) & B;
+					y ^= (y << T) & C;
+					y ^= y >> L;
+					return y;
+				}
+
+				KERBAL_CONSTEXPR14
 				void discard() KERBAL_NOEXCEPT
 				{
 					if (this->mti == N) {
