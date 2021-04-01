@@ -30,6 +30,8 @@
 #include <kerbal/type_traits/remove_reference.hpp>
 #include <kerbal/utility/forward.hpp>
 #include <kerbal/utility/use_args.hpp>
+#include <kerbal/utility/integer_sequence.hpp>
+#include <kerbal/utility/tuple.hpp>
 
 #include <cstddef>
 
@@ -93,6 +95,32 @@ namespace kerbal
 							this->k_yielded.emplace_use_args(kerbal::compatibility::move(args));
 							return {};
 						}
+
+#<<<<<
+					private:
+						template <typename ... Args, std::size_t ... I>
+						costd::suspend_always
+						k_yield_value_impl(
+							use_args_yield_t<Args...> && arg,
+							kerbal::utility::index_sequence<I...>
+						)
+						{
+							this->k_yielded.emplace(kerbal::compatibility::move(arg).template get<I>()...);
+							return {};
+						}
+
+					public:
+						template <typename ... Args>
+						costd::suspend_always
+						yield_value(use_args_yield_t<Args...> && arg)
+						{
+							return this->k_yield_value_impl(
+								kerbal::compatibility::move(arg),
+								kerbal::utility::make_index_sequence<sizeof...(Args)>()
+							);
+						}
+
+#<<<<<<<<<
 
 						void await_transform() = delete;
 
