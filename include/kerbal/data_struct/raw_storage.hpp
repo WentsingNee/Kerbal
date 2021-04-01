@@ -12,11 +12,13 @@
 #ifndef KERBAL_DATA_STRUCT_RAW_STORAGE_HPP
 #define KERBAL_DATA_STRUCT_RAW_STORAGE_HPP
 
+#include <kerbal/algorithm/modifier.hpp>
 #include <kerbal/compatibility/alignof.hpp>
 #include <kerbal/compatibility/constexpr.hpp>
 #include <kerbal/compatibility/method_overload_tag.hpp>
 #include <kerbal/compatibility/move.hpp>
 #include <kerbal/compatibility/noexcept.hpp>
+#include <kerbal/memory/uninitialized.hpp>
 #include <kerbal/operators/generic_assign.hpp>
 #include <kerbal/type_traits/aligned_storage.hpp>
 #include <kerbal/type_traits/array_traits.hpp>
@@ -328,9 +330,7 @@ namespace kerbal
 				KERBAL_CONSTEXPR14
 				void construct(const_reference src) KERBAL_NOEXCEPT
 				{
-					for (size_t i = 0; i < N; ++i) {
-						kerbal::operators::generic_assign(this->storage[i], src[i]);
-					}
+					kerbal::algorithm::copy(src + 0, src + N, this->storage + 0);
 				}
 
 #		if __cplusplus >= 201103L
@@ -338,9 +338,7 @@ namespace kerbal
 				KERBAL_CONSTEXPR14
 				void construct(rvalue_reference src) KERBAL_NOEXCEPT
 				{
-					for (size_t i = 0; i < N; ++i) {
-						kerbal::operators::generic_assign(this->storage[i], kerbal::compatibility::move(src[i]));
-					}
+					kerbal::algorithm::move(src + 0, src + N, this->storage + 0);
 				}
 
 #		endif
@@ -371,58 +369,63 @@ namespace kerbal
 
 				void construct()
 				{
-					new (this->raw_pointer()) value_type();
+					kerbal::memory::construct_at(this->raw_pointer());
 				}
 
 				template <typename Arg0>
 				void construct(const Arg0 & arg0)
 				{
-					new (this->raw_pointer()) value_type(arg0);
+					kerbal::memory::construct_at(this->raw_pointer(), arg0);
 				}
 
 				template <typename Arg0, typename Arg1>
 				void construct(const Arg0 & arg0, const Arg1& arg1)
 				{
-					new (this->raw_pointer()) value_type(arg0, arg1);
+					kerbal::memory::construct_at(this->raw_pointer(), arg0, arg1);
 				}
 
 				template <typename Arg0, typename Arg1, typename Arg2>
 				void construct(const Arg0 & arg0, const Arg1& arg1, const Arg2 & arg2)
 				{
-					new (this->raw_pointer()) value_type(arg0, arg1, arg2);
+					kerbal::memory::construct_at(this->raw_pointer(), arg0, arg1, arg2);
 				}
 
 				template <typename Arg0, typename Arg1, typename Arg2, typename Arg3>
 				void construct(const Arg0 & arg0, const Arg1& arg1, const Arg2 & arg2, const Arg3& arg3)
 				{
-					new (this->raw_pointer()) value_type(arg0, arg1, arg2, arg3);
+					kerbal::memory::construct_at(this->raw_pointer(), arg0, arg1, arg2, arg3);
 				}
 
 				template <typename Arg0, typename Arg1, typename Arg2, typename Arg3, typename Arg4>
 				void construct(const Arg0 & arg0, const Arg1& arg1, const Arg2 & arg2, const Arg3& arg3, const Arg4 & arg4)
 				{
-					new (this->raw_pointer()) value_type(arg0, arg1, arg2, arg3, arg4);
+					kerbal::memory::construct_at(this->raw_pointer(), arg0, arg1, arg2, arg3, arg4);
 				}
 
 #		else
 
 				template <typename ... Args>
-				void construct(Args&&... args)
-										KERBAL_CONDITIONAL_NOEXCEPT(
-												(std::is_nothrow_constructible<value_type, Args...>::value)
-										)
+				void construct(Args&& ... args)
+						KERBAL_CONDITIONAL_NOEXCEPT(
+							noexcept(
+								kerbal::memory::construct_at(
+									kerbal::utility::declthis<__rawst_agent>()->raw_pointer(),
+									kerbal::utility::forward<Args>(args)...
+								)
+							)
+						)
 				{
-					new (this->raw_pointer()) value_type(kerbal::utility::forward<Args>(args)...);
+					kerbal::memory::construct_at(this->raw_pointer(), kerbal::utility::forward<Args>(args)...);
 				}
 
 #		endif
 
 				void destroy()
-										KERBAL_CONDITIONAL_NOEXCEPT(
-												std::is_nothrow_destructible<value_type>::value
-										)
+						KERBAL_CONDITIONAL_NOEXCEPT(
+								std::is_nothrow_destructible<value_type>::value
+						)
 				{
-					this->raw_pointer()->~value_type();
+					kerbal::memory::destroy_at(this->raw_pointer());
 				}
 		};
 
@@ -441,35 +444,6 @@ namespace kerbal
 				typedef value_type&&			rvalue_reference;
 #		endif
 
-			private:
-				template <typename Up, size_t M>
-				typename kerbal::type_traits::enable_if<kerbal::type_traits::rank<Up>::value >= 1>::type
-				static __des_array(Up (&arr) [M])
-												KERBAL_CONDITIONAL_NOEXCEPT(
-														noexcept(this_type::__des_array(arr[0]))
-												)
-				{
-					size_t i = M;
-					while (i != 0) {
-						--i;
-						__des_array(arr[i]);
-					}
-				}
-
-				template <typename Up, size_t M>
-				typename kerbal::type_traits::enable_if<kerbal::type_traits::rank<Up>::value == 0>::type
-				static __des_array(Up (&arr) [M])
-												KERBAL_CONDITIONAL_NOEXCEPT(
-														std::is_nothrow_destructible<Up>::value
-												)
-				{
-					size_t i = M;
-					while (i != 0) {
-						--i;
-						(arr + i)->~Up();
-					}
-				}
-
 			protected:
 
 				KERBAL_CONSTEXPR
@@ -480,55 +454,47 @@ namespace kerbal
 			public:
 
 				void construct()
-												KERBAL_CONDITIONAL_NOEXCEPT(
-														std::is_nothrow_default_constructible<Type>::value
-												)
+						KERBAL_CONDITIONAL_NOEXCEPT(
+							noexcept(
+								kerbal::memory::uninitialized_value_construct(
+										&kerbal::utility::declthis<__rawst_agent>()->raw_value()[0],
+										&kerbal::utility::declthis<__rawst_agent>()->raw_value()[N]
+								)
+							)
+						)
 				{
-					for (size_t i = 0; i != N; ++i) {
-						new (&this->raw_value()[i]) Type();
-					}
+					kerbal::memory::uninitialized_value_construct(this->raw_value() + 0, this->raw_value() + N);
 				}
 
 				void construct(const_reference src)
 				{
-					for (size_t i = 0; i != N; ++i) {
-						new (&this->raw_value()[i]) Type(src[i]);
-					}
+					kerbal::memory::uninitialized_copy(src + 0, src + N, this->raw_value() + 0);
 				}
 
 				template <typename Up>
 				void construct(const Up (&src)[N])
 				{
-					for (size_t i = 0; i != N; ++i) {
-						new (&this->raw_value()[i]) Type(src[i]);
-					}
+					kerbal::memory::uninitialized_copy(src + 0, src + N, this->raw_value() + 0);
 				}
 
 #		if __cplusplus >= 201103L
 
 				void construct(rvalue_reference src)
 				{
-					for (size_t i = 0; i != N; ++i) {
-						new (&this->raw_value()[i]) Type(kerbal::compatibility::move(src[i]));
-					}
+					kerbal::memory::uninitialized_move(src + 0, src + N, this->raw_value() + 0);
 				}
 
 				template <typename Up>
 				void construct(Up (&&src)[N])
 				{
-					for (size_t i = 0; i != N; ++i) {
-						new (&this->raw_value()[i]) Type(kerbal::utility::forward<Up>(src[i]));
-					}
+					kerbal::memory::uninitialized_move(src + 0, src + N, this->raw_value() + 0);
 				}
 
 #		endif
 
-				void destroy()
-												KERBAL_CONDITIONAL_NOEXCEPT(
-														noexcept(__des_array(kerbal::utility::declthis<this_type>()->raw_value()))
-												)
+				void destroy() KERBAL_NOEXCEPT
 				{
-					__des_array(this->raw_value());
+					kerbal::memory::destroy_at(this->raw_pointer());
 				}
 
 		};
