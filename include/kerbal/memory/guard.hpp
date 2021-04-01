@@ -15,12 +15,14 @@
 #include <kerbal/compatibility/noexcept.hpp>
 #include <kerbal/memory/default_delete.hpp>
 #include <kerbal/utility/declval.hpp>
+#include <kerbal/utility/member_compress_helper.hpp>
 #include <kerbal/utility/noncopyable.hpp>
 
 #include <cstddef>
+
 #if __cplusplus >= 201103L
-# include <type_traits>
-# include <kerbal/compatibility/move.hpp>
+#	include <kerbal/compatibility/move.hpp>
+#	include <type_traits>
 #endif
 
 
@@ -31,107 +33,215 @@ namespace kerbal
 	{
 
 		template <typename Tp, typename Deleter = kerbal::memory::default_delete<Tp> >
-		class guard: kerbal::utility::noncopyable
+		class guard;
+
+
+		template <typename Tp, typename Deleter>
+		class guard :
+				private kerbal::utility::noncopyable,
+				protected kerbal::utility::member_compress_helper<Deleter>
 		{
+			private:
+				typedef kerbal::utility::member_compress_helper<Deleter> deleter_compress_helper;
+
 			public:
 				typedef Tp element_type;
 				typedef Tp* pointer;
 				typedef Deleter deleter_type;
 
 			protected:
-				pointer ptr;
-				Deleter deleter;
+				pointer K_ptr;
 
 			public:
-				guard(pointer ptr) KERBAL_CONDITIONAL_NOEXCEPT(std::is_trivially_default_constructible<deleter_type>::value) :
-					ptr(ptr), deleter()
+				KERBAL_CONSTEXPR20
+				guard(pointer ptr)
+						KERBAL_CONDITIONAL_NOEXCEPT(
+							std::is_nothrow_default_constructible<deleter_compress_helper>::value
+						) :
+						K_ptr(ptr)
 				{
 				}
 
-				guard(pointer ptr, const deleter_type& deleter) KERBAL_CONDITIONAL_NOEXCEPT(std::is_trivially_copy_constructible<deleter_type>::value) :
-					ptr(ptr), deleter(deleter)
+				KERBAL_CONSTEXPR20
+				guard(pointer ptr, const deleter_type & deleter)
+						KERBAL_CONDITIONAL_NOEXCEPT((
+							std::is_nothrow_constructible<
+								deleter_compress_helper,
+								kerbal::utility::in_place_t,
+								const deleter_type &
+							>::value
+						)) :
+						deleter_compress_helper(kerbal::utility::in_place_t(), deleter), K_ptr(ptr)
 				{
 				}
 
 #			if __cplusplus >= 201103L
 
-				guard(pointer ptr, deleter_type&& deleter) KERBAL_CONDITIONAL_NOEXCEPT(std::is_trivially_move_constructible<deleter_type>::value) :
-					ptr(ptr), deleter(kerbal::compatibility::move(deleter))
+				KERBAL_CONSTEXPR20
+				guard(pointer ptr, deleter_type && deleter)
+						KERBAL_CONDITIONAL_NOEXCEPT((
+							std::is_nothrow_constructible<
+								deleter_compress_helper,
+								kerbal::utility::in_place_t,
+								deleter_type &&
+							>::value
+						)) :
+						deleter_compress_helper(kerbal::utility::in_place_t(), kerbal::compatibility::move(deleter)), K_ptr(ptr)
 				{
 				}
 
 #			endif
 
-				~guard() KERBAL_CONDITIONAL_NOEXCEPT(noexcept(kerbal::utility::declthis<guard>()->reset()))
+				KERBAL_CONSTEXPR20
+				~guard()
+						KERBAL_CONDITIONAL_NOEXCEPT(
+							noexcept(
+								kerbal::utility::declthis<guard>()->get_deleter()(
+									kerbal::utility::declthis<guard>()->K_ptr
+								)
+							)
+						)
 				{
-					this->reset();
+					this->get_deleter()(this->K_ptr);
 				}
 
+				KERBAL_CONSTEXPR20
 				pointer release() KERBAL_NOEXCEPT
 				{
-					pointer p = this->ptr;
-					this->ptr = NULL;
+					pointer p = this->K_ptr;
+					this->K_ptr = NULL;
 					return p;
 				}
 
-				void reset() KERBAL_CONDITIONAL_NOEXCEPT(noexcept(
-						kerbal::utility::declthis<guard>()->deleter(kerbal::utility::declthis<guard>()->ptr)))
+				KERBAL_CONSTEXPR20
+				void reset()
+						KERBAL_CONDITIONAL_NOEXCEPT(
+							noexcept(
+								kerbal::utility::declthis<guard>()->get_deleter()(
+									kerbal::utility::declthis<guard>()->K_ptr
+								)
+							)
+						)
 				{
-					this->deleter(this->ptr);
-					this->ptr = NULL;
+					this->get_deleter(this->K_ptr);
+					this->K_ptr = NULL;
+				}
+
+				KERBAL_CONSTEXPR20
+				deleter_type & get_deleter() KERBAL_NOEXCEPT
+				{
+					return deleter_compress_helper::member();
+				}
+
+				KERBAL_CONSTEXPR20
+				const deleter_type & get_deleter() const KERBAL_NOEXCEPT
+				{
+					return deleter_compress_helper::member();
 				}
 
 		};
 
 		template <typename Tp, typename Deleter>
-		class guard<Tp[], Deleter>: kerbal::utility::noncopyable
+		class guard<Tp[], Deleter> :
+				private kerbal::utility::noncopyable,
+				protected kerbal::utility::member_compress_helper<Deleter>
 		{
+			private:
+				typedef kerbal::utility::member_compress_helper<Deleter> deleter_compress_helper;
+
 			public:
 				typedef Tp element_type [];
 				typedef Tp* pointer;
 				typedef Deleter deleter_type;
 
 			protected:
-				pointer ptr;
-				Deleter deleter;
+				pointer K_ptr;
 
 			public:
-				guard(pointer ptr) KERBAL_CONDITIONAL_NOEXCEPT(std::is_trivially_default_constructible<deleter_type>::value) :
-					ptr(ptr), deleter()
+				KERBAL_CONSTEXPR20
+				guard(pointer ptr)
+						KERBAL_CONDITIONAL_NOEXCEPT(
+							std::is_nothrow_default_constructible<deleter_compress_helper>::value
+						) :
+						K_ptr(ptr)
 				{
 				}
 
-				guard(pointer ptr, const deleter_type& deleter) KERBAL_CONDITIONAL_NOEXCEPT(std::is_trivially_copy_constructible<deleter_type>::value) :
-					ptr(ptr), deleter(deleter)
+				KERBAL_CONSTEXPR20
+				guard(pointer ptr, const deleter_type & deleter)
+						KERBAL_CONDITIONAL_NOEXCEPT((
+							std::is_nothrow_constructible<
+								deleter_compress_helper,
+								kerbal::utility::in_place_t,
+								const deleter_type &
+							>::value
+						)) :
+						deleter_compress_helper(kerbal::utility::in_place_t(), deleter), K_ptr(ptr)
 				{
 				}
 
 #			if __cplusplus >= 201103L
 
-				guard(pointer ptr, deleter_type&& deleter) KERBAL_CONDITIONAL_NOEXCEPT(std::is_trivially_move_constructible<deleter_type>::value) :
-					ptr(ptr), deleter(kerbal::compatibility::move(deleter))
+				KERBAL_CONSTEXPR20
+				guard(pointer ptr, deleter_type && deleter)
+						KERBAL_CONDITIONAL_NOEXCEPT((
+							std::is_nothrow_constructible<
+								deleter_compress_helper,
+								kerbal::utility::in_place_t,
+								deleter_type &&
+							>::value
+						)) :
+						deleter_compress_helper(kerbal::utility::in_place_t(), kerbal::compatibility::move(deleter)), K_ptr(ptr)
 				{
 				}
 
 #			endif
 
-				~guard() KERBAL_CONDITIONAL_NOEXCEPT(noexcept(kerbal::utility::declthis<guard>()->reset()))
+				KERBAL_CONSTEXPR20
+				~guard()
+						KERBAL_CONDITIONAL_NOEXCEPT(
+							noexcept(
+								kerbal::utility::declthis<guard>()->get_deleter()(
+									kerbal::utility::declthis<guard>()->K_ptr
+								)
+							)
+						)
 				{
-					this->reset();
+					this->get_deleter()(this->K_ptr);
 				}
 
+				KERBAL_CONSTEXPR20
 				pointer release() KERBAL_NOEXCEPT
 				{
-					pointer p = this->ptr;
-					this->ptr = NULL;
+					pointer p = this->K_ptr;
+					this->K_ptr = NULL;
 					return p;
 				}
 
-				void reset() KERBAL_CONDITIONAL_NOEXCEPT(noexcept(
-						kerbal::utility::declthis<guard>()->deleter(kerbal::utility::declthis<guard>()->ptr)))
+				KERBAL_CONSTEXPR20
+				void reset()
+						KERBAL_CONDITIONAL_NOEXCEPT(
+							noexcept(
+								kerbal::utility::declthis<guard>()->get_deleter()(
+									kerbal::utility::declthis<guard>()->K_ptr
+								)
+							)
+						)
 				{
-					this->deleter(this->ptr);
-					this->ptr = NULL;
+					this->get_deleter(this->K_ptr);
+					this->K_ptr = NULL;
+				}
+
+				KERBAL_CONSTEXPR20
+				deleter_type & get_deleter() KERBAL_NOEXCEPT
+				{
+					return deleter_compress_helper::member();
+				}
+
+				KERBAL_CONSTEXPR20
+				const deleter_type & get_deleter() const KERBAL_NOEXCEPT
+				{
+					return deleter_compress_helper::member();
 				}
 
 		};
