@@ -545,6 +545,18 @@ namespace kerbal
 
 				using sl_type_only::reverse;
 
+
+				using sl_type_only::rotate;
+
+				template <typename BinaryPredict>
+				KERBAL_CONSTEXPR20
+				void merge(sl_type_only & other, BinaryPredict cmp);
+
+				KERBAL_CONSTEXPR20
+				void merge(sl_type_only & other);
+
+				using sl_type_only::sort;
+
 				template <typename UnaryPredicate>
 				KERBAL_CONSTEXPR20
 				size_type remove_if(const_iterator first, const_iterator last, UnaryPredicate predicate);
