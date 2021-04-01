@@ -63,7 +63,7 @@ namespace kerbal
 					template <typename Tp>
 					friend class list_kiter;
 
-				private:
+				public:
 					list_node_base* prev;
 					list_node_base* next;
 
@@ -130,7 +130,7 @@ namespace kerbal
 
 					friend class kerbal::container::detail::list_kiter<Tp>;
 
-				private:
+				protected:
 					Tp value;
 
 				public:
@@ -192,7 +192,7 @@ namespace kerbal
 
 					friend class kerbal::container::detail::list_kiter<Tp[N]>;
 
-				private:
+				protected:
 					Tp value[N];
 
 #		if __cplusplus >= 201103L

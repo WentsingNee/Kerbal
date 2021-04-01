@@ -12,6 +12,7 @@
 #ifndef KERBAL_CONTAINER_DETAIL_LIST_ITERATOR_HPP
 #define KERBAL_CONTAINER_DETAIL_LIST_ITERATOR_HPP
 
+#include <kerbal/autonm/fwd/list.fwd.hpp>
 #include <kerbal/container/fwd/list.fwd.hpp>
 
 #include <kerbal/operators/dereferenceable.hpp>
@@ -147,7 +148,7 @@ namespace kerbal
 
 			template <typename Tp>
 			class list_iter:
-					list_iter_type_unrelated,
+					protected list_iter_type_unrelated,
 					//forward iterator interface
 					public kerbal::operators::dereferenceable<list_iter<Tp>, Tp*>, // it->
 					public kerbal::operators::equality_comparable<list_iter<Tp> >, // it != jt
@@ -159,6 +160,9 @@ namespace kerbal
 					typedef list_iter_type_unrelated super;
 
 					friend class kerbal::container::detail::list_allocator_unrelated<Tp>;
+
+					template <typename Up, typename AutonmPolicy>
+					friend class kerbal::autonm::list;
 
 					template <typename Up, typename Allocator>
 					friend class kerbal::container::list;
@@ -225,7 +229,7 @@ namespace kerbal
 
 			template <typename Tp>
 			class list_kiter:
-					list_kiter_type_unrelated,
+					protected list_kiter_type_unrelated,
 					//forward iterator interface
 					public kerbal::operators::dereferenceable<list_kiter<Tp>, const Tp*>, // it->
 					public kerbal::operators::equality_comparable<list_kiter<Tp> >, // it != jt
@@ -237,6 +241,9 @@ namespace kerbal
 					typedef list_kiter_type_unrelated super;
 
 					friend class kerbal::container::detail::list_allocator_unrelated<Tp>;
+
+					template <typename Up, typename AutonmPolicy>
+					friend class kerbal::autonm::list;
 
 					template <typename Up, typename Allocator>
 					friend class kerbal::container::list;

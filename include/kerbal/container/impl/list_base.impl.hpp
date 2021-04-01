@@ -487,7 +487,8 @@ namespace kerbal
 				struct policy
 						: kerbal::type_traits::bool_constant<
 								std::is_trivially_copy_constructible<Tp>::value &&
-								std::is_trivially_copy_assignable<Tp>::value
+								std::is_trivially_copy_assignable<Tp>::value &&
+								sizeof(value_type) <= 4 * sizeof(void*)
 						>
 				{
 				};

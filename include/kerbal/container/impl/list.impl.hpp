@@ -349,7 +349,7 @@ namespace kerbal
 			iterator it(this->begin());
 			while (count != 0) {
 				if (it != this->cend()) {
-					kerbal::operators::generic_assign(*it, val); // *it = val;
+					kerbal::operators::generic_assign(*it, val); // *it = _K_val;
 					--count;
 					++it;
 				} else {
