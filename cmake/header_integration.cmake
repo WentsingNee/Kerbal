@@ -15,11 +15,13 @@ include(FindThreads)
 foreach (
         sublib IN ITEMS
         kerbal
+        kerbal-coroutine
         kerbal-omp
         kerbal-parallel
 )
     if (
         FALSE
+        OR ((sublib STREQUAL "kerbal-coroutine") AND (NOT KERBAL_SUPPORT_COROUTINE))
         OR ((sublib STREQUAL "kerbal-omp") AND (NOT OpenMP_FOUND))
         OR ((sublib STREQUAL "kerbal-parallel") AND (NOT Threads_FOUND))
     )
