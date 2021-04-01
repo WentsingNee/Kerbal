@@ -71,7 +71,7 @@ namespace kerbal
 				typedef const value_type&&			const_rvalue_reference;
 #		endif
 
-				typedef std::size_t					size_type;
+				typedef typename super::size_type	size_type;
 				typedef std::ptrdiff_t				difference_type;
 
 				typedef value_type				equal_c_array[N];

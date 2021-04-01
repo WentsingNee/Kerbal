@@ -14,7 +14,9 @@
 
 #include <kerbal/compatibility/constexpr.hpp>
 #include <kerbal/data_struct/raw_storage.hpp>
+#include <kerbal/numeric/numeric_limits.hpp>
 #include <kerbal/type_traits/can_be_pseudo_destructible.hpp>
+#include <kerbal/type_traits/conditional.hpp>
 
 #include <cstddef>
 
@@ -27,6 +29,21 @@ namespace kerbal
 		namespace detail
 		{
 
+			template <size_t N>
+			struct static_vector_size_type_def_helper
+			{
+					typedef typename
+					kerbal::type_traits::conditional<
+							N <= kerbal::numeric::numeric_limits<unsigned short>::MAX::value,
+							unsigned short,
+							typename kerbal::type_traits::conditional<
+									N <= kerbal::numeric::numeric_limits<unsigned int>::MAX::value,
+									unsigned int,
+									std::size_t
+							>::type
+					>::type type;
+			};
+
 			template <typename Tp, size_t N, bool is_trivially_destructible =
 					kerbal::type_traits::can_be_pseudo_destructible<Tp>::value>
 			class static_vector_base;
@@ -36,7 +53,7 @@ namespace kerbal
 			{
 				public:
 					typedef Tp			value_type;
-					typedef size_t		size_type;
+					typedef typename static_vector_size_type_def_helper<N>::type	size_type;
 
 				protected:
 					typedef kerbal::data_struct::raw_storage<value_type> storage_type;
@@ -72,7 +89,7 @@ namespace kerbal
 			{
 				public:
 					typedef Tp			value_type;
-					typedef size_t		size_type;
+					typedef typename static_vector_size_type_def_helper<N>::type	size_type;
 
 				protected:
 					typedef kerbal::data_struct::raw_storage<value_type> storage_type;
