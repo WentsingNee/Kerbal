@@ -15,6 +15,7 @@ include(GNUInstallDirs)
 set(
         kerbal_modules
         "${PROJECT_SOURCE_DIR}/cmake/Modules/aux_headers.cmake"
+        "${PROJECT_SOURCE_DIR}/cmake/Modules/coroutine.cmake"
         "${PROJECT_SOURCE_DIR}/cmake/Modules/instruction_extensions.cmake"
         "${PROJECT_SOURCE_DIR}/cmake/Modules/list_ext.cmake"
 )

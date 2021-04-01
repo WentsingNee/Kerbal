@@ -19,8 +19,14 @@ kerbal_aux_headers(
         headers_relative_kerbal "${PROJECT_SOURCE_DIR}/include/kerbal"
         RELATIVE "${CMAKE_CURRENT_SOURCE_DIR}"
         BLOCK_PATTERNS
+            "coroutine/*"
             "openmp/*"
             "parallel/*"
+)
+
+kerbal_aux_headers(
+        headers_relative_kerbal-coroutine "${PROJECT_SOURCE_DIR}/include/kerbal/coroutine"
+        RELATIVE "${CMAKE_CURRENT_SOURCE_DIR}"
 )
 
 kerbal_aux_headers(
@@ -37,6 +43,7 @@ kerbal_aux_headers(
 foreach (
     lib IN ITEMS
     kerbal
+    kerbal-coroutine
     kerbal-omp
     kerbal-parallel
 )
@@ -106,6 +113,24 @@ target_compile_options(
         kerbal
         INTERFACE $<$<CXX_COMPILER_ID:MSVC>:/Zc:__cplusplus>
 )
+
+
+## kerbal-coroutine
+
+target_link_libraries(
+        kerbal-coroutine
+        INTERFACE
+        kerbal
+)
+
+include(Kerbal/coroutine)
+kerbal_coroutine_required()
+if (KERBAL_SUPPORT_COROUTINE)
+    target_compile_options(
+            kerbal-coroutine
+            INTERFACE $<BUILD_INTERFACE:${KERBAL_FLAGS_COROUTINE}>
+    )
+endif ()
 
 
 ## kerbal-omp
