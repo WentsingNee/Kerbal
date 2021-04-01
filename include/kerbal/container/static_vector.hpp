@@ -80,7 +80,7 @@ namespace kerbal
 				typedef typename super::const_rvalue_reference		const_rvalue_reference;
 #			endif
 
-				typedef typename super::size_type			size_type;
+				typedef typename super::size_type	size_type;
 				typedef typename super::difference_type		difference_type;
 
 				typedef value_type				equal_c_array[N];
@@ -90,6 +90,8 @@ namespace kerbal
 				typedef const_equal_c_array&	const_equal_c_array_reference;
 
 			private:
+				typedef typename super::size_compressed_type	size_compressed_type;
+				typedef typename super::storage_type			storage_type;
 				typedef typename kerbal::type_traits::remove_all_extents<value_type>::type remove_all_extents_t;
 
 			public:

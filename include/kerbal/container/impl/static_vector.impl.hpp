@@ -185,7 +185,7 @@ namespace kerbal
 
 				kerbal::algorithm::fill(this->begin(), this->end(), val);
 				kerbal::memory::raw_storage_uninitialized_fill(this->storage + previous_size, this->storage + new_size, val);
-				this->len = new_size;
+				this->len = static_cast<size_compressed_type>(new_size);
 			} else {
 				/*
 				 * a a a a a a x x
@@ -201,7 +201,7 @@ namespace kerbal
 		void static_vector<Tp, N>::k_assign_unsafe_n_val(size_type new_size, const_reference val, kerbal::type_traits::true_type)
 		{
 			kerbal::algorithm::fill(this->begin(), this->nth(new_size), val);
-			this->len = new_size;
+			this->len = static_cast<size_compressed_type>(new_size);
 		}
 
 		template <typename Tp, std::size_t N>
@@ -281,7 +281,7 @@ namespace kerbal
 		KERBAL_CONSTEXPR14
 		void static_vector<Tp, N>::k_assign_unsafe_range(ForwardIterator first, ForwardIterator last, std::forward_iterator_tag)
 		{
-			size_type ori_size = this->len;
+			size_type ori_size = static_cast<size_type>(this->len);
 			size_type new_size = static_cast<size_type>(kerbal::iterator::distance(first, last));
 
 			if (new_size <= ori_size) { // also suitable for new_size == 0
@@ -291,7 +291,7 @@ namespace kerbal
 				 */
 				iterator new_end(kerbal::algorithm::copy(first, last, this->begin()));
 				kerbal::memory::raw_storage_reverse_destroy(new_end.current, this->end().current);
-				this->len = new_size;
+				this->len = static_cast<size_compressed_type>(new_size);
 			} else { // new_size > ori_size
 				/*
 				 * a a a x x x x x
@@ -299,7 +299,7 @@ namespace kerbal
 				 */
 				kerbal::utility::compressed_pair<ForwardIterator, iterator> copy_n_r(kerbal::algorithm::copy_n(first, ori_size, this->begin()));
 				kerbal::memory::raw_storage_uninitialized_copy(copy_n_r.first(), last, copy_n_r.second().current);
-				this->len = new_size;
+				this->len = static_cast<size_compressed_type>(new_size);
 			}
 		}
 
@@ -354,7 +354,7 @@ namespace kerbal
 		KERBAL_CONSTEXPR20
 		void static_vector<Tp, N>::k_assign_range(ForwardIterator first, ForwardIterator last, std::forward_iterator_tag)
 		{
-			size_type ori_size = this->len;
+			size_type ori_size = static_cast<size_type>(this->len);
 			size_type new_size = static_cast<size_type>(kerbal::iterator::distance(first, last));
 
 			if (new_size > N) {
@@ -370,7 +370,7 @@ namespace kerbal
 				 */
 				iterator new_end(kerbal::algorithm::copy(first, last, this->begin()));
 				kerbal::memory::raw_storage_reverse_destroy(new_end.current, this->end().current);
-				this->len = new_size;
+				this->len = static_cast<size_compressed_type>(new_size);
 			} else { // new_size > ori_size
 				/*
 				 * a a a x x x x x
@@ -378,7 +378,7 @@ namespace kerbal
 				 */
 				kerbal::utility::compressed_pair<ForwardIterator, iterator> copy_n_r(kerbal::algorithm::copy_n(first, ori_size, this->begin()));
 				kerbal::memory::raw_storage_uninitialized_copy(copy_n_r.first(), last, copy_n_r.second().current);
-				this->len = new_size;
+				this->len = static_cast<size_compressed_type>(new_size);
 			}
 		}
 
@@ -527,7 +527,7 @@ namespace kerbal
 		typename static_vector<Tp, N>::size_type
 		static_vector<Tp, N>::size() const KERBAL_NOEXCEPT
 		{
-			return (this->len);
+			return static_cast<size_type>(this->len);
 		}
 
 		template <typename Tp, std::size_t N>
@@ -712,7 +712,7 @@ namespace kerbal
 		typename static_vector<Tp, N>::reference
 		static_vector<Tp, N>::emplace_back(Args&& ... args)
 		{
-			if (this->len + 1 > N) {
+			if (static_cast<size_type>(this->len) + 1u > N) {
 				kerbal::utility::throw_this_exception_helper<std::logic_error>::throw_this_exception(
 					(const char*)"Out of storage space"
 				);
@@ -744,7 +744,7 @@ namespace kerbal
 		typename static_vector<Tp, N>::reference \
 		static_vector<Tp, N>::emplace_back(KERBAL_OPT_PPEXPAND_WITH_COMMA_N(REMAINF, EMPTY, ARGS_DECL, i)) \
 		{ \
-			if (this->len + 1 > N) { \
+			if (static_cast<size_type>(this->len) + 1u > N) { \
 				kerbal::utility::throw_this_exception_helper<std::logic_error>::throw_this_exception( \
 					(const char*)"Out of storage space" \
 				); \
@@ -790,8 +790,8 @@ namespace kerbal
 		void static_vector<Tp, N>::shrink_back_to(const_iterator to)
 		{
 			size_type new_size = this->index_of(to);
-			kerbal::memory::raw_storage_reverse_destroy(this->storage + new_size, this->storage + this->len);
-			this->len = new_size;
+			kerbal::memory::raw_storage_reverse_destroy(this->storage + new_size, this->storage + static_cast<size_type>(this->len));
+			this->len = static_cast<size_compressed_type>(new_size);
 		}
 
 		template <typename Tp, std::size_t N>
@@ -838,7 +838,7 @@ namespace kerbal
 		{
 			size_type insert_pos_index = this->index_of(pos);
 			size_type n = static_cast<size_type>(kerbal::iterator::distance(first, last));
-			size_type ori_size = this->len;
+			size_type ori_size = static_cast<size_type>(this->len);
 
 			if (n > N - ori_size) {
 				kerbal::utility::throw_this_exception_helper<std::logic_error>::throw_this_exception(
@@ -856,7 +856,7 @@ namespace kerbal
 				//       ^
 				// construct at the end
 				kerbal::memory::raw_storage_uninitialized_copy(first, last, this->end().current);
-				this->len = new_size;
+				this->len = static_cast<size_compressed_type>(new_size);
 			} else if (insert_pos_index + n <= ori_size) {
 				// A A A 1 2 3 4 5 6
 				// A A A X X 1 2 3 4 5 6
@@ -865,7 +865,7 @@ namespace kerbal
 				// A A A 1 2 3 4 5 6
 				// A A A 1 2 3 4 5 6 5 6
 				kerbal::memory::raw_storage_uninitialized_copy(this->cend() - n, this->cend(), this->end().current);
-				this->len = new_size;
+				this->len = static_cast<size_compressed_type>(new_size);
 
 				// A A A 1 2 3 4 5 6
 				// A A A 1 2 1 2 3 4 5 6
@@ -891,7 +891,7 @@ namespace kerbal
 					throw;
 				}
 #		endif
-				this->len = new_size;
+				this->len = static_cast<size_compressed_type>(new_size);
 			}
 
 			return this->nth(insert_pos_index);
@@ -1084,7 +1084,7 @@ namespace kerbal
 		typename static_vector<Tp, N>::iterator
 		static_vector<Tp, N>::emplace(const_iterator pos, Args&& ... args)
 		{
-			if (this->len + 1 > N) {
+			if (static_cast<size_type>(this->len) + 1u > N) {
 				kerbal::utility::throw_this_exception_helper<std::logic_error>::throw_this_exception(
 					(const char *)"Out of storage space"
 				);
@@ -1124,7 +1124,7 @@ namespace kerbal
 		typename static_vector<Tp, N>::iterator \
 		static_vector<Tp, N>::emplace(const_iterator pos KERBAL_OPT_PPEXPAND_WITH_COMMA_N(LEFT_JOIN_COMMA, EMPTY, ARGS_DECL, i)) \
 		{ \
-			if (this->len + 1 > N) { \
+			if (static_cast<size_type>(this->len) + 1u > N) { \
 				kerbal::utility::throw_this_exception_helper<std::logic_error>::throw_this_exception( \
 					(const char *)"Out of storage space" \
 				); \
@@ -1226,7 +1226,7 @@ namespace kerbal
 		void static_vector<Tp, N>::fill()
 		{
 			kerbal::memory::raw_storage_uninitialized_value_construct(this->storage + this->len, this->storage + N);
-			this->len = N;
+			this->len = static_cast<size_compressed_type>(N);
 		}
 
 		template <typename Tp, std::size_t N>
@@ -1234,7 +1234,7 @@ namespace kerbal
 		void static_vector<Tp, N>::fill(const_reference val)
 		{
 			kerbal::memory::raw_storage_uninitialized_fill(this->storage + this->len, this->storage + N, val);
-			this->len = N;
+			this->len = static_cast<size_compressed_type>(N);
 		}
 
 		template <typename Tp, std::size_t N1, std::size_t N2>
