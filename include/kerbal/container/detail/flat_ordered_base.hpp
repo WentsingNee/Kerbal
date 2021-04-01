@@ -24,6 +24,7 @@
 #include <kerbal/compatibility/move.hpp>
 #include <kerbal/compatibility/noexcept.hpp>
 #include <kerbal/container/associative_container_facility/associative_unique_insert_r.hpp>
+#include <kerbal/container/associative_container_facility/key_extractors/identity_extractor.hpp>
 #include <kerbal/container/nonmember_container_access.hpp>
 #include <kerbal/iterator/iterator.hpp>
 #include <kerbal/iterator/iterator_traits.hpp>
@@ -271,26 +272,26 @@ namespace kerbal
 						return key_compare_compress_helper::member();
 					}
 
-#			if __cplusplus >= 201402L
+//#			if __cplusplus >= 201402L
+//
+//					KERBAL_CONSTEXPR14
+//					auto value_comp() const
+//					{
+//						return [this](const_reference lhs, const_reference rhs) -> bool {
+//							return this->key_comp()(this->extract()(lhs), this->extract()(rhs));
+//						};
+//					}
+//
+//#			else
 
-					KERBAL_CONSTEXPR14
-					auto value_comp() const
-					{
-						return [this](const_reference lhs, const_reference rhs) -> bool {
-							return this->key_comp()(this->extract()(lhs), this->extract()(rhs));
-						};
-					}
-
-#			else
-
-					class value_compare
+					class stateful_value_compare
 					{
 							friend class flat_ordered_base;
 
 							const flat_ordered_base * self;
 
 							KERBAL_CONSTEXPR
-							explicit value_compare(const flat_ordered_base * self) KERBAL_NOEXCEPT :
+							explicit stateful_value_compare(const flat_ordered_base * self) KERBAL_NOEXCEPT :
 								self(self)
 							{
 							}
@@ -302,12 +303,39 @@ namespace kerbal
 							}
 					};
 
-					value_compare value_comp() const
+					typedef kerbal::type_traits::bool_constant<
+						kerbal::type_traits::is_same<
+							Extract, kerbal::container::identity_extractor<Entity>
+						>::value
+					> ENABLE_STATELESS_VALUE_COMPARE_OPTIMIZATION;
+
+					typedef typename kerbal::type_traits::conditional<
+						ENABLE_STATELESS_VALUE_COMPARE_OPTIMIZATION::value,
+						KeyCompare,
+						stateful_value_compare
+					>::type value_compare;
+
+
+					template <bool stateless>
+					typename kerbal::type_traits::enable_if<stateless, value_compare>::type
+					value_comp_impl() const
 					{
-						return value_compare(this);
+						return this->key_comp();
 					}
 
-#			endif
+					template <bool stateless>
+					typename kerbal::type_traits::enable_if<!stateless, value_compare>::type
+					value_comp_impl() const
+					{
+						return value_compare(this);;
+					}
+
+					value_compare value_comp() const
+					{
+						return value_comp_impl<ENABLE_STATELESS_VALUE_COMPARE_OPTIMIZATION::value>();
+					}
+
+//#			endif
 
 				protected:
 
