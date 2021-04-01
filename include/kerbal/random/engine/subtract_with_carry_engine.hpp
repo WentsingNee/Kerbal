@@ -37,6 +37,9 @@
 #include <cstddef>
 
 
+#define WAY 1
+
+
 namespace kerbal
 {
 
@@ -152,7 +155,9 @@ namespace kerbal
 					}
 					k_carry = (k_state[LONG_LAG::value - 1] == 0) ? 1 : 0;
 					k_index = 0;
+#	if WAY == 1
 					this->twist();
+#	endif
 				}
 
 			private:
@@ -179,6 +184,27 @@ namespace kerbal
 				}
 
 			public:
+
+#	if WAY == 0
+
+				KERBAL_CONSTEXPR14
+				result_type operator()() KERBAL_NOEXCEPT
+				{
+					result_type x_s = k_state[k_index >= S ? k_index - S : k_index + R - S]; // k_state[(k_index - S) % R]
+					result_type x_r = k_state[k_index];
+					result_type y = x_s - x_r - k_carry;
+					result_type r = y % m::value;
+					k_state[k_index] = r;
+					++k_index;
+					if (k_index == LONG_LAG::value) {
+						k_index = 0;
+					}
+					k_carry = x_s < (x_r + k_carry);
+					return r;
+				}
+
+#	else
+
 				KERBAL_CONSTEXPR14
 				result_type operator()() KERBAL_NOEXCEPT
 				{
@@ -189,6 +215,21 @@ namespace kerbal
 					result_type r = this->k_state[this->k_index++];
 					return r;
 				}
+
+#	endif
+
+#	if WAY == 0
+
+				KERBAL_CONSTEXPR14
+				void discard(unsigned long long n) KERBAL_NOEXCEPT
+				{
+					while (n != 0) {
+						--n;
+						(*this)();
+					}
+				}
+
+#	else
 
 				KERBAL_CONSTEXPR14
 				void discard() KERBAL_NOEXCEPT
@@ -214,6 +255,8 @@ namespace kerbal
 					}
 					this->k_index = (flag ? (remain - left) : (mti_old + remain));
 				}
+
+#	endif
 
 			private:
 				template <typename OutputIterator>
