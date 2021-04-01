@@ -23,50 +23,52 @@
 #	include <type_traits>
 #endif
 
+
 namespace kerbal
 {
 
 	namespace random
 	{
 
-		template <typename Engine, size_t P, size_t R>
+		template <typename Engine, std::size_t P, std::size_t R>
 		class discard_block_engine
 		{
+			private:
 				KERBAL_STATIC_ASSERT(R <= P, "R Must be greater than 0 and not greater than P");
 
 			public:
 				typedef typename Engine::result_type result_type;
 
 			private:
-				Engine engine;
-				size_t state_value;
+				Engine _K_base_eg;
+				std::size_t _K_idx;
 
 			public:
 
 				KERBAL_CONSTEXPR
 				discard_block_engine()
-							KERBAL_CONDITIONAL_NOEXCEPT(
+						KERBAL_CONDITIONAL_NOEXCEPT(
 								std::is_nothrow_default_constructible<Engine>::value
-							)
-							: engine(), state_value(0)
+						) :
+						_K_base_eg(), _K_idx(0)
 				{
 				}
 
 				KERBAL_CONSTEXPR
 				explicit discard_block_engine(const result_type & seed)
-							KERBAL_CONDITIONAL_NOEXCEPT(
+						KERBAL_CONDITIONAL_NOEXCEPT(
 								(std::is_nothrow_constructible<Engine, result_type>::value)
-							)
-							: engine(seed), state_value(0)
+						) :
+						_K_base_eg(seed), _K_idx(0)
 				{
 				}
 
 				KERBAL_CONSTEXPR
 				explicit discard_block_engine(const Engine & engine)
-							KERBAL_CONDITIONAL_NOEXCEPT(
+						KERBAL_CONDITIONAL_NOEXCEPT(
 								std::is_nothrow_copy_constructible<Engine>::value
-							)
-							: engine(engine), state_value(0)
+						) :
+						_K_base_eg(engine), _K_idx(0)
 				{
 				}
 
@@ -74,68 +76,106 @@ namespace kerbal
 
 				KERBAL_CONSTEXPR
 				explicit discard_block_engine(Engine && engine)
-							KERBAL_CONDITIONAL_NOEXCEPT(
+						KERBAL_CONDITIONAL_NOEXCEPT(
 								std::is_nothrow_move_constructible<Engine>::value
-							)
-							: engine(kerbal::compatibility::move(engine)), state_value(0)
+						) :
+						_K_base_eg(kerbal::compatibility::move(engine)), _K_idx(0)
 				{
 				}
 
 #		endif
 
 				KERBAL_CONSTEXPR14
-				result_type operator()() KERBAL_NOEXCEPT
+				void seed()
+						KERBAL_CONDITIONAL_NOEXCEPT(
+								noexcept(_K_base_eg.seed())
+						)
 				{
-					if (this->state_value == R) {
-						this->engine.discard(P - R);
-						this->state_value = 0;
-					}
-					++this->state_value;
-					return this->engine();
+					this->_K_base_eg.seed();
 				}
 
 				KERBAL_CONSTEXPR14
-				void discard(unsigned long long times) KERBAL_NOEXCEPT
+				void seed(const result_type & seed)
+						KERBAL_CONDITIONAL_NOEXCEPT(
+								noexcept(_K_base_eg.seed(seed))
+						)
 				{
-					for (; times != 0ULL; --times) {
+					this->_K_base_eg.seed(seed);
+				}
+
+				KERBAL_CONSTEXPR14
+				const Engine & base() const KERBAL_NOEXCEPT
+				{
+					return this->_K_base_eg;
+				}
+
+				KERBAL_CONSTEXPR14
+				result_type operator()()
+						KERBAL_CONDITIONAL_NOEXCEPT(
+								noexcept(_K_base_eg.discard(P - R)) &&
+								noexcept(_K_base_eg())
+						)
+				{
+					if (this->_K_idx == R) {
+						this->_K_base_eg.discard(P - R);
+						this->_K_idx = 0;
+					}
+					++this->_K_idx;
+					return this->_K_base_eg();
+				}
+
+				KERBAL_CONSTEXPR14
+				void discard(unsigned long long times)
+						KERBAL_CONDITIONAL_NOEXCEPT(
+								noexcept(operator()())
+						)
+				{
+					while (times != 0) {
+						--times;
 						(*this)();
 					}
 				}
 
-				KERBAL_CONSTEXPR14
-				void seed() KERBAL_NOEXCEPT
-				{
-					this->engine.seed();
-				}
-
-				KERBAL_CONSTEXPR14
-				void seed(const result_type & seed) KERBAL_NOEXCEPT
-				{
-					this->engine.seed(seed);
-				}
-
-				static KERBAL_CONSTEXPR result_type min() KERBAL_NOEXCEPT
+				KERBAL_CONSTEXPR
+				static result_type min()
+						KERBAL_CONDITIONAL_NOEXCEPT(
+								noexcept(Engine::min())
+						)
 				{
 					return Engine::min();
 				}
 
-				static KERBAL_CONSTEXPR result_type max() KERBAL_NOEXCEPT
+				KERBAL_CONSTEXPR
+				static result_type max()
+						KERBAL_CONDITIONAL_NOEXCEPT(
+								noexcept(Engine::max())
+						)
 				{
 					return Engine::max();
 				}
 
 				KERBAL_CONSTEXPR
 				bool operator==(const discard_block_engine & rhs) const
+						KERBAL_CONDITIONAL_NOEXCEPT(
+							noexcept(static_cast<bool>(
+								_K_base_eg == rhs._K_base_eg
+							))
+						)
 				{
-					return this->state_value == rhs.state_value &&
-							static_cast<bool>(this->engine == rhs.engine);
+					return this->_K_idx == rhs._K_idx &&
+						   static_cast<bool>(this->_K_base_eg == rhs._K_base_eg);
 				}
 
 				KERBAL_CONSTEXPR
 				bool operator!=(const discard_block_engine & rhs) const
+						KERBAL_CONDITIONAL_NOEXCEPT(
+							noexcept(static_cast<bool>(
+								_K_base_eg != rhs._K_base_eg
+							))
+						)
 				{
-					return this->state_value != rhs.state_value ||
-							static_cast<bool>(this->engine != rhs.engine);
+					return this->_K_idx != rhs._K_idx ||
+						   static_cast<bool>(this->_K_base_eg != rhs._K_base_eg);
 				}
 
 		};
@@ -144,4 +184,4 @@ namespace kerbal
 
 } // namespace kerbal
 
-#endif	// KERBAL_RANDOM_DISCARD_BLOCK_ENGINE_HPP
+#endif // KERBAL_RANDOM_DISCARD_BLOCK_ENGINE_HPP
