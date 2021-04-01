@@ -392,6 +392,13 @@ namespace kerbal
 			return false;
 		}
 
+		template <typename Tp>
+		KERBAL_CONSTEXPR
+		bool empty(const Tp (&)[0]) KERBAL_NOEXCEPT
+		{
+			return true;
+		}
+
 		template <typename Tp, size_t N>
 		KERBAL_CONSTEXPR14
 		Tp* nth(Tp (&arr)[N], std::size_t index) KERBAL_NOEXCEPT
