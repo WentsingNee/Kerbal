@@ -524,6 +524,20 @@ namespace kerbal
 
 				using sl_type_only::reverse;
 
+
+/*
+				using sl_allocator_unrelated::rotate;
+
+				template <typename BinaryPredict>
+				KERBAL_CONSTEXPR20
+				void merge(list & other, BinaryPredict cmp);
+
+				KERBAL_CONSTEXPR20
+				void merge(list & other);
+
+				using list_allocator_unrelated::sort;
+*/
+
 				KERBAL_CONSTEXPR20
 				size_type remove(const_reference val);
 
