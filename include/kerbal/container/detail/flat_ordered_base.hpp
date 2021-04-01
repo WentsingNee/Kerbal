@@ -27,51 +27,17 @@
 #include <utility> // std::pair
 
 #if __cplusplus >= 201103L
+#	include <initializer_list>
 #	include <type_traits>
 #endif
+
+#include <kerbal/container/detail/key_of_value_extractor.hpp>
 
 namespace kerbal
 {
 
 	namespace container
 	{
-
-		template <typename Key, typename Entity>
-		struct default_extract;
-
-		template <typename Key, typename Value>
-		struct default_extract<Key, std::pair<Key, Value> >
-		{
-				typedef std::pair<Key, Value> Pair;
-
-				KERBAL_CONSTEXPR
-				Key& operator()(Pair & p) const KERBAL_NOEXCEPT
-				{
-					return p.first;
-				}
-
-				KERBAL_CONSTEXPR
-				const Key& operator()(const Pair & p) const KERBAL_NOEXCEPT
-				{
-					return p.first;
-				}
-		};
-
-		template <typename Key>
-		struct default_extract<Key, Key>
-		{
-				KERBAL_CONSTEXPR
-				Key& operator()(Key & key) const KERBAL_NOEXCEPT
-				{
-					return key;
-				}
-
-				KERBAL_CONSTEXPR
-				const Key& operator()(const Key & key) const KERBAL_NOEXCEPT
-				{
-					return key;
-				}
-		};
 
 		namespace detail
 		{
@@ -323,26 +289,26 @@ namespace kerbal
 						return this->key_comp_obj();
 					}
 
-#			if __cplusplus >= 201402L
+//#			if __cplusplus >= 201402L
+//
+//					KERBAL_CONSTEXPR14
+//					auto value_comp() const
+//					{
+//						return [this](const_reference lhs, const_reference rhs) -> bool {
+//							return this->key_comp_obj()(Extract()(lhs), Extract()(rhs));
+//						};
+//					}
+//
+//#			else
 
-					KERBAL_CONSTEXPR14
-					auto value_comp() const
-					{
-						return [this](const_reference lhs, const_reference rhs) -> bool {
-							return this->key_comp_obj()(Extract()(lhs), Extract()(rhs));
-						};
-					}
-
-#			else
-
-					class value_compare
+					class stateful_value_compare
 					{
 							friend class flat_ordered_base;
 
 							const flat_ordered_base *self;
 
 							KERBAL_CONSTEXPR
-							explicit value_compare(const flat_ordered_base * self) KERBAL_NOEXCEPT
+							explicit stateful_value_compare(const flat_ordered_base * self) KERBAL_NOEXCEPT
 									: self(self)
 							{
 							}
@@ -354,12 +320,39 @@ namespace kerbal
 							}
 					};
 
-					value_compare value_comp() const
+					typedef kerbal::type_traits::bool_constant<
+							kerbal::type_traits::is_same<
+									Extract, kerbal::container::detail::identity_extractor<Entity>
+							>::value
+					> ENABLE_STATELESS_VALUE_COMPARE_OPTIMIZATION;
+
+					typedef typename kerbal::type_traits::conditional<
+							ENABLE_STATELESS_VALUE_COMPARE_OPTIMIZATION::value,
+							KeyCompare,
+							stateful_value_compare
+					>::type value_compare;
+
+
+					template <bool stateless>
+					typename kerbal::type_traits::enable_if<stateless, value_compare>::type
+					value_comp_impl() const
 					{
-						return value_compare(this);
+						return this->key_comp_obj();
 					}
 
-#			endif
+					template <bool stateless>
+					typename kerbal::type_traits::enable_if<!stateless, value_compare>::type
+					value_comp_impl() const
+					{
+						return value_compare(this);;
+					}
+
+					value_compare value_comp() const
+					{
+						return value_comp_impl<ENABLE_STATELESS_VALUE_COMPARE_OPTIMIZATION::value>();
+					}
+
+//#			endif
 
 				protected:
 
@@ -539,7 +532,7 @@ namespace kerbal
 						return sequence.nth(index);
 					}
 
-					KERBAL_CONSTEXPR
+					KERBAL_CONSTEXPR14
 					size_type index_of(iterator it)
 					{
 						return sequence.index_of(it);

@@ -25,7 +25,7 @@ namespace kerbal
 	{
 
 		template <typename Entity, typename Key = Entity, typename KeyCompare = std::less<Key>,
-				typename Extract = default_extract<Key, Entity>, typename Allocator = std::allocator<Entity> >
+				typename Extract = detail::identity_extractor<Entity>, typename Allocator = std::allocator<Entity> >
 		class flat_ordered:
 				public kerbal::container::detail::flat_ordered_base<
 						Entity, Key, KeyCompare, Extract, std::vector<Entity, Allocator>

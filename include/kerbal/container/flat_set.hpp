@@ -23,10 +23,10 @@ namespace kerbal
 
 		template <typename Tp, typename KeyCompare = std::less<Tp>, typename Allocator = std::allocator<Tp> >
 		class flat_set
-				: public kerbal::container::detail::flat_set_base<Tp, kerbal::container::flat_ordered<Tp, Tp, KeyCompare, default_extract<Tp, Tp>, Allocator> >
+				: public kerbal::container::detail::flat_set_base<Tp, kerbal::container::flat_ordered<Tp, Tp, KeyCompare, detail::identity_extractor<Tp>, Allocator> >
 		{
 			private:
-				typedef kerbal::container::flat_ordered<Tp, Tp, KeyCompare, default_extract<Tp, Tp>, Allocator> Ordered;
+				typedef kerbal::container::flat_ordered<Tp, Tp, KeyCompare, detail::identity_extractor<Tp>, Allocator> Ordered;
 				typedef kerbal::container::detail::flat_set_base<Tp, Ordered> super;
 
 			public:
@@ -175,10 +175,10 @@ namespace kerbal
 
 		template <typename Tp, typename KeyCompare = std::less<Tp>, typename Allocator = std::allocator<Tp> >
 		class flat_multiset
-				: public kerbal::container::detail::flat_multiset_base<Tp, kerbal::container::flat_ordered<Tp, Tp, KeyCompare, default_extract<Tp, Tp>, Allocator> >
+				: public kerbal::container::detail::flat_multiset_base<Tp, kerbal::container::flat_ordered<Tp, Tp, KeyCompare, detail::identity_extractor<Tp>, Allocator> >
 		{
 			private:
-				typedef kerbal::container::flat_ordered<Tp, Tp, KeyCompare, default_extract<Tp, Tp>, Allocator> Ordered;
+				typedef kerbal::container::flat_ordered<Tp, Tp, KeyCompare, detail::identity_extractor<Tp>, Allocator> Ordered;
 				typedef kerbal::container::detail::flat_multiset_base<Tp, Ordered> super;
 
 			public:
