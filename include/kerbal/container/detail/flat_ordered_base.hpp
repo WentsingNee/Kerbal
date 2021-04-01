@@ -25,6 +25,7 @@
 #include <kerbal/compatibility/noexcept.hpp>
 #include <kerbal/container/associative_container_facility/associative_unique_insert_r.hpp>
 #include <kerbal/container/associative_container_facility/key_compare_is_transparent.hpp>
+#include <kerbal/container/associative_container_facility/key_extractors/identity_extractor.hpp>
 #include <kerbal/container/nonmember_container_access.hpp>
 #include <kerbal/iterator/iterator.hpp>
 #include <kerbal/iterator/iterator_traits.hpp>
@@ -127,7 +128,7 @@ namespace kerbal
 						return key_compare_compress_helper::member();
 					}
 
-					class value_compare
+					class stateful_value_compare
 					{
 							friend class flat_ordered_base;
 
@@ -135,7 +136,7 @@ namespace kerbal
 
 							KERBAL_CONSTEXPR
 							explicit
-							value_compare(const flat_ordered_base * self) KERBAL_NOEXCEPT :
+							stateful_value_compare(const flat_ordered_base * self) KERBAL_NOEXCEPT :
 								self(self)
 							{
 							}
@@ -149,11 +150,39 @@ namespace kerbal
 							}
 					};
 
+					typedef kerbal::type_traits::bool_constant<
+						kerbal::type_traits::is_same<
+							Extract, kerbal::container::identity_extractor<Entity>
+						>::value
+					> ENABLE_STATELESS_VALUE_COMPARE_OPTIMIZATION;
+
+					typedef typename kerbal::type_traits::conditional<
+						ENABLE_STATELESS_VALUE_COMPARE_OPTIMIZATION::value,
+						KeyCompare,
+						stateful_value_compare
+					>::type value_compare;
+
+
+					template <bool stateless>
 					KERBAL_CONSTEXPR14
-					value_compare
-					value_comp() const
+					typename kerbal::type_traits::enable_if<stateless, value_compare>::type
+					value_comp_impl() const
+					{
+						return this->key_comp();
+					}
+
+					template <bool stateless>
+					KERBAL_CONSTEXPR14
+					typename kerbal::type_traits::enable_if<!stateless, value_compare>::type
+					value_comp_impl() const
 					{
 						return value_compare(this);
+					}
+
+					KERBAL_CONSTEXPR14
+					value_compare value_comp() const
+					{
+						return value_comp_impl<ENABLE_STATELESS_VALUE_COMPARE_OPTIMIZATION::value>();
 					}
 
 
