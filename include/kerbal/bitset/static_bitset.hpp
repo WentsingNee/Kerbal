@@ -375,6 +375,16 @@ namespace kerbal
 				}
 
 				KERBAL_CONSTEXPR14
+				static_bitset operator~() KERBAL_NOEXCEPT
+				{
+					static_bitset r;
+					for (size_t i = 0; i < BLOCK_SIZE::value; ++i) {
+						r.m_block[i] = ~this->m_block[i];
+					}
+					return r;
+				}
+
+				KERBAL_CONSTEXPR14
 				void swap(static_bitset & ano) KERBAL_NOEXCEPT
 				{
 					kerbal::algorithm::swap(this->m_block, ano.m_block);
