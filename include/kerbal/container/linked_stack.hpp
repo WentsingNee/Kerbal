@@ -12,7 +12,7 @@
 #ifndef KERBAL_CONTAINER_LINKED_STACK_HPP
 #define KERBAL_CONTAINER_LINKED_STACK_HPP
 
-#include <kerbal/container/single_list.hpp>
+#include <kerbal/container/forward_list.hpp>
 
 #if __cplusplus >= 201103L
 #	include <kerbal/utility/forward.hpp>
@@ -24,7 +24,7 @@ namespace kerbal
 	namespace container
 	{
 
-		template <typename Tp, typename Sequence = kerbal::container::single_list<Tp> >
+		template <typename Tp, typename Sequence = kerbal::container::forward_list<Tp> >
 		class linked_stack
 		{
 			public:
@@ -211,7 +211,7 @@ namespace kerbal
 		namespace pmr
 		{
 			template <typename Tp>
-			using linked_stack = kerbal::container::linked_stack<Tp, kerbal::container::pmr::single_list<Tp> >;
+			using linked_stack = kerbal::container::linked_stack<Tp, kerbal::container::pmr::forward_list<Tp> >;
 		}
 
 #	endif
