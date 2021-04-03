@@ -188,10 +188,45 @@ namespace kerbal
 			private:
 
 				KERBAL_CONSTEXPR14
-				void __assign(size_type new_size, const_reference val, kerbal::type_traits::false_type enable_optimization);
+				void assign_directly(size_type new_size, const_reference val);
+
+				template <bool c>
+				KERBAL_CONSTEXPR14
+				typename kerbal::type_traits::enable_if<!c>::type
+				assign_larger_size_helper(size_type new_size, const_reference val);
+
+				template <bool c>
+				KERBAL_CONSTEXPR14
+				typename kerbal::type_traits::enable_if<c>::type
+				assign_larger_size_helper(size_type new_size, const_reference val);
 
 				KERBAL_CONSTEXPR14
-				void __assign(size_type new_size, const_reference val, kerbal::type_traits::true_type enable_optimization);
+				void assign_larger_size(size_type new_size, const_reference val);
+
+
+				template <bool c>
+				KERBAL_CONSTEXPR14
+				typename kerbal::type_traits::enable_if<!c>::type
+				assign_smaller_size_helper(size_type new_size, const_reference val);
+
+				template <bool c>
+				KERBAL_CONSTEXPR14
+				typename kerbal::type_traits::enable_if<c>::type
+				assign_smaller_size_helper(size_type new_size, const_reference val);
+
+				KERBAL_CONSTEXPR14
+				void assign_smaller_size(size_type new_size, const_reference val);
+
+
+				template <bool c>
+				KERBAL_CONSTEXPR14
+				typename kerbal::type_traits::enable_if<!c>::type
+				__assign(size_type new_size, const_reference val);
+
+				template <bool c>
+				KERBAL_CONSTEXPR14
+				typename kerbal::type_traits::enable_if<c>::type
+				__assign(size_type new_size, const_reference val);
 
 			public:
 

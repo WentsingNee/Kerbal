@@ -281,37 +281,148 @@ namespace kerbal
 
 		template <typename Tp, size_t N>
 		KERBAL_CONSTEXPR14
-		void static_vector<Tp, N>::__assign(size_type new_size, const_reference val, kerbal::type_traits::false_type)
+		void static_vector<Tp, N>::assign_directly(size_type new_size, const_reference val)
 		{
+			kerbal::algorithm::fill(this->begin(), this->nth(new_size), val);
+			this->len = new_size;
+		}
+
+		template <typename Tp, size_t N>
+		template <bool c>
+		KERBAL_CONSTEXPR14
+		typename kerbal::type_traits::enable_if<!c>::type
+		static_vector<Tp, N>::assign_larger_size_helper(size_type new_size, const_reference val)
+		{
+			/*
+			 * a a a x x x x x
+			 * b b b b b b x x
+			 */
+
+			kerbal::algorithm::fill(this->begin(), this->end(), val);
 			size_type previous_size = this->size();
-
-			if (previous_size <= new_size) {
-				/*
-				 * a a a x x x x x
-				 * b b b b b b x x
-				 */
-
-				kerbal::algorithm::fill(this->begin(), this->end(), val);
-				while (previous_size != new_size) {
-					this->push_back(val);
-					++previous_size;
-				}
-			} else {
-				/*
-				 * a a a a a a x x
-				 * b b b x x x x x
-				 */
-				this->shrink_back_to(this->nth(new_size));
-				kerbal::algorithm::fill(this->begin(), this->end(), val);
+			while (previous_size != new_size) {
+				this->push_back(val);
+				++previous_size;
 			}
 		}
 
 		template <typename Tp, size_t N>
+		template <bool c>
 		KERBAL_CONSTEXPR14
-		void static_vector<Tp, N>::__assign(size_type new_size, const_reference val, kerbal::type_traits::true_type)
+		typename kerbal::type_traits::enable_if<c>::type
+		static_vector<Tp, N>::assign_larger_size_helper(size_type new_size, const_reference val)
 		{
-			kerbal::algorithm::fill(this->begin(), this->nth(new_size), val);
-			this->len = new_size;
+			assign_directly(new_size, val);
+		}
+
+		template <typename Tp, size_t N>
+		KERBAL_CONSTEXPR14
+		void static_vector<Tp, N>::assign_larger_size(size_type new_size, const_reference val)
+		{
+
+#		if __cplusplus < 201103L
+
+			struct enable_optimization:
+					kerbal::type_traits::bool_constant<
+						kerbal::type_traits::is_fundamental<remove_all_extents_t>::value ||
+						kerbal::type_traits::is_member_pointer<remove_all_extents_t>::value ||
+						kerbal::type_traits::is_pointer<remove_all_extents_t>::value
+					>
+			{
+			};
+
+#		else
+
+			struct enable_optimization:
+					kerbal::type_traits::bool_constant<
+						std::is_trivially_copy_constructible<remove_all_extents_t>::value &&
+						std::is_trivially_copy_assignable<remove_all_extents_t>::value
+					>
+			{
+			};
+
+#		endif
+
+			this->assign_larger_size_helper<enable_optimization::value>(new_size, val);
+		}
+
+		template <typename Tp, size_t N>
+		template <bool c>
+		KERBAL_CONSTEXPR14
+		typename kerbal::type_traits::enable_if<!c>::type
+		static_vector<Tp, N>::assign_smaller_size_helper(size_type new_size, const_reference val)
+		{
+			/*
+			 * a a a a a a x x
+			 * b b b x x x x x
+			 */
+			this->shrink_back_to(this->nth(new_size));
+			kerbal::algorithm::fill(this->begin(), this->end(), val);
+		}
+
+		template <typename Tp, size_t N>
+		template <bool c>
+		KERBAL_CONSTEXPR14
+		typename kerbal::type_traits::enable_if<c>::type
+		static_vector<Tp, N>::assign_smaller_size_helper(size_type new_size, const_reference val)
+		{
+			assign_directly(new_size, val);
+		}
+
+		template <typename Tp, size_t N>
+		KERBAL_CONSTEXPR14
+		void static_vector<Tp, N>::assign_smaller_size(size_type new_size, const_reference val)
+		{
+
+#		if __cplusplus < 201103L
+
+			struct enable_optimization:
+					kerbal::type_traits::bool_constant<
+						kerbal::type_traits::is_fundamental<remove_all_extents_t>::value ||
+						kerbal::type_traits::is_member_pointer<remove_all_extents_t>::value ||
+						kerbal::type_traits::is_pointer<remove_all_extents_t>::value
+					>
+			{
+			};
+
+#		else
+
+			struct enable_optimization:
+					kerbal::type_traits::bool_constant<
+						std::is_trivially_destructible<remove_all_extents_t>::value &&
+						std::is_trivially_copy_assignable<remove_all_extents_t>::value
+					>
+			{
+			};
+
+#		endif
+
+			this->assign_smaller_size_helper<enable_optimization::value>(new_size, val);
+		}
+
+		template <typename Tp, size_t N>
+		template <bool c>
+		KERBAL_CONSTEXPR14
+		typename kerbal::type_traits::enable_if<!c>::type
+		static_vector<Tp, N>::__assign(size_type new_size, const_reference val)
+		{
+			size_type previous_size = this->size();
+			if (previous_size == new_size) {
+				kerbal::algorithm::fill(this->begin(), this->end(), val);
+			} else if (previous_size < new_size) {
+				this->assign_larger_size(new_size, val);
+			} else {
+				this->assign_smaller_size(new_size, val);
+			}
+		}
+
+		template <typename Tp, size_t N>
+		template <bool c>
+		KERBAL_CONSTEXPR14
+		typename kerbal::type_traits::enable_if<c>::type
+		static_vector<Tp, N>::__assign(size_type new_size, const_reference val)
+		{
+			this->assign_directly(new_size, val);
 		}
 
 		template <typename Tp, size_t N>
@@ -327,6 +438,7 @@ namespace kerbal
 			struct enable_optimization:
 					kerbal::type_traits::bool_constant<
 						kerbal::type_traits::is_fundamental<remove_all_extents_t>::value ||
+						kerbal::type_traits::is_member_pointer<remove_all_extents_t>::value ||
 						kerbal::type_traits::is_pointer<remove_all_extents_t>::value
 					>
 			{
@@ -345,7 +457,7 @@ namespace kerbal
 
 #		endif
 
-			this->__assign(new_size, val, enable_optimization());
+			this->__assign<enable_optimization::value>(new_size, val);
 		}
 
 		template <typename Tp, size_t N>
