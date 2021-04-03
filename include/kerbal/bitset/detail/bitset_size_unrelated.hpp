@@ -49,50 +49,207 @@ namespace kerbal
 					static bool all_chunk(const block_type m_block[], block_width_type trunk_size) KERBAL_NOEXCEPT
 					{
 
+#		ifndef KERBAL_STATIC_BITSET_ALL_CHUNK_POLICY
+#			if KERBAL_COMPILER_ID == KERBAL_COMPILER_ID_GNU
+#				define KERBAL_STATIC_BITSET_ALL_CHUNK_POLICY 1
+#			elif KERBAL_COMPILER_ID == KERBAL_COMPILER_ID_CLANG
+#				define KERBAL_STATIC_BITSET_ALL_CHUNK_POLICY 2
+#			endif
+#		endif
+
+#		ifndef KERBAL_STATIC_BITSET_ALL_CHUNK_POLICY
+#			define KERBAL_STATIC_BITSET_ALL_CHUNK_POLICY 0
+#		endif
+
+
 #				define EACH(idx) if (m_block[idx] != ALL_ONE::value) {return false;}
 
-							for (size_t i = 0; i + 4 <= trunk_size; i += 4) {
-								EACH(i);
-								EACH(i + 1);
-								EACH(i + 2);
-								EACH(i + 3);
-							}
+#					if KERBAL_STATIC_BITSET_ALL_CHUNK_POLICY==0
 
-							switch (trunk_size % 4) {
-								case 3:
-									EACH(trunk_size - 3);
-								case 2:
-									EACH(trunk_size - 2);
-								case 1:
-									EACH(trunk_size - 1);
-							}
-
-#				undef EACH
-
-							return true;
-					}
-
-					KERBAL_CONSTEXPR14
-					static bool any_chunk(const block_type m_block[], block_width_type trunk_size) KERBAL_NOEXCEPT
-					{
-
-#				define EACH(idx) if (m_block[idx]) {return true;}
-
-						for (size_t i = 0; i + 4 <= trunk_size; i += 4) {
+						size_t i = 0;
+						for (; i + 4 <= trunk_size; i += 4) {
 							EACH(i);
 							EACH(i + 1);
 							EACH(i + 2);
 							EACH(i + 3);
 						}
 
-						switch (trunk_size % 4) {
-							case 3:
-								EACH(trunk_size - 3);
-							case 2:
-								EACH(trunk_size - 2);
-							case 1:
-								EACH(trunk_size - 1);
+						size_t remain(trunk_size % 4);
+						if (remain >= 2) {
+							EACH(i);
+							EACH(i + 1);
+							i += 2;
+							remain -= 2;
 						}
+						if (remain >= 1) {
+							EACH(i);
+						}
+
+#					elif KERBAL_STATIC_BITSET_ALL_CHUNK_POLICY==1
+
+						size_t i = 0;
+						for (; i + 4 <= trunk_size; i += 4) {
+							if ((m_block[i] & m_block[i + 1] & m_block[i + 2] & m_block[i + 3]) != ALL_ONE::value) {
+								return false;
+							}
+						}
+
+						size_t remain(trunk_size % 4);
+						if (remain >= 2) {
+							if ((m_block[i] & m_block[i + 1]) != ALL_ONE::value) {
+								return false;
+							}
+							i += 2;
+							remain -= 2;
+						}
+						if (remain >= 1) {
+							if (m_block[i] != ALL_ONE::value) {
+								return false;
+							}
+						}
+
+#					elif KERBAL_STATIC_BITSET_ALL_CHUNK_POLICY==2
+
+						size_t i = 0;
+						for (; i + 8 <= trunk_size; i += 8) {
+							if ((
+									m_block[i] & m_block[i + 1] & m_block[i + 2] & m_block[i + 3] &
+									m_block[i + 4] & m_block[i + 5] & m_block[i + 6] & m_block[i + 7]
+							) != ALL_ONE::value) {
+								return false;
+							}
+						}
+
+						size_t remain(trunk_size % 8);
+						if (remain >= 4) {
+							if ((
+									m_block[i] & m_block[i + 1] & m_block[i + 2] & m_block[i + 3]
+							) != ALL_ONE::value) {
+								return false;
+							}
+							i += 4;
+							remain -= 4;
+						}
+						if (remain >= 2) {
+							if ((m_block[i] & m_block[i + 1]) != ALL_ONE::value) {
+								return false;
+							}
+							i += 2;
+							remain -= 2;
+						}
+						if (remain >= 1) {
+							if (m_block[i] != ALL_ONE::value) {
+								return false;
+							}
+						}
+
+#					else
+#						error "unrecognized value of macro KERBAL_STATIC_BITSET_ALL_CHUNK_POLICY"
+#					endif
+
+#				undef EACH
+
+						return true;
+					}
+
+					KERBAL_CONSTEXPR14
+					static bool any_chunk(const block_type m_block[], block_width_type trunk_size) KERBAL_NOEXCEPT
+					{
+
+#		ifndef KERBAL_STATIC_BITSET_ANY_CHUNK_POLICY
+#			if KERBAL_COMPILER_ID == KERBAL_COMPILER_ID_GNU
+#				define KERBAL_STATIC_BITSET_ANY_CHUNK_POLICY 1
+#			elif KERBAL_COMPILER_ID == KERBAL_COMPILER_ID_CLANG
+#				define KERBAL_STATIC_BITSET_ANY_CHUNK_POLICY 2
+#			endif
+#		endif
+
+#		ifndef KERBAL_STATIC_BITSET_ANY_CHUNK_POLICY
+#			define KERBAL_STATIC_BITSET_ANY_CHUNK_POLICY 0
+#		endif
+
+#				define EACH(idx) if (m_block[idx]) {return true;}
+
+#					if KERBAL_STATIC_BITSET_ANY_CHUNK_POLICY==0
+
+						size_t i = 0;
+						for (; i + 4 <= trunk_size; i += 4) {
+							EACH(i);
+							EACH(i + 1);
+							EACH(i + 2);
+							EACH(i + 3);
+						}
+
+						size_t remain(trunk_size % 4);
+						if (remain >= 2) {
+							EACH(i);
+							EACH(i + 1);
+							i += 2;
+							remain -= 2;
+						}
+						if (remain >= 1) {
+							EACH(i);
+						}
+
+#					elif KERBAL_STATIC_BITSET_ANY_CHUNK_POLICY==1
+
+						size_t i = 0;
+						for (; i + 4 <= trunk_size; i += 4) {
+							if (m_block[i] | m_block[i + 1] | m_block[i + 2] | m_block[i + 3]) {
+								return true;
+							}
+						}
+
+						size_t remain(trunk_size % 4);
+						if (remain >= 2) {
+							if (m_block[i] | m_block[i + 1]) {
+								return true;
+							}
+							i += 2;
+							remain -= 2;
+						}
+						if (remain >= 1) {
+							if (m_block[i]) {
+								return true;
+							}
+						}
+
+#					elif KERBAL_STATIC_BITSET_ANY_CHUNK_POLICY==2
+
+						size_t i = 0;
+						for (; i + 8 <= trunk_size; i += 8) {
+							if (
+									m_block[i] | m_block[i + 1] | m_block[i + 2] | m_block[i + 3] |
+									m_block[i + 4] | m_block[i + 5] | m_block[i + 6] | m_block[i + 7]
+							) {
+								return true;
+							}
+						}
+
+						size_t remain(trunk_size % 8);
+						if (remain >= 4) {
+							if (m_block[i] | m_block[i + 1] | m_block[i + 2] | m_block[i + 3]) {
+								return true;
+							}
+							i += 4;
+							remain -= 4;
+						}
+						if (remain >= 2) {
+							if (m_block[i] | m_block[i + 1]) {
+								return true;
+							}
+							i += 2;
+							remain -= 2;
+						}
+						if (remain >= 1) {
+							if (m_block[i]) {
+								return true;
+							}
+						}
+
+#					else
+#						error "unrecognized value of macro KERBAL_STATIC_BITSET_ANY_CHUNK_POLICY"
+#					endif
 
 #				undef EACH
 
@@ -105,20 +262,23 @@ namespace kerbal
 
 #				define EACH(idx) m_block[idx] = ~m_block[idx]
 
-						for (size_t i = 0; i + 4 <= block_width; i += 4) {
+						size_t i = 0;
+						for (; i + 4 <= block_width; i += 4) {
 							EACH(i);
 							EACH(i + 1);
 							EACH(i + 2);
 							EACH(i + 3);
 						}
 
-						switch (block_width % 4) {
-							case 3:
-								EACH(block_width - 3);
-							case 2:
-								EACH(block_width - 2);
-							case 1:
-								EACH(block_width - 1);
+						size_t remain(block_width % 4);
+						if (remain >= 2) {
+							EACH(i);
+							EACH(i + 1);
+							i += 2;
+							remain -= 2;
+						}
+						if (remain >= 1) {
+							EACH(i);
 						}
 
 #				undef EACH
@@ -140,20 +300,23 @@ namespace kerbal
 
 #				define EACH(idx) m_block[idx] &= ano[idx]
 
-						for (size_t i = 0; i + 4 <= block_width; i += 4) {
+						size_t i = 0;
+						for (; i + 4 <= block_width; i += 4) {
 							EACH(i);
 							EACH(i + 1);
 							EACH(i + 2);
 							EACH(i + 3);
 						}
 
-						switch (block_width % 4) {
-							case 3:
-								EACH(block_width - 3);
-							case 2:
-								EACH(block_width - 2);
-							case 1:
-								EACH(block_width - 1);
+						size_t remain(block_width % 4);
+						if (remain >= 2) {
+							EACH(i);
+							EACH(i + 1);
+							i += 2;
+							remain -= 2;
+						}
+						if (remain >= 1) {
+							EACH(i);
 						}
 
 #				undef EACH
@@ -166,20 +329,23 @@ namespace kerbal
 
 #				define EACH(idx) m_block[idx] |= ano[idx]
 
-						for (size_t i = 0; i + 4 <= block_width; i += 4) {
+						size_t i = 0;
+						for (; i + 4 <= block_width; i += 4) {
 							EACH(i);
 							EACH(i + 1);
 							EACH(i + 2);
 							EACH(i + 3);
 						}
 
-						switch (block_width % 4) {
-							case 3:
-								EACH(block_width - 3);
-							case 2:
-								EACH(block_width - 2);
-							case 1:
-								EACH(block_width - 1);
+						size_t remain(block_width % 4);
+						if (remain >= 2) {
+							EACH(i);
+							EACH(i + 1);
+							i += 2;
+							remain -= 2;
+						}
+						if (remain >= 1) {
+							EACH(i);
 						}
 
 #				undef EACH
@@ -192,20 +358,23 @@ namespace kerbal
 
 #				define EACH(idx) m_block[idx] ^= ano[idx]
 
-						for (size_t i = 0; i + 4 <= block_width; i += 4) {
+						size_t i = 0;
+						for (; i + 4 <= block_width; i += 4) {
 							EACH(i);
 							EACH(i + 1);
 							EACH(i + 2);
 							EACH(i + 3);
 						}
 
-						switch (block_width % 4) {
-							case 3:
-								EACH(block_width - 3);
-							case 2:
-								EACH(block_width - 2);
-							case 1:
-								EACH(block_width - 1);
+						size_t remain(block_width % 4);
+						if (remain >= 2) {
+							EACH(i);
+							EACH(i + 1);
+							i += 2;
+							remain -= 2;
+						}
+						if (remain >= 1) {
+							EACH(i);
 						}
 
 #				undef EACH
