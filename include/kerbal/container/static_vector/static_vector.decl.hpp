@@ -207,6 +207,48 @@ namespace kerbal
 			private:
 
 				KERBAL_CONSTEXPR14
+				void k_assign_unsafe_n_val_directly(
+					size_type new_size, const_reference val
+				);
+
+
+				KERBAL_CONSTEXPR14
+				void k_assign_unsafe_n_val_larger_size(
+					size_type new_size, const_reference val,
+					kerbal::type_traits::false_type enable_optimization
+				);
+
+				KERBAL_CONSTEXPR14
+				void k_assign_unsafe_n_val_larger_size(
+					size_type new_size, const_reference val,
+					kerbal::type_traits::true_type enable_optimization
+				);
+
+				KERBAL_CONSTEXPR14
+				void k_assign_unsafe_n_val_larger_size(
+					size_type new_size, const_reference val
+				);
+
+				KERBAL_CONSTEXPR14
+				void k_assign_unsafe_n_val_smaller_size(
+					size_type new_size, const_reference val,
+					kerbal::type_traits::false_type enable_optimization
+				);
+
+				KERBAL_CONSTEXPR14
+				void k_assign_unsafe_n_val_smaller_size(
+					size_type new_size, const_reference val,
+					kerbal::type_traits::true_type enable_optimization
+				);
+
+				KERBAL_CONSTEXPR14
+				void k_assign_unsafe_n_val_smaller_size(
+					size_type new_size, const_reference val
+				);
+
+			private:
+
+				KERBAL_CONSTEXPR14
 				void k_assign_unsafe_n_val(
 					size_type new_size, const_reference val,
 					kerbal::type_traits::false_type enable_optimization

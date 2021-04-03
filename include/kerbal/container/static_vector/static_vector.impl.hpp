@@ -222,26 +222,161 @@ namespace kerbal
 		KERBAL_CONSTEXPR14
 		void
 		static_vector<T, N>::
-		k_assign_unsafe_n_val(size_type new_size, const_reference val, kerbal::type_traits::false_type)
+		k_assign_unsafe_n_val_directly(
+			size_type new_size, const_reference val
+		)
+		{
+			kerbal::algorithm::fill(this->begin(), this->nth(new_size), val);
+			this->len = new_size;
+		}
+
+		template <typename T, std::size_t N>
+		KERBAL_CONSTEXPR14
+		void
+		static_vector<T, N>::
+		k_assign_unsafe_n_val_larger_size(
+			size_type new_size, const_reference val,
+			kerbal::type_traits::false_type
+		)
+		{
+			/*
+			 * a a a x x x x x
+			 * b b b b b b x x
+			 */
+
+			kerbal::algorithm::fill(this->begin(), this->end(), val);
+			size_type previous_size = this->size();
+			kerbal::memory::raw_storage_uninitialized_fill(this->storage + previous_size, this->storage + new_size, val);
+			this->len = static_cast<size_compressed_type>(new_size);
+		}
+
+		template <typename T, std::size_t N>
+		KERBAL_CONSTEXPR14
+		void
+		static_vector<T, N>::
+		k_assign_unsafe_n_val_larger_size(
+			size_type new_size, const_reference val,
+			kerbal::type_traits::true_type
+		)
+		{
+			this->k_assign_unsafe_n_val_directly(new_size, val);
+		}
+
+		template <typename T, std::size_t N>
+		KERBAL_CONSTEXPR14
+		void
+		static_vector<T, N>::
+		k_assign_unsafe_n_val_larger_size(
+			size_type new_size, const_reference val
+		)
+		{
+
+#		if __cplusplus < 201103L
+
+			struct enable_optimization :
+				kerbal::type_traits::bool_constant<
+					kerbal::type_traits::is_fundamental<remove_all_extents_t>::value ||
+					kerbal::type_traits::is_member_pointer<remove_all_extents_t>::value ||
+					kerbal::type_traits::is_pointer<remove_all_extents_t>::value
+				>
+			{
+			};
+
+#		else
+
+			struct enable_optimization :
+				kerbal::type_traits::bool_constant<
+					std::is_trivially_copy_constructible<remove_all_extents_t>::value &&
+					std::is_trivially_copy_assignable<remove_all_extents_t>::value
+				>
+			{
+			};
+
+#		endif
+
+			this->k_assign_unsafe_n_val_larger_size(new_size, val, enable_optimization());
+		}
+
+		template <typename T, std::size_t N>
+		KERBAL_CONSTEXPR14
+		void
+		static_vector<T, N>::
+		k_assign_unsafe_n_val_smaller_size(
+			size_type new_size, const_reference val,
+			kerbal::type_traits::false_type
+		)
+		{
+			/*
+			 * a a a a a a x x
+			 * b b b x x x x x
+			 */
+			this->shrink_back_to(this->nth(new_size));
+			kerbal::algorithm::fill(this->begin(), this->end(), val);
+		}
+
+		template <typename T, std::size_t N>
+		KERBAL_CONSTEXPR14
+		void
+		static_vector<T, N>::
+		k_assign_unsafe_n_val_smaller_size(
+			size_type new_size, const_reference val,
+			kerbal::type_traits::true_type
+		)
+		{
+			this->k_assign_unsafe_n_val_directly(new_size, val);
+		}
+
+		template <typename T, std::size_t N>
+		KERBAL_CONSTEXPR14
+		void
+		static_vector<T, N>::
+		k_assign_unsafe_n_val_smaller_size(
+			size_type new_size, const_reference val
+		)
+		{
+
+#		if __cplusplus < 201103L
+
+			struct enable_optimization :
+				kerbal::type_traits::bool_constant<
+					kerbal::type_traits::is_fundamental<remove_all_extents_t>::value ||
+					kerbal::type_traits::is_member_pointer<remove_all_extents_t>::value ||
+					kerbal::type_traits::is_pointer<remove_all_extents_t>::value
+				>
+			{
+			};
+
+#		else
+
+			struct enable_optimization :
+				kerbal::type_traits::bool_constant<
+					std::is_trivially_destructible<remove_all_extents_t>::value &&
+					std::is_trivially_copy_assignable<remove_all_extents_t>::value
+				>
+			{
+			};
+
+#		endif
+
+			this->k_assign_unsafe_n_val_smaller_size(new_size, val, enable_optimization());
+		}
+
+		template <typename T, std::size_t N>
+		KERBAL_CONSTEXPR14
+		void
+		static_vector<T, N>::
+		k_assign_unsafe_n_val(
+			size_type new_size, const_reference val,
+			kerbal::type_traits::false_type
+		)
 		{
 			size_type previous_size = this->size();
-
-			if (previous_size <= new_size) {
-				/*
-				 * a a a x x x x x
-				 * b b b b b b x x
-				 */
-
+			if (previous_size == new_size) {
 				kerbal::algorithm::fill(this->begin(), this->end(), val);
-				kerbal::memory::raw_storage_uninitialized_fill(this->storage + previous_size, this->storage + new_size, val);
-				this->len = static_cast<size_compressed_type>(new_size);
+			} else if (previous_size < new_size) {
+				this->k_assign_unsafe_n_val_larger_size(new_size, val);
 			} else {
-				/*
-				 * a a a a a a x x
-				 * b b b x x x x x
-				 */
-				this->shrink_back_to(this->nth(new_size));
-				kerbal::algorithm::fill(this->begin(), this->end(), val);
+				this->k_assign_unsafe_n_val_smaller_size(new_size, val);
 			}
 		}
 
@@ -249,17 +384,23 @@ namespace kerbal
 		KERBAL_CONSTEXPR14
 		void
 		static_vector<T, N>::
-		k_assign_unsafe_n_val(size_type new_size, const_reference val, kerbal::type_traits::true_type)
+		k_assign_unsafe_n_val(
+			size_type new_size, const_reference val,
+			kerbal::type_traits::true_type
+		)
 		{
-			kerbal::algorithm::fill(this->begin(), this->nth(new_size), val);
-			this->len = static_cast<size_compressed_type>(new_size);
+			this->k_assign_unsafe_n_val_directly(new_size, val);
 		}
 
 		template <typename T, std::size_t N>
 		KERBAL_CONSTEXPR14
-		void static_vector<T, N>::assign_unsafe(size_type new_size, const_reference val)
+		void
+		static_vector<T, N>::
+		assign_unsafe(
+			size_type new_size, const_reference val
+		)
 		{
-			struct enable_optimization:
+			struct enable_optimization :
 				kerbal::type_traits::tribool_conjunction<
 					kerbal::type_traits::try_test_is_trivially_copy_constructible<remove_all_extents_t>,
 					kerbal::type_traits::try_test_is_trivially_copy_assignable<remove_all_extents_t>,
