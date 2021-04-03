@@ -541,6 +541,20 @@ namespace kerbal
 				find(const Key & key);
 
 				KERBAL_CONSTEXPR20
+				const_iterator find_hint(const_iterator hint, const key_type & key) const;
+
+				KERBAL_CONSTEXPR20
+				iterator find_hint(const_iterator hint, const key_type & key);
+
+				template <typename Key>
+				KERBAL_CONSTEXPR20
+				const_iterator find_hint(const_iterator hint, const Key & key) const;
+
+				template <typename Key>
+				KERBAL_CONSTEXPR20
+				iterator find_hint(const_iterator hint, const Key & key);
+
+				KERBAL_CONSTEXPR20
 				const_iterator lower_bound(const key_type & key) const;
 
 				KERBAL_CONSTEXPR20
@@ -603,6 +617,13 @@ namespace kerbal
 				KERBAL_CONSTEXPR20
 				typename enable_if_transparent_lookup<Key, bool>::type
 				contains(const Key & key) const;
+
+				KERBAL_CONSTEXPR20
+				bool contains_hint(const_iterator hint, const key_type & key) const;
+
+				template <typename Key>
+				KERBAL_CONSTEXPR20
+				bool contains_hint(const_iterator hint, const Key & key) const;
 
 			//===================
 			// insert
@@ -762,6 +783,18 @@ namespace kerbal
 				template <typename OtherExtract, typename OtherKeyCompare>
 				KERBAL_CONSTEXPR20
 				void merge_unique(avl_ordered<Entity, OtherExtract, OtherKeyCompare, Allocator> & other);
+
+				KERBAL_CONSTEXPR20
+				static void set_difference(avl_ordered & set1, avl_ordered & set2, avl_ordered & to);
+
+				KERBAL_CONSTEXPR20
+				static void set_intersection(avl_ordered & set1, avl_ordered & set2, avl_ordered & to);
+
+				KERBAL_CONSTEXPR20
+				static void set_symmetric_difference(avl_ordered & set1, avl_ordered & set2, avl_ordered & to);
+
+				KERBAL_CONSTEXPR20
+				static void set_union(avl_ordered & set1, avl_ordered & set2, avl_ordered & to);
 
 				KERBAL_CONSTEXPR20
 				void swap(avl_ordered & other);

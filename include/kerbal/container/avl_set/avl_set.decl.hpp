@@ -272,6 +272,13 @@ namespace kerbal
 				find(const Key & key) const;
 
 				KERBAL_CONSTEXPR20
+				const_iterator find_hint(const_iterator hint, const_reference key) const;
+
+				template <typename Key>
+				KERBAL_CONSTEXPR20
+				const_iterator find_hint(const_iterator hint, const Key & key) const;
+
+				KERBAL_CONSTEXPR20
 				const_iterator lower_bound(const_reference key) const;
 
 				template <typename Key>
@@ -306,6 +313,13 @@ namespace kerbal
 				KERBAL_CONSTEXPR20
 				typename enable_if_transparent_lookup<Key, bool>::type
 				contains(const Key & key) const;
+
+				KERBAL_CONSTEXPR20
+				bool contains_hint(const_iterator hint, const_reference key) const;
+
+				template <typename Key>
+				KERBAL_CONSTEXPR20
+				bool contains_hint(const_iterator hint, const Key & key) const;
 
 			//===================
 			// insert
@@ -429,6 +443,18 @@ namespace kerbal
 				template <typename OtherKeyCompare>
 				KERBAL_CONSTEXPR20
 				void merge(avl_set<T, OtherKeyCompare, Allocator> & other);
+
+				KERBAL_CONSTEXPR20
+				static void set_difference(avl_set & set1, avl_set & set2, avl_set & to);
+
+				KERBAL_CONSTEXPR20
+				static void set_intersection(avl_set & set1, avl_set & set2, avl_set & to);
+
+				KERBAL_CONSTEXPR20
+				static void set_symmetric_difference(avl_set & set1, avl_set & set2, avl_set & to);
+
+				KERBAL_CONSTEXPR20
+				static void set_union(avl_set & set1, avl_set & set2, avl_set & to);
 
 				KERBAL_CONSTEXPR20
 				void swap(avl_set & other);

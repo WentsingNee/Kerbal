@@ -280,6 +280,20 @@ namespace kerbal
 				find(const Key & key);
 
 				KERBAL_CONSTEXPR20
+				const_iterator find_hint(const_iterator hint, const key_type & key) const;
+
+				KERBAL_CONSTEXPR20
+				iterator find_hint(const_iterator hint, const key_type & key);
+
+				template <typename Key>
+				KERBAL_CONSTEXPR20
+				const_iterator find_hint(const_iterator hint, const Key & key) const;
+
+				template <typename Key>
+				KERBAL_CONSTEXPR20
+				iterator find_hint(const_iterator hint, const Key & key);
+
+				KERBAL_CONSTEXPR20
 				const_iterator lower_bound(const key_type & key) const;
 
 				KERBAL_CONSTEXPR20
@@ -342,6 +356,13 @@ namespace kerbal
 				KERBAL_CONSTEXPR20
 				typename enable_if_transparent_lookup<Key, bool>::type
 				contains(const Key & key) const;
+
+				KERBAL_CONSTEXPR20
+				bool contains_hint(const_iterator hint, const key_type & key) const;
+
+				template <typename Key>
+				KERBAL_CONSTEXPR20
+				bool contains_hint(const_iterator hint, const Key & key) const;
 
 			//===================
 			// insert

@@ -777,6 +777,44 @@ namespace kerbal
 		template <typename Entity, typename Extract, typename KeyCompare, typename Allocator>
 		KERBAL_CONSTEXPR20
 		typename avl_ordered<Entity, Extract, KeyCompare, Allocator>::const_iterator
+		avl_ordered<Entity, Extract, KeyCompare, Allocator>::find_hint(const_iterator hint, const key_type & key) const
+		{
+			const Extract & e = this->extract();
+			return this->avl_type_only::k_find_hint(hint, key, e, this->key_comp());
+		}
+
+		template <typename Entity, typename Extract, typename KeyCompare, typename Allocator>
+		KERBAL_CONSTEXPR20
+		typename avl_ordered<Entity, Extract, KeyCompare, Allocator>::iterator
+		avl_ordered<Entity, Extract, KeyCompare, Allocator>::find_hint(const_iterator hint, const key_type & key)
+		{
+			const Extract & e = this->extract();
+			return this->avl_type_only::k_find_hint(hint, key, e, this->key_comp());
+		}
+
+		template <typename Entity, typename Extract, typename KeyCompare, typename Allocator>
+		template <typename Key>
+		KERBAL_CONSTEXPR20
+		typename avl_ordered<Entity, Extract, KeyCompare, Allocator>::const_iterator
+		avl_ordered<Entity, Extract, KeyCompare, Allocator>::find_hint(const_iterator hint, const Key & key) const
+		{
+			const Extract & e = this->extract();
+			return this->avl_type_only::k_find_hint(hint, key, e, this->key_comp());
+		}
+
+		template <typename Entity, typename Extract, typename KeyCompare, typename Allocator>
+		template <typename Key>
+		KERBAL_CONSTEXPR20
+		typename avl_ordered<Entity, Extract, KeyCompare, Allocator>::iterator
+		avl_ordered<Entity, Extract, KeyCompare, Allocator>::find_hint(const_iterator hint, const Key & key)
+		{
+			const Extract & e = this->extract();
+			return this->avl_type_only::k_find_hint(hint, key, e, this->key_comp());
+		}
+
+		template <typename Entity, typename Extract, typename KeyCompare, typename Allocator>
+		KERBAL_CONSTEXPR20
+		typename avl_ordered<Entity, Extract, KeyCompare, Allocator>::const_iterator
 		avl_ordered<Entity, Extract, KeyCompare, Allocator>::lower_bound(const key_type & key) const
 		{
 			const Extract & e = this->extract();
@@ -937,6 +975,23 @@ namespace kerbal
 		{
 			const Extract & e = this->extract();
 			return this->avl_type_only::k_contains(key, e, this->key_comp());
+		}
+
+		template <typename Entity, typename Extract, typename KeyCompare, typename Allocator>
+		KERBAL_CONSTEXPR20
+		bool avl_ordered<Entity, Extract, KeyCompare, Allocator>::contains_hint(const_iterator hint, const key_type & key) const
+		{
+			const Extract & e = this->extract();
+			return this->avl_type_only::k_contains_hint(hint, key, e, this->key_comp());
+		}
+
+		template <typename Entity, typename Extract, typename KeyCompare, typename Allocator>
+		template <typename Key>
+		KERBAL_CONSTEXPR20
+		bool avl_ordered<Entity, Extract, KeyCompare, Allocator>::contains_hint(const_iterator hint, const Key & key) const
+		{
+			const Extract & e = this->extract();
+			return this->avl_type_only::k_contains_hint(hint, key, e, this->key_comp());
 		}
 
 		//===================
@@ -1223,6 +1278,35 @@ namespace kerbal
 		{
 			this->avl_type_only::k_merge_unique(this->extract(), this->key_comp(), static_cast<avl_type_only &>(other));
 		}
+
+		template <typename Entity, typename Extract, typename KeyCompare, typename Allocator>
+		KERBAL_CONSTEXPR20
+		void avl_ordered<Entity, Extract, KeyCompare, Allocator>::set_difference(avl_ordered & set1, avl_ordered & set2, avl_ordered & to)
+		{
+			avl_type_only::k_set_difference(to.extract(), to.key_comp(), to, set1, set2);
+		}
+
+		template <typename Entity, typename Extract, typename KeyCompare, typename Allocator>
+		KERBAL_CONSTEXPR20
+		void avl_ordered<Entity, Extract, KeyCompare, Allocator>::set_intersection(avl_ordered & set1, avl_ordered & set2, avl_ordered & to)
+		{
+			avl_type_only::k_set_intersection(to.extract(), to.key_comp(), to, set1, set2);
+		}
+
+		template <typename Entity, typename Extract, typename KeyCompare, typename Allocator>
+		KERBAL_CONSTEXPR20
+		void avl_ordered<Entity, Extract, KeyCompare, Allocator>::set_symmetric_difference(avl_ordered & set1, avl_ordered & set2, avl_ordered & to)
+		{
+			avl_type_only::k_set_symmetric_difference(to.extract(), to.key_comp(), to, set1, set2);
+		}
+
+		template <typename Entity, typename Extract, typename KeyCompare, typename Allocator>
+		KERBAL_CONSTEXPR20
+		void avl_ordered<Entity, Extract, KeyCompare, Allocator>::set_union(avl_ordered & set1, avl_ordered & set2, avl_ordered & to)
+		{
+			avl_type_only::k_set_union(to.extract(), to.key_comp(), to, set1, set2);
+		}
+
 
 		template <typename Entity, typename Extract, typename KeyCompare, typename Allocator>
 		KERBAL_CONSTEXPR20
