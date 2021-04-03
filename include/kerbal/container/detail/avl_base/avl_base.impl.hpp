@@ -1479,6 +1479,226 @@ namespace kerbal
 			template <typename Extract, typename KeyCompare, typename Key>
 			KERBAL_CONSTEXPR14
 			typename
+			avl_type_only<Entity>::const_iterator
+			avl_type_only<Entity>::
+			k_find_hint_search_left(
+				const node_base * p_start,
+				Extract & e, KeyCompare & kc,
+				const Key & key
+			) const
+			{
+				while (true) {
+
+					// <=> p_start = midorder_prev(p);
+					while (true) {
+						const head_node * parent = p_start->parent;
+						if (parent == &this->k_head) {
+							return this->cend();
+						}
+						const node_base * p_start_bak = p_start;
+						p_start = parent->as_node_base();
+						if (p_start_bak != parent->left) { // aka: p_start_bak == parent->right
+							break;
+						}
+					}
+
+					const node_base * cur_base = p_start;
+					const typename Extract::key_type & cur_key = e(node::reinterpret_as(cur_base)->member());
+					if (kc(key, cur_key)) { // key < cur_key
+						// search on p->left;
+
+						bool always_search_left = true;
+						while (cur_base != get_avl_vnull_node()) {
+							const typename Extract::key_type & cur_key = e(node::reinterpret_as(cur_base)->member());
+							if (kc(key, cur_key)) { // key < cur_key
+								cur_base = cur_base->left;
+							} else if (kc(cur_key, key)) { // cur_key < key
+								cur_base = cur_base->right;
+								always_search_left = false;
+							} else { // key == cur_key
+								return const_iterator(cur_base);
+							}
+						}
+						if (!always_search_left) {
+							return this->cend();
+						}
+
+					} else if (kc(cur_key, key)) { // cur_key < key
+						return this->cend();
+					} else { // key == cur_key
+						return const_iterator(cur_base);
+					}
+				}
+			}
+
+			template <typename Entity>
+			template <typename Extract, typename KeyCompare, typename Key>
+			KERBAL_CONSTEXPR14
+			typename
+			avl_type_only<Entity>::const_iterator
+			avl_type_only<Entity>::
+			k_find_hint_search_right(
+				const node_base * p_start,
+				Extract & e, KeyCompare & kc,
+				const Key & key
+			) const
+			{
+				while (true) {
+
+					// <=> p_start = midorder_next(p);
+					while (true) {
+						const head_node * parent = p_start->parent;
+						if (parent == &this->k_head) {
+							return this->cend();
+						}
+						const node_base * p_start_bak = p_start;
+						p_start = parent->as_node_base();
+						if (p_start_bak == parent->left) {
+							break;
+						}
+					}
+
+					const node_base * cur_base = p_start;
+					const typename Extract::key_type & cur_key = e(node::reinterpret_as(cur_base)->member());
+					if (kc(key, cur_key)) { // key < cur_key
+						return this->cend();
+					} else if (kc(cur_key, key)) { // cur_key < key
+						// search on p->right;
+
+						bool always_search_right = true;
+						while (cur_base != get_avl_vnull_node()) {
+							const typename Extract::key_type & cur_key = e(node::reinterpret_as(cur_base)->member());
+							if (kc(key, cur_key)) { // key < cur_key
+								cur_base = cur_base->left;
+								always_search_right = false;
+							} else if (kc(cur_key, key)) { // cur_key < key
+								cur_base = cur_base->right;
+							} else { // key == cur_key
+								return const_iterator(cur_base);
+							}
+						}
+						if (!always_search_right) {
+							return this->cend();
+						}
+
+					} else { // key == cur_key
+						return const_iterator(cur_base);
+					}
+				}
+			}
+
+			template <typename Entity>
+			template <typename Extract, typename KeyCompare, typename Key>
+			KERBAL_CONSTEXPR14
+			typename
+			avl_type_only<Entity>::const_iterator
+			avl_type_only<Entity>::
+			k_find_hint_impl(
+				const_iterator hint,
+				Extract & e, KeyCompare & kc,
+				const Key & key
+			) const
+			{
+				if (hint == this->cend()) {
+					return this->k_find(e, kc, key);
+				}
+
+				const node_base * p_start = hint.current->as_node_base();
+				bool always_search_left = true;
+				bool always_search_right = true;
+				{
+					const node_base * cur_base = p_start;
+					do {
+						const typename Extract::key_type & cur_key = e(node::reinterpret_as(cur_base)->member());
+						if (kc(key, cur_key)) { // key < cur_key
+							cur_base = cur_base->left;
+							always_search_right = false;
+						} else if (kc(cur_key, key)) { // cur_key < key
+							cur_base = cur_base->right;
+							always_search_left = false;
+						} else { // key == cur_key
+							return const_iterator(cur_base);
+						}
+					} while (cur_base != get_avl_vnull_node());
+				}
+
+				if (always_search_left) {
+					return this->k_find_hint_search_left(p_start, e, kc, key);
+				}
+				if (always_search_right) {
+					return this->k_find_hint_search_right(p_start, e, kc, key);
+				}
+				return this->cend();
+			}
+
+			template <typename Entity>
+			template <typename Extract, typename KeyCompare>
+			KERBAL_CONSTEXPR14
+			typename
+			avl_type_only<Entity>::const_iterator
+			avl_type_only<Entity>::
+			k_find_hint(
+				const_iterator hint,
+				Extract & e, KeyCompare & kc,
+				const typename Extract::key_type & key
+			) const
+			{
+				return this->k_find_hint_impl(hint, e, kc, key);
+			}
+
+			template <typename Entity>
+			template <typename Extract, typename KeyCompare>
+			KERBAL_CONSTEXPR14
+			typename
+			avl_type_only<Entity>::iterator
+			avl_type_only<Entity>::
+			k_find_hint(
+				const_iterator hint,
+				Extract & e, KeyCompare & kc,
+				const typename Extract::key_type & key
+			)
+			{
+				return this->k_find_hint_impl(hint, e, kc, key).cast_to_mutable();
+			}
+
+			template <typename Entity>
+			template <typename Extract, typename KeyCompare, typename Key>
+			KERBAL_CONSTEXPR14
+			typename
+			avl_type_only<Entity>::template enable_if_transparent_lookup<
+				Extract, KeyCompare, Key, typename avl_type_only<Entity>::const_iterator
+			>::type
+			avl_type_only<Entity>::
+			k_find_hint(
+				const_iterator hint,
+				Extract & e, KeyCompare & kc,
+				const Key & key
+			) const
+			{
+				return this->k_find_hint_impl(hint, e, kc, key);
+			}
+
+			template <typename Entity>
+			template <typename Extract, typename KeyCompare, typename Key>
+			KERBAL_CONSTEXPR14
+			typename
+			avl_type_only<Entity>::template enable_if_transparent_lookup<
+				Extract, KeyCompare, Key, typename avl_type_only<Entity>::iterator
+			>::type
+			avl_type_only<Entity>::
+			k_find_hint(
+				const_iterator hint,
+				Extract & e, KeyCompare & kc,
+				const Key & key
+			)
+			{
+				return this->k_find_hint_impl(hint, e, kc, key).cast_to_mutable();
+			}
+
+			template <typename Entity>
+			template <typename Extract, typename KeyCompare, typename Key>
+			KERBAL_CONSTEXPR14
+			typename
 			avl_type_only<Entity>::node_base const *
 			avl_type_only<Entity>::
 			k_lower_bound_helper(
@@ -1849,6 +2069,28 @@ namespace kerbal
 			) const
 			{
 				return this->k_contains_impl(e, kc, key);
+			}
+
+			template <typename Entity>
+			template <typename Extract, typename KeyCompare>
+			KERBAL_CONSTEXPR14
+			bool
+			avl_type_only<Entity>::
+			k_contains_hint(const_iterator hint, Extract & e, KeyCompare & kc, const typename Extract::key_type & key) const
+			{
+				return this->k_find_hint(hint, e, kc, key) != this->cend();
+			}
+
+			template <typename Entity>
+			template <typename Extract, typename KeyCompare, typename Key>
+			KERBAL_CONSTEXPR14
+			typename avl_type_only<Entity>::template enable_if_transparent_lookup<
+				Extract, KeyCompare, Key, bool
+			>::type
+			avl_type_only<Entity>::
+			k_contains_hint(const_iterator hint, Extract & e, KeyCompare & kc, const Key & key) const
+			{
+				return this->k_find_hint(hint, e, kc, key) != this->cend();
 			}
 
 

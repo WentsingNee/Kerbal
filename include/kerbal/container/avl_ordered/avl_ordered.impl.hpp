@@ -1076,6 +1076,54 @@ namespace kerbal
 		typename
 		avl_ordered<Entity, Extract, KeyCompare, Allocator>::const_iterator
 		avl_ordered<Entity, Extract, KeyCompare, Allocator>::
+		find_hint(const_iterator hint, const key_type & key) const
+		{
+			return this->avl_type_only::k_find_hint(hint, this->extract(), this->key_comp(), key);
+		}
+
+		template <typename Entity, typename Extract, typename KeyCompare, typename Allocator>
+		KERBAL_CONSTEXPR20
+		typename
+		avl_ordered<Entity, Extract, KeyCompare, Allocator>::iterator
+		avl_ordered<Entity, Extract, KeyCompare, Allocator>::
+		find_hint(const_iterator hint, const key_type & key)
+		{
+			return this->avl_type_only::k_find_hint(hint, this->extract(), this->key_comp(), key);
+		}
+
+		template <typename Entity, typename Extract, typename KeyCompare, typename Allocator>
+		template <typename Key>
+		KERBAL_CONSTEXPR20
+		typename
+		avl_ordered<Entity, Extract, KeyCompare, Allocator>::template enable_if_transparent_lookup<
+			Key,
+			typename avl_ordered<Entity, Extract, KeyCompare, Allocator>::const_iterator
+		>::type
+		avl_ordered<Entity, Extract, KeyCompare, Allocator>::
+		find_hint(const_iterator hint, const Key & key) const
+		{
+			return this->avl_type_only::k_find_hint(hint, this->extract(), this->key_comp(), key);
+		}
+
+		template <typename Entity, typename Extract, typename KeyCompare, typename Allocator>
+		template <typename Key>
+		KERBAL_CONSTEXPR20
+		typename
+		avl_ordered<Entity, Extract, KeyCompare, Allocator>::template enable_if_transparent_lookup<
+			Key,
+			typename avl_ordered<Entity, Extract, KeyCompare, Allocator>::iterator
+		>::type
+		avl_ordered<Entity, Extract, KeyCompare, Allocator>::
+		find_hint(const_iterator hint, const Key & key)
+		{
+			return this->avl_type_only::k_find_hint(hint, this->extract(), this->key_comp(), key);
+		}
+
+		template <typename Entity, typename Extract, typename KeyCompare, typename Allocator>
+		KERBAL_CONSTEXPR20
+		typename
+		avl_ordered<Entity, Extract, KeyCompare, Allocator>::const_iterator
+		avl_ordered<Entity, Extract, KeyCompare, Allocator>::
 		lower_bound(const key_type & key) const
 		{
 			return this->avl_type_only::k_lower_bound(this->extract(), this->key_comp(), key);
@@ -1246,6 +1294,29 @@ namespace kerbal
 		contains(const Key & key) const
 		{
 			return this->avl_type_only::k_contains(this->extract(), this->key_comp(), key);
+		}
+
+		template <typename Entity, typename Extract, typename KeyCompare, typename Allocator>
+		KERBAL_CONSTEXPR20
+		bool
+		avl_ordered<Entity, Extract, KeyCompare, Allocator>::
+		contains_hint(const_iterator hint, const key_type & key) const
+		{
+			return this->avl_type_only::k_contains_hint(hint, this->extract(), this->key_comp(), key);
+		}
+
+		template <typename Entity, typename Extract, typename KeyCompare, typename Allocator>
+		template <typename Key>
+		KERBAL_CONSTEXPR20
+		typename
+		avl_ordered<Entity, Extract, KeyCompare, Allocator>::template enable_if_transparent_lookup<
+			Key,
+			bool
+		>::type
+		avl_ordered<Entity, Extract, KeyCompare, Allocator>::
+		contains_hint(const_iterator hint, const Key & key) const
+		{
+			return this->avl_type_only::k_contains_hint(hint, this->extract(), this->key_comp(), key);
 		}
 
 		//===================

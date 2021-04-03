@@ -397,6 +397,30 @@ namespace kerbal
 		typename
 		avl_set<T, KeyCompare, Allocator>::const_iterator
 		avl_set<T, KeyCompare, Allocator>::
+		find_hint(const_iterator hint, const key_type & key) const
+		{
+			return this->avl_ordered::find_hint(hint, key);
+		}
+
+		template <typename T, typename KeyCompare, typename Allocator>
+		template <typename Key>
+		KERBAL_CONSTEXPR20
+		typename
+		avl_set<T, KeyCompare, Allocator>::template enable_if_transparent_lookup<
+			Key,
+			typename avl_set<T, KeyCompare, Allocator>::const_iterator
+		>::type
+		avl_set<T, KeyCompare, Allocator>::
+		find_hint(const_iterator hint, const Key & key) const
+		{
+			return this->avl_ordered::find_hint(hint, key);
+		}
+
+		template <typename T, typename KeyCompare, typename Allocator>
+		KERBAL_CONSTEXPR20
+		typename
+		avl_set<T, KeyCompare, Allocator>::const_iterator
+		avl_set<T, KeyCompare, Allocator>::
 		lower_bound(const key_type & key) const
 		{
 			return this->avl_ordered::lower_bound(key);
@@ -490,6 +514,29 @@ namespace kerbal
 		contains(const Key & key) const
 		{
 			return this->avl_ordered::contains(key);
+		}
+
+		template <typename T, typename KeyCompare, typename Allocator>
+		KERBAL_CONSTEXPR20
+		bool
+		avl_set<T, KeyCompare, Allocator>::
+		contains_hint(const_iterator hint, const key_type & key) const
+		{
+			return this->avl_ordered::contains_hint(hint, key);
+		}
+
+		template <typename T, typename KeyCompare, typename Allocator>
+		template <typename Key>
+		KERBAL_CONSTEXPR20
+		typename
+		avl_set<T, KeyCompare, Allocator>::template enable_if_transparent_lookup<
+			Key,
+			bool
+		>::type
+		avl_set<T, KeyCompare, Allocator>::
+		contains_hint(const_iterator hint, const Key & key) const
+		{
+			return this->avl_ordered::contains_hint(hint, key);
 		}
 
 

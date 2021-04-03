@@ -470,6 +470,54 @@ namespace kerbal
 		typename
 		avl_map<K, M, KeyCompare, Allocator>::const_iterator
 		avl_map<K, M, KeyCompare, Allocator>::
+		find_hint(const_iterator hint, const key_type & key) const
+		{
+			return this->avl_ordered::find_hint(hint, key);
+		}
+
+		template <typename K, typename M, typename KeyCompare, typename Allocator>
+		KERBAL_CONSTEXPR20
+		typename
+		avl_map<K, M, KeyCompare, Allocator>::iterator
+		avl_map<K, M, KeyCompare, Allocator>::
+		find_hint(const_iterator hint, const key_type & key)
+		{
+			return this->avl_ordered::find_hint(hint, key);
+		}
+
+		template <typename K, typename M, typename KeyCompare, typename Allocator>
+		template <typename Key>
+		KERBAL_CONSTEXPR20
+		typename
+		avl_map<K, M, KeyCompare, Allocator>::template enable_if_transparent_lookup<
+			Key,
+			typename avl_map<K, M, KeyCompare, Allocator>::const_iterator
+		>::type
+		avl_map<K, M, KeyCompare, Allocator>::
+		find_hint(const_iterator hint, const Key & key) const
+		{
+			return this->avl_ordered::find_hint(hint, key);
+		}
+
+		template <typename K, typename M, typename KeyCompare, typename Allocator>
+		template <typename Key>
+		KERBAL_CONSTEXPR20
+		typename
+		avl_map<K, M, KeyCompare, Allocator>::template enable_if_transparent_lookup<
+			Key,
+			typename avl_map<K, M, KeyCompare, Allocator>::iterator
+		>::type
+		avl_map<K, M, KeyCompare, Allocator>::
+		find_hint(const_iterator hint, const Key & key)
+		{
+			return this->avl_ordered::find_hint(hint, key);
+		}
+
+		template <typename K, typename M, typename KeyCompare, typename Allocator>
+		KERBAL_CONSTEXPR20
+		typename
+		avl_map<K, M, KeyCompare, Allocator>::const_iterator
+		avl_map<K, M, KeyCompare, Allocator>::
 		lower_bound(const key_type & key) const
 		{
 			return this->avl_ordered::lower_bound(key);
@@ -640,6 +688,29 @@ namespace kerbal
 		contains(const Key & key) const
 		{
 			return this->avl_ordered::contains(key);
+		}
+
+		template <typename K, typename M, typename KeyCompare, typename Allocator>
+		KERBAL_CONSTEXPR20
+		bool
+		avl_map<K, M, KeyCompare, Allocator>::
+		contains_hint(const_iterator hint, const key_type & key) const
+		{
+			return this->avl_ordered::contains_hint(hint, key);
+		}
+
+		template <typename K, typename M, typename KeyCompare, typename Allocator>
+		template <typename Key>
+		KERBAL_CONSTEXPR20
+		typename
+		avl_map<K, M, KeyCompare, Allocator>::template enable_if_transparent_lookup<
+			Key,
+			bool
+		>::type
+		avl_map<K, M, KeyCompare, Allocator>::
+		contains_hint(const_iterator hint, const Key & key) const
+		{
+			return this->avl_ordered::contains_hint(hint, key);
 		}
 
 
