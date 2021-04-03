@@ -140,11 +140,11 @@ namespace kerbal
 
 				template <typename InputIterator>
 				KERBAL_CONSTEXPR14
-				void __range_copy_constructor(InputIterator first, InputIterator last, std::input_iterator_tag) KERBAL_NOEXCEPT;
+				void __range_copy_constructor(InputIterator first, InputIterator last, std::input_iterator_tag);
 
 				template <typename RandomAccessIterator>
 				KERBAL_CONSTEXPR14
-				void __range_copy_constructor(RandomAccessIterator first, RandomAccessIterator last, std::random_access_iterator_tag) KERBAL_NOEXCEPT;
+				void __range_copy_constructor(RandomAccessIterator first, RandomAccessIterator last, std::random_access_iterator_tag);
 
 			public:
 

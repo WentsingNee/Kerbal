@@ -179,7 +179,7 @@ namespace kerbal
 		template <typename InputIterator>
 		KERBAL_CONSTEXPR14
 		void static_vector<Tp, N>::__range_copy_constructor(InputIterator first, InputIterator last,
-													std::input_iterator_tag) KERBAL_NOEXCEPT
+													std::input_iterator_tag)
 		{
 			// input iterator, no throw copy constructible
 			// if any exception thrown, static_vector_base will do the cleanup job
@@ -194,7 +194,7 @@ namespace kerbal
 		template <typename RandomAccessIterator>
 		KERBAL_CONSTEXPR14
 		void static_vector<Tp, N>::__range_copy_constructor(RandomAccessIterator first, RandomAccessIterator last,
-													std::random_access_iterator_tag) KERBAL_NOEXCEPT
+													std::random_access_iterator_tag)
 		{
 			// random access iterator, no throw copy constructible
 			// if any exception thrown, static_vector_base will do the cleanup job
