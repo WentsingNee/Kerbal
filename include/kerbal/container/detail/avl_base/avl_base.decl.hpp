@@ -737,6 +737,71 @@ namespace kerbal
 				private:
 					template <typename Extract, typename KeyCompare, typename Key>
 					KERBAL_CONSTEXPR14
+					const_iterator
+					k_find_hint_search_left(
+						const node_base * p_start,
+						Extract & e, KeyCompare & kc,
+						const Key & key
+					) const;
+
+					template <typename Extract, typename KeyCompare, typename Key>
+					KERBAL_CONSTEXPR14
+					const_iterator
+					k_find_hint_search_right(
+						const node_base * p_start,
+						Extract & e, KeyCompare & kc,
+						const Key & key
+					) const;
+
+					template <typename Extract, typename KeyCompare, typename Key>
+					KERBAL_CONSTEXPR14
+					const_iterator
+					k_find_hint_impl(
+						const_iterator hint,
+						Extract & e, KeyCompare & kc,
+						const Key & key
+					) const;
+
+				public:
+					template <typename Extract, typename KeyCompare>
+					KERBAL_CONSTEXPR14
+					const_iterator
+					k_find_hint(
+						const_iterator hint,
+						Extract & e, KeyCompare & kc,
+						const typename Extract::key_type & key
+					) const;
+
+					template <typename Extract, typename KeyCompare>
+					KERBAL_CONSTEXPR14
+					iterator
+					k_find_hint(
+						const_iterator hint,
+						Extract & e, KeyCompare & kc,
+						const typename Extract::key_type & key
+					);
+
+					template <typename Extract, typename KeyCompare, typename Key>
+					KERBAL_CONSTEXPR14
+					typename enable_if_transparent_lookup<Extract, KeyCompare, Key, const_iterator>::type
+					k_find_hint(
+						const_iterator hint,
+						Extract & e, KeyCompare & kc,
+						const Key & key
+					) const;
+
+					template <typename Extract, typename KeyCompare, typename Key>
+					KERBAL_CONSTEXPR14
+					typename enable_if_transparent_lookup<Extract, KeyCompare, Key, iterator>::type
+					k_find_hint(
+						const_iterator hint,
+						Extract & e, KeyCompare & kc,
+						const Key & key
+					);
+
+				private:
+					template <typename Extract, typename KeyCompare, typename Key>
+					KERBAL_CONSTEXPR14
 					static
 					const node_base *
 					k_lower_bound_helper(
@@ -937,6 +1002,24 @@ namespace kerbal
 						bool
 					>::type
 					k_contains(
+						Extract & e, KeyCompare & kc,
+						const Key & key
+					) const;
+
+				public:
+					template <typename Extract, typename KeyCompare>
+					KERBAL_CONSTEXPR14
+					bool k_contains_hint(
+						const_iterator hint,
+						Extract & e, KeyCompare & kc,
+						const typename Extract::key_type & key
+					) const;
+
+					template <typename Extract, typename KeyCompare, typename Key>
+					KERBAL_CONSTEXPR14
+					typename enable_if_transparent_lookup<Extract, KeyCompare, Key, bool>::type
+					k_contains_hint(
+						const_iterator hint,
 						Extract & e, KeyCompare & kc,
 						const Key & key
 					) const;
