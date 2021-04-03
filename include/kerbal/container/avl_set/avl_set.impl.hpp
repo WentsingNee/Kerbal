@@ -309,6 +309,23 @@ namespace kerbal
 		template <typename T, typename KeyCompare, typename Allocator>
 		KERBAL_CONSTEXPR20
 		typename avl_set<T, KeyCompare, Allocator>::const_iterator
+		avl_set<T, KeyCompare, Allocator>::find_hint(const_iterator hint, const key_type & key) const
+		{
+			return this->avl_ordered::find_hint(hint, key);
+		}
+
+		template <typename T, typename KeyCompare, typename Allocator>
+		template <typename Key>
+		KERBAL_CONSTEXPR20
+		typename avl_set<T, KeyCompare, Allocator>::const_iterator
+		avl_set<T, KeyCompare, Allocator>::find_hint(const_iterator hint, const Key & key) const
+		{
+			return this->avl_ordered::find_hint(hint, key);
+		}
+
+		template <typename T, typename KeyCompare, typename Allocator>
+		KERBAL_CONSTEXPR20
+		typename avl_set<T, KeyCompare, Allocator>::const_iterator
 		avl_set<T, KeyCompare, Allocator>::lower_bound(const key_type & key) const
 		{
 			return this->avl_ordered::lower_bound(key);
@@ -386,6 +403,21 @@ namespace kerbal
 		avl_set<T, KeyCompare, Allocator>::contains(const Key & key) const
 		{
 			return this->avl_ordered::contains(key);
+		}
+
+		template <typename T, typename KeyCompare, typename Allocator>
+		KERBAL_CONSTEXPR20
+		bool avl_set<T, KeyCompare, Allocator>::contains_hint(const_iterator hint, const key_type & key) const
+		{
+			return this->avl_ordered::contains_hint(hint, key);
+		}
+
+		template <typename T, typename KeyCompare, typename Allocator>
+		template <typename Key>
+		KERBAL_CONSTEXPR20
+		bool avl_set<T, KeyCompare, Allocator>::contains_hint(const_iterator hint, const Key & key) const
+		{
+			return this->avl_ordered::contains_hint(hint, key);
 		}
 
 
@@ -593,6 +625,34 @@ namespace kerbal
 		void avl_set<T, KeyCompare, Allocator>::merge(avl_set<T, OtherKeyCompare, Allocator> & other)
 		{
 			this->avl_ordered::merge_unique(static_cast<avl_ordered &>(other));
+		}
+
+		template <typename T, typename KeyCompare, typename Allocator>
+		KERBAL_CONSTEXPR20
+		void avl_set<T, KeyCompare, Allocator>::set_difference(avl_set & set1, avl_set & set2, avl_set & to)
+		{
+			avl_ordered::set_difference(set1, set2, to);
+		}
+
+		template <typename T, typename KeyCompare, typename Allocator>
+		KERBAL_CONSTEXPR20
+		void avl_set<T, KeyCompare, Allocator>::set_intersection(avl_set & set1, avl_set & set2, avl_set & to)
+		{
+			avl_ordered::set_intersection(set1, set2, to);
+		}
+
+		template <typename T, typename KeyCompare, typename Allocator>
+		KERBAL_CONSTEXPR20
+		void avl_set<T, KeyCompare, Allocator>::set_symmetric_difference(avl_set & set1, avl_set & set2, avl_set & to)
+		{
+			avl_ordered::set_symmetric_difference(set1, set2, to);
+		}
+
+		template <typename T, typename KeyCompare, typename Allocator>
+		KERBAL_CONSTEXPR20
+		void avl_set<T, KeyCompare, Allocator>::set_union(avl_set & set1, avl_set & set2, avl_set & to)
+		{
+			avl_ordered::set_union(set1, set2, to);
 		}
 
 		template <typename T, typename KeyCompare, typename Allocator>

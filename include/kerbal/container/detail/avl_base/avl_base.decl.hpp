@@ -579,6 +579,38 @@ namespace kerbal
 				private:
 					template <typename Extract, typename KeyCompare, typename Key>
 					KERBAL_CONSTEXPR14
+					const_iterator k_find_hint_search_left(const node_base * p_start, const Key & key, Extract & e, KeyCompare & kc) const;
+
+					template <typename Key, typename Extract, typename KeyCompare>
+					KERBAL_CONSTEXPR14
+					const_iterator k_find_hint_search_right(const node_base * p_start, const Key & key, Extract & e, KeyCompare & kc) const;
+
+					template <typename Key, typename Extract, typename KeyCompare>
+					KERBAL_CONSTEXPR14
+					const_iterator k_find_hint_impl(const_iterator hint, const Key & key, Extract & e, KeyCompare & kc) const;
+
+				public:
+					template <typename Extract, typename KeyCompare>
+					KERBAL_CONSTEXPR14
+					const_iterator k_find_hint(const_iterator hint, const typename Extract::key_type & key, Extract & e, KeyCompare & kc) const;
+
+					template <typename Extract, typename KeyCompare>
+					KERBAL_CONSTEXPR14
+					iterator k_find_hint(const_iterator hint, const typename Extract::key_type & key, Extract & e, KeyCompare & kc);
+
+					template <typename Key, typename Extract, typename KeyCompare>
+					KERBAL_CONSTEXPR14
+					typename enable_if_transparent_lookup<Key, Extract, KeyCompare, const_iterator>::type
+					k_find_hint(const_iterator hint, const Key & key, Extract & e, KeyCompare & kc) const;
+
+					template <typename Key, typename Extract, typename KeyCompare>
+					KERBAL_CONSTEXPR14
+					typename enable_if_transparent_lookup<Key, Extract, KeyCompare, iterator>::type
+					k_find_hint(const_iterator hint, const Key & key, Extract & e, KeyCompare & kc);
+
+				private:
+					template <typename Key, typename Extract, typename KeyCompare>
+					KERBAL_CONSTEXPR14
 					static const node_base *
 					k_lower_bound_helper(Extract & e, KeyCompare & kc, const Key & key, const node_base * p_base, const node_base * lbound);
 
@@ -697,6 +729,16 @@ namespace kerbal
 					KERBAL_CONSTEXPR14
 					typename enable_if_transparent_lookup<Extract, KeyCompare, Key, bool>::type
 					k_contains(Extract & e, KeyCompare & kc, const Key & key) const;
+
+				public:
+					template <typename Extract, typename KeyCompare>
+					KERBAL_CONSTEXPR14
+					bool k_contains_hint(const_iterator hint, const typename Extract::key_type & key, Extract & e, KeyCompare & kc) const;
+
+					template <typename Key, typename Extract, typename KeyCompare>
+					KERBAL_CONSTEXPR14
+					typename enable_if_transparent_lookup<Key, Extract, KeyCompare, bool>::type
+					k_contains_hint(const_iterator hint, const Key & key, Extract & e, KeyCompare & kc) const;
 
 
 				//===================
@@ -947,6 +989,64 @@ namespace kerbal
 					template <typename ThisExtract, typename ThisKeyCompare>
 					KERBAL_CONSTEXPR20
 					void k_merge_unique(ThisExtract & this_e, ThisKeyCompare & this_kc, avl_type_only & other);
+
+
+					template <typename Extract, typename KeyCompare>
+					KERBAL_CONSTEXPR20
+					static void k_set_difference(
+							Extract & e, KeyCompare & kc, avl_type_only & to,
+							avl_type_only & set1, const_iterator first1, const_iterator last1,
+							avl_type_only & set2, const_iterator first2, const_iterator last2
+					);
+
+					template <typename Extract, typename KeyCompare>
+					KERBAL_CONSTEXPR20
+					static void k_set_difference(Extract & e, KeyCompare & kc, avl_type_only & to, avl_type_only & set1, avl_type_only & set2);
+
+					template <typename Extract, typename KeyCompare>
+					KERBAL_CONSTEXPR20
+					static void k_set_intersection(
+							Extract & e, KeyCompare & kc, avl_type_only & to,
+							avl_type_only & set1, const_iterator first1, const_iterator last1,
+							avl_type_only & set2, const_iterator first2, const_iterator last2
+					);
+
+					template <typename Extract, typename KeyCompare>
+					KERBAL_CONSTEXPR20
+					static void k_set_intersection(Extract & e, KeyCompare & kc, avl_type_only & to, avl_type_only & set1, avl_type_only & set2);
+
+					template <typename Extract, typename KeyCompare>
+					KERBAL_CONSTEXPR20
+					static void k_set_symmetric_difference(
+							Extract & e, KeyCompare & kc, avl_type_only & to,
+							avl_type_only & set1, const_iterator first1, const_iterator last1,
+							avl_type_only & set2, const_iterator first2, const_iterator last2
+					);
+
+					template <typename Extract, typename KeyCompare>
+					KERBAL_CONSTEXPR20
+					static void k_set_symmetric_difference(Extract & e, KeyCompare & kc, avl_type_only & to, avl_type_only & set1, avl_type_only & set2);
+
+					template <typename Extract, typename KeyCompare>
+					KERBAL_CONSTEXPR20
+					static void k_set_union(
+							Extract & e, KeyCompare & kc, avl_type_only & to,
+							avl_type_only & set1, const_iterator first1, const_iterator last1,
+							avl_type_only & set2, const_iterator first2, const_iterator last2
+					);
+
+					template <typename Extract, typename KeyCompare>
+					KERBAL_CONSTEXPR20
+					static void k_set_union_unique(
+							Extract & e, KeyCompare & kc, avl_type_only & to,
+							avl_type_only & set1, const_iterator first1, const_iterator last1,
+							avl_type_only & set2, const_iterator first2, const_iterator last2
+					);
+
+					template <typename Extract, typename KeyCompare>
+					KERBAL_CONSTEXPR20
+					static void k_set_union(Extract & e, KeyCompare & kc, avl_type_only & to, avl_type_only & set1, avl_type_only & set2);
+
 
 
 					template <typename F>
