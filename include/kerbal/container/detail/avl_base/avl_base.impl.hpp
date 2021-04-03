@@ -3063,6 +3063,233 @@ namespace kerbal
 
 
 			template <typename Entity>
+			template <typename Extract, typename KeyCompare>
+			KERBAL_CONSTEXPR20
+			void
+			avl_type_only<Entity>::
+			k_set_difference(
+				Extract & e, KeyCompare & kc, avl_type_only & to,
+				avl_type_only & set1, const_iterator first1, const_iterator last1,
+				avl_type_only const & /*set2*/, const_iterator first2, const_iterator last2
+			)
+			{
+				while (first1 != last1) {
+					if (first2 != last2) {
+						const typename Extract::key_type & key1 = e(*first1);
+						const typename Extract::key_type & key2 = e(*first2);
+						if (kc(key1, key2)) { // *first1 < *first2
+							first1 = to.k_splice(e, kc, set1, first1);
+						} else { // *first1 >= *first2
+							if (!static_cast<bool>(kc(key2, key1))) { // *first1 == *first2
+								++first1;
+							}
+							++first2;
+						}
+					} else {
+						to.k_merge(e, kc, set1, first1, last1);
+						return;
+					}
+				}
+			}
+
+			template <typename Entity>
+			template <typename Extract, typename KeyCompare>
+			KERBAL_CONSTEXPR20
+			void
+			avl_type_only<Entity>::
+			k_set_difference(
+				Extract & e, KeyCompare & kc, avl_type_only & to,
+				avl_type_only & set1,
+				avl_type_only const & set2
+			)
+			{
+				avl_type_only::k_set_difference(
+					e, kc, to,
+					set1, set1.cbegin(), set1.cend(),
+					set2, set2.cbegin(), set2.cend()
+				);
+			}
+
+			template <typename Entity>
+			template <typename Extract, typename KeyCompare>
+			KERBAL_CONSTEXPR20
+			void
+			avl_type_only<Entity>::
+			k_set_intersection(
+				Extract & e, KeyCompare & kc, avl_type_only & to,
+				avl_type_only & set1, const_iterator first1, const_iterator last1,
+				avl_type_only & /*set2*/, const_iterator first2, const_iterator last2
+			)
+			{
+				while (first1 != last1) {
+					if (first2 != last2) {
+						const typename Extract::key_type & key1 = e(*first1);
+						const typename Extract::key_type & key2 = e(*first2);
+						if (kc(key1, key2)) { // *first1 < *first2
+							++first1;
+						} else if (kc(key2, key1)) { // *first2 < *first1
+							++first2;
+						} else { // *first1 == *first2
+							first1 = to.k_splice(e, kc, set1, first1);
+							++first2;
+						}
+					} else {
+						break;
+					}
+				}
+			}
+
+			template <typename Entity>
+			template <typename Extract, typename KeyCompare>
+			KERBAL_CONSTEXPR20
+			void
+			avl_type_only<Entity>::
+			k_set_intersection(
+				Extract & e, KeyCompare & kc, avl_type_only & to,
+				avl_type_only & set1,
+				avl_type_only & set2
+			)
+			{
+				avl_type_only::k_set_intersection(
+					e, kc, to,
+					set1, set1.cbegin(), set1.cend(),
+					set2, set2.cbegin(), set2.cend()
+				);
+			}
+
+			template <typename Entity>
+			template <typename Extract, typename KeyCompare>
+			KERBAL_CONSTEXPR20
+			void
+			avl_type_only<Entity>::
+			k_set_symmetric_difference(
+				Extract & e, KeyCompare & kc, avl_type_only & to,
+				avl_type_only & set1, const_iterator first1, const_iterator last1,
+				avl_type_only & set2, const_iterator first2, const_iterator last2
+			)
+			{
+				while (first1 != last1) {
+					if (first2 != last2) {
+						const typename Extract::key_type & key1 = e(*first1);
+						const typename Extract::key_type & key2 = e(*first2);
+						if (kc(key1, key2)) { // *first1 < *first2
+							first1 = to.k_splice(e, kc, set1, first1);
+						} else if (kc(key2, key1)) { // *first2 < *first1
+							first2 = to.k_splice(e, kc, set2, first2);
+						} else { // *first1 == *first2
+							++first1;
+							++first2;
+						}
+					} else {
+						to.k_merge(e, kc, set1, first1, last1);
+						return;
+					}
+				}
+				to.k_merge(e, kc, set2, first2, last2);
+			}
+
+			template <typename Entity>
+			template <typename Extract, typename KeyCompare>
+			KERBAL_CONSTEXPR20
+			void
+			avl_type_only<Entity>::
+			k_set_symmetric_difference(
+				Extract & e, KeyCompare & kc, avl_type_only & to,
+				avl_type_only & set1,
+				avl_type_only & set2
+			)
+			{
+				avl_type_only::k_set_symmetric_difference(
+					e, kc, to,
+					set1, set1.cbegin(), set1.cend(),
+					set2, set2.cbegin(), set2.cend()
+				);
+			}
+
+			template <typename Entity>
+			template <typename Extract, typename KeyCompare>
+			KERBAL_CONSTEXPR20
+			void
+			avl_type_only<Entity>::
+			k_set_union(
+				Extract & e, KeyCompare & kc, avl_type_only & to,
+				avl_type_only & set1, const_iterator first1, const_iterator last1,
+				avl_type_only & set2, const_iterator first2, const_iterator last2
+			)
+			{
+				while (first1 != last1) {
+					if (first2 != last2) {
+						const typename Extract::key_type & key1 = e(*first1);
+						const typename Extract::key_type & key2 = e(*first2);
+						if (kc(key2, key1)) { // *first2 < *first1
+							first2 = to.k_splice(e, kc, set2, first2);
+						} else { // *first1 <= *first2
+							bool b = static_cast<bool>(kc(key1, key2));
+							first1 = to.k_splice(e, kc, set1, first1);
+							if (!b) { // *first1 == *first2
+								++first2;
+							}
+						}
+					} else {
+						to.k_merge(e, kc, set1, first1, last1);
+						return;
+					}
+				}
+				to.k_merge(e, kc, set2, first2, last2);
+			}
+
+			template <typename Entity>
+			template <typename Extract, typename KeyCompare>
+			KERBAL_CONSTEXPR20
+			void
+			avl_type_only<Entity>::
+			k_set_union_unique(
+				Extract & e, KeyCompare & kc, avl_type_only & to,
+				avl_type_only & set1, const_iterator first1, const_iterator last1,
+				avl_type_only & set2, const_iterator first2, const_iterator last2
+			)
+			{
+				while (first1 != last1) {
+					if (first2 != last2) {
+						const typename Extract::key_type & key1 = e(*first1);
+						const typename Extract::key_type & key2 = e(*first2);
+						if (kc(key2, key1)) { // *first2 < *first1
+							first2 = to.k_splice_unique(e, kc, set2, first2).position();
+						} else { // *first1 <= *first2
+							bool b = static_cast<bool>(kc(key1, key2));
+							first1 = to.k_splice_unique(e, kc, set1, first1).position();
+							if (!b) { // *first1 == *first2
+								++first2;
+							}
+						}
+					} else {
+						to.k_merge_unique(e, kc, set1, first1, last1);
+						return;
+					}
+				}
+				to.k_merge_unique(e, kc, set2, first2, last2);
+			}
+
+			template <typename Entity>
+			template <typename Extract, typename KeyCompare>
+			KERBAL_CONSTEXPR20
+			void
+			avl_type_only<Entity>::
+			k_set_union(
+				Extract & e, KeyCompare & kc, avl_type_only & to,
+				avl_type_only & set1,
+				avl_type_only & set2
+			)
+			{
+				avl_type_only::k_set_union(
+					e, kc, to,
+					set1, set1.cbegin(), set1.cend(),
+					set2, set2.cbegin(), set2.cend()
+				);
+			}
+
+
+			template <typename Entity>
 			template <typename F>
 			KERBAL_CONSTEXPR20
 			void

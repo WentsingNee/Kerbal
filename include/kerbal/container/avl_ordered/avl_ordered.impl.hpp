@@ -1775,6 +1775,75 @@ namespace kerbal
 		KERBAL_CONSTEXPR20
 		void
 		avl_ordered<Entity, Extract, KeyCompare, Allocator>::
+		set_difference(
+			avl_ordered & set1, avl_ordered const & set2,
+			avl_ordered & to
+		)
+		{
+			avl_type_only::k_set_difference(
+				to.extract(), to.key_comp(),
+				static_cast<avl_type_only &>(to),
+				static_cast<avl_type_only &>(set1),
+				static_cast<avl_type_only const &>(set2)
+			);
+		}
+
+		template <typename Entity, typename Extract, typename KeyCompare, typename Allocator>
+		KERBAL_CONSTEXPR20
+		void
+		avl_ordered<Entity, Extract, KeyCompare, Allocator>::
+		set_intersection(
+			avl_ordered & set1, avl_ordered & set2,
+			avl_ordered & to
+		)
+		{
+			avl_type_only::k_set_intersection(
+				to.extract(), to.key_comp(),
+				static_cast<avl_type_only &>(to),
+				static_cast<avl_type_only &>(set1),
+				static_cast<avl_type_only &>(set2)
+			);
+		}
+
+		template <typename Entity, typename Extract, typename KeyCompare, typename Allocator>
+		KERBAL_CONSTEXPR20
+		void
+		avl_ordered<Entity, Extract, KeyCompare, Allocator>::
+		set_symmetric_difference(
+			avl_ordered & set1, avl_ordered & set2,
+			avl_ordered & to
+		)
+		{
+			avl_type_only::k_set_symmetric_difference(
+				to.extract(), to.key_comp(),
+				static_cast<avl_type_only &>(to),
+				static_cast<avl_type_only &>(set1),
+				static_cast<avl_type_only &>(set2)
+			);
+		}
+
+		template <typename Entity, typename Extract, typename KeyCompare, typename Allocator>
+		KERBAL_CONSTEXPR20
+		void
+		avl_ordered<Entity, Extract, KeyCompare, Allocator>::
+		set_union(
+			avl_ordered & set1, avl_ordered & set2,
+			avl_ordered & to
+		)
+		{
+			avl_type_only::k_set_union(
+				to.extract(), to.key_comp(),
+				static_cast<avl_type_only &>(to),
+				static_cast<avl_type_only &>(set1),
+				static_cast<avl_type_only &>(set2)
+			);
+		}
+
+
+		template <typename Entity, typename Extract, typename KeyCompare, typename Allocator>
+		KERBAL_CONSTEXPR20
+		void
+		avl_ordered<Entity, Extract, KeyCompare, Allocator>::
 		swap(avl_ordered & other)
 		{
 			avl_allocator_overload::k_swap_allocator_if_propagate(

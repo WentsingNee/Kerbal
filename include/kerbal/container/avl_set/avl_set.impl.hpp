@@ -808,6 +808,70 @@ namespace kerbal
 		KERBAL_CONSTEXPR20
 		void
 		avl_set<T, KeyCompare, Allocator>::
+		set_difference(
+			avl_set & set1, avl_set const & set2,
+			avl_set & to
+		)
+		{
+			avl_ordered::set_difference(
+				static_cast<avl_ordered &>(set1),
+				static_cast<avl_ordered const &>(set2),
+				static_cast<avl_ordered &>(to)
+			);
+		}
+
+		template <typename T, typename KeyCompare, typename Allocator>
+		KERBAL_CONSTEXPR20
+		void
+		avl_set<T, KeyCompare, Allocator>::
+		set_intersection(
+			avl_set & set1, avl_set & set2,
+			avl_set & to
+		)
+		{
+			avl_ordered::set_intersection(
+				static_cast<avl_ordered &>(set1),
+				static_cast<avl_ordered &>(set2),
+				static_cast<avl_ordered &>(to)
+			);
+		}
+
+		template <typename T, typename KeyCompare, typename Allocator>
+		KERBAL_CONSTEXPR20
+		void
+		avl_set<T, KeyCompare, Allocator>::
+		set_symmetric_difference(
+			avl_set & set1, avl_set & set2,
+			avl_set & to
+		)
+		{
+			avl_ordered::set_symmetric_difference(
+				static_cast<avl_ordered &>(set1),
+				static_cast<avl_ordered &>(set2),
+				static_cast<avl_ordered &>(to)
+			);
+		}
+
+		template <typename T, typename KeyCompare, typename Allocator>
+		KERBAL_CONSTEXPR20
+		void
+		avl_set<T, KeyCompare, Allocator>::
+		set_union(
+			avl_set & set1, avl_set & set2,
+			avl_set & to
+		)
+		{
+			avl_ordered::set_union(
+				static_cast<avl_ordered &>(set1),
+				static_cast<avl_ordered &>(set2),
+				static_cast<avl_ordered &>(to)
+			);
+		}
+
+		template <typename T, typename KeyCompare, typename Allocator>
+		KERBAL_CONSTEXPR20
+		void
+		avl_set<T, KeyCompare, Allocator>::
 		swap(avl_set & other)
 		{
 			this->avl_ordered::swap(static_cast<avl_ordered &>(other));

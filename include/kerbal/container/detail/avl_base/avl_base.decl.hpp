@@ -1459,6 +1459,89 @@ namespace kerbal
 #			endif
 
 
+					template <typename Extract, typename KeyCompare>
+					KERBAL_CONSTEXPR20
+					static
+					void k_set_difference(
+						Extract & e, KeyCompare & kc, avl_type_only & to,
+						avl_type_only & set1, const_iterator first1, const_iterator last1,
+						avl_type_only const & /*set2*/, const_iterator first2, const_iterator last2
+					);
+
+					template <typename Extract, typename KeyCompare>
+					KERBAL_CONSTEXPR20
+					static
+					void k_set_difference(
+						Extract & e, KeyCompare & kc, avl_type_only & to,
+						avl_type_only & set1,
+						avl_type_only const & set2
+					);
+
+					template <typename Extract, typename KeyCompare>
+					KERBAL_CONSTEXPR20
+					static
+					void k_set_intersection(
+						Extract & e, KeyCompare & kc, avl_type_only & to,
+						avl_type_only & set1, const_iterator first1, const_iterator last1,
+						avl_type_only & /*set2*/, const_iterator first2, const_iterator last2
+					);
+
+					template <typename Extract, typename KeyCompare>
+					KERBAL_CONSTEXPR20
+					static
+					void k_set_intersection(
+						Extract & e, KeyCompare & kc, avl_type_only & to,
+						avl_type_only & set1,
+						avl_type_only & set2
+					);
+
+					template <typename Extract, typename KeyCompare>
+					KERBAL_CONSTEXPR20
+					static
+					void k_set_symmetric_difference(
+						Extract & e, KeyCompare & kc, avl_type_only & to,
+						avl_type_only & set1, const_iterator first1, const_iterator last1,
+						avl_type_only & set2, const_iterator first2, const_iterator last2
+					);
+
+					template <typename Extract, typename KeyCompare>
+					KERBAL_CONSTEXPR20
+					static
+					void k_set_symmetric_difference(
+						Extract & e, KeyCompare & kc, avl_type_only & to,
+						avl_type_only & set1,
+						avl_type_only & set2
+					);
+
+					template <typename Extract, typename KeyCompare>
+					KERBAL_CONSTEXPR20
+					static
+					void k_set_union(
+						Extract & e, KeyCompare & kc, avl_type_only & to,
+						avl_type_only & set1, const_iterator first1, const_iterator last1,
+						avl_type_only & set2, const_iterator first2, const_iterator last2
+					);
+
+					template <typename Extract, typename KeyCompare>
+					KERBAL_CONSTEXPR20
+					static
+					void k_set_union_unique(
+						Extract & e, KeyCompare & kc, avl_type_only & to,
+						avl_type_only & set1, const_iterator first1, const_iterator last1,
+						avl_type_only & set2, const_iterator first2, const_iterator last2
+					);
+
+					template <typename Extract, typename KeyCompare>
+					KERBAL_CONSTEXPR20
+					static
+					void k_set_union(
+						Extract & e, KeyCompare & kc, avl_type_only & to,
+						avl_type_only & set1,
+						avl_type_only & set2
+					);
+
+
+
 					template <typename F>
 					KERBAL_CONSTEXPR20
 					static

@@ -985,6 +985,34 @@ namespace kerbal
 #		endif
 
 				KERBAL_CONSTEXPR20
+				static
+				void set_difference(
+					avl_ordered & set1, avl_ordered const & set2,
+					avl_ordered & to
+				);
+
+				KERBAL_CONSTEXPR20
+				static
+				void set_intersection(
+					avl_ordered & set1, avl_ordered & set2,
+					avl_ordered & to
+				);
+
+				KERBAL_CONSTEXPR20
+				static void
+				set_symmetric_difference(
+					avl_ordered & set1, avl_ordered & set2,
+					avl_ordered & to
+				);
+
+				KERBAL_CONSTEXPR20
+				static
+				void set_union(
+					avl_ordered & set1, avl_ordered & set2,
+					avl_ordered & to
+				);
+
+				KERBAL_CONSTEXPR20
 				void swap(avl_ordered & other);
 
 				KERBAL_CONSTEXPR20
