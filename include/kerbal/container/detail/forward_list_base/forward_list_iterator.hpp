@@ -13,6 +13,7 @@
 #define KERBAL_CONTAINER_DETAIL_FORWARD_LIST_BASE_FORWARD_LIST_ITERATOR_HPP
 
 #include <kerbal/container/detail/forward_list_base/forward_list_base.fwd.hpp>
+#include <kerbal/autonm/forward_list/forward_list.fwd.hpp>
 #include <kerbal/container/forward_list/forward_list.fwd.hpp>
 
 #include <kerbal/operators/dereferenceable.hpp>
@@ -146,6 +147,9 @@ namespace kerbal
 					template <typename Up, typename Allocator>
 					friend class kerbal::container::forward_list;
 
+					template <typename Up, typename SemiAllocator>
+					friend class kerbal::autonm::forward_list;
+
 					friend class fl_kiter<Tp>;
 
 				private:
@@ -213,6 +217,9 @@ namespace kerbal
 
 					template <typename Up, typename Allocator>
 					friend class kerbal::container::forward_list;
+
+					template <typename Up, typename SemiAllocator>
+					friend class kerbal::autonm::forward_list;
 
 					typedef fl_iter<Tp> iterator;
 

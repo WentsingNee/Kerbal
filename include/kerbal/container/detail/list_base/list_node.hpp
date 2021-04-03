@@ -13,6 +13,7 @@
 #define KERBAL_CONTAINER_DETAIL_LIST_BASE_LIST_NODE_HPP
 
 #include <kerbal/container/detail/list_base/list_base.fwd.hpp>
+#include <kerbal/autonm/list/list.fwd.hpp>
 #include <kerbal/container/list/list.fwd.hpp>
 
 #include <kerbal/algorithm/modifier.hpp>
@@ -56,6 +57,9 @@ namespace kerbal
 
 					template <typename Tp>
 					friend class kerbal::container::detail::list_allocator_unrelated;
+
+					template <typename Tp, typename SemiAllocator>
+					friend class kerbal::autonm::list;
 
 					template <typename Tp>
 					friend class list_iter;

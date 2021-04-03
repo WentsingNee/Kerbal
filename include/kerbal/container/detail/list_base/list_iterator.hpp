@@ -13,6 +13,7 @@
 #define KERBAL_CONTAINER_DETAIL_LIST_BASE_LIST_ITERATOR_HPP
 
 #include <kerbal/container/detail/list_base/list_base.fwd.hpp>
+#include <kerbal/autonm/list/list.fwd.hpp>
 #include <kerbal/container/list/list.fwd.hpp>
 
 #include <kerbal/operators/dereferenceable.hpp>
@@ -166,6 +167,9 @@ namespace kerbal
 					template <typename Up, typename Allocator>
 					friend class kerbal::container::list;
 
+					template <typename Up, typename SemiAllocator>
+					friend class kerbal::autonm::list;
+
 					friend class list_kiter<Tp>;
 
 				private:
@@ -244,6 +248,9 @@ namespace kerbal
 
 					template <typename Up, typename Allocator>
 					friend class kerbal::container::list;
+
+					template <typename Up, typename SemiAllocator>
+					friend class kerbal::autonm::list;
 
 					typedef list_iter<Tp> iterator;
 

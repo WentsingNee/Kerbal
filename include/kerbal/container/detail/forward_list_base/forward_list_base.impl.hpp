@@ -1576,11 +1576,12 @@ namespace kerbal
 			void fl_allocator_unrelated<Tp>::_K_destroy_node(NodeAllocator & alloc, node_base * p_node_base) KERBAL_NOEXCEPT
 			{
 				typedef kerbal::memory::allocator_traits<NodeAllocator> node_allocator_traits;
-				typedef typename node_allocator_traits::pointer real_pointer;
+				typedef typename node_allocator_traits::pointer allocator_pointer_type;
 
-				real_pointer p_node = static_cast<real_pointer>(&p_node_base->template reinterpret_as<value_type>());
-				node_allocator_traits::destroy(alloc, p_node);
-				node_allocator_traits::deallocate(alloc, p_node, 1);
+				node * p_node = &p_node_base->template reinterpret_as<value_type>();
+				allocator_pointer_type p_node_act = static_cast<allocator_pointer_type>(p_node);
+				node_allocator_traits::destroy(alloc, p_node_act);
+				node_allocator_traits::deallocate(alloc, p_node_act, 1);
 			}
 
 			template <typename Tp>
@@ -1601,12 +1602,13 @@ namespace kerbal
 			void fl_allocator_unrelated<Tp>::_K_consecutive_destroy_node_impl(NodeAllocator & alloc, node_base * first, node_base * last, CNSCTV_DES_VER_DESTROY_BUT_NO_DEALLOCATE) KERBAL_NOEXCEPT
 			{
 				typedef kerbal::memory::allocator_traits<NodeAllocator> node_allocator_traits;
-				typedef typename node_allocator_traits::pointer real_pointer;
+				typedef typename node_allocator_traits::pointer allocator_pointer_type;
 
 				while (first != last) {
 					node_base * next = first->next;
-					real_pointer p_node = static_cast<real_pointer>(&first->template reinterpret_as<value_type>());
-					node_allocator_traits::destroy(alloc, p_node);
+					node * p_node = &first->template reinterpret_as<value_type>();
+					allocator_pointer_type p_node_act = static_cast<allocator_pointer_type>(p_node);
+					node_allocator_traits::destroy(alloc, p_node_act);
 					first = next;
 				}
 			}
