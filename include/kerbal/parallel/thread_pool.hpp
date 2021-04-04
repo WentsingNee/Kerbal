@@ -13,6 +13,11 @@
 #define KERBAL_PARALLEL_THREAD_POOL_HPP
 
 #include <kerbal/compatibility/move.hpp>
+#include <kerbal/compatibility/noexcept.hpp>
+
+#if __cplusplus >= 201103L
+#	include <kerbal/utility/forward.hpp>
+#endif
 
 #include <vector>
 #include <queue>
@@ -22,6 +27,7 @@
 #include <future>
 #include <functional>
 #include <stdexcept>
+
 
 namespace kerbal
 {
@@ -33,32 +39,34 @@ namespace kerbal
 		{
 				using Task = std::function<void()>;
 
-				std::vector<std::thread> pool;
-				std::queue<Task> tasks;
-				std::mutex m_lock;
-				std::condition_variable cv_task;
-				std::atomic<bool> stoped;
-				std::atomic<int> idle_thread_num;
+				std::vector<std::thread> _K_threads_pool;
+				std::queue<Task> _K_tasks_queue;
+				std::mutex _K_mutex;
+				std::condition_variable _K_cv;
+				std::atomic<bool> _K_stopped;
+				std::atomic<unsigned int> _K_idle_threads_num;
 
 			public:
-				explicit thread_pool(size_t init_size = 4) : stoped(false), idle_thread_num(init_size)
+				explicit
+				thread_pool(unsigned int init_size = 4)
+						: _K_stopped(false), _K_idle_threads_num(init_size)
 				{
-					for (size_t i = 0; i < this->idle_thread_num; ++i) {   //初始化线程数量
-						pool.emplace_back([this] {
-							while (!this->stoped) {
-								std::unique_lock<std::mutex> lock(this->m_lock);
-								this->cv_task.wait(lock, [this] {
-									return this->stoped.load() || !this->tasks.empty();
+					for (size_t i = 0; i < this->_K_idle_threads_num; ++i) {   //初始化线程数量
+						_K_threads_pool.emplace_back([this] {
+							while (!this->_K_stopped.load()) {
+								std::unique_lock<std::mutex> lock(this->_K_mutex);
+								this->_K_cv.wait(lock, [this] {
+									return this->_K_stopped.load() || !this->_K_tasks_queue.empty();
 								});
-								if (this->stoped && this->tasks.empty()) {
+								if (this->_K_stopped.load() && this->_K_tasks_queue.empty()) {
 									return;
 								}
-								std::function<void()> task = kerbal::compatibility::move(this->tasks.front());
-								this->tasks.pop();
+								std::function<void()> task(kerbal::compatibility::move(this->_K_tasks_queue.front()));
+								this->_K_tasks_queue.pop();
 								lock.unlock();
-								--(this->idle_thread_num);
+								--this->_K_idle_threads_num;
 								task();
-								++(this->idle_thread_num);
+								++this->_K_idle_threads_num;
 							}
 						});
 					}
@@ -66,9 +74,9 @@ namespace kerbal
 
 				~thread_pool()
 				{
-					stoped.store(true);
-					cv_task.notify_all(); // 唤醒所有线程执行
-					for (std::thread& thread : pool) {
+					this->_K_stopped.store(true);
+					this->_K_cv.notify_all(); // 唤醒所有线程执行
+					for (std::thread & thread : this->_K_threads_pool) {
 						//thread.detach(); // 让线程“自生自灭”
 						if (thread.joinable())
 							thread.join(); // 等待任务结束， 前提：线程一定会执行完
@@ -87,31 +95,32 @@ namespace kerbal
 				// 一种是使用   bind： .commit(std::bind(&Dog::sayHello, &dog));
 				// 一种是用 mem_fn： .commit(std::mem_fn(&Dog::sayHello), &dog)
 				template <class F, class... Args>
-				auto commit(F&& f, Args&& ... args) -> std::future<typename std::result_of<F(Args...)>::type>
+				std::future<typename std::result_of<F(Args...)>::type>
+				commit(F&& f, Args&& ... args)
 				{
-					if (stoped.load())
+					if (this->_K_stopped.load())
 						throw std::runtime_error("commit on ThreadPool is stopped.");
 
-					using RetType = typename std::result_of<F(Args...)>::type; // typename std::result_of<F(Args...)>::type, 函数 f 的返回值类型
-					auto task = std::make_shared<std::packaged_task<RetType()> >(
-							std::bind(std::forward<F>(f), std::forward<Args>(args)...)
-					);    // wtf !
-					std::future<RetType> future = task->get_future();
+					using result_type = typename std::result_of<F(Args...)>::type; // typename std::result_of<F(Args...)>::type, 函数 f 的返回值类型
+					auto task = std::make_shared<std::packaged_task<result_type()> >(
+							std::bind(kerbal::utility::forward<F>(f), kerbal::utility::forward<Args>(args)...)
+					);
+					std::future<result_type> future = task->get_future();
 					{// 添加任务到队列
-						std::lock_guard<std::mutex> lock(m_lock);
-						tasks.emplace([task]() {
+						std::lock_guard<std::mutex> lock(_K_mutex);
+						_K_tasks_queue.emplace([task]() {
 							// push(Task{...})
 							(*task)();
 						});
 					}
-					cv_task.notify_one();
+					_K_cv.notify_one();
 					return future;
 				}
 
 				//空闲线程数量
-				int idle_count()
+				unsigned int idle_count() const KERBAL_NOEXCEPT
 				{
-					return this->idle_thread_num;
+					return this->_K_idle_threads_num.load();
 				}
 
 		};

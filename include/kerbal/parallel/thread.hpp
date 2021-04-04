@@ -19,11 +19,15 @@
 #include <kerbal/utility/noncopyable.hpp>
 #include <kerbal/utility/throw_this_exception.hpp>
 
+#if __cplusplus >= 201103L
+#	include <kerbal/utility/forward.hpp>
+#	include <kerbal/utility/integer_sequence.hpp>
+#endif
+
 #include <pthread.h>
 #include <exception> // std::terminate
 
 #if __cplusplus >= 201103L
-#	include <kerbal/utility/integer_sequence.hpp>
 #	include <tuple>
 #endif
 
@@ -116,9 +120,10 @@ namespace kerbal
 				{
 					int err = ::pthread_create(&this->th_id.native_handle, NULL, start_rtn, fun_args_pack);
 					if (err != 0) {
-						kerbal::parallel::thread_create_failed::throw_this_exception();
+						kerbal::utility::throw_this_exception_helper<
+								kerbal::parallel::thread_create_failed
+						>::throw_this_exception();
 					}
-
 				}
 
 #		if __cplusplus >= 201103L
@@ -153,8 +158,8 @@ namespace kerbal
 					};
 					void * fun_args_pack = reinterpret_cast<void*>(
 							new fun_args_pack_t(
-								std::forward<Callable>(fun),
-								std::forward<Args>(args)...
+								kerbal::utility::forward<Callable>(fun),
+								kerbal::utility::forward<Args>(args)...
 							)
 					);
 					this->create(helper::start_rtn, fun_args_pack);
