@@ -14,6 +14,7 @@
 
 #include <kerbal/algorithm/sort/bubble_sort.hpp>
 #include <kerbal/algorithm/sort/heap_sort.hpp>
+#include <kerbal/algorithm/sort/inplace_merge_sort.hpp>
 #include <kerbal/algorithm/sort/insertion_sort.hpp>
 #include <kerbal/algorithm/sort/intro_sort.hpp>
 #include <kerbal/algorithm/sort/is_sorted.hpp>
