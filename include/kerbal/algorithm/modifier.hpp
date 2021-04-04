@@ -104,10 +104,10 @@ namespace kerbal
 
 
 
-		template <typename BidirectionalIterator, typename OutputIterator, typename UnaryPredicate>
+		template <typename BidirectionalIterator, typename BidirectionalOutputIterator, typename UnaryPredicate>
 		KERBAL_CONSTEXPR14
-		OutputIterator
-		__copy_backward_if(BidirectionalIterator first, BidirectionalIterator last, OutputIterator to_last,
+		BidirectionalOutputIterator
+		__copy_backward_if(BidirectionalIterator first, BidirectionalIterator last, BidirectionalOutputIterator to_last,
 							UnaryPredicate pred, std::bidirectional_iterator_tag)
 		{
 			while (first != last) {
@@ -120,10 +120,10 @@ namespace kerbal
 			return to_last;
 		}
 
-		template <typename RandomAccessIterator, typename OutputIterator, typename UnaryPredicate>
+		template <typename RandomAccessIterator, typename BidirectionalOutputIterator, typename UnaryPredicate>
 		KERBAL_CONSTEXPR14
-		OutputIterator
-		__copy_backward_if(RandomAccessIterator first, RandomAccessIterator last, OutputIterator to_last,
+		BidirectionalOutputIterator
+		__copy_backward_if(RandomAccessIterator first, RandomAccessIterator last, BidirectionalOutputIterator to_last,
 							UnaryPredicate pred, std::random_access_iterator_tag)
 		{
 			typedef RandomAccessIterator iterator;
@@ -160,11 +160,11 @@ namespace kerbal
 			return to_last;
 		}
 
-		template <typename BidirectionalIterator, typename OutputIterator, typename UnaryPredicate>
+		template <typename BidirectionalIterator, typename BidirectionalOutputIterator, typename UnaryPredicate>
 		KERBAL_CONSTEXPR14
-		OutputIterator
+		BidirectionalOutputIterator
 		copy_backward_if(BidirectionalIterator first, BidirectionalIterator last,
-							OutputIterator to_last, UnaryPredicate pred)
+						BidirectionalOutputIterator to_last, UnaryPredicate pred)
 		{
 			return kerbal::algorithm::__copy_backward_if(first, last, to_last, pred, kerbal::iterator::iterator_category(first));
 		}
