@@ -25,13 +25,14 @@ namespace kerbal
 
 		class thread;
 
-		class thread_create_failed:
-				public kerbal::utility::throw_this_exception_helper<thread_create_failed>,
-				public std::runtime_error
+		class thread_create_failed: public std::runtime_error
 		{
 			private:
 				friend class kerbal::parallel::thread;
-				friend class kerbal::utility::throw_this_exception_helper<thread_create_failed>;
+
+				friend class kerbal::utility::throw_this_exception_helper<
+						kerbal::parallel::thread_create_failed
+				>;
 
 				thread_create_failed() KERBAL_NOEXCEPT:
 						std::runtime_error("can't create thread")
