@@ -50,6 +50,60 @@ namespace kerbal
 				return left;
 			}
 
+			template <typename RandomAccessIterator, typename BufferIterator, typename BufferSize>
+			RandomAccessIterator
+			rotate_with_buffer(RandomAccessIterator first, RandomAccessIterator n_first, RandomAccessIterator last,
+							  BufferIterator buffer, BufferSize buffer_size)
+			{
+				typedef RandomAccessIterator iterator;
+				typedef typename kerbal::iterator::iterator_traits<iterator>::difference_type difference_type;
+
+				difference_type left_len(n_first - first);
+				difference_type right_len(last - n_first);
+
+				iterator ret(first + right_len);
+
+				while (left_len != 0 && right_len != 0) {
+
+//					cout << left_len << "   " << right_len << endl;
+
+					if (left_len <= right_len) {
+						if (left_len <= buffer_size) {
+							BufferIterator buffer_end(kerbal::algorithm::move(first, n_first, buffer));
+							kerbal::algorithm::move(buffer, buffer_end, kerbal::algorithm::move(n_first, last, first));
+							break;
+						}
+						while (n_first != last) {
+							kerbal::algorithm::iter_swap(first, n_first);
+							++first;
+							++n_first;
+						}
+						right_len %= left_len;
+						left_len -= right_len;
+						n_first = last - right_len;
+						// next loop: rotate(left, n_first', last)
+					} else {
+						if (right_len <= buffer_size) {
+							BufferIterator buffer_end(kerbal::algorithm::move(n_first, last, buffer));
+							kerbal::algorithm::move_backward(first, n_first, last);
+							kerbal::algorithm::move(buffer, buffer_end, first);
+							break;
+						}
+						while (n_first != first) {
+							--n_first;
+							--last;
+							kerbal::algorithm::iter_swap(n_first, last);
+						}
+						left_len %= right_len;
+						right_len -= left_len;
+						n_first = first + left_len;
+						// next loop: rotate(first, n_first', right)
+					}
+				}
+
+				return ret;
+			}
+
 			template <typename ForwardIterator>
 			KERBAL_CONSTEXPR14
 			ForwardIterator
