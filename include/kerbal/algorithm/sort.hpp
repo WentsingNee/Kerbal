@@ -13,6 +13,7 @@
 #define KERBAL_ALGORITHM_SORT_HPP
 
 #include <kerbal/algorithm/sort/bubble_sort.hpp>
+#include <kerbal/algorithm/sort/contiguously_radix_sort.hpp>
 #include <kerbal/algorithm/sort/heap_sort.hpp>
 #include <kerbal/algorithm/sort/inplace_merge_sort.hpp>
 #include <kerbal/algorithm/sort/insertion_sort.hpp>
