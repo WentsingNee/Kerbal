@@ -386,6 +386,96 @@ namespace kerbal
 
 
 
+		namespace detail
+		{
+
+			template <typename InputIterator1, typename InputIterator2, typename LessPredicate>
+			KERBAL_CONSTEXPR14
+			bool _K_sequence_less(InputIterator1 a_first, InputIterator1 a_last,
+								InputIterator2 b_first, InputIterator2 b_last,
+								LessPredicate less, std::input_iterator_tag, std::input_iterator_tag)
+			{
+				while (static_cast<bool>(a_first != a_last) && static_cast<bool>(b_first != b_last)) {
+					if (less(*a_first, *b_first)) { // namely *a < *b
+						return true;
+					} else if (less(*b_first, *a_first)) { // namely *a > *b
+						return false;
+					} else { // namely *a == *b
+						++a_first;
+						++b_first;
+					}
+				}
+				/*
+				 * 1 2 3
+				 * 1 2 3
+				 * false
+				 *
+				 * 1 2 3
+				 * 1 2
+				 * false
+				 *
+				 * 1 2
+				 * 1 2 3
+				 * true
+				 *
+				 * b_first == b_last => false
+				 * b_first != b_last => true
+				 */
+				return static_cast<bool>(b_first != b_last);
+			}
+
+			template <typename RandomAccessIterator1, typename RandomAccessIterator2, typename LessPredicate>
+			KERBAL_CONSTEXPR14
+			bool _K_sequence_less(RandomAccessIterator1 a_first, RandomAccessIterator1 a_last,
+								  RandomAccessIterator2 b_first, RandomAccessIterator2 b_last,
+								LessPredicate less, std::random_access_iterator_tag, std::random_access_iterator_tag)
+			{
+				typedef RandomAccessIterator1 iterator1;
+				typedef typename kerbal::iterator::iterator_traits<iterator1>::difference_type difference_type;
+
+				difference_type trip_count(kerbal::iterator::distance(a_first, a_last));
+				{
+					difference_type trip_count2(kerbal::iterator::distance(b_first, b_last));
+					if (trip_count2 < trip_count) {
+						trip_count = trip_count2;
+					}
+				}
+
+#			define EACH() do { \
+					if (less(*a_first, *b_first)) { /* namely *a < *b */ \
+						return true; \
+					} else if (less(*b_first, *a_first)) { /* namely *a > *b */ \
+						return false; \
+					} else { /* namely *a == *b */ \
+						++a_first; \
+						++b_first; \
+					} \
+				} while (false)
+
+				difference_type remain(trip_count & 3);
+				for (trip_count >>= 2; trip_count > 0; --trip_count) {
+					EACH();
+					EACH();
+					EACH();
+					EACH();
+				}
+
+				if (remain >= 2) {
+					EACH();
+					EACH();
+					remain -= 2;
+				}
+				if (remain >= 1) {
+					EACH();
+				}
+
+#			undef EACH
+
+				return static_cast<bool>(b_first != b_last);
+			}
+
+		} // namespace detail
+
 		template <typename InputIterator1, typename InputIterator2, typename LessPredicate>
 		KERBAL_CONSTEXPR14
 		bool sequence_less(
@@ -394,33 +484,9 @@ namespace kerbal
 			LessPredicate less
 		)
 		{
-			while (static_cast<bool>(a_first != a_last) && static_cast<bool>(b_first != b_last)) {
-				if (less(*a_first, *b_first)) { // namely *a < *b
-					return true;
-				} else if (less(*b_first, *a_first)) { // namely *a > *b
-					return false;
-				} else { // namely *a == *b
-					++a_first;
-					++b_first;
-				}
-			}
-			/*
-			 * 1 2 3
-			 * 1 2 3
-			 * false
-			 *
-			 * 1 2 3
-			 * 1 2
-			 * false
-			 *
-			 * 1 2
-			 * 1 2 3
-			 * true
-			 *
-			 * b_first == b_last => false
-			 * b_first != b_last => true
-			 */
-			return static_cast<bool>(b_first != b_last);
+			return detail::_K_sequence_less(a_first, a_last, b_first, b_last, less,
+					kerbal::iterator::iterator_category(a_first),
+					kerbal::iterator::iterator_category(b_first));
 		}
 
 		template <typename InputIterator1, typename InputIterator2>
