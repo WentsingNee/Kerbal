@@ -15,7 +15,18 @@
 #include <kerbal/assign/generic_assign.hpp>
 #include <kerbal/compatibility/constexpr.hpp>
 #include <kerbal/compatibility/noexcept.hpp>
-#include <kerbal/iterator/iterator_traits.hpp>
+#include <kerbal/type_traits/integral_constant.hpp>
+
+#include <kerbal/algorithm/modifier/detail/is_memmove_optimizable.hpp>
+
+
+#if KERBAL_ALGORITHM_COPY_ENABLE_MEMMOVE_OPTIMIZATION
+#	include <kerbal/compatibility/is_constant_evaluated.hpp>
+#	include <kerbal/iterator/iterator_traits.hpp>
+
+#	include <cstddef>
+#	include <cstring>
+#endif
 
 
 namespace kerbal
@@ -30,7 +41,10 @@ namespace kerbal
 			template <typename BidirectionalIterator, typename BidirectionalOutputIterator>
 			KERBAL_CONSTEXPR14
 			BidirectionalOutputIterator
-			k_copy_backward(BidirectionalIterator first, BidirectionalIterator last, BidirectionalOutputIterator to_last, std::bidirectional_iterator_tag)
+			copy_backward_memmove_opt_dispatcher(
+				BidirectionalIterator first, BidirectionalIterator last, BidirectionalOutputIterator to_last,
+				kerbal::type_traits::false_type
+			)
 				KERBAL_CONDITIONAL_NOEXCEPT(
 					noexcept(static_cast<bool>(first != last)) &&
 					noexcept(--last) &&
@@ -46,17 +60,79 @@ namespace kerbal
 				return to_last;
 			}
 
+#if KERBAL_ALGORITHM_COPY_ENABLE_MEMMOVE_OPTIMIZATION
+
+			template <typename ContiguousIterator, typename ContiguousOutputIterator>
+			ContiguousOutputIterator
+			copy_backward_memmove_opt_dispatcher(
+				ContiguousIterator first, ContiguousIterator last, ContiguousOutputIterator to_last,
+				kerbal::type_traits::true_type
+			)
+			{
+				typedef ContiguousIterator iterator;
+				typedef typename kerbal::iterator::iterator_traits<iterator>::value_type value_type;
+
+				std::size_t dist(last - first);
+				ContiguousOutputIterator to_first(to_last - dist);
+				std::memmove(&*to_first, &*first, dist * sizeof(value_type));
+				return to_first;
+			}
+
+#endif
+
 		} // namespace detail
+
 
 		template <typename BidirectionalIterator, typename BidirectionalOutputIterator>
 		KERBAL_CONSTEXPR14
 		BidirectionalOutputIterator
 		copy_backward(BidirectionalIterator first, BidirectionalIterator last, BidirectionalOutputIterator to_last)
 		{
-			return kerbal::algorithm::detail::k_copy_backward(
+
+#if KERBAL_ALGORITHM_COPY_ENABLE_MEMMOVE_OPTIMIZATION
+
+			typedef kerbal::algorithm::detail::is_memmove_optimizable<BidirectionalIterator, BidirectionalOutputIterator> is_memmove_optimizable;
+
+#	if __cplusplus >= 201402L
+
+#		if KERBAL_HAS_IS_CONSTANT_EVALUATED_SUPPORT
+
+			return
+				KERBAL_IS_CONSTANT_EVALUATED() ?
+				kerbal::algorithm::detail::copy_backward_memmove_opt_dispatcher(
+					first, last, to_last,
+					kerbal::type_traits::false_type()
+				) :
+				kerbal::algorithm::detail::copy_backward_memmove_opt_dispatcher(
+					first, last, to_last,
+					is_memmove_optimizable()
+				)
+			;
+
+#		else
+
+			return kerbal::algorithm::detail::copy_backward_memmove_opt_dispatcher(
 				first, last, to_last,
-				kerbal::iterator::iterator_category(first)
+				kerbal::type_traits::false_type()
 			);
+
+#		endif
+
+#	else
+
+			return kerbal::algorithm::detail::copy_backward_memmove_opt_dispatcher(
+				first, last, to_last,
+				is_memmove_optimizable()
+			);
+
+#	endif
+
+#else
+			return kerbal::algorithm::detail::copy_backward_memmove_opt_dispatcher(
+				first, last, to_last,
+				kerbal::type_traits::false_type()
+			);
+#endif
 		}
 
 	} // namespace algorithm

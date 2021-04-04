@@ -16,7 +16,18 @@
 #include <kerbal/compatibility/constexpr.hpp>
 #include <kerbal/compatibility/move.hpp>
 #include <kerbal/compatibility/noexcept.hpp>
-#include <kerbal/iterator/iterator_traits.hpp>
+#include <kerbal/type_traits/integral_constant.hpp>
+
+#include <kerbal/algorithm/modifier/detail/is_memmove_optimizable.hpp>
+
+
+#if KERBAL_ALGORITHM_COPY_ENABLE_MEMMOVE_OPTIMIZATION
+#	include <kerbal/compatibility/is_constant_evaluated.hpp>
+#	include <kerbal/iterator/iterator_traits.hpp>
+
+#	include <cstddef>
+#	include <cstring>
+#endif
 
 
 namespace kerbal
@@ -31,7 +42,10 @@ namespace kerbal
 			template <typename InputIterator, typename OutputIterator>
 			KERBAL_CONSTEXPR14
 			OutputIterator
-			k_move(InputIterator first, InputIterator last, OutputIterator to, std::input_iterator_tag)
+			move_memmove_opt_dispatcher(
+				InputIterator first, InputIterator last, OutputIterator to,
+				kerbal::type_traits::false_type
+			)
 					KERBAL_CONDITIONAL_NOEXCEPT(
 						noexcept(static_cast<bool>(first != last)) &&
 						noexcept(kerbal::assign::generic_assign(*to, kerbal::compatibility::to_xvalue(*first))) &&
@@ -48,14 +62,62 @@ namespace kerbal
 				return to;
 			}
 
+#if KERBAL_ALGORITHM_COPY_ENABLE_MEMMOVE_OPTIMIZATION
+
+			template <typename ContiguousIterator, typename ContiguousOutputIterator>
+			ContiguousOutputIterator
+			move_memmove_opt_dispatcher(
+				ContiguousIterator first, ContiguousIterator last, ContiguousOutputIterator to,
+				kerbal::type_traits::true_type
+			)
+			{
+				typedef ContiguousIterator iterator;
+				typedef typename kerbal::iterator::iterator_traits<iterator>::value_type value_type;
+
+				std::size_t dist(last - first);
+				std::memmove(&*to, &*first, dist * sizeof(value_type));
+				return to + dist;
+			}
+
+#endif
+
 		} // namespace detail
+
 
 		template <typename InputIterator, typename OutputIterator>
 		KERBAL_CONSTEXPR14
 		OutputIterator
 		move(InputIterator first, InputIterator last, OutputIterator to)
 		{
-			return kerbal::algorithm::detail::k_move(first, last, to, kerbal::iterator::iterator_category(first));
+
+#if KERBAL_ALGORITHM_COPY_ENABLE_MEMMOVE_OPTIMIZATION
+
+			typedef kerbal::algorithm::detail::is_memmove_optimizable<InputIterator, OutputIterator> is_memmove_optimizable;
+
+#	if __cplusplus >= 201402L
+
+#		if KERBAL_HAS_IS_CONSTANT_EVALUATED_SUPPORT
+
+			return KERBAL_IS_CONSTANT_EVALUATED() ?
+				kerbal::algorithm::detail::move_memmove_opt_dispatcher(first, last, to, kerbal::type_traits::false_type()) :
+				kerbal::algorithm::detail::move_memmove_opt_dispatcher(first, last, to, is_memmove_optimizable());
+
+#		else
+
+			return kerbal::algorithm::detail::move_memmove_opt_dispatcher(first, last, to, kerbal::type_traits::false_type());
+
+#		endif
+
+#	else
+
+			return kerbal::algorithm::detail::move_memmove_opt_dispatcher(first, last, to, is_memmove_optimizable());
+
+#	endif
+
+#else
+			return kerbal::algorithm::detail::move_memmove_opt_dispatcher(first, last, to, kerbal::type_traits::false_type());
+#endif
+
 		}
 
 	} // namespace algorithm
