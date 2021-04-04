@@ -17,6 +17,10 @@
 #include <kerbal/hash/hash.hpp>
 #include <kerbal/utility/addressof.hpp>
 
+#if __cplusplus >= 201103L
+#	include <kerbal/utility/forward.hpp>
+#endif
+
 namespace kerbal
 {
 
@@ -78,13 +82,13 @@ namespace kerbal
 #	if __cplusplus >= 201103L
 
 				explicit equality_comparable_any_control_block(Tp && value) :
-						value(std::forward<Tp>(value))
+						value(kerbal::utility::forward<Tp>(value))
 				{
 				}
 
 				template <typename ... Args>
 				explicit equality_comparable_any_control_block(Args && ... args) :
-						value(std::forward<Args>(args)...)
+						value(kerbal::utility::forward<Args>(args)...)
 				{
 				}
 
@@ -147,7 +151,7 @@ namespace kerbal
 
 				template <typename Tp>
 				explicit equality_comparable_any(Tp && value) :
-						__any_base(std::forward<Tp>(value))
+						__any_base(kerbal::utility::forward<Tp>(value))
 				{
 				}
 

@@ -20,9 +20,12 @@
 #include <kerbal/type_traits/decay.hpp>
 #include <kerbal/type_traits/reference_deduction.hpp>
 
+#if __cplusplus >= 201103L
+#	include <kerbal/utility/forward.hpp>
+#endif
+
 #include <cstddef>
 #include <typeinfo>
-#include <utility>
 
 #if __cplusplus >= 201103L
 #	include <memory>
@@ -94,14 +97,14 @@ namespace kerbal
 				static control_block_base* __create_control_block(Tp && value)
 				{
 					using value_type = typename kerbal::type_traits::decay<Tp>::type; // TODO
-					return static_cast<control_block_base*>(new typename control_block<Tp>::type(std::forward<Tp>(value)));
+					return static_cast<control_block_base*>(new typename control_block<Tp>::type(kerbal::utility::forward<Tp>(value)));
 				}
 
 				template <typename Tp, typename ... Args>
 				static control_block_base* __create_control_block(Args&& ... args)
 				{
 					using value_type = typename kerbal::type_traits::decay<Tp>::type; // TODO
-					return static_cast<control_block_base*>(new typename control_block<Tp>::type(std::forward<Args>(args)...));
+					return static_cast<control_block_base*>(new typename control_block<Tp>::type(kerbal::utility::forward<Args>(args)...));
 				}
 
 #	endif
@@ -134,7 +137,7 @@ namespace kerbal
 
 				template <typename Tp>
 				explicit __any_base(Tp && value) :
-						p(__create_control_block(std::forward<Tp>(value)))
+						p(__create_control_block(kerbal::utility::forward<Tp>(value)))
 				{
 				}
 
@@ -191,7 +194,7 @@ namespace kerbal
 				void assign(Tp && value)
 				{
 					typedef typename kerbal::type_traits::decay<Tp>::type value_type;
-					this->emplace<value_type>(std::forward<Tp>(value));
+					this->emplace<value_type>(kerbal::utility::forward<Tp>(value));
 				}
 
 				void assign(__any_base && src)
@@ -227,7 +230,7 @@ namespace kerbal
 				{
 					this->reset();
 					typedef typename kerbal::type_traits::decay<Tp>::type value_type;
-					this->p = __create_control_block<value_type>(std::forward<Args>(args)...);
+					this->p = __create_control_block<value_type>(kerbal::utility::forward<Args>(args)...);
 					return this->__get_control_block_ref<value_type>().value;
 				}
 
