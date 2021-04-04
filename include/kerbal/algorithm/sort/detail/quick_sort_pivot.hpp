@@ -77,7 +77,7 @@ namespace kerbal
 
 			template <typename BidirectionalIterator, typename Tp, typename Compare>
 			KERBAL_CONSTEXPR14
-			bool quick_sort_partition_move_first_iter(BidirectionalIterator &first, BidirectionalIterator &last,
+			bool quick_sort_partition_move_first_iter(BidirectionalIterator & first, const BidirectionalIterator & last,
 													const Tp & pivot, Compare & cmp)
 			{
 				while (first != last) {
@@ -92,7 +92,7 @@ namespace kerbal
 
 			template <typename BidirectionalIterator, typename Tp, typename Compare>
 			KERBAL_CONSTEXPR14
-			bool quick_sort_partition_move_last_iter(BidirectionalIterator &first, BidirectionalIterator &last,
+			bool quick_sort_partition_move_last_iter(const BidirectionalIterator & first, BidirectionalIterator & last,
 													const Tp & pivot, Compare & cmp)
 			{
 				while (first != last) {
