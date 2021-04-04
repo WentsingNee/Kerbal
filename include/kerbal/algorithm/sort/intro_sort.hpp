@@ -44,7 +44,36 @@ namespace kerbal
 
 			template <typename BidirectionalIterator, typename Compare>
 			KERBAL_CONSTEXPR14
-			void intro_sort(BidirectionalIterator first, BidirectionalIterator last, Compare cmp, std::size_t depth_limit)
+			void unguarded_directly_insertion_sort(BidirectionalIterator first, BidirectionalIterator last, Compare cmp)
+			{
+				typedef BidirectionalIterator iterator;
+				typedef typename kerbal::iterator::iterator_traits<iterator>::value_type value_type;
+
+				if (first == last) {
+					return;
+				}
+
+				iterator i(first); ++i;
+				while (i != last) {
+					iterator insert_pos(i); --insert_pos;
+
+					if (cmp(*i, *insert_pos)) { // *i < *insert_pos
+						do {
+							--insert_pos;
+						} while (cmp(*i, *insert_pos)); // *i < *insert_pos
+						++insert_pos;
+						value_type value(kerbal::compatibility::to_xvalue(*i));
+						kerbal::algorithm::move_backward(insert_pos, i, kerbal::iterator::next(i));
+						*insert_pos = kerbal::compatibility::to_xvalue(value);
+					}
+
+					++i;
+				}
+			}
+
+			template <typename BidirectionalIterator, typename Compare>
+			KERBAL_CONSTEXPR14
+			void intro_sort_loop(BidirectionalIterator first, BidirectionalIterator last, Compare cmp, std::size_t depth_limit, bool is_leftest)
 			{
 				typedef BidirectionalIterator iterator;
 
@@ -64,12 +93,16 @@ namespace kerbal
 						if (cmp(*back, *partition_point)) {
 							kerbal::algorithm::iter_swap(back, partition_point);
 						}
-						detail::intro_sort(kerbal::iterator::next(partition_point), last, cmp, depth_limit);
+						intro_sort_loop(kerbal::iterator::next(partition_point), last, cmp, depth_limit, false);
 					}
 					last = partition_point;
 				}
 				// dist <= 16
-				kerbal::algorithm::directly_insertion_sort(first, last, cmp);
+				if (is_leftest) {
+					kerbal::algorithm::directly_insertion_sort(first, last, cmp);
+				} else {
+					kerbal::algorithm::detail::unguarded_directly_insertion_sort(first, last, cmp);
+				}
 			}
 
 		} // namespace detail
@@ -78,7 +111,7 @@ namespace kerbal
 		KERBAL_CONSTEXPR14
 		void intro_sort(BidirectionalIterator first, BidirectionalIterator last, Compare cmp)
 		{
-			detail::intro_sort(first, last, cmp, 2 * detail::lg(kerbal::iterator::distance(first, last)));
+			detail::intro_sort_loop(first, last, cmp, 2 * detail::lg(kerbal::iterator::distance(first, last)), true);
 		}
 
 		template <typename BidirectionalIterator>
