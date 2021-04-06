@@ -444,7 +444,7 @@ namespace kerbal
 		Tp reset_left_n(Tp x, size_t n) KERBAL_NOEXCEPT
 		{
 			typedef typename kerbal::type_traits::make_unsigned<Tp>::type unsigned_t;
-			return x & ~kerbal::numeric::mask<unsigned_t>(sizeof(unsigned_t) * CHAR_BIT - n);
+			return x & kerbal::numeric::mask<unsigned_t>(sizeof(unsigned_t) * CHAR_BIT - n);
 		}
 
 		template <typename Tp>
