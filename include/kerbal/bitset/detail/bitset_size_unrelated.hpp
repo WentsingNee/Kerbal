@@ -46,7 +46,7 @@ namespace kerbal
 					typedef kerbal::type_traits::integral_constant<block_type, static_cast<block_type>(~static_cast<block_type>(0))> ALL_ONE;
 
 					KERBAL_CONSTEXPR14
-					static bool all_trunk(const block_type m_block[], block_width_type trunk_size) KERBAL_NOEXCEPT
+					static bool all_chunk(const block_type m_block[], block_width_type trunk_size) KERBAL_NOEXCEPT
 					{
 
 #				define EACH(idx) if (m_block[idx] != ALL_ONE::value) {return false;}
@@ -73,7 +73,7 @@ namespace kerbal
 					}
 
 					KERBAL_CONSTEXPR14
-					static bool any_trunk(const block_type m_block[], block_width_type trunk_size) KERBAL_NOEXCEPT
+					static bool any_chunk(const block_type m_block[], block_width_type trunk_size) KERBAL_NOEXCEPT
 					{
 
 #				define EACH(idx) if (m_block[idx]) {return true;}
@@ -100,7 +100,7 @@ namespace kerbal
 					}
 
 					KERBAL_CONSTEXPR14
-					static void flip(block_type m_block[], block_width_type block_width) KERBAL_NOEXCEPT
+					static void flip_chunk(block_type m_block[], block_width_type block_width) KERBAL_NOEXCEPT
 					{
 
 #				define EACH(idx) m_block[idx] = ~m_block[idx]
@@ -126,7 +126,7 @@ namespace kerbal
 					}
 
 					KERBAL_CONSTEXPR14
-					static bool equal_trunk(const block_type m_block[], const block_type ano[], block_width_type trunk_size) KERBAL_NOEXCEPT
+					static bool equal_chunk(const block_type m_block[], const block_type ano[], block_width_type trunk_size) KERBAL_NOEXCEPT
 					{
 						return kerbal::algorithm::sequence_equal_to(
 								m_block, m_block + trunk_size,

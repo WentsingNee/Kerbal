@@ -132,18 +132,18 @@ namespace kerbal
 				template <bool c>
 				KERBAL_CONSTEXPR14
 				typename kerbal::type_traits::enable_if<!c, bool>::type
-				all_helper() const KERBAL_NOEXCEPT
+				_K_all_impl() const KERBAL_NOEXCEPT
 				{
-					return bitset_size_unrelated::all_trunk(m_block, BLOCK_SIZE::value - 1) &&
+					return bitset_size_unrelated::all_chunk(m_block, BLOCK_SIZE::value - 1) &&
 							(static_cast<block_type>((~m_block[BLOCK_SIZE::value - 1]) << WASTE_SIZE::value) == 0);
 				}
 
 				template <bool c>
 				KERBAL_CONSTEXPR14
 				typename kerbal::type_traits::enable_if<c, bool>::type
-				all_helper() const KERBAL_NOEXCEPT
+				_K_all_impl() const KERBAL_NOEXCEPT
 				{
-					return bitset_size_unrelated::all_trunk(m_block, BLOCK_SIZE::value);
+					return bitset_size_unrelated::all_chunk(m_block, BLOCK_SIZE::value);
 				}
 
 			public:
@@ -152,7 +152,7 @@ namespace kerbal
 				KERBAL_CONSTEXPR14
 				bool all() const KERBAL_NOEXCEPT
 				{
-					return all_helper<IS_DIVISIBLE::value>();
+					return _K_all_impl<IS_DIVISIBLE::value>();
 				}
 
 				KERBAL_CONSTEXPR14
@@ -163,18 +163,18 @@ namespace kerbal
 				template <bool c>
 				KERBAL_CONSTEXPR14
 				typename kerbal::type_traits::enable_if<!c, bool>::type
-				any_helper() const KERBAL_NOEXCEPT
+				_K_any_impl() const KERBAL_NOEXCEPT
 				{
-					return bitset_size_unrelated::any_trunk(m_block, BLOCK_SIZE::value - 1) ||
+					return bitset_size_unrelated::any_chunk(m_block, BLOCK_SIZE::value - 1) ||
 							(static_cast<block_type>(m_block[BLOCK_SIZE::value - 1] << WASTE_SIZE::value) != 0);
 				}
 
 				template <bool c>
 				KERBAL_CONSTEXPR14
 				typename kerbal::type_traits::enable_if<c, bool>::type
-				any_helper() const KERBAL_NOEXCEPT
+				_K_any_impl() const KERBAL_NOEXCEPT
 				{
-					return bitset_size_unrelated::any_trunk(m_block, BLOCK_SIZE::value);
+					return bitset_size_unrelated::any_chunk(m_block, BLOCK_SIZE::value);
 				}
 
 			public:
@@ -183,7 +183,7 @@ namespace kerbal
 				KERBAL_CONSTEXPR14
 				bool any() const KERBAL_NOEXCEPT
 				{
-					return any_helper<IS_DIVISIBLE::value>();
+					return _K_any_impl<IS_DIVISIBLE::value>();
 				}
 
 				KERBAL_CONSTEXPR14
@@ -254,7 +254,7 @@ namespace kerbal
 				KERBAL_CONSTEXPR14
 				static_bitset& flip() KERBAL_NOEXCEPT
 				{
-					bitset_size_unrelated::flip(m_block, BLOCK_SIZE::value);
+					bitset_size_unrelated::flip_chunk(m_block, BLOCK_SIZE::value);
 					return *this;
 				}
 
@@ -271,9 +271,9 @@ namespace kerbal
 				template <bool c>
 				KERBAL_CONSTEXPR14
 				typename kerbal::type_traits::enable_if<!c, bool>::type
-				equals_helper(const static_bitset & rhs) const KERBAL_NOEXCEPT
+				_K_equals_impl(const static_bitset & rhs) const KERBAL_NOEXCEPT
 				{
-					return bitset_size_unrelated::equal_trunk(m_block, rhs.m_block, BLOCK_SIZE::value - 1) &&
+					return bitset_size_unrelated::equal_chunk(m_block, rhs.m_block, BLOCK_SIZE::value - 1) &&
 							(
 								static_cast<block_type>(m_block[BLOCK_SIZE::value - 1] << WASTE_SIZE::value) ==
 								static_cast<block_type>(rhs.m_block[BLOCK_SIZE::value - 1] << WASTE_SIZE::value)
@@ -283,16 +283,16 @@ namespace kerbal
 				template <bool c>
 				KERBAL_CONSTEXPR14
 				typename kerbal::type_traits::enable_if<c, bool>::type
-				equals_helper(const static_bitset & rhs) const KERBAL_NOEXCEPT
+				_K_equals_impl(const static_bitset & rhs) const KERBAL_NOEXCEPT
 				{
-					return bitset_size_unrelated::equal_trunk(m_block, rhs.m_block, BLOCK_SIZE::value);
+					return bitset_size_unrelated::equal_chunk(m_block, rhs.m_block, BLOCK_SIZE::value);
 				}
 
 			public:
 				KERBAL_CONSTEXPR14
 				bool operator==(const static_bitset & rhs) const KERBAL_NOEXCEPT
 				{
-					return equals_helper<IS_DIVISIBLE::value>(rhs);
+					return _K_equals_impl<IS_DIVISIBLE::value>(rhs);
 				}
 
 				KERBAL_CONSTEXPR14
