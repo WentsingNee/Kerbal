@@ -199,6 +199,33 @@ namespace kerbal
 				KERBAL_CONSTEXPR14
 				bool none(size_type l, size_type r) const KERBAL_NOEXCEPT;
 
+			private:
+
+				template <bool c>
+				KERBAL_CONSTEXPR14
+				typename kerbal::type_traits::enable_if<!c, size_t>::type
+				_K_count_impl() const KERBAL_NOEXCEPT
+				{
+					return bitset_size_unrelated::count_chunk(m_block, BLOCK_SIZE::value - 1) +
+						   kerbal::numeric::popcount(static_cast<block_type>(m_block[BLOCK_SIZE::value - 1] << WASTE_SIZE::value));
+				}
+
+				template <bool c>
+				KERBAL_CONSTEXPR14
+				typename kerbal::type_traits::enable_if<c, size_t>::type
+				_K_count_impl() const KERBAL_NOEXCEPT
+				{
+					return bitset_size_unrelated::count_chunk(m_block, BLOCK_SIZE::value);
+				}
+
+			public:
+
+				KERBAL_CONSTEXPR14
+				size_t count() const KERBAL_NOEXCEPT
+				{
+					return _K_count_impl<IS_DIVISIBLE::value>();
+				}
+
 				KERBAL_CONSTEXPR14
 				static_bitset& reset() KERBAL_NOEXCEPT
 				{

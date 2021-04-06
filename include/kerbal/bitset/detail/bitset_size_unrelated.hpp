@@ -13,6 +13,7 @@
 #define KERBAL_BITSET_DETAIL_BITSET_SIZE_UNRELATED_HPP
 
 #include <kerbal/algorithm/sequence_compare.hpp>
+#include <kerbal/numeric/bit.hpp>
 #include <kerbal/type_traits/integral_constant.hpp>
 
 #include <climits>
@@ -254,6 +255,38 @@ namespace kerbal
 #				undef EACH
 
 						return false;
+					}
+
+					KERBAL_CONSTEXPR14
+					static size_t count_chunk(const block_type m_block[], block_width_type block_width) KERBAL_NOEXCEPT
+					{
+						size_t cnt = 0;
+
+#				define EACH(idx) cnt += kerbal::numeric::popcount(m_block[idx]);
+
+						size_t i = 0;
+						for (; i + 4 <= block_width; i += 4) {
+							EACH(i);
+							EACH(i + 1);
+							EACH(i + 2);
+							EACH(i + 3);
+						}
+
+						size_t remain(block_width % 4);
+						if (remain >= 2) {
+							EACH(i);
+							EACH(i + 1);
+							i += 2;
+							remain -= 2;
+						}
+						if (remain >= 1) {
+							EACH(i);
+						}
+
+						return cnt;
+
+#				undef EACH
+
 					}
 
 					KERBAL_CONSTEXPR14
