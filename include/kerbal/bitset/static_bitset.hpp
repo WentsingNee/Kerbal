@@ -125,6 +125,18 @@ namespace kerbal
 					return r;
 				}
 
+				KERBAL_CONSTEXPR
+				const block_type * data() const KERBAL_NOEXCEPT
+				{
+					return this->_K_block;
+				}
+
+				KERBAL_CONSTEXPR14
+				block_type * mutable_data() KERBAL_NOEXCEPT
+				{
+					return this->_K_block;
+				}
+
 			private:
 
 				template <bool c>
