@@ -12,6 +12,8 @@
 #ifndef KERBAL_HASH_SHA1_SHA1_IMPL_HPP
 #define KERBAL_HASH_SHA1_SHA1_IMPL_HPP
 
+#include <kerbal/config/library_export.hpp>
+
 #include <kerbal/algorithm/modifier/copy.hpp>
 #include <kerbal/compatibility/static_assert.hpp>
 #include <kerbal/iterator/iterator.hpp>
@@ -28,6 +30,8 @@ namespace kerbal
 
 	namespace hash
 	{
+
+#	if KERBAL_LIBRARY_EXPORT
 
 		KERBAL_CONSTEXPR14
 		inline
@@ -68,6 +72,9 @@ namespace kerbal
 			e += (b ^ c ^ d) + 0xCA62C1D6;
 			b = kerbal::numeric::rotl(b, 30);
 		}
+
+#	endif // KERBAL_LIBRARY_EXPORT
+
 
 #	if __cplusplus >= 201103L
 
@@ -115,8 +122,10 @@ namespace kerbal
 			return (c[3] << 24u) | (c[2] << 16u) | (c[1] << 8u) | c[0];
 		}
 
+#	if KERBAL_LIBRARY_EXPORT
+
 		KERBAL_CONSTEXPR14
-		inline
+		KERBAL_SYMBOL_EXPORT
 		void k_rotate5(uint32_t & a, uint32_t & b, uint32_t & c, uint32_t & d, uint32_t & e)
 		{
 			uint32_t t = a;
@@ -227,7 +236,7 @@ namespace kerbal
 		}
 
 		KERBAL_CONSTEXPR14
-		inline
+		KERBAL_SYMBOL_EXPORT
 		void update_w_fast(uint32_t w[16]) KERBAL_NOEXCEPT
 		{
 			w[0] = kerbal::numeric::rotl(w[0] ^ w[2] ^ w[8] ^ w[13] , 1);
@@ -304,6 +313,9 @@ namespace kerbal
 			this->state[3] += d;
 			this->state[4] += e;
 		}
+
+#	endif // KERBAL_LIBRARY_EXPORT
+
 
 		template <typename Policy>
 		template <typename RandomAccessIterator>
