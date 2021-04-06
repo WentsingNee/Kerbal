@@ -12,8 +12,6 @@
 #ifndef KERBAL_BITSET_STATIC_BITSET_HPP
 #define KERBAL_BITSET_STATIC_BITSET_HPP
 
-#include <kerbal/algorithm/modifier.hpp>
-#include <kerbal/algorithm/querier.hpp>
 #include <kerbal/algorithm/swap.hpp>
 #include <kerbal/compatibility/constexpr.hpp>
 #include <kerbal/compatibility/noexcept.hpp>
@@ -229,7 +227,7 @@ namespace kerbal
 				KERBAL_CONSTEXPR14
 				static_bitset& reset() KERBAL_NOEXCEPT
 				{
-					kerbal::algorithm::fill(m_block, m_block + BLOCK_SIZE::value, static_cast<block_type>(0));
+					bitset_size_unrelated::reset_chunk(m_block, BLOCK_SIZE::value);
 					return *this;
 				}
 
@@ -254,7 +252,7 @@ namespace kerbal
 				KERBAL_CONSTEXPR14
 				static_bitset& set() KERBAL_NOEXCEPT
 				{
-					kerbal::algorithm::fill(m_block, m_block + BLOCK_SIZE::value, ALL_ONE::value);
+					bitset_size_unrelated::set_chunk(m_block, BLOCK_SIZE::value);
 					return *this;
 				}
 

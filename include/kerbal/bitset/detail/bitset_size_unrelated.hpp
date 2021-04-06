@@ -12,6 +12,7 @@
 #ifndef KERBAL_BITSET_DETAIL_BITSET_SIZE_UNRELATED_HPP
 #define KERBAL_BITSET_DETAIL_BITSET_SIZE_UNRELATED_HPP
 
+#include <kerbal/algorithm/modifier.hpp>
 #include <kerbal/algorithm/sequence_compare.hpp>
 #include <kerbal/numeric/bit.hpp>
 #include <kerbal/type_traits/integral_constant.hpp>
@@ -287,6 +288,18 @@ namespace kerbal
 
 #				undef EACH
 
+					}
+
+					KERBAL_CONSTEXPR14
+					static void reset_chunk(block_type m_block[], block_width_type block_width) KERBAL_NOEXCEPT
+					{
+						kerbal::algorithm::fill(m_block, m_block + block_width, static_cast<block_type>(0));
+					}
+
+					KERBAL_CONSTEXPR14
+					static void set_chunk(block_type m_block[], block_width_type block_width) KERBAL_NOEXCEPT
+					{
+						kerbal::algorithm::fill(m_block, m_block + block_width, ALL_ONE::value);
 					}
 
 					KERBAL_CONSTEXPR14
