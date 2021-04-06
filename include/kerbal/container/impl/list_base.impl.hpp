@@ -601,7 +601,7 @@ namespace kerbal
 						if (cmp(*other_it, *it)) { // *other_it < *it
 							node_base * p = other_it.cast_to_mutable().current;
 							++other_it;
-							this->_K_hook_node(it, p);
+							_K_hook_node(it, p);
 						} else { // *other_it >= *it
 							++it;
 						}
@@ -609,7 +609,7 @@ namespace kerbal
 						// node: it has made sure that the remain range is not empty
 						node_base * remain_start = other_it.cast_to_mutable().current;
 						node_base * remain_back = other.head_node.prev;
-						this->_K_hook_node(end, remain_start, remain_back);
+						_K_hook_node(end, remain_start, remain_back);
 						break;
 					}
 				}
@@ -633,7 +633,7 @@ namespace kerbal
 							if (cmp(*other_it, *it)) { // *other_it < *it, waring: may throw!!!
 								node_base * p = other_it.cast_to_mutable().current;
 								++other_it;
-								this->_K_hook_node(it, p);
+								_K_hook_node(it, p);
 							} else { // *other_it >= *it
 								++it;
 							}
@@ -641,7 +641,7 @@ namespace kerbal
 							// node: it has made sure that the remain range is not empty
 							node_base * remain_start = other_it.cast_to_mutable().current;
 							node_base * remain_back = other.head_node.prev;
-							this->_K_hook_node(end, remain_start, remain_back);
+							_K_hook_node(end, remain_start, remain_back);
 							break;
 						}
 					}
