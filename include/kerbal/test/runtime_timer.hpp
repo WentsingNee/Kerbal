@@ -26,13 +26,18 @@ namespace kerbal
 		class runtime_timer: kerbal::utility::noncopyable
 		{
 			protected:
-				const unsigned long start_time;
+				unsigned long start_time;
 
 			public:
 
 				runtime_timer() :
 						start_time(GetTickCount())
 				{
+				}
+
+				void refresh()
+				{
+					start_time = ::GetTickCount();
 				}
 
 				unsigned long count() const
