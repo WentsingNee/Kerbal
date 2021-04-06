@@ -3,7 +3,7 @@
  * @brief
  * @date       2024-10-06
  * @author     Peter
- * @copyright
+ * @coapyright
  *      Peter of [ThinkSpirit Laboratory](http://thinkspirit.org/)
  *   of [Nanjing University of Information Science & Technology](http://www.nuist.edu.cn/)
  *   all rights reserved

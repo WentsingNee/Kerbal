@@ -12,6 +12,8 @@
 #ifndef KERBAL_HASH_SHA1_DETAIL_SHA1_TRANSFORM_OVERLOAD_SHA1_TRANSFORM_OVERLOAD_SIZE_HPP
 #define KERBAL_HASH_SHA1_DETAIL_SHA1_TRANSFORM_OVERLOAD_SHA1_TRANSFORM_OVERLOAD_SIZE_HPP
 
+#include <kerbal/config/library_export.hpp>
+
 #include <kerbal/hash/detail/char4tolong1.hpp>
 #include <kerbal/hash/sha1/sha1.fwd.hpp>
 #include <kerbal/hash/sha1/detail/sha1_context_base.hpp>
@@ -50,6 +52,8 @@ namespace kerbal
 
 			};
 
+#	if KERBAL_LIBRARY_EXPORT
+
 			KERBAL_CONSTEXPR14
 			inline
 			void
@@ -79,7 +83,7 @@ namespace kerbal
 			}
 
 			KERBAL_CONSTEXPR14
-			inline
+			KERBAL_SYMBOL_EXPORT
 			void
 			SHA1_transform_overload<SHA1_policy::size>::
 			transform(const uint8_t buffer[64]) KERBAL_NOEXCEPT
@@ -152,6 +156,8 @@ namespace kerbal
 				this->state[3] += d;
 				this->state[4] += e;
 			}
+
+#	endif // KERBAL_LIBRARY_EXPORT
 
 		} // namespace detail
 
