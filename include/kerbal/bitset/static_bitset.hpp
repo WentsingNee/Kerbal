@@ -59,7 +59,7 @@ namespace kerbal
 				>																BLOCK_SIZE;
 
 			private:
-				block_type m_block[BLOCK_SIZE::value];
+				block_type _K_block[BLOCK_SIZE::value];
 
 				typedef typename bitset_size_unrelated::ALL_ONE					ALL_ONE;
 				typedef kerbal::type_traits::integral_constant<
@@ -77,7 +77,7 @@ namespace kerbal
 
 				KERBAL_CONSTEXPR
 				static_bitset() KERBAL_NOEXCEPT
-						: m_block{static_cast<block_type>(0)}
+						: _K_block{static_cast<block_type>(0)}
 				{
 				}
 
@@ -105,7 +105,7 @@ namespace kerbal
 				KERBAL_CONSTEXPR
 				bool test(size_type pos) const KERBAL_NOEXCEPT
 				{
-					return kerbal::numeric::get_bit(m_block[pos / BITS_PER_BLOCK::value],
+					return kerbal::numeric::get_bit(_K_block[pos / BITS_PER_BLOCK::value],
 													pos % BITS_PER_BLOCK::value);
 				}
 
@@ -132,8 +132,8 @@ namespace kerbal
 				typename kerbal::type_traits::enable_if<!c, bool>::type
 				_K_all_impl() const KERBAL_NOEXCEPT
 				{
-					return bitset_size_unrelated::all_chunk(m_block, BLOCK_SIZE::value - 1) &&
-							(static_cast<block_type>((~m_block[BLOCK_SIZE::value - 1]) << WASTE_SIZE::value) == 0);
+					return bitset_size_unrelated::all_chunk(_K_block, BLOCK_SIZE::value - 1) &&
+							(static_cast<block_type>((~_K_block[BLOCK_SIZE::value - 1]) << WASTE_SIZE::value) == 0);
 				}
 
 				template <bool c>
@@ -141,7 +141,7 @@ namespace kerbal
 				typename kerbal::type_traits::enable_if<c, bool>::type
 				_K_all_impl() const KERBAL_NOEXCEPT
 				{
-					return bitset_size_unrelated::all_chunk(m_block, BLOCK_SIZE::value);
+					return bitset_size_unrelated::all_chunk(_K_block, BLOCK_SIZE::value);
 				}
 
 			public:
@@ -163,8 +163,8 @@ namespace kerbal
 				typename kerbal::type_traits::enable_if<!c, bool>::type
 				_K_any_impl() const KERBAL_NOEXCEPT
 				{
-					return bitset_size_unrelated::any_chunk(m_block, BLOCK_SIZE::value - 1) ||
-							(static_cast<block_type>(m_block[BLOCK_SIZE::value - 1] << WASTE_SIZE::value) != 0);
+					return bitset_size_unrelated::any_chunk(_K_block, BLOCK_SIZE::value - 1) ||
+							(static_cast<block_type>(_K_block[BLOCK_SIZE::value - 1] << WASTE_SIZE::value) != 0);
 				}
 
 				template <bool c>
@@ -172,7 +172,7 @@ namespace kerbal
 				typename kerbal::type_traits::enable_if<c, bool>::type
 				_K_any_impl() const KERBAL_NOEXCEPT
 				{
-					return bitset_size_unrelated::any_chunk(m_block, BLOCK_SIZE::value);
+					return bitset_size_unrelated::any_chunk(_K_block, BLOCK_SIZE::value);
 				}
 
 			public:
@@ -204,8 +204,8 @@ namespace kerbal
 				typename kerbal::type_traits::enable_if<!c, size_t>::type
 				_K_count_impl() const KERBAL_NOEXCEPT
 				{
-					return bitset_size_unrelated::count_chunk(m_block, BLOCK_SIZE::value - 1) +
-						   kerbal::numeric::popcount(static_cast<block_type>(m_block[BLOCK_SIZE::value - 1] << WASTE_SIZE::value));
+					return bitset_size_unrelated::count_chunk(_K_block, BLOCK_SIZE::value - 1) +
+						   kerbal::numeric::popcount(static_cast<block_type>(_K_block[BLOCK_SIZE::value - 1] << WASTE_SIZE::value));
 				}
 
 				template <bool c>
@@ -213,7 +213,7 @@ namespace kerbal
 				typename kerbal::type_traits::enable_if<c, size_t>::type
 				_K_count_impl() const KERBAL_NOEXCEPT
 				{
-					return bitset_size_unrelated::count_chunk(m_block, BLOCK_SIZE::value);
+					return bitset_size_unrelated::count_chunk(_K_block, BLOCK_SIZE::value);
 				}
 
 			public:
@@ -227,7 +227,7 @@ namespace kerbal
 				KERBAL_CONSTEXPR14
 				static_bitset& reset() KERBAL_NOEXCEPT
 				{
-					bitset_size_unrelated::reset_chunk(m_block, BLOCK_SIZE::value);
+					bitset_size_unrelated::reset_chunk(_K_block, BLOCK_SIZE::value);
 					return *this;
 				}
 
@@ -236,7 +236,7 @@ namespace kerbal
 				{
 					size_t idx = pos / BITS_PER_BLOCK::value;
 					size_t ofs = pos % BITS_PER_BLOCK::value;
-					m_block[idx] = kerbal::numeric::reset_bit(m_block[idx], ofs);
+					_K_block[idx] = kerbal::numeric::reset_bit(_K_block[idx], ofs);
 					return *this;
 				}
 
@@ -252,7 +252,7 @@ namespace kerbal
 				KERBAL_CONSTEXPR14
 				static_bitset& set() KERBAL_NOEXCEPT
 				{
-					bitset_size_unrelated::set_chunk(m_block, BLOCK_SIZE::value);
+					bitset_size_unrelated::set_chunk(_K_block, BLOCK_SIZE::value);
 					return *this;
 				}
 
@@ -261,7 +261,7 @@ namespace kerbal
 				{
 					size_t idx = pos / BITS_PER_BLOCK::value;
 					size_t ofs = pos % BITS_PER_BLOCK::value;
-					m_block[idx] = kerbal::numeric::set_bit(m_block[idx], ofs);
+					_K_block[idx] = kerbal::numeric::set_bit(_K_block[idx], ofs);
 					return *this;
 				}
 
@@ -279,7 +279,7 @@ namespace kerbal
 				KERBAL_CONSTEXPR14
 				static_bitset& flip() KERBAL_NOEXCEPT
 				{
-					bitset_size_unrelated::flip_chunk(m_block, BLOCK_SIZE::value);
+					bitset_size_unrelated::flip_chunk(_K_block, BLOCK_SIZE::value);
 					return *this;
 				}
 
@@ -288,7 +288,7 @@ namespace kerbal
 				{
 					size_t idx = pos / BITS_PER_BLOCK::value;
 					size_t ofs = pos % BITS_PER_BLOCK::value;
-					m_block[idx] = kerbal::numeric::flip(m_block[idx], ofs);
+					_K_block[idx] = kerbal::numeric::flip(_K_block[idx], ofs);
 					return *this;
 				}
 
@@ -298,10 +298,10 @@ namespace kerbal
 				typename kerbal::type_traits::enable_if<!c, bool>::type
 				_K_equals_impl(const static_bitset & rhs) const KERBAL_NOEXCEPT
 				{
-					return bitset_size_unrelated::equal_chunk(m_block, rhs.m_block, BLOCK_SIZE::value - 1) &&
+					return bitset_size_unrelated::equal_chunk(_K_block, rhs._K_block, BLOCK_SIZE::value - 1) &&
 							(
-								static_cast<block_type>(m_block[BLOCK_SIZE::value - 1] << WASTE_SIZE::value) ==
-								static_cast<block_type>(rhs.m_block[BLOCK_SIZE::value - 1] << WASTE_SIZE::value)
+								static_cast<block_type>(_K_block[BLOCK_SIZE::value - 1] << WASTE_SIZE::value) ==
+								static_cast<block_type>(rhs._K_block[BLOCK_SIZE::value - 1] << WASTE_SIZE::value)
 							);
 				}
 
@@ -310,7 +310,7 @@ namespace kerbal
 				typename kerbal::type_traits::enable_if<c, bool>::type
 				_K_equals_impl(const static_bitset & rhs) const KERBAL_NOEXCEPT
 				{
-					return bitset_size_unrelated::equal_chunk(m_block, rhs.m_block, BLOCK_SIZE::value);
+					return bitset_size_unrelated::equal_chunk(_K_block, rhs._K_block, BLOCK_SIZE::value);
 				}
 
 			public:
@@ -329,21 +329,21 @@ namespace kerbal
 				KERBAL_CONSTEXPR14
 				static_bitset& operator&=(const static_bitset & ano) KERBAL_NOEXCEPT
 				{
-					bitset_size_unrelated::bit_and_assign(this->m_block, ano.m_block, BLOCK_SIZE::value);
+					bitset_size_unrelated::bit_and_assign(this->_K_block, ano._K_block, BLOCK_SIZE::value);
 					return *this;
 				}
 
 				KERBAL_CONSTEXPR14
 				static_bitset& operator|=(const static_bitset & ano) KERBAL_NOEXCEPT
 				{
-					bitset_size_unrelated::bit_or_assign(this->m_block, ano.m_block, BLOCK_SIZE::value);
+					bitset_size_unrelated::bit_or_assign(this->_K_block, ano._K_block, BLOCK_SIZE::value);
 					return *this;
 				}
 
 				KERBAL_CONSTEXPR14
 				static_bitset& operator^=(const static_bitset & ano) KERBAL_NOEXCEPT
 				{
-					bitset_size_unrelated::bit_xor_assign(this->m_block, ano.m_block, BLOCK_SIZE::value);
+					bitset_size_unrelated::bit_xor_assign(this->_K_block, ano._K_block, BLOCK_SIZE::value);
 					return *this;
 				}
 
@@ -379,7 +379,7 @@ namespace kerbal
 				{
 					static_bitset r;
 					for (size_t i = 0; i < BLOCK_SIZE::value; ++i) {
-						r.m_block[i] = ~this->m_block[i];
+						r._K_block[i] = ~this->_K_block[i];
 					}
 					return r;
 				}
@@ -387,7 +387,7 @@ namespace kerbal
 				KERBAL_CONSTEXPR14
 				void swap(static_bitset & ano) KERBAL_NOEXCEPT
 				{
-					kerbal::algorithm::swap(this->m_block, ano.m_block);
+					kerbal::algorithm::swap(this->_K_block, ano._K_block);
 				}
 
 		};
