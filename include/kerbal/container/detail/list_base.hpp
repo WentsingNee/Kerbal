@@ -396,21 +396,37 @@ namespace kerbal
 					void _K_merge(list_allocator_unrelated & other);
 
 				private:
-					template <typename BinaryPredict>
-					KERBAL_CONSTEXPR20
-					void merge_sort_merge(iterator first, iterator mid, iterator last, BinaryPredict cmp);
+					typedef kerbal::type_traits::integral_constant<int, 0> MSM_VER_NOTHROW;
+
+#				if __cpp_exceptions
+					typedef kerbal::type_traits::integral_constant<int, 1> MSM_VER_MAY_THROW;
+#				endif
 
 					template <typename BinaryPredict>
 					KERBAL_CONSTEXPR20
-					iterator merge_sort_n(iterator first, difference_type len, BinaryPredict cmp);
+					static void _K_merge_sort_merge(iterator first, iterator mid, iterator last, BinaryPredict cmp, MSM_VER_NOTHROW);
+
+#				if __cpp_exceptions
+					template <typename BinaryPredict>
+					KERBAL_CONSTEXPR20
+					static void _K_merge_sort_merge(iterator first, iterator mid, iterator last, BinaryPredict cmp, MSM_VER_MAY_THROW);
+#				endif
+
+					template <typename BinaryPredict>
+					KERBAL_CONSTEXPR20
+					static void merge_sort_merge(iterator first, iterator mid, iterator last, BinaryPredict cmp);
+
+					template <typename BinaryPredict>
+					KERBAL_CONSTEXPR20
+					static iterator merge_sort_n(iterator first, difference_type len, BinaryPredict cmp);
 
 				protected:
 					template <typename BinaryPredict>
 					KERBAL_CONSTEXPR20
-					void sort(iterator first, iterator last, BinaryPredict cmp);
+					static void _K_sort(iterator first, iterator last, BinaryPredict cmp);
 
 					KERBAL_CONSTEXPR20
-					void sort(iterator first, iterator last);
+					static void _K_sort(iterator first, iterator last);
 
 					template <typename BinaryPredict>
 					KERBAL_CONSTEXPR20

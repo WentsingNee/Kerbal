@@ -694,45 +694,90 @@ namespace kerbal
 
 			template <typename Tp>
 			template <typename BinaryPredict>
+			inline
+			KERBAL_CONSTEXPR20
+			void list_allocator_unrelated<Tp>::_K_merge_sort_merge(iterator first, iterator mid, iterator last, BinaryPredict cmp, MSM_VER_NOTHROW)
+			{
+				iterator before_mid(kerbal::iterator::prev(mid));
+				const_iterator i(first);
+				const_iterator j(mid);
+				while (i != mid) {
+					if (j != last) {
+						if (cmp(*j, *i)) {
+							_K_hook_node(i, (j++).cast_to_mutable().current);
+						} else {
+							++i;
+						}
+					} else {
+						break;
+					}
+				}
+				before_mid.current->next = j.cast_to_mutable().current;
+				j.cast_to_mutable().current->prev = before_mid.current;
+			}
+
+#		if __cpp_exceptions
+
+			template <typename Tp>
+			template <typename BinaryPredict>
+			inline
+			KERBAL_CONSTEXPR20
+			void list_allocator_unrelated<Tp>::_K_merge_sort_merge(iterator first, iterator mid, iterator last, BinaryPredict cmp, MSM_VER_MAY_THROW)
+			{
+				iterator before_mid(kerbal::iterator::prev(mid));
+				const_iterator i(first);
+				const_iterator j(mid);
+				try {
+					while (i != mid) {
+						if (j != last) {
+							if (cmp(*j, *i)) {
+								_K_hook_node(i, (j++).cast_to_mutable().current);
+							} else {
+								++i;
+							}
+						} else {
+							break;
+						}
+					}
+				} catch (...) {
+					before_mid.current->next = j.cast_to_mutable().current;
+					j.cast_to_mutable().current->prev = before_mid.current;
+					throw;
+				}
+				before_mid.current->next = j.cast_to_mutable().current;
+				j.cast_to_mutable().current->prev = before_mid.current;
+			}
+
+#		endif
+
+			template <typename Tp>
+			template <typename BinaryPredict>
+			inline
 			KERBAL_CONSTEXPR20
 			void list_allocator_unrelated<Tp>::merge_sort_merge(iterator first, iterator mid, iterator last, BinaryPredict cmp)
 			{
-				node * a = static_cast<node*>(first.current);
-				node_base * const a_back = mid.current->prev;
 
-				a_back->next = NULL;
+#		if __cpp_exceptions
 
-				mid.current->prev = a->prev;
-				a->prev->next = mid.current;
+#			if __cplusplus >= 201103L
 
-				while (a != NULL) {
-					if (mid != last) {
+				typedef typename kerbal::type_traits::conditional<
+						noexcept(cmp(
+								kerbal::utility::declval<const_reference>(),
+								kerbal::utility::declval<const_reference>())),
+						MSM_VER_NOTHROW,
+						MSM_VER_MAY_THROW
+				>::type MSM_VERSION;
 
-#			if __cpp_exceptions
-						bool flag = false;
-						try {
-							flag = static_cast<bool>(cmp(*mid, a->value));
-						} catch (...) {
-							_K_hook_node(mid, a, a_back);
-							throw;
-						}
 #			else
-						bool flag = static_cast<bool>(cmp(*mid, a->value));
-#			endif // __cpp_exceptions
+				typedef MSM_VER_MAY_THROW MSM_VERSION;
+#			endif
+#		else
+				typedef MSM_VER_NOTHROW MSM_VERSION;
+#		endif
 
+				_K_merge_sort_merge(first, mid, last, cmp, MSM_VERSION());
 
-						if (flag) {
-							++mid;
-						} else {
-							node_base * t = a->next;
-							_K_hook_node(mid, a);
-							a = static_cast<node*>(t);
-						}
-					} else {
-						_K_hook_node(mid, a, a_back);
-						return;
-					}
-				}
 			}
 
 			template <typename Tp>
@@ -758,14 +803,14 @@ namespace kerbal
 				difference_type first_half_len = len / 2;
 
 				iterator pre_first(kerbal::iterator::prev(first));
-				iterator mid(this->merge_sort_n(first, first_half_len, cmp));
+				iterator mid(merge_sort_n(first, first_half_len, cmp));
 
 				iterator pre_mid(kerbal::iterator::prev(mid));
-				iterator last(this->merge_sort_n(mid, len - first_half_len, cmp));
+				iterator last(merge_sort_n(mid, len - first_half_len, cmp));
 
 				first = kerbal::iterator::next(pre_first);
 				mid = kerbal::iterator::next(pre_mid);
-				this->merge_sort_merge(first, mid, last, cmp);
+				merge_sort_merge(first, mid, last, cmp);
 
 				return last;
 			}
@@ -773,16 +818,16 @@ namespace kerbal
 			template <typename Tp>
 			template <typename BinaryPredict>
 			KERBAL_CONSTEXPR20
-			void list_allocator_unrelated<Tp>::sort(iterator first, iterator last, BinaryPredict cmp)
+			void list_allocator_unrelated<Tp>::_K_sort(iterator first, iterator last, BinaryPredict cmp)
 			{
-				this->merge_sort_n(first, kerbal::iterator::distance(first, last), cmp);
+				merge_sort_n(first, kerbal::iterator::distance(first, last), cmp);
 			}
 
 			template <typename Tp>
 			KERBAL_CONSTEXPR20
-			void list_allocator_unrelated<Tp>::sort(iterator first, iterator last)
+			void list_allocator_unrelated<Tp>::_K_sort(iterator first, iterator last)
 			{
-				this->sort(first, last, std::less<value_type>());
+				_K_sort(first, last, std::less<value_type>());
 			}
 
 			template <typename Tp>
@@ -790,14 +835,14 @@ namespace kerbal
 			KERBAL_CONSTEXPR20
 			void list_allocator_unrelated<Tp>::sort(BinaryPredict cmp)
 			{
-				this->sort(this->begin(), this->end(), cmp);
+				_K_sort(this->begin(), this->end(), cmp);
 			}
 
 			template <typename Tp>
 			KERBAL_CONSTEXPR20
 			void list_allocator_unrelated<Tp>::sort()
 			{
-				this->sort(this->begin(), this->end());
+				_K_sort(this->begin(), this->end());
 			}
 
 			template <typename Tp>

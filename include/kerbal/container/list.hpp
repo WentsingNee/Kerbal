@@ -488,6 +488,13 @@ namespace kerbal
 				KERBAL_CONSTEXPR20
 				void merge(list & other);
 
+				template <typename BinaryPredict>
+				KERBAL_CONSTEXPR20
+				void sort(iterator first, iterator last, BinaryPredict cmp);
+
+				KERBAL_CONSTEXPR20
+				void sort(iterator first, iterator last);
+
 				using list_allocator_unrelated::sort;
 
 				KERBAL_CONSTEXPR20
