@@ -60,16 +60,15 @@ namespace kerbal
 #				pragma omp barrier
 
 				int thrd_id = omp_get_thread_num();
-				size_t section_cnt = kerbal::algorithm::__count_if(
-						section_ranges[thrd_id], section_ranges[thrd_id + 1], pred,
-						kerbal::iterator::iterator_category(first));
+				size_t section_cnt = kerbal::algorithm::count_if(
+						section_ranges[thrd_id], section_ranges[thrd_id + 1], pred);
 
 #				pragma omp critical
 				{
 					cnt += section_cnt;
 				}
 
-			}; // omp parallel
+			} // omp parallel
 
 			return cnt;
 		}
@@ -99,9 +98,8 @@ namespace kerbal
 				int thrd_id = omp_get_thread_num();
 				iterator section_first(kerbal::iterator::next(first, thrd_id * per));
 				iterator section_last((thrd_id == threads_num - 1) ? last : kerbal::iterator::next(section_first, per));
-				size_t section_cnt = kerbal::algorithm::__count_if(
-						section_first, section_last, pred,
-						kerbal::iterator::iterator_category(first));
+				size_t section_cnt = kerbal::algorithm::count_if(
+						section_first, section_last, pred);
 
 #				pragma omp critical
 				{
@@ -143,9 +141,8 @@ namespace kerbal
 #				pragma omp barrier
 
 				int thrd_id = omp_get_thread_num();
-				kerbal::algorithm::__for_each(
-						section_ranges[thrd_id], section_ranges[thrd_id + 1], f,
-						kerbal::iterator::iterator_category(first));
+				kerbal::algorithm::for_each(
+						section_ranges[thrd_id], section_ranges[thrd_id + 1], f);
 
 			} // omp parallel
 
@@ -175,7 +172,7 @@ namespace kerbal
 				int thrd_id = omp_get_thread_num();
 				iterator section_first(kerbal::iterator::next(first, thrd_id * per));
 				iterator section_last((thrd_id == threads_num - 1) ? last : kerbal::iterator::next(section_first, per));
-				kerbal::algorithm::__for_each(section_first, section_last, f, kerbal::iterator::iterator_category(first));
+				kerbal::algorithm::for_each(section_first, section_last, f);
 			} // omp parallel
 
 			return kerbal::compatibility::to_xvalue(f);
