@@ -1,20 +1,22 @@
-/*
- * modules_ts.hpp
- *
- *  Created on: 2018年12月10日
- *      Author: peter
+/**
+ * @file       modules_ts.hpp
+ * @brief
+ * @date       2018-12-10
+ * @author     Peter
+ * @copyright
+ *      Peter of [ThinkSpirit Laboratory](http://thinkspirit.org/)
+ *   of [Nanjing University of Information Science & Technology](http://www.nuist.edu.cn/)
+ *   all rights reserved
  */
 
-#ifndef INCLUDE_KERBAL_TS_MODULES_TS_MODULES_TS_HPP_
-#define INCLUDE_KERBAL_TS_MODULES_TS_MODULES_TS_HPP_
+#ifndef KERBAL_TS_MODULES_TS_MODULES_TS_HPP
+#define KERBAL_TS_MODULES_TS_MODULES_TS_HPP
 
-#ifdef __cpp_modules
-#	define KERBAL_ENABLE_CLANGPP_MODULES
+#if KERBAL_ENABLE_MODULES
 #	define MODULE_EXPORT export
 #else
 #	define MODULE_EXPORT
 #endif
 
 
-
-#endif /* INCLUDE_KERBAL_TS_MODULES_TS_MODULES_TS_HPP_ */
+#endif // KERBAL_TS_MODULES_TS_MODULES_TS_HPP
