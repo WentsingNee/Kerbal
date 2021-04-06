@@ -60,6 +60,9 @@ namespace kerbal
 				protected:
 					node_base head_node;
 
+				//===================
+				// construct/copy/destroy
+
 #			if __cplusplus < 201103L
 
 					list_type_unrelated() KERBAL_NOEXCEPT
@@ -230,6 +233,9 @@ namespace kerbal
 
 
 				protected:
+
+				//===================
+				// construct/copy/destroy
 
 #			if __cplusplus >= 201103L
 

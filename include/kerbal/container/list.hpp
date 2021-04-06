@@ -96,6 +96,10 @@ namespace kerbal
 				using list_allocator_overload::alloc;
 
 			public:
+
+			//===================
+			// construct/copy/destroy
+
 				KERBAL_CONSTEXPR20
 				list() KERBAL_CONDITIONAL_NOEXCEPT(
 						std::is_nothrow_default_constructible<list_allocator_unrelated>::value &&
@@ -272,13 +276,13 @@ namespace kerbal
 #		endif
 
 			//===================
-			//element access
+			// element access
 
 				using list_allocator_unrelated::front;
 				using list_allocator_unrelated::back;
 
 			//===================
-			//iterator
+			// iterator
 
 				using list_allocator_unrelated::begin;
 				using list_allocator_unrelated::end;
@@ -296,14 +300,14 @@ namespace kerbal
 				using list_allocator_unrelated::index_of;
 
 			//===================
-			//capacity
+			// capacity
 
 				using list_type_unrelated::empty;
 				using list_type_unrelated::size;
 				using list_allocator_unrelated::max_size;
 
 			//===================
-			//insert
+			// insert
 
 				KERBAL_CONSTEXPR20
 				void push_front(const_reference val);
@@ -422,7 +426,7 @@ namespace kerbal
 #		endif
 
 			//===================
-			//erase
+			// erase
 
 				KERBAL_CONSTEXPR20
 				void pop_front();
@@ -436,15 +440,15 @@ namespace kerbal
 				KERBAL_CONSTEXPR20
 				iterator erase(const_iterator first, const_iterator last);
 
-			//===================
-			//operation
-
 				KERBAL_CONSTEXPR20
 				void clear() KERBAL_CONDITIONAL_NOEXCEPT(
 						noexcept(kerbal::utility::declthis<list>()->erase(
 								kerbal::utility::declthis<list>()->cbegin(), kerbal::utility::declthis<list>()->cend()
 						))
 				);
+
+			//===================
+			// operation
 
 				KERBAL_CONSTEXPR20
 				void resize(size_type count);

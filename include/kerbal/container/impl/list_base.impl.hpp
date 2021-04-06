@@ -247,9 +247,8 @@ namespace kerbal
 			}
 
 
-
-			//===================
-			//element access
+		//===================
+		// element access
 
 			template <typename Tp>
 			KERBAL_CONSTEXPR20
@@ -283,8 +282,9 @@ namespace kerbal
 				return this->head_node.prev->template reinterpret_as<Tp>().value;
 			}
 
-			//===================
-			//iterator
+
+		//===================
+		// iterator
 
 			template <typename Tp>
 			KERBAL_CONSTEXPR20
@@ -415,8 +415,8 @@ namespace kerbal
 			}
 
 
-			//===================
-			//operation
+		//===================
+		// erase
 
 			template <typename Tp>
 			template <typename NodeAllocator>
@@ -449,8 +449,8 @@ namespace kerbal
 			}
 
 
-			//===================
-			//operation
+		//===================
+		// operation
 
 			template <typename Tp>
 			KERBAL_CONSTEXPR20
@@ -947,8 +947,8 @@ namespace kerbal
 			}
 
 
-			//===================
-			// private
+		//===================
+		// private
 
 #	if __cplusplus >= 201103L
 
