@@ -119,8 +119,8 @@ namespace kerbal
 #define KERBAL_TEMPLATE_TEST_CASE(name, description) \
 	void name(kerbal::test::assert_record& record)
 
-#define KERBAL_TEMPLATE_TEST_CASE_INST(name, description, args...) \
-	static const int KERBAL_JOIN_LINE(__kerbal_test_register_unit_tag) = (kerbal::test::__register_test_suit(#name, name<args>, description), 0);
+#define KERBAL_TEMPLATE_TEST_CASE_INST(name, description, ...) \
+	static const int KERBAL_JOIN_LINE(__kerbal_test_register_unit_tag) = (kerbal::test::__register_test_suit(#name, name<__VA_ARGS__>, description), 0);
 
 
 #if __cplusplus >= 201103L
