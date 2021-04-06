@@ -12,6 +12,8 @@
 #ifndef KERBAL_HASH_IMPL_SHA1_IMPL_HPP
 #define KERBAL_HASH_IMPL_SHA1_IMPL_HPP
 
+#include <kerbal/config/library_export.hpp>
+
 #include <kerbal/algorithm/modifier.hpp>
 #include <kerbal/compatibility/static_assert.hpp>
 #include <kerbal/iterator/iterator.hpp>
@@ -25,6 +27,8 @@ namespace kerbal
 
 	namespace hash
 	{
+
+#	if KERBAL_LIBRARY_EXPORT
 
 		template <>
 		KERBAL_CONSTEXPR14
@@ -102,6 +106,9 @@ namespace kerbal
 			w = kerbal::numeric::rotl(w, 30);
 		}
 
+#	endif // KERBAL_LIBRARY_EXPORT
+
+
 //#if BYTE_ORDER == LITTLE_ENDIAN
 //#define blk0(l, i) l[(i)]=((kerbal::numeric::rotl(l[i],24)&0xFF00FF00u) \
 //    |(kerbal::numeric::rotl(l[i],8)&0x00FF00FFu))
@@ -153,8 +160,10 @@ namespace kerbal
 			return (c[3] << 24u) | (c[2] << 16u) | (c[1] << 8u) | c[0];
 		}
 
+#	if KERBAL_LIBRARY_EXPORT
+
 		KERBAL_CONSTEXPR14
-		inline
+		KERBAL_SYMBOL_EXPORT
 		void SHA1_transform_overload<SHA1_policy::size>::transform(const unsigned char buffer[64]) KERBAL_NOEXCEPT
 		{
 			uint32_t l[16] = {};
@@ -213,7 +222,7 @@ namespace kerbal
 		}
 
 		KERBAL_CONSTEXPR14
-		inline
+		KERBAL_SYMBOL_EXPORT
 		void SHA1_transform_overload<SHA1_policy::fast>::transform(const unsigned char buffer[64]) KERBAL_NOEXCEPT
 		{
 			uint32_t l[16] = {};
@@ -257,6 +266,9 @@ namespace kerbal
 			this->state[3] += d;
 			this->state[4] += e;
 		}
+
+#	endif // KERBAL_LIBRARY_EXPORT
+
 
 		template <typename Policy>
 		template <typename RandomAccessIterator>
