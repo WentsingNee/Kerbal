@@ -541,7 +541,13 @@ namespace kerbal
 #		if __cplusplus >= 201103L
 
 				KERBAL_CONSTEXPR20
-				void splice(const_iterator pos, list&& other) KERBAL_NOEXCEPT;
+				void splice(const_iterator pos, list && other) KERBAL_NOEXCEPT;
+
+				KERBAL_CONSTEXPR20
+				void splice(const_iterator pos, list && other, const_iterator opos) KERBAL_NOEXCEPT;
+
+				KERBAL_CONSTEXPR20
+				void splice(const_iterator pos, list && other, const_iterator first, const_iterator last) KERBAL_NOEXCEPT;
 
 #		endif
 

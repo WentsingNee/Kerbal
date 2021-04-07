@@ -131,6 +131,17 @@ namespace kerbal
 				list_type_unrelated::_K_splice(pos, other.basic_begin(), other.basic_end());
 			}
 
+#		if __cplusplus >= 201103L
+
+			KERBAL_CONSTEXPR14
+			inline
+			void list_type_unrelated::_K_splice(basic_const_iterator pos, list_type_unrelated && other) KERBAL_NOEXCEPT
+			{
+				list_type_unrelated::_K_splice(pos, other.basic_begin(), other.basic_end());
+			}
+
+#		endif
+
 			KERBAL_CONSTEXPR14
 			inline
 			void list_type_unrelated::_K_splice(basic_const_iterator pos, basic_const_iterator opos) KERBAL_NOEXCEPT

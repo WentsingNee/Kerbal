@@ -145,6 +145,43 @@ namespace kerbal
 				this->_K_hook_node(pos, start, back);
 			}
 
+#		if __cplusplus >= 201103L
+
+			KERBAL_CONSTEXPR20
+			inline
+			void sl_type_unrelated::_K_splice(basic_const_iterator pos, sl_type_unrelated && other)
+																							KERBAL_NOEXCEPT
+			{
+				this->_K_splice(pos, kerbal::compatibility::move(other), other.basic_begin(), other.basic_end());
+			}
+
+			KERBAL_CONSTEXPR20
+			inline
+			void sl_type_unrelated::_K_splice(basic_const_iterator pos, sl_type_unrelated && other, basic_const_iterator opos)
+																							KERBAL_NOEXCEPT
+			{
+				node_base * p = other._K_unhook_node(opos.cast_to_mutable());
+				p->next = NULL;
+				this->_K_hook_node(pos, p);
+			}
+
+			KERBAL_CONSTEXPR20
+			inline
+			void sl_type_unrelated::_K_splice(basic_const_iterator pos, sl_type_unrelated && other,
+											basic_const_iterator first, basic_const_iterator last) KERBAL_NOEXCEPT
+			{
+				if (first == last) {
+					return;
+				}
+				std::pair<node_base *, node_base *> range(other._K_unhook_node(first.cast_to_mutable(), last.cast_to_mutable()));
+				node_base * start = range.first;
+				node_base * back = range.second;
+				back->next = NULL;
+				this->_K_hook_node(pos, start, back);
+			}
+
+#		endif
+
 			KERBAL_CONSTEXPR20
 			inline
 			void sl_type_unrelated::_K_hook_node_back(node_base * p) KERBAL_NOEXCEPT

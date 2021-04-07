@@ -818,6 +818,32 @@ namespace kerbal
 			this->sl_type_unrelated::_K_splice(pos, other, first, last);
 		}
 
+#	if __cplusplus >= 201103L
+
+		template <typename Tp, typename Allocator>
+		KERBAL_CONSTEXPR20
+		void single_list<Tp, Allocator>::splice(const_iterator pos, single_list && other) KERBAL_NOEXCEPT
+		{
+			this->sl_type_unrelated::_K_splice(pos, kerbal::compatibility::move(other));
+		}
+
+		template <typename Tp, typename Allocator>
+		KERBAL_CONSTEXPR20
+		void single_list<Tp, Allocator>::splice(const_iterator pos, single_list && other, const_iterator opos) KERBAL_NOEXCEPT
+		{
+			this->sl_type_unrelated::_K_splice(pos, kerbal::compatibility::move(other), opos);
+		}
+
+		template <typename Tp, typename Allocator>
+		KERBAL_CONSTEXPR20
+		void single_list<Tp, Allocator>::splice(const_iterator pos, single_list && other,
+												const_iterator first, const_iterator last) KERBAL_NOEXCEPT
+		{
+			this->sl_type_unrelated::_K_splice(pos, kerbal::compatibility::move(other), first, last);
+		}
+
+#	endif
+
 	} // namespace container
 
 } // namespace kerbal

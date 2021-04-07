@@ -135,6 +135,20 @@ namespace kerbal
 					void _K_splice(basic_const_iterator pos, sl_type_unrelated & other,
 								basic_const_iterator first, basic_const_iterator last) KERBAL_NOEXCEPT;
 
+#			if __cplusplus >= 201103L
+
+					KERBAL_CONSTEXPR20
+					void _K_splice(basic_const_iterator pos, sl_type_unrelated && other) KERBAL_NOEXCEPT;
+
+					KERBAL_CONSTEXPR20
+					void _K_splice(basic_const_iterator pos, sl_type_unrelated && other, basic_const_iterator opos) KERBAL_NOEXCEPT;
+
+					KERBAL_CONSTEXPR20
+					void _K_splice(basic_const_iterator pos, sl_type_unrelated && other,
+								basic_const_iterator first, basic_const_iterator last) KERBAL_NOEXCEPT;
+
+#			endif
+
 				//===================
 				// private
 

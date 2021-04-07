@@ -152,6 +152,13 @@ namespace kerbal
 					KERBAL_CONSTEXPR14
 					static void _K_splice(basic_const_iterator pos, list_type_unrelated & other) KERBAL_NOEXCEPT;
 
+#			if __cplusplus >= 201103L
+
+					KERBAL_CONSTEXPR14
+					static void _K_splice(basic_const_iterator pos, list_type_unrelated && other) KERBAL_NOEXCEPT;
+
+#			endif
+
 					KERBAL_CONSTEXPR14
 					static void _K_splice(basic_const_iterator pos, basic_const_iterator opos) KERBAL_NOEXCEPT;
 
