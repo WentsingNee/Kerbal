@@ -763,6 +763,40 @@ namespace kerbal
 
 		template <typename Tp, typename Allocator>
 		KERBAL_CONSTEXPR20
+		typename single_list<Tp, Allocator>::size_type
+		single_list<Tp, Allocator>::remove(const_reference val)
+		{
+			return sl_allocator_unrelated::_K_remove(this->alloc(), val);
+		}
+
+		template <typename Tp, typename Allocator>
+		KERBAL_CONSTEXPR20
+		typename single_list<Tp, Allocator>::size_type
+		single_list<Tp, Allocator>::remove(const_iterator first, const_iterator last, const_reference val)
+		{
+			return sl_allocator_unrelated::_K_remove(this->alloc(), first, last, val);
+		}
+
+		template <typename Tp, typename Allocator>
+		template <typename UnaryPredicate>
+		KERBAL_CONSTEXPR20
+		typename single_list<Tp, Allocator>::size_type
+		single_list<Tp, Allocator>::remove_if(UnaryPredicate predicate)
+		{
+			return sl_allocator_unrelated::_K_remove_if(this->alloc(), predicate);
+		}
+
+		template <typename Tp, typename Allocator>
+		template <typename UnaryPredicate>
+		KERBAL_CONSTEXPR20
+		typename single_list<Tp, Allocator>::size_type
+		single_list<Tp, Allocator>::remove_if(const_iterator first, const_iterator last, UnaryPredicate predicate)
+		{
+			return sl_allocator_unrelated::_K_remove_if(this->alloc(), first, last, predicate);
+		}
+
+		template <typename Tp, typename Allocator>
+		KERBAL_CONSTEXPR20
 		void single_list<Tp, Allocator>::splice(const_iterator pos, single_list & other) KERBAL_NOEXCEPT
 		{
 			this->sl_type_unrelated::_K_splice(pos, other);

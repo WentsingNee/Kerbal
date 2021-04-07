@@ -458,6 +458,19 @@ namespace kerbal
 
 				using sl_allocator_unrelated::reverse;
 
+				KERBAL_CONSTEXPR20
+				size_type remove(const_reference val);
+
+				KERBAL_CONSTEXPR20
+				size_type remove(const_iterator first, const_iterator last, const_reference val);
+
+				template <typename UnaryPredicate>
+				KERBAL_CONSTEXPR20
+				size_type remove_if(UnaryPredicate predicate);
+
+				template <typename UnaryPredicate>
+				KERBAL_CONSTEXPR20
+				size_type remove_if(const_iterator first, const_iterator last, UnaryPredicate predicate);
 
 				KERBAL_CONSTEXPR20
 				void splice(const_iterator pos, single_list & other) KERBAL_NOEXCEPT;
