@@ -494,6 +494,27 @@ namespace kerbal
 
 #		endif
 
+				KERBAL_CONSTEXPR20
+				single_list& operator+=(const single_list& with);
+
+#		if __cplusplus >= 201103L
+
+				KERBAL_CONSTEXPR20
+				single_list& operator+=(single_list&& with);
+
+#		endif
+
+#		if __cplusplus >= 201103L
+
+				KERBAL_CONSTEXPR20
+				single_list& operator+=(std::initializer_list<value_type> with);
+
+#		else
+
+				single_list& operator+=(const kerbal::assign::assign_list<value_type> & with);
+
+#		endif
+
 		};
 
 #	if __cplusplus >= 201703L
@@ -518,6 +539,26 @@ namespace kerbal
 
 #	endif
 
+
+		template <typename Tp, typename Allocator>
+		KERBAL_CONSTEXPR20
+		single_list<Tp, Allocator> operator+(const single_list<Tp, Allocator> & lhs, const single_list<Tp, Allocator> & rhs);
+
+#	if __cplusplus >= 201103L
+
+		template <typename Tp, typename Allocator>
+		KERBAL_CONSTEXPR20
+		single_list<Tp, Allocator> operator+(const single_list<Tp, Allocator> & lhs, single_list<Tp, Allocator> && rhs);
+
+		template <typename Tp, typename Allocator>
+		KERBAL_CONSTEXPR20
+		single_list<Tp, Allocator> operator+(single_list<Tp, Allocator> && lhs, const single_list<Tp, Allocator> & rhs);
+
+		template <typename Tp, typename Allocator>
+		KERBAL_CONSTEXPR20
+		single_list<Tp, Allocator> operator+(single_list<Tp, Allocator> && lhs, single_list<Tp, Allocator> && rhs);
+
+#	endif
 
 		template <typename Tp, typename Allocator>
 		KERBAL_CONSTEXPR20

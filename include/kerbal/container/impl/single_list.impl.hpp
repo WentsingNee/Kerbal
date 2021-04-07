@@ -844,6 +844,87 @@ namespace kerbal
 
 #	endif
 
+		template <typename Tp, typename Allocator>
+		KERBAL_CONSTEXPR20
+		single_list<Tp, Allocator>& single_list<Tp, Allocator>::operator+=(const single_list & with)
+		{
+			this->insert(this->cend(), with.cbegin(), with.cend());
+			return *this;
+		}
+
+#	if __cplusplus >= 201103L
+
+		template <typename Tp, typename Allocator>
+		KERBAL_CONSTEXPR20
+		single_list<Tp, Allocator>& single_list<Tp, Allocator>::operator+=(single_list && with)
+		{
+			this->splice(this->cend(), kerbal::compatibility::move(with));
+			return *this;
+		}
+
+#	endif
+
+#	if __cplusplus >= 201103L
+
+		template <typename Tp, typename Allocator>
+		KERBAL_CONSTEXPR20
+		single_list<Tp, Allocator>& single_list<Tp, Allocator>::operator+=(std::initializer_list<value_type> with)
+		{
+			this->insert(this->cend(), with.begin(), with.end());
+			return *this;
+		}
+
+#	else
+
+		template <typename Tp, typename Allocator>
+		single_list<Tp, Allocator>& single_list<Tp, Allocator>::operator+=(const kerbal::assign::assign_list<value_type> & with)
+		{
+			this->insert(this->cend(), with.cbegin(), with.cend());
+			return *this;
+		}
+
+#	endif
+
+		template <typename Tp, typename Allocator>
+		KERBAL_CONSTEXPR20
+		single_list<Tp, Allocator> operator+(const single_list<Tp, Allocator> & lhs, const single_list<Tp, Allocator> & rhs)
+		{
+			single_list<Tp, Allocator> r(lhs);
+			r.insert(r.cend(), rhs.cbegin(), rhs.cend());
+			return r;
+		}
+
+#	if __cplusplus >= 201103L
+
+		template <typename Tp, typename Allocator>
+		KERBAL_CONSTEXPR20
+		single_list<Tp, Allocator> operator+(const single_list<Tp, Allocator> & lhs, single_list<Tp, Allocator> && rhs)
+		{
+			single_list<Tp, Allocator> r(lhs);
+			r += kerbal::compatibility::move(rhs);
+			return r;
+		}
+
+		template <typename Tp, typename Allocator>
+		KERBAL_CONSTEXPR20
+		single_list<Tp, Allocator> operator+(single_list<Tp, Allocator> && lhs, const single_list<Tp, Allocator> & rhs)
+		{
+			single_list<Tp, Allocator> r(kerbal::compatibility::move(lhs));
+			r += rhs;
+			return r;
+		}
+
+		template <typename Tp, typename Allocator>
+		KERBAL_CONSTEXPR20
+		single_list<Tp, Allocator> operator+(single_list<Tp, Allocator> && lhs, single_list<Tp, Allocator> && rhs)
+		{
+			single_list<Tp, Allocator> r(kerbal::compatibility::move(lhs));
+			r += kerbal::compatibility::move(rhs);
+			return r;
+		}
+
+#	endif
+
 	} // namespace container
 
 } // namespace kerbal
