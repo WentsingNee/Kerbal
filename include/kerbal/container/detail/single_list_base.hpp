@@ -288,7 +288,29 @@ namespace kerbal
 					}
 
 				//===================
+				// erase
+
+					template <typename NodeAllocator>
+					KERBAL_CONSTEXPR20
+					iterator _K_erase(NodeAllocator & alloc, const_iterator pos);
+
+					template <typename NodeAllocator>
+					KERBAL_CONSTEXPR20
+					iterator _K_erase(NodeAllocator & alloc, const_iterator first, const_iterator last);
+
+				//===================
 				// operation
+
+					template <typename NodeAllocator>
+					KERBAL_CONSTEXPR20
+					void _K_clear(NodeAllocator & alloc)
+							KERBAL_CONDITIONAL_NOEXCEPT(
+									noexcept(kerbal::utility::declthis<sl_allocator_unrelated>()->_K_consecutive_destroy_node(
+											alloc,
+											kerbal::utility::declthis<sl_allocator_unrelated>()->head_node.next
+									))
+							)
+					;
 
 					KERBAL_CONSTEXPR20
 					void iter_swap_unstable(iterator a, iterator b);

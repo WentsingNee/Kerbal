@@ -700,10 +700,7 @@ namespace kerbal
 		typename single_list<Tp, Allocator>::iterator
 		single_list<Tp, Allocator>::erase(const_iterator pos)
 		{
-			iterator pos_mut(pos.cast_to_mutable());
-			node_base * p = sl_type_unrelated::_K_unhook_node(pos_mut);
-			this->_K_destroy_node(this->alloc(), p);
-			return pos_mut;
+			return this->_K_erase(this->alloc(), pos);
 		}
 
 		template <typename Tp, typename Allocator>
@@ -711,31 +708,20 @@ namespace kerbal
 		typename single_list<Tp, Allocator>::iterator
 		single_list<Tp, Allocator>::erase(const_iterator first, const_iterator last)
 		{
-			iterator first_mut(first.cast_to_mutable());
-			iterator last_mut(last.cast_to_mutable());
-			if (first != last) {
-				std::pair<node_base *, node_base *> range(this->sl_type_unrelated::_K_unhook_node(first_mut, last_mut));
-				node_base * start = range.first;
-				node_base * back = range.second;
-				back->next = NULL;
-				this->_K_consecutive_destroy_node(this->alloc(), start);
-			}
-			return first_mut;
+			return this->_K_erase(this->alloc(), first, last);
 		}
 
 		template <typename Tp, typename Allocator>
 		KERBAL_CONSTEXPR20
 		void single_list<Tp, Allocator>::clear()
 				KERBAL_CONDITIONAL_NOEXCEPT(
-						noexcept(kerbal::utility::declthis<single_list>()->_K_consecutive_destroy_node(
-								kerbal::utility::declthis<single_list>()->alloc(),
-								kerbal::utility::declthis<single_list>()->head_node.next
+						noexcept(
+							kerbal::utility::declthis<single_list>()->sl_allocator_unrelated::_K_clear(
+								kerbal::utility::declthis<single_list>()->alloc()
 						))
 				)
 		{
-			this->_K_consecutive_destroy_node(this->alloc(), this->head_node.next);
-			this->head_node.next = NULL;
-			this->last_iter = this->begin();
+			this->sl_allocator_unrelated::_K_clear(this->alloc());
 		}
 
 		template <typename Tp, typename Allocator>

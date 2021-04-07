@@ -437,9 +437,9 @@ namespace kerbal
 
 				KERBAL_CONSTEXPR20
 				void clear() KERBAL_CONDITIONAL_NOEXCEPT(
-						noexcept(kerbal::utility::declthis<single_list>()->_K_consecutive_destroy_node(
-								kerbal::utility::declthis<single_list>()->alloc(),
-								kerbal::utility::declthis<single_list>()->head_node.next
+						noexcept(
+							kerbal::utility::declthis<single_list>()->sl_allocator_unrelated::_K_clear(
+								kerbal::utility::declthis<single_list>()->alloc()
 						))
 				);
 

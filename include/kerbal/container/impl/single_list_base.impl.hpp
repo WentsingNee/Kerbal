@@ -395,7 +395,57 @@ namespace kerbal
 
 
 			//===================
+			// erase
+
+			template <typename Tp>
+			template <typename NodeAllocator>
+			KERBAL_CONSTEXPR20
+			typename sl_allocator_unrelated<Tp>::iterator
+			sl_allocator_unrelated<Tp>::_K_erase(NodeAllocator & alloc, const_iterator pos)
+			{
+				iterator pos_mut(pos.cast_to_mutable());
+				node_base * p = this->_K_unhook_node(pos_mut);
+				_K_destroy_node(alloc, p);
+				return pos_mut;
+			}
+
+			template <typename Tp>
+			template <typename NodeAllocator>
+			KERBAL_CONSTEXPR20
+			typename sl_allocator_unrelated<Tp>::iterator
+			sl_allocator_unrelated<Tp>::_K_erase(NodeAllocator & alloc, const_iterator first, const_iterator last)
+			{
+				iterator first_mut(first.cast_to_mutable());
+				iterator last_mut(last.cast_to_mutable());
+				if (first != last) {
+					std::pair<node_base *, node_base *> range(this->_K_unhook_node(first_mut, last_mut));
+					node_base * start = range.first;
+					node_base * back = range.second;
+					back->next = NULL;
+					_K_consecutive_destroy_node(alloc, start);
+				}
+				return first_mut;
+			}
+
+
+			//===================
 			//operation
+
+			template <typename Tp>
+			template <typename NodeAllocator>
+			KERBAL_CONSTEXPR20
+			void sl_allocator_unrelated<Tp>::_K_clear(NodeAllocator & alloc)
+						KERBAL_CONDITIONAL_NOEXCEPT(
+								noexcept(kerbal::utility::declthis<sl_allocator_unrelated>()->_K_consecutive_destroy_node(
+										alloc,
+										kerbal::utility::declthis<sl_allocator_unrelated>()->head_node.next
+								))
+						)
+			{
+				_K_consecutive_destroy_node(alloc, this->head_node.next);
+				this->head_node.next = NULL;
+				this->last_iter = this->begin();
+			}
 
 			template <typename Tp>
 			KERBAL_CONSTEXPR20
