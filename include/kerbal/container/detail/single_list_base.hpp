@@ -281,6 +281,9 @@ namespace kerbal
 				//===================
 				// capacity
 
+					using sl_type_unrelated::empty;
+					using sl_type_unrelated::size;
+
 					KERBAL_CONSTEXPR
 					size_type max_size() const KERBAL_NOEXCEPT
 					{
