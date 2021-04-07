@@ -35,6 +35,9 @@ namespace kerbal
 	namespace container
 	{
 
+	//===================
+	// construct/copy/destroy
+
 #	if __cplusplus < 201103L
 
 		template <typename Tp, typename Allocator>
@@ -266,8 +269,9 @@ namespace kerbal
 			this->_K_consecutive_destroy_node(this->alloc(), this->head_node.next);
 		}
 
-		//===================
-		//assign
+
+	//===================
+	// assign
 
 		template <typename Tp, typename Allocator>
 		KERBAL_CONSTEXPR20
@@ -406,8 +410,9 @@ namespace kerbal
 
 #	endif
 
-		//===================
-		//insert
+
+	//===================
+	// insert
 
 		template <typename Tp, typename Allocator>
 		KERBAL_CONSTEXPR20
@@ -685,8 +690,9 @@ namespace kerbal
 
 #	endif
 
-		//===================
-		//erase
+
+	//===================
+	// erase
 
 		template <typename Tp, typename Allocator>
 		KERBAL_CONSTEXPR20
@@ -723,6 +729,10 @@ namespace kerbal
 		{
 			this->sl_allocator_unrelated::_K_clear(this->alloc());
 		}
+
+
+	//===================
+	// operation
 
 		template <typename Tp, typename Allocator>
 		KERBAL_CONSTEXPR20

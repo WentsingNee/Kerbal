@@ -59,6 +59,9 @@ namespace kerbal
 					node_base head_node;
 					basic_iterator last_iter;
 
+				//===================
+				// construct/copy/destroy
+
 					KERBAL_CONSTEXPR14
 					sl_type_unrelated() KERBAL_NOEXCEPT
 							: head_node(), last_iter(this->basic_begin())
@@ -231,6 +234,9 @@ namespace kerbal
 
 				protected:
 
+				//===================
+				// construct/copy/destroy
+
 #			if __cplusplus >= 201103L
 
 					using super::super;
@@ -315,9 +321,6 @@ namespace kerbal
 					KERBAL_CONSTEXPR20
 					iterator _K_erase(NodeAllocator & alloc, const_iterator first, const_iterator last);
 
-				//===================
-				// operation
-
 					template <typename NodeAllocator>
 					KERBAL_CONSTEXPR20
 					void _K_clear(NodeAllocator & alloc)
@@ -328,6 +331,9 @@ namespace kerbal
 									))
 							)
 					;
+
+				//===================
+				// operation
 
 					KERBAL_CONSTEXPR20
 					void iter_swap_unstable(iterator a, iterator b);

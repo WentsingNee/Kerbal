@@ -948,7 +948,7 @@ namespace kerbal
 
 		template <typename Tp, typename Allocator>
 		KERBAL_CONSTEXPR20
-		list<Tp, Allocator>& list<Tp, Allocator>::operator+=(const list& with)
+		list<Tp, Allocator>& list<Tp, Allocator>::operator+=(const list & with)
 		{
 			this->insert(this->cend(), with.cbegin(), with.cend());
 			return *this;
@@ -958,7 +958,7 @@ namespace kerbal
 
 		template <typename Tp, typename Allocator>
 		KERBAL_CONSTEXPR20
-		list<Tp, Allocator>& list<Tp, Allocator>::operator+=(list&& with)
+		list<Tp, Allocator>& list<Tp, Allocator>::operator+=(list && with)
 		{
 			this->splice(this->cend(), kerbal::compatibility::move(with));
 			return *this;
@@ -989,7 +989,7 @@ namespace kerbal
 
 		template <typename Tp, typename Allocator>
 		KERBAL_CONSTEXPR20
-		list<Tp, Allocator> operator+(const list<Tp, Allocator>& lhs, const list<Tp, Allocator>& rhs)
+		list<Tp, Allocator> operator+(const list<Tp, Allocator> & lhs, const list<Tp, Allocator> & rhs)
 		{
 			list<Tp, Allocator> r(lhs);
 			r.insert(r.cend(), rhs.cbegin(), rhs.cend());
@@ -1000,7 +1000,7 @@ namespace kerbal
 
 		template <typename Tp, typename Allocator>
 		KERBAL_CONSTEXPR20
-		list<Tp, Allocator> operator+(const list<Tp, Allocator>& lhs, list<Tp, Allocator>&& rhs)
+		list<Tp, Allocator> operator+(const list<Tp, Allocator> & lhs, list<Tp, Allocator> && rhs)
 		{
 			list<Tp, Allocator> r(lhs);
 			r += kerbal::compatibility::move(rhs);
@@ -1009,7 +1009,7 @@ namespace kerbal
 
 		template <typename Tp, typename Allocator>
 		KERBAL_CONSTEXPR20
-		list<Tp, Allocator> operator+(list<Tp, Allocator>&& lhs, const list<Tp, Allocator>& rhs)
+		list<Tp, Allocator> operator+(list<Tp, Allocator> && lhs, const list<Tp, Allocator> & rhs)
 		{
 			list<Tp, Allocator> r(kerbal::compatibility::move(lhs));
 			r += rhs;
@@ -1018,7 +1018,7 @@ namespace kerbal
 
 		template <typename Tp, typename Allocator>
 		KERBAL_CONSTEXPR20
-		list<Tp, Allocator> operator+(list<Tp, Allocator>&& lhs, list<Tp, Allocator>&& rhs)
+		list<Tp, Allocator> operator+(list<Tp, Allocator> && lhs, list<Tp, Allocator> && rhs)
 		{
 			list<Tp, Allocator> r(kerbal::compatibility::move(lhs));
 			r += kerbal::compatibility::move(rhs);

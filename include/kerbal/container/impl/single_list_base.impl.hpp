@@ -34,8 +34,8 @@ namespace kerbal
 		namespace detail
 		{
 
-			//===================
-			//capacity
+		//===================
+		// capacity
 
 			KERBAL_CONSTEXPR20
 			inline
@@ -59,8 +59,9 @@ namespace kerbal
 				return sz;
 			}
 
-			//===================
-			//operation
+
+		//===================
+		// operation
 
 			KERBAL_CONSTEXPR20
 			inline
@@ -191,8 +192,8 @@ namespace kerbal
 				this->last_iter = basic_iterator(p);
 			}
 
-			//===================
-			//private
+		//===================
+		// private
 
 			KERBAL_CONSTEXPR20
 			inline
@@ -311,9 +312,8 @@ namespace kerbal
 			}
 
 
-
-			//===================
-			//element access
+		//===================
+		// element access
 
 			template <typename Tp>
 			KERBAL_CONSTEXPR20
@@ -347,8 +347,9 @@ namespace kerbal
 				return this->cend().current->template reinterpret_as<Tp>().value;
 			}
 
-			//===================
-			//iterator
+
+		//===================
+		// iterator
 
 			template <typename Tp>
 			KERBAL_CONSTEXPR20
@@ -431,8 +432,8 @@ namespace kerbal
 			}
 
 
-			//===================
-			// erase
+		//===================
+		// erase
 
 			template <typename Tp>
 			template <typename NodeAllocator>
@@ -464,10 +465,6 @@ namespace kerbal
 				return first_mut;
 			}
 
-
-			//===================
-			//operation
-
 			template <typename Tp>
 			template <typename NodeAllocator>
 			KERBAL_CONSTEXPR20
@@ -483,6 +480,10 @@ namespace kerbal
 				this->head_node.next = NULL;
 				this->last_iter = this->begin();
 			}
+
+
+		//===================
+		// operation
 
 			template <typename Tp>
 			KERBAL_CONSTEXPR20
@@ -594,8 +595,8 @@ namespace kerbal
 			}
 
 
-			//===================
-			// private
+		//===================
+		// private
 
 #	if __cplusplus >= 201103L
 

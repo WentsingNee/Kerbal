@@ -97,6 +97,9 @@ namespace kerbal
 
 			public:
 
+			//===================
+			// construct/copy/destroy
+
 #		if __cplusplus < 201103L
 
 				single_list();
@@ -212,7 +215,7 @@ namespace kerbal
 				);
 
 			//===================
-			//assign
+			// assign
 
 				KERBAL_CONSTEXPR20
 				single_list& operator=(const single_list & src) KERBAL_CONDITIONAL_NOEXCEPT(
@@ -283,7 +286,7 @@ namespace kerbal
 				using sl_allocator_unrelated::back;
 
 			//===================
-			//iterator
+			// iterator
 
 				using sl_allocator_unrelated::begin;
 				using sl_allocator_unrelated::end;
@@ -295,14 +298,14 @@ namespace kerbal
 				using sl_allocator_unrelated::index_of;
 
 			//===================
-			//capacity
+			// capacity
 
 				using sl_allocator_unrelated::empty;
 				using sl_allocator_unrelated::size;
 				using sl_allocator_unrelated::max_size;
 
 			//===================
-			//insert
+			// insert
 
 				KERBAL_CONSTEXPR20
 				void push_front(const_reference val);
@@ -421,7 +424,7 @@ namespace kerbal
 #		endif
 
 			//===================
-			//erase
+			// erase
 
 				KERBAL_CONSTEXPR20
 				void pop_front();
@@ -432,9 +435,6 @@ namespace kerbal
 				KERBAL_CONSTEXPR20
 				iterator erase(const_iterator first, const_iterator last);
 
-			//===================
-			//operation
-
 				KERBAL_CONSTEXPR20
 				void clear() KERBAL_CONDITIONAL_NOEXCEPT(
 						noexcept(
@@ -442,6 +442,9 @@ namespace kerbal
 								kerbal::utility::declthis<single_list>()->alloc()
 						))
 				);
+
+			//===================
+			// operation
 
 				KERBAL_CONSTEXPR20
 				void resize(size_type count);

@@ -552,12 +552,12 @@ namespace kerbal
 #		endif
 
 				KERBAL_CONSTEXPR20
-				list& operator+=(const list& with);
+				list& operator+=(const list & with);
 
 #		if __cplusplus >= 201103L
 
 				KERBAL_CONSTEXPR20
-				list& operator+=(list&& with);
+				list& operator+=(list && with);
 
 #		endif
 
@@ -599,21 +599,21 @@ namespace kerbal
 
 		template <typename Tp, typename Allocator>
 		KERBAL_CONSTEXPR20
-		list<Tp, Allocator> operator+(const list<Tp, Allocator>& lhs, const list<Tp, Allocator>& rhs);
+		list<Tp, Allocator> operator+(const list<Tp, Allocator> & lhs, const list<Tp, Allocator> & rhs);
 
 #	if __cplusplus >= 201103L
 
 		template <typename Tp, typename Allocator>
 		KERBAL_CONSTEXPR20
-		list<Tp, Allocator> operator+(const list<Tp, Allocator>& lhs, list<Tp, Allocator>&& rhs);
+		list<Tp, Allocator> operator+(const list<Tp, Allocator> & lhs, list<Tp, Allocator> && rhs);
 
 		template <typename Tp, typename Allocator>
 		KERBAL_CONSTEXPR20
-		list<Tp, Allocator> operator+(list<Tp, Allocator>&& lhs, const list<Tp, Allocator>& rhs);
+		list<Tp, Allocator> operator+(list<Tp, Allocator> && lhs, const list<Tp, Allocator> & rhs);
 
 		template <typename Tp, typename Allocator>
 		KERBAL_CONSTEXPR20
-		list<Tp, Allocator> operator+(list<Tp, Allocator>&& lhs, list<Tp, Allocator>&& rhs);
+		list<Tp, Allocator> operator+(list<Tp, Allocator> && lhs, list<Tp, Allocator> && rhs);
 
 #	endif
 
