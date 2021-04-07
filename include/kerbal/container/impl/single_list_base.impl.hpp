@@ -902,7 +902,7 @@ namespace kerbal
 			template <typename Tp>
 			template <typename NodeAllocator>
 			KERBAL_CONSTEXPR20
-			void sl_allocator_unrelated<Tp>::_K_consecutive_destroy_node(NodeAllocator & alloc, node_base * start)
+			void sl_allocator_unrelated<Tp>::_K_consecutive_destroy_node_impl(NodeAllocator & alloc, node_base * start, CNSCTV_DES_VER_DEFAULT)
 					KERBAL_CONDITIONAL_NOEXCEPT(
 							noexcept(kerbal::utility::declthis<sl_allocator_unrelated>()->_K_destroy_node(alloc, kerbal::utility::declval<node_base *>()))
 					)
@@ -915,6 +915,43 @@ namespace kerbal
 				}
 			}
 
+			template <typename Tp>
+			template <typename NodeAllocator>
+			KERBAL_CONSTEXPR20
+			void sl_allocator_unrelated<Tp>::_K_consecutive_destroy_node_impl(NodeAllocator & alloc, node_base * start, CNSCTV_DES_VER_DESTROY_BUT_NO_DEALLOCATE)
+					KERBAL_CONDITIONAL_NOEXCEPT(
+							noexcept(kerbal::memory::allocator_traits<NodeAllocator>::destroy(alloc, kerbal::utility::declval<node*>()))
+					)
+			{
+				typedef kerbal::memory::allocator_traits<NodeAllocator> node_allocator_traits;
+
+				node_base * current_node_base = start;
+				while (current_node_base != NULL) {
+					node_base * next = current_node_base->next;
+					node * p_node = &current_node_base->template reinterpret_as<Tp>();
+					node_allocator_traits::destroy(alloc, p_node);
+					current_node_base = next;
+				}
+			}
+
+			template <typename Tp>
+			template <typename NodeAllocator>
+			KERBAL_CONSTEXPR20
+			void sl_allocator_unrelated<Tp>::_K_consecutive_destroy_node_impl(NodeAllocator & /*alloc*/, node_base * /*start*/, CNSCTV_DES_VER_NO_DEALLOCATE) KERBAL_NOEXCEPT
+			{
+			}
+
+			template <typename Tp>
+			template <typename NodeAllocator>
+			KERBAL_CONSTEXPR20
+			void sl_allocator_unrelated<Tp>::_K_consecutive_destroy_node(NodeAllocator & alloc, node_base * start)
+					KERBAL_CONDITIONAL_NOEXCEPT(
+							noexcept(_K_consecutive_destroy_node_impl(alloc, start, CNSCTV_DES_VER_DEFAULT()))
+					)
+			{
+				_K_consecutive_destroy_node_impl(alloc, start, CNSCTV_DES_VER_DEFAULT());
+			}
+
 #		if __cplusplus >= 201703L
 #			if __has_include(<memory_resource>)
 
@@ -923,28 +960,20 @@ namespace kerbal
 			KERBAL_CONSTEXPR20
 			void sl_allocator_unrelated<Tp>::_K_consecutive_destroy_node(std::pmr::polymorphic_allocator<Node> & alloc, node_base * start)
 					KERBAL_CONDITIONAL_NOEXCEPT(
-							noexcept(kerbal::utility::declthis<sl_allocator_unrelated>()->_K_destroy_node(alloc, kerbal::utility::declval<node_base *>()))
+						(
+							!std::is_trivially_destructible<Tp>::value ?
+							noexcept(_K_consecutive_destroy_node_impl(alloc, start, CNSCTV_DES_VER_DESTROY_BUT_NO_DEALLOCATE())) :
+							true
+						) &&
+						noexcept(_K_consecutive_destroy_node_impl(alloc, start, CNSCTV_DES_VER_DEFAULT()))
 					)
 			{
 				if (typeid(*alloc.resource()) == typeid(std::pmr::monotonic_buffer_resource)) {
 					if constexpr (!std::is_trivially_destructible<Tp>::value) {
-						typedef kerbal::memory::allocator_traits<std::pmr::polymorphic_allocator<Node> > node_allocator_traits;
-
-						node_base * current_node_base = start;
-						while (current_node_base != NULL) {
-							node_base * next = current_node_base->next;
-							node * p_node = &current_node_base->template reinterpret_as<Tp>();
-							node_allocator_traits::destroy(alloc, p_node);
-							current_node_base = next;
-						}
+						_K_consecutive_destroy_node_impl(alloc, start, CNSCTV_DES_VER_DESTROY_BUT_NO_DEALLOCATE());
 					}
 				} else {
-					node_base * current_node_base = start;
-					while (current_node_base != NULL) {
-						node_base * next = current_node_base->next;
-						_K_destroy_node(alloc, current_node_base);
-						current_node_base = next;
-					}
+					_K_consecutive_destroy_node_impl(alloc, start, CNSCTV_DES_VER_DEFAULT());
 				}
 			}
 
