@@ -136,7 +136,7 @@ do {\
 		printf("    location: " __FILE__ ":%d\n", __LINE__); \
 		record.items.back().result = kerbal::test::running_result::FAILURE; \
 	} \
-} while (false);
+} while (false)
 
 #define KERBAL_TEST_CHECK(statement) \
 do {\
@@ -148,7 +148,7 @@ do {\
 		printf("    location: " __FILE__ ":%d\n", __LINE__); \
 		record.items.back().result = kerbal::test::running_result::FAILURE; \
 	} \
-} while (false);
+} while (false)
 
 #else
 
@@ -163,7 +163,7 @@ do {\
 		printf("    location: " __FILE__ ":%d\n", __LINE__); \
 		record.items.back().result = kerbal::test::running_result::FAILURE; \
 	} \
-} while (false);
+} while (false)
 
 #define KERBAL_TEST_CHECK(statement) \
 do {\
@@ -175,7 +175,7 @@ do {\
 		printf("    location: " __FILE__ ":%d\n", __LINE__); \
 		record.items.back().result = kerbal::test::running_result::FAILURE; \
 	} \
-} while (false);
+} while (false)
 
 #endif
 
@@ -183,12 +183,12 @@ do {\
 #define KERBAL_TEST_CHECK_EQUAL_STATIC(lhs, rhs) do {\
 	KERBAL_STATIC_ASSERT((lhs) == (rhs), "Check failed!"); \
 	KERBAL_TEST_CHECK_EQUAL(lhs, rhs); \
-} while(false);
+} while(false)
 
 #define KERBAL_TEST_CHECK_STATIC(statement) do {\
 	KERBAL_STATIC_ASSERT(static_cast<bool>(statement), "Check failed!"); \
 	KERBAL_TEST_CHECK(statement); \
-} while(false);
+} while(false)
 
 
 #include <kerbal/test/impl/test_case.impl.hpp>
