@@ -12,6 +12,12 @@
 #ifndef KERBAL_RANDOM_MERSENNE_TWISTER_ENGINE_HPP
 #define KERBAL_RANDOM_MERSENNE_TWISTER_ENGINE_HPP
 
+#include <kerbal/ts/modules_ts/modules_ts.hpp>
+
+#if KERBAL_ENABLE_MODULES
+
+module;
+
 #include <kerbal/algorithm/sequence_compare.hpp>
 #include <kerbal/compatibility/constexpr.hpp>
 #include <kerbal/compatibility/fixed_width_integer.hpp>
@@ -22,12 +28,15 @@
 
 #include <cstddef>
 
+#endif
+
 namespace kerbal
 {
 
 	namespace random
 	{
 
+		MODULE_EXPORT
 		template <
 				typename UIntType,
 				size_t W, size_t N, size_t M, size_t R,
