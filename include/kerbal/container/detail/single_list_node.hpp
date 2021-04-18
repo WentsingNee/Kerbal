@@ -38,31 +38,12 @@ namespace kerbal
 		namespace detail
 		{
 
-			class sl_node_base: kerbal::utility::noncopyable
+			class sl_node_base: private kerbal::utility::noncopyable
 			{
-				private:
-					friend class kerbal::container::detail::sl_type_unrelated;
-
-					template <typename Tp>
-					friend class kerbal::container::detail::sl_allocator_unrelated;
-
-					template <typename Tp, typename Allocator>
-					friend class kerbal::container::single_list;
-
-					friend class sl_iter_type_unrelated;
-
-					friend class sl_kiter_type_unrelated;
-
-					template <typename Tp>
-					friend class sl_iter;
-
-					template <typename Tp>
-					friend class sl_kiter;
-
-				private:
+				public:
 					sl_node_base * next;
 
-				protected:
+				public:
 					KERBAL_CONSTEXPR
 					explicit sl_node_base() KERBAL_NOEXCEPT :
 							next(NULL)
@@ -109,17 +90,7 @@ namespace kerbal
 				private:
 					typedef sl_node_base super;
 
-				private:
-					friend class kerbal::container::detail::sl_allocator_unrelated<Tp>;
-
-					template <typename Up, typename Allocator>
-					friend class kerbal::container::single_list;
-
-					friend class kerbal::container::detail::sl_iter<Tp>;
-
-					friend class kerbal::container::detail::sl_kiter<Tp>;
-
-				private:
+				public:
 					Tp value;
 
 				public:
@@ -171,17 +142,7 @@ namespace kerbal
 				private:
 					typedef sl_node_base super;
 
-				private:
-					friend class kerbal::container::detail::sl_allocator_unrelated<Tp[N]>;
-
-					template <typename Up, typename Allocator>
-					friend class kerbal::container::single_list;
-
-					friend class kerbal::container::detail::sl_iter<Tp[N]>;
-
-					friend class kerbal::container::detail::sl_kiter<Tp[N]>;
-
-				private:
+				public:
 					Tp value[N];
 
 #		if __cplusplus >= 201103L
