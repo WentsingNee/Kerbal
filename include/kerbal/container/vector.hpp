@@ -206,14 +206,6 @@ namespace kerbal
 
 #		endif
 
-			private:
-
-				KERBAL_CONSTEXPR20
-				void _K_assign(size_type new_size, const_reference val, kerbal::type_traits::false_type enable_optimization);
-
-				KERBAL_CONSTEXPR20
-				void _K_assign(size_type new_size, const_reference val, kerbal::type_traits::true_type enable_optimization);
-
 			public:
 
 				KERBAL_CONSTEXPR20

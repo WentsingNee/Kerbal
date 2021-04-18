@@ -264,68 +264,43 @@ namespace kerbal
 
 		template <typename Tp, typename Allocator>
 		KERBAL_CONSTEXPR20
-		void vector<Tp, Allocator>::_K_assign(size_type new_size, const_reference val, kerbal::type_traits::false_type)
+		void vector<Tp, Allocator>::assign(size_type new_size, const_reference val)
 		{
-			size_type previous_size = this->size();
+			size_type ori_size = this->size();
 
-			if (previous_size <= new_size) {
+			if (ori_size < new_size) {
 				/*
 				 * a a a x x x x x
 				 * b b b b b b x x
 				 */
 
-				kerbal::algorithm::fill(this->begin(), this->end(), val);
-				while (previous_size != new_size) {
-					this->push_back(val);
-					++previous_size;
+				if (new_size <= this->capacity()) {
+					kerbal::algorithm::fill(this->begin(), this->end(), val);
+					while (this->_K_size != new_size) {
+						kerbal::memory::construct_at(&*this->end(), val);
+						++this->_K_size;
+					}
+				} else {
+					kerbal::memory::destroy(this->begin(), this->end());
+					this->_K_size = 0;
+					allocator_traits::deallocate(this->alloc(), this->_K_p, this->_K_capacity);
+					this->_K_p = allocator_traits::allocate(this->alloc(), new_size);
+					this->_K_capacity = new_size;
+					while (this->_K_size != new_size) {
+						kerbal::memory::construct_at(&*this->end(), val);
+						++this->_K_size;
+					}
 				}
+
 			} else {
 				/*
 				 * a a a a a a x x
 				 * b b b x x x x x
 				 */
-				this->shrink_back_to(this->nth(new_size));
-				kerbal::algorithm::fill(this->begin(), this->end(), val);
+				kerbal::algorithm::fill(this->begin(), this->nth(new_size), val);
+				kerbal::memory::destroy(this->nth(new_size), this->end());
+				this->_K_size = new_size;
 			}
-		}
-
-		template <typename Tp, typename Allocator>
-		KERBAL_CONSTEXPR20
-		void vector<Tp, Allocator>::_K_assign(size_type new_size, const_reference val, kerbal::type_traits::true_type)
-		{
-			kerbal::algorithm::fill(this->begin(), this->nth(new_size), val);
-			this->len = new_size;
-		}
-
-		template <typename Tp, typename Allocator>
-		KERBAL_CONSTEXPR20
-		void vector<Tp, Allocator>::assign(size_type new_size, const_reference val)
-		{
-
-#		if __cplusplus < 201103L
-
-			struct enable_optimization:
-					kerbal::type_traits::bool_constant<
-						kerbal::type_traits::is_fundamental<remove_all_extents_t>::value ||
-						kerbal::type_traits::is_pointer<remove_all_extents_t>::value
-					>
-			{
-			};
-
-#		else
-
-			struct enable_optimization:
-					kerbal::type_traits::bool_constant<
-						std::is_trivially_copy_constructible<remove_all_extents_t>::value &&
-						std::is_trivially_copy_assignable<remove_all_extents_t>::value &&
-						std::is_trivially_destructible<remove_all_extents_t>::value
-					>
-			{
-			};
-
-#		endif
-
-			this->_K_assign(new_size, val, enable_optimization());
 		}
 
 		template <typename Tp, typename Allocator>
