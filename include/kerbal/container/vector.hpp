@@ -104,6 +104,9 @@ namespace kerbal
 				vector(size_type n);
 
 				KERBAL_CONSTEXPR20
+				vector(size_type n, const Allocator & allocator);
+
+				KERBAL_CONSTEXPR20
 				vector(size_type n, const_reference val);
 
 				KERBAL_CONSTEXPR20
@@ -118,6 +121,10 @@ namespace kerbal
 				template <typename RandomAccessIterator>
 				KERBAL_CONSTEXPR20
 				void _K_range_copy_cnstrct_impl(RandomAccessIterator first, RandomAccessIterator last, std::random_access_iterator_tag);
+
+				template <typename InputIterator>
+				KERBAL_CONSTEXPR20
+				void _K_range_copy_cnstrct(InputIterator first, InputIterator last);
 
 			public:
 

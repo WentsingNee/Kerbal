@@ -13,6 +13,8 @@
 #define KERBAL_CONTAINER_IMPL_VECTOR_BASE_IMPL_HPP
 
 #include <kerbal/container/detail/vector_base.hpp>
+
+#include <kerbal/algorithm/swap.hpp>
 #include <kerbal/utility/throw_this_exception.hpp>
 
 #include <stdexcept>

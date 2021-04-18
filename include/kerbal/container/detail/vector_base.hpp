@@ -187,7 +187,7 @@ namespace kerbal
 								KERBAL_CONDITIONAL_NOEXCEPT(
 										std::is_nothrow_default_constructible<super>::value
 								)
-							: super()
+							: super(kerbal::utility::in_place_t())
 					{
 					}
 
@@ -197,7 +197,7 @@ namespace kerbal
 								KERBAL_CONDITIONAL_NOEXCEPT(
 										std::is_nothrow_copy_constructible<super>::value
 								)
-							: super(allocator)
+							: super(kerbal::utility::in_place_t(), allocator)
 					{
 					}
 
@@ -209,7 +209,7 @@ namespace kerbal
 								KERBAL_CONDITIONAL_NOEXCEPT(
 										std::is_nothrow_move_constructible<super>::value
 								)
-							: super(kerbal::compatibility::move(allocator))
+							: super(kerbal::utility::in_place_t(), kerbal::compatibility::move(allocator))
 					{
 					}
 

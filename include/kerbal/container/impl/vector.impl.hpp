@@ -16,7 +16,6 @@
 
 #include <kerbal/algorithm/modifier.hpp>
 #include <kerbal/algorithm/swap.hpp>
-#include <kerbal/algorithm/uninitialized.hpp>
 #include <kerbal/compatibility/move.hpp>
 #include <kerbal/iterator/iterator.hpp>
 #include <kerbal/memory/allocator_traits.hpp>
@@ -113,6 +112,11 @@ namespace kerbal
 			} while (false)
 
 			iter_difference_type trip_count(kerbal::iterator::distance(first, last));
+
+			this->_K_p = allocator_traits::allocate(this->alloc(), trip_count);
+			this->_K_capacity = trip_count;
+			this->_K_size = 0;
+
 			iter_difference_type remain(trip_count & 3);
 			for (trip_count >>= 2; trip_count > 0; --trip_count) {
 				EACH();
@@ -137,6 +141,14 @@ namespace kerbal
 		template <typename Tp, typename Allocator>
 		template <typename InputIterator>
 		KERBAL_CONSTEXPR20
+		void vector<Tp, Allocator>::_K_range_copy_cnstrct(InputIterator first, InputIterator last)
+		{
+			this->_K_range_copy_cnstrct_impl(first, last, kerbal::iterator::iterator_category(first));
+		}
+
+		template <typename Tp, typename Allocator>
+		template <typename InputIterator>
+		KERBAL_CONSTEXPR20
 		vector<Tp, Allocator>::vector(InputIterator first, InputIterator last,
 				typename kerbal::type_traits::enable_if<
 						kerbal::iterator::is_input_compatible_iterator<InputIterator>::value
@@ -145,7 +157,7 @@ namespace kerbal
 		) :
 				vector_allocator_overload()
 		{
-			this->_K_range_copy_cnstrct_impl(first, last, kerbal::iterator::iterator_category(first));
+			this->_K_range_copy_cnstrct(first, last);
 		}
 
 
@@ -155,7 +167,7 @@ namespace kerbal
 				vector_allocator_overload(src.alloc()),
 				vector_allocator_unrelated()
 		{
-			this->_K_range_copy_cnstrct_impl(src.cbegin(), src.cend(), std::random_access_iterator_tag());
+			this->_K_range_copy_cnstrct(src.cbegin(), src.cend());
 		}
 
 
@@ -230,7 +242,8 @@ namespace kerbal
 
 		template <typename Tp, typename Allocator>
 		KERBAL_CONSTEXPR20
-		vector<Tp, Allocator>& vector<Tp, Allocator>::operator=(const kerbal::assign::assign_list<Up> & ilist)
+		vector<Tp, Allocator>&
+		vector<Tp, Allocator>::operator=(const kerbal::assign::assign_list<Up> & ilist)
 		{
 			this->assign(ilist.begin(), ilist.end());
 			return *this;
@@ -240,7 +253,8 @@ namespace kerbal
 
 		template <typename Tp, typename Allocator>
 		KERBAL_CONSTEXPR20
-		vector<Tp, Allocator>& vector<Tp, Allocator>::operator=(std::initializer_list<value_type> ilist)
+		vector<Tp, Allocator>&
+		vector<Tp, Allocator>::operator=(std::initializer_list<value_type> ilist)
 		{
 			this->assign(ilist.begin(), ilist.end());
 			return *this;
@@ -285,7 +299,7 @@ namespace kerbal
 
 		template <typename Tp, typename Allocator>
 		KERBAL_CONSTEXPR20
-		void vector<Tp, Allocator>::assign(size_type new_size, const value_type & val)
+		void vector<Tp, Allocator>::assign(size_type new_size, const_reference val)
 		{
 
 #		if __cplusplus < 201103L
@@ -385,44 +399,30 @@ namespace kerbal
 
 
 		template <typename Tp, typename Allocator>
+		KERBAL_CONSTEXPR20
 		void vector<Tp, Allocator>::reserve(size_type new_capacity)
 		{
 			if (new_capacity <= this->_K_capacity) {
 				return;
 			}
 
-			typedef kerbal::memory::allocator_traits<Allocator> allocator_traits;
-
 			pointer new_buffer = allocator_traits::allocate(this->alloc(), new_capacity);
-			pointer pos = new_buffer;
-			const_iterator first(this->cbegin());
-			const_iterator last(this->cend());
 
 			try {
-				while (first != last) {
-					allocator_traits::construct(this->alloc(), pos, kerbal::compatibility::move(*first));
-					++pos;
-					++first;
-				}
+				kerbal::memory::uninitialized_copy(this->cbegin(), this->cend(), new_buffer);
 			} catch (...) {
-				while (pos != new_buffer) {
-					--pos;
-					allocator_traits::destroy(this->alloc(), pos);
-				}
 				allocator_traits::deallocate(this->alloc(), new_buffer, new_capacity);
 				throw;
 			}
 
-			while (last != first) {
-				--last;
-				allocator_traits::destroy(this->alloc(), last.current);
-			}
+			kerbal::memory::reverse_destroy(this->begin(), this->end());
 			allocator_traits::deallocate(this->alloc(), this->_K_p, this->_K_capacity);
 
 			this->_K_p = new_buffer;
 			this->_K_capacity = new_capacity;
 		}
 
+/*
 		template <typename Tp, typename Allocator>
 		KERBAL_CONSTEXPR20
 		void vector<Tp, Allocator>::__shrink_back_to(const_iterator to, kerbal::type_traits::false_type)
@@ -445,11 +445,13 @@ namespace kerbal
 		{
 			this->__shrink_back_to(to, kerbal::type_traits::can_be_pseudo_destructible<value_type>());
 		}
+*/
 
 
 	//===================
 	// insert
 
+/*
 #	if __cplusplus < 201103L
 
 #	else
@@ -479,6 +481,7 @@ namespace kerbal
 		}
 
 #	endif
+*/
 
 		template <typename Tp, typename Allocator>
 		KERBAL_CONSTEXPR20
@@ -502,13 +505,22 @@ namespace kerbal
 
 #	if __cplusplus < 201103L
 
+/*
+#	define __emplace_back_body(pos, ...) \
+		do { \
+			if (this->size() + 1 > tbhis->capacity()) { \
+				this->reserve(this->capacity() * 2); \
+			} \
+			kerbal::memory::construct_at(&*this->end(), __VA_ARGS__); \
+			++this->len; \
+			return this->back(); \
+		} while(false)
+
 		template <typename Tp, typename Allocator>
 		typename vector<Tp, Allocator>::reference
 		vector<Tp, Allocator>::emplace_back()
 		{
-			this->__construct_at(this->end());
-			++this->len;
-			return this->back();
+			__emplace_back_body();
 		}
 
 		template <typename Tp, typename Allocator>
@@ -516,9 +528,7 @@ namespace kerbal
 		typename vector<Tp, Allocator>::reference
 		vector<Tp, Allocator>::emplace_back(const Arg0 & arg0)
 		{
-			this->__construct_at(this->end(), arg0);
-			++this->len;
-			return this->back();
+			__emplace_back_body(arg0);
 		}
 
 		template <typename Tp, typename Allocator>
@@ -526,9 +536,7 @@ namespace kerbal
 		typename vector<Tp, Allocator>::reference
 		vector<Tp, Allocator>::emplace_back(const Arg0 & arg0, const Arg1& arg1)
 		{
-			this->__construct_at(this->end(), arg0, arg1);
-			++this->len;
-			return this->back();
+			__emplace_back_body(arg0, arg1);
 		}
 
 		template <typename Tp, typename Allocator>
@@ -536,10 +544,9 @@ namespace kerbal
 		typename vector<Tp, Allocator>::reference
 		vector<Tp, Allocator>::emplace_back(const Arg0 & arg0, const Arg1 & arg1, const Arg2 & arg2)
 		{
-			this->__construct_at(this->end(), arg0, arg1, arg2);
-			++this->len;
-			return this->back();
+			__emplace_back_body(arg0, arg1, arg2);
 		}
+*/
 
 #	else
 
@@ -549,8 +556,36 @@ namespace kerbal
 		typename vector<Tp, Allocator>::reference
 		vector<Tp, Allocator>::emplace_back(Args&& ... args)
 		{
-			this->__construct_at(this->end(), kerbal::utility::forward<Args>(args)...);
-			++this->len;
+			if (this->_K_size + 1 > this->_K_capacity) {
+				size_type new_capacity = this->_K_capacity == 0 ? 1 : this->_K_capacity * 2;
+
+				pointer new_buffer = allocator_traits::allocate(this->alloc(), new_capacity);
+				pointer e = new_buffer + this->size();
+
+				try {
+					kerbal::memory::construct_at(e, kerbal::utility::forward<Args>(args)...);
+				} catch (...) {
+					allocator_traits::deallocate(this->alloc(), new_buffer, new_capacity);
+					throw;
+				}
+
+				try {
+					kerbal::memory::uninitialized_copy(this->cbegin(), this->cend(), new_buffer);
+				} catch (...) {
+					kerbal::memory::destroy_at(e);
+					allocator_traits::deallocate(this->alloc(), new_buffer, new_capacity);
+					throw;
+				}
+
+				kerbal::memory::reverse_destroy(this->begin(), this->end());
+				allocator_traits::deallocate(this->alloc(), this->_K_p, this->_K_capacity);
+
+				this->_K_p = new_buffer;
+				this->_K_capacity = new_capacity;
+			} else {
+				kerbal::memory::construct_at(&*this->end(), kerbal::utility::forward<Args>(args)...);
+			}
+			++this->_K_size;
 			return this->back();
 		}
 
@@ -586,6 +621,7 @@ namespace kerbal
 			--this->_K_size;
 		}
 
+/*
 		template <typename Tp, typename Allocator>
 		KERBAL_CONSTEXPR20
 		typename vector<Tp, Allocator>::iterator
@@ -602,7 +638,9 @@ namespace kerbal
 			this->pop_back();
 			return pos_mut;
 		}
+*/
 
+/*
 		template <typename Tp, typename Allocator>
 		KERBAL_CONSTEXPR20
 		typename vector<Tp, Allocator>::iterator
@@ -617,6 +655,7 @@ namespace kerbal
 			this->shrink_back_to(new_end);
 			return first_mut;
 		}
+*/
 
 		template <typename Tp, typename Allocator>
 		KERBAL_CONSTEXPR20
@@ -634,9 +673,9 @@ namespace kerbal
 		KERBAL_CONSTEXPR20
 		void vector<Tp, Allocator>::swap(vector & with)
 		{
-			this->list_allocator_overload::swap_allocator_if_propagate(ano);
+			this->vector_allocator_overload::swap_allocator_if_propagate(with);
 
-			vector_allocator_unrelated::_K_swap(*this, ano);
+			vector_allocator_unrelated::_K_swap(*this, with);
 		}
 
 	} // namespace container
