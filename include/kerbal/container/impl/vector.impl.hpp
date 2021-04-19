@@ -73,7 +73,8 @@ namespace kerbal
 		template <typename Tp, typename Allocator>
 		KERBAL_CONSTEXPR20
 		vector<Tp, Allocator>::vector(size_type n) :
-				vector_allocator_overload()
+				vector_allocator_overload(),
+				vector_allocator_unrelated()
 		{
 			value_type val;
 			this->assign(n, val);
@@ -82,7 +83,8 @@ namespace kerbal
 		template <typename Tp, typename Allocator>
 		KERBAL_CONSTEXPR20
 		vector<Tp, Allocator>::vector(size_type n, const Allocator & allocator) :
-				vector_allocator_overload(allocator)
+				vector_allocator_overload(allocator),
+				vector_allocator_unrelated()
 		{
 			value_type val;
 			this->assign(n, val);
@@ -91,7 +93,8 @@ namespace kerbal
 		template <typename Tp, typename Allocator>
 		KERBAL_CONSTEXPR20
 		vector<Tp, Allocator>::vector(size_type n, const_reference val) :
-				vector_allocator_overload()
+				vector_allocator_overload(),
+				vector_allocator_unrelated()
 		{
 			this->assign(n, val);
 		}
@@ -99,7 +102,8 @@ namespace kerbal
 		template <typename Tp, typename Allocator>
 		KERBAL_CONSTEXPR20
 		vector<Tp, Allocator>::vector(size_type n, const_reference val, const Allocator & allocator) :
-				vector_allocator_overload(allocator)
+				vector_allocator_overload(allocator),
+				vector_allocator_unrelated()
 		{
 			this->assign(n, val);
 		}
@@ -156,7 +160,8 @@ namespace kerbal
 						, int
 				>::type
 		) :
-				vector_allocator_overload()
+				vector_allocator_overload(),
+				vector_allocator_unrelated()
 		{
 			this->_K_range_copy_cnstrct(first, last);
 		}
@@ -186,6 +191,24 @@ namespace kerbal
 
 
 #	if __cplusplus < 201103L
+
+		template <typename Tp, typename Allocator>
+		template <typename Up>
+		vector<Tp, Allocator>::vector(const kerbal::assign::assign_list<Up> & ilist) :
+				vector_allocator_overload(),
+				vector_allocator_unrelated()
+		{
+			this->_K_range_copy_cnstrct(ilist.cbegin(), ilist.cend());
+		}
+
+		template <typename Tp, typename Allocator>
+		template <typename Up>
+		vector<Tp, Allocator>::vector(const kerbal::assign::assign_list<Up> & ilist, const Allocator & allocator) :
+				vector_allocator_overload(allocator),
+				vector_allocator_unrelated()
+		{
+			this->_K_range_copy_cnstrct(ilist.cbegin(), ilist.cend());
+		}
 
 #	else
 
@@ -284,7 +307,7 @@ namespace kerbal
 				if (new_size <= this->capacity()) {
 					kerbal::algorithm::fill(this->begin(), this->end(), val);
 					while (this->_K_size != new_size) {
-						kerbal::memory::construct_at(&*this->end(), val);
+						kerbal::memory::construct_at(this->_K_p + this->_K_size, val);
 						++this->_K_size;
 					}
 				} else {
@@ -294,7 +317,7 @@ namespace kerbal
 					this->_K_p = allocator_traits::allocate(this->alloc(), new_size);
 					this->_K_capacity = new_size;
 					while (this->_K_size != new_size) {
-						kerbal::memory::construct_at(&*this->end(), val);
+						kerbal::memory::construct_at(this->_K_p + this->_K_size, val);
 						++this->_K_size;
 					}
 				}
