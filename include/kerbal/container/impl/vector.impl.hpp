@@ -43,6 +43,9 @@ namespace kerbal
 	namespace container
 	{
 
+	//===================
+	// construct/copy/destroy
+
 		template <typename Tp, typename Allocator>
 		KERBAL_CONSTEXPR20
 		vector<Tp, Allocator>::vector()
@@ -78,8 +81,25 @@ namespace kerbal
 
 		template <typename Tp, typename Allocator>
 		KERBAL_CONSTEXPR20
+		vector<Tp, Allocator>::vector(size_type n, const Allocator & allocator) :
+				vector_allocator_overload(allocator)
+		{
+			value_type val;
+			this->assign(n, val);
+		}
+
+		template <typename Tp, typename Allocator>
+		KERBAL_CONSTEXPR20
 		vector<Tp, Allocator>::vector(size_type n, const_reference val) :
 				vector_allocator_overload()
+		{
+			this->assign(n, val);
+		}
+
+		template <typename Tp, typename Allocator>
+		KERBAL_CONSTEXPR20
+		vector<Tp, Allocator>::vector(size_type n, const_reference val, const Allocator & allocator) :
+				vector_allocator_overload(allocator)
 		{
 			this->assign(n, val);
 		}
@@ -106,36 +126,17 @@ namespace kerbal
 			typedef RandomAccessIterator iterator;
 			typedef typename kerbal::iterator::iterator_traits<iterator>::difference_type iter_difference_type;
 
-#	define EACH() do { \
-				this->emplace_back(*first); \
-				++first; \
-			} while (false)
+			iter_difference_type len(kerbal::iterator::distance(first, last));
 
-			iter_difference_type trip_count(kerbal::iterator::distance(first, last));
-
-			this->_K_p = allocator_traits::allocate(this->alloc(), trip_count);
-			this->_K_capacity = trip_count;
-			this->_K_size = 0;
-
-			iter_difference_type remain(trip_count & 3);
-			for (trip_count >>= 2; trip_count > 0; --trip_count) {
-				EACH();
-				EACH();
-				EACH();
-				EACH();
+			this->_K_p = allocator_traits::allocate(this->alloc(), len);
+			try {
+				kerbal::memory::uninitialized_copy(first, last, this->_K_p);
+			} catch (...) {
+				allocator_traits::deallocate(this->alloc(), this->_K_p, len);
+				throw;
 			}
-
-			if (remain >= 2) {
-				EACH();
-				EACH();
-				remain -= 2;
-			}
-			if (remain >= 1) {
-				EACH();
-			}
-
-#	undef EACH
-
+			this->_K_capacity = len;
+			this->_K_size = len;
 		}
 
 		template <typename Tp, typename Allocator>
@@ -210,11 +211,17 @@ namespace kerbal
 		KERBAL_CONSTEXPR20
 		vector<Tp, Allocator>::~vector()
 		{
+			if (this->_K_p == NULL) { // c++20 compatible
+				return;
+			}
 			kerbal::memory::reverse_destroy(this->_K_p, this->_K_p + this->_K_size);
 			kerbal::memory::allocator_traits<Allocator>::deallocate(this->alloc(), this->_K_p, this->_K_capacity);
 		}
 
 
+
+	//===================
+	// assign
 
 		template <typename Tp, typename Allocator>
 		KERBAL_CONSTEXPR20
@@ -373,6 +380,10 @@ namespace kerbal
 #	endif
 
 
+
+	//===================
+	// capacity
+
 		template <typename Tp, typename Allocator>
 		KERBAL_CONSTEXPR20
 		void vector<Tp, Allocator>::reserve(size_type new_capacity)
@@ -481,6 +492,31 @@ namespace kerbal
 		}
 
 #	endif
+
+
+#		if __cplusplus < 201103L
+
+		template <typename Tp, typename Allocator>
+		template <typename Up>
+		typename vector<Tp, Allocator>::iterator
+		vector<Tp, Allocator>::insert(const_iterator pos, const kerbal::assign::assign_list<Up> & ilist)
+		{
+			return this->insert(pos, ilist.cbegin(), ilist.cend());
+		}
+
+#		else
+
+		template <typename Tp, typename Allocator>
+		KERBAL_CONSTEXPR20
+		typename vector<Tp, Allocator>::iterator
+		vector<Tp, Allocator>::insert(const_iterator pos, std::initializer_list<value_type> ilist)
+		{
+			return this->insert(pos, ilist.begin(), ilist.end());
+		}
+
+#		endif
+
+
 
 #	if __cplusplus < 201103L
 

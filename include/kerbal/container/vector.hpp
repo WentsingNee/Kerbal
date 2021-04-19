@@ -86,6 +86,10 @@ namespace kerbal
 				using vector_allocator_overload::alloc;
 
 			public:
+
+			//===================
+			// construct/copy/destroy
+
 				KERBAL_CONSTEXPR20
 				vector() KERBAL_CONDITIONAL_NOEXCEPT(
 						std::is_nothrow_default_constructible<vector_allocator_overload>::value &&
@@ -183,6 +187,9 @@ namespace kerbal
 				KERBAL_CONSTEXPR20
 				~vector();
 
+			//===================
+			// assign
+
 				KERBAL_CONSTEXPR20
 				vector& operator=(const vector & src);
 
@@ -210,6 +217,18 @@ namespace kerbal
 
 				KERBAL_CONSTEXPR20
 				void assign(size_type new_size, const_reference val);
+
+			private:
+
+				template <typename InputIterator>
+				KERBAL_CONSTEXPR20
+				void _K_range_assign_impl(InputIterator first, InputIterator last, std::input_iterator_tag);
+
+				template <typename RandomAccessIterator>
+				KERBAL_CONSTEXPR20
+				void _K_range_assign_impl(RandomAccessIterator first, RandomAccessIterator last, std::random_access_iterator_tag);
+
+			public:
 
 				template <typename InputIterator>
 				KERBAL_CONSTEXPR20
@@ -287,16 +306,16 @@ namespace kerbal
 
 #		if __cplusplus < 201103L
 
-				iterator emplace();
+				iterator emplace(const_iterator pos);
 
 				template <typename Arg0>
-				iterator emplace(const Arg0& arg0);
+				iterator emplace(const_iterator pos, const Arg0& arg0);
 
 				template <typename Arg0, typename Arg1>
-				iterator emplace(const Arg0& arg0, const Arg1& arg1);
+				iterator emplace(const_iterator pos, const Arg0& arg0, const Arg1& arg1);
 
 				template <typename Arg0, typename Arg1, typename Arg2>
-				iterator emplace(const Arg0& arg0, const Arg1& arg1, const Arg2& arg2);
+				iterator emplace(const_iterator pos, const Arg0& arg0, const Arg1& arg1, const Arg2& arg2);
 
 #		else
 
@@ -315,6 +334,41 @@ namespace kerbal
 				iterator insert(const_iterator pos, rvalue_reference val);
 
 #		endif
+
+				KERBAL_CONSTEXPR20
+				iterator insert(const_iterator pos, size_type n, const_reference val);
+
+			private:
+
+				template <typename InputIterator>
+				KERBAL_CONSTEXPR20
+				iterator _K_range_insert_impl(const_iterator pos, InputIterator first, InputIterator last, std::input_iterator_tag);
+
+				template <typename RandomAccessIterator>
+				KERBAL_CONSTEXPR20
+				iterator _K_range_insert_impl(const_iterator pos, RandomAccessIterator first, RandomAccessIterator last, std::random_access_iterator_tag);
+
+			public:
+				template <typename InputIterator>
+				KERBAL_CONSTEXPR20
+				typename kerbal::type_traits::enable_if<
+						kerbal::iterator::is_input_compatible_iterator<InputIterator>::value,
+						iterator
+				>::type
+				insert(const_iterator pos, InputIterator first, InputIterator last);
+
+#		if __cplusplus < 201103L
+
+				template <typename Up>
+				iterator insert(const_iterator pos, const kerbal::assign::assign_list<Up> & ilist);
+
+#		else
+
+				KERBAL_CONSTEXPR20
+				iterator insert(const_iterator pos, std::initializer_list<value_type> ilist);
+
+#		endif
+
 
 #		if __cplusplus < 201103L
 
