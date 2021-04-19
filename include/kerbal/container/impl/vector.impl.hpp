@@ -397,6 +397,35 @@ namespace kerbal
 			this->_K_capacity = new_capacity;
 		}
 
+		template <typename Tp, typename Allocator>
+		KERBAL_CONSTEXPR20
+		void vector<Tp, Allocator>::shrink_to_fit()
+		{
+			if (this->_K_size == this->_K_capacity) {
+				return;
+			}
+
+			if (this->_K_size == 0) {
+				allocator_traits::deallocate(this->alloc(), this->_K_p, this->_K_capacity);
+				this->_K_p = NULL;
+				this->_K_capacity = 0;
+				return;
+			}
+
+			size_type new_capacity = this->_K_size;
+			pointer new_buffer = allocator_traits::allocate(this->alloc(), new_capacity);
+			try {
+				kerbal::memory::uninitialized_copy(this->_K_p, this->_K_p + this->_K_size, new_buffer);
+			} catch (...) {
+				allocator_traits::deallocate(this->alloc(), new_buffer, new_capacity);
+				throw;
+			}
+			kerbal::memory::reverse_destroy(this->_K_p, this->_K_p + this->_K_size);
+			allocator_traits::deallocate(this->alloc(), this->_K_p, this->_K_capacity);
+			this->_K_p = new_buffer;
+			this->_K_capacity = new_capacity;
+		}
+
 
 	//===================
 	// insert
