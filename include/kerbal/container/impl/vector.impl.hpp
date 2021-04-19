@@ -397,31 +397,6 @@ namespace kerbal
 			this->_K_capacity = new_capacity;
 		}
 
-/*
-		template <typename Tp, typename Allocator>
-		KERBAL_CONSTEXPR20
-		void vector<Tp, Allocator>::__shrink_back_to(const_iterator to, kerbal::type_traits::false_type)
-		{
-			while (this->end() > to) {
-				this->pop_back();
-			}
-		}
-
-		template <typename Tp, typename Allocator>
-		KERBAL_CONSTEXPR20
-		void vector<Tp, Allocator>::__shrink_back_to(const_iterator to, kerbal::type_traits::true_type) KERBAL_NOEXCEPT
-		{
-			this->len = this->index_of(to);
-		}
-
-		template <typename Tp, typename Allocator>
-		KERBAL_CONSTEXPR20
-		void vector<Tp, Allocator>::shrink_back_to(const_iterator to)
-		{
-			this->__shrink_back_to(to, kerbal::type_traits::can_be_pseudo_destructible<value_type>());
-		}
-*/
-
 
 	//===================
 	// insert
@@ -592,11 +567,10 @@ namespace kerbal
 		KERBAL_CONSTEXPR20
 		void vector<Tp, Allocator>::pop_back() KERBAL_NOEXCEPT
 		{
-			kerbal::memory::destroy_on(this>back());
+			kerbal::memory::destroy_on(this->back());
 			--this->_K_size;
 		}
 
-/*
 		template <typename Tp, typename Allocator>
 		KERBAL_CONSTEXPR20
 		typename vector<Tp, Allocator>::iterator
@@ -613,24 +587,23 @@ namespace kerbal
 			this->pop_back();
 			return pos_mut;
 		}
-*/
 
-/*
 		template <typename Tp, typename Allocator>
 		KERBAL_CONSTEXPR20
 		typename vector<Tp, Allocator>::iterator
 		vector<Tp, Allocator>::erase(const_iterator first, const_iterator last)
 		{
 			iterator first_mut(first.cast_to_mutable());
+			if (first == last) {
+				return first_mut;
+			}
 			iterator last_mut(last.cast_to_mutable());
 
-			kerbal::algorithm::move(last_mut, this->end(), first_mut);
-
-			iterator new_end(this->end() - (last_mut - first_mut));
-			this->shrink_back_to(new_end);
+			iterator new_end(kerbal::algorithm::move(last_mut, this->end(), first_mut));
+			kerbal::memory::destroy(new_end, this->end());
+			this->_K_size = this->index_of(new_end);
 			return first_mut;
 		}
-*/
 
 		template <typename Tp, typename Allocator>
 		KERBAL_CONSTEXPR20

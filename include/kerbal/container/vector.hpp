@@ -279,17 +279,6 @@ namespace kerbal
 				KERBAL_CONSTEXPR20
 				void reserve(size_type new_capacity);
 
-			private:
-				KERBAL_CONSTEXPR20
-				void __shrink_back_to(const_iterator to, kerbal::type_traits::false_type);
-
-				KERBAL_CONSTEXPR20
-				void __shrink_back_to(const_iterator to, kerbal::type_traits::true_type) KERBAL_NOEXCEPT;
-
-			public:
-				KERBAL_CONSTEXPR20
-				void shrink_back_to(const_iterator to);
-
 				KERBAL_CONSTEXPR20
 				void shrink_to_fit();
 
