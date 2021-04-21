@@ -280,7 +280,7 @@ namespace kerbal
 			void vector_allocator_unrelated<Tp>::_K_swap(vector_allocator_unrelated & lhs, vector_allocator_unrelated & rhs) KERBAL_NOEXCEPT
 			{
 				kerbal::algorithm::swap(lhs._K_p, rhs._K_p);
-				kerbal::algorithm::swap(lhs.len, rhs.len);
+				kerbal::algorithm::swap(lhs._K_size, rhs._K_size);
 				kerbal::algorithm::swap(lhs._K_capacity, rhs._K_capacity);
 			}
 
