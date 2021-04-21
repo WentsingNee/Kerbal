@@ -196,7 +196,7 @@ namespace kerbal
 			KERBAL_CONSTEXPR20
 			bool vector_allocator_unrelated<Tp>::empty() const KERBAL_NOEXCEPT
 			{
-				return this->size() == 0;
+				return this->_K_size == 0;
 			}
 
 			template <typename Tp>
@@ -219,7 +219,7 @@ namespace kerbal
 			typename vector_allocator_unrelated<Tp>::reference
 			vector_allocator_unrelated<Tp>::at(size_type index)
 			{
-				if (index >= size()) {
+				if (index >= this->_K_size) {
 					kerbal::utility::throw_this_exception_helper<std::out_of_range>::throw_this_exception((const char*)"range check fail in static_array");
 				}
 				return (*this)[index];
@@ -229,7 +229,7 @@ namespace kerbal
 			typename vector_allocator_unrelated<Tp>::const_reference
 			vector_allocator_unrelated<Tp>::at(size_type index) const
 			{
-				if (index >= size()) {
+				if (index >= this->_K_size) {
 					kerbal::utility::throw_this_exception_helper<std::out_of_range>::throw_this_exception((const char*)"range check fail in static_array");
 				}
 				return (*this)[index];

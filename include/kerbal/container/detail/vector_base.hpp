@@ -14,6 +14,7 @@
 
 #include <kerbal/container/detail/vector_iterator.hpp>
 
+#include <kerbal/algorithm/swap.hpp>
 #include <kerbal/compatibility/constexpr.hpp>
 #include <kerbal/compatibility/move.hpp>
 #include <kerbal/compatibility/noexcept.hpp>
@@ -179,6 +180,7 @@ namespace kerbal
 
 				protected:
 					typedef Allocator allocator_type;
+					typedef kerbal::memory::allocator_traits<allocator_type>		allocator_traits;
 
 				protected:
 
@@ -225,6 +227,32 @@ namespace kerbal
 					const allocator_type& alloc() const KERBAL_NOEXCEPT
 					{
 						return super::member();
+					}
+
+				private:
+
+					template <bool propagate_on_container_swap>
+					KERBAL_CONSTEXPR20
+					typename kerbal::type_traits::enable_if<!propagate_on_container_swap>::type
+					_K_swap_allocator_impl(vector_allocator_overload & ano) KERBAL_NOEXCEPT
+					{
+					}
+
+					template <bool propagate_on_container_swap>
+					KERBAL_CONSTEXPR20
+					typename kerbal::type_traits::enable_if<propagate_on_container_swap>::type
+					_K_swap_allocator_impl(vector_allocator_overload & ano)
+					{
+						kerbal::algorithm::swap(this->alloc(), ano.alloc());
+					}
+
+				protected:
+
+					KERBAL_CONSTEXPR20
+					void _K_swap_allocator_if_propagate(vector_allocator_overload & ano)
+					{
+						typedef typename allocator_traits::propagate_on_container_swap propagate_on_container_swap;
+						this->_K_swap_allocator_impl<propagate_on_container_swap::value>(ano);
 					}
 
 			};

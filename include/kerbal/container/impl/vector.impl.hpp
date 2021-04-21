@@ -333,6 +333,7 @@ namespace kerbal
 			}
 		}
 
+/*
 		template <typename Tp, typename Allocator>
 		template <typename InputIterator>
 		KERBAL_CONSTEXPR20
@@ -361,6 +362,7 @@ namespace kerbal
 				}
 			}
 		}
+*/
 
 		template <typename Tp, typename Allocator>
 		KERBAL_CONSTEXPR20
@@ -709,7 +711,7 @@ namespace kerbal
 		KERBAL_CONSTEXPR20
 		void vector<Tp, Allocator>::swap(vector & with)
 		{
-			this->vector_allocator_overload::swap_allocator_if_propagate(with);
+			this->vector_allocator_overload::_K_swap_allocator_if_propagate(with);
 
 			vector_allocator_unrelated::_K_swap(*this, with);
 		}
