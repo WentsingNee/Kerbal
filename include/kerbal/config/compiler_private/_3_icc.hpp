@@ -1,7 +1,7 @@
 /**
- * @file       compiler_version.hpp
+ * @file       _3_icc.hpp
  * @brief
- * @date       2020-09-10
+ * @date       2021-04-23
  * @author     Peter
  * @copyright
  *      Peter of [ThinkSpirit Laboratory](http://thinkspirit.org/)
@@ -9,8 +9,8 @@
  *   all rights reserved
  */
 
-#ifndef KERBAL_CONFIG_COMPILER_PRIVATE_ICC_COMPILER_VERSION_HPP
-#define KERBAL_CONFIG_COMPILER_PRIVATE_ICC_COMPILER_VERSION_HPP
+#ifndef KERBAL_CONFIG_COMPILER_PRIVATE__3_ICC_HPP
+#define KERBAL_CONFIG_COMPILER_PRIVATE__3_ICC_HPP
 
 #include <kerbal/config/compiler_id.hpp>
 
@@ -18,6 +18,10 @@
 #	include <kerbal/config/detail/unexpected_compiler_error.hpp>
 #endif
 
+
+
+//===============
+// Compiler Version
 
 #ifndef KERBAL_ICC_MAJOR
 #	define KERBAL_ICC_MAJOR        (__INTEL_COMPILER / 100)
@@ -45,9 +49,31 @@
 			KERBAL_ICC_PATCHLEVEL >= (patchlevel) \
 		) \
 		) \
-	)\
+	) \
 )
 #endif // KERBAL_ICC_VERSION_MEETS
 
 
-#endif // KERBAL_CONFIG_COMPILER_PRIVATE_ICC_COMPILER_VERSION_HPP
+
+//===============
+// has_builtin
+
+#if defined __has_builtin
+#	define KERBAL_ICC_PRIVATE_HAS_BUILTIN(x) __has_builtin(x)
+#else
+#	define KERBAL_ICC_PRIVATE_HAS_BUILTIN(x) 0
+#endif
+
+
+
+//===============
+// has_feature
+
+#ifdef __has_feature                             // Optional of course.
+#	define KERBAL_ICC_PRIVATE_HAS_FEATURE(x)   __has_feature(x)
+#else
+#	define KERBAL_ICC_PRIVATE_HAS_FEATURE(x)   0
+#endif
+
+
+#endif // KERBAL_CONFIG_COMPILER_PRIVATE__3_ICC_HPP

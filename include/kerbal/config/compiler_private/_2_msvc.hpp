@@ -1,7 +1,7 @@
 /**
- * @file       compiler_version.hpp
+ * @file       _2_msvc.hpp
  * @brief
- * @date       2020-09-10
+ * @date       2021-04-23
  * @author     Peter
  * @copyright
  *      Peter of [ThinkSpirit Laboratory](http://thinkspirit.org/)
@@ -9,8 +9,8 @@
  *   all rights reserved
  */
 
-#ifndef KERBAL_CONFIG_COMPILER_PRIVATE_MSVC_COMPILER_VERSION_HPP
-#define KERBAL_CONFIG_COMPILER_PRIVATE_MSVC_COMPILER_VERSION_HPP
+#ifndef KERBAL_CONFIG_COMPILER_PRIVATE__2_MSVC_HPP
+#define KERBAL_CONFIG_COMPILER_PRIVATE__2_MSVC_HPP
 
 #include <kerbal/config/compiler_id.hpp>
 
@@ -18,6 +18,10 @@
 #	include <kerbal/config/detail/unexpected_compiler_error.hpp>
 #endif
 
+
+
+//===============
+// Compiler Version
 
 #ifndef KERBAL_MSVC_MAJOR
 #	define KERBAL_MSVC_MAJOR        (_MSC_VER / 100)
@@ -47,9 +51,9 @@
 			KERBAL_MSVC_PATCHLEVEL >= (patchlevel) \
 		) \
 		) \
-	)\
+	) \
 )
 #endif // KERBAL_MSVC_VERSION_MEETS
 
 
-#endif // KERBAL_CONFIG_COMPILER_PRIVATE_MSVC_COMPILER_VERSION_HPP
+#endif // KERBAL_CONFIG_COMPILER_PRIVATE__2_MSVC_HPP

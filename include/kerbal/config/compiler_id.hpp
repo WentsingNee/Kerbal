@@ -37,48 +37,18 @@
 
 #ifndef KERBAL_COMPILER_ID
 
-#	if defined(__GNUC__) && !defined(__clang__) && !defined(__ICC) && !defined(__ICL)
-#		if defined(KERBAL_COMPILER_ID) && KERBAL_COMPILER_ID != KERBAL_COMPILER_ID_GNU
-#			warning "Macro KERBAL_COMPILER_ID has defined!"
-#		else
-#			define KERBAL_COMPILER_ID KERBAL_COMPILER_ID_GNU
-#		endif
-#	endif
-
-#	if defined(__clang__)
-#		if defined(KERBAL_COMPILER_ID) && KERBAL_COMPILER_ID != KERBAL_COMPILER_ID_CLANG
-#			warning "Macro KERBAL_COMPILER_ID has defined!"
-#		else
-#			define KERBAL_COMPILER_ID KERBAL_COMPILER_ID_CLANG
-#		endif
-#	endif
-
-#	if defined(_MSC_VER)
-#		if defined(KERBAL_COMPILER_ID) && KERBAL_COMPILER_ID != KERBAL_COMPILER_ID_MSVC
-#			pragma message ("Kerbal Warning: " "Macro KERBAL_COMPILER_ID has defined!")
-#		else
-#			define KERBAL_COMPILER_ID KERBAL_COMPILER_ID_MSVC
-#		endif
-#	endif
-
-#	if defined(__ICC) || defined(__ICL) // __ICC (Linux , macOS* ), __ICL (Windows)
-#		if defined(KERBAL_COMPILER_ID) && KERBAL_COMPILER_ID != KERBAL_COMPILER_ID_ICC
-#			warning "Macro KERBAL_COMPILER_ID has defined!"
-#		else
-#			define KERBAL_COMPILER_ID KERBAL_COMPILER_ID_ICC
-#		endif
-#	endif
+#	include <kerbal/config/compiler_id/_0_gnu.hpp>
+#	include <kerbal/config/compiler_id/_1_clang.hpp>
+#	include <kerbal/config/compiler_id/_2_msvc.hpp>
+#	include <kerbal/config/compiler_id/_3_icc.hpp>
 
 
 #	ifndef KERBAL_COMPILER_ID
 
 #		define KERBAL_COMPILER_ID KERBAL_COMPILER_ID_UNKNOWN
 
-#		if KERBAL_COMPILER_ID == KERBAL_COMPILER_ID_MSVC
-#			pragma message ("Kerbal Warning: " "Unknown compiler")
-#		else
-#			warning "Kerbal Warning: " "Unknown compiler"
-#		endif
+#		pragma message ("Kerbal Warning: " "Unknown compiler")
+#		warning "Kerbal Warning: " "Unknown compiler"
 
 #	endif
 

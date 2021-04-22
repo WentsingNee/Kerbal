@@ -13,7 +13,7 @@
 #define KERBAL_COMPATIBILITY_ALIGNOF_HPP
 
 #include <kerbal/config/compiler_id.hpp>
-#include <kerbal/config/compiler_version.hpp>
+#include <kerbal/config/compiler_private.hpp>
 
 
 #ifndef KERBAL_ALIGNOF
@@ -27,9 +27,6 @@
 #		endif
 
 #	elif KERBAL_COMPILER_ID == KERBAL_COMPILER_ID_CLANG
-
-#		include <kerbal/config/compiler_private/clang/feature_detection.hpp>
-#		include <kerbal/config/compiler_private/clang/extension_detection.hpp>
 
 // https://clang.llvm.org/docs/LanguageExtensions.html#c-11-alignment-specifiers
 

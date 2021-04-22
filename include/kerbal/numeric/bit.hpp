@@ -13,15 +13,7 @@
 #define KERBAL_NUMERIC_BIT_HPP
 
 #include <kerbal/config/compiler_id.hpp>
-#include <kerbal/config/compiler_version.hpp>
-
-#if KERBAL_COMPILER_ID == KERBAL_COMPILER_ID_GNU
-#	include <kerbal/config/compiler_private/gnu/builtin_detection.hpp>
-#elif KERBAL_COMPILER_ID == KERBAL_COMPILER_ID_CLANG
-#	include <kerbal/config/compiler_private/clang/builtin_detection.hpp>
-#elif KERBAL_COMPILER_ID == KERBAL_COMPILER_ID_ICC
-#	include <kerbal/config/compiler_private/icc/builtin_detection.hpp>
-#endif
+#include <kerbal/config/compiler_private.hpp>
 
 #include <kerbal/compatibility/constexpr.hpp>
 #include <kerbal/compatibility/noexcept.hpp>

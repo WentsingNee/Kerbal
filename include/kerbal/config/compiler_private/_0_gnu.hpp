@@ -1,7 +1,7 @@
 /**
- * @file       compiler_version.hpp
+ * @file       _0_gnu.hpp
  * @brief
- * @date       2020-09-10
+ * @date       2021-04-23
  * @author     Peter
  * @copyright
  *      Peter of [ThinkSpirit Laboratory](http://thinkspirit.org/)
@@ -9,8 +9,8 @@
  *   all rights reserved
  */
 
-#ifndef KERBAL_CONFIG_COMPILER_PRIVATE_GNU_COMPILER_VERSION_HPP
-#define KERBAL_CONFIG_COMPILER_PRIVATE_GNU_COMPILER_VERSION_HPP
+#ifndef KERBAL_CONFIG_COMPILER_PRIVATE__0_GNU_HPP
+#define KERBAL_CONFIG_COMPILER_PRIVATE__0_GNU_HPP
 
 #include <kerbal/config/compiler_id.hpp>
 
@@ -18,6 +18,10 @@
 #	include <kerbal/config/detail/unexpected_compiler_error.hpp>
 #endif
 
+
+
+//===============
+// Compiler Version
 
 #ifndef KERBAL_GNU_MAJOR
 #	define KERBAL_GNU_MAJOR        __GNUC__
@@ -45,9 +49,22 @@
 			KERBAL_GNU_PATCHLEVEL >= (patchlevel) \
 		) \
 		) \
-	)\
+	) \
 )
 #endif // KERBAL_GNU_VERSION_MEETS
 
 
-#endif // KERBAL_CONFIG_COMPILER_PRIVATE_GNU_COMPILER_VERSION_HPP
+
+//===============
+// has_builtin
+//
+// https://gcc.gnu.org/onlinedocs/cpp/_005f_005fhas_005fbuiltin.html#g_t_005f_005fhas_005fbuiltin
+
+#if defined __has_builtin
+#	define KERBAL_GNU_PRIVATE_HAS_BUILTIN(x) __has_builtin(x)
+#else
+#	define KERBAL_GNU_PRIVATE_HAS_BUILTIN(x) 0
+#endif
+
+
+#endif // KERBAL_CONFIG_COMPILER_PRIVATE__0_GNU_HPP
