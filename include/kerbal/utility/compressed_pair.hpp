@@ -29,11 +29,13 @@
 #	include <type_traits>
 #endif
 
-namespace std
-{
+#include <kerbal/compatibility/namespace_std_scope.hpp>
+
+
+KERBAL_NAMESPACE_STD_BEGIN
 	template <typename Tp, typename Up>
 	class pair;
-}
+KERBAL_NAMESPACE_STD_END
 
 
 namespace kerbal
@@ -488,8 +490,8 @@ namespace kerbal
 
 #if __cplusplus >= 201402L
 
-namespace std
-{
+KERBAL_NAMESPACE_STD_BEGIN
+
 	template <typename Tp>
 	struct tuple_size;
 
@@ -625,7 +627,7 @@ namespace std
 		return kerbal_compressed_pair_get<I>::__const_move_get(kerbal::compatibility::move(pair));
 	}
 
-} // namespace std
+KERBAL_NAMESPACE_STD_END
 
 namespace kerbal
 {

@@ -27,8 +27,10 @@
 
 #if KERBAL_OPTIONAL_ENABLE_SUPPORT_TO_STD_OPTIONAL==1
 
-namespace std
-{
+#include <kerbal/compatibility/namespace_std_scope.hpp>
+
+KERBAL_NAMESPACE_STD_BEGIN
+
 	template <typename Type>
 	class optional;
 
@@ -37,7 +39,7 @@ namespace std
 	template <typename Type>
 	class hash;
 
-}
+KERBAL_NAMESPACE_STD_END
 
 #endif
 
@@ -50,6 +52,7 @@ namespace boost
 
 	class none_t;
 }
+
 #endif
 
 #endif /* KERBAL_OPTIONAL_OPTIONAL_SETTINGS_HPP_ */
