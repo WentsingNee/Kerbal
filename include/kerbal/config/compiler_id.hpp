@@ -33,6 +33,10 @@
 #	define KERBAL_COMPILER_ID_ICC 3
 #endif
 
+#ifndef KERBAL_COMPILER_ID_NVCC
+#	define KERBAL_COMPILER_ID_NVCC 4
+#endif
+
 
 
 #ifndef KERBAL_COMPILER_ID
@@ -41,6 +45,7 @@
 #	include <kerbal/config/compiler_id/_1_clang.hpp>
 #	include <kerbal/config/compiler_id/_2_msvc.hpp>
 #	include <kerbal/config/compiler_id/_3_icc.hpp>
+#	include <kerbal/config/compiler_id/_4_nvcc.hpp>
 
 
 #	ifndef KERBAL_COMPILER_ID
