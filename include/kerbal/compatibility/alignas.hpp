@@ -59,6 +59,12 @@
 #			define KERBAL_ALIGNAS(alignment) __attribute__((aligned (alignment)))
 #		endif
 
+#	elif KERBAL_COMPILER_ID == KERBAL_COMPILER_ID_NVCC
+
+#		if __cplusplus >= 201103L
+#			define KERBAL_ALIGNAS(alignment) alignas(alignment)
+#		endif
+
 #	endif
 
 #endif

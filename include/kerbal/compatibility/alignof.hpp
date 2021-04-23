@@ -59,6 +59,12 @@
 #			define KERBAL_ALIGNOF(T) (__alignof__(T))
 #		endif
 
+#	elif KERBAL_COMPILER_ID == KERBAL_COMPILER_ID_NVCC
+
+#		if __cplusplus >= 201103L
+#			define KERBAL_ALIGNOF(T) (alignof(T))
+#		endif
+
 #	endif
 
 #endif
