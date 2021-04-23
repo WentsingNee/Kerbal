@@ -13,7 +13,7 @@
 #define KERBAL_CONFIG_DETAIL_COMPILER_ID__0_GNU_PART_HPP
 
 
-#if defined(__GNUC__) && !defined(__clang__) && !defined(__ICC) && !defined(__ICL)
+#if defined(__GNUC__) && !defined(__clang__) && !defined(__ICC) && !defined(__ICL) && !defined(__NVCC__)
 #	if defined(KERBAL_COMPILER_ID) && KERBAL_COMPILER_ID != KERBAL_COMPILER_ID_GNU
 #		warning "Macro KERBAL_COMPILER_ID has defined!"
 #	else
