@@ -16,7 +16,7 @@
 #include <kerbal/config/compiler_private.hpp>
 
 
-#ifndef KERBAL_ALIGNAS
+#ifndef KERBAL_HAS_ALIGNAS_SUPPORT
 
 #	if KERBAL_COMPILER_ID == KERBAL_COMPILER_ID_GNU
 
@@ -61,14 +61,32 @@
 
 #	endif
 
+
+#	ifndef KERBAL_ALIGNAS
+#		if __cplusplus >= 201103L
+#			define KERBAL_ALIGNAS(alignment) alignas(alignment)
+#		endif
+#	endif
+
+
+#	ifndef KERBAL_ALIGNAS
+#		define KERBAL_HAS_ALIGNAS_SUPPORT 0
+#	else
+#		define KERBAL_HAS_ALIGNAS_SUPPORT 1
+#	endif
+
+
+#else // define KERBAL_HAS_ALIGNAS_SUPPORT
+
+#	if KERBAL_HAS_ALIGNAS_SUPPORT && !defined(KERBAL_ALIGNAS)
+#		error "KERBAL_HAS_ALIGNAS_SUPPORT is defined as 1 but KERBAL_ALIGNAS has not been defined yet!"
+#	endif
+
 #endif
 
-#undef KERBAL_ALIGNAS_SUPPORTED
-#ifdef KERBAL_ALIGNAS
-#	define KERBAL_ALIGNAS_SUPPORTED 1
-#else
 
-#	define KERBAL_ALIGNAS_SUPPORTED 0
+
+#if !KERBAL_HAS_ALIGNAS_SUPPORT
 
 #	if KERBAL_COMPILER_ID == KERBAL_COMPILER_ID_MSVC
 #		pragma message ("Kerbal Warning: " "KERBAL_ALIGNAS is not supported")
