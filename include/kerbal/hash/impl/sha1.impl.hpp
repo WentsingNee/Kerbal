@@ -26,100 +26,45 @@ namespace kerbal
 	namespace hash
 	{
 
-		template <>
 		KERBAL_CONSTEXPR14
 		inline
-		uint32_t SHA1_context_base::blk0<LITTLE_ENDIAN>(uint32_t l[16], size_t i) KERBAL_NOEXCEPT
+		void SHA1_context_base::R1(const uint32_t * w, uint32_t a, uint32_t & b, uint32_t c, uint32_t d, uint32_t & e, size_t i) KERBAL_NOEXCEPT
 		{
-			return l[i] = (kerbal::numeric::rotl(l[i], 24) & 0xFF00FF00u) |
-					(kerbal::numeric::rotl(l[i], 8) & 0x00FF00FFu);
-		}
-
-		template <>
-		KERBAL_CONSTEXPR14
-		inline
-		uint32_t SHA1_context_base::blk0<BIG_ENDIAN>(uint32_t l[16], size_t i) KERBAL_NOEXCEPT
-		{
-			return l[i];
-		}
-
-		KERBAL_CONSTEXPR
-		inline
-		uint32_t SHA1_context_base::blk(const uint32_t l[16], size_t i) KERBAL_NOEXCEPT
-		{
-			return kerbal::numeric::rotl(
-					l[(i + 13) & 15u] ^ l[(i + 8) & 15u] ^ l[(i + 2) & 15u] ^ l[i & 15u]
-					, 1);
+			e += w[i];
+			e += kerbal::numeric::rotl(a, 5);
+			e += ((b & (c ^ d)) ^ d) + 0x5A827999;
+			b = kerbal::numeric::rotl(b, 30);
 		}
 
 		KERBAL_CONSTEXPR14
 		inline
-		void SHA1_context_base::R0(uint32_t block_l[16], uint32_t v, uint32_t & w, uint32_t x, uint32_t y, uint32_t & z, size_t i) KERBAL_NOEXCEPT
+		void SHA1_context_base::R2(const uint32_t * w, uint32_t a, uint32_t & b, uint32_t c, uint32_t d, uint32_t & e, size_t i) KERBAL_NOEXCEPT
 		{
-			z += blk0<BYTE_ORDER>(block_l, i);
-			z += kerbal::numeric::rotl(v, 5);
-			z += ((w & (x ^ y)) ^ y) + 0x5A827999;
-			w = kerbal::numeric::rotl(w, 30);
+			e += w[i];
+			e += kerbal::numeric::rotl(a, 5);
+			e += (b ^ c ^ d) + 0x6ED9EBA1;
+			b = kerbal::numeric::rotl(b, 30);
 		}
 
 		KERBAL_CONSTEXPR14
 		inline
-		void SHA1_context_base::R1(uint32_t block_l[16], uint32_t v, uint32_t & w, uint32_t x, uint32_t y, uint32_t & z, size_t i) KERBAL_NOEXCEPT
+		void SHA1_context_base::R3(const uint32_t * w, uint32_t a, uint32_t & b, uint32_t c, uint32_t d, uint32_t & e, size_t i) KERBAL_NOEXCEPT
 		{
-			z += (block_l[i] = blk(block_l, i));
-			z += kerbal::numeric::rotl(v, 5);
-			z += ((w & (x ^ y)) ^ y) + 0x5A827999;
-			w = kerbal::numeric::rotl(w, 30);
+			e += w[i];
+			e += kerbal::numeric::rotl(a, 5);
+			e += (((b | c) & d) | (b & c)) + 0x8F1BBCDC;
+			b = kerbal::numeric::rotl(b, 30);
 		}
 
 		KERBAL_CONSTEXPR14
 		inline
-		void SHA1_context_base::R2(uint32_t block_l[16], uint32_t v, uint32_t & w, uint32_t x, uint32_t y, uint32_t & z, size_t i) KERBAL_NOEXCEPT
+		void SHA1_context_base::R4(const uint32_t * w, uint32_t a, uint32_t & b, uint32_t c, uint32_t d, uint32_t & e, size_t i) KERBAL_NOEXCEPT
 		{
-			z += (block_l[i] = blk(block_l, i));
-			z += kerbal::numeric::rotl(v, 5);
-			z += (w ^ x ^ y) + 0x6ED9EBA1;
-			w = kerbal::numeric::rotl(w, 30);
+			e += w[i];
+			e += kerbal::numeric::rotl(a, 5);
+			e += (b ^ c ^ d) + 0xCA62C1D6;
+			b = kerbal::numeric::rotl(b, 30);
 		}
-
-		KERBAL_CONSTEXPR14
-		inline
-		void SHA1_context_base::R3(uint32_t block_l[16], uint32_t v, uint32_t & w, uint32_t x, uint32_t y, uint32_t & z, size_t i) KERBAL_NOEXCEPT
-		{
-			z += (block_l[i] = blk(block_l, i));
-			z += kerbal::numeric::rotl(v, 5);
-			z += (((w | x) & y) | (w & x)) + 0x8F1BBCDC;
-			w = kerbal::numeric::rotl(w, 30);
-		}
-
-		KERBAL_CONSTEXPR14
-		inline
-		void SHA1_context_base::R4(uint32_t block_l[16], uint32_t v, uint32_t & w, uint32_t x, uint32_t y, uint32_t & z, size_t i) KERBAL_NOEXCEPT
-		{
-			z += (block_l[i] = blk(block_l, i));
-			z += kerbal::numeric::rotl(v, 5);
-			z += (w ^ x ^ y) + 0xCA62C1D6;
-			w = kerbal::numeric::rotl(w, 30);
-		}
-
-//#if BYTE_ORDER == LITTLE_ENDIAN
-//#define blk0(l, i) l[(i)]=((kerbal::numeric::rotl(l[i],24)&0xFF00FF00u) \
-//    |(kerbal::numeric::rotl(l[i],8)&0x00FF00FFu))
-//#elif BYTE_ORDER == BIG_ENDIAN
-//#define blk0(l, i) l[i]
-//#else
-//#error "Endianness not defined!"
-//#endif
-//
-//#define blk(l, i) l[(i)&15u]=(kerbal::numeric::rotl(l[(i+13)&15u]^l[(i+8)&15u] \
-//    ^l[(i+2)&15u]^l[i&15u],1))
-//
-//
-//#define R0(l,v,w,x,y,z,i) z+=((w&(x^y))^y)+(blk0(l, i))+0x5A827999+kerbal::numeric::rotl(v,5);w=kerbal::numeric::rotl(w,30);
-//#define R1(l,v,w,x,y,z,i) z+=((w&(x^y))^y)+(blk(l, i))+0x5A827999+kerbal::numeric::rotl(v,5);w=kerbal::numeric::rotl(w,30);
-//#define R2(l,v,w,x,y,z,i) z+=(w^x^y)+(blk(l, i))+0x6ED9EBA1+kerbal::numeric::rotl(v,5);w=kerbal::numeric::rotl(w,30);
-//#define R3(l,v,w,x,y,z,i) z+=(((w|x)&y)|(w&x))+(blk(l, i))+0x8F1BBCDC+kerbal::numeric::rotl(v,5);w=kerbal::numeric::rotl(w,30);
-//#define R4(l,v,w,x,y,z,i) z+=(w^x^y)+(blk(l, i))+0xCA62C1D6+kerbal::numeric::rotl(v,5);w=kerbal::numeric::rotl(w,30);
 
 #	if __cplusplus >= 201103L
 
@@ -147,19 +92,74 @@ namespace kerbal
 
 #	endif
 
+		template <int byte_order>
 		KERBAL_CONSTEXPR
-		inline uint32_t char4tolong1(const unsigned char c[4])
+		uint32_t char4tolong1(const uint8_t c[4]) KERBAL_NOEXCEPT;
+
+		template <>
+		KERBAL_CONSTEXPR
+		inline
+		uint32_t char4tolong1<LITTLE_ENDIAN>(const uint8_t c[4]) KERBAL_NOEXCEPT
+		{
+			return (c[0] << 24u) | (c[1] << 16u) | (c[2] << 8u) | c[3];
+		}
+
+		template <>
+		KERBAL_CONSTEXPR
+		inline
+		uint32_t char4tolong1<BIG_ENDIAN>(const uint8_t c[4]) KERBAL_NOEXCEPT
 		{
 			return (c[3] << 24u) | (c[2] << 16u) | (c[1] << 8u) | c[0];
 		}
 
 		KERBAL_CONSTEXPR14
 		inline
-		void SHA1_transform_overload<SHA1_policy::size>::transform(const unsigned char buffer[64]) KERBAL_NOEXCEPT
+		void _K_rotate5(uint32_t & a, uint32_t & b, uint32_t & c, uint32_t & d, uint32_t & e)
 		{
-			uint32_t l[16] = {};
+			uint32_t t = a;
+			a = b;
+			b = c;
+			c = d;
+			d = e;
+			e = t;
+		}
+
+		KERBAL_CONSTEXPR14
+		inline
+		void update_w_size(uint32_t w[20]) KERBAL_NOEXCEPT
+		{
+			w[0] = kerbal::numeric::rotl(w[17] ^ w[12] ^ w[6] ^ w[4] , 1);
+			w[1] = kerbal::numeric::rotl(w[18] ^ w[13] ^ w[7] ^ w[5] , 1);
+			w[2] = kerbal::numeric::rotl(w[19] ^ w[14] ^ w[8] ^ w[6] , 1);
+			w[3] = kerbal::numeric::rotl(w[0] ^ w[15] ^ w[9] ^ w[7] , 1);
+			w[4] = kerbal::numeric::rotl(w[1] ^ w[16] ^ w[10] ^ w[8] , 1);
+			w[5] = kerbal::numeric::rotl(w[2] ^ w[17] ^ w[11] ^ w[9] , 1);
+			w[6] = kerbal::numeric::rotl(w[3] ^ w[18] ^ w[12] ^ w[10] , 1);
+			w[7] = kerbal::numeric::rotl(w[4] ^ w[19] ^ w[13] ^ w[11] , 1);
+			w[8] = kerbal::numeric::rotl(w[5] ^ w[0] ^ w[14] ^ w[12] , 1);
+			w[9] = kerbal::numeric::rotl(w[6] ^ w[1] ^ w[15] ^ w[13] , 1);
+			w[10] = kerbal::numeric::rotl(w[7] ^ w[2] ^ w[16] ^ w[14] , 1);
+			w[11] = kerbal::numeric::rotl(w[8] ^ w[3] ^ w[17] ^ w[15] , 1);
+			w[12] = kerbal::numeric::rotl(w[9] ^ w[4] ^ w[18] ^ w[16] , 1);
+			w[13] = kerbal::numeric::rotl(w[10] ^ w[5] ^ w[19] ^ w[17] , 1);
+			w[14] = kerbal::numeric::rotl(w[11] ^ w[6] ^ w[0] ^ w[18] , 1);
+			w[15] = kerbal::numeric::rotl(w[12] ^ w[7] ^ w[1] ^ w[19] , 1);
+			w[16] = kerbal::numeric::rotl(w[13] ^ w[8] ^ w[2] ^ w[0] , 1);
+			w[17] = kerbal::numeric::rotl(w[14] ^ w[9] ^ w[3] ^ w[1] , 1);
+			w[18] = kerbal::numeric::rotl(w[15] ^ w[10] ^ w[4] ^ w[2] , 1);
+			w[19] = kerbal::numeric::rotl(w[16] ^ w[11] ^ w[5] ^ w[3] , 1);
+		}
+
+		KERBAL_CONSTEXPR14
+		inline
+		void SHA1_transform_overload<SHA1_policy::size>::transform(const uint8_t buffer[64]) KERBAL_NOEXCEPT
+		{
+			uint32_t w[20] = {};
 			for (int i = 0; i < 16; ++i) {
-				l[i] = char4tolong1(buffer + 4 * i);
+				w[i] = char4tolong1<BYTE_ORDER>(buffer + 4 * i);
+			}
+			for (int i = 16; i < 20; ++i) {
+				w[i] = kerbal::numeric::rotl(w[i - 16] ^ w[i - 14] ^ w[i - 8] ^ w[i - 3] , 1);
 			}
 
 			/* Copy context->state[] to working vars */
@@ -169,39 +169,50 @@ namespace kerbal
 			uint32_t d = this->state[3];
 			uint32_t e = this->state[4];
 
-			for (size_t i = 0; i < 15; i += 5) {
-				R0(l, a, b, c, d, e, i + 0);
-				R0(l, e, a, b, c, d, i + 1);
-				R0(l, d, e, a, b, c, i + 2);
-				R0(l, c, d, e, a, b, i + 3);
-				R0(l, b, c, d, e, a, i + 4);
-			}
-			R0(l, a, b, c, d, e, 15u);
-
-			R1(l, e, a, b, c, d, 0u); R1(l, d, e, a, b, c, 1u); R1(l, c, d, e, a, b, 2u); R1(l, b, c, d, e, a, 3u);
-
-			for (size_t i = 4; i < 24; i += 5) {
-				R2(l, a, b, c, d, e, (i + 0) & 15u);
-				R2(l, e, a, b, c, d, (i + 1) & 15u);
-				R2(l, d, e, a, b, c, (i + 2) & 15u);
-				R2(l, c, d, e, a, b, (i + 3) & 15u);
-				R2(l, b, c, d, e, a, (i + 4) & 15u);
+			uint32_t * ww = w;
+			for (int i = 0; i < 4; ++i) {
+				R1(ww, a, b, c, d, e, 0);
+				R1(ww, e, a, b, c, d, 1);
+				R1(ww, d, e, a, b, c, 2);
+				R1(ww, c, d, e, a, b, 3);
+				R1(ww, b, c, d, e, a, 4);
+				ww += 5;
 			}
 
-			for (size_t i = 8; i < 28; i += 5) {
-				R3(l, a, b, c, d, e, (i + 0) & 15u);
-				R3(l, e, a, b, c, d, (i + 1) & 15u);
-				R3(l, d, e, a, b, c, (i + 2) & 15u);
-				R3(l, c, d, e, a, b, (i + 3) & 15u);
-				R3(l, b, c, d, e, a, (i + 4) & 15u);
+			update_w_size(w);
+
+			ww = w;
+			for (int i = 0; i < 4; ++i) {
+				R2(ww, a, b, c, d, e, 0);
+				R2(ww, e, a, b, c, d, 1);
+				R2(ww, d, e, a, b, c, 2);
+				R2(ww, c, d, e, a, b, 3);
+				R2(ww, b, c, d, e, a, 4);
+				ww += 5;
 			}
 
-			for (size_t i = 12; i < 32; i += 5) {
-				R4(l, a, b, c, d, e, (i + 0) & 15u);
-				R4(l, e, a, b, c, d, (i + 1) & 15u);
-				R4(l, d, e, a, b, c, (i + 2) & 15u);
-				R4(l, c, d, e, a, b, (i + 3) & 15u);
-				R4(l, b, c, d, e, a, (i + 4) & 15u);
+			update_w_size(w);
+
+			ww = w;
+			for (int i = 0; i < 4; ++i) {
+				R3(ww, a, b, c, d, e, 0);
+				R3(ww, e, a, b, c, d, 1);
+				R3(ww, d, e, a, b, c, 2);
+				R3(ww, c, d, e, a, b, 3);
+				R3(ww, b, c, d, e, a, 4);
+				ww += 5;
+			}
+
+			update_w_size(w);
+
+			ww = w;
+			for (int i = 0; i < 4; ++i) {
+				R4(ww, a, b, c, d, e, 0);
+				R4(ww, e, a, b, c, d, 1);
+				R4(ww, d, e, a, b, c, 2);
+				R4(ww, c, d, e, a, b, 3);
+				R4(ww, b, c, d, e, a, 4);
+				ww += 5;
 			}
 
 			/* Add the working vars back into context.state[] */
@@ -214,11 +225,33 @@ namespace kerbal
 
 		KERBAL_CONSTEXPR14
 		inline
-		void SHA1_transform_overload<SHA1_policy::fast>::transform(const unsigned char buffer[64]) KERBAL_NOEXCEPT
+		void update_w_fast(uint32_t w[16]) KERBAL_NOEXCEPT
 		{
-			uint32_t l[16] = {};
+			w[0] = kerbal::numeric::rotl(w[0] ^ w[2] ^ w[8] ^ w[13] , 1);
+			w[1] = kerbal::numeric::rotl(w[1] ^ w[3] ^ w[9] ^ w[14] , 1);
+			w[2] = kerbal::numeric::rotl(w[2] ^ w[4] ^ w[10] ^ w[15] , 1);
+			w[3] = kerbal::numeric::rotl(w[3] ^ w[5] ^ w[11] ^ w[0] , 1);
+			w[4] = kerbal::numeric::rotl(w[4] ^ w[6] ^ w[12] ^ w[1] , 1);
+			w[5] = kerbal::numeric::rotl(w[5] ^ w[7] ^ w[13] ^ w[2] , 1);
+			w[6] = kerbal::numeric::rotl(w[6] ^ w[8] ^ w[14] ^ w[3] , 1);
+			w[7] = kerbal::numeric::rotl(w[7] ^ w[9] ^ w[15] ^ w[4] , 1);
+			w[8] = kerbal::numeric::rotl(w[8] ^ w[10] ^ w[0] ^ w[5] , 1);
+			w[9] = kerbal::numeric::rotl(w[9] ^ w[11] ^ w[1] ^ w[6] , 1);
+			w[10] = kerbal::numeric::rotl(w[10] ^ w[12] ^ w[2] ^ w[7] , 1);
+			w[11] = kerbal::numeric::rotl(w[11] ^ w[13] ^ w[3] ^ w[8] , 1);
+			w[12] = kerbal::numeric::rotl(w[12] ^ w[14] ^ w[4] ^ w[9] , 1);
+			w[13] = kerbal::numeric::rotl(w[13] ^ w[15] ^ w[5] ^ w[10] , 1);
+			w[14] = kerbal::numeric::rotl(w[14] ^ w[0] ^ w[6] ^ w[11] , 1);
+			w[15] = kerbal::numeric::rotl(w[15] ^ w[1] ^ w[7] ^ w[12] , 1);
+		}
+
+		KERBAL_CONSTEXPR14
+		inline
+		void SHA1_transform_overload<SHA1_policy::fast>::transform(const uint8_t buffer[64]) KERBAL_NOEXCEPT
+		{
+			uint32_t w[16] = {};
 			for (int i = 0; i < 16; ++i) {
-				l[i] = char4tolong1(buffer + 4 * i);
+				w[i] = char4tolong1<BYTE_ORDER>(buffer + 4 * i);
 			}
 
 			/* Copy context->state[] to working vars */
@@ -228,27 +261,38 @@ namespace kerbal
 			uint32_t d = this->state[3];
 			uint32_t e = this->state[4];
 
-			R0(l, a, b, c, d, e,  0u); R0(l, e, a, b, c, d,  1u); R0(l, d, e, a, b, c,  2u); R0(l, c, d, e, a, b,  3u); R0(l, b, c, d, e, a,  4u);
-			R0(l, a, b, c, d, e,  5u); R0(l, e, a, b, c, d,  6u); R0(l, d, e, a, b, c,  7u); R0(l, c, d, e, a, b,  8u); R0(l, b, c, d, e, a,  9u);
-			R0(l, a, b, c, d, e, 10u); R0(l, e, a, b, c, d, 11u); R0(l, d, e, a, b, c, 12u); R0(l, c, d, e, a, b, 13u); R0(l, b, c, d, e, a, 14u);
-			R0(l, a, b, c, d, e, 15u);
+			R1(w, a, b, c, d, e,  0); R1(w, e, a, b, c, d,  1); R1(w, d, e, a, b, c,  2); R1(w, c, d, e, a, b,  3); _K_rotate5(b, c, d, e, a);
+			R1(w, a, b, c, d, e,  4); R1(w, e, a, b, c, d,  5); R1(w, d, e, a, b, c,  6); R1(w, c, d, e, a, b,  7); _K_rotate5(b, c, d, e, a);
+			R1(w, a, b, c, d, e,  8); R1(w, e, a, b, c, d,  9); R1(w, d, e, a, b, c, 10); R1(w, c, d, e, a, b, 11); _K_rotate5(b, c, d, e, a);
+			R1(w, a, b, c, d, e, 12); R1(w, e, a, b, c, d, 13); R1(w, d, e, a, b, c, 14); R1(w, c, d, e, a, b, 15); _K_rotate5(b, c, d, e, a);
 
-			R1(l, e, a, b, c, d,  0u); R1(l, d, e, a, b, c,  1u); R1(l, c, d, e, a, b,  2u); R1(l, b, c, d, e, a,  3u);
+			update_w_fast(w);
 
-			R2(l, a, b, c, d, e,  4u); R2(l, e, a, b, c, d,  5u); R2(l, d, e, a, b, c,  6u); R2(l, c, d, e, a, b,  7u); R2(l, b, c, d, e, a,  8u);
-			R2(l, a, b, c, d, e,  9u); R2(l, e, a, b, c, d, 10u); R2(l, d, e, a, b, c, 11u); R2(l, c, d, e, a, b, 12u); R2(l, b, c, d, e, a, 13u);
-			R2(l, a, b, c, d, e, 14u); R2(l, e, a, b, c, d, 15u); R2(l, d, e, a, b, c,  0u); R2(l, c, d, e, a, b,  1u); R2(l, b, c, d, e, a,  2u);
-			R2(l, a, b, c, d, e,  3u); R2(l, e, a, b, c, d,  4u); R2(l, d, e, a, b, c,  5u); R2(l, c, d, e, a, b,  6u); R2(l, b, c, d, e, a,  7u);
+			R1(w, a, b, c, d, e,  0); R1(w, e, a, b, c, d,  1); R1(w, d, e, a, b, c,  2); R1(w, c, d, e, a, b,  3); _K_rotate5(b, c, d, e, a);
+			R2(w, a, b, c, d, e,  4); R2(w, e, a, b, c, d,  5); R2(w, d, e, a, b, c,  6); R2(w, c, d, e, a, b,  7); _K_rotate5(b, c, d, e, a);
+			R2(w, a, b, c, d, e,  8); R2(w, e, a, b, c, d,  9); R2(w, d, e, a, b, c, 10); R2(w, c, d, e, a, b, 11); _K_rotate5(b, c, d, e, a);
+			R2(w, a, b, c, d, e, 12); R2(w, e, a, b, c, d, 13); R2(w, d, e, a, b, c, 14); R2(w, c, d, e, a, b, 15); _K_rotate5(b, c, d, e, a);
 
-			R3(l, a, b, c, d, e,  8u); R3(l, e, a, b, c, d,  9u); R3(l, d, e, a, b, c, 10u); R3(l, c, d, e, a, b, 11u); R3(l, b, c, d, e, a, 12u);
-			R3(l, a, b, c, d, e, 13u); R3(l, e, a, b, c, d, 14u); R3(l, d, e, a, b, c, 15u); R3(l, c, d, e, a, b,  0u); R3(l, b, c, d, e, a,  1u);
-			R3(l, a, b, c, d, e,  2u); R3(l, e, a, b, c, d,  3u); R3(l, d, e, a, b, c,  4u); R3(l, c, d, e, a, b,  5u); R3(l, b, c, d, e, a,  6u);
-			R3(l, a, b, c, d, e,  7u); R3(l, e, a, b, c, d,  8u); R3(l, d, e, a, b, c,  9u); R3(l, c, d, e, a, b, 10u); R3(l, b, c, d, e, a, 11u);
+			update_w_fast(w);
 
-			R4(l, a, b, c, d, e, 12u); R4(l, e, a, b, c, d, 13u); R4(l, d, e, a, b, c, 14u); R4(l, c, d, e, a, b, 15u); R4(l, b, c, d, e, a,  0u);
-			R4(l, a, b, c, d, e,  1u); R4(l, e, a, b, c, d,  2u); R4(l, d, e, a, b, c,  3u); R4(l, c, d, e, a, b,  4u); R4(l, b, c, d, e, a,  5u);
-			R4(l, a, b, c, d, e,  6u); R4(l, e, a, b, c, d,  7u); R4(l, d, e, a, b, c,  8u); R4(l, c, d, e, a, b,  9u); R4(l, b, c, d, e, a, 10u);
-			R4(l, a, b, c, d, e, 11u); R4(l, e, a, b, c, d, 12u); R4(l, d, e, a, b, c, 13u); R4(l, c, d, e, a, b, 14u); R4(l, b, c, d, e, a, 15u);
+			R2(w, a, b, c, d, e,  0); R2(w, e, a, b, c, d,  1); R2(w, d, e, a, b, c,  2); R2(w, c, d, e, a, b,  3); _K_rotate5(b, c, d, e, a);
+			R2(w, a, b, c, d, e,  4); R2(w, e, a, b, c, d,  5); R2(w, d, e, a, b, c,  6); R2(w, c, d, e, a, b,  7); _K_rotate5(b, c, d, e, a);
+			R3(w, a, b, c, d, e,  8); R3(w, e, a, b, c, d,  9); R3(w, d, e, a, b, c, 10); R3(w, c, d, e, a, b, 11); _K_rotate5(b, c, d, e, a);
+			R3(w, a, b, c, d, e, 12); R3(w, e, a, b, c, d, 13); R3(w, d, e, a, b, c, 14); R3(w, c, d, e, a, b, 15); _K_rotate5(b, c, d, e, a);
+
+			update_w_fast(w);
+
+			R3(w, a, b, c, d, e,  0); R3(w, e, a, b, c, d,  1); R3(w, d, e, a, b, c,  2); R3(w, c, d, e, a, b,  3); _K_rotate5(b, c, d, e, a);
+			R3(w, a, b, c, d, e,  4); R3(w, e, a, b, c, d,  5); R3(w, d, e, a, b, c,  6); R3(w, c, d, e, a, b,  7); _K_rotate5(b, c, d, e, a);
+			R3(w, a, b, c, d, e,  8); R3(w, e, a, b, c, d,  9); R3(w, d, e, a, b, c, 10); R3(w, c, d, e, a, b, 11); _K_rotate5(b, c, d, e, a);
+			R4(w, a, b, c, d, e, 12); R4(w, e, a, b, c, d, 13); R4(w, d, e, a, b, c, 14); R4(w, c, d, e, a, b, 15); _K_rotate5(b, c, d, e, a);
+
+			update_w_fast(w);
+
+			R4(w, a, b, c, d, e,  0); R4(w, e, a, b, c, d,  1); R4(w, d, e, a, b, c,  2); R4(w, c, d, e, a, b,  3); _K_rotate5(b, c, d, e, a);
+			R4(w, a, b, c, d, e,  4); R4(w, e, a, b, c, d,  5); R4(w, d, e, a, b, c,  6); R4(w, c, d, e, a, b,  7); _K_rotate5(b, c, d, e, a);
+			R4(w, a, b, c, d, e,  8); R4(w, e, a, b, c, d,  9); R4(w, d, e, a, b, c, 10); R4(w, c, d, e, a, b, 11); _K_rotate5(b, c, d, e, a);
+			R4(w, a, b, c, d, e, 12); R4(w, e, a, b, c, d, 13); R4(w, d, e, a, b, c, 14); R4(w, c, d, e, a, b, 15); _K_rotate5(b, c, d, e, a);
 
 			/* Add the working vars back into context.state[] */
 			this->state[0] += a;
@@ -267,25 +311,22 @@ namespace kerbal
 			typedef RandomAccessIterator iterator;
 			typedef typename kerbal::iterator::iterator_traits<iterator>::difference_type difference_type;
 
-			difference_type len(last - first);
+			difference_type const len(last - first);
 
 			uint32_t j = (this->count[0] / 8) % 64;
 
-			if (len >= 64 - j) {
-				iterator next = first + (64 - j);
+			if (len >= static_cast<uint32_t>(64 - j)) {
+				iterator next = first + static_cast<uint32_t>(64 - j);
 				kerbal::algorithm::copy(first, next, this->buffer + j);
 				first = next;
-
 				this->transform(this->buffer);
 
-				int loop = (last - first) / 64;
-				for (int i = 0; i < loop; ++i) {
-					unsigned char c[64] = {};
+				difference_type loop = (last - first) / 64;
+				for (difference_type i = 0; i < loop; ++i) {
 					next = first + 64;
-					kerbal::algorithm::copy(first, next, c);
-
+					kerbal::algorithm::copy(first, next, this->buffer);
 					first = next;
-					this->transform(c);
+					this->transform(this->buffer);
 				}
 				j = 0;
 			}
@@ -300,46 +341,28 @@ namespace kerbal
 			this->count[1] += (len >> 29);
 
 		}
-//		{
-//			uint32_t i, j;
-//
-//			j = context->count[0];
-//			if ((context->count[0] += len << 3) < j)
-//				context->count[1]++;
-//			context->count[1] += (len >> 29);
-//			j = (j >> 3) & 63;
-//			if ((j + len) > 63) {
-//				memcpy(&context->buffer[j], data, (i = 64 - j));
-//				SHA1Transform(context->state, context->buffer);
-//				for (; i + 63 < len; i += 64) {
-//					SHA1Transform(context->state, &data[i]);
-//				}
-//				j = 0;
-//			} else
-//				i = 0;
-//			memcpy(&context->buffer[j], &data[i], len - i);
-//		}
 
 		template <typename Policy>
 		KERBAL_CONSTEXPR14
-		void SHA1_context<Policy>::update(const unsigned char * first, const unsigned char * last) KERBAL_NOEXCEPT
+		void SHA1_context<Policy>::update(const uint8_t * first, const uint8_t * last) KERBAL_NOEXCEPT
 		{
-			typedef const unsigned char * iterator;
+			typedef const uint8_t * iterator;
 			typedef typename kerbal::iterator::iterator_traits<iterator>::difference_type difference_type;
 
-			difference_type len(last - first);
+			difference_type const len(last - first);
 
 			uint32_t j = (this->count[0] / 8) % 64;
 
-			if (len >= 64 - j) {
-				iterator next = first + (64 - j);
-				kerbal::algorithm::copy(first, next, this->buffer + j);
-				first = next;
+			if (len >= static_cast<uint32_t>(64 - j)) {
+				if (j != 0) {
+					iterator next = first + static_cast<uint32_t>(64 - j);
+					kerbal::algorithm::copy(first, next, this->buffer + j);
+					first = next;
+					this->transform(this->buffer);
+				}
 
-				this->transform(this->buffer);
-
-				int loop = (last - first) / 64;
-				for (int i = 0; i < loop; ++i) {
+				difference_type loop = (last - first) / 64;
+				for (difference_type i = 0; i < loop; ++i) {
 					this->transform(first);
 					first += 64;
 				}
@@ -364,7 +387,7 @@ namespace kerbal
 		{
 			typedef ForwardIterator iterator;
 			typedef typename kerbal::iterator::iterator_traits<iterator>::value_type value_type;
-			KERBAL_STATIC_ASSERT((kerbal::type_traits::is_same<value_type, unsigned char>::value), "Iterator must refers to unsigned char");
+			KERBAL_STATIC_ASSERT((kerbal::type_traits::is_same<value_type, uint8_t>::value), "Iterator must refers to uint8_t");
 
 			this->update_helper(first, last, kerbal::iterator::iterator_category(first));
 		}
@@ -374,19 +397,19 @@ namespace kerbal
 		typename SHA1_context<Policy>::result
 		SHA1_context<Policy>::digest() KERBAL_NOEXCEPT
 		{
-			const unsigned char final_count[8] = {
-					static_cast<unsigned char>(this->count[1] >> 24),
-					static_cast<unsigned char>(this->count[1] >> 16),
-					static_cast<unsigned char>(this->count[1] >> 8),
-					static_cast<unsigned char>(this->count[1] >> 0),
-					static_cast<unsigned char>(this->count[0] >> 24),
-					static_cast<unsigned char>(this->count[0] >> 16),
-					static_cast<unsigned char>(this->count[0] >> 8),
-					static_cast<unsigned char>(this->count[0] >> 0),
+			const uint8_t final_count[8] = {
+					static_cast<uint8_t>(this->count[1] >> 24),
+					static_cast<uint8_t>(this->count[1] >> 16),
+					static_cast<uint8_t>(this->count[1] >> 8),
+					static_cast<uint8_t>(this->count[1] >> 0),
+					static_cast<uint8_t>(this->count[0] >> 24),
+					static_cast<uint8_t>(this->count[0] >> 16),
+					static_cast<uint8_t>(this->count[0] >> 8),
+					static_cast<uint8_t>(this->count[0] >> 0),
 			}; /* Endian independent */
 
 			{
-				unsigned char p[1] = {0200};
+				uint8_t p[1] = {0200};
 				this->update(p, p + 1);
 				while ((this->count[0] & 504) != 448) {
 					// 504 = 0b111111000
