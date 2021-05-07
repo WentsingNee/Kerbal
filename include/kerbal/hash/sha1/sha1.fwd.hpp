@@ -12,6 +12,13 @@
 #ifndef KERBAL_HASH_SHA1_SHA1_FWD_HPP
 #define KERBAL_HASH_SHA1_SHA1_FWD_HPP
 
+#ifndef KERBAL_ENABLE_SHA1_INSTRUCT
+#	if __SHA__
+#		define KERBAL_ENABLE_SHA1_INSTRUCT 1
+#	endif
+#endif
+
+
 namespace kerbal
 {
 
@@ -34,6 +41,7 @@ namespace kerbal
 		{
 			struct fast {};
 			struct size {};
+			struct sha1_instruct {};
 		};
 
 		template <typename Policy>
