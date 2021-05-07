@@ -12,7 +12,13 @@
 #ifndef KERBAL_HASH_SHA1_DETAIL_SHA1_TRANSFORM_OVERLOAD_HPP
 #define KERBAL_HASH_SHA1_DETAIL_SHA1_TRANSFORM_OVERLOAD_HPP
 
+#include <kerbal/hash/sha1/sha1.fwd.hpp>
+
 #include <kerbal/hash/sha1/detail/sha1_transform_overload/sha1_transform_overload.fast.hpp>
 #include <kerbal/hash/sha1/detail/sha1_transform_overload/sha1_transform_overload.size.hpp>
+
+#if KERBAL_ENABLE_SHA1_INSTRUCT
+#	include <kerbal/hash/sha1/detail/sha1_transform_overload/sha1_transform_overload.sha1_instruct.hpp>
+#endif
 
 #endif // KERBAL_HASH_SHA1_DETAIL_SHA1_TRANSFORM_OVERLOAD_HPP
