@@ -20,6 +20,12 @@
 
 #include <kerbal/hash/sha1.hpp>
 
+
+#if KERBAL_ENABLE_SHA1_INSTRUCT
+#	include <immintrin.h>
+#endif
+
+
 namespace kerbal
 {
 
@@ -303,6 +309,8 @@ namespace kerbal
 		}
 
 
+#	if KERBAL_ENABLE_SHA1_INSTRUCT
+
 		inline
 		__m128i mm_reverse32(__m128i a)
 		{
@@ -401,7 +409,7 @@ namespace kerbal
 			/* Copy context->state[] to working vars */
 			__m128i abcd = mm_reverse32(_mm_loadu_si128(reinterpret_cast<const __m128i*>(this->state + 0)));
 			__m128i mmw;
-			uint32_t e = this->state[4];
+			__m128i e = _mm_set_epi32(this->state[4], 0, 0, 0);
 
 			mmw = mm_reverse32(_mm_loadu_si128(reinterpret_cast<const __m128i*>(w + 0)));
 			abcd = _mm_sha1rnds4_epu32(abcd, mmw, 0);
@@ -411,44 +419,70 @@ namespace kerbal
 			abcd = _mm_sha1rnds4_epu32(abcd, mmw, 0);
 			mmw = mm_reverse32(_mm_loadu_si128(reinterpret_cast<const __m128i*>(w + 12)));
 			abcd = _mm_sha1rnds4_epu32(abcd, mmw, 0);
-			e =
+			e = _mm_sha1nexte_epu32(e, _mm_setzero_si128());
 
 			update_w_fast(w);
 
-			R1(w, a, b, c, d, e,  0); R1(w, e, a, b, c, d,  1); R1(w, d, e, a, b, c,  2); R1(w, c, d, e, a, b,  3); _K_rotate5(b, c, d, e, a);
-			R2(w, a, b, c, d, e,  4); R2(w, e, a, b, c, d,  5); R2(w, d, e, a, b, c,  6); R2(w, c, d, e, a, b,  7); _K_rotate5(b, c, d, e, a);
-			R2(w, a, b, c, d, e,  8); R2(w, e, a, b, c, d,  9); R2(w, d, e, a, b, c, 10); R2(w, c, d, e, a, b, 11); _K_rotate5(b, c, d, e, a);
-			R2(w, a, b, c, d, e, 12); R2(w, e, a, b, c, d, 13); R2(w, d, e, a, b, c, 14); R2(w, c, d, e, a, b, 15); _K_rotate5(b, c, d, e, a);
+			mmw = mm_reverse32(_mm_loadu_si128(reinterpret_cast<const __m128i*>(w + 0)));
+			abcd = _mm_sha1rnds4_epu32(abcd, mmw, 0);
+			mmw = mm_reverse32(_mm_loadu_si128(reinterpret_cast<const __m128i*>(w + 4)));
+			abcd = _mm_sha1rnds4_epu32(abcd, mmw, 1);
+			mmw = mm_reverse32(_mm_loadu_si128(reinterpret_cast<const __m128i*>(w + 8)));
+			abcd = _mm_sha1rnds4_epu32(abcd, mmw, 1);
+			mmw = mm_reverse32(_mm_loadu_si128(reinterpret_cast<const __m128i*>(w + 12)));
+			abcd = _mm_sha1rnds4_epu32(abcd, mmw, 1);
+			e = _mm_sha1nexte_epu32(e, _mm_setzero_si128());
 
 			update_w_fast(w);
 
-			R2(w, a, b, c, d, e,  0); R2(w, e, a, b, c, d,  1); R2(w, d, e, a, b, c,  2); R2(w, c, d, e, a, b,  3); _K_rotate5(b, c, d, e, a);
-			R2(w, a, b, c, d, e,  4); R2(w, e, a, b, c, d,  5); R2(w, d, e, a, b, c,  6); R2(w, c, d, e, a, b,  7); _K_rotate5(b, c, d, e, a);
-			R3(w, a, b, c, d, e,  8); R3(w, e, a, b, c, d,  9); R3(w, d, e, a, b, c, 10); R3(w, c, d, e, a, b, 11); _K_rotate5(b, c, d, e, a);
-			R3(w, a, b, c, d, e, 12); R3(w, e, a, b, c, d, 13); R3(w, d, e, a, b, c, 14); R3(w, c, d, e, a, b, 15); _K_rotate5(b, c, d, e, a);
+			mmw = mm_reverse32(_mm_loadu_si128(reinterpret_cast<const __m128i*>(w + 0)));
+			abcd = _mm_sha1rnds4_epu32(abcd, mmw, 1);
+			mmw = mm_reverse32(_mm_loadu_si128(reinterpret_cast<const __m128i*>(w + 4)));
+			abcd = _mm_sha1rnds4_epu32(abcd, mmw, 1);
+			mmw = mm_reverse32(_mm_loadu_si128(reinterpret_cast<const __m128i*>(w + 8)));
+			abcd = _mm_sha1rnds4_epu32(abcd, mmw, 2);
+			mmw = mm_reverse32(_mm_loadu_si128(reinterpret_cast<const __m128i*>(w + 12)));
+			abcd = _mm_sha1rnds4_epu32(abcd, mmw, 2);
+			e = _mm_sha1nexte_epu32(e, _mm_setzero_si128());
 
 			update_w_fast(w);
 
-			R3(w, a, b, c, d, e,  0); R3(w, e, a, b, c, d,  1); R3(w, d, e, a, b, c,  2); R3(w, c, d, e, a, b,  3); _K_rotate5(b, c, d, e, a);
-			R3(w, a, b, c, d, e,  4); R3(w, e, a, b, c, d,  5); R3(w, d, e, a, b, c,  6); R3(w, c, d, e, a, b,  7); _K_rotate5(b, c, d, e, a);
-			R3(w, a, b, c, d, e,  8); R3(w, e, a, b, c, d,  9); R3(w, d, e, a, b, c, 10); R3(w, c, d, e, a, b, 11); _K_rotate5(b, c, d, e, a);
-			R4(w, a, b, c, d, e, 12); R4(w, e, a, b, c, d, 13); R4(w, d, e, a, b, c, 14); R4(w, c, d, e, a, b, 15); _K_rotate5(b, c, d, e, a);
+			mmw = mm_reverse32(_mm_loadu_si128(reinterpret_cast<const __m128i*>(w + 0)));
+			abcd = _mm_sha1rnds4_epu32(abcd, mmw, 2);
+			mmw = mm_reverse32(_mm_loadu_si128(reinterpret_cast<const __m128i*>(w + 4)));
+			abcd = _mm_sha1rnds4_epu32(abcd, mmw, 2);
+			mmw = mm_reverse32(_mm_loadu_si128(reinterpret_cast<const __m128i*>(w + 8)));
+			abcd = _mm_sha1rnds4_epu32(abcd, mmw, 2);
+			mmw = mm_reverse32(_mm_loadu_si128(reinterpret_cast<const __m128i*>(w + 12)));
+			abcd = _mm_sha1rnds4_epu32(abcd, mmw, 3);
+			e = _mm_sha1nexte_epu32(e, _mm_setzero_si128());
 
 			update_w_fast(w);
 
-			R4(w, a, b, c, d, e,  0); R4(w, e, a, b, c, d,  1); R4(w, d, e, a, b, c,  2); R4(w, c, d, e, a, b,  3); _K_rotate5(b, c, d, e, a);
-			R4(w, a, b, c, d, e,  4); R4(w, e, a, b, c, d,  5); R4(w, d, e, a, b, c,  6); R4(w, c, d, e, a, b,  7); _K_rotate5(b, c, d, e, a);
-			R4(w, a, b, c, d, e,  8); R4(w, e, a, b, c, d,  9); R4(w, d, e, a, b, c, 10); R4(w, c, d, e, a, b, 11); _K_rotate5(b, c, d, e, a);
-			R4(w, a, b, c, d, e, 12); R4(w, e, a, b, c, d, 13); R4(w, d, e, a, b, c, 14); R4(w, c, d, e, a, b, 15); _K_rotate5(b, c, d, e, a);
+			mmw = mm_reverse32(_mm_loadu_si128(reinterpret_cast<const __m128i*>(w + 0)));
+			abcd = _mm_sha1rnds4_epu32(abcd, mmw, 3);
+			mmw = mm_reverse32(_mm_loadu_si128(reinterpret_cast<const __m128i*>(w + 4)));
+			abcd = _mm_sha1rnds4_epu32(abcd, mmw, 3);
+			mmw = mm_reverse32(_mm_loadu_si128(reinterpret_cast<const __m128i*>(w + 8)));
+			abcd = _mm_sha1rnds4_epu32(abcd, mmw, 3);
+			mmw = mm_reverse32(_mm_loadu_si128(reinterpret_cast<const __m128i*>(w + 12)));
+			abcd = _mm_sha1rnds4_epu32(abcd, mmw, 3);
+			e = _mm_sha1nexte_epu32(e, _mm_setzero_si128());
 
 			/* Add the working vars back into context.state[] */
-			this->state[0] += a;
-			this->state[1] += b;
-			this->state[2] += c;
-			this->state[3] += d;
-			this->state[4] += e;
+			__m128i abcd0 = mm_reverse32(_mm_loadu_si128(reinterpret_cast<const __m128i*>(this->state + 0)));
+			abcd0 = _mm_add_epi32(abcd, abcd0);
+			_mm_storeu_si128(reinterpret_cast<__m128i*>(this->state + 0), mm_reverse32(abcd0));
+#		if __SSE_4_1__
+			this->state[4] += _mm_extract_epi32(e, 3); // SSE4.1
+#		else
+			uint32_t newe = 0;
+			_mm_storeu_si32(reinterpret_cast<__m128i*>(&newe), mm_reverse32(e));
+			this->state[4] += newe;
+#		endif
 		}
 
+#	endif
 
 		template <typename Policy>
 		template <typename RandomAccessIterator>

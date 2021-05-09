@@ -48,6 +48,14 @@
 
 #include <cstddef>
 
+
+#ifndef KERBAL_ENABLE_SHA1_INSTRUCT
+#	if __SHA__
+#		define KERBAL_ENABLE_SHA1_INSTRUCT 1
+#	endif
+#endif
+
+
 namespace kerbal
 {
 
@@ -130,6 +138,8 @@ namespace kerbal
 
 		};
 
+#if KERBAL_ENABLE_SHA1_INSTRUCT
+
 		template <>
 		class SHA1_transform_overload<SHA1_policy::sha1_instruct> : protected SHA1_context_base
 		{
@@ -143,6 +153,8 @@ namespace kerbal
 				void transform(const uint8_t buffer[64]) KERBAL_NOEXCEPT;
 
 		};
+
+#endif
 
 		template <typename Policy>
 		class SHA1_context : protected SHA1_transform_overload<Policy>
