@@ -307,7 +307,13 @@ namespace kerbal
 
 
 		inline
-		void update_w_sha1(uint32_t w[16]) KERBAL_NOEXCEPT
+		__m128i mm_reverse32(__m128i a)
+		{
+			return _mm_shuffle_epi32(a, 27); // bswap; 27 == 0b 00 01 10 11
+		}
+
+		inline
+		void update_w_sha1_instruct(uint32_t w[16]) KERBAL_NOEXCEPT
 		{
 			//w[0] = kerbal::numeric::rotl(w[0] ^ w[2] ^ w[8] ^ w[13] , 1);
 			//w[1] = kerbal::numeric::rotl(w[1] ^ w[3] ^ w[9] ^ w[14] , 1);
@@ -315,21 +321,17 @@ namespace kerbal
 			//w[3] = kerbal::numeric::rotl(w[3] ^ w[5] ^ w[11] ^ w[0] , 1);
 			{
 				//__m128i a = _mm_set_epi32(w[0], w[1], w[2], w[3]);
-				__m128i a = _mm_loadu_si128(reinterpret_cast<__m128i*>(w + 0));
-				a = _mm_shuffle_epi32(a, 27); // bswap; 27 == 0b 00 01 10 11
+				__m128i a = mm_reverse32(_mm_loadu_si128(reinterpret_cast<__m128i*>(w + 0));
 				//__m128i b = _mm_set_epi32(w[4], w[5], 0, 0);
-				__m128i b = _mm_loadu_si128(reinterpret_cast<__m128i*>(w + 4));
-				b = _mm_shuffle_epi32(b, 27);
+				__m128i b = mm_reverse32(_mm_loadu_si128(reinterpret_cast<__m128i*>(w + 4));
 				__m128i sha1msg1 = _mm_sha1msg1_epu32(a, b);
 				//__m128i c = _mm_set_epi32(w[8], w[9], w[10], w[11]);
-				__m128i c = _mm_loadu_si128(reinterpret_cast<__m128i*>(w + 8));
-				c = _mm_shuffle_epi32(c, 27); // bswap; 27 == 0b 00 01 10 11
+				__m128i c = mm_reverse32(_mm_loadu_si128(reinterpret_cast<__m128i*>(w + 8));
 				c = _mm_xor_si128(sha1msg1, c);
 				//__m128i d = _mm_set_epi32(0, w[13], w[14], w[15]);
-				__m128i d = _mm_loadu_si128(reinterpret_cast<__m128i*>(w + 12));
-				d = _mm_shuffle_epi32(d, 27); // bswap; 27 == 0b 00 01 10 11
+				__m128i d = mm_reverse32(_mm_loadu_si128(reinterpret_cast<__m128i*>(w + 12));
 				__m128i sha1msg2 = _mm_sha1msg2_epu32(c, d);
-				sha1msg2 = _mm_shuffle_epi32(sha1msg2, 27); // bswap; 27 == 0b 00 01 10 11
+				sha1msg2 = mm_reverse32(sha1msg2);
 				_mm_storeu_si128(reinterpret_cast<__m128i*>(w + 0), sha1msg2);
 			}
 
@@ -339,21 +341,17 @@ namespace kerbal
 			//w[7] = kerbal::numeric::rotl(w[7] ^ w[9] ^ w[15] ^ w[4] , 1);
 			{
 				//__m128i a = _mm_set_epi32(w[4], w[5], w[6], w[7]);
-				__m128i a = _mm_loadu_si128(reinterpret_cast<__m128i*>(w + 4));
-				a = _mm_shuffle_epi32(a, 27); // bswap; 27 == 0b 00 01 10 11
+				__m128i a = mm_reverse32(_mm_loadu_si128(reinterpret_cast<__m128i*>(w + 4)));
 				//__m128i b = _mm_set_epi32(w[8], w[9], 0, 0);
-				__m128i b = _mm_loadu_si128(reinterpret_cast<__m128i*>(w + 8));
-				b = _mm_shuffle_epi32(b, 27);
+				__m128i b = mm_reverse32(_mm_loadu_si128(reinterpret_cast<__m128i*>(w + 8)));
 				__m128i sha1msg1 = _mm_sha1msg1_epu32(a, b);
 				//__m128i c = _mm_set_epi32(w[12], w[13], w[14], w[15]);
-				__m128i c = _mm_loadu_si128(reinterpret_cast<__m128i*>(w + 12));
-				c = _mm_shuffle_epi32(c, 27); // bswap; 27 == 0b 00 01 10 11
+				__m128i c = mm_reverse32(_mm_loadu_si128(reinterpret_cast<__m128i*>(w + 12)));
 				c = _mm_xor_si128(sha1msg1, c);
 				//__m128i d = _mm_set_epi32(0, w[1], w[2], w[3]);
-				__m128i d = _mm_loadu_si128(reinterpret_cast<__m128i*>(w + 0));
-				d = _mm_shuffle_epi32(d, 27); // bswap; 27 == 0b 00 01 10 11
+				__m128i d = mm_reverse32(_mm_loadu_si128(reinterpret_cast<__m128i*>(w + 0)));
 				__m128i sha1msg2 = _mm_sha1msg2_epu32(c, d);
-				sha1msg2 = _mm_shuffle_epi32(sha1msg2, 27); // bswap; 27 == 0b 00 01 10 11
+				sha1msg2 = mm_reverse32(sha1msg2);
 				_mm_storeu_si128(reinterpret_cast<__m128i*>(w + 4), sha1msg2);
 			}
 
@@ -363,21 +361,17 @@ namespace kerbal
 			//w[11] = kerbal::numeric::rotl(w[11] ^ w[13] ^ w[3] ^ w[8] , 1);
 			{
 				//__m128i a = _mm_set_epi32(w[8], w[9], w[10], w[11]);
-				__m128i a = _mm_loadu_si128(reinterpret_cast<__m128i*>(w + 8));
-				a = _mm_shuffle_epi32(a, 27); // bswap; 27 == 0b 00 01 10 11
+				__m128i a = mm_reverse32(_mm_loadu_si128(reinterpret_cast<__m128i*>(w + 8)));
 				//__m128i b = _mm_set_epi32(w[12], w[13], 0, 0);
-				__m128i b = _mm_loadu_si128(reinterpret_cast<__m128i*>(w + 12));
-				b = _mm_shuffle_epi32(b, 27);
+				__m128i b = mm_reverse32(_mm_loadu_si128(reinterpret_cast<__m128i*>(w + 12)));
 				__m128i sha1msg1 = _mm_sha1msg1_epu32(a, b);
 				//__m128i c = _mm_set_epi32(w[0], w[1], w[2], w[3]);
-				__m128i c = _mm_loadu_si128(reinterpret_cast<__m128i*>(w + 0));
-				c = _mm_shuffle_epi32(c, 27); // bswap; 27 == 0b 00 01 10 11
+				__m128i c = mm_reverse32(_mm_loadu_si128(reinterpret_cast<__m128i*>(w + 0)));
 				c = _mm_xor_si128(sha1msg1, c);
 				//__m128i d = _mm_set_epi32(0, w[5], w[6], w[7]);
-				__m128i d = _mm_loadu_si128(reinterpret_cast<__m128i*>(w + 4));
-				d = _mm_shuffle_epi32(d, 27); // bswap; 27 == 0b 00 01 10 11
+				__m128i d = mm_reverse32(_mm_loadu_si128(reinterpret_cast<__m128i*>(w + 4)));
 				__m128i sha1msg2 = _mm_sha1msg2_epu32(c, d);
-				sha1msg2 = _mm_shuffle_epi32(sha1msg2, 27); // bswap; 27 == 0b 00 01 10 11
+				sha1msg2 = mm_reverse32(sha1msg2);
 				_mm_storeu_si128(reinterpret_cast<__m128i*>(w + 8), sha1msg2);
 			}
 
@@ -387,25 +381,81 @@ namespace kerbal
 			//w[15] = kerbal::numeric::rotl(w[15] ^ w[1] ^ w[7] ^ w[12] , 1);
 			{
 				//__m128i a = _mm_set_epi32(w[12], w[13], w[14], w[15]);
-				__m128i a = _mm_loadu_si128(reinterpret_cast<__m128i*>(w + 12));
-				a = _mm_shuffle_epi32(a, 27); // bswap; 27 == 0b 00 01 10 11
+				__m128i a = mm_reverse32(_mm_loadu_si128(reinterpret_cast<__m128i*>(w + 12)));
 				//__m128i b = _mm_set_epi32(w[0], w[1], 0, 0);
-				__m128i b = _mm_loadu_si128(reinterpret_cast<__m128i*>(w + 0));
-				b = _mm_shuffle_epi32(b, 27);
+				__m128i b = mm_reverse32(_mm_loadu_si128(reinterpret_cast<__m128i*>(w + 0)));
 				__m128i sha1msg1 = _mm_sha1msg1_epu32(a, b);
 				//__m128i c = _mm_set_epi32(w[4], w[5], w[6], w[7]);
-				__m128i c = _mm_loadu_si128(reinterpret_cast<__m128i*>(w + 4));
-				c = _mm_shuffle_epi32(c, 27); // bswap; 27 == 0b 00 01 10 11
+				__m128i c = mm_reverse32(_mm_loadu_si128(reinterpret_cast<__m128i*>(w + 4)));
 				c = _mm_xor_si128(sha1msg1, c);
 				//__m128i d = _mm_set_epi32(0, w[9], w[10], w[11]);
-				__m128i d = _mm_loadu_si128(reinterpret_cast<__m128i*>(w + 8));
-				d = _mm_shuffle_epi32(d, 27); // bswap; 27 == 0b 00 01 10 11
+				__m128i d = mm_reverse32(_mm_loadu_si128(reinterpret_cast<__m128i*>(w + 8)));
 				__m128i sha1msg2 = _mm_sha1msg2_epu32(c, d);
-				sha1msg2 = _mm_shuffle_epi32(sha1msg2, 27); // bswap; 27 == 0b 00 01 10 11
+				sha1msg2 = mm_reverse32(sha1msg2);
 				_mm_storeu_si128(reinterpret_cast<__m128i*>(w + 12), sha1msg2);
 			}
 
 		}
+
+		inline
+		void SHA1_transform_overload<SHA1_policy::sha1_instruct>::transform(const uint8_t buffer[64]) KERBAL_NOEXCEPT
+		{
+			uint32_t w[16] = {};
+			for (int i = 0; i < 16; ++i) {
+				w[i] = char4tolong1<BYTE_ORDER>(buffer + 4 * i);
+			}
+
+			/* Copy context->state[] to working vars */
+			__m128i abcd = mm_reverse32(_mm_loadu_si128(reinterpret_cast<const __m128i*>(this->state + 0)));
+			__m128i mmw;
+			uint32_t e = this->state[4];
+
+			mmw = mm_reverse32(_mm_loadu_si128(reinterpret_cast<const __m128i*>(w + 0)));
+			abcd = _mm_sha1rnds4_epu32(abcd, mmw, 0);
+			mmw = mm_reverse32(_mm_loadu_si128(reinterpret_cast<const __m128i*>(w + 4)));
+			abcd = _mm_sha1rnds4_epu32(abcd, mmw, 0);
+			mmw = mm_reverse32(_mm_loadu_si128(reinterpret_cast<const __m128i*>(w + 8)));
+			abcd = _mm_sha1rnds4_epu32(abcd, mmw, 0);
+			mmw = mm_reverse32(_mm_loadu_si128(reinterpret_cast<const __m128i*>(w + 12)));
+			abcd = _mm_sha1rnds4_epu32(abcd, mmw, 0);
+			e =
+
+			update_w_fast(w);
+
+			R1(w, a, b, c, d, e,  0); R1(w, e, a, b, c, d,  1); R1(w, d, e, a, b, c,  2); R1(w, c, d, e, a, b,  3); _K_rotate5(b, c, d, e, a);
+			R2(w, a, b, c, d, e,  4); R2(w, e, a, b, c, d,  5); R2(w, d, e, a, b, c,  6); R2(w, c, d, e, a, b,  7); _K_rotate5(b, c, d, e, a);
+			R2(w, a, b, c, d, e,  8); R2(w, e, a, b, c, d,  9); R2(w, d, e, a, b, c, 10); R2(w, c, d, e, a, b, 11); _K_rotate5(b, c, d, e, a);
+			R2(w, a, b, c, d, e, 12); R2(w, e, a, b, c, d, 13); R2(w, d, e, a, b, c, 14); R2(w, c, d, e, a, b, 15); _K_rotate5(b, c, d, e, a);
+
+			update_w_fast(w);
+
+			R2(w, a, b, c, d, e,  0); R2(w, e, a, b, c, d,  1); R2(w, d, e, a, b, c,  2); R2(w, c, d, e, a, b,  3); _K_rotate5(b, c, d, e, a);
+			R2(w, a, b, c, d, e,  4); R2(w, e, a, b, c, d,  5); R2(w, d, e, a, b, c,  6); R2(w, c, d, e, a, b,  7); _K_rotate5(b, c, d, e, a);
+			R3(w, a, b, c, d, e,  8); R3(w, e, a, b, c, d,  9); R3(w, d, e, a, b, c, 10); R3(w, c, d, e, a, b, 11); _K_rotate5(b, c, d, e, a);
+			R3(w, a, b, c, d, e, 12); R3(w, e, a, b, c, d, 13); R3(w, d, e, a, b, c, 14); R3(w, c, d, e, a, b, 15); _K_rotate5(b, c, d, e, a);
+
+			update_w_fast(w);
+
+			R3(w, a, b, c, d, e,  0); R3(w, e, a, b, c, d,  1); R3(w, d, e, a, b, c,  2); R3(w, c, d, e, a, b,  3); _K_rotate5(b, c, d, e, a);
+			R3(w, a, b, c, d, e,  4); R3(w, e, a, b, c, d,  5); R3(w, d, e, a, b, c,  6); R3(w, c, d, e, a, b,  7); _K_rotate5(b, c, d, e, a);
+			R3(w, a, b, c, d, e,  8); R3(w, e, a, b, c, d,  9); R3(w, d, e, a, b, c, 10); R3(w, c, d, e, a, b, 11); _K_rotate5(b, c, d, e, a);
+			R4(w, a, b, c, d, e, 12); R4(w, e, a, b, c, d, 13); R4(w, d, e, a, b, c, 14); R4(w, c, d, e, a, b, 15); _K_rotate5(b, c, d, e, a);
+
+			update_w_fast(w);
+
+			R4(w, a, b, c, d, e,  0); R4(w, e, a, b, c, d,  1); R4(w, d, e, a, b, c,  2); R4(w, c, d, e, a, b,  3); _K_rotate5(b, c, d, e, a);
+			R4(w, a, b, c, d, e,  4); R4(w, e, a, b, c, d,  5); R4(w, d, e, a, b, c,  6); R4(w, c, d, e, a, b,  7); _K_rotate5(b, c, d, e, a);
+			R4(w, a, b, c, d, e,  8); R4(w, e, a, b, c, d,  9); R4(w, d, e, a, b, c, 10); R4(w, c, d, e, a, b, 11); _K_rotate5(b, c, d, e, a);
+			R4(w, a, b, c, d, e, 12); R4(w, e, a, b, c, d, 13); R4(w, d, e, a, b, c, 14); R4(w, c, d, e, a, b, 15); _K_rotate5(b, c, d, e, a);
+
+			/* Add the working vars back into context.state[] */
+			this->state[0] += a;
+			this->state[1] += b;
+			this->state[2] += c;
+			this->state[3] += d;
+			this->state[4] += e;
+		}
+
 
 		template <typename Policy>
 		template <typename RandomAccessIterator>
