@@ -317,19 +317,18 @@ namespace kerbal
 			//w[2] = kerbal::numeric::rotl(w[2] ^ w[4] ^ w[10] ^ w[15] , 1);
 			//w[3] = kerbal::numeric::rotl(w[3] ^ w[5] ^ w[11] ^ w[0] , 1);
 			{
-				//__m128i a = _mm_set_epi32(w[0], w[1], w[2], w[3]);
-				__m128i a = mm_reverse32(_mm_loadu_si128(reinterpret_cast<__m128i*>(w + 0));
-				//__m128i b = _mm_set_epi32(w[4], w[5], 0, 0);
-				__m128i b = mm_reverse32(_mm_loadu_si128(reinterpret_cast<__m128i*>(w + 4));
-				__m128i sha1msg1 = _mm_sha1msg1_epu32(a, b);
-				//__m128i c = _mm_set_epi32(w[8], w[9], w[10], w[11]);
-				__m128i c = mm_reverse32(_mm_loadu_si128(reinterpret_cast<__m128i*>(w + 8));
-				c = _mm_xor_si128(sha1msg1, c);
-				//__m128i d = _mm_set_epi32(0, w[13], w[14], w[15]);
-				__m128i d = mm_reverse32(_mm_loadu_si128(reinterpret_cast<__m128i*>(w + 12));
-				__m128i sha1msg2 = _mm_sha1msg2_epu32(c, d);
-				sha1msg2 = mm_reverse32(sha1msg2);
-				_mm_storeu_si128(reinterpret_cast<__m128i*>(w + 0), sha1msg2);
+				//__m128i w0123 = _mm_set_epi32(w[0], w[1], w[2], w[3]);
+				__m128i w0123 = mm_reverse32(_mm_loadu_si128(reinterpret_cast<__m128i*>(w + 0)));
+				//__m128i wcol2 = _mm_set_epi32(w[4], w[5], 0, 0);
+				__m128i wcol2 = mm_reverse32(_mm_loadu_si128(reinterpret_cast<__m128i*>(w + 4)));
+				w0123 = _mm_sha1msg1_epu32(w0123, wcol2);
+				//__m128i w891011 = _mm_set_epi32(w[8], w[9], w[10], w[11]);
+				__m128i w891011 = mm_reverse32(_mm_loadu_si128(reinterpret_cast<__m128i*>(w + 8)));
+				w0123 = _mm_xor_si128(w0123, w891011);
+				//__m128i wcol4 = _mm_set_epi32(0, w[13], w[14], w[15]);
+				__m128i wcol4 = mm_reverse32(_mm_loadu_si128(reinterpret_cast<__m128i*>(w + 12)));
+				w0123 = _mm_sha1msg2_epu32(w0123, wcol4);
+				_mm_storeu_si128(reinterpret_cast<__m128i*>(w + 0), mm_reverse32(w0123));
 			}
 
 			//w[4] = kerbal::numeric::rotl(w[4] ^ w[6] ^ w[12] ^ w[1] , 1);
@@ -337,19 +336,18 @@ namespace kerbal
 			//w[6] = kerbal::numeric::rotl(w[6] ^ w[8] ^ w[14] ^ w[3] , 1);
 			//w[7] = kerbal::numeric::rotl(w[7] ^ w[9] ^ w[15] ^ w[4] , 1);
 			{
-				//__m128i a = _mm_set_epi32(w[4], w[5], w[6], w[7]);
-				__m128i a = mm_reverse32(_mm_loadu_si128(reinterpret_cast<__m128i*>(w + 4)));
-				//__m128i b = _mm_set_epi32(w[8], w[9], 0, 0);
-				__m128i b = mm_reverse32(_mm_loadu_si128(reinterpret_cast<__m128i*>(w + 8)));
-				__m128i sha1msg1 = _mm_sha1msg1_epu32(a, b);
-				//__m128i c = _mm_set_epi32(w[12], w[13], w[14], w[15]);
-				__m128i c = mm_reverse32(_mm_loadu_si128(reinterpret_cast<__m128i*>(w + 12)));
-				c = _mm_xor_si128(sha1msg1, c);
-				//__m128i d = _mm_set_epi32(0, w[1], w[2], w[3]);
-				__m128i d = mm_reverse32(_mm_loadu_si128(reinterpret_cast<__m128i*>(w + 0)));
-				__m128i sha1msg2 = _mm_sha1msg2_epu32(c, d);
-				sha1msg2 = mm_reverse32(sha1msg2);
-				_mm_storeu_si128(reinterpret_cast<__m128i*>(w + 4), sha1msg2);
+				//__m128i w4567 = _mm_set_epi32(w[4], w[5], w[6], w[7]);
+				__m128i w4567 = mm_reverse32(_mm_loadu_si128(reinterpret_cast<__m128i*>(w + 4)));
+				//__m128i wcol2 = _mm_set_epi32(w[8], w[9], 0, 0);
+				__m128i wcol2 = mm_reverse32(_mm_loadu_si128(reinterpret_cast<__m128i*>(w + 8)));
+				w4567 = _mm_sha1msg1_epu32(w4567, wcol2);
+				//__m128i w12131415 = _mm_set_epi32(w[12], w[13], w[14], w[15]);
+				__m128i w12131415 = mm_reverse32(_mm_loadu_si128(reinterpret_cast<__m128i*>(w + 12)));
+				w4567 = _mm_xor_si128(w4567, w12131415);
+				//__m128i wcol4 = _mm_set_epi32(0, w[1], w[2], w[3]);
+				__m128i wcol4 = mm_reverse32(_mm_loadu_si128(reinterpret_cast<__m128i*>(w + 0)));
+				w4567 = _mm_sha1msg2_epu32(w4567, wcol4);
+				_mm_storeu_si128(reinterpret_cast<__m128i*>(w + 4), mm_reverse32(w4567));
 			}
 
 			//w[8] = kerbal::numeric::rotl(w[8] ^ w[10] ^ w[0] ^ w[5] , 1);
@@ -357,19 +355,18 @@ namespace kerbal
 			//w[10] = kerbal::numeric::rotl(w[10] ^ w[12] ^ w[2] ^ w[7] , 1);
 			//w[11] = kerbal::numeric::rotl(w[11] ^ w[13] ^ w[3] ^ w[8] , 1);
 			{
-				//__m128i a = _mm_set_epi32(w[8], w[9], w[10], w[11]);
-				__m128i a = mm_reverse32(_mm_loadu_si128(reinterpret_cast<__m128i*>(w + 8)));
-				//__m128i b = _mm_set_epi32(w[12], w[13], 0, 0);
-				__m128i b = mm_reverse32(_mm_loadu_si128(reinterpret_cast<__m128i*>(w + 12)));
-				__m128i sha1msg1 = _mm_sha1msg1_epu32(a, b);
-				//__m128i c = _mm_set_epi32(w[0], w[1], w[2], w[3]);
-				__m128i c = mm_reverse32(_mm_loadu_si128(reinterpret_cast<__m128i*>(w + 0)));
-				c = _mm_xor_si128(sha1msg1, c);
-				//__m128i d = _mm_set_epi32(0, w[5], w[6], w[7]);
-				__m128i d = mm_reverse32(_mm_loadu_si128(reinterpret_cast<__m128i*>(w + 4)));
-				__m128i sha1msg2 = _mm_sha1msg2_epu32(c, d);
-				sha1msg2 = mm_reverse32(sha1msg2);
-				_mm_storeu_si128(reinterpret_cast<__m128i*>(w + 8), sha1msg2);
+				//__m128i w891011 = _mm_set_epi32(w[8], w[9], w[10], w[11]);
+				__m128i w891011 = mm_reverse32(_mm_loadu_si128(reinterpret_cast<__m128i*>(w + 8)));
+				//__m128i wcol2 = _mm_set_epi32(w[12], w[13], 0, 0);
+				__m128i wcol2 = mm_reverse32(_mm_loadu_si128(reinterpret_cast<__m128i*>(w + 12)));
+				w891011 = _mm_sha1msg1_epu32(w891011, wcol2);
+				//__m128i w0123 = _mm_set_epi32(w[0], w[1], w[2], w[3]);
+				__m128i w0123 = mm_reverse32(_mm_loadu_si128(reinterpret_cast<__m128i*>(w + 0)));
+				w891011 = _mm_xor_si128(w891011, w0123);
+				//__m128i wcol4 = _mm_set_epi32(0, w[5], w[6], w[7]);
+				__m128i wcol4 = mm_reverse32(_mm_loadu_si128(reinterpret_cast<__m128i*>(w + 4)));
+				w891011 = _mm_sha1msg2_epu32(w891011, wcol4);
+				_mm_storeu_si128(reinterpret_cast<__m128i*>(w + 8), mm_reverse32(w891011));
 			}
 
 			//w[12] = kerbal::numeric::rotl(w[12] ^ w[14] ^ w[4] ^ w[9] , 1);
@@ -377,19 +374,18 @@ namespace kerbal
 			//w[14] = kerbal::numeric::rotl(w[14] ^ w[0] ^ w[6] ^ w[11] , 1);
 			//w[15] = kerbal::numeric::rotl(w[15] ^ w[1] ^ w[7] ^ w[12] , 1);
 			{
-				//__m128i a = _mm_set_epi32(w[12], w[13], w[14], w[15]);
-				__m128i a = mm_reverse32(_mm_loadu_si128(reinterpret_cast<__m128i*>(w + 12)));
-				//__m128i b = _mm_set_epi32(w[0], w[1], 0, 0);
-				__m128i b = mm_reverse32(_mm_loadu_si128(reinterpret_cast<__m128i*>(w + 0)));
-				__m128i sha1msg1 = _mm_sha1msg1_epu32(a, b);
-				//__m128i c = _mm_set_epi32(w[4], w[5], w[6], w[7]);
-				__m128i c = mm_reverse32(_mm_loadu_si128(reinterpret_cast<__m128i*>(w + 4)));
-				c = _mm_xor_si128(sha1msg1, c);
-				//__m128i d = _mm_set_epi32(0, w[9], w[10], w[11]);
-				__m128i d = mm_reverse32(_mm_loadu_si128(reinterpret_cast<__m128i*>(w + 8)));
-				__m128i sha1msg2 = _mm_sha1msg2_epu32(c, d);
-				sha1msg2 = mm_reverse32(sha1msg2);
-				_mm_storeu_si128(reinterpret_cast<__m128i*>(w + 12), sha1msg2);
+				//__m128i w12131415 = _mm_set_epi32(w[12], w[13], w[14], w[15]);
+				__m128i w12131415 = mm_reverse32(_mm_loadu_si128(reinterpret_cast<__m128i*>(w + 12)));
+				//__m128i wcol2 = _mm_set_epi32(w[0], w[1], 0, 0);
+				__m128i wcol2 = mm_reverse32(_mm_loadu_si128(reinterpret_cast<__m128i*>(w + 0)));
+				w12131415 = _mm_sha1msg1_epu32(w12131415, wcol2);
+				//__m128i w4567 = _mm_set_epi32(w[4], w[5], w[6], w[7]);
+				__m128i w4567 = mm_reverse32(_mm_loadu_si128(reinterpret_cast<__m128i*>(w + 4)));
+				w12131415 = _mm_xor_si128(w12131415, w4567);
+				//__m128i wcol4 = _mm_set_epi32(0, w[9], w[10], w[11]);
+				__m128i wcol4 = mm_reverse32(_mm_loadu_si128(reinterpret_cast<__m128i*>(w + 8)));
+				w12131415 = _mm_sha1msg2_epu32(w12131415, wcol4);
+				_mm_storeu_si128(reinterpret_cast<__m128i*>(w + 12), mm_reverse32(w12131415));
 			}
 
 		}
