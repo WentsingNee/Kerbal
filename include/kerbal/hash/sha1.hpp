@@ -94,6 +94,7 @@ namespace kerbal
 		{
 			struct fast {};
 			struct size {};
+			struct sha1_instruct {};
 		};
 
 		template <typename Policy>
@@ -125,6 +126,20 @@ namespace kerbal
 #		endif
 
 				KERBAL_CONSTEXPR14
+				void transform(const uint8_t buffer[64]) KERBAL_NOEXCEPT;
+
+		};
+
+		template <>
+		class SHA1_transform_overload<SHA1_policy::sha1_instruct> : protected SHA1_context_base
+		{
+			protected:
+
+#		if __cplusplus >= 201103L
+				constexpr
+				SHA1_transform_overload() noexcept = default;
+#		endif
+
 				void transform(const uint8_t buffer[64]) KERBAL_NOEXCEPT;
 
 		};
