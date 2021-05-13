@@ -60,7 +60,7 @@
 //
 // https://gcc.gnu.org/onlinedocs/cpp/_005f_005fhas_005fbuiltin.html#g_t_005f_005fhas_005fbuiltin
 
-#if defined __has_builtin
+#ifdef __has_builtin
 #	define KERBAL_GNU_PRIVATE_HAS_BUILTIN(x) __has_builtin(x)
 #else
 #	define KERBAL_GNU_PRIVATE_HAS_BUILTIN(x) 0

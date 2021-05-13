@@ -58,7 +58,7 @@
 //===============
 // has_builtin
 
-#if defined __has_builtin
+#ifdef __has_builtin
 #	define KERBAL_ICC_PRIVATE_HAS_BUILTIN(x) __has_builtin(x)
 #else
 #	define KERBAL_ICC_PRIVATE_HAS_BUILTIN(x) 0

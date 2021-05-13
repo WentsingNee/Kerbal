@@ -60,7 +60,7 @@
 //
 // https://clang.llvm.org/docs/LanguageExtensions.html#feature-checking-macros
 
-#if defined __has_builtin
+#ifdef __has_builtin
 #	define KERBAL_CLANG_PRIVATE_HAS_BUILTIN(x) __has_builtin(x)
 #else
 #	define KERBAL_CLANG_PRIVATE_HAS_BUILTIN(x) 0
