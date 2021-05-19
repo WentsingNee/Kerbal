@@ -32,6 +32,8 @@
 //		https://clang.llvm.org/docs/LanguageExtensions.html#type-trait-primitives
 #		if KERBAL_CLANG_PRIVATE_HAS_BUILTIN(__is_union)
 #			define KERBAL_IS_UNION(T) __is_union(T)
+#		elif KERBAL_CLANG_PRIVATE_HAS_FEATURE(is_union)
+#			define KERBAL_IS_UNION(T) __is_union(T)
 #		endif
 
 #	elif KERBAL_COMPILER_ID == KERBAL_COMPILER_ID_MSVC
