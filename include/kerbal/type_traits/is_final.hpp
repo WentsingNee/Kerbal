@@ -20,8 +20,7 @@
 
 #	if KERBAL_COMPILER_ID == KERBAL_COMPILER_ID_GNU
 
-//		https://gcc.gnu.org/onlinedocs/gcc-4.3.0/gcc/Type-Traits.html#Type-Traits
-#		if KERBAL_GNU_VERSION_MEETS(4, 3, 0)
+#		if KERBAL_GNU_VERSION_MEETS(4, 7, 1) // There is no official document to describe `__is_final`, just testing result
 #			define KERBAL_IS_FINAL(T) __is_final(T)
 #		elif KERBAL_GNU_PRIVATE_HAS_BUILTIN(__is_final)
 #			define KERBAL_IS_FINAL(T) __is_final(T)
@@ -40,8 +39,10 @@
 
 //		https://docs.microsoft.com/en-us/previous-versions/visualstudio/visual-studio-2008/ms177194(v=vs.90)
 //		https://www.cnblogs.com/yamboo/p/14030418.html
-#		if KERBAL_MSVC_VERSION_MEETS(15, 0, 0) // MSVC++ 9.0   _MSC_VER == 1500 (Visual Studio 2008 version 9.0)
+#		if KERBAL_MSVC_VERSION_MEETS(19, 0, 0) // MSVC++ 14.0  _MSC_VER == 1900 (Visual Studio 2015 version 14.0)
 #			define KERBAL_IS_FINAL(T) __is_final(T)
+#		if KERBAL_MSVC_VERSION_MEETS(15, 0, 0) // MSVC++ 9.0   _MSC_VER == 1500 (Visual Studio 2008 version 9.0)
+#			define KERBAL_IS_FINAL(T) __is_sealed(T)
 #		endif
 
 #	elif KERBAL_COMPILER_ID == KERBAL_COMPILER_ID_ICC
