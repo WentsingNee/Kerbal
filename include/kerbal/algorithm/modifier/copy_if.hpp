@@ -15,6 +15,11 @@
 #include <kerbal/assign/generic_assign.hpp>
 #include <kerbal/compatibility/constexpr.hpp>
 #include <kerbal/compatibility/noexcept.hpp>
+#include <kerbal/config/exceptions.hpp>
+
+#if __cplusplus >= 201103L && KERBAL_HAS_EXCEPTIONS_SUPPORT
+#	include <kerbal/type_traits/is_nothrow_move_constructible.hpp>
+#endif
 
 
 namespace kerbal
@@ -32,7 +37,8 @@ namespace kerbal
 				noexcept(static_cast<bool>(pred(*first))) &&
 				noexcept(kerbal::assign::generic_assign(*to, *first)) &&
 				noexcept(++to) &&
-				noexcept(++first)
+				noexcept(++first) &&
+				kerbal::type_traits::try_test_is_nothrow_move_constructible<OutputIterator>::IS_TRUE::value
 			)
 		{
 			while (first != last) {

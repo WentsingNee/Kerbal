@@ -16,7 +16,12 @@
 #include <kerbal/assign/generic_assign.hpp>
 #include <kerbal/compatibility/constexpr.hpp>
 #include <kerbal/compare/binary_type_compare.hpp>
+#include <kerbal/config/exceptions.hpp>
 #include <kerbal/iterator/iterator_traits.hpp>
+
+#if __cplusplus >= 201103L && KERBAL_HAS_EXCEPTIONS_SUPPORT
+#	include <kerbal/type_traits/is_nothrow_move_constructible.hpp>
+#endif
 
 
 namespace kerbal
@@ -33,6 +38,19 @@ namespace kerbal
 			InputIterator2 b_first, InputIterator2 b_last,
 			OutputIterator to, CompareFuntion cmp
 		)
+			KERBAL_CONDITIONAL_NOEXCEPT(
+				noexcept(static_cast<bool>(a_first != a_last)) &&
+				noexcept(static_cast<bool>(b_first != b_last)) &&
+				noexcept(static_cast<bool>(cmp(*b_first, *a_first))) &&
+				noexcept(kerbal::assign::generic_assign(*to, *b_first)) &&
+				noexcept(++to) &&
+				noexcept(++b_first) &&
+				noexcept(kerbal::assign::generic_assign(*to, *a_first)) &&
+				noexcept(++a_first) &&
+				noexcept(static_cast<OutputIterator>(kerbal::algorithm::copy(a_first, a_last, to))) &&
+				noexcept(static_cast<OutputIterator>(kerbal::algorithm::copy(b_first, b_last, to))) &&
+				kerbal::type_traits::try_test_is_nothrow_move_constructible<OutputIterator>::IS_TRUE::value
+			)
 		{
 			while (a_first != a_last) {
 				if (b_first != b_last) {
@@ -47,10 +65,10 @@ namespace kerbal
 						++a_first;
 					}
 				} else {
-					return kerbal::algorithm::copy(a_first, a_last, to);
+					return static_cast<OutputIterator>(kerbal::algorithm::copy(a_first, a_last, to));
 				}
 			}
-			return kerbal::algorithm::copy(b_first, b_last, to);
+			return static_cast<OutputIterator>(kerbal::algorithm::copy(b_first, b_last, to));
 		}
 
 		template <typename InputIterator1, typename InputIterator2, typename OutputIterator>
