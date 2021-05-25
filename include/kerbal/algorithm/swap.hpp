@@ -96,7 +96,10 @@ namespace kerbal
 							noexcept(static_cast<bool>(a_first != a_last)) &&
 							noexcept(kerbal::algorithm::iter_swap(a_first, b_first)) &&
 							noexcept(++a_first) &&
-							noexcept(++b_first)
+							noexcept(++b_first) &&
+							kerbal::type_traits::tribool_is_true<
+								kerbal::type_traits::try_test_is_nothrow_move_constructible<ForwardIterator2>
+							>::value
 					)
 			{
 				while (a_first != a_last) {
