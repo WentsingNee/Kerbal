@@ -118,7 +118,7 @@ namespace kerbal
 							{
 							}
 
-							KERBAL_CONSTEXPR14
+							KERBAL_CONSTEXPR
 							bool operator()(const_reference item, const key_type & key) const
 							{
 								return self->key_comp()(self->extract()(item), key);
@@ -154,7 +154,7 @@ namespace kerbal
 							{
 							}
 
-							KERBAL_CONSTEXPR14
+							KERBAL_CONSTEXPR
 							bool operator()(const key_type & key, const_reference item) const
 							{
 								return self->key_comp()(key, self->extract()(item));
@@ -251,7 +251,7 @@ namespace kerbal
 						return extract_compress_helper::member();
 					}
 
-					KERBAL_CONSTEXPR14
+					KERBAL_CONSTEXPR
 					const Extract &
 					extract() const KERBAL_NOEXCEPT
 					{
@@ -268,7 +268,7 @@ namespace kerbal
 					/**
 					 * @brief Returns the comparison object with which the %set was constructed.
 					 */
-					KERBAL_CONSTEXPR14
+					KERBAL_CONSTEXPR
 					const key_compare &
 					key_comp() const KERBAL_NOEXCEPT
 					{
@@ -497,7 +497,7 @@ namespace kerbal
 						return sequence.begin();
 					}
 
-					KERBAL_CONSTEXPR14
+					KERBAL_CONSTEXPR
 					const_iterator
 					begin() const
 					{
@@ -511,7 +511,7 @@ namespace kerbal
 						return sequence.end();
 					}
 
-					KERBAL_CONSTEXPR14
+					KERBAL_CONSTEXPR
 					const_iterator
 					end() const
 					{
@@ -539,7 +539,7 @@ namespace kerbal
 						return sequence.rbegin();
 					}
 
-					KERBAL_CONSTEXPR14
+					KERBAL_CONSTEXPR
 					const_reverse_iterator
 					rbegin() const
 					{
@@ -553,7 +553,7 @@ namespace kerbal
 						return sequence.rend();
 					}
 
-					KERBAL_CONSTEXPR14
+					KERBAL_CONSTEXPR
 					const_reverse_iterator
 					rend() const
 					{
@@ -581,7 +581,7 @@ namespace kerbal
 						return sequence.nth(index);
 					}
 
-					KERBAL_CONSTEXPR14
+					KERBAL_CONSTEXPR
 					const_iterator
 					nth(size_type index) const
 					{

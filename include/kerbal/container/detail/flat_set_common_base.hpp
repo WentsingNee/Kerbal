@@ -98,63 +98,63 @@ namespace kerbal
 
 				public:
 
-					KERBAL_CONSTEXPR14
+					KERBAL_CONSTEXPR
 					const_iterator
 					begin() const
 					{
 						return ordered.begin();
 					}
 
-					KERBAL_CONSTEXPR14
+					KERBAL_CONSTEXPR
 					const_iterator
 					end() const
 					{
 						return ordered.end();
 					}
 
-					KERBAL_CONSTEXPR14
+					KERBAL_CONSTEXPR
 					const_iterator
 					cbegin() const
 					{
 						return ordered.cbegin();
 					}
 
-					KERBAL_CONSTEXPR14
+					KERBAL_CONSTEXPR
 					const_iterator
 					cend() const
 					{
 						return ordered.cend();
 					}
 
-					KERBAL_CONSTEXPR14
+					KERBAL_CONSTEXPR
 					const_reverse_iterator
 					rbegin() const
 					{
 						return ordered.rbegin();
 					}
 
-					KERBAL_CONSTEXPR14
+					KERBAL_CONSTEXPR
 					const_reverse_iterator
 					rend() const
 					{
 						return ordered.rend();
 					}
 
-					KERBAL_CONSTEXPR14
+					KERBAL_CONSTEXPR
 					const_reverse_iterator
 					crbegin() const
 					{
 						return ordered.crbegin();
 					}
 
-					KERBAL_CONSTEXPR14
+					KERBAL_CONSTEXPR
 					const_reverse_iterator
 					crend() const
 					{
 						return ordered.crend();
 					}
 
-					KERBAL_CONSTEXPR14
+					KERBAL_CONSTEXPR
 					const_iterator
 					nth(size_type index) const
 					{
