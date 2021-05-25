@@ -87,7 +87,7 @@ namespace kerbal
 						return super::member();
 					}
 
-					KERBAL_CONSTEXPR14
+					KERBAL_CONSTEXPR
 					const key_compare & key_comp_obj() const KERBAL_NOEXCEPT
 					{
 						return super::member();
@@ -443,7 +443,7 @@ namespace kerbal
 						return sequence.begin();
 					}
 
-					KERBAL_CONSTEXPR14
+					KERBAL_CONSTEXPR
 					const_iterator begin() const
 					{
 						return sequence.begin();
@@ -455,7 +455,7 @@ namespace kerbal
 						return sequence.end();
 					}
 
-					KERBAL_CONSTEXPR14
+					KERBAL_CONSTEXPR
 					const_iterator end() const
 					{
 						return sequence.end();
@@ -479,7 +479,7 @@ namespace kerbal
 						return sequence.rbegin();
 					}
 
-					KERBAL_CONSTEXPR14
+					KERBAL_CONSTEXPR
 					const_reverse_iterator rbegin() const
 					{
 						return sequence.rbegin();
@@ -491,7 +491,7 @@ namespace kerbal
 						return sequence.rend();
 					}
 
-					KERBAL_CONSTEXPR14
+					KERBAL_CONSTEXPR
 					const_reverse_iterator rend() const
 					{
 						return sequence.rend();
@@ -515,7 +515,7 @@ namespace kerbal
 						return sequence.nth(index);
 					}
 
-					KERBAL_CONSTEXPR14
+					KERBAL_CONSTEXPR
 					const_iterator nth(size_type index) const
 					{
 						return sequence.nth(index);
