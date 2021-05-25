@@ -68,6 +68,18 @@ namespace kerbal
 
 #			if __cplusplus >= 201103L
 
+					member_compress_helper_impl() = default;
+
+#			else
+
+					member_compress_helper_impl()
+					{
+					}
+
+#			endif
+
+#			if __cplusplus >= 201103L
+
 					template <typename ... Args>
 					KERBAL_CONSTEXPR
 					explicit member_compress_helper_impl(kerbal::utility::in_place_t, Args&& ... args)
@@ -197,6 +209,18 @@ namespace kerbal
 
 #			if __cplusplus >= 201103L
 
+					member_compress_helper_impl() = default;
+
+#			else
+
+					member_compress_helper_impl()
+					{
+					}
+
+#			endif
+
+#			if __cplusplus >= 201103L
+
 					template <typename ... Args>
 					KERBAL_CONSTEXPR
 					explicit member_compress_helper_impl(kerbal::utility::in_place_t, Args&& ... args)
@@ -315,6 +339,10 @@ namespace kerbal
 			public:
 
 #		if __cplusplus < 201103L
+
+				member_compress_helper()
+				{
+				}
 
 				explicit member_compress_helper(kerbal::utility::in_place_t in_place):
 						super(in_place)
