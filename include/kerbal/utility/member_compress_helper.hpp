@@ -18,12 +18,10 @@
 #include <kerbal/compatibility/noexcept.hpp>
 #include <kerbal/operators/generic_assign.hpp>
 #include <kerbal/type_traits/can_be_empty_base.hpp>
-#include <kerbal/type_traits/conditional.hpp>
-#include <kerbal/type_traits/cv_deduction.hpp>
 #include <kerbal/type_traits/reference_deduction.hpp>
+#include <kerbal/type_traits/volatile_deduction.hpp>
 #include <kerbal/utility/declval.hpp>
 #include <kerbal/utility/in_place.hpp>
-#include <kerbal/utility/noncopyable.hpp>
 
 #if __cplusplus >= 201103L
 #	include <kerbal/utility/forward.hpp>
@@ -177,21 +175,12 @@ namespace kerbal
 
 			};
 
-			struct member_compress_allow_copy_assignable
-			{
-			};
-
 			template <typename T>
 			class member_compress_helper_impl<T, true>:
-					private kerbal::type_traits::remove_cv<T>::type,
-					private kerbal::type_traits::conditional<
-							kerbal::type_traits::is_const<T>::value,
-							kerbal::utility::noncopyassignable,
-							member_compress_allow_copy_assignable
-					>::type
+					private kerbal::type_traits::remove_volatile<T>::type
 			{
 				private:
-					typedef typename kerbal::type_traits::remove_cv<T>::type super;
+					typedef typename kerbal::type_traits::remove_volatile<T>::type super;
 
 				public:
 					typedef kerbal::type_traits::true_type IS_COMPRESSED;
@@ -287,6 +276,156 @@ namespace kerbal
 					}
 
 #			endif
+
+					KERBAL_CONSTEXPR14
+					reference member() KERBAL_REFERENCE_OVERLOAD_TAG KERBAL_NOEXCEPT
+					{
+						return static_cast<reference>(*this);
+					}
+
+					KERBAL_CONSTEXPR14
+					const_reference member() KERBAL_CONST_REFERENCE_OVERLOAD_TAG KERBAL_NOEXCEPT
+					{
+						return static_cast<const_reference>(*this);
+					}
+
+#			if __cplusplus >= 201103L
+
+					KERBAL_CONSTEXPR14
+					rvalue_reference member() && KERBAL_NOEXCEPT
+					{
+						return static_cast<rvalue_reference>(*this);
+					}
+
+					KERBAL_CONSTEXPR14
+					const_rvalue_reference member() const && KERBAL_NOEXCEPT
+					{
+						return static_cast<const_rvalue_reference>(*this);
+					}
+
+#			endif
+
+			};
+
+			template <typename T>
+			class member_compress_helper_impl<const T, true>:
+					private kerbal::type_traits::remove_volatile<T>::type
+			{
+				private:
+					typedef typename kerbal::type_traits::remove_volatile<T>::type super;
+
+				public:
+					typedef kerbal::type_traits::true_type IS_COMPRESSED;
+
+					typedef const T																		value_type;
+					typedef typename kerbal::type_traits::add_lvalue_reference<const T>::type			reference;
+					typedef typename kerbal::type_traits::add_const_lvalue_reference<const T>::type		const_reference;
+
+#			if __cplusplus >= 201103L
+					typedef typename kerbal::type_traits::add_rvalue_reference<const T>::type			rvalue_reference;
+					typedef typename kerbal::type_traits::add_const_rvalue_reference<const T>::type		const_rvalue_reference;
+#			endif
+
+				public:
+
+#			if __cplusplus >= 201103L
+
+					member_compress_helper_impl() = default;
+
+#			else
+
+					member_compress_helper_impl()
+					{
+					}
+
+#			endif
+
+#			if __cplusplus >= 201103L
+
+					template <typename ... Args>
+					KERBAL_CONSTEXPR
+					explicit member_compress_helper_impl(kerbal::utility::in_place_t, Args&& ... args)
+									KERBAL_CONDITIONAL_NOEXCEPT(
+											(std::is_nothrow_constructible<super, Args...>::value)
+									) :
+							super(kerbal::utility::forward<Args>(args)...)
+					{
+					}
+
+#			else
+
+					explicit member_compress_helper_impl(kerbal::utility::in_place_t):
+							super()
+					{
+					}
+
+					template <typename Arg0>
+					explicit member_compress_helper_impl(kerbal::utility::in_place_t, const Arg0 & arg0):
+							super(arg0)
+					{
+					}
+
+					template <typename Arg0, typename Arg1>
+					explicit member_compress_helper_impl(kerbal::utility::in_place_t, const Arg0 & arg0, const Arg1 & arg1):
+							super(arg0, arg1)
+					{
+					}
+
+					template <typename Arg0, typename Arg1, typename Arg2>
+					explicit member_compress_helper_impl(kerbal::utility::in_place_t, const Arg0 & arg0, const Arg1 & arg1, const Arg2 & arg2):
+							super(arg0, arg1, arg2)
+					{
+					}
+
+#			endif
+
+					template <typename U, size_t J>
+					KERBAL_CONSTEXPR14
+					explicit member_compress_helper_impl(const kerbal::utility::member_compress_helper<U, J> & src)
+									KERBAL_CONDITIONAL_NOEXCEPT((
+											std::is_nothrow_constructible<
+													const T,
+													typename kerbal::utility::member_compress_helper<U, J>::const_reference
+											>::value
+									)) :
+							super(src.member())
+					{
+					}
+
+#			if __cplusplus >= 201103L
+
+					template <typename U, size_t J>
+					KERBAL_CONSTEXPR14
+					explicit member_compress_helper_impl(kerbal::utility::member_compress_helper<U, J> && src)
+									KERBAL_CONDITIONAL_NOEXCEPT((
+											std::is_nothrow_constructible<
+													const T,
+													typename kerbal::utility::member_compress_helper<U, J>::rvalue_reference
+											>::value
+									)) :
+							super(kerbal::compatibility::move(src.member()))
+					{
+					}
+
+#			endif
+
+
+				// note: `member_compress_helper_impl` couldn't inherit from `noncopyassignable` in pursuit of more effective compression effect
+
+#			if __cplusplus < 201103L
+
+				private:
+					member_compress_helper_impl& operator=(const member_compress_helper_impl &);
+
+#			else
+
+				public:
+					member_compress_helper_impl& operator=(const member_compress_helper_impl &) = delete;
+					member_compress_helper_impl& operator=(member_compress_helper_impl &&) = delete;
+
+#			endif
+
+				public:
 
 					KERBAL_CONSTEXPR14
 					reference member() KERBAL_REFERENCE_OVERLOAD_TAG KERBAL_NOEXCEPT
