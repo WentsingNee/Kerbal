@@ -25,6 +25,7 @@
 #include <kerbal/utility/integer_sequence.hpp>
 #include <kerbal/utility/member_compress_helper.hpp>
 #include <kerbal/utility/type_vector.hpp>
+#include <kerbal/type_traits/enable_if.hpp>
 
 
 namespace kerbal
@@ -35,28 +36,6 @@ namespace kerbal
 
 		namespace detail
 		{
-
-			template <std::size_t Index, typename ... Args>
-			struct tuple_type_index;
-
-			template <std::size_t Index, typename T, typename ... Args>
-			struct tuple_type_index<Index, T, Args...>
-			{
-					typedef typename tuple_type_index<Index - 1, Args...>::type type;
-			};
-
-			template <std::size_t Index>
-			struct tuple_type_index<Index>
-			{
-			};
-
-			template <typename T, typename ... Args>
-			struct tuple_type_index<0, T, Args...>
-			{
-					typedef T type;
-			};
-
-
 
 			template <typename T, typename ... Args>
 			struct tuple_impl;
@@ -71,7 +50,7 @@ namespace kerbal
 					template <std::size_t I>
 					struct value_type
 					{
-							typedef typename tuple_type_index<I, Args...>::type type;
+							typedef typename type_vector_at<type_vector<Args...>, I>::result type;
 					};
 
 				private:
@@ -131,16 +110,17 @@ namespace kerbal
 					}
 
 				private:
-					struct helper {};
+					struct converting_cnstrct_tag {};
 
-					template <typename ... Head, std::size_t ... HeadIndex, typename ... Tail, std::size_t ... TailIndex, typename ... UArgs>
+					template <std::size_t ... HeadIndex, std::size_t ... TailIndex, typename ... UArgs>
 					KERBAL_CONSTEXPR
 					tuple_impl(
-							kerbal::utility::type_vector<Head...>, kerbal::utility::index_sequence<HeadIndex...>,
-							kerbal::utility::type_vector<Tail...>, kerbal::utility::index_sequence<TailIndex...>,
+							converting_cnstrct_tag,
+							kerbal::utility::index_sequence<HeadIndex...>,
+							kerbal::utility::index_sequence<TailIndex...>,
 							UArgs && ... args) :
-							kerbal::utility::member_compress_helper<Head, HeadIndex>(kerbal::utility::in_place_t(), std::forward<UArgs>(args))...,
-							kerbal::utility::member_compress_helper<Tail, TailIndex + sizeof...(Head)>(kerbal::utility::in_place_t())...
+							super<HeadIndex>::type(kerbal::utility::in_place_t(), std::forward<UArgs>(args))...,
+							super<TailIndex + sizeof...(HeadIndex)>::type(kerbal::utility::in_place_t())...
 					{
 					}
 
@@ -148,16 +128,17 @@ namespace kerbal
 
 					template <typename ... UArgs>
 					KERBAL_CONSTEXPR
-					tuple_impl(UArgs && ... args) :
+					explicit tuple_impl(UArgs && ... args) :
 							tuple_impl(
-									typename kerbal::utility::type_vector_spilit<kerbal::utility::type_vector<Args...>, sizeof...(UArgs)>::head(),
+									converting_cnstrct_tag(),
 									kerbal::utility::make_index_sequence<sizeof...(UArgs)>(),
-									typename kerbal::utility::type_vector_spilit<kerbal::utility::type_vector<Args...>, sizeof...(UArgs)>::tail(),
 									kerbal::utility::make_index_sequence<TUPLE_SIZE::value - sizeof...(UArgs)>(),
 									std::forward<UArgs>(args)...)
 					{
 						static_assert(sizeof...(UArgs) <= sizeof...(Args), "too many arguments");
 					}
+
+				public:
 
 					template <std::size_t I>
 					KERBAL_CONSTEXPR14
@@ -171,6 +152,14 @@ namespace kerbal
 					KERBAL_CONSTEXPR
 					typename const_reference<I>::type
 					get() const & KERBAL_NOEXCEPT
+					{
+						return super<I>::type::member();
+					}
+
+					template <std::size_t I>
+					KERBAL_CONSTEXPR
+					typename const_reference<I>::type
+					cget() const & KERBAL_NOEXCEPT
 					{
 						return super<I>::type::member();
 					}
@@ -191,14 +180,14 @@ namespace kerbal
 						return super<I>::type::member();
 					}
 
-					KERBAL_CONSTEXPR14
-					void swap(tuple_impl & ano)
+					template <std::size_t I>
+					KERBAL_CONSTEXPR
+					typename const_rvalue_reference<I>::type
+					cget() const && KERBAL_NOEXCEPT
 					{
-						int a[[maybe_unused]][]{(kerbal::algorithm::swap(
-								static_cast<kerbal::utility::member_compress_helper<Args, Index> &>(*this),
-								static_cast<kerbal::utility::member_compress_helper<Args, Index> &>(ano)
-						), 0)...};
+						return super<I>::type::member();
 					}
+
 			};
 
 		} // namespace detail
@@ -210,8 +199,130 @@ namespace kerbal
 				typedef detail::tuple_impl<kerbal::utility::make_index_sequence<sizeof...(Args)>, Args...> super;
 
 			public:
-
+				typedef typename super::TUPLE_SIZE			TUPLE_SIZE;
 				using super::super;
+
+			protected:
+
+				template <std::size_t ... Index1, typename ... UArgs, std::size_t ... Index2>
+				KERBAL_CONSTEXPR
+				static tuple<Args..., UArgs...> _K_tuple_cat_impl(
+						const tuple<Args...> & tuple1, kerbal::utility::index_sequence<Index1...>,
+						const tuple<UArgs...> & tuple2, kerbal::utility::index_sequence<Index2...>)
+				{
+					return tuple<Args..., UArgs...>(tuple1.template get<Index1>()..., tuple2.template get<Index2>()...);
+				}
+
+			public:
+
+				template <typename ... UArgs>
+				KERBAL_CONSTEXPR
+				friend
+				tuple<Args..., UArgs...> operator+(const tuple<Args...> & tuple1, const tuple<UArgs...> & tuple2)
+				{
+					return _K_tuple_cat_impl(
+							tuple1, kerbal::utility::make_index_sequence<sizeof...(Args)>(),
+							tuple2, kerbal::utility::make_index_sequence<sizeof...(UArgs)>());
+				}
+
+
+			protected:
+
+				template <std::size_t ... Index>
+				KERBAL_CONSTEXPR14
+				tuple<typename kerbal::type_traits::add_lvalue_reference<Args>::type...>
+				_K_ref_impl(kerbal::utility::index_sequence<Index...>) KERBAL_NOEXCEPT
+				{
+					return tuple<typename kerbal::type_traits::add_lvalue_reference<Args>::type...>(this->template get<Index>()...);
+				}
+
+			public:
+
+				KERBAL_CONSTEXPR14
+				tuple<typename kerbal::type_traits::add_lvalue_reference<Args>::type...>
+				ref() KERBAL_NOEXCEPT
+				{
+					return _K_ref_impl(kerbal::utility::make_index_sequence<TUPLE_SIZE::value>());
+				}
+
+
+			protected:
+
+				template <std::size_t ... Index>
+				KERBAL_CONSTEXPR14
+				tuple<typename kerbal::type_traits::add_const_lvalue_reference<Args>::type...>
+				_K_cref_impl(kerbal::utility::index_sequence<Index...>) const KERBAL_NOEXCEPT
+				{
+					return tuple<typename kerbal::type_traits::add_const_lvalue_reference<Args>::type...>(this->template get<Index>()...);
+				}
+
+			public:
+
+				KERBAL_CONSTEXPR14
+				tuple<typename kerbal::type_traits::add_const_lvalue_reference<Args>::type...>
+				cref() const KERBAL_NOEXCEPT
+				{
+					return _K_cref_impl(kerbal::utility::make_index_sequence<TUPLE_SIZE::value>());
+				}
+
+
+			protected:
+
+				template <typename F, std::size_t ... Index>
+				KERBAL_CONSTEXPR14
+				void _K_for_each_impl(F f, kerbal::utility::index_sequence<Index...>)
+				{
+					int a[[maybe_unused]][]{(f(
+							this->template get<Index>(),
+							kerbal::type_traits::integral_constant<std::size_t, Index>()
+					), 0)...};
+				}
+
+				template <typename F, std::size_t ... Index>
+				KERBAL_CONSTEXPR14
+				void _K_for_each_impl(F f, kerbal::utility::index_sequence<Index...>) const
+				{
+					int a[[maybe_unused]][]{(f(
+							this->template get<Index>(),
+							kerbal::type_traits::integral_constant<std::size_t, Index>()
+					), 0)...};
+				}
+
+			public:
+
+				template <typename F>
+				KERBAL_CONSTEXPR14
+				void for_each(F f)
+				{
+					_K_for_each_impl(f, kerbal::utility::make_index_sequence<TUPLE_SIZE::value>());
+				}
+
+				template <typename F>
+				KERBAL_CONSTEXPR14
+				void for_each(F f) const
+				{
+					_K_for_each_impl(f, kerbal::utility::make_index_sequence<TUPLE_SIZE::value>());
+				}
+
+
+			protected:
+
+				template <std::size_t ... Index>
+				KERBAL_CONSTEXPR14
+				void _K_swap_impl(tuple & ano, kerbal::utility::index_sequence<Index...>)
+				{
+					int a[[maybe_unused]][]{(kerbal::algorithm::swap(
+							this->template get<Index>(), ano.template get<Index>()
+					), 0)...};
+				}
+
+			public:
+
+				KERBAL_CONSTEXPR14
+				void swap(tuple & ano)
+				{
+					_K_swap_impl(ano, kerbal::utility::make_index_sequence<TUPLE_SIZE::value>());
+				}
 		};
 
 
@@ -221,6 +332,14 @@ namespace kerbal
 		make_tuple(Args&& ... args)
 		{
 			return kerbal::utility::tuple<Args...>(kerbal::utility::forward<Args>(args)...);
+		}
+
+		template <typename ... Args>
+		KERBAL_CONSTEXPR
+		kerbal::utility::tuple<Args&...>
+		tie(Args& ... args) KERBAL_NOEXCEPT
+		{
+			return kerbal::utility::tuple<Args&...>(args...);
 		}
 
 		template <typename ... Args>
