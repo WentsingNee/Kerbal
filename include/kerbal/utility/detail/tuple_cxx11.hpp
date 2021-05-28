@@ -18,6 +18,7 @@
 
 #include <kerbal/algorithm/swap.hpp>
 #include <kerbal/compatibility/constexpr.hpp>
+#include <kerbal/compatibility/move.hpp>
 #include <kerbal/compatibility/noexcept.hpp>
 #include <kerbal/type_traits/integral_constant.hpp>
 #include <kerbal/type_traits/reference_deduction.hpp>
@@ -34,10 +35,15 @@ namespace kerbal
 	namespace utility
 	{
 
+		struct tuple_partial_init_tag {};
+
+		template <typename ... Args>
+		struct tuple;
+
 		namespace detail
 		{
 
-			template <typename T, typename ... Args>
+			template <typename IndexSequence, typename ... Args>
 			struct tuple_impl;
 
 			template <std::size_t ... Index, typename ... Args>
@@ -110,12 +116,11 @@ namespace kerbal
 					}
 
 				private:
-					struct converting_cnstrct_tag {};
 
 					template <std::size_t ... HeadIndex, std::size_t ... TailIndex, typename ... UArgs>
 					KERBAL_CONSTEXPR
-					tuple_impl(
-							converting_cnstrct_tag,
+					explicit tuple_impl(
+							tuple_partial_init_tag,
 							kerbal::utility::index_sequence<HeadIndex...>,
 							kerbal::utility::index_sequence<TailIndex...>,
 							UArgs && ... args) :
@@ -128,14 +133,40 @@ namespace kerbal
 
 					template <typename ... UArgs>
 					KERBAL_CONSTEXPR
-					explicit tuple_impl(UArgs && ... args) :
+					explicit tuple_impl(tuple_partial_init_tag tag, UArgs && ... args) :
 							tuple_impl(
-									converting_cnstrct_tag(),
+									tag,
 									kerbal::utility::make_index_sequence<sizeof...(UArgs)>(),
 									kerbal::utility::make_index_sequence<TUPLE_SIZE::value - sizeof...(UArgs)>(),
 									std::forward<UArgs>(args)...)
 					{
 						static_assert(sizeof...(UArgs) <= sizeof...(Args), "too many arguments");
+					}
+
+					template <typename ... UArgs, typename = typename kerbal::type_traits::enable_if<sizeof...(UArgs) == TUPLE_SIZE::value, int>::type>
+					KERBAL_CONSTEXPR
+					tuple_impl(UArgs && ... args) :
+							super<Index>::type(kerbal::utility::in_place_t(), std::forward<UArgs>(args))...
+					{
+						static_assert(sizeof...(UArgs) <= sizeof...(Args), "too many arguments");
+					}
+
+				protected:
+
+					template <typename ... UArgs, typename = typename kerbal::type_traits::enable_if<sizeof...(UArgs) == TUPLE_SIZE::value, int>::type>
+					KERBAL_CONSTEXPR
+					explicit tuple_impl(const tuple<UArgs...> & args) :
+							tuple_impl(args.template get<Index>()...)
+					{
+						static_assert(sizeof...(UArgs) == sizeof...(Args), "wrong size tuple");
+					}
+
+					template <typename ... UArgs, typename = typename kerbal::type_traits::enable_if<sizeof...(UArgs) == TUPLE_SIZE::value, int>::type>
+					KERBAL_CONSTEXPR
+					explicit tuple_impl(tuple<UArgs...> && args) :
+							tuple_impl(kerbal::compatibility::move(args.template get<Index>())...)
+					{
+						static_assert(sizeof...(UArgs) == sizeof...(Args), "wrong size tuple");
 					}
 
 				public:
@@ -169,7 +200,7 @@ namespace kerbal
 					typename rvalue_reference<I>::type
 					get() && KERBAL_NOEXCEPT
 					{
-						return super<I>::type::member();
+						return static_cast<tuple_impl&&>(*this).super<I>::type::member();
 					}
 
 					template <std::size_t I>
@@ -177,7 +208,7 @@ namespace kerbal
 					typename const_rvalue_reference<I>::type
 					get() const && KERBAL_NOEXCEPT
 					{
-						return super<I>::type::member();
+						return static_cast<const tuple_impl&&>(*this).super<I>::type::member();
 					}
 
 					template <std::size_t I>
@@ -201,6 +232,22 @@ namespace kerbal
 			public:
 				typedef typename super::TUPLE_SIZE			TUPLE_SIZE;
 				using super::super;
+
+				template <typename ... UArgs>
+				KERBAL_CONSTEXPR
+				explicit tuple(const tuple<UArgs...> & args) :
+						super(args)
+				{
+					static_assert(sizeof...(UArgs) == sizeof...(Args), "wrong size tuple");
+				}
+
+				template <typename ... UArgs>
+				KERBAL_CONSTEXPR
+				explicit tuple(tuple<UArgs...> && args) :
+						super(kerbal::compatibility::move(args))
+				{
+					static_assert(sizeof...(UArgs) == sizeof...(Args), "wrong size tuple");
+				}
 
 			protected:
 
@@ -328,10 +375,10 @@ namespace kerbal
 
 		template <typename ... Args>
 		KERBAL_CONSTEXPR
-		kerbal::utility::tuple<Args...>
+		kerbal::utility::tuple<typename kerbal::type_traits::remove_reference<Args>::type...>
 		make_tuple(Args&& ... args)
 		{
-			return kerbal::utility::tuple<Args...>(kerbal::utility::forward<Args>(args)...);
+			return kerbal::utility::tuple<typename kerbal::type_traits::remove_reference<Args>::type...>(kerbal::utility::forward<Args>(args)...);
 		}
 
 		template <typename ... Args>
