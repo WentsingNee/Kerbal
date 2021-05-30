@@ -86,6 +86,21 @@ namespace kerbal
 		{
 		};
 
+		template <>
+		struct __is_integral_helper<signed char> : kerbal::type_traits::true_type
+		{
+		};
+
+		template <>
+		struct __is_integral_helper<unsigned char> : kerbal::type_traits::true_type
+		{
+		};
+
+		template <>
+		struct __is_integral_helper<wchar_t> : kerbal::type_traits::true_type
+		{
+		};
+
 #	if __cplusplus >= 201103L
 
 		template <>
@@ -101,32 +116,7 @@ namespace kerbal
 #	endif
 
 		template <>
-		struct __is_integral_helper<signed char> : kerbal::type_traits::true_type
-		{
-		};
-
-		template <>
 		struct __is_integral_helper<short> : kerbal::type_traits::true_type
-		{
-		};
-
-		template <>
-		struct __is_integral_helper<int> : kerbal::type_traits::true_type
-		{
-		};
-
-		template <>
-		struct __is_integral_helper<long> : kerbal::type_traits::true_type
-		{
-		};
-
-		template <>
-		struct __is_integral_helper<long long> : kerbal::type_traits::true_type
-		{
-		};
-
-		template <>
-		struct __is_integral_helper<unsigned char> : kerbal::type_traits::true_type
 		{
 		};
 
@@ -136,12 +126,27 @@ namespace kerbal
 		};
 
 		template <>
+		struct __is_integral_helper<int> : kerbal::type_traits::true_type
+		{
+		};
+
+		template <>
 		struct __is_integral_helper<unsigned int> : kerbal::type_traits::true_type
 		{
 		};
 
 		template <>
+		struct __is_integral_helper<long> : kerbal::type_traits::true_type
+		{
+		};
+
+		template <>
 		struct __is_integral_helper<unsigned long> : kerbal::type_traits::true_type
+		{
+		};
+
+		template <>
+		struct __is_integral_helper<long long> : kerbal::type_traits::true_type
 		{
 		};
 
