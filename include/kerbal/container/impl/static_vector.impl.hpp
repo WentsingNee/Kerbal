@@ -199,7 +199,13 @@ namespace kerbal
 			// random access iterator, no throw copy constructible
 			// if any exception thrown, static_vector_base will do the cleanup job
 
-			if (last - first > this->max_size()) {
+			if (first >= last) {
+				return;
+			}
+
+			difference_type trip_count(kerbal::iterator::distance(first, last));
+
+			if (static_cast<size_type>(trip_count) > this->max_size()) {
 				last = first + this->max_size();
 			}
 
@@ -208,7 +214,6 @@ namespace kerbal
 				++first; \
 			} while (false)
 
-			difference_type trip_count(kerbal::iterator::distance(first, last));
 			difference_type remain(trip_count & 3);
 			for (trip_count >>= 2; trip_count > 0; --trip_count) {
 				EACH();
