@@ -9,21 +9,23 @@
  *   all rights reserved
  */
 
-#ifndef KERBAL_CONTAINER_STATIC_CONTAINER_EXCEPTION_HPP_
-#define KERBAL_CONTAINER_STATIC_CONTAINER_EXCEPTION_HPP_
+#ifndef KERBAL_CONTAINER_STATIC_CONTAINER_EXCEPTION_HPP
+#define KERBAL_CONTAINER_STATIC_CONTAINER_EXCEPTION_HPP
 
 #include <kerbal/utility/throw_this_exception.hpp>
 
 #include <stdexcept>
 
+
 namespace kerbal
 {
+
 	namespace container
 	{
 
 		class static_container_empty_exception:
-				public kerbal::utility::throw_this_exception_helper<static_container_empty_exception>,
-				public std::logic_error
+				public std::logic_error,
+				public kerbal::utility::throw_this_exception_helper<static_container_empty_exception>
 		{
 			public:
 				static_container_empty_exception() :
@@ -33,8 +35,8 @@ namespace kerbal
 		};
 
 		class static_container_full_exception:
-				public kerbal::utility::throw_this_exception_helper<static_container_full_exception>,
-				public std::logic_error
+				public std::logic_error,
+				public kerbal::utility::throw_this_exception_helper<static_container_full_exception>
 		{
 			public:
 				static_container_full_exception() :
@@ -52,4 +54,4 @@ namespace kerbal
 
 } // namespace kerbal
 
-#endif /* KERBAL_CONTAINER_STATIC_CONTAINER_EXCEPTION_HPP_ */
+#endif // KERBAL_CONTAINER_STATIC_CONTAINER_EXCEPTION_HPP
