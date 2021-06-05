@@ -20,20 +20,11 @@
 
 #	if KERBAL_COMPILER_ID == KERBAL_COMPILER_ID_GNU
 
-#		if KERBAL_GNU_VERSION_MEETS(4, 7, 1) // There is no official document to describe `__is_final`, just testing result
-#			define KERBAL_IS_FINAL(T) __is_final(T)
-#		elif KERBAL_GNU_PRIVATE_HAS_BUILTIN(__is_final)
-#			define KERBAL_IS_FINAL(T) __is_final(T)
-#		endif
+
 
 #	elif KERBAL_COMPILER_ID == KERBAL_COMPILER_ID_CLANG
 
-//		https://clang.llvm.org/docs/LanguageExtensions.html#type-trait-primitives
-#		if KERBAL_CLANG_PRIVATE_HAS_BUILTIN(__is_final)
-#			define KERBAL_IS_FINAL(T) __is_final(T)
-#		elif KERBAL_CLANG_PRIVATE_HAS_FEATURE(is_final) // >= 3.1
-#			define KERBAL_IS_FINAL(T) __is_final(T)
-#		endif
+
 
 #	elif KERBAL_COMPILER_ID == KERBAL_COMPILER_ID_MSVC
 

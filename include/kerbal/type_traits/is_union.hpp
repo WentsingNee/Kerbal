@@ -20,21 +20,11 @@
 
 #	if KERBAL_COMPILER_ID == KERBAL_COMPILER_ID_GNU
 
-//		https://gcc.gnu.org/onlinedocs/gcc-4.3.0/gcc/Type-Traits.html#Type-Traits
-#		if KERBAL_GNU_VERSION_MEETS(4, 3, 0)
-#			define KERBAL_IS_UNION(T) __is_union(T)
-#		elif KERBAL_GNU_PRIVATE_HAS_BUILTIN(__is_union)
-#			define KERBAL_IS_UNION(T) __is_union(T)
-#		endif
+
 
 #	elif KERBAL_COMPILER_ID == KERBAL_COMPILER_ID_CLANG
 
-//		https://clang.llvm.org/docs/LanguageExtensions.html#type-trait-primitives
-#		if KERBAL_CLANG_PRIVATE_HAS_BUILTIN(__is_union)
-#			define KERBAL_IS_UNION(T) __is_union(T)
-#		elif KERBAL_CLANG_PRIVATE_HAS_FEATURE(is_union)
-#			define KERBAL_IS_UNION(T) __is_union(T)
-#		endif
+
 
 #	elif KERBAL_COMPILER_ID == KERBAL_COMPILER_ID_MSVC
 
