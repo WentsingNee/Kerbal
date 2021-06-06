@@ -12,8 +12,12 @@
 #ifndef KERBAL_MEMORY_ALLOCATOR_TRAITS_HPP
 #define KERBAL_MEMORY_ALLOCATOR_TRAITS_HPP
 
+#include <kerbal/compatibility/constexpr.hpp>
+#include <kerbal/compatibility/noexcept.hpp>
 #include <kerbal/memory/pointer_traits.hpp>
+#include <kerbal/numeric/numeric_limits.hpp>
 #include <kerbal/type_traits/integral_constant.hpp>
+#include <kerbal/type_traits/sign_deduction.hpp>
 #include <kerbal/type_traits/void_type.hpp>
 #include <kerbal/utility/declval.hpp>
 
@@ -70,7 +74,9 @@ namespace kerbal
 					typedef typename Alloc::pointer type;
 			};
 
-		}
+		} // namespace detail
+
+
 
 		template <typename Alloc, typename = kerbal::type_traits::void_type<>::type>
 		struct allocator_has_def_const_pointer: kerbal::type_traits::false_type
@@ -117,7 +123,9 @@ namespace kerbal
 					typedef typename Alloc::const_pointer type;
 			};
 
-		}
+		} // namespace detail
+
+
 
 		template <typename Alloc, typename = kerbal::type_traits::void_type<>::type>
 		struct allocator_has_def_void_pointer: kerbal::type_traits::false_type
@@ -149,7 +157,9 @@ namespace kerbal
 					typedef typename Alloc::void_pointer type;
 			};
 
-		}
+		} // namespace detail
+
+
 
 		template <typename Alloc, typename = kerbal::type_traits::void_type<>::type>
 		struct allocator_has_def_const_void_pointer: kerbal::type_traits::false_type
@@ -181,7 +191,9 @@ namespace kerbal
 					typedef typename Alloc::const_void_pointer type;
 			};
 
-		}
+		} // namespace detail
+
+
 
 		template <typename Alloc, typename = kerbal::type_traits::void_type<>::type>
 		struct allocator_has_def_difference_type: kerbal::type_traits::false_type
@@ -213,7 +225,44 @@ namespace kerbal
 					typedef typename Alloc::difference_type type;
 			};
 
-		}
+		} // namespace detail
+
+
+
+		template <typename Alloc, typename = kerbal::type_traits::void_type<>::type>
+		struct allocator_has_def_size_type: kerbal::type_traits::false_type
+		{
+		};
+
+		template <typename Alloc>
+		struct allocator_has_def_size_type<Alloc, typename kerbal::type_traits::void_type<typename Alloc::size_type>::type>
+				: kerbal::type_traits::true_type
+		{
+		};
+
+		namespace detail
+		{
+
+			template <typename Alloc, bool = kerbal::memory::allocator_has_def_size_type<Alloc>::value>
+			struct allocator_size_type_traits_helper
+			{
+				private:
+					typedef typename allocator_pointer_traits_helper<Alloc>::type pointer;
+					typedef typename kerbal::memory::pointer_traits<pointer>::difference_type difference_type;
+
+				public:
+					typedef typename kerbal::type_traits::make_unsigned<difference_type>::type type;
+			};
+
+			template <typename Alloc>
+			struct allocator_size_type_traits_helper<Alloc, true>
+			{
+					typedef typename Alloc::size_type type;
+			};
+
+		} // namespace detail
+
+
 
 		template <typename Alloc, typename = kerbal::type_traits::void_type<>::type>
 		struct allocator_has_def_propagate_on_container_copy_assignment: kerbal::type_traits::false_type
@@ -243,7 +292,9 @@ namespace kerbal
 			{
 			};
 
-		}
+		} // namespace detail
+
+
 
 		template <typename Alloc, typename = kerbal::type_traits::void_type<>::type>
 		struct allocator_has_def_propagate_on_container_move_assignment: kerbal::type_traits::false_type
@@ -273,7 +324,9 @@ namespace kerbal
 			{
 			};
 
-		}
+		} // namespace detail
+
+
 
 		template <typename Alloc, typename = kerbal::type_traits::void_type<>::type>
 		struct allocator_has_def_propagate_on_container_swap: kerbal::type_traits::false_type
@@ -303,7 +356,9 @@ namespace kerbal
 			{
 			};
 
-		}
+		} // namespace detail
+
+
 
 		template <typename Alloc, typename , typename = kerbal::type_traits::void_type<>::type>
 		struct allocator_has_def_rebind_alloc: kerbal::type_traits::false_type
@@ -366,6 +421,7 @@ namespace kerbal
 			};
 
 		} // namespace detail
+
 
 
 #	if __cplusplus >= 201103L
@@ -450,6 +506,8 @@ namespace kerbal
 		} // namespace detail
 
 #	endif // __cplusplus >= 201103L
+
+
 
 #	if __cplusplus >= 201103L
 
@@ -543,6 +601,102 @@ namespace kerbal
 
 		} // namespace detail
 
+
+
+#	if __cplusplus >= 201103L
+
+		namespace detail
+		{
+
+			template <typename Alloc, typename = kerbal::type_traits::void_type<>::type>
+			struct allocator_has_max_size_helper : kerbal::type_traits::false_type
+			{
+			};
+
+			template <typename Alloc>
+			struct allocator_has_max_size_helper<Alloc, typename kerbal::type_traits::void_type<
+																	decltype(kerbal::utility::declval<const Alloc>().max_size())
+														>::type>
+					: kerbal::type_traits::true_type
+			{
+			};
+
+		}; // namespace detail
+
+		template <typename Alloc>
+		struct allocator_has_max_size : detail::allocator_has_max_size_helper<Alloc>
+		{
+		};
+
+#	endif
+
+#	if __cplusplus < 201103L
+
+		template <typename Alloc>
+		struct allocator_could_use_max_size : kerbal::type_traits::false_type
+		{
+		};
+
+#	else
+
+		template <typename Alloc>
+		struct allocator_could_use_max_size : kerbal::memory::allocator_has_max_size<Alloc>
+		{
+		};
+
+#	if __cplusplus >= 201703L
+
+		template <typename T>
+		struct allocator_could_use_max_size<std::allocator<T> >: kerbal::type_traits::false_type
+		{
+		};
+
+#	endif
+
+#	endif // __cplusplus < 201103L
+
+		namespace detail
+		{
+
+			template <typename Alloc, bool = kerbal::memory::allocator_could_use_max_size<Alloc>::value>
+			struct allocator_traits_max_size_helper
+			{
+				private:
+					typedef typename Alloc::value_type value_type;
+					typedef typename kerbal::memory::detail::allocator_size_type_traits_helper<Alloc>::type size_type;
+
+				public:
+					KERBAL_CONSTEXPR
+					static size_type max_size(const Alloc & /*alloc*/)
+							KERBAL_CONDITIONAL_NOEXCEPT(
+									noexcept(kerbal::numeric::numeric_limits<size_type>::MAX::value / sizeof(value_type))
+							)
+					{
+						return kerbal::numeric::numeric_limits<size_type>::MAX::value / sizeof(value_type);
+					}
+			};
+
+			template <typename Alloc>
+			struct allocator_traits_max_size_helper<Alloc, true>
+			{
+				private:
+					typedef typename kerbal::memory::detail::allocator_size_type_traits_helper<Alloc>::type size_type;
+
+				public:
+					KERBAL_CONSTEXPR
+					static size_type max_size(const Alloc & alloc)
+							KERBAL_CONDITIONAL_NOEXCEPT(
+									noexcept(kerbal::utility::declval<const Alloc>().max_size())
+							)
+					{
+						return alloc.max_size();
+					}
+			};
+
+		} // namespace detail
+
+
+
 		template <typename Alloc>
 		struct allocator_traits
 		{
@@ -560,13 +714,13 @@ namespace kerbal
 
 				typedef typename kerbal::memory::detail::allocator_difference_type_traits_helper<allocator_type>::type difference_type;
 
+				typedef typename kerbal::memory::detail::allocator_size_type_traits_helper<allocator_type>::type size_type;
+
 				typedef kerbal::memory::detail::allocator_propagate_on_container_copy_assignment_traits_helper<allocator_type> propagate_on_container_copy_assignment;
 
 				typedef kerbal::memory::detail::allocator_propagate_on_container_move_assignment_traits_helper<allocator_type> propagate_on_container_move_assignment;
 
 				typedef kerbal::memory::detail::allocator_propagate_on_container_swap_traits_helper<allocator_type> propagate_on_container_swap;
-
-				typedef size_t size_type;
 
 				template <typename Up>
 				struct rebind_alloc
@@ -649,6 +803,15 @@ namespace kerbal
 								)
 				{
 					kerbal::memory::detail::allocator_traits_destroy_helper<Alloc>::destroy(alloc, p);
+				}
+
+				KERBAL_CONSTEXPR
+				static size_type max_size(const Alloc & alloc)
+								KERBAL_CONDITIONAL_NOEXCEPT(
+										noexcept(kerbal::memory::detail::allocator_traits_max_size_helper<Alloc>::max_size(alloc))
+								)
+				{
+					return kerbal::memory::detail::allocator_traits_max_size_helper<Alloc>::max_size(alloc);
 				}
 
 		};
