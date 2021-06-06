@@ -265,7 +265,7 @@ namespace kerbal
 		array<Tp, N>::at(size_type index)
 		{
 			if (index >= this->size()) {
-				kerbal::utility::throw_this_exception_helper<std::out_of_range>::throw_this_exception("range check fail in static_array");
+				kerbal::utility::throw_this_exception_helper<std::out_of_range>::throw_this_exception((const char*)"range check fail in static_array");
 			}
 			return (*this)[index];
 		}
@@ -275,7 +275,7 @@ namespace kerbal
 		array<Tp, N>::at(size_type index) const
 		{
 			if (index >= this->size()) {
-				kerbal::utility::throw_this_exception_helper<std::out_of_range>::throw_this_exception("range check fail in static_array");
+				kerbal::utility::throw_this_exception_helper<std::out_of_range>::throw_this_exception((const char*)"range check fail in static_array");
 			}
 			return (*this)[index];
 		}
