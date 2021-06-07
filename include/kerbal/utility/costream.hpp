@@ -15,7 +15,9 @@
 #include <iostream>
 
 #ifdef _WIN32
-#	define NOMINMAX
+#	ifndef NOMINMAX
+#		define NOMINMAX
+#	endif
 #	include <windows.h>
 #endif
 
