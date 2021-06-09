@@ -27,14 +27,12 @@
 #	include <type_traits>
 #endif
 
+
 namespace kerbal
 {
 
 	namespace iterator
 	{
-
-		template <typename Iter>
-		class reverse_iterator;
 
 		namespace detail
 		{
@@ -45,19 +43,28 @@ namespace kerbal
 			};
 
 			template <typename Tp>
-			struct reverse_iterator_base_is_inplace<Tp*> : kerbal::type_traits::true_type
+			struct reverse_iterator_base_is_inplace<Tp *> : kerbal::type_traits::true_type
 			{
 			};
 
-			template <typename BidirectionalIterator,
-						bool inplace = reverse_iterator_base_is_inplace<
-										typename kerbal::type_traits::remove_cv<BidirectionalIterator>::type
-									>::value>
-			class __reverse_iterator_base;
+		} // namespace detail
+
+		template <typename Iter, bool IsInplace = kerbal::iterator::detail::reverse_iterator_base_is_inplace<
+										typename kerbal::type_traits::remove_cv<Iter>::type
+								>::value
+		>
+		class reverse_iterator;
+
+
+		namespace detail
+		{
+
+			template <typename BidirectionalIterator, bool IsInplace>
+			class reverse_iterator_base;
 
 
 			template <typename BidirectionalIterator>
-			class __reverse_iterator_base<BidirectionalIterator, false>
+			class reverse_iterator_base<BidirectionalIterator, false>
 			{
 				private:
 					typedef BidirectionalIterator iterator_type;
@@ -72,7 +79,7 @@ namespace kerbal
 					iterator_type iter;
 
 					KERBAL_CONSTEXPR
-					explicit __reverse_iterator_base()
+					explicit reverse_iterator_base()
 							KERBAL_CONDITIONAL_NOEXCEPT(
 									std::is_nothrow_default_constructible<iterator_type>::value
 							)
@@ -81,7 +88,7 @@ namespace kerbal
 					}
 
 					KERBAL_CONSTEXPR
-					explicit __reverse_iterator_base(const iterator_type & iter)
+					explicit reverse_iterator_base(const iterator_type & iter)
 							KERBAL_CONDITIONAL_NOEXCEPT(
 									std::is_nothrow_copy_constructible<iterator_type>::value
 							)
@@ -104,7 +111,7 @@ namespace kerbal
 			};
 
 			template <typename BidirectionalIterator>
-			class __reverse_iterator_base<BidirectionalIterator, true>
+			class reverse_iterator_base<BidirectionalIterator, true>
 			{
 				private:
 					typedef BidirectionalIterator iterator_type;
@@ -119,13 +126,13 @@ namespace kerbal
 					iterator_type iter;
 
 					KERBAL_CONSTEXPR
-					explicit __reverse_iterator_base()
+					explicit reverse_iterator_base()
 							: iter(kerbal::iterator::prev(iterator_type()))
 					{
 					}
 
 					KERBAL_CONSTEXPR
-					explicit __reverse_iterator_base(const iterator_type & iter)
+					explicit reverse_iterator_base(const iterator_type & iter)
 							: iter(kerbal::iterator::prev(iter))
 					{
 					}
@@ -144,31 +151,31 @@ namespace kerbal
 					}
 			};
 
-			template <typename BidirectionalIterator, typename IteratorTag>
-			class __reverse_iterator;
+			template <typename BidirectionalIterator, typename IteratorTag, bool IsInplace>
+			class reverse_iterator_impl;
 
-			template <typename Iter>
-			class __reverse_iterator<Iter, std::bidirectional_iterator_tag> :
-					public kerbal::iterator::detail::__reverse_iterator_base<Iter>,
+			template <typename Iter, bool IsInplace>
+			class reverse_iterator_impl<Iter, std::bidirectional_iterator_tag, IsInplace> :
+					public kerbal::iterator::detail::reverse_iterator_base<Iter, IsInplace>,
 
 					//input iterator interface
 					public kerbal::operators::dereferenceable<
-							kerbal::iterator::reverse_iterator<Iter>,
+							kerbal::iterator::reverse_iterator<Iter, IsInplace>,
 							typename kerbal::iterator::iterator_traits<Iter>::pointer
 					>, // it->
 					public kerbal::operators::incrementable<
-							kerbal::iterator::reverse_iterator<Iter>
+							kerbal::iterator::reverse_iterator<Iter, IsInplace>
 					>, // it++
 
 					//bidirectional iterator interface
 					public kerbal::operators::decrementable<
-							kerbal::iterator::reverse_iterator<Iter>
+							kerbal::iterator::reverse_iterator<Iter, IsInplace>
 					> // it--
 			{
 				private:
-					typedef kerbal::iterator::detail::__reverse_iterator_base<Iter> super;
-					typedef __reverse_iterator this_type;
-					typedef kerbal::iterator::reverse_iterator<Iter> reverse_iterator;
+					typedef kerbal::iterator::detail::reverse_iterator_base<Iter, IsInplace> super;
+					typedef reverse_iterator_impl this_type;
+					typedef kerbal::iterator::reverse_iterator<Iter, IsInplace> reverse_iterator;
 					typedef kerbal::iterator::iterator_traits<Iter> base_iterator_traits;
 
 				protected:
@@ -180,13 +187,13 @@ namespace kerbal
 
 				protected:
 					KERBAL_CONSTEXPR
-					explicit __reverse_iterator()
+					explicit reverse_iterator_impl()
 							: super()
 					{
 					}
 
 					KERBAL_CONSTEXPR
-					explicit __reverse_iterator(const Iter& iter)
+					explicit reverse_iterator_impl(const Iter& iter)
 							: super(iter)
 					{
 					}
@@ -231,27 +238,27 @@ namespace kerbal
 
 			};
 
-			template <typename Iter>
-			class __reverse_iterator<Iter, std::random_access_iterator_tag> :
-					public __reverse_iterator<Iter, std::bidirectional_iterator_tag>,
+			template <typename Iter, bool IsInplace>
+			class reverse_iterator_impl<Iter, std::random_access_iterator_tag, IsInplace> :
+					public reverse_iterator_impl<Iter, std::bidirectional_iterator_tag, IsInplace>,
 
 					public kerbal::operators::addable<
-							kerbal::iterator::reverse_iterator<Iter>,
+							kerbal::iterator::reverse_iterator<Iter, IsInplace>,
 							typename kerbal::iterator::iterator_traits<Iter>::difference_type
 					>, // it + N
 					public kerbal::operators::addable_left<
-							kerbal::iterator::reverse_iterator<Iter>,
+							kerbal::iterator::reverse_iterator<Iter, IsInplace>,
 							typename kerbal::iterator::iterator_traits<Iter>::difference_type
 					>, // N + it
 					public kerbal::operators::subtractable<
-							kerbal::iterator::reverse_iterator<Iter>,
+							kerbal::iterator::reverse_iterator<Iter, IsInplace>,
 							typename kerbal::iterator::iterator_traits<Iter>::difference_type
 					> // it - N
 			{
 				private:
-					typedef __reverse_iterator<Iter, std::bidirectional_iterator_tag> super;
-					typedef __reverse_iterator this_type;
-					typedef kerbal::iterator::reverse_iterator<Iter> reverse_iterator;
+					typedef reverse_iterator_impl<Iter, std::bidirectional_iterator_tag, IsInplace> super;
+					typedef reverse_iterator_impl this_type;
+					typedef kerbal::iterator::reverse_iterator<Iter, IsInplace> reverse_iterator;
 					typedef kerbal::iterator::iterator_traits<Iter> base_iterator_traits;
 
 				protected:
@@ -263,13 +270,13 @@ namespace kerbal
 
 				protected:
 					KERBAL_CONSTEXPR
-					explicit __reverse_iterator()
+					explicit reverse_iterator_impl()
 							: super()
 					{
 					}
 
 					KERBAL_CONSTEXPR
-					explicit __reverse_iterator(const Iter& iter)
+					explicit reverse_iterator_impl(const Iter& iter)
 							: super(iter)
 					{
 					}
@@ -340,15 +347,15 @@ namespace kerbal
 
 		} // namespace detail
 
-		template <typename Iter>
+		template <typename Iter, bool IsInplace>
 		class reverse_iterator :
-				public kerbal::iterator::detail::__reverse_iterator<Iter, typename kerbal::iterator::iterator_traits<Iter>::iterator_category>
+				public kerbal::iterator::detail::reverse_iterator_impl<Iter, typename kerbal::iterator::iterator_traits<Iter>::iterator_category, IsInplace>
 		{
 			public:
 				typedef Iter iterator_type;
 
 			private:
-				typedef kerbal::iterator::detail::__reverse_iterator<iterator_type, typename kerbal::iterator::iterator_traits<iterator_type>::iterator_category> super;
+				typedef kerbal::iterator::detail::reverse_iterator_impl<iterator_type, typename kerbal::iterator::iterator_traits<iterator_type>::iterator_category, IsInplace> super;
 
 			public:
 				typedef typename super::iterator_category		iterator_category;
@@ -389,10 +396,10 @@ namespace kerbal
 
 		template <typename Tp, size_t N>
 		KERBAL_CONSTEXPR
-		reverse_iterator<Tp*>
+		reverse_iterator<Tp*, false>
 		make_reverse_iterator(Tp (&arr) [N])
 		{
-			return reverse_iterator<Tp*>(arr);
+			return reverse_iterator<Tp*, false>(arr);
 		}
 
 	} // namespace iterator

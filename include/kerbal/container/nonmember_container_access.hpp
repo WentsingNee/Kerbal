@@ -348,34 +348,34 @@ namespace kerbal
 
 		template <typename Tp, size_t N>
 		KERBAL_CONSTEXPR
-		kerbal::iterator::reverse_iterator<Tp*>
+		kerbal::iterator::reverse_iterator<Tp*, false>
 		rbegin(Tp (&arr)[N]) KERBAL_NOEXCEPT
 		{
-			return kerbal::iterator::reverse_iterator<Tp*>(arr + N);
+			return kerbal::iterator::reverse_iterator<Tp*, false>(arr + N);
 		}
 
 		template <typename Tp, size_t N>
 		KERBAL_CONSTEXPR
-		kerbal::iterator::reverse_iterator<const Tp*>
+		kerbal::iterator::reverse_iterator<const Tp*, false>
 		crbegin(Tp (&arr)[N]) KERBAL_NOEXCEPT
 		{
-			return kerbal::iterator::reverse_iterator<const Tp*>(arr + N);
+			return kerbal::iterator::reverse_iterator<const Tp*, false>(arr + N);
 		}
 
 		template <typename Tp, size_t N>
 		KERBAL_CONSTEXPR
-		kerbal::iterator::reverse_iterator<Tp*>
+		kerbal::iterator::reverse_iterator<Tp*, false>
 		rend(Tp (&arr)[N]) KERBAL_NOEXCEPT
 		{
-			return kerbal::iterator::reverse_iterator<Tp*>(arr);
+			return kerbal::iterator::reverse_iterator<Tp*, false>(arr);
 		}
 
 		template <typename Tp, size_t N>
 		KERBAL_CONSTEXPR
-		kerbal::iterator::reverse_iterator<const Tp*>
+		kerbal::iterator::reverse_iterator<const Tp*, false>
 		crend(Tp (&arr)[N]) KERBAL_NOEXCEPT
 		{
-			return kerbal::iterator::reverse_iterator<const Tp*>(arr);
+			return kerbal::iterator::reverse_iterator<const Tp*, false>(arr);
 		}
 
 		template <typename Tp, size_t N>
