@@ -137,6 +137,27 @@ namespace kerbal
 					return this->_K_block;
 				}
 
+			public:
+
+				template <typename Func>
+				KERBAL_CONSTEXPR14
+				void for_each(Func f) const
+				{
+					for (size_type i = 0; i < SIZE::value; ++i) {
+						f(i, this->test(i));
+					}
+				}
+
+				template <typename Func>
+				KERBAL_CONSTEXPR14
+				void for_each(size_type left, size_type len, Func f) const
+				{
+					size_type right = (SIZE::value - left < len) ? SIZE::value : (left + len);
+					for (size_type i = left; i < right; ++i) {
+						f(i, this->test(i));
+					}
+				}
+
 			private:
 
 				template <bool c>
