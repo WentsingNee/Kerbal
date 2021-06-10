@@ -213,7 +213,7 @@ namespace kerbal
 
 				template <bool c>
 				KERBAL_CONSTEXPR14
-				typename kerbal::type_traits::enable_if<!c, size_t>::type
+				typename kerbal::type_traits::enable_if<!c, size_type>::type
 				_K_count_impl() const KERBAL_NOEXCEPT
 				{
 					return bitset_size_unrelated::count_chunk(_K_block, BLOCK_SIZE::value - 1) +
@@ -222,7 +222,7 @@ namespace kerbal
 
 				template <bool c>
 				KERBAL_CONSTEXPR14
-				typename kerbal::type_traits::enable_if<c, size_t>::type
+				typename kerbal::type_traits::enable_if<c, size_type>::type
 				_K_count_impl() const KERBAL_NOEXCEPT
 				{
 					return bitset_size_unrelated::count_chunk(_K_block, BLOCK_SIZE::value);
@@ -231,7 +231,7 @@ namespace kerbal
 			public:
 
 				KERBAL_CONSTEXPR14
-				size_t count() const KERBAL_NOEXCEPT
+				size_type count() const KERBAL_NOEXCEPT
 				{
 					return _K_count_impl<IS_DIVISIBLE::value>();
 				}
@@ -390,7 +390,7 @@ namespace kerbal
 				static_bitset operator~() KERBAL_NOEXCEPT
 				{
 					static_bitset r;
-					for (size_t i = 0; i < BLOCK_SIZE::value; ++i) {
+					for (size_type i = 0; i < BLOCK_SIZE::value; ++i) {
 						r._K_block[i] = ~this->_K_block[i];
 					}
 					return r;
