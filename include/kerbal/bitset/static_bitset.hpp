@@ -458,6 +458,27 @@ namespace kerbal
 				}
 
 				KERBAL_CONSTEXPR14
+				static_bitset& operator>>=(size_type n) KERBAL_NOEXCEPT
+				{
+					if (n >= SIZE::value) {
+						this->reset();
+					} else {
+						if (n % BITS_PER_BLOCK::value == 0) {
+							block_size_type shift_block_cnt = n / BITS_PER_BLOCK::value;
+							kerbal::algorithm::copy_backward(this->_K_block, this->_K_block + (BLOCK_SIZE::value - shift_block_cnt), this->_K_block + BLOCK_SIZE::value);
+						} else {
+							size_type i = SIZE::value - n;
+							while (i != 0) {
+								--i;
+								this->set(i + n, this->test(i));
+							}
+						}
+						this->reset(0, n);
+					}
+					return *this;
+				}
+
+				KERBAL_CONSTEXPR14
 				void swap(static_bitset & ano) KERBAL_NOEXCEPT
 				{
 					kerbal::algorithm::swap(this->_K_block, ano._K_block);
