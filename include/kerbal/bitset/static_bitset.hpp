@@ -33,6 +33,9 @@ namespace kerbal
 	namespace bitset
 	{
 
+		/*
+		 *  [63 ... 0] [127 ... 64] [191 ... 128] [255 ... 192]
+		 */
 		template <size_t N, typename Block = KERBAL_BITSET_DEFAULT_BLOCK_TYPE>
 		class static_bitset: protected detail::bitset_size_unrelated<Block>
 		{
