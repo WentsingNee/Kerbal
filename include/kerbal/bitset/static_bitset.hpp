@@ -52,9 +52,9 @@ namespace kerbal
 						N % BITS_PER_BLOCK::value == 0
 				>																IS_DIVISIBLE;
 
-				typedef typename bitset_size_unrelated::block_width_type		block_width_type;
+				typedef typename bitset_size_unrelated::block_size_type		block_size_type;
 				typedef kerbal::type_traits::integral_constant<
-						block_width_type,
+						block_size_type,
 						N / BITS_PER_BLOCK::value + (N % BITS_PER_BLOCK::value != 0)
 				>																BLOCK_SIZE;
 
@@ -63,11 +63,11 @@ namespace kerbal
 
 				typedef typename bitset_size_unrelated::ALL_ONE					ALL_ONE;
 				typedef kerbal::type_traits::integral_constant<
-						block_width_type,
+						block_size_type,
 						N % BITS_PER_BLOCK::value
 				>																TAIL_SIZE;
 				typedef kerbal::type_traits::integral_constant<
-						block_width_type,
+						block_size_type,
 						BITS_PER_BLOCK::value - TAIL_SIZE::value
 				>																WASTE_SIZE;
 
@@ -97,7 +97,7 @@ namespace kerbal
 				}
 
 				KERBAL_CONSTEXPR
-				block_width_type block_size() const KERBAL_NOEXCEPT
+				block_size_type block_size() const KERBAL_NOEXCEPT
 				{
 					return BLOCK_SIZE::value;
 				}
@@ -246,8 +246,8 @@ namespace kerbal
 				KERBAL_CONSTEXPR14
 				static_bitset& reset(size_type pos) KERBAL_NOEXCEPT
 				{
-					size_t idx = pos / BITS_PER_BLOCK::value;
-					size_t ofs = pos % BITS_PER_BLOCK::value;
+					block_size_type idx = pos / BITS_PER_BLOCK::value;
+					block_size_type ofs = pos % BITS_PER_BLOCK::value;
 					_K_block[idx] = kerbal::numeric::reset_bit(_K_block[idx], ofs);
 					return *this;
 				}
@@ -271,8 +271,8 @@ namespace kerbal
 				KERBAL_CONSTEXPR14
 				static_bitset& set(size_type pos) KERBAL_NOEXCEPT
 				{
-					size_t idx = pos / BITS_PER_BLOCK::value;
-					size_t ofs = pos % BITS_PER_BLOCK::value;
+					block_size_type idx = pos / BITS_PER_BLOCK::value;
+					block_size_type ofs = pos % BITS_PER_BLOCK::value;
 					_K_block[idx] = kerbal::numeric::set_bit(_K_block[idx], ofs);
 					return *this;
 				}
@@ -298,8 +298,8 @@ namespace kerbal
 				KERBAL_CONSTEXPR14
 				static_bitset& flip(size_type pos) KERBAL_NOEXCEPT
 				{
-					size_t idx = pos / BITS_PER_BLOCK::value;
-					size_t ofs = pos % BITS_PER_BLOCK::value;
+					block_size_type idx = pos / BITS_PER_BLOCK::value;
+					block_size_type ofs = pos % BITS_PER_BLOCK::value;
 					_K_block[idx] = kerbal::numeric::flip(_K_block[idx], ofs);
 					return *this;
 				}

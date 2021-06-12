@@ -42,13 +42,13 @@ namespace kerbal
 				public:
 					typedef Block										block_type;
 					typedef detail::bitset_bits_per_block<Block>		BITS_PER_BLOCK;
-					typedef size_t										block_width_type;
+					typedef size_t										block_size_type;
 
 				protected:
 					typedef kerbal::type_traits::integral_constant<block_type, static_cast<block_type>(~static_cast<block_type>(0))> ALL_ONE;
 
 					KERBAL_CONSTEXPR14
-					static bool all_chunk(const block_type block[], block_width_type trunk_size) KERBAL_NOEXCEPT
+					static bool all_chunk(const block_type block[], block_size_type trunk_size) KERBAL_NOEXCEPT
 					{
 
 #		ifndef KERBAL_STATIC_BITSET_ALL_CHUNK_POLICY
@@ -155,7 +155,7 @@ namespace kerbal
 					}
 
 					KERBAL_CONSTEXPR14
-					static bool any_chunk(const block_type block[], block_width_type trunk_size) KERBAL_NOEXCEPT
+					static bool any_chunk(const block_type block[], block_size_type trunk_size) KERBAL_NOEXCEPT
 					{
 
 #		ifndef KERBAL_STATIC_BITSET_ANY_CHUNK_POLICY
@@ -259,7 +259,7 @@ namespace kerbal
 					}
 
 					KERBAL_CONSTEXPR14
-					static size_t count_chunk(const block_type block[], block_width_type block_width) KERBAL_NOEXCEPT
+					static size_t count_chunk(const block_type block[], block_size_type block_width) KERBAL_NOEXCEPT
 					{
 						size_t cnt = 0;
 
@@ -291,19 +291,19 @@ namespace kerbal
 					}
 
 					KERBAL_CONSTEXPR14
-					static void reset_chunk(block_type block[], block_width_type block_width) KERBAL_NOEXCEPT
+					static void reset_chunk(block_type block[], block_size_type block_width) KERBAL_NOEXCEPT
 					{
 						kerbal::algorithm::fill(block, block + block_width, static_cast<block_type>(0));
 					}
 
 					KERBAL_CONSTEXPR14
-					static void set_chunk(block_type block[], block_width_type block_width) KERBAL_NOEXCEPT
+					static void set_chunk(block_type block[], block_size_type block_width) KERBAL_NOEXCEPT
 					{
 						kerbal::algorithm::fill(block, block + block_width, ALL_ONE::value);
 					}
 
 					KERBAL_CONSTEXPR14
-					static void flip_chunk(block_type block[], block_width_type block_width) KERBAL_NOEXCEPT
+					static void flip_chunk(block_type block[], block_size_type block_width) KERBAL_NOEXCEPT
 					{
 
 #				define EACH(idx) block[idx] = ~block[idx]
@@ -332,7 +332,7 @@ namespace kerbal
 					}
 
 					KERBAL_CONSTEXPR14
-					static bool equal_chunk(const block_type block[], const block_type ano[], block_width_type trunk_size) KERBAL_NOEXCEPT
+					static bool equal_chunk(const block_type block[], const block_type ano[], block_size_type trunk_size) KERBAL_NOEXCEPT
 					{
 						return kerbal::algorithm::sequence_equal_to(
 								block, block + trunk_size,
@@ -341,7 +341,7 @@ namespace kerbal
 					}
 
 					KERBAL_CONSTEXPR14
-					static void bit_and_assign(block_type block[], const block_type ano[], block_width_type block_width) KERBAL_NOEXCEPT
+					static void bit_and_assign(block_type block[], const block_type ano[], block_size_type block_width) KERBAL_NOEXCEPT
 					{
 
 #				define EACH(idx) block[idx] &= ano[idx]
@@ -370,7 +370,7 @@ namespace kerbal
 					}
 
 					KERBAL_CONSTEXPR14
-					static void bit_or_assign(block_type block[], const block_type ano[], block_width_type block_width) KERBAL_NOEXCEPT
+					static void bit_or_assign(block_type block[], const block_type ano[], block_size_type block_width) KERBAL_NOEXCEPT
 					{
 
 #				define EACH(idx) block[idx] |= ano[idx]
@@ -399,7 +399,7 @@ namespace kerbal
 					}
 
 					KERBAL_CONSTEXPR14
-					static void bit_xor_assign(block_type block[], const block_type ano[], block_width_type block_width) KERBAL_NOEXCEPT
+					static void bit_xor_assign(block_type block[], const block_type ano[], block_size_type block_width) KERBAL_NOEXCEPT
 					{
 
 #				define EACH(idx) block[idx] ^= ano[idx]
