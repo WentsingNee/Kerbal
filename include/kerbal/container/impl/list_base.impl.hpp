@@ -1500,6 +1500,144 @@ namespace kerbal
 				return r;
 			}
 
+			template <typename Tp>
+			template <typename BinaryPredict>
+			KERBAL_CONSTEXPR20
+			void list_allocator_unrelated<Tp>::_K_set_difference(list_allocator_unrelated & l1, const list_allocator_unrelated & l2, list_allocator_unrelated & lto, BinaryPredict cmp)
+			{
+				const_iterator it1(l1.cbegin());
+				const_iterator it2(l2.cbegin());
+				const_iterator const end1(l1.cend());
+				const_iterator const end2(l2.cend());
+
+				while (it1 != end1) {
+					if (it2 != end2) {
+						if (cmp(*it1, *it2)) { // *it1 < *it2
+							lto._K_splice(lto.cend(), it1++);
+						} else if (cmp(*it2, *it1)) { // *it2 < *it1
+							++it2;
+						} else { // *it1 == *first2
+							++it1;
+							++it2;
+						}
+					} else {
+						lto._K_splice(lto.cend(), it1, end1);
+						break;
+					}
+				}
+			}
+
+			template <typename Tp>
+			KERBAL_CONSTEXPR20
+			void list_allocator_unrelated<Tp>::_K_set_difference(list_allocator_unrelated & l1, const list_allocator_unrelated & l2, list_allocator_unrelated & lto)
+			{
+				list_allocator_unrelated::_K_set_difference(l1, l2, lto, std::less<value_type>());
+			}
+
+			template <typename Tp>
+			template <typename BinaryPredict>
+			KERBAL_CONSTEXPR20
+			void list_allocator_unrelated<Tp>::_K_set_intersection(list_allocator_unrelated & l1, list_allocator_unrelated & l2, list_allocator_unrelated & lto, BinaryPredict cmp)
+			{
+				const_iterator it1(l1.cbegin());
+				const_iterator it2(l2.cbegin());
+				const_iterator const end1(l1.cend());
+				const_iterator const end2(l2.cend());
+
+				while (it1 != end1) {
+					if (it2 != end2) {
+						if (cmp(*it1, *it2)) { // *it1 < *it2
+							++it1;
+						} else if (cmp(*it2, *it1)) { // *it2 < *it1
+							++it2;
+						} else { // *it1 == *first2
+							lto._K_splice(lto.cend(), it1++);
+							++it2;
+						}
+					} else {
+						break;
+					}
+				}
+			}
+
+			template <typename Tp>
+			KERBAL_CONSTEXPR20
+			void list_allocator_unrelated<Tp>::_K_set_intersection(list_allocator_unrelated & l1, list_allocator_unrelated & l2, list_allocator_unrelated & lto)
+			{
+				list_allocator_unrelated::_K_set_intersection(l1, l2, lto, std::less<value_type>());
+			}
+
+			template <typename Tp>
+			template <typename BinaryPredict>
+			KERBAL_CONSTEXPR20
+			void list_allocator_unrelated<Tp>::_K_set_symmetric_difference(list_allocator_unrelated & l1, list_allocator_unrelated & l2, list_allocator_unrelated & lto, BinaryPredict cmp)
+			{
+				const_iterator it1(l1.cbegin());
+				const_iterator it2(l2.cbegin());
+				const_iterator const end1(l1.cend());
+				const_iterator const end2(l2.cend());
+
+				while (it1 != end1) {
+					if (it2 != end2) {
+						if (cmp(*it1, *it2)) { // *it1 < *it2
+							lto._K_splice(lto.cend(), it1++);
+						} else if (cmp(*it2, *it1)) { // *it2 < *it1
+							lto._K_splice(lto.cend(), it2++);
+						} else { // *it1 == *first2
+							++it1;
+							++it2;
+						}
+					} else {
+						lto._K_splice(lto.cend(), it1, end1);
+						return;
+					}
+				}
+				lto._K_splice(lto.cend(), it2, end2);
+			}
+
+			template <typename Tp>
+			KERBAL_CONSTEXPR20
+			void list_allocator_unrelated<Tp>::_K_set_symmetric_difference(list_allocator_unrelated & l1, list_allocator_unrelated & l2, list_allocator_unrelated & lto)
+			{
+				list_allocator_unrelated::_K_set_symmetric_difference(l1, l2, lto, std::less<value_type>());
+			}
+
+			template <typename Tp>
+			template <typename BinaryPredict>
+			KERBAL_CONSTEXPR20
+			void list_allocator_unrelated<Tp>::_K_set_union(list_allocator_unrelated & l1, list_allocator_unrelated & l2, list_allocator_unrelated & lto, BinaryPredict cmp)
+			{
+				const_iterator it1(l1.cbegin());
+				const_iterator it2(l2.cbegin());
+				const_iterator const end1(l1.cend());
+				const_iterator const end2(l2.cend());
+
+				while (it1 != end1) {
+					if (it2 != end2) {
+						if (cmp(*it2, *it1)) { // *it2 < *it1
+							lto._K_splice(lto.cend(), it2++);
+						} else {
+							bool b = cmp(*it1, *it2); // *it1 < *it2
+							lto._K_splice(lto.cend(), it1++);
+							if (!b) { // *it1 == *it2
+								++it2;
+							}
+						}
+					} else {
+						lto._K_splice(lto.cend(), it1, end1);
+						return;
+					}
+				}
+				lto._K_splice(lto.cend(), it2, end2);
+			}
+
+			template <typename Tp>
+			KERBAL_CONSTEXPR20
+			void list_allocator_unrelated<Tp>::_K_set_union(list_allocator_unrelated & l1, list_allocator_unrelated & l2, list_allocator_unrelated & lto)
+			{
+				list_allocator_unrelated::_K_set_union(l1, l2, lto, std::less<value_type>());
+			}
+
 
 		//===================
 		// private

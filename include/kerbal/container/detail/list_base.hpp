@@ -766,6 +766,33 @@ namespace kerbal
 					KERBAL_CONSTEXPR20
 					static size_type unique_using_allocator(NodeAllocator & alloc, const_iterator first, const_iterator last, BinaryPredicate pred);
 
+					template <typename BinaryPredict>
+					KERBAL_CONSTEXPR20
+					static void _K_set_difference(list_allocator_unrelated & l1, const list_allocator_unrelated & l2, list_allocator_unrelated & lto, BinaryPredict cmp);
+
+					KERBAL_CONSTEXPR20
+					static void _K_set_difference(list_allocator_unrelated & l1, const list_allocator_unrelated & l2, list_allocator_unrelated & lto);
+
+					template <typename BinaryPredict>
+					KERBAL_CONSTEXPR20
+					static void _K_set_intersection(list_allocator_unrelated & l1, list_allocator_unrelated & l2, list_allocator_unrelated & lto, BinaryPredict cmp);
+
+					KERBAL_CONSTEXPR20
+					static void _K_set_intersection(list_allocator_unrelated & l1, list_allocator_unrelated & l2, list_allocator_unrelated & lto);
+
+					template <typename BinaryPredict>
+					KERBAL_CONSTEXPR20
+					static void _K_set_symmetric_difference(list_allocator_unrelated & l1, list_allocator_unrelated & l2, list_allocator_unrelated & lto, BinaryPredict cmp);
+
+					KERBAL_CONSTEXPR20
+					static void _K_set_symmetric_difference(list_allocator_unrelated & l1, list_allocator_unrelated & l2, list_allocator_unrelated & lto);
+
+					template <typename BinaryPredict>
+					KERBAL_CONSTEXPR20
+					static void _K_set_union(list_allocator_unrelated & l1, list_allocator_unrelated & l2, list_allocator_unrelated & lto, BinaryPredict cmp);
+
+					KERBAL_CONSTEXPR20
+					static void _K_set_union(list_allocator_unrelated & l1, list_allocator_unrelated & l2, list_allocator_unrelated & lto);
 
 				//===================
 				// private
