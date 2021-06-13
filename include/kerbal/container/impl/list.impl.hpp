@@ -947,6 +947,90 @@ namespace kerbal
 #	endif
 
 		template <typename Tp, typename Allocator>
+		template <typename BinaryPredict>
+		KERBAL_CONSTEXPR20
+		list<Tp, Allocator> list<Tp, Allocator>::set_difference(list & l1, const list & l2, BinaryPredict cmp)
+		{
+			list lto;
+			list_allocator_unrelated::_K_set_difference(static_cast<list_allocator_unrelated &>(lto), static_cast<list_allocator_unrelated &>(l1),
+														static_cast<const list_allocator_unrelated &>(l2), cmp);
+			return lto;
+		}
+
+		template <typename Tp, typename Allocator>
+		KERBAL_CONSTEXPR20
+		list<Tp, Allocator> list<Tp, Allocator>::set_difference(list & l1, const list & l2)
+		{
+			list lto;
+			list_allocator_unrelated::_K_set_difference(static_cast<list_allocator_unrelated &>(lto), static_cast<list_allocator_unrelated &>(l1),
+														static_cast<const list_allocator_unrelated &>(l2));
+			return lto;
+		}
+
+		template <typename Tp, typename Allocator>
+		template <typename BinaryPredict>
+		KERBAL_CONSTEXPR20
+		list<Tp, Allocator> list<Tp, Allocator>::set_intersection(list & l1, list & l2, BinaryPredict cmp)
+		{
+			list lto;
+			list_allocator_unrelated::_K_set_intersection(static_cast<list_allocator_unrelated &>(lto), static_cast<list_allocator_unrelated &>(l1),
+														  static_cast<list_allocator_unrelated &>(l2), cmp);
+			return lto;
+		}
+
+		template <typename Tp, typename Allocator>
+		KERBAL_CONSTEXPR20
+		list<Tp, Allocator> list<Tp, Allocator>::set_intersection(list & l1, list & l2)
+		{
+			list lto;
+			list_allocator_unrelated::_K_set_intersection(static_cast<list_allocator_unrelated &>(lto), static_cast<list_allocator_unrelated &>(l1),
+														  static_cast<list_allocator_unrelated &>(l2));
+			return lto;
+		}
+
+		template <typename Tp, typename Allocator>
+		template <typename BinaryPredict>
+		KERBAL_CONSTEXPR20
+		list<Tp, Allocator> list<Tp, Allocator>::set_symmetric_difference(list & l1, list & l2, BinaryPredict cmp)
+		{
+			list lto;
+			list_allocator_unrelated::_K_set_symmetric_difference(static_cast<list_allocator_unrelated &>(lto), static_cast<list_allocator_unrelated &>(l1),
+																  static_cast<list_allocator_unrelated &>(l2), cmp);
+			return lto;
+		}
+
+		template <typename Tp, typename Allocator>
+		KERBAL_CONSTEXPR20
+		list<Tp, Allocator> list<Tp, Allocator>::set_symmetric_difference(list & l1, list & l2)
+		{
+			list lto;
+			list_allocator_unrelated::_K_set_symmetric_difference(static_cast<list_allocator_unrelated &>(lto), static_cast<list_allocator_unrelated &>(l1),
+																  static_cast<list_allocator_unrelated &>(l2));
+			return lto;
+		}
+
+		template <typename Tp, typename Allocator>
+		template <typename BinaryPredict>
+		KERBAL_CONSTEXPR20
+		list<Tp, Allocator> list<Tp, Allocator>::set_union(list & l1, list & l2, BinaryPredict cmp)
+		{
+			list lto;
+			list_allocator_unrelated::_K_set_union(static_cast<list_allocator_unrelated &>(lto), static_cast<list_allocator_unrelated &>(l1),
+												   static_cast<list_allocator_unrelated &>(l2), cmp);
+			return lto;
+		}
+
+		template <typename Tp, typename Allocator>
+		KERBAL_CONSTEXPR20
+		list<Tp, Allocator> list<Tp, Allocator>::set_union(list & l1, list & l2)
+		{
+			list lto;
+			list_allocator_unrelated::_K_set_union(static_cast<list_allocator_unrelated &>(lto), static_cast<list_allocator_unrelated &>(l1),
+												   static_cast<list_allocator_unrelated &>(l2));
+			return lto;
+		}
+
+		template <typename Tp, typename Allocator>
 		KERBAL_CONSTEXPR20
 		list<Tp, Allocator>& list<Tp, Allocator>::operator+=(const list & with)
 		{

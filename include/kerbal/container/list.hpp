@@ -551,6 +551,34 @@ namespace kerbal
 
 #		endif
 
+				template <typename BinaryPredict>
+				KERBAL_CONSTEXPR20
+				static list set_difference(list & l1, const list & l2, BinaryPredict cmp);
+
+				KERBAL_CONSTEXPR20
+				static list set_difference(list & l1, const list & l2);
+
+				template <typename BinaryPredict>
+				KERBAL_CONSTEXPR20
+				static list set_intersection(list & l1, list & l2, BinaryPredict cmp);
+
+				KERBAL_CONSTEXPR20
+				static list set_intersection(list & l1, list & l2);
+
+				template <typename BinaryPredict>
+				KERBAL_CONSTEXPR20
+				static list set_symmetric_difference(list & l1, list & l2, BinaryPredict cmp);
+
+				KERBAL_CONSTEXPR20
+				static list set_symmetric_difference(list & l1, list & l2);
+
+				template <typename BinaryPredict>
+				KERBAL_CONSTEXPR20
+				static list set_union(list & l1, list & l2, BinaryPredict cmp);
+
+				KERBAL_CONSTEXPR20
+				static list set_union(list & l1, list & l2);
+
 				KERBAL_CONSTEXPR20
 				list& operator+=(const list & with);
 
