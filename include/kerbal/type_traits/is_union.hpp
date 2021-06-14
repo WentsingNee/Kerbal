@@ -28,17 +28,7 @@
 
 #	elif KERBAL_COMPILER_ID == KERBAL_COMPILER_ID_MSVC
 
-//		https://docs.microsoft.com/en-us/previous-versions/visualstudio/visual-studio-2008/ms177194(v=vs.90)
-//		https://www.cnblogs.com/yamboo/p/14030418.html
-#		if KERBAL_MSVC_VERSION_MEETS(15, 0, 0) // MSVC++ 9.0   _MSC_VER == 1500 (Visual Studio 2008 version 9.0)
-#			define KERBAL_IS_UNION(T) __is_union(T)
-#		endif
-
 #	elif KERBAL_COMPILER_ID == KERBAL_COMPILER_ID_ICC
-
-#		if KERBAL_ICC_PRIVATE_HAS_FEATURE(is_union)
-#			define KERBAL_IS_UNION(T) __is_union(T)
-#		endif
 
 #	endif
 

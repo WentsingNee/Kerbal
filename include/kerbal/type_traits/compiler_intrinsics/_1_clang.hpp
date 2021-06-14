@@ -9,8 +9,8 @@
  *   all rights reserved
  */
 
-#ifndef KERBAL_TYPE_TRAITS_TYPE_TRAITS_INTRINSICS_1_CLANG_HPP
-#define KERBAL_TYPE_TRAITS_TYPE_TRAITS_INTRINSICS_1_CLANG_HPP
+#ifndef KERBAL_TYPE_TRAITSCOMPILER_INTRINSICS__1_CLANG_HPP
+#define KERBAL_TYPE_TRAITSCOMPILER_INTRINSICS__1_CLANG_HPP
 
 //		https://clang.llvm.org/docs/LanguageExtensions.html#type-trait-primitives
 
@@ -32,6 +32,12 @@
 #			define KERBAL_IS_ARRAY(T) __is_array(T)
 #		endif
 
+#		if KERBAL_CLANG_PRIVATE_HAS_BUILTIN(__is_base_of)
+#			define KERBAL_IS_BASE_OF(BASE, DERIVED) __is_base_of(BASE, DERIVED)
+#		elif KERBAL_CLANG_PRIVATE_HAS_FEATURE(is_base_of)
+#			define KERBAL_IS_BASE_OF(BASE, DERIVED) __is_base_of(BASE, DERIVED)
+#		endif
+
 #		if KERBAL_CLANG_PRIVATE_HAS_BUILTIN(__is_class)
 #			define KERBAL_IS_CLASS(T) __is_class(T)
 #		elif KERBAL_CLANG_PRIVATE_HAS_FEATURE(is_class)
@@ -44,6 +50,12 @@
 
 #		if KERBAL_CLANG_PRIVATE_HAS_BUILTIN(__is_const)
 #			define KERBAL_IS_CONST(T) __is_const(T)
+#		endif
+
+#		if KERBAL_CLANG_PRIVATE_HAS_BUILTIN(__is_convertible)
+#			define KERBAL_IS_CONVERTIBLE(FROM, TO) __is_convertible(FROM, TO)
+#		elif KERBAL_CLANG_PRIVATE_HAS_FEATURE(is_convertible)
+#			define KERBAL_IS_CONVERTIBLE(FROM, TO) __is_convertible(FROM, TO)
 #		endif
 
 #		if KERBAL_CLANG_PRIVATE_HAS_BUILTIN(__is_empty)
@@ -100,6 +112,8 @@
 
 #		if KERBAL_CLANG_PRIVATE_HAS_BUILTIN(__is_standard_layout)
 #			define KERBAL_IS_STANDARD_LAYOUT(T) __is_standard_layout(T)
+#		elif KERBAL_CLANG_PRIVATE_HAS_FEATURE(is_standard_layout)
+#			define KERBAL_IS_STANDARD_LAYOUT(T) __is_standard_layout(T)
 #		endif
 
 #		if KERBAL_CLANG_PRIVATE_HAS_BUILTIN(__is_union)
@@ -134,4 +148,4 @@
 
 
 
-#endif // KERBAL_TYPE_TRAITS_TYPE_TRAITS_INTRINSICS_1_CLANG_HPP
+#endif // KERBAL_TYPE_TRAITSCOMPILER_INTRINSICS__1_CLANG_HPP
