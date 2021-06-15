@@ -15,12 +15,35 @@
 #include <kerbal/ts/modules_ts/modules_ts.hpp>
 #include <kerbal/type_traits/conditional.hpp>
 #include <kerbal/type_traits/integral_constant.hpp>
+#include <kerbal/type_traits/void_type.hpp>
 
 namespace kerbal
 {
 
 	namespace type_traits
 	{
+
+		namespace detail
+		{
+
+			template <typename T, typename = kerbal::type_traits::void_type<>::type>
+			struct is_referenceable_helper : kerbal::type_traits::false_type
+			{
+			};
+
+			template <typename T>
+			struct is_referenceable_helper<T, typename kerbal::type_traits::void_type<T&>::type> :
+					kerbal::type_traits::true_type
+			{
+			};
+
+		} // namespace detail
+
+		MODULE_EXPORT
+		template <typename T>
+		struct is_referenceable : kerbal::type_traits::detail::is_referenceable_helper<T>
+		{
+		};
 
 		MODULE_EXPORT
 		template <typename>
