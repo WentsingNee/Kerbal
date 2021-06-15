@@ -14,7 +14,7 @@
 
 #include <kerbal/ts/modules_ts/modules_ts.hpp>
 #include <kerbal/type_traits/cv_deduction.hpp>
-#include <kerbal/type_traits/function_deduction.hpp>
+#include <kerbal/type_traits/fundamental_deduction.hpp>
 #include <kerbal/type_traits/reference_deduction.hpp>
 
 #include <cstddef>
@@ -97,30 +97,27 @@ namespace kerbal
 		};
 
 
-//		template <typename Tp, bool = kerbal::type_traits::is_function<Tp>::value >
-//		struct __add_pointer_helper
-//		{
-//			typedef kerbal::type_traits::conditional<
-//						kerbal::type_traits::function_traits<Tp>::
-//			type;
-//		};
-//
-//		template <typename Tp>
-//		struct __add_pointer_helper<Tp, false>
-//		{
-//			typedef Tp* type;
-//		};
-
-		template <typename Tp>
-		struct __add_pointer_helper
+		namespace detail
 		{
-			typedef Tp* type;
-		};
+
+			template <typename Tp, bool IsPointerable = kerbal::type_traits::is_referenceable<Tp>::value || kerbal::type_traits::is_void<Tp>::value >
+			struct add_pointer_helper
+			{
+					typedef Tp* type;
+			};
+
+			template <typename Tp>
+			struct add_pointer_helper<Tp, false>
+			{
+					typedef Tp type;
+			};
+
+		} // namespace detail
 
 		MODULE_EXPORT
 		template <typename Tp>
 		struct add_pointer:
-				kerbal::type_traits::__add_pointer_helper<
+				kerbal::type_traits::detail::add_pointer_helper<
 						typename kerbal::type_traits::remove_reference<Tp>::type
 				>
 		{
