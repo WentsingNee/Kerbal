@@ -50,23 +50,9 @@ namespace kerbal
 
 		MODULE_EXPORT
 		template <typename Tp>
-		struct remove_const<const Tp&>
-		{
-				typedef const Tp& type;
-		};
-
-		MODULE_EXPORT
-		template <typename Tp>
 		struct add_const
 		{
 				typedef const Tp type;
-		};
-
-		MODULE_EXPORT
-		template <typename Tp>
-		struct add_const<Tp&>
-		{
-				typedef Tp& type;
 		};
 
 		MODULE_EXPORT

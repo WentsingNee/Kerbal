@@ -50,23 +50,9 @@ namespace kerbal
 
 		MODULE_EXPORT
 		template <typename Tp>
-		struct remove_volatile<volatile Tp&>
-		{
-				typedef volatile Tp& type;
-		};
-
-		MODULE_EXPORT
-		template <typename Tp>
 		struct add_volatile
 		{
 				typedef volatile Tp type;
-		};
-
-		MODULE_EXPORT
-		template <typename Tp>
-		struct add_volatile<Tp&>
-		{
-				typedef Tp& type;
 		};
 
 		MODULE_EXPORT
