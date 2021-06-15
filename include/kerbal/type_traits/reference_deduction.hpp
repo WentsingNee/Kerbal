@@ -118,12 +118,29 @@ namespace kerbal
 
 #	endif
 
+		namespace detail
+		{
+
+			template <typename Tp, bool IsReferenceable = kerbal::type_traits::is_referenceable<Tp>::value>
+			struct add_lvalue_reference_helper
+			{
+					typedef Tp& type;
+			};
+
+			template <typename Tp>
+			struct add_lvalue_reference_helper<Tp, false>
+			{
+					typedef Tp type;
+			};
+
+		} // namespace detail
+
 		MODULE_EXPORT
 		/// add_lvalue_reference
 		template <typename Tp>
-		struct add_lvalue_reference
+		struct add_lvalue_reference :
+				kerbal::type_traits::detail::add_lvalue_reference_helper<Tp>
 		{
-				typedef Tp& type;
 		};
 
 		MODULE_EXPORT
@@ -136,30 +153,57 @@ namespace kerbal
 
 #	if __cplusplus >= 201103L
 
-		MODULE_EXPORT
-		/// add_rvalue_reference
-		template <typename Tp>
-		struct add_rvalue_reference
+		namespace detail
 		{
-				typedef Tp&& type;
-		};
+
+			template <typename Tp, bool IsReferenceable = kerbal::type_traits::is_referenceable<Tp>::value>
+			struct add_rvalue_reference_helper
+			{
+					typedef Tp&& type;
+			};
+
+			template <typename Tp>
+			struct add_rvalue_reference_helper<Tp, false>
+			{
+					typedef Tp type;
+			};
+
+		} // namespace detail
 
 		MODULE_EXPORT
 		/// add_rvalue_reference
 		template <typename Tp>
-		struct add_const_rvalue_reference
+		struct add_rvalue_reference :
+				kerbal::type_traits::detail::add_rvalue_reference_helper<Tp>
 		{
-				typedef const Tp&& type;
 		};
 
 #	endif
 
+
+		namespace detail
+		{
+
+			template <typename Tp, bool IsReferenceable = kerbal::type_traits::is_referenceable<Tp>::value>
+			struct add_const_lvalue_reference_helper
+			{
+					typedef const Tp& type;
+			};
+
+			template <typename Tp>
+			struct add_const_lvalue_reference_helper<Tp, false>
+			{
+					typedef Tp type;
+			};
+
+		} // namespace detail
+
 		MODULE_EXPORT
 		/// add_const_lvalue_reference
 		template <typename Tp>
-		struct add_const_lvalue_reference
+		struct add_const_lvalue_reference :
+				kerbal::type_traits::detail::add_const_lvalue_reference_helper<Tp>
 		{
-				typedef const Tp& type;
 		};
 
 		MODULE_EXPORT
@@ -170,14 +214,45 @@ namespace kerbal
 				typedef Tp& type;
 		};
 
+
+#	if __cplusplus >= 201103L
+
+		namespace detail
+		{
+
+			template <typename Tp, bool IsReferenceable = kerbal::type_traits::is_referenceable<Tp>::value>
+			struct add_const_rvalue_reference_helper
+			{
+					typedef const Tp&& type;
+			};
+
+			template <typename Tp>
+			struct add_const_rvalue_reference_helper<Tp, false>
+			{
+					typedef Tp type;
+			};
+
+		} // namespace detail
+
+		MODULE_EXPORT
+		/// add_rvalue_reference
+		template <typename Tp>
+		struct add_const_rvalue_reference :
+				kerbal::type_traits::detail::add_const_rvalue_reference_helper<Tp>
+		{
+		};
+
+#	endif
+
+
 		MODULE_EXPORT
 		template <typename From, typename To>
 		struct copy_lvalue_reference:
-					kerbal::type_traits::conditional<
+				kerbal::type_traits::conditional<
 						kerbal::type_traits::is_lvalue_reference<From>::value,
 						typename kerbal::type_traits::add_lvalue_reference<To>::type,
 						To
-					>
+				>
 		{
 		};
 
