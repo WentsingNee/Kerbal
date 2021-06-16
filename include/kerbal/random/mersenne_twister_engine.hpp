@@ -75,31 +75,31 @@ namespace kerbal
 				typedef kerbal::type_traits::integral_constant<size_t, M>		SHIFT_SIZE;
 				typedef kerbal::type_traits::integral_constant<size_t, R>		MASK_BITS;
 
-				typedef kerbal::type_traits::integral_constant<UIntType, A>		XOR_MASK;
+				typedef kerbal::type_traits::integral_constant<result_type, A>	XOR_MASK;
 				typedef kerbal::type_traits::integral_constant<size_t, U>		TEMPERING_U;
-				typedef kerbal::type_traits::integral_constant<UIntType, D>		TEMPERING_D;
+				typedef kerbal::type_traits::integral_constant<result_type, D>	TEMPERING_D;
 				typedef kerbal::type_traits::integral_constant<size_t, S>		TEMPERING_S;
 
-				typedef kerbal::type_traits::integral_constant<UIntType, B>		TEMPERING_B;
+				typedef kerbal::type_traits::integral_constant<result_type, B>	TEMPERING_B;
 				typedef kerbal::type_traits::integral_constant<size_t, T>		TEMPERING_T;
 
-				typedef kerbal::type_traits::integral_constant<UIntType, C>		TEMPERING_C;
+				typedef kerbal::type_traits::integral_constant<result_type, C>	TEMPERING_C;
 				typedef kerbal::type_traits::integral_constant<size_t, L>		TEMPERING_L;
-				typedef kerbal::type_traits::integral_constant<UIntType, F>		INITIALIZATION_MULTIPLIER;
+				typedef kerbal::type_traits::integral_constant<result_type, F>	INITIALIZATION_MULTIPLIER;
 
-				typedef kerbal::type_traits::integral_constant<UIntType, 5489u>		DEFAULT_SEED;
+				typedef kerbal::type_traits::integral_constant<result_type, 5489u>		DEFAULT_SEED;
 
 			private:
-				UIntType mt[N];
+				result_type mt[N];
 				size_t mti;
 
 				KERBAL_CONSTEXPR14
 				void twist() KERBAL_NOEXCEPT
 				{
-					typedef kerbal::type_traits::integral_constant<UIntType, (~static_cast<UIntType>(0)) << R> UPPER_MASK; // most significant w-r bits
-					typedef kerbal::type_traits::integral_constant<UIntType, ~UPPER_MASK::value> LOWER_MASK; // least significant r bits
+					typedef kerbal::type_traits::integral_constant<result_type, (~static_cast<result_type>(0)) << R> UPPER_MASK; // most significant w-r bits
+					typedef kerbal::type_traits::integral_constant<result_type, ~UPPER_MASK::value> LOWER_MASK; // least significant r bits
 
-					const UIntType mag01[2] = {0x0UL, A};
+					const result_type mag01[2] = {0x0UL, A};
 
 					size_t i = 0;
 
@@ -121,10 +121,10 @@ namespace kerbal
 				void init_mt() KERBAL_NOEXCEPT
 				{
 					for (size_t i = 1; i < N; ++i) {
-						UIntType x = this->mt[i - 1];
+						result_type x = this->mt[i - 1];
 						x ^= x >> (W - 2);
 						x *= F;
-						x += i;
+						x += static_cast<result_type>(i);
 						this->mt[i] = x;
 					}
 				}
