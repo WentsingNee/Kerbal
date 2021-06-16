@@ -23,12 +23,14 @@
 //===============
 // Compiler Version
 
+// https://software.intel.com/content/www/us/en/develop/documentation/cpp-compiler-developer-guide-and-reference/top/compiler-reference/macros/additional-predefined-macros.html
+
 #ifndef KERBAL_ICC_MAJOR
-#	define KERBAL_ICC_MAJOR        (__INTEL_COMPILER / 100)
+#	define KERBAL_ICC_MAJOR        (__INTEL_COMPILER)
 #endif
 
 #ifndef KERBAL_ICC_MINOR
-#	define KERBAL_ICC_MINOR        (__INTEL_COMPILER % 100)
+#	define KERBAL_ICC_MINOR        (__INTEL_COMPILER_UPDATE)
 #endif
 
 #ifndef KERBAL_ICC_PATCHLEVEL
