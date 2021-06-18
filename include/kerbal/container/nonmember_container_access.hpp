@@ -19,11 +19,21 @@
 
 #include <cstddef>
 
+
 namespace kerbal
 {
 
 	namespace container
 	{
+
+		// begin
+
+		template <typename Tp, size_t N>
+		KERBAL_CONSTEXPR
+		Tp* begin(Tp (&arr)[N]) KERBAL_NOEXCEPT
+		{
+			return arr;
+		}
 
 #	if __cplusplus >= 201103L
 
@@ -45,14 +55,68 @@ namespace kerbal
 			return container.begin();
 		}
 
+#	else
+
+		template <typename Container>
+		typename Container::iterator
+		begin(Container & container)
+		{
+			return container.begin();
+		}
+
+		template <typename Container>
+		typename Container::const_iterator
+		begin(const Container & container)
+		{
+			return container.begin();
+		}
+
+#	endif // __cplusplus >= 201103L
+
+
+
+		// cbegin
+
+#	if __cplusplus >= 201103L
+
 		template <typename Container>
 		KERBAL_CONSTEXPR
 		auto cbegin(const Container & container)
-					KERBAL_CONDITIONAL_NOEXCEPT(noexcept(container.cbegin()))
-					-> decltype(container.cbegin())
+					KERBAL_CONDITIONAL_NOEXCEPT(noexcept(kerbal::container::begin(container)))
+					-> decltype(kerbal::container::begin(container))
 		{
-			return container.cbegin();
+			return kerbal::container::begin(container);
 		}
+
+#	else
+
+		template <typename Tp, size_t N>
+		const Tp* cbegin(Tp (&arr)[N]) KERBAL_NOEXCEPT
+		{
+			return arr;
+		}
+
+		template <typename Container>
+		typename Container::const_iterator
+		cbegin(const Container & container)
+		{
+			return container.begin();
+		}
+
+#	endif // __cplusplus >= 201103L
+
+
+
+		// end
+
+		template <typename Tp, size_t N>
+		KERBAL_CONSTEXPR
+		Tp* end(Tp (&arr)[N]) KERBAL_NOEXCEPT
+		{
+			return arr + N;
+		}
+
+#	if __cplusplus >= 201103L
 
 		template <typename Container>
 		KERBAL_CONSTEXPR
@@ -72,14 +136,69 @@ namespace kerbal
 			return container.end();
 		}
 
+#	else
+
+		template <typename Container>
+		typename Container::iterator
+		end(Container & container)
+		{
+			return container.end();
+		}
+
+		template <typename Container>
+		typename Container::const_iterator
+		end(const Container & container)
+		{
+			return container.end();
+		}
+
+#	endif // __cplusplus >= 201103L
+
+
+
+		// cend
+
+#	if __cplusplus >= 201103L
+
 		template <typename Container>
 		KERBAL_CONSTEXPR
 		auto cend(const Container & container)
-					KERBAL_CONDITIONAL_NOEXCEPT(noexcept(container.cend()))
-					-> decltype(container.cend())
+					KERBAL_CONDITIONAL_NOEXCEPT(noexcept(kerbal::container::end(container)))
+					-> decltype(kerbal::container::end(container))
 		{
-			return container.cend();
+			return kerbal::container::end(container);
 		}
+
+#	else
+
+		template <typename Tp, size_t N>
+		const Tp* cend(Tp (&arr)[N]) KERBAL_NOEXCEPT
+		{
+			return arr + N;
+		}
+
+		template <typename Container>
+		typename Container::const_iterator
+		cend(const Container & container)
+		{
+			return container.end();
+		}
+
+#	endif // __cplusplus >= 201103L
+
+
+
+		// rbegin
+
+		template <typename Tp, size_t N>
+		KERBAL_CONSTEXPR
+		kerbal::iterator::reverse_iterator<Tp*, false>
+		rbegin(Tp (&arr)[N]) KERBAL_NOEXCEPT
+		{
+			return kerbal::iterator::reverse_iterator<Tp*, false>(arr + N);
+		}
+
+#	if __cplusplus >= 201103L
 
 		template <typename Container>
 		KERBAL_CONSTEXPR
@@ -99,14 +218,70 @@ namespace kerbal
 			return container.rbegin();
 		}
 
+#	else
+
+		template <typename Container>
+		typename Container::reverse_iterator
+		rbegin(Container & container)
+		{
+			return container.rbegin();
+		}
+
+		template <typename Container>
+		typename Container::const_reverse_iterator
+		rbegin(const Container & container)
+		{
+			return container.rbegin();
+		}
+
+#	endif // __cplusplus >= 201103L
+
+
+
+		// crbegin
+
+#	if __cplusplus >= 201103L
+
 		template <typename Container>
 		KERBAL_CONSTEXPR
 		auto crbegin(const Container & container)
-					KERBAL_CONDITIONAL_NOEXCEPT(noexcept(container.crbegin()))
-					-> decltype(container.crbegin())
+					KERBAL_CONDITIONAL_NOEXCEPT(noexcept(kerbal::container::rbegin(container)))
+					-> decltype(kerbal::container::rbegin(container))
 		{
-			return container.crbegin();
+			return kerbal::container::rbegin(container);
 		}
+
+#	else
+
+		template <typename Tp, size_t N>
+		kerbal::iterator::reverse_iterator<const Tp*, false>
+		crbegin(Tp (&arr)[N]) KERBAL_NOEXCEPT
+		{
+			return kerbal::iterator::reverse_iterator<const Tp*, false>(arr + N);
+		}
+
+		template <typename Container>
+		typename Container::const_reverse_iterator
+		crbegin(const Container & container)
+		{
+			return container.rbegin();
+		}
+
+#	endif // __cplusplus >= 201103L
+
+
+
+		// rend
+
+		template <typename Tp, size_t N>
+		KERBAL_CONSTEXPR
+		kerbal::iterator::reverse_iterator<Tp*, false>
+		rend(Tp (&arr)[N]) KERBAL_NOEXCEPT
+		{
+			return kerbal::iterator::reverse_iterator<Tp*, false>(arr);
+		}
+
+#	if __cplusplus >= 201103L
 
 		template <typename Container>
 		KERBAL_CONSTEXPR
@@ -126,14 +301,69 @@ namespace kerbal
 			return container.rend();
 		}
 
+#	else
+
+		template <typename Container>
+		typename Container::reverse_iterator
+		rend(Container & container)
+		{
+			return container.rend();
+		}
+
+		template <typename Container>
+		typename Container::const_reverse_iterator
+		rend(const Container & container)
+		{
+			return container.rend();
+		}
+
+#	endif // __cplusplus >= 201103L
+
+
+
+		// crend
+
+#	if __cplusplus >= 201103L
+
 		template <typename Container>
 		KERBAL_CONSTEXPR
 		auto crend(const Container & container)
-					KERBAL_CONDITIONAL_NOEXCEPT(noexcept(container.crend()))
-					-> decltype(container.crend())
+					KERBAL_CONDITIONAL_NOEXCEPT(noexcept(kerbal::container::rend(container)))
+					-> decltype(kerbal::container::rend(container))
 		{
-			return container.crend();
+			return kerbal::container::rend(container);
 		}
+
+#	else
+
+		template <typename Tp, size_t N>
+		kerbal::iterator::reverse_iterator<const Tp*, false>
+		crend(Tp (&arr)[N]) KERBAL_NOEXCEPT
+		{
+			return kerbal::iterator::reverse_iterator<const Tp*, false>(arr);
+		}
+
+		template <typename Container>
+		typename Container::const_reverse_iterator
+		crend(const Container & container)
+		{
+			return container.rend();
+		}
+
+#	endif // __cplusplus >= 201103L
+
+
+
+		// size
+
+		template <typename Tp, size_t N>
+		KERBAL_CONSTEXPR
+		size_t size(const Tp (&)[N]) KERBAL_NOEXCEPT
+		{
+			return N;
+		}
+
+#	if __cplusplus >= 201103L
 
 		template <typename Container>
 		KERBAL_CONSTEXPR
@@ -144,6 +374,30 @@ namespace kerbal
 			return container.size();
 		}
 
+#	else
+
+		template <typename Container>
+		typename Container::size_type
+		size(const Container & container)
+		{
+			return container.size();
+		}
+
+#	endif // __cplusplus >= 201103L
+
+
+
+		// empty
+
+		template <typename Tp, size_t N>
+		KERBAL_CONSTEXPR
+		bool empty(const Tp (&)[N]) KERBAL_NOEXCEPT
+		{
+			return false;
+		}
+
+#	if __cplusplus >= 201103L
+
 		template <typename Container>
 		KERBAL_CONSTEXPR
 		auto empty(const Container & container)
@@ -152,6 +406,29 @@ namespace kerbal
 		{
 			return container.empty();
 		}
+
+#	else
+
+		template <typename Container>
+		bool empty(const Container & container)
+		{
+			return container.empty();
+		}
+
+#	endif // __cplusplus >= 201103L
+
+
+
+		// nth
+
+		template <typename Tp, size_t N>
+		KERBAL_CONSTEXPR14
+		Tp* nth(Tp (&arr)[N], std::size_t index) KERBAL_NOEXCEPT
+		{
+			return arr + index;
+		}
+
+#	if __cplusplus >= 201103L
 
 		template <typename Container>
 		KERBAL_CONSTEXPR14
@@ -170,6 +447,44 @@ namespace kerbal
 		{
 			return kerbal::iterator::next(kerbal::container::cbegin(container), index);
 		}
+
+#	else
+
+		template <typename Container>
+		typename Container::iterator
+		nth(Container & container, typename Container::size_type index)
+		{
+			return kerbal::iterator::next(kerbal::container::begin(container), index);
+		}
+
+		template <typename Container>
+		typename Container::const_iterator
+		nth(const Container & container, typename Container::size_type index)
+		{
+			return kerbal::iterator::next(kerbal::container::cbegin(container), index);
+		}
+
+#	endif // __cplusplus >= 201103L
+
+
+
+		// index_of
+
+		template <typename Tp, size_t N>
+		KERBAL_CONSTEXPR14
+		std::size_t index_of(Tp (&arr)[N], Tp * it) KERBAL_NOEXCEPT
+		{
+			return it - arr;
+		}
+
+		template <typename Tp, size_t N>
+		KERBAL_CONSTEXPR14
+		std::size_t index_of(const Tp (&arr)[N], const Tp * it) KERBAL_NOEXCEPT
+		{
+			return it - arr;
+		}
+
+#	if __cplusplus >= 201103L
 
 		template <typename Container>
 		KERBAL_CONSTEXPR14
@@ -192,117 +507,6 @@ namespace kerbal
 #	else
 
 		template <typename Container>
-		typename Container::iterator
-		begin(Container & container)
-		{
-			return container.begin();
-		}
-
-		template <typename Container>
-		typename Container::const_iterator
-		begin(const Container & container)
-		{
-			return container.begin();
-		}
-
-		template <typename Container>
-		typename Container::const_iterator
-		cbegin(const Container & container)
-		{
-			return container.begin();
-		}
-
-		template <typename Container>
-		typename Container::iterator
-		end(Container & container)
-		{
-			return container.end();
-		}
-
-		template <typename Container>
-		typename Container::const_iterator
-		end(const Container & container)
-		{
-			return container.end();
-		}
-
-		template <typename Container>
-		typename Container::const_iterator
-		cend(const Container & container)
-		{
-			return container.end();
-		}
-
-		template <typename Container>
-		typename Container::reverse_iterator
-		rbegin(Container & container)
-		{
-			return container.rbegin();
-		}
-
-		template <typename Container>
-		typename Container::const_reverse_iterator
-		rbegin(const Container & container)
-		{
-			return container.rbegin();
-		}
-
-		template <typename Container>
-		typename Container::const_reverse_iterator
-		crbegin(const Container & container)
-		{
-			return container.rbegin();
-		}
-
-		template <typename Container>
-		typename Container::reverse_iterator
-		rend(Container & container)
-		{
-			return container.rend();
-		}
-
-		template <typename Container>
-		typename Container::const_reverse_iterator
-		rend(const Container & container)
-		{
-			return container.rend();
-		}
-
-		template <typename Container>
-		typename Container::const_reverse_iterator
-		crend(const Container & container)
-		{
-			return container.rend();
-		}
-
-		template <typename Container>
-		typename Container::size_type
-		size(const Container & container)
-		{
-			return container.size();
-		}
-
-		template <typename Container>
-		bool empty(const Container & container)
-		{
-			return container.empty();
-		}
-
-		template <typename Container>
-		typename Container::iterator
-		nth(Container & container, typename Container::size_type index)
-		{
-			return kerbal::iterator::next(kerbal::container::begin(container), index);
-		}
-
-		template <typename Container>
-		typename Container::const_iterator
-		nth(const Container & container, typename Container::size_type index)
-		{
-			return kerbal::iterator::next(kerbal::container::cbegin(container), index);
-		}
-
-		template <typename Container>
 		typename Container::size_type
 		index_of(Container & container, typename Container::iterator it)
 		{
@@ -317,108 +521,6 @@ namespace kerbal
 		}
 
 #	endif // __cplusplus >= 201103L
-
-		template <typename Tp, size_t N>
-		KERBAL_CONSTEXPR
-		Tp* begin(Tp (&arr)[N]) KERBAL_NOEXCEPT
-		{
-			return arr;
-		}
-
-		template <typename Tp, size_t N>
-		KERBAL_CONSTEXPR
-		const Tp* cbegin(Tp (&arr)[N]) KERBAL_NOEXCEPT
-		{
-			return arr;
-		}
-
-		template <typename Tp, size_t N>
-		KERBAL_CONSTEXPR
-		Tp* end(Tp (&arr)[N]) KERBAL_NOEXCEPT
-		{
-			return arr + N;
-		}
-
-		template <typename Tp, size_t N>
-		KERBAL_CONSTEXPR
-		const Tp* cend(Tp (&arr)[N]) KERBAL_NOEXCEPT
-		{
-			return arr + N;
-		}
-
-		template <typename Tp, size_t N>
-		KERBAL_CONSTEXPR
-		kerbal::iterator::reverse_iterator<Tp*, false>
-		rbegin(Tp (&arr)[N]) KERBAL_NOEXCEPT
-		{
-			return kerbal::iterator::reverse_iterator<Tp*, false>(arr + N);
-		}
-
-		template <typename Tp, size_t N>
-		KERBAL_CONSTEXPR
-		kerbal::iterator::reverse_iterator<const Tp*, false>
-		crbegin(Tp (&arr)[N]) KERBAL_NOEXCEPT
-		{
-			return kerbal::iterator::reverse_iterator<const Tp*, false>(arr + N);
-		}
-
-		template <typename Tp, size_t N>
-		KERBAL_CONSTEXPR
-		kerbal::iterator::reverse_iterator<Tp*, false>
-		rend(Tp (&arr)[N]) KERBAL_NOEXCEPT
-		{
-			return kerbal::iterator::reverse_iterator<Tp*, false>(arr);
-		}
-
-		template <typename Tp, size_t N>
-		KERBAL_CONSTEXPR
-		kerbal::iterator::reverse_iterator<const Tp*, false>
-		crend(Tp (&arr)[N]) KERBAL_NOEXCEPT
-		{
-			return kerbal::iterator::reverse_iterator<const Tp*, false>(arr);
-		}
-
-		template <typename Tp, size_t N>
-		KERBAL_CONSTEXPR
-		size_t size(const Tp (&)[N]) KERBAL_NOEXCEPT
-		{
-			return N;
-		}
-
-		template <typename Tp, size_t N>
-		KERBAL_CONSTEXPR
-		bool empty(const Tp (&)[N]) KERBAL_NOEXCEPT
-		{
-			return false;
-		}
-
-		template <typename Tp, size_t N>
-		KERBAL_CONSTEXPR14
-		Tp* nth(Tp (&arr)[N], std::size_t index) KERBAL_NOEXCEPT
-		{
-			return arr + index;
-		}
-
-		template <typename Tp, size_t N>
-		KERBAL_CONSTEXPR14
-		const Tp* nth(const Tp (&arr)[N], std::size_t index) KERBAL_NOEXCEPT
-		{
-			return arr + index;
-		}
-
-		template <typename Tp, size_t N>
-		KERBAL_CONSTEXPR14
-		std::size_t index_of(Tp (&arr)[N], Tp * it) KERBAL_NOEXCEPT
-		{
-			return it - arr;
-		}
-
-		template <typename Tp, size_t N>
-		KERBAL_CONSTEXPR14
-		std::size_t index_of(const Tp (&arr)[N], const Tp * it) KERBAL_NOEXCEPT
-		{
-			return it - arr;
-		}
 
 	} // namespace container
 
