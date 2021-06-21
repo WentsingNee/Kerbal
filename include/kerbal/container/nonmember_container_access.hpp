@@ -26,6 +26,29 @@ namespace kerbal
 	namespace container
 	{
 
+		template <typename Range>
+		struct range_traits
+		{
+				typedef typename Range::iterator			iterator;
+				typedef typename Range::const_iterator		const_iterator;
+		};
+
+		template <typename Range>
+		struct range_traits<const Range>
+		{
+				typedef typename Range::const_iterator		iterator;
+				typedef typename Range::const_iterator		const_iterator;
+		};
+
+		template <typename T, std::size_t N>
+		struct range_traits<T[N]>
+		{
+				typedef T *									iterator;
+				typedef const T *							const_iterator;
+		};
+
+
+
 		// begin
 
 		template <typename T, std::size_t N>
