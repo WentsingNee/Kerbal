@@ -12,6 +12,14 @@
 #ifndef KERBAL_ALGORITHM_QUERIER_HPP
 #define KERBAL_ALGORITHM_QUERIER_HPP
 
+#include <kerbal/algorithm/querier/all_of.hpp>
+#include <kerbal/algorithm/querier/count_if.hpp>
+#include <kerbal/algorithm/querier/find_if.hpp>
+#include <kerbal/algorithm/querier/find_if_not.hpp>
+#include <kerbal/algorithm/querier/for_each.hpp>
+#include <kerbal/algorithm/querier/mismatch.hpp>
+#include <kerbal/algorithm/querier/mismatch_with_distance.hpp>
+
 #include <kerbal/algorithm/binary_type_predicate.hpp>
 #include <kerbal/compatibility/constexpr.hpp>
 #include <kerbal/compatibility/move.hpp>
@@ -62,68 +70,6 @@ namespace kerbal
 					return !static_cast<bool>(this->pred(val));
 				}
 		};
-
-
-
-		template <typename InputIterator, typename UnaryPredicate>
-		KERBAL_CONSTEXPR14
-		InputIterator
-		__find_if(InputIterator first, InputIterator last, UnaryPredicate pred, std::input_iterator_tag)
-		{
-			while (first != last) {
-				if (pred(*first)) {
-					break;
-				}
-				++first;
-			}
-			return first;
-		}
-
-		template <typename RandomAccessIterator, typename UnaryPredicate>
-		KERBAL_CONSTEXPR14
-		RandomAccessIterator
-		__find_if(RandomAccessIterator first, RandomAccessIterator last, UnaryPredicate pred, std::random_access_iterator_tag)
-		{
-			typedef RandomAccessIterator iterator;
-			typedef typename kerbal::iterator::iterator_traits<iterator>::difference_type difference_type;
-
-#	define EACH() do {\
-				if (pred(*first)) {\
-					return first;\
-				}\
-				++first;\
-			} while (false)
-
-			difference_type trip_count(kerbal::iterator::distance(first, last));
-			difference_type remain(trip_count & 3);
-			for (trip_count >>= 2; trip_count > 0; --trip_count) {
-				EACH();
-				EACH();
-				EACH();
-				EACH();
-			}
-
-			if (remain >= 2) {
-				EACH();
-				EACH();
-				remain -= 2;
-			}
-			if (remain >= 1) {
-				EACH();
-			}
-
-#	undef EACH
-
-			return first;
-		}
-
-		template <typename InputIterator, typename UnaryPredicate>
-		KERBAL_CONSTEXPR14
-		InputIterator
-		find_if(InputIterator first, InputIterator last, UnaryPredicate pred)
-		{
-			return kerbal::algorithm::__find_if(first, last, pred, kerbal::iterator::iterator_category(first));
-		}
 
 
 
@@ -191,75 +137,6 @@ namespace kerbal
 
 		template <typename InputIterator, typename UnaryPredicate>
 		KERBAL_CONSTEXPR14
-		InputIterator
-		__find_if_not(InputIterator first, InputIterator last, UnaryPredicate pred, std::input_iterator_tag)
-		{
-			while (first != last) {
-				if (pred(*first)) {
-					++first;
-				} else {
-					break;
-				}
-			}
-			return first;
-		}
-
-		template <typename RandomAccessIterator, typename UnaryPredicate>
-		KERBAL_CONSTEXPR14
-		RandomAccessIterator
-		__find_if_not(RandomAccessIterator first, RandomAccessIterator last, UnaryPredicate pred, std::random_access_iterator_tag)
-		{
-			typedef RandomAccessIterator iterator;
-			typedef typename kerbal::iterator::iterator_traits<iterator>::difference_type difference_type;
-
-#	define EACH() do {\
-				if (pred(*first)) {\
-					++first;\
-				} else {\
-					break;\
-				}\
-			} while (false)
-
-			difference_type trip_count(kerbal::iterator::distance(first, last));
-			difference_type remain(trip_count & 3);
-			for (trip_count >>= 2; trip_count > 0; --trip_count) {
-				EACH();
-				EACH();
-				EACH();
-				EACH();
-			}
-
-			if (remain >= 2) {
-				EACH();
-				EACH();
-				remain -= 2;
-			}
-			if (remain >= 1) {
-				EACH();
-			}
-
-#	undef EACH
-
-			return first;
-		}
-
-		template <typename InputIterator, typename UnaryPredicate>
-		KERBAL_CONSTEXPR14
-		InputIterator
-		find_if_not(InputIterator first, InputIterator last, UnaryPredicate pred)
-		{
-			return kerbal::algorithm::__find_if_not(first, last, pred, kerbal::iterator::iterator_category(first));
-		}
-
-		template <typename InputIterator, typename UnaryPredicate>
-		KERBAL_CONSTEXPR14
-		bool all_of(InputIterator first, InputIterator last, UnaryPredicate pred)
-		{
-			return (kerbal::algorithm::find_if_not(first, last, pred) == last);
-		}
-
-		template <typename InputIterator, typename UnaryPredicate>
-		KERBAL_CONSTEXPR14
 		bool any_of(InputIterator first, InputIterator last, UnaryPredicate pred)
 		{
 			return (kerbal::algorithm::find_if(first, last, pred) != last);
@@ -270,65 +147,6 @@ namespace kerbal
 		bool none_of(InputIterator first, InputIterator last, UnaryPredicate pred)
 		{
 			return !kerbal::algorithm::any_of(first, last, pred);
-		}
-
-
-
-		template <typename InputIterator, typename UnaryFunction>
-		KERBAL_CONSTEXPR14
-		UnaryFunction
-		__for_each(InputIterator first, InputIterator last, UnaryFunction f, std::input_iterator_tag)
-		{
-			while (first != last) {
-				f(*first);
-				++first;
-			}
-			return kerbal::compatibility::to_xvalue(f);
-		}
-
-		template <typename RandomAccessIterator, typename UnaryFunction>
-		KERBAL_CONSTEXPR14
-		UnaryFunction
-		__for_each(RandomAccessIterator first, RandomAccessIterator last, UnaryFunction f, std::random_access_iterator_tag)
-		{
-			typedef RandomAccessIterator iterator;
-			typedef typename kerbal::iterator::iterator_traits<iterator>::difference_type difference_type;
-
-#	define EACH() do {\
-				f(*first);\
-				++first;\
-			} while (false)
-
-			difference_type trip_count(kerbal::iterator::distance(first, last));
-			difference_type remain(trip_count & 3);
-
-			for (trip_count >>= 2; trip_count > 0; --trip_count) {
-				EACH();
-				EACH();
-				EACH();
-				EACH();
-			}
-
-			if (remain >= 2) {
-				EACH();
-				EACH();
-				remain -= 2;
-			}
-			if (remain >= 1) {
-				EACH();
-			}
-
-#	undef EACH
-
-			return kerbal::compatibility::to_xvalue(f);
-		}
-
-		template <typename InputIterator, typename UnaryFunction>
-		KERBAL_CONSTEXPR14
-		UnaryFunction
-		for_each(InputIterator first, InputIterator last, UnaryFunction f)
-		{
-			return kerbal::algorithm::__for_each(first, last, f, kerbal::iterator::iterator_category(first));
 		}
 
 
@@ -388,68 +206,6 @@ namespace kerbal
 		rfor_each(BidirectionalIterator first, BidirectionalIterator last, UnaryFunction f)
 		{
 			return kerbal::algorithm::__rfor_each(first, last, f, kerbal::iterator::iterator_category(first));
-		}
-
-
-
-		template <typename InputIterator, typename UnaryPredicate>
-		KERBAL_CONSTEXPR14
-		size_t __count_if(InputIterator first, InputIterator last, UnaryPredicate pred, std::input_iterator_tag)
-		{
-			size_t cnt = 0;
-			while (first != last) {
-				if (pred(*first)) {
-					++cnt;
-				}
-				++first;
-			}
-			return cnt;
-		}
-
-		template <typename RandomAccessIterator, typename UnaryPredicate>
-		KERBAL_CONSTEXPR14
-		size_t __count_if(RandomAccessIterator first, RandomAccessIterator last, UnaryPredicate pred, std::random_access_iterator_tag)
-		{
-			typedef RandomAccessIterator iterator;
-			typedef typename kerbal::iterator::iterator_traits<iterator>::difference_type difference_type;
-
-			size_t cnt = 0;
-
-#	define EACH() do {\
-				if (pred(*first)) {\
-					++cnt;\
-				}\
-				++first;\
-			} while (false)
-
-			difference_type trip_count(kerbal::iterator::distance(first, last));
-			difference_type remain(trip_count & 3);
-			for (trip_count >>= 2; trip_count > 0; --trip_count) {
-				EACH();
-				EACH();
-				EACH();
-				EACH();
-			}
-
-			if (remain >= 2) {
-				EACH();
-				EACH();
-				remain -= 2;
-			}
-			if (remain >= 1) {
-				EACH();
-			}
-
-#	undef EACH
-
-			return cnt;
-		}
-
-		template <typename InputIterator, typename UnaryPredicate>
-		KERBAL_CONSTEXPR14
-		size_t count_if(InputIterator first, InputIterator last, UnaryPredicate pred)
-		{
-			return kerbal::algorithm::__count_if(first, last, pred, kerbal::iterator::iterator_category(first));
 		}
 
 
