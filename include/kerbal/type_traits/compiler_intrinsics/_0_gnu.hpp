@@ -65,6 +65,28 @@
 #			define KERBAL_IS_FINAL(T)				__is_final(T)
 #		endif
 
+
+
+#	if KERBAL_GNU_VERSION_MEETS(7, 1, 0) // There is no official document to describe `__is_aggregate`, just testing result
+#		define KERBAL_IS_AGGREGATE(T)					__is_aggregate(T)
+#	else
+
+#		if KERBAL_GNU_PRIVATE_HAS_BUILTIN(__is_aggregate)
+#			define KERBAL_IS_AGGREGATE(T)				__is_aggregate(T)
+#		endif
+
+
+
+// https://gcc.gnu.org/onlinedocs/gcc-4.6.1/gcc/Type-Traits.html#Type-Traits
+
+#	if KERBAL_GNU_VERSION_MEETS(4, 6, 1)
+#		define KERBAL_IS_STANDARD_LAYOUT(T)					__is_standard_layout(T)
+#	else
+
+#		if KERBAL_GNU_PRIVATE_HAS_BUILTIN(__is_standard_layout)
+#			define KERBAL_IS_STANDARD_LAYOUT(T)				__is_standard_layout(T)
+#		endif
+
 #	endif
 
 #endif // KERBAL_TYPE_TRAITS_COMPILER_INTRINSICS__0_GNU_HPP

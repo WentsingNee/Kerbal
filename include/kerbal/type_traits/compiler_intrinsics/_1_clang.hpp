@@ -132,18 +132,38 @@
 #			define KERBAL_IS_NOTHROW_ASSIGNABLE(T, U) __is_nothrow_assignable(T, U)
 #		endif
 
+#		if KERBAL_CLANG_PRIVATE_HAS_BUILTIN(__is_trivially_assignable)
+#			define KERBAL_IS_TRIVIALLY_ASSIGNABLE(T, U) __is_trivially_assignable(T, U)
+#		elif KERBAL_CLANG_PRIVATE_HAS_FEATURE(is_trivially_assignable)
+#			define KERBAL_IS_TRIVIALLY_ASSIGNABLE(T, U) __is_trivially_assignable(T, U)
+#		endif
+
+
+
 #		if KERBAL_CLANG_PRIVATE_HAS_BUILTIN(__is_nothrow_constructible)
 #			define KERBAL_IS_NOTHROW_CONSTRUCTIBLE(...) __is_nothrow_constructible(__VA_ARGS__)
+#		endif
+
+#		if KERBAL_CLANG_PRIVATE_HAS_BUILTIN(__is_trivially_constructible)
+#			define KERBAL_IS_TRIVIALLY_CONSTRUCTIBLE(...) __is_trivially_constructible(__VA_ARGS__)
+#		elif KERBAL_CLANG_PRIVATE_HAS_FEATURE(is_trivially_constructible)
+#			define KERBAL_IS_TRIVIALLY_CONSTRUCTIBLE(...) __is_trivially_constructible(__VA_ARGS__)
+#		endif
+
+
+
+#		if KERBAL_CLANG_PRIVATE_HAS_BUILTIN(__is_nothrow_destructible)
+#			define KERBAL_IS_NOTHROW_DESTRUCTIBLE(T) __is_nothrow_destructible(T)
+#		endif
+
+#		if KERBAL_CLANG_PRIVATE_HAS_BUILTIN(__is_trivially_constructible)
+#			define KERBAL_IS_TRIVIALLY_DESTRUCTIBLE(T) __is_trivially_destructible(T)
 #		endif
 
 
 
 #		if KERBAL_CLANG_PRIVATE_HAS_BUILTIN(__is_trivial)
 #			define KERBAL_IS_TRIVIAL(T) __is_trivial(T)
-#		endif
-
-#		if KERBAL_CLANG_PRIVATE_HAS_BUILTIN(__is_nothrow_constructible)
-#			define KERBAL_IS_NOTHROW_CONSTRUCTIBLE(...) __is_nothrow_constructible(__VA_ARGS__)
 #		endif
 
 
