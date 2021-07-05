@@ -425,6 +425,22 @@ namespace kerbal
 
 		template <typename Tp>
 		KERBAL_CONSTEXPR
+		Tp flip_left_n(Tp x, size_t n) KERBAL_NOEXCEPT
+		{
+			typedef typename kerbal::type_traits::make_unsigned<Tp>::type unsigned_t;
+			return x ^ ~kerbal::numeric::mask<unsigned_t>(sizeof(unsigned_t) * CHAR_BIT - n);
+		}
+
+		template <typename Tp>
+		KERBAL_CONSTEXPR
+		Tp flip_right_n(Tp x, size_t n) KERBAL_NOEXCEPT
+		{
+			typedef typename kerbal::type_traits::make_unsigned<Tp>::type unsigned_t;
+			return x ^ kerbal::numeric::mask<unsigned_t>(n);
+		}
+
+		template <typename Tp>
+		KERBAL_CONSTEXPR
 		Tp reset_bit(Tp x, size_t pos) KERBAL_NOEXCEPT
 		{
 			typedef typename kerbal::type_traits::make_unsigned<Tp>::type unsigned_t;
