@@ -190,7 +190,42 @@ namespace kerbal
 				}
 
 				KERBAL_CONSTEXPR14
-				bool all(size_type l, size_type r) const KERBAL_NOEXCEPT;
+				bool all(size_type left, size_type len) const KERBAL_NOEXCEPT
+				{
+					block_size_type idx_left = left / BITS_PER_BLOCK::value;
+					block_size_type ofs_left = left % BITS_PER_BLOCK::value;
+					size_type t = BITS_PER_BLOCK::value - ofs_left;
+					if (len > t) {
+						if ((~_K_block[idx_left] >> ofs_left) != 0) { // if any left t(BITS_PER_BLOCK::value - ofs_left) bits of _K_block[idx_left] is false
+							return false;
+						}
+						len -= t;
+						block_size_type chunk_left = idx_left + 1;
+						size_type chunk_size = len / BITS_PER_BLOCK::value;
+						if (!bitset_size_unrelated::all_chunk(_K_block + chunk_left, chunk_size)) {
+							return false;
+						}
+						if ((chunk_left + chunk_size) < BLOCK_SIZE::value) {
+							size_type remain = len % BITS_PER_BLOCK::value;
+							const block_type & remain_block = _K_block[chunk_left + chunk_size];
+							if ((~remain_block << (BITS_PER_BLOCK::value - remain)) != 0) { // if any right remain bits of remain_block is false
+								return false;
+							}
+						}
+					} else {
+						if (len != 0) {
+							block_type mask = static_cast<block_type>(kerbal::numeric::mask<block_type>(len) << ofs_left);
+							// 0000 111 00000000
+							//      len ofs_left
+							if ((~_K_block[idx_left] & mask) != 0) {
+								return false;
+							}
+						}
+					}
+
+					return true;
+				}
+
 
 			private:
 
@@ -221,7 +256,41 @@ namespace kerbal
 				}
 
 				KERBAL_CONSTEXPR14
-				bool any(size_type l, size_type r) const KERBAL_NOEXCEPT;
+				bool any(size_type left, size_type len) const KERBAL_NOEXCEPT
+				{
+					block_size_type idx_left = left / BITS_PER_BLOCK::value;
+					block_size_type ofs_left = left % BITS_PER_BLOCK::value;
+					size_type t = BITS_PER_BLOCK::value - ofs_left;
+					if (len > t) {
+						if ((_K_block[idx_left] >> ofs_left) != 0) { // if any left t(BITS_PER_BLOCK::value - ofs_left) bits of _K_block[idx_left] is true
+							return true;
+						}
+						len -= t;
+						block_size_type chunk_left = idx_left + 1;
+						size_type chunk_size = len / BITS_PER_BLOCK::value;
+						if (bitset_size_unrelated::any_chunk(_K_block + chunk_left, chunk_size)) {
+							return true;
+						}
+						if ((chunk_left + chunk_size) < BLOCK_SIZE::value) {
+							size_type remain = len % BITS_PER_BLOCK::value;
+							const block_type & remain_block = _K_block[chunk_left + chunk_size];
+							if ((remain_block << (BITS_PER_BLOCK::value - remain)) != 0) { // if any right remain bits of remain_block is true
+								return true;
+							}
+						}
+					} else {
+						if (len != 0) {
+							block_type mask = static_cast<block_type>(kerbal::numeric::mask<block_type>(len) << ofs_left);
+							// 0000 111 00000000
+							//      len ofs_left
+							if ((_K_block[idx_left] & mask) != 0) {
+								return true;
+							}
+						}
+					}
+
+					return false;
+				}
 
 				// Checks if none of the bits are set to true
 				KERBAL_CONSTEXPR14
@@ -231,7 +300,10 @@ namespace kerbal
 				}
 
 				KERBAL_CONSTEXPR14
-				bool none(size_type l, size_type r) const KERBAL_NOEXCEPT;
+				bool none(size_type left, size_type len) const KERBAL_NOEXCEPT
+				{
+					return !this->any(left, len);
+				}
 
 			private:
 
