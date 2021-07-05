@@ -382,6 +382,35 @@ namespace kerbal
 					return *this;
 				}
 
+				KERBAL_CONSTEXPR14
+				static_bitset& flip(size_type left, size_type len) KERBAL_NOEXCEPT
+				{
+					block_size_type idx_left = left / BITS_PER_BLOCK::value;
+					block_size_type ofs_left = left % BITS_PER_BLOCK::value;
+					size_type t = BITS_PER_BLOCK::value - ofs_left;
+					if (len > t) {
+						_K_block[idx_left] = kerbal::numeric::flip_left_n(_K_block[idx_left], t);
+						len -= t;
+						block_size_type chunk_left = idx_left + 1;
+						size_type chunk_size = len / BITS_PER_BLOCK::value;
+						bitset_size_unrelated::flip_chunk(_K_block + chunk_left, chunk_size);
+						if ((chunk_left + chunk_size) < BLOCK_SIZE::value) {
+							size_type remain = len % BITS_PER_BLOCK::value;
+							block_type & remain_block = _K_block[chunk_left + chunk_size];
+							remain_block = kerbal::numeric::flip_right_n(remain_block, remain);
+						}
+					} else {
+						if (len != 0) {
+							block_type mask = static_cast<block_type>(kerbal::numeric::mask<block_type>(len) << ofs_left);
+							// 0000 111 00000000
+							//      len ofs_left
+							_K_block[idx_left] ^= mask;
+						}
+					}
+
+					return *this;
+				}
+
 			private:
 				template <bool c>
 				KERBAL_CONSTEXPR14
