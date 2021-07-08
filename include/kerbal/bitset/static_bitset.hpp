@@ -333,6 +333,36 @@ namespace kerbal
 				}
 
 				KERBAL_CONSTEXPR14
+				size_type count(size_type left, size_type len) const KERBAL_NOEXCEPT
+				{
+					block_size_type idx_left = left / BITS_PER_BLOCK::value;
+					block_size_type ofs_left = left % BITS_PER_BLOCK::value;
+					size_type t = BITS_PER_BLOCK::value - ofs_left;
+					size_type cnt = 0;
+					if (len > t) {
+						cnt += kerbal::numeric::popcount(_K_block[idx_left] >> ofs_left);
+						len -= t;
+						block_size_type chunk_left = idx_left + 1;
+						size_type chunk_size = len / BITS_PER_BLOCK::value;
+						cnt += bitset_size_unrelated::count_chunk(_K_block + chunk_left, chunk_size);
+						if ((chunk_left + chunk_size) < BLOCK_SIZE::value) {
+							size_type remain = len % BITS_PER_BLOCK::value;
+							const block_type & remain_block = _K_block[chunk_left + chunk_size];
+							cnt += kerbal::numeric::popcount(remain_block << (BITS_PER_BLOCK::value - remain));
+						}
+					} else {
+						if (len != 0) {
+							block_type mask = static_cast<block_type>(kerbal::numeric::mask<block_type>(len) << ofs_left);
+							// 0000 111 00000000
+							//      len ofs_left
+							cnt += kerbal::numeric::popcount(_K_block[idx_left] & mask);
+						}
+					}
+
+					return cnt;
+				}
+
+				KERBAL_CONSTEXPR14
 				static_bitset& reset() KERBAL_NOEXCEPT
 				{
 					bitset_size_unrelated::reset_chunk(_K_block, BLOCK_SIZE::value);
