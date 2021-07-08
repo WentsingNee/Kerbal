@@ -71,7 +71,7 @@ namespace kerbal
 				>																TAIL_SIZE;
 				typedef kerbal::type_traits::integral_constant<
 						block_size_type,
-						BITS_PER_BLOCK::value - TAIL_SIZE::value
+						TAIL_SIZE::value == 0 ? 0 : BITS_PER_BLOCK::value - TAIL_SIZE::value
 				>																WASTE_SIZE;
 
 			public:
