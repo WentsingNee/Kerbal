@@ -581,15 +581,25 @@ namespace kerbal
 					if (n >= SIZE::value) {
 						this->reset();
 					} else {
-						if (n % BITS_PER_BLOCK::value == 0) {
-							block_size_type shift_block_cnt = n / BITS_PER_BLOCK::value;
+						if (!IS_DIVISIBLE::value) {
+							this->_K_block[BLOCK_SIZE::value - 1] = kerbal::numeric::reset_left_n(this->_K_block[BLOCK_SIZE::value - 1], WASTE_SIZE::value);
+						}
+						const size_type inner_ofs = n % BITS_PER_BLOCK::value;
+						const block_size_type shift_block_cnt = n / BITS_PER_BLOCK::value;
+						if (inner_ofs == 0) {
 							kerbal::algorithm::copy(this->_K_block + shift_block_cnt, this->_K_block + BLOCK_SIZE::value, this->_K_block);
 						} else {
-							for (size_type i = 0; i < SIZE::value - n; ++i) {
-								this->set(i, this->test(i + n));
+							const size_type ano_ofs = (BITS_PER_BLOCK::value - inner_ofs);
+							size_type i = 0;
+							size_type j = shift_block_cnt;
+							while (j + 1 != BLOCK_SIZE::value) {
+								this->_K_block[i] = (this->_K_block[j] >> inner_ofs) | (this->_K_block[j + 1] << ano_ofs);
+								++i;
+								++j;
 							}
+							this->_K_block[i] = (this->_K_block[j] >> inner_ofs);
 						}
-						this->reset(SIZE::value - n, n);
+						bitset_size_unrelated::reset_chunk(this->_K_block + (BLOCK_SIZE::value - shift_block_cnt), shift_block_cnt);
 					}
 					return *this;
 				}
@@ -600,17 +610,22 @@ namespace kerbal
 					if (n >= SIZE::value) {
 						this->reset();
 					} else {
-						if (n % BITS_PER_BLOCK::value == 0) {
-							block_size_type shift_block_cnt = n / BITS_PER_BLOCK::value;
+						const size_type inner_ofs = n % BITS_PER_BLOCK::value;
+						const block_size_type shift_block_cnt = n / BITS_PER_BLOCK::value;
+						if (inner_ofs == 0) {
 							kerbal::algorithm::copy_backward(this->_K_block, this->_K_block + (BLOCK_SIZE::value - shift_block_cnt), this->_K_block + BLOCK_SIZE::value);
 						} else {
-							size_type i = SIZE::value - n;
-							while (i != 0) {
+							const size_type ano_ofs = (BITS_PER_BLOCK::value - inner_ofs);
+							size_type i = BLOCK_SIZE::value;
+							size_type j = i - shift_block_cnt;
+							while (j - 1 != 0) {
 								--i;
-								this->set(i + n, this->test(i));
+								--j;
+								this->_K_block[i] = (this->_K_block[j] << inner_ofs) | (this->_K_block[j - 1] >> ano_ofs);
 							}
+							this->_K_block[shift_block_cnt] = (this->_K_block[0] << inner_ofs);
 						}
-						this->reset(0, n);
+						bitset_size_unrelated::reset_chunk(this->_K_block + 0, shift_block_cnt); // this->reset(0, n);
 					}
 					return *this;
 				}
