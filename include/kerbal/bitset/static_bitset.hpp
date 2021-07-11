@@ -408,6 +408,86 @@ namespace kerbal
 					return cnt;
 				}
 
+			private:
+
+				template <bool c>
+				KERBAL_CONSTEXPR14
+				typename kerbal::type_traits::enable_if<!c, size_type>::type
+				k_countl_zero_impl() const KERBAL_NOEXCEPT
+				{
+					block_size_type chunk_index = bitset_size_unrelated::countl_zero_chunk(k_block, BLOCK_SIZE::value - 1);
+					block_type last_block = this->k_block[chunk_index];
+					if (chunk_index == BLOCK_SIZE::value - 1) {
+						// 1111 000000000
+						//      TAIL_SIZE
+						const block_type mask = ~(kerbal::numeric::mask<block_type>(TAIL_SIZE::value));
+						last_block |= mask;
+					}
+					// last_block != 0
+					return kerbal::numeric::countr_zero(last_block) + BITS_PER_BLOCK::value * chunk_index;
+				}
+
+				template <bool c>
+				KERBAL_CONSTEXPR14
+				typename kerbal::type_traits::enable_if<c, size_type>::type
+				k_countl_zero_impl() const KERBAL_NOEXCEPT
+				{
+					block_size_type chunk_index = bitset_size_unrelated::countl_zero_chunk(k_block, BLOCK_SIZE::value);
+					size_type r = BITS_PER_BLOCK::value * chunk_index;
+					if (chunk_index != BLOCK_SIZE::value) {
+						block_type last_block = this->k_block[chunk_index];
+						// last_block != 0
+						r += kerbal::numeric::countr_zero(last_block);
+					}
+					return r;
+				}
+
+			public:
+
+				size_type countl_zero() KERBAL_NOEXCEPT
+				{
+					return k_countl_zero_impl<IS_DIVISIBLE::value>();
+				}
+
+			private:
+
+				template <bool c>
+				KERBAL_CONSTEXPR14
+				typename kerbal::type_traits::enable_if<!c, size_type>::type
+				k_countl_one_impl() const KERBAL_NOEXCEPT
+				{
+					block_size_type chunk_index = bitset_size_unrelated::countl_one_chunk(k_block, BLOCK_SIZE::value - 1);
+					block_type last_block = this->k_block[chunk_index];
+					if (chunk_index == BLOCK_SIZE::value - 1) {
+						// 0000 111111111
+						//      TAIL_SIZE
+						const block_type mask = kerbal::numeric::mask<block_type>(TAIL_SIZE::value);
+						last_block &= mask;
+					}
+					return kerbal::numeric::countr_zero(~last_block) + BITS_PER_BLOCK::value * chunk_index;
+				}
+
+				template <bool c>
+				KERBAL_CONSTEXPR14
+				typename kerbal::type_traits::enable_if<c, size_type>::type
+				k_countl_one_impl() const KERBAL_NOEXCEPT
+				{
+					block_size_type chunk_index = bitset_size_unrelated::countl_one_chunk(k_block, BLOCK_SIZE::value);
+					size_type r = BITS_PER_BLOCK::value * chunk_index;
+					if (chunk_index != BLOCK_SIZE::value) {
+						block_type last_block = this->k_block[chunk_index];
+						r += kerbal::numeric::countr_zero(~last_block);
+					}
+					return r;
+				}
+
+			public:
+
+				size_type countl_one() KERBAL_NOEXCEPT
+				{
+					return k_countl_one_impl<IS_DIVISIBLE::value>();
+				}
+
 				KERBAL_CONSTEXPR14
 				static_bitset & reset() KERBAL_NOEXCEPT
 				{
