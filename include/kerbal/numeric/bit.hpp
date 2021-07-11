@@ -16,12 +16,25 @@
 #include <kerbal/config/compiler_private.hpp>
 
 #include <kerbal/compatibility/constexpr.hpp>
+#include <kerbal/compatibility/is_constant_evaluated.hpp>
 #include <kerbal/compatibility/noexcept.hpp>
+#include <kerbal/config/architecture.hpp>
+#include <kerbal/config/compiler_id.hpp>
 #include <kerbal/container/array.hpp>
 #include <kerbal/type_traits/integral_constant.hpp>
 #include <kerbal/type_traits/sign_deduction.hpp>
 
 #include <climits>
+
+
+#if KERBAL_COMPILER_ID == KERBAL_COMPILER_ID_MSVC
+#	if KERBAL_ARCHITECTURE == KERBAL_ARCHITECTURE_X86 || KERBAL_ARCHITECTURE == KERBAL_ARCHITECTURE_AMD64
+#		include <immintrin.h>
+#		define KERBAL_X86_POPCNTU32_INTRINSIC 1
+#		define KERBAL_X86_POPCNTU64_INTRINSIC 1
+#	endif
+#endif
+
 
 namespace kerbal
 {
@@ -110,24 +123,24 @@ namespace kerbal
 		}
 
 
-# if CHAR_BIT != 8
-
-		template <typename Unsigned>
-		KERBAL_CONSTEXPR14
-		int __popcount(Unsigned x, kerbal::type_traits::false_type) KERBAL_NOEXCEPT
-		{
-			int cnt = 0;
-			while (x) {
-				x &= x - 1;
-				++cnt;
-			}
-			return cnt;
-		}
-
-# else
-
 		namespace detail
 		{
+
+# if CHAR_BIT != 8
+
+			template <typename Unsigned>
+			KERBAL_CONSTEXPR14
+			int __basic_popcount(Unsigned x) KERBAL_NOEXCEPT
+			{
+				int cnt = 0;
+				while (x) {
+					x &= x - 1;
+					++cnt;
+				}
+				return cnt;
+			}
+
+# else
 
 			template <typename T, int W>
 			struct _0x3333_loop;
@@ -142,7 +155,7 @@ namespace kerbal
 			struct _0x3333_loop :
 					public kerbal::type_traits::integral_constant<
 							T,
-							_0x3333_loop<T, W - 1>::value + (static_cast<T>(0x33) << (W - 1) * 8)
+							(_0x3333_loop<T, W - 1>::value << CHAR_BIT) + _0x3333_loop<T, 1>::value
 					>
 			{
 			};
@@ -167,7 +180,7 @@ namespace kerbal
 			struct _0x5555_loop :
 					public kerbal::type_traits::integral_constant<
 							T,
-							_0x5555_loop<T, W - 1>::value + (static_cast<T>(0x55) << (W - 1) * 8)
+							(_0x5555_loop<T, W - 1>::value << CHAR_BIT) + _0x5555_loop<T, 1>::value
 					>
 			{
 			};
@@ -192,7 +205,7 @@ namespace kerbal
 			struct _0x0f0f_loop :
 					public kerbal::type_traits::integral_constant<
 							T,
-							_0x0f0f_loop<T, W - 1>::value + (static_cast<T>(0xf) << (W - 1) * 8)
+							(_0x0f0f_loop<T, W - 1>::value << CHAR_BIT) + _0x0f0f_loop<T, 1>::value
 					>
 			{
 			};
@@ -217,7 +230,7 @@ namespace kerbal
 			struct _0x0101_loop :
 					public kerbal::type_traits::integral_constant<
 							T,
-							_0x0101_loop<T, W - 1>::value + (static_cast<T>(1) << (W - 1) * 8)
+							(_0x0101_loop<T, W - 1>::value << CHAR_BIT) + _0x0101_loop<T, 1>::value
 					>
 			{
 			};
@@ -228,33 +241,47 @@ namespace kerbal
 			{
 			};
 
-		} // namespace detail
-
-
-		// optimized-swar algorithm
-		template <typename Unsigned>
-		KERBAL_CONSTEXPR14
-		int __popcount(Unsigned x, kerbal::type_traits::false_type) KERBAL_NOEXCEPT
-		{
-			x = x - ((x >> 1) & detail::_0x5555<Unsigned>::value);
-			// x = (x & detail::_0x5555<Unsigned>::value) + ((x >> 1) & detail::_0x5555<Unsigned>::value);
-
-			x = (x & detail::_0x3333<Unsigned>::value) + ((x >> 2) & detail::_0x3333<Unsigned>::value);
-
-			x = ((x >> 4) + x) & detail::_0x0f0f<Unsigned>::value;
-			// x = (x & detail::_0x0f0f<Unsigned>::value) + ((x >> 4) & detail::_0x0f0f<Unsigned>::value);
-
-			x = static_cast<Unsigned>(x * detail::_0x0101<Unsigned>::value) >> (8 * (sizeof(Unsigned) - 1));
-			return x;
-		}
-
-
 #endif
 
+			// optimized-swar algorithm
+			template <typename Unsigned>
+			KERBAL_CONSTEXPR14
+			int __basic_popcount(Unsigned x) KERBAL_NOEXCEPT
+			{
+				x = x - ((x >> 1) & detail::_0x5555<Unsigned>::value);
+				// x = (x & detail::_0x5555<Unsigned>::value) + ((x >> 1) & detail::_0x5555<Unsigned>::value);
+
+				x = (x & detail::_0x3333<Unsigned>::value) + ((x >> 2) & detail::_0x3333<Unsigned>::value);
+
+				x = ((x >> 4) + x) & detail::_0x0f0f<Unsigned>::value;
+				// x = (x & detail::_0x0f0f<Unsigned>::value) + ((x >> 4) & detail::_0x0f0f<Unsigned>::value);
+
+				x = static_cast<Unsigned>(x * detail::_0x0101<Unsigned>::value) >> (8 * (sizeof(Unsigned) - 1));
+				return x;
+			}
+
+
+			template <typename Unsigned>
+			KERBAL_CONSTEXPR14
+			int __popcount(Unsigned x, kerbal::type_traits::false_type) KERBAL_NOEXCEPT
+			{
+				return __basic_popcount(x);
+			}
 
 #	if KERBAL_COMPILER_ID == KERBAL_COMPILER_ID_GNU
-#		if KERBAL_GNU_PRIVATE_HAS_BUILTIN(__builtin_popcount)
-#			define KERBAL_BUILTIN_POPCOUNT(x) __builtin_popcount(x)
+#		if (KERBAL_ARCHITECTURE != KERBAL_ARCHITECTURE_X86 && KERBAL_ARCHITECTURE != KERBAL_ARCHITECTURE_AMD64) || (defined(__POPCNT__))
+#			define KERBAL_GNU_TRY_BUILTIN_POPCOUNT_INTRINSICS 1
+#		endif
+#	endif
+
+
+#ifndef KERBAL_HAS_BUILTIN_POPCOUNT
+
+#	if KERBAL_COMPILER_ID == KERBAL_COMPILER_ID_GNU
+#		if KERBAL_GNU_TRY_BUILTIN_POPCOUNT_INTRINSICS
+#			if KERBAL_GNU_PRIVATE_HAS_BUILTIN(__builtin_popcount)
+#				define KERBAL_BUILTIN_POPCOUNT(x) __builtin_popcount(x)
+#			endif
 #		endif
 #	elif KERBAL_COMPILER_ID == KERBAL_COMPILER_ID_CLANG
 #		if KERBAL_CLANG_PRIVATE_HAS_BUILTIN(__builtin_popcount)
@@ -266,10 +293,22 @@ namespace kerbal
 #		endif
 #	endif
 
+#	if defined(KERBAL_BUILTIN_POPCOUNT)
+#		define KERBAL_HAS_BUILTIN_POPCOUNT 1
+#	else
+#		define KERBAL_HAS_BUILTIN_POPCOUNT 0
+#	endif
+
+#endif
+
+
+#ifndef KERBAL_HAS_BUILTIN_POPCOUNTL
 
 #	if KERBAL_COMPILER_ID == KERBAL_COMPILER_ID_GNU
-#		if KERBAL_GNU_PRIVATE_HAS_BUILTIN(__builtin_popcountl)
-#			define KERBAL_BUILTIN_POPCOUNTL(x) __builtin_popcountl(x)
+#		if KERBAL_GNU_TRY_BUILTIN_POPCOUNT_INTRINSICS
+#			if KERBAL_GNU_PRIVATE_HAS_BUILTIN(__builtin_popcountl)
+#				define KERBAL_BUILTIN_POPCOUNTL(x) __builtin_popcountl(x)
+#			endif
 #		endif
 #	elif KERBAL_COMPILER_ID == KERBAL_COMPILER_ID_CLANG
 #		if KERBAL_CLANG_PRIVATE_HAS_BUILTIN(__builtin_popcountl)
@@ -281,10 +320,22 @@ namespace kerbal
 #		endif
 #	endif
 
+#	if defined(KERBAL_BUILTIN_POPCOUNTL)
+#		define KERBAL_HAS_BUILTIN_POPCOUNTL 1
+#	else
+#		define KERBAL_HAS_BUILTIN_POPCOUNTL 0
+#	endif
+
+#endif
+
+
+#ifndef KERBAL_HAS_BUILTIN_POPCOUNTLL
 
 #	if KERBAL_COMPILER_ID == KERBAL_COMPILER_ID_GNU
-#		if KERBAL_GNU_PRIVATE_HAS_BUILTIN(__builtin_popcountll)
-#			define KERBAL_BUILTIN_POPCOUNTLL(x) __builtin_popcountll(x)
+#		if KERBAL_GNU_TRY_BUILTIN_POPCOUNT_INTRINSICS
+#			if KERBAL_GNU_PRIVATE_HAS_BUILTIN(__builtin_popcountll)
+#				define KERBAL_BUILTIN_POPCOUNTLL(x) __builtin_popcountll(x)
+#			endif
 #		endif
 #	elif KERBAL_COMPILER_ID == KERBAL_COMPILER_ID_CLANG
 #		if KERBAL_CLANG_PRIVATE_HAS_BUILTIN(__builtin_popcountll)
@@ -296,49 +347,77 @@ namespace kerbal
 #		endif
 #	endif
 
-
-#	if defined(KERBAL_BUILTIN_POPCOUNT)
-
-		KERBAL_CONSTEXPR
-		inline
-		int __popcount(unsigned int x, kerbal::type_traits::false_type) KERBAL_NOEXCEPT
-		{
-			return KERBAL_BUILTIN_POPCOUNT(x);
-		}
-
-#	endif
-
-
-#	if defined(KERBAL_BUILTIN_POPCOUNTL)
-
-		KERBAL_CONSTEXPR
-		inline
-		int __popcount(unsigned long x, kerbal::type_traits::false_type) KERBAL_NOEXCEPT
-		{
-			return KERBAL_BUILTIN_POPCOUNTL(x);
-		}
-
-#	endif
-
-
 #	if defined(KERBAL_BUILTIN_POPCOUNTLL)
+#		define KERBAL_HAS_BUILTIN_POPCOUNTLL 1
+#	else
+#		define KERBAL_HAS_BUILTIN_POPCOUNTLL 0
+#	endif
 
-		KERBAL_CONSTEXPR
-		inline
-		int __popcount(unsigned long long x, kerbal::type_traits::false_type) KERBAL_NOEXCEPT
-		{
-			return KERBAL_BUILTIN_POPCOUNTLL(x);
-		}
+#endif
+
+
+
+#	if KERBAL_HAS_BUILTIN_POPCOUNT
+
+			KERBAL_CONSTEXPR
+			inline
+			int __popcount(unsigned int x, kerbal::type_traits::false_type) KERBAL_NOEXCEPT
+			{
+				return KERBAL_BUILTIN_POPCOUNT(x);
+			}
+
+#	elif KERBAL_X86_POPCNTU32_INTRINSIC
+
+			KERBAL_CONSTEXPR14
+			inline
+			int __popcount(unsigned int x, kerbal::type_traits::false_type) KERBAL_NOEXCEPT
+			{
+#		if __cplusplus >= 201402L
+#			if KERBAL_HAS_KERBAL_HAS_IS_CONSTANT_EVALUATED_SUPPORT
+					return KERBAL_IS_CONSTANT_EVALUATED() ? __basic_popcount(x) : _mm_popcnt_u32(x);
+#			else
+					return __basic_popcount(x);
+#			endif
+#		else
+				return _mm_popcnt_u32(x);
+#		endif
+			}
 
 #	endif
 
-		template <typename Signed>
-		KERBAL_CONSTEXPR
-		int __popcount(Signed x, kerbal::type_traits::true_type) KERBAL_NOEXCEPT
-		{
-			typedef typename kerbal::type_traits::make_unsigned<Signed>::type unsigned_t;
-			return __popcount(static_cast<unsigned_t>(x), kerbal::type_traits::false_type());
-		}
+
+#	if KERBAL_HAS_BUILTIN_POPCOUNTL
+
+			KERBAL_CONSTEXPR
+			inline
+			int __popcount(unsigned long x, kerbal::type_traits::false_type) KERBAL_NOEXCEPT
+			{
+				return KERBAL_BUILTIN_POPCOUNTL(x);
+			}
+
+#	endif
+
+
+#	if KERBAL_HAS_BUILTIN_POPCOUNTLL
+
+			KERBAL_CONSTEXPR
+			inline
+			int __popcount(unsigned long long x, kerbal::type_traits::false_type) KERBAL_NOEXCEPT
+			{
+				return KERBAL_BUILTIN_POPCOUNTLL(x);
+			}
+
+#	endif
+
+			template <typename Signed>
+			KERBAL_CONSTEXPR
+			int __popcount(Signed x, kerbal::type_traits::true_type) KERBAL_NOEXCEPT
+			{
+				typedef typename kerbal::type_traits::make_unsigned<Signed>::type unsigned_t;
+				return __popcount(static_cast<unsigned_t>(x), kerbal::type_traits::false_type());
+			}
+
+		} // namespace detail
 
 		/**
 		 * Counts the number of 1 bits in the value of x.
@@ -347,7 +426,7 @@ namespace kerbal
 		KERBAL_CONSTEXPR
 		int popcount(Tp x) KERBAL_NOEXCEPT
 		{
-			return kerbal::numeric::__popcount(x, kerbal::type_traits::is_signed<Tp>());
+			return kerbal::numeric::detail::__popcount(x, kerbal::type_traits::is_signed<Tp>());
 		}
 
 
