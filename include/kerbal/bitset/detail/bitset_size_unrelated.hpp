@@ -296,6 +296,42 @@ namespace kerbal
 					}
 
 					KERBAL_CONSTEXPR14
+					static
+					block_size_type
+					countl_zero_chunk(
+						const block_type block[],
+						block_size_type block_width
+					) KERBAL_NOEXCEPT
+					{
+						block_size_type i = 0;
+						while (i < block_width) {
+							if (block[i]) {
+								break;
+							}
+							++i;
+						}
+						return i;
+					}
+
+					KERBAL_CONSTEXPR14
+					static
+					block_size_type
+					countl_one_chunk(
+						const block_type block[],
+						block_size_type block_width
+					) KERBAL_NOEXCEPT
+					{
+						block_size_type i = 0;
+						while (i < block_width) {
+							if (block[i] != ALL_ONE::value) {
+								break;
+							}
+							++i;
+						}
+						return i;
+					}
+
+					KERBAL_CONSTEXPR14
 					static void reset_chunk(block_type block[], block_size_type block_width) KERBAL_NOEXCEPT
 					{
 						kerbal::algorithm::fill(block, block + block_width, static_cast<block_type>(0));
