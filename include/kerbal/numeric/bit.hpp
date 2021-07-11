@@ -635,6 +635,310 @@ namespace kerbal
 			return __rotr(x, s % (sizeof(Tp) * CHAR_BIT), kerbal::type_traits::is_signed<Tp>());
 		}
 
+
+#	if CHAR_BIT != 8
+
+		template <typename Unsigned>
+		KERBAL_CONSTEXPR14
+		int _K_countr_zero(Unsigned x, kerbal::type_traits::false_type) KERBAL_NOEXCEPT
+		{
+			typedef kerbal::type_traits::integral_constant<int, CHAR_BIT * sizeof(x)> DIGIT;
+			int i = 0;
+			while (i < DIGIT::value) {
+				if (x % 2 == 1) {
+					break;
+				}
+				x >>= 1;
+				++i;
+			}
+			return i;
+		}
+
+#	else
+
+		namespace detail
+		{
+
+			template <typename Unsigned, int I, int J>
+			struct _K_countr_zero_find_1_mask_loop;
+
+			template <typename Unsigned, int I>
+			struct _K_countr_zero_find_1_mask_loop<Unsigned, I, 0> :
+					kerbal::type_traits::integral_constant<Unsigned, 0>
+			{
+			};
+
+			template <typename Unsigned, int I, int J>
+			struct _K_countr_zero_find_1_mask_loop :
+					kerbal::type_traits::integral_constant<
+							Unsigned,
+							_K_countr_zero_find_1_mask_loop<Unsigned, I, J - 1>::value |
+									(((static_cast<Unsigned>(~(J - 1)) & (static_cast<Unsigned>(1) << I)) != 0) ?
+									static_cast<Unsigned>(1) << (J - 1) :
+									0)
+					>
+			{
+			};
+
+			template <typename Unsigned, int I>
+			struct _K_countr_zero_find_1_mask :
+					_K_countr_zero_find_1_mask_loop<Unsigned, I, sizeof(Unsigned) * CHAR_BIT>
+			{
+			};
+
+			template <std::size_t I>
+			struct _K_countr_zero_find_1_mask_N : kerbal::type_traits::integral_constant<int, 0>
+			{
+			};
+
+			template <>
+			struct _K_countr_zero_find_1_mask_N<8> : kerbal::type_traits::integral_constant<int, 3>
+			{
+			};
+
+			template <>
+			struct _K_countr_zero_find_1_mask_N<16> : kerbal::type_traits::integral_constant<int, 4>
+			{
+			};
+
+			template <>
+			struct _K_countr_zero_find_1_mask_N<32> : kerbal::type_traits::integral_constant<int, 5>
+			{
+			};
+
+			template <>
+			struct _K_countr_zero_find_1_mask_N<64> : kerbal::type_traits::integral_constant<int, 6>
+			{
+			};
+
+			template <>
+			struct _K_countr_zero_find_1_mask_N<128> : kerbal::type_traits::integral_constant<int, 7>
+			{
+			};
+
+
+			template <typename Unsigned, int I>
+			struct _K_countr_zero_find_1;
+
+			template <typename Unsigned>
+			struct _K_countr_zero_find_1<Unsigned, 0>
+			{
+					typedef _K_countr_zero_find_1_mask<Unsigned, 0> MASK;
+
+					KERBAL_CONSTEXPR
+					static int f(Unsigned x) KERBAL_NOEXCEPT
+					{
+						return (x & MASK::value ? 0 : 1);
+					}
+			};
+
+			template <typename Unsigned, int I>
+			struct _K_countr_zero_find_1
+			{
+					typedef _K_countr_zero_find_1_mask<Unsigned, I> MASK;
+					typedef kerbal::type_traits::integral_constant<int, 1u << I> G;
+
+					KERBAL_CONSTEXPR
+					static int f(Unsigned x) KERBAL_NOEXCEPT
+					{
+						return _K_countr_zero_find_1<Unsigned, I - 1>::f(x) + (x & MASK::value ? 0 : G::value);
+					}
+			};
+
+		} // namespace detail
+
+		template <typename Unsigned>
+		KERBAL_CONSTEXPR
+		typename kerbal::type_traits::enable_if<
+				detail::_K_countr_zero_find_1_mask_N<CHAR_BIT * sizeof(Unsigned)>::value != 0,
+				int
+		>::type
+		_K_countr_zero(Unsigned x, kerbal::type_traits::false_type) KERBAL_NOEXCEPT
+		{
+			typedef kerbal::type_traits::integral_constant<std::size_t, CHAR_BIT * sizeof(Unsigned)> DIGIT;
+			typedef detail::_K_countr_zero_find_1_mask_N<DIGIT::value> N;
+			return detail::_K_countr_zero_find_1<Unsigned, N::value - 1>::f(x & (-x)) + (x == 0);
+		}
+
+		template <typename Unsigned>
+		KERBAL_CONSTEXPR
+		typename kerbal::type_traits::enable_if<
+				detail::_K_countr_zero_find_1_mask_N<CHAR_BIT * sizeof(Unsigned)>::value == 0,
+				int
+		>::type
+		_K_countr_zero(Unsigned x, kerbal::type_traits::false_type) KERBAL_NOEXCEPT
+		{
+			typedef kerbal::type_traits::integral_constant<int, CHAR_BIT * sizeof(Unsigned)> DIGIT;
+			int i = 0;
+			while (i < DIGIT::value) {
+				if (x % 2 == 1) {
+					break;
+				}
+				x >>= 1;
+				++i;
+			}
+			return i;
+		}
+
+#	endif
+
+
+
+#ifndef KERBAL_HAS_BUILTIN_COUNTR_ZERO
+
+#	if KERBAL_COMPILER_ID == KERBAL_COMPILER_ID_GNU
+#		if KERBAL_GNU_PRIVATE_HAS_BUILTIN(__builtin_ctz)
+#			define KERBAL_BUILTIN_COUNTR_ZERO(x) __builtin_ctz(x)
+#		endif
+#	elif KERBAL_COMPILER_ID == KERBAL_COMPILER_ID_CLANG
+#		if KERBAL_CLANG_PRIVATE_HAS_BUILTIN(__builtin_ctz)
+#			define KERBAL_BUILTIN_COUNTR_ZERO(x) __builtin_ctz(x)
+#		endif
+#	elif KERBAL_COMPILER_ID == KERBAL_COMPILER_ID_ICC
+#		if KERBAL_ICC_PRIVATE_HAS_BUILTIN(__builtin_ctz)
+#			define KERBAL_BUILTIN_COUNTR_ZERO(x) __builtin_ctz(x)
+#		endif
+#	endif
+
+#	if defined(KERBAL_BUILTIN_COUNTR_ZERO)
+#		define KERBAL_HAS_BUILTIN_COUNTR_ZERO 1
+#	else
+#		define KERBAL_HAS_BUILTIN_COUNTR_ZERO 0
+#	endif
+
+#endif
+
+
+
+#ifndef KERBAL_HAS_BUILTIN_COUNTR_ZEROL
+
+#	if KERBAL_COMPILER_ID == KERBAL_COMPILER_ID_GNU
+#		if KERBAL_GNU_PRIVATE_HAS_BUILTIN(__builtin_ctzl)
+#			define KERBAL_BUILTIN_COUNTR_ZEROL(x) __builtin_ctzl(x)
+#		endif
+#	elif KERBAL_COMPILER_ID == KERBAL_COMPILER_ID_CLANG
+#		if KERBAL_CLANG_PRIVATE_HAS_BUILTIN(__builtin_ctzl)
+#			define KERBAL_BUILTIN_COUNTR_ZEROL(x) __builtin_ctzl(x)
+#		endif
+#	elif KERBAL_COMPILER_ID == KERBAL_COMPILER_ID_ICC
+#		if KERBAL_ICC_PRIVATE_HAS_BUILTIN(__builtin_ctzl)
+#			define KERBAL_BUILTIN_COUNTR_ZEROL(x) __builtin_ctzl(x)
+#		endif
+#	endif
+
+#	if defined(KERBAL_BUILTIN_COUNTR_ZEROL)
+#		define KERBAL_HAS_BUILTIN_COUNTR_ZEROL 1
+#	else
+#		define KERBAL_HAS_BUILTIN_COUNTR_ZEROL 0
+#	endif
+
+#endif
+
+
+
+#ifndef KERBAL_HAS_BUILTIN_COUNTR_ZEROLL
+
+#	if KERBAL_COMPILER_ID == KERBAL_COMPILER_ID_GNU
+#		if KERBAL_GNU_PRIVATE_HAS_BUILTIN(__builtin_ctzll)
+#			define KERBAL_BUILTIN_COUNTR_ZEROLL(x) __builtin_ctzll(x)
+#		endif
+#	elif KERBAL_COMPILER_ID == KERBAL_COMPILER_ID_CLANG
+#		if KERBAL_CLANG_PRIVATE_HAS_BUILTIN(__builtin_ctzll)
+#			define KERBAL_BUILTIN_COUNTR_ZEROLL(x) __builtin_ctzll(x)
+#		endif
+#	elif KERBAL_COMPILER_ID == KERBAL_COMPILER_ID_ICC
+#		if KERBAL_ICC_PRIVATE_HAS_BUILTIN(__builtin_ctzll)
+#			define KERBAL_BUILTIN_COUNTR_ZEROLL(x) __builtin_ctzll(x)
+#		endif
+#	endif
+
+#	if defined(KERBAL_BUILTIN_COUNTR_ZEROLL)
+#		define KERBAL_HAS_BUILTIN_COUNTR_ZEROLL 1
+#	else
+#		define KERBAL_HAS_BUILTIN_COUNTR_ZEROLL 0
+#	endif
+
+#endif
+
+
+
+#	if KERBAL_HAS_BUILTIN_COUNTR_ZERO
+
+		KERBAL_CONSTEXPR
+		inline
+		int _K_countr_zero(unsigned int x, kerbal::type_traits::false_type) KERBAL_NOEXCEPT
+		{
+			return KERBAL_BUILTIN_COUNTR_ZERO(x);
+		}
+
+		KERBAL_CONSTEXPR
+		inline
+		int _K_countr_zero(unsigned short x, kerbal::type_traits::false_type) KERBAL_NOEXCEPT
+		{
+//			return x == 0 ? CHAR_BIT * sizeof(x) : KERBAL_BUILTIN_COUNTR_ZERO(x);
+			typedef kerbal::type_traits::integral_constant<std::size_t, CHAR_BIT * sizeof(unsigned short)> S;
+			typedef kerbal::type_traits::integral_constant<std::size_t, CHAR_BIT * sizeof(unsigned int)> I;
+			KERBAL_STATIC_ASSERT(S::value <= I::value, "digits of short type is greater than that of int type");
+			return S::value == I::value ?
+					KERBAL_BUILTIN_COUNTR_ZERO(x) :
+					KERBAL_BUILTIN_COUNTR_ZERO(static_cast<unsigned int>(1u) << S::value | static_cast<unsigned int>(x));
+		}
+
+		KERBAL_CONSTEXPR
+		inline
+		int _K_countr_zero(unsigned char x, kerbal::type_traits::false_type) KERBAL_NOEXCEPT
+		{
+//			return x == 0 ? CHAR_BIT * sizeof(x) : KERBAL_BUILTIN_COUNTR_ZERO(x);
+			 typedef kerbal::type_traits::integral_constant<std::size_t, CHAR_BIT * sizeof(unsigned char)> C;
+			 typedef kerbal::type_traits::integral_constant<std::size_t, CHAR_BIT * sizeof(unsigned int)> I;
+			 KERBAL_STATIC_ASSERT(C::value <= I::value, "");
+			 return C::value == I::value ?
+					KERBAL_BUILTIN_COUNTR_ZERO(x) :
+			 		KERBAL_BUILTIN_COUNTR_ZERO(static_cast<unsigned int>(1u) << C::value | static_cast<unsigned int>(x));
+		 }
+
+#	endif
+
+
+#	if KERBAL_HAS_BUILTIN_COUNTR_ZEROL
+
+		KERBAL_CONSTEXPR
+		inline
+		int _K_countr_zero(unsigned long x, kerbal::type_traits::false_type) KERBAL_NOEXCEPT
+		{
+			return KERBAL_BUILTIN_COUNTR_ZEROL(x);
+		}
+
+#	endif
+
+
+#	if KERBAL_HAS_BUILTIN_COUNTR_ZEROLL
+
+		KERBAL_CONSTEXPR
+		inline
+		int _K_countr_zero(unsigned long long x, kerbal::type_traits::false_type) KERBAL_NOEXCEPT
+		{
+			return KERBAL_BUILTIN_COUNTR_ZEROLL(x);
+		}
+
+#	endif
+
+
+		template <typename Signed>
+		KERBAL_CONSTEXPR
+		int _K_countr_zero(Signed x, kerbal::type_traits::true_type) KERBAL_NOEXCEPT
+		{
+			typedef typename kerbal::type_traits::make_unsigned<Signed>::type unsigned_t;
+			return _K_countr_zero(static_cast<unsigned_t>(x), kerbal::type_traits::false_type());
+		}
+
+		template <typename Tp>
+		KERBAL_CONSTEXPR
+		int countr_zero(Tp x) KERBAL_NOEXCEPT
+		{
+			return _K_countr_zero(x, kerbal::type_traits::is_signed<Tp>());
+		}
+
 	} // namespace numeric
 
 } // namespace kerbal
