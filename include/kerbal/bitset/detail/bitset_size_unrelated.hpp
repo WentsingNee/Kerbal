@@ -427,6 +427,17 @@ namespace kerbal
 
 					}
 
+					KERBAL_CONSTEXPR14
+					static size_t find_chunk(const block_type block[], block_size_type block_width) KERBAL_NOEXCEPT
+					{
+						for (block_size_type i = 0; i < block_width; ++i) {
+							if (block[i]) {
+								return i * BITS_PER_BLOCK::value + kerbal::numeric::countr_zero(block[i]);
+							}
+						}
+						return block_width * BITS_PER_BLOCK::value;
+					}
+
 			};
 
 		} // namespace detail
