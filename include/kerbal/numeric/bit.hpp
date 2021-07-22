@@ -36,12 +36,18 @@ namespace kerbal
 		};
 
 		template <typename Tp>
+		struct bitarray_result
+		{
+				typedef kerbal::container::array<bool, bitarray_result_len<Tp>::value> type;
+		};
+
+		template <typename Tp>
 		KERBAL_CONSTEXPR14
-		kerbal::container::array<bool, bitarray_result_len<Tp>::value>
+		typename kerbal::numeric::bitarray_result<Tp>::type
 		bitarray(Tp x) KERBAL_NOEXCEPT
 		{
-			typedef bitarray_result_len<Tp> BIT_ARRAY_LEN;
-			kerbal::container::array<bool, BIT_ARRAY_LEN::value> r
+			typedef kerbal::numeric::bitarray_result_len<Tp> BIT_ARRAY_LEN;
+			typename kerbal::numeric::bitarray_result<Tp>::type r
 #		if __cplusplus >= 201402L
 				= {}
 #		endif
@@ -60,12 +66,18 @@ namespace kerbal
 		};
 
 		template <typename Tp>
+		struct octarray_result
+		{
+				typedef kerbal::container::array<char, octarray_result_len<Tp>::value> type;
+		};
+
+		template <typename Tp>
 		KERBAL_CONSTEXPR14
-		kerbal::container::array<char, octarray_result_len<Tp>::value>
+		typename kerbal::numeric::octarray_result<Tp>::type
 		octarray(Tp x) KERBAL_NOEXCEPT
 		{
-			typedef octarray_result_len<Tp> OCT_ARRAY_LEN;
-			kerbal::container::array<char, OCT_ARRAY_LEN::value> r
+			typedef kerbal::numeric::octarray_result_len<Tp> OCT_ARRAY_LEN;
+			typename kerbal::numeric::octarray_result<Tp>::type r
 #		if __cplusplus >= 201402L
 				= {}
 #		endif
@@ -86,12 +98,18 @@ namespace kerbal
 		};
 
 		template <typename Tp>
+		struct hexarray_result
+		{
+				typedef kerbal::container::array<char, hexarray_result_len<Tp>::value> type;
+		};
+
+		template <typename Tp>
 		KERBAL_CONSTEXPR14
-		kerbal::container::array<char, hexarray_result_len<Tp>::value>
+		typename kerbal::numeric::hexarray_result<Tp>::type
 		hexarray(Tp x) KERBAL_NOEXCEPT
 		{
 			typedef hexarray_result_len<Tp> HEX_ARRAY_LEN;
-			kerbal::container::array<char, HEX_ARRAY_LEN::value> r
+			typename kerbal::numeric::hexarray_result<Tp>::type r
 #		if __cplusplus >= 201402L
 				= {}
 #		endif
