@@ -302,7 +302,12 @@ namespace kerbal
 
 				using sl_allocator_unrelated::empty;
 				using sl_allocator_unrelated::size;
-				using sl_allocator_unrelated::max_size;
+
+				KERBAL_CONSTEXPR
+				size_type max_size() const KERBAL_NOEXCEPT
+				{
+					return node_allocator_traits::max_size(this->alloc());
+				}
 
 			//===================
 			// insert

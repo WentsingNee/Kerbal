@@ -282,12 +282,6 @@ namespace kerbal
 					using fl_type_unrelated::empty;
 					using fl_type_unrelated::size;
 
-					KERBAL_CONSTEXPR
-					size_type max_size() const KERBAL_NOEXCEPT
-					{
-						return static_cast<size_type>(-1) / sizeof(node);
-					}
-
 				//===================
 				// element access
 
