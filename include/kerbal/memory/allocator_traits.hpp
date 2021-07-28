@@ -13,6 +13,7 @@
 #define KERBAL_MEMORY_ALLOCATOR_TRAITS_HPP
 
 #include <kerbal/compatibility/constexpr.hpp>
+#include <kerbal/compatibility/namespace_std_scope.hpp>
 #include <kerbal/compatibility/noexcept.hpp>
 #include <kerbal/memory/pointer_traits.hpp>
 #include <kerbal/numeric/numeric_limits.hpp>
@@ -25,7 +26,24 @@
 #	include <kerbal/utility/forward.hpp>
 #endif
 
-#include <memory>
+#include <memory> // std::construct_at
+
+
+KERBAL_NAMESPACE_STD_BEGIN
+
+template <typename T>
+class allocator;
+
+namespace pmr
+{
+
+	template <typename T>
+	class polymorphic_allocator;
+
+} // namespace pmr
+
+
+KERBAL_NAMESPACE_STD_END
 
 
 namespace kerbal
@@ -536,6 +554,15 @@ namespace kerbal
 
 		template <typename T>
 		struct allocator_could_use_destroy<std::allocator<T>, T>: kerbal::type_traits::false_type
+		{
+		};
+
+#	endif
+
+#	if __cplusplus > 201703L
+
+		template <typename T>
+		struct allocator_could_use_destroy<std::pmr::polymorphic_allocator<T>, T>: kerbal::type_traits::false_type
 		{
 		};
 
