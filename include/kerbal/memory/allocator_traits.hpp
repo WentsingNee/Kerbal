@@ -17,6 +17,7 @@
 #include <kerbal/compatibility/noexcept.hpp>
 #include <kerbal/memory/pointer_traits.hpp>
 #include <kerbal/numeric/numeric_limits.hpp>
+#include <kerbal/memory/uninitialized.hpp>
 #include <kerbal/type_traits/integral_constant.hpp>
 #include <kerbal/type_traits/sign_deduction.hpp>
 #include <kerbal/type_traits/void_type.hpp>
@@ -493,11 +494,7 @@ namespace kerbal
 					KERBAL_CONSTEXPR20
 					static void __construct(kerbal::type_traits::false_type, Alloc&, T* p, Args&& ... args)
 					{
-#			if KERBAL_ENABLE_CONSTEXPR20
-						std::construct_at(p, kerbal::utility::forward<Args>(args)...);
-#			else
-						::new(static_cast<void*>(p)) T(kerbal::utility::forward<Args>(args)...);
-#			endif
+						kerbal::memory::construct_at(p, kerbal::utility::forward<Args>(args)...);
 					}
 
 					template <typename T, typename ... Args>
@@ -587,7 +584,7 @@ namespace kerbal
 													std::is_nothrow_destructible<T>::value
 											)
 					{
-						p->~T();
+						kerbal::memory::destroy_at(p);
 					}
 
 					template <typename T>
@@ -799,25 +796,25 @@ namespace kerbal
 				template <typename T>
 				static void construct(Alloc &, T * p)
 				{
-					::new(static_cast<void*>(p)) T();
+					kerbal::memory::construct_at(p);
 				}
 
 				template <typename T, typename Arg0>
 				static void construct(Alloc &, T * p, const Arg0& arg0)
 				{
-					::new(static_cast<void*>(p)) T(arg0);
+					kerbal::memory::construct_at(p, arg0);
 				}
 
 				template <typename T, typename Arg0, typename Arg1>
 				static void construct(Alloc &, T * p, const Arg0& arg0, const Arg1& arg1)
 				{
-					::new(static_cast<void*>(p)) T(arg0, arg1);
+					kerbal::memory::construct_at(p, arg0, arg1);
 				}
 
 				template <typename T, typename Arg0, typename Arg1, typename Arg2>
 				static void construct(Alloc &, T * p, const Arg0& arg0, const Arg1& arg1, const Arg2& arg2)
 				{
-					::new(static_cast<void*>(p)) T(arg0, arg1, arg2);
+					kerbal::memory::construct_at(p, arg0, arg1, arg2);
 				}
 
 #		endif // __cplusplus >= 201103L
