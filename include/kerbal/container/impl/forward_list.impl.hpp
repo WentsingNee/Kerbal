@@ -632,7 +632,7 @@ namespace kerbal
 		KERBAL_CONSTEXPR20
 		void forward_list<Tp, Allocator>::clear()
 				KERBAL_CONDITIONAL_NOEXCEPT(
-						noexcept(kerbal::utility::declthis<forward_list>()->fl_allocator_unrelated::_K_clear(
+						noexcept(kerbal::utility::declthis<fl_allocator_unrelated>()->_K_clear(
 								kerbal::utility::declthis<forward_list>()->alloc()
 						))
 				)

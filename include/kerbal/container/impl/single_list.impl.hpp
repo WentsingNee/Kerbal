@@ -722,7 +722,7 @@ namespace kerbal
 		void single_list<Tp, Allocator>::clear()
 				KERBAL_CONDITIONAL_NOEXCEPT(
 						noexcept(
-							kerbal::utility::declthis<single_list>()->sl_allocator_unrelated::_K_clear(
+							kerbal::utility::declthis<sl_allocator_unrelated>()->_K_clear(
 								kerbal::utility::declthis<single_list>()->alloc()
 						))
 				)
