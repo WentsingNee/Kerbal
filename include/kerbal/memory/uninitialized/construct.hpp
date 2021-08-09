@@ -14,12 +14,19 @@
 
 #include <kerbal/compatibility/constexpr.hpp>
 #include <kerbal/compatibility/move.hpp>
+#include <kerbal/iterator/iterator_traits.hpp>
 #include <kerbal/memory/uninitialized/destroy.hpp>
 #include <kerbal/type_traits/array_traits.hpp>
 #include <kerbal/type_traits/conditional.hpp>
 
 #if __cplusplus >= 201103L
 #	include <kerbal/utility/forward.hpp>
+#endif
+
+#if __cplusplus < 201103L
+#	include <kerbal/type_traits/can_be_pseudo_destructible.hpp>
+#else
+#	include <type_traits>
 #endif
 
 #if __cplusplus > 201703L
@@ -37,15 +44,15 @@ namespace kerbal
 	// forward declare
 
 		template <typename ForwardIterator>
-		KERBAL_CONSTEXPR20
+		KERBAL_CONSTEXPR14
 		void uninitialized_value_construct(ForwardIterator first, ForwardIterator last);
 
 		template <typename InputIterator, typename ForwardIterator>
-		KERBAL_CONSTEXPR20
+		KERBAL_CONSTEXPR14
 		ForwardIterator uninitialized_copy(InputIterator first, InputIterator last, ForwardIterator to);
 
 		template <typename InputIterator, typename ForwardIterator>
-		KERBAL_CONSTEXPR20
+		KERBAL_CONSTEXPR14
 		ForwardIterator uninitialized_move(InputIterator first, InputIterator last, ForwardIterator to);
 
 
@@ -184,7 +191,7 @@ namespace kerbal
 
 
 			template <typename Tp, std::size_t N>
-			KERBAL_CONSTEXPR20
+			KERBAL_CONSTEXPR14
 			Tp (* _K_construct_at(Tp (*p) [N])) [N]
 			{
 				kerbal::memory::uninitialized_value_construct(*p, *p + N);
@@ -193,7 +200,7 @@ namespace kerbal
 
 
 			template <typename Tp, typename Up, std::size_t N>
-			KERBAL_CONSTEXPR20
+			KERBAL_CONSTEXPR14
 			Tp (* _K_construct_at(Tp (*p) [N], Up (&&val) [N])) [N]
 			{
 				kerbal::memory::uninitialized_move(val + 0, val + N, *p + 0);
@@ -202,7 +209,7 @@ namespace kerbal
 
 
 			template <typename Tp, typename Up, std::size_t N>
-			KERBAL_CONSTEXPR20
+			KERBAL_CONSTEXPR14
 			Tp (* _K_construct_at(Tp (*p) [N], Up (&val) [N])) [N]
 			{
 				kerbal::memory::uninitialized_copy(val + 0, val + N, *p + 0);
@@ -269,7 +276,7 @@ namespace kerbal
 #		endif
 
 			template <typename ForwardIterator>
-			KERBAL_CONSTEXPR20
+			KERBAL_CONSTEXPR14
 			void _K_uninitialized_value_construct(ForwardIterator first, ForwardIterator last, UI_VAL_CONSTRUCT_VER_NO_CATCH)
 			{
 				while (first != last) {
@@ -281,14 +288,29 @@ namespace kerbal
 		} // namespace detail
 
 		template <typename ForwardIterator>
-		KERBAL_CONSTEXPR20
+		KERBAL_CONSTEXPR14
 		void uninitialized_value_construct(ForwardIterator first, ForwardIterator last)
 		{
 
 #	if __cpp_exceptions
-			typedef detail::UI_VAL_CONSTRUCT_VER_DEFAULT VER;
+
+			typedef ForwardIterator iterator;
+			typedef typename kerbal::iterator::iterator_traits<iterator>::value_type value_type;
+
+			typedef typename kerbal::type_traits::conditional<
+#		if __cplusplus < 201103L
+					kerbal::type_traits::can_be_pseudo_destructible<value_type>::value,
+#		else
+					std::is_trivially_destructible<value_type>::value,
+#		endif
+					detail::UI_VAL_CONSTRUCT_VER_NO_CATCH,
+					detail::UI_VAL_CONSTRUCT_VER_DEFAULT
+			>::type VER;
+
 #	else
+
 			typedef detail::UI_VAL_CONSTRUCT_VER_NO_CATCH VER;
+
 #	endif
 
 			detail::_K_uninitialized_value_construct(first, last, VER());
@@ -340,7 +362,7 @@ namespace kerbal
 #		endif
 
 			template <typename ForwardIterator, typename SizeType>
-			KERBAL_CONSTEXPR20
+			KERBAL_CONSTEXPR14
 			ForwardIterator _K_uninitialized_value_construct_n(ForwardIterator first, SizeType n, UI_VAL_CONSTRUCT_N_VER_NO_CATCH)
 			{
 				while (n > 0) {
@@ -354,14 +376,29 @@ namespace kerbal
 		} // namespace detail
 
 		template <typename ForwardIterator, typename SizeType>
-		KERBAL_CONSTEXPR20
+		KERBAL_CONSTEXPR14
 		ForwardIterator uninitialized_value_construct_n(ForwardIterator first, SizeType n)
 		{
 
 #	if __cpp_exceptions
-			typedef detail::UI_VAL_CONSTRUCT_N_VER_DEFAULT VER;
+
+			typedef ForwardIterator iterator;
+			typedef typename kerbal::iterator::iterator_traits<iterator>::value_type value_type;
+
+			typedef typename kerbal::type_traits::conditional<
+#		if __cplusplus < 201103L
+					kerbal::type_traits::can_be_pseudo_destructible<value_type>::value,
+#		else
+					std::is_trivially_destructible<value_type>::value,
+#		endif
+					detail::UI_VAL_CONSTRUCT_N_VER_NO_CATCH,
+					detail::UI_VAL_CONSTRUCT_N_VER_DEFAULT
+			>::type VER;
+
 #	else
+
 			typedef detail::UI_VAL_CONSTRUCT_N_VER_NO_CATCH VER;
+
 #	endif
 
 			return detail::_K_uninitialized_value_construct_n(first, n, VER());
@@ -413,7 +450,7 @@ namespace kerbal
 #		endif
 
 			template <typename InputIterator, typename ForwardIterator>
-			KERBAL_CONSTEXPR20
+			KERBAL_CONSTEXPR14
 			ForwardIterator _K_uninitialized_copy(InputIterator first, InputIterator last, ForwardIterator to, UI_CPY_VER_NO_CATCH)
 			{
 				while (first != last) {
@@ -427,14 +464,29 @@ namespace kerbal
 		} // namespace detail
 
 		template <typename InputIterator, typename ForwardIterator>
-		KERBAL_CONSTEXPR20
+		KERBAL_CONSTEXPR14
 		ForwardIterator uninitialized_copy(InputIterator first, InputIterator last, ForwardIterator to)
 		{
 
 #	if __cpp_exceptions
-			typedef detail::UI_CPY_VER_DEFAULT VER;
+
+			typedef ForwardIterator iterator;
+			typedef typename kerbal::iterator::iterator_traits<iterator>::value_type value_type;
+
+			typedef typename kerbal::type_traits::conditional<
+#		if __cplusplus < 201103L
+					kerbal::type_traits::can_be_pseudo_destructible<value_type>::value,
+#		else
+					std::is_trivially_destructible<value_type>::value,
+#		endif
+					detail::UI_CPY_VER_NO_CATCH,
+					detail::UI_CPY_VER_DEFAULT
+			>::type VER;
+
 #	else
+
 			typedef detail::UI_CPY_VER_NO_CATCH VER;
+
 #	endif
 
 			return detail::_K_uninitialized_copy(first, last, to, VER());
@@ -487,7 +539,7 @@ namespace kerbal
 #		endif
 
 			template <typename InputIterator, typename SizeType, typename ForwardIterator>
-			KERBAL_CONSTEXPR20
+			KERBAL_CONSTEXPR14
 			ForwardIterator _K_uninitialized_copy_n(InputIterator first, SizeType n, ForwardIterator to, UI_CPY_N_VER_NO_CATCH)
 			{
 				while (n > 0) {
@@ -502,14 +554,29 @@ namespace kerbal
 		} // namespace detail
 
 		template <typename InputIterator, typename SizeType, typename ForwardIterator>
-		KERBAL_CONSTEXPR20
+		KERBAL_CONSTEXPR14
 		ForwardIterator uninitialized_copy_n(InputIterator first, SizeType n, ForwardIterator to)
 		{
 
 #	if __cpp_exceptions
-			typedef detail::UI_CPY_N_VER_DEFAULT VER;
+
+			typedef ForwardIterator iterator;
+			typedef typename kerbal::iterator::iterator_traits<iterator>::value_type value_type;
+
+			typedef typename kerbal::type_traits::conditional<
+#		if __cplusplus < 201103L
+					kerbal::type_traits::can_be_pseudo_destructible<value_type>::value,
+#		else
+					std::is_trivially_destructible<value_type>::value,
+#		endif
+					detail::UI_CPY_N_VER_NO_CATCH,
+					detail::UI_CPY_N_VER_DEFAULT
+			>::type VER;
+
 #	else
+
 			typedef detail::UI_CPY_N_VER_NO_CATCH VER;
+
 #	endif
 
 			return detail::_K_uninitialized_copy_n(first, n, to, VER());
@@ -561,7 +628,7 @@ namespace kerbal
 #		endif
 
 			template <typename InputIterator, typename ForwardIterator>
-			KERBAL_CONSTEXPR20
+			KERBAL_CONSTEXPR14
 			ForwardIterator _K_uninitialized_move(InputIterator first, InputIterator last, ForwardIterator to, UI_MOV_VER_NO_CATCH)
 			{
 				while (first != last) {
@@ -575,14 +642,29 @@ namespace kerbal
 		} // namespace detail
 
 		template <typename InputIterator, typename ForwardIterator>
-		KERBAL_CONSTEXPR20
+		KERBAL_CONSTEXPR14
 		ForwardIterator uninitialized_move(InputIterator first, InputIterator last, ForwardIterator to)
 		{
 
 #	if __cpp_exceptions
-			typedef detail::UI_MOV_VER_DEFAULT VER;
+
+			typedef ForwardIterator iterator;
+			typedef typename kerbal::iterator::iterator_traits<iterator>::value_type value_type;
+
+			typedef typename kerbal::type_traits::conditional<
+#		if __cplusplus < 201103L
+					kerbal::type_traits::can_be_pseudo_destructible<value_type>::value,
+#		else
+					std::is_trivially_destructible<value_type>::value,
+#		endif
+					detail::UI_MOV_VER_NO_CATCH,
+					detail::UI_MOV_VER_DEFAULT
+			>::type VER;
+
 #	else
+
 			typedef detail::UI_MOV_VER_NO_CATCH VER;
+
 #	endif
 
 			return detail::_K_uninitialized_move(first, last, to, VER());
@@ -635,7 +717,7 @@ namespace kerbal
 #		endif
 
 			template <typename InputIterator, typename SizeType, typename ForwardIterator>
-			KERBAL_CONSTEXPR20
+			KERBAL_CONSTEXPR14
 			ForwardIterator _K_uninitialized_move_n(InputIterator first, SizeType n, ForwardIterator to, UI_MOV_N_VER_NO_CATCH)
 			{
 				while (n > 0) {
@@ -650,14 +732,29 @@ namespace kerbal
 		} // namespace detail
 
 		template <typename InputIterator, typename SizeType, typename ForwardIterator>
-		KERBAL_CONSTEXPR20
+		KERBAL_CONSTEXPR14
 		ForwardIterator uninitialized_move_n(InputIterator first, SizeType n, ForwardIterator to)
 		{
 
 #	if __cpp_exceptions
-			typedef detail::UI_MOV_N_VER_DEFAULT VER;
+
+			typedef ForwardIterator iterator;
+			typedef typename kerbal::iterator::iterator_traits<iterator>::value_type value_type;
+
+			typedef typename kerbal::type_traits::conditional<
+#		if __cplusplus < 201103L
+					kerbal::type_traits::can_be_pseudo_destructible<value_type>::value,
+#		else
+					std::is_trivially_destructible<value_type>::value,
+#		endif
+					detail::UI_MOV_N_VER_NO_CATCH,
+					detail::UI_MOV_N_VER_DEFAULT
+			>::type VER;
+
 #	else
+
 			typedef detail::UI_MOV_N_VER_NO_CATCH VER;
+
 #	endif
 
 			return detail::_K_uninitialized_move_n(first, n, to, VER());
@@ -707,7 +804,7 @@ namespace kerbal
 #		endif
 
 			template <typename ForwardIterator, typename T>
-			KERBAL_CONSTEXPR20
+			KERBAL_CONSTEXPR14
 			void uninitialized_fill(ForwardIterator first, ForwardIterator last, const T & value, UI_FILL_VER_NO_CATCH)
 			{
 				while (first != last) {
@@ -719,14 +816,29 @@ namespace kerbal
 		} // namespace detail
 
 		template <typename ForwardIterator, typename T>
-		KERBAL_CONSTEXPR20
+		KERBAL_CONSTEXPR14
 		void uninitialized_fill(ForwardIterator first, ForwardIterator last, const T & value)
 		{
 
 #	if __cpp_exceptions
-			typedef detail::UI_FILL_VER_DEFAULT VER;
+
+			typedef ForwardIterator iterator;
+			typedef typename kerbal::iterator::iterator_traits<iterator>::value_type value_type;
+
+			typedef typename kerbal::type_traits::conditional<
+#		if __cplusplus < 201103L
+					kerbal::type_traits::can_be_pseudo_destructible<value_type>::value,
+#		else
+					std::is_trivially_destructible<value_type>::value,
+#		endif
+					detail::UI_FILL_VER_NO_CATCH,
+					detail::UI_FILL_VER_DEFAULT
+			>::type VER;
+
 #	else
+
 			typedef detail::UI_FILL_VER_NO_CATCH VER;
+
 #	endif
 
 			detail::uninitialized_fill(first, last, value, VER());
@@ -778,7 +890,7 @@ namespace kerbal
 #		endif
 
 			template <typename ForwardIterator, typename SizeType, typename T>
-			KERBAL_CONSTEXPR20
+			KERBAL_CONSTEXPR14
 			ForwardIterator _K_uninitialized_fill_n(ForwardIterator first, SizeType n, const T & value, UI_FILL_N_VER_NO_CATCH)
 			{
 				while (n > 0) {
@@ -792,14 +904,29 @@ namespace kerbal
 		} // namespace detail
 
 		template <typename ForwardIterator, typename SizeType, typename T>
-		KERBAL_CONSTEXPR20
+		KERBAL_CONSTEXPR14
 		ForwardIterator uninitialized_fill_n(ForwardIterator first, SizeType n, const T & value)
 		{
 
 #	if __cpp_exceptions
-			typedef detail::UI_FILL_N_VER_DEFAULT VER;
+
+			typedef ForwardIterator iterator;
+			typedef typename kerbal::iterator::iterator_traits<iterator>::value_type value_type;
+
+			typedef typename kerbal::type_traits::conditional<
+#		if __cplusplus < 201103L
+					kerbal::type_traits::can_be_pseudo_destructible<value_type>::value,
+#		else
+					std::is_trivially_destructible<value_type>::value,
+#		endif
+					detail::UI_FILL_N_VER_NO_CATCH,
+					detail::UI_FILL_N_VER_DEFAULT
+			>::type VER;
+
 #	else
+
 			typedef detail::UI_FILL_N_VER_NO_CATCH VER;
+
 #	endif
 
 			return detail::_K_uninitialized_fill_n(first, n, value, VER());
