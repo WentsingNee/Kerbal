@@ -16,6 +16,7 @@
 #include <kerbal/compatibility/move.hpp>
 #include <kerbal/memory/uninitialized/destroy.hpp>
 #include <kerbal/type_traits/array_traits.hpp>
+#include <kerbal/type_traits/conditional.hpp>
 
 #if __cplusplus >= 201103L
 #	include <kerbal/utility/forward.hpp>
@@ -118,8 +119,11 @@ namespace kerbal
 
 #	if __cplusplus <= 201703L
 
+			typedef kerbal::type_traits::integral_constant<int, 0> CONSTRUCT_AT_VER_DEFAULT;
+			typedef kerbal::type_traits::integral_constant<int, 1> CONSTRUCT_AT_VER_TRIVIAL;
+
 			template <typename Tp, typename ... Args>
-			Tp * _K_construct_at(Tp * p, Args&& ... args)
+			Tp * _K_construct_at_impl(CONSTRUCT_AT_VER_DEFAULT, Tp * p, Args&& ... args)
 					KERBAL_CONDITIONAL_NOEXCEPT(
 						noexcept(::new (const_cast<void*>(static_cast<const volatile void*>(p)))
 							Tp (kerbal::utility::forward<Args>(args)...))
@@ -127,6 +131,36 @@ namespace kerbal
 			{
 				return ::new (const_cast<void*>(static_cast<const volatile void*>(p)))
 						Tp (kerbal::utility::forward<Args>(args)...);
+			}
+
+			template <typename Tp, typename ... Args>
+			KERBAL_CONSTEXPR14
+			Tp * _K_construct_at_impl(CONSTRUCT_AT_VER_TRIVIAL, Tp * p, Args&& ... args)
+			{
+				*p = Tp(kerbal::utility::forward<Args>(args)...);
+				return p;
+			}
+
+			template <typename Tp, typename ... Args>
+			struct construct_at_impl_overload_ver
+			{
+					typedef typename kerbal::type_traits::conditional<
+						(
+							std::is_trivially_constructible<Tp, Args...>::value &&
+							std::is_trivially_move_assignable<Tp>::value &&
+							std::is_trivially_destructible<Tp>::value
+						),
+						CONSTRUCT_AT_VER_TRIVIAL,
+						CONSTRUCT_AT_VER_DEFAULT
+					>::type type;
+			};
+
+			template <typename Tp, typename ... Args>
+			KERBAL_CONSTEXPR14
+			Tp * _K_construct_at(Tp * p, Args&& ... args) KERBAL_NOEXCEPT
+			{
+				typedef typename construct_at_impl_overload_ver<Tp, Args...>::type VER;
+				return _K_construct_at_impl(VER(), p, kerbal::utility::forward<Args>(args)...);
 			}
 
 #	else
@@ -175,7 +209,7 @@ namespace kerbal
 
 
 		template <typename Tp, typename ... Args>
-		KERBAL_CONSTEXPR20
+		KERBAL_CONSTEXPR14
 		Tp * construct_at(Tp * p, Args&& ... args)
 				KERBAL_CONDITIONAL_NOEXCEPT(
 						noexcept(detail::_K_construct_at(p, kerbal::utility::forward<Args>(args)...))
