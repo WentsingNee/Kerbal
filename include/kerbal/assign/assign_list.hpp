@@ -12,7 +12,12 @@
 #ifndef KERBAL_ASSIGN_ASSIGN_LIST_HPP
 #define KERBAL_ASSIGN_ASSIGN_LIST_HPP
 
-#include <vector>
+#include <kerbal/compatibility/noexcept.hpp>
+#include <kerbal/container/detail/vector_base.hpp>
+#include <kerbal/utility/member_compress_helper.hpp>
+
+#include <memory>
+
 
 namespace kerbal
 {
@@ -21,10 +26,12 @@ namespace kerbal
 	{
 
 		template <typename Tp>
-		class assign_list
+		class assign_list :
+				private kerbal::utility::member_compress_helper<std::allocator<Tp> >
 		{
 			private:
-				typedef std::vector<Tp> c;
+				typedef kerbal::utility::member_compress_helper<std::allocator<Tp> > super;
+				typedef kerbal::container::detail::vector_allocator_unrelated<Tp> c;
 
 			public:
 				typedef Tp									value_type;
@@ -32,14 +39,30 @@ namespace kerbal
 				typedef const Tp&							const_reference;
 				typedef typename c::iterator				iterator;
 				typedef typename c::const_iterator			const_iterator;
+				typedef std::allocator<Tp>					allocator_type;
 
 			private:
 				c v;
 
+				allocator_type & alloc() KERBAL_NOEXCEPT
+				{
+					return super::member();
+				}
+
 			public:
+				assign_list()
+				{
+					v.reserve_using_allocator(this->alloc(), 20);
+				}
+
+				~assign_list() KERBAL_NOEXCEPT
+				{
+					v.template destroy_using_allocator(this->alloc());
+				}
+
 				assign_list& operator,(const_reference val)
 				{
-					v.push_back(val);
+					v.push_back_using_allocator(this->alloc(), val);
 					return *this;
 				}
 
