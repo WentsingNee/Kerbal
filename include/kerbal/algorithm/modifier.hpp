@@ -49,44 +49,6 @@ namespace kerbal
 			return to;
 		}
 
-		template <typename RandomAccessIterator, typename RandomAccessIteratorEnd, typename OutputIterator>
-		KERBAL_CONSTEXPR14
-		OutputIterator
-		__copy(RandomAccessIterator first, RandomAccessIteratorEnd last, OutputIterator to,
-				std::random_access_iterator_tag)
-		{
-			typedef RandomAccessIterator iterator;
-			typedef typename kerbal::iterator::iterator_traits<iterator>::difference_type difference_type;
-
-#	define EACH() do {\
-				kerbal::operators::generic_assign(*to, *first); /*  *to = *first; */\
-				++to;\
-				++first;\
-			} while(false)
-
-			for (difference_type trip_count(kerbal::iterator::distance(first, last) >> 2); trip_count > 0; --trip_count) {
-				EACH();
-				EACH();
-				EACH();
-				EACH();
-			}
-
-			difference_type remain(kerbal::iterator::distance(first, last));
-			if (remain == 3) {
-				EACH();
-			}
-			if (remain >= 2) {
-				EACH();
-			}
-			if (remain >= 1) {
-				EACH();
-			}
-
-#	undef EACH
-
-			return to;
-		}
-
 		template <typename InputIterator, typename OutputIterator>
 		KERBAL_CONSTEXPR14
 		OutputIterator
@@ -190,44 +152,6 @@ namespace kerbal
 			return to_last;
 		}
 
-		template <typename RandomAccessIterator, typename OutputIterator>
-		KERBAL_CONSTEXPR14
-		OutputIterator
-		__copy_backward(RandomAccessIterator first, RandomAccessIterator last, OutputIterator to_last,
-						std::random_access_iterator_tag)
-		{
-			typedef RandomAccessIterator iterator;
-			typedef typename kerbal::iterator::iterator_traits<iterator>::difference_type difference_type;
-
-#	define EACH() do {\
-				--last;\
-				--to_last;\
-				kerbal::operators::generic_assign(*to_last, *last); /*  *to_last = *last; */\
-			} while (false)
-
-			for (difference_type trip_count(kerbal::iterator::distance(first, last) >> 2); trip_count > 0; --trip_count) {
-				EACH();
-				EACH();
-				EACH();
-				EACH();
-			}
-
-			difference_type remain(kerbal::iterator::distance(first, last));
-			if (remain == 3) {
-				EACH();
-			}
-			if (remain >= 2) {
-				EACH();
-			}
-			if (remain >= 1) {
-				EACH();
-			}
-
-#	undef EACH
-
-			return to_last;
-		}
-
 		template <typename BidirectionalIterator, typename OutputIterator>
 		KERBAL_CONSTEXPR14
 		OutputIterator
@@ -319,44 +243,6 @@ namespace kerbal
 			return to;
 		}
 
-		template <typename RandomAccessIterator, typename OutputIterator>
-		KERBAL_CONSTEXPR14
-		OutputIterator
-		__move(RandomAccessIterator first, RandomAccessIterator last, OutputIterator to, std::random_access_iterator_tag)
-		{
-			typedef RandomAccessIterator iterator;
-			typedef typename kerbal::iterator::iterator_traits<iterator>::difference_type difference_type;
-
-#	define EACH() do {\
-				kerbal::operators::generic_assign(*to, kerbal::compatibility::to_xvalue(*first));\
-				/*  *to = kerbal::compatibility::to_xvalue(*first); */\
-				++to;\
-				++first;\
-			} while(false)
-
-			for (difference_type trip_count(kerbal::iterator::distance(first, last) >> 2); trip_count > 0; --trip_count) {
-				EACH();
-				EACH();
-				EACH();
-				EACH();
-			}
-
-			difference_type remain(kerbal::iterator::distance(first, last));
-			if (remain == 3) {
-				EACH();
-			}
-			if (remain >= 2) {
-				EACH();
-			}
-			if (remain >= 1) {
-				EACH();
-			}
-
-#	undef EACH
-
-			return to;
-		}
-
 		template <typename InputIterator, typename OutputIterator>
 		KERBAL_CONSTEXPR14
 		OutputIterator
@@ -379,45 +265,6 @@ namespace kerbal
 				kerbal::operators::generic_assign(*to_last, kerbal::compatibility::to_xvalue(*last));
 				// *to_last = kerbal::compatibility::to_xvalue(*last);
 			}
-			return to_last;
-		}
-
-		template <typename RandomAccessIterator, typename OutputIterator>
-		KERBAL_CONSTEXPR14
-		OutputIterator
-		__move_backward(RandomAccessIterator first, RandomAccessIterator last, OutputIterator to_last,
-						std::random_access_iterator_tag)
-		{
-			typedef RandomAccessIterator iterator;
-			typedef typename kerbal::iterator::iterator_traits<iterator>::difference_type difference_type;
-
-#	define EACH() do {\
-				--last;\
-				--to_last;\
-				kerbal::operators::generic_assign(*to_last, kerbal::compatibility::to_xvalue(*last));\
-				/*  *to_last = kerbal::compatibility::to_xvalue(*last); */\
-			} while (false)
-
-			for (difference_type trip_count(kerbal::iterator::distance(first, last) >> 2); trip_count > 0; --trip_count) {
-				EACH();
-				EACH();
-				EACH();
-				EACH();
-			}
-
-			difference_type remain(kerbal::iterator::distance(first, last));
-			if (remain == 3) {
-				EACH();
-			}
-			if (remain >= 2) {
-				EACH();
-			}
-			if (remain >= 1) {
-				EACH();
-			}
-
-#	undef EACH
-
 			return to_last;
 		}
 
