@@ -12,9 +12,11 @@
 #ifndef KERBAL_TEST_IMPL_TEST_CASE_IMPL_HPP
 #define KERBAL_TEST_IMPL_TEST_CASE_IMPL_HPP
 
-#include <cstdio>
-#include <vector>
 #include <kerbal/compatibility/noexcept.hpp>
+#include <kerbal/container/vector.hpp>
+
+#include <cstdio>
+
 
 namespace kerbal
 {
@@ -36,11 +38,7 @@ namespace kerbal
 				const char * description)
 				KERBAL_NOEXCEPT
 		{
-#	if __cplusplus < 201103L
-			__get_register_list().push_back(kerbal::test::test_case(name, call_ptr, description));
-#	else
 			__get_register_list().emplace_back(name, call_ptr, description);
-#	endif
 			return 0;
 		}
 
@@ -69,7 +67,7 @@ namespace kerbal
 			int success = 0;
 			int failure = 0;
 
-			for (std::vector<assert_item>::size_type i = 0; i < record.items.size(); ++i) {
+			for (kerbal::container::vector<assert_item>::size_type i = 0; i < record.items.size(); ++i) {
 				switch (record.items[i].result) {
 					case kerbal::test::running_result::SUCCESS: {
 						++success;

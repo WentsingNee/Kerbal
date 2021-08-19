@@ -14,12 +14,12 @@
 
 #include <kerbal/compatibility/noexcept.hpp>
 #include <kerbal/compatibility/static_assert.hpp>
+#include <kerbal/container/vector.hpp>
 #include <kerbal/macro/join_line.hpp>
 
 #include <cstdio>
 #include <cstdlib>
 #include <iostream>
-#include <vector>
 
 namespace kerbal
 {
@@ -58,7 +58,7 @@ namespace kerbal
 
 		struct assert_record
 		{
-				std::vector<assert_item> items;
+				kerbal::container::vector<assert_item> items;
 		};
 
 		struct test_case
@@ -82,7 +82,7 @@ namespace kerbal
 
 		};
 
-		typedef std::vector<test_case> register_list_type;
+		typedef kerbal::container::vector<test_case> register_list_type;
 
 		int __register_test_suit(
 				const char * name,
@@ -123,8 +123,6 @@ namespace kerbal
 	static const int KERBAL_JOIN_LINE(__kerbal_test_register_unit_tag) = (kerbal::test::__register_test_suit(#name, name<__VA_ARGS__>, description), 0);
 
 
-#if __cplusplus >= 201103L
-
 #define KERBAL_TEST_CHECK_EQUAL(lhs, rhs) \
 do {\
 	record.items.emplace_back((const char *)__FILE__, __LINE__, (const char *)(#lhs " == " #rhs)); \
@@ -149,35 +147,6 @@ do {\
 		record.items.back().result = kerbal::test::running_result::FAILURE; \
 	} \
 } while (false)
-
-#else
-
-#define KERBAL_TEST_CHECK_EQUAL(lhs, rhs) \
-do {\
-	record.items.push_back(kerbal::test::assert_item(__FILE__, __LINE__, #lhs " == " #rhs)); \
-	if (kerbal::test::compare_and_out((lhs), (rhs))) { \
-		puts("CHECK EQUAL FAILED!"); \
-		puts("details: "); \
-		puts("    left statement: " #lhs); \
-		puts("    right statement: " #rhs); \
-		printf("    location: " __FILE__ ":%d\n", __LINE__); \
-		record.items.back().result = kerbal::test::running_result::FAILURE; \
-	} \
-} while (false)
-
-#define KERBAL_TEST_CHECK(statement) \
-do {\
-	record.items.push_back(kerbal::test::assert_item(__FILE__, __LINE__, #statement " == true")); \
-	if (!static_cast<bool>((statement))) { \
-		puts("CHECK FAILED!"); \
-		puts("details: "); \
-		puts("    statement: " #statement); \
-		printf("    location: " __FILE__ ":%d\n", __LINE__); \
-		record.items.back().result = kerbal::test::running_result::FAILURE; \
-	} \
-} while (false)
-
-#endif
 
 
 #define KERBAL_TEST_CHECK_EQUAL_STATIC(lhs, rhs) do {\
