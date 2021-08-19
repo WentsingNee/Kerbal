@@ -46,6 +46,46 @@ namespace kerbal
 		Tp (& generic_assign(Tp (& lhs)[N], const Up (& rhs)[N]))[N];
 
 
+#	if __cplusplus >= 201103L
+
+		namespace detail
+		{
+
+			template <typename Tp, typename Up>
+			KERBAL_CONSTEXPR14
+			void _K_generic_assign(Tp& lhs, Up&& rhs, kerbal::type_traits::false_type)
+								KERBAL_CONDITIONAL_NOEXCEPT(
+										noexcept(lhs = kerbal::utility::forward<Up>(rhs))
+								)
+			;
+
+			template <typename Tp, typename Up>
+			KERBAL_CONSTEXPR14
+			void _K_generic_assign(Tp& lhs, Up&& rhs, kerbal::type_traits::true_type)
+								KERBAL_CONDITIONAL_NOEXCEPT(
+										noexcept(
+											kerbal::operators::generic_assign(lhs[0], kerbal::utility::forward<decltype(rhs[0])>(rhs[0]))
+										)
+								)
+			;
+
+		} // namespace detail
+
+		template <typename Tp, typename Up>
+		KERBAL_CONSTEXPR14
+		Tp& generic_assign(Tp& lhs, Up&& rhs)
+								KERBAL_CONDITIONAL_NOEXCEPT(
+										noexcept(
+											kerbal::operators::detail::_K_generic_assign(
+												lhs, kerbal::utility::forward<Up>(rhs), kerbal::type_traits::is_array<Tp>()
+											)
+										)
+								)
+		;
+
+#	endif
+
+
 
 		// implement
 
@@ -78,63 +118,22 @@ namespace kerbal
 
 			template <typename Tp, typename Up>
 			KERBAL_CONSTEXPR14
-			void generic_assign(Tp& lhs, Up&& rhs, kerbal::type_traits::false_type)
-										KERBAL_CONDITIONAL_NOEXCEPT(
-												noexcept(lhs = kerbal::utility::forward<Up>(rhs))
-										)
-			;
-
-			template <typename Tp, typename Up>
-			KERBAL_CONSTEXPR14
-			void generic_assign(Tp& lhs, Up&& rhs, kerbal::type_traits::true_type)
-										KERBAL_CONDITIONAL_NOEXCEPT(
-												noexcept(
-													kerbal::operators::generic_assign(
-														lhs[0],
-														kerbal::utility::forward<decltype(rhs[0])>(rhs[0])
-													)
-												)
-										)
-			;
-
-		} // namespace detail
-
-		template <typename Tp, typename Up>
-		KERBAL_CONSTEXPR14
-		Tp& generic_assign(Tp& lhs, Up&& rhs)
-										KERBAL_CONDITIONAL_NOEXCEPT(
-												noexcept(
-													kerbal::operators::detail::generic_assign(
-														lhs, rhs, kerbal::type_traits::is_array<Tp>()
-													)
-												)
-										)
-		;
-
-		namespace detail
-		{
-
-			template <typename Tp, typename Up>
-			KERBAL_CONSTEXPR14
-			void generic_assign(Tp& lhs, Up&& rhs, kerbal::type_traits::false_type)
-										KERBAL_CONDITIONAL_NOEXCEPT(
-												noexcept(lhs = kerbal::utility::forward<Up>(rhs))
-										)
+			void _K_generic_assign(Tp& lhs, Up&& rhs, kerbal::type_traits::false_type)
+								KERBAL_CONDITIONAL_NOEXCEPT(
+										noexcept(lhs = kerbal::utility::forward<Up>(rhs))
+								)
 			{
 				lhs = kerbal::utility::forward<Up>(rhs);
 			}
 
 			template <typename Tp, typename Up>
 			KERBAL_CONSTEXPR14
-			void generic_assign(Tp& lhs, Up&& rhs, kerbal::type_traits::true_type)
-										KERBAL_CONDITIONAL_NOEXCEPT(
-												noexcept(
-													kerbal::operators::generic_assign(
-														lhs[0],
-														kerbal::utility::forward<decltype(rhs[0])>(rhs[0])
-													)
-												)
+			void _K_generic_assign(Tp& lhs, Up&& rhs, kerbal::type_traits::true_type)
+								KERBAL_CONDITIONAL_NOEXCEPT(
+										noexcept(
+											kerbal::operators::generic_assign(lhs[0], kerbal::utility::forward<decltype(rhs[0])>(rhs[0]))
 										)
+								)
 			{
 				typedef kerbal::type_traits::extent<Tp, 0> TP_EXTENT;
 				typedef kerbal::type_traits::extent<
@@ -151,15 +150,15 @@ namespace kerbal
 		template <typename Tp, typename Up>
 		KERBAL_CONSTEXPR14
 		Tp& generic_assign(Tp & lhs, Up && rhs)
-										KERBAL_CONDITIONAL_NOEXCEPT(
-												noexcept(
-													kerbal::operators::detail::generic_assign(
-														lhs, rhs, kerbal::type_traits::is_array<Tp>()
-													)
-												)
+								KERBAL_CONDITIONAL_NOEXCEPT(
+										noexcept(
+											kerbal::operators::detail::_K_generic_assign(
+												lhs, kerbal::utility::forward<Up>(rhs), kerbal::type_traits::is_array<Tp>()
+											)
 										)
+								)
 		{
-			kerbal::operators::detail::generic_assign(lhs, rhs, kerbal::type_traits::is_array<Tp>());
+			kerbal::operators::detail::_K_generic_assign(lhs, kerbal::utility::forward<Up>(rhs), kerbal::type_traits::is_array<Tp>());
 			return lhs;
 		}
 
