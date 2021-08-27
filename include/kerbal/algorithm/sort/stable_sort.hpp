@@ -18,6 +18,7 @@
 #include <kerbal/compatibility/static_assert.hpp>
 #include <kerbal/iterator/iterator.hpp>
 #include <kerbal/memory/allocator_traits.hpp>
+#include <kerbal/memory/uninitialized_using_allocator.hpp>
 
 #include <memory>
 
@@ -137,6 +138,7 @@ namespace kerbal
 		}
 
 		template <typename ForwardIterator, typename Allocator, typename Compare>
+		KERBAL_CONSTEXPR20
 		ForwardIterator
 		stable_sort_n_afford_allocator(ForwardIterator first, typename kerbal::iterator::iterator_traits<ForwardIterator>::difference_type len,
 										Allocator & allocator, Compare cmp)
@@ -146,74 +148,59 @@ namespace kerbal
 			typedef typename kerbal::iterator::iterator_traits<iterator>::value_type value_type;
 			typedef kerbal::memory::allocator_traits<Allocator> allocator_traits;
 
+			KERBAL_STATIC_ASSERT((kerbal::type_traits::is_same<value_type, typename allocator_traits::value_type>::value),
+								 "the afforded allocator doesn't provide the support of type which the iterator refers to");
+
 			difference_type buffer_length(len - len / 2);
 			value_type * const buffer = allocator_traits::allocate(allocator, buffer_length);
-			value_type * k = buffer;
-
-			typedef typename Allocator::value_type allocator_value_type;
-
-			KERBAL_STATIC_ASSERT((kerbal::type_traits::is_same<value_type, allocator_value_type>::value),
-								 "the afforded allocator doesn't provide the support of type which the iterator refers to");
 
 			struct dealloc_helper
 			{
-				Allocator & allocator;
-				difference_type const & buffer_length;
-				value_type * const & buffer;
-				value_type * & k;
+					Allocator & allocator;
+					difference_type const & buffer_length;
+					value_type * const & buffer;
 
-				dealloc_helper(Allocator & allocator, difference_type const & buffer_length, value_type * const & buffer, value_type * & k) KERBAL_NOEXCEPT :
-						allocator(allocator), buffer_length(buffer_length), buffer(buffer), k(k)
-				{
-				}
-
-				~dealloc_helper()
-				{
-					while (k != buffer) {
-						--k;
-						allocator_traits::destroy(this->allocator, k);
+					KERBAL_CONSTEXPR20
+					dealloc_helper(Allocator & allocator, difference_type const & buffer_length, value_type * const & buffer) KERBAL_NOEXCEPT :
+							allocator(allocator), buffer_length(buffer_length), buffer(buffer)
+					{
 					}
-					allocator_traits::deallocate(this->allocator, buffer, buffer_length);
-				}
-			} auto_dealloc_helper(allocator, buffer_length, buffer, k);
 
-/*
-			while (k != buffer + buffer_length) {
-				allocator.construct(k);
-				++k;
-			}
-*/
+					KERBAL_CONSTEXPR20
+					~dealloc_helper()
+					{
+						allocator_traits::deallocate(this->allocator, this->buffer, this->buffer_length);
+					}
 
-#	define EACH() do {\
-				/*allocator.construct(k);\*/\
-				allocator_traits::construct(allocator, k);\
-				++k;\
-			} while(false)
+			} auto_dealloc_helper(allocator, buffer_length, buffer);
 
-			for (difference_type trip_count(buffer_length >> 2); trip_count > 0; --trip_count) {
-				EACH();
-				EACH();
-				EACH();
-				EACH();
-			}
+			kerbal::memory::uninitialized_value_construct_using_allocator(allocator, buffer, buffer + buffer_length);
 
-			difference_type remain(buffer + buffer_length - k);
-			if (remain == 3) {
-				EACH();
-			}
-			if (remain >= 2) {
-				EACH();
-			}
-			if (remain >= 1) {
-				EACH();
-			}
+			struct destroy_helper
+			{
+					Allocator & allocator;
+					difference_type const & buffer_length;
+					value_type * const & buffer;
 
-#	undef EACH
+					KERBAL_CONSTEXPR20
+					destroy_helper(Allocator & allocator, difference_type const & buffer_length, value_type * const & buffer) KERBAL_NOEXCEPT :
+							allocator(allocator), buffer_length(buffer_length), buffer(buffer)
+					{
+					}
+
+					KERBAL_CONSTEXPR20
+					~destroy_helper()
+					{
+						kerbal::memory::reverse_destroy_using_allocator(this->allocator, this->buffer, this->buffer + this->buffer_length);
+					}
+
+			} auto_destroy_helper(allocator, buffer_length, buffer);
 
 			return kerbal::algorithm::stable_sort_n_afford_buffer(first, len, buffer, cmp);
 		}
 
 		template <typename ForwardIterator, typename Allocator>
+		KERBAL_CONSTEXPR20
 		ForwardIterator
 		stable_sort_n_afford_allocator(ForwardIterator first, typename kerbal::iterator::iterator_traits<ForwardIterator>::difference_type len,
 										Allocator & allocator)
@@ -224,6 +211,7 @@ namespace kerbal
 		}
 
 		template <typename ForwardIterator, typename Allocator, typename Compare>
+		KERBAL_CONSTEXPR20
 		void stable_sort_afford_allocator(ForwardIterator first, ForwardIterator last, Allocator & allocator, Compare cmp)
 		{
 			typedef ForwardIterator iterator;
@@ -233,6 +221,7 @@ namespace kerbal
 		}
 
 		template <typename ForwardIterator, typename Allocator>
+		KERBAL_CONSTEXPR20
 		void stable_sort_afford_allocator(ForwardIterator first, ForwardIterator last, Allocator & allocator)
 		{
 			typedef ForwardIterator iterator;
@@ -241,6 +230,7 @@ namespace kerbal
 		}
 
 		template <typename ForwardIterator, typename Compare>
+		KERBAL_CONSTEXPR20
 		void stable_sort(ForwardIterator first, ForwardIterator last, Compare cmp)
 		{
 			typedef ForwardIterator iterator;
@@ -250,6 +240,7 @@ namespace kerbal
 		}
 
 		template <typename ForwardIterator>
+		KERBAL_CONSTEXPR20
 		void stable_sort(ForwardIterator first, ForwardIterator last)
 		{
 			typedef ForwardIterator iterator;
