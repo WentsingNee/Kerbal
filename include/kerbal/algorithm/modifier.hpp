@@ -22,6 +22,8 @@
 #include <kerbal/iterator/iterator.hpp>
 #include <kerbal/iterator/iterator_traits.hpp>
 #include <kerbal/operators/generic_assign.hpp>
+#include <kerbal/utility/compressed_pair.hpp>
+
 
 namespace kerbal
 {
@@ -55,6 +57,22 @@ namespace kerbal
 		copy(InputIterator first, InputIterator last, OutputIterator to)
 		{
 			return kerbal::algorithm::__copy(first, last, to, kerbal::iterator::iterator_category(first));
+		}
+
+
+
+		template <typename InputIterator, typename SizeType, typename OutputIterator>
+		KERBAL_CONSTEXPR14
+		kerbal::utility::compressed_pair<InputIterator, OutputIterator>
+		copy_n(InputIterator first, SizeType n, OutputIterator to)
+		{
+			while (n > 0) {
+				kerbal::operators::generic_assign(*to, *first); // *to = *first;
+				--n;
+				++to;
+				++first;
+			}
+			return kerbal::utility::compressed_pair<InputIterator, OutputIterator>(first, to);
 		}
 
 
