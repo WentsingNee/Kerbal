@@ -12,8 +12,9 @@
 #ifndef KERBAL_UTILITY_COMPRESSED_PAIR_HPP
 #define KERBAL_UTILITY_COMPRESSED_PAIR_HPP
 
+#include <kerbal/config/compiler_id.hpp>
+
 #include <kerbal/algorithm/swap.hpp>
-#include <kerbal/compatibility/constexpr.hpp>
 #include <kerbal/compatibility/method_overload_tag.hpp>
 #include <kerbal/compatibility/move.hpp>
 #include <kerbal/compatibility/noexcept.hpp>
@@ -33,8 +34,12 @@
 
 
 KERBAL_NAMESPACE_STD_BEGIN
-	template <typename Tp, typename Up>
+	template <typename T, typename U>
+# if KERBAL_COMPILER_ID == KERBAL_COMPILER_ID_MSVC
+	struct pair;
+# else
 	class pair;
+# endif
 KERBAL_NAMESPACE_STD_END
 
 

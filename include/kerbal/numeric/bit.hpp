@@ -263,7 +263,7 @@ namespace kerbal
 			// x = (x & detail::_0x0f0f<Unsigned>::value) + ((x >> 4) & detail::_0x0f0f<Unsigned>::value);
 
 			x = static_cast<Unsigned>(x * detail::_0x0101<Unsigned>::value) >> (8 * (sizeof(Unsigned) - 1));
-			return x;
+			return static_cast<int>(x);
 		}
 
 
