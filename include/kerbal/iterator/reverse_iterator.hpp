@@ -200,8 +200,8 @@ namespace kerbal
 
 				public:
 
-					//===================
-					//input iterator interface
+				//===================
+				//input iterator interface
 
 					KERBAL_CONSTEXPR14
 					reverse_iterator& operator++()
@@ -225,8 +225,8 @@ namespace kerbal
 						return lhs.iter != rhs.iter;
 					}
 
-					//===================
-					//bidirectional iterator interface
+				//===================
+				//bidirectional iterator interface
 
 					KERBAL_CONSTEXPR14
 					reverse_iterator& operator--()
@@ -242,6 +242,7 @@ namespace kerbal
 			class reverse_iterator_impl<Iter, std::random_access_iterator_tag, IsInplace> :
 					public reverse_iterator_impl<Iter, std::bidirectional_iterator_tag, IsInplace>,
 
+					//random access iterator interface
 					public kerbal::operators::addable<
 							kerbal::iterator::reverse_iterator<Iter, IsInplace>,
 							typename kerbal::iterator::iterator_traits<Iter>::difference_type
@@ -282,9 +283,10 @@ namespace kerbal
 					}
 
 				public:
-					/*
-					 * @precondition lhs.stride == rhs.stride
-					 */
+
+				//===================
+				//random access iterator interface
+
 					friend KERBAL_CONSTEXPR
 					difference_type
 					operator-(const reverse_iterator& lhs, const reverse_iterator& rhs)
