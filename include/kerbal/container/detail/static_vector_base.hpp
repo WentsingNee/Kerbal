@@ -46,7 +46,7 @@ namespace kerbal
 
 					storage_type storage[N];
 
-					KERBAL_CONSTEXPR
+					KERBAL_CONSTEXPR20
 					static_vector_base() KERBAL_NOEXCEPT
 #			if __cplusplus >= 201103L
 							: len(0), storage{}
