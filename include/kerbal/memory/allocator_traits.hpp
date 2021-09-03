@@ -453,7 +453,7 @@ namespace kerbal
 					template <typename Alloc2>
 					static kerbal::type_traits::false_type test(...);
 
-					template <typename Alloc2, typename = decltype(kerbal::utility::declval<Alloc2*>()->construct(
+					template <typename Alloc2, typename = decltype(kerbal::utility::declval<Alloc2&>().construct(
 							kerbal::utility::declval<T*>(),
 							kerbal::utility::declval<Args>()...
 					))>
@@ -534,7 +534,7 @@ namespace kerbal
 		template <typename Alloc, typename T>
 		struct allocator_has_destroy<Alloc, T, typename kerbal::type_traits::void_type<
 				decltype(
-					kerbal::utility::declval<Alloc>().destroy(
+					kerbal::utility::declval<Alloc&>().destroy(
 							kerbal::utility::declval<T*>()
 					)
 				)
@@ -639,7 +639,7 @@ namespace kerbal
 
 			template <typename Alloc>
 			struct allocator_has_max_size_helper<Alloc, typename kerbal::type_traits::void_type<
-																	decltype(kerbal::utility::declval<const Alloc>().max_size())
+																	decltype(kerbal::utility::declval<const Alloc&>().max_size())
 														>::type>
 					: kerbal::type_traits::true_type
 			{
@@ -710,7 +710,7 @@ namespace kerbal
 					KERBAL_CONSTEXPR
 					static size_type max_size(const Alloc & alloc)
 							KERBAL_CONDITIONAL_NOEXCEPT(
-									noexcept(kerbal::utility::declval<const Alloc>().max_size())
+									noexcept(kerbal::utility::declval<const Alloc&>().max_size())
 							)
 					{
 						return alloc.max_size();
