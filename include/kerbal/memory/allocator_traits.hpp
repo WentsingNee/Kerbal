@@ -29,6 +29,10 @@
 
 #include <memory> // std::construct_at
 
+#if __cplusplus >= 201103L
+#	include <type_traits>
+#endif
+
 
 KERBAL_NAMESPACE_STD_BEGIN
 
@@ -374,6 +378,67 @@ namespace kerbal
 					>
 			{
 			};
+
+		} // namespace detail
+
+
+
+		template <typename Alloc, typename = kerbal::type_traits::void_type<>::type>
+		struct allocator_has_def_is_always_equal: kerbal::type_traits::false_type
+		{
+		};
+
+		template <typename Alloc>
+		struct allocator_has_def_is_always_equal
+				<Alloc, typename kerbal::type_traits::void_type<typename Alloc::is_always_equal>::type>
+				: kerbal::type_traits::true_type
+		{
+		};
+
+		template <typename Alloc>
+		struct allocator_could_use_is_always_equal : kerbal::memory::allocator_has_def_is_always_equal<Alloc>
+		{
+		};
+
+#	if __cplusplus > 201703L
+
+		template <typename Tp>
+		struct allocator_could_use_is_always_equal<std::allocator<Tp> >: kerbal::type_traits::false_type
+		{
+		};
+
+#	endif
+
+		namespace detail
+		{
+
+			template <typename Alloc, bool = kerbal::memory::allocator_could_use_is_always_equal<Alloc>::value>
+			struct allocator_is_always_equal_traits_helper:
+#		if __cplusplus < 201103L
+					kerbal::type_traits::false_type
+#		else
+					kerbal::type_traits::bool_constant<std::is_empty<Alloc>::value>
+#		endif
+			{
+			};
+
+			template <typename Alloc>
+			struct allocator_is_always_equal_traits_helper<Alloc, true>
+					: kerbal::type_traits::bool_constant<
+							Alloc::is_always_equal::value
+					>
+			{
+			};
+
+#		if __cplusplus < 201103L
+
+			template <typename T>
+			struct allocator_is_always_equal_traits_helper<std::allocator<T>, false>
+					: kerbal::type_traits::true_type
+			{
+			};
+
+#		endif
 
 		} // namespace detail
 
@@ -747,6 +812,8 @@ namespace kerbal
 				typedef kerbal::memory::detail::allocator_propagate_on_container_move_assignment_traits_helper<allocator_type> propagate_on_container_move_assignment;
 
 				typedef kerbal::memory::detail::allocator_propagate_on_container_swap_traits_helper<allocator_type> propagate_on_container_swap;
+
+				typedef kerbal::memory::detail::allocator_is_always_equal_traits_helper<allocator_type> is_always_equal;
 
 				template <typename Up>
 				struct rebind_alloc
