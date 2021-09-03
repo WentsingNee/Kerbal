@@ -450,6 +450,7 @@ namespace kerbal
 			template <typename Alloc, typename T, typename ... Args>
 			struct allocator_has_construct_helper
 			{
+				private:
 					template <typename Alloc2>
 					static kerbal::type_traits::false_type test(...);
 
@@ -459,6 +460,7 @@ namespace kerbal
 					))>
 					static kerbal::type_traits::true_type test(int);
 
+				public:
 					typedef decltype(test<Alloc>(0)) type;
 			};
 
@@ -492,14 +494,14 @@ namespace kerbal
 				private:
 					template <typename T, typename ... Args>
 					KERBAL_CONSTEXPR20
-					static void __construct(kerbal::type_traits::false_type, Alloc&, T* p, Args&& ... args)
+					static void _K_construct(kerbal::type_traits::false_type, Alloc&, T* p, Args&& ... args)
 					{
 						kerbal::memory::construct_at(p, kerbal::utility::forward<Args>(args)...);
 					}
 
 					template <typename T, typename ... Args>
 					KERBAL_CONSTEXPR14
-					static void __construct(kerbal::type_traits::true_type, Alloc& alloc, T* p, Args&& ... args)
+					static void _K_construct(kerbal::type_traits::true_type, Alloc& alloc, T* p, Args&& ... args)
 													KERBAL_CONDITIONAL_NOEXCEPT(
 															noexcept(alloc.construct(p, kerbal::utility::forward<Args>(args)...))
 													)
@@ -512,7 +514,7 @@ namespace kerbal
 					KERBAL_CONSTEXPR14
 					static void construct(Alloc& alloc, T* p, Args&& ... args)
 					{
-						__construct(allocator_could_use_construct<Alloc, T, Args...>(), alloc, p,
+						_K_construct(allocator_could_use_construct<Alloc, T, Args...>(), alloc, p,
 									kerbal::utility::forward<Args>(args)...);
 					}
 
@@ -579,7 +581,7 @@ namespace kerbal
 				private:
 					template <typename T>
 					KERBAL_CONSTEXPR20
-					static void __destroy(kerbal::type_traits::false_type, Alloc &, T * p)
+					static void _K_destroy(kerbal::type_traits::false_type, Alloc &, T * p)
 											KERBAL_CONDITIONAL_NOEXCEPT(
 													std::is_nothrow_destructible<T>::value
 											)
@@ -589,7 +591,7 @@ namespace kerbal
 
 					template <typename T>
 					KERBAL_CONSTEXPR14
-					static void __destroy(kerbal::type_traits::true_type, Alloc & alloc, T * p)
+					static void _K_destroy(kerbal::type_traits::true_type, Alloc & alloc, T * p)
 											KERBAL_CONDITIONAL_NOEXCEPT(
 													noexcept(alloc.destroy(p))
 											)
@@ -602,10 +604,10 @@ namespace kerbal
 					KERBAL_CONSTEXPR14
 					static void destroy(Alloc & alloc, T * p)
 											KERBAL_CONDITIONAL_NOEXCEPT(
-													noexcept(__destroy(allocator_could_use_destroy<Alloc, T>(), alloc, p))
+													noexcept(_K_destroy(allocator_could_use_destroy<Alloc, T>(), alloc, p))
 											)
 					{
-						__destroy(allocator_could_use_destroy<Alloc, T>(), alloc, p);
+						_K_destroy(allocator_could_use_destroy<Alloc, T>(), alloc, p);
 					}
 
 #		else
