@@ -66,70 +66,48 @@ namespace kerbal
 		KERBAL_CONSTEXPR20
 		list<Tp, Allocator>::list(const list& src) :
 				list_allocator_overload(),
-				list_allocator_unrelated(detail::init_list_node_ptr_to_self_tag())
+				list_allocator_unrelated(this->alloc(), src.cbegin(), src.cend())
 		{
-			this->insert(this->cend(), src.cbegin(), src.cend());
 		}
 
 		template <typename Tp, typename Allocator>
 		KERBAL_CONSTEXPR20
 		list<Tp, Allocator>::list(const list& src, const Allocator& alloc) :
 				list_allocator_overload(alloc),
-				list_allocator_unrelated(detail::init_list_node_ptr_to_self_tag())
+				list_allocator_unrelated(this->alloc(), src.cbegin(), src.cend())
 		{
-			this->insert(this->cend(), src.cbegin(), src.cend());
 		}
 
 		template <typename Tp, typename Allocator>
 		KERBAL_CONSTEXPR20
 		list<Tp, Allocator>::list(size_type n) :
 				list_allocator_overload(),
-				list_allocator_unrelated(detail::init_list_node_ptr_to_self_tag())
+				list_allocator_unrelated(this->alloc(), n)
 		{
-			if (n == 0) {
-				return;
-			}
-			std::pair<node*, node*> p(this->_K_build_n_new_nodes_unguarded(this->alloc(), n));
-			list_type_unrelated::_K_hook_node(this->cend(), p.first, p.second);
 		}
 
 		template <typename Tp, typename Allocator>
 		KERBAL_CONSTEXPR20
 		list<Tp, Allocator>::list(size_type n, const Allocator& alloc) :
 				list_allocator_overload(alloc),
-				list_allocator_unrelated(detail::init_list_node_ptr_to_self_tag())
+				list_allocator_unrelated(this->alloc(), n)
 		{
-			if (n == 0) {
-				return;
-			}
-			std::pair<node*, node*> p(this->_K_build_n_new_nodes_unguarded(this->alloc(), n));
-			list_type_unrelated::_K_hook_node(this->cend(), p.first, p.second);
 		}
 
 		template <typename Tp, typename Allocator>
 		KERBAL_CONSTEXPR20
 		list<Tp, Allocator>::list(size_type n, const_reference val) :
 				list_allocator_overload(),
-				list_allocator_unrelated(detail::init_list_node_ptr_to_self_tag())
+				list_allocator_unrelated(this->alloc(), n, val)
 		{
-			if (n == 0) {
-				return;
-			}
-			std::pair<node*, node*> p(this->_K_build_n_new_nodes_unguarded(this->alloc(), n, val));
-			list_type_unrelated::_K_hook_node(this->cend(), p.first, p.second);
 		}
 
 		template <typename Tp, typename Allocator>
 		KERBAL_CONSTEXPR20
 		list<Tp, Allocator>::list(size_type n, const_reference val, const Allocator& alloc) :
 				list_allocator_overload(alloc),
-				list_allocator_unrelated(detail::init_list_node_ptr_to_self_tag())
+				list_allocator_unrelated(this->alloc(), n, val)
 		{
-			if (n == 0) {
-				return;
-			}
-			std::pair<node*, node*> p(this->_K_build_n_new_nodes_unguarded(this->alloc(), n, val));
-			list_type_unrelated::_K_hook_node(this->cend(), p.first, p.second);
 		}
 
 		template <typename Tp, typename Allocator>
@@ -140,9 +118,8 @@ namespace kerbal
 						kerbal::iterator::is_input_compatible_iterator<InputIterator>::value, int
 				>::type) :
 				list_allocator_overload(),
-				list_allocator_unrelated(detail::init_list_node_ptr_to_self_tag())
+				list_allocator_unrelated(this->alloc(), first, last)
 		{
-			this->insert(this->cend(), first, last);
 		}
 
 		template <typename Tp, typename Allocator>
@@ -153,9 +130,8 @@ namespace kerbal
 						kerbal::iterator::is_input_compatible_iterator<InputIterator>::value, int
 				>::type) :
 				list_allocator_overload(alloc),
-				list_allocator_unrelated(detail::init_list_node_ptr_to_self_tag())
+				list_allocator_unrelated(this->alloc(), first, last)
 		{
-			this->insert(this->cend(), first, last);
 		}
 
 #	if __cplusplus >= 201103L
@@ -255,18 +231,16 @@ namespace kerbal
 		template <typename Up>
 		list<Tp, Allocator>::list(const kerbal::assign::assign_list<Up> & src) :
 				list_allocator_overload(),
-				list_allocator_unrelated(detail::init_list_node_ptr_to_self_tag())
+				list_allocator_unrelated(this->alloc(), src.cbegin(), src.cend())
 		{
-			this->insert(this->cend(), src.cbegin(), src.cend());
 		}
 
 		template <typename Tp, typename Allocator>
 		template <typename Up>
 		list<Tp, Allocator>::list(const kerbal::assign::assign_list<Up> & src, const Allocator& alloc) :
 				list_allocator_overload(alloc),
-				list_allocator_unrelated(detail::init_list_node_ptr_to_self_tag())
+				list_allocator_unrelated(this->alloc(), src.cbegin(), src.cend())
 		{
-			this->insert(this->cend(), src.cbegin(), src.cend());
 		}
 
 #	endif
@@ -354,18 +328,7 @@ namespace kerbal
 		KERBAL_CONSTEXPR20
 		void list<Tp, Allocator>::assign(size_type count, const_reference val)
 		{
-			iterator it(this->begin());
-			while (count != 0) {
-				if (it != this->cend()) {
-					kerbal::operators::generic_assign(*it, val); // *it = val;
-					--count;
-					++it;
-				} else {
-					this->insert(this->cend(), count, val);
-					return;
-				}
-			}
-			this->erase(it, this->cend());
+			list_allocator_unrelated::assign_using_allocator(this->alloc(), count, val);
 		}
 
 		template <typename Tp, typename Allocator>
@@ -376,18 +339,7 @@ namespace kerbal
 		>::type
 		list<Tp, Allocator>::assign(InputIterator first, InputIterator last)
 		{
-			iterator it(this->begin());
-			while (first != last) {
-				if (it != this->cend()) {
-					kerbal::operators::generic_assign(*it, *first); // *it = *first;
-					++first;
-					++it;
-				} else {
-					this->insert(this->cend(), first, last);
-					return;
-				}
-			}
-			this->erase(it, this->cend());
+			list_allocator_unrelated::assign_using_allocator(this->alloc(), first, last);
 		}
 
 
@@ -429,7 +381,7 @@ namespace kerbal
 		KERBAL_CONSTEXPR20
 		void list<Tp, Allocator>::push_front(const_reference val)
 		{
-			this->emplace_front(val);
+			this->list_allocator_unrelated::push_front_using_allocator(this->alloc(), val);
 		}
 
 #	if __cplusplus >= 201103L
@@ -438,7 +390,7 @@ namespace kerbal
 		KERBAL_CONSTEXPR20
 		void list<Tp, Allocator>::push_front(rvalue_reference val)
 		{
-			this->emplace_front(kerbal::compatibility::move(val));
+			this->list_allocator_unrelated::push_front_using_allocator(this->alloc(), kerbal::compatibility::move(val));
 		}
 
 #	endif
@@ -451,7 +403,7 @@ namespace kerbal
 		typename list<Tp, Allocator>::reference
 		list<Tp, Allocator>::emplace_front(Args&& ... args)
 		{
-			return *this->emplace(this->cbegin(), kerbal::utility::forward<Args>(args)...);
+			return this->list_allocator_unrelated::emplace_front_using_allocator(this->alloc(), kerbal::utility::forward<Args>(args)...);
 		}
 
 #	else
@@ -460,7 +412,7 @@ namespace kerbal
 		typename list<Tp, Allocator>::reference
 		list<Tp, Allocator>::emplace_front()
 		{
-			return *this->emplace(this->cbegin());
+			return this->list_allocator_unrelated::emplace_front_using_allocator(this->alloc());
 		}
 
 		template <typename Tp, typename Allocator>
@@ -468,7 +420,7 @@ namespace kerbal
 		typename list<Tp, Allocator>::reference
 		list<Tp, Allocator>::emplace_front(const Arg0& arg0)
 		{
-			return *this->emplace(this->cbegin(), arg0);
+			return this->list_allocator_unrelated::emplace_front_using_allocator(this->alloc(), arg0);
 		}
 
 		template <typename Tp, typename Allocator>
@@ -476,7 +428,7 @@ namespace kerbal
 		typename list<Tp, Allocator>::reference
 		list<Tp, Allocator>::emplace_front(const Arg0& arg0, const Arg1& arg1)
 		{
-			return *this->emplace(this->cbegin(), arg0, arg1);
+			return this->list_allocator_unrelated::emplace_front_using_allocator(this->alloc(), arg0, arg1);
 		}
 
 		template <typename Tp, typename Allocator>
@@ -484,7 +436,7 @@ namespace kerbal
 		typename list<Tp, Allocator>::reference
 		list<Tp, Allocator>::emplace_front(const Arg0& arg0, const Arg1& arg1, const Arg2& arg2)
 		{
-			return *this->emplace(this->cbegin(), arg0, arg1, arg2);
+			return this->list_allocator_unrelated::emplace_front_using_allocator(this->alloc(), arg0, arg1, arg2);
 		}
 
 #	endif
@@ -493,7 +445,7 @@ namespace kerbal
 		KERBAL_CONSTEXPR20
 		void list<Tp, Allocator>::push_back(const_reference val)
 		{
-			this->emplace_back(val);
+			this->list_allocator_unrelated::emplace_back_using_allocator(this->alloc(), val);
 		}
 
 #	if __cplusplus >= 201103L
@@ -502,7 +454,7 @@ namespace kerbal
 		KERBAL_CONSTEXPR20
 		void list<Tp, Allocator>::push_back(rvalue_reference val)
 		{
-			this->emplace_back(kerbal::compatibility::move(val));
+			this->list_allocator_unrelated::emplace_back_using_allocator(this->alloc(), kerbal::compatibility::move(val));
 		}
 
 #	endif
@@ -515,7 +467,7 @@ namespace kerbal
 		typename list<Tp, Allocator>::reference
 		list<Tp, Allocator>::emplace_back(Args&& ... args)
 		{
-			return *this->emplace(this->cend(), kerbal::utility::forward<Args>(args)...);
+			return this->list_allocator_unrelated::emplace_back_using_allocator(this->alloc(), kerbal::utility::forward<Args>(args)...);
 		}
 
 #	else
@@ -524,7 +476,7 @@ namespace kerbal
 		typename list<Tp, Allocator>::reference
 		list<Tp, Allocator>::emplace_back()
 		{
-			return *this->emplace(this->cend());
+			return this->list_allocator_unrelated::emplace_back_using_allocator(this->alloc());
 		}
 
 		template <typename Tp, typename Allocator>
@@ -532,7 +484,7 @@ namespace kerbal
 		typename list<Tp, Allocator>::reference
 		list<Tp, Allocator>::emplace_back(const Arg0& arg0)
 		{
-			return *this->emplace(this->cend(), arg0);
+			return this->list_allocator_unrelated::emplace_back_using_allocator(this->alloc(), arg0);
 		}
 
 		template <typename Tp, typename Allocator>
@@ -540,7 +492,7 @@ namespace kerbal
 		typename list<Tp, Allocator>::reference
 		list<Tp, Allocator>::emplace_back(const Arg0& arg0, const Arg1& arg1)
 		{
-			return *this->emplace(this->cend(), arg0, arg1);
+			return this->list_allocator_unrelated::emplace_back_using_allocator(this->alloc(), arg0, arg1);
 		}
 
 		template <typename Tp, typename Allocator>
@@ -548,7 +500,7 @@ namespace kerbal
 		typename list<Tp, Allocator>::reference
 		list<Tp, Allocator>::emplace_back(const Arg0& arg0, const Arg1& arg1, const Arg2& arg2)
 		{
-			return *this->emplace(this->cend(), arg0, arg1, arg2);
+			return this->list_allocator_unrelated::emplace_back_using_allocator(this->alloc(), arg0, arg1, arg2);
 		}
 
 #	endif
@@ -558,7 +510,7 @@ namespace kerbal
 		typename list<Tp, Allocator>::iterator
 		list<Tp, Allocator>::insert(const_iterator pos, const_reference val)
 		{
-			return this->emplace(pos, val);
+			return list_allocator_unrelated::insert_using_allocator(this->alloc(), pos, val);
 		}
 
 		template <typename Tp, typename Allocator>
@@ -566,12 +518,7 @@ namespace kerbal
 		typename list<Tp, Allocator>::iterator
 		list<Tp, Allocator>::insert(const_iterator pos, size_type n, const_reference val)
 		{
-			if (n == 0) {
-				return pos.cast_to_mutable();
-			}
-			std::pair<node*, node*> range(this->_K_build_n_new_nodes_unguarded(this->alloc(), n, val));
-			list_type_unrelated::_K_hook_node(pos, range.first, range.second);
-			return iterator(range.first);
+			return list_allocator_unrelated::insert_using_allocator(this->alloc(), pos, n, val);
 		}
 
 		template <typename Tp, typename Allocator>
@@ -583,12 +530,7 @@ namespace kerbal
 		>::type
 		list<Tp, Allocator>::insert(const_iterator pos, InputIterator first, InputIterator last)
 		{
-			if (first == last) {
-				return pos.cast_to_mutable();
-			}
-			std::pair<node*, node*> range(this->_K_build_new_nodes_range_unguarded(this->alloc(), first, last));
-			list_type_unrelated::_K_hook_node(pos, range.first, range.second);
-			return iterator(range.first);
+			return list_allocator_unrelated::insert_using_allocator(this->alloc(), pos, first, last);
 		}
 
 #	if __cplusplus >= 201103L
@@ -598,7 +540,7 @@ namespace kerbal
 		typename list<Tp, Allocator>::iterator
 		list<Tp, Allocator>::insert(const_iterator pos, rvalue_reference val)
 		{
-			return this->emplace(pos, kerbal::compatibility::move(val));
+			return list_allocator_unrelated::insert_using_allocator(this->alloc(), pos, kerbal::compatibility::move(val));
 		}
 
 #	endif
@@ -633,9 +575,7 @@ namespace kerbal
 		typename list<Tp, Allocator>::iterator
 		list<Tp, Allocator>::emplace(const_iterator pos, Args&& ... args)
 		{
-			node *p = this->_K_build_new_node(this->alloc(), kerbal::utility::forward<Args>(args)...);
-			list_type_unrelated::_K_hook_node(pos, p);
-			return iterator(p);
+			return list_allocator_unrelated::emplace_using_allocator(this->alloc(), pos, kerbal::utility::forward<Args>(args)...);
 		}
 
 #	else
@@ -644,9 +584,7 @@ namespace kerbal
 		typename list<Tp, Allocator>::iterator
 		list<Tp, Allocator>::emplace(const_iterator pos)
 		{
-			node *p = this->_K_build_new_node(this->alloc());
-			list_type_unrelated::_K_hook_node(pos, p);
-			return iterator(p);
+			return list_allocator_unrelated::emplace_using_allocator(this->alloc(), pos);
 		}
 
 		template <typename Tp, typename Allocator>
@@ -654,9 +592,7 @@ namespace kerbal
 		typename list<Tp, Allocator>::iterator
 		list<Tp, Allocator>::emplace(const_iterator pos, const Arg0& arg0)
 		{
-			node *p = this->_K_build_new_node(this->alloc(), arg0);
-			list_type_unrelated::_K_hook_node(pos, p);
-			return iterator(p);
+			return list_allocator_unrelated::emplace_using_allocator(this->alloc(), pos, arg0);
 		}
 
 		template <typename Tp, typename Allocator>
@@ -664,9 +600,7 @@ namespace kerbal
 		typename list<Tp, Allocator>::iterator
 		list<Tp, Allocator>::emplace(const_iterator pos, const Arg0& arg0, const Arg1& arg1)
 		{
-			node *p = this->_K_build_new_node(this->alloc(), arg0, arg1);
-			list_type_unrelated::_K_hook_node(pos, p);
-			return iterator(p);
+			return list_allocator_unrelated::emplace_using_allocator(this->alloc(), pos, arg0, arg1);
 		}
 
 		template <typename Tp, typename Allocator>
@@ -674,9 +608,7 @@ namespace kerbal
 		typename list<Tp, Allocator>::iterator
 		list<Tp, Allocator>::emplace(const_iterator pos, const Arg0& arg0, const Arg1& arg1, const Arg2& arg2)
 		{
-			node *p = this->_K_build_new_node(this->alloc(), arg0, arg1, arg2);
-			list_type_unrelated::_K_hook_node(pos, p);
-			return iterator(p);
+			return list_allocator_unrelated::emplace_using_allocator(this->alloc(), pos, arg0, arg1, arg2);
 		}
 
 #	endif
@@ -688,14 +620,14 @@ namespace kerbal
 		KERBAL_CONSTEXPR20
 		void list<Tp, Allocator>::pop_front()
 		{
-			this->erase(this->cbegin());
+			this->list_allocator_unrelated::pop_front_using_allocator(this->alloc());
 		}
 
 		template <typename Tp, typename Allocator>
 		KERBAL_CONSTEXPR20
 		void list<Tp, Allocator>::pop_back()
 		{
-			this->erase(kerbal::iterator::prev(this->cend()));
+			this->list_allocator_unrelated::pop_back_using_allocator(this->alloc());
 		}
 
 		template <typename Tp, typename Allocator>
@@ -703,7 +635,7 @@ namespace kerbal
 		typename list<Tp, Allocator>::iterator
 		list<Tp, Allocator>::erase(const_iterator pos)
 		{
-			return list_allocator_unrelated::_K_erase(this->alloc(), pos);
+			return list_allocator_unrelated::erase_using_allocator(this->alloc(), pos);
 		}
 
 		template <typename Tp, typename Allocator>
@@ -711,19 +643,19 @@ namespace kerbal
 		typename list<Tp, Allocator>::iterator
 		list<Tp, Allocator>::erase(const_iterator first, const_iterator last)
 		{
-			return list_allocator_unrelated::_K_erase(this->alloc(), first, last);
+			return list_allocator_unrelated::erase_using_allocator(this->alloc(), first, last);
 		}
 
 		template <typename Tp, typename Allocator>
 		KERBAL_CONSTEXPR20
 		void list<Tp, Allocator>::clear()
 				KERBAL_CONDITIONAL_NOEXCEPT(
-						noexcept(kerbal::utility::declthis<list>()->erase(
-								kerbal::utility::declthis<list>()->cbegin(), kerbal::utility::declthis<list>()->cend()
+						noexcept(kerbal::utility::declthis<list_allocator_unrelated>()->clear_using_allocator(
+								kerbal::utility::declthis<list>()->alloc()
 						))
 				)
 		{
-			this->erase(this->cbegin(), this->cend());
+			this->list_allocator_unrelated::clear_using_allocator(this->alloc());
 		}
 
 	//===================
@@ -733,30 +665,14 @@ namespace kerbal
 		KERBAL_CONSTEXPR20
 		void list<Tp, Allocator>::resize(size_type count)
 		{
-			const_iterator it(this->cbegin());
-			const_iterator const cend(this->cend());
-			size_type size(kerbal::iterator::advance_at_most(it, count, cend));
-			if (size == count) {
-				this->erase(it, cend);
-			} else {
-				// note: count - size != 0
-				std::pair<node*, node*> range(this->_K_build_n_new_nodes_unguarded(this->alloc(), count - size));
-				list_type_unrelated::_K_hook_node(cend, range.first, range.second);
-			}
+			list_allocator_unrelated::resize_using_allocator(this->alloc(), count);
 		}
 
 		template <typename Tp, typename Allocator>
 		KERBAL_CONSTEXPR20
 		void list<Tp, Allocator>::resize(size_type count, const_reference value)
 		{
-			const_iterator it(this->cbegin());
-			const_iterator const cend(this->cend());
-			size_type size(kerbal::iterator::advance_at_most(it, count, cend));
-			if (size == count) {
-				this->erase(it, cend);
-			} else {
-				this->insert(cend, count - size, value);
-			}
+			list_allocator_unrelated::resize_using_allocator(this->alloc(), count, value);
 		}
 
 		template <typename Tp, typename Allocator>
@@ -856,7 +772,7 @@ namespace kerbal
 		typename list<Tp, Allocator>::size_type
 		list<Tp, Allocator>::remove(const_reference val)
 		{
-			return list_allocator_unrelated::_K_remove(this->alloc(), val);
+			return list_allocator_unrelated::remove_using_allocator(this->alloc(), val);
 		}
 
 		template <typename Tp, typename Allocator>
@@ -864,7 +780,7 @@ namespace kerbal
 		typename list<Tp, Allocator>::size_type
 		list<Tp, Allocator>::remove(const_iterator first, const_iterator last, const_reference val)
 		{
-			return list_allocator_unrelated::_K_remove(this->alloc(), first, last, val);
+			return list_allocator_unrelated::remove_using_allocator(this->alloc(), first, last, val);
 		}
 
 		template <typename Tp, typename Allocator>
@@ -873,7 +789,7 @@ namespace kerbal
 		typename list<Tp, Allocator>::size_type
 		list<Tp, Allocator>::remove_if(UnaryPredicate predicate)
 		{
-			return list_allocator_unrelated::_K_remove_if(this->alloc(), predicate);
+			return list_allocator_unrelated::remove_if_using_allocator(this->alloc(), predicate);
 		}
 
 		template <typename Tp, typename Allocator>
@@ -882,7 +798,7 @@ namespace kerbal
 		typename list<Tp, Allocator>::size_type
 		list<Tp, Allocator>::remove_if(const_iterator first, const_iterator last, UnaryPredicate predicate)
 		{
-			return list_allocator_unrelated::_K_remove_if(this->alloc(), first, last, predicate);
+			return list_allocator_unrelated::remove_if_using_allocator(this->alloc(), first, last, predicate);
 		}
 
 		template <typename Tp, typename Allocator>
@@ -890,7 +806,7 @@ namespace kerbal
 		typename list<Tp, Allocator>::size_type
 		list<Tp, Allocator>::unique()
 		{
-			return list_allocator_unrelated::_K_unique(this->alloc());
+			return list_allocator_unrelated::unique_using_allocator(this->alloc());
 		}
 
 		template <typename Tp, typename Allocator>
@@ -899,7 +815,7 @@ namespace kerbal
 		typename list<Tp, Allocator>::size_type
 		list<Tp, Allocator>::unique(BinaryPredicate pred)
 		{
-			return list_allocator_unrelated::_K_unique(this->alloc(), pred);
+			return list_allocator_unrelated::unique_using_allocator(this->alloc(), pred);
 		}
 
 		template <typename Tp, typename Allocator>
@@ -907,7 +823,7 @@ namespace kerbal
 		typename list<Tp, Allocator>::size_type
 		list<Tp, Allocator>::unique(const_iterator first, const_iterator last)
 		{
-			return list_allocator_unrelated::_K_unique(this->alloc(), first, last);
+			return list_allocator_unrelated::unique_using_allocator(this->alloc(), first, last);
 		}
 
 		template <typename Tp, typename Allocator>
@@ -916,7 +832,7 @@ namespace kerbal
 		typename list<Tp, Allocator>::size_type
 		list<Tp, Allocator>::unique(const_iterator first, const_iterator last, BinaryPredicate pred)
 		{
-			return list_allocator_unrelated::_K_unique(this->alloc(), first, last, pred);
+			return list_allocator_unrelated::unique_using_allocator(this->alloc(), first, last, pred);
 		}
 
 		template <typename Tp, typename Allocator>

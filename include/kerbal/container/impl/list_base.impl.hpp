@@ -259,6 +259,95 @@ namespace kerbal
 
 
 		//===================
+		// construct/copy/destroy
+
+			template <typename Tp>
+			template <typename NodeAllocator>
+			KERBAL_CONSTEXPR20
+			list_allocator_unrelated<Tp>::list_allocator_unrelated(NodeAllocator & alloc, size_type n) :
+					super(init_list_node_ptr_to_self_tag())
+			{
+				if (n == 0) {
+					return;
+				}
+				std::pair<node*, node*> p(this->_K_build_n_new_nodes_unguarded(alloc, n));
+				list_type_unrelated::_K_hook_node(this->cend(), p.first, p.second);
+			}
+
+			template <typename Tp>
+			template <typename NodeAllocator>
+			KERBAL_CONSTEXPR20
+			list_allocator_unrelated<Tp>::list_allocator_unrelated(NodeAllocator & alloc, size_type n, const_reference val) :
+					super(init_list_node_ptr_to_self_tag())
+			{
+				if (n == 0) {
+					return;
+				}
+				std::pair<node*, node*> p(this->_K_build_n_new_nodes_unguarded(alloc, n, val));
+				list_type_unrelated::_K_hook_node(this->cend(), p.first, p.second);
+			}
+
+			template <typename Tp>
+			template <typename NodeAllocator, typename InputIterator>
+			KERBAL_CONSTEXPR20
+			list_allocator_unrelated<Tp>::list_allocator_unrelated(NodeAllocator & alloc, InputIterator first, InputIterator last,
+					typename kerbal::type_traits::enable_if<
+							kerbal::iterator::is_input_compatible_iterator<InputIterator>::value, int
+					>::type) :
+					super(init_list_node_ptr_to_self_tag())
+			{
+				insert_using_allocator(alloc, this->cend(), first, last);
+			}
+
+
+		//===================
+		//assign
+
+			template <typename Tp>
+			template <typename NodeAllocator>
+			KERBAL_CONSTEXPR20
+			void list_allocator_unrelated<Tp>::assign_using_allocator(NodeAllocator & alloc, size_type count, const_reference val)
+			{
+				iterator it(this->begin());
+				const_iterator const end(this->cend());
+				while (count != 0) {
+					if (it != end) {
+						kerbal::operators::generic_assign(*it, val); // *it = val;
+						--count;
+						++it;
+					} else {
+						insert_using_allocator(alloc, end, count, val);
+						return;
+					}
+				}
+				erase_using_allocator(alloc, it, end);
+			}
+
+			template <typename Tp>
+			template <typename NodeAllocator, typename InputIterator>
+			KERBAL_CONSTEXPR20
+			typename kerbal::type_traits::enable_if<
+					kerbal::iterator::is_input_compatible_iterator<InputIterator>::value
+			>::type
+			list_allocator_unrelated<Tp>::assign_using_allocator(NodeAllocator & alloc, InputIterator first, InputIterator last)
+			{
+				iterator it(this->begin());
+				const_iterator const end(this->cend());
+				while (first != last) {
+					if (it != end) {
+						kerbal::operators::generic_assign(*it, *first); // *it = *first;
+						++first;
+						++it;
+					} else {
+						insert_using_allocator(alloc, end, first, last);
+						return;
+					}
+				}
+				erase_using_allocator(alloc, it, end);
+			}
+
+
+		//===================
 		// element access
 
 			template <typename Tp>
@@ -427,13 +516,277 @@ namespace kerbal
 
 
 		//===================
-		// erase
+		// insert
+
+			template <typename Tp>
+			template <typename NodeAllocator>
+			KERBAL_CONSTEXPR20
+			void list_allocator_unrelated<Tp>::push_front_using_allocator(NodeAllocator & alloc, const_reference val)
+			{
+				this->emplace_front_using_allocator(alloc, val);
+			}
+
+#		if __cplusplus >= 201103L
+
+			template <typename Tp>
+			template <typename NodeAllocator>
+			KERBAL_CONSTEXPR20
+			void list_allocator_unrelated<Tp>::push_front_using_allocator(NodeAllocator & alloc, rvalue_reference val)
+			{
+				this->emplace_front_using_allocator(alloc, kerbal::compatibility::move(val));
+			}
+
+#		endif
+
+#		if __cplusplus >= 201103L
+
+			template <typename Tp>
+			template <typename NodeAllocator, typename ... Args>
+			KERBAL_CONSTEXPR20
+			typename list_allocator_unrelated<Tp>::reference
+			list_allocator_unrelated<Tp>::emplace_front_using_allocator(NodeAllocator & alloc, Args&& ... args)
+			{
+				return *emplace_using_allocator(alloc, this->cbegin(), kerbal::utility::forward<Args>(args)...);
+			}
+
+#		else
+
+			template <typename Tp>
+			template <typename NodeAllocator>
+			typename list_allocator_unrelated<Tp>::reference
+			list_allocator_unrelated<Tp>::emplace_front_using_allocator(NodeAllocator & alloc)
+			{
+				return *emplace_using_allocator(alloc, this->cbegin());
+			}
+
+			template <typename Tp>
+			template <typename NodeAllocator, typename Arg0>
+			typename list_allocator_unrelated<Tp>::reference
+			list_allocator_unrelated<Tp>::emplace_front_using_allocator(NodeAllocator & alloc, const Arg0& arg0)
+			{
+				return *emplace_using_allocator(alloc, this->cbegin(), arg0);
+			}
+
+			template <typename Tp>
+			template <typename NodeAllocator, typename Arg0, typename Arg1>
+			typename list_allocator_unrelated<Tp>::reference
+			list_allocator_unrelated<Tp>::emplace_front_using_allocator(NodeAllocator & alloc, const Arg0& arg0, const Arg1& arg1)
+			{
+				return *emplace_using_allocator(alloc, this->cbegin(), arg0, arg1);
+			}
+
+			template <typename Tp>
+			template <typename NodeAllocator, typename Arg0, typename Arg1, typename Arg2>
+			typename list_allocator_unrelated<Tp>::reference
+			list_allocator_unrelated<Tp>::emplace_front_using_allocator(NodeAllocator & alloc, const Arg0& arg0, const Arg1& arg1, const Arg2& arg2)
+			{
+				return *emplace_using_allocator(alloc, this->cbegin(), arg0, arg1, arg2);
+			}
+
+#		endif
+
+			template <typename Tp>
+			template <typename NodeAllocator>
+			KERBAL_CONSTEXPR20
+			void list_allocator_unrelated<Tp>::push_back_using_allocator(NodeAllocator & alloc, const_reference val)
+			{
+				this->emplace_back_using_allocator(alloc, val);
+			}
+
+#		if __cplusplus >= 201103L
+
+			template <typename Tp>
+			template <typename NodeAllocator>
+			KERBAL_CONSTEXPR20
+			void list_allocator_unrelated<Tp>::push_back_using_allocator(NodeAllocator & alloc, rvalue_reference val)
+			{
+				this->emplace_back_using_allocator(alloc, kerbal::compatibility::move(val));
+			}
+
+#		endif
+
+#		if __cplusplus >= 201103L
+
+			template <typename Tp>
+			template <typename NodeAllocator, typename ... Args>
+			KERBAL_CONSTEXPR20
+			typename list_allocator_unrelated<Tp>::reference
+			list_allocator_unrelated<Tp>::emplace_back_using_allocator(NodeAllocator & alloc, Args&& ... args)
+			{
+				return *emplace_using_allocator(alloc, this->cend(), kerbal::utility::forward<Args>(args)...);
+			}
+
+#		else
+
+			template <typename Tp>
+			template <typename NodeAllocator>
+			typename list_allocator_unrelated<Tp>::reference
+			list_allocator_unrelated<Tp>::emplace_back_using_allocator(NodeAllocator & alloc)
+			{
+				return *emplace_using_allocator(alloc, this->cend());
+			}
+
+			template <typename Tp>
+			template <typename NodeAllocator, typename Arg0>
+			typename list_allocator_unrelated<Tp>::reference
+			list_allocator_unrelated<Tp>::emplace_back_using_allocator(NodeAllocator & alloc, const Arg0& arg0)
+			{
+				return *emplace_using_allocator(alloc, this->cend(), arg0);
+			}
+
+			template <typename Tp>
+			template <typename NodeAllocator, typename Arg0, typename Arg1>
+			typename list_allocator_unrelated<Tp>::reference
+			list_allocator_unrelated<Tp>::emplace_back_using_allocator(NodeAllocator & alloc, const Arg0& arg0, const Arg1& arg1)
+			{
+				return *emplace_using_allocator(alloc, this->cend(), arg0, arg1);
+			}
+
+			template <typename Tp>
+			template <typename NodeAllocator, typename Arg0, typename Arg1, typename Arg2>
+			typename list_allocator_unrelated<Tp>::reference
+			list_allocator_unrelated<Tp>::emplace_back_using_allocator(NodeAllocator & alloc, const Arg0& arg0, const Arg1& arg1, const Arg2& arg2)
+			{
+				return *emplace_using_allocator(alloc, this->cend(), arg0, arg1, arg2);
+			}
+
+#		endif
 
 			template <typename Tp>
 			template <typename NodeAllocator>
 			KERBAL_CONSTEXPR20
 			typename list_allocator_unrelated<Tp>::iterator
-			list_allocator_unrelated<Tp>::_K_erase(NodeAllocator & alloc, const_iterator pos)
+			list_allocator_unrelated<Tp>::insert_using_allocator(NodeAllocator & alloc, const_iterator pos, const_reference val)
+			{
+				return emplace_using_allocator(alloc, pos, val);
+			}
+
+			template <typename Tp>
+			template <typename NodeAllocator>
+			KERBAL_CONSTEXPR20
+			typename list_allocator_unrelated<Tp>::iterator
+			list_allocator_unrelated<Tp>::insert_using_allocator(NodeAllocator & alloc, const_iterator pos, size_type n, const_reference val)
+			{
+				if (n == 0) {
+					return pos.cast_to_mutable();
+				}
+				std::pair<node*, node*> range(_K_build_n_new_nodes_unguarded(alloc, n, val));
+				list_type_unrelated::_K_hook_node(pos, range.first, range.second);
+				return iterator(range.first);
+			}
+
+			template <typename Tp>
+			template <typename NodeAllocator, typename InputIterator>
+			KERBAL_CONSTEXPR20
+			typename kerbal::type_traits::enable_if<
+					kerbal::iterator::is_input_compatible_iterator<InputIterator>::value,
+					typename list_allocator_unrelated<Tp>::iterator
+			>::type
+			list_allocator_unrelated<Tp>::insert_using_allocator(NodeAllocator & alloc, const_iterator pos, InputIterator first, InputIterator last)
+			{
+				if (first == last) {
+					return pos.cast_to_mutable();
+				}
+				std::pair<node *, node *> range(_K_build_new_nodes_range_unguarded(alloc, first, last));
+				list_type_unrelated::_K_hook_node(pos, range.first, range.second);
+				return iterator(range.first);
+			}
+
+#		if __cplusplus >= 201103L
+
+			template <typename Tp>
+			template <typename NodeAllocator>
+			KERBAL_CONSTEXPR20
+			typename list_allocator_unrelated<Tp>::iterator
+			list_allocator_unrelated<Tp>::insert_using_allocator(NodeAllocator & alloc, const_iterator pos, rvalue_reference val)
+			{
+				return emplace_using_allocator(alloc, pos, kerbal::compatibility::move(val));
+			}
+
+#		endif
+
+#		if __cplusplus >= 201103L
+
+			template <typename Tp>
+			template <typename NodeAllocator, typename ... Args>
+			KERBAL_CONSTEXPR20
+			typename list_allocator_unrelated<Tp>::iterator
+			list_allocator_unrelated<Tp>::emplace_using_allocator(NodeAllocator & alloc, const_iterator pos, Args&& ... args)
+			{
+				node *p = _K_build_new_node(alloc, kerbal::utility::forward<Args>(args)...);
+				list_type_unrelated::_K_hook_node(pos, p);
+				return iterator(p);
+			}
+
+#		else
+
+			template <typename Tp>
+			template <typename NodeAllocator>
+			typename list_allocator_unrelated<Tp>::iterator
+			list_allocator_unrelated<Tp>::emplace_using_allocator(NodeAllocator & alloc, const_iterator pos)
+			{
+				node *p = _K_build_new_node(alloc);
+				list_type_unrelated::_K_hook_node(pos, p);
+				return iterator(p);
+			}
+
+			template <typename Tp>
+			template <typename NodeAllocator, typename Arg0>
+			typename list_allocator_unrelated<Tp>::iterator
+			list_allocator_unrelated<Tp>::emplace_using_allocator(NodeAllocator & alloc, const_iterator pos, const Arg0& arg0)
+			{
+				node *p = _K_build_new_node(alloc, arg0);
+				list_type_unrelated::_K_hook_node(pos, p);
+				return iterator(p);
+			}
+
+			template <typename Tp>
+			template <typename NodeAllocator, typename Arg0, typename Arg1>
+			typename list_allocator_unrelated<Tp>::iterator
+			list_allocator_unrelated<Tp>::emplace_using_allocator(NodeAllocator & alloc, const_iterator pos, const Arg0& arg0, const Arg1& arg1)
+			{
+				node *p = _K_build_new_node(alloc, arg0, arg1);
+				list_type_unrelated::_K_hook_node(pos, p);
+				return iterator(p);
+			}
+
+			template <typename Tp>
+			template <typename NodeAllocator, typename Arg0, typename Arg1, typename Arg2>
+			typename list_allocator_unrelated<Tp>::iterator
+			list_allocator_unrelated<Tp>::emplace_using_allocator(NodeAllocator & alloc, const_iterator pos, const Arg0& arg0, const Arg1& arg1, const Arg2& arg2)
+			{
+				node *p = _K_build_new_node(alloc, arg0, arg1, arg2);
+				list_type_unrelated::_K_hook_node(pos, p);
+				return iterator(p);
+			}
+
+#		endif
+
+
+		//===================
+		// erase
+
+			template <typename Tp>
+			template <typename NodeAllocator>
+			KERBAL_CONSTEXPR20
+			void list_allocator_unrelated<Tp>::pop_front_using_allocator(NodeAllocator & alloc)
+			{
+				erase_using_allocator(alloc, this->cbegin());
+			}
+
+			template <typename Tp>
+			template <typename NodeAllocator>
+			KERBAL_CONSTEXPR20
+			void list_allocator_unrelated<Tp>::pop_back_using_allocator(NodeAllocator & alloc)
+			{
+				erase_using_allocator(alloc, kerbal::iterator::prev(this->cend()));
+			}
+
+			template <typename Tp>
+			template <typename NodeAllocator>
+			KERBAL_CONSTEXPR20
+			typename list_allocator_unrelated<Tp>::iterator
+			list_allocator_unrelated<Tp>::erase_using_allocator(NodeAllocator & alloc, const_iterator pos)
 			{
 				iterator pos_mut(pos.cast_to_mutable());
 				node_base * p = list_type_unrelated::_K_unhook_node(pos_mut++);
@@ -445,7 +798,7 @@ namespace kerbal
 			template <typename NodeAllocator>
 			KERBAL_CONSTEXPR20
 			typename list_allocator_unrelated<Tp>::iterator
-			list_allocator_unrelated<Tp>::_K_erase(NodeAllocator & alloc, const_iterator first, const_iterator last)
+			list_allocator_unrelated<Tp>::erase_using_allocator(NodeAllocator & alloc, const_iterator first, const_iterator last)
 			{
 				iterator last_mut(last.cast_to_mutable());
 				if (first != last) {
@@ -459,9 +812,53 @@ namespace kerbal
 				return last_mut;
 			}
 
+			template <typename Tp>
+			template <typename NodeAllocator>
+			KERBAL_CONSTEXPR20
+			void list_allocator_unrelated<Tp>::clear_using_allocator(NodeAllocator & alloc)
+					KERBAL_CONDITIONAL_NOEXCEPT(noexcept(erase_using_allocator(alloc,
+							kerbal::utility::declthis<list_allocator_unrelated>()->cbegin(),
+							kerbal::utility::declthis<list_allocator_unrelated>()->cend())
+					))
+			{
+				erase_using_allocator(alloc, this->cbegin(), this->cend());
+			}
+
 
 		//===================
 		// operation
+
+			template <typename Tp>
+			template <typename NodeAllocator>
+			KERBAL_CONSTEXPR20
+			void list_allocator_unrelated<Tp>::resize_using_allocator(NodeAllocator & alloc, size_type count)
+			{
+				const_iterator it(this->cbegin());
+				const_iterator const cend(this->cend());
+				size_type size(kerbal::iterator::advance_at_most(it, count, cend));
+				if (size == count) {
+					erase_using_allocator(alloc, it, cend);
+				} else {
+					// note: count - size != 0
+					std::pair<node*, node*> range(_K_build_n_new_nodes_unguarded(alloc, count - size));
+					list_type_unrelated::_K_hook_node(cend, range.first, range.second);
+				}
+			}
+
+			template <typename Tp>
+			template <typename NodeAllocator>
+			KERBAL_CONSTEXPR20
+			void list_allocator_unrelated<Tp>::resize_using_allocator(NodeAllocator & alloc, size_type count, const_reference value)
+			{
+				const_iterator it(this->cbegin());
+				const_iterator const cend(this->cend());
+				size_type size(kerbal::iterator::advance_at_most(it, count, cend));
+				if (size == count) {
+					erase_using_allocator(alloc, it, cend);
+				} else {
+					insert_using_allocator(alloc, cend, count - size, value);
+				}
+			}
 
 			template <typename Tp>
 			KERBAL_CONSTEXPR20
@@ -860,41 +1257,41 @@ namespace kerbal
 			template <typename NodeAllocator>
 			KERBAL_CONSTEXPR20
 			typename list_allocator_unrelated<Tp>::size_type
-			list_allocator_unrelated<Tp>::_K_remove(NodeAllocator & alloc, const_reference val)
+			list_allocator_unrelated<Tp>::remove_using_allocator(NodeAllocator & alloc, const_reference val)
 			{
-				return _K_remove(alloc, this->cbegin(), this->cend(), val);
+				return remove_using_allocator(alloc, this->cbegin(), this->cend(), val);
 			}
 
 			template <typename Tp>
 			template <typename NodeAllocator>
 			KERBAL_CONSTEXPR20
 			typename list_allocator_unrelated<Tp>::size_type
-			list_allocator_unrelated<Tp>::_K_remove(NodeAllocator & alloc, const_iterator first, const_iterator last, const_reference val)
+			list_allocator_unrelated<Tp>::remove_using_allocator(NodeAllocator & alloc, const_iterator first, const_iterator last, const_reference val)
 			{
-				return _K_remove_if(alloc, first, last, remove_predict(val));
+				return remove_if_using_allocator(alloc, first, last, remove_predict(val));
 			}
 
 			template <typename Tp>
 			template <typename NodeAllocator, typename UnaryPredicate>
 			KERBAL_CONSTEXPR20
 			typename list_allocator_unrelated<Tp>::size_type
-			list_allocator_unrelated<Tp>::_K_remove_if(NodeAllocator & alloc, UnaryPredicate predicate)
+			list_allocator_unrelated<Tp>::remove_if_using_allocator(NodeAllocator & alloc, UnaryPredicate predicate)
 			{
-				return _K_remove_if(alloc, this->cbegin(), this->cend(), predicate);
+				return remove_if_using_allocator(alloc, this->cbegin(), this->cend(), predicate);
 			}
 
 			template <typename Tp>
 			template <typename NodeAllocator, typename UnaryPredicate>
 			KERBAL_CONSTEXPR20
 			typename list_allocator_unrelated<Tp>::size_type
-			list_allocator_unrelated<Tp>::_K_remove_if(NodeAllocator & alloc, const_iterator first, const_iterator last, UnaryPredicate predicate)
+			list_allocator_unrelated<Tp>::remove_if_using_allocator(NodeAllocator & alloc, const_iterator first, const_iterator last, UnaryPredicate predicate)
 			{
 				size_type i = 0;
 				while (first != last) {
 					if (predicate(*first)) {
 						node_base * p = _K_unhook_node(first++.cast_to_mutable());
 						_K_destroy_node(alloc, p);
-						// <=> first = _K_erase(alloc, first);
+						// <=> first = erase_using_allocator(alloc, first);
 						++i;
 					} else {
 						++first;
@@ -907,34 +1304,34 @@ namespace kerbal
 			template <typename NodeAllocator>
 			KERBAL_CONSTEXPR20
 			typename list_allocator_unrelated<Tp>::size_type
-			list_allocator_unrelated<Tp>::_K_unique(NodeAllocator & alloc)
+			list_allocator_unrelated<Tp>::unique_using_allocator(NodeAllocator & alloc)
 			{
-				return _K_unique(alloc, this->cbegin(), this->cend());
+				return unique_using_allocator(alloc, this->cbegin(), this->cend());
 			}
 
 			template <typename Tp>
 			template <typename NodeAllocator, typename BinaryPredicate>
 			KERBAL_CONSTEXPR20
 			typename list_allocator_unrelated<Tp>::size_type
-			list_allocator_unrelated<Tp>::_K_unique(NodeAllocator & alloc, BinaryPredicate pred)
+			list_allocator_unrelated<Tp>::unique_using_allocator(NodeAllocator & alloc, BinaryPredicate pred)
 			{
-				return _K_unique(alloc, this->cbegin(), this->cend(), pred);
+				return unique_using_allocator(alloc, this->cbegin(), this->cend(), pred);
 			}
 
 			template <typename Tp>
 			template <typename NodeAllocator>
 			KERBAL_CONSTEXPR20
 			typename list_allocator_unrelated<Tp>::size_type
-			list_allocator_unrelated<Tp>::_K_unique(NodeAllocator & alloc, const_iterator first, const_iterator last)
+			list_allocator_unrelated<Tp>::unique_using_allocator(NodeAllocator & alloc, const_iterator first, const_iterator last)
 			{
-				return _K_unique(alloc, first, last, std::equal_to<value_type>());
+				return unique_using_allocator(alloc, first, last, std::equal_to<value_type>());
 			}
 
 			template <typename Tp>
 			template <typename NodeAllocator, typename BinaryPredicate>
 			KERBAL_CONSTEXPR20
 			typename list_allocator_unrelated<Tp>::size_type
-			list_allocator_unrelated<Tp>::_K_unique(NodeAllocator & alloc, const_iterator first, const_iterator last, BinaryPredicate pred)
+			list_allocator_unrelated<Tp>::unique_using_allocator(NodeAllocator & alloc, const_iterator first, const_iterator last, BinaryPredicate pred)
 			{
 				size_type r = 0;
 
@@ -945,7 +1342,7 @@ namespace kerbal
 						if (pred(*first, *forward)) {
 							node_base * p = list_type_unrelated::_K_unhook_node(forward++.cast_to_mutable());
 							_K_destroy_node(alloc, p);
-							// <=> _K_erase(alloc, forward++);
+							// <=> erase_using_allocator(alloc, forward++);
 							++r;
 						} else {
 							first = forward;

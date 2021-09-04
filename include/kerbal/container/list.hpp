@@ -444,8 +444,8 @@ namespace kerbal
 
 				KERBAL_CONSTEXPR20
 				void clear() KERBAL_CONDITIONAL_NOEXCEPT(
-						noexcept(kerbal::utility::declthis<list>()->erase(
-								kerbal::utility::declthis<list>()->cbegin(), kerbal::utility::declthis<list>()->cend()
+						noexcept(kerbal::utility::declthis<list_allocator_unrelated>()->clear_using_allocator(
+								kerbal::utility::declthis<list>()->alloc()
 						))
 				);
 
