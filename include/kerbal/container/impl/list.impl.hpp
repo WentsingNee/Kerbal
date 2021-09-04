@@ -753,11 +753,22 @@ namespace kerbal
 
 		template <typename Tp, typename Allocator>
 		KERBAL_CONSTEXPR20
-		void list<Tp, Allocator>::swap(list& ano)
+		void list<Tp, Allocator>::swap(list& with)
+				KERBAL_CONDITIONAL_NOEXCEPT(
+						noexcept(list_allocator_overload::_K_swap_allocator_if_propagate(
+								kerbal::utility::declval<list_allocator_overload&>(), kerbal::utility::declval<list_allocator_overload&>()
+						)) &&
+						noexcept(list_type_unrelated::_K_swap_type_unrelated(
+								kerbal::utility::declval<list_type_unrelated&>(), kerbal::utility::declval<list_type_unrelated&>()
+						))
+				)
 		{
-			this->list_allocator_overload::swap_allocator_if_propagate(ano);
-
-			list_type_unrelated::_K_swap_type_unrelated(*this, ano);
+			list_allocator_overload::_K_swap_allocator_if_propagate(
+					static_cast<list_allocator_overload&>(*this),
+					static_cast<list_allocator_overload&>(with));
+			list_type_unrelated::_K_swap_type_unrelated(
+					static_cast<list_type_unrelated&>(*this),
+					static_cast<list_type_unrelated&>(with));
 		}
 
 		template <typename Tp, typename Allocator>

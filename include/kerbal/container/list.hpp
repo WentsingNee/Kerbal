@@ -13,9 +13,11 @@
 #define KERBAL_CONTAINER_LIST_HPP
 
 #include <kerbal/algorithm/sequence_compare.hpp>
+#include <kerbal/algorithm/swap.hpp>
 #include <kerbal/assign/ilist.hpp>
 #include <kerbal/compatibility/constexpr.hpp>
 #include <kerbal/compatibility/move.hpp>
+#include <kerbal/compatibility/namespace_std_scope.hpp>
 #include <kerbal/compatibility/noexcept.hpp>
 #include <kerbal/iterator/reverse_iterator.hpp>
 #include <kerbal/memory/allocator_traits.hpp>
@@ -462,7 +464,14 @@ namespace kerbal
 				void resize(size_type count, const_reference value);
 
 				KERBAL_CONSTEXPR20
-				void swap(list & ano);
+				void swap(list & with) KERBAL_CONDITIONAL_NOEXCEPT(
+						noexcept(list_allocator_overload::_K_swap_allocator_if_propagate(
+								kerbal::utility::declval<list_allocator_overload&>(), kerbal::utility::declval<list_allocator_overload&>()
+						)) &&
+						noexcept(list_type_unrelated::_K_swap_type_unrelated(
+								kerbal::utility::declval<list_type_unrelated&>(), kerbal::utility::declval<list_type_unrelated&>()
+						))
+				);
 
 				KERBAL_CONSTEXPR20
 				void iter_swap_unstable(const_iterator a, const_iterator b);
@@ -666,7 +675,33 @@ namespace kerbal
 
 	} // namespace container
 
+	namespace algorithm
+	{
+
+		template <typename Tp, typename Allocator>
+		KERBAL_CONSTEXPR20
+		void swap(kerbal::container::list<Tp, Allocator> & a, kerbal::container::list<Tp, Allocator> & b)
+				KERBAL_CONDITIONAL_NOEXCEPT(noexcept(a.swap(b)))
+		{
+			a.swap(b);
+		}
+
+	} // namespace algorithm
+
 } // namespace kerbal
+
+
+KERBAL_NAMESPACE_STD_BEGIN
+
+	template <typename Tp, typename Allocator>
+	KERBAL_CONSTEXPR20
+	void swap(kerbal::container::list<Tp, Allocator> & a, kerbal::container::list<Tp, Allocator> & b)
+			KERBAL_CONDITIONAL_NOEXCEPT(noexcept(a.swap(b)))
+	{
+		a.swap(b);
+	}
+
+KERBAL_NAMESPACE_STD_END
 
 #include <kerbal/container/impl/list.impl.hpp>
 
