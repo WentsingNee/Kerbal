@@ -51,13 +51,13 @@ namespace kerbal
 
 		template <typename Tp, typename Allocator = std::allocator<Tp> >
 		class single_list:
-				protected kerbal::container::detail::sl_allocator_unrelated<Tp>,
-				protected kerbal::container::detail::sl_allocator_overload<Tp, Allocator>
+				protected kerbal::container::detail::sl_allocator_overload<Tp, Allocator>,
+				protected kerbal::container::detail::sl_allocator_unrelated<Tp>
 		{
 			private:
 				typedef kerbal::container::detail::sl_type_unrelated						sl_type_unrelated;
-				typedef kerbal::container::detail::sl_allocator_unrelated<Tp>				sl_allocator_unrelated;
 				typedef kerbal::container::detail::sl_allocator_overload<Tp, Allocator>		sl_allocator_overload;
+				typedef kerbal::container::detail::sl_allocator_unrelated<Tp>				sl_allocator_unrelated;
 
 			public:
 				typedef typename sl_allocator_unrelated::value_type					value_type;
@@ -115,8 +115,8 @@ namespace kerbal
 				KERBAL_CONSTEXPR20
 				explicit
 				single_list(const Allocator& alloc) KERBAL_CONDITIONAL_NOEXCEPT((
-						std::is_nothrow_default_constructible<sl_allocator_unrelated>::value &&
-						std::is_nothrow_constructible<sl_allocator_overload, const Allocator&>::value
+						std::is_nothrow_constructible<sl_allocator_overload, const Allocator&>::value &&
+						std::is_nothrow_default_constructible<sl_allocator_unrelated>::value
 				));
 
 				KERBAL_CONSTEXPR20
@@ -161,7 +161,8 @@ namespace kerbal
 
 				KERBAL_CONSTEXPR20
 				single_list(single_list && src) KERBAL_NOEXCEPT((
-						std::is_nothrow_constructible<sl_allocator_overload, node_allocator_type&&>::value
+						std::is_nothrow_constructible<sl_allocator_overload, node_allocator_type&&>::value &&
+						std::is_nothrow_default_constructible<sl_allocator_overload>::value
 				));
 
 			private:
@@ -208,13 +209,7 @@ namespace kerbal
 #		endif
 
 				KERBAL_CONSTEXPR20
-				~single_list() KERBAL_CONDITIONAL_NOEXCEPT(
-						noexcept(kerbal::utility::declthis<single_list>()->_K_consecutive_destroy_node(
-								kerbal::utility::declthis<single_list>()->alloc(),
-								kerbal::utility::declthis<single_list>()->head_node.next
-						)) &&
-						std::is_nothrow_destructible<sl_allocator_overload>::value
-				);
+				~single_list();
 
 			//===================
 			// assign

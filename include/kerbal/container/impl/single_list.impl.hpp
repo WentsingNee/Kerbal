@@ -41,8 +41,9 @@ namespace kerbal
 #	if __cplusplus < 201103L
 
 		template <typename Tp, typename Allocator>
-		single_list<Tp, Allocator>::single_list()
-				: sl_allocator_unrelated(), sl_allocator_overload()
+		single_list<Tp, Allocator>::single_list() :
+				sl_allocator_overload(),
+				sl_allocator_unrelated()
 		{
 		}
 
@@ -51,34 +52,38 @@ namespace kerbal
 		template <typename Tp, typename Allocator>
 		KERBAL_CONSTEXPR20
 		single_list<Tp, Allocator>::single_list(const Allocator& alloc)
-					KERBAL_CONDITIONAL_NOEXCEPT((
-							std::is_nothrow_default_constructible<sl_allocator_unrelated>::value &&
-							std::is_nothrow_constructible<sl_allocator_overload, const Allocator&>::value
-					))
-				: sl_allocator_unrelated(), sl_allocator_overload(alloc)
+				KERBAL_CONDITIONAL_NOEXCEPT((
+						std::is_nothrow_constructible<sl_allocator_overload, const Allocator&>::value &&
+						std::is_nothrow_default_constructible<sl_allocator_unrelated>::value
+				)) :
+				sl_allocator_overload(alloc),
+				sl_allocator_unrelated()
 		{
 		}
 
 		template <typename Tp, typename Allocator>
 		KERBAL_CONSTEXPR20
-		single_list<Tp, Allocator>::single_list(const single_list & src)
-				: sl_allocator_unrelated(), sl_allocator_overload()
-		{
-			this->insert(this->cbegin(), src.cbegin(), src.cend());
-		}
-
-		template <typename Tp, typename Allocator>
-		KERBAL_CONSTEXPR20
-		single_list<Tp, Allocator>::single_list(const single_list & src, const Allocator& alloc)
-				: sl_allocator_unrelated(), sl_allocator_overload(alloc)
+		single_list<Tp, Allocator>::single_list(const single_list & src) :
+				sl_allocator_overload(),
+				sl_allocator_unrelated()
 		{
 			this->insert(this->cbegin(), src.cbegin(), src.cend());
 		}
 
 		template <typename Tp, typename Allocator>
 		KERBAL_CONSTEXPR20
-		single_list<Tp, Allocator>::single_list(size_type n)
-				: sl_allocator_unrelated(), sl_allocator_overload()
+		single_list<Tp, Allocator>::single_list(const single_list & src, const Allocator& alloc) :
+				sl_allocator_overload(alloc),
+				sl_allocator_unrelated()
+		{
+			this->insert(this->cbegin(), src.cbegin(), src.cend());
+		}
+
+		template <typename Tp, typename Allocator>
+		KERBAL_CONSTEXPR20
+		single_list<Tp, Allocator>::single_list(size_type n) :
+				sl_allocator_overload(),
+				sl_allocator_unrelated()
 		{
 			if (n == 0) {
 				return;
@@ -89,8 +94,9 @@ namespace kerbal
 
 		template <typename Tp, typename Allocator>
 		KERBAL_CONSTEXPR20
-		single_list<Tp, Allocator>::single_list(size_type n, const Allocator& alloc)
-				: sl_allocator_unrelated(), sl_allocator_overload(alloc)
+		single_list<Tp, Allocator>::single_list(size_type n, const Allocator& alloc) :
+				sl_allocator_overload(alloc),
+				sl_allocator_unrelated()
 		{
 			if (n == 0) {
 				return;
@@ -101,8 +107,9 @@ namespace kerbal
 
 		template <typename Tp, typename Allocator>
 		KERBAL_CONSTEXPR20
-		single_list<Tp, Allocator>::single_list(size_type n, const_reference val)
-				: sl_allocator_unrelated(), sl_allocator_overload()
+		single_list<Tp, Allocator>::single_list(size_type n, const_reference val) :
+				sl_allocator_overload(),
+				sl_allocator_unrelated()
 		{
 			if (n == 0) {
 				return;
@@ -113,8 +120,9 @@ namespace kerbal
 
 		template <typename Tp, typename Allocator>
 		KERBAL_CONSTEXPR20
-		single_list<Tp, Allocator>::single_list(size_type n, const_reference val, const Allocator& alloc)
-				: sl_allocator_unrelated(), sl_allocator_overload(alloc)
+		single_list<Tp, Allocator>::single_list(size_type n, const_reference val, const Allocator& alloc) :
+				sl_allocator_overload(alloc),
+				sl_allocator_unrelated()
 		{
 			if (n == 0) {
 				return;
@@ -129,8 +137,9 @@ namespace kerbal
 		single_list<Tp, Allocator>::single_list(InputIterator first, InputIterator last,
 				typename kerbal::type_traits::enable_if<
 						kerbal::iterator::is_input_compatible_iterator<InputIterator>::value, int
-				>::type)
-				: sl_allocator_unrelated(), sl_allocator_overload()
+				>::type) :
+				sl_allocator_overload(),
+				sl_allocator_unrelated()
 		{
 			this->insert(this->cbegin(), first, last);
 		}
@@ -141,8 +150,9 @@ namespace kerbal
 		single_list<Tp, Allocator>::single_list(InputIterator first, InputIterator last, const Allocator& alloc,
 				typename kerbal::type_traits::enable_if<
 						kerbal::iterator::is_input_compatible_iterator<InputIterator>::value, int
-				>::type)
-				: sl_allocator_unrelated(), sl_allocator_overload(alloc)
+				>::type) :
+				sl_allocator_overload(alloc),
+				sl_allocator_unrelated()
 		{
 			this->insert(this->cbegin(), first, last);
 		}
@@ -152,10 +162,12 @@ namespace kerbal
 		template <typename Tp, typename Allocator>
 		KERBAL_CONSTEXPR20
 		single_list<Tp, Allocator>::single_list(single_list && src)
-					KERBAL_NOEXCEPT((
-						std::is_nothrow_constructible<sl_allocator_overload, node_allocator_type&&>::value
-					))
-				: sl_allocator_unrelated(), sl_allocator_overload(kerbal::compatibility::move(src.alloc()))
+				KERBAL_NOEXCEPT((
+						std::is_nothrow_constructible<sl_allocator_overload, node_allocator_type&&>::value &&
+						std::is_nothrow_default_constructible<sl_allocator_overload>::value
+				)) :
+				sl_allocator_overload(kerbal::compatibility::move(src.alloc())),
+				sl_allocator_unrelated()
 		{
 			if (!src.empty()) {
 				sl_type_unrelated::_K_swap_with_empty(src, *this);
@@ -206,8 +218,9 @@ namespace kerbal
 
 		template <typename Tp, typename Allocator>
 		KERBAL_CONSTEXPR20
-		single_list<Tp, Allocator>::single_list(single_list && src, const Allocator& alloc)
-				: sl_allocator_unrelated(), sl_allocator_overload(alloc)
+		single_list<Tp, Allocator>::single_list(single_list && src, const Allocator& alloc) :
+				sl_allocator_overload(alloc),
+				sl_allocator_unrelated()
 		{
 			if (src.empty()) {
 				return;
@@ -223,15 +236,15 @@ namespace kerbal
 
 		template <typename Tp, typename Allocator>
 		KERBAL_CONSTEXPR20
-		single_list<Tp, Allocator>::single_list(std::initializer_list<value_type> src)
-				: single_list(src.begin(), src.end())
+		single_list<Tp, Allocator>::single_list(std::initializer_list<value_type> src) :
+				single_list(src.begin(), src.end())
 		{
 		}
 
 		template <typename Tp, typename Allocator>
 		KERBAL_CONSTEXPR20
-		single_list<Tp, Allocator>::single_list(std::initializer_list<value_type> src, const Allocator& alloc)
-				: single_list(src.begin(), src.end(), alloc)
+		single_list<Tp, Allocator>::single_list(std::initializer_list<value_type> src, const Allocator& alloc) :
+				single_list(src.begin(), src.end(), alloc)
 		{
 		}
 
@@ -239,16 +252,18 @@ namespace kerbal
 
 		template <typename Tp, typename Allocator>
 		template <typename Up>
-		single_list<Tp, Allocator>::single_list(const kerbal::assign::assign_list<Up> & src)
-				: sl_allocator_unrelated(), sl_allocator_overload()
+		single_list<Tp, Allocator>::single_list(const kerbal::assign::assign_list<Up> & src) :
+				sl_allocator_overload(),
+				sl_allocator_unrelated()
 		{
 			this->insert(this->cend(), src.cbegin(), src.cend());
 		}
 
 		template <typename Tp, typename Allocator>
 		template <typename Up>
-		single_list<Tp, Allocator>::single_list(const kerbal::assign::assign_list<Up> & src, const Allocator& alloc)
-				: sl_allocator_unrelated(), sl_allocator_overload(alloc)
+		single_list<Tp, Allocator>::single_list(const kerbal::assign::assign_list<Up> & src, const Allocator& alloc) :
+				sl_allocator_overload(alloc),
+				sl_allocator_unrelated()
 		{
 			this->insert(this->cend(), src.cbegin(), src.cend());
 		}
@@ -258,13 +273,6 @@ namespace kerbal
 		template <typename Tp, typename Allocator>
 		KERBAL_CONSTEXPR20
 		single_list<Tp, Allocator>::~single_list()
-				KERBAL_CONDITIONAL_NOEXCEPT(
-						noexcept(kerbal::utility::declthis<single_list>()->_K_consecutive_destroy_node(
-								kerbal::utility::declthis<single_list>()->alloc(),
-								kerbal::utility::declthis<single_list>()->head_node.next
-						)) &&
-						std::is_nothrow_destructible<sl_allocator_overload>::value
-				)
 		{
 			this->_K_consecutive_destroy_node(this->alloc(), this->head_node.next);
 		}

@@ -51,13 +51,13 @@ namespace kerbal
 
 		template <typename Tp, typename Allocator>
 		class forward_list:
-				protected kerbal::container::detail::fl_allocator_unrelated<Tp>,
-				protected kerbal::container::detail::fl_allocator_overload<Tp, Allocator>
+				protected kerbal::container::detail::fl_allocator_overload<Tp, Allocator>,
+				protected kerbal::container::detail::fl_allocator_unrelated<Tp>
 		{
 			private:
 				typedef kerbal::container::detail::fl_type_unrelated						fl_type_unrelated;
-				typedef kerbal::container::detail::fl_allocator_unrelated<Tp>				fl_allocator_unrelated;
 				typedef kerbal::container::detail::fl_allocator_overload<Tp, Allocator>		fl_allocator_overload;
+				typedef kerbal::container::detail::fl_allocator_unrelated<Tp>				fl_allocator_unrelated;
 
 			public:
 				typedef typename fl_allocator_unrelated::value_type					value_type;
@@ -115,8 +115,8 @@ namespace kerbal
 				KERBAL_CONSTEXPR20
 				explicit
 				forward_list(const Allocator& alloc) KERBAL_CONDITIONAL_NOEXCEPT((
-						std::is_nothrow_default_constructible<fl_allocator_unrelated>::value &&
-						std::is_nothrow_constructible<fl_allocator_overload, const Allocator&>::value
+						std::is_nothrow_constructible<fl_allocator_overload, const Allocator&>::value &&
+						std::is_nothrow_default_constructible<fl_allocator_unrelated>::value
 				));
 
 				KERBAL_CONSTEXPR20
@@ -160,7 +160,8 @@ namespace kerbal
 
 				KERBAL_CONSTEXPR20
 				forward_list(forward_list && src) KERBAL_NOEXCEPT((
-						std::is_nothrow_constructible<fl_allocator_overload, node_allocator_type&&>::value
+						std::is_nothrow_constructible<fl_allocator_overload, node_allocator_type&&>::value &&
+						std::is_nothrow_default_constructible<fl_allocator_unrelated>::value
 				));
 
 			private:
@@ -207,14 +208,7 @@ namespace kerbal
 #		endif
 
 				KERBAL_CONSTEXPR20
-				~forward_list() KERBAL_CONDITIONAL_NOEXCEPT(
-						noexcept(kerbal::utility::declthis<forward_list>()->_K_consecutive_destroy_node(
-								kerbal::utility::declthis<forward_list>()->alloc(),
-								kerbal::utility::declthis<forward_list>()->head_node.next,
-								NULL
-						)) &&
-						std::is_nothrow_destructible<fl_allocator_overload>::value
-				);
+				~forward_list();
 
 			//===================
 			// assign

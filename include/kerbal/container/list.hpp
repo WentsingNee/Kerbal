@@ -49,13 +49,13 @@ namespace kerbal
 
 		template <typename Tp, typename Allocator = std::allocator<Tp> >
 		class list:
-				protected kerbal::container::detail::list_allocator_unrelated<Tp>,
-				protected kerbal::container::detail::list_allocator_overload<Tp, Allocator>
+				protected kerbal::container::detail::list_allocator_overload<Tp, Allocator>,
+				protected kerbal::container::detail::list_allocator_unrelated<Tp>
 		{
 			private:
 				typedef kerbal::container::detail::list_type_unrelated						list_type_unrelated;
-				typedef kerbal::container::detail::list_allocator_unrelated<Tp>				list_allocator_unrelated;
 				typedef kerbal::container::detail::list_allocator_overload<Tp, Allocator>	list_allocator_overload;
+				typedef kerbal::container::detail::list_allocator_unrelated<Tp>				list_allocator_unrelated;
 
 			public:
 				typedef typename list_allocator_unrelated::value_type					value_type;
@@ -103,16 +103,16 @@ namespace kerbal
 			// construct/copy/destroy
 
 				KERBAL_CONSTEXPR20
-				list() KERBAL_CONDITIONAL_NOEXCEPT(
-						std::is_nothrow_default_constructible<list_allocator_unrelated>::value &&
-						std::is_nothrow_default_constructible<list_allocator_overload>::value
-				);
+				list() KERBAL_CONDITIONAL_NOEXCEPT((
+						std::is_nothrow_default_constructible<list_allocator_overload>::value &&
+						std::is_nothrow_constructible<list_allocator_unrelated, detail::init_list_node_ptr_to_self_tag>::value
+				));
 
 				KERBAL_CONSTEXPR20
 				explicit
 				list(const Allocator& alloc) KERBAL_CONDITIONAL_NOEXCEPT((
-						std::is_nothrow_default_constructible<list_allocator_unrelated>::value &&
-						std::is_nothrow_constructible<list_allocator_overload, const Allocator&>::value
+						std::is_nothrow_constructible<list_allocator_overload, const Allocator&>::value &&
+						std::is_nothrow_constructible<list_allocator_unrelated, detail::init_list_node_ptr_to_self_tag>::value
 				));
 
 				KERBAL_CONSTEXPR20
@@ -157,7 +157,8 @@ namespace kerbal
 
 				KERBAL_CONSTEXPR20
 				list(list && src) KERBAL_NOEXCEPT((
-						std::is_nothrow_constructible<list_allocator_overload, node_allocator_type&&>::value
+						std::is_nothrow_constructible<list_allocator_overload, node_allocator_type&&>::value &&
+						std::is_nothrow_constructible<list_allocator_unrelated, detail::init_list_node_ptr_to_self_tag>::value
 				));
 
 			private:
@@ -204,13 +205,7 @@ namespace kerbal
 #		endif
 
 				KERBAL_CONSTEXPR20
-				~list() KERBAL_CONDITIONAL_NOEXCEPT(
-						noexcept(kerbal::utility::declthis<list>()->_K_consecutive_destroy_node(
-								kerbal::utility::declthis<list>()->alloc(),
-								kerbal::utility::declthis<list>()->head_node.next
-						)) &&
-						std::is_nothrow_destructible<list_allocator_overload>::value
-				);
+				~list();
 
 			//===================
 			//assign
