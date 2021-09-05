@@ -50,70 +50,48 @@ namespace kerbal
 		KERBAL_CONSTEXPR20
 		forward_list<Tp, Allocator>::forward_list(const forward_list & src) :
 				fl_allocator_overload(),
-				fl_allocator_unrelated()
+				fl_allocator_unrelated(this->alloc(), src.cbegin(), src.cend())
 		{
-			this->insert_after(this->cbefore_begin(), src.cbegin(), src.cend());
 		}
 
 		template <typename Tp, typename Allocator>
 		KERBAL_CONSTEXPR20
 		forward_list<Tp, Allocator>::forward_list(const forward_list & src, const Allocator& alloc) :
 				fl_allocator_overload(alloc),
-				fl_allocator_unrelated()
+				fl_allocator_unrelated(this->alloc(), src.cbegin(), src.cend())
 		{
-			this->insert_after(this->cbefore_begin(), src.cbegin(), src.cend());
 		}
 
 		template <typename Tp, typename Allocator>
 		KERBAL_CONSTEXPR20
 		forward_list<Tp, Allocator>::forward_list(size_type n) :
 				fl_allocator_overload(),
-				fl_allocator_unrelated()
+				fl_allocator_unrelated(this->alloc(), n)
 		{
-			if (n == 0) {
-				return;
-			}
-			std::pair<node*, node*> p(this->_K_build_n_new_nodes_unguarded(this->alloc(), n));
-			this->_K_hook_node_after(this->basic_cbefore_begin(), p.first, p.second);
 		}
 
 		template <typename Tp, typename Allocator>
 		KERBAL_CONSTEXPR20
 		forward_list<Tp, Allocator>::forward_list(size_type n, const Allocator& alloc) :
 				fl_allocator_overload(alloc),
-				fl_allocator_unrelated()
+				fl_allocator_unrelated(this->alloc(), n)
 		{
-			if (n == 0) {
-				return;
-			}
-			std::pair<node*, node*> p(this->_K_build_n_new_nodes_unguarded(this->alloc(), n));
-			this->_K_hook_node_after(this->basic_cbefore_begin(), p.first, p.second);
 		}
 
 		template <typename Tp, typename Allocator>
 		KERBAL_CONSTEXPR20
 		forward_list<Tp, Allocator>::forward_list(size_type n, const_reference val) :
 				fl_allocator_overload(),
-				fl_allocator_unrelated()
+				fl_allocator_unrelated(this->alloc(), n, val)
 		{
-			if (n == 0) {
-				return;
-			}
-			std::pair<node*, node*> p(this->_K_build_n_new_nodes_unguarded(this->alloc(), n, val));
-			this->_K_hook_node_after(this->basic_cbefore_begin(), p.first, p.second);
 		}
 
 		template <typename Tp, typename Allocator>
 		KERBAL_CONSTEXPR20
 		forward_list<Tp, Allocator>::forward_list(size_type n, const_reference val, const Allocator& alloc) :
 				fl_allocator_overload(alloc),
-				fl_allocator_unrelated()
+				fl_allocator_unrelated(this->alloc(), n, val)
 		{
-			if (n == 0) {
-				return;
-			}
-			std::pair<node*, node*> p(this->_K_build_n_new_nodes_unguarded(this->alloc(), n, val));
-			this->_K_hook_node_after(this->basic_cbefore_begin(), p.first, p.second);
 		}
 
 		template <typename Tp, typename Allocator>
@@ -124,9 +102,8 @@ namespace kerbal
 						kerbal::iterator::is_input_compatible_iterator<InputIterator>::value, int
 				>::type) :
 				fl_allocator_overload(),
-				fl_allocator_unrelated()
+				fl_allocator_unrelated(this->alloc(), first, last)
 		{
-			this->insert_after(this->cbefore_begin(), first, last);
 		}
 
 		template <typename Tp, typename Allocator>
@@ -137,9 +114,8 @@ namespace kerbal
 						kerbal::iterator::is_input_compatible_iterator<InputIterator>::value, int
 				>::type) :
 				fl_allocator_overload(alloc),
-				fl_allocator_unrelated()
+				fl_allocator_unrelated(this->alloc(), first, last)
 		{
-			this->insert_after(this->cbefore_begin(), first, last);
 		}
 
 #	if __cplusplus >= 201103L
@@ -233,18 +209,16 @@ namespace kerbal
 		template <typename Up>
 		forward_list<Tp, Allocator>::forward_list(const kerbal::assign::assign_list<Up> & src) :
 				fl_allocator_overload(),
-				fl_allocator_unrelated()
+				fl_allocator_unrelated(this->alloc(), src.cbegin(), src.cend())
 		{
-			this->insert_after(this->cbefore_begin(), src.cbegin(), src.cend());
 		}
 
 		template <typename Tp, typename Allocator>
 		template <typename Up>
 		forward_list<Tp, Allocator>::forward_list(const kerbal::assign::assign_list<Up> & src, const Allocator& alloc) :
 				fl_allocator_overload(alloc),
-				fl_allocator_unrelated()
+				fl_allocator_unrelated(this->alloc(), src.cbegin(), src.cend())
 		{
-			this->insert_after(this->cbefore_begin(), src.cbegin(), src.cend());
 		}
 
 #	endif
@@ -329,21 +303,7 @@ namespace kerbal
 		KERBAL_CONSTEXPR20
 		void forward_list<Tp, Allocator>::assign(size_type count, const_reference val)
 		{
-			const_iterator before_it(this->before_begin());
-			iterator it(this->begin());
-			const_iterator const cend(this->cend());
-			while (count != 0) {
-				if (it != cend) {
-					kerbal::operators::generic_assign(*it, val); // *it = val;
-					--count;
-					before_it = it;
-					++it;
-				} else {
-					this->insert_after(before_it, count, val);
-					return;
-				}
-			}
-			this->erase_after(before_it, cend);
+			fl_allocator_unrelated::assign_using_allocator(this->alloc(), count, val);
 		}
 
 		template <typename Tp, typename Allocator>
@@ -354,21 +314,7 @@ namespace kerbal
 		>::type
 		forward_list<Tp, Allocator>::assign(InputIterator first, InputIterator last)
 		{
-			iterator before_it(this->before_begin());
-			iterator it(this->begin());
-			const_iterator const cend(this->cend());
-			while (first != last) {
-				if (it != cend) {
-					kerbal::operators::generic_assign(*it, *first); // *it = *first;
-					++first;
-					before_it = it;
-					++it;
-				} else {
-					this->insert_after(before_it, first, last);
-					return;
-				}
-			}
-			this->erase_after(before_it, cend);
+			fl_allocator_unrelated::assign_using_allocator(this->alloc(), first, last);
 		}
 
 
@@ -411,7 +357,7 @@ namespace kerbal
 		KERBAL_CONSTEXPR20
 		void forward_list<Tp, Allocator>::push_front(const_reference val)
 		{
-			this->emplace_front(val);
+			this->fl_allocator_unrelated::push_front_using_allocator(this->alloc(), val);
 		}
 
 #	if __cplusplus >= 201103L
@@ -420,7 +366,7 @@ namespace kerbal
 		KERBAL_CONSTEXPR20
 		void forward_list<Tp, Allocator>::push_front(rvalue_reference val)
 		{
-			this->emplace_front(kerbal::compatibility::move(val));
+			this->fl_allocator_unrelated::push_front_using_allocator(this->alloc(), kerbal::compatibility::move(val));
 		}
 
 #	endif
@@ -433,9 +379,7 @@ namespace kerbal
 		typename forward_list<Tp, Allocator>::reference
 		forward_list<Tp, Allocator>::emplace_front(Args&& ... args)
 		{
-			node *p = this->_K_build_new_node(this->alloc(), kerbal::utility::forward<Args>(args)...);
-			this->_K_hook_node_after(this->basic_cbefore_begin(), p);
-			return p->value;
+			return this->fl_allocator_unrelated::emplace_front_using_allocator(this->alloc(), kerbal::utility::forward<Args>(args)...);
 		}
 
 #	else
@@ -444,9 +388,7 @@ namespace kerbal
 		typename forward_list<Tp, Allocator>::reference
 		forward_list<Tp, Allocator>::emplace_front()
 		{
-			node *p = this->_K_build_new_node(this->alloc());
-			this->_K_hook_node_after(this->basic_cbefore_begin(), p);
-			return p->value;
+			return this->fl_allocator_unrelated::emplace_front_using_allocator(this->alloc());
 		}
 
 		template <typename Tp, typename Allocator>
@@ -454,9 +396,7 @@ namespace kerbal
 		typename forward_list<Tp, Allocator>::reference
 		forward_list<Tp, Allocator>::emplace_front(const Arg0& arg0)
 		{
-			node *p = this->_K_build_new_node(this->alloc(), arg0);
-			this->_K_hook_node_after(this->basic_cbefore_begin(), p);
-			return p->value;
+			return this->fl_allocator_unrelated::emplace_front_using_allocator(this->alloc(), arg0);
 		}
 
 		template <typename Tp, typename Allocator>
@@ -464,9 +404,7 @@ namespace kerbal
 		typename forward_list<Tp, Allocator>::reference
 		forward_list<Tp, Allocator>::emplace_front(const Arg0& arg0, const Arg1& arg1)
 		{
-			node *p = this->_K_build_new_node(this->alloc(), arg0, arg1);
-			this->_K_hook_node_after(this->basic_cbefore_begin(), p);
-			return p->value;
+			return this->fl_allocator_unrelated::emplace_front_using_allocator(this->alloc(), arg0, arg1);
 		}
 
 		template <typename Tp, typename Allocator>
@@ -474,9 +412,7 @@ namespace kerbal
 		typename forward_list<Tp, Allocator>::reference
 		forward_list<Tp, Allocator>::emplace_front(const Arg0& arg0, const Arg1& arg1, const Arg2& arg2)
 		{
-			node *p = this->_K_build_new_node(this->alloc(), arg0, arg1, arg2);
-			this->_K_hook_node_after(this->basic_cbefore_begin(), p);
-			return p->value;
+			return this->fl_allocator_unrelated::emplace_front_using_allocator(this->alloc(), arg0, arg1, arg2);
 		}
 
 #	endif
@@ -486,7 +422,7 @@ namespace kerbal
 		typename forward_list<Tp, Allocator>::iterator
 		forward_list<Tp, Allocator>::insert_after(const_iterator pos, const_reference val)
 		{
-			return this->emplace_after(pos, val);
+			return fl_allocator_unrelated::insert_after_using_allocator(this->alloc(), pos, val);
 		}
 
 		template <typename Tp, typename Allocator>
@@ -494,12 +430,7 @@ namespace kerbal
 		typename forward_list<Tp, Allocator>::iterator
 		forward_list<Tp, Allocator>::insert_after(const_iterator pos, size_type n, const_reference val)
 		{
-			if (n == 0) {
-				return pos.cast_to_mutable();
-			}
-			std::pair<node*, node*> range(this->_K_build_n_new_nodes_unguarded(this->alloc(), n, val));
-			this->_K_hook_node_after(pos, range.first, range.second);
-			return iterator(range.second);
+			return fl_allocator_unrelated::insert_after_using_allocator(this->alloc(), pos, n, val);
 		}
 
 		template <typename Tp, typename Allocator>
@@ -511,12 +442,7 @@ namespace kerbal
 		>::type
 		forward_list<Tp, Allocator>::insert_after(const_iterator pos, InputIterator first, InputIterator last)
 		{
-			if (first == last) {
-				return pos.cast_to_mutable();
-			}
-			std::pair<node*, node*> range(this->_K_build_new_nodes_range_unguarded(this->alloc(), first, last));
-			this->_K_hook_node_after(pos, range.first, range.second);
-			return iterator(range.second);
+			return fl_allocator_unrelated::insert_after_using_allocator(this->alloc(), pos, first, last);
 		}
 
 #	if __cplusplus >= 201103L
@@ -526,7 +452,7 @@ namespace kerbal
 		typename forward_list<Tp, Allocator>::iterator
 		forward_list<Tp, Allocator>::insert_after(const_iterator pos, rvalue_reference val)
 		{
-			return this->emplace_after(pos, kerbal::compatibility::move(val));
+			return fl_allocator_unrelated::insert_after_using_allocator(this->alloc(), pos, kerbal::compatibility::move(val));
 		}
 
 #	endif
@@ -548,7 +474,7 @@ namespace kerbal
 		typename forward_list<Tp, Allocator>::iterator
 		forward_list<Tp, Allocator>::insert_after(const_iterator pos, const kerbal::assign::assign_list<Up> & src)
 		{
-			return this->insert_after(pos, src.begin(), src.end());
+			return this->insert_after(pos, src.cbegin(), src.cend());
 		}
 
 #	endif
@@ -561,9 +487,7 @@ namespace kerbal
 		typename forward_list<Tp, Allocator>::iterator
 		forward_list<Tp, Allocator>::emplace_after(const_iterator pos, Args&& ... args)
 		{
-			node *p = this->_K_build_new_node(this->alloc(), kerbal::utility::forward<Args>(args)...);
-			this->_K_hook_node_after(pos, p);
-			return iterator(p);
+			return fl_allocator_unrelated::emplace_after_using_allocator(this->alloc(), pos, kerbal::utility::forward<Args>(args)...);
 		}
 
 #	else
@@ -572,9 +496,7 @@ namespace kerbal
 		typename forward_list<Tp, Allocator>::iterator
 		forward_list<Tp, Allocator>::emplace_after(const_iterator pos)
 		{
-			node *p = this->_K_build_new_node(this->alloc());
-			this->_K_hook_node_after(pos, p);
-			return iterator(p);
+			return fl_allocator_unrelated::emplace_after_using_allocator(this->alloc(), pos);
 		}
 
 		template <typename Tp, typename Allocator>
@@ -582,9 +504,7 @@ namespace kerbal
 		typename forward_list<Tp, Allocator>::iterator
 		forward_list<Tp, Allocator>::emplace_after(const_iterator pos, const Arg0& arg0)
 		{
-			node *p = this->_K_build_new_node(this->alloc(), arg0);
-			this->_K_hook_node_after(pos, p);
-			return iterator(p);
+			return fl_allocator_unrelated::emplace_after_using_allocator(this->alloc(), pos, arg0);
 		}
 
 		template <typename Tp, typename Allocator>
@@ -592,9 +512,7 @@ namespace kerbal
 		typename forward_list<Tp, Allocator>::iterator
 		forward_list<Tp, Allocator>::emplace_after(const_iterator pos, const Arg0& arg0, const Arg1& arg1)
 		{
-			node *p = this->_K_build_new_node(this->alloc(), arg0, arg1);
-			this->_K_hook_node_after(pos, p);
-			return iterator(p);
+			return fl_allocator_unrelated::emplace_after_using_allocator(this->alloc(), pos, arg0, arg1);
 		}
 
 		template <typename Tp, typename Allocator>
@@ -602,9 +520,7 @@ namespace kerbal
 		typename forward_list<Tp, Allocator>::iterator
 		forward_list<Tp, Allocator>::emplace_after(const_iterator pos, const Arg0& arg0, const Arg1& arg1, const Arg2& arg2)
 		{
-			node *p = this->_K_build_new_node(this->alloc(), arg0, arg1, arg2);
-			this->_K_hook_node_after(pos, p);
-			return iterator(p);
+			return fl_allocator_unrelated::emplace_after_using_allocator(this->alloc(), pos, arg0, arg1, arg2);
 		}
 
 #	endif
@@ -616,7 +532,7 @@ namespace kerbal
 		KERBAL_CONSTEXPR20
 		void forward_list<Tp, Allocator>::pop_front()
 		{
-			this->erase_after(this->cbefore_begin());
+			this->fl_allocator_unrelated::pop_front_using_allocator(this->alloc());
 		}
 
 		template <typename Tp, typename Allocator>
@@ -624,7 +540,7 @@ namespace kerbal
 		typename forward_list<Tp, Allocator>::iterator
 		forward_list<Tp, Allocator>::erase_after(const_iterator pos)
 		{
-			return fl_allocator_unrelated::_K_erase_after(this->alloc(), pos);
+			return fl_allocator_unrelated::erase_after_using_allocator(this->alloc(), pos);
 		}
 
 		template <typename Tp, typename Allocator>
@@ -632,19 +548,19 @@ namespace kerbal
 		typename forward_list<Tp, Allocator>::iterator
 		forward_list<Tp, Allocator>::erase_after(const_iterator first, const_iterator last)
 		{
-			return fl_allocator_unrelated::_K_erase_after(this->alloc(), first, last);
+			return fl_allocator_unrelated::erase_after_using_allocator(this->alloc(), first, last);
 		}
 
 		template <typename Tp, typename Allocator>
 		KERBAL_CONSTEXPR20
 		void forward_list<Tp, Allocator>::clear()
 				KERBAL_CONDITIONAL_NOEXCEPT(
-						noexcept(kerbal::utility::declthis<fl_allocator_unrelated>()->_K_clear(
+						noexcept(kerbal::utility::declthis<fl_allocator_unrelated>()->clear_using_allocator(
 								kerbal::utility::declthis<forward_list>()->alloc()
 						))
 				)
 		{
-			this->fl_allocator_unrelated::_K_clear(this->alloc());
+			this->fl_allocator_unrelated::clear_using_allocator(this->alloc());
 		}
 
 
@@ -655,44 +571,14 @@ namespace kerbal
 		KERBAL_CONSTEXPR20
 		void forward_list<Tp, Allocator>::resize(size_type count)
 		{
-			const_iterator before_it(this->before_begin());
-			iterator it(this->begin());
-			const_iterator const cend(this->cend());
-			while (count != 0) {
-				if (it != cend) {
-					--count;
-					before_it = it;
-					++it;
-				} else {
-					// pre-condition: count != 0
-					std::pair<node*, node*> range(this->_K_build_n_new_nodes_unguarded(this->alloc(), count));
-					this->_K_hook_node_after(before_it, range.first, range.second);
-					return;
-				}
-			}
-			this->erase_after(before_it, cend);
+			this->fl_allocator_unrelated::resize_using_allocator(this->alloc(), count);
 		}
 
 		template <typename Tp, typename Allocator>
 		KERBAL_CONSTEXPR20
 		void forward_list<Tp, Allocator>::resize(size_type count, const_reference value)
 		{
-			const_iterator before_it(this->before_begin());
-			iterator it(this->begin());
-			const_iterator const cend(this->cend());
-			while (count != 0) {
-				if (it != cend) {
-					--count;
-					before_it = it;
-					++it;
-				} else {
-					// pre-condition: count != 0
-					std::pair<node*, node*> range(this->_K_build_n_new_nodes_unguarded(this->alloc(), count, value));
-					this->_K_hook_node_after(before_it, range.first, range.second);
-					return;
-				}
-			}
-			this->erase_after(before_it, cend);
+			this->fl_allocator_unrelated::resize_using_allocator(this->alloc(), count, value);
 		}
 
 		template <typename Tp, typename Allocator>
@@ -780,7 +666,7 @@ namespace kerbal
 		typename forward_list<Tp, Allocator>::size_type
 		forward_list<Tp, Allocator>::remove_after_if(const_iterator first, const_iterator last, UnaryPredicate predicate)
 		{
-			return fl_allocator_unrelated::_K_remove_after_if(this->alloc(), first, last, predicate);
+			return fl_allocator_unrelated::remove_after_if_using_allocator(this->alloc(), first, last, predicate);
 		}
 
 		template <typename Tp, typename Allocator>
@@ -789,7 +675,7 @@ namespace kerbal
 		typename forward_list<Tp, Allocator>::size_type
 		forward_list<Tp, Allocator>::remove_if(UnaryPredicate predicate)
 		{
-			return this->fl_allocator_unrelated::_K_remove_if(this->alloc(), predicate);
+			return this->fl_allocator_unrelated::remove_if_using_allocator(this->alloc(), predicate);
 		}
 
 		template <typename Tp, typename Allocator>
@@ -797,7 +683,7 @@ namespace kerbal
 		typename forward_list<Tp, Allocator>::size_type
 		forward_list<Tp, Allocator>::remove_after(const_iterator first, const_iterator last, const_reference val)
 		{
-			return fl_allocator_unrelated::_K_remove_after(this->alloc(), first, last, val);
+			return fl_allocator_unrelated::remove_after_using_allocator(this->alloc(), first, last, val);
 		}
 
 		template <typename Tp, typename Allocator>
@@ -805,7 +691,7 @@ namespace kerbal
 		typename forward_list<Tp, Allocator>::size_type
 		forward_list<Tp, Allocator>::remove(const_reference val)
 		{
-			return this->fl_allocator_unrelated::_K_remove(this->alloc(), val);
+			return this->fl_allocator_unrelated::remove_using_allocator(this->alloc(), val);
 		}
 
 		template <typename Tp, typename Allocator>
@@ -814,7 +700,7 @@ namespace kerbal
 		typename forward_list<Tp, Allocator>::size_type
 		forward_list<Tp, Allocator>::unique(const_iterator first, const_iterator last, BinaryPredict equal_to)
 		{
-			return fl_allocator_unrelated::_K_unique(this->alloc(), first, last, equal_to);
+			return fl_allocator_unrelated::unique_using_allocator(this->alloc(), first, last, equal_to);
 		}
 
 		template <typename Tp, typename Allocator>
@@ -822,7 +708,7 @@ namespace kerbal
 		typename forward_list<Tp, Allocator>::size_type
 		forward_list<Tp, Allocator>::unique(const_iterator first, const_iterator last)
 		{
-			return fl_allocator_unrelated::_K_unique(this->alloc(), first, last);
+			return fl_allocator_unrelated::unique_using_allocator(this->alloc(), first, last);
 		}
 
 		template <typename Tp, typename Allocator>
@@ -831,7 +717,7 @@ namespace kerbal
 		typename forward_list<Tp, Allocator>::size_type
 		forward_list<Tp, Allocator>::unique(BinaryPredict equal_to)
 		{
-			return this->fl_allocator_unrelated::_K_unique(this->alloc(), equal_to);
+			return this->fl_allocator_unrelated::unique_using_allocator(this->alloc(), equal_to);
 		}
 
 		template <typename Tp, typename Allocator>
@@ -839,7 +725,7 @@ namespace kerbal
 		typename forward_list<Tp, Allocator>::size_type
 		forward_list<Tp, Allocator>::unique()
 		{
-			return this->fl_allocator_unrelated::_K_unique(this->alloc());
+			return this->fl_allocator_unrelated::unique_using_allocator(this->alloc());
 		}
 
 		template <typename Tp, typename Allocator>
