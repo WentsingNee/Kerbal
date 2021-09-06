@@ -16,6 +16,7 @@
 #include <kerbal/compatibility/noexcept.hpp>
 #include <kerbal/iterator/iterator_traits.hpp>
 #include <kerbal/memory/allocator_traits.hpp>
+#include <kerbal/memory/uninitialized/destroy.hpp>
 #include <kerbal/type_traits/can_be_pseudo_destructible.hpp>
 #include <kerbal/type_traits/integral_constant.hpp>
 
@@ -34,27 +35,27 @@ namespace kerbal
 	// forward declare
 
 		template <typename Allocator, typename Tp>
-		KERBAL_CONSTEXPR20
+		KERBAL_CONSTEXPR14
 		void destroy_on_using_allocator(Allocator & alloc, Tp & plc);
 
 		template <typename Allocator, typename Tp>
-		KERBAL_CONSTEXPR20
+		KERBAL_CONSTEXPR14
 		void destroy_at_using_allocator(Allocator & alloc, Tp * p);
 
 		template <typename Allocator, typename ForwardIterator>
-		KERBAL_CONSTEXPR20
+		KERBAL_CONSTEXPR14
 		void destroy_using_allocator(Allocator & alloc, ForwardIterator first, ForwardIterator last) KERBAL_NOEXCEPT;
 
 		template <typename Allocator, typename ForwardIterator, typename SizeType>
-		KERBAL_CONSTEXPR20
+		KERBAL_CONSTEXPR14
 		ForwardIterator destroy_n_using_allocator(Allocator & alloc, ForwardIterator first, SizeType n) KERBAL_NOEXCEPT;
 
 		template <typename Allocator, typename BidirectionalIterator>
-		KERBAL_CONSTEXPR20
+		KERBAL_CONSTEXPR14
 		void reverse_destroy_using_allocator(Allocator & alloc, BidirectionalIterator first, BidirectionalIterator last) KERBAL_NOEXCEPT;
 
 		template <typename Allocator, typename ForwardIterator>
-		KERBAL_CONSTEXPR20
+		KERBAL_CONSTEXPR14
 		void uninitialized_transaction_failed_destroy_using_allocator(Allocator & alloc, ForwardIterator first, ForwardIterator last) KERBAL_NOEXCEPT;
 
 
@@ -66,8 +67,8 @@ namespace kerbal
 		{
 
 			template <typename Allocator, typename Tp>
-			KERBAL_CONSTEXPR20
-			void _K_destroy_on_using_allocator(Allocator & alloc, Tp & plc)
+			KERBAL_CONSTEXPR14
+			void _K_destroy_on_using_allocator(Allocator & alloc, Tp & plc, kerbal::type_traits::true_type)
 					KERBAL_CONDITIONAL_NOEXCEPT(
 							noexcept(kerbal::memory::allocator_traits<Allocator>::destroy(alloc, &plc))
 					)
@@ -75,17 +76,35 @@ namespace kerbal
 				kerbal::memory::allocator_traits<Allocator>::destroy(alloc, &plc);
 			}
 
+#		if __cplusplus >= 201103L
+
+			template <typename Allocator, typename Tp>
+			KERBAL_CONSTEXPR14
+			void _K_destroy_on_using_allocator(Allocator & /*alloc*/, Tp & plc, kerbal::type_traits::false_type)
+					KERBAL_CONDITIONAL_NOEXCEPT(
+							noexcept(kerbal::memory::destroy_on(plc))
+					)
+			{
+				kerbal::memory::destroy_on(plc);
+			}
+
+#		endif
+
 		} // namespace detail
 
 		template <typename Allocator, typename Tp>
-		KERBAL_CONSTEXPR20
+		KERBAL_CONSTEXPR14
 		void destroy_on_using_allocator(Allocator & alloc, Tp & plc)
 		{
-			detail::_K_destroy_on_using_allocator(alloc, plc);
+#	if __cplusplus >= 201103L
+			detail::_K_destroy_on_using_allocator(alloc, plc, kerbal::memory::allocator_could_use_destroy<Allocator, Tp>());
+#	else
+			detail::_K_destroy_on_using_allocator(alloc, plc, kerbal::type_traits::true_type());
+#	endif
 		}
 
 		template <typename Allocator, typename Tp>
-		KERBAL_CONSTEXPR20
+		KERBAL_CONSTEXPR14
 		void destroy_at_using_allocator(Allocator & alloc, Tp * p)
 		{
 			kerbal::memory::destroy_on_using_allocator(alloc, *p);
@@ -100,8 +119,8 @@ namespace kerbal
 		{
 
 			template <typename Allocator, typename ForwardIterator>
-			KERBAL_CONSTEXPR20
-			void _K_destroy_using_allocator(Allocator & alloc, ForwardIterator first, ForwardIterator last) KERBAL_NOEXCEPT
+			KERBAL_CONSTEXPR14
+			void _K_destroy_using_allocator(Allocator & alloc, ForwardIterator first, ForwardIterator last, kerbal::type_traits::true_type) KERBAL_NOEXCEPT
 			{
 				while (first != last) {
 					kerbal::memory::destroy_on_using_allocator(alloc, *first);
@@ -109,13 +128,26 @@ namespace kerbal
 				}
 			}
 
+			template <typename Allocator, typename ForwardIterator>
+			KERBAL_CONSTEXPR14
+			void _K_destroy_using_allocator(Allocator & /*alloc*/, ForwardIterator first, ForwardIterator last, kerbal::type_traits::false_type) KERBAL_NOEXCEPT
+			{
+				kerbal::memory::destroy(first, last);
+			}
+
 		} // namespace detail
 
 		template <typename Allocator, typename ForwardIterator>
-		KERBAL_CONSTEXPR20
+		KERBAL_CONSTEXPR14
 		void destroy_using_allocator(Allocator & alloc, ForwardIterator first, ForwardIterator last) KERBAL_NOEXCEPT
 		{
-			detail::_K_destroy_using_allocator(alloc, first, last);
+#	if __cplusplus >= 201103L
+			typedef ForwardIterator iterator;
+			typedef typename kerbal::iterator::iterator_traits<iterator>::value_type value_type;
+			detail::_K_destroy_using_allocator(alloc, first, last, kerbal::memory::allocator_could_use_destroy<Allocator, value_type>());
+#	else
+			detail::_K_destroy_using_allocator(alloc, first, last, kerbal::type_traits::true_type());
+#	endif
 		}
 
 
@@ -127,8 +159,8 @@ namespace kerbal
 		{
 
 			template <typename Allocator, typename ForwardIterator, typename SizeType>
-			KERBAL_CONSTEXPR20
-			ForwardIterator _K_destroy_n_using_allocator(Allocator & alloc, ForwardIterator first, SizeType n) KERBAL_NOEXCEPT
+			KERBAL_CONSTEXPR14
+			ForwardIterator _K_destroy_n_using_allocator(Allocator & alloc, ForwardIterator first, SizeType n, kerbal::type_traits::true_type) KERBAL_NOEXCEPT
 			{
 				while (n > 0) {
 					--n;
@@ -138,13 +170,26 @@ namespace kerbal
 				return first;
 			}
 
+			template <typename Allocator, typename ForwardIterator, typename SizeType>
+			KERBAL_CONSTEXPR14
+			ForwardIterator _K_destroy_n_using_allocator(Allocator & /*alloc*/, ForwardIterator first, SizeType n, kerbal::type_traits::false_type) KERBAL_NOEXCEPT
+			{
+				return kerbal::memory::destroy_n(first, n);
+			}
+
 		} // namespace detail
 
 		template <typename Allocator, typename ForwardIterator, typename SizeType>
-		KERBAL_CONSTEXPR20
+		KERBAL_CONSTEXPR14
 		ForwardIterator destroy_n_using_allocator(Allocator & alloc, ForwardIterator first, SizeType n) KERBAL_NOEXCEPT
 		{
-			return detail::_K_destroy_n_using_allocator(alloc, first, n);
+#	if __cplusplus >= 201103L
+			typedef ForwardIterator iterator;
+			typedef typename kerbal::iterator::iterator_traits<iterator>::value_type value_type;
+			return detail::_K_destroy_n_using_allocator(alloc, first, n, kerbal::memory::allocator_could_use_destroy<Allocator, value_type>());
+#	else
+			return detail::_K_destroy_n_using_allocator(alloc, first, n, kerbal::type_traits::true_type());
+#	endif
 		}
 
 
@@ -156,8 +201,8 @@ namespace kerbal
 		{
 
 			template <typename Allocator, typename BidirectionalIterator>
-			KERBAL_CONSTEXPR20
-			void _K_reverse_destroy_using_allocator(Allocator & alloc, BidirectionalIterator first, BidirectionalIterator last) KERBAL_NOEXCEPT
+			KERBAL_CONSTEXPR14
+			void _K_reverse_destroy_using_allocator(Allocator & alloc, BidirectionalIterator first, BidirectionalIterator last, kerbal::type_traits::true_type) KERBAL_NOEXCEPT
 			{
 				while (first != last) {
 					--last;
@@ -165,13 +210,26 @@ namespace kerbal
 				}
 			}
 
+			template <typename Allocator, typename BidirectionalIterator>
+			KERBAL_CONSTEXPR14
+			void _K_reverse_destroy_using_allocator(Allocator & /*alloc*/, BidirectionalIterator first, BidirectionalIterator last, kerbal::type_traits::false_type) KERBAL_NOEXCEPT
+			{
+				kerbal::memory::reverse_destroy(first, last);
+			}
+
 		} // namespace detail
 
 		template <typename Allocator, typename BidirectionalIterator>
-		KERBAL_CONSTEXPR20
+		KERBAL_CONSTEXPR14
 		void reverse_destroy_using_allocator(Allocator & alloc, BidirectionalIterator first, BidirectionalIterator last) KERBAL_NOEXCEPT
 		{
-			detail::_K_reverse_destroy_using_allocator(alloc, first, last);
+#	if __cplusplus >= 201103L
+			typedef BidirectionalIterator iterator;
+			typedef typename kerbal::iterator::iterator_traits<iterator>::value_type value_type;
+			detail::_K_reverse_destroy_using_allocator(alloc, first, last, kerbal::memory::allocator_could_use_destroy<Allocator, value_type>());
+#	else
+			detail::_K_reverse_destroy_using_allocator(alloc, first, last, kerbal::type_traits::true_type());
+#	endif
 		}
 
 
@@ -183,14 +241,14 @@ namespace kerbal
 		{
 
 			template <typename Allocator, typename ForwardIterator>
-			KERBAL_CONSTEXPR20
+			KERBAL_CONSTEXPR14
 			void uninitialized_transaction_failed_destroy_using_allocator(Allocator & alloc, ForwardIterator first, ForwardIterator last, std::forward_iterator_tag) KERBAL_NOEXCEPT
 			{
 				kerbal::memory::destroy_using_allocator(alloc, first, last);
 			}
 
 			template <typename Allocator, typename BidirectionalIterator>
-			KERBAL_CONSTEXPR20
+			KERBAL_CONSTEXPR14
 			void uninitialized_transaction_failed_destroy_using_allocator(Allocator & alloc, BidirectionalIterator first, BidirectionalIterator last, std::bidirectional_iterator_tag) KERBAL_NOEXCEPT
 			{
 				kerbal::memory::reverse_destroy_using_allocator(alloc, first, last);
@@ -199,7 +257,7 @@ namespace kerbal
 		} // namespace detail
 
 		template <typename Allocator, typename ForwardIterator>
-		KERBAL_CONSTEXPR20
+		KERBAL_CONSTEXPR14
 		void uninitialized_transaction_failed_destroy_using_allocator(Allocator & alloc, ForwardIterator first, ForwardIterator last) KERBAL_NOEXCEPT
 		{
 			detail::uninitialized_transaction_failed_destroy_using_allocator(alloc, first, last, kerbal::iterator::iterator_category(first));
