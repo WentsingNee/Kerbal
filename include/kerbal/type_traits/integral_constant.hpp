@@ -16,6 +16,10 @@
 #include <kerbal/compatibility/constexpr.hpp>
 #include <kerbal/compatibility/noexcept.hpp>
 
+#if __cplusplus >= 201103L
+#	include <type_traits>
+#endif
+
 
 namespace kerbal
 {
@@ -39,6 +43,15 @@ namespace kerbal
 				{
 					return value;
 				}
+
+#			if __cplusplus >=  201103L
+				KERBAL_CONSTEXPR
+				operator std::integral_constant<T, val>() const KERBAL_NOEXCEPT
+				{
+					return std::integral_constant<T, val>();
+				}
+#			endif
+
 		};
 
 		template <typename T, T val>
