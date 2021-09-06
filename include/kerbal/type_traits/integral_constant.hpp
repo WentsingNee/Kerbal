@@ -16,6 +16,11 @@
 #include <kerbal/compatibility/constexpr.hpp>
 #include <kerbal/compatibility/noexcept.hpp>
 
+#if __cplusplus >= 201103L
+#	include <type_traits>
+#endif
+
+
 namespace kerbal
 {
 
@@ -35,10 +40,20 @@ namespace kerbal
 				typedef Type value_type;
 				typedef integral_constant<Type, val> type;
 
-				KERBAL_CONSTEXPR operator value_type() const KERBAL_NOEXCEPT
+				KERBAL_CONSTEXPR
+				operator value_type() const KERBAL_NOEXCEPT
 				{
 					return value;
 				}
+
+#			if __cplusplus >=  201103L
+				KERBAL_CONSTEXPR
+				operator std::integral_constant<Type, val>() const KERBAL_NOEXCEPT
+				{
+					return std::integral_constant<Type, val>();
+				}
+#			endif
+
 		};
 
 #	if __cplusplus >= 201103L
