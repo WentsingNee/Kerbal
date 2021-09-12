@@ -157,29 +157,9 @@ namespace kerbal
 
 				KERBAL_CONSTEXPR20
 				list(list && src) KERBAL_NOEXCEPT((
-						std::is_nothrow_constructible<list_allocator_overload, node_allocator_type&&>::value &&
-						std::is_nothrow_constructible<list_allocator_unrelated, detail::init_list_node_ptr_to_self_tag>::value
+						std::is_nothrow_constructible<list_allocator_overload, node_allocator_type &&>::value &&
+						std::is_nothrow_constructible<list_allocator_unrelated, list_allocator_unrelated &&>::value
 				));
-
-			private:
-
-				KERBAL_CONSTEXPR20
-				void move_constructor_with_afforded_allocator_allocator_equal(list && src) KERBAL_NOEXCEPT;
-
-				KERBAL_CONSTEXPR20
-				void move_constructor_with_afforded_allocator_allocator_not_equal(list && src);
-
-				template <bool is_allocator_always_equal>
-				KERBAL_CONSTEXPR20
-				typename kerbal::type_traits::enable_if<!is_allocator_always_equal>::type
-				move_constructor_with_afforded_allocator_helper(list && src);
-
-				template <bool is_allocator_always_equal>
-				KERBAL_CONSTEXPR20
-				typename kerbal::type_traits::enable_if<is_allocator_always_equal>::type
-				move_constructor_with_afforded_allocator_helper(list && src) KERBAL_NOEXCEPT;
-
-			public:
 
 				KERBAL_CONSTEXPR20
 				list(list && src, const Allocator& alloc);
@@ -211,9 +191,7 @@ namespace kerbal
 			//assign
 
 				KERBAL_CONSTEXPR20
-				list& operator=(const list & src) KERBAL_CONDITIONAL_NOEXCEPT(
-						noexcept(kerbal::utility::declthis<list>()->assign(src))
-				);
+				list& operator=(const list & src);
 
 #		if __cplusplus >= 201103L
 
@@ -227,9 +205,7 @@ namespace kerbal
 #		if __cplusplus >= 201103L
 
 				KERBAL_CONSTEXPR20
-				list& operator=(std::initializer_list<value_type> src) KERBAL_CONDITIONAL_NOEXCEPT(
-						noexcept(kerbal::utility::declthis<list>()->assign(src))
-				);
+				list& operator=(std::initializer_list<value_type> src);
 
 #		else
 
@@ -239,9 +215,7 @@ namespace kerbal
 #		endif
 
 				KERBAL_CONSTEXPR20
-				void assign(const list & src) KERBAL_CONDITIONAL_NOEXCEPT(
-						noexcept(kerbal::utility::declthis<list>()->assign(src.cbegin(), src.cend()))
-				);
+				void assign(const list & src);
 
 				KERBAL_CONSTEXPR20
 				void assign(size_type count, const_reference val);
@@ -256,7 +230,13 @@ namespace kerbal
 #		if __cplusplus >= 201103L
 
 				KERBAL_CONSTEXPR20
-				void assign(list&& src);
+				void assign(list&& src) KERBAL_CONDITIONAL_NOEXCEPT(noexcept(
+						kerbal::utility::declthis<list_allocator_unrelated>()->assign_using_allocator(
+								kerbal::utility::declthis<list>()->alloc(),
+								kerbal::compatibility::move(kerbal::utility::declval<list &&>().alloc()),
+								kerbal::utility::declval<list_allocator_unrelated &&>()
+						)
+				));
 
 #		endif
 

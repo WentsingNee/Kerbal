@@ -179,10 +179,10 @@ namespace kerbal
 				src._K_capacity = 0;
 			}
 
+			// move construct using allocator, allocator is equal
 			template <typename Tp>
-			template <typename Allocator>
 			KERBAL_CONSTEXPR14
-			void vector_allocator_unrelated<Tp>::_K_move_cnstrct_with_aa_allocator_equal(Allocator & alloc, vector_allocator_unrelated && src) KERBAL_NOEXCEPT
+			void vector_allocator_unrelated<Tp>::_K_move_cnstrct_ua_ae(vector_allocator_unrelated && src) KERBAL_NOEXCEPT
 			{
 				this->_K_buffer = src._K_buffer;
 				this->_K_size = src._K_size;
@@ -192,10 +192,11 @@ namespace kerbal
 				src._K_capacity = 0;
 			}
 
+			// move construct using allocator, allocator is not equal
 			template <typename Tp>
 			template <typename Allocator>
 			KERBAL_CONSTEXPR20
-			void vector_allocator_unrelated<Tp>::_K_move_cnstrct_with_aa_allocator_not_equal(Allocator & alloc, Allocator && src_alloc, vector_allocator_unrelated && src)
+			void vector_allocator_unrelated<Tp>::_K_move_cnstrct_ua_ane(Allocator & alloc, Allocator && src_alloc, vector_allocator_unrelated && src)
 			{
 				if (src._K_buffer != NULL) {
 					typedef kerbal::memory::allocator_traits<Allocator> allocator_traits;
@@ -203,14 +204,12 @@ namespace kerbal
 					this->_K_capacity = src._K_size;
 					this->_K_buffer = allocator_traits::allocate(alloc, this->_K_capacity);
 					try {
-						ui_move_if_noexcept_ow_copy_phase1(alloc, src.begin().current, src.end().current, this->_K_buffer);
+						kerbal::memory::uninitialized_move_using_allocator(alloc, src.begin().current, src.end().current, this->_K_buffer);
 					} catch (...) {
 						allocator_traits::deallocate(alloc, this->_K_buffer, this->_K_capacity);
 						throw;
 					}
 					this->_K_size = src._K_size;
-					ui_move_if_noexcept_ow_copy_phase2(alloc, src.begin().current, src.end().current);
-					src._K_size = 0;
 				} else {
 					this->_K_buffer = NULL;
 					this->_K_size = 0;
@@ -221,23 +220,23 @@ namespace kerbal
 			template <typename Tp>
 			template <typename Allocator>
 			KERBAL_CONSTEXPR20
-			void vector_allocator_unrelated<Tp>::_K_move_cnstrct_with_aa_helper(Allocator & alloc, Allocator && src_alloc, vector_allocator_unrelated && src,
-																				kerbal::type_traits::false_type /*is_always_equal*/)
+			void vector_allocator_unrelated<Tp>::_K_move_cnstrct_ua_helper(Allocator & alloc, Allocator && src_alloc, vector_allocator_unrelated && src,
+																		   kerbal::type_traits::false_type /*is_always_equal*/)
 			{
-				if (alloc == src_alloc) {
-					this->_K_move_cnstrct_with_aa_allocator_equal(alloc, kerbal::compatibility::move(src));
+				if (alloc != src_alloc) {
+					this->_K_move_cnstrct_ua_ane(alloc, kerbal::compatibility::move(src_alloc), kerbal::compatibility::move(src));
 				} else {
-					this->_K_move_cnstrct_with_aa_allocator_not_equal(alloc, kerbal::compatibility::move(src_alloc), kerbal::compatibility::move(src));
+					this->_K_move_cnstrct_ua_ae(kerbal::compatibility::move(src));
 				}
 			}
 
 			template <typename Tp>
 			template <typename Allocator>
 			KERBAL_CONSTEXPR14
-			void vector_allocator_unrelated<Tp>::_K_move_cnstrct_with_aa_helper(Allocator & alloc, Allocator && src_alloc, vector_allocator_unrelated && src,
-																				kerbal::type_traits::true_type /*is_always_equal*/) KERBAL_NOEXCEPT
+			void vector_allocator_unrelated<Tp>::_K_move_cnstrct_ua_helper(Allocator & alloc, Allocator && src_alloc, vector_allocator_unrelated && src,
+																		   kerbal::type_traits::true_type /*is_always_equal*/) KERBAL_NOEXCEPT
 			{
-				this->_K_move_cnstrct_with_aa_allocator_equal(alloc, kerbal::compatibility::move(src));
+				this->_K_move_cnstrct_ua_ae(kerbal::compatibility::move(src));
 			}
 
 			template <typename Tp>
@@ -251,7 +250,7 @@ namespace kerbal
 				typedef kerbal::memory::allocator_traits<Allocator> allocator_traits;
 				typedef typename allocator_traits::is_always_equal is_always_equal;
 
-				this->_K_move_cnstrct_with_aa_helper(alloc, kerbal::compatibility::move(src_alloc), kerbal::compatibility::move(src), is_always_equal());
+				this->_K_move_cnstrct_ua_helper(alloc, kerbal::compatibility::move(src_alloc), kerbal::compatibility::move(src), is_always_equal());
 			}
 
 #		endif
@@ -409,8 +408,8 @@ namespace kerbal
 			template <typename Tp>
 			template <typename Allocator>
 			KERBAL_CONSTEXPR20
-			void vector_allocator_unrelated<Tp>::_K_cpyass_vec_ua_impl(Allocator & alloc, const Allocator & src_alloc, const vector_allocator_unrelated & src,
-																	   CPYASS_VER_NOT_PROPAGATE)
+			void vector_allocator_unrelated<Tp>::_K_cpy_ass_ua_impl(Allocator & alloc, const Allocator & src_alloc, const vector_allocator_unrelated & src,
+																	CPYASS_VER_NOT_PROPAGATE)
 			{
 				if (alloc != src_alloc) {
 					this->destroy_using_allocator(alloc);
@@ -424,8 +423,8 @@ namespace kerbal
 			template <typename Tp>
 			template <typename Allocator>
 			KERBAL_CONSTEXPR20
-			void vector_allocator_unrelated<Tp>::_K_cpyass_vec_ua_impl(Allocator & alloc, const Allocator & src_alloc, const vector_allocator_unrelated & src,
-																	   CPYASS_VER_PROPAGATE)
+			void vector_allocator_unrelated<Tp>::_K_cpy_ass_ua_impl(Allocator & alloc, const Allocator & src_alloc, const vector_allocator_unrelated & src,
+																	CPYASS_VER_PROPAGATE)
 			{
 				if (alloc != src_alloc) {
 					this->destroy_using_allocator(alloc);
@@ -440,8 +439,8 @@ namespace kerbal
 			template <typename Tp>
 			template <typename Allocator>
 			KERBAL_CONSTEXPR20
-			void vector_allocator_unrelated<Tp>::_K_cpyass_vec_ua_impl(Allocator & alloc, const Allocator & src_alloc, const vector_allocator_unrelated & src,
-																	   CPYASS_VER_ALWAYS_EQUAL)
+			void vector_allocator_unrelated<Tp>::_K_cpy_ass_ua_impl(Allocator & alloc, const Allocator & /*src_alloc*/, const vector_allocator_unrelated & src,
+																	CPYASS_VER_ALWAYS_EQUAL)
 			{
 				this->assign_using_allocator(alloc, src.cbegin().current, src.cend().current);
 			}
@@ -465,17 +464,17 @@ namespace kerbal
 						>::type
 				>::type VER;
 
-				this->_K_cpyass_vec_ua_impl(alloc, src_alloc, src, VER());
+				this->_K_cpy_ass_ua_impl(alloc, src_alloc, src, VER());
 			}
 
 
 #		if __cplusplus >= 201103L
 
-			// move assign vector using allocator, allocator is equal
+			// move assign using allocator, allocator is equal
 			template <typename Tp>
 			template <typename Allocator>
 			KERBAL_CONSTEXPR20
-			void vector_allocator_unrelated<Tp>::_K_mvass_vec_ua_ae(Allocator & alloc, vector_allocator_unrelated && src) KERBAL_NOEXCEPT
+			void vector_allocator_unrelated<Tp>::_K_mov_ass_ua_ae(Allocator & alloc, vector_allocator_unrelated && src) KERBAL_NOEXCEPT
 			{
 				this->destroy_using_allocator(alloc);
 				this->_K_buffer = src._K_buffer;
@@ -486,11 +485,11 @@ namespace kerbal
 				src._K_size = 0;
 			}
 
-			// move assign vector using allocator, allocator is not equal
+			// move assign using allocator, allocator is not equal
 			template <typename Tp>
 			template <typename Allocator>
 			KERBAL_CONSTEXPR20
-			void vector_allocator_unrelated<Tp>::_K_mvass_vec_ua_nae(Allocator & alloc, Allocator && src_alloc, vector_allocator_unrelated && src)
+			void vector_allocator_unrelated<Tp>::_K_mov_ass_ua_ane(Allocator & alloc, Allocator && src_alloc, vector_allocator_unrelated && src)
 			{
 				this->assign_using_allocator(alloc, kerbal::iterator::make_move_iterator(src.begin().current), kerbal::iterator::make_move_iterator(src.end().current));
 			}
@@ -498,21 +497,21 @@ namespace kerbal
 			template <typename Tp>
 			template <typename Allocator>
 			KERBAL_CONSTEXPR20
-			void vector_allocator_unrelated<Tp>::_K_mvass_vec_ua_impl(Allocator & alloc, Allocator && src_alloc, vector_allocator_unrelated && src,
-																	  MOVASS_VER_NOT_PROPAGATE)
+			void vector_allocator_unrelated<Tp>::_K_mov_ass_ua_impl(Allocator & alloc, Allocator && src_alloc, vector_allocator_unrelated && src,
+																	MOVASS_VER_NOT_PROPAGATE)
 			{
 				if (alloc != src_alloc) {
-					this->_K_mvass_vec_ua_nae(alloc, kerbal::compatibility::move(src_alloc), kerbal::compatibility::move(src));
+					this->_K_mov_ass_ua_ane(alloc, kerbal::compatibility::move(src_alloc), kerbal::compatibility::move(src));
 				} else {
-					this->_K_mvass_vec_ua_ae(alloc, kerbal::compatibility::move(src));
+					this->_K_mov_ass_ua_ae(alloc, kerbal::compatibility::move(src));
 				}
 			}
 
 			template <typename Tp>
 			template <typename Allocator>
 			KERBAL_CONSTEXPR20
-			void vector_allocator_unrelated<Tp>::_K_mvass_vec_ua_impl(Allocator & alloc, Allocator && src_alloc, vector_allocator_unrelated && src,
-																	  MOVASS_VER_PROPAGATE)
+			void vector_allocator_unrelated<Tp>::_K_mov_ass_ua_impl(Allocator & alloc, Allocator && src_alloc, vector_allocator_unrelated && src,
+																	MOVASS_VER_PROPAGATE)
 			{
 				this->destroy_using_allocator(alloc);
 				this->_K_buffer = NULL;
@@ -530,10 +529,10 @@ namespace kerbal
 			template <typename Tp>
 			template <typename Allocator>
 			KERBAL_CONSTEXPR20
-			void vector_allocator_unrelated<Tp>::_K_mvass_vec_ua_impl(Allocator & alloc, Allocator && /*src_alloc*/, vector_allocator_unrelated && src,
-																	  MOVASS_VER_ALWAYS_EQUAL) KERBAL_NOEXCEPT
+			void vector_allocator_unrelated<Tp>::_K_mov_ass_ua_impl(Allocator & alloc, Allocator && /*src_alloc*/, vector_allocator_unrelated && src,
+																	MOVASS_VER_ALWAYS_EQUAL) KERBAL_NOEXCEPT
 			{
-				this->_K_mvass_vec_ua_ae(alloc, kerbal::compatibility::move(src));
+				this->_K_mov_ass_ua_ae(alloc, kerbal::compatibility::move(src));
 			}
 
 			template <typename Tp>
@@ -558,7 +557,7 @@ namespace kerbal
 						>::type
 				>::type VER;
 
-				this->_K_mvass_vec_ua_impl(
+				this->_K_mov_ass_ua_impl(
 						alloc,
 						kerbal::compatibility::move(src_alloc),
 						kerbal::compatibility::move(src),
