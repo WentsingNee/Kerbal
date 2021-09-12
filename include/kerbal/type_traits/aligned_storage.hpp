@@ -30,7 +30,7 @@ namespace kerbal
 				{
 						unsigned char k_data[Len];
 
-						struct KERBAL_ALIGNAS(Alignment)
+						struct KERBAL_ALIGNAS(128) t
 						{
 						} k_align;
 				};
