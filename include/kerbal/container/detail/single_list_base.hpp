@@ -28,6 +28,11 @@
 #include <kerbal/utility/in_place.hpp>
 #include <kerbal/utility/member_compress_helper.hpp>
 
+#if __cplusplus < 201103L
+#	include <kerbal/macro/macro_concat.hpp>
+#	include <kerbal/macro/ppexpand.hpp>
+#endif
+
 #include <cstddef>
 #include <utility> // std::pair
 
@@ -477,17 +482,22 @@ namespace kerbal
 
 #			else
 
-					template <typename NodeAllocator>
-					reference emplace_front_using_allocator(NodeAllocator & alloc);
+#				define EMPTY
+#				define LEFT_JOIN_COMMA(exp) , exp
+#				define TARGS_DECL(i) KERBAL_MACRO_CONCAT(typename Arg, i)
+#				define ARGS_DECL(i) KERBAL_MACRO_CONCAT(const Arg, i) & KERBAL_MACRO_CONCAT(arg, i)
+#				define FBODY(i) \
+					template <typename NodeAllocator KERBAL_OPT_PPEXPAND_WITH_COMMA_N(LEFT_JOIN_COMMA, EMPTY, TARGS_DECL, i)> \
+					reference emplace_front_using_allocator(NodeAllocator & alloc KERBAL_OPT_PPEXPAND_WITH_COMMA_N(LEFT_JOIN_COMMA, EMPTY, ARGS_DECL, i));
 
-					template <typename NodeAllocator, typename Arg0>
-					reference emplace_front_using_allocator(NodeAllocator & alloc, const Arg0& arg0);
+					KERBAL_PPEXPAND_N(FBODY, KERBAL_PPEXPAND_EMPTY_SEPARATOR, 0)
+					KERBAL_PPEXPAND_N(FBODY, KERBAL_PPEXPAND_EMPTY_SEPARATOR, 20)
 
-					template <typename NodeAllocator, typename Arg0, typename Arg1>
-					reference emplace_front_using_allocator(NodeAllocator & alloc, const Arg0& arg0, const Arg1& arg1);
-
-					template <typename NodeAllocator, typename Arg0, typename Arg1, typename Arg2>
-					reference emplace_front_using_allocator(NodeAllocator & alloc, const Arg0& arg0, const Arg1& arg1, const Arg2& arg2);
+#				undef EMPTY
+#				undef LEFT_JOIN_COMMA
+#				undef TARGS_DECL
+#				undef ARGS_DECL
+#				undef FBODY
 
 #			endif
 
@@ -511,17 +521,22 @@ namespace kerbal
 
 #			else
 
-					template <typename NodeAllocator>
-					reference emplace_back_using_allocator(NodeAllocator & alloc);
+#				define EMPTY
+#				define LEFT_JOIN_COMMA(exp) , exp
+#				define TARGS_DECL(i) KERBAL_MACRO_CONCAT(typename Arg, i)
+#				define ARGS_DECL(i) KERBAL_MACRO_CONCAT(const Arg, i) & KERBAL_MACRO_CONCAT(arg, i)
+#				define FBODY(i) \
+					template <typename NodeAllocator KERBAL_OPT_PPEXPAND_WITH_COMMA_N(LEFT_JOIN_COMMA, EMPTY, TARGS_DECL, i)> \
+					reference emplace_back_using_allocator(NodeAllocator & alloc KERBAL_OPT_PPEXPAND_WITH_COMMA_N(LEFT_JOIN_COMMA, EMPTY, ARGS_DECL, i));
 
-					template <typename NodeAllocator, typename Arg0>
-					reference emplace_back_using_allocator(NodeAllocator & alloc, const Arg0& arg0);
+					KERBAL_PPEXPAND_N(FBODY, KERBAL_PPEXPAND_EMPTY_SEPARATOR, 0)
+					KERBAL_PPEXPAND_N(FBODY, KERBAL_PPEXPAND_EMPTY_SEPARATOR, 20)
 
-					template <typename NodeAllocator, typename Arg0, typename Arg1>
-					reference emplace_back_using_allocator(NodeAllocator & alloc, const Arg0& arg0, const Arg1& arg1);
-
-					template <typename NodeAllocator, typename Arg0, typename Arg1, typename Arg2>
-					reference emplace_back_using_allocator(NodeAllocator & alloc, const Arg0& arg0, const Arg1& arg1, const Arg2& arg2);
+#				undef EMPTY
+#				undef LEFT_JOIN_COMMA
+#				undef TARGS_DECL
+#				undef ARGS_DECL
+#				undef FBODY
 
 #			endif
 
@@ -557,17 +572,22 @@ namespace kerbal
 
 #			else
 
-					template <typename NodeAllocator>
-					iterator emplace_using_allocator(NodeAllocator & alloc, const_iterator pos);
+#				define EMPTY
+#				define LEFT_JOIN_COMMA(exp) , exp
+#				define TARGS_DECL(i) KERBAL_MACRO_CONCAT(typename Arg, i)
+#				define ARGS_DECL(i) KERBAL_MACRO_CONCAT(const Arg, i) & KERBAL_MACRO_CONCAT(arg, i)
+#				define FBODY(i) \
+					template <typename NodeAllocator KERBAL_OPT_PPEXPAND_WITH_COMMA_N(LEFT_JOIN_COMMA, EMPTY, TARGS_DECL, i)> \
+					iterator emplace_using_allocator(NodeAllocator & alloc, const_iterator pos KERBAL_OPT_PPEXPAND_WITH_COMMA_N(LEFT_JOIN_COMMA, EMPTY, ARGS_DECL, i));
 
-					template <typename NodeAllocator, typename Arg0>
-					iterator emplace_using_allocator(NodeAllocator & alloc, const_iterator pos, const Arg0& arg0);
+					KERBAL_PPEXPAND_N(FBODY, KERBAL_PPEXPAND_EMPTY_SEPARATOR, 0)
+					KERBAL_PPEXPAND_N(FBODY, KERBAL_PPEXPAND_EMPTY_SEPARATOR, 20)
 
-					template <typename NodeAllocator, typename Arg0, typename Arg1>
-					iterator emplace_using_allocator(NodeAllocator & alloc, const_iterator pos, const Arg0& arg0, const Arg1& arg1);
-
-					template <typename NodeAllocator, typename Arg0, typename Arg1, typename Arg2>
-					iterator emplace_using_allocator(NodeAllocator & alloc, const_iterator pos, const Arg0& arg0, const Arg1& arg1, const Arg2& arg2);
+#				undef EMPTY
+#				undef LEFT_JOIN_COMMA
+#				undef TARGS_DECL
+#				undef ARGS_DECL
+#				undef FBODY
 
 #			endif
 
@@ -688,17 +708,22 @@ namespace kerbal
 
 #			else
 
-					template <typename NodeAllocator>
-					static node* _K_build_new_node(NodeAllocator & alloc);
+#				define EMPTY
+#				define LEFT_JOIN_COMMA(exp) , exp
+#				define TARGS_DECL(i) KERBAL_MACRO_CONCAT(typename Arg, i)
+#				define ARGS_DECL(i) KERBAL_MACRO_CONCAT(const Arg, i) & KERBAL_MACRO_CONCAT(arg, i)
+#				define FBODY(i) \
+					template <typename NodeAllocator KERBAL_OPT_PPEXPAND_WITH_COMMA_N(LEFT_JOIN_COMMA, EMPTY, TARGS_DECL, i)> \
+					static node* _K_build_new_node(NodeAllocator & alloc KERBAL_OPT_PPEXPAND_WITH_COMMA_N(LEFT_JOIN_COMMA, EMPTY, ARGS_DECL, i));
 
-					template <typename NodeAllocator, typename Arg0>
-					static node* _K_build_new_node(NodeAllocator & alloc, const Arg0& arg0);
+					KERBAL_PPEXPAND_N(FBODY, KERBAL_PPEXPAND_EMPTY_SEPARATOR, 0)
+					KERBAL_PPEXPAND_N(FBODY, KERBAL_PPEXPAND_EMPTY_SEPARATOR, 20)
 
-					template <typename NodeAllocator, typename Arg0, typename Arg1>
-					static node* _K_build_new_node(NodeAllocator & alloc, const Arg0& arg0, const Arg1& arg1);
-
-					template <typename NodeAllocator, typename Arg0, typename Arg1, typename Arg2>
-					static node* _K_build_new_node(NodeAllocator & alloc, const Arg0& arg0, const Arg1& arg1, const Arg2& arg2);
+#				undef EMPTY
+#				undef LEFT_JOIN_COMMA
+#				undef TARGS_DECL
+#				undef ARGS_DECL
+#				undef FBODY
 
 #			endif
 
@@ -711,21 +736,23 @@ namespace kerbal
 
 #			else
 
-					template <typename NodeAllocator>
-					static
-					std::pair<node*, node*> _K_build_n_new_nodes_unguarded(NodeAllocator & alloc, size_type n);
+#				define EMPTY
+#				define LEFT_JOIN_COMMA(exp) , exp
+#				define TARGS_DECL(i) KERBAL_MACRO_CONCAT(typename Arg, i)
+#				define ARGS_DECL(i) KERBAL_MACRO_CONCAT(const Arg, i) & KERBAL_MACRO_CONCAT(arg, i)
+#				define FBODY(i) \
+					template <typename NodeAllocator KERBAL_OPT_PPEXPAND_WITH_COMMA_N(LEFT_JOIN_COMMA, EMPTY, TARGS_DECL, i)> \
+					static \
+					std::pair<node*, node*> _K_build_n_new_nodes_unguarded(NodeAllocator & alloc, size_type n KERBAL_OPT_PPEXPAND_WITH_COMMA_N(LEFT_JOIN_COMMA, EMPTY, ARGS_DECL, i));
 
-					template <typename NodeAllocator, typename Arg0>
-					static
-					std::pair<node*, node*> _K_build_n_new_nodes_unguarded(NodeAllocator & alloc, size_type n, const Arg0& arg0);
+					KERBAL_PPEXPAND_N(FBODY, KERBAL_PPEXPAND_EMPTY_SEPARATOR, 0)
+					KERBAL_PPEXPAND_N(FBODY, KERBAL_PPEXPAND_EMPTY_SEPARATOR, 20)
 
-					template <typename NodeAllocator, typename Arg0, typename Arg1>
-					static
-					std::pair<node*, node*> _K_build_n_new_nodes_unguarded(NodeAllocator & alloc, size_type n, const Arg0& arg0, const Arg1& arg1);
-
-					template <typename NodeAllocator, typename Arg0, typename Arg1, typename Arg2>
-					static
-					std::pair<node*, node*> _K_build_n_new_nodes_unguarded(NodeAllocator & alloc, size_type n, const Arg0& arg0, const Arg1& arg1, const Arg2& arg2);
+#				undef EMPTY
+#				undef LEFT_JOIN_COMMA
+#				undef TARGS_DECL
+#				undef ARGS_DECL
+#				undef FBODY
 
 #			endif
 

@@ -27,6 +27,11 @@
 #include <kerbal/type_traits/integral_constant.hpp>
 #include <kerbal/utility/member_compress_helper.hpp>
 
+#if __cplusplus < 201103L
+#	include <kerbal/macro/macro_concat.hpp>
+#	include <kerbal/macro/ppexpand.hpp>
+#endif
+
 #include <limits>
 
 #if __cplusplus >= 201103L
@@ -360,17 +365,22 @@ namespace kerbal
 
 #			else
 
-					template <typename Allocator>
-					iterator emplace_using_allocator(Allocator & alloc, const_iterator pos);
+#				define EMPTY
+#				define LEFT_JOIN_COMMA(exp) , exp
+#				define TARGS_DECL(i) KERBAL_MACRO_CONCAT(typename Arg, i)
+#				define ARGS_DECL(i) KERBAL_MACRO_CONCAT(const Arg, i) & KERBAL_MACRO_CONCAT(arg, i)
+#				define FBODY(i) \
+					template <typename Allocator KERBAL_OPT_PPEXPAND_WITH_COMMA_N(LEFT_JOIN_COMMA, EMPTY, TARGS_DECL, i)> \
+					iterator emplace_using_allocator(Allocator & alloc, const_iterator pos KERBAL_OPT_PPEXPAND_WITH_COMMA_N(LEFT_JOIN_COMMA, EMPTY, ARGS_DECL, i));
 
-					template <typename Allocator, typename Arg0>
-					iterator emplace_using_allocator(Allocator & alloc, const_iterator pos, const Arg0& arg0);
+					KERBAL_PPEXPAND_N(FBODY, KERBAL_PPEXPAND_EMPTY_SEPARATOR, 0)
+					KERBAL_PPEXPAND_N(FBODY, KERBAL_PPEXPAND_EMPTY_SEPARATOR, 20)
 
-					template <typename Allocator, typename Arg0, typename Arg1>
-					iterator emplace_using_allocator(Allocator & alloc, const_iterator pos, const Arg0& arg0, const Arg1& arg1);
-
-					template <typename Allocator, typename Arg0, typename Arg1, typename Arg2>
-					iterator emplace_using_allocator(Allocator & alloc, const_iterator pos, const Arg0& arg0, const Arg1& arg1, const Arg2& arg2);
+#				undef EMPTY
+#				undef LEFT_JOIN_COMMA
+#				undef TARGS_DECL
+#				undef ARGS_DECL
+#				undef FBODY
 
 #			endif
 
@@ -431,17 +441,22 @@ namespace kerbal
 
 #			else
 
-					template <typename Allocator>
-					reference emplace_back_using_allocator(Allocator & alloc);
+#				define EMPTY
+#				define LEFT_JOIN_COMMA(exp) , exp
+#				define TARGS_DECL(i) KERBAL_MACRO_CONCAT(typename Arg, i)
+#				define ARGS_DECL(i) KERBAL_MACRO_CONCAT(const Arg, i) & KERBAL_MACRO_CONCAT(arg, i)
+#				define FBODY(i) \
+					template <typename Allocator KERBAL_OPT_PPEXPAND_WITH_COMMA_N(LEFT_JOIN_COMMA, EMPTY, TARGS_DECL, i)> \
+					reference emplace_back_using_allocator(Allocator & alloc KERBAL_OPT_PPEXPAND_WITH_COMMA_N(LEFT_JOIN_COMMA, EMPTY, ARGS_DECL, i));
 
-					template <typename Allocator, typename Arg0>
-					reference emplace_back_using_allocator(Allocator & alloc, const Arg0 & arg0);
+					KERBAL_PPEXPAND_N(FBODY, KERBAL_PPEXPAND_EMPTY_SEPARATOR, 0)
+					KERBAL_PPEXPAND_N(FBODY, KERBAL_PPEXPAND_EMPTY_SEPARATOR, 20)
 
-					template <typename Allocator, typename Arg0, typename Arg1>
-					reference emplace_back_using_allocator(Allocator & alloc, const Arg0 & arg0, const Arg1 & arg1);
-
-					template <typename Allocator, typename Arg0, typename Arg1, typename Arg2>
-					reference emplace_back_using_allocator(Allocator & alloc, const Arg0 & arg0, const Arg1 & arg1, const Arg2 & arg2);
+#				undef EMPTY
+#				undef LEFT_JOIN_COMMA
+#				undef TARGS_DECL
+#				undef ARGS_DECL
+#				undef FBODY
 
 #			endif
 

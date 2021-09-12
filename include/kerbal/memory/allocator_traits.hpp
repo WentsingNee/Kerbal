@@ -23,6 +23,11 @@
 #include <kerbal/type_traits/void_type.hpp>
 #include <kerbal/utility/declval.hpp>
 
+#if __cplusplus < 201103L
+#	include <kerbal/macro/macro_concat.hpp>
+#	include <kerbal/macro/ppexpand.hpp>
+#endif
+
 #if __cplusplus >= 201103L
 #	include <kerbal/utility/forward.hpp>
 #endif
@@ -862,29 +867,27 @@ namespace kerbal
 					alloc.construct(p, val);
 				}
 
-				template <typename T>
-				static void construct(Alloc &, T * p)
-				{
-					kerbal::memory::construct_at(p);
+#			define EMPTY
+#			define LEFT_JOIN_COMMA(exp) , exp
+#			define TARGS_DECL(i) KERBAL_MACRO_CONCAT(typename Arg, i)
+#			define ARGS_DECL(i) KERBAL_MACRO_CONCAT(const Arg, i) & KERBAL_MACRO_CONCAT(arg, i)
+#			define ARGS_USE(i) KERBAL_MACRO_CONCAT(arg, i)
+#			define FBODY(i) \
+				template <typename T KERBAL_OPT_PPEXPAND_WITH_COMMA_N(LEFT_JOIN_COMMA, EMPTY, TARGS_DECL, i)> \
+				static void construct(Alloc &, T * p KERBAL_OPT_PPEXPAND_WITH_COMMA_N(LEFT_JOIN_COMMA, EMPTY, ARGS_DECL, i)) \
+				{ \
+					kerbal::memory::construct_at(p KERBAL_OPT_PPEXPAND_WITH_COMMA_N(LEFT_JOIN_COMMA, EMPTY, ARGS_USE, i)); \
 				}
 
-				template <typename T, typename Arg0>
-				static void construct(Alloc &, T * p, const Arg0& arg0)
-				{
-					kerbal::memory::construct_at(p, arg0);
-				}
+				KERBAL_PPEXPAND_N(FBODY, KERBAL_PPEXPAND_EMPTY_SEPARATOR, 0)
+				KERBAL_PPEXPAND_N(FBODY, KERBAL_PPEXPAND_EMPTY_SEPARATOR, 20)
 
-				template <typename T, typename Arg0, typename Arg1>
-				static void construct(Alloc &, T * p, const Arg0& arg0, const Arg1& arg1)
-				{
-					kerbal::memory::construct_at(p, arg0, arg1);
-				}
-
-				template <typename T, typename Arg0, typename Arg1, typename Arg2>
-				static void construct(Alloc &, T * p, const Arg0& arg0, const Arg1& arg1, const Arg2& arg2)
-				{
-					kerbal::memory::construct_at(p, arg0, arg1, arg2);
-				}
+#			undef EMPTY
+#			undef LEFT_JOIN_COMMA
+#			undef TARGS_DECL
+#			undef ARGS_DECL
+#			undef ARGS_USE
+#			undef FBODY
 
 #		endif // __cplusplus >= 201103L
 

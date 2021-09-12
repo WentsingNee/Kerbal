@@ -22,6 +22,11 @@
 #include <kerbal/type_traits/integral_constant.hpp>
 #include <kerbal/utility/throw_this_exception.hpp>
 
+#if __cplusplus < 201103L
+#	include <kerbal/macro/macro_concat.hpp>
+#	include <kerbal/macro/ppexpand.hpp>
+#endif
+
 #if __cplusplus >= 201103L
 #	include <kerbal/utility/forward.hpp>
 #endif
@@ -653,44 +658,35 @@ namespace kerbal
 
 #	else
 
-		template <typename Tp, size_t N>
-		typename static_vector<Tp, N>::reference
-		static_vector<Tp, N>::emplace_back()
-		{
-			this->__construct_at(this->end());
-			++this->len;
-			return this->back();
+#	define EMPTY
+#	define REMAINF(exp) exp
+#	define LEFT_JOIN_COMMA(exp) , exp
+#	define THEAD_NOT_EMPTY(exp) template <exp>
+#	define TARGS_DECL(i) KERBAL_MACRO_CONCAT(typename Arg, i)
+#	define ARGS_DECL(i) KERBAL_MACRO_CONCAT(const Arg, i) & KERBAL_MACRO_CONCAT(arg, i)
+#	define ARGS_USE(i) KERBAL_MACRO_CONCAT(arg, i)
+#	define FBODY(i) \
+		template <typename Tp, size_t N> \
+		KERBAL_OPT_PPEXPAND_WITH_COMMA_N(THEAD_NOT_EMPTY, EMPTY, TARGS_DECL, i) \
+		typename static_vector<Tp, N>::reference \
+		static_vector<Tp, N>::emplace_back(KERBAL_OPT_PPEXPAND_WITH_COMMA_N(REMAINF, EMPTY, ARGS_DECL, i)) \
+		{ \
+			this->__construct_at(this->end() KERBAL_OPT_PPEXPAND_WITH_COMMA_N(LEFT_JOIN_COMMA, EMPTY, ARGS_USE, i)); \
+			++this->len; \
+			return this->back(); \
 		}
 
-		template <typename Tp, size_t N>
-		template <typename Arg0>
-		typename static_vector<Tp, N>::reference
-		static_vector<Tp, N>::emplace_back(const Arg0 & arg0)
-		{
-			this->__construct_at(this->end(), arg0);
-			++this->len;
-			return this->back();
-		}
+		KERBAL_PPEXPAND_N(FBODY, KERBAL_PPEXPAND_EMPTY_SEPARATOR, 0)
+		KERBAL_PPEXPAND_N(FBODY, KERBAL_PPEXPAND_EMPTY_SEPARATOR, 20)
 
-		template <typename Tp, size_t N>
-		template <typename Arg0, typename Arg1>
-		typename static_vector<Tp, N>::reference
-		static_vector<Tp, N>::emplace_back(const Arg0& arg0, const Arg1& arg1)
-		{
-			this->__construct_at(this->end(), arg0, arg1);
-			++this->len;
-			return this->back();
-		}
-
-		template <typename Tp, size_t N>
-		template <typename Arg0, typename Arg1, typename Arg2>
-		typename static_vector<Tp, N>::reference
-		static_vector<Tp, N>::emplace_back(const Arg0& arg0, const Arg1& arg1, const Arg2& arg2)
-		{
-			this->__construct_at(this->end(), arg0, arg1, arg2);
-			++this->len;
-			return this->back();
-		}
+#	undef EMPTY
+#	undef REMAINF
+#	undef LEFT_JOIN_COMMA
+#	undef THEAD_NOT_EMPTY
+#	undef TARGS_DECL
+#	undef ARGS_DECL
+#	undef ARGS_USE
+#	undef FBODY
 
 #	endif
 
@@ -796,50 +792,40 @@ namespace kerbal
 
 #	else
 
-#	define EMPLACE_BODY(args...) do { \
+#	define EMPTY
+#	define REMAINF(exp) exp
+#	define LEFT_JOIN_COMMA(exp) , exp
+#	define THEAD_NOT_EMPTY(exp) template <exp>
+#	define TARGS_DECL(i) KERBAL_MACRO_CONCAT(typename Arg, i)
+#	define ARGS_DECL(i) KERBAL_MACRO_CONCAT(const Arg, i) & KERBAL_MACRO_CONCAT(arg, i)
+#	define ARGS_USE(i) KERBAL_MACRO_CONCAT(arg, i)
+#	define FBODY(i) \
+		template <typename Tp, size_t N> \
+		KERBAL_OPT_PPEXPAND_WITH_COMMA_N(THEAD_NOT_EMPTY, EMPTY, TARGS_DECL, i) \
+		typename static_vector<Tp, N>::iterator \
+		static_vector<Tp, N>::emplace(const_iterator pos KERBAL_OPT_PPEXPAND_WITH_COMMA_N(LEFT_JOIN_COMMA, EMPTY, ARGS_DECL, i)) \
+		{ \
 			iterator mutable_pos(pos.cast_to_mutable()); \
 			if (pos == this->cend()) { \
-				this->emplace_back(args); \
+				this->emplace_back(KERBAL_OPT_PPEXPAND_WITH_COMMA_N(REMAINF, EMPTY, ARGS_USE, i)); \
 			} else { \
 				this->push_back(kerbal::compatibility::to_xvalue(this->back())); \
 				kerbal::algorithm::move_backward(mutable_pos, this->end() - 2, this->end() - 1); \
-				kerbal::operators::generic_assign(*mutable_pos, value_type(args)); \
+				kerbal::operators::generic_assign(*mutable_pos, value_type(KERBAL_OPT_PPEXPAND_WITH_COMMA_N(REMAINF, EMPTY, ARGS_USE, i))); \
 			} \
 			return mutable_pos; \
-		} while (false)
-
-		template <typename Tp, size_t N>
-		typename static_vector<Tp, N>::iterator
-		static_vector<Tp, N>::emplace(const_iterator pos)
-		{
-			EMPLACE_BODY();
 		}
 
-		template <typename Tp, size_t N>
-		template <typename Arg0>
-		typename static_vector<Tp, N>::iterator
-		static_vector<Tp, N>::emplace(const_iterator pos, const Arg0 & arg0)
-		{
-			EMPLACE_BODY(arg0);
-		}
+		KERBAL_PPEXPAND_N(FBODY, KERBAL_PPEXPAND_EMPTY_SEPARATOR, 0)
+		KERBAL_PPEXPAND_N(FBODY, KERBAL_PPEXPAND_EMPTY_SEPARATOR, 20)
 
-		template <typename Tp, size_t N>
-		template <typename Arg0, typename Arg1>
-		typename static_vector<Tp, N>::iterator
-		static_vector<Tp, N>::emplace(const_iterator pos, const Arg0& arg0, const Arg1& arg1)
-		{
-			EMPLACE_BODY(arg0, arg1);
-		}
-
-		template <typename Tp, size_t N>
-		template <typename Arg0, typename Arg1, typename Arg2>
-		typename static_vector<Tp, N>::iterator
-		static_vector<Tp, N>::emplace(const_iterator pos, const Arg0& arg0, const Arg1& arg1, const Arg2& arg2)
-		{
-			EMPLACE_BODY(arg0, arg1, arg2);
-		}
-
-#	undef EMPLACE_BODY
+#	undef EMPTY
+#	undef LEFT_JOIN_COMMA
+#	undef THEAD_NOT_EMPTY
+#	undef TARGS_DECL
+#	undef ARGS_DECL
+#	undef ARGS_USE
+#	undef FBODY
 
 #	endif
 
@@ -964,46 +950,32 @@ namespace kerbal
 
 #	if __cplusplus < 201103L
 
-		template <typename Tp, size_t N>
-		void static_vector<Tp, N>::__construct_at(iterator itor)
-		{
-			(itor.current)->construct();
+#	define EMPTY
+#	define REMAINF(exp) exp
+#	define LEFT_JOIN_COMMA(exp) , exp
+#	define THEAD_NOT_EMPTY(exp) template <exp>
+#	define TARGS_DECL(i) KERBAL_MACRO_CONCAT(typename Arg, i)
+#	define ARGS_DECL(i) KERBAL_MACRO_CONCAT(const Arg, i) & KERBAL_MACRO_CONCAT(arg, i)
+#	define ARGS_USE(i) KERBAL_MACRO_CONCAT(arg, i)
+#	define FBODY(i) \
+		template <typename Tp, size_t N> \
+		KERBAL_OPT_PPEXPAND_WITH_COMMA_N(THEAD_NOT_EMPTY, EMPTY, TARGS_DECL, i) \
+		void static_vector<Tp, N>::__construct_at(iterator itor KERBAL_OPT_PPEXPAND_WITH_COMMA_N(LEFT_JOIN_COMMA, EMPTY, ARGS_DECL, i)) \
+		{ \
+			(itor.current)->construct(KERBAL_OPT_PPEXPAND_WITH_COMMA_N(REMAINF, EMPTY, ARGS_USE, i)); \
 		}
 
-		template <typename Tp, size_t N>
-		template <typename T0>
-		void static_vector<Tp, N>::__construct_at(iterator itor, const T0& v0)
-		{
-			(itor.current)->construct(v0);
-		}
+		KERBAL_PPEXPAND_N(FBODY, KERBAL_PPEXPAND_EMPTY_SEPARATOR, 0)
+		KERBAL_PPEXPAND_N(FBODY, KERBAL_PPEXPAND_EMPTY_SEPARATOR, 20)
 
-		template <typename Tp, size_t N>
-		template <typename T0, typename T1>
-		void static_vector<Tp, N>::__construct_at(iterator itor, const T0& v0, const T1& v1)
-		{
-			(itor.current)->construct(v0, v1);
-		}
-
-		template <typename Tp, size_t N>
-		template <typename T0, typename T1, typename T2>
-		void static_vector<Tp, N>::__construct_at(iterator itor, const T0& v0, const T1& v1, const T2& v2)
-		{
-			(itor.current)->construct(v0, v1, v2);
-		}
-
-		template <typename Tp, size_t N>
-		template <typename T0, typename T1, typename T2, typename T3>
-		void static_vector<Tp, N>::__construct_at(iterator itor, const T0& v0, const T1& v1, const T2& v2, const T3& v3)
-		{
-			(itor.current)->construct(v0, v1, v2, v3);
-		}
-
-		template <typename Tp, size_t N>
-		template <typename T0, typename T1, typename T2, typename T3, typename T4>
-		void static_vector<Tp, N>::__construct_at(iterator itor, const T0& v0, const T1& v1, const T2& v2, const T3& v3, const T4& v4)
-		{
-			(itor.current)->construct(v0, v1, v2, v3, v4);
-		}
+#	undef EMPTY
+#	undef REMAINF
+#	undef LEFT_JOIN_COMMA
+#	undef THEAD_NOT_EMPTY
+#	undef TARGS_DECL
+#	undef ARGS_DECL
+#	undef ARGS_USE
+#	undef FBODY
 
 #	else
 

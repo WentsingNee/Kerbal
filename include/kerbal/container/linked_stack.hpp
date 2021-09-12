@@ -14,6 +14,11 @@
 
 #include <kerbal/container/forward_list.hpp>
 
+#if __cplusplus < 201103L
+#	include <kerbal/macro/macro_concat.hpp>
+#	include <kerbal/macro/ppexpand.hpp>
+#endif
+
 #if __cplusplus >= 201103L
 #	include <kerbal/utility/forward.hpp>
 #endif
@@ -119,28 +124,29 @@ namespace kerbal
 
 #		else
 
-				reference emplace()
-				{
-					return c.emplace_front();
+#			define EMPTY
+#			define REMAINF(exp) exp
+#			define THEAD_NOT_EMPTY(exp) template <exp>
+#			define TARGS_DECL(i) KERBAL_MACRO_CONCAT(typename Arg, i)
+#			define ARGS_DECL(i) KERBAL_MACRO_CONCAT(const Arg, i) & KERBAL_MACRO_CONCAT(arg, i)
+#			define ARGS_USE(i) KERBAL_MACRO_CONCAT(arg, i)
+#			define FBODY(i) \
+				KERBAL_OPT_PPEXPAND_WITH_COMMA_N(THEAD_NOT_EMPTY, EMPTY, TARGS_DECL, i) \
+				reference emplace(KERBAL_OPT_PPEXPAND_WITH_COMMA_N(REMAINF, EMPTY, ARGS_DECL, i)) \
+				{ \
+					return c.emplace_front(KERBAL_OPT_PPEXPAND_WITH_COMMA_N(REMAINF, EMPTY, ARGS_USE, i)); \
 				}
 
-				template <typename Arg0>
-				reference emplace(const Arg0& arg0)
-				{
-					return c.emplace_front(arg0);
-				}
+				KERBAL_PPEXPAND_N(FBODY, KERBAL_PPEXPAND_EMPTY_SEPARATOR, 0)
+				KERBAL_PPEXPAND_N(FBODY, KERBAL_PPEXPAND_EMPTY_SEPARATOR, 20)
 
-				template <typename Arg0, typename Arg1>
-				reference emplace(const Arg0& arg0, const Arg1& arg1)
-				{
-					return c.emplace_front(arg0, arg1);
-				}
-
-				template <typename Arg0, typename Arg1, typename Arg2>
-				reference emplace(const Arg0& arg0, const Arg1& arg1, const Arg2& arg2)
-				{
-					return c.emplace_front(arg0, arg1, arg2);
-				}
+#			undef EMPTY
+#			undef REMAINF
+#			undef THEAD_NOT_EMPTY
+#			undef TARGS_DECL
+#			undef ARGS_DECL
+#			undef ARGS_USE
+#			undef FBODY
 
 #		endif
 

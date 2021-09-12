@@ -25,6 +25,11 @@
 #include <kerbal/utility/in_place.hpp>
 #include <kerbal/utility/noncopyable.hpp>
 
+#if __cplusplus < 201103L
+#	include <kerbal/macro/macro_concat.hpp>
+#	include <kerbal/macro/ppexpand.hpp>
+#endif
+
 #if __cplusplus >= 201103L
 #	include <kerbal/utility/forward.hpp>
 #endif
@@ -92,28 +97,31 @@ namespace kerbal
 
 #			else
 
-					explicit member_compress_helper_impl(kerbal::utility::in_place_t):
-							M_member()
-					{
+#				define EMPTY
+#				define REMAINF(exp) exp
+#				define LEFT_JOIN_COMMA(exp) , exp
+#				define THEAD_NOT_EMPTY(exp) template <exp>
+#				define TARGS_DECL(i) KERBAL_MACRO_CONCAT(typename Arg, i)
+#				define ARGS_DECL(i) KERBAL_MACRO_CONCAT(const Arg, i) & KERBAL_MACRO_CONCAT(arg, i)
+#				define ARGS_USE(i) KERBAL_MACRO_CONCAT(arg, i)
+#				define FBODY(i) \
+					KERBAL_OPT_PPEXPAND_WITH_COMMA_N(THEAD_NOT_EMPTY, EMPTY, TARGS_DECL, i) \
+					explicit member_compress_helper_impl(kerbal::utility::in_place_t KERBAL_OPT_PPEXPAND_WITH_COMMA_N(LEFT_JOIN_COMMA, EMPTY, ARGS_DECL, i)): \
+							M_member(KERBAL_OPT_PPEXPAND_WITH_COMMA_N(REMAINF, EMPTY, ARGS_USE, i)) \
+					{ \
 					}
 
-					template <typename Arg0>
-					explicit member_compress_helper_impl(kerbal::utility::in_place_t, const Arg0 & arg0):
-							M_member(arg0)
-					{
-					}
+					KERBAL_PPEXPAND_N(FBODY, KERBAL_PPEXPAND_EMPTY_SEPARATOR, 0)
+					KERBAL_PPEXPAND_N(FBODY, KERBAL_PPEXPAND_EMPTY_SEPARATOR, 20)
 
-					template <typename Arg0, typename Arg1>
-					explicit member_compress_helper_impl(kerbal::utility::in_place_t, const Arg0 & arg0, const Arg1 & arg1):
-							M_member(arg0, arg1)
-					{
-					}
-
-					template <typename Arg0, typename Arg1, typename Arg2>
-					explicit member_compress_helper_impl(kerbal::utility::in_place_t, const Arg0 & arg0, const Arg1 & arg1, const Arg2 & arg2):
-							M_member(arg0, arg1, arg2)
-					{
-					}
+#				undef EMPTY
+#				undef REMAINF
+#				undef LEFT_JOIN_COMMA
+#				undef THEAD_NOT_EMPTY
+#				undef TARGS_DECL
+#				undef ARGS_DECL
+#				undef ARGS_USE
+#				undef FBODY
 
 #			endif
 
@@ -233,28 +241,31 @@ namespace kerbal
 
 #			else
 
-					explicit member_compress_helper_impl(kerbal::utility::in_place_t):
-							super()
-					{
+#				define EMPTY
+#				define REMAINF(exp) exp
+#				define LEFT_JOIN_COMMA(exp) , exp
+#				define THEAD_NOT_EMPTY(exp) template <exp>
+#				define TARGS_DECL(i) KERBAL_MACRO_CONCAT(typename Arg, i)
+#				define ARGS_DECL(i) KERBAL_MACRO_CONCAT(const Arg, i) & KERBAL_MACRO_CONCAT(arg, i)
+#				define ARGS_USE(i) KERBAL_MACRO_CONCAT(arg, i)
+#				define FBODY(i) \
+					KERBAL_OPT_PPEXPAND_WITH_COMMA_N(THEAD_NOT_EMPTY, EMPTY, TARGS_DECL, i) \
+					explicit member_compress_helper_impl(kerbal::utility::in_place_t KERBAL_OPT_PPEXPAND_WITH_COMMA_N(LEFT_JOIN_COMMA, EMPTY, ARGS_DECL, i)): \
+							super(KERBAL_OPT_PPEXPAND_WITH_COMMA_N(REMAINF, EMPTY, ARGS_USE, i)) \
+					{ \
 					}
 
-					template <typename Arg0>
-					explicit member_compress_helper_impl(kerbal::utility::in_place_t, const Arg0 & arg0):
-							super(arg0)
-					{
-					}
+					KERBAL_PPEXPAND_N(FBODY, KERBAL_PPEXPAND_EMPTY_SEPARATOR, 0)
+					KERBAL_PPEXPAND_N(FBODY, KERBAL_PPEXPAND_EMPTY_SEPARATOR, 20)
 
-					template <typename Arg0, typename Arg1>
-					explicit member_compress_helper_impl(kerbal::utility::in_place_t, const Arg0 & arg0, const Arg1 & arg1):
-							super(arg0, arg1)
-					{
-					}
-
-					template <typename Arg0, typename Arg1, typename Arg2>
-					explicit member_compress_helper_impl(kerbal::utility::in_place_t, const Arg0 & arg0, const Arg1 & arg1, const Arg2 & arg2):
-							super(arg0, arg1, arg2)
-					{
-					}
+#				undef EMPTY
+#				undef REMAINF
+#				undef LEFT_JOIN_COMMA
+#				undef THEAD_NOT_EMPTY
+#				undef TARGS_DECL
+#				undef ARGS_DECL
+#				undef ARGS_USE
+#				undef FBODY
 
 #			endif
 
@@ -344,28 +355,29 @@ namespace kerbal
 				{
 				}
 
-				explicit member_compress_helper(kerbal::utility::in_place_t in_place):
-						super(in_place)
-				{
+#			define EMPTY
+#			define LEFT_JOIN_COMMA(exp) , exp
+#			define THEAD_NOT_EMPTY(exp) template <exp>
+#			define TARGS_DECL(i) KERBAL_MACRO_CONCAT(typename Arg, i)
+#			define ARGS_DECL(i) KERBAL_MACRO_CONCAT(const Arg, i) & KERBAL_MACRO_CONCAT(arg, i)
+#			define ARGS_USE(i) KERBAL_MACRO_CONCAT(arg, i)
+#			define FBODY(i) \
+				KERBAL_OPT_PPEXPAND_WITH_COMMA_N(THEAD_NOT_EMPTY, EMPTY, TARGS_DECL, i) \
+				explicit member_compress_helper(kerbal::utility::in_place_t in_place KERBAL_OPT_PPEXPAND_WITH_COMMA_N(LEFT_JOIN_COMMA, EMPTY, ARGS_DECL, i)): \
+						super(in_place KERBAL_OPT_PPEXPAND_WITH_COMMA_N(LEFT_JOIN_COMMA, EMPTY, ARGS_USE, i)) \
+				{ \
 				}
 
-				template <typename Arg0>
-				explicit member_compress_helper(kerbal::utility::in_place_t in_place, const Arg0 & arg0):
-						super(in_place, arg0)
-				{
-				}
+				KERBAL_PPEXPAND_N(FBODY, KERBAL_PPEXPAND_EMPTY_SEPARATOR, 0)
+				KERBAL_PPEXPAND_N(FBODY, KERBAL_PPEXPAND_EMPTY_SEPARATOR, 20)
 
-				template <typename Arg0, typename Arg1>
-				explicit member_compress_helper(kerbal::utility::in_place_t in_place, const Arg0 & arg0, const Arg1 & arg1):
-						super(in_place, arg0, arg1)
-				{
-				}
-
-				template <typename Arg0, typename Arg1, typename Arg2>
-				explicit member_compress_helper(kerbal::utility::in_place_t in_place, const Arg0 & arg0, const Arg1 & arg1, const Arg2 & arg2):
-						super(in_place, arg0, arg1, arg2)
-				{
-				}
+#			undef EMPTY
+#			undef LEFT_JOIN_COMMA
+#			undef THEAD_NOT_EMPTY
+#			undef TARGS_DECL
+#			undef ARGS_DECL
+#			undef ARGS_USE
+#			undef FBODY
 
 				template <typename U, size_t J>
 				explicit member_compress_helper(const member_compress_helper<U, J> & arg):

@@ -16,6 +16,11 @@
 #include <kerbal/iterator/iterator_traits.hpp>
 #include <kerbal/utility/declval.hpp>
 
+#if __cplusplus < 201103L
+#	include <kerbal/macro/macro_concat.hpp>
+#	include <kerbal/macro/ppexpand.hpp>
+#endif
+
 #if __cplusplus >= 201103L
 #	include <kerbal/utility/forward.hpp>
 #endif
@@ -359,36 +364,33 @@ namespace kerbal
 
 #	else
 
-		template <typename Tp, typename Allocator>
-		typename list<Tp, Allocator>::reference
-		list<Tp, Allocator>::emplace_front()
-		{
-			return this->list_allocator_unrelated::emplace_front_using_allocator(this->alloc());
+#	define EMPTY
+#	define REMAINF(exp) exp
+#	define LEFT_JOIN_COMMA(exp) , exp
+#	define THEAD_NOT_EMPTY(exp) template <exp>
+#	define TARGS_DECL(i) KERBAL_MACRO_CONCAT(typename Arg, i)
+#	define ARGS_DECL(i) KERBAL_MACRO_CONCAT(const Arg, i) & KERBAL_MACRO_CONCAT(arg, i)
+#	define ARGS_USE(i) KERBAL_MACRO_CONCAT(arg, i)
+#	define FBODY(i) \
+		template <typename Tp, typename Allocator> \
+		KERBAL_OPT_PPEXPAND_WITH_COMMA_N(THEAD_NOT_EMPTY, EMPTY, TARGS_DECL, i) \
+		typename list<Tp, Allocator>::reference \
+		list<Tp, Allocator>::emplace_front(KERBAL_OPT_PPEXPAND_WITH_COMMA_N(REMAINF, EMPTY, ARGS_DECL, i)) \
+		{ \
+			return this->list_allocator_unrelated::emplace_front_using_allocator(this->alloc() KERBAL_OPT_PPEXPAND_WITH_COMMA_N(LEFT_JOIN_COMMA, EMPTY, ARGS_USE, i)); \
 		}
 
-		template <typename Tp, typename Allocator>
-		template <typename Arg0>
-		typename list<Tp, Allocator>::reference
-		list<Tp, Allocator>::emplace_front(const Arg0& arg0)
-		{
-			return this->list_allocator_unrelated::emplace_front_using_allocator(this->alloc(), arg0);
-		}
+		KERBAL_PPEXPAND_N(FBODY, KERBAL_PPEXPAND_EMPTY_SEPARATOR, 0)
+		KERBAL_PPEXPAND_N(FBODY, KERBAL_PPEXPAND_EMPTY_SEPARATOR, 20)
 
-		template <typename Tp, typename Allocator>
-		template <typename Arg0, typename Arg1>
-		typename list<Tp, Allocator>::reference
-		list<Tp, Allocator>::emplace_front(const Arg0& arg0, const Arg1& arg1)
-		{
-			return this->list_allocator_unrelated::emplace_front_using_allocator(this->alloc(), arg0, arg1);
-		}
-
-		template <typename Tp, typename Allocator>
-		template <typename Arg0, typename Arg1, typename Arg2>
-		typename list<Tp, Allocator>::reference
-		list<Tp, Allocator>::emplace_front(const Arg0& arg0, const Arg1& arg1, const Arg2& arg2)
-		{
-			return this->list_allocator_unrelated::emplace_front_using_allocator(this->alloc(), arg0, arg1, arg2);
-		}
+#	undef EMPTY
+#	undef REMAINF
+#	undef LEFT_JOIN_COMMA
+#	undef THEAD_NOT_EMPTY
+#	undef TARGS_DECL
+#	undef ARGS_DECL
+#	undef ARGS_USE
+#	undef FBODY
 
 #	endif
 
@@ -423,36 +425,33 @@ namespace kerbal
 
 #	else
 
-		template <typename Tp, typename Allocator>
-		typename list<Tp, Allocator>::reference
-		list<Tp, Allocator>::emplace_back()
-		{
-			return this->list_allocator_unrelated::emplace_back_using_allocator(this->alloc());
+#	define EMPTY
+#	define REMAINF(exp) exp
+#	define LEFT_JOIN_COMMA(exp) , exp
+#	define THEAD_NOT_EMPTY(exp) template <exp>
+#	define TARGS_DECL(i) KERBAL_MACRO_CONCAT(typename Arg, i)
+#	define ARGS_DECL(i) KERBAL_MACRO_CONCAT(const Arg, i) & KERBAL_MACRO_CONCAT(arg, i)
+#	define ARGS_USE(i) KERBAL_MACRO_CONCAT(arg, i)
+#	define FBODY(i) \
+		template <typename Tp, typename Allocator> \
+		KERBAL_OPT_PPEXPAND_WITH_COMMA_N(THEAD_NOT_EMPTY, EMPTY, TARGS_DECL, i) \
+		typename list<Tp, Allocator>::reference \
+		list<Tp, Allocator>::emplace_back(KERBAL_OPT_PPEXPAND_WITH_COMMA_N(REMAINF, EMPTY, ARGS_DECL, i)) \
+		{ \
+			return this->list_allocator_unrelated::emplace_back_using_allocator(this->alloc() KERBAL_OPT_PPEXPAND_WITH_COMMA_N(LEFT_JOIN_COMMA, EMPTY, ARGS_USE, i)); \
 		}
 
-		template <typename Tp, typename Allocator>
-		template <typename Arg0>
-		typename list<Tp, Allocator>::reference
-		list<Tp, Allocator>::emplace_back(const Arg0& arg0)
-		{
-			return this->list_allocator_unrelated::emplace_back_using_allocator(this->alloc(), arg0);
-		}
+		KERBAL_PPEXPAND_N(FBODY, KERBAL_PPEXPAND_EMPTY_SEPARATOR, 0)
+		KERBAL_PPEXPAND_N(FBODY, KERBAL_PPEXPAND_EMPTY_SEPARATOR, 20)
 
-		template <typename Tp, typename Allocator>
-		template <typename Arg0, typename Arg1>
-		typename list<Tp, Allocator>::reference
-		list<Tp, Allocator>::emplace_back(const Arg0& arg0, const Arg1& arg1)
-		{
-			return this->list_allocator_unrelated::emplace_back_using_allocator(this->alloc(), arg0, arg1);
-		}
-
-		template <typename Tp, typename Allocator>
-		template <typename Arg0, typename Arg1, typename Arg2>
-		typename list<Tp, Allocator>::reference
-		list<Tp, Allocator>::emplace_back(const Arg0& arg0, const Arg1& arg1, const Arg2& arg2)
-		{
-			return this->list_allocator_unrelated::emplace_back_using_allocator(this->alloc(), arg0, arg1, arg2);
-		}
+#	undef EMPTY
+#	undef REMAINF
+#	undef LEFT_JOIN_COMMA
+#	undef THEAD_NOT_EMPTY
+#	undef TARGS_DECL
+#	undef ARGS_DECL
+#	undef ARGS_USE
+#	undef FBODY
 
 #	endif
 
@@ -531,36 +530,31 @@ namespace kerbal
 
 #	else
 
-		template <typename Tp, typename Allocator>
-		typename list<Tp, Allocator>::iterator
-		list<Tp, Allocator>::emplace(const_iterator pos)
-		{
-			return list_allocator_unrelated::emplace_using_allocator(this->alloc(), pos);
+#	define EMPTY
+#	define LEFT_JOIN_COMMA(exp) , exp
+#	define THEAD_NOT_EMPTY(exp) template <exp>
+#	define TARGS_DECL(i) KERBAL_MACRO_CONCAT(typename Arg, i)
+#	define ARGS_DECL(i) KERBAL_MACRO_CONCAT(const Arg, i) & KERBAL_MACRO_CONCAT(arg, i)
+#	define ARGS_USE(i) KERBAL_MACRO_CONCAT(arg, i)
+#	define FBODY(i) \
+		template <typename Tp, typename Allocator> \
+		KERBAL_OPT_PPEXPAND_WITH_COMMA_N(THEAD_NOT_EMPTY, EMPTY, TARGS_DECL, i) \
+		typename list<Tp, Allocator>::iterator \
+		list<Tp, Allocator>::emplace(const_iterator pos KERBAL_OPT_PPEXPAND_WITH_COMMA_N(LEFT_JOIN_COMMA, EMPTY, ARGS_DECL, i)) \
+		{ \
+			return list_allocator_unrelated::emplace_using_allocator(this->alloc(), pos KERBAL_OPT_PPEXPAND_WITH_COMMA_N(LEFT_JOIN_COMMA, EMPTY, ARGS_USE, i)); \
 		}
 
-		template <typename Tp, typename Allocator>
-		template <typename Arg0>
-		typename list<Tp, Allocator>::iterator
-		list<Tp, Allocator>::emplace(const_iterator pos, const Arg0& arg0)
-		{
-			return list_allocator_unrelated::emplace_using_allocator(this->alloc(), pos, arg0);
-		}
+		KERBAL_PPEXPAND_N(FBODY, KERBAL_PPEXPAND_EMPTY_SEPARATOR, 0)
+		KERBAL_PPEXPAND_N(FBODY, KERBAL_PPEXPAND_EMPTY_SEPARATOR, 20)
 
-		template <typename Tp, typename Allocator>
-		template <typename Arg0, typename Arg1>
-		typename list<Tp, Allocator>::iterator
-		list<Tp, Allocator>::emplace(const_iterator pos, const Arg0& arg0, const Arg1& arg1)
-		{
-			return list_allocator_unrelated::emplace_using_allocator(this->alloc(), pos, arg0, arg1);
-		}
-
-		template <typename Tp, typename Allocator>
-		template <typename Arg0, typename Arg1, typename Arg2>
-		typename list<Tp, Allocator>::iterator
-		list<Tp, Allocator>::emplace(const_iterator pos, const Arg0& arg0, const Arg1& arg1, const Arg2& arg2)
-		{
-			return list_allocator_unrelated::emplace_using_allocator(this->alloc(), pos, arg0, arg1, arg2);
-		}
+#	undef EMPTY
+#	undef LEFT_JOIN_COMMA
+#	undef THEAD_NOT_EMPTY
+#	undef TARGS_DECL
+#	undef ARGS_DECL
+#	undef ARGS_USE
+#	undef FBODY
 
 #	endif
 

@@ -18,6 +18,11 @@
 #include <kerbal/iterator/iterator_traits.hpp>
 #include <kerbal/type_traits/enable_if.hpp>
 
+#if __cplusplus < 201103L
+#	include <kerbal/macro/macro_concat.hpp>
+#	include <kerbal/macro/ppexpand.hpp>
+#endif
+
 #if __cplusplus >= 201103L
 #	include <kerbal/utility/forward.hpp>
 #endif
@@ -186,32 +191,30 @@ namespace kerbal
 
 #		else
 
-				void emplace()
-				{
-					c.emplace_back();
-					kerbal::algorithm::push_heap(c.begin(), c.end(), vc);
+#			define EMPTY
+#			define REMAINF(exp) exp
+#			define THEAD_NOT_EMPTY(exp) template <exp>
+#			define TARGS_DECL(i) KERBAL_MACRO_CONCAT(typename Arg, i)
+#			define ARGS_DECL(i) KERBAL_MACRO_CONCAT(const Arg, i) & KERBAL_MACRO_CONCAT(arg, i)
+#			define ARGS_USE(i) KERBAL_MACRO_CONCAT(arg, i)
+#			define FBODY(i) \
+				KERBAL_OPT_PPEXPAND_WITH_COMMA_N(THEAD_NOT_EMPTY, EMPTY, TARGS_DECL, i) \
+				void emplace(KERBAL_OPT_PPEXPAND_WITH_COMMA_N(REMAINF, EMPTY, ARGS_DECL, i)) \
+				{ \
+					c.emplace_back(KERBAL_OPT_PPEXPAND_WITH_COMMA_N(REMAINF, EMPTY, ARGS_USE, i)); \
+					kerbal::algorithm::push_heap(c.begin(), c.end(), vc); \
 				}
 
-				template <typename Arg0>
-				void emplace(const Arg0& arg0)
-				{
-					c.emplace_back(arg0);
-					kerbal::algorithm::push_heap(c.begin(), c.end(), vc);
-				}
+				KERBAL_PPEXPAND_N(FBODY, KERBAL_PPEXPAND_EMPTY_SEPARATOR, 0)
+				KERBAL_PPEXPAND_N(FBODY, KERBAL_PPEXPAND_EMPTY_SEPARATOR, 20)
 
-				template <typename Arg0, typename Arg1>
-				void emplace(const Arg0& arg0, const Arg1& arg1)
-				{
-					c.emplace_back(arg0, arg1);
-					kerbal::algorithm::push_heap(c.begin(), c.end(), vc);
-				}
-
-				template <typename Arg0, typename Arg1, typename Arg2>
-				void emplace(const Arg0& arg0, const Arg1& arg1, const Arg2& arg2)
-				{
-					c.emplace_back(arg0, arg1, arg2);
-					kerbal::algorithm::push_heap(c.begin(), c.end(), vc);
-				}
+#			undef EMPTY
+#			undef REMAINF
+#			undef THEAD_NOT_EMPTY
+#			undef TARGS_DECL
+#			undef ARGS_DECL
+#			undef ARGS_USE
+#			undef FBODY
 
 #		endif
 

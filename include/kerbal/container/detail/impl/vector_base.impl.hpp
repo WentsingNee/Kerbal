@@ -28,6 +28,11 @@
 #include <kerbal/utility/compressed_pair.hpp>
 #include <kerbal/utility/throw_this_exception.hpp>
 
+#if __cplusplus < 201103L
+#	include <kerbal/macro/macro_concat.hpp>
+#	include <kerbal/macro/ppexpand.hpp>
+#endif
+
 #if __cplusplus >= 201103L
 #	include <kerbal/iterator/move_iterator.hpp>
 #	include <kerbal/utility/forward.hpp>
@@ -980,65 +985,17 @@ namespace kerbal
 
 #		else
 
-			template <typename Tp>
-			template <typename Allocator>
-			typename vector_allocator_unrelated<Tp>::iterator
-			vector_allocator_unrelated<Tp>::emplace_using_allocator(Allocator & alloc, const_iterator pos)
-			{
-				typedef kerbal::memory::allocator_traits<Allocator> allocator_traits;
-
-				size_type insert_pos_index = this->index_of(pos);
-				size_type ori_size = this->_K_size;
-				size_type new_size = ori_size + 1;
-				if (new_size <= this->_K_capacity) {
-					pointer insert_pos = pos.cast_to_mutable().current;
-					if (pos == this->cend()) {
-						// A A A O O O
-						//       ^
-						// construct at the end
-						kerbal::memory::construct_at_using_allocator(alloc, this->end().current);
-						this->_K_size = new_size;
-					} else {
-						typename kerbal::type_traits::aligned_storage<sizeof(value_type), KERBAL_ALIGNOF(value_type)>::type storage;
-						pointer pt = reinterpret_cast<pointer>(&storage);
-						kerbal::memory::construct_at_using_allocator(alloc, pt);
-						try {
-							// construct at the end
-							kerbal::memory::construct_at_using_allocator(alloc, this->end().current, kerbal::compatibility::to_xvalue(this->back()));
-							this->_K_size = new_size;
-							// A A A X Y Z Z O O
-							//             ^
-							kerbal::algorithm::move_backward(insert_pos, this->end().current - 2, this->end().current - 1);
-							// A A A X X Y Z O O
-							//           ^
-							kerbal::operators::generic_assign(*insert_pos, kerbal::compatibility::to_xvalue(*pt));
-							// *insert_pos = kerbal::compatibility::to_xvalue(*pt);
-						} catch (...) {
-							kerbal::memory::destroy_at_using_allocator(alloc, pt);
-							throw;
-						}
-						kerbal::memory::destroy_at_using_allocator(alloc, pt);
-					}
-				} else { // new_size > this->_K_capacity
-					size_type new_capacity = this->_K_capacity == 0 ? 1 : 2 * this->_K_capacity;
-					pointer new_buffer = allocator_traits::allocate(alloc, new_capacity);
-					pointer emplace_pos = new_buffer + insert_pos_index;
-
-					try {
-						kerbal::memory::construct_at_using_allocator(alloc, emplace_pos);
-					} catch (...) {
-						allocator_traits::deallocate(alloc, new_buffer, new_capacity);
-						throw;
-					}
-
-					this->emplace_realloc_aux(alloc, insert_pos_index, new_buffer, new_capacity);
-				}
-				return this->nth(insert_pos_index);
-			}
-
-
-#		define __emplace_using_allocator_body(...) \
-			do { \
+#		define EMPTY
+#		define LEFT_JOIN_COMMA(exp) , exp
+#		define TARGS_DECL(i) KERBAL_MACRO_CONCAT(typename Arg, i)
+#		define ARGS_DECL(i) KERBAL_MACRO_CONCAT(const Arg, i) & KERBAL_MACRO_CONCAT(arg, i)
+#		define ARGS_USE(i) KERBAL_MACRO_CONCAT(arg, i)
+#		define FBODY(i) \
+			template <typename Tp> \
+			template <typename Allocator KERBAL_OPT_PPEXPAND_WITH_COMMA_N(LEFT_JOIN_COMMA, EMPTY, TARGS_DECL, i)> \
+			typename vector_allocator_unrelated<Tp>::iterator \
+			vector_allocator_unrelated<Tp>::emplace_using_allocator(Allocator & alloc, const_iterator pos KERBAL_OPT_PPEXPAND_WITH_COMMA_N(LEFT_JOIN_COMMA, EMPTY, ARGS_DECL, i)) \
+			{ \
 				typedef kerbal::memory::allocator_traits<Allocator> allocator_traits; \
  \
 				size_type insert_pos_index = this->index_of(pos); \
@@ -1047,12 +1004,12 @@ namespace kerbal
 				if (new_size <= this->_K_capacity) { \
 					pointer insert_pos = pos.cast_to_mutable().current; \
 					if (pos == this->cend()) { \
-						kerbal::memory::construct_at_using_allocator(alloc, this->end().current, __VA_ARGS__); \
+						kerbal::memory::construct_at_using_allocator(alloc, this->end().current KERBAL_OPT_PPEXPAND_WITH_COMMA_N(LEFT_JOIN_COMMA, EMPTY, ARGS_USE, i)); \
 						this->_K_size = new_size; \
 					} else { \
 						typename kerbal::type_traits::aligned_storage<sizeof(value_type), KERBAL_ALIGNOF(value_type)>::type storage; \
 						pointer pt = reinterpret_cast<pointer>(&storage); \
-						kerbal::memory::construct_at_using_allocator(alloc, pt, __VA_ARGS__); \
+						kerbal::memory::construct_at_using_allocator(alloc, pt KERBAL_OPT_PPEXPAND_WITH_COMMA_N(LEFT_JOIN_COMMA, EMPTY, ARGS_USE, i)); \
 						try { \
 							kerbal::memory::construct_at_using_allocator(alloc, this->end().current, kerbal::compatibility::to_xvalue(this->back())); \
 							this->_K_size = new_size; \
@@ -1070,7 +1027,7 @@ namespace kerbal
 					pointer emplace_pos = new_buffer + insert_pos_index; \
  \
 					try { \
-						kerbal::memory::construct_at_using_allocator(alloc, emplace_pos, __VA_ARGS__); \
+						kerbal::memory::construct_at_using_allocator(alloc, emplace_pos KERBAL_OPT_PPEXPAND_WITH_COMMA_N(LEFT_JOIN_COMMA, EMPTY, ARGS_USE, i)); \
 					} catch (...) { \
 						allocator_traits::deallocate(alloc, new_buffer, new_capacity); \
 						throw; \
@@ -1079,33 +1036,17 @@ namespace kerbal
 					this->emplace_realloc_aux(alloc, insert_pos_index, new_buffer, new_capacity); \
 				} \
 				return this->nth(insert_pos_index); \
-			} while(false)
-
-			template <typename Tp>
-			template <typename Allocator, typename Arg0>
-			typename vector_allocator_unrelated<Tp>::iterator
-			vector_allocator_unrelated<Tp>::emplace_using_allocator(Allocator & alloc, const_iterator pos, const Arg0 & arg0)
-			{
-				__emplace_using_allocator_body(arg0);
 			}
 
-			template <typename Tp>
-			template <typename Allocator, typename Arg0, typename Arg1>
-			typename vector_allocator_unrelated<Tp>::iterator
-			vector_allocator_unrelated<Tp>::emplace_using_allocator(Allocator & alloc, const_iterator pos, const Arg0 & arg0, const Arg1& arg1)
-			{
-				__emplace_using_allocator_body(arg0, arg1);
-			}
+			KERBAL_PPEXPAND_N(FBODY, KERBAL_PPEXPAND_EMPTY_SEPARATOR, 0)
+			KERBAL_PPEXPAND_N(FBODY, KERBAL_PPEXPAND_EMPTY_SEPARATOR, 20)
 
-			template <typename Tp>
-			template <typename Allocator, typename Arg0, typename Arg1, typename Arg2>
-			typename vector_allocator_unrelated<Tp>::iterator
-			vector_allocator_unrelated<Tp>::emplace_using_allocator(Allocator & alloc, const_iterator pos, const Arg0 & arg0, const Arg1 & arg1, const Arg2 & arg2)
-			{
-				__emplace_using_allocator_body(arg0, arg1, arg2);
-			}
-
-#		undef __emplace_using_allocator_body
+#		undef EMPTY
+#		undef LEFT_JOIN_COMMA
+#		undef TARGS_DECL
+#		undef ARGS_DECL
+#		undef ARGS_USE
+#		undef FBODY
 
 #		endif
 
@@ -1504,44 +1445,23 @@ namespace kerbal
 
 #		else
 
-			template <typename Tp>
-			template <typename Allocator>
-			typename vector_allocator_unrelated<Tp>::reference
-			vector_allocator_unrelated<Tp>::emplace_back_using_allocator(Allocator & alloc)
-			{
-				typedef kerbal::memory::allocator_traits<Allocator> allocator_traits;
-
-				size_type ori_size = this->_K_size;
-				size_type new_size = ori_size + 1;
-				if (new_size <= this->_K_capacity) {
-					kerbal::memory::construct_at_using_allocator(alloc, this->end().current);
-					++this->_K_size;
-				} else {
-					size_type new_capacity = this->_K_capacity == 0 ? 1 : this->_K_capacity * 2;
-					pointer new_buffer = allocator_traits::allocate(alloc, new_capacity);
-					pointer emplace_pos = new_buffer + ori_size;
-
-					try {
-						kerbal::memory::construct_at_using_allocator(alloc, emplace_pos);
-					} catch (...) {
-						allocator_traits::deallocate(alloc, new_buffer, new_capacity);
-						throw;
-					}
-
-					this->emplace_back_realloc_aux(alloc, new_buffer, new_capacity);
-				}
-				return this->_K_buffer[this->_K_size];
-			}
-
-
-#		define __emplace_back_using_allocator_body(...) \
-			do { \
+#		define EMPTY
+#		define LEFT_JOIN_COMMA(exp) , exp
+#		define TARGS_DECL(i) KERBAL_MACRO_CONCAT(typename Arg, i)
+#		define ARGS_DECL(i) KERBAL_MACRO_CONCAT(const Arg, i) & KERBAL_MACRO_CONCAT(arg, i)
+#		define ARGS_USE(i) KERBAL_MACRO_CONCAT(arg, i)
+#		define FBODY(i) \
+			template <typename Tp> \
+			template <typename Allocator KERBAL_OPT_PPEXPAND_WITH_COMMA_N(LEFT_JOIN_COMMA, EMPTY, TARGS_DECL, i)> \
+			typename vector_allocator_unrelated<Tp>::reference \
+			vector_allocator_unrelated<Tp>::emplace_back_using_allocator(Allocator & alloc KERBAL_OPT_PPEXPAND_WITH_COMMA_N(LEFT_JOIN_COMMA, EMPTY, ARGS_DECL, i)) \
+			{ \
 				typedef kerbal::memory::allocator_traits<Allocator> allocator_traits; \
  \
 				size_type ori_size = this->_K_size; \
 				size_type new_size = ori_size + 1; \
 				if (new_size <= this->_K_capacity) { \
-					kerbal::memory::construct_at_using_allocator(alloc, this->end().current, __VA_ARGS__); \
+					kerbal::memory::construct_at_using_allocator(alloc, this->end().current KERBAL_OPT_PPEXPAND_WITH_COMMA_N(LEFT_JOIN_COMMA, EMPTY, ARGS_USE, i)); \
 					++this->_K_size; \
 				} else { \
 					size_type new_capacity = this->_K_capacity == 0 ? 1 : this->_K_capacity * 2; \
@@ -1549,7 +1469,7 @@ namespace kerbal
 					pointer emplace_pos = new_buffer + ori_size; \
  \
 					try { \
-						kerbal::memory::construct_at_using_allocator(alloc, emplace_pos, __VA_ARGS__); \
+						kerbal::memory::construct_at_using_allocator(alloc, emplace_pos KERBAL_OPT_PPEXPAND_WITH_COMMA_N(LEFT_JOIN_COMMA, EMPTY, ARGS_USE, i)); \
 					} catch (...) { \
 						allocator_traits::deallocate(alloc, new_buffer, new_capacity); \
 						throw; \
@@ -1558,33 +1478,17 @@ namespace kerbal
 					this->emplace_back_realloc_aux(alloc, new_buffer, new_capacity); \
 				} \
 				return this->_K_buffer[this->_K_size]; \
-			} while(false)
-
-			template <typename Tp>
-			template <typename Allocator, typename Arg0>
-			typename vector_allocator_unrelated<Tp>::reference
-			vector_allocator_unrelated<Tp>::emplace_back_using_allocator(Allocator & alloc, const Arg0 & arg0)
-			{
-				__emplace_back_using_allocator_body(arg0);
 			}
 
-			template <typename Tp>
-			template <typename Allocator, typename Arg0, typename Arg1>
-			typename vector_allocator_unrelated<Tp>::reference
-			vector_allocator_unrelated<Tp>::emplace_back_using_allocator(Allocator & alloc, const Arg0 & arg0, const Arg1& arg1)
-			{
-				__emplace_back_using_allocator_body(arg0, arg1);
-			}
+			KERBAL_PPEXPAND_N(FBODY, KERBAL_PPEXPAND_EMPTY_SEPARATOR, 0)
+			KERBAL_PPEXPAND_N(FBODY, KERBAL_PPEXPAND_EMPTY_SEPARATOR, 20)
 
-			template <typename Tp>
-			template <typename Allocator, typename Arg0, typename Arg1, typename Arg2>
-			typename vector_allocator_unrelated<Tp>::reference
-			vector_allocator_unrelated<Tp>::emplace_back_using_allocator(Allocator & alloc, const Arg0 & arg0, const Arg1 & arg1, const Arg2 & arg2)
-			{
-				__emplace_back_using_allocator_body(arg0, arg1, arg2);
-			}
-
-#		undef __emplace_back_using_allocator_body
+#		undef EMPTY
+#		undef LEFT_JOIN_COMMA
+#		undef TARGS_DECL
+#		undef ARGS_DECL
+#		undef ARGS_USE
+#		undef FBODY
 
 #		endif
 

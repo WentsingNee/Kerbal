@@ -19,6 +19,11 @@
 #include <kerbal/type_traits/array_traits.hpp>
 #include <kerbal/type_traits/conditional.hpp>
 
+#if __cplusplus < 201103L
+#	include <kerbal/macro/macro_concat.hpp>
+#	include <kerbal/macro/ppexpand.hpp>
+#endif
+
 #if __cplusplus >= 201103L
 #	include <kerbal/utility/forward.hpp>
 #endif
@@ -59,49 +64,30 @@ namespace kerbal
 
 #	if __cplusplus < 201103L
 
-#	define _construct_at_body(p, ...) \
-		do { \
-			::new (const_cast<void*>(static_cast<const volatile void*>(p))) Tp (__VA_ARGS__); \
+#	define EMPTY
+#	define REMAINF(exp) exp
+#	define LEFT_JOIN_COMMA(exp) , exp
+#	define TARGS_DECL(i) KERBAL_MACRO_CONCAT(typename Arg, i)
+#	define ARGS_DECL(i) KERBAL_MACRO_CONCAT(const Arg, i) & KERBAL_MACRO_CONCAT(arg, i)
+#	define ARGS_USE(i) KERBAL_MACRO_CONCAT(arg, i)
+#	define FBODY(i) \
+		template <typename Tp KERBAL_OPT_PPEXPAND_WITH_COMMA_N(LEFT_JOIN_COMMA, EMPTY, TARGS_DECL, i)> \
+		Tp * construct_at(Tp * p KERBAL_OPT_PPEXPAND_WITH_COMMA_N(LEFT_JOIN_COMMA, EMPTY, ARGS_DECL, i)) \
+		{ \
+			::new (const_cast<void*>(static_cast<const volatile void*>(p))) Tp (KERBAL_OPT_PPEXPAND_WITH_COMMA_N(REMAINF, EMPTY, ARGS_USE, i)); \
 			return p; \
-		} while (false)
-
-		template <typename Tp>
-		Tp * construct_at(Tp * p)
-		{
-			_construct_at_body(p);
 		}
 
-		template <typename Tp, typename Arg0>
-		Tp * construct_at(Tp * p, const Arg0 & arg0)
-		{
-			_construct_at_body(p, arg0);
-		}
+		KERBAL_PPEXPAND_N(FBODY, KERBAL_PPEXPAND_EMPTY_SEPARATOR, 0)
+		KERBAL_PPEXPAND_N(FBODY, KERBAL_PPEXPAND_EMPTY_SEPARATOR, 20)
 
-		template <typename Tp, typename Arg0, typename Arg1>
-		Tp * construct_at(Tp * p, const Arg0 & arg0, const Arg1 & arg1)
-		{
-			_construct_at_body(p, arg0, arg1);
-		}
-
-		template <typename Tp, typename Arg0, typename Arg1, typename Arg2>
-		Tp * construct_at(Tp * p, const Arg0 & arg0, const Arg1 & arg1, const Arg2 & arg2)
-		{
-			_construct_at_body(p, arg0, arg1, arg2);
-		}
-
-		template <typename Tp, typename Arg0, typename Arg1, typename Arg2, typename Arg3>
-		Tp * construct_at(Tp * p, const Arg0 & arg0, const Arg1 & arg1, const Arg2 & arg2, const Arg3 & arg3)
-		{
-			_construct_at_body(p, arg0, arg1, arg2, arg3);
-		}
-
-		template <typename Tp, typename Arg0, typename Arg1, typename Arg2, typename Arg3, typename Arg4>
-		Tp * construct_at(Tp * p, const Arg0 & arg0, const Arg1 & arg1, const Arg2 & arg2, const Arg3 & arg3, const Arg4 & arg4)
-		{
-			_construct_at_body(p, arg0, arg1, arg2, arg3, arg4);
-		}
-
-#	undef _construct_at_body
+#	undef EMPTY
+#	undef REMAINF
+#	undef LEFT_JOIN_COMMA
+#	undef TARGS_DECL
+#	undef ARGS_DECL
+#	undef ARGS_USE
+#	undef FBODY
 
 
 		template <typename Tp, std::size_t N>

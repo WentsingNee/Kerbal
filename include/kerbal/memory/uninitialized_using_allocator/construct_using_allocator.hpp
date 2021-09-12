@@ -19,6 +19,11 @@
 #include <kerbal/type_traits/array_traits.hpp>
 #include <kerbal/type_traits/conditional.hpp>
 
+#if __cplusplus < 201103L
+#	include <kerbal/macro/macro_concat.hpp>
+#	include <kerbal/macro/ppexpand.hpp>
+#endif
+
 #if __cplusplus >= 201103L
 #	include <kerbal/utility/forward.hpp>
 #endif
@@ -53,51 +58,29 @@ namespace kerbal
 
 #	if __cplusplus < 201103L
 
-#	define _construct_at_using_allocator_body(...) \
-		do { \
+#	define EMPTY
+#	define LEFT_JOIN_COMMA(exp) , exp
+#	define TARGS_DECL(i) KERBAL_MACRO_CONCAT(typename Arg, i)
+#	define ARGS_DECL(i) KERBAL_MACRO_CONCAT(const Arg, i) & KERBAL_MACRO_CONCAT(arg, i)
+#	define ARGS_USE(i) KERBAL_MACRO_CONCAT(arg, i)
+#	define FBODY(i) \
+		template <typename Allocator, typename Tp KERBAL_OPT_PPEXPAND_WITH_COMMA_N(LEFT_JOIN_COMMA, EMPTY, TARGS_DECL, i)> \
+		Tp * construct_at_using_allocator(Allocator & alloc, Tp * p KERBAL_OPT_PPEXPAND_WITH_COMMA_N(LEFT_JOIN_COMMA, EMPTY, ARGS_DECL, i)) \
+		{ \
 			typedef kerbal::memory::allocator_traits<Allocator> allocator_traits; \
-			allocator_traits::construct(__VA_ARGS__); \
+			allocator_traits::construct(alloc, p KERBAL_OPT_PPEXPAND_WITH_COMMA_N(LEFT_JOIN_COMMA, EMPTY, ARGS_USE, i)); \
 			return p; \
-		} while (false)
-
-		template <typename Allocator, typename Tp>
-		Tp * construct_at_using_allocator(Allocator & alloc, Tp * p)
-		{
-			_construct_at_using_allocator_body(alloc, p);
 		}
 
-		template <typename Allocator, typename Tp, typename Arg0>
-		Tp * construct_at_using_allocator(Allocator & alloc, Tp * p, const Arg0 & arg0)
-		{
-			_construct_at_using_allocator_body(alloc, p, arg0);
-		}
+		KERBAL_PPEXPAND_N(FBODY, KERBAL_PPEXPAND_EMPTY_SEPARATOR, 0)
+		KERBAL_PPEXPAND_N(FBODY, KERBAL_PPEXPAND_EMPTY_SEPARATOR, 20)
 
-		template <typename Allocator, typename Tp, typename Arg0, typename Arg1>
-		Tp * construct_at_using_allocator(Allocator & alloc, Tp * p, const Arg0 & arg0, const Arg1 & arg1)
-		{
-			_construct_at_using_allocator_body(alloc, p, arg0, arg1);
-		}
-
-		template <typename Allocator, typename Tp, typename Arg0, typename Arg1, typename Arg2>
-		Tp * construct_at_using_allocator(Allocator & alloc, Tp * p, const Arg0 & arg0, const Arg1 & arg1, const Arg2 & arg2)
-		{
-			_construct_at_using_allocator_body(alloc, p, arg0, arg1, arg2);
-		}
-
-		template <typename Allocator, typename Tp, typename Arg0, typename Arg1, typename Arg2, typename Arg3>
-		Tp * construct_at_using_allocator(Allocator & alloc, Tp * p, const Arg0 & arg0, const Arg1 & arg1, const Arg2 & arg2, const Arg3 & arg3)
-		{
-			_construct_at_using_allocator_body(alloc, p, arg0, arg1, arg2, arg3);
-		}
-
-		template <typename Allocator, typename Tp, typename Arg0, typename Arg1, typename Arg2, typename Arg3, typename Arg4>
-		Tp * construct_at_using_allocator(Allocator & alloc, Tp * p, const Arg0 & arg0, const Arg1 & arg1, const Arg2 & arg2, const Arg3 & arg3, const Arg4 & arg4)
-		{
-			_construct_at_using_allocator_body(alloc, p, arg0, arg1, arg2, arg3, arg4);
-		}
-
-#	undef _construct_at_using_allocator_body
-
+#	undef EMPTY
+#	undef LEFT_JOIN_COMMA
+#	undef TARGS_DECL
+#	undef ARGS_DECL
+#	undef ARGS_USE
+#	undef FBODY
 
 #	else
 

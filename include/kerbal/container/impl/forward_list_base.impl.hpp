@@ -22,6 +22,11 @@
 #include <kerbal/utility/declval.hpp>
 #include <kerbal/utility/in_place.hpp>
 
+#if __cplusplus < 201103L
+#	include <kerbal/macro/macro_concat.hpp>
+#	include <kerbal/macro/ppexpand.hpp>
+#endif
+
 #if __cplusplus >= 201103L
 #	include <kerbal/iterator/move_iterator.hpp>
 #	include <kerbal/utility/forward.hpp>
@@ -683,45 +688,31 @@ namespace kerbal
 
 #		else
 
-			template <typename Tp>
-			template <typename NodeAllocator>
-			typename fl_allocator_unrelated<Tp>::reference
-			fl_allocator_unrelated<Tp>::emplace_front_using_allocator(NodeAllocator & alloc)
-			{
-				node *p = _K_build_new_node(alloc);
-				fl_type_unrelated::_K_hook_node_after(this->basic_cbefore_begin(), p);
-				return p->value;
+#		define EMPTY
+#		define LEFT_JOIN_COMMA(exp) , exp
+#		define TARGS_DECL(i) KERBAL_MACRO_CONCAT(typename Arg, i)
+#		define ARGS_DECL(i) KERBAL_MACRO_CONCAT(const Arg, i) & KERBAL_MACRO_CONCAT(arg, i)
+#		define ARGS_USE(i) KERBAL_MACRO_CONCAT(arg, i)
+#		define FBODY(i) \
+			template <typename Tp> \
+			template <typename NodeAllocator KERBAL_OPT_PPEXPAND_WITH_COMMA_N(LEFT_JOIN_COMMA, EMPTY, TARGS_DECL, i)> \
+			typename fl_allocator_unrelated<Tp>::reference \
+			fl_allocator_unrelated<Tp>::emplace_front_using_allocator(NodeAllocator & alloc KERBAL_OPT_PPEXPAND_WITH_COMMA_N(LEFT_JOIN_COMMA, EMPTY, ARGS_DECL, i)) \
+			{ \
+				node *p = _K_build_new_node(alloc KERBAL_OPT_PPEXPAND_WITH_COMMA_N(LEFT_JOIN_COMMA, EMPTY, ARGS_USE, i)); \
+				fl_type_unrelated::_K_hook_node_after(this->basic_cbefore_begin(), p); \
+				return p->value; \
 			}
 
-			template <typename Tp>
-			template <typename NodeAllocator, typename Arg0>
-			typename fl_allocator_unrelated<Tp>::reference
-			fl_allocator_unrelated<Tp>::emplace_front_using_allocator(NodeAllocator & alloc, const Arg0& arg0)
-			{
-				node *p = _K_build_new_node(alloc, arg0);
-				fl_type_unrelated::_K_hook_node_after(this->basic_cbefore_begin(), p);
-				return p->value;
-			}
+			KERBAL_PPEXPAND_N(FBODY, KERBAL_PPEXPAND_EMPTY_SEPARATOR, 0)
+			KERBAL_PPEXPAND_N(FBODY, KERBAL_PPEXPAND_EMPTY_SEPARATOR, 20)
 
-			template <typename Tp>
-			template <typename NodeAllocator, typename Arg0, typename Arg1>
-			typename fl_allocator_unrelated<Tp>::reference
-			fl_allocator_unrelated<Tp>::emplace_front_using_allocator(NodeAllocator & alloc, const Arg0& arg0, const Arg1& arg1)
-			{
-				node *p = _K_build_new_node(alloc, arg0, arg1);
-				fl_type_unrelated::_K_hook_node_after(this->basic_cbefore_begin(), p);
-				return p->value;
-			}
-
-			template <typename Tp>
-			template <typename NodeAllocator, typename Arg0, typename Arg1, typename Arg2>
-			typename fl_allocator_unrelated<Tp>::reference
-			fl_allocator_unrelated<Tp>::emplace_front_using_allocator(NodeAllocator & alloc, const Arg0& arg0, const Arg1& arg1, const Arg2& arg2)
-			{
-				node *p = _K_build_new_node(alloc, arg0, arg1, arg2);
-				fl_type_unrelated::_K_hook_node_after(this->basic_cbefore_begin(), p);
-				return p->value;
-			}
+#		undef EMPTY
+#		undef LEFT_JOIN_COMMA
+#		undef TARGS_DECL
+#		undef ARGS_DECL
+#		undef ARGS_USE
+#		undef FBODY
 
 #		endif
 
@@ -793,45 +784,31 @@ namespace kerbal
 
 #		else
 
-			template <typename Tp>
-			template <typename NodeAllocator>
-			typename fl_allocator_unrelated<Tp>::iterator
-			fl_allocator_unrelated<Tp>::emplace_after_using_allocator(NodeAllocator & alloc, const_iterator pos)
-			{
-				node *p = _K_build_new_node(alloc);
-				fl_type_unrelated::_K_hook_node_after(pos, p);
-				return iterator(p);
+#		define EMPTY
+#		define LEFT_JOIN_COMMA(exp) , exp
+#		define TARGS_DECL(i) KERBAL_MACRO_CONCAT(typename Arg, i)
+#		define ARGS_DECL(i) KERBAL_MACRO_CONCAT(const Arg, i) & KERBAL_MACRO_CONCAT(arg, i)
+#		define ARGS_USE(i) KERBAL_MACRO_CONCAT(arg, i)
+#		define FBODY(i) \
+			template <typename Tp> \
+			template <typename NodeAllocator KERBAL_OPT_PPEXPAND_WITH_COMMA_N(LEFT_JOIN_COMMA, EMPTY, TARGS_DECL, i)> \
+			typename fl_allocator_unrelated<Tp>::iterator \
+			fl_allocator_unrelated<Tp>::emplace_after_using_allocator(NodeAllocator & alloc, const_iterator pos KERBAL_OPT_PPEXPAND_WITH_COMMA_N(LEFT_JOIN_COMMA, EMPTY, ARGS_DECL, i)) \
+			{ \
+				node *p = _K_build_new_node(alloc KERBAL_OPT_PPEXPAND_WITH_COMMA_N(LEFT_JOIN_COMMA, EMPTY, ARGS_USE, i)); \
+				fl_type_unrelated::_K_hook_node_after(pos, p); \
+				return iterator(p); \
 			}
 
-			template <typename Tp>
-			template <typename NodeAllocator, typename Arg0>
-			typename fl_allocator_unrelated<Tp>::iterator
-			fl_allocator_unrelated<Tp>::emplace_after_using_allocator(NodeAllocator & alloc, const_iterator pos, const Arg0& arg0)
-			{
-				node *p = _K_build_new_node(alloc, arg0);
-				fl_type_unrelated::_K_hook_node_after(pos, p);
-				return iterator(p);
-			}
+			KERBAL_PPEXPAND_N(FBODY, KERBAL_PPEXPAND_EMPTY_SEPARATOR, 0)
+			KERBAL_PPEXPAND_N(FBODY, KERBAL_PPEXPAND_EMPTY_SEPARATOR, 20)
 
-			template <typename Tp>
-			template <typename NodeAllocator, typename Arg0, typename Arg1>
-			typename fl_allocator_unrelated<Tp>::iterator
-			fl_allocator_unrelated<Tp>::emplace_after_using_allocator(NodeAllocator & alloc, const_iterator pos, const Arg0& arg0, const Arg1& arg1)
-			{
-				node *p = _K_build_new_node(alloc, arg0, arg1);
-				fl_type_unrelated::_K_hook_node_after(pos, p);
-				return iterator(p);
-			}
-
-			template <typename Tp>
-			template <typename NodeAllocator, typename Arg0, typename Arg1, typename Arg2>
-			typename fl_allocator_unrelated<Tp>::iterator
-			fl_allocator_unrelated<Tp>::emplace_after_using_allocator(NodeAllocator & alloc, const_iterator pos, const Arg0& arg0, const Arg1& arg1, const Arg2& arg2)
-			{
-				node *p = _K_build_new_node(alloc, arg0, arg1, arg2);
-				fl_type_unrelated::_K_hook_node_after(pos, p);
-				return iterator(p);
-			}
+#		undef EMPTY
+#		undef LEFT_JOIN_COMMA
+#		undef TARGS_DECL
+#		undef ARGS_DECL
+#		undef ARGS_USE
+#		undef FBODY
 
 #		endif
 
@@ -1436,41 +1413,29 @@ namespace kerbal
 
 #		endif // __cpp_exceptions
 
-
-			template <typename Tp>
-			template <typename NodeAllocator>
-			typename fl_allocator_unrelated<Tp>::node*
-			fl_allocator_unrelated<Tp>::_K_build_new_node(NodeAllocator & alloc)
-			{
-				_K_build_new_node_body(kerbal::utility::in_place_t());
+#		define EMPTY
+#		define LEFT_JOIN_COMMA(exp) , exp
+#		define TARGS_DECL(i) KERBAL_MACRO_CONCAT(typename Arg, i)
+#		define ARGS_DECL(i) KERBAL_MACRO_CONCAT(const Arg, i) & KERBAL_MACRO_CONCAT(arg, i)
+#		define ARGS_USE(i) KERBAL_MACRO_CONCAT(arg, i)
+#		define FBODY(i) \
+			template <typename Tp> \
+			template <typename NodeAllocator KERBAL_OPT_PPEXPAND_WITH_COMMA_N(LEFT_JOIN_COMMA, EMPTY, TARGS_DECL, i)> \
+			typename fl_allocator_unrelated<Tp>::node* \
+			fl_allocator_unrelated<Tp>::_K_build_new_node(NodeAllocator & alloc KERBAL_OPT_PPEXPAND_WITH_COMMA_N(LEFT_JOIN_COMMA, EMPTY, ARGS_DECL, i)) \
+			{ \
+				_K_build_new_node_body(kerbal::utility::in_place_t() KERBAL_OPT_PPEXPAND_WITH_COMMA_N(LEFT_JOIN_COMMA, EMPTY, ARGS_USE, i)); \
 			}
 
-			template <typename Tp>
-			template <typename NodeAllocator, typename Arg0>
-			typename fl_allocator_unrelated<Tp>::node*
-			fl_allocator_unrelated<Tp>::_K_build_new_node(NodeAllocator & alloc,
-															const Arg0 & arg0)
-			{
-				_K_build_new_node_body(kerbal::utility::in_place_t(), arg0);
-			}
+			KERBAL_PPEXPAND_N(FBODY, KERBAL_PPEXPAND_EMPTY_SEPARATOR, 0)
+			KERBAL_PPEXPAND_N(FBODY, KERBAL_PPEXPAND_EMPTY_SEPARATOR, 20)
 
-			template <typename Tp>
-			template <typename NodeAllocator, typename Arg0, typename Arg1>
-			typename fl_allocator_unrelated<Tp>::node*
-			fl_allocator_unrelated<Tp>::_K_build_new_node(NodeAllocator & alloc,
-															const Arg0 & arg0, const Arg1 & arg1)
-			{
-				_K_build_new_node_body(kerbal::utility::in_place_t(), arg0, arg1);
-			}
-
-			template <typename Tp>
-			template <typename NodeAllocator, typename Arg0, typename Arg1, typename Arg2>
-			typename fl_allocator_unrelated<Tp>::node*
-			fl_allocator_unrelated<Tp>::_K_build_new_node(NodeAllocator & alloc,
-															const Arg0 & arg0, const Arg1 & arg1, const Arg2 & arg2)
-			{
-				_K_build_new_node_body(kerbal::utility::in_place_t(), arg0, arg1, arg2);
-			}
+#		undef EMPTY
+#		undef LEFT_JOIN_COMMA
+#		undef TARGS_DECL
+#		undef ARGS_DECL
+#		undef ARGS_USE
+#		undef FBODY
 
 #	undef _K_build_new_node_body
 
@@ -1550,38 +1515,29 @@ namespace kerbal
 
 #endif
 
-
-			template <typename Tp>
-			template <typename NodeAllocator>
-			std::pair<typename fl_allocator_unrelated<Tp>::node*, typename fl_allocator_unrelated<Tp>::node*>
-			fl_allocator_unrelated<Tp>::_K_build_n_new_nodes_unguarded(NodeAllocator & alloc, size_type n)
-			{
-				_K_build_n_new_nodes_unguarded_body(alloc);
+#		define EMPTY
+#		define LEFT_JOIN_COMMA(exp) , exp
+#		define TARGS_DECL(i) KERBAL_MACRO_CONCAT(typename Arg, i)
+#		define ARGS_DECL(i) KERBAL_MACRO_CONCAT(const Arg, i) & KERBAL_MACRO_CONCAT(arg, i)
+#		define ARGS_USE(i) KERBAL_MACRO_CONCAT(arg, i)
+#		define FBODY(i) \
+			template <typename Tp> \
+			template <typename NodeAllocator KERBAL_OPT_PPEXPAND_WITH_COMMA_N(LEFT_JOIN_COMMA, EMPTY, TARGS_DECL, i)> \
+			std::pair<typename fl_allocator_unrelated<Tp>::node*, typename fl_allocator_unrelated<Tp>::node*> \
+			fl_allocator_unrelated<Tp>::_K_build_n_new_nodes_unguarded(NodeAllocator & alloc, size_type n KERBAL_OPT_PPEXPAND_WITH_COMMA_N(LEFT_JOIN_COMMA, EMPTY, ARGS_DECL, i)) \
+			{ \
+				_K_build_n_new_nodes_unguarded_body(alloc KERBAL_OPT_PPEXPAND_WITH_COMMA_N(LEFT_JOIN_COMMA, EMPTY, ARGS_USE, i)); \
 			}
 
-			template <typename Tp>
-			template <typename NodeAllocator, typename Arg0>
-			std::pair<typename fl_allocator_unrelated<Tp>::node*, typename fl_allocator_unrelated<Tp>::node*>
-			fl_allocator_unrelated<Tp>::_K_build_n_new_nodes_unguarded(NodeAllocator & alloc, size_type n, const Arg0 & arg0)
-			{
-				_K_build_n_new_nodes_unguarded_body(alloc, arg0);
-			}
+			KERBAL_PPEXPAND_N(FBODY, KERBAL_PPEXPAND_EMPTY_SEPARATOR, 0)
+			KERBAL_PPEXPAND_N(FBODY, KERBAL_PPEXPAND_EMPTY_SEPARATOR, 20)
 
-			template <typename Tp>
-			template <typename NodeAllocator, typename Arg0, typename Arg1>
-			std::pair<typename fl_allocator_unrelated<Tp>::node*, typename fl_allocator_unrelated<Tp>::node*>
-			fl_allocator_unrelated<Tp>::_K_build_n_new_nodes_unguarded(NodeAllocator & alloc, size_type n, const Arg0 & arg0, const Arg1 & arg1)
-			{
-				_K_build_n_new_nodes_unguarded_body(alloc, arg0, arg1);
-			}
-
-			template <typename Tp>
-			template <typename NodeAllocator, typename Arg0, typename Arg1, typename Arg2>
-			std::pair<typename fl_allocator_unrelated<Tp>::node*, typename fl_allocator_unrelated<Tp>::node*>
-			fl_allocator_unrelated<Tp>::_K_build_n_new_nodes_unguarded(NodeAllocator & alloc, size_type n, const Arg0 & arg0, const Arg1 & arg1, const Arg2 & arg2)
-			{
-				_K_build_n_new_nodes_unguarded_body(alloc, arg0, arg1, arg2);
-			}
+#		undef EMPTY
+#		undef LEFT_JOIN_COMMA
+#		undef TARGS_DECL
+#		undef ARGS_DECL
+#		undef ARGS_USE
+#		undef FBODY
 
 #	undef _K_build_n_new_nodes_unguarded_body
 

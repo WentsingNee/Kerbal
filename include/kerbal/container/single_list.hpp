@@ -27,6 +27,11 @@
 #include <kerbal/type_traits/integral_constant.hpp>
 #include <kerbal/utility/declval.hpp>
 
+#if __cplusplus < 201103L
+#	include <kerbal/macro/macro_concat.hpp>
+#	include <kerbal/macro/ppexpand.hpp>
+#endif
+
 #include <memory>
 
 #if __cplusplus >= 201103L
@@ -307,16 +312,24 @@ namespace kerbal
 
 #		else
 
-				reference emplace_front();
+#			define EMPTY
+#			define REMAINF(exp) exp
+#			define THEAD_NOT_EMPTY(exp) template <exp>
+#			define TARGS_DECL(i) KERBAL_MACRO_CONCAT(typename Arg, i)
+#			define ARGS_DECL(i) KERBAL_MACRO_CONCAT(const Arg, i) & KERBAL_MACRO_CONCAT(arg, i)
+#			define FBODY(i) \
+				KERBAL_OPT_PPEXPAND_WITH_COMMA_N(THEAD_NOT_EMPTY, EMPTY, TARGS_DECL, i) \
+				reference emplace_front(KERBAL_OPT_PPEXPAND_WITH_COMMA_N(REMAINF, EMPTY, ARGS_DECL, i));
 
-				template <typename Arg0>
-				reference emplace_front(const Arg0& arg0);
+				KERBAL_PPEXPAND_N(FBODY, KERBAL_PPEXPAND_EMPTY_SEPARATOR, 0)
+				KERBAL_PPEXPAND_N(FBODY, KERBAL_PPEXPAND_EMPTY_SEPARATOR, 20)
 
-				template <typename Arg0, typename Arg1>
-				reference emplace_front(const Arg0& arg0, const Arg1& arg1);
-
-				template <typename Arg0, typename Arg1, typename Arg2>
-				reference emplace_front(const Arg0& arg0, const Arg1& arg1, const Arg2& arg2);
+#			undef EMPTY
+#			undef REMAINF
+#			undef THEAD_NOT_EMPTY
+#			undef TARGS_DECL
+#			undef ARGS_DECL
+#			undef FBODY
 
 #		endif
 
@@ -338,16 +351,24 @@ namespace kerbal
 
 #		else
 
-				reference emplace_back();
+#			define EMPTY
+#			define REMAINF(exp) exp
+#			define THEAD_NOT_EMPTY(exp) template <exp>
+#			define TARGS_DECL(i) KERBAL_MACRO_CONCAT(typename Arg, i)
+#			define ARGS_DECL(i) KERBAL_MACRO_CONCAT(const Arg, i) & KERBAL_MACRO_CONCAT(arg, i)
+#			define FBODY(i) \
+				KERBAL_OPT_PPEXPAND_WITH_COMMA_N(THEAD_NOT_EMPTY, EMPTY, TARGS_DECL, i) \
+				reference emplace_back(KERBAL_OPT_PPEXPAND_WITH_COMMA_N(REMAINF, EMPTY, ARGS_DECL, i));
 
-				template <typename Arg0>
-				reference emplace_back(const Arg0& arg0);
+				KERBAL_PPEXPAND_N(FBODY, KERBAL_PPEXPAND_EMPTY_SEPARATOR, 0)
+				KERBAL_PPEXPAND_N(FBODY, KERBAL_PPEXPAND_EMPTY_SEPARATOR, 20)
 
-				template <typename Arg0, typename Arg1>
-				reference emplace_back(const Arg0& arg0, const Arg1& arg1);
-
-				template <typename Arg0, typename Arg1, typename Arg2>
-				reference emplace_back(const Arg0& arg0, const Arg1& arg1, const Arg2& arg2);
+#			undef EMPTY
+#			undef REMAINF
+#			undef THEAD_NOT_EMPTY
+#			undef TARGS_DECL
+#			undef ARGS_DECL
+#			undef FBODY
 
 #		endif
 
@@ -392,16 +413,24 @@ namespace kerbal
 
 #		else
 
-				iterator emplace(const_iterator pos);
+#			define EMPTY
+#			define LEFT_JOIN_COMMA(exp) , exp
+#			define THEAD_NOT_EMPTY(exp) template <exp>
+#			define TARGS_DECL(i) KERBAL_MACRO_CONCAT(typename Arg, i)
+#			define ARGS_DECL(i) KERBAL_MACRO_CONCAT(const Arg, i) & KERBAL_MACRO_CONCAT(arg, i)
+#			define FBODY(i) \
+				KERBAL_OPT_PPEXPAND_WITH_COMMA_N(THEAD_NOT_EMPTY, EMPTY, TARGS_DECL, i) \
+				iterator emplace(const_iterator pos KERBAL_OPT_PPEXPAND_WITH_COMMA_N(LEFT_JOIN_COMMA, EMPTY, ARGS_DECL, i));
 
-				template <typename Arg0>
-				iterator emplace(const_iterator pos, const Arg0& arg0);
+				KERBAL_PPEXPAND_N(FBODY, KERBAL_PPEXPAND_EMPTY_SEPARATOR, 0)
+				KERBAL_PPEXPAND_N(FBODY, KERBAL_PPEXPAND_EMPTY_SEPARATOR, 20)
 
-				template <typename Arg0, typename Arg1>
-				iterator emplace(const_iterator pos, const Arg0& arg0, const Arg1& arg1);
-
-				template <typename Arg0, typename Arg1, typename Arg2>
-				iterator emplace(const_iterator pos, const Arg0& arg0, const Arg1& arg1, const Arg2& arg2);
+#			undef EMPTY
+#			undef LEFT_JOIN_COMMA
+#			undef THEAD_NOT_EMPTY
+#			undef TARGS_DECL
+#			undef ARGS_DECL
+#			undef FBODY
 
 #		endif
 

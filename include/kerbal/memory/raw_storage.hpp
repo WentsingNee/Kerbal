@@ -24,6 +24,11 @@
 #include <kerbal/utility/in_place.hpp>
 #include <kerbal/utility/noncopyable.hpp>
 
+#if __cplusplus < 201103L
+#	include <kerbal/macro/macro_concat.hpp>
+#	include <kerbal/macro/ppexpand.hpp>
+#endif
+
 #if __cplusplus >= 201103L
 #	include <kerbal/type_traits/conditional.hpp>
 #	include <kerbal/utility/forward.hpp>
@@ -108,40 +113,31 @@ namespace kerbal
 				_K_rawst_base() = default;
 #		endif
 
-				explicit _K_rawst_base(kerbal::utility::in_place_t) :
-						_K_storage()
-				{
+#			define EMPTY
+#			define REMAINF(exp) exp
+#			define LEFT_JOIN_COMMA(exp) , exp
+#			define THEAD_NOT_EMPTY(exp) template <exp>
+#			define TARGS_DECL(i) KERBAL_MACRO_CONCAT(typename Arg, i)
+#			define ARGS_DECL(i) KERBAL_MACRO_CONCAT(const Arg, i) & KERBAL_MACRO_CONCAT(arg, i)
+#			define ARGS_USE(i) KERBAL_MACRO_CONCAT(arg, i)
+#			define FBODY(i) \
+				KERBAL_OPT_PPEXPAND_WITH_COMMA_N(THEAD_NOT_EMPTY, EMPTY, TARGS_DECL, i) \
+				explicit _K_rawst_base(kerbal::utility::in_place_t KERBAL_OPT_PPEXPAND_WITH_COMMA_N(LEFT_JOIN_COMMA, EMPTY, ARGS_DECL, i)) : \
+						_K_storage(KERBAL_OPT_PPEXPAND_WITH_COMMA_N(REMAINF, EMPTY, ARGS_USE, i)) \
+				{ \
 				}
 
-				template <typename Arg0>
-				explicit _K_rawst_base(kerbal::utility::in_place_t, const Arg0 & arg0) :
-						_K_storage(arg0)
-				{
-				}
+				KERBAL_PPEXPAND_N(FBODY, KERBAL_PPEXPAND_EMPTY_SEPARATOR, 0)
+				KERBAL_PPEXPAND_N(FBODY, KERBAL_PPEXPAND_EMPTY_SEPARATOR, 20)
 
-				template <typename Arg0, typename Arg1>
-				explicit _K_rawst_base(kerbal::utility::in_place_t, const Arg0 & arg0, const Arg1 & arg1) :
-						_K_storage(arg0, arg1)
-				{
-				}
-
-				template <typename Arg0, typename Arg1, typename Arg2>
-				explicit _K_rawst_base(kerbal::utility::in_place_t, const Arg0 & arg0, const Arg1 & arg1, const Arg2 & arg2) :
-						_K_storage(arg0, arg1, arg2)
-				{
-				}
-
-				template <typename Arg0, typename Arg1, typename Arg2, typename Arg3>
-				explicit _K_rawst_base(kerbal::utility::in_place_t, const Arg0 & arg0, const Arg1 & arg1, const Arg2 & arg2, const Arg3 & arg3) :
-						_K_storage(arg0, arg1, arg2, arg3)
-				{
-				}
-
-				template <typename Arg0, typename Arg1, typename Arg2, typename Arg3, typename Arg4>
-				explicit _K_rawst_base(kerbal::utility::in_place_t, const Arg0 & arg0, const Arg1 & arg1, const Arg2 & arg2, const Arg3 & arg3, const Arg4 & arg4) :
-						_K_storage(arg0, arg1, arg2, arg3, arg4)
-				{
-				}
+#			undef EMPTY
+#			undef REMAINF
+#			undef LEFT_JOIN_COMMA
+#			undef THEAD_NOT_EMPTY
+#			undef TARGS_DECL
+#			undef ARGS_DECL
+#			undef ARGS_USE
+#			undef FBODY
 
 			public:
 
@@ -223,40 +219,29 @@ namespace kerbal
 				_K_rawst_base() = default;
 #		endif
 
-				explicit _K_rawst_base(kerbal::utility::in_place_t)
-				{
-					kerbal::memory::construct_at(this->raw_pointer());
+#			define EMPTY
+#			define LEFT_JOIN_COMMA(exp) , exp
+#			define THEAD_NOT_EMPTY(exp) template <exp>
+#			define TARGS_DECL(i) KERBAL_MACRO_CONCAT(typename Arg, i)
+#			define ARGS_DECL(i) KERBAL_MACRO_CONCAT(const Arg, i) & KERBAL_MACRO_CONCAT(arg, i)
+#			define ARGS_USE(i) KERBAL_MACRO_CONCAT(arg, i)
+#			define FBODY(i) \
+				KERBAL_OPT_PPEXPAND_WITH_COMMA_N(THEAD_NOT_EMPTY, EMPTY, TARGS_DECL, i) \
+				explicit _K_rawst_base(kerbal::utility::in_place_t KERBAL_OPT_PPEXPAND_WITH_COMMA_N(LEFT_JOIN_COMMA, EMPTY, ARGS_DECL, i)) \
+				{ \
+					kerbal::memory::construct_at(this->raw_pointer() KERBAL_OPT_PPEXPAND_WITH_COMMA_N(LEFT_JOIN_COMMA, EMPTY, ARGS_USE, i)); \
 				}
 
-				template <typename Arg0>
-				explicit _K_rawst_base(kerbal::utility::in_place_t, const Arg0 & arg0)
-				{
-					kerbal::memory::construct_at(this->raw_pointer(), arg0);
-				}
+				KERBAL_PPEXPAND_N(FBODY, KERBAL_PPEXPAND_EMPTY_SEPARATOR, 0)
+				KERBAL_PPEXPAND_N(FBODY, KERBAL_PPEXPAND_EMPTY_SEPARATOR, 20)
 
-				template <typename Arg0, typename Arg1>
-				explicit _K_rawst_base(kerbal::utility::in_place_t, const Arg0 & arg0, const Arg1 & arg1)
-				{
-					kerbal::memory::construct_at(this->raw_pointer(), arg0, arg1);
-				}
-
-				template <typename Arg0, typename Arg1, typename Arg2>
-				explicit _K_rawst_base(kerbal::utility::in_place_t, const Arg0 & arg0, const Arg1 & arg1, const Arg2 & arg2)
-				{
-					kerbal::memory::construct_at(this->raw_pointer(), arg0, arg1, arg2);
-				}
-
-				template <typename Arg0, typename Arg1, typename Arg2, typename Arg3>
-				explicit _K_rawst_base(kerbal::utility::in_place_t, const Arg0 & arg0, const Arg1 & arg1, const Arg2 & arg2, const Arg3 & arg3)
-				{
-					kerbal::memory::construct_at(this->raw_pointer(), arg0, arg1, arg2, arg3);
-				}
-
-				template <typename Arg0, typename Arg1, typename Arg2, typename Arg3, typename Arg4>
-				explicit _K_rawst_base(kerbal::utility::in_place_t, const Arg0 & arg0, const Arg1 & arg1, const Arg2 & arg2, const Arg3 & arg3, const Arg4 & arg4)
-				{
-					kerbal::memory::construct_at(this->raw_pointer(), arg0, arg1, arg2, arg3, arg4);
-				}
+#			undef EMPTY
+#			undef LEFT_JOIN_COMMA
+#			undef THEAD_NOT_EMPTY
+#			undef TARGS_DECL
+#			undef ARGS_DECL
+#			undef ARGS_USE
+#			undef FBODY
 
 			public:
 
@@ -658,40 +643,29 @@ namespace kerbal
 
 				_K_rawst_agent() KERBAL_NOEXCEPT {}
 
-				explicit _K_rawst_agent(kerbal::utility::in_place_t in_place) :
-						super(in_place)
-				{
+#			define EMPTY
+#			define LEFT_JOIN_COMMA(exp) , exp
+#			define THEAD_NOT_EMPTY(exp) template <exp>
+#			define TARGS_DECL(i) KERBAL_MACRO_CONCAT(typename Arg, i)
+#			define ARGS_DECL(i) KERBAL_MACRO_CONCAT(const Arg, i) & KERBAL_MACRO_CONCAT(arg, i)
+#			define ARGS_USE(i) KERBAL_MACRO_CONCAT(arg, i)
+#			define FBODY(i) \
+				KERBAL_OPT_PPEXPAND_WITH_COMMA_N(THEAD_NOT_EMPTY, EMPTY, TARGS_DECL, i) \
+				explicit _K_rawst_agent(kerbal::utility::in_place_t in_place KERBAL_OPT_PPEXPAND_WITH_COMMA_N(LEFT_JOIN_COMMA, EMPTY, ARGS_DECL, i)) : \
+						super(in_place KERBAL_OPT_PPEXPAND_WITH_COMMA_N(LEFT_JOIN_COMMA, EMPTY, ARGS_USE, i)) \
+				{ \
 				}
 
-				template <typename Arg0>
-				explicit _K_rawst_agent(kerbal::utility::in_place_t in_place, const Arg0 & arg0) :
-						super(in_place, arg0)
-				{
-				}
+				KERBAL_PPEXPAND_N(FBODY, KERBAL_PPEXPAND_EMPTY_SEPARATOR, 0)
+				KERBAL_PPEXPAND_N(FBODY, KERBAL_PPEXPAND_EMPTY_SEPARATOR, 20)
 
-				template <typename Arg0, typename Arg1>
-				explicit _K_rawst_agent(kerbal::utility::in_place_t in_place, const Arg0 & arg0, const Arg1 & arg1) :
-						super(in_place, arg0, arg1)
-				{
-				}
-
-				template <typename Arg0, typename Arg1, typename Arg2>
-				explicit _K_rawst_agent(kerbal::utility::in_place_t in_place, const Arg0 & arg0, const Arg1 & arg1, const Arg2 & arg2) :
-						super(in_place, arg0, arg1, arg2)
-				{
-				}
-
-				template <typename Arg0, typename Arg1, typename Arg2, typename Arg3>
-				explicit _K_rawst_agent(kerbal::utility::in_place_t in_place, const Arg0 & arg0, const Arg1 & arg1, const Arg2 & arg2, const Arg3 & arg3) :
-						super(in_place, arg0, arg1, arg2, arg3)
-				{
-				}
-
-				template <typename Arg0, typename Arg1, typename Arg2, typename Arg3, typename Arg4>
-				explicit _K_rawst_agent(kerbal::utility::in_place_t in_place, const Arg0 & arg0, const Arg1 & arg1, const Arg2 & arg2, const Arg3 & arg3, const Arg4 & arg4) :
-						super(in_place, arg0, arg1, arg2, arg3, arg4)
-				{
-				}
+#			undef EMPTY
+#			undef LEFT_JOIN_COMMA
+#			undef THEAD_NOT_EMPTY
+#			undef TARGS_DECL
+#			undef ARGS_DECL
+#			undef ARGS_USE
+#			undef FBODY
 
 #		else
 				using super::super;
@@ -701,40 +675,31 @@ namespace kerbal
 
 #		if __cplusplus < 201103L
 
-				void construct()
-				{
-					kerbal::memory::construct_at(this->raw_pointer());
+#			define EMPTY
+#			define REMAINF(exp) exp
+#			define LEFT_JOIN_COMMA(exp) , exp
+#			define THEAD_NOT_EMPTY(exp) template <exp>
+#			define TARGS_DECL(i) KERBAL_MACRO_CONCAT(typename Arg, i)
+#			define ARGS_DECL(i) KERBAL_MACRO_CONCAT(const Arg, i) & KERBAL_MACRO_CONCAT(arg, i)
+#			define ARGS_USE(i) KERBAL_MACRO_CONCAT(arg, i)
+#			define FBODY(i) \
+				KERBAL_OPT_PPEXPAND_WITH_COMMA_N(THEAD_NOT_EMPTY, EMPTY, TARGS_DECL, i) \
+				void construct(KERBAL_OPT_PPEXPAND_WITH_COMMA_N(REMAINF, EMPTY, ARGS_DECL, i)) \
+				{ \
+					kerbal::memory::construct_at(this->raw_pointer() KERBAL_OPT_PPEXPAND_WITH_COMMA_N(LEFT_JOIN_COMMA, EMPTY, ARGS_USE, i)); \
 				}
 
-				template <typename Arg0>
-				void construct(const Arg0 & arg0)
-				{
-					kerbal::memory::construct_at(this->raw_pointer(), arg0);
-				}
+				KERBAL_PPEXPAND_N(FBODY, KERBAL_PPEXPAND_EMPTY_SEPARATOR, 0)
+				KERBAL_PPEXPAND_N(FBODY, KERBAL_PPEXPAND_EMPTY_SEPARATOR, 20)
 
-				template <typename Arg0, typename Arg1>
-				void construct(const Arg0 & arg0, const Arg1 & arg1)
-				{
-					kerbal::memory::construct_at(this->raw_pointer(), arg0, arg1);
-				}
-
-				template <typename Arg0, typename Arg1, typename Arg2>
-				void construct(const Arg0 & arg0, const Arg1 & arg1, const Arg2 & arg2)
-				{
-					kerbal::memory::construct_at(this->raw_pointer(), arg0, arg1, arg2);
-				}
-
-				template <typename Arg0, typename Arg1, typename Arg2, typename Arg3>
-				void construct(const Arg0 & arg0, const Arg1 & arg1, const Arg2 & arg2, const Arg3 & arg3)
-				{
-					kerbal::memory::construct_at(this->raw_pointer(), arg0, arg1, arg2, arg3);
-				}
-
-				template <typename Arg0, typename Arg1, typename Arg2, typename Arg3, typename Arg4>
-				void construct(const Arg0 & arg0, const Arg1 & arg1, const Arg2 & arg2, const Arg3 & arg3, const Arg4 & arg4)
-				{
-					kerbal::memory::construct_at(this->raw_pointer(), arg0, arg1, arg2, arg3, arg4);
-				}
+#			undef EMPTY
+#			undef REMAINF
+#			undef LEFT_JOIN_COMMA
+#			undef THEAD_NOT_EMPTY
+#			undef TARGS_DECL
+#			undef ARGS_DECL
+#			undef ARGS_USE
+#			undef FBODY
 
 #		else
 
@@ -889,40 +854,31 @@ namespace kerbal
 				{
 				}
 
-				explicit raw_storage(kerbal::utility::in_place_t in_place) :
-						super(in_place)
-				{
+#			define EMPTY
+#			define REMAINF(exp) exp
+#			define LEFT_JOIN_COMMA(exp) , exp
+#			define THEAD_NOT_EMPTY(exp) template <exp>
+#			define TARGS_DECL(i) KERBAL_MACRO_CONCAT(typename Arg, i)
+#			define ARGS_DECL(i) KERBAL_MACRO_CONCAT(const Arg, i) & KERBAL_MACRO_CONCAT(arg, i)
+#			define ARGS_USE(i) KERBAL_MACRO_CONCAT(arg, i)
+#			define FBODY(i) \
+				KERBAL_OPT_PPEXPAND_WITH_COMMA_N(THEAD_NOT_EMPTY, EMPTY, TARGS_DECL, i) \
+				explicit raw_storage(kerbal::utility::in_place_t in_place KERBAL_OPT_PPEXPAND_WITH_COMMA_N(LEFT_JOIN_COMMA, EMPTY, ARGS_DECL, i)) : \
+						super(in_place KERBAL_OPT_PPEXPAND_WITH_COMMA_N(LEFT_JOIN_COMMA, EMPTY, ARGS_USE, i)) \
+				{ \
 				}
 
-				template <typename Arg0>
-				explicit raw_storage(kerbal::utility::in_place_t in_place, const Arg0 & arg0) :
-						super(in_place, arg0)
-				{
-				}
+				KERBAL_PPEXPAND_N(FBODY, KERBAL_PPEXPAND_EMPTY_SEPARATOR, 0)
+				KERBAL_PPEXPAND_N(FBODY, KERBAL_PPEXPAND_EMPTY_SEPARATOR, 20)
 
-				template <typename Arg0, typename Arg1>
-				explicit raw_storage(kerbal::utility::in_place_t in_place, const Arg0 & arg0, const Arg1 & arg1) :
-						super(in_place, arg0, arg1)
-				{
-				}
-
-				template <typename Arg0, typename Arg1, typename Arg2>
-				explicit raw_storage(kerbal::utility::in_place_t in_place, const Arg0 & arg0, const Arg1 & arg1, const Arg2 & arg2) :
-						super(in_place, arg0, arg1, arg2)
-				{
-				}
-
-				template <typename Arg0, typename Arg1, typename Arg2, typename Arg3>
-				explicit raw_storage(kerbal::utility::in_place_t in_place, const Arg0 & arg0, const Arg1 & arg1, const Arg2 & arg2, const Arg3 & arg3) :
-						super(in_place, arg0, arg1, arg2, arg3)
-				{
-				}
-
-				template <typename Arg0, typename Arg1, typename Arg2, typename Arg3, typename Arg4>
-				explicit raw_storage(kerbal::utility::in_place_t in_place, const Arg0 & arg0, const Arg1 & arg1, const Arg2 & arg2, const Arg3 & arg3, const Arg4 & arg4) :
-						super(in_place, arg0, arg1, arg2, arg3, arg4)
-				{
-				}
+#			undef EMPTY
+#			undef REMAINF
+#			undef LEFT_JOIN_COMMA
+#			undef THEAD_NOT_EMPTY
+#			undef TARGS_DECL
+#			undef ARGS_DECL
+#			undef ARGS_USE
+#			undef FBODY
 
 #		else
 				using super::super;

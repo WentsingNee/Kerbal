@@ -33,6 +33,11 @@
 #include <kerbal/type_traits/reference_deduction.hpp>
 #include <kerbal/utility/in_place.hpp>
 
+#if __cplusplus < 201103L
+#	include <kerbal/macro/macro_concat.hpp>
+#	include <kerbal/macro/ppexpand.hpp>
+#endif
+
 #if __cplusplus >= 201103L
 #	include <kerbal/utility/forward.hpp>
 #endif
@@ -95,40 +100,29 @@ namespace kerbal
 
 #			else
 
-					explicit optional_base(kerbal::utility::in_place_t in_place) :
-							_K_storage(in_place), _K_has_value(true)
-					{
+#				define EMPTY
+#				define LEFT_JOIN_COMMA(exp) , exp
+#				define THEAD_NOT_EMPTY(exp) template <exp>
+#				define TARGS_DECL(i) KERBAL_MACRO_CONCAT(typename Arg, i)
+#				define ARGS_DECL(i) KERBAL_MACRO_CONCAT(const Arg, i) & KERBAL_MACRO_CONCAT(arg, i)
+#				define ARGS_USE(i) KERBAL_MACRO_CONCAT(arg, i)
+#				define FBODY(i) \
+					KERBAL_OPT_PPEXPAND_WITH_COMMA_N(THEAD_NOT_EMPTY, EMPTY, TARGS_DECL, i) \
+					explicit optional_base(kerbal::utility::in_place_t in_place KERBAL_OPT_PPEXPAND_WITH_COMMA_N(LEFT_JOIN_COMMA, EMPTY, ARGS_DECL, i)) : \
+							_K_storage(in_place KERBAL_OPT_PPEXPAND_WITH_COMMA_N(LEFT_JOIN_COMMA, EMPTY, ARGS_USE, i)), _K_has_value(true) \
+					{ \
 					}
 
-					template <typename Arg0>
-					explicit optional_base(kerbal::utility::in_place_t in_place, const Arg0 & arg0) :
-							_K_storage(in_place, arg0), _K_has_value(true)
-					{
-					}
+					KERBAL_PPEXPAND_N(FBODY, KERBAL_PPEXPAND_EMPTY_SEPARATOR, 0)
+					KERBAL_PPEXPAND_N(FBODY, KERBAL_PPEXPAND_EMPTY_SEPARATOR, 20)
 
-					template <typename Arg0, typename Arg1>
-					explicit optional_base(kerbal::utility::in_place_t in_place, const Arg0 & arg0, const Arg1 & arg1) :
-							_K_storage(in_place, arg0, arg1), _K_has_value(true)
-					{
-					}
-
-					template <typename Arg0, typename Arg1, typename Arg2>
-					explicit optional_base(kerbal::utility::in_place_t in_place, const Arg0 & arg0, const Arg1 & arg1, const Arg2 & arg2) :
-							_K_storage(in_place, arg0, arg1, arg2), _K_has_value(true)
-					{
-					}
-
-					template <typename Arg0, typename Arg1, typename Arg2, typename Arg3>
-					explicit optional_base(kerbal::utility::in_place_t in_place, const Arg0 & arg0, const Arg1 & arg1, const Arg2 & arg2, const Arg3 & arg3) :
-							_K_storage(in_place, arg0, arg1, arg2, arg3), _K_has_value(true)
-					{
-					}
-
-					template <typename Arg0, typename Arg1, typename Arg2, typename Arg3, typename Arg4>
-					explicit optional_base(kerbal::utility::in_place_t in_place, const Arg0 & arg0, const Arg1 & arg1, const Arg2 & arg2, const Arg3 & arg3, const Arg4 & arg4) :
-							_K_storage(in_place, arg0, arg1, arg2, arg3, arg4), _K_has_value(true)
-					{
-					}
+#				undef EMPTY
+#				undef LEFT_JOIN_COMMA
+#				undef THEAD_NOT_EMPTY
+#				undef TARGS_DECL
+#				undef ARGS_DECL
+#				undef ARGS_USE
+#				undef FBODY
 
 #			endif
 
@@ -183,40 +177,29 @@ namespace kerbal
 
 #			else
 
-					explicit optional_base(kerbal::utility::in_place_t in_place) :
-							_K_storage(in_place), _K_has_value(true)
-					{
+#				define EMPTY
+#				define LEFT_JOIN_COMMA(exp) , exp
+#				define THEAD_NOT_EMPTY(exp) template <exp>
+#				define TARGS_DECL(i) KERBAL_MACRO_CONCAT(typename Arg, i)
+#				define ARGS_DECL(i) KERBAL_MACRO_CONCAT(const Arg, i) & KERBAL_MACRO_CONCAT(arg, i)
+#				define ARGS_USE(i) KERBAL_MACRO_CONCAT(arg, i)
+#				define FBODY(i) \
+					KERBAL_OPT_PPEXPAND_WITH_COMMA_N(THEAD_NOT_EMPTY, EMPTY, TARGS_DECL, i) \
+					explicit optional_base(kerbal::utility::in_place_t in_place KERBAL_OPT_PPEXPAND_WITH_COMMA_N(LEFT_JOIN_COMMA, EMPTY, ARGS_DECL, i)) : \
+							_K_storage(in_place KERBAL_OPT_PPEXPAND_WITH_COMMA_N(LEFT_JOIN_COMMA, EMPTY, ARGS_USE, i)), _K_has_value(true) \
+					{ \
 					}
 
-					template <typename Arg0>
-					explicit optional_base(kerbal::utility::in_place_t in_place, const Arg0 & arg0) :
-							_K_storage(in_place, arg0), _K_has_value(true)
-					{
-					}
+					KERBAL_PPEXPAND_N(FBODY, KERBAL_PPEXPAND_EMPTY_SEPARATOR, 0)
+					KERBAL_PPEXPAND_N(FBODY, KERBAL_PPEXPAND_EMPTY_SEPARATOR, 20)
 
-					template <typename Arg0, typename Arg1>
-					explicit optional_base(kerbal::utility::in_place_t in_place, const Arg0 & arg0, const Arg1 & arg1) :
-							_K_storage(in_place, arg0, arg1), _K_has_value(true)
-					{
-					}
-
-					template <typename Arg0, typename Arg1, typename Arg2>
-					explicit optional_base(kerbal::utility::in_place_t in_place, const Arg0 & arg0, const Arg1 & arg1, const Arg2 & arg2) :
-							_K_storage(in_place, arg0, arg1, arg2), _K_has_value(true)
-					{
-					}
-
-					template <typename Arg0, typename Arg1, typename Arg2, typename Arg3>
-					explicit optional_base(kerbal::utility::in_place_t in_place, const Arg0 & arg0, const Arg1 & arg1, const Arg2 & arg2, const Arg3 & arg3) :
-							_K_storage(in_place, arg0, arg1, arg2, arg3), _K_has_value(true)
-					{
-					}
-
-					template <typename Arg0, typename Arg1, typename Arg2, typename Arg3, typename Arg4>
-					explicit optional_base(kerbal::utility::in_place_t in_place, const Arg0 & arg0, const Arg1 & arg1, const Arg2 & arg2, const Arg3 & arg3, const Arg4 & arg4) :
-							_K_storage(in_place, arg0, arg1, arg2, arg3, arg4), _K_has_value(true)
-					{
-					}
+#				undef EMPTY
+#				undef LEFT_JOIN_COMMA
+#				undef THEAD_NOT_EMPTY
+#				undef TARGS_DECL
+#				undef ARGS_DECL
+#				undef ARGS_USE
+#				undef FBODY
 
 #			endif
 
@@ -398,40 +381,29 @@ namespace kerbal
 
 #		else
 
-				explicit optional(kerbal::utility::in_place_t in_place) :
-						super(in_place)
-				{
+#			define EMPTY
+#			define LEFT_JOIN_COMMA(exp) , exp
+#			define THEAD_NOT_EMPTY(exp) template <exp>
+#			define TARGS_DECL(i) KERBAL_MACRO_CONCAT(typename Arg, i)
+#			define ARGS_DECL(i) KERBAL_MACRO_CONCAT(const Arg, i) & KERBAL_MACRO_CONCAT(arg, i)
+#			define ARGS_USE(i) KERBAL_MACRO_CONCAT(arg, i)
+#			define FBODY(i) \
+				KERBAL_OPT_PPEXPAND_WITH_COMMA_N(THEAD_NOT_EMPTY, EMPTY, TARGS_DECL, i) \
+				explicit optional(kerbal::utility::in_place_t in_place KERBAL_OPT_PPEXPAND_WITH_COMMA_N(LEFT_JOIN_COMMA, EMPTY, ARGS_DECL, i)) : \
+						super(in_place KERBAL_OPT_PPEXPAND_WITH_COMMA_N(LEFT_JOIN_COMMA, EMPTY, ARGS_USE, i)) \
+				{ \
 				}
 
-				template <typename Arg0>
-				explicit optional(kerbal::utility::in_place_t in_place, const Arg0 & arg0) :
-						super(in_place, arg0)
-				{
-				}
+				KERBAL_PPEXPAND_N(FBODY, KERBAL_PPEXPAND_EMPTY_SEPARATOR, 0)
+				KERBAL_PPEXPAND_N(FBODY, KERBAL_PPEXPAND_EMPTY_SEPARATOR, 20)
 
-				template <typename Arg0, typename Arg1>
-				explicit optional(kerbal::utility::in_place_t in_place, const Arg0 & arg0, const Arg1 & arg1) :
-						super(in_place, arg0, arg1)
-				{
-				}
-
-				template <typename Arg0, typename Arg1, typename Arg2>
-				explicit optional(kerbal::utility::in_place_t in_place, const Arg0 & arg0, const Arg1 & arg1, const Arg2 & arg2) :
-						super(in_place, arg0, arg1, arg2)
-				{
-				}
-
-				template <typename Arg0, typename Arg1, typename Arg2, typename Arg3>
-				explicit optional(kerbal::utility::in_place_t in_place, const Arg0 & arg0, const Arg1 & arg1, const Arg2 & arg2, const Arg3 & arg3) :
-						super(in_place, arg0, arg1, arg2, arg3)
-				{
-				}
-
-				template <typename Arg0, typename Arg1, typename Arg2, typename Arg3, typename Arg4>
-				explicit optional(kerbal::utility::in_place_t in_place, const Arg0 & arg0, const Arg1 & arg1, const Arg2 & arg2, const Arg3 & arg3, const Arg4 & arg4) :
-						super(in_place, arg0, arg1, arg2, arg3, arg4)
-				{
-				}
+#			undef EMPTY
+#			undef LEFT_JOIN_COMMA
+#			undef THEAD_NOT_EMPTY
+#			undef TARGS_DECL
+#			undef ARGS_DECL
+#			undef ARGS_USE
+#			undef FBODY
 
 #		endif
 
@@ -851,59 +823,32 @@ namespace kerbal
 
 #	else
 
-				optional& emplace()
-				{
-					this->reset();
-					this->_K_storage.construct();
-					this->_K_has_value = true;
-					return *this;
+#			define EMPTY
+#			define REMAINF(exp) exp
+#			define THEAD_NOT_EMPTY(exp) template <exp>
+#			define TARGS_DECL(i) KERBAL_MACRO_CONCAT(typename Arg, i)
+#			define ARGS_DECL(i) KERBAL_MACRO_CONCAT(const Arg, i) & KERBAL_MACRO_CONCAT(arg, i)
+#			define ARGS_USE(i) KERBAL_MACRO_CONCAT(arg, i)
+#			define FBODY(i) \
+				KERBAL_OPT_PPEXPAND_WITH_COMMA_N(THEAD_NOT_EMPTY, EMPTY, TARGS_DECL, i) \
+				optional& emplace(KERBAL_OPT_PPEXPAND_WITH_COMMA_N(REMAINF, EMPTY, ARGS_DECL, i)) \
+				{ \
+					this->reset(); \
+					this->_K_storage.construct(KERBAL_OPT_PPEXPAND_WITH_COMMA_N(REMAINF, EMPTY, ARGS_USE, i)); \
+					this->_K_has_value = true; \
+					return *this; \
 				}
 
-				template <typename Arg0>
-				optional& emplace(const Arg0 & arg0)
-				{
-					this->reset();
-					this->_K_storage.construct(arg0);
-					this->_K_has_value = true;
-					return *this;
-				}
+				KERBAL_PPEXPAND_N(FBODY, KERBAL_PPEXPAND_EMPTY_SEPARATOR, 0)
+				KERBAL_PPEXPAND_N(FBODY, KERBAL_PPEXPAND_EMPTY_SEPARATOR, 20)
 
-				template <typename Arg0, typename Arg1>
-				optional& emplace(const Arg0 & arg0, const Arg1& arg1)
-				{
-					this->reset();
-					this->_K_storage.construct(arg0, arg1);
-					this->_K_has_value = true;
-					return *this;
-				}
-
-				template <typename Arg0, typename Arg1, typename Arg2>
-				optional& emplace(const Arg0 & arg0, const Arg1& arg1, const Arg2 & arg2)
-				{
-					this->reset();
-					this->_K_storage.construct(arg0, arg1, arg2);
-					this->_K_has_value = true;
-					return *this;
-				}
-
-
-				template <typename Arg0, typename Arg1, typename Arg2, typename Arg3>
-				optional& emplace(const Arg0 & arg0, const Arg1& arg1, const Arg2 & arg2, const Arg3& arg3)
-				{
-					this->reset();
-					this->_K_storage.construct(arg0, arg1, arg2, arg3);
-					this->_K_has_value = true;
-					return *this;
-				}
-
-				template <typename Arg0, typename Arg1, typename Arg2, typename Arg3, typename Arg4>
-				optional& emplace(const Arg0 & arg0, const Arg1& arg1, const Arg2 & arg2, const Arg3& arg3, const Arg4 & arg4)
-				{
-					this->reset();
-					this->_K_storage.construct(arg0, arg1, arg2, arg3, arg4);
-					this->_K_has_value = true;
-					return *this;
-				}
+#			undef EMPTY
+#			undef REMAINF
+#			undef THEAD_NOT_EMPTY
+#			undef TARGS_DECL
+#			undef ARGS_DECL
+#			undef ARGS_USE
+#			undef FBODY
 
 #	endif
 
@@ -972,47 +917,30 @@ namespace kerbal
 
 #	else
 
-		template <typename T>
-		kerbal::optional::optional<T>
-		make_optional()
-		{
-			return kerbal::optional::optional<T>(kerbal::utility::in_place_t());
+#	define EMPTY
+#	define REMAINF(exp) exp
+#	define LEFT_JOIN_COMMA(exp) , exp
+#	define TARGS_DECL(i) KERBAL_MACRO_CONCAT(typename Arg, i)
+#	define ARGS_DECL(i) KERBAL_MACRO_CONCAT(const Arg, i) & KERBAL_MACRO_CONCAT(arg, i)
+#	define ARGS_USE(i) KERBAL_MACRO_CONCAT(arg, i)
+#	define FBODY(i) \
+		template <typename T KERBAL_OPT_PPEXPAND_WITH_COMMA_N(LEFT_JOIN_COMMA, EMPTY, TARGS_DECL, i)> \
+		kerbal::optional::optional<T> \
+		make_optional(KERBAL_OPT_PPEXPAND_WITH_COMMA_N(REMAINF, EMPTY, ARGS_DECL, i)) \
+		{ \
+			return kerbal::optional::optional<T>(kerbal::utility::in_place_t() KERBAL_OPT_PPEXPAND_WITH_COMMA_N(LEFT_JOIN_COMMA, EMPTY, ARGS_USE, i)); \
 		}
 
-		template <typename T, typename Arg0>
-		kerbal::optional::optional<T>
-		make_optional(const Arg0 & arg0)
-		{
-			return kerbal::optional::optional<T>(kerbal::utility::in_place_t(), arg0);
-		}
+		KERBAL_PPEXPAND_N(FBODY, KERBAL_PPEXPAND_EMPTY_SEPARATOR, 0)
+		KERBAL_PPEXPAND_N(FBODY, KERBAL_PPEXPAND_EMPTY_SEPARATOR, 20)
 
-		template <typename T, typename Arg0, typename Arg1>
-		kerbal::optional::optional<T>
-		make_optional(const Arg0 & arg0, const Arg1 & arg1)
-		{
-			return kerbal::optional::optional<T>(kerbal::utility::in_place_t(), arg0, arg1);
-		}
-
-		template <typename T, typename Arg0, typename Arg1, typename Arg2>
-		kerbal::optional::optional<T>
-		make_optional(const Arg0 & arg0, const Arg1 & arg1, const Arg2 & arg2)
-		{
-			return kerbal::optional::optional<T>(kerbal::utility::in_place_t(), arg0, arg1, arg2);
-		}
-
-		template <typename T, typename Arg0, typename Arg1, typename Arg2, typename Arg3>
-		kerbal::optional::optional<T>
-		make_optional(const Arg0 & arg0, const Arg1 & arg1, const Arg2 & arg2, const Arg3 & arg3)
-		{
-			return kerbal::optional::optional<T>(kerbal::utility::in_place_t(), arg0, arg1, arg2, arg3);
-		}
-
-		template <typename T, typename Arg0, typename Arg1, typename Arg2, typename Arg3, typename Arg4>
-		kerbal::optional::optional<T>
-		make_optional(const Arg0 & arg0, const Arg1 & arg1, const Arg2 & arg2, const Arg3 & arg3, const Arg4 & arg4)
-		{
-			return kerbal::optional::optional<T>(kerbal::utility::in_place_t(), arg0, arg1, arg2, arg3, arg4);
-		}
+#	undef EMPTY
+#	undef REMAINF
+#	undef LEFT_JOIN_COMMA
+#	undef TARGS_DECL
+#	undef ARGS_DECL
+#	undef ARGS_USE
+#	undef FBODY
 
 #	endif
 
