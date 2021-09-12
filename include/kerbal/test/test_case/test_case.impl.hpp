@@ -62,7 +62,7 @@ namespace kerbal
 			const char * name = item.name;
 			kerbal::test::test_case::call_ptr_t call_ptr = item.call_ptr;
 			const char * description = item.description;
-			printf("test case[%zu]: %s (%s) running\n", case_id, name, description);
+			printf("test case[]: %s (%s) running\n", name, description);
 
 			kerbal::test::assert_record record;
 
@@ -77,7 +77,7 @@ namespace kerbal
 #	if KERBAL_HAS_EXCEPTIONS_SUPPORT
 			} catch (...) {
 				record.items.back().result = test_case_running_result::EXCEPTION;
-				printf("test case[%zu]: %s (%s): EXCEPTION\n", case_id, name, description);
+				printf("test case[]: %s (%s): EXCEPTION\n", name, description);
 				throw;
 			}
 #	endif
@@ -105,9 +105,9 @@ namespace kerbal
 			}
 
 			if (failure == 0) {
-				printf("test case[%zu]: %s (%s): SUCCESS\n", case_id, name, description);
+				printf("test case[]: %s (%s): SUCCESS\n", name, description);
 			} else {
-				printf("test case[%zu]: %s (%s): FAILURE\n", case_id, name, description);
+				printf("test case[]: %s (%s): FAILURE\n", name, description);
 			}
 
 #	if KERBAL_HAS_RUNTIME_TIMER_SUPPORT

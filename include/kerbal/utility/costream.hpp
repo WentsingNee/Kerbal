@@ -112,7 +112,10 @@ namespace kerbal
 								SetConsoleTextAttribute(handle, init_color);
 							}
 
-					}static const bakup;
+					};
+
+					static const Init_bakup bakup;
+
 #endif // KERBAL_SYSTEM_WINDOWS
 
 					const Color_t foreground, background;
@@ -174,16 +177,16 @@ namespace kerbal
 			};
 
 #if KERBAL_SYSTEM == KERBAL_SYSTEM_WINDOWS
-			template <std::ostream & bind_ostream>
-			const typename costream<bind_ostream>::Init_bakup costream<bind_ostream>::bakup(
-			STD_OUTPUT_HANDLE);
+			// template <std::ostream & bind_ostream>
+			// const typename costream<bind_ostream>::Init_bakup costream<bind_ostream>::bakup(
+			// STD_OUTPUT_HANDLE);
 
-			template <>
-			const typename costream<std::cerr>::Init_bakup costream<std::cerr>::bakup(
-			STD_ERROR_HANDLE);
+			// template <>
+			// const typename costream<std::cerr>::Init_bakup costream<std::cerr>::bakup(
+			// STD_ERROR_HANDLE);
 #endif // KERBAL_SYSTEM_WINDOWS
 
-//			costream<std::cerr> ccerr(LIGHT_RED, INIT);ßß
+//			costream<std::cerr> ccerr(LIGHT_RED, INIT);
 
 		} // namespace costream
 
