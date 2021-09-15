@@ -131,8 +131,40 @@ namespace kerbal
 			};
 
 			template <typename Iter>
+			class move_iterator_impl<Iter, std::forward_iterator_tag> :
+					public move_iterator_impl<Iter, std::input_iterator_tag>
+			{
+				private:
+					typedef move_iterator_impl<Iter, std::input_iterator_tag> super;
+					typedef move_iterator_impl this_type;
+					typedef kerbal::iterator::move_iterator<Iter> move_iterator;
+					typedef kerbal::iterator::iterator_traits<Iter> base_iterator_traits;
+
+				protected:
+					typedef std::forward_iterator_tag			iterator_category;
+					typedef typename super::value_type			value_type;
+					typedef typename super::difference_type		difference_type;
+					typedef typename super::pointer				pointer;
+					typedef typename super::reference			reference;
+
+				protected:
+					KERBAL_CONSTEXPR
+					explicit move_iterator_impl()
+							: super()
+					{
+					}
+
+					KERBAL_CONSTEXPR
+					explicit move_iterator_impl(const Iter& iter)
+							: super(iter)
+					{
+					}
+
+			};
+
+			template <typename Iter>
 			class move_iterator_impl<Iter, std::bidirectional_iterator_tag> :
-					public move_iterator_impl<Iter, std::input_iterator_tag>,
+					public move_iterator_impl<Iter, std::forward_iterator_tag>,
 
 					//bidirectional iterator interface
 					public kerbal::operators::decrementable<
@@ -140,7 +172,7 @@ namespace kerbal
 					> // it--
 			{
 				private:
-					typedef move_iterator_impl<Iter, std::input_iterator_tag> super;
+					typedef move_iterator_impl<Iter, std::forward_iterator_tag> super;
 					typedef move_iterator_impl this_type;
 					typedef kerbal::iterator::move_iterator<Iter> move_iterator;
 					typedef kerbal::iterator::iterator_traits<Iter> base_iterator_traits;
