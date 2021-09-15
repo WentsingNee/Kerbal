@@ -247,6 +247,35 @@ namespace kerbal
 					KERBAL_CONSTEXPR14
 					fl_allocator_unrelated(fl_allocator_unrelated && src) KERBAL_NOEXCEPT;
 
+				private:
+
+					// move construct using allocator, allocator is equal
+					KERBAL_CONSTEXPR14
+					void _K_move_cnstrct_ua_ae(fl_allocator_unrelated && src) KERBAL_NOEXCEPT;
+
+					// move construct using allocator, allocator is not equal
+					template <typename NodeAllocator>
+					KERBAL_CONSTEXPR20
+					void _K_move_cnstrct_ua_ane(NodeAllocator & alloc, NodeAllocator && src_alloc, fl_allocator_unrelated && src);
+
+					template <typename NodeAllocator>
+					KERBAL_CONSTEXPR20
+					void _K_move_cnstrct_ua_helper(NodeAllocator & alloc, NodeAllocator && src_alloc, fl_allocator_unrelated && src,
+												   kerbal::type_traits::false_type /*is_always_equal*/);
+
+					template <typename NodeAllocator>
+					KERBAL_CONSTEXPR14
+					void _K_move_cnstrct_ua_helper(NodeAllocator & alloc, NodeAllocator && src_alloc, fl_allocator_unrelated && src,
+												   kerbal::type_traits::true_type /*is_always_equal*/) KERBAL_NOEXCEPT;
+
+				public:
+
+					template <typename NodeAllocator>
+					KERBAL_CONSTEXPR14
+					fl_allocator_unrelated(NodeAllocator & alloc, NodeAllocator && src_alloc, fl_allocator_unrelated && src) KERBAL_CONDITIONAL_NOEXCEPT(
+							kerbal::memory::allocator_traits<NodeAllocator>::is_always_equal::value
+					);
+
 #			endif
 
 					template <typename NodeAllocator>
@@ -266,6 +295,11 @@ namespace kerbal
 							>::type = 0
 					);
 
+					template <typename NodeAllocator>
+					KERBAL_CONSTEXPR20
+					void destroy_using_allocator(NodeAllocator & alloc) KERBAL_NOEXCEPT;
+
+
 				//===================
 				// assign
 
@@ -279,6 +313,71 @@ namespace kerbal
 							kerbal::iterator::is_input_compatible_iterator<InputIterator>::value
 					>::type
 					assign_using_allocator(NodeAllocator & alloc, InputIterator first, InputIterator last);
+
+				private:
+
+					typedef kerbal::type_traits::integral_constant<int, 0> CPYASS_VER_NOT_PROPAGATE;
+					typedef kerbal::type_traits::integral_constant<int, 1> CPYASS_VER_PROPAGATE;
+					typedef kerbal::type_traits::integral_constant<int, 2> CPYASS_VER_ALWAYS_EQUAL;
+
+					template <typename NodeAllocator>
+					KERBAL_CONSTEXPR20
+					void _K_cpy_ass_ua_impl(NodeAllocator & alloc, const NodeAllocator & src_alloc, const fl_allocator_unrelated & src, CPYASS_VER_NOT_PROPAGATE);
+
+					template <typename NodeAllocator>
+					KERBAL_CONSTEXPR20
+					void _K_cpy_ass_ua_impl(NodeAllocator & alloc, const NodeAllocator & src_alloc, const fl_allocator_unrelated & src, CPYASS_VER_PROPAGATE);
+
+					template <typename NodeAllocator>
+					KERBAL_CONSTEXPR20
+					void _K_cpy_ass_ua_impl(NodeAllocator & alloc, const NodeAllocator & src_alloc, const fl_allocator_unrelated & src, CPYASS_VER_ALWAYS_EQUAL);
+
+				public:
+
+					template <typename NodeAllocator>
+					KERBAL_CONSTEXPR20
+					void assign_using_allocator(NodeAllocator & alloc, const NodeAllocator & src_alloc, const fl_allocator_unrelated & src);
+
+#			if __cplusplus >= 201103L
+
+				private:
+
+					// move assign using allocator, allocator is equal
+					template <typename NodeAllocator>
+					KERBAL_CONSTEXPR20
+					void _K_mov_ass_ua_ae(NodeAllocator & alloc, fl_allocator_unrelated && src) KERBAL_NOEXCEPT;
+
+					// move assign using allocator, allocator is not equal
+					template <typename NodeAllocator>
+					KERBAL_CONSTEXPR20
+					void _K_mov_ass_ua_ane(NodeAllocator & alloc, fl_allocator_unrelated && src);
+
+					typedef kerbal::type_traits::integral_constant<int, 0> MOVASS_VER_NOT_PROPAGATE;
+					typedef kerbal::type_traits::integral_constant<int, 1> MOVASS_VER_PROPAGATE;
+					typedef kerbal::type_traits::integral_constant<int, 2> MOVASS_VER_ALWAYS_EQUAL;
+
+					template <typename NodeAllocator>
+					KERBAL_CONSTEXPR20
+					void _K_mov_ass_ua_impl(NodeAllocator & alloc, NodeAllocator && src_alloc, fl_allocator_unrelated && src, MOVASS_VER_NOT_PROPAGATE);
+
+					template <typename NodeAllocator>
+					KERBAL_CONSTEXPR20
+					void _K_mov_ass_ua_impl(NodeAllocator & alloc, NodeAllocator && src_alloc, fl_allocator_unrelated && src, MOVASS_VER_PROPAGATE);
+
+					template <typename NodeAllocator>
+					KERBAL_CONSTEXPR20
+					void _K_mov_ass_ua_impl(NodeAllocator & alloc, NodeAllocator && /*src_alloc*/, fl_allocator_unrelated && src, MOVASS_VER_ALWAYS_EQUAL) KERBAL_NOEXCEPT;
+
+				public:
+
+					template <typename NodeAllocator>
+					KERBAL_CONSTEXPR20
+					void assign_using_allocator(NodeAllocator & alloc, NodeAllocator && src_alloc, fl_allocator_unrelated && src) KERBAL_CONDITIONAL_NOEXCEPT(
+							kerbal::memory::allocator_traits<NodeAllocator>::is_always_equal::value
+					);
+
+#			endif
+
 
 				//===================
 				// iterator

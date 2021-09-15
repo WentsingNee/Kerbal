@@ -160,29 +160,9 @@ namespace kerbal
 
 				KERBAL_CONSTEXPR20
 				forward_list(forward_list && src) KERBAL_NOEXCEPT((
-						std::is_nothrow_constructible<fl_allocator_overload, node_allocator_type&&>::value &&
-						std::is_nothrow_default_constructible<fl_allocator_unrelated>::value
+						std::is_nothrow_constructible<fl_allocator_overload, node_allocator_type &&>::value &&
+						std::is_nothrow_constructible<fl_allocator_unrelated, fl_allocator_unrelated &&>::value
 				));
-
-			private:
-
-				KERBAL_CONSTEXPR20
-				void _K_move_constructor_with_afforded_allocator_equal(forward_list && src) KERBAL_NOEXCEPT;
-
-				KERBAL_CONSTEXPR20
-				void _K_move_constructor_with_afforded_allocator_not_equal(forward_list && src);
-
-				template <bool is_allocator_always_equal>
-				KERBAL_CONSTEXPR20
-				typename kerbal::type_traits::enable_if<!is_allocator_always_equal>::type
-				_K_move_constructor_with_afforded_allocator_helper(forward_list && src);
-
-				template <bool is_allocator_always_equal>
-				KERBAL_CONSTEXPR20
-				typename kerbal::type_traits::enable_if<is_allocator_always_equal>::type
-				_K_move_constructor_with_afforded_allocator_helper(forward_list && src) KERBAL_NOEXCEPT;
-
-			public:
 
 				KERBAL_CONSTEXPR20
 				forward_list(forward_list && src, const Allocator& alloc);
@@ -214,9 +194,7 @@ namespace kerbal
 			// assign
 
 				KERBAL_CONSTEXPR20
-				forward_list& operator=(const forward_list & src) KERBAL_CONDITIONAL_NOEXCEPT(
-						noexcept(kerbal::utility::declthis<forward_list>()->assign(src))
-				);
+				forward_list& operator=(const forward_list & src);
 
 #		if __cplusplus >= 201103L
 
@@ -230,9 +208,7 @@ namespace kerbal
 #		if __cplusplus >= 201103L
 
 				KERBAL_CONSTEXPR20
-				forward_list& operator=(std::initializer_list<value_type> src) KERBAL_CONDITIONAL_NOEXCEPT(
-						noexcept(kerbal::utility::declthis<forward_list>()->assign(src))
-				);
+				forward_list& operator=(std::initializer_list<value_type> src);
 
 #		else
 
@@ -242,9 +218,7 @@ namespace kerbal
 #		endif
 
 				KERBAL_CONSTEXPR20
-				void assign(const forward_list & src) KERBAL_CONDITIONAL_NOEXCEPT(
-						noexcept(kerbal::utility::declthis<forward_list>()->assign(src.cbegin(), src.cend()))
-				);
+				void assign(const forward_list & src);
 
 				KERBAL_CONSTEXPR20
 				void assign(size_type count, const_reference val);
@@ -259,7 +233,13 @@ namespace kerbal
 #		if __cplusplus >= 201103L
 
 				KERBAL_CONSTEXPR20
-				void assign(forward_list&& src);
+				void assign(forward_list&& src) KERBAL_CONDITIONAL_NOEXCEPT(noexcept(
+						kerbal::utility::declthis<fl_allocator_unrelated>()->assign_using_allocator(
+								kerbal::utility::declthis<forward_list>()->alloc(),
+								kerbal::compatibility::move(kerbal::utility::declval<forward_list &&>().alloc()),
+								kerbal::utility::declval<fl_allocator_unrelated &&>()
+						)
+				));
 
 #		endif
 
