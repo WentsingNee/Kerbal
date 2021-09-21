@@ -1167,14 +1167,14 @@ namespace kerbal
 
 			template <typename Tp>
 			KERBAL_CONSTEXPR20
-			void list_allocator_unrelated<Tp>::_K_reverse_unstable(const_iterator first, const_iterator last) KERBAL_NOEXCEPT
+			void list_allocator_unrelated<Tp>::_K_reverse_unstable(const_iterator first, const_iterator last)
 			{
 				kerbal::algorithm::reverse(first.cast_to_mutable(), last.cast_to_mutable());
 			}
 
 			template <typename Tp>
 			KERBAL_CONSTEXPR20
-			void list_allocator_unrelated<Tp>::reverse_unstable() KERBAL_NOEXCEPT
+			void list_allocator_unrelated<Tp>::reverse_unstable()
 			{
 				_K_reverse_unstable(this->cbegin(), this->cend());
 			}
@@ -1188,7 +1188,7 @@ namespace kerbal
 
 			template <typename Tp>
 			KERBAL_CONSTEXPR20
-			void list_allocator_unrelated<Tp>::_K_reverse_fast(const_iterator first, const_iterator last) KERBAL_NOEXCEPT
+			void list_allocator_unrelated<Tp>::_K_reverse_fast(const_iterator first, const_iterator last)
 			{
 
 #		if __cplusplus >= 201103L
@@ -1219,7 +1219,7 @@ namespace kerbal
 						}
 
 						KERBAL_CONSTEXPR20
-						static void apply(const_iterator first, const_iterator last, kerbal::type_traits::true_type) KERBAL_NOEXCEPT
+						static void apply(const_iterator first, const_iterator last, kerbal::type_traits::true_type)
 						{
 							_K_reverse_unstable(first, last);
 						}
@@ -1230,7 +1230,7 @@ namespace kerbal
 
 			template <typename Tp>
 			KERBAL_CONSTEXPR20
-			void list_allocator_unrelated<Tp>::reverse_fast() KERBAL_NOEXCEPT
+			void list_allocator_unrelated<Tp>::reverse_fast()
 			{
 				_K_reverse_fast(this->cbegin(), this->cend());
 			}

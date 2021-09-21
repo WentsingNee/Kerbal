@@ -667,14 +667,14 @@ namespace kerbal
 
 		template <typename Tp, typename Allocator>
 		KERBAL_CONSTEXPR20
-		void list<Tp, Allocator>::reverse_unstable(const_iterator a, const_iterator b) KERBAL_NOEXCEPT
+		void list<Tp, Allocator>::reverse_unstable(const_iterator a, const_iterator b)
 		{
 			list_allocator_unrelated::_K_reverse_unstable(a, b);
 		}
 
 		template <typename Tp, typename Allocator>
 		KERBAL_CONSTEXPR20
-		void list<Tp, Allocator>::reverse(const_iterator a, const_iterator b)
+		void list<Tp, Allocator>::reverse(const_iterator a, const_iterator b) KERBAL_NOEXCEPT
 		{
 			list_allocator_unrelated::_K_reverse(a, b);
 		}
