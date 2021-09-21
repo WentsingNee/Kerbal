@@ -19,7 +19,7 @@
 #include <kerbal/compatibility/move.hpp>
 #include <kerbal/compatibility/namespace_std_scope.hpp>
 #include <kerbal/compatibility/noexcept.hpp>
-#include <kerbal/iterator/reverse_iterator.hpp>
+#include <kerbal/iterator/iterator_traits.hpp>
 #include <kerbal/memory/allocator_traits.hpp>
 #include <kerbal/type_traits/enable_if.hpp>
 #include <kerbal/type_traits/integral_constant.hpp>
@@ -29,6 +29,7 @@
 
 #if __cplusplus >= 201103L
 #	include <initializer_list>
+#	include <type_traits>
 #endif
 
 #if __cplusplus >= 201703L
@@ -126,7 +127,6 @@ namespace kerbal
 				list(size_type n);
 
 				KERBAL_CONSTEXPR20
-				explicit
 				list(size_type n, const Allocator& alloc);
 
 				KERBAL_CONSTEXPR20
@@ -188,7 +188,7 @@ namespace kerbal
 				~list();
 
 			//===================
-			//assign
+			// assign
 
 				KERBAL_CONSTEXPR20
 				list& operator=(const list & src);

@@ -16,8 +16,10 @@
 
 #include <kerbal/algorithm/swap.hpp>
 #include <kerbal/iterator/iterator.hpp>
+#include <kerbal/type_traits/conditional.hpp>
 #include <kerbal/type_traits/enable_if.hpp>
 #include <kerbal/type_traits/integral_constant.hpp>
+#include <kerbal/utility/declval.hpp>
 #include <kerbal/utility/in_place.hpp>
 
 #if __cplusplus >= 201103L
@@ -25,6 +27,7 @@
 #	include <kerbal/utility/forward.hpp>
 #endif
 
+#include <utility> // std::pair
 
 namespace kerbal
 {
@@ -34,6 +37,10 @@ namespace kerbal
 
 		namespace detail
 		{
+
+		//===================
+		//===================
+		// sl_type_unrelated
 
 		//===================
 		// capacity
@@ -460,17 +467,18 @@ namespace kerbal
 			void sl_allocator_unrelated<Tp>::assign_using_allocator(NodeAllocator & alloc, size_type count, const_reference val)
 			{
 				iterator it(this->begin());
+				const_iterator const end(this->cend());
 				while (count != 0) {
-					if (it != this->cend()) {
+					if (it != end) {
 						kerbal::operators::generic_assign(*it, val); // *it = val;
 						--count;
 						++it;
 					} else {
-						this->insert_using_allocator(alloc, this->cend(), count, val);
+						this->insert_using_allocator(alloc, end, count, val);
 						return;
 					}
 				}
-				this->erase_using_allocator(alloc, it, this->cend());
+				this->erase_using_allocator(alloc, it, end);
 			}
 
 			template <typename Tp>
@@ -482,17 +490,18 @@ namespace kerbal
 			sl_allocator_unrelated<Tp>::assign_using_allocator(NodeAllocator & alloc, InputIterator first, InputIterator last)
 			{
 				iterator it(this->begin());
+				const_iterator const end(this->cend());
 				while (first != last) {
-					if (it != this->cend()) {
+					if (it != end) {
 						kerbal::operators::generic_assign(*it, *first); // *it = *first;
 						++first;
 						++it;
 					} else {
-						this->insert_using_allocator(alloc, this->cend(), first, last);
+						this->insert_using_allocator(alloc, end, first, last);
 						return;
 					}
 				}
-				this->erase_using_allocator(alloc, it, this->cend());
+				this->erase_using_allocator(alloc, it, end);
 			}
 
 			template <typename Tp>
@@ -1609,6 +1618,7 @@ namespace kerbal
 
 #			endif
 #		endif
+
 
 		} // namespace detail
 

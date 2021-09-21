@@ -17,6 +17,7 @@
 #include <kerbal/algorithm/swap.hpp>
 #include <kerbal/iterator/iterator.hpp>
 #include <kerbal/type_traits/conditional.hpp>
+#include <kerbal/type_traits/enable_if.hpp>
 #include <kerbal/type_traits/integral_constant.hpp>
 #include <kerbal/utility/declval.hpp>
 #include <kerbal/utility/in_place.hpp>
@@ -37,8 +38,12 @@ namespace kerbal
 		namespace detail
 		{
 
-			//===================
-			//capacity
+		//===================
+		//===================
+		// list_type_unrelated
+
+		//===================
+		// capacity
 
 			KERBAL_CONSTEXPR14
 			inline
@@ -62,8 +67,9 @@ namespace kerbal
 				return sz;
 			}
 
-			//===================
-			//operation
+
+		//===================
+		// operation
 
 			KERBAL_CONSTEXPR14
 			inline
@@ -166,8 +172,9 @@ namespace kerbal
 				list_type_unrelated::_K_hook_node(pos, start, back);
 			}
 
-			//===================
-			//private
+
+		//===================
+		// private
 
 			KERBAL_CONSTEXPR14
 			inline
@@ -258,6 +265,10 @@ namespace kerbal
 				}
 			}
 
+
+		//===================
+		//===================
+		// list_allocator_unrelated
 
 		//===================
 		// construct/copy/destroy
@@ -398,7 +409,7 @@ namespace kerbal
 
 
 		//===================
-		//assign
+		// assign
 
 			template <typename Tp>
 			template <typename NodeAllocator>
@@ -1917,6 +1928,7 @@ namespace kerbal
 
 #			endif
 #		endif
+
 
 		} // namespace detail
 

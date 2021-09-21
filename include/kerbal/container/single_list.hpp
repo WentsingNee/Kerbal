@@ -24,6 +24,7 @@
 #include <kerbal/iterator/iterator_traits.hpp>
 #include <kerbal/memory/allocator_traits.hpp>
 #include <kerbal/type_traits/enable_if.hpp>
+#include <kerbal/type_traits/integral_constant.hpp>
 #include <kerbal/utility/declval.hpp>
 
 #include <memory>
@@ -130,7 +131,6 @@ namespace kerbal
 				single_list(size_type n);
 
 				KERBAL_CONSTEXPR20
-				explicit
 				single_list(size_type n, const Allocator& alloc);
 
 				KERBAL_CONSTEXPR20
@@ -257,7 +257,7 @@ namespace kerbal
 #		endif
 
 			//===================
-			//element access
+			// element access
 
 				using sl_allocator_unrelated::front;
 				using sl_allocator_unrelated::back;
@@ -419,8 +419,7 @@ namespace kerbal
 
 				KERBAL_CONSTEXPR20
 				void clear() KERBAL_CONDITIONAL_NOEXCEPT(
-						noexcept(
-							kerbal::utility::declthis<sl_allocator_unrelated>()->clear_using_allocator(
+						noexcept(kerbal::utility::declthis<sl_allocator_unrelated>()->clear_using_allocator(
 								kerbal::utility::declthis<single_list>()->alloc()
 						))
 				);

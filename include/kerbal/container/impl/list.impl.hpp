@@ -201,6 +201,7 @@ namespace kerbal
 			this->list_allocator_unrelated::destroy_using_allocator(this->alloc());
 		}
 
+
 	//===================
 	// assign
 
@@ -322,6 +323,7 @@ namespace kerbal
 		}
 
 #	endif
+
 
 	//===================
 	// insert
@@ -606,6 +608,7 @@ namespace kerbal
 		{
 			this->list_allocator_unrelated::clear_using_allocator(this->alloc());
 		}
+
 
 	//===================
 	// operation

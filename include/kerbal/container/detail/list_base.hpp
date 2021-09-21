@@ -326,7 +326,7 @@ namespace kerbal
 
 
 				//===================
-				//assign
+				// assign
 
 					template <typename NodeAllocator>
 					KERBAL_CONSTEXPR20
