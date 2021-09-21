@@ -641,21 +641,9 @@ namespace kerbal
 					static void _K_iter_swap_fast(const_iterator a, const_iterator b);
 
 					KERBAL_CONSTEXPR20
-					static void _K_reverse_unstable(const_iterator first, const_iterator last);
-
-					KERBAL_CONSTEXPR20
-					void reverse_unstable();
-
-					KERBAL_CONSTEXPR20
 					static void _K_reverse(const_iterator first, const_iterator last) KERBAL_NOEXCEPT;
 
 					using list_type_unrelated::reverse;
-
-					KERBAL_CONSTEXPR20
-					static void _K_reverse_fast(const_iterator first, const_iterator last);
-
-					KERBAL_CONSTEXPR20
-					void reverse_fast();
 
 					KERBAL_CONSTEXPR20
 					iterator rotate(const_iterator first, const_iterator n_first, const_iterator last) KERBAL_NOEXCEPT;

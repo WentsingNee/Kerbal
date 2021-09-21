@@ -458,19 +458,9 @@ namespace kerbal
 				void iter_swap_fast(const_iterator a, const_iterator b);
 
 				KERBAL_CONSTEXPR20
-				void reverse_unstable(const_iterator a, const_iterator b);
-
-				using list_allocator_unrelated::reverse_unstable;
-
-				KERBAL_CONSTEXPR20
 				void reverse(const_iterator a, const_iterator b) KERBAL_NOEXCEPT;
 
 				using list_allocator_unrelated::reverse;
-
-				KERBAL_CONSTEXPR20
-				void reverse_fast(const_iterator a, const_iterator b);
-
-				using list_allocator_unrelated::reverse_fast;
 
 				using list_allocator_unrelated::rotate;
 

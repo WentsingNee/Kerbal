@@ -1167,72 +1167,9 @@ namespace kerbal
 
 			template <typename Tp>
 			KERBAL_CONSTEXPR20
-			void list_allocator_unrelated<Tp>::_K_reverse_unstable(const_iterator first, const_iterator last)
-			{
-				kerbal::algorithm::reverse(first.cast_to_mutable(), last.cast_to_mutable());
-			}
-
-			template <typename Tp>
-			KERBAL_CONSTEXPR20
-			void list_allocator_unrelated<Tp>::reverse_unstable()
-			{
-				_K_reverse_unstable(this->cbegin(), this->cend());
-			}
-
-			template <typename Tp>
-			KERBAL_CONSTEXPR20
 			void list_allocator_unrelated<Tp>::_K_reverse(const_iterator first, const_iterator last) KERBAL_NOEXCEPT
 			{
 				list_type_unrelated::_K_reverse(first, last);
-			}
-
-			template <typename Tp>
-			KERBAL_CONSTEXPR20
-			void list_allocator_unrelated<Tp>::_K_reverse_fast(const_iterator first, const_iterator last)
-			{
-
-#		if __cplusplus >= 201103L
-
-				struct policy
-						: kerbal::type_traits::bool_constant<
-								std::is_trivially_copy_constructible<Tp>::value &&
-								std::is_trivially_copy_assignable<Tp>::value
-						>
-				{
-				};
-
-#		else
-
-				struct policy
-						: kerbal::type_traits::is_fundamental<Tp>
-				{
-				};
-
-#		endif
-
-				struct apply_helper
-				{
-						KERBAL_CONSTEXPR20
-						static void apply(const_iterator first, const_iterator last, kerbal::type_traits::false_type) KERBAL_NOEXCEPT
-						{
-							_K_reverse(first, last);
-						}
-
-						KERBAL_CONSTEXPR20
-						static void apply(const_iterator first, const_iterator last, kerbal::type_traits::true_type)
-						{
-							_K_reverse_unstable(first, last);
-						}
-				};
-
-				apply_helper::apply(first, last, policy());
-			};
-
-			template <typename Tp>
-			KERBAL_CONSTEXPR20
-			void list_allocator_unrelated<Tp>::reverse_fast()
-			{
-				_K_reverse_fast(this->cbegin(), this->cend());
 			}
 
 			template <typename Tp>
