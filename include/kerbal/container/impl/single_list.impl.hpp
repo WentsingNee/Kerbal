@@ -140,70 +140,21 @@ namespace kerbal
 		single_list<Tp, Allocator>::single_list(single_list && src)
 				KERBAL_NOEXCEPT((
 						std::is_nothrow_constructible<sl_allocator_overload, node_allocator_type&&>::value &&
-						std::is_nothrow_default_constructible<sl_allocator_overload>::value
+						std::is_nothrow_constructible<sl_allocator_overload, sl_allocator_unrelated &&>::value
 				)) :
 				sl_allocator_overload(kerbal::compatibility::move(src.alloc())),
-				sl_allocator_unrelated()
+				sl_allocator_unrelated(static_cast<sl_allocator_unrelated &&>(src))
 		{
-			if (!src.empty()) {
-				sl_type_unrelated::_K_swap_with_empty(src, *this);
-			}
-		}
-
-
-		// pre-condition: src.empty() == true
-		template <typename Tp, typename Allocator>
-		KERBAL_CONSTEXPR20
-		void single_list<Tp, Allocator>::move_constructor_with_afforded_allocator_allocator_equal(single_list && src) KERBAL_NOEXCEPT
-		{
-			sl_type_unrelated::_K_swap_with_empty(src, *this);
-		}
-
-		// pre-condition: src.empty() == true
-		template <typename Tp, typename Allocator>
-		KERBAL_CONSTEXPR20
-		void single_list<Tp, Allocator>::move_constructor_with_afforded_allocator_allocator_not_equal(single_list && src)
-		{
-			std::pair<node*, node*> range(this->_K_build_new_nodes_range_unguarded_move(this->alloc(), src.begin(), src.end()));
-			sl_type_unrelated::_K_hook_node(this->cend(), range.first, range.second);
-		}
-
-		// pre-condition: src.empty() == true
-		template <typename Tp, typename Allocator>
-		template <bool is_allocator_always_equal>
-		KERBAL_CONSTEXPR20
-		typename kerbal::type_traits::enable_if<!is_allocator_always_equal>::type
-		single_list<Tp, Allocator>::move_constructor_with_afforded_allocator_helper(single_list && src)
-		{
-			if (this->alloc() != src.alloc()) {
-				this->move_constructor_with_afforded_allocator_allocator_not_equal(kerbal::compatibility::move(src));
-			} else {
-				this->move_constructor_with_afforded_allocator_allocator_equal(kerbal::compatibility::move(src));
-			}
-		}
-
-		// pre-condition: src.empty() == true
-		template <typename Tp, typename Allocator>
-		template <bool is_allocator_always_equal>
-		KERBAL_CONSTEXPR20
-		typename kerbal::type_traits::enable_if<is_allocator_always_equal>::type
-		single_list<Tp, Allocator>::move_constructor_with_afforded_allocator_helper(single_list && src) KERBAL_NOEXCEPT
-		{
-			this->move_constructor_with_afforded_allocator_allocator_equal(kerbal::compatibility::move(src));
 		}
 
 		template <typename Tp, typename Allocator>
 		KERBAL_CONSTEXPR20
 		single_list<Tp, Allocator>::single_list(single_list && src, const Allocator& alloc) :
 				sl_allocator_overload(alloc),
-				sl_allocator_unrelated()
+				sl_allocator_unrelated(this->alloc(),
+									   kerbal::compatibility::move(src.alloc()),
+									   static_cast<sl_allocator_unrelated &&>(src))
 		{
-			if (src.empty()) {
-				return;
-			}
-			typedef typename std::allocator_traits<node_allocator_type>::is_always_equal is_always_equal;
-//			typedef typename node_allocator_traits::is_always_equal is_always_equal;
-			this->move_constructor_with_afforded_allocator_helper<is_always_equal::value>(kerbal::compatibility::move(src));
 		}
 
 #	endif
@@ -248,7 +199,7 @@ namespace kerbal
 		KERBAL_CONSTEXPR20
 		single_list<Tp, Allocator>::~single_list()
 		{
-			this->_K_consecutive_destroy_node(this->alloc(), this->head_node.next);
+			this->sl_allocator_unrelated::destroy_using_allocator(this->alloc());
 		}
 
 
@@ -259,9 +210,6 @@ namespace kerbal
 		KERBAL_CONSTEXPR20
 		single_list<Tp, Allocator>&
 		single_list<Tp, Allocator>::operator=(const single_list& src)
-				KERBAL_CONDITIONAL_NOEXCEPT(
-						noexcept(kerbal::utility::declthis<single_list>()->assign(src))
-				)
 		{
 			this->assign(src);
 			return *this;
@@ -289,9 +237,6 @@ namespace kerbal
 		KERBAL_CONSTEXPR20
 		single_list<Tp, Allocator>&
 		single_list<Tp, Allocator>::operator=(std::initializer_list<value_type> src)
-				KERBAL_CONDITIONAL_NOEXCEPT(
-						noexcept(kerbal::utility::declthis<single_list>()->assign(src))
-				)
 		{
 			this->assign(src);
 			return *this;
@@ -313,11 +258,11 @@ namespace kerbal
 		template <typename Tp, typename Allocator>
 		KERBAL_CONSTEXPR20
 		void single_list<Tp, Allocator>::assign(const single_list& src)
-				KERBAL_CONDITIONAL_NOEXCEPT(
-						noexcept(kerbal::utility::declthis<single_list>()->assign(src.cbegin(), src.cend()))
-				)
 		{
-			this->assign(src.cbegin(), src.cend());
+			this->sl_allocator_unrelated::assign_using_allocator(
+					this->alloc(),
+					src.alloc(),
+					static_cast<const sl_allocator_unrelated &>(src));
 		}
 
 		template <typename Tp, typename Allocator>
@@ -344,8 +289,18 @@ namespace kerbal
 		template <typename Tp, typename Allocator>
 		KERBAL_CONSTEXPR20
 		void single_list<Tp, Allocator>::assign(single_list&& src)
+				KERBAL_CONDITIONAL_NOEXCEPT(noexcept(
+						kerbal::utility::declthis<sl_allocator_unrelated>()->assign_using_allocator(
+								kerbal::utility::declthis<single_list>()->alloc(),
+								kerbal::compatibility::move(kerbal::utility::declval<single_list &&>().alloc()),
+								kerbal::utility::declval<sl_allocator_unrelated &&>()
+						)
+				))
 		{
-			this->swap(src);
+			this->sl_allocator_unrelated::assign_using_allocator(
+					this->alloc(),
+					kerbal::compatibility::move(src.alloc()),
+					static_cast<sl_allocator_unrelated &&>(src));
 		}
 
 #	endif

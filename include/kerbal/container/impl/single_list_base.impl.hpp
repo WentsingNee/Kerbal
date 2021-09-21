@@ -21,6 +21,7 @@
 #include <kerbal/utility/in_place.hpp>
 
 #if __cplusplus >= 201103L
+#	include <kerbal/iterator/move_iterator.hpp>
 #	include <kerbal/utility/forward.hpp>
 #endif
 
@@ -284,9 +285,8 @@ namespace kerbal
 			void sl_type_unrelated::_K_swap_with_empty(sl_type_unrelated & not_empty_list, sl_type_unrelated & empty_list) KERBAL_NOEXCEPT
 			{
 				empty_list.head_node.next = not_empty_list.head_node.next;
-				not_empty_list.head_node.next = NULL;
 				empty_list.last_iter = not_empty_list.last_iter;
-				not_empty_list.last_iter = not_empty_list.basic_begin();
+				not_empty_list._K_init_node_base();
 			}
 
 			KERBAL_CONSTEXPR20
@@ -357,6 +357,99 @@ namespace kerbal
 				this->insert_using_allocator(alloc, this->cbegin(), first, last);
 			}
 
+#	if __cplusplus >= 201103L
+
+			// pre-cond: allocator allows
+			template <typename Tp>
+			KERBAL_CONSTEXPR14
+			sl_allocator_unrelated<Tp>::sl_allocator_unrelated(sl_allocator_unrelated && src) KERBAL_NOEXCEPT :
+					sl_type_unrelated()
+			{
+				if (src.empty()) {
+					return;
+				}
+				sl_type_unrelated::_K_swap_with_empty(
+						static_cast<sl_type_unrelated &>(src),
+						static_cast<sl_type_unrelated &>(*this));
+			}
+
+			// move construct using allocator, allocator is equal
+			template <typename Tp>
+			KERBAL_CONSTEXPR14
+			void sl_allocator_unrelated<Tp>::_K_move_cnstrct_ua_ae(sl_allocator_unrelated && src) KERBAL_NOEXCEPT
+			{
+				if (src.empty()) {
+					return;
+				}
+				sl_type_unrelated::_K_swap_with_empty(
+						static_cast<sl_type_unrelated &>(src),
+						static_cast<sl_type_unrelated &>(*this));
+			}
+
+			// move construct using allocator, allocator is not equal
+			template <typename Tp>
+			template <typename NodeAllocator>
+			KERBAL_CONSTEXPR20
+			void sl_allocator_unrelated<Tp>::_K_move_cnstrct_ua_ane(NodeAllocator & alloc, NodeAllocator && /*src_alloc*/, sl_allocator_unrelated && src)
+			{
+				if (src.empty()) {
+					return;
+				}
+				std::pair<node*, node*> range(
+						_K_build_new_nodes_range_unguarded(
+								alloc,
+								kerbal::iterator::make_move_iterator(src.begin()),
+								kerbal::iterator::make_move_iterator(src.end())));
+				sl_type_unrelated::_K_hook_node_back(range.first, range.second);
+			}
+
+			template <typename Tp>
+			template <typename NodeAllocator>
+			KERBAL_CONSTEXPR20
+			void sl_allocator_unrelated<Tp>::_K_move_cnstrct_ua_helper(NodeAllocator & alloc, NodeAllocator && src_alloc, sl_allocator_unrelated && src,
+																	   kerbal::type_traits::false_type /*is_always_equal*/)
+			{
+				if (alloc != src_alloc) {
+					this->_K_move_cnstrct_ua_ane(alloc, kerbal::compatibility::move(src_alloc), kerbal::compatibility::move(src));
+				} else {
+					this->_K_move_cnstrct_ua_ae(kerbal::compatibility::move(src));
+				}
+			}
+
+			template <typename Tp>
+			template <typename NodeAllocator>
+			KERBAL_CONSTEXPR14
+			void sl_allocator_unrelated<Tp>::_K_move_cnstrct_ua_helper(NodeAllocator & /*alloc*/, NodeAllocator && /*src_alloc*/, sl_allocator_unrelated && src,
+																	   kerbal::type_traits::true_type /*is_always_equal*/) KERBAL_NOEXCEPT
+			{
+				this->_K_move_cnstrct_ua_ae(kerbal::compatibility::move(src));
+			}
+
+			template <typename Tp>
+			template <typename NodeAllocator>
+			KERBAL_CONSTEXPR14
+			sl_allocator_unrelated<Tp>::sl_allocator_unrelated(NodeAllocator & alloc, NodeAllocator && src_alloc, sl_allocator_unrelated && src)
+					KERBAL_CONDITIONAL_NOEXCEPT(
+							kerbal::memory::allocator_traits<NodeAllocator>::is_always_equal::value
+					) :
+					sl_type_unrelated()
+			{
+				typedef kerbal::memory::allocator_traits<NodeAllocator> allocator_traits;
+				typedef typename allocator_traits::is_always_equal is_always_equal;
+
+				this->_K_move_cnstrct_ua_helper(alloc, kerbal::compatibility::move(src_alloc), kerbal::compatibility::move(src), is_always_equal());
+			}
+
+#	endif
+
+			template <typename Tp>
+			template <typename NodeAllocator>
+			KERBAL_CONSTEXPR20
+			void sl_allocator_unrelated<Tp>::destroy_using_allocator(NodeAllocator & alloc) KERBAL_NOEXCEPT
+			{
+				this->_K_consecutive_destroy_node(alloc, this->head_node.next);
+			}
+
 
 		//===================
 		// assign
@@ -401,6 +494,157 @@ namespace kerbal
 				}
 				this->erase_using_allocator(alloc, it, this->cend());
 			}
+
+			template <typename Tp>
+			template <typename NodeAllocator>
+			KERBAL_CONSTEXPR20
+			void sl_allocator_unrelated<Tp>::_K_cpy_ass_ua_impl(NodeAllocator & alloc, const NodeAllocator & src_alloc, const sl_allocator_unrelated & src, CPYASS_VER_NOT_PROPAGATE)
+			{
+				if (alloc != src_alloc) {
+					this->destroy_using_allocator(alloc);
+					this->sl_type_unrelated::_K_init_node_base();
+				}
+				this->assign_using_allocator(alloc, src.cbegin(), src.cend());
+			}
+
+			template <typename Tp>
+			template <typename NodeAllocator>
+			KERBAL_CONSTEXPR20
+			void sl_allocator_unrelated<Tp>::_K_cpy_ass_ua_impl(NodeAllocator & alloc, const NodeAllocator & src_alloc, const sl_allocator_unrelated & src, CPYASS_VER_PROPAGATE)
+			{
+				if (alloc != src_alloc) {
+					this->destroy_using_allocator(alloc);
+					this->sl_type_unrelated::_K_init_node_base();
+				}
+				alloc = src_alloc;
+				this->assign_using_allocator(alloc, src.cbegin(), src.cend());
+			}
+
+			template <typename Tp>
+			template <typename NodeAllocator>
+			KERBAL_CONSTEXPR20
+			void sl_allocator_unrelated<Tp>::_K_cpy_ass_ua_impl(NodeAllocator & alloc, const NodeAllocator & /*src_alloc*/, const sl_allocator_unrelated & src, CPYASS_VER_ALWAYS_EQUAL)
+			{
+				this->assign_using_allocator(alloc, src.cbegin(), src.cend());
+			}
+
+			template <typename Tp>
+			template <typename NodeAllocator>
+			KERBAL_CONSTEXPR20
+			void sl_allocator_unrelated<Tp>::assign_using_allocator(NodeAllocator & alloc, const NodeAllocator & src_alloc, const sl_allocator_unrelated & src)
+			{
+				typedef kerbal::memory::allocator_traits<NodeAllocator> allocator_traits;
+				typedef typename allocator_traits::propagate_on_container_copy_assignment propagate;
+				typedef typename allocator_traits::is_always_equal is_always_equal;
+
+				typedef typename kerbal::type_traits::conditional<
+						is_always_equal::value,
+						CPYASS_VER_ALWAYS_EQUAL,
+						typename kerbal::type_traits::conditional<
+								propagate::value,
+								CPYASS_VER_PROPAGATE,
+								CPYASS_VER_NOT_PROPAGATE
+						>::type
+				>::type VER;
+
+				this->_K_cpy_ass_ua_impl(alloc, src_alloc, src, VER());
+			}
+
+
+#		if __cplusplus >= 201103L
+
+			// move assign using allocator, allocator is equal
+			template <typename Tp>
+			template <typename NodeAllocator>
+			KERBAL_CONSTEXPR20
+			void sl_allocator_unrelated<Tp>::_K_mov_ass_ua_ae(NodeAllocator & alloc, sl_allocator_unrelated && src) KERBAL_NOEXCEPT
+			{
+				this->destroy_using_allocator(alloc);
+				this->sl_type_unrelated::_K_init_node_base();
+				if (!src.empty()) {
+					sl_type_unrelated::_K_swap_with_empty(static_cast<sl_type_unrelated &>(src), static_cast<sl_type_unrelated &>(*this));
+				}
+			}
+
+			// move assign using allocator, allocator is not equal
+			template <typename Tp>
+			template <typename NodeAllocator>
+			KERBAL_CONSTEXPR20
+			void sl_allocator_unrelated<Tp>::_K_mov_ass_ua_ane(NodeAllocator & alloc, sl_allocator_unrelated && src)
+			{
+				this->assign_using_allocator(
+						alloc,
+						kerbal::iterator::make_move_iterator(src.begin()),
+						kerbal::iterator::make_move_iterator(src.end()));
+			}
+
+			template <typename Tp>
+			template <typename NodeAllocator>
+			KERBAL_CONSTEXPR20
+			void sl_allocator_unrelated<Tp>::_K_mov_ass_ua_impl(NodeAllocator & alloc, NodeAllocator && src_alloc, sl_allocator_unrelated && src,
+																MOVASS_VER_NOT_PROPAGATE)
+			{
+				if (alloc != src_alloc) {
+					this->_K_mov_ass_ua_ane(alloc, kerbal::compatibility::move(src));
+				} else {
+					this->_K_mov_ass_ua_ae(alloc, kerbal::compatibility::move(src));
+				}
+			}
+
+			template <typename Tp>
+			template <typename NodeAllocator>
+			KERBAL_CONSTEXPR20
+			void sl_allocator_unrelated<Tp>::_K_mov_ass_ua_impl(NodeAllocator & alloc, NodeAllocator && src_alloc, sl_allocator_unrelated && src,
+																MOVASS_VER_PROPAGATE)
+			{
+				this->destroy_using_allocator(alloc);
+				this->sl_type_unrelated::_K_init_node_base();
+				alloc = kerbal::compatibility::move(src_alloc);
+				if (!src.empty()) {
+					sl_type_unrelated::_K_swap_with_empty(static_cast<sl_type_unrelated &>(src), static_cast<sl_type_unrelated &>(*this));
+				}
+			}
+
+			template <typename Tp>
+			template <typename NodeAllocator>
+			KERBAL_CONSTEXPR20
+			void sl_allocator_unrelated<Tp>::_K_mov_ass_ua_impl(NodeAllocator & alloc, NodeAllocator && /*src_alloc*/, sl_allocator_unrelated && src,
+																MOVASS_VER_ALWAYS_EQUAL) KERBAL_NOEXCEPT
+			{
+				this->_K_mov_ass_ua_ae(alloc, kerbal::compatibility::move(src));
+			}
+
+			template <typename Tp>
+			template <typename NodeAllocator>
+			KERBAL_CONSTEXPR20
+			void sl_allocator_unrelated<Tp>::assign_using_allocator(NodeAllocator & alloc, NodeAllocator && src_alloc, sl_allocator_unrelated && src)
+					KERBAL_CONDITIONAL_NOEXCEPT(
+							kerbal::memory::allocator_traits<NodeAllocator>::is_always_equal::value
+					)
+			{
+				typedef kerbal::memory::allocator_traits<NodeAllocator> allocator_traits;
+				typedef typename allocator_traits::propagate_on_container_move_assignment propagate;
+				typedef typename allocator_traits::is_always_equal is_always_equal;
+
+				typedef typename kerbal::type_traits::conditional<
+						is_always_equal::value,
+						MOVASS_VER_ALWAYS_EQUAL,
+						typename kerbal::type_traits::conditional<
+								propagate::value,
+								MOVASS_VER_PROPAGATE,
+								MOVASS_VER_NOT_PROPAGATE
+						>::type
+				>::type VER;
+
+				this->_K_mov_ass_ua_impl(
+						alloc,
+						kerbal::compatibility::move(src_alloc),
+						kerbal::compatibility::move(src),
+						VER()
+				);
+			}
+
+#		endif
 
 
 		//===================
@@ -844,8 +1088,7 @@ namespace kerbal
 						)
 			{
 				_K_consecutive_destroy_node(alloc, this->head_node.next);
-				this->head_node.next = NULL;
-				this->last_iter = this->begin();
+				this->_K_init_node_base();
 			}
 
 
