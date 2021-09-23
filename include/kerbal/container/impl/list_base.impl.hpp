@@ -1110,59 +1110,9 @@ namespace kerbal
 
 			template <typename Tp>
 			KERBAL_CONSTEXPR20
-			void list_allocator_unrelated<Tp>::_K_iter_swap_unstable(const_iterator a, const_iterator b)
-			{
-				kerbal::algorithm::iter_swap(a.cast_to_mutable(), b.cast_to_mutable());
-			}
-
-			template <typename Tp>
-			KERBAL_CONSTEXPR20
 			void list_allocator_unrelated<Tp>::_K_iter_swap(const_iterator a, const_iterator b) KERBAL_NOEXCEPT
 			{
 				list_type_unrelated::_K_iter_swap(a, b);
-			}
-
-			template <typename Tp>
-			KERBAL_CONSTEXPR20
-			void list_allocator_unrelated<Tp>::_K_iter_swap_fast(const_iterator a, const_iterator b)
-			{
-
-#		if __cplusplus >= 201103L
-
-				struct policy
-						: kerbal::type_traits::bool_constant<
-								std::is_trivially_copy_constructible<Tp>::value &&
-								std::is_trivially_copy_assignable<Tp>::value
-						>
-				{
-				};
-
-#		else
-
-				struct policy
-						: kerbal::type_traits::is_fundamental<Tp>
-				{
-				};
-
-#		endif
-
-				struct apply_helper
-				{
-						KERBAL_CONSTEXPR20
-						static void apply(const_iterator a, const_iterator b, kerbal::type_traits::false_type) KERBAL_NOEXCEPT
-						{
-							_K_iter_swap(a, b);
-						}
-
-						KERBAL_CONSTEXPR20
-						static void apply(const_iterator a, const_iterator b, kerbal::type_traits::true_type)
-						{
-							_K_iter_swap_unstable(a, b);
-						}
-				};
-
-				apply_helper::apply(a, b, policy());
-
 			}
 
 			template <typename Tp>

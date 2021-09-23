@@ -444,9 +444,7 @@ namespace kerbal
 						))
 				);
 
-				using sl_allocator_unrelated::iter_swap_unstable;
 				using sl_allocator_unrelated::iter_swap;
-				using sl_allocator_unrelated::iter_swap_fast;
 
 				using sl_allocator_unrelated::reverse;
 

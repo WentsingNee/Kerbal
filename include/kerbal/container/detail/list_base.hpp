@@ -632,13 +632,7 @@ namespace kerbal
 					void resize_using_allocator(NodeAllocator & alloc, size_type count, const_reference value);
 
 					KERBAL_CONSTEXPR20
-					static void _K_iter_swap_unstable(const_iterator a, const_iterator b);
-
-					KERBAL_CONSTEXPR20
 					static void _K_iter_swap(const_iterator a, const_iterator b) KERBAL_NOEXCEPT;
-
-					KERBAL_CONSTEXPR20
-					static void _K_iter_swap_fast(const_iterator a, const_iterator b);
 
 					KERBAL_CONSTEXPR20
 					static void _K_reverse(const_iterator first, const_iterator last) KERBAL_NOEXCEPT;

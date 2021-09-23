@@ -1129,59 +1129,9 @@ namespace kerbal
 
 			template <typename Tp>
 			KERBAL_CONSTEXPR20
-			void sl_allocator_unrelated<Tp>::iter_swap_unstable(iterator a, iterator b)
-			{
-				kerbal::algorithm::iter_swap(a, b);
-			}
-
-			template <typename Tp>
-			KERBAL_CONSTEXPR20
 			void sl_allocator_unrelated<Tp>::iter_swap(iterator a, iterator b) KERBAL_NOEXCEPT
 			{
 				sl_type_unrelated::_K_iter_swap(a, b);
-			}
-
-			template <typename Tp>
-			KERBAL_CONSTEXPR20
-			void sl_allocator_unrelated<Tp>::iter_swap_fast(iterator a, iterator b)
-			{
-
-#		if __cplusplus >= 201103L
-
-				struct policy
-						: kerbal::type_traits::bool_constant<
-								std::is_trivially_copy_constructible<Tp>::value &&
-								std::is_trivially_copy_assignable<Tp>::value
-						>
-				{
-				};
-
-#		else
-
-				struct policy
-						: kerbal::type_traits::is_fundamental<Tp>
-				{
-				};
-
-#		endif
-
-				struct apply_helper
-				{
-						KERBAL_CONSTEXPR20
-						static void apply(sl_allocator_unrelated & l, iterator a, iterator b, kerbal::type_traits::false_type) KERBAL_NOEXCEPT
-						{
-							l.iter_swap(a, b);
-						}
-
-						KERBAL_CONSTEXPR20
-						static void apply(sl_allocator_unrelated & l, iterator a, iterator b, kerbal::type_traits::true_type)
-						{
-							l.iter_swap_unstable(a, b);
-						}
-				};
-
-				apply_helper::apply(*this, a, b, policy());
-
 			}
 
 			template <typename Tp>

@@ -449,13 +449,7 @@ namespace kerbal
 				);
 
 				KERBAL_CONSTEXPR20
-				void iter_swap_unstable(const_iterator a, const_iterator b);
-
-				KERBAL_CONSTEXPR20
 				void iter_swap(const_iterator a, const_iterator b) KERBAL_NOEXCEPT;
-
-				KERBAL_CONSTEXPR20
-				void iter_swap_fast(const_iterator a, const_iterator b);
 
 				KERBAL_CONSTEXPR20
 				void reverse(const_iterator a, const_iterator b) KERBAL_NOEXCEPT;
