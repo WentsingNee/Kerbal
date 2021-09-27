@@ -16,12 +16,14 @@
 #include <kerbal/memory/allocator/monotonic_allocator/monotonic_allocator.fwd.hpp>
 
 #include <kerbal/compare/basic_compare.hpp>
+#include <kerbal/compare/std_compare/std_compare.fwd.hpp>
 #include <kerbal/compatibility/constexpr.hpp>
 #include <kerbal/compatibility/noexcept.hpp>
 #include <kerbal/config/exceptions.hpp>
 #include <kerbal/memory/allocator_traits.hpp>
 #include <kerbal/type_traits/enable_if.hpp>
 #include <kerbal/type_traits/integral_constant.hpp>
+#include <kerbal/type_traits/is_integral.hpp>
 #include <kerbal/utility/declval.hpp>
 
 #if __cplusplus < 201103L
@@ -50,8 +52,21 @@ namespace kerbal
 		namespace detail
 		{
 
+			template <typename T>
+			struct is_forward_list_radix_sort_acceptable_type :
+				kerbal::type_traits::bool_constant<
+					kerbal::type_traits::is_integral<T>::value &&
+					sizeof(T) <= 4
+				>
+			{
+			};
+
 			class fl_type_unrelated
 			{
+				private:
+					template <typename T>
+					friend class kerbal::container::detail::fl_type_only;
+
 				public:
 					typedef std::size_t					size_type;
 					typedef std::ptrdiff_t				difference_type;
@@ -199,6 +214,46 @@ namespace kerbal
 					void k_splice_after(
 						basic_const_iterator before_pos,
 						basic_const_iterator before_first, basic_const_iterator last
+					) KERBAL_NOEXCEPT;
+
+					KERBAL_CONSTEXPR14
+					static
+					void
+					k_radix_sort_back_fill_after(
+						kerbal::type_traits::false_type /*asc*/,
+						kerbal::type_traits::false_type /*unsigned*/,
+						basic_iterator before_insert_pos,
+						fl_type_unrelated buckets[], basic_iterator bucket_backs[], std::size_t BUCKETS_NUM
+					) KERBAL_NOEXCEPT;
+
+					KERBAL_CONSTEXPR14
+					static
+					void
+					k_radix_sort_back_fill_after(
+						kerbal::type_traits::true_type /*desc*/,
+						kerbal::type_traits::false_type /*unsigned*/,
+						basic_iterator before_insert_pos,
+						fl_type_unrelated buckets[], basic_iterator bucket_backs[], std::size_t BUCKETS_NUM
+					) KERBAL_NOEXCEPT;
+
+					KERBAL_CONSTEXPR14
+					static
+					void
+					k_radix_sort_back_fill_after(
+						kerbal::type_traits::false_type /*asc*/,
+						kerbal::type_traits::true_type /*signed*/,
+						basic_iterator before_insert_pos,
+						fl_type_unrelated buckets[], basic_iterator bucket_backs[], std::size_t BUCKETS_NUM
+					) KERBAL_NOEXCEPT;
+
+					KERBAL_CONSTEXPR14
+					static
+					void
+					k_radix_sort_back_fill_after(
+						kerbal::type_traits::true_type /*desc*/,
+						kerbal::type_traits::true_type /*signed*/,
+						basic_iterator before_insert_pos,
+						fl_type_unrelated buckets[], basic_iterator bucket_backs[], std::size_t BUCKETS_NUM
 					) KERBAL_NOEXCEPT;
 
 				//===================
@@ -901,6 +956,133 @@ namespace kerbal
 					KERBAL_CONSTEXPR14
 					static
 					void k_merge_sort_after(const_iterator before_first, const_iterator last, BinaryPredict cmp);
+
+
+				private:
+
+					template <std::size_t RADIX_BIT_WIDTH>
+					KERBAL_CONSTEXPR14
+					static
+					void radix_sort_after(
+						const_iterator before_first, const_iterator last, kerbal::type_traits::false_type asc,
+						kerbal::type_traits::integral_constant<std::size_t, RADIX_BIT_WIDTH>
+					) KERBAL_NOEXCEPT;
+
+					template <std::size_t RADIX_BIT_WIDTH>
+					KERBAL_CONSTEXPR14
+					static
+					void radix_sort_after(
+						const_iterator before_first, const_iterator last, kerbal::type_traits::true_type desc,
+						kerbal::type_traits::integral_constant<std::size_t, RADIX_BIT_WIDTH>
+					) KERBAL_NOEXCEPT;
+
+					template <typename Order>
+					KERBAL_CONSTEXPR14
+					static
+					void radix_sort_after(const_iterator before_first, const_iterator last, Order order) KERBAL_NOEXCEPT;
+
+					template <bool is_radix_sort_acceptable_type>
+					KERBAL_CONSTEXPR14
+					static
+					typename kerbal::type_traits::enable_if<is_radix_sort_acceptable_type>::type
+					radix_sort_after(const_iterator before_first, const_iterator last) KERBAL_NOEXCEPT;
+
+
+				private:
+
+					template <bool is_radix_sort_acceptable_type, typename BinaryPredict>
+					KERBAL_CONSTEXPR14
+					static
+					typename kerbal::type_traits::enable_if<is_radix_sort_acceptable_type>::type
+					sort_after_method_overload(
+						const_iterator before_first, const_iterator last,
+						BinaryPredict cmp
+					);
+
+					template <bool is_radix_sort_acceptable_type>
+					KERBAL_CONSTEXPR14
+					static
+					typename kerbal::type_traits::enable_if<is_radix_sort_acceptable_type>::type
+					sort_after_method_overload(
+						const_iterator before_first, const_iterator last,
+						kerbal::compare::less<value_type> cmp
+					);
+
+					template <bool is_radix_sort_acceptable_type>
+					KERBAL_CONSTEXPR14
+					static
+					typename kerbal::type_traits::enable_if<is_radix_sort_acceptable_type>::type
+					sort_after_method_overload(
+						const_iterator before_first, const_iterator last,
+						kerbal::compare::greater<value_type> cmp
+					);
+
+					template <bool is_radix_sort_acceptable_type>
+					KERBAL_CONSTEXPR14
+					static
+					typename kerbal::type_traits::enable_if<is_radix_sort_acceptable_type>::type
+					sort_after_method_overload(
+						const_iterator before_first, const_iterator last,
+						kerbal::compare::less<void> cmp
+					);
+
+					template <bool is_radix_sort_acceptable_type>
+					KERBAL_CONSTEXPR14
+					static
+					typename kerbal::type_traits::enable_if<is_radix_sort_acceptable_type>::type
+					sort_after_method_overload(
+						const_iterator before_first, const_iterator last,
+						kerbal::compare::greater<void> cmp
+					);
+
+					template <bool is_radix_sort_acceptable_type>
+					KERBAL_CONSTEXPR14
+					static
+					typename kerbal::type_traits::enable_if<is_radix_sort_acceptable_type>::type
+					sort_after_method_overload(
+						const_iterator before_first, const_iterator last,
+						std::less<value_type> cmp
+					);
+
+					template <bool is_radix_sort_acceptable_type>
+					KERBAL_CONSTEXPR14
+					static
+					typename kerbal::type_traits::enable_if<is_radix_sort_acceptable_type>::type
+					sort_after_method_overload(
+						const_iterator before_first, const_iterator last,
+						std::greater<value_type> cmp
+					);
+
+#			if __cplusplus >= 201402L
+
+					template <bool is_radix_sort_acceptable_type>
+					KERBAL_CONSTEXPR14
+					static
+					typename kerbal::type_traits::enable_if<is_radix_sort_acceptable_type>::type
+					sort_after_method_overload(
+						const_iterator before_first, const_iterator last,
+						std::less<void> cmp
+					);
+
+					template <bool is_radix_sort_acceptable_type>
+					KERBAL_CONSTEXPR14
+					static
+					typename kerbal::type_traits::enable_if<is_radix_sort_acceptable_type>::type
+					sort_after_method_overload(
+						const_iterator before_first, const_iterator last,
+						std::greater<void> cmp
+					);
+
+#			endif
+
+					template <bool is_radix_sort_acceptable_type, typename BinaryPredict>
+					KERBAL_CONSTEXPR20
+					static
+					typename kerbal::type_traits::enable_if<!is_radix_sort_acceptable_type>::type
+					sort_after_method_overload(
+						const_iterator before_first, const_iterator last,
+						BinaryPredict cmp
+					);
 
 				public:
 

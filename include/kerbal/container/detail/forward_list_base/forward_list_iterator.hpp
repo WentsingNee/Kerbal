@@ -44,6 +44,10 @@ namespace kerbal
 
 					friend class kerbal::container::detail::fl_kiter_type_unrelated;
 
+					// forward_list
+					template <typename T>
+					friend class kerbal::container::detail::fl_type_only;
+
 				public:
 					typedef std::forward_iterator_tag						iterator_category;
 					typedef std::ptrdiff_t									difference_type;
@@ -52,6 +56,13 @@ namespace kerbal
 					typedef kerbal::container::detail::sl_node_base			node_base;
 					typedef node_base *										ptr_to_node_base;
 					ptr_to_node_base current;
+
+				private:
+					KERBAL_CONSTEXPR
+					fl_iter_type_unrelated() KERBAL_NOEXCEPT :
+						current(NULL)
+					{
+					}
 
 				protected:
 					KERBAL_CONSTEXPR

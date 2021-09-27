@@ -41,6 +41,10 @@
 #	include <kerbal/utility/throw_this_exception.hpp>
 #endif
 
+#include <climits> // CHAR_BIT
+#include <cstddef> // std::size_t
+
+#include <functional>
 #include <typeinfo>
 
 #if __cplusplus >= 201703L
@@ -182,6 +186,113 @@ namespace kerbal
 					node_base * start = k_unhook_node_after(before_first, last);
 					k_hook_node_after(before_pos, start, back.cast_to_mutable().current);
 				}
+			}
+
+			KERBAL_CONSTEXPR14
+			inline
+			void
+			fl_type_unrelated::
+			k_radix_sort_back_fill_after(
+				kerbal::type_traits::false_type /*asc*/,
+				kerbal::type_traits::false_type /*unsigned*/,
+				basic_iterator before_insert_pos,
+				fl_type_unrelated buckets[], basic_iterator bucket_backs[], std::size_t BUCKETS_NUM
+			) KERBAL_NOEXCEPT
+			{
+				node_base * last_bucket_front = before_insert_pos.current->next;
+				std::size_t i = BUCKETS_NUM;
+				while (i > 0) {
+					--i;
+					bucket_backs[i].current->next = last_bucket_front;
+					last_bucket_front = buckets[i].basic_begin().current;
+					// k_splice_after(before_insert_pos, buckets[i]); // O(n)
+				}
+				before_insert_pos.current->next = last_bucket_front;
+			}
+
+			KERBAL_CONSTEXPR14
+			inline
+			void
+			fl_type_unrelated::
+			k_radix_sort_back_fill_after(
+				kerbal::type_traits::true_type /*desc*/,
+				kerbal::type_traits::false_type /*unsigned*/,
+				basic_iterator before_insert_pos,
+				fl_type_unrelated buckets[], basic_iterator bucket_backs[], std::size_t BUCKETS_NUM
+			) KERBAL_NOEXCEPT
+			{
+				node_base * last_bucket_front = before_insert_pos.current->next;
+				for (std::size_t i = 0; i < BUCKETS_NUM; ++i) {
+					bucket_backs[i].current->next = last_bucket_front;
+					last_bucket_front = buckets[i].basic_begin().current;
+
+					// k_splice_after(before_insert_pos, buckets[i]); // O(n)
+				}
+				before_insert_pos.current->next = last_bucket_front;
+			}
+
+			KERBAL_CONSTEXPR14
+			inline
+			void
+			fl_type_unrelated::
+			k_radix_sort_back_fill_after(
+				kerbal::type_traits::false_type /*asc*/,
+				kerbal::type_traits::true_type /*signed*/,
+				basic_iterator before_insert_pos,
+				fl_type_unrelated buckets[], basic_iterator bucket_backs[], std::size_t BUCKETS_NUM
+			) KERBAL_NOEXCEPT
+			{
+				node_base * last_bucket_front = before_insert_pos.current->next;
+				{
+					std::size_t i = BUCKETS_NUM / 2;
+					while (i > 0) {
+						--i;
+
+						bucket_backs[i].current->next = last_bucket_front;
+						last_bucket_front = buckets[i].basic_begin().current;
+
+						// k_splice_after(before_insert_pos, buckets[i]); // O(n)
+					}
+				}
+				{
+					std::size_t i = BUCKETS_NUM;
+					while (i > BUCKETS_NUM / 2) {
+						--i;
+
+						bucket_backs[i].current->next = last_bucket_front;
+						last_bucket_front = buckets[i].basic_begin().current;
+
+						// k_splice_after(before_insert_pos, buckets[i]); // O(n)
+					}
+				}
+				before_insert_pos.current->next = last_bucket_front;
+			}
+
+			KERBAL_CONSTEXPR14
+			inline
+			void
+			fl_type_unrelated::
+			k_radix_sort_back_fill_after(
+				kerbal::type_traits::true_type /*desc*/,
+				kerbal::type_traits::true_type /*signed*/,
+				basic_iterator before_insert_pos,
+				fl_type_unrelated buckets[], basic_iterator bucket_backs[], std::size_t BUCKETS_NUM
+			) KERBAL_NOEXCEPT
+			{
+				node_base * last_bucket_front = before_insert_pos.current->next;
+				for (std::size_t i = BUCKETS_NUM / 2; i < BUCKETS_NUM; ++i) {
+					bucket_backs[i].current->next = last_bucket_front;
+					last_bucket_front = buckets[i].basic_begin().current;
+
+					// k_splice_after(before_insert_pos, buckets[i]); // O(n)
+				}
+				for (std::size_t i = 0; i < BUCKETS_NUM / 2; ++i) {
+					bucket_backs[i].current->next = last_bucket_front;
+					last_bucket_front = buckets[i].basic_begin().current;
+
+					// k_splice_after(before_insert_pos, buckets[i]); // O(n)
+				}
+				before_insert_pos.current->next = last_bucket_front;
 			}
 
 
@@ -1648,13 +1759,306 @@ namespace kerbal
 			}
 
 			template <typename T>
+			template <std::size_t RADIX_BIT_WIDTH>
+			KERBAL_CONSTEXPR14
+			void
+			fl_type_only<T>::
+			radix_sort_after(
+				const_iterator before_first, const_iterator last, kerbal::type_traits::false_type asc,
+				kerbal::type_traits::integral_constant<std::size_t, RADIX_BIT_WIDTH>
+			) KERBAL_NOEXCEPT
+			{
+				typedef kerbal::type_traits::integral_constant<std::size_t, 1 << RADIX_BIT_WIDTH> BUCKETS_NUM;
+				fl_type_unrelated buckets[2][BUCKETS_NUM::value];
+
+				for (int i = 0; i < 2; ++i) {
+					for (std::size_t j = 0; j < BUCKETS_NUM::value; ++j) {
+						buckets[i][j].k_head.next = NULL;
+					}
+				}
+
+				typedef kerbal::type_traits::integral_constant<std::size_t, sizeof(value_type) * CHAR_BIT> VALUE_TYPE_BIT_WIDTH;
+				typedef kerbal::type_traits::integral_constant<std::size_t, VALUE_TYPE_BIT_WIDTH::value / RADIX_BIT_WIDTH + (VALUE_TYPE_BIT_WIDTH::value % RADIX_BIT_WIDTH != 0)> ROUNDS;
+
+				basic_iterator bucket_backs[BUCKETS_NUM::value];
+
+				// first round
+				for (std::size_t i = 0; i < BUCKETS_NUM::value; ++i) {
+					bucket_backs[i] = buckets[0][i].basic_before_begin();
+				}
+				for (const_iterator it(kerbal::iterator::next(before_first)); it != last; ) {
+					int bucket_id = *it % BUCKETS_NUM::value;
+					fl_type_unrelated & bucket_in = buckets[0][bucket_id];
+					++it;
+					bucket_in.k_splice_after(bucket_backs[bucket_id], before_first);
+					++bucket_backs[bucket_id];
+				}
+
+				for (std::size_t round = 1; round < ROUNDS::value; ++round) {
+					fl_type_unrelated (& buckets_from)[BUCKETS_NUM::value] = buckets[(round + 1) % 2];
+					fl_type_unrelated (& buckets_to)[BUCKETS_NUM::value] = buckets[round % 2];
+
+					for (std::size_t i = 0; i < BUCKETS_NUM::value; ++i) {
+						buckets_to[i].k_head.next = NULL;
+						bucket_backs[i] = buckets_to[i].basic_before_begin();
+					}
+
+					for (std::size_t i = 0; i < BUCKETS_NUM::value; ++i) {
+						fl_type_unrelated & bucket_out = buckets_from[i];
+						const_iterator it(bucket_out.basic_begin());
+						const_iterator const cend(bucket_out.basic_end());
+						while (it != cend) {
+							int bucket_id = (*it >> (RADIX_BIT_WIDTH * round)) % BUCKETS_NUM::value;
+							fl_type_unrelated & bucket_in = buckets_to[bucket_id];
+							node_base * splice_node = (it++).cast_to_mutable().current;
+							bucket_in.k_hook_node_after(bucket_backs[bucket_id], splice_node);
+							bucket_backs[bucket_id].current = splice_node;
+						}
+					}
+				}
+
+				fl_type_unrelated::k_radix_sort_back_fill_after(
+					asc,
+					kerbal::type_traits::is_signed<value_type>(),
+					before_first.cast_to_mutable(),
+					buckets[(ROUNDS::value + 1) % 2], bucket_backs, BUCKETS_NUM::value
+				);
+			}
+
+			template <typename T>
+			template <std::size_t RADIX_BIT_WIDTH>
+			KERBAL_CONSTEXPR14
+			void
+			fl_type_only<T>::
+			radix_sort_after(
+				const_iterator before_first, const_iterator last, kerbal::type_traits::true_type desc,
+				kerbal::type_traits::integral_constant<std::size_t, RADIX_BIT_WIDTH>
+			) KERBAL_NOEXCEPT
+			{
+				typedef kerbal::type_traits::integral_constant<std::size_t, 1 << RADIX_BIT_WIDTH> BUCKETS_NUM;
+				fl_type_unrelated buckets[2][BUCKETS_NUM::value];
+
+				for (int i = 0; i < 2; ++i) {
+					for (std::size_t j = 0; j < BUCKETS_NUM::value; ++j) {
+						buckets[i][j].k_head.next = NULL;
+					}
+				}
+
+				typedef kerbal::type_traits::integral_constant<std::size_t, sizeof(value_type) * CHAR_BIT> VALUE_TYPE_BIT_WIDTH;
+				typedef kerbal::type_traits::integral_constant<std::size_t, VALUE_TYPE_BIT_WIDTH::value / RADIX_BIT_WIDTH + (VALUE_TYPE_BIT_WIDTH::value % RADIX_BIT_WIDTH != 0)> ROUNDS;
+
+				basic_iterator bucket_backs[BUCKETS_NUM::value];
+
+				// first round
+				for (std::size_t i = 0; i < BUCKETS_NUM::value; ++i) {
+					bucket_backs[i] = buckets[0][i].basic_before_begin();
+				}
+				for (const_iterator it(kerbal::iterator::next(before_first)); it != last; ) {
+					int bucket_id = *it % BUCKETS_NUM::value;
+					fl_type_unrelated & bucket_in = buckets[0][bucket_id];
+					++it;
+					bucket_in.k_splice_after(bucket_backs[bucket_id], before_first);
+					++bucket_backs[bucket_id];
+				}
+
+				for (std::size_t round = 1; round < ROUNDS::value; ++round) {
+					fl_type_unrelated (& buckets_from)[BUCKETS_NUM::value] = buckets[(round + 1) % 2];
+					fl_type_unrelated (& buckets_to)[BUCKETS_NUM::value] = buckets[round % 2];
+
+					for (std::size_t i = 0; i < BUCKETS_NUM::value; ++i) {
+						buckets_to[i].k_head.next = NULL;
+						bucket_backs[i] = buckets_to[i].basic_before_begin();
+					}
+
+					std::size_t i = BUCKETS_NUM::value;
+					while (i != 0) {
+						--i;
+						fl_type_unrelated & bucket_out = buckets_from[i];
+						const_iterator it(bucket_out.basic_begin());
+						const_iterator const cend(bucket_out.basic_end());
+						while (it != cend) {
+							int bucket_id = (*it >> (RADIX_BIT_WIDTH * round)) % BUCKETS_NUM::value;
+							fl_type_unrelated & bucket_in = buckets_to[bucket_id];
+							node_base * splice_node = (it++).cast_to_mutable().current;
+							bucket_in.k_hook_node_after(bucket_backs[bucket_id], splice_node);
+							bucket_backs[bucket_id].current = splice_node;
+						}
+					}
+				}
+
+				fl_type_unrelated::k_radix_sort_back_fill_after(
+					desc,
+					kerbal::type_traits::is_signed<value_type>(),
+					before_first.cast_to_mutable(),
+					buckets[(ROUNDS::value + 1) % 2], bucket_backs, BUCKETS_NUM::value
+				);
+			}
+
+			template <typename T>
+			template <typename Order>
+			KERBAL_CONSTEXPR14
+			void
+			fl_type_only<T>::
+			radix_sort_after(const_iterator before_first, const_iterator last, Order /*order*/) KERBAL_NOEXCEPT
+			{
+				radix_sort_after(
+					before_first, last, kerbal::type_traits::bool_constant<Order::value>(),
+					kerbal::type_traits::integral_constant<std::size_t, CHAR_BIT>()
+				);
+			}
+
+			template <typename T>
+			template <bool is_radix_sort_acceptable_type>
+			KERBAL_CONSTEXPR14
+			typename kerbal::type_traits::enable_if<is_radix_sort_acceptable_type>::type
+			fl_type_only<T>::
+			radix_sort_after(const_iterator before_first, const_iterator last) KERBAL_NOEXCEPT
+			{
+				radix_sort_after(before_first, last, kerbal::type_traits::false_type());
+			}
+
+			template <typename T>
+			template <bool is_radix_sort_acceptable_type, typename BinaryPredict>
+			KERBAL_CONSTEXPR14
+			typename kerbal::type_traits::enable_if<is_radix_sort_acceptable_type>::type
+			fl_type_only<T>::
+			sort_after_method_overload(
+				const_iterator before_first, const_iterator last,
+				BinaryPredict cmp
+			)
+			{
+				k_merge_sort_after(before_first, last, cmp);
+			}
+
+			template <typename T>
+			template <bool is_radix_sort_acceptable_type>
+			KERBAL_CONSTEXPR14
+			typename kerbal::type_traits::enable_if<is_radix_sort_acceptable_type>::type
+			fl_type_only<T>::
+			sort_after_method_overload(
+				const_iterator before_first, const_iterator last,
+				kerbal::compare::less<value_type> /*cmp*/
+			)
+			{
+				radix_sort_after(before_first, last, kerbal::type_traits::false_type());
+			}
+
+			template <typename T>
+			template <bool is_radix_sort_acceptable_type>
+			KERBAL_CONSTEXPR14
+			typename kerbal::type_traits::enable_if<is_radix_sort_acceptable_type>::type
+			fl_type_only<T>::
+			sort_after_method_overload(
+				const_iterator before_first, const_iterator last,
+				kerbal::compare::greater<value_type> /*cmp*/
+			)
+			{
+				radix_sort_after(before_first, last, kerbal::type_traits::true_type());
+			}
+
+			template <typename T>
+			template <bool is_radix_sort_acceptable_type>
+			KERBAL_CONSTEXPR14
+			typename kerbal::type_traits::enable_if<is_radix_sort_acceptable_type>::type
+			fl_type_only<T>::
+			sort_after_method_overload(
+				const_iterator before_first, const_iterator last,
+				kerbal::compare::less<void> /*cmp*/
+			)
+			{
+				radix_sort_after(before_first, last, kerbal::type_traits::false_type());
+			}
+
+			template <typename T>
+			template <bool is_radix_sort_acceptable_type>
+			KERBAL_CONSTEXPR14
+			typename kerbal::type_traits::enable_if<is_radix_sort_acceptable_type>::type
+			fl_type_only<T>::
+			sort_after_method_overload(
+				const_iterator before_first, const_iterator last,
+				kerbal::compare::greater<void> /*cmp*/
+			)
+			{
+				radix_sort_after(before_first, last, kerbal::type_traits::true_type());
+			}
+
+			template <typename T>
+			template <bool is_radix_sort_acceptable_type>
+			KERBAL_CONSTEXPR14
+			typename kerbal::type_traits::enable_if<is_radix_sort_acceptable_type>::type
+			fl_type_only<T>::
+			sort_after_method_overload(
+				const_iterator before_first, const_iterator last,
+				std::less<value_type> /*cmp*/
+			)
+			{
+				radix_sort_after(before_first, last, kerbal::type_traits::false_type());
+			}
+
+			template <typename T>
+			template <bool is_radix_sort_acceptable_type>
+			KERBAL_CONSTEXPR14
+			typename kerbal::type_traits::enable_if<is_radix_sort_acceptable_type>::type
+			fl_type_only<T>::
+			sort_after_method_overload(
+				const_iterator before_first, const_iterator last,
+				std::greater<value_type> /*cmp*/
+			)
+			{
+				radix_sort_after(before_first, last, kerbal::type_traits::true_type());
+			}
+
+#		if __cplusplus >= 201402L
+
+			template <typename T>
+			template <bool is_radix_sort_acceptable_type>
+			KERBAL_CONSTEXPR14
+			typename kerbal::type_traits::enable_if<is_radix_sort_acceptable_type>::type
+			fl_type_only<T>::
+			sort_after_method_overload(
+				const_iterator before_first, const_iterator last,
+				std::less<void> /*cmp*/
+			)
+			{
+				radix_sort_after(before_first, last, kerbal::type_traits::false_type());
+			}
+
+			template <typename T>
+			template <bool is_radix_sort_acceptable_type>
+			KERBAL_CONSTEXPR14
+			typename kerbal::type_traits::enable_if<is_radix_sort_acceptable_type>::type
+			fl_type_only<T>::
+			sort_after_method_overload(
+				const_iterator before_first, const_iterator last,
+				std::greater<void> /*cmp*/
+			)
+			{
+				radix_sort_after(before_first, last, kerbal::type_traits::true_type());
+			}
+
+#		endif
+
+			template <typename T>
+			template <bool is_radix_sort_acceptable_type, typename BinaryPredict>
+			KERBAL_CONSTEXPR20
+			typename kerbal::type_traits::enable_if<!is_radix_sort_acceptable_type>::type
+			fl_type_only<T>::
+			sort_after_method_overload(
+				const_iterator before_first, const_iterator last,
+				BinaryPredict cmp
+			)
+			{
+				k_merge_sort_after(before_first, last, cmp);
+			}
+
+			template <typename T>
 			template <typename BinaryPredict>
 			KERBAL_CONSTEXPR14
 			void
 			fl_type_only<T>::
 			k_sort_after(const_iterator before_first, const_iterator last, BinaryPredict cmp)
 			{
-				k_merge_sort_after(before_first, last, cmp);
+				sort_after_method_overload<is_forward_list_radix_sort_acceptable_type<value_type>::value>(before_first, last, cmp);
 			}
 
 			template <typename T>
