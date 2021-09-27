@@ -234,6 +234,13 @@ namespace kerbal
 					typedef typename iterator_traits::pointer				pointer;
 					typedef typename iterator_traits::reference				reference;
 
+				private:
+					KERBAL_CONSTEXPR
+					fl_kiter() KERBAL_NOEXCEPT :
+							super(NULL)
+					{
+					}
+
 				protected:
 					KERBAL_CONSTEXPR
 					explicit fl_kiter(ptr_to_node_base current) KERBAL_NOEXCEPT :

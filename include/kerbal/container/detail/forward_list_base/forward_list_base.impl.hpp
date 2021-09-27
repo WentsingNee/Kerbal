@@ -1188,24 +1188,272 @@ namespace kerbal
 			template <typename Tp>
 			template <typename BinaryPredict>
 			KERBAL_CONSTEXPR14
-			void fl_type_only<Tp>::k_merge_sort_after(const_iterator first, const_iterator last, BinaryPredict cmp)
+			void fl_type_only<Tp>::k_merge_sort_after(const_iterator before_first, const_iterator last, BinaryPredict cmp)
 			{
-				k_merge_sort_n_after(first, kerbal::iterator::distance(first, last) - 1, cmp);
+				k_merge_sort_n_after(before_first, kerbal::iterator::distance(before_first, last) - 1, cmp);
+			}
+
+			template <typename Tp>
+			template <bool is_radix_sort_acceptable_type>
+			KERBAL_CONSTEXPR20
+			typename kerbal::type_traits::enable_if<is_radix_sort_acceptable_type>::type
+			fl_allocator_unrelated<Tp>::radix_sort_back_fill_after(
+					const_iterator before_insert_pos,
+					kerbal::type_traits::false_type /*asc*/, kerbal::type_traits::false_type /*unsigned*/,
+					fl_allocator_unrelated buckets[], std::size_t BUCKETS_NUM) KERBAL_NOEXCEPT
+			{
+				std::size_t i = BUCKETS_NUM;
+				while (i > 0) {
+					--i;
+					_K_splice_after(before_insert_pos, buckets[i]);
+				}
+			}
+
+			template <typename Tp>
+			template <bool is_radix_sort_acceptable_type>
+			KERBAL_CONSTEXPR20
+			typename kerbal::type_traits::enable_if<is_radix_sort_acceptable_type>::type
+			fl_allocator_unrelated<Tp>::radix_sort_back_fill_after(
+					const_iterator before_insert_pos,
+					kerbal::type_traits::true_type /*desc*/, kerbal::type_traits::false_type /*unsigned*/,
+					fl_allocator_unrelated buckets[], std::size_t BUCKETS_NUM) KERBAL_NOEXCEPT
+			{
+				for (std::size_t i = 0; i < BUCKETS_NUM; ++i) {
+					buckets[i].reverse();
+					_K_splice_after(before_insert_pos, buckets[i]);
+				}
+			}
+
+			template <typename Tp>
+			template <bool is_radix_sort_acceptable_type>
+			KERBAL_CONSTEXPR20
+			typename kerbal::type_traits::enable_if<is_radix_sort_acceptable_type>::type
+			fl_allocator_unrelated<Tp>::radix_sort_back_fill_after(
+					const_iterator before_insert_pos,
+					kerbal::type_traits::false_type /*asc*/, kerbal::type_traits::true_type /*signed*/,
+					fl_allocator_unrelated buckets[], std::size_t BUCKETS_NUM) KERBAL_NOEXCEPT
+			{
+				{
+					std::size_t i = BUCKETS_NUM / 2;
+					while (i > 0) {
+						--i;
+						_K_splice_after(before_insert_pos, buckets[i]);
+					}
+				}
+				{
+					std::size_t i = BUCKETS_NUM;
+					while (i > BUCKETS_NUM / 2) {
+						--i;
+						_K_splice_after(before_insert_pos, buckets[i]);
+					}
+				}
+			}
+
+			template <typename Tp>
+			template <bool is_radix_sort_acceptable_type>
+			KERBAL_CONSTEXPR20
+			typename kerbal::type_traits::enable_if<is_radix_sort_acceptable_type>::type
+			fl_allocator_unrelated<Tp>::radix_sort_back_fill_after(
+					const_iterator before_insert_pos,
+					kerbal::type_traits::true_type /*desc*/, kerbal::type_traits::true_type /*signed*/,
+					fl_allocator_unrelated buckets[], std::size_t BUCKETS_NUM) KERBAL_NOEXCEPT
+			{
+				for (std::size_t i = BUCKETS_NUM / 2; i < BUCKETS_NUM; ++i) {
+					buckets[i].reverse();
+					_K_splice_after(before_insert_pos, buckets[i]);
+				}
+				for (std::size_t i = 0; i < BUCKETS_NUM / 2; ++i) {
+					buckets[i].reverse();
+					_K_splice_after(before_insert_pos, buckets[i]);
+				}
+			}
+
+			template <typename Tp>
+			template <bool Order, std::size_t RADIX_BIT_WIDTH>
+			KERBAL_CONSTEXPR20
+			void fl_allocator_unrelated<Tp>::radix_sort_after(
+					const_iterator before_first, const_iterator last, kerbal::type_traits::bool_constant<Order> order,
+					kerbal::type_traits::integral_constant<std::size_t, RADIX_BIT_WIDTH>) KERBAL_NOEXCEPT
+			{
+				typedef kerbal::type_traits::integral_constant<std::size_t, 1 << RADIX_BIT_WIDTH> BUCKETS_NUM;
+				fl_allocator_unrelated buckets[2][BUCKETS_NUM::value];
+
+				for (int i = 0; i < 2; ++i) {
+					for (std::size_t j = 0; j < BUCKETS_NUM::value; ++j) {
+						buckets[i][j].head_node.next = NULL;
+					}
+				}
+
+				typedef kerbal::type_traits::integral_constant<std::size_t, sizeof(value_type) * CHAR_BIT> VALUE_TYPE_BIT_WIDTH;
+				typedef kerbal::type_traits::integral_constant<std::size_t, VALUE_TYPE_BIT_WIDTH::value / RADIX_BIT_WIDTH + (VALUE_TYPE_BIT_WIDTH::value % RADIX_BIT_WIDTH != 0)> ROUNDS;
+
+				const_iterator bucket_backs[BUCKETS_NUM::value];
+
+				// first round
+				for (std::size_t i = 0; i < BUCKETS_NUM::value; ++i) {
+					bucket_backs[i] = buckets[0][i].cbefore_begin();
+				}
+				for (const_iterator it(kerbal::iterator::next(before_first)); it != last; ) {
+					int bucket_id = *it % BUCKETS_NUM::value;
+					fl_allocator_unrelated & bucket_in = buckets[0][bucket_id];
+					++it;
+					bucket_in._K_splice_after(bucket_backs[bucket_id], before_first);
+					++bucket_backs[bucket_id];
+				}
+
+				for (std::size_t round = 1; round < ROUNDS::value; ++round) {
+					fl_allocator_unrelated (& buckets_from)[BUCKETS_NUM::value] = buckets[(round + 1) % 2];
+					fl_allocator_unrelated (& buckets_to)[BUCKETS_NUM::value] = buckets[round % 2];
+
+					for (std::size_t i = 0; i < BUCKETS_NUM::value; ++i) {
+						bucket_backs[i] = buckets_to[i].cbefore_begin();
+					}
+
+					for (std::size_t i = 0; i < BUCKETS_NUM::value; ++i) {
+						fl_allocator_unrelated & bucket_out = buckets_from[i];
+						const_iterator it(bucket_out.begin());
+						const_iterator const cend(bucket_out.end());
+						while (it != cend) {
+							int bucket_id = (*it >> (RADIX_BIT_WIDTH * round)) % BUCKETS_NUM::value;
+							fl_allocator_unrelated & bucket_in = buckets_to[bucket_id];
+							++it;
+							bucket_in._K_splice_after(bucket_backs[bucket_id], bucket_out.cbefore_begin());
+							++bucket_backs[bucket_id];
+						}
+					}
+				}
+
+				radix_sort_back_fill_after<true>(
+						before_first, order,
+						kerbal::type_traits::is_signed<value_type>(),
+						buckets[(ROUNDS::value + 1) % 2], BUCKETS_NUM::value);
+			}
+
+			template <typename Tp>
+			template <typename Order>
+			KERBAL_CONSTEXPR20
+			void fl_allocator_unrelated<Tp>::radix_sort_after(const_iterator before_first, const_iterator last, Order /*order*/) KERBAL_NOEXCEPT
+			{
+				radix_sort_after(before_first, last, kerbal::type_traits::bool_constant<Order::value>(),
+						   kerbal::type_traits::integral_constant<std::size_t, CHAR_BIT>());
+			}
+
+			template <typename Tp>
+			template <bool is_radix_sort_acceptable_type>
+			KERBAL_CONSTEXPR20
+			typename kerbal::type_traits::enable_if<is_radix_sort_acceptable_type>::type
+			fl_allocator_unrelated<Tp>::radix_sort_after(const_iterator before_first, const_iterator last) KERBAL_NOEXCEPT
+			{
+				radix_sort_after(before_first, last, kerbal::type_traits::false_type());
+			}
+
+			template <typename Tp>
+			template <bool is_radix_sort_acceptable_type, typename BinaryPredict>
+			KERBAL_CONSTEXPR20
+			typename kerbal::type_traits::enable_if<is_radix_sort_acceptable_type>::type
+			fl_allocator_unrelated<Tp>::sort_after_method_overload(const_iterator before_first, const_iterator last, BinaryPredict cmp)
+			{
+				_K_merge_sort_after(before_first, last, cmp);
+			}
+
+			template <typename Tp>
+			template <bool is_radix_sort_acceptable_type>
+			KERBAL_CONSTEXPR20
+			typename kerbal::type_traits::enable_if<is_radix_sort_acceptable_type>::type
+			fl_allocator_unrelated<Tp>::sort_after_method_overload(const_iterator before_first, const_iterator last, kerbal::compare::less<value_type> /*cmp*/)
+			{
+				radix_sort_after(before_first, last, kerbal::type_traits::false_type());
+			}
+
+			template <typename Tp>
+			template <bool is_radix_sort_acceptable_type>
+			KERBAL_CONSTEXPR20
+			typename kerbal::type_traits::enable_if<is_radix_sort_acceptable_type>::type
+			fl_allocator_unrelated<Tp>::sort_after_method_overload(const_iterator before_first, const_iterator last, kerbal::compare::greater<value_type> /*cmp*/)
+			{
+				radix_sort_after(before_first, last, kerbal::type_traits::true_type());
+			}
+
+			template <typename Tp>
+			template <bool is_radix_sort_acceptable_type>
+			KERBAL_CONSTEXPR20
+			typename kerbal::type_traits::enable_if<is_radix_sort_acceptable_type>::type
+			fl_allocator_unrelated<Tp>::sort_after_method_overload(const_iterator before_first, const_iterator last, kerbal::compare::less<void> /*cmp*/)
+			{
+				radix_sort_after(before_first, last, kerbal::type_traits::false_type());
+			}
+
+			template <typename Tp>
+			template <bool is_radix_sort_acceptable_type>
+			KERBAL_CONSTEXPR20
+			typename kerbal::type_traits::enable_if<is_radix_sort_acceptable_type>::type
+			fl_allocator_unrelated<Tp>::sort_after_method_overload(const_iterator before_first, const_iterator last, kerbal::compare::greater<void> /*cmp*/)
+			{
+				radix_sort_after(before_first, last, kerbal::type_traits::true_type());
+			}
+
+			template <typename Tp>
+			template <bool is_radix_sort_acceptable_type>
+			KERBAL_CONSTEXPR20
+			typename kerbal::type_traits::enable_if<is_radix_sort_acceptable_type>::type
+			fl_allocator_unrelated<Tp>::sort_after_method_overload(const_iterator before_first, const_iterator last, std::less<value_type> /*cmp*/)
+			{
+				radix_sort_after(before_first, last, kerbal::type_traits::false_type());
+			}
+
+			template <typename Tp>
+			template <bool is_radix_sort_acceptable_type>
+			KERBAL_CONSTEXPR20
+			typename kerbal::type_traits::enable_if<is_radix_sort_acceptable_type>::type
+			fl_allocator_unrelated<Tp>::sort_after_method_overload(const_iterator before_first, const_iterator last, std::greater<value_type> /*cmp*/)
+			{
+				radix_sort_after(before_first, last, kerbal::type_traits::true_type());
+			}
+
+#		if __cplusplus >= 201402L
+
+			template <typename Tp>
+			template <bool is_radix_sort_acceptable_type>
+			KERBAL_CONSTEXPR20
+			typename kerbal::type_traits::enable_if<is_radix_sort_acceptable_type>::type
+			fl_allocator_unrelated<Tp>::sort_after_method_overload(const_iterator before_first, const_iterator last, std::less<void> /*cmp*/)
+			{
+				radix_sort_after(before_first, last, kerbal::type_traits::false_type());
+			}
+
+			template <typename Tp>
+			template <bool is_radix_sort_acceptable_type>
+			KERBAL_CONSTEXPR20
+			typename kerbal::type_traits::enable_if<is_radix_sort_acceptable_type>::type
+			fl_allocator_unrelated<Tp>::sort_after_method_overload(const_iterator before_first, const_iterator last, std::greater<void> /*cmp*/)
+			{
+				radix_sort_after(before_first, last, kerbal::type_traits::true_type());
+			}
+
+#		endif
+
+			template <typename Tp>
+			template <bool is_radix_sort_acceptable_type, typename BinaryPredict>
+			KERBAL_CONSTEXPR20
+			typename kerbal::type_traits::enable_if<!is_radix_sort_acceptable_type>::type
+			fl_allocator_unrelated<Tp>::sort_after_method_overload(const_iterator before_first, const_iterator last, BinaryPredict cmp)
+			{
+				_K_merge_sort_after(before_first, last, cmp);
 			}
 
 			template <typename Tp>
 			template <typename BinaryPredict>
 			KERBAL_CONSTEXPR14
-			void fl_type_only<Tp>::k_sort_after(const_iterator first, const_iterator last, BinaryPredict cmp)
+			void fl_type_only<Tp>::k_sort_after(const_iterator before_first, const_iterator last, BinaryPredict cmp)
 			{
-				k_merge_sort_after(first, last, cmp);
+				sort_after_method_overload<IS_LIST_RADIX_SORT_ACCEPTABLE_TYPE::value>(before_first, last, cmp);
 			}
 
 			template <typename Tp>
 			KERBAL_CONSTEXPR14
-			void fl_type_only<Tp>::k_sort_after(const_iterator first, const_iterator last)
+			void fl_type_only<Tp>::k_sort_after(const_iterator before_first, const_iterator last)
 			{
-				k_sort_after(first, last, kerbal::compare::less<value_type>());
+				k_sort_after(before_first, last, kerbal::compare::less<value_type>());
 			}
 
 			template <typename Tp>
