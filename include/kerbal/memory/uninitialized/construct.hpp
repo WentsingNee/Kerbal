@@ -135,7 +135,7 @@ namespace kerbal
 
 			template <typename Tp, typename ... Args>
 			KERBAL_CONSTEXPR14
-			Tp * _K_construct_at_impl(CONSTRUCT_AT_VER_TRIVIAL, Tp * p, Args&& ... args)
+			Tp * _K_construct_at_impl(CONSTRUCT_AT_VER_TRIVIAL, Tp * p, Args&& ... args) KERBAL_NOEXCEPT
 			{
 				*p = Tp(kerbal::utility::forward<Args>(args)...);
 				return p;
@@ -157,7 +157,12 @@ namespace kerbal
 
 			template <typename Tp, typename ... Args>
 			KERBAL_CONSTEXPR14
-			Tp * _K_construct_at(Tp * p, Args&& ... args) KERBAL_NOEXCEPT
+			Tp * _K_construct_at(Tp * p, Args&& ... args)
+					KERBAL_CONDITIONAL_NOEXCEPT(
+						noexcept(_K_construct_at_impl(
+							typename construct_at_impl_overload_ver<Tp, Args...>::type(),
+							p, kerbal::utility::forward<Args>(args)...))
+					)
 			{
 				typedef typename construct_at_impl_overload_ver<Tp, Args...>::type VER;
 				return _K_construct_at_impl(VER(), p, kerbal::utility::forward<Args>(args)...);
