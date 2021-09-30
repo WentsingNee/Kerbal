@@ -68,10 +68,10 @@ namespace kerbal
 
 					kerbal::memory::raw_storage<value_type> storage[N + 1];
 
-					KERBAL_CONSTEXPR
+					KERBAL_CONSTEXPR20
 					static_queue_base() KERBAL_NOEXCEPT
 #			if __cplusplus >= 201103L
-							: ibegin(0), iend(0), storage{}
+							: ibegin(0), iend(0), storage()
 #			else
 							: ibegin(0), iend(0)
 #			endif
@@ -84,7 +84,7 @@ namespace kerbal
 						this->clear();
 					}
 
-					KERBAL_CONSTEXPR14
+					KERBAL_CONSTEXPR20
 					void clear()
 					{
 						while (this->ibegin != this->iend) {
@@ -114,7 +114,7 @@ namespace kerbal
 					KERBAL_CONSTEXPR
 					static_queue_base() KERBAL_NOEXCEPT
 #			if __cplusplus >= 201103L
-							: ibegin(0), iend(0), storage{}
+							: ibegin(0), iend(0), storage()
 #			else
 							: ibegin(0), iend(0)
 #			endif

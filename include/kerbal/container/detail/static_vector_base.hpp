@@ -49,7 +49,7 @@ namespace kerbal
 					KERBAL_CONSTEXPR20
 					static_vector_base() KERBAL_NOEXCEPT
 #			if __cplusplus >= 201103L
-							: len(0), storage{}
+							: len(0), storage()
 #			else
 							: len(0)
 #			endif
@@ -85,7 +85,7 @@ namespace kerbal
 					KERBAL_CONSTEXPR
 					static_vector_base() KERBAL_NOEXCEPT
 #			if __cplusplus >= 201103L
-							: len(0), storage{}
+							: len(0), storage()
 #			else
 							: len(0)
 #			endif
