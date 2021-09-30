@@ -9,8 +9,8 @@
  *   all rights reserved
  */
 
-#ifndef KERBAL_DATA_STRUCT_RAW_STORAGE_HPP
-#define KERBAL_DATA_STRUCT_RAW_STORAGE_HPP
+#ifndef KERBAL_MEMORY_RAW_STORAGE_HPP
+#define KERBAL_MEMORY_RAW_STORAGE_HPP
 
 #include <kerbal/compatibility/alignof.hpp>
 #include <kerbal/compatibility/constexpr.hpp>
@@ -39,7 +39,7 @@
 namespace kerbal
 {
 
-	namespace data_struct
+	namespace memory
 	{
 
 		template <typename Type>
@@ -234,7 +234,7 @@ namespace kerbal
 
 		template <typename Type>
 		class _K_rawst_agent:
-				public kerbal::data_struct::_K_rawst_base<Type>
+				public kerbal::memory::_K_rawst_base<Type>
 		{
 			private:
 				typedef _K_rawst_agent this_type;
@@ -313,7 +313,7 @@ namespace kerbal
 
 		template <typename Type, size_t N>
 		class _K_rawst_agent<Type[N]>:
-				public kerbal::data_struct::_K_rawst_base<Type[N]>
+				public kerbal::memory::_K_rawst_base<Type[N]>
 		{
 			private:
 				typedef _K_rawst_agent this_type;
@@ -392,10 +392,10 @@ namespace kerbal
 
 
 		template <typename Type>
-		class raw_storage: public kerbal::data_struct::_K_rawst_agent<Type>
+		class raw_storage: public kerbal::memory::_K_rawst_agent<Type>
 		{
 			private:
-				typedef kerbal::data_struct::_K_rawst_agent<Type> super;
+				typedef kerbal::memory::_K_rawst_agent<Type> super;
 
 			public:
 				typedef Type						value_type;
@@ -418,9 +418,9 @@ namespace kerbal
 
 		};
 
-	} // namespace data_struct
+	} // namespace memory
 
 } // namespace kerbal
 
 
-#endif // KERBAL_DATA_STRUCT_RAW_STORAGE_HPP
+#endif // KERBAL_MEMORY_RAW_STORAGE_HPP

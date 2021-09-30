@@ -20,7 +20,7 @@
 #include <kerbal/compatibility/constexpr.hpp>
 #include <kerbal/compatibility/move.hpp>
 #include <kerbal/compatibility/noexcept.hpp>
-#include <kerbal/data_struct/raw_storage.hpp>
+#include <kerbal/memory/raw_storage.hpp>
 #include <kerbal/type_traits/enable_if.hpp>
 
 #if __cplusplus >= 201103L
@@ -34,7 +34,7 @@ namespace kerbal
 	{
 
 		template <typename Type>
-		class optional: protected kerbal::data_struct::raw_storage<Type>
+		class optional: protected kerbal::memory::raw_storage<Type>
 		{
 			public:
 				typedef Type value_type;

@@ -13,7 +13,7 @@
 #define KERBAL_CONTAINER_DETAIL_STATIC_VECTOR_BASE_HPP
 
 #include <kerbal/compatibility/constexpr.hpp>
-#include <kerbal/data_struct/raw_storage.hpp>
+#include <kerbal/memory/raw_storage.hpp>
 #include <kerbal/type_traits/can_be_pseudo_destructible.hpp>
 
 #include <cstddef>
@@ -39,7 +39,7 @@ namespace kerbal
 					typedef size_t		size_type;
 
 				protected:
-					typedef kerbal::data_struct::raw_storage<value_type> storage_type;
+					typedef kerbal::memory::raw_storage<value_type> storage_type;
 
 				protected:
 					size_type len;
@@ -75,7 +75,7 @@ namespace kerbal
 					typedef size_t		size_type;
 
 				protected:
-					typedef kerbal::data_struct::raw_storage<value_type> storage_type;
+					typedef kerbal::memory::raw_storage<value_type> storage_type;
 
 				protected:
 					size_type len;

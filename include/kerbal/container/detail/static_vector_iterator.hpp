@@ -14,8 +14,8 @@
 
 #include <kerbal/compatibility/constexpr.hpp>
 #include <kerbal/compatibility/noexcept.hpp>
-#include <kerbal/data_struct/raw_storage.hpp>
 #include <kerbal/iterator/iterator_traits.hpp>
+#include <kerbal/memory/raw_storage.hpp>
 #include <kerbal/operators/addable.hpp>
 #include <kerbal/operators/dereferenceable.hpp>
 #include <kerbal/operators/equality_comparable.hpp>
@@ -148,7 +148,7 @@ namespace kerbal
 			class __stavec_iter: public __stavec_iterbase<
 													__stavec_iter<ValueType>,
 													ValueType*,
-													kerbal::data_struct::raw_storage<ValueType>
+													kerbal::memory::raw_storage<ValueType>
 											>
 			{
 				private:
@@ -157,7 +157,7 @@ namespace kerbal
 
 					friend class __stavec_kiter<ValueType>;
 
-					typedef kerbal::data_struct::raw_storage<ValueType> storage_type;
+					typedef kerbal::memory::raw_storage<ValueType> storage_type;
 					typedef __stavec_iterbase<__stavec_iter<ValueType>, ValueType*, storage_type> super;
 
 				public:
@@ -173,14 +173,14 @@ namespace kerbal
 			class __stavec_kiter: public __stavec_iterbase<
 													__stavec_kiter<ValueType>,
 													const ValueType*,
-													const kerbal::data_struct::raw_storage<ValueType>
+													const kerbal::memory::raw_storage<ValueType>
 											>
 			{
 				private:
 					template <typename Tp, size_t N>
 					friend class kerbal::container::static_vector;
 
-					typedef kerbal::data_struct::raw_storage<ValueType> storage_type;
+					typedef kerbal::memory::raw_storage<ValueType> storage_type;
 					typedef __stavec_iterbase<__stavec_kiter<ValueType>, const ValueType*, const storage_type> super;
 					typedef __stavec_iter<ValueType> iterator;
 
