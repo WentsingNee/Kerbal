@@ -1,5 +1,5 @@
 /**
- * @file       optional_hash.hpp
+ * @file       optional_hash_template.hpp
  * @brief
  * @date       2018-11-7
  * @author     Peter
@@ -9,8 +9,8 @@
  *   all rights reserved
  */
 
-#ifndef KERBAL_OPTIONAL_OPTIONAL_HASH_HPP
-#define KERBAL_OPTIONAL_OPTIONAL_HASH_HPP
+#ifndef KERBAL_OPTIONAL_DETAIL_OPTIONAL_HASH_TEMPLATE_HPP
+#define KERBAL_OPTIONAL_DETAIL_OPTIONAL_HASH_TEMPLATE_HPP
 
 #include <kerbal/optional/fwd/optional.fwd.hpp>
 
@@ -27,7 +27,7 @@ namespace kerbal
 	{
 
 		template <typename OptionalType, typename ValueTypeHash, std::size_t NulloptHash>
-		struct optional_hash
+		struct optional_hash_template
 		{
 				KERBAL_CONSTEXPR
 				std::size_t operator()(const OptionalType & opt) const
@@ -40,21 +40,6 @@ namespace kerbal
 
 	} // namespace optional
 
-	namespace hash
-	{
-
-		template <typename T>
-		struct hash<kerbal::optional::optional<T> > :
-				public kerbal::optional::optional_hash<
-							kerbal::optional::optional<T>,
-							kerbal::hash::hash<T>,
-							static_cast<size_t>(-3333)
-						>
-		{
-		};
-
-	} // namespace hash
-
 } // namespace kerbal
 
-#endif // KERBAL_OPTIONAL_OPTIONAL_HASH_HPP
+#endif // KERBAL_OPTIONAL_DETAIL_OPTIONAL_HASH_TEMPLATE_HPP

@@ -1,5 +1,5 @@
 /**
- * @file       optional_type_traits.hpp
+ * @file       is_optional.hpp
  * @brief
  * @date       2018-10-28
  * @author     Peter
@@ -9,8 +9,8 @@
  *   all rights reserved
  */
 
-#ifndef KERBAL_OPTIONAL_OPTIONAL_TYPE_TRAITS_HPP
-#define KERBAL_OPTIONAL_OPTIONAL_TYPE_TRAITS_HPP
+#ifndef KERBAL_OPTIONAL_IS_OPTIONAL_HPP
+#define KERBAL_OPTIONAL_IS_OPTIONAL_HPP
 
 #include <kerbal/optional/fwd/optional.fwd.hpp>
 
@@ -53,4 +53,4 @@ namespace kerbal
 
 } // namespace kerbal
 
-#endif // KERBAL_OPTIONAL_OPTIONAL_TYPE_TRAITS_HPP
+#endif // KERBAL_OPTIONAL_IS_OPTIONAL_HPP

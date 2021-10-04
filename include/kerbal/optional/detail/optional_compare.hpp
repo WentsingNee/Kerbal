@@ -9,8 +9,8 @@
  *   all rights reserved
  */
 
-#ifndef KERBAL_OPTIONAL_OPTIONAL_COMPARE_HPP
-#define KERBAL_OPTIONAL_OPTIONAL_COMPARE_HPP
+#ifndef KERBAL_OPTIONAL_DETAIL_OPTIONAL_COMPARE_HPP
+#define KERBAL_OPTIONAL_DETAIL_OPTIONAL_COMPARE_HPP
 
 #include <kerbal/optional/fwd/optional.fwd.hpp>
 
@@ -432,4 +432,4 @@ namespace kerbal
 
 } // namespace kerbal
 
-#endif // KERBAL_OPTIONAL_OPTIONAL_COMPARE_HPP
+#endif // KERBAL_OPTIONAL_DETAIL_OPTIONAL_COMPARE_HPP

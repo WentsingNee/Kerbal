@@ -15,8 +15,9 @@
 #include <kerbal/optional/fwd/optional.fwd.hpp>
 
 #include <kerbal/optional/bad_optional_access.hpp>
-#include <kerbal/optional/optional_type_traits.hpp>
+#include <kerbal/optional/is_optional.hpp>
 #include <kerbal/optional/nullopt.hpp>
+#include <kerbal/optional/detail/optional_hash_template.hpp>
 
 #include <kerbal/algorithm/swap.hpp>
 #include <kerbal/compatibility/constexpr.hpp>
@@ -35,6 +36,8 @@
 #if __cplusplus >= 201103L
 #	include <kerbal/utility/forward.hpp>
 #endif
+
+#include <cstddef>
 
 
 namespace kerbal
@@ -1023,6 +1026,22 @@ namespace kerbal
 
 	} // namespace optional
 
+
+	namespace hash
+	{
+
+		template <typename T>
+		struct hash<kerbal::optional::optional<T> > :
+				public kerbal::optional::optional_hash_template<
+						kerbal::optional::optional<T>,
+						kerbal::hash::hash<T>,
+						static_cast<std::size_t>(-3333)
+				>
+		{
+		};
+
+	} // namespace hash
+
 } // namespace kerbal
 
 
@@ -1034,5 +1053,8 @@ KERBAL_NAMESPACE_STD_BEGIN
 		a.swap(b);
 	}
 KERBAL_NAMESPACE_STD_END
+
+
+#include <kerbal/optional/detail/optional_compare.hpp>
 
 #endif // KERBAL_OPTIONAL_OPTIONAL_HPP
