@@ -2,20 +2,26 @@
  * @file       optional_compare.hpp
  * @brief
  * @date       2019-5-14
- * @author     peter
+ * @author     Peter
  * @copyright
- *      peter of [ThinkSpirit Laboratory](http://thinkspirit.org/)
+ *      Peter of [ThinkSpirit Laboratory](http://thinkspirit.org/)
  *   of [Nanjing University of Information Science & Technology](http://www.nuist.edu.cn/)
  *   all rights reserved
  */
 
-#ifndef KERBAL_OPTIONAL_OPTIONAL_COMPARE_HPP_
-#define KERBAL_OPTIONAL_OPTIONAL_COMPARE_HPP_
+#ifndef KERBAL_OPTIONAL_OPTIONAL_COMPARE_HPP
+#define KERBAL_OPTIONAL_OPTIONAL_COMPARE_HPP
 
-#include <kerbal/optional/optional.hpp>
+#include <kerbal/optional/fwd/optional.fwd.hpp>
+
+#include <kerbal/compatibility/constexpr.hpp>
+#include <kerbal/compatibility/noexcept.hpp>
+#include <kerbal/optional/nullopt.hpp>
+
 
 namespace kerbal
 {
+
 	namespace optional
 	{
 
@@ -24,44 +30,130 @@ namespace kerbal
 		 * Compare with kerbal::optional::optional
 		 * @{
 		 */
-		template <typename Tp, typename Up>
-		bool operator==(const optional<Tp> & lhs, const optional<Up> & rhs)
+		template <typename T, typename U>
+		KERBAL_CONSTEXPR
+		bool operator==(const optional<T> & lhs, const optional<U> & rhs)
 		{
-			return (bool(lhs) && bool(rhs)) ?
-					(lhs.ignored_get() == rhs.ignored_get()) :
-					bool(lhs) == bool(rhs);
+			/*
+			 * match (lhs.has_value(), rhs.has_value()) {
+			 *     case true, true:
+			 *         lhs == rhs
+			 *     case true, false:
+			 *         false
+			 *     case false, true:
+			 *         false
+			 *     case false, false:
+			 *         true
+			 * }
+			 */
+			return (lhs.has_value() && rhs.has_value()) ?
+				   (lhs.ignored_get() == rhs.ignored_get()) :
+				   lhs.has_value() == rhs.has_value();
 		}
 
-		template <typename Tp, typename Up>
-		bool operator<(const optional<Tp> & lhs, const optional<Up> & rhs)
+		template <typename T, typename U>
+		KERBAL_CONSTEXPR
+		bool operator!=(const optional<T> & lhs, const optional<U> & rhs)
 		{
-			return (bool(lhs) && bool(rhs)) ?
-					(lhs.ignored_get() < rhs.ignored_get()) :
-					(!bool(lhs) && bool(rhs) ? true : false);
+			/*
+			 * match (lhs.has_value(), rhs.has_value()) {
+			 *     case true, true:
+			 *         lhs != rhs
+			 *     case true, false:
+			 *         true
+			 *     case false, true:
+			 *         true
+			 *     case false, false:
+			 *         false
+			 * }
+			 */
+			return (lhs.has_value() && rhs.has_value()) ?
+				   (lhs.ignored_get() != rhs.ignored_get()) :
+				   lhs.has_value() != rhs.has_value();
 		}
 
-		template <typename Tp, typename Up>
-		bool operator!=(const optional<Tp> & lhs, const optional<Up> & rhs)
+		template <typename T, typename U>
+		KERBAL_CONSTEXPR
+		bool operator<(const optional<T> & lhs, const optional<U> & rhs)
 		{
-			return !(lhs == rhs);
+			/*
+			 * match (lhs.has_value(), rhs.has_value()) {
+			 *     case true, true:
+			 *         lhs < rhs
+			 *     case true, false:
+			 *         false
+			 *     case false, true:
+			 *         true
+			 *     case false, false:
+			 *         false
+			 * }
+			 */
+			return (lhs.has_value() && rhs.has_value()) ?
+				   (lhs.ignored_get() < rhs.ignored_get()) :
+				   rhs.has_value();
 		}
 
-		template <typename Tp, typename Up>
-		bool operator<=(const optional<Tp> & lhs, const optional<Up> & rhs)
+		template <typename T, typename U>
+		KERBAL_CONSTEXPR
+		bool operator<=(const optional<T> & lhs, const optional<U> & rhs)
 		{
-			return !(rhs < lhs);
+			/*
+			 * match (lhs.has_value(), rhs.has_value()) {
+			 *     case true, true:
+			 *         lhs <= rhs
+			 *     case true, false:
+			 *         false
+			 *     case false, true:
+			 *         true
+			 *     case false, false:
+			 *         true
+			 * }
+			 */
+			return (lhs.has_value() && rhs.has_value()) ?
+				   (lhs.ignored_get() <= rhs.ignored_get()) :
+				   !lhs.has_value();
 		}
 
-		template <typename Tp, typename Up>
-		bool operator>(const optional<Tp> & lhs, const optional<Up> & rhs)
+		template <typename T, typename U>
+		KERBAL_CONSTEXPR
+		bool operator>(const optional<T> & lhs, const optional<U> & rhs)
 		{
-			return rhs < lhs;
+			/*
+			 * match (lhs.has_value(), rhs.has_value()) {
+			 *     case true, true:
+			 *         lhs > rhs
+			 *     case true, false:
+			 *         true
+			 *     case false, true:
+			 *         false
+			 *     case false, false:
+			 *         false
+			 * }
+			 */
+			return (lhs.has_value() && rhs.has_value()) ?
+				   (lhs.ignored_get() > rhs.ignored_get()) :
+				   lhs.has_value();
 		}
 
-		template <typename Tp, typename Up>
-		bool operator>=(const optional<Tp> & lhs, const optional<Up> & rhs)
+		template <typename T, typename U>
+		KERBAL_CONSTEXPR
+		bool operator>=(const optional<T> & lhs, const optional<U> & rhs)
 		{
-			return !(lhs < rhs);
+			/*
+			 * match (lhs.has_value(), rhs.has_value()) {
+			 *     case true, true:
+			 *         lhs >= rhs
+			 *     case true, false:
+			 *         true
+			 *     case false, true:
+			 *         false
+			 *     case false, false:
+			 *         true
+			 * }
+			 */
+			return (lhs.has_value() && rhs.has_value()) ?
+				   (lhs.ignored_get() >= rhs.ignored_get()) :
+				   !rhs.has_value();
 		}
 		/**
 		 * @}
@@ -70,100 +162,101 @@ namespace kerbal
 
 		/**
 		 * @defgroup optional_compare
-		 * Compare with std::nullopt, kerbal::optional::nullopt
+		 * Compare with kerbal::optional::nullopt
 		 * @{
 		 */
-		template <typename Tp, typename NulloptType>
-		typename kerbal::type_traits::enable_if<is_nullopt<NulloptType>::value, bool>::type
-		operator==(const optional<Tp> & opt, const NulloptType &)
+		template <typename T>
+		KERBAL_CONSTEXPR
+		bool operator==(const optional<T> & opt, const nullopt_t &) KERBAL_NOEXCEPT
 		{
-			return bool(opt) == false;
+			return !opt.has_value();
 		}
 
-		template <typename Tp, typename NulloptType>
+		template <typename T>
 		KERBAL_CONSTEXPR
-		typename kerbal::type_traits::enable_if<is_nullopt<NulloptType>::value, bool>::type
-		operator<(const optional<Tp> &, const NulloptType &)
+		bool operator!=(const optional<T> & opt, const nullopt_t &) KERBAL_NOEXCEPT
 		{
+			return opt.has_value();
+		}
+
+		template <typename T>
+		KERBAL_CONSTEXPR
+		bool operator<(const optional<T> &, const nullopt_t &) KERBAL_NOEXCEPT
+		{
+//			return opt.has_value() < false;
 			return false;
 		}
 
-		template <typename Tp, typename NulloptType>
-		typename kerbal::type_traits::enable_if<is_nullopt<NulloptType>::value, bool>::type
-		operator!=(const optional<Tp> & opt, const NulloptType & nullopt)
-		{
-			return !(opt == nullopt);
-		}
-
-		template <typename Tp, typename NulloptType>
-		typename kerbal::type_traits::enable_if<is_nullopt<NulloptType>::value, bool>::type
-		operator<=(const optional<Tp> & opt, const NulloptType & /*nullopt*/)
-		{
-//			return opt < nullopt || opt == nullopt;
-			return !(bool(opt));
-		}
-
-		template <typename Tp, typename NulloptType>
-		typename kerbal::type_traits::enable_if<is_nullopt<NulloptType>::value, bool>::type
-		operator>(const optional<Tp> & opt, const NulloptType & /*nullopt*/)
-		{
-//			return !(opt <= nullopt);
-			return bool(opt);
-		}
-
-		template <typename Tp, typename NulloptType>
+		template <typename T>
 		KERBAL_CONSTEXPR
-		typename kerbal::type_traits::enable_if<is_nullopt<NulloptType>::value, bool>::type
-		operator>=(const optional<Tp> & /*opt*/, const NulloptType & /*nullopt*/)
+		bool operator<=(const optional<T> & opt, const nullopt_t &) KERBAL_NOEXCEPT
 		{
-//			return !(opt < nullopt);
+//			return opt.has_value() <= false;
+			return !opt.has_value();
+		}
+
+		template <typename T>
+		KERBAL_CONSTEXPR
+		bool operator>(const optional<T> & opt, const nullopt_t &) KERBAL_NOEXCEPT
+		{
+//			return opt.has_value() > false;
+			return opt.has_value();
+		}
+
+		template <typename T>
+		KERBAL_CONSTEXPR
+		bool operator>=(const optional<T> & /*opt*/, const nullopt_t &) KERBAL_NOEXCEPT
+		{
+//			return opt.has_value() >= false;
 			return true;
 		}
 
-		template <typename Tp, typename NulloptType>
-		typename kerbal::type_traits::enable_if<is_nullopt<NulloptType>::value, bool>::type
-		operator==(const NulloptType & nullopt, const optional<Tp> & opt)
-		{
-			return opt == nullopt;
-		}
 
-		template <typename Tp, typename NulloptType>
-		typename kerbal::type_traits::enable_if<is_nullopt<NulloptType>::value, bool>::type
-		operator<(const NulloptType & nullopt, const optional<Tp> & opt)
-		{
-			return opt > nullopt;
-		}
 
-		template <typename Tp, typename NulloptType>
-		typename kerbal::type_traits::enable_if<is_nullopt<NulloptType>::value, bool>::type
-		operator!=(const NulloptType & nullopt, const optional<Tp> & opt)
-		{
-			return !(opt == nullopt);
-		}
-
-		template <typename Tp, typename NulloptType>
+		template <typename T>
 		KERBAL_CONSTEXPR
-		typename kerbal::type_traits::enable_if<is_nullopt<NulloptType>::value, bool>::type
-		operator<=(const NulloptType & nullopt, const optional<Tp> & opt)
+		bool operator==(const nullopt_t &, const optional<T> & opt) KERBAL_NOEXCEPT
 		{
-//			return !(opt < nullopt);
+			return !opt.has_value();
+		}
+
+		template <typename T>
+		KERBAL_CONSTEXPR
+		bool operator!=(const nullopt_t &, const optional<T> & opt) KERBAL_NOEXCEPT
+		{
+			return opt.has_value();
+		}
+
+		template <typename T>
+		KERBAL_CONSTEXPR
+		bool operator<(const nullopt_t &, const optional<T> & opt)
+		{
+//			return false < opt.has_value();
+			return opt.has_value();
+		}
+
+		template <typename T>
+		KERBAL_CONSTEXPR
+		bool operator<=(const nullopt_t &, const optional<T> & opt)
+		{
+//			return false < opt.has_value();
 			return true;
 		}
 
-		template <typename Tp, typename NulloptType>
+		template <typename T>
 		KERBAL_CONSTEXPR
-		typename kerbal::type_traits::enable_if<is_nullopt<NulloptType>::value, bool>::type
-		operator>(const NulloptType & nullopt, const optional<Tp> & opt)
+		bool operator>(const nullopt_t &, const optional<T> & opt)
 		{
-//			return opt < nullopt;
+//			return false > opt.has_value();
 			return false;
 		}
 
-		template <typename Tp, typename NulloptType>
-		typename kerbal::type_traits::enable_if<is_nullopt<NulloptType>::value, bool>::type
-		operator>=(const NulloptType & nullopt, const optional<Tp> & opt)
+		template <typename T>
+		KERBAL_CONSTEXPR
+		bool operator>=(const nullopt_t & nullopt, const optional<T> & opt)
 		{
-			return !(opt > nullopt);
+//			return false >= opt.has_value();
+			return !opt.has_value();
 		}
 
 		/**
@@ -175,100 +268,168 @@ namespace kerbal
 		 * Compare with value type
 		 * @{
 		 */
-		template <typename Tp, typename Up>
-		typename kerbal::type_traits::enable_if<!is_optional<Up>::value && !is_nullopt<Up>::value, bool>::type
-		operator==(const optional<Tp> & opt, const Up & value)
+		template <typename T, typename U>
+		KERBAL_CONSTEXPR
+		bool operator==(const optional<T> & opt, const U & value)
 		{
-			return (bool(opt)) ?
-					(opt.ignored_get() == value) :
-					false;
+			/*
+			 * if opt.has_value()
+			 *     *opt == value
+			 * else
+			 *     false == true => false
+			 */
+			return opt.has_value() && (opt.ignored_get() == value);
 		}
 
-		template <typename Tp, typename Up>
-		typename kerbal::type_traits::enable_if<!is_optional<Up>::value && !is_nullopt<Up>::value, bool>::type
-		operator<(const optional<Tp> & opt, const Up & value)
+		template <typename T, typename U>
+		KERBAL_CONSTEXPR
+		bool operator!=(const optional<T> & opt, const U & value)
 		{
-			return (bool(opt)) ?
-					(opt.ignored_get() < value) :
-					true;
+			/*
+			 * if opt.has_value()
+			 *     *opt != value
+			 * else
+			 *     false != true => true
+			 */
+			return !opt.has_value() || (opt.ignored_get() != value);
 		}
 
-		template <typename Tp, typename Up>
-		typename kerbal::type_traits::enable_if<!is_optional<Up>::value && !is_nullopt<Up>::value, bool>::type
-		operator!=(const optional<Tp> & opt, const Up & value)
+		template <typename T, typename U>
+		KERBAL_CONSTEXPR
+		bool operator<(const optional<T> & opt, const U & value)
 		{
-			return !(opt == value);
+			/*
+			 * if opt.has_value()
+			 *     *opt < value
+			 * else
+			 *     false < true => true
+			 */
+			return !opt.has_value() || (opt.ignored_get() < value);
 		}
 
-		template <typename Tp, typename Up>
-		typename kerbal::type_traits::enable_if<!is_optional<Up>::value && !is_nullopt<Up>::value, bool>::type
-		operator<=(const optional<Tp> & opt, const Up & value)
+		template <typename T, typename U>
+		KERBAL_CONSTEXPR
+		bool operator<=(const optional<T> & opt, const U & value)
 		{
-			return (opt < value || opt == value);
+			/*
+			 * if opt.has_value()
+			 *     *opt <= value
+			 * else
+			 *     false <= true => true
+			 */
+			return !opt.has_value() || (opt.ignored_get() <= value);
 		}
 
-		template <typename Tp, typename Up>
-		typename kerbal::type_traits::enable_if<!is_optional<Up>::value && !is_nullopt<Up>::value, bool>::type
-		operator>(const optional<Tp> & opt, const Up & value)
+		template <typename T, typename U>
+		KERBAL_CONSTEXPR
+		bool operator>(const optional<T> & opt, const U & value)
 		{
-			return !(opt <= value);
+			/*
+			 * if opt.has_value()
+			 *     *opt > value
+			 * else
+			 *     false > true => false
+			 */
+			return opt.has_value() && (opt.ignored_get() > value);
 		}
 
-		template <typename Tp, typename Up>
-		typename kerbal::type_traits::enable_if<!is_optional<Up>::value && !is_nullopt<Up>::value, bool>::type
-		operator>=(const optional<Tp> & opt, const Up & value)
+		template <typename T, typename U>
+		KERBAL_CONSTEXPR
+		bool operator>=(const optional<T> & opt, const U & value)
 		{
-			return !(opt < value);
+			/*
+			 * if opt.has_value()
+			 *     *opt >= value
+			 * else
+			 *     false >= true => false
+			 */
+			return opt.has_value() && (opt.ignored_get() >= value);
 		}
 
 
-		template <typename Up, typename Tp>
-		typename kerbal::type_traits::enable_if<!is_optional<Up>::value && !is_nullopt<Up>::value, bool>::type
-		operator==(const Up & value, const optional<Tp> & opt)
+		template <typename U, typename T>
+		KERBAL_CONSTEXPR
+		bool operator==(const U & value, const optional<T> & opt)
 		{
-			return opt == value;
+			/*
+			 * if opt.has_value()
+			 *     value == *opt
+			 * else
+			 *     true == false => false
+			 */
+			return opt.has_value() && (value == opt.ignored_get());
 		}
 
-		template <typename Up, typename Tp>
-		typename kerbal::type_traits::enable_if<!is_optional<Up>::value && !is_nullopt<Up>::value, bool>::type
-		operator<(const Up & value, const optional<Tp> & opt)
+		template <typename U, typename T>
+		KERBAL_CONSTEXPR
+		bool operator!=(const U & value, const optional<T> & opt)
 		{
-			return opt > value;
+			/*
+			 * if opt.has_value()
+			 *     value != *opt
+			 * else
+			 *     true != false => true
+			 */
+			return !opt.has_value() || (value != opt.ignored_get());
 		}
 
-		template <typename Up, typename Tp>
-		typename kerbal::type_traits::enable_if<!is_optional<Up>::value && !is_nullopt<Up>::value, bool>::type
-		operator!=(const Up & value, const optional<Tp> & opt)
+		template <typename U, typename T>
+		KERBAL_CONSTEXPR
+		bool operator<(const U & value, const optional<T> & opt)
 		{
-			return opt != value;
+			/*
+			 * if opt.has_value()
+			 *     value < *opt
+			 * else
+			 *     true < false => false
+			 */
+			return opt.has_value() && (value < opt.ignored_get());
 		}
 
-		template <typename Up, typename Tp>
-		typename kerbal::type_traits::enable_if<!is_optional<Up>::value && !is_nullopt<Up>::value, bool>::type
-		operator<=(const Up & value, const optional<Tp> & opt)
+		template <typename U, typename T>
+		KERBAL_CONSTEXPR
+		bool operator<=(const U & value, const optional<T> & opt)
 		{
-			return opt >= value;
+			/*
+			 * if opt.has_value()
+			 *     value <= *opt
+			 * else
+			 *     true <= false => false
+			 */
+			return opt.has_value() && (value <= opt.ignored_get());
 		}
 
-		template <typename Up, typename Tp>
-		typename kerbal::type_traits::enable_if<!is_optional<Up>::value && !is_nullopt<Up>::value, bool>::type
-		operator>(const Up & value, const optional<Tp> & opt)
+		template <typename U, typename T>
+		KERBAL_CONSTEXPR
+		bool operator>(const U & value, const optional<T> & opt)
 		{
-			return opt < value;
+			/*
+			 * if opt.has_value()
+			 *     value > *opt
+			 * else
+			 *     true > false => true
+			 */
+			return !opt.has_value() || (value > opt.ignored_get());
 		}
 
-		template <typename Up, typename Tp>
-		typename kerbal::type_traits::enable_if<!is_optional<Up>::value && !is_nullopt<Up>::value, bool>::type
-		operator>=(const Up & value, const optional<Tp> & opt)
+		template <typename U, typename T>
+		KERBAL_CONSTEXPR
+		bool operator>=(const U & value, const optional<T> & opt)
 		{
-			return opt <= value;
+			/*
+			 * if opt.has_value()
+			 *     value >= *opt
+			 * else
+			 *     true >= false => true
+			 */
+			return !opt.has_value() || (value >= opt.ignored_get());
 		}
 		/**
 		 * @}
 		 */
 
-	} /* namespace optional */
+	} // namespace optional
 
-} /* namespace kerbal */
+} // namespace kerbal
 
-#endif /* KERBAL_OPTIONAL_OPTIONAL_COMPARE_HPP_ */
+#endif // KERBAL_OPTIONAL_OPTIONAL_COMPARE_HPP

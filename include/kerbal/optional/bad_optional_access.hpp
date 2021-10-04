@@ -2,26 +2,31 @@
  * @file       bad_optional_access.hpp
  * @brief
  * @date       2018-10-28
- * @author     peter
+ * @author     Peter
  * @copyright
- *      peter of [ThinkSpirit Laboratory](http://thinkspirit.org/)
+ *      Peter of [ThinkSpirit Laboratory](http://thinkspirit.org/)
  *   of [Nanjing University of Information Science & Technology](http://www.nuist.edu.cn/)
  *   all rights reserved
  */
 
-#ifndef KERBAL_OPTIONAL_BAD_OPTIONAL_ACCESS_
-#define KERBAL_OPTIONAL_BAD_OPTIONAL_ACCESS_
+#ifndef KERBAL_OPTIONAL_BAD_OPTIONAL_ACCESS
+#define KERBAL_OPTIONAL_BAD_OPTIONAL_ACCESS
 
 #include <kerbal/compatibility/noexcept.hpp>
 #include <kerbal/utility/throw_this_exception.hpp>
+
 #include <exception>
+
 
 namespace kerbal
 {
+
 	namespace optional
 	{
 
-		class bad_optional_access: public std::exception, public kerbal::utility::throw_this_exception_helper<bad_optional_access>
+		class bad_optional_access:
+				public std::exception,
+				public kerbal::utility::throw_this_exception_helper<bad_optional_access>
 		{
 			public:
 				virtual const char* what() const KERBAL_NOEXCEPT
@@ -30,9 +35,8 @@ namespace kerbal
 				}
 		};
 
-	} /* namespace optional */
+	} // namespace optional
 
-} /* namespace kerbal */
+} // namespace kerbal
 
-
-#endif /* KERBAL_OPTIONAL_BAD_OPTIONAL_ACCESS_ */
+#endif // KERBAL_OPTIONAL_BAD_OPTIONAL_ACCESS
