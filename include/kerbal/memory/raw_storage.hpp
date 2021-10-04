@@ -108,37 +108,37 @@ namespace kerbal
 				_K_rawst_base() = default;
 #		endif
 
-				_K_rawst_base(kerbal::utility::in_place_t) :
+				explicit _K_rawst_base(kerbal::utility::in_place_t) :
 						_K_storage()
 				{
 				}
 
 				template <typename Arg0>
-				_K_rawst_base(kerbal::utility::in_place_t, const Arg0 & arg0) :
+				explicit _K_rawst_base(kerbal::utility::in_place_t, const Arg0 & arg0) :
 						_K_storage(arg0)
 				{
 				}
 
 				template <typename Arg0, typename Arg1>
-				_K_rawst_base(kerbal::utility::in_place_t, const Arg0 & arg0, const Arg1 & arg1) :
+				explicit _K_rawst_base(kerbal::utility::in_place_t, const Arg0 & arg0, const Arg1 & arg1) :
 						_K_storage(arg0, arg1)
 				{
 				}
 
 				template <typename Arg0, typename Arg1, typename Arg2>
-				_K_rawst_base(kerbal::utility::in_place_t, const Arg0 & arg0, const Arg1 & arg1, const Arg2 & arg2) :
+				explicit _K_rawst_base(kerbal::utility::in_place_t, const Arg0 & arg0, const Arg1 & arg1, const Arg2 & arg2) :
 						_K_storage(arg0, arg1, arg2)
 				{
 				}
 
 				template <typename Arg0, typename Arg1, typename Arg2, typename Arg3>
-				_K_rawst_base(kerbal::utility::in_place_t, const Arg0 & arg0, const Arg1 & arg1, const Arg2 & arg2, const Arg3 & arg3) :
+				explicit _K_rawst_base(kerbal::utility::in_place_t, const Arg0 & arg0, const Arg1 & arg1, const Arg2 & arg2, const Arg3 & arg3) :
 						_K_storage(arg0, arg1, arg2, arg3)
 				{
 				}
 
 				template <typename Arg0, typename Arg1, typename Arg2, typename Arg3, typename Arg4>
-				_K_rawst_base(kerbal::utility::in_place_t, const Arg0 & arg0, const Arg1 & arg1, const Arg2 & arg2, const Arg3 & arg3, const Arg4 & arg4) :
+				explicit _K_rawst_base(kerbal::utility::in_place_t, const Arg0 & arg0, const Arg1 & arg1, const Arg2 & arg2, const Arg3 & arg3, const Arg4 & arg4) :
 						_K_storage(arg0, arg1, arg2, arg3, arg4)
 				{
 				}
@@ -223,37 +223,37 @@ namespace kerbal
 				_K_rawst_base() = default;
 #		endif
 
-				_K_rawst_base(kerbal::utility::in_place_t)
+				explicit _K_rawst_base(kerbal::utility::in_place_t)
 				{
 					kerbal::memory::construct_at(this->raw_pointer());
 				}
 
 				template <typename Arg0>
-				_K_rawst_base(kerbal::utility::in_place_t, const Arg0 & arg0)
+				explicit _K_rawst_base(kerbal::utility::in_place_t, const Arg0 & arg0)
 				{
 					kerbal::memory::construct_at(this->raw_pointer(), arg0);
 				}
 
 				template <typename Arg0, typename Arg1>
-				_K_rawst_base(kerbal::utility::in_place_t, const Arg0 & arg0, const Arg1 & arg1)
+				explicit _K_rawst_base(kerbal::utility::in_place_t, const Arg0 & arg0, const Arg1 & arg1)
 				{
 					kerbal::memory::construct_at(this->raw_pointer(), arg0, arg1);
 				}
 
 				template <typename Arg0, typename Arg1, typename Arg2>
-				_K_rawst_base(kerbal::utility::in_place_t, const Arg0 & arg0, const Arg1 & arg1, const Arg2 & arg2)
+				explicit _K_rawst_base(kerbal::utility::in_place_t, const Arg0 & arg0, const Arg1 & arg1, const Arg2 & arg2)
 				{
 					kerbal::memory::construct_at(this->raw_pointer(), arg0, arg1, arg2);
 				}
 
 				template <typename Arg0, typename Arg1, typename Arg2, typename Arg3>
-				_K_rawst_base(kerbal::utility::in_place_t, const Arg0 & arg0, const Arg1 & arg1, const Arg2 & arg2, const Arg3 & arg3)
+				explicit _K_rawst_base(kerbal::utility::in_place_t, const Arg0 & arg0, const Arg1 & arg1, const Arg2 & arg2, const Arg3 & arg3)
 				{
 					kerbal::memory::construct_at(this->raw_pointer(), arg0, arg1, arg2, arg3);
 				}
 
 				template <typename Arg0, typename Arg1, typename Arg2, typename Arg3, typename Arg4>
-				_K_rawst_base(kerbal::utility::in_place_t, const Arg0 & arg0, const Arg1 & arg1, const Arg2 & arg2, const Arg3 & arg3, const Arg4 & arg4)
+				explicit _K_rawst_base(kerbal::utility::in_place_t, const Arg0 & arg0, const Arg1 & arg1, const Arg2 & arg2, const Arg3 & arg3, const Arg4 & arg4)
 				{
 					kerbal::memory::construct_at(this->raw_pointer(), arg0, arg1, arg2, arg3, arg4);
 				}
@@ -350,7 +350,7 @@ namespace kerbal
 
 						template <typename ... Args>
 						KERBAL_CONSTEXPR20
-						storage_type(kerbal::utility::in_place_t, Args&& ... args) :
+						explicit storage_type(kerbal::utility::in_place_t, Args&& ... args) :
 								_K_val(kerbal::utility::forward<Args>(args)...)
 						{
 						}
@@ -370,7 +370,7 @@ namespace kerbal
 
 				template <typename ... Args>
 				KERBAL_CONSTEXPR20
-				_K_rawst_base(kerbal::utility::in_place_t in_place, Args&& ... args) :
+				explicit _K_rawst_base(kerbal::utility::in_place_t in_place, Args&& ... args) :
 					_K_storage(in_place, kerbal::utility::forward<Args>(args)...)
 				{
 				}
@@ -454,7 +454,7 @@ namespace kerbal
 
 						template <typename ... Args>
 						KERBAL_CONSTEXPR
-						storage_type(kerbal::utility::in_place_t, Args&& ... args) :
+						explicit storage_type(kerbal::utility::in_place_t, Args&& ... args) :
 								_K_val(kerbal::utility::forward<Args>(args)...)
 						{
 						}
@@ -469,7 +469,7 @@ namespace kerbal
 
 				template <typename ... Args>
 				KERBAL_CONSTEXPR
-				_K_rawst_base(kerbal::utility::in_place_t in_place, Args&& ... args) :
+				explicit _K_rawst_base(kerbal::utility::in_place_t in_place, Args&& ... args) :
 					_K_storage(in_place, kerbal::utility::forward<Args>(args)...)
 				{
 				}
@@ -555,7 +555,7 @@ namespace kerbal
 
 						template <typename ... Args>
 						KERBAL_CONSTEXPR
-						storage_type(kerbal::utility::in_place_t, Args&& ... args) :
+						explicit storage_type(kerbal::utility::in_place_t, Args&& ... args) :
 								_K_val(kerbal::utility::forward<Args>(args)...)
 						{
 						}
@@ -570,7 +570,7 @@ namespace kerbal
 
 				template <typename ... Args>
 				KERBAL_CONSTEXPR
-				_K_rawst_base(kerbal::utility::in_place_t in_place, Args&& ... args) :
+				explicit _K_rawst_base(kerbal::utility::in_place_t in_place, Args&& ... args) :
 					_K_storage(in_place, kerbal::utility::forward<Args>(args)...)
 				{
 				}
@@ -658,37 +658,37 @@ namespace kerbal
 
 				_K_rawst_agent() KERBAL_NOEXCEPT {}
 
-				_K_rawst_agent(kerbal::utility::in_place_t in_place) :
+				explicit _K_rawst_agent(kerbal::utility::in_place_t in_place) :
 						super(in_place)
 				{
 				}
 
 				template <typename Arg0>
-				_K_rawst_agent(kerbal::utility::in_place_t in_place, const Arg0 & arg0) :
+				explicit _K_rawst_agent(kerbal::utility::in_place_t in_place, const Arg0 & arg0) :
 						super(in_place, arg0)
 				{
 				}
 
 				template <typename Arg0, typename Arg1>
-				_K_rawst_agent(kerbal::utility::in_place_t in_place, const Arg0 & arg0, const Arg1 & arg1) :
+				explicit _K_rawst_agent(kerbal::utility::in_place_t in_place, const Arg0 & arg0, const Arg1 & arg1) :
 						super(in_place, arg0, arg1)
 				{
 				}
 
 				template <typename Arg0, typename Arg1, typename Arg2>
-				_K_rawst_agent(kerbal::utility::in_place_t in_place, const Arg0 & arg0, const Arg1 & arg1, const Arg2 & arg2) :
+				explicit _K_rawst_agent(kerbal::utility::in_place_t in_place, const Arg0 & arg0, const Arg1 & arg1, const Arg2 & arg2) :
 						super(in_place, arg0, arg1, arg2)
 				{
 				}
 
 				template <typename Arg0, typename Arg1, typename Arg2, typename Arg3>
-				_K_rawst_agent(kerbal::utility::in_place_t in_place, const Arg0 & arg0, const Arg1 & arg1, const Arg2 & arg2, const Arg3 & arg3) :
+				explicit _K_rawst_agent(kerbal::utility::in_place_t in_place, const Arg0 & arg0, const Arg1 & arg1, const Arg2 & arg2, const Arg3 & arg3) :
 						super(in_place, arg0, arg1, arg2, arg3)
 				{
 				}
 
 				template <typename Arg0, typename Arg1, typename Arg2, typename Arg3, typename Arg4>
-				_K_rawst_agent(kerbal::utility::in_place_t in_place, const Arg0 & arg0, const Arg1 & arg1, const Arg2 & arg2, const Arg3 & arg3, const Arg4 & arg4) :
+				explicit _K_rawst_agent(kerbal::utility::in_place_t in_place, const Arg0 & arg0, const Arg1 & arg1, const Arg2 & arg2, const Arg3 & arg3, const Arg4 & arg4) :
 						super(in_place, arg0, arg1, arg2, arg3, arg4)
 				{
 				}
@@ -785,18 +785,18 @@ namespace kerbal
 
 				_K_rawst_agent() KERBAL_NOEXCEPT {}
 
-				_K_rawst_agent(kerbal::utility::in_place_t in_place) :
+				explicit _K_rawst_agent(kerbal::utility::in_place_t in_place) :
 						super(in_place)
 				{
 				}
 
-				_K_rawst_agent(kerbal::utility::in_place_t in_place, const_reference src) :
+				explicit _K_rawst_agent(kerbal::utility::in_place_t in_place, const_reference src) :
 						super(in_place, src)
 				{
 				}
 
 				template <typename Up>
-				_K_rawst_agent(kerbal::utility::in_place_t in_place, const Up (&src)[N]) :
+				explicit _K_rawst_agent(kerbal::utility::in_place_t in_place, const Up (&src)[N]) :
 						super(in_place, src)
 				{
 				}
@@ -889,37 +889,37 @@ namespace kerbal
 				{
 				}
 
-				raw_storage(kerbal::utility::in_place_t in_place) :
+				explicit raw_storage(kerbal::utility::in_place_t in_place) :
 						super(in_place)
 				{
 				}
 
 				template <typename Arg0>
-				raw_storage(kerbal::utility::in_place_t in_place, const Arg0 & arg0) :
+				explicit raw_storage(kerbal::utility::in_place_t in_place, const Arg0 & arg0) :
 						super(in_place, arg0)
 				{
 				}
 
 				template <typename Arg0, typename Arg1>
-				raw_storage(kerbal::utility::in_place_t in_place, const Arg0 & arg0, const Arg1 & arg1) :
+				explicit raw_storage(kerbal::utility::in_place_t in_place, const Arg0 & arg0, const Arg1 & arg1) :
 						super(in_place, arg0, arg1)
 				{
 				}
 
 				template <typename Arg0, typename Arg1, typename Arg2>
-				raw_storage(kerbal::utility::in_place_t in_place, const Arg0 & arg0, const Arg1 & arg1, const Arg2 & arg2) :
+				explicit raw_storage(kerbal::utility::in_place_t in_place, const Arg0 & arg0, const Arg1 & arg1, const Arg2 & arg2) :
 						super(in_place, arg0, arg1, arg2)
 				{
 				}
 
 				template <typename Arg0, typename Arg1, typename Arg2, typename Arg3>
-				raw_storage(kerbal::utility::in_place_t in_place, const Arg0 & arg0, const Arg1 & arg1, const Arg2 & arg2, const Arg3 & arg3) :
+				explicit raw_storage(kerbal::utility::in_place_t in_place, const Arg0 & arg0, const Arg1 & arg1, const Arg2 & arg2, const Arg3 & arg3) :
 						super(in_place, arg0, arg1, arg2, arg3)
 				{
 				}
 
 				template <typename Arg0, typename Arg1, typename Arg2, typename Arg3, typename Arg4>
-				raw_storage(kerbal::utility::in_place_t in_place, const Arg0 & arg0, const Arg1 & arg1, const Arg2 & arg2, const Arg3 & arg3, const Arg4 & arg4) :
+				explicit raw_storage(kerbal::utility::in_place_t in_place, const Arg0 & arg0, const Arg1 & arg1, const Arg2 & arg2, const Arg3 & arg3, const Arg4 & arg4) :
 						super(in_place, arg0, arg1, arg2, arg3, arg4)
 				{
 				}
