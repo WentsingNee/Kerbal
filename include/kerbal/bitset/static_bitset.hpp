@@ -682,6 +682,50 @@ namespace kerbal
 					return *this;
 				}
 
+			private:
+
+				template <size_type Len>
+				KERBAL_CONSTEXPR14
+				static_bitset<Len, Block>
+				_K_subset_impl(size_type left) const KERBAL_NOEXCEPT
+				{
+					static_bitset<Len, Block> r;
+					typedef typename static_bitset<Len, Block>::BLOCK_SIZE RESULT_BLOC_SIZE;
+					const block_size_type shift_block_cnt = left / BITS_PER_BLOCK::value;
+					const block_size_type inner_ofs = left % BITS_PER_BLOCK::value;
+					if (inner_ofs == 0) {
+						kerbal::algorithm::copy(
+								this->_K_block + shift_block_cnt,
+								this->_K_block + shift_block_cnt + RESULT_BLOC_SIZE::value,
+								r.mutable_data()
+						);
+					} else {
+						const block_size_type ano_ofs = BITS_PER_BLOCK::value - inner_ofs;
+						block_size_type i = 0;
+						block_size_type j = shift_block_cnt;
+						while (i + 1 != RESULT_BLOC_SIZE::value) {
+							r.mutable_data()[i] = (this->_K_block[j] >> inner_ofs) | (this->_K_block[j + 1] << ano_ofs);
+							++i;
+							++j;
+						}
+						r.mutable_data()[i] = (this->_K_block[j] >> inner_ofs);
+					}
+					return r;
+				}
+
+			public:
+
+				template <size_type Left, size_type Len>
+				KERBAL_CONSTEXPR14
+				static_bitset<Len, Block>
+				subset() const KERBAL_NOEXCEPT
+				{
+					KERBAL_STATIC_ASSERT(Left < SIZE::value, "Left should < SIZE::value");
+					KERBAL_STATIC_ASSERT(Len > 0, "Len should > 0");
+					KERBAL_STATIC_ASSERT(Len <= SIZE::value - Left, "Left + Len should <= SIZE::value");
+					return this->_K_subset_impl<Len>(Left);
+				}
+
 				KERBAL_CONSTEXPR14
 				void swap(static_bitset & ano) KERBAL_NOEXCEPT
 				{
