@@ -89,7 +89,7 @@ namespace kerbal
 					KERBAL_CONSTEXPR
 					explicit member_compress_helper_impl(kerbal::utility::in_place_t, Args&& ... args)
 									KERBAL_CONDITIONAL_NOEXCEPT(
-											(std::is_nothrow_constructible<T, Args...>::value)
+											(std::is_nothrow_constructible<T, Args&&...>::value)
 									) :
 							M_member(kerbal::utility::forward<Args>(args)...)
 					{
@@ -233,7 +233,7 @@ namespace kerbal
 					KERBAL_CONSTEXPR
 					explicit member_compress_helper_impl(kerbal::utility::in_place_t, Args&& ... args)
 									KERBAL_CONDITIONAL_NOEXCEPT(
-											(std::is_nothrow_constructible<super, Args...>::value)
+											(std::is_nothrow_constructible<super, Args&&...>::value)
 									) :
 							super(kerbal::utility::forward<Args>(args)...)
 					{

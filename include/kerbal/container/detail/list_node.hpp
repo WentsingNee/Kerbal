@@ -146,7 +146,7 @@ namespace kerbal
 					KERBAL_CONSTEXPR
 					explicit list_node(kerbal::utility::in_place_t, Args&& ... args)
 										KERBAL_CONDITIONAL_NOEXCEPT(
-												(std::is_nothrow_constructible<Tp, Args...>::value)
+												(std::is_nothrow_constructible<Tp, Args&&...>::value)
 										)
 							: super(), value(kerbal::utility::forward<Args>(args)...)
 					{
