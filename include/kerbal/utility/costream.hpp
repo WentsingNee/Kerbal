@@ -9,12 +9,13 @@
  *   all rights reserved
  */
 
-#ifndef INCLUDE_KERBAL_UTILITY_COSTREAM_HPP
-#define INCLUDE_KERBAL_UTILITY_COSTREAM_HPP
+#ifndef KERBAL_UTILITY_COSTREAM_HPP
+#define KERBAL_UTILITY_COSTREAM_HPP
 
-#include <iostream>
+#include <kerbal/config/compiler_id.hpp>
+#include <kerbal/config/system.hpp>
 
-#ifdef _WIN32
+#if KERBAL_SYSTEM == KERBAL_SYSTEM_WINDOWS
 #	ifndef NOMINMAX
 #		define NOMINMAX
 #	endif
@@ -22,7 +23,9 @@
 #endif
 
 #include <kerbal/compatibility/constexpr.hpp>
-#include <kerbal/config/compiler_id.hpp>
+
+#include <iostream>
+
 
 namespace kerbal
 {
@@ -60,27 +63,27 @@ namespace kerbal
 			const
 #		endif
 
-			INIT(-1),
-#ifdef _WIN32
-			BLACK(0), BLUE(1), GREEN(2), LAKE_BLUE(3), RED(4), PURPLE(5), YELLOW(6), WHITE(7),
-			GREY(8), LIGHT_BLUE(9), LIGHT_GREEN(10), LIGHT_LIGHT_GREEN(11),
-			LIGHT_RED(12), LIGHT_PURPLE(13), LIGHT_YELLOW(14), BRIGHT_WHITE(15);
-#endif
+			INIT(-1)
+#if   KERBAL_SYSTEM == KERBAL_SYSTEM_WINDOWS
+			, BLACK(0), BLUE(1), GREEN(2), LAKE_BLUE(3), RED(4), PURPLE(5), YELLOW(6), WHITE(7),
+			  GREY(8), LIGHT_BLUE(9), LIGHT_GREEN(10), LIGHT_LIGHT_GREEN(11),
+			  LIGHT_RED(12), LIGHT_PURPLE(13), LIGHT_YELLOW(14), BRIGHT_WHITE(15);
+#elif KERBAL_SYSTEM == KERBAL_SYSTEM_LINUX
+			, BLACK(0),RED(1),GREEN(2),YELLOW(3),BLUE(4),PURPLE(5),LIGHT_BLUE(104),WHITE(7),
 
-#ifdef __linux
-			BLACK(0),RED(1),GREEN(2),YELLOW(3),BLUE(4),PURPLE(5),LIGHT_BLUE(104),WHITE(7),
-
-			LIGHT_RED(101),LIGHT_GREEN(102),LIGHT_YELLOW(103),LAKE_BLUE(6),LIGHT_PURPLE(105),
-			GREY(107),
-			LIGHT_LIGHT_GREEN(106),
-			BRIGHT_WHITE(107);
+			  LIGHT_RED(101),LIGHT_GREEN(102),LIGHT_YELLOW(103),LAKE_BLUE(6),LIGHT_PURPLE(105),
+			  GREY(107),
+			  LIGHT_LIGHT_GREEN(106),
+			  BRIGHT_WHITE(107);
+#else
+			;
 #endif
 
 			template <std::ostream& bind_ostream>
 			class costream
 			{
 				protected:
-#ifdef _WIN32
+#if KERBAL_SYSTEM == KERBAL_SYSTEM_WINDOWS
 					struct Init_bakup
 					{
 							const HANDLE handle;
@@ -107,7 +110,7 @@ namespace kerbal
 							}
 
 					}static const bakup;
-#endif //WIN32
+#endif // KERBAL_SYSTEM_WINDOWS
 
 					const Color_t foreground, background;
 
@@ -120,7 +123,7 @@ namespace kerbal
 					template <class Type>
 					const costream& operator<<(const Type & src) const
 					{
-#ifdef _WIN32
+#if KERBAL_SYSTEM == KERBAL_SYSTEM_WINDOWS
 						HANDLE handle = bakup.handle;
 						WORD colorOld = bakup.init_color;
 						WORD color = (
@@ -132,9 +135,9 @@ namespace kerbal
 						bind_ostream << src;
 						SetConsoleTextAttribute(handle, colorOld);
 
-#endif //WIN32
+#endif // KERBAL_SYSTEM_WINDOWS
 
-#ifdef __linux
+#if KERBAL_SYSTEM == KERBAL_SYSTEM_LINUX
 						if(this->foreground != INIT) {
 							if(this->foreground.ID > 100) {
 								bind_ostream << "\033[1m";
@@ -167,7 +170,7 @@ namespace kerbal
 					}
 			};
 
-#ifdef _WIN32
+#if KERBAL_SYSTEM == KERBAL_SYSTEM_WINDOWS
 			template <std::ostream& bind_ostream>
 			const typename costream<bind_ostream>::Init_bakup costream<bind_ostream>::bakup(
 			STD_OUTPUT_HANDLE);
@@ -175,13 +178,9 @@ namespace kerbal
 			template <>
 			const typename costream<std::cerr>::Init_bakup costream<std::cerr>::bakup(
 			STD_ERROR_HANDLE);
-#endif //WIN32
+#endif // KERBAL_SYSTEM_WINDOWS
 
-//			costream<std::cerr> ccerr(LIGHT_RED, INIT);
-
-			const Color_t color_test_arr[] = {
-				BLACK, RED, GREEN, YELLOW, BLUE, PURPLE, LIGHT_BLUE, WHITE, LIGHT_RED, LIGHT_GREEN,
-				LIGHT_YELLOW, LAKE_BLUE, LIGHT_PURPLE, GREY, LIGHT_LIGHT_GREEN, BRIGHT_WHITE };
+//			costream<std::cerr> ccerr(LIGHT_RED, INIT);ßß
 
 		} // namespace costream
 

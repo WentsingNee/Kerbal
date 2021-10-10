@@ -1,27 +1,38 @@
-/*
- * tick_count.h
- *
- *  Created on: 2017年11月5日
- *      Author: Peter
+/**
+ * @file       tick_count.h
+ * @brief
+ * @date       2017-11-05
+ * @author     Peter
+ * @copyright
+ *      Peter of [ThinkSpirit Laboratory](http://thinkspirit.org/)
+ *   of [Nanjing University of Information Science & Technology](http://www.nuist.edu.cn/)
+ *   all rights reserved
  */
 
-#ifndef KERBAL_UTILITY_TICK_COUNT_H_
-#define KERBAL_UTILITY_TICK_COUNT_H_
+#ifndef KERBAL_UTILITY_TICK_COUNT_H
+#define KERBAL_UTILITY_TICK_COUNT_H
 
-#ifdef __linux
+#include <kerbal/config/system.hpp>
+
+#if KERBAL_SYSTEM == KERBAL_SYSTEM_LINUX || \
+    KERBAL_SYSTEM == KERBAL_SYSTEM_APPLE
+
 # include <time.h>
 # include <unistd.h>
 # include <pwd.h>
-inline unsigned long GetTickCount()
+
+inline
+unsigned long GetTickCount()
 {
 	struct timespec ts;
 	clock_gettime(CLOCK_MONOTONIC, &ts);
 	return (ts.tv_sec * 1000 + ts.tv_nsec / 1000000);
 }
-#endif
 
-#if (defined __WINDOWS_) || (defined _WIN32)
+#elif KERBAL_SYSTEM == KERBAL_SYSTEM_WINDOWS
+
 #	include <windows.h>
+
 #endif
 
-#endif /* KERBAL_UTILITY_TICK_COUNT_H_ */
+#endif // KERBAL_UTILITY_TICK_COUNT_H
