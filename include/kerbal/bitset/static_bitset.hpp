@@ -12,6 +12,8 @@
 #ifndef KERBAL_BITSET_STATIC_BITSET_HPP
 #define KERBAL_BITSET_STATIC_BITSET_HPP
 
+#include <kerbal/bitset/fwd/static_bitset.fwd.hpp>
+
 #include <kerbal/algorithm/swap.hpp>
 #include <kerbal/compatibility/constexpr.hpp>
 #include <kerbal/compatibility/noexcept.hpp>
@@ -27,6 +29,7 @@
 #include <kerbal/bitset/detail/bitset_size_unrelated.hpp>
 #include <kerbal/bitset/detail/default_block_type.hpp>
 
+
 namespace kerbal
 {
 
@@ -36,7 +39,7 @@ namespace kerbal
 		/*
 		 *  [63 ... 0] [127 ... 64] [191 ... 128] [255 ... 192]
 		 */
-		template <size_t N, typename Block = KERBAL_BITSET_DEFAULT_BLOCK_TYPE>
+		template <std::size_t N, typename Block>
 		class static_bitset: protected detail::bitset_size_unrelated<Block>
 		{
 				KERBAL_STATIC_ASSERT(kerbal::type_traits::is_unsigned<Block>::value, "Block must be unsigned type");
