@@ -9,9 +9,10 @@
  *   all rights reserved
  */
 
-#ifndef KERBAL_ALGORITHM_KMP_HPP_
-#define KERBAL_ALGORITHM_KMP_HPP_
+#ifndef KERBAL_ALGORITHM_KMP_HPP
+#define KERBAL_ALGORITHM_KMP_HPP
 
+#include <kerbal/container/vector.hpp>
 #include <kerbal/iterator/iterator.hpp>
 #include <kerbal/iterator/iterator_traits.hpp>
 #include <kerbal/iterator/general_back_inserter.hpp>
@@ -19,8 +20,10 @@
 #include <kerbal/type_traits/enable_if.hpp>
 #include <kerbal/type_traits/is_same.hpp>
 
-#include <vector>
 #include <cstring>
+#include <cstddef>
+#include <functional>
+
 
 namespace kerbal
 {
@@ -52,7 +55,7 @@ namespace kerbal
 				return pattern_last;
 			}
 
-			size_t k = 0; pattern_iterator k_pattern(pattern_first);
+			std::size_t k = 0; pattern_iterator k_pattern(pattern_first);
 			*back_inserter = k; ++back_inserter;
 			++i_pattern;
 
@@ -108,7 +111,7 @@ namespace kerbal
 			typedef ForwardPatternIterator pattern_iterator;
 
 			host_iterator it_host(host_first);
-			pattern_iterator it_pattern(pattern_first); size_t j = 0;
+			pattern_iterator it_pattern(pattern_first); std::size_t j = 0;
 
 			while (it_pattern != pattern_last) {
 				if (it_host == host_last) {
@@ -159,11 +162,11 @@ namespace kerbal
 			typedef typename kerbal::iterator::iterator_traits<pattern_iterator>::difference_type pattern_difference_type;
 			pattern_difference_type pattern_length(kerbal::iterator::distance(pattern_first, pattern_last));
 			if (pattern_length < 32) {
-				size_t lsp[32];
+				std::size_t lsp[32];
 				kerbal::algorithm::longest_matched_suffix_prefix(pattern_first, pattern_last, lsp, equal_predict);
 				return kerbal::algorithm::kmp(host_first, host_last, pattern_first, pattern_last, equal_predict, lsp);
 			} else {
-				std::vector<size_t> lsp;
+				kerbal::container::vector<std::size_t> lsp;
 				lsp.reserve(pattern_length);
 				kerbal::algorithm::longest_matched_suffix_prefix(pattern_first, pattern_last, lsp, equal_predict);
 				return kerbal::algorithm::kmp(host_first, host_last, pattern_first, pattern_last, equal_predict, lsp);
@@ -191,12 +194,11 @@ namespace kerbal
 
 		inline const char* kmp(const char* host, const char* pattern)
 		{
-			return kerbal::algorithm::kmp(host, host + strlen(host), pattern, pattern + strlen(pattern));
+			return kerbal::algorithm::kmp(host, host + std::strlen(host), pattern, pattern + std::strlen(pattern));
 		}
 
+	} // namespace algorithm
 
-	} /* namespace algorithm */
+} // namespace kerbal
 
-} /* namespace kerbal */
-
-#endif /* KERBAL_ALGORITHM_KMP_HPP_ */
+#endif // KERBAL_ALGORITHM_KMP_HPP
