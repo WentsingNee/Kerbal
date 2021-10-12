@@ -12,9 +12,6 @@
 #ifndef KERBAL_CONTAINER_DECL_VECTOR_DECL_HPP
 #define KERBAL_CONTAINER_DECL_VECTOR_DECL_HPP
 
-#include <kerbal/container/detail/decl/vector_base.decl.hpp>
-#include <kerbal/container/detail/vector_iterator.hpp>
-
 #include <kerbal/algorithm/sequence_compare.hpp>
 #include <kerbal/algorithm/swap.hpp>
 #include <kerbal/assign/ilist.hpp>
@@ -42,6 +39,10 @@
 #	include <initializer_list>
 #	include <type_traits>
 #endif
+
+#include <kerbal/container/detail/decl/vector_base.decl.hpp>
+
+#include <kerbal/container/detail/vector_iterator.hpp>
 
 
 namespace kerbal

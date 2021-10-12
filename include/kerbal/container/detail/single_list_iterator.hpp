@@ -12,14 +12,14 @@
 #ifndef KERBAL_CONTAINER_DETAIL_SINGLE_LIST_ITERATOR_HPP
 #define KERBAL_CONTAINER_DETAIL_SINGLE_LIST_ITERATOR_HPP
 
-#include <kerbal/container/fwd/single_list.fwd.hpp>
-
 #include <kerbal/operators/dereferenceable.hpp>
 #include <kerbal/operators/equality_comparable.hpp>
 #include <kerbal/operators/incr_decr.hpp>
 #include <kerbal/iterator/iterator_traits.hpp>
 
-#include <kerbal/container/detail/single_list_node.hpp>
+#include <kerbal/container/detail/fwd/single_list_base.fwd.hpp>
+#include <kerbal/container/fwd/single_list.fwd.hpp>
+
 
 namespace kerbal
 {

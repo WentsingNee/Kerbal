@@ -12,8 +12,6 @@
 #ifndef KERBAL_CONTAINER_DETAIL_IMPL_VECTOR_BASE_IMPL_HPP
 #define KERBAL_CONTAINER_DETAIL_IMPL_VECTOR_BASE_IMPL_HPP
 
-#include <kerbal/container/detail/decl/vector_base.decl.hpp>
-
 #include <kerbal/algorithm/modifier.hpp>
 #include <kerbal/algorithm/swap.hpp>
 #include <kerbal/compatibility/alignof.hpp>
@@ -39,6 +37,8 @@
 #endif
 
 #include <stdexcept>
+
+#include <kerbal/container/detail/decl/vector_base.decl.hpp>
 
 
 namespace kerbal

@@ -12,42 +12,35 @@
 #ifndef KERBAL_CONTAINER_FWD_LIST_FWD_HPP
 #define KERBAL_CONTAINER_FWD_LIST_FWD_HPP
 
+#include <memory>
+
+#if __cplusplus >= 201703L
+#	if __has_include(<memory_resource>)
+#		include <memory_resource>
+#	endif
+#endif
+
+
 namespace kerbal
 {
 
 	namespace container
 	{
 
-		template <typename Tp, typename Allocator>
+		template <typename Tp, typename Allocator = std::allocator<Tp> >
 		class list;
 
-		namespace detail
+#if __cplusplus >= 201703L
+#	if __has_include(<memory_resource>)
+
+		namespace pmr
 		{
-
-			class list_type_unrelated;
-
 			template <typename Tp>
-			class list_allocator_unrelated;
+			using list = kerbal::container::list<Tp, std::pmr::polymorphic_allocator<Tp> >;
+		}
 
-			template <typename Tp, typename Allocator>
-			class list_allocator_overload;
-
-			class list_node_base;
-
-			template <typename Tp>
-			class list_node;
-
-			class list_iter_type_unrelated;
-
-			class list_kiter_type_unrelated;
-
-			template <typename Tp>
-			class list_iter;
-
-			template <typename Tp>
-			class list_kiter;
-
-		} // namespace detail
+#	endif
+#endif
 
 	} // namespace container
 

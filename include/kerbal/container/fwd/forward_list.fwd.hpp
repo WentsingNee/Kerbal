@@ -14,6 +14,13 @@
 
 #include <memory>
 
+#if __cplusplus >= 201703L
+#	if __has_include(<memory_resource>)
+#		include <memory_resource>
+#	endif
+#endif
+
+
 namespace kerbal
 {
 
@@ -23,33 +30,17 @@ namespace kerbal
 		template <typename Tp, typename Allocator = std::allocator<Tp> >
 		class forward_list;
 
-		namespace detail
+#if __cplusplus >= 201703L
+#	if __has_include(<memory_resource>)
+
+		namespace pmr
 		{
-
-			class fl_type_unrelated;
-
 			template <typename Tp>
-			class fl_allocator_unrelated;
+			using forward_list = kerbal::container::forward_list<Tp, std::pmr::polymorphic_allocator<Tp> >;
+		}
 
-			template <typename Tp, typename Allocator>
-			class fl_allocator_overload;
-
-			class sl_node_base;
-
-			template <typename Tp>
-			class sl_node;
-
-			class fl_iter_type_unrelated;
-
-			class fl_kiter_type_unrelated;
-
-			template <typename Tp>
-			class fl_iter;
-
-			template <typename Tp>
-			class fl_kiter;
-
-		} // namespace detail
+#	endif
+#endif
 
 	} // namespace container
 

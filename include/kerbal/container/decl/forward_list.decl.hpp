@@ -12,12 +12,6 @@
 #ifndef KERBAL_CONTAINER_DECL_FORWARD_LIST_DECL_HPP
 #define KERBAL_CONTAINER_DECL_FORWARD_LIST_DECL_HPP
 
-#include <kerbal/container/fwd/forward_list.fwd.hpp>
-
-#include <kerbal/container/detail/single_list_node.hpp>
-#include <kerbal/container/detail/forward_list_iterator.hpp>
-#include <kerbal/container/detail/forward_list_base.hpp>
-
 #include <kerbal/algorithm/sequence_compare.hpp>
 #include <kerbal/algorithm/swap.hpp>
 #include <kerbal/assign/ilist.hpp>
@@ -43,11 +37,11 @@
 #	include <type_traits>
 #endif
 
-#if __cplusplus >= 201703L
-#	if __has_include(<memory_resource>)
-#		include <memory_resource>
-#	endif
-#endif
+#include <kerbal/container/detail/decl/forward_list_base.decl.hpp>
+
+#include <kerbal/container/detail/forward_list_iterator.hpp>
+#include <kerbal/container/detail/single_list_node.hpp>
+
 
 namespace kerbal
 {
@@ -513,16 +507,6 @@ namespace kerbal
 		template <typename Tp, typename Alloc = std::allocator<Tp> >
 		forward_list(std::initializer_list<Tp> src, Alloc = Alloc()) -> forward_list<Tp, Alloc>;
 
-#	if __has_include(<memory_resource>)
-
-		namespace pmr
-		{
-			template <typename Tp>
-			using forward_list = kerbal::container::forward_list<Tp, std::pmr::polymorphic_allocator<Tp> >;
-		}
-
-#	endif
-
 #	endif
 
 
@@ -597,7 +581,5 @@ KERBAL_NAMESPACE_STD_BEGIN
 	}
 
 KERBAL_NAMESPACE_STD_END
-
-#include <kerbal/container/impl/forward_list.impl.hpp>
 
 #endif // KERBAL_CONTAINER_DECL_FORWARD_LIST_DECL_HPP

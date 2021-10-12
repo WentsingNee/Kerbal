@@ -33,7 +33,8 @@
 #	include <type_traits>
 #endif
 
-#include <kerbal/container/single_list.hpp>
+#include <kerbal/container/detail/single_list_base.hpp>
+
 
 namespace kerbal
 {

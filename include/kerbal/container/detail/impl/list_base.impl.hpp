@@ -12,8 +12,6 @@
 #ifndef KERBAL_CONTAINER_DETAIL_IMPL_LIST_BASE_IMPL_HPP
 #define KERBAL_CONTAINER_DETAIL_IMPL_LIST_BASE_IMPL_HPP
 
-#include <kerbal/container/detail/decl/list_base.decl.hpp>
-
 #include <kerbal/algorithm/swap.hpp>
 #include <kerbal/iterator/iterator.hpp>
 #include <kerbal/type_traits/conditional.hpp>
@@ -34,6 +32,8 @@
 
 #include <utility> // std::pair
 #include <climits> // CHAR_BIT
+
+#include <kerbal/container/detail/decl/list_base.decl.hpp>
 
 
 namespace kerbal

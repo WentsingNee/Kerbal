@@ -30,7 +30,8 @@
 #	include <type_traits>
 #endif
 
-#include <kerbal/container/forward_list.hpp>
+#include <kerbal/container/detail/forward_list_base.hpp>
+
 
 namespace kerbal
 {

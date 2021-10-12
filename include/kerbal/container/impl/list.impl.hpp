@@ -30,7 +30,8 @@
 #	include <type_traits>
 #endif
 
-#include <kerbal/container/list.hpp>
+#include <kerbal/container/detail/list_base.hpp>
+
 
 namespace kerbal
 {

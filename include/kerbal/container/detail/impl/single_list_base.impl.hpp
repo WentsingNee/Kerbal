@@ -12,8 +12,6 @@
 #ifndef KERBAL_CONTAINER_DETAIL_IMPL_SINGLE_LIST_BASE_IMPL_HPP
 #define KERBAL_CONTAINER_DETAIL_IMPL_SINGLE_LIST_BASE_IMPL_HPP
 
-#include <kerbal/container/detail/decl/single_list_base.decl.hpp>
-
 #include <kerbal/algorithm/swap.hpp>
 #include <kerbal/iterator/iterator.hpp>
 #include <kerbal/type_traits/conditional.hpp>
@@ -33,6 +31,9 @@
 #endif
 
 #include <utility> // std::pair
+
+#include <kerbal/container/detail/decl/single_list_base.decl.hpp>
+
 
 namespace kerbal
 {

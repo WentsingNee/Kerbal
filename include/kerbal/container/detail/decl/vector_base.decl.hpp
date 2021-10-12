@@ -12,8 +12,6 @@
 #ifndef KERBAL_CONTAINER_DETAIL_DECL_VECTOR_BASE_DECL_HPP
 #define KERBAL_CONTAINER_DETAIL_DECL_VECTOR_BASE_DECL_HPP
 
-#include <kerbal/container/detail/vector_iterator.hpp>
-
 #include <kerbal/algorithm/swap.hpp>
 #include <kerbal/compatibility/constexpr.hpp>
 #include <kerbal/compatibility/move.hpp>
@@ -37,6 +35,10 @@
 #if __cplusplus >= 201103L
 #	include <type_traits>
 #endif
+
+#include <kerbal/container/fwd/vector.fwd.hpp>
+
+#include <kerbal/container/detail/vector_iterator.hpp>
 
 
 namespace kerbal

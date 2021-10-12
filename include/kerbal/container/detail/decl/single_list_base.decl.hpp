@@ -12,11 +12,6 @@
 #ifndef KERBAL_CONTAINER_DETAIL_DECL_SINGLE_LIST_BASE_DECL_HPP
 #define KERBAL_CONTAINER_DETAIL_DECL_SINGLE_LIST_BASE_DECL_HPP
 
-#include <kerbal/container/fwd/single_list.fwd.hpp>
-
-#include <kerbal/container/detail/single_list_node.hpp>
-#include <kerbal/container/detail/single_list_iterator.hpp>
-
 #include <kerbal/algorithm/swap.hpp>
 #include <kerbal/compatibility/constexpr.hpp>
 #include <kerbal/compatibility/move.hpp>
@@ -45,6 +40,12 @@
 #		include <memory_resource>
 #	endif
 #endif
+
+#include <kerbal/container/fwd/single_list.fwd.hpp>
+
+#include <kerbal/container/detail/single_list_node.hpp>
+#include <kerbal/container/detail/single_list_iterator.hpp>
+
 
 namespace kerbal
 {
@@ -963,7 +964,5 @@ namespace kerbal
 	} // namespace container
 
 } // namespace kerbal
-
-#include <kerbal/container/detail/impl/single_list_base.impl.hpp>
 
 #endif // KERBAL_CONTAINER_DETAIL_DECL_SINGLE_LIST_BASE_DECL_HPP
