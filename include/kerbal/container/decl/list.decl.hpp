@@ -1,5 +1,5 @@
 /**
- * @file       list.hpp
+ * @file       list.decl.hpp
  * @brief
  * @date       2020-02-24
  * @author     Peter
@@ -9,8 +9,8 @@
  *   all rights reserved
  */
 
-#ifndef KERBAL_CONTAINER_LIST_HPP
-#define KERBAL_CONTAINER_LIST_HPP
+#ifndef KERBAL_CONTAINER_DECL_LIST_DECL_HPP
+#define KERBAL_CONTAINER_DECL_LIST_DECL_HPP
 
 #include <kerbal/algorithm/sequence_compare.hpp>
 #include <kerbal/algorithm/swap.hpp>
@@ -721,4 +721,4 @@ KERBAL_NAMESPACE_STD_END
 
 #include <kerbal/container/impl/list.impl.hpp>
 
-#endif // KERBAL_CONTAINER_LIST_HPP
+#endif // KERBAL_CONTAINER_DECL_LIST_DECL_HPP

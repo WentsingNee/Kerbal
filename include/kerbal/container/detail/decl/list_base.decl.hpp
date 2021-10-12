@@ -1,5 +1,5 @@
 /**
- * @file       list_base.hpp
+ * @file       list_base.decl.hpp
  * @brief
  * @date       2020-6-13
  * @author     Peter
@@ -9,8 +9,8 @@
  *   all rights reserved
  */
 
-#ifndef KERBAL_CONTAINER_DETAIL_LIST_BASE_HPP
-#define KERBAL_CONTAINER_DETAIL_LIST_BASE_HPP
+#ifndef KERBAL_CONTAINER_DETAIL_DECL_LIST_BASE_DECL_HPP
+#define KERBAL_CONTAINER_DETAIL_DECL_LIST_BASE_DECL_HPP
 
 #include <kerbal/container/fwd/list.fwd.hpp>
 
@@ -1200,6 +1200,6 @@ namespace kerbal
 
 } // namespace kerbal
 
-#include <kerbal/container/impl/list_base.impl.hpp>
+#include <kerbal/container/detail/impl/list_base.impl.hpp>
 
-#endif // KERBAL_CONTAINER_DETAIL_LIST_BASE_HPP
+#endif // KERBAL_CONTAINER_DETAIL_DECL_LIST_BASE_DECL_HPP

@@ -1,5 +1,5 @@
 /**
- * @file       single_list.hpp
+ * @file       single_list.decl.hpp
  * @brief
  * @date       2019-7-14
  * @author     Peter
@@ -9,8 +9,8 @@
  *   all rights reserved
  */
 
-#ifndef KERBAL_CONTAINER_SINGLE_LIST_HPP
-#define KERBAL_CONTAINER_SINGLE_LIST_HPP
+#ifndef KERBAL_CONTAINER_DECL_SINGLE_LIST_DECL_HPP
+#define KERBAL_CONTAINER_DECL_SINGLE_LIST_DECL_HPP
 
 #include <kerbal/container/fwd/single_list.fwd.hpp>
 
@@ -652,4 +652,4 @@ KERBAL_NAMESPACE_STD_END
 
 #include <kerbal/container/impl/single_list.impl.hpp>
 
-#endif // KERBAL_CONTAINER_SINGLE_LIST_HPP
+#endif // KERBAL_CONTAINER_DECL_SINGLE_LIST_DECL_HPP

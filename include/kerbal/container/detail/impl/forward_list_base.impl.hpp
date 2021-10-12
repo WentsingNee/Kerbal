@@ -9,10 +9,10 @@
  *   all rights reserved
  */
 
-#ifndef KERBAL_CONTAINER_IMPL_FORWARD_LIST_BASE_IMPL_HPP
-#define KERBAL_CONTAINER_IMPL_FORWARD_LIST_BASE_IMPL_HPP
+#ifndef KERBAL_CONTAINER_DETAIL_IMPL_FORWARD_LIST_BASE_IMPL_HPP
+#define KERBAL_CONTAINER_DETAIL_IMPL_FORWARD_LIST_BASE_IMPL_HPP
 
-#include <kerbal/container/detail/forward_list_base.hpp>
+#include <kerbal/container/detail/decl/forward_list_base.decl.hpp>
 
 #include <kerbal/algorithm/swap.hpp>
 #include <kerbal/iterator/iterator.hpp>
@@ -1693,4 +1693,4 @@ namespace kerbal
 } // namespace kerbal
 
 
-#endif // KERBAL_CONTAINER_IMPL_FORWARD_LIST_BASE_IMPL_HPP
+#endif // KERBAL_CONTAINER_DETAIL_IMPL_FORWARD_LIST_BASE_IMPL_HPP

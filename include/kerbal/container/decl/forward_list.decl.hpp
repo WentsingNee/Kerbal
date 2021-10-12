@@ -1,5 +1,5 @@
 /**
- * @file       forward_list.hpp
+ * @file       forward_list.decl.hpp
  * @brief
  * @date       2021-01-25
  * @author     Peter
@@ -9,8 +9,8 @@
  *   all rights reserved
  */
 
-#ifndef KERBAL_CONTAINER_FORWARD_LIST_HPP
-#define KERBAL_CONTAINER_FORWARD_LIST_HPP
+#ifndef KERBAL_CONTAINER_DECL_FORWARD_LIST_DECL_HPP
+#define KERBAL_CONTAINER_DECL_FORWARD_LIST_DECL_HPP
 
 #include <kerbal/container/fwd/forward_list.fwd.hpp>
 
@@ -600,4 +600,4 @@ KERBAL_NAMESPACE_STD_END
 
 #include <kerbal/container/impl/forward_list.impl.hpp>
 
-#endif // KERBAL_CONTAINER_FORWARD_LIST_HPP
+#endif // KERBAL_CONTAINER_DECL_FORWARD_LIST_DECL_HPP
