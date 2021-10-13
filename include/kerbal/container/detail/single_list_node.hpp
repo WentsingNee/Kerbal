@@ -217,6 +217,33 @@ namespace kerbal
 
 			};
 
+			struct sl_node_base_chain
+			{
+					sl_node_base * start;
+					sl_node_base * back;
+
+					KERBAL_CONSTEXPR
+					sl_node_base_chain(sl_node_base * start, sl_node_base * back) KERBAL_NOEXCEPT :
+							start(start), back(back)
+					{
+					}
+
+			};
+
+			template <typename Tp>
+			struct sl_node_chain
+			{
+					sl_node<Tp> * start;
+					sl_node<Tp> * back;
+
+					KERBAL_CONSTEXPR
+					sl_node_chain(sl_node<Tp> * start, sl_node<Tp> * back) KERBAL_NOEXCEPT :
+							start(start), back(back)
+					{
+					}
+
+			};
+
 		} // namespace detail
 
 	} // namespace container

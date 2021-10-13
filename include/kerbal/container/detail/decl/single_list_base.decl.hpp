@@ -29,7 +29,6 @@
 #endif
 
 #include <cstddef>
-#include <utility> // std::pair
 
 #if __cplusplus >= 201103L
 #	include <type_traits>
@@ -200,7 +199,7 @@ namespace kerbal
 
 					// pre-cond: first != last;
 					KERBAL_CONSTEXPR20
-					std::pair<node_base *, node_base *>
+					sl_node_base_chain
 					_K_unhook_node(basic_iterator first, basic_iterator last) KERBAL_NOEXCEPT;
 
 					// pre-cond: lhs and rhs are lists of same type
@@ -733,7 +732,7 @@ namespace kerbal
 					template <typename NodeAllocator, typename ... Args>
 					KERBAL_CONSTEXPR20
 					static
-					std::pair<node*, node*> _K_build_n_new_nodes_unguarded(NodeAllocator & alloc, size_type n, Args&& ...args);
+					sl_node_chain<Tp> _K_build_n_new_nodes_unguarded(NodeAllocator & alloc, size_type n, Args&& ...args);
 
 #			else
 
@@ -744,7 +743,7 @@ namespace kerbal
 #				define FBODY(i) \
 					template <typename NodeAllocator KERBAL_OPT_PPEXPAND_WITH_COMMA_N(LEFT_JOIN_COMMA, EMPTY, TARGS_DECL, i)> \
 					static \
-					std::pair<node*, node*> _K_build_n_new_nodes_unguarded(NodeAllocator & alloc, size_type n KERBAL_OPT_PPEXPAND_WITH_COMMA_N(LEFT_JOIN_COMMA, EMPTY, ARGS_DECL, i));
+					sl_node_chain<Tp> _K_build_n_new_nodes_unguarded(NodeAllocator & alloc, size_type n KERBAL_OPT_PPEXPAND_WITH_COMMA_N(LEFT_JOIN_COMMA, EMPTY, ARGS_DECL, i));
 
 					KERBAL_PPEXPAND_N(FBODY, KERBAL_PPEXPAND_EMPTY_SEPARATOR, 0)
 					KERBAL_PPEXPAND_N(FBODY, KERBAL_PPEXPAND_EMPTY_SEPARATOR, 20)
@@ -765,7 +764,7 @@ namespace kerbal
 					static
 					typename kerbal::type_traits::enable_if<
 							kerbal::iterator::is_input_compatible_iterator<InputIterator>::value,
-							std::pair<node*, node*>
+							sl_node_chain<Tp>
 					>::type
 					_K_build_new_nodes_range_unguarded(NodeAllocator & alloc, InputIterator first, InputIterator last);
 
@@ -774,7 +773,7 @@ namespace kerbal
 					template <typename NodeAllocator>
 					KERBAL_CONSTEXPR20
 					static
-					std::pair<node*, node*>
+					sl_node_chain<Tp>
 					_K_build_new_nodes_range_unguarded_move(NodeAllocator & alloc, iterator first, iterator last);
 
 #			endif

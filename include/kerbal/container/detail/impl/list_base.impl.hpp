@@ -30,7 +30,6 @@
 #	include <kerbal/utility/forward.hpp>
 #endif
 
-#include <utility> // std::pair
 #include <climits> // CHAR_BIT
 
 #include <kerbal/container/detail/decl/list_base.decl.hpp>
@@ -133,8 +132,8 @@ namespace kerbal
 					return first_mut;
 				}
 
-				std::pair<node_base *, node_base *> left_range(_K_unhook_node(first_mut, n_first_mut));
-				_K_hook_node(last_mut, left_range.first, left_range.second);
+				list_node_base_chain chain(_K_unhook_node(first_mut, n_first_mut));
+				_K_hook_node(last_mut, chain.start, chain.back);
 				return first_mut;
 			}
 
@@ -173,10 +172,8 @@ namespace kerbal
 					return;
 				}
 
-				std::pair<node_base *, node_base *> range(list_type_unrelated::_K_unhook_node(first.cast_to_mutable(), last.cast_to_mutable()));
-				node_base * start = range.first;
-				node_base * back = range.second;
-				list_type_unrelated::_K_hook_node(pos, start, back);
+				list_node_base_chain chain(list_type_unrelated::_K_unhook_node(first.cast_to_mutable(), last.cast_to_mutable()));
+				list_type_unrelated::_K_hook_node(pos, chain.start, chain.back);
 			}
 
 
@@ -222,7 +219,7 @@ namespace kerbal
 
 			KERBAL_CONSTEXPR14
 			inline
-			std::pair<list_type_unrelated::node_base *, list_type_unrelated::node_base *>
+			list_node_base_chain
 			list_type_unrelated::_K_unhook_node(basic_iterator first, basic_iterator last) KERBAL_NOEXCEPT
 			{
 				node_base * start = first.current;
@@ -231,7 +228,7 @@ namespace kerbal
 				node_base * back = end->prev;
 				end->prev = prev;
 				prev->next = end;
-				return std::pair<node_base *, node_base *>(start, back);
+				return list_node_base_chain(start, back);
 			}
 
 			KERBAL_CONSTEXPR14
@@ -289,8 +286,8 @@ namespace kerbal
 				if (n == 0) {
 					return;
 				}
-				std::pair<node*, node*> p(this->_K_build_n_new_nodes_unguarded(alloc, n));
-				list_type_unrelated::_K_hook_node(this->cend(), p.first, p.second);
+				list_node_chain<Tp> chain(this->_K_build_n_new_nodes_unguarded(alloc, n));
+				list_type_unrelated::_K_hook_node(this->cend(), chain.start, chain.back);
 			}
 
 			template <typename Tp>
@@ -302,8 +299,8 @@ namespace kerbal
 				if (n == 0) {
 					return;
 				}
-				std::pair<node*, node*> p(this->_K_build_n_new_nodes_unguarded(alloc, n, val));
-				list_type_unrelated::_K_hook_node(this->cend(), p.first, p.second);
+				list_node_chain<Tp> chain(this->_K_build_n_new_nodes_unguarded(alloc, n, val));
+				list_type_unrelated::_K_hook_node(this->cend(), chain.start, chain.back);
 			}
 
 			template <typename Tp>
@@ -355,12 +352,12 @@ namespace kerbal
 				if (src.empty()) {
 					return;
 				}
-				std::pair<node*, node*> range(
+				list_node_chain<Tp> chain(
 						_K_build_new_nodes_range_unguarded(
 								alloc,
 								kerbal::iterator::make_move_iterator(src.begin()),
 								kerbal::iterator::make_move_iterator(src.end())));
-				list_type_unrelated::_K_hook_node(this->cend(), range.first, range.second);
+				list_type_unrelated::_K_hook_node(this->cend(), chain.start, chain.back);
 			}
 
 			template <typename Tp>
@@ -920,9 +917,9 @@ namespace kerbal
 				if (n == 0) {
 					return pos.cast_to_mutable();
 				}
-				std::pair<node*, node*> range(_K_build_n_new_nodes_unguarded(alloc, n, val));
-				list_type_unrelated::_K_hook_node(pos, range.first, range.second);
-				return iterator(range.first);
+				list_node_chain<Tp> chain(_K_build_n_new_nodes_unguarded(alloc, n, val));
+				list_type_unrelated::_K_hook_node(pos, chain.start, chain.back);
+				return iterator(chain.start);
 			}
 
 			template <typename Tp>
@@ -937,9 +934,9 @@ namespace kerbal
 				if (first == last) {
 					return pos.cast_to_mutable();
 				}
-				std::pair<node *, node *> range(_K_build_new_nodes_range_unguarded(alloc, first, last));
-				list_type_unrelated::_K_hook_node(pos, range.first, range.second);
-				return iterator(range.first);
+				list_node_chain<Tp> chain(_K_build_new_nodes_range_unguarded(alloc, first, last));
+				list_type_unrelated::_K_hook_node(pos, chain.start, chain.back);
+				return iterator(chain.start);
 			}
 
 #		if __cplusplus >= 201103L
@@ -1039,11 +1036,9 @@ namespace kerbal
 				iterator last_mut(last.cast_to_mutable());
 				if (first != last) {
 					iterator first_mut(first.cast_to_mutable());
-					std::pair<node_base *, node_base *> range(list_type_unrelated::_K_unhook_node(first_mut, last_mut));
-					node_base * start = range.first;
-					node_base * back = range.second;
-					back->next = NULL;
-					_K_consecutive_destroy_node(alloc, start);
+					list_node_base_chain chain(list_type_unrelated::_K_unhook_node(first_mut, last_mut));
+					chain.back->next = NULL;
+					_K_consecutive_destroy_node(alloc, chain.start);
 				}
 				return last_mut;
 			}
@@ -1076,8 +1071,8 @@ namespace kerbal
 					erase_using_allocator(alloc, it, cend);
 				} else {
 					// note: count - size != 0
-					std::pair<node*, node*> range(_K_build_n_new_nodes_unguarded(alloc, count - size));
-					list_type_unrelated::_K_hook_node(cend, range.first, range.second);
+					list_node_chain<Tp> chain(_K_build_n_new_nodes_unguarded(alloc, count - size));
+					list_type_unrelated::_K_hook_node(cend, chain.start, chain.back);
 				}
 			}
 
@@ -1968,7 +1963,7 @@ namespace kerbal
 			template <typename Tp>
 			template <typename NodeAllocator, typename... Args>
 			KERBAL_CONSTEXPR20
-			std::pair<typename list_allocator_unrelated<Tp>::node*, typename list_allocator_unrelated<Tp>::node*>
+			list_node_chain<Tp>
 			list_allocator_unrelated<Tp>::_K_build_n_new_nodes_unguarded(NodeAllocator & alloc, size_type n, Args&& ... args)
 			{
 				size_t cnt = 0;
@@ -1985,7 +1980,7 @@ namespace kerbal
 						back = new_node;
 						++cnt;
 					}
-					return std::pair<node*, node*>(start, back);
+					return list_node_chain<Tp>(start, back);
 #		if __cpp_exceptions
 				} catch (...) {
 					_K_consecutive_destroy_node(alloc, start);
@@ -2014,7 +2009,7 @@ namespace kerbal
 					back = new_node; \
 					++cnt; \
 				} \
-				return std::pair<node*, node*>(start, back); \
+				return list_node_chain<Tp>(start, back); \
 			} catch (...) { \
 				_K_consecutive_destroy_node(alloc, start); \
 				throw; \
@@ -2037,7 +2032,7 @@ namespace kerbal
 				back = new_node; \
 				++cnt; \
 			} \
-			return std::pair<node*, node*>(start, back); \
+			return list_node_chain<Tp>(start, back); \
 		}
 
 #endif
@@ -2050,7 +2045,7 @@ namespace kerbal
 #		define FBODY(i) \
 			template <typename Tp> \
 			template <typename NodeAllocator KERBAL_OPT_PPEXPAND_WITH_COMMA_N(LEFT_JOIN_COMMA, EMPTY, TARGS_DECL, i)> \
-			std::pair<typename list_allocator_unrelated<Tp>::node*, typename list_allocator_unrelated<Tp>::node*> \
+			list_node_chain<Tp> \
 			list_allocator_unrelated<Tp>::_K_build_n_new_nodes_unguarded(NodeAllocator & alloc, size_type n KERBAL_OPT_PPEXPAND_WITH_COMMA_N(LEFT_JOIN_COMMA, EMPTY, ARGS_DECL, i)) \
 			{ \
 				__build_n_new_nodes_unguarded_body(alloc KERBAL_OPT_PPEXPAND_WITH_COMMA_N(LEFT_JOIN_COMMA, EMPTY, ARGS_USE, i)); \
@@ -2076,7 +2071,7 @@ namespace kerbal
 			KERBAL_CONSTEXPR20
 			typename kerbal::type_traits::enable_if<
 					kerbal::iterator::is_input_compatible_iterator<InputIterator>::value,
-					std::pair<typename list_allocator_unrelated<Tp>::node*, typename list_allocator_unrelated<Tp>::node*>
+					list_node_chain<Tp>
 			>::type
 			list_allocator_unrelated<Tp>::_K_build_new_nodes_range_unguarded(NodeAllocator & alloc, InputIterator first, InputIterator last)
 			{
@@ -2093,7 +2088,7 @@ namespace kerbal
 						back = new_node;
 						++first;
 					}
-					return std::pair<node*, node*>(start, back);
+					return list_node_chain<Tp>(start, back);
 #			if __cpp_exceptions
 				} catch (...) {
 					_K_consecutive_destroy_node(alloc, start);
@@ -2107,7 +2102,7 @@ namespace kerbal
 			template <typename Tp>
 			template <typename NodeAllocator>
 			KERBAL_CONSTEXPR20
-			std::pair<typename list_allocator_unrelated<Tp>::node*, typename list_allocator_unrelated<Tp>::node*>
+			list_node_chain<Tp>
 			list_allocator_unrelated<Tp>::_K_build_new_nodes_range_unguarded_move(NodeAllocator & alloc, iterator first, iterator last)
 			{
 				node * const start = _K_build_new_node(alloc, kerbal::compatibility::move(*first));
@@ -2123,7 +2118,7 @@ namespace kerbal
 						back = new_node;
 						++first;
 					}
-					return std::pair<node*, node*>(start, back);
+					return list_node_chain<Tp>(start, back);
 #			if __cpp_exceptions
 				} catch (...) {
 					_K_consecutive_destroy_node(alloc, start);

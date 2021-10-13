@@ -26,8 +26,6 @@
 #	include <kerbal/utility/forward.hpp>
 #endif
 
-#include <utility> // std::pair
-
 #if __cplusplus >= 201103L
 #	include <initializer_list>
 #	include <type_traits>
