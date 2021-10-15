@@ -18,7 +18,10 @@
 #include <kerbal/memory/pointer_traits.hpp>
 #include <kerbal/numeric/numeric_limits.hpp>
 #include <kerbal/memory/uninitialized.hpp>
+#include <kerbal/type_traits/conditional.hpp>
 #include <kerbal/type_traits/integral_constant.hpp>
+#include <kerbal/type_traits/is_same.hpp>
+#include <kerbal/type_traits/reference_deduction.hpp>
 #include <kerbal/type_traits/sign_deduction.hpp>
 #include <kerbal/type_traits/void_type.hpp>
 #include <kerbal/utility/declval.hpp>
@@ -861,8 +864,17 @@ namespace kerbal
 
 #		else
 
+			private:
+				typedef typename kerbal::type_traits::conditional<
+						kerbal::type_traits::is_same<value_type, void>::value,
+						void*,
+						typename kerbal::type_traits::add_lvalue_reference<const value_type>::type
+				>::type cxx98_construct_cref;
+
+			public:
+
 				template <typename T>
-				static void construct(Alloc & alloc, T * p, const value_type & val)
+				static void construct(Alloc & alloc, T * p, cxx98_construct_cref val)
 				{
 					alloc.construct(p, val);
 				}
