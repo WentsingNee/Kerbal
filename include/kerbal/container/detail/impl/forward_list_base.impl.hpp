@@ -30,6 +30,10 @@
 #	include <kerbal/utility/forward.hpp>
 #endif
 
+#if !__cpp_exceptions
+#	include <kerbal/memory/bad_alloc.hpp>
+#endif
+
 #include <kerbal/container/detail/decl/forward_list_base.decl.hpp>
 
 
@@ -1377,6 +1381,9 @@ namespace kerbal
 			{
 				typedef kerbal::memory::allocator_traits<NodeAllocator> node_allocator_traits;
 				node * p = node_allocator_traits::allocate(alloc, 1);
+				if (p == NULL) {
+					kerbal::memory::bad_alloc::throw_this_exception();
+				}
 				node_allocator_traits::construct(alloc, p, kerbal::utility::in_place_t(), kerbal::utility::forward<Args>(args)...);
 				return p;
 			}
@@ -1385,46 +1392,44 @@ namespace kerbal
 
 #	else // __cplusplus >= 201103L
 
-#		if __cpp_exceptions
-
-#	define _K_build_new_node_body(args...) \
-		{ \
-			typedef kerbal::memory::allocator_traits<NodeAllocator> node_allocator_traits; \
-			node * p = node_allocator_traits::allocate(alloc, 1); \
-			try { \
-				node_allocator_traits::construct(alloc, p, args); \
-			} catch (...) { \
-				node_allocator_traits::deallocate(alloc, p, 1); \
-				throw; \
-			} \
-			return p; \
-		}
-
-#		else
-
-#	define _K_build_new_node_body(args...) \
-		{ \
-			typedef kerbal::memory::allocator_traits<NodeAllocator> node_allocator_traits; \
-			node * p = node_allocator_traits::allocate(alloc, 1); \
-			node_allocator_traits::construct(alloc, p, args); \
-			return p; \
-		}
-
-#		endif // __cpp_exceptions
-
 #		define EMPTY
 #		define LEFT_JOIN_COMMA(exp) , exp
 #		define TARGS_DECL(i) KERBAL_MACRO_CONCAT(typename Arg, i)
 #		define ARGS_DECL(i) KERBAL_MACRO_CONCAT(const Arg, i) & KERBAL_MACRO_CONCAT(arg, i)
 #		define ARGS_USE(i) KERBAL_MACRO_CONCAT(arg, i)
+#	if __cpp_exceptions
 #		define FBODY(i) \
 			template <typename Tp> \
 			template <typename NodeAllocator KERBAL_OPT_PPEXPAND_WITH_COMMA_N(LEFT_JOIN_COMMA, EMPTY, TARGS_DECL, i)> \
 			typename fl_allocator_unrelated<Tp>::node* \
 			fl_allocator_unrelated<Tp>::_K_build_new_node(NodeAllocator & alloc KERBAL_OPT_PPEXPAND_WITH_COMMA_N(LEFT_JOIN_COMMA, EMPTY, ARGS_DECL, i)) \
 			{ \
-				_K_build_new_node_body(kerbal::utility::in_place_t() KERBAL_OPT_PPEXPAND_WITH_COMMA_N(LEFT_JOIN_COMMA, EMPTY, ARGS_USE, i)); \
+				typedef kerbal::memory::allocator_traits<NodeAllocator> node_allocator_traits; \
+				node * p = node_allocator_traits::allocate(alloc, 1); \
+				try { \
+					node_allocator_traits::construct(alloc, p, kerbal::utility::in_place_t() KERBAL_OPT_PPEXPAND_WITH_COMMA_N(LEFT_JOIN_COMMA, EMPTY, ARGS_USE, i)); \
+				} catch (...) { \
+					node_allocator_traits::deallocate(alloc, p, 1); \
+					throw; \
+				} \
+				return p; \
 			}
+#	else // __cpp_exceptions
+#		define FBODY(i) \
+			template <typename Tp> \
+			template <typename NodeAllocator KERBAL_OPT_PPEXPAND_WITH_COMMA_N(LEFT_JOIN_COMMA, EMPTY, TARGS_DECL, i)> \
+			typename fl_allocator_unrelated<Tp>::node* \
+			fl_allocator_unrelated<Tp>::_K_build_new_node(NodeAllocator & alloc KERBAL_OPT_PPEXPAND_WITH_COMMA_N(LEFT_JOIN_COMMA, EMPTY, ARGS_DECL, i)) \
+			{ \
+				typedef kerbal::memory::allocator_traits<NodeAllocator> node_allocator_traits; \
+				node * p = node_allocator_traits::allocate(alloc, 1); \
+				if (p == NULL) { \
+					kerbal::memory::bad_alloc::throw_this_exception(); \
+				} \
+				node_allocator_traits::construct(alloc, p, kerbal::utility::in_place_t() KERBAL_OPT_PPEXPAND_WITH_COMMA_N(LEFT_JOIN_COMMA, EMPTY, ARGS_USE, i)); \
+				return p; \
+			}
+#	endif // __cpp_exceptions
 
 			KERBAL_PPEXPAND_N(FBODY, KERBAL_PPEXPAND_EMPTY_SEPARATOR, 0)
 			KERBAL_PPEXPAND_N(FBODY, KERBAL_PPEXPAND_EMPTY_SEPARATOR, 20)
@@ -1435,8 +1440,6 @@ namespace kerbal
 #		undef ARGS_DECL
 #		undef ARGS_USE
 #		undef FBODY
-
-#	undef _K_build_new_node_body
 
 #	endif // __cplusplus >= 201103L
 
@@ -1472,61 +1475,53 @@ namespace kerbal
 
 #	else
 
-
-#if __cpp_exceptions
-
-// args = {alloc, arg0, arg1...}
-#	define _K_build_n_new_nodes_unguarded_body(args...) \
-		{ \
-			--n; \
-			node * const start = _K_build_new_node(args); \
-			node * back = start; \
-			try { \
-				while (n != 0) { \
-					node * new_node = _K_build_new_node(args); \
-					back->next = new_node; \
-					back = new_node; \
-					--n; \
-				} \
-				return sl_node_chain<Tp>(start, back); \
-			} catch (...) { \
-				_K_consecutive_destroy_node(alloc, start, NULL); \
-				throw; \
-			} \
-		}
-
-#else
-
-// args = {alloc, arg0, arg1...}
-#	define _K_build_n_new_nodes_unguarded_body(args...) \
-		{ \
-			--n; \
-			node * const start = _K_build_new_node(args); \
-			node * back = start; \
-			while (n != 0) { \
-				node* new_node = _K_build_new_node(args); \
-				back->next = new_node; \
-				back = new_node; \
-				--n; \
-			} \
-			return sl_node_chain<Tp>(start, back); \
-		}
-
-#endif
-
 #		define EMPTY
 #		define LEFT_JOIN_COMMA(exp) , exp
 #		define TARGS_DECL(i) KERBAL_MACRO_CONCAT(typename Arg, i)
 #		define ARGS_DECL(i) KERBAL_MACRO_CONCAT(const Arg, i) & KERBAL_MACRO_CONCAT(arg, i)
 #		define ARGS_USE(i) KERBAL_MACRO_CONCAT(arg, i)
+#	if __cpp_exceptions
 #		define FBODY(i) \
 			template <typename Tp> \
 			template <typename NodeAllocator KERBAL_OPT_PPEXPAND_WITH_COMMA_N(LEFT_JOIN_COMMA, EMPTY, TARGS_DECL, i)> \
 			sl_node_chain<Tp> \
 			fl_allocator_unrelated<Tp>::_K_build_n_new_nodes_unguarded(NodeAllocator & alloc, size_type n KERBAL_OPT_PPEXPAND_WITH_COMMA_N(LEFT_JOIN_COMMA, EMPTY, ARGS_DECL, i)) \
 			{ \
-				_K_build_n_new_nodes_unguarded_body(alloc KERBAL_OPT_PPEXPAND_WITH_COMMA_N(LEFT_JOIN_COMMA, EMPTY, ARGS_USE, i)); \
+				--n; \
+				node * const start = _K_build_new_node(alloc KERBAL_OPT_PPEXPAND_WITH_COMMA_N(LEFT_JOIN_COMMA, EMPTY, ARGS_USE, i)); \
+				node * back = start; \
+				try { \
+					while (n != 0) { \
+						node * new_node = _K_build_new_node(alloc KERBAL_OPT_PPEXPAND_WITH_COMMA_N(LEFT_JOIN_COMMA, EMPTY, ARGS_USE, i)); \
+						back->next = new_node; \
+						back = new_node; \
+						--n; \
+					} \
+					return sl_node_chain<Tp>(start, back); \
+				} catch (...) { \
+					_K_consecutive_destroy_node(alloc, start, NULL); \
+					throw; \
+				} \
 			}
+#	else // __cpp_exceptions
+#		define FBODY(i) \
+			template <typename Tp> \
+			template <typename NodeAllocator KERBAL_OPT_PPEXPAND_WITH_COMMA_N(LEFT_JOIN_COMMA, EMPTY, TARGS_DECL, i)> \
+			sl_node_chain<Tp> \
+			fl_allocator_unrelated<Tp>::_K_build_n_new_nodes_unguarded(NodeAllocator & alloc, size_type n KERBAL_OPT_PPEXPAND_WITH_COMMA_N(LEFT_JOIN_COMMA, EMPTY, ARGS_DECL, i)) \
+			{ \
+				--n; \
+				node * const start = _K_build_new_node(alloc KERBAL_OPT_PPEXPAND_WITH_COMMA_N(LEFT_JOIN_COMMA, EMPTY, ARGS_USE, i)); \
+				node * back = start; \
+				while (n != 0) { \
+					node* new_node = _K_build_new_node(alloc KERBAL_OPT_PPEXPAND_WITH_COMMA_N(LEFT_JOIN_COMMA, EMPTY, ARGS_USE, i)); \
+					back->next = new_node; \
+					back = new_node; \
+					--n; \
+				} \
+				return sl_node_chain<Tp>(start, back); \
+			}
+#	endif // __cpp_exceptions
 
 			KERBAL_PPEXPAND_N(FBODY, KERBAL_PPEXPAND_EMPTY_SEPARATOR, 0)
 			KERBAL_PPEXPAND_N(FBODY, KERBAL_PPEXPAND_EMPTY_SEPARATOR, 20)
@@ -1537,8 +1532,6 @@ namespace kerbal
 #		undef ARGS_DECL
 #		undef ARGS_USE
 #		undef FBODY
-
-#	undef _K_build_n_new_nodes_unguarded_body
 
 #	endif
 
@@ -1572,37 +1565,6 @@ namespace kerbal
 				}
 #			endif // __cpp_exceptions
 			}
-
-#		if __cplusplus >= 201103L
-
-			template <typename Tp>
-			template <typename NodeAllocator>
-			KERBAL_CONSTEXPR20
-			sl_node_chain<Tp>
-			fl_allocator_unrelated<Tp>::_K_build_new_nodes_range_unguarded_move(NodeAllocator & alloc, iterator first, iterator last)
-			{
-				node * const start = _K_build_new_node(alloc, kerbal::compatibility::move(*first));
-				node * back = start;
-#			if __cpp_exceptions
-				try {
-#			endif // __cpp_exceptions
-					++first;
-					while (first != last) {
-						node* new_node = _K_build_new_node(alloc, kerbal::compatibility::move(*first));
-						back->next = new_node;
-						back = new_node;
-						++first;
-					}
-					return sl_node_chain<Tp>(start, back);
-#			if __cpp_exceptions
-				} catch (...) {
-					_K_consecutive_destroy_node(alloc, start, NULL);
-					throw;
-				}
-#			endif // __cpp_exceptions
-			}
-
-#		endif
 
 
 			template <typename Tp>

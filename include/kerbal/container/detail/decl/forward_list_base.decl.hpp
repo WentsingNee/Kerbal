@@ -802,16 +802,6 @@ namespace kerbal
 					>::type
 					_K_build_new_nodes_range_unguarded(NodeAllocator & alloc, InputIterator first, InputIterator last);
 
-#			if __cplusplus >= 201103L
-
-					template <typename NodeAllocator>
-					KERBAL_CONSTEXPR20
-					static
-					sl_node_chain<Tp>
-					_K_build_new_nodes_range_unguarded_move(NodeAllocator & alloc, iterator first, iterator last);
-
-#			endif
-
 					template <typename NodeAllocator>
 					KERBAL_CONSTEXPR20
 					static void _K_destroy_node(NodeAllocator & alloc, node_base * p_node_base) KERBAL_NOEXCEPT;
