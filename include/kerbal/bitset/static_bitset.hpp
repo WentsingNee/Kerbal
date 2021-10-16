@@ -764,6 +764,7 @@ namespace kerbal
 					kerbal::type_traits::integral_constant<std::size_t, N1 >= N2 ? N1 : N2>
 			{};
 
+			// http://graphics.stanford.edu/~seander/bithacks.html#MaskedMerge
 			template <std::size_t NLong, std::size_t NShort, typename Block>
 			KERBAL_CONSTEXPR14
 			static_bitset<NLong, Block>
@@ -771,8 +772,8 @@ namespace kerbal
 						   const static_bitset<NShort, Block> & bs2,
 						   const static_bitset<NShort, Block> & mask) KERBAL_NOEXCEPT
 			{
-				typedef static_bitset<NLong, Block>		LongBs;
-				typedef static_bitset<NShort, Block>		ShortBs;
+				typedef static_bitset<NLong, Block>				LongBs;
+				typedef static_bitset<NShort, Block>			ShortBs;
 				typedef typename LongBs::block_size_type		block_size_type;
 				typedef typename LongBs::block_type				block_type;
 
@@ -782,12 +783,13 @@ namespace kerbal
 				block_size_type long_block_size = LongBs::BLOCK_SIZE::value;
 				block_size_type short_block_size = ShortBs::BLOCK_SIZE::value;
 				for (block_size_type i = 0; i < short_block_size; ++i) {
-					r._K_block[i] = (bs1._K_block[i] & bs2._K_block[i]) | (bs1._K_block[i] & ~mask._K_block[i]) | (bs2._K_block[i] & mask._K_block[i]);
+//					r._K_block[i] = (bs1._K_block[i] & bs2._K_block[i]) | (bs1._K_block[i] & ~mask._K_block[i]) | (bs2._K_block[i] & mask._K_block[i]);
+					r._K_block[i] = ((bs1._K_block[i] ^ bs2._K_block[i]) & mask._K_block[i]) ^ bs1._K_block[i];
 				}
 				if (!ShortBs::IS_DIVISIBLE::value) {
-					const block_type bmask = kerbal::numeric::mask<block_type>(ShortBs::TAIL_SIZE::value);
+					const block_type BMASK = kerbal::numeric::mask<block_type>(ShortBs::TAIL_SIZE::value);
 					r._K_block[short_block_size - 1] =
-							(r._K_block[short_block_size - 1] & bmask) | (bs1._K_block[short_block_size - 1] & ~bmask);
+							(r._K_block[short_block_size - 1] & BMASK) | (bs1._K_block[short_block_size - 1] & ~BMASK);
 				}
 				kerbal::algorithm::copy(bs1._K_block + short_block_size, bs1._K_block + long_block_size, r._K_block + short_block_size);
 				return r;
@@ -800,8 +802,8 @@ namespace kerbal
 						   const static_bitset<NLong, Block> & bs2,
 						   const static_bitset<NShort, Block> & mask) KERBAL_NOEXCEPT
 			{
-				typedef static_bitset<NLong, Block>		LongBs;
-				typedef static_bitset<NShort, Block>		ShortBs;
+				typedef static_bitset<NLong, Block>				LongBs;
+				typedef static_bitset<NShort, Block>			ShortBs;
 				typedef typename LongBs::block_size_type		block_size_type;
 				typedef typename LongBs::block_type				block_type;
 
@@ -811,43 +813,75 @@ namespace kerbal
 				block_size_type long_block_size = LongBs::BLOCK_SIZE::value;
 				block_size_type short_block_size = ShortBs::BLOCK_SIZE::value;
 				for (block_size_type i = 0; i < short_block_size; ++i) {
-					r._K_block[i] = (bs1._K_block[i] & bs2._K_block[i]) | (bs1._K_block[i] & ~mask._K_block[i]) | (bs2._K_block[i] & mask._K_block[i]);
+//					r._K_block[i] = (bs1._K_block[i] & bs2._K_block[i]) | (bs1._K_block[i] & ~mask._K_block[i]) | (bs2._K_block[i] & mask._K_block[i]);
+					r._K_block[i] = ((bs1._K_block[i] ^ bs2._K_block[i]) & mask._K_block[i]) ^ bs1._K_block[i];
 				}
 				if (!ShortBs::IS_DIVISIBLE::value) {
-					const block_type bmask = kerbal::numeric::mask<block_type>(ShortBs::TAIL_SIZE::value);
+					const block_type BMASK = kerbal::numeric::mask<block_type>(ShortBs::TAIL_SIZE::value);
 					r._K_block[short_block_size - 1] =
-							(r._K_block[short_block_size - 1] & bmask) | (bs2._K_block[short_block_size - 1] & ~bmask);
+							(r._K_block[short_block_size - 1] & BMASK) | (bs2._K_block[short_block_size - 1] & ~BMASK);
 				}
 				kerbal::algorithm::copy(bs2._K_block + short_block_size, bs2._K_block + long_block_size, r._K_block + short_block_size);
 				return r;
 			}
 
+			template <std::size_t N1, std::size_t N2, typename Block>
+			KERBAL_CONSTEXPR14
+			typename kerbal::type_traits::enable_if<
+					N1 >= N2,
+					static_bitset<detail::static_bitset_blend_max_len<N1, N2>::value, Block>
+			>::type
+			_K_blend_dispatch(const static_bitset<N1, Block> & bs1,
+							  const static_bitset<N2, Block> & bs2,
+							  const static_bitset<detail::static_bitset_blend_min_len<N1, N2>::value, Block> & mask) KERBAL_NOEXCEPT
+			{
+				return kerbal::bitset::detail::_K_blend_impl1(bs1, bs2, mask);
+			}
+
+			template <std::size_t N1, std::size_t N2, typename Block>
+			KERBAL_CONSTEXPR14
+			typename kerbal::type_traits::enable_if<
+					N1 < N2,
+					static_bitset<detail::static_bitset_blend_max_len<N1, N2>::value, Block>
+			>::type
+			_K_blend_dispatch(const static_bitset<N1, Block> & bs1,
+							  const static_bitset<N2, Block> & bs2,
+							  const static_bitset<detail::static_bitset_blend_min_len<N1, N2>::value, Block> & mask) KERBAL_NOEXCEPT
+			{
+				return kerbal::bitset::detail::_K_blend_impl2(bs1, bs2, mask);
+			}
+
 		} // namespace detail
 
-		template <std::size_t N1, std::size_t N2, typename Block>
+		/**
+		 * select the bits in bs1 or bs2 according to the mask.
+		 * @param mask
+		 *         requires mask.size() == min(bs1.size(), bs2.size())
+		 * @return r
+		 *         promise r.size() == max(bs1.size(), bs2.size())
+		 * @details
+		 *     \f[
+		 *         r[i] = \begin{cases}
+		 *             bs1[i]& \text{, if } mask[i] == false \\
+		 *             bs2[i]& \text{, if } mask[i] == true \\
+		 *             longer(bs1, bs2)[i]& \text{, if } i >= min(bs1.size(), bs2.size())
+		 *         \end{cases}
+		 *     \f]
+		 */
+		template <std::size_t N1, std::size_t N2, std::size_t NMask, typename Block>
 		KERBAL_CONSTEXPR14
-		typename kerbal::type_traits::enable_if<
-				N1 >= N2,
-				static_bitset<detail::static_bitset_blend_max_len<N1, N2>::value, Block>
-		>::type
+		static_bitset<detail::static_bitset_blend_max_len<N1, N2>::value, Block>
 		blend(const static_bitset<N1, Block> & bs1,
 			  const static_bitset<N2, Block> & bs2,
-			  const static_bitset<detail::static_bitset_blend_min_len<N1, N2>::value, Block> & mask) KERBAL_NOEXCEPT
+			  const static_bitset<NMask, Block> & mask) KERBAL_NOEXCEPT
 		{
-			return kerbal::bitset::detail::_K_blend_impl1(bs1, bs2, mask);
-		}
-
-		template <std::size_t N1, std::size_t N2, typename Block>
-		KERBAL_CONSTEXPR14
-		typename kerbal::type_traits::enable_if<
-				N1 < N2,
-				static_bitset<detail::static_bitset_blend_max_len<N1, N2>::value, Block>
-		>::type
-		blend(const static_bitset<N1, Block> & bs1,
-			  const static_bitset<N2, Block> & bs2,
-			  const static_bitset<detail::static_bitset_blend_min_len<N1, N2>::value, Block> & mask) KERBAL_NOEXCEPT
-		{
-			return kerbal::bitset::detail::_K_blend_impl2(bs1, bs2, mask);
+			/*
+			 *         ┌ bs1[i]               , if mask[i] == false
+			 *  r[i] = │ bs2[i]               , if mask[i] == true
+			 *         └ longer(bs1, bs2)[i]  , if i >= min(bs1.size(), bs2.size())
+			 */
+			KERBAL_STATIC_ASSERT((NMask == detail::static_bitset_blend_min_len<N1, N2>::value), "mask.size() should == min(bs1.size(), bs2.size())");
+			return kerbal::bitset::detail::_K_blend_dispatch(bs1, bs2, mask);
 		}
 
 	} // namespace bitset
