@@ -56,13 +56,17 @@ namespace kerbal
 
 			kerbal::test::assert_record record;
 
+#	if __cpp_exceptions
 			try {
+#	endif
 				call_ptr(record);
+#	if __cpp_exceptions
 			} catch (...) {
 				record.items.back().result = running_result::EXCEPTION;
 				printf("test case[%zu]: %s (%s): EXCEPTION\n", case_id, name, description);
 				throw;
 			}
+#	endif
 
 			int success = 0;
 			int failure = 0;
