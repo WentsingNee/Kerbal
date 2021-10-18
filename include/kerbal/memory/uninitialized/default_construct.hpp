@@ -222,8 +222,10 @@ namespace kerbal
 		KERBAL_CONSTEXPR14
 		void uninitialized_default_construct(ForwardIterator first, ForwardIterator last)
 		{
+#	if __cpp_exceptions || __cplusplus >= 201103L
 			typedef ForwardIterator iterator;
 			typedef typename kerbal::iterator::iterator_traits<iterator>::value_type value_type;
+#	endif
 
 #	if __cpp_exceptions
 
@@ -337,8 +339,10 @@ namespace kerbal
 		KERBAL_CONSTEXPR14
 		ForwardIterator uninitialized_default_construct_n(ForwardIterator first, SizeType n)
 		{
+#	if __cpp_exceptions || __cplusplus >= 201103L
 			typedef ForwardIterator iterator;
 			typedef typename kerbal::iterator::iterator_traits<iterator>::value_type value_type;
+#	endif
 
 #	if __cpp_exceptions
 
