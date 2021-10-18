@@ -976,7 +976,8 @@ namespace kerbal
 KERBAL_NAMESPACE_STD_BEGIN
 	template <typename T>
 	KERBAL_CONSTEXPR14
-	void swap(kerbal::optional::optional<T> & a, kerbal::optional::optional<T> & b) KERBAL_NOEXCEPT
+	void swap(kerbal::optional::optional<T> & a, kerbal::optional::optional<T> & b)
+			KERBAL_CONDITIONAL_NOEXCEPT(noexcept(a.swap(b)))
 	{
 		a.swap(b);
 	}
