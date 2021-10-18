@@ -12,8 +12,10 @@
 #ifndef KERBAL_CONTAINER_STATIC_FLAT_SET_HPP
 #define KERBAL_CONTAINER_STATIC_FLAT_SET_HPP
 
+#include <kerbal/compatibility/namespace_std_scope.hpp>
 #include <kerbal/container/detail/flat_set_base.hpp>
 #include <kerbal/container/static_ordered.hpp>
+
 
 namespace kerbal
 {
@@ -357,7 +359,54 @@ namespace kerbal
 
 	} // namespace container
 
+
+	namespace algorithm
+	{
+
+		template <typename Tp, std::size_t N, typename KeyCompare>
+		KERBAL_CONSTEXPR14
+		void swap(kerbal::container::static_flat_set<Tp, N, KeyCompare> & a,
+				  kerbal::container::static_flat_set<Tp, N, KeyCompare> & b)
+				KERBAL_CONDITIONAL_NOEXCEPT(noexcept(a.swap(b)))
+		{
+			a.swap(b);
+		}
+
+		template <typename Tp, std::size_t N, typename KeyCompare>
+		KERBAL_CONSTEXPR14
+		void swap(kerbal::container::static_flat_multiset<Tp, N, KeyCompare> & a,
+				  kerbal::container::static_flat_multiset<Tp, N, KeyCompare> & b)
+				KERBAL_CONDITIONAL_NOEXCEPT(noexcept(a.swap(b)))
+		{
+			a.swap(b);
+		}
+
+	} // namespace algorithm
+
 } // namespace kerbal
+
+
+KERBAL_NAMESPACE_STD_BEGIN
+
+	template <typename Tp, std::size_t N, typename KeyCompare>
+	KERBAL_CONSTEXPR14
+	void swap(kerbal::container::static_flat_set<Tp, N, KeyCompare> & a,
+			  kerbal::container::static_flat_set<Tp, N, KeyCompare> & b)
+			KERBAL_CONDITIONAL_NOEXCEPT(noexcept(a.swap(b)))
+	{
+		a.swap(b);
+	}
+
+	template <typename Tp, std::size_t N, typename KeyCompare>
+	KERBAL_CONSTEXPR14
+	void swap(kerbal::container::static_flat_multiset<Tp, N, KeyCompare> & a,
+			  kerbal::container::static_flat_multiset<Tp, N, KeyCompare> & b)
+			KERBAL_CONDITIONAL_NOEXCEPT(noexcept(a.swap(b)))
+	{
+		a.swap(b);
+	}
+
+KERBAL_NAMESPACE_STD_END
 
 
 #endif // KERBAL_CONTAINER_STATIC_FLAT_SET_HPP

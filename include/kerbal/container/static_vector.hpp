@@ -15,6 +15,7 @@
 #include <kerbal/algorithm/sequence_compare.hpp>
 #include <kerbal/assign/ilist.hpp>
 #include <kerbal/compatibility/constexpr.hpp>
+#include <kerbal/compatibility/namespace_std_scope.hpp>
 #include <kerbal/compatibility/noexcept.hpp>
 #include <kerbal/container/static_container_exception.hpp>
 #include <kerbal/iterator/iterator_traits.hpp>
@@ -35,6 +36,7 @@
 
 #include <kerbal/container/detail/static_vector_base.hpp>
 #include <kerbal/container/detail/static_vector_iterator.hpp>
+
 
 namespace kerbal
 {
@@ -615,7 +617,35 @@ namespace kerbal
 
 	} // namespace container
 
+
+	namespace algorithm
+	{
+
+		template <typename Tp, size_t N>
+		KERBAL_CONSTEXPR14
+		void swap(kerbal::container::static_vector<Tp, N> & a, kerbal::container::static_vector<Tp, N> & b)
+				KERBAL_CONDITIONAL_NOEXCEPT(noexcept(a.swap(b)))
+		{
+			a.swap(b);
+		}
+
+	} // namespace algorithm
+
 } // namespace kerbal
+
+
+KERBAL_NAMESPACE_STD_BEGIN
+
+	template <typename Tp, size_t N>
+	KERBAL_CONSTEXPR14
+	void swap(kerbal::container::static_vector<Tp, N> & a, kerbal::container::static_vector<Tp, N> & b)
+			KERBAL_CONDITIONAL_NOEXCEPT(noexcept(a.swap(b)))
+	{
+		a.swap(b);
+	}
+
+KERBAL_NAMESPACE_STD_END
+
 
 #include <kerbal/container/impl/static_vector.impl.hpp>
 

@@ -12,6 +12,7 @@
 #ifndef KERBAL_CONTAINER_LINKED_QUEUE_HPP
 #define KERBAL_CONTAINER_LINKED_QUEUE_HPP
 
+#include <kerbal/compatibility/namespace_std_scope.hpp>
 #include <kerbal/container/single_list.hpp>
 
 #if __cplusplus < 201103L
@@ -22,6 +23,7 @@
 #if __cplusplus >= 201103L
 #	include <kerbal/utility/forward.hpp>
 #endif
+
 
 namespace kerbal
 {
@@ -263,6 +265,34 @@ namespace kerbal
 
 	} // namespace container
 
+
+	namespace algorithm
+	{
+
+		template <typename Tp, typename Sequence>
+		KERBAL_CONSTEXPR20
+		void swap(kerbal::container::linked_queue<Tp, Sequence> & a, kerbal::container::linked_queue<Tp, Sequence> & b)
+				KERBAL_CONDITIONAL_NOEXCEPT(noexcept(a.swap(b)))
+		{
+			a.swap(b);
+		}
+
+	} // namespace algorithm
+
 } // namespace kerbal
+
+
+KERBAL_NAMESPACE_STD_BEGIN
+
+	template <typename Tp, typename Sequence>
+	KERBAL_CONSTEXPR14
+	void swap(kerbal::container::linked_queue<Tp, Sequence> & a, kerbal::container::linked_queue<Tp, Sequence> & b)
+			KERBAL_CONDITIONAL_NOEXCEPT(noexcept(a.swap(b)))
+	{
+		a.swap(b);
+	}
+
+KERBAL_NAMESPACE_STD_END
+
 
 #endif // KERBAL_CONTAINER_LINKED_QUEUE_HPP

@@ -13,10 +13,12 @@
 #define KERBAL_CONTAINER_FLAT_ORDERED_HPP
 
 #include <kerbal/algorithm/swap.hpp>
+#include <kerbal/compatibility/namespace_std_scope.hpp>
 #include <kerbal/container/detail/flat_ordered_base.hpp>
 
 #include <cstddef>
 #include <vector>
+
 
 namespace kerbal
 {
@@ -188,6 +190,36 @@ namespace kerbal
 
 	} // namespace container
 
+
+	namespace algorithm
+	{
+
+		template <typename Entity, typename Key, typename KeyCompare, typename Extract, typename Allocator>
+		KERBAL_CONSTEXPR14
+		void swap(kerbal::container::flat_ordered<Entity, Key, KeyCompare, Extract, Allocator> & a,
+				  kerbal::container::flat_ordered<Entity, Key, KeyCompare, Extract, Allocator> & b)
+				KERBAL_CONDITIONAL_NOEXCEPT(noexcept(a.swap(b)))
+		{
+			a.swap(b);
+		}
+
+	} // namespace algorithm
+
 } // namespace kerbal
+
+
+KERBAL_NAMESPACE_STD_BEGIN
+
+	template <typename Entity, typename Key, typename KeyCompare, typename Extract, typename Allocator>
+	KERBAL_CONSTEXPR14
+	void swap(kerbal::container::flat_ordered<Entity, Key, KeyCompare, Extract, Allocator> & a,
+			  kerbal::container::flat_ordered<Entity, Key, KeyCompare, Extract, Allocator> & b)
+			KERBAL_CONDITIONAL_NOEXCEPT(noexcept(a.swap(b)))
+	{
+		a.swap(b);
+	}
+
+KERBAL_NAMESPACE_STD_END
+
 
 #endif // KERBAL_CONTAINER_FLAT_ORDERED_HPP

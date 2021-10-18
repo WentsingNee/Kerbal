@@ -13,10 +13,12 @@
 #define KERBAL_CONTAINER_STATIC_ORDERED_HPP
 
 #include <kerbal/algorithm/swap.hpp>
+#include <kerbal/compatibility/namespace_std_scope.hpp>
 #include <kerbal/container/detail/flat_ordered_base.hpp>
 #include <kerbal/container/static_vector.hpp>
 
 #include <cstddef>
+
 
 namespace kerbal
 {
@@ -203,6 +205,35 @@ namespace kerbal
 
 	} // namespace container
 
+
+	namespace algorithm
+	{
+
+		template <typename Entity, std::size_t N, typename Key, typename KeyCompare, typename Extract>
+		KERBAL_CONSTEXPR14
+		void swap(kerbal::container::static_ordered<Entity, N, Key, KeyCompare, Extract> & a,
+				  kerbal::container::static_ordered<Entity, N, Key, KeyCompare, Extract> & b)
+				KERBAL_CONDITIONAL_NOEXCEPT(noexcept(a.swap(b)))
+		{
+			a.swap(b);
+		}
+
+	} // namespace algorithm
+
 } // namespace kerbal
+
+
+KERBAL_NAMESPACE_STD_BEGIN
+
+	template <typename Entity, std::size_t N, typename Key, typename KeyCompare, typename Extract>
+	KERBAL_CONSTEXPR14
+	void swap(kerbal::container::static_ordered<Entity, N, Key, KeyCompare, Extract> & a,
+			  kerbal::container::static_ordered<Entity, N, Key, KeyCompare, Extract> & b)
+			KERBAL_CONDITIONAL_NOEXCEPT(noexcept(a.swap(b)))
+	{
+		a.swap(b);
+	}
+
+KERBAL_NAMESPACE_STD_END
 
 #endif // KERBAL_CONTAINER_STATIC_ORDERED_HPP

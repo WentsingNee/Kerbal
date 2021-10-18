@@ -16,6 +16,7 @@
 
 #include <kerbal/algorithm/swap.hpp>
 #include <kerbal/compatibility/constexpr.hpp>
+#include <kerbal/compatibility/namespace_std_scope.hpp>
 #include <kerbal/compatibility/noexcept.hpp>
 #include <kerbal/compatibility/static_assert.hpp>
 #include <kerbal/container/array.hpp>
@@ -851,7 +852,34 @@ namespace kerbal
 
 	} // namespace bitset
 
+
+	namespace algorithm
+	{
+
+		template <std::size_t N, typename Block>
+		KERBAL_CONSTEXPR14
+		void swap(kerbal::bitset::static_bitset<N, Block> & a, kerbal::bitset::static_bitset<N, Block> & b)
+				KERBAL_CONDITIONAL_NOEXCEPT(noexcept(a.swap(b)))
+		{
+			a.swap(b);
+		}
+
+	} // namespace algorithm
+
 } // namespace kerbal
+
+
+KERBAL_NAMESPACE_STD_BEGIN
+
+	template <std::size_t N, typename Block>
+	KERBAL_CONSTEXPR14
+	void swap(kerbal::bitset::static_bitset<N, Block> & a, kerbal::bitset::static_bitset<N, Block> & b)
+			KERBAL_CONDITIONAL_NOEXCEPT(noexcept(a.swap(b)))
+	{
+		a.swap(b);
+	}
+
+KERBAL_NAMESPACE_STD_END
 
 
 #endif // KERBAL_BITSET_STATIC_BITSET_HPP

@@ -14,6 +14,7 @@
 
 #include <kerbal/algorithm/heap.hpp>
 #include <kerbal/compatibility/move.hpp>
+#include <kerbal/compatibility/namespace_std_scope.hpp>
 #include <kerbal/container/static_vector.hpp>
 #include <kerbal/iterator/iterator_traits.hpp>
 #include <kerbal/type_traits/enable_if.hpp>
@@ -285,6 +286,36 @@ namespace kerbal
 
 	} // namespace container
 
+
+	namespace algorithm
+	{
+
+		template <typename Tp, size_t N, typename KeyCompare>
+		KERBAL_CONSTEXPR14
+		void swap(kerbal::container::static_priority_queue<Tp, N, KeyCompare> & a,
+				  kerbal::container::static_priority_queue<Tp, N, KeyCompare> & b)
+				KERBAL_CONDITIONAL_NOEXCEPT(noexcept(a.swap(b)))
+		{
+			a.swap(b);
+		}
+
+	} // namespace algorithm
+
 } // namespace kerbal
+
+
+KERBAL_NAMESPACE_STD_BEGIN
+
+	template <typename Tp, size_t N, typename KeyCompare>
+	KERBAL_CONSTEXPR14
+	void swap(kerbal::container::static_priority_queue<Tp, N, KeyCompare> & a,
+			  kerbal::container::static_priority_queue<Tp, N, KeyCompare> & b)
+			KERBAL_CONDITIONAL_NOEXCEPT(noexcept(a.swap(b)))
+	{
+		a.swap(b);
+	}
+
+KERBAL_NAMESPACE_STD_END
+
 
 #endif // KERBAL_CONTAINER_STATIC_PRIORITY_QUEUE_HPP
