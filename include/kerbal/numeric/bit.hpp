@@ -22,6 +22,7 @@
 #include <cstddef>
 
 #include <kerbal/numeric/bit/popcount.hpp>
+#include <kerbal/numeric/bit/single_bit_bsearch.hpp>
 
 
 namespace kerbal
