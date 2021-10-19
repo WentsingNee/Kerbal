@@ -21,6 +21,7 @@
 #include <climits>
 #include <cstddef>
 
+#include <kerbal/numeric/bit/countr_zero.hpp>
 #include <kerbal/numeric/bit/popcount.hpp>
 #include <kerbal/numeric/bit/single_bit_bsearch.hpp>
 
