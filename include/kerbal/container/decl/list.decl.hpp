@@ -34,7 +34,6 @@
 
 #if __cplusplus >= 201103L
 #	include <initializer_list>
-#	include <type_traits>
 #endif
 
 #include <kerbal/container/detail/decl/list_base.decl.hpp>
@@ -105,17 +104,17 @@ namespace kerbal
 			// construct/copy/destroy
 
 				KERBAL_CONSTEXPR20
-				list() KERBAL_CONDITIONAL_NOEXCEPT((
-						std::is_nothrow_default_constructible<list_allocator_overload>::value &&
-						std::is_nothrow_constructible<list_allocator_unrelated, detail::init_list_node_ptr_to_self_tag>::value
-				));
+				list() KERBAL_CONDITIONAL_NOEXCEPT(
+						list_allocator_overload::is_nothrow_default_constrctible::value &&
+						list_allocator_unrelated::is_nothrow_init_to_self_constrctible::value
+				);
 
 				KERBAL_CONSTEXPR20
 				explicit
-				list(const Allocator& alloc) KERBAL_CONDITIONAL_NOEXCEPT((
-						std::is_nothrow_constructible<list_allocator_overload, const Allocator&>::value &&
-						std::is_nothrow_constructible<list_allocator_unrelated, detail::init_list_node_ptr_to_self_tag>::value
-				));
+				list(const Allocator& alloc) KERBAL_CONDITIONAL_NOEXCEPT(
+						list_allocator_overload::is_nothrow_constructible_from_allocator_const_reference::value &&
+						list_allocator_unrelated::is_nothrow_init_to_self_constrctible::value
+				);
 
 				KERBAL_CONSTEXPR20
 				list(const list & src);
@@ -157,13 +156,16 @@ namespace kerbal
 #		if __cplusplus >= 201103L
 
 				KERBAL_CONSTEXPR20
-				list(list && src) KERBAL_CONDITIONAL_NOEXCEPT((
-						std::is_nothrow_constructible<list_allocator_overload, node_allocator_type &&>::value &&
-						std::is_nothrow_constructible<list_allocator_unrelated, list_allocator_unrelated &&>::value
-				));
+				list(list && src) KERBAL_CONDITIONAL_NOEXCEPT(
+						list_allocator_overload::is_nothrow_constructible_from_allocator_rvalue_reference::value &&
+						list_allocator_unrelated::is_nothrow_move_constrctible::value
+				);
 
 				KERBAL_CONSTEXPR20
-				list(list && src, const Allocator& alloc);
+				list(list && src, const Allocator& alloc) KERBAL_CONDITIONAL_NOEXCEPT(
+						list_allocator_overload::is_nothrow_constructible_from_allocator_const_reference::value &&
+						list_allocator_unrelated::template is_nothrow_move_constructible_using_allocator<node_allocator_type>::value
+				);
 
 #		endif
 
@@ -231,13 +233,9 @@ namespace kerbal
 #		if __cplusplus >= 201103L
 
 				KERBAL_CONSTEXPR20
-				void assign(list&& src) KERBAL_CONDITIONAL_NOEXCEPT(noexcept(
-						kerbal::utility::declthis<list_allocator_unrelated>()->assign_using_allocator(
-								kerbal::utility::declthis<list>()->alloc(),
-								kerbal::compatibility::move(kerbal::utility::declval<list &&>().alloc()),
-								kerbal::utility::declval<list_allocator_unrelated &&>()
-						)
-				));
+				void assign(list&& src) KERBAL_CONDITIONAL_NOEXCEPT(
+						list_allocator_unrelated::template is_nothrow_move_assign_using_allocator<node_allocator_type>::value
+				);
 
 #		endif
 

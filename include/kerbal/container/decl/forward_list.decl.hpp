@@ -34,7 +34,6 @@
 
 #if __cplusplus >= 201103L
 #	include <initializer_list>
-#	include <type_traits>
 #endif
 
 #include <kerbal/container/detail/decl/forward_list_base.decl.hpp>
@@ -114,10 +113,10 @@ namespace kerbal
 
 				KERBAL_CONSTEXPR20
 				explicit
-				forward_list(const Allocator& alloc) KERBAL_CONDITIONAL_NOEXCEPT((
-						std::is_nothrow_constructible<fl_allocator_overload, const Allocator&>::value &&
-						std::is_nothrow_default_constructible<fl_allocator_unrelated>::value
-				));
+				forward_list(const Allocator& alloc) KERBAL_CONDITIONAL_NOEXCEPT(
+						fl_allocator_overload::is_nothrow_constructible_from_allocator_const_reference::value &&
+						fl_allocator_unrelated::is_nothrow_default_constrctible::value
+				);
 
 				KERBAL_CONSTEXPR20
 				forward_list(const forward_list & src);
@@ -159,13 +158,16 @@ namespace kerbal
 #		if __cplusplus >= 201103L
 
 				KERBAL_CONSTEXPR20
-				forward_list(forward_list && src) KERBAL_CONDITIONAL_NOEXCEPT((
-						std::is_nothrow_constructible<fl_allocator_overload, node_allocator_type &&>::value &&
-						std::is_nothrow_constructible<fl_allocator_unrelated, fl_allocator_unrelated &&>::value
-				));
+				forward_list(forward_list && src) KERBAL_CONDITIONAL_NOEXCEPT(
+						fl_allocator_overload::is_nothrow_constructible_from_allocator_rvalue_reference::value &&
+						fl_allocator_unrelated::is_nothrow_move_constrctible::value
+				);
 
 				KERBAL_CONSTEXPR20
-				forward_list(forward_list && src, const Allocator& alloc);
+				forward_list(forward_list && src, const Allocator& alloc) KERBAL_CONDITIONAL_NOEXCEPT(
+						fl_allocator_overload::is_nothrow_constructible_from_allocator_const_reference::value &&
+						fl_allocator_unrelated::template is_nothrow_move_constructible_using_allocator<node_allocator_type>::value
+				);
 
 #		endif
 
@@ -233,13 +235,9 @@ namespace kerbal
 #		if __cplusplus >= 201103L
 
 				KERBAL_CONSTEXPR20
-				void assign(forward_list&& src) KERBAL_CONDITIONAL_NOEXCEPT(noexcept(
-						kerbal::utility::declthis<fl_allocator_unrelated>()->assign_using_allocator(
-								kerbal::utility::declthis<forward_list>()->alloc(),
-								kerbal::compatibility::move(kerbal::utility::declval<forward_list &&>().alloc()),
-								kerbal::utility::declval<fl_allocator_unrelated &&>()
-						)
-				));
+				void assign(forward_list&& src) KERBAL_CONDITIONAL_NOEXCEPT(
+						fl_allocator_unrelated::template is_nothrow_move_assign_using_allocator<node_allocator_type>::value
+				);
 
 #		endif
 

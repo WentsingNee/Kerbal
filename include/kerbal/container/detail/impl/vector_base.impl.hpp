@@ -248,9 +248,7 @@ namespace kerbal
 			template <typename Allocator>
 			KERBAL_CONSTEXPR14
 			vector_allocator_unrelated<Tp>::vector_allocator_unrelated(Allocator & alloc, Allocator && src_alloc, vector_allocator_unrelated && src)
-					KERBAL_CONDITIONAL_NOEXCEPT(
-							kerbal::memory::allocator_traits<Allocator>::is_always_equal::value
-					)
+					KERBAL_CONDITIONAL_NOEXCEPT(is_nothrow_move_constructible_using_allocator<Allocator>::value)
 			{
 				typedef kerbal::memory::allocator_traits<Allocator> allocator_traits;
 				typedef typename allocator_traits::is_always_equal is_always_equal;
@@ -544,9 +542,7 @@ namespace kerbal
 			template <typename Allocator>
 			KERBAL_CONSTEXPR20
 			void vector_allocator_unrelated<Tp>::assign_using_allocator(Allocator & alloc, Allocator && src_alloc, vector_allocator_unrelated && src)
-					KERBAL_CONDITIONAL_NOEXCEPT(
-							kerbal::memory::allocator_traits<Allocator>::is_always_equal::value
-					)
+					KERBAL_CONDITIONAL_NOEXCEPT(is_nothrow_move_assign_using_allocator<Allocator>::value)
 			{
 				typedef kerbal::memory::allocator_traits<Allocator> allocator_traits;
 				typedef typename allocator_traits::propagate_on_container_move_assignment propagate;

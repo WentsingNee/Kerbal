@@ -37,7 +37,6 @@
 
 #if __cplusplus >= 201103L
 #	include <initializer_list>
-#	include <type_traits>
 #endif
 
 #include <kerbal/container/detail/decl/vector_base.decl.hpp>
@@ -98,16 +97,16 @@ namespace kerbal
 
 				KERBAL_CONSTEXPR20
 				vector() KERBAL_CONDITIONAL_NOEXCEPT(
-						std::is_nothrow_default_constructible<vector_allocator_overload>::value &&
-						std::is_nothrow_default_constructible<vector_allocator_unrelated>::value
+						vector_allocator_overload::is_nothrow_default_constrctible::value &&
+						vector_allocator_unrelated::is_nothrow_default_constrctible::value
 				);
 
 				KERBAL_CONSTEXPR20
 				explicit
-				vector(const Allocator & allocator) KERBAL_CONDITIONAL_NOEXCEPT((
-						std::is_nothrow_constructible<vector_allocator_overload, const Allocator &>::value &&
-						std::is_nothrow_default_constructible<vector_allocator_unrelated>::value
-				));
+				vector(const Allocator & allocator) KERBAL_CONDITIONAL_NOEXCEPT(
+						vector_allocator_overload::is_nothrow_constructible_from_allocator_const_reference::value &&
+						vector_allocator_unrelated::is_nothrow_default_constrctible::value
+				);
 
 				KERBAL_CONSTEXPR20
 				explicit
@@ -149,16 +148,16 @@ namespace kerbal
 #		if __cplusplus >= 201103L
 
 				KERBAL_CONSTEXPR20
-				vector(vector && src) KERBAL_CONDITIONAL_NOEXCEPT((
-						std::is_nothrow_constructible<vector_allocator_overload, Allocator &&>::value &&
-						std::is_nothrow_constructible<vector_allocator_unrelated, vector_allocator_unrelated &&>::value
-				));
+				vector(vector && src) KERBAL_CONDITIONAL_NOEXCEPT(
+						vector_allocator_overload::is_nothrow_constructible_from_allocator_rvalue_reference::value &&
+						vector_allocator_unrelated::is_nothrow_move_constrctible::value
+				);
 
 				KERBAL_CONSTEXPR20
-				vector(vector && src, const Allocator & allocator) KERBAL_CONDITIONAL_NOEXCEPT((
-						std::is_nothrow_constructible<vector_allocator_overload, const Allocator &>::value &&
-						std::is_nothrow_constructible<vector_allocator_unrelated, Allocator &, Allocator &&, vector_allocator_unrelated &&>::value
-				));
+				vector(vector && src, const Allocator & allocator) KERBAL_CONDITIONAL_NOEXCEPT(
+						vector_allocator_overload::is_nothrow_constructible_from_allocator_const_reference::value &&
+						vector_allocator_unrelated::template is_nothrow_move_constructible_using_allocator<allocator_type>::value
+				);
 
 
 #		endif
@@ -230,13 +229,9 @@ namespace kerbal
 #		if __cplusplus >= 201103L
 
 				KERBAL_CONSTEXPR20
-				void assign(vector && src) KERBAL_CONDITIONAL_NOEXCEPT(noexcept(
-						kerbal::utility::declthis<vector_allocator_unrelated>()->assign_using_allocator(
-								kerbal::utility::declthis<vector>()->alloc(),
-								kerbal::compatibility::move(kerbal::utility::declval<vector &&>().alloc()),
-								kerbal::utility::declval<vector_allocator_unrelated &&>()
-						)
-				));
+				void assign(vector && src) KERBAL_CONDITIONAL_NOEXCEPT(
+						vector_allocator_unrelated::template is_nothrow_move_assign_using_allocator<allocator_type>::value
+				);
 
 #		endif
 

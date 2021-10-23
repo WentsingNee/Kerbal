@@ -256,6 +256,10 @@ namespace kerbal
 
 #			if __cplusplus >= 201103L
 
+					struct is_nothrow_default_constrctible : kerbal::type_traits::true_type
+					{
+					};
+
 					sl_allocator_unrelated() = default;
 
 #			else
@@ -286,6 +290,10 @@ namespace kerbal
 
 #			if __cplusplus >= 201103L
 
+					struct is_nothrow_move_constrctible : kerbal::type_traits::true_type
+					{
+					};
+
 					// pre-cond: allocator allows
 					KERBAL_CONSTEXPR14
 					sl_allocator_unrelated(sl_allocator_unrelated && src) KERBAL_NOEXCEPT;
@@ -314,10 +322,16 @@ namespace kerbal
 				protected:
 
 					template <typename NodeAllocator>
+					struct is_nothrow_move_constructible_using_allocator :
+							kerbal::memory::allocator_traits<NodeAllocator>::is_always_equal
+					{
+					};
+
+					template <typename NodeAllocator>
 					KERBAL_CONSTEXPR14
-					sl_allocator_unrelated(NodeAllocator & alloc, NodeAllocator && src_alloc, sl_allocator_unrelated && src) KERBAL_CONDITIONAL_NOEXCEPT(
-							kerbal::memory::allocator_traits<NodeAllocator>::is_always_equal::value
-					);
+					sl_allocator_unrelated(NodeAllocator & alloc, NodeAllocator && src_alloc, sl_allocator_unrelated && src)
+							KERBAL_CONDITIONAL_NOEXCEPT(is_nothrow_move_constructible_using_allocator<NodeAllocator>::value)
+					;
 
 #			endif
 
@@ -397,10 +411,16 @@ namespace kerbal
 				protected:
 
 					template <typename NodeAllocator>
+					struct is_nothrow_move_assign_using_allocator :
+							kerbal::memory::allocator_traits<NodeAllocator>::is_always_equal
+					{
+					};
+
+					template <typename NodeAllocator>
 					KERBAL_CONSTEXPR20
-					void assign_using_allocator(NodeAllocator & alloc, NodeAllocator && src_alloc, sl_allocator_unrelated && src) KERBAL_CONDITIONAL_NOEXCEPT(
-							kerbal::memory::allocator_traits<NodeAllocator>::is_always_equal::value
-					);
+					void assign_using_allocator(NodeAllocator & alloc, NodeAllocator && src_alloc, sl_allocator_unrelated && src)
+							KERBAL_CONDITIONAL_NOEXCEPT(is_nothrow_move_assign_using_allocator<NodeAllocator>::value)
+					;
 
 #			endif
 
@@ -871,33 +891,60 @@ namespace kerbal
 
 				protected:
 
-					KERBAL_CONSTEXPR
-					sl_allocator_overload()
-								KERBAL_CONDITIONAL_NOEXCEPT((
-										std::is_nothrow_constructible<super, kerbal::utility::in_place_t>::value
-								))
-							: super(kerbal::utility::in_place_t())
+#			if __cplusplus >= 201103L
+
+					struct is_nothrow_default_constrctible :
+							kerbal::type_traits::integral_constant<
+								bool,
+								std::is_nothrow_constructible<super, kerbal::utility::in_place_t>::value
+							>
 					{
-					}
+					};
+
+#			endif
 
 					KERBAL_CONSTEXPR
-					explicit
-					sl_allocator_overload(const Allocator & allocator)
-								KERBAL_CONDITIONAL_NOEXCEPT((
-										std::is_nothrow_constructible<super, kerbal::utility::in_place_t, const Allocator &>::value
-								))
-							: super(kerbal::utility::in_place_t(), allocator)
+					sl_allocator_overload()
+							KERBAL_CONDITIONAL_NOEXCEPT(is_nothrow_default_constrctible::value)
+							: super(kerbal::utility::in_place_t())
 					{
 					}
 
 #			if __cplusplus >= 201103L
 
+					struct is_nothrow_constructible_from_allocator_const_reference :
+							kerbal::type_traits::integral_constant<
+								bool,
+								std::is_nothrow_constructible<super, kerbal::utility::in_place_t, const Allocator &>::value
+							>
+					{
+					};
+
+#			endif
+
+					KERBAL_CONSTEXPR
+					explicit
+					sl_allocator_overload(const Allocator & allocator)
+							KERBAL_CONDITIONAL_NOEXCEPT(is_nothrow_constructible_from_allocator_const_reference::value)
+							: super(kerbal::utility::in_place_t(), allocator)
+					{
+					}
+
+
+#			if __cplusplus >= 201103L
+
+					struct is_nothrow_constructible_from_allocator_rvalue_reference :
+							kerbal::type_traits::integral_constant<
+								bool,
+								std::is_nothrow_constructible<super, kerbal::utility::in_place_t, Allocator &&>::value
+							>
+					{
+					};
+
 					KERBAL_CONSTEXPR
 					explicit
 					sl_allocator_overload(Allocator && allocator)
-								KERBAL_CONDITIONAL_NOEXCEPT((
-										std::is_nothrow_constructible<super, kerbal::utility::in_place_t, Allocator &&>::value
-								))
+							KERBAL_CONDITIONAL_NOEXCEPT(is_nothrow_constructible_from_allocator_rvalue_reference::value)
 							: super(kerbal::utility::in_place_t(), kerbal::compatibility::move(allocator))
 					{
 					}

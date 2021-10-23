@@ -27,7 +27,6 @@
 
 #if __cplusplus >= 201103L
 #	include <initializer_list>
-#	include <type_traits>
 #endif
 
 #include <kerbal/container/detail/list_base.hpp>
@@ -45,10 +44,10 @@ namespace kerbal
 		template <typename Tp, typename Allocator>
 		KERBAL_CONSTEXPR20
 		list<Tp, Allocator>::list()
-				KERBAL_CONDITIONAL_NOEXCEPT((
-						std::is_nothrow_default_constructible<list_allocator_overload>::value &&
-						std::is_nothrow_constructible<list_allocator_unrelated, detail::init_list_node_ptr_to_self_tag>::value
-				)) :
+				KERBAL_CONDITIONAL_NOEXCEPT(
+						list_allocator_overload::is_nothrow_default_constrctible::value &&
+						list_allocator_unrelated::is_nothrow_init_to_self_constrctible::value
+				) :
 				list_allocator_overload(),
 				list_allocator_unrelated(detail::init_list_node_ptr_to_self_tag())
 		{
@@ -57,10 +56,10 @@ namespace kerbal
 		template <typename Tp, typename Allocator>
 		KERBAL_CONSTEXPR20
 		list<Tp, Allocator>::list(const Allocator& alloc)
-				KERBAL_CONDITIONAL_NOEXCEPT((
-						std::is_nothrow_constructible<list_allocator_overload, const Allocator&>::value &&
-						std::is_nothrow_constructible<list_allocator_unrelated, detail::init_list_node_ptr_to_self_tag>::value
-				)) :
+				KERBAL_CONDITIONAL_NOEXCEPT(
+						list_allocator_overload::is_nothrow_constructible_from_allocator_const_reference::value &&
+						list_allocator_unrelated::is_nothrow_init_to_self_constrctible::value
+				) :
 				list_allocator_overload(alloc),
 				list_allocator_unrelated(detail::init_list_node_ptr_to_self_tag())
 		{
@@ -143,10 +142,10 @@ namespace kerbal
 		template <typename Tp, typename Allocator>
 		KERBAL_CONSTEXPR20
 		list<Tp, Allocator>::list(list&& src)
-				KERBAL_CONDITIONAL_NOEXCEPT((
-						std::is_nothrow_constructible<list_allocator_overload, node_allocator_type &&>::value &&
-						std::is_nothrow_constructible<list_allocator_unrelated, list_allocator_unrelated &&>::value
-				)) :
+				KERBAL_CONDITIONAL_NOEXCEPT(
+						list_allocator_overload::is_nothrow_constructible_from_allocator_rvalue_reference::value &&
+						list_allocator_unrelated::is_nothrow_move_constrctible::value
+				) :
 				list_allocator_overload(kerbal::compatibility::move(src.alloc())),
 				list_allocator_unrelated(static_cast<list_allocator_unrelated &&>(src))
 		{
@@ -154,7 +153,11 @@ namespace kerbal
 
 		template <typename Tp, typename Allocator>
 		KERBAL_CONSTEXPR20
-		list<Tp, Allocator>::list(list&& src, const Allocator& alloc) :
+		list<Tp, Allocator>::list(list&& src, const Allocator& alloc)
+				KERBAL_CONDITIONAL_NOEXCEPT(
+						list_allocator_overload::is_nothrow_constructible_from_allocator_const_reference::value &&
+						list_allocator_unrelated::template is_nothrow_move_constructible_using_allocator<node_allocator_type>::value
+				) :
 				list_allocator_overload(alloc),
 				list_allocator_unrelated(this->alloc(),
 										 kerbal::compatibility::move(src.alloc()),
@@ -294,13 +297,9 @@ namespace kerbal
 		template <typename Tp, typename Allocator>
 		KERBAL_CONSTEXPR20
 		void list<Tp, Allocator>::assign(list&& src)
-				KERBAL_CONDITIONAL_NOEXCEPT(noexcept(
-						kerbal::utility::declthis<list_allocator_unrelated>()->assign_using_allocator(
-								kerbal::utility::declthis<list>()->alloc(),
-								kerbal::compatibility::move(kerbal::utility::declval<list &&>().alloc()),
-								kerbal::utility::declval<list_allocator_unrelated &&>()
-						)
-				))
+				KERBAL_CONDITIONAL_NOEXCEPT(
+						list_allocator_unrelated::template is_nothrow_move_assign_using_allocator<node_allocator_type>::value
+				)
 		{
 			this->list_allocator_unrelated::assign_using_allocator(
 					this->alloc(),

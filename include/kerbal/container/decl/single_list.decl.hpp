@@ -34,7 +34,6 @@
 
 #if __cplusplus >= 201103L
 #	include <initializer_list>
-#	include <type_traits>
 #endif
 
 #include <kerbal/container/detail/decl/single_list_base.decl.hpp>
@@ -114,10 +113,10 @@ namespace kerbal
 
 				KERBAL_CONSTEXPR20
 				explicit
-				single_list(const Allocator& alloc) KERBAL_CONDITIONAL_NOEXCEPT((
-						std::is_nothrow_constructible<sl_allocator_overload, const Allocator&>::value &&
-						std::is_nothrow_default_constructible<sl_allocator_unrelated>::value
-				));
+				single_list(const Allocator& alloc) KERBAL_CONDITIONAL_NOEXCEPT(
+						sl_allocator_overload::is_nothrow_constructible_from_allocator_const_reference::value &&
+						sl_allocator_unrelated::is_nothrow_default_constrctible::value
+				);
 
 				KERBAL_CONSTEXPR20
 				single_list(const single_list & src);
@@ -159,13 +158,16 @@ namespace kerbal
 #		if __cplusplus >= 201103L
 
 				KERBAL_CONSTEXPR20
-				single_list(single_list && src) KERBAL_CONDITIONAL_NOEXCEPT((
-						std::is_nothrow_constructible<sl_allocator_overload, node_allocator_type&&>::value &&
-						std::is_nothrow_constructible<sl_allocator_overload, sl_allocator_unrelated &&>::value
-				));
+				single_list(single_list && src) KERBAL_CONDITIONAL_NOEXCEPT(
+						sl_allocator_overload::is_nothrow_constructible_from_allocator_rvalue_reference::value &&
+						sl_allocator_unrelated::is_nothrow_move_constrctible::value
+				);
 
 				KERBAL_CONSTEXPR20
-				single_list(single_list && src, const Allocator& alloc);
+				single_list(single_list && src, const Allocator& alloc)  KERBAL_CONDITIONAL_NOEXCEPT(
+						sl_allocator_overload::is_nothrow_constructible_from_allocator_const_reference::value &&
+						sl_allocator_unrelated::template is_nothrow_move_constructible_using_allocator<node_allocator_type>::value
+				);
 
 #		endif
 
@@ -233,13 +235,9 @@ namespace kerbal
 #		if __cplusplus >= 201103L
 
 				KERBAL_CONSTEXPR20
-				void assign(single_list&& src) KERBAL_CONDITIONAL_NOEXCEPT(noexcept(
-						kerbal::utility::declthis<sl_allocator_unrelated>()->assign_using_allocator(
-								kerbal::utility::declthis<single_list>()->alloc(),
-								kerbal::compatibility::move(kerbal::utility::declval<single_list &&>().alloc()),
-								kerbal::utility::declval<sl_allocator_unrelated &&>()
-						)
-				));
+				void assign(single_list&& src) KERBAL_CONDITIONAL_NOEXCEPT(
+						sl_allocator_unrelated::template is_nothrow_move_assign_using_allocator<node_allocator_type>::value
+				);
 
 #		endif
 
