@@ -161,7 +161,7 @@ namespace kerbal
 #		if __cplusplus >= 201103L
 
 				KERBAL_CONSTEXPR20
-				list(list && src) KERBAL_NOEXCEPT((
+				list(list && src) KERBAL_CONDITIONAL_NOEXCEPT((
 						std::is_nothrow_constructible<list_allocator_overload, node_allocator_type &&>::value &&
 						std::is_nothrow_constructible<list_allocator_unrelated, list_allocator_unrelated &&>::value
 				));

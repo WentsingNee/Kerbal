@@ -144,7 +144,7 @@ namespace kerbal
 		template <typename Tp, typename Allocator>
 		KERBAL_CONSTEXPR20
 		single_list<Tp, Allocator>::single_list(single_list && src)
-				KERBAL_NOEXCEPT((
+				KERBAL_CONDITIONAL_NOEXCEPT((
 						std::is_nothrow_constructible<sl_allocator_overload, node_allocator_type&&>::value &&
 						std::is_nothrow_constructible<sl_allocator_overload, sl_allocator_unrelated &&>::value
 				)) :
