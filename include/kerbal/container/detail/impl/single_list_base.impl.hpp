@@ -34,6 +34,12 @@
 #	include <kerbal/memory/bad_alloc.hpp>
 #endif
 
+#if __cplusplus >= 201703L
+#	if __has_include(<memory_resource>)
+#		include <type_traits>
+#	endif
+#endif
+
 #include <kerbal/container/detail/decl/single_list_base.decl.hpp>
 
 
