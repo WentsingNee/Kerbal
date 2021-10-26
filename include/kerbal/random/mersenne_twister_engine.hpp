@@ -23,6 +23,7 @@
 
 #include <cstddef>
 
+
 namespace kerbal
 {
 
@@ -64,10 +65,10 @@ namespace kerbal
 
 		template <
 				typename UIntType,
-				size_t W, size_t N, size_t M, size_t R,
-				UIntType A, size_t U, UIntType D, size_t S,
-				UIntType B, size_t T,
-				UIntType C, size_t L, UIntType F
+				std::size_t W, std::size_t N, std::size_t M, std::size_t R,
+				UIntType A, std::size_t U, UIntType D, std::size_t S,
+				UIntType B, std::size_t T,
+				UIntType C, std::size_t L, UIntType F
 		>
 		class mersenne_twister_engine
 		{
@@ -95,28 +96,28 @@ namespace kerbal
 			public:
 				typedef UIntType result_type;
 
-				typedef kerbal::type_traits::integral_constant<size_t, W>		WORD_SIZE;
-				typedef kerbal::type_traits::integral_constant<size_t, N>		STATE_SIZE;
-				typedef kerbal::type_traits::integral_constant<size_t, M>		SHIFT_SIZE;
-				typedef kerbal::type_traits::integral_constant<size_t, R>		MASK_BITS;
+				typedef kerbal::type_traits::integral_constant<std::size_t, W>		WORD_SIZE;
+				typedef kerbal::type_traits::integral_constant<std::size_t, N>		STATE_SIZE;
+				typedef kerbal::type_traits::integral_constant<std::size_t, M>		SHIFT_SIZE;
+				typedef kerbal::type_traits::integral_constant<std::size_t, R>		MASK_BITS;
 
 				typedef kerbal::type_traits::integral_constant<result_type, A>	XOR_MASK;
-				typedef kerbal::type_traits::integral_constant<size_t, U>		TEMPERING_U;
+				typedef kerbal::type_traits::integral_constant<std::size_t, U>		TEMPERING_U;
 				typedef kerbal::type_traits::integral_constant<result_type, D>	TEMPERING_D;
-				typedef kerbal::type_traits::integral_constant<size_t, S>		TEMPERING_S;
+				typedef kerbal::type_traits::integral_constant<std::size_t, S>		TEMPERING_S;
 
 				typedef kerbal::type_traits::integral_constant<result_type, B>	TEMPERING_B;
-				typedef kerbal::type_traits::integral_constant<size_t, T>		TEMPERING_T;
+				typedef kerbal::type_traits::integral_constant<std::size_t, T>		TEMPERING_T;
 
 				typedef kerbal::type_traits::integral_constant<result_type, C>	TEMPERING_C;
-				typedef kerbal::type_traits::integral_constant<size_t, L>		TEMPERING_L;
+				typedef kerbal::type_traits::integral_constant<std::size_t, L>		TEMPERING_L;
 				typedef kerbal::type_traits::integral_constant<result_type, F>	INITIALIZATION_MULTIPLIER;
 
 				typedef kerbal::type_traits::integral_constant<result_type, 5489u>		DEFAULT_SEED;
 
 			private:
 				result_type mt[N];
-				size_t mti;
+				std::size_t mti;
 
 				KERBAL_CONSTEXPR14
 				void twist() KERBAL_NOEXCEPT
@@ -124,20 +125,18 @@ namespace kerbal
 					typedef kerbal::type_traits::integral_constant<result_type, (~static_cast<result_type>(0)) << R> UPPER_MASK; // most significant w-r bits
 					typedef kerbal::type_traits::integral_constant<result_type, ~UPPER_MASK::value> LOWER_MASK; // least significant r bits
 
-					const result_type mag01[2] = {0x0UL, A};
-
-					size_t i = 0;
+					std::size_t i = 0;
 
 					for (; i < N - M; ++i) {
 						result_type y = (this->mt[i] & UPPER_MASK::value) | (this->mt[i + 1] & LOWER_MASK::value);
-						this->mt[i] = this->mt[i + M] ^ (y >> 1) ^ mag01[y & 0x1UL];
+						this->mt[i] = this->mt[i + M] ^ (y >> 1) ^ ((y & 0x1ul) ? A : 0);
 					}
 					for (; i < N - 1; ++i) {
 						result_type y = (this->mt[i] & UPPER_MASK::value) | (this->mt[i + 1] & LOWER_MASK::value);
-						this->mt[i] = this->mt[i - (N - M)] ^ (y >> 1) ^ mag01[y & 0x1UL];
+						this->mt[i] = this->mt[i - (N - M)] ^ (y >> 1) ^ ((y & 0x1ul) ? A : 0);
 					}
 					result_type y = (this->mt[N - 1] & UPPER_MASK::value) | (this->mt[0] & LOWER_MASK::value);
-					this->mt[N - 1] = this->mt[M - 1] ^ (y >> 1) ^ mag01[y & 0x1UL];
+					this->mt[N - 1] = this->mt[M - 1] ^ (y >> 1) ^ ((y & 0x1ul) ? A : 0);
 				}
 
 
@@ -145,7 +144,7 @@ namespace kerbal
 				KERBAL_CONSTEXPR14
 				void init_mt() KERBAL_NOEXCEPT
 				{
-					for (size_t i = 1; i < N; ++i) {
+					for (std::size_t i = 1; i < N; ++i) {
 						result_type x = this->mt[i - 1];
 						x ^= x >> (W - 2);
 						x *= F;
@@ -180,8 +179,8 @@ namespace kerbal
 				void seed(result_type seed = DEFAULT_SEED::value) KERBAL_NOEXCEPT
 				{
 					this->mt[0] = seed;
-					this->mti = N;
 					this->init_mt();
+					this->mti = N;
 				}
 
 				KERBAL_CONSTEXPR14
@@ -210,19 +209,19 @@ namespace kerbal
 				}
 
 				KERBAL_CONSTEXPR14
-				void discard(unsigned long long z) KERBAL_NOEXCEPT
+				void discard(unsigned long long times) KERBAL_NOEXCEPT
 				{
-					for (unsigned long long i = 0; i < z / N; ++i) {
+					unsigned long long twist_times = times / N;
+					unsigned long long remain = times % N;
+					std::size_t mti_old = this->mti;
+					std::size_t left = N - mti_old;
+					bool flag = remain > left;
+					twist_times += flag;
+					while (twist_times != 0) {
+						--twist_times;
 						this->twist();
 					}
-					unsigned long long i = z % N;
-					size_t left = N - this->mti;
-					if (i <= left) {
-						this->mti += i;
-					} else {
-						this->twist();
-						this->mti = i - left;
-					}
+					this->mti = (flag ? (remain - left) : (mti_old + remain));
 				}
 
 				KERBAL_CONSTEXPR
@@ -256,10 +255,10 @@ namespace kerbal
 
 //		template <
 //				typename UIntType,
-//				size_t W, size_t N, size_t M, size_t R,
-//				UIntType A, size_t U, UIntType D, size_t S,
-//				UIntType B, size_t T,
-//				UIntType C, size_t L, UIntType F
+//				std::size_t W, std::size_t N, std::size_t M, std::size_t R,
+//				UIntType A, std::size_t U, UIntType D, std::size_t S,
+//				UIntType B, std::size_t T,
+//				UIntType C, std::size_t L, UIntType F
 //		>
 //		class mersenne_twister_engine;
 
