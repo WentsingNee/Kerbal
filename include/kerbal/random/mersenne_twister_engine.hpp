@@ -23,6 +23,8 @@
 
 #include <cstddef>
 
+#include <kerbal/random/detail/mt_engine_base.hpp>
+
 
 namespace kerbal
 {
@@ -70,8 +72,12 @@ namespace kerbal
 				UIntType B, std::size_t T,
 				UIntType C, std::size_t L, UIntType F
 		>
-		class mersenne_twister_engine
+		class mersenne_twister_engine :
+				detail::mt_engine_twist_helper<UIntType, N, M, R, A>
 		{
+			private:
+				typedef detail::mt_engine_twist_helper<UIntType, N, M, R, A> mt_engine_twist_helper;
+
 			private:
 				KERBAL_STATIC_ASSERT(0 < M,     "the following relations shall hold: 0 < M");
 				KERBAL_STATIC_ASSERT(M <= N,    "the following relations shall hold: M <= N");
@@ -101,17 +107,17 @@ namespace kerbal
 				typedef kerbal::type_traits::integral_constant<std::size_t, M>		SHIFT_SIZE;
 				typedef kerbal::type_traits::integral_constant<std::size_t, R>		MASK_BITS;
 
-				typedef kerbal::type_traits::integral_constant<result_type, A>	XOR_MASK;
+				typedef kerbal::type_traits::integral_constant<result_type, A>		XOR_MASK;
 				typedef kerbal::type_traits::integral_constant<std::size_t, U>		TEMPERING_U;
-				typedef kerbal::type_traits::integral_constant<result_type, D>	TEMPERING_D;
+				typedef kerbal::type_traits::integral_constant<result_type, D>		TEMPERING_D;
 				typedef kerbal::type_traits::integral_constant<std::size_t, S>		TEMPERING_S;
 
-				typedef kerbal::type_traits::integral_constant<result_type, B>	TEMPERING_B;
+				typedef kerbal::type_traits::integral_constant<result_type, B>		TEMPERING_B;
 				typedef kerbal::type_traits::integral_constant<std::size_t, T>		TEMPERING_T;
 
-				typedef kerbal::type_traits::integral_constant<result_type, C>	TEMPERING_C;
+				typedef kerbal::type_traits::integral_constant<result_type, C>		TEMPERING_C;
 				typedef kerbal::type_traits::integral_constant<std::size_t, L>		TEMPERING_L;
-				typedef kerbal::type_traits::integral_constant<result_type, F>	INITIALIZATION_MULTIPLIER;
+				typedef kerbal::type_traits::integral_constant<result_type, F>		INITIALIZATION_MULTIPLIER;
 
 				typedef kerbal::type_traits::integral_constant<result_type, 5489u>		DEFAULT_SEED;
 
@@ -122,21 +128,7 @@ namespace kerbal
 				KERBAL_CONSTEXPR14
 				void twist() KERBAL_NOEXCEPT
 				{
-					typedef kerbal::type_traits::integral_constant<result_type, (~static_cast<result_type>(0)) << R> UPPER_MASK; // most significant w-r bits
-					typedef kerbal::type_traits::integral_constant<result_type, ~UPPER_MASK::value> LOWER_MASK; // least significant r bits
-
-					std::size_t i = 0;
-
-					for (; i < N - M; ++i) {
-						result_type y = (this->mt[i] & UPPER_MASK::value) | (this->mt[i + 1] & LOWER_MASK::value);
-						this->mt[i] = this->mt[i + M] ^ (y >> 1) ^ ((y & 0x1ul) ? A : 0);
-					}
-					for (; i < N - 1; ++i) {
-						result_type y = (this->mt[i] & UPPER_MASK::value) | (this->mt[i + 1] & LOWER_MASK::value);
-						this->mt[i] = this->mt[i - (N - M)] ^ (y >> 1) ^ ((y & 0x1ul) ? A : 0);
-					}
-					result_type y = (this->mt[N - 1] & UPPER_MASK::value) | (this->mt[0] & LOWER_MASK::value);
-					this->mt[N - 1] = this->mt[M - 1] ^ (y >> 1) ^ ((y & 0x1ul) ? A : 0);
+					mt_engine_twist_helper::twist(mt);
 				}
 
 
