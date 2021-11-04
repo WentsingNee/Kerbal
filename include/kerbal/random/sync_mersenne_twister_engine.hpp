@@ -24,6 +24,8 @@
 #include <cstddef>
 #include <atomic>
 
+#include <kerbal/random/detail/mt_engine_base.hpp>
+
 
 namespace kerbal
 {
@@ -38,8 +40,12 @@ namespace kerbal
 				UIntType B, std::size_t T,
 				UIntType C, std::size_t L, UIntType F
 		>
-		class sync_mersenne_twister_engine
+		class sync_mersenne_twister_engine :
+				detail::mt_engine_twist_helper<UIntType, N, M, R, A>
 		{
+			private:
+				typedef detail::mt_engine_twist_helper<UIntType, N, M, R, A> mt_engine_twist_helper;
+
 			private:
 				KERBAL_STATIC_ASSERT(0 < M,     "the following relations shall hold: 0 < M");
 				KERBAL_STATIC_ASSERT(M <= N,    "the following relations shall hold: M <= N");
@@ -77,17 +83,17 @@ namespace kerbal
 				typedef kerbal::type_traits::integral_constant<std::size_t, M>		SHIFT_SIZE;
 				typedef kerbal::type_traits::integral_constant<std::size_t, R>		MASK_BITS;
 
-				typedef kerbal::type_traits::integral_constant<result_type, A>	XOR_MASK;
+				typedef kerbal::type_traits::integral_constant<result_type, A>		XOR_MASK;
 				typedef kerbal::type_traits::integral_constant<std::size_t, U>		TEMPERING_U;
-				typedef kerbal::type_traits::integral_constant<result_type, D>	TEMPERING_D;
+				typedef kerbal::type_traits::integral_constant<result_type, D>		TEMPERING_D;
 				typedef kerbal::type_traits::integral_constant<std::size_t, S>		TEMPERING_S;
 
-				typedef kerbal::type_traits::integral_constant<result_type, B>	TEMPERING_B;
+				typedef kerbal::type_traits::integral_constant<result_type, B>		TEMPERING_B;
 				typedef kerbal::type_traits::integral_constant<std::size_t, T>		TEMPERING_T;
 
-				typedef kerbal::type_traits::integral_constant<result_type, C>	TEMPERING_C;
+				typedef kerbal::type_traits::integral_constant<result_type, C>		TEMPERING_C;
 				typedef kerbal::type_traits::integral_constant<std::size_t, L>		TEMPERING_L;
-				typedef kerbal::type_traits::integral_constant<result_type, F>	INITIALIZATION_MULTIPLIER;
+				typedef kerbal::type_traits::integral_constant<result_type, F>		INITIALIZATION_MULTIPLIER;
 
 				typedef kerbal::type_traits::integral_constant<result_type, 5489u>		DEFAULT_SEED;
 
@@ -98,23 +104,7 @@ namespace kerbal
 				KERBAL_CONSTEXPR14
 				void twist() KERBAL_NOEXCEPT
 				{
-					typedef kerbal::type_traits::integral_constant<result_type, (~static_cast<result_type>(0)) << R> UPPER_MASK; // most significant w-r bits
-					typedef kerbal::type_traits::integral_constant<result_type, ~UPPER_MASK::value> LOWER_MASK; // least significant r bits
-
-					const result_type mag01[2] = {0x0UL, A};
-
-					std::size_t i = 0;
-
-					for (; i < N - M; ++i) {
-						result_type y = (this->mt[i] & UPPER_MASK::value) | (this->mt[i + 1] & LOWER_MASK::value);
-						this->mt[i] = this->mt[i + M] ^ (y >> 1) ^ mag01[y & 0x1UL];
-					}
-					for (; i < N - 1; ++i) {
-						result_type y = (this->mt[i] & UPPER_MASK::value) | (this->mt[i + 1] & LOWER_MASK::value);
-						this->mt[i] = this->mt[i - (N - M)] ^ (y >> 1) ^ mag01[y & 0x1UL];
-					}
-					result_type y = (this->mt[N - 1] & UPPER_MASK::value) | (this->mt[0] & LOWER_MASK::value);
-					this->mt[N - 1] = this->mt[M - 1] ^ (y >> 1) ^ mag01[y & 0x1UL];
+					mt_engine_twist_helper::twist(mt);
 				}
 
 
@@ -154,44 +144,44 @@ namespace kerbal
 
 				void sync_seed(result_type seed = DEFAULT_SEED::value) KERBAL_NOEXCEPT
 				{
-					std::size_t mti_old = this->mti.load();
+					std::size_t mti_old = this->mti.load(std::memory_order_relaxed);
 					while (true) {
 						if (mti_old == -1) {
-							mti_old = this->mti.load();
+							mti_old = this->mti.load(std::memory_order_relaxed);
 							continue; // spin
 						}
-						if (this->mti.compare_exchange_weak(mti_old, -1)) {
+						if (this->mti.compare_exchange_weak(mti_old, -1, std::memory_order_acquire, std::memory_order_relaxed)) {
 							break;
 						}
 					}
 					// enter critical section
 					this->mt[0] = seed;
 					this->init_mt();
-					this->mti.store(N);
+					this->mti.store(N, std::memory_order_release);
 					// exit critical section
 				}
 
 				result_type sync_next() KERBAL_NOEXCEPT
 				{
-					std::size_t mti_old = this->mti.load();
+					std::size_t mti_old = this->mti.load(std::memory_order_relaxed);
 					while (true) {
 						if (mti_old == -1) {
-							mti_old = this->mti.load();
+							mti_old = this->mti.load(std::memory_order_relaxed);
 							continue; // spin
 						}
 						result_type y;
 						if (mti_old == N) {
-							if (!this->mti.compare_exchange_weak(mti_old, -1)) {
+							if (!this->mti.compare_exchange_weak(mti_old, -1, std::memory_order_acquire, std::memory_order_relaxed)) {
 								continue;
 							}
 							// enter critical section
 							this->twist(); /* generate N words at one time */
 							y = this->mt[0];
-							this->mti.store(1);
+							this->mti.store(1, std::memory_order_release);
 							// exit critical section
 						} else {
 							y = this->mt[mti_old];
-							if (!this->mti.compare_exchange_weak(mti_old, mti_old + 1)) {
+							if (!this->mti.compare_exchange_weak(mti_old, mti_old + 1, std::memory_order_acq_rel, std::memory_order_relaxed)) {
 								continue;
 							}
 						}
@@ -210,22 +200,22 @@ namespace kerbal
 
 				void sync_discard() KERBAL_NOEXCEPT
 				{
-					std::size_t mti_old = this->mti.load();
+					std::size_t mti_old = this->mti.load(std::memory_order_relaxed);
 					while (true) {
 						if (mti_old == -1) {
-							mti_old = this->mti.load();
+							mti_old = this->mti.load(std::memory_order_relaxed);
 							continue; // spin
 						}
 						if (mti_old == N) {
-							if (!this->mti.compare_exchange_weak(mti_old, -1)) {
+							if (!this->mti.compare_exchange_weak(mti_old, -1, std::memory_order_acquire, std::memory_order_relaxed)) {
 								continue;
 							}
 							// enter critical section
 							this->twist(); /* generate N words at one time */
-							this->mti.store(1);
+							this->mti.store(1, std::memory_order_release);
 							// exit critical section
 						} else {
-							if (!this->mti.compare_exchange_weak(mti_old, mti_old + 1)) {
+							if (!this->mti.compare_exchange_weak(mti_old, mti_old + 1, std::memory_order_acq_rel, std::memory_order_relaxed)) {
 								continue;
 							}
 						}
@@ -235,13 +225,13 @@ namespace kerbal
 
 				void sync_discard(unsigned long long times) KERBAL_NOEXCEPT
 				{
-					std::size_t mti_old = this->mti.load();
+					std::size_t mti_old = this->mti.load(std::memory_order_relaxed);
 					while (true) {
 						if (mti_old == -1) {
-							mti_old = this->mti.load();
+							mti_old = this->mti.load(std::memory_order_relaxed);
 							continue; // spin
 						}
-						if (!this->mti.compare_exchange_weak(mti_old, -1)) {
+						if (!this->mti.compare_exchange_weak(mti_old, -1, std::memory_order_acquire, std::memory_order_relaxed)) {
 							continue;
 						}
 						// enter critical section
@@ -250,11 +240,11 @@ namespace kerbal
 						std::size_t left = N - mti_old;
 						bool flag = remain > left;
 						twist_times += flag;
-						while (twist_times) {
+						while (twist_times != 0) {
 							--twist_times;
 							this->twist();
 						}
-						this->mti.store(flag ? (remain - left) : (mti_old + remain));
+						this->mti.store(flag ? (remain - left) : (mti_old + remain), std::memory_order_release);
 						// exit critical section
 						return;
 					}
