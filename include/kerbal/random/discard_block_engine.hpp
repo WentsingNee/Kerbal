@@ -16,6 +16,7 @@
 #include <kerbal/compatibility/move.hpp>
 #include <kerbal/compatibility/noexcept.hpp>
 #include <kerbal/compatibility/static_assert.hpp>
+#include <kerbal/numeric/numeric_limits.hpp>
 
 #include <cstddef>
 
@@ -127,13 +128,51 @@ namespace kerbal
 				KERBAL_CONSTEXPR14
 				void discard(unsigned long long times)
 						KERBAL_CONDITIONAL_NOEXCEPT(
-								noexcept(operator()())
+								noexcept(_K_base_eg.discard(times))
 						)
 				{
-					while (times != 0) {
-						--times;
-						(*this)();
+/*
+					// plain version that the calculation may overflow
+					unsigned long long rounds = times / R;
+					times %= R;
+					unsigned long long base_discard_times = rounds * P + times;
+					unsigned long long retreat = R - times;
+					bool once_more_rewind = this->_K_idx > retreat;
+					if (once_more_rewind) {
+						base_discard_times += P - R;
 					}
+					this->_K_base_eg.discard(base_discard_times);
+					if (once_more_rewind) {
+						this->_K_idx -= retreat;
+					} else {
+						this->_K_idx += times;
+					}
+*/
+
+					typedef kerbal::numeric::numeric_limits<unsigned long long>::MAX MAX;
+
+					unsigned long long rounds = times / R;
+					times %= R;
+					unsigned long long retreat = R - times;
+					bool once_more_rewind = this->_K_idx > retreat;
+					unsigned long long base_remain_discard_times = times; // times' = times % R
+					if (once_more_rewind) {
+						base_remain_discard_times += P - R;
+					}
+					if (rounds <= MAX::value / P) { // P * rounds will overflow?
+						this->_K_base_eg.discard(rounds * P);
+					} else {
+						for (std::size_t i = 0; i < P; ++i) {
+							this->_K_base_eg.discard(rounds);
+						}
+					}
+					this->_K_base_eg.discard(base_remain_discard_times);
+					if (once_more_rewind) {
+						this->_K_idx -= retreat;
+					} else {
+						this->_K_idx += times;
+					}
+
 				}
 
 				KERBAL_CONSTEXPR
