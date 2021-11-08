@@ -29,6 +29,39 @@ namespace kerbal
 	namespace random
 	{
 
+		namespace detail
+		{
+
+			template <typename UIntType, size_t W, bool /* W == digits(UIntType) */>
+			struct _1_shift_W_minus_1_helper;
+
+			template <typename UIntType, size_t W>
+			struct _1_shift_W_minus_1_helper<UIntType, W, true>
+			{
+					typedef kerbal::type_traits::integral_constant<
+							UIntType,
+							~static_cast<UIntType>(0u)
+					> type;
+			};
+
+			template <typename UIntType, size_t W>
+			struct _1_shift_W_minus_1_helper<UIntType, W, false>
+			{
+					typedef kerbal::type_traits::integral_constant<
+							UIntType,
+							(static_cast<UIntType>(1u) << W) - 1u
+					> type;
+			};
+
+			template <typename UIntType, size_t W>
+			struct _1_shift_W_minus_1 :
+					public _1_shift_W_minus_1_helper<UIntType, W, (W == kerbal::numeric::numeric_limits<UIntType>::DIGITS::value)>::type
+			{
+			};
+
+		} // namespace detail
+
+
 		template <
 				typename UIntType,
 				size_t W, size_t N, size_t M, size_t R,
@@ -51,15 +84,7 @@ namespace kerbal
 						"the following relations shall hold: w <= numeric_limits<UIntType>::digits");
 
 				// (1 << W) - 1u
-				struct _1_shift_W_minus_1 :
-						public kerbal::type_traits::integral_constant<
-							UIntType,
-							W == kerbal::numeric::numeric_limits<UIntType>::DIGITS::value ?
-								~static_cast<UIntType>(0u) :
-								((static_cast<UIntType>(1u) << W) - 1u)
-						>
-				{
-				};
+				typedef detail::_1_shift_W_minus_1<UIntType, W> _1_shift_W_minus_1;
 
 				KERBAL_STATIC_ASSERT(A <= _1_shift_W_minus_1::value, "the following relations shall hold: A <= (1u << W) - 1u");
 				KERBAL_STATIC_ASSERT(B <= _1_shift_W_minus_1::value, "the following relations shall hold: B <= (1u << W) - 1u");
