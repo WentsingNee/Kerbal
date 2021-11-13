@@ -183,6 +183,205 @@ namespace kerbal
 					}
 			};
 
+
+			template <typename ResultType, ResultType m, bool = (m == 0)>
+			struct partial_static_mul_mod_impl;
+
+			template <typename ResultType, ResultType m>
+			struct partial_static_mul_mod_impl<ResultType, m, true> // m == 0
+			{
+					KERBAL_CONSTEXPR
+					static ResultType cacl(ResultType a, ResultType s) KERBAL_NOEXCEPT
+					{
+						return a * s;
+					}
+			};
+
+			template <typename ResultType, ResultType m>
+			struct partial_static_mul_mod_impl<ResultType, m, false> // m != 0
+			{
+				private:
+					KERBAL_CONSTEXPR14
+					static ResultType cacl_impl2(ResultType a, ResultType s) KERBAL_NOEXCEPT
+					{
+						// a * s % m
+						// a < m, s < m
+
+						if (a == 0) {
+							return 0;
+						}
+
+						if (s <= kerbal::numeric::numeric_limits<ResultType>::MAX::value / a) {
+							return a * s % m;
+						}
+
+						ResultType q = m / a;
+						ResultType r = m % a;
+
+						ResultType t0 = a * (s % q);
+						ResultType t1 =
+								r <= q ?
+								r * (s / q) :
+								cacl_impl2(r, s / q);
+						return t0 - t1 + (t0 < t1) * m;
+					}
+
+					KERBAL_CONSTEXPR14
+					static ResultType cacl_impl(ResultType a, ResultType s, kerbal::type_traits::type_identity<void>) KERBAL_NOEXCEPT
+					{
+						return cacl_impl2(a, s);
+					}
+
+					template <typename T>
+					KERBAL_CONSTEXPR14
+					static ResultType cacl_impl(ResultType a, ResultType s, kerbal::type_traits::type_identity<T>) KERBAL_NOEXCEPT
+					{
+						// a * s will not overflow under T
+						return T(a) * T(s) % m;
+					}
+
+				public:
+					KERBAL_CONSTEXPR14
+					static ResultType cacl(ResultType a, ResultType s) KERBAL_NOEXCEPT
+					{
+						typedef typename find_never_overflow_integer_type_for_mul_mod<ResultType, m - 1, m>::type T;
+						return cacl_impl(a % m, s % m, kerbal::type_traits::type_identity<T>());
+					}
+			};
+
+			template <typename ResultType, ResultType m>
+			struct partial_static_mul_mod
+			{
+					KERBAL_CONSTEXPR14
+					static ResultType cacl(ResultType a, ResultType s) KERBAL_NOEXCEPT
+					{
+						return partial_static_mul_mod_impl<ResultType, m>::cacl(a, s);
+					}
+			};
+
+
+			template <typename ResultType, ResultType m>
+			struct add_mod
+			{
+					KERBAL_CONSTEXPR14
+					static ResultType cacl(ResultType a, ResultType b) KERBAL_NOEXCEPT
+					{
+						// pre: a = a % m && b = b % m
+						return a + b - (a >= m - b) * m;
+					}
+			};
+
+
+			template <typename ResultType, ResultType a, ResultType m, bool = (m == 0)>
+			struct pow_mod_m_impl;
+
+			template <typename ResultType, ResultType a, ResultType m>
+			struct pow_mod_m_impl<ResultType, a, m, true>
+			{
+					KERBAL_CONSTEXPR14
+					static ResultType cacl(unsigned long long n) KERBAL_NOEXCEPT
+					{
+						ResultType r = 1;
+						ResultType base = a;
+						while (true) {
+							unsigned long long half_n = n / 2;
+							if (n % 2 == 1) {
+								r *= base;
+							}
+							if (half_n == 0) {
+								break;
+							}
+							base = base * base;
+							n = half_n;
+						}
+						return r;
+					}
+			};
+
+			template <typename ResultType, ResultType a, ResultType m>
+			struct pow_mod_m_impl<ResultType, a, m, false>
+			{
+					KERBAL_CONSTEXPR14
+					static ResultType cacl(unsigned long long n) KERBAL_NOEXCEPT
+					{
+						ResultType r = 1;
+						ResultType base = a;
+						while (true) {
+							unsigned long long half_n = n / 2;
+							if (n % 2 == 1) {
+								r = partial_static_mul_mod<ResultType, m>::cacl(r, base);
+							}
+							if (half_n == 0) {
+								break;
+							}
+							base = partial_static_mul_mod<ResultType, m>::cacl(base, base);
+							n = half_n;
+						}
+						return r;
+					}
+			};
+
+			/*
+			 * a ** n % m
+			 */
+			template <typename ResultType, ResultType a, ResultType m>
+			struct pow_mod : pow_mod_m_impl<ResultType, a, m>
+			{
+			};
+
+
+
+			// a ** (n - 1) + ... + a ** 3 + a ** 2 + a ** 1 + 1
+			template <typename ResultType, ResultType a, ResultType m>
+			struct sigma_pow_mod
+			{
+					KERBAL_CONSTEXPR14
+					static ResultType cacl(unsigned long long n) KERBAL_NOEXCEPT
+					{
+						/*
+						 *   e.g. for n = 21
+						 *
+						 *   16  8  4  2  1
+						 *    1  0  1  0  1  r = r * a + 1
+						 *       1  0  1  0  r = r * (a ** 10 + 1)
+						 *          1  0  1  r = r * (a ** 5 + 1)
+						 *          1  0  0  r = r * a + 1
+						 *             1  0  r = r * (a ** 2 + 1)
+						 *                1  r = r * a + 1
+						 */
+
+						// pre: n != 0
+						int lead = CHAR_BIT * sizeof(n) - 1;
+						{
+							// to opt: lead = CHAR_BIT * sizeof(n) - 1 - __builtin_clzll(n);
+							while (((n >> lead) & 1) == 0) {
+								lead--;
+							}
+						}
+						ResultType r = 1;
+						bool b = true;
+						ResultType poa = 1;
+						while (lead > 0) {
+							--lead;
+							poa = partial_static_mul_mod<ResultType, m>::cacl(poa, poa);
+							if (b) {
+								poa = partial_static_mul_mod<ResultType, m>::cacl(a, poa);
+							}
+							r = partial_static_mul_mod<ResultType, m>::cacl(
+								r,
+								add_mod<ResultType, m>::cacl(poa, 1)
+							);
+							b = (n >> lead) & 1;
+							if (b) {
+								// r = r * a + 1
+								r = static_mul_mod<ResultType, a, m>::cacl(r);
+								r = add_mod<ResultType, m>::cacl(r, 1);
+							}
+						}
+						return r;
+					}
+			};
+
 		} // namespace detail
 
 
@@ -227,7 +426,7 @@ namespace kerbal
 						state_value = a * state_value + c;
 					} else {
 						state_value = detail::static_mul_mod<result_type, a, m>::cacl(state_value);
-						state_value += c - (state_value >= m - c) * m;
+						state_value = detail::add_mod<result_type, m>::cacl(state_value, c);
 					}
 					return state_value;
 				}
@@ -235,9 +434,24 @@ namespace kerbal
 				KERBAL_CONSTEXPR14
 				void discard(unsigned long long times) KERBAL_NOEXCEPT
 				{
-					while (times != 0) {
-						--times;
-						(*this)();
+					if (times == 0) {
+						return ;
+					}
+					/*
+					 * s_{i+n} = a^{n} \times s_i + c \times \sum_{i=0}^{n-1} a^i
+					 *         = a ** n * s_i + c * (a ** (n - 1) + a ** (n - 2) + ... + a + 1)
+					 */
+					result_type a_pow_times_mod_m = detail::pow_mod<result_type, a, m>::cacl(times);
+					state_value = detail::partial_static_mul_mod<ResultType, m>::cacl(a_pow_times_mod_m, state_value);
+					if (c != 0) {
+						if (a == 1) {
+							result_type c_mul_times_mod_m = detail::static_mul_mod<result_type, c, m>::cacl(times);
+							state_value = detail::add_mod<result_type, m>::cacl(state_value, c_mul_times_mod_m);
+						} else {
+							result_type sigma = detail::sigma_pow_mod<result_type, a, m>::cacl(times);
+							sigma = detail::static_mul_mod<result_type, c, m>::cacl(sigma);
+							state_value = detail::add_mod<result_type, m>::cacl(state_value, sigma);
+						}
 					}
 				}
 
