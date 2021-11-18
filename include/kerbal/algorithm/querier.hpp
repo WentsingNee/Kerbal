@@ -13,12 +13,12 @@
 #define KERBAL_ALGORITHM_QUERIER_HPP
 
 #include <kerbal/algorithm/binary_type_predicate.hpp>
+#include <kerbal/compare/basic_compare.hpp>
 #include <kerbal/compatibility/constexpr.hpp>
 #include <kerbal/compatibility/move.hpp>
 #include <kerbal/compatibility/noexcept.hpp>
 #include <kerbal/iterator/iterator.hpp>
 
-#include <functional> // std::less etc
 
 namespace kerbal
 {
@@ -651,7 +651,7 @@ namespace kerbal
 			typedef ForwardIterator iterator;
 			typedef typename kerbal::iterator::iterator_traits<iterator>::value_type value_type;
 
-			return kerbal::algorithm::min_element(first, last, std::less<value_type>());
+			return kerbal::algorithm::min_element(first, last, kerbal::compare::less<value_type>());
 		}
 
 		template <typename ForwardIterator, typename BinaryPredicate>
@@ -668,7 +668,7 @@ namespace kerbal
 			typedef ForwardIterator iterator;
 			typedef typename kerbal::iterator::iterator_traits<iterator>::value_type value_type;
 
-			return kerbal::algorithm::max_element(first, last, std::greater<value_type>());
+			return kerbal::algorithm::max_element(first, last, kerbal::compare::greater<value_type>());
 		}
 
 		template <typename ForwardIterator, typename BinaryPredicate>
@@ -756,7 +756,7 @@ namespace kerbal
 			typedef ForwardIterator iterator;
 			typedef typename kerbal::iterator::iterator_traits<iterator>::value_type value_type;
 
-			return kerbal::algorithm::minmax_element(first, last, std::less<value_type>());
+			return kerbal::algorithm::minmax_element(first, last, kerbal::compare::less<value_type>());
 		}
 
 	} //namespace algorithm

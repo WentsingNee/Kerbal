@@ -12,6 +12,7 @@
 #ifndef KERBAL_CONTAINER_STATIC_FLAT_SET_HPP
 #define KERBAL_CONTAINER_STATIC_FLAT_SET_HPP
 
+#include <kerbal/compare/basic_compare.hpp>
 #include <kerbal/compatibility/namespace_std_scope.hpp>
 #include <kerbal/container/detail/flat_set_base.hpp>
 #include <kerbal/container/static_ordered.hpp>
@@ -23,7 +24,7 @@ namespace kerbal
 	namespace container
 	{
 
-		template <typename Tp, std::size_t N, typename KeyCompare = std::less<Tp> >
+		template <typename Tp, std::size_t N, typename KeyCompare = kerbal::compare::less<Tp> >
 		class static_flat_set
 				: public kerbal::container::detail::flat_set_base<Tp, kerbal::container::static_ordered<Tp, N, Tp, KeyCompare> >
 		{
@@ -190,7 +191,7 @@ namespace kerbal
 
 		};
 
-		template <typename Tp, std::size_t N, typename KeyCompare = std::less<Tp> >
+		template <typename Tp, std::size_t N, typename KeyCompare = kerbal::compare::less<Tp> >
 		class static_flat_multiset
 				: public kerbal::container::detail::flat_multiset_base<Tp, kerbal::container::static_ordered<Tp, N, Tp, KeyCompare> >
 		{

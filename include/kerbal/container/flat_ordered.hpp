@@ -13,6 +13,7 @@
 #define KERBAL_CONTAINER_FLAT_ORDERED_HPP
 
 #include <kerbal/algorithm/swap.hpp>
+#include <kerbal/compare/basic_compare.hpp>
 #include <kerbal/compatibility/namespace_std_scope.hpp>
 #include <kerbal/container/detail/flat_ordered_base.hpp>
 
@@ -26,7 +27,7 @@ namespace kerbal
 	namespace container
 	{
 
-		template <typename Entity, typename Key = Entity, typename KeyCompare = std::less<Key>,
+		template <typename Entity, typename Key = Entity, typename KeyCompare = kerbal::compare::less<Key>,
 				typename Extract = default_extract<Key, Entity>, typename Allocator = std::allocator<Entity> >
 		class flat_ordered:
 				public kerbal::container::detail::flat_ordered_base<

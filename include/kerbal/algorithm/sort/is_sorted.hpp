@@ -12,8 +12,10 @@
 #ifndef KERBAL_ALGORITHM_SORT_IS_SORTED_HPP
 #define KERBAL_ALGORITHM_SORT_IS_SORTED_HPP
 
+#include <kerbal/compare/basic_compare.hpp>
 #include <kerbal/compatibility/constexpr.hpp>
 #include <kerbal/iterator/iterator.hpp>
+
 
 namespace kerbal
 {
@@ -44,7 +46,7 @@ namespace kerbal
 		{
 			typedef ForwardIterator iterator;
 			typedef typename kerbal::iterator::iterator_traits<iterator>::value_type value_type;
-			return kerbal::algorithm::is_sorted_until(first, last, std::less<value_type>());
+			return kerbal::algorithm::is_sorted_until(first, last, kerbal::compare::less<value_type>());
 		}
 
 		template <typename ForwardIterator, typename Compare>
@@ -60,7 +62,7 @@ namespace kerbal
 		{
 			typedef ForwardIterator iterator;
 			typedef typename kerbal::iterator::iterator_traits<iterator>::value_type value_type;
-			return kerbal::algorithm::is_sorted(first, last, std::less<value_type>());
+			return kerbal::algorithm::is_sorted(first, last, kerbal::compare::less<value_type>());
 		}
 
 	} // namespace algorithm

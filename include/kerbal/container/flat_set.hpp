@@ -12,6 +12,7 @@
 #ifndef KERBAL_CONTAINER_FLAT_SET_HPP
 #define KERBAL_CONTAINER_FLAT_SET_HPP
 
+#include <kerbal/compare/basic_compare.hpp>
 #include <kerbal/compatibility/namespace_std_scope.hpp>
 #include <kerbal/container/detail/flat_set_base.hpp>
 #include <kerbal/container/flat_ordered.hpp>
@@ -23,7 +24,7 @@ namespace kerbal
 	namespace container
 	{
 
-		template <typename Tp, typename KeyCompare = std::less<Tp>, typename Allocator = std::allocator<Tp> >
+		template <typename Tp, typename KeyCompare = kerbal::compare::less<Tp>, typename Allocator = std::allocator<Tp> >
 		class flat_set
 				: public kerbal::container::detail::flat_set_base<Tp, kerbal::container::flat_ordered<Tp, Tp, KeyCompare, default_extract<Tp, Tp>, Allocator> >
 		{
@@ -175,7 +176,7 @@ namespace kerbal
 
 		};
 
-		template <typename Tp, typename KeyCompare = std::less<Tp>, typename Allocator = std::allocator<Tp> >
+		template <typename Tp, typename KeyCompare = kerbal::compare::less<Tp>, typename Allocator = std::allocator<Tp> >
 		class flat_multiset
 				: public kerbal::container::detail::flat_multiset_base<Tp, kerbal::container::flat_ordered<Tp, Tp, KeyCompare, default_extract<Tp, Tp>, Allocator> >
 		{

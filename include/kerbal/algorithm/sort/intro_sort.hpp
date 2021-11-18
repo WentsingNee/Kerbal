@@ -16,11 +16,13 @@
 #include <kerbal/algorithm/sort/detail/quick_sort_pivot.hpp>
 #include <kerbal/algorithm/sort/heap_sort.hpp>
 #include <kerbal/algorithm/sort/insertion_sort.hpp>
+#include <kerbal/compare/basic_compare.hpp>
 #include <kerbal/compatibility/constexpr.hpp>
 #include <kerbal/container/static_stack.hpp>
 #include <kerbal/iterator/iterator.hpp>
 
 #include <climits>
+
 
 namespace kerbal
 {
@@ -89,7 +91,7 @@ namespace kerbal
 			typedef BidirectionalIterator iterator;
 			typedef typename kerbal::iterator::iterator_traits<iterator>::value_type value_type;
 
-			kerbal::algorithm::intro_sort(first, last, std::less<value_type>());
+			kerbal::algorithm::intro_sort(first, last, kerbal::compare::less<value_type>());
 		}
 
 
@@ -165,7 +167,7 @@ namespace kerbal
 			typedef BidirectionalIterator iterator;
 			typedef typename kerbal::iterator::iterator_traits<iterator>::value_type value_type;
 
-			kerbal::algorithm::nonrecursive_intro_sort(first, last, std::less<value_type>());
+			kerbal::algorithm::nonrecursive_intro_sort(first, last, kerbal::compare::less<value_type>());
 		}
 
 	} // namespace algorithm

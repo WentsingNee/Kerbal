@@ -13,8 +13,10 @@
 #define KERBAL_ALGORITHM_SORT_HEAP_SORT_HPP
 
 #include <kerbal/algorithm/heap.hpp>
+#include <kerbal/compare/basic_compare.hpp>
 #include <kerbal/compatibility/constexpr.hpp>
 #include <kerbal/iterator/iterator.hpp>
+
 
 namespace kerbal
 {
@@ -36,7 +38,7 @@ namespace kerbal
 		{
 			typedef BidirectionalIterator iterator;
 			typedef typename kerbal::iterator::iterator_traits<iterator>::value_type value_type;
-			kerbal::algorithm::heap_sort(first, last, std::less<value_type>());
+			kerbal::algorithm::heap_sort(first, last, kerbal::compare::less<value_type>());
 		}
 
 	} // namespace algorithm

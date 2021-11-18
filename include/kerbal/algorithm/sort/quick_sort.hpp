@@ -15,6 +15,7 @@
 #include <kerbal/algorithm/swap.hpp>
 #include <kerbal/algorithm/sort/detail/quick_sort_pivot.hpp>
 #include <kerbal/algorithm/sort/insertion_sort.hpp>
+#include <kerbal/compare/basic_compare.hpp>
 #include <kerbal/compatibility/constexpr.hpp>
 #include <kerbal/compatibility/noexcept.hpp>
 #include <kerbal/iterator/iterator.hpp>
@@ -29,6 +30,7 @@
 #		endif
 #	endif
 #endif
+
 
 namespace kerbal
 {
@@ -66,7 +68,7 @@ namespace kerbal
 			typedef BidirectionalIterator iterator;
 			typedef typename kerbal::iterator::iterator_traits<iterator>::value_type value_type;
 
-			kerbal::algorithm::quick_sort(first, last, std::less<value_type>());
+			kerbal::algorithm::quick_sort(first, last, kerbal::compare::less<value_type>());
 		}
 
 		template <typename BidirectionalIterator, typename Compare, typename StackBuffer>
@@ -116,7 +118,7 @@ namespace kerbal
 			typedef BidirectionalIterator iterator;
 			typedef typename kerbal::iterator::iterator_traits<iterator>::value_type value_type;
 
-			kerbal::algorithm::nonrecursive_qsort(first, last, std::less<value_type>());
+			kerbal::algorithm::nonrecursive_qsort(first, last, kerbal::compare::less<value_type>());
 		}
 
 #	if ENABLE_PMR_NONRECURSIVE_QSORT
@@ -143,7 +145,7 @@ namespace kerbal
 				typedef BidirectionalIterator iterator;
 				typedef typename kerbal::iterator::iterator_traits<iterator>::value_type value_type;
 
-				kerbal::algorithm::pmr::nonrecursive_qsort(first, last, std::less<value_type>());
+				kerbal::algorithm::pmr::nonrecursive_qsort(first, last, kerbal::compare::less<value_type>());
 			}
 
 		} // namespace pmr

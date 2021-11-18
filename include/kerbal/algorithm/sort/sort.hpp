@@ -16,6 +16,7 @@
 #include <kerbal/algorithm/sort/pigeonhole_sort.hpp>
 #include <kerbal/algorithm/sort/radix_sort.hpp>
 #include <kerbal/algorithm/sort/stable_sort.hpp>
+#include <kerbal/compare/basic_compare.hpp>
 #include <kerbal/iterator/iterator_traits.hpp>
 #include <kerbal/type_traits/conditional.hpp>
 #include <kerbal/type_traits/integral_constant.hpp>
@@ -44,7 +45,9 @@ namespace kerbal
 							kerbal::algorithm::is_pigeonhole_sort_acceptable_type<value_type>::value &&
 							(
 								kerbal::type_traits::is_same<Compare, std::less<value_type> >::value ||
-								kerbal::type_traits::is_same<Compare, std::less_equal<value_type> >::value
+								kerbal::type_traits::is_same<Compare, std::less_equal<value_type> >::value ||
+								kerbal::type_traits::is_same<Compare, kerbal::compare::less<value_type> >::value ||
+								kerbal::type_traits::is_same<Compare, kerbal::compare::less_equal<value_type> >::value
 							)
 					> IS_PIGEONHOLE_SORT_ASC;
 
@@ -53,7 +56,9 @@ namespace kerbal
 							kerbal::algorithm::is_pigeonhole_sort_acceptable_type<value_type>::value &&
 							(
 								kerbal::type_traits::is_same<Compare, std::greater<value_type> >::value ||
-								kerbal::type_traits::is_same<Compare, std::greater_equal<value_type> >::value
+								kerbal::type_traits::is_same<Compare, std::greater_equal<value_type> >::value ||
+								kerbal::type_traits::is_same<Compare, kerbal::compare::greater<value_type> >::value ||
+								kerbal::type_traits::is_same<Compare, kerbal::compare::greater_equal<value_type> >::value
 							)
 					> IS_PIGEONHOLE_SORT_DESC;
 
@@ -62,7 +67,9 @@ namespace kerbal
 							kerbal::algorithm::is_radix_sort_acceptable_type<value_type>::value &&
 							(
 								kerbal::type_traits::is_same<Compare, std::less<value_type> >::value ||
-								kerbal::type_traits::is_same<Compare, std::less_equal<value_type> >::value
+								kerbal::type_traits::is_same<Compare, std::less_equal<value_type> >::value ||
+								kerbal::type_traits::is_same<Compare, kerbal::compare::less<value_type> >::value ||
+								kerbal::type_traits::is_same<Compare, kerbal::compare::less_equal<value_type> >::value
 							)
 					> IS_RADIX_SORT_ASC;
 
@@ -71,7 +78,9 @@ namespace kerbal
 							kerbal::algorithm::is_radix_sort_acceptable_type<value_type>::value &&
 							(
 								kerbal::type_traits::is_same<Compare, std::greater<value_type> >::value ||
-								kerbal::type_traits::is_same<Compare, std::greater_equal<value_type> >::value
+								kerbal::type_traits::is_same<Compare, std::greater_equal<value_type> >::value ||
+								kerbal::type_traits::is_same<Compare, kerbal::compare::greater<value_type> >::value ||
+								kerbal::type_traits::is_same<Compare, kerbal::compare::greater_equal<value_type> >::value
 							)
 					> IS_RADIX_SORT_DESC;
 
@@ -174,7 +183,7 @@ namespace kerbal
 		{
 			typedef ForwardIterator iterator;
 			typedef typename kerbal::iterator::iterator_traits<iterator>::value_type value_type;
-			kerbal::algorithm::sort(first, last, std::less<value_type>());
+			kerbal::algorithm::sort(first, last, kerbal::compare::less<value_type>());
 		}
 
 	} // namespace algorithm

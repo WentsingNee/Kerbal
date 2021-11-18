@@ -14,9 +14,11 @@
 
 #include <kerbal/algorithm/binary_search.hpp>
 #include <kerbal/algorithm/modifier.hpp>
+#include <kerbal/compare/basic_compare.hpp>
 #include <kerbal/compatibility/constexpr.hpp>
 #include <kerbal/compatibility/move.hpp>
 #include <kerbal/iterator/iterator.hpp>
+
 
 namespace kerbal
 {
@@ -48,7 +50,7 @@ namespace kerbal
 			typedef BidirectionalIterator iterator;
 			typedef typename kerbal::iterator::iterator_traits<iterator>::value_type value_type;
 
-			kerbal::algorithm::directly_insertion_sort(first, last, std::less<value_type>());
+			kerbal::algorithm::directly_insertion_sort(first, last, kerbal::compare::less<value_type>());
 		}
 
 
@@ -76,7 +78,7 @@ namespace kerbal
 			typedef BidirectionalIterator iterator;
 			typedef typename kerbal::iterator::iterator_traits<iterator>::value_type value_type;
 
-			kerbal::algorithm::insertion_sort(first, last, std::less<value_type>());
+			kerbal::algorithm::insertion_sort(first, last, kerbal::compare::less<value_type>());
 		}
 
 	} // namespace algorithm

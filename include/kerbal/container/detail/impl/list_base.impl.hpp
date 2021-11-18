@@ -13,6 +13,7 @@
 #define KERBAL_CONTAINER_DETAIL_IMPL_LIST_BASE_IMPL_HPP
 
 #include <kerbal/algorithm/swap.hpp>
+#include <kerbal/compare/basic_compare.hpp>
 #include <kerbal/iterator/iterator.hpp>
 #include <kerbal/type_traits/conditional.hpp>
 #include <kerbal/type_traits/enable_if.hpp>
@@ -1224,7 +1225,7 @@ namespace kerbal
 			KERBAL_CONSTEXPR20
 			void list_allocator_unrelated<Tp>::_K_merge(list_allocator_unrelated& other)
 			{
-				this->_K_merge(other, std::less<value_type>());
+				this->_K_merge(other, kerbal::compare::less<value_type>());
 			}
 
 			template <typename Tp>
@@ -1512,6 +1513,42 @@ namespace kerbal
 			template <bool is_radix_sort_acceptable_type>
 			KERBAL_CONSTEXPR20
 			typename kerbal::type_traits::enable_if<is_radix_sort_acceptable_type>::type
+			list_allocator_unrelated<Tp>::sort_method_overload(iterator first, iterator last, kerbal::compare::less<value_type> /*cmp*/)
+			{
+				radix_sort(first, last, kerbal::type_traits::false_type());
+			}
+
+			template <typename Tp>
+			template <bool is_radix_sort_acceptable_type>
+			KERBAL_CONSTEXPR20
+			typename kerbal::type_traits::enable_if<is_radix_sort_acceptable_type>::type
+			list_allocator_unrelated<Tp>::sort_method_overload(iterator first, iterator last, kerbal::compare::greater<value_type> /*cmp*/)
+			{
+				radix_sort(first, last, kerbal::type_traits::true_type());
+			}
+
+			template <typename Tp>
+			template <bool is_radix_sort_acceptable_type>
+			KERBAL_CONSTEXPR20
+			typename kerbal::type_traits::enable_if<is_radix_sort_acceptable_type>::type
+			list_allocator_unrelated<Tp>::sort_method_overload(iterator first, iterator last, kerbal::compare::less<void> /*cmp*/)
+			{
+				radix_sort(first, last, kerbal::type_traits::false_type());
+			}
+
+			template <typename Tp>
+			template <bool is_radix_sort_acceptable_type>
+			KERBAL_CONSTEXPR20
+			typename kerbal::type_traits::enable_if<is_radix_sort_acceptable_type>::type
+			list_allocator_unrelated<Tp>::sort_method_overload(iterator first, iterator last, kerbal::compare::greater<void> /*cmp*/)
+			{
+				radix_sort(first, last, kerbal::type_traits::true_type());
+			}
+
+			template <typename Tp>
+			template <bool is_radix_sort_acceptable_type>
+			KERBAL_CONSTEXPR20
+			typename kerbal::type_traits::enable_if<is_radix_sort_acceptable_type>::type
 			list_allocator_unrelated<Tp>::sort_method_overload(iterator first, iterator last, std::less<value_type> /*cmp*/)
 			{
 				radix_sort(first, last, kerbal::type_traits::false_type());
@@ -1570,7 +1607,7 @@ namespace kerbal
 			KERBAL_CONSTEXPR20
 			void list_allocator_unrelated<Tp>::_K_sort(iterator first, iterator last)
 			{
-				_K_sort(first, last, std::less<value_type>());
+				_K_sort(first, last, kerbal::compare::less<value_type>());
 			}
 
 			template <typename Tp>
@@ -1659,7 +1696,7 @@ namespace kerbal
 			typename list_allocator_unrelated<Tp>::size_type
 			list_allocator_unrelated<Tp>::unique_using_allocator(NodeAllocator & alloc, const_iterator first, const_iterator last)
 			{
-				return unique_using_allocator(alloc, first, last, std::equal_to<value_type>());
+				return unique_using_allocator(alloc, first, last, kerbal::compare::equal_to<value_type>());
 			}
 
 			template <typename Tp>
@@ -1720,7 +1757,7 @@ namespace kerbal
 			KERBAL_CONSTEXPR20
 			void list_allocator_unrelated<Tp>::_K_set_difference(list_allocator_unrelated & l1, const list_allocator_unrelated & l2, list_allocator_unrelated & lto)
 			{
-				list_allocator_unrelated::_K_set_difference(l1, l2, lto, std::less<value_type>());
+				list_allocator_unrelated::_K_set_difference(l1, l2, lto, kerbal::compare::less<value_type>());
 			}
 
 			template <typename Tp>
@@ -1753,7 +1790,7 @@ namespace kerbal
 			KERBAL_CONSTEXPR20
 			void list_allocator_unrelated<Tp>::_K_set_intersection(list_allocator_unrelated & l1, list_allocator_unrelated & l2, list_allocator_unrelated & lto)
 			{
-				list_allocator_unrelated::_K_set_intersection(l1, l2, lto, std::less<value_type>());
+				list_allocator_unrelated::_K_set_intersection(l1, l2, lto, kerbal::compare::less<value_type>());
 			}
 
 			template <typename Tp>
@@ -1788,7 +1825,7 @@ namespace kerbal
 			KERBAL_CONSTEXPR20
 			void list_allocator_unrelated<Tp>::_K_set_symmetric_difference(list_allocator_unrelated & l1, list_allocator_unrelated & l2, list_allocator_unrelated & lto)
 			{
-				list_allocator_unrelated::_K_set_symmetric_difference(l1, l2, lto, std::less<value_type>());
+				list_allocator_unrelated::_K_set_symmetric_difference(l1, l2, lto, kerbal::compare::less<value_type>());
 			}
 
 			template <typename Tp>
@@ -1824,7 +1861,7 @@ namespace kerbal
 			KERBAL_CONSTEXPR20
 			void list_allocator_unrelated<Tp>::_K_set_union(list_allocator_unrelated & l1, list_allocator_unrelated & l2, list_allocator_unrelated & lto)
 			{
-				list_allocator_unrelated::_K_set_union(l1, l2, lto, std::less<value_type>());
+				list_allocator_unrelated::_K_set_union(l1, l2, lto, kerbal::compare::less<value_type>());
 			}
 
 

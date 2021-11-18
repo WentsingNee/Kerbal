@@ -13,6 +13,7 @@
 #define KERBAL_CONTAINER_STATIC_ORDERED_HPP
 
 #include <kerbal/algorithm/swap.hpp>
+#include <kerbal/compare/basic_compare.hpp>
 #include <kerbal/compatibility/namespace_std_scope.hpp>
 #include <kerbal/container/detail/flat_ordered_base.hpp>
 #include <kerbal/container/static_vector.hpp>
@@ -27,7 +28,7 @@ namespace kerbal
 	{
 
 		template <typename Entity, size_t N, typename Key = Entity,
-			typename KeyCompare = std::less<Key>, typename Extract = default_extract<Key, Entity> >
+			typename KeyCompare = kerbal::compare::less<Key>, typename Extract = default_extract<Key, Entity> >
 		class static_ordered:
 				public kerbal::container::detail::flat_ordered_base<
 						Entity, Key, KeyCompare, Extract, kerbal::container::static_vector<Entity, N>

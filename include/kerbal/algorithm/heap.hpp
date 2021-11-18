@@ -13,8 +13,10 @@
 #define KERBAL_ALGORITHM_HEAP_HPP
 
 #include <kerbal/algorithm/swap.hpp>
+#include <kerbal/compare/basic_compare.hpp>
 #include <kerbal/iterator/iterator.hpp>
 #include <kerbal/iterator/iterator_traits.hpp>
+
 
 namespace kerbal
 {
@@ -243,7 +245,7 @@ namespace kerbal
 		{
 			typedef BidirectionalIterator iterator;
 			typedef typename kerbal::iterator::iterator_traits<iterator>::value_type value_type;
-			kerbal::algorithm::push_heap(first, last, std::less<value_type>());
+			kerbal::algorithm::push_heap(first, last, kerbal::compare::less<value_type>());
 		}
 
 		template <typename BidirectionalIterator, typename Compare>
@@ -265,7 +267,7 @@ namespace kerbal
 		{
 			typedef BidirectionalIterator iterator;
 			typedef typename kerbal::iterator::iterator_traits<iterator>::value_type value_type;
-			kerbal::algorithm::pop_heap(first, last, std::less<value_type>());
+			kerbal::algorithm::pop_heap(first, last, kerbal::compare::less<value_type>());
 		}
 
 		template <typename BidirectionalIterator, typename Compare>
@@ -290,7 +292,7 @@ namespace kerbal
 		{
 			typedef BidirectionalIterator iterator;
 			typedef typename kerbal::iterator::iterator_traits<iterator>::value_type value_type;
-			kerbal::algorithm::sort_heap(first, last, std::less<value_type>());
+			kerbal::algorithm::sort_heap(first, last, kerbal::compare::less<value_type>());
 		}
 
 		template <typename ForwardIterator, typename Compare>
@@ -327,7 +329,7 @@ namespace kerbal
 		{
 			typedef ForwardIterator iterator;
 			typedef typename kerbal::iterator::iterator_traits<iterator>::value_type value_type;
-			return kerbal::algorithm::is_heap_until(first, last, std::less<value_type>());
+			return kerbal::algorithm::is_heap_until(first, last, kerbal::compare::less<value_type>());
 		}
 
 		template <typename ForwardIterator, typename Compare>
@@ -343,7 +345,7 @@ namespace kerbal
 		{
 			typedef ForwardIterator iterator;
 			typedef typename kerbal::iterator::iterator_traits<iterator>::value_type value_type;
-			return kerbal::algorithm::is_heap(first, last, std::less<value_type>());
+			return kerbal::algorithm::is_heap(first, last, kerbal::compare::less<value_type>());
 		}
 
 		namespace detail
@@ -406,7 +408,7 @@ namespace kerbal
 		{
 			typedef BidirectionalIterator iterator;
 			typedef typename kerbal::iterator::iterator_traits<iterator>::value_type value_type;
-			kerbal::algorithm::make_heap(first, last, std::less<value_type>());
+			kerbal::algorithm::make_heap(first, last, kerbal::compare::less<value_type>());
 		}
 
 	} // namespace algorithm

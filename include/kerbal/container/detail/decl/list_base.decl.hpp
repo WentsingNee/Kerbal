@@ -13,6 +13,7 @@
 #define KERBAL_CONTAINER_DETAIL_DECL_LIST_BASE_DECL_HPP
 
 #include <kerbal/algorithm/swap.hpp>
+#include <kerbal/compare/basic_compare.hpp>
 #include <kerbal/compatibility/constexpr.hpp>
 #include <kerbal/compatibility/move.hpp>
 #include <kerbal/compatibility/noexcept.hpp>
@@ -30,6 +31,8 @@
 #endif
 
 #include <cstddef>
+
+#include <functional> // std::less
 
 #if __cplusplus >= 201103L
 #	include <type_traits>
@@ -804,6 +807,30 @@ namespace kerbal
 					KERBAL_CONSTEXPR20
 					static
 					typename kerbal::type_traits::enable_if<is_radix_sort_acceptable_type>::type
+					sort_method_overload(iterator first, iterator last, kerbal::compare::less<value_type> cmp);
+
+					template <bool is_radix_sort_acceptable_type>
+					KERBAL_CONSTEXPR20
+					static
+					typename kerbal::type_traits::enable_if<is_radix_sort_acceptable_type>::type
+					sort_method_overload(iterator first, iterator last, kerbal::compare::greater<value_type> cmp);
+
+					template <bool is_radix_sort_acceptable_type>
+					KERBAL_CONSTEXPR20
+					static
+					typename kerbal::type_traits::enable_if<is_radix_sort_acceptable_type>::type
+					sort_method_overload(iterator first, iterator last, kerbal::compare::less<void> cmp);
+
+					template <bool is_radix_sort_acceptable_type>
+					KERBAL_CONSTEXPR20
+					static
+					typename kerbal::type_traits::enable_if<is_radix_sort_acceptable_type>::type
+					sort_method_overload(iterator first, iterator last, kerbal::compare::greater<void> cmp);
+
+					template <bool is_radix_sort_acceptable_type>
+					KERBAL_CONSTEXPR20
+					static
+					typename kerbal::type_traits::enable_if<is_radix_sort_acceptable_type>::type
 					sort_method_overload(iterator first, iterator last, std::less<value_type> cmp);
 
 					template <bool is_radix_sort_acceptable_type>
@@ -867,10 +894,10 @@ namespace kerbal
 							KERBAL_CONSTEXPR14
 							bool operator()(const_reference with) const
 									KERBAL_CONDITIONAL_NOEXCEPT(
-											noexcept(val == with)
+											noexcept(kerbal::compare::equal_to<value_type>()(val, with))
 									)
 							{
-								return val == with;
+								return kerbal::compare::equal_to<value_type>()(val, with);
 							}
 					};
 

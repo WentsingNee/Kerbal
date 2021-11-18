@@ -13,6 +13,7 @@
 #define KERBAL_CONTAINER_DETAIL_IMPL_FORWARD_LIST_BASE_IMPL_HPP
 
 #include <kerbal/algorithm/swap.hpp>
+#include <kerbal/compare/basic_compare.hpp>
 #include <kerbal/iterator/iterator.hpp>
 #include <kerbal/type_traits/conditional.hpp>
 #include <kerbal/type_traits/enable_if.hpp>
@@ -33,8 +34,6 @@
 #if !__cpp_exceptions
 #	include <kerbal/memory/bad_alloc.hpp>
 #endif
-
-#include <functional> // std::less
 
 #if __cplusplus >= 201703L
 #	if __has_include(<memory_resource>)
@@ -1035,7 +1034,7 @@ namespace kerbal
 			KERBAL_CONSTEXPR14
 			void fl_allocator_unrelated<Tp>::_K_merge(fl_allocator_unrelated & other)
 			{
-				this->_K_merge(other, std::less<value_type>());
+				this->_K_merge(other, kerbal::compare::less<value_type>());
 			}
 
 			template <typename Tp>
@@ -1192,7 +1191,7 @@ namespace kerbal
 			KERBAL_CONSTEXPR14
 			void fl_allocator_unrelated<Tp>::_K_sort_after(const_iterator first, const_iterator last)
 			{
-				_K_sort_after(first, last, std::less<value_type>());
+				_K_sort_after(first, last, kerbal::compare::less<value_type>());
 			}
 
 			template <typename Tp>
@@ -1207,7 +1206,7 @@ namespace kerbal
 			KERBAL_CONSTEXPR14
 			void fl_allocator_unrelated<Tp>::_K_sort()
 			{
-				_K_sort(std::less<value_type>());
+				_K_sort(kerbal::compare::less<value_type>());
 			}
 
 			template <typename Tp>
@@ -1288,7 +1287,7 @@ namespace kerbal
 			typename fl_allocator_unrelated<Tp>::size_type
 			fl_allocator_unrelated<Tp>::unique_using_allocator(NodeAllocator & alloc, const_iterator first, const_iterator last)
 			{
-				return unique_using_allocator(alloc, first, last, std::equal_to<value_type>());
+				return unique_using_allocator(alloc, first, last, kerbal::compare::equal_to<value_type>());
 			}
 
 			template <typename Tp>
@@ -1306,7 +1305,7 @@ namespace kerbal
 			typename fl_allocator_unrelated<Tp>::size_type
 			fl_allocator_unrelated<Tp>::unique_using_allocator(NodeAllocator & alloc)
 			{
-				return this->unique_using_allocator(alloc, std::equal_to<value_type>());
+				return this->unique_using_allocator(alloc, kerbal::compare::equal_to<value_type>());
 			}
 
 

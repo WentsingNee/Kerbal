@@ -12,6 +12,7 @@
 #ifndef KERBAL_ALGORITHM_KMP_HPP
 #define KERBAL_ALGORITHM_KMP_HPP
 
+#include <kerbal/compare/basic_compare.hpp>
 #include <kerbal/container/vector.hpp>
 #include <kerbal/iterator/iterator.hpp>
 #include <kerbal/iterator/iterator_traits.hpp>
@@ -22,7 +23,6 @@
 
 #include <cstring>
 #include <cstddef>
-#include <functional>
 
 
 namespace kerbal
@@ -95,7 +95,7 @@ namespace kerbal
 			typedef ForwardIterator pattern_iterator;
 			typedef typename kerbal::iterator::iterator_traits<pattern_iterator>::value_type Tp;
 			return kerbal::algorithm::longest_matched_suffix_prefix
-					(pattern_first, pattern_last, next_container, std::equal_to<Tp>());
+					(pattern_first, pattern_last, next_container, kerbal::compare::equal_to<Tp>());
 		}
 
 
@@ -189,7 +189,7 @@ namespace kerbal
 		{
 			typedef typename kerbal::iterator::iterator_traits<BidirectionalHostIterator>::value_type host_value_type;
 			return kerbal::algorithm::kmp(host_first, host_last, pattern_first, pattern_last,
-					std::equal_to<host_value_type>());
+					kerbal::compare::equal_to<host_value_type>());
 		}
 
 		inline const char* kmp(const char* host, const char* pattern)

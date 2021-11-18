@@ -14,6 +14,7 @@
 
 #include <kerbal/algorithm/modifier.hpp>
 #include <kerbal/algorithm/swap.hpp>
+#include <kerbal/compare/basic_compare.hpp>
 #include <kerbal/compatibility/constexpr.hpp>
 #include <kerbal/compatibility/static_assert.hpp>
 #include <kerbal/iterator/iterator.hpp>
@@ -23,6 +24,7 @@
 #include <memory>
 
 #include <kerbal/algorithm/sort/detail/merge_sort_merge.hpp>
+
 
 namespace kerbal
 {
@@ -80,7 +82,7 @@ namespace kerbal
 		{
 			typedef ForwardIterator iterator;
 			typedef typename kerbal::iterator::iterator_traits<iterator>::value_type value_type;
-			return kerbal::algorithm::merge_sort_n_afford_buffer(first, len, buffer, std::less<value_type>());
+			return kerbal::algorithm::merge_sort_n_afford_buffer(first, len, buffer, kerbal::compare::less<value_type>());
 		}
 
 		template <typename ForwardIterator, typename ForwardIterator2, typename Compare>
@@ -100,7 +102,7 @@ namespace kerbal
 		{
 			typedef ForwardIterator iterator;
 			typedef typename kerbal::iterator::iterator_traits<iterator>::value_type value_type;
-			kerbal::algorithm::merge_sort_afford_buffer(first, last, buffer, std::less<value_type>());
+			kerbal::algorithm::merge_sort_afford_buffer(first, last, buffer, kerbal::compare::less<value_type>());
 		}
 
 		template <typename ForwardIterator, typename Allocator, typename Compare>
@@ -173,7 +175,7 @@ namespace kerbal
 		{
 			typedef ForwardIterator iterator;
 			typedef typename kerbal::iterator::iterator_traits<iterator>::value_type value_type;
-			return kerbal::algorithm::merge_sort_n_afford_allocator(first, len, allocator, std::less<value_type>());
+			return kerbal::algorithm::merge_sort_n_afford_allocator(first, len, allocator, kerbal::compare::less<value_type>());
 		}
 
 		template <typename ForwardIterator, typename Allocator, typename Compare>
@@ -192,7 +194,7 @@ namespace kerbal
 		{
 			typedef ForwardIterator iterator;
 			typedef typename kerbal::iterator::iterator_traits<iterator>::value_type value_type;
-			kerbal::algorithm::merge_sort_afford_allocator(first, last, allocator, std::less<value_type>());
+			kerbal::algorithm::merge_sort_afford_allocator(first, last, allocator, kerbal::compare::less<value_type>());
 		}
 
 		template <typename ForwardIterator, typename Compare>
@@ -211,7 +213,7 @@ namespace kerbal
 		{
 			typedef ForwardIterator iterator;
 			typedef typename kerbal::iterator::iterator_traits<iterator>::value_type value_type;
-			kerbal::algorithm::merge_sort(first, last, std::less<value_type>());
+			kerbal::algorithm::merge_sort(first, last, kerbal::compare::less<value_type>());
 		}
 
 	} // namespace algorithm

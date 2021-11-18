@@ -13,7 +13,9 @@
 #define KERBAL_ALGORITHM_SORT_INPLACE_MERGE_SORT_HPP
 
 #include <kerbal/algorithm/modifier.hpp>
+#include <kerbal/compare/basic_compare.hpp>
 #include <kerbal/iterator/iterator.hpp>
+
 
 namespace kerbal
 {
@@ -45,7 +47,7 @@ namespace kerbal
 		{
 			typedef ForwardIterator iterator;
 			typedef typename kerbal::iterator::iterator_traits<iterator>::value_type value_type;
-			kerbal::algorithm::inplace_merge_sort(first, last, std::less<value_type>());
+			kerbal::algorithm::inplace_merge_sort(first, last, kerbal::compare::less<value_type>());
 		}
 
 	} // namespace algorithm

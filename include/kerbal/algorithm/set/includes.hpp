@@ -12,10 +12,9 @@
 #ifndef KERBAL_ALGORITHM_SET_INCLUDES_HPP
 #define KERBAL_ALGORITHM_SET_INCLUDES_HPP
 
+#include <kerbal/compare/basic_compare.hpp>
 #include <kerbal/compatibility/constexpr.hpp>
 #include <kerbal/iterator/iterator_traits.hpp>
-
-#include <functional>
 
 
 namespace kerbal
@@ -55,7 +54,7 @@ namespace kerbal
 //			typedef InputIterator2 iterator2;
 			typedef typename kerbal::iterator::iterator_traits<iterator1>::value_type value_type1;
 //			typedef typename kerbal::iterator::iterator_traits<iterator2>::value_type value_type2;
-			return kerbal::algorithm::includes(first1, last1, first2, last2, std::less<value_type1>());
+			return kerbal::algorithm::includes(first1, last1, first2, last2, kerbal::compare::less<value_type1>());
 		}
 
 	} // namespace algorithm

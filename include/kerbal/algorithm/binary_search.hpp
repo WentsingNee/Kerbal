@@ -14,6 +14,7 @@
 
 #include <kerbal/algorithm/binary_type_predicate.hpp>
 #include <kerbal/algorithm/querier.hpp>
+#include <kerbal/compare/basic_compare.hpp>
 #include <kerbal/compatibility/constexpr.hpp>
 #include <kerbal/compatibility/static_assert.hpp>
 #include <kerbal/iterator/iterator.hpp>
@@ -272,7 +273,7 @@ namespace kerbal
 		std::pair<ForwardIterator, ForwardIterator>
 		equal_range(ForwardIterator first, ForwardIterator last, const Tp & value)
 		{
-			return kerbal::algorithm::equal_range(first, last, value, std::less<Tp>());
+			return kerbal::algorithm::equal_range(first, last, value, kerbal::compare::less<Tp>());
 		}
 
 
@@ -303,7 +304,7 @@ namespace kerbal
 					>::value),
 					"the range iterator doesn't refer to the same type as `value`"
 			);
-			return kerbal::algorithm::binary_search(first, last, value, std::less<Tp>());
+			return kerbal::algorithm::binary_search(first, last, value, kerbal::compare::less<Tp>());
 		}
 
 
@@ -518,7 +519,7 @@ namespace kerbal
 					>::value),
 					"the range iterator doesn't refer to the same type as `value`"
 			);
-			return kerbal::algorithm::binary_search_hint(first, last, value, hint, std::less<Tp>());
+			return kerbal::algorithm::binary_search_hint(first, last, value, hint, kerbal::compare::less<Tp>());
 		}
 
 	} // namespace algorithm

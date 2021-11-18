@@ -15,13 +15,13 @@
 #include <kerbal/algorithm/binary_search.hpp>
 #include <kerbal/algorithm/binary_type_predicate.hpp>
 #include <kerbal/algorithm/modifier.hpp>
+#include <kerbal/compare/basic_compare.hpp>
 #include <kerbal/compatibility/constexpr.hpp>
 #include <kerbal/container/nonmember_container_access.hpp>
 #include <kerbal/iterator/general_back_inserter.hpp>
 #include <kerbal/iterator/iterator.hpp>
 
 #include <cstddef>
-#include <functional>
 #include <vector>
 
 
@@ -172,7 +172,7 @@ namespace kerbal
 		{
 			typedef ForwardIterator iterator;
 			typedef typename std::iterator_traits<iterator>::value_type value_type;
-			return kerbal::algorithm::longest_increasing_subsequence(first, last, std::less<value_type>());
+			return kerbal::algorithm::longest_increasing_subsequence(first, last, kerbal::compare::less<value_type>());
 		}
 
 

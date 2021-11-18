@@ -16,6 +16,7 @@
 #include <kerbal/algorithm/binary_type_predicate.hpp>
 #include <kerbal/algorithm/querier.hpp>
 #include <kerbal/algorithm/swap.hpp>
+#include <kerbal/compare/basic_compare.hpp>
 #include <kerbal/compatibility/constexpr.hpp>
 #include <kerbal/compatibility/move.hpp>
 #include <kerbal/compatibility/noexcept.hpp>
@@ -703,7 +704,7 @@ namespace kerbal
 		{
 			typedef ForwardIterator iterator;
 			typedef typename kerbal::iterator::iterator_traits<iterator>::value_type value_type;
-			kerbal::algorithm::inplace_merge(first, mid, last, std::less<value_type>());
+			kerbal::algorithm::inplace_merge(first, mid, last, kerbal::compare::less<value_type>());
 		}
 
 
@@ -997,7 +998,7 @@ namespace kerbal
 		{
 			typedef ForwardIterator iterator;
 			typedef typename kerbal::iterator::iterator_traits<iterator>::value_type value_type;
-			return kerbal::algorithm::unique(first, last, std::equal_to<value_type>());
+			return kerbal::algorithm::unique(first, last, kerbal::compare::equal_to<value_type>());
 		}
 
 	} // namespace algorithm
