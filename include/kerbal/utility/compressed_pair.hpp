@@ -254,7 +254,7 @@ namespace kerbal
 #		endif
 
 				template <typename Tp2, typename Up2>
-				KERBAL_CONSTEXPR14
+				KERBAL_CONSTEXPR
 				explicit
 				compressed_pair(const kerbal::utility::compressed_pair<Tp2, Up2> & pair)
 						KERBAL_CONDITIONAL_NOEXCEPT((
@@ -275,7 +275,7 @@ namespace kerbal
 				}
 
 				template <typename Tp2, typename Up2>
-				KERBAL_CONSTEXPR14
+				KERBAL_CONSTEXPR
 				explicit
 				compressed_pair(const std::pair<Tp2, Up2> & pair)
 						KERBAL_CONDITIONAL_NOEXCEPT((
@@ -372,7 +372,7 @@ namespace kerbal
 					return super0::member();
 				}
 
-				KERBAL_CONSTEXPR14
+				KERBAL_CONSTEXPR
 				first_type_const_reference first() KERBAL_CONST_REFERENCE_OVERLOAD_TAG KERBAL_NOEXCEPT
 				{
 					return super0::member();
@@ -384,7 +384,7 @@ namespace kerbal
 					return super1::member();
 				}
 
-				KERBAL_CONSTEXPR14
+				KERBAL_CONSTEXPR
 				second_type_const_reference second() KERBAL_CONST_REFERENCE_OVERLOAD_TAG KERBAL_NOEXCEPT
 				{
 					return super1::member();
@@ -398,7 +398,7 @@ namespace kerbal
 					return kerbal::compatibility::move(*this).super0::member();
 				}
 
-				KERBAL_CONSTEXPR14
+				KERBAL_CONSTEXPR
 				first_type_const_rvalue_reference first() const && KERBAL_NOEXCEPT
 				{
 					return kerbal::compatibility::move(*this).super0::member();
@@ -410,7 +410,7 @@ namespace kerbal
 					return kerbal::compatibility::move(*this).super1::member();
 				}
 
-				KERBAL_CONSTEXPR14
+				KERBAL_CONSTEXPR
 				second_type_const_rvalue_reference second() const && KERBAL_NOEXCEPT
 				{
 					return kerbal::compatibility::move(*this).super1::member();
@@ -418,6 +418,7 @@ namespace kerbal
 
 #		endif
 
+				KERBAL_CONSTEXPR14
 				void swap(compressed_pair & other)
 				{
 					kerbal::algorithm::swap(this->first(), other.first());
@@ -451,6 +452,7 @@ namespace kerbal
 		};
 
 		template <typename Tp, typename Up>
+		KERBAL_CONSTEXPR
 		bool operator==(const kerbal::utility::compressed_pair<Tp, Up>& lhs, const kerbal::utility::compressed_pair<Tp, Up>& rhs)
 				KERBAL_CONDITIONAL_NOEXCEPT(
 						noexcept(static_cast<bool>(lhs.first() == rhs.first())) &&
@@ -461,6 +463,7 @@ namespace kerbal
 		}
 
 		template <typename Tp, typename Up>
+		KERBAL_CONSTEXPR
 		bool operator!=(const kerbal::utility::compressed_pair<Tp, Up>& lhs, const kerbal::utility::compressed_pair<Tp, Up>& rhs)
 				KERBAL_CONDITIONAL_NOEXCEPT(
 						noexcept(static_cast<bool>(lhs.first() != rhs.first())) &&
@@ -471,6 +474,7 @@ namespace kerbal
 		}
 
 		template <typename Tp, typename Up>
+		KERBAL_CONSTEXPR
 		bool operator<(const kerbal::utility::compressed_pair<Tp, Up>& lhs, const kerbal::utility::compressed_pair<Tp, Up>& rhs)
 				KERBAL_CONDITIONAL_NOEXCEPT(
 						noexcept(static_cast<bool>(lhs.first() < rhs.first())) &&
@@ -483,6 +487,7 @@ namespace kerbal
 		}
 
 		template <typename Tp, typename Up>
+		KERBAL_CONSTEXPR
 		bool operator>(const kerbal::utility::compressed_pair<Tp, Up>& lhs, const kerbal::utility::compressed_pair<Tp, Up>& rhs)
 		{
 			return static_cast<bool>(lhs.first() > rhs.first())
@@ -490,6 +495,7 @@ namespace kerbal
 		}
 
 		template <typename Tp, typename Up>
+		KERBAL_CONSTEXPR
 		bool operator<=(const kerbal::utility::compressed_pair<Tp, Up>& lhs, const kerbal::utility::compressed_pair<Tp, Up>& rhs)
 		{
 			return static_cast<bool>(lhs.first() <= rhs.first()) && (
@@ -497,6 +503,7 @@ namespace kerbal
 		}
 
 		template <typename Tp, typename Up>
+		KERBAL_CONSTEXPR
 		bool operator>=(const kerbal::utility::compressed_pair<Tp, Up>& lhs, const kerbal::utility::compressed_pair<Tp, Up>& rhs)
 		{
 			return static_cast<bool>(lhs.first() >= rhs.first()) && (
@@ -767,12 +774,12 @@ namespace kerbal
 #endif
 
 	template <typename Tp2, typename Up2>
-	KERBAL_CONSTEXPR14
+	KERBAL_CONSTEXPR
 	explicit
 	compressed_pair(const kerbal::utility::compressed_pair<Tp2, Up2> & pair);
 
 	template <typename Tp2, typename Up2>
-	KERBAL_CONSTEXPR14
+	KERBAL_CONSTEXPR
 	explicit
 	compressed_pair(const std::pair<Tp2, Up2> & pair);
 

@@ -126,7 +126,7 @@ namespace kerbal
 #			endif
 
 					template <typename U, size_t J>
-					KERBAL_CONSTEXPR14
+					KERBAL_CONSTEXPR
 					explicit member_compress_helper_impl(const kerbal::utility::member_compress_helper<U, J> & src)
 									KERBAL_CONDITIONAL_NOEXCEPT((
 											std::is_nothrow_constructible<
@@ -141,7 +141,7 @@ namespace kerbal
 #			if __cplusplus >= 201103L
 
 					template <typename U, size_t J>
-					KERBAL_CONSTEXPR14
+					KERBAL_CONSTEXPR
 					explicit member_compress_helper_impl(kerbal::utility::member_compress_helper<U, J> && src)
 								KERBAL_CONDITIONAL_NOEXCEPT((
 										std::is_nothrow_constructible<
@@ -161,7 +161,7 @@ namespace kerbal
 						return this->M_member;
 					}
 
-					KERBAL_CONSTEXPR14
+					KERBAL_CONSTEXPR
 					const_reference member() KERBAL_CONST_REFERENCE_OVERLOAD_TAG KERBAL_NOEXCEPT
 					{
 						return this->M_member;
@@ -175,7 +175,7 @@ namespace kerbal
 						return kerbal::compatibility::move(*this).M_member;
 					}
 
-					KERBAL_CONSTEXPR14
+					KERBAL_CONSTEXPR
 					const_rvalue_reference member() const && KERBAL_NOEXCEPT
 					{
 						return kerbal::compatibility::move(*this).M_member;
@@ -270,7 +270,7 @@ namespace kerbal
 #			endif
 
 					template <typename U, size_t J>
-					KERBAL_CONSTEXPR14
+					KERBAL_CONSTEXPR
 					explicit member_compress_helper_impl(const kerbal::utility::member_compress_helper<U, J> & src)
 									KERBAL_CONDITIONAL_NOEXCEPT((
 											std::is_nothrow_constructible<
@@ -285,7 +285,7 @@ namespace kerbal
 #			if __cplusplus >= 201103L
 
 					template <typename U, size_t J>
-					KERBAL_CONSTEXPR14
+					KERBAL_CONSTEXPR
 					explicit member_compress_helper_impl(kerbal::utility::member_compress_helper<U, J> && src)
 									KERBAL_CONDITIONAL_NOEXCEPT((
 											std::is_nothrow_constructible<
@@ -305,7 +305,7 @@ namespace kerbal
 						return static_cast<reference>(*this);
 					}
 
-					KERBAL_CONSTEXPR14
+					KERBAL_CONSTEXPR
 					const_reference member() KERBAL_CONST_REFERENCE_OVERLOAD_TAG KERBAL_NOEXCEPT
 					{
 						return static_cast<const_reference>(*this);
@@ -319,7 +319,7 @@ namespace kerbal
 						return static_cast<rvalue_reference>(*this);
 					}
 
-					KERBAL_CONSTEXPR14
+					KERBAL_CONSTEXPR
 					const_rvalue_reference member() const && KERBAL_NOEXCEPT
 					{
 						return static_cast<const_rvalue_reference>(*this);
