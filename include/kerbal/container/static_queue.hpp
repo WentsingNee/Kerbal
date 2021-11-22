@@ -81,7 +81,7 @@ namespace kerbal
 						: super()
 				{
 					for (size_type j = src.ibegin; j != src.iend; j = src.next(j)) {
-						this->push(kerbal::compatibility::move(src.storage[j].raw_value()));
+						this->push(kerbal::compatibility::move(src).storage[j].raw_value());
 					}
 				}
 
@@ -142,7 +142,7 @@ namespace kerbal
 				{
 					this->clear();
 					for (size_type j = src.ibegin; j != src.iend; j = src.next(j)) {
-						this->push(kerbal::compatibility::move(src.storage[j].raw_value()));
+						this->push(kerbal::compatibility::move(src).storage[j].raw_value());
 					}
 				}
 

@@ -149,7 +149,7 @@ namespace kerbal
 												typename kerbal::utility::member_compress_helper<U, J>::rvalue_reference
 										>::value
 								)) :
-							M_member(kerbal::compatibility::move(src.member()))
+							M_member(kerbal::compatibility::move(src).member())
 					{
 					}
 
@@ -172,13 +172,13 @@ namespace kerbal
 					KERBAL_CONSTEXPR14
 					rvalue_reference member() && KERBAL_NOEXCEPT
 					{
-						return kerbal::compatibility::move(this->M_member);
+						return kerbal::compatibility::move(*this).M_member;
 					}
 
 					KERBAL_CONSTEXPR14
 					const_rvalue_reference member() const && KERBAL_NOEXCEPT
 					{
-						return kerbal::compatibility::move(this->M_member);
+						return kerbal::compatibility::move(*this).M_member;
 					}
 
 #			endif
@@ -293,7 +293,7 @@ namespace kerbal
 													typename kerbal::utility::member_compress_helper<U, J>::rvalue_reference
 											>::value
 									)) :
-							super(kerbal::compatibility::move(src.member()))
+							super(kerbal::compatibility::move(src).member())
 					{
 					}
 
@@ -446,11 +446,11 @@ namespace kerbal
 						KERBAL_CONDITIONAL_NOEXCEPT(
 								noexcept(kerbal::operators::generic_assign(
 										kerbal::utility::declthis<member_compress_helper>()->member(),
-										kerbal::compatibility::move(arg.member())
+										kerbal::compatibility::move(arg).member()
 								))
 						)
 				{
-					kerbal::operators::generic_assign(this->member(), kerbal::compatibility::move(arg.member()));
+					kerbal::operators::generic_assign(this->member(), kerbal::compatibility::move(arg).member());
 					return *this;
 				}
 

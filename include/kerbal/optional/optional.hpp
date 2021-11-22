@@ -351,7 +351,7 @@ namespace kerbal
 						super()
 				{
 					if (src.has_value()) {
-						this->_K_storage.construct(src.ignored_get());
+						this->_K_storage.construct(kerbal::compatibility::move(src).ignored_get());
 						this->_K_has_value = true;
 					}
 				}
@@ -382,7 +382,7 @@ namespace kerbal
 						super()
 				{
 					if (src.has_value()) {
-						this->_K_storage.construct(src.ignored_get());
+						this->_K_storage.construct(kerbal::compatibility::move(src).ignored_get());
 						this->_K_has_value = true;
 					}
 				}
@@ -548,15 +548,15 @@ namespace kerbal
 				{
 					if (this->has_value()) {
 						if (src.has_value()) {
-							kerbal::operators::generic_assign(this->_K_storage.raw_value(), kerbal::compatibility::move(src.ignored_get()));
-							// this->_K_storage.raw_value() = kerbal::compatibility::move(src.ignored_get());
+							kerbal::operators::generic_assign(this->_K_storage.raw_value(), kerbal::compatibility::move(src).ignored_get());
+							// this->_K_storage.raw_value() = kerbal::compatibility::move(src).ignored_get();
 						} else {
 							this->_K_storage.destroy();
 							this->_K_has_value = false;
 						}
 					} else {
 						if (src.has_value()) {
-							this->_K_storage.construct(kerbal::compatibility::move(src.ignored_get()));
+							this->_K_storage.construct(kerbal::compatibility::move(src).ignored_get());
 							this->_K_has_value = true;
 						}
 					}
@@ -595,15 +595,15 @@ namespace kerbal
 				{
 					if (this->has_value()) {
 						if (src.has_value()) {
-							kerbal::operators::generic_assign(this->_K_storage.raw_value(), kerbal::compatibility::move(src.ignored_get()));
-							// this->_K_storage.raw_value() = kerbal::compatibility::move(src.ignored_get());
+							kerbal::operators::generic_assign(this->_K_storage.raw_value(), kerbal::compatibility::move(src).ignored_get());
+							// this->_K_storage.raw_value() = kerbal::compatibility::move(src).ignored_get();
 						} else {
 							this->_K_storage.destroy();
 							this->_K_has_value = false;
 						}
 					} else {
 						if (src.has_value()) {
-							this->_K_storage.construct(kerbal::compatibility::move(src.ignored_get()));
+							this->_K_storage.construct(kerbal::compatibility::move(src).ignored_get());
 							this->_K_has_value = true;
 						}
 					}
@@ -702,7 +702,7 @@ namespace kerbal
 					if (this->empty()) {
 						kerbal::optional::bad_optional_access::throw_this_exception();
 					}
-					return kerbal::compatibility::move(this->ignored_get());
+					return kerbal::compatibility::move(*this).ignored_get();
 				}
 
 				KERBAL_CONSTEXPR20
@@ -711,31 +711,31 @@ namespace kerbal
 					if (this->empty()) {
 						kerbal::optional::bad_optional_access::throw_this_exception();
 					}
-					return kerbal::compatibility::move(this->ignored_get());
+					return kerbal::compatibility::move(*this).ignored_get();
 				}
 
 				KERBAL_CONSTEXPR14
 				rvalue_reference ignored_get() && noexcept
 				{
-					return kerbal::compatibility::move(this->_K_storage.raw_value());
+					return kerbal::compatibility::move(*this)._K_storage.raw_value();
 				}
 
 				KERBAL_CONSTEXPR
 				const_rvalue_reference ignored_get() const && noexcept
 				{
-					return kerbal::compatibility::move(this->_K_storage.raw_value());
+					return kerbal::compatibility::move(*this)._K_storage.raw_value();
 				}
 
 				KERBAL_CONSTEXPR14
 				rvalue_reference operator*() && noexcept
 				{
-					return kerbal::compatibility::move(this->ignored_get());
+					return kerbal::compatibility::move(*this).ignored_get();
 				}
 
 				KERBAL_CONSTEXPR
 				const_rvalue_reference operator*() const && noexcept
 				{
-					return kerbal::compatibility::move(this->ignored_get());
+					return kerbal::compatibility::move(*this).ignored_get();
 				}
 
 #			endif
@@ -810,7 +810,7 @@ namespace kerbal
 				value_type value_or(U && default_value) &&
 				{
 					return this->has_value() ?
-						   kerbal::compatibility::move(this->ignored_get()) :
+						   kerbal::compatibility::move(*this).ignored_get() :
 						   static_cast<T>(kerbal::utility::forward<U>(default_value));
 				}
 

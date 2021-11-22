@@ -325,8 +325,8 @@ namespace kerbal
 				KERBAL_CONSTEXPR14
 				compressed_pair& operator=(kerbal::utility::compressed_pair<Tp2, Up2> && pair)
 				{
-					kerbal::operators::generic_assign(this->first(), kerbal::compatibility::move(pair.first()));
-					kerbal::operators::generic_assign(this->second(), kerbal::compatibility::move(pair.second()));
+					kerbal::operators::generic_assign(this->first(), kerbal::compatibility::move(pair).first());
+					kerbal::operators::generic_assign(this->second(), kerbal::compatibility::move(pair).second());
 					return *this;
 				}
 
