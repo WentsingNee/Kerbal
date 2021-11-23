@@ -9,16 +9,19 @@
  *   all rights reserved
  */
 
-#ifndef KERBAL_ALGORITHM_BINARY_TYPE_PREDICATE_HPP_
-#define KERBAL_ALGORITHM_BINARY_TYPE_PREDICATE_HPP_
+#ifndef KERBAL_ALGORITHM_BINARY_TYPE_PREDICATE_HPP
+#define KERBAL_ALGORITHM_BINARY_TYPE_PREDICATE_HPP
 
 #include <kerbal/compatibility/constexpr.hpp>
 #include <kerbal/compatibility/noexcept.hpp>
 
+
 namespace kerbal
 {
+
 	namespace algorithm
 	{
+
 		template <typename Tp, typename Up>
 		struct binary_type_equal_to
 		{
@@ -79,9 +82,8 @@ namespace kerbal
 				}
 		};
 
-	} /* namespace algorithm */
+	} // namespace algorithm
 
-} /* namespace kerbal */
+} // namespace kerbal
 
-
-#endif /* KERBAL_ALGORITHM_BINARY_TYPE_PREDICATE_HPP_ */
+#endif // KERBAL_ALGORITHM_BINARY_TYPE_PREDICATE_HPP

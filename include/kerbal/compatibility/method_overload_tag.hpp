@@ -1,12 +1,16 @@
-/*
- * method_overload_tag.hpp
- *
- *  Created on: 2019年5月11日
- *      Author: peter
+/**
+ * @file       method_overload_tag.hpp
+ * @brief
+ * @date       2019-5-11
+ * @author     Peter
+ * @copyright
+ *      Peter of [ThinkSpirit Laboratory](http://thinkspirit.org/)
+ *   of [Nanjing University of Information Science & Technology](http://www.nuist.edu.cn/)
+ *   all rights reserved
  */
 
-#ifndef INCLUDE_KERBAL_COMPATIBILITY_METHOD_OVERLOAD_TAG_HPP_
-#define INCLUDE_KERBAL_COMPATIBILITY_METHOD_OVERLOAD_TAG_HPP_
+#ifndef KERBAL_COMPATIBILITY_METHOD_OVERLOAD_TAG_HPP
+#define KERBAL_COMPATIBILITY_METHOD_OVERLOAD_TAG_HPP
 
 #ifndef KERBAL_REFERENCE_OVERLOAD_TAG
 #	if __cplusplus < 201103L
@@ -25,4 +29,4 @@
 #endif
 
 
-#endif /* INCLUDE_KERBAL_COMPATIBILITY_METHOD_OVERLOAD_TAG_HPP_ */
+#endif // KERBAL_COMPATIBILITY_METHOD_OVERLOAD_TAG_HPP

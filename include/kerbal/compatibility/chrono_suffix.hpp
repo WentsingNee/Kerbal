@@ -1,20 +1,27 @@
-/*
- * chrono_suffix.hpp
- *
- *  Created on: 2018年7月24日
- *      Author: peter
+/**
+ * @file       chrono_suffix.hpp
+ * @brief
+ * @date       2018-7-24
+ * @author     Peter
+ * @copyright
+ *      Peter of [ThinkSpirit Laboratory](http://thinkspirit.org/)
+ *   of [Nanjing University of Information Science & Technology](http://www.nuist.edu.cn/)
+ *   all rights reserved
  */
 
-#ifndef INCLUDE_KERBAL_COMPATIBILITY_CHRONO_SUFFIX_HPP_
-#define INCLUDE_KERBAL_COMPATIBILITY_CHRONO_SUFFIX_HPP_
+#ifndef KERBAL_COMPATIBILITY_CHRONO_SUFFIX_HPP
+#define KERBAL_COMPATIBILITY_CHRONO_SUFFIX_HPP
 
 #include <chrono>
 #include <type_traits>
 
+
 namespace kerbal
 {
+
 	namespace compatibility
 	{
+
 		namespace chrono_suffix
 		{
 
@@ -77,10 +84,11 @@ namespace kerbal
 			{
 				return std::chrono::nanoseconds { __nsecs };
 			}
-		}
-	}
-}
 
+		} // namespace chrono_suffix
 
+	} // namespace compatibility
 
-#endif /* INCLUDE_KERBAL_COMPATIBILITY_CHRONO_SUFFIX_HPP_ */
+} // namespace kerbal
+
+#endif // KERBAL_COMPATIBILITY_CHRONO_SUFFIX_HPP

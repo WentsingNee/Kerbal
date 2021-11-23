@@ -9,8 +9,8 @@
  *   all rights reserved
  */
 
-#ifndef KERBAL_RANDOM_ISTREAM_ENGINE_HPP_
-#define KERBAL_RANDOM_ISTREAM_ENGINE_HPP_
+#ifndef KERBAL_RANDOM_ISTREAM_ENGINE_HPP
+#define KERBAL_RANDOM_ISTREAM_ENGINE_HPP
 
 #include <kerbal/compatibility/constexpr.hpp>
 #include <kerbal/compatibility/noexcept.hpp>
@@ -18,6 +18,7 @@
 
 #include <istream>
 #include <limits>
+
 
 namespace kerbal
 {
@@ -84,4 +85,4 @@ namespace kerbal
 
 } // namespace kerbal
 
-#endif	/* KERBAL_RANDOM_ISTREAM_ENGINE_HPP_ */
+#endif // KERBAL_RANDOM_ISTREAM_ENGINE_HPP

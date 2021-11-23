@@ -1,20 +1,23 @@
 /**
  * @file       move.hpp
  * @brief      
- * @date       2019年6月2日
- * @author     peter
+ * @date       2019-6-2
+ * @author     Peter
  * @copyright
- *      peter of [ThinkSpirit Laboratory](http://thinkspirit.org/)
+ *      Peter of [ThinkSpirit Laboratory](http://thinkspirit.org/)
  *   of [Nanjing University of Information Science & Technology](http://www.nuist.edu.cn/)
  *   all rights reserved
  */
-#ifndef INCLUDE_KERBAL_COMPATIBILITY_MOVE_HPP_
-#define INCLUDE_KERBAL_COMPATIBILITY_MOVE_HPP_
+
+#ifndef KERBAL_COMPATIBILITY_MOVE_HPP
+#define KERBAL_COMPATIBILITY_MOVE_HPP
 
 #include <kerbal/type_traits/reference_deduction.hpp>
 
+
 namespace kerbal
 {
+
 	namespace compatibility
 	{
 
@@ -49,7 +52,8 @@ namespace kerbal
 
 #	endif
 
-	}
-}
+	} // namespace compatibility
 
-#endif /* INCLUDE_KERBAL_COMPATIBILITY_MOVE_HPP_ */
+} // namespace kerbal
+
+#endif // KERBAL_COMPATIBILITY_MOVE_HPP

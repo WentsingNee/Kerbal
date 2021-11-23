@@ -9,8 +9,8 @@
  *   all rights reserved
  */
 
-#ifndef KERBAL_ALGORITHM_DYNAMIC_PROGRAMMING_HPP_
-#define KERBAL_ALGORITHM_DYNAMIC_PROGRAMMING_HPP_
+#ifndef KERBAL_ALGORITHM_DYNAMIC_PROGRAMMING_HPP
+#define KERBAL_ALGORITHM_DYNAMIC_PROGRAMMING_HPP
 
 #include <kerbal/algorithm/binary_search.hpp>
 #include <kerbal/algorithm/binary_type_predicate.hpp>
@@ -23,6 +23,7 @@
 #include <cstddef>
 #include <functional>
 #include <vector>
+
 
 namespace kerbal
 {
@@ -249,8 +250,8 @@ namespace kerbal
 					kerbal::algorithm::binary_type_equal_to<value_type1, value_type2>());
 		}
 
-	} /* namespace algorithm */
+	} // namespace algorithm
 
-} /* namespace kerbal */
+} // namespace kerbal
 
-#endif /* KERBAL_ALGORITHM_DYNAMIC_PROGRAMMING_HPP_ */
+#endif // KERBAL_ALGORITHM_DYNAMIC_PROGRAMMING_HPP

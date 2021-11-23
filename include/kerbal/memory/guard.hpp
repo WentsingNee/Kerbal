@@ -2,15 +2,15 @@
  * @file       guard.hpp
  * @brief      
  * @date       2019-7-26
- * @author     peter
+ * @author     Peter
  * @copyright
- *      peter of [ThinkSpirit Laboratory](http://thinkspirit.org/)
+ *      Peter of [ThinkSpirit Laboratory](http://thinkspirit.org/)
  *   of [Nanjing University of Information Science & Technology](http://www.nuist.edu.cn/)
  *   all rights reserved
  */
 
-#ifndef KERBAL_MEMORY_GUARD_HPP_
-#define KERBAL_MEMORY_GUARD_HPP_
+#ifndef KERBAL_MEMORY_GUARD_HPP
+#define KERBAL_MEMORY_GUARD_HPP
 
 #include <kerbal/compatibility/noexcept.hpp>
 #include <kerbal/memory/default_delete.hpp>
@@ -23,10 +23,13 @@
 # include <kerbal/compatibility/move.hpp>
 #endif
 
+
 namespace kerbal
 {
+
 	namespace memory
 	{
+
 		template <typename Tp, typename Deleter = kerbal::memory::default_delete<Tp> >
 		class guard: kerbal::utility::noncopyable
 		{
@@ -137,4 +140,4 @@ namespace kerbal
 
 } // namespace kerbal
 
-#endif /* KERBAL_MEMORY_GUARD_HPP_ */
+#endif // KERBAL_MEMORY_GUARD_HPP

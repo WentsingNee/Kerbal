@@ -2,15 +2,15 @@
  * @file       default_delete.hpp
  * @brief      
  * @date       2019-7-26
- * @author     peter
+ * @author     Peter
  * @copyright
- *      peter of [ThinkSpirit Laboratory](http://thinkspirit.org/)
+ *      Peter of [ThinkSpirit Laboratory](http://thinkspirit.org/)
  *   of [Nanjing University of Information Science & Technology](http://www.nuist.edu.cn/)
  *   all rights reserved
  */
 
-#ifndef KERBAL_MEMORY_DEFALUT_DELETE_HPP_
-#define KERBAL_MEMORY_DEFALUT_DELETE_HPP_
+#ifndef KERBAL_MEMORY_DEFAULT_DELETE_HPP
+#define KERBAL_MEMORY_DEFAULT_DELETE_HPP
 
 #include <kerbal/compatibility/constexpr.hpp>
 #include <kerbal/compatibility/noexcept.hpp>
@@ -20,8 +20,10 @@
 # include <type_traits>
 #endif
 
+
 namespace kerbal
 {
+
 	namespace memory
 	{
 		template <typename Tp>
@@ -81,4 +83,4 @@ namespace kerbal
 
 } // namespace kerbal
 
-#endif /* KERBAL_MEMORY_DEFALUT_DELETER_HPP_ */
+#endif // KERBAL_MEMORY_DEFAULT_DELETE_HPP

@@ -9,14 +9,16 @@
  *   all rights reserved
  */
 
-#ifndef KERBAL_RANDOM_BERNOULLI_DISTRIBUTIONE_HPP_
-#define KERBAL_RANDOM_BERNOULLI_DISTRIBUTIONE_HPP_
+#ifndef KERBAL_RANDOM_BERNOULLI_DISTRIBUTIONE_HPP
+#define KERBAL_RANDOM_BERNOULLI_DISTRIBUTIONE_HPP
 
 #include <kerbal/compatibility/constexpr.hpp>
 #include <kerbal/compatibility/noexcept.hpp>
 
+
 namespace kerbal
 {
+
 	namespace random
 	{
 
@@ -58,4 +60,4 @@ namespace kerbal
 
 } // namespace kerbal
 
-#endif	/* KERBAL_RANDOM_BERNOULLI_DISTRIBUTIONE_HPP_ */
+#endif // KERBAL_RANDOM_BERNOULLI_DISTRIBUTIONE_HPP

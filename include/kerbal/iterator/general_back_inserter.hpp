@@ -9,13 +9,14 @@
  *   all rights reserved
  */
 
-#ifndef KERBAL_ITERATOR_GENERAL_BACK_INSERTER_HPP_
-#define KERBAL_ITERATOR_GENERAL_BACK_INSERTER_HPP_
+#ifndef KERBAL_ITERATOR_GENERAL_BACK_INSERTER_HPP
+#define KERBAL_ITERATOR_GENERAL_BACK_INSERTER_HPP
 
 #include <kerbal/compatibility/constexpr.hpp>
 
 #include <cstddef>
 #include <iterator>
+
 
 namespace kerbal
 {
@@ -54,4 +55,4 @@ namespace kerbal
 
 } // namespace kerbal
 
-#endif /* KERBAL_ITERATOR_GENERAL_BACK_INSERTER_HPP_ */
+#endif // KERBAL_ITERATOR_GENERAL_BACK_INSERTER_HPP

@@ -9,8 +9,8 @@
  *   all rights reserved
  */
 
-#ifndef KERBAL_RANDOM_EXPONENTIAL_DISTRIBUTION_HPP_
-#define KERBAL_RANDOM_EXPONENTIAL_DISTRIBUTION_HPP_
+#ifndef KERBAL_RANDOM_EXPONENTIAL_DISTRIBUTION_HPP
+#define KERBAL_RANDOM_EXPONENTIAL_DISTRIBUTION_HPP
 
 #include <kerbal/compatibility/constexpr.hpp>
 #include <kerbal/compatibility/noexcept.hpp>
@@ -19,8 +19,10 @@
 #include <cmath>
 #include <limits>
 
+
 namespace kerbal
 {
+
 	namespace random
 	{
 
@@ -63,4 +65,4 @@ namespace kerbal
 
 } // namespace kerbal
 
-#endif	/* KERBAL_RANDOM_EXPONENTIAL_DISTRIBUTION_HPP_ */
+#endif // KERBAL_RANDOM_EXPONENTIAL_DISTRIBUTION_HPP
