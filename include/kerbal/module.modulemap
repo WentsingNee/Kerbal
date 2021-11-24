@@ -1,0 +1,70 @@
+
+module kerbal {
+	module algorithm {
+		umbrella "algorithm"
+		export *
+	}
+	module bitset {
+		umbrella "bitset"
+		export *
+	}
+	module compatibility {
+		umbrella "compatibility"
+		export *
+	}
+	module container {
+		umbrella "container"
+		export *
+		exclude header "container/priority_queue.hpp"
+	}
+	module function {
+		umbrella "function"
+		export *
+	}
+	module hash {
+		umbrella "hash"
+		export *
+	}
+	module iterator {
+		umbrella "iterator"
+		export *
+	}
+	module memory {
+		umbrella "memory"
+		export *
+	}
+	module numeric {
+		umbrella "numeric"
+		export *
+		exclude header "numeric/bit/bitarray.hpp"
+	}
+	module operators {
+		umbrella "operators"
+		export *
+	}
+	module optional {
+		umbrella "optional"
+		export *
+		exclude header "optional/optional_reference.hpp"
+	}
+	module random {
+		umbrella "random"
+		export *
+		exclude header "random/tiny_mt_engine.hpp"
+	}
+	module test {
+		umbrella "test"
+		export *
+		exclude header "test/impl/test_case.impl.hpp"
+	}
+	module type_traits {
+		umbrella "type_traits"
+		export *
+		exclude header "type_traits/type_traits.hpp"
+	}
+	module utility {
+		umbrella "utility"
+		export *
+	}
+	export *
+}
