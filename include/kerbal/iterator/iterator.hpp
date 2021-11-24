@@ -18,6 +18,8 @@
 #include <kerbal/iterator/iterator_traits.hpp>
 #include <kerbal/type_traits/sign_deduction.hpp>
 
+#include <iterator>
+
 
 namespace kerbal
 {
