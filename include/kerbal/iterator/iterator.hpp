@@ -19,6 +19,8 @@
 #include <kerbal/type_traits/integral_constant.hpp>
 #include <kerbal/type_traits/sign_deduction.hpp>
 
+#include <iterator>
+
 
 namespace kerbal
 {
