@@ -920,6 +920,138 @@ namespace kerbal
 		};
 
 
+		template <typename T>
+		class optional<T&>
+		{
+			public:
+				typedef T				value_type;
+				typedef T&				reference;
+				typedef T*				pointer;
+
+			protected:
+				pointer _K_ptr;
+
+			public:
+
+				KERBAL_CONSTEXPR
+				optional() KERBAL_NOEXCEPT :
+						_K_ptr(NULL)
+				{
+				}
+
+				KERBAL_CONSTEXPR
+				optional(const kerbal::optional::nullopt_t &) KERBAL_NOEXCEPT :
+						_K_ptr(NULL)
+				{
+				}
+
+				KERBAL_CONSTEXPR
+				optional(reference val) KERBAL_NOEXCEPT :
+						_K_ptr(&val)
+				{
+				}
+
+
+			//===================
+			// observer
+
+				KERBAL_CONSTEXPR
+				bool has_value() const KERBAL_NOEXCEPT
+				{
+					return this->_K_ptr != NULL;
+				}
+
+				KERBAL_CONSTEXPR
+				bool empty() const KERBAL_NOEXCEPT
+				{
+					return this->_K_ptr == NULL;
+				}
+
+				KERBAL_CONSTEXPR
+				operator bool() const KERBAL_NOEXCEPT
+				{
+					return this->has_value();
+				}
+
+				KERBAL_CONSTEXPR20
+				reference value() const
+				{
+					if (this->empty()) {
+						bad_optional_access::throw_this_exception();
+					}
+					return this->ignored_get();
+				}
+
+				KERBAL_CONSTEXPR14
+				reference ignored_get() const KERBAL_NOEXCEPT
+				{
+					return *this->_K_ptr;
+				}
+
+				KERBAL_CONSTEXPR14
+				reference operator*() const KERBAL_NOEXCEPT
+				{
+					return this->ignored_get();
+				}
+
+
+				KERBAL_CONSTEXPR20
+				pointer get_pointer() const
+				{
+					if (this->empty()) {
+						kerbal::optional::bad_optional_access::throw_this_exception();
+					}
+					return this->ignored_get_pointer();
+				}
+
+				KERBAL_CONSTEXPR14
+				pointer ignored_get_pointer() const KERBAL_NOEXCEPT
+				{
+					return this->_K_ptr;
+				}
+
+				KERBAL_CONSTEXPR14
+				pointer operator->() const KERBAL_NOEXCEPT
+				{
+					return this->ignored_get_pointer();
+				}
+
+				KERBAL_CONSTEXPR14
+				reference value_or(reference ano) const KERBAL_NOEXCEPT
+				{
+					if (this->empty()) {
+						return ano;
+					}
+					return this->ignored_get();
+				}
+
+
+			//===================
+			// modifier
+
+				KERBAL_CONSTEXPR14
+				optional& emplace(reference val) KERBAL_NOEXCEPT
+				{
+					this->_K_ptr = &val;
+					return *this;
+				}
+
+				KERBAL_CONSTEXPR14
+				void reset() KERBAL_NOEXCEPT
+				{
+					this->_K_ptr = NULL;
+				}
+
+				KERBAL_CONSTEXPR14
+				void swap(optional & with) KERBAL_NOEXCEPT
+				{
+					kerbal::algorithm::swap(this->_K_ptr, with._K_ptr);
+				}
+
+		};
+
+
+
 #	if __cplusplus >= 201103L
 
 		template <typename T>
