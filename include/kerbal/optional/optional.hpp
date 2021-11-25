@@ -963,26 +963,39 @@ namespace kerbal
 
 #	else
 
+		template <typename T>
+		kerbal::optional::optional<T> make_optional()
+		{
+			return kerbal::optional::optional<T>(kerbal::utility::in_place_t());
+		}
+
+		template <typename T, typename Arg0>
+		typename kerbal::type_traits::enable_if<
+				!kerbal::type_traits::is_same<T, Arg0>::value,
+				kerbal::optional::optional<T>
+		>::type
+		make_optional(const Arg0 & arg0)
+		{
+			return kerbal::optional::optional<T>(kerbal::utility::in_place_t(), arg0);
+		}
+
 #	define EMPTY
 #	define REMAINF(exp) exp
-#	define LEFT_JOIN_COMMA(exp) , exp
 #	define TARGS_DECL(i) KERBAL_MACRO_CONCAT(typename Arg, i)
 #	define ARGS_DECL(i) KERBAL_MACRO_CONCAT(const Arg, i) & KERBAL_MACRO_CONCAT(arg, i)
 #	define ARGS_USE(i) KERBAL_MACRO_CONCAT(arg, i)
 #	define FBODY(i) \
-		template <typename T KERBAL_OPT_PPEXPAND_WITH_COMMA_N(LEFT_JOIN_COMMA, EMPTY, TARGS_DECL, i)> \
+		template <typename T, typename Arg0, KERBAL_OPT_PPEXPAND_WITH_COMMA_N(REMAINF, EMPTY, TARGS_DECL, i)> \
 		kerbal::optional::optional<T> \
-		make_optional(KERBAL_OPT_PPEXPAND_WITH_COMMA_N(REMAINF, EMPTY, ARGS_DECL, i)) \
+		make_optional(const Arg0 & arg0, KERBAL_OPT_PPEXPAND_WITH_COMMA_N(REMAINF, EMPTY, ARGS_DECL, i)) \
 		{ \
-			return kerbal::optional::optional<T>(kerbal::utility::in_place_t() KERBAL_OPT_PPEXPAND_WITH_COMMA_N(LEFT_JOIN_COMMA, EMPTY, ARGS_USE, i)); \
+			return kerbal::optional::optional<T>(kerbal::utility::in_place_t(), arg0, KERBAL_OPT_PPEXPAND_WITH_COMMA_N(REMAINF, EMPTY, ARGS_USE, i)); \
 		}
 
-		KERBAL_PPEXPAND_N(FBODY, KERBAL_PPEXPAND_EMPTY_SEPARATOR, 0)
-		KERBAL_PPEXPAND_N(FBODY, KERBAL_PPEXPAND_EMPTY_SEPARATOR, 20)
+		KERBAL_PPEXPAND_N(FBODY, KERBAL_PPEXPAND_EMPTY_SEPARATOR, 19)
 
 #	undef EMPTY
 #	undef REMAINF
-#	undef LEFT_JOIN_COMMA
 #	undef TARGS_DECL
 #	undef ARGS_DECL
 #	undef ARGS_USE
