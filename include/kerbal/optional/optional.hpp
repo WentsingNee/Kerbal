@@ -250,6 +250,17 @@ namespace kerbal
 				{
 				}
 
+#		if __cplusplus >= 201103L
+
+				KERBAL_CONSTEXPR
+				explicit optional(kerbal::optional::nullopt_t &&) KERBAL_NOEXCEPT :
+						super()
+				{
+				}
+
+#		endif
+
+
 				/**
 				 * @~English
 				 * @brief Copy from an instance of current type.
@@ -264,6 +275,19 @@ namespace kerbal
 						super(kerbal::utility::in_place_t(), src)
 				{
 				}
+
+#		if __cplusplus >= 201103L
+
+				KERBAL_CONSTEXPR
+				explicit optional(rvalue_reference src) :
+						super(kerbal::utility::in_place_t(), kerbal::compatibility::move(src))
+				{
+				}
+
+#		endif
+
+
+#		if __cplusplus < 201103L
 
 				/**
 				 * @~English
@@ -282,6 +306,24 @@ namespace kerbal
 						super(kerbal::utility::in_place_t(), src)
 				{
 				}
+
+#		else
+
+				template <typename U, typename = typename kerbal::type_traits::enable_if<
+						(
+								!kerbal::optional::is_optional<typename kerbal::type_traits::remove_reference<U>::type>::value &&
+								!kerbal::type_traits::is_same<typename kerbal::type_traits::remove_reference<U>::type, kerbal::optional::nullopt_t>::value
+						),
+						int
+				>::type>
+				KERBAL_CONSTEXPR
+				explicit optional(U && src) :
+						super(kerbal::utility::in_place_t(), kerbal::utility::forward<U>(src))
+				{
+				}
+
+#		endif
+
 
 				/**
 				 * @~English
@@ -302,6 +344,21 @@ namespace kerbal
 					}
 				}
 
+#		if __cplusplus >= 201103L
+
+				KERBAL_CONSTEXPR14
+				optional(optional && src) :
+						super()
+				{
+					if (src.has_value()) {
+						this->_K_storage.construct(src.ignored_get());
+						this->_K_has_value = true;
+					}
+				}
+
+#		endif
+
+
 				/**
 				 * @brief Copy from an instance of optional which contains another type.
 				 * @param src value from
@@ -318,43 +375,6 @@ namespace kerbal
 				}
 
 #		if __cplusplus >= 201103L
-
-				KERBAL_CONSTEXPR
-				explicit optional(kerbal::optional::nullopt_t &&) KERBAL_NOEXCEPT :
-						super()
-				{
-				}
-
-				KERBAL_CONSTEXPR
-				explicit optional(rvalue_reference src) :
-						super(kerbal::utility::in_place_t(), kerbal::compatibility::move(src))
-				{
-				}
-
-				template <typename U>
-				KERBAL_CONSTEXPR
-				explicit optional(U && src,
-							typename kerbal::type_traits::enable_if<
-								(
-									!kerbal::optional::is_optional<typename kerbal::type_traits::remove_reference<U>::type>::value &&
-									!kerbal::type_traits::is_same<typename kerbal::type_traits::remove_reference<U>::type, kerbal::optional::nullopt_t>::value
-								),
-								int
-							>::type = 0
-						) :
-						super(kerbal::utility::in_place_t(), kerbal::utility::forward<U>(src))
-				{
-				}
-
-				KERBAL_CONSTEXPR14
-				optional(optional && src) :
-						super()
-				{
-					if (src.has_value()) {
-						this->_K_storage.construct(src.ignored_get());
-						this->_K_has_value = true;
-					}
-				}
 
 				template <typename U>
 				KERBAL_CONSTEXPR14
@@ -417,6 +437,18 @@ namespace kerbal
 					return *this;
 				}
 
+#	if __cplusplus >= 201103L
+
+				KERBAL_CONSTEXPR14
+				optional& operator=(kerbal::optional::nullopt_t &&)
+				{
+					this->reset();
+					return *this;
+				}
+
+#		endif
+
+
 				KERBAL_CONSTEXPR14
 				optional& operator=(const_reference src)
 				{
@@ -429,6 +461,26 @@ namespace kerbal
 					}
 					return *this;
 				}
+
+#	if __cplusplus >= 201103L
+
+				KERBAL_CONSTEXPR14
+				optional& operator=(rvalue_reference src)
+				{
+					if (this->has_value()) {
+						kerbal::operators::generic_assign(this->_K_storage.raw_value(), kerbal::compatibility::move(src));
+						// this->_K_storage.raw_value() = kerbal::compatibility::move(src);
+					} else {
+						this->_K_storage.construct(kerbal::compatibility::move(src));
+						this->_K_has_value = true;
+					}
+					return *this;
+				}
+
+#		endif
+
+
+#	if __cplusplus < 201103L
 
 				template <typename U>
 				KERBAL_CONSTEXPR14
@@ -443,6 +495,31 @@ namespace kerbal
 					}
 					return *this;
 				}
+
+#	else
+
+				template <typename U>
+				KERBAL_CONSTEXPR14
+				typename kerbal::type_traits::enable_if<
+					(
+						!kerbal::optional::is_optional<typename kerbal::type_traits::remove_reference<U>::type>::value &&
+						!kerbal::type_traits::is_same<typename kerbal::type_traits::remove_reference<U>::type, kerbal::optional::nullopt_t>::value
+					),
+				optional&>::type
+				operator=(U && src)
+				{
+					if (this->has_value()) {
+						kerbal::operators::generic_assign(this->_K_storage.raw_value(), kerbal::utility::forward<U>(src));
+						// this->_K_storage.raw_value() = kerbal::utility::forward<U>(src);
+					} else {
+						this->_K_storage.construct(kerbal::utility::forward<U>(src));
+						this->_K_has_value = true;
+					}
+					return *this;
+				}
+
+#		endif
+
 
 				KERBAL_CONSTEXPR14
 				optional& operator=(const optional & src)
@@ -463,6 +540,31 @@ namespace kerbal
 					}
 					return *this;
 				}
+
+#	if __cplusplus >= 201103L
+
+				KERBAL_CONSTEXPR14
+				optional& operator=(optional && src)
+				{
+					if (this->has_value()) {
+						if (src.has_value()) {
+							kerbal::operators::generic_assign(this->_K_storage.raw_value(), kerbal::compatibility::move(src.ignored_get()));
+							// this->_K_storage.raw_value() = kerbal::compatibility::move(src.ignored_get());
+						} else {
+							this->_K_storage.destroy();
+							this->_K_has_value = false;
+						}
+					} else {
+						if (src.has_value()) {
+							this->_K_storage.construct(kerbal::compatibility::move(src.ignored_get()));
+							this->_K_has_value = true;
+						}
+					}
+					return *this;
+				}
+
+#		endif
+
 
 				template <typename U>
 				KERBAL_CONSTEXPR14
@@ -486,66 +588,6 @@ namespace kerbal
 				}
 
 #	if __cplusplus >= 201103L
-
-				KERBAL_CONSTEXPR14
-				optional& operator=(kerbal::optional::nullopt_t &&)
-				{
-					this->reset();
-					return *this;
-				}
-
-				KERBAL_CONSTEXPR14
-				optional& operator=(rvalue_reference src)
-				{
-					if (this->has_value()) {
-						kerbal::operators::generic_assign(this->_K_storage.raw_value(), kerbal::compatibility::move(src));
-						// this->_K_storage.raw_value() = kerbal::compatibility::move(src);
-					} else {
-						this->_K_storage.construct(kerbal::compatibility::move(src));
-						this->_K_has_value = true;
-					}
-					return *this;
-				}
-
-				template <typename U>
-				KERBAL_CONSTEXPR14
-				typename kerbal::type_traits::enable_if<
-					(
-						!kerbal::optional::is_optional<typename kerbal::type_traits::remove_reference<U>::type>::value &&
-						!kerbal::type_traits::is_same<typename kerbal::type_traits::remove_reference<U>::type, kerbal::optional::nullopt_t>::value
-					),
-				optional&>::type
-				operator=(U && src)
-				{
-					if (this->has_value()) {
-						kerbal::operators::generic_assign(this->_K_storage.raw_value(), kerbal::utility::forward<U>(src));
-						// this->_K_storage.raw_value() = kerbal::utility::forward<U>(src);
-					} else {
-						this->_K_storage.construct(kerbal::utility::forward<U>(src));
-						this->_K_has_value = true;
-					}
-					return *this;
-				}
-
-				KERBAL_CONSTEXPR14
-				optional& operator=(optional && src)
-				{
-					if (this->has_value()) {
-						if (src.has_value()) {
-							kerbal::operators::generic_assign(this->_K_storage.raw_value(), kerbal::compatibility::move(src.ignored_get()));
-							// this->_K_storage.raw_value() = kerbal::compatibility::move(src.ignored_get());
-						} else {
-							this->_K_storage.destroy();
-							this->_K_has_value = false;
-						}
-					} else {
-						if (src.has_value()) {
-							this->_K_storage.construct(kerbal::compatibility::move(src.ignored_get()));
-							this->_K_has_value = true;
-						}
-					}
-					return *this;
-				}
 
 				template <typename U>
 				KERBAL_CONSTEXPR14
