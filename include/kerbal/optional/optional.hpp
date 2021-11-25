@@ -886,10 +886,14 @@ namespace kerbal
 
 		template <typename T>
 		KERBAL_CONSTEXPR
-		kerbal::optional::optional<T>
+		kerbal::optional::optional<
+			typename kerbal::type_traits::remove_reference<T>::type
+		>
 		make_optional(T && value)
 		{
-			return kerbal::optional::optional<T>(kerbal::utility::forward<T>(value));
+			return kerbal::optional::optional<
+						typename kerbal::type_traits::remove_reference<T>::type
+					>(kerbal::utility::forward<T>(value));
 		}
 
 #	else
