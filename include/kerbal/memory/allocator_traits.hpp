@@ -624,8 +624,8 @@ namespace kerbal
 
 #	if __cplusplus >= 201703L
 
-		template <typename T>
-		struct allocator_could_use_destroy<std::allocator<T>, T>: kerbal::type_traits::false_type
+		template <typename T, typename U>
+		struct allocator_could_use_destroy<std::allocator<T>, U>: kerbal::type_traits::false_type
 		{
 		};
 
@@ -633,8 +633,8 @@ namespace kerbal
 
 #	if __cplusplus > 201703L
 
-		template <typename T>
-		struct allocator_could_use_destroy<std::pmr::polymorphic_allocator<T>, T>: kerbal::type_traits::false_type
+		template <typename T, typename U>
+		struct allocator_could_use_destroy<std::pmr::polymorphic_allocator<T>, U>: kerbal::type_traits::false_type
 		{
 		};
 
