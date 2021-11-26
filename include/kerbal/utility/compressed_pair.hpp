@@ -56,8 +56,8 @@ namespace kerbal
 
 		template <typename Tp, typename Up>
 		class compressed_pair:
-				private kerbal::utility::member_compress_helper<Tp, 0>,
-				private kerbal::utility::member_compress_helper<Up, kerbal::type_traits::is_same<Tp, Up>::value ? 1 : 0>
+				public kerbal::utility::member_compress_helper<Tp, 0>,
+				public kerbal::utility::member_compress_helper<Up, kerbal::type_traits::is_same<Tp, Up>::value ? 1 : 0>
 		{
 			private:
 				typedef kerbal::utility::member_compress_helper<Tp, 0> super0;
