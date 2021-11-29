@@ -157,10 +157,10 @@ namespace kerbal
 
 				KERBAL_CONSTEXPR
 				compressed_pair()
-								KERBAL_CONDITIONAL_NOEXCEPT(
-										std::is_nothrow_default_constructible<super0>::value &&
-										std::is_nothrow_default_constructible<super1>::value
-								) :
+						KERBAL_CONDITIONAL_NOEXCEPT((
+							std::is_nothrow_constructible<super0, kerbal::utility::in_place_t>::value &&
+							std::is_nothrow_constructible<super1, kerbal::utility::in_place_t>::value
+						)) :
 						super0(kerbal::utility::in_place_t()),
 						super1(kerbal::utility::in_place_t())
 				{
@@ -218,10 +218,10 @@ namespace kerbal
 				template <typename Tp2, typename Up2>
 				KERBAL_CONSTEXPR
 				compressed_pair(Tp2&& first, Up2&& second)
-								KERBAL_CONDITIONAL_NOEXCEPT(
-										(std::is_nothrow_constructible<super0, Tp2>::value) &&
-										(std::is_nothrow_constructible<super1, Up2>::value)
-								) :
+						KERBAL_CONDITIONAL_NOEXCEPT((
+							std::is_nothrow_constructible<super0, kerbal::utility::in_place_t, Tp2&&>::value &&
+							std::is_nothrow_constructible<super1, kerbal::utility::in_place_t, Up2&&>::value
+						)) :
 						super0(kerbal::utility::in_place_t(), kerbal::utility::forward<Tp2>(first)),
 						super1(kerbal::utility::in_place_t(), kerbal::utility::forward<Up2>(second))
 				{
@@ -230,10 +230,10 @@ namespace kerbal
 				template <typename Up2>
 				KERBAL_CONSTEXPR
 				compressed_pair(compressed_pair_default_construct_tag, Up2&& second)
-								KERBAL_CONDITIONAL_NOEXCEPT(
-										std::is_nothrow_default_constructible<super0>::value &&
-										(std::is_nothrow_constructible<super1, Up2>::value)
-								) :
+						KERBAL_CONDITIONAL_NOEXCEPT((
+							std::is_nothrow_constructible<super0, kerbal::utility::in_place_t>::value &&
+							std::is_nothrow_constructible<super1, kerbal::utility::in_place_t, Up2&&>::value
+						)) :
 						super0(kerbal::utility::in_place_t()),
 						super1(kerbal::utility::in_place_t(), kerbal::utility::forward<Up2>(second))
 				{
@@ -242,10 +242,10 @@ namespace kerbal
 				template <typename Tp2>
 				KERBAL_CONSTEXPR
 				compressed_pair(Tp2&& first, compressed_pair_default_construct_tag)
-								KERBAL_CONDITIONAL_NOEXCEPT(
-										(std::is_nothrow_constructible<super0, Tp2>::value) &&
-										std::is_nothrow_default_constructible<super1>::value
-								) :
+						KERBAL_CONDITIONAL_NOEXCEPT((
+							std::is_nothrow_constructible<super0, kerbal::utility::in_place_t, Tp2&&>::value &&
+							std::is_nothrow_constructible<super1, kerbal::utility::in_place_t>::value
+						)) :
 						super0(kerbal::utility::in_place_t(), kerbal::utility::forward<Tp2>(first)),
 						super1(kerbal::utility::in_place_t())
 				{
@@ -257,10 +257,18 @@ namespace kerbal
 				KERBAL_CONSTEXPR14
 				explicit
 				compressed_pair(const kerbal::utility::compressed_pair<Tp2, Up2> & pair)
-								KERBAL_CONDITIONAL_NOEXCEPT(
-										(std::is_nothrow_constructible<super0, const Tp2 &>::value) &&
-										(std::is_nothrow_constructible<super1, const Up2 &>::value)
-								) :
+						KERBAL_CONDITIONAL_NOEXCEPT((
+							std::is_nothrow_constructible<
+								super0,
+								kerbal::utility::in_place_t,
+								decltype(kerbal::utility::declval<const kerbal::utility::compressed_pair<Tp2, Up2> &>().first())
+							>::value &&
+							std::is_nothrow_constructible<
+								super1,
+								kerbal::utility::in_place_t,
+								decltype(kerbal::utility::declval<const kerbal::utility::compressed_pair<Tp2, Up2> &>().second())
+							>::value
+						)) :
 						super0(kerbal::utility::in_place_t(), pair.first()),
 						super1(kerbal::utility::in_place_t(), pair.second())
 				{
@@ -270,10 +278,18 @@ namespace kerbal
 				KERBAL_CONSTEXPR14
 				explicit
 				compressed_pair(const std::pair<Tp2, Up2> & pair)
-								KERBAL_CONDITIONAL_NOEXCEPT(
-										(std::is_nothrow_constructible<super0, const Tp2 &>::value) &&
-										(std::is_nothrow_constructible<super1, const Up2 &>::value)
-								) :
+						KERBAL_CONDITIONAL_NOEXCEPT((
+							std::is_nothrow_constructible<
+								super0,
+								kerbal::utility::in_place_t,
+								decltype(kerbal::utility::declval<const std::pair<Tp2, Up2> &>().first)
+							>::value &&
+							std::is_nothrow_constructible<
+								super1,
+								kerbal::utility::in_place_t,
+								decltype(kerbal::utility::declval<const std::pair<Tp2, Up2> &>().second)
+							>::value
+						)) :
 						super0(kerbal::utility::in_place_t(), pair.first),
 						super1(kerbal::utility::in_place_t(), pair.second)
 				{
@@ -286,12 +302,20 @@ namespace kerbal
 				KERBAL_CONSTEXPR14
 				explicit
 				compressed_pair(kerbal::utility::compressed_pair<Tp2, Up2> && pair)
-								KERBAL_CONDITIONAL_NOEXCEPT(
-										(std::is_nothrow_constructible<super0, Tp2 &&>::value) &&
-										(std::is_nothrow_constructible<super1, Up2 &&>::value)
-								) :
-						super0(kerbal::utility::in_place_t(), kerbal::utility::forward<Tp2>(pair.first())),
-						super1(kerbal::utility::in_place_t(), kerbal::utility::forward<Up2>(pair.second()))
+						KERBAL_CONDITIONAL_NOEXCEPT((
+							std::is_nothrow_constructible<
+								super0,
+								kerbal::utility::in_place_t,
+								decltype(kerbal::compatibility::move(pair).first())
+							>::value &&
+							std::is_nothrow_constructible<
+								super1,
+								kerbal::utility::in_place_t,
+								decltype(kerbal::compatibility::move(pair).second())
+							>::value
+						)) :
+						super0(kerbal::utility::in_place_t(), kerbal::compatibility::move(pair).first()),
+						super1(kerbal::utility::in_place_t(), kerbal::compatibility::move(pair).second())
 				{
 				}
 
@@ -299,12 +323,20 @@ namespace kerbal
 				KERBAL_CONSTEXPR14
 				explicit
 				compressed_pair(std::pair<Tp2, Up2> && pair)
-								KERBAL_CONDITIONAL_NOEXCEPT(
-										(std::is_nothrow_constructible<super0, Tp2 &&>::value) &&
-										(std::is_nothrow_constructible<super1, Up2 &&>::value)
-								) :
-						super0(kerbal::utility::in_place_t(), kerbal::utility::forward<Tp2>(pair.first)),
-						super1(kerbal::utility::in_place_t(), kerbal::utility::forward<Up2>(pair.second))
+						KERBAL_CONDITIONAL_NOEXCEPT((
+							std::is_nothrow_constructible<
+								super0,
+								kerbal::utility::in_place_t,
+								decltype(kerbal::compatibility::move(pair).first)
+							>::value &&
+							std::is_nothrow_constructible<
+								super1,
+								kerbal::utility::in_place_t,
+								decltype(kerbal::compatibility::move(pair).second)
+							>::value
+						)) :
+						super0(kerbal::utility::in_place_t(), kerbal::compatibility::move(pair).first),
+						super1(kerbal::utility::in_place_t(), kerbal::compatibility::move(pair).second)
 				{
 				}
 
