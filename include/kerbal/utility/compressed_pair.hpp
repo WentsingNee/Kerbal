@@ -252,7 +252,7 @@ namespace kerbal
 				template <typename Tp2, typename Up2>
 				KERBAL_CONSTEXPR
 				explicit
-				compressed_pair(const kerbal::utility::compressed_pair<Tp2, Up2> & pair)
+				compressed_pair(const kerbal::utility::compressed_pair<Tp2, Up2> & p)
 						KERBAL_CONDITIONAL_NOEXCEPT((
 							std::is_nothrow_constructible<
 								super0,
@@ -265,15 +265,15 @@ namespace kerbal
 								decltype(kerbal::utility::declval<const kerbal::utility::compressed_pair<Tp2, Up2> &>().second())
 							>::value
 						)) :
-						super0(kerbal::utility::in_place_t(), pair.first()),
-						super1(kerbal::utility::in_place_t(), pair.second())
+						super0(kerbal::utility::in_place_t(), p.first()),
+						super1(kerbal::utility::in_place_t(), p.second())
 				{
 				}
 
 				template <typename Tp2, typename Up2>
 				KERBAL_CONSTEXPR
 				explicit
-				compressed_pair(const std::pair<Tp2, Up2> & pair)
+				compressed_pair(const std::pair<Tp2, Up2> & p)
 						KERBAL_CONDITIONAL_NOEXCEPT((
 							std::is_nothrow_constructible<
 								super0,
@@ -286,8 +286,8 @@ namespace kerbal
 								decltype(kerbal::utility::declval<const std::pair<Tp2, Up2> &>().second)
 							>::value
 						)) :
-						super0(kerbal::utility::in_place_t(), pair.first),
-						super1(kerbal::utility::in_place_t(), pair.second)
+						super0(kerbal::utility::in_place_t(), p.first),
+						super1(kerbal::utility::in_place_t(), p.second)
 				{
 				}
 
@@ -297,42 +297,42 @@ namespace kerbal
 				template <typename Tp2, typename Up2>
 				KERBAL_CONSTEXPR14
 				explicit
-				compressed_pair(kerbal::utility::compressed_pair<Tp2, Up2> && pair)
+				compressed_pair(kerbal::utility::compressed_pair<Tp2, Up2> && p)
 						KERBAL_CONDITIONAL_NOEXCEPT((
 							std::is_nothrow_constructible<
 								super0,
 								kerbal::utility::in_place_t,
-								decltype(kerbal::compatibility::move(pair).first())
+								decltype(kerbal::compatibility::move(p).first())
 							>::value &&
 							std::is_nothrow_constructible<
 								super1,
 								kerbal::utility::in_place_t,
-								decltype(kerbal::compatibility::move(pair).second())
+								decltype(kerbal::compatibility::move(p).second())
 							>::value
 						)) :
-						super0(kerbal::utility::in_place_t(), kerbal::compatibility::move(pair).first()),
-						super1(kerbal::utility::in_place_t(), kerbal::compatibility::move(pair).second())
+						super0(kerbal::utility::in_place_t(), kerbal::compatibility::move(p).first()),
+						super1(kerbal::utility::in_place_t(), kerbal::compatibility::move(p).second())
 				{
 				}
 
 				template <typename Tp2, typename Up2>
 				KERBAL_CONSTEXPR14
 				explicit
-				compressed_pair(std::pair<Tp2, Up2> && pair)
+				compressed_pair(std::pair<Tp2, Up2> && p)
 						KERBAL_CONDITIONAL_NOEXCEPT((
 							std::is_nothrow_constructible<
 								super0,
 								kerbal::utility::in_place_t,
-								decltype(kerbal::compatibility::move(pair).first)
+								decltype(kerbal::compatibility::move(p).first)
 							>::value &&
 							std::is_nothrow_constructible<
 								super1,
 								kerbal::utility::in_place_t,
-								decltype(kerbal::compatibility::move(pair).second)
+								decltype(kerbal::compatibility::move(p).second)
 							>::value
 						)) :
-						super0(kerbal::utility::in_place_t(), kerbal::compatibility::move(pair).first),
-						super1(kerbal::utility::in_place_t(), kerbal::compatibility::move(pair).second)
+						super0(kerbal::utility::in_place_t(), kerbal::compatibility::move(p).first),
+						super1(kerbal::utility::in_place_t(), kerbal::compatibility::move(p).second)
 				{
 				}
 
@@ -340,10 +340,10 @@ namespace kerbal
 
 				template <typename Tp2, typename Up2>
 				KERBAL_CONSTEXPR14
-				compressed_pair& operator=(const kerbal::utility::compressed_pair<Tp2, Up2> & pair)
+				compressed_pair& operator=(const kerbal::utility::compressed_pair<Tp2, Up2> & p)
 				{
-					kerbal::operators::generic_assign(this->first(), pair.first());
-					kerbal::operators::generic_assign(this->second(), pair.second());
+					kerbal::operators::generic_assign(this->first(), p.first());
+					kerbal::operators::generic_assign(this->second(), p.second());
 					return *this;
 				}
 
@@ -351,10 +351,10 @@ namespace kerbal
 
 				template <typename Tp2, typename Up2>
 				KERBAL_CONSTEXPR14
-				compressed_pair& operator=(kerbal::utility::compressed_pair<Tp2, Up2> && pair)
+				compressed_pair& operator=(kerbal::utility::compressed_pair<Tp2, Up2> && p)
 				{
-					kerbal::operators::generic_assign(this->first(), kerbal::compatibility::move(pair).first());
-					kerbal::operators::generic_assign(this->second(), kerbal::compatibility::move(pair).second());
+					kerbal::operators::generic_assign(this->first(), kerbal::compatibility::move(p).first());
+					kerbal::operators::generic_assign(this->second(), kerbal::compatibility::move(p).second());
 					return *this;
 				}
 
