@@ -12,6 +12,10 @@
 #ifndef KERBAL_UTILITY_NONCOPYABLE_HPP
 #define KERBAL_UTILITY_NONCOPYABLE_HPP
 
+#include <kerbal/compatibility/constexpr.hpp>
+#include <kerbal/compatibility/noexcept.hpp>
+
+
 namespace kerbal
 {
 
@@ -23,16 +27,17 @@ namespace kerbal
 		class noncopyconstructible
 		{
 			protected:
-				noncopyconstructible()
+
+				noncopyconstructible() KERBAL_NOEXCEPT
 				{
 				}
 
-				~noncopyconstructible()
+				~noncopyconstructible() KERBAL_NOEXCEPT
 				{
 				}
 
 			private:
-				noncopyconstructible(const noncopyconstructible &);
+				noncopyconstructible(const noncopyconstructible &) KERBAL_NOEXCEPT;
 		};
 
 #	else
@@ -40,11 +45,14 @@ namespace kerbal
 		class noncopyconstructible
 		{
 			protected:
-				noncopyconstructible() noexcept = default;
-				~noncopyconstructible() noexcept = default;
+
+				KERBAL_CONSTEXPR
+				noncopyconstructible() KERBAL_NOEXCEPT = default;
+
+				~noncopyconstructible() KERBAL_NOEXCEPT = default;
 
 			private:
-				noncopyconstructible(const noncopyconstructible &) noexcept = delete;
+				noncopyconstructible(const noncopyconstructible &) = delete;
 		};
 
 #	endif
@@ -55,16 +63,17 @@ namespace kerbal
 		class noncopyassignable
 		{
 			protected:
-				noncopyassignable()
+
+				noncopyassignable() KERBAL_NOEXCEPT
 				{
 				}
 
-				~noncopyassignable()
+				~noncopyassignable() KERBAL_NOEXCEPT
 				{
 				}
 
 			private:
-				noncopyassignable& operator=(const noncopyassignable &);
+				noncopyassignable& operator=(const noncopyassignable &) KERBAL_NOEXCEPT;
 		};
 
 #	else
@@ -72,11 +81,14 @@ namespace kerbal
 		class noncopyassignable
 		{
 			protected:
-				noncopyassignable() noexcept = default;
-				~noncopyassignable() noexcept = default;
+
+				KERBAL_CONSTEXPR
+				noncopyassignable() KERBAL_NOEXCEPT = default;
+
+				~noncopyassignable() KERBAL_NOEXCEPT = default;
 
 			private:
-				noncopyassignable& operator=(const noncopyassignable &) noexcept = delete;
+				noncopyassignable& operator=(const noncopyassignable &) = delete;
 		};
 
 #	endif
@@ -85,6 +97,18 @@ namespace kerbal
 				protected kerbal::utility::noncopyconstructible,
 				protected kerbal::utility::noncopyassignable
 		{
+
+#	if __cplusplus >= 201103L
+
+			protected:
+
+				KERBAL_CONSTEXPR
+				noncopyable() KERBAL_NOEXCEPT = default;
+
+				~noncopyable() KERBAL_NOEXCEPT = default;
+
+#	endif
+
 		};
 
 	} // namespace utility
