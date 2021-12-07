@@ -14,14 +14,14 @@
 
 #include <kerbal/compatibility/move.hpp>
 #include <kerbal/compatibility/noexcept.hpp>
+#include <kerbal/container/vector.hpp>
+#include <kerbal/parallel/thread.hpp>
 
 #if __cplusplus >= 201103L
 #	include <kerbal/utility/forward.hpp>
 #endif
 
-#include <vector>
 #include <queue>
-#include <thread>
 #include <atomic>
 #include <condition_variable>
 #include <future>
@@ -39,7 +39,7 @@ namespace kerbal
 		{
 				using Task = std::function<void()>;
 
-				std::vector<std::thread> _K_threads_pool;
+				fkerbal::container::vector<fkerbal::parallel::thread> _K_threads_pool;
 				std::queue<Task> _K_tasks_queue;
 				std::mutex _K_mutex;
 				std::condition_variable _K_cv;
@@ -48,9 +48,10 @@ namespace kerbal
 
 			public:
 				explicit
-				thread_pool(unsigned int init_size = 4)
-						: _K_stopped(false), _K_idle_threads_num(init_size)
+				thread_pool(unsigned int init_size = 4) :
+						_K_stopped(false), _K_idle_threads_num(init_size)
 				{
+					_K_threads_pool.reserve(init_size);
 					for (size_t i = 0; i < this->_K_idle_threads_num; ++i) {   //初始化线程数量
 						_K_threads_pool.emplace_back([this] {
 							while (!this->_K_stopped.load()) {
@@ -76,10 +77,11 @@ namespace kerbal
 				{
 					this->_K_stopped.store(true);
 					this->_K_cv.notify_all(); // 唤醒所有线程执行
-					for (std::thread & thread : this->_K_threads_pool) {
+					for (fkerbal::parallel::thread & thread : this->_K_threads_pool) {
 						//thread.detach(); // 让线程“自生自灭”
-						if (thread.joinable())
+						if (thread.joinable()) {
 							thread.join(); // 等待任务结束， 前提：线程一定会执行完
+						}
 					}
 				}
 
@@ -98,8 +100,9 @@ namespace kerbal
 				std::future<typename std::result_of<F(Args...)>::type>
 				commit(F&& f, Args&& ... args)
 				{
-					if (this->_K_stopped.load())
+					if (this->_K_stopped.load()) {
 						throw std::runtime_error("commit on ThreadPool is stopped.");
+					}
 
 					using result_type = typename std::result_of<F(Args...)>::type; // typename std::result_of<F(Args...)>::type, 函数 f 的返回值类型
 					auto task = std::make_shared<std::packaged_task<result_type()> >(
@@ -124,8 +127,9 @@ namespace kerbal
 				}
 
 		};
-	}
 
-}
+	} // namespace parallel
 
-#endif //KERBAL_PARALLEL_THREAD_POOL_HPP
+} // namespace kerbal
+
+#endif // KERBAL_PARALLEL_THREAD_POOL_HPP

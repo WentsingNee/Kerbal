@@ -16,8 +16,15 @@
 #include <kerbal/compatibility/constexpr.hpp>
 #include <kerbal/compatibility/noexcept.hpp>
 #include <kerbal/memory/guard.hpp>
+#include <kerbal/type_traits/decay.hpp>
 #include <kerbal/utility/noncopyable.hpp>
 #include <kerbal/utility/throw_this_exception.hpp>
+#include <kerbal/utility/tuple.hpp>
+
+#if __cplusplus < 201103L
+#	include <kerbal/macro/macro_concat.hpp>
+#	include <kerbal/macro/ppexpand.hpp>
+#endif
 
 #if __cplusplus >= 201103L
 #	include <kerbal/utility/forward.hpp>
@@ -26,10 +33,6 @@
 
 #include <pthread.h>
 #include <exception> // std::terminate
-
-#if __cplusplus >= 201103L
-#	include <tuple>
-#endif
 
 #include <kerbal/parallel/thread_create_failed.hpp>
 
@@ -105,130 +108,136 @@ namespace kerbal
 				};
 
 			private:
-				id th_id;
+				id _K_th_id;
 
 			public:
 
 				KERBAL_CONSTEXPR
-				thread() KERBAL_NOEXCEPT
-						: th_id()
+				thread() KERBAL_NOEXCEPT :
+						_K_th_id()
 				{
 				}
 
-			private:
-				void create(void* (*start_rtn)(void*), void * fun_args_pack)
-				{
-					int err = ::pthread_create(&this->th_id.native_handle, NULL, start_rtn, fun_args_pack);
-					if (err != 0) {
-						kerbal::utility::throw_this_exception_helper<
-								kerbal::parallel::thread_create_failed
-						>::throw_this_exception();
-					}
-				}
-
-#		if __cplusplus >= 201103L
+#	if __cplusplus >= 201103L
 
 			private:
 
-				template <typename Callable, typename ... Args, size_t ... I>
-				static void apply(std::tuple<Callable, Args...> & pack,
-									kerbal::utility::integer_sequence<size_t, I...>)
+				template <typename Callable, typename ... Args, std::size_t ... I>
+				static void apply(kerbal::utility::tuple<Callable, Args...> & pack,
+									kerbal::utility::integer_sequence<std::size_t, I...>)
 				{
-					std::get<0>(pack)(std::get<I + 1>(pack)...);
+					pack.template get<0>()(pack.template get<I + 1>()...);
 				}
 
 			public:
 
 				template <typename Callable, typename ... Args>
 				explicit
-				thread(Callable&& fun, Args&& ... args)
-						: th_id()
+				thread(Callable&& fun, Args&& ... args) :
+						_K_th_id()
 				{
-					typedef std::tuple<Callable, Args...> fun_args_pack_t;
+					typedef kerbal::utility::tuple<
+							typename kerbal::type_traits::decay<Callable>::type,
+							typename kerbal::type_traits::decay<Args>::type ...
+					> fun_args_pack_t;
 					struct helper
 					{
-							static void* start_rtn(void * fun_args_pack)
+							static void* start_rtn(void * fun_args_pack_v)
 							{
-								fun_args_pack_t * fun_args_pack_p = static_cast<fun_args_pack_t*>(fun_args_pack);
+								fun_args_pack_t * fun_args_pack_p = static_cast<fun_args_pack_t*>(fun_args_pack_v);
 								kerbal::memory::guard<fun_args_pack_t> guard(fun_args_pack_p);
 								thread::apply(*fun_args_pack_p,
 												kerbal::utility::make_index_sequence<sizeof...(Args)>());
 								return NULL;
 							}
 					};
-					void * fun_args_pack = reinterpret_cast<void*>(
-							new fun_args_pack_t(
-								kerbal::utility::forward<Callable>(fun),
-								kerbal::utility::forward<Args>(args)...
-							)
+					fun_args_pack_t * fun_args_pack_p = new fun_args_pack_t(
+							kerbal::utility::forward<Callable>(fun),
+							kerbal::utility::forward<Args>(args)...
 					);
-					this->create(helper::start_rtn, fun_args_pack);
+					void * fun_args_pack_v = reinterpret_cast<void*>(fun_args_pack_p);
+					int err = ::pthread_create(&this->_K_th_id.native_handle, NULL, helper::start_rtn, fun_args_pack_v);
+					if (err != 0) {
+						delete fun_args_pack_p;
+						kerbal::utility::throw_this_exception_helper<
+								kerbal::parallel::thread_create_failed
+						>::throw_this_exception();
+					}
 				}
 
-#		else
+#	else
 
 			public:
 
-				template <typename Callable>
-				explicit
-				thread(Callable fun)
-						: th_id()
-				{
-					typedef Callable fun_args_pack_t;
-					struct helper
-					{
-							static void* start_rtn(void * fun_args_pack)
-							{
-								fun_args_pack_t * fun_args_pack_p = static_cast<fun_args_pack_t*>(fun_args_pack);
-								kerbal::memory::guard<fun_args_pack_t> guard(fun_args_pack_p);
-								(*fun_args_pack_p)();
-								return NULL;
-							}
-					};
-					void * fun_args_pack = reinterpret_cast<void*>(
-							new fun_args_pack_t(
-								fun
-							)
-					);
-					this->create(helper::start_rtn, fun_args_pack);
+#		define EMPTY
+#		define REMAINF(exp) exp
+#		define LEFT_JOIN_COMMA(exp) , exp
+#		define TARGS_DECL(i) typename KERBAL_MACRO_CONCAT(Arg, i)
+#		define TARGS_USE(i) typename kerbal::type_traits::decay<KERBAL_MACRO_CONCAT(Arg, i)>::type
+#		define ARGS_DECL(i) const KERBAL_MACRO_CONCAT(Arg, i) & KERBAL_MACRO_CONCAT(arg, i)
+#		define ARGS_USE(i) KERBAL_MACRO_CONCAT(arg, i)
+#		define FUN_ARGS_PACK_EXPAND_ARG(i) (fun_args_pack_p->template get<(i)>())
+#		define FBODY(i) \
+				template <typename Callable KERBAL_OPT_PPEXPAND_WITH_COMMA_N(LEFT_JOIN_COMMA, EMPTY, TARGS_DECL, i)> \
+				explicit \
+				thread(Callable fun KERBAL_OPT_PPEXPAND_WITH_COMMA_N(LEFT_JOIN_COMMA, EMPTY, ARGS_DECL, i)) : \
+						_K_th_id() \
+				{ \
+					typedef kerbal::utility::tuple< \
+							typename kerbal::type_traits::decay<Callable>::type \
+							KERBAL_OPT_PPEXPAND_WITH_COMMA_N(LEFT_JOIN_COMMA, EMPTY, TARGS_USE, i) \
+					> fun_args_pack_t; \
+					struct helper \
+					{ \
+							static void* start_rtn(void * fun_args_pack_v) \
+							{ \
+								const fun_args_pack_t * fun_args_pack_p = static_cast<fun_args_pack_t*>(fun_args_pack_v); \
+								kerbal::memory::guard<const fun_args_pack_t> guard(fun_args_pack_p); \
+								fun_args_pack_p->template get<0>()(KERBAL_OPT_PPEXPAND_WITH_COMMA_N(REMAINF, EMPTY, FUN_ARGS_PACK_EXPAND_ARG, i)); \
+								return NULL; \
+							} \
+					}; \
+					void * fun_args_pack_p = new fun_args_pack_t( \
+							fun \
+							KERBAL_OPT_PPEXPAND_WITH_COMMA_N(LEFT_JOIN_COMMA, EMPTY, ARGS_USE, i) \
+					); \
+					void * fun_args_pack_v = reinterpret_cast<void*>(fun_args_pack_p); \
+					int err = ::pthread_create(&this->_K_th_id.native_handle, NULL, helper::start_rtn, fun_args_pack_v); \
+					if (err != 0) { \
+						delete fun_args_pack_p; \
+						kerbal::utility::throw_this_exception_helper< \
+								kerbal::parallel::thread_create_failed \
+						>::throw_this_exception(); \
+					} \
 				}
 
-				template <typename Callable, typename Arg0>
-				explicit
-				thread(Callable fun, Arg0& arg0)
-						: th_id()
-				{
-					typedef std::pair<Callable, Arg0> fun_args_pack_t;
-					struct helper
-					{
-							static void* start_rtn(void * fun_args_pack)
-							{
-								fun_args_pack_t * fun_args_pack_p = static_cast<fun_args_pack_t*>(fun_args_pack);
-								kerbal::memory::guard<fun_args_pack_t> guard(fun_args_pack_p);
-								fun_args_pack_p->first(fun_args_pack_p->second);
-								return NULL;
-							}
-					};
-					void * fun_args_pack = reinterpret_cast<void*>(
-							new fun_args_pack_t(fun, arg0)
-					);
-					this->create(helper::start_rtn, fun_args_pack);
-				}
+				KERBAL_PPEXPAND_N(FBODY, KERBAL_PPEXPAND_EMPTY_SEPARATOR, 0)
+				KERBAL_PPEXPAND_N(FBODY, KERBAL_PPEXPAND_EMPTY_SEPARATOR, 19)
 
-#		endif
+#		undef EMPTY
+#		undef REMAINF
+#		undef LEFT_JOIN_COMMA
+#		undef TARGS_DECL
+#		undef TARGS_USE
+#		undef ARGS_DECL
+#		undef ARGS_USE
+#		undef FUN_ARGS_PACK_EXPAND_ARG
+#		undef FBODY
 
-#		if __cplusplus >= 201103L
+#	endif
+
+#	if __cplusplus >= 201103L
 
 			public:
 
 				KERBAL_CONSTEXPR14
-				thread(kerbal::parallel::thread&& ano) KERBAL_NOEXCEPT
-						: th_id(ano.th_id)
+				thread(thread&& ano) KERBAL_NOEXCEPT :
+						_K_th_id(ano._K_th_id)
 				{
-					ano.th_id = id();
+					ano._K_th_id = id();
 				}
 
-#		endif
+#	endif
 
 			public:
 
@@ -242,31 +251,31 @@ namespace kerbal
 				KERBAL_CONSTEXPR
 				bool joinable() const KERBAL_NOEXCEPT
 				{
-					return this->th_id != id();
+					return this->_K_th_id != id();
 				}
 
 				void join()
 				{
 					::pthread_join(this->native_handle(), NULL);
-					this->th_id = id();
+					this->_K_th_id = id();
 				}
 
 				void detach()
 				{
 					::pthread_detach(this->native_handle());
-					this->th_id = id();
+					this->_K_th_id = id();
 				}
 
 				KERBAL_CONSTEXPR14
 				void swap(thread & ano)
 				{
-					kerbal::algorithm::swap(this->th_id, ano.th_id);
+					kerbal::algorithm::swap(this->_K_th_id, ano._K_th_id);
 				}
 
 				KERBAL_CONSTEXPR
 				id get_id() const KERBAL_NOEXCEPT
 				{
-					return this->th_id;
+					return this->_K_th_id;
 				}
 
 				KERBAL_CONSTEXPR
@@ -278,37 +287,37 @@ namespace kerbal
 				KERBAL_CONSTEXPR
 				bool operator==(const thread & with) const KERBAL_NOEXCEPT
 				{
-					return this->th_id == with.th_id;
+					return this->_K_th_id == with._K_th_id;
 				}
 
 				KERBAL_CONSTEXPR
 				bool operator!=(const thread & with) const KERBAL_NOEXCEPT
 				{
-					return this->th_id != with.th_id;
+					return this->_K_th_id != with._K_th_id;
 				}
 
 				KERBAL_CONSTEXPR
 				bool operator<(const thread & with) const KERBAL_NOEXCEPT
 				{
-					return this->th_id < with.th_id;
+					return this->_K_th_id < with._K_th_id;
 				}
 
 				KERBAL_CONSTEXPR
 				bool operator<=(const thread & with) const KERBAL_NOEXCEPT
 				{
-					return this->th_id <= with.th_id;
+					return this->_K_th_id <= with._K_th_id;
 				}
 
 				KERBAL_CONSTEXPR
 				bool operator>(const thread & with) const KERBAL_NOEXCEPT
 				{
-					return this->th_id > with.th_id;
+					return this->_K_th_id > with._K_th_id;
 				}
 
 				KERBAL_CONSTEXPR
 				bool operator>=(const thread & with) const KERBAL_NOEXCEPT
 				{
-					return this->th_id >= with.th_id;
+					return this->_K_th_id >= with._K_th_id;
 				}
 
 		};
