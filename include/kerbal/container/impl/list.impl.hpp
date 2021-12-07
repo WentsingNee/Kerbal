@@ -673,14 +673,14 @@ namespace kerbal
 		template <typename Tp, typename Allocator>
 		template <typename BinaryPredict>
 		KERBAL_CONSTEXPR20
-		void list<Tp, Allocator>::sort(iterator first, iterator last, BinaryPredict cmp)
+		void list<Tp, Allocator>::sort(const_iterator first, const_iterator last, BinaryPredict cmp)
 		{
 			list_allocator_unrelated::_K_sort(first, last, cmp);
 		}
 
 		template <typename Tp, typename Allocator>
 		KERBAL_CONSTEXPR20
-		void list<Tp, Allocator>::sort(iterator first, iterator last)
+		void list<Tp, Allocator>::sort(const_iterator first, const_iterator last)
 		{
 			list_allocator_unrelated::_K_sort(first, last);
 		}

@@ -1232,9 +1232,9 @@ namespace kerbal
 			template <typename BinaryPredict>
 			inline
 			KERBAL_CONSTEXPR20
-			void list_allocator_unrelated<Tp>::_K_merge_sort_merge(iterator first, iterator mid, iterator last, BinaryPredict cmp, MSM_VER_NOTHROW)
+			void list_allocator_unrelated<Tp>::_K_merge_sort_merge(const_iterator first, const_iterator mid, const_iterator last, BinaryPredict cmp, MSM_VER_NOTHROW)
 			{
-				iterator before_mid(kerbal::iterator::prev(mid));
+				const_iterator before_mid(kerbal::iterator::prev(mid));
 				const_iterator i(first);
 				const_iterator j(mid);
 				while (i != mid) {
@@ -1248,8 +1248,8 @@ namespace kerbal
 						break;
 					}
 				}
-				before_mid.current->next = j.cast_to_mutable().current;
-				j.cast_to_mutable().current->prev = before_mid.current;
+				before_mid.cast_to_mutable().current->next = j.cast_to_mutable().current;
+				j.cast_to_mutable().current->prev = before_mid.cast_to_mutable().current;
 			}
 
 #		if __cpp_exceptions
@@ -1258,9 +1258,9 @@ namespace kerbal
 			template <typename BinaryPredict>
 			inline
 			KERBAL_CONSTEXPR20
-			void list_allocator_unrelated<Tp>::_K_merge_sort_merge(iterator first, iterator mid, iterator last, BinaryPredict cmp, MSM_VER_MAY_THROW)
+			void list_allocator_unrelated<Tp>::_K_merge_sort_merge(const_iterator first, const_iterator mid, const_iterator last, BinaryPredict cmp, MSM_VER_MAY_THROW)
 			{
-				iterator before_mid(kerbal::iterator::prev(mid));
+				const_iterator before_mid(kerbal::iterator::prev(mid));
 				const_iterator i(first);
 				const_iterator j(mid);
 				try {
@@ -1276,12 +1276,12 @@ namespace kerbal
 						}
 					}
 				} catch (...) {
-					before_mid.current->next = j.cast_to_mutable().current;
-					j.cast_to_mutable().current->prev = before_mid.current;
+					before_mid.cast_to_mutable().current->next = j.cast_to_mutable().current;
+					j.cast_to_mutable().current->prev = before_mid.cast_to_mutable().current;
 					throw;
 				}
-				before_mid.current->next = j.cast_to_mutable().current;
-				j.cast_to_mutable().current->prev = before_mid.current;
+				before_mid.cast_to_mutable().current->next = j.cast_to_mutable().current;
+				j.cast_to_mutable().current->prev = before_mid.cast_to_mutable().current;
 			}
 
 #		endif
@@ -1290,7 +1290,7 @@ namespace kerbal
 			template <typename BinaryPredict>
 			inline
 			KERBAL_CONSTEXPR20
-			void list_allocator_unrelated<Tp>::merge_sort_merge(iterator first, iterator mid, iterator last, BinaryPredict cmp)
+			void list_allocator_unrelated<Tp>::merge_sort_merge(const_iterator first, const_iterator mid, const_iterator last, BinaryPredict cmp)
 			{
 
 #		if __cpp_exceptions
@@ -1319,8 +1319,8 @@ namespace kerbal
 			template <typename Tp>
 			template <typename BinaryPredict>
 			KERBAL_CONSTEXPR20
-			typename list_allocator_unrelated<Tp>::iterator
-			list_allocator_unrelated<Tp>::merge_sort_n(iterator first, difference_type len, BinaryPredict cmp)
+			typename list_allocator_unrelated<Tp>::const_iterator
+			list_allocator_unrelated<Tp>::merge_sort_n(const_iterator first, difference_type len, BinaryPredict cmp)
 			{
 				if (len == 0) {
 					return first;
@@ -1329,8 +1329,8 @@ namespace kerbal
 					return kerbal::iterator::next(first);
 				}
 				if (len == 2) {
-					iterator i(kerbal::iterator::next(first));
-					iterator r(kerbal::iterator::next(i));
+					const_iterator i(kerbal::iterator::next(first));
+					const_iterator r(kerbal::iterator::next(i));
 					if (cmp(*i, *first)) {
 						_K_iter_swap(first, i);
 					}
@@ -1338,11 +1338,11 @@ namespace kerbal
 				}
 				difference_type first_half_len = len / 2;
 
-				iterator pre_first(kerbal::iterator::prev(first));
-				iterator mid(merge_sort_n(first, first_half_len, cmp));
+				const_iterator pre_first(kerbal::iterator::prev(first));
+				const_iterator mid(merge_sort_n(first, first_half_len, cmp));
 
-				iterator pre_mid(kerbal::iterator::prev(mid));
-				iterator last(merge_sort_n(mid, len - first_half_len, cmp));
+				const_iterator pre_mid(kerbal::iterator::prev(mid));
+				const_iterator last(merge_sort_n(mid, len - first_half_len, cmp));
 
 				first = kerbal::iterator::next(pre_first);
 				mid = kerbal::iterator::next(pre_mid);
@@ -1354,7 +1354,7 @@ namespace kerbal
 			template <typename Tp>
 			template <typename BinaryPredict>
 			KERBAL_CONSTEXPR20
-			void list_allocator_unrelated<Tp>::merge_sort(iterator first, iterator last, BinaryPredict cmp)
+			void list_allocator_unrelated<Tp>::merge_sort(const_iterator first, const_iterator last, BinaryPredict cmp)
 			{
 				merge_sort_n(first, kerbal::iterator::distance(first, last), cmp);
 			}
@@ -1392,7 +1392,7 @@ namespace kerbal
 			template <std::size_t RADIX_BIT_WIDTH>
 			KERBAL_CONSTEXPR20
 			void list_allocator_unrelated<Tp>::radix_sort(
-					iterator first, iterator last, kerbal::type_traits::false_type asc,
+					const_iterator first, const_iterator last, kerbal::type_traits::false_type asc,
 					kerbal::type_traits::integral_constant<std::size_t, RADIX_BIT_WIDTH>) KERBAL_NOEXCEPT
 			{
 				typedef kerbal::type_traits::integral_constant<std::size_t, 1 << RADIX_BIT_WIDTH> BUCKETS_NUM;
@@ -1439,7 +1439,7 @@ namespace kerbal
 			template <std::size_t RADIX_BIT_WIDTH>
 			KERBAL_CONSTEXPR20
 			void list_allocator_unrelated<Tp>::radix_sort(
-					iterator first, iterator last, kerbal::type_traits::true_type desc,
+					const_iterator first, const_iterator last, kerbal::type_traits::true_type desc,
 					kerbal::type_traits::integral_constant<std::size_t, RADIX_BIT_WIDTH>) KERBAL_NOEXCEPT
 			{
 				typedef kerbal::type_traits::integral_constant<std::size_t, 1 << RADIX_BIT_WIDTH> BUCKETS_NUM;
@@ -1485,7 +1485,7 @@ namespace kerbal
 			template <typename Tp>
 			template <typename Order>
 			KERBAL_CONSTEXPR20
-			void list_allocator_unrelated<Tp>::radix_sort(iterator first, iterator last, Order /*order*/) KERBAL_NOEXCEPT
+			void list_allocator_unrelated<Tp>::radix_sort(const_iterator first, const_iterator last, Order /*order*/) KERBAL_NOEXCEPT
 			{
 				radix_sort(first, last, kerbal::type_traits::bool_constant<Order::value>(),
 						   kerbal::type_traits::integral_constant<std::size_t, CHAR_BIT>());
@@ -1495,7 +1495,7 @@ namespace kerbal
 			template <bool is_radix_sort_acceptable_type>
 			KERBAL_CONSTEXPR20
 			typename kerbal::type_traits::enable_if<is_radix_sort_acceptable_type>::type
-			list_allocator_unrelated<Tp>::radix_sort(iterator first, iterator last) KERBAL_NOEXCEPT
+			list_allocator_unrelated<Tp>::radix_sort(const_iterator first, const_iterator last) KERBAL_NOEXCEPT
 			{
 				radix_sort(first, last, kerbal::type_traits::false_type());
 			}
@@ -1504,7 +1504,7 @@ namespace kerbal
 			template <bool is_radix_sort_acceptable_type, typename BinaryPredict>
 			KERBAL_CONSTEXPR20
 			typename kerbal::type_traits::enable_if<is_radix_sort_acceptable_type>::type
-			list_allocator_unrelated<Tp>::sort_method_overload(iterator first, iterator last, BinaryPredict cmp)
+			list_allocator_unrelated<Tp>::sort_method_overload(const_iterator first, const_iterator last, BinaryPredict cmp)
 			{
 				merge_sort(first, last, cmp);
 			}
@@ -1513,7 +1513,7 @@ namespace kerbal
 			template <bool is_radix_sort_acceptable_type>
 			KERBAL_CONSTEXPR20
 			typename kerbal::type_traits::enable_if<is_radix_sort_acceptable_type>::type
-			list_allocator_unrelated<Tp>::sort_method_overload(iterator first, iterator last, kerbal::compare::less<value_type> /*cmp*/)
+			list_allocator_unrelated<Tp>::sort_method_overload(const_iterator first, const_iterator last, kerbal::compare::less<value_type> /*cmp*/)
 			{
 				radix_sort(first, last, kerbal::type_traits::false_type());
 			}
@@ -1522,7 +1522,7 @@ namespace kerbal
 			template <bool is_radix_sort_acceptable_type>
 			KERBAL_CONSTEXPR20
 			typename kerbal::type_traits::enable_if<is_radix_sort_acceptable_type>::type
-			list_allocator_unrelated<Tp>::sort_method_overload(iterator first, iterator last, kerbal::compare::greater<value_type> /*cmp*/)
+			list_allocator_unrelated<Tp>::sort_method_overload(const_iterator first, const_iterator last, kerbal::compare::greater<value_type> /*cmp*/)
 			{
 				radix_sort(first, last, kerbal::type_traits::true_type());
 			}
@@ -1531,7 +1531,7 @@ namespace kerbal
 			template <bool is_radix_sort_acceptable_type>
 			KERBAL_CONSTEXPR20
 			typename kerbal::type_traits::enable_if<is_radix_sort_acceptable_type>::type
-			list_allocator_unrelated<Tp>::sort_method_overload(iterator first, iterator last, kerbal::compare::less<void> /*cmp*/)
+			list_allocator_unrelated<Tp>::sort_method_overload(const_iterator first, const_iterator last, kerbal::compare::less<void> /*cmp*/)
 			{
 				radix_sort(first, last, kerbal::type_traits::false_type());
 			}
@@ -1540,7 +1540,7 @@ namespace kerbal
 			template <bool is_radix_sort_acceptable_type>
 			KERBAL_CONSTEXPR20
 			typename kerbal::type_traits::enable_if<is_radix_sort_acceptable_type>::type
-			list_allocator_unrelated<Tp>::sort_method_overload(iterator first, iterator last, kerbal::compare::greater<void> /*cmp*/)
+			list_allocator_unrelated<Tp>::sort_method_overload(const_iterator first, const_iterator last, kerbal::compare::greater<void> /*cmp*/)
 			{
 				radix_sort(first, last, kerbal::type_traits::true_type());
 			}
@@ -1549,7 +1549,7 @@ namespace kerbal
 			template <bool is_radix_sort_acceptable_type>
 			KERBAL_CONSTEXPR20
 			typename kerbal::type_traits::enable_if<is_radix_sort_acceptable_type>::type
-			list_allocator_unrelated<Tp>::sort_method_overload(iterator first, iterator last, std::less<value_type> /*cmp*/)
+			list_allocator_unrelated<Tp>::sort_method_overload(const_iterator first, const_iterator last, std::less<value_type> /*cmp*/)
 			{
 				radix_sort(first, last, kerbal::type_traits::false_type());
 			}
@@ -1558,7 +1558,7 @@ namespace kerbal
 			template <bool is_radix_sort_acceptable_type>
 			KERBAL_CONSTEXPR20
 			typename kerbal::type_traits::enable_if<is_radix_sort_acceptable_type>::type
-			list_allocator_unrelated<Tp>::sort_method_overload(iterator first, iterator last, std::greater<value_type> /*cmp*/)
+			list_allocator_unrelated<Tp>::sort_method_overload(const_iterator first, const_iterator last, std::greater<value_type> /*cmp*/)
 			{
 				radix_sort(first, last, kerbal::type_traits::true_type());
 			}
@@ -1569,7 +1569,7 @@ namespace kerbal
 			template <bool is_radix_sort_acceptable_type>
 			KERBAL_CONSTEXPR20
 			typename kerbal::type_traits::enable_if<is_radix_sort_acceptable_type>::type
-			list_allocator_unrelated<Tp>::sort_method_overload(iterator first, iterator last, std::less<void> /*cmp*/)
+			list_allocator_unrelated<Tp>::sort_method_overload(const_iterator first, const_iterator last, std::less<void> /*cmp*/)
 			{
 				radix_sort(first, last, kerbal::type_traits::false_type());
 			}
@@ -1578,7 +1578,7 @@ namespace kerbal
 			template <bool is_radix_sort_acceptable_type>
 			KERBAL_CONSTEXPR20
 			typename kerbal::type_traits::enable_if<is_radix_sort_acceptable_type>::type
-			list_allocator_unrelated<Tp>::sort_method_overload(iterator first, iterator last, std::greater<void> /*cmp*/)
+			list_allocator_unrelated<Tp>::sort_method_overload(const_iterator first, const_iterator last, std::greater<void> /*cmp*/)
 			{
 				radix_sort(first, last, kerbal::type_traits::true_type());
 			}
@@ -1589,7 +1589,7 @@ namespace kerbal
 			template <bool is_radix_sort_acceptable_type, typename BinaryPredict>
 			KERBAL_CONSTEXPR20
 			typename kerbal::type_traits::enable_if<!is_radix_sort_acceptable_type>::type
-			list_allocator_unrelated<Tp>::sort_method_overload(iterator first, iterator last, BinaryPredict cmp)
+			list_allocator_unrelated<Tp>::sort_method_overload(const_iterator first, const_iterator last, BinaryPredict cmp)
 			{
 				merge_sort(first, last, cmp);
 			}
@@ -1597,7 +1597,7 @@ namespace kerbal
 			template <typename Tp>
 			template <typename BinaryPredict>
 			KERBAL_CONSTEXPR20
-			void list_allocator_unrelated<Tp>::_K_sort(iterator first, iterator last, BinaryPredict cmp)
+			void list_allocator_unrelated<Tp>::_K_sort(const_iterator first, const_iterator last, BinaryPredict cmp)
 			{
 //				merge_sort(first, last, cmp);
 				sort_method_overload<IS_LIST_RADIX_SORT_ACCEPTABLE_TYPE::value>(first, last, cmp);
@@ -1605,7 +1605,7 @@ namespace kerbal
 
 			template <typename Tp>
 			KERBAL_CONSTEXPR20
-			void list_allocator_unrelated<Tp>::_K_sort(iterator first, iterator last)
+			void list_allocator_unrelated<Tp>::_K_sort(const_iterator first, const_iterator last)
 			{
 				_K_sort(first, last, kerbal::compare::less<value_type>());
 			}

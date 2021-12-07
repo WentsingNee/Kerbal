@@ -490,10 +490,10 @@ namespace kerbal
 
 				template <typename BinaryPredict>
 				KERBAL_CONSTEXPR20
-				void sort(iterator first, iterator last, BinaryPredict cmp);
+				void sort(const_iterator first, const_iterator last, BinaryPredict cmp);
 
 				KERBAL_CONSTEXPR20
-				void sort(iterator first, iterator last);
+				void sort(const_iterator first, const_iterator last);
 
 				using list_allocator_unrelated::sort;
 
