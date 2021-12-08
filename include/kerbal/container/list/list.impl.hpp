@@ -837,6 +837,9 @@ namespace kerbal
 			return list_type_only::k_remove_if_using_allocator(this->alloc(), first, last, predicate);
 		}
 
+
+#	if __cplusplus < 201103L
+
 		template <typename T, typename Allocator>
 		template <typename UnaryPredicate>
 		KERBAL_CONSTEXPR20
@@ -885,6 +888,20 @@ namespace kerbal
 			return list_type_only::k_unique_using_allocator(this->alloc(), pred);
 		}
 
+#	endif
+
+		template <typename T, typename Allocator>
+		template <typename BinaryPredicate, typename Project>
+		KERBAL_CONSTEXPR20
+		typename list<T, Allocator>::size_type
+		list<T, Allocator>::unique(BinaryPredicate pred, Project proj)
+		{
+			return list_type_only::k_unique_using_allocator(this->alloc(), pred, proj);
+		}
+
+
+#	if __cplusplus < 201103L
+
 		template <typename T, typename Allocator>
 		KERBAL_CONSTEXPR20
 		typename
@@ -902,6 +919,18 @@ namespace kerbal
 		{
 			return list_type_only::k_unique_using_allocator(this->alloc());
 		}
+
+#	endif
+
+		template <typename T, typename Allocator>
+		template <typename BinaryPredicate, typename Project>
+		KERBAL_CONSTEXPR20
+		typename list<T, Allocator>::size_type
+		list<T, Allocator>::unique(const_iterator first, const_iterator last, BinaryPredicate pred, Project proj)
+		{
+			return list_type_only::k_unique_using_allocator(this->alloc(), first, last, pred, proj);
+		}
+
 
 		template <typename T, typename Allocator>
 		KERBAL_CONSTEXPR20

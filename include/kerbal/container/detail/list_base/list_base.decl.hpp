@@ -20,6 +20,7 @@
 #include <kerbal/compatibility/constexpr.hpp>
 #include <kerbal/compatibility/noexcept.hpp>
 #include <kerbal/config/exceptions.hpp>
+#include <kerbal/function/identity.hpp>
 #include <kerbal/iterator/reverse_iterator.hpp>
 #include <kerbal/memory/allocator_traits.hpp>
 #include <kerbal/type_traits/enable_if.hpp>
@@ -1155,6 +1156,14 @@ namespace kerbal
 						UnaryPredicate predicate
 					);
 
+#			if __cplusplus >= 201103L
+
+					template <typename NodeAllocator, typename BinaryPredicate = kerbal::compare::equal_to<>, typename Project = kerbal::function::identity>
+					KERBAL_CONSTEXPR20
+					size_type k_unique_using_allocator(NodeAllocator & alloc, BinaryPredicate pred = {}, Project proj = {});
+
+#			else
+
 					template <typename NodeAllocator>
 					KERBAL_CONSTEXPR20
 					static
@@ -1164,6 +1173,21 @@ namespace kerbal
 						const_iterator first, const_iterator last,
 						const_reference val
 					);
+
+					template <typename NodeAllocator, typename BinaryPredicate, typename Project>
+					KERBAL_CONSTEXPR20
+					size_type k_unique_using_allocator(NodeAllocator & alloc, BinaryPredicate pred, Project proj);
+
+#			endif
+
+
+#			if __cplusplus >= 201103L
+
+					template <typename NodeAllocator, typename BinaryPredicate = kerbal::compare::equal_to<>, typename Project = kerbal::function::identity>
+					KERBAL_CONSTEXPR20
+					static size_type k_unique_using_allocator(NodeAllocator & alloc, const_iterator first, const_iterator last, BinaryPredicate pred = {}, Project proj = {});
+
+#			else
 
 					template <typename NodeAllocator>
 					KERBAL_CONSTEXPR20
@@ -1204,6 +1228,13 @@ namespace kerbal
 					KERBAL_CONSTEXPR20
 					size_type
 					k_unique_using_allocator(NodeAllocator & alloc);
+
+					template <typename NodeAllocator, typename BinaryPredicate, typename Project>
+					KERBAL_CONSTEXPR20
+					static size_type k_unique_using_allocator(NodeAllocator & alloc, const_iterator first, const_iterator last, BinaryPredicate pred, Project proj);
+
+#			endif
+
 
 					template <typename BinaryPredict>
 					KERBAL_CONSTEXPR20
