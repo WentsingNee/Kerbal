@@ -793,6 +793,16 @@ namespace kerbal
 		}
 
 		template <typename T, typename Allocator>
+		template <typename BinaryPredict, typename Project>
+		KERBAL_CONSTEXPR20
+		void list<T, Allocator>::sort(iterator first, iterator last, BinaryPredict cmp, Project proj)
+		{
+			list_type_only::k_sort(first, last, cmp, proj);
+		}
+
+#	if __cplusplus < 201103L
+
+		template <typename T, typename Allocator>
 		template <typename BinaryPredict>
 		KERBAL_CONSTEXPR20
 		void list<T, Allocator>::sort(const_iterator first, const_iterator last, BinaryPredict cmp)
@@ -806,6 +816,8 @@ namespace kerbal
 		{
 			list_type_only::k_sort(first, last);
 		}
+
+#	endif
 
 		template <typename T, typename Allocator>
 		template <typename UnaryPredicate>
