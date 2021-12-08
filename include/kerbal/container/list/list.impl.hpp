@@ -715,6 +715,16 @@ namespace kerbal
 		}
 
 		template <typename Tp, typename Allocator>
+		template <typename BinaryPredict, typename Project>
+		KERBAL_CONSTEXPR20
+		void list<Tp, Allocator>::sort(iterator first, iterator last, BinaryPredict cmp, Project proj)
+		{
+			list_type_only::_K_sort(first, last, cmp, proj);
+		}
+
+#	if __cplusplus < 201103L
+
+		template <typename Tp, typename Allocator>
 		template <typename BinaryPredict>
 		KERBAL_CONSTEXPR20
 		void list<Tp, Allocator>::sort(const_iterator first, const_iterator last, BinaryPredict cmp)
@@ -728,6 +738,8 @@ namespace kerbal
 		{
 			list_type_only::k_sort(first, last);
 		}
+
+#	endif
 
 		template <typename Tp, typename Allocator>
 		KERBAL_CONSTEXPR20
@@ -763,6 +775,9 @@ namespace kerbal
 			return list_type_only::k_remove_if_using_allocator(this->alloc(), first, last, predicate);
 		}
 
+
+#	if __cplusplus < 201103L
+
 		template <typename Tp, typename Allocator>
 		KERBAL_CONSTEXPR20
 		typename list<Tp, Allocator>::size_type
@@ -780,6 +795,20 @@ namespace kerbal
 			return list_type_only::k_unique_using_allocator(this->alloc(), pred);
 		}
 
+#	endif
+
+		template <typename Tp, typename Allocator>
+		template <typename BinaryPredicate, typename Project>
+		KERBAL_CONSTEXPR20
+		typename list<Tp, Allocator>::size_type
+		list<Tp, Allocator>::unique(BinaryPredicate pred, Project proj)
+		{
+			return list_type_only::unique_using_allocator(this->alloc(), pred, proj);
+		}
+
+
+#	if __cplusplus < 201103L
+
 		template <typename Tp, typename Allocator>
 		KERBAL_CONSTEXPR20
 		typename list<Tp, Allocator>::size_type
@@ -796,6 +825,18 @@ namespace kerbal
 		{
 			return list_type_only::k_unique_using_allocator(this->alloc(), first, last, pred);
 		}
+
+#	endif
+
+		template <typename Tp, typename Allocator>
+		template <typename BinaryPredicate, typename Project>
+		KERBAL_CONSTEXPR20
+		typename list<Tp, Allocator>::size_type
+		list<Tp, Allocator>::unique(const_iterator first, const_iterator last, BinaryPredicate pred, Project proj)
+		{
+			return list_type_only::unique_using_allocator(this->alloc(), first, last, pred, proj);
+		}
+
 
 		template <typename Tp, typename Allocator>
 		KERBAL_CONSTEXPR20

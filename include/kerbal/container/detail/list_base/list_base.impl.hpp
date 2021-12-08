@@ -16,6 +16,7 @@
 #include <kerbal/assign/generic_assign.hpp>
 #include <kerbal/compare/basic_compare.hpp>
 #include <kerbal/config/exceptions.hpp>
+#include <kerbal/function/identity.hpp>
 #include <kerbal/iterator/iterator.hpp>
 #include <kerbal/type_traits/conditional.hpp>
 #include <kerbal/type_traits/enable_if.hpp>
@@ -1243,17 +1244,17 @@ namespace kerbal
 			}
 
 			template <typename Tp>
-			template <typename BinaryPredict>
+			template <typename BinaryPredict, typename Project>
 			inline
 			KERBAL_CONSTEXPR20
-			void list_type_only<Tp>::k_merge_sort_merge(const_iterator first, const_iterator mid, const_iterator last, BinaryPredict cmp, MSM_VER_NOTHROW)
+			void list_type_only<Tp>::k_merge_sort_merge(const_iterator first, const_iterator mid, const_iterator last, BinaryPredict cmp, Project proj, MSM_VER_NOTHROW)
 			{
 				const_iterator before_mid(kerbal::iterator::prev(mid));
 				const_iterator i(first);
 				const_iterator j(mid);
 				while (i != mid) {
 					if (j != last) {
-						if (cmp(*j, *i)) {
+						if (cmp(proj(*j), proj(*i))) {
 							k_hook_node(i, (j++).cast_to_mutable().current);
 						} else {
 							++i;
@@ -1269,10 +1270,10 @@ namespace kerbal
 #		if KERBAL_HAS_EXCEPTIONS_SUPPORT
 
 			template <typename Tp>
-			template <typename BinaryPredict>
+			template <typename BinaryPredict, typename Project>
 			inline
 			KERBAL_CONSTEXPR20
-			void list_type_only<Tp>::k_merge_sort_merge(const_iterator first, const_iterator mid, const_iterator last, BinaryPredict cmp, MSM_VER_MAY_THROW)
+			void list_type_only<Tp>::k_merge_sort_merge(const_iterator first, const_iterator mid, const_iterator last, BinaryPredict cmp, Project proj, MSM_VER_MAY_THROW)
 			{
 				const_iterator before_mid(kerbal::iterator::prev(mid));
 				const_iterator i(first);
@@ -1280,7 +1281,7 @@ namespace kerbal
 				try {
 					while (i != mid) {
 						if (j != last) {
-							if (cmp(*j, *i)) {
+							if (cmp(proj(*j), proj(*i))) {
 								k_hook_node(i, (j++).cast_to_mutable().current);
 							} else {
 								++i;
@@ -1301,10 +1302,10 @@ namespace kerbal
 #		endif
 
 			template <typename Tp>
-			template <typename BinaryPredict>
+			template <typename BinaryPredict, typename Project>
 			inline
 			KERBAL_CONSTEXPR20
-			void list_type_only<Tp>::k_merge_sort_merge(const_iterator first, const_iterator mid, const_iterator last, BinaryPredict cmp)
+			void list_type_only<Tp>::k_merge_sort_merge(const_iterator first, const_iterator mid, const_iterator last, BinaryPredict cmp, Project proj)
 			{
 
 #		if KERBAL_HAS_EXCEPTIONS_SUPPORT
@@ -1313,8 +1314,9 @@ namespace kerbal
 
 				typedef typename kerbal::type_traits::conditional<
 						noexcept(cmp(
-								kerbal::utility::declval<const_reference>(),
-								kerbal::utility::declval<const_reference>())),
+								proj(kerbal::utility::declval<const_reference>()),
+								proj(kerbal::utility::declval<const_reference>())
+						)),
 						MSM_VER_NOTHROW,
 						MSM_VER_MAY_THROW
 				>::type MSM_VERSION;
@@ -1326,15 +1328,15 @@ namespace kerbal
 				typedef MSM_VER_NOTHROW MSM_VERSION;
 #		endif
 
-				k_merge_sort_merge(first, mid, last, cmp, MSM_VERSION());
+				k_merge_sort_merge(first, mid, last, cmp, proj, MSM_VERSION());
 
 			}
 
 			template <typename Tp>
-			template <typename BinaryPredict>
+			template <typename BinaryPredict, typename Project>
 			KERBAL_CONSTEXPR20
 			typename list_type_only<Tp>::const_iterator
-			list_type_only<Tp>::k_merge_sort_n(const_iterator first, difference_type len, BinaryPredict cmp)
+			list_type_only<Tp>::k_merge_sort_n(const_iterator first, difference_type len, BinaryPredict cmp, Project proj)
 			{
 				if (len == 0) {
 					return first;
@@ -1353,22 +1355,22 @@ namespace kerbal
 				difference_type first_half_len = len / 2;
 
 				const_iterator pre_first(kerbal::iterator::prev(first));
-				const_iterator mid(k_merge_sort_n(first, first_half_len, cmp));
+				const_iterator mid(k_merge_sort_n(first, first_half_len, cmp, proj));
 
 				const_iterator pre_mid(kerbal::iterator::prev(mid));
-				const_iterator last(k_merge_sort_n(mid, len - first_half_len, cmp));
+				const_iterator last(k_merge_sort_n(mid, len - first_half_len, cmp, proj));
 
 				first = kerbal::iterator::next(pre_first);
 				mid = kerbal::iterator::next(pre_mid);
-				k_merge_sort_merge(first, mid, last, cmp);
+				k_merge_sort_merge(first, mid, last, cmp, proj);
 
 				return last;
 			}
 
 			template <typename Tp>
-			template <typename BinaryPredict>
+			template <typename BinaryPredict, typename Project>
 			KERBAL_CONSTEXPR20
-			void list_type_only<Tp>::k_merge_sort(const_iterator first, const_iterator last, BinaryPredict cmp)
+			void list_type_only<Tp>::k_merge_sort(const_iterator first, const_iterator last, BinaryPredict cmp, Project proj)
 			{
 				if (first == last) {
 					return;
@@ -1377,7 +1379,7 @@ namespace kerbal
 				size_type right_len = 1;
 				list_type_only partition_left_nodes((init_list_node_ptr_to_self_tag()));
 				const_iterator it(kerbal::iterator::next(first));
-#		if __cpp_exceptions
+#		if KERBAL_HAS_EXCEPTIONS_SUPPORT
 				try {
 #		endif
 					while (it != last) {
@@ -1390,14 +1392,14 @@ namespace kerbal
 						}
 					}
 					merge_sort_n(partition_left_nodes.cbegin(), left_len, cmp); // sort left
-#		if __cpp_exceptions
+#		if KERBAL_HAS_EXCEPTIONS_SUPPORT
 				} catch (...) {
 					k_splice(first, partition_left_nodes);
 					throw;
 				}
 #		endif
 				k_splice(first, partition_left_nodes);
-				k_merge_sort_n(first, right_len, cmp);
+				k_merge_sort_n(first, right_len, cmp, proj);
 			}
 
 			template <typename Tp>
@@ -1636,12 +1638,22 @@ namespace kerbal
 			}
 
 			template <typename Tp>
+			template <typename BinaryPredict, typename Project>
+			KERBAL_CONSTEXPR20
+			void list_type_only<Tp>::k_sort(iterator first, iterator last, BinaryPredict cmp, Project proj)
+			{
+				merge_sort(first, last, cmp, proj);
+//				sort_method_overload<is_list_radix_sort_acceptable_type<value_type>::value>(first, last, cmp, proj);
+			}
+
+#		if __cplusplus < 201103L
+
+			template <typename Tp>
 			template <typename BinaryPredict>
 			KERBAL_CONSTEXPR20
 			void list_type_only<Tp>::k_sort(const_iterator first, const_iterator last, BinaryPredict cmp)
 			{
-//				k_merge_sort(first, last, cmp);
-				k_sort_method_overload<is_list_radix_sort_acceptable_type<value_type>::value>(first, last, cmp);
+				k__sort(first, last, cmp, kerbal::function::identity());
 			}
 
 			template <typename Tp>
@@ -1650,6 +1662,19 @@ namespace kerbal
 			{
 				k_sort(first, last, kerbal::compare::less<value_type>());
 			}
+
+#		endif
+
+
+			template <typename Tp>
+			template <typename BinaryPredict, typename Project>
+			KERBAL_CONSTEXPR20
+			void list_type_only<Tp>::sort(BinaryPredict cmp, Project proj)
+			{
+				k_sort(this->begin(), this->end(), cmp, proj);
+			}
+
+#		if __cplusplus < 201103L
 
 			template <typename Tp>
 			template <typename BinaryPredict>
@@ -1665,6 +1690,8 @@ namespace kerbal
 			{
 				k_sort(this->begin(), this->end());
 			}
+
+#		endif
 
 			template <typename Tp>
 			template <typename NodeAllocator>
@@ -1713,6 +1740,9 @@ namespace kerbal
 				return i;
 			}
 
+
+#		if __cplusplus < 201103L
+
 			template <typename Tp>
 			template <typename NodeAllocator>
 			KERBAL_CONSTEXPR20
@@ -1731,6 +1761,20 @@ namespace kerbal
 				return k_unique_using_allocator(alloc, this->cbegin(), this->cend(), pred);
 			}
 
+#		endif
+
+			template <typename Tp>
+			template <typename NodeAllocator, typename BinaryPredicate, typename Project>
+			KERBAL_CONSTEXPR20
+			typename list_allocator_unrelated<Tp>::size_type
+			list_allocator_unrelated<Tp>::unique_using_allocator(NodeAllocator & alloc, BinaryPredicate pred, Project proj)
+			{
+				return unique_using_allocator(alloc, this->cbegin(), this->cend(), pred, proj);
+			}
+
+
+#		if __cplusplus < 201103L
+
 			template <typename Tp>
 			template <typename NodeAllocator>
 			KERBAL_CONSTEXPR20
@@ -1746,13 +1790,24 @@ namespace kerbal
 			typename list_type_only<Tp>::size_type
 			list_type_only<Tp>::k_unique_using_allocator(NodeAllocator & alloc, const_iterator first, const_iterator last, BinaryPredicate pred)
 			{
+				return unique_using_allocator(alloc, first, last, kerbal::compare::equal_to<value_type>(), kerbal::function::identity());
+			}
+
+#		endif
+
+			template <typename Tp>
+			template <typename NodeAllocator, typename BinaryPredicate, typename Project>
+			KERBAL_CONSTEXPR20
+			typename list_allocator_unrelated<Tp>::size_type
+			list_allocator_unrelated<Tp>::unique_using_allocator(NodeAllocator & alloc, const_iterator first, const_iterator last, BinaryPredicate pred, Project proj)
+			{
 				size_type r = 0;
 
 				if (first != last) {
 					const_iterator forward(first); ++forward;
 
 					while (forward != last) {
-						if (pred(*first, *forward)) {
+						if (pred(proj(*first), proj(*forward))) {
 							node_base * p = list_type_unrelated::k_unhook_node(forward++.cast_to_mutable());
 							k_destroy_node(alloc, p);
 							// <=> k_erase_using_allocator(alloc, forward++);
@@ -1766,6 +1821,7 @@ namespace kerbal
 
 				return r;
 			}
+
 
 			template <typename Tp>
 			template <typename BinaryPredict>
