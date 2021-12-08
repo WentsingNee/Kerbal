@@ -567,12 +567,26 @@ namespace kerbal
 				KERBAL_CONSTEXPR20
 				void merge(list & other);
 
+#		if __cplusplus < 201103L
+
+				template <typename BinaryPredict, typename Project>
+				KERBAL_CONSTEXPR20
+				void sort(iterator first, iterator last, BinaryPredict cmp, Project proj);
+
 				template <typename BinaryPredict>
 				KERBAL_CONSTEXPR20
 				void sort(const_iterator first, const_iterator last, BinaryPredict cmp);
 
 				KERBAL_CONSTEXPR20
 				void sort(const_iterator first, const_iterator last);
+
+#		else
+
+				template <typename BinaryPredict = kerbal::compare::less<>, typename Project = kerbal::function::identity>
+				KERBAL_CONSTEXPR20
+				void sort(iterator first, iterator last, BinaryPredict cmp = {}, Project proj = {});
+
+#		endif
 
 				using list_type_only::sort;
 
