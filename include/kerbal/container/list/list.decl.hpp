@@ -14,11 +14,13 @@
 
 #include <kerbal/algorithm/swap.hpp>
 #include <kerbal/assign/ilist.hpp>
+#include <kerbal/compare/basic_compare.hpp>
 #include <kerbal/compare/sequence_compare.hpp>
 #include <kerbal/compatibility/constexpr.hpp>
 #include <kerbal/compatibility/move.hpp>
 #include <kerbal/compatibility/namespace_std_scope.hpp>
 #include <kerbal/compatibility/noexcept.hpp>
+#include <kerbal/function/identity.hpp>
 #include <kerbal/iterator/iterator_traits.hpp>
 #include <kerbal/memory/allocator_traits.hpp>
 #include <kerbal/type_traits/enable_if.hpp>
@@ -561,6 +563,15 @@ namespace kerbal
 				KERBAL_CONSTEXPR20
 				size_type remove_if(const_iterator first, const_iterator last, UnaryPredicate predicate);
 
+
+#		if __cplusplus >= 201103L
+
+				template <typename BinaryPredicate = kerbal::compare::equal_to<>, typename Project = kerbal::function::identity>
+				KERBAL_CONSTEXPR20
+				size_type unique(BinaryPredicate pred = {}, Project proj = {});
+
+#		else
+
 				KERBAL_CONSTEXPR20
 				size_type unique();
 
@@ -568,12 +579,34 @@ namespace kerbal
 				KERBAL_CONSTEXPR20
 				size_type unique(BinaryPredicate pred);
 
+				template <typename BinaryPredicate, typename Project>
+				KERBAL_CONSTEXPR20
+				size_type unique(BinaryPredicate pred, Project proj);
+
+#		endif
+
+
+#		if __cplusplus >= 201103L
+
+				template <typename BinaryPredicate = kerbal::compare::equal_to<>, typename Project = kerbal::function::identity>
+				KERBAL_CONSTEXPR20
+				size_type unique(const_iterator first, const_iterator last, BinaryPredicate pred = {}, Project proj = {});
+
+#		else
+
 				KERBAL_CONSTEXPR20
 				size_type unique(const_iterator first, const_iterator last);
 
 				template <typename BinaryPredicate>
 				KERBAL_CONSTEXPR20
 				size_type unique(const_iterator first, const_iterator last, BinaryPredicate pred);
+
+				template <typename BinaryPredicate, typename Project>
+				KERBAL_CONSTEXPR20
+				size_type unique(const_iterator first, const_iterator last, BinaryPredicate pred, Project proj);
+
+#		endif
+
 
 				KERBAL_CONSTEXPR20
 				void splice(const_iterator pos, list & other) KERBAL_NOEXCEPT;

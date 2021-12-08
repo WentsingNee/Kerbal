@@ -18,6 +18,7 @@
 #include <kerbal/compatibility/constexpr.hpp>
 #include <kerbal/compatibility/noexcept.hpp>
 #include <kerbal/config/exceptions.hpp>
+#include <kerbal/function/identity.hpp>
 #include <kerbal/iterator/iterator.hpp>
 #include <kerbal/type_traits/conditional.hpp>
 #include <kerbal/type_traits/enable_if.hpp>
@@ -1696,6 +1697,9 @@ namespace kerbal
 				return i;
 			}
 
+
+#		if __cplusplus < 201103L
+
 			template <typename T>
 			template <typename NodeAllocator>
 			KERBAL_CONSTEXPR20
@@ -1714,6 +1718,20 @@ namespace kerbal
 				return k_unique_using_allocator(alloc, this->cbegin(), this->cend(), pred);
 			}
 
+#		endif
+
+			template <typename T>
+			template <typename NodeAllocator, typename BinaryPredicate, typename Project>
+			KERBAL_CONSTEXPR20
+			typename list_type_only<T>::size_type
+			list_type_only<T>::k_unique_using_allocator(NodeAllocator & alloc, BinaryPredicate pred, Project proj)
+			{
+				return k_unique_using_allocator(alloc, this->cbegin(), this->cend(), pred, proj);
+			}
+
+
+#		if __cplusplus < 201103L
+
 			template <typename T>
 			template <typename NodeAllocator>
 			KERBAL_CONSTEXPR20
@@ -1729,13 +1747,24 @@ namespace kerbal
 			typename list_type_only<T>::size_type
 			list_type_only<T>::k_unique_using_allocator(NodeAllocator & alloc, const_iterator first, const_iterator last, BinaryPredicate pred)
 			{
+				return k_unique_using_allocator(alloc, first, last, kerbal::compare::equal_to<value_type>(), kerbal::function::identity());
+			}
+
+#		endif
+
+			template <typename T>
+			template <typename NodeAllocator, typename BinaryPredicate, typename Project>
+			KERBAL_CONSTEXPR20
+			typename list_type_only<T>::size_type
+			list_type_only<T>::k_unique_using_allocator(NodeAllocator & alloc, const_iterator first, const_iterator last, BinaryPredicate pred, Project proj)
+			{
 				size_type r = 0;
 
 				if (first != last) {
 					const_iterator forward(first); ++forward;
 
 					while (forward != last) {
-						if (pred(*first, *forward)) {
+						if (pred(proj(*first), proj(*forward))) {
 							node_base * p = list_type_unrelated::k_unhook_node(forward++.cast_to_mutable());
 							k_destroy_node(alloc, p);
 							// <=> k_erase_using_allocator(alloc, forward++);
@@ -1749,6 +1778,7 @@ namespace kerbal
 
 				return r;
 			}
+
 
 			template <typename T>
 			template <typename BinaryPredict>
