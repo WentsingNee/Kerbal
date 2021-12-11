@@ -1403,10 +1403,8 @@ namespace kerbal
 			}
 
 			template <typename Tp>
-			template <bool is_radix_sort_acceptable_type>
 			KERBAL_CONSTEXPR20
-			typename kerbal::type_traits::enable_if<is_radix_sort_acceptable_type>::type
-			list_type_only<Tp>::k_radix_sort_back_fill(
+			void list_type_only<Tp>::k_radix_sort_back_fill(
 					const_iterator insert_pos, kerbal::type_traits::false_type /*unsigned*/,
 					list_type_only buckets[], std::size_t BUCKETS_NUM) KERBAL_NOEXCEPT
 			{
@@ -1416,10 +1414,8 @@ namespace kerbal
 			}
 
 			template <typename Tp>
-			template <bool is_radix_sort_acceptable_type>
 			KERBAL_CONSTEXPR20
-			typename kerbal::type_traits::enable_if<is_radix_sort_acceptable_type>::type
-			list_type_only<Tp>::k_radix_sort_back_fill(
+			void list_type_only<Tp>::k_radix_sort_back_fill(
 					const_iterator insert_pos, kerbal::type_traits::true_type /*signed*/,
 					list_type_only buckets[], std::size_t BUCKETS_NUM) KERBAL_NOEXCEPT
 			{
@@ -1432,11 +1428,12 @@ namespace kerbal
 			}
 
 			template <typename Tp>
-			template <std::size_t RADIX_BIT_WIDTH>
+			template <std::size_t RADIX_BIT_WIDTH, typename Project>
 			KERBAL_CONSTEXPR20
 			void list_type_only<Tp>::k_radix_sort(
 					const_iterator first, const_iterator last, kerbal::type_traits::false_type asc,
-					kerbal::type_traits::integral_constant<std::size_t, RADIX_BIT_WIDTH>) KERBAL_NOEXCEPT
+					kerbal::type_traits::integral_constant<std::size_t, RADIX_BIT_WIDTH>,
+					Project proj) KERBAL_NOEXCEPT
 			{
 				typedef kerbal::type_traits::integral_constant<std::size_t, 1 << RADIX_BIT_WIDTH> BUCKETS_NUM;
 				list_type_only buckets[2][BUCKETS_NUM::value];
@@ -1452,7 +1449,7 @@ namespace kerbal
 
 				// first round
 				for (const_iterator it(first); it != last; ) {
-					int bucket_id = *it % BUCKETS_NUM::value;
+					int bucket_id = proj(*it) % BUCKETS_NUM::value;
 					list_type_only & bucket_in = buckets[0][bucket_id];
 					bucket_in.k_splice(bucket_in.cend(), it++);
 				}
@@ -1466,24 +1463,25 @@ namespace kerbal
 						const_iterator it(bucket_out.begin());
 						const_iterator const cend(bucket_out.end());
 						while (it != cend) {
-							int bucket_id = (*it >> (RADIX_BIT_WIDTH * round)) % BUCKETS_NUM::value;
+							int bucket_id = (proj(*it) >> (RADIX_BIT_WIDTH * round)) % BUCKETS_NUM::value;
 							list_type_only & bucket_in = buckets_to[bucket_id];
 							bucket_in.k_splice(bucket_in.cend(), it++);
 						}
 					}
 				}
 
-				k_radix_sort_back_fill<true>(
+				k_radix_sort_back_fill(
 						last, kerbal::type_traits::is_signed<value_type>(),
 						buckets[(ROUNDS::value + 1) % 2], BUCKETS_NUM::value);
 			}
 
 			template <typename Tp>
-			template <std::size_t RADIX_BIT_WIDTH>
+			template <std::size_t RADIX_BIT_WIDTH, typename Project>
 			KERBAL_CONSTEXPR20
 			void list_type_only<Tp>::k_radix_sort(
 					const_iterator first, const_iterator last, kerbal::type_traits::true_type desc,
-					kerbal::type_traits::integral_constant<std::size_t, RADIX_BIT_WIDTH>) KERBAL_NOEXCEPT
+					kerbal::type_traits::integral_constant<std::size_t, RADIX_BIT_WIDTH>,
+					Project proj) KERBAL_NOEXCEPT
 			{
 				typedef kerbal::type_traits::integral_constant<std::size_t, 1 << RADIX_BIT_WIDTH> BUCKETS_NUM;
 				list_type_only buckets[2][BUCKETS_NUM::value];
@@ -1499,7 +1497,7 @@ namespace kerbal
 
 				// first round
 				for (const_iterator it(first); it != last; ) {
-					int bucket_id = BUCKETS_NUM::value - 1 - *it % BUCKETS_NUM::value;
+					int bucket_id = BUCKETS_NUM::value - 1 - proj(*it) % BUCKETS_NUM::value;
 					list_type_only & bucket_in = buckets[0][bucket_id];
 					bucket_in.k_splice(bucket_in.cend(), it++);
 				}
@@ -1513,128 +1511,153 @@ namespace kerbal
 						const_iterator it(bucket_out.begin());
 						const_iterator const cend(bucket_out.end());
 						while (it != cend) {
-							int bucket_id = BUCKETS_NUM::value - 1 - (*it >> (RADIX_BIT_WIDTH * round)) % BUCKETS_NUM::value;
+							int bucket_id = BUCKETS_NUM::value - 1 - (proj(*it) >> (RADIX_BIT_WIDTH * round)) % BUCKETS_NUM::value;
 							list_type_only & bucket_in = buckets_to[bucket_id];
 							bucket_in.k_splice(bucket_in.cend(), it++);
 						}
 					}
 				}
 
-				k_radix_sort_back_fill<true>(
+				k_radix_sort_back_fill(
 						last, kerbal::type_traits::is_signed<value_type>(),
 						buckets[(ROUNDS::value + 1) % 2], BUCKETS_NUM::value);
 			}
 
 			template <typename Tp>
-			template <typename Order>
+			template <typename Order, typename Project>
 			KERBAL_CONSTEXPR20
-			void list_type_only<Tp>::k_radix_sort(const_iterator first, const_iterator last, Order /*order*/) KERBAL_NOEXCEPT
+			typename kerbal::type_traits::enable_if<
+					is_list_radix_sort_acceptable_project<typename list_type_only<Tp>::value_type, Project>::value
+			>::type
+			list_type_only<Tp>::k_radix_sort(const_iterator first, const_iterator last, Order /*order*/, Project proj) KERBAL_NOEXCEPT
 			{
 				k_radix_sort(first, last, kerbal::type_traits::bool_constant<Order::value>(),
-						   kerbal::type_traits::integral_constant<std::size_t, CHAR_BIT>());
+						   kerbal::type_traits::integral_constant<std::size_t, CHAR_BIT>(), proj);
 			}
 
 			template <typename Tp>
-			template <bool is_radix_sort_acceptable_type>
+			template <typename Project>
 			KERBAL_CONSTEXPR20
-			typename kerbal::type_traits::enable_if<is_radix_sort_acceptable_type>::type
-			list_type_only<Tp>::k_radix_sort(const_iterator first, const_iterator last) KERBAL_NOEXCEPT
+			typename kerbal::type_traits::enable_if<
+					is_list_radix_sort_acceptable_project<typename list_type_only<Tp>::value_type, Project>::value
+			>::type
+			list_type_only<Tp>::k_radix_sort(const_iterator first, const_iterator last, Project proj) KERBAL_NOEXCEPT
 			{
-				k_radix_sort(first, last, kerbal::type_traits::false_type());
+				k_radix_sort(first, last, kerbal::type_traits::false_type(), proj);
 			}
 
 			template <typename Tp>
-			template <bool is_radix_sort_acceptable_type, typename BinaryPredict>
+			template <typename BinaryPredict, typename Project>
 			KERBAL_CONSTEXPR20
-			typename kerbal::type_traits::enable_if<is_radix_sort_acceptable_type>::type
-			list_type_only<Tp>::k_sort_method_overload(const_iterator first, const_iterator last, BinaryPredict cmp)
+			typename kerbal::type_traits::enable_if<
+					is_list_radix_sort_acceptable_project<typename list_type_only<Tp>::value_type, Project>::value
+			>::type
+			list_type_only<Tp>::k_sort_method_overload(const_iterator first, const_iterator last, BinaryPredict cmp, Project proj)
 			{
-				k_merge_sort(first, last, cmp);
+				k_merge_sort(first, last, cmp, proj);
 			}
 
 			template <typename Tp>
-			template <bool is_radix_sort_acceptable_type>
+			template <typename Project>
 			KERBAL_CONSTEXPR20
-			typename kerbal::type_traits::enable_if<is_radix_sort_acceptable_type>::type
-			list_type_only<Tp>::k_sort_method_overload(const_iterator first, const_iterator last, kerbal::compare::less<value_type> /*cmp*/)
+			typename kerbal::type_traits::enable_if<
+					is_list_radix_sort_acceptable_project<typename list_type_only<Tp>::value_type, Project>::value
+			>::type
+			list_type_only<Tp>::k_sort_method_overload(const_iterator first, const_iterator last, kerbal::compare::less<value_type> /*cmp*/, Project proj)
 			{
-				k_radix_sort(first, last, kerbal::type_traits::false_type());
+				k_radix_sort(first, last, kerbal::type_traits::false_type(), proj);
 			}
 
 			template <typename Tp>
-			template <bool is_radix_sort_acceptable_type>
+			template <typename Project>
 			KERBAL_CONSTEXPR20
-			typename kerbal::type_traits::enable_if<is_radix_sort_acceptable_type>::type
-			list_type_only<Tp>::k_sort_method_overload(const_iterator first, const_iterator last, kerbal::compare::greater<value_type> /*cmp*/)
+			typename kerbal::type_traits::enable_if<
+					is_list_radix_sort_acceptable_project<typename list_type_only<Tp>::value_type, Project>::value
+			>::type
+			list_type_only<Tp>::k_sort_method_overload(const_iterator first, const_iterator last, kerbal::compare::greater<value_type> /*cmp*/, Project proj)
 			{
-				k_radix_sort(first, last, kerbal::type_traits::true_type());
+				k_radix_sort(first, last, kerbal::type_traits::true_type(), proj);
 			}
 
 			template <typename Tp>
-			template <bool is_radix_sort_acceptable_type>
+			template <typename Project>
 			KERBAL_CONSTEXPR20
-			typename kerbal::type_traits::enable_if<is_radix_sort_acceptable_type>::type
-			list_type_only<Tp>::k_sort_method_overload(const_iterator first, const_iterator last, kerbal::compare::less<void> /*cmp*/)
+			typename kerbal::type_traits::enable_if<
+					is_list_radix_sort_acceptable_project<typename list_type_only<Tp>::value_type, Project>::value
+			>::type
+			list_type_only<Tp>::k_sort_method_overload(const_iterator first, const_iterator last, kerbal::compare::less<void> /*cmp*/, Project proj)
 			{
-				k_radix_sort(first, last, kerbal::type_traits::false_type());
+				k_radix_sort(first, last, kerbal::type_traits::false_type(), proj);
 			}
 
 			template <typename Tp>
-			template <bool is_radix_sort_acceptable_type>
+			template <typename Project>
 			KERBAL_CONSTEXPR20
-			typename kerbal::type_traits::enable_if<is_radix_sort_acceptable_type>::type
-			list_type_only<Tp>::k_sort_method_overload(const_iterator first, const_iterator last, kerbal::compare::greater<void> /*cmp*/)
+			typename kerbal::type_traits::enable_if<
+					is_list_radix_sort_acceptable_project<typename list_type_only<Tp>::value_type, Project>::value
+			>::type
+			list_type_only<Tp>::k_sort_method_overload(const_iterator first, const_iterator last, kerbal::compare::greater<void> /*cmp*/, Project proj)
 			{
-				k_radix_sort(first, last, kerbal::type_traits::true_type());
+				k_radix_sort(first, last, kerbal::type_traits::true_type(), proj);
 			}
 
 			template <typename Tp>
-			template <bool is_radix_sort_acceptable_type>
+			template <typename Project>
 			KERBAL_CONSTEXPR20
-			typename kerbal::type_traits::enable_if<is_radix_sort_acceptable_type>::type
-			list_type_only<Tp>::k_sort_method_overload(const_iterator first, const_iterator last, std::less<value_type> /*cmp*/)
+			typename kerbal::type_traits::enable_if<
+					is_list_radix_sort_acceptable_project<typename list_type_only<Tp>::value_type, Project>::value
+			>::type
+			list_type_only<Tp>::k_sort_method_overload(const_iterator first, const_iterator last, std::less<value_type> /*cmp*/, Project proj)
 			{
-				k_radix_sort(first, last, kerbal::type_traits::false_type());
+				k_radix_sort(first, last, kerbal::type_traits::false_type(), proj);
 			}
 
 			template <typename Tp>
-			template <bool is_radix_sort_acceptable_type>
+			template <typename Project>
 			KERBAL_CONSTEXPR20
-			typename kerbal::type_traits::enable_if<is_radix_sort_acceptable_type>::type
-			list_type_only<Tp>::k_sort_method_overload(const_iterator first, const_iterator last, std::greater<value_type> /*cmp*/)
+			typename kerbal::type_traits::enable_if<
+					is_list_radix_sort_acceptable_project<typename list_type_only<Tp>::value_type, Project>::value
+			>::type
+			list_type_only<Tp>::k_sort_method_overload(const_iterator first, const_iterator last, std::greater<value_type> /*cmp*/, Project proj)
 			{
-				k_radix_sort(first, last, kerbal::type_traits::true_type());
+				k_radix_sort(first, last, kerbal::type_traits::true_type(), proj);
 			}
 
 #		if __cplusplus >= 201402L
 
 			template <typename Tp>
-			template <bool is_radix_sort_acceptable_type>
+			template <typename Project>
 			KERBAL_CONSTEXPR20
-			typename kerbal::type_traits::enable_if<is_radix_sort_acceptable_type>::type
-			list_type_only<Tp>::k_sort_method_overload(const_iterator first, const_iterator last, std::less<void> /*cmp*/)
+			typename kerbal::type_traits::enable_if<
+					is_list_radix_sort_acceptable_project<typename list_type_only<Tp>::value_type, Project>::value
+			>::type
+			list_type_only<Tp>::k_sort_method_overload(const_iterator first, const_iterator last, std::less<void> /*cmp*/, Project proj)
 			{
-				k_radix_sort(first, last, kerbal::type_traits::false_type());
+				k_radix_sort(first, last, kerbal::type_traits::false_type(), proj);
 			}
 
 			template <typename Tp>
-			template <bool is_radix_sort_acceptable_type>
+			template <typename Project>
 			KERBAL_CONSTEXPR20
-			typename kerbal::type_traits::enable_if<is_radix_sort_acceptable_type>::type
-			list_type_only<Tp>::k_sort_method_overload(const_iterator first, const_iterator last, std::greater<void> /*cmp*/)
+			typename kerbal::type_traits::enable_if<
+					is_list_radix_sort_acceptable_project<typename list_type_only<Tp>::value_type, Project>::value
+			>::type
+			list_type_only<Tp>::k_sort_method_overload(const_iterator first, const_iterator last, std::greater<void> /*cmp*/, Project proj)
 			{
-				k_radix_sort(first, last, kerbal::type_traits::true_type());
+				k_radix_sort(first, last, kerbal::type_traits::true_type(), proj);
 			}
 
 #		endif
 
 			template <typename Tp>
-			template <bool is_radix_sort_acceptable_type, typename BinaryPredict>
+			template <typename BinaryPredict, typename Project>
 			KERBAL_CONSTEXPR20
-			typename kerbal::type_traits::enable_if<!is_radix_sort_acceptable_type>::type
-			list_type_only<Tp>::k_sort_method_overload(const_iterator first, const_iterator last, BinaryPredict cmp)
+			typename kerbal::type_traits::enable_if<
+					!is_list_radix_sort_acceptable_project<typename list_type_only<Tp>::value_type, Project>::value
+			>::type
+			list_type_only<Tp>::k_sort_method_overload(const_iterator first, const_iterator last, BinaryPredict cmp, Project proj)
 			{
-				k_merge_sort(first, last, cmp);
+				k_merge_sort(first, last, cmp, proj);
 			}
 
 			template <typename Tp>
@@ -1642,8 +1665,8 @@ namespace kerbal
 			KERBAL_CONSTEXPR20
 			void list_type_only<Tp>::k_sort(iterator first, iterator last, BinaryPredict cmp, Project proj)
 			{
-				merge_sort(first, last, cmp, proj);
-//				sort_method_overload<is_list_radix_sort_acceptable_type<value_type>::value>(first, last, cmp, proj);
+//				merge_sort(first, last, cmp, proj);
+				k_sort_method_overload<is_list_radix_sort_acceptable_type<value_type>::value>(first, last, cmp, proj);
 			}
 
 #		if __cplusplus < 201103L
@@ -1766,8 +1789,8 @@ namespace kerbal
 			template <typename Tp>
 			template <typename NodeAllocator, typename BinaryPredicate, typename Project>
 			KERBAL_CONSTEXPR20
-			typename list_allocator_unrelated<Tp>::size_type
-			list_allocator_unrelated<Tp>::unique_using_allocator(NodeAllocator & alloc, BinaryPredicate pred, Project proj)
+			typename list_type_only<Tp>::size_type
+			list_type_only<Tp>::unique_using_allocator(NodeAllocator & alloc, BinaryPredicate pred, Project proj)
 			{
 				return unique_using_allocator(alloc, this->cbegin(), this->cend(), pred, proj);
 			}
@@ -1798,8 +1821,8 @@ namespace kerbal
 			template <typename Tp>
 			template <typename NodeAllocator, typename BinaryPredicate, typename Project>
 			KERBAL_CONSTEXPR20
-			typename list_allocator_unrelated<Tp>::size_type
-			list_allocator_unrelated<Tp>::unique_using_allocator(NodeAllocator & alloc, const_iterator first, const_iterator last, BinaryPredicate pred, Project proj)
+			typename list_type_only<Tp>::size_type
+			list_type_only<Tp>::unique_using_allocator(NodeAllocator & alloc, const_iterator first, const_iterator last, BinaryPredicate pred, Project proj)
 			{
 				size_type r = 0;
 

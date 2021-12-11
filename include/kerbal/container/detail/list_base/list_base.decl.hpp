@@ -25,6 +25,8 @@
 #include <kerbal/type_traits/enable_if.hpp>
 #include <kerbal/type_traits/integral_constant.hpp>
 #include <kerbal/type_traits/is_integral.hpp>
+#include <kerbal/type_traits/remove_const.hpp>
+#include <kerbal/type_traits/remove_reference.hpp>
 #include <kerbal/utility/declval.hpp>
 
 #if __cplusplus < 201103L
@@ -57,14 +59,65 @@ namespace kerbal
 		namespace detail
 		{
 
-			template <typename Tp>
+			template <typename T>
 			struct is_list_radix_sort_acceptable_type :
 					kerbal::type_traits::bool_constant<
-						kerbal::type_traits::is_integral<Tp>::value &&
-						sizeof(Tp) <= 4
+						kerbal::type_traits::is_integral<
+							typename kerbal::type_traits::remove_const<
+								typename kerbal::type_traits::remove_reference<T>::type
+							>::type
+						>::value &&
+						sizeof(T) <= 4
 					>
 			{
 			};
+
+#	if __cplusplus < 201103L
+
+			template <typename T, typename Project>
+			struct is_list_radix_sort_acceptable_project :
+					kerbal::type_traits::false_type
+			{
+			};
+
+			template <typename T>
+			struct is_list_radix_sort_acceptable_project<T, kerbal::function::identity> :
+					is_list_radix_sort_acceptable_type<T>
+			{
+			};
+
+#	else
+
+			template <typename T, typename Project>
+			struct is_list_radix_sort_acceptable_project_helper
+			{
+					typedef typename kerbal::container::list<T>::const_reference const_reference;
+					typedef decltype(
+							kerbal::utility::declval<Project>()(
+								kerbal::utility::declval<const_reference>()
+							)
+					) project_result_type;
+					typedef kerbal::type_traits::bool_constant<noexcept(
+							kerbal::utility::declval<Project>()(
+								kerbal::utility::declval<const_reference>()
+							)
+					)> PROJECT_IS_NOEXCEPT;
+			};
+
+			template <typename T, typename Project>
+			struct is_list_radix_sort_acceptable_project :
+					kerbal::type_traits::bool_constant<
+						is_list_radix_sort_acceptable_type<
+							typename is_list_radix_sort_acceptable_project_helper<T, Project>::project_result_type
+						>::value &&
+						is_list_radix_sort_acceptable_project_helper<T, Project>::PROJECT_IS_NOEXCEPT::value
+					>
+			{
+			};
+
+#	endif
+
+
 
 			class list_type_unrelated
 			{
@@ -768,106 +821,130 @@ namespace kerbal
 
 				private:
 
-					template <bool is_radix_sort_acceptable_type>
 					KERBAL_CONSTEXPR20
-					typename kerbal::type_traits::enable_if<is_radix_sort_acceptable_type>::type
 					static k_radix_sort_back_fill(const_iterator insert_pos, kerbal::type_traits::false_type /*unsigned*/,
-												list_type_only buckets[], std::size_t BUCKETS_NUM) KERBAL_NOEXCEPT;
+													list_type_only buckets[], std::size_t BUCKETS_NUM) KERBAL_NOEXCEPT;
 
-					template <bool is_radix_sort_acceptable_type>
 					KERBAL_CONSTEXPR20
-					typename kerbal::type_traits::enable_if<is_radix_sort_acceptable_type>::type
 					static k_radix_sort_back_fill(const_iterator insert_pos, kerbal::type_traits::true_type /*signed*/,
-												list_type_only buckets[], std::size_t BUCKETS_NUM) KERBAL_NOEXCEPT;
+													list_type_only buckets[], std::size_t BUCKETS_NUM) KERBAL_NOEXCEPT;
 
-					template <std::size_t RADIX_BIT_WIDTH>
+					template <std::size_t RADIX_BIT_WIDTH, typename Project>
 					KERBAL_CONSTEXPR20
 					static void k_radix_sort(const_iterator first, const_iterator last, kerbal::type_traits::false_type asc,
-										   kerbal::type_traits::integral_constant<std::size_t, RADIX_BIT_WIDTH>) KERBAL_NOEXCEPT;
+										   kerbal::type_traits::integral_constant<std::size_t, RADIX_BIT_WIDTH>,
+										   Project proj) KERBAL_NOEXCEPT;
 
-					template <std::size_t RADIX_BIT_WIDTH>
+					template <std::size_t RADIX_BIT_WIDTH, typename Project>
 					KERBAL_CONSTEXPR20
 					static void k_radix_sort(const_iterator first, const_iterator last, kerbal::type_traits::true_type desc,
-										   kerbal::type_traits::integral_constant<std::size_t, RADIX_BIT_WIDTH>) KERBAL_NOEXCEPT;
+										   kerbal::type_traits::integral_constant<std::size_t, RADIX_BIT_WIDTH>,
+										   Project proj) KERBAL_NOEXCEPT;
 
 				protected:
 
-					template <typename Order>
-					KERBAL_CONSTEXPR20
-					static void k_radix_sort(const_iterator first, const_iterator last, Order order) KERBAL_NOEXCEPT;
-
-					template <bool is_radix_sort_acceptable_type>
+					template <typename Order, typename Project>
 					KERBAL_CONSTEXPR20
 					static
-					typename kerbal::type_traits::enable_if<is_radix_sort_acceptable_type>::type
-					k_radix_sort(const_iterator first, const_iterator last) KERBAL_NOEXCEPT;
+					typename kerbal::type_traits::enable_if<
+							is_list_radix_sort_acceptable_project<value_type, Project>::value
+					>::type
+					k_radix_sort(const_iterator first, const_iterator last, Order order, Project proj) KERBAL_NOEXCEPT;
+
+					template <typename Project>
+					KERBAL_CONSTEXPR20
+					static
+					typename kerbal::type_traits::enable_if<
+							is_list_radix_sort_acceptable_project<value_type, Project>::value
+					>::type
+					k_radix_sort(const_iterator first, const_iterator last, Project proj) KERBAL_NOEXCEPT;
 
 
 				private:
 
-					template <bool is_radix_sort_acceptable_type, typename BinaryPredict>
+					template <typename BinaryPredict, typename Project>
 					KERBAL_CONSTEXPR20
 					static
-					typename kerbal::type_traits::enable_if<is_radix_sort_acceptable_type>::type
-					k_sort_method_overload(const_iterator first, const_iterator last, BinaryPredict cmp);
+					typename kerbal::type_traits::enable_if<
+							is_list_radix_sort_acceptable_project<value_type, Project>::value
+					>::type
+					k_sort_method_overload(const_iterator first, const_iterator last, BinaryPredict cmp, Project proj);
 
-					template <bool is_radix_sort_acceptable_type>
+					template <typename Project>
 					KERBAL_CONSTEXPR20
 					static
-					typename kerbal::type_traits::enable_if<is_radix_sort_acceptable_type>::type
-					k_sort_method_overload(const_iterator first, const_iterator last, kerbal::compare::less<value_type> cmp);
+					typename kerbal::type_traits::enable_if<
+							is_list_radix_sort_acceptable_project<value_type, Project>::value
+					>::type
+					k_sort_method_overload(const_iterator first, const_iterator last, kerbal::compare::less<value_type> cmp, Project proj);
 
-					template <bool is_radix_sort_acceptable_type>
+					template <typename Project>
 					KERBAL_CONSTEXPR20
 					static
-					typename kerbal::type_traits::enable_if<is_radix_sort_acceptable_type>::type
-					k_sort_method_overload(const_iterator first, const_iterator last, kerbal::compare::greater<value_type> cmp);
+					typename kerbal::type_traits::enable_if<
+							is_list_radix_sort_acceptable_project<value_type, Project>::value
+					>::type
+					k_sort_method_overload(const_iterator first, const_iterator last, kerbal::compare::greater<value_type> cmp, Project proj);
 
-					template <bool is_radix_sort_acceptable_type>
+					template <typename Project>
 					KERBAL_CONSTEXPR20
 					static
-					typename kerbal::type_traits::enable_if<is_radix_sort_acceptable_type>::type
-					k_sort_method_overload(const_iterator first, const_iterator last, kerbal::compare::less<void> cmp);
+					typename kerbal::type_traits::enable_if<
+							is_list_radix_sort_acceptable_project<value_type, Project>::value
+					>::type
+					k_sort_method_overload(const_iterator first, const_iterator last, kerbal::compare::less<void> cmp, Project proj);
 
-					template <bool is_radix_sort_acceptable_type>
+					template <typename Project>
 					KERBAL_CONSTEXPR20
 					static
-					typename kerbal::type_traits::enable_if<is_radix_sort_acceptable_type>::type
-					k_sort_method_overload(const_iterator first, const_iterator last, kerbal::compare::greater<void> cmp);
+					typename kerbal::type_traits::enable_if<
+							is_list_radix_sort_acceptable_project<value_type, Project>::value
+					>::type
+					k_sort_method_overload(const_iterator first, const_iterator last, kerbal::compare::greater<void> cmp, Project proj);
 
-					template <bool is_radix_sort_acceptable_type>
+					template <typename Project>
 					KERBAL_CONSTEXPR20
 					static
-					typename kerbal::type_traits::enable_if<is_radix_sort_acceptable_type>::type
-					k_sort_method_overload(const_iterator first, const_iterator last, std::less<value_type> cmp);
+					typename kerbal::type_traits::enable_if<
+							is_list_radix_sort_acceptable_project<value_type, Project>::value
+					>::type
+					k_sort_method_overload(const_iterator first, const_iterator last, std::less<value_type> cmp, Project proj);
 
-					template <bool is_radix_sort_acceptable_type>
+					template <typename Project>
 					KERBAL_CONSTEXPR20
 					static
-					typename kerbal::type_traits::enable_if<is_radix_sort_acceptable_type>::type
-					k_sort_method_overload(const_iterator first, const_iterator last, std::greater<value_type> cmp);
+					typename kerbal::type_traits::enable_if<
+							is_list_radix_sort_acceptable_project<value_type, Project>::value
+					>::type
+					k_sort_method_overload(const_iterator first, const_iterator last, std::greater<value_type> cmp, Project proj);
 
 #			if __cplusplus >= 201402L
 
-					template <bool is_radix_sort_acceptable_type>
+					template <typename Project>
 					KERBAL_CONSTEXPR20
 					static
-					typename kerbal::type_traits::enable_if<is_radix_sort_acceptable_type>::type
-					k_sort_method_overload(const_iterator first, const_iterator last, std::less<void> cmp);
+					typename kerbal::type_traits::enable_if<
+							is_list_radix_sort_acceptable_project<value_type, Project>::value
+					>::type
+					k_sort_method_overload(const_iterator first, const_iterator last, std::less<void> cmp, Project proj);
 
-					template <bool is_radix_sort_acceptable_type>
+					template <typename Project>
 					KERBAL_CONSTEXPR20
 					static
-					typename kerbal::type_traits::enable_if<is_radix_sort_acceptable_type>::type
-					k_sort_method_overload(const_iterator first, const_iterator last, std::greater<void> cmp);
+					typename kerbal::type_traits::enable_if<
+							is_list_radix_sort_acceptable_project<value_type, Project>::value
+					>::type
+					k_sort_method_overload(const_iterator first, const_iterator last, std::greater<void> cmp, Project proj);
 
 #			endif
 
-					template <bool is_radix_sort_acceptable_type, typename BinaryPredict>
+					template <typename BinaryPredict, typename Project>
 					KERBAL_CONSTEXPR20
 					static
-					typename kerbal::type_traits::enable_if<!is_radix_sort_acceptable_type>::type
-					k_sort_method_overload(const_iterator first, const_iterator last, BinaryPredict cmp);
+					typename kerbal::type_traits::enable_if<
+							!is_list_radix_sort_acceptable_project<value_type, Project>::value
+					>::type
+					k_sort_method_overload(const_iterator first, const_iterator last, BinaryPredict cmp, Project proj);
 
 
 				protected:
