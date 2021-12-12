@@ -1745,7 +1745,34 @@ namespace kerbal
 			list_type_only<T>::
 			k_merge_sort(const_iterator first, const_iterator last, BinaryPredict cmp)
 			{
-				k_merge_sort_n(first, kerbal::iterator::distance(first, last), cmp);
+				if (first == last) {
+					return;
+				}
+				size_type left_len = 0;
+				size_type right_len = 1;
+				list_type_only partition_left_nodes((init_list_node_ptr_to_self_tag()));
+				const_iterator it(kerbal::iterator::next(first));
+#		if KERBAL_HAS_EXCEPTIONS_SUPPORT
+				try {
+#		endif
+					while (it != last) {
+						if (cmp(*it, *first)) {
+							partition_left_nodes.k_splice(partition_left_nodes.cend(), it++);
+							++left_len;
+						} else {
+							++it;
+							++right_len;
+						}
+					}
+					k_merge_sort_n(partition_left_nodes.cbegin(), left_len, cmp); // sort left
+#		if KERBAL_HAS_EXCEPTIONS_SUPPORT
+				} catch (...) {
+					k_splice(first, partition_left_nodes);
+					throw;
+				}
+#		endif
+				k_splice(first, partition_left_nodes);
+				k_merge_sort_n(first, right_len, cmp);
 			}
 
 			template <typename T>
