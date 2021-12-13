@@ -352,7 +352,10 @@ namespace kerbal
 
 			public:
 
-				_K_rawst_base() = default;
+				KERBAL_CONSTEXPR20
+				_K_rawst_base() KERBAL_NOEXCEPT
+				{
+				}
 
 				template <typename ... Args>
 				KERBAL_CONSTEXPR20
@@ -451,7 +454,10 @@ namespace kerbal
 
 			public:
 
-				_K_rawst_base() = default;
+				KERBAL_CONSTEXPR
+				_K_rawst_base() KERBAL_NOEXCEPT
+				{
+				}
 
 				template <typename ... Args>
 				KERBAL_CONSTEXPR
@@ -552,7 +558,10 @@ namespace kerbal
 
 			public:
 
-				_K_rawst_base() = default;
+				KERBAL_CONSTEXPR
+				_K_rawst_base() KERBAL_NOEXCEPT
+				{
+				}
 
 				template <typename ... Args>
 				KERBAL_CONSTEXPR
@@ -642,8 +651,6 @@ namespace kerbal
 
 #		if __cplusplus < 201103L
 
-				_K_rawst_agent() KERBAL_NOEXCEPT {}
-
 #			define EMPTY
 #			define LEFT_JOIN_COMMA(exp) , exp
 #			define THEAD_NOT_EMPTY(exp) template <exp>
@@ -671,6 +678,11 @@ namespace kerbal
 #		else
 				using super::super;
 #		endif
+
+				KERBAL_CONSTEXPR
+				_K_rawst_agent() KERBAL_NOEXCEPT
+				{
+				}
 
 			public:
 
@@ -794,8 +806,6 @@ namespace kerbal
 
 #		if __cplusplus < 201103L
 
-				_K_rawst_agent() KERBAL_NOEXCEPT {}
-
 				explicit _K_rawst_agent(kerbal::utility::in_place_t in_place) :
 						super(in_place)
 				{
@@ -815,6 +825,11 @@ namespace kerbal
 #		else
 				using super::super;
 #		endif
+
+				KERBAL_CONSTEXPR
+				_K_rawst_agent() KERBAL_NOEXCEPT
+				{
+				}
 
 			public:
 
@@ -961,10 +976,6 @@ namespace kerbal
 
 #		if __cplusplus < 201103L
 
-				raw_storage()
-				{
-				}
-
 #			define EMPTY
 #			define REMAINF(exp) exp
 #			define LEFT_JOIN_COMMA(exp) , exp
@@ -994,6 +1005,11 @@ namespace kerbal
 #		else
 				using super::super;
 #		endif
+
+				KERBAL_CONSTEXPR
+				raw_storage() KERBAL_NOEXCEPT
+				{
+				}
 
 				KERBAL_CONSTEXPR14
 				void default_construct()
