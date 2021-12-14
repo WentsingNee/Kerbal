@@ -19,6 +19,7 @@
 #include <kerbal/compatibility/move.hpp>
 #include <kerbal/compatibility/noexcept.hpp>
 #include <kerbal/operators/generic_assign.hpp>
+#include <kerbal/tmp/type_vector.hpp>
 #include <kerbal/type_traits/is_same.hpp>
 #include <kerbal/utility/member_compress_helper.hpp>
 
@@ -54,78 +55,6 @@ namespace kerbal
 		};
 
 		template <typename Tp, typename Up>
-		class compressed_pair;
-
-
-		template <size_t I, typename CompressedPair>
-		struct compressed_pair_method_get_return_type;
-
-		template <typename Tp, typename Up>
-		struct compressed_pair_method_get_return_type<0, kerbal::utility::compressed_pair<Tp, Up> >
-		{
-				typedef typename kerbal::utility::compressed_pair<Tp, Up>::first_type_reference type;
-		};
-
-		template <typename Tp, typename Up>
-		struct compressed_pair_method_get_return_type<1, kerbal::utility::compressed_pair<Tp, Up> >
-		{
-				typedef typename kerbal::utility::compressed_pair<Tp, Up>::second_type_reference type;
-		};
-
-
-
-		template <size_t I, typename CompressedPair>
-		struct compressed_pair_const_method_get_return_type;
-
-		template <typename Tp, typename Up>
-		struct compressed_pair_const_method_get_return_type<0, kerbal::utility::compressed_pair<Tp, Up> >
-		{
-				typedef typename kerbal::utility::compressed_pair<Tp, Up>::first_type_const_reference type;
-		};
-
-		template <typename Tp, typename Up>
-		struct compressed_pair_const_method_get_return_type<1, kerbal::utility::compressed_pair<Tp, Up> >
-		{
-				typedef typename kerbal::utility::compressed_pair<Tp, Up>::second_type_const_reference type;
-		};
-
-
-
-		template <size_t I, typename CompressedPair>
-		struct compressed_pair_rvalue_method_get_return_type;
-
-		template <typename Tp, typename Up>
-		struct compressed_pair_rvalue_method_get_return_type<0, kerbal::utility::compressed_pair<Tp, Up> >
-		{
-				typedef typename kerbal::utility::compressed_pair<Tp, Up>::first_type_rvalue_reference type;
-		};
-
-		template <typename Tp, typename Up>
-		struct compressed_pair_rvalue_method_get_return_type<1, kerbal::utility::compressed_pair<Tp, Up> >
-		{
-				typedef typename kerbal::utility::compressed_pair<Tp, Up>::second_type_rvalue_reference type;
-		};
-
-
-
-		template <size_t I, typename CompressedPair>
-		struct compressed_pair_const_rvalue_method_get_return_type;
-
-		template <typename Tp, typename Up>
-		struct compressed_pair_const_rvalue_method_get_return_type<0, kerbal::utility::compressed_pair<Tp, Up> >
-		{
-				typedef typename kerbal::utility::compressed_pair<Tp, Up>::first_type_const_rvalue_reference type;
-		};
-
-		template <typename Tp, typename Up>
-		struct compressed_pair_const_rvalue_method_get_return_type<1, kerbal::utility::compressed_pair<Tp, Up> >
-		{
-				typedef typename kerbal::utility::compressed_pair<Tp, Up>::second_type_const_rvalue_reference type;
-		};
-
-
-
-		template <typename Tp, typename Up>
 		class compressed_pair:
 				private kerbal::utility::member_compress_helper<Tp, 0>,
 				private kerbal::utility::member_compress_helper<Up, kerbal::type_traits::is_same<Tp, Up>::value ? 1 : 0>
@@ -133,6 +62,17 @@ namespace kerbal
 			private:
 				typedef kerbal::utility::member_compress_helper<Tp, 0> super0;
 				typedef kerbal::utility::member_compress_helper<Up, kerbal::type_traits::is_same<Tp, Up>::value ? 1 : 0> super1;
+
+				template <std::size_t I>
+				struct super
+				{
+					private:
+						KERBAL_STATIC_ASSERT(I < 2, "Index out of range");
+						typedef kerbal::tmp::type_vector<super0, super1> vec;
+
+					public:
+						typedef typename kerbal::tmp::type_vector_at<vec, I>::result type;
+				};
 
 			public:
 				typedef Tp first_type;
@@ -151,6 +91,62 @@ namespace kerbal
 				typedef typename super1::rvalue_reference			second_type_rvalue_reference;
 				typedef typename super0::const_rvalue_reference		first_type_const_rvalue_reference;
 				typedef typename super1::const_rvalue_reference		second_type_const_rvalue_reference;
+#		endif
+
+
+				template <std::size_t I>
+				struct value_type
+				{
+					private:
+						KERBAL_STATIC_ASSERT(I < 2, "Index out of range");
+						typedef kerbal::tmp::type_vector<Tp, Up> vec;
+
+					public:
+						typedef typename kerbal::tmp::type_vector_at<vec, I>::result type;
+				};
+
+				template <std::size_t I>
+				struct reference
+				{
+					private:
+						KERBAL_STATIC_ASSERT(I < 2, "Index out of range");
+
+					public:
+						typedef typename super<I>::type::reference type;
+				};
+
+				template <std::size_t I>
+				struct const_reference
+				{
+					private:
+						KERBAL_STATIC_ASSERT(I < 2, "Index out of range");
+
+					public:
+						typedef typename super<I>::type::const_reference type;
+				};
+
+#		if __cplusplus >= 201103L
+
+				template <std::size_t I>
+				struct rvalue_reference
+				{
+					private:
+						KERBAL_STATIC_ASSERT(I < 2, "Index out of range");
+
+					public:
+						typedef typename super<I>::type::rvalue_reference type;
+				};
+
+				template <std::size_t I>
+				struct const_rvalue_reference
+				{
+					private:
+						KERBAL_STATIC_ASSERT(I < 2, "Index out of range");
+
+					public:
+						typedef typename super<I>::type::const_rvalue_reference type;
+				};
+
 #		endif
 
 			public:
@@ -418,36 +414,48 @@ namespace kerbal
 
 #		endif
 
+				template <std::size_t I>
+				KERBAL_CONSTEXPR14
+				typename reference<I>::type
+				get() KERBAL_REFERENCE_OVERLOAD_TAG KERBAL_NOEXCEPT
+				{
+					return super<I>::type::member();
+				}
+
+				template <std::size_t I>
+				KERBAL_CONSTEXPR
+				typename const_reference<I>::type
+				get() KERBAL_CONST_REFERENCE_OVERLOAD_TAG KERBAL_NOEXCEPT
+				{
+					return super<I>::type::member();
+				}
+
+#		if __cplusplus >= 201103L
+
+				template <std::size_t I>
+				KERBAL_CONSTEXPR14
+				typename rvalue_reference<I>::type
+				get() && noexcept
+				{
+					return kerbal::compatibility::move(*this).super<I>::type::member();
+				}
+
+				template <std::size_t I>
+				KERBAL_CONSTEXPR
+				typename const_rvalue_reference<I>::type
+				get() const && noexcept
+				{
+					return kerbal::compatibility::move(*this).super<I>::type::member();
+				}
+
+#		endif
+
 				KERBAL_CONSTEXPR14
 				void swap(compressed_pair & other)
 				{
 					kerbal::algorithm::swap(this->first(), other.first());
 					kerbal::algorithm::swap(this->second(), other.second());
 				}
-
-				template <size_t I>
-				KERBAL_CONSTEXPR14
-				typename kerbal::utility::compressed_pair_method_get_return_type<I, compressed_pair>::type
-				get() KERBAL_REFERENCE_OVERLOAD_TAG KERBAL_NOEXCEPT;
-
-				template <size_t I>
-				KERBAL_CONSTEXPR14
-				typename kerbal::utility::compressed_pair_const_method_get_return_type<I, compressed_pair>::type
-				get() KERBAL_CONST_REFERENCE_OVERLOAD_TAG KERBAL_NOEXCEPT;
-
-#		if __cplusplus >= 201103L
-
-				template <size_t I>
-				KERBAL_CONSTEXPR14
-				typename kerbal::utility::compressed_pair_rvalue_method_get_return_type<I, compressed_pair>::type
-				get() && noexcept;
-
-				template <size_t I>
-				KERBAL_CONSTEXPR14
-				typename kerbal::utility::compressed_pair_const_rvalue_method_get_return_type<I, compressed_pair>::type
-				get() const && noexcept;
-
-#		endif
 
 		};
 
@@ -532,7 +540,8 @@ namespace kerbal
 
 } // namespace kerbal
 
-#if __cplusplus >= 201402L
+
+#if __cplusplus >= 201103L
 
 KERBAL_NAMESPACE_STD_BEGIN
 
@@ -540,263 +549,55 @@ KERBAL_NAMESPACE_STD_BEGIN
 	struct tuple_size;
 
 	template <typename Tp, typename Up>
-	struct tuple_size<kerbal::utility::compressed_pair<Tp, Up> >
-			: std::integral_constant<size_t, 2>
+	struct tuple_size<kerbal::utility::compressed_pair<Tp, Up> > :
+			std::integral_constant<std::size_t, 2>
 	{
 	};
 
 	template <std::size_t I, typename Tp>
 	struct tuple_element;
 
-	template <typename Tp, typename Up>
-	struct tuple_element<0, kerbal::utility::compressed_pair<Tp, Up> >
+	template <std::size_t I, typename Tp, typename Up>
+	struct tuple_element<I, kerbal::utility::compressed_pair<Tp, Up> > :
+			kerbal::utility::compressed_pair<Tp, Up>::template value_type<I>
 	{
-			typedef Tp type;
-	};
-
-	template <typename Tp, typename Up>
-	struct tuple_element<1, kerbal::utility::compressed_pair<Tp, Up> >
-	{
-			typedef Up type;
-	};
-
-	template <typename Tp, typename Up>
-	struct tuple_element<0, const kerbal::utility::compressed_pair<Tp, Up> >
-	{
-			typedef const Tp type;
-	};
-
-	template <typename Tp, typename Up>
-	struct tuple_element<1, const kerbal::utility::compressed_pair<Tp, Up> >
-	{
-			typedef const Up type;
-	};
-
-	template <std::size_t I>
-	struct kerbal_compressed_pair_get;
-
-	template <>
-	struct kerbal_compressed_pair_get<0>
-	{
-			template <typename Tp, typename Up>
-			static constexpr Tp&
-			__get(kerbal::utility::compressed_pair<Tp, Up>& p) noexcept
-			{
-				return p.first();
-			}
-
-			template <typename Tp, typename Up>
-			static constexpr Tp&&
-			__move_get(kerbal::utility::compressed_pair<Tp, Up>&& p) noexcept
-			{
-				return kerbal::utility::forward<Tp>(p.first());
-			}
-
-			template <typename Tp, typename Up>
-			static constexpr const Tp&
-			__const_get(const kerbal::utility::compressed_pair<Tp, Up>& p) noexcept
-			{
-				return p.first();
-			}
-
-			template <typename Tp, typename Up>
-			static constexpr const Tp&&
-			__const_move_get(const kerbal::utility::compressed_pair<Tp, Up>&& p) noexcept
-			{
-				return kerbal::utility::forward<const Tp>(p.first());
-			}
-	};
-
-	template <>
-	struct kerbal_compressed_pair_get<1>
-	{
-			template <typename Tp, typename Up>
-			static constexpr Up&
-			__get(kerbal::utility::compressed_pair<Tp, Up>& p) noexcept
-			{
-				return p.second();
-			}
-
-			template <typename Tp, typename Up>
-			static constexpr Up&&
-			__move_get(kerbal::utility::compressed_pair<Tp, Up>&& p) noexcept
-			{
-				return kerbal::utility::forward<Up>(p.second());
-			}
-
-			template <typename Tp, typename Up>
-			static constexpr const Up&
-			__const_get(const kerbal::utility::compressed_pair<Tp, Up>& p) noexcept
-			{
-				return p.second();
-			}
-
-			template <typename Tp, typename Up>
-			static constexpr const Up&&
-			__const_move_get(const kerbal::utility::compressed_pair<Tp, Up>&& p) noexcept
-			{
-				return kerbal::utility::forward<const Up>(p.second());
-			}
 	};
 
 	template <std::size_t I, typename Tp, typename Up>
-	constexpr
-	auto&
-	get(kerbal::utility::compressed_pair<Tp, Up>& pair) noexcept
+	KERBAL_CONSTEXPR14
+	typename kerbal::utility::compressed_pair<Tp, Up>::template reference<I>::type
+	get(kerbal::utility::compressed_pair<Tp, Up> & pair) KERBAL_NOEXCEPT
 	{
-		return kerbal_compressed_pair_get<I>::__get(pair);
+		return pair.template get<I>();
 	}
 
 	template <std::size_t I, typename Tp, typename Up>
-	constexpr
-	auto&&
-	get(kerbal::utility::compressed_pair<Tp, Up>&& pair) noexcept
+	KERBAL_CONSTEXPR
+	typename kerbal::utility::compressed_pair<Tp, Up>::template const_reference<I>::type
+	get(const kerbal::utility::compressed_pair<Tp, Up> & pair) KERBAL_NOEXCEPT
 	{
-		return kerbal_compressed_pair_get<I>::__move_get(kerbal::compatibility::move(pair));
+		return pair.template get<I>();
 	}
 
 	template <std::size_t I, typename Tp, typename Up>
-	constexpr
-	const auto&
-	get(const kerbal::utility::compressed_pair<Tp, Up>& pair) noexcept
+	KERBAL_CONSTEXPR14
+	typename kerbal::utility::compressed_pair<Tp, Up>::template rvalue_reference<I>::type
+	get(kerbal::utility::compressed_pair<Tp, Up> && pair) KERBAL_NOEXCEPT
 	{
-		return kerbal_compressed_pair_get<I>::__const_get(pair);
+		return kerbal::compatibility::move(pair).template get<I>();
 	}
 
 	template <std::size_t I, typename Tp, typename Up>
-	constexpr
-	const auto&&
-	get(const kerbal::utility::compressed_pair<Tp, Up>&& pair) noexcept
+	KERBAL_CONSTEXPR
+	typename kerbal::utility::compressed_pair<Tp, Up>::template const_rvalue_reference<I>::type
+	get(const kerbal::utility::compressed_pair<Tp, Up> && pair) KERBAL_NOEXCEPT
 	{
-		return kerbal_compressed_pair_get<I>::__const_move_get(kerbal::compatibility::move(pair));
+		return kerbal::compatibility::move(pair).template get<I>();
 	}
 
 KERBAL_NAMESPACE_STD_END
 
-namespace kerbal
-{
-
-	namespace utility
-	{
-
-		template <typename Tp, typename Up>
-		template <size_t I>
-		KERBAL_CONSTEXPR14
-		typename kerbal::utility::compressed_pair_method_get_return_type<I, compressed_pair<Tp, Up> >::type
-		compressed_pair<Tp, Up>::get() KERBAL_REFERENCE_OVERLOAD_TAG KERBAL_NOEXCEPT
-		{
-			return std::get<I>(*this);
-		}
-
-		template <typename Tp, typename Up>
-		template <size_t I>
-		KERBAL_CONSTEXPR14
-		typename kerbal::utility::compressed_pair_const_method_get_return_type<I, compressed_pair<Tp, Up> >::type
-		compressed_pair<Tp, Up>::get() KERBAL_CONST_REFERENCE_OVERLOAD_TAG KERBAL_NOEXCEPT
-		{
-			return std::get<I>(*this);
-		}
-
-#	if __cplusplus >= 201103L
-
-		template <typename Tp, typename Up>
-		template <size_t I>
-		KERBAL_CONSTEXPR14
-		typename kerbal::utility::compressed_pair_rvalue_method_get_return_type<I, compressed_pair<Tp, Up> >::type
-		compressed_pair<Tp, Up>::get() && noexcept
-		{
-			return std::get<I>(static_cast<compressed_pair&&>(*this));
-		}
-
-		template <typename Tp, typename Up>
-		template <size_t I>
-		KERBAL_CONSTEXPR14
-		typename kerbal::utility::compressed_pair_const_rvalue_method_get_return_type<I, compressed_pair<Tp, Up> >::type
-		compressed_pair<Tp, Up>::get() const && noexcept
-		{
-			return std::get<I>(static_cast<const compressed_pair&&>(*this));
-		}
-
-#	endif
-
-
-	} // namespace utility
-
-} // namespace kerbal
-
 #endif
-
-
-/*
-
- note: constructor for compressed_pair
-
-	KERBAL_CONSTEXPR
-	compressed_pair();
-
-#if __cplusplus < 201103L
-
-	KERBAL_CONSTEXPR
-	compressed_pair(first_type_const_reference first, second_type_const_reference second);
-
-	KERBAL_CONSTEXPR
-	compressed_pair(compressed_pair_default_construct_tag tag, second_type_const_reference second);
-
-	KERBAL_CONSTEXPR
-	compressed_pair(first_type_const_reference first, compressed_pair_default_construct_tag tag);
-
-	template <typename Tp2, typename Up2>
-	KERBAL_CONSTEXPR
-	compressed_pair(const Tp2 & first, const Up2 & second);
-
-	template <typename Up2>
-	KERBAL_CONSTEXPR
-	compressed_pair(compressed_pair_default_construct_tag tag, const Up2 & second);
-
-	template <typename Tp2>
-	KERBAL_CONSTEXPR
-	compressed_pair(const Tp2 & first, compressed_pair_default_construct_tag tag);
-
-#else
-
-	template <typename Tp2, typename Up2>
-	KERBAL_CONSTEXPR
-	compressed_pair(Tp2&& first, Up2&& second);
-
-	template <typename Up2>
-	KERBAL_CONSTEXPR
-	compressed_pair(compressed_pair_default_construct_tag tag, Up2&& second);
-
-	template <typename Tp2>
-	KERBAL_CONSTEXPR
-	compressed_pair(Tp2&& first, compressed_pair_default_construct_tag tag);
-
-#endif
-
-	template <typename Tp2, typename Up2>
-	KERBAL_CONSTEXPR
-	explicit
-	compressed_pair(const kerbal::utility::compressed_pair<Tp2, Up2> & pair);
-
-	template <typename Tp2, typename Up2>
-	KERBAL_CONSTEXPR
-	explicit
-	compressed_pair(const std::pair<Tp2, Up2> & pair);
-
-
-#if __cplusplus >= 201103L
-
-	template <typename Tp2, typename Up2>
-	KERBAL_CONSTEXPR14
-	compressed_pair(kerbal::utility::compressed_pair<Tp2, Up2> && pair);
-
-	template <typename Tp2, typename Up2>
-	KERBAL_CONSTEXPR14
-	compressed_pair(std::pair<Tp2, Up2> && pair);
-
-#endif
-
-*/
 
 
 #endif // KERBAL_UTILITY_COMPRESSED_PAIR_HPP
