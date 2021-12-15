@@ -30,10 +30,12 @@ namespace kerbal
 		{
 				KERBAL_CONSTEXPR14
 				friend Tp operator++(Tp& x, int)
+#	if KERBAL_COMPILER_ID != KERBAL_COMPILER_ID_ICC
 						KERBAL_CONDITIONAL_NOEXCEPT(
 								std::is_nothrow_copy_constructible<Tp>::value &&
 								noexcept(++x)
 						)
+#	endif
 				{
 					Tp tmp(x);
 					++x;
@@ -46,10 +48,12 @@ namespace kerbal
 		{
 				KERBAL_CONSTEXPR14
 				friend Tp operator--(Tp& x, int)
+#	if KERBAL_COMPILER_ID != KERBAL_COMPILER_ID_ICC
 						KERBAL_CONDITIONAL_NOEXCEPT(
 								std::is_nothrow_copy_constructible<Tp>::value &&
 								noexcept(--x)
 						)
+#	endif
 				{
 					Tp tmp(x);
 					--x;

@@ -213,14 +213,18 @@ namespace kerbal
 
 					friend KERBAL_CONSTEXPR
 					bool operator==(const reverse_iterator& lhs, const reverse_iterator& rhs)
+#	if KERBAL_COMPILER_ID != KERBAL_COMPILER_ID_ICC
 							KERBAL_CONDITIONAL_NOEXCEPT(noexcept(lhs.iter == rhs.iter))
+#	endif
 					{
 						return lhs.iter == rhs.iter;
 					}
 
 					friend KERBAL_CONSTEXPR
 					bool operator!=(const reverse_iterator& lhs, const reverse_iterator& rhs)
+#	if KERBAL_COMPILER_ID != KERBAL_COMPILER_ID_ICC
 							KERBAL_CONDITIONAL_NOEXCEPT(noexcept(lhs.iter != rhs.iter))
+#	endif
 					{
 						return lhs.iter != rhs.iter;
 					}
@@ -290,7 +294,9 @@ namespace kerbal
 					friend KERBAL_CONSTEXPR
 					difference_type
 					operator-(const reverse_iterator& lhs, const reverse_iterator& rhs)
+#	if KERBAL_COMPILER_ID != KERBAL_COMPILER_ID_ICC
 							KERBAL_CONDITIONAL_NOEXCEPT(noexcept(rhs.iter - lhs.iter))
+#	endif
 					{
 						return rhs.iter - lhs.iter;
 					}
@@ -319,28 +325,36 @@ namespace kerbal
 
 					friend KERBAL_CONSTEXPR
 					bool operator<(const reverse_iterator& lhs, const reverse_iterator& rhs)
+#	if KERBAL_COMPILER_ID != KERBAL_COMPILER_ID_ICC
 							KERBAL_CONDITIONAL_NOEXCEPT(noexcept(lhs.iter > rhs.iter))
+#	endif
 					{
 						return lhs.iter > rhs.iter;
 					}
 
 					friend KERBAL_CONSTEXPR
 					bool operator<=(const reverse_iterator& lhs, const reverse_iterator& rhs)
+#	if KERBAL_COMPILER_ID != KERBAL_COMPILER_ID_ICC
 							KERBAL_CONDITIONAL_NOEXCEPT(noexcept(lhs.iter >= rhs.iter))
+#	endif
 					{
 						return lhs.iter >= rhs.iter;
 					}
 
 					friend KERBAL_CONSTEXPR
 					bool operator>(const reverse_iterator& lhs, const reverse_iterator& rhs)
+#	if KERBAL_COMPILER_ID != KERBAL_COMPILER_ID_ICC
 							KERBAL_CONDITIONAL_NOEXCEPT(noexcept(lhs.iter < rhs.iter))
+#	endif
 					{
 						return lhs.iter < rhs.iter;
 					}
 
 					friend KERBAL_CONSTEXPR
 					bool operator>=(const reverse_iterator& lhs, const reverse_iterator& rhs)
+#	if KERBAL_COMPILER_ID != KERBAL_COMPILER_ID_ICC
 							KERBAL_CONDITIONAL_NOEXCEPT(noexcept(lhs.iter <= rhs.iter))
+#	endif
 					{
 						return lhs.iter <= rhs.iter;
 					}

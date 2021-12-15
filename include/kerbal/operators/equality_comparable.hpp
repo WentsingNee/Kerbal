@@ -26,7 +26,9 @@ namespace kerbal
 		{
 				KERBAL_CONSTEXPR
 				friend bool operator!=(const Tp & lhs, const Tp & rhs)
+#	if KERBAL_COMPILER_ID != KERBAL_COMPILER_ID_ICC
 						KERBAL_CONDITIONAL_NOEXCEPT(noexcept(static_cast<bool>(lhs == rhs)))
+#	endif
 				{
 					return !static_cast<bool>(lhs == rhs);
 				}

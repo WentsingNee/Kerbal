@@ -18,6 +18,7 @@
 
 #include <kerbal/compatibility/constexpr.hpp>
 #include <kerbal/compatibility/noexcept.hpp>
+#include <kerbal/config/compiler_id.hpp>
 #include <kerbal/iterator/iterator_traits.hpp>
 #include <kerbal/operators/addable.hpp>
 #include <kerbal/operators/incr_decr.hpp>
@@ -116,14 +117,18 @@ namespace kerbal
 
 					friend KERBAL_CONSTEXPR
 					bool operator==(const move_iterator& lhs, const move_iterator& rhs)
+#		if KERBAL_COMPILER_ID == KERBAL_COMPILER_ID_ICC && __cplusplus >+ 201703L
 							KERBAL_CONDITIONAL_NOEXCEPT(noexcept(lhs.iter == rhs.iter))
+#		endif
 					{
 						return lhs.iter == rhs.iter;
 					}
 
 					friend KERBAL_CONSTEXPR
 					bool operator!=(const move_iterator& lhs, const move_iterator& rhs)
+#		if KERBAL_COMPILER_ID == KERBAL_COMPILER_ID_ICC && __cplusplus >+ 201703L
 							KERBAL_CONDITIONAL_NOEXCEPT(noexcept(lhs.iter != rhs.iter))
+#		endif
 					{
 						return lhs.iter != rhs.iter;
 					}
@@ -264,7 +269,9 @@ namespace kerbal
 					friend KERBAL_CONSTEXPR
 					difference_type
 					operator-(const move_iterator& lhs, const move_iterator& rhs)
+#		if KERBAL_COMPILER_ID == KERBAL_COMPILER_ID_ICC && __cplusplus >+ 201703L
 							KERBAL_CONDITIONAL_NOEXCEPT(noexcept(lhs.iter - rhs.iter))
+#		endif
 					{
 						return lhs.iter - rhs.iter;
 					}
@@ -293,28 +300,36 @@ namespace kerbal
 
 					friend KERBAL_CONSTEXPR
 					bool operator<(const move_iterator& lhs, const move_iterator& rhs)
+#		if KERBAL_COMPILER_ID == KERBAL_COMPILER_ID_ICC && __cplusplus >+ 201703L
 							KERBAL_CONDITIONAL_NOEXCEPT(noexcept(lhs.iter < rhs.iter))
+#		endif
 					{
 						return lhs.iter < rhs.iter;
 					}
 
 					friend KERBAL_CONSTEXPR
 					bool operator<=(const move_iterator& lhs, const move_iterator& rhs)
+#		if KERBAL_COMPILER_ID == KERBAL_COMPILER_ID_ICC && __cplusplus >+ 201703L
 							KERBAL_CONDITIONAL_NOEXCEPT(noexcept(lhs.iter <= rhs.iter))
+#		endif
 					{
 						return lhs.iter <= rhs.iter;
 					}
 
 					friend KERBAL_CONSTEXPR
 					bool operator>(const move_iterator& lhs, const move_iterator& rhs)
+#		if KERBAL_COMPILER_ID == KERBAL_COMPILER_ID_ICC && __cplusplus >+ 201703L
 							KERBAL_CONDITIONAL_NOEXCEPT(noexcept(lhs.iter > rhs.iter))
+#		endif
 					{
 						return lhs.iter > rhs.iter;
 					}
 
 					friend KERBAL_CONSTEXPR
 					bool operator>=(const move_iterator& lhs, const move_iterator& rhs)
+#		if KERBAL_COMPILER_ID == KERBAL_COMPILER_ID_ICC && __cplusplus >+ 201703L
 							KERBAL_CONDITIONAL_NOEXCEPT(noexcept(lhs.iter >= rhs.iter))
+#		endif
 					{
 						return lhs.iter >= rhs.iter;
 					}

@@ -26,7 +26,9 @@ namespace kerbal
 		{
 				KERBAL_CONSTEXPR14
 				friend Tp operator-(Tp lhs, const Up& rhs)
+#	if KERBAL_COMPILER_ID != KERBAL_COMPILER_ID_ICC
 						KERBAL_CONDITIONAL_NOEXCEPT(noexcept(lhs -= rhs))
+#	endif
 				{
 					lhs -= rhs;
 					return lhs;

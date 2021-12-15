@@ -25,7 +25,7 @@
 
 #ifndef KERBAL_CONDITIONAL_NOEXCEPT
 #	if __cpp_exceptions
-#		if __cplusplus >= 201103L && KERBAL_COMPILER_ID != KERBAL_COMPILER_ID_ICC
+#		if __cplusplus >= 201103L
 #			define KERBAL_CONDITIONAL_NOEXCEPT(cond) noexcept(cond)
 #		else
 #			define KERBAL_CONDITIONAL_NOEXCEPT(cond)
