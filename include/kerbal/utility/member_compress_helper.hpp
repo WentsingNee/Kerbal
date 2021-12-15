@@ -389,8 +389,8 @@ namespace kerbal
 
 				using super::super;
 
-				member_compress_helper(const member_compress_helper<T, I> & arg) noexcept = default;
-				member_compress_helper(member_compress_helper<T, I> && arg) noexcept = default;
+				member_compress_helper(const member_compress_helper<T, I> & arg) = default;
+				member_compress_helper(member_compress_helper<T, I> && arg) = default;
 
 #		endif
 
@@ -437,8 +437,8 @@ namespace kerbal
 
 #		if __cplusplus >= 201103L
 
-				member_compress_helper& operator=(const member_compress_helper & arg) noexcept = default;
-				member_compress_helper& operator=(member_compress_helper && arg) noexcept = default;
+				member_compress_helper& operator=(const member_compress_helper & arg) = default;
+				member_compress_helper& operator=(member_compress_helper && arg) = default;
 
 				template <typename U, size_t J>
 				KERBAL_CONSTEXPR14
