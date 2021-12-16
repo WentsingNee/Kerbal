@@ -497,6 +497,15 @@ namespace kerbal
 				{
 				}
 
+#		else
+
+				member_compress_helper() = default;
+
+#		endif
+
+
+#		if __cplusplus < 201103L
+
 #			define EMPTY
 #			define LEFT_JOIN_COMMA(exp) , exp
 #			define THEAD_NOT_EMPTY(exp) template <exp>
@@ -521,15 +530,49 @@ namespace kerbal
 #			undef ARGS_USE
 #			undef FBODY
 
-				template <typename U, size_t J>
-				explicit member_compress_helper(const member_compress_helper<U, J> & arg):
-						super(arg)
+#		else
+
+				template <typename ... Args>
+				KERBAL_CONSTEXPR
+				explicit member_compress_helper(kerbal::utility::in_place_t in_place, Args&& ... args)
+						KERBAL_CONDITIONAL_NOEXCEPT((
+							std::is_nothrow_constructible<super, kerbal::utility::in_place_t, Args&&...>::value
+						)) :
+						super(in_place, kerbal::utility::forward<Args>(args)...)
 				{
 				}
 
-#		else
+#		endif
 
-				using super::super;
+
+				template <typename U, size_t J>
+				KERBAL_CONSTEXPR
+				explicit member_compress_helper(const kerbal::utility::member_compress_helper<U, J> & src)
+						KERBAL_CONDITIONAL_NOEXCEPT((
+							std::is_nothrow_constructible<
+								T,
+								const kerbal::utility::member_compress_helper<U, J> &
+							>::value
+						)) :
+						super(src)
+				{
+				}
+
+
+#		if __cplusplus >= 201103L
+
+				template <typename U, size_t J>
+				KERBAL_CONSTEXPR
+				explicit member_compress_helper(kerbal::utility::member_compress_helper<U, J> && src)
+						KERBAL_CONDITIONAL_NOEXCEPT((
+							std::is_nothrow_constructible<
+								super,
+								kerbal::utility::member_compress_helper<U, J> &&
+							>::value
+						)) :
+						super(kerbal::compatibility::move(src))
+				{
+				}
 
 #		endif
 
