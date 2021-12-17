@@ -19,6 +19,7 @@
 #include <kerbal/container/static_vector.hpp>
 #include <kerbal/iterator/iterator_traits.hpp>
 #include <kerbal/type_traits/enable_if.hpp>
+#include <kerbal/utility/throw_this_exception.hpp>
 
 #if __cplusplus < 201103L
 #	include <kerbal/macro/macro_concat.hpp>
@@ -28,6 +29,8 @@
 #if __cplusplus >= 201103L
 #	include <kerbal/utility/forward.hpp>
 #endif
+
+#include <stdexcept>
 
 #if __cplusplus >= 201103L
 #	include <initializer_list>
@@ -154,14 +157,35 @@ namespace kerbal
 				}
 
 				KERBAL_CONSTEXPR14
+				void push_unsafe(const_reference val)
+				{
+					c.push_back_unsafe(val);
+					kerbal::algorithm::push_heap(c.begin(), c.end(), vc);
+				}
+
+				KERBAL_CONSTEXPR20
 				void push(const_reference val)
 				{
-					c.push_back(val);
-					kerbal::algorithm::push_heap(c.begin(), c.end(), vc);
+					if (this->full()) {
+						kerbal::utility::throw_this_exception_helper<std::logic_error>::throw_this_exception(
+							(const char*)"Out of storage space"
+						);
+					}
+					this->push_unsafe(val);
 				}
 
 				template <typename InputIterator>
 				KERBAL_CONSTEXPR14
+				void push_unsafe(InputIterator first, InputIterator last)
+				{
+					while (first != last) {
+						this->push_unsafe(*first);
+						++first;
+					}
+				}
+
+				template <typename InputIterator>
+				KERBAL_CONSTEXPR20
 				void push(InputIterator first, InputIterator last)
 				{
 					while (first != last) {
@@ -173,10 +197,21 @@ namespace kerbal
 #		if __cplusplus >= 201103L
 
 				KERBAL_CONSTEXPR14
+				void push_unsafe(rvalue_reference val)
+				{
+					c.push_back_unsafe(kerbal::compatibility::move(val));
+					kerbal::algorithm::push_heap(c.begin(), c.end(), vc);
+				}
+
+				KERBAL_CONSTEXPR20
 				void push(rvalue_reference val)
 				{
-					c.push_back(kerbal::compatibility::move(val));
-					kerbal::algorithm::push_heap(c.begin(), c.end(), vc);
+					if (this->full()) {
+						kerbal::utility::throw_this_exception_helper<std::logic_error>::throw_this_exception(
+							(const char*)"Out of storage space"
+						);
+					}
+					this->push_unsafe(kerbal::compatibility::move(val));
 				}
 
 #		endif
@@ -185,10 +220,22 @@ namespace kerbal
 
 				template <typename ... Args>
 				KERBAL_CONSTEXPR14
+				void emplace_unsafe(Args&& ... args)
+				{
+					c.emplace_back_unsafe(kerbal::utility::forward<Args>(args)...);
+					kerbal::algorithm::push_heap(c.begin(), c.end(), vc);
+				}
+
+				template <typename ... Args>
+				KERBAL_CONSTEXPR20
 				void emplace(Args&& ... args)
 				{
-					c.emplace_back(kerbal::utility::forward<Args>(args)...);
-					kerbal::algorithm::push_heap(c.begin(), c.end(), vc);
+					if (this->full()) {
+						kerbal::utility::throw_this_exception_helper<std::logic_error>::throw_this_exception(
+							(const char*)"Out of storage space"
+						);
+					}
+					this->emplace_back_unsafe(kerbal::utility::forward<Args>(args)...);
 				}
 
 #		else
@@ -201,10 +248,21 @@ namespace kerbal
 #			define ARGS_USE(i) KERBAL_MACRO_CONCAT(arg, i)
 #			define FBODY(i) \
 				KERBAL_OPT_PPEXPAND_WITH_COMMA_N(THEAD_NOT_EMPTY, EMPTY, TARGS_DECL, i) \
+				void emplace_unsafe(KERBAL_OPT_PPEXPAND_WITH_COMMA_N(REMAINF, EMPTY, ARGS_DECL, i)) \
+				{ \
+					c.emplace_back_unsafe(KERBAL_OPT_PPEXPAND_WITH_COMMA_N(REMAINF, EMPTY, ARGS_USE, i)); \
+					kerbal::algorithm::push_heap(c.begin(), c.end(), vc); \
+				} \
+ \
+				KERBAL_OPT_PPEXPAND_WITH_COMMA_N(THEAD_NOT_EMPTY, EMPTY, TARGS_DECL, i) \
 				void emplace(KERBAL_OPT_PPEXPAND_WITH_COMMA_N(REMAINF, EMPTY, ARGS_DECL, i)) \
 				{ \
-					c.emplace_back(KERBAL_OPT_PPEXPAND_WITH_COMMA_N(REMAINF, EMPTY, ARGS_USE, i)); \
-					kerbal::algorithm::push_heap(c.begin(), c.end(), vc); \
+					if (this->full()) { \
+						kerbal::utility::throw_this_exception_helper<std::logic_error>::throw_this_exception( \
+							(const char*)"Out of storage space" \
+						); \
+					} \
+					this->emplace_unsafe(KERBAL_OPT_PPEXPAND_WITH_COMMA_N(REMAINF, EMPTY, ARGS_USE, i)); \
 				}
 
 				KERBAL_PPEXPAND_N(FBODY, KERBAL_PPEXPAND_EMPTY_SEPARATOR, 0)
@@ -221,10 +279,21 @@ namespace kerbal
 #		endif
 
 				KERBAL_CONSTEXPR14
-				void pop()
+				void pop_unsafe()
 				{
 					kerbal::algorithm::pop_heap(c.begin(), c.end(), vc);
-					c.pop_back();
+					c.pop_back_unsafe();
+				}
+
+				KERBAL_CONSTEXPR20
+				void pop()
+				{
+					if (c.empty()) {
+						kerbal::utility::throw_this_exception_helper<std::logic_error>::throw_this_exception(
+							(const char*)"Static priority queue is empty"
+						);
+					}
+					this->pop_unsafe();
 				}
 
 				template <size_t M>

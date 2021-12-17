@@ -60,26 +60,27 @@ namespace kerbal
 		 * @tparam N The maximum number of elements that the array can hold.
 		 */
 		template <typename Tp, size_t N>
-		class static_vector: protected kerbal::container::detail::static_vector_base<Tp, N>
+		class static_vector :
+				protected kerbal::container::detail::sv_trivially_des_overload<Tp, N>
 		{
 			private:
-				typedef kerbal::container::detail::static_vector_base<Tp, N> super;
+				typedef kerbal::container::detail::sv_trivially_des_overload<Tp, N> super;
 
 			public:
-				typedef Tp							value_type;
-				typedef const value_type			const_type;
-				typedef value_type&					reference;
-				typedef const value_type&			const_reference;
-				typedef value_type*					pointer;
-				typedef const value_type*			const_pointer;
+				typedef typename super::value_type			value_type;
+				typedef typename super::const_type			const_type;
+				typedef typename super::reference			reference;
+				typedef typename super::const_reference		const_reference;
+				typedef typename super::pointer				pointer;
+				typedef typename super::const_pointer		const_pointer;
 
-#		if __cplusplus >= 201103L
-				typedef value_type&&				rvalue_reference;
-				typedef const value_type&&			const_rvalue_reference;
-#		endif
+#			if __cplusplus >= 201103L
+				typedef typename super::rvalue_reference			rvalue_reference;
+				typedef typename super::const_rvalue_reference		const_rvalue_reference;
+#			endif
 
-				typedef std::size_t					size_type;
-				typedef std::ptrdiff_t				difference_type;
+				typedef typename super::size_type			size_type;
+				typedef typename super::difference_type		difference_type;
 
 				typedef value_type				equal_c_array[N];
 				typedef equal_c_array&			equal_c_array_reference;
@@ -89,8 +90,6 @@ namespace kerbal
 
 			private:
 				typedef typename kerbal::type_traits::remove_all_extents<value_type>::type remove_all_extents_t;
-
-				typedef typename super::storage_type	storage_type;
 
 			public:
 
@@ -117,21 +116,6 @@ namespace kerbal
 
 #		if __cplusplus >= 201103L
 
-				/**
-				 * @brief Construct the array by coping the contents in initializer list
-				 * @param src An initializer list
-				 */
-				KERBAL_CONSTEXPR14
-				static_vector(std::initializer_list<value_type> src);
-#		else
-
-				template <typename Up>
-				static_vector(const kerbal::assign::assign_list<Up> & src);
-
-#		endif
-
-#		if __cplusplus >= 201103L
-
 				KERBAL_CONSTEXPR14
 				static_vector(static_vector && src);
 
@@ -142,18 +126,6 @@ namespace kerbal
 
 				KERBAL_CONSTEXPR14
 				static_vector(size_type n, const_reference val);
-
-			private:
-
-				template <typename InputIterator>
-				KERBAL_CONSTEXPR14
-				void __range_copy_constructor(InputIterator first, InputIterator last, std::input_iterator_tag);
-
-				template <typename RandomAccessIterator>
-				KERBAL_CONSTEXPR14
-				void __range_copy_constructor(RandomAccessIterator first, RandomAccessIterator last, std::random_access_iterator_tag);
-
-			public:
 
 				/**
 				 * @brief Range constructor
@@ -172,8 +144,31 @@ namespace kerbal
 						>::type = 0
 				);
 
+#		if __cplusplus >= 201103L
+
+				/**
+				 * @brief Construct the array by coping the contents in initializer list
+				 * @param src An initializer list
+				 */
+				KERBAL_CONSTEXPR14
+				static_vector(std::initializer_list<value_type> src);
+
+#		else
+
+				template <typename Up>
+				static_vector(const kerbal::assign::assign_list<Up> & src);
+
+#		endif
+
 				KERBAL_CONSTEXPR14
 				static_vector& operator=(const static_vector & src);
+
+#		if __cplusplus >= 201103L
+
+				KERBAL_CONSTEXPR14
+				static_vector& operator=(static_vector && src);
+
+#		endif
 
 #		if __cplusplus >= 201103L
 
@@ -195,30 +190,64 @@ namespace kerbal
 			private:
 
 				KERBAL_CONSTEXPR14
-				void __assign(size_type new_size, const_reference val, kerbal::type_traits::false_type enable_optimization);
+				void k_assign_unsafe_n_val(size_type new_size, const_reference val, kerbal::type_traits::false_type enable_optimization);
 
 				KERBAL_CONSTEXPR14
-				void __assign(size_type new_size, const_reference val, kerbal::type_traits::true_type enable_optimization);
+				void k_assign_unsafe_n_val(size_type new_size, const_reference val, kerbal::type_traits::true_type enable_optimization);
 
 			public:
+
+				KERBAL_CONSTEXPR14
+				void assign_unsafe(size_type new_size, const_reference val);
 
 				/**
 				 * @brief Assign the array by using n value(s).
 				 * @param new_size numbers of the value(s)
 				 * @param val value
 				 */
-				KERBAL_CONSTEXPR14
+				KERBAL_CONSTEXPR20
 				void assign(size_type new_size, const_reference val);
+
+			private:
+
+				template <typename InputIterator>
+				KERBAL_CONSTEXPR14
+				void k_assign_unsafe_range(InputIterator first, InputIterator last, std::input_iterator_tag);
+
+				template <typename ForwardIterator>
+				KERBAL_CONSTEXPR14
+				void k_assign_unsafe_range(ForwardIterator first, ForwardIterator last, std::forward_iterator_tag);
+
+			public:
+
+				template <typename InputIterator>
+				KERBAL_CONSTEXPR14
+				typename kerbal::type_traits::enable_if<
+						kerbal::iterator::is_input_compatible_iterator<InputIterator>::value
+				>::type
+				assign_unsafe(InputIterator first, InputIterator last);
+
+			private:
+
+				template <typename InputIterator>
+				KERBAL_CONSTEXPR20
+				void k_assign_range(InputIterator first, InputIterator last, std::input_iterator_tag);
+
+				template <typename ForwardIterator>
+				KERBAL_CONSTEXPR20
+				void k_assign_range(ForwardIterator first, ForwardIterator last, std::forward_iterator_tag);
+
+			public:
 
 				/**
 				 * @brief Assign the array by using a range of elements.
 				 * @param first the iterator that points to the range begin
 				 * @param last the iterator that points to the range end
 				 * @tparam InputIterator An input iterator type that points to elements of a type
-				 * @warning 若区间长度超出 static_vector 所能存放的最大元素数目, 超过部分将自动截断
+				 * @throw 若区间长度超出 static_vector 所能存放的最大元素数目, 则抛出 logic_error 异常
 				 */
 				template <typename InputIterator>
-				KERBAL_CONSTEXPR14
+				KERBAL_CONSTEXPR20
 				typename kerbal::type_traits::enable_if<
 						kerbal::iterator::is_input_compatible_iterator<InputIterator>::value
 				>::type
@@ -231,9 +260,15 @@ namespace kerbal
 				 * @param src the initializer list
 				 */
 				KERBAL_CONSTEXPR14
+				void assign_unsafe(std::initializer_list<value_type> src);
+
+				KERBAL_CONSTEXPR20
 				void assign(std::initializer_list<value_type> src);
 
 #		else
+
+				template <typename Up>
+				void assign_unsafe(const kerbal::assign::assign_list<Up> & src);
 
 				template <typename Up>
 				void assign(const kerbal::assign::assign_list<Up> & src);
@@ -246,10 +281,10 @@ namespace kerbal
 				KERBAL_CONSTEXPR14
 				iterator end() KERBAL_NOEXCEPT;
 
-				KERBAL_CONSTEXPR14
+				KERBAL_CONSTEXPR
 				const_iterator begin() const KERBAL_NOEXCEPT;
 
-				KERBAL_CONSTEXPR14
+				KERBAL_CONSTEXPR
 				const_iterator end() const KERBAL_NOEXCEPT;
 
 				KERBAL_CONSTEXPR
@@ -264,10 +299,10 @@ namespace kerbal
 				KERBAL_CONSTEXPR14
 				reverse_iterator rend() KERBAL_NOEXCEPT;
 
-				KERBAL_CONSTEXPR14
+				KERBAL_CONSTEXPR
 				const_reverse_iterator rbegin() const KERBAL_NOEXCEPT;
 
-				KERBAL_CONSTEXPR14
+				KERBAL_CONSTEXPR
 				const_reverse_iterator rend() const KERBAL_NOEXCEPT;
 
 				KERBAL_CONSTEXPR
@@ -282,7 +317,7 @@ namespace kerbal
 					return this->begin() + index;
 				}
 
-				KERBAL_CONSTEXPR14
+				KERBAL_CONSTEXPR
 				const_iterator nth(size_type index) const
 				{
 					return this->cbegin() + index;
@@ -323,6 +358,7 @@ namespace kerbal
 				KERBAL_CONSTEXPR
 				bool empty() const KERBAL_NOEXCEPT;
 
+				KERBAL_CONSTEXPR20
 				void alert_empty() const
 				{
 					if (empty()) {
@@ -337,6 +373,7 @@ namespace kerbal
 				KERBAL_CONSTEXPR
 				bool full() const KERBAL_NOEXCEPT;
 
+				KERBAL_CONSTEXPR20
 				void alert_full() const
 				{
 					if (full()) {
@@ -350,7 +387,10 @@ namespace kerbal
 				KERBAL_CONSTEXPR14
 				const_reference operator[](size_type index) const KERBAL_NOEXCEPT;
 
+				KERBAL_CONSTEXPR20
 				reference at(size_type index);
+
+				KERBAL_CONSTEXPR20
 				const_reference at(size_type index) const;
 
 				/**
@@ -388,11 +428,17 @@ namespace kerbal
 				const_pointer data() const KERBAL_NOEXCEPT;
 
 				KERBAL_CONSTEXPR14
+				void push_back_unsafe(const_reference src);
+
+				KERBAL_CONSTEXPR20
 				void push_back(const_reference src);
 
 #		if __cplusplus >= 201103L
 
 				KERBAL_CONSTEXPR14
+				void push_back_unsafe(rvalue_reference src);
+
+				KERBAL_CONSTEXPR20
 				void push_back(rvalue_reference src);
 
 #		endif
@@ -401,7 +447,11 @@ namespace kerbal
 
 				template <typename ... Args>
 				KERBAL_CONSTEXPR14
-				reference emplace_back(Args&& ...args);
+				reference emplace_back_unsafe(Args&& ... args);
+
+				template <typename ... Args>
+				KERBAL_CONSTEXPR20
+				reference emplace_back(Args&& ... args);
 
 #		else
 
@@ -411,6 +461,9 @@ namespace kerbal
 #			define TARGS_DECL(i) KERBAL_MACRO_CONCAT(typename Arg, i)
 #			define ARGS_DECL(i) KERBAL_MACRO_CONCAT(const Arg, i) & KERBAL_MACRO_CONCAT(arg, i)
 #			define FBODY(i) \
+				KERBAL_OPT_PPEXPAND_WITH_COMMA_N(THEAD_NOT_EMPTY, EMPTY, TARGS_DECL, i) \
+				reference emplace_back_unsafe(KERBAL_OPT_PPEXPAND_WITH_COMMA_N(REMAINF, EMPTY, ARGS_DECL, i)); \
+ \
 				KERBAL_OPT_PPEXPAND_WITH_COMMA_N(THEAD_NOT_EMPTY, EMPTY, TARGS_DECL, i) \
 				reference emplace_back(KERBAL_OPT_PPEXPAND_WITH_COMMA_N(REMAINF, EMPTY, ARGS_DECL, i));
 
@@ -427,37 +480,56 @@ namespace kerbal
 #		endif
 
 				KERBAL_CONSTEXPR14
+				void pop_back_unsafe();
+
+				KERBAL_CONSTEXPR20
 				void pop_back();
 
-			private:
-				KERBAL_CONSTEXPR14
-				void __shrink_back_to(const_iterator to, kerbal::type_traits::false_type);
-
-				KERBAL_CONSTEXPR14
-				void __shrink_back_to(const_iterator to, kerbal::type_traits::true_type) KERBAL_NOEXCEPT;
-
-			public:
 				KERBAL_CONSTEXPR14
 				void shrink_back_to(const_iterator to);
 
 
 				KERBAL_CONSTEXPR14
+				iterator insert_unsafe(const_iterator pos, const_reference val);
+
+				KERBAL_CONSTEXPR20
 				iterator insert(const_iterator pos, const_reference val);
-
-				KERBAL_CONSTEXPR14
-				iterator insert(size_type count, const_reference val);
-
-				template <typename InputIterator>
-				KERBAL_CONSTEXPR14
-				iterator insert(const_iterator pos, const_reference first, const_reference last);
 
 #		if __cplusplus >= 201103L
 
 				KERBAL_CONSTEXPR14
+				iterator insert_unsafe(const_iterator pos, rvalue_reference val);
+
+				KERBAL_CONSTEXPR20
 				iterator insert(const_iterator pos, rvalue_reference val);
 
-				KERBAL_CONSTEXPR14
+#		endif
+
+				template <typename InputIterator>
+				KERBAL_CONSTEXPR20
+				iterator k_range_insert(const_iterator pos, InputIterator first, InputIterator last, std::input_iterator_tag);
+
+				template <typename ForwardIterator>
+				KERBAL_CONSTEXPR20
+				iterator k_range_insert(const_iterator pos, ForwardIterator first, ForwardIterator last, std::forward_iterator_tag);
+
+				template <typename InputIterator>
+				KERBAL_CONSTEXPR20
+				typename kerbal::type_traits::enable_if<
+						kerbal::iterator::is_input_compatible_iterator<InputIterator>::value,
+						iterator
+				>::type
+				insert(const_iterator pos, InputIterator first, InputIterator last);
+
+#		if __cplusplus >= 201103L
+
+				KERBAL_CONSTEXPR20
 				iterator insert(const_iterator pos, std::initializer_list<Tp> ilist);
+
+#		else
+
+				template <typename Up>
+				iterator insert(const_iterator pos, const kerbal::assign::assign_list<Up> & ilist);
 
 #		endif
 
@@ -465,7 +537,11 @@ namespace kerbal
 
 				template <typename ... Args>
 				KERBAL_CONSTEXPR14
-				iterator emplace(const_iterator pos, Args&& ...args);
+				iterator emplace_unsafe(const_iterator pos, Args&& ... args);
+
+				template <typename ... Args>
+				KERBAL_CONSTEXPR20
+				iterator emplace(const_iterator pos, Args&& ... args);
 
 #		else
 
@@ -475,6 +551,9 @@ namespace kerbal
 #			define TARGS_DECL(i) KERBAL_MACRO_CONCAT(typename Arg, i)
 #			define ARGS_DECL(i) KERBAL_MACRO_CONCAT(const Arg, i) & KERBAL_MACRO_CONCAT(arg, i)
 #			define FBODY(i) \
+				KERBAL_OPT_PPEXPAND_WITH_COMMA_N(THEAD_NOT_EMPTY, EMPTY, TARGS_DECL, i) \
+				iterator emplace_unsafe(const_iterator pos KERBAL_OPT_PPEXPAND_WITH_COMMA_N(LEFT_JOIN_COMMA, EMPTY, ARGS_DECL, i)); \
+ \
 				KERBAL_OPT_PPEXPAND_WITH_COMMA_N(THEAD_NOT_EMPTY, EMPTY, TARGS_DECL, i) \
 				iterator emplace(const_iterator pos KERBAL_OPT_PPEXPAND_WITH_COMMA_N(LEFT_JOIN_COMMA, EMPTY, ARGS_DECL, i));
 
@@ -498,7 +577,7 @@ namespace kerbal
 
 			private:
 				KERBAL_CONSTEXPR14
-				void swap_helper(static_vector & with);
+				void k_swap_helper(static_vector & with);
 
 			public:
 				/**
@@ -527,49 +606,38 @@ namespace kerbal
 				KERBAL_CONSTEXPR14
 				void fill(const_reference val);
 
-				template <size_t M>
+				template <typename Up, size_t N1, size_t N2>
 				KERBAL_CONSTEXPR14
-				static_vector<Tp, N + M>
-				operator+(const static_vector<Tp, M> & rhs) const;
+				friend
+				static_vector<Up, N1 + N2>
+				operator+(const static_vector<Up, N1> & lhs, const static_vector<Up, N2> & rhs);
+
+#		if __cplusplus >= 201103L
+
+				template <typename Up, size_t N1, size_t N2>
+				KERBAL_CONSTEXPR14
+				friend
+				static_vector<Up, N1 + N2>
+				operator+(const static_vector<Up, N1> & lhs, const static_vector<Up, N2> && rhs);
+
+				template <typename Up, size_t N1, size_t N2>
+				KERBAL_CONSTEXPR14
+				friend
+				static_vector<Up, N1 + N2>
+				operator+(const static_vector<Up, N1> && lhs, const static_vector<Up, N2> & rhs);
+
+				template <typename Up, size_t N1, size_t N2>
+				KERBAL_CONSTEXPR14
+				friend
+				static_vector<Up, N1 + N2>
+				operator+(const static_vector<Up, N1> && lhs, const static_vector<Up, N2> && rhs);
+
+#		endif
 
 				template <size_t M>
 				KERBAL_CONSTEXPR14
 				static_vector<Tp, N>
 				operator*(const static_vector<Tp, M> & rhs) const;
-
-			private:
-
-#		if __cplusplus < 201103L
-
-#			define EMPTY
-#			define LEFT_JOIN_COMMA(exp) , exp
-#			define THEAD_NOT_EMPTY(exp) template <exp>
-#			define TARGS_DECL(i) KERBAL_MACRO_CONCAT(typename Arg, i)
-#			define ARGS_DECL(i) KERBAL_MACRO_CONCAT(const Arg, i) & KERBAL_MACRO_CONCAT(arg, i)
-#			define FBODY(i) \
-				KERBAL_OPT_PPEXPAND_WITH_COMMA_N(THEAD_NOT_EMPTY, EMPTY, TARGS_DECL, i) \
-				void __construct_at(iterator itor KERBAL_OPT_PPEXPAND_WITH_COMMA_N(LEFT_JOIN_COMMA, EMPTY, ARGS_DECL, i));
-
-				KERBAL_PPEXPAND_N(FBODY, KERBAL_PPEXPAND_EMPTY_SEPARATOR, 0)
-				KERBAL_PPEXPAND_N(FBODY, KERBAL_PPEXPAND_EMPTY_SEPARATOR, 20)
-
-#			undef EMPTY
-#			undef LEFT_JOIN_COMMA
-#			undef THEAD_NOT_EMPTY
-#			undef TARGS_DECL
-#			undef ARGS_DECL
-#			undef FBODY
-
-#		else
-
-				template <typename ... Args>
-				KERBAL_CONSTEXPR14
-				void __construct_at(iterator, Args&& ...);
-
-#		endif
-
-				KERBAL_CONSTEXPR14
-				void __destroy_at(iterator);
 
 		};
 
