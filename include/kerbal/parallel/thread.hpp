@@ -15,6 +15,7 @@
 #include <kerbal/algorithm/swap.hpp>
 #include <kerbal/compatibility/constexpr.hpp>
 #include <kerbal/compatibility/noexcept.hpp>
+#include <kerbal/memory/allocator_traits.hpp>
 #include <kerbal/memory/guard.hpp>
 #include <kerbal/type_traits/decay.hpp>
 #include <kerbal/utility/noncopyable.hpp>
@@ -43,7 +44,8 @@ namespace kerbal
 	namespace parallel
 	{
 
-		class thread: private kerbal::utility::noncopyable
+		template <typename Allocator>
+		class basic_thread: private kerbal::utility::noncopyable
 		{
 			public:
 				typedef pthread_t native_handle_type;
@@ -51,7 +53,7 @@ namespace kerbal
 				class id
 				{
 					public:
-						friend class thread;
+						friend class basic_thread;
 
 					private:
 						native_handle_type native_handle;
@@ -110,10 +112,21 @@ namespace kerbal
 			private:
 				id _K_th_id;
 
+				typedef Allocator allocator_type;
+				typedef kerbal::memory::allocator_traits<allocator_type> allocator_traits;
+
+				template <typename T>
+				static
+				typename allocator_traits::template rebind_alloc<T>::other
+				rebind_alloc() KERBAL_NOEXCEPT
+				{
+					return typename allocator_traits::template rebind_alloc<T>::other(allocator_type());
+				}
+
 			public:
 
 				KERBAL_CONSTEXPR
-				thread() KERBAL_NOEXCEPT :
+				basic_thread() KERBAL_NOEXCEPT :
 						_K_th_id()
 				{
 				}
@@ -133,35 +146,88 @@ namespace kerbal
 
 				template <typename Callable, typename ... Args>
 				explicit
-				thread(Callable&& fun, Args&& ... args) :
+				basic_thread(Callable&& fun, Args&& ... args) :
 						_K_th_id()
 				{
 					typedef kerbal::utility::tuple<
 							typename kerbal::type_traits::decay<Callable>::type,
 							typename kerbal::type_traits::decay<Args>::type ...
 					> fun_args_pack_t;
+
+					typedef typename allocator_traits::template rebind_alloc<fun_args_pack_t>::other rebind_allocator;
+					typedef typename allocator_traits::template rebind_traits<fun_args_pack_t>::other rebind_allocator_traits;
+
+					struct dealloc_helper
+					{
+						fun_args_pack_t * p;
+
+						KERBAL_CONSTEXPR
+						dealloc_helper(fun_args_pack_t * p) KERBAL_NOEXCEPT :
+								p(p)
+						{
+						}
+
+						~dealloc_helper()
+						{
+							if (this->p) {
+								rebind_allocator alloc(rebind_alloc<fun_args_pack_t>());
+								rebind_allocator_traits::deallocate(alloc, this->p, 1);
+							}
+						}
+					};
+
+					struct destroy_helper
+					{
+						fun_args_pack_t * p;
+
+						KERBAL_CONSTEXPR
+						destroy_helper(fun_args_pack_t * p) KERBAL_NOEXCEPT :
+								p(p)
+						{
+						}
+
+						~destroy_helper()
+						{
+							if (this->p) {
+								rebind_allocator alloc(rebind_alloc<fun_args_pack_t>());
+								rebind_allocator_traits::destroy(alloc, this->p);
+							}
+						}
+					};
+
 					struct helper
 					{
 							static void* start_rtn(void * fun_args_pack_v)
 							{
 								fun_args_pack_t * fun_args_pack_p = static_cast<fun_args_pack_t*>(fun_args_pack_v);
-								kerbal::memory::guard<fun_args_pack_t> guard(fun_args_pack_p);
-								thread::apply(*fun_args_pack_p,
+								dealloc_helper dealloc_h(fun_args_pack_p);
+								destroy_helper destroy_h(fun_args_pack_p);
+								basic_thread::apply(*fun_args_pack_p,
 												kerbal::utility::make_index_sequence<sizeof...(Args)>());
 								return NULL;
 							}
 					};
-					fun_args_pack_t * fun_args_pack_p = new fun_args_pack_t(
+
+					rebind_allocator alloc(rebind_alloc<fun_args_pack_t>());
+					fun_args_pack_t * fun_args_pack_p = rebind_allocator_traits::allocate(alloc, 1);
+					dealloc_helper dealloc_h(fun_args_pack_p);
+
+					rebind_allocator_traits::construct(
+							alloc, fun_args_pack_p,
 							kerbal::utility::forward<Callable>(fun),
 							kerbal::utility::forward<Args>(args)...
 					);
+					destroy_helper destroy_h(fun_args_pack_p);
+
 					void * fun_args_pack_v = reinterpret_cast<void*>(fun_args_pack_p);
 					int err = ::pthread_create(&this->_K_th_id.native_handle, NULL, helper::start_rtn, fun_args_pack_v);
 					if (err != 0) {
-						delete fun_args_pack_p;
 						kerbal::utility::throw_this_exception_helper<
 								kerbal::parallel::thread_create_failed
 						>::throw_this_exception();
+					} else {
+						destroy_h.p = NULL;
+						dealloc_h.p = NULL;
 					}
 				}
 
@@ -180,13 +246,54 @@ namespace kerbal
 #		define FBODY(i) \
 				template <typename Callable KERBAL_OPT_PPEXPAND_WITH_COMMA_N(LEFT_JOIN_COMMA, EMPTY, TARGS_DECL, i)> \
 				explicit \
-				thread(Callable fun KERBAL_OPT_PPEXPAND_WITH_COMMA_N(LEFT_JOIN_COMMA, EMPTY, ARGS_DECL, i)) : \
+				basic_thread(Callable fun KERBAL_OPT_PPEXPAND_WITH_COMMA_N(LEFT_JOIN_COMMA, EMPTY, ARGS_DECL, i)) : \
 						_K_th_id() \
 				{ \
 					typedef kerbal::utility::tuple< \
 							typename kerbal::type_traits::decay<Callable>::type \
 							KERBAL_OPT_PPEXPAND_WITH_COMMA_N(LEFT_JOIN_COMMA, EMPTY, TARGS_USE, i) \
 					> fun_args_pack_t; \
+					typedef typename allocator_traits::template rebind_alloc<fun_args_pack_t>::other rebind_allocator; \
+					typedef typename allocator_traits::template rebind_traits<fun_args_pack_t>::other rebind_allocator_traits; \
+ \
+					struct dealloc_helper \
+					{ \
+						fun_args_pack_t * p; \
+ \
+						KERBAL_CONSTEXPR \
+						dealloc_helper(fun_args_pack_t * p) KERBAL_NOEXCEPT : \
+								p(p) \
+						{ \
+						} \
+ \
+						~dealloc_helper() \
+						{ \
+							if (this->p) { \
+								rebind_allocator alloc(rebind_alloc<fun_args_pack_t>()); \
+								rebind_allocator_traits::deallocate(alloc, this->p, 1); \
+							} \
+						} \
+					}; \
+ \
+					struct destroy_helper \
+					{ \
+						fun_args_pack_t * p; \
+ \
+						KERBAL_CONSTEXPR \
+						destroy_helper(fun_args_pack_t * p) KERBAL_NOEXCEPT : \
+								p(p) \
+						{ \
+						} \
+ \
+						~destroy_helper() \
+						{ \
+							if (this->p) { \
+								rebind_allocator alloc(rebind_alloc<fun_args_pack_t>()); \
+								rebind_allocator_traits::destroy(alloc, this->p); \
+							} \
+						} \
+					}; \
+ \
 					struct helper \
 					{ \
 							static void* start_rtn(void * fun_args_pack_v) \
@@ -231,7 +338,7 @@ namespace kerbal
 			public:
 
 				KERBAL_CONSTEXPR14
-				thread(thread&& ano) KERBAL_NOEXCEPT :
+				basic_thread(basic_thread&& ano) KERBAL_NOEXCEPT :
 						_K_th_id(ano._K_th_id)
 				{
 					ano._K_th_id = id();
@@ -241,7 +348,7 @@ namespace kerbal
 
 			public:
 
-				~thread()
+				~basic_thread()
 				{
 					if (this->joinable()) {
 						std::terminate();
@@ -267,7 +374,7 @@ namespace kerbal
 				}
 
 				KERBAL_CONSTEXPR14
-				void swap(thread & ano)
+				void swap(basic_thread & ano)
 				{
 					kerbal::algorithm::swap(this->_K_th_id, ano._K_th_id);
 				}
@@ -285,37 +392,37 @@ namespace kerbal
 				}
 
 				KERBAL_CONSTEXPR
-				bool operator==(const thread & with) const KERBAL_NOEXCEPT
+				bool operator==(const basic_thread & with) const KERBAL_NOEXCEPT
 				{
 					return this->_K_th_id == with._K_th_id;
 				}
 
 				KERBAL_CONSTEXPR
-				bool operator!=(const thread & with) const KERBAL_NOEXCEPT
+				bool operator!=(const basic_thread & with) const KERBAL_NOEXCEPT
 				{
 					return this->_K_th_id != with._K_th_id;
 				}
 
 				KERBAL_CONSTEXPR
-				bool operator<(const thread & with) const KERBAL_NOEXCEPT
+				bool operator<(const basic_thread & with) const KERBAL_NOEXCEPT
 				{
 					return this->_K_th_id < with._K_th_id;
 				}
 
 				KERBAL_CONSTEXPR
-				bool operator<=(const thread & with) const KERBAL_NOEXCEPT
+				bool operator<=(const basic_thread & with) const KERBAL_NOEXCEPT
 				{
 					return this->_K_th_id <= with._K_th_id;
 				}
 
 				KERBAL_CONSTEXPR
-				bool operator>(const thread & with) const KERBAL_NOEXCEPT
+				bool operator>(const basic_thread & with) const KERBAL_NOEXCEPT
 				{
 					return this->_K_th_id > with._K_th_id;
 				}
 
 				KERBAL_CONSTEXPR
-				bool operator>=(const thread & with) const KERBAL_NOEXCEPT
+				bool operator>=(const basic_thread & with) const KERBAL_NOEXCEPT
 				{
 					return this->_K_th_id >= with._K_th_id;
 				}

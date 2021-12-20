@@ -17,25 +17,28 @@
 
 #include <stdexcept>
 
+#include <kerbal/parallel/fwd/thread.fwd.hpp>
+
+
 namespace kerbal
 {
 
 	namespace parallel
 	{
 
-		class thread;
-
 		class thread_create_failed: public std::runtime_error
 		{
 			private:
-				friend class kerbal::parallel::thread;
+
+				template <typename Allocator>
+				friend class kerbal::parallel::basic_thread;
 
 				friend class kerbal::utility::throw_this_exception_helper<
 						kerbal::parallel::thread_create_failed
 				>;
 
 				thread_create_failed() KERBAL_NOEXCEPT:
-						std::runtime_error("can't create thread")
+						std::runtime_error("can't create basic_thread")
 				{
 				}
 
