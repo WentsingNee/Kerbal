@@ -14,7 +14,6 @@
 
 #include <kerbal/ts/modules_ts/modules_ts.hpp>
 #include <kerbal/type_traits/integral_constant.hpp>
-#include <kerbal/type_traits/type_chooser.hpp>
 
 #if __cplusplus < 201103L
 #	include <kerbal/macro/macro_concat.hpp>
