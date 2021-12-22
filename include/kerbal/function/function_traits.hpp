@@ -13,8 +13,8 @@
 #define KERBAL_FUNCTION_FUNCTION_TRAITS_HPP
 
 #include <kerbal/ts/modules_ts/modules_ts.hpp>
+#include <kerbal/tmp/type_vector.hpp>
 #include <kerbal/type_traits/integral_constant.hpp>
-#include <kerbal/type_traits/type_chooser.hpp>
 
 #if __cplusplus < 201103L
 #	include <kerbal/macro/macro_concat.hpp>
@@ -22,6 +22,7 @@
 #endif
 
 #include <cstddef>
+
 
 namespace kerbal
 {
@@ -43,16 +44,20 @@ namespace kerbal
 #	define TARGS_USE(i) KERBAL_MACRO_CONCAT(T, i)
 #	define VAR_LIST ...
 
-#	define FUNCTION_TRAITS_VAR_LIST_DEF(i, VAR_L, HAS_VAR_LIST, CV_QUALIFIER, IS_CONST, IS_VOLATILE) \
+#	define FUNCTION_TRAITS_VAR_LIST_DEF(i, VAR_L, HAS_VAR_L, CV_QUALIFIER, IS_CONST, IS_VOLATILE) \
 		template <typename Ret KERBAL_OPT_PPEXPAND_WITH_COMMA_N(LEFT_JOIN_COMMA, EMPTY, TARGS_DECL, i)> \
 		struct function_traits<Ret(KERBAL_OPT_PPEXPAND_WITH_COMMA_N(REMAINF, EMPTY, TARGS_USE, i) VAR_L) CV_QUALIFIER> \
 		{ \
-				typedef kerbal::type_traits::HAS_VAR_LIST		has_var_list; \
-				typedef kerbal::type_traits::IS_CONST			is_const; \
-				typedef kerbal::type_traits::IS_VOLATILE		is_volatile; \
+				typedef kerbal::type_traits::HAS_VAR_L			has_var_list; \
+				typedef kerbal::type_traits::IS_CONST			is_const_qualified; \
+				typedef kerbal::type_traits::IS_VOLATILE		is_volatile_qualified; \
+				typedef kerbal::type_traits::false_type			is_lvalue_reference_qualified; \
+				typedef kerbal::type_traits::false_type			is_rvalue_reference_qualified; \
+				typedef kerbal::type_traits::false_type			is_noexcept_qualified; \
  \
 				typedef Ret										return_type; \
-				typedef kerbal::type_traits::integral_constant<int, i>		args_num; \
+				typedef kerbal::type_traits::integral_constant<std::size_t, i>		args_num; \
+				typedef kerbal::tmp::type_vector<KERBAL_OPT_PPEXPAND_WITH_COMMA_N(REMAINF, EMPTY, TARGS_USE, i)>			args_vector; \
 		};
 
 #	define FUNCTION_TRAITS_CV_DEF(i, CV_QUALIFIER, IS_CONST, IS_VOLATILE) \
@@ -86,28 +91,25 @@ namespace kerbal
 #	define VAR_LIST ,...
 
 #if __cplusplus < 201703L
-#	define IS_NOEXCEPT_DEF(IS_NOEXCEPT)
+#	define IS_NOEXCEPT_DEF(IS_NOEXCEPT) typedef kerbal::type_traits::false_type				is_noexcept_qualified;
 #else
-#	define IS_NOEXCEPT_DEF(IS_NOEXCEPT) typedef kerbal::type_traits::IS_NOEXCEPT			is_noexcept;
+#	define IS_NOEXCEPT_DEF(IS_NOEXCEPT) typedef kerbal::type_traits::IS_NOEXCEPT			is_noexcept_qualified;
 #endif // __cplusplus < 201703L
 
-#	define FUNCTION_TRAITS_VAR_LIST_DEF(VAR_L, HAS_VAR_LIST, CV_QUALIFIER, IS_CONST, IS_VOLATILE, REF_QUALIFIER, IS_LREF, IS_RREF, NOEXCEPT_QUALIFIER, IS_NOEXCEPT) \
+#	define FUNCTION_TRAITS_VAR_LIST_DEF(VAR_L, HAS_VAR_L, CV_QUALIFIER, IS_CONST, IS_VOLATILE, REF_QUALIFIER, IS_LREF, IS_RREF, NOEXCEPT_QUALIFIER, IS_NOEXCEPT) \
 		MODULE_EXPORT \
 		template <typename Ret, typename ... Args> \
 		struct function_traits<Ret(Args... VAR_L) CV_QUALIFIER REF_QUALIFIER NOEXCEPT_QUALIFIER> \
 		{ \
-				typedef kerbal::type_traits::HAS_VAR_LIST		has_var_list; \
-				typedef kerbal::type_traits::IS_CONST			is_const; \
-				typedef kerbal::type_traits::IS_VOLATILE		is_volatile; \
-				typedef kerbal::type_traits::IS_LREF			is_lref; \
-				typedef kerbal::type_traits::IS_RREF			is_rref; \
+				typedef kerbal::type_traits::HAS_VAR_L			has_var_list; \
+				typedef kerbal::type_traits::IS_CONST			is_const_qualified; \
+				typedef kerbal::type_traits::IS_VOLATILE		is_volatile_qualified; \
+				typedef kerbal::type_traits::IS_LREF			is_lvalue_reference_qualified; \
+				typedef kerbal::type_traits::IS_RREF			is_rvalue_reference_qualified; \
 				IS_NOEXCEPT_DEF(IS_NOEXCEPT) \
 				typedef Ret										return_type; \
-				typedef kerbal::type_traits::integral_constant<int, sizeof...(Args)>	args_num; \
-				template <size_t i> \
-				struct argument: kerbal::type_traits::type_chooser<i, Args...> \
-				{ \
-				}; \
+				typedef kerbal::type_traits::integral_constant<std::size_t, sizeof...(Args)>	args_num; \
+				typedef kerbal::tmp::type_vector<Args...>										args_vector; \
 		};
 
 #	define FUNCTION_TRAITS_CV_DEF(CV_QUALIFIER, IS_CONST, IS_VOLATILE, REF_QUALIFIER, IS_LREF, IS_RREF, NOEXCEPT_QUALIFIER, IS_NOEXCEPT) \
