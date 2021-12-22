@@ -13,6 +13,7 @@
 #define KERBAL_TYPE_TRAITS_FUNCTION_DEDUCTION_HPP
 
 #include <kerbal/ts/modules_ts/modules_ts.hpp>
+#include <kerbal/compatibility/cv_qualified_function.hpp>
 #include <kerbal/type_traits/integral_constant.hpp>
 
 #if __cplusplus < 201103L
@@ -48,11 +49,16 @@ namespace kerbal
 		template <typename Ret KERBAL_OPT_PPEXPAND_WITH_COMMA_N(LEFT_JOIN_COMMA, EMPTY, TARGS_DECL, i)> \
 		struct is_function<Ret(KERBAL_OPT_PPEXPAND_WITH_COMMA_N(RIGHT_JOIN_COMMA, EMPTY, TARGS_USE, i) ...) CV_QUALIFIER>: kerbal::type_traits::true_type {};
 
+#if KERBAL_HAS_CV_QUALIFIED_FUNCTION_SUPPORT
 #	define DBODY(i) \
 		DBODY_BASIC(i, EMPTY) \
 		DBODY_BASIC(i, const) \
 		DBODY_BASIC(i, volatile) \
 		DBODY_BASIC(i, const volatile)
+#else
+#	define DBODY(i) \
+		DBODY_BASIC(i, EMPTY)
+#endif
 
 		KERBAL_PPEXPAND_N(DBODY, KERBAL_PPEXPAND_EMPTY_SEPARATOR, 0)
 		KERBAL_PPEXPAND_N(DBODY, KERBAL_PPEXPAND_EMPTY_SEPARATOR, 20)

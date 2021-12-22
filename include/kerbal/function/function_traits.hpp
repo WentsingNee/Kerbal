@@ -13,6 +13,7 @@
 #define KERBAL_FUNCTION_FUNCTION_TRAITS_HPP
 
 #include <kerbal/ts/modules_ts/modules_ts.hpp>
+#include <kerbal/compatibility/cv_qualified_function.hpp>
 #include <kerbal/tmp/type_vector.hpp>
 #include <kerbal/type_traits/integral_constant.hpp>
 
@@ -64,11 +65,16 @@ namespace kerbal
 		FUNCTION_TRAITS_VAR_LIST_DEF(i, EMPTY,    false_type, CV_QUALIFIER, IS_CONST, IS_VOLATILE) \
 		FUNCTION_TRAITS_VAR_LIST_DEF(i, VAR_LIST, true_type,  CV_QUALIFIER, IS_CONST, IS_VOLATILE)
 
+#if KERBAL_HAS_CV_QUALIFIED_FUNCTION_SUPPORT
 #	define DBODY(i) \
 		FUNCTION_TRAITS_CV_DEF(i, EMPTY, false_type, false_type) \
 		FUNCTION_TRAITS_CV_DEF(i, const, true_type, false_type) \
 		FUNCTION_TRAITS_CV_DEF(i, volatile, false_type, true_type) \
 		FUNCTION_TRAITS_CV_DEF(i, const volatile, true_type, true_type)
+#else
+#	define DBODY(i) \
+		FUNCTION_TRAITS_CV_DEF(i, EMPTY, false_type, false_type)
+#endif
 
 		KERBAL_PPEXPAND_N(DBODY, KERBAL_PPEXPAND_EMPTY_SEPARATOR, 0)
 		KERBAL_PPEXPAND_N(DBODY, KERBAL_PPEXPAND_EMPTY_SEPARATOR, 20)
@@ -86,6 +92,7 @@ namespace kerbal
 
 
 #	else // __cplusplus >= 201103L
+
 
 #	define EMPTY
 #	define VAR_LIST ,...
