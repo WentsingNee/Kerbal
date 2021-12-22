@@ -16,6 +16,14 @@
 #include <kerbal/type_traits/conditional.hpp>
 #include <kerbal/type_traits/integral_constant.hpp>
 
+#include <kerbal/config/compiler_id.hpp>
+#include <kerbal/config/compiler_private.hpp>
+
+#if KERBAL_COMPILER_ID == KERBAL_COMPILER_ID_MSVC // VS2012 compatible
+#	include <cstddef>
+#endif
+
+
 namespace kerbal
 {
 
@@ -30,9 +38,26 @@ namespace kerbal
 
 		MODULE_EXPORT
 		template <typename Tp>
-		struct is_const<Tp const> : kerbal::type_traits::true_type
+		struct is_const<const Tp> : kerbal::type_traits::true_type
 		{
 		};
+
+#	if KERBAL_COMPILER_ID == KERBAL_COMPILER_ID_MSVC // VS2012 compatible
+
+		MODULE_EXPORT
+		template <typename Tp>
+		struct is_const<const Tp[]> : kerbal::type_traits::true_type
+		{
+		};
+
+		MODULE_EXPORT
+		template <typename Tp, std::size_t N>
+		struct is_const<const Tp[N]> : kerbal::type_traits::true_type
+		{
+		};
+
+#	endif
+
 
 		MODULE_EXPORT
 		template <typename Tp>
@@ -48,12 +73,32 @@ namespace kerbal
 				typedef Tp type;
 		};
 
+#	if KERBAL_COMPILER_ID == KERBAL_COMPILER_ID_MSVC // VS2012 compatible
+
+		MODULE_EXPORT
+		template <typename Tp>
+		struct remove_const<const Tp[]>
+		{
+				typedef Tp type [];
+		};
+
+		MODULE_EXPORT
+		template <typename Tp, std::size_t N>
+		struct remove_const<const Tp[N]>
+		{
+				typedef Tp type [N];
+		};
+
+#	endif
+
+
 		MODULE_EXPORT
 		template <typename Tp>
 		struct add_const
 		{
 				typedef const Tp type;
 		};
+
 
 		MODULE_EXPORT
 		template <typename From, typename To>
