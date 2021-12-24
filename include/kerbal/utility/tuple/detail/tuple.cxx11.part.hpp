@@ -453,6 +453,46 @@ namespace kerbal
 			{
 			};
 
+			template <typename Tuple, typename Folded, typename F, std::size_t N>
+			KERBAL_CONSTEXPR
+			auto tuple_binary_left_fold(Tuple && t, Folded && folded, F f, kerbal::type_traits::integral_constant<std::size_t, N>) ->
+					typename tuple_binary_left_fold_result<Tuple &&, Folded &&, F, N>::type;
+
+			template <typename Tuple, typename Folded, typename F, std::size_t N>
+			KERBAL_CONSTEXPR
+			Folded && tuple_binary_left_fold_impl(Tuple && /*self*/, Folded && folded, F /*f*/, kerbal::type_traits::integral_constant<std::size_t, N>, kerbal::type_traits::true_type)
+			{
+				return kerbal::utility::forward<Folded>(folded);
+			}
+
+			template <typename Tuple, typename Folded, typename F, std::size_t N>
+			KERBAL_CONSTEXPR
+			auto tuple_binary_left_fold_impl(Tuple && t, Folded && folded, F f, kerbal::type_traits::integral_constant<std::size_t, N>, kerbal::type_traits::false_type) ->
+					typename tuple_binary_left_fold_result<Tuple &&, Folded &&, F, N>::type
+			{
+				return tuple_binary_left_fold(
+						kerbal::utility::forward<Tuple>(t),
+						f(kerbal::utility::forward<Folded>(folded), kerbal::utility::forward<Tuple>(t).template get<N>()),
+						f,
+						kerbal::type_traits::integral_constant<std::size_t, N + 1>()
+				);
+			}
+
+			template <typename Tuple, typename Folded, typename F, std::size_t N>
+			KERBAL_CONSTEXPR
+			auto tuple_binary_left_fold(Tuple && t, Folded && folded, F f, kerbal::type_traits::integral_constant<std::size_t, N> index) ->
+					typename tuple_binary_left_fold_result<Tuple &&, Folded &&, F, N>::type
+			{
+				typedef typename kerbal::type_traits::remove_reference<Tuple>::type TupleRemoveRef;
+				return tuple_binary_left_fold_impl(
+						kerbal::utility::forward<Tuple>(t),
+						kerbal::utility::forward<Folded>(folded),
+						f,
+						index,
+						kerbal::type_traits::bool_constant<N == TupleRemoveRef::TUPLE_SIZE::value>()
+				);
+			}
+
 
 		} // namespace detail
 
@@ -1238,60 +1278,38 @@ namespace kerbal
 				}
 
 
-			protected:
-
-				template <typename Self, typename Folded, typename F>
-				KERBAL_CONSTEXPR
-				static Folded && _K_binary_left_fold_impl(Self && /*self*/, Folded && folded, F /*f*/, kerbal::type_traits::integral_constant<std::size_t, TUPLE_SIZE::value>)
-				{
-					return kerbal::utility::forward<Folded>(folded);
-				}
-
-				template <typename Self, typename Folded, typename F, std::size_t N>
-				KERBAL_CONSTEXPR
-				static auto _K_binary_left_fold_impl(Self && self, Folded && folded, F f, kerbal::type_traits::integral_constant<std::size_t, N>) ->
-						typename detail::tuple_binary_left_fold_result<Self &&, Folded &&, F, N>::type
-				{
-					return _K_binary_left_fold_impl(
-							kerbal::utility::forward<Self>(self),
-							f(kerbal::utility::forward<Folded>(folded), kerbal::utility::forward<Self>(self).template get<N>()),
-							f,
-							kerbal::type_traits::integral_constant<std::size_t, N + 1>()
-					);
-				}
-
 			public:
 
 				template <typename T, typename F>
 				KERBAL_CONSTEXPR14
 				auto binary_left_fold(T && init, F f) & ->
-						decltype(_K_binary_left_fold_impl(*this, kerbal::utility::forward<T>(init), f, kerbal::type_traits::integral_constant<std::size_t, 0>()))
+						decltype(tuple_binary_left_fold(*this, kerbal::utility::forward<T>(init), f, kerbal::type_traits::integral_constant<std::size_t, 0>()))
 				{
-					return _K_binary_left_fold_impl(*this, kerbal::utility::forward<T>(init), f, kerbal::type_traits::integral_constant<std::size_t, 0>());
+					return tuple_binary_left_fold(*this, kerbal::utility::forward<T>(init), f, kerbal::type_traits::integral_constant<std::size_t, 0>());
 				}
 
 				template <typename T, typename F>
 				KERBAL_CONSTEXPR
 				auto binary_left_fold(T && init, F f) const & ->
-						decltype(_K_binary_left_fold_impl(*this, kerbal::utility::forward<T>(init), f, kerbal::type_traits::integral_constant<std::size_t, 0>()))
+						decltype(tuple_binary_left_fold(*this, kerbal::utility::forward<T>(init), f, kerbal::type_traits::integral_constant<std::size_t, 0>()))
 				{
-					return _K_binary_left_fold_impl(*this, kerbal::utility::forward<T>(init), f, kerbal::type_traits::integral_constant<std::size_t, 0>());
+					return tuple_binary_left_fold(*this, kerbal::utility::forward<T>(init), f, kerbal::type_traits::integral_constant<std::size_t, 0>());
 				}
 
 				template <typename T, typename F>
 				KERBAL_CONSTEXPR14
 				auto binary_left_fold(T && init, F f) && ->
-						decltype(_K_binary_left_fold_impl(kerbal::compatibility::move(*this), kerbal::utility::forward<T>(init), f, kerbal::type_traits::integral_constant<std::size_t, 0>()))
+						decltype(tuple_binary_left_fold(kerbal::compatibility::move(*this), kerbal::utility::forward<T>(init), f, kerbal::type_traits::integral_constant<std::size_t, 0>()))
 				{
-					return _K_binary_left_fold_impl(kerbal::compatibility::move(*this), kerbal::utility::forward<T>(init), f, kerbal::type_traits::integral_constant<std::size_t, 0>());
+					return tuple_binary_left_fold(kerbal::compatibility::move(*this), kerbal::utility::forward<T>(init), f, kerbal::type_traits::integral_constant<std::size_t, 0>());
 				}
 
 				template <typename T, typename F>
 				KERBAL_CONSTEXPR
 				auto binary_left_fold(T && init, F f) const && ->
-						decltype(_K_binary_left_fold_impl(kerbal::compatibility::move(*this), kerbal::utility::forward<T>(init), f, kerbal::type_traits::integral_constant<std::size_t, 0>()))
+						decltype(tuple_binary_left_fold(kerbal::compatibility::move(*this), kerbal::utility::forward<T>(init), f, kerbal::type_traits::integral_constant<std::size_t, 0>()))
 				{
-					return _K_binary_left_fold_impl(kerbal::compatibility::move(*this), kerbal::utility::forward<T>(init), f, kerbal::type_traits::integral_constant<std::size_t, 0>());
+					return tuple_binary_left_fold(kerbal::compatibility::move(*this), kerbal::utility::forward<T>(init), f, kerbal::type_traits::integral_constant<std::size_t, 0>());
 				}
 
 
