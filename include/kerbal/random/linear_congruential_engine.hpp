@@ -153,7 +153,7 @@ namespace kerbal
 				public:
 					// a %= m, s %= m
 					KERBAL_CONSTEXPR
-					static ResultType cacl(ResultType s) KERBAL_NOEXCEPT
+					static ResultType cacl(ResultType /*s*/) KERBAL_NOEXCEPT
 					{
 						return 0;
 					}

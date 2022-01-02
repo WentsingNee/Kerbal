@@ -44,7 +44,7 @@ namespace kerbal
 				{
 				}
 
-				explicit static_container_full_exception(std::size_t max_capacity) :
+				explicit static_container_full_exception(std::size_t /*max_capacity*/) :
 						std::logic_error("the static container is full")
 				{
 				}
