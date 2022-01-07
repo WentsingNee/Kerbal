@@ -18,6 +18,7 @@
 #include <kerbal/memory/uninitialized/destroy.hpp>
 #include <kerbal/type_traits/array_traits.hpp>
 #include <kerbal/type_traits/conditional.hpp>
+#include <kerbal/type_traits/integral_constant.hpp>
 
 #if __cplusplus < 201103L
 #	include <kerbal/macro/macro_concat.hpp>
@@ -37,6 +38,8 @@
 #if __cplusplus > 201703L
 #	include <memory>
 #endif
+
+#include <kerbal/memory/detail/can_be_nothrow_advance_iterator.hpp>
 
 
 namespace kerbal
@@ -227,7 +230,8 @@ namespace kerbal
 		{
 
 			typedef kerbal::type_traits::integral_constant<int, 0> UI_VAL_CONSTRUCT_VER_DEFAULT;
-			typedef kerbal::type_traits::integral_constant<int, 1> UI_VAL_CONSTRUCT_VER_NO_CATCH;
+			typedef kerbal::type_traits::integral_constant<int, 1> UI_VAL_CONSTRUCT_VER_NOTHROW_ITER_ADVANCE;
+			typedef kerbal::type_traits::integral_constant<int, 2> UI_VAL_CONSTRUCT_VER_NO_CATCH;
 
 #		if __cpp_exceptions
 
@@ -255,6 +259,23 @@ namespace kerbal
 					if (!iter_move_next_exception_happen) {
 						kerbal::memory::uninitialized_transaction_failed_destroy(first, current);
 					}
+					throw;
+				}
+			}
+
+			template <typename ForwardIterator>
+			KERBAL_CONSTEXPR20
+			void _K_uninitialized_value_construct(ForwardIterator first, ForwardIterator last, UI_VAL_CONSTRUCT_VER_NOTHROW_ITER_ADVANCE)
+			{
+				typedef ForwardIterator iterator;
+				iterator current(first);
+				try {
+					while (current != last) {
+						kerbal::memory::construct_at(&*current); // new (&*current) Tp ();
+						++current;
+					}
+				} catch (...) {
+					kerbal::memory::uninitialized_transaction_failed_destroy(first, current);
 					throw;
 				}
 			}
@@ -290,7 +311,11 @@ namespace kerbal
 					std::is_trivially_destructible<value_type>::value,
 #		endif
 					detail::UI_VAL_CONSTRUCT_VER_NO_CATCH,
-					detail::UI_VAL_CONSTRUCT_VER_DEFAULT
+					typename kerbal::type_traits::conditional<
+							detail::can_be_nothrow_advance_iterator<iterator>::value,
+							detail::UI_VAL_CONSTRUCT_VER_NOTHROW_ITER_ADVANCE,
+							detail::UI_VAL_CONSTRUCT_VER_DEFAULT
+					>::type
 			>::type VER;
 
 #	else
@@ -311,7 +336,8 @@ namespace kerbal
 		{
 
 			typedef kerbal::type_traits::integral_constant<int, 0> UI_VAL_CONSTRUCT_N_VER_DEFAULT;
-			typedef kerbal::type_traits::integral_constant<int, 1> UI_VAL_CONSTRUCT_N_VER_NO_CATCH;
+			typedef kerbal::type_traits::integral_constant<int, 1> UI_VAL_CONSTRUCT_N_VER_NOTHROW_ITER_ADVANCE;
+			typedef kerbal::type_traits::integral_constant<int, 2> UI_VAL_CONSTRUCT_N_VER_NO_CATCH;
 
 #		if __cpp_exceptions
 
@@ -341,6 +367,25 @@ namespace kerbal
 					if (!iter_move_next_exception_happen) {
 						kerbal::memory::uninitialized_transaction_failed_destroy(first, current);
 					}
+					throw;
+				}
+			}
+
+			template <typename ForwardIterator, typename SizeType>
+			KERBAL_CONSTEXPR20
+			ForwardIterator _K_uninitialized_value_construct_n(ForwardIterator first, SizeType n, UI_VAL_CONSTRUCT_N_VER_NOTHROW_ITER_ADVANCE)
+			{
+				typedef ForwardIterator iterator;
+				iterator current(first);
+				try {
+					while (n > 0) {
+						--n;
+						kerbal::memory::construct_at(&*current); // new (&*current) Tp();
+						++current;
+					}
+					return current;
+				} catch (...) {
+					kerbal::memory::uninitialized_transaction_failed_destroy(first, current);
 					throw;
 				}
 			}
@@ -378,7 +423,11 @@ namespace kerbal
 					std::is_trivially_destructible<value_type>::value,
 #		endif
 					detail::UI_VAL_CONSTRUCT_N_VER_NO_CATCH,
-					detail::UI_VAL_CONSTRUCT_N_VER_DEFAULT
+					typename kerbal::type_traits::conditional<
+							detail::can_be_nothrow_advance_iterator<iterator>::value,
+							detail::UI_VAL_CONSTRUCT_N_VER_NOTHROW_ITER_ADVANCE,
+							detail::UI_VAL_CONSTRUCT_N_VER_DEFAULT
+					>::type
 			>::type VER;
 
 #	else
@@ -399,7 +448,8 @@ namespace kerbal
 		{
 
 			typedef kerbal::type_traits::integral_constant<int, 0> UI_CPY_VER_DEFAULT;
-			typedef kerbal::type_traits::integral_constant<int, 1> UI_CPY_VER_NO_CATCH;
+			typedef kerbal::type_traits::integral_constant<int, 1> UI_CPY_VER_NOTHROW_ITER_ADVANCE;
+			typedef kerbal::type_traits::integral_constant<int, 2> UI_CPY_VER_NO_CATCH;
 
 #		if __cpp_exceptions
 
@@ -429,6 +479,25 @@ namespace kerbal
 					if (!iter_move_next_exception_happen) {
 						kerbal::memory::uninitialized_transaction_failed_destroy(to, current);
 					}
+					throw;
+				}
+			}
+
+			template <typename InputIterator, typename ForwardIterator>
+			KERBAL_CONSTEXPR20
+			ForwardIterator _K_uninitialized_copy(InputIterator first, InputIterator last, ForwardIterator to, UI_CPY_VER_NOTHROW_ITER_ADVANCE)
+			{
+				typedef ForwardIterator iterator;
+				iterator current(to);
+				try {
+					while (first != last) {
+						kerbal::memory::construct_at(&*current, *first); // new (&*current) Tp (*first);
+						++current;
+						++first;
+					}
+					return current;
+				} catch (...) {
+					kerbal::memory::uninitialized_transaction_failed_destroy(to, current);
 					throw;
 				}
 			}
@@ -466,7 +535,11 @@ namespace kerbal
 					std::is_trivially_destructible<value_type>::value,
 #		endif
 					detail::UI_CPY_VER_NO_CATCH,
-					detail::UI_CPY_VER_DEFAULT
+					typename kerbal::type_traits::conditional<
+							detail::can_be_nothrow_advance_iterator<iterator>::value,
+							detail::UI_CPY_VER_NOTHROW_ITER_ADVANCE,
+							detail::UI_CPY_VER_DEFAULT
+					>::type
 			>::type VER;
 
 #	else
@@ -487,7 +560,8 @@ namespace kerbal
 		{
 
 			typedef kerbal::type_traits::integral_constant<int, 0> UI_CPY_N_VER_DEFAULT;
-			typedef kerbal::type_traits::integral_constant<int, 1> UI_CPY_N_VER_NO_CATCH;
+			typedef kerbal::type_traits::integral_constant<int, 1> UI_CPY_N_VER_NOTHROW_ITER_ADVANCE;
+			typedef kerbal::type_traits::integral_constant<int, 2> UI_CPY_N_VER_NO_CATCH;
 
 #		if __cpp_exceptions
 
@@ -518,6 +592,26 @@ namespace kerbal
 					if (!iter_move_next_exception_happen) {
 						kerbal::memory::uninitialized_transaction_failed_destroy(to, current);
 					}
+					throw;
+				}
+			}
+
+			template <typename InputIterator, typename SizeType, typename ForwardIterator>
+			KERBAL_CONSTEXPR20
+			ForwardIterator _K_uninitialized_copy_n(InputIterator first, SizeType n, ForwardIterator to, UI_CPY_N_VER_NOTHROW_ITER_ADVANCE)
+			{
+				typedef ForwardIterator iterator;
+				iterator current(to);
+				try {
+					while (n > 0) {
+						--n;
+						kerbal::memory::construct_at(&*current, *first); // new (&*current) Tp(*first);
+						++current;
+						++first;
+					}
+					return current;
+				} catch (...) {
+					kerbal::memory::uninitialized_transaction_failed_destroy(to, current);
 					throw;
 				}
 			}
@@ -556,7 +650,11 @@ namespace kerbal
 					std::is_trivially_destructible<value_type>::value,
 #		endif
 					detail::UI_CPY_N_VER_NO_CATCH,
-					detail::UI_CPY_N_VER_DEFAULT
+					typename kerbal::type_traits::conditional<
+							detail::can_be_nothrow_advance_iterator<iterator>::value,
+							detail::UI_CPY_N_VER_NOTHROW_ITER_ADVANCE,
+							detail::UI_CPY_N_VER_DEFAULT
+					>::type
 			>::type VER;
 
 #	else
@@ -577,7 +675,8 @@ namespace kerbal
 		{
 
 			typedef kerbal::type_traits::integral_constant<int, 0> UI_MOV_VER_DEFAULT;
-			typedef kerbal::type_traits::integral_constant<int, 1> UI_MOV_VER_NO_CATCH;
+			typedef kerbal::type_traits::integral_constant<int, 1> UI_MOV_VER_NOTHROW_ITER_ADVANCE;
+			typedef kerbal::type_traits::integral_constant<int, 2> UI_MOV_VER_NO_CATCH;
 
 #		if __cpp_exceptions
 
@@ -607,6 +706,25 @@ namespace kerbal
 					if (!iter_move_next_exception_happen) {
 						kerbal::memory::uninitialized_transaction_failed_destroy(to, current);
 					}
+					throw;
+				}
+			}
+
+			template <typename InputIterator, typename ForwardIterator>
+			KERBAL_CONSTEXPR20
+			ForwardIterator _K_uninitialized_move(InputIterator first, InputIterator last, ForwardIterator to, UI_MOV_VER_NOTHROW_ITER_ADVANCE)
+			{
+				typedef ForwardIterator iterator;
+				iterator current(to);
+				try {
+					while (first != last) {
+						kerbal::memory::construct_at(&*current, kerbal::compatibility::to_xvalue(*first)); // new (&*current) Tp (kerbal::compatibility::to_xvalue(*first));
+						++current;
+						++first;
+					}
+					return current;
+				} catch (...) {
+					kerbal::memory::uninitialized_transaction_failed_destroy(to, current);
 					throw;
 				}
 			}
@@ -644,7 +762,11 @@ namespace kerbal
 					std::is_trivially_destructible<value_type>::value,
 #		endif
 					detail::UI_MOV_VER_NO_CATCH,
-					detail::UI_MOV_VER_DEFAULT
+					typename kerbal::type_traits::conditional<
+							detail::can_be_nothrow_advance_iterator<iterator>::value,
+							detail::UI_MOV_VER_NOTHROW_ITER_ADVANCE,
+							detail::UI_MOV_VER_DEFAULT
+					>::type
 			>::type VER;
 
 #	else
@@ -665,7 +787,8 @@ namespace kerbal
 		{
 
 			typedef kerbal::type_traits::integral_constant<int, 0> UI_MOV_N_VER_DEFAULT;
-			typedef kerbal::type_traits::integral_constant<int, 1> UI_MOV_N_VER_NO_CATCH;
+			typedef kerbal::type_traits::integral_constant<int, 1> UI_MOV_N_VER_NOTHROW_ITER_ADVANCE;
+			typedef kerbal::type_traits::integral_constant<int, 2> UI_MOV_N_VER_NO_CATCH;
 
 #		if __cpp_exceptions
 
@@ -696,6 +819,26 @@ namespace kerbal
 					if (!iter_move_next_exception_happen) {
 						kerbal::memory::uninitialized_transaction_failed_destroy(to, current);
 					}
+					throw;
+				}
+			}
+
+			template <typename InputIterator, typename SizeType, typename ForwardIterator>
+			KERBAL_CONSTEXPR20
+			ForwardIterator _K_uninitialized_move_n(InputIterator first, SizeType n, ForwardIterator to, UI_MOV_N_VER_NOTHROW_ITER_ADVANCE)
+			{
+				typedef ForwardIterator iterator;
+				iterator current(to);
+				try {
+					while (n > 0) {
+						--n;
+						kerbal::memory::construct_at(&*current, kerbal::compatibility::to_xvalue(*first)); // new (&*current) Tp(kerbal::compatibility::to_xvalue(*first));
+						++current;
+						++first;
+					}
+					return current;
+				} catch (...) {
+					kerbal::memory::uninitialized_transaction_failed_destroy(to, current);
 					throw;
 				}
 			}
@@ -734,7 +877,11 @@ namespace kerbal
 					std::is_trivially_destructible<value_type>::value,
 #		endif
 					detail::UI_MOV_N_VER_NO_CATCH,
-					detail::UI_MOV_N_VER_DEFAULT
+					typename kerbal::type_traits::conditional<
+							detail::can_be_nothrow_advance_iterator<iterator>::value,
+							detail::UI_MOV_N_VER_NOTHROW_ITER_ADVANCE,
+							detail::UI_MOV_N_VER_DEFAULT
+					>::type
 			>::type VER;
 
 #	else
@@ -755,7 +902,8 @@ namespace kerbal
 		{
 
 			typedef kerbal::type_traits::integral_constant<int, 0> UI_FILL_VER_DEFAULT;
-			typedef kerbal::type_traits::integral_constant<int, 1> UI_FILL_VER_NO_CATCH;
+			typedef kerbal::type_traits::integral_constant<int, 1> UI_FILL_VER_NOTHROW_ITER_ADVANCE;
+			typedef kerbal::type_traits::integral_constant<int, 2> UI_FILL_VER_NO_CATCH;
 
 #		if __cpp_exceptions
 
@@ -783,6 +931,23 @@ namespace kerbal
 					if (!iter_move_next_exception_happen) {
 						kerbal::memory::uninitialized_transaction_failed_destroy(first, current);
 					}
+					throw;
+				}
+			}
+
+			template <typename ForwardIterator, typename T>
+			KERBAL_CONSTEXPR20
+			void uninitialized_fill(ForwardIterator first, ForwardIterator last, const T & value, UI_FILL_VER_NOTHROW_ITER_ADVANCE)
+			{
+				typedef ForwardIterator iterator;
+				iterator current(first);
+				try {
+					while (current != last) {
+						kerbal::memory::construct_at(&*current, value); // new (&*current) Tp (value);
+						++current;
+					}
+				} catch (...) {
+					kerbal::memory::uninitialized_transaction_failed_destroy(first, current);
 					throw;
 				}
 			}
@@ -818,7 +983,11 @@ namespace kerbal
 					std::is_trivially_destructible<value_type>::value,
 #		endif
 					detail::UI_FILL_VER_NO_CATCH,
-					detail::UI_FILL_VER_DEFAULT
+					typename kerbal::type_traits::conditional<
+							detail::can_be_nothrow_advance_iterator<iterator>::value,
+							detail::UI_FILL_VER_NOTHROW_ITER_ADVANCE,
+							detail::UI_FILL_VER_DEFAULT
+					>::type
 			>::type VER;
 
 #	else
@@ -839,7 +1008,8 @@ namespace kerbal
 		{
 
 			typedef kerbal::type_traits::integral_constant<int, 0> UI_FILL_N_VER_DEFAULT;
-			typedef kerbal::type_traits::integral_constant<int, 1> UI_FILL_N_VER_NO_CATCH;
+			typedef kerbal::type_traits::integral_constant<int, 1> UI_FILL_N_VER_NOTHROW_ITER_ADVANCE;
+			typedef kerbal::type_traits::integral_constant<int, 2> UI_FILL_N_VER_NO_CATCH;
 
 #		if __cpp_exceptions
 
@@ -869,6 +1039,25 @@ namespace kerbal
 					if (!iter_move_next_exception_happen) {
 						kerbal::memory::uninitialized_transaction_failed_destroy(first, current);
 					}
+					throw;
+				}
+			}
+
+			template <typename ForwardIterator, typename SizeType, typename T>
+			KERBAL_CONSTEXPR20
+			ForwardIterator _K_uninitialized_fill_n(ForwardIterator first, SizeType n, const T & value, UI_FILL_N_VER_NOTHROW_ITER_ADVANCE)
+			{
+				typedef ForwardIterator iterator;
+				iterator current(first);
+				try {
+					while (n > 0) {
+						--n;
+						kerbal::memory::construct_at(&*current, value); // new (&*current) Tp(value);
+						++current;
+					}
+					return current;
+				} catch (...) {
+					kerbal::memory::uninitialized_transaction_failed_destroy(first, current);
 					throw;
 				}
 			}
@@ -906,7 +1095,11 @@ namespace kerbal
 					std::is_trivially_destructible<value_type>::value,
 #		endif
 					detail::UI_FILL_N_VER_NO_CATCH,
-					detail::UI_FILL_N_VER_DEFAULT
+					typename kerbal::type_traits::conditional<
+							detail::can_be_nothrow_advance_iterator<iterator>::value,
+							detail::UI_FILL_N_VER_NOTHROW_ITER_ADVANCE,
+							detail::UI_FILL_N_VER_DEFAULT
+					>::type
 			>::type VER;
 
 #	else
