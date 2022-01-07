@@ -424,13 +424,13 @@ namespace kerbal
 						}
 						++first;
 					}
+					return current;
 				} catch (...) {
 					if (!iter_move_next_exception_happen) {
 						kerbal::memory::uninitialized_transaction_failed_destroy(to, current);
 					}
 					throw;
 				}
-				return current;
 			}
 
 #		endif
@@ -602,13 +602,13 @@ namespace kerbal
 						}
 						++first;
 					}
+					return current;
 				} catch (...) {
 					if (!iter_move_next_exception_happen) {
 						kerbal::memory::uninitialized_transaction_failed_destroy(to, current);
 					}
 					throw;
 				}
-				return current;
 			}
 
 #		endif
