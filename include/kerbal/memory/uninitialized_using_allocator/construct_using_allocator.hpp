@@ -43,15 +43,15 @@ namespace kerbal
 	// forward declare
 
 		template <typename Allocator, typename ForwardIterator>
-		KERBAL_CONSTEXPR20
+		KERBAL_CONSTEXPR14
 		void uninitialized_value_construct_using_allocator(Allocator & alloc, ForwardIterator first, ForwardIterator last);
 
 		template <typename Allocator, typename InputIterator, typename ForwardIterator>
-		KERBAL_CONSTEXPR20
+		KERBAL_CONSTEXPR14
 		ForwardIterator uninitialized_copy_using_allocator(Allocator & alloc, InputIterator first, InputIterator last, ForwardIterator to);
 
 		template <typename Allocator, typename InputIterator, typename ForwardIterator>
-		KERBAL_CONSTEXPR20
+		KERBAL_CONSTEXPR14
 		ForwardIterator uninitialized_move_using_allocator(Allocator & alloc, InputIterator first, InputIterator last, ForwardIterator to);
 
 
@@ -88,7 +88,7 @@ namespace kerbal
 		{
 
 			template <typename Allocator, typename Tp, typename ... Args>
-			KERBAL_CONSTEXPR20
+			KERBAL_CONSTEXPR14
 			Tp * _K_construct_at_using_allocator(Allocator & alloc, Tp * p, Args&& ... args)
 					KERBAL_CONDITIONAL_NOEXCEPT(
 						noexcept(kerbal::memory::allocator_traits<Allocator>::construct(alloc, p, kerbal::utility::forward<Args>(args)...))
@@ -103,7 +103,7 @@ namespace kerbal
 
 
 		template <typename Allocator, typename Tp, typename ... Args>
-		KERBAL_CONSTEXPR20
+		KERBAL_CONSTEXPR14
 		Tp * construct_at_using_allocator(Allocator & alloc, Tp * p, Args&& ... args)
 				KERBAL_CONDITIONAL_NOEXCEPT(
 						noexcept(detail::_K_construct_at_using_allocator(alloc, p, kerbal::utility::forward<Args>(args)...))
@@ -158,7 +158,7 @@ namespace kerbal
 #		endif
 
 			template <typename Allocator, typename ForwardIterator>
-			KERBAL_CONSTEXPR20
+			KERBAL_CONSTEXPR14
 			void _K_uninitialized_value_construct_using_allocator(Allocator & alloc, ForwardIterator first, ForwardIterator last, UI_VAL_CONSTRUCT_UA_VER_NO_CATCH)
 			{
 				while (first != last) {
@@ -170,7 +170,7 @@ namespace kerbal
 		} // namespace detail
 
 		template <typename Allocator, typename ForwardIterator>
-		KERBAL_CONSTEXPR20
+		KERBAL_CONSTEXPR14
 		void uninitialized_value_construct_using_allocator(Allocator & alloc, ForwardIterator first, ForwardIterator last)
 		{
 
@@ -229,7 +229,7 @@ namespace kerbal
 #		endif
 
 			template <typename Allocator, typename ForwardIterator, typename SizeType>
-			KERBAL_CONSTEXPR20
+			KERBAL_CONSTEXPR14
 			ForwardIterator _K_uninitialized_value_construct_n_using_allocator(Allocator & alloc, ForwardIterator first, SizeType n, UI_VAL_CONSTRUCT_N_UA_VER_NO_CATCH)
 			{
 				while (n > 0) {
@@ -243,7 +243,7 @@ namespace kerbal
 		} // namespace detail
 
 		template <typename Allocator, typename ForwardIterator, typename SizeType>
-		KERBAL_CONSTEXPR20
+		KERBAL_CONSTEXPR14
 		ForwardIterator uninitialized_value_construct_n_using_allocator(Allocator & alloc, ForwardIterator first, SizeType n)
 		{
 
@@ -302,7 +302,7 @@ namespace kerbal
 #		endif
 
 			template <typename Allocator, typename InputIterator, typename ForwardIterator>
-			KERBAL_CONSTEXPR20
+			KERBAL_CONSTEXPR14
 			ForwardIterator _K_uninitialized_copy_using_allocator(Allocator & alloc, InputIterator first, InputIterator last, ForwardIterator to, UI_CPY_UA_VER_NO_CATCH)
 			{
 				while (first != last) {
@@ -316,7 +316,7 @@ namespace kerbal
 		} // namespace detail
 
 		template <typename Allocator, typename InputIterator, typename ForwardIterator>
-		KERBAL_CONSTEXPR20
+		KERBAL_CONSTEXPR14
 		ForwardIterator uninitialized_copy_using_allocator(Allocator & alloc, InputIterator first, InputIterator last, ForwardIterator to)
 		{
 
@@ -376,7 +376,7 @@ namespace kerbal
 #		endif
 
 			template <typename Allocator, typename InputIterator, typename SizeType, typename ForwardIterator>
-			KERBAL_CONSTEXPR20
+			KERBAL_CONSTEXPR14
 			ForwardIterator _K_uninitialized_copy_n_using_allocator(Allocator & alloc, InputIterator first, SizeType n, ForwardIterator to, UI_CPY_N_UA_VER_NO_CATCH)
 			{
 				while (n > 0) {
@@ -391,7 +391,7 @@ namespace kerbal
 		} // namespace detail
 
 		template <typename Allocator, typename InputIterator, typename SizeType, typename ForwardIterator>
-		KERBAL_CONSTEXPR20
+		KERBAL_CONSTEXPR14
 		ForwardIterator uninitialized_copy_n_using_allocator(Allocator & alloc, InputIterator first, SizeType n, ForwardIterator to)
 		{
 
@@ -450,7 +450,7 @@ namespace kerbal
 #		endif
 
 			template <typename Allocator, typename InputIterator, typename ForwardIterator>
-			KERBAL_CONSTEXPR20
+			KERBAL_CONSTEXPR14
 			ForwardIterator _K_uninitialized_move_using_allocator(Allocator & alloc, InputIterator first, InputIterator last, ForwardIterator to, UI_MOV_UA_VER_NO_CATCH)
 			{
 				while (first != last) {
@@ -464,7 +464,7 @@ namespace kerbal
 		} // namespace detail
 
 		template <typename Allocator, typename InputIterator, typename ForwardIterator>
-		KERBAL_CONSTEXPR20
+		KERBAL_CONSTEXPR14
 		ForwardIterator uninitialized_move_using_allocator(Allocator & alloc, InputIterator first, InputIterator last, ForwardIterator to)
 		{
 
@@ -524,7 +524,7 @@ namespace kerbal
 #		endif
 
 			template <typename Allocator, typename InputIterator, typename SizeType, typename ForwardIterator>
-			KERBAL_CONSTEXPR20
+			KERBAL_CONSTEXPR14
 			ForwardIterator _K_uninitialized_move_n_using_allocator(Allocator & alloc, InputIterator first, SizeType n, ForwardIterator to, UI_MOV_N_UA_VER_NO_CATCH)
 			{
 				while (n > 0) {
@@ -539,7 +539,7 @@ namespace kerbal
 		} // namespace detail
 
 		template <typename Allocator, typename InputIterator, typename SizeType, typename ForwardIterator>
-		KERBAL_CONSTEXPR20
+		KERBAL_CONSTEXPR14
 		ForwardIterator uninitialized_move_n_using_allocator(Allocator & alloc, InputIterator first, SizeType n, ForwardIterator to)
 		{
 
@@ -596,7 +596,7 @@ namespace kerbal
 #		endif
 
 			template <typename Allocator, typename ForwardIterator, typename T>
-			KERBAL_CONSTEXPR20
+			KERBAL_CONSTEXPR14
 			void uninitialized_fill_using_allocator(Allocator & alloc, ForwardIterator first, ForwardIterator last, const T & value, UI_FILL_UA_VER_NO_CATCH)
 			{
 				while (first != last) {
@@ -608,7 +608,7 @@ namespace kerbal
 		} // namespace detail
 
 		template <typename Allocator, typename ForwardIterator, typename T>
-		KERBAL_CONSTEXPR20
+		KERBAL_CONSTEXPR14
 		void uninitialized_fill_using_allocator(Allocator & alloc, ForwardIterator first, ForwardIterator last, const T & value)
 		{
 
@@ -667,7 +667,7 @@ namespace kerbal
 #		endif
 
 			template <typename Allocator, typename ForwardIterator, typename SizeType, typename T>
-			KERBAL_CONSTEXPR20
+			KERBAL_CONSTEXPR14
 			ForwardIterator _K_uninitialized_fill_n_using_allocator(Allocator & alloc, ForwardIterator first, SizeType n, const T & value, UI_FILL_N_UA_VER_NO_CATCH)
 			{
 				while (n > 0) {
@@ -681,7 +681,7 @@ namespace kerbal
 		} // namespace detail
 
 		template <typename Allocator, typename ForwardIterator, typename SizeType, typename T>
-		KERBAL_CONSTEXPR20
+		KERBAL_CONSTEXPR14
 		ForwardIterator uninitialized_fill_n_using_allocator(Allocator & alloc, ForwardIterator first, SizeType n, const T & value)
 		{
 
