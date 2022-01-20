@@ -31,6 +31,7 @@
 #include <kerbal/type_traits/reference_deduction.hpp>
 #include <kerbal/utility/declval.hpp>
 #include <kerbal/utility/forward.hpp>
+#include <kerbal/utility/ignore_unused.hpp>
 #include <kerbal/utility/integer_sequence.hpp>
 #include <kerbal/utility/member_compress_helper.hpp>
 
@@ -536,12 +537,12 @@ namespace kerbal
 				KERBAL_CONSTEXPR14
 				void _K_covariant_assign_impl(const kerbal::utility::tuple<UArgs...> & t, kerbal::utility::index_sequence<Index...>)
 				{
-					unused_pack(
+					kerbal::utility::ignore_unused(std::initializer_list<int>{
 						(
 							this->template get<Index>() = t.template get<Index>(),
 							0
 						)...
-					);
+					});
 				}
 
 			public:
@@ -562,12 +563,12 @@ namespace kerbal
 				KERBAL_CONSTEXPR14
 				void _K_covariant_move_assign_impl(kerbal::utility::tuple<UArgs...> && t, kerbal::utility::index_sequence<Index...>)
 				{
-					unused_pack(
+					kerbal::utility::ignore_unused(std::initializer_list<int>{
 						(
 							this->template get<Index>() = kerbal::compatibility::move(t).template get<Index>(),
 							0
 						)...
-					);
+					});
 				}
 
 			public:
@@ -643,14 +644,14 @@ namespace kerbal
 				KERBAL_CONSTEXPR
 				static Self&& _K_for_each_impl(Self && self, F f, kerbal::utility::index_sequence<Index...>)
 				{
-					return unused_pack(
+					return kerbal::utility::ignore_unused(std::initializer_list<int>{
 						(
 							f(
 								kerbal::type_traits::integral_constant<std::size_t, Index>(),
 								kerbal::utility::forward<Self>(self).template get<Index>()
 							), 0
 						)...
-					), kerbal::utility::forward<Self>(self);
+					}), kerbal::utility::forward<Self>(self);
 				}
 
 			public:
@@ -690,14 +691,14 @@ namespace kerbal
 				KERBAL_CONSTEXPR
 				static Self&& _K_rfor_each_impl(Self && self, F f, kerbal::utility::index_sequence<Index...>)
 				{
-					return unused_pack(
+					return kerbal::utility::ignore_unused(std::initializer_list<int>{
 						(
 							f(
 								kerbal::type_traits::integral_constant<std::size_t, TUPLE_SIZE::value - 1 - Index>(),
 								kerbal::utility::forward<Self>(self).template get<TUPLE_SIZE::value - 1 - Index>()
 							), 0
 						)...
-					), kerbal::utility::forward<Self>(self);
+					}), kerbal::utility::forward<Self>(self);
 				}
 
 			public:
@@ -781,7 +782,7 @@ namespace kerbal
 				KERBAL_CONSTEXPR
 				static int _K_join_impl2(Self && self, F f, JoinF joinf, kerbal::utility::index_sequence<Index...>)
 				{
-					return unused_pack(
+					return kerbal::utility::ignore_unused(std::initializer_list<int>{
 						(
 							Index % 2 == 0 ?
 							(
@@ -796,7 +797,7 @@ namespace kerbal
 								), 0
 							)
 						)...
-					), 0;
+					}), 0;
 				}
 
 				template <typename Self, typename HeadF, typename F, typename JoinF, typename TailF, std::size_t N>
@@ -973,14 +974,14 @@ namespace kerbal
 				KERBAL_CONSTEXPR14
 				void _K_swap_impl(tuple & ano, kerbal::utility::index_sequence<Index...>)
 				{
-					unused_pack(
+					kerbal::utility::ignore_unused(std::initializer_list<int>{
 						(
 							kerbal::algorithm::swap(
 								this->template get<Index>(),
 								ano.template get<Index>()
 							), 0
 						)...
-					);
+					});
 				}
 
 			public:
@@ -1165,14 +1166,6 @@ namespace kerbal
 					return this->_K_greater_equal_impl(ano, kerbal::type_traits::integral_constant<std::size_t, 0>());
 				}
 
-			private:
-
-				template <typename ... UArgs>
-				KERBAL_CONSTEXPR
-				static int unused_pack(UArgs && ...) KERBAL_NOEXCEPT
-				{
-					return 0;
-				}
 		};
 
 
