@@ -28,6 +28,7 @@
 #include <kerbal/memory/raw_storage.hpp>
 #include <kerbal/operators/generic_assign.hpp>
 #include <kerbal/type_traits/can_be_pseudo_destructible.hpp>
+#include <kerbal/type_traits/decay.hpp>
 #include <kerbal/type_traits/enable_if.hpp>
 #include <kerbal/type_traits/is_same.hpp>
 #include <kerbal/type_traits/reference_deduction.hpp>
@@ -782,32 +783,34 @@ namespace kerbal
 #		if __cplusplus < 201103L
 
 				template <typename U>
-				KERBAL_CONSTEXPR
-				value_type value_or(U & default_value) const
+				typename kerbal::type_traits::decay<const value_type>::type
+				value_or(U & default_value) const
 				{
 					return this->has_value() ?
 						   this->ignored_get() :
-						   static_cast<T>(default_value);
+						   static_cast<typename kerbal::type_traits::decay<const value_type>::type>(default_value);
 				}
 
 #		else
 
 				template <typename U>
 				KERBAL_CONSTEXPR
-				value_type value_or(U && default_value) const &
+				typename kerbal::type_traits::decay<const value_type>::type
+				value_or(U && default_value) const &
 				{
 					return this->has_value() ?
 						   this->ignored_get() :
-						   static_cast<T>(kerbal::utility::forward<U>(default_value));
+						   static_cast<typename kerbal::type_traits::decay<const value_type>::type>(kerbal::utility::forward<U>(default_value));
 				}
 
 				template <typename U>
 				KERBAL_CONSTEXPR14
-				value_type value_or(U && default_value) &&
+				typename kerbal::type_traits::decay<value_type>::type
+				value_or(U && default_value) &&
 				{
 					return this->has_value() ?
 						   kerbal::compatibility::move(*this).ignored_get() :
-						   static_cast<T>(kerbal::utility::forward<U>(default_value));
+						   static_cast<typename kerbal::type_traits::decay<value_type>::type>(kerbal::utility::forward<U>(default_value));
 				}
 
 #		endif
