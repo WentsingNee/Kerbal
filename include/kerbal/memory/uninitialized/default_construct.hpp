@@ -16,13 +16,13 @@
 #include <kerbal/compatibility/noexcept.hpp>
 #include <kerbal/iterator/iterator_traits.hpp>
 #include <kerbal/memory/uninitialized/destroy.hpp>
-#include <kerbal/type_traits/can_be_pseudo_destructible.hpp>
 #include <kerbal/type_traits/conditional.hpp>
 #include <kerbal/type_traits/integral_constant.hpp>
 
 #if __cplusplus < 201103L
+#	include <kerbal/type_traits/can_be_pseudo_destructible.hpp>
+#else
 #	include <kerbal/type_traits/array_traits.hpp>
-#	include <kerbal/type_traits/cv_deduction.hpp>
 #endif
 
 #if __cplusplus >= 201103L
@@ -109,26 +109,12 @@ namespace kerbal
 #	if __cplusplus < 201103L
 
 		template <typename Tp>
-		struct _K_default_construct_at_overload_version_helper :
-				kerbal::type_traits::conditional<
-						(
-							kerbal::type_traits::is_fundamental<Tp>::value ||
-							kerbal::type_traits::is_member_pointer<Tp>::value ||
-							kerbal::type_traits::is_pointer<Tp>::value
-						),
-						detail::DFT_CNSTRCT_AT_VER_TRIVIALLY,
-						detail::DFT_CNSTRCT_AT_VER_DEFAULT
-				>::type
-		{
-		};
-
-		template <typename Tp>
 		struct default_construct_at_overload_version :
-				_K_default_construct_at_overload_version_helper<
-						typename kerbal::type_traits::remove_cv<
-								typename kerbal::type_traits::remove_all_extents<Tp>::type
-						>::type
-				>
+				kerbal::type_traits::conditional<
+					kerbal::type_traits::can_be_pseudo_destructible<Tp>::value,
+					detail::DFT_CNSTRCT_AT_VER_TRIVIALLY,
+					detail::DFT_CNSTRCT_AT_VER_DEFAULT
+				>::type
 		{
 		};
 
@@ -137,9 +123,11 @@ namespace kerbal
 		template <typename Tp>
 		struct default_construct_at_overload_version :
 				kerbal::type_traits::conditional<
-						std::is_trivially_default_constructible<Tp>::value,
-						detail::DFT_CNSTRCT_AT_VER_TRIVIALLY,
-						detail::DFT_CNSTRCT_AT_VER_DEFAULT
+					std::is_trivially_default_constructible<
+						typename kerbal::type_traits::remove_all_extents<Tp>::type
+					>::value,
+					detail::DFT_CNSTRCT_AT_VER_TRIVIALLY,
+					detail::DFT_CNSTRCT_AT_VER_DEFAULT
 				>::type
 		{
 		};
