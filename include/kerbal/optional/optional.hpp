@@ -80,12 +80,8 @@ namespace kerbal
 				protected:
 
 					KERBAL_CONSTEXPR20
-					optional_base() KERBAL_NOEXCEPT
-#			if __cplusplus >= 201103L
-							: _K_storage(), _K_has_value(false)
-#			else
-							: _K_has_value(false)
-#			endif
+					optional_base() KERBAL_NOEXCEPT :
+							_K_has_value(false)
 					{
 					}
 
@@ -157,12 +153,8 @@ namespace kerbal
 
 				protected:
 					KERBAL_CONSTEXPR
-					optional_base() KERBAL_NOEXCEPT
-#			if __cplusplus >= 201103L
-							: _K_storage(), _K_has_value(false)
-#			else
-							: _K_has_value(false)
-#			endif
+					optional_base() KERBAL_NOEXCEPT :
+							_K_has_value(false)
 					{
 					}
 
@@ -238,23 +230,27 @@ namespace kerbal
 				 * @~Chinese
 				 * @brief 默认构造函数.
 				 */
-				KERBAL_CONSTEXPR
-				optional() KERBAL_NOEXCEPT :
-						super()
+#		if __cplusplus >= 201103L
+
+				optional() = default;
+
+#		else
+
+				optional() KERBAL_NOEXCEPT
 				{
 				}
 
+#		endif
+
 				KERBAL_CONSTEXPR
-				optional(const kerbal::optional::nullopt_t &) KERBAL_NOEXCEPT :
-						super()
+				optional(const kerbal::optional::nullopt_t &) KERBAL_NOEXCEPT
 				{
 				}
 
 #		if __cplusplus >= 201103L
 
 				KERBAL_CONSTEXPR
-				explicit optional(kerbal::optional::nullopt_t &&) KERBAL_NOEXCEPT :
-						super()
+				explicit optional(kerbal::optional::nullopt_t &&) KERBAL_NOEXCEPT
 				{
 				}
 
