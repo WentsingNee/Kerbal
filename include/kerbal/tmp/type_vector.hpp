@@ -33,7 +33,7 @@ namespace kerbal
 
 #if __cplusplus < 201103L
 
-#	define TARGS_DECL(i) KERBAL_MACRO_CONCAT(typename T, i) = kerbal::tmp::tppter
+#	define TARGS_DECL(i) typename KERBAL_MACRO_CONCAT(T, i) = kerbal::tmp::tppter
 
 		template <typename T0 = kerbal::tmp::tppter, KERBAL_PPEXPAND_WITH_COMMA_N(TARGS_DECL, 20)> \
 		struct type_vector;
@@ -43,7 +43,7 @@ namespace kerbal
 
 #	define EMPTY
 #	define REMAINF(exp) exp
-#	define TARGS_DECL(i) KERBAL_MACRO_CONCAT(typename T, i)
+#	define TARGS_DECL(i) typename KERBAL_MACRO_CONCAT(T, i)
 #	define TARGS_USE(i) KERBAL_MACRO_CONCAT(T, i)
 #	define DBODY(i) \
 		template <KERBAL_OPT_PPEXPAND_WITH_COMMA_N(REMAINF, EMPTY, TARGS_DECL, i)> \
@@ -78,7 +78,7 @@ namespace kerbal
 		template <typename TypeVector, std::size_t I>
 		struct type_vector_at;
 
-#	define TARGS_DECL(i) KERBAL_MACRO_CONCAT(typename T, i)
+#	define TARGS_DECL(i) typename KERBAL_MACRO_CONCAT(T, i)
 #	define TARGS_USE(i) KERBAL_MACRO_CONCAT(T, i)
 
 		template <std::size_t I, typename T0, KERBAL_PPEXPAND_WITH_COMMA_N(TARGS_DECL, 19)>

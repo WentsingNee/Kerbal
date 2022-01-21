@@ -40,7 +40,7 @@ namespace kerbal
 #	define REMAINF(exp) exp
 #	define LEFT_JOIN_COMMA(exp) , exp
 #	define RIGHT_JOIN_COMMA(exp) exp ,
-#	define TARGS_DECL(i) KERBAL_MACRO_CONCAT(typename T, i)
+#	define TARGS_DECL(i) typename KERBAL_MACRO_CONCAT(T, i)
 #	define TARGS_USE(i) KERBAL_MACRO_CONCAT(T, i)
 #	define DBODY_BASIC(i, CV_QUALIFIER) \
 		template <typename Ret KERBAL_OPT_PPEXPAND_WITH_COMMA_N(LEFT_JOIN_COMMA, EMPTY, TARGS_DECL, i)> \

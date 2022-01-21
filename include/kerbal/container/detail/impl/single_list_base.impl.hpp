@@ -822,8 +822,8 @@ namespace kerbal
 
 #		define EMPTY
 #		define LEFT_JOIN_COMMA(exp) , exp
-#		define TARGS_DECL(i) KERBAL_MACRO_CONCAT(typename Arg, i)
-#		define ARGS_DECL(i) KERBAL_MACRO_CONCAT(const Arg, i) & KERBAL_MACRO_CONCAT(arg, i)
+#		define TARGS_DECL(i) typename KERBAL_MACRO_CONCAT(Arg, i)
+#		define ARGS_DECL(i) const KERBAL_MACRO_CONCAT(Arg, i) & KERBAL_MACRO_CONCAT(arg, i)
 #		define ARGS_USE(i) KERBAL_MACRO_CONCAT(arg, i)
 #		define FBODY(i) \
 			template <typename Tp> \
@@ -885,8 +885,8 @@ namespace kerbal
 
 #		define EMPTY
 #		define LEFT_JOIN_COMMA(exp) , exp
-#		define TARGS_DECL(i) KERBAL_MACRO_CONCAT(typename Arg, i)
-#		define ARGS_DECL(i) KERBAL_MACRO_CONCAT(const Arg, i) & KERBAL_MACRO_CONCAT(arg, i)
+#		define TARGS_DECL(i) typename KERBAL_MACRO_CONCAT(Arg, i)
+#		define ARGS_DECL(i) const KERBAL_MACRO_CONCAT(Arg, i) & KERBAL_MACRO_CONCAT(arg, i)
 #		define ARGS_USE(i) KERBAL_MACRO_CONCAT(arg, i)
 #		define FBODY(i) \
 			template <typename Tp> \
@@ -981,8 +981,8 @@ namespace kerbal
 
 #		define EMPTY
 #		define LEFT_JOIN_COMMA(exp) , exp
-#		define TARGS_DECL(i) KERBAL_MACRO_CONCAT(typename Arg, i)
-#		define ARGS_DECL(i) KERBAL_MACRO_CONCAT(const Arg, i) & KERBAL_MACRO_CONCAT(arg, i)
+#		define TARGS_DECL(i) typename KERBAL_MACRO_CONCAT(Arg, i)
+#		define ARGS_DECL(i) const KERBAL_MACRO_CONCAT(Arg, i) & KERBAL_MACRO_CONCAT(arg, i)
 #		define ARGS_USE(i) KERBAL_MACRO_CONCAT(arg, i)
 #		define FBODY(i) \
 			template <typename Tp> \
@@ -1246,8 +1246,8 @@ namespace kerbal
 
 #		define EMPTY
 #		define LEFT_JOIN_COMMA(exp) , exp
-#		define TARGS_DECL(i) KERBAL_MACRO_CONCAT(typename Arg, i)
-#		define ARGS_DECL(i) KERBAL_MACRO_CONCAT(const Arg, i) & KERBAL_MACRO_CONCAT(arg, i)
+#		define TARGS_DECL(i) typename KERBAL_MACRO_CONCAT(Arg, i)
+#		define ARGS_DECL(i) const KERBAL_MACRO_CONCAT(Arg, i) & KERBAL_MACRO_CONCAT(arg, i)
 #		define ARGS_USE(i) KERBAL_MACRO_CONCAT(arg, i)
 #	if __cpp_exceptions
 #		define FBODY(i) \
@@ -1330,8 +1330,8 @@ namespace kerbal
 
 #		define EMPTY
 #		define LEFT_JOIN_COMMA(exp) , exp
-#		define TARGS_DECL(i) KERBAL_MACRO_CONCAT(typename Arg, i)
-#		define ARGS_DECL(i) KERBAL_MACRO_CONCAT(const Arg, i) & KERBAL_MACRO_CONCAT(arg, i)
+#		define TARGS_DECL(i) typename KERBAL_MACRO_CONCAT(Arg, i)
+#		define ARGS_DECL(i) const KERBAL_MACRO_CONCAT(Arg, i) & KERBAL_MACRO_CONCAT(arg, i)
 #		define ARGS_USE(i) KERBAL_MACRO_CONCAT(arg, i)
 #	if __cpp_exceptions
 #		define FBODY(i) \

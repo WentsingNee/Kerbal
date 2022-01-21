@@ -505,8 +505,8 @@ namespace kerbal
 
 #				define EMPTY
 #				define LEFT_JOIN_COMMA(exp) , exp
-#				define TARGS_DECL(i) KERBAL_MACRO_CONCAT(typename Arg, i)
-#				define ARGS_DECL(i) KERBAL_MACRO_CONCAT(const Arg, i) & KERBAL_MACRO_CONCAT(arg, i)
+#				define TARGS_DECL(i) typename KERBAL_MACRO_CONCAT(Arg, i)
+#				define ARGS_DECL(i) const KERBAL_MACRO_CONCAT(Arg, i) & KERBAL_MACRO_CONCAT(arg, i)
 #				define FBODY(i) \
 					template <typename NodeAllocator KERBAL_OPT_PPEXPAND_WITH_COMMA_N(LEFT_JOIN_COMMA, EMPTY, TARGS_DECL, i)> \
 					reference emplace_front_using_allocator(NodeAllocator & alloc KERBAL_OPT_PPEXPAND_WITH_COMMA_N(LEFT_JOIN_COMMA, EMPTY, ARGS_DECL, i));
@@ -544,8 +544,8 @@ namespace kerbal
 
 #				define EMPTY
 #				define LEFT_JOIN_COMMA(exp) , exp
-#				define TARGS_DECL(i) KERBAL_MACRO_CONCAT(typename Arg, i)
-#				define ARGS_DECL(i) KERBAL_MACRO_CONCAT(const Arg, i) & KERBAL_MACRO_CONCAT(arg, i)
+#				define TARGS_DECL(i) typename KERBAL_MACRO_CONCAT(Arg, i)
+#				define ARGS_DECL(i) const KERBAL_MACRO_CONCAT(Arg, i) & KERBAL_MACRO_CONCAT(arg, i)
 #				define FBODY(i) \
 					template <typename NodeAllocator KERBAL_OPT_PPEXPAND_WITH_COMMA_N(LEFT_JOIN_COMMA, EMPTY, TARGS_DECL, i)> \
 					reference emplace_back_using_allocator(NodeAllocator & alloc KERBAL_OPT_PPEXPAND_WITH_COMMA_N(LEFT_JOIN_COMMA, EMPTY, ARGS_DECL, i));
@@ -595,8 +595,8 @@ namespace kerbal
 
 #				define EMPTY
 #				define LEFT_JOIN_COMMA(exp) , exp
-#				define TARGS_DECL(i) KERBAL_MACRO_CONCAT(typename Arg, i)
-#				define ARGS_DECL(i) KERBAL_MACRO_CONCAT(const Arg, i) & KERBAL_MACRO_CONCAT(arg, i)
+#				define TARGS_DECL(i) typename KERBAL_MACRO_CONCAT(Arg, i)
+#				define ARGS_DECL(i) const KERBAL_MACRO_CONCAT(Arg, i) & KERBAL_MACRO_CONCAT(arg, i)
 #				define FBODY(i) \
 					template <typename NodeAllocator KERBAL_OPT_PPEXPAND_WITH_COMMA_N(LEFT_JOIN_COMMA, EMPTY, TARGS_DECL, i)> \
 					iterator emplace_using_allocator(NodeAllocator & alloc, const_iterator pos KERBAL_OPT_PPEXPAND_WITH_COMMA_N(LEFT_JOIN_COMMA, EMPTY, ARGS_DECL, i));
@@ -731,8 +731,8 @@ namespace kerbal
 
 #				define EMPTY
 #				define LEFT_JOIN_COMMA(exp) , exp
-#				define TARGS_DECL(i) KERBAL_MACRO_CONCAT(typename Arg, i)
-#				define ARGS_DECL(i) KERBAL_MACRO_CONCAT(const Arg, i) & KERBAL_MACRO_CONCAT(arg, i)
+#				define TARGS_DECL(i) typename KERBAL_MACRO_CONCAT(Arg, i)
+#				define ARGS_DECL(i) const KERBAL_MACRO_CONCAT(Arg, i) & KERBAL_MACRO_CONCAT(arg, i)
 #				define FBODY(i) \
 					template <typename NodeAllocator KERBAL_OPT_PPEXPAND_WITH_COMMA_N(LEFT_JOIN_COMMA, EMPTY, TARGS_DECL, i)> \
 					static node* _K_build_new_node(NodeAllocator & alloc KERBAL_OPT_PPEXPAND_WITH_COMMA_N(LEFT_JOIN_COMMA, EMPTY, ARGS_DECL, i));
@@ -759,8 +759,8 @@ namespace kerbal
 
 #				define EMPTY
 #				define LEFT_JOIN_COMMA(exp) , exp
-#				define TARGS_DECL(i) KERBAL_MACRO_CONCAT(typename Arg, i)
-#				define ARGS_DECL(i) KERBAL_MACRO_CONCAT(const Arg, i) & KERBAL_MACRO_CONCAT(arg, i)
+#				define TARGS_DECL(i) typename KERBAL_MACRO_CONCAT(Arg, i)
+#				define ARGS_DECL(i) const KERBAL_MACRO_CONCAT(Arg, i) & KERBAL_MACRO_CONCAT(arg, i)
 #				define FBODY(i) \
 					template <typename NodeAllocator KERBAL_OPT_PPEXPAND_WITH_COMMA_N(LEFT_JOIN_COMMA, EMPTY, TARGS_DECL, i)> \
 					static \

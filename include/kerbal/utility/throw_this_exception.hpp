@@ -55,8 +55,8 @@ namespace kerbal
 #				define EMPTY
 #				define REMAINF(exp) exp
 #				define THEAD_NOT_EMPTY(exp) template <exp>
-#				define TARGS_DECL(i) KERBAL_MACRO_CONCAT(typename Arg, i)
-#				define ARGS_DECL(i) KERBAL_MACRO_CONCAT(const Arg, i) & KERBAL_MACRO_CONCAT(arg, i)
+#				define TARGS_DECL(i) typename KERBAL_MACRO_CONCAT(Arg, i)
+#				define ARGS_DECL(i) const KERBAL_MACRO_CONCAT(Arg, i) & KERBAL_MACRO_CONCAT(arg, i)
 #				define ARGS_USE(i) KERBAL_MACRO_CONCAT(arg, i)
 #				define FBODY(i) \
 					KERBAL_OPT_PPEXPAND_WITH_COMMA_N(THEAD_NOT_EMPTY, EMPTY, TARGS_DECL, i) \
@@ -94,8 +94,8 @@ namespace kerbal
 #				define EMPTY
 #				define REMAINF(exp) exp
 #				define THEAD_NOT_EMPTY(exp) template <exp>
-#				define TARGS_DECL(i) KERBAL_MACRO_CONCAT(typename Arg, i)
-#				define ARGS_DECL(i) KERBAL_MACRO_CONCAT(const Arg, i) &
+#				define TARGS_DECL(i) typename KERBAL_MACRO_CONCAT(Arg, i)
+#				define ARGS_DECL(i) const KERBAL_MACRO_CONCAT(Arg, i) &
 #				define FBODY(i) \
 					KERBAL_OPT_PPEXPAND_WITH_COMMA_N(THEAD_NOT_EMPTY, EMPTY, TARGS_DECL, i) \
 					static void throw_this_exception(KERBAL_OPT_PPEXPAND_WITH_COMMA_N(REMAINF, EMPTY, ARGS_DECL, i)) KERBAL_NOEXCEPT \

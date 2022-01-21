@@ -34,7 +34,7 @@ namespace kerbal
 #if __cplusplus < 201103L
 
 
-#	define TARGS_DECL(i) KERBAL_MACRO_CONCAT(typename Arg, i) = kerbal::tmp::tppter
+#	define TARGS_DECL(i) typename KERBAL_MACRO_CONCAT(Arg, i) = kerbal::tmp::tppter
 
 		template <KERBAL_PPEXPAND_WITH_COMMA_N(TARGS_DECL, 20)> \
 		struct tuple;

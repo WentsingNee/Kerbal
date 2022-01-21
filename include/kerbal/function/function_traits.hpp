@@ -41,7 +41,7 @@ namespace kerbal
 #	define REMAINF(exp) exp
 #	define LEFT_JOIN_COMMA(exp) , exp
 #	define RIGHT_JOIN_COMMA(exp) exp ,
-#	define TARGS_DECL(i) KERBAL_MACRO_CONCAT(typename T, i)
+#	define TARGS_DECL(i) typename KERBAL_MACRO_CONCAT(T, i)
 #	define TARGS_USE(i) KERBAL_MACRO_CONCAT(T, i)
 #	define VAR_LIST ...
 
