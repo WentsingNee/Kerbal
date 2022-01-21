@@ -230,7 +230,11 @@ namespace kerbal
 			typedef typename kerbal::type_traits::conditional<
 					std::is_trivially_default_constructible<value_type>::value,
 					detail::UI_DFT_CONSTRUCT_VER_TRIVIALLY,
-					detail::UI_DFT_CONSTRUCT_VER_DEFAULT
+					typename kerbal::type_traits::conditional<
+						std::is_trivially_destructible<value_type>::value,
+						detail::UI_DFT_CONSTRUCT_VER_NO_CATCH,
+						detail::UI_DFT_CONSTRUCT_VER_DEFAULT
+					>::type
 			>::type VER;
 
 #		endif
@@ -348,12 +352,7 @@ namespace kerbal
 				std::is_trivially_default_constructible<value_type>::value,
 				detail::UI_DFT_CONSTRUCT_N_VER_TRIVIALLY,
 				typename kerbal::type_traits::conditional<
-					std::is_trivially_destructible<value_type>::value || (
-						noexcept(static_cast<bool>(n > 0)) &&
-						noexcept(--n) &&
-						noexcept(kerbal::memory::default_construct_at(&*first)) &&
-						noexcept(++first)
-					),
+					std::is_trivially_destructible<value_type>::value,
 					detail::UI_DFT_CONSTRUCT_N_VER_NO_CATCH,
 					detail::UI_DFT_CONSTRUCT_N_VER_DEFAULT
 				>::type
