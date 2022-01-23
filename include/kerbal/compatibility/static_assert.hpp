@@ -14,12 +14,15 @@
 
 #if __cplusplus >= 201103L
 
-#	define KERBAL_STATIC_ASSERT(condition, msg)\
+#	define KERBAL_STATIC_ASSERT(condition, msg) \
 	static_assert(condition, msg)
 
 #else
 
-#include <kerbal/type_traits/integral_constant.hpp>
+#	include <kerbal/compatibility/attribute_unused.hpp>
+#	include <kerbal/macro/join_line.hpp>
+#	include <kerbal/type_traits/integral_constant.hpp>
+
 
 namespace kerbal
 {
@@ -27,31 +30,35 @@ namespace kerbal
 	namespace compatibility
 	{
 
-		template <bool>
-		struct static_assert_helper
+		namespace detail
 		{
-		};
 
-		template <>
-		struct static_assert_helper<true>: kerbal::type_traits::true_type
-		{
-		};
+			template <bool>
+			struct static_assert_helper
+			{
+			};
 
-		template <bool>
-		struct static_assert_test
-		{
-		};
+			template <>
+			struct static_assert_helper<true>: kerbal::type_traits::true_type
+			{
+			};
+
+			template <bool>
+			struct static_assert_test
+			{
+			};
+
+		} // namespace detail
 
 	}
 
 }
 
-#include <kerbal/macro/join_line.hpp>
 
-#define KERBAL_STATIC_ASSERT(condition, msg)\
-typedef kerbal::compatibility::static_assert_test< \
-			kerbal::compatibility::static_assert_helper<static_cast<bool>(condition)>::value \
-		> KERBAL_JOIN_LINE(__KERBAL_STATIC_ASSERT_TYPEDEF) __attribute__((unused))
+#define KERBAL_STATIC_ASSERT(condition, msg) \
+	typedef kerbal::compatibility::detail::static_assert_test< \
+		kerbal::compatibility::detail::static_assert_helper<static_cast<bool>(condition)>::value \
+	> KERBAL_JOIN_LINE(__KERBAL_STATIC_ASSERT_TYPEDEF) KERBAL_ATTRIBUTE_UNUSED
 
 #endif
 
