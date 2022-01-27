@@ -42,6 +42,7 @@
 #include <kerbal/memory/allocator_traits/minimum_alignment.hpp>
 #include <kerbal/memory/allocator_traits/deallocate_one.hpp>
 #include <kerbal/memory/allocator_traits/allow_deallocate_null.hpp>
+#include <kerbal/memory/allocator_traits/reallocate.hpp>
 #include <kerbal/memory/allocator_traits/construct.hpp>
 #include <kerbal/memory/allocator_traits/destroy.hpp>
 #include <kerbal/memory/allocator_traits/max_size.hpp>
@@ -54,7 +55,8 @@ namespace kerbal
 	{
 
 		template <typename Alloc>
-		struct allocator_traits
+		struct allocator_traits :
+				public kerbal::memory::detail::allocator_traits_reallocate_helper<Alloc>
 		{
 				typedef Alloc allocator_type;
 
@@ -91,6 +93,8 @@ namespace kerbal
 				{
 						typedef kerbal::memory::allocator_traits<typename rebind_alloc<Up>::other> other;
 				};
+
+				typedef kerbal::memory::allocator_has_reallocate<Alloc, value_type> has_reallocate;
 
 				KERBAL_CONSTEXPR14
 				static pointer allocate(allocator_type & alloc, size_type n)
