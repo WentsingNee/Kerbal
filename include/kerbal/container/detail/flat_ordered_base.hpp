@@ -539,7 +539,7 @@ namespace kerbal
 						return sequence.nth(index);
 					}
 
-					KERBAL_CONSTEXPR
+					KERBAL_CONSTEXPR14
 					size_type index_of(iterator it)
 					{
 						return sequence.index_of(it);
