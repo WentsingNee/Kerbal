@@ -25,8 +25,7 @@ namespace kerbal
 	{
 
 		class bad_alloc :
-				public std::exception,
-				public kerbal::utility::throw_this_exception_helper<bad_alloc>
+				public std::exception
 		{
 			public:
 				virtual const char * what() const KERBAL_NOEXCEPT

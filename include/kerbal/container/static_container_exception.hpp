@@ -12,8 +12,6 @@
 #ifndef KERBAL_CONTAINER_STATIC_CONTAINER_EXCEPTION_HPP
 #define KERBAL_CONTAINER_STATIC_CONTAINER_EXCEPTION_HPP
 
-#include <kerbal/utility/throw_this_exception.hpp>
-
 #include <stdexcept>
 
 
@@ -24,8 +22,7 @@ namespace kerbal
 	{
 
 		class static_container_empty_exception:
-				public std::logic_error,
-				public kerbal::utility::throw_this_exception_helper<static_container_empty_exception>
+				public std::logic_error
 		{
 			public:
 				static_container_empty_exception() :
@@ -35,8 +32,7 @@ namespace kerbal
 		};
 
 		class static_container_full_exception:
-				public std::logic_error,
-				public kerbal::utility::throw_this_exception_helper<static_container_full_exception>
+				public std::logic_error
 		{
 			public:
 				static_container_full_exception() :

@@ -81,7 +81,7 @@ namespace kerbal
 				this->_K_buffer = allocator_traits::allocate(alloc, this->_K_capacity);
 #		if !__cpp_exceptions
 				if (this->_K_buffer == NULL) {
-					kerbal::memory::bad_alloc::throw_this_exception();
+					kerbal::utility::throw_this_exception_helper<kerbal::memory::bad_alloc>::throw_this_exception();
 				}
 #		endif
 
@@ -116,7 +116,7 @@ namespace kerbal
 				this->_K_buffer = allocator_traits::allocate(alloc, this->_K_capacity);
 #		if !__cpp_exceptions
 				if (this->_K_buffer == NULL) {
-					kerbal::memory::bad_alloc::throw_this_exception();
+					kerbal::utility::throw_this_exception_helper<kerbal::memory::bad_alloc>::throw_this_exception();
 				}
 #		endif
 
@@ -184,7 +184,7 @@ namespace kerbal
 				this->_K_buffer = allocator_traits::allocate(alloc, this->_K_capacity);
 #		if !__cpp_exceptions
 				if (this->_K_buffer == NULL) {
-					kerbal::memory::bad_alloc::throw_this_exception();
+					kerbal::utility::throw_this_exception_helper<kerbal::memory::bad_alloc>::throw_this_exception();
 				}
 #		endif
 
@@ -247,7 +247,7 @@ namespace kerbal
 					this->_K_buffer = allocator_traits::allocate(alloc, this->_K_capacity);
 #		if !__cpp_exceptions
 					if (this->_K_buffer == NULL) {
-						kerbal::memory::bad_alloc::throw_this_exception();
+						kerbal::utility::throw_this_exception_helper<kerbal::memory::bad_alloc>::throw_this_exception();
 					}
 #		endif
 
@@ -354,7 +354,7 @@ namespace kerbal
 						pointer new_buffer = allocator_traits::allocate(alloc, new_capacity);
 #		if !__cpp_exceptions
 						if (new_buffer == NULL) {
-							kerbal::memory::bad_alloc::throw_this_exception();
+							kerbal::utility::throw_this_exception_helper<kerbal::memory::bad_alloc>::throw_this_exception();
 						}
 #		endif
 
@@ -435,7 +435,7 @@ namespace kerbal
 						pointer new_buffer = allocator_traits::allocate(alloc, new_capacity);
 #		if !__cpp_exceptions
 						if (new_buffer == NULL) {
-							kerbal::memory::bad_alloc::throw_this_exception();
+							kerbal::utility::throw_this_exception_helper<kerbal::memory::bad_alloc>::throw_this_exception();
 						}
 #		endif
 
@@ -896,7 +896,7 @@ namespace kerbal
 				pointer new_buffer = allocator_traits::allocate(alloc, new_capacity);
 #		if !__cpp_exceptions
 				if (new_buffer == NULL) {
-					kerbal::memory::bad_alloc::throw_this_exception();
+					kerbal::utility::throw_this_exception_helper<kerbal::memory::bad_alloc>::throw_this_exception();
 				}
 #		endif
 
@@ -942,7 +942,7 @@ namespace kerbal
 				pointer new_buffer = allocator_traits::allocate(alloc, new_capacity);
 #		if !__cpp_exceptions
 				if (new_buffer == NULL) {
-					kerbal::memory::bad_alloc::throw_this_exception();
+					kerbal::utility::throw_this_exception_helper<kerbal::memory::bad_alloc>::throw_this_exception();
 				}
 #		endif
 
@@ -1107,7 +1107,7 @@ namespace kerbal
 					pointer new_buffer = allocator_traits::allocate(alloc, new_capacity);
 #		if !__cpp_exceptions
 					if (new_buffer == NULL) {
-						kerbal::memory::bad_alloc::throw_this_exception();
+						kerbal::utility::throw_this_exception_helper<kerbal::memory::bad_alloc>::throw_this_exception();
 					}
 #		endif
 					pointer emplace_pos = new_buffer + insert_pos_index;
@@ -1158,7 +1158,7 @@ namespace kerbal
 					size_type new_capacity = this->_K_capacity == 0 ? 1 : 2 * this->_K_capacity; \
 					pointer new_buffer = allocator_traits::allocate(alloc, new_capacity); \
 					if (new_buffer == NULL) { \
-						kerbal::memory::bad_alloc::throw_this_exception(); \
+						kerbal::utility::throw_this_exception_helper<kerbal::memory::bad_alloc>::throw_this_exception(); \
 					} \
 					pointer emplace_pos = new_buffer + insert_pos_index; \
  \
@@ -1355,7 +1355,7 @@ namespace kerbal
 					pointer new_buffer = allocator_traits::allocate(alloc, new_capacity);
 #		if !__cpp_exceptions
 					if (new_buffer == NULL) {
-						kerbal::memory::bad_alloc::throw_this_exception();
+						kerbal::utility::throw_this_exception_helper<kerbal::memory::bad_alloc>::throw_this_exception();
 					}
 #		endif
 					pointer new_insert_pos = new_buffer + insert_pos_index;
@@ -1469,7 +1469,7 @@ namespace kerbal
 					pointer new_buffer = allocator_traits::allocate(alloc, new_capacity);
 #		if !__cpp_exceptions
 					if (new_buffer == NULL) {
-						kerbal::memory::bad_alloc::throw_this_exception();
+						kerbal::utility::throw_this_exception_helper<kerbal::memory::bad_alloc>::throw_this_exception();
 					}
 #		endif
 					pointer new_insert_pos = new_buffer + insert_pos_index;
@@ -1561,7 +1561,7 @@ namespace kerbal
 					pointer new_buffer = allocator_traits::allocate(alloc, new_capacity);
 #		if !__cpp_exceptions
 					if (new_buffer == NULL) {
-						kerbal::memory::bad_alloc::throw_this_exception();
+						kerbal::utility::throw_this_exception_helper<kerbal::memory::bad_alloc>::throw_this_exception();
 					}
 #		endif
 					pointer new_insert_pos = new_buffer + insert_pos_index;
@@ -1645,7 +1645,7 @@ namespace kerbal
 					pointer new_buffer = allocator_traits::allocate(alloc, new_capacity);
 #		if !__cpp_exceptions
 					if (new_buffer == NULL) {
-						kerbal::memory::bad_alloc::throw_this_exception();
+						kerbal::utility::throw_this_exception_helper<kerbal::memory::bad_alloc>::throw_this_exception();
 					}
 #		endif
 					pointer emplace_pos = new_buffer + ori_size;
@@ -1721,7 +1721,7 @@ namespace kerbal
 					size_type new_capacity = this->_K_capacity == 0 ? 1 : this->_K_capacity * 2; \
 					pointer new_buffer = allocator_traits::allocate(alloc, new_capacity); \
 					if (new_buffer == NULL) { \
-						kerbal::memory::bad_alloc::throw_this_exception(); \
+						kerbal::utility::throw_this_exception_helper<kerbal::memory::bad_alloc>::throw_this_exception(); \
 					} \
 					pointer emplace_pos = new_buffer + ori_size; \
  \
@@ -1887,7 +1887,7 @@ namespace kerbal
 						pointer new_buffer = allocator_traits::allocate(alloc, new_capacity);
 #		if !__cpp_exceptions
 						if (new_buffer == NULL) {
-							kerbal::memory::bad_alloc::throw_this_exception();
+							kerbal::utility::throw_this_exception_helper<kerbal::memory::bad_alloc>::throw_this_exception();
 						}
 #		endif
 
@@ -1935,7 +1935,7 @@ namespace kerbal
 						pointer new_buffer = allocator_traits::allocate(alloc, new_capacity);
 #		if !__cpp_exceptions
 						if (new_buffer == NULL) {
-							kerbal::memory::bad_alloc::throw_this_exception();
+							kerbal::utility::throw_this_exception_helper<kerbal::memory::bad_alloc>::throw_this_exception();
 						}
 #		endif
 

@@ -39,7 +39,7 @@ void * operator new(std::size_t size, kerbal::memory::basic_t)
 {
 	void * p = std::malloc(size);
 	if (p == NULL) {
-		kerbal::memory::bad_alloc::throw_this_exception();
+		kerbal::utility::throw_this_exception_helper<kerbal::memory::bad_alloc>::throw_this_exception();
 	}
 	return p;
 }

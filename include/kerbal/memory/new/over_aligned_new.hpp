@@ -127,7 +127,7 @@ void * operator new(std::size_t size, kerbal::memory::align_val_t align)
 {
 	void * p = ::operator new(size, align, kerbal::memory::nothrow_t()); // kerbal aligned non-throwing new
 	if (p == NULL) {
-		kerbal::memory::bad_alloc::throw_this_exception();
+		kerbal::utility::throw_this_exception_helper<kerbal::memory::bad_alloc>::throw_this_exception();
 	}
 	return p;
 }

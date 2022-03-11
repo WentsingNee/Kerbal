@@ -22,6 +22,7 @@
 #include <kerbal/iterator/reverse_iterator.hpp>
 #include <kerbal/type_traits/array_traits.hpp>
 #include <kerbal/type_traits/enable_if.hpp>
+#include <kerbal/utility/throw_this_exception.hpp>
 
 #if __cplusplus < 201103L
 #	include <kerbal/macro/macro_concat.hpp>
@@ -362,7 +363,7 @@ namespace kerbal
 				void alert_empty() const
 				{
 					if (empty()) {
-						kerbal::container::static_container_empty_exception::throw_this_exception();
+						kerbal::utility::throw_this_exception_helper<kerbal::container::static_container_empty_exception>::throw_this_exception();
 					}
 				}
 
@@ -377,7 +378,7 @@ namespace kerbal
 				void alert_full() const
 				{
 					if (full()) {
-						kerbal::container::static_container_full_exception::throw_this_exception(N);
+						kerbal::utility::throw_this_exception_helper<kerbal::container::static_container_full_exception>::throw_this_exception(N);
 					}
 				}
 

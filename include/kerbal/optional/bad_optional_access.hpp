@@ -13,7 +13,6 @@
 #define KERBAL_OPTIONAL_BAD_OPTIONAL_ACCESS
 
 #include <kerbal/compatibility/noexcept.hpp>
-#include <kerbal/utility/throw_this_exception.hpp>
 
 #include <exception>
 
@@ -25,8 +24,7 @@ namespace kerbal
 	{
 
 		class bad_optional_access:
-				public std::exception,
-				public kerbal::utility::throw_this_exception_helper<bad_optional_access>
+				public std::exception
 		{
 			public:
 				virtual const char* what() const KERBAL_NOEXCEPT

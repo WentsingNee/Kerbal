@@ -33,6 +33,7 @@
 #include <kerbal/type_traits/is_same.hpp>
 #include <kerbal/type_traits/reference_deduction.hpp>
 #include <kerbal/utility/in_place.hpp>
+#include <kerbal/utility/throw_this_exception.hpp>
 
 #if __cplusplus < 201103L
 #	include <kerbal/macro/macro_concat.hpp>
@@ -653,7 +654,7 @@ namespace kerbal
 				reference value() KERBAL_REFERENCE_OVERLOAD_TAG
 				{
 					if (this->empty()) {
-						bad_optional_access::throw_this_exception();
+						kerbal::utility::throw_this_exception_helper<kerbal::optional::bad_optional_access>::throw_this_exception();
 					}
 					return this->ignored_get();
 				}
@@ -662,7 +663,7 @@ namespace kerbal
 				const_reference value() const KERBAL_REFERENCE_OVERLOAD_TAG
 				{
 					if (this->empty()) {
-						bad_optional_access::throw_this_exception();
+						kerbal::utility::throw_this_exception_helper<kerbal::optional::bad_optional_access>::throw_this_exception();
 					}
 					return this->ignored_get();
 				}
@@ -697,7 +698,7 @@ namespace kerbal
 				rvalue_reference value() &&
 				{
 					if (this->empty()) {
-						kerbal::optional::bad_optional_access::throw_this_exception();
+						kerbal::utility::throw_this_exception_helper<kerbal::optional::bad_optional_access>::throw_this_exception();
 					}
 					return kerbal::compatibility::move(*this).ignored_get();
 				}
@@ -706,7 +707,7 @@ namespace kerbal
 				const_rvalue_reference value() const &&
 				{
 					if (this->empty()) {
-						kerbal::optional::bad_optional_access::throw_this_exception();
+						kerbal::utility::throw_this_exception_helper<kerbal::optional::bad_optional_access>::throw_this_exception();
 					}
 					return kerbal::compatibility::move(*this).ignored_get();
 				}
@@ -742,7 +743,7 @@ namespace kerbal
 				pointer get_pointer()
 				{
 					if (this->empty()) {
-						kerbal::optional::bad_optional_access::throw_this_exception();
+						kerbal::utility::throw_this_exception_helper<kerbal::optional::bad_optional_access>::throw_this_exception();
 					}
 					return this->ignored_get_pointer();
 				}
@@ -751,7 +752,7 @@ namespace kerbal
 				const_pointer get_pointer() const
 				{
 					if (this->empty()) {
-						kerbal::optional::bad_optional_access::throw_this_exception();
+						kerbal::utility::throw_this_exception_helper<kerbal::optional::bad_optional_access>::throw_this_exception();
 					}
 					return this->ignored_get_pointer();
 				}
@@ -980,7 +981,7 @@ namespace kerbal
 				reference value() const
 				{
 					if (this->empty()) {
-						bad_optional_access::throw_this_exception();
+						kerbal::utility::throw_this_exception_helper<kerbal::optional::bad_optional_access>::throw_this_exception();
 					}
 					return this->ignored_get();
 				}
@@ -1002,7 +1003,7 @@ namespace kerbal
 				pointer get_pointer() const
 				{
 					if (this->empty()) {
-						kerbal::optional::bad_optional_access::throw_this_exception();
+						kerbal::utility::throw_this_exception_helper<kerbal::optional::bad_optional_access>::throw_this_exception();
 					}
 					return this->ignored_get_pointer();
 				}
