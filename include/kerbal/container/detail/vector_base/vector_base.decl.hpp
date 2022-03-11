@@ -362,11 +362,30 @@ namespace kerbal
 					KERBAL_CONSTEXPR20
 					void k_capacity_adjusted_realloc_aux(Allocator & alloc, pointer new_buffer, size_type new_capacity);
 
+				private:
+					template <typename Allocator>
+					KERBAL_CONSTEXPR20
+					void k_reserve_expand_buffer(kerbal::type_traits::false_type, Allocator & alloc, size_type new_capacity);
+
+					template <typename Allocator>
+					KERBAL_CONSTEXPR20
+					void k_reserve_expand_buffer(kerbal::type_traits::true_type, Allocator & alloc, size_type new_capacity);
+
 				public:
 					template <typename Allocator>
 					KERBAL_CONSTEXPR20
 					void k_reserve_using_allocator(Allocator & alloc, size_type new_capacity);
 
+				private:
+					template <typename Allocator>
+					KERBAL_CONSTEXPR20
+					void k_shrink_buffer(kerbal::type_traits::false_type /*has_reallocate*/, Allocator & alloc);
+
+					template <typename Allocator>
+					KERBAL_CONSTEXPR20
+					void k_shrink_buffer(kerbal::type_traits::true_type /*has_reallocate*/, Allocator & alloc);
+
+				public:
 					template <typename Allocator>
 					KERBAL_CONSTEXPR20
 					void k_shrink_to_fit_using_allocator(Allocator & alloc);
@@ -453,12 +472,20 @@ namespace kerbal
 				private:
 					template <typename Allocator>
 					KERBAL_CONSTEXPR20
-					void emplace_back_realloc_aux(Allocator & alloc, pointer new_buffer, size_type new_capacity);
-
-				public:
+					void k_emplace_back_transfer_ele(Allocator & alloc, pointer new_buffer, size_type new_capacity);
 
 #			if __cplusplus >= 201103L
 
+				private:
+					template <typename Allocator, typename ... Args>
+					KERBAL_CONSTEXPR20
+					void k_emplace_back_ua_expand_buffer(kerbal::type_traits::false_type, Allocator & alloc, Args&& ...args);
+
+					template <typename Allocator, typename ... Args>
+					KERBAL_CONSTEXPR20
+					void k_emplace_back_ua_expand_buffer(kerbal::type_traits::true_type, Allocator & alloc, Args&& ...args);
+
+				public:
 					template <typename Allocator, typename ... Args>
 					KERBAL_CONSTEXPR20
 					reference k_emplace_back_using_allocator(Allocator & alloc, Args&& ...args);
@@ -470,6 +497,14 @@ namespace kerbal
 #				define TARGS_DECL(i) typename KERBAL_MACRO_CONCAT(Arg, i)
 #				define ARGS_DECL(i) const KERBAL_MACRO_CONCAT(Arg, i) & KERBAL_MACRO_CONCAT(arg, i)
 #				define FBODY(i) \
+				private: \
+					template <typename Allocator KERBAL_OPT_PPEXPAND_WITH_COMMA_N(LEFT_JOIN_COMMA, EMPTY, TARGS_DECL, i)> \
+					void k_emplace_back_ua_expand_buffer(kerbal::type_traits::false_type, Allocator & alloc KERBAL_OPT_PPEXPAND_WITH_COMMA_N(LEFT_JOIN_COMMA, EMPTY, ARGS_DECL, i)); \
+ \
+					template <typename Allocator KERBAL_OPT_PPEXPAND_WITH_COMMA_N(LEFT_JOIN_COMMA, EMPTY, TARGS_DECL, i)> \
+					void k_emplace_back_ua_expand_buffer(kerbal::type_traits::true_type, Allocator & alloc KERBAL_OPT_PPEXPAND_WITH_COMMA_N(LEFT_JOIN_COMMA, EMPTY, ARGS_DECL, i)); \
+ \
+				public: \
 					template <typename Allocator KERBAL_OPT_PPEXPAND_WITH_COMMA_N(LEFT_JOIN_COMMA, EMPTY, TARGS_DECL, i)> \
 					reference k_emplace_back_using_allocator(Allocator & alloc KERBAL_OPT_PPEXPAND_WITH_COMMA_N(LEFT_JOIN_COMMA, EMPTY, ARGS_DECL, i));
 
@@ -521,7 +556,23 @@ namespace kerbal
 				private:
 					template <typename Allocator>
 					KERBAL_CONSTEXPR20
-					void resize_realloc_aux(Allocator & alloc, pointer new_buffer, size_type new_capacity, size_type new_size);
+					void k_resize_transfer_ele(Allocator & alloc, pointer new_buffer, size_type new_capacity, size_type new_size);
+
+					template <typename Allocator>
+					KERBAL_CONSTEXPR20
+					void k_resize_expand_buffer(kerbal::type_traits::false_type, Allocator & alloc, size_type new_size);
+
+					template <typename Allocator>
+					KERBAL_CONSTEXPR20
+					void k_resize_expand_buffer(kerbal::type_traits::true_type, Allocator & alloc, size_type new_size);
+
+					template <typename Allocator>
+					KERBAL_CONSTEXPR20
+					void k_resize_expand_buffer(kerbal::type_traits::false_type, Allocator & alloc, size_type new_size, const_reference value);
+
+					template <typename Allocator>
+					KERBAL_CONSTEXPR20
+					void k_resize_expand_buffer(kerbal::type_traits::true_type, Allocator & alloc, size_type new_size, const_reference value);
 
 				public:
 					template <typename Allocator>

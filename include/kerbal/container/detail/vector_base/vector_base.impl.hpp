@@ -910,13 +910,9 @@ namespace kerbal
 			template <typename Tp>
 			template <typename Allocator>
 			KERBAL_CONSTEXPR20
-			void vector_type_only<Tp>::reserve_using_allocator(Allocator & alloc, size_type new_capacity)
+			void vector_type_only<Tp>::k_reserve_expand_buffer(kerbal::type_traits::false_type, Allocator & alloc, size_type new_capacity)
 			{
 				typedef kerbal::memory::allocator_traits<Allocator> allocator_traits;
-
-				if (new_capacity <= this->k_capacity) {
-					return;
-				}
 
 				pointer new_buffer = allocator_traits::allocate(alloc, new_capacity);
 #		if !__cpp_exceptions
@@ -930,6 +926,72 @@ namespace kerbal
 				}
 
 				this->k_buffer = new_buffer;
+				this->k_capacity = new_capacity;
+			}
+
+			template <typename Tp>
+			template <typename Allocator>
+			KERBAL_CONSTEXPR20
+			void vector_type_only<Tp>::k_reserve_expand_buffer(kerbal::type_traits::true_type, Allocator & alloc, size_type new_capacity)
+			{
+				typedef kerbal::memory::allocator_traits<Allocator> allocator_traits;
+
+				pointer new_buffer = allocator_traits::reallocate(alloc, this->k_buffer, this->k_capacity, new_capacity);
+#		if !__cpp_exceptions
+				if (new_buffer == NULL) {
+					kerbal::utility::throw_this_exception_helper<kerbal::memory::bad_alloc>::throw_this_exception();
+				}
+#		endif
+
+				this->k_buffer = new_buffer;
+				this->k_capacity = new_capacity;
+			}
+
+			template <typename Tp>
+			template <typename Allocator>
+			KERBAL_CONSTEXPR20
+			void vector_type_only<Tp>::k_reserve_using_allocator(Allocator & alloc, size_type new_capacity)
+			{
+				typedef kerbal::memory::allocator_traits<Allocator> allocator_traits;
+
+				if (new_capacity <= this->k_capacity) {
+					return;
+				}
+
+				typedef typename allocator_traits::has_reallocate has_reallocate;
+				this->k_reserve_expand_buffer(has_reallocate(), alloc, new_capacity);
+			}
+
+			template <typename Tp>
+			template <typename Allocator>
+			KERBAL_CONSTEXPR20
+			void vector_type_only<Tp>::k_shrink_buffer(kerbal::type_traits::false_type, Allocator & alloc)
+			{
+				typedef kerbal::memory::allocator_traits<Allocator> allocator_traits;
+
+				size_type new_capacity = this->k_size;
+				pointer new_buffer = allocator_traits::allocate(alloc, new_capacity);
+#		if !__cpp_exceptions
+				if (new_buffer == NULL) {
+					kerbal::utility::throw_this_exception_helper<kerbal::memory::bad_alloc>::throw_this_exception();
+				}
+#		endif
+
+				this->k_capacity_adjusted_realloc_aux(alloc, new_buffer, new_capacity);
+				this->k_buffer = new_buffer;
+				this->k_capacity = new_capacity;
+			}
+
+			template <typename Tp>
+			template <typename Allocator>
+			KERBAL_CONSTEXPR20
+			void vector_type_only<Tp>::k_shrink_buffer(kerbal::type_traits::true_type, Allocator & alloc)
+			{
+				typedef kerbal::memory::allocator_traits<Allocator> allocator_traits;
+
+				size_type new_capacity = this->k_size;
+				allocator_traits::reallocate(alloc, this->k_buffer, this->k_capacity, new_capacity);
+
 				this->k_capacity = new_capacity;
 			}
 
@@ -951,20 +1013,9 @@ namespace kerbal
 					return;
 				}
 
-				size_type new_capacity = this->k_size;
-				pointer new_buffer = allocator_traits::allocate(alloc, new_capacity);
-#		if !__cpp_exceptions
-				if (new_buffer == NULL) {
-					kerbal::utility::throw_this_exception_helper<kerbal::memory::bad_alloc>::throw_this_exception();
-				}
-#		endif
-
-				this->capacity_adjusted_realloc_aux(alloc, new_buffer, new_capacity);
-				this->k_buffer = new_buffer;
-				this->k_capacity = new_capacity;
+				typedef typename allocator_traits::has_reallocate has_reallocate;
+				this->k_shrink_buffer(has_reallocate(), alloc);
 			}
-
-
 
 		//===================
 		// insert
@@ -1600,7 +1651,7 @@ namespace kerbal
 			template <typename Tp>
 			template <typename Allocator>
 			KERBAL_CONSTEXPR20
-			void vector_type_only<Tp>::emplace_back_realloc_aux(Allocator & alloc, pointer new_buffer, size_type new_capacity)
+			void vector_type_only<Tp>::k_emplace_back_transfer_ele(Allocator & alloc, pointer new_buffer, size_type new_capacity)
 			{
 				typedef kerbal::memory::allocator_traits<Allocator> allocator_traits;
 
@@ -1630,8 +1681,63 @@ namespace kerbal
 			template <typename Tp>
 			template <typename Allocator, typename ... Args>
 			KERBAL_CONSTEXPR20
+			void vector_type_only<Tp>::k_emplace_back_ua_expand_buffer(kerbal::type_traits::false_type, Allocator & alloc, Args&& ... args)
+			{
+				typedef kerbal::memory::allocator_traits<Allocator> allocator_traits;
+
+				size_type ori_size = this->k_size;
+				size_type new_capacity = this->k_capacity == 0 ? 1 : this->k_capacity * 2;
+				pointer new_buffer = allocator_traits::allocate(alloc, new_capacity);
+#		if !__cpp_exceptions
+				if (new_buffer == NULL) {
+					kerbal::utility::throw_this_exception_helper<kerbal::memory::bad_alloc>::throw_this_exception();
+				}
+#		endif
+				pointer emplace_pos = new_buffer + ori_size;
+
+#		if __cpp_exceptions
+				try {
+#		endif
+					kerbal::memory::construct_at_using_allocator(alloc, emplace_pos, kerbal::utility::forward<Args>(args)...);
+#		if __cpp_exceptions
+				} catch (...) {
+					allocator_traits::deallocate(alloc, new_buffer, new_capacity);
+					throw;
+				}
+#		endif
+
+				this->k_emplace_back_transfer_ele(alloc, new_buffer, new_capacity);
+			}
+
+			template <typename Tp>
+			template <typename Allocator, typename ... Args>
+			KERBAL_CONSTEXPR20
+			void vector_type_only<Tp>::k_emplace_back_ua_expand_buffer(kerbal::type_traits::true_type, Allocator & alloc, Args&& ... args)
+			{
+				typedef kerbal::memory::allocator_traits<Allocator> allocator_traits;
+
+				size_type ori_size = this->k_size;
+				size_type new_capacity = this->k_capacity == 0 ? 1 : this->k_capacity * 2;
+				pointer new_buffer = allocator_traits::reallocate(alloc, this->k_buffer, this->k_capacity, new_capacity);
+#		if !__cpp_exceptions
+				if (new_buffer == NULL) {
+					kerbal::utility::throw_this_exception_helper<kerbal::memory::bad_alloc>::throw_this_exception();
+				}
+#		endif
+				pointer emplace_pos = new_buffer + ori_size;
+
+				kerbal::memory::construct_at_using_allocator(alloc, emplace_pos, kerbal::utility::forward<Args>(args)...);
+
+				this->k_buffer = new_buffer;
+				this->k_capacity = new_capacity;
+				++this->k_size;
+			}
+
+			template <typename Tp>
+			template <typename Allocator, typename ... Args>
+			KERBAL_CONSTEXPR20
 			typename vector_type_only<Tp>::reference
-			vector_type_only<Tp>::emplace_back_using_allocator(Allocator & alloc, Args&& ... args)
+			vector_type_only<Tp>::k_emplace_back_using_allocator(Allocator & alloc, Args&& ... args)
 			{
 				typedef kerbal::memory::allocator_traits<Allocator> allocator_traits;
 
@@ -1641,27 +1747,8 @@ namespace kerbal
 					kerbal::memory::construct_at_using_allocator(alloc, this->end().current, kerbal::utility::forward<Args>(args)...);
 					++this->k_size;
 				} else {
-					size_type new_capacity = this->k_capacity == 0 ? 1 : this->k_capacity * 2;
-					pointer new_buffer = allocator_traits::allocate(alloc, new_capacity);
-#		if !__cpp_exceptions
-					if (new_buffer == NULL) {
-						kerbal::utility::throw_this_exception_helper<kerbal::memory::bad_alloc>::throw_this_exception();
-					}
-#		endif
-					pointer emplace_pos = new_buffer + ori_size;
-
-#		if __cpp_exceptions
-					try {
-#		endif
-						kerbal::memory::construct_at_using_allocator(alloc, emplace_pos, kerbal::utility::forward<Args>(args)...);
-#		if __cpp_exceptions
-					} catch (...) {
-						allocator_traits::deallocate(alloc, new_buffer, new_capacity);
-						throw;
-					}
-#		endif
-
-					this->k_emplace_back_realloc_aux(alloc, new_buffer, new_capacity);
+					typedef typename allocator_traits::has_reallocate has_reallocate;
+					this->k_emplace_back_ua_expand_buffer(has_reallocate(), alloc, kerbal::utility::forward<Args>(args)...);
 				}
 				return this->k_buffer[this->k_size];
 			}
@@ -1674,37 +1761,91 @@ namespace kerbal
 #		define ARGS_DECL(i) const KERBAL_MACRO_CONCAT(Arg, i) & KERBAL_MACRO_CONCAT(arg, i)
 #		define ARGS_USE(i) KERBAL_MACRO_CONCAT(arg, i)
 #	if __cpp_exceptions
-#		define FBODY(i) \
+#		define FBODY_EXPAND_BUFFER(i) \
 			template <typename Tp> \
 			template <typename Allocator KERBAL_OPT_PPEXPAND_WITH_COMMA_N(LEFT_JOIN_COMMA, EMPTY, TARGS_DECL, i)> \
-			typename vector_type_only<Tp>::reference \
-			vector_type_only<Tp>::emplace_back_using_allocator(Allocator & alloc KERBAL_OPT_PPEXPAND_WITH_COMMA_N(LEFT_JOIN_COMMA, EMPTY, ARGS_DECL, i)) \
+			void vector_type_only<Tp>::k_emplace_back_ua_expand_buffer(kerbal::type_traits::false_type, Allocator & alloc KERBAL_OPT_PPEXPAND_WITH_COMMA_N(LEFT_JOIN_COMMA, EMPTY, ARGS_DECL, i)) \
 			{ \
 				typedef kerbal::memory::allocator_traits<Allocator> allocator_traits; \
  \
 				size_type ori_size = this->k_size; \
-				size_type new_size = ori_size + 1; \
-				if (new_size <= this->k_capacity) { \
-					kerbal::memory::construct_at_using_allocator(alloc, this->end().current KERBAL_OPT_PPEXPAND_WITH_COMMA_N(LEFT_JOIN_COMMA, EMPTY, ARGS_USE, i)); \
-					++this->k_size; \
-				} else { \
-					size_type new_capacity = this->k_capacity == 0 ? 1 : this->k_capacity * 2; \
-					pointer new_buffer = allocator_traits::allocate(alloc, new_capacity); \
-					pointer emplace_pos = new_buffer + ori_size; \
+				size_type new_capacity = this->k_capacity == 0 ? 1 : this->k_capacity * 2; \
+				pointer new_buffer = allocator_traits::allocate(alloc, new_capacity); \
+				pointer emplace_pos = new_buffer + ori_size; \
  \
-					try { \
-						kerbal::memory::construct_at_using_allocator(alloc, emplace_pos KERBAL_OPT_PPEXPAND_WITH_COMMA_N(LEFT_JOIN_COMMA, EMPTY, ARGS_USE, i)); \
-					} catch (...) { \
-						allocator_traits::deallocate(alloc, new_buffer, new_capacity); \
-						throw; \
-					} \
- \
-					this->emplace_back_realloc_aux(alloc, new_buffer, new_capacity); \
+				try { \
+					kerbal::memory::construct_at_using_allocator(alloc, emplace_pos KERBAL_OPT_PPEXPAND_WITH_COMMA_N(LEFT_JOIN_COMMA, EMPTY, ARGS_USE, i)); \
+				} catch (...) { \
+					allocator_traits::deallocate(alloc, new_buffer, new_capacity); \
+					throw; \
 				} \
-				return this->k_buffer[this->k_size]; \
+ \
+				this->k_emplace_back_transfer_ele(alloc, new_buffer, new_capacity); \
+			} \
+ \
+			template <typename Tp> \
+			template <typename Allocator KERBAL_OPT_PPEXPAND_WITH_COMMA_N(LEFT_JOIN_COMMA, EMPTY, TARGS_DECL, i)> \
+			void vector_type_only<Tp>::k_emplace_back_ua_expand_buffer(kerbal::type_traits::true_type, Allocator & alloc KERBAL_OPT_PPEXPAND_WITH_COMMA_N(LEFT_JOIN_COMMA, EMPTY, ARGS_DECL, i)) \
+			{ \
+				typedef kerbal::memory::allocator_traits<Allocator> allocator_traits; \
+ \
+				size_type ori_size = this->k_size; \
+				size_type new_capacity = this->k_capacity == 0 ? 1 : this->k_capacity * 2; \
+				pointer new_buffer = allocator_traits::reallocate(alloc, this->k_buffer, this->k_capacity, new_capacity); \
+				pointer emplace_pos = new_buffer + ori_size; \
+ \
+				kerbal::memory::construct_at_using_allocator(alloc, emplace_pos KERBAL_OPT_PPEXPAND_WITH_COMMA_N(LEFT_JOIN_COMMA, EMPTY, ARGS_USE, i)); \
+ \
+				this->k_buffer = new_buffer; \
+				this->k_capacity = new_capacity; \
+				++this->k_size; \
 			}
 #	else // __cpp_exceptions
+#		define FBODY_EXPAND_BUFFER(i) \
+			template <typename Tp> \
+			template <typename Allocator KERBAL_OPT_PPEXPAND_WITH_COMMA_N(LEFT_JOIN_COMMA, EMPTY, TARGS_DECL, i)> \
+			void vector_type_only<Tp>::k_emplace_back_ua_expand_buffer(kerbal::type_traits::false_type, Allocator & alloc KERBAL_OPT_PPEXPAND_WITH_COMMA_N(LEFT_JOIN_COMMA, EMPTY, ARGS_DECL, i)) \
+			{ \
+				typedef kerbal::memory::allocator_traits<Allocator> allocator_traits; \
+ \
+				size_type ori_size = this->k_size; \
+				size_type new_capacity = this->k_capacity == 0 ? 1 : this->k_capacity * 2; \
+				pointer new_buffer = allocator_traits::allocate(alloc, new_capacity); \
+				if (new_buffer == NULL) { \
+					kerbal::utility::throw_this_exception_helper<kerbal::memory::bad_alloc>::throw_this_exception(); \
+				} \
+				pointer emplace_pos = new_buffer + ori_size; \
+ \
+				{ \
+					kerbal::memory::construct_at_using_allocator(alloc, emplace_pos KERBAL_OPT_PPEXPAND_WITH_COMMA_N(LEFT_JOIN_COMMA, EMPTY, ARGS_USE, i)); \
+				} \
+ \
+				this->k_emplace_back_transfer_ele(alloc, new_buffer, new_capacity); \
+			} \
+			template <typename Tp> \
+			template <typename Allocator KERBAL_OPT_PPEXPAND_WITH_COMMA_N(LEFT_JOIN_COMMA, EMPTY, TARGS_DECL, i)> \
+			void vector_type_only<Tp>::k_emplace_back_ua_expand_buffer(kerbal::type_traits::true_type, Allocator & alloc KERBAL_OPT_PPEXPAND_WITH_COMMA_N(LEFT_JOIN_COMMA, EMPTY, ARGS_DECL, i)) \
+			{ \
+				typedef kerbal::memory::allocator_traits<Allocator> allocator_traits; \
+ \
+				size_type ori_size = this->k_size; \
+				size_type new_capacity = this->k_capacity == 0 ? 1 : this->k_capacity * 2; \
+				pointer new_buffer = allocator_traits::reallocate(alloc, this->k_buffer, this->k_capacity, new_capacity); \
+				if (new_buffer == NULL) { \
+					kerbal::utility::throw_this_exception_helper<kerbal::memory::bad_alloc>::throw_this_exception(); \
+				} \
+				pointer emplace_pos = new_buffer + ori_size; \
+ \
+				kerbal::memory::construct_at_using_allocator(alloc, emplace_pos KERBAL_OPT_PPEXPAND_WITH_COMMA_N(LEFT_JOIN_COMMA, EMPTY, ARGS_USE, i)); \
+ \
+				this->k_buffer = new_buffer; \
+				this->k_capacity = new_capacity; \
+				++this->k_size; \
+			}
+#	endif // __cpp_exceptions
+
 #		define FBODY(i) \
+			FBODY_EXPAND_BUFFER(i) \
 			template <typename Tp> \
 			template <typename Allocator KERBAL_OPT_PPEXPAND_WITH_COMMA_N(LEFT_JOIN_COMMA, EMPTY, TARGS_DECL, i)> \
 			typename vector_type_only<Tp>::reference \
@@ -1718,22 +1859,11 @@ namespace kerbal
 					kerbal::memory::construct_at_using_allocator(alloc, this->end().current KERBAL_OPT_PPEXPAND_WITH_COMMA_N(LEFT_JOIN_COMMA, EMPTY, ARGS_USE, i)); \
 					++this->k_size; \
 				} else { \
-					size_type new_capacity = this->k_capacity == 0 ? 1 : this->k_capacity * 2; \
-					pointer new_buffer = allocator_traits::allocate(alloc, new_capacity); \
-					if (new_buffer == NULL) { \
-						kerbal::utility::throw_this_exception_helper<kerbal::memory::bad_alloc>::throw_this_exception(); \
-					} \
-					pointer emplace_pos = new_buffer + ori_size; \
- \
-					{ \
-						kerbal::memory::construct_at_using_allocator(alloc, emplace_pos KERBAL_OPT_PPEXPAND_WITH_COMMA_N(LEFT_JOIN_COMMA, EMPTY, ARGS_USE, i)); \
-					} \
- \
-					this->emplace_back_realloc_aux(alloc, new_buffer, new_capacity); \
+					typedef typename allocator_traits::has_reallocate has_reallocate; \
+					this->k_emplace_back_ua_expand_buffer(has_reallocate(), alloc KERBAL_OPT_PPEXPAND_WITH_COMMA_N(LEFT_JOIN_COMMA, EMPTY, ARGS_USE, i)); \
 				} \
 				return this->k_buffer[this->k_size]; \
 			}
-#	endif // __cpp_exceptions
 
 			KERBAL_PPEXPAND_N(FBODY, KERBAL_PPEXPAND_EMPTY_SEPARATOR, 0)
 			KERBAL_PPEXPAND_N(FBODY, KERBAL_PPEXPAND_EMPTY_SEPARATOR, 20)
@@ -1743,6 +1873,7 @@ namespace kerbal
 #		undef TARGS_DECL
 #		undef ARGS_DECL
 #		undef ARGS_USE
+#		undef FBODY_EXPAND_BUFFER
 #		undef FBODY
 
 #		endif
@@ -1834,7 +1965,7 @@ namespace kerbal
 			template <typename Tp>
 			template <typename Allocator>
 			KERBAL_CONSTEXPR20
-			void vector_type_only<Tp>::resize_realloc_aux(Allocator & alloc, pointer new_buffer, size_type new_capacity, size_type new_size)
+			void vector_type_only<Tp>::k_resize_transfer_ele(Allocator & alloc, pointer new_buffer, size_type new_capacity, size_type new_size)
 			{
 				typedef kerbal::memory::allocator_traits<Allocator> allocator_traits;
 
@@ -1862,7 +1993,113 @@ namespace kerbal
 			template <typename Tp>
 			template <typename Allocator>
 			KERBAL_CONSTEXPR20
-			void vector_type_only<Tp>::resize_using_allocator(Allocator & alloc, size_type new_size)
+			void vector_type_only<Tp>::k_resize_expand_buffer(kerbal::type_traits::false_type, Allocator & alloc, size_type new_size)
+			{
+				typedef kerbal::memory::allocator_traits<Allocator> allocator_traits;
+
+				size_type ori_size = this->k_size;
+				size_type new_capacity = 2 * new_size;
+				pointer new_buffer = allocator_traits::allocate(alloc, new_capacity);
+#		if !__cpp_exceptions
+				if (new_buffer == NULL) {
+					kerbal::utility::throw_this_exception_helper<kerbal::memory::bad_alloc>::throw_this_exception();
+				}
+#		endif
+
+#		if __cpp_exceptions
+				try {
+#		endif
+					kerbal::memory::uninitialized_value_construct_using_allocator(alloc, new_buffer + ori_size, new_buffer + new_size);
+#		if __cpp_exceptions
+				} catch (...) {
+					allocator_traits::deallocate(alloc, new_buffer, new_capacity);
+					throw;
+				}
+#		endif
+
+				this->k_resize_transfer_ele(alloc, new_buffer, new_capacity, new_size);
+			}
+
+			template <typename Tp>
+			template <typename Allocator>
+			KERBAL_CONSTEXPR20
+			void vector_type_only<Tp>::k_resize_expand_buffer(kerbal::type_traits::true_type, Allocator & alloc, size_type new_size)
+			{
+				typedef kerbal::memory::allocator_traits<Allocator> allocator_traits;
+
+				size_type ori_size = this->k_size;
+				size_type new_capacity = 2 * new_size;
+				pointer new_buffer = allocator_traits::reallocate(alloc, this->k_buffer, this->k_capacity, new_capacity);
+#		if !__cpp_exceptions
+				if (new_buffer == NULL) {
+					kerbal::utility::throw_this_exception_helper<kerbal::memory::bad_alloc>::throw_this_exception();
+				}
+#		endif
+
+				kerbal::memory::uninitialized_value_construct_using_allocator(alloc, new_buffer + ori_size, new_buffer + new_size);
+
+				this->k_buffer = new_buffer;
+				this->k_capacity = new_capacity;
+				this->k_size = new_size;
+			}
+
+			template <typename Tp>
+			template <typename Allocator>
+			KERBAL_CONSTEXPR20
+			void vector_type_only<Tp>::k_resize_expand_buffer(kerbal::type_traits::false_type, Allocator & alloc, size_type new_size, const_reference value)
+			{
+				typedef kerbal::memory::allocator_traits<Allocator> allocator_traits;
+
+				size_type ori_size = this->k_size;
+				size_type new_capacity = 2 * new_size;
+				pointer new_buffer = allocator_traits::allocate(alloc, new_capacity);
+#		if !__cpp_exceptions
+				if (new_buffer == NULL) {
+					kerbal::utility::throw_this_exception_helper<kerbal::memory::bad_alloc>::throw_this_exception();
+				}
+#		endif
+
+#		if __cpp_exceptions
+				try {
+#		endif
+					kerbal::memory::uninitialized_fill_using_allocator(alloc, new_buffer + ori_size, new_buffer + new_size, value);
+#		if __cpp_exceptions
+				} catch (...) {
+					allocator_traits::deallocate(alloc, new_buffer, new_capacity);
+					throw;
+				}
+#		endif
+
+				this->k_resize_transfer_ele(alloc, new_buffer, new_capacity, new_size);
+			}
+
+			template <typename Tp>
+			template <typename Allocator>
+			KERBAL_CONSTEXPR20
+			void vector_type_only<Tp>::k_resize_expand_buffer(kerbal::type_traits::true_type, Allocator & alloc, size_type new_size, const_reference value)
+			{
+				typedef kerbal::memory::allocator_traits<Allocator> allocator_traits;
+
+				size_type ori_size = this->k_size;
+				size_type new_capacity = 2 * new_size;
+				pointer new_buffer = allocator_traits::reallocate(alloc, this->k_buffer, this->k_capacity, new_capacity);
+#		if !__cpp_exceptions
+				if (new_buffer == NULL) {
+					kerbal::utility::throw_this_exception_helper<kerbal::memory::bad_alloc>::throw_this_exception();
+				}
+#		endif
+
+				kerbal::memory::uninitialized_fill_using_allocator(alloc, new_buffer + ori_size, new_buffer + new_size, value);
+
+				this->k_buffer = new_buffer;
+				this->k_capacity = new_capacity;
+				this->k_size = new_size;
+			}
+
+			template <typename Tp>
+			template <typename Allocator>
+			KERBAL_CONSTEXPR20
+			void vector_type_only<Tp>::k_resize_using_allocator(Allocator & alloc, size_type new_size)
 			{
 				typedef kerbal::memory::allocator_traits<Allocator> allocator_traits;
 
@@ -1875,34 +2112,16 @@ namespace kerbal
 					kerbal::memory::reverse_destroy_using_allocator(alloc, this->nth(new_size).current, this->nth(ori_size).current);
 					this->k_size = new_size;
 				} else { // new_size > ori_size
-					/*
-					 * a a a x x x x x
-					 * a a a b b b x x
-					 */
 					if (new_size <= this->k_capacity) {
+						/*
+						 * a a a x x x x x
+						 * a a a b b b x x
+						 */
 						kerbal::memory::uninitialized_value_construct_using_allocator(alloc, this->nth(ori_size).current, this->nth(new_size).current);
 						this->k_size = new_size;
 					} else {
-						size_type new_capacity = 2 * new_size;
-						pointer new_buffer = allocator_traits::allocate(alloc, new_capacity);
-#		if !__cpp_exceptions
-						if (new_buffer == NULL) {
-							kerbal::utility::throw_this_exception_helper<kerbal::memory::bad_alloc>::throw_this_exception();
-						}
-#		endif
-
-#		if __cpp_exceptions
-						try {
-#		endif
-							kerbal::memory::uninitialized_value_construct_using_allocator(alloc, new_buffer + ori_size, new_buffer + new_size);
-#		if __cpp_exceptions
-						} catch (...) {
-							allocator_traits::deallocate(alloc, new_buffer, new_capacity);
-							throw;
-						}
-#		endif
-
-						this->resize_realloc_aux(alloc, new_buffer, new_capacity, new_size);
+						typedef typename allocator_traits::has_reallocate has_reallocate;
+						this->k_resize_expand_buffer(has_reallocate(), alloc, new_size);
 					}
 				}
 			}
@@ -1910,7 +2129,7 @@ namespace kerbal
 			template <typename Tp>
 			template <typename Allocator>
 			KERBAL_CONSTEXPR20
-			void vector_type_only<Tp>::resize_using_allocator(Allocator & alloc, size_type new_size, const_reference value)
+			void vector_type_only<Tp>::k_resize_using_allocator(Allocator & alloc, size_type new_size, const_reference value)
 			{
 				typedef kerbal::memory::allocator_traits<Allocator> allocator_traits;
 
@@ -1923,34 +2142,16 @@ namespace kerbal
 					kerbal::memory::reverse_destroy_using_allocator(alloc, this->nth(new_size).current, this->nth(ori_size).current);
 					this->k_size = new_size;
 				} else { // new_size > ori_size
-					/*
-					 * a a a x x x x x
-					 * a a a b b b x x
-					 */
 					if (new_size <= this->k_capacity) {
+						/*
+						 * a a a x x x x x
+						 * a a a b b b x x
+						 */
 						kerbal::memory::uninitialized_fill_using_allocator(alloc, this->nth(ori_size).current, this->nth(new_size).current, value);
 						this->k_size = new_size;
 					} else {
-						size_type new_capacity = 2 * new_size;
-						pointer new_buffer = allocator_traits::allocate(alloc, new_capacity);
-#		if !__cpp_exceptions
-						if (new_buffer == NULL) {
-							kerbal::utility::throw_this_exception_helper<kerbal::memory::bad_alloc>::throw_this_exception();
-						}
-#		endif
-
-#		if __cpp_exceptions
-						try {
-#		endif
-							kerbal::memory::uninitialized_fill_using_allocator(alloc, new_buffer + ori_size, new_buffer + new_size, value);
-#		if __cpp_exceptions
-						} catch (...) {
-							allocator_traits::deallocate(alloc, new_buffer, new_capacity);
-							throw;
-						}
-#		endif
-
-						this->k_resize_realloc_aux(alloc, new_buffer, new_capacity, new_size);
+						typedef typename allocator_traits::has_reallocate has_reallocate;
+						this->k_resize_expand_buffer(has_reallocate(), alloc, new_size, value);
 					}
 				}
 			}
