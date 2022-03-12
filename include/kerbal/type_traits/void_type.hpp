@@ -14,6 +14,10 @@
 
 #include <kerbal/ts/modules_ts/modules_ts.hpp>
 
+#if __cplusplus < 201103L
+#	include <kerbal/macro/ppexpand.hpp>
+#endif
+
 namespace kerbal
 {
 
@@ -22,14 +26,15 @@ namespace kerbal
 
 #	if __cplusplus < 201103L
 
-		template <
-				typename T0 = void, typename = T0, typename = T0, typename = T0, typename = T0,
-				typename    = T0,   typename = T0, typename = T0, typename = T0, typename = T0,
-				typename    = T0,   typename = T0, typename = T0, typename = T0, typename = T0>
+#	define TARGS_DECL(i) typename = T0
+
+		template <typename T0 = void, KERBAL_PPEXPAND_WITH_COMMA_N(TARGS_DECL, 20)>
 		struct void_type
 		{
 				typedef void type;
 		};
+
+#	undef TARGS_DECL
 
 #	else
 
