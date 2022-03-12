@@ -556,7 +556,7 @@ namespace kerbal
 		KERBAL_CONSTEXPR20
 		void forward_list<Tp, Allocator>::swap(forward_list & with)
 				KERBAL_CONDITIONAL_NOEXCEPT(
-						noexcept(fl_allocator_overload::_K_swap_allocator_if_propagate(
+						noexcept(fl_allocator_overload::k_swap_allocator_if_propagate(
 								kerbal::utility::declval<fl_allocator_overload&>(), kerbal::utility::declval<fl_allocator_overload&>()
 						)) &&
 						noexcept(fl_type_unrelated::_K_swap_type_unrelated(
@@ -564,7 +564,7 @@ namespace kerbal
 						))
 				)
 		{
-			fl_allocator_overload::_K_swap_allocator_if_propagate(
+			fl_allocator_overload::k_swap_allocator_if_propagate(
 					static_cast<fl_allocator_overload&>(*this),
 					static_cast<fl_allocator_overload&>(with));
 			fl_type_unrelated::_K_swap_type_unrelated(

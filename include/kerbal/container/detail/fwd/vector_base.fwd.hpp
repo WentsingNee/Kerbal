@@ -25,9 +25,6 @@ namespace kerbal
 			template <typename Tp>
 			class vector_allocator_unrelated;
 
-			template <typename Allocator>
-			class vector_allocator_overload;
-
 			template <typename Tp>
 			class vec_iter;
 

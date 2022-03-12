@@ -40,6 +40,7 @@
 #endif
 
 #include <kerbal/container/detail/decl/vector_base.decl.hpp>
+#include <kerbal/container/detail/container_allocator_overload.hpp>
 
 #include <kerbal/container/detail/vector_iterator.hpp>
 
@@ -52,11 +53,11 @@ namespace kerbal
 
 		template <typename Tp, typename Allocator>
 		class vector:
-				protected kerbal::container::detail::vector_allocator_overload<Allocator>,
+				protected kerbal::container::detail::container_allocator_overload<Allocator>,
 				protected kerbal::container::detail::vector_allocator_unrelated<Tp>
 		{
 			private:
-				typedef kerbal::container::detail::vector_allocator_overload<Allocator>		vector_allocator_overload;
+				typedef kerbal::container::detail::container_allocator_overload<Allocator>	vector_allocator_overload;
 				typedef kerbal::container::detail::vector_allocator_unrelated<Tp>			vector_allocator_unrelated;
 
 			public:
@@ -426,7 +427,7 @@ namespace kerbal
 
 				KERBAL_CONSTEXPR20
 				void swap(vector & with) KERBAL_CONDITIONAL_NOEXCEPT(
-						noexcept(vector_allocator_overload::_K_swap_allocator_if_propagate(
+						noexcept(vector_allocator_overload::k_swap_allocator_if_propagate(
 								kerbal::utility::declval<vector_allocator_overload&>(), kerbal::utility::declval<vector_allocator_overload&>()
 						)) &&
 						noexcept(vector_allocator_unrelated::_K_swap_type_unrelated(

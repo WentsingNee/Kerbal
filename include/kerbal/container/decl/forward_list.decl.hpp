@@ -36,6 +36,7 @@
 #	include <initializer_list>
 #endif
 
+#include <kerbal/container/detail/container_rebind_allocator_overload.hpp>
 #include <kerbal/container/detail/decl/forward_list_base.decl.hpp>
 
 #include <kerbal/container/detail/forward_list_iterator.hpp>
@@ -48,15 +49,33 @@ namespace kerbal
 	namespace container
 	{
 
+		namespace detail
+		{
+
+			template <typename Tp, typename Allocator>
+			struct fl_typedef_helper
+			{
+					typedef kerbal::container::detail::fl_allocator_unrelated<Tp>						fl_allocator_unrelated;
+					typedef typename fl_allocator_unrelated::node 										node;
+					typedef Allocator																	allocator_type;
+					typedef kerbal::container::detail::container_rebind_allocator_overload<
+							allocator_type, node
+					>																					fl_allocator_overload;
+			};
+
+		} // namespace detail
+
+
 		template <typename Tp, typename Allocator>
 		class forward_list:
-				protected kerbal::container::detail::fl_allocator_overload<Tp, Allocator>,
-				protected kerbal::container::detail::fl_allocator_unrelated<Tp>
+				protected detail::fl_typedef_helper<Tp, Allocator>::fl_allocator_overload,
+				protected detail::fl_typedef_helper<Tp, Allocator>::fl_allocator_unrelated
 		{
 			private:
-				typedef kerbal::container::detail::fl_type_unrelated						fl_type_unrelated;
-				typedef kerbal::container::detail::fl_allocator_overload<Tp, Allocator>		fl_allocator_overload;
-				typedef kerbal::container::detail::fl_allocator_unrelated<Tp>				fl_allocator_unrelated;
+				typedef kerbal::container::detail::fl_type_unrelated					fl_type_unrelated;
+				typedef detail::fl_typedef_helper<Tp, Allocator>						fl_typedef_helper;
+				typedef typename fl_typedef_helper::fl_allocator_overload 				fl_allocator_overload;
+				typedef typename fl_typedef_helper::fl_allocator_unrelated				fl_allocator_unrelated;
 
 			public:
 				typedef typename fl_allocator_unrelated::value_type					value_type;
@@ -85,12 +104,11 @@ namespace kerbal
 				typedef kerbal::type_traits::integral_constant<size_t, sizeof(node)>	NODE_SIZE;
 
 			public:
-				typedef Allocator															allocator_type;
+				typedef Allocator														allocator_type;
 
 			private:
-				typedef kerbal::memory::allocator_traits<allocator_type>					tp_allocator_traits;
-				typedef typename fl_allocator_overload::node_allocator_type					node_allocator_type;
-				typedef typename tp_allocator_traits::template rebind_traits<node>::other	node_allocator_traits;
+				typedef typename fl_allocator_overload::rebind_allocator_type			node_allocator_type;
+				typedef typename fl_allocator_overload::rebind_allocator_traits 		node_allocator_traits;
 
 			private:
 
@@ -419,7 +437,7 @@ namespace kerbal
 
 				KERBAL_CONSTEXPR20
 				void swap(forward_list & with) KERBAL_CONDITIONAL_NOEXCEPT(
-						noexcept(fl_allocator_overload::_K_swap_allocator_if_propagate(
+						noexcept(fl_allocator_overload::k_swap_allocator_if_propagate(
 								kerbal::utility::declval<fl_allocator_overload&>(), kerbal::utility::declval<fl_allocator_overload&>()
 						)) &&
 						noexcept(fl_type_unrelated::_K_swap_type_unrelated(

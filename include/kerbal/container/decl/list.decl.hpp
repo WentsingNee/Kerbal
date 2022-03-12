@@ -36,6 +36,7 @@
 #	include <initializer_list>
 #endif
 
+#include <kerbal/container/detail/container_rebind_allocator_overload.hpp>
 #include <kerbal/container/detail/decl/list_base.decl.hpp>
 
 #include <kerbal/container/detail/list_iterator.hpp>
@@ -48,15 +49,33 @@ namespace kerbal
 	namespace container
 	{
 
+		namespace detail
+		{
+
+			template <typename Tp, typename Allocator>
+			struct list_typedef_helper
+			{
+					typedef kerbal::container::detail::list_allocator_unrelated<Tp>						list_allocator_unrelated;
+					typedef typename list_allocator_unrelated::node 									node;
+					typedef Allocator																	allocator_type;
+					typedef kerbal::container::detail::container_rebind_allocator_overload<
+							allocator_type, node
+					>																					list_allocator_overload;
+			};
+
+		} // namespace detail
+
+
 		template <typename Tp, typename Allocator>
 		class list:
-				protected kerbal::container::detail::list_allocator_overload<Tp, Allocator>,
-				protected kerbal::container::detail::list_allocator_unrelated<Tp>
+				protected detail::list_typedef_helper<Tp, Allocator>::list_allocator_overload,
+				protected detail::list_typedef_helper<Tp, Allocator>::list_allocator_unrelated
 		{
 			private:
 				typedef kerbal::container::detail::list_type_unrelated						list_type_unrelated;
-				typedef kerbal::container::detail::list_allocator_overload<Tp, Allocator>	list_allocator_overload;
-				typedef kerbal::container::detail::list_allocator_unrelated<Tp>				list_allocator_unrelated;
+				typedef detail::list_typedef_helper<Tp, Allocator>							list_typedef_helper;
+				typedef typename list_typedef_helper::list_allocator_overload 				list_allocator_overload;
+				typedef typename list_typedef_helper::list_allocator_unrelated				list_allocator_unrelated;
 
 			public:
 				typedef typename list_allocator_unrelated::value_type					value_type;
@@ -90,9 +109,8 @@ namespace kerbal
 				typedef Allocator														allocator_type;
 
 			private:
-				typedef typename list_allocator_overload::tp_allocator_traits			tp_allocator_traits;
-				typedef typename list_allocator_overload::node_allocator_type			node_allocator_type;
-				typedef typename list_allocator_overload::node_allocator_traits			node_allocator_traits;
+				typedef typename list_allocator_overload::rebind_allocator_type			node_allocator_type;
+				typedef typename list_allocator_overload::rebind_allocator_traits 		node_allocator_traits;
 
 			private:
 
@@ -463,7 +481,7 @@ namespace kerbal
 
 				KERBAL_CONSTEXPR20
 				void swap(list & with) KERBAL_CONDITIONAL_NOEXCEPT(
-						noexcept(list_allocator_overload::_K_swap_allocator_if_propagate(
+						noexcept(list_allocator_overload::k_swap_allocator_if_propagate(
 								kerbal::utility::declval<list_allocator_overload&>(), kerbal::utility::declval<list_allocator_overload&>()
 						)) &&
 						noexcept(list_type_unrelated::_K_swap_type_unrelated(

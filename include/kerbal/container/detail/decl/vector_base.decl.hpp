@@ -12,9 +12,7 @@
 #ifndef KERBAL_CONTAINER_DETAIL_DECL_VECTOR_BASE_DECL_HPP
 #define KERBAL_CONTAINER_DETAIL_DECL_VECTOR_BASE_DECL_HPP
 
-#include <kerbal/algorithm/swap.hpp>
 #include <kerbal/compatibility/constexpr.hpp>
-#include <kerbal/compatibility/move.hpp>
 #include <kerbal/compatibility/noexcept.hpp>
 #include <kerbal/iterator/iterator_traits.hpp>
 #include <kerbal/iterator/reverse_iterator.hpp>
@@ -23,7 +21,6 @@
 #include <kerbal/type_traits/conditional.hpp>
 #include <kerbal/type_traits/enable_if.hpp>
 #include <kerbal/type_traits/integral_constant.hpp>
-#include <kerbal/utility/member_compress_helper.hpp>
 
 #if __cplusplus < 201103L
 #	include <kerbal/macro/macro_concat.hpp>
@@ -585,124 +582,6 @@ namespace kerbal
 					template <typename Allocator>
 					KERBAL_CONSTEXPR20
 					static void ui_move_if_noexcept_ow_copy_phase2(Allocator & alloc, pointer first, pointer last) KERBAL_NOEXCEPT;
-
-			};
-
-
-			template <typename Allocator>
-			class vector_allocator_overload:
-					private kerbal::utility::member_compress_helper<Allocator>
-			{
-				private:
-					typedef kerbal::utility::member_compress_helper<Allocator> super;
-
-				protected:
-					typedef Allocator allocator_type;
-					typedef kerbal::memory::allocator_traits<allocator_type>		allocator_traits;
-
-				public:
-
-#			if __cplusplus >= 201103L
-
-					struct is_nothrow_default_constrctible :
-							kerbal::type_traits::integral_constant<
-								bool,
-								std::is_nothrow_constructible<super, kerbal::utility::in_place_t>::value
-							>
-					{
-					};
-
-#			endif
-
-					KERBAL_CONSTEXPR
-					vector_allocator_overload()
-							KERBAL_CONDITIONAL_NOEXCEPT(is_nothrow_default_constrctible::value)
-							: super(kerbal::utility::in_place_t())
-					{
-					}
-
-#			if __cplusplus >= 201103L
-
-					struct is_nothrow_constructible_from_allocator_const_reference :
-							kerbal::type_traits::integral_constant<
-								bool,
-								std::is_nothrow_constructible<super, kerbal::utility::in_place_t, const Allocator &>::value
-							>
-					{
-					};
-
-#			endif
-
-					KERBAL_CONSTEXPR
-					explicit
-					vector_allocator_overload(const allocator_type & allocator)
-							KERBAL_CONDITIONAL_NOEXCEPT(is_nothrow_constructible_from_allocator_const_reference::value)
-							: super(kerbal::utility::in_place_t(), allocator)
-					{
-					}
-
-
-#			if __cplusplus >= 201103L
-
-					struct is_nothrow_constructible_from_allocator_rvalue_reference :
-							kerbal::type_traits::integral_constant<
-								bool,
-								std::is_nothrow_constructible<super, kerbal::utility::in_place_t, Allocator &&>::value
-							>
-					{
-					};
-
-					KERBAL_CONSTEXPR
-					explicit
-					vector_allocator_overload(allocator_type && allocator)
-							KERBAL_CONDITIONAL_NOEXCEPT(is_nothrow_constructible_from_allocator_rvalue_reference::value)
-							: super(kerbal::utility::in_place_t(), kerbal::compatibility::move(allocator))
-					{
-					}
-
-#			endif
-
-					KERBAL_CONSTEXPR14
-					allocator_type& alloc() KERBAL_NOEXCEPT
-					{
-						return super::member();
-					}
-
-					KERBAL_CONSTEXPR14
-					const allocator_type& alloc() const KERBAL_NOEXCEPT
-					{
-						return super::member();
-					}
-
-				private:
-
-					KERBAL_CONSTEXPR14
-					static void _K_swap_allocator_if_propagate_impl(vector_allocator_overload & /*lhs*/, vector_allocator_overload & /*rhs*/,
-													   kerbal::type_traits::false_type /*propagate_on_container_swap*/) KERBAL_NOEXCEPT
-					{
-					}
-
-					KERBAL_CONSTEXPR14
-					static void _K_swap_allocator_if_propagate_impl(vector_allocator_overload & lhs, vector_allocator_overload & rhs,
-													   kerbal::type_traits::true_type /*propagate_on_container_swap*/)
-							KERBAL_CONDITIONAL_NOEXCEPT(
-								noexcept(kerbal::algorithm::swap(lhs.alloc(), rhs.alloc()))
-							)
-					{
-						kerbal::algorithm::swap(lhs.alloc(), rhs.alloc());
-					}
-
-				public:
-
-					KERBAL_CONSTEXPR14
-					static void _K_swap_allocator_if_propagate(vector_allocator_overload & lhs, vector_allocator_overload & rhs)
-							KERBAL_CONDITIONAL_NOEXCEPT(
-									noexcept(_K_swap_allocator_if_propagate_impl(lhs, rhs, typename allocator_traits::propagate_on_container_swap()))
-							)
-					{
-						typedef typename allocator_traits::propagate_on_container_swap propagate_on_container_swap;
-						_K_swap_allocator_if_propagate_impl(lhs, rhs, propagate_on_container_swap());
-					}
 
 			};
 

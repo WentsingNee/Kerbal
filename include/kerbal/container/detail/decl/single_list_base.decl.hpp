@@ -12,17 +12,13 @@
 #ifndef KERBAL_CONTAINER_DETAIL_DECL_SINGLE_LIST_BASE_DECL_HPP
 #define KERBAL_CONTAINER_DETAIL_DECL_SINGLE_LIST_BASE_DECL_HPP
 
-#include <kerbal/algorithm/swap.hpp>
 #include <kerbal/compare/basic_compare.hpp>
 #include <kerbal/compatibility/constexpr.hpp>
-#include <kerbal/compatibility/move.hpp>
 #include <kerbal/compatibility/noexcept.hpp>
 #include <kerbal/memory/allocator_traits.hpp>
 #include <kerbal/type_traits/enable_if.hpp>
 #include <kerbal/type_traits/integral_constant.hpp>
 #include <kerbal/utility/declval.hpp>
-#include <kerbal/utility/in_place.hpp>
-#include <kerbal/utility/member_compress_helper.hpp>
 
 #if __cplusplus < 201103L
 #	include <kerbal/macro/macro_concat.hpp>
@@ -222,10 +218,10 @@ namespace kerbal
 					typedef kerbal::container::detail::sl_type_unrelated		sl_type_unrelated;
 
 					template <typename Up, typename Allocator>
-					friend class kerbal::container::single_list;
+					friend struct sl_typedef_helper;
 
 					template <typename Up, typename Allocator>
-					friend struct sl_node_allocator_helper;
+					friend class kerbal::container::single_list;
 
 				protected:
 					typedef Tp							value_type;
@@ -851,148 +847,6 @@ namespace kerbal
 
 #				endif
 #			endif
-
-			};
-
-
-			template <typename Tp, typename Allocator>
-			struct sl_node_allocator_helper
-			{
-				private:
-					typedef kerbal::container::detail::sl_allocator_unrelated<Tp>		sl_allocator_unrelated;
-					typedef typename sl_allocator_unrelated::value_type					value_type;
-					typedef typename sl_allocator_unrelated::node						node;
-
-				public:
-					typedef kerbal::memory::allocator_traits<Allocator>							tp_allocator_traits;
-					typedef typename tp_allocator_traits::template rebind_alloc<node>::other	node_allocator_type;
-					typedef typename tp_allocator_traits::template rebind_traits<node>::other	node_allocator_traits;
-			};
-
-
-			template <typename Tp, typename Allocator>
-			class sl_allocator_overload:
-					private kerbal::utility::member_compress_helper<
-							typename sl_node_allocator_helper<Tp, Allocator>::node_allocator_type
-					>
-			{
-				private:
-					typedef kerbal::utility::member_compress_helper<
-							typename sl_node_allocator_helper<Tp, Allocator>::node_allocator_type
-					> super;
-
-				private:
-					typedef kerbal::container::detail::sl_node_allocator_helper<Tp, Allocator>
-																						sl_node_allocator_helper;
-
-				protected:
-					typedef typename sl_node_allocator_helper::tp_allocator_traits		tp_allocator_traits;
-					typedef typename sl_node_allocator_helper::node_allocator_type		node_allocator_type;
-					typedef typename sl_node_allocator_helper::node_allocator_traits	node_allocator_traits;
-
-				protected:
-
-#			if __cplusplus >= 201103L
-
-					struct is_nothrow_default_constrctible :
-							kerbal::type_traits::integral_constant<
-								bool,
-								std::is_nothrow_constructible<super, kerbal::utility::in_place_t>::value
-							>
-					{
-					};
-
-#			endif
-
-					KERBAL_CONSTEXPR
-					sl_allocator_overload()
-							KERBAL_CONDITIONAL_NOEXCEPT(is_nothrow_default_constrctible::value)
-							: super(kerbal::utility::in_place_t())
-					{
-					}
-
-#			if __cplusplus >= 201103L
-
-					struct is_nothrow_constructible_from_allocator_const_reference :
-							kerbal::type_traits::integral_constant<
-								bool,
-								std::is_nothrow_constructible<super, kerbal::utility::in_place_t, const Allocator &>::value
-							>
-					{
-					};
-
-#			endif
-
-					KERBAL_CONSTEXPR
-					explicit
-					sl_allocator_overload(const Allocator & allocator)
-							KERBAL_CONDITIONAL_NOEXCEPT(is_nothrow_constructible_from_allocator_const_reference::value)
-							: super(kerbal::utility::in_place_t(), allocator)
-					{
-					}
-
-
-#			if __cplusplus >= 201103L
-
-					struct is_nothrow_constructible_from_allocator_rvalue_reference :
-							kerbal::type_traits::integral_constant<
-								bool,
-								std::is_nothrow_constructible<super, kerbal::utility::in_place_t, Allocator &&>::value
-							>
-					{
-					};
-
-					KERBAL_CONSTEXPR
-					explicit
-					sl_allocator_overload(Allocator && allocator)
-							KERBAL_CONDITIONAL_NOEXCEPT(is_nothrow_constructible_from_allocator_rvalue_reference::value)
-							: super(kerbal::utility::in_place_t(), kerbal::compatibility::move(allocator))
-					{
-					}
-
-#			endif
-
-					KERBAL_CONSTEXPR14
-					node_allocator_type& alloc() KERBAL_NOEXCEPT
-					{
-						return super::member();
-					}
-
-					KERBAL_CONSTEXPR14
-					const node_allocator_type& alloc() const KERBAL_NOEXCEPT
-					{
-						return super::member();
-					}
-
-				private:
-
-					KERBAL_CONSTEXPR14
-					static void _K_swap_allocator_if_propagate_impl(sl_allocator_overload & /*lhs*/, sl_allocator_overload & /*rhs*/,
-																	kerbal::type_traits::false_type /*propagate_on_container_swap*/) KERBAL_NOEXCEPT
-					{
-					}
-
-					KERBAL_CONSTEXPR14
-					static void _K_swap_allocator_if_propagate_impl(sl_allocator_overload & lhs, sl_allocator_overload & rhs,
-																	kerbal::type_traits::true_type /*propagate_on_container_swap*/)
-							KERBAL_CONDITIONAL_NOEXCEPT(
-									noexcept(kerbal::algorithm::swap(lhs.alloc(), rhs.alloc()))
-							)
-					{
-						kerbal::algorithm::swap(lhs.alloc(), rhs.alloc());
-					}
-
-				public:
-
-					KERBAL_CONSTEXPR14
-					static void _K_swap_allocator_if_propagate(sl_allocator_overload & lhs, sl_allocator_overload & rhs)
-							KERBAL_CONDITIONAL_NOEXCEPT(
-									noexcept(_K_swap_allocator_if_propagate_impl(lhs, rhs, typename node_allocator_traits::propagate_on_container_swap()))
-							)
-					{
-						typedef typename node_allocator_traits::propagate_on_container_swap propagate_on_container_swap;
-						_K_swap_allocator_if_propagate_impl(lhs, rhs, propagate_on_container_swap());
-					}
 
 			};
 

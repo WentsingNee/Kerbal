@@ -27,9 +27,6 @@ namespace kerbal
 			template <typename Tp>
 			class fl_allocator_unrelated;
 
-			template <typename Tp, typename Allocator>
-			class fl_allocator_overload;
-
 			class sl_node_base;
 
 			template <typename Tp>
