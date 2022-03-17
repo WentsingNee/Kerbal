@@ -12,15 +12,17 @@
 #ifndef KERBAL_CONTAINER_DETAIL_HASH_TABLE_ITERATOR_HPP
 #define KERBAL_CONTAINER_DETAIL_HASH_TABLE_ITERATOR_HPP
 
-#include <kerbal/container/fwd/forward_list.fwd.hpp>
-#include <kerbal/container/fwd/hash_table.fwd.hpp>
-
 #include <kerbal/iterator/iterator_traits.hpp>
 #include <kerbal/operators/dereferenceable.hpp>
 #include <kerbal/operators/equality_comparable.hpp>
 #include <kerbal/operators/incr_decr.hpp>
 
 #include <iterator>
+
+#include <kerbal/container/fwd/hash_table.fwd.hpp>
+
+#include <kerbal/container/detail/forward_list_base.hpp>
+#include <kerbal/container/detail/forward_list_iterator.hpp>
 
 
 namespace kerbal
@@ -46,12 +48,9 @@ namespace kerbal
 				private:
 					template <typename Entity2,
 							typename Extract,
-							typename Hash,
-							typename KeyEqual,
-							typename NodeAllocatorBR,
-							typename BucketAllocatorBR
+							typename Hash
 					>
-					friend class kerbal::container::hash_table;
+					friend class kerbal::container::detail::hash_table_base;
 
 					friend class kerbal::container::detail::hash_table_iter<Entity>;
 
@@ -123,18 +122,17 @@ namespace kerbal
 				private:
 					template <typename Entity2,
 							typename Extract,
-							typename Hash,
-							typename KeyEqual,
-							typename NodeAllocatorBR,
-							typename BucketAllocatorBR
+							typename Hash
 					>
-					friend class kerbal::container::hash_table;
+					friend class kerbal::container::detail::hash_table_base;
 
 					friend class kerbal::container::detail::hash_table_kiter<Entity>;
 
 
 				protected:
 					typedef kerbal::container::detail::fl_allocator_unrelated<Entity> bucket_type;
+
+					typedef hash_table_local_iter<Entity> local_iter;
 
 				private:
 					typedef kerbal::iterator::iterator_traits<Entity const*>	iterator_traits;
@@ -183,6 +181,12 @@ namespace kerbal
 						return static_cast<const super&>(lhs) == static_cast<const super&>(rhs);
 					}
 
+					KERBAL_CONSTEXPR14
+					local_iter cast_to_mutable() const KERBAL_NOEXCEPT
+					{
+						return local_iter(this->super::cast_to_mutable());
+					}
+
 			};
 
 			template <typename Entity>
@@ -195,12 +199,9 @@ namespace kerbal
 				private:
 					template <typename Entity2,
 							typename Extract,
-							typename Hash,
-							typename KeyEqual,
-							typename NodeAllocatorBR,
-							typename BucketAllocatorBR
+							typename Hash
 					>
-					friend class kerbal::container::hash_table;
+					friend class kerbal::container::detail::hash_table_base;
 
 				protected:
 					typedef kerbal::container::detail::fl_allocator_unrelated<Entity>	bucket_type;
@@ -283,12 +284,9 @@ namespace kerbal
 				private:
 					template <typename Entity2,
 							typename Extract,
-							typename Hash,
-							typename KeyEqual,
-							typename NodeAllocatorBR,
-							typename BucketAllocatorBR
+							typename Hash
 					>
-					friend class kerbal::container::hash_table;
+					friend class kerbal::container::detail::hash_table_base;
 
 				protected:
 					typedef kerbal::container::detail::fl_allocator_unrelated<Entity>	bucket_type;
