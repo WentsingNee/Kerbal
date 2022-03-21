@@ -947,10 +947,9 @@ namespace kerbal
 
 				template <typename ... Args>
 				KERBAL_CONSTEXPR20
-				static_vector_emplace_helper(kerbal::utility::in_place_t /*in_place*/, Args&& ... args)
+				static_vector_emplace_helper(kerbal::utility::in_place_t in_place, Args&& ... args) :
+						storage(in_place, kerbal::utility::forward<Args>(args)...)
 				{
-					// currently could not be optimised because we need to support static_vector<T[]>
-					this->storage.construct(kerbal::utility::forward<Args>(args)...);
 				}
 
 #	else
@@ -958,15 +957,14 @@ namespace kerbal
 #		define EMPTY
 #		define THEAD_NOT_EMPTY(exp) template <exp>
 #		define LEFT_JOIN_COMMA(exp) , exp
-#		define REMAINF(exp) exp
 #		define TARGS_DECL(i) typename KERBAL_MACRO_CONCAT(Arg, i)
 #		define ARGS_DECL(i) const KERBAL_MACRO_CONCAT(Arg, i) & KERBAL_MACRO_CONCAT(arg, i)
 #		define ARGS_USE(i) KERBAL_MACRO_CONCAT(arg, i)
 #		define FBODY(i) \
 				KERBAL_OPT_PPEXPAND_WITH_COMMA_N(THEAD_NOT_EMPTY, EMPTY, TARGS_DECL, i) \
-				static_vector_emplace_helper(kerbal::utility::in_place_t /*in_place*/ KERBAL_OPT_PPEXPAND_WITH_COMMA_N(LEFT_JOIN_COMMA, EMPTY, ARGS_DECL, i)) \
+				static_vector_emplace_helper(kerbal::utility::in_place_t in_place KERBAL_OPT_PPEXPAND_WITH_COMMA_N(LEFT_JOIN_COMMA, EMPTY, ARGS_DECL, i)) : \
+						storage(in_place KERBAL_OPT_PPEXPAND_WITH_COMMA_N(LEFT_JOIN_COMMA, EMPTY, ARGS_USE, i)) \
 				{ \
-					this->storage.construct(KERBAL_OPT_PPEXPAND_WITH_COMMA_N(REMAINF, EMPTY, ARGS_USE, i)); \
 				}
 
 				KERBAL_PPEXPAND_N(FBODY, KERBAL_PPEXPAND_EMPTY_SEPARATOR, 0)
@@ -975,7 +973,6 @@ namespace kerbal
 #		undef EMPTY
 #		undef THEAD_NOT_EMPTY
 #		undef LEFT_JOIN_COMMA
-#		undef REMAINF
 #		undef TARGS_DECL
 #		undef ARGS_DECL
 #		undef ARGS_USE
@@ -1002,10 +999,10 @@ namespace kerbal
 #	if __cplusplus >= 201103L
 
 				template <typename ... Args>
-				KERBAL_CONSTEXPR14
-				static_vector_emplace_helper(kerbal::utility::in_place_t /*in_place*/, Args&& ... args)
+				KERBAL_CONSTEXPR
+				static_vector_emplace_helper(kerbal::utility::in_place_t in_place, Args&& ... args) :
+						storage(in_place, kerbal::utility::forward<Args>(args)...)
 				{
-					this->storage.construct(kerbal::utility::forward<Args>(args)...);
 				}
 
 #	else
@@ -1013,15 +1010,14 @@ namespace kerbal
 #		define EMPTY
 #		define THEAD_NOT_EMPTY(exp) template <exp>
 #		define LEFT_JOIN_COMMA(exp) , exp
-#		define REMAINF(exp) exp
 #		define TARGS_DECL(i) typename KERBAL_MACRO_CONCAT(Arg, i)
 #		define ARGS_DECL(i) const KERBAL_MACRO_CONCAT(Arg, i) & KERBAL_MACRO_CONCAT(arg, i)
 #		define ARGS_USE(i) KERBAL_MACRO_CONCAT(arg, i)
 #		define FBODY(i) \
 				KERBAL_OPT_PPEXPAND_WITH_COMMA_N(THEAD_NOT_EMPTY, EMPTY, TARGS_DECL, i) \
-				static_vector_emplace_helper(kerbal::utility::in_place_t /*in_place*/ KERBAL_OPT_PPEXPAND_WITH_COMMA_N(LEFT_JOIN_COMMA, EMPTY, ARGS_DECL, i)) \
+				static_vector_emplace_helper(kerbal::utility::in_place_t in_place KERBAL_OPT_PPEXPAND_WITH_COMMA_N(LEFT_JOIN_COMMA, EMPTY, ARGS_DECL, i)) : \
+						storage(in_place KERBAL_OPT_PPEXPAND_WITH_COMMA_N(LEFT_JOIN_COMMA, EMPTY, ARGS_USE, i)) \
 				{ \
-					this->storage.construct(KERBAL_OPT_PPEXPAND_WITH_COMMA_N(REMAINF, EMPTY, ARGS_USE, i)); \
 				}
 
 				KERBAL_PPEXPAND_N(FBODY, KERBAL_PPEXPAND_EMPTY_SEPARATOR, 0)
@@ -1030,7 +1026,6 @@ namespace kerbal
 #		undef EMPTY
 #		undef THEAD_NOT_EMPTY
 #		undef LEFT_JOIN_COMMA
-#		undef REMAINF
 #		undef TARGS_DECL
 #		undef ARGS_DECL
 #		undef ARGS_USE
