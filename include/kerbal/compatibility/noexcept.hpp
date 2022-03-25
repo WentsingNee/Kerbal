@@ -23,6 +23,15 @@
 #endif
 
 
+#ifndef KERBAL_NOEXCEPT17
+#	if __cplusplus >= 201703L
+#		define KERBAL_NOEXCEPT17 noexcept
+#	else
+#		define KERBAL_NOEXCEPT17
+#	endif
+#endif
+
+
 #ifndef KERBAL_CONDITIONAL_NOEXCEPT
 #	if __cpp_exceptions
 #		if __cplusplus >= 201103L
