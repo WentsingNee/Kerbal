@@ -49,6 +49,28 @@
 
 
 
+#ifndef KERBAL_ENABLE_CONSTEXPR17
+#	if __cplusplus >= 201703L
+#		if __cpp_constexpr >= 201402L
+#			define KERBAL_ENABLE_CONSTEXPR17 1
+#		else
+#			define KERBAL_ENABLE_CONSTEXPR17 0
+#		endif
+#	else
+#		define KERBAL_ENABLE_CONSTEXPR17 0
+#	endif
+#endif
+
+#ifndef KERBAL_CONSTEXPR17
+#	if KERBAL_ENABLE_CONSTEXPR17
+#		define KERBAL_CONSTEXPR17 constexpr
+#	else
+#		define KERBAL_CONSTEXPR17
+#	endif
+#endif
+
+
+
 #ifndef KERBAL_ENABLE_CONSTEXPR20
 #	if __cplusplus > 201703L
 #		if __cpp_constexpr >= 201907L
