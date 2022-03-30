@@ -18,7 +18,6 @@
 #include <kerbal/hash/murmur_hash2.hpp>
 #include <kerbal/type_traits/enable_if.hpp>
 #include <kerbal/type_traits/fundamental_deduction.hpp>
-#include <kerbal/utility/addressof.hpp>
 
 #include <cstddef>
 

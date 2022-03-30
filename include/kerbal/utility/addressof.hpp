@@ -12,27 +12,90 @@
 #ifndef KERBAL_UTILITY_ADDRESSOF_HPP
 #define KERBAL_UTILITY_ADDRESSOF_HPP
 
+#include <kerbal/config/compiler_id.hpp>
+#include <kerbal/config/compiler_private.hpp>
+
 #include <kerbal/compatibility/constexpr.hpp>
 #include <kerbal/compatibility/noexcept.hpp>
 
+
+#ifndef KERBAL_HAS_BUILTIN_ADDRESSOF_SUPPORT
+
+#	if KERBAL_COMPILER_ID == KERBAL_COMPILER_ID_GNU
+
+#		if KERBAL_GNU_PRIVATE_HAS_BUILTIN(__builtin_addressof)
+#			define KERBAL_HAS_BUILTIN_ADDRESSOF_SUPPORT 1
+#			define KERBAL_BUILTIN_ADDRESSOF(x) __builtin_addressof(x)
+#		endif
+
+#	elif KERBAL_COMPILER_ID == KERBAL_COMPILER_ID_CLANG
+
+#		if KERBAL_CLANG_PRIVATE_HAS_BUILTIN(__builtin_addressof)
+#			define KERBAL_HAS_BUILTIN_ADDRESSOF_SUPPORT 1
+#			define KERBAL_BUILTIN_ADDRESSOF(x) __builtin_addressof(x)
+#		endif
+
+#	elif KERBAL_COMPILER_ID == KERBAL_COMPILER_ID_ICC
+
+#		if KERBAL_ICC_PRIVATE_HAS_BUILTIN(__builtin_addressof)
+#			define KERBAL_HAS_BUILTIN_ADDRESSOF_SUPPORT 1
+#			define KERBAL_BUILTIN_ADDRESSOF(x) __builtin_addressof(x)
+#		endif
+
+#	endif
+
+#endif
+
+
+#if !KERBAL_HAS_BUILTIN_ADDRESSOF_SUPPORT
+#	if __cplusplus >= 201103L
+#		include <memory>
+#	endif
+#endif
+
+
 namespace kerbal
 {
+
 	namespace utility
 	{
+
+#	if KERBAL_HAS_BUILTIN_ADDRESSOF_SUPPORT
+
 		template <typename Tp>
 		KERBAL_CONSTEXPR
-		Tp* addressof(Tp& arg) KERBAL_NOEXCEPT
+		Tp * addressof(Tp & arg) KERBAL_NOEXCEPT
 		{
+			return KERBAL_BUILTIN_ADDRESSOF(arg);
+		}
+
+#	else
+
+		template <typename Tp>
+#	if __cpp_lib_addressof_constexpr >= 201603L
+		KERBAL_CONSTEXPR17
+#	endif
+		Tp * addressof(Tp & arg) KERBAL_NOEXCEPT
+		{
+
+#		if __cplusplus >= 201103L
+			return std::addressof(arg);
+#		else
 			return static_cast<Tp*>(
 						static_cast<void*>(
 							&const_cast<char&>(
 								(const volatile char&)(arg))));
+#		endif
+
 		}
+
+#	endif
+
 
 #	if __cplusplus >= 201103L
 
 		template <typename Tp>
-		const Tp* addressof(const Tp&&) = delete;
+		const Tp * addressof(const Tp &&) = delete;
 
 #	endif
 
