@@ -96,11 +96,7 @@ namespace kerbal
 		KERBAL_CONSTEXPR14
 		void destroy_on_using_allocator(Allocator & alloc, Tp & plc)
 		{
-#	if __cplusplus >= 201103L
 			detail::_K_destroy_on_using_allocator(alloc, plc, kerbal::memory::allocator_could_use_destroy<Allocator, Tp>());
-#	else
-			detail::_K_destroy_on_using_allocator(alloc, plc, kerbal::type_traits::true_type());
-#	endif
 		}
 
 		template <typename Allocator, typename Tp>
@@ -141,13 +137,9 @@ namespace kerbal
 		KERBAL_CONSTEXPR14
 		void destroy_using_allocator(Allocator & alloc, ForwardIterator first, ForwardIterator last) KERBAL_NOEXCEPT
 		{
-#	if __cplusplus >= 201103L
 			typedef ForwardIterator iterator;
 			typedef typename kerbal::iterator::iterator_traits<iterator>::value_type value_type;
 			detail::_K_destroy_using_allocator(alloc, first, last, kerbal::memory::allocator_could_use_destroy<Allocator, value_type>());
-#	else
-			detail::_K_destroy_using_allocator(alloc, first, last, kerbal::type_traits::true_type());
-#	endif
 		}
 
 
@@ -183,13 +175,9 @@ namespace kerbal
 		KERBAL_CONSTEXPR14
 		ForwardIterator destroy_n_using_allocator(Allocator & alloc, ForwardIterator first, SizeType n) KERBAL_NOEXCEPT
 		{
-#	if __cplusplus >= 201103L
 			typedef ForwardIterator iterator;
 			typedef typename kerbal::iterator::iterator_traits<iterator>::value_type value_type;
 			return detail::_K_destroy_n_using_allocator(alloc, first, n, kerbal::memory::allocator_could_use_destroy<Allocator, value_type>());
-#	else
-			return detail::_K_destroy_n_using_allocator(alloc, first, n, kerbal::type_traits::true_type());
-#	endif
 		}
 
 
@@ -223,13 +211,9 @@ namespace kerbal
 		KERBAL_CONSTEXPR14
 		void reverse_destroy_using_allocator(Allocator & alloc, BidirectionalIterator first, BidirectionalIterator last) KERBAL_NOEXCEPT
 		{
-#	if __cplusplus >= 201103L
 			typedef BidirectionalIterator iterator;
 			typedef typename kerbal::iterator::iterator_traits<iterator>::value_type value_type;
 			detail::_K_reverse_destroy_using_allocator(alloc, first, last, kerbal::memory::allocator_could_use_destroy<Allocator, value_type>());
-#	else
-			detail::_K_reverse_destroy_using_allocator(alloc, first, last, kerbal::type_traits::true_type());
-#	endif
 		}
 
 
