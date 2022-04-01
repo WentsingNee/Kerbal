@@ -1600,7 +1600,7 @@ namespace kerbal
 			void list_allocator_unrelated<Tp>::_K_sort(const_iterator first, const_iterator last, BinaryPredict cmp)
 			{
 //				merge_sort(first, last, cmp);
-				sort_method_overload<IS_LIST_RADIX_SORT_ACCEPTABLE_TYPE::value>(first, last, cmp);
+				sort_method_overload<is_list_radix_sort_acceptable_type<value_type>::value>(first, last, cmp);
 			}
 
 			template <typename Tp>

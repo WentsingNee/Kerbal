@@ -66,6 +66,27 @@ namespace kerbal
 		} // namespace detail
 
 
+		namespace detail
+		{
+
+			template <typename Tp, typename Allocator>
+			struct single_list_node_size_helper
+			{
+					typedef kerbal::type_traits::integral_constant<
+							std::size_t,
+							sizeof(typename kerbal::container::single_list<Tp, Allocator>::node)
+					> type;
+			};
+
+		} // namespace detail
+
+		template <typename Tp, typename Allocator>
+		struct single_list_node_size :
+				kerbal::container::detail::single_list_node_size_helper<Tp, Allocator>::type
+		{
+		};
+
+
 		template <typename Tp, typename Allocator>
 		class single_list:
 				protected detail::sl_typedef_helper<Tp, Allocator>::sl_allocator_overload,
@@ -100,8 +121,7 @@ namespace kerbal
 				typedef typename sl_allocator_unrelated::node_base					node_base;
 				typedef typename sl_allocator_unrelated::node						node;
 
-			public:
-				typedef kerbal::type_traits::integral_constant<size_t, sizeof(node)>	NODE_SIZE;
+				friend struct kerbal::container::detail::single_list_node_size_helper<Tp, Allocator>;
 
 			public:
 				typedef Allocator														allocator_type;

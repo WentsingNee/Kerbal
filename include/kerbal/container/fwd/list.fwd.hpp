@@ -42,6 +42,9 @@ namespace kerbal
 #	endif
 #endif
 
+		template <typename Tp, typename Allocator = std::allocator<Tp> >
+		struct list_node_size;
+
 	} // namespace container
 
 } // namespace kerbal

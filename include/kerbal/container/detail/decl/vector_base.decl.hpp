@@ -17,6 +17,7 @@
 #include <kerbal/iterator/iterator_traits.hpp>
 #include <kerbal/iterator/reverse_iterator.hpp>
 #include <kerbal/memory/allocator_traits.hpp>
+#include <kerbal/memory/uninitialized_using_allocator.hpp>
 #include <kerbal/type_traits/array_traits.hpp>
 #include <kerbal/type_traits/conditional.hpp>
 #include <kerbal/type_traits/enable_if.hpp>
@@ -535,49 +536,15 @@ namespace kerbal
 
 				private:
 
-#			if __cplusplus >= 201103L
-					typedef kerbal::type_traits::integral_constant<int, 0> UIMIN_VER_MOVE;
-#			endif
-					typedef kerbal::type_traits::integral_constant<int, 1> UIMIN_VER_COPY;
-
-
-#			if __cplusplus >= 201103L
-					typedef typename kerbal::type_traits::conditional<
-							std::is_nothrow_move_constructible<value_type>::value,
-							UIMIN_VER_MOVE,
-							UIMIN_VER_COPY
-					>::type UIMIN_VER;
-#			else
-					typedef UIMIN_VER_COPY UIMIN_VER;
-#			endif
-
-
-#			if __cplusplus >= 201103L
 					template <typename Allocator>
 					KERBAL_CONSTEXPR20
-					static void ui_move_if_noexcept_ow_copy_phase1_impl(Allocator & alloc, pointer first, pointer last, pointer to, UIMIN_VER_MOVE) KERBAL_NOEXCEPT;
-#			endif
-
-					template <typename Allocator>
-					KERBAL_CONSTEXPR20
-					static void ui_move_if_noexcept_ow_copy_phase1_impl(Allocator & alloc, pointer first, pointer last, pointer to, UIMIN_VER_COPY);
-
-					template <typename Allocator>
-					KERBAL_CONSTEXPR20
-					static void ui_move_if_noexcept_ow_copy_phase1(Allocator & alloc, pointer first, pointer last, pointer to) KERBAL_CONDITIONAL_NOEXCEPT(
-							noexcept(ui_move_if_noexcept_ow_copy_phase1_impl(alloc, first, last, to, UIMIN_VER()))
-					);
-
-
-#			if __cplusplus >= 201103L
-					template <typename Allocator>
-					KERBAL_CONSTEXPR20
-					static void ui_move_if_noexcept_ow_copy_phase2_impl(Allocator & /*alloc*/, pointer /*first*/, pointer /*last*/, UIMIN_VER_MOVE) KERBAL_NOEXCEPT;
-#			endif
-
-					template <typename Allocator>
-					KERBAL_CONSTEXPR20
-					static void ui_move_if_noexcept_ow_copy_phase2_impl(Allocator & alloc, pointer first, pointer last, UIMIN_VER_COPY) KERBAL_NOEXCEPT;
+					static void ui_move_if_noexcept_ow_copy_phase1(Allocator & alloc, pointer first, pointer last, pointer to)
+						KERBAL_CONDITIONAL_NOEXCEPT(
+							noexcept(
+								kerbal::memory::ui_move_if_noexcept_ow_copy<Allocator, pointer, pointer>::phase1(alloc, first, last, to)
+							)
+						)
+					;
 
 					template <typename Allocator>
 					KERBAL_CONSTEXPR20

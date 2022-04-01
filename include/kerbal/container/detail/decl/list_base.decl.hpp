@@ -55,6 +55,15 @@ namespace kerbal
 		namespace detail
 		{
 
+			template <typename Tp>
+			struct is_list_radix_sort_acceptable_type :
+					kerbal::type_traits::bool_constant<
+						kerbal::type_traits::is_integral<Tp>::value &&
+						sizeof(Tp) <= 4
+					>
+			{
+			};
+
 			class list_type_unrelated
 			{
 				protected:
@@ -750,11 +759,6 @@ namespace kerbal
 
 
 				private:
-
-					typedef kerbal::type_traits::bool_constant<
-							kerbal::type_traits::is_integral<value_type>::value &&
-							sizeof(value_type) <= 4
-					> IS_LIST_RADIX_SORT_ACCEPTABLE_TYPE;
 
 					template <bool is_radix_sort_acceptable_type>
 					KERBAL_CONSTEXPR20

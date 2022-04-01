@@ -1966,60 +1966,17 @@ namespace kerbal
 
 
 
-#		if __cplusplus >= 201103L
-
-			template <typename Tp>
-			template <typename Allocator>
-			KERBAL_CONSTEXPR20
-			void vector_allocator_unrelated<Tp>::ui_move_if_noexcept_ow_copy_phase1_impl(Allocator & alloc, pointer first, pointer last, pointer to, UIMIN_VER_MOVE) KERBAL_NOEXCEPT
-			{
-				while (first != last) {
-					kerbal::memory::construct_at_using_allocator(alloc, &*to, kerbal::compatibility::move(*first)); // new (&*to) Tp (kerbal::compatibility::move(*first));
-					kerbal::memory::destroy_on_using_allocator(alloc, *first);
-					++to;
-					++first;
-				}
-			}
-
-#		endif
-
-			template <typename Tp>
-			template <typename Allocator>
-			KERBAL_CONSTEXPR20
-			void vector_allocator_unrelated<Tp>::ui_move_if_noexcept_ow_copy_phase1_impl(Allocator & alloc, pointer first, pointer last, pointer to, UIMIN_VER_COPY)
-			{
-				kerbal::memory::uninitialized_copy_using_allocator(alloc, const_pointer(first), const_pointer(last), to);
-			}
-
 			template <typename Tp>
 			template <typename Allocator>
 			KERBAL_CONSTEXPR20
 			void vector_allocator_unrelated<Tp>::ui_move_if_noexcept_ow_copy_phase1(Allocator & alloc, pointer first, pointer last, pointer to)
 					KERBAL_CONDITIONAL_NOEXCEPT(
-							noexcept(ui_move_if_noexcept_ow_copy_phase1_impl(alloc, first, last, to, UIMIN_VER()))
+						noexcept(
+							kerbal::memory::ui_move_if_noexcept_ow_copy<Allocator, pointer, pointer>::phase1(alloc, first, last, to)
+						)
 					)
 			{
-				ui_move_if_noexcept_ow_copy_phase1_impl(alloc, first, last, to, UIMIN_VER());
-			}
-
-
-#		if __cplusplus >= 201103L
-
-			template <typename Tp>
-			template <typename Allocator>
-			KERBAL_CONSTEXPR20
-			void vector_allocator_unrelated<Tp>::ui_move_if_noexcept_ow_copy_phase2_impl(Allocator & /*alloc*/, pointer /*first*/, pointer /*last*/, UIMIN_VER_MOVE) KERBAL_NOEXCEPT
-			{
-			}
-
-#		endif
-
-			template <typename Tp>
-			template <typename Allocator>
-			KERBAL_CONSTEXPR20
-			void vector_allocator_unrelated<Tp>::ui_move_if_noexcept_ow_copy_phase2_impl(Allocator & alloc, pointer first, pointer last, UIMIN_VER_COPY) KERBAL_NOEXCEPT
-			{
-				kerbal::memory::reverse_destroy_using_allocator(alloc, first, last);
+				kerbal::memory::ui_move_if_noexcept_ow_copy<Allocator, pointer, pointer>::phase1(alloc, first, last, to);
 			}
 
 			template <typename Tp>
@@ -2027,7 +1984,7 @@ namespace kerbal
 			KERBAL_CONSTEXPR20
 			void vector_allocator_unrelated<Tp>::ui_move_if_noexcept_ow_copy_phase2(Allocator & alloc, pointer first, pointer last) KERBAL_NOEXCEPT
 			{
-				ui_move_if_noexcept_ow_copy_phase2_impl(alloc, first, last, UIMIN_VER());
+				kerbal::memory::ui_move_if_noexcept_ow_copy<Allocator, pointer, pointer>::phase2(alloc, first, last);
 			}
 
 		} // namespace detail
