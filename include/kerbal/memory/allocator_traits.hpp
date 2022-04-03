@@ -35,7 +35,7 @@
 #	include <kerbal/utility/forward.hpp>
 #endif
 
-#include <memory> // std::construct_at
+#include <cstddef>
 
 #if __cplusplus >= 201103L
 #	include <type_traits>
@@ -568,6 +568,9 @@ namespace kerbal
 					template <typename T, typename ... Args>
 					KERBAL_CONSTEXPR20
 					static void _K_construct(kerbal::type_traits::false_type, Alloc&, T* p, Args&& ... args)
+							KERBAL_CONDITIONAL_NOEXCEPT(
+								noexcept(kerbal::memory::construct_at(p, kerbal::utility::forward<Args>(args)...))
+							)
 					{
 						kerbal::memory::construct_at(p, kerbal::utility::forward<Args>(args)...);
 					}
@@ -575,9 +578,9 @@ namespace kerbal
 					template <typename T, typename ... Args>
 					KERBAL_CONSTEXPR14
 					static void _K_construct(kerbal::type_traits::true_type, Alloc& alloc, T* p, Args&& ... args)
-													KERBAL_CONDITIONAL_NOEXCEPT(
-															noexcept(alloc.construct(p, kerbal::utility::forward<Args>(args)...))
-													)
+							KERBAL_CONDITIONAL_NOEXCEPT(
+								noexcept(alloc.construct(p, kerbal::utility::forward<Args>(args)...))
+							)
 					{
 						alloc.construct(p, kerbal::utility::forward<Args>(args)...);
 					}
@@ -586,6 +589,12 @@ namespace kerbal
 					template <typename T, typename ... Args>
 					KERBAL_CONSTEXPR14
 					static void construct(Alloc& alloc, T* p, Args&& ... args)
+							KERBAL_CONDITIONAL_NOEXCEPT(
+								noexcept
+									(_K_construct(allocator_could_use_construct<Alloc, T, Args...>(), alloc, p,
+												  kerbal::utility::forward<Args>(args)...)
+								)
+							)
 					{
 						_K_construct(allocator_could_use_construct<Alloc, T, Args...>(), alloc, p,
 									kerbal::utility::forward<Args>(args)...);
@@ -858,6 +867,11 @@ namespace kerbal
 				template <typename T, typename ... Args>
 				KERBAL_CONSTEXPR14
 				static void construct(Alloc & alloc, T * p, Args&& ... args)
+						KERBAL_CONDITIONAL_NOEXCEPT(
+							noexcept(
+								kerbal::memory::detail::allocator_traits_construct_helper<Alloc>::construct(alloc, p, kerbal::utility::forward<Args>(args)...)
+							)
+						)
 				{
 					kerbal::memory::detail::allocator_traits_construct_helper<Alloc>::construct(alloc, p, kerbal::utility::forward<Args>(args)...);
 				}
