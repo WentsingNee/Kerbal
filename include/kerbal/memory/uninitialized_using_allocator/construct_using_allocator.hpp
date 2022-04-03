@@ -18,6 +18,7 @@
 #include <kerbal/memory/uninitialized_using_allocator/destroy_using_allocator.hpp>
 #include <kerbal/type_traits/array_traits.hpp>
 #include <kerbal/type_traits/conditional.hpp>
+#include <kerbal/utility/declval.hpp>
 
 #if __cplusplus < 201103L
 #	include <kerbal/macro/macro_concat.hpp>
@@ -1088,6 +1089,108 @@ namespace kerbal
 
 			return detail::_K_uninitialized_fill_n_using_allocator(alloc, first, n, value, VER());
 		}
+
+
+
+	//==================
+	// ui_move_if_noexcept_ow_copy
+
+		namespace detail
+		{
+
+			typedef kerbal::type_traits::integral_constant<int, 0> UI_MOV_IF_NOEXCEPT_OW_CPY_VER_COPY;
+#	if __cplusplus >= 201103L
+			typedef kerbal::type_traits::integral_constant<int, 1> UI_MOV_IF_NOEXCEPT_OW_CPY_VER_MOVE;
+#	endif
+
+			template <typename Allocator, typename ForwardIterator, typename OutputIterator>
+			KERBAL_CONSTEXPR14
+			void _K_ui_move_if_noexcept_ow_copy_phase1(Allocator & alloc, ForwardIterator first, ForwardIterator last, OutputIterator to, UI_MOV_IF_NOEXCEPT_OW_CPY_VER_COPY)
+			{
+				kerbal::memory::uninitialized_copy_using_allocator(alloc, first, last, to);
+			}
+
+#	if __cplusplus >= 201103L
+
+			template <typename Allocator, typename ForwardIterator, typename OutputIterator>
+			KERBAL_CONSTEXPR14
+			void _K_ui_move_if_noexcept_ow_copy_phase1(Allocator & alloc, ForwardIterator first, ForwardIterator last, OutputIterator to, UI_MOV_IF_NOEXCEPT_OW_CPY_VER_MOVE) KERBAL_NOEXCEPT
+			{
+				while (first != last) {
+					kerbal::memory::construct_at_using_allocator(alloc, &*to, kerbal::compatibility::move(*first)); // new (&*to) Tp (kerbal::compatibility::move(*first));
+					kerbal::memory::destroy_on_using_allocator(alloc, *first);
+					++to;
+					++first;
+				}
+			}
+
+#	endif
+
+			template <typename Allocator, typename ForwardIterator>
+			KERBAL_CONSTEXPR14
+			void _K_ui_move_if_noexcept_ow_copy_phase2(Allocator & alloc, ForwardIterator first, ForwardIterator last, UI_MOV_IF_NOEXCEPT_OW_CPY_VER_COPY) KERBAL_NOEXCEPT
+			{
+				kerbal::memory::destroy_using_allocator(alloc, first, last);
+			}
+
+#	if __cplusplus >= 201103L
+
+			template <typename Allocator, typename ForwardIterator>
+			KERBAL_CONSTEXPR14
+			void _K_ui_move_if_noexcept_ow_copy_phase2(Allocator & /*alloc*/, ForwardIterator /*first*/, ForwardIterator /*last*/, UI_MOV_IF_NOEXCEPT_OW_CPY_VER_MOVE) KERBAL_NOEXCEPT
+			{
+			}
+
+#	endif
+
+		} // namespace detail
+
+		template <typename Allocator, typename ForwardIterator, typename OutputIterator>
+		struct ui_move_if_noexcept_ow_copy
+		{
+				typedef typename kerbal::iterator::iterator_traits<ForwardIterator>::value_type src_value_type;
+				typedef typename kerbal::iterator::iterator_traits<OutputIterator>::value_type target_value_type;
+
+#	if __cplusplus >= 201103L
+
+				typedef typename kerbal::type_traits::conditional<
+					(
+						noexcept(kerbal::utility::declval<ForwardIterator &>() != kerbal::utility::declval<ForwardIterator &>()) &&
+						noexcept(++kerbal::utility::declval<ForwardIterator &>()) &&
+						noexcept(++kerbal::utility::declval<OutputIterator &>()) &&
+						noexcept(
+							kerbal::memory::construct_at_using_allocator(
+								kerbal::utility::declval<Allocator &>(),
+								kerbal::utility::declval<target_value_type *>(),
+								kerbal::utility::declval<src_value_type &&>()
+							)
+						)
+					),
+					detail::UI_MOV_IF_NOEXCEPT_OW_CPY_VER_MOVE,
+					detail::UI_MOV_IF_NOEXCEPT_OW_CPY_VER_COPY
+				>::type VER;
+
+#	else
+
+				typedef detail::UI_MOV_IF_NOEXCEPT_OW_CPY_VER_COPY VER;
+
+#	endif
+
+				KERBAL_CONSTEXPR14
+				static void phase1(Allocator & alloc, ForwardIterator first, ForwardIterator last, OutputIterator to)
+				{
+					kerbal::memory::detail::_K_ui_move_if_noexcept_ow_copy_phase1(alloc, first, last, to, VER());
+				}
+
+				KERBAL_CONSTEXPR14
+				static void phase2(Allocator & alloc, ForwardIterator first, ForwardIterator last) KERBAL_NOEXCEPT
+				{
+					kerbal::memory::detail::_K_ui_move_if_noexcept_ow_copy_phase2(alloc, first, last, VER());
+				}
+
+		};
+
+
 
 	} // namespace memory
 
