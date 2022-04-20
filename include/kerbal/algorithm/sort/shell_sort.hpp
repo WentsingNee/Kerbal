@@ -81,7 +81,7 @@ namespace kerbal
 						++cnt;
 					}
 					dist |= kerbal::numeric::mask<differece_type>(cnt);
-					return dist;
+					return dist / 2;
 				}
 
 				KERBAL_CONSTEXPR14
@@ -150,21 +150,20 @@ namespace kerbal
 			difference_type dist(kerbal::iterator::distance(first, last));
 			difference_type stride(gap_reduce_policy.init_stride(dist));
 			do {
-				if (stride == 1) {
-					kerbal::algorithm::directly_insertion_sort(first, last, cmp);
+				if (stride == 0 || stride == 1) {
 					break;
-				} else {
-					iterator section_first(first); // first + i
-					for (difference_type i = 0; i < stride; ++i) {
-						kerbal::iterator::stride_iterator<iterator> stride_first(first, section_first, last, stride);
-						difference_type m((dist - i) % stride);
-						difference_type out((m != 0) ? (stride - m) : 0);
-						kerbal::iterator::stride_iterator<iterator> stride_last(first, last, last, stride, out);
-						kerbal::algorithm::directly_insertion_sort(stride_first, stride_last, cmp);
-						++section_first;
-					}
+				}
+				iterator section_first(first); // first + i
+				for (difference_type i = 0; i < stride; ++i) {
+					kerbal::iterator::stride_iterator<iterator> stride_first(first, section_first, last, stride);
+					difference_type m((dist - i) % stride);
+					difference_type out((m != 0) ? (stride - m) : 0);
+					kerbal::iterator::stride_iterator<iterator> stride_last(first, last, last, stride, out);
+					kerbal::algorithm::directly_insertion_sort(stride_first, stride_last, cmp);
+					++section_first;
 				}
 			} while (gap_reduce_policy(stride));
+			kerbal::algorithm::directly_insertion_sort(first, last, cmp);
 		}
 
 		template <typename BidirectionalIterator, typename Compare>
