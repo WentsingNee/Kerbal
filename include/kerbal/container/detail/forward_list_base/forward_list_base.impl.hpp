@@ -1306,6 +1306,7 @@ namespace kerbal
 					fl_allocator_unrelated (& buckets_to)[BUCKETS_NUM::value] = buckets[round % 2];
 
 					for (std::size_t i = 0; i < BUCKETS_NUM::value; ++i) {
+						buckets_to[i].head_node.next = NULL;
 						bucket_backs[i] = buckets_to[i].cbefore_begin();
 					}
 
@@ -1316,9 +1317,9 @@ namespace kerbal
 						while (it != cend) {
 							int bucket_id = (*it >> (RADIX_BIT_WIDTH * round)) % BUCKETS_NUM::value;
 							fl_allocator_unrelated & bucket_in = buckets_to[bucket_id];
-							++it;
-							bucket_in._K_splice_after(bucket_backs[bucket_id], bucket_out.cbefore_begin());
-							++bucket_backs[bucket_id];
+							node_base * splice_node = (it++).cast_to_mutable().current;
+							bucket_in._K_hook_node_after(bucket_backs[bucket_id], splice_node);
+							bucket_backs[bucket_id].current = splice_node;
 						}
 					}
 				}
