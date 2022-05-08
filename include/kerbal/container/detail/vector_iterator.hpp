@@ -31,9 +31,6 @@ namespace kerbal
 	namespace container
 	{
 
-		template <typename Tp, typename Allocator>
-		class vector;
-
 		namespace detail
 		{
 
@@ -73,11 +70,20 @@ namespace kerbal
 
 				public:
 					KERBAL_CONSTEXPR
+					vec_iter() KERBAL_NOEXCEPT :
+							current(NULL)
+					{
+					}
+
+				protected:
+					KERBAL_CONSTEXPR
 					explicit
 					vec_iter(pointer current) KERBAL_NOEXCEPT :
 							current(current)
 					{
 					}
+
+				public:
 
 					//===================
 					//forward iterator interface
@@ -183,11 +189,20 @@ namespace kerbal
 
 				public:
 					KERBAL_CONSTEXPR
+					vec_kiter() KERBAL_NOEXCEPT :
+							current(NULL)
+					{
+					}
+
+				protected:
+					KERBAL_CONSTEXPR
 					explicit
 					vec_kiter(pointer current) KERBAL_NOEXCEPT :
 							current(current)
 					{
 					}
+
+				public:
 
 					KERBAL_CONSTEXPR
 					vec_kiter(const iterator & iter) KERBAL_NOEXCEPT :
