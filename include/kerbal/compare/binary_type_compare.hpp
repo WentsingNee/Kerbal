@@ -1,5 +1,5 @@
 /**
- * @file       binary_type_predicate.hpp
+ * @file       binary_type_compare.hpp
  * @brief
  * @date       2018-9-7
  * @author     Peter
@@ -9,8 +9,8 @@
  *   all rights reserved
  */
 
-#ifndef KERBAL_ALGORITHM_BINARY_TYPE_PREDICATE_HPP
-#define KERBAL_ALGORITHM_BINARY_TYPE_PREDICATE_HPP
+#ifndef KERBAL_COMPARE_BINARY_TYPE_COMPARE_HPP
+#define KERBAL_COMPARE_BINARY_TYPE_COMPARE_HPP
 
 #include <kerbal/compatibility/constexpr.hpp>
 #include <kerbal/compatibility/noexcept.hpp>
@@ -19,7 +19,7 @@
 namespace kerbal
 {
 
-	namespace algorithm
+	namespace compare
 	{
 
 		template <typename Tp, typename Up>
@@ -82,8 +82,8 @@ namespace kerbal
 				}
 		};
 
-	} // namespace algorithm
+	} // namespace compare
 
 } // namespace kerbal
 
-#endif // KERBAL_ALGORITHM_BINARY_TYPE_PREDICATE_HPP
+#endif // KERBAL_COMPARE_BINARY_TYPE_COMPARE_HPP

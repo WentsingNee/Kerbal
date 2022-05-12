@@ -12,8 +12,8 @@
 #ifndef KERBAL_ALGORITHM_QUERIER_HPP
 #define KERBAL_ALGORITHM_QUERIER_HPP
 
-#include <kerbal/algorithm/binary_type_predicate.hpp>
 #include <kerbal/compare/basic_compare.hpp>
+#include <kerbal/compare/binary_type_compare.hpp>
 #include <kerbal/compatibility/constexpr.hpp>
 #include <kerbal/compatibility/move.hpp>
 #include <kerbal/compatibility/noexcept.hpp>
@@ -40,7 +40,7 @@ namespace kerbal
 			KERBAL_CONSTEXPR14
 			bool operator()(const Type & value) const
 			{
-				return kerbal::algorithm::binary_type_equal_to<Type, BindType>()(value, this->value);
+				return kerbal::compare::binary_type_equal_to<Type, BindType>()(value, this->value);
 			}
 		};
 
@@ -542,7 +542,7 @@ namespace kerbal
 			typedef typename kerbal::iterator::iterator_traits<ForwardIterator>::value_type value_type2;
 
 			return kerbal::algorithm::find_first_of(first, last, s_first, s_last,
-					kerbal::algorithm::binary_type_equal_to<value_type1, value_type2>());
+					kerbal::compare::binary_type_equal_to<value_type1, value_type2>());
 		}
 
 		template <typename ForwardIterator, typename BinaryPredicate>
@@ -571,7 +571,7 @@ namespace kerbal
 			typedef ForwardIterator iterator;
 			typedef typename kerbal::iterator::iterator_traits<iterator>::value_type value_type;
 
-			return kerbal::algorithm::adjacent_find(first, last, kerbal::algorithm::binary_type_equal_to<value_type, value_type>());
+			return kerbal::algorithm::adjacent_find(first, last, kerbal::compare::binary_type_equal_to<value_type, value_type>());
 		}
 
 

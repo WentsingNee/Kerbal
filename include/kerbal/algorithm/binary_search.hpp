@@ -12,9 +12,9 @@
 #ifndef KERBAL_ALGORITHM_BINARY_SEARCH_HPP
 #define KERBAL_ALGORITHM_BINARY_SEARCH_HPP
 
-#include <kerbal/algorithm/binary_type_predicate.hpp>
 #include <kerbal/algorithm/querier.hpp>
 #include <kerbal/compare/basic_compare.hpp>
+#include <kerbal/compare/binary_type_compare.hpp>
 #include <kerbal/compatibility/constexpr.hpp>
 #include <kerbal/compatibility/static_assert.hpp>
 #include <kerbal/iterator/iterator.hpp>
@@ -95,7 +95,7 @@ namespace kerbal
 		{
 			typedef ForwardIterator iterator;
 			typedef typename kerbal::iterator::iterator_traits<iterator>::value_type type;
-			return kerbal::algorithm::lower_bound(first, last, value, kerbal::algorithm::binary_type_less<type, Tp>());
+			return kerbal::algorithm::lower_bound(first, last, value, kerbal::compare::binary_type_less<type, Tp>());
 		}
 
 
@@ -122,7 +122,7 @@ namespace kerbal
 		{
 			typedef BidirectionalIterator iterator;
 			typedef typename kerbal::iterator::iterator_traits<iterator>::value_type type;
-			return kerbal::algorithm::lower_bound_backward(first, last, value, kerbal::algorithm::binary_type_less<type, Tp>());
+			return kerbal::algorithm::lower_bound_backward(first, last, value, kerbal::compare::binary_type_less<type, Tp>());
 		}
 
 
@@ -183,7 +183,7 @@ namespace kerbal
 		{
 			typedef ForwardIterator iterator;
 			typedef typename kerbal::iterator::iterator_traits<iterator>::value_type type;
-			return kerbal::algorithm::upper_bound(first, last, value, kerbal::algorithm::binary_type_less<Tp, type>());
+			return kerbal::algorithm::upper_bound(first, last, value, kerbal::compare::binary_type_less<Tp, type>());
 		}
 
 
@@ -210,7 +210,7 @@ namespace kerbal
 		{
 			typedef BidirectionalIterator iterator;
 			typedef typename kerbal::iterator::iterator_traits<iterator>::value_type type;
-			return kerbal::algorithm::upper_bound_backward(first, last, value, kerbal::algorithm::binary_type_less<type, Tp>());
+			return kerbal::algorithm::upper_bound_backward(first, last, value, kerbal::compare::binary_type_less<type, Tp>());
 		}
 
 
@@ -397,7 +397,7 @@ namespace kerbal
 		{
 			typedef ForwardIterator iterator;
 			typedef typename kerbal::iterator::iterator_traits<iterator>::value_type type;
-			return lower_bound_hint(first, last, value, hint, kerbal::algorithm::binary_type_less<type, Tp>());
+			return lower_bound_hint(first, last, value, hint, kerbal::compare::binary_type_less<type, Tp>());
 		}
 
 
@@ -491,7 +491,7 @@ namespace kerbal
 		{
 			typedef ForwardIterator iterator;
 			typedef typename kerbal::iterator::iterator_traits<iterator>::value_type type;
-			return upper_bound_hint(first, last, value, hint, kerbal::algorithm::binary_type_less<Tp, type>());
+			return upper_bound_hint(first, last, value, hint, kerbal::compare::binary_type_less<Tp, type>());
 		}
 
 

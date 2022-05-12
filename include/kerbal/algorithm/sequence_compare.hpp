@@ -12,8 +12,8 @@
 #ifndef KERBAL_ALGORITHM_SEQUENCE_COMPARE_HPP
 #define KERBAL_ALGORITHM_SEQUENCE_COMPARE_HPP
 
-#include <kerbal/algorithm/binary_type_predicate.hpp>
 #include <kerbal/compare/basic_compare.hpp>
+#include <kerbal/compare/binary_type_compare.hpp>
 #include <kerbal/compatibility/constexpr.hpp>
 #include <kerbal/compatibility/noexcept.hpp>
 #include <kerbal/compatibility/static_assert.hpp>
@@ -125,7 +125,7 @@ namespace kerbal
 								InputIterator2 b_first, InputIterator2 b_last)
 				KERBAL_CONDITIONAL_NOEXCEPT(
 						noexcept(sequence_equal_to(a_first, a_last, b_first, b_last,
-								binary_type_equal_to<
+								kerbal::compare::binary_type_equal_to<
 									typename kerbal::iterator::iterator_traits<InputIterator1>::value_type,
 									typename kerbal::iterator::iterator_traits<InputIterator2>::value_type
 								>()))
@@ -135,7 +135,7 @@ namespace kerbal
 			typedef InputIterator2 iterator2;
 			typedef typename kerbal::iterator::iterator_traits<iterator1>::value_type Tp;
 			typedef typename kerbal::iterator::iterator_traits<iterator2>::value_type Up;
-			return sequence_equal_to(a_first, a_last, b_first, b_last, binary_type_equal_to<Tp, Up>());
+			return sequence_equal_to(a_first, a_last, b_first, b_last, kerbal::compare::binary_type_equal_to<Tp, Up>());
 		}
 
 		template <typename Container1, typename Container2, typename BinaryTypeEqualToPredicate>
@@ -282,7 +282,7 @@ namespace kerbal
 			typedef InputIterator2 iterator2;
 			typedef typename kerbal::iterator::iterator_traits<iterator1>::value_type Tp;
 			typedef typename kerbal::iterator::iterator_traits<iterator2>::value_type Up;
-			return sequence_not_equal_to(a_first, a_last, b_first, b_last, binary_type_not_equal_to<Tp, Up>());
+			return sequence_not_equal_to(a_first, a_last, b_first, b_last, kerbal::compare::binary_type_not_equal_to<Tp, Up>());
 		}
 
 		template <typename Container1, typename Container2, typename BinaryTypeNotEqualToPredicate>

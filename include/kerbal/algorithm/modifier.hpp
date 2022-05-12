@@ -13,10 +13,10 @@
 #define KERBAL_ALGORITHM_MODIFIER_HPP
 
 #include <kerbal/algorithm/binary_search.hpp>
-#include <kerbal/algorithm/binary_type_predicate.hpp>
 #include <kerbal/algorithm/querier.hpp>
 #include <kerbal/algorithm/swap.hpp>
 #include <kerbal/compare/basic_compare.hpp>
+#include <kerbal/compare/binary_type_compare.hpp>
 #include <kerbal/compatibility/constexpr.hpp>
 #include <kerbal/compatibility/move.hpp>
 #include <kerbal/compatibility/noexcept.hpp>
@@ -346,7 +346,7 @@ namespace kerbal
 			typedef InputIterator2 iterator2;
 			typedef typename kerbal::iterator::iterator_traits<iterator1>::value_type type1;
 			typedef typename kerbal::iterator::iterator_traits<iterator2>::value_type type2;
-			return kerbal::algorithm::merge(a_first, a_last, b_first, b_last, to, kerbal::algorithm::binary_type_less<type2, type1>());
+			return kerbal::algorithm::merge(a_first, a_last, b_first, b_last, to, kerbal::compare::binary_type_less<type2, type1>());
 		}
 
 

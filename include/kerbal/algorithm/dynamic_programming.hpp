@@ -13,9 +13,9 @@
 #define KERBAL_ALGORITHM_DYNAMIC_PROGRAMMING_HPP
 
 #include <kerbal/algorithm/binary_search.hpp>
-#include <kerbal/algorithm/binary_type_predicate.hpp>
 #include <kerbal/algorithm/modifier.hpp>
 #include <kerbal/compare/basic_compare.hpp>
+#include <kerbal/compare/binary_type_compare.hpp>
 #include <kerbal/compatibility/constexpr.hpp>
 #include <kerbal/container/nonmember_container_access.hpp>
 #include <kerbal/iterator/general_back_inserter.hpp>
@@ -93,7 +93,7 @@ namespace kerbal
 			typedef typename std::iterator_traits<ForwardIterator1>::value_type value_type1;
 			typedef typename std::iterator_traits<InputIterator2>::value_type value_type2;
 			return kerbal::algorithm::longest_common_subsequence(a_first, a_last, b_first, b_last,
-					kerbal::algorithm::binary_type_equal_to<value_type1, value_type2>());
+					kerbal::compare::binary_type_equal_to<value_type1, value_type2>());
 		}
 
 
@@ -247,7 +247,7 @@ namespace kerbal
 			typedef typename std::iterator_traits<ForwardIterator1>::value_type value_type1;
 			typedef typename std::iterator_traits<InputIterator2>::value_type value_type2;
 			return kerbal::algorithm::edit_distance(a_first, a_last, b_first, b_last,
-					kerbal::algorithm::binary_type_equal_to<value_type1, value_type2>());
+					kerbal::compare::binary_type_equal_to<value_type1, value_type2>());
 		}
 
 	} // namespace algorithm
