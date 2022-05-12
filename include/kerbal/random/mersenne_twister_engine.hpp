@@ -12,7 +12,7 @@
 #ifndef KERBAL_RANDOM_MERSENNE_TWISTER_ENGINE_HPP
 #define KERBAL_RANDOM_MERSENNE_TWISTER_ENGINE_HPP
 
-#include <kerbal/algorithm/sequence_compare.hpp>
+#include <kerbal/compare/sequence_compare.hpp>
 #include <kerbal/compatibility/constexpr.hpp>
 #include <kerbal/compatibility/fixed_width_integer.hpp>
 #include <kerbal/compatibility/noexcept.hpp>
@@ -232,14 +232,14 @@ namespace kerbal
 				bool operator==(const mersenne_twister_engine & rhs) const KERBAL_NOEXCEPT
 				{
 					return this->mti == rhs.mti &&
-							static_cast<bool>(kerbal::algorithm::sequence_equal_to(this->mt, rhs.mt));
+							static_cast<bool>(kerbal::compare::sequence_equal_to(this->mt, rhs.mt));
 				}
 
 				KERBAL_CONSTEXPR14
 				bool operator!=(const mersenne_twister_engine & rhs) const KERBAL_NOEXCEPT
 				{
 					return this->mti != rhs.mti ||
-							static_cast<bool>(kerbal::algorithm::sequence_not_equal_to(this->mt, rhs.mt));
+							static_cast<bool>(kerbal::compare::sequence_not_equal_to(this->mt, rhs.mt));
 				}
 
 		};

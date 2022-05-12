@@ -9,8 +9,8 @@
  *   all rights reserved
  */
 
-#ifndef KERBAL_ALGORITHM_SEQUENCE_COMPARE_HPP
-#define KERBAL_ALGORITHM_SEQUENCE_COMPARE_HPP
+#ifndef KERBAL_COMPARE_SEQUENCE_COMPARE_HPP
+#define KERBAL_COMPARE_SEQUENCE_COMPARE_HPP
 
 #include <kerbal/compare/basic_compare.hpp>
 #include <kerbal/compare/binary_type_compare.hpp>
@@ -27,7 +27,7 @@
 namespace kerbal
 {
 
-	namespace algorithm
+	namespace compare
 	{
 
 		template <typename InputIterator1, typename InputIterator2, typename BinaryTypeEqualToPredicate>
@@ -603,8 +603,8 @@ namespace kerbal
 			);
 		}
 
-	} // namespace algorithm
+	} // namespace compare
 
 } // namespace kerbal
 
-#endif // KERBAL_ALGORITHM_SEQUENCE_COMPARE_HPP
+#endif // KERBAL_COMPARE_SEQUENCE_COMPARE_HPP

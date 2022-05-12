@@ -12,9 +12,9 @@
 #ifndef KERBAL_CONTAINER_DECL_FORWARD_LIST_DECL_HPP
 #define KERBAL_CONTAINER_DECL_FORWARD_LIST_DECL_HPP
 
-#include <kerbal/algorithm/sequence_compare.hpp>
 #include <kerbal/algorithm/swap.hpp>
 #include <kerbal/assign/ilist.hpp>
+#include <kerbal/compare/sequence_compare.hpp>
 #include <kerbal/compatibility/constexpr.hpp>
 #include <kerbal/compatibility/move.hpp>
 #include <kerbal/compatibility/namespace_std_scope.hpp>
@@ -530,42 +530,42 @@ namespace kerbal
 		KERBAL_CONSTEXPR20
 		bool operator==(const forward_list<Tp, Allocator> & lhs, const forward_list<Tp, Allocator> & rhs)
 		{
-			return kerbal::algorithm::sequence_equal_to(lhs.cbegin(), lhs.cend(), rhs.cbegin(), rhs.cend());
+			return kerbal::compare::sequence_equal_to(lhs.cbegin(), lhs.cend(), rhs.cbegin(), rhs.cend());
 		}
 
 		template <typename Tp, typename Allocator>
 		KERBAL_CONSTEXPR20
 		bool operator!=(const forward_list<Tp, Allocator> & lhs, const forward_list<Tp, Allocator> & rhs)
 		{
-			return kerbal::algorithm::sequence_not_equal_to(lhs.cbegin(), lhs.cend(), rhs.cbegin(), rhs.cend());
+			return kerbal::compare::sequence_not_equal_to(lhs.cbegin(), lhs.cend(), rhs.cbegin(), rhs.cend());
 		}
 
 		template <typename Tp, typename Allocator>
 		KERBAL_CONSTEXPR20
 		bool operator<(const forward_list<Tp, Allocator> & lhs, const forward_list<Tp, Allocator> & rhs)
 		{
-			return kerbal::algorithm::sequence_less(lhs.cbegin(), lhs.cend(), rhs.cbegin(), rhs.cend());
+			return kerbal::compare::sequence_less(lhs.cbegin(), lhs.cend(), rhs.cbegin(), rhs.cend());
 		}
 
 		template <typename Tp, typename Allocator>
 		KERBAL_CONSTEXPR20
 		bool operator>(const forward_list<Tp, Allocator> & lhs, const forward_list<Tp, Allocator> & rhs)
 		{
-			return kerbal::algorithm::sequence_greater(lhs.cbegin(), lhs.cend(), rhs.cbegin(), rhs.cend());
+			return kerbal::compare::sequence_greater(lhs.cbegin(), lhs.cend(), rhs.cbegin(), rhs.cend());
 		}
 
 		template <typename Tp, typename Allocator>
 		KERBAL_CONSTEXPR20
 		bool operator<=(const forward_list<Tp, Allocator> & lhs, const forward_list<Tp, Allocator> & rhs)
 		{
-			return kerbal::algorithm::sequence_less_equal(lhs.cbegin(), lhs.cend(), rhs.cbegin(), rhs.cend());
+			return kerbal::compare::sequence_less_equal(lhs.cbegin(), lhs.cend(), rhs.cbegin(), rhs.cend());
 		}
 
 		template <typename Tp, typename Allocator>
 		KERBAL_CONSTEXPR20
 		bool operator>=(const forward_list<Tp, Allocator> & lhs, const forward_list<Tp, Allocator> & rhs)
 		{
-			return kerbal::algorithm::sequence_greater_equal(lhs.cbegin(), lhs.cend(), rhs.cbegin(), rhs.cend());
+			return kerbal::compare::sequence_greater_equal(lhs.cbegin(), lhs.cend(), rhs.cbegin(), rhs.cend());
 		}
 
 	} // namespace container

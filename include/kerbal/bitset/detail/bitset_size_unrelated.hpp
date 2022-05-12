@@ -13,7 +13,7 @@
 #define KERBAL_BITSET_DETAIL_BITSET_SIZE_UNRELATED_HPP
 
 #include <kerbal/algorithm/modifier.hpp>
-#include <kerbal/algorithm/sequence_compare.hpp>
+#include <kerbal/compare/sequence_compare.hpp>
 #include <kerbal/numeric/bit.hpp>
 #include <kerbal/type_traits/integral_constant.hpp>
 
@@ -334,7 +334,7 @@ namespace kerbal
 					KERBAL_CONSTEXPR14
 					static bool equal_chunk(const block_type block[], const block_type ano[], block_size_type trunk_size) KERBAL_NOEXCEPT
 					{
-						return kerbal::algorithm::sequence_equal_to(
+						return kerbal::compare::sequence_equal_to(
 								block, block + trunk_size,
 								ano, ano + trunk_size
 						);

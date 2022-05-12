@@ -14,8 +14,8 @@
 
 #include <kerbal/container/fwd/array.fwd.hpp>
 
-#include <kerbal/algorithm/sequence_compare.hpp>
 #include <kerbal/assign/ilist.hpp>
+#include <kerbal/compare/sequence_compare.hpp>
 #include <kerbal/compatibility/constexpr.hpp>
 #include <kerbal/compatibility/namespace_std_scope.hpp>
 #include <kerbal/compatibility/noexcept.hpp>
@@ -304,42 +304,42 @@ namespace kerbal
 		KERBAL_CONSTEXPR14
 		bool operator==(const array<Tp, N> & lhs, const array<Tp, N> & rhs)
 		{
-			return kerbal::algorithm::sequence_equal_to(lhs.cbegin(), lhs.cend(), rhs.cbegin(), rhs.cend());
+			return kerbal::compare::sequence_equal_to(lhs.cbegin(), lhs.cend(), rhs.cbegin(), rhs.cend());
 		}
 
 		template <typename Tp, size_t N>
 		KERBAL_CONSTEXPR14
 		bool operator!=(const array<Tp, N> & lhs, const array<Tp, N> & rhs)
 		{
-			return kerbal::algorithm::sequence_not_equal_to(lhs.cbegin(), lhs.cend(), rhs.cbegin(), rhs.cend());
+			return kerbal::compare::sequence_not_equal_to(lhs.cbegin(), lhs.cend(), rhs.cbegin(), rhs.cend());
 		}
 
 		template <typename Tp, size_t M, size_t N>
 		KERBAL_CONSTEXPR14
 		bool operator<(const array<Tp, M> & lhs, const array<Tp, N> & rhs)
 		{
-			return kerbal::algorithm::sequence_less(lhs.cbegin(), lhs.cend(), rhs.cbegin(), rhs.cend());
+			return kerbal::compare::sequence_less(lhs.cbegin(), lhs.cend(), rhs.cbegin(), rhs.cend());
 		}
 
 		template <typename Tp, size_t M, size_t N>
 		KERBAL_CONSTEXPR14
 		bool operator<=(const array<Tp, M> & lhs, const array<Tp, N> & rhs)
 		{
-			return kerbal::algorithm::sequence_less_equal(lhs.cbegin(), lhs.cend(), rhs.cbegin(), rhs.cend());
+			return kerbal::compare::sequence_less_equal(lhs.cbegin(), lhs.cend(), rhs.cbegin(), rhs.cend());
 		}
 
 		template <typename Tp, size_t M, size_t N>
 		KERBAL_CONSTEXPR14
 		bool operator>(const array<Tp, M> & lhs, const array<Tp, N> & rhs)
 		{
-			return kerbal::algorithm::sequence_greater(lhs.cbegin(), lhs.cend(), rhs.cbegin(), rhs.cend());
+			return kerbal::compare::sequence_greater(lhs.cbegin(), lhs.cend(), rhs.cbegin(), rhs.cend());
 		}
 
 		template <typename Tp, size_t M, size_t N>
 		KERBAL_CONSTEXPR14
 		bool operator>=(const array<Tp, M> & lhs, const array<Tp, N> & rhs)
 		{
-			return kerbal::algorithm::sequence_greater_equal(lhs.cbegin(), lhs.cend(), rhs.cbegin(), rhs.cend());
+			return kerbal::compare::sequence_greater_equal(lhs.cbegin(), lhs.cend(), rhs.cbegin(), rhs.cend());
 		}
 
 	} // namespace container
