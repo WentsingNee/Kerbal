@@ -663,6 +663,12 @@ namespace kerbal
 				{
 				}
 
+#		if __cplusplus >= 201103L
+
+				explicit member_compress_helper(const member_compress_helper & arg) = default;
+
+#		endif
+
 				template <size_t J>
 				KERBAL_CONSTEXPR14
 				explicit member_compress_helper(const member_compress_helper<T, J> & arg) KERBAL_NOEXCEPT:
