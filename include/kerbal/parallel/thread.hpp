@@ -28,6 +28,7 @@
 #endif
 
 #if __cplusplus >= 201103L
+#	include <kerbal/function/invoke.hpp>
 #	include <kerbal/utility/forward.hpp>
 #	include <kerbal/utility/integer_sequence.hpp>
 #endif
@@ -139,7 +140,7 @@ namespace kerbal
 				static void apply(kerbal::utility::tuple<Callable, Args...> & pack,
 									kerbal::utility::integer_sequence<std::size_t, I...>)
 				{
-					pack.template get<0>()(pack.template get<I + 1>()...);
+					kerbal::function::invoke(pack.template get<0>(), pack.template get<I + 1>()...);
 				}
 
 			public:
