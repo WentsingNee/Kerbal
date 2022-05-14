@@ -16,7 +16,6 @@
 #include <kerbal/compatibility/constexpr.hpp>
 #include <kerbal/compatibility/noexcept.hpp>
 #include <kerbal/memory/allocator_traits.hpp>
-#include <kerbal/memory/guard.hpp>
 #include <kerbal/type_traits/decay.hpp>
 #include <kerbal/utility/noncopyable.hpp>
 #include <kerbal/utility/throw_this_exception.hpp>
@@ -299,23 +298,34 @@ namespace kerbal
 					{ \
 							static void* start_rtn(void * fun_args_pack_v) \
 							{ \
-								const fun_args_pack_t * fun_args_pack_p = static_cast<fun_args_pack_t*>(fun_args_pack_v); \
-								kerbal::memory::guard<const fun_args_pack_t> guard(fun_args_pack_p); \
+								fun_args_pack_t * fun_args_pack_p = static_cast<fun_args_pack_t*>(fun_args_pack_v); \
+								dealloc_helper dealloc_h(fun_args_pack_p); \
+								destroy_helper destroy_h(fun_args_pack_p); \
 								fun_args_pack_p->template get<0>()(KERBAL_OPT_PPEXPAND_WITH_COMMA_N(REMAINF, EMPTY, FUN_ARGS_PACK_EXPAND_ARG, i)); \
 								return NULL; \
 							} \
 					}; \
-					void * fun_args_pack_p = new fun_args_pack_t( \
+ \
+					rebind_allocator alloc(rebind_alloc<fun_args_pack_t>()); \
+					fun_args_pack_t * fun_args_pack_p = rebind_allocator_traits::allocate(alloc, 1); \
+					dealloc_helper dealloc_h(fun_args_pack_p); \
+ \
+					rebind_allocator_traits::construct( \
+							alloc, fun_args_pack_p, \
 							fun \
 							KERBAL_OPT_PPEXPAND_WITH_COMMA_N(LEFT_JOIN_COMMA, EMPTY, ARGS_USE, i) \
 					); \
+					destroy_helper destroy_h(fun_args_pack_p); \
+ \
 					void * fun_args_pack_v = reinterpret_cast<void*>(fun_args_pack_p); \
 					int err = ::pthread_create(&this->_K_th_id.native_handle, NULL, helper::start_rtn, fun_args_pack_v); \
 					if (err != 0) { \
-						delete fun_args_pack_p; \
 						kerbal::utility::throw_this_exception_helper< \
 								kerbal::parallel::thread_create_failed \
 						>::throw_this_exception(); \
+					} else { \
+						destroy_h.p = NULL; \
+						dealloc_h.p = NULL; \
 					} \
 				}
 
