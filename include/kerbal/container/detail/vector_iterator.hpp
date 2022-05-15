@@ -15,7 +15,6 @@
 #include <kerbal/compatibility/constexpr.hpp>
 #include <kerbal/compatibility/noexcept.hpp>
 #include <kerbal/iterator/iterator_traits.hpp>
-#include <kerbal/iterator/reverse_iterator.hpp>
 #include <kerbal/operators/addable.hpp>
 #include <kerbal/operators/dereferenceable.hpp>
 #include <kerbal/operators/equality_comparable.hpp>
@@ -276,28 +275,6 @@ namespace kerbal
 		} //namespace detail
 
 	} //namespace container
-
-	namespace iterator
-	{
-
-		namespace detail
-		{
-
-			template <typename Tp>
-			struct reverse_iterator_base_is_inplace<kerbal::container::detail::vec_iter<Tp> >:
-					kerbal::type_traits::true_type
-			{
-			};
-
-			template <typename Tp>
-			struct reverse_iterator_base_is_inplace<kerbal::container::detail::vec_kiter<Tp> >:
-					kerbal::type_traits::true_type
-			{
-			};
-
-		} // namespace detail
-
-	} // namespace iterator
 
 } //namespace kerbal
 
