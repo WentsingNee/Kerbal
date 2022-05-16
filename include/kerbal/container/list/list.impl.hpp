@@ -730,6 +730,22 @@ namespace kerbal
 		}
 
 		template <typename Tp, typename Allocator>
+		template <typename ValueTypeAllocator, typename BinaryPredict>
+		KERBAL_CONSTEXPR20
+		void list<Tp, Allocator>::sort_afford_allocator(ValueTypeAllocator & alloc, const_iterator first, const_iterator last, BinaryPredict cmp)
+		{
+			list_type_only::k_sort_afford_allocator(alloc, first, last, cmp);
+		}
+
+		template <typename Tp, typename Allocator>
+		template <typename ValueTypeAllocator>
+		KERBAL_CONSTEXPR20
+		void list<Tp, Allocator>::sort_afford_allocator(ValueTypeAllocator & alloc, const_iterator first, const_iterator last)
+		{
+			list_type_only::k_sort_afford_allocator(alloc, first, last);
+		}
+
+		template <typename Tp, typename Allocator>
 		KERBAL_CONSTEXPR20
 		typename list<Tp, Allocator>::size_type
 		list<Tp, Allocator>::remove(const_reference val)

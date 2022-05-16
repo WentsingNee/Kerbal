@@ -1640,6 +1640,99 @@ namespace kerbal
 			}
 
 			template <typename Tp>
+			template <typename ValueTypeAllocator, typename BinaryPredict>
+			KERBAL_CONSTEXPR20
+			void list_type_only<Tp>::k_sort_afford_allocator(ValueTypeAllocator & alloc, const_iterator first, const_iterator last, BinaryPredict cmp)
+			{
+				if (first == last) {
+					return;
+				}
+
+				typedef kerbal::memory::allocator_traits<ValueTypeAllocator> allocator_traits;
+				typedef typename allocator_traits::template rebind_alloc<node_base*>::other ptr_allocator;
+				typedef kerbal::memory::allocator_traits<ptr_allocator> ptr_allocator_traits;
+
+				ptr_allocator ptr_alloc(alloc);
+				size_type n(kerbal::iterator::distance(first, last));
+
+				node_base** buffer = ptr_allocator_traits::allocate(ptr_alloc, n + 2);
+
+				{
+					iterator it = first.cast_to_mutable();
+					buffer[0] = it.current->prev;
+					size_type i = 1;
+					while (it != last) {
+						buffer[i] = it.current;
+						++it;
+						++i;
+					}
+					buffer[i] = it.current;
+				}
+
+				struct cmp_by_ptr_points_to
+				{
+						BinaryPredict & cmp;
+
+						KERBAL_CONSTEXPR20
+						cmp_by_ptr_points_to(BinaryPredict & cmp) KERBAL_NOEXCEPT :
+								cmp(cmp)
+						{
+						}
+
+						KERBAL_CONSTEXPR20
+						bool operator()(const node_base * const & lhs, const node_base * const & rhs)
+						{
+							const node * a = static_cast<const node*>(lhs);
+							const node * b = static_cast<const node*>(rhs);
+							return cmp(a->value, b->value);
+						}
+				};
+
+				try {
+					kerbal::algorithm::sort(buffer + 1, buffer + 1 + n, cmp_by_ptr_points_to(cmp));
+				} catch (...) {
+					ptr_allocator_traits::deallocate(ptr_alloc, buffer, n + 2);
+					throw;
+				}
+
+				{
+					buffer[0]->next = buffer[1];
+					for (size_type i = 1; i < n + 1; ++i) {
+						buffer[i]->prev = buffer[i - 1];
+						buffer[i]->next = buffer[i + 1];
+					}
+					buffer[n + 1]->prev = buffer[n];
+				}
+
+				ptr_allocator_traits::deallocate(ptr_alloc, buffer, n + 2);
+
+			}
+
+			template <typename Tp>
+			template <typename ValueTypeAllocator>
+			KERBAL_CONSTEXPR20
+			void list_type_only<Tp>::k_sort_afford_allocator(ValueTypeAllocator & alloc, const_iterator first, const_iterator last)
+			{
+				k_sort_afford_allocator(alloc, first, last, kerbal::compare::less<value_type>());
+			}
+
+			template <typename Tp>
+			template <typename ValueTypeAllocator, typename BinaryPredict>
+			KERBAL_CONSTEXPR20
+			void list_type_only<Tp>::sort_afford_allocator(ValueTypeAllocator & alloc, BinaryPredict cmp)
+			{
+				k_sort_afford_allocator(alloc, this->begin(), this->end(), cmp);
+			}
+
+			template <typename Tp>
+			template <typename ValueTypeAllocator>
+			KERBAL_CONSTEXPR20
+			void list_type_only<Tp>::sort_afford_allocator(ValueTypeAllocator & alloc)
+			{
+				k_sort_afford_allocator(alloc, this->begin(), this->end());
+			}
+
+			template <typename Tp>
 			template <typename NodeAllocator>
 			KERBAL_CONSTEXPR20
 			typename list_type_only<Tp>::size_type

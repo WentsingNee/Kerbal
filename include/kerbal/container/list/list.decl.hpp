@@ -555,6 +555,16 @@ namespace kerbal
 
 				using list_type_only::sort;
 
+				template <typename ValueTypeAllocator, typename BinaryPredict>
+				KERBAL_CONSTEXPR20
+				void sort_afford_allocator(ValueTypeAllocator & alloc, const_iterator first, const_iterator last, BinaryPredict cmp);
+
+				template <typename ValueTypeAllocator>
+				KERBAL_CONSTEXPR20
+				void sort_afford_allocator(ValueTypeAllocator & alloc, const_iterator first, const_iterator last);
+
+				using list_type_only::sort_afford_allocator;
+
 				KERBAL_CONSTEXPR20
 				size_type remove(const_reference val);
 
