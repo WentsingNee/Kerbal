@@ -17,7 +17,7 @@
 
 #include <stdexcept>
 
-#include <kerbal/parallel/fwd/thread.fwd.hpp>
+#include <kerbal/parallel/thread/thread.fwd.hpp>
 
 
 namespace kerbal
