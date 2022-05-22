@@ -15,6 +15,7 @@
 #include <kerbal/compatibility/noexcept.hpp>
 #include <kerbal/container/vector.hpp>
 
+#include <cstddef>
 #include <cstdio>
 
 
@@ -43,7 +44,7 @@ namespace kerbal
 		}
 
 		inline
-		void run_test_case(size_t case_id, int, char*[])
+		void run_test_case(std::size_t case_id, int, char*[])
 		{
 			register_list_type & register_list = __get_register_list();
 			typedef register_list_type::const_reference const_reference;

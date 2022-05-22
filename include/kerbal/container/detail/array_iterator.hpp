@@ -25,6 +25,8 @@
 #include <kerbal/operators/less_than_comparable.hpp>
 #include <kerbal/operators/subtractable.hpp>
 
+#include <cstddef>
+
 
 namespace kerbal
 {
@@ -145,7 +147,7 @@ namespace kerbal
 			class __arr_iter: public __arr_iterbase<__arr_iter<ValueType>, ValueType*>
 			{
 				private:
-					template <typename Tp, size_t N>
+					template <typename Tp, std::size_t N>
 					friend class kerbal::container::array;
 
 					friend class __arr_kiter<ValueType>;
@@ -164,7 +166,7 @@ namespace kerbal
 			class __arr_kiter: public __arr_iterbase<__arr_kiter<ValueType>, const ValueType*>
 			{
 				private:
-					template <typename Tp, size_t N>
+					template <typename Tp, std::size_t N>
 					friend class kerbal::container::array;
 
 					typedef __arr_iterbase<__arr_kiter<ValueType>, const ValueType*> super;

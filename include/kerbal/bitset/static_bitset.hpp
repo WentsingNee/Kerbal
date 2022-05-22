@@ -71,7 +71,7 @@ namespace kerbal
 				typedef Block													block_type;
 				typedef typename bitset_size_unrelated::BITS_PER_BLOCK			BITS_PER_BLOCK;
 
-				typedef size_t													size_type;
+				typedef std::size_t													size_type;
 				typedef kerbal::type_traits::integral_constant<size_type, N>	SIZE;
 
 				typedef kerbal::type_traits::bool_constant<

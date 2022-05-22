@@ -18,7 +18,10 @@
 #include <kerbal/numeric/bit.hpp>
 #include <kerbal/type_traits/is_same.hpp>
 
+#include <cstddef>
+
 #include <kerbal/hash/sha1.hpp>
+
 
 namespace kerbal
 {
@@ -28,7 +31,7 @@ namespace kerbal
 
 		KERBAL_CONSTEXPR14
 		inline
-		void SHA1_context_base::R1(const uint32_t * w, uint32_t a, uint32_t & b, uint32_t c, uint32_t d, uint32_t & e, size_t i) KERBAL_NOEXCEPT
+		void SHA1_context_base::R1(const uint32_t * w, uint32_t a, uint32_t & b, uint32_t c, uint32_t d, uint32_t & e, std::size_t i) KERBAL_NOEXCEPT
 		{
 			e += w[i];
 			e += kerbal::numeric::rotl(a, 5);
@@ -38,7 +41,7 @@ namespace kerbal
 
 		KERBAL_CONSTEXPR14
 		inline
-		void SHA1_context_base::R2(const uint32_t * w, uint32_t a, uint32_t & b, uint32_t c, uint32_t d, uint32_t & e, size_t i) KERBAL_NOEXCEPT
+		void SHA1_context_base::R2(const uint32_t * w, uint32_t a, uint32_t & b, uint32_t c, uint32_t d, uint32_t & e, std::size_t i) KERBAL_NOEXCEPT
 		{
 			e += w[i];
 			e += kerbal::numeric::rotl(a, 5);
@@ -48,7 +51,7 @@ namespace kerbal
 
 		KERBAL_CONSTEXPR14
 		inline
-		void SHA1_context_base::R3(const uint32_t * w, uint32_t a, uint32_t & b, uint32_t c, uint32_t d, uint32_t & e, size_t i) KERBAL_NOEXCEPT
+		void SHA1_context_base::R3(const uint32_t * w, uint32_t a, uint32_t & b, uint32_t c, uint32_t d, uint32_t & e, std::size_t i) KERBAL_NOEXCEPT
 		{
 			e += w[i];
 			e += kerbal::numeric::rotl(a, 5);
@@ -58,7 +61,7 @@ namespace kerbal
 
 		KERBAL_CONSTEXPR14
 		inline
-		void SHA1_context_base::R4(const uint32_t * w, uint32_t a, uint32_t & b, uint32_t c, uint32_t d, uint32_t & e, size_t i) KERBAL_NOEXCEPT
+		void SHA1_context_base::R4(const uint32_t * w, uint32_t a, uint32_t & b, uint32_t c, uint32_t d, uint32_t & e, std::size_t i) KERBAL_NOEXCEPT
 		{
 			e += w[i];
 			e += kerbal::numeric::rotl(a, 5);

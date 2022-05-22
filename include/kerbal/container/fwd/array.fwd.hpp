@@ -20,7 +20,7 @@ namespace kerbal
 	namespace container
 	{
 
-		template <typename Tp, size_t N>
+		template <typename Tp, std::size_t N>
 		class array;
 
 		namespace detail

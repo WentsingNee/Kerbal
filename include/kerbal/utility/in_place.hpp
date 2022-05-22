@@ -30,7 +30,7 @@ namespace kerbal
 				typedef Tp type;
 		};
 
-		template <size_t I>
+		template <std::size_t I>
 		struct in_place_index_t
 		{
 		};

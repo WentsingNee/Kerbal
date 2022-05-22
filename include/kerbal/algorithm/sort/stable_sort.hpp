@@ -21,6 +21,7 @@
 #include <kerbal/memory/allocator_traits.hpp>
 #include <kerbal/memory/uninitialized_using_allocator.hpp>
 
+#include <cstddef>
 #include <memory>
 
 #include <kerbal/algorithm/sort/detail/merge_sort_merge.hpp>
@@ -101,7 +102,7 @@ namespace kerbal
 			const iterator d_end(kerbal::algorithm::stable_sort_n_afford_buffer(c_end, d, buffer, cmp));
 			const buffer_iterator buffer_end(kerbal::algorithm::merge(b_end, c_end, c_end, d_end, buffer, cmp));
 
-			const iterator t(kerbal::iterator::next(b_end, static_cast<size_t>(second_half_len - first_half_len)));
+			const iterator t(kerbal::iterator::next(b_end, static_cast<std::size_t>(second_half_len - first_half_len)));
 			kerbal::algorithm::merge(first, a_end, a_end, b_end, t, cmp);
 
 			kerbal::algorithm::detail::merge_sort_merge(buffer, buffer_end, t, d_end, first, cmp);

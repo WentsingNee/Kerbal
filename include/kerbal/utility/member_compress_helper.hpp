@@ -34,13 +34,14 @@
 
 #include <cstddef>
 
+
 namespace kerbal
 {
 
 	namespace utility
 	{
 
-		template <typename T, size_t I = 0>
+		template <typename T, std::size_t I = 0>
 		class member_compress_helper;
 
 		namespace detail
@@ -123,7 +124,7 @@ namespace kerbal
 
 #			endif
 
-					template <typename U, size_t J>
+					template <typename U, std::size_t J>
 					KERBAL_CONSTEXPR
 					explicit member_compress_helper_impl(const kerbal::utility::member_compress_helper<U, J> & src)
 									KERBAL_CONDITIONAL_NOEXCEPT((
@@ -138,7 +139,7 @@ namespace kerbal
 
 #			if __cplusplus >= 201103L
 
-					template <typename U, size_t J>
+					template <typename U, std::size_t J>
 					KERBAL_CONSTEXPR
 					explicit member_compress_helper_impl(kerbal::utility::member_compress_helper<U, J> && src)
 								KERBAL_CONDITIONAL_NOEXCEPT((
@@ -258,7 +259,7 @@ namespace kerbal
 
 #			endif
 
-					template <typename U, size_t J>
+					template <typename U, std::size_t J>
 					KERBAL_CONSTEXPR
 					explicit member_compress_helper_impl(const kerbal::utility::member_compress_helper<U, J> & src)
 									KERBAL_CONDITIONAL_NOEXCEPT((
@@ -273,7 +274,7 @@ namespace kerbal
 
 #			if __cplusplus >= 201103L
 
-					template <typename U, size_t J>
+					template <typename U, std::size_t J>
 					KERBAL_CONSTEXPR
 					explicit member_compress_helper_impl(kerbal::utility::member_compress_helper<U, J> && src)
 									KERBAL_CONDITIONAL_NOEXCEPT((
@@ -393,7 +394,7 @@ namespace kerbal
 
 #			endif
 
-					template <typename U, size_t J>
+					template <typename U, std::size_t J>
 					KERBAL_CONSTEXPR
 					explicit member_compress_helper_impl(const kerbal::utility::member_compress_helper<U, J> & src)
 									KERBAL_CONDITIONAL_NOEXCEPT((
@@ -408,7 +409,7 @@ namespace kerbal
 
 #			if __cplusplus >= 201103L
 
-					template <typename U, size_t J>
+					template <typename U, std::size_t J>
 					KERBAL_CONSTEXPR
 					explicit member_compress_helper_impl(kerbal::utility::member_compress_helper<U, J> && src)
 									KERBAL_CONDITIONAL_NOEXCEPT((
@@ -473,7 +474,7 @@ namespace kerbal
 
 		} // namespace detail
 
-		template <typename T, size_t I>
+		template <typename T, std::size_t I>
 		class member_compress_helper: public detail::member_compress_helper_impl<T>
 		{
 			private:
@@ -545,7 +546,7 @@ namespace kerbal
 #		endif
 
 
-				template <typename U, size_t J>
+				template <typename U, std::size_t J>
 				KERBAL_CONSTEXPR
 				explicit member_compress_helper(const kerbal::utility::member_compress_helper<U, J> & src)
 						KERBAL_CONDITIONAL_NOEXCEPT((
@@ -561,7 +562,7 @@ namespace kerbal
 
 #		if __cplusplus >= 201103L
 
-				template <typename U, size_t J>
+				template <typename U, std::size_t J>
 				KERBAL_CONSTEXPR
 				explicit member_compress_helper(kerbal::utility::member_compress_helper<U, J> && src)
 						KERBAL_CONDITIONAL_NOEXCEPT((
@@ -603,7 +604,7 @@ namespace kerbal
 #		endif
 
 
-				template <typename U, size_t J>
+				template <typename U, std::size_t J>
 				KERBAL_CONSTEXPR14
 				member_compress_helper& operator=(const member_compress_helper<U, J> & arg)
 						KERBAL_CONDITIONAL_NOEXCEPT(
@@ -619,7 +620,7 @@ namespace kerbal
 
 #		if __cplusplus >= 201103L
 
-				template <typename U, size_t J>
+				template <typename U, std::size_t J>
 				KERBAL_CONSTEXPR14
 				member_compress_helper& operator=(member_compress_helper<U, J> && arg)
 						KERBAL_CONDITIONAL_NOEXCEPT(
@@ -637,7 +638,7 @@ namespace kerbal
 
 		};
 
-		template <typename T, size_t I>
+		template <typename T, std::size_t I>
 		class member_compress_helper<T&, I>
 		{
 			public:
@@ -669,14 +670,14 @@ namespace kerbal
 
 #		endif
 
-				template <size_t J>
+				template <std::size_t J>
 				KERBAL_CONSTEXPR14
 				explicit member_compress_helper(const member_compress_helper<T, J> & arg) KERBAL_NOEXCEPT:
 						_K_member(arg.member())
 				{
 				}
 
-				template <size_t J>
+				template <std::size_t J>
 				KERBAL_CONSTEXPR14
 				explicit member_compress_helper(const member_compress_helper<T&, J> & arg) KERBAL_NOEXCEPT:
 						_K_member(arg.member())
@@ -702,7 +703,7 @@ namespace kerbal
 					return *this;
 				}
 
-				template <typename U, size_t J>
+				template <typename U, std::size_t J>
 				KERBAL_CONSTEXPR14
 				member_compress_helper& operator=(const member_compress_helper<U, J> & arg)
 						KERBAL_CONDITIONAL_NOEXCEPT(

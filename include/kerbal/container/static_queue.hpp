@@ -39,7 +39,7 @@ namespace kerbal
 	namespace container
 	{
 
-		template <typename Tp, size_t N>
+		template <typename Tp, std::size_t N>
 		class static_queue: protected kerbal::container::detail::static_queue_base<Tp, N>
 		{
 			private:
@@ -56,7 +56,7 @@ namespace kerbal
 				typedef const value_type&&		const_rvalue_reference;
 #		endif
 
-				typedef size_t					size_type;
+				typedef std::size_t					size_type;
 
 			public:
 				KERBAL_CONSTEXPR

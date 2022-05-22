@@ -19,6 +19,8 @@
 #include <kerbal/compatibility/noexcept.hpp>
 #include <kerbal/iterator/iterator.hpp>
 
+#include <cstddef>
+
 
 namespace kerbal
 {
@@ -394,9 +396,9 @@ namespace kerbal
 
 		template <typename InputIterator, typename UnaryPredicate>
 		KERBAL_CONSTEXPR14
-		size_t __count_if(InputIterator first, InputIterator last, UnaryPredicate pred, std::input_iterator_tag)
+		std::size_t __count_if(InputIterator first, InputIterator last, UnaryPredicate pred, std::input_iterator_tag)
 		{
-			size_t cnt = 0;
+			std::size_t cnt = 0;
 			while (first != last) {
 				if (pred(*first)) {
 					++cnt;
@@ -408,12 +410,12 @@ namespace kerbal
 
 		template <typename RandomAccessIterator, typename UnaryPredicate>
 		KERBAL_CONSTEXPR14
-		size_t __count_if(RandomAccessIterator first, RandomAccessIterator last, UnaryPredicate pred, std::random_access_iterator_tag)
+		std::size_t __count_if(RandomAccessIterator first, RandomAccessIterator last, UnaryPredicate pred, std::random_access_iterator_tag)
 		{
 			typedef RandomAccessIterator iterator;
 			typedef typename kerbal::iterator::iterator_traits<iterator>::difference_type difference_type;
 
-			size_t cnt = 0;
+			std::size_t cnt = 0;
 
 #	define EACH() do {\
 				if (pred(*first)) {\
@@ -447,7 +449,7 @@ namespace kerbal
 
 		template <typename InputIterator, typename UnaryPredicate>
 		KERBAL_CONSTEXPR14
-		size_t count_if(InputIterator first, InputIterator last, UnaryPredicate pred)
+		std::size_t count_if(InputIterator first, InputIterator last, UnaryPredicate pred)
 		{
 			return kerbal::algorithm::__count_if(first, last, pred, kerbal::iterator::iterator_category(first));
 		}
@@ -456,9 +458,9 @@ namespace kerbal
 
 		template <typename InputIterator, typename Type>
 		KERBAL_CONSTEXPR14
-		size_t __count(InputIterator first, InputIterator last, const Type & value, std::input_iterator_tag)
+		std::size_t __count(InputIterator first, InputIterator last, const Type & value, std::input_iterator_tag)
 		{
-			size_t cnt = 0;
+			std::size_t cnt = 0;
 			while (first != last) {
 				if (*first == value) {
 					++cnt;
@@ -470,12 +472,12 @@ namespace kerbal
 
 		template <typename RandomAccessIterator, typename Type>
 		KERBAL_CONSTEXPR14
-		size_t __count(RandomAccessIterator first, RandomAccessIterator last, const Type & value, std::random_access_iterator_tag)
+		std::size_t __count(RandomAccessIterator first, RandomAccessIterator last, const Type & value, std::random_access_iterator_tag)
 		{
 			typedef RandomAccessIterator iterator;
 			typedef typename kerbal::iterator::iterator_traits<iterator>::difference_type difference_type;
 
-			size_t cnt = 0;
+			std::size_t cnt = 0;
 
 #	define EACH() do {\
 				if (*first == value) {\
@@ -509,7 +511,7 @@ namespace kerbal
 
 		template <typename InputIterator, typename Type>
 		KERBAL_CONSTEXPR14
-		size_t count(InputIterator first, InputIterator last, const Type & value)
+		std::size_t count(InputIterator first, InputIterator last, const Type & value)
 		{
 			return kerbal::algorithm::__count(first, last, value, kerbal::iterator::iterator_category(first));
 		}

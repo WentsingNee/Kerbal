@@ -19,6 +19,7 @@
 #include <kerbal/type_traits/sign_deduction.hpp>
 
 #include <climits>
+#include <cstddef>
 
 #include <kerbal/numeric/bit/popcount.hpp>
 
@@ -31,7 +32,7 @@ namespace kerbal
 
 		template <typename Tp>
 		struct bitarray_result_len:
-				kerbal::type_traits::integral_constant<size_t, sizeof(Tp) * CHAR_BIT>
+				kerbal::type_traits::integral_constant<std::size_t, sizeof(Tp) * CHAR_BIT>
 		{
 		};
 
@@ -61,7 +62,7 @@ namespace kerbal
 
 		template <typename Tp>
 		struct octarray_result_len:
-				kerbal::type_traits::integral_constant<size_t, sizeof(Tp) * CHAR_BIT / 3 + (sizeof(Tp) * CHAR_BIT % 3 != 0)>
+				kerbal::type_traits::integral_constant<std::size_t, sizeof(Tp) * CHAR_BIT / 3 + (sizeof(Tp) * CHAR_BIT % 3 != 0)>
 		{
 		};
 
@@ -93,7 +94,7 @@ namespace kerbal
 
 		template <typename Tp>
 		struct hexarray_result_len:
-				kerbal::type_traits::integral_constant<size_t, sizeof(Tp) * CHAR_BIT / 4 + (sizeof(Tp) * CHAR_BIT % 4 != 0)>
+				kerbal::type_traits::integral_constant<std::size_t, sizeof(Tp) * CHAR_BIT / 4 + (sizeof(Tp) * CHAR_BIT % 4 != 0)>
 		{
 		};
 
@@ -184,7 +185,7 @@ namespace kerbal
 		 */
 		template <typename Tp>
 		KERBAL_CONSTEXPR
-		Tp mask(size_t n) KERBAL_NOEXCEPT
+		Tp mask(std::size_t n) KERBAL_NOEXCEPT
 		{
 			typedef typename kerbal::type_traits::make_unsigned<Tp>::type unsigned_t;
 			return n == sizeof(unsigned_t) * CHAR_BIT ?
@@ -194,7 +195,7 @@ namespace kerbal
 
 		template <typename Tp>
 		KERBAL_CONSTEXPR
-		Tp flip(Tp x, size_t pos) KERBAL_NOEXCEPT
+		Tp flip(Tp x, std::size_t pos) KERBAL_NOEXCEPT
 		{
 			typedef typename kerbal::type_traits::make_unsigned<Tp>::type unsigned_t;
 			return x ^ (static_cast<unsigned_t>(1) << pos);
@@ -202,7 +203,7 @@ namespace kerbal
 
 		template <typename Tp>
 		KERBAL_CONSTEXPR
-		Tp flip_left_n(Tp x, size_t n) KERBAL_NOEXCEPT
+		Tp flip_left_n(Tp x, std::size_t n) KERBAL_NOEXCEPT
 		{
 			typedef typename kerbal::type_traits::make_unsigned<Tp>::type unsigned_t;
 			return x ^ ~kerbal::numeric::mask<unsigned_t>(sizeof(unsigned_t) * CHAR_BIT - n);
@@ -210,7 +211,7 @@ namespace kerbal
 
 		template <typename Tp>
 		KERBAL_CONSTEXPR
-		Tp flip_right_n(Tp x, size_t n) KERBAL_NOEXCEPT
+		Tp flip_right_n(Tp x, std::size_t n) KERBAL_NOEXCEPT
 		{
 			typedef typename kerbal::type_traits::make_unsigned<Tp>::type unsigned_t;
 			return x ^ kerbal::numeric::mask<unsigned_t>(n);
@@ -218,7 +219,7 @@ namespace kerbal
 
 		template <typename Tp>
 		KERBAL_CONSTEXPR
-		Tp reset_bit(Tp x, size_t pos) KERBAL_NOEXCEPT
+		Tp reset_bit(Tp x, std::size_t pos) KERBAL_NOEXCEPT
 		{
 			typedef typename kerbal::type_traits::make_unsigned<Tp>::type unsigned_t;
 			return x & ~(static_cast<unsigned_t>(1) << pos);
@@ -226,7 +227,7 @@ namespace kerbal
 
 		template <typename Tp>
 		KERBAL_CONSTEXPR
-		Tp reset_left_n(Tp x, size_t n) KERBAL_NOEXCEPT
+		Tp reset_left_n(Tp x, std::size_t n) KERBAL_NOEXCEPT
 		{
 			typedef typename kerbal::type_traits::make_unsigned<Tp>::type unsigned_t;
 			return x & kerbal::numeric::mask<unsigned_t>(sizeof(unsigned_t) * CHAR_BIT - n);
@@ -234,7 +235,7 @@ namespace kerbal
 
 		template <typename Tp>
 		KERBAL_CONSTEXPR
-		Tp reset_right_n(Tp x, size_t n) KERBAL_NOEXCEPT
+		Tp reset_right_n(Tp x, std::size_t n) KERBAL_NOEXCEPT
 		{
 			typedef typename kerbal::type_traits::make_unsigned<Tp>::type unsigned_t;
 			return x & ~kerbal::numeric::mask<unsigned_t>(n);
@@ -242,7 +243,7 @@ namespace kerbal
 
 		template <typename Tp>
 		KERBAL_CONSTEXPR
-		Tp set_bit(Tp x, size_t pos) KERBAL_NOEXCEPT
+		Tp set_bit(Tp x, std::size_t pos) KERBAL_NOEXCEPT
 		{
 			typedef typename kerbal::type_traits::make_unsigned<Tp>::type unsigned_t;
 			return x | (static_cast<unsigned_t>(1) << pos);
@@ -250,7 +251,7 @@ namespace kerbal
 
 		template <typename Tp>
 		KERBAL_CONSTEXPR
-		Tp set_left_n(Tp x, size_t n) KERBAL_NOEXCEPT
+		Tp set_left_n(Tp x, std::size_t n) KERBAL_NOEXCEPT
 		{
 			typedef typename kerbal::type_traits::make_unsigned<Tp>::type unsigned_t;
 			return x | ~kerbal::numeric::mask<unsigned_t>(sizeof(unsigned_t) * CHAR_BIT - n);
@@ -258,7 +259,7 @@ namespace kerbal
 
 		template <typename Tp>
 		KERBAL_CONSTEXPR
-		Tp set_right_n(Tp x, size_t n) KERBAL_NOEXCEPT
+		Tp set_right_n(Tp x, std::size_t n) KERBAL_NOEXCEPT
 		{
 			typedef typename kerbal::type_traits::make_unsigned<Tp>::type unsigned_t;
 			return x | kerbal::numeric::mask<unsigned_t>(n);
@@ -266,7 +267,7 @@ namespace kerbal
 
 		template <typename Tp>
 		KERBAL_CONSTEXPR
-		bool get_bit(Tp x, size_t pos) KERBAL_NOEXCEPT
+		bool get_bit(Tp x, std::size_t pos) KERBAL_NOEXCEPT
 		{
 			return (x >> pos) & 1;
 		}
@@ -278,7 +279,7 @@ namespace kerbal
 		Signed __rotl(Signed x, int s, kerbal::type_traits::true_type) KERBAL_NOEXCEPT
 		{
 			typedef typename kerbal::type_traits::make_unsigned<Signed>::type unsigned_t;
-			typedef kerbal::type_traits::integral_constant<size_t, sizeof(Signed) * CHAR_BIT> BIT_WIDTH;
+			typedef kerbal::type_traits::integral_constant<std::size_t, sizeof(Signed) * CHAR_BIT> BIT_WIDTH;
 #	define __u static_cast<unsigned_t>(x)
 			return s == 0 ?
 					x :
@@ -292,7 +293,7 @@ namespace kerbal
 		KERBAL_CONSTEXPR
 		Unsigned __rotl(Unsigned x, int s, kerbal::type_traits::false_type) KERBAL_NOEXCEPT
 		{
-			typedef kerbal::type_traits::integral_constant<size_t, sizeof(Unsigned) * CHAR_BIT> BIT_WIDTH;
+			typedef kerbal::type_traits::integral_constant<std::size_t, sizeof(Unsigned) * CHAR_BIT> BIT_WIDTH;
 			return s == 0 ?
 					 x :
 					 (x << s | (x >> (BIT_WIDTH::value - s)));

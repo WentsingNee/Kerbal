@@ -21,6 +21,8 @@
 #include <kerbal/type_traits/is_same.hpp>
 #include <kerbal/type_traits/sign_deduction.hpp>
 
+#include <cstddef>
+
 
 namespace kerbal
 {
@@ -36,7 +38,7 @@ namespace kerbal
 			{
 					typedef typename kerbal::iterator::iterator_traits<ForwardIterator>::value_type value_type;
 					typedef kerbal::algorithm::detail::actual_bit_width<value_type> VALUE_TYPE_BIT_WIDTH; // warning: must be unsigned!!!
-					typedef kerbal::type_traits::integral_constant<size_t, 1ull << VALUE_TYPE_BIT_WIDTH::value> type;
+					typedef kerbal::type_traits::integral_constant<std::size_t, 1ull << VALUE_TYPE_BIT_WIDTH::value> type;
 			};
 
 			template <typename ForwardIterator>
@@ -46,7 +48,7 @@ namespace kerbal
 
 			template <typename ForwardIterator>
 			KERBAL_CONSTEXPR14
-			void pigeonhole_sort_fill(ForwardIterator first, ForwardIterator last, size_t cnt[])
+			void pigeonhole_sort_fill(ForwardIterator first, ForwardIterator last, std::size_t cnt[])
 			{
 				typedef ForwardIterator iterator;
 
@@ -58,11 +60,11 @@ namespace kerbal
 
 			template <typename ForwardIterator>
 			KERBAL_CONSTEXPR14
-			void pigeonhole_sort_back_fill_n(ForwardIterator & first, size_t cnt,
+			void pigeonhole_sort_back_fill_n(ForwardIterator & first, std::size_t cnt,
 											typename kerbal::iterator::iterator_traits<ForwardIterator>::value_type current,
 											std::forward_iterator_tag)
 			{
-				for (size_t j = 0; j < cnt; ++j) {
+				for (std::size_t j = 0; j < cnt; ++j) {
 					*first = current;
 					++first;
 				}
@@ -70,7 +72,7 @@ namespace kerbal
 
 			template <typename RandomAccessIterator>
 			KERBAL_CONSTEXPR14
-			void pigeonhole_sort_back_fill_n(RandomAccessIterator & first, size_t cnt,
+			void pigeonhole_sort_back_fill_n(RandomAccessIterator & first, std::size_t cnt,
 											typename kerbal::iterator::iterator_traits<RandomAccessIterator>::value_type current,
 											std::random_access_iterator_tag)
 			{
@@ -80,8 +82,8 @@ namespace kerbal
 				++first;\
 			} while (false)
 
-				size_t trip_count(cnt);
-				size_t remain(trip_count & 3);
+				std::size_t trip_count(cnt);
+				std::size_t remain(trip_count & 3);
 				for (trip_count >>= 2; trip_count > 0; --trip_count) {
 					EACH();
 					EACH();
@@ -104,7 +106,7 @@ namespace kerbal
 
 			template <typename ForwardIterator>
 			KERBAL_CONSTEXPR14
-			void pigeonhole_sort_back_fill_n(ForwardIterator & first, size_t cnt,
+			void pigeonhole_sort_back_fill_n(ForwardIterator & first, std::size_t cnt,
 											typename kerbal::iterator::iterator_traits<ForwardIterator>::value_type current)
 			{
 				pigeonhole_sort_back_fill_n(first, cnt, current, kerbal::iterator::iterator_category(first));
@@ -112,14 +114,14 @@ namespace kerbal
 
 			template <typename ForwardIterator>
 			KERBAL_CONSTEXPR14
-			void pigeonhole_sort_back_fill(ForwardIterator first, const size_t cnt[],
+			void pigeonhole_sort_back_fill(ForwardIterator first, const std::size_t cnt[],
 											kerbal::type_traits::false_type /*asc*/,
 											kerbal::type_traits::false_type /*unsigned*/)
 			{
 				typedef ForwardIterator iterator;
 				typedef typename kerbal::iterator::iterator_traits<iterator>::value_type value_type;
 
-				for (size_t i = 0; i < cnt_array_size<iterator>::value; ++i) {
+				for (std::size_t i = 0; i < cnt_array_size<iterator>::value; ++i) {
 					value_type current(static_cast<value_type>(i));
 					pigeonhole_sort_back_fill_n(first, cnt[i], current);
 				}
@@ -127,14 +129,14 @@ namespace kerbal
 
 			template <typename ForwardIterator>
 			KERBAL_CONSTEXPR14
-			void pigeonhole_sort_back_fill(ForwardIterator first, const size_t cnt[],
+			void pigeonhole_sort_back_fill(ForwardIterator first, const std::size_t cnt[],
 											kerbal::type_traits::true_type /*desc*/,
 											kerbal::type_traits::false_type /*unsigned*/)
 			{
 				typedef ForwardIterator iterator;
 				typedef typename kerbal::iterator::iterator_traits<iterator>::value_type value_type;
 
-				size_t i = cnt_array_size<iterator>::value;
+				std::size_t i = cnt_array_size<iterator>::value;
 				while (i > 0) {
 					--i;
 					value_type current(static_cast<value_type>(i));
@@ -144,7 +146,7 @@ namespace kerbal
 
 			template <typename ForwardIterator>
 			KERBAL_CONSTEXPR14
-			void pigeonhole_sort_back_fill(ForwardIterator first, const size_t cnt[],
+			void pigeonhole_sort_back_fill(ForwardIterator first, const std::size_t cnt[],
 											kerbal::type_traits::false_type /*asc*/,
 											kerbal::type_traits::true_type /*signed*/)
 			{
@@ -152,11 +154,11 @@ namespace kerbal
 				typedef typename kerbal::iterator::iterator_traits<iterator>::value_type value_type;
 				typedef cnt_array_size<iterator> cnt_array_size;
 
-				for (size_t i = cnt_array_size::value / 2; i < cnt_array_size::value; ++i) {
+				for (std::size_t i = cnt_array_size::value / 2; i < cnt_array_size::value; ++i) {
 					value_type current(static_cast<value_type>(i));
 					pigeonhole_sort_back_fill_n(first, cnt[i], current);
 				}
-				for (size_t i = 0; i < cnt_array_size::value / 2; ++i) {
+				for (std::size_t i = 0; i < cnt_array_size::value / 2; ++i) {
 					value_type current(static_cast<value_type>(i));
 					pigeonhole_sort_back_fill_n(first, cnt[i], current);
 				}
@@ -164,7 +166,7 @@ namespace kerbal
 
 			template <typename ForwardIterator>
 			KERBAL_CONSTEXPR14
-			void pigeonhole_sort_back_fill(ForwardIterator first, const size_t cnt[],
+			void pigeonhole_sort_back_fill(ForwardIterator first, const std::size_t cnt[],
 											kerbal::type_traits::true_type /*desc*/,
 											kerbal::type_traits::true_type /*signed*/)
 			{
@@ -173,7 +175,7 @@ namespace kerbal
 				typedef cnt_array_size<iterator> cnt_array_size;
 
 				{
-					size_t i = cnt_array_size::value / 2;
+					std::size_t i = cnt_array_size::value / 2;
 					while (i > 0) {
 						--i;
 						value_type current(static_cast<value_type>(i));
@@ -181,7 +183,7 @@ namespace kerbal
 					}
 				}
 				{
-					size_t i = cnt_array_size::value;
+					std::size_t i = cnt_array_size::value;
 					while (i > cnt_array_size::value / 2) {
 						--i;
 						value_type current(static_cast<value_type>(i));
@@ -231,7 +233,7 @@ namespace kerbal
 			KERBAL_STATIC_ASSERT(is_pigeonhole_sort_acceptable_type<value_type>::value,
 								 "pigeonhole sort only accept bool type or integer with bit width <= 16");
 
-			size_t cnt[detail::cnt_array_size<iterator>::value] = {0};
+			std::size_t cnt[detail::cnt_array_size<iterator>::value] = {0};
 			detail::pigeonhole_sort_fill(first, last, cnt);
 			detail::pigeonhole_sort_back_fill(first, cnt, order, kerbal::type_traits::is_signed<value_type>());
 		}

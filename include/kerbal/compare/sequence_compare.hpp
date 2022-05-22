@@ -23,6 +23,8 @@
 #include <kerbal/type_traits/const_deduction.hpp>
 #include <kerbal/type_traits/is_same.hpp>
 
+#include <cstddef>
+
 
 namespace kerbal
 {
@@ -160,7 +162,7 @@ namespace kerbal
 			);
 		}
 
-		template <typename Tp, typename Up, size_t N, typename BinaryTypeEqualToPredicate>
+		template <typename Tp, typename Up, std::size_t N, typename BinaryTypeEqualToPredicate>
 		KERBAL_CONSTEXPR14
 		bool sequence_equal_to(const Tp (&a)[N], const Up (&b)[N],
 								BinaryTypeEqualToPredicate equal_to)
@@ -172,7 +174,7 @@ namespace kerbal
 			);
 		}
 
-		template <typename Tp, typename Up, size_t N>
+		template <typename Tp, typename Up, std::size_t N>
 		KERBAL_CONSTEXPR14
 		bool sequence_equal_to(const Tp (&a)[N], const Up (&b)[N])
 		{
@@ -182,14 +184,14 @@ namespace kerbal
 			);
 		}
 
-		template <typename Tp, typename Up, size_t M, size_t N, typename BinaryTypeEqualToPredicate>
+		template <typename Tp, typename Up, std::size_t M, std::size_t N, typename BinaryTypeEqualToPredicate>
 		KERBAL_CONSTEXPR
 		bool sequence_equal_to(const Tp (&)[M], const Up (&)[N], BinaryTypeEqualToPredicate) KERBAL_NOEXCEPT
 		{
 			return false;
 		}
 
-		template <typename Tp, typename Up, size_t M, size_t N>
+		template <typename Tp, typename Up, std::size_t M, std::size_t N>
 		KERBAL_CONSTEXPR
 		bool sequence_equal_to(const Tp (&)[N], const Up (&)[N]) KERBAL_NOEXCEPT
 		{
@@ -307,7 +309,7 @@ namespace kerbal
 			);
 		}
 
-		template <typename Tp, typename Up, size_t N, typename BinaryTypeNotEqualToPredicate>
+		template <typename Tp, typename Up, std::size_t N, typename BinaryTypeNotEqualToPredicate>
 		KERBAL_CONSTEXPR14
 		bool sequence_not_equal_to(const Tp (&a)[N], const Up (&b)[N],
 									BinaryTypeNotEqualToPredicate not_equal_to)
@@ -319,7 +321,7 @@ namespace kerbal
 			);
 		}
 
-		template <typename Tp, typename Up, size_t N>
+		template <typename Tp, typename Up, std::size_t N>
 		KERBAL_CONSTEXPR14
 		bool sequence_not_equal_to(const Tp (&a)[N], const Up (&b)[N])
 		{
@@ -329,14 +331,14 @@ namespace kerbal
 			);
 		}
 
-		template <typename Tp, typename Up, size_t M, size_t N, typename BinaryTypeNotEqualToPredicate>
+		template <typename Tp, typename Up, std::size_t M, std::size_t N, typename BinaryTypeNotEqualToPredicate>
 		KERBAL_CONSTEXPR
 		bool sequence_not_equal_to(const Tp (&)[M], const Up (&)[N], BinaryTypeNotEqualToPredicate) KERBAL_NOEXCEPT
 		{
 			return true;
 		}
 
-		template <typename Tp, typename Up, size_t M, size_t N>
+		template <typename Tp, typename Up, std::size_t M, std::size_t N>
 		KERBAL_CONSTEXPR
 		bool sequence_not_equal_to(const Tp (&)[N], const Up (&)[N]) KERBAL_NOEXCEPT
 		{

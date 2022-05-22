@@ -34,6 +34,8 @@
 #	include <kerbal/memory/bad_alloc.hpp>
 #endif
 
+#include <cstddef>
+
 #if __cplusplus >= 201703L
 #	if __has_include(<memory_resource>)
 #		include <type_traits>
@@ -1304,7 +1306,7 @@ namespace kerbal
 			sl_node_chain<Tp>
 			sl_allocator_unrelated<Tp>::_K_build_n_new_nodes_unguarded(NodeAllocator & alloc, size_type n, Args&& ... args)
 			{
-				size_t cnt = 0;
+				std::size_t cnt = 0;
 				node * const start = _K_build_new_node(alloc, kerbal::utility::forward<Args>(args)...);
 				node * back = start;
 #		if __cpp_exceptions
@@ -1340,7 +1342,7 @@ namespace kerbal
 			sl_node_chain<Tp> \
 			sl_allocator_unrelated<Tp>::_K_build_n_new_nodes_unguarded(NodeAllocator & alloc, size_type n KERBAL_OPT_PPEXPAND_WITH_COMMA_N(LEFT_JOIN_COMMA, EMPTY, ARGS_DECL, i)) \
 			{ \
-				size_t cnt = 0; \
+				std::size_t cnt = 0; \
 				node * const start = _K_build_new_node(alloc KERBAL_OPT_PPEXPAND_WITH_COMMA_N(LEFT_JOIN_COMMA, EMPTY, ARGS_USE, i)); \
 				node * back = start; \
 				try { \
@@ -1364,7 +1366,7 @@ namespace kerbal
 			sl_node_chain<Tp> \
 			sl_allocator_unrelated<Tp>::_K_build_n_new_nodes_unguarded(NodeAllocator & alloc, size_type n KERBAL_OPT_PPEXPAND_WITH_COMMA_N(LEFT_JOIN_COMMA, EMPTY, ARGS_DECL, i)) \
 			{ \
-				size_t cnt = 0; \
+				std::size_t cnt = 0; \
 				node * const start = _K_build_new_node(alloc KERBAL_OPT_PPEXPAND_WITH_COMMA_N(LEFT_JOIN_COMMA, EMPTY, ARGS_USE, i)); \
 				node * back = start; \
 				++cnt; \

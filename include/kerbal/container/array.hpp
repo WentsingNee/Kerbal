@@ -40,7 +40,7 @@ namespace kerbal
 	namespace container
 	{
 
-		template <typename Tp, size_t N>
+		template <typename Tp, std::size_t N>
 		class array
 		{
 			public:
@@ -286,56 +286,56 @@ namespace kerbal
 
 		};
 
-		template <typename Tp, size_t M, size_t N>
+		template <typename Tp, std::size_t M, std::size_t N>
 		KERBAL_CONSTEXPR
 		bool operator==(const array<Tp, M> &, const array<Tp, N> &) KERBAL_NOEXCEPT
 		{
 			return false;
 		}
 
-		template <typename Tp, size_t M, size_t N>
+		template <typename Tp, std::size_t M, std::size_t N>
 		KERBAL_CONSTEXPR
 		bool operator!=(const array<Tp, M> &, const array<Tp, N> &) KERBAL_NOEXCEPT
 		{
 			return true;
 		}
 
-		template <typename Tp, size_t N>
+		template <typename Tp, std::size_t N>
 		KERBAL_CONSTEXPR14
 		bool operator==(const array<Tp, N> & lhs, const array<Tp, N> & rhs)
 		{
 			return kerbal::compare::sequence_equal_to(lhs.cbegin(), lhs.cend(), rhs.cbegin(), rhs.cend());
 		}
 
-		template <typename Tp, size_t N>
+		template <typename Tp, std::size_t N>
 		KERBAL_CONSTEXPR14
 		bool operator!=(const array<Tp, N> & lhs, const array<Tp, N> & rhs)
 		{
 			return kerbal::compare::sequence_not_equal_to(lhs.cbegin(), lhs.cend(), rhs.cbegin(), rhs.cend());
 		}
 
-		template <typename Tp, size_t M, size_t N>
+		template <typename Tp, std::size_t M, std::size_t N>
 		KERBAL_CONSTEXPR14
 		bool operator<(const array<Tp, M> & lhs, const array<Tp, N> & rhs)
 		{
 			return kerbal::compare::sequence_less(lhs.cbegin(), lhs.cend(), rhs.cbegin(), rhs.cend());
 		}
 
-		template <typename Tp, size_t M, size_t N>
+		template <typename Tp, std::size_t M, std::size_t N>
 		KERBAL_CONSTEXPR14
 		bool operator<=(const array<Tp, M> & lhs, const array<Tp, N> & rhs)
 		{
 			return kerbal::compare::sequence_less_equal(lhs.cbegin(), lhs.cend(), rhs.cbegin(), rhs.cend());
 		}
 
-		template <typename Tp, size_t M, size_t N>
+		template <typename Tp, std::size_t M, std::size_t N>
 		KERBAL_CONSTEXPR14
 		bool operator>(const array<Tp, M> & lhs, const array<Tp, N> & rhs)
 		{
 			return kerbal::compare::sequence_greater(lhs.cbegin(), lhs.cend(), rhs.cbegin(), rhs.cend());
 		}
 
-		template <typename Tp, size_t M, size_t N>
+		template <typename Tp, std::size_t M, std::size_t N>
 		KERBAL_CONSTEXPR14
 		bool operator>=(const array<Tp, M> & lhs, const array<Tp, N> & rhs)
 		{
@@ -348,7 +348,7 @@ namespace kerbal
 	namespace algorithm
 	{
 
-		template <typename Tp, size_t N>
+		template <typename Tp, std::size_t N>
 		KERBAL_CONSTEXPR14
 		void swap(kerbal::container::array<Tp, N> & a, kerbal::container::array<Tp, N> & b)
 				KERBAL_CONDITIONAL_NOEXCEPT(noexcept(a.swap(b)))
@@ -363,7 +363,7 @@ namespace kerbal
 
 KERBAL_NAMESPACE_STD_BEGIN
 
-	template <typename Tp, size_t N>
+	template <typename Tp, std::size_t N>
 	KERBAL_CONSTEXPR14
 	void swap(kerbal::container::array<Tp, N> & a, kerbal::container::array<Tp, N> & b)
 			KERBAL_CONDITIONAL_NOEXCEPT(noexcept(a.swap(b)))

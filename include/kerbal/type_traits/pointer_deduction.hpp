@@ -19,6 +19,7 @@
 
 #include <cstddef>
 
+
 namespace kerbal
 {
 
@@ -79,7 +80,7 @@ namespace kerbal
 		template <typename Tp>
 		struct __pointer_rank_helper<Tp, true>:
 				kerbal::type_traits::integral_constant<
-						size_t,
+						std::size_t,
 						1 + kerbal::type_traits::pointer_rank<
 								typename kerbal::type_traits::remove_pointer<Tp>::type
 						>::value
@@ -90,7 +91,7 @@ namespace kerbal
 		template <typename Tp>
 		struct __pointer_rank_helper<Tp, false>:
 				kerbal::type_traits::integral_constant<
-						size_t,
+						std::size_t,
 						0
 				>
 		{

@@ -18,6 +18,7 @@
 #include <climits>
 #include <cstddef>
 
+
 namespace kerbal
 {
 
@@ -28,12 +29,12 @@ namespace kerbal
 		{
 
 			template <typename Tp>
-			struct __actual_bit_width: kerbal::type_traits::integral_constant<size_t, sizeof(Tp) * CHAR_BIT>
+			struct __actual_bit_width: kerbal::type_traits::integral_constant<std::size_t, sizeof(Tp) * CHAR_BIT>
 			{
 			};
 
 			template <>
-			struct __actual_bit_width<bool>: kerbal::type_traits::integral_constant<size_t, 1>
+			struct __actual_bit_width<bool>: kerbal::type_traits::integral_constant<std::size_t, 1>
 			{
 			};
 

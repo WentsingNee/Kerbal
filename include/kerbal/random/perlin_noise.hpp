@@ -20,13 +20,14 @@
 #include <cmath>
 #include <cstddef>
 
+
 namespace kerbal
 {
 
 	namespace random
 	{
 
-		template <typename ResultType = double, size_t PERLIN_SIZE = 4096>
+		template <typename ResultType = double, std::size_t PERLIN_SIZE = 4096>
 		class perlin_noise
 		{
 			public:
@@ -54,7 +55,7 @@ namespace kerbal
 				void reset(Engine & eg)
 				{
 					kerbal::random::uniform_real_distribution<result_type> urdis(0.0, 1.0);
-					for (size_t i = 0; i < kerbal::container::size(this->perlin); ++i) {
+					for (std::size_t i = 0; i < kerbal::container::size(this->perlin); ++i) {
 						this->perlin[i] = urdis(eg);
 					}
 				}
@@ -97,7 +98,7 @@ namespace kerbal
 					result_type ampl = 0.5;
 
 					for (int i = 0; i < this->octaves; ++i) {
-						size_t of = xi;
+						std::size_t of = xi;
 
 						result_type rxf = noise_fsc(xf);
 
@@ -137,7 +138,7 @@ namespace kerbal
 					const int YWRAP = 1 << YWRAPB;
 
 					for (int i = 0; i < this->octaves; ++i) {
-						size_t of = xi + (yi << YWRAPB);
+						std::size_t of = xi + (yi << YWRAPB);
 
 						result_type rxf = noise_fsc(xf);
 						result_type ryf = noise_fsc(yf);
@@ -193,7 +194,7 @@ namespace kerbal
 					const int ZWRAP = 1 << ZWRAPB;
 
 					for (int i = 0; i < this->octaves; ++i) {
-						size_t of = xi + (yi << YWRAPB) + (zi << ZWRAPB);
+						std::size_t of = xi + (yi << YWRAPB) + (zi << ZWRAPB);
 
 						result_type rxf = noise_fsc(xf);
 						result_type ryf = noise_fsc(yf);
@@ -240,7 +241,7 @@ namespace kerbal
 
 			private:
 				KERBAL_CONSTEXPR14
-				result_type h(size_t of, result_type rf) const KERBAL_NOEXCEPT
+				result_type h(std::size_t of, result_type rf) const KERBAL_NOEXCEPT
 				{
 					result_type n = perlin[of % PERLIN_SIZE];
 					n += rf * (perlin[(of + 1) % PERLIN_SIZE] - n);

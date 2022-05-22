@@ -16,8 +16,10 @@
 #include <kerbal/compatibility/fixed_width_integer.hpp>
 #include <kerbal/compatibility/noexcept.hpp>
 
+#include <cstddef>
 #include <ostream>
 #include <string>
+
 
 namespace kerbal
 {
@@ -43,7 +45,7 @@ namespace kerbal
 #	endif
 
 				{
-					for (size_t i = 0; i < 20; ++i) {
+					for (std::size_t i = 0; i < 20; ++i) {
 						this->hash[i] = static_cast<unsigned char>((state[i >> 2u] >> ((3 - (i & 3u)) * 8)) & 255u);
 					}
 				}
@@ -60,7 +62,7 @@ namespace kerbal
 				{
 					char tmp[41];
 					tmp[40] = '\0';
-					for (size_t i = 0; i < 20; ++i) {
+					for (std::size_t i = 0; i < 20; ++i) {
 						tmp[i * 2 + 0] = to_ocx(static_cast<char>(result.hash[i] >> 4u));
 						tmp[i * 2 + 1] = to_ocx(static_cast<char>(result.hash[i] % 16u));
 					}
@@ -72,7 +74,7 @@ namespace kerbal
 				{
 					char tmp[41];
 					tmp[40] = '\0';
-					for (size_t i = 0; i < 20; ++i) {
+					for (std::size_t i = 0; i < 20; ++i) {
 						tmp[i * 2 + 0] = to_ocx(static_cast<char>(hash[i] >> 4u));
 						tmp[i * 2 + 1] = to_ocx(static_cast<char>(hash[i] % 16u));
 					}

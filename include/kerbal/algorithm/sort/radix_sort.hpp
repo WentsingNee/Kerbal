@@ -20,6 +20,8 @@
 #include <kerbal/type_traits/sign_deduction.hpp>
 
 #include <climits>
+#include <cstddef>
+
 
 namespace kerbal
 {
@@ -36,9 +38,9 @@ namespace kerbal
 					kerbal::type_traits::false_type /*asc*/,
 					kerbal::type_traits::false_type /*unsigned*/,
 					const kerbal::container::vector<typename kerbal::iterator::iterator_traits<ForwardIterator>::value_type> buckets[],
-					size_t BUCKETS_NUM)
+					std::size_t BUCKETS_NUM)
 			{
-				for (size_t i = 0; i < BUCKETS_NUM; ++i) {
+				for (std::size_t i = 0; i < BUCKETS_NUM; ++i) {
 					first = kerbal::algorithm::copy(buckets[i].data(), buckets[i].data() + buckets[i].size(), first);
 				}
 			}
@@ -49,9 +51,9 @@ namespace kerbal
 					kerbal::type_traits::true_type /*desc*/,
 					kerbal::type_traits::false_type /*unsigned*/,
 					const kerbal::container::vector<typename kerbal::iterator::iterator_traits<ForwardIterator>::value_type> buckets[],
-					size_t BUCKETS_NUM)
+					std::size_t BUCKETS_NUM)
 			{
-				size_t i = BUCKETS_NUM;
+				std::size_t i = BUCKETS_NUM;
 				while (i > 0) {
 					--i;
 					first = kerbal::algorithm::reverse_copy(buckets[i].data(), buckets[i].data() + buckets[i].size(), first);
@@ -64,12 +66,12 @@ namespace kerbal
 					kerbal::type_traits::false_type /*asc*/,
 					kerbal::type_traits::true_type /*signed*/,
 					const kerbal::container::vector<typename kerbal::iterator::iterator_traits<ForwardIterator>::value_type> buckets[],
-					size_t BUCKETS_NUM)
+					std::size_t BUCKETS_NUM)
 			{
-				for (size_t i = BUCKETS_NUM / 2; i < BUCKETS_NUM; ++i) {
+				for (std::size_t i = BUCKETS_NUM / 2; i < BUCKETS_NUM; ++i) {
 					first = kerbal::algorithm::copy(buckets[i].data(), buckets[i].data() + buckets[i].size(), first);
 				}
-				for (size_t i = 0; i < BUCKETS_NUM / 2; ++i) {
+				for (std::size_t i = 0; i < BUCKETS_NUM / 2; ++i) {
 					first = kerbal::algorithm::copy(buckets[i].data(), buckets[i].data() + buckets[i].size(), first);
 				}
 			}
@@ -80,17 +82,17 @@ namespace kerbal
 					kerbal::type_traits::true_type /*desc*/,
 					kerbal::type_traits::true_type /*signed*/,
 					const kerbal::container::vector<typename kerbal::iterator::iterator_traits<ForwardIterator>::value_type> buckets[],
-					size_t BUCKETS_NUM)
+					std::size_t BUCKETS_NUM)
 			{
 				{
-					size_t i = BUCKETS_NUM / 2;
+					std::size_t i = BUCKETS_NUM / 2;
 					while (i > 0) {
 						--i;
 						first = kerbal::algorithm::reverse_copy(buckets[i].data(), buckets[i].data() + buckets[i].size(), first);
 					}
 				}
 				{
-					size_t i = BUCKETS_NUM;
+					std::size_t i = BUCKETS_NUM;
 					while (i > BUCKETS_NUM / 2) {
 						--i;
 						first = kerbal::algorithm::reverse_copy(buckets[i].data(), buckets[i].data() + buckets[i].size(), first);
@@ -106,10 +108,10 @@ namespace kerbal
 		{
 		};
 
-		template <typename ForwardIterator, typename Order, size_t RADIX_BIT_WIDTH>
+		template <typename ForwardIterator, typename Order, std::size_t RADIX_BIT_WIDTH>
 		KERBAL_CONSTEXPR20
 		void radix_sort(ForwardIterator first, ForwardIterator last,
-						Order order, kerbal::type_traits::integral_constant<size_t, RADIX_BIT_WIDTH> /*radix_bit_width*/)
+						Order order, kerbal::type_traits::integral_constant<std::size_t, RADIX_BIT_WIDTH> /*radix_bit_width*/)
 		{
 			typedef ForwardIterator iterator;
 			typedef typename kerbal::iterator::iterator_traits<iterator>::value_type value_type;
@@ -117,14 +119,14 @@ namespace kerbal
 
 			KERBAL_STATIC_ASSERT(is_radix_sort_acceptable_type<value_type>::value, "radix_sort only accepts integral type");
 
-			typedef kerbal::type_traits::integral_constant<size_t, 1 << RADIX_BIT_WIDTH> BUCKETS_NUM;
+			typedef kerbal::type_traits::integral_constant<std::size_t, 1 << RADIX_BIT_WIDTH> BUCKETS_NUM;
 			bucket_type buckets[2][BUCKETS_NUM::value];
 
-			typedef kerbal::type_traits::integral_constant<size_t, sizeof(value_type) * CHAR_BIT> VALUE_TYPE_BIT_WIDTH;
-			typedef kerbal::type_traits::integral_constant<size_t, VALUE_TYPE_BIT_WIDTH::value / RADIX_BIT_WIDTH + (VALUE_TYPE_BIT_WIDTH::value % RADIX_BIT_WIDTH != 0)> ROUNDS;
+			typedef kerbal::type_traits::integral_constant<std::size_t, sizeof(value_type) * CHAR_BIT> VALUE_TYPE_BIT_WIDTH;
+			typedef kerbal::type_traits::integral_constant<std::size_t, VALUE_TYPE_BIT_WIDTH::value / RADIX_BIT_WIDTH + (VALUE_TYPE_BIT_WIDTH::value % RADIX_BIT_WIDTH != 0)> ROUNDS;
 
-//			size_t dist = kerbal::iterator::distance(first, last) /*/ BUCKETS_NUM::value*/;
-//			for (size_t i = 0; i < BUCKETS_NUM::value; ++i) {
+//			std::size_t dist = kerbal::iterator::distance(first, last) /*/ BUCKETS_NUM::value*/;
+//			for (std::size_t i = 0; i < BUCKETS_NUM::value; ++i) {
 //				buckets[0][i].reserve(dist);
 //				buckets[1][i].reserve(dist);
 //			}
@@ -135,14 +137,14 @@ namespace kerbal
 				buckets[0][bucket_id].push_back(*it);
 			}
 
-			for (size_t round = 1; round < ROUNDS::value; ++round) {
+			for (std::size_t round = 1; round < ROUNDS::value; ++round) {
 				bucket_type (& buckets_from)[BUCKETS_NUM::value] = buckets[(round + 1) % 2];
 				bucket_type (& buckets_to)[BUCKETS_NUM::value] = buckets[round % 2];
 
-				for (size_t i = 0; i < BUCKETS_NUM::value; ++i) {
+				for (std::size_t i = 0; i < BUCKETS_NUM::value; ++i) {
 					buckets_to[i].clear();
 				}
-				for (size_t i = 0; i < BUCKETS_NUM::value; ++i) {
+				for (std::size_t i = 0; i < BUCKETS_NUM::value; ++i) {
 					typename bucket_type::iterator it(buckets_from[i].begin());
 					typename bucket_type::iterator end(buckets_from[i].end());
 					while (it != end) {
@@ -163,7 +165,7 @@ namespace kerbal
 		void radix_sort(ForwardIterator first, ForwardIterator last, Order /*order*/)
 		{
 			kerbal::algorithm::radix_sort(first, last, kerbal::type_traits::bool_constant<Order::value>(),
-											kerbal::type_traits::integral_constant<size_t, CHAR_BIT>());
+											kerbal::type_traits::integral_constant<std::size_t, CHAR_BIT>());
 		}
 
 		template <typename ForwardIterator>

@@ -48,6 +48,7 @@
 
 #include <cstddef>
 
+
 namespace kerbal
 {
 
@@ -77,16 +78,16 @@ namespace kerbal
 			protected:
 
 				KERBAL_CONSTEXPR14
-				static void R1(const uint32_t * w, uint32_t a, uint32_t & b, uint32_t c, uint32_t y, uint32_t & d, size_t i) KERBAL_NOEXCEPT;
+				static void R1(const uint32_t * w, uint32_t a, uint32_t & b, uint32_t c, uint32_t y, uint32_t & d, std::size_t i) KERBAL_NOEXCEPT;
 
 				KERBAL_CONSTEXPR14
-				static void R2(const uint32_t * w, uint32_t a, uint32_t & b, uint32_t c, uint32_t y, uint32_t & d, size_t i) KERBAL_NOEXCEPT;
+				static void R2(const uint32_t * w, uint32_t a, uint32_t & b, uint32_t c, uint32_t y, uint32_t & d, std::size_t i) KERBAL_NOEXCEPT;
 
 				KERBAL_CONSTEXPR14
-				static void R3(const uint32_t * w, uint32_t a, uint32_t & b, uint32_t c, uint32_t y, uint32_t & d, size_t i) KERBAL_NOEXCEPT;
+				static void R3(const uint32_t * w, uint32_t a, uint32_t & b, uint32_t c, uint32_t y, uint32_t & d, std::size_t i) KERBAL_NOEXCEPT;
 
 				KERBAL_CONSTEXPR14
-				static void R4(const uint32_t * w, uint32_t a, uint32_t & b, uint32_t c, uint32_t y, uint32_t & d, size_t i) KERBAL_NOEXCEPT;
+				static void R4(const uint32_t * w, uint32_t a, uint32_t & b, uint32_t c, uint32_t y, uint32_t & d, std::size_t i) KERBAL_NOEXCEPT;
 
 		};
 

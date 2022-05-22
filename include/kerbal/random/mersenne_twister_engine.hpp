@@ -35,10 +35,10 @@ namespace kerbal
 		namespace detail
 		{
 
-			template <typename UIntType, size_t W, bool /* W == digits(UIntType) */>
+			template <typename UIntType, std::size_t W, bool /* W == digits(UIntType) */>
 			struct _1_shift_W_minus_1_helper;
 
-			template <typename UIntType, size_t W>
+			template <typename UIntType, std::size_t W>
 			struct _1_shift_W_minus_1_helper<UIntType, W, true>
 			{
 					typedef kerbal::type_traits::integral_constant<
@@ -47,7 +47,7 @@ namespace kerbal
 					> type;
 			};
 
-			template <typename UIntType, size_t W>
+			template <typename UIntType, std::size_t W>
 			struct _1_shift_W_minus_1_helper<UIntType, W, false>
 			{
 					typedef kerbal::type_traits::integral_constant<
@@ -56,7 +56,7 @@ namespace kerbal
 					> type;
 			};
 
-			template <typename UIntType, size_t W>
+			template <typename UIntType, std::size_t W>
 			struct _1_shift_W_minus_1 :
 					public _1_shift_W_minus_1_helper<UIntType, W, (W == kerbal::numeric::numeric_limits<UIntType>::DIGITS::value)>::type
 			{

@@ -22,6 +22,7 @@
 #include <kerbal/iterator/iterator.hpp>
 
 #include <climits>
+#include <cstddef>
 
 
 namespace kerbal
@@ -47,7 +48,7 @@ namespace kerbal
 
 			template <typename BidirectionalIterator, typename Compare>
 			KERBAL_CONSTEXPR14
-			void intro_sort(BidirectionalIterator first, BidirectionalIterator last, Compare cmp, size_t depth_limit)
+			void intro_sort(BidirectionalIterator first, BidirectionalIterator last, Compare cmp, std::size_t depth_limit)
 			{
 				typedef BidirectionalIterator iterator;
 
@@ -104,10 +105,10 @@ namespace kerbal
 					typedef BidirectionalIterator iterator;
 
 					iterator first, last;
-					size_t depth_limit;
+					std::size_t depth_limit;
 
 					KERBAL_CONSTEXPR
-					nonrecursive_intro_sort_callee_info(iterator first, iterator last, size_t depth_limit):
+					nonrecursive_intro_sort_callee_info(iterator first, iterator last, std::size_t depth_limit):
 							first(first), last(last), depth_limit(depth_limit)
 					{
 					}
@@ -122,10 +123,10 @@ namespace kerbal
 		{
 			typedef BidirectionalIterator iterator;
 			typedef detail::nonrecursive_intro_sort_callee_info<iterator> callee_info;
-			typedef kerbal::container::static_stack<callee_info, sizeof(size_t) * CHAR_BIT> StackBuffer;
+			typedef kerbal::container::static_stack<callee_info, sizeof(std::size_t) * CHAR_BIT> StackBuffer;
 
 			StackBuffer st;
-			size_t depth_limit = 2 * detail::lg(kerbal::iterator::distance(first, last));
+			std::size_t depth_limit = 2 * detail::lg(kerbal::iterator::distance(first, last));
 			st.emplace(first, last, depth_limit);
 
 			while (!st.empty()) {

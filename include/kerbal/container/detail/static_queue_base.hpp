@@ -18,6 +18,7 @@
 
 #include <cstddef>
 
+
 namespace kerbal
 {
 
@@ -27,11 +28,11 @@ namespace kerbal
 		namespace detail
 		{
 
-			template <size_t N>
+			template <std::size_t N>
 			class static_queue_ring_helper
 			{
 				public:
-					typedef size_t size_type;
+					typedef std::size_t size_type;
 
 				protected:
 
@@ -48,16 +49,16 @@ namespace kerbal
 					}
 			};
 
-			template <typename Tp, size_t N, bool is_trivially_destructible =
+			template <typename Tp, std::size_t N, bool is_trivially_destructible =
 					kerbal::type_traits::can_be_pseudo_destructible<Tp>::value>
 			class static_queue_base;
 
-			template <typename Tp, size_t N>
+			template <typename Tp, std::size_t N>
 			class static_queue_base<Tp, N, false>: protected static_queue_ring_helper<N>
 			{
 				public:
 					typedef Tp			value_type;
-					typedef size_t		size_type;
+					typedef std::size_t		size_type;
 
 				protected:
 					typedef kerbal::memory::raw_storage<value_type> storage_type;
@@ -95,12 +96,12 @@ namespace kerbal
 
 			};
 
-			template <typename Tp, size_t N>
+			template <typename Tp, std::size_t N>
 			class static_queue_base<Tp, N, true>: protected static_queue_ring_helper<N>
 			{
 				public:
 					typedef Tp			value_type;
-					typedef size_t		size_type;
+					typedef std::size_t		size_type;
 
 				protected:
 					typedef kerbal::memory::raw_storage<value_type> storage_type;

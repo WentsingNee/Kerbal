@@ -36,7 +36,7 @@ namespace kerbal
 				typedef Tp* type;
 		};
 
-		template <typename Tp, size_t N>
+		template <typename Tp, std::size_t N>
 		struct general_back_insert_iterator<Tp[N]>
 		{
 				typedef Tp* type;

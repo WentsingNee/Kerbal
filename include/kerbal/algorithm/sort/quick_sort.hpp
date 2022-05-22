@@ -21,6 +21,7 @@
 #include <kerbal/iterator/iterator.hpp>
 
 #include <stack>
+#include <cstddef>
 
 #ifndef ENABLE_PMR_NONRECURSIVE_QSORT
 #	if __cplusplus >= 201703L
@@ -132,7 +133,7 @@ namespace kerbal
 				typedef BidirectionalIterator iterator;
 				typedef std::pair<iterator, iterator> callee_info;
 				typedef std::stack<callee_info, std::pmr::deque<callee_info> > StackBuffer;
-				constexpr size_t stack_buff_length = 32 * sizeof(callee_info);
+				constexpr std::size_t stack_buff_length = 32 * sizeof(callee_info);
 				std::byte stack_buff[stack_buff_length];
 				std::pmr::monotonic_buffer_resource resource(stack_buff, stack_buff_length);
 				StackBuffer st(&resource);

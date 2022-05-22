@@ -35,6 +35,8 @@
 #	include <kerbal/utility/forward.hpp>
 #endif
 
+#include <cstddef>
+
 #if __cplusplus >= 201103L
 #	include <type_traits>
 #else
@@ -781,7 +783,7 @@ namespace kerbal
 		};
 
 
-		template <typename T, size_t N>
+		template <typename T, std::size_t N>
 		class _K_rawst_agent<T[N]>:
 				public kerbal::memory::_K_rawst_base<T[N]>
 		{

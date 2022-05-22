@@ -23,13 +23,16 @@
 #include <kerbal/operators/less_than_comparable.hpp>
 #include <kerbal/operators/subtractable.hpp>
 
+#include <cstddef>
+
+
 namespace kerbal
 {
 
 	namespace container
 	{
 
-		template <typename Tp, size_t N>
+		template <typename Tp, std::size_t N>
 		class static_vector;
 
 		namespace detail
@@ -152,7 +155,7 @@ namespace kerbal
 											>
 			{
 				private:
-					template <typename Tp, size_t N>
+					template <typename Tp, std::size_t N>
 					friend class kerbal::container::static_vector;
 
 					friend class __stavec_kiter<ValueType>;
@@ -177,7 +180,7 @@ namespace kerbal
 											>
 			{
 				private:
-					template <typename Tp, size_t N>
+					template <typename Tp, std::size_t N>
 					friend class kerbal::container::static_vector;
 
 					typedef kerbal::memory::raw_storage<ValueType> storage_type;

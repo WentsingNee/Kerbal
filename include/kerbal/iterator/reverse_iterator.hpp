@@ -23,6 +23,8 @@
 #include <kerbal/type_traits/cv_deduction.hpp>
 #include <kerbal/type_traits/integral_constant.hpp>
 
+#include <cstddef>
+
 #if __cplusplus >= 201103L
 #	include <type_traits>
 #endif
@@ -410,7 +412,7 @@ namespace kerbal
 			return reverse_iterator<Iter>(iter);
 		}
 
-		template <typename Tp, size_t N>
+		template <typename Tp, std::size_t N>
 		KERBAL_CONSTEXPR
 		reverse_iterator<Tp*, false>
 		make_reverse_iterator(Tp (&arr) [N])

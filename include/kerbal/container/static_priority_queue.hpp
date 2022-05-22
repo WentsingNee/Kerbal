@@ -30,6 +30,7 @@
 #	include <kerbal/utility/forward.hpp>
 #endif
 
+#include <cstddef>
 #include <stdexcept>
 
 #if __cplusplus >= 201103L
@@ -43,7 +44,7 @@ namespace kerbal
 	namespace container
 	{
 
-		template <typename Tp, size_t N, typename KeyCompare = kerbal::compare::less<Tp> >
+		template <typename Tp, std::size_t N, typename KeyCompare = kerbal::compare::less<Tp> >
 		class static_priority_queue
 		{
 			public:
@@ -296,7 +297,7 @@ namespace kerbal
 					this->pop_unsafe();
 				}
 
-				template <size_t M>
+				template <std::size_t M>
 				KERBAL_CONSTEXPR14
 				void swap(static_priority_queue<Tp, M> & with)
 				{
@@ -360,7 +361,7 @@ namespace kerbal
 	namespace algorithm
 	{
 
-		template <typename Tp, size_t N, typename KeyCompare>
+		template <typename Tp, std::size_t N, typename KeyCompare>
 		KERBAL_CONSTEXPR14
 		void swap(kerbal::container::static_priority_queue<Tp, N, KeyCompare> & a,
 				  kerbal::container::static_priority_queue<Tp, N, KeyCompare> & b)
@@ -376,7 +377,7 @@ namespace kerbal
 
 KERBAL_NAMESPACE_STD_BEGIN
 
-	template <typename Tp, size_t N, typename KeyCompare>
+	template <typename Tp, std::size_t N, typename KeyCompare>
 	KERBAL_CONSTEXPR14
 	void swap(kerbal::container::static_priority_queue<Tp, N, KeyCompare> & a,
 			  kerbal::container::static_priority_queue<Tp, N, KeyCompare> & b)

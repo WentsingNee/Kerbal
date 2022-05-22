@@ -26,6 +26,8 @@
 #include <kerbal/type_traits/conditional.hpp>
 #include <kerbal/type_traits/reference_deduction.hpp>
 
+#include <cstddef>
+
 #if __cplusplus >= 201103L
 #	include <type_traits>
 #endif
@@ -385,7 +387,7 @@ namespace kerbal
 			return move_iterator<Iter>(iter);
 		}
 
-		template <typename Tp, size_t N>
+		template <typename Tp, std::size_t N>
 		KERBAL_CONSTEXPR
 		move_iterator<Tp*>
 		make_move_iterator(Tp (&arr) [N])

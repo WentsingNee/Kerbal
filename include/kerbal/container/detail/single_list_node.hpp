@@ -145,7 +145,7 @@ namespace kerbal
 
 			};
 
-			template <typename Tp, size_t N>
+			template <typename Tp, std::size_t N>
 			class sl_node<Tp[N]>: public sl_node_base
 			{
 				private:
@@ -158,11 +158,11 @@ namespace kerbal
 
 				private:
 
-					typedef kerbal::type_traits::integral_constant<size_t, 32> BRACE_INIT_LIMIT;
+					typedef kerbal::type_traits::integral_constant<std::size_t, 32> BRACE_INIT_LIMIT;
 
-					template <typename Up, size_t ... I>
+					template <typename Up, std::size_t ... I>
 					KERBAL_CONSTEXPR
-					explicit sl_node(const Up (&arg)[N], kerbal::utility::integer_sequence<size_t, I...>)
+					explicit sl_node(const Up (&arg)[N], kerbal::utility::integer_sequence<std::size_t, I...>)
 							: super(), value{arg[I]...}
 					{
 					}

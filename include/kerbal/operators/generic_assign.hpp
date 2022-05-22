@@ -25,6 +25,7 @@
 
 #include <cstddef>
 
+
 namespace kerbal
 {
 
@@ -41,7 +42,7 @@ namespace kerbal
 								)
 		;
 
-		template <typename Tp, typename Up, size_t N>
+		template <typename Tp, typename Up, std::size_t N>
 		KERBAL_CONSTEXPR14
 		Tp (& generic_assign(Tp (& lhs)[N], const Up (& rhs)[N]))[N];
 
@@ -100,12 +101,12 @@ namespace kerbal
 			return lhs;
 		}
 
-		template <typename Tp, typename Up, size_t N>
+		template <typename Tp, typename Up, std::size_t N>
 		KERBAL_CONSTEXPR14
 		Tp (& generic_assign(Tp (& lhs)[N], const Up (& rhs)[N])
 			)[N]
 		{
-			for (size_t i = 0; i < N; ++i) {
+			for (std::size_t i = 0; i < N; ++i) {
 				kerbal::operators::generic_assign(lhs[i], rhs[i]);
 			}
 			return lhs;
@@ -140,7 +141,7 @@ namespace kerbal
 						typename kerbal::type_traits::remove_reference<Up>::type
 				, 0> UP_EXTENT;
 				KERBAL_STATIC_ASSERT(TP_EXTENT::value == UP_EXTENT::value, "Tp and Up must have same length");
-				for (size_t i = 0; i < kerbal::type_traits::extent<Tp, 0>::value; ++i) {
+				for (std::size_t i = 0; i < kerbal::type_traits::extent<Tp, 0>::value; ++i) {
 					kerbal::operators::generic_assign(lhs[i], kerbal::utility::forward<decltype(rhs[i])>(rhs[i]));
 				}
 			}

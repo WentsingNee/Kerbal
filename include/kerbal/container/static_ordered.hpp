@@ -27,7 +27,7 @@ namespace kerbal
 	namespace container
 	{
 
-		template <typename Entity, size_t N, typename Key = Entity,
+		template <typename Entity, std::size_t N, typename Key = Entity,
 			typename KeyCompare = kerbal::compare::less<Key>, typename Extract = default_extract<Key, Entity> >
 		class static_ordered:
 				public kerbal::container::detail::flat_ordered_base<
@@ -154,7 +154,7 @@ namespace kerbal
 					kerbal::algorithm::swap(this->key_comp_obj(), ano.key_comp_obj());
 				}
 
-				template <size_t M>
+				template <std::size_t M>
 				KERBAL_CONSTEXPR14
 				friend bool operator==(const static_ordered<Entity, M, Key, KeyCompare, Extract> & lhs,
 										const static_ordered<Entity, N, Key, KeyCompare, Extract> & rhs)
@@ -162,7 +162,7 @@ namespace kerbal
 					return lhs.sequence == rhs.sequence;
 				}
 
-				template <size_t M>
+				template <std::size_t M>
 				KERBAL_CONSTEXPR14
 				friend bool operator!=(const static_ordered<Entity, M, Key, KeyCompare, Extract> & lhs,
 										const static_ordered<Entity, N, Key, KeyCompare, Extract> & rhs)
@@ -170,7 +170,7 @@ namespace kerbal
 					return lhs.sequence != rhs.sequence;
 				}
 
-				template <size_t M>
+				template <std::size_t M>
 				KERBAL_CONSTEXPR14
 				friend bool operator<(const static_ordered<Entity, M, Key, KeyCompare, Extract> & lhs,
 										const static_ordered<Entity, N, Key, KeyCompare, Extract> & rhs)
@@ -178,7 +178,7 @@ namespace kerbal
 					return lhs.sequence < rhs.sequence;
 				}
 
-				template <size_t M>
+				template <std::size_t M>
 				KERBAL_CONSTEXPR14
 				friend bool operator<=(const static_ordered<Entity, M, Key, KeyCompare, Extract> & lhs,
 										const static_ordered<Entity, N, Key, KeyCompare, Extract> & rhs)
@@ -186,7 +186,7 @@ namespace kerbal
 					return lhs.sequence <= rhs.sequence;
 				}
 
-				template <size_t M>
+				template <std::size_t M>
 				KERBAL_CONSTEXPR14
 				friend bool operator>(const static_ordered<Entity, M, Key, KeyCompare, Extract> & lhs,
 										const static_ordered<Entity, N, Key, KeyCompare, Extract> & rhs)
@@ -194,7 +194,7 @@ namespace kerbal
 					return lhs.sequence > rhs.sequence;
 				}
 
-				template <size_t M>
+				template <std::size_t M>
 				KERBAL_CONSTEXPR14
 				friend bool operator>=(const static_ordered<Entity, M, Key, KeyCompare, Extract> & lhs,
 										const static_ordered<Entity, N, Key, KeyCompare, Extract> & rhs)

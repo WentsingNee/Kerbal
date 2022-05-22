@@ -17,6 +17,8 @@
 #include <kerbal/container/detail/flat_set_base.hpp>
 #include <kerbal/container/static_ordered.hpp>
 
+#include <cstddef>
+
 
 namespace kerbal
 {
@@ -141,7 +143,7 @@ namespace kerbal
 					this->ordered.swap(ano.ordered);
 				}
 
-				template <size_t M>
+				template <std::size_t M>
 				KERBAL_CONSTEXPR14
 				friend bool operator==(const static_flat_set<Tp, M, KeyCompare> & lhs,
 										const static_flat_set<Tp, N, KeyCompare> & rhs)
@@ -149,7 +151,7 @@ namespace kerbal
 					return lhs.ordered == rhs.ordered;
 				}
 
-				template <size_t M>
+				template <std::size_t M>
 				KERBAL_CONSTEXPR14
 				friend bool operator!=(const static_flat_set<Tp, M, KeyCompare> & lhs,
 										const static_flat_set<Tp, N, KeyCompare> & rhs)
@@ -157,7 +159,7 @@ namespace kerbal
 					return lhs.ordered != rhs.ordered;
 				}
 
-				template <size_t M>
+				template <std::size_t M>
 				KERBAL_CONSTEXPR14
 				friend bool operator<(const static_flat_set<Tp, M, KeyCompare> & lhs,
 										const static_flat_set<Tp, N, KeyCompare> & rhs)
@@ -165,7 +167,7 @@ namespace kerbal
 					return lhs.ordered < rhs.ordered;
 				}
 
-				template <size_t M>
+				template <std::size_t M>
 				KERBAL_CONSTEXPR14
 				friend bool operator<=(const static_flat_set<Tp, M, KeyCompare> & lhs,
 										const static_flat_set<Tp, N, KeyCompare> & rhs)
@@ -173,7 +175,7 @@ namespace kerbal
 					return lhs.ordered <= rhs.ordered;
 				}
 
-				template <size_t M>
+				template <std::size_t M>
 				KERBAL_CONSTEXPR14
 				friend bool operator>(const static_flat_set<Tp, M, KeyCompare> & lhs,
 										const static_flat_set<Tp, N, KeyCompare> & rhs)
@@ -181,7 +183,7 @@ namespace kerbal
 					return lhs.ordered > rhs.ordered;
 				}
 
-				template <size_t M>
+				template <std::size_t M>
 				KERBAL_CONSTEXPR14
 				friend bool operator>=(const static_flat_set<Tp, M, KeyCompare> & lhs,
 										const static_flat_set<Tp, N, KeyCompare> & rhs)
@@ -308,7 +310,7 @@ namespace kerbal
 					this->ordered.swap(ano.ordered);
 				}
 
-				template <size_t M>
+				template <std::size_t M>
 				KERBAL_CONSTEXPR14
 				friend bool operator==(const static_flat_multiset<Tp, M, KeyCompare> & lhs,
 										const static_flat_multiset<Tp, N, KeyCompare> & rhs)
@@ -316,7 +318,7 @@ namespace kerbal
 					return lhs.ordered == rhs.ordered;
 				}
 
-				template <size_t M>
+				template <std::size_t M>
 				KERBAL_CONSTEXPR14
 				friend bool operator!=(const static_flat_multiset<Tp, M, KeyCompare> & lhs,
 										const static_flat_multiset<Tp, N, KeyCompare> & rhs)
@@ -324,7 +326,7 @@ namespace kerbal
 					return lhs.ordered != rhs.ordered;
 				}
 
-				template <size_t M>
+				template <std::size_t M>
 				KERBAL_CONSTEXPR14
 				friend bool operator<(const static_flat_multiset<Tp, M, KeyCompare> & lhs,
 										const static_flat_multiset<Tp, N, KeyCompare> & rhs)
@@ -332,7 +334,7 @@ namespace kerbal
 					return lhs.ordered < rhs.ordered;
 				}
 
-				template <size_t M>
+				template <std::size_t M>
 				KERBAL_CONSTEXPR14
 				friend bool operator<=(const static_flat_multiset<Tp, M, KeyCompare> & lhs,
 										const static_flat_multiset<Tp, N, KeyCompare> & rhs)
@@ -340,7 +342,7 @@ namespace kerbal
 					return lhs.ordered <= rhs.ordered;
 				}
 
-				template <size_t M>
+				template <std::size_t M>
 				KERBAL_CONSTEXPR14
 				friend bool operator>(const static_flat_multiset<Tp, M, KeyCompare> & lhs,
 										const static_flat_multiset<Tp, N, KeyCompare> & rhs)
@@ -348,7 +350,7 @@ namespace kerbal
 					return lhs.ordered > rhs.ordered;
 				}
 
-				template <size_t M>
+				template <std::size_t M>
 				KERBAL_CONSTEXPR14
 				friend bool operator>=(const static_flat_multiset<Tp, M, KeyCompare> & lhs,
 										const static_flat_multiset<Tp, N, KeyCompare> & rhs)

@@ -22,6 +22,7 @@
 
 #include <cstddef>
 
+
 namespace kerbal
 {
 
@@ -35,13 +36,13 @@ namespace kerbal
 				KERBAL_STATIC_ASSERT(kerbal::type_traits::is_integral<Tp>::value, "");
 
 			public:
-				typedef size_t result_type;
+				typedef std::size_t result_type;
 				typedef Tp argument_type;
 
 				KERBAL_CONSTEXPR
 				result_type operator()(const Tp & val) const KERBAL_NOEXCEPT
 				{
-					return static_cast<size_t>(val);
+					return static_cast<std::size_t>(val);
 				}
 		};
 
@@ -129,7 +130,7 @@ namespace kerbal
 				typedef kerbal::hash::murmur_hash2<float>::result_type result_type;
 				typedef float argument_type;
 
-				size_t operator()(float val) const KERBAL_NOEXCEPT
+				std::size_t operator()(float val) const KERBAL_NOEXCEPT
 				{
 					return val == 0.0 ? 0 : kerbal::hash::murmur_hash2<float>()(val);
 				}
@@ -141,7 +142,7 @@ namespace kerbal
 				typedef kerbal::hash::murmur_hash2<double>::result_type result_type;
 				typedef double argument_type;
 
-				size_t operator()(double val) const KERBAL_NOEXCEPT
+				std::size_t operator()(double val) const KERBAL_NOEXCEPT
 				{
 					return val == 0.0 ? 0 : kerbal::hash::murmur_hash2<double>()(val);
 				}
@@ -153,7 +154,7 @@ namespace kerbal
 				typedef kerbal::hash::murmur_hash2<long double>::result_type result_type;
 				typedef long double argument_type;
 
-				size_t operator()(long double val) const KERBAL_NOEXCEPT
+				std::size_t operator()(long double val) const KERBAL_NOEXCEPT
 				{
 					return val == 0.0 ? 0 : kerbal::hash::murmur_hash2<long double>()(val);
 				}
@@ -162,12 +163,12 @@ namespace kerbal
 		template <typename Tp>
 		struct hash<Tp*>
 		{
-				typedef size_t result_type;
+				typedef std::size_t result_type;
 				typedef Tp* argument_type;
 
-				size_t operator()(Tp* p) const KERBAL_NOEXCEPT
+				std::size_t operator()(Tp* p) const KERBAL_NOEXCEPT
 				{
-					return reinterpret_cast<size_t>(p);
+					return reinterpret_cast<std::size_t>(p);
 				}
 		};
 

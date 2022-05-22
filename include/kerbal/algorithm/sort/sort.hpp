@@ -22,6 +22,7 @@
 #include <kerbal/type_traits/integral_constant.hpp>
 #include <kerbal/type_traits/is_same.hpp>
 
+#include <cstddef>
 #include <functional>
 
 
@@ -91,20 +92,20 @@ namespace kerbal
 					typedef
 					typename kerbal::type_traits::conditional<
 							IS_PIGEONHOLE_SORT_ASC::value,
-							kerbal::type_traits::integral_constant<size_t, 0>,
+							kerbal::type_traits::integral_constant<std::size_t, 0>,
 							typename kerbal::type_traits::conditional<
 									IS_PIGEONHOLE_SORT_DESC::value,
-									kerbal::type_traits::integral_constant<size_t, 1>,
+									kerbal::type_traits::integral_constant<std::size_t, 1>,
 									typename kerbal::type_traits::conditional<
 											IS_RADIX_SORT_ASC::value,
-											kerbal::type_traits::integral_constant<size_t, 2>,
+											kerbal::type_traits::integral_constant<std::size_t, 2>,
 											typename kerbal::type_traits::conditional<
 													IS_RADIX_SORT_DESC::value,
-													kerbal::type_traits::integral_constant<size_t, 3>,
+													kerbal::type_traits::integral_constant<std::size_t, 3>,
 													typename kerbal::type_traits::conditional<
 															IS_INTRO_SORT_DESC::value,
-															kerbal::type_traits::integral_constant<size_t, 4>,
-															kerbal::type_traits::integral_constant<size_t, 5>
+															kerbal::type_traits::integral_constant<std::size_t, 4>,
+															kerbal::type_traits::integral_constant<std::size_t, 5>
 													>::type
 											>::type
 									>::type
@@ -123,7 +124,7 @@ namespace kerbal
 			template <typename ForwardIterator, typename Compare>
 			KERBAL_CONSTEXPR14
 			void sort(ForwardIterator first, ForwardIterator last, Compare,
-						kerbal::type_traits::integral_constant<size_t, 0>)
+						kerbal::type_traits::integral_constant<std::size_t, 0>)
 			{
 				kerbal::algorithm::pigeonhole_sort(first, last, kerbal::type_traits::false_type());
 			}
@@ -131,21 +132,21 @@ namespace kerbal
 			template <typename ForwardIterator, typename Compare>
 			KERBAL_CONSTEXPR14
 			void sort(ForwardIterator first, ForwardIterator last, Compare,
-						kerbal::type_traits::integral_constant<size_t, 1>)
+						kerbal::type_traits::integral_constant<std::size_t, 1>)
 			{
 				kerbal::algorithm::pigeonhole_sort(first, last, kerbal::type_traits::true_type());
 			}
 
 			template <typename ForwardIterator, typename Compare>
 			void sort(ForwardIterator first, ForwardIterator last, Compare,
-						kerbal::type_traits::integral_constant<size_t, 2>)
+						kerbal::type_traits::integral_constant<std::size_t, 2>)
 			{
 				kerbal::algorithm::radix_sort(first, last, kerbal::type_traits::false_type());
 			}
 
 			template <typename ForwardIterator, typename Compare>
 			void sort(ForwardIterator first, ForwardIterator last, Compare,
-						kerbal::type_traits::integral_constant<size_t, 3>)
+						kerbal::type_traits::integral_constant<std::size_t, 3>)
 			{
 				kerbal::algorithm::radix_sort(first, last, kerbal::type_traits::true_type());
 			}
@@ -153,14 +154,14 @@ namespace kerbal
 			template <typename ForwardIterator, typename Compare>
 			KERBAL_CONSTEXPR14
 			void sort(ForwardIterator first, ForwardIterator last, Compare compare,
-						kerbal::type_traits::integral_constant<size_t, 4>)
+						kerbal::type_traits::integral_constant<std::size_t, 4>)
 			{
 				kerbal::algorithm::intro_sort(first, last, compare);
 			}
 
 			template <typename ForwardIterator, typename Compare>
 			void sort(ForwardIterator first, ForwardIterator last, Compare compare,
-						kerbal::type_traits::integral_constant<size_t, 5>)
+						kerbal::type_traits::integral_constant<std::size_t, 5>)
 			{
 				kerbal::algorithm::stable_sort(first, last, compare);
 			}

@@ -38,7 +38,7 @@ namespace kerbal
 							)
 		;
 
-		template <typename Tp, size_t N>
+		template <typename Tp, std::size_t N>
 		KERBAL_CONSTEXPR14
 		void swap(Tp (&lhs)[N], Tp (&rhs)[N]);
 
@@ -133,7 +133,7 @@ namespace kerbal
 									kerbal::iterator::iterator_category(a_first));
 		}
 
-		template <typename Tp, size_t N>
+		template <typename Tp, std::size_t N>
 		KERBAL_CONSTEXPR14
 		void swap(Tp (&lhs)[N], Tp (&rhs)[N])
 		{

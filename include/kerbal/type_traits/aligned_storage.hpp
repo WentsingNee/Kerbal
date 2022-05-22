@@ -16,13 +16,14 @@
 
 #include <cstddef>
 
+
 namespace kerbal
 {
 
 	namespace type_traits
 	{
 
-		template <size_t Len, size_t Alignment>
+		template <std::size_t Len, std::size_t Alignment>
 		struct aligned_storage
 		{
 			union type
