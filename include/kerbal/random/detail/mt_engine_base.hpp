@@ -88,42 +88,42 @@ namespace kerbal
 					typedef kerbal::type_traits::integral_constant<std::size_t, N - M> NPM;
 
 					typedef kerbal::type_traits::integral_constant<std::size_t, 512 / 32> STEP;
-					const __m512i ymm_UPPER_MASK = _mm512_set1_epi32(UPPER_MASK::value); // AVX512F
-					const __m512i ymm_ZERO = _mm512_set1_epi32(0); // AVX512F
-					const __m512i ymm_ONE = _mm512_set1_epi32(1); // AVX512F
-					const __m512i ymm_A = _mm512_set1_epi32(A); // AVX512F
+					const __m512i zmm_UPPER_MASK = _mm512_set1_epi32(UPPER_MASK::value); // AVX512F
+					const __m512i zmm_ZERO = _mm512_set1_epi32(0); // AVX512F
+					const __m512i zmm_ONE = _mm512_set1_epi32(1); // AVX512F
+					const __m512i zmm_A = _mm512_set1_epi32(A); // AVX512F
 
 					std::size_t i = 0;
 					for (; i + STEP::value <= NPM::value; i += STEP::value) {
-						__m512i ymm_mti = _mm512_loadu_si512(reinterpret_cast<const __m512i*>(&mt[i])); // AVX512F
-						__m512i ymm_mtip1 = _mm512_loadu_si512(reinterpret_cast<const __m512i*>(&mt[i + 1])); // AVX512F
+						__m512i zmm_mti = _mm512_loadu_si512(&mt[i]); // AVX512F
+						__m512i zmm_mtip1 = _mm512_loadu_si512(&mt[i + 1]); // AVX512F
 
 					/*
-						__m512i ymm_y = _mm512_or_si512( // AVX512F
-								_mm512_and_si512(ymm_UPPER_MASK, ymm_mti), // AVX512F
-								_mm512_andnot_si512(ymm_UPPER_MASK, ymm_mtip1)); // AVX512F
+						__m512i zmm_y = _mm512_or_si512( // AVX512F
+								_mm512_and_si512(zmm_UPPER_MASK, zmm_mti), // AVX512F
+								_mm512_andnot_si512(zmm_UPPER_MASK, zmm_mtip1)); // AVX512F
 
 						can be optimised to ternarylogic operation as below:
 					*/
 
-						__m512i ymm_y = _mm512_ternarylogic_epi32(ymm_mti, ymm_UPPER_MASK, ymm_mtip1, 226); // AVX512F, 226 = 0b11100010
+						__m512i zmm_y = _mm512_ternarylogic_epi32(zmm_mti, zmm_UPPER_MASK, zmm_mtip1, 226); // AVX512F, 226 = 0b11100010
 
-						__m512i ymm_mag_mask = _mm512_and_si512(ymm_y, ymm_ONE); // AVX512F
-						ymm_mag_mask = _mm512_sub_epi32(ymm_ZERO, ymm_mag_mask); // AVX512F <=> _mm512_cmpeq_epi32(ymm_mag_mask, ymm_ONE) AVX512F
-						ymm_mag_mask = _mm512_and_si512(ymm_mag_mask, ymm_A); // AVX512F
-						ymm_y = _mm512_srli_epi32(ymm_y, 1); // AVX512F
-						__m512i ymm_mtipm = _mm512_loadu_si512(reinterpret_cast<const __m512i*>(&mt[i + M])); // AVX512F
+						__m512i zmm_mag_mask = _mm512_and_si512(zmm_y, zmm_ONE); // AVX512F
+						zmm_mag_mask = _mm512_sub_epi32(zmm_ZERO, zmm_mag_mask); // AVX512F <=> _mm512_cmpeq_epi32(zmm_mag_mask, zmm_ONE) AVX512F
+						zmm_mag_mask = _mm512_and_si512(zmm_mag_mask, zmm_A); // AVX512F
+						zmm_y = _mm512_srli_epi32(zmm_y, 1); // AVX512F
+						__m512i zmm_mtipm = _mm512_loadu_si512(&mt[i + M]); // AVX512F
 
 					/*
-						ymm_y = _mm512_xor_si512(ymm_y, ymm_mag_mask); // AVX512F
-						ymm_mti = _mm512_xor_si512(ymm_y, ymm_mtipm); // AVX512F
+						zmm_y = _mm512_xor_si512(zmm_y, zmm_mag_mask); // AVX512F
+						zmm_mti = _mm512_xor_si512(zmm_y, zmm_mtipm); // AVX512F
 
 						can be optimised to ternarylogic operation as below:
 					*/
 
-						ymm_mti = _mm512_ternarylogic_epi32(ymm_y, ymm_mag_mask, ymm_mtipm, 150); // AVX512F, 150 = 0b10010110
+						zmm_mti = _mm512_ternarylogic_epi32(zmm_y, zmm_mag_mask, zmm_mtipm, 150); // AVX512F, 150 = 0b10010110
 
-						_mm512_storeu_si512(reinterpret_cast<__m512i*>(&mt[i]), ymm_mti); // AVX512F
+						_mm512_storeu_si512(&mt[i], zmm_mti); // AVX512F
 					}
 
 					while (i < NPM::value) {
@@ -132,35 +132,35 @@ namespace kerbal
 					}
 
 					for (; i + STEP::value <= N - 1; i += STEP::value) {
-						__m512i ymm_mti = _mm512_loadu_si512(reinterpret_cast<const __m512i*>(&mt[i])); // AVX512F
-						__m512i ymm_mtip1 = _mm512_loadu_si512(reinterpret_cast<const __m512i*>(&mt[i + 1])); // AVX512F
+						__m512i zmm_mti = _mm512_loadu_si512(&mt[i]); // AVX512F
+						__m512i zmm_mtip1 = _mm512_loadu_si512(&mt[i + 1]); // AVX512F
 
 					/*
-						__m512i ymm_y = _mm512_or_si512( // AVX512F
-								_mm512_and_si512(ymm_UPPER_MASK, ymm_mti), // AVX512F
-								_mm512_andnot_si512(ymm_UPPER_MASK, ymm_mtip1)); // AVX512F
+						__m512i zmm_y = _mm512_or_si512( // AVX512F
+								_mm512_and_si512(zmm_UPPER_MASK, zmm_mti), // AVX512F
+								_mm512_andnot_si512(zmm_UPPER_MASK, zmm_mtip1)); // AVX512F
 
 						can be optimised to ternarylogic operation as below:
 					*/
 
-						__m512i ymm_y = _mm512_ternarylogic_epi32(ymm_mti, ymm_UPPER_MASK, ymm_mtip1, 226); // AVX512F, 226 = 0b11100010
+						__m512i zmm_y = _mm512_ternarylogic_epi32(zmm_mti, zmm_UPPER_MASK, zmm_mtip1, 226); // AVX512F, 226 = 0b11100010
 
-						__m512i ymm_mag_mask = _mm512_and_si512(ymm_y, ymm_ONE); // AVX512F
-						ymm_mag_mask = _mm512_sub_epi32(ymm_ZERO, ymm_mag_mask); // AVX512F <=> _mm512_cmpeq_epi32(ymm_mag_mask, ymm_ONE) AVX512F
-						ymm_mag_mask = _mm512_and_si512(ymm_mag_mask, ymm_A); // AVX512F
-						ymm_y = _mm512_srli_epi32(ymm_y, 1); // AVX512F
-						__m512i ymm_mtipm = _mm512_loadu_si512(reinterpret_cast<const __m512i*>(&mt[i - (NPM::value)])); // AVX512F
+						__m512i zmm_mag_mask = _mm512_and_si512(zmm_y, zmm_ONE); // AVX512F
+						zmm_mag_mask = _mm512_sub_epi32(zmm_ZERO, zmm_mag_mask); // AVX512F <=> _mm512_cmpeq_epi32(zmm_mag_mask, zmm_ONE) AVX512F
+						zmm_mag_mask = _mm512_and_si512(zmm_mag_mask, zmm_A); // AVX512F
+						zmm_y = _mm512_srli_epi32(zmm_y, 1); // AVX512F
+						__m512i zmm_mtipm = _mm512_loadu_si512(&mt[i - (NPM::value)]); // AVX512F
 
 					/*
-						ymm_y = _mm512_xor_si512(ymm_y, ymm_mag_mask); // AVX512F
-						ymm_mti = _mm512_xor_si512(ymm_y, ymm_mtipm); // AVX512F
+						zmm_y = _mm512_xor_si512(zmm_y, zmm_mag_mask); // AVX512F
+						zmm_mti = _mm512_xor_si512(zmm_y, zmm_mtipm); // AVX512F
 
 						can be optimised to ternarylogic operation as below:
 					*/
 
-						ymm_mti = _mm512_ternarylogic_epi32(ymm_y, ymm_mag_mask, ymm_mtipm, 150); // AVX512F, 150 = 0b10010110
+						zmm_mti = _mm512_ternarylogic_epi32(zmm_y, zmm_mag_mask, zmm_mtipm, 150); // AVX512F, 150 = 0b10010110
 
-						_mm512_storeu_si512(reinterpret_cast<__m512i*>(&mt[i]), ymm_mti); // AVX512F
+						_mm512_storeu_si512(&mt[i], zmm_mti); // AVX512F
 					}
 
 					while (i < N - 1) {
@@ -184,42 +184,42 @@ namespace kerbal
 					typedef kerbal::type_traits::integral_constant<std::size_t, N - M> NPM;
 
 					typedef kerbal::type_traits::integral_constant<std::size_t, 512 / 64> STEP;
-					const __m512i ymm_UPPER_MASK = _mm512_set1_epi64(UPPER_MASK::value); // AVX512F
-					const __m512i ymm_ZERO = _mm512_set1_epi64(0); // AVX512F
-					const __m512i ymm_ONE = _mm512_set1_epi64(1); // AVX512F
-					const __m512i ymm_A = _mm512_set1_epi64(A); // AVX512F
+					const __m512i zmm_UPPER_MASK = _mm512_set1_epi64(UPPER_MASK::value); // AVX512F
+					const __m512i zmm_ZERO = _mm512_set1_epi64(0); // AVX512F
+					const __m512i zmm_ONE = _mm512_set1_epi64(1); // AVX512F
+					const __m512i zmm_A = _mm512_set1_epi64(A); // AVX512F
 
 					std::size_t i = 0;
 					for (; i + STEP::value <= NPM::value; i += STEP::value) {
-						__m512i ymm_mti = _mm512_loadu_si512(reinterpret_cast<const __m512i*>(&mt[i])); // AVX512F
-						__m512i ymm_mtip1 = _mm512_loadu_si512(reinterpret_cast<const __m512i*>(&mt[i + 1])); // AVX512F
+						__m512i zmm_mti = _mm512_loadu_si512(&mt[i]); // AVX512F
+						__m512i zmm_mtip1 = _mm512_loadu_si512(&mt[i + 1]); // AVX512F
 
 					/*
-						__m512i ymm_y = _mm512_or_si512( // AVX512F
-								_mm512_and_si512(ymm_UPPER_MASK, ymm_mti), // AVX512F
-								_mm512_andnot_si512(ymm_UPPER_MASK, ymm_mtip1)); // AVX512F
+						__m512i zmm_y = _mm512_or_si512( // AVX512F
+								_mm512_and_si512(zmm_UPPER_MASK, zmm_mti), // AVX512F
+								_mm512_andnot_si512(zmm_UPPER_MASK, zmm_mtip1)); // AVX512F
 
 						can be optimised to ternarylogic operation as below:
 					*/
 
-						__m512i ymm_y = _mm512_ternarylogic_epi64(ymm_mti, ymm_UPPER_MASK, ymm_mtip1, 226); // AVX512F, 226 = 0b11100010
+						__m512i zmm_y = _mm512_ternarylogic_epi64(zmm_mti, zmm_UPPER_MASK, zmm_mtip1, 226); // AVX512F, 226 = 0b11100010
 
-						__m512i ymm_mag_mask = _mm512_and_si512(ymm_y, ymm_ONE); // AVX512F
-						ymm_mag_mask = _mm512_sub_epi64(ymm_ZERO, ymm_mag_mask); // AVX512F <=> _mm512_cmpeq_epi64(ymm_mag_mask, ymm_ONE) AVX512F
-						ymm_mag_mask = _mm512_and_si512(ymm_mag_mask, ymm_A); // AVX512F
-						ymm_y = _mm512_srli_epi64(ymm_y, 1); // AVX512F
-						__m512i ymm_mtipm = _mm512_loadu_si512(reinterpret_cast<const __m512i*>(&mt[i + M])); // AVX512F
+						__m512i zmm_mag_mask = _mm512_and_si512(zmm_y, zmm_ONE); // AVX512F
+						zmm_mag_mask = _mm512_sub_epi64(zmm_ZERO, zmm_mag_mask); // AVX512F <=> _mm512_cmpeq_epi64(zmm_mag_mask, zmm_ONE) AVX512F
+						zmm_mag_mask = _mm512_and_si512(zmm_mag_mask, zmm_A); // AVX512F
+						zmm_y = _mm512_srli_epi64(zmm_y, 1); // AVX512F
+						__m512i zmm_mtipm = _mm512_loadu_si512(&mt[i + M]); // AVX512F
 
 					/*
-						ymm_y = _mm512_xor_si512(ymm_y, ymm_mag_mask); // AVX512F
-						ymm_mti = _mm512_xor_si512(ymm_y, ymm_mtipm); // AVX512F
+						zmm_y = _mm512_xor_si512(zmm_y, zmm_mag_mask); // AVX512F
+						zmm_mti = _mm512_xor_si512(zmm_y, zmm_mtipm); // AVX512F
 
 						can be optimised to ternarylogic operation as below:
 					*/
 
-						ymm_mti = _mm512_ternarylogic_epi64(ymm_y, ymm_mag_mask, ymm_mtipm, 150); // AVX512F, 150 = 0b10010110
+						zmm_mti = _mm512_ternarylogic_epi64(zmm_y, zmm_mag_mask, zmm_mtipm, 150); // AVX512F, 150 = 0b10010110
 
-						_mm512_storeu_si512(reinterpret_cast<__m512i*>(&mt[i]), ymm_mti); // AVX512F
+						_mm512_storeu_si512(&mt[i], zmm_mti); // AVX512F
 					}
 
 					while (i < NPM::value) {
@@ -228,35 +228,35 @@ namespace kerbal
 					}
 
 					for (; i + STEP::value <= N - 1; i += STEP::value) {
-						__m512i ymm_mti = _mm512_loadu_si512(reinterpret_cast<const __m512i*>(&mt[i])); // AVX512F
-						__m512i ymm_mtip1 = _mm512_loadu_si512(reinterpret_cast<const __m512i*>(&mt[i + 1])); // AVX512F
+						__m512i zmm_mti = _mm512_loadu_si512(&mt[i]); // AVX512F
+						__m512i zmm_mtip1 = _mm512_loadu_si512(&mt[i + 1]); // AVX512F
 
 					/*
-						__m512i ymm_y = _mm512_or_si512( // AVX512F
-								_mm512_and_si512(ymm_UPPER_MASK, ymm_mti), // AVX512F
-								_mm512_andnot_si512(ymm_UPPER_MASK, ymm_mtip1)); // AVX512F
+						__m512i zmm_y = _mm512_or_si512( // AVX512F
+								_mm512_and_si512(zmm_UPPER_MASK, zmm_mti), // AVX512F
+								_mm512_andnot_si512(zmm_UPPER_MASK, zmm_mtip1)); // AVX512F
 
 						can be optimised to ternarylogic operation as below:
 					*/
 
-						__m512i ymm_y = _mm512_ternarylogic_epi64(ymm_mti, ymm_UPPER_MASK, ymm_mtip1, 226); // AVX512F, 226 = 0b11100010
+						__m512i zmm_y = _mm512_ternarylogic_epi64(zmm_mti, zmm_UPPER_MASK, zmm_mtip1, 226); // AVX512F, 226 = 0b11100010
 
-						__m512i ymm_mag_mask = _mm512_and_si512(ymm_y, ymm_ONE); // AVX512F
-						ymm_mag_mask = _mm512_sub_epi64(ymm_ZERO, ymm_mag_mask); // AVX512F <=> _mm512_cmpeq_epi64(ymm_mag_mask, ymm_ONE) AVX512F
-						ymm_mag_mask = _mm512_and_si512(ymm_mag_mask, ymm_A); // AVX512F
-						ymm_y = _mm512_srli_epi64(ymm_y, 1); // AVX512F
-						__m512i ymm_mtipm = _mm512_loadu_si512(reinterpret_cast<const __m512i*>(&mt[i - (NPM::value)])); // AVX512F
+						__m512i zmm_mag_mask = _mm512_and_si512(zmm_y, zmm_ONE); // AVX512F
+						zmm_mag_mask = _mm512_sub_epi64(zmm_ZERO, zmm_mag_mask); // AVX512F <=> _mm512_cmpeq_epi64(zmm_mag_mask, zmm_ONE) AVX512F
+						zmm_mag_mask = _mm512_and_si512(zmm_mag_mask, zmm_A); // AVX512F
+						zmm_y = _mm512_srli_epi64(zmm_y, 1); // AVX512F
+						__m512i zmm_mtipm = _mm512_loadu_si512(&mt[i - (NPM::value)]); // AVX512F
 
 					/*
-						ymm_y = _mm512_xor_si512(ymm_y, ymm_mag_mask); // AVX512F
-						ymm_mti = _mm512_xor_si512(ymm_y, ymm_mtipm); // AVX512F
+						zmm_y = _mm512_xor_si512(zmm_y, zmm_mag_mask); // AVX512F
+						zmm_mti = _mm512_xor_si512(zmm_y, zmm_mtipm); // AVX512F
 
 						can be optimised to ternarylogic operation as below:
 					*/
 
-						ymm_mti = _mm512_ternarylogic_epi64(ymm_y, ymm_mag_mask, ymm_mtipm, 150); // AVX512F, 150 = 0b10010110
+						zmm_mti = _mm512_ternarylogic_epi64(zmm_y, zmm_mag_mask, zmm_mtipm, 150); // AVX512F, 150 = 0b10010110
 
-						_mm512_storeu_si512(reinterpret_cast<__m512i*>(&mt[i]), ymm_mti); // AVX512F
+						_mm512_storeu_si512(&mt[i], zmm_mti); // AVX512F
 					}
 
 					while (i < N - 1) {
