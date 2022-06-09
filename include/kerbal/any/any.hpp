@@ -22,6 +22,7 @@
 #include <kerbal/compatibility/namespace_std_scope.hpp>
 #include <kerbal/compatibility/noexcept.hpp>
 #include <kerbal/memory/allocator_traits.hpp>
+#include <kerbal/memory/any_storage.hpp>
 #include <kerbal/type_traits/aligned_storage.hpp>
 #include <kerbal/type_traits/conditional.hpp>
 #include <kerbal/type_traits/const_deduction.hpp>
@@ -100,7 +101,7 @@ namespace kerbal
 #	endif
 
 		template <typename T, std::size_t Size, std::size_t Align>
-		struct is_any_internal_stored_type :
+		struct is_any_embedded_stored_type :
 				kerbal::type_traits::bool_constant<
 						sizeof(T) <= Size && KERBAL_ALIGNOF(T) <= Align
 #	if __cplusplus >= 201103L
@@ -116,60 +117,6 @@ namespace kerbal
 		namespace detail
 		{
 
-			struct any_node_base
-			{
-			};
-
-			template <typename T>
-			struct any_node :
-					public any_node_base
-			{
-					T value;
-
-#		if __cplusplus >= 201103L
-
-					template <typename ... Args>
-					KERBAL_CONSTEXPR
-					explicit any_node(kerbal::utility::in_place_t, Args&& ... args)
-										KERBAL_CONDITIONAL_NOEXCEPT(
-												(std::is_nothrow_constructible<T, Args&&...>::value)
-										)
-							: value(kerbal::utility::forward<Args>(args)...)
-					{
-					}
-
-#		else
-
-#				define EMPTY
-#				define REMAINF(exp) exp
-#				define LEFT_JOIN_COMMA(exp) , exp
-#				define THEAD_NOT_EMPTY(exp) template <exp>
-#				define TARGS_DECL(i) typename KERBAL_MACRO_CONCAT(Arg, i)
-#				define ARGS_DECL(i) const KERBAL_MACRO_CONCAT(Arg, i) & KERBAL_MACRO_CONCAT(arg, i)
-#				define ARGS_USE(i) KERBAL_MACRO_CONCAT(arg, i)
-#				define FBODY(i) \
-					KERBAL_OPT_PPEXPAND_WITH_COMMA_N(THEAD_NOT_EMPTY, EMPTY, TARGS_DECL, i) \
-					explicit any_node(kerbal::utility::in_place_t KERBAL_OPT_PPEXPAND_WITH_COMMA_N(LEFT_JOIN_COMMA, EMPTY, ARGS_DECL, i)) \
-							: value(KERBAL_OPT_PPEXPAND_WITH_COMMA_N(REMAINF, EMPTY, ARGS_USE, i)) \
-					{ \
-					}
-
-					KERBAL_PPEXPAND_N(FBODY, KERBAL_PPEXPAND_EMPTY_SEPARATOR, 0)
-					KERBAL_PPEXPAND_N(FBODY, KERBAL_PPEXPAND_EMPTY_SEPARATOR, 20)
-
-#				undef EMPTY
-#				undef REMAINF
-#				undef LEFT_JOIN_COMMA
-#				undef THEAD_NOT_EMPTY
-#				undef TARGS_DECL
-#				undef ARGS_DECL
-#				undef ARGS_USE
-#				undef FBODY
-
-#		endif
-
-			};
-
 			template <std::size_t Size, std::size_t Align, typename Allocator>
 			struct any_manager_table
 			{
@@ -179,9 +126,8 @@ namespace kerbal
 #	if __cplusplus >= 201103L
 					typedef void (*xfer_entry_type)(any &, any &&) KERBAL_NOEXCEPT17;
 #	endif
-					typedef void (*swap_xfer_to_tmp_entry_type)(any &, typename any::storage &) KERBAL_NOEXCEPT17;
-					typedef void (*swap_xfer_from_other_entry_type)(any &, any &) KERBAL_NOEXCEPT17;
-					typedef void (*swap_xfer_from_tmp_entry_type)(any &, typename any::storage &) KERBAL_NOEXCEPT17;
+					typedef void (*swap_out_entry_type)(any &, any &) KERBAL_NOEXCEPT17;
+					typedef void (*swap_entry_type)(any &, any &) KERBAL_NOEXCEPT17;
 					typedef const std::type_info & (*type_info_entry_type)() KERBAL_NOEXCEPT17;
 
 
@@ -190,9 +136,8 @@ namespace kerbal
 #	if __cplusplus >= 201103L
 					xfer_entry_type						xfer;
 #	endif
-					swap_xfer_to_tmp_entry_type			swap_xfer_to_tmp;
-					swap_xfer_from_other_entry_type		swap_xfer_from_other;
-					swap_xfer_from_tmp_entry_type		swap_xfer_from_tmp;
+					swap_out_entry_type					swap_out;
+					swap_entry_type						swap;
 					type_info_entry_type				type_info;
 
 
@@ -203,9 +148,8 @@ namespace kerbal
 #	if __cplusplus >= 201103L
 								  xfer_entry_type						xfer,
 #	endif
-								  swap_xfer_to_tmp_entry_type			swap_xfer_to_tmp,
-								  swap_xfer_from_other_entry_type		swap_xfer_from_other,
-								  swap_xfer_from_tmp_entry_type			swap_xfer_from_tmp,
+								  swap_out_entry_type					swap_out,
+								  swap_entry_type						swap,
 								  type_info_entry_type					type_info
 					) KERBAL_NOEXCEPT :
 							destroy(destroy),
@@ -213,9 +157,8 @@ namespace kerbal
 #	if __cplusplus >= 201103L
 							xfer(xfer),
 #	endif
-							swap_xfer_to_tmp(swap_xfer_to_tmp),
-							swap_xfer_from_other(swap_xfer_from_other),
-							swap_xfer_from_tmp(swap_xfer_from_tmp),
+							swap_out(swap_out),
+							swap(swap),
 							type_info(type_info)
 					{
 					}
@@ -254,22 +197,17 @@ namespace kerbal
 #	endif
 
 					KERBAL_CONSTEXPR20
-					static void swap_xfer_to_tmp(any & /*self*/, typename any::storage & /*storage_temp*/) KERBAL_NOEXCEPT
+					static void swap_out(any & /*self*/, any & /*out*/) KERBAL_NOEXCEPT
 					{
 					}
 
 					KERBAL_CONSTEXPR20
-					static void swap_xfer_from_other(any & /*self*/, any & /*other*/) KERBAL_NOEXCEPT
+					static void swap(any & /*self*/, any & /*with*/) KERBAL_NOEXCEPT
 					{
 					}
 
 					KERBAL_CONSTEXPR20
-					static void swap_xfer_from_tmp(any & /*self*/, typename any::storage & /*storage_temp*/) KERBAL_NOEXCEPT
-					{
-					}
-
-					KERBAL_CONSTEXPR20
-					static const std::type_info & type_info() KERBAL_NOEXCEPT17
+					static const std::type_info & type_info() KERBAL_NOEXCEPT
 					{
 						return typeid(void);
 					}
@@ -281,7 +219,7 @@ namespace kerbal
 #			if __cplusplus >= 201703L
 					inline
 #			endif
-					static const manager_table mtable = manager_table(destroy, clone, xfer, swap_xfer_to_tmp, swap_xfer_from_other, swap_xfer_from_tmp, type_info);
+					static const manager_table mtable = manager_table(destroy, clone, xfer, swap_out, swap, type_info);
 #		else
 					static const manager_table mtable;
 #		endif
@@ -302,7 +240,7 @@ namespace kerbal
 
 			template <std::size_t Size, std::size_t Align, typename Allocator>
 			const typename any_manager_collection<void, Size, Align, Allocator>::manager_table
-			any_manager_collection<void, Size, Align, Allocator>::mtable(destroy, clone, swap_xfer_to_tmp, swap_xfer_from_other, swap_xfer_from_tmp, type_info);
+			any_manager_collection<void, Size, Align, Allocator>::mtable(destroy, clone, swap_out, swap, type_info);
 
 #	endif
 
@@ -311,264 +249,63 @@ namespace kerbal
 			{
 				private:
 					typedef kerbal::any::basic_any<Size, Align, Allocator>								any;
-					typedef kerbal::any::detail::any_node<T>											any_node;
+					typedef kerbal::memory::detail::any_node<T>											any_node;
 					typedef typename any::void_allocator_type											void_allocator_type;
 					typedef kerbal::memory::allocator_traits<void_allocator_type>						void_allocator_traits;
 					typedef typename void_allocator_traits::template rebind_alloc<any_node>::other		allocator_type;
 					typedef kerbal::memory::allocator_traits<allocator_type>							allocator_traits;
-					typedef is_any_internal_stored_type<T, Size, Align>									is_internal_stored_type;
+					typedef is_any_embedded_stored_type<T, Size, Align>									is_embedded_stored_type;
 					typedef any_manager_table<Size, Align, Allocator>									manager_table;
 
 					KERBAL_STATIC_ASSERT(!kerbal::type_traits::is_const<T>::value, "T couldn't be const");
 					KERBAL_STATIC_ASSERT(!kerbal::type_traits::is_reference<T>::value, "T couldn't be reference");
 
 					KERBAL_CONSTEXPR20
-					static void k_destroy(kerbal::type_traits::false_type, any & self) KERBAL_NOEXCEPT
-					{
-						any_node * stored_pos = self.template obj_pos<T>();
-						allocator_type alloc(self.void_alloc());
-						allocator_traits::destroy(alloc, stored_pos);
-						allocator_traits::deallocate(alloc, stored_pos, 1);
-					}
-
-					KERBAL_CONSTEXPR20
-					static void k_destroy(kerbal::type_traits::true_type, any & self) KERBAL_NOEXCEPT
-					{
-						any_node * stored_pos = self.template obj_pos<T>();
-						allocator_type alloc(self.void_alloc());
-						allocator_traits::destroy(alloc, stored_pos);
-					}
-
-					KERBAL_CONSTEXPR20
 					static void destroy(any & self) KERBAL_NOEXCEPT
 					{
-
-#			if __cplusplus > 201703L
-#				if KERBAL_HAS_IS_CONSTANT_EVALUATED_SUPPORT
-						if (KERBAL_IS_CONSTANT_EVALUATED()) {
-							k_destroy(kerbal::type_traits::false_type(), self);
-							return;
-						}
-#				endif
-#			endif
-
-						k_destroy(is_internal_stored_type(), self);
-					}
-
-
-
-					KERBAL_CONSTEXPR20
-					static void k_clone(kerbal::type_traits::false_type, any & self, const any & ano)
-					{
-						const any_node * anop = ano.template obj_pos<T>();
-						allocator_type alloc(self.void_alloc());
-
-						any_node * stored_pos = allocator_traits::allocate(alloc, 1);
-#			if __cpp_exceptions
-						try {
-#			endif
-							allocator_traits::construct(alloc, stored_pos, kerbal::utility::in_place_t(), anop->value);
-#			if __cpp_exceptions
-						} catch (...) {
-							allocator_traits::deallocate(alloc, stored_pos, 1);
-							throw;
-						}
-#			endif
-						self.k_storage.ptr = stored_pos;
-					}
-
-					static void k_clone(kerbal::type_traits::true_type, any & self, const any & ano)
-					{
-						const any_node * anop = ano.template obj_pos<T>();
-						allocator_type alloc(self.void_alloc());
-
-						any_node * stored_pos = reinterpret_cast<any_node*>(&self.k_storage.buffer);
-						allocator_traits::construct(alloc, stored_pos, kerbal::utility::in_place_t(), anop->value);
+						self.k_storage.template destroy<T>(is_embedded_stored_type(), self.void_alloc());
 					}
 
 					KERBAL_CONSTEXPR20
 					static void clone(any & self, const any & ano)
 					{
-
-#			if __cplusplus > 201703L
-#				if KERBAL_HAS_IS_CONSTANT_EVALUATED_SUPPORT
-						if (KERBAL_IS_CONSTANT_EVALUATED()) {
-							k_clone(kerbal::type_traits::false_type(), self, ano);
-							return;
-						}
-#				endif
-#			endif
-
-						k_clone(is_internal_stored_type(), self, ano);
+						const any_node * p_to_src = ano.template obj_pos<T>();
+						self.k_storage.template construct<T>(is_embedded_stored_type(), self.void_alloc(), p_to_src->value);
 					}
-
-
 
 #	if __cplusplus >= 201103L
-
-					KERBAL_CONSTEXPR20
-					static void k_xfer(kerbal::type_traits::false_type, any & self, any && ano) KERBAL_NOEXCEPT
-					{
-						any_node * anop = ano.template obj_pos<T>();
-						self.k_storage.ptr = anop;
-						ano.k_mtable = &detail::any_manager_collection<void, Size, Align, Allocator>::mtable;
-					}
-
-					static void k_xfer(kerbal::type_traits::true_type, any & self, any && ano) KERBAL_NOEXCEPT
-					{
-						KERBAL_STATIC_ASSERT(std::is_nothrow_move_constructible<T>::value, "Static check failed!");
-
-						any_node * anop = ano.template obj_pos<T>();
-
-						any_node * stored_pos = reinterpret_cast<any_node*>(&self.k_storage.buffer);
-						{
-							allocator_type alloc(self.void_alloc());
-							allocator_traits::construct(alloc, stored_pos, kerbal::utility::in_place_t(), kerbal::compatibility::move(anop->value));
-						}
-						{
-							allocator_type alloc(ano.void_alloc());
-							allocator_traits::destroy(alloc, anop);
-						}
-						ano.k_mtable = &detail::any_manager_collection<void, Size, Align, Allocator>::mtable;
-					}
 
 					KERBAL_CONSTEXPR20
 					static void xfer(any & self, any && ano) KERBAL_NOEXCEPT
 					{
-
-#			if __cplusplus > 201703L
-#				if KERBAL_HAS_IS_CONSTANT_EVALUATED_SUPPORT
-						if (KERBAL_IS_CONSTANT_EVALUATED()) {
-							k_xfer(kerbal::type_traits::false_type(), self, kerbal::compatibility::move(ano));
-							return;
-						}
-#				endif
-#			endif
-
-						k_xfer(is_internal_stored_type(), self, kerbal::compatibility::move(ano));
+						self.k_storage.template xfer<T>(is_embedded_stored_type(), self.void_alloc(), kerbal::compatibility::move(ano.k_storage), ano.void_alloc());
 					}
 
 #	endif
 
-
-
 					KERBAL_CONSTEXPR20
-					static void k_swap_xfer_to_tmp(kerbal::type_traits::false_type, any & self, typename any::storage & storage_temp) KERBAL_NOEXCEPT
+					static void swap_out(any & self, any & out) KERBAL_NOEXCEPT
 					{
-						storage_temp.ptr = self.template obj_pos<T>();
-					}
-
-					static void k_swap_xfer_to_tmp(kerbal::type_traits::true_type, any & self, typename any::storage & storage_temp) KERBAL_NOEXCEPT
-					{
-
-#	if __cplusplus >= 201103L
-						KERBAL_STATIC_ASSERT(std::is_nothrow_move_constructible<T>::value, "Static check failed!");
-#	else
-						KERBAL_STATIC_ASSERT(detail::any_can_be_nothrow_move_constructible<T>::value, "Static check failed!");
-#	endif
-
-						allocator_type alloc(self.void_alloc());
-						any_node * selfp = self.template obj_pos<T>();
-						any_node * top = reinterpret_cast<any_node*>(&storage_temp.buffer);
-						allocator_traits::construct(alloc, top, kerbal::utility::in_place_t(), kerbal::compatibility::to_xvalue(selfp->value));
-						allocator_traits::destroy(alloc, selfp);
-					}
-
-					static void swap_xfer_to_tmp(any & self, typename any::storage & storage_temp) KERBAL_NOEXCEPT
-					{
-
-#			if __cplusplus > 201703L
-#				if KERBAL_HAS_IS_CONSTANT_EVALUATED_SUPPORT
-						if (KERBAL_IS_CONSTANT_EVALUATED()) {
-							k_swap_xfer_to_tmp(kerbal::type_traits::false_type(), self, storage_temp);
-							return;
-						}
-#				endif
-#			endif
-
-						k_swap_xfer_to_tmp(is_internal_stored_type(), self, storage_temp);
-					}
-
-
-
-					KERBAL_CONSTEXPR20
-					static void k_swap_xfer_from_other(kerbal::type_traits::false_type, any & self, any & other) KERBAL_NOEXCEPT
-					{
-						self.k_storage.ptr = other.template obj_pos<T>();
-					}
-
-					static void k_swap_xfer_from_other(kerbal::type_traits::true_type, any & self, any & other) KERBAL_NOEXCEPT
-					{
-
-#	if __cplusplus >= 201103L
-						KERBAL_STATIC_ASSERT(std::is_nothrow_move_constructible<T>::value, "Static check failed!");
-#	else
-						KERBAL_STATIC_ASSERT(detail::any_can_be_nothrow_move_constructible<T>::value, "Static check failed!");
-#	endif
-
-						allocator_type alloc(self.void_alloc());
-						any_node * fromp = other.template obj_pos<T>();
-						any_node * selfp = reinterpret_cast<any_node*>(&self.k_storage.buffer);
-						allocator_traits::construct(alloc, selfp, kerbal::utility::in_place_t(), kerbal::compatibility::to_xvalue(fromp->value));
-						allocator_traits::destroy(alloc, fromp);
-					}
-
-					static void swap_xfer_from_other(any & self, any & other) KERBAL_NOEXCEPT
-					{
-
-#			if __cplusplus > 201703L
-#				if KERBAL_HAS_IS_CONSTANT_EVALUATED_SUPPORT
-						if (KERBAL_IS_CONSTANT_EVALUATED()) {
-							k_swap_xfer_from_other(kerbal::type_traits::false_type(), self, other);
-							return;
-						}
-#				endif
-#			endif
-
-						k_swap_xfer_from_other(is_internal_stored_type(), self, other);
-					}
-
-
-
-					KERBAL_CONSTEXPR20
-					static void k_swap_xfer_from_tmp(kerbal::type_traits::false_type, any & self, typename any::storage & storage_temp) KERBAL_NOEXCEPT
-					{
-						self.k_storage.ptr = storage_temp.ptr;
-					}
-
-					static void k_swap_xfer_from_tmp(kerbal::type_traits::true_type, any & self, typename any::storage & storage_temp) KERBAL_NOEXCEPT
-					{
-
-#	if __cplusplus >= 201103L
-						KERBAL_STATIC_ASSERT(std::is_nothrow_move_constructible<T>::value, "Static check failed!");
-#	else
-						KERBAL_STATIC_ASSERT(detail::any_can_be_nothrow_move_constructible<T>::value, "Static check failed!");
-#	endif
-
-						allocator_type alloc(self.void_alloc());
-						any_node * fromp = reinterpret_cast<any_node *>(&storage_temp.buffer);
-						any_node * selfp = reinterpret_cast<any_node*>(&self.k_storage.buffer);
-						allocator_traits::construct(alloc, selfp, kerbal::utility::in_place_t(), kerbal::compatibility::to_xvalue(fromp->value));
-						allocator_traits::destroy(alloc, fromp);
-					}
-
-					static void swap_xfer_from_tmp(any & self, typename any::storage & storage_temp) KERBAL_NOEXCEPT
-					{
-
-#			if __cplusplus > 201703L
-#				if KERBAL_HAS_IS_CONSTANT_EVALUATED_SUPPORT
-						if (KERBAL_IS_CONSTANT_EVALUATED()) {
-							k_swap_xfer_from_tmp(kerbal::type_traits::false_type(), self, storage_temp);
-							return;
-						}
-#				endif
-#			endif
-
-						k_swap_xfer_from_tmp(is_internal_stored_type(), self, storage_temp);
+						out.k_storage.template xfer<T>(is_embedded_stored_type(), out.void_alloc(), kerbal::compatibility::to_xvalue(self.k_storage), self.void_alloc());
 					}
 
 					KERBAL_CONSTEXPR20
-					static const std::type_info & type_info() KERBAL_NOEXCEPT17
+					static void swap(any & self, any & with) KERBAL_NOEXCEPT
+					{
+						typename any::any_storage_type tmp;
+
+						// self -> tmp
+						tmp.template xfer<T>(is_embedded_stored_type(), self.void_alloc(), kerbal::compatibility::to_xvalue(self.k_storage), self.void_alloc());
+
+						// with -> self
+						with.k_mtable->swap_out(with, self);
+
+						// tmp -> with
+						with.k_storage.template xfer<T>(is_embedded_stored_type(), with.void_alloc(), kerbal::compatibility::to_xvalue(tmp), with.void_alloc());
+					}
+
+					KERBAL_CONSTEXPR20
+					static const std::type_info & type_info() KERBAL_NOEXCEPT
 					{
 						return typeid(T);
 					}
@@ -580,7 +317,7 @@ namespace kerbal
 #			if __cplusplus >= 201703L
 					inline
 #			endif
-					static const manager_table mtable = manager_table(destroy, clone, xfer, swap_xfer_to_tmp, swap_xfer_from_other, swap_xfer_from_tmp, type_info);
+					static const manager_table mtable = manager_table(destroy, clone, xfer, swap_out, swap, type_info);
 #		else
 					static const manager_table mtable;
 #		endif
@@ -601,7 +338,7 @@ namespace kerbal
 
 			template <typename T, std::size_t Size, std::size_t Align, typename Allocator>
 			const typename any_manager_collection<T, Size, Align, Allocator>::manager_table
-			any_manager_collection<T, Size, Align, Allocator>::mtable(destroy, clone, swap_xfer_to_tmp, swap_xfer_from_other, swap_xfer_from_tmp, type_info);
+			any_manager_collection<T, Size, Align, Allocator>::mtable(destroy, clone, swap_out, swap, type_info);
 
 #	endif
 
@@ -630,85 +367,37 @@ namespace kerbal
 				const T* any_cast(const basic_any<Size2, Align2, Allocator2> * operand) KERBAL_NOEXCEPT;
 
 				template <typename T>
-				struct is_internal_stored_type :
-						is_any_internal_stored_type<T, Size, Align>
+				struct is_embedded_stored_type :
+						is_any_embedded_stored_type<T, Size, Align>
 				{
 				};
 
-				typedef kerbal::any::detail::any_node_base			any_node_base;
+				typedef kerbal::memory::detail::any_node_base			any_node_base;
 
 				template <typename T>
 				struct get_any_node_type
 				{
-						typedef kerbal::any::detail::any_node<T> type;
+						typedef kerbal::memory::detail::any_node<T> type;
 				};
 
-				typedef const detail::any_manager_table<Size, Align, Allocator>				manager_table;
-				typedef kerbal::utility::member_compress_helper<Allocator>					allocator_compress_helper;
-				typedef typename kerbal::type_traits::aligned_storage<Size, Align>::type	aligned_storage_type;
+				typedef const detail::any_manager_table<Size, Align, Allocator>		manager_table;
+				typedef kerbal::utility::member_compress_helper<Allocator>			allocator_compress_helper;
+				typedef kerbal::memory::any_storage<Size, Align>					any_storage_type;
 
 			public:
 				typedef Allocator void_allocator_type;
 
 			private:
 
+				any_storage_type k_storage;
 				manager_table * k_mtable;
-
-				union storage
-				{
-						any_node_base * ptr;
-						aligned_storage_type buffer;
-				} k_storage;
-
-				template <typename T>
-				KERBAL_CONSTEXPR20
-				typename get_any_node_type<T>::type *
-				k_obj_pos(kerbal::type_traits::false_type) KERBAL_NOEXCEPT
-				{
-					typedef typename get_any_node_type<T>::type any_node;
-					return static_cast<any_node *>(this->k_storage.ptr);
-				}
-
-				template <typename T>
-				typename get_any_node_type<T>::type *
-				k_obj_pos(kerbal::type_traits::true_type) KERBAL_NOEXCEPT
-				{
-					typedef typename get_any_node_type<T>::type any_node;
-					return reinterpret_cast<any_node *>(&this->k_storage.buffer);
-				}
 
 				template <typename T>
 				KERBAL_CONSTEXPR20
 				typename get_any_node_type<T>::type *
 				obj_pos() KERBAL_NOEXCEPT
 				{
-
-#			if __cplusplus > 201703L
-#				if KERBAL_HAS_IS_CONSTANT_EVALUATED_SUPPORT
-					if (KERBAL_IS_CONSTANT_EVALUATED()) {
-						return this->k_obj_pos<T>(kerbal::type_traits::false_type());
-					}
-#				endif
-#			endif
-
-					return this->k_obj_pos<T>(is_internal_stored_type<T>());
-				}
-
-				template <typename T>
-				KERBAL_CONSTEXPR20
-				const typename get_any_node_type<T>::type *
-				k_obj_pos(kerbal::type_traits::false_type) const KERBAL_NOEXCEPT
-				{
-					typedef typename get_any_node_type<T>::type any_node;
-					return static_cast<const any_node *>(this->k_storage.ptr);
-				}
-
-				template <typename T>
-				const typename get_any_node_type<T>::type *
-				k_obj_pos(kerbal::type_traits::true_type) const KERBAL_NOEXCEPT
-				{
-					typedef typename get_any_node_type<T>::type any_node;
-					return reinterpret_cast<const any_node *>(&this->k_storage.buffer);
+					return this->k_storage.template obj_pos<T>(is_embedded_stored_type<T>());
 				}
 
 				template <typename T>
@@ -716,16 +405,7 @@ namespace kerbal
 				const typename get_any_node_type<T>::type *
 				obj_pos() const KERBAL_NOEXCEPT
 				{
-
-#			if __cplusplus > 201703L
-#				if KERBAL_HAS_IS_CONSTANT_EVALUATED_SUPPORT
-					if (KERBAL_IS_CONSTANT_EVALUATED()) {
-						return this->k_obj_pos<T>(kerbal::type_traits::false_type());
-					}
-#				endif
-#			endif
-
-					return this->k_obj_pos<T>(is_internal_stored_type<T>());
+					return this->k_storage.template obj_pos<T>(is_embedded_stored_type<T>());
 				}
 
 				KERBAL_CONSTEXPR20
@@ -778,6 +458,7 @@ namespace kerbal
 						k_mtable(src.k_mtable)
 				{
 					this->k_mtable->xfer(*this, kerbal::compatibility::move(src));
+					src.k_mtable = mtable_of_type<void>();
 				}
 
 #	endif
@@ -797,7 +478,7 @@ namespace kerbal
 				{
 					typedef typename kerbal::type_traits::remove_reference<T>::type remove_reference;
 					typedef typename kerbal::type_traits::remove_const<remove_reference>::type value_type;
-					this->k_construct<value_type>(kerbal::utility::forward<T>(value));
+					this->k_storage.template construct<value_type>(is_embedded_stored_type<value_type>(), this->void_alloc(), kerbal::utility::forward<T>(value));
 					this->k_mtable = mtable_of_type<value_type>();
 				}
 
@@ -814,7 +495,7 @@ namespace kerbal
 						k_mtable(NULL)
 				{
 					typedef T value_type;
-					this->k_construct<value_type>(value);
+					this->k_storage.template construct<value_type>(is_embedded_stored_type<value_type>(), this->void_alloc(), value);
 					this->k_mtable = mtable_of_type<value_type>();
 				}
 
@@ -830,14 +511,13 @@ namespace kerbal
 				{
 					typedef typename kerbal::type_traits::remove_reference<T>::type remove_reference;
 					typedef typename kerbal::type_traits::remove_const<remove_reference>::type value_type;
-					this->k_construct<value_type>(kerbal::utility::forward<Args>(args)...);
+					this->k_storage.template construct<value_type>(is_embedded_stored_type<value_type>(), this->void_alloc(), kerbal::utility::forward<Args>(args)...);
 					this->k_mtable = mtable_of_type<value_type>();
 				}
 
 #	else
 
 #			define EMPTY
-#			define REMAINF(exp) exp
 #			define LEFT_JOIN_COMMA(exp) , exp
 #			define TARGS_DECL(i) KERBAL_MACRO_CONCAT(typename Arg, i)
 #			define ARGS_DECL(i) KERBAL_MACRO_CONCAT(const Arg, i) & KERBAL_MACRO_CONCAT(arg, i)
@@ -849,7 +529,7 @@ namespace kerbal
 				{ \
 					typedef typename kerbal::type_traits::remove_reference<T>::type remove_reference; \
 					typedef typename kerbal::type_traits::remove_const<remove_reference>::type value_type; \
-					this->k_construct<value_type>(KERBAL_OPT_PPEXPAND_WITH_COMMA_N(REMAINF, EMPTY, ARGS_USE, i)); \
+					this->k_storage.template construct<value_type>(is_embedded_stored_type<value_type>(), this->void_alloc() KERBAL_OPT_PPEXPAND_WITH_COMMA_N(LEFT_JOIN_COMMA, EMPTY, ARGS_USE, i)); \
 					this->k_mtable = mtable_of_type<value_type>(); \
 				}
 
@@ -857,7 +537,6 @@ namespace kerbal
 				KERBAL_PPEXPAND_N(FBODY, KERBAL_PPEXPAND_EMPTY_SEPARATOR, 20)
 
 #			undef EMPTY
-#			undef REMAINF
 #			undef LEFT_JOIN_COMMA
 #			undef TARGS_DECL
 #			undef ARGS_DECL
@@ -936,7 +615,7 @@ namespace kerbal
 					typedef typename kerbal::type_traits::remove_reference<T>::type remove_reference;
 					typedef typename kerbal::type_traits::remove_const<remove_reference>::type value_type;
 					this->k_mtable->destroy(*this);
-					this->k_construct<value_type>(value);
+					this->k_storage.template construct<value_type>(is_embedded_stored_type<value_type>(), this->void_alloc(), value);
 					this->k_mtable = mtable_of_type<value_type>();
 				}
 
@@ -948,7 +627,7 @@ namespace kerbal
 				{
 					typedef T value_type;
 					this->k_mtable->destroy(*this);
-					this->k_construct<value_type>(value);
+					this->k_storage.template construct<value_type>(is_embedded_stored_type<value_type>(), this->void_alloc(), value);
 					this->k_mtable = mtable_of_type<value_type>();
 				}
 
@@ -958,6 +637,9 @@ namespace kerbal
 				KERBAL_CONSTEXPR20
 				void assign(const basic_any & src)
 				{
+					if (this == &src) {
+						return;
+					}
 					this->k_mtable->destroy(*this);
 					this->k_mtable = src.k_mtable;
 					this->k_mtable->clone(*this, src);
@@ -968,9 +650,13 @@ namespace kerbal
 				KERBAL_CONSTEXPR20
 				void assign(basic_any && src) KERBAL_NOEXCEPT
 				{
+					if (this == &src) {
+						return;
+					}
 					this->k_mtable->destroy(*this);
 					this->k_mtable = src.k_mtable;
 					this->k_mtable->xfer(*this, kerbal::compatibility::move(src));
+					src.k_mtable = mtable_of_type<void>();
 				}
 
 #	endif
@@ -985,7 +671,7 @@ namespace kerbal
 					typedef typename kerbal::type_traits::remove_reference<T>::type remove_reference;
 					typedef typename kerbal::type_traits::remove_const<remove_reference>::type value_type;
 					this->k_mtable->destroy(*this);
-					this->k_construct<value_type>(kerbal::utility::forward<Args>(args)...);
+					this->k_storage.template construct<value_type>(is_embedded_stored_type<value_type>(), this->void_alloc(), kerbal::utility::forward<Args>(args)...);
 					this->k_mtable = mtable_of_type<value_type>();
 				}
 
@@ -1004,7 +690,7 @@ namespace kerbal
 					typedef typename kerbal::type_traits::remove_reference<T>::type remove_reference; \
 					typedef typename kerbal::type_traits::remove_const<remove_reference>::type value_type; \
 					this->k_mtable->destroy(*this); \
-					this->k_construct<value_type>(KERBAL_OPT_PPEXPAND_WITH_COMMA_N(REMAINF, EMPTY, ARGS_USE, i)); \
+					this->k_storage.template construct<value_type>(is_embedded_stored_type<value_type>(), this->void_alloc() KERBAL_OPT_PPEXPAND_WITH_COMMA_N(LEFT_JOIN_COMMA, EMPTY, ARGS_USE, i)); \
 					this->k_mtable = mtable_of_type<value_type>(); \
 				}
 
@@ -1031,15 +717,8 @@ namespace kerbal
 				KERBAL_CONSTEXPR20
 				void swap(basic_any & with) KERBAL_NOEXCEPT
 				{
-					union storage temp_storage;
-					this->k_mtable->swap_xfer_to_tmp(*this, temp_storage);
-					manager_table * mtable_tmp = this->k_mtable;
-
-					this->k_mtable = with.k_mtable;
-					this->k_mtable->swap_xfer_from_other(*this, with);
-
-					with.k_mtable = mtable_tmp;
-					with.k_mtable->swap_xfer_from_tmp(with, temp_storage);
+					this->k_mtable->swap(*this, with);
+					kerbal::algorithm::swap(this->k_mtable, with.k_mtable);
 				}
 
 				KERBAL_CONSTEXPR20
@@ -1183,153 +862,6 @@ namespace kerbal
 					}
 					return kerbal::compatibility::move(this->template obj_pos<value_type>()->value);
 				}
-
-#	endif
-
-			private:
-
-#	if __cplusplus >= 201103L
-
-				template <typename T, typename ... Args>
-				KERBAL_CONSTEXPR20
-				void k_construct_impl(kerbal::type_traits::false_type, Args&& ... args)
-				{
-					typedef T value_type;
-					typedef typename get_any_node_type<value_type>::type any_node;
-					typedef typename kerbal::memory::allocator_traits<void_allocator_type>::template rebind_alloc<any_node>::other allocator;
-					typedef kerbal::memory::allocator_traits<allocator> allocator_traits;
-					allocator alloc(this->void_alloc());
-					any_node * stored_pos = allocator_traits::allocate(alloc, 1);
-#			if __cpp_exceptions
-					try {
-#			endif
-						allocator_traits::construct(alloc, stored_pos, kerbal::utility::in_place_t(), kerbal::utility::forward<Args>(args)...);
-#			if __cpp_exceptions
-					} catch (...) {
-						allocator_traits::deallocate(alloc, stored_pos, 1);
-						throw;
-					}
-#			endif
-					this->k_storage.ptr = static_cast<any_node_base *>(stored_pos);
-				}
-
-				template <typename T, typename ... Args>
-				void k_construct_impl(kerbal::type_traits::true_type, Args&& ... args)
-				{
-					typedef T value_type;
-					typedef typename get_any_node_type<value_type>::type any_node;
-					typedef typename kerbal::memory::allocator_traits<void_allocator_type>::template rebind_alloc<any_node>::other allocator;
-					typedef kerbal::memory::allocator_traits<allocator> allocator_traits;
-					allocator alloc(this->void_alloc());
-
-					any_node * stored_pos = reinterpret_cast<any_node *>(&this->k_storage.buffer);
-					allocator_traits::construct(alloc, stored_pos, kerbal::utility::in_place_t(), kerbal::utility::forward<Args>(args)...);
-				}
-
-				template <typename T, typename ... Args>
-				KERBAL_CONSTEXPR20
-				void k_construct(Args&& ... args)
-				{
-					typedef typename kerbal::type_traits::remove_const<T>::type value_type;
-
-#			if __cplusplus > 201703L
-#				if KERBAL_HAS_IS_CONSTANT_EVALUATED_SUPPORT
-					if (KERBAL_IS_CONSTANT_EVALUATED()) {
-						this->k_construct_impl<value_type>(kerbal::type_traits::false_type(), kerbal::utility::forward<Args>(args)...);
-						return;
-					}
-#				endif
-#			endif
-
-					this->k_construct_impl<value_type>(is_internal_stored_type<value_type>(), kerbal::utility::forward<Args>(args)...);
-				}
-
-#	else
-
-#			define EMPTY
-#			define REMAINF(exp) exp
-#			define LEFT_JOIN_COMMA(exp) , exp
-#			define TARGS_DECL(i) KERBAL_MACRO_CONCAT(typename Arg, i)
-#			define ARGS_DECL(i) KERBAL_MACRO_CONCAT(const Arg, i) & KERBAL_MACRO_CONCAT(arg, i)
-#			define ARGS_USE(i) KERBAL_MACRO_CONCAT(arg, i)
-
-#		if __cpp_exceptions
-
-#			define CONSTRUCT_EXTERNAL(i) \
-				template <typename T KERBAL_OPT_PPEXPAND_WITH_COMMA_N(LEFT_JOIN_COMMA, EMPTY, TARGS_DECL, i)> \
-				void k_construct_impl(kerbal::type_traits::false_type KERBAL_OPT_PPEXPAND_WITH_COMMA_N(LEFT_JOIN_COMMA, EMPTY, ARGS_DECL, i)) \
-				{ \
-					typedef T value_type; \
-					typedef typename get_any_node_type<value_type>::type any_node; \
-					typedef typename kerbal::memory::allocator_traits<void_allocator_type>::template rebind_alloc<any_node>::other allocator; \
-					typedef kerbal::memory::allocator_traits<allocator> allocator_traits; \
-					allocator alloc(this->void_alloc()); \
- \
-					any_node * stored_pos = allocator_traits::allocate(alloc, 1); \
-					try { \
-						allocator_traits::construct(alloc, stored_pos, kerbal::utility::in_place_t() KERBAL_OPT_PPEXPAND_WITH_COMMA_N(LEFT_JOIN_COMMA, EMPTY, ARGS_USE, i)); \
-					} catch (...) { \
-						allocator_traits::deallocate(alloc, stored_pos, 1); \
-						throw; \
-					} \
-					this->k_storage.ptr = static_cast<any_node_base *>(stored_pos); \
-				}
-
-#		else
-
-#			define CONSTRUCT_EXTERNAL(i) \
-				template <typename T KERBAL_OPT_PPEXPAND_WITH_COMMA_N(LEFT_JOIN_COMMA, EMPTY, TARGS_DECL, i)> \
-				void k_construct_impl(kerbal::type_traits::false_type KERBAL_OPT_PPEXPAND_WITH_COMMA_N(LEFT_JOIN_COMMA, EMPTY, ARGS_DECL, i)) \
-				{ \
-					typedef T value_type; \
-					typedef typename get_any_node_type<value_type>::type any_node; \
-					typedef typename kerbal::memory::allocator_traits<void_allocator_type>::template rebind_alloc<any_node>::other allocator; \
-					typedef kerbal::memory::allocator_traits<allocator> allocator_traits; \
-					allocator alloc(this->void_alloc()); \
- \
-					any_node * stored_pos = allocator_traits::allocate(alloc, 1); \
-					allocator_traits::construct(alloc, stored_pos, kerbal::utility::in_place_t() KERBAL_OPT_PPEXPAND_WITH_COMMA_N(LEFT_JOIN_COMMA, EMPTY, ARGS_USE, i)); \
-					this->k_storage.ptr = static_cast<any_node_base *>(stored_pos); \
-				}
-
-#		endif
-
-
-#			define FBODY(i) \
-				CONSTRUCT_EXTERNAL(i) \
- \
-				template <typename T KERBAL_OPT_PPEXPAND_WITH_COMMA_N(LEFT_JOIN_COMMA, EMPTY, TARGS_DECL, i)> \
-				void k_construct_impl(kerbal::type_traits::true_type KERBAL_OPT_PPEXPAND_WITH_COMMA_N(LEFT_JOIN_COMMA, EMPTY, ARGS_DECL, i)) \
-				{ \
-					typedef T value_type; \
-					typedef typename get_any_node_type<value_type>::type any_node; \
-					typedef typename kerbal::memory::allocator_traits<void_allocator_type>::template rebind_alloc<any_node>::other allocator; \
-					typedef kerbal::memory::allocator_traits<allocator> allocator_traits; \
-					allocator alloc(this->void_alloc()); \
- \
-					any_node * stored_pos = reinterpret_cast<any_node *>(&this->k_storage.buffer); \
-					allocator_traits::construct(alloc, stored_pos, kerbal::utility::in_place_t() KERBAL_OPT_PPEXPAND_WITH_COMMA_N(LEFT_JOIN_COMMA, EMPTY, ARGS_USE, i)); \
-				} \
- \
-				template <typename T KERBAL_OPT_PPEXPAND_WITH_COMMA_N(LEFT_JOIN_COMMA, EMPTY, TARGS_DECL, i)> \
-				void k_construct(KERBAL_OPT_PPEXPAND_WITH_COMMA_N(REMAINF, EMPTY, ARGS_DECL, i)) \
-				{ \
-					typedef T value_type; \
-					this->k_construct_impl<value_type>(is_internal_stored_type<value_type>() KERBAL_OPT_PPEXPAND_WITH_COMMA_N(LEFT_JOIN_COMMA, EMPTY, ARGS_USE, i)); \
-				}
-
-
-				KERBAL_PPEXPAND_N(FBODY, KERBAL_PPEXPAND_EMPTY_SEPARATOR, 0)
-				KERBAL_PPEXPAND_N(FBODY, KERBAL_PPEXPAND_EMPTY_SEPARATOR, 20)
-
-#			undef EMPTY
-#			undef REMAINF
-#			undef LEFT_JOIN_COMMA
-#			undef TARGS_DECL
-#			undef ARGS_DECL
-#			undef ARGS_USE
-#			undef CONSTRUCT_EXTERNAL
-#			undef FBODY
 
 #	endif
 
