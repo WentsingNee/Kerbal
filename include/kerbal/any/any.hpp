@@ -21,6 +21,7 @@
 #include <kerbal/compatibility/move.hpp>
 #include <kerbal/compatibility/namespace_std_scope.hpp>
 #include <kerbal/compatibility/noexcept.hpp>
+#include <kerbal/config/compiler_id.hpp>
 #include <kerbal/memory/allocator_traits.hpp>
 #include <kerbal/memory/any_storage.hpp>
 #include <kerbal/type_traits/aligned_storage.hpp>
@@ -65,6 +66,23 @@
 
 
 #include <kerbal/any/bad_any_cast.hpp>
+
+
+#define KERBAL_ANY_TYPE_POLICY_DISABLE 0
+#define KERBAL_ANY_TYPE_POLICY_POINTER 1
+#define KERBAL_ANY_TYPE_POLICY_FUNCTION 2
+
+#ifndef KERBAL_ANY_TYPE_POLICY
+
+#	ifndef __cpp_rtti
+#		define KERBAL_ANY_TYPE_POLICY KERBAL_ANY_TYPE_POLICY_DISABLE
+#	elif KERBAL_COMPILER_ID == KERBAL_COMPILER_ID_MSVC
+#		define KERBAL_ANY_TYPE_POLICY KERBAL_ANY_TYPE_POLICY_FUNCTION
+#	else
+#		define KERBAL_ANY_TYPE_POLICY KERBAL_ANY_TYPE_POLICY_POINTER
+#	endif
+
+#endif
 
 
 namespace kerbal
@@ -128,7 +146,11 @@ namespace kerbal
 #	endif
 					typedef void (*swap_out_entry_type)(any &, any &) KERBAL_NOEXCEPT17;
 					typedef void (*swap_entry_type)(any &, any &) KERBAL_NOEXCEPT17;
+#	if KERBAL_ANY_TYPE_POLICY == KERBAL_ANY_TYPE_POLICY_POINTER
+					typedef const std::type_info * type_info_entry_type;
+#	elif KERBAL_ANY_TYPE_POLICY == KERBAL_ANY_TYPE_POLICY_FUNCTION
 					typedef const std::type_info & (*type_info_entry_type)() KERBAL_NOEXCEPT17;
+#	endif
 
 
 					destroy_entry_type					destroy;
@@ -138,28 +160,33 @@ namespace kerbal
 #	endif
 					swap_out_entry_type					swap_out;
 					swap_entry_type						swap;
+#	if KERBAL_ANY_TYPE_POLICY != KERBAL_ANY_TYPE_POLICY_DISABLE
 					type_info_entry_type				type_info;
+#	endif
 
 
 					KERBAL_CONSTEXPR
 					any_manager_table(
-								  destroy_entry_type					destroy,
-								  clone_entry_type						clone,
+							  destroy_entry_type destroy
+							, clone_entry_type clone
 #	if __cplusplus >= 201103L
-								  xfer_entry_type						xfer,
+							, xfer_entry_type						xfer
 #	endif
-								  swap_out_entry_type					swap_out,
-								  swap_entry_type						swap,
-								  type_info_entry_type					type_info
-					) KERBAL_NOEXCEPT :
-							destroy(destroy),
-							clone(clone),
+							, swap_out_entry_type swap_out, swap_entry_type swap
+#	if KERBAL_ANY_TYPE_POLICY != KERBAL_ANY_TYPE_POLICY_DISABLE
+							, type_info_entry_type					type_info
+#	endif
+					) KERBAL_NOEXCEPT
+							: destroy(destroy)
+							, clone(clone)
 #	if __cplusplus >= 201103L
-							xfer(xfer),
+							, xfer(xfer)
 #	endif
-							swap_out(swap_out),
-							swap(swap),
-							type_info(type_info)
+							, swap_out(swap_out)
+							, swap(swap)
+#	if KERBAL_ANY_TYPE_POLICY != KERBAL_ANY_TYPE_POLICY_DISABLE
+							, type_info(type_info)
+#	endif
 					{
 					}
 
@@ -206,20 +233,32 @@ namespace kerbal
 					{
 					}
 
+#	if KERBAL_ANY_TYPE_POLICY == KERBAL_ANY_TYPE_POLICY_FUNCTION
+
 					KERBAL_CONSTEXPR20
 					static const std::type_info & type_info() KERBAL_NOEXCEPT
 					{
 						return typeid(void);
 					}
 
+#	endif
+
 				public:
+
+#	if KERBAL_ANY_TYPE_POLICY == KERBAL_ANY_TYPE_POLICY_DISABLE
+#		define TYPE_INFO_ENTRY
+#	elif KERBAL_ANY_TYPE_POLICY == KERBAL_ANY_TYPE_POLICY_POINTER
+#		define TYPE_INFO_ENTRY , &typeid(void)
+#	elif KERBAL_ANY_TYPE_POLICY == KERBAL_ANY_TYPE_POLICY_FUNCTION
+#		define TYPE_INFO_ENTRY , type_info
+#	endif
 
 #		if __cplusplus >= 201103L
 					KERBAL_CONSTEXPR
 #			if __cplusplus >= 201703L
 					inline
 #			endif
-					static const manager_table mtable = manager_table(destroy, clone, xfer, swap_out, swap, type_info);
+					static const manager_table mtable = manager_table(destroy, clone, xfer, swap_out, swap TYPE_INFO_ENTRY);
 #		else
 					static const manager_table mtable;
 #		endif
@@ -240,9 +279,12 @@ namespace kerbal
 
 			template <std::size_t Size, std::size_t Align, typename Allocator>
 			const typename any_manager_collection<void, Size, Align, Allocator>::manager_table
-			any_manager_collection<void, Size, Align, Allocator>::mtable(destroy, clone, swap_out, swap, type_info);
+			any_manager_collection<void, Size, Align, Allocator>::mtable(destroy, clone, swap_out, swap TYPE_INFO_ENTRY);
 
 #	endif
+
+#	undef TYPE_INFO_ENTRY
+
 
 			template <typename T, std::size_t Size, std::size_t Align, typename Allocator>
 			struct any_manager_collection
@@ -304,20 +346,32 @@ namespace kerbal
 						with.k_storage.template xfer<T>(is_embedded_stored_type(), with.void_alloc(), kerbal::compatibility::to_xvalue(tmp), with.void_alloc());
 					}
 
+#	if KERBAL_ANY_TYPE_POLICY == KERBAL_ANY_TYPE_POLICY_FUNCTION
+
 					KERBAL_CONSTEXPR20
 					static const std::type_info & type_info() KERBAL_NOEXCEPT
 					{
 						return typeid(T);
 					}
 
+#	endif
+
 				public:
+
+#	if KERBAL_ANY_TYPE_POLICY == KERBAL_ANY_TYPE_POLICY_DISABLE
+#		define TYPE_INFO_ENTRY
+#	elif KERBAL_ANY_TYPE_POLICY == KERBAL_ANY_TYPE_POLICY_POINTER
+#		define TYPE_INFO_ENTRY , &typeid(T)
+#	elif KERBAL_ANY_TYPE_POLICY == KERBAL_ANY_TYPE_POLICY_FUNCTION
+#		define TYPE_INFO_ENTRY , type_info
+#	endif
 
 #		if __cplusplus >= 201103L
 					KERBAL_CONSTEXPR
 #			if __cplusplus >= 201703L
 					inline
 #			endif
-					static const manager_table mtable = manager_table(destroy, clone, xfer, swap_out, swap, type_info);
+					static const manager_table mtable = manager_table(destroy, clone, xfer, swap_out, swap TYPE_INFO_ENTRY);
 #		else
 					static const manager_table mtable;
 #		endif
@@ -338,9 +392,11 @@ namespace kerbal
 
 			template <typename T, std::size_t Size, std::size_t Align, typename Allocator>
 			const typename any_manager_collection<T, Size, Align, Allocator>::manager_table
-			any_manager_collection<T, Size, Align, Allocator>::mtable(destroy, clone, swap_out, swap, type_info);
+			any_manager_collection<T, Size, Align, Allocator>::mtable(destroy, clone, swap_out, swap TYPE_INFO_ENTRY);
 
 #	endif
+
+#	undef TYPE_INFO_ENTRY
 
 		} // namespace detail
 
@@ -721,11 +777,23 @@ namespace kerbal
 					kerbal::algorithm::swap(this->k_mtable, with.k_mtable);
 				}
 
+#	if KERBAL_ANY_TYPE_POLICY == KERBAL_ANY_TYPE_POLICY_POINTER
+
+				KERBAL_CONSTEXPR20
+				const std::type_info & type() const KERBAL_NOEXCEPT
+				{
+					return *this->k_mtable->type_info;
+				}
+
+#	elif KERBAL_ANY_TYPE_POLICY == KERBAL_ANY_TYPE_POLICY_FUNCTION
+
 				KERBAL_CONSTEXPR20
 				const std::type_info & type() const KERBAL_NOEXCEPT
 				{
 					return this->k_mtable->type_info();
 				}
+
+#	endif
 
 				template <typename T>
 				KERBAL_CONSTEXPR20
@@ -811,7 +879,7 @@ namespace kerbal
 					typedef typename kerbal::type_traits::remove_const<remove_reference>::type value_type;
 
 					if (!this->template contains_type<value_type>()) {
-						kerbal::utility::throw_this_exception_helper<kerbal::any::bad_any_cast>::throw_this_exception(this->type(), typeid(value_type));
+						kerbal::utility::throw_this_exception_helper<kerbal::any::bad_any_cast>::throw_this_exception();
 					}
 					return this->template obj_pos<value_type>()->value;
 				}
@@ -829,7 +897,7 @@ namespace kerbal
 					typedef typename kerbal::type_traits::remove_const<remove_reference>::type value_type;
 
 					if (!this->template contains_type<value_type>()) {
-						kerbal::utility::throw_this_exception_helper<kerbal::any::bad_any_cast>::throw_this_exception(this->type(), typeid(value_type));
+						kerbal::utility::throw_this_exception_helper<kerbal::any::bad_any_cast>::throw_this_exception();
 					}
 					return this->template obj_pos<value_type>()->value;
 				}
@@ -858,7 +926,7 @@ namespace kerbal
 					typedef typename kerbal::type_traits::remove_const<remove_reference>::type value_type;
 
 					if (!this->template contains_type<value_type>()) {
-						kerbal::utility::throw_this_exception_helper<kerbal::any::bad_any_cast>::throw_this_exception(this->type(), typeid(value_type));
+						kerbal::utility::throw_this_exception_helper<kerbal::any::bad_any_cast>::throw_this_exception();
 					}
 					return kerbal::compatibility::move(this->template obj_pos<value_type>()->value);
 				}

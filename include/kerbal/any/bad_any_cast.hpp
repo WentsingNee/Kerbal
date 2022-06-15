@@ -28,7 +28,7 @@ namespace kerbal
 					public std::logic_error
 		{
 			public:
-				bad_any_cast(const std::type_info & actual, const std::type_info & require) :
+				bad_any_cast() :
 						std::logic_error("bad any_cast")
 				{
 				}
