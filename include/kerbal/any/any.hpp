@@ -170,10 +170,10 @@ namespace kerbal
 
 			};
 
-			template <typename Allocator, std::size_t Size, std::size_t Align>
+			template <std::size_t Size, std::size_t Align, typename Allocator>
 			struct any_manager_table
 			{
-					typedef kerbal::any::basic_any<Allocator, Size, Align> any;
+					typedef kerbal::any::basic_any<Size, Align, Allocator> any;
 					typedef void (*destroy_entry_type)(any &) KERBAL_NOEXCEPT17;
 					typedef void (*clone_entry_type)(any &, const any &);
 #	if __cplusplus >= 201103L
@@ -222,17 +222,17 @@ namespace kerbal
 
 			};
 
-			template <typename T, typename Allocator, std::size_t Size, std::size_t Align>
+			template <typename T, std::size_t Size, std::size_t Align, typename Allocator>
 			struct any_manager_collection;
 
-			template <typename Allocator, std::size_t Size, std::size_t Align>
-			struct any_manager_collection<void, Allocator, Size, Align>
+			template <std::size_t Size, std::size_t Align, typename Allocator>
+			struct any_manager_collection<void, Size, Align, Allocator>
 			{
 				private:
-					typedef kerbal::any::basic_any<Allocator, Size, Align>					any;
+					typedef kerbal::any::basic_any<Size, Align, Allocator>					any;
 					typedef typename any::void_allocator_type								void_allocator_type;
 					typedef kerbal::memory::allocator_traits<void_allocator_type>			void_allocator_traits;
-					typedef any_manager_table<Allocator, Size, Align>						manager_table;
+					typedef any_manager_table<Size, Align, Allocator>						manager_table;
 
 					KERBAL_CONSTEXPR20
 					static void destroy(any & /*self*/) KERBAL_NOEXCEPT
@@ -292,32 +292,32 @@ namespace kerbal
 #	if __cplusplus >= 201103L
 
 #		if __cplusplus < 201703L
-			template <typename Allocator, std::size_t Size, std::size_t Align>
+			template <std::size_t Size, std::size_t Align, typename Allocator>
 			KERBAL_CONSTEXPR
-			const typename any_manager_collection<void, Allocator, Size, Align>::manager_table
-			any_manager_collection<void, Allocator, Size, Align>::mtable;
+			const typename any_manager_collection<void, Size, Align, Allocator>::manager_table
+			any_manager_collection<void, Size, Align, Allocator>::mtable;
 #		endif
 
 #	else
 
-			template <typename Allocator, std::size_t Size, std::size_t Align>
-			const typename any_manager_collection<void, Allocator, Size, Align>::manager_table
-			any_manager_collection<void, Allocator, Size, Align>::mtable(destroy, clone, swap_xfer_to_tmp, swap_xfer_from_other, swap_xfer_from_tmp, type_info);
+			template <std::size_t Size, std::size_t Align, typename Allocator>
+			const typename any_manager_collection<void, Size, Align, Allocator>::manager_table
+			any_manager_collection<void, Size, Align, Allocator>::mtable(destroy, clone, swap_xfer_to_tmp, swap_xfer_from_other, swap_xfer_from_tmp, type_info);
 
 #	endif
 
-			template <typename T, typename Allocator, std::size_t Size, std::size_t Align>
+			template <typename T, std::size_t Size, std::size_t Align, typename Allocator>
 			struct any_manager_collection
 			{
 				private:
-					typedef kerbal::any::basic_any<Allocator, Size, Align>								any;
+					typedef kerbal::any::basic_any<Size, Align, Allocator>								any;
 					typedef kerbal::any::detail::any_node<T>											any_node;
 					typedef typename any::void_allocator_type											void_allocator_type;
 					typedef kerbal::memory::allocator_traits<void_allocator_type>						void_allocator_traits;
 					typedef typename void_allocator_traits::template rebind_alloc<any_node>::other		allocator_type;
 					typedef kerbal::memory::allocator_traits<allocator_type>							allocator_traits;
 					typedef is_any_internal_stored_type<T, Size, Align>									is_internal_stored_type;
-					typedef any_manager_table<Allocator, Size, Align>									manager_table;
+					typedef any_manager_table<Size, Align, Allocator>									manager_table;
 
 					KERBAL_STATIC_ASSERT(!kerbal::type_traits::is_const<T>::value, "T couldn't be const");
 					KERBAL_STATIC_ASSERT(!kerbal::type_traits::is_reference<T>::value, "T couldn't be reference");
@@ -411,7 +411,7 @@ namespace kerbal
 					{
 						any_node * anop = ano.template obj_pos<T>();
 						self.k_storage.ptr = anop;
-						ano.k_mtable = &detail::any_manager_collection<void, Allocator, Size, Align>::mtable;
+						ano.k_mtable = &detail::any_manager_collection<void, Size, Align, Allocator>::mtable;
 					}
 
 					static void k_xfer(kerbal::type_traits::true_type, any & self, any && ano) KERBAL_NOEXCEPT
@@ -429,7 +429,7 @@ namespace kerbal
 							allocator_type alloc(ano.void_alloc());
 							allocator_traits::destroy(alloc, anop);
 						}
-						ano.k_mtable = &detail::any_manager_collection<void, Allocator, Size, Align>::mtable;
+						ano.k_mtable = &detail::any_manager_collection<void, Size, Align, Allocator>::mtable;
 					}
 
 					KERBAL_CONSTEXPR20
@@ -591,43 +591,43 @@ namespace kerbal
 #	if __cplusplus >= 201103L
 
 #		if __cplusplus < 201703L
-			template <typename T, typename Allocator, std::size_t Size, std::size_t Align>
+			template <typename T, std::size_t Size, std::size_t Align, typename Allocator>
 			KERBAL_CONSTEXPR
-			const typename any_manager_collection<T, Allocator, Size, Align>::manager_table
-			any_manager_collection<T, Allocator, Size, Align>::mtable;
+			const typename any_manager_collection<T, Size, Align, Allocator>::manager_table
+			any_manager_collection<T, Size, Align, Allocator>::mtable;
 #		endif
 
 #	else
 
-			template <typename T, typename Allocator, std::size_t Size, std::size_t Align>
-			const typename any_manager_collection<T, Allocator, Size, Align>::manager_table
-			any_manager_collection<T, Allocator, Size, Align>::mtable(destroy, clone, swap_xfer_to_tmp, swap_xfer_from_other, swap_xfer_from_tmp, type_info);
+			template <typename T, std::size_t Size, std::size_t Align, typename Allocator>
+			const typename any_manager_collection<T, Size, Align, Allocator>::manager_table
+			any_manager_collection<T, Size, Align, Allocator>::mtable(destroy, clone, swap_xfer_to_tmp, swap_xfer_from_other, swap_xfer_from_tmp, type_info);
 
 #	endif
 
 		} // namespace detail
 
 
-		template <typename Allocator, std::size_t Size, std::size_t Align>
+		template <std::size_t Size, std::size_t Align, typename Allocator>
 		class basic_any :
 				private kerbal::utility::member_compress_helper<Allocator>
 		{
 			private:
 
-				friend struct detail::any_manager_table<Allocator, Size, Align>;
+				friend struct detail::any_manager_table<Size, Align, Allocator>;
 
-				template <typename T, typename Allocator2, std::size_t Size2, std::size_t Align2>
+				template <typename T, std::size_t Size2, std::size_t Align2, typename Allocator2>
 				friend struct kerbal::any::detail::any_manager_collection;
 
-				template <typename T, typename Allocator2, std::size_t Size2, std::size_t Align2>
+				template <typename T, std::size_t Size2, std::size_t Align2, typename Allocator2>
 				KERBAL_CONSTEXPR20
 				friend
-				T* any_cast(basic_any<Allocator2, Size2, Align2> * operand) KERBAL_NOEXCEPT;
+				T* any_cast(basic_any<Size2, Align2, Allocator2> * operand) KERBAL_NOEXCEPT;
 
-				template <typename T, typename Allocator2, std::size_t Size2, std::size_t Align2>
+				template <typename T, std::size_t Size2, std::size_t Align2, typename Allocator2>
 				KERBAL_CONSTEXPR20
 				friend
-				const T* any_cast(const basic_any<Allocator2, Size2, Align2> * operand) KERBAL_NOEXCEPT;
+				const T* any_cast(const basic_any<Size2, Align2, Allocator2> * operand) KERBAL_NOEXCEPT;
 
 				template <typename T>
 				struct is_internal_stored_type :
@@ -643,7 +643,7 @@ namespace kerbal
 						typedef kerbal::any::detail::any_node<T> type;
 				};
 
-				typedef const detail::any_manager_table<Allocator, Size, Align>				manager_table;
+				typedef const detail::any_manager_table<Size, Align, Allocator>				manager_table;
 				typedef kerbal::utility::member_compress_helper<Allocator>					allocator_compress_helper;
 				typedef typename kerbal::type_traits::aligned_storage<Size, Align>::type	aligned_storage_type;
 
@@ -744,7 +744,7 @@ namespace kerbal
 				KERBAL_CONSTEXPR20
 				static manager_table * mtable_of_type() KERBAL_NOEXCEPT
 				{
-					return &detail::any_manager_collection<T, Allocator, Size, Align>::mtable;
+					return &detail::any_manager_collection<T, Size, Align, Allocator>::mtable;
 				}
 
 			public:
@@ -1335,39 +1335,39 @@ namespace kerbal
 
 		};
 
-		template <typename T, typename Allocator, std::size_t Size, std::size_t Align>
+		template <typename T, std::size_t Size, std::size_t Align, typename Allocator>
 		KERBAL_CONSTEXPR20
-		T* any_cast(basic_any<Allocator, Size, Align> * operand) KERBAL_NOEXCEPT
+		T* any_cast(basic_any<Size, Align, Allocator> * operand) KERBAL_NOEXCEPT
 		{
 			return operand->template get_pointer<T>();
 		}
 
-		template <typename T, typename Allocator, std::size_t Size, std::size_t Align>
+		template <typename T, std::size_t Size, std::size_t Align, typename Allocator>
 		KERBAL_CONSTEXPR20
-		const T* any_cast(const basic_any<Allocator, Size, Align> * operand) KERBAL_NOEXCEPT
+		const T* any_cast(const basic_any<Size, Align, Allocator> * operand) KERBAL_NOEXCEPT
 		{
 			return operand->template get_pointer<T>();
 		}
 
-		template <typename T, typename Allocator, std::size_t Size, std::size_t Align>
+		template <typename T, std::size_t Size, std::size_t Align, typename Allocator>
 		KERBAL_CONSTEXPR20
-		T any_cast(basic_any<Allocator, Size, Align> & operand)
+		T any_cast(basic_any<Size, Align, Allocator> & operand)
 		{
 			return operand.template get<T>();
 		}
 
-		template <typename T, typename Allocator, std::size_t Size, std::size_t Align>
+		template <typename T, std::size_t Size, std::size_t Align, typename Allocator>
 		KERBAL_CONSTEXPR20
-		const T any_cast(const basic_any<Allocator, Size, Align> & operand)
+		const T any_cast(const basic_any<Size, Align, Allocator> & operand)
 		{
 			return operand.template get<T>();
 		}
 
 #	if __cplusplus >= 201103L
 
-		template <typename T, typename Allocator, std::size_t Size, std::size_t Align>
+		template <typename T, std::size_t Size, std::size_t Align, typename Allocator>
 		KERBAL_CONSTEXPR20
-		T any_cast(basic_any<Allocator, Size, Align> && operand)
+		T any_cast(basic_any<Size, Align, Allocator> && operand)
 		{
 			return kerbal::compatibility::move(operand).template get<T>();
 		}
@@ -1379,9 +1379,9 @@ namespace kerbal
 	namespace algorithm
 	{
 
-		template <typename Allocator, std::size_t Size, std::size_t Align>
+		template <std::size_t Size, std::size_t Align, typename Allocator>
 		KERBAL_CONSTEXPR20
-		void swap(kerbal::any::basic_any<Allocator, Size, Align> & a, kerbal::any::basic_any<Allocator, Size, Align> & b)
+		void swap(kerbal::any::basic_any<Size, Align, Allocator> & a, kerbal::any::basic_any<Size, Align, Allocator> & b)
 				KERBAL_CONDITIONAL_NOEXCEPT(noexcept(a.swap(b)))
 		{
 			a.swap(b);
@@ -1394,9 +1394,9 @@ namespace kerbal
 
 KERBAL_NAMESPACE_STD_BEGIN
 
-	template <typename Allocator, std::size_t Size, std::size_t Align>
+	template <std::size_t Size, std::size_t Align, typename Allocator>
 	KERBAL_CONSTEXPR20
-	void swap(kerbal::any::basic_any<Allocator, Size, Align> & a, kerbal::any::basic_any<Allocator, Size, Align> & b)
+	void swap(kerbal::any::basic_any<Size, Align, Allocator> & a, kerbal::any::basic_any<Size, Align, Allocator> & b)
 			KERBAL_CONDITIONAL_NOEXCEPT(noexcept(a.swap(b)))
 	{
 		a.swap(b);

@@ -27,18 +27,18 @@ namespace kerbal
 	namespace any
 	{
 
-		template <typename Allocator = std::allocator<char>, std::size_t Size = sizeof(void*), std::size_t Align = Size>
+		template <std::size_t Size = sizeof(void*), std::size_t Align = Size, typename Allocator = std::allocator<char> >
 		class basic_any;
 
-		typedef basic_any<std::allocator<char>, sizeof(void*), KERBAL_ALIGNOF(void*)> any;
+		typedef basic_any<sizeof(void*), KERBAL_ALIGNOF(void*), std::allocator<char> > any;
 
-		template <typename T, typename Allocator, std::size_t Size, std::size_t Align>
+		template <typename T, std::size_t Size, std::size_t Align, typename Allocator>
 		KERBAL_CONSTEXPR20
-		T* any_cast(basic_any<Allocator, Size, Align> * operand) KERBAL_NOEXCEPT;
+		T* any_cast(basic_any<Size, Align, Allocator> * operand) KERBAL_NOEXCEPT;
 
-		template <typename T, typename Allocator, std::size_t Size, std::size_t Align>
+		template <typename T, std::size_t Size, std::size_t Align, typename Allocator>
 		KERBAL_CONSTEXPR20
-		const T* any_cast(const basic_any<Allocator, Size, Align> * operand) KERBAL_NOEXCEPT;
+		const T* any_cast(const basic_any<Size, Align, Allocator> * operand) KERBAL_NOEXCEPT;
 
 	} // namespace any
 
