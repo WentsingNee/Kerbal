@@ -896,7 +896,7 @@ namespace kerbal
 			{
 			};
 
-		}; // namespace detail
+		} // namespace detail
 
 		template <typename Alloc>
 		struct allocator_has_max_size : detail::allocator_has_max_size_helper<Alloc>

@@ -1,6 +1,6 @@
 /**
  * @file       any.hpp
- * @brief      
+ * @brief
  * @date       2019-7-14
  * @author     Peter
  * @copyright

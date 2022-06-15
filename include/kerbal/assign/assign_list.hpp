@@ -117,7 +117,7 @@ namespace kerbal
 		make_assign_list()
 		{
 			return assign_list<void>();
-		};
+		}
 
 	} // namespace assign
 
