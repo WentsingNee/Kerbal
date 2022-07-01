@@ -12,8 +12,8 @@
 #ifndef KERBAL_CONTAINER_DETAIL_LIST_BASE_HPP
 #define KERBAL_CONTAINER_DETAIL_LIST_BASE_HPP
 
-#include <kerbal/container/detail/fwd/list_base.fwd.hpp>
-#include <kerbal/container/detail/decl/list_base.decl.hpp>
-#include <kerbal/container/detail/impl/list_base.impl.hpp>
+#include <kerbal/container/detail/list_base/list_base.fwd.hpp>
+#include <kerbal/container/detail/list_base/list_base.decl.hpp>
+#include <kerbal/container/detail/list_base/list_base.impl.hpp>
 
 #endif // KERBAL_CONTAINER_DETAIL_LIST_BASE_HPP

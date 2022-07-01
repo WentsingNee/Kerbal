@@ -12,8 +12,8 @@
 #ifndef KERBAL_CONTAINER_DETAIL_VECTOR_BASE_HPP
 #define KERBAL_CONTAINER_DETAIL_VECTOR_BASE_HPP
 
-#include <kerbal/container/detail/fwd/vector_base.fwd.hpp>
-#include <kerbal/container/detail/decl/vector_base.decl.hpp>
-#include <kerbal/container/detail/impl/vector_base.impl.hpp>
+#include <kerbal/container/detail/vector_base/vector_base.fwd.hpp>
+#include <kerbal/container/detail/vector_base/vector_base.decl.hpp>
+#include <kerbal/container/detail/vector_base/vector_base.impl.hpp>
 
 #endif // KERBAL_CONTAINER_DETAIL_VECTOR_BASE_HPP

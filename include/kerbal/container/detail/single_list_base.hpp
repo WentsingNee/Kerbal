@@ -12,8 +12,8 @@
 #ifndef KERBAL_CONTAINER_DETAIL_SINGLE_LIST_BASE_HPP
 #define KERBAL_CONTAINER_DETAIL_SINGLE_LIST_BASE_HPP
 
-#include <kerbal/container/detail/fwd/single_list_base.fwd.hpp>
-#include <kerbal/container/detail/decl/single_list_base.decl.hpp>
-#include <kerbal/container/detail/impl/single_list_base.impl.hpp>
+#include <kerbal/container/detail/single_list_base/single_list_base.fwd.hpp>
+#include <kerbal/container/detail/single_list_base/single_list_base.decl.hpp>
+#include <kerbal/container/detail/single_list_base/single_list_base.impl.hpp>
 
 #endif // KERBAL_CONTAINER_DETAIL_SINGLE_LIST_BASE_HPP

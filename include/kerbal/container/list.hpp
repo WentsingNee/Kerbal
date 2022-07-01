@@ -12,8 +12,8 @@
 #ifndef KERBAL_CONTAINER_LIST_HPP
 #define KERBAL_CONTAINER_LIST_HPP
 
-#include <kerbal/container/fwd/list.fwd.hpp>
-#include <kerbal/container/decl/list.decl.hpp>
-#include <kerbal/container/impl/list.impl.hpp>
+#include <kerbal/container/list/list.fwd.hpp>
+#include <kerbal/container/list/list.decl.hpp>
+#include <kerbal/container/list/list.impl.hpp>
 
 #endif // KERBAL_CONTAINER_LIST_HPP

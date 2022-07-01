@@ -12,8 +12,8 @@
 #ifndef KERBAL_CONTAINER_DETAIL_FORWARD_LIST_BASE_HPP
 #define KERBAL_CONTAINER_DETAIL_FORWARD_LIST_BASE_HPP
 
-#include <kerbal/container/detail/fwd/forward_list_base.fwd.hpp>
-#include <kerbal/container/detail/decl/forward_list_base.decl.hpp>
-#include <kerbal/container/detail/impl/forward_list_base.impl.hpp>
+#include <kerbal/container/detail/forward_list_base/forward_list_base.fwd.hpp>
+#include <kerbal/container/detail/forward_list_base/forward_list_base.decl.hpp>
+#include <kerbal/container/detail/forward_list_base/forward_list_base.impl.hpp>
 
 #endif // KERBAL_CONTAINER_DETAIL_FORWARD_LIST_BASE_HPP

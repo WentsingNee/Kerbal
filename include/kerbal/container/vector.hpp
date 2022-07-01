@@ -12,8 +12,8 @@
 #ifndef KERBAL_CONTAINER_VECTOR_HPP
 #define KERBAL_CONTAINER_VECTOR_HPP
 
-#include <kerbal/container/fwd/vector.fwd.hpp>
-#include <kerbal/container/decl/vector.decl.hpp>
-#include <kerbal/container/impl/vector.impl.hpp>
+#include <kerbal/container/vector/vector.fwd.hpp>
+#include <kerbal/container/vector/vector.decl.hpp>
+#include <kerbal/container/vector/vector.impl.hpp>
 
 #endif // KERBAL_CONTAINER_VECTOR_HPP

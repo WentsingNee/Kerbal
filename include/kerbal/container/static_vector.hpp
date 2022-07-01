@@ -36,7 +36,7 @@
 #endif
 
 #include <kerbal/container/detail/static_vector_base.hpp>
-#include <kerbal/container/detail/static_vector_iterator.hpp>
+#include <kerbal/container/detail/static_vector_base/static_vector_iterator.hpp>
 
 
 namespace kerbal
@@ -718,6 +718,6 @@ KERBAL_NAMESPACE_STD_BEGIN
 KERBAL_NAMESPACE_STD_END
 
 
-#include <kerbal/container/impl/static_vector.impl.hpp>
+#include <kerbal/container/static_vector/static_vector.impl.hpp>
 
 #endif // KERBAL_CONTAINER_STATIC_VECTOR_HPP

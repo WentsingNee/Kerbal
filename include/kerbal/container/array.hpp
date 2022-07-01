@@ -12,7 +12,7 @@
 #ifndef KERBAL_CONTAINER_ARRAY_HPP
 #define KERBAL_CONTAINER_ARRAY_HPP
 
-#include <kerbal/container/fwd/array.fwd.hpp>
+#include <kerbal/container/array/array.fwd.hpp>
 
 #include <kerbal/assign/ilist.hpp>
 #include <kerbal/compare/sequence_compare.hpp>
@@ -374,6 +374,6 @@ KERBAL_NAMESPACE_STD_BEGIN
 KERBAL_NAMESPACE_STD_END
 
 
-#include <kerbal/container/impl/array.impl.hpp>
+#include <kerbal/container/array/array.impl.hpp>
 
 #endif // KERBAL_CONTAINER_ARRAY_HPP
