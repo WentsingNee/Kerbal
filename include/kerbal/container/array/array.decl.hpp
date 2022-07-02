@@ -1,5 +1,5 @@
 /**
- * @file       array.hpp
+ * @file       array.decl.hpp
  * @brief
  * @date       2019-10-24
  * @author     Peter
@@ -9,8 +9,8 @@
  *   all rights reserved
  */
 
-#ifndef KERBAL_CONTAINER_ARRAY_HPP
-#define KERBAL_CONTAINER_ARRAY_HPP
+#ifndef KERBAL_CONTAINER_ARRAY_ARRAY_DECL_HPP
+#define KERBAL_CONTAINER_ARRAY_ARRAY_DECL_HPP
 
 #include <kerbal/container/array/array.fwd.hpp>
 
@@ -374,6 +374,4 @@ KERBAL_NAMESPACE_STD_BEGIN
 KERBAL_NAMESPACE_STD_END
 
 
-#include <kerbal/container/array/array.impl.hpp>
-
-#endif // KERBAL_CONTAINER_ARRAY_HPP
+#endif // KERBAL_CONTAINER_ARRAY_ARRAY_DECL_HPP
