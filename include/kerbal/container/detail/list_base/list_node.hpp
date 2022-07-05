@@ -12,6 +12,9 @@
 #ifndef KERBAL_CONTAINER_DETAIL_LIST_BASE_LIST_NODE_HPP
 #define KERBAL_CONTAINER_DETAIL_LIST_BASE_LIST_NODE_HPP
 
+#include <kerbal/container/detail/list_base/list_base.fwd.hpp>
+#include <kerbal/container/list/list.fwd.hpp>
+
 #include <kerbal/algorithm/modifier.hpp>
 #include <kerbal/compatibility/constexpr.hpp>
 #include <kerbal/compatibility/method_overload_tag.hpp>
@@ -31,9 +34,6 @@
 #endif
 
 #include <cstddef>
-
-#include <kerbal/container/detail/list_base/list_base.fwd.hpp>
-#include <kerbal/container/list/list.fwd.hpp>
 
 
 namespace kerbal

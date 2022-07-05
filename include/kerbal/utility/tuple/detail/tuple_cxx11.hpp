@@ -16,6 +16,8 @@
 #	error This file requires compiler and library support for the ISO C++ 2011 standard.
 #endif
 
+#include <kerbal/utility/tuple/tuple.fwd.hpp>
+
 #include <kerbal/algorithm/swap.hpp>
 #include <kerbal/compare/basic_compare.hpp>
 #include <kerbal/compatibility/constexpr.hpp>
@@ -25,6 +27,7 @@
 #include <kerbal/compatibility/static_assert.hpp>
 #include <kerbal/tmp/type_vector.hpp>
 #include <kerbal/type_traits/conditional.hpp>
+#include <kerbal/type_traits/cv_deduction.hpp>
 #include <kerbal/type_traits/enable_if.hpp>
 #include <kerbal/type_traits/integral_constant.hpp>
 #include <kerbal/type_traits/logical.hpp>
@@ -36,8 +39,6 @@
 #include <kerbal/utility/member_compress_helper.hpp>
 
 #include <cstddef>
-
-#include <kerbal/utility/tuple/tuple.fwd.hpp>
 
 
 namespace kerbal

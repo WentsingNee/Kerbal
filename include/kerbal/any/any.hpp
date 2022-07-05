@@ -12,6 +12,8 @@
 #ifndef KERBAL_ANY_ANY_HPP
 #define KERBAL_ANY_ANY_HPP
 
+#include <kerbal/any/fwd/any.fwd.hpp>
+
 #include <kerbal/algorithm/swap.hpp>
 #include <kerbal/compatibility/alignof.hpp>
 #include <kerbal/compatibility/constexpr.hpp>
@@ -61,7 +63,6 @@
 #endif
 
 
-#include <kerbal/any/fwd/any.fwd.hpp>
 #include <kerbal/any/bad_any_cast.hpp>
 
 

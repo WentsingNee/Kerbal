@@ -12,6 +12,8 @@
 #ifndef KERBAL_CONTAINER_DETAIL_VECTOR_BASE_VECTOR_ITERATOR_HPP
 #define KERBAL_CONTAINER_DETAIL_VECTOR_BASE_VECTOR_ITERATOR_HPP
 
+#include <kerbal/container/vector/vector.fwd.hpp>
+
 #include <kerbal/compatibility/constexpr.hpp>
 #include <kerbal/compatibility/noexcept.hpp>
 #include <kerbal/iterator/iterator_traits.hpp>
@@ -21,8 +23,6 @@
 #include <kerbal/operators/incr_decr.hpp>
 #include <kerbal/operators/less_than_comparable.hpp>
 #include <kerbal/operators/subtractable.hpp>
-
-#include <kerbal/container/vector/vector.fwd.hpp>
 
 
 namespace kerbal

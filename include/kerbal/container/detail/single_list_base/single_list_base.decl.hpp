@@ -12,6 +12,8 @@
 #ifndef KERBAL_CONTAINER_DETAIL_SINGLE_LIST_BASE_SINGLE_LIST_BASE_DECL_HPP
 #define KERBAL_CONTAINER_DETAIL_SINGLE_LIST_BASE_SINGLE_LIST_BASE_DECL_HPP
 
+#include <kerbal/container/single_list/single_list.fwd.hpp>
+
 #include <kerbal/compare/basic_compare.hpp>
 #include <kerbal/compatibility/constexpr.hpp>
 #include <kerbal/compatibility/noexcept.hpp>
@@ -36,8 +38,6 @@
 #		include <memory_resource>
 #	endif
 #endif
-
-#include <kerbal/container/single_list/single_list.fwd.hpp>
 
 #include <kerbal/container/detail/single_list_base/single_list_node.hpp>
 #include <kerbal/container/detail/single_list_base/single_list_iterator.hpp>

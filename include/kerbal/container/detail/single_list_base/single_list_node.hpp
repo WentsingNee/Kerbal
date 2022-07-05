@@ -12,6 +12,8 @@
 #ifndef KERBAL_CONTAINER_DETAIL_SINGLE_LIST_BASE_SINGLE_LIST_NODE_HPP
 #define KERBAL_CONTAINER_DETAIL_SINGLE_LIST_BASE_SINGLE_LIST_NODE_HPP
 
+#include <kerbal/container/detail/single_list_base/single_list_base.fwd.hpp>
+
 #include <kerbal/algorithm/modifier.hpp>
 #include <kerbal/compatibility/constexpr.hpp>
 #include <kerbal/compatibility/method_overload_tag.hpp>
@@ -31,8 +33,6 @@
 #endif
 
 #include <cstddef>
-
-#include <kerbal/container/detail/single_list_base/single_list_base.fwd.hpp>
 
 
 namespace kerbal

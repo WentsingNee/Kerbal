@@ -12,14 +12,14 @@
 #ifndef KERBAL_CONTAINER_DETAIL_LIST_BASE_LIST_ITERATOR_HPP
 #define KERBAL_CONTAINER_DETAIL_LIST_BASE_LIST_ITERATOR_HPP
 
+#include <kerbal/container/detail/list_base/list_base.fwd.hpp>
+#include <kerbal/container/list/list.fwd.hpp>
+
 #include <kerbal/operators/dereferenceable.hpp>
 #include <kerbal/operators/equality_comparable.hpp>
 #include <kerbal/operators/incr_decr.hpp>
 #include <kerbal/iterator/iterator_traits.hpp>
 #include <kerbal/iterator/reverse_iterator.hpp>
-
-#include <kerbal/container/detail/list_base/list_base.fwd.hpp>
-#include <kerbal/container/list/list.fwd.hpp>
 
 
 namespace kerbal

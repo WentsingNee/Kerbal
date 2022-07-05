@@ -12,6 +12,8 @@
 #ifndef KERBAL_CONTAINER_DETAIL_LIST_BASE_LIST_BASE_DECL_HPP
 #define KERBAL_CONTAINER_DETAIL_LIST_BASE_LIST_BASE_DECL_HPP
 
+#include <kerbal/container/list/list.fwd.hpp>
+
 #include <kerbal/compare/basic_compare.hpp>
 #include <kerbal/compatibility/constexpr.hpp>
 #include <kerbal/compatibility/noexcept.hpp>
@@ -39,8 +41,6 @@
 #		include <memory_resource>
 #	endif
 #endif
-
-#include <kerbal/container/list/list.fwd.hpp>
 
 #include <kerbal/container/detail/list_base/list_node.hpp>
 #include <kerbal/container/detail/list_base/list_iterator.hpp>

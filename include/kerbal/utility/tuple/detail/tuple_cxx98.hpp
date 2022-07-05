@@ -12,6 +12,8 @@
 #ifndef KERBAL_UTILITY_TUPLE_DETAIL_TUPLE_CXX98_HPP
 #define KERBAL_UTILITY_TUPLE_DETAIL_TUPLE_CXX98_HPP
 
+#include <kerbal/utility/tuple/tuple.fwd.hpp>
+
 #include <kerbal/algorithm/swap.hpp>
 #include <kerbal/compare/basic_compare.hpp>
 #include <kerbal/compatibility/constexpr.hpp>
@@ -26,8 +28,6 @@
 #include <kerbal/utility/member_compress_helper.hpp>
 
 #include <cstddef>
-
-#include <kerbal/utility/tuple/tuple.fwd.hpp>
 
 
 namespace kerbal

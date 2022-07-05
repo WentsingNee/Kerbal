@@ -12,6 +12,7 @@
 #ifndef KERBAL_ANY_FWD_ANY_FWD_HPP
 #define KERBAL_ANY_FWD_ANY_FWD_HPP
 
+#include <kerbal/compatibility/alignof.hpp>
 #include <kerbal/compatibility/constexpr.hpp>
 #include <kerbal/compatibility/noexcept.hpp>
 
