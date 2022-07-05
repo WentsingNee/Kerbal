@@ -14,6 +14,8 @@
 
 #include <kerbal/config/compiler_id.hpp>
 
+#include <kerbal/utility/compressed_pair/compressed_pair.fwd.hpp>
+
 #include <kerbal/algorithm/swap.hpp>
 #include <kerbal/compatibility/method_overload_tag.hpp>
 #include <kerbal/compatibility/move.hpp>
@@ -21,6 +23,7 @@
 #include <kerbal/operators/generic_assign.hpp>
 #include <kerbal/tmp/type_vector.hpp>
 #include <kerbal/type_traits/is_same.hpp>
+#include <kerbal/utility/in_place.hpp>
 #include <kerbal/utility/member_compress_helper.hpp>
 
 #if __cplusplus >= 201103L

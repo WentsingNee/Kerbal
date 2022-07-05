@@ -12,6 +12,8 @@
 #ifndef KERBAL_ASSIGN_ASSIGN_LIST_HPP
 #define KERBAL_ASSIGN_ASSIGN_LIST_HPP
 
+#include <kerbal/assign/assign_list/assign_list.fwd.hpp>
+
 #include <kerbal/compatibility/noexcept.hpp>
 #include <kerbal/container/detail/vector_base.hpp>
 #include <kerbal/utility/member_compress_helper.hpp>

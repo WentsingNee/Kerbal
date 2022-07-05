@@ -12,6 +12,8 @@
 #ifndef KERBAL_ALGORITHM_MODIFIER_HPP
 #define KERBAL_ALGORITHM_MODIFIER_HPP
 
+#include <kerbal/algorithm/modifier/modifier.fwd.hpp>
+
 #include <kerbal/algorithm/binary_search.hpp>
 #include <kerbal/algorithm/querier.hpp>
 #include <kerbal/algorithm/swap.hpp>
@@ -303,18 +305,6 @@ namespace kerbal
 		merge(InputIterator1 a_first, InputIterator1 a_last,
 			InputIterator2 b_first, InputIterator2 b_last,
 			OutputIterator to, CompareFuntion cmp)
-									KERBAL_CONDITIONAL_NOEXCEPT(
-											noexcept(static_cast<bool>(a_first != a_last)) &&
-											noexcept(static_cast<bool>(b_first != b_last)) &&
-											noexcept(static_cast<bool>(cmp(*b_first, *a_first))) &&
-											noexcept(kerbal::operators::generic_assign(*to, *b_first)) &&
-											noexcept(++to) &&
-											noexcept(++b_first) &&
-											noexcept(kerbal::operators::generic_assign(*to, *a_first)) &&
-											noexcept(++a_first) &&
-											noexcept(kerbal::algorithm::copy(a_first, a_last, to)) &&
-											noexcept(kerbal::algorithm::copy(b_first, b_last, to))
-									)
 		{
 			while (a_first != a_last) {
 				if (b_first != b_last) {
