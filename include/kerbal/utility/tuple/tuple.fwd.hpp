@@ -9,8 +9,8 @@
  *   all rights reserved
  */
 
-#ifndef KERBAL_UTILITY_TUPLE_FWD_HPP
-#define KERBAL_UTILITY_TUPLE_FWD_HPP
+#ifndef KERBAL_UTILITY_TUPLE_TUPLE_FWD_HPP
+#define KERBAL_UTILITY_TUPLE_TUPLE_FWD_HPP
 
 #include <kerbal/compatibility/constexpr.hpp>
 #include <kerbal/compatibility/noexcept.hpp>
@@ -116,4 +116,4 @@ namespace kerbal
 } // namespace kerbal
 
 
-#endif // KERBAL_UTILITY_TUPLE_FWD_HPP
+#endif // KERBAL_UTILITY_TUPLE_TUPLE_FWD_HPP

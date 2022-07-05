@@ -13,9 +13,9 @@
 #define KERBAL_UTILITY_TUPLE_HPP
 
 #if __cplusplus < 201103L
-#	include <kerbal/utility/detail/tuple_cxx98.hpp>
+#	include <kerbal/utility/tuple/detail/tuple_cxx98.hpp>
 #else
-#	include <kerbal/utility/detail/tuple_cxx11.hpp>
+#	include <kerbal/utility/tuple/detail/tuple_cxx11.hpp>
 #endif
 
 #endif // KERBAL_UTILITY_TUPLE_HPP

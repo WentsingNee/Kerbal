@@ -9,8 +9,8 @@
  *   all rights reserved
  */
 
-#ifndef KERBAL_UTILITY_DETAIL_TUPLE_CXX11_HPP
-#define KERBAL_UTILITY_DETAIL_TUPLE_CXX11_HPP
+#ifndef KERBAL_UTILITY_TUPLE_DETAIL_TUPLE_CXX11_HPP
+#define KERBAL_UTILITY_TUPLE_DETAIL_TUPLE_CXX11_HPP
 
 #if __cplusplus < 201103L
 #	error This file requires compiler and library support for the ISO C++ 2011 standard.
@@ -37,7 +37,7 @@
 
 #include <cstddef>
 
-#include <kerbal/utility/fwd/tuple.fwd.hpp>
+#include <kerbal/utility/tuple/tuple.fwd.hpp>
 
 
 namespace kerbal
@@ -1520,4 +1520,4 @@ namespace kerbal
 
 } // namespace kerbal
 
-#endif // KERBAL_UTILITY_DETAIL_TUPLE_CXX11_HPP
+#endif // KERBAL_UTILITY_TUPLE_DETAIL_TUPLE_CXX11_HPP
