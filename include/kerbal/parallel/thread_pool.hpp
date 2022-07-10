@@ -15,6 +15,7 @@
 #include <kerbal/compatibility/move.hpp>
 #include <kerbal/compatibility/noexcept.hpp>
 #include <kerbal/container/vector.hpp>
+#include <kerbal/function/invoke.hpp>
 #include <kerbal/parallel/thread.hpp>
 
 #if __cplusplus >= 201103L
@@ -39,6 +40,7 @@ namespace kerbal
 		{
 				using Task = std::function<void()>;
 
+//				kerbal::container::vector<std::thread> K_threads_pool;
 				kerbal::container::vector<kerbal::parallel::thread> K_threads_pool;
 				std::queue<Task> K_tasks_queue;
 				std::mutex K_mutex;
@@ -77,7 +79,7 @@ namespace kerbal
 				{
 					this->K_stopped.store(true);
 					this->K_cv.notify_all(); // 唤醒所有线程执行
-					for (kerbal::parallel::thread & thread : this->K_threads_pool) {
+					for (auto & thread : this->K_threads_pool) {
 						//thread.detach(); // 让线程“自生自灭”
 						if (thread.joinable()) {
 							thread.join(); // 等待任务结束， 前提：线程一定会执行完
@@ -87,33 +89,30 @@ namespace kerbal
 
 			public:
 
-//				void stop()
-//				{
-//				}
-
 				// 提交一个任务
 				// 调用.get()获取返回值会等待任务执行完,获取返回值
 				// 有两种方法可以实现调用类成员，
 				// 一种是使用   bind： .commit(std::bind(&Dog::sayHello, &dog));
 				// 一种是用 mem_fn： .commit(std::mem_fn(&Dog::sayHello), &dog)
 				template <class F, class... Args>
-				std::future<typename std::result_of<F(Args...)>::type>
+				std::future<typename kerbal::function::invoke_result<F, Args...>::type>
 				commit(F&& f, Args&& ... args)
 				{
 					if (this->K_stopped.load()) {
 						throw std::runtime_error("commit on ThreadPool is stopped.");
 					}
 
-					using result_type = typename std::result_of<F(Args...)>::type; // typename std::result_of<F(Args...)>::type, 函数 f 的返回值类型
-					auto task = std::make_shared<std::packaged_task<result_type()> >(
-							std::bind(kerbal::utility::forward<F>(f), kerbal::utility::forward<Args>(args)...)
+					using result_type = typename kerbal::function::invoke_result<F, Args...>::type;
+					auto p_task = std::make_shared<std::packaged_task<result_type()> >(
+							[f, args...] () -> result_type {
+								return kerbal::function::invoke(f, args...);
+							}
 					);
-					std::future<result_type> future = task->get_future();
+					std::future<result_type> future = p_task->get_future();
 					{// 添加任务到队列
 						std::lock_guard<std::mutex> lock(K_mutex);
-						K_tasks_queue.emplace([task]() {
-							// push(Task{...})
-							(*task)();
+						K_tasks_queue.emplace([p_task]{
+							(*p_task)();
 						});
 					}
 					K_cv.notify_one();
@@ -121,9 +120,10 @@ namespace kerbal
 				}
 
 				//空闲线程数量
-				unsigned int idle_count() const KERBAL_NOEXCEPT
+				const std::atomic<unsigned int> &
+				idle_count() const KERBAL_NOEXCEPT
 				{
-					return this->K_idle_threads_num.load();
+					return this->K_idle_threads_num;
 				}
 
 		};
