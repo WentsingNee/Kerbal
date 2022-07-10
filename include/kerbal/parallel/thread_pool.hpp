@@ -39,35 +39,35 @@ namespace kerbal
 		{
 				using Task = std::function<void()>;
 
-				fkerbal::container::vector<fkerbal::parallel::thread> _K_threads_pool;
-				std::queue<Task> _K_tasks_queue;
-				std::mutex _K_mutex;
-				std::condition_variable _K_cv;
-				std::atomic<bool> _K_stopped;
-				std::atomic<unsigned int> _K_idle_threads_num;
+				kerbal::container::vector<kerbal::parallel::thread> K_threads_pool;
+				std::queue<Task> K_tasks_queue;
+				std::mutex K_mutex;
+				std::condition_variable K_cv;
+				std::atomic<bool> K_stopped;
+				std::atomic<unsigned int> K_idle_threads_num;
 
 			public:
 				explicit
 				thread_pool(unsigned int init_size = 4) :
-						_K_stopped(false), _K_idle_threads_num(init_size)
+						K_stopped(false), K_idle_threads_num(init_size)
 				{
-					_K_threads_pool.reserve(init_size);
-					for (size_t i = 0; i < this->_K_idle_threads_num; ++i) {   //初始化线程数量
-						_K_threads_pool.emplace_back([this] {
-							while (!this->_K_stopped.load()) {
-								std::unique_lock<std::mutex> lock(this->_K_mutex);
-								this->_K_cv.wait(lock, [this] {
-									return this->_K_stopped.load() || !this->_K_tasks_queue.empty();
+					K_threads_pool.reserve(init_size);
+					for (size_t i = 0; i < this->K_idle_threads_num; ++i) {   //初始化线程数量
+						K_threads_pool.emplace_back([this] {
+							while (!this->K_stopped.load()) {
+								std::unique_lock<std::mutex> lock(this->K_mutex);
+								this->K_cv.wait(lock, [this] {
+									return this->K_stopped.load() || !this->K_tasks_queue.empty();
 								});
-								if (this->_K_stopped.load() && this->_K_tasks_queue.empty()) {
+								if (this->K_stopped.load() && this->K_tasks_queue.empty()) {
 									return;
 								}
-								std::function<void()> task(kerbal::compatibility::move(this->_K_tasks_queue.front()));
-								this->_K_tasks_queue.pop();
+								std::function<void()> task(kerbal::compatibility::move(this->K_tasks_queue.front()));
+								this->K_tasks_queue.pop();
 								lock.unlock();
-								--this->_K_idle_threads_num;
+								--this->K_idle_threads_num;
 								task();
-								++this->_K_idle_threads_num;
+								++this->K_idle_threads_num;
 							}
 						});
 					}
@@ -75,9 +75,9 @@ namespace kerbal
 
 				~thread_pool()
 				{
-					this->_K_stopped.store(true);
-					this->_K_cv.notify_all(); // 唤醒所有线程执行
-					for (fkerbal::parallel::thread & thread : this->_K_threads_pool) {
+					this->K_stopped.store(true);
+					this->K_cv.notify_all(); // 唤醒所有线程执行
+					for (kerbal::parallel::thread & thread : this->K_threads_pool) {
 						//thread.detach(); // 让线程“自生自灭”
 						if (thread.joinable()) {
 							thread.join(); // 等待任务结束， 前提：线程一定会执行完
@@ -100,7 +100,7 @@ namespace kerbal
 				std::future<typename std::result_of<F(Args...)>::type>
 				commit(F&& f, Args&& ... args)
 				{
-					if (this->_K_stopped.load()) {
+					if (this->K_stopped.load()) {
 						throw std::runtime_error("commit on ThreadPool is stopped.");
 					}
 
@@ -110,20 +110,20 @@ namespace kerbal
 					);
 					std::future<result_type> future = task->get_future();
 					{// 添加任务到队列
-						std::lock_guard<std::mutex> lock(_K_mutex);
-						_K_tasks_queue.emplace([task]() {
+						std::lock_guard<std::mutex> lock(K_mutex);
+						K_tasks_queue.emplace([task]() {
 							// push(Task{...})
 							(*task)();
 						});
 					}
-					_K_cv.notify_one();
+					K_cv.notify_one();
 					return future;
 				}
 
 				//空闲线程数量
 				unsigned int idle_count() const KERBAL_NOEXCEPT
 				{
-					return this->_K_idle_threads_num.load();
+					return this->K_idle_threads_num.load();
 				}
 
 		};
