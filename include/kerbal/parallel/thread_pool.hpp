@@ -17,6 +17,9 @@
 #include <kerbal/container/vector.hpp>
 #include <kerbal/function/invoke.hpp>
 #include <kerbal/parallel/thread.hpp>
+#include <kerbal/utility/forward.hpp>
+#include <kerbal/utility/tuple.hpp>
+#include <kerbal/type_traits/reference_deduction.hpp>
 
 #if __cplusplus >= 201103L
 #	include <kerbal/utility/forward.hpp>
@@ -89,6 +92,41 @@ namespace kerbal
 
 			public:
 
+				template <typename F, typename ... Args>
+				struct task
+				{
+						using result_type = typename kerbal::function::invoke_result<F, Args...>::type;
+
+						kerbal::utility::tuple<F, Args...> pack;
+						std::promise<result_type> promise;
+
+						template <typename ... UArgs>
+						task(F && f, UArgs && ... args) :
+								pack(kerbal::utility::forward<F>(f), kerbal::utility::forward<UArgs>(args)...)
+						{
+						}
+
+					private:
+
+						template <std::size_t ... I>
+						void apply(kerbal::utility::integer_sequence<std::size_t, I...>)
+						{
+							try {
+								result_type result = kerbal::function::invoke(pack.template get<0>(), pack.template get<I + 1>()...);
+								promise.set_value(kerbal::compatibility::move(result));
+							} catch (...) {
+								promise.set_exception(std::current_exception());
+							}
+						}
+
+					public:
+
+						void operator()()
+						{
+							apply(kerbal::utility::make_index_sequence<sizeof...(Args)>());
+						}
+				};
+
 				// 提交一个任务
 				// 调用.get()获取返回值会等待任务执行完,获取返回值
 				// 有两种方法可以实现调用类成员，
@@ -102,16 +140,13 @@ namespace kerbal
 						throw std::runtime_error("commit on ThreadPool is stopped.");
 					}
 
-					using result_type = typename kerbal::function::invoke_result<F, Args...>::type;
-					auto p_task = std::make_shared<std::packaged_task<result_type()> >(
-							[f, args...] () -> result_type {
-								return kerbal::function::invoke(f, args...);
-							}
-					);
-					std::future<result_type> future = p_task->get_future();
+					using task_type = task<F, typename kerbal::type_traits::remove_reference<Args>::type ...>;
+					using result_type = typename task_type::result_type;
+					auto p_task = std::make_shared<task_type>(kerbal::utility::forward<F>(f), kerbal::utility::forward<Args>(args)...);
+					std::future<result_type> future = p_task->promise.get_future();
 					{// 添加任务到队列
 						std::lock_guard<std::mutex> lock(K_mutex);
-						K_tasks_queue.emplace([p_task]{
+						K_tasks_queue.emplace([p_task] {
 							(*p_task)();
 						});
 					}
