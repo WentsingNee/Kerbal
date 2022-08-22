@@ -16,6 +16,8 @@
 #include <kerbal/compatibility/move.hpp>
 #include <kerbal/compatibility/noexcept.hpp>
 #include <kerbal/compatibility/static_assert.hpp>
+#include <kerbal/iterator/iterator.hpp>
+#include <kerbal/iterator/iterator_traits.hpp>
 #include <kerbal/numeric/numeric_limits.hpp>
 
 #include <cstddef>
@@ -173,6 +175,59 @@ namespace kerbal
 						this->_K_idx += times;
 					}
 
+				}
+
+			private:
+				template <typename OutputIterator>
+				KERBAL_CONSTEXPR14
+				void K_generate(OutputIterator first, OutputIterator last, std::output_iterator_tag)
+				{
+					while (first != last) {
+						*first = (*this)();
+						++first;
+					}
+				}
+
+				template <typename RandomAccessIterator>
+				KERBAL_CONSTEXPR14
+				void K_generate(RandomAccessIterator first, RandomAccessIterator last, std::random_access_iterator_tag)
+				{
+					this->generate_n(first, kerbal::iterator::distance(first, last));
+				}
+
+			public:
+
+				template <typename OutputIterator>
+				KERBAL_CONSTEXPR14
+				void generate(OutputIterator first, OutputIterator last)
+				{
+					this->K_generate(first, last, kerbal::iterator::iterator_category(first));
+				}
+
+				template <typename OutputIterator>
+				KERBAL_CONSTEXPR14
+				OutputIterator generate_n(OutputIterator first, typename kerbal::iterator::iterator_traits<OutputIterator>::difference_type n)
+				{
+					std::size_t this_round_remain = R - this->_K_idx;
+					if (n <= this_round_remain) {
+						this->_K_idx += n;
+						return this->_K_base_eg.generate_n(first, n);
+					}
+					this->_K_idx = R;
+					first = this->_K_base_eg.generate_n(first, this_round_remain);
+					n -= this_round_remain;
+					this->_K_base_eg.discard(P - R);
+					this->_K_idx = 0;
+
+					for (std::size_t round = 0; round < n / R; ++round) {
+						this->_K_idx = R;
+						first = this->_K_base_eg.generate_n(first, R);
+						this->_K_base_eg.discard(P - R);
+						this->_K_idx = 0;
+					}
+					n %= R;
+					this->_K_idx = n;
+					return this->_K_base_eg.generate_n(first, n);
 				}
 
 				KERBAL_CONSTEXPR

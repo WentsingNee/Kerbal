@@ -17,6 +17,7 @@
 #include <kerbal/compatibility/static_assert.hpp>
 #include <kerbal/compatibility/noexcept.hpp>
 #include <kerbal/numeric/numeric_limits.hpp>
+#include <kerbal/iterator/iterator_traits.hpp>
 #include <kerbal/type_traits/conditional.hpp>
 #include <kerbal/type_traits/integral_constant.hpp>
 #include <kerbal/type_traits/type_identity.hpp>
@@ -463,6 +464,28 @@ namespace kerbal
 							(seed == 0u ? 1u : seed) :
 							(seed % m == 0u ? 1u : seed)
 					);
+				}
+
+				template <typename OutputIterator>
+				KERBAL_CONSTEXPR14
+				void generate(OutputIterator first, OutputIterator last)
+				{
+					while (first != last) {
+						*first = (*this)();
+						++first;
+					}
+				}
+
+				template <typename OutputIterator>
+				KERBAL_CONSTEXPR14
+				OutputIterator generate_n(OutputIterator first, typename kerbal::iterator::iterator_traits<OutputIterator>::difference_type n)
+				{
+					while (n != 0) {
+						--n;
+						*first = (*this)();
+						++first;
+					}
+					return first;
 				}
 
 				KERBAL_CONSTEXPR
