@@ -1,5 +1,5 @@
 /**
- * @file       static_vector.hpp
+ * @file       static_vector.decl.hpp
  * @brief
  * @date       2018-4-28
  * @author     Peter
@@ -9,8 +9,8 @@
  *   all rights reserved
  */
 
-#ifndef KERBAL_CONTAINER_STATIC_VECTOR_HPP
-#define KERBAL_CONTAINER_STATIC_VECTOR_HPP
+#ifndef KERBAL_CONTAINER_STATIC_VECTOR_STATIC_VECTOR_DECL_HPP
+#define KERBAL_CONTAINER_STATIC_VECTOR_STATIC_VECTOR_DECL_HPP
 
 #include <kerbal/assign/ilist.hpp>
 #include <kerbal/compare/sequence_compare.hpp>
@@ -717,7 +717,4 @@ KERBAL_NAMESPACE_STD_BEGIN
 
 KERBAL_NAMESPACE_STD_END
 
-
-#include <kerbal/container/static_vector/static_vector.impl.hpp>
-
-#endif // KERBAL_CONTAINER_STATIC_VECTOR_HPP
+#endif // KERBAL_CONTAINER_STATIC_VECTOR_STATIC_VECTOR_DECL_HPP
