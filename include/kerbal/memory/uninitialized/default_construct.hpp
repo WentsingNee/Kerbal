@@ -233,6 +233,7 @@ namespace kerbal
 #	if __cpp_exceptions || __cplusplus >= 201103L
 			typedef ForwardIterator iterator;
 			typedef typename kerbal::iterator::iterator_traits<iterator>::value_type value_type;
+			typedef typename kerbal::type_traits::remove_all_extents<value_type>::type remove_all_extents_type; // compatible with gcc-5
 #	endif
 
 #	if __cpp_exceptions
@@ -240,7 +241,7 @@ namespace kerbal
 #		if __cplusplus < 201103L
 
 			typedef typename kerbal::type_traits::conditional<
-					kerbal::type_traits::can_be_pseudo_destructible<value_type>::value,
+					kerbal::type_traits::can_be_pseudo_destructible<remove_all_extents_type>::value,
 					detail::UI_DFT_CONSTRUCT_VER_NO_CATCH,
 					typename kerbal::type_traits::conditional<
 						detail::can_be_nothrow_advance_iterator<iterator>::value,
@@ -252,10 +253,10 @@ namespace kerbal
 #		else
 
 			typedef typename kerbal::type_traits::conditional<
-					std::is_trivially_default_constructible<value_type>::value,
+					std::is_trivially_default_constructible<remove_all_extents_type>::value,
 					detail::UI_DFT_CONSTRUCT_VER_TRIVIALLY,
 					typename kerbal::type_traits::conditional<
-						std::is_trivially_destructible<value_type>::value,
+						std::is_trivially_destructible<remove_all_extents_type>::value,
 						detail::UI_DFT_CONSTRUCT_VER_NO_CATCH,
 						typename kerbal::type_traits::conditional<
 							detail::can_be_nothrow_advance_iterator<iterator>::value,
@@ -276,7 +277,7 @@ namespace kerbal
 #		else
 
 			typedef typename kerbal::type_traits::conditional<
-					std::is_trivially_default_constructible<value_type>::value,
+					std::is_trivially_default_constructible<remove_all_extents_type>::value,
 					detail::UI_DFT_CONSTRUCT_VER_TRIVIALLY,
 					detail::UI_DFT_CONSTRUCT_VER_NO_CATCH
 			>::type VER;
@@ -382,6 +383,7 @@ namespace kerbal
 #	if __cpp_exceptions || __cplusplus >= 201103L
 			typedef ForwardIterator iterator;
 			typedef typename kerbal::iterator::iterator_traits<iterator>::value_type value_type;
+			typedef typename kerbal::type_traits::remove_all_extents<value_type>::type remove_all_extents_type; // compatible with gcc-5
 #	endif
 
 #	if __cpp_exceptions
@@ -389,7 +391,7 @@ namespace kerbal
 #		if __cplusplus < 201103L
 
 			typedef typename kerbal::type_traits::conditional<
-					kerbal::type_traits::can_be_pseudo_destructible<value_type>::value,
+					kerbal::type_traits::can_be_pseudo_destructible<remove_all_extents_type>::value,
 					detail::UI_DFT_CONSTRUCT_N_VER_NO_CATCH,
 					typename kerbal::type_traits::conditional<
 						detail::can_be_nothrow_advance_iterator<iterator>::value,
@@ -401,10 +403,10 @@ namespace kerbal
 #		else
 
 			typedef typename kerbal::type_traits::conditional<
-				std::is_trivially_default_constructible<value_type>::value,
+				std::is_trivially_default_constructible<remove_all_extents_type>::value,
 				detail::UI_DFT_CONSTRUCT_N_VER_TRIVIALLY,
 				typename kerbal::type_traits::conditional<
-					std::is_trivially_destructible<value_type>::value,
+					std::is_trivially_destructible<remove_all_extents_type>::value,
 					detail::UI_DFT_CONSTRUCT_N_VER_NO_CATCH,
 					typename kerbal::type_traits::conditional<
 						detail::can_be_nothrow_advance_iterator<iterator>::value,
@@ -425,7 +427,7 @@ namespace kerbal
 #		else
 
 			typedef typename kerbal::type_traits::conditional<
-				std::is_trivially_default_constructible<value_type>::value,
+				std::is_trivially_default_constructible<remove_all_extents_type>::value,
 				detail::UI_DFT_CONSTRUCT_N_VER_TRIVIALLY,
 				detail::UI_DFT_CONSTRUCT_N_VER_NO_CATCH
 			>::type VER;
