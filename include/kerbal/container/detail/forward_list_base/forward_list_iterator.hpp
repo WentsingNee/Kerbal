@@ -131,7 +131,7 @@ namespace kerbal
 
 			template <typename Tp>
 			class fl_iter:
-					public fl_iter_type_unrelated,
+					protected fl_iter_type_unrelated,
 					//forward iterator interface
 					public kerbal::operators::dereferenceable<fl_iter<Tp>, Tp*>, // it->
 					public kerbal::operators::equality_comparable<fl_iter<Tp> >, // it != jt
@@ -158,7 +158,7 @@ namespace kerbal
 					typedef typename iterator_traits::pointer				pointer;
 					typedef typename iterator_traits::reference				reference;
 
-				public:
+				protected:
 					KERBAL_CONSTEXPR
 					explicit fl_iter(ptr_to_node_base current) KERBAL_NOEXCEPT :
 							super(current)
@@ -199,7 +199,7 @@ namespace kerbal
 
 			template <typename Tp>
 			class fl_kiter:
-					public fl_kiter_type_unrelated,
+					protected fl_kiter_type_unrelated,
 					//forward iterator interface
 					public kerbal::operators::dereferenceable<fl_kiter<Tp>, const Tp*>, // it->
 					public kerbal::operators::equality_comparable<fl_kiter<Tp> >, // it != jt
@@ -226,7 +226,7 @@ namespace kerbal
 					typedef typename iterator_traits::pointer				pointer;
 					typedef typename iterator_traits::reference				reference;
 
-				public:
+				protected:
 					KERBAL_CONSTEXPR
 					explicit fl_kiter(ptr_to_node_base current) KERBAL_NOEXCEPT :
 							super(current)
@@ -267,7 +267,7 @@ namespace kerbal
 					friend KERBAL_CONSTEXPR
 					bool operator==(const fl_kiter & lhs, const fl_kiter & rhs) KERBAL_NOEXCEPT
 					{
-						return (const super&)lhs == (const super&)rhs;
+						return static_cast<const super&>(lhs) == static_cast<const super&>(rhs);
 					}
 
 				protected:

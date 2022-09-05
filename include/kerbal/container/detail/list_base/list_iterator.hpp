@@ -38,6 +38,7 @@ namespace kerbal
 					//bidirectional iterator interface
 					public kerbal::operators::decrementable<list_iter_type_unrelated> // it--
 			{
+				private:
 					friend class kerbal::container::detail::list_type_unrelated;
 
 					friend class kerbal::container::detail::list_kiter_type_unrelated;
@@ -59,6 +60,7 @@ namespace kerbal
 					}
 
 				protected:
+
 					KERBAL_CONSTEXPR14
 					list_iter_type_unrelated& operator++() KERBAL_NOEXCEPT
 					{
@@ -117,6 +119,7 @@ namespace kerbal
 					}
 
 				protected:
+
 					KERBAL_CONSTEXPR14
 					list_kiter_type_unrelated& operator++() KERBAL_NOEXCEPT
 					{
@@ -147,7 +150,7 @@ namespace kerbal
 
 			template <typename Tp>
 			class list_iter:
-					list_iter_type_unrelated,
+					protected list_iter_type_unrelated,
 					//forward iterator interface
 					public kerbal::operators::dereferenceable<list_iter<Tp>, Tp*>, // it->
 					public kerbal::operators::equality_comparable<list_iter<Tp> >, // it != jt
@@ -182,6 +185,7 @@ namespace kerbal
 					{
 					}
 
+				protected:
 					KERBAL_CONSTEXPR
 					explicit list_iter(const list_iter_type_unrelated & iter) KERBAL_NOEXCEPT :
 							super(iter)
@@ -208,7 +212,7 @@ namespace kerbal
 					friend KERBAL_CONSTEXPR
 					bool operator==(const list_iter & lhs, const list_iter & rhs) KERBAL_NOEXCEPT
 					{
-						return (const super&)lhs == (const super&)rhs;
+						return static_cast<const super&>(lhs) == static_cast<const super&>(rhs);
 					}
 
 					//===================
@@ -225,7 +229,7 @@ namespace kerbal
 
 			template <typename Tp>
 			class list_kiter:
-					list_kiter_type_unrelated,
+					protected list_kiter_type_unrelated,
 					//forward iterator interface
 					public kerbal::operators::dereferenceable<list_kiter<Tp>, const Tp*>, // it->
 					public kerbal::operators::equality_comparable<list_kiter<Tp> >, // it != jt
@@ -260,6 +264,7 @@ namespace kerbal
 					{
 					}
 
+				protected:
 					KERBAL_CONSTEXPR
 					explicit list_kiter(const list_kiter_type_unrelated & iter) KERBAL_NOEXCEPT :
 							super(iter)
@@ -293,7 +298,7 @@ namespace kerbal
 					friend KERBAL_CONSTEXPR
 					bool operator==(const list_kiter & lhs, const list_kiter & rhs) KERBAL_NOEXCEPT
 					{
-						return (const super&)lhs == (const super&)rhs;
+						return static_cast<const super&>(lhs) == static_cast<const super&>(rhs);
 					}
 
 					//===================

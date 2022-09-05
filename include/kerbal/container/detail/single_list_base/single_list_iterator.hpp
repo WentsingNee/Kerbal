@@ -35,6 +35,7 @@ namespace kerbal
 					public kerbal::operators::equality_comparable<sl_iter_type_unrelated>, // it != jt
 					public kerbal::operators::incrementable<sl_iter_type_unrelated> // it++
 			{
+				private:
 					friend class kerbal::container::detail::sl_type_unrelated;
 
 					friend class kerbal::container::detail::sl_kiter_type_unrelated;
@@ -140,7 +141,7 @@ namespace kerbal
 
 			template <typename Tp>
 			class sl_iter:
-					sl_iter_type_unrelated,
+					protected sl_iter_type_unrelated,
 					//forward iterator interface
 					public kerbal::operators::dereferenceable<sl_iter<Tp>, Tp*>, // it->
 					public kerbal::operators::equality_comparable<sl_iter<Tp> >, // it != jt
@@ -173,6 +174,7 @@ namespace kerbal
 					{
 					}
 
+				protected:
 					KERBAL_CONSTEXPR
 					explicit sl_iter(const detail::sl_iter_type_unrelated & iter) KERBAL_NOEXCEPT :
 							super(iter)
@@ -199,14 +201,14 @@ namespace kerbal
 					friend KERBAL_CONSTEXPR
 					bool operator==(const sl_iter & lhs, const sl_iter & rhs) KERBAL_NOEXCEPT
 					{
-						return (const super&)lhs == (const super&)rhs;
+						return static_cast<const super&>(lhs) == static_cast<const super&>(rhs);
 					}
 
 			};
 
 			template <typename Tp>
 			class sl_kiter:
-					sl_kiter_type_unrelated,
+					protected sl_kiter_type_unrelated,
 					//forward iterator interface
 					public kerbal::operators::dereferenceable<sl_kiter<Tp>, const Tp*>, // it->
 					public kerbal::operators::equality_comparable<sl_kiter<Tp> >, // it != jt
@@ -239,6 +241,7 @@ namespace kerbal
 					{
 					}
 
+				protected:
 					KERBAL_CONSTEXPR
 					explicit sl_kiter(const detail::sl_iter_type_unrelated & iter) KERBAL_NOEXCEPT :
 							super(iter)
@@ -272,7 +275,7 @@ namespace kerbal
 					friend KERBAL_CONSTEXPR
 					bool operator==(const sl_kiter & lhs, const sl_kiter & rhs) KERBAL_NOEXCEPT
 					{
-						return (const super&)lhs == (const super&)rhs;
+						return static_cast<const super&>(lhs) == static_cast<const super&>(rhs);
 					}
 
 				protected:

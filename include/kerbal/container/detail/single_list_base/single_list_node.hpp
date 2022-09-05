@@ -12,6 +12,7 @@
 #ifndef KERBAL_CONTAINER_DETAIL_SINGLE_LIST_BASE_SINGLE_LIST_NODE_HPP
 #define KERBAL_CONTAINER_DETAIL_SINGLE_LIST_BASE_SINGLE_LIST_NODE_HPP
 
+#include <kerbal/container/detail/forward_list_base/forward_list_base.fwd.hpp>
 #include <kerbal/container/detail/single_list_base/single_list_base.fwd.hpp>
 
 #include <kerbal/algorithm/modifier.hpp>
@@ -46,10 +47,33 @@ namespace kerbal
 
 			class sl_node_base: private kerbal::utility::noncopyable
 			{
+				private:
+					friend class kerbal::container::detail::fl_type_unrelated;
+
+					template <typename Tp>
+					friend class kerbal::container::detail::fl_allocator_unrelated;
+
+					template <typename Tp>
+					friend class fl_iter;
+
+					template <typename Tp>
+					friend class fl_kiter;
+
+					friend class kerbal::container::detail::sl_type_unrelated;
+
+					template <typename Tp>
+					friend class kerbal::container::detail::sl_allocator_unrelated;
+
+					template <typename Tp>
+					friend class sl_iter;
+
+					template <typename Tp>
+					friend class sl_kiter;
+
 				public:
 					sl_node_base * next;
 
-				public:
+				protected:
 					KERBAL_CONSTEXPR
 					explicit sl_node_base() KERBAL_NOEXCEPT :
 							next(NULL)
