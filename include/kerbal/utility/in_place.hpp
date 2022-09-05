@@ -39,4 +39,4 @@ namespace kerbal
 
 } // namespace kerbal
 
-#endif //KERBAL_UTILITY_IN_PLACE_HPP
+#endif // KERBAL_UTILITY_IN_PLACE_HPP

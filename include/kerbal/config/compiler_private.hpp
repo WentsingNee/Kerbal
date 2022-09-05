@@ -9,8 +9,8 @@
  *   all rights reserved
  */
 
-#ifndef KERBAL_CONFIG_COMPILER_VERSION_HPP
-#define KERBAL_CONFIG_COMPILER_VERSION_HPP
+#ifndef KERBAL_CONFIG_COMPILER_PRIVATE_HPP
+#define KERBAL_CONFIG_COMPILER_PRIVATE_HPP
 
 #include <kerbal/config/compiler_id.hpp>
 
@@ -26,4 +26,4 @@
 #endif
 
 
-#endif // KERBAL_CONFIG_COMPILER_VERSION_HPP
+#endif // KERBAL_CONFIG_COMPILER_PRIVATE_HPP

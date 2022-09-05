@@ -49,4 +49,4 @@ namespace kerbal
 
 } // namespace kerbal
 
-#endif //KERBAL_ALGORITHM_SORT_DETAIL_ACTUAL_BIT_WIDTH_HPP
+#endif // KERBAL_ALGORITHM_SORT_DETAIL_ACTUAL_BIT_WIDTH_HPP

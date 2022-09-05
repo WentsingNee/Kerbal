@@ -9,8 +9,8 @@
  *   all rights reserved
  */
 
-#ifndef KERBAL_COMPARE_basic_compare_HPP
-#define KERBAL_COMPARE_basic_compare_HPP
+#ifndef KERBAL_COMPARE_BASIC_COMPARE_HPP
+#define KERBAL_COMPARE_BASIC_COMPARE_HPP
 
 #include <kerbal/compatibility/constexpr.hpp>
 #include <kerbal/compatibility/noexcept.hpp>
@@ -364,4 +364,4 @@ namespace kerbal
 
 } // namespace kerbal
 
-#endif // KERBAL_COMPARE_basic_compare_HPP
+#endif // KERBAL_COMPARE_BASIC_COMPARE_HPP

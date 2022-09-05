@@ -158,5 +158,3 @@ namespace kerbal
 } // namespace kerbal
 
 #endif // KERBAL_FUNCTION_FUNCTION_TRAITS_HPP
-
-

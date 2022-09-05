@@ -9,8 +9,8 @@
  *   all rights reserved
  */
 
-#ifndef KERBAL_RANDOM_DETAIL_MERSENNE_TWISTER_ENGINE_BASE_HPP
-#define KERBAL_RANDOM_DETAIL_MERSENNE_TWISTER_ENGINE_BASE_HPP
+#ifndef KERBAL_RANDOM_DETAIL_MT_ENGINE_BASE_HPP
+#define KERBAL_RANDOM_DETAIL_MT_ENGINE_BASE_HPP
 
 #include <kerbal/compatibility/constexpr.hpp>
 #include <kerbal/compatibility/fixed_width_integer.hpp>

@@ -9,8 +9,8 @@
  *   all rights reserved
  */
 
-#ifndef KERBAL_OPTIONAL_BAD_OPTIONAL_ACCESS
-#define KERBAL_OPTIONAL_BAD_OPTIONAL_ACCESS
+#ifndef KERBAL_OPTIONAL_BAD_OPTIONAL_ACCESS_HPP
+#define KERBAL_OPTIONAL_BAD_OPTIONAL_ACCESS_HPP
 
 #include <kerbal/compatibility/noexcept.hpp>
 
@@ -37,4 +37,4 @@ namespace kerbal
 
 } // namespace kerbal
 
-#endif // KERBAL_OPTIONAL_BAD_OPTIONAL_ACCESS
+#endif // KERBAL_OPTIONAL_BAD_OPTIONAL_ACCESS_HPP

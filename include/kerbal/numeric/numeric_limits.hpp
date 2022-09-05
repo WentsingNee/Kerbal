@@ -9,8 +9,8 @@
  *   all rights reserved
  */
 
-#ifndef KERBAL_KERBAL_NUMERIC_NUMERIC_LIMITS_HPP
-#define KERBAL_KERBAL_NUMERIC_NUMERIC_LIMITS_HPP
+#ifndef KERBAL_NUMERIC_NUMERIC_LIMITS_HPP
+#define KERBAL_NUMERIC_NUMERIC_LIMITS_HPP
 
 #include <kerbal/type_traits/fundamental_deduction.hpp>
 #include <kerbal/type_traits/integral_constant.hpp>
@@ -319,4 +319,4 @@ namespace kerbal
 
 } // namespace kerbal
 
-#endif // KERBAL_KERBAL_NUMERIC_NUMERIC_LIMITS_HPP
+#endif // KERBAL_NUMERIC_NUMERIC_LIMITS_HPP
