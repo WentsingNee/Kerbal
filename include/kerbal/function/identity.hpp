@@ -14,7 +14,10 @@
 
 #include <kerbal/compatibility/constexpr.hpp>
 #include <kerbal/compatibility/noexcept.hpp>
-#include <kerbal/utility/forward.hpp>
+
+#if __cplusplus >= 201103L
+#	include <kerbal/utility/forward.hpp>
+#endif
 
 
 namespace kerbal
