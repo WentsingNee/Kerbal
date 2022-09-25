@@ -35,12 +35,10 @@
 
 #include <kerbal/parallel/thread/thread.fwd.hpp>
 
-#include <kerbal/config/system.hpp>
-
-#if KERBAL_SYSTEM == KERBAL_SYSTEM_WINDOWS
-#	include <kerbal/parallel/thread/detail/thread.win.decl.hpp>
-#elif KERBAL_SYSTEM == KERBAL_SYSTEM_LINUX || KERBAL_SYSTEM == KERBAL_SYSTEM_APPLE
+#if KERBAL_PARALLEL_THREAD_MODE == KERBAL_PARALLEL_THREAD_MODE_POSIX
 #	include <kerbal/parallel/thread/detail/thread.posix.decl.hpp>
+#elif KERBAL_PARALLEL_THREAD_MODE == KERBAL_PARALLEL_THREAD_MODE_WIN
+#	include <kerbal/parallel/thread/detail/thread.win.decl.hpp>
 #else
 #	error "Not implemented yet"
 #endif
@@ -296,6 +294,17 @@ namespace kerbal
 						std::terminate();
 					}
 				}
+
+#	if __cplusplus >= 201103L
+
+				KERBAL_CONSTEXPR14
+				basic_thread & operator=(basic_thread && ano) KERBAL_NOEXCEPT
+				{
+					this->swap(ano);
+					return *this;
+				}
+
+#	endif
 
 				KERBAL_CONSTEXPR
 				bool joinable() const KERBAL_NOEXCEPT

@@ -20,10 +20,10 @@
 
 #include <kerbal/parallel/thread/thread.decl.hpp>
 
-#if KERBAL_SYSTEM == KERBAL_SYSTEM_WINDOWS
-#	include <kerbal/parallel/thread/detail/thread.win.impl.hpp>
-#elif KERBAL_SYSTEM == KERBAL_SYSTEM_LINUX || KERBAL_SYSTEM == KERBAL_SYSTEM_APPLE
+#if KERBAL_PARALLEL_THREAD_MODE == KERBAL_PARALLEL_THREAD_MODE_POSIX
 #	include <kerbal/parallel/thread/detail/thread.posix.impl.hpp>
+#elif KERBAL_PARALLEL_THREAD_MODE == KERBAL_PARALLEL_THREAD_MODE_WIN
+#	include <kerbal/parallel/thread/detail/thread.win.impl.hpp>
 #else
 #	error "Not implemented yet"
 #endif
