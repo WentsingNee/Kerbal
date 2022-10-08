@@ -14,6 +14,8 @@
 
 #include <kerbal/compatibility/constexpr.hpp>
 #include <kerbal/compatibility/noexcept.hpp>
+#include <kerbal/config/cuda.hpp>
+
 
 namespace kerbal
 {
@@ -25,6 +27,7 @@ namespace kerbal
 		struct addable
 		{
 				KERBAL_CONSTEXPR14
+				KERBAL_CUDA_HOST KERBAL_CUDA_DEVICE
 				friend Tp operator+(Tp lhs, const Up& rhs)
 #	if KERBAL_COMPILER_ID != KERBAL_COMPILER_ID_ICC
 						KERBAL_CONDITIONAL_NOEXCEPT(noexcept(lhs += rhs))
@@ -39,6 +42,7 @@ namespace kerbal
 		struct addable_left
 		{
 				KERBAL_CONSTEXPR14
+				KERBAL_CUDA_HOST KERBAL_CUDA_DEVICE
 				friend Tp operator+(const Up & lhs, const Tp & rhs)
 #	if KERBAL_COMPILER_ID != KERBAL_COMPILER_ID_ICC
 						KERBAL_CONDITIONAL_NOEXCEPT(noexcept(rhs + lhs))
