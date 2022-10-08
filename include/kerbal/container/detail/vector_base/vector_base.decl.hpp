@@ -16,6 +16,7 @@
 
 #include <kerbal/compatibility/constexpr.hpp>
 #include <kerbal/compatibility/noexcept.hpp>
+#include <kerbal/config/cuda.hpp>
 #include <kerbal/iterator/iterator_traits.hpp>
 #include <kerbal/iterator/reverse_iterator.hpp>
 #include <kerbal/memory/allocator_traits.hpp>
@@ -90,6 +91,7 @@ namespace kerbal
 #			endif
 
 					KERBAL_CONSTEXPR
+					KERBAL_CUDA_DEVICE KERBAL_CUDA_HOST
 					vector_type_only() KERBAL_NOEXCEPT;
 
 #			if __cplusplus >= 201103L
@@ -355,90 +357,117 @@ namespace kerbal
 					const_reference at(size_type index) const;
 
 					KERBAL_CONSTEXPR20
+					KERBAL_CUDA_DEVICE KERBAL_CUDA_HOST
 					reference operator[](size_type index) KERBAL_NOEXCEPT;
 
 					KERBAL_CONSTEXPR20
+					KERBAL_CUDA_DEVICE KERBAL_CUDA_HOST
 					const_reference operator[](size_type index) const KERBAL_NOEXCEPT;
 
 					KERBAL_CONSTEXPR20
+					KERBAL_CUDA_DEVICE KERBAL_CUDA_HOST
 					reference front();
 
 					KERBAL_CONSTEXPR20
+					KERBAL_CUDA_DEVICE KERBAL_CUDA_HOST
 					const_reference front() const;
 
 					KERBAL_CONSTEXPR20
+					KERBAL_CUDA_DEVICE KERBAL_CUDA_HOST
 					reference back();
 
 					KERBAL_CONSTEXPR20
+					KERBAL_CUDA_DEVICE KERBAL_CUDA_HOST
 					const_reference back() const;
 
 					KERBAL_CONSTEXPR
+					KERBAL_CUDA_DEVICE KERBAL_CUDA_HOST
 					const_pointer data() const KERBAL_NOEXCEPT;
 
 				//===================
 				// iterator
 
 					KERBAL_CONSTEXPR14
+					KERBAL_CUDA_DEVICE KERBAL_CUDA_HOST
 					iterator begin() KERBAL_NOEXCEPT;
 
 					KERBAL_CONSTEXPR
+					KERBAL_CUDA_DEVICE KERBAL_CUDA_HOST
 					const_iterator begin() const KERBAL_NOEXCEPT;
 
 					KERBAL_CONSTEXPR
+					KERBAL_CUDA_DEVICE KERBAL_CUDA_HOST
 					const_iterator cbegin() const KERBAL_NOEXCEPT;
 
 					KERBAL_CONSTEXPR14
+					KERBAL_CUDA_DEVICE KERBAL_CUDA_HOST
 					iterator end() KERBAL_NOEXCEPT;
 
 					KERBAL_CONSTEXPR
+					KERBAL_CUDA_DEVICE KERBAL_CUDA_HOST
 					const_iterator end() const KERBAL_NOEXCEPT;
 
 					KERBAL_CONSTEXPR
+					KERBAL_CUDA_DEVICE KERBAL_CUDA_HOST
 					const_iterator cend() const KERBAL_NOEXCEPT;
 
 					KERBAL_CONSTEXPR14
+					KERBAL_CUDA_DEVICE KERBAL_CUDA_HOST
 					reverse_iterator rbegin() KERBAL_NOEXCEPT;
 
 					KERBAL_CONSTEXPR14
+					KERBAL_CUDA_DEVICE KERBAL_CUDA_HOST
 					const_reverse_iterator rbegin() const KERBAL_NOEXCEPT;
 
 					KERBAL_CONSTEXPR14
+					KERBAL_CUDA_DEVICE KERBAL_CUDA_HOST
 					const_reverse_iterator crbegin() const KERBAL_NOEXCEPT;
 
 					KERBAL_CONSTEXPR14
+					KERBAL_CUDA_DEVICE KERBAL_CUDA_HOST
 					reverse_iterator rend() KERBAL_NOEXCEPT;
 
 					KERBAL_CONSTEXPR14
+					KERBAL_CUDA_DEVICE KERBAL_CUDA_HOST
 					const_reverse_iterator rend() const KERBAL_NOEXCEPT;
 
 					KERBAL_CONSTEXPR14
+					KERBAL_CUDA_DEVICE KERBAL_CUDA_HOST
 					const_reverse_iterator crend() const KERBAL_NOEXCEPT;
 
 					KERBAL_CONSTEXPR14
+					KERBAL_CUDA_DEVICE KERBAL_CUDA_HOST
 					iterator nth(size_type index);
 
 					KERBAL_CONSTEXPR
+					KERBAL_CUDA_DEVICE KERBAL_CUDA_HOST
 					const_iterator nth(size_type index) const;
 
 					KERBAL_CONSTEXPR
+					KERBAL_CUDA_DEVICE KERBAL_CUDA_HOST
 					const_iterator cnth(size_type index) const;
 
 					KERBAL_CONSTEXPR14
+					KERBAL_CUDA_DEVICE KERBAL_CUDA_HOST
 					size_type index_of(iterator it);
 
 					KERBAL_CONSTEXPR
+					KERBAL_CUDA_DEVICE KERBAL_CUDA_HOST
 					size_type index_of(const_iterator it) const;
 
 				//===================
 				// capacity
 
 					KERBAL_CONSTEXPR
+					KERBAL_CUDA_DEVICE KERBAL_CUDA_HOST
 					bool empty() const KERBAL_NOEXCEPT;
 
 					KERBAL_CONSTEXPR
+					KERBAL_CUDA_DEVICE KERBAL_CUDA_HOST
 					size_type size() const KERBAL_NOEXCEPT;
 
 					KERBAL_CONSTEXPR
+					KERBAL_CUDA_DEVICE KERBAL_CUDA_HOST
 					size_type capacity() const KERBAL_NOEXCEPT;
 
 				private:

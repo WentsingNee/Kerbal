@@ -14,6 +14,7 @@
 
 #include <kerbal/compatibility/constexpr.hpp>
 #include <kerbal/compatibility/noexcept.hpp>
+#include <kerbal/config/cuda.hpp>
 #include <kerbal/iterator/iterator.hpp>
 #include <kerbal/iterator/iterator_traits.hpp>
 #include <kerbal/operators/addable.hpp>
@@ -110,12 +111,14 @@ namespace kerbal
 
 				public:
 					KERBAL_CONSTEXPR14
+					KERBAL_CUDA_HOST KERBAL_CUDA_DEVICE
 					reference operator*() const
 					{
 						return *kerbal::iterator::prev(iter);
 					}
 
 					KERBAL_CONSTEXPR
+					KERBAL_CUDA_HOST KERBAL_CUDA_DEVICE
 					iterator_type base() const KERBAL_NOEXCEPT
 					{
 						return this->iter;
@@ -151,12 +154,14 @@ namespace kerbal
 
 				public:
 					KERBAL_CONSTEXPR14
+					KERBAL_CUDA_HOST KERBAL_CUDA_DEVICE
 					reference operator*() const
 					{
 						return *iter;
 					}
 
 					KERBAL_CONSTEXPR
+					KERBAL_CUDA_HOST KERBAL_CUDA_DEVICE
 					iterator_type base() const
 					{
 						return kerbal::iterator::next(this->iter);
@@ -216,6 +221,7 @@ namespace kerbal
 				// input iterator interface
 
 					KERBAL_CONSTEXPR14
+					KERBAL_CUDA_HOST KERBAL_CUDA_DEVICE
 					reverse_iterator & operator++()
 						KERBAL_CONDITIONAL_NOEXCEPT(
 							noexcept(
@@ -228,6 +234,7 @@ namespace kerbal
 					}
 
 					KERBAL_CONSTEXPR
+					KERBAL_CUDA_HOST KERBAL_CUDA_DEVICE
 					friend
 					bool operator==(const reverse_iterator & lhs, const reverse_iterator & rhs)
 #	if KERBAL_COMPILER_ID != KERBAL_COMPILER_ID_ICC
@@ -238,6 +245,7 @@ namespace kerbal
 					}
 
 					KERBAL_CONSTEXPR
+					KERBAL_CUDA_HOST KERBAL_CUDA_DEVICE
 					friend
 					bool operator!=(const reverse_iterator & lhs, const reverse_iterator & rhs)
 #	if KERBAL_COMPILER_ID != KERBAL_COMPILER_ID_ICC
@@ -251,6 +259,7 @@ namespace kerbal
 				// bidirectional iterator interface
 
 					KERBAL_CONSTEXPR14
+					KERBAL_CUDA_HOST KERBAL_CUDA_DEVICE
 					reverse_iterator & operator--()
 						KERBAL_CONDITIONAL_NOEXCEPT(
 							noexcept(
@@ -314,6 +323,7 @@ namespace kerbal
 				// random access iterator interface
 
 					KERBAL_CONSTEXPR
+					KERBAL_CUDA_HOST KERBAL_CUDA_DEVICE
 					friend
 					difference_type
 					operator-(const reverse_iterator & lhs, const reverse_iterator & rhs)
@@ -325,6 +335,7 @@ namespace kerbal
 					}
 
 					KERBAL_CONSTEXPR14
+					KERBAL_CUDA_HOST KERBAL_CUDA_DEVICE
 					reverse_iterator & operator+=(const difference_type & delta)
 						KERBAL_CONDITIONAL_NOEXCEPT(
 							noexcept(
@@ -337,6 +348,7 @@ namespace kerbal
 					}
 
 					KERBAL_CONSTEXPR14
+					KERBAL_CUDA_HOST KERBAL_CUDA_DEVICE
 					reverse_iterator & operator-=(const difference_type & delta)
 						KERBAL_CONDITIONAL_NOEXCEPT(
 							noexcept(
@@ -349,12 +361,14 @@ namespace kerbal
 					}
 
 					KERBAL_CONSTEXPR14
+					KERBAL_CUDA_HOST KERBAL_CUDA_DEVICE
 					reference operator[](const difference_type & dist) const
 					{
 						return *(static_cast<const reverse_iterator &>(*this) + dist);
 					}
 
 					KERBAL_CONSTEXPR
+					KERBAL_CUDA_HOST KERBAL_CUDA_DEVICE
 					friend
 					bool operator<(const reverse_iterator & lhs, const reverse_iterator & rhs)
 #	if KERBAL_COMPILER_ID != KERBAL_COMPILER_ID_ICC
@@ -365,6 +379,7 @@ namespace kerbal
 					}
 
 					KERBAL_CONSTEXPR
+					KERBAL_CUDA_HOST KERBAL_CUDA_DEVICE
 					friend
 					bool operator<=(const reverse_iterator & lhs, const reverse_iterator & rhs)
 #	if KERBAL_COMPILER_ID != KERBAL_COMPILER_ID_ICC
@@ -375,6 +390,7 @@ namespace kerbal
 					}
 
 					KERBAL_CONSTEXPR
+					KERBAL_CUDA_HOST KERBAL_CUDA_DEVICE
 					friend
 					bool operator>(const reverse_iterator & lhs, const reverse_iterator & rhs)
 #	if KERBAL_COMPILER_ID != KERBAL_COMPILER_ID_ICC
@@ -385,6 +401,7 @@ namespace kerbal
 					}
 
 					KERBAL_CONSTEXPR
+					KERBAL_CUDA_HOST KERBAL_CUDA_DEVICE
 					friend
 					bool operator>=(const reverse_iterator & lhs, const reverse_iterator & rhs)
 #	if KERBAL_COMPILER_ID != KERBAL_COMPILER_ID_ICC
@@ -448,6 +465,7 @@ namespace kerbal
 
 		template <typename Iter>
 		KERBAL_CONSTEXPR
+		KERBAL_CUDA_HOST KERBAL_CUDA_DEVICE
 		reverse_iterator<Iter>
 		make_reverse_iterator(const Iter & iter)
 		{
@@ -456,6 +474,7 @@ namespace kerbal
 
 		template <typename T, std::size_t N>
 		KERBAL_CONSTEXPR
+		KERBAL_CUDA_HOST KERBAL_CUDA_DEVICE
 		reverse_iterator<T *, false>
 		make_reverse_iterator(T (&arr) [N])
 		{

@@ -15,6 +15,7 @@
 #include <kerbal/compatibility/constexpr.hpp>
 #include <kerbal/compatibility/noexcept.hpp>
 #include <kerbal/utility/declval.hpp>
+#include <kerbal/config/cuda.hpp>
 
 
 namespace kerbal
@@ -27,6 +28,7 @@ namespace kerbal
 		struct dereferenceable
 		{
 				KERBAL_CONSTEXPR14
+				KERBAL_CUDA_HOST KERBAL_CUDA_DEVICE
 				Ptr operator->() const
 					KERBAL_CONDITIONAL_NOEXCEPT(
 						noexcept(
