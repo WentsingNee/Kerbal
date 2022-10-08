@@ -14,6 +14,7 @@
 
 #include <kerbal/compatibility/constexpr.hpp>
 #include <kerbal/compatibility/noexcept.hpp>
+#include <kerbal/config/cuda.hpp>
 
 #if __cplusplus >= 201103L
 #	include <kerbal/type_traits/is_nothrow_copy_constructible.hpp>
@@ -30,6 +31,7 @@ namespace kerbal
 		struct incrementable
 		{
 				KERBAL_CONSTEXPR14
+				KERBAL_CUDA_HOST KERBAL_CUDA_DEVICE
 				friend
 				T operator++(T & x, int)
 #	if KERBAL_COMPILER_ID != KERBAL_COMPILER_ID_ICC
@@ -49,6 +51,7 @@ namespace kerbal
 		struct decrementable
 		{
 				KERBAL_CONSTEXPR14
+				KERBAL_CUDA_HOST KERBAL_CUDA_DEVICE
 				friend
 				T operator--(T & x, int)
 #	if KERBAL_COMPILER_ID != KERBAL_COMPILER_ID_ICC

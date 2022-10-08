@@ -13,6 +13,7 @@
 #define KERBAL_UTILITY_DECLVAL_HPP
 
 #include <kerbal/compatibility/noexcept.hpp>
+#include <kerbal/config/cuda.hpp>
 
 #if __cplusplus >= 201103L
 #	include <kerbal/type_traits/add_rvalue_reference.hpp>
@@ -30,18 +31,21 @@ namespace kerbal
 #	if __cplusplus >= 201103L
 
 		template <typename T>
+		KERBAL_CUDA_HOST KERBAL_CUDA_DEVICE
 		typename kerbal::type_traits::add_rvalue_reference<T>::type
 		declval() KERBAL_NOEXCEPT;
 
 #	else
 
 		template <typename T>
+		KERBAL_CUDA_HOST KERBAL_CUDA_DEVICE
 		typename kerbal::type_traits::add_lvalue_reference<T>::type
 		declval() KERBAL_NOEXCEPT;
 
 #	endif
 
 		template <typename T>
+		KERBAL_CUDA_HOST KERBAL_CUDA_DEVICE
 		T *
 		declthis() KERBAL_NOEXCEPT;
 

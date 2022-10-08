@@ -19,6 +19,7 @@
 #include <kerbal/compatibility/move.hpp>
 #include <kerbal/compatibility/namespace_std_scope.hpp>
 #include <kerbal/compatibility/noexcept.hpp>
+#include <kerbal/config/cuda.hpp>
 #include <kerbal/iterator/iterator_traits.hpp>
 #include <kerbal/memory/allocator_traits.hpp>
 #include <kerbal/type_traits/enable_if.hpp>
@@ -99,6 +100,7 @@ namespace kerbal
 			// construct/copy/destroy
 
 				KERBAL_CONSTEXPR20
+				KERBAL_CUDA_DEVICE KERBAL_CUDA_HOST
 				vector()
 					KERBAL_CONDITIONAL_NOEXCEPT(
 						vector_allocator_overload::is_nothrow_default_constructible::value &&
@@ -309,6 +311,7 @@ namespace kerbal
 				using vector_type_only::capacity;
 
 				KERBAL_CONSTEXPR
+				KERBAL_CUDA_HOST KERBAL_CUDA_DEVICE
 				size_type max_size() const KERBAL_NOEXCEPT
 				{
 					return allocator_traits::max_size(this->alloc());
