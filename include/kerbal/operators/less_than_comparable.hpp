@@ -14,6 +14,7 @@
 
 #include <kerbal/compatibility/constexpr.hpp>
 #include <kerbal/compatibility/noexcept.hpp>
+#include <kerbal/config/cuda.hpp>
 
 
 namespace kerbal
@@ -26,6 +27,7 @@ namespace kerbal
 		struct less_than_comparable
 		{
 				KERBAL_CONSTEXPR
+				KERBAL_CUDA_HOST KERBAL_CUDA_DEVICE
 				friend
 				bool operator>(const T & lhs, const T & rhs)
 #	if KERBAL_COMPILER_ID != KERBAL_COMPILER_ID_ICC
@@ -36,6 +38,7 @@ namespace kerbal
 				}
 
 				KERBAL_CONSTEXPR
+				KERBAL_CUDA_HOST KERBAL_CUDA_DEVICE
 				friend
 				bool operator<=(const T & lhs, const T & rhs)
 #	if KERBAL_COMPILER_ID != KERBAL_COMPILER_ID_ICC
@@ -46,6 +49,7 @@ namespace kerbal
 				}
 
 				KERBAL_CONSTEXPR
+				KERBAL_CUDA_HOST KERBAL_CUDA_DEVICE
 				friend
 				bool operator>=(const T & lhs, const T & rhs)
 #	if KERBAL_COMPILER_ID != KERBAL_COMPILER_ID_ICC
