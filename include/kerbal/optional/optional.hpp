@@ -26,6 +26,7 @@
 #include <kerbal/compatibility/move.hpp>
 #include <kerbal/compatibility/namespace_std_scope.hpp>
 #include <kerbal/compatibility/noexcept.hpp>
+#include <kerbal/config/cuda.hpp>
 #include <kerbal/memory/raw_storage.hpp>
 #include <kerbal/type_traits/decay.hpp>
 #include <kerbal/type_traits/enable_if.hpp>
@@ -625,6 +626,7 @@ namespace kerbal
 				 * @return 若含值, 返回 true.
 				 */
 				KERBAL_CONSTEXPR
+				KERBAL_CUDA_HOST KERBAL_CUDA_DEVICE
 				bool has_value() const KERBAL_NOEXCEPT
 				{
 					return this->k_has_value;
@@ -640,6 +642,7 @@ namespace kerbal
 				 * @return 若不含值, 返回 true.
 				 */
 				KERBAL_CONSTEXPR
+				KERBAL_CUDA_HOST KERBAL_CUDA_DEVICE
 				bool empty() const KERBAL_NOEXCEPT
 				{
 					return !this->k_has_value;
@@ -908,6 +911,7 @@ namespace kerbal
 #	endif
 
 				KERBAL_CONSTEXPR14
+				KERBAL_CUDA_HOST KERBAL_CUDA_DEVICE
 				void reset()
 				{
 					if (this->has_value()) {

@@ -16,6 +16,7 @@
 
 #include <kerbal/compatibility/constexpr.hpp>
 #include <kerbal/compatibility/noexcept.hpp>
+#include <kerbal/config/cuda.hpp>
 #include <kerbal/iterator/iterator_traits.hpp>
 #include <kerbal/operators/addable.hpp>
 #include <kerbal/operators/dereferenceable.hpp>
@@ -89,12 +90,14 @@ namespace kerbal
 					//forward iterator interface
 
 					KERBAL_CONSTEXPR14
+					KERBAL_CUDA_HOST KERBAL_CUDA_DEVICE
 					reference operator*() const KERBAL_NOEXCEPT
 					{
 						return *this->current;
 					}
 
 					KERBAL_CONSTEXPR14
+					KERBAL_CUDA_HOST KERBAL_CUDA_DEVICE
 					vec_iter& operator++() KERBAL_NOEXCEPT
 					{
 						++this->current;
@@ -102,6 +105,7 @@ namespace kerbal
 					}
 
 					KERBAL_CONSTEXPR
+					KERBAL_CUDA_HOST KERBAL_CUDA_DEVICE
 					friend bool operator==(const vec_iter & lhs, const vec_iter & rhs) KERBAL_NOEXCEPT
 					{
 						return lhs.current == rhs.current;
@@ -111,6 +115,7 @@ namespace kerbal
 					//bidirectional iterator interface
 
 					KERBAL_CONSTEXPR14
+					KERBAL_CUDA_HOST KERBAL_CUDA_DEVICE
 					vec_iter& operator--() KERBAL_NOEXCEPT
 					{
 						--this->current;
@@ -121,6 +126,7 @@ namespace kerbal
 					//random access iterator interface
 
 					KERBAL_CONSTEXPR
+					KERBAL_CUDA_HOST KERBAL_CUDA_DEVICE
 					friend difference_type
 					operator-(const vec_iter & lhs, const vec_iter & rhs) KERBAL_NOEXCEPT
 					{
@@ -128,6 +134,7 @@ namespace kerbal
 					}
 
 					KERBAL_CONSTEXPR14
+					KERBAL_CUDA_HOST KERBAL_CUDA_DEVICE
 					vec_iter& operator+=(const difference_type & delta) KERBAL_NOEXCEPT
 					{
 						this->current += delta;
@@ -135,6 +142,7 @@ namespace kerbal
 					}
 
 					KERBAL_CONSTEXPR14
+					KERBAL_CUDA_HOST KERBAL_CUDA_DEVICE
 					vec_iter& operator-=(const difference_type & delta) KERBAL_NOEXCEPT
 					{
 						this->current -= delta;
@@ -142,12 +150,14 @@ namespace kerbal
 					}
 
 					KERBAL_CONSTEXPR14
+					KERBAL_CUDA_HOST KERBAL_CUDA_DEVICE
 					reference operator[](const difference_type & dist) const KERBAL_NOEXCEPT
 					{
 						return *(static_cast<const vec_iter&>(*this) + dist);
 					}
 
 					KERBAL_CONSTEXPR
+					KERBAL_CUDA_HOST KERBAL_CUDA_DEVICE
 					friend bool operator<(const vec_iter & lhs, const vec_iter & rhs) KERBAL_NOEXCEPT
 					{
 						return lhs.current < rhs.current;
@@ -205,6 +215,7 @@ namespace kerbal
 				public:
 
 					KERBAL_CONSTEXPR
+					KERBAL_CUDA_HOST KERBAL_CUDA_DEVICE
 					vec_kiter(const iterator & iter) KERBAL_NOEXCEPT :
 							current(iter.current)
 					{
@@ -214,12 +225,14 @@ namespace kerbal
 					//forward iterator interface
 
 					KERBAL_CONSTEXPR14
+					KERBAL_CUDA_HOST KERBAL_CUDA_DEVICE
 					reference operator*() const KERBAL_NOEXCEPT
 					{
 						return *this->current;
 					}
 
 					KERBAL_CONSTEXPR14
+					KERBAL_CUDA_HOST KERBAL_CUDA_DEVICE
 					vec_kiter& operator++() KERBAL_NOEXCEPT
 					{
 						++this->current;
@@ -227,6 +240,7 @@ namespace kerbal
 					}
 
 					KERBAL_CONSTEXPR
+					KERBAL_CUDA_HOST KERBAL_CUDA_DEVICE
 					friend bool operator==(const vec_kiter & lhs, const vec_kiter & rhs) KERBAL_NOEXCEPT
 					{
 						return lhs.current == rhs.current;
@@ -236,6 +250,7 @@ namespace kerbal
 					//bidirectional iterator interface
 
 					KERBAL_CONSTEXPR14
+					KERBAL_CUDA_HOST KERBAL_CUDA_DEVICE
 					vec_kiter& operator--() KERBAL_NOEXCEPT
 					{
 						--this->current;
@@ -246,6 +261,7 @@ namespace kerbal
 					//random access iterator interface
 
 					KERBAL_CONSTEXPR
+					KERBAL_CUDA_HOST KERBAL_CUDA_DEVICE
 					friend difference_type
 					operator-(const vec_kiter & lhs, const vec_kiter & rhs) KERBAL_NOEXCEPT
 					{
@@ -253,6 +269,7 @@ namespace kerbal
 					}
 
 					KERBAL_CONSTEXPR14
+					KERBAL_CUDA_HOST KERBAL_CUDA_DEVICE
 					vec_kiter& operator+=(const difference_type & delta) KERBAL_NOEXCEPT
 					{
 						this->current += delta;
@@ -260,6 +277,7 @@ namespace kerbal
 					}
 
 					KERBAL_CONSTEXPR14
+					KERBAL_CUDA_HOST KERBAL_CUDA_DEVICE
 					vec_kiter& operator-=(const difference_type & delta) KERBAL_NOEXCEPT
 					{
 						this->current -= delta;
@@ -267,12 +285,14 @@ namespace kerbal
 					}
 
 					KERBAL_CONSTEXPR14
+					KERBAL_CUDA_HOST KERBAL_CUDA_DEVICE
 					reference operator[](const difference_type & dist) const KERBAL_NOEXCEPT
 					{
 						return *(static_cast<const vec_kiter&>(*this) + dist);
 					}
 
 					KERBAL_CONSTEXPR
+					KERBAL_CUDA_HOST KERBAL_CUDA_DEVICE
 					friend bool operator<(const vec_kiter & lhs, const vec_kiter & rhs) KERBAL_NOEXCEPT
 					{
 						return lhs.current < rhs.current;

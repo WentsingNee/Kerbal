@@ -14,6 +14,8 @@
 
 #include <kerbal/compatibility/constexpr.hpp>
 #include <kerbal/compatibility/noexcept.hpp>
+#include <kerbal/config/cuda.hpp>
+
 
 namespace kerbal
 {
@@ -25,6 +27,7 @@ namespace kerbal
 		struct equality_comparable
 		{
 				KERBAL_CONSTEXPR
+				KERBAL_CUDA_HOST KERBAL_CUDA_DEVICE
 				friend bool operator!=(const T & lhs, const T & rhs)
 #	if KERBAL_COMPILER_ID != KERBAL_COMPILER_ID_ICC
 						KERBAL_CONDITIONAL_NOEXCEPT(noexcept(static_cast<bool>(lhs == rhs)))
