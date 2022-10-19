@@ -1089,7 +1089,6 @@ namespace kerbal
 						this->_K_size = new_size;
 					} else {
 						vector_emplace_helper<Tp, Allocator> helper(alloc, kerbal::utility::forward<Args>(args)...);
-						pointer pt = reinterpret_cast<pointer>(&(helper.storage));
 
 						// construct at the end
 						kerbal::memory::construct_at_using_allocator(alloc, this->end().current, kerbal::compatibility::to_xvalue(this->back()));
@@ -1099,8 +1098,8 @@ namespace kerbal
 						kerbal::algorithm::move_backward(insert_pos, this->end().current - 2, this->end().current - 1);
 						// A A A X X Y Z O O
 						//           ^
-						kerbal::operators::generic_assign(*insert_pos, kerbal::compatibility::to_xvalue(*pt));
-						// *insert_pos = kerbal::compatibility::to_xvalue(*pt);
+						kerbal::operators::generic_assign(*insert_pos, kerbal::compatibility::to_xvalue(helper.storage.raw_value()));
+						// *insert_pos = kerbal::compatibility::to_xvalue(helper.storage.raw_value());
 					}
 				} else { // new_size > this->_K_capacity
 					size_type new_capacity = this->_K_capacity == 0 ? 1 : 2 * this->_K_capacity;
@@ -1189,12 +1188,11 @@ namespace kerbal
 						this->_K_size = new_size; \
 					} else { \
 						vector_emplace_helper<Tp, Allocator> helper(alloc KERBAL_OPT_PPEXPAND_WITH_COMMA_N(LEFT_JOIN_COMMA, EMPTY, ARGS_USE, i)); \
-						pointer pt = reinterpret_cast<pointer>(&(helper.storage)); \
  \
 						kerbal::memory::construct_at_using_allocator(alloc, this->end().current, kerbal::compatibility::to_xvalue(this->back())); \
 						this->_K_size = new_size; \
 						kerbal::algorithm::move_backward(insert_pos, this->end().current - 2, this->end().current - 1); \
-						kerbal::operators::generic_assign(*insert_pos, kerbal::compatibility::to_xvalue(*pt)); \
+						kerbal::operators::generic_assign(*insert_pos, kerbal::compatibility::to_xvalue(helper.storage.raw_value())); \
 					} \
 				} else { \
 					FBODY_REALLOC(i); \
