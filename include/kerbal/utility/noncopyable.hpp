@@ -27,7 +27,6 @@ namespace kerbal
 		class noncopyconstructible
 		{
 			protected:
-
 				noncopyconstructible() KERBAL_NOEXCEPT
 				{
 				}
@@ -45,11 +44,9 @@ namespace kerbal
 		class noncopyconstructible
 		{
 			protected:
+				noncopyconstructible() = default;
 
-				KERBAL_CONSTEXPR
-				noncopyconstructible() KERBAL_NOEXCEPT = default;
-
-				~noncopyconstructible() KERBAL_NOEXCEPT = default;
+				~noncopyconstructible() = default;
 
 			private:
 				noncopyconstructible(const noncopyconstructible &) = delete;
@@ -63,7 +60,6 @@ namespace kerbal
 		class noncopyassignable
 		{
 			protected:
-
 				noncopyassignable() KERBAL_NOEXCEPT
 				{
 				}
@@ -81,11 +77,9 @@ namespace kerbal
 		class noncopyassignable
 		{
 			protected:
+				noncopyassignable() = default;
 
-				KERBAL_CONSTEXPR
-				noncopyassignable() KERBAL_NOEXCEPT = default;
-
-				~noncopyassignable() KERBAL_NOEXCEPT = default;
+				~noncopyassignable()  = default;
 
 			private:
 				noncopyassignable& operator=(const noncopyassignable &) = delete;
@@ -93,23 +87,34 @@ namespace kerbal
 
 #	endif
 
-		class noncopyable :
-				protected kerbal::utility::noncopyconstructible,
-				protected kerbal::utility::noncopyassignable
+
+#	if __cplusplus < 201103L
+
+		class noncopyable
 		{
-
-#	if __cplusplus >= 201103L
-
 			protected:
+				noncopyable() KERBAL_NOEXCEPT
+				{
+				}
 
-				KERBAL_CONSTEXPR
-				noncopyable() KERBAL_NOEXCEPT = default;
+			private:
+				noncopyable(const noncopyable &);
+				noncopyassignable& operator=(const noncopyassignable &);
+		};
 
-				~noncopyable() KERBAL_NOEXCEPT = default;
+#	else
+
+		class noncopyable
+		{
+			protected:
+				noncopyable() = default;
+
+			private:
+				noncopyable(const noncopyable &) = delete;
+				noncopyassignable& operator=(const noncopyassignable &) = delete;
+		};
 
 #	endif
-
-		};
 
 	} // namespace utility
 
