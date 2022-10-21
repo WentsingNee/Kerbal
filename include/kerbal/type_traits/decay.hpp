@@ -16,8 +16,8 @@
 
 #include <kerbal/type_traits/add_pointer.hpp>
 #include <kerbal/type_traits/conditional.hpp>
-#include <kerbal/type_traits/function_deduction.hpp>
 #include <kerbal/type_traits/is_array.hpp>
+#include <kerbal/type_traits/is_function.hpp>
 #include <kerbal/type_traits/remove_cv.hpp>
 #include <kerbal/type_traits/remove_extent.hpp>
 #include <kerbal/type_traits/remove_reference.hpp>
@@ -29,10 +29,13 @@ namespace kerbal
 	namespace type_traits
 	{
 
-		template <typename _Up,
-				bool _IsArray = kerbal::type_traits::is_array<_Up>::value,
-				bool _IsFunction = kerbal::type_traits::is_function<_Up>::value>
-		struct __decay_selector;
+		namespace detail
+		{
+
+			template <typename T,
+					bool IsArray = kerbal::type_traits::is_array<T>::value,
+					bool IsFunction = kerbal::type_traits::is_function<T>::value>
+			struct decay_selector;
 
 		template <typename _Up>
 		struct __decay_selector<_Up, false, false>

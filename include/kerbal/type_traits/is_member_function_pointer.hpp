@@ -14,8 +14,8 @@
 #define KERBAL_TYPE_TRAITS_IS_MEMBER_FUNCTION_POINTER_HPP
 
 #include <kerbal/ts/modules_ts/modules_ts.hpp>
-#include <kerbal/type_traits/function_deduction.hpp>
 #include <kerbal/type_traits/integral_constant.hpp>
+#include <kerbal/type_traits/is_function.hpp>
 #include <kerbal/type_traits/remove_cv.hpp>
 
 
