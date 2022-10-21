@@ -12,8 +12,8 @@
 #ifndef KERBAL_NUMERIC_NUMERIC_LIMITS_HPP
 #define KERBAL_NUMERIC_NUMERIC_LIMITS_HPP
 
-#include <kerbal/type_traits/fundamental_deduction.hpp>
 #include <kerbal/type_traits/integral_constant.hpp>
+#include <kerbal/type_traits/is_integral.hpp>
 #include <kerbal/type_traits/sign_deduction.hpp>
 
 #include <cfloat>

@@ -21,6 +21,7 @@
 #include <kerbal/memory/allocator_traits.hpp>
 #include <kerbal/type_traits/enable_if.hpp>
 #include <kerbal/type_traits/integral_constant.hpp>
+#include <kerbal/type_traits/is_integral.hpp>
 #include <kerbal/utility/declval.hpp>
 
 #if __cplusplus < 201103L

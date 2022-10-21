@@ -40,7 +40,7 @@
 #if __cplusplus >= 201103L
 #	include <type_traits>
 #else
-#	include <kerbal/type_traits/fundamental_deduction.hpp>
+#	include <kerbal/type_traits/is_fundamental.hpp>
 #	include <kerbal/type_traits/pointer_deduction.hpp>
 #endif
 

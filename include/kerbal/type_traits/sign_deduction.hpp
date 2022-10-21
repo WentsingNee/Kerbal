@@ -14,7 +14,8 @@
 
 #include <kerbal/ts/modules_ts/modules_ts.hpp>
 #include <kerbal/type_traits/copy_cv.hpp>
-#include <kerbal/type_traits/fundamental_deduction.hpp>
+#include <kerbal/type_traits/integral_constant.hpp>
+#include <kerbal/type_traits/is_arithmetic.hpp>
 #include <kerbal/type_traits/remove_cv.hpp>
 #include <kerbal/type_traits/type_identity.hpp>
 

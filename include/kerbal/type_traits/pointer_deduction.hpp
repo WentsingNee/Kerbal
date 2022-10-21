@@ -14,8 +14,8 @@
 
 #include <kerbal/ts/modules_ts/modules_ts.hpp>
 #include <kerbal/type_traits/conditional.hpp>
-#include <kerbal/type_traits/fundamental_deduction.hpp>
 #include <kerbal/type_traits/is_referencable.hpp>
+#include <kerbal/type_traits/is_void.hpp>
 #include <kerbal/type_traits/remove_reference.hpp>
 #include <kerbal/type_traits/remove_cv.hpp>
 

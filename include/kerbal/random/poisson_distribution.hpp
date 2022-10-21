@@ -16,7 +16,7 @@
 #include <kerbal/compatibility/noexcept.hpp>
 #include <kerbal/compatibility/static_assert.hpp>
 #include <kerbal/random/uniform_real_distribution.hpp>
-#include <kerbal/type_traits/fundamental_deduction.hpp>
+#include <kerbal/type_traits/is_integral.hpp>
 #include <kerbal/utility/declval.hpp>
 
 #include <cmath>
