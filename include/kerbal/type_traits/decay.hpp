@@ -37,33 +37,36 @@ namespace kerbal
 					bool IsFunction = kerbal::type_traits::is_function<T>::value>
 			struct decay_selector;
 
-		template <typename _Up>
-		struct __decay_selector<_Up, false, false>
-		{
-			typedef typename kerbal::type_traits::remove_cv<_Up>::type type;
-		};
+			template <typename T>
+			struct decay_selector<T, false, false>
+			{
+				typedef typename kerbal::type_traits::remove_cv<T>::type type;
+			};
 
-		template <typename _Up>
-		struct __decay_selector<_Up, true, false>
-		{
-			typedef typename kerbal::type_traits::remove_extent<_Up>::type *type;
-		};
+			template <typename T>
+			struct decay_selector<T, true, false>
+			{
+				typedef typename kerbal::type_traits::remove_extent<T>::type *type;
+			};
 
-		template <typename _Up>
-		struct __decay_selector<_Up, false, true>
-		{
-			typedef typename kerbal::type_traits::add_pointer<_Up>::type type;
-		};
+			template <typename T>
+			struct decay_selector<T, false, true>
+			{
+				typedef typename kerbal::type_traits::add_pointer<T>::type type;
+			};
+
+		} // namespace detail
+
 
 		MODULE_EXPORT
-		template <typename Tp>
+		template <typename T>
 		struct decay
 		{
 			private:
-				typedef typename kerbal::type_traits::remove_reference<Tp>::type U;
+				typedef typename kerbal::type_traits::remove_reference<T>::type U;
 
 			public:
-				typedef typename __decay_selector<U>::type type;
+				typedef typename kerbal::type_traits::detail::decay_selector<U>::type type;
 		};
 
 	} // namespace type_traits
