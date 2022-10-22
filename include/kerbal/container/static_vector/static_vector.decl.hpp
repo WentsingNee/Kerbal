@@ -20,8 +20,8 @@
 #include <kerbal/container/static_container_exception.hpp>
 #include <kerbal/iterator/iterator_traits.hpp>
 #include <kerbal/iterator/reverse_iterator.hpp>
-#include <kerbal/type_traits/array_traits.hpp>
 #include <kerbal/type_traits/enable_if.hpp>
+#include <kerbal/type_traits/remove_all_extents.hpp>
 #include <kerbal/utility/throw_this_exception.hpp>
 
 #if __cplusplus < 201103L

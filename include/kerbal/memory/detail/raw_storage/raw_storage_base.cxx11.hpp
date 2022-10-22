@@ -16,9 +16,9 @@
 #include <kerbal/compatibility/method_overload_tag.hpp>
 #include <kerbal/compatibility/noexcept.hpp>
 #include <kerbal/memory/uninitialized.hpp>
-#include <kerbal/type_traits/array_traits.hpp>
 #include <kerbal/type_traits/conditional.hpp>
 #include <kerbal/type_traits/integral_constant.hpp>
+#include <kerbal/type_traits/remove_all_extents.hpp>
 #include <kerbal/utility/forward.hpp>
 #include <kerbal/utility/in_place.hpp>
 #include <kerbal/utility/integer_sequence.hpp>

@@ -18,8 +18,8 @@
 #include <kerbal/compatibility/noexcept.hpp>
 #include <kerbal/memory/uninitialized.hpp>
 #include <kerbal/type_traits/aligned_storage.hpp>
-#include <kerbal/type_traits/array_traits.hpp>
 #include <kerbal/type_traits/integral_constant.hpp>
+#include <kerbal/type_traits/remove_all_extents.hpp>
 #include <kerbal/utility/in_place.hpp>
 #include <kerbal/utility/noncopyable.hpp>
 

@@ -17,8 +17,9 @@
 
 #if __cplusplus >= 201103L
 #	include <kerbal/compatibility/static_assert.hpp>
-#	include <kerbal/type_traits/array_traits.hpp>
+#	include <kerbal/type_traits/extent.hpp>
 #	include <kerbal/type_traits/integral_constant.hpp>
+#	include <kerbal/type_traits/is_array.hpp>
 #	include <kerbal/type_traits/reference_deduction.hpp>
 #	include <kerbal/utility/forward.hpp>
 #endif
@@ -141,7 +142,7 @@ namespace kerbal
 						typename kerbal::type_traits::remove_reference<Up>::type
 				, 0> UP_EXTENT;
 				KERBAL_STATIC_ASSERT(TP_EXTENT::value == UP_EXTENT::value, "Tp and Up must have same length");
-				for (std::size_t i = 0; i < kerbal::type_traits::extent<Tp, 0>::value; ++i) {
+				for (std::size_t i = 0; i < TP_EXTENT::value; ++i) {
 					kerbal::operators::generic_assign(lhs[i], kerbal::utility::forward<decltype(rhs[i])>(rhs[i]));
 				}
 			}

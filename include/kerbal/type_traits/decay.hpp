@@ -14,12 +14,14 @@
 
 #include <kerbal/ts/modules_ts/modules_ts.hpp>
 
-#include <kerbal/type_traits/array_traits.hpp>
 #include <kerbal/type_traits/conditional.hpp>
 #include <kerbal/type_traits/cv_deduction.hpp>
 #include <kerbal/type_traits/function_deduction.hpp>
+#include <kerbal/type_traits/is_array.hpp>
 #include <kerbal/type_traits/pointer_deduction.hpp>
 #include <kerbal/type_traits/reference_deduction.hpp>
+#include <kerbal/type_traits/remove_extent.hpp>
+
 
 namespace kerbal
 {

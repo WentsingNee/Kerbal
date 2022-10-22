@@ -12,8 +12,8 @@
 #ifndef KERBAL_TYPE_TRAITS_CAN_BE_PSEUDO_DESTRUCTIBLE_HPP
 #define KERBAL_TYPE_TRAITS_CAN_BE_PSEUDO_DESTRUCTIBLE_HPP
 
-#include <kerbal/type_traits/array_traits.hpp>
 #include <kerbal/type_traits/integral_constant.hpp>
+#include <kerbal/type_traits/remove_all_extents.hpp>
 
 #if __cplusplus >= 201103L
 #	include <type_traits>

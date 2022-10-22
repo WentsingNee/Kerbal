@@ -22,7 +22,11 @@
 #if __cplusplus < 201103L
 #	include <kerbal/type_traits/can_be_pseudo_destructible.hpp>
 #else
-#	include <kerbal/type_traits/array_traits.hpp>
+#	include <kerbal/type_traits/remove_all_extents.hpp>
+#endif
+
+#if __cpp_exceptions
+#	include <kerbal/type_traits/remove_all_extents.hpp>
 #endif
 
 #if __cplusplus >= 201103L

@@ -16,7 +16,6 @@
 #include <kerbal/compatibility/move.hpp>
 #include <kerbal/iterator/iterator_traits.hpp>
 #include <kerbal/memory/uninitialized/destroy.hpp>
-#include <kerbal/type_traits/array_traits.hpp>
 #include <kerbal/type_traits/conditional.hpp>
 #include <kerbal/type_traits/integral_constant.hpp>
 

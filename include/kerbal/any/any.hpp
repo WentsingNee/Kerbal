@@ -39,7 +39,7 @@
 #if __cplusplus >= 201103L
 #	include <kerbal/utility/forward.hpp>
 #else
-#	include <kerbal/type_traits/array_traits.hpp>
+#	include <kerbal/type_traits/remove_all_extents.hpp>
 #	include <kerbal/type_traits/fundamental_deduction.hpp>
 #	include <kerbal/type_traits/member_pointer_deduction.hpp>
 #	include <kerbal/type_traits/pointer_deduction.hpp>
