@@ -17,6 +17,7 @@
 #include <kerbal/memory/allocator_traits.hpp>
 #include <kerbal/type_traits/aligned_storage.hpp>
 #include <kerbal/type_traits/integral_constant.hpp>
+#include <kerbal/type_traits/remove_const.hpp>
 #include <kerbal/utility/in_place.hpp>
 
 #if __cplusplus >= 201103L

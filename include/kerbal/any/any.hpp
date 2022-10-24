@@ -26,11 +26,12 @@
 #include <kerbal/memory/any_storage.hpp>
 #include <kerbal/type_traits/aligned_storage.hpp>
 #include <kerbal/type_traits/conditional.hpp>
-#include <kerbal/type_traits/const_deduction.hpp>
 #include <kerbal/type_traits/enable_if.hpp>
 #include <kerbal/type_traits/integral_constant.hpp>
+#include <kerbal/type_traits/is_const.hpp>
 #include <kerbal/type_traits/is_same.hpp>
 #include <kerbal/type_traits/reference_deduction.hpp>
+#include <kerbal/type_traits/remove_const.hpp>
 #include <kerbal/utility/declval.hpp>
 #include <kerbal/utility/in_place.hpp>
 #include <kerbal/utility/member_compress_helper.hpp>

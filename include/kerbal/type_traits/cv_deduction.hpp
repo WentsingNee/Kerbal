@@ -13,9 +13,12 @@
 #define KERBAL_TYPE_TRAITS_CV_DEDUCTION_HPP
 
 #include <kerbal/ts/modules_ts/modules_ts.hpp>
-#include <kerbal/type_traits/const_deduction.hpp>
+#include <kerbal/type_traits/add_const.hpp>
+#include <kerbal/type_traits/copy_const.hpp>
 #include <kerbal/type_traits/volatile_deduction.hpp>
 #include <kerbal/type_traits/reference_deduction.hpp>
+#include <kerbal/type_traits/remove_const.hpp>
+
 
 namespace kerbal
 {

@@ -14,7 +14,8 @@
 
 #include <kerbal/compatibility/constexpr.hpp>
 #include <kerbal/compatibility/noexcept.hpp>
-#include <kerbal/type_traits/const_deduction.hpp>
+#include <kerbal/type_traits/add_const.hpp>
+
 
 namespace kerbal
 {

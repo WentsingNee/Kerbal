@@ -32,6 +32,7 @@
 #include <kerbal/type_traits/integral_constant.hpp>
 #include <kerbal/type_traits/logical.hpp>
 #include <kerbal/type_traits/reference_deduction.hpp>
+#include <kerbal/type_traits/remove_const.hpp>
 #include <kerbal/utility/declval.hpp>
 #include <kerbal/utility/forward.hpp>
 #include <kerbal/utility/ignore_unused.hpp>
