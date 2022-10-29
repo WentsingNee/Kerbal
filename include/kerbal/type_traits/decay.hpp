@@ -19,8 +19,8 @@
 #include <kerbal/type_traits/function_deduction.hpp>
 #include <kerbal/type_traits/is_array.hpp>
 #include <kerbal/type_traits/pointer_deduction.hpp>
-#include <kerbal/type_traits/reference_deduction.hpp>
 #include <kerbal/type_traits/remove_extent.hpp>
+#include <kerbal/type_traits/remove_reference.hpp>
 
 
 namespace kerbal

@@ -12,7 +12,7 @@
 #ifndef KERBAL_COMPATIBILITY_MOVE_HPP
 #define KERBAL_COMPATIBILITY_MOVE_HPP
 
-#include <kerbal/type_traits/reference_deduction.hpp>
+#include <kerbal/type_traits/remove_reference.hpp>
 
 
 namespace kerbal

@@ -23,8 +23,9 @@
 #include <kerbal/operators/addable.hpp>
 #include <kerbal/operators/incr_decr.hpp>
 #include <kerbal/operators/subtractable.hpp>
+#include <kerbal/type_traits/add_rvalue_reference.hpp>
 #include <kerbal/type_traits/conditional.hpp>
-#include <kerbal/type_traits/reference_deduction.hpp>
+#include <kerbal/type_traits/is_reference.hpp>
 #include <kerbal/utility/declval.hpp>
 
 #include <cstddef>

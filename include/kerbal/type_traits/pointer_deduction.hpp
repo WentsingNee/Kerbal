@@ -15,7 +15,8 @@
 #include <kerbal/ts/modules_ts/modules_ts.hpp>
 #include <kerbal/type_traits/cv_deduction.hpp>
 #include <kerbal/type_traits/fundamental_deduction.hpp>
-#include <kerbal/type_traits/reference_deduction.hpp>
+#include <kerbal/type_traits/is_referencable.hpp>
+#include <kerbal/type_traits/remove_reference.hpp>
 
 #include <cstddef>
 
@@ -101,7 +102,7 @@ namespace kerbal
 		namespace detail
 		{
 
-			template <typename Tp, bool IsPointerable = kerbal::type_traits::is_referenceable<Tp>::value || kerbal::type_traits::is_void<Tp>::value >
+			template <typename Tp, bool IsPointerable = kerbal::type_traits::is_referencable<Tp>::value || kerbal::type_traits::is_void<Tp>::value >
 			struct add_pointer_helper
 			{
 					typedef Tp* type;

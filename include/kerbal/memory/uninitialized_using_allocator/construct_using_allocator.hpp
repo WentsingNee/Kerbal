@@ -26,6 +26,7 @@
 #endif
 
 #if __cplusplus >= 201103L
+#	include <kerbal/type_traits/add_rvalue_reference.hpp>
 #	include <kerbal/utility/forward.hpp>
 #endif
 

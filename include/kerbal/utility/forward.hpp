@@ -18,9 +18,11 @@
 
 #include <kerbal/compatibility/constexpr.hpp>
 #include <kerbal/compatibility/noexcept.hpp>
-#include <kerbal/type_traits/reference_deduction.hpp>
+#include <kerbal/type_traits/is_lvalue_reference.hpp>
+#include <kerbal/type_traits/remove_reference.hpp>
 
 #include <type_traits>
+
 
 namespace kerbal
 {

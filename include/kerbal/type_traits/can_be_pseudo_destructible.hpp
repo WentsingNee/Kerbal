@@ -19,9 +19,9 @@
 #	include <type_traits>
 #else
 #	include <kerbal/type_traits/fundamental_deduction.hpp>
+#	include <kerbal/type_traits/is_reference.hpp>
 #	include <kerbal/type_traits/member_pointer_deduction.hpp>
 #	include <kerbal/type_traits/pointer_deduction.hpp>
-#	include <kerbal/type_traits/reference_deduction.hpp>
 #endif
 
 namespace kerbal

@@ -13,7 +13,13 @@
 #define KERBAL_UTILITY_DECLVAL_HPP
 
 #include <kerbal/compatibility/noexcept.hpp>
-#include <kerbal/type_traits/reference_deduction.hpp>
+
+#if __cplusplus >= 201103L
+#	include <kerbal/type_traits/add_rvalue_reference.hpp>
+#else
+#	include <kerbal/type_traits/add_lvalue_reference.hpp>
+#endif
+
 
 namespace kerbal
 {

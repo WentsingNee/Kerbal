@@ -23,8 +23,9 @@
 #include <kerbal/macro/macro_concat.hpp>
 #include <kerbal/macro/ppexpand.hpp>
 #include <kerbal/tmp/type_vector.hpp>
+#include <kerbal/type_traits/add_lvalue_reference.hpp>
+#include <kerbal/type_traits/add_const_lvalue_reference.hpp>
 #include <kerbal/type_traits/integral_constant.hpp>
-#include <kerbal/type_traits/reference_deduction.hpp>
 #include <kerbal/utility/member_compress_helper.hpp>
 
 #include <cstddef>

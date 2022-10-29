@@ -20,9 +20,10 @@
 #include <kerbal/compatibility/move.hpp>
 #include <kerbal/compatibility/noexcept.hpp>
 #include <kerbal/operators/generic_assign.hpp>
+#include <kerbal/type_traits/add_lvalue_reference.hpp>
+#include <kerbal/type_traits/add_const_lvalue_reference.hpp>
 #include <kerbal/type_traits/can_be_empty_base.hpp>
 #include <kerbal/type_traits/integral_constant.hpp>
-#include <kerbal/type_traits/reference_deduction.hpp>
 #include <kerbal/type_traits/remove_volatile.hpp>
 #include <kerbal/utility/declval.hpp>
 #include <kerbal/utility/in_place.hpp>
@@ -33,6 +34,8 @@
 #endif
 
 #if __cplusplus >= 201103L
+#	include <kerbal/type_traits/add_rvalue_reference.hpp>
+#	include <kerbal/type_traits/add_const_rvalue_reference.hpp>
 #	include <kerbal/utility/forward.hpp>
 #	include <kerbal/utility/integer_sequence.hpp>
 #else

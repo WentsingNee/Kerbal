@@ -20,7 +20,7 @@
 #	include <kerbal/type_traits/extent.hpp>
 #	include <kerbal/type_traits/integral_constant.hpp>
 #	include <kerbal/type_traits/is_array.hpp>
-#	include <kerbal/type_traits/reference_deduction.hpp>
+#	include <kerbal/type_traits/remove_reference.hpp>
 #	include <kerbal/utility/forward.hpp>
 #endif
 

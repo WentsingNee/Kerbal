@@ -31,7 +31,6 @@
 #include <kerbal/type_traits/decay.hpp>
 #include <kerbal/type_traits/enable_if.hpp>
 #include <kerbal/type_traits/is_same.hpp>
-#include <kerbal/type_traits/reference_deduction.hpp>
 #include <kerbal/utility/in_place.hpp>
 #include <kerbal/utility/throw_this_exception.hpp>
 
@@ -41,6 +40,7 @@
 #endif
 
 #if __cplusplus >= 201103L
+#	include <kerbal/type_traits/remove_reference.hpp>
 #	include <kerbal/utility/forward.hpp>
 #endif
 
