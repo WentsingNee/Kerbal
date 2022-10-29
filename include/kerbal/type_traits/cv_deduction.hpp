@@ -14,10 +14,12 @@
 
 #include <kerbal/ts/modules_ts/modules_ts.hpp>
 #include <kerbal/type_traits/add_const.hpp>
+#include <kerbal/type_traits/add_volatile.hpp>
 #include <kerbal/type_traits/copy_const.hpp>
-#include <kerbal/type_traits/volatile_deduction.hpp>
+#include <kerbal/type_traits/copy_volatile.hpp>
 #include <kerbal/type_traits/reference_deduction.hpp>
 #include <kerbal/type_traits/remove_const.hpp>
+#include <kerbal/type_traits/remove_volatile.hpp>
 
 
 namespace kerbal

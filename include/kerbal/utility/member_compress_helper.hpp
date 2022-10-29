@@ -23,7 +23,7 @@
 #include <kerbal/type_traits/can_be_empty_base.hpp>
 #include <kerbal/type_traits/integral_constant.hpp>
 #include <kerbal/type_traits/reference_deduction.hpp>
-#include <kerbal/type_traits/volatile_deduction.hpp>
+#include <kerbal/type_traits/remove_volatile.hpp>
 #include <kerbal/utility/declval.hpp>
 #include <kerbal/utility/in_place.hpp>
 
