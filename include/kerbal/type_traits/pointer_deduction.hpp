@@ -13,10 +13,11 @@
 #define KERBAL_TYPE_TRAITS_POINTER_DEDUCTION_HPP
 
 #include <kerbal/ts/modules_ts/modules_ts.hpp>
-#include <kerbal/type_traits/cv_deduction.hpp>
+#include <kerbal/type_traits/conditional.hpp>
 #include <kerbal/type_traits/fundamental_deduction.hpp>
 #include <kerbal/type_traits/is_referencable.hpp>
 #include <kerbal/type_traits/remove_reference.hpp>
+#include <kerbal/type_traits/remove_cv.hpp>
 
 #include <cstddef>
 

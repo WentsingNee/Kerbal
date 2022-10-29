@@ -18,7 +18,7 @@
 #include <kerbal/compatibility/constexpr.hpp>
 #include <kerbal/compatibility/static_assert.hpp>
 #include <kerbal/iterator/iterator.hpp>
-#include <kerbal/type_traits/cv_deduction.hpp>
+#include <kerbal/type_traits/remove_cv.hpp>
 
 
 namespace kerbal

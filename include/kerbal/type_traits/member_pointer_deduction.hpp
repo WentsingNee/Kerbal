@@ -13,8 +13,9 @@
 #define KERBAL_TYPE_TRAITS_MEMBER_POINTER_DEDUCTION_HPP
 
 #include <kerbal/ts/modules_ts/modules_ts.hpp>
-#include <kerbal/type_traits/cv_deduction.hpp>
 #include <kerbal/type_traits/function_deduction.hpp>
+#include <kerbal/type_traits/remove_cv.hpp>
+
 
 namespace kerbal
 {

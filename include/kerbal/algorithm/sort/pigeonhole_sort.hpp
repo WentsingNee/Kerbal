@@ -16,9 +16,8 @@
 #include <kerbal/compatibility/constexpr.hpp>
 #include <kerbal/compatibility/static_assert.hpp>
 #include <kerbal/iterator/iterator.hpp>
-#include <kerbal/type_traits/cv_deduction.hpp>
 #include <kerbal/type_traits/fundamental_deduction.hpp>
-#include <kerbal/type_traits/is_same.hpp>
+#include <kerbal/type_traits/integral_constant.hpp>
 #include <kerbal/type_traits/sign_deduction.hpp>
 
 #include <cstddef>

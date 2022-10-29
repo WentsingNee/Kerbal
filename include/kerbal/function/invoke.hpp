@@ -16,9 +16,9 @@
 #include <kerbal/compatibility/noexcept.hpp>
 #include <kerbal/compatibility/static_assert.hpp>
 #include <kerbal/type_traits/conditional.hpp>
-#include <kerbal/type_traits/cv_deduction.hpp>
 #include <kerbal/type_traits/integral_constant.hpp>
 #include <kerbal/type_traits/member_pointer_deduction.hpp>
+#include <kerbal/type_traits/remove_cvref.hpp>
 #include <kerbal/utility/declval.hpp>
 #include <kerbal/utility/forward.hpp>
 

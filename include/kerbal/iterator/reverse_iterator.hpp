@@ -20,8 +20,8 @@
 #include <kerbal/operators/dereferenceable.hpp>
 #include <kerbal/operators/incr_decr.hpp>
 #include <kerbal/operators/subtractable.hpp>
-#include <kerbal/type_traits/cv_deduction.hpp>
 #include <kerbal/type_traits/integral_constant.hpp>
+#include <kerbal/type_traits/remove_cv.hpp>
 
 #include <cstddef>
 

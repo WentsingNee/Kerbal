@@ -17,9 +17,6 @@
 #include <kerbal/iterator/iterator.hpp>
 #include <kerbal/iterator/iterator_traits.hpp>
 #include <kerbal/iterator/general_back_inserter.hpp>
-#include <kerbal/type_traits/cv_deduction.hpp>
-#include <kerbal/type_traits/enable_if.hpp>
-#include <kerbal/type_traits/is_same.hpp>
 
 #include <cstring>
 #include <cstddef>

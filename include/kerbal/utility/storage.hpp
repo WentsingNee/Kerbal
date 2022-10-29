@@ -16,9 +16,9 @@
 #	error This file requires compiler and library support for the ISO C++ 2011 standard.
 #endif
 
-#include <kerbal/type_traits/cv_deduction.hpp>
 #include <kerbal/type_traits/enable_if.hpp>
 #include <kerbal/type_traits/integral_constant.hpp>
+#include <kerbal/type_traits/remove_cvref.hpp>
 
 #include <chrono>
 #include <cstdint>

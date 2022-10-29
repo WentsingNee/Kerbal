@@ -14,7 +14,7 @@
 
 #include <kerbal/compatibility/constexpr.hpp>
 #include <kerbal/compatibility/noexcept.hpp>
-#include <kerbal/type_traits/cv_deduction.hpp>
+#include <kerbal/type_traits/remove_cvref.hpp>
 
 #if __cplusplus < 201103L
 #	include <kerbal/macro/macro_concat.hpp>

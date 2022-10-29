@@ -13,8 +13,8 @@
 #define KERBAL_TYPE_TRAITS_FUNDAMENTAL_DEDUCTION_HPP
 
 #include <kerbal/ts/modules_ts/modules_ts.hpp>
-#include <kerbal/type_traits/cv_deduction.hpp>
 #include <kerbal/type_traits/integral_constant.hpp>
+#include <kerbal/type_traits/remove_cv.hpp>
 
 #if __cplusplus >= 201103L
 #	include <cstddef>
