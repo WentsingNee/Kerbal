@@ -41,7 +41,7 @@
 #	include <type_traits>
 #else
 #	include <kerbal/type_traits/is_fundamental.hpp>
-#	include <kerbal/type_traits/pointer_deduction.hpp>
+#	include <kerbal/type_traits/is_pointer.hpp>
 #endif
 
 #include <kerbal/container/static_vector.hpp>

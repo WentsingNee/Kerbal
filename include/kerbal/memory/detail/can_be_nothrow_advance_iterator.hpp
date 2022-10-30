@@ -14,7 +14,7 @@
 
 #if __cpp_exceptions
 #	if __cplusplus < 201103L
-#		include <kerbal/memory/pointer_traits.hpp>
+#		include <kerbal/type_traits/is_pointer.hpp>
 #	else
 #		include <kerbal/type_traits/integral_constant.hpp>
 #		include <kerbal/utility/declval.hpp>

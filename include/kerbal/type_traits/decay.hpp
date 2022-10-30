@@ -14,10 +14,10 @@
 
 #include <kerbal/ts/modules_ts/modules_ts.hpp>
 
+#include <kerbal/type_traits/add_pointer.hpp>
 #include <kerbal/type_traits/conditional.hpp>
 #include <kerbal/type_traits/function_deduction.hpp>
 #include <kerbal/type_traits/is_array.hpp>
-#include <kerbal/type_traits/pointer_deduction.hpp>
 #include <kerbal/type_traits/remove_cv.hpp>
 #include <kerbal/type_traits/remove_extent.hpp>
 #include <kerbal/type_traits/remove_reference.hpp>
