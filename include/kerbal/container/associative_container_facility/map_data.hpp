@@ -24,6 +24,7 @@
 #if __cplusplus >= 201103L
 #	include <kerbal/compatibility/move.hpp>
 #	include <kerbal/utility/forward.hpp>
+#	include <kerbal/utility/piecewise_construct.hpp>
 #endif
 
 
@@ -131,6 +132,18 @@ namespace kerbal
 				template <typename Tuple>
 				map_data(const Tuple & tuple) :
 						super(tuple)
+				{
+				}
+
+#		endif
+
+
+#		if __cplusplus >= 201103L
+
+				template <typename TupleK, typename TupleV>
+				KERBAL_CONSTEXPR
+				map_data(kerbal::utility::piecewise_construct_t tag, TupleK && args_for_key, TupleV && args_for_value) :
+						super(tag, kerbal::utility::forward<TupleK>(args_for_key), kerbal::utility::forward<TupleV>(args_for_value))
 				{
 				}
 
