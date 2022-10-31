@@ -345,6 +345,20 @@ namespace kerbal
 
 #		endif
 
+
+#		if __cplusplus >= 201103L
+
+				template <typename Tuple1, typename Tuple2>
+				KERBAL_CONSTEXPR
+				compressed_pair(kerbal::utility::piecewise_construct_t tag, Tuple1 && args_for_first, Tuple2 && args_for_second) :
+						super0(tag, kerbal::utility::forward<Tuple1>(args_for_first)),
+						super1(tag, kerbal::utility::forward<Tuple2>(args_for_second))
+				{
+				}
+
+#		endif
+
+
 				template <typename Tp2, typename Up2>
 				KERBAL_CONSTEXPR14
 				compressed_pair& operator=(const kerbal::utility::compressed_pair<Tp2, Up2> & p)

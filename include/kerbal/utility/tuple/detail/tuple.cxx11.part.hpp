@@ -45,6 +45,7 @@
 #include <kerbal/utility/ignore_unused.hpp>
 #include <kerbal/utility/integer_sequence.hpp>
 #include <kerbal/utility/member_compress_helper.hpp>
+#include <kerbal/utility/piecewise_construct.hpp>
 
 #if __cplusplus >= 201103L
 #	include <initializer_list>
@@ -281,6 +282,17 @@ namespace kerbal
 							super<Index>::type(kerbal::utility::in_place_t(), kerbal::utility::forward<UArgs>(args))...
 					{
 						KERBAL_STATIC_ASSERT(sizeof...(UArgs) == sizeof...(Args), "Wrong number of arguments");
+					}
+
+				protected:
+
+					template <typename ... TupleArgs, typename =
+							typename kerbal::type_traits::enable_if<sizeof...(TupleArgs) == TUPLE_SIZE::value, int>::type>
+					KERBAL_CONSTEXPR
+					explicit tuple_impl(kerbal::utility::piecewise_construct_t pie, TupleArgs && ... args) :
+							super<Index>::type(pie, kerbal::utility::forward<TupleArgs>(args))...
+					{
+						KERBAL_STATIC_ASSERT(sizeof...(TupleArgs) == sizeof...(Args), "Wrong number of arguments");
 					}
 
 				public:
@@ -531,6 +543,15 @@ namespace kerbal
 					KERBAL_STATIC_ASSERT(sizeof...(UArgs) == sizeof...(Args), "Wrong size tuple");
 				}
 
+
+				template <typename ... TupleArgs, typename =
+						typename kerbal::type_traits::enable_if<sizeof...(TupleArgs) == TUPLE_SIZE::value, int>::type>
+				KERBAL_CONSTEXPR
+				explicit tuple(kerbal::utility::piecewise_construct_t pie, TupleArgs && ... args) :
+						super(pie, kerbal::utility::forward<TupleArgs>(args)...)
+				{
+					KERBAL_STATIC_ASSERT(sizeof...(TupleArgs) == sizeof...(Args), "Wrong number of arguments");
+				}
 
 			protected:
 

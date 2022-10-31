@@ -28,6 +28,7 @@
 #include <kerbal/type_traits/tribool_constant.hpp>
 #include <kerbal/utility/declval.hpp>
 #include <kerbal/utility/in_place.hpp>
+#include <kerbal/utility/piecewise_construct.hpp>
 
 #if __cplusplus < 201103L
 #	include <kerbal/macro/macro_concat.hpp>
@@ -37,6 +38,7 @@
 #if __cplusplus >= 201103L
 #	include <kerbal/type_traits/add_rvalue_reference.hpp>
 #	include <kerbal/type_traits/add_const_rvalue_reference.hpp>
+#	include <kerbal/type_traits/remove_cvref.hpp>
 #	include <kerbal/utility/forward.hpp>
 #	include <kerbal/utility/integer_sequence.hpp>
 #else
@@ -546,6 +548,30 @@ namespace kerbal
 							try_test_is_nothrow_covariant_move_constructible<U, J>::IS_TRUE::value
 						)) :
 						super(kerbal::utility::in_place_t(), kerbal::compatibility::move(src).member())
+				{
+				}
+
+#		endif
+
+
+#		if __cplusplus >= 201103L
+
+				template <typename Tuple, std::size_t ... J>
+				KERBAL_CONSTEXPR
+				explicit member_compress_helper(kerbal::utility::index_sequence<J...>, Tuple && args) :
+						super(kerbal::utility::in_place_t(), kerbal::utility::forward<Tuple>(args).template get<J>()...)
+				{
+				}
+
+				template <typename Tuple>
+				KERBAL_CONSTEXPR
+				explicit member_compress_helper(kerbal::utility::piecewise_construct_t, Tuple && args) :
+						member_compress_helper(
+							kerbal::utility::make_index_sequence<
+								kerbal::type_traits::remove_cvref<Tuple>::type::TUPLE_SIZE::value
+							>(),
+							kerbal::utility::forward<Tuple>(args)
+						)
 				{
 				}
 
