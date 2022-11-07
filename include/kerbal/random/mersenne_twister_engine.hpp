@@ -25,6 +25,7 @@
 
 #include <cstddef>
 
+#include <kerbal/random/detail/mt_generate_copy_n_helper.hpp>
 #include <kerbal/random/detail/mt_twist_helper.hpp>
 
 
@@ -75,10 +76,12 @@ namespace kerbal
 				UIntType C, std::size_t L, UIntType F
 		>
 		class mersenne_twister_engine :
-				detail::mt_twist_helper<UIntType, N, M, R, A>
+				detail::mt_twist_helper<UIntType, N, M, R, A>,
+				detail::mt_generate_copy_n_helper<UIntType, U, D, S, B, T, C, L>
 		{
 			private:
 				typedef detail::mt_twist_helper<UIntType, N, M, R, A> mt_twist_helper;
+				typedef detail::mt_generate_copy_n_helper<UIntType, U, D, S, B, T, C, L> mt_generate_copy_n_helper;
 
 			private:
 				KERBAL_STATIC_ASSERT(0 < M,     "the following relations shall hold: 0 < M");
@@ -250,18 +253,11 @@ namespace kerbal
 
 				template <typename OutputIterator>
 				KERBAL_CONSTEXPR14
-				void K_generate_n_helper(OutputIterator & first, typename kerbal::iterator::iterator_traits<OutputIterator>::difference_type n)
+				OutputIterator K_generate_n_helper(OutputIterator first, typename kerbal::iterator::iterator_traits<OutputIterator>::difference_type n)
 				{
-					while (n != 0) {
-						--n;
-						result_type y = this->mt[this->mti++];
-						y ^= (y >> U) & D;
-						y ^= (y << S) & B;
-						y ^= (y << T) & C;
-						y ^= y >> L;
-						*first = y;
-						++first;
-					}
+					first = mt_generate_copy_n_helper::mt_generate_copy_n(this->mt + this->mti, first, n);
+					this->mti += n;
+					return first;
 				}
 
 			public:
@@ -272,22 +268,20 @@ namespace kerbal
 				{
 					std::size_t this_round_remain = N - this->mti;
 					if (static_cast<std::size_t>(n) <= this_round_remain) {
-						this->K_generate_n_helper(first, n);
-						return first;
+						return this->K_generate_n_helper(first, n);
 					}
-					this->K_generate_n_helper(first, this_round_remain);
+					first = this->K_generate_n_helper(first, this_round_remain);
 					n -= this_round_remain;
 					this->twist();
 					this->mti = 0;
 
 					for (std::size_t round = 0; round < n / N; ++round) {
-						this->K_generate_n_helper(first, N);
+						first = this->K_generate_n_helper(first, N);
 						this->twist();
 						this->mti = 0;
 					}
 					n %= N;
-					this->K_generate_n_helper(first, n);
-					return first;
+					return this->K_generate_n_helper(first, n);
 				}
 
 				KERBAL_CONSTEXPR
