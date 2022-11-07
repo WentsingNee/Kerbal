@@ -285,7 +285,7 @@ namespace kerbal
 						this->twist();
 						this->mti = 0;
 					}
-					n %= R;
+					n %= N;
 					this->K_generate_n_helper(first, n);
 					return first;
 				}
