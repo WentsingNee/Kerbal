@@ -33,6 +33,7 @@
 #include <kerbal/bitset/detail/bitset_size_unrelated.hpp>
 #include <kerbal/bitset/detail/default_block_type.hpp>
 #include <kerbal/bitset/detail/all_chunk.hpp>
+#include <kerbal/bitset/detail/shift_left_copy.hpp>
 
 
 namespace kerbal
@@ -70,7 +71,8 @@ namespace kerbal
 		template <std::size_t N, typename Block>
 		class static_bitset :
 			protected detail::bitset_size_unrelated<Block>,
-			protected detail::all_chunk_helper<Block>
+			protected detail::all_chunk_helper<Block>,
+			protected detail::shift_left_copy_helper<Block>
 		{
 				KERBAL_STATIC_ASSERT(
 					kerbal::type_traits::is_unsigned<Block>::value,
@@ -80,6 +82,7 @@ namespace kerbal
 			private:
 				typedef detail::bitset_size_unrelated<Block> bitset_size_unrelated;
 				typedef detail::all_chunk_helper<Block> all_chunk_helper;
+				typedef detail::shift_left_copy_helper<Block> shift_left_copy_helper;
 
 			public:
 				typedef Block													block_type;
@@ -660,7 +663,7 @@ namespace kerbal
 				}
 
 				KERBAL_CONSTEXPR14
-				static_bitset & operator<<=(size_type n) KERBAL_NOEXCEPT
+				static_bitset & shtl(size_type n) KERBAL_NOEXCEPT
 				{
 					if (n >= SIZE::value) {
 						this->reset();
@@ -686,6 +689,28 @@ namespace kerbal
 								++j;
 							}
 							this->k_block[i] = (this->k_block[j] >> inner_ofs);
+						}
+						bitset_size_unrelated::reset_chunk(this->k_block + (BLOCK_SIZE::value - shift_block_cnt), shift_block_cnt);
+					}
+					return *this;
+				}
+
+				KERBAL_CONSTEXPR14
+				static_bitset& operator<<=(size_type n) KERBAL_NOEXCEPT
+				{
+					if (n >= SIZE::value) {
+						this->reset();
+					} else {
+						if (!IS_DIVISIBLE::value) {
+							this->k_block[BLOCK_SIZE::value - 1] = kerbal::numeric::reset_left_n(this->k_block[BLOCK_SIZE::value - 1], WASTE_SIZE::value);
+						}
+						const size_type inner_ofs = n % BITS_PER_BLOCK::value;
+						const block_size_type shift_block_cnt = n / BITS_PER_BLOCK::value;
+						if (inner_ofs == 0) {
+							kerbal::algorithm::copy(this->k_block + shift_block_cnt, this->k_block + BLOCK_SIZE::value, this->k_block);
+						} else {
+							shift_left_copy_helper::shift_left_copy(this->k_block + shift_block_cnt, BLOCK_SIZE::value - shift_block_cnt, inner_ofs, this->k_block + 0);
+							this->k_block[BLOCK_SIZE::value - shift_block_cnt - 1] = (this->k_block[BLOCK_SIZE::value - 1] >> inner_ofs);
 						}
 						bitset_size_unrelated::reset_chunk(this->k_block + (BLOCK_SIZE::value - shift_block_cnt), shift_block_cnt);
 					}
