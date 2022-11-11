@@ -32,6 +32,7 @@
 
 #include <kerbal/bitset/detail/bitset_size_unrelated.hpp>
 #include <kerbal/bitset/detail/default_block_type.hpp>
+#include <kerbal/bitset/detail/all_chunk.hpp>
 
 
 namespace kerbal
@@ -63,12 +64,15 @@ namespace kerbal
 		 *  [63 ... 0] [127 ... 64] [191 ... 128] [255 ... 192]
 		 */
 		template <std::size_t N, typename Block>
-		class static_bitset: protected detail::bitset_size_unrelated<Block>
+		class static_bitset :
+				protected detail::bitset_size_unrelated<Block>,
+				protected detail::all_chunk_helper<Block>
 		{
 				KERBAL_STATIC_ASSERT(kerbal::type_traits::is_unsigned<Block>::value, "Block must be unsigned type");
 
 			private:
 				typedef detail::bitset_size_unrelated<Block> bitset_size_unrelated;
+				typedef detail::all_chunk_helper<Block> all_chunk_helper;
 
 			public:
 				typedef Block													block_type;
@@ -194,7 +198,7 @@ namespace kerbal
 				typename kerbal::type_traits::enable_if<!c, bool>::type
 				k_all_impl() const KERBAL_NOEXCEPT
 				{
-					return bitset_size_unrelated::all_chunk(k_block, BLOCK_SIZE::value - 1) &&
+					return all_chunk_helper::all_chunk(k_block, BLOCK_SIZE::value - 1) &&
 							(
 								static_cast<block_type>(
 									static_cast<block_type>(~k_block[BLOCK_SIZE::value - 1])
@@ -208,7 +212,7 @@ namespace kerbal
 				typename kerbal::type_traits::enable_if<c, bool>::type
 				k_all_impl() const KERBAL_NOEXCEPT
 				{
-					return bitset_size_unrelated::all_chunk(k_block, BLOCK_SIZE::value);
+					return all_chunk_helper::all_chunk(k_block, BLOCK_SIZE::value);
 				}
 
 			public:
@@ -233,7 +237,7 @@ namespace kerbal
 						len -= t;
 						block_size_type chunk_left = idx_left + 1;
 						size_type chunk_size = len / BITS_PER_BLOCK::value;
-						if (!bitset_size_unrelated::all_chunk(k_block + chunk_left, chunk_size)) {
+						if (!all_chunk_helper::all_chunk(k_block + chunk_left, chunk_size)) {
 							return false;
 						}
 						if ((chunk_left + chunk_size) < BLOCK_SIZE::value) {
