@@ -14,6 +14,7 @@
 
 #include <kerbal/compatibility/constexpr.hpp>
 #include <kerbal/compatibility/noexcept.hpp>
+#include <kerbal/type_traits/integral_constant.hpp>
 
 #if __cplusplus >= 201103L
 
@@ -23,7 +24,6 @@
 #	include <kerbal/utility/forward.hpp>
 
 #	if __cpp_exceptions
-#		include <kerbal/type_traits/integral_constant.hpp>
 #		include <kerbal/utility/declval.hpp>
 #	endif
 
@@ -69,6 +69,8 @@ namespace kerbal
 		struct NAME<void> \
 		{ \
  \
+				typedef kerbal::type_traits::true_type is_transparent; \
+ \
 				template <typename T> \
 				bool operator()(const T & lhs, const T & rhs) const \
 				{ \
@@ -82,6 +84,8 @@ namespace kerbal
 		template <> \
 		struct NAME<void> \
 		{ \
+ \
+				typedef kerbal::type_traits::true_type is_transparent; \
  \
 				template <typename T, typename U> \
 				KERBAL_CONSTEXPR \
