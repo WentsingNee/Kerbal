@@ -137,16 +137,16 @@ namespace kerbal
 					// move construct using allocator, allocator is not equal
 					template <typename Allocator>
 					KERBAL_CONSTEXPR20
-					void _K_move_cnstrct_ua_ane(Allocator & alloc, Allocator && src_alloc, vector_allocator_unrelated && src);
+					void _K_move_cnstrct_ua_ane(Allocator & this_alloc, vector_allocator_unrelated && src);
 
 					template <typename Allocator>
 					KERBAL_CONSTEXPR20
-					void _K_move_cnstrct_ua_helper(Allocator & alloc, Allocator && src_alloc, vector_allocator_unrelated && src,
+					void _K_move_cnstrct_ua_helper(Allocator & this_alloc, Allocator && src_alloc, vector_allocator_unrelated && src,
 												   kerbal::type_traits::false_type /*is_always_equal*/);
 
 					template <typename Allocator>
 					KERBAL_CONSTEXPR14
-					void _K_move_cnstrct_ua_helper(Allocator & alloc, Allocator && src_alloc, vector_allocator_unrelated && src,
+					void _K_move_cnstrct_ua_helper(Allocator & this_alloc, Allocator && src_alloc, vector_allocator_unrelated && src,
 												   kerbal::type_traits::true_type /*is_always_equal*/) KERBAL_NOEXCEPT;
 
 				public:
@@ -159,7 +159,7 @@ namespace kerbal
 
 					template <typename Allocator>
 					KERBAL_CONSTEXPR14
-					vector_allocator_unrelated(Allocator & alloc, Allocator && src_alloc, vector_allocator_unrelated && src)
+					vector_allocator_unrelated(Allocator & this_alloc, Allocator && src_alloc, vector_allocator_unrelated && src)
 							KERBAL_CONDITIONAL_NOEXCEPT(is_nothrow_move_constructible_using_allocator<Allocator>::value)
 					;
 

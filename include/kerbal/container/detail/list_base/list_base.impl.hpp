@@ -361,14 +361,14 @@ namespace kerbal
 			template <typename Tp>
 			template <typename NodeAllocator>
 			KERBAL_CONSTEXPR20
-			void list_allocator_unrelated<Tp>::_K_move_cnstrct_ua_ane(NodeAllocator & alloc, NodeAllocator && /*src_alloc*/, list_allocator_unrelated && src)
+			void list_allocator_unrelated<Tp>::_K_move_cnstrct_ua_ane(NodeAllocator & this_alloc, list_allocator_unrelated && src)
 			{
 				if (src.empty()) {
 					return;
 				}
 				list_node_chain<Tp> chain(
 						_K_build_new_nodes_range_unguarded(
-								alloc,
+								this_alloc,
 								kerbal::iterator::make_move_iterator(src.begin()),
 								kerbal::iterator::make_move_iterator(src.end())));
 				list_type_unrelated::_K_hook_node(this->cend(), chain.start, chain.back);
@@ -377,11 +377,11 @@ namespace kerbal
 			template <typename Tp>
 			template <typename NodeAllocator>
 			KERBAL_CONSTEXPR20
-			void list_allocator_unrelated<Tp>::_K_move_cnstrct_ua_helper(NodeAllocator & alloc, NodeAllocator && src_alloc, list_allocator_unrelated && src,
+			void list_allocator_unrelated<Tp>::_K_move_cnstrct_ua_helper(NodeAllocator & this_alloc, NodeAllocator && src_alloc, list_allocator_unrelated && src,
 																		 kerbal::type_traits::false_type /*is_always_equal*/)
 			{
-				if (alloc != src_alloc) {
-					this->_K_move_cnstrct_ua_ane(alloc, kerbal::compatibility::move(src_alloc), kerbal::compatibility::move(src));
+				if (this_alloc != src_alloc) {
+					this->_K_move_cnstrct_ua_ane(this_alloc, kerbal::compatibility::move(src));
 				} else {
 					this->_K_move_cnstrct_ua_ae(kerbal::compatibility::move(src));
 				}
@@ -390,7 +390,7 @@ namespace kerbal
 			template <typename Tp>
 			template <typename NodeAllocator>
 			KERBAL_CONSTEXPR14
-			void list_allocator_unrelated<Tp>::_K_move_cnstrct_ua_helper(NodeAllocator & /*alloc*/, NodeAllocator && /*src_alloc*/, list_allocator_unrelated && src,
+			void list_allocator_unrelated<Tp>::_K_move_cnstrct_ua_helper(NodeAllocator & /*this_alloc*/, NodeAllocator && /*src_alloc*/, list_allocator_unrelated && src,
 																		 kerbal::type_traits::true_type /*is_always_equal*/) KERBAL_NOEXCEPT
 			{
 				this->_K_move_cnstrct_ua_ae(kerbal::compatibility::move(src));
@@ -399,14 +399,14 @@ namespace kerbal
 			template <typename Tp>
 			template <typename NodeAllocator>
 			KERBAL_CONSTEXPR14
-			list_allocator_unrelated<Tp>::list_allocator_unrelated(NodeAllocator & alloc, NodeAllocator && src_alloc, list_allocator_unrelated && src)
+			list_allocator_unrelated<Tp>::list_allocator_unrelated(NodeAllocator & this_alloc, NodeAllocator && src_alloc, list_allocator_unrelated && src)
 					KERBAL_CONDITIONAL_NOEXCEPT(is_nothrow_move_constructible_using_allocator<NodeAllocator>::value) :
 					super(init_list_node_ptr_to_self_tag())
 			{
 				typedef kerbal::memory::allocator_traits<NodeAllocator> allocator_traits;
 				typedef typename allocator_traits::is_always_equal is_always_equal;
 
-				this->_K_move_cnstrct_ua_helper(alloc, kerbal::compatibility::move(src_alloc), kerbal::compatibility::move(src), is_always_equal());
+				this->_K_move_cnstrct_ua_helper(this_alloc, kerbal::compatibility::move(src_alloc), kerbal::compatibility::move(src), is_always_equal());
 			}
 
 #		endif
