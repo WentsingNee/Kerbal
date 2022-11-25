@@ -25,6 +25,7 @@
 #include <kerbal/type_traits/can_be_empty_base.hpp>
 #include <kerbal/type_traits/integral_constant.hpp>
 #include <kerbal/type_traits/remove_volatile.hpp>
+#include <kerbal/type_traits/tribool_constant.hpp>
 #include <kerbal/utility/declval.hpp>
 #include <kerbal/utility/in_place.hpp>
 
@@ -58,7 +59,11 @@ namespace kerbal
 		namespace detail
 		{
 
-			template <typename T, bool = kerbal::type_traits::can_be_empty_base<T>::value>
+			template <typename T, bool =
+					kerbal::type_traits::tribool_is_true<
+						kerbal::type_traits::try_test_can_be_empty_base<T>
+					>::value
+			>
 			class member_compress_helper_impl;
 
 			template <typename T>
