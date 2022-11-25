@@ -13,6 +13,7 @@
 #define KERBAL_MEMORY_RAW_STORAGE_UNINITIALIZED_CONSTRUCT_HPP
 
 #include <kerbal/compatibility/constexpr.hpp>
+#include <kerbal/compatibility/move.hpp>
 #include <kerbal/compatibility/noexcept.hpp>
 #include <kerbal/iterator/iterator_traits.hpp>
 #include <kerbal/memory/raw_storage_uninitialized/destroy.hpp>

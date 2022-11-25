@@ -25,6 +25,7 @@
 #include <kerbal/operators/subtractable.hpp>
 #include <kerbal/type_traits/conditional.hpp>
 #include <kerbal/type_traits/reference_deduction.hpp>
+#include <kerbal/utility/declval.hpp>
 
 #include <cstddef>
 

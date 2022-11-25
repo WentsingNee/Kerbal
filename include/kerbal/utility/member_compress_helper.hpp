@@ -21,6 +21,7 @@
 #include <kerbal/compatibility/noexcept.hpp>
 #include <kerbal/operators/generic_assign.hpp>
 #include <kerbal/type_traits/can_be_empty_base.hpp>
+#include <kerbal/type_traits/integral_constant.hpp>
 #include <kerbal/type_traits/reference_deduction.hpp>
 #include <kerbal/type_traits/volatile_deduction.hpp>
 #include <kerbal/utility/declval.hpp>
