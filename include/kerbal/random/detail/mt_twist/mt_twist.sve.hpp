@@ -21,8 +21,6 @@
 
 #include <arm_sve.h>
 
-#include <kerbal/random/detail/mt_twist/mt_twist.plain.hpp>
-
 
 namespace kerbal
 {

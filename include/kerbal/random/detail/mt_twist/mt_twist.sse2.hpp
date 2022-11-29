@@ -69,10 +69,43 @@ namespace kerbal
 						_mm_storeu_si128(reinterpret_cast<__m128i*>(&mt[i]), xmm_mti); // SSE2
 					}
 
-					while (i < NPM::value) {
+					typedef kerbal::type_traits::integral_constant<int, NPM::value % STEP::value> FIRST_STEP_REMAIN;
+					if (FIRST_STEP_REMAIN::value == 3) {
+						__m128i xmm_mti = _mm_loadl_epi64(reinterpret_cast<const __m128i*>(&mt[i])); // SSE2
+						__m128i xmm_mtip1 = _mm_loadl_epi64(reinterpret_cast<const __m128i*>(&mt[i + 1])); // SSE2
+						__m128i xmm_y = _mm_or_si128( // SSE2
+								_mm_and_si128(xmm_UPPER_MASK, xmm_mti), // SSE2
+								_mm_andnot_si128(xmm_UPPER_MASK, xmm_mtip1)); // SSE2
+						__m128i xmm_mag_mask = _mm_and_si128(xmm_y, xmm_ONE); // SSE2
+						xmm_mag_mask = _mm_sub_epi32(xmm_ZERO, xmm_mag_mask); // SSE2 <=> _mm_cmpeq_epi32(xmm_mag_mask, xmm_ONE) SSE2
+						xmm_mag_mask = _mm_and_si128(xmm_mag_mask, xmm_A); // SSE2
+						xmm_y = _mm_srli_epi32(xmm_y, 1); // SSE2
+						xmm_y = _mm_xor_si128(xmm_y, xmm_mag_mask); // SSE2
+						__m128i xmm_mtipm = _mm_loadl_epi64(reinterpret_cast<const __m128i*>(&mt[i + M])); // SSE2
+						xmm_mti = _mm_xor_si128(xmm_y, xmm_mtipm); // SSE2
+						_mm_storel_epi64(reinterpret_cast<__m128i*>(&mt[i]), xmm_mti); // SSE2
+
+						i += 2;
 						EACH1(i);
-						++i;
+					} else if (FIRST_STEP_REMAIN::value == 2) {
+						__m128i xmm_mti = _mm_loadl_epi64(reinterpret_cast<const __m128i*>(&mt[i])); // SSE2
+						__m128i xmm_mtip1 = _mm_loadl_epi64(reinterpret_cast<const __m128i*>(&mt[i + 1])); // SSE2
+						__m128i xmm_y = _mm_or_si128( // SSE2
+								_mm_and_si128(xmm_UPPER_MASK, xmm_mti), // SSE2
+								_mm_andnot_si128(xmm_UPPER_MASK, xmm_mtip1)); // SSE2
+						__m128i xmm_mag_mask = _mm_and_si128(xmm_y, xmm_ONE); // SSE2
+						xmm_mag_mask = _mm_sub_epi32(xmm_ZERO, xmm_mag_mask); // SSE2 <=> _mm_cmpeq_epi32(xmm_mag_mask, xmm_ONE) SSE2
+						xmm_mag_mask = _mm_and_si128(xmm_mag_mask, xmm_A); // SSE2
+						xmm_y = _mm_srli_epi32(xmm_y, 1); // SSE2
+						xmm_y = _mm_xor_si128(xmm_y, xmm_mag_mask); // SSE2
+						__m128i xmm_mtipm = _mm_loadl_epi64(reinterpret_cast<const __m128i*>(&mt[i + M])); // SSE2
+						xmm_mti = _mm_xor_si128(xmm_y, xmm_mtipm); // SSE2
+						_mm_storel_epi64(reinterpret_cast<__m128i*>(&mt[i]), xmm_mti); // SSE2
+					} else if (FIRST_STEP_REMAIN::value == 1) {
+						EACH1(i);
 					}
+
+					i = NPM::value;
 
 					for (; i + STEP::value <= N - 1; i += STEP::value) {
 						__m128i xmm_mti = _mm_loadu_si128(reinterpret_cast<const __m128i*>(&mt[i])); // SSE2
@@ -90,7 +123,39 @@ namespace kerbal
 						_mm_storeu_si128(reinterpret_cast<__m128i*>(&mt[i]), xmm_mti); // SSE2
 					}
 
-					while (i < N - 1) {
+					typedef kerbal::type_traits::integral_constant<int, (M - 1) % STEP::value> SECOND_STEP_REMAIN;
+					if (SECOND_STEP_REMAIN::value == 3) {
+						__m128i xmm_mti = _mm_loadl_epi64(reinterpret_cast<const __m128i*>(&mt[i])); // SSE2
+						__m128i xmm_mtip1 = _mm_loadl_epi64(reinterpret_cast<const __m128i*>(&mt[i + 1])); // SSE2
+						__m128i xmm_y = _mm_or_si128( // SSE2
+								_mm_and_si128(xmm_UPPER_MASK, xmm_mti), // SSE2
+								_mm_andnot_si128(xmm_UPPER_MASK, xmm_mtip1)); // SSE2
+						__m128i xmm_mag_mask = _mm_and_si128(xmm_y, xmm_ONE); // SSE2
+						xmm_mag_mask = _mm_sub_epi32(xmm_ZERO, xmm_mag_mask); // SSE2 <=> _mm_cmpeq_epi32(xmm_mag_mask, xmm_ONE) SSE2
+						xmm_mag_mask = _mm_and_si128(xmm_mag_mask, xmm_A); // SSE2
+						xmm_y = _mm_srli_epi32(xmm_y, 1); // SSE2
+						xmm_y = _mm_xor_si128(xmm_y, xmm_mag_mask); // SSE2
+						__m128i xmm_mtipm = _mm_loadl_epi64(reinterpret_cast<const __m128i*>(&mt[i - (NPM::value)])); // SSE2
+						xmm_mti = _mm_xor_si128(xmm_y, xmm_mtipm); // SSE2
+						_mm_storel_epi64(reinterpret_cast<__m128i*>(&mt[i]), xmm_mti); // SSE2
+
+						i += 2;
+						EACH2(i);
+					} else if (SECOND_STEP_REMAIN::value == 2) {
+						__m128i xmm_mti = _mm_loadl_epi64(reinterpret_cast<const __m128i*>(&mt[i])); // SSE2
+						__m128i xmm_mtip1 = _mm_loadl_epi64(reinterpret_cast<const __m128i*>(&mt[i + 1])); // SSE2
+						__m128i xmm_y = _mm_or_si128( // SSE2
+								_mm_and_si128(xmm_UPPER_MASK, xmm_mti), // SSE2
+								_mm_andnot_si128(xmm_UPPER_MASK, xmm_mtip1)); // SSE2
+						__m128i xmm_mag_mask = _mm_and_si128(xmm_y, xmm_ONE); // SSE2
+						xmm_mag_mask = _mm_sub_epi32(xmm_ZERO, xmm_mag_mask); // SSE2 <=> _mm_cmpeq_epi32(xmm_mag_mask, xmm_ONE) SSE2
+						xmm_mag_mask = _mm_and_si128(xmm_mag_mask, xmm_A); // SSE2
+						xmm_y = _mm_srli_epi32(xmm_y, 1); // SSE2
+						xmm_y = _mm_xor_si128(xmm_y, xmm_mag_mask); // SSE2
+						__m128i xmm_mtipm = _mm_loadl_epi64(reinterpret_cast<const __m128i*>(&mt[i - (NPM::value)])); // SSE2
+						xmm_mti = _mm_xor_si128(xmm_y, xmm_mtipm); // SSE2
+						_mm_storel_epi64(reinterpret_cast<__m128i*>(&mt[i]), xmm_mti); // SSE2
+					} else if (SECOND_STEP_REMAIN::value == 1) {
 						EACH2(i);
 						++i;
 					}
@@ -133,10 +198,12 @@ namespace kerbal
 						_mm_storeu_si128(reinterpret_cast<__m128i*>(&mt[i]), xmm_mti); // SSE2
 					}
 
-					while (i < NPM::value) {
+					typedef kerbal::type_traits::integral_constant<long long, NPM::value % STEP::value> FIRST_STEP_REMAIN;
+					if (FIRST_STEP_REMAIN::value != 0) {
 						EACH1(i);
-						++i;
 					}
+
+					i = NPM::value;
 
 					for (; i + STEP::value <= N - 1; i += STEP::value) {
 						__m128i xmm_mti = _mm_loadu_si128(reinterpret_cast<const __m128i*>(&mt[i])); // SSE2
@@ -154,10 +221,12 @@ namespace kerbal
 						_mm_storeu_si128(reinterpret_cast<__m128i*>(&mt[i]), xmm_mti); // SSE2
 					}
 
-					while (i < N - 1) {
+					typedef kerbal::type_traits::integral_constant<long long, (M - 1) % STEP::value> SECOND_STEP_REMAIN;
+					if (SECOND_STEP_REMAIN::value != 0) {
 						EACH2(i);
-						++i;
 					}
+
+					// i = N - 1
 
 					result_type y = (mt[N - 1] & UPPER_MASK::value) | (mt[0] & LOWER_MASK::value);
 					mt[N - 1] = mt[M - 1] ^ (y >> 1) ^ ((y & 0x1UL) ? A : 0);

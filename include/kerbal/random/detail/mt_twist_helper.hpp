@@ -27,7 +27,7 @@
 
 #ifndef KERBAL_RANDOM_ENABLE_MT_TWIST_IE_OPTIMISE
 
-#	if __AVX512F__ || __AVX2__ || __SSE2__ || __ARM_FEATURE_SVE || __ARM_NEON
+#	if __AVX512F__ || __AVX2__ || __SSE4_1__ || __SSE2__ || __ARM_FEATURE_SVE || __ARM_NEON
 #		define KERBAL_RANDOM_ENABLE_MT_TWIST_IE_OPTIMISE 1
 #	else
 #		define KERBAL_RANDOM_ENABLE_MT_TWIST_IE_OPTIMISE 0
@@ -44,6 +44,10 @@
 
 #	if __AVX2__
 #		include <kerbal/random/detail/mt_twist/mt_twist.avx2.hpp>
+#	endif
+
+#	if __SSE4_1__
+#		include <kerbal/random/detail/mt_twist/mt_twist.sse41.hpp>
 #	endif
 
 #	if __SSE2__
@@ -85,6 +89,8 @@ namespace kerbal
 				avx512f::mt_twist<N, M, R, A>(mtr);
 #		elif __AVX2__
 				avx2::mt_twist<N, M, R, A>(mtr);
+#		elif __SSE4_1__
+				sse41::mt_twist<N, M, R, A>(mtr);
 #		elif __SSE2__
 				sse2::mt_twist<N, M, R, A>(mtr);
 #		elif __ARM_FEATURE_SVE

@@ -66,9 +66,21 @@ namespace kerbal
 						vst1q_u32(&mt[i], q_mti);
 					}
 
-					if ((NPM::value % STEP::value) != 0) {
-						uint32x4_t q_mti = vld1q_u32(&mt[i]);
-						uint32x4_t q_mtip1 = vld1q_u32(&mt[i + 1]);
+					typedef kerbal::type_traits::integral_constant<int, NPM::value % STEP::value> FIRST_STEP_REMAIN;
+					if (FIRST_STEP_REMAIN::value == 3) {
+						uint32x4_t q_mti = vld1q_u32(&mt[i]); // FIRST_STEP_REMAIN::value (3) + M >= STEP::value always true
+
+						uint32x4_t q_mtip1;
+						if (FIRST_STEP_REMAIN::value + M - 1 >= STEP::value) {
+							q_mtip1 = vld1q_u32(&mt[i + 1]);
+						} else {
+							uint32x2_t d_un;
+							q_mtip1 = vcombine_u32(
+									vld1_u32(&mt[i + 1]),
+									vld1_lane_u32(&mt[i + 3], d_un, 0)
+							);
+						}
+
 						uint32x4_t q_y = vbslq_u32(q_UPPER_MASK, q_mti, q_mtip1);
 						uint32x4_t q_mag_mask = vandq_u32(q_y, q_ONE);
 						q_mag_mask = vceqq_u32(q_mag_mask, q_ONE);
@@ -76,49 +88,36 @@ namespace kerbal
 						q_y = vshrq_n_u32(q_y, 1);
 						q_mti = veorq_u32(q_y, q_mag_mask);
 
-#if 0
-						uint32x4_t q_mtipm;
-
-						switch (NPM::value % STEP::value) {
-							case 3: {
-								q_mtipm = vld1q_lane_u32(&mt[i + 0 + M], q_mtipm, 0);
-								q_mtipm = vld1q_lane_u32(&mt[i + 1 + M], q_mtipm, 1);
-								q_mtipm = vld1q_lane_u32(&mt[i + 2 + M], q_mtipm, 2);
-								q_mtipm = vld1q_lane_u32(&mt[i + 3 - NPM::value], q_mtipm, 3);
-								break;
-							}
-							case 2: {
-								q_mtipm = vld1q_lane_u32(&mt[i + 0 + M], q_mtipm, 0);
-								q_mtipm = vld1q_lane_u32(&mt[i + 1 + M], q_mtipm, 1);
-								q_mtipm = vld1q_lane_u32(&mt[i + 2 - NPM::value], q_mtipm, 2);
-								q_mtipm = vld1q_lane_u32(&mt[i + 3 - NPM::value], q_mtipm, 3);
-								break;
-							}
-							case 1: {
-								q_mtipm = vld1q_lane_u32(&mt[i + 0 + M], q_mtipm, 0);
-								q_mtipm = vld1q_lane_u32(&mt[i + 1 - NPM::value], q_mtipm, 1);
-								q_mtipm = vld1q_lane_u32(&mt[i + 2 - NPM::value], q_mtipm, 2);
-								q_mtipm = vld1q_lane_u32(&mt[i + 3 - NPM::value], q_mtipm, 3);
-								break;
-							}
+						uint32x4_t q_mtipm; {
+							uint32x2_t d_un;
+							q_mtipm = vcombine_u32(
+									vld1_u32(&mt[i + 0 + M]),
+									vld1_lane_u32(&mt[i + 2 + M], d_un, 0)
+							);
 						}
 
 						q_mti = veorq_u32(q_mti, q_mtipm);
-						vst1q_u32(&mt[i], q_mti);
-						i += STEP::value;
-#else
-						vst1q_u32(&mt[i], q_mti);
-						unsigned int j = 0;
-						for (; j < (NPM::value % STEP::value); ++j) {
-							mt[i] ^= mt[i + M];
-							++i;
-						}
-						for (; j < STEP::value; ++j) {
-							mt[i] ^= mt[i - NPM::value];
-							++i;
-						}
-#endif
+
+						vst1_u32(&mt[i + 0], vget_low_u32(q_mti));
+						vst1q_lane_u32(&mt[i + 2], q_mti, 2);
+					} else if (FIRST_STEP_REMAIN::value == 2) {
+						uint32x2_t d_mti = vld1_u32(&mt[i]);
+						uint32x2_t d_mtip1 = vld1_u32(&mt[i + 1]);
+						uint32x2_t d_y = vbsl_u32(vget_low_u32(q_UPPER_MASK), d_mti, d_mtip1);
+						uint32x2_t d_mag_mask = vand_u32(d_y, vget_low_u32(q_ONE));
+						d_mag_mask = vceq_u32(d_mag_mask, vget_low_u32(q_ONE));
+						d_mag_mask = vand_u32(d_mag_mask, vget_low_u32(q_A));
+						d_y = vshr_n_u32(d_y, 1);
+						d_mti = veor_u32(d_y, d_mag_mask);
+						uint32x2_t d_mtipm = vld1_u32(&mt[i + 0 + M]);
+						d_mti = veor_u32(d_mti, d_mtipm);
+
+						vst1_u32(&mt[i + 0], d_mti);
+					} else if (FIRST_STEP_REMAIN::value == 1) {
+						EACH1(i);
 					}
+
+					i = NPM::value;
 
 					for (; i + STEP::value <= N - 1; i += STEP::value) {
 						uint32x4_t q_mti = vld1q_u32(&mt[i]);
@@ -175,26 +174,10 @@ namespace kerbal
 						vst1q_u64(&mt[i], q_mti);
 					}
 
-					if ((NPM::value % STEP::value) != 0) {
-						uint64x2_t q_mti = vld1q_u64(&mt[i]);
-						uint64x2_t q_mtip1 = vld1q_u64(&mt[i + 1]);
-						uint64x2_t q_y = vbslq_u64(q_UPPER_MASK, q_mti, q_mtip1);
-						uint64x2_t q_mag_mask = vandq_u64(q_y, q_ONE);
-						q_mag_mask = vsubq_u64(q_ZERO, q_mag_mask); // <=> vceqq_u64(q_mag_mask, q_ONE) neon // arm neon does not support `vceqq_u64` offically
-						q_mag_mask = vandq_u64(q_mag_mask, q_A);
-						q_y = vshrq_n_u64(q_y, 1);
-						q_mti = veorq_u64(q_y, q_mag_mask);
-						vst1q_u64(&mt[i], q_mti);
-
-						unsigned int j = 0;
-						for (; j < (NPM::value % STEP::value); ++j) {
-							mt[i] ^= mt[i + M];
-							++i;
-						}
-						for (; j < STEP::value; ++j) {
-							mt[i] ^= mt[i - NPM::value];
-							++i;
-						}
+					typedef kerbal::type_traits::integral_constant<int, NPM::value % STEP::value> FIRST_STEP_REMAIN;
+					if (FIRST_STEP_REMAIN::value != 0) {
+						EACH1(i);
+						++i;
 					}
 
 					for (; i + STEP::value <= N - 1; i += STEP::value) {
@@ -211,7 +194,8 @@ namespace kerbal
 						vst1q_u64(&mt[i], q_mti);
 					}
 
-					while (i < N - 1) {
+					typedef kerbal::type_traits::integral_constant<int, (M - 1) % STEP::value> SECOND_STEP_REMAIN;
+					if (SECOND_STEP_REMAIN::value != 0) {
 						EACH2(i);
 						++i;
 					}
