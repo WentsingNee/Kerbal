@@ -57,7 +57,7 @@ namespace kerbal
 			{
 			};
 
-#	if __cplusplus > 201703L
+#	if __cpp_char8_t >= 201811L
 
 			template <>
 			struct is_integral_helper<char8_t> : kerbal::type_traits::true_type

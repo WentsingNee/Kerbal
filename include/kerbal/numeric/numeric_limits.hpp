@@ -159,7 +159,7 @@ namespace kerbal
 		{
 		};
 
-#	if __cplusplus > 201703L
+#	if __cpp_char8_t >= 201811L
 
 		template<>
 		class numeric_limits<char8_t> :
