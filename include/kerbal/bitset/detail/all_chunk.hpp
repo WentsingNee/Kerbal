@@ -17,6 +17,7 @@
 #include <kerbal/compatibility/is_constant_evaluated.hpp>
 #include <kerbal/compatibility/noexcept.hpp>
 #include <kerbal/type_traits/integral_constant.hpp>
+#include <kerbal/utility/ignore_unused.hpp>
 
 #include <cstddef>
 #include <climits>
@@ -77,62 +78,61 @@ namespace kerbal
 
 #if KERBAL_BITSET_ENABLE_ALL_CHUNK_IE_OPTIMISE
 
-			inline
-			bool all_chunk_simd_dispatch(const kerbal::compatibility::uint32_t block[], std::size_t n) KERBAL_NOEXCEPT
+			template <typename BlockType>
+			bool all_chunk_fix_integer_simd_dispatch(const BlockType block[], std::size_t n, kerbal::type_traits::integral_constant<std::size_t, 32>) KERBAL_NOEXCEPT
 			{
-#		if __AVX512F__
-				return avx512f::all_chunk(block, n);
+				const kerbal::compatibility::uint32_t * blockr = reinterpret_cast<const kerbal::compatibility::uint32_t *>(block);
+
+				kerbal::utility::ignore_unused(blockr);
+
+#		if 0
+				// pass
+#		elif __AVX512F__
+				return avx512f::all_chunk(blockr, n);
 #		elif __AVX2__
-				return avx2::all_chunk(block, n);
+				return avx2::all_chunk(blockr, n);
 #		elif __AVX__
-				return avx::all_chunk(block, n);
+				return avx::all_chunk(blockr, n);
 #		elif __SSE4_1__
-				return sse2::all_chunk(block, n);
+				return sse41::all_chunk(blockr, n);
 #		elif __ARM_FEATURE_SVE
-				return sve::all_chunk(block, n);
+				return sve::all_chunk(blockr, n);
 #		elif __ARM_NEON
-				return neon::all_chunk(block, n);
+				return neon::all_chunk(blockr, n);
 #		else
-				return plain::all_chunk<kerbal::compatibility::uint32_t>(block, n);
+				return plain::all_chunk<BlockType>(block, n);
 #		endif
 			}
 
-//			inline
-//			bool all_chunk_simd_dispatch(const kerbal::compatibility::uint64_t block[], std::size_t n) KERBAL_NOEXCEPT
-//			{
-//#		if __AVX512F__
-//				return avx512f::all_chunk(block, n);
-//#		elif __AVX2__
-//				return avx2::all_chunk(block, n);
-//#		elif __AVX__
-//				return avx::all_chunk(block, n);
-//#		elif __SSE4_1__
-//				return sse2::all_chunk(block, n);
-////#		elif __ARM_FEATURE_SVE
-////				return sve::all_chunk(block, n);
-//#		elif __ARM_NEON
-//				return neon::all_chunk(block, n);
-//#		else
-//				return plain::all_chunk<kerbal::compatibility::uint64_t>(block, n);
-//#		endif
-//			}
-
-
 			template <typename BlockType>
-			bool all_chunk_fix_integer_type_convert(const BlockType block[], std::size_t n, kerbal::type_traits::integral_constant<std::size_t, 32>) KERBAL_NOEXCEPT
+			bool all_chunk_fix_integer_simd_dispatch(const BlockType block[], std::size_t n, kerbal::type_traits::integral_constant<std::size_t, 64>) KERBAL_NOEXCEPT
 			{
-				return all_chunk_simd_dispatch(reinterpret_cast<const kerbal::compatibility::uint32_t*>(block), n);
-			}
+				const kerbal::compatibility::uint64_t * blockr = reinterpret_cast<const kerbal::compatibility::uint64_t *>(block);
 
-//			template <typename BlockType>
-//			bool all_chunk_fix_integer_type_convert(const BlockType block[], std::size_t n, kerbal::type_traits::integral_constant<std::size_t, 64>) KERBAL_NOEXCEPT
-//			{
-//				return all_chunk_simd_dispatch(reinterpret_cast<const kerbal::compatibility::uint64_t*>(block), n);
-//			}
+				kerbal::utility::ignore_unused(blockr);
+
+#		if 0
+				// pass
+#		elif __AVX512F__
+				return avx512f::all_chunk(blockr, n);
+#		elif __AVX2__
+				return avx2::all_chunk(blockr, n);
+#		elif __AVX__
+				return avx::all_chunk(blockr, n);
+#		elif __SSE4_1__
+				return sse41::all_chunk(blockr, n);
+#		elif __ARM_FEATURE_SVE
+				return sve::all_chunk(blockr, n);
+#		elif __ARM_NEON
+				return neon::all_chunk(blockr, n);
+#		else
+				return plain::all_chunk<BlockType>(block, n);
+#		endif
+			}
 
 			template <typename BlockType, std::size_t Size>
 			KERBAL_CONSTEXPR14
-			bool all_chunk_fix_integer_type_convert(const BlockType block[], std::size_t n, kerbal::type_traits::integral_constant<std::size_t, Size>) KERBAL_NOEXCEPT
+			bool all_chunk_fix_integer_simd_dispatch(const BlockType block[], std::size_t n, kerbal::type_traits::integral_constant<std::size_t, Size>) KERBAL_NOEXCEPT
 			{
 				return plain::all_chunk<BlockType>(block, n);
 			}
@@ -149,7 +149,7 @@ namespace kerbal
 
 					static bool fix_integer_type_dispatch(const BlockType block[], std::size_t n) KERBAL_NOEXCEPT
 					{
-						return all_chunk_fix_integer_type_convert<BlockType>(block, n, kerbal::type_traits::integral_constant<std::size_t, CHAR_BIT * sizeof(BlockType)>());
+						return all_chunk_fix_integer_simd_dispatch<BlockType>(block, n, kerbal::type_traits::integral_constant<std::size_t, CHAR_BIT * sizeof(BlockType)>());
 					}
 
 					KERBAL_CONSTEXPR14
