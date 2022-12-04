@@ -35,12 +35,12 @@ namespace kerbal
 
 				template <typename Block>
 				KERBAL_CONSTEXPR14
-				bool all_chunk0(const Block block[], std::size_t trunk_size) KERBAL_NOEXCEPT
+				bool all_chunk0(const Block block[], std::size_t chunk_size) KERBAL_NOEXCEPT
 				{
 					typedef kerbal::type_traits::integral_constant<Block, static_cast<Block>(~static_cast<Block>(0))> ALL_ONE;
 
 					std::size_t i = 0;
-					for (; i < trunk_size; ++i) {
+					for (; i < chunk_size; ++i) {
 						EACH(i);
 					}
 					return true;
@@ -48,7 +48,7 @@ namespace kerbal
 
 				template <typename Block>
 				KERBAL_CONSTEXPR14
-				bool all_chunk(const Block block[], std::size_t trunk_size) KERBAL_NOEXCEPT
+				bool all_chunk(const Block block[], std::size_t chunk_size) KERBAL_NOEXCEPT
 				{
 					typedef kerbal::type_traits::integral_constant<Block, static_cast<Block>(~static_cast<Block>(0))> ALL_ONE;
 
@@ -68,14 +68,14 @@ namespace kerbal
 #				if KERBAL_STATIC_BITSET_ALL_CHUNK_POLICY==0
 
 					std::size_t i = 0;
-					for (; i + 4 <= trunk_size; i += 4) {
+					for (; i + 4 <= chunk_size; i += 4) {
 						EACH(i);
 						EACH(i + 1);
 						EACH(i + 2);
 						EACH(i + 3);
 					}
 
-					std::size_t remain(trunk_size % 4);
+					std::size_t remain(chunk_size % 4);
 					if (remain >= 2) {
 						EACH(i);
 						EACH(i + 1);
@@ -89,13 +89,13 @@ namespace kerbal
 #				elif KERBAL_STATIC_BITSET_ALL_CHUNK_POLICY==1
 
 					std::size_t i = 0;
-					for (; i + 4 <= trunk_size; i += 4) {
+					for (; i + 4 <= chunk_size; i += 4) {
 						if ((block[i] & block[i + 1] & block[i + 2] & block[i + 3]) != ALL_ONE::value) {
 							return false;
 						}
 					}
 
-					std::size_t remain(trunk_size % 4);
+					std::size_t remain(chunk_size % 4);
 					if (remain >= 2) {
 						if ((block[i] & block[i + 1]) != ALL_ONE::value) {
 							return false;
@@ -112,7 +112,7 @@ namespace kerbal
 #				elif KERBAL_STATIC_BITSET_ALL_CHUNK_POLICY==2
 
 					std::size_t i = 0;
-					for (; i + 8 <= trunk_size; i += 8) {
+					for (; i + 8 <= chunk_size; i += 8) {
 						if ((
 								block[i] & block[i + 1] & block[i + 2] & block[i + 3] &
 								block[i + 4] & block[i + 5] & block[i + 6] & block[i + 7]
@@ -121,7 +121,7 @@ namespace kerbal
 						}
 					}
 
-					std::size_t remain(trunk_size % 8);
+					std::size_t remain(chunk_size % 8);
 					if (remain >= 4) {
 						if ((
 								block[i] & block[i + 1] & block[i + 2] & block[i + 3]
