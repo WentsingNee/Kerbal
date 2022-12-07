@@ -81,7 +81,9 @@ namespace kerbal
 			kerbal::numeric::bitarray_result<kerbal::compatibility::uint8_t>::type
 			bitarray_simd_dispatch(kerbal::compatibility::uint8_t x) KERBAL_NOEXCEPT
 			{
-#		if __BMI2__
+#		if 0
+				// pass
+#		elif __BMI2__
 				return bmi2::bitarray(x);
 #		elif __SSE2__
 				return sse2::bitarray(x);
@@ -98,10 +100,14 @@ namespace kerbal
 			kerbal::numeric::bitarray_result<kerbal::compatibility::uint16_t>::type
 			bitarray_simd_dispatch(kerbal::compatibility::uint16_t x) KERBAL_NOEXCEPT
 			{
-#		if __BMI2__
+#		if 0
+				// pass
+#		elif __BMI2__
 				return bmi2::bitarray(x);
 #		elif __SSE2__
 				return sse2::bitarray(x);
+#		elif __MMX__
+				return mmx::bitarray(x);
 #		elif __ARM_NEON
 				return neon::bitarray(x);
 #		else
@@ -113,10 +119,14 @@ namespace kerbal
 			kerbal::numeric::bitarray_result<kerbal::compatibility::uint32_t>::type
 			bitarray_simd_dispatch(kerbal::compatibility::uint32_t x) KERBAL_NOEXCEPT
 			{
-#		if __BMI2__
+#		if 0
+				// pass
+#		elif __BMI2__
 				return bmi2::bitarray(x);
 #		elif __AVX2__
 				return avx2::bitarray(x);
+#		elif __SSE2__
+				return sse2::bitarray(x);
 #		else
 				return plain::bitarray(x);
 #		endif
@@ -126,7 +136,15 @@ namespace kerbal
 			kerbal::numeric::bitarray_result<kerbal::compatibility::uint64_t>::type
 			bitarray_simd_dispatch(kerbal::compatibility::uint64_t x) KERBAL_NOEXCEPT
 			{
+#		if 0
+				// pass
+#		elif __BMI2__
+				return bmi2::bitarray(x);
+#		elif __AVX2__
+				return avx2::bitarray(x);
+#		else
 				return plain::bitarray(x);
+#		endif
 			}
 
 
