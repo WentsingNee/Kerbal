@@ -16,7 +16,6 @@
 #include <kerbal/compatibility/fixed_width_integer.hpp>
 #include <kerbal/smath/max_sa_sb.hpp>
 #include <kerbal/type_traits/aligned_storage.hpp>
-#include <kerbal/type_traits/integral_constant.hpp>
 
 #include <kerbal/numeric/bit/bitarray/bitarray.plain.hpp>
 
@@ -34,12 +33,6 @@ namespace kerbal
 
 			namespace bmi2
 			{
-
-				template <typename T, T a, T b>
-				struct static_max :
-						kerbal::type_traits::integral_constant<T, (a > b ? a : b)>
-				{
-				};
 
 				inline
 				kerbal::numeric::bitarray_result<kerbal::compatibility::uint8_t>::type
