@@ -16,7 +16,6 @@
 #include <kerbal/compatibility/fixed_width_integer.hpp>
 #include <kerbal/smath/max_sa_sb.hpp>
 #include <kerbal/type_traits/aligned_storage.hpp>
-#include <kerbal/type_traits/integral_constant.hpp>
 
 #include <kerbal/numeric/bit/bitarray/bitarray.plain.hpp>
 
@@ -35,12 +34,6 @@ namespace kerbal
 
 			namespace sse2
 			{
-
-				template <typename T, T a, T b>
-				struct static_max :
-						kerbal::type_traits::integral_constant<T, (a > b ? a : b)>
-				{
-				};
 
 				inline
 				kerbal::numeric::bitarray_result<kerbal::compatibility::uint8_t>::type
@@ -77,6 +70,7 @@ namespace kerbal
 							1u << 3, 1u << 2, 1u << 1, 1u << 0,
 							0, 0, 0, 0, 0, 0, 0, 0
 					); // SSE2
+					__m128i const xmm_ALL_ONE = _mm_set1_epi8(1);
 
 //					__m128i xmm_x = _mm_set1_epi8(static_cast<char>(x)); // SSE2
 
@@ -84,7 +78,7 @@ namespace kerbal
 					xmm_x = _mm_shufflelo_epi16(xmm_x, 0);
 
 					xmm_x = _mm_and_si128(xmm_x, xmm_andmask); // SSE2
-					xmm_x = _mm_min_epu8(xmm_x, _mm_set1_epi8(1)); // SSE2
+					xmm_x = _mm_min_epu8(xmm_x, xmm_ALL_ONE); // SSE2
 
 					kerbal::type_traits::aligned_storage<
 							kerbal::smath::max_sa_sb<std::size_t, sizeof(bitarray_result_t), sizeof(uint64_t)>::value,
@@ -108,19 +102,58 @@ namespace kerbal
 							static_cast<char>(1u << 7), 1u << 6, 1u << 5, 1u << 4,
 							1u << 3, 1u << 2, 1u << 1, 1u << 0
 					); // SSE2
-
-					uint64_t u = ((static_cast<uint64_t>(x & 0xff00) << 24) | (x & 0xff)) * 0x01010101u;
-
-					__m128i xmm_x = _mm_loadl_epi64(reinterpret_cast<const __m128i *>(&u)); // SSE2
-					xmm_x = _mm_shuffle_epi32(xmm_x, 0x05); // SSE2
-					xmm_x = _mm_and_si128(xmm_x, xmm_andmask); // SSE2
-					xmm_x = _mm_min_epu8(xmm_x, _mm_set1_epi8(1)); // SSE2
+					__m128i const xmm_ALL_ONE = _mm_set1_epi8(1);
 
 					kerbal::type_traits::aligned_storage<
 							kerbal::smath::max_sa_sb<std::size_t, sizeof(bitarray_result_t), sizeof(uint64_t)>::value,
 							kerbal::smath::max_sa_sb<std::size_t, KERBAL_ALIGNOF(bitarray_result_t), KERBAL_ALIGNOF(uint64_t)>::value
 					>::type as;
+
+					uint64_t u = ((static_cast<uint64_t>(x & 0xFF00) << 24) | (x & 0xFF)) * 0x01010101u;
+					__m128i xmm_x = _mm_loadl_epi64(reinterpret_cast<const __m128i *>(&u)); // SSE2
+					xmm_x = _mm_shuffle_epi32(xmm_x, 0x05); // SSE2, 0x5 = [00, 00, 01, 01]
+					xmm_x = _mm_and_si128(xmm_x, xmm_andmask); // SSE2
+					xmm_x = _mm_min_epu8(xmm_x, xmm_ALL_ONE); // SSE2
 					_mm_storeu_si128(reinterpret_cast<__m128i *>(&as), xmm_x); // SSE2
+					return reinterpret_cast<const bitarray_result_t &>(as);
+				}
+
+				inline
+				kerbal::numeric::bitarray_result<kerbal::compatibility::uint32_t>::type
+				bitarray(kerbal::compatibility::uint32_t x)
+				{
+					typedef kerbal::compatibility::uint32_t T;
+					typedef kerbal::compatibility::uint64_t uint64_t;
+					typedef typename kerbal::numeric::bitarray_result<T>::type bitarray_result_t;
+
+					__m128i const xmm_andmask = _mm_setr_epi8(
+							static_cast<char>(1u << 7), 1u << 6, 1u << 5, 1u << 4,
+							1u << 3, 1u << 2, 1u << 1, 1u << 0,
+							static_cast<char>(1u << 7), 1u << 6, 1u << 5, 1u << 4,
+							1u << 3, 1u << 2, 1u << 1, 1u << 0
+					); // SSE2
+					__m128i const xmm_ALL_ONE = _mm_set1_epi8(1);
+
+					kerbal::type_traits::aligned_storage<
+							kerbal::smath::max_sa_sb<std::size_t, sizeof(bitarray_result_t), sizeof(uint64_t)>::value,
+							kerbal::smath::max_sa_sb<std::size_t, KERBAL_ALIGNOF(bitarray_result_t), KERBAL_ALIGNOF(uint64_t)>::value
+					>::type as;
+
+					uint64_t u = ((static_cast<uint64_t>(x & 0xFF00) << 24) | (x & 0xFF)) * 0x01010101u;
+					__m128i xmm_x = _mm_loadl_epi64(reinterpret_cast<const __m128i *>(&u)); // SSE2
+					xmm_x = _mm_shuffle_epi32(xmm_x, 0x05); // SSE2, 0x5 = [00, 00, 01, 01]
+					xmm_x = _mm_and_si128(xmm_x, xmm_andmask); // SSE2
+					xmm_x = _mm_min_epu8(xmm_x, xmm_ALL_ONE); // SSE2
+					_mm_storeu_si128(reinterpret_cast<__m128i *>(&as) + 1, xmm_x); // SSE2
+
+					x >>= 16;
+					u = ((static_cast<uint64_t>(x & 0xFF00) << 24) | (x & 0xFF)) * 0x01010101u;
+					xmm_x = _mm_loadl_epi64(reinterpret_cast<const __m128i *>(&u)); // SSE2
+					xmm_x = _mm_shuffle_epi32(xmm_x, 0x05); // SSE2, 0x5 = [00, 00, 01, 01]
+					xmm_x = _mm_and_si128(xmm_x, xmm_andmask); // SSE2
+					xmm_x = _mm_min_epu8(xmm_x, xmm_ALL_ONE); // SSE2
+					_mm_storeu_si128(reinterpret_cast<__m128i *>(&as) + 0, xmm_x); // SSE2
+
 					return reinterpret_cast<const bitarray_result_t &>(as);
 				}
 
