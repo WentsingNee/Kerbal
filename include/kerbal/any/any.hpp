@@ -315,7 +315,7 @@ namespace kerbal
 					static void clone(any & self, const any & ano)
 					{
 						const any_node * p_to_src = ano.template obj_pos<T>();
-						self.k_storage.template construct<T>(is_embedded_stored_type(), self.void_alloc(), p_to_src->value);
+						self.k_storage.template construct<T>(is_embedded_stored_type(), self.void_alloc(), p_to_src->member());
 					}
 
 #	if __cplusplus >= 201103L
@@ -816,7 +816,7 @@ namespace kerbal
 				T* ignored_get_pointer() KERBAL_NOEXCEPT
 				{
 					typedef typename kerbal::type_traits::remove_const<T>::type value_type;
-					return &(this->template obj_pos<value_type>()->value);
+					return &(this->template obj_pos<value_type>()->member());
 				}
 
 				template <typename T>
@@ -824,7 +824,7 @@ namespace kerbal
 				const T* ignored_get_pointer() const KERBAL_NOEXCEPT
 				{
 					typedef typename kerbal::type_traits::remove_const<T>::type value_type;
-					return &(this->template obj_pos<value_type>()->value);
+					return &(this->template obj_pos<value_type>()->member());
 				}
 
 				template <typename T>
@@ -834,7 +834,7 @@ namespace kerbal
 					typedef typename kerbal::type_traits::remove_const<T>::type value_type;
 
 					return this->template contains_type<value_type>() ?
-						   &(this->template obj_pos<value_type>()->value) :
+						   &(this->template obj_pos<value_type>()->member()) :
 						   NULL;
 				}
 
@@ -845,7 +845,7 @@ namespace kerbal
 					typedef typename kerbal::type_traits::remove_const<T>::type value_type;
 
 					return this->template contains_type<value_type>() ?
-						   &(this->template obj_pos<value_type>()->value) :
+						   &(this->template obj_pos<value_type>()->member()) :
 						   NULL;
 				}
 
@@ -856,7 +856,7 @@ namespace kerbal
 					typedef typename kerbal::type_traits::remove_reference<T>::type remove_reference;
 					typedef typename kerbal::type_traits::remove_const<remove_reference>::type value_type;
 
-					return this->template obj_pos<value_type>()->value;
+					return this->template obj_pos<value_type>()->member();
 				}
 
 				template <typename T>
@@ -871,7 +871,7 @@ namespace kerbal
 					typedef typename kerbal::type_traits::remove_reference<T>::type remove_reference;
 					typedef typename kerbal::type_traits::remove_const<remove_reference>::type value_type;
 
-					return this->template obj_pos<value_type>()->value;
+					return this->template obj_pos<value_type>()->member();
 				}
 
 				template <typename T>
@@ -884,7 +884,7 @@ namespace kerbal
 					if (!this->template contains_type<value_type>()) {
 						kerbal::utility::throw_this_exception_helper<kerbal::any::bad_any_cast>::throw_this_exception();
 					}
-					return this->template obj_pos<value_type>()->value;
+					return this->template obj_pos<value_type>()->member();
 				}
 
 				template <typename T>
@@ -902,7 +902,7 @@ namespace kerbal
 					if (!this->template contains_type<value_type>()) {
 						kerbal::utility::throw_this_exception_helper<kerbal::any::bad_any_cast>::throw_this_exception();
 					}
-					return this->template obj_pos<value_type>()->value;
+					return this->template obj_pos<value_type>()->member();
 				}
 
 #	if __cplusplus >= 201103L
@@ -916,7 +916,7 @@ namespace kerbal
 					typedef typename kerbal::type_traits::remove_reference<T>::type remove_reference;
 					typedef typename kerbal::type_traits::remove_const<remove_reference>::type value_type;
 
-					return kerbal::compatibility::move(this->template obj_pos<value_type>()->value);
+					return kerbal::compatibility::move(this->template obj_pos<value_type>()->member());
 				}
 
 				template <typename T>
@@ -931,7 +931,7 @@ namespace kerbal
 					if (!this->template contains_type<value_type>()) {
 						kerbal::utility::throw_this_exception_helper<kerbal::any::bad_any_cast>::throw_this_exception();
 					}
-					return kerbal::compatibility::move(this->template obj_pos<value_type>()->value);
+					return kerbal::compatibility::move(this->template obj_pos<value_type>()->member());
 				}
 
 #	endif

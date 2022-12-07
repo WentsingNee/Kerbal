@@ -19,6 +19,7 @@
 #include <kerbal/type_traits/integral_constant.hpp>
 #include <kerbal/type_traits/remove_const.hpp>
 #include <kerbal/utility/in_place.hpp>
+#include <kerbal/utility/member_compress_helper.hpp>
 
 #if __cplusplus >= 201103L
 #	include <kerbal/utility/forward.hpp>
@@ -59,26 +60,26 @@ namespace kerbal
 
 			template <typename T>
 			struct any_node :
-					public any_node_base
+					public any_node_base,
+					private kerbal::utility::member_compress_helper<T>
 			{
-					T value;
+				private:
+					typedef kerbal::utility::member_compress_helper<T> member_compress_helper;
+
+				public:
 
 #		if __cplusplus >= 201103L
 
 					template <typename ... Args>
 					KERBAL_CONSTEXPR
-					explicit any_node(kerbal::utility::in_place_t, Args&& ... args)
-								KERBAL_CONDITIONAL_NOEXCEPT(
-										(std::is_nothrow_constructible<T, Args&&...>::value)
-								)
-							: value(kerbal::utility::forward<Args>(args)...)
+					explicit any_node(kerbal::utility::in_place_t in_place, Args&& ... args)
+							: member_compress_helper(in_place, kerbal::utility::forward<Args>(args)...)
 					{
 					}
 
 #		else
 
 #				define EMPTY
-#				define REMAINF(exp) exp
 #				define LEFT_JOIN_COMMA(exp) , exp
 #				define THEAD_NOT_EMPTY(exp) template <exp>
 #				define TARGS_DECL(i) typename KERBAL_MACRO_CONCAT(Arg, i)
@@ -86,8 +87,8 @@ namespace kerbal
 #				define ARGS_USE(i) KERBAL_MACRO_CONCAT(arg, i)
 #				define FBODY(i) \
 					KERBAL_OPT_PPEXPAND_WITH_COMMA_N(THEAD_NOT_EMPTY, EMPTY, TARGS_DECL, i) \
-					explicit any_node(kerbal::utility::in_place_t KERBAL_OPT_PPEXPAND_WITH_COMMA_N(LEFT_JOIN_COMMA, EMPTY, ARGS_DECL, i)) \
-							: value(KERBAL_OPT_PPEXPAND_WITH_COMMA_N(REMAINF, EMPTY, ARGS_USE, i)) \
+					explicit any_node(kerbal::utility::in_place_t in_place KERBAL_OPT_PPEXPAND_WITH_COMMA_N(LEFT_JOIN_COMMA, EMPTY, ARGS_DECL, i)) \
+							: member_compress_helper(in_place KERBAL_OPT_PPEXPAND_WITH_COMMA_N(LEFT_JOIN_COMMA, EMPTY, ARGS_USE, i)) \
 					{ \
 					}
 
@@ -95,7 +96,6 @@ namespace kerbal
 					KERBAL_PPEXPAND_N(FBODY, KERBAL_PPEXPAND_EMPTY_SEPARATOR, 20)
 
 #				undef EMPTY
-#				undef REMAINF
 #				undef LEFT_JOIN_COMMA
 #				undef THEAD_NOT_EMPTY
 #				undef TARGS_DECL
@@ -104,6 +104,8 @@ namespace kerbal
 #				undef FBODY
 
 #		endif
+
+				using member_compress_helper::member;
 
 			};
 
@@ -488,7 +490,7 @@ namespace kerbal
 					any_node * stored_pos = reinterpret_cast<any_node*>(&this->k_storage.buffer);
 
 					typedef kerbal::memory::allocator_traits<SelfAnyNodeAlloctor> self_allocator_traits;
-					self_allocator_traits::construct(self_alloc, stored_pos, kerbal::utility::in_place_t(), kerbal::compatibility::to_xvalue(anop->value));
+					self_allocator_traits::construct(self_alloc, stored_pos, kerbal::utility::in_place_t(), kerbal::compatibility::to_xvalue(anop->member()));
 
 					typedef kerbal::memory::allocator_traits<AnoAnyNodeAllocator> ano_allocator_traits;
 					ano_allocator_traits::destroy(ano_alloc, anop);
