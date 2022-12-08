@@ -21,11 +21,11 @@
 #include <kerbal/compatibility/move.hpp>
 #include <kerbal/compatibility/namespace_std_scope.hpp>
 #include <kerbal/compatibility/noexcept.hpp>
+#include <kerbal/compatibility/static_assert.hpp>
 #include <kerbal/config/compiler_id.hpp>
 #include <kerbal/memory/allocator_traits.hpp>
 #include <kerbal/memory/any_storage.hpp>
 #include <kerbal/type_traits/aligned_storage.hpp>
-#include <kerbal/type_traits/conditional.hpp>
 #include <kerbal/type_traits/enable_if.hpp>
 #include <kerbal/type_traits/integral_constant.hpp>
 #include <kerbal/type_traits/is_const.hpp>
@@ -861,15 +861,13 @@ namespace kerbal
 
 				template <typename T>
 				KERBAL_CONSTEXPR20
-				typename kerbal::type_traits::conditional<
-					kerbal::type_traits::is_reference<T>::value,
-					const T,
-					T
-				>::type
-				ignored_get() KERBAL_CONST_REFERENCE_OVERLOAD_TAG
+				T ignored_get() KERBAL_CONST_REFERENCE_OVERLOAD_TAG
 				{
 					typedef typename kerbal::type_traits::remove_reference<T>::type remove_reference;
 					typedef typename kerbal::type_traits::remove_const<remove_reference>::type value_type;
+					KERBAL_STATIC_ASSERT(!(
+							kerbal::type_traits::is_reference<T>::value &&
+							!kerbal::type_traits::is_const<remove_reference>::value), "can not bind non-const reference to value from const any");
 
 					return this->template obj_pos<value_type>()->member();
 				}
@@ -889,15 +887,13 @@ namespace kerbal
 
 				template <typename T>
 				KERBAL_CONSTEXPR20
-				typename kerbal::type_traits::conditional<
-					kerbal::type_traits::is_reference<T>::value,
-					const T,
-					T
-				>::type
-				get() KERBAL_CONST_REFERENCE_OVERLOAD_TAG
+				T get() KERBAL_CONST_REFERENCE_OVERLOAD_TAG
 				{
 					typedef typename kerbal::type_traits::remove_reference<T>::type remove_reference;
 					typedef typename kerbal::type_traits::remove_const<remove_reference>::type value_type;
+					KERBAL_STATIC_ASSERT(!(
+							kerbal::type_traits::is_reference<T>::value &&
+							!kerbal::type_traits::is_const<remove_reference>::value), "can not bind non-const reference to value from const any");
 
 					if (!this->template contains_type<value_type>()) {
 						kerbal::utility::throw_this_exception_helper<kerbal::any::bad_any_cast>::throw_this_exception();
