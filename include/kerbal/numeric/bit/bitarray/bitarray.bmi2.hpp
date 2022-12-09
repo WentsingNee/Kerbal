@@ -45,7 +45,7 @@ namespace kerbal
 					const uint64_t mask = 0x0101010101010101ull;
 
 					kerbal::type_traits::aligned_storage<
-							kerbal::smath::max_sa_sb<std::size_t, sizeof(bitarray_result_t), sizeof(uint64_t)>::value,
+							sizeof(bitarray_result_t),
 							kerbal::smath::max_sa_sb<std::size_t, KERBAL_ALIGNOF(bitarray_result_t), KERBAL_ALIGNOF(uint64_t)>::value
 					>::type as;
 					reinterpret_cast<uint64_t &>(as) = __bswap_64(_pdep_u64(static_cast<uint64_t>(x), mask));
@@ -63,7 +63,7 @@ namespace kerbal
 					const uint64_t mask = 0x0101010101010101ull;
 
 					kerbal::type_traits::aligned_storage<
-							kerbal::smath::max_sa_sb<std::size_t, sizeof(bitarray_result_t), sizeof(uint64_t)>::value,
+							sizeof(bitarray_result_t),
 							kerbal::smath::max_sa_sb<std::size_t, KERBAL_ALIGNOF(bitarray_result_t), KERBAL_ALIGNOF(uint64_t)>::value
 					>::type as;
 
@@ -84,7 +84,7 @@ namespace kerbal
 					const uint64_t mask = 0x0101010101010101ull;
 
 					kerbal::type_traits::aligned_storage<
-							kerbal::smath::max_sa_sb<std::size_t, sizeof(bitarray_result_t), sizeof(uint64_t)>::value,
+							sizeof(bitarray_result_t),
 							kerbal::smath::max_sa_sb<std::size_t, KERBAL_ALIGNOF(bitarray_result_t), KERBAL_ALIGNOF(uint64_t)>::value
 					>::type as;
 
@@ -107,7 +107,7 @@ namespace kerbal
 					const uint64_t mask = 0x0101010101010101ull;
 
 					kerbal::type_traits::aligned_storage<
-							kerbal::smath::max_sa_sb<std::size_t, sizeof(bitarray_result_t), sizeof(uint64_t)>::value,
+							sizeof(bitarray_result_t),
 							kerbal::smath::max_sa_sb<std::size_t, KERBAL_ALIGNOF(bitarray_result_t), KERBAL_ALIGNOF(uint64_t)>::value
 					>::type as;
 
