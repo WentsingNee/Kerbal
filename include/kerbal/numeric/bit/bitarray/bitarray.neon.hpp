@@ -45,7 +45,7 @@ namespace kerbal
 					uint8x8_t const d_ALL_ONE = vdup_n_u8(1);
 
 					kerbal::type_traits::aligned_storage<
-							kerbal::smath::max_sa_sb<std::size_t, sizeof(bitarray_result_t), sizeof(uint64_t)>::value,
+							sizeof(bitarray_result_t),
 							kerbal::smath::max_sa_sb<std::size_t, KERBAL_ALIGNOF(bitarray_result_t), KERBAL_ALIGNOF(uint64_t)>::value
 					>::type as;
 
@@ -115,7 +115,7 @@ namespace kerbal
 					uint8x16_t const q_ALL_ONE = vdupq_n_u8(1);
 
 					kerbal::type_traits::aligned_storage<
-							kerbal::smath::max_sa_sb<std::size_t, sizeof(bitarray_result_t), sizeof(uint64_t)>::value,
+							sizeof(bitarray_result_t),
 							kerbal::smath::max_sa_sb<std::size_t, KERBAL_ALIGNOF(bitarray_result_t), KERBAL_ALIGNOF(uint64_t)>::value
 					>::type as;
 
