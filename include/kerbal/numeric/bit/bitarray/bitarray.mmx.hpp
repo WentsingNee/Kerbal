@@ -43,7 +43,7 @@ namespace kerbal
 					typedef kerbal::numeric::bitarray_result<T>::type bitarray_result_t;
 
 					kerbal::type_traits::aligned_storage<
-							kerbal::smath::max_sa_sb<std::size_t, sizeof(bitarray_result_t), sizeof(uint64_t)>::value,
+							sizeof(bitarray_result_t),
 							kerbal::smath::max_sa_sb<std::size_t, KERBAL_ALIGNOF(bitarray_result_t), KERBAL_ALIGNOF(uint64_t)>::value
 					>::type as;
 
@@ -71,7 +71,7 @@ namespace kerbal
 					typedef kerbal::numeric::bitarray_result<T>::type bitarray_result_t;
 
 					kerbal::type_traits::aligned_storage<
-							kerbal::smath::max_sa_sb<std::size_t, sizeof(bitarray_result_t), sizeof(uint64_t)>::value,
+							sizeof(bitarray_result_t),
 							kerbal::smath::max_sa_sb<std::size_t, KERBAL_ALIGNOF(bitarray_result_t), KERBAL_ALIGNOF(uint64_t)>::value
 					>::type as;
 

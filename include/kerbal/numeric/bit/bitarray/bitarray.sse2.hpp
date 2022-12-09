@@ -50,7 +50,7 @@ namespace kerbal
 					_mm_storel_epi64(reinterpret_cast<__m128i *>(&u), xmm_x); // SSE2
 
 					kerbal::type_traits::aligned_storage<
-							kerbal::smath::max_sa_sb<std::size_t, sizeof(bitarray_result_t), sizeof(uint64_t)>::value,
+							sizeof(bitarray_result_t),
 							kerbal::smath::max_sa_sb<std::size_t, KERBAL_ALIGNOF(bitarray_result_t), KERBAL_ALIGNOF(uint64_t)>::value
 					>::type as;
 					reinterpret_cast<uint64_t &>(as) = u;
@@ -81,7 +81,7 @@ namespace kerbal
 					xmm_x = _mm_min_epu8(xmm_x, xmm_ALL_ONE); // SSE2
 
 					kerbal::type_traits::aligned_storage<
-							kerbal::smath::max_sa_sb<std::size_t, sizeof(bitarray_result_t), sizeof(uint64_t)>::value,
+							sizeof(bitarray_result_t),
 							kerbal::smath::max_sa_sb<std::size_t, KERBAL_ALIGNOF(bitarray_result_t), KERBAL_ALIGNOF(uint64_t)>::value
 					>::type as;
 					_mm_storel_epi64(reinterpret_cast<__m128i *>(&as), xmm_x); // SSE2
@@ -105,7 +105,7 @@ namespace kerbal
 					__m128i const xmm_ALL_ONE = _mm_set1_epi8(1);
 
 					kerbal::type_traits::aligned_storage<
-							kerbal::smath::max_sa_sb<std::size_t, sizeof(bitarray_result_t), sizeof(uint64_t)>::value,
+							sizeof(bitarray_result_t),
 							kerbal::smath::max_sa_sb<std::size_t, KERBAL_ALIGNOF(bitarray_result_t), KERBAL_ALIGNOF(uint64_t)>::value
 					>::type as;
 
@@ -135,7 +135,7 @@ namespace kerbal
 					__m128i const xmm_ALL_ONE = _mm_set1_epi8(1);
 
 					kerbal::type_traits::aligned_storage<
-							kerbal::smath::max_sa_sb<std::size_t, sizeof(bitarray_result_t), sizeof(uint64_t)>::value,
+							sizeof(bitarray_result_t),
 							kerbal::smath::max_sa_sb<std::size_t, KERBAL_ALIGNOF(bitarray_result_t), KERBAL_ALIGNOF(uint64_t)>::value
 					>::type as;
 
