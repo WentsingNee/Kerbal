@@ -142,12 +142,14 @@ namespace kerbal
 					typedef kerbal::type_traits::integral_constant<int, (M - 1) % STEP::value> SECOND_STEP_REMAIN;
 					if (SECOND_STEP_REMAIN::value != 0) {
 						__mmask16 k_mask = _cvtu32_mask16(~(~0u << SECOND_STEP_REMAIN::value)); // AVX512F
+						__mmask16 k_maskp1 = _cvtu32_mask16(~(~0u << (SECOND_STEP_REMAIN::value + 1))); // AVX512F
 
 						__m512i zmm_mti =
 								(SECOND_STEP_REMAIN::value + 1 >= STEP::value) ?
 								_mm512_loadu_si512(&mt[i]) : // AVX512F
-								_mm512_maskz_loadu_epi32(k_mask, &mt[i]); // AVX512F
-						__m512i zmm_mtip1 = _mm512_maskz_loadu_epi32(k_mask, &mt[i + 1]); // AVX512F
+								_mm512_maskz_loadu_epi32(k_maskp1, &mt[i]); // AVX512F
+						__m512i zmm_mtip1 = _mm512_set1_epi32(static_cast<int>(mt[0])); // AVX512F
+						zmm_mtip1 = _mm512_mask_loadu_epi32(zmm_mtip1, k_mask, &mt[i + 1]); // AVX512F
 						// SECOND_STEP_REMAIN::value >= STEP::value always false
 						__m512i zmm_y = _mm512_ternarylogic_epi32(zmm_mti, zmm_UPPER_MASK, zmm_mtip1, 226); // AVX512F, 226 = 0b11100010
 						__m512i zmm_mag_mask = _mm512_and_si512(zmm_y, zmm_ONE); // AVX512F
@@ -155,18 +157,19 @@ namespace kerbal
 						zmm_mag_mask = _mm512_and_si512(zmm_mag_mask, zmm_A); // AVX512F
 						zmm_y = _mm512_srli_epi32(zmm_y, 1); // AVX512F
 						__m512i zmm_mtipm =
-								(SECOND_STEP_REMAIN::value + NPM::value >= STEP::value) ?
+								(SECOND_STEP_REMAIN::value + NPM::value + 1 >= STEP::value) ?
 								_mm512_loadu_si512(&mt[i - NPM::value]) : // AVX512F
-								_mm512_maskz_loadu_epi32(k_mask, &mt[i - NPM::value]); // AVX512F
+								_mm512_maskz_loadu_epi32(k_maskp1, &mt[i - NPM::value]); // AVX512F
 						zmm_mti = _mm512_ternarylogic_epi32(zmm_y, zmm_mag_mask, zmm_mtipm, 150); // AVX512F, 150 = 0b10010110
 
-						_mm512_mask_storeu_epi32(&mt[i], k_mask, zmm_mti); // AVX512F
+						_mm512_mask_storeu_epi32(&mt[i], k_maskp1, zmm_mti); // AVX512F
+					} else {
+
+						// i = N - 1;
+
+						result_type y = (mt[N - 1] & UPPER_MASK::value) | (mt[0] & LOWER_MASK::value);
+						mt[N - 1] = mt[M - 1] ^ (y >> 1) ^ ((y & 0x1UL) ? A : 0);
 					}
-
-					// i = N - 1;
-
-					result_type y = (mt[N - 1] & UPPER_MASK::value) | (mt[0] & LOWER_MASK::value);
-					mt[N - 1] = mt[M - 1] ^ (y >> 1) ^ ((y & 0x1UL) ? A : 0);
 
 				}
 
@@ -279,12 +282,14 @@ namespace kerbal
 					typedef kerbal::type_traits::integral_constant<int, (M - 1) % STEP::value> SECOND_STEP_REMAIN;
 					if (SECOND_STEP_REMAIN::value != 0) {
 						__mmask8 k_mask = _mm512_cmpgt_epi64_mask(_mm512_set1_epi64(SECOND_STEP_REMAIN::value), zmm_iota); // AVX512F
+						__mmask8 k_maskp1 = _mm512_cmpgt_epi64_mask(_mm512_set1_epi64(SECOND_STEP_REMAIN::value + 1), zmm_iota); // AVX512F
 
 						__m512i zmm_mti =
 								(SECOND_STEP_REMAIN::value + 1 >= STEP::value) ?
 								_mm512_loadu_si512(&mt[i]) : // AVX512F
-								_mm512_maskz_loadu_epi64(k_mask, &mt[i]); // AVX512F
-						__m512i zmm_mtip1 = _mm512_maskz_loadu_epi64(k_mask, &mt[i + 1]); // AVX512F
+								_mm512_maskz_loadu_epi64(k_maskp1, &mt[i]); // AVX512F
+						__m512i zmm_mtip1 = _mm512_set1_epi64(static_cast<long long>(mt[0])); // AVX512F
+						zmm_mtip1 = _mm512_mask_loadu_epi64(zmm_mtip1, k_mask, &mt[i + 1]); // AVX512F
 						// SECOND_STEP_REMAIN::value >= STEP::value always false
 						__m512i zmm_y = _mm512_ternarylogic_epi32(zmm_mti, zmm_UPPER_MASK, zmm_mtip1, 226); // AVX512F, 226 = 0b11100010
 						__m512i zmm_mag_mask = _mm512_and_si512(zmm_y, zmm_ONE); // AVX512F
@@ -292,17 +297,18 @@ namespace kerbal
 						zmm_mag_mask = _mm512_and_si512(zmm_mag_mask, zmm_A); // AVX512F
 						zmm_y = _mm512_srli_epi32(zmm_y, 1); // AVX512F
 						__m512i zmm_mtipm =
-								(SECOND_STEP_REMAIN::value + NPM::value >= STEP::value) ?
+								(SECOND_STEP_REMAIN::value + NPM::value + 1 >= STEP::value) ?
 								_mm512_loadu_si512(&mt[i - NPM::value]) : // AVX512F
-								_mm512_maskz_loadu_epi64(k_mask, &mt[i - NPM::value]); // AVX512F
+								_mm512_maskz_loadu_epi64(k_maskp1, &mt[i - NPM::value]); // AVX512F
 						zmm_mti = _mm512_ternarylogic_epi32(zmm_y, zmm_mag_mask, zmm_mtipm, 150); // AVX512F, 150 = 0b10010110
-						_mm512_mask_storeu_epi64(&mt[i], k_mask, zmm_mti); // AVX512F
+						_mm512_mask_storeu_epi64(&mt[i], k_maskp1, zmm_mti); // AVX512F
+					} else {
+
+						// i = N - 1;
+
+						result_type y = (mt[N - 1] & UPPER_MASK::value) | (mt[0] & LOWER_MASK::value);
+						mt[N - 1] = mt[M - 1] ^ (y >> 1) ^ ((y & 0x1UL) ? A : 0);
 					}
-
-					// i = N - 1;
-
-					result_type y = (mt[N - 1] & UPPER_MASK::value) | (mt[0] & LOWER_MASK::value);
-					mt[N - 1] = mt[M - 1] ^ (y >> 1) ^ ((y & 0x1UL) ? A : 0);
 
 				}
 
