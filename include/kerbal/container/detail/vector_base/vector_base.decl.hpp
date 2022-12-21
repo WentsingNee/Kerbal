@@ -361,6 +361,12 @@ namespace kerbal
 					KERBAL_CONSTEXPR
 					size_type capacity() const KERBAL_NOEXCEPT;
 
+				private:
+					template <typename Allocator>
+					KERBAL_CONSTEXPR20
+					void capacity_adjusted_realloc_aux(Allocator & alloc, pointer new_buffer, size_type new_capacity);
+
+				public:
 					template <typename Allocator>
 					KERBAL_CONSTEXPR20
 					void reserve_using_allocator(Allocator & alloc, size_type new_capacity);

@@ -885,6 +885,27 @@ namespace kerbal
 			template <typename Tp>
 			template <typename Allocator>
 			KERBAL_CONSTEXPR20
+			void vector_allocator_unrelated<Tp>::capacity_adjusted_realloc_aux(Allocator & alloc, pointer new_buffer, size_type new_capacity)
+			{
+				typedef kerbal::memory::allocator_traits<Allocator> allocator_traits;
+
+#		if __cpp_exceptions
+				try {
+#		endif
+					ui_move_if_noexcept_ow_copy_phase1(alloc, this->begin().current, this->end().current, new_buffer);
+#		if __cpp_exceptions
+				} catch (...) {
+					allocator_traits::deallocate(alloc, new_buffer, new_capacity);
+					throw;
+				}
+#		endif
+				ui_move_if_noexcept_ow_copy_phase2(alloc, this->begin().current, this->end().current);
+				allocator_traits::deallocate(alloc, this->_K_buffer, this->_K_capacity);
+			}
+
+			template <typename Tp>
+			template <typename Allocator>
+			KERBAL_CONSTEXPR20
 			void vector_allocator_unrelated<Tp>::reserve_using_allocator(Allocator & alloc, size_type new_capacity)
 			{
 				typedef kerbal::memory::allocator_traits<Allocator> allocator_traits;
@@ -901,19 +922,7 @@ namespace kerbal
 #		endif
 
 				if (this->_K_buffer != NULL) {
-#		if __cpp_exceptions
-					try {
-#		endif
-						ui_move_if_noexcept_ow_copy_phase1(alloc, this->begin().current, this->end().current, new_buffer);
-#		if __cpp_exceptions
-					} catch (...) {
-						allocator_traits::deallocate(alloc, new_buffer, new_capacity);
-						throw;
-					}
-#		endif
-
-					ui_move_if_noexcept_ow_copy_phase2(alloc, this->begin().current, this->end().current);
-					allocator_traits::deallocate(alloc, this->_K_buffer, this->_K_capacity);
+					this->capacity_adjusted_realloc_aux(alloc, new_buffer, new_capacity);
 				}
 
 				this->_K_buffer = new_buffer;
@@ -946,18 +955,7 @@ namespace kerbal
 				}
 #		endif
 
-#		if __cpp_exceptions
-				try {
-#		endif
-					ui_move_if_noexcept_ow_copy_phase1(alloc, this->begin().current, this->end().current, new_buffer);
-#		if __cpp_exceptions
-				} catch (...) {
-					allocator_traits::deallocate(alloc, new_buffer, new_capacity);
-					throw;
-				}
-#		endif
-				ui_move_if_noexcept_ow_copy_phase2(alloc, this->begin().current, this->end().current);
-				allocator_traits::deallocate(alloc, this->_K_buffer, this->_K_capacity);
+				this->capacity_adjusted_realloc_aux(alloc, new_buffer, new_capacity);
 				this->_K_buffer = new_buffer;
 				this->_K_capacity = new_capacity;
 			}
