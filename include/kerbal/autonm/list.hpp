@@ -168,7 +168,7 @@ namespace kerbal
 				KERBAL_CONSTEXPR20
 				list()
 						KERBAL_CONDITIONAL_NOEXCEPT(
-								list_allocator_unrelated::is_nothrow_init_to_self_constrctible::value
+								list_allocator_unrelated::is_nothrow_init_to_self_constructible::value
 						) :
 						list_allocator_unrelated(kerbal::container::detail::init_list_node_ptr_to_self_tag())
 				{
@@ -179,7 +179,7 @@ namespace kerbal
 				KERBAL_CONSTEXPR20
 				list(list && src)
 						KERBAL_CONDITIONAL_NOEXCEPT(
-								list_allocator_unrelated::is_nothrow_move_constrctible::value
+								list_allocator_unrelated::is_nothrow_move_constructible::value
 						) :
 						list_allocator_unrelated(kerbal::compatibility::move(src))
 				{

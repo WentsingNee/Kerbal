@@ -45,8 +45,8 @@ namespace kerbal
 		KERBAL_CONSTEXPR20
 		list<Tp, Allocator>::list()
 				KERBAL_CONDITIONAL_NOEXCEPT(
-						list_allocator_overload::is_nothrow_default_constrctible::value &&
-						list_allocator_unrelated::is_nothrow_init_to_self_constrctible::value
+						list_allocator_overload::is_nothrow_default_constructible::value &&
+						list_allocator_unrelated::is_nothrow_init_to_self_constructible::value
 				) :
 				list_allocator_overload(),
 				list_allocator_unrelated(detail::init_list_node_ptr_to_self_tag())
@@ -58,7 +58,7 @@ namespace kerbal
 		list<Tp, Allocator>::list(const Allocator& alloc)
 				KERBAL_CONDITIONAL_NOEXCEPT(
 						list_allocator_overload::is_nothrow_constructible_from_allocator_const_reference::value &&
-						list_allocator_unrelated::is_nothrow_init_to_self_constrctible::value
+						list_allocator_unrelated::is_nothrow_init_to_self_constructible::value
 				) :
 				list_allocator_overload(alloc),
 				list_allocator_unrelated(detail::init_list_node_ptr_to_self_tag())
@@ -144,7 +144,7 @@ namespace kerbal
 		list<Tp, Allocator>::list(list&& src)
 				KERBAL_CONDITIONAL_NOEXCEPT(
 						list_allocator_overload::is_nothrow_constructible_from_allocator_rvalue_reference::value &&
-						list_allocator_unrelated::is_nothrow_move_constrctible::value
+						list_allocator_unrelated::is_nothrow_move_constructible::value
 				) :
 				list_allocator_overload(kerbal::compatibility::move(src.alloc())),
 				list_allocator_unrelated(static_cast<list_allocator_unrelated &&>(src))

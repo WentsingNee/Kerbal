@@ -86,7 +86,7 @@ namespace kerbal
 
 #			if __cplusplus >= 201103L
 
-					struct is_nothrow_default_constrctible : kerbal::type_traits::true_type
+					struct is_nothrow_default_constructible : kerbal::type_traits::true_type
 					{
 					};
 
@@ -121,7 +121,7 @@ namespace kerbal
 
 #			if __cplusplus >= 201103L
 
-					struct is_nothrow_move_constrctible : kerbal::type_traits::true_type
+					struct is_nothrow_move_constructible : kerbal::type_traits::true_type
 					{
 					};
 

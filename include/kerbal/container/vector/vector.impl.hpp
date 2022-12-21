@@ -47,8 +47,8 @@ namespace kerbal
 		KERBAL_CONSTEXPR20
 		vector<Tp, Allocator>::vector()
 				KERBAL_CONDITIONAL_NOEXCEPT(
-						vector_allocator_overload::is_nothrow_default_constrctible::value &&
-						vector_allocator_unrelated::is_nothrow_default_constrctible::value
+						vector_allocator_overload::is_nothrow_default_constructible::value &&
+						vector_allocator_unrelated::is_nothrow_default_constructible::value
 				) :
 				vector_allocator_overload(),
 				vector_allocator_unrelated()
@@ -60,7 +60,7 @@ namespace kerbal
 		vector<Tp, Allocator>::vector(const Allocator & allocator)
 				KERBAL_CONDITIONAL_NOEXCEPT(
 						vector_allocator_overload::is_nothrow_constructible_from_allocator_const_reference::value &&
-						vector_allocator_unrelated::is_nothrow_default_constrctible::value
+						vector_allocator_unrelated::is_nothrow_default_constructible::value
 				) :
 				vector_allocator_overload(allocator),
 				vector_allocator_unrelated()
@@ -152,7 +152,7 @@ namespace kerbal
 		vector<Tp, Allocator>::vector(vector && src)
 				KERBAL_CONDITIONAL_NOEXCEPT(
 						vector_allocator_overload::is_nothrow_constructible_from_allocator_rvalue_reference::value &&
-						vector_allocator_unrelated::is_nothrow_move_constrctible::value
+						vector_allocator_unrelated::is_nothrow_move_constructible::value
 				) :
 				vector_allocator_overload(kerbal::compatibility::move(src.alloc())),
 				vector_allocator_unrelated(static_cast<vector_allocator_unrelated &&>(src))

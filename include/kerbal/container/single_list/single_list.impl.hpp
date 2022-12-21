@@ -58,7 +58,7 @@ namespace kerbal
 		single_list<Tp, Allocator>::single_list(const Allocator& alloc)
 				KERBAL_CONDITIONAL_NOEXCEPT(
 						sl_allocator_overload::is_nothrow_constructible_from_allocator_const_reference::value &&
-						sl_allocator_unrelated::is_nothrow_default_constrctible::value
+						sl_allocator_unrelated::is_nothrow_default_constructible::value
 				) :
 				sl_allocator_overload(alloc),
 				sl_allocator_unrelated()
@@ -144,7 +144,7 @@ namespace kerbal
 		single_list<Tp, Allocator>::single_list(single_list && src)
 				KERBAL_CONDITIONAL_NOEXCEPT(
 						sl_allocator_overload::is_nothrow_constructible_from_allocator_rvalue_reference::value &&
-						sl_allocator_unrelated::is_nothrow_move_constrctible::value
+						sl_allocator_unrelated::is_nothrow_move_constructible::value
 				) :
 				sl_allocator_overload(kerbal::compatibility::move(src.alloc())),
 				sl_allocator_unrelated(static_cast<sl_allocator_unrelated &&>(src))

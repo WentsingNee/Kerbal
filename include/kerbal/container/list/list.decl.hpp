@@ -143,15 +143,15 @@ namespace kerbal
 
 				KERBAL_CONSTEXPR20
 				list() KERBAL_CONDITIONAL_NOEXCEPT(
-						list_allocator_overload::is_nothrow_default_constrctible::value &&
-						list_allocator_unrelated::is_nothrow_init_to_self_constrctible::value
+						list_allocator_overload::is_nothrow_default_constructible::value &&
+						list_allocator_unrelated::is_nothrow_init_to_self_constructible::value
 				);
 
 				KERBAL_CONSTEXPR20
 				explicit
 				list(const Allocator& alloc) KERBAL_CONDITIONAL_NOEXCEPT(
 						list_allocator_overload::is_nothrow_constructible_from_allocator_const_reference::value &&
-						list_allocator_unrelated::is_nothrow_init_to_self_constrctible::value
+						list_allocator_unrelated::is_nothrow_init_to_self_constructible::value
 				);
 
 				KERBAL_CONSTEXPR20
@@ -196,7 +196,7 @@ namespace kerbal
 				KERBAL_CONSTEXPR20
 				list(list && src) KERBAL_CONDITIONAL_NOEXCEPT(
 						list_allocator_overload::is_nothrow_constructible_from_allocator_rvalue_reference::value &&
-						list_allocator_unrelated::is_nothrow_move_constrctible::value
+						list_allocator_unrelated::is_nothrow_move_constructible::value
 				);
 
 				KERBAL_CONSTEXPR20

@@ -50,7 +50,7 @@ namespace kerbal
 
 #			if __cplusplus >= 201103L
 
-					struct is_nothrow_default_constrctible :
+					struct is_nothrow_default_constructible :
 							kerbal::type_traits::integral_constant<
 								bool,
 								std::is_nothrow_constructible<super, kerbal::utility::in_place_t>::value
@@ -62,7 +62,7 @@ namespace kerbal
 
 					KERBAL_CONSTEXPR
 					container_allocator_overload()
-							KERBAL_CONDITIONAL_NOEXCEPT(is_nothrow_default_constrctible::value)
+							KERBAL_CONDITIONAL_NOEXCEPT(is_nothrow_default_constructible::value)
 							: super(kerbal::utility::in_place_t())
 					{
 					}

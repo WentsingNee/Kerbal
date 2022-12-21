@@ -57,7 +57,7 @@ namespace kerbal
 		forward_list<Tp, Allocator>::forward_list(const Allocator& alloc)
 				KERBAL_CONDITIONAL_NOEXCEPT(
 						fl_allocator_overload::is_nothrow_constructible_from_allocator_const_reference::value &&
-						fl_allocator_unrelated::is_nothrow_default_constrctible::value
+						fl_allocator_unrelated::is_nothrow_default_constructible::value
 				) :
 				fl_allocator_overload(alloc),
 				fl_allocator_unrelated()
@@ -143,7 +143,7 @@ namespace kerbal
 		forward_list<Tp, Allocator>::forward_list(forward_list && src)
 				KERBAL_CONDITIONAL_NOEXCEPT(
 						fl_allocator_overload::is_nothrow_constructible_from_allocator_rvalue_reference::value &&
-						fl_allocator_unrelated::is_nothrow_move_constrctible::value
+						fl_allocator_unrelated::is_nothrow_move_constructible::value
 				) :
 				fl_allocator_overload(kerbal::compatibility::move(src.alloc())),
 				fl_allocator_unrelated(static_cast<fl_allocator_unrelated &&>(src))

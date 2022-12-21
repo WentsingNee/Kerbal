@@ -166,7 +166,7 @@ namespace kerbal
 				KERBAL_CONSTEXPR20
 				forward_list()
 						KERBAL_CONDITIONAL_NOEXCEPT(
-								fl_allocator_unrelated::is_nothrow_default_constrctible::value
+								fl_allocator_unrelated::is_nothrow_default_constructible::value
 						) :
 						fl_allocator_unrelated()
 				{
@@ -177,7 +177,7 @@ namespace kerbal
 				KERBAL_CONSTEXPR20
 				forward_list(forward_list && src)
 						KERBAL_CONDITIONAL_NOEXCEPT(
-								fl_allocator_unrelated::is_nothrow_move_constrctible::value
+								fl_allocator_unrelated::is_nothrow_move_constructible::value
 						) :
 						fl_allocator_unrelated(kerbal::compatibility::move(src))
 				{
