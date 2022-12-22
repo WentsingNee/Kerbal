@@ -59,7 +59,7 @@ namespace kerbal
 		KERBAL_CONSTEXPR20
 		ring_buffer_queue<T, Allocator>::~ring_buffer_queue()
 		{
-			this->rbq_allocator_unrelated::K_destroy(this->alloc());
+			this->rbq_allocator_unrelated::destroy_using_allocator(this->alloc());
 		}
 
 		template <typename T, typename Allocator>
