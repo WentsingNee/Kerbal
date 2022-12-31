@@ -30,10 +30,6 @@
 
 #include <cstddef>
 
-#if __cplusplus >= 201103L
-#	include <type_traits>
-#endif
-
 
 namespace kerbal
 {

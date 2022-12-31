@@ -18,21 +18,14 @@
 #include <kerbal/compatibility/noexcept.hpp>
 #include <kerbal/memory/uninitialized.hpp>
 #include <kerbal/type_traits/aligned_storage.hpp>
-#include <kerbal/type_traits/integral_constant.hpp>
-#include <kerbal/type_traits/remove_all_extents.hpp>
+#include <kerbal/type_traits/is_trivially_default_constructible.hpp>
+#include <kerbal/type_traits/is_trivially_destructible.hpp>
+#include <kerbal/type_traits/tribool_constant.hpp>
 #include <kerbal/utility/in_place.hpp>
 #include <kerbal/utility/noncopyable.hpp>
 
 #include <kerbal/macro/macro_concat.hpp>
 #include <kerbal/macro/ppexpand.hpp>
-
-#if __cplusplus >= 201103L
-#	include <type_traits>
-#else
-#	include <kerbal/type_traits/is_fundamental.hpp>
-#	include <kerbal/type_traits/is_member_pointer.hpp>
-#	include <kerbal/type_traits/is_pointer.hpp>
-#endif
 
 #include <cstddef>
 
@@ -47,36 +40,18 @@ namespace kerbal
 		{
 
 			template <typename T>
-			struct is_trivial_stored_type;
-
-#	if __cplusplus >= 201103L
-
-			template <typename T>
-			struct is_trivial_stored_type:
-					kerbal::type_traits::bool_constant<
-						std::is_trivially_default_constructible<typename kerbal::type_traits::remove_all_extents<T>::type>::value &&
-						std::is_trivially_destructible<typename kerbal::type_traits::remove_all_extents<T>::type>::value
+			struct is_raw_storage_trivially_stored_type :
+					kerbal::type_traits::tribool_is_true<
+						typename kerbal::type_traits::tribool_conjunction<
+							kerbal::type_traits::try_test_is_trivially_default_constructible<T>,
+							kerbal::type_traits::try_test_is_trivially_destructible<T>
+						>::result
 					>
 			{
 			};
 
-#	else
 
-			template <typename T>
-			struct is_trivial_stored_type:
-					kerbal::type_traits::bool_constant<
-						kerbal::type_traits::is_fundamental<typename kerbal::type_traits::remove_all_extents<T>::type>::value ||
-						kerbal::type_traits::is_member_pointer<typename kerbal::type_traits::remove_all_extents<T>::type>::value ||
-						kerbal::type_traits::is_pointer<typename kerbal::type_traits::remove_all_extents<T>::type>::value
-					>
-			{
-			};
-
-#	endif
-
-
-
-			template <typename T, bool is_trivally_stored = is_trivial_stored_type<T>::value>
+			template <typename T, bool is_trivially_stored = is_raw_storage_trivially_stored_type<T>::value>
 			class _K_rawst_base;
 
 			template <typename T>

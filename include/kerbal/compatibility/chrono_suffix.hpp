@@ -13,7 +13,6 @@
 #define KERBAL_COMPATIBILITY_CHRONO_SUFFIX_HPP
 
 #include <chrono>
-#include <type_traits>
 
 
 namespace kerbal

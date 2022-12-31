@@ -21,8 +21,6 @@
 #include <kerbal/type_traits/is_lvalue_reference.hpp>
 #include <kerbal/type_traits/remove_reference.hpp>
 
-#include <type_traits>
-
 
 namespace kerbal
 {

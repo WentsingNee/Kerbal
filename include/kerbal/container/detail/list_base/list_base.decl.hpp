@@ -33,12 +33,10 @@
 
 #include <functional> // std::less
 
-#if __cplusplus >= 201103L
-#	include <type_traits>
-#endif
-
 #if __cplusplus >= 201703L
 #	if __has_include(<memory_resource>)
+#		include <kerbal/type_traits/is_trivially_destructible.hpp>
+#		include <kerbal/type_traits/tribool_constant.hpp>
 #		include <memory_resource>
 #	endif
 #endif
@@ -1117,7 +1115,7 @@ namespace kerbal
 					static void _K_consecutive_destroy_node(std::pmr::polymorphic_allocator<Node> & alloc, node_base * start)
 							KERBAL_CONDITIONAL_NOEXCEPT(
 								(
-									!std::is_trivially_destructible<Tp>::value ?
+									!kerbal::type_traits::tribool_is_true<kerbal::type_traits::try_test_is_trivially_destructible<Tp> >::value ?
 									noexcept(_K_consecutive_destroy_node_impl(alloc, start, CNSCTV_DES_VER_DESTROY_BUT_NO_DEALLOCATE())) :
 									true
 								) &&

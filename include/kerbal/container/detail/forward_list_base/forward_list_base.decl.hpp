@@ -26,10 +26,6 @@
 
 #include <cstddef>
 
-#if __cplusplus >= 201103L
-#	include <type_traits>
-#endif
-
 #if __cplusplus >= 201703L
 #	if __has_include(<memory_resource>)
 #		include <memory_resource>

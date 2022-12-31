@@ -47,6 +47,7 @@
 
 #if __cplusplus >= 201103L
 #	include <initializer_list>
+#	include <type_traits>
 #endif
 
 

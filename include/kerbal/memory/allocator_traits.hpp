@@ -21,8 +21,10 @@
 #include <kerbal/type_traits/add_lvalue_reference.hpp>
 #include <kerbal/type_traits/conditional.hpp>
 #include <kerbal/type_traits/integral_constant.hpp>
+#include <kerbal/type_traits/is_empty.hpp>
 #include <kerbal/type_traits/is_same.hpp>
 #include <kerbal/type_traits/sign_deduction.hpp>
+#include <kerbal/type_traits/tribool_constant.hpp>
 #include <kerbal/type_traits/void_type.hpp>
 #include <kerbal/utility/declval.hpp>
 
@@ -425,11 +427,9 @@ namespace kerbal
 
 			template <typename Alloc, bool = kerbal::memory::allocator_could_use_is_always_equal<Alloc>::value>
 			struct allocator_is_always_equal_traits_helper:
-#		if __cplusplus < 201103L
-					kerbal::type_traits::false_type
-#		else
-					kerbal::type_traits::bool_constant<std::is_empty<Alloc>::value>
-#		endif
+					kerbal::type_traits::tribool_is_true<
+						kerbal::type_traits::try_test_is_empty<Alloc>
+					>
 			{
 			};
 

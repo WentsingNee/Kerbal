@@ -32,10 +32,6 @@
 
 #include <limits>
 
-#if __cplusplus >= 201103L
-#	include <type_traits>
-#endif
-
 #include <kerbal/container/detail/vector_base/vector_iterator.hpp>
 
 

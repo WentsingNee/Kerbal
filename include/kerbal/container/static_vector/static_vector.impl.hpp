@@ -18,9 +18,12 @@
 #include <kerbal/iterator/iterator.hpp>
 #include <kerbal/memory/raw_storage_uninitialized.hpp>
 #include <kerbal/operators/generic_assign.hpp>
-#include <kerbal/type_traits/can_be_pseudo_destructible.hpp>
 #include <kerbal/type_traits/enable_if.hpp>
 #include <kerbal/type_traits/integral_constant.hpp>
+#include <kerbal/type_traits/is_trivially_copy_assignable.hpp>
+#include <kerbal/type_traits/is_trivially_copy_constructible.hpp>
+#include <kerbal/type_traits/is_trivially_destructible.hpp>
+#include <kerbal/type_traits/tribool_constant.hpp>
 #include <kerbal/utility/in_place.hpp>
 #include <kerbal/utility/throw_this_exception.hpp>
 
@@ -36,14 +39,6 @@
 
 #include <cstddef>
 #include <stdexcept>
-
-#if __cplusplus >= 201103L
-#	include <type_traits>
-#else
-#	include <kerbal/type_traits/is_fundamental.hpp>
-#	include <kerbal/type_traits/is_member_pointer.hpp>
-#	include <kerbal/type_traits/is_pointer.hpp>
-#endif
 
 #include <kerbal/container/static_vector/static_vector.decl.hpp>
 
@@ -209,30 +204,16 @@ namespace kerbal
 		KERBAL_CONSTEXPR14
 		void static_vector<Tp, N>::assign_unsafe(size_type new_size, const_reference val)
 		{
-
-#		if __cplusplus < 201103L
-
 			struct enable_optimization:
-					kerbal::type_traits::bool_constant<
-						kerbal::type_traits::is_fundamental<remove_all_extents_t>::value ||
-						kerbal::type_traits::is_member_pointer<remove_all_extents_t>::value ||
-						kerbal::type_traits::is_pointer<remove_all_extents_t>::value
+					kerbal::type_traits::tribool_is_true<
+						typename kerbal::type_traits::tribool_conjunction<
+							kerbal::type_traits::try_test_is_trivially_copy_constructible<remove_all_extents_t>,
+							kerbal::type_traits::try_test_is_trivially_copy_assignable<remove_all_extents_t>,
+							kerbal::type_traits::try_test_is_trivially_destructible<remove_all_extents_t>
+						>::result
 					>
 			{
 			};
-
-#		else
-
-			struct enable_optimization:
-					kerbal::type_traits::bool_constant<
-						std::is_trivially_copy_constructible<remove_all_extents_t>::value &&
-						std::is_trivially_copy_assignable<remove_all_extents_t>::value &&
-						std::is_trivially_destructible<remove_all_extents_t>::value
-					>
-			{
-			};
-
-#		endif
 
 			this->k_assign_unsafe_n_val(new_size, val, enable_optimization());
 		}
@@ -933,7 +914,8 @@ namespace kerbal
 #	endif
 
 
-		template <typename Tp, bool = kerbal::type_traits::can_be_pseudo_destructible<Tp>::value>
+		template <typename Tp, bool =
+			kerbal::type_traits::tribool_is_true<kerbal::type_traits::try_test_is_trivially_destructible<Tp> >::value>
 		struct static_vector_emplace_helper;
 
 		template <typename Tp>

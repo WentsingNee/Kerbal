@@ -13,13 +13,10 @@
 #define KERBAL_UTILITY_INTEGER_SEQUENCE_HPP
 
 #if __cplusplus < 201103L
-#	error This file requires compiler and library support \
-for the ISO C++ 2011 standard.
+#	error This file requires compiler and library support for the ISO C++ 2011 standard.
 #endif
 
 #include <kerbal/config/compiler_private.hpp>
-
-#include <type_traits>
 
 #include <cstddef>
 

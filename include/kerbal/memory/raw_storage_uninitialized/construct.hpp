@@ -19,12 +19,8 @@
 #include <kerbal/memory/raw_storage_uninitialized/destroy.hpp>
 #include <kerbal/type_traits/conditional.hpp>
 #include <kerbal/type_traits/integral_constant.hpp>
-
-#if __cplusplus < 201103L
-#	include <kerbal/type_traits/can_be_pseudo_destructible.hpp>
-#else
-#	include <type_traits>
-#endif
+#include <kerbal/type_traits/is_trivially_destructible.hpp>
+#include <kerbal/type_traits/tribool_constant.hpp>
 
 #include <kerbal/memory/detail/can_be_nothrow_advance_iterator.hpp>
 
@@ -117,11 +113,9 @@ namespace kerbal
 			typedef typename kerbal::iterator::iterator_traits<iterator>::value_type value_type;
 
 			typedef typename kerbal::type_traits::conditional<
-#		if __cplusplus < 201103L
-					kerbal::type_traits::can_be_pseudo_destructible<value_type>::value,
-#		else
-					std::is_trivially_destructible<value_type>::value,
-#		endif
+					kerbal::type_traits::tribool_is_true<
+							kerbal::type_traits::try_test_is_trivially_destructible<value_type>
+					>::value,
 					detail::RAWST_UI_VAL_CONSTRUCT_VER_NO_CATCH,
 					typename kerbal::type_traits::conditional<
 							detail::can_be_nothrow_advance_iterator<iterator>::value,
@@ -229,11 +223,9 @@ namespace kerbal
 			typedef typename kerbal::iterator::iterator_traits<iterator>::value_type value_type;
 
 			typedef typename kerbal::type_traits::conditional<
-#		if __cplusplus < 201103L
-					kerbal::type_traits::can_be_pseudo_destructible<value_type>::value,
-#		else
-					std::is_trivially_destructible<value_type>::value,
-#		endif
+					kerbal::type_traits::tribool_is_true<
+							kerbal::type_traits::try_test_is_trivially_destructible<value_type>
+					>::value,
 					detail::RAWST_UI_VAL_CONSTRUCT_N_VER_NO_CATCH,
 					typename kerbal::type_traits::conditional<
 							detail::can_be_nothrow_advance_iterator<iterator>::value,
@@ -341,11 +333,9 @@ namespace kerbal
 			typedef typename kerbal::iterator::iterator_traits<iterator>::value_type value_type;
 
 			typedef typename kerbal::type_traits::conditional<
-#		if __cplusplus < 201103L
-					kerbal::type_traits::can_be_pseudo_destructible<value_type>::value,
-#		else
-					std::is_trivially_destructible<value_type>::value,
-#		endif
+					kerbal::type_traits::tribool_is_true<
+							kerbal::type_traits::try_test_is_trivially_destructible<value_type>
+					>::value,
 					detail::RAWST_UICPY_VER_NO_CATCH,
 					typename kerbal::type_traits::conditional<
 							detail::can_be_nothrow_advance_iterator<iterator>::value,
@@ -456,11 +446,9 @@ namespace kerbal
 			typedef typename kerbal::iterator::iterator_traits<iterator>::value_type value_type;
 
 			typedef typename kerbal::type_traits::conditional<
-#		if __cplusplus < 201103L
-					kerbal::type_traits::can_be_pseudo_destructible<value_type>::value,
-#		else
-					std::is_trivially_destructible<value_type>::value,
-#		endif
+					kerbal::type_traits::tribool_is_true<
+							kerbal::type_traits::try_test_is_trivially_destructible<value_type>
+					>::value,
 					detail::RAWST_UICPY_N_VER_NO_CATCH,
 					typename kerbal::type_traits::conditional<
 							detail::can_be_nothrow_advance_iterator<iterator>::value,
@@ -568,11 +556,9 @@ namespace kerbal
 			typedef typename kerbal::iterator::iterator_traits<iterator>::value_type value_type;
 
 			typedef typename kerbal::type_traits::conditional<
-#		if __cplusplus < 201103L
-					kerbal::type_traits::can_be_pseudo_destructible<value_type>::value,
-#		else
-					std::is_trivially_destructible<value_type>::value,
-#		endif
+					kerbal::type_traits::tribool_is_true<
+							kerbal::type_traits::try_test_is_trivially_destructible<value_type>
+					>::value,
 					detail::RAWST_UIMOV_VER_NO_CATCH,
 					typename kerbal::type_traits::conditional<
 							detail::can_be_nothrow_advance_iterator<iterator>::value,
@@ -683,11 +669,9 @@ namespace kerbal
 			typedef typename kerbal::iterator::iterator_traits<iterator>::value_type value_type;
 
 			typedef typename kerbal::type_traits::conditional<
-#		if __cplusplus < 201103L
-					kerbal::type_traits::can_be_pseudo_destructible<value_type>::value,
-#		else
-					std::is_trivially_destructible<value_type>::value,
-#		endif
+					kerbal::type_traits::tribool_is_true<
+							kerbal::type_traits::try_test_is_trivially_destructible<value_type>
+					>::value,
 					detail::RAWST_UIMOV_N_VER_NO_CATCH,
 					typename kerbal::type_traits::conditional<
 							detail::can_be_nothrow_advance_iterator<iterator>::value,
@@ -789,11 +773,9 @@ namespace kerbal
 			typedef typename kerbal::iterator::iterator_traits<iterator>::value_type value_type;
 
 			typedef typename kerbal::type_traits::conditional<
-#		if __cplusplus < 201103L
-					kerbal::type_traits::can_be_pseudo_destructible<value_type>::value,
-#		else
-					std::is_trivially_destructible<value_type>::value,
-#		endif
+					kerbal::type_traits::tribool_is_true<
+							kerbal::type_traits::try_test_is_trivially_destructible<value_type>
+					>::value,
 					detail::RAWST_UIFILL_VER_NO_CATCH,
 					typename kerbal::type_traits::conditional<
 							detail::can_be_nothrow_advance_iterator<iterator>::value,
@@ -901,11 +883,9 @@ namespace kerbal
 			typedef typename kerbal::iterator::iterator_traits<iterator>::value_type value_type;
 
 			typedef typename kerbal::type_traits::conditional<
-#		if __cplusplus < 201103L
-					kerbal::type_traits::can_be_pseudo_destructible<value_type>::value,
-#		else
-					std::is_trivially_destructible<value_type>::value,
-#		endif
+					kerbal::type_traits::tribool_is_true<
+							kerbal::type_traits::try_test_is_trivially_destructible<value_type>
+					>::value,
 					detail::RAWST_UIFILL_N_VER_NO_CATCH,
 					typename kerbal::type_traits::conditional<
 							detail::can_be_nothrow_advance_iterator<iterator>::value,

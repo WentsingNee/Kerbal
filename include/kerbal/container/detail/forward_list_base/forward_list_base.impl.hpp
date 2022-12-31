@@ -37,7 +37,9 @@
 
 #if __cplusplus >= 201703L
 #	if __has_include(<memory_resource>)
-#		include <type_traits>
+#		include <kerbal/type_traits/is_trivially_destructible.hpp>
+#		include <kerbal/type_traits/tribool_constant.hpp>
+#		include <memory_resource>
 #	endif
 #endif
 
@@ -1640,7 +1642,7 @@ namespace kerbal
 				typedef typename node_allocator_traits::value_type real_value_type;
 
 				if (typeid(*alloc.resource()) == typeid(std::pmr::monotonic_buffer_resource)) {
-					if constexpr (!std::is_trivially_destructible<real_value_type>::value) {
+					if constexpr (!kerbal::type_traits::tribool_is_true<kerbal::type_traits::try_test_is_trivially_destructible<real_value_type> >::value) {
 						_K_consecutive_destroy_node_impl(alloc, first, last, CNSCTV_DES_VER_DESTROY_BUT_NO_DEALLOCATE());
 					}
 				} else {

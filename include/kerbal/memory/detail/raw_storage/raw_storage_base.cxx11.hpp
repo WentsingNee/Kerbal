@@ -18,14 +18,16 @@
 #include <kerbal/memory/uninitialized.hpp>
 #include <kerbal/type_traits/conditional.hpp>
 #include <kerbal/type_traits/integral_constant.hpp>
-#include <kerbal/type_traits/remove_all_extents.hpp>
+#include <kerbal/type_traits/is_trivially_default_constructible.hpp>
+#include <kerbal/type_traits/is_trivially_destructible.hpp>
+#include <kerbal/type_traits/tribool_constant.hpp>
 #include <kerbal/utility/forward.hpp>
 #include <kerbal/utility/in_place.hpp>
 #include <kerbal/utility/integer_sequence.hpp>
 #include <kerbal/utility/noncopyable.hpp>
 
 #include <initializer_list>
-#include <type_traits>
+#include <cstddef>
 
 
 namespace kerbal
@@ -40,13 +42,17 @@ namespace kerbal
 			template <typename T>
 			struct rawst_base_selector:
 					kerbal::type_traits::conditional<
-						!std::is_trivially_destructible<typename kerbal::type_traits::remove_all_extents<T>::type>::value,
-						kerbal::type_traits::integral_constant<int, 0>,
+						kerbal::type_traits::tribool_is_true<
+							kerbal::type_traits::try_test_is_trivially_destructible<T>
+						>::value,
 						typename kerbal::type_traits::conditional<
-							std::is_trivially_default_constructible<typename kerbal::type_traits::remove_all_extents<T>::type>::value,
+							kerbal::type_traits::tribool_is_true<
+								kerbal::type_traits::try_test_is_trivially_default_constructible<T>
+							>::value,
 							kerbal::type_traits::integral_constant<int, 1>,
 							kerbal::type_traits::integral_constant<int, 2>
-						>::type
+						>::type,
+						kerbal::type_traits::integral_constant<int, 0>
 					>::type
 			{
 			};
