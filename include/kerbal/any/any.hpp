@@ -87,6 +87,10 @@
 
 #endif
 
+#if KERBAL_FUNCTION_TYPE_POLICY != KERBAL_FUNCTION_TYPE_POLICY_DISABLE
+#	include <typeinfo>
+#endif
+
 
 namespace kerbal
 {
