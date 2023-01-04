@@ -26,7 +26,9 @@
 #include <cstddef>
 
 #if __cplusplus >= 201103L
-#	include <type_traits>
+#	include <kerbal/type_traits/is_nothrow_copy_constructible.hpp>
+#	include <kerbal/type_traits/is_nothrow_default_constructible.hpp>
+#	include <kerbal/type_traits/tribool_constant.hpp>
 #endif
 
 
@@ -83,7 +85,9 @@ namespace kerbal
 					KERBAL_CONSTEXPR
 					explicit reverse_iterator_base()
 							KERBAL_CONDITIONAL_NOEXCEPT(
-									std::is_nothrow_default_constructible<iterator_type>::value
+								kerbal::type_traits::tribool_is_true<
+									kerbal::type_traits::try_test_is_nothrow_default_constructible<iterator_type>
+								>::value
 							)
 							: iter()
 					{
@@ -92,7 +96,9 @@ namespace kerbal
 					KERBAL_CONSTEXPR
 					explicit reverse_iterator_base(const iterator_type & iter)
 							KERBAL_CONDITIONAL_NOEXCEPT(
-									std::is_nothrow_copy_constructible<iterator_type>::value
+								kerbal::type_traits::tribool_is_true<
+									kerbal::type_traits::try_test_is_nothrow_copy_constructible<iterator_type>
+								>::value
 							)
 							: iter(iter)
 					{

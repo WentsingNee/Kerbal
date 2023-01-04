@@ -23,7 +23,11 @@
 #include <cstddef>
 
 #if __cplusplus >= 201103L
-#	include <type_traits>
+#	include <kerbal/type_traits/is_nothrow_constructible.hpp>
+#	include <kerbal/type_traits/is_nothrow_copy_constructible.hpp>
+#	include <kerbal/type_traits/is_nothrow_default_constructible.hpp>
+#	include <kerbal/type_traits/is_nothrow_move_constructible.hpp>
+#	include <kerbal/type_traits/tribool_constant.hpp>
 #endif
 
 
@@ -51,7 +55,9 @@ namespace kerbal
 				KERBAL_CONSTEXPR
 				discard_block_engine()
 						KERBAL_CONDITIONAL_NOEXCEPT(
-								std::is_nothrow_default_constructible<Engine>::value
+								kerbal::type_traits::tribool_is_true<
+									kerbal::type_traits::is_nothrow_default_constructible<Engine>
+								>::value
 						) :
 						_K_base_eg(), _K_idx(0)
 				{
@@ -59,9 +65,11 @@ namespace kerbal
 
 				KERBAL_CONSTEXPR
 				explicit discard_block_engine(const result_type & seed)
-						KERBAL_CONDITIONAL_NOEXCEPT(
-								(std::is_nothrow_constructible<Engine, result_type>::value)
-						) :
+						KERBAL_CONDITIONAL_NOEXCEPT((
+								kerbal::type_traits::tribool_is_true<
+									kerbal::type_traits::is_nothrow_constructible<Engine, result_type>
+								>::value
+						)) :
 						_K_base_eg(seed), _K_idx(0)
 				{
 				}
@@ -69,7 +77,9 @@ namespace kerbal
 				KERBAL_CONSTEXPR
 				explicit discard_block_engine(const Engine & engine)
 						KERBAL_CONDITIONAL_NOEXCEPT(
-								std::is_nothrow_copy_constructible<Engine>::value
+								kerbal::type_traits::tribool_is_true<
+									kerbal::type_traits::is_nothrow_copy_constructible<Engine>
+								>::value
 						) :
 						_K_base_eg(engine), _K_idx(0)
 				{
@@ -80,7 +90,9 @@ namespace kerbal
 				KERBAL_CONSTEXPR
 				explicit discard_block_engine(Engine && engine)
 						KERBAL_CONDITIONAL_NOEXCEPT(
-								std::is_nothrow_move_constructible<Engine>::value
+								kerbal::type_traits::tribool_is_true<
+									kerbal::type_traits::is_nothrow_move_constructible<Engine>
+								>::value
 						) :
 						_K_base_eg(kerbal::compatibility::move(engine)), _K_idx(0)
 				{

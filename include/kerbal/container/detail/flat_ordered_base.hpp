@@ -21,14 +21,17 @@
 #include <kerbal/iterator/iterator_traits.hpp>
 #include <kerbal/type_traits/enable_if.hpp>
 #include <kerbal/type_traits/is_same.hpp>
+#include <kerbal/type_traits/tribool_constant.hpp>
 #include <kerbal/utility/as_const.hpp>
 #include <kerbal/utility/member_compress_helper.hpp>
 
+#if __cplusplus >= 201103L
+#	include <kerbal/type_traits/is_nothrow_copy_constructible.hpp>
+#	include <kerbal/type_traits/is_nothrow_default_constructible.hpp>
+#endif
+
 #include <utility> // std::pair
 
-#if __cplusplus >= 201103L
-#	include <type_traits>
-#endif
 
 namespace kerbal
 {
@@ -89,9 +92,11 @@ namespace kerbal
 				protected:
 					KERBAL_CONSTEXPR
 					flat_ordered_key_compare_overload()
-									KERBAL_CONDITIONAL_NOEXCEPT(
-										std::is_nothrow_default_constructible<super>::value
-									)
+							KERBAL_CONDITIONAL_NOEXCEPT(
+									kerbal::type_traits::tribool_is_true<
+										kerbal::type_traits::is_nothrow_default_constructible<super>
+									>::value
+							)
 							: super(kerbal::utility::in_place_t())
 					{
 					}
@@ -99,9 +104,11 @@ namespace kerbal
 					KERBAL_CONSTEXPR
 					explicit
 					flat_ordered_key_compare_overload(const key_compare & kc)
-									KERBAL_CONDITIONAL_NOEXCEPT(
-										std::is_nothrow_copy_constructible<super>::value
-									)
+							KERBAL_CONDITIONAL_NOEXCEPT(
+									kerbal::type_traits::tribool_is_true<
+										kerbal::type_traits::is_nothrow_copy_constructible<super>
+									>::value
+							)
 							: super(kerbal::utility::in_place_t(), kc)
 					{
 					}

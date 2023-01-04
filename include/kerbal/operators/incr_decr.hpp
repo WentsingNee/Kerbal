@@ -16,8 +16,10 @@
 #include <kerbal/compatibility/noexcept.hpp>
 
 #if __cplusplus >= 201103L
-#	include <type_traits>
+#	include <kerbal/type_traits/is_nothrow_copy_constructible.hpp>
+#	include <kerbal/type_traits/tribool_constant.hpp>
 #endif
+
 
 namespace kerbal
 {
@@ -32,8 +34,10 @@ namespace kerbal
 				friend Tp operator++(Tp& x, int)
 #	if KERBAL_COMPILER_ID != KERBAL_COMPILER_ID_ICC
 						KERBAL_CONDITIONAL_NOEXCEPT(
-								std::is_nothrow_copy_constructible<Tp>::value &&
-								noexcept(++x)
+							kerbal::type_traits::tribool_is_true<
+								kerbal::type_traits::try_test_is_nothrow_copy_constructible<Tp>
+							>::value &&
+							noexcept(++x)
 						)
 #	endif
 				{
@@ -50,8 +54,10 @@ namespace kerbal
 				friend Tp operator--(Tp& x, int)
 #	if KERBAL_COMPILER_ID != KERBAL_COMPILER_ID_ICC
 						KERBAL_CONDITIONAL_NOEXCEPT(
-								std::is_nothrow_copy_constructible<Tp>::value &&
-								noexcept(--x)
+							kerbal::type_traits::tribool_is_true<
+								kerbal::type_traits::try_test_is_nothrow_copy_constructible<Tp>
+							>::value &&
+							noexcept(--x)
 						)
 #	endif
 				{

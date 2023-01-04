@@ -31,8 +31,10 @@
 #include <kerbal/type_traits/is_const.hpp>
 #include <kerbal/type_traits/is_reference.hpp>
 #include <kerbal/type_traits/is_same.hpp>
+#include <kerbal/type_traits/remove_all_extents.hpp>
 #include <kerbal/type_traits/remove_const.hpp>
 #include <kerbal/type_traits/remove_reference.hpp>
+#include <kerbal/type_traits/tribool_constant.hpp>
 #include <kerbal/utility/declval.hpp>
 #include <kerbal/utility/in_place.hpp>
 #include <kerbal/utility/member_compress_helper.hpp>
@@ -40,12 +42,11 @@
 
 #if __cplusplus >= 201103L
 #	include <kerbal/type_traits/is_lvalue_reference.hpp>
+#	include <kerbal/type_traits/is_nothrow_constructible.hpp>
+#	include <kerbal/type_traits/is_nothrow_move_constructible.hpp>
 #	include <kerbal/utility/forward.hpp>
 #else
-#	include <kerbal/type_traits/is_fundamental.hpp>
-#	include <kerbal/type_traits/is_member_pointer.hpp>
-#	include <kerbal/type_traits/is_pointer.hpp>
-#	include <kerbal/type_traits/remove_all_extents.hpp>
+#	include <kerbal/type_traits/is_nothrow_copy_constructible.hpp>
 #endif
 
 #if __cplusplus < 201103L
@@ -62,10 +63,6 @@
 #endif
 
 #include <cstddef>
-
-#if __cplusplus >= 201103L
-#	include <type_traits>
-#endif
 
 
 #include <kerbal/any/bad_any_cast.hpp>
@@ -98,42 +95,20 @@ namespace kerbal
 	namespace any
 	{
 
-#	if __cplusplus < 201103L
-
-		namespace detail
-		{
-
-			template <typename T>
-			struct any_can_be_nothrow_move_constructible_base :
-					kerbal::type_traits::bool_constant<
-						kerbal::type_traits::is_fundamental<T>::value ||
-						kerbal::type_traits::is_member_pointer<T>::value ||
-						kerbal::type_traits::is_pointer<T>::value
-					>
-			{
-			};
-
-			template <typename T>
-			struct any_can_be_nothrow_move_constructible :
-					any_can_be_nothrow_move_constructible_base<
-						typename kerbal::type_traits::remove_all_extents<T>::type
-					>
-			{
-			};
-
-		} // namespace detail
-
-#	endif
-
 		template <typename T, std::size_t Size, std::size_t Align>
 		struct is_any_embedded_stored_type :
 				kerbal::type_traits::bool_constant<
-						sizeof(T) <= Size && KERBAL_ALIGNOF(T) <= Align
+						sizeof(T) <= Size && KERBAL_ALIGNOF(T) <= Align &&
+						kerbal::type_traits::tribool_is_true<
 #	if __cplusplus >= 201103L
-						&& std::is_nothrow_move_constructible<T>::value
+							kerbal::type_traits::try_test_is_nothrow_move_constructible
 #	else
-						&& detail::any_can_be_nothrow_move_constructible<T>::value
+							kerbal::type_traits::try_test_is_nothrow_copy_constructible
 #	endif
+							<
+								typename kerbal::type_traits::remove_all_extents<T>::type
+							>
+						>::value
 				>
 		{
 		};
@@ -511,10 +486,12 @@ namespace kerbal
 				KERBAL_CONSTEXPR20
 				basic_any(basic_any && src)
 						KERBAL_CONDITIONAL_NOEXCEPT((
-								std::is_nothrow_constructible<
+								kerbal::type_traits::tribool_is_true<
+									kerbal::type_traits::try_test_is_nothrow_constructible<
 										allocator_compress_helper,
 										kerbal::utility::in_place_t,
 										void_allocator_type &&
+									>
 								>::value
 						)) :
 						allocator_compress_helper(kerbal::utility::in_place_t(), kerbal::compatibility::move(src.void_alloc())),

@@ -16,11 +16,16 @@
 #include <kerbal/compatibility/move.hpp>
 #include <kerbal/compatibility/noexcept.hpp>
 #include <kerbal/iterator/iterator.hpp>
+#include <kerbal/type_traits/tribool_constant.hpp>
 
 #include <cstddef>
 
 #if __cplusplus >= 201103L
-#	include <type_traits>
+#	include <kerbal/type_traits/is_nothrow_move_assignable.hpp>
+#	include <kerbal/type_traits/is_nothrow_move_constructible.hpp>
+#else
+#	include <kerbal/type_traits/is_nothrow_copy_assignable.hpp>
+#	include <kerbal/type_traits/is_nothrow_copy_constructible.hpp>
 #endif
 
 
@@ -29,13 +34,27 @@ namespace kerbal
 
 	namespace algorithm
 	{
+
+		template <typename Tp>
+		struct try_test_is_nothrow_swappable :
+				kerbal::type_traits::tribool_conjunction<
+#	if __cplusplus >= 201103L
+					kerbal::type_traits::try_test_is_nothrow_move_constructible<Tp>,
+					kerbal::type_traits::try_test_is_nothrow_move_assignable<Tp>
+#	else
+					kerbal::type_traits::try_test_is_nothrow_copy_constructible<Tp>,
+					kerbal::type_traits::try_test_is_nothrow_copy_assignable<Tp>
+#	endif
+				>::result
+		{
+		};
+
 		template <typename Tp>
 		KERBAL_CONSTEXPR14
 		void swap(Tp & lhs, Tp & rhs)
-							KERBAL_CONDITIONAL_NOEXCEPT(
-									std::is_nothrow_move_constructible<Tp>::value &&
-									std::is_nothrow_move_assignable<Tp>::value
-							)
+				KERBAL_CONDITIONAL_NOEXCEPT(
+						kerbal::type_traits::tribool_is_true<try_test_is_nothrow_swappable<Tp> >::value
+				)
 		;
 
 		template <typename Tp, std::size_t N>
@@ -46,10 +65,9 @@ namespace kerbal
 		template <typename Tp>
 		KERBAL_CONSTEXPR14
 		void swap(Tp & lhs, Tp & rhs)
-							KERBAL_CONDITIONAL_NOEXCEPT(
-									std::is_nothrow_move_constructible<Tp>::value &&
-									std::is_nothrow_move_assignable<Tp>::value
-							)
+				KERBAL_CONDITIONAL_NOEXCEPT(
+						kerbal::type_traits::tribool_is_true<try_test_is_nothrow_swappable<Tp> >::value
+				)
 		{
 			Tp t(kerbal::compatibility::to_xvalue(lhs));
 			lhs = kerbal::compatibility::to_xvalue(rhs);
@@ -59,9 +77,9 @@ namespace kerbal
 		template <typename ForwardIterator1, typename ForwardIterator2>
 		KERBAL_CONSTEXPR14
 		void iter_swap(ForwardIterator1 lhs, ForwardIterator2 rhs)
-							KERBAL_CONDITIONAL_NOEXCEPT(
-									noexcept(kerbal::algorithm::swap(*lhs, *rhs))
-							)
+				KERBAL_CONDITIONAL_NOEXCEPT(
+						noexcept(kerbal::algorithm::swap(*lhs, *rhs))
+				)
 		{
 			kerbal::algorithm::swap(*lhs, *rhs);
 		}
@@ -71,12 +89,12 @@ namespace kerbal
 		ForwardIterator2
 		__range_swap(ForwardIterator1 a_first, ForwardIterator1 a_last, ForwardIterator2 b_first,
 						std::forward_iterator_tag)
-											KERBAL_CONDITIONAL_NOEXCEPT(
-													noexcept(static_cast<bool>(a_first != a_last)) &&
-													noexcept(kerbal::algorithm::iter_swap(a_first, b_first)) &&
-													noexcept(++a_first) &&
-													noexcept(++b_first)
-											)
+				KERBAL_CONDITIONAL_NOEXCEPT(
+						noexcept(static_cast<bool>(a_first != a_last)) &&
+						noexcept(kerbal::algorithm::iter_swap(a_first, b_first)) &&
+						noexcept(++a_first) &&
+						noexcept(++b_first)
+				)
 		{
 			while (a_first != a_last) {
 				kerbal::algorithm::iter_swap(a_first, b_first);

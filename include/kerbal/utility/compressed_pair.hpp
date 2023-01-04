@@ -27,11 +27,9 @@
 #include <kerbal/utility/member_compress_helper.hpp>
 
 #if __cplusplus >= 201103L
+#	include <kerbal/type_traits/is_nothrow_constructible.hpp>
+#	include <kerbal/type_traits/tribool_constant.hpp>
 #   include <kerbal/utility/forward.hpp>
-#endif
-
-#if __cplusplus >= 201103L
-#	include <type_traits>
 #endif
 
 #include <kerbal/compatibility/namespace_std_scope.hpp>
@@ -157,8 +155,12 @@ namespace kerbal
 				KERBAL_CONSTEXPR
 				compressed_pair()
 						KERBAL_CONDITIONAL_NOEXCEPT((
-							std::is_nothrow_constructible<super0, kerbal::utility::in_place_t>::value &&
-							std::is_nothrow_constructible<super1, kerbal::utility::in_place_t>::value
+							kerbal::type_traits::tribool_is_true<
+								typename kerbal::type_traits::tribool_conjunction<
+									kerbal::type_traits::try_test_is_nothrow_constructible<super0, kerbal::utility::in_place_t>,
+									kerbal::type_traits::try_test_is_nothrow_constructible<super1, kerbal::utility::in_place_t>
+								>::result
+							>::value
 						)) :
 						super0(kerbal::utility::in_place_t()),
 						super1(kerbal::utility::in_place_t())
@@ -218,8 +220,12 @@ namespace kerbal
 				KERBAL_CONSTEXPR
 				compressed_pair(Tp2&& first, Up2&& second)
 						KERBAL_CONDITIONAL_NOEXCEPT((
-							std::is_nothrow_constructible<super0, kerbal::utility::in_place_t, Tp2&&>::value &&
-							std::is_nothrow_constructible<super1, kerbal::utility::in_place_t, Up2&&>::value
+							kerbal::type_traits::tribool_is_true<
+								typename kerbal::type_traits::tribool_conjunction<
+									kerbal::type_traits::try_test_is_nothrow_constructible<super0, kerbal::utility::in_place_t, Tp2&&>,
+									kerbal::type_traits::try_test_is_nothrow_constructible<super1, kerbal::utility::in_place_t, Up2&&>
+								>::result
+							>::value
 						)) :
 						super0(kerbal::utility::in_place_t(), kerbal::utility::forward<Tp2>(first)),
 						super1(kerbal::utility::in_place_t(), kerbal::utility::forward<Up2>(second))
@@ -230,8 +236,12 @@ namespace kerbal
 				KERBAL_CONSTEXPR
 				compressed_pair(compressed_pair_default_construct_tag, Up2&& second)
 						KERBAL_CONDITIONAL_NOEXCEPT((
-							std::is_nothrow_constructible<super0, kerbal::utility::in_place_t>::value &&
-							std::is_nothrow_constructible<super1, kerbal::utility::in_place_t, Up2&&>::value
+							kerbal::type_traits::tribool_is_true<
+								typename kerbal::type_traits::tribool_conjunction<
+									kerbal::type_traits::try_test_is_nothrow_constructible<super0, kerbal::utility::in_place_t>,
+									kerbal::type_traits::try_test_is_nothrow_constructible<super1, kerbal::utility::in_place_t, Up2&&>
+								>::result
+							>::value
 						)) :
 						super0(kerbal::utility::in_place_t()),
 						super1(kerbal::utility::in_place_t(), kerbal::utility::forward<Up2>(second))
@@ -242,8 +252,12 @@ namespace kerbal
 				KERBAL_CONSTEXPR
 				compressed_pair(Tp2&& first, compressed_pair_default_construct_tag)
 						KERBAL_CONDITIONAL_NOEXCEPT((
-							std::is_nothrow_constructible<super0, kerbal::utility::in_place_t, Tp2&&>::value &&
-							std::is_nothrow_constructible<super1, kerbal::utility::in_place_t>::value
+							kerbal::type_traits::tribool_is_true<
+								typename kerbal::type_traits::tribool_conjunction<
+									kerbal::type_traits::try_test_is_nothrow_constructible<super0, kerbal::utility::in_place_t, Tp2&&>,
+									kerbal::type_traits::try_test_is_nothrow_constructible<super1, kerbal::utility::in_place_t>
+								>::result
+							>::value
 						)) :
 						super0(kerbal::utility::in_place_t(), kerbal::utility::forward<Tp2>(first)),
 						super1(kerbal::utility::in_place_t())
@@ -257,15 +271,19 @@ namespace kerbal
 				explicit
 				compressed_pair(const kerbal::utility::compressed_pair<Tp2, Up2> & p)
 						KERBAL_CONDITIONAL_NOEXCEPT((
-							std::is_nothrow_constructible<
-								super0,
-								kerbal::utility::in_place_t,
-								decltype(kerbal::utility::declval<const kerbal::utility::compressed_pair<Tp2, Up2> &>().first())
-							>::value &&
-							std::is_nothrow_constructible<
-								super1,
-								kerbal::utility::in_place_t,
-								decltype(kerbal::utility::declval<const kerbal::utility::compressed_pair<Tp2, Up2> &>().second())
+							kerbal::type_traits::tribool_is_true<
+								typename kerbal::type_traits::tribool_conjunction<
+									kerbal::type_traits::try_test_is_nothrow_constructible<
+										super0,
+										kerbal::utility::in_place_t,
+										decltype(kerbal::utility::declval<const kerbal::utility::compressed_pair<Tp2, Up2> &>().first())
+									>,
+									kerbal::type_traits::try_test_is_nothrow_constructible<
+										super1,
+										kerbal::utility::in_place_t,
+										decltype(kerbal::utility::declval<const kerbal::utility::compressed_pair<Tp2, Up2> &>().second())
+									>
+								>::result
 							>::value
 						)) :
 						super0(kerbal::utility::in_place_t(), p.first()),
@@ -278,15 +296,19 @@ namespace kerbal
 				explicit
 				compressed_pair(const std::pair<Tp2, Up2> & p)
 						KERBAL_CONDITIONAL_NOEXCEPT((
-							std::is_nothrow_constructible<
-								super0,
-								kerbal::utility::in_place_t,
-								decltype(kerbal::utility::declval<const std::pair<Tp2, Up2> &>().first)
-							>::value &&
-							std::is_nothrow_constructible<
-								super1,
-								kerbal::utility::in_place_t,
-								decltype(kerbal::utility::declval<const std::pair<Tp2, Up2> &>().second)
+							kerbal::type_traits::tribool_is_true<
+								typename kerbal::type_traits::tribool_conjunction<
+									kerbal::type_traits::try_test_is_nothrow_constructible<
+										super0,
+										kerbal::utility::in_place_t,
+										decltype(kerbal::utility::declval<const std::pair<Tp2, Up2> &>().first)
+									>,
+									kerbal::type_traits::try_test_is_nothrow_constructible<
+										super1,
+										kerbal::utility::in_place_t,
+										decltype(kerbal::utility::declval<const std::pair<Tp2, Up2> &>().second)
+									>
+								>::result
 							>::value
 						)) :
 						super0(kerbal::utility::in_place_t(), p.first),
@@ -302,15 +324,19 @@ namespace kerbal
 				explicit
 				compressed_pair(kerbal::utility::compressed_pair<Tp2, Up2> && p)
 						KERBAL_CONDITIONAL_NOEXCEPT((
-							std::is_nothrow_constructible<
-								super0,
-								kerbal::utility::in_place_t,
-								decltype(kerbal::compatibility::move(p).first())
-							>::value &&
-							std::is_nothrow_constructible<
-								super1,
-								kerbal::utility::in_place_t,
-								decltype(kerbal::compatibility::move(p).second())
+							kerbal::type_traits::tribool_is_true<
+								typename kerbal::type_traits::tribool_conjunction<
+									kerbal::type_traits::try_test_is_nothrow_constructible<
+										super0,
+										kerbal::utility::in_place_t,
+										decltype(kerbal::compatibility::move(p).first())
+									>,
+									kerbal::type_traits::try_test_is_nothrow_constructible<
+										super1,
+										kerbal::utility::in_place_t,
+										decltype(kerbal::compatibility::move(p).second())
+									>
+								>::result
 							>::value
 						)) :
 						super0(kerbal::utility::in_place_t(), kerbal::compatibility::move(p).first()),
@@ -323,15 +349,19 @@ namespace kerbal
 				explicit
 				compressed_pair(std::pair<Tp2, Up2> && p)
 						KERBAL_CONDITIONAL_NOEXCEPT((
-							std::is_nothrow_constructible<
-								super0,
-								kerbal::utility::in_place_t,
-								decltype(kerbal::compatibility::move(p).first)
-							>::value &&
-							std::is_nothrow_constructible<
-								super1,
-								kerbal::utility::in_place_t,
-								decltype(kerbal::compatibility::move(p).second)
+							kerbal::type_traits::tribool_is_true<
+								typename kerbal::type_traits::tribool_conjunction<
+									kerbal::type_traits::try_test_is_nothrow_constructible<
+										super0,
+										kerbal::utility::in_place_t,
+										decltype(kerbal::compatibility::move(p).first)
+									>,
+									kerbal::type_traits::try_test_is_nothrow_constructible<
+										super1,
+										kerbal::utility::in_place_t,
+										decltype(kerbal::compatibility::move(p).second)
+									>
+								>::result
 							>::value
 						)) :
 						super0(kerbal::utility::in_place_t(), kerbal::compatibility::move(p).first),
@@ -525,9 +555,11 @@ namespace kerbal
 		KERBAL_CONSTEXPR
 		kerbal::utility::compressed_pair<Tp, Up>
 		make_compressed_pair(const Tp & first, const Up & second)
-								KERBAL_CONDITIONAL_NOEXCEPT(
-										(std::is_nothrow_constructible<kerbal::utility::compressed_pair<Tp, Up>, const Tp &, const Up &>::value)
-								)
+				KERBAL_CONDITIONAL_NOEXCEPT((
+					kerbal::type_traits::tribool_is_true<
+						kerbal::type_traits::try_test_is_nothrow_constructible<kerbal::utility::compressed_pair<Tp, Up>, const Tp &, const Up &>
+					>::value
+				))
 		{
 			return kerbal::utility::compressed_pair<Tp, Up>(first, second);
 		}
@@ -545,6 +577,8 @@ namespace kerbal
 
 
 #if __cplusplus >= 201103L
+
+#include <type_traits> // std::integral_constant
 
 KERBAL_NAMESPACE_STD_BEGIN
 

@@ -24,16 +24,14 @@
 #	include <kerbal/utility/forward.hpp>
 
 #	if __cpp_exceptions
+#		include <kerbal/type_traits/is_nothrow_default_constructible.hpp>
+#		include <kerbal/type_traits/tribool_constant.hpp>
 #		include <kerbal/utility/declval.hpp>
 #	endif
 
 #endif
 
 #include <cstddef>
-
-#if __cplusplus >= 201103L && __cpp_exceptions
-#	include <type_traits>
-#endif
 
 
 namespace kerbal
@@ -133,7 +131,9 @@ namespace kerbal
 #	if __cplusplus >= 201103L && __cpp_exceptions
 
 				typedef kerbal::type_traits::bool_constant<
-						std::is_nothrow_default_constructible<ValuePredict>::value &&
+						kerbal::type_traits::tribool_is_true<
+							kerbal::type_traits::try_test_is_nothrow_default_constructible<ValuePredict>
+						>::value &&
 						noexcept(
 							kerbal::utility::declval<ValuePredict>()(
 								kerbal::utility::declval<T>(), kerbal::utility::declval<T>()
@@ -171,7 +171,9 @@ namespace kerbal
 #	if __cplusplus >= 201103L && __cpp_exceptions
 
 				typedef kerbal::type_traits::bool_constant<
-						std::is_nothrow_default_constructible<ValuePredict>::value &&
+						kerbal::type_traits::tribool_is_true<
+							kerbal::type_traits::try_test_is_nothrow_default_constructible<ValuePredict>
+						>::value &&
 						noexcept(
 							kerbal::utility::declval<ValuePredict>()(
 								kerbal::utility::declval<T>(), kerbal::utility::declval<T>()
@@ -209,7 +211,9 @@ namespace kerbal
 #	if __cplusplus >= 201103L && __cpp_exceptions
 
 				typedef kerbal::type_traits::bool_constant<
-						std::is_nothrow_default_constructible<ValuePredict>::value &&
+						kerbal::type_traits::tribool_is_true<
+							kerbal::type_traits::try_test_is_nothrow_default_constructible<ValuePredict>
+						>::value &&
 						noexcept(
 							kerbal::utility::declval<ValuePredict>()(
 								kerbal::utility::declval<T>(), kerbal::utility::declval<T>()
@@ -249,7 +253,9 @@ namespace kerbal
 #	if __cplusplus >= 201103L && __cpp_exceptions
 
 				typedef kerbal::type_traits::bool_constant<
-						std::is_nothrow_default_constructible<ValuePredict>::value &&
+						kerbal::type_traits::tribool_is_true<
+							kerbal::type_traits::try_test_is_nothrow_default_constructible<ValuePredict>
+						>::value &&
 						noexcept(
 							kerbal::utility::declval<ValuePredict>()(
 								kerbal::utility::declval<T>(), kerbal::utility::declval<T>()
@@ -289,7 +295,9 @@ namespace kerbal
 #	if __cplusplus >= 201103L && __cpp_exceptions
 
 				typedef kerbal::type_traits::bool_constant<
-						std::is_nothrow_default_constructible<ValuePredict>::value &&
+						kerbal::type_traits::tribool_is_true<
+							kerbal::type_traits::try_test_is_nothrow_default_constructible<ValuePredict>
+						>::value &&
 						noexcept(
 							kerbal::utility::declval<ValuePredict>()(
 								kerbal::utility::declval<T>(), kerbal::utility::declval<T>()
@@ -332,7 +340,9 @@ namespace kerbal
 #	if __cplusplus >= 201103L && __cpp_exceptions
 
 				typedef kerbal::type_traits::bool_constant<
-						std::is_nothrow_default_constructible<ValuePredict>::value &&
+						kerbal::type_traits::tribool_is_true<
+							kerbal::type_traits::try_test_is_nothrow_default_constructible<ValuePredict>
+						>::value &&
 						noexcept(
 							kerbal::utility::declval<ValuePredict>()(
 								kerbal::utility::declval<T>(), kerbal::utility::declval<T>()

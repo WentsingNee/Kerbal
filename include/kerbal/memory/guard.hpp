@@ -18,12 +18,14 @@
 #include <kerbal/utility/member_compress_helper.hpp>
 #include <kerbal/utility/noncopyable.hpp>
 
-#include <cstddef>
-
 #if __cplusplus >= 201103L
 #	include <kerbal/compatibility/move.hpp>
-#	include <type_traits>
+#	include <kerbal/type_traits/is_nothrow_constructible.hpp>
+#	include <kerbal/type_traits/is_nothrow_default_constructible.hpp>
+#	include <kerbal/type_traits/tribool_constant.hpp>
 #endif
+
+#include <cstddef>
 
 
 namespace kerbal
@@ -56,7 +58,9 @@ namespace kerbal
 				KERBAL_CONSTEXPR20
 				guard(pointer ptr)
 						KERBAL_CONDITIONAL_NOEXCEPT(
-							std::is_nothrow_default_constructible<deleter_compress_helper>::value
+							kerbal::type_traits::tribool_is_true<
+								kerbal::type_traits::try_test_is_nothrow_default_constructible<deleter_compress_helper>
+							>::value
 						) :
 						K_ptr(ptr)
 				{
@@ -65,10 +69,12 @@ namespace kerbal
 				KERBAL_CONSTEXPR20
 				guard(pointer ptr, const deleter_type & deleter)
 						KERBAL_CONDITIONAL_NOEXCEPT((
-							std::is_nothrow_constructible<
-								deleter_compress_helper,
-								kerbal::utility::in_place_t,
-								const deleter_type &
+							kerbal::type_traits::tribool_is_true<
+								kerbal::type_traits::try_test_is_nothrow_constructible<
+									deleter_compress_helper,
+									kerbal::utility::in_place_t,
+									const deleter_type &
+								>
 							>::value
 						)) :
 						deleter_compress_helper(kerbal::utility::in_place_t(), deleter), K_ptr(ptr)
@@ -80,10 +86,12 @@ namespace kerbal
 				KERBAL_CONSTEXPR20
 				guard(pointer ptr, deleter_type && deleter)
 						KERBAL_CONDITIONAL_NOEXCEPT((
-							std::is_nothrow_constructible<
-								deleter_compress_helper,
-								kerbal::utility::in_place_t,
-								deleter_type &&
+							kerbal::type_traits::tribool_is_true<
+								kerbal::type_traits::try_test_is_nothrow_constructible<
+									deleter_compress_helper,
+									kerbal::utility::in_place_t,
+									deleter_type &&
+								>
 							>::value
 						)) :
 						deleter_compress_helper(kerbal::utility::in_place_t(), kerbal::compatibility::move(deleter)), K_ptr(ptr)
@@ -161,7 +169,9 @@ namespace kerbal
 				KERBAL_CONSTEXPR20
 				guard(pointer ptr)
 						KERBAL_CONDITIONAL_NOEXCEPT(
-							std::is_nothrow_default_constructible<deleter_compress_helper>::value
+							kerbal::type_traits::tribool_is_true<
+								kerbal::type_traits::try_test_is_nothrow_default_constructible<deleter_compress_helper>
+							>::value
 						) :
 						K_ptr(ptr)
 				{
@@ -170,10 +180,12 @@ namespace kerbal
 				KERBAL_CONSTEXPR20
 				guard(pointer ptr, const deleter_type & deleter)
 						KERBAL_CONDITIONAL_NOEXCEPT((
-							std::is_nothrow_constructible<
-								deleter_compress_helper,
-								kerbal::utility::in_place_t,
-								const deleter_type &
+							kerbal::type_traits::tribool_is_true<
+								kerbal::type_traits::try_test_is_nothrow_constructible<
+									deleter_compress_helper,
+									kerbal::utility::in_place_t,
+									const deleter_type &
+								>
 							>::value
 						)) :
 						deleter_compress_helper(kerbal::utility::in_place_t(), deleter), K_ptr(ptr)
@@ -185,10 +197,12 @@ namespace kerbal
 				KERBAL_CONSTEXPR20
 				guard(pointer ptr, deleter_type && deleter)
 						KERBAL_CONDITIONAL_NOEXCEPT((
-							std::is_nothrow_constructible<
-								deleter_compress_helper,
-								kerbal::utility::in_place_t,
-								deleter_type &&
+							kerbal::type_traits::tribool_is_true<
+								kerbal::type_traits::try_test_is_nothrow_constructible<
+									deleter_compress_helper,
+									kerbal::utility::in_place_t,
+									deleter_type &&
+								>
 							>::value
 						)) :
 						deleter_compress_helper(kerbal::utility::in_place_t(), kerbal::compatibility::move(deleter)), K_ptr(ptr)

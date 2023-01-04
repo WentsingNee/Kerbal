@@ -14,9 +14,10 @@
 
 #include <kerbal/compatibility/constexpr.hpp>
 #include <kerbal/compatibility/noexcept.hpp>
+#include <kerbal/type_traits/tribool_constant.hpp>
 
 #if __cplusplus >= 201103L
-# include <type_traits>
+#	include <kerbal/type_traits/is_nothrow_destructible.hpp>
 #endif
 
 
@@ -50,7 +51,11 @@ namespace kerbal
 
 				KERBAL_CONSTEXPR20
 				void operator()(Tp* ptr) const
-						KERBAL_CONDITIONAL_NOEXCEPT(std::is_nothrow_destructible<Tp>::value)
+						KERBAL_CONDITIONAL_NOEXCEPT(
+								kerbal::type_traits::tribool_is_true<
+									kerbal::type_traits::try_test_is_nothrow_destructible<Tp>
+								>::value
+						)
 				{
 					delete ptr;
 				}
@@ -81,7 +86,11 @@ namespace kerbal
 
 				KERBAL_CONSTEXPR20
 				void operator()(Tp* ptr) const
-						KERBAL_CONDITIONAL_NOEXCEPT(std::is_nothrow_destructible<Tp>::value)
+						KERBAL_CONDITIONAL_NOEXCEPT(
+								kerbal::type_traits::tribool_is_true<
+									kerbal::type_traits::try_test_is_nothrow_destructible<Tp>
+								>::value
+						)
 				{
 					delete[] ptr;
 				}

@@ -22,7 +22,8 @@
 #include <kerbal/utility/member_compress_helper.hpp>
 
 #if __cplusplus >= 201103L
-#	include <type_traits>
+#	include <kerbal/type_traits/is_nothrow_constructible.hpp>
+#	include <kerbal/type_traits/tribool_constant.hpp>
 #endif
 
 
@@ -69,9 +70,8 @@ namespace kerbal
 #			if __cplusplus >= 201103L
 
 					struct is_nothrow_default_constructible :
-							kerbal::type_traits::integral_constant<
-								bool,
-								std::is_nothrow_constructible<super, kerbal::utility::in_place_t>::value
+							kerbal::type_traits::tribool_is_true<
+								kerbal::type_traits::try_test_is_nothrow_constructible<super, kerbal::utility::in_place_t>
 							>
 					{
 					};
@@ -88,9 +88,8 @@ namespace kerbal
 #			if __cplusplus >= 201103L
 
 					struct is_nothrow_constructible_from_allocator_const_reference :
-							kerbal::type_traits::integral_constant<
-								bool,
-								std::is_nothrow_constructible<super, kerbal::utility::in_place_t, const Allocator &>::value
+							kerbal::type_traits::tribool_is_true<
+								kerbal::type_traits::try_test_is_nothrow_constructible<super, kerbal::utility::in_place_t, const Allocator &>
 							>
 					{
 					};
@@ -109,9 +108,8 @@ namespace kerbal
 #			if __cplusplus >= 201103L
 
 					struct is_nothrow_constructible_from_allocator_rvalue_reference :
-							kerbal::type_traits::integral_constant<
-								bool,
-								std::is_nothrow_constructible<super, kerbal::utility::in_place_t, Allocator &&>::value
+							kerbal::type_traits::tribool_is_true<
+								kerbal::type_traits::try_test_is_nothrow_constructible<super, kerbal::utility::in_place_t, Allocator &&>
 							>
 					{
 					};
@@ -150,7 +148,7 @@ namespace kerbal
 					static void k_swap_allocator_if_propagate_impl(container_rebind_allocator_overload & lhs, container_rebind_allocator_overload & rhs,
 																	kerbal::type_traits::true_type /*propagate_on_container_swap*/)
 							KERBAL_CONDITIONAL_NOEXCEPT(
-									noexcept(kerbal::algorithm::swap(lhs.alloc(), rhs.alloc()))
+								noexcept(kerbal::algorithm::swap(lhs.alloc(), rhs.alloc()))
 							)
 					{
 						kerbal::algorithm::swap(lhs.alloc(), rhs.alloc());
@@ -161,7 +159,7 @@ namespace kerbal
 					KERBAL_CONSTEXPR14
 					static void k_swap_allocator_if_propagate(container_rebind_allocator_overload & lhs, container_rebind_allocator_overload & rhs)
 							KERBAL_CONDITIONAL_NOEXCEPT(
-									noexcept(k_swap_allocator_if_propagate_impl(lhs, rhs, typename rebind_allocator_traits::propagate_on_container_swap()))
+								noexcept(k_swap_allocator_if_propagate_impl(lhs, rhs, typename rebind_allocator_traits::propagate_on_container_swap()))
 							)
 					{
 						typedef typename rebind_allocator_traits::propagate_on_container_swap propagate_on_container_swap;

@@ -20,6 +20,12 @@
 #include <kerbal/type_traits/is_trivially_destructible.hpp>
 #include <kerbal/type_traits/tribool_constant.hpp>
 
+#if __cplusplus >= 201103L
+#	include <kerbal/type_traits/is_nothrow_destructible.hpp>
+#endif
+
+#include <cstddef>
+
 #if __cplusplus > 201703L
 #	include <memory>
 #endif
@@ -73,7 +79,9 @@ namespace kerbal
 			KERBAL_CONSTEXPR20
 			void _K_destroy_on(Tp & plc, DESTROY_ON_VER_DEFAULT)
 					KERBAL_CONDITIONAL_NOEXCEPT(
-							std::is_nothrow_destructible<Tp>::value
+							kerbal::type_traits::tribool_is_true<
+								kerbal::type_traits::try_test_is_nothrow_destructible<Tp>
+							>::value
 					)
 			{
 				plc.~Tp();

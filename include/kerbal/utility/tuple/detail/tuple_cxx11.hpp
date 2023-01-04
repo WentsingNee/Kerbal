@@ -33,10 +33,13 @@
 #include <kerbal/type_traits/conditional.hpp>
 #include <kerbal/type_traits/enable_if.hpp>
 #include <kerbal/type_traits/integral_constant.hpp>
+#include <kerbal/type_traits/is_nothrow_constructible.hpp>
+#include <kerbal/type_traits/is_nothrow_default_constructible.hpp>
 #include <kerbal/type_traits/logical.hpp>
 #include <kerbal/type_traits/remove_const.hpp>
 #include <kerbal/type_traits/remove_cvref.hpp>
 #include <kerbal/type_traits/remove_reference.hpp>
+#include <kerbal/type_traits/tribool_constant.hpp>
 #include <kerbal/utility/declval.hpp>
 #include <kerbal/utility/forward.hpp>
 #include <kerbal/utility/ignore_unused.hpp>
@@ -58,7 +61,6 @@ namespace kerbal
 			template <typename IndexSequence, typename ... Args>
 			struct tuple_impl;
 
-#		if __cplusplus >= 201103L
 
 			template <typename TupleImpl, typename HeadIndexSequence, typename TailIndexSequence, typename ... UArgs>
 			struct tuple_impl_is_nothrow_partially_init_constructible_helper;
@@ -74,19 +76,23 @@ namespace kerbal
 				private:
 					typedef TupleImpl _K_tuple_impl;
 
-					typedef kerbal::type_traits::conjunction<
-							std::is_nothrow_constructible<
+					typedef kerbal::type_traits::tribool_is_true<
+						typename kerbal::type_traits::tribool_conjunction<
+							kerbal::type_traits::try_test_is_nothrow_constructible<
 								typename _K_tuple_impl::template super<HeadIndex>::type,
 								kerbal::utility::in_place_t,
 								UArgs&&
 							>...
+						>::result
 					> is_head_nothrow_constructible;
 
-					typedef kerbal::type_traits::conjunction<
-							std::is_nothrow_constructible<
+					typedef kerbal::type_traits::tribool_is_true<
+						typename kerbal::type_traits::tribool_conjunction<
+							kerbal::type_traits::try_test_is_nothrow_constructible<
 								typename _K_tuple_impl::template super<TailIndex + sizeof...(HeadIndex)>::type,
 								kerbal::utility::in_place_t
 							>...
+						>::result
 					> is_tail_nothrow_constructible;
 
 				public:
@@ -95,8 +101,6 @@ namespace kerbal
 							is_tail_nothrow_constructible
 					> type;
 			};
-
-#		endif
 
 
 			template <std::size_t ... Index, typename ... Args>
@@ -190,18 +194,17 @@ namespace kerbal
 							>::type type;
 					};
 
-#		if __cplusplus >= 201103L
 
 				protected:
 
 					struct is_nothrow_default_constructible :
-							kerbal::type_traits::conjunction<
-								std::is_nothrow_default_constructible<typename super<Index>::type>...
+							kerbal::type_traits::tribool_is_true<
+								typename kerbal::type_traits::tribool_conjunction<
+									kerbal::type_traits::try_test_is_nothrow_default_constructible<typename super<Index>::type>...
+								>::result
 							>
 					{
 					};
-
-#		endif
 
 				public:
 
@@ -211,8 +214,6 @@ namespace kerbal
 					{
 					}
 
-
-#		if __cplusplus >= 201103L
 
 				protected:
 
@@ -229,8 +230,6 @@ namespace kerbal
 							>::type
 					{
 					};
-
-#		endif
 
 				private:
 
@@ -265,19 +264,19 @@ namespace kerbal
 					}
 
 
-#		if __cplusplus >= 201103L
-
 				protected:
 
 					template <typename ... UArgs>
 					struct is_nothrow_completely_init_constructible :
-							kerbal::type_traits::conjunction<
-								std::is_nothrow_constructible<typename super<Index>::type, kerbal::utility::in_place_t, UArgs&&>...
+							kerbal::type_traits::tribool_is_true<
+								typename kerbal::type_traits::tribool_conjunction<
+									kerbal::type_traits::try_test_is_nothrow_constructible<typename super<Index>::type, kerbal::utility::in_place_t, UArgs&&>...
+								>::result
 							>
 					{
 					};
 
-#		endif
+				public:
 
 					template <typename ... UArgs, typename =
 							typename kerbal::type_traits::enable_if<sizeof...(UArgs) == TUPLE_SIZE::value, int>::type>

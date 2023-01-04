@@ -20,7 +20,11 @@
 #include <cstddef>
 
 #if __cplusplus >= 201103L
-#	include <type_traits>
+#	include <kerbal/type_traits/is_nothrow_constructible.hpp>
+#	include <kerbal/type_traits/is_nothrow_copy_constructible.hpp>
+#	include <kerbal/type_traits/is_nothrow_default_constructible.hpp>
+#	include <kerbal/type_traits/is_nothrow_move_constructible.hpp>
+#	include <kerbal/type_traits/tribool_constant.hpp>
 #endif
 
 
@@ -85,7 +89,9 @@ namespace kerbal
 				KERBAL_CONSTEXPR14
 				shuffle_order_engine()
 						KERBAL_CONDITIONAL_NOEXCEPT(
-								std::is_nothrow_default_constructible<Engine>::value
+								kerbal::type_traits::tribool_is_true<
+									kerbal::type_traits::is_nothrow_default_constructible<Engine>
+								>::value
 						) :
 						_K_base_eg(), _K_stored_y()
 				{
@@ -95,7 +101,9 @@ namespace kerbal
 				KERBAL_CONSTEXPR14
 				explicit shuffle_order_engine(result_type seed)
 						KERBAL_CONDITIONAL_NOEXCEPT((
-								std::is_nothrow_constructible<Engine, result_type>::value
+								kerbal::type_traits::tribool_is_true<
+									kerbal::type_traits::is_nothrow_constructible<Engine, result_type>
+								>::value
 						)) :
 						_K_base_eg(seed), _K_stored_y()
 				{
@@ -105,7 +113,9 @@ namespace kerbal
 				KERBAL_CONSTEXPR14
 				explicit shuffle_order_engine(const Engine & engine)
 						KERBAL_CONDITIONAL_NOEXCEPT(
-								std::is_nothrow_copy_constructible<Engine>::value
+								kerbal::type_traits::tribool_is_true<
+									kerbal::type_traits::is_nothrow_copy_constructible<Engine>
+								>::value
 						) :
 						_K_base_eg(engine), _K_stored_y()
 				{
@@ -117,7 +127,9 @@ namespace kerbal
 				KERBAL_CONSTEXPR14
 				explicit shuffle_order_engine(Engine && engine)
 						KERBAL_CONDITIONAL_NOEXCEPT(
-								std::is_nothrow_move_constructible<Engine>::value
+								kerbal::type_traits::tribool_is_true<
+									kerbal::type_traits::is_nothrow_move_constructible<Engine>
+								>::value
 						) :
 						_K_base_eg(kerbal::compatibility::move(engine)), _K_stored_y()
 				{
