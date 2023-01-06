@@ -28,8 +28,6 @@
 #include <kerbal/memory/raw_storage_uninitialized.hpp>
 #include <kerbal/type_traits/enable_if.hpp>
 #include <kerbal/type_traits/integral_constant.hpp>
-#include <kerbal/type_traits/is_trivially_copy_assignable.hpp>
-#include <kerbal/type_traits/is_trivially_copy_constructible.hpp>
 #include <kerbal/type_traits/is_trivially_destructible.hpp>
 #include <kerbal/type_traits/tribool_constant.hpp>
 #include <kerbal/utility/compressed_pair.hpp>
@@ -222,11 +220,11 @@ namespace kerbal
 		KERBAL_CONSTEXPR14
 		void
 		static_vector<T, N>::
-		k_assign_unsafe_n_val(size_type new_size, const_reference val, kerbal::type_traits::false_type)
+		k_assign_unsafe_n_val(size_type new_size, const_reference val, ASSIGN_UNSAFE_N_VAL_VER_DEFAULT)
 		{
 			size_type previous_size = this->size();
 
-			if (previous_size <= new_size) {
+			if (previous_size < new_size) {
 				/*
 				 * a a a x x x x x
 				 * b b b b b b x x
@@ -249,7 +247,20 @@ namespace kerbal
 		KERBAL_CONSTEXPR14
 		void
 		static_vector<T, N>::
-		k_assign_unsafe_n_val(size_type new_size, const_reference val, kerbal::type_traits::true_type)
+		k_assign_unsafe_n_val(size_type new_size, const_reference val, ASSIGN_UNSAFE_N_VAL_VER_TRIVIALLY_DESTRUCTIBLE)
+		{
+			size_type previous_size = this->size();
+
+			kerbal::algorithm::fill(this->begin(), this->end(), val);
+			if (previous_size < new_size) {
+				kerbal::memory::raw_storage_uninitialized_fill(this->storage + previous_size, this->storage + new_size, val);
+			}
+			this->len = static_cast<size_compressed_type>(new_size);
+		}
+
+		template <typename Tp, std::size_t N>
+		KERBAL_CONSTEXPR14
+		void static_vector<Tp, N>::k_assign_unsafe_n_val(size_type new_size, const_reference val, ASSIGN_UNSAFE_N_VAL_VER_TRIVIAL)
 		{
 			kerbal::algorithm::fill(this->begin(), this->nth(new_size), val);
 			this->len = static_cast<size_compressed_type>(new_size);
@@ -259,16 +270,7 @@ namespace kerbal
 		KERBAL_CONSTEXPR14
 		void static_vector<T, N>::assign_unsafe(size_type new_size, const_reference val)
 		{
-			struct enable_optimization:
-				kerbal::type_traits::tribool_conjunction<
-					kerbal::type_traits::try_test_is_trivially_copy_constructible<remove_all_extents_t>,
-					kerbal::type_traits::try_test_is_trivially_copy_assignable<remove_all_extents_t>,
-					kerbal::type_traits::try_test_is_trivially_destructible<remove_all_extents_t>
-				>::result::IS_TRUE
-			{
-			};
-
-			this->k_assign_unsafe_n_val(new_size, val, enable_optimization());
+			this->k_assign_unsafe_n_val(new_size, val, assign_unsafe_ver());
 		}
 
 		template <typename T, std::size_t N>
