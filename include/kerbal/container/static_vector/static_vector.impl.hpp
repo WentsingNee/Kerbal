@@ -25,8 +25,6 @@
 #include <kerbal/memory/raw_storage_uninitialized.hpp>
 #include <kerbal/type_traits/enable_if.hpp>
 #include <kerbal/type_traits/integral_constant.hpp>
-#include <kerbal/type_traits/is_trivially_copy_assignable.hpp>
-#include <kerbal/type_traits/is_trivially_copy_constructible.hpp>
 #include <kerbal/type_traits/is_trivially_destructible.hpp>
 #include <kerbal/type_traits/tribool_constant.hpp>
 #include <kerbal/utility/compressed_pair.hpp>
@@ -188,11 +186,11 @@ namespace kerbal
 
 		template <typename Tp, std::size_t N>
 		KERBAL_CONSTEXPR14
-		void static_vector<Tp, N>::k_assign_unsafe_n_val(size_type new_size, const_reference val, kerbal::type_traits::false_type)
+		void static_vector<Tp, N>::k_assign_unsafe_n_val(size_type new_size, const_reference val, ASSIGN_UNSAFE_N_VAL_VER_DEFAULT)
 		{
 			size_type previous_size = this->size();
 
-			if (previous_size <= new_size) {
+			if (previous_size < new_size) {
 				/*
 				 * a a a x x x x x
 				 * b b b b b b x x
@@ -213,7 +211,20 @@ namespace kerbal
 
 		template <typename Tp, std::size_t N>
 		KERBAL_CONSTEXPR14
-		void static_vector<Tp, N>::k_assign_unsafe_n_val(size_type new_size, const_reference val, kerbal::type_traits::true_type)
+		void static_vector<Tp, N>::k_assign_unsafe_n_val(size_type new_size, const_reference val, ASSIGN_UNSAFE_N_VAL_VER_TRIVIALLY_DESTRUCTIBLE)
+		{
+			size_type previous_size = this->size();
+
+			kerbal::algorithm::fill(this->begin(), this->end(), val);
+			if (previous_size < new_size) {
+				kerbal::memory::raw_storage_uninitialized_fill(this->storage + previous_size, this->storage + new_size, val);
+			}
+			this->len = static_cast<size_compressed_type>(new_size);
+		}
+
+		template <typename Tp, std::size_t N>
+		KERBAL_CONSTEXPR14
+		void static_vector<Tp, N>::k_assign_unsafe_n_val(size_type new_size, const_reference val, ASSIGN_UNSAFE_N_VAL_VER_TRIVIAL)
 		{
 			kerbal::algorithm::fill(this->begin(), this->nth(new_size), val);
 			this->len = static_cast<size_compressed_type>(new_size);
@@ -223,18 +234,7 @@ namespace kerbal
 		KERBAL_CONSTEXPR14
 		void static_vector<Tp, N>::assign_unsafe(size_type new_size, const_reference val)
 		{
-			struct enable_optimization:
-					kerbal::type_traits::tribool_is_true<
-						typename kerbal::type_traits::tribool_conjunction<
-							kerbal::type_traits::try_test_is_trivially_copy_constructible<remove_all_extents_t>,
-							kerbal::type_traits::try_test_is_trivially_copy_assignable<remove_all_extents_t>,
-							kerbal::type_traits::try_test_is_trivially_destructible<remove_all_extents_t>
-						>::result
-					>
-			{
-			};
-
-			this->k_assign_unsafe_n_val(new_size, val, enable_optimization());
+			this->k_assign_unsafe_n_val(new_size, val, assign_unsafe_ver());
 		}
 
 		template <typename Tp, std::size_t N>
@@ -292,7 +292,6 @@ namespace kerbal
 				 */
 				iterator new_end(kerbal::algorithm::copy(first, last, this->begin()));
 				kerbal::memory::raw_storage_reverse_destroy(new_end.current, this->end().current);
-				this->len = static_cast<size_compressed_type>(new_size);
 			} else { // new_size > ori_size
 				/*
 				 * a a a x x x x x
@@ -300,8 +299,8 @@ namespace kerbal
 				 */
 				kerbal::utility::compressed_pair<ForwardIterator, iterator> copy_n_r(kerbal::algorithm::copy_n(first, ori_size, this->begin()));
 				kerbal::memory::raw_storage_uninitialized_copy(copy_n_r.first(), last, copy_n_r.second().current);
-				this->len = static_cast<size_compressed_type>(new_size);
 			}
+			this->len = static_cast<size_compressed_type>(new_size);
 		}
 
 		template <typename Tp, std::size_t N>
@@ -371,7 +370,6 @@ namespace kerbal
 				 */
 				iterator new_end(kerbal::algorithm::copy(first, last, this->begin()));
 				kerbal::memory::raw_storage_reverse_destroy(new_end.current, this->end().current);
-				this->len = static_cast<size_compressed_type>(new_size);
 			} else { // new_size > ori_size
 				/*
 				 * a a a x x x x x
@@ -379,8 +377,8 @@ namespace kerbal
 				 */
 				kerbal::utility::compressed_pair<ForwardIterator, iterator> copy_n_r(kerbal::algorithm::copy_n(first, ori_size, this->begin()));
 				kerbal::memory::raw_storage_uninitialized_copy(copy_n_r.first(), last, copy_n_r.second().current);
-				this->len = static_cast<size_compressed_type>(new_size);
 			}
+			this->len = static_cast<size_compressed_type>(new_size);
 		}
 
 		template <typename Tp, std::size_t N>

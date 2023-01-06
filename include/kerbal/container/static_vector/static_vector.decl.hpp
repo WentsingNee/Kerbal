@@ -21,7 +21,11 @@
 #include <kerbal/iterator/iterator_traits.hpp>
 #include <kerbal/iterator/reverse_iterator.hpp>
 #include <kerbal/type_traits/enable_if.hpp>
+#include <kerbal/type_traits/is_trivially_copy_assignable.hpp>
+#include <kerbal/type_traits/is_trivially_copy_constructible.hpp>
+#include <kerbal/type_traits/is_trivially_destructible.hpp>
 #include <kerbal/type_traits/remove_all_extents.hpp>
+#include <kerbal/type_traits/tribool_constant.hpp>
 #include <kerbal/utility/throw_this_exception.hpp>
 
 #if __cplusplus < 201103L
@@ -196,11 +200,38 @@ namespace kerbal
 
 			private:
 
-				KERBAL_CONSTEXPR14
-				void k_assign_unsafe_n_val(size_type new_size, const_reference val, kerbal::type_traits::false_type enable_optimization);
+				typedef kerbal::type_traits::integral_constant<int, 0> ASSIGN_UNSAFE_N_VAL_VER_DEFAULT;
+				typedef kerbal::type_traits::integral_constant<int, 1> ASSIGN_UNSAFE_N_VAL_VER_TRIVIALLY_DESTRUCTIBLE;
+				typedef kerbal::type_traits::integral_constant<int, 2> ASSIGN_UNSAFE_N_VAL_VER_TRIVIAL;
 
 				KERBAL_CONSTEXPR14
-				void k_assign_unsafe_n_val(size_type new_size, const_reference val, kerbal::type_traits::true_type enable_optimization);
+				void k_assign_unsafe_n_val(size_type new_size, const_reference val, ASSIGN_UNSAFE_N_VAL_VER_DEFAULT);
+
+				KERBAL_CONSTEXPR14
+				void k_assign_unsafe_n_val(size_type new_size, const_reference val, ASSIGN_UNSAFE_N_VAL_VER_TRIVIALLY_DESTRUCTIBLE);
+
+				KERBAL_CONSTEXPR14
+				void k_assign_unsafe_n_val(size_type new_size, const_reference val, ASSIGN_UNSAFE_N_VAL_VER_TRIVIAL);
+
+				struct assign_unsafe_ver :
+						kerbal::type_traits::conditional<
+							kerbal::type_traits::tribool_is_true<
+								kerbal::type_traits::try_test_is_trivially_destructible<remove_all_extents_t>
+							>::value,
+							typename kerbal::type_traits::conditional<
+								kerbal::type_traits::tribool_is_true<
+									typename kerbal::type_traits::tribool_conjunction<
+										kerbal::type_traits::try_test_is_trivially_copy_assignable<remove_all_extents_t>,
+										kerbal::type_traits::try_test_is_trivially_copy_constructible<remove_all_extents_t>
+									>::result
+								>::value,
+								ASSIGN_UNSAFE_N_VAL_VER_TRIVIAL,
+								ASSIGN_UNSAFE_N_VAL_VER_TRIVIALLY_DESTRUCTIBLE
+							>::type,
+							ASSIGN_UNSAFE_N_VAL_VER_DEFAULT
+						>::type
+				{
+				};
 
 			public:
 
