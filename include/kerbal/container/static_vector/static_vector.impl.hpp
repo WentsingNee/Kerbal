@@ -294,7 +294,6 @@ namespace kerbal
 				 */
 				iterator new_end(kerbal::algorithm::copy(first, last, this->begin()));
 				kerbal::memory::raw_storage_reverse_destroy(new_end.current, this->end().current);
-				this->len = static_cast<size_compressed_type>(new_size);
 			} else { // new_size > ori_size
 				/*
 				 * a a a x x x x x
@@ -302,8 +301,8 @@ namespace kerbal
 				 */
 				kerbal::utility::compressed_pair<ForwardIterator, iterator> copy_n_r(kerbal::algorithm::copy_n(first, ori_size, this->begin()));
 				kerbal::memory::raw_storage_uninitialized_copy(copy_n_r.first(), last, copy_n_r.second().current);
-				this->len = static_cast<size_compressed_type>(new_size);
 			}
+			this->len = static_cast<size_compressed_type>(new_size);
 		}
 
 		template <typename T, std::size_t N>
@@ -373,7 +372,6 @@ namespace kerbal
 				 */
 				iterator new_end(kerbal::algorithm::copy(first, last, this->begin()));
 				kerbal::memory::raw_storage_reverse_destroy(new_end.current, this->end().current);
-				this->len = static_cast<size_compressed_type>(new_size);
 			} else { // new_size > ori_size
 				/*
 				 * a a a x x x x x
@@ -381,8 +379,8 @@ namespace kerbal
 				 */
 				kerbal::utility::compressed_pair<ForwardIterator, iterator> copy_n_r(kerbal::algorithm::copy_n(first, ori_size, this->begin()));
 				kerbal::memory::raw_storage_uninitialized_copy(copy_n_r.first(), last, copy_n_r.second().current);
-				this->len = static_cast<size_compressed_type>(new_size);
 			}
+			this->len = static_cast<size_compressed_type>(new_size);
 		}
 
 		template <typename T, std::size_t N>
