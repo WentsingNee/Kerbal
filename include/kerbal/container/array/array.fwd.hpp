@@ -14,6 +14,7 @@
 
 #include <cstddef>
 
+
 namespace kerbal
 {
 
@@ -26,12 +27,11 @@ namespace kerbal
 		namespace detail
 		{
 
-			template <typename ValueType>
-			class __arr_iter;
+			template <typename Tp>
+			class arr_iter;
 
-			template <typename ValueType>
-			class __arr_kiter;
-
+			template <typename Tp>
+			class arr_kiter;
 
 		} // namespace detail
 

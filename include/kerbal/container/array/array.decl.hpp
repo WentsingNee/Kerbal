@@ -71,9 +71,9 @@ namespace kerbal
 				typedef std::ptrdiff_t difference_type;
 
 				/// @brief Iterator to array.
-				typedef kerbal::container::detail::__arr_iter<value_type> iterator;
+				typedef kerbal::container::detail::arr_iter<value_type> iterator;
 				/// @brief Constant iterator to array.
-				typedef kerbal::container::detail::__arr_kiter<value_type> const_iterator;
+				typedef kerbal::container::detail::arr_kiter<value_type> const_iterator;
 				/// @brief Reverse iterator to array.
 				typedef kerbal::iterator::reverse_iterator<iterator> reverse_iterator;
 				/// @brief Constant reverse iterator to array.

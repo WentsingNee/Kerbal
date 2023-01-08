@@ -37,27 +37,27 @@ namespace kerbal
 		namespace detail
 		{
 
-			template <typename DerivedIterator, typename Pointer>
-			class __arr_iterbase:
+			template <typename Tp>
+			class arr_iter:
 					//forward iterator interface
-					public kerbal::operators::dereferenceable<DerivedIterator, Pointer>, // it->
-					public kerbal::operators::equality_comparable<DerivedIterator>, // it != jt
-					public kerbal::operators::incrementable<DerivedIterator>, // it++
-
+					public kerbal::operators::dereferenceable<arr_iter<Tp>, Tp*>, // it->
+					public kerbal::operators::equality_comparable<arr_iter<Tp> >, // it != jt
+					public kerbal::operators::incrementable<arr_iter<Tp> >, // it++
 					//bidirectional iterator interface
-					public kerbal::operators::decrementable<DerivedIterator>, // it--
-
+					public kerbal::operators::decrementable<arr_iter<Tp> >, // it--
 					//random access iterator interface
-					public kerbal::operators::addable<DerivedIterator, typename kerbal::iterator::iterator_traits<Pointer>::difference_type>, // it + N
-					public kerbal::operators::addable_left<DerivedIterator, typename kerbal::iterator::iterator_traits<Pointer>::difference_type>, // N + it
-					public kerbal::operators::less_than_comparable<DerivedIterator>, // it > jt, it <= jt, it >= jt
-					public kerbal::operators::subtractable<DerivedIterator, typename kerbal::iterator::iterator_traits<Pointer>::difference_type> // it - N
+					public kerbal::operators::addable<arr_iter<Tp>, typename kerbal::iterator::iterator_traits<Tp*>::difference_type>, // it + N
+					public kerbal::operators::addable_left<arr_iter<Tp>, typename kerbal::iterator::iterator_traits<Tp*>::difference_type>,// N + it
+					public kerbal::operators::less_than_comparable<arr_iter<Tp> >, // it > jt, it <= jt, it >= jt
+					public kerbal::operators::subtractable<arr_iter<Tp>, typename kerbal::iterator::iterator_traits<Tp*>::difference_type> // it - N
 			{
-				private:
-					Pointer current;
+					friend class kerbal::container::detail::arr_kiter<Tp>;
+
+					template <typename Up, std::size_t N>
+					friend class kerbal::container::array;
 
 				private:
-					typedef kerbal::iterator::iterator_traits<Pointer>		iterator_traits;
+					typedef kerbal::iterator::iterator_traits<Tp*>			iterator_traits;
 
 				public:
 					typedef std::random_access_iterator_tag					iterator_category;
@@ -66,31 +66,44 @@ namespace kerbal
 					typedef typename iterator_traits::pointer				pointer;
 					typedef typename iterator_traits::reference				reference;
 
+				protected:
+					pointer current;
+
 				public:
 					KERBAL_CONSTEXPR
-					explicit __arr_iterbase(Pointer current) KERBAL_NOEXCEPT :
+					arr_iter() KERBAL_NOEXCEPT :
+							current(NULL)
+					{
+					}
+
+				protected:
+					KERBAL_CONSTEXPR
+					explicit
+					arr_iter(pointer current) KERBAL_NOEXCEPT :
 							current(current)
 					{
 					}
 
+				public:
+
 					//===================
 					//forward iterator interface
 
-					KERBAL_CONSTEXPR
+					KERBAL_CONSTEXPR14
 					reference operator*() const KERBAL_NOEXCEPT
 					{
 						return *this->current;
 					}
 
 					KERBAL_CONSTEXPR14
-					DerivedIterator& operator++() KERBAL_NOEXCEPT
+					arr_iter& operator++() KERBAL_NOEXCEPT
 					{
 						++this->current;
-						return static_cast<DerivedIterator&>(*this);
+						return static_cast<arr_iter&>(*this);
 					}
 
 					friend KERBAL_CONSTEXPR
-					bool operator==(const DerivedIterator & lhs, const DerivedIterator & rhs) KERBAL_NOEXCEPT
+					bool operator==(const arr_iter & lhs, const arr_iter & rhs) KERBAL_NOEXCEPT
 					{
 						return lhs.current == rhs.current;
 					}
@@ -99,10 +112,10 @@ namespace kerbal
 					//bidirectional iterator interface
 
 					KERBAL_CONSTEXPR14
-					DerivedIterator& operator--() KERBAL_NOEXCEPT
+					arr_iter& operator--() KERBAL_NOEXCEPT
 					{
 						--this->current;
-						return static_cast<DerivedIterator&>(*this);
+						return static_cast<arr_iter&>(*this);
 					}
 
 					//===================
@@ -110,86 +123,165 @@ namespace kerbal
 
 					friend KERBAL_CONSTEXPR
 					difference_type
-					operator-(const DerivedIterator & lhs, const DerivedIterator & rhs) KERBAL_NOEXCEPT
+					operator-(const arr_iter & lhs, const arr_iter & rhs) KERBAL_NOEXCEPT
 					{
 						return lhs.current - rhs.current;
 					}
 
 					KERBAL_CONSTEXPR14
-					DerivedIterator& operator+=(const difference_type & delta) KERBAL_NOEXCEPT
+					arr_iter& operator+=(const difference_type & delta) KERBAL_NOEXCEPT
 					{
 						this->current += delta;
-						return static_cast<DerivedIterator&>(*this);
+						return static_cast<arr_iter&>(*this);
 					}
 
 					KERBAL_CONSTEXPR14
-					DerivedIterator& operator-=(const difference_type & delta) KERBAL_NOEXCEPT
+					arr_iter& operator-=(const difference_type & delta) KERBAL_NOEXCEPT
 					{
 						this->current -= delta;
-						return static_cast<DerivedIterator&>(*this);
+						return static_cast<arr_iter&>(*this);
 					}
 
 					KERBAL_CONSTEXPR14
 					reference operator[](const difference_type & dist) const KERBAL_NOEXCEPT
 					{
-						return *(static_cast<const DerivedIterator&>(*this) + dist);
+						return *(static_cast<const arr_iter&>(*this) + dist);
 					}
 
 					friend KERBAL_CONSTEXPR
-					bool operator<(const DerivedIterator & lhs, const DerivedIterator & rhs) KERBAL_NOEXCEPT
+					bool operator<(const arr_iter & lhs, const arr_iter & rhs) KERBAL_NOEXCEPT
 					{
 						return lhs.current < rhs.current;
 					}
 			};
 
-			/// @brief Iterator to array.
-			template <typename ValueType>
-			class __arr_iter: public __arr_iterbase<__arr_iter<ValueType>, ValueType*>
+			template <typename Tp>
+			class arr_kiter:
+					//forward iterator interface
+					public kerbal::operators::dereferenceable<arr_kiter<Tp>, const Tp*>, // it->
+					public kerbal::operators::equality_comparable<arr_kiter<Tp> >, // it != jt
+					public kerbal::operators::incrementable<arr_kiter<Tp> >, // it++
+					//bidirectional iterator interface
+					public kerbal::operators::decrementable<arr_kiter<Tp> >, // it--
+					//random access iterator interface
+					public kerbal::operators::addable<arr_kiter<Tp>, typename kerbal::iterator::iterator_traits<const Tp*>::difference_type>, // it + N
+					public kerbal::operators::addable_left<arr_kiter<Tp>, typename kerbal::iterator::iterator_traits<const Tp*>::difference_type>,// N + it
+					public kerbal::operators::less_than_comparable<arr_kiter<Tp> >, // it > jt, it <= jt, it >= jt
+					public kerbal::operators::subtractable<arr_kiter<Tp>, typename kerbal::iterator::iterator_traits<const Tp*>::difference_type> // it - N
 			{
-				private:
-					template <typename Tp, std::size_t N>
+					template <typename Up, std::size_t N>
 					friend class kerbal::container::array;
 
-					friend class __arr_kiter<ValueType>;
-
-					typedef __arr_iterbase<__arr_iter<ValueType>, ValueType*> super;
+				private:
+					typedef kerbal::iterator::iterator_traits<const Tp*>			iterator_traits;
+					typedef kerbal::container::detail::arr_iter<Tp> iterator;
 
 				public:
-					explicit KERBAL_CONSTEXPR __arr_iter(ValueType* current) KERBAL_NOEXCEPT :
-							super(current)
-					{
-					}
-			};
+					typedef std::random_access_iterator_tag					iterator_category;
+					typedef typename iterator_traits::value_type			value_type;
+					typedef typename iterator_traits::difference_type		difference_type;
+					typedef typename iterator_traits::pointer				pointer;
+					typedef typename iterator_traits::reference				reference;
 
-			/// @brief Iterator to array.
-			template <typename ValueType>
-			class __arr_kiter: public __arr_iterbase<__arr_kiter<ValueType>, const ValueType*>
-			{
-				private:
-					template <typename Tp, std::size_t N>
-					friend class kerbal::container::array;
-
-					typedef __arr_iterbase<__arr_kiter<ValueType>, const ValueType*> super;
-					typedef __arr_iter<ValueType> iterator;
+				protected:
+					pointer current;
 
 				public:
 					KERBAL_CONSTEXPR
-					explicit __arr_kiter(const ValueType* current) KERBAL_NOEXCEPT :
-							super(current)
+					arr_kiter() KERBAL_NOEXCEPT :
+							current(NULL)
 					{
 					}
 
+				protected:
 					KERBAL_CONSTEXPR
-					__arr_kiter(const iterator & current) KERBAL_NOEXCEPT :
-							super(current.current)
+					explicit
+					arr_kiter(pointer current) KERBAL_NOEXCEPT :
+							current(current)
 					{
+					}
+
+				public:
+
+					KERBAL_CONSTEXPR
+					arr_kiter(const iterator & iter) KERBAL_NOEXCEPT :
+							current(iter.current)
+					{
+					}
+
+					//===================
+					//forward iterator interface
+
+					KERBAL_CONSTEXPR14
+					reference operator*() const KERBAL_NOEXCEPT
+					{
+						return *this->current;
+					}
+
+					KERBAL_CONSTEXPR14
+					arr_kiter& operator++() KERBAL_NOEXCEPT
+					{
+						++this->current;
+						return static_cast<arr_kiter&>(*this);
+					}
+
+					friend KERBAL_CONSTEXPR
+					bool operator==(const arr_kiter & lhs, const arr_kiter & rhs) KERBAL_NOEXCEPT
+					{
+						return lhs.current == rhs.current;
+					}
+
+					//===================
+					//bidirectional iterator interface
+
+					KERBAL_CONSTEXPR14
+					arr_kiter& operator--() KERBAL_NOEXCEPT
+					{
+						--this->current;
+						return static_cast<arr_kiter&>(*this);
+					}
+
+					//===================
+					//random access iterator interface
+
+					friend KERBAL_CONSTEXPR
+					difference_type
+					operator-(const arr_kiter & lhs, const arr_kiter & rhs) KERBAL_NOEXCEPT
+					{
+						return lhs.current - rhs.current;
+					}
+
+					KERBAL_CONSTEXPR14
+					arr_kiter& operator+=(const difference_type & delta) KERBAL_NOEXCEPT
+					{
+						this->current += delta;
+						return static_cast<arr_kiter&>(*this);
+					}
+
+					KERBAL_CONSTEXPR14
+					arr_kiter& operator-=(const difference_type & delta) KERBAL_NOEXCEPT
+					{
+						this->current -= delta;
+						return static_cast<arr_kiter&>(*this);
+					}
+
+					KERBAL_CONSTEXPR14
+					reference operator[](const difference_type & dist) const KERBAL_NOEXCEPT
+					{
+						return *(static_cast<const arr_kiter&>(*this) + dist);
+					}
+
+					friend KERBAL_CONSTEXPR
+					bool operator<(const arr_kiter & lhs, const arr_kiter & rhs) KERBAL_NOEXCEPT
+					{
+						return lhs.current < rhs.current;
 					}
 
 				protected:
 					KERBAL_CONSTEXPR14
 					iterator cast_to_mutable() const KERBAL_NOEXCEPT
 					{
-						return iterator(const_cast<ValueType*>(this->current));
+						return iterator(const_cast<Tp*>(this->current));
 					}
 
 			};
@@ -205,13 +297,13 @@ namespace kerbal
 		{
 
 			template <typename Tp>
-			struct reverse_iterator_base_is_inplace<kerbal::container::detail::__arr_iter<Tp> >:
+			struct reverse_iterator_base_is_inplace<kerbal::container::detail::arr_iter<Tp> >:
 					kerbal::type_traits::true_type
 			{
 			};
 
 			template <typename Tp>
-			struct reverse_iterator_base_is_inplace<kerbal::container::detail::__arr_kiter<Tp> >:
+			struct reverse_iterator_base_is_inplace<kerbal::container::detail::arr_kiter<Tp> >:
 					kerbal::type_traits::true_type
 			{
 			};
