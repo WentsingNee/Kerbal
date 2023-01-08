@@ -213,26 +213,35 @@ namespace kerbal
 			typedef ForwardIterator iterator;
 			typedef typename kerbal::iterator::iterator_traits<iterator>::value_type value_type;
 
-			typedef typename kerbal::type_traits::conditional<
-				kerbal::memory::allocator_could_use_construct<Allocator, value_type>::value,
-				detail::UI_VAL_CONSTRUCT_UA_VER_NO_CATCH,
-				detail::UI_VAL_CONSTRUCT_UA_VER_NO_UA
-			>::type AT_TRIVIALLY_DESTROY;
+			typedef kerbal::type_traits::bool_constant<
+				!kerbal::memory::allocator_could_use_construct<Allocator, value_type>::value &&
+				!kerbal::memory::allocator_could_use_destroy<Allocator, value_type>::value
+			> NO_UA;
 
 #	if KERBAL_HAS_EXCEPTIONS_SUPPORT
 
 			typedef typename kerbal::type_traits::conditional<
-				detail::can_be_trivially_destroy_ua<value_type, Allocator>::value,
-				AT_TRIVIALLY_DESTROY,
+				NO_UA::value,
+				detail::UI_VAL_CONSTRUCT_UA_VER_NO_UA,
 				typename kerbal::type_traits::conditional<
-					detail::can_be_nothrow_advance_iterator<iterator>::value,
-					detail::UI_VAL_CONSTRUCT_UA_VER_NOTHROW_ITER_ADVANCE,
-					detail::UI_VAL_CONSTRUCT_UA_VER_DEFAULT
+					detail::can_be_trivially_destroy_ua<value_type, Allocator>::value,
+					detail::UI_VAL_CONSTRUCT_UA_VER_NO_CATCH,
+					typename kerbal::type_traits::conditional<
+						detail::can_be_nothrow_advance_iterator<iterator>::value,
+						detail::UI_VAL_CONSTRUCT_UA_VER_NOTHROW_ITER_ADVANCE,
+						detail::UI_VAL_CONSTRUCT_UA_VER_DEFAULT
+					>::type
 				>::type
 			>::type VER;
 
 #	else
-			typedef AT_TRIVIALLY_DESTROY VER;
+
+			typedef typename kerbal::type_traits::conditional<
+				NO_UA::value,
+				detail::UI_VAL_CONSTRUCT_UA_VER_NO_UA,
+				detail::UI_VAL_CONSTRUCT_UA_VER_NO_CATCH
+			>::type VER;
+
 #	endif
 
 			detail::k_uninitialized_value_construct_using_allocator(alloc, first, last, VER());
@@ -494,26 +503,35 @@ namespace kerbal
 			typedef ForwardIterator output_iterator;
 			typedef typename kerbal::iterator::iterator_traits<output_iterator>::value_type output_value_type;
 
-			typedef typename kerbal::type_traits::conditional<
-				kerbal::memory::allocator_could_use_construct<Allocator, output_value_type, input_reference>::value,
-				detail::UI_CPY_UA_VER_NO_CATCH,
-				detail::UI_CPY_UA_VER_NO_UA
-			>::type AT_TRIVIALLY_DESTROY;
+			typedef kerbal::type_traits::bool_constant<
+				!kerbal::memory::allocator_could_use_construct<Allocator, output_value_type, input_reference>::value &&
+				!kerbal::memory::allocator_could_use_destroy<Allocator, output_value_type>::value
+			> NO_UA;
 
 #	if KERBAL_HAS_EXCEPTIONS_SUPPORT
 
 			typedef typename kerbal::type_traits::conditional<
-				detail::can_be_trivially_destroy_ua<output_value_type, Allocator>::value,
-				AT_TRIVIALLY_DESTROY,
+				NO_UA::value,
+				detail::UI_CPY_UA_VER_NO_UA,
 				typename kerbal::type_traits::conditional<
-					detail::can_be_nothrow_advance_iterator<output_iterator>::value,
-					detail::UI_CPY_UA_VER_NOTHROW_ITER_ADVANCE,
-					detail::UI_CPY_UA_VER_DEFAULT
+					detail::can_be_trivially_destroy_ua<output_value_type, Allocator>::value,
+					detail::UI_CPY_UA_VER_NO_CATCH,
+					typename kerbal::type_traits::conditional<
+						detail::can_be_nothrow_advance_iterator<output_iterator>::value,
+						detail::UI_CPY_UA_VER_NOTHROW_ITER_ADVANCE,
+						detail::UI_CPY_UA_VER_DEFAULT
+					>::type
 				>::type
 			>::type VER;
 
 #	else
-			typedef AT_TRIVIALLY_DESTROY VER;
+
+			typedef typename kerbal::type_traits::conditional<
+				NO_UA::value,
+				detail::UI_CPY_UA_VER_NO_UA,
+				detail::UI_CPY_UA_VER_NO_CATCH
+			>::type VER;
+
 #	endif
 
 			return detail::k_uninitialized_copy_using_allocator(alloc, first, last, to, VER());
