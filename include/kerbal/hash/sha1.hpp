@@ -107,7 +107,7 @@ namespace kerbal
 
 #		if __cplusplus >= 201103L
 				constexpr
-				SHA1_transform_overload() noexcept = default;
+				SHA1_transform_overload() = default;
 #		endif
 
 				KERBAL_CONSTEXPR14
@@ -122,7 +122,7 @@ namespace kerbal
 
 #		if __cplusplus >= 201103L
 				constexpr
-				SHA1_transform_overload() noexcept = default;
+				SHA1_transform_overload() = default;
 #		endif
 
 				KERBAL_CONSTEXPR14
@@ -138,11 +138,7 @@ namespace kerbal
 
 #		if __cplusplus >= 201103L
 				constexpr
-				SHA1_context() noexcept = default;
-#		else
-				SHA1_context() KERBAL_NOEXCEPT
-				{
-				}
+				SHA1_context() = default;
 #		endif
 
 			private:
