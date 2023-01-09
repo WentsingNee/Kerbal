@@ -1,0 +1,18 @@
+/**
+ * @file       is_destructible.hpp
+ * @brief
+ * @date       2023-01-02
+ * @author     Peter
+ * @copyright
+ *      Peter of [ThinkSpirit Laboratory](http://thinkspirit.org/)
+ *   of [Nanjing University of Information Science & Technology](http://www.nuist.edu.cn/)
+ *   all rights reserved
+ */
+
+#ifndef KERBAL_TYPE_TRAITS_IS_DESTRUCTIBLE_HPP
+#define KERBAL_TYPE_TRAITS_IS_DESTRUCTIBLE_HPP
+
+#include <kerbal/type_traits/detail/is_destructible/is_destructible.part.hpp>
+#include <kerbal/type_traits/detail/is_destructible/try_test_is_destructible.part.hpp>
+
+#endif // KERBAL_TYPE_TRAITS_IS_DESTRUCTIBLE_HPP
