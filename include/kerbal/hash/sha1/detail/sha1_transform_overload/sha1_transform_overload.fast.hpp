@@ -38,7 +38,7 @@ namespace kerbal
 
 #		if __cplusplus >= 201103L
 					constexpr
-					SHA1_transform_overload() noexcept = default;
+					SHA1_transform_overload() = default;
 #		endif
 
 					KERBAL_CONSTEXPR14

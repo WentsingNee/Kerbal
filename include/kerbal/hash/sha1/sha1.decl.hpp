@@ -43,11 +43,7 @@ namespace kerbal
 
 #		if __cplusplus >= 201103L
 				constexpr
-				SHA1_context() noexcept = default;
-#		else
-				SHA1_context() KERBAL_NOEXCEPT
-				{
-				}
+				SHA1_context() = default;
 #		endif
 
 			private:
