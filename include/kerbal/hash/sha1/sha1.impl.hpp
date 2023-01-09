@@ -162,7 +162,7 @@ namespace kerbal
 				w[i] = char4tolong1<BYTE_ORDER>(buffer + 4 * i);
 			}
 			for (int i = 16; i < 20; ++i) {
-				w[i] = kerbal::numeric::rotl(w[i - 16] ^ w[i - 14] ^ w[i - 8] ^ w[i - 3] , 1);
+				w[i] = kerbal::numeric::rotl(w[i - 16] ^ w[i - 14] ^ w[i - 8] ^ w[i - 3], 1);
 			}
 
 			/* Copy context->state[] to working vars */
@@ -230,22 +230,22 @@ namespace kerbal
 		inline
 		void update_w_fast(uint32_t w[16]) KERBAL_NOEXCEPT
 		{
-			w[0] = kerbal::numeric::rotl(w[0] ^ w[2] ^ w[8] ^ w[13] , 1);
-			w[1] = kerbal::numeric::rotl(w[1] ^ w[3] ^ w[9] ^ w[14] , 1);
-			w[2] = kerbal::numeric::rotl(w[2] ^ w[4] ^ w[10] ^ w[15] , 1);
-			w[3] = kerbal::numeric::rotl(w[3] ^ w[5] ^ w[11] ^ w[0] , 1);
-			w[4] = kerbal::numeric::rotl(w[4] ^ w[6] ^ w[12] ^ w[1] , 1);
-			w[5] = kerbal::numeric::rotl(w[5] ^ w[7] ^ w[13] ^ w[2] , 1);
-			w[6] = kerbal::numeric::rotl(w[6] ^ w[8] ^ w[14] ^ w[3] , 1);
-			w[7] = kerbal::numeric::rotl(w[7] ^ w[9] ^ w[15] ^ w[4] , 1);
-			w[8] = kerbal::numeric::rotl(w[8] ^ w[10] ^ w[0] ^ w[5] , 1);
-			w[9] = kerbal::numeric::rotl(w[9] ^ w[11] ^ w[1] ^ w[6] , 1);
-			w[10] = kerbal::numeric::rotl(w[10] ^ w[12] ^ w[2] ^ w[7] , 1);
-			w[11] = kerbal::numeric::rotl(w[11] ^ w[13] ^ w[3] ^ w[8] , 1);
-			w[12] = kerbal::numeric::rotl(w[12] ^ w[14] ^ w[4] ^ w[9] , 1);
-			w[13] = kerbal::numeric::rotl(w[13] ^ w[15] ^ w[5] ^ w[10] , 1);
-			w[14] = kerbal::numeric::rotl(w[14] ^ w[0] ^ w[6] ^ w[11] , 1);
-			w[15] = kerbal::numeric::rotl(w[15] ^ w[1] ^ w[7] ^ w[12] , 1);
+			w[0] = kerbal::numeric::rotl(w[0] ^ w[2] ^ w[8] ^ w[13], 1);
+			w[1] = kerbal::numeric::rotl(w[1] ^ w[3] ^ w[9] ^ w[14], 1);
+			w[2] = kerbal::numeric::rotl(w[2] ^ w[4] ^ w[10] ^ w[15], 1);
+			w[3] = kerbal::numeric::rotl(w[3] ^ w[5] ^ w[11] ^ w[0], 1);
+			w[4] = kerbal::numeric::rotl(w[4] ^ w[6] ^ w[12] ^ w[1], 1);
+			w[5] = kerbal::numeric::rotl(w[5] ^ w[7] ^ w[13] ^ w[2], 1);
+			w[6] = kerbal::numeric::rotl(w[6] ^ w[8] ^ w[14] ^ w[3], 1);
+			w[7] = kerbal::numeric::rotl(w[7] ^ w[9] ^ w[15] ^ w[4], 1);
+			w[8] = kerbal::numeric::rotl(w[8] ^ w[10] ^ w[0] ^ w[5], 1);
+			w[9] = kerbal::numeric::rotl(w[9] ^ w[11] ^ w[1] ^ w[6], 1);
+			w[10] = kerbal::numeric::rotl(w[10] ^ w[12] ^ w[2] ^ w[7], 1);
+			w[11] = kerbal::numeric::rotl(w[11] ^ w[13] ^ w[3] ^ w[8], 1);
+			w[12] = kerbal::numeric::rotl(w[12] ^ w[14] ^ w[4] ^ w[9], 1);
+			w[13] = kerbal::numeric::rotl(w[13] ^ w[15] ^ w[5] ^ w[10], 1);
+			w[14] = kerbal::numeric::rotl(w[14] ^ w[0] ^ w[6] ^ w[11], 1);
+			w[15] = kerbal::numeric::rotl(w[15] ^ w[1] ^ w[7] ^ w[12], 1);
 		}
 
 		KERBAL_CONSTEXPR14
