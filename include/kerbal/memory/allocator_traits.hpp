@@ -20,7 +20,6 @@
 #include <kerbal/memory/pointer_traits.hpp>
 #include <kerbal/memory/uninitialized.hpp>
 #include <kerbal/numeric/numeric_limits.hpp>
-#include <kerbal/type_traits/add_lvalue_reference.hpp>
 #include <kerbal/type_traits/conditional.hpp>
 #include <kerbal/type_traits/integral_constant.hpp>
 #include <kerbal/type_traits/is_empty.hpp>
@@ -1026,21 +1025,6 @@ namespace kerbal
 				}
 
 #		else
-
-			private:
-				typedef typename kerbal::type_traits::conditional<
-						kerbal::type_traits::is_same<value_type, void>::value,
-						void*,
-						typename kerbal::type_traits::add_lvalue_reference<const value_type>::type
-				>::type cxx98_construct_cref;
-
-			public:
-
-				template <typename T>
-				static void construct(Alloc & alloc, T * p, cxx98_construct_cref val)
-				{
-					alloc.construct(p, val);
-				}
 
 #			define EMPTY
 #			define LEFT_JOIN_COMMA(exp) , exp
