@@ -12,8 +12,10 @@
 #ifndef KERBAL_MEMORY_ALLOCATOR_TRAITS_HPP
 #define KERBAL_MEMORY_ALLOCATOR_TRAITS_HPP
 
+#include <kerbal/memory/allocator/std_allocator.fwd.hpp>
+#include <kerbal/memory/allocator/std_pmr_allocator.fwd.hpp>
+
 #include <kerbal/compatibility/constexpr.hpp>
-#include <kerbal/compatibility/namespace_std_scope.hpp>
 #include <kerbal/compatibility/noexcept.hpp>
 #include <kerbal/memory/pointer_traits.hpp>
 #include <kerbal/numeric/numeric_limits.hpp>
@@ -42,23 +44,6 @@
 #endif
 
 #include <cstddef>
-
-
-KERBAL_NAMESPACE_STD_BEGIN
-
-template <typename T>
-class allocator;
-
-namespace pmr
-{
-
-	template <typename T>
-	class polymorphic_allocator;
-
-} // namespace pmr
-
-
-KERBAL_NAMESPACE_STD_END
 
 
 namespace kerbal
