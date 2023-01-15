@@ -32,6 +32,13 @@
 #			define KERBAL_IS_CONSTANT_EVALUATED() (__builtin_is_constant_evaluated())
 #		endif
 
+#	elif KERBAL_COMPILER_ID == KERBAL_COMPILER_ID_MSVC
+
+#		if KERBAL_MSVC_VERSION_MEETS(19, 25, 0) // vs2019
+#			define KERBAL_HAS_IS_CONSTANT_EVALUATED_SUPPORT 1
+#			define KERBAL_IS_CONSTANT_EVALUATED() (__builtin_is_constant_evaluated())
+#		endif
+
 #	elif KERBAL_COMPILER_ID == KERBAL_COMPILER_ID_ICC
 
 #		if KERBAL_ICC_PRIVATE_HAS_BUILTIN(__builtin_is_constant_evaluated)
