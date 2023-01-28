@@ -12,7 +12,6 @@
 #ifndef KERBAL_UTILITY_NONCOPYABLE_HPP
 #define KERBAL_UTILITY_NONCOPYABLE_HPP
 
-#include <kerbal/compatibility/constexpr.hpp>
 #include <kerbal/compatibility/noexcept.hpp>
 
 

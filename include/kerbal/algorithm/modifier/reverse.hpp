@@ -13,7 +13,6 @@
 #define KERBAL_ALGORITHM_MODIFIER_REVERSE_HPP
 
 #include <kerbal/algorithm/swap.hpp>
-#include <kerbal/assign/generic_assign.hpp>
 #include <kerbal/compatibility/constexpr.hpp>
 #include <kerbal/iterator/iterator.hpp>
 #include <kerbal/iterator/iterator_traits.hpp>

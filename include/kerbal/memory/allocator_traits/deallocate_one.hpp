@@ -14,7 +14,6 @@
 
 #include <kerbal/compatibility/constexpr.hpp>
 #include <kerbal/compatibility/noexcept.hpp>
-#include <kerbal/memory/allocator_traits/pointer_type.hpp>
 #include <kerbal/type_traits/integral_constant.hpp>
 #include <kerbal/type_traits/void_type.hpp>
 #include <kerbal/utility/declval.hpp>
