@@ -12,6 +12,8 @@
 #ifndef KERBAL_COMPARE_SEQUENCE_COMPARE_HPP
 #define KERBAL_COMPARE_SEQUENCE_COMPARE_HPP
 
+#include <kerbal/compare/fwd/sequence_compare.fwd.hpp>
+
 #include <kerbal/compare/basic_compare.hpp>
 #include <kerbal/compare/binary_type_compare.hpp>
 #include <kerbal/compatibility/constexpr.hpp>
@@ -110,11 +112,6 @@ namespace kerbal
 		bool sequence_equal_to(InputIterator1 a_first, InputIterator1 a_last,
 								InputIterator2 b_first, InputIterator2 b_last,
 								BinaryTypeEqualToPredicate equal_to)
-				KERBAL_CONDITIONAL_NOEXCEPT(
-						noexcept(__sequence_equal_to(a_first, a_last, b_first, b_last, equal_to,
-								kerbal::iterator::iterator_category(a_first),
-								kerbal::iterator::iterator_category(b_first)))
-				)
 		{
 			return __sequence_equal_to(a_first, a_last, b_first, b_last, equal_to,
 					kerbal::iterator::iterator_category(a_first),
@@ -125,13 +122,6 @@ namespace kerbal
 		KERBAL_CONSTEXPR14
 		bool sequence_equal_to(InputIterator1 a_first, InputIterator1 a_last,
 								InputIterator2 b_first, InputIterator2 b_last)
-				KERBAL_CONDITIONAL_NOEXCEPT(
-						noexcept(sequence_equal_to(a_first, a_last, b_first, b_last,
-								kerbal::compare::binary_type_equal_to<
-									typename kerbal::iterator::iterator_traits<InputIterator1>::value_type,
-									typename kerbal::iterator::iterator_traits<InputIterator2>::value_type
-								>()))
-				)
 		{
 			typedef InputIterator1 iterator1;
 			typedef InputIterator2 iterator2;
