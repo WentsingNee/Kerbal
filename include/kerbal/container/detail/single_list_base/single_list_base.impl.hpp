@@ -688,7 +688,7 @@ namespace kerbal
 			typename sl_allocator_unrelated<Tp>::reference
 			sl_allocator_unrelated<Tp>::back() KERBAL_NOEXCEPT
 			{
-				return this->end().current->template reinterpret_as<Tp>().value;
+				return this->end().current->template reinterpret_as<Tp>().member();
 			}
 
 			template <typename Tp>
@@ -696,7 +696,7 @@ namespace kerbal
 			typename sl_allocator_unrelated<Tp>::const_reference
 			sl_allocator_unrelated<Tp>::back() const KERBAL_NOEXCEPT
 			{
-				return this->cend().current->template reinterpret_as<Tp>().value;
+				return this->cend().current->template reinterpret_as<Tp>().member();
 			}
 
 
@@ -817,7 +817,7 @@ namespace kerbal
 			{
 				node *p = _K_build_new_node(alloc, kerbal::utility::forward<Args>(args)...);
 				this->_K_hook_node(this->basic_begin(), p);
-				return p->value;
+				return p->member();
 			}
 
 #		else
@@ -835,7 +835,7 @@ namespace kerbal
 			{ \
 				node *p = _K_build_new_node(alloc KERBAL_OPT_PPEXPAND_WITH_COMMA_N(LEFT_JOIN_COMMA, EMPTY, ARGS_USE, i)); \
 				this->_K_hook_node(this->basic_begin(), p); \
-				return p->value; \
+				return p->member(); \
 			}
 
 			KERBAL_PPEXPAND_N(FBODY, KERBAL_PPEXPAND_EMPTY_SEPARATOR, 0)
@@ -880,7 +880,7 @@ namespace kerbal
 			{
 				node *p = _K_build_new_node(alloc, kerbal::utility::forward<Args>(args)...);
 				this->_K_hook_node_back(p);
-				return p->value;
+				return p->member();
 			}
 
 #		else
@@ -898,7 +898,7 @@ namespace kerbal
 			{ \
 				node *p = _K_build_new_node(alloc KERBAL_OPT_PPEXPAND_WITH_COMMA_N(LEFT_JOIN_COMMA, EMPTY, ARGS_USE, i)); \
 				this->_K_hook_node_back(p); \
-				return p->value; \
+				return p->member(); \
 			}
 
 			KERBAL_PPEXPAND_N(FBODY, KERBAL_PPEXPAND_EMPTY_SEPARATOR, 0)

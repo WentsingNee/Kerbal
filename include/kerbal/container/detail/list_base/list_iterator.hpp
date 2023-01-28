@@ -203,7 +203,7 @@ namespace kerbal
 					KERBAL_CONSTEXPR14
 					reference operator*() const KERBAL_NOEXCEPT
 					{
-						return this->current->template reinterpret_as<Tp>().value;
+						return this->current->template reinterpret_as<Tp>().member();
 					}
 
 					KERBAL_CONSTEXPR14
@@ -292,7 +292,7 @@ namespace kerbal
 					KERBAL_CONSTEXPR14
 					reference operator*() const KERBAL_NOEXCEPT
 					{
-						return this->current->template reinterpret_as<Tp>().value;
+						return this->current->template reinterpret_as<Tp>().member();
 					}
 
 					KERBAL_CONSTEXPR14

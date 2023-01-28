@@ -644,7 +644,7 @@ namespace kerbal
 			typename fl_allocator_unrelated<Tp>::reference
 			fl_allocator_unrelated<Tp>::front() KERBAL_NOEXCEPT
 			{
-				return this->head_node.next->template reinterpret_as<Tp>().value;
+				return this->head_node.next->template reinterpret_as<Tp>().member();
 			}
 
 			template <typename Tp>
@@ -652,7 +652,7 @@ namespace kerbal
 			typename fl_allocator_unrelated<Tp>::const_reference
 			fl_allocator_unrelated<Tp>::front() const KERBAL_NOEXCEPT
 			{
-				return this->head_node.next->template reinterpret_as<Tp>().value;
+				return this->head_node.next->template reinterpret_as<Tp>().member();
 			}
 
 
@@ -689,7 +689,7 @@ namespace kerbal
 			{
 				node *p = _K_build_new_node(alloc, kerbal::utility::forward<Args>(args)...);
 				fl_type_unrelated::_K_hook_node_after(this->basic_cbefore_begin(), p);
-				return p->value;
+				return p->member();
 			}
 
 #		else
@@ -707,7 +707,7 @@ namespace kerbal
 			{ \
 				node *p = _K_build_new_node(alloc KERBAL_OPT_PPEXPAND_WITH_COMMA_N(LEFT_JOIN_COMMA, EMPTY, ARGS_USE, i)); \
 				fl_type_unrelated::_K_hook_node_after(this->basic_cbefore_begin(), p); \
-				return p->value; \
+				return p->member(); \
 			}
 
 			KERBAL_PPEXPAND_N(FBODY, KERBAL_PPEXPAND_EMPTY_SEPARATOR, 0)

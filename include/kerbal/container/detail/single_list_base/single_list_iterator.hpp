@@ -188,7 +188,7 @@ namespace kerbal
 					KERBAL_CONSTEXPR14
 					reference operator*() const KERBAL_NOEXCEPT
 					{
-						return this->refer_node_ptr()->template reinterpret_as<Tp>().value;
+						return this->refer_node_ptr()->template reinterpret_as<Tp>().member();
 					}
 
 					KERBAL_CONSTEXPR14
@@ -262,7 +262,7 @@ namespace kerbal
 					KERBAL_CONSTEXPR14
 					reference operator*() const KERBAL_NOEXCEPT
 					{
-						return this->refer_node_ptr()->template reinterpret_as<Tp>().value;
+						return this->refer_node_ptr()->template reinterpret_as<Tp>().member();
 					}
 
 					KERBAL_CONSTEXPR14
