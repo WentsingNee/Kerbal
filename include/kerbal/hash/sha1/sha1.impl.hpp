@@ -321,26 +321,16 @@ namespace kerbal
 		}
 
 		inline
-		void update_w_sha1_instruct(uint32_t w[16]) KERBAL_NOEXCEPT
+		void update_w_sha1_instruct(__m128i xmm_w[4]) KERBAL_NOEXCEPT
 		{
 			//w[0] = kerbal::numeric::rotl(w[0] ^ w[2] ^ w[8] ^ w[13] , 1);
 			//w[1] = kerbal::numeric::rotl(w[1] ^ w[3] ^ w[9] ^ w[14] , 1);
 			//w[2] = kerbal::numeric::rotl(w[2] ^ w[4] ^ w[10] ^ w[15] , 1);
 			//w[3] = kerbal::numeric::rotl(w[3] ^ w[5] ^ w[11] ^ w[0] , 1);
 			{
-				//__m128i a = _mm_set_epi32(w[0], w[1], w[2], w[3]);
-				__m128i a = mm_reverse32(_mm_loadu_si128(reinterpret_cast<__m128i*>(w + 0)));
-				//__m128i b = _mm_set_epi32(w[4], w[5], 0, 0);
-				__m128i b = mm_reverse32(_mm_loadu_si128(reinterpret_cast<__m128i*>(w + 4)));
-				__m128i sha1msg1 = _mm_sha1msg1_epu32(a, b);
-				//__m128i c = _mm_set_epi32(w[8], w[9], w[10], w[11]);
-				__m128i c = mm_reverse32(_mm_loadu_si128(reinterpret_cast<__m128i*>(w + 8)));
-				c = _mm_xor_si128(sha1msg1, c);
-				//__m128i d = _mm_set_epi32(0, w[13], w[14], w[15]);
-				__m128i d = mm_reverse32(_mm_loadu_si128(reinterpret_cast<__m128i*>(w + 12)));
-				__m128i sha1msg2 = _mm_sha1msg2_epu32(c, d);
-				sha1msg2 = mm_reverse32(sha1msg2);
-				_mm_storeu_si128(reinterpret_cast<__m128i*>(w + 0), sha1msg2);
+				__m128i xmm_sha1msg1 = _mm_sha1msg1_epu32(xmm_w[0], xmm_w[1]);
+				xmm_sha1msg1 = _mm_xor_si128(xmm_sha1msg1, xmm_w[2]);
+				xmm_w[0] = _mm_sha1msg2_epu32(xmm_sha1msg1, xmm_w[3]);
 			}
 
 			//w[4] = kerbal::numeric::rotl(w[4] ^ w[6] ^ w[12] ^ w[1] , 1);
@@ -348,19 +338,9 @@ namespace kerbal
 			//w[6] = kerbal::numeric::rotl(w[6] ^ w[8] ^ w[14] ^ w[3] , 1);
 			//w[7] = kerbal::numeric::rotl(w[7] ^ w[9] ^ w[15] ^ w[4] , 1);
 			{
-				//__m128i a = _mm_set_epi32(w[4], w[5], w[6], w[7]);
-				__m128i a = mm_reverse32(_mm_loadu_si128(reinterpret_cast<__m128i*>(w + 4)));
-				//__m128i b = _mm_set_epi32(w[8], w[9], 0, 0);
-				__m128i b = mm_reverse32(_mm_loadu_si128(reinterpret_cast<__m128i*>(w + 8)));
-				__m128i sha1msg1 = _mm_sha1msg1_epu32(a, b);
-				//__m128i c = _mm_set_epi32(w[12], w[13], w[14], w[15]);
-				__m128i c = mm_reverse32(_mm_loadu_si128(reinterpret_cast<__m128i*>(w + 12)));
-				c = _mm_xor_si128(sha1msg1, c);
-				//__m128i d = _mm_set_epi32(0, w[1], w[2], w[3]);
-				__m128i d = mm_reverse32(_mm_loadu_si128(reinterpret_cast<__m128i*>(w + 0)));
-				__m128i sha1msg2 = _mm_sha1msg2_epu32(c, d);
-				sha1msg2 = mm_reverse32(sha1msg2);
-				_mm_storeu_si128(reinterpret_cast<__m128i*>(w + 4), sha1msg2);
+				__m128i xmm_sha1msg1 = _mm_sha1msg1_epu32(xmm_w[1], xmm_w[2]);
+				xmm_sha1msg1 = _mm_xor_si128(xmm_sha1msg1, xmm_w[3]);
+				xmm_w[1] = _mm_sha1msg2_epu32(xmm_sha1msg1, xmm_w[0]);
 			}
 
 			//w[8] = kerbal::numeric::rotl(w[8] ^ w[10] ^ w[0] ^ w[5] , 1);
@@ -368,19 +348,9 @@ namespace kerbal
 			//w[10] = kerbal::numeric::rotl(w[10] ^ w[12] ^ w[2] ^ w[7] , 1);
 			//w[11] = kerbal::numeric::rotl(w[11] ^ w[13] ^ w[3] ^ w[8] , 1);
 			{
-				//__m128i a = _mm_set_epi32(w[8], w[9], w[10], w[11]);
-				__m128i a = mm_reverse32(_mm_loadu_si128(reinterpret_cast<__m128i*>(w + 8)));
-				//__m128i b = _mm_set_epi32(w[12], w[13], 0, 0);
-				__m128i b = mm_reverse32(_mm_loadu_si128(reinterpret_cast<__m128i*>(w + 12)));
-				__m128i sha1msg1 = _mm_sha1msg1_epu32(a, b);
-				//__m128i c = _mm_set_epi32(w[0], w[1], w[2], w[3]);
-				__m128i c = mm_reverse32(_mm_loadu_si128(reinterpret_cast<__m128i*>(w + 0)));
-				c = _mm_xor_si128(sha1msg1, c);
-				//__m128i d = _mm_set_epi32(0, w[5], w[6], w[7]);
-				__m128i d = mm_reverse32(_mm_loadu_si128(reinterpret_cast<__m128i*>(w + 4)));
-				__m128i sha1msg2 = _mm_sha1msg2_epu32(c, d);
-				sha1msg2 = mm_reverse32(sha1msg2);
-				_mm_storeu_si128(reinterpret_cast<__m128i*>(w + 8), sha1msg2);
+				__m128i xmm_sha1msg1 = _mm_sha1msg1_epu32(xmm_w[2], xmm_w[3]);
+				xmm_sha1msg1 = _mm_xor_si128(xmm_sha1msg1, xmm_w[0]);
+				xmm_w[2] = _mm_sha1msg2_epu32(xmm_sha1msg1, xmm_w[1]);
 			}
 
 			//w[12] = kerbal::numeric::rotl(w[12] ^ w[14] ^ w[4] ^ w[9] , 1);
@@ -388,160 +358,134 @@ namespace kerbal
 			//w[14] = kerbal::numeric::rotl(w[14] ^ w[0] ^ w[6] ^ w[11] , 1);
 			//w[15] = kerbal::numeric::rotl(w[15] ^ w[1] ^ w[7] ^ w[12] , 1);
 			{
-				//__m128i a = _mm_set_epi32(w[12], w[13], w[14], w[15]);
-				__m128i a = mm_reverse32(_mm_loadu_si128(reinterpret_cast<__m128i*>(w + 12)));
-				//__m128i b = _mm_set_epi32(w[0], w[1], 0, 0);
-				__m128i b = mm_reverse32(_mm_loadu_si128(reinterpret_cast<__m128i*>(w + 0)));
-				__m128i sha1msg1 = _mm_sha1msg1_epu32(a, b);
-				//__m128i c = _mm_set_epi32(w[4], w[5], w[6], w[7]);
-				__m128i c = mm_reverse32(_mm_loadu_si128(reinterpret_cast<__m128i*>(w + 4)));
-				c = _mm_xor_si128(sha1msg1, c);
-				//__m128i d = _mm_set_epi32(0, w[9], w[10], w[11]);
-				__m128i d = mm_reverse32(_mm_loadu_si128(reinterpret_cast<__m128i*>(w + 8)));
-				__m128i sha1msg2 = _mm_sha1msg2_epu32(c, d);
-				sha1msg2 = mm_reverse32(sha1msg2);
-				_mm_storeu_si128(reinterpret_cast<__m128i*>(w + 12), sha1msg2);
+				__m128i xmm_sha1msg1 = _mm_sha1msg1_epu32(xmm_w[3], xmm_w[0]);
+				xmm_sha1msg1 = _mm_xor_si128(xmm_sha1msg1, xmm_w[1]);
+				xmm_w[3] = _mm_sha1msg2_epu32(xmm_sha1msg1, xmm_w[2]);
 			}
 
 		}
 
-		/*inline*/
+		inline
 		void SHA1_transform_overload<SHA1_policy::sha1_instruct>::transform(const uint8_t buffer[64]) KERBAL_NOEXCEPT
 		{
-			uint32_t w[16] = {};
-			for (int i = 0; i < 16; ++i) {
-				w[i] = char4tolong1<BYTE_ORDER>(buffer + 4 * i);
+			__m128i const xmm_emask = _mm_set_epi8(
+					0, 1, 2, 3,
+					4, 5, 6, 7,
+					8, 9, 10, 11,
+					12, 13, 14, 15
+			);
+
+			__m128i xmm_w[4];
+			for (int i = 0; i < 4; ++i) {
+				xmm_w[i] = _mm_loadu_si128(reinterpret_cast<const __m128i*>(buffer + 16 * i));
+				xmm_w[i] = _mm_shuffle_epi8(xmm_w[i], xmm_emask);
 			}
-
-			/* Copy context->state[] to working vars */
-
-			__m128i xmm_w;
-			__m128i const xmm_ZERO = _mm_set1_epi32(0);
 
 			__m128i xmm_abcd_ori = mm_reverse32(_mm_loadu_si128(reinterpret_cast<const __m128i*>(this->state + 0)));
 			__m128i xmm_e = _mm_set_epi32(this->state[4], 0, 0, 0);
 			__m128i xmm_abcd = xmm_abcd_ori;
 			__m128i xmm_abcd2;
+			__m128i xmm_t;
+
 
 			{
 				// round 0-3
-				xmm_w = mm_reverse32(_mm_loadu_si128(reinterpret_cast<const __m128i*>(w + 0)));
-				xmm_w = _mm_add_epi32(xmm_w, xmm_e);
-				xmm_abcd2 = _mm_sha1rnds4_epu32(xmm_abcd, xmm_w, 0);
+				xmm_t = _mm_add_epi32(xmm_e, xmm_w[0]);
+				xmm_abcd2 = _mm_sha1rnds4_epu32(xmm_abcd, xmm_t, 0);
 
 				// round 4-7
-				xmm_w = mm_reverse32(_mm_loadu_si128(reinterpret_cast<const __m128i*>(w + 4)));
-				xmm_w = _mm_sha1nexte_epu32(xmm_abcd, xmm_w);
-				xmm_abcd = _mm_sha1rnds4_epu32(xmm_abcd2, xmm_w, 0);
+				xmm_t = _mm_sha1nexte_epu32(xmm_abcd, xmm_w[1]);
+				xmm_abcd = _mm_sha1rnds4_epu32(xmm_abcd2, xmm_t, 0);
 
 				// round 8-11
-				xmm_w = mm_reverse32(_mm_loadu_si128(reinterpret_cast<const __m128i*>(w + 8)));
-				xmm_w = _mm_sha1nexte_epu32(xmm_abcd2, xmm_w);
-				xmm_abcd2 = _mm_sha1rnds4_epu32(xmm_abcd, xmm_w, 0);
+				xmm_t = _mm_sha1nexte_epu32(xmm_abcd2, xmm_w[2]);
+				xmm_abcd2 = _mm_sha1rnds4_epu32(xmm_abcd, xmm_t, 0);
 
 				// round 12-15
-				xmm_w = mm_reverse32(_mm_loadu_si128(reinterpret_cast<const __m128i*>(w + 12)));
-				xmm_w = _mm_sha1nexte_epu32(xmm_abcd, xmm_w);
-				xmm_abcd = _mm_sha1rnds4_epu32(xmm_abcd2, xmm_w, 0);
+				xmm_t = _mm_sha1nexte_epu32(xmm_abcd, xmm_w[3]);
+				xmm_abcd = _mm_sha1rnds4_epu32(xmm_abcd2, xmm_t, 0);
 
-				update_w_sha1_instruct(w);
+				update_w_sha1_instruct(xmm_w);
 			}
 
 			{
 				// round 16-19
-				xmm_w = mm_reverse32(_mm_loadu_si128(reinterpret_cast<const __m128i*>(w + 0)));
-				xmm_w = _mm_sha1nexte_epu32(xmm_abcd2, xmm_w);
-				xmm_abcd2 = _mm_sha1rnds4_epu32(xmm_abcd, xmm_w, 0);
+				xmm_t = _mm_sha1nexte_epu32(xmm_abcd2, xmm_w[0]);
+				xmm_abcd2 = _mm_sha1rnds4_epu32(xmm_abcd, xmm_t, 0);
 
 				// round 20-23
-				xmm_w = mm_reverse32(_mm_loadu_si128(reinterpret_cast<const __m128i*>(w + 4)));
-				xmm_w = _mm_sha1nexte_epu32(xmm_abcd, xmm_w);
-				xmm_abcd = _mm_sha1rnds4_epu32(xmm_abcd2, xmm_w, 1);
+				xmm_t = _mm_sha1nexte_epu32(xmm_abcd, xmm_w[1]);
+				xmm_abcd = _mm_sha1rnds4_epu32(xmm_abcd2, xmm_t, 1);
 
 				// round 24-27
-				xmm_w = mm_reverse32(_mm_loadu_si128(reinterpret_cast<const __m128i*>(w + 8)));
-				xmm_w = _mm_sha1nexte_epu32(xmm_abcd2, xmm_w);
-				xmm_abcd2 = _mm_sha1rnds4_epu32(xmm_abcd, xmm_w, 1);
+				xmm_t = _mm_sha1nexte_epu32(xmm_abcd2, xmm_w[2]);
+				xmm_abcd2 = _mm_sha1rnds4_epu32(xmm_abcd, xmm_t, 1);
 
 				// round 28-31
-				xmm_w = mm_reverse32(_mm_loadu_si128(reinterpret_cast<const __m128i*>(w + 12)));
-				xmm_w = _mm_sha1nexte_epu32(xmm_abcd, xmm_w);
-				xmm_abcd = _mm_sha1rnds4_epu32(xmm_abcd2, xmm_w, 1);
+				xmm_t = _mm_sha1nexte_epu32(xmm_abcd, xmm_w[3]);
+				xmm_abcd = _mm_sha1rnds4_epu32(xmm_abcd2, xmm_t, 1);
 
-				update_w_sha1_instruct(w);
+				update_w_sha1_instruct(xmm_w);
 			}
 
 			{
 				// round 32-35
-				xmm_w = mm_reverse32(_mm_loadu_si128(reinterpret_cast<const __m128i*>(w + 0)));
-				xmm_w = _mm_sha1nexte_epu32(xmm_abcd2, xmm_w);
-				xmm_abcd2 = _mm_sha1rnds4_epu32(xmm_abcd, xmm_w, 1);
+				xmm_t = _mm_sha1nexte_epu32(xmm_abcd2, xmm_w[0]);
+				xmm_abcd2 = _mm_sha1rnds4_epu32(xmm_abcd, xmm_t, 1);
 
 				// round 36-39
-				xmm_w = mm_reverse32(_mm_loadu_si128(reinterpret_cast<const __m128i*>(w + 4)));
-				xmm_w = _mm_sha1nexte_epu32(xmm_abcd, xmm_w);
-				xmm_abcd = _mm_sha1rnds4_epu32(xmm_abcd2, xmm_w, 1);
+				xmm_t = _mm_sha1nexte_epu32(xmm_abcd, xmm_w[1]);
+				xmm_abcd = _mm_sha1rnds4_epu32(xmm_abcd2, xmm_t, 1);
 
 				// round 40-43
-				xmm_w = mm_reverse32(_mm_loadu_si128(reinterpret_cast<const __m128i*>(w + 8)));
-				xmm_w = _mm_sha1nexte_epu32(xmm_abcd2, xmm_w);
-				xmm_abcd2 = _mm_sha1rnds4_epu32(xmm_abcd, xmm_w, 2);
+				xmm_t = _mm_sha1nexte_epu32(xmm_abcd2, xmm_w[2]);
+				xmm_abcd2 = _mm_sha1rnds4_epu32(xmm_abcd, xmm_t, 2);
 
 				// round 44-47
-				xmm_w = mm_reverse32(_mm_loadu_si128(reinterpret_cast<const __m128i*>(w + 12)));
-				xmm_w = _mm_sha1nexte_epu32(xmm_abcd, xmm_w);
-				xmm_abcd = _mm_sha1rnds4_epu32(xmm_abcd2, xmm_w, 2);
+				xmm_t = _mm_sha1nexte_epu32(xmm_abcd, xmm_w[3]);
+				xmm_abcd = _mm_sha1rnds4_epu32(xmm_abcd2, xmm_t, 2);
 
-				update_w_sha1_instruct(w);
+				update_w_sha1_instruct(xmm_w);
 			}
 
 			{
 				// round 48-51
-				xmm_w = mm_reverse32(_mm_loadu_si128(reinterpret_cast<const __m128i*>(w + 0)));
-				xmm_w = _mm_sha1nexte_epu32(xmm_abcd2, xmm_w);
-				xmm_abcd2 = _mm_sha1rnds4_epu32(xmm_abcd, xmm_w, 2);
+				xmm_t = _mm_sha1nexte_epu32(xmm_abcd2, xmm_w[0]);
+				xmm_abcd2 = _mm_sha1rnds4_epu32(xmm_abcd, xmm_t, 2);
 
 				// round 52-55
-				xmm_w = mm_reverse32(_mm_loadu_si128(reinterpret_cast<const __m128i*>(w + 4)));
-				xmm_w = _mm_sha1nexte_epu32(xmm_abcd, xmm_w);
-				xmm_abcd = _mm_sha1rnds4_epu32(xmm_abcd2, xmm_w, 2);
+				xmm_t = _mm_sha1nexte_epu32(xmm_abcd, xmm_w[1]);
+				xmm_abcd = _mm_sha1rnds4_epu32(xmm_abcd2, xmm_t, 2);
 
 				// round 56-59
-				xmm_w = mm_reverse32(_mm_loadu_si128(reinterpret_cast<const __m128i*>(w + 8)));
-				xmm_w = _mm_sha1nexte_epu32(xmm_abcd2, xmm_w);
-				xmm_abcd2 = _mm_sha1rnds4_epu32(xmm_abcd, xmm_w, 2);
+				xmm_t = _mm_sha1nexte_epu32(xmm_abcd2, xmm_w[2]);
+				xmm_abcd2 = _mm_sha1rnds4_epu32(xmm_abcd, xmm_t, 2);
 
 				// round 60-63
-				xmm_w = mm_reverse32(_mm_loadu_si128(reinterpret_cast<const __m128i*>(w + 12)));
-				xmm_w = _mm_sha1nexte_epu32(xmm_abcd, xmm_w);
-				xmm_abcd = _mm_sha1rnds4_epu32(xmm_abcd2, xmm_w, 3);
+				xmm_t = _mm_sha1nexte_epu32(xmm_abcd, xmm_w[3]);
+				xmm_abcd = _mm_sha1rnds4_epu32(xmm_abcd2, xmm_t, 3);
 
-				update_w_sha1_instruct(w);
+				update_w_sha1_instruct(xmm_w);
 			}
 
 			{
 				// round 64-67
-				xmm_w = mm_reverse32(_mm_loadu_si128(reinterpret_cast<const __m128i*>(w + 0)));
-				xmm_w = _mm_sha1nexte_epu32(xmm_abcd2, xmm_w);
-				xmm_abcd2 = _mm_sha1rnds4_epu32(xmm_abcd, xmm_w, 3);
+				xmm_t = _mm_sha1nexte_epu32(xmm_abcd2, xmm_w[0]);
+				xmm_abcd2 = _mm_sha1rnds4_epu32(xmm_abcd, xmm_t, 3);
 
 				// round 68-71
-				xmm_w = mm_reverse32(_mm_loadu_si128(reinterpret_cast<const __m128i*>(w + 4)));
-				xmm_w = _mm_sha1nexte_epu32(xmm_abcd, xmm_w);
-				xmm_abcd = _mm_sha1rnds4_epu32(xmm_abcd2, xmm_w, 3);
+				xmm_t = _mm_sha1nexte_epu32(xmm_abcd, xmm_w[1]);
+				xmm_abcd = _mm_sha1rnds4_epu32(xmm_abcd2, xmm_t, 3);
 
 				// round 72-75
-				xmm_w = mm_reverse32(_mm_loadu_si128(reinterpret_cast<const __m128i*>(w + 8)));
-				xmm_w = _mm_sha1nexte_epu32(xmm_abcd2, xmm_w);
-				xmm_abcd2 = _mm_sha1rnds4_epu32(xmm_abcd, xmm_w, 3);
+				xmm_t = _mm_sha1nexte_epu32(xmm_abcd2, xmm_w[2]);
+				xmm_abcd2 = _mm_sha1rnds4_epu32(xmm_abcd, xmm_t, 3);
 
 				// round 76-79
-				xmm_w = mm_reverse32(_mm_loadu_si128(reinterpret_cast<const __m128i*>(w + 12)));
-				xmm_w = _mm_sha1nexte_epu32(xmm_abcd, xmm_w);
-				xmm_e = _mm_sha1nexte_epu32(xmm_abcd2, xmm_ZERO);
-				xmm_abcd = _mm_sha1rnds4_epu32(xmm_abcd2, xmm_w, 3);
+				xmm_t = _mm_sha1nexte_epu32(xmm_abcd, xmm_w[3]);
+				xmm_abcd = _mm_sha1rnds4_epu32(xmm_abcd2, xmm_t, 3);
 
-				update_w_sha1_instruct(w);
+				update_w_sha1_instruct(xmm_w);
 			}
 
 			/* Add the working vars back into context.state[] */
@@ -549,6 +493,8 @@ namespace kerbal
 			xmm_abcd_ori = mm_reverse32(xmm_abcd_ori);
 			_mm_storeu_si128(reinterpret_cast<__m128i*>(this->state), xmm_abcd_ori);
 
+			__m128i const xmm_ZERO = _mm_set1_epi32(0);
+			xmm_e = _mm_sha1nexte_epu32(xmm_abcd2, xmm_ZERO);
 			this->state[4] += _mm_extract_epi32(xmm_e, 3);
 		}
 
