@@ -421,31 +421,31 @@ namespace kerbal
 			__m128i xmm_abcd_ori = mm_reverse32(_mm_loadu_si128(reinterpret_cast<const __m128i*>(this->state + 0)));
 			__m128i xmm_abcd = xmm_abcd_ori;
 			__m128i xmm_e = _mm_set_epi32(this->state[4], 0, 0, 0);
+			__m128i xmm_next_abcd, xmm_nexte;
 
 			{
 				// round 0-3
 				xmm_w = mm_reverse32(_mm_loadu_si128(reinterpret_cast<const __m128i*>(w + 0)));
 				xmm_w = _mm_add_epi32(xmm_w, xmm_e);
-				xmm_e = _mm_sha1nexte_epu32(xmm_abcd, xmm_ZERO);
-				xmm_abcd = _mm_sha1rnds4_epu32(xmm_abcd, xmm_w, 0);
+				xmm_next_abcd = _mm_sha1rnds4_epu32(xmm_abcd, xmm_w, 0);
 
 				// round 4-7
 				xmm_w = mm_reverse32(_mm_loadu_si128(reinterpret_cast<const __m128i*>(w + 4)));
-				xmm_w = _mm_add_epi32(xmm_w, xmm_e);
-				xmm_e = _mm_sha1nexte_epu32(xmm_abcd, xmm_ZERO);
-				xmm_abcd = _mm_sha1rnds4_epu32(xmm_abcd, xmm_w, 0);
+				xmm_w = _mm_sha1nexte_epu32(xmm_abcd, xmm_w);
+				xmm_abcd = xmm_next_abcd;
+				xmm_next_abcd = _mm_sha1rnds4_epu32(xmm_next_abcd, xmm_w, 0);
 
 				// round 8-11
 				xmm_w = mm_reverse32(_mm_loadu_si128(reinterpret_cast<const __m128i*>(w + 8)));
-				xmm_w = _mm_add_epi32(xmm_w, xmm_e);
-				xmm_e = _mm_sha1nexte_epu32(xmm_abcd, xmm_ZERO);
-				xmm_abcd = _mm_sha1rnds4_epu32(xmm_abcd, xmm_w, 0);
+				xmm_w = _mm_sha1nexte_epu32(xmm_abcd, xmm_w);
+				xmm_abcd = xmm_next_abcd;
+				xmm_next_abcd = _mm_sha1rnds4_epu32(xmm_next_abcd, xmm_w, 0);
 
 				// round 12-15
 				xmm_w = mm_reverse32(_mm_loadu_si128(reinterpret_cast<const __m128i*>(w + 12)));
-				xmm_w = _mm_add_epi32(xmm_w, xmm_e);
-				xmm_e = _mm_sha1nexte_epu32(xmm_abcd, xmm_ZERO);
-				xmm_abcd = _mm_sha1rnds4_epu32(xmm_abcd, xmm_w, 0);
+				xmm_w = _mm_sha1nexte_epu32(xmm_abcd, xmm_w);
+				xmm_abcd = xmm_next_abcd;
+				xmm_next_abcd = _mm_sha1rnds4_epu32(xmm_next_abcd, xmm_w, 0);
 
 				update_w_sha1_instruct(w);
 			}
@@ -453,27 +453,27 @@ namespace kerbal
 			{
 				// round 16-19
 				xmm_w = mm_reverse32(_mm_loadu_si128(reinterpret_cast<const __m128i*>(w + 0)));
-				xmm_w = _mm_add_epi32(xmm_w, xmm_e);
-				xmm_e = _mm_sha1nexte_epu32(xmm_abcd, xmm_ZERO);
-				xmm_abcd = _mm_sha1rnds4_epu32(xmm_abcd, xmm_w, 0);
+				xmm_w = _mm_sha1nexte_epu32(xmm_abcd, xmm_w);
+				xmm_abcd = xmm_next_abcd;
+				xmm_next_abcd = _mm_sha1rnds4_epu32(xmm_next_abcd, xmm_w, 0);
 
 				// round 20-23
 				xmm_w = mm_reverse32(_mm_loadu_si128(reinterpret_cast<const __m128i*>(w + 4)));
-				xmm_w = _mm_add_epi32(xmm_w, xmm_e);
-				xmm_e = _mm_sha1nexte_epu32(xmm_abcd, xmm_ZERO);
-				xmm_abcd = _mm_sha1rnds4_epu32(xmm_abcd, xmm_w, 1);
+				xmm_w = _mm_sha1nexte_epu32(xmm_abcd, xmm_w);
+				xmm_abcd = xmm_next_abcd;
+				xmm_next_abcd = _mm_sha1rnds4_epu32(xmm_next_abcd, xmm_w, 1);
 
 				// round 24-27
 				xmm_w = mm_reverse32(_mm_loadu_si128(reinterpret_cast<const __m128i*>(w + 8)));
-				xmm_w = _mm_add_epi32(xmm_w, xmm_e);
-				xmm_e = _mm_sha1nexte_epu32(xmm_abcd, xmm_ZERO);
-				xmm_abcd = _mm_sha1rnds4_epu32(xmm_abcd, xmm_w, 1);
+				xmm_w = _mm_sha1nexte_epu32(xmm_abcd, xmm_w);
+				xmm_abcd = xmm_next_abcd;
+				xmm_next_abcd = _mm_sha1rnds4_epu32(xmm_next_abcd, xmm_w, 1);
 
 				// round 28-31
 				xmm_w = mm_reverse32(_mm_loadu_si128(reinterpret_cast<const __m128i*>(w + 12)));
-				xmm_w = _mm_add_epi32(xmm_w, xmm_e);
-				xmm_e = _mm_sha1nexte_epu32(xmm_abcd, xmm_ZERO);
-				xmm_abcd = _mm_sha1rnds4_epu32(xmm_abcd, xmm_w, 1);
+				xmm_w = _mm_sha1nexte_epu32(xmm_abcd, xmm_w);
+				xmm_abcd = xmm_next_abcd;
+				xmm_next_abcd = _mm_sha1rnds4_epu32(xmm_next_abcd, xmm_w, 1);
 
 				update_w_sha1_instruct(w);
 			}
@@ -481,27 +481,27 @@ namespace kerbal
 			{
 				// round 32-35
 				xmm_w = mm_reverse32(_mm_loadu_si128(reinterpret_cast<const __m128i*>(w + 0)));
-				xmm_w = _mm_add_epi32(xmm_w, xmm_e);
-				xmm_e = _mm_sha1nexte_epu32(xmm_abcd, xmm_ZERO);
-				xmm_abcd = _mm_sha1rnds4_epu32(xmm_abcd, xmm_w, 1);
+				xmm_w = _mm_sha1nexte_epu32(xmm_abcd, xmm_w);
+				xmm_abcd = xmm_next_abcd;
+				xmm_next_abcd = _mm_sha1rnds4_epu32(xmm_next_abcd, xmm_w, 1);
 
 				// round 36-39
 				xmm_w = mm_reverse32(_mm_loadu_si128(reinterpret_cast<const __m128i*>(w + 4)));
-				xmm_w = _mm_add_epi32(xmm_w, xmm_e);
-				xmm_e = _mm_sha1nexte_epu32(xmm_abcd, xmm_ZERO);
-				xmm_abcd = _mm_sha1rnds4_epu32(xmm_abcd, xmm_w, 1);
+				xmm_w = _mm_sha1nexte_epu32(xmm_abcd, xmm_w);
+				xmm_abcd = xmm_next_abcd;
+				xmm_next_abcd = _mm_sha1rnds4_epu32(xmm_next_abcd, xmm_w, 1);
 
 				// round 40-43
 				xmm_w = mm_reverse32(_mm_loadu_si128(reinterpret_cast<const __m128i*>(w + 8)));
-				xmm_w = _mm_add_epi32(xmm_w, xmm_e);
-				xmm_e = _mm_sha1nexte_epu32(xmm_abcd, xmm_ZERO);
-				xmm_abcd = _mm_sha1rnds4_epu32(xmm_abcd, xmm_w, 2);
+				xmm_w = _mm_sha1nexte_epu32(xmm_abcd, xmm_w);
+				xmm_abcd = xmm_next_abcd;
+				xmm_next_abcd = _mm_sha1rnds4_epu32(xmm_next_abcd, xmm_w, 2);
 
 				// round 44-47
 				xmm_w = mm_reverse32(_mm_loadu_si128(reinterpret_cast<const __m128i*>(w + 12)));
-				xmm_w = _mm_add_epi32(xmm_w, xmm_e);
-				xmm_e = _mm_sha1nexte_epu32(xmm_abcd, xmm_ZERO);
-				xmm_abcd = _mm_sha1rnds4_epu32(xmm_abcd, xmm_w, 2);
+				xmm_w = _mm_sha1nexte_epu32(xmm_abcd, xmm_w);
+				xmm_abcd = xmm_next_abcd;
+				xmm_next_abcd = _mm_sha1rnds4_epu32(xmm_next_abcd, xmm_w, 2);
 
 				update_w_sha1_instruct(w);
 			}
@@ -509,27 +509,23 @@ namespace kerbal
 			{
 				// round 48-51
 				xmm_w = mm_reverse32(_mm_loadu_si128(reinterpret_cast<const __m128i*>(w + 0)));
-				xmm_w = _mm_add_epi32(xmm_w, xmm_e);
-				xmm_e = _mm_sha1nexte_epu32(xmm_abcd, xmm_ZERO);
-				xmm_abcd = _mm_sha1rnds4_epu32(xmm_abcd, xmm_w, 2);
+				xmm_w = _mm_sha1nexte_epu32(xmm_abcd, xmm_w);
+				xmm_abcd = _mm_sha1rnds4_epu32(xmm_next_abcd, xmm_w, 2);
 
 				// round 52-55
 				xmm_w = mm_reverse32(_mm_loadu_si128(reinterpret_cast<const __m128i*>(w + 4)));
-				xmm_w = _mm_add_epi32(xmm_w, xmm_e);
-				xmm_e = _mm_sha1nexte_epu32(xmm_abcd, xmm_ZERO);
-				xmm_abcd = _mm_sha1rnds4_epu32(xmm_abcd, xmm_w, 2);
+				xmm_w = _mm_sha1nexte_epu32(xmm_next_abcd, xmm_w);
+				xmm_next_abcd = _mm_sha1rnds4_epu32(xmm_abcd, xmm_w, 2);
 
 				// round 56-59
 				xmm_w = mm_reverse32(_mm_loadu_si128(reinterpret_cast<const __m128i*>(w + 8)));
-				xmm_w = _mm_add_epi32(xmm_w, xmm_e);
-				xmm_e = _mm_sha1nexte_epu32(xmm_abcd, xmm_ZERO);
-				xmm_abcd = _mm_sha1rnds4_epu32(xmm_abcd, xmm_w, 2);
+				xmm_w = _mm_sha1nexte_epu32(xmm_abcd, xmm_w);
+				xmm_abcd = _mm_sha1rnds4_epu32(xmm_next_abcd, xmm_w, 2);
 
 				// round 60-63
 				xmm_w = mm_reverse32(_mm_loadu_si128(reinterpret_cast<const __m128i*>(w + 12)));
-				xmm_w = _mm_add_epi32(xmm_w, xmm_e);
-				xmm_e = _mm_sha1nexte_epu32(xmm_abcd, xmm_ZERO);
-				xmm_abcd = _mm_sha1rnds4_epu32(xmm_abcd, xmm_w, 3);
+				xmm_w = _mm_sha1nexte_epu32(xmm_next_abcd, xmm_w);
+				xmm_next_abcd = _mm_sha1rnds4_epu32(xmm_abcd, xmm_w, 3);
 
 				update_w_sha1_instruct(w);
 			}
@@ -537,25 +533,22 @@ namespace kerbal
 			{
 				// round 64-67
 				xmm_w = mm_reverse32(_mm_loadu_si128(reinterpret_cast<const __m128i*>(w + 0)));
-				xmm_w = _mm_add_epi32(xmm_w, xmm_e);
-				xmm_e = _mm_sha1nexte_epu32(xmm_abcd, xmm_ZERO);
-				xmm_abcd = _mm_sha1rnds4_epu32(xmm_abcd, xmm_w, 3);
+				xmm_w = _mm_sha1nexte_epu32(xmm_abcd, xmm_w);
+				xmm_abcd = _mm_sha1rnds4_epu32(xmm_next_abcd, xmm_w, 3);
 
 				// round 68-71
 				xmm_w = mm_reverse32(_mm_loadu_si128(reinterpret_cast<const __m128i*>(w + 4)));
-				xmm_w = _mm_add_epi32(xmm_w, xmm_e);
-				xmm_e = _mm_sha1nexte_epu32(xmm_abcd, xmm_ZERO);
-				xmm_abcd = _mm_sha1rnds4_epu32(xmm_abcd, xmm_w, 3);
+				xmm_w = _mm_sha1nexte_epu32(xmm_next_abcd, xmm_w);
+				xmm_next_abcd = _mm_sha1rnds4_epu32(xmm_abcd, xmm_w, 3);
 
 				// round 72-75
 				xmm_w = mm_reverse32(_mm_loadu_si128(reinterpret_cast<const __m128i*>(w + 8)));
-				xmm_w = _mm_add_epi32(xmm_w, xmm_e);
-				xmm_e = _mm_sha1nexte_epu32(xmm_abcd, xmm_ZERO);
-				xmm_abcd = _mm_sha1rnds4_epu32(xmm_abcd, xmm_w, 3);
+				xmm_w = _mm_sha1nexte_epu32(xmm_abcd, xmm_w);
+				xmm_abcd = _mm_sha1rnds4_epu32(xmm_next_abcd, xmm_w, 3);
 
 				// round 76-79
 				xmm_w = mm_reverse32(_mm_loadu_si128(reinterpret_cast<const __m128i*>(w + 12)));
-				xmm_w = _mm_add_epi32(xmm_w, xmm_e);
+				xmm_w = _mm_sha1nexte_epu32(xmm_next_abcd, xmm_w);
 				xmm_e = _mm_sha1nexte_epu32(xmm_abcd, xmm_ZERO);
 				xmm_abcd = _mm_sha1rnds4_epu32(xmm_abcd, xmm_w, 3);
 
