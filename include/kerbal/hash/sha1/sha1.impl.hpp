@@ -373,11 +373,12 @@ namespace kerbal
 					12, 13, 14, 15
 			);
 
-			__m128i xmm_w[4];
-			for (int i = 0; i < 4; ++i) {
-				xmm_w[i] = _mm_loadu_si128(reinterpret_cast<const __m128i*>(buffer + 16 * i));
-				xmm_w[i] = _mm_shuffle_epi8(xmm_w[i], xmm_emask);
-			}
+			__m128i xmm_w[4] = {
+					_mm_shuffle_epi8(_mm_loadu_si128(reinterpret_cast<const __m128i*>(buffer + 16 * 0)), xmm_emask),
+					_mm_shuffle_epi8(_mm_loadu_si128(reinterpret_cast<const __m128i*>(buffer + 16 * 1)), xmm_emask),
+					_mm_shuffle_epi8(_mm_loadu_si128(reinterpret_cast<const __m128i*>(buffer + 16 * 2)), xmm_emask),
+					_mm_shuffle_epi8(_mm_loadu_si128(reinterpret_cast<const __m128i*>(buffer + 16 * 3)), xmm_emask),
+			};
 
 			__m128i xmm_abcd_ori = mm_reverse32(_mm_loadu_si128(reinterpret_cast<const __m128i*>(this->state + 0)));
 			__m128i xmm_e = _mm_set_epi32(this->state[4], 0, 0, 0);
@@ -483,7 +484,6 @@ namespace kerbal
 				xmm_t = _mm_sha1nexte_epu32(xmm_abcd, xmm_w[3]);
 				xmm_abcd = _mm_sha1rnds4_epu32(xmm_abcd2, xmm_t, 3);
 
-				update_w_sha1_instruct(xmm_w);
 			}
 
 			/* Add the working vars back into context.state[] */
