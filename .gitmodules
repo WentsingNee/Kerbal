@@ -1,0 +1,8 @@
+[submodule "test"]
+	path = test
+	url = ../KerbalTest.git
+	branch = main
+[submodule "pretty_printer"]
+	path = pretty_printer
+	url = ../KerbalPrettyPrinter.git
+	branch = main
