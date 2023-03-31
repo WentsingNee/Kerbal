@@ -23,13 +23,13 @@ namespace kerbal
 	namespace type_traits
 	{
 
-		MODULE_EXPORT
+		KERBAL_MODULE_EXPORT
 		template <typename>
 		struct is_lvalue_reference : kerbal::type_traits::false_type
 		{
 		};
 
-		MODULE_EXPORT
+		KERBAL_MODULE_EXPORT
 		template <typename T>
 		struct is_lvalue_reference<T &> : kerbal::type_traits::true_type
 		{

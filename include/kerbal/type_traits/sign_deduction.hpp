@@ -40,13 +40,13 @@ namespace kerbal
 		{
 		};
 
-		MODULE_EXPORT
+		KERBAL_MODULE_EXPORT
 		template <typename Tp>
 		struct is_signed: kerbal::type_traits::__is_signed_helper<Tp>
 		{
 		};
 
-		MODULE_EXPORT
+		KERBAL_MODULE_EXPORT
 		template <typename Tp>
 		struct is_unsigned: kerbal::type_traits::bool_constant<
 									kerbal::type_traits::is_arithmetic<Tp>::value &&
@@ -96,7 +96,7 @@ namespace kerbal
 		{
 		};
 
-		MODULE_EXPORT
+		KERBAL_MODULE_EXPORT
 		template <typename Tp>
 		struct make_unsigned:
 				kerbal::type_traits::copy_cv<
@@ -145,7 +145,7 @@ namespace kerbal
 		{
 		};
 
-		MODULE_EXPORT
+		KERBAL_MODULE_EXPORT
 		template <typename Tp>
 		struct make_signed:
 				kerbal::type_traits::copy_cv<

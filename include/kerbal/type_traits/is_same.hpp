@@ -33,7 +33,7 @@ namespace kerbal
 
 #	else
 
-		MODULE_EXPORT
+		KERBAL_MODULE_EXPORT
 		template <typename Tp, typename Up, typename ... Types>
 		struct is_same: kerbal::type_traits::bool_constant<
 									kerbal::type_traits::is_same<Tp, Up>::value &&
@@ -42,7 +42,7 @@ namespace kerbal
 		{
 		};
 
-		MODULE_EXPORT
+		KERBAL_MODULE_EXPORT
 		template <typename Tp, typename Up>
 		struct is_same<Tp, Up> : kerbal::type_traits::false_type
 		{
@@ -50,7 +50,7 @@ namespace kerbal
 
 #endif
 
-		MODULE_EXPORT
+		KERBAL_MODULE_EXPORT
 		template <typename Tp>
 		struct is_same<Tp, Tp> : kerbal::type_traits::true_type
 		{

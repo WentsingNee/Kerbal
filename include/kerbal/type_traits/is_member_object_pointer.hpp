@@ -25,7 +25,7 @@ namespace kerbal
 	namespace type_traits
 	{
 
-		MODULE_EXPORT
+		KERBAL_MODULE_EXPORT
 		template <typename T>
 		struct is_member_object_pointer :
 				kerbal::type_traits::bool_constant<

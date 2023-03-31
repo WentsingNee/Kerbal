@@ -25,7 +25,7 @@ namespace kerbal
 	namespace type_traits
 	{
 
-		MODULE_EXPORT
+		KERBAL_MODULE_EXPORT
 		template <class T>
 		struct is_arithmetic :
 				kerbal::type_traits::bool_constant<

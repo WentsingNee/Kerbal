@@ -85,13 +85,13 @@ namespace kerbal
 
 #	else
 
-		MODULE_EXPORT
+		KERBAL_MODULE_EXPORT
 		template <template <typename> typename Traits, typename ...Types>
 		struct for_all_types : kerbal::type_traits::conjunction<Traits<Types>...>
 		{
 		};
 
-		MODULE_EXPORT
+		KERBAL_MODULE_EXPORT
 		template <template <typename> typename Traits, typename ...Types>
 		struct has_types : kerbal::type_traits::disjunction<Traits<Types>...>
 		{

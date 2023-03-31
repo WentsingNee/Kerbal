@@ -22,14 +22,14 @@ namespace kerbal
 	namespace type_traits
 	{
 
-		MODULE_EXPORT
+		KERBAL_MODULE_EXPORT
 		template <typename T>
 		struct remove_reference
 		{
 			typedef T type;
 		};
 
-		MODULE_EXPORT
+		KERBAL_MODULE_EXPORT
 		template <typename T>
 		struct remove_reference<T &>
 		{
@@ -38,7 +38,7 @@ namespace kerbal
 
 #	if __cplusplus >= 201103L
 
-		MODULE_EXPORT
+		KERBAL_MODULE_EXPORT
 		template <typename T>
 		struct remove_reference<T &&>
 		{

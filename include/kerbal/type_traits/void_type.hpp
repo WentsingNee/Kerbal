@@ -38,7 +38,7 @@ namespace kerbal
 
 #	else
 
-		MODULE_EXPORT
+		KERBAL_MODULE_EXPORT
 		template <typename ... Args>
 		struct void_type
 		{

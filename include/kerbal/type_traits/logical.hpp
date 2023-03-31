@@ -21,7 +21,7 @@ namespace kerbal
 	namespace type_traits
 	{
 
-		MODULE_EXPORT
+		KERBAL_MODULE_EXPORT
 		template <typename Tp>
 		struct negation: kerbal::type_traits::bool_constant<!Tp::value>
 		{
@@ -95,17 +95,17 @@ namespace kerbal
 
 #	else
 
-		MODULE_EXPORT
+		KERBAL_MODULE_EXPORT
 		template <typename ...Args>
 		struct conjunction;
 
-		MODULE_EXPORT
+		KERBAL_MODULE_EXPORT
 		template <>
 		struct conjunction<> : kerbal::type_traits::true_type
 		{
 		};
 
-		MODULE_EXPORT
+		KERBAL_MODULE_EXPORT
 		template <typename Tp, typename ...Args>
 		struct conjunction<Tp, Args...> : kerbal::type_traits::conditional<
 															Tp::value,
@@ -115,23 +115,23 @@ namespace kerbal
 		{
 		};
 
-		MODULE_EXPORT
+		KERBAL_MODULE_EXPORT
 		template <typename ...Args>
 		struct disjunction;
 
-		MODULE_EXPORT
+		KERBAL_MODULE_EXPORT
 		template <>
 		struct disjunction<> : kerbal::type_traits::true_type
 		{
 		};
 
-		MODULE_EXPORT
+		KERBAL_MODULE_EXPORT
 		template <typename Tp>
 		struct disjunction<Tp> : kerbal::type_traits::bool_constant<Tp::value>
 		{
 		};
 
-		MODULE_EXPORT
+		KERBAL_MODULE_EXPORT
 		template <typename Tp, typename ...Args>
 		struct disjunction<Tp, Args...> : kerbal::type_traits::conditional<
 															Tp::value,

@@ -28,7 +28,7 @@ namespace kerbal
 
 #	if __cplusplus >= 201402L
 
-		MODULE_EXPORT
+		KERBAL_MODULE_EXPORT
 		template <typename Tp>
 		struct can_be_empty_base : kerbal::type_traits::bool_constant<
 										!std::is_final<Tp>::value && std::is_empty<Tp>::value

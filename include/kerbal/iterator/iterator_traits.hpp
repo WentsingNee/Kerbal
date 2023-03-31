@@ -54,13 +54,13 @@ namespace kerbal
 				typedef typename Iterator::reference			reference;
 		};
 
-		MODULE_EXPORT
+		KERBAL_MODULE_EXPORT
 		template <typename Iterator>
 		struct iterator_traits: kerbal::iterator::__iterator_traits_helper<Iterator>
 		{
 		};
 
-		MODULE_EXPORT
+		KERBAL_MODULE_EXPORT
 		/// Partial specialization for pointer types.
 		template <typename Tp>
 		struct iterator_traits<Tp*>
@@ -72,7 +72,7 @@ namespace kerbal
 				typedef Tp&									reference;
 		};
 
-		MODULE_EXPORT
+		KERBAL_MODULE_EXPORT
 		/// Partial specialization for const pointer types.
 		template <typename Tp>
 		struct iterator_traits<const Tp*>
@@ -106,7 +106,7 @@ namespace kerbal
 		{
 		};
 
-		MODULE_EXPORT
+		KERBAL_MODULE_EXPORT
 		template <typename Tp>
 		struct is_iterator: kerbal::iterator::__is_iterator_helper<typename kerbal::type_traits::remove_cv<Tp>::type>
 		{
@@ -140,7 +140,7 @@ namespace kerbal
 		{
 		};
 
-		MODULE_EXPORT
+		KERBAL_MODULE_EXPORT
 		template <typename Tp>
 		struct is_output_iterator:
 				kerbal::iterator::__iterator_category_matches_required_helper<
@@ -150,7 +150,7 @@ namespace kerbal
 		{
 		};
 
-		MODULE_EXPORT
+		KERBAL_MODULE_EXPORT
 		template <typename Tp>
 		struct is_input_iterator:
 				kerbal::iterator::__iterator_category_matches_required_helper<
@@ -160,7 +160,7 @@ namespace kerbal
 		{
 		};
 
-		MODULE_EXPORT
+		KERBAL_MODULE_EXPORT
 		template <typename Tp>
 		struct is_forward_iterator:
 				kerbal::iterator::__iterator_category_matches_required_helper<
@@ -170,7 +170,7 @@ namespace kerbal
 		{
 		};
 
-		MODULE_EXPORT
+		KERBAL_MODULE_EXPORT
 		template <typename Tp>
 		struct is_bidirectional_iterator:
 				kerbal::iterator::__iterator_category_matches_required_helper<
@@ -180,7 +180,7 @@ namespace kerbal
 		{
 		};
 
-		MODULE_EXPORT
+		KERBAL_MODULE_EXPORT
 		template <typename Tp>
 		struct is_random_access_iterator:
 				kerbal::iterator::__iterator_category_matches_required_helper<
@@ -253,7 +253,7 @@ namespace kerbal
 		{
 		};
 
-		MODULE_EXPORT
+		KERBAL_MODULE_EXPORT
 		template <typename Tp>
 		struct is_contiguous_iterator:
 				kerbal::iterator::__is_contiguous_iterator_helper<
@@ -263,13 +263,13 @@ namespace kerbal
 		};
 
 
-		MODULE_EXPORT
+		KERBAL_MODULE_EXPORT
 		template <typename Tp>
 		struct is_random_access_compatible_iterator: kerbal::iterator::is_random_access_iterator<Tp>
 		{
 		};
 
-		MODULE_EXPORT
+		KERBAL_MODULE_EXPORT
 		template <typename Tp>
 		struct is_bidirectional_compatible_iterator:
 				kerbal::type_traits::bool_constant<
@@ -279,7 +279,7 @@ namespace kerbal
 		{
 		};
 
-		MODULE_EXPORT
+		KERBAL_MODULE_EXPORT
 		template <typename Tp>
 		struct is_forward_compatible_iterator:
 				kerbal::type_traits::bool_constant<
@@ -289,7 +289,7 @@ namespace kerbal
 		{
 		};
 
-		MODULE_EXPORT
+		KERBAL_MODULE_EXPORT
 		template <typename Tp>
 		struct is_input_compatible_iterator:
 				kerbal::type_traits::bool_constant<
@@ -299,7 +299,7 @@ namespace kerbal
 		{
 		};
 
-		MODULE_EXPORT
+		KERBAL_MODULE_EXPORT
 		template <typename Tp>
 		inline
 		KERBAL_CONSTEXPR

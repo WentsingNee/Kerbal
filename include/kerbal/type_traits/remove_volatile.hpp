@@ -28,14 +28,14 @@ namespace kerbal
 	namespace type_traits
 	{
 
-		MODULE_EXPORT
+		KERBAL_MODULE_EXPORT
 		template <typename T>
 		struct remove_volatile
 		{
 				typedef T type;
 		};
 
-		MODULE_EXPORT
+		KERBAL_MODULE_EXPORT
 		template <typename T>
 		struct remove_volatile<volatile T>
 		{
@@ -44,14 +44,14 @@ namespace kerbal
 
 #	if KERBAL_COMPILER_ID == KERBAL_COMPILER_ID_MSVC // VS2012 compatible
 
-		MODULE_EXPORT
+		KERBAL_MODULE_EXPORT
 		template <typename T>
 		struct remove_volatile<volatile T[]>
 		{
 				typedef T type [];
 		};
 
-		MODULE_EXPORT
+		KERBAL_MODULE_EXPORT
 		template <typename T, std::size_t N>
 		struct remove_volatile<volatile T[N]>
 		{

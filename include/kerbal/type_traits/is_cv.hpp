@@ -23,13 +23,13 @@ namespace kerbal
 	namespace type_traits
 	{
 
-		MODULE_EXPORT
+		KERBAL_MODULE_EXPORT
 		template <typename >
 		struct is_cv : kerbal::type_traits::false_type
 		{
 		};
 
-		MODULE_EXPORT
+		KERBAL_MODULE_EXPORT
 		template <typename Tp>
 		struct is_cv<const volatile Tp> : kerbal::type_traits::true_type
 		{

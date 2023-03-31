@@ -49,7 +49,7 @@ namespace kerbal
 
 		} // namespace detail
 
-		MODULE_EXPORT
+		KERBAL_MODULE_EXPORT
 		template <typename T>
 		struct is_floating_point :
 				kerbal::type_traits::detail::is_floating_point_helper<

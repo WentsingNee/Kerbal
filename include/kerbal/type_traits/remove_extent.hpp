@@ -25,21 +25,21 @@ namespace kerbal
 	namespace type_traits
 	{
 
-		MODULE_EXPORT
+		KERBAL_MODULE_EXPORT
 		template <typename T>
 		struct remove_extent
 		{
 				typedef T type;
 		};
 
-		MODULE_EXPORT
+		KERBAL_MODULE_EXPORT
 		template <typename T, std::size_t N>
 		struct remove_extent<T[N]>
 		{
 				typedef T type;
 		};
 
-		MODULE_EXPORT
+		KERBAL_MODULE_EXPORT
 		template <typename T>
 		struct remove_extent<T[]>
 		{

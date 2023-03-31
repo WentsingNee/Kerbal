@@ -29,13 +29,13 @@ namespace kerbal
 	namespace type_traits
 	{
 
-		MODULE_EXPORT
+		KERBAL_MODULE_EXPORT
 		template <typename >
 		struct is_volatile: kerbal::type_traits::false_type
 		{
 		};
 
-		MODULE_EXPORT
+		KERBAL_MODULE_EXPORT
 		template <typename T>
 		struct is_volatile<volatile T> : kerbal::type_traits::true_type
 		{
@@ -43,13 +43,13 @@ namespace kerbal
 
 #	if KERBAL_COMPILER_ID == KERBAL_COMPILER_ID_MSVC // VS2012 compatible
 
-		MODULE_EXPORT
+		KERBAL_MODULE_EXPORT
 		template <typename T>
 		struct is_volatile<volatile T[]> : kerbal::type_traits::true_type
 		{
 		};
 
-		MODULE_EXPORT
+		KERBAL_MODULE_EXPORT
 		template <typename T, std::size_t N>
 		struct is_volatile<volatile T[N]> : kerbal::type_traits::true_type
 		{

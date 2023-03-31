@@ -25,7 +25,7 @@ namespace kerbal
 	namespace type_traits
 	{
 
-		MODULE_EXPORT
+		KERBAL_MODULE_EXPORT
 		template <typename From, typename To>
 		struct copy_lvalue_reference :
 				kerbal::type_traits::conditional<

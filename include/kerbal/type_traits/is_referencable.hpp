@@ -40,7 +40,7 @@ namespace kerbal
 
 		} // namespace detail
 
-		MODULE_EXPORT
+		KERBAL_MODULE_EXPORT
 		template <typename T>
 		struct is_referencable : kerbal::type_traits::detail::is_referencable_helper<T>
 		{

@@ -25,19 +25,19 @@ namespace kerbal
 	namespace type_traits
 	{
 
-		MODULE_EXPORT
+		KERBAL_MODULE_EXPORT
 		template <typename>
 		struct is_array : kerbal::type_traits::false_type
 		{
 		};
 
-		MODULE_EXPORT
+		KERBAL_MODULE_EXPORT
 		template <typename T>
 		struct is_array<T[]> : kerbal::type_traits::true_type
 		{
 		};
 
-		MODULE_EXPORT
+		KERBAL_MODULE_EXPORT
 		template <typename T, std::size_t N>
 		struct is_array<T[N]> : kerbal::type_traits::true_type
 		{

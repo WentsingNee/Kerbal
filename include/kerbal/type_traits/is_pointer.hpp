@@ -39,7 +39,7 @@ namespace kerbal
 
 		} // namespace detail
 
-		MODULE_EXPORT
+		KERBAL_MODULE_EXPORT
 		template <typename T>
 		struct is_pointer :
 				kerbal::type_traits::detail::is_pointer_helper<

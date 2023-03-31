@@ -25,35 +25,35 @@ namespace kerbal
 	namespace type_traits
 	{
 
-		MODULE_EXPORT
+		KERBAL_MODULE_EXPORT
 		template <typename T, std::size_t I = 0>
 		struct extent;
 
-		MODULE_EXPORT
+		KERBAL_MODULE_EXPORT
 		template <typename T>
 		struct extent<T, 0> : kerbal::type_traits::integral_constant<std::size_t, 0>
 		{
 		};
 
-		MODULE_EXPORT
+		KERBAL_MODULE_EXPORT
 		template <typename T>
 		struct extent<T[], 0> : kerbal::type_traits::integral_constant<std::size_t, 0>
 		{
 		};
 
-		MODULE_EXPORT
+		KERBAL_MODULE_EXPORT
 		template <typename T, std::size_t I>
 		struct extent<T[], I> : kerbal::type_traits::extent<T, I - 1>
 		{
 		};
 
-		MODULE_EXPORT
+		KERBAL_MODULE_EXPORT
 		template <typename T, std::size_t N>
 		struct extent<T[N], 0> : kerbal::type_traits::integral_constant<std::size_t, N>
 		{
 		};
 
-		MODULE_EXPORT
+		KERBAL_MODULE_EXPORT
 		template <typename T, std::size_t N, std::size_t I>
 		struct extent<T[N], I> : kerbal::type_traits::extent<T, I - 1>
 		{

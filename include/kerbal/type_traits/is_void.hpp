@@ -39,7 +39,7 @@ namespace kerbal
 
 		} // namespace detail
 
-		MODULE_EXPORT
+		KERBAL_MODULE_EXPORT
 		template <typename T>
 		struct is_void :
 				kerbal::type_traits::detail::is_void_helper<

@@ -37,7 +37,7 @@ namespace kerbal
 
 #	else
 
-		MODULE_EXPORT
+		KERBAL_MODULE_EXPORT
 		template <typename T>
 		struct is_reference :
 				kerbal::type_traits::bool_constant<

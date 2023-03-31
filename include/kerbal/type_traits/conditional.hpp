@@ -21,14 +21,14 @@ namespace kerbal
 	namespace type_traits
 	{
 
-		MODULE_EXPORT
+		KERBAL_MODULE_EXPORT
 		template <bool condition, typename TrueType, typename FalseType>
 		struct conditional
 		{
 				typedef TrueType type;
 		};
 
-		MODULE_EXPORT
+		KERBAL_MODULE_EXPORT
 		template <typename TrueType, typename FalseType>
 		struct conditional<false, TrueType, FalseType>
 		{

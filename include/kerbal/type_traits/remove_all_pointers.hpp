@@ -25,7 +25,7 @@ namespace kerbal
 	namespace type_traits
 	{
 
-		MODULE_EXPORT
+		KERBAL_MODULE_EXPORT
 		template <typename T>
 		struct remove_all_pointers:
 				kerbal::type_traits::conditional<

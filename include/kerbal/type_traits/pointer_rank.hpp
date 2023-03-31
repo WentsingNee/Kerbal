@@ -57,7 +57,7 @@ namespace kerbal
 
 		} // namespace detail
 
-		MODULE_EXPORT
+		KERBAL_MODULE_EXPORT
 		template <typename T>
 		struct pointer_rank :
 				kerbal::type_traits::detail::pointer_rank_helper<

@@ -25,20 +25,20 @@ namespace kerbal
 	namespace type_traits
 	{
 
-		MODULE_EXPORT
+		KERBAL_MODULE_EXPORT
 		template <typename >
 		struct rank : kerbal::type_traits::integral_constant<std::size_t, 0>
 		{
 		};
 
-		MODULE_EXPORT
+		KERBAL_MODULE_EXPORT
 		template <typename T, std::size_t N>
 		struct rank<T[N]> :
 				kerbal::type_traits::integral_constant<std::size_t, 1 + rank<T>::value>
 		{
 		};
 
-		MODULE_EXPORT
+		KERBAL_MODULE_EXPORT
 		template <typename T>
 		struct rank<T[]> :
 				kerbal::type_traits::integral_constant<std::size_t, 1 + rank<T>::value>

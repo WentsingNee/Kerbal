@@ -40,14 +40,14 @@ namespace kerbal
 
 		} // namespace detail
 
-		MODULE_EXPORT
+		KERBAL_MODULE_EXPORT
 		template <typename T>
 		struct add_lvalue_reference :
 				kerbal::type_traits::detail::add_lvalue_reference_helper<T>
 		{
 		};
 
-		MODULE_EXPORT
+		KERBAL_MODULE_EXPORT
 		template <typename T>
 		struct add_lvalue_reference<T &>
 		{

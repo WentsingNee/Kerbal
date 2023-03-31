@@ -22,7 +22,7 @@ namespace kerbal
 	namespace type_traits
 	{
 
-		MODULE_EXPORT
+		KERBAL_MODULE_EXPORT
 		template <typename Type, Type val>
 		struct integral_constant
 		{
@@ -50,17 +50,17 @@ namespace kerbal
 #	endif
 
 
-		MODULE_EXPORT
+		KERBAL_MODULE_EXPORT
 		struct false_type : integral_constant<bool, false>
 		{
 		};
 
-		MODULE_EXPORT
+		KERBAL_MODULE_EXPORT
 		struct true_type : integral_constant<bool, true>
 		{
 		};
 
-		MODULE_EXPORT
+		KERBAL_MODULE_EXPORT
 		template <bool>
 		struct bool_constant;
 
