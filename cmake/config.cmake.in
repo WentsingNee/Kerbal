@@ -25,14 +25,18 @@ set(@PROJECT_NAME@_PUBLIC_HEADERS_RELATIVE_kerbal "@Kerbal_PUBLIC_HEADERS_RELATI
 __kerbal_relative_to_absolute(@PROJECT_NAME@_PUBLIC_HEADERS_kerbal "${@PROJECT_NAME@_PUBLIC_HEADERS_RELATIVE_kerbal}")
 
 
-## kerbal-omp
+get_property(__enabled_lang GLOBAL PROPERTY ENABLED_LANGUAGES)
+if ("CXX" IN_LIST __enabled_lang)
 
-include(FindOpenMP)
-if (OpenMP_FOUND)
-    include("${CMAKE_CURRENT_LIST_DIR}/@PROJECT_NAME@Targets-kerbal-omp.cmake")
-    __kerbal_relative_to_absolute(@PROJECT_NAME@_HEADERS_kerbal-omp "@Kerbal_HEADERS_RELATIVE_kerbal-omp@")
-    set(@PROJECT_NAME@_PUBLIC_HEADERS_RELATIVE_kerbal-omp "@Kerbal_PUBLIC_HEADERS_RELATIVE_kerbal-omp@")
-    __kerbal_relative_to_absolute(@PROJECT_NAME@_PUBLIC_HEADERS_kerbal-omp "${@PROJECT_NAME@_PUBLIC_HEADERS_RELATIVE_kerbal-omp}")
+    ## kerbal-omp
+
+    find_package(OpenMP)
+    if (OpenMP_FOUND)
+        include("${CMAKE_CURRENT_LIST_DIR}/@PROJECT_NAME@Targets-kerbal-omp.cmake")
+        __kerbal_relative_to_absolute(@PROJECT_NAME@_HEADERS_kerbal-omp "@Kerbal_HEADERS_RELATIVE_kerbal-omp@")
+        set(@PROJECT_NAME@_PUBLIC_HEADERS_RELATIVE_kerbal-omp "@Kerbal_PUBLIC_HEADERS_RELATIVE_kerbal-omp@")
+        __kerbal_relative_to_absolute(@PROJECT_NAME@_PUBLIC_HEADERS_kerbal-omp "${@PROJECT_NAME@_PUBLIC_HEADERS_RELATIVE_kerbal-omp}")
+    endif ()
 endif ()
 
 
