@@ -9,15 +9,24 @@
 #   all rights reserved
 #
 
-execute_process(
-        COMMAND date "+%Y-%-m-%-d"
-        OUTPUT_VARIABLE date
-)
-string(REGEX MATCH "(.*)-(.*)-(.*)" _ ${date})
-set(year ${CMAKE_MATCH_1})
-set(month ${CMAKE_MATCH_2})
-set(day ${CMAKE_MATCH_3})
 set(project_version_file_path "${CMAKE_SOURCE_DIR}/VERSION")
+
+if (${KERBAL_UPDATE_VERSION})
+    execute_process(
+            COMMAND date "+%Y-%-m-%-d"
+            OUTPUT_VARIABLE date
+    )
+    string(REGEX MATCH "(.*)-(.*)-(.*)" _ ${date})
+    set(year ${CMAKE_MATCH_1})
+    set(month ${CMAKE_MATCH_2})
+    set(day ${CMAKE_MATCH_3})
+    set(KERBAL_VERSION "${year}.${month}.1")
+else ()
+    file(READ "${project_version_file_path}" KERBAL_VERSION)
+endif ()
+
+
+# increase build
 #if (EXISTS "${project_version_file_path}")
 #    file(READ "VERSION" version)
 #    string(FIND ${version} "." pos REVERSE)
@@ -29,6 +38,8 @@ set(project_version_file_path "${CMAKE_SOURCE_DIR}/VERSION")
 #    set(build 1)
 #endif ()
 
-set(KERBAL_VERSION "${year}.${month}.1")
-message(STATUS "Updated version ${KERBAL_VERSION} to ${project_version_file_path}")
-file(WRITE "${project_version_file_path}" ${KERBAL_VERSION})
+
+if (${KERBAL_UPDATE_VERSION})
+    message(STATUS "Updated version ${KERBAL_VERSION} to ${project_version_file_path}")
+    file(WRITE "${project_version_file_path}" ${KERBAL_VERSION})
+endif ()
