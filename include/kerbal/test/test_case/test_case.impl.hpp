@@ -9,14 +9,17 @@
  *   all rights reserved
  */
 
-#ifndef KERBAL_TEST_IMPL_TEST_CASE_IMPL_HPP
-#define KERBAL_TEST_IMPL_TEST_CASE_IMPL_HPP
+#ifndef KERBAL_TEST_TEST_CASE_TEST_CASE_IMPL_HPP
+#define KERBAL_TEST_TEST_CASE_TEST_CASE_IMPL_HPP
 
 #include <kerbal/compatibility/noexcept.hpp>
 #include <kerbal/container/vector.hpp>
+#include <kerbal/test/runtime_timer.hpp>
 
 #include <cstddef>
 #include <cstdio>
+
+#include <kerbal/test/test_case/test_case.decl.hpp>
 
 
 namespace kerbal
@@ -25,28 +28,33 @@ namespace kerbal
 	namespace test
 	{
 
-		inline
-		register_list_type& __get_register_list() KERBAL_NOEXCEPT
+		namespace detail
 		{
-			static register_list_type register_list;
-			return register_list;
-		}
+
+			inline
+			register_list_type & get_register_list() KERBAL_NOEXCEPT
+			{
+				static register_list_type register_list;
+				return register_list;
+			}
+
+			inline
+			int register_test_suit(
+					const char * name,
+					kerbal::test::test_case::call_ptr_t call_ptr,
+					const char * description)
+			KERBAL_NOEXCEPT
+			{
+				kerbal::test::detail::get_register_list().emplace_back(name, call_ptr, description);
+				return 0;
+			}
+
+		} // namespace detail
 
 		inline
-		int __register_test_suit(
-				const char * name,
-				kerbal::test::test_case::call_ptr_t call_ptr,
-				const char * description)
-				KERBAL_NOEXCEPT
+		int run_test_case(std::size_t case_id, int, char * [])
 		{
-			__get_register_list().emplace_back(name, call_ptr, description);
-			return 0;
-		}
-
-		inline
-		void run_test_case(std::size_t case_id, int, char*[])
-		{
-			register_list_type & register_list = __get_register_list();
+			register_list_type & register_list = kerbal::test::detail::get_register_list();
 			typedef register_list_type::const_reference const_reference;
 
 			const_reference item = register_list[case_id];
@@ -57,16 +65,24 @@ namespace kerbal
 
 			kerbal::test::assert_record record;
 
+#	if KERBAL_HAS_RUNTIME_TIMER_SUPPORT
+			kerbal::test::runtime_timer timer;
+#	endif
+
 #	if __cpp_exceptions
 			try {
 #	endif
 				call_ptr(record);
 #	if __cpp_exceptions
 			} catch (...) {
-				record.items.back().result = running_result::EXCEPTION;
+				record.items.back().result = test_case_running_result::EXCEPTION;
 				printf("test case[%zu]: %s (%s): EXCEPTION\n", case_id, name, description);
 				throw;
 			}
+#	endif
+
+#	if KERBAL_HAS_RUNTIME_TIMER_SUPPORT
+			unsigned long time_usage = timer.count();
 #	endif
 
 			int success = 0;
@@ -74,15 +90,15 @@ namespace kerbal
 
 			for (kerbal::container::vector<assert_item>::size_type i = 0; i < record.items.size(); ++i) {
 				switch (record.items[i].result) {
-					case kerbal::test::running_result::SUCCESS: {
+					case kerbal::test::test_case_running_result::SUCCESS: {
 						++success;
 						break;
 					}
-					case kerbal::test::running_result::FAILURE: {
+					case kerbal::test::test_case_running_result::FAILURE: {
 						++failure;
 						break;
 					}
-					case running_result::EXCEPTION:
+					case test_case_running_result::EXCEPTION:
 						break;
 				}
 			}
@@ -93,18 +109,45 @@ namespace kerbal
 				printf("test case[%zu]: %s (%s): FAILURE\n", case_id, name, description);
 			}
 
+#	if KERBAL_HAS_RUNTIME_TIMER_SUPPORT
+			{
+				unsigned long milliseconds = time_usage;
+				unsigned long seconds = milliseconds / 1000;
+				milliseconds %= 1000;
+				unsigned long minutes = seconds / 60;
+				seconds %= 60;
+
+				printf("time usage:");
+				if (minutes != 0) {
+					printf("%lu min", minutes);
+				}
+				if (minutes != 0 || seconds != 0) {
+					printf(" %lu s", seconds);
+				}
+				printf(" %lu ms (%lu ms)\n", milliseconds, time_usage);
+			}
+#	else
+			printf("time usage: --- (not supported)\n");
+#	endif
+
 			printf(" ------------------------\n");
 			printf("|SUCCESS    | %10d |\n", success);
 			printf("|FAILURE    | %10d |\n", failure);
 			printf("|------------------------|\n");
 			printf("|TOTAL      | %10d |\n", success + failure);
 			printf(" ------------------------\n");
+
+			if (failure == 0) {
+				return -1;
+			} else {
+				return 0;
+			}
 		}
 
 		inline
-		void select_test_case(int argc, char* argv[])
+		int select_test_case(int argc, char * argv[])
 		{
-			register_list_type & register_list = __get_register_list();
+			register_list_type & register_list = kerbal::test::detail::get_register_list();
 
 			typedef register_list_type::size_type size_type;
 			typedef register_list_type::const_reference const_reference;
@@ -118,23 +161,26 @@ namespace kerbal
 			printf("Please select the test case num: \n");
 			int i = 0;
 			scanf("%u", &i);
-			run_test_case(i, argc, argv);
+			return run_test_case(i, argc, argv);
 		}
 
 		inline
-		void run_all_test_case(int argc, char* argv[])
+		int run_all_test_case(int argc, char * argv[])
 		{
-			register_list_type & register_list = __get_register_list();
+			register_list_type & register_list = kerbal::test::detail::get_register_list();
+			int ret = 0;
 			typedef register_list_type::size_type size_type;
-
 			for (size_type i = 0; i < register_list.size(); ++i) {
-				run_test_case(i, argc, argv);
+				if (run_test_case(i, argc, argv) != 0) {
+					ret = 1;
+				}
 				printf("\n\n");
 			}
+			return ret;
 		}
 
 	} // namespace test
 
 } // namespace kerbal
 
-#endif // KERBAL_TEST_IMPL_TEST_CASE_IMPL_HPP
+#endif // KERBAL_TEST_TEST_CASE_TEST_CASE_IMPL_HPP
