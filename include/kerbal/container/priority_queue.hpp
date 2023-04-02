@@ -15,6 +15,7 @@
 #include <kerbal/algorithm/heap.hpp>
 #include <kerbal/assign/ilist.hpp>
 #include <kerbal/compatibility/move.hpp>
+#include <kerbal/compatibility/namespace_std_scope.hpp>
 #include <kerbal/compatibility/noexcept.hpp>
 #include <kerbal/compatibility/static_assert.hpp>
 #include <kerbal/container/vector.hpp>

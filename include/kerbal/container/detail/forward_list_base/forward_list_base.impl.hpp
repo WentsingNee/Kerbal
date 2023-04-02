@@ -33,6 +33,7 @@
 
 #if !__cpp_exceptions
 #	include <kerbal/memory/bad_alloc.hpp>
+#	include <kerbal/utility/throw_this_exception.hpp>
 #endif
 
 #if __cplusplus >= 201703L

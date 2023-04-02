@@ -18,6 +18,7 @@
 #include <kerbal/compatibility/constexpr.hpp>
 #include <kerbal/compatibility/move.hpp>
 #include <kerbal/iterator/iterator.hpp>
+#include <kerbal/iterator/iterator_traits.hpp>
 
 
 namespace kerbal

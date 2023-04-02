@@ -15,7 +15,7 @@
 #include <kerbal/algorithm/heap.hpp>
 #include <kerbal/compare/basic_compare.hpp>
 #include <kerbal/compatibility/constexpr.hpp>
-#include <kerbal/iterator/iterator.hpp>
+#include <kerbal/iterator/iterator_traits.hpp>
 
 
 namespace kerbal
