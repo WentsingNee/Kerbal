@@ -18,12 +18,9 @@
 #include <kerbal/compare/binary_type_compare.hpp>
 #include <kerbal/compatibility/constexpr.hpp>
 #include <kerbal/compatibility/noexcept.hpp>
-#include <kerbal/compatibility/static_assert.hpp>
 #include <kerbal/container/nonmember_container_access.hpp>
 #include <kerbal/iterator/iterator.hpp>
 #include <kerbal/iterator/iterator_traits.hpp>
-#include <kerbal/type_traits/is_same.hpp>
-#include <kerbal/type_traits/remove_const.hpp>
 
 #include <cstddef>
 
@@ -377,15 +374,7 @@ namespace kerbal
 		bool sequence_less(InputIterator1 a_first, InputIterator1 a_last,
 							InputIterator2 b_first, InputIterator2 b_last)
 		{
-			typedef InputIterator1 iterator1;
-			typedef InputIterator2 iterator2;
-			typedef typename kerbal::iterator::iterator_traits<iterator1>::value_type Tp;
-			typedef typename kerbal::iterator::iterator_traits<iterator2>::value_type Up;
-			typedef typename kerbal::type_traits::remove_const<Tp>::type remove_const_tp;
-			typedef typename kerbal::type_traits::remove_const<Up>::type remove_const_up;
-			KERBAL_STATIC_ASSERT((kerbal::type_traits::is_same<remove_const_tp, remove_const_up>::value),
-								"InputIterator1 and InputIterator2 must point to same type!");
-			return sequence_less(a_first, a_last, b_first, b_last, kerbal::compare::less<Tp>());
+			return sequence_less(a_first, a_last, b_first, b_last, kerbal::compare::binary_type_less<void, void>());
 		}
 
 		template <typename Container1, typename Container2, typename LessPredicate>
@@ -438,15 +427,7 @@ namespace kerbal
 		bool sequence_greater(InputIterator1 a_first, InputIterator1 a_last,
 							InputIterator2 b_first, InputIterator2 b_last)
 		{
-			typedef InputIterator1 iterator1;
-			typedef InputIterator2 iterator2;
-			typedef typename kerbal::iterator::iterator_traits<iterator1>::value_type Tp;
-			typedef typename kerbal::iterator::iterator_traits<iterator2>::value_type Up;
-			typedef typename kerbal::type_traits::remove_const<Tp>::type remove_const_tp;
-			typedef typename kerbal::type_traits::remove_const<Up>::type remove_const_up;
-			KERBAL_STATIC_ASSERT((kerbal::type_traits::is_same<remove_const_tp, remove_const_up>::value),
-								 "InputIterator1 and InputIterator2 must point to same type!");
-			return sequence_greater(a_first, a_last, b_first, b_last, kerbal::compare::greater<Tp>());
+			return sequence_greater(a_first, a_last, b_first, b_last, kerbal::compare::binary_type_greater<void, void>());
 		}
 
 		template <typename Container1, typename Container2, typename GreaterPredicate>
@@ -500,15 +481,7 @@ namespace kerbal
 		bool sequence_less_equal(InputIterator1 a_first, InputIterator1 a_last,
 								InputIterator2 b_first, InputIterator2 b_last)
 		{
-			typedef InputIterator1 iterator1;
-			typedef InputIterator2 iterator2;
-			typedef typename kerbal::iterator::iterator_traits<iterator1>::value_type Tp;
-			typedef typename kerbal::iterator::iterator_traits<iterator2>::value_type Up;
-			typedef typename kerbal::type_traits::remove_const<Tp>::type remove_const_tp;
-			typedef typename kerbal::type_traits::remove_const<Up>::type remove_const_up;
-			KERBAL_STATIC_ASSERT((kerbal::type_traits::is_same<remove_const_tp, remove_const_up>::value),
-								 "InputIterator1 and InputIterator2 must point to same type!");
-			return sequence_less_equal(a_first, a_last, b_first, b_last, kerbal::compare::less_equal<Tp>());
+			return sequence_less_equal(a_first, a_last, b_first, b_last, kerbal::compare::binary_type_less_equal<void, void>());
 		}
 
 		template <typename Container1, typename Container2, typename LessEqualPredicate>
@@ -562,15 +535,7 @@ namespace kerbal
 		bool sequence_greater_equal(InputIterator1 a_first, InputIterator1 a_last,
 									InputIterator2 b_first, InputIterator2 b_last)
 		{
-			typedef InputIterator1 iterator1;
-			typedef InputIterator2 iterator2;
-			typedef typename kerbal::iterator::iterator_traits<iterator1>::value_type Tp;
-			typedef typename kerbal::iterator::iterator_traits<iterator2>::value_type Up;
-			typedef typename kerbal::type_traits::remove_const<Tp>::type remove_const_tp;
-			typedef typename kerbal::type_traits::remove_const<Up>::type remove_const_up;
-			KERBAL_STATIC_ASSERT((kerbal::type_traits::is_same<remove_const_tp, remove_const_up>::value),
-								 "InputIterator1 and InputIterator2 must point to same type!");
-			return sequence_greater_equal(a_first, a_last, b_first, b_last, kerbal::compare::greater_equal<Tp>());
+			return sequence_greater_equal(a_first, a_last, b_first, b_last, kerbal::compare::binary_type_greater_equal<void, void>());
 		}
 
 		template <typename Container1, typename Container2, typename GreaterEqualPredicate>
