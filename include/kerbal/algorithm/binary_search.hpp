@@ -13,12 +13,9 @@
 #define KERBAL_ALGORITHM_BINARY_SEARCH_HPP
 
 #include <kerbal/algorithm/querier.hpp>
-#include <kerbal/compare/basic_compare.hpp>
 #include <kerbal/compare/binary_type_compare.hpp>
 #include <kerbal/compatibility/constexpr.hpp>
-#include <kerbal/compatibility/static_assert.hpp>
 #include <kerbal/iterator/iterator.hpp>
-#include <kerbal/type_traits/remove_cv.hpp>
 
 
 namespace kerbal
@@ -273,7 +270,7 @@ namespace kerbal
 		std::pair<ForwardIterator, ForwardIterator>
 		equal_range(ForwardIterator first, ForwardIterator last, const Tp & value)
 		{
-			return kerbal::algorithm::equal_range(first, last, value, kerbal::compare::less<Tp>());
+			return kerbal::algorithm::equal_range(first, last, value, kerbal::compare::binary_type_less<void , void>());
 		}
 
 
@@ -295,16 +292,7 @@ namespace kerbal
 		KERBAL_CONSTEXPR14
 		bool binary_search(ForwardIterator first, ForwardIterator last, const Tp & value)
 		{
-			typedef ForwardIterator iterator;
-			typedef typename kerbal::iterator::iterator_traits<iterator>::value_type value_type;
-			KERBAL_STATIC_ASSERT((
-					kerbal::type_traits::is_same<
-							kerbal::type_traits::remove_cv<value_type>,
-							kerbal::type_traits::remove_cv<Tp>
-					>::value),
-					"the range iterator doesn't refer to the same type as `value`"
-			);
-			return kerbal::algorithm::binary_search(first, last, value, kerbal::compare::less<Tp>());
+			return kerbal::algorithm::binary_search(first, last, value, kerbal::compare::binary_type_less<void, void>());
 		}
 
 
@@ -510,16 +498,7 @@ namespace kerbal
 		KERBAL_CONSTEXPR14
 		bool binary_search_hint(ForwardIterator first, ForwardIterator last, const Tp & value, ForwardIterator hint)
 		{
-			typedef ForwardIterator iterator;
-			typedef typename kerbal::iterator::iterator_traits<iterator>::value_type value_type;
-			KERBAL_STATIC_ASSERT((
-					kerbal::type_traits::is_same<
-							kerbal::type_traits::remove_cv<value_type>,
-							kerbal::type_traits::remove_cv<Tp>
-					>::value),
-					"the range iterator doesn't refer to the same type as `value`"
-			);
-			return kerbal::algorithm::binary_search_hint(first, last, value, hint, kerbal::compare::less<Tp>());
+			return kerbal::algorithm::binary_search_hint(first, last, value, hint, kerbal::compare::binary_type_less<void, void>());
 		}
 
 	} // namespace algorithm
