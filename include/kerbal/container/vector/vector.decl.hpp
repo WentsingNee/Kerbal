@@ -12,7 +12,16 @@
 #ifndef KERBAL_CONTAINER_VECTOR_VECTOR_DECL_HPP
 #define KERBAL_CONTAINER_VECTOR_VECTOR_DECL_HPP
 
-#include <kerbal/ts/modules_ts/modules_ts.hpp>
+
+#include <kerbal/config/modules/modules.hpp>
+
+#if KERBAL_ENABLE_MODULES
+module;
+#endif
+
+
+#include <kerbal/config/modules/include_header_begin.part.hpp>
+
 
 #include <kerbal/algorithm/swap.hpp>
 #include <kerbal/assign/ilist.hpp>
@@ -45,6 +54,14 @@
 #include <kerbal/container/detail/container_allocator_overload.hpp>
 
 #include <kerbal/container/detail/vector_base/vector_iterator.hpp>
+
+
+#include <kerbal/config/modules/include_header_end.part.hpp>
+
+
+#if KERBAL_ENABLE_MODULES
+export module kerbal.container.vector.decl;
+#endif
 
 
 namespace kerbal

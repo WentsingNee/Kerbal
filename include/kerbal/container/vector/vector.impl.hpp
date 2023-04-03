@@ -12,6 +12,17 @@
 #ifndef KERBAL_CONTAINER_VECTOR_VECTOR_IMPL_HPP
 #define KERBAL_CONTAINER_VECTOR_VECTOR_IMPL_HPP
 
+
+#include <kerbal/config/modules/modules.hpp>
+
+#if KERBAL_ENABLE_MODULES
+module;
+#endif
+
+
+#include <kerbal/config/modules/include_header_begin.part.hpp>
+
+
 #include <kerbal/assign/ilist.hpp>
 #include <kerbal/compatibility/constexpr.hpp>
 #include <kerbal/compatibility/move.hpp>
@@ -35,6 +46,14 @@
 
 #include <kerbal/container/detail/vector_base/vector_base.impl.hpp>
 #include <kerbal/container/vector/vector.decl.hpp>
+
+
+#include <kerbal/config/modules/include_header_end.part.hpp>
+
+
+#if KERBAL_ENABLE_MODULES
+export module kerbal.container.vector.impl;
+#endif
 
 
 namespace kerbal
