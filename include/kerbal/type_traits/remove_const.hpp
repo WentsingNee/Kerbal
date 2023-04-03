@@ -13,13 +13,30 @@
 #ifndef KERBAL_TYPE_TRAITS_REMOVE_CONST_HPP
 #define KERBAL_TYPE_TRAITS_REMOVE_CONST_HPP
 
-#include <kerbal/ts/modules_ts/modules_ts.hpp>
+#include <kerbal/config/modules/modules.hpp>
 
 #include <kerbal/config/compiler_id.hpp>
+
+#if KERBAL_ENABLE_MODULES
+module;
+#endif
+
+
+#include <kerbal/config/modules/include_header_begin.part.hpp>
+
 
 #if KERBAL_COMPILER_ID == KERBAL_COMPILER_ID_MSVC // VS2012 compatible
 #	include <cstddef>
 #endif
+
+
+#include <kerbal/config/modules/include_header_end.part.hpp>
+
+
+#if KERBAL_ENABLE_MODULES
+export module kerbal.type_traits.remove_const;
+#endif
+
 
 
 namespace kerbal

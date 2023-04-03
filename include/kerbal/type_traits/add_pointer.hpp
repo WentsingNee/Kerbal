@@ -13,12 +13,28 @@
 #ifndef KERBAL_TYPE_TRAITS_ADD_POINTER_HPP
 #define KERBAL_TYPE_TRAITS_ADD_POINTER_HPP
 
-#include <kerbal/ts/modules_ts/modules_ts.hpp>
+#include <kerbal/config/modules/modules.hpp>
+
+#if KERBAL_ENABLE_MODULES
+module;
+#endif
+
+
+#include <kerbal/config/modules/include_header_begin.part.hpp>
 
 #include <kerbal/type_traits/is_referencable.hpp>
 #include <kerbal/type_traits/is_void.hpp>
 #include <kerbal/type_traits/logical.hpp>
 #include <kerbal/type_traits/remove_reference.hpp>
+
+
+#include <kerbal/config/modules/include_header_end.part.hpp>
+
+
+#if KERBAL_ENABLE_MODULES
+export module kerbal.type_traits.add_pointer;
+#endif
+
 
 
 namespace kerbal
