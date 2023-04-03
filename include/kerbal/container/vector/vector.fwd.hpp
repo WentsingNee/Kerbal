@@ -12,7 +12,16 @@
 #ifndef KERBAL_CONTAINER_VECTOR_VECTOR_FWD_HPP
 #define KERBAL_CONTAINER_VECTOR_VECTOR_FWD_HPP
 
-#include <kerbal/ts/modules_ts/modules_ts.hpp>
+
+#include <kerbal/config/modules/modules.hpp>
+
+#if KERBAL_ENABLE_MODULES
+module;
+#endif
+
+
+#include <kerbal/config/modules/include_header_begin.part.hpp>
+
 
 #include <kerbal/container/detail/vector_base/vector_base.fwd.hpp>
 
@@ -22,6 +31,14 @@
 #	if __has_include(<memory_resource>)
 #		include <memory_resource>
 #	endif
+#endif
+
+
+#include <kerbal/config/modules/include_header_end.part.hpp>
+
+
+#if KERBAL_ENABLE_MODULES
+export module kerbal.container.vector.fwd;
 #endif
 
 
