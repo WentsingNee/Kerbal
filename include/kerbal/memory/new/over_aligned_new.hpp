@@ -14,87 +14,37 @@
 
 #include <kerbal/compatibility/constexpr.hpp>
 #include <kerbal/compatibility/noexcept.hpp>
-#include <kerbal/memory/bad_alloc.hpp>
-#include <kerbal/memory/new/nothrow_new.hpp>
+#include <kerbal/memory/allocator/over_aligned_allocator.hpp>
+#include <kerbal/memory/nothrow_t.hpp>
 #include <kerbal/memory/pointer_alignment.hpp>
 
 #include <cstddef>
 
 
-namespace kerbal
-{
-
-	namespace memory
-	{
-
-		namespace detail
-		{
-
-			KERBAL_CONSTEXPR
-			inline
-			std::size_t raw_alloc_size_with_align(std::size_t size, kerbal::memory::align_val_t align) KERBAL_NOEXCEPT
-			{
-				return size + align;
-			}
-
-		} // namespace detail
-
-	} // namespace memory
-
-} // namespace kerbal
-
-
 inline
-void * operator new(std::size_t size, kerbal::memory::align_val_t align, kerbal::memory::nothrow_t nothrow_new_tag) KERBAL_NOEXCEPT
+void * operator new(std::size_t size, kerbal::memory::align_val_t align, kerbal::memory::nothrow_t nothrow) KERBAL_NOEXCEPT
 {
-	if (align <= kerbal::memory::DEFAULT_ALIGNMENT::value) {
-		return ::operator new(size, nothrow_new_tag); // kerbal non-throwing new
-	}
-
-	void * const p_raw = ::operator new(kerbal::memory::detail::raw_alloc_size_with_align(size, align), nothrow_new_tag); // kerbal non-throwing new
-
-	if (p_raw == NULL) {
-		return NULL;
-	}
-
-	void ** p = static_cast<void **>(p_raw);
-	++p;
-	{
-		std::size_t z = reinterpret_cast<std::size_t>(p);
-		z &= ~(align - 1);
-		z += align;
-		p = reinterpret_cast<void**>(z);
-	}
-	*(p - 1) = p_raw;
-	return static_cast<void*>(p);
+	kerbal::memory::over_aligned_allocator<void> alloc;
+	return alloc.allocate(size, align, nothrow);
 }
 
 inline
-void operator delete(void * p, std::size_t size, kerbal::memory::align_val_t align, kerbal::memory::nothrow_t nothrow_new_tag) KERBAL_NOEXCEPT
+void operator delete(void * p, std::size_t size, kerbal::memory::align_val_t align, kerbal::memory::nothrow_t nothrow) KERBAL_NOEXCEPT
 {
-	if (align <= kerbal::memory::DEFAULT_ALIGNMENT::value) {
-		::operator delete(p, size, nothrow_new_tag); // kerbal non-throwing delete
-		return;
-	}
-
-	if (p == NULL) {
-		return;
-	}
-
-	void * p_raw = *(static_cast<void**>(p) - 1);
-	::operator delete(p_raw, kerbal::memory::detail::raw_alloc_size_with_align(size, align), nothrow_new_tag); // kerbal non-throwing delete
+	kerbal::memory::over_aligned_allocator<void> alloc;
+	alloc.deallocate(p, size, align, nothrow);
 }
 
 inline
-void * operator new[](std::size_t size, kerbal::memory::align_val_t align, kerbal::memory::nothrow_t nothrow_new_tag) KERBAL_NOEXCEPT
+void * operator new[](std::size_t size, kerbal::memory::align_val_t align, kerbal::memory::nothrow_t nothrow) KERBAL_NOEXCEPT
 {
-	return ::operator new(size, align, nothrow_new_tag);
+	return ::operator new(size, align, nothrow);
 }
 
 inline
-void operator delete[](void * p, std::size_t size, kerbal::memory::align_val_t align, kerbal::memory::nothrow_t nothrow_new_tag) KERBAL_NOEXCEPT
+void operator delete[](void * p, std::size_t size, kerbal::memory::align_val_t align, kerbal::memory::nothrow_t nothrow) KERBAL_NOEXCEPT
 {
-	::operator delete(p, size, align, nothrow_new_tag);
+	::operator delete(p, size, align, nothrow);
 }
 
 
@@ -102,17 +52,15 @@ void operator delete[](void * p, std::size_t size, kerbal::memory::align_val_t a
 inline
 void * operator new(std::size_t size, kerbal::memory::align_val_t align)
 {
-	void * p = ::operator new(size, align, kerbal::memory::nothrow_t()); // kerbal aligned non-throwing new
-	if (p == NULL) {
-		kerbal::utility::throw_this_exception_helper<kerbal::memory::bad_alloc>::throw_this_exception();
-	}
-	return p;
+	kerbal::memory::over_aligned_allocator<void> alloc;
+	return alloc.allocate(size, align);
 }
 
 inline
 void operator delete(void * p, std::size_t size, kerbal::memory::align_val_t align) KERBAL_NOEXCEPT
 {
-	::operator delete(p, size, align, kerbal::memory::nothrow_t()); // kerbal aligned non-throwing delete
+	kerbal::memory::over_aligned_allocator<void> alloc;
+	alloc.deallocate(p, size, align);
 }
 
 inline
