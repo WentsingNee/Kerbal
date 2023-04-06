@@ -18,8 +18,8 @@
 #include <kerbal/compatibility/constexpr.hpp>
 #include <kerbal/compatibility/noexcept.hpp>
 #include <kerbal/memory/pointer_traits.hpp>
-#include <kerbal/numeric/numeric_limits.hpp>
 #include <kerbal/memory/uninitialized.hpp>
+#include <kerbal/numeric/numeric_limits.hpp>
 #include <kerbal/type_traits/add_lvalue_reference.hpp>
 #include <kerbal/type_traits/conditional.hpp>
 #include <kerbal/type_traits/integral_constant.hpp>
@@ -478,11 +478,29 @@ namespace kerbal
 
 #		else
 
-			template <typename Tp, typename Up, template <typename> class AllocTem>
-			struct pointer_traits_rebind_impl<AllocTem<Tp>, Up>
-			{
-					typedef AllocTem<Up> type;
+#		define EMPTY
+#		define LEFT_JOIN_COMMA(exp) , exp
+#		define TARGS_DECL1(i) typename KERBAL_MACRO_CONCAT(Arg, i)
+#		define TARGS_USE1(i) KERBAL_MACRO_CONCAT(Arg, i)
+#		define TARGS_DECL2(i) typename
+#		define DBODY(i) \
+			template <typename Tp, typename Up \
+					KERBAL_OPT_PPEXPAND_WITH_COMMA_N(LEFT_JOIN_COMMA, EMPTY, TARGS_DECL1, i), \
+					template <typename KERBAL_OPT_PPEXPAND_WITH_COMMA_N(LEFT_JOIN_COMMA, EMPTY, TARGS_DECL2, i)> class AllocTem> \
+			struct pointer_traits_rebind_impl<AllocTem<Tp KERBAL_OPT_PPEXPAND_WITH_COMMA_N(LEFT_JOIN_COMMA, EMPTY, TARGS_USE1, i)>, Up> \
+			{ \
+					typedef AllocTem<Up KERBAL_OPT_PPEXPAND_WITH_COMMA_N(LEFT_JOIN_COMMA, EMPTY, TARGS_USE1, i)> type; \
 			};
+
+			KERBAL_PPEXPAND_N(DBODY, KERBAL_PPEXPAND_EMPTY_SEPARATOR, 0)
+			KERBAL_PPEXPAND_N(DBODY, KERBAL_PPEXPAND_EMPTY_SEPARATOR, 20)
+
+#		undef EMPTY
+#		undef LEFT_JOIN_COMMA
+#		undef TARGS_DECL1
+#		undef TARGS_USE1
+#		undef TARGS_DECL2
+#		undef DBODY
 
 #		endif // __cplusplus >= 201103L
 
