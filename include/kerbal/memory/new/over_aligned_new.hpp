@@ -16,7 +16,7 @@
 #include <kerbal/compatibility/noexcept.hpp>
 #include <kerbal/memory/bad_alloc.hpp>
 #include <kerbal/memory/new/nothrow_new.hpp>
-#include <kerbal/type_traits/integral_constant.hpp>
+#include <kerbal/memory/pointer_alignment.hpp>
 
 #include <cstddef>
 
@@ -26,29 +26,6 @@ namespace kerbal
 
 	namespace memory
 	{
-
-#ifdef __STDCPP_DEFAULT_NEW_ALIGNMENT__
-		typedef kerbal::type_traits::integral_constant<std::size_t, __STDCPP_DEFAULT_NEW_ALIGNMENT__> DEFAULT_ALIGNMENT;
-#else
-		typedef kerbal::type_traits::integral_constant<std::size_t, sizeof(void*)> DEFAULT_ALIGNMENT;
-#endif
-
-		struct align_val_t
-		{
-				std::size_t val;
-
-				KERBAL_CONSTEXPR
-				align_val_t(std::size_t val = kerbal::memory::DEFAULT_ALIGNMENT::value) KERBAL_NOEXCEPT
-						: val(val)
-				{
-				}
-
-				KERBAL_CONSTEXPR
-				operator std::size_t() const KERBAL_NOEXCEPT
-				{
-					return val;
-				}
-		};
 
 		namespace detail
 		{
