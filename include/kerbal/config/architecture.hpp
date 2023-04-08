@@ -35,6 +35,10 @@
 #	define KERBAL_ARCHITECTURE_AARCH64 3
 #endif
 
+#ifndef KERBAL_ARCHITECTURE_WASM
+#	define KERBAL_ARCHITECTURE_WASM 4
+#endif
+
 
 
 #ifndef KERBAL_ARCHITECTURE
@@ -43,6 +47,7 @@
 #	include <kerbal/config/architecture/_1_amd64.hpp>
 #	include <kerbal/config/architecture/_2_arm.hpp>
 #	include <kerbal/config/architecture/_3_aarch64.hpp>
+#	include <kerbal/config/architecture/_4_wasm.hpp>
 
 
 #	ifndef KERBAL_ARCHITECTURE

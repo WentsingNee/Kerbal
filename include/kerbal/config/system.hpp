@@ -39,6 +39,10 @@
 #	define KERBAL_SYSTEM_ANDROID 4
 #endif
 
+#ifndef KERBAL_SYSTEM_WASM
+#	define KERBAL_SYSTEM_WASM 5
+#endif
+
 
 
 #ifndef KERBAL_SYSTEM
@@ -48,6 +52,7 @@
 #	include <kerbal/config/system/_2_linux.hpp>
 #	include <kerbal/config/system/_3_apple.hpp>
 #	include <kerbal/config/system/_4_android.hpp>
+#	include <kerbal/config/system/_5_wasm.hpp>
 
 
 #	ifndef KERBAL_SYSTEM
