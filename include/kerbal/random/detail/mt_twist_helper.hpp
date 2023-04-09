@@ -27,7 +27,7 @@
 
 #ifndef KERBAL_RANDOM_ENABLE_MT_TWIST_IE_OPTIMISE
 
-#	if __AVX512F__ || __AVX2__ || __SSE4_1__ || __SSE2__ || __ARM_FEATURE_SVE || __ARM_NEON
+#	if __AVX512F__ || __AVX2__ || __SSE4_1__ || __SSE2__ || __ARM_FEATURE_SVE || __ARM_NEON || __wasm_simd128__
 #		define KERBAL_RANDOM_ENABLE_MT_TWIST_IE_OPTIMISE 1
 #	else
 #		define KERBAL_RANDOM_ENABLE_MT_TWIST_IE_OPTIMISE 0
@@ -60,6 +60,10 @@
 
 #	if __ARM_NEON
 #		include <kerbal/random/detail/mt_twist/mt_twist.neon.part.hpp>
+#	endif
+
+#	if __wasm_simd128__
+#		include <kerbal/random/detail/mt_twist/mt_twist.wasm_simd128.hpp>
 #	endif
 
 #	include <kerbal/random/detail/mt_twist/mt_twist.plain.part.hpp>
@@ -106,6 +110,8 @@ namespace kerbal
 				sve::mt_twist<N, M, R, A>(mtr);
 #		elif __ARM_NEON
 				neon::mt_twist<N, M, R, A>(mtr);
+#		elif __wasm_simd128__
+				wasm_simd128::mt_twist<N, M, R, A>(mtr);
 #		else
 				plain::mt_twist<kerbal::compatibility::uint32_t, N, M, R, A>(mt);
 #		endif
@@ -133,6 +139,8 @@ namespace kerbal
 				sve::mt_twist<N, M, R, A>(mtr);
 #		elif __ARM_NEON
 				neon::mt_twist<N, M, R, A>(mtr);
+#		elif __wasm_simd128__
+				wasm_simd128::mt_twist<N, M, R, A>(mtr);
 #		else
 				plain::mt_twist<kerbal::compatibility::uint64_t, N, M, R, A>(mt);
 #		endif
