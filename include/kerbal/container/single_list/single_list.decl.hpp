@@ -152,7 +152,9 @@ namespace kerbal
 				KERBAL_CONSTEXPR20
 				explicit
 				single_list(const Allocator& alloc) KERBAL_CONDITIONAL_NOEXCEPT(
-						sl_allocator_overload::is_nothrow_constructible_from_allocator_const_reference::value &&
+						kerbal::type_traits::tribool_is_true<
+							typename sl_allocator_overload::template try_test_is_nothrow_constructible_from_allocator<const Allocator &>
+						>::value &&
 						sl_type_only::is_nothrow_default_constructible::value
 				);
 
@@ -197,13 +199,17 @@ namespace kerbal
 
 				KERBAL_CONSTEXPR20
 				single_list(single_list && src) KERBAL_CONDITIONAL_NOEXCEPT(
-						sl_allocator_overload::is_nothrow_constructible_from_allocator_rvalue_reference::value &&
+						kerbal::type_traits::tribool_is_true<
+							typename sl_allocator_overload::template try_test_is_nothrow_constructible_from_allocator<Allocator &&>
+						>::value &&
 						sl_type_only::is_nothrow_move_constructible::value
 				);
 
 				KERBAL_CONSTEXPR20
 				single_list(single_list && src, const Allocator& alloc)  KERBAL_CONDITIONAL_NOEXCEPT(
-						sl_allocator_overload::is_nothrow_constructible_from_allocator_const_reference::value &&
+						kerbal::type_traits::tribool_is_true<
+							typename sl_allocator_overload::template try_test_is_nothrow_constructible_from_allocator<const Allocator &>
+						>::value &&
 						sl_type_only::template is_nothrow_move_constructible_using_allocator<node_allocator_type>::value
 				);
 

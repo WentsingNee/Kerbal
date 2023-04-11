@@ -24,6 +24,7 @@
 #if __cplusplus >= 201103L
 #	include <kerbal/type_traits/is_nothrow_constructible.hpp>
 #	include <kerbal/type_traits/tribool_constant.hpp>
+#	include <kerbal/utility/forward.hpp>
 #endif
 
 
@@ -69,10 +70,8 @@ namespace kerbal
 
 #			if __cplusplus >= 201103L
 
-					struct is_nothrow_default_constructible :
-							kerbal::type_traits::tribool_is_true<
-								kerbal::type_traits::try_test_is_nothrow_constructible<super, kerbal::utility::in_place_t>
-							>
+					struct try_test_is_nothrow_default_constructible :
+							kerbal::type_traits::try_test_is_nothrow_constructible<super, kerbal::utility::in_place_t>
 					{
 					};
 
@@ -80,45 +79,39 @@ namespace kerbal
 
 					KERBAL_CONSTEXPR
 					container_rebind_allocator_overload()
-							KERBAL_CONDITIONAL_NOEXCEPT(is_nothrow_default_constructible::value)
+							KERBAL_CONDITIONAL_NOEXCEPT(
+								kerbal::type_traits::tribool_is_true<try_test_is_nothrow_default_constructible>::value
+							)
 							: super(kerbal::utility::in_place_t())
 					{
 					}
 
+
 #			if __cplusplus >= 201103L
 
-					struct is_nothrow_constructible_from_allocator_const_reference :
-							kerbal::type_traits::tribool_is_true<
-								kerbal::type_traits::try_test_is_nothrow_constructible<super, kerbal::utility::in_place_t, const Allocator &>
-							>
+					template <typename Allocator2>
+					struct try_test_is_nothrow_constructible_from_allocator :
+							kerbal::type_traits::try_test_is_nothrow_constructible<super, kerbal::utility::in_place_t, Allocator2>
 					{
 					};
 
-#			endif
-
+					template <typename Allocator2>
 					KERBAL_CONSTEXPR
 					explicit
-					container_rebind_allocator_overload(const Allocator & allocator)
-							KERBAL_CONDITIONAL_NOEXCEPT(is_nothrow_constructible_from_allocator_const_reference::value)
-							: super(kerbal::utility::in_place_t(), allocator)
+					container_rebind_allocator_overload(Allocator2 && allocator)
+							KERBAL_CONDITIONAL_NOEXCEPT(
+								kerbal::type_traits::tribool_is_true<try_test_is_nothrow_constructible_from_allocator<Allocator2 &&> >::value
+							)
+							: super(kerbal::utility::in_place_t(), kerbal::utility::forward<Allocator2>(allocator))
 					{
 					}
 
+#			else
 
-#			if __cplusplus >= 201103L
-
-					struct is_nothrow_constructible_from_allocator_rvalue_reference :
-							kerbal::type_traits::tribool_is_true<
-								kerbal::type_traits::try_test_is_nothrow_constructible<super, kerbal::utility::in_place_t, Allocator &&>
-							>
-					{
-					};
-
-					KERBAL_CONSTEXPR
+					template <typename Allocator2>
 					explicit
-					container_rebind_allocator_overload(Allocator && allocator)
-							KERBAL_CONDITIONAL_NOEXCEPT(is_nothrow_constructible_from_allocator_rvalue_reference::value)
-							: super(kerbal::utility::in_place_t(), kerbal::compatibility::move(allocator))
+					container_rebind_allocator_overload(const Allocator2 & allocator)
+							: super(kerbal::utility::in_place_t(), allocator)
 					{
 					}
 
