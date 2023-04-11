@@ -17,8 +17,8 @@ project(
         VERSION ${KERBAL_VERSION}
 )
 
-file(GLOB_RECURSE kerbal_src include/kerbal/container "*.hpp")
-add_library(Kerbal INTERFACE ${kerbal_src})
+file(GLOB_RECURSE kerbal_header ${PROJECT_SOURCE_DIR}/include/kerbal "${PROJECT_SOURCE_DIR}/include/*.hpp")
+add_library(Kerbal INTERFACE ${kerbal_header})
 
 target_include_directories(
         Kerbal INTERFACE
