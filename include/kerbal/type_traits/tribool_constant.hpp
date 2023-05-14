@@ -71,12 +71,12 @@ namespace kerbal
 
 		/**
 		 * @details
-		 *      if for all of the args, args::value is true (1):
-		 *          result is true
+		 *      if for any of the args, args::value is false (0):
+		 *          result is false
 		 *      else if for any of the args, args::value is unspecified (-1):
 		 *          result is unspecified
 		 *      else:
-		 *          result is false
+		 *          result is true
 		 */
 		template <typename ... Args>
 		struct tribool_conjunction;
@@ -88,40 +88,40 @@ namespace kerbal
 			// if unspecified exists in the remained, then the whole result of tribool_conjunction is unspecified
 			// otherwise the whole result is false
 			template <typename ... Args>
-			struct tribool_conjunction_when_has_false;
+			struct tribool_conjunction_when_has_unspecified;
 
 			template <int Arg0, typename ... Args>
-			struct tribool_conjunction_when_has_false_impl;
+			struct tribool_conjunction_when_has_unspecified_impl;
 
 
 			template <>
-			struct tribool_conjunction_when_has_false<>
-			{
-					typedef kerbal::type_traits::tribool_false result;
-			};
-
-			template <typename Arg0, typename ... Args>
-			struct tribool_conjunction_when_has_false<Arg0, Args...> :
-					tribool_conjunction_when_has_false_impl<Arg0::value, Args...>
-			{
-			};
-
-
-			template <typename ... Args>
-			struct tribool_conjunction_when_has_false_impl<-1, Args...>
+			struct tribool_conjunction_when_has_unspecified<>
 			{
 					typedef kerbal::type_traits::tribool_unspecified result;
 			};
 
+			template <typename Arg0, typename ... Args>
+			struct tribool_conjunction_when_has_unspecified<Arg0, Args...> :
+					tribool_conjunction_when_has_unspecified_impl<Arg0::value, Args...>
+			{
+			};
+
+
 			template <typename ... Args>
-			struct tribool_conjunction_when_has_false_impl<0, Args...> :
-					tribool_conjunction_when_has_false<Args...>
+			struct tribool_conjunction_when_has_unspecified_impl<-1, Args...> :
+					tribool_conjunction_when_has_unspecified<Args...>
 			{
 			};
 
 			template <typename ... Args>
-			struct tribool_conjunction_when_has_false_impl<1, Args...> :
-					tribool_conjunction_when_has_false<Args...>
+			struct tribool_conjunction_when_has_unspecified_impl<0, Args...>
+			{
+				typedef kerbal::type_traits::tribool_false result;
+			};
+
+			template <typename ... Args>
+			struct tribool_conjunction_when_has_unspecified_impl<1, Args...> :
+					tribool_conjunction_when_has_unspecified<Args...>
 			{
 			};
 
@@ -131,14 +131,14 @@ namespace kerbal
 			struct tribool_conjunction_impl;
 
 			template <typename ... Args>
-			struct tribool_conjunction_impl<-1, Args...>
+			struct tribool_conjunction_impl<-1, Args...> : tribool_conjunction_when_has_unspecified<Args...>
 			{
-					typedef kerbal::type_traits::tribool_unspecified result;
 			};
 
 			template <typename ... Args>
-			struct tribool_conjunction_impl<0, Args...> : tribool_conjunction_when_has_false<Args...>
+			struct tribool_conjunction_impl<0, Args...>
 			{
+				typedef kerbal::type_traits::tribool_false result;
 			};
 
 			template <typename ... Args>
@@ -172,40 +172,40 @@ namespace kerbal
 		{
 
 			template <typename Arg0 = kerbal::type_traits::tribool_true, KERBAL_PPEXPAND_WITH_COMMA_N(TRIBOOL_CONJUNCTION_ARGS_DECL_WITH_DEFAULT, 20)>
-			struct tribool_conjunction_when_has_false;
+			struct tribool_conjunction_when_has_unspecified;
 
 			template <int Arg0, KERBAL_PPEXPAND_WITH_COMMA_N(TRIBOOL_CONJUNCTION_ARGS_DECL_WITH_DEFAULT, 20)>
-			struct tribool_conjunction_when_has_false_impl;
+			struct tribool_conjunction_when_has_unspecified_impl;
 
 
 			template <typename Arg0, KERBAL_PPEXPAND_WITH_COMMA_N(TRIBOOL_CONJUNCTION_ARGS_DECL, 20)>
-			struct tribool_conjunction_when_has_false :
-					tribool_conjunction_when_has_false_impl<Arg0::value, KERBAL_PPEXPAND_WITH_COMMA_N(TRIBOOL_CONJUNCTION_ARGS_USE, 20)>
+			struct tribool_conjunction_when_has_unspecified :
+					tribool_conjunction_when_has_unspecified_impl<Arg0::value, KERBAL_PPEXPAND_WITH_COMMA_N(TRIBOOL_CONJUNCTION_ARGS_USE, 20)>
 			{
 			};
 
 			template <>
-			struct tribool_conjunction_when_has_false<>
-			{
-					typedef kerbal::type_traits::tribool_false result;
-			};
-
-
-			template <KERBAL_PPEXPAND_WITH_COMMA_N(TRIBOOL_CONJUNCTION_ARGS_DECL, 20)>
-			struct tribool_conjunction_when_has_false_impl<-1, KERBAL_PPEXPAND_WITH_COMMA_N(TRIBOOL_CONJUNCTION_ARGS_USE, 20)>
+			struct tribool_conjunction_when_has_unspecified<>
 			{
 					typedef kerbal::type_traits::tribool_unspecified result;
 			};
 
+
 			template <KERBAL_PPEXPAND_WITH_COMMA_N(TRIBOOL_CONJUNCTION_ARGS_DECL, 20)>
-			struct tribool_conjunction_when_has_false_impl<0, KERBAL_PPEXPAND_WITH_COMMA_N(TRIBOOL_CONJUNCTION_ARGS_USE, 20)> :
-					tribool_conjunction_when_has_false<KERBAL_PPEXPAND_WITH_COMMA_N(TRIBOOL_CONJUNCTION_ARGS_USE, 20)>
+			struct tribool_conjunction_when_has_unspecified_impl<-1, KERBAL_PPEXPAND_WITH_COMMA_N(TRIBOOL_CONJUNCTION_ARGS_USE, 20)> :
+					tribool_conjunction_when_has_unspecified<KERBAL_PPEXPAND_WITH_COMMA_N(TRIBOOL_CONJUNCTION_ARGS_USE, 20)>
 			{
 			};
 
 			template <KERBAL_PPEXPAND_WITH_COMMA_N(TRIBOOL_CONJUNCTION_ARGS_DECL, 20)>
-			struct tribool_conjunction_when_has_false_impl<1, KERBAL_PPEXPAND_WITH_COMMA_N(TRIBOOL_CONJUNCTION_ARGS_USE, 20)> :
-					tribool_conjunction_when_has_false<KERBAL_PPEXPAND_WITH_COMMA_N(TRIBOOL_CONJUNCTION_ARGS_USE, 20)>
+			struct tribool_conjunction_when_has_unspecified_impl<0, KERBAL_PPEXPAND_WITH_COMMA_N(TRIBOOL_CONJUNCTION_ARGS_USE, 20)>
+			{
+					typedef kerbal::type_traits::tribool_false result;
+			};
+
+			template <KERBAL_PPEXPAND_WITH_COMMA_N(TRIBOOL_CONJUNCTION_ARGS_DECL, 20)>
+			struct tribool_conjunction_when_has_unspecified_impl<1, KERBAL_PPEXPAND_WITH_COMMA_N(TRIBOOL_CONJUNCTION_ARGS_USE, 20)> :
+					tribool_conjunction_when_has_unspecified<KERBAL_PPEXPAND_WITH_COMMA_N(TRIBOOL_CONJUNCTION_ARGS_USE, 20)>
 			{
 			};
 
@@ -218,17 +218,17 @@ namespace kerbal
 			struct tribool_conjunction_impl<
 					-1,
 					KERBAL_PPEXPAND_WITH_COMMA_N(TRIBOOL_CONJUNCTION_ARGS_USE, 20)
-			>
+			> : tribool_conjunction_when_has_unspecified<KERBAL_PPEXPAND_WITH_COMMA_N(TRIBOOL_CONJUNCTION_ARGS_USE, 20)>
 			{
-				typedef kerbal::type_traits::tribool_unspecified result;
 			};
 
 			template <KERBAL_PPEXPAND_WITH_COMMA_N(TRIBOOL_CONJUNCTION_ARGS_DECL, 20)>
 			struct tribool_conjunction_impl<
 					0,
 					KERBAL_PPEXPAND_WITH_COMMA_N(TRIBOOL_CONJUNCTION_ARGS_USE, 20)
-			> : tribool_conjunction_when_has_false<KERBAL_PPEXPAND_WITH_COMMA_N(TRIBOOL_CONJUNCTION_ARGS_USE, 20)>
+			>
 			{
+				typedef kerbal::type_traits::tribool_false result;
 			};
 
 			template <KERBAL_PPEXPAND_WITH_COMMA_N(TRIBOOL_CONJUNCTION_ARGS_DECL, 20)>
@@ -243,7 +243,7 @@ namespace kerbal
 
 		template <typename Arg0, KERBAL_PPEXPAND_WITH_COMMA_N(TRIBOOL_CONJUNCTION_ARGS_DECL, 20)>
 		struct tribool_conjunction :
-				detail::tribool_conjunction_impl<Arg0::value, KERBAL_PPEXPAND_WITH_COMMA_N(TRIBOOL_CONJUNCTION_ARGS_USE, 20)>
+				kerbal::type_traits::detail::tribool_conjunction_impl<Arg0::value, KERBAL_PPEXPAND_WITH_COMMA_N(TRIBOOL_CONJUNCTION_ARGS_USE, 20)>
 		{
 		};
 
@@ -452,7 +452,7 @@ namespace kerbal
 
 		template <typename Arg0, KERBAL_PPEXPAND_WITH_COMMA_N(TRIBOOL_OR_ARGS_DECL, 20)>
 		struct tribool_disjunction :
-				detail::tribool_disjunction_impl<Arg0::value, KERBAL_PPEXPAND_WITH_COMMA_N(TRIBOOL_OR_ARGS_USE, 20)>
+				kerbal::type_traits::detail::tribool_disjunction_impl<Arg0::value, KERBAL_PPEXPAND_WITH_COMMA_N(TRIBOOL_OR_ARGS_USE, 20)>
 		{
 		};
 
