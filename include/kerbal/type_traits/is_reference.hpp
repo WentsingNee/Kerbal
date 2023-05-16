@@ -17,8 +17,8 @@
 #include <kerbal/type_traits/is_lvalue_reference.hpp>
 
 #if __cplusplus >= 201103L
-#	include <kerbal/type_traits/integral_constant.hpp>
 #	include <kerbal/type_traits/is_rvalue_reference.hpp>
+#	include <kerbal/type_traits/logical.hpp>
 #endif
 
 
@@ -40,9 +40,9 @@ namespace kerbal
 		KERBAL_MODULE_EXPORT
 		template <typename T>
 		struct is_reference :
-				kerbal::type_traits::bool_constant<
-					kerbal::type_traits::is_lvalue_reference<T>::value ||
-					kerbal::type_traits::is_rvalue_reference<T>::value
+				kerbal::type_traits::disjunction<
+					kerbal::type_traits::is_lvalue_reference<T>,
+					kerbal::type_traits::is_rvalue_reference<T>
 				>
 		{
 		};

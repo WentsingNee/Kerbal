@@ -13,7 +13,6 @@
 #define KERBAL_TYPE_TRAITS_CAN_BE_EMPTY_BASE_HPP
 
 #include <kerbal/ts/modules_ts/modules_ts.hpp>
-#include <kerbal/type_traits/integral_constant.hpp>
 #include <kerbal/type_traits/is_empty.hpp>
 #include <kerbal/type_traits/is_final.hpp>
 #include <kerbal/type_traits/tribool_constant.hpp>
@@ -23,6 +22,11 @@
 #	define KERBAL_HAS_CAN_BE_EMPTY_BASE_SUPPORT 1
 #else
 #	define KERBAL_HAS_CAN_BE_EMPTY_BASE_SUPPORT 0
+#endif
+
+
+#if KERBAL_HAS_CAN_BE_EMPTY_BASE_SUPPORT
+#	include <kerbal/type_traits/logical.hpp>
 #endif
 
 
@@ -36,10 +40,13 @@ namespace kerbal
 
 		KERBAL_MODULE_EXPORT
 		template <typename T>
-		struct can_be_empty_base : kerbal::type_traits::bool_constant<
-				!kerbal::type_traits::is_final<T>::value &&
-				kerbal::type_traits::is_empty<T>::value
-		>
+		struct can_be_empty_base :
+				kerbal::type_traits::conjunction<
+					kerbal::type_traits::negation<
+						kerbal::type_traits::is_final<T>
+					>,
+					kerbal::type_traits::is_empty<T>
+				>
 		{
 		};
 

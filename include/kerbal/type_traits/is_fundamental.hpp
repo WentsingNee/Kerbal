@@ -14,9 +14,9 @@
 #define KERBAL_TYPE_TRAITS_IS_FUNDAMENTAL_HPP
 
 #include <kerbal/ts/modules_ts/modules_ts.hpp>
-#include <kerbal/type_traits/integral_constant.hpp>
 #include <kerbal/type_traits/is_arithmetic.hpp>
 #include <kerbal/type_traits/is_void.hpp>
+#include <kerbal/type_traits/logical.hpp>
 
 #if __cplusplus >= 201103L
 #	include <kerbal/type_traits/is_null_pointer.hpp>
@@ -32,12 +32,12 @@ namespace kerbal
 		KERBAL_MODULE_EXPORT
 		template <typename T>
 		struct is_fundamental :
-				kerbal::type_traits::bool_constant<
-					   kerbal::type_traits::is_arithmetic<T>::value
-					|| kerbal::type_traits::is_void<T>::value
+				kerbal::type_traits::disjunction<
 #	if __cplusplus >= 201103L
-					|| kerbal::type_traits::is_null_pointer<T>::value
+					kerbal::type_traits::is_null_pointer<T>,
 #	endif
+					kerbal::type_traits::is_arithmetic<T>,
+					kerbal::type_traits::is_void<T>
 				>
 		{
 		};

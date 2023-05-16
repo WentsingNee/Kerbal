@@ -15,6 +15,13 @@
 #include <kerbal/ts/modules_ts/modules_ts.hpp>
 #include <kerbal/type_traits/integral_constant.hpp>
 
+#if __cplusplus < 201103L
+#	include <kerbal/macro/ppexpand.hpp>
+#else
+#	include <kerbal/type_traits/logical.hpp>
+#endif
+
+
 namespace kerbal
 {
 
@@ -23,22 +30,26 @@ namespace kerbal
 
 #	if __cplusplus < 201103L
 
-		template <
-				typename Tp,   typename Up  , typename = Up, typename = Up, typename = Up,
-				typename = Up, typename = Up, typename = Up, typename = Up, typename = Up,
-				typename = Up, typename = Up, typename = Up, typename = Up, typename = Up>
+#		define TARGS_DECL(i) typename = Up
+
+		template <typename Tp, typename Up,
+				KERBAL_PPEXPAND_WITH_COMMA_N(TARGS_DECL, 20)
+		>
 		struct is_same : kerbal::type_traits::false_type
 		{
 		};
+
+#		undef TARGS_DECL
 
 #	else
 
 		KERBAL_MODULE_EXPORT
 		template <typename Tp, typename Up, typename ... Types>
-		struct is_same: kerbal::type_traits::bool_constant<
-									kerbal::type_traits::is_same<Tp, Up>::value &&
-									kerbal::type_traits::is_same<Up, Types...>::value
-							>
+		struct is_same:
+				kerbal::type_traits::conjunction<
+					kerbal::type_traits::is_same<Tp, Up>,
+					kerbal::type_traits::is_same<Tp, Types>...
+				>
 		{
 		};
 

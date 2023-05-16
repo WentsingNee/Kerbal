@@ -16,6 +16,7 @@
 #include <kerbal/type_traits/copy_cv.hpp>
 #include <kerbal/type_traits/integral_constant.hpp>
 #include <kerbal/type_traits/is_arithmetic.hpp>
+#include <kerbal/type_traits/logical.hpp>
 #include <kerbal/type_traits/remove_cv.hpp>
 #include <kerbal/type_traits/type_identity.hpp>
 
@@ -48,10 +49,13 @@ namespace kerbal
 
 		KERBAL_MODULE_EXPORT
 		template <typename Tp>
-		struct is_unsigned: kerbal::type_traits::bool_constant<
-									kerbal::type_traits::is_arithmetic<Tp>::value &&
-									!(kerbal::type_traits::is_signed<Tp>::value)
-							>
+		struct is_unsigned :
+				kerbal::type_traits::conjunction<
+					kerbal::type_traits::is_arithmetic<Tp>,
+					kerbal::type_traits::negation<
+						kerbal::type_traits::is_signed<Tp>
+					>
+				>
 		{
 		};
 
