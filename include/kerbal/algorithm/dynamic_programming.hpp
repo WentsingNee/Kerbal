@@ -18,11 +18,11 @@
 #include <kerbal/compare/binary_type_compare.hpp>
 #include <kerbal/compatibility/constexpr.hpp>
 #include <kerbal/container/nonmember_container_access.hpp>
+#include <kerbal/container/vector.hpp>
 #include <kerbal/iterator/general_back_inserter.hpp>
 #include <kerbal/iterator/iterator.hpp>
 
 #include <cstddef>
-#include <vector>
 
 
 namespace kerbal
@@ -78,7 +78,7 @@ namespace kerbal
 			typedef typename kerbal::iterator::iterator_traits<ForwardIterator1>::difference_type difference_type;
 			difference_type buffer_size_need(kerbal::iterator::distance(a_first, a_last) + 1);
 			if (buffer_size_need > 128) {
-				std::vector<std::size_t> buffer(buffer_size_need);
+				kerbal::container::vector<std::size_t> buffer(buffer_size_need);
 				return kerbal::algorithm::longest_common_subsequence(a_first, a_last, b_first, b_last, equal_to, buffer.begin());
 			} else {
 				std::size_t buffer[128];
@@ -158,7 +158,7 @@ namespace kerbal
 
 			difference_type buffer_size_need(kerbal::iterator::distance(first, last));
 			if (buffer_size_need > 32) {
-				std::vector<iterator> buffer;
+				kerbal::container::vector<iterator> buffer;
 				buffer.reserve(buffer_size_need);
 				return kerbal::algorithm::longest_increasing_subsequence(first, last, cmp, buffer);
 			} else {
@@ -232,7 +232,7 @@ namespace kerbal
 
 			difference_type buffer_size_need(kerbal::iterator::distance(a_first, a_last) + 1);
 			if (buffer_size_need > 32) {
-				std::vector<std::size_t> buffer(buffer_size_need);
+				kerbal::container::vector<std::size_t> buffer(buffer_size_need);
 				return kerbal::algorithm::edit_distance(a_first, a_last, b_first, b_last, equal, buffer.begin());
 			} else {
 				std::size_t buffer[32];
