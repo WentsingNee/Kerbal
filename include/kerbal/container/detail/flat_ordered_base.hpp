@@ -870,30 +870,13 @@ namespace kerbal
 					KERBAL_CONSTEXPR14
 					const_iterator erase(const_iterator pos)
 					{
-
-#			if __cplusplus >= 201103L
-						return pos == sequence.end() ? pos : sequence.erase(pos);
-#			else
-						iterator b(sequence.begin());
-						iterator pos_mut(b + (pos - b));
-						return pos == sequence.end() ? pos : sequence.erase(pos_mut);
-#			endif
-
+						return pos == sequence.cend() ? pos : sequence.erase(pos);
 					}
 
 					KERBAL_CONSTEXPR14
 					const_iterator erase(const_iterator first, const_iterator last)
 					{
-
-#			if __cplusplus >= 201103L
 						return sequence.erase(first, last);
-#			else
-						iterator b(sequence.begin());
-						iterator first_mut(b + (first - b));
-						iterator last_mut(b + (last - b));
-						return sequence.erase(first_mut, last_mut);
-#			endif
-
 					}
 
 					KERBAL_CONSTEXPR14

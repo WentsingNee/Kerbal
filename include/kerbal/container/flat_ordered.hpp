@@ -12,13 +12,14 @@
 #ifndef KERBAL_CONTAINER_FLAT_ORDERED_HPP
 #define KERBAL_CONTAINER_FLAT_ORDERED_HPP
 
+#include <kerbal/container/detail/flat_ordered_base.hpp>
+
 #include <kerbal/algorithm/swap.hpp>
 #include <kerbal/compare/basic_compare.hpp>
 #include <kerbal/compatibility/namespace_std_scope.hpp>
-#include <kerbal/container/detail/flat_ordered_base.hpp>
+#include <kerbal/container/vector.hpp>
 
 #include <cstddef>
-#include <vector>
 
 
 namespace kerbal
@@ -31,11 +32,11 @@ namespace kerbal
 				typename Extract = default_extract<Key, Entity>, typename Allocator = std::allocator<Entity> >
 		class flat_ordered:
 				public kerbal::container::detail::flat_ordered_base<
-						Entity, Key, KeyCompare, Extract, std::vector<Entity, Allocator>
+						Entity, Key, KeyCompare, Extract, kerbal::container::vector<Entity, Allocator>
 				>
 		{
 			public:
-				typedef std::vector<Entity, Allocator> Sequence;
+				typedef kerbal::container::vector<Entity, Allocator> Sequence;
 
 			private:
 				typedef kerbal::container::detail::flat_ordered_base<
