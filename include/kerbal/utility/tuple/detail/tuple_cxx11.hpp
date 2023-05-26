@@ -611,7 +611,11 @@ namespace kerbal
 
 				KERBAL_CONSTEXPR14
 				auto ref() & KERBAL_NOEXCEPT ->
-						decltype(_K_ref_impl(kerbal::utility::make_index_sequence<TUPLE_SIZE::value>()))
+						decltype(
+							kerbal::utility::declval<tuple &>()._K_ref_impl(
+								kerbal::utility::make_index_sequence<TUPLE_SIZE::value>()
+							)
+						)
 				{
 					return _K_ref_impl(kerbal::utility::make_index_sequence<TUPLE_SIZE::value>());
 				}
@@ -631,14 +635,22 @@ namespace kerbal
 
 				KERBAL_CONSTEXPR14
 				auto ref() const & KERBAL_NOEXCEPT ->
-						decltype(_K_cref_impl(kerbal::utility::make_index_sequence<TUPLE_SIZE::value>()))
+						decltype(
+							kerbal::utility::declval<const tuple &>()._K_cref_impl(
+								kerbal::utility::make_index_sequence<TUPLE_SIZE::value>()
+							)
+						)
 				{
 					return _K_cref_impl(kerbal::utility::make_index_sequence<TUPLE_SIZE::value>());
 				}
 
 				KERBAL_CONSTEXPR14
 				auto cref() const & KERBAL_NOEXCEPT ->
-						decltype(_K_cref_impl(kerbal::utility::make_index_sequence<TUPLE_SIZE::value>()))
+						decltype(
+							kerbal::utility::declval<const tuple &>()._K_cref_impl(
+								kerbal::utility::make_index_sequence<TUPLE_SIZE::value>()
+							)
+						)
 				{
 					return _K_cref_impl(kerbal::utility::make_index_sequence<TUPLE_SIZE::value>());
 				}
