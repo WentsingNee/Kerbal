@@ -40,6 +40,7 @@
 
 #if __cplusplus >= 201103L
 #	include <kerbal/type_traits/is_nothrow_destructible.hpp>
+#	include <kerbal/type_traits/yes_no_type.hpp>
 #	include <kerbal/utility/forward.hpp>
 #endif
 
@@ -528,32 +529,22 @@ namespace kerbal
 			struct allocator_has_construct_helper
 			{
 				private:
-					typedef char NO [1];
-					typedef char YES [2];
+					template <typename Alloc2>
+					static kerbal::type_traits::no_type test(...);
 
 					template <typename Alloc2>
-					static NO* test(...);
-
-					template <typename Alloc2, typename =
-							kerbal::type_traits::integral_constant<
-								std::size_t,
-								sizeof(
-									kerbal::utility::declval<Alloc2&>().construct(
-										kerbal::utility::declval<T*>(),
-										kerbal::utility::declval<Args>()...
-									),
-									0
-								)
-							>
-					>
-					static YES* test(int);
+					static kerbal::type_traits::yes_type test(char (*)[sizeof(
+							kerbal::utility::declval<Alloc2&>().construct(
+									kerbal::utility::declval<T*>(),
+									kerbal::utility::declval<Args>()...
+							),
+							0
+					)]);
 
 				public:
-					typedef typename kerbal::type_traits::conditional<
-						kerbal::type_traits::is_same<decltype(test<Alloc>(0)), YES*>::value,
-						kerbal::type_traits::true_type,
-						kerbal::type_traits::false_type
-					>::type type;
+					typedef kerbal::type_traits::bool_constant<
+						sizeof(test<Alloc>(NULL)) == sizeof(kerbal::type_traits::yes_type)
+					> type;
 			};
 
 		} // namespace detail
