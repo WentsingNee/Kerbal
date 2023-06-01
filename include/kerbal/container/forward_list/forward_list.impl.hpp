@@ -560,7 +560,7 @@ namespace kerbal
 						noexcept(fl_allocator_overload::k_swap_allocator_if_propagate(
 								kerbal::utility::declval<fl_allocator_overload&>(), kerbal::utility::declval<fl_allocator_overload&>()
 						)) &&
-						noexcept(fl_type_unrelated::_K_swap_type_unrelated(
+						noexcept(fl_type_unrelated::k_swap_type_unrelated(
 								kerbal::utility::declval<fl_type_unrelated&>(), kerbal::utility::declval<fl_type_unrelated&>()
 						))
 				)
@@ -568,7 +568,7 @@ namespace kerbal
 			fl_allocator_overload::k_swap_allocator_if_propagate(
 					static_cast<fl_allocator_overload&>(*this),
 					static_cast<fl_allocator_overload&>(with));
-			fl_type_unrelated::_K_swap_type_unrelated(
+			fl_type_unrelated::k_swap_type_unrelated(
 					static_cast<fl_type_unrelated&>(*this),
 					static_cast<fl_type_unrelated&>(with));
 		}
@@ -577,14 +577,14 @@ namespace kerbal
 		KERBAL_CONSTEXPR20
 		void forward_list<Tp, Allocator>::iter_swap_after(const_iterator a, const_iterator b) KERBAL_NOEXCEPT
 		{
-			fl_allocator_unrelated::_K_iter_swap_after(a, b);
+			fl_allocator_unrelated::k_iter_swap_after(a, b);
 		}
 
 		template <typename Tp, typename Allocator>
 		KERBAL_CONSTEXPR20
 		void forward_list<Tp, Allocator>::reverse_after(const_iterator first, const_iterator last) KERBAL_NOEXCEPT
 		{
-			fl_allocator_unrelated::_K_reverse_after(first, last);
+			fl_allocator_unrelated::k_reverse_after(first, last);
 		}
 
 		template <typename Tp, typename Allocator>
@@ -592,14 +592,14 @@ namespace kerbal
 		KERBAL_CONSTEXPR20
 		void forward_list<Tp, Allocator>::merge(forward_list & other, BinaryPredict cmp)
 		{
-			this->fl_allocator_unrelated::_K_merge(static_cast<fl_allocator_unrelated&>(other), cmp);
+			this->fl_allocator_unrelated::k_merge(static_cast<fl_allocator_unrelated&>(other), cmp);
 		}
 
 		template <typename Tp, typename Allocator>
 		KERBAL_CONSTEXPR20
 		void forward_list<Tp, Allocator>::merge(forward_list & other)
 		{
-			this->fl_allocator_unrelated::_K_merge(static_cast<fl_allocator_unrelated&>(other));
+			this->fl_allocator_unrelated::k_merge(static_cast<fl_allocator_unrelated&>(other));
 		}
 
 		template <typename Tp, typename Allocator>
@@ -607,14 +607,14 @@ namespace kerbal
 		KERBAL_CONSTEXPR20
 		void forward_list<Tp, Allocator>::sort_after(const_iterator first, const_iterator last, BinaryPredict cmp)
 		{
-			fl_allocator_unrelated::_K_sort_after(first, last, cmp);
+			fl_allocator_unrelated::k_sort_after(first, last, cmp);
 		}
 
 		template <typename Tp, typename Allocator>
 		KERBAL_CONSTEXPR20
 		void forward_list<Tp, Allocator>::sort_after(const_iterator first, const_iterator last)
 		{
-			fl_allocator_unrelated::_K_sort_after(first, last);
+			fl_allocator_unrelated::k_sort_after(first, last);
 		}
 
 		template <typename Tp, typename Allocator>
@@ -622,14 +622,14 @@ namespace kerbal
 		KERBAL_CONSTEXPR20
 		void forward_list<Tp, Allocator>::sort(BinaryPredict cmp)
 		{
-			fl_allocator_unrelated::_K_sort(cmp);
+			fl_allocator_unrelated::k_sort(cmp);
 		}
 
 		template <typename Tp, typename Allocator>
 		KERBAL_CONSTEXPR20
 		void forward_list<Tp, Allocator>::sort()
 		{
-			fl_allocator_unrelated::_K_sort();
+			fl_allocator_unrelated::k_sort();
 		}
 
 		template <typename Tp, typename Allocator>
@@ -704,21 +704,21 @@ namespace kerbal
 		KERBAL_CONSTEXPR20
 		void forward_list<Tp, Allocator>::splice_after(const_iterator pos, forward_list & other) KERBAL_NOEXCEPT
 		{
-			fl_type_unrelated::_K_splice_after(pos, other);
+			fl_type_unrelated::k_splice_after(pos, other);
 		}
 
 		template <typename Tp, typename Allocator>
 		KERBAL_CONSTEXPR20
 		void forward_list<Tp, Allocator>::splice_after(const_iterator pos, forward_list &, const_iterator opos) KERBAL_NOEXCEPT
 		{
-			fl_type_unrelated::_K_splice_after(pos, opos);
+			fl_type_unrelated::k_splice_after(pos, opos);
 		}
 
 		template <typename Tp, typename Allocator>
 		KERBAL_CONSTEXPR20
 		void forward_list<Tp, Allocator>::splice_after(const_iterator pos, forward_list &, const_iterator first, const_iterator last) KERBAL_NOEXCEPT
 		{
-			fl_type_unrelated::_K_splice_after(pos, first, last);
+			fl_type_unrelated::k_splice_after(pos, first, last);
 		}
 
 

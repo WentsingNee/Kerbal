@@ -71,18 +71,18 @@ namespace kerbal
 				typedef typename Engine::result_type result_type;
 
 			private:
-				Engine _K_base_eg;
-				result_type _K_stored[K];
-				result_type _K_stored_y;
+				Engine k_base_eg;
+				result_type k_stored[K];
+				result_type k_stored_y;
 
 			private:
 				KERBAL_CONSTEXPR14
-				void _K_init()
+				void k_init()
 				{
 					for (std::size_t i = 0; i < K; ++i) {
-						_K_stored[i] = _K_base_eg();
+						k_stored[i] = k_base_eg();
 					}
-					_K_stored_y = _K_base_eg();
+					k_stored_y = k_base_eg();
 				}
 
 			public:
@@ -93,9 +93,9 @@ namespace kerbal
 									kerbal::type_traits::is_nothrow_default_constructible<Engine>
 								>::value
 						) :
-						_K_base_eg(), _K_stored_y()
+						k_base_eg(), k_stored_y()
 				{
-					_K_init();
+					k_init();
 				}
 
 				KERBAL_CONSTEXPR14
@@ -105,9 +105,9 @@ namespace kerbal
 									kerbal::type_traits::is_nothrow_constructible<Engine, result_type>
 								>::value
 						)) :
-						_K_base_eg(seed), _K_stored_y()
+						k_base_eg(seed), k_stored_y()
 				{
-					_K_init();
+					k_init();
 				}
 
 				KERBAL_CONSTEXPR14
@@ -117,9 +117,9 @@ namespace kerbal
 									kerbal::type_traits::is_nothrow_copy_constructible<Engine>
 								>::value
 						) :
-						_K_base_eg(engine), _K_stored_y()
+						k_base_eg(engine), k_stored_y()
 				{
-					_K_init();
+					k_init();
 				}
 
 #		if __cplusplus >= 201103L
@@ -131,9 +131,9 @@ namespace kerbal
 									kerbal::type_traits::is_nothrow_move_constructible<Engine>
 								>::value
 						) :
-						_K_base_eg(kerbal::compatibility::move(engine)), _K_stored_y()
+						k_base_eg(kerbal::compatibility::move(engine)), k_stored_y()
 				{
-					_K_init();
+					k_init();
 				}
 
 #		endif
@@ -153,26 +153,26 @@ namespace kerbal
 				KERBAL_CONSTEXPR14
 				const Engine & base() const KERBAL_NOEXCEPT
 				{
-					return this->_K_base_eg;
+					return this->k_base_eg;
 				}
 
 				KERBAL_CONSTEXPR14
 				result_type operator()()
 						KERBAL_CONDITIONAL_NOEXCEPT(
-								noexcept(_K_base_eg())
+								noexcept(k_base_eg())
 						)
 				{
-					const result_type min = _K_base_eg.min();
-					const result_type max = _K_base_eg.max();
+					const result_type min = k_base_eg.min();
+					const result_type max = k_base_eg.max();
 					result_type R = (max - min + 1);
-					result_type b = _K_stored_y - min;
+					result_type b = k_stored_y - min;
 					std::size_t J = R == 0 ?
-									(double)(K) * (double)(_K_stored_y - min) / (max - min + 1.0) :
+									(double)(K) * (double)(k_stored_y - min) / (max - min + 1.0) :
 									(K / R) * b + detail::muldiv_less_a<result_type>(K % R, b, R);
-					result_type next = _K_base_eg();
-					_K_stored_y = _K_stored[J];
-					_K_stored[J] = next;
-					return _K_stored_y;
+					result_type next = k_base_eg();
+					k_stored_y = k_stored[J];
+					k_stored[J] = next;
+					return k_stored_y;
 				}
 
 				KERBAL_CONSTEXPR14

@@ -13,7 +13,9 @@
 #define KERBAL_TYPE_TRAITS_BATCH_TRAITS_HPP
 
 #include <kerbal/ts/modules_ts/modules_ts.hpp>
+#include <kerbal/tmp/tppter.hpp>
 #include <kerbal/type_traits/logical.hpp>
+
 
 namespace kerbal
 {
@@ -23,12 +25,8 @@ namespace kerbal
 
 #	if __cplusplus < 201103L
 
-		struct __for_all_types_has_types_empty_args_helper
-		{
-		};
-
 		template <template <typename> typename Traits,
-										typename T0 = __for_all_types_has_types_empty_args_helper,
+										typename T0 = kerbal::tmp::tppter,
 										typename T1 = T0,
 										typename T2 = T0,
 										typename T3 = T0,
@@ -51,12 +49,12 @@ namespace kerbal
 		};
 
 		template <template <typename> typename Traits>
-		struct for_all_types<Traits, __for_all_types_has_types_empty_args_helper> : kerbal::type_traits::true_type
+		struct for_all_types<Traits, kerbal::tmp::tppter> : kerbal::type_traits::true_type
 		{
 		};
 
 		template <template <typename> typename Traits,
-										typename T0 = __for_all_types_has_types_empty_args_helper,
+										typename T0 = kerbal::tmp::tppter,
 										typename T1 = T0,
 										typename T2 = T0,
 										typename T3 = T0,
@@ -79,7 +77,7 @@ namespace kerbal
 		};
 
 		template <template <typename> typename Traits>
-		struct has_types<Traits, __for_all_types_has_types_empty_args_helper> : kerbal::type_traits::true_type
+		struct has_types<Traits, kerbal::tmp::tppter> : kerbal::type_traits::true_type
 		{
 		};
 

@@ -99,47 +99,52 @@ namespace kerbal
 
 
 
-		template <typename ForwardIterator, typename Compare, typename Container, typename BackInserter>
-		KERBAL_CONSTEXPR14
-		std::size_t __longest_increasing_subsequence(ForwardIterator first, ForwardIterator last, Compare cmp,
-													Container & buffer, BackInserter back_inserter)
+		namespace detail
 		{
-			if (first == last) {
-				return 0;
-			}
 
-			typedef ForwardIterator iterator;
-			struct iter_cmp
+			template <typename ForwardIterator, typename Compare, typename Container, typename BackInserter>
+			KERBAL_CONSTEXPR14
+			std::size_t longest_increasing_subsequence_helper(ForwardIterator first, ForwardIterator last, Compare cmp,
+														Container & buffer, BackInserter back_inserter)
 			{
-					Compare cmp;
-
-					KERBAL_CONSTEXPR
-					iter_cmp(Compare cmp) :
-								cmp(cmp)
-					{
-					}
-
-					KERBAL_CONSTEXPR
-					bool operator()(iterator a, iterator b)
-					{
-						return this->cmp(*a, *b);
-					}
-			} _iter_cmp(cmp);
-
-			*back_inserter = first; ++back_inserter;
-			std::size_t index_of_back = 0;
-
-			++first;
-			for (; first != last; ++first) {
-				if (cmp(buffer[index_of_back], *first)) {
-					*back_inserter = first; ++back_inserter; ++index_of_back;
-				} else {
-					*kerbal::algorithm::lower_bound(
-							kerbal::container::begin(buffer), kerbal::container::end(buffer), first, _iter_cmp) = first;
+				if (first == last) {
+					return 0;
 				}
+
+				typedef ForwardIterator iterator;
+				struct iter_cmp
+				{
+						Compare cmp;
+
+						KERBAL_CONSTEXPR
+						iter_cmp(Compare cmp) :
+									cmp(cmp)
+						{
+						}
+
+						KERBAL_CONSTEXPR
+						bool operator()(iterator a, iterator b)
+						{
+							return this->cmp(*a, *b);
+						}
+				} _iter_cmp(cmp);
+
+				*back_inserter = first; ++back_inserter;
+				std::size_t index_of_back = 0;
+
+				++first;
+				for (; first != last; ++first) {
+					if (cmp(buffer[index_of_back], *first)) {
+						*back_inserter = first; ++back_inserter; ++index_of_back;
+					} else {
+						*kerbal::algorithm::lower_bound(
+								kerbal::container::begin(buffer), kerbal::container::end(buffer), first, _iter_cmp) = first;
+					}
+				}
+				return index_of_back + 1;
 			}
-			return index_of_back + 1;
-		}
+
+		} // namespace detail
 
 		//warning: buffer must have capacity >= distance(first, last)
 		template <typename ForwardIterator, typename Compare, typename Container>
@@ -147,7 +152,7 @@ namespace kerbal
 		std::size_t longest_increasing_subsequence(ForwardIterator first, ForwardIterator last, Compare cmp,
 												Container & buffer)
 		{
-			return kerbal::algorithm::__longest_increasing_subsequence(first, last, cmp, buffer, kerbal::iterator::general_inserter(buffer));
+			return kerbal::algorithm::detail::longest_increasing_subsequence_helper(first, last, cmp, buffer, kerbal::iterator::general_inserter(buffer));
 		}
 
 		template <typename ForwardIterator, typename Compare>

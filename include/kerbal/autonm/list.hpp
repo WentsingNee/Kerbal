@@ -232,19 +232,19 @@ namespace kerbal
 				KERBAL_CONSTEXPR20
 				void push_front(auto_node & node) KERBAL_NOEXCEPT
 				{
-					list_type_unrelated::_K_hook_node(this->list_type_unrelated::basic_begin(), &node);
+					list_type_unrelated::k_hook_node(this->list_type_unrelated::basic_begin(), &node);
 				}
 
 				KERBAL_CONSTEXPR20
 				void push_back(auto_node & node) KERBAL_NOEXCEPT
 				{
-					list_type_unrelated::_K_hook_node(this->list_type_unrelated::basic_end(), &node);
+					list_type_unrelated::k_hook_node(this->list_type_unrelated::basic_end(), &node);
 				}
 
 				KERBAL_CONSTEXPR20
 				iterator insert(const_iterator pos, auto_node & node) KERBAL_NOEXCEPT
 				{
-					list_type_unrelated::_K_hook_node(pos, &node);
+					list_type_unrelated::k_hook_node(pos, &node);
 					return (++pos).cast_to_mutable();
 				}
 
@@ -270,7 +270,7 @@ namespace kerbal
 						++next;
 					}
 
-					list_type_unrelated::_K_hook_node(pos, &*first, &*it);
+					list_type_unrelated::k_hook_node(pos, &*first, &*it);
 					return iterator(&*first);
 				}
 
@@ -289,7 +289,7 @@ namespace kerbal
 
 					ForwardIterator start(first);
 					do {
-						list_type_unrelated::_K_hook_node(pos, &*first);
+						list_type_unrelated::k_hook_node(pos, &*first);
 						++first;
 					} while (first != last);
 					return iterator(&*start);
@@ -335,7 +335,7 @@ namespace kerbal
 				KERBAL_CONSTEXPR20
 				void reverse(const_iterator first, const_iterator last) KERBAL_NOEXCEPT
 				{
-					this->list_allocator_unrelated::_K_reverse(first, last);
+					this->list_allocator_unrelated::k_reverse(first, last);
 				}
 
 				KERBAL_CONSTEXPR20
@@ -357,41 +357,41 @@ namespace kerbal
 				void merge(list & other, BinaryPredict cmp)
 						KERBAL_CONDITIONAL_NOEXCEPT(
 							noexcept(
-								kerbal::utility::declthis<list>()->list_allocator_unrelated::_K_merge(static_cast<list_allocator_unrelated&>(other), cmp)
+								kerbal::utility::declthis<list>()->list_allocator_unrelated::k_merge(static_cast<list_allocator_unrelated&>(other), cmp)
 							)
 						)
 				{
-					this->list_allocator_unrelated::_K_merge(static_cast<list_allocator_unrelated&>(other), cmp);
+					this->list_allocator_unrelated::k_merge(static_cast<list_allocator_unrelated&>(other), cmp);
 				}
 
 				KERBAL_CONSTEXPR20
 				void merge(list & other)
 						KERBAL_CONDITIONAL_NOEXCEPT(
 							noexcept(
-								kerbal::utility::declthis<list>()->list_allocator_unrelated::_K_merge(static_cast<list_allocator_unrelated&>(other))
+								kerbal::utility::declthis<list>()->list_allocator_unrelated::k_merge(static_cast<list_allocator_unrelated&>(other))
 							)
 						)
 				{
-					this->list_allocator_unrelated::_K_merge(static_cast<list_allocator_unrelated&>(other));
+					this->list_allocator_unrelated::k_merge(static_cast<list_allocator_unrelated&>(other));
 				}
 
 				template <typename BinaryPredict>
 				KERBAL_CONSTEXPR20
 				void sort(const_iterator first, const_iterator last, BinaryPredict cmp)
 						KERBAL_CONDITIONAL_NOEXCEPT(
-							noexcept(list_allocator_unrelated::_K_sort(first, last, cmp))
+							noexcept(list_allocator_unrelated::k_sort(first, last, cmp))
 						)
 				{
-					list_allocator_unrelated::_K_sort(first, last, cmp);
+					list_allocator_unrelated::k_sort(first, last, cmp);
 				}
 
 				KERBAL_CONSTEXPR20
 				void sort(const_iterator first, const_iterator last)
 						KERBAL_CONDITIONAL_NOEXCEPT(
-								noexcept(list_allocator_unrelated::_K_sort(first, last))
+								noexcept(list_allocator_unrelated::k_sort(first, last))
 						)
 				{
-					list_allocator_unrelated::_K_sort(first, last);
+					list_allocator_unrelated::k_sort(first, last);
 				}
 
 				template <typename BinaryPredict>
@@ -468,19 +468,19 @@ namespace kerbal
 				KERBAL_CONSTEXPR20
 				void splice(const_iterator pos, list & other) KERBAL_NOEXCEPT
 				{
-					list_type_unrelated::_K_splice(pos, other);
+					list_type_unrelated::k_splice(pos, other);
 				}
 
 				KERBAL_CONSTEXPR20
 				void splice(const_iterator pos, list & /*other*/, const_iterator opos) KERBAL_NOEXCEPT
 				{
-					list_type_unrelated::_K_splice(pos, opos);
+					list_type_unrelated::k_splice(pos, opos);
 				}
 
 				KERBAL_CONSTEXPR20
 				void splice(const_iterator pos, list & /*other*/, const_iterator first, const_iterator last) KERBAL_NOEXCEPT
 				{
-					list_type_unrelated::_K_splice(pos, first, last);
+					list_type_unrelated::k_splice(pos, first, last);
 				}
 
 #		if __cplusplus >= 201103L
@@ -488,7 +488,7 @@ namespace kerbal
 				KERBAL_CONSTEXPR20
 				void splice(const_iterator pos, list && other) KERBAL_NOEXCEPT
 				{
-					list_type_unrelated::_K_splice(pos, other);
+					list_type_unrelated::k_splice(pos, other);
 				}
 
 #		endif
@@ -500,7 +500,7 @@ namespace kerbal
 						static_cast<list_semi_allocator_overload&>(*this),
 						static_cast<list_semi_allocator_overload&>(with)
 					);
-					list_type_unrelated::_K_swap_type_unrelated(
+					list_type_unrelated::k_swap_type_unrelated(
 						static_cast<list_type_unrelated &>(*this),
 						static_cast<list_type_unrelated &>(with)
 					);
@@ -510,52 +510,52 @@ namespace kerbal
 				KERBAL_CONSTEXPR20
 				static void set_difference(list & l1, const list & l2, list & lto, BinaryPredict cmp)
 				{
-					list_allocator_unrelated::_K_set_difference(l1, l2, lto, cmp);
+					list_allocator_unrelated::k_set_difference(l1, l2, lto, cmp);
 				}
 
 				KERBAL_CONSTEXPR20
 				static void set_difference(list & l1, const list & l2, list & lto)
 				{
-					list_allocator_unrelated::_K_set_difference(l1, l2, lto);
+					list_allocator_unrelated::k_set_difference(l1, l2, lto);
 				}
 
 				template <typename BinaryPredict>
 				KERBAL_CONSTEXPR20
 				static void set_intersection(list & l1, list & l2, list & lto, BinaryPredict cmp)
 				{
-					list_allocator_unrelated::_K_set_intersection(l1, l2, lto, cmp);
+					list_allocator_unrelated::k_set_intersection(l1, l2, lto, cmp);
 				}
 
 				KERBAL_CONSTEXPR20
 				static void set_intersection(list & l1, list & l2, list & lto)
 				{
-					list_allocator_unrelated::_K_set_intersection(l1, l2, lto);
+					list_allocator_unrelated::k_set_intersection(l1, l2, lto);
 				}
 
 				template <typename BinaryPredict>
 				KERBAL_CONSTEXPR20
 				static void set_symmetric_difference(list & l1, list & l2, list & lto, BinaryPredict cmp)
 				{
-					list_allocator_unrelated::_K_set_symmetric_difference(l1, l2, lto, cmp);
+					list_allocator_unrelated::k_set_symmetric_difference(l1, l2, lto, cmp);
 				}
 
 				KERBAL_CONSTEXPR20
 				static void set_symmetric_difference(list & l1, list & l2, list & lto)
 				{
-					list_allocator_unrelated::_K_set_symmetric_difference(l1, l2, lto);
+					list_allocator_unrelated::k_set_symmetric_difference(l1, l2, lto);
 				}
 
 				template <typename BinaryPredict>
 				KERBAL_CONSTEXPR20
 				static void set_union(list & l1, list & l2, list & lto, BinaryPredict cmp)
 				{
-					list_allocator_unrelated::_K_set_union(l1, l2, lto, cmp);
+					list_allocator_unrelated::k_set_union(l1, l2, lto, cmp);
 				}
 
 				KERBAL_CONSTEXPR20
 				static void set_union(list & l1, list & l2, list & lto)
 				{
-					list_allocator_unrelated::_K_set_union(l1, l2, lto);
+					list_allocator_unrelated::k_set_union(l1, l2, lto);
 				}
 
 #		if __cplusplus >= 201103L

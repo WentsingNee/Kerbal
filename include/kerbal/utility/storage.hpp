@@ -23,6 +23,7 @@
 #include <chrono>
 #include <cstdint>
 
+
 namespace kerbal
 {
 
@@ -99,27 +100,33 @@ namespace kerbal
 			return GiB(x);
 		}
 
-		template <typename>
-		struct __is_storage_helper: kerbal::type_traits::false_type
-		{
-		};
 
-		template <typename size_type, typename Ratio>
-		struct __is_storage_helper<storage<size_type, Ratio> > : kerbal::type_traits::true_type
+		namespace detail
 		{
-		};
+
+			template <typename>
+			struct is_storage_helper: kerbal::type_traits::false_type
+			{
+			};
+
+			template <typename size_type, typename Ratio>
+			struct is_storage_helper<storage<size_type, Ratio> > : kerbal::type_traits::true_type
+			{
+			};
+
+		} // namespace detail
 
 		template <typename Type>
-		struct is_storage: __is_storage_helper<typename kerbal::type_traits::remove_cvref<Type>::type>
+		struct is_storage: kerbal::utility::detail::is_storage_helper<typename kerbal::type_traits::remove_cvref<Type>::type>
 		{
 		};
 
 		template <typename ToStor, typename size_type, typename Ratio>
 		constexpr
 		typename kerbal::type_traits::enable_if<is_storage<ToStor>::value, ToStor>::type
-		storage_cast(const storage<size_type, Ratio>& __d)
+		storage_cast(const storage<size_type, Ratio>& d)
 		{
-			return ToStor(std::chrono::duration_cast<typename ToStor::super>(__d));
+			return ToStor(std::chrono::duration_cast<typename ToStor::super>(d));
 		}
 
 	} // namespace utility

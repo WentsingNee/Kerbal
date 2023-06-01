@@ -62,7 +62,7 @@ namespace kerbal
 #	if __cplusplus <= 201703L
 
 			template <typename Tp>
-			Tp * _K_default_construct_at(Tp * p, DFT_CNSTRCT_AT_VER_DEFAULT)
+			Tp * k_default_construct_at(Tp * p, DFT_CNSTRCT_AT_VER_DEFAULT)
 					KERBAL_CONDITIONAL_NOEXCEPT(
 							noexcept(::new (const_cast<void*>(static_cast<const volatile void*>(p))) Tp)
 					)
@@ -75,7 +75,7 @@ namespace kerbal
 
 			template <typename Tp>
 			KERBAL_CONSTEXPR20
-			Tp * _K_default_construct_at(Tp * p, DFT_CNSTRCT_AT_VER_DEFAULT)
+			Tp * k_default_construct_at(Tp * p, DFT_CNSTRCT_AT_VER_DEFAULT)
 					KERBAL_CONDITIONAL_NOEXCEPT(
 							noexcept(std::construct_at(p))
 					)
@@ -88,7 +88,7 @@ namespace kerbal
 
 			template <typename Tp, std::size_t N>
 			KERBAL_CONSTEXPR20
-			Tp (* _K_default_construct_at(Tp (*p) [N], DFT_CNSTRCT_AT_VER_DEFAULT)) [N]
+			Tp (* k_default_construct_at(Tp (*p) [N], DFT_CNSTRCT_AT_VER_DEFAULT)) [N]
 			{
 				kerbal::memory::uninitialized_default_construct(*p + 0, *p + N);
 				return p;
@@ -96,7 +96,7 @@ namespace kerbal
 
 			template <typename Tp>
 			KERBAL_CONSTEXPR14
-			Tp * _K_default_construct_at(Tp * p, DFT_CNSTRCT_AT_VER_TRIVIALLY) KERBAL_NOEXCEPT
+			Tp * k_default_construct_at(Tp * p, DFT_CNSTRCT_AT_VER_TRIVIALLY) KERBAL_NOEXCEPT
 			{
 				return p;
 			}
@@ -119,10 +119,10 @@ namespace kerbal
 		KERBAL_CONSTEXPR14
 		Tp * default_construct_at(Tp * p)
 				KERBAL_CONDITIONAL_NOEXCEPT(
-					noexcept(detail::_K_default_construct_at(p, default_construct_at_overload_version<Tp>()))
+					noexcept(detail::k_default_construct_at(p, default_construct_at_overload_version<Tp>()))
 				)
 		{
-			return detail::_K_default_construct_at(p, default_construct_at_overload_version<Tp>());
+			return detail::k_default_construct_at(p, default_construct_at_overload_version<Tp>());
 		}
 
 
@@ -142,7 +142,7 @@ namespace kerbal
 
 			template <typename ForwardIterator>
 			KERBAL_CONSTEXPR20
-			void _K_uninitialized_default_construct(ForwardIterator first, ForwardIterator last, UI_DFT_CONSTRUCT_VER_DEFAULT)
+			void k_uninitialized_default_construct(ForwardIterator first, ForwardIterator last, UI_DFT_CONSTRUCT_VER_DEFAULT)
 			{
 				typedef ForwardIterator iterator;
 				iterator current(first);
@@ -170,7 +170,7 @@ namespace kerbal
 
 			template <typename ForwardIterator>
 			KERBAL_CONSTEXPR20
-			void _K_uninitialized_default_construct(ForwardIterator first, ForwardIterator last, UI_DFT_CONSTRUCT_VER_NOTHROW_ITER_ADVANCE)
+			void k_uninitialized_default_construct(ForwardIterator first, ForwardIterator last, UI_DFT_CONSTRUCT_VER_NOTHROW_ITER_ADVANCE)
 			{
 				typedef ForwardIterator iterator;
 				iterator current(first);
@@ -189,7 +189,7 @@ namespace kerbal
 
 			template <typename ForwardIterator>
 			KERBAL_CONSTEXPR14
-			void _K_uninitialized_default_construct(ForwardIterator first, ForwardIterator last, UI_DFT_CONSTRUCT_VER_NO_CATCH)
+			void k_uninitialized_default_construct(ForwardIterator first, ForwardIterator last, UI_DFT_CONSTRUCT_VER_NO_CATCH)
 			{
 				while (first != last) {
 					kerbal::memory::default_construct_at(&*first); // new (&*first) Tp;
@@ -199,7 +199,7 @@ namespace kerbal
 
 			template <typename ForwardIterator>
 			KERBAL_CONSTEXPR14
-			void _K_uninitialized_default_construct(ForwardIterator /*first*/, ForwardIterator /*last*/, UI_DFT_CONSTRUCT_VER_TRIVIALLY)
+			void k_uninitialized_default_construct(ForwardIterator /*first*/, ForwardIterator /*last*/, UI_DFT_CONSTRUCT_VER_TRIVIALLY)
 			{
 			}
 
@@ -244,7 +244,7 @@ namespace kerbal
 
 #	endif
 
-			detail::_K_uninitialized_default_construct(first, last, VER());
+			detail::k_uninitialized_default_construct(first, last, VER());
 		}
 
 
@@ -264,7 +264,7 @@ namespace kerbal
 
 			template <typename ForwardIterator, typename SizeType>
 			KERBAL_CONSTEXPR20
-			ForwardIterator _K_uninitialized_default_construct_n(ForwardIterator first, SizeType n, UI_DFT_CONSTRUCT_N_VER_DEFAULT)
+			ForwardIterator k_uninitialized_default_construct_n(ForwardIterator first, SizeType n, UI_DFT_CONSTRUCT_N_VER_DEFAULT)
 			{
 				typedef ForwardIterator iterator;
 				iterator current(first);
@@ -294,7 +294,7 @@ namespace kerbal
 
 			template <typename ForwardIterator, typename SizeType>
 			KERBAL_CONSTEXPR20
-			ForwardIterator _K_uninitialized_default_construct_n(ForwardIterator first, SizeType n, UI_DFT_CONSTRUCT_N_VER_NOTHROW_ITER_ADVANCE)
+			ForwardIterator k_uninitialized_default_construct_n(ForwardIterator first, SizeType n, UI_DFT_CONSTRUCT_N_VER_NOTHROW_ITER_ADVANCE)
 			{
 				typedef ForwardIterator iterator;
 				iterator current(first);
@@ -315,7 +315,7 @@ namespace kerbal
 
 			template <typename ForwardIterator, typename SizeType>
 			KERBAL_CONSTEXPR14
-			ForwardIterator _K_uninitialized_default_construct_n(ForwardIterator first, SizeType n, UI_DFT_CONSTRUCT_N_VER_NO_CATCH)
+			ForwardIterator k_uninitialized_default_construct_n(ForwardIterator first, SizeType n, UI_DFT_CONSTRUCT_N_VER_NO_CATCH)
 			{
 				while (n > 0) {
 					--n;
@@ -327,7 +327,7 @@ namespace kerbal
 
 			template <typename ForwardIterator, typename SizeType>
 			KERBAL_CONSTEXPR14
-			ForwardIterator _K_uninitialized_default_construct_n(ForwardIterator first, SizeType n, UI_DFT_CONSTRUCT_N_VER_TRIVIALLY)
+			ForwardIterator k_uninitialized_default_construct_n(ForwardIterator first, SizeType n, UI_DFT_CONSTRUCT_N_VER_TRIVIALLY)
 			{
 				return kerbal::iterator::next(first, n);
 			}
@@ -373,7 +373,7 @@ namespace kerbal
 
 #	endif
 
-			return detail::_K_uninitialized_default_construct_n(first, n, VER());
+			return detail::k_uninitialized_default_construct_n(first, n, VER());
 		}
 
 

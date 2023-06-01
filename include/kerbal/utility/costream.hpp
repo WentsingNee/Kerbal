@@ -163,9 +163,9 @@ namespace kerbal
 						return *this;
 					}
 
-					const costream& operator<<(std::ostream& (*__pf)(std::ostream&)) const
+					const costream& operator<<(std::ostream& (*pf)(std::ostream&)) const
 					{
-						__pf(bind_ostream);
+						pf(bind_ostream);
 						return *this;
 					}
 			};

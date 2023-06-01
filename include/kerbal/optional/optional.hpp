@@ -71,20 +71,20 @@ namespace kerbal
 					typedef kerbal::memory::raw_storage<value_type> storage_type;
 
 				protected:
-					storage_type _K_storage;
+					storage_type k_storage;
 
 					///@~English
 					///@brief Mark whether the instance has value.
 					///
 					///@~Chinese
 					///@brief 标记该实例是否含值.
-					bool _K_has_value;
+					bool k_has_value;
 
 				protected:
 
 					KERBAL_CONSTEXPR20
 					optional_base() KERBAL_NOEXCEPT :
-							_K_has_value(false)
+							k_has_value(false)
 					{
 					}
 
@@ -93,7 +93,7 @@ namespace kerbal
 					template <typename ... Args>
 					KERBAL_CONSTEXPR20
 					explicit optional_base(kerbal::utility::in_place_t in_place, Args&& ... args) :
-							_K_storage(in_place, kerbal::utility::forward<Args>(args)...), _K_has_value(true)
+							k_storage(in_place, kerbal::utility::forward<Args>(args)...), k_has_value(true)
 					{
 					}
 
@@ -108,7 +108,7 @@ namespace kerbal
 #				define FBODY(i) \
 					KERBAL_OPT_PPEXPAND_WITH_COMMA_N(THEAD_NOT_EMPTY, EMPTY, TARGS_DECL, i) \
 					explicit optional_base(kerbal::utility::in_place_t in_place KERBAL_OPT_PPEXPAND_WITH_COMMA_N(LEFT_JOIN_COMMA, EMPTY, ARGS_DECL, i)) : \
-							_K_storage(in_place KERBAL_OPT_PPEXPAND_WITH_COMMA_N(LEFT_JOIN_COMMA, EMPTY, ARGS_USE, i)), _K_has_value(true) \
+							k_storage(in_place KERBAL_OPT_PPEXPAND_WITH_COMMA_N(LEFT_JOIN_COMMA, EMPTY, ARGS_USE, i)), k_has_value(true) \
 					{ \
 					}
 
@@ -128,8 +128,8 @@ namespace kerbal
 					KERBAL_CONSTEXPR20
 					~optional_base() KERBAL_NOEXCEPT
 					{
-						if (this->_K_has_value) {
-							this->_K_storage.destroy();
+						if (this->k_has_value) {
+							this->k_storage.destroy();
 						}
 					}
 
@@ -145,19 +145,19 @@ namespace kerbal
 					typedef kerbal::memory::raw_storage<value_type> storage_type;
 
 				protected:
-					storage_type _K_storage;
+					storage_type k_storage;
 
 					///@~English
 					///@brief Mark whether the instance has value.
 					///
 					///@~Chinese
 					///@brief 标记该实例是否含值.
-					bool _K_has_value;
+					bool k_has_value;
 
 				protected:
 					KERBAL_CONSTEXPR
 					optional_base() KERBAL_NOEXCEPT :
-							_K_has_value(false)
+							k_has_value(false)
 					{
 					}
 
@@ -166,7 +166,7 @@ namespace kerbal
 					template <typename ... Args>
 					KERBAL_CONSTEXPR
 					explicit optional_base(kerbal::utility::in_place_t in_place, Args&& ... args) :
-							_K_storage(in_place, kerbal::utility::forward<Args>(args)...), _K_has_value(true)
+							k_storage(in_place, kerbal::utility::forward<Args>(args)...), k_has_value(true)
 					{
 					}
 
@@ -181,7 +181,7 @@ namespace kerbal
 #				define FBODY(i) \
 					KERBAL_OPT_PPEXPAND_WITH_COMMA_N(THEAD_NOT_EMPTY, EMPTY, TARGS_DECL, i) \
 					explicit optional_base(kerbal::utility::in_place_t in_place KERBAL_OPT_PPEXPAND_WITH_COMMA_N(LEFT_JOIN_COMMA, EMPTY, ARGS_DECL, i)) : \
-							_K_storage(in_place KERBAL_OPT_PPEXPAND_WITH_COMMA_N(LEFT_JOIN_COMMA, EMPTY, ARGS_USE, i)), _K_has_value(true) \
+							k_storage(in_place KERBAL_OPT_PPEXPAND_WITH_COMMA_N(LEFT_JOIN_COMMA, EMPTY, ARGS_USE, i)), k_has_value(true) \
 					{ \
 					}
 
@@ -338,8 +338,8 @@ namespace kerbal
 						super()
 				{
 					if (src.has_value()) {
-						this->_K_storage.construct(src.ignored_get());
-						this->_K_has_value = true;
+						this->k_storage.construct(src.ignored_get());
+						this->k_has_value = true;
 					}
 				}
 
@@ -350,8 +350,8 @@ namespace kerbal
 						super()
 				{
 					if (src.has_value()) {
-						this->_K_storage.construct(kerbal::compatibility::move(src).ignored_get());
-						this->_K_has_value = true;
+						this->k_storage.construct(kerbal::compatibility::move(src).ignored_get());
+						this->k_has_value = true;
 					}
 				}
 
@@ -368,8 +368,8 @@ namespace kerbal
 						super()
 				{
 					if (src.has_value()) {
-						this->_K_storage.construct(src.ignored_get());
-						this->_K_has_value = true;
+						this->k_storage.construct(src.ignored_get());
+						this->k_has_value = true;
 					}
 				}
 
@@ -381,8 +381,8 @@ namespace kerbal
 						super()
 				{
 					if (src.has_value()) {
-						this->_K_storage.construct(kerbal::compatibility::move(src).ignored_get());
-						this->_K_has_value = true;
+						this->k_storage.construct(kerbal::compatibility::move(src).ignored_get());
+						this->k_has_value = true;
 					}
 				}
 
@@ -452,11 +452,11 @@ namespace kerbal
 				optional& operator=(const_reference src)
 				{
 					if (this->has_value()) {
-						kerbal::operators::generic_assign(this->_K_storage.raw_value(), src);
-						// this->_K_storage.raw_value() = src
+						kerbal::operators::generic_assign(this->k_storage.raw_value(), src);
+						// this->k_storage.raw_value() = src
 					} else {
-						this->_K_storage.construct(src);
-						this->_K_has_value = true;
+						this->k_storage.construct(src);
+						this->k_has_value = true;
 					}
 					return *this;
 				}
@@ -467,11 +467,11 @@ namespace kerbal
 				optional& operator=(rvalue_reference src)
 				{
 					if (this->has_value()) {
-						kerbal::operators::generic_assign(this->_K_storage.raw_value(), kerbal::compatibility::move(src));
-						// this->_K_storage.raw_value() = kerbal::compatibility::move(src);
+						kerbal::operators::generic_assign(this->k_storage.raw_value(), kerbal::compatibility::move(src));
+						// this->k_storage.raw_value() = kerbal::compatibility::move(src);
 					} else {
-						this->_K_storage.construct(kerbal::compatibility::move(src));
-						this->_K_has_value = true;
+						this->k_storage.construct(kerbal::compatibility::move(src));
+						this->k_has_value = true;
 					}
 					return *this;
 				}
@@ -486,11 +486,11 @@ namespace kerbal
 				optional& operator=(const U & src)
 				{
 					if (this->has_value()) {
-						kerbal::operators::generic_assign(this->_K_storage.raw_value(), src);
-						// this->_K_storage.raw_value() = src;
+						kerbal::operators::generic_assign(this->k_storage.raw_value(), src);
+						// this->k_storage.raw_value() = src;
 					} else {
-						this->_K_storage.construct(src);
-						this->_K_has_value = true;
+						this->k_storage.construct(src);
+						this->k_has_value = true;
 					}
 					return *this;
 				}
@@ -508,11 +508,11 @@ namespace kerbal
 				operator=(U && src)
 				{
 					if (this->has_value()) {
-						kerbal::operators::generic_assign(this->_K_storage.raw_value(), kerbal::utility::forward<U>(src));
-						// this->_K_storage.raw_value() = kerbal::utility::forward<U>(src);
+						kerbal::operators::generic_assign(this->k_storage.raw_value(), kerbal::utility::forward<U>(src));
+						// this->k_storage.raw_value() = kerbal::utility::forward<U>(src);
 					} else {
-						this->_K_storage.construct(kerbal::utility::forward<U>(src));
-						this->_K_has_value = true;
+						this->k_storage.construct(kerbal::utility::forward<U>(src));
+						this->k_has_value = true;
 					}
 					return *this;
 				}
@@ -525,16 +525,16 @@ namespace kerbal
 				{
 					if (this->has_value()) {
 						if (src.has_value()) {
-							kerbal::operators::generic_assign(this->_K_storage.raw_value(), src.ignored_get());
-							// this->_K_storage.raw_value() = src.ignored_get();
+							kerbal::operators::generic_assign(this->k_storage.raw_value(), src.ignored_get());
+							// this->k_storage.raw_value() = src.ignored_get();
 						} else {
-							this->_K_storage.destroy();
-							this->_K_has_value = false;
+							this->k_storage.destroy();
+							this->k_has_value = false;
 						}
 					} else {
 						if (src.has_value()) {
-							this->_K_storage.construct(src.ignored_get());
-							this->_K_has_value = true;
+							this->k_storage.construct(src.ignored_get());
+							this->k_has_value = true;
 						}
 					}
 					return *this;
@@ -547,16 +547,16 @@ namespace kerbal
 				{
 					if (this->has_value()) {
 						if (src.has_value()) {
-							kerbal::operators::generic_assign(this->_K_storage.raw_value(), kerbal::compatibility::move(src).ignored_get());
-							// this->_K_storage.raw_value() = kerbal::compatibility::move(src).ignored_get();
+							kerbal::operators::generic_assign(this->k_storage.raw_value(), kerbal::compatibility::move(src).ignored_get());
+							// this->k_storage.raw_value() = kerbal::compatibility::move(src).ignored_get();
 						} else {
-							this->_K_storage.destroy();
-							this->_K_has_value = false;
+							this->k_storage.destroy();
+							this->k_has_value = false;
 						}
 					} else {
 						if (src.has_value()) {
-							this->_K_storage.construct(kerbal::compatibility::move(src).ignored_get());
-							this->_K_has_value = true;
+							this->k_storage.construct(kerbal::compatibility::move(src).ignored_get());
+							this->k_has_value = true;
 						}
 					}
 					return *this;
@@ -571,16 +571,16 @@ namespace kerbal
 				{
 					if (this->has_value()) {
 						if (src.has_value()) {
-							kerbal::operators::generic_assign(this->_K_storage.raw_value(), src.ignored_get());
-							// this->_K_storage.raw_value() = src.ignored_get();
+							kerbal::operators::generic_assign(this->k_storage.raw_value(), src.ignored_get());
+							// this->k_storage.raw_value() = src.ignored_get();
 						} else {
-							this->_K_storage.destroy();
-							this->_K_has_value = false;
+							this->k_storage.destroy();
+							this->k_has_value = false;
 						}
 					} else {
 						if (src.has_value()) {
-							this->_K_storage.construct(src.ignored_get());
-							this->_K_has_value = true;
+							this->k_storage.construct(src.ignored_get());
+							this->k_has_value = true;
 						}
 					}
 					return *this;
@@ -594,16 +594,16 @@ namespace kerbal
 				{
 					if (this->has_value()) {
 						if (src.has_value()) {
-							kerbal::operators::generic_assign(this->_K_storage.raw_value(), kerbal::compatibility::move(src).ignored_get());
-							// this->_K_storage.raw_value() = kerbal::compatibility::move(src).ignored_get();
+							kerbal::operators::generic_assign(this->k_storage.raw_value(), kerbal::compatibility::move(src).ignored_get());
+							// this->k_storage.raw_value() = kerbal::compatibility::move(src).ignored_get();
 						} else {
-							this->_K_storage.destroy();
-							this->_K_has_value = false;
+							this->k_storage.destroy();
+							this->k_has_value = false;
 						}
 					} else {
 						if (src.has_value()) {
-							this->_K_storage.construct(kerbal::compatibility::move(src).ignored_get());
-							this->_K_has_value = true;
+							this->k_storage.construct(kerbal::compatibility::move(src).ignored_get());
+							this->k_has_value = true;
 						}
 					}
 					return *this;
@@ -627,7 +627,7 @@ namespace kerbal
 				KERBAL_CONSTEXPR
 				bool has_value() const KERBAL_NOEXCEPT
 				{
-					return this->_K_has_value;
+					return this->k_has_value;
 				}
 
 				/**
@@ -642,7 +642,7 @@ namespace kerbal
 				KERBAL_CONSTEXPR
 				bool empty() const KERBAL_NOEXCEPT
 				{
-					return !this->_K_has_value;
+					return !this->k_has_value;
 				}
 
 				KERBAL_CONSTEXPR
@@ -672,13 +672,13 @@ namespace kerbal
 				KERBAL_CONSTEXPR14
 				reference ignored_get() KERBAL_REFERENCE_OVERLOAD_TAG KERBAL_NOEXCEPT
 				{
-					return this->_K_storage.raw_value();
+					return this->k_storage.raw_value();
 				}
 
 				KERBAL_CONSTEXPR
 				const_reference ignored_get() const KERBAL_REFERENCE_OVERLOAD_TAG KERBAL_NOEXCEPT
 				{
-					return this->_K_storage.raw_value();
+					return this->k_storage.raw_value();
 				}
 
 				KERBAL_CONSTEXPR14
@@ -716,13 +716,13 @@ namespace kerbal
 				KERBAL_CONSTEXPR14
 				rvalue_reference ignored_get() && noexcept
 				{
-					return kerbal::compatibility::move(*this)._K_storage.raw_value();
+					return kerbal::compatibility::move(*this).k_storage.raw_value();
 				}
 
 				KERBAL_CONSTEXPR
 				const_rvalue_reference ignored_get() const && noexcept
 				{
-					return kerbal::compatibility::move(*this)._K_storage.raw_value();
+					return kerbal::compatibility::move(*this).k_storage.raw_value();
 				}
 
 				KERBAL_CONSTEXPR14
@@ -761,13 +761,13 @@ namespace kerbal
 				KERBAL_CONSTEXPR14
 				pointer ignored_get_pointer() KERBAL_NOEXCEPT
 				{
-					return this->_K_storage.raw_pointer();
+					return this->k_storage.raw_pointer();
 				}
 
 				KERBAL_CONSTEXPR
 				const_pointer ignored_get_pointer() const KERBAL_NOEXCEPT
 				{
-					return this->_K_storage.raw_pointer();
+					return this->k_storage.raw_pointer();
 				}
 
 				KERBAL_CONSTEXPR14
@@ -859,8 +859,8 @@ namespace kerbal
 				optional& emplace(Args&& ... args)
 				{
 					this->reset();
-					this->_K_storage.construct(kerbal::utility::forward<Args>(args)...);
-					this->_K_has_value = true;
+					this->k_storage.construct(kerbal::utility::forward<Args>(args)...);
+					this->k_has_value = true;
 					return *this;
 				}
 
@@ -877,8 +877,8 @@ namespace kerbal
 				optional& emplace(KERBAL_OPT_PPEXPAND_WITH_COMMA_N(REMAINF, EMPTY, ARGS_DECL, i)) \
 				{ \
 					this->reset(); \
-					this->_K_storage.construct(KERBAL_OPT_PPEXPAND_WITH_COMMA_N(REMAINF, EMPTY, ARGS_USE, i)); \
-					this->_K_has_value = true; \
+					this->k_storage.construct(KERBAL_OPT_PPEXPAND_WITH_COMMA_N(REMAINF, EMPTY, ARGS_USE, i)); \
+					this->k_has_value = true; \
 					return *this; \
 				}
 
@@ -899,8 +899,8 @@ namespace kerbal
 				void reset()
 				{
 					if (this->has_value()) {
-						this->_K_storage.destroy();
-						this->_K_has_value = false;
+						this->k_storage.destroy();
+						this->k_has_value = false;
 					}
 				}
 
@@ -910,15 +910,15 @@ namespace kerbal
 					if (this->has_value() && with.has_value()) {
 						kerbal::algorithm::swap(this->ignored_get(), with.ignored_get());
 					} else if (this->has_value() && !with.has_value()) {
-						with._K_storage.construct(kerbal::compatibility::to_xvalue(this->ignored_get()));
-						with._K_has_value = true;
-						this->_K_storage.destroy();
-						this->_K_has_value = false;
+						with.k_storage.construct(kerbal::compatibility::to_xvalue(this->ignored_get()));
+						with.k_has_value = true;
+						this->k_storage.destroy();
+						this->k_has_value = false;
 					} else if (!this->has_value() && with.has_value()) {
-						this->_K_storage.construct(kerbal::compatibility::to_xvalue(with.ignored_get()));
-						this->_K_has_value = true;
-						with._K_storage.destroy();
-						with._K_has_value = false;
+						this->k_storage.construct(kerbal::compatibility::to_xvalue(with.ignored_get()));
+						this->k_has_value = true;
+						with.k_storage.destroy();
+						with.k_has_value = false;
 					}
 				}
 
@@ -934,25 +934,25 @@ namespace kerbal
 				typedef T*				pointer;
 
 			protected:
-				pointer _K_ptr;
+				pointer k_ptr;
 
 			public:
 
 				KERBAL_CONSTEXPR
 				optional() KERBAL_NOEXCEPT :
-						_K_ptr(NULL)
+						k_ptr(NULL)
 				{
 				}
 
 				KERBAL_CONSTEXPR
 				optional(const kerbal::optional::nullopt_t &) KERBAL_NOEXCEPT :
-						_K_ptr(NULL)
+						k_ptr(NULL)
 				{
 				}
 
 				KERBAL_CONSTEXPR
 				optional(reference val) KERBAL_NOEXCEPT :
-						_K_ptr(&val)
+						k_ptr(&val)
 				{
 				}
 
@@ -963,13 +963,13 @@ namespace kerbal
 				KERBAL_CONSTEXPR
 				bool has_value() const KERBAL_NOEXCEPT
 				{
-					return this->_K_ptr != NULL;
+					return this->k_ptr != NULL;
 				}
 
 				KERBAL_CONSTEXPR
 				bool empty() const KERBAL_NOEXCEPT
 				{
-					return this->_K_ptr == NULL;
+					return this->k_ptr == NULL;
 				}
 
 				KERBAL_CONSTEXPR
@@ -990,7 +990,7 @@ namespace kerbal
 				KERBAL_CONSTEXPR14
 				reference ignored_get() const KERBAL_NOEXCEPT
 				{
-					return *this->_K_ptr;
+					return *this->k_ptr;
 				}
 
 				KERBAL_CONSTEXPR14
@@ -1012,7 +1012,7 @@ namespace kerbal
 				KERBAL_CONSTEXPR14
 				pointer ignored_get_pointer() const KERBAL_NOEXCEPT
 				{
-					return this->_K_ptr;
+					return this->k_ptr;
 				}
 
 				KERBAL_CONSTEXPR14
@@ -1037,20 +1037,20 @@ namespace kerbal
 				KERBAL_CONSTEXPR14
 				optional& emplace(reference val) KERBAL_NOEXCEPT
 				{
-					this->_K_ptr = &val;
+					this->k_ptr = &val;
 					return *this;
 				}
 
 				KERBAL_CONSTEXPR14
 				void reset() KERBAL_NOEXCEPT
 				{
-					this->_K_ptr = NULL;
+					this->k_ptr = NULL;
 				}
 
 				KERBAL_CONSTEXPR14
 				void swap(optional & with) KERBAL_NOEXCEPT
 				{
-					kerbal::algorithm::swap(this->_K_ptr, with._K_ptr);
+					kerbal::algorithm::swap(this->k_ptr, with.k_ptr);
 				}
 
 		};

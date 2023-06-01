@@ -84,70 +84,75 @@ namespace kerbal
 			kerbal::algorithm::swap(*lhs, *rhs);
 		}
 
-		template <typename ForwardIterator1, typename ForwardIterator2>
-		KERBAL_CONSTEXPR14
-		ForwardIterator2
-		__range_swap(ForwardIterator1 a_first, ForwardIterator1 a_last, ForwardIterator2 b_first,
-						std::forward_iterator_tag)
-				KERBAL_CONDITIONAL_NOEXCEPT(
-						noexcept(static_cast<bool>(a_first != a_last)) &&
-						noexcept(kerbal::algorithm::iter_swap(a_first, b_first)) &&
-						noexcept(++a_first) &&
-						noexcept(++b_first)
-				)
+		namespace detail
 		{
-			while (a_first != a_last) {
-				kerbal::algorithm::iter_swap(a_first, b_first);
-				++a_first;
-				++b_first;
-			}
-			return b_first;
-		}
 
-		template <typename RandomAccessIterator1, typename ForwardIterator2>
-		KERBAL_CONSTEXPR14
-		ForwardIterator2
-		__range_swap(RandomAccessIterator1 a_first, RandomAccessIterator1 a_last, ForwardIterator2 b_first,
-						std::random_access_iterator_tag)
-		{
-			typedef RandomAccessIterator1 iterator;
-			typedef typename kerbal::iterator::iterator_traits<iterator>::difference_type difference_type;
-
-#	define EACH() do {\
-				kerbal::algorithm::iter_swap(a_first, b_first);\
-				++a_first;\
-				++b_first;\
-			} while (false)
-
-			difference_type trip_count(kerbal::iterator::distance(a_first, a_last));
-			difference_type remain(trip_count & 3);
-			for (trip_count >>= 2; trip_count > 0; --trip_count) {
-				EACH();
-				EACH();
-				EACH();
-				EACH();
+			template <typename ForwardIterator1, typename ForwardIterator2>
+			KERBAL_CONSTEXPR14
+			ForwardIterator2
+			range_swap_helper(ForwardIterator1 a_first, ForwardIterator1 a_last, ForwardIterator2 b_first,
+							std::forward_iterator_tag)
+					KERBAL_CONDITIONAL_NOEXCEPT(
+							noexcept(static_cast<bool>(a_first != a_last)) &&
+							noexcept(kerbal::algorithm::iter_swap(a_first, b_first)) &&
+							noexcept(++a_first) &&
+							noexcept(++b_first)
+					)
+			{
+				while (a_first != a_last) {
+					kerbal::algorithm::iter_swap(a_first, b_first);
+					++a_first;
+					++b_first;
+				}
+				return b_first;
 			}
 
-			if (remain >= 2) {
-				EACH();
-				EACH();
-				remain -= 2;
-			}
-			if (remain >= 1) {
-				EACH();
+			template <typename RandomAccessIterator1, typename ForwardIterator2>
+			KERBAL_CONSTEXPR14
+			ForwardIterator2
+			range_swap_helper(RandomAccessIterator1 a_first, RandomAccessIterator1 a_last, ForwardIterator2 b_first,
+							std::random_access_iterator_tag)
+			{
+				typedef RandomAccessIterator1 iterator;
+				typedef typename kerbal::iterator::iterator_traits<iterator>::difference_type difference_type;
+
+#		define EACH() do {\
+					kerbal::algorithm::iter_swap(a_first, b_first);\
+					++a_first;\
+					++b_first;\
+				} while (false)
+
+				difference_type trip_count(kerbal::iterator::distance(a_first, a_last));
+				difference_type remain(trip_count & 3);
+				for (trip_count >>= 2; trip_count > 0; --trip_count) {
+					EACH();
+					EACH();
+					EACH();
+					EACH();
+				}
+
+				if (remain >= 2) {
+					EACH();
+					EACH();
+					remain -= 2;
+				}
+				if (remain >= 1) {
+					EACH();
+				}
+
+#		undef EACH
+
+				return b_first;
 			}
 
-#	undef EACH
-
-			return b_first;
-		}
+		} // namespace detail
 
 		template <typename ForwardIterator1, typename ForwardIterator2>
 		KERBAL_CONSTEXPR14
 		ForwardIterator2
 		range_swap(ForwardIterator1 a_first, ForwardIterator1 a_last, ForwardIterator2 b_first)
 		{
-			return kerbal::algorithm::__range_swap(a_first, a_last, b_first,
+			return kerbal::algorithm::detail::range_swap_helper(a_first, a_last, b_first,
 									kerbal::iterator::iterator_category(a_first));
 		}
 

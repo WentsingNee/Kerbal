@@ -125,34 +125,34 @@ namespace kerbal
 				// operation
 
 					KERBAL_CONSTEXPR20
-					void _K_iter_swap(basic_iterator a, basic_iterator b) KERBAL_NOEXCEPT;
+					void k_iter_swap(basic_iterator a, basic_iterator b) KERBAL_NOEXCEPT;
 
 					KERBAL_CONSTEXPR20
-					void _K_reverse(basic_iterator first, basic_iterator last) KERBAL_NOEXCEPT;
+					void k_reverse(basic_iterator first, basic_iterator last) KERBAL_NOEXCEPT;
 
 					KERBAL_CONSTEXPR20
 					void reverse() KERBAL_NOEXCEPT;
 
 					KERBAL_CONSTEXPR20
-					void _K_splice(basic_const_iterator pos, sl_type_unrelated & other) KERBAL_NOEXCEPT;
+					void k_splice(basic_const_iterator pos, sl_type_unrelated & other) KERBAL_NOEXCEPT;
 
 					KERBAL_CONSTEXPR20
-					void _K_splice(basic_const_iterator pos, sl_type_unrelated & other, basic_const_iterator opos) KERBAL_NOEXCEPT;
+					void k_splice(basic_const_iterator pos, sl_type_unrelated & other, basic_const_iterator opos) KERBAL_NOEXCEPT;
 
 					KERBAL_CONSTEXPR20
-					void _K_splice(basic_const_iterator pos, sl_type_unrelated & other,
+					void k_splice(basic_const_iterator pos, sl_type_unrelated & other,
 								basic_const_iterator first, basic_const_iterator last) KERBAL_NOEXCEPT;
 
 #			if __cplusplus >= 201103L
 
 					KERBAL_CONSTEXPR20
-					void _K_splice(basic_const_iterator pos, sl_type_unrelated && other) KERBAL_NOEXCEPT;
+					void k_splice(basic_const_iterator pos, sl_type_unrelated && other) KERBAL_NOEXCEPT;
 
 					KERBAL_CONSTEXPR20
-					void _K_splice(basic_const_iterator pos, sl_type_unrelated && other, basic_const_iterator opos) KERBAL_NOEXCEPT;
+					void k_splice(basic_const_iterator pos, sl_type_unrelated && other, basic_const_iterator opos) KERBAL_NOEXCEPT;
 
 					KERBAL_CONSTEXPR20
-					void _K_splice(basic_const_iterator pos, sl_type_unrelated && other,
+					void k_splice(basic_const_iterator pos, sl_type_unrelated && other,
 								basic_const_iterator first, basic_const_iterator last) KERBAL_NOEXCEPT;
 
 #			endif
@@ -161,7 +161,7 @@ namespace kerbal
 				// private
 
 					KERBAL_CONSTEXPR14
-					void _K_init_node_base() KERBAL_NOEXCEPT
+					void k_init_node_base() KERBAL_NOEXCEPT
 					{
 						this->head_node.next = NULL;
 						this->last_iter = this->basic_begin();
@@ -169,41 +169,41 @@ namespace kerbal
 
 					// pre-cond: p->next == NULL;
 					KERBAL_CONSTEXPR20
-					void _K_hook_node_back(node_base * p) KERBAL_NOEXCEPT;
+					void k_hook_node_back(node_base * p) KERBAL_NOEXCEPT;
 
 					KERBAL_CONSTEXPR20
-					static void _K_hook_node_not_back(basic_iterator pos, node_base * p) KERBAL_NOEXCEPT;
+					static void k_hook_node_not_back(basic_iterator pos, node_base * p) KERBAL_NOEXCEPT;
 
 					// pre-cond: if pos == cend then p->next == NULL;
 					KERBAL_CONSTEXPR20
-					void _K_hook_node(basic_const_iterator pos, node_base * p) KERBAL_NOEXCEPT;
+					void k_hook_node(basic_const_iterator pos, node_base * p) KERBAL_NOEXCEPT;
 
 					// pre-cond: back->next == NULL;
 					KERBAL_CONSTEXPR20
-					void _K_hook_node_back(node_base * start, node_base * back) KERBAL_NOEXCEPT;
+					void k_hook_node_back(node_base * start, node_base * back) KERBAL_NOEXCEPT;
 
 					KERBAL_CONSTEXPR20
-					static void _K_hook_node_not_back(basic_iterator pos, node_base * start, node_base * back) KERBAL_NOEXCEPT;
+					static void k_hook_node_not_back(basic_iterator pos, node_base * start, node_base * back) KERBAL_NOEXCEPT;
 
 					// pre-cond: if pos == cend then back->next == NULL;
 					KERBAL_CONSTEXPR20
-					void _K_hook_node(basic_const_iterator pos, node_base * start, node_base * back) KERBAL_NOEXCEPT;
+					void k_hook_node(basic_const_iterator pos, node_base * start, node_base * back) KERBAL_NOEXCEPT;
 
 					KERBAL_CONSTEXPR20
-					node_base * _K_unhook_node(basic_iterator pos) KERBAL_NOEXCEPT;
+					node_base * k_unhook_node(basic_iterator pos) KERBAL_NOEXCEPT;
 
 					// pre-cond: first != last;
 					KERBAL_CONSTEXPR20
 					sl_node_base_chain
-					_K_unhook_node(basic_iterator first, basic_iterator last) KERBAL_NOEXCEPT;
+					k_unhook_node(basic_iterator first, basic_iterator last) KERBAL_NOEXCEPT;
 
 					// pre-cond: lhs and rhs are lists of same type
 					KERBAL_CONSTEXPR20
-					static void _K_swap_with_empty(sl_type_unrelated & not_empty_list, sl_type_unrelated & empty_list) KERBAL_NOEXCEPT;
+					static void k_swap_with_empty(sl_type_unrelated & not_empty_list, sl_type_unrelated & empty_list) KERBAL_NOEXCEPT;
 
 					// pre-cond: lhs and rhs are lists of same type
 					KERBAL_CONSTEXPR20
-					static void _K_swap_type_unrelated(sl_type_unrelated & lhs, sl_type_unrelated & rhs) KERBAL_NOEXCEPT;
+					static void k_swap_type_unrelated(sl_type_unrelated & lhs, sl_type_unrelated & rhs) KERBAL_NOEXCEPT;
 
 			};
 
@@ -297,21 +297,21 @@ namespace kerbal
 
 					// move construct using allocator, allocator is equal
 					KERBAL_CONSTEXPR14
-					void _K_move_cnstrct_ua_ae(sl_allocator_unrelated && src) KERBAL_NOEXCEPT;
+					void k_move_cnstrct_ua_ae(sl_allocator_unrelated && src) KERBAL_NOEXCEPT;
 
 					// move construct using allocator, allocator is not equal
 					template <typename NodeAllocator>
 					KERBAL_CONSTEXPR20
-					void _K_move_cnstrct_ua_ane(NodeAllocator & this_alloc, sl_allocator_unrelated && src);
+					void k_move_cnstrct_ua_ane(NodeAllocator & this_alloc, sl_allocator_unrelated && src);
 
 					template <typename NodeAllocator>
 					KERBAL_CONSTEXPR20
-					void _K_move_cnstrct_ua_helper(NodeAllocator & this_alloc, NodeAllocator && src_alloc, sl_allocator_unrelated && src,
+					void k_move_cnstrct_ua_helper(NodeAllocator & this_alloc, NodeAllocator && src_alloc, sl_allocator_unrelated && src,
 												   kerbal::type_traits::false_type /*is_always_equal*/);
 
 					template <typename NodeAllocator>
 					KERBAL_CONSTEXPR14
-					void _K_move_cnstrct_ua_helper(NodeAllocator & this_alloc, NodeAllocator && src_alloc, sl_allocator_unrelated && src,
+					void k_move_cnstrct_ua_helper(NodeAllocator & this_alloc, NodeAllocator && src_alloc, sl_allocator_unrelated && src,
 												   kerbal::type_traits::true_type /*is_always_equal*/) KERBAL_NOEXCEPT;
 
 				protected:
@@ -357,15 +357,15 @@ namespace kerbal
 
 					template <typename NodeAllocator>
 					KERBAL_CONSTEXPR20
-					void _K_cpy_ass_ua_impl(NodeAllocator & alloc, const NodeAllocator & src_alloc, const sl_allocator_unrelated & src, CPYASS_VER_NOT_PROPAGATE);
+					void k_cpy_ass_ua_impl(NodeAllocator & alloc, const NodeAllocator & src_alloc, const sl_allocator_unrelated & src, CPYASS_VER_NOT_PROPAGATE);
 
 					template <typename NodeAllocator>
 					KERBAL_CONSTEXPR20
-					void _K_cpy_ass_ua_impl(NodeAllocator & alloc, const NodeAllocator & src_alloc, const sl_allocator_unrelated & src, CPYASS_VER_PROPAGATE);
+					void k_cpy_ass_ua_impl(NodeAllocator & alloc, const NodeAllocator & src_alloc, const sl_allocator_unrelated & src, CPYASS_VER_PROPAGATE);
 
 					template <typename NodeAllocator>
 					KERBAL_CONSTEXPR20
-					void _K_cpy_ass_ua_impl(NodeAllocator & alloc, const NodeAllocator & src_alloc, const sl_allocator_unrelated & src, CPYASS_VER_ALWAYS_EQUAL);
+					void k_cpy_ass_ua_impl(NodeAllocator & alloc, const NodeAllocator & src_alloc, const sl_allocator_unrelated & src, CPYASS_VER_ALWAYS_EQUAL);
 
 				protected:
 
@@ -380,12 +380,12 @@ namespace kerbal
 					// move assign using allocator, allocator is equal
 					template <typename NodeAllocator>
 					KERBAL_CONSTEXPR20
-					void _K_mov_ass_ua_ae(NodeAllocator & alloc, sl_allocator_unrelated && src) KERBAL_NOEXCEPT;
+					void k_mov_ass_ua_ae(NodeAllocator & alloc, sl_allocator_unrelated && src) KERBAL_NOEXCEPT;
 
 					// move assign using allocator, allocator is not equal
 					template <typename NodeAllocator>
 					KERBAL_CONSTEXPR20
-					void _K_mov_ass_ua_ane(NodeAllocator & alloc, sl_allocator_unrelated && src);
+					void k_mov_ass_ua_ane(NodeAllocator & alloc, sl_allocator_unrelated && src);
 
 					typedef kerbal::type_traits::integral_constant<int, 0> MOVASS_VER_NOT_PROPAGATE;
 					typedef kerbal::type_traits::integral_constant<int, 1> MOVASS_VER_PROPAGATE;
@@ -393,15 +393,15 @@ namespace kerbal
 
 					template <typename NodeAllocator>
 					KERBAL_CONSTEXPR20
-					void _K_mov_ass_ua_impl(NodeAllocator & alloc, NodeAllocator && src_alloc, sl_allocator_unrelated && src, MOVASS_VER_NOT_PROPAGATE);
+					void k_mov_ass_ua_impl(NodeAllocator & alloc, NodeAllocator && src_alloc, sl_allocator_unrelated && src, MOVASS_VER_NOT_PROPAGATE);
 
 					template <typename NodeAllocator>
 					KERBAL_CONSTEXPR20
-					void _K_mov_ass_ua_impl(NodeAllocator & alloc, NodeAllocator && src_alloc, sl_allocator_unrelated && src, MOVASS_VER_PROPAGATE);
+					void k_mov_ass_ua_impl(NodeAllocator & alloc, NodeAllocator && src_alloc, sl_allocator_unrelated && src, MOVASS_VER_PROPAGATE);
 
 					template <typename NodeAllocator>
 					KERBAL_CONSTEXPR20
-					void _K_mov_ass_ua_impl(NodeAllocator & alloc, NodeAllocator && /*src_alloc*/, sl_allocator_unrelated && src, MOVASS_VER_ALWAYS_EQUAL) KERBAL_NOEXCEPT;
+					void k_mov_ass_ua_impl(NodeAllocator & alloc, NodeAllocator && /*src_alloc*/, sl_allocator_unrelated && src, MOVASS_VER_ALWAYS_EQUAL) KERBAL_NOEXCEPT;
 
 				protected:
 
@@ -625,7 +625,7 @@ namespace kerbal
 					KERBAL_CONSTEXPR20
 					void clear_using_allocator(NodeAllocator & alloc)
 							KERBAL_CONDITIONAL_NOEXCEPT(
-									noexcept(kerbal::utility::declthis<sl_allocator_unrelated>()->_K_consecutive_destroy_node(
+									noexcept(kerbal::utility::declthis<sl_allocator_unrelated>()->k_consecutive_destroy_node(
 											alloc,
 											kerbal::utility::declthis<sl_allocator_unrelated>()->head_node.next
 									))
@@ -703,13 +703,13 @@ namespace kerbal
 					KERBAL_CONSTEXPR20
 					static
 					typename kerbal::type_traits::enable_if<!nothrow_while_construct, node*>::type
-					_K_build_new_node_impl(NodeAllocator & alloc, Args&& ... args);
+					k_build_new_node_impl(NodeAllocator & alloc, Args&& ... args);
 
 					template <bool nothrow_while_construct, typename NodeAllocator, typename ... Args>
 					KERBAL_CONSTEXPR20
 					static
 					typename kerbal::type_traits::enable_if<nothrow_while_construct, node*>::type
-					_K_build_new_node_impl(NodeAllocator & alloc, Args&& ... args)
+					k_build_new_node_impl(NodeAllocator & alloc, Args&& ... args)
 							KERBAL_CONDITIONAL_NOEXCEPT(
 									noexcept(kerbal::memory::allocator_traits<NodeAllocator>::allocate(alloc, 1))
 							)
@@ -719,7 +719,7 @@ namespace kerbal
 
 					template <typename NodeAllocator, typename ... Args>
 					KERBAL_CONSTEXPR20
-					static node* _K_build_new_node(NodeAllocator & alloc, Args&& ... args);
+					static node* k_build_new_node(NodeAllocator & alloc, Args&& ... args);
 
 #			else
 
@@ -729,7 +729,7 @@ namespace kerbal
 #				define ARGS_DECL(i) const KERBAL_MACRO_CONCAT(Arg, i) & KERBAL_MACRO_CONCAT(arg, i)
 #				define FBODY(i) \
 					template <typename NodeAllocator KERBAL_OPT_PPEXPAND_WITH_COMMA_N(LEFT_JOIN_COMMA, EMPTY, TARGS_DECL, i)> \
-					static node* _K_build_new_node(NodeAllocator & alloc KERBAL_OPT_PPEXPAND_WITH_COMMA_N(LEFT_JOIN_COMMA, EMPTY, ARGS_DECL, i));
+					static node* k_build_new_node(NodeAllocator & alloc KERBAL_OPT_PPEXPAND_WITH_COMMA_N(LEFT_JOIN_COMMA, EMPTY, ARGS_DECL, i));
 
 					KERBAL_PPEXPAND_N(FBODY, KERBAL_PPEXPAND_EMPTY_SEPARATOR, 0)
 					KERBAL_PPEXPAND_N(FBODY, KERBAL_PPEXPAND_EMPTY_SEPARATOR, 20)
@@ -747,7 +747,7 @@ namespace kerbal
 					template <typename NodeAllocator, typename ... Args>
 					KERBAL_CONSTEXPR20
 					static
-					sl_node_chain<Tp> _K_build_n_new_nodes_unguarded(NodeAllocator & alloc, size_type n, Args&& ...args);
+					sl_node_chain<Tp> k_build_n_new_nodes_unguarded(NodeAllocator & alloc, size_type n, Args&& ...args);
 
 #			else
 
@@ -758,7 +758,7 @@ namespace kerbal
 #				define FBODY(i) \
 					template <typename NodeAllocator KERBAL_OPT_PPEXPAND_WITH_COMMA_N(LEFT_JOIN_COMMA, EMPTY, TARGS_DECL, i)> \
 					static \
-					sl_node_chain<Tp> _K_build_n_new_nodes_unguarded(NodeAllocator & alloc, size_type n KERBAL_OPT_PPEXPAND_WITH_COMMA_N(LEFT_JOIN_COMMA, EMPTY, ARGS_DECL, i));
+					sl_node_chain<Tp> k_build_n_new_nodes_unguarded(NodeAllocator & alloc, size_type n KERBAL_OPT_PPEXPAND_WITH_COMMA_N(LEFT_JOIN_COMMA, EMPTY, ARGS_DECL, i));
 
 					KERBAL_PPEXPAND_N(FBODY, KERBAL_PPEXPAND_EMPTY_SEPARATOR, 0)
 					KERBAL_PPEXPAND_N(FBODY, KERBAL_PPEXPAND_EMPTY_SEPARATOR, 20)
@@ -781,11 +781,11 @@ namespace kerbal
 							kerbal::iterator::is_input_compatible_iterator<InputIterator>::value,
 							sl_node_chain<Tp>
 					>::type
-					_K_build_new_nodes_range_unguarded(NodeAllocator & alloc, InputIterator first, InputIterator last);
+					k_build_new_nodes_range_unguarded(NodeAllocator & alloc, InputIterator first, InputIterator last);
 
 					template <typename NodeAllocator>
 					KERBAL_CONSTEXPR20
-					static void _K_destroy_node(NodeAllocator & alloc, node_base * p_node_base)
+					static void k_destroy_node(NodeAllocator & alloc, node_base * p_node_base)
 							KERBAL_CONDITIONAL_NOEXCEPT(
 								noexcept(kerbal::memory::allocator_traits<NodeAllocator>::destroy(alloc, kerbal::utility::declval<node*>())) &&
 								noexcept(kerbal::memory::allocator_traits<NodeAllocator>::deallocate(alloc, kerbal::utility::declval<node*>(), 1))
@@ -799,15 +799,15 @@ namespace kerbal
 
 					template <typename NodeAllocator>
 					KERBAL_CONSTEXPR20
-					static void _K_consecutive_destroy_node_impl(NodeAllocator & alloc, node_base * start, CNSCTV_DES_VER_DEFAULT)
+					static void k_consecutive_destroy_node_impl(NodeAllocator & alloc, node_base * start, CNSCTV_DES_VER_DEFAULT)
 							KERBAL_CONDITIONAL_NOEXCEPT(
-								noexcept(kerbal::utility::declthis<sl_allocator_unrelated>()->_K_destroy_node(alloc, kerbal::utility::declval<node_base *>()))
+								noexcept(kerbal::utility::declthis<sl_allocator_unrelated>()->k_destroy_node(alloc, kerbal::utility::declval<node_base *>()))
 							)
 					;
 
 					template <typename NodeAllocator>
 					KERBAL_CONSTEXPR20
-					static void _K_consecutive_destroy_node_impl(NodeAllocator & alloc, node_base * start, CNSCTV_DES_VER_DESTROY_BUT_NO_DEALLOCATE)
+					static void k_consecutive_destroy_node_impl(NodeAllocator & alloc, node_base * start, CNSCTV_DES_VER_DESTROY_BUT_NO_DEALLOCATE)
 							KERBAL_CONDITIONAL_NOEXCEPT(
 								noexcept(kerbal::memory::allocator_traits<NodeAllocator>::destroy(alloc, kerbal::utility::declval<node*>()))
 							)
@@ -815,15 +815,15 @@ namespace kerbal
 
 					template <typename NodeAllocator>
 					KERBAL_CONSTEXPR20
-					static void _K_consecutive_destroy_node_impl(NodeAllocator & alloc, node_base * start, CNSCTV_DES_VER_NO_DEALLOCATE) KERBAL_NOEXCEPT;
+					static void k_consecutive_destroy_node_impl(NodeAllocator & alloc, node_base * start, CNSCTV_DES_VER_NO_DEALLOCATE) KERBAL_NOEXCEPT;
 
 				protected:
 
 					template <typename NodeAllocator>
 					KERBAL_CONSTEXPR20
-					static void _K_consecutive_destroy_node(NodeAllocator & alloc, node_base * start)
+					static void k_consecutive_destroy_node(NodeAllocator & alloc, node_base * start)
 							KERBAL_CONDITIONAL_NOEXCEPT(
-								noexcept(_K_consecutive_destroy_node_impl(alloc, start, CNSCTV_DES_VER_DEFAULT()))
+								noexcept(k_consecutive_destroy_node_impl(alloc, start, CNSCTV_DES_VER_DEFAULT()))
 							)
 					;
 
@@ -832,14 +832,14 @@ namespace kerbal
 
 					template <typename Node>
 					KERBAL_CONSTEXPR20
-					static void _K_consecutive_destroy_node(std::pmr::polymorphic_allocator<Node> & alloc, node_base * start)
+					static void k_consecutive_destroy_node(std::pmr::polymorphic_allocator<Node> & alloc, node_base * start)
 							KERBAL_CONDITIONAL_NOEXCEPT(
 								(
 									!kerbal::type_traits::tribool_is_true<kerbal::type_traits::try_test_is_trivially_destructible<Tp> >::value ?
-									noexcept(_K_consecutive_destroy_node_impl(alloc, start, CNSCTV_DES_VER_DESTROY_BUT_NO_DEALLOCATE())) :
+									noexcept(k_consecutive_destroy_node_impl(alloc, start, CNSCTV_DES_VER_DESTROY_BUT_NO_DEALLOCATE())) :
 									true
 								) &&
-								noexcept(_K_consecutive_destroy_node_impl(alloc, start, CNSCTV_DES_VER_DEFAULT()))
+								noexcept(k_consecutive_destroy_node_impl(alloc, start, CNSCTV_DES_VER_DEFAULT()))
 							)
 					;
 

@@ -48,15 +48,15 @@ namespace kerbal
 
 
 		template <typename T>
-		class _K_rawst_agent;
+		class k_rawst_agent;
 
 		template <typename T>
-		class _K_rawst_agent:
-				public kerbal::memory::detail::_K_rawst_base<T>
+		class k_rawst_agent:
+				public kerbal::memory::detail::k_rawst_base<T>
 		{
 			private:
-				typedef _K_rawst_agent this_type;
-				typedef kerbal::memory::detail::_K_rawst_base<T> super;
+				typedef k_rawst_agent this_type;
+				typedef kerbal::memory::detail::k_rawst_base<T> super;
 
 			protected:
 				typedef typename super::value_type					value_type;
@@ -83,7 +83,7 @@ namespace kerbal
 #			define ARGS_USE(i) KERBAL_MACRO_CONCAT(arg, i)
 #			define FBODY(i) \
 				KERBAL_OPT_PPEXPAND_WITH_COMMA_N(THEAD_NOT_EMPTY, EMPTY, TARGS_DECL, i) \
-				explicit _K_rawst_agent(kerbal::utility::in_place_t in_place KERBAL_OPT_PPEXPAND_WITH_COMMA_N(LEFT_JOIN_COMMA, EMPTY, ARGS_DECL, i)) : \
+				explicit k_rawst_agent(kerbal::utility::in_place_t in_place KERBAL_OPT_PPEXPAND_WITH_COMMA_N(LEFT_JOIN_COMMA, EMPTY, ARGS_DECL, i)) : \
 						super(in_place KERBAL_OPT_PPEXPAND_WITH_COMMA_N(LEFT_JOIN_COMMA, EMPTY, ARGS_USE, i)) \
 				{ \
 				}
@@ -104,7 +104,7 @@ namespace kerbal
 #		endif
 
 				KERBAL_CONSTEXPR
-				_K_rawst_agent() KERBAL_NOEXCEPT
+				k_rawst_agent() KERBAL_NOEXCEPT
 				{
 				}
 
@@ -206,12 +206,12 @@ namespace kerbal
 
 /*
 		template <typename T, std::size_t N>
-		class _K_rawst_agent<T[N]>:
-				public kerbal::memory::detail::_K_rawst_base<T[N]>
+		class k_rawst_agent<T[N]>:
+				public kerbal::memory::detail::k_rawst_base<T[N]>
 		{
 			private:
-				typedef _K_rawst_agent this_type;
-				typedef kerbal::memory::detail::_K_rawst_base<T[N]> super;
+				typedef k_rawst_agent this_type;
+				typedef kerbal::memory::detail::k_rawst_base<T[N]> super;
 
 			protected:
 				typedef typename super::value_type					value_type;
@@ -230,18 +230,18 @@ namespace kerbal
 
 #		if __cplusplus < 201103L
 
-				explicit _K_rawst_agent(kerbal::utility::in_place_t in_place) :
+				explicit k_rawst_agent(kerbal::utility::in_place_t in_place) :
 						super(in_place)
 				{
 				}
 
-				explicit _K_rawst_agent(kerbal::utility::in_place_t in_place, const_reference src) :
+				explicit k_rawst_agent(kerbal::utility::in_place_t in_place, const_reference src) :
 						super(in_place, src)
 				{
 				}
 
 				template <typename Up>
-				explicit _K_rawst_agent(kerbal::utility::in_place_t in_place, const Up (&src)[N]) :
+				explicit k_rawst_agent(kerbal::utility::in_place_t in_place, const Up (&src)[N]) :
 						super(in_place, src)
 				{
 				}
@@ -251,7 +251,7 @@ namespace kerbal
 #		endif
 
 				KERBAL_CONSTEXPR
-				_K_rawst_agent() KERBAL_NOEXCEPT
+				k_rawst_agent() KERBAL_NOEXCEPT
 				{
 				}
 
@@ -377,11 +377,11 @@ namespace kerbal
 
 
 		template <typename T>
-		class raw_storage: public kerbal::memory::_K_rawst_agent<T>
+		class raw_storage: public kerbal::memory::k_rawst_agent<T>
 		{
 			private:
 				typedef raw_storage this_type;
-				typedef kerbal::memory::_K_rawst_agent<T> super;
+				typedef kerbal::memory::k_rawst_agent<T> super;
 
 			public:
 				typedef typename super::value_type					value_type;

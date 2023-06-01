@@ -31,78 +31,83 @@ namespace kerbal
 	namespace compare
 	{
 
-		template <typename InputIterator1, typename InputIterator2, typename BinaryTypeEqualToPredicate>
-		KERBAL_CONSTEXPR14
-		bool __sequence_equal_to(InputIterator1 a_first, InputIterator1 a_last,
-								InputIterator2 b_first, InputIterator2 b_last,
-								BinaryTypeEqualToPredicate equal_to,
-								std::input_iterator_tag, std::input_iterator_tag)
-				KERBAL_CONDITIONAL_NOEXCEPT(
-						noexcept(static_cast<bool>(a_first != a_last)) &&
-						noexcept(static_cast<bool>(b_first != b_last)) &&
-						noexcept(static_cast<bool>(equal_to(*a_first, *b_first))) &&
-						noexcept(++a_first) &&
-						noexcept(++b_first)
-				)
+		namespace detail
 		{
-			while (static_cast<bool>(a_first != a_last) && static_cast<bool>(b_first != b_last)) {
-				if (equal_to(*a_first, *b_first)) { // namely *a == *b
-					++a_first;
-					++b_first;
-				} else {
+
+			template <typename InputIterator1, typename InputIterator2, typename BinaryTypeEqualToPredicate>
+			KERBAL_CONSTEXPR14
+			bool sequence_equal_to_helper(InputIterator1 a_first, InputIterator1 a_last,
+										InputIterator2 b_first, InputIterator2 b_last,
+										BinaryTypeEqualToPredicate equal_to,
+										std::input_iterator_tag, std::input_iterator_tag)
+					KERBAL_CONDITIONAL_NOEXCEPT(
+							noexcept(static_cast<bool>(a_first != a_last)) &&
+							noexcept(static_cast<bool>(b_first != b_last)) &&
+							noexcept(static_cast<bool>(equal_to(*a_first, *b_first))) &&
+							noexcept(++a_first) &&
+							noexcept(++b_first)
+					)
+			{
+				while (static_cast<bool>(a_first != a_last) && static_cast<bool>(b_first != b_last)) {
+					if (equal_to(*a_first, *b_first)) { // namely *a == *b
+						++a_first;
+						++b_first;
+					} else {
+						return false;
+					}
+				}
+				return !(static_cast<bool>(a_first != a_last) || static_cast<bool>(b_first != b_last));
+				// a_first == a_last && b_first == b_last => true
+				// a_first != a_last || b_first != b_last => false
+			}
+
+			template <typename RandomAccessIterator1, typename RandomAccessIterator2, typename BinaryTypeEqualToPredicate>
+			KERBAL_CONSTEXPR14
+			bool sequence_equal_to_helper(RandomAccessIterator1 a_first, RandomAccessIterator1 a_last,
+										RandomAccessIterator2 b_first, RandomAccessIterator2 b_last,
+										BinaryTypeEqualToPredicate equal_to,
+										std::random_access_iterator_tag, std::random_access_iterator_tag)
+			{
+				typedef RandomAccessIterator1 iterator1;
+				typedef typename kerbal::iterator::iterator_traits<iterator1>::difference_type difference_type;
+
+				difference_type trip_count(kerbal::iterator::distance(a_first, a_last));
+				if (trip_count != kerbal::iterator::distance(b_first, b_last)) {
 					return false;
 				}
-			}
-			return !(static_cast<bool>(a_first != a_last) || static_cast<bool>(b_first != b_last));
-			// a_first == a_last && b_first == b_last => true
-			// a_first != a_last || b_first != b_last => false
-		}
 
-		template <typename RandomAccessIterator1, typename RandomAccessIterator2, typename BinaryTypeEqualToPredicate>
-		KERBAL_CONSTEXPR14
-		bool __sequence_equal_to(RandomAccessIterator1 a_first, RandomAccessIterator1 a_last,
-								RandomAccessIterator2 b_first, RandomAccessIterator2 b_last,
-								BinaryTypeEqualToPredicate equal_to,
-								std::random_access_iterator_tag, std::random_access_iterator_tag)
-		{
-			typedef RandomAccessIterator1 iterator1;
-			typedef typename kerbal::iterator::iterator_traits<iterator1>::difference_type difference_type;
+#		define EACH() do {\
+					if (equal_to(*a_first, *b_first)) { /* namely *a == *b*/\
+						++a_first;\
+						++b_first;\
+					} else {\
+						return false;\
+					}\
+				} while (false)
 
-			difference_type trip_count(kerbal::iterator::distance(a_first, a_last));
-			if (trip_count != kerbal::iterator::distance(b_first, b_last)) {
-				return false;
-			}
+				difference_type remain(trip_count & 3);
+				for (trip_count >>= 2; trip_count > 0; --trip_count) {
+					EACH();
+					EACH();
+					EACH();
+					EACH();
+				}
 
-#	define EACH() do {\
-				if (equal_to(*a_first, *b_first)) { /* namely *a == *b*/\
-					++a_first;\
-					++b_first;\
-				} else {\
-					return false;\
-				}\
-			} while (false)
+				if (remain >= 2) {
+					EACH();
+					EACH();
+					remain -= 2;
+				}
+				if (remain >= 1) {
+					EACH();
+				}
 
-			difference_type remain(trip_count & 3);
-			for (trip_count >>= 2; trip_count > 0; --trip_count) {
-				EACH();
-				EACH();
-				EACH();
-				EACH();
+#		undef EACH
+
+				return true;
 			}
 
-			if (remain >= 2) {
-				EACH();
-				EACH();
-				remain -= 2;
-			}
-			if (remain >= 1) {
-				EACH();
-			}
-
-#	undef EACH
-
-			return true;
-		}
+		} // namespace detail
 
 		template <typename InputIterator1, typename InputIterator2, typename BinaryTypeEqualToPredicate>
 		KERBAL_CONSTEXPR14
@@ -110,7 +115,7 @@ namespace kerbal
 								InputIterator2 b_first, InputIterator2 b_last,
 								BinaryTypeEqualToPredicate equal_to)
 		{
-			return __sequence_equal_to(a_first, a_last, b_first, b_last, equal_to,
+			return kerbal::compare::detail::sequence_equal_to_helper(a_first, a_last, b_first, b_last, equal_to,
 					kerbal::iterator::iterator_category(a_first),
 					kerbal::iterator::iterator_category(b_first));
 		}
@@ -187,69 +192,74 @@ namespace kerbal
 
 
 
-		template <typename InputIterator1, typename InputIterator2, typename BinaryTypeNotEqualToPredicate>
-		KERBAL_CONSTEXPR14
-		bool __sequence_not_equal_to(InputIterator1 a_first, InputIterator1 a_last,
-									InputIterator2 b_first, InputIterator2 b_last,
-									BinaryTypeNotEqualToPredicate not_equal_to,
-									std::input_iterator_tag, std::input_iterator_tag)
+		namespace detail
 		{
-			while (static_cast<bool>(a_first != a_last) && static_cast<bool>(b_first != b_last)) {
-				if (not_equal_to(*a_first, *b_first)) { // namely *a != *b
-					return true;
-				} else {
-					++a_first;
-					++b_first;
+
+			template <typename InputIterator1, typename InputIterator2, typename BinaryTypeNotEqualToPredicate>
+			KERBAL_CONSTEXPR14
+			bool sequence_not_equal_to_helper(InputIterator1 a_first, InputIterator1 a_last,
+											InputIterator2 b_first, InputIterator2 b_last,
+											BinaryTypeNotEqualToPredicate not_equal_to,
+											std::input_iterator_tag, std::input_iterator_tag)
+			{
+				while (static_cast<bool>(a_first != a_last) && static_cast<bool>(b_first != b_last)) {
+					if (not_equal_to(*a_first, *b_first)) { // namely *a != *b
+						return true;
+					} else {
+						++a_first;
+						++b_first;
+					}
 				}
-			}
-			return (static_cast<bool>(a_first != a_last) || static_cast<bool>(b_first != b_last));
-		}
-
-		template <typename RandomAccessIterator1, typename RandomAccessIterator2, typename BinaryTypeNotEqualToPredicate>
-		KERBAL_CONSTEXPR14
-		bool __sequence_not_equal_to(RandomAccessIterator1 a_first, RandomAccessIterator1 a_last,
-									RandomAccessIterator2 b_first, RandomAccessIterator2 b_last,
-									BinaryTypeNotEqualToPredicate not_equal_to,
-									std::random_access_iterator_tag, std::random_access_iterator_tag)
-		{
-			typedef RandomAccessIterator1 iterator1;
-			typedef typename kerbal::iterator::iterator_traits<iterator1>::difference_type difference_type;
-
-			difference_type trip_count(kerbal::iterator::distance(a_first, a_last));
-			if (trip_count != kerbal::iterator::distance(b_first, b_last)) {
-				return true;
+				return (static_cast<bool>(a_first != a_last) || static_cast<bool>(b_first != b_last));
 			}
 
-#	define EACH() do {\
-				if (not_equal_to(*a_first, *b_first)) { /* namely *a != *b*/\
-					return true;\
-				} else {\
-					++a_first;\
-					++b_first;\
-				}\
-			} while (false)
+			template <typename RandomAccessIterator1, typename RandomAccessIterator2, typename BinaryTypeNotEqualToPredicate>
+			KERBAL_CONSTEXPR14
+			bool sequence_not_equal_to_helper(RandomAccessIterator1 a_first, RandomAccessIterator1 a_last,
+											RandomAccessIterator2 b_first, RandomAccessIterator2 b_last,
+											BinaryTypeNotEqualToPredicate not_equal_to,
+											std::random_access_iterator_tag, std::random_access_iterator_tag)
+			{
+				typedef RandomAccessIterator1 iterator1;
+				typedef typename kerbal::iterator::iterator_traits<iterator1>::difference_type difference_type;
 
-			difference_type remain(trip_count & 3);
-			for (trip_count >>= 2; trip_count > 0; --trip_count) {
-				EACH();
-				EACH();
-				EACH();
-				EACH();
+				difference_type trip_count(kerbal::iterator::distance(a_first, a_last));
+				if (trip_count != kerbal::iterator::distance(b_first, b_last)) {
+					return true;
+				}
+
+#		define EACH() do {\
+					if (not_equal_to(*a_first, *b_first)) { /* namely *a != *b*/\
+						return true;\
+					} else {\
+						++a_first;\
+						++b_first;\
+					}\
+				} while (false)
+
+				difference_type remain(trip_count & 3);
+				for (trip_count >>= 2; trip_count > 0; --trip_count) {
+					EACH();
+					EACH();
+					EACH();
+					EACH();
+				}
+
+				if (remain >= 2) {
+					EACH();
+					EACH();
+					remain -= 2;
+				}
+				if (remain >= 1) {
+					EACH();
+				}
+
+#		undef EACH
+
+				return false;
 			}
 
-			if (remain >= 2) {
-				EACH();
-				EACH();
-				remain -= 2;
-			}
-			if (remain >= 1) {
-				EACH();
-			}
-
-#	undef EACH
-
-			return false;
-		}
+		} // namespace detail
 
 		template <typename InputIterator1, typename InputIterator2, typename BinaryTypeNotEqualToPredicate>
 		KERBAL_CONSTEXPR14
@@ -257,7 +267,7 @@ namespace kerbal
 									InputIterator2 b_first, InputIterator2 b_last,
 									BinaryTypeNotEqualToPredicate not_equal_to)
 		{
-			return __sequence_not_equal_to(a_first, a_last, b_first, b_last, not_equal_to,
+			return kerbal::compare::detail::sequence_not_equal_to_helper(a_first, a_last, b_first, b_last, not_equal_to,
 					kerbal::iterator::iterator_category(a_first),
 					kerbal::iterator::iterator_category(b_first));
 		}

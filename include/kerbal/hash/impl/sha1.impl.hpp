@@ -117,7 +117,7 @@ namespace kerbal
 
 		KERBAL_CONSTEXPR14
 		inline
-		void _K_rotate5(uint32_t & a, uint32_t & b, uint32_t & c, uint32_t & d, uint32_t & e)
+		void k_rotate5(uint32_t & a, uint32_t & b, uint32_t & c, uint32_t & d, uint32_t & e)
 		{
 			uint32_t t = a;
 			a = b;
@@ -264,38 +264,38 @@ namespace kerbal
 			uint32_t d = this->state[3];
 			uint32_t e = this->state[4];
 
-			R1(w, a, b, c, d, e,  0); R1(w, e, a, b, c, d,  1); R1(w, d, e, a, b, c,  2); R1(w, c, d, e, a, b,  3); _K_rotate5(b, c, d, e, a);
-			R1(w, a, b, c, d, e,  4); R1(w, e, a, b, c, d,  5); R1(w, d, e, a, b, c,  6); R1(w, c, d, e, a, b,  7); _K_rotate5(b, c, d, e, a);
-			R1(w, a, b, c, d, e,  8); R1(w, e, a, b, c, d,  9); R1(w, d, e, a, b, c, 10); R1(w, c, d, e, a, b, 11); _K_rotate5(b, c, d, e, a);
-			R1(w, a, b, c, d, e, 12); R1(w, e, a, b, c, d, 13); R1(w, d, e, a, b, c, 14); R1(w, c, d, e, a, b, 15); _K_rotate5(b, c, d, e, a);
+			R1(w, a, b, c, d, e,  0); R1(w, e, a, b, c, d,  1); R1(w, d, e, a, b, c,  2); R1(w, c, d, e, a, b,  3); k_rotate5(b, c, d, e, a);
+			R1(w, a, b, c, d, e,  4); R1(w, e, a, b, c, d,  5); R1(w, d, e, a, b, c,  6); R1(w, c, d, e, a, b,  7); k_rotate5(b, c, d, e, a);
+			R1(w, a, b, c, d, e,  8); R1(w, e, a, b, c, d,  9); R1(w, d, e, a, b, c, 10); R1(w, c, d, e, a, b, 11); k_rotate5(b, c, d, e, a);
+			R1(w, a, b, c, d, e, 12); R1(w, e, a, b, c, d, 13); R1(w, d, e, a, b, c, 14); R1(w, c, d, e, a, b, 15); k_rotate5(b, c, d, e, a);
 
 			update_w_fast(w);
 
-			R1(w, a, b, c, d, e,  0); R1(w, e, a, b, c, d,  1); R1(w, d, e, a, b, c,  2); R1(w, c, d, e, a, b,  3); _K_rotate5(b, c, d, e, a);
-			R2(w, a, b, c, d, e,  4); R2(w, e, a, b, c, d,  5); R2(w, d, e, a, b, c,  6); R2(w, c, d, e, a, b,  7); _K_rotate5(b, c, d, e, a);
-			R2(w, a, b, c, d, e,  8); R2(w, e, a, b, c, d,  9); R2(w, d, e, a, b, c, 10); R2(w, c, d, e, a, b, 11); _K_rotate5(b, c, d, e, a);
-			R2(w, a, b, c, d, e, 12); R2(w, e, a, b, c, d, 13); R2(w, d, e, a, b, c, 14); R2(w, c, d, e, a, b, 15); _K_rotate5(b, c, d, e, a);
+			R1(w, a, b, c, d, e,  0); R1(w, e, a, b, c, d,  1); R1(w, d, e, a, b, c,  2); R1(w, c, d, e, a, b,  3); k_rotate5(b, c, d, e, a);
+			R2(w, a, b, c, d, e,  4); R2(w, e, a, b, c, d,  5); R2(w, d, e, a, b, c,  6); R2(w, c, d, e, a, b,  7); k_rotate5(b, c, d, e, a);
+			R2(w, a, b, c, d, e,  8); R2(w, e, a, b, c, d,  9); R2(w, d, e, a, b, c, 10); R2(w, c, d, e, a, b, 11); k_rotate5(b, c, d, e, a);
+			R2(w, a, b, c, d, e, 12); R2(w, e, a, b, c, d, 13); R2(w, d, e, a, b, c, 14); R2(w, c, d, e, a, b, 15); k_rotate5(b, c, d, e, a);
 
 			update_w_fast(w);
 
-			R2(w, a, b, c, d, e,  0); R2(w, e, a, b, c, d,  1); R2(w, d, e, a, b, c,  2); R2(w, c, d, e, a, b,  3); _K_rotate5(b, c, d, e, a);
-			R2(w, a, b, c, d, e,  4); R2(w, e, a, b, c, d,  5); R2(w, d, e, a, b, c,  6); R2(w, c, d, e, a, b,  7); _K_rotate5(b, c, d, e, a);
-			R3(w, a, b, c, d, e,  8); R3(w, e, a, b, c, d,  9); R3(w, d, e, a, b, c, 10); R3(w, c, d, e, a, b, 11); _K_rotate5(b, c, d, e, a);
-			R3(w, a, b, c, d, e, 12); R3(w, e, a, b, c, d, 13); R3(w, d, e, a, b, c, 14); R3(w, c, d, e, a, b, 15); _K_rotate5(b, c, d, e, a);
+			R2(w, a, b, c, d, e,  0); R2(w, e, a, b, c, d,  1); R2(w, d, e, a, b, c,  2); R2(w, c, d, e, a, b,  3); k_rotate5(b, c, d, e, a);
+			R2(w, a, b, c, d, e,  4); R2(w, e, a, b, c, d,  5); R2(w, d, e, a, b, c,  6); R2(w, c, d, e, a, b,  7); k_rotate5(b, c, d, e, a);
+			R3(w, a, b, c, d, e,  8); R3(w, e, a, b, c, d,  9); R3(w, d, e, a, b, c, 10); R3(w, c, d, e, a, b, 11); k_rotate5(b, c, d, e, a);
+			R3(w, a, b, c, d, e, 12); R3(w, e, a, b, c, d, 13); R3(w, d, e, a, b, c, 14); R3(w, c, d, e, a, b, 15); k_rotate5(b, c, d, e, a);
 
 			update_w_fast(w);
 
-			R3(w, a, b, c, d, e,  0); R3(w, e, a, b, c, d,  1); R3(w, d, e, a, b, c,  2); R3(w, c, d, e, a, b,  3); _K_rotate5(b, c, d, e, a);
-			R3(w, a, b, c, d, e,  4); R3(w, e, a, b, c, d,  5); R3(w, d, e, a, b, c,  6); R3(w, c, d, e, a, b,  7); _K_rotate5(b, c, d, e, a);
-			R3(w, a, b, c, d, e,  8); R3(w, e, a, b, c, d,  9); R3(w, d, e, a, b, c, 10); R3(w, c, d, e, a, b, 11); _K_rotate5(b, c, d, e, a);
-			R4(w, a, b, c, d, e, 12); R4(w, e, a, b, c, d, 13); R4(w, d, e, a, b, c, 14); R4(w, c, d, e, a, b, 15); _K_rotate5(b, c, d, e, a);
+			R3(w, a, b, c, d, e,  0); R3(w, e, a, b, c, d,  1); R3(w, d, e, a, b, c,  2); R3(w, c, d, e, a, b,  3); k_rotate5(b, c, d, e, a);
+			R3(w, a, b, c, d, e,  4); R3(w, e, a, b, c, d,  5); R3(w, d, e, a, b, c,  6); R3(w, c, d, e, a, b,  7); k_rotate5(b, c, d, e, a);
+			R3(w, a, b, c, d, e,  8); R3(w, e, a, b, c, d,  9); R3(w, d, e, a, b, c, 10); R3(w, c, d, e, a, b, 11); k_rotate5(b, c, d, e, a);
+			R4(w, a, b, c, d, e, 12); R4(w, e, a, b, c, d, 13); R4(w, d, e, a, b, c, 14); R4(w, c, d, e, a, b, 15); k_rotate5(b, c, d, e, a);
 
 			update_w_fast(w);
 
-			R4(w, a, b, c, d, e,  0); R4(w, e, a, b, c, d,  1); R4(w, d, e, a, b, c,  2); R4(w, c, d, e, a, b,  3); _K_rotate5(b, c, d, e, a);
-			R4(w, a, b, c, d, e,  4); R4(w, e, a, b, c, d,  5); R4(w, d, e, a, b, c,  6); R4(w, c, d, e, a, b,  7); _K_rotate5(b, c, d, e, a);
-			R4(w, a, b, c, d, e,  8); R4(w, e, a, b, c, d,  9); R4(w, d, e, a, b, c, 10); R4(w, c, d, e, a, b, 11); _K_rotate5(b, c, d, e, a);
-			R4(w, a, b, c, d, e, 12); R4(w, e, a, b, c, d, 13); R4(w, d, e, a, b, c, 14); R4(w, c, d, e, a, b, 15); _K_rotate5(b, c, d, e, a);
+			R4(w, a, b, c, d, e,  0); R4(w, e, a, b, c, d,  1); R4(w, d, e, a, b, c,  2); R4(w, c, d, e, a, b,  3); k_rotate5(b, c, d, e, a);
+			R4(w, a, b, c, d, e,  4); R4(w, e, a, b, c, d,  5); R4(w, d, e, a, b, c,  6); R4(w, c, d, e, a, b,  7); k_rotate5(b, c, d, e, a);
+			R4(w, a, b, c, d, e,  8); R4(w, e, a, b, c, d,  9); R4(w, d, e, a, b, c, 10); R4(w, c, d, e, a, b, 11); k_rotate5(b, c, d, e, a);
+			R4(w, a, b, c, d, e, 12); R4(w, e, a, b, c, d, 13); R4(w, d, e, a, b, c, 14); R4(w, c, d, e, a, b, 15); k_rotate5(b, c, d, e, a);
 
 			/* Add the working vars back into context.state[] */
 			this->state[0] += a;

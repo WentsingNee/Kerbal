@@ -164,7 +164,7 @@ namespace kerbal
 					using key_compare_overload::key_comp_obj;
 
 					KERBAL_CONSTEXPR14
-					void __sort()
+					void k_sort()
 					{
 						kerbal::algorithm::sort(sequence.begin(), sequence.end(), this->value_comp());
 					}
@@ -245,14 +245,14 @@ namespace kerbal
 					friend struct equal_range_kc_adapter;
 
 				private:
-					struct __equal_range_kc_adapter_not_same
+					struct equal_range_kc_adapter_not_same
 					{
 						private:
 							const flat_ordered_base * self;
 
 						protected:
 							KERBAL_CONSTEXPR
-							explicit __equal_range_kc_adapter_not_same(const flat_ordered_base * self) KERBAL_NOEXCEPT
+							explicit equal_range_kc_adapter_not_same(const flat_ordered_base * self) KERBAL_NOEXCEPT
 								: self(self)
 							{
 							}
@@ -269,14 +269,14 @@ namespace kerbal
 							}
 					};
 
-					struct __equal_range_kc_adapter_same
+					struct equal_range_kc_adapter_same
 					{
 						private:
 							const flat_ordered_base * self;
 
 						protected:
 							KERBAL_CONSTEXPR
-							explicit __equal_range_kc_adapter_same(const flat_ordered_base * self) KERBAL_NOEXCEPT
+							explicit equal_range_kc_adapter_same(const flat_ordered_base * self) KERBAL_NOEXCEPT
 								: self(self)
 							{
 							}
@@ -295,8 +295,8 @@ namespace kerbal
 												const key_type &,
 												const_reference
 											>::value,
-											__equal_range_kc_adapter_same,
-											__equal_range_kc_adapter_not_same
+											equal_range_kc_adapter_same,
+											equal_range_kc_adapter_not_same
 									>::type
 					{
 						private:
@@ -306,8 +306,8 @@ namespace kerbal
 											const key_type &,
 											const_reference
 									>::value,
-									__equal_range_kc_adapter_same,
-									__equal_range_kc_adapter_not_same
+									equal_range_kc_adapter_same,
+									equal_range_kc_adapter_not_same
 							>::type super;
 
 						public:
@@ -391,7 +391,7 @@ namespace kerbal
 							>::type = 0) :
 							key_compare_overload(), sequence(first, last)
 					{
-						this->__sort();
+						this->k_sort();
 					}
 
 					template <typename InputIterator>
@@ -403,7 +403,7 @@ namespace kerbal
 							>::type = 0) :
 							key_compare_overload(kc), sequence(first, last)
 					{
-						this->__sort();
+						this->k_sort();
 					}
 
 
@@ -432,7 +432,7 @@ namespace kerbal
 					assign(InputIterator first, InputIterator last)
 					{
 						sequence.assign(first, last);
-						this->__sort();
+						this->k_sort();
 					}
 
 					template <typename InputIterator>
@@ -667,7 +667,7 @@ namespace kerbal
 
 				protected:
 					KERBAL_CONSTEXPR14
-					const_iterator __find_helper(const_iterator lower_bound_pos, const key_type & key) const
+					const_iterator k_find_impl(const_iterator lower_bound_pos, const key_type & key) const
 					{
 						const_iterator end_it(this->cend());
 						if (lower_bound_pos != end_it && this->key_comp_obj()(key, Extract()(*lower_bound_pos))) {
@@ -686,13 +686,13 @@ namespace kerbal
 					KERBAL_CONSTEXPR14
 					const_iterator find(const key_type & key) const
 					{
-						return this->__find_helper(this->lower_bound(key), key);
+						return this->k_find_impl(this->lower_bound(key), key);
 					}
 
 					KERBAL_CONSTEXPR14
 					const_iterator find(const key_type & key, const_iterator hint) const
 					{
-						return this->__find_helper(this->lower_bound(key, hint), key);
+						return this->k_find_impl(this->lower_bound(key, hint), key);
 					}
 
 					KERBAL_CONSTEXPR14
@@ -724,7 +724,7 @@ namespace kerbal
 				protected:
 					KERBAL_CONSTEXPR14
 					std::pair<iterator, bool>
-					__try_insert_helper(iterator ub, const_reference src)
+					k_try_insert_impl(iterator ub, const_reference src)
 					{
 						Extract extract;
 						bool inserted = false;
@@ -741,13 +741,13 @@ namespace kerbal
 					KERBAL_CONSTEXPR14
 					std::pair<iterator, bool> try_insert(const_reference src)
 					{
-						return this->__try_insert_helper(this->upper_bound(Extract()(src)), src);
+						return this->k_try_insert_impl(this->upper_bound(Extract()(src)), src);
 					}
 
 					KERBAL_CONSTEXPR14
 					std::pair<iterator, bool> try_insert(const_iterator hint, const_reference src)
 					{
-						return this->__try_insert_helper(this->upper_bound(Extract()(src), hint), src);
+						return this->k_try_insert_impl(this->upper_bound(Extract()(src), hint), src);
 					}
 
 #			if __cplusplus >= 201103L
@@ -755,7 +755,7 @@ namespace kerbal
 				protected:
 					KERBAL_CONSTEXPR14
 					std::pair<iterator, bool>
-					__try_insert_helper(iterator ub, rvalue_reference src)
+					k_try_insert_impl(iterator ub, rvalue_reference src)
 					{
 						Extract extract;
 						bool inserted = false;
@@ -772,13 +772,13 @@ namespace kerbal
 					KERBAL_CONSTEXPR14
 					std::pair<iterator, bool> try_insert(rvalue_reference src)
 					{
-						return this->__try_insert_helper(this->upper_bound(Extract()(src)), kerbal::compatibility::move(src));
+						return this->k_try_insert_impl(this->upper_bound(Extract()(src)), kerbal::compatibility::move(src));
 					}
 
 					KERBAL_CONSTEXPR14
 					std::pair<iterator, bool> try_insert(const_iterator hint, rvalue_reference src)
 					{
-						return this->__try_insert_helper(this->upper_bound(Extract()(src), hint), kerbal::compatibility::move(src));
+						return this->k_try_insert_impl(this->upper_bound(Extract()(src), hint), kerbal::compatibility::move(src));
 					}
 
 #			endif
@@ -816,7 +816,7 @@ namespace kerbal
 							sequence.push_back(*first);
 							++first;
 						}
-						this->__sort();
+						this->k_sort();
 						iterator unique_last(kerbal::algorithm::unique(
 											sequence.begin(),
 											sequence.end(), equal_adapter(this)));

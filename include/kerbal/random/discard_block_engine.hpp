@@ -47,8 +47,8 @@ namespace kerbal
 				typedef typename Engine::result_type result_type;
 
 			private:
-				Engine _K_base_eg;
-				std::size_t _K_idx;
+				Engine k_base_eg;
+				std::size_t k_idx;
 
 			public:
 
@@ -59,7 +59,7 @@ namespace kerbal
 									kerbal::type_traits::is_nothrow_default_constructible<Engine>
 								>::value
 						) :
-						_K_base_eg(), _K_idx(0)
+						k_base_eg(), k_idx(0)
 				{
 				}
 
@@ -70,7 +70,7 @@ namespace kerbal
 									kerbal::type_traits::is_nothrow_constructible<Engine, result_type>
 								>::value
 						)) :
-						_K_base_eg(seed), _K_idx(0)
+						k_base_eg(seed), k_idx(0)
 				{
 				}
 
@@ -81,7 +81,7 @@ namespace kerbal
 									kerbal::type_traits::is_nothrow_copy_constructible<Engine>
 								>::value
 						) :
-						_K_base_eg(engine), _K_idx(0)
+						k_base_eg(engine), k_idx(0)
 				{
 				}
 
@@ -94,7 +94,7 @@ namespace kerbal
 									kerbal::type_traits::is_nothrow_move_constructible<Engine>
 								>::value
 						) :
-						_K_base_eg(kerbal::compatibility::move(engine)), _K_idx(0)
+						k_base_eg(kerbal::compatibility::move(engine)), k_idx(0)
 				{
 				}
 
@@ -103,46 +103,46 @@ namespace kerbal
 				KERBAL_CONSTEXPR14
 				void seed()
 						KERBAL_CONDITIONAL_NOEXCEPT(
-								noexcept(_K_base_eg.seed())
+								noexcept(k_base_eg.seed())
 						)
 				{
-					this->_K_base_eg.seed();
+					this->k_base_eg.seed();
 				}
 
 				KERBAL_CONSTEXPR14
 				void seed(const result_type & seed)
 						KERBAL_CONDITIONAL_NOEXCEPT(
-								noexcept(_K_base_eg.seed(seed))
+								noexcept(k_base_eg.seed(seed))
 						)
 				{
-					this->_K_base_eg.seed(seed);
+					this->k_base_eg.seed(seed);
 				}
 
 				KERBAL_CONSTEXPR14
 				const Engine & base() const KERBAL_NOEXCEPT
 				{
-					return this->_K_base_eg;
+					return this->k_base_eg;
 				}
 
 				KERBAL_CONSTEXPR14
 				result_type operator()()
 						KERBAL_CONDITIONAL_NOEXCEPT(
-								noexcept(_K_base_eg.discard(P - R)) &&
-								noexcept(_K_base_eg())
+								noexcept(k_base_eg.discard(P - R)) &&
+								noexcept(k_base_eg())
 						)
 				{
-					if (this->_K_idx == R) {
-						this->_K_base_eg.discard(P - R);
-						this->_K_idx = 0;
+					if (this->k_idx == R) {
+						this->k_base_eg.discard(P - R);
+						this->k_idx = 0;
 					}
-					++this->_K_idx;
-					return this->_K_base_eg();
+					++this->k_idx;
+					return this->k_base_eg();
 				}
 
 				KERBAL_CONSTEXPR14
 				void discard(unsigned long long times)
 						KERBAL_CONDITIONAL_NOEXCEPT(
-								noexcept(_K_base_eg.discard(times))
+								noexcept(k_base_eg.discard(times))
 						)
 				{
 /*
@@ -151,15 +151,15 @@ namespace kerbal
 					times %= R;
 					unsigned long long base_discard_times = rounds * P + times;
 					unsigned long long retreat = R - times;
-					bool once_more_rewind = this->_K_idx > retreat;
+					bool once_more_rewind = this->k_idx > retreat;
 					if (once_more_rewind) {
 						base_discard_times += P - R;
 					}
-					this->_K_base_eg.discard(base_discard_times);
+					this->k_base_eg.discard(base_discard_times);
 					if (once_more_rewind) {
-						this->_K_idx -= retreat;
+						this->k_idx -= retreat;
 					} else {
-						this->_K_idx += times;
+						this->k_idx += times;
 					}
 */
 
@@ -168,23 +168,23 @@ namespace kerbal
 					unsigned long long rounds = times / R;
 					times %= R;
 					unsigned long long retreat = R - times;
-					bool once_more_rewind = this->_K_idx > retreat;
+					bool once_more_rewind = this->k_idx > retreat;
 					unsigned long long base_remain_discard_times = times; // times' = times % R
 					if (once_more_rewind) {
 						base_remain_discard_times += P - R;
 					}
 					if (rounds <= MAX::value / P) { // P * rounds will overflow?
-						this->_K_base_eg.discard(rounds * P);
+						this->k_base_eg.discard(rounds * P);
 					} else {
 						for (std::size_t i = 0; i < P; ++i) {
-							this->_K_base_eg.discard(rounds);
+							this->k_base_eg.discard(rounds);
 						}
 					}
-					this->_K_base_eg.discard(base_remain_discard_times);
+					this->k_base_eg.discard(base_remain_discard_times);
 					if (once_more_rewind) {
-						this->_K_idx -= retreat;
+						this->k_idx -= retreat;
 					} else {
-						this->_K_idx += times;
+						this->k_idx += times;
 					}
 
 				}
@@ -192,7 +192,7 @@ namespace kerbal
 			private:
 				template <typename OutputIterator>
 				KERBAL_CONSTEXPR14
-				void K_generate(OutputIterator first, OutputIterator last, std::output_iterator_tag)
+				void k_generate(OutputIterator first, OutputIterator last, std::output_iterator_tag)
 				{
 					while (first != last) {
 						*first = (*this)();
@@ -202,7 +202,7 @@ namespace kerbal
 
 				template <typename RandomAccessIterator>
 				KERBAL_CONSTEXPR14
-				void K_generate(RandomAccessIterator first, RandomAccessIterator last, std::random_access_iterator_tag)
+				void k_generate(RandomAccessIterator first, RandomAccessIterator last, std::random_access_iterator_tag)
 				{
 					this->generate_n(first, kerbal::iterator::distance(first, last));
 				}
@@ -213,33 +213,33 @@ namespace kerbal
 				KERBAL_CONSTEXPR14
 				void generate(OutputIterator first, OutputIterator last)
 				{
-					this->K_generate(first, last, kerbal::iterator::iterator_category(first));
+					this->k_generate(first, last, kerbal::iterator::iterator_category(first));
 				}
 
 				template <typename OutputIterator>
 				KERBAL_CONSTEXPR14
 				OutputIterator generate_n(OutputIterator first, typename kerbal::iterator::iterator_traits<OutputIterator>::difference_type n)
 				{
-					std::size_t this_round_remain = R - this->_K_idx;
+					std::size_t this_round_remain = R - this->k_idx;
 					if (n <= this_round_remain) {
-						this->_K_idx += n;
-						return this->_K_base_eg.generate_n(first, n);
+						this->k_idx += n;
+						return this->k_base_eg.generate_n(first, n);
 					}
-					this->_K_idx = R;
-					first = this->_K_base_eg.generate_n(first, this_round_remain);
+					this->k_idx = R;
+					first = this->k_base_eg.generate_n(first, this_round_remain);
 					n -= this_round_remain;
-					this->_K_base_eg.discard(P - R);
-					this->_K_idx = 0;
+					this->k_base_eg.discard(P - R);
+					this->k_idx = 0;
 
 					for (std::size_t round = 0; round < n / R; ++round) {
-						this->_K_idx = R;
-						first = this->_K_base_eg.generate_n(first, R);
-						this->_K_base_eg.discard(P - R);
-						this->_K_idx = 0;
+						this->k_idx = R;
+						first = this->k_base_eg.generate_n(first, R);
+						this->k_base_eg.discard(P - R);
+						this->k_idx = 0;
 					}
 					n %= R;
-					this->_K_idx = n;
-					return this->_K_base_eg.generate_n(first, n);
+					this->k_idx = n;
+					return this->k_base_eg.generate_n(first, n);
 				}
 
 				KERBAL_CONSTEXPR
@@ -264,24 +264,24 @@ namespace kerbal
 				bool operator==(const discard_block_engine & rhs) const
 						KERBAL_CONDITIONAL_NOEXCEPT(
 							noexcept(static_cast<bool>(
-								_K_base_eg == rhs._K_base_eg
+								k_base_eg == rhs.k_base_eg
 							))
 						)
 				{
-					return this->_K_idx == rhs._K_idx &&
-						   static_cast<bool>(this->_K_base_eg == rhs._K_base_eg);
+					return this->k_idx == rhs.k_idx &&
+						   static_cast<bool>(this->k_base_eg == rhs.k_base_eg);
 				}
 
 				KERBAL_CONSTEXPR
 				bool operator!=(const discard_block_engine & rhs) const
 						KERBAL_CONDITIONAL_NOEXCEPT(
 							noexcept(static_cast<bool>(
-								_K_base_eg != rhs._K_base_eg
+								k_base_eg != rhs.k_base_eg
 							))
 						)
 				{
-					return this->_K_idx != rhs._K_idx ||
-						   static_cast<bool>(this->_K_base_eg != rhs._K_base_eg);
+					return this->k_idx != rhs.k_idx ||
+						   static_cast<bool>(this->k_base_eg != rhs.k_base_eg);
 				}
 
 		};

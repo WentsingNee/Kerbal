@@ -226,13 +226,13 @@ namespace kerbal
 				KERBAL_CONSTEXPR20
 				void push_front(auto_node & node) KERBAL_NOEXCEPT
 				{
-					fl_type_unrelated::_K_hook_node_after(this->basic_before_begin(), &node);
+					fl_type_unrelated::k_hook_node_after(this->basic_before_begin(), &node);
 				}
 
 				KERBAL_CONSTEXPR20
 				iterator insert_after(const_iterator pos, auto_node & node) KERBAL_NOEXCEPT
 				{
-					fl_type_unrelated::_K_hook_node_after(pos, &node);
+					fl_type_unrelated::k_hook_node_after(pos, &node);
 					return (++pos).cast_to_mutable();
 				}
 
@@ -257,7 +257,7 @@ namespace kerbal
 						++next;
 					}
 
-					fl_type_unrelated::_K_hook_node_after(pos, &*first, &*it);
+					fl_type_unrelated::k_hook_node_after(pos, &*first, &*it);
 					return iterator(&*it);
 				}
 
@@ -275,7 +275,7 @@ namespace kerbal
 						return pos.cast_to_mutable();
 					}
 					do {
-						fl_type_unrelated::_K_hook_node_after(pos, &*first);
+						fl_type_unrelated::k_hook_node_after(pos, &*first);
 						++first;
 						++pos;
 					} while (first != last);
@@ -316,7 +316,7 @@ namespace kerbal
 				KERBAL_CONSTEXPR20
 				void reverse_after(const_iterator first, const_iterator last) KERBAL_NOEXCEPT
 				{
-					fl_type_unrelated::_K_reverse_after(first, last);
+					fl_type_unrelated::k_reverse_after(first, last);
 				}
 
 				KERBAL_CONSTEXPR20
@@ -330,35 +330,35 @@ namespace kerbal
 				void merge(forward_list & other, BinaryPredict cmp)
 						KERBAL_CONDITIONAL_NOEXCEPT(
 							noexcept(
-								kerbal::utility::declthis<forward_list>()->fl_allocator_unrelated::_K_merge(static_cast<fl_allocator_unrelated&>(other), cmp)
+								kerbal::utility::declthis<forward_list>()->fl_allocator_unrelated::k_merge(static_cast<fl_allocator_unrelated&>(other), cmp)
 							)
 						)
 				{
-					fl_allocator_unrelated::_K_merge(static_cast<fl_allocator_unrelated&>(other), cmp);
+					fl_allocator_unrelated::k_merge(static_cast<fl_allocator_unrelated&>(other), cmp);
 				}
 
 				KERBAL_CONSTEXPR20
 				void merge(forward_list & other)
 						KERBAL_CONDITIONAL_NOEXCEPT(
 							noexcept(
-								kerbal::utility::declthis<forward_list>()->fl_allocator_unrelated::_K_merge(static_cast<fl_allocator_unrelated&>(other))
+								kerbal::utility::declthis<forward_list>()->fl_allocator_unrelated::k_merge(static_cast<fl_allocator_unrelated&>(other))
 							)
 						)
 				{
-					this->fl_allocator_unrelated::_K_merge(static_cast<fl_allocator_unrelated&>(other));
+					this->fl_allocator_unrelated::k_merge(static_cast<fl_allocator_unrelated&>(other));
 				}
 
 				template <typename BinaryPredict>
 				KERBAL_CONSTEXPR20
 				void sort_after(const_iterator first, const_iterator last, BinaryPredict cmp)
 				{
-					fl_allocator_unrelated::_K_sort_after(first, last, cmp);
+					fl_allocator_unrelated::k_sort_after(first, last, cmp);
 				}
 
 				KERBAL_CONSTEXPR20
 				void sort_after(const_iterator first, const_iterator last)
 				{
-					fl_allocator_unrelated::_K_sort_after(first, last);
+					fl_allocator_unrelated::k_sort_after(first, last);
 				}
 
 				template <typename BinaryPredict>
@@ -366,22 +366,22 @@ namespace kerbal
 				void sort(BinaryPredict cmp)
 						KERBAL_CONDITIONAL_NOEXCEPT(
 							noexcept(
-								kerbal::utility::declthis<forward_list>()->fl_allocator_unrelated::_K_sort(cmp)
+								kerbal::utility::declthis<forward_list>()->fl_allocator_unrelated::k_sort(cmp)
 							)
 						)
 				{
-					this->fl_allocator_unrelated::_K_sort(cmp);
+					this->fl_allocator_unrelated::k_sort(cmp);
 				}
 
 				KERBAL_CONSTEXPR20
 				void sort()
 						KERBAL_CONDITIONAL_NOEXCEPT(
 							noexcept(
-								kerbal::utility::declthis<forward_list>()->fl_allocator_unrelated::_K_sort()
+								kerbal::utility::declthis<forward_list>()->fl_allocator_unrelated::k_sort()
 							)
 						)
 				{
-					this->fl_allocator_unrelated::_K_sort();
+					this->fl_allocator_unrelated::k_sort();
 				}
 
 				template <typename UnaryPredicate>
@@ -439,19 +439,19 @@ namespace kerbal
 				KERBAL_CONSTEXPR20
 				void splice_after(const_iterator pos, forward_list & other) KERBAL_NOEXCEPT
 				{
-					fl_type_unrelated::_K_splice_after(pos, other);
+					fl_type_unrelated::k_splice_after(pos, other);
 				}
 
 				KERBAL_CONSTEXPR20
 				void splice_after(const_iterator pos, forward_list & /*other*/, const_iterator opos) KERBAL_NOEXCEPT
 				{
-					fl_type_unrelated::_K_splice_after(pos, opos);
+					fl_type_unrelated::k_splice_after(pos, opos);
 				}
 
 				KERBAL_CONSTEXPR20
 				void splice_after(const_iterator pos, forward_list & /*other*/, const_iterator first, const_iterator last) KERBAL_NOEXCEPT
 				{
-					fl_type_unrelated::_K_splice_after(pos, first, last);
+					fl_type_unrelated::k_splice_after(pos, first, last);
 				}
 
 #		if __cplusplus >= 201103L
@@ -459,7 +459,7 @@ namespace kerbal
 				KERBAL_CONSTEXPR20
 				void splice_after(const_iterator pos, forward_list && other) KERBAL_NOEXCEPT
 				{
-					fl_type_unrelated::_K_splice_after(pos, other);
+					fl_type_unrelated::k_splice_after(pos, other);
 				}
 
 #		endif
@@ -471,7 +471,7 @@ namespace kerbal
 						static_cast<fl_semi_allocator_overload&>(*this),
 						static_cast<fl_semi_allocator_overload&>(with)
 					);
-					fl_type_unrelated ::_K_swap_type_unrelated(
+					fl_type_unrelated ::k_swap_type_unrelated(
 						static_cast<fl_type_unrelated &>(*this),
 						static_cast<fl_type_unrelated &>(with)
 					);

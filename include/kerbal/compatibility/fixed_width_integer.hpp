@@ -18,82 +18,88 @@
 
 #include <climits>
 
+
 namespace kerbal
 {
 
 	namespace compatibility
 	{
 
-		template <int width>
-		struct __fixed_width_interger_helper
+		namespace detail
 		{
-				typedef
-				typename kerbal::type_traits::conditional<
-					sizeof(signed char) * CHAR_BIT == width,
-					signed char,
+
+			template <int width>
+			struct fixed_width_interger_helper
+			{
+					typedef
 					typename kerbal::type_traits::conditional<
-						sizeof(short) * CHAR_BIT == width,
-						short,
+						sizeof(signed char) * CHAR_BIT == width,
+						signed char,
 						typename kerbal::type_traits::conditional<
-							sizeof(int) * CHAR_BIT == width,
-							int,
+							sizeof(short) * CHAR_BIT == width,
+							short,
 							typename kerbal::type_traits::conditional<
-								sizeof(long) * CHAR_BIT == width,
-								long,
+								sizeof(int) * CHAR_BIT == width,
+								int,
 								typename kerbal::type_traits::conditional<
-									sizeof(long long) * CHAR_BIT == width,
-									long long,
-									void
+									sizeof(long) * CHAR_BIT == width,
+									long,
+									typename kerbal::type_traits::conditional<
+										sizeof(long long) * CHAR_BIT == width,
+										long long,
+										void
+									>::type
 								>::type
 							>::type
 						>::type
-					>::type
-				>::type type;
+					>::type type;
 
-				KERBAL_STATIC_ASSERT(!(kerbal::type_traits::is_same<type, void>::value), "doesn't support this width");
-		};
+					KERBAL_STATIC_ASSERT(!(kerbal::type_traits::is_same<type, void>::value), "doesn't support this width");
+			};
 
-		template <int width>
-		struct __fixed_width_unsigned_interger_helper
-		{
-				typedef
-				typename kerbal::type_traits::conditional<
-					sizeof(unsigned char) * CHAR_BIT == width,
-					unsigned char,
+			template <int width>
+			struct fixed_width_unsigned_interger_helper
+			{
+					typedef
 					typename kerbal::type_traits::conditional<
-						sizeof(unsigned short) * CHAR_BIT == width,
-						unsigned short,
+						sizeof(unsigned char) * CHAR_BIT == width,
+						unsigned char,
 						typename kerbal::type_traits::conditional<
-							sizeof(unsigned int) * CHAR_BIT == width,
-							unsigned int,
+							sizeof(unsigned short) * CHAR_BIT == width,
+							unsigned short,
 							typename kerbal::type_traits::conditional<
-								sizeof(unsigned long) * CHAR_BIT == width,
-								unsigned long,
+								sizeof(unsigned int) * CHAR_BIT == width,
+								unsigned int,
 								typename kerbal::type_traits::conditional<
-									sizeof(unsigned long long) * CHAR_BIT == width,
-									unsigned long long,
-									void
+									sizeof(unsigned long) * CHAR_BIT == width,
+									unsigned long,
+									typename kerbal::type_traits::conditional<
+										sizeof(unsigned long long) * CHAR_BIT == width,
+										unsigned long long,
+										void
+									>::type
 								>::type
 							>::type
 						>::type
-					>::type
-				>::type type;
+					>::type type;
 
-				KERBAL_STATIC_ASSERT(!(kerbal::type_traits::is_same<type, void>::value), "doesn't support this width");
-		};
+					KERBAL_STATIC_ASSERT(!(kerbal::type_traits::is_same<type, void>::value), "doesn't support this width");
+			};
 
-		typedef __fixed_width_interger_helper<8>::type		int8_t;
-		typedef __fixed_width_interger_helper<16>::type		int16_t;
-		typedef __fixed_width_interger_helper<32>::type		int32_t;
-		typedef __fixed_width_interger_helper<64>::type		int64_t;
+		} // namespace detail
 
-		typedef __fixed_width_unsigned_interger_helper<8>::type		uint8_t;
-		typedef __fixed_width_unsigned_interger_helper<16>::type	uint16_t;
-		typedef __fixed_width_unsigned_interger_helper<32>::type	uint32_t;
-		typedef __fixed_width_unsigned_interger_helper<64>::type	uint64_t;
+		typedef kerbal::compatibility::detail::fixed_width_interger_helper<8>::type		int8_t;
+		typedef kerbal::compatibility::detail::fixed_width_interger_helper<16>::type	int16_t;
+		typedef kerbal::compatibility::detail::fixed_width_interger_helper<32>::type	int32_t;
+		typedef kerbal::compatibility::detail::fixed_width_interger_helper<64>::type	int64_t;
 
+		typedef kerbal::compatibility::detail::fixed_width_unsigned_interger_helper<8>::type	uint8_t;
+		typedef kerbal::compatibility::detail::fixed_width_unsigned_interger_helper<16>::type	uint16_t;
+		typedef kerbal::compatibility::detail::fixed_width_unsigned_interger_helper<32>::type	uint32_t;
+		typedef kerbal::compatibility::detail::fixed_width_unsigned_interger_helper<64>::type	uint64_t;
 
-	}
-}
+	} // namespace compatibility
+
+} // namespace kerbal
 
 #endif // KERBAL_COMPATIBILITY_FIXED_WIDTH_INTEGER_HPP

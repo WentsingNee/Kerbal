@@ -71,8 +71,8 @@ namespace kerbal
 					typedef std::size_t				size_type;
 					typedef std::ptrdiff_t			difference_type;
 
-					typedef detail::__stavec_iter<value_type>					iterator;
-					typedef detail::__stavec_kiter<value_type>					const_iterator;
+					typedef detail::sv_iter<value_type>					iterator;
+					typedef detail::sv_kiter<value_type>				const_iterator;
 
 				protected:
 					typedef typename static_vector_size_compressed_type_def_helper<N>::type	size_compressed_type;

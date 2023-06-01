@@ -28,11 +28,11 @@ namespace kerbal
 		{
 			union type
 			{
-				unsigned char _data[Len];
+				unsigned char k_data[Len];
 
 				struct KERBAL_ALIGNAS(Alignment)
 				{
-				} _align;
+				} k_align;
 			};
 		};
 

@@ -373,15 +373,15 @@ namespace kerbal
  \
 				template <std::size_t N> \
 				KERBAL_CONSTEXPR \
-				bool _K_equal_to_impl(const tuple & ano, kerbal::type_traits::integral_constant<std::size_t, N>) const \
+				bool k_equal_to_impl(const tuple & ano, kerbal::type_traits::integral_constant<std::size_t, N>) const \
 				{ \
 					typedef kerbal::compare::equal_to<typename value_type<N>::type> Pred; \
 					return static_cast<bool>(Pred()(this->template get<N>(), ano.template get<N>())) && \
-						   this->_K_equal_to_impl(ano, kerbal::type_traits::integral_constant<std::size_t, N + 1>()); \
+						   this->k_equal_to_impl(ano, kerbal::type_traits::integral_constant<std::size_t, N + 1>()); \
 				} \
  \
 				KERBAL_CONSTEXPR \
-				bool _K_equal_to_impl(const tuple & ano, kerbal::type_traits::integral_constant<std::size_t, TUPLE_SIZE::value>) const \
+				bool k_equal_to_impl(const tuple & ano, kerbal::type_traits::integral_constant<std::size_t, TUPLE_SIZE::value>) const \
 				{ \
 					return true; \
 				} \
@@ -391,7 +391,7 @@ namespace kerbal
 				KERBAL_CONSTEXPR \
 				bool operator==(const tuple & ano) const \
 				{ \
-					return this->_K_equal_to_impl(ano, kerbal::type_traits::integral_constant<std::size_t, 0>()); \
+					return this->k_equal_to_impl(ano, kerbal::type_traits::integral_constant<std::size_t, 0>()); \
 				} \
  \
  \
@@ -399,15 +399,15 @@ namespace kerbal
  \
 				template <std::size_t N> \
 				KERBAL_CONSTEXPR \
-				bool _K_not_equal_to_impl(const tuple & ano, kerbal::type_traits::integral_constant<std::size_t, N>) const \
+				bool k_not_equal_to_impl(const tuple & ano, kerbal::type_traits::integral_constant<std::size_t, N>) const \
 				{ \
 					typedef kerbal::compare::not_equal_to<typename value_type<N>::type> Pred; \
 					return static_cast<bool>(Pred()(this->template get<N>(), ano.template get<N>())) || \
-						   this->_K_not_equal_to_impl(ano, kerbal::type_traits::integral_constant<std::size_t, N + 1>()); \
+						   this->k_not_equal_to_impl(ano, kerbal::type_traits::integral_constant<std::size_t, N + 1>()); \
 				} \
  \
 				KERBAL_CONSTEXPR \
-				bool _K_not_equal_to_impl(const tuple & ano, kerbal::type_traits::integral_constant<std::size_t, TUPLE_SIZE::value>) const \
+				bool k_not_equal_to_impl(const tuple & ano, kerbal::type_traits::integral_constant<std::size_t, TUPLE_SIZE::value>) const \
 				{ \
 					return false; \
 				} \
@@ -417,7 +417,7 @@ namespace kerbal
 				KERBAL_CONSTEXPR \
 				bool operator!=(const tuple & ano) const \
 				{ \
-					return this->_K_not_equal_to_impl(ano, kerbal::type_traits::integral_constant<std::size_t, 0>()); \
+					return this->k_not_equal_to_impl(ano, kerbal::type_traits::integral_constant<std::size_t, 0>()); \
 				} \
  \
  \
@@ -425,19 +425,19 @@ namespace kerbal
  \
 				template <std::size_t N> \
 				KERBAL_CONSTEXPR \
-				bool _K_less_impl(const tuple & ano, kerbal::type_traits::integral_constant<std::size_t, N>) const \
+				bool k_less_impl(const tuple & ano, kerbal::type_traits::integral_constant<std::size_t, N>) const \
 				{ \
 					typedef kerbal::compare::less<typename value_type<N>::type> Pred; \
 					return \
 							static_cast<bool>(Pred()(this->template get<N>(), ano.template get<N>())) /* *this < ano */ || \
 							( \
 								!static_cast<bool>(Pred()(ano.template get<N>(), this->template get<N>())) /* *this <= ano */ && \
-								this->_K_less_impl(ano, kerbal::type_traits::integral_constant<std::size_t, N + 1>()) \
+								this->k_less_impl(ano, kerbal::type_traits::integral_constant<std::size_t, N + 1>()) \
 							); \
 				} \
  \
 				KERBAL_CONSTEXPR \
-				bool _K_less_impl(const tuple & ano, kerbal::type_traits::integral_constant<std::size_t, TUPLE_SIZE::value>) const \
+				bool k_less_impl(const tuple & ano, kerbal::type_traits::integral_constant<std::size_t, TUPLE_SIZE::value>) const \
 				{ \
 					return false; \
 				} \
@@ -447,7 +447,7 @@ namespace kerbal
 				KERBAL_CONSTEXPR \
 				bool operator<(const tuple & ano) const \
 				{ \
-					return this->_K_less_impl(ano, kerbal::type_traits::integral_constant<std::size_t, 0>()); \
+					return this->k_less_impl(ano, kerbal::type_traits::integral_constant<std::size_t, 0>()); \
 				} \
  \
  \
@@ -455,19 +455,19 @@ namespace kerbal
  \
 				template <std::size_t N> \
 				KERBAL_CONSTEXPR \
-				bool _K_greater_impl(const tuple & ano, kerbal::type_traits::integral_constant<std::size_t, N>) const \
+				bool k_greater_impl(const tuple & ano, kerbal::type_traits::integral_constant<std::size_t, N>) const \
 				{ \
 					typedef kerbal::compare::greater<typename value_type<N>::type> Pred; \
 					return \
 							static_cast<bool>(Pred()(this->template get<N>(), ano.template get<N>())) /* *this > ano */ || \
 							( \
 								!static_cast<bool>(Pred()(ano.template get<N>(), this->template get<N>())) /* *this >= ano */ && \
-								this->_K_greater_impl(ano, kerbal::type_traits::integral_constant<std::size_t, N + 1>()) \
+								this->k_greater_impl(ano, kerbal::type_traits::integral_constant<std::size_t, N + 1>()) \
 							); \
 				} \
  \
 				KERBAL_CONSTEXPR \
-				bool _K_greater_impl(const tuple & ano, kerbal::type_traits::integral_constant<std::size_t, TUPLE_SIZE::value>) const \
+				bool k_greater_impl(const tuple & ano, kerbal::type_traits::integral_constant<std::size_t, TUPLE_SIZE::value>) const \
 				{ \
 					return false; \
 				} \
@@ -477,7 +477,7 @@ namespace kerbal
 				KERBAL_CONSTEXPR \
 				bool operator>(const tuple & ano) const \
 				{ \
-					return this->_K_greater_impl(ano, kerbal::type_traits::integral_constant<std::size_t, 0>()); \
+					return this->k_greater_impl(ano, kerbal::type_traits::integral_constant<std::size_t, 0>()); \
 				} \
  \
  \
@@ -485,20 +485,20 @@ namespace kerbal
  \
 				template <std::size_t N> \
 				KERBAL_CONSTEXPR \
-				bool _K_less_equal_impl(const tuple & ano, kerbal::type_traits::integral_constant<std::size_t, N>) const \
+				bool k_less_equal_impl(const tuple & ano, kerbal::type_traits::integral_constant<std::size_t, N>) const \
 				{ \
 					typedef kerbal::compare::less_equal<typename value_type<N>::type> Pred; \
 					return \
 							static_cast<bool>(Pred()(this->template get<N>(), ano.template get<N>())) /* *this <= ano */ && \
 							( \
 									static_cast<bool>(Pred()(ano.template get<N>(), this->template get<N>())) ? /* ano <= *this */ \
-									this->_K_less_equal_impl(ano, kerbal::type_traits::integral_constant<std::size_t, N + 1>()) : /* *this == ano */ \
+									this->k_less_equal_impl(ano, kerbal::type_traits::integral_constant<std::size_t, N + 1>()) : /* *this == ano */ \
 									true /* *this < ano */ \
 							); \
 				} \
  \
 				KERBAL_CONSTEXPR \
-				bool _K_less_equal_impl(const tuple & ano, kerbal::type_traits::integral_constant<std::size_t, TUPLE_SIZE::value>) const \
+				bool k_less_equal_impl(const tuple & ano, kerbal::type_traits::integral_constant<std::size_t, TUPLE_SIZE::value>) const \
 				{ \
 					return true; \
 				} \
@@ -508,7 +508,7 @@ namespace kerbal
 				KERBAL_CONSTEXPR \
 				bool operator<=(const tuple & ano) const \
 				{ \
-					return this->_K_less_equal_impl(ano, kerbal::type_traits::integral_constant<std::size_t, 0>()); \
+					return this->k_less_equal_impl(ano, kerbal::type_traits::integral_constant<std::size_t, 0>()); \
 				} \
  \
  \
@@ -516,20 +516,20 @@ namespace kerbal
  \
 				template <std::size_t N> \
 				KERBAL_CONSTEXPR \
-				bool _K_greater_equal_impl(const tuple & ano, kerbal::type_traits::integral_constant<std::size_t, N>) const \
+				bool k_greater_equal_impl(const tuple & ano, kerbal::type_traits::integral_constant<std::size_t, N>) const \
 				{ \
 					typedef kerbal::compare::greater_equal<typename value_type<N>::type> Pred; \
 					return \
 							static_cast<bool>(Pred()(this->template get<N>(), ano.template get<N>())) /* *this >= ano */ && \
 							( \
 									static_cast<bool>(Pred()(ano.template get<N>(), this->template get<N>())) ? /* ano >= *this */ \
-									this->_K_greater_equal_impl(ano, kerbal::type_traits::integral_constant<std::size_t, N + 1>()) : /* *this == ano */ \
+									this->k_greater_equal_impl(ano, kerbal::type_traits::integral_constant<std::size_t, N + 1>()) : /* *this == ano */ \
 									true /* *this > ano */ \
 							); \
 				} \
  \
 				KERBAL_CONSTEXPR \
-				bool _K_greater_equal_impl(const tuple & ano, kerbal::type_traits::integral_constant<std::size_t, TUPLE_SIZE::value>) const \
+				bool k_greater_equal_impl(const tuple & ano, kerbal::type_traits::integral_constant<std::size_t, TUPLE_SIZE::value>) const \
 				{ \
 					return true; \
 				} \
@@ -539,7 +539,7 @@ namespace kerbal
 				KERBAL_CONSTEXPR \
 				bool operator>=(const tuple & ano) const \
 				{ \
-					return this->_K_greater_equal_impl(ano, kerbal::type_traits::integral_constant<std::size_t, 0>()); \
+					return this->k_greater_equal_impl(ano, kerbal::type_traits::integral_constant<std::size_t, 0>()); \
 				} \
  \
 		};

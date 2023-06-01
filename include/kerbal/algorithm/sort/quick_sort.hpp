@@ -72,36 +72,41 @@ namespace kerbal
 			kerbal::algorithm::quick_sort(first, last, kerbal::compare::less<value_type>());
 		}
 
-		template <typename BidirectionalIterator, typename Compare, typename StackBuffer>
-		KERBAL_CONSTEXPR14
-		void __nonrecursive_qsort(BidirectionalIterator first, BidirectionalIterator last, Compare cmp, StackBuffer & st)
+		namespace detail
 		{
-			typedef BidirectionalIterator iterator;
 
-			st.push(std::make_pair(first, last));
+			template <typename BidirectionalIterator, typename Compare, typename StackBuffer>
+			KERBAL_CONSTEXPR14
+			void nonrecursive_qsort_helper(BidirectionalIterator first, BidirectionalIterator last, Compare cmp, StackBuffer & st)
+			{
+				typedef BidirectionalIterator iterator;
 
-			while (!st.empty()) {
-				first = st.top().first;
-				last = st.top().second;
-				st.pop();
+				st.push(std::make_pair(first, last));
 
-				while (kerbal::iterator::distance_greater_than(first, last, 16)) {
-					iterator back(kerbal::iterator::prev(last));
-					detail::quick_sort_select_pivot(first, back, cmp);
-					iterator partition_point(detail::quick_sort_partition(first, back, *back, cmp));
+				while (!st.empty()) {
+					first = st.top().first;
+					last = st.top().second;
+					st.pop();
 
-					st.push(std::make_pair(first, partition_point));
-					if (partition_point != back) {
-						if (cmp(*back, *partition_point)) {
-							kerbal::algorithm::iter_swap(back, partition_point);
+					while (kerbal::iterator::distance_greater_than(first, last, 16)) {
+						iterator back(kerbal::iterator::prev(last));
+						detail::quick_sort_select_pivot(first, back, cmp);
+						iterator partition_point(detail::quick_sort_partition(first, back, *back, cmp));
+
+						st.push(std::make_pair(first, partition_point));
+						if (partition_point != back) {
+							if (cmp(*back, *partition_point)) {
+								kerbal::algorithm::iter_swap(back, partition_point);
+							}
+							first = kerbal::iterator::next(partition_point);
 						}
-						first = kerbal::iterator::next(partition_point);
 					}
-				}
 
-				kerbal::algorithm::directly_insertion_sort(first, last, cmp);
+					kerbal::algorithm::directly_insertion_sort(first, last, cmp);
+				}
 			}
-		}
+
+		} // namespace detail
 
 		template <typename BidirectionalIterator, typename Compare>
 		void nonrecursive_qsort(BidirectionalIterator first, BidirectionalIterator last, Compare cmp)
@@ -110,7 +115,7 @@ namespace kerbal
 			typedef std::pair<iterator, iterator> callee_info;
 			typedef std::stack<callee_info> StackBuffer;
 			StackBuffer st;
-			kerbal::algorithm::__nonrecursive_qsort(first, last, cmp, st);
+			kerbal::algorithm::detail::nonrecursive_qsort_helper(first, last, cmp, st);
 		}
 
 		template <typename BidirectionalIterator>
@@ -137,7 +142,7 @@ namespace kerbal
 				std::byte stack_buff[stack_buff_length];
 				std::pmr::monotonic_buffer_resource resource(stack_buff, stack_buff_length);
 				StackBuffer st(&resource);
-				kerbal::algorithm::__nonrecursive_qsort<BidirectionalIterator, Compare, StackBuffer>(first, last, cmp, st);
+				kerbal::algorithm::detail::nonrecursive_qsort_helper<BidirectionalIterator, Compare, StackBuffer>(first, last, cmp, st);
 			}
 
 			template <typename BidirectionalIterator>

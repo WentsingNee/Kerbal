@@ -225,7 +225,7 @@ namespace kerbal
 			private:
 				template <typename OutputIterator>
 				KERBAL_CONSTEXPR14
-				void K_generate(OutputIterator first, OutputIterator last, std::output_iterator_tag)
+				void k_generate(OutputIterator first, OutputIterator last, std::output_iterator_tag)
 				{
 					while (first != last) {
 						*first = (*this)();
@@ -235,7 +235,7 @@ namespace kerbal
 
 				template <typename RandomAccessIterator>
 				KERBAL_CONSTEXPR14
-				void K_generate(RandomAccessIterator first, RandomAccessIterator last, std::random_access_iterator_tag)
+				void k_generate(RandomAccessIterator first, RandomAccessIterator last, std::random_access_iterator_tag)
 				{
 					this->generate_n(first, kerbal::iterator::distance(first, last));
 				}
@@ -246,14 +246,14 @@ namespace kerbal
 				KERBAL_CONSTEXPR14
 				void generate(OutputIterator first, OutputIterator last)
 				{
-					this->K_generate(first, last, kerbal::iterator::iterator_category(first));
+					this->k_generate(first, last, kerbal::iterator::iterator_category(first));
 				}
 
 			private:
 
 				template <typename OutputIterator>
 				KERBAL_CONSTEXPR14
-				OutputIterator K_generate_n_helper(OutputIterator first, typename kerbal::iterator::iterator_traits<OutputIterator>::difference_type n)
+				OutputIterator k_generate_n_helper(OutputIterator first, typename kerbal::iterator::iterator_traits<OutputIterator>::difference_type n)
 				{
 					first = mt_generate_copy_n_helper::mt_generate_copy_n(this->mt + this->mti, first, n);
 					this->mti += n;
@@ -268,20 +268,20 @@ namespace kerbal
 				{
 					std::size_t this_round_remain = N - this->mti;
 					if (static_cast<std::size_t>(n) <= this_round_remain) {
-						return this->K_generate_n_helper(first, n);
+						return this->k_generate_n_helper(first, n);
 					}
-					first = this->K_generate_n_helper(first, this_round_remain);
+					first = this->k_generate_n_helper(first, this_round_remain);
 					n -= this_round_remain;
 					this->twist();
 					this->mti = 0;
 
 					for (std::size_t round = 0; round < n / N; ++round) {
-						first = this->K_generate_n_helper(first, N);
+						first = this->k_generate_n_helper(first, N);
 						this->twist();
 						this->mti = 0;
 					}
 					n %= N;
-					return this->K_generate_n_helper(first, n);
+					return this->k_generate_n_helper(first, n);
 				}
 
 				KERBAL_CONSTEXPR

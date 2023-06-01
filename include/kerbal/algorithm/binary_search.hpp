@@ -24,55 +24,60 @@ namespace kerbal
 	namespace algorithm
 	{
 
-		template <typename ForwardIterator, typename Tp, typename Comparator>
-		KERBAL_CONSTEXPR14
-		ForwardIterator
-		__lower_bound(ForwardIterator first, ForwardIterator last, const Tp & value, Comparator comparator,
-					  std::forward_iterator_tag)
+		namespace detail
 		{
-			while (static_cast<bool>(first != last) &&
-					static_cast<bool>(comparator(*first, value))) {
-				++first;
-			}
-			return first;
 
-			/*
-			typedef ForwardIterator iterator;
-			while (first != last) {
-				iterator middle = kerbal::iterator::midden_iterator(first, last);
-				if (comparator(*middle, value)) { // *middle < value
-					first = kerbal::iterator::next(middle);
-				} else { // *middle >= value
-					last = middle;
+			template <typename ForwardIterator, typename Tp, typename Comparator>
+			KERBAL_CONSTEXPR14
+			ForwardIterator
+			lower_bound_helper(ForwardIterator first, ForwardIterator last, const Tp & value, Comparator comparator,
+								std::forward_iterator_tag)
+			{
+				while (static_cast<bool>(first != last) &&
+						static_cast<bool>(comparator(*first, value))) {
+					++first;
 				}
-			}
-			return first;
-			*/
-		}
+				return first;
 
-		template <typename RandomAccessIterator, typename Tp, typename Comparator>
-		KERBAL_CONSTEXPR14
-		RandomAccessIterator
-		__lower_bound(RandomAccessIterator first, RandomAccessIterator last, const Tp & value, Comparator comparator,
-					std::random_access_iterator_tag)
-		{
-			typedef RandomAccessIterator iterator;
-			typedef typename kerbal::iterator::iterator_traits<iterator>::difference_type difference_type;
-
-			difference_type len(kerbal::iterator::distance(first, last));
-
-			while (len > 0) {
-				difference_type half(len >> 1);
-				iterator middle(kerbal::iterator::next(first, half));
-				if (comparator(*middle, value)) {
-					first = kerbal::iterator::next(middle);
-					len -= half + 1;
-				} else {
-					len = half;
+				/*
+				typedef ForwardIterator iterator;
+				while (first != last) {
+					iterator middle = kerbal::iterator::midden_iterator(first, last);
+					if (comparator(*middle, value)) { // *middle < value
+						first = kerbal::iterator::next(middle);
+					} else { // *middle >= value
+						last = middle;
+					}
 				}
+				return first;
+				*/
 			}
-			return first;
-		}
+
+			template <typename RandomAccessIterator, typename Tp, typename Comparator>
+			KERBAL_CONSTEXPR14
+			RandomAccessIterator
+			lower_bound_helper(RandomAccessIterator first, RandomAccessIterator last, const Tp & value, Comparator comparator,
+								std::random_access_iterator_tag)
+			{
+				typedef RandomAccessIterator iterator;
+				typedef typename kerbal::iterator::iterator_traits<iterator>::difference_type difference_type;
+
+				difference_type len(kerbal::iterator::distance(first, last));
+
+				while (len > 0) {
+					difference_type half(len >> 1);
+					iterator middle(kerbal::iterator::next(first, half));
+					if (comparator(*middle, value)) {
+						first = kerbal::iterator::next(middle);
+						len -= half + 1;
+					} else {
+						len = half;
+					}
+				}
+				return first;
+			}
+
+		} // namespace detail
 
 		/**
 		 * @param comparator requires: comparator(value_type, Tp)
@@ -82,7 +87,7 @@ namespace kerbal
 		ForwardIterator
 		lower_bound(ForwardIterator first, ForwardIterator last, const Tp & value, Comparator comparator)
 		{
-			return kerbal::algorithm::__lower_bound(first, last, value, comparator, kerbal::iterator::iterator_category(first));
+			return kerbal::algorithm::detail::lower_bound_helper(first, last, value, comparator, kerbal::iterator::iterator_category(first));
 		}
 
 		template <typename ForwardIterator, typename Tp>
@@ -124,42 +129,47 @@ namespace kerbal
 
 
 
-		template <typename ForwardIterator, typename Tp, typename Comparator>
-		KERBAL_CONSTEXPR14
-		ForwardIterator
-		__upper_bound(ForwardIterator first, ForwardIterator last, const Tp & value, Comparator comparator,
-					std::forward_iterator_tag)
+		namespace detail
 		{
-			while (static_cast<bool>(first != last) && !static_cast<bool>(comparator(value, *first))) {
-				// value >= *first
-				++first;
-			}
-			return first;
-		}
 
-		template <typename RandomAccessIterator, typename Tp, typename Comparator>
-		KERBAL_CONSTEXPR14
-		RandomAccessIterator
-		__upper_bound(RandomAccessIterator first, RandomAccessIterator last, const Tp & value, Comparator comparator,
-					std::random_access_iterator_tag)
-		{
-			typedef RandomAccessIterator iterator;
-			typedef typename kerbal::iterator::iterator_traits<iterator>::difference_type difference_type;
-
-			difference_type len(kerbal::iterator::distance(first, last));
-
-			while (len > 0) {
-				difference_type half(len >> 1);
-				iterator middle(kerbal::iterator::next(first, half));
-				if (comparator(value, *middle)) { // *middle > value
-					len = half;
-				} else { // *middle <= value, namely !(*middle > value)
-					first = kerbal::iterator::next(middle);
-					len -= half + 1;
+			template <typename ForwardIterator, typename Tp, typename Comparator>
+			KERBAL_CONSTEXPR14
+			ForwardIterator
+			upper_bound_helper(ForwardIterator first, ForwardIterator last, const Tp & value, Comparator comparator,
+								std::forward_iterator_tag)
+			{
+				while (static_cast<bool>(first != last) && !static_cast<bool>(comparator(value, *first))) {
+					// value >= *first
+					++first;
 				}
+				return first;
 			}
-			return first;
-		}
+
+			template <typename RandomAccessIterator, typename Tp, typename Comparator>
+			KERBAL_CONSTEXPR14
+			RandomAccessIterator
+			upper_bound_helper(RandomAccessIterator first, RandomAccessIterator last, const Tp & value, Comparator comparator,
+								std::random_access_iterator_tag)
+			{
+				typedef RandomAccessIterator iterator;
+				typedef typename kerbal::iterator::iterator_traits<iterator>::difference_type difference_type;
+
+				difference_type len(kerbal::iterator::distance(first, last));
+
+				while (len > 0) {
+					difference_type half(len >> 1);
+					iterator middle(kerbal::iterator::next(first, half));
+					if (comparator(value, *middle)) { // *middle > value
+						len = half;
+					} else { // *middle <= value, namely !(*middle > value)
+						first = kerbal::iterator::next(middle);
+						len -= half + 1;
+					}
+				}
+				return first;
+			}
+
+		} // namespace detail
 
 		/**
 		 *
@@ -170,7 +180,7 @@ namespace kerbal
 		ForwardIterator
 		upper_bound(ForwardIterator first, ForwardIterator last, const Tp & value, Comparator comparator)
 		{
-			return kerbal::algorithm::__upper_bound(first, last, value, comparator, kerbal::iterator::iterator_category(first));
+			return kerbal::algorithm::detail::upper_bound_helper(first, last, value, comparator, kerbal::iterator::iterator_category(first));
 		}
 
 		template <typename ForwardIterator, typename Tp>
@@ -212,46 +222,51 @@ namespace kerbal
 
 
 
-		template <typename ForwardIterator, typename Tp, typename Comparator>
-		KERBAL_CONSTEXPR14
-		std::pair<ForwardIterator, ForwardIterator>
-		__equal_range(ForwardIterator first, ForwardIterator last, const Tp & value, Comparator comparator,
-					std::forward_iterator_tag)
+		namespace detail
 		{
-			first = kerbal::algorithm::lower_bound(first, last, value, comparator);
-			return std::make_pair(first, kerbal::algorithm::upper_bound(first, last, value, comparator));
-		}
 
-		template <typename RandomAccessIterator, typename Tp, typename Comparator>
-		KERBAL_CONSTEXPR14
-		std::pair<RandomAccessIterator, RandomAccessIterator>
-		__equal_range(RandomAccessIterator first, RandomAccessIterator last, const Tp & value, Comparator comparator,
-					std::random_access_iterator_tag)
-		{
-			typedef RandomAccessIterator iterator;
-			typedef typename kerbal::iterator::iterator_traits<iterator>::difference_type difference_type;
-
-			difference_type len(kerbal::iterator::distance(first, last));
-
-			while (len > 0) {
-				difference_type half(len >> 1);
-				iterator middle(kerbal::iterator::next(first, half));
-				if (comparator(*middle, value)) { // *middle < value
-					first = kerbal::iterator::next(middle);
-					len -= half + 1;
-				} else if (comparator(value, *middle)) { // *middle > value
-					len = half;
-				} else { // *middle == value
-					return std::make_pair(
-						kerbal::algorithm::lower_bound(first, middle, value, comparator),
-						kerbal::algorithm::upper_bound(kerbal::iterator::next(middle),
-														kerbal::iterator::next(first, len), value, comparator)
-					);
-				}
+			template <typename ForwardIterator, typename Tp, typename Comparator>
+			KERBAL_CONSTEXPR14
+			std::pair<ForwardIterator, ForwardIterator>
+			equal_range_helper(ForwardIterator first, ForwardIterator last, const Tp & value, Comparator comparator,
+								std::forward_iterator_tag)
+			{
+				ForwardIterator lb(kerbal::algorithm::lower_bound(first, last, value, comparator));
+				return std::make_pair(lb, kerbal::algorithm::upper_bound(lb, last, value, comparator));
 			}
 
-			return std::make_pair(first, first);
-		}
+			template <typename RandomAccessIterator, typename Tp, typename Comparator>
+			KERBAL_CONSTEXPR14
+			std::pair<RandomAccessIterator, RandomAccessIterator>
+			equal_range_helper(RandomAccessIterator first, RandomAccessIterator last, const Tp & value, Comparator comparator,
+								std::random_access_iterator_tag)
+			{
+				typedef RandomAccessIterator iterator;
+				typedef typename kerbal::iterator::iterator_traits<iterator>::difference_type difference_type;
+
+				difference_type len(kerbal::iterator::distance(first, last));
+
+				while (len > 0) {
+					difference_type half(len >> 1);
+					iterator middle(kerbal::iterator::next(first, half));
+					if (comparator(*middle, value)) { // *middle < value
+						first = kerbal::iterator::next(middle);
+						len -= half + 1;
+					} else if (comparator(value, *middle)) { // *middle > value
+						len = half;
+					} else { // *middle == value
+						return std::make_pair(
+							kerbal::algorithm::lower_bound(first, middle, value, comparator),
+							kerbal::algorithm::upper_bound(kerbal::iterator::next(middle),
+															kerbal::iterator::next(first, len), value, comparator)
+						);
+					}
+				}
+
+				return std::make_pair(first, first);
+			}
+
+		} // namespace detail
 
 		/**
 		 *
@@ -262,7 +277,7 @@ namespace kerbal
 		std::pair<ForwardIterator, ForwardIterator>
 		equal_range(ForwardIterator first, ForwardIterator last, const Tp & value, Comparator comparator)
 		{
-			return kerbal::algorithm::__equal_range(first, last, value, comparator, kerbal::iterator::iterator_category(first));
+			return kerbal::algorithm::detail::equal_range_helper(first, last, value, comparator, kerbal::iterator::iterator_category(first));
 		}
 
 		template <typename ForwardIterator, typename Tp>
@@ -312,8 +327,8 @@ namespace kerbal
 				} else { // *hint >= value
 					last = hint; // both are right if last = hint or last = next(hint)
 				}
-				return kerbal::algorithm::__lower_bound(first, last, value, comparator,
-																kerbal::iterator::iterator_category(first));
+				return kerbal::algorithm::detail::lower_bound_helper(first, last, value, comparator,
+																	kerbal::iterator::iterator_category(first));
 			}
 
 			template <typename BidirectionalIterator, typename Tp, typename Comparator>
@@ -325,8 +340,8 @@ namespace kerbal
 				if (hint == last) {
 				} else if (comparator(*hint, value)) { //*hint < value
 					++hint;
-					return kerbal::algorithm::__lower_bound(hint, last, value, comparator,
-																	kerbal::iterator::iterator_category(first));
+					return kerbal::algorithm::detail::lower_bound_helper(hint, last, value, comparator,
+																		kerbal::iterator::iterator_category(first));
 				} else { // *hint >= value
 				}
 				return kerbal::algorithm::lower_bound_backward(first, hint, value, comparator);
@@ -346,13 +361,13 @@ namespace kerbal
 					if (kerbal::iterator::distance(hint, last) > 4) {
 						iterator hint_4(hint + 4);
 						if (comparator(*hint_4, value)) { // hint[4] < value
-							return kerbal::algorithm::__lower_bound(kerbal::iterator::next(hint_4), last, value,
-																			comparator, std::random_access_iterator_tag());
+							return kerbal::algorithm::detail::lower_bound_helper(kerbal::iterator::next(hint_4), last, value,
+																				comparator, std::random_access_iterator_tag());
 						} else {
 							last = hint_4;
 						}
 					}
-					return kerbal::algorithm::__lower_bound(hint, last, value, comparator, std::forward_iterator_tag());
+					return kerbal::algorithm::detail::lower_bound_helper(hint, last, value, comparator, std::forward_iterator_tag());
 				} else { //*hint >= value
 				}
 				if (kerbal::iterator::distance(first, hint) > 4) {
@@ -360,8 +375,8 @@ namespace kerbal
 					if (comparator(*hint_4, value)) { // hint[-4] < value
 						first = hint_4;
 					} else {
-						return kerbal::algorithm::__lower_bound(first, hint_4, value, comparator,
-																		std::random_access_iterator_tag());
+						return kerbal::algorithm::detail::lower_bound_helper(first, hint_4, value, comparator,
+																			std::random_access_iterator_tag());
 					}
 				}
 				return kerbal::algorithm::lower_bound_backward(first, hint, value, comparator);
@@ -405,8 +420,8 @@ namespace kerbal
 				} else { // *hint <= value
 					first = kerbal::iterator::next(hint);
 				}
-				return kerbal::algorithm::__upper_bound(first, last, value, comparator,
-																kerbal::iterator::iterator_category(first));
+				return kerbal::algorithm::detail::upper_bound_helper(first, last, value, comparator,
+																	kerbal::iterator::iterator_category(first));
 			}
 
 			template <typename BidirectionalIterator, typename Tp, typename Comparator>
@@ -419,8 +434,8 @@ namespace kerbal
 				} else if (comparator(value, *hint)) { // *hint > value
 				} else { // *hint <= value
 					++hint;
-					return kerbal::algorithm::__upper_bound(hint, last, value, comparator,
-																	kerbal::iterator::iterator_category(first));
+					return kerbal::algorithm::detail::upper_bound_helper(hint, last, value, comparator,
+																		kerbal::iterator::iterator_category(first));
 				}
 				return kerbal::algorithm::upper_bound_backward(first, hint, value, comparator);
 			}
@@ -442,17 +457,17 @@ namespace kerbal
 						if (comparator(value, *hint_4)) { // value < hint[4]
 							last = hint_4;
 						} else {
-							return kerbal::algorithm::__upper_bound(kerbal::iterator::next(hint_4), last, value, comparator,
-																		std::random_access_iterator_tag());
+							return kerbal::algorithm::detail::upper_bound_helper(kerbal::iterator::next(hint_4), last, value, comparator,
+																				std::random_access_iterator_tag());
 						}
 					}
-					return kerbal::algorithm::__upper_bound(hint, last, value, comparator, std::forward_iterator_tag());
+					return kerbal::algorithm::detail::upper_bound_helper(hint, last, value, comparator, std::forward_iterator_tag());
 				}
 				if (kerbal::iterator::distance(first, hint) > 4) {
 					iterator hint_4(hint - 4);
 					if (comparator(value, *hint_4)) { // value < hint[-4]
-						return kerbal::algorithm::__upper_bound(first, hint_4, value, comparator,
-																	std::random_access_iterator_tag());
+						return kerbal::algorithm::detail::upper_bound_helper(first, hint_4, value, comparator,
+																			std::random_access_iterator_tag());
 					} else {
 						first = hint_4;
 					}

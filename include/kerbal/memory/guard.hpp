@@ -52,7 +52,7 @@ namespace kerbal
 				typedef Deleter deleter_type;
 
 			protected:
-				pointer K_ptr;
+				pointer k_ptr;
 
 			public:
 				KERBAL_CONSTEXPR20
@@ -62,7 +62,7 @@ namespace kerbal
 								kerbal::type_traits::try_test_is_nothrow_default_constructible<deleter_compress_helper>
 							>::value
 						) :
-						K_ptr(ptr)
+						k_ptr(ptr)
 				{
 				}
 
@@ -77,7 +77,7 @@ namespace kerbal
 								>
 							>::value
 						)) :
-						deleter_compress_helper(kerbal::utility::in_place_t(), deleter), K_ptr(ptr)
+						deleter_compress_helper(kerbal::utility::in_place_t(), deleter), k_ptr(ptr)
 				{
 				}
 
@@ -94,7 +94,7 @@ namespace kerbal
 								>
 							>::value
 						)) :
-						deleter_compress_helper(kerbal::utility::in_place_t(), kerbal::compatibility::move(deleter)), K_ptr(ptr)
+						deleter_compress_helper(kerbal::utility::in_place_t(), kerbal::compatibility::move(deleter)), k_ptr(ptr)
 				{
 				}
 
@@ -105,19 +105,19 @@ namespace kerbal
 						KERBAL_CONDITIONAL_NOEXCEPT(
 							noexcept(
 								kerbal::utility::declthis<guard>()->get_deleter()(
-									kerbal::utility::declthis<guard>()->K_ptr
+									kerbal::utility::declthis<guard>()->k_ptr
 								)
 							)
 						)
 				{
-					this->get_deleter()(this->K_ptr);
+					this->get_deleter()(this->k_ptr);
 				}
 
 				KERBAL_CONSTEXPR20
 				pointer release() KERBAL_NOEXCEPT
 				{
-					pointer p = this->K_ptr;
-					this->K_ptr = NULL;
+					pointer p = this->k_ptr;
+					this->k_ptr = NULL;
 					return p;
 				}
 
@@ -126,13 +126,13 @@ namespace kerbal
 						KERBAL_CONDITIONAL_NOEXCEPT(
 							noexcept(
 								kerbal::utility::declthis<guard>()->get_deleter()(
-									kerbal::utility::declthis<guard>()->K_ptr
+									kerbal::utility::declthis<guard>()->k_ptr
 								)
 							)
 						)
 				{
-					this->get_deleter(this->K_ptr);
-					this->K_ptr = NULL;
+					this->get_deleter(this->k_ptr);
+					this->k_ptr = NULL;
 				}
 
 				KERBAL_CONSTEXPR20
@@ -163,7 +163,7 @@ namespace kerbal
 				typedef Deleter deleter_type;
 
 			protected:
-				pointer K_ptr;
+				pointer k_ptr;
 
 			public:
 				KERBAL_CONSTEXPR20
@@ -173,7 +173,7 @@ namespace kerbal
 								kerbal::type_traits::try_test_is_nothrow_default_constructible<deleter_compress_helper>
 							>::value
 						) :
-						K_ptr(ptr)
+						k_ptr(ptr)
 				{
 				}
 
@@ -188,7 +188,7 @@ namespace kerbal
 								>
 							>::value
 						)) :
-						deleter_compress_helper(kerbal::utility::in_place_t(), deleter), K_ptr(ptr)
+						deleter_compress_helper(kerbal::utility::in_place_t(), deleter), k_ptr(ptr)
 				{
 				}
 
@@ -205,7 +205,7 @@ namespace kerbal
 								>
 							>::value
 						)) :
-						deleter_compress_helper(kerbal::utility::in_place_t(), kerbal::compatibility::move(deleter)), K_ptr(ptr)
+						deleter_compress_helper(kerbal::utility::in_place_t(), kerbal::compatibility::move(deleter)), k_ptr(ptr)
 				{
 				}
 
@@ -216,19 +216,19 @@ namespace kerbal
 						KERBAL_CONDITIONAL_NOEXCEPT(
 							noexcept(
 								kerbal::utility::declthis<guard>()->get_deleter()(
-									kerbal::utility::declthis<guard>()->K_ptr
+									kerbal::utility::declthis<guard>()->k_ptr
 								)
 							)
 						)
 				{
-					this->get_deleter()(this->K_ptr);
+					this->get_deleter()(this->k_ptr);
 				}
 
 				KERBAL_CONSTEXPR20
 				pointer release() KERBAL_NOEXCEPT
 				{
-					pointer p = this->K_ptr;
-					this->K_ptr = NULL;
+					pointer p = this->k_ptr;
+					this->k_ptr = NULL;
 					return p;
 				}
 
@@ -237,13 +237,13 @@ namespace kerbal
 						KERBAL_CONDITIONAL_NOEXCEPT(
 							noexcept(
 								kerbal::utility::declthis<guard>()->get_deleter()(
-									kerbal::utility::declthis<guard>()->K_ptr
+									kerbal::utility::declthis<guard>()->k_ptr
 								)
 							)
 						)
 				{
-					this->get_deleter(this->K_ptr);
-					this->K_ptr = NULL;
+					this->get_deleter(this->k_ptr);
+					this->k_ptr = NULL;
 				}
 
 				KERBAL_CONSTEXPR20

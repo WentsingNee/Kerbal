@@ -24,64 +24,64 @@ namespace kerbal
 		namespace chrono_suffix
 		{
 
-			constexpr std::chrono::duration<long double, std::ratio<3600, 1>> operator""_h(long double __hours)
+			constexpr std::chrono::duration<long double, std::ratio<3600, 1>> operator""_h(long double hours)
 			{
-				return std::chrono::duration<long double, std::ratio<3600, 1>> { __hours };
+				return std::chrono::duration<long double, std::ratio<3600, 1>> {hours};
 			}
 
-			constexpr std::chrono::hours operator""_h(unsigned long long __hours)
+			constexpr std::chrono::hours operator""_h(unsigned long long hours)
 			{
-				return std::chrono::hours { __hours };
+				return std::chrono::hours {hours};
 			}
 
-			constexpr std::chrono::duration<long double, std::ratio<60, 1>> operator""_min(long double __mins)
+			constexpr std::chrono::duration<long double, std::ratio<60, 1>> operator""_min(long double mins)
 			{
-				return std::chrono::duration<long double, std::ratio<60, 1>> { __mins };
+				return std::chrono::duration<long double, std::ratio<60, 1>> {mins};
 			}
 
-			constexpr std::chrono::minutes operator""_min(unsigned long long __mins)
+			constexpr std::chrono::minutes operator""_min(unsigned long long mins)
 			{
-				return std::chrono::minutes { __mins };
+				return std::chrono::minutes {mins};
 			}
 
-			constexpr std::chrono::duration<long double> operator""_s(long double __secs)
+			constexpr std::chrono::duration<long double> operator""_s(long double secs)
 			{
-				return std::chrono::duration<long double> { __secs };
+				return std::chrono::duration<long double> {secs};
 			}
 
-			constexpr std::chrono::seconds operator""_s(unsigned long long __secs)
+			constexpr std::chrono::seconds operator""_s(unsigned long long secs)
 			{
-				return std::chrono::seconds { __secs };
+				return std::chrono::seconds {secs};
 			}
 
-			constexpr std::chrono::duration<long double, std::milli> operator""_ms(long double __msecs)
+			constexpr std::chrono::duration<long double, std::milli> operator""_ms(long double msecs)
 			{
-				return std::chrono::duration<long double, std::milli> { __msecs };
+				return std::chrono::duration<long double, std::milli> {msecs};
 			}
 
-			constexpr std::chrono::milliseconds operator""_ms(unsigned long long __msecs)
+			constexpr std::chrono::milliseconds operator""_ms(unsigned long long msecs)
 			{
-				return std::chrono::milliseconds { __msecs };
+				return std::chrono::milliseconds {msecs};
 			}
 
-			constexpr std::chrono::duration<long double, std::micro> operator""_us(long double __usecs)
+			constexpr std::chrono::duration<long double, std::micro> operator""_us(long double usecs)
 			{
-				return std::chrono::duration<long double, std::micro> { __usecs };
+				return std::chrono::duration<long double, std::micro> {usecs};
 			}
 
-			constexpr std::chrono::microseconds operator""_us(unsigned long long __usecs)
+			constexpr std::chrono::microseconds operator""_us(unsigned long long usecs)
 			{
-				return std::chrono::microseconds { __usecs };
+				return std::chrono::microseconds {usecs};
 			}
 
-			constexpr std::chrono::duration<long double, std::nano> operator""_ns(long double __nsecs)
+			constexpr std::chrono::duration<long double, std::nano> operator""_ns(long double nsecs)
 			{
-				return std::chrono::duration<long double, std::nano> { __nsecs };
+				return std::chrono::duration<long double, std::nano> {nsecs};
 			}
 
-			constexpr std::chrono::nanoseconds operator""_ns(unsigned long long __nsecs)
+			constexpr std::chrono::nanoseconds operator""_ns(unsigned long long nsecs)
 			{
-				return std::chrono::nanoseconds { __nsecs };
+				return std::chrono::nanoseconds {nsecs};
 			}
 
 		} // namespace chrono_suffix

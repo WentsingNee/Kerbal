@@ -12,6 +12,8 @@
 #ifndef KERBAL_COMPATIBILITY_MOVE_HPP
 #define KERBAL_COMPATIBILITY_MOVE_HPP
 
+#include <kerbal/compatibility/constexpr.hpp>
+#include <kerbal/compatibility/noexcept.hpp>
 #include <kerbal/type_traits/remove_reference.hpp>
 
 
@@ -23,31 +25,33 @@ namespace kerbal
 
 #	if __cplusplus < 201103L
 
-		template <typename _Tp>
-		typename kerbal::type_traits::remove_reference<_Tp>::type&
-		to_xvalue(_Tp& __t)
+		template <typename T>
+		typename kerbal::type_traits::remove_reference<T>::type &
+		to_xvalue(T & value)
 		{
-			return static_cast<typename kerbal::type_traits::remove_reference<_Tp>::type&>(__t);
+			return static_cast<typename kerbal::type_traits::remove_reference<T>::type &>(value);
 		}
 
 #	else
 
-		template <typename _Tp>
-		constexpr	typename kerbal::type_traits::remove_reference<_Tp>::type&&
-		to_xvalue(_Tp&& __t) noexcept
+		template <typename T>
+		KERBAL_CONSTEXPR
+		typename kerbal::type_traits::remove_reference<T>::type &&
+		to_xvalue(T && value) KERBAL_NOEXCEPT
 		{
-			return static_cast<typename kerbal::type_traits::remove_reference<_Tp>::type&&>(__t);
+			return static_cast<typename kerbal::type_traits::remove_reference<T>::type &&>(value);
 		}
 
 #	endif
 
 #	if __cplusplus >= 201103L
 
-		template <typename _Tp>
-		constexpr	typename kerbal::type_traits::remove_reference<_Tp>::type&&
-		move(_Tp&& __t) noexcept
+		template <typename T>
+		KERBAL_CONSTEXPR
+		typename kerbal::type_traits::remove_reference<T>::type &&
+		move(T && value) KERBAL_NOEXCEPT
 		{
-			return static_cast<typename kerbal::type_traits::remove_reference<_Tp>::type&&>(__t);
+			return static_cast<typename kerbal::type_traits::remove_reference<T>::type &&>(value);
 		}
 
 #	endif

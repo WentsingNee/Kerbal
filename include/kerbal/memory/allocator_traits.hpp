@@ -690,7 +690,7 @@ namespace kerbal
 				private:
 					template <typename T, typename ... Args>
 					KERBAL_CONSTEXPR20
-					static void _K_construct(kerbal::type_traits::false_type, Alloc&, T* p, Args&& ... args)
+					static void k_construct(kerbal::type_traits::false_type, Alloc&, T* p, Args&& ... args)
 							KERBAL_CONDITIONAL_NOEXCEPT(
 								noexcept(kerbal::memory::construct_at(p, kerbal::utility::forward<Args>(args)...))
 							)
@@ -700,7 +700,7 @@ namespace kerbal
 
 					template <typename T, typename ... Args>
 					KERBAL_CONSTEXPR14
-					static void _K_construct(kerbal::type_traits::true_type, Alloc& alloc, T* p, Args&& ... args)
+					static void k_construct(kerbal::type_traits::true_type, Alloc& alloc, T* p, Args&& ... args)
 							KERBAL_CONDITIONAL_NOEXCEPT(
 								noexcept(alloc.construct(p, kerbal::utility::forward<Args>(args)...))
 							)
@@ -714,12 +714,12 @@ namespace kerbal
 					static void construct(Alloc& alloc, T* p, Args&& ... args)
 							KERBAL_CONDITIONAL_NOEXCEPT(
 								noexcept
-									(_K_construct(allocator_could_use_construct<Alloc, T, Args...>(), alloc, p,
+									(k_construct(allocator_could_use_construct<Alloc, T, Args...>(), alloc, p,
 												  kerbal::utility::forward<Args>(args)...)
 								)
 							)
 					{
-						_K_construct(allocator_could_use_construct<Alloc, T, Args...>(), alloc, p,
+						k_construct(allocator_could_use_construct<Alloc, T, Args...>(), alloc, p,
 									kerbal::utility::forward<Args>(args)...);
 					}
 
@@ -734,13 +734,13 @@ namespace kerbal
 #		define DBODY(i) \
 				private: \
 					template <typename T KERBAL_OPT_PPEXPAND_WITH_COMMA_N(LEFT_JOIN_COMMA, EMPTY, TARGS_DECL, i)> \
-					static void _K_construct(kerbal::type_traits::false_type, Alloc&, T* p KERBAL_OPT_PPEXPAND_WITH_COMMA_N(LEFT_JOIN_COMMA, EMPTY, ARGS_DECL, i)) \
+					static void k_construct(kerbal::type_traits::false_type, Alloc&, T* p KERBAL_OPT_PPEXPAND_WITH_COMMA_N(LEFT_JOIN_COMMA, EMPTY, ARGS_DECL, i)) \
 					{ \
 						kerbal::memory::construct_at(p KERBAL_OPT_PPEXPAND_WITH_COMMA_N(LEFT_JOIN_COMMA, EMPTY, ARGS_USE, i)); \
 					} \
  \
 					template <typename T KERBAL_OPT_PPEXPAND_WITH_COMMA_N(LEFT_JOIN_COMMA, EMPTY, TARGS_DECL, i)> \
-					static void _K_construct(kerbal::type_traits::true_type, Alloc& alloc, T* p KERBAL_OPT_PPEXPAND_WITH_COMMA_N(LEFT_JOIN_COMMA, EMPTY, ARGS_DECL, i)) \
+					static void k_construct(kerbal::type_traits::true_type, Alloc& alloc, T* p KERBAL_OPT_PPEXPAND_WITH_COMMA_N(LEFT_JOIN_COMMA, EMPTY, ARGS_DECL, i)) \
 					{ \
 						alloc.construct(p KERBAL_OPT_PPEXPAND_WITH_COMMA_N(LEFT_JOIN_COMMA, EMPTY, ARGS_USE, i)); \
 					} \
@@ -749,7 +749,7 @@ namespace kerbal
 					template <typename T KERBAL_OPT_PPEXPAND_WITH_COMMA_N(LEFT_JOIN_COMMA, EMPTY, TARGS_DECL, i)> \
 					static void construct(Alloc& alloc, T* p KERBAL_OPT_PPEXPAND_WITH_COMMA_N(LEFT_JOIN_COMMA, EMPTY, ARGS_DECL, i)) \
 					{ \
-						_K_construct(allocator_could_use_construct<Alloc, T KERBAL_OPT_PPEXPAND_WITH_COMMA_N(LEFT_JOIN_COMMA, EMPTY, TARGS_USE, i)>(), alloc, p \
+						k_construct(allocator_could_use_construct<Alloc, T KERBAL_OPT_PPEXPAND_WITH_COMMA_N(LEFT_JOIN_COMMA, EMPTY, TARGS_USE, i)>(), alloc, p \
 									KERBAL_OPT_PPEXPAND_WITH_COMMA_N(LEFT_JOIN_COMMA, EMPTY, ARGS_USE, i)); \
 					}
 
@@ -833,7 +833,7 @@ namespace kerbal
 				private:
 					template <typename T>
 					KERBAL_CONSTEXPR20
-					static void _K_destroy(kerbal::type_traits::false_type, Alloc &, T * p)
+					static void k_destroy(kerbal::type_traits::false_type, Alloc &, T * p)
 											KERBAL_CONDITIONAL_NOEXCEPT(
 													kerbal::type_traits::tribool_is_true<
 														kerbal::type_traits::try_test_is_nothrow_destructible<T>
@@ -845,7 +845,7 @@ namespace kerbal
 
 					template <typename T>
 					KERBAL_CONSTEXPR14
-					static void _K_destroy(kerbal::type_traits::true_type, Alloc & alloc, T * p)
+					static void k_destroy(kerbal::type_traits::true_type, Alloc & alloc, T * p)
 											KERBAL_CONDITIONAL_NOEXCEPT(
 													noexcept(alloc.destroy(p))
 											)
@@ -858,10 +858,10 @@ namespace kerbal
 					KERBAL_CONSTEXPR14
 					static void destroy(Alloc & alloc, T * p)
 											KERBAL_CONDITIONAL_NOEXCEPT(
-													noexcept(_K_destroy(allocator_could_use_destroy<Alloc, T>(), alloc, p))
+													noexcept(k_destroy(allocator_could_use_destroy<Alloc, T>(), alloc, p))
 											)
 					{
-						_K_destroy(allocator_could_use_destroy<Alloc, T>(), alloc, p);
+						k_destroy(allocator_could_use_destroy<Alloc, T>(), alloc, p);
 					}
 
 			};

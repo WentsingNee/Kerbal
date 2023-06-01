@@ -130,50 +130,60 @@ namespace kerbal
 
 
 
-		template <typename Unsigned>
-		KERBAL_CONSTEXPR
-		bool __ispow2(Unsigned x, kerbal::type_traits::false_type) KERBAL_NOEXCEPT
+		namespace detail
 		{
-			return x != 0 && ((x & (x - 1)) == 0);
-		}
 
-		template <typename Signed>
-		KERBAL_CONSTEXPR
-		bool __ispow2(Signed x, kerbal::type_traits::true_type) KERBAL_NOEXCEPT
-		{
-			return x > 0 && ((x & (x - 1)) == 0);
-		}
+			template <typename Unsigned>
+			KERBAL_CONSTEXPR
+			bool ispow2_helper(Unsigned x, kerbal::type_traits::false_type) KERBAL_NOEXCEPT
+			{
+				return x != 0 && ((x & (x - 1)) == 0);
+			}
+
+			template <typename Signed>
+			KERBAL_CONSTEXPR
+			bool ispow2_helper(Signed x, kerbal::type_traits::true_type) KERBAL_NOEXCEPT
+			{
+				return x > 0 && ((x & (x - 1)) == 0);
+			}
+
+		} // namespace detail
 
 		template <typename Tp>
 		KERBAL_CONSTEXPR
 		bool ispow2(Tp x) KERBAL_NOEXCEPT
 		{
-			return __ispow2(x, kerbal::type_traits::is_signed<Tp>());
+			return kerbal::numeric::detail::ispow2_helper(x, kerbal::type_traits::is_signed<Tp>());
 		}
 
 
 
-		template <typename Unsigned>
-		KERBAL_CONSTEXPR
-		bool __has_single_bit(Unsigned x, kerbal::type_traits::false_type) KERBAL_NOEXCEPT
+		namespace detail
 		{
-			return x != 0 && ((x & (x - 1)) == 0);
-		}
 
-		template <typename Signed>
-		KERBAL_CONSTEXPR14
-		bool __has_single_bit(Signed x, kerbal::type_traits::true_type) KERBAL_NOEXCEPT
-		{
-			typedef typename kerbal::type_traits::make_unsigned<Signed>::type unsigned_t;
-			unsigned_t u = static_cast<unsigned_t>(x);
-			return __has_single_bit(u, kerbal::type_traits::false_type());
-		}
+			template <typename Unsigned>
+			KERBAL_CONSTEXPR
+			bool has_single_bit_helper(Unsigned x, kerbal::type_traits::false_type) KERBAL_NOEXCEPT
+			{
+				return x != 0 && ((x & (x - 1)) == 0);
+			}
+
+			template <typename Signed>
+			KERBAL_CONSTEXPR14
+			bool has_single_bit_helper(Signed x, kerbal::type_traits::true_type) KERBAL_NOEXCEPT
+			{
+				typedef typename kerbal::type_traits::make_unsigned<Signed>::type unsigned_t;
+				unsigned_t ux = static_cast<unsigned_t>(x);
+				return has_single_bit_helper(ux, kerbal::type_traits::false_type());
+			}
+
+		} // namespace detail
 
 		template <typename Tp>
 		KERBAL_CONSTEXPR
 		bool has_single_bit(Tp x) KERBAL_NOEXCEPT
 		{
-			return __has_single_bit(x, kerbal::type_traits::is_signed<Tp>());
+			return kerbal::numeric::detail::has_single_bit_helper(x, kerbal::type_traits::is_signed<Tp>());
 		}
 
 
@@ -274,64 +284,76 @@ namespace kerbal
 
 
 
-		template <typename Signed>
-		KERBAL_CONSTEXPR
-		Signed __rotl(Signed x, int s, kerbal::type_traits::true_type) KERBAL_NOEXCEPT
+		namespace detail
 		{
-			typedef typename kerbal::type_traits::make_unsigned<Signed>::type unsigned_t;
-			typedef kerbal::type_traits::integral_constant<std::size_t, sizeof(Signed) * CHAR_BIT> BIT_WIDTH;
-#	define __u static_cast<unsigned_t>(x)
-			return s == 0 ?
-					x :
-					s > 0 ?
-					(__u << s | (__u >> (BIT_WIDTH::value - s))) :
-					(__u >> -s | (__u << (BIT_WIDTH::value - (-s)))); // rotr(x, -s);
-#	undef __u
-		}
 
-		template <typename Unsigned>
-		KERBAL_CONSTEXPR
-		Unsigned __rotl(Unsigned x, int s, kerbal::type_traits::false_type) KERBAL_NOEXCEPT
-		{
-			typedef kerbal::type_traits::integral_constant<std::size_t, sizeof(Unsigned) * CHAR_BIT> BIT_WIDTH;
-			return s == 0 ?
-					 x :
-					 (x << s | (x >> (BIT_WIDTH::value - s)));
-		}
+			template <typename Signed>
+			KERBAL_CONSTEXPR
+			Signed rotl_helper(Signed x, int s, kerbal::type_traits::true_type) KERBAL_NOEXCEPT
+			{
+				typedef typename kerbal::type_traits::make_unsigned<Signed>::type unsigned_t;
+				typedef kerbal::type_traits::integral_constant<std::size_t, sizeof(Signed) * CHAR_BIT> BIT_WIDTH;
+#		define ux static_cast<unsigned_t>(x)
+				return s == 0 ?
+						x :
+						s > 0 ?
+						(ux << s | (ux >> (BIT_WIDTH::value - s))) :
+						(ux >> -s | (ux << (BIT_WIDTH::value - (-s)))); // rotr(x, -s);
+#		undef ux
+			}
+
+			template <typename Unsigned>
+			KERBAL_CONSTEXPR
+			Unsigned rotl_helper(Unsigned x, int s, kerbal::type_traits::false_type) KERBAL_NOEXCEPT
+			{
+				typedef kerbal::type_traits::integral_constant<std::size_t, sizeof(Unsigned) * CHAR_BIT> BIT_WIDTH;
+				return s == 0 ?
+						 x :
+						 (x << s | (x >> (BIT_WIDTH::value - s)));
+			}
+
+		} // namespace detail
 
 		template <typename Tp>
 		KERBAL_CONSTEXPR
 		Tp rotl(Tp x, int s) KERBAL_NOEXCEPT
 		{
-			return __rotl(x, s % (sizeof(Tp) * CHAR_BIT), kerbal::type_traits::is_signed<Tp>());
+			return kerbal::numeric::detail::rotl_helper(x, s % (sizeof(Tp) * CHAR_BIT), kerbal::type_traits::is_signed<Tp>());
 		}
 
-		template <typename Signed>
-		KERBAL_CONSTEXPR
-		Signed __rotr(Signed x, int s, kerbal::type_traits::true_type) KERBAL_NOEXCEPT
+		namespace detail
 		{
-			typedef typename kerbal::type_traits::make_unsigned<Signed>::type unsigned_t;
-			return s == 0 ?
-					x :
-					s > 0 ?
-					(static_cast<unsigned_t>(x) >> s | (static_cast<unsigned_t>(x) << ((sizeof(Signed) * CHAR_BIT) - s))) :
-					(static_cast<unsigned_t>(x) << -s | (static_cast<unsigned_t>(x) >> ((sizeof(Signed) * CHAR_BIT) - (-s)))); // rotl(x, -s);
-		}
 
-		template <typename Unsigned>
-		KERBAL_CONSTEXPR
-		Unsigned __rotr(Unsigned x, int s, kerbal::type_traits::false_type) KERBAL_NOEXCEPT
-		{
-			return s == 0 ?
-					 x :
-					 (x >> s | (x << ((sizeof(Unsigned) * CHAR_BIT) - s)));
-		}
+			template <typename Signed>
+			KERBAL_CONSTEXPR
+			Signed rotr_helper(Signed x, int s, kerbal::type_traits::true_type) KERBAL_NOEXCEPT
+			{
+				typedef typename kerbal::type_traits::make_unsigned<Signed>::type unsigned_t;
+#		define ux static_cast<unsigned_t>(x)
+				return s == 0 ?
+						x :
+						s > 0 ?
+						(ux >> s | (ux << ((sizeof(Signed) * CHAR_BIT) - s))) :
+						(ux << -s | (ux >> ((sizeof(Signed) * CHAR_BIT) - (-s)))); // rotl(x, -s);
+#		undef ux
+			}
+
+			template <typename Unsigned>
+			KERBAL_CONSTEXPR
+			Unsigned rotr_helper(Unsigned x, int s, kerbal::type_traits::false_type) KERBAL_NOEXCEPT
+			{
+				return s == 0 ?
+						 x :
+						 (x >> s | (x << ((sizeof(Unsigned) * CHAR_BIT) - s)));
+			}
+
+		} // namespace detail
 
 		template <typename Tp>
 		KERBAL_CONSTEXPR
 		Tp rotr(Tp x, int s) KERBAL_NOEXCEPT
 		{
-			return __rotr(x, s % (sizeof(Tp) * CHAR_BIT), kerbal::type_traits::is_signed<Tp>());
+			return kerbal::numeric::detail::rotr_helper(x, s % (sizeof(Tp) * CHAR_BIT), kerbal::type_traits::is_signed<Tp>());
 		}
 
 	} // namespace numeric

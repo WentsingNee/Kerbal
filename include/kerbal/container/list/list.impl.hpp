@@ -629,7 +629,7 @@ namespace kerbal
 						noexcept(list_allocator_overload::k_swap_allocator_if_propagate(
 								kerbal::utility::declval<list_allocator_overload&>(), kerbal::utility::declval<list_allocator_overload&>()
 						)) &&
-						noexcept(list_type_unrelated::_K_swap_type_unrelated(
+						noexcept(list_type_unrelated::k_swap_type_unrelated(
 								kerbal::utility::declval<list_type_unrelated&>(), kerbal::utility::declval<list_type_unrelated&>()
 						))
 				)
@@ -637,7 +637,7 @@ namespace kerbal
 			list_allocator_overload::k_swap_allocator_if_propagate(
 					static_cast<list_allocator_overload&>(*this),
 					static_cast<list_allocator_overload&>(with));
-			list_type_unrelated::_K_swap_type_unrelated(
+			list_type_unrelated::k_swap_type_unrelated(
 					static_cast<list_type_unrelated&>(*this),
 					static_cast<list_type_unrelated&>(with));
 		}
@@ -646,14 +646,14 @@ namespace kerbal
 		KERBAL_CONSTEXPR20
 		void list<Tp, Allocator>::iter_swap(const_iterator a, const_iterator b) KERBAL_NOEXCEPT
 		{
-			list_allocator_unrelated::_K_iter_swap(a, b);
+			list_allocator_unrelated::k_iter_swap(a, b);
 		}
 
 		template <typename Tp, typename Allocator>
 		KERBAL_CONSTEXPR20
 		void list<Tp, Allocator>::reverse(const_iterator a, const_iterator b) KERBAL_NOEXCEPT
 		{
-			list_allocator_unrelated::_K_reverse(a, b);
+			list_allocator_unrelated::k_reverse(a, b);
 		}
 
 		template <typename Tp, typename Allocator>
@@ -661,14 +661,14 @@ namespace kerbal
 		KERBAL_CONSTEXPR20
 		void list<Tp, Allocator>::merge(list & other, BinaryPredict cmp)
 		{
-			list_allocator_unrelated::_K_merge(static_cast<list_allocator_unrelated&>(other), cmp);
+			list_allocator_unrelated::k_merge(static_cast<list_allocator_unrelated&>(other), cmp);
 		}
 
 		template <typename Tp, typename Allocator>
 		KERBAL_CONSTEXPR20
 		void list<Tp, Allocator>::merge(list & other)
 		{
-			list_allocator_unrelated::_K_merge(static_cast<list_allocator_unrelated&>(other));
+			list_allocator_unrelated::k_merge(static_cast<list_allocator_unrelated&>(other));
 		}
 
 		template <typename Tp, typename Allocator>
@@ -676,14 +676,14 @@ namespace kerbal
 		KERBAL_CONSTEXPR20
 		void list<Tp, Allocator>::sort(const_iterator first, const_iterator last, BinaryPredict cmp)
 		{
-			list_allocator_unrelated::_K_sort(first, last, cmp);
+			list_allocator_unrelated::k_sort(first, last, cmp);
 		}
 
 		template <typename Tp, typename Allocator>
 		KERBAL_CONSTEXPR20
 		void list<Tp, Allocator>::sort(const_iterator first, const_iterator last)
 		{
-			list_allocator_unrelated::_K_sort(first, last);
+			list_allocator_unrelated::k_sort(first, last);
 		}
 
 		template <typename Tp, typename Allocator>
@@ -758,21 +758,21 @@ namespace kerbal
 		KERBAL_CONSTEXPR20
 		void list<Tp, Allocator>::splice(const_iterator pos, list & other) KERBAL_NOEXCEPT
 		{
-			list_type_unrelated::_K_splice(pos, other);
+			list_type_unrelated::k_splice(pos, other);
 		}
 
 		template <typename Tp, typename Allocator>
 		KERBAL_CONSTEXPR20
 		void list<Tp, Allocator>::splice(const_iterator pos, list & /*other*/, const_iterator opos) KERBAL_NOEXCEPT
 		{
-			list_type_unrelated::_K_splice(pos, opos);
+			list_type_unrelated::k_splice(pos, opos);
 		}
 
 		template <typename Tp, typename Allocator>
 		KERBAL_CONSTEXPR20
 		void list<Tp, Allocator>::splice(const_iterator pos, list & /*other*/, const_iterator first, const_iterator last) KERBAL_NOEXCEPT
 		{
-			list_type_unrelated::_K_splice(pos, first, last);
+			list_type_unrelated::k_splice(pos, first, last);
 		}
 
 #	if __cplusplus >= 201103L
@@ -781,21 +781,21 @@ namespace kerbal
 		KERBAL_CONSTEXPR20
 		void list<Tp, Allocator>::splice(const_iterator pos, list && other) KERBAL_NOEXCEPT
 		{
-			list_type_unrelated::_K_splice(pos, kerbal::compatibility::move(other));
+			list_type_unrelated::k_splice(pos, kerbal::compatibility::move(other));
 		}
 
 		template <typename Tp, typename Allocator>
 		KERBAL_CONSTEXPR20
 		void list<Tp, Allocator>::splice(const_iterator pos, list && /*other*/, const_iterator opos) KERBAL_NOEXCEPT
 		{
-			list_type_unrelated::_K_splice(pos, opos);
+			list_type_unrelated::k_splice(pos, opos);
 		}
 
 		template <typename Tp, typename Allocator>
 		KERBAL_CONSTEXPR20
 		void list<Tp, Allocator>::splice(const_iterator pos, list && /*other*/, const_iterator first, const_iterator last) KERBAL_NOEXCEPT
 		{
-			list_type_unrelated::_K_splice(pos, first, last);
+			list_type_unrelated::k_splice(pos, first, last);
 		}
 
 #	endif
@@ -805,7 +805,7 @@ namespace kerbal
 		KERBAL_CONSTEXPR20
 		void list<Tp, Allocator>::set_difference(list & l1, const list & l2, list & lto, BinaryPredict cmp)
 		{
-			list_allocator_unrelated::_K_set_difference(static_cast<list_allocator_unrelated &>(l1), static_cast<const list_allocator_unrelated &>(l2),
+			list_allocator_unrelated::k_set_difference(static_cast<list_allocator_unrelated &>(l1), static_cast<const list_allocator_unrelated &>(l2),
 														static_cast<list_allocator_unrelated &>(lto), cmp);
 		}
 
@@ -813,7 +813,7 @@ namespace kerbal
 		KERBAL_CONSTEXPR20
 		void list<Tp, Allocator>::set_difference(list & l1, const list & l2, list & lto)
 		{
-			list_allocator_unrelated::_K_set_difference(static_cast<list_allocator_unrelated &>(l1), static_cast<const list_allocator_unrelated &>(l2),
+			list_allocator_unrelated::k_set_difference(static_cast<list_allocator_unrelated &>(l1), static_cast<const list_allocator_unrelated &>(l2),
 														static_cast<list_allocator_unrelated &>(lto));
 		}
 
@@ -822,7 +822,7 @@ namespace kerbal
 		KERBAL_CONSTEXPR20
 		void list<Tp, Allocator>::set_intersection(list & l1, list & l2, list & lto, BinaryPredict cmp)
 		{
-			list_allocator_unrelated::_K_set_intersection(static_cast<list_allocator_unrelated &>(l1), static_cast<list_allocator_unrelated &>(l2),
+			list_allocator_unrelated::k_set_intersection(static_cast<list_allocator_unrelated &>(l1), static_cast<list_allocator_unrelated &>(l2),
 														  static_cast<list_allocator_unrelated &>(lto), cmp);
 		}
 
@@ -830,7 +830,7 @@ namespace kerbal
 		KERBAL_CONSTEXPR20
 		void list<Tp, Allocator>::set_intersection(list & l1, list & l2, list & lto)
 		{
-			list_allocator_unrelated::_K_set_intersection(static_cast<list_allocator_unrelated &>(l1), static_cast<list_allocator_unrelated &>(l2),
+			list_allocator_unrelated::k_set_intersection(static_cast<list_allocator_unrelated &>(l1), static_cast<list_allocator_unrelated &>(l2),
 														  static_cast<list_allocator_unrelated &>(lto));
 		}
 
@@ -839,7 +839,7 @@ namespace kerbal
 		KERBAL_CONSTEXPR20
 		void list<Tp, Allocator>::set_symmetric_difference(list & l1, list & l2, list & lto, BinaryPredict cmp)
 		{
-			list_allocator_unrelated::_K_set_symmetric_difference(static_cast<list_allocator_unrelated &>(l1), static_cast<list_allocator_unrelated &>(l2),
+			list_allocator_unrelated::k_set_symmetric_difference(static_cast<list_allocator_unrelated &>(l1), static_cast<list_allocator_unrelated &>(l2),
 																  static_cast<list_allocator_unrelated &>(lto), cmp);
 		}
 
@@ -847,7 +847,7 @@ namespace kerbal
 		KERBAL_CONSTEXPR20
 		void list<Tp, Allocator>::set_symmetric_difference(list & l1, list & l2, list & lto)
 		{
-			list_allocator_unrelated::_K_set_symmetric_difference(static_cast<list_allocator_unrelated &>(l1), static_cast<list_allocator_unrelated &>(l2),
+			list_allocator_unrelated::k_set_symmetric_difference(static_cast<list_allocator_unrelated &>(l1), static_cast<list_allocator_unrelated &>(l2),
 																  static_cast<list_allocator_unrelated &>(lto));
 		}
 
@@ -856,7 +856,7 @@ namespace kerbal
 		KERBAL_CONSTEXPR20
 		void list<Tp, Allocator>::set_union(list & l1, list & l2, list & lto, BinaryPredict cmp)
 		{
-			list_allocator_unrelated::_K_set_union(static_cast<list_allocator_unrelated &>(l1), static_cast<list_allocator_unrelated &>(l2),
+			list_allocator_unrelated::k_set_union(static_cast<list_allocator_unrelated &>(l1), static_cast<list_allocator_unrelated &>(l2),
 												   static_cast<list_allocator_unrelated &>(lto), cmp);
 		}
 
@@ -864,7 +864,7 @@ namespace kerbal
 		KERBAL_CONSTEXPR20
 		void list<Tp, Allocator>::set_union(list & l1, list & l2, list & lto)
 		{
-			list_allocator_unrelated::_K_set_union(static_cast<list_allocator_unrelated &>(l1), static_cast<list_allocator_unrelated &>(l2),
+			list_allocator_unrelated::k_set_union(static_cast<list_allocator_unrelated &>(l1), static_cast<list_allocator_unrelated &>(l2),
 												   static_cast<list_allocator_unrelated &>(lto));
 		}
 

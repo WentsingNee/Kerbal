@@ -55,7 +55,7 @@ namespace kerbal
 
 			template <typename Tp, typename Up>
 			KERBAL_CONSTEXPR14
-			void _K_generic_assign(Tp& lhs, Up&& rhs, kerbal::type_traits::false_type)
+			void k_generic_assign(Tp& lhs, Up&& rhs, kerbal::type_traits::false_type)
 								KERBAL_CONDITIONAL_NOEXCEPT(
 										noexcept(lhs = kerbal::utility::forward<Up>(rhs))
 								)
@@ -63,7 +63,7 @@ namespace kerbal
 
 			template <typename Tp, typename Up>
 			KERBAL_CONSTEXPR14
-			void _K_generic_assign(Tp& lhs, Up&& rhs, kerbal::type_traits::true_type)
+			void k_generic_assign(Tp& lhs, Up&& rhs, kerbal::type_traits::true_type)
 								KERBAL_CONDITIONAL_NOEXCEPT(
 										noexcept(
 											kerbal::operators::generic_assign(lhs[0], kerbal::utility::forward<decltype(rhs[0])>(rhs[0]))
@@ -78,7 +78,7 @@ namespace kerbal
 		Tp& generic_assign(Tp& lhs, Up&& rhs)
 								KERBAL_CONDITIONAL_NOEXCEPT(
 										noexcept(
-											kerbal::operators::detail::_K_generic_assign(
+											kerbal::operators::detail::k_generic_assign(
 												lhs, kerbal::utility::forward<Up>(rhs), kerbal::type_traits::is_array<Tp>()
 											)
 										)
@@ -120,7 +120,7 @@ namespace kerbal
 
 			template <typename Tp, typename Up>
 			KERBAL_CONSTEXPR14
-			void _K_generic_assign(Tp& lhs, Up&& rhs, kerbal::type_traits::false_type)
+			void k_generic_assign(Tp& lhs, Up&& rhs, kerbal::type_traits::false_type)
 								KERBAL_CONDITIONAL_NOEXCEPT(
 										noexcept(lhs = kerbal::utility::forward<Up>(rhs))
 								)
@@ -130,7 +130,7 @@ namespace kerbal
 
 			template <typename Tp, typename Up>
 			KERBAL_CONSTEXPR14
-			void _K_generic_assign(Tp& lhs, Up&& rhs, kerbal::type_traits::true_type)
+			void k_generic_assign(Tp& lhs, Up&& rhs, kerbal::type_traits::true_type)
 								KERBAL_CONDITIONAL_NOEXCEPT(
 										noexcept(
 											kerbal::operators::generic_assign(lhs[0], kerbal::utility::forward<decltype(rhs[0])>(rhs[0]))
@@ -154,13 +154,13 @@ namespace kerbal
 		Tp& generic_assign(Tp & lhs, Up && rhs)
 								KERBAL_CONDITIONAL_NOEXCEPT(
 										noexcept(
-											kerbal::operators::detail::_K_generic_assign(
+											kerbal::operators::detail::k_generic_assign(
 												lhs, kerbal::utility::forward<Up>(rhs), kerbal::type_traits::is_array<Tp>()
 											)
 										)
 								)
 		{
-			kerbal::operators::detail::_K_generic_assign(lhs, kerbal::utility::forward<Up>(rhs), kerbal::type_traits::is_array<Tp>());
+			kerbal::operators::detail::k_generic_assign(lhs, kerbal::utility::forward<Up>(rhs), kerbal::type_traits::is_array<Tp>());
 			return lhs;
 		}
 

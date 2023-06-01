@@ -116,7 +116,7 @@ namespace kerbal
 			typedef kerbal::type_traits::integral_constant<int, 1> CONSTRUCT_AT_VER_TRIVIAL;
 
 			template <typename Tp, typename ... Args>
-			Tp * _K_construct_at_impl(CONSTRUCT_AT_VER_DEFAULT, Tp * p, Args&& ... args)
+			Tp * k_construct_at_impl(CONSTRUCT_AT_VER_DEFAULT, Tp * p, Args&& ... args)
 					KERBAL_CONDITIONAL_NOEXCEPT(
 						noexcept(::new (const_cast<void*>(static_cast<const volatile void*>(p)))
 							Tp (kerbal::utility::forward<Args>(args)...))
@@ -128,7 +128,7 @@ namespace kerbal
 
 			template <typename Tp, typename ... Args>
 			KERBAL_CONSTEXPR14
-			Tp * _K_construct_at_impl(CONSTRUCT_AT_VER_TRIVIAL, Tp * p, Args&& ... args) KERBAL_NOEXCEPT
+			Tp * k_construct_at_impl(CONSTRUCT_AT_VER_TRIVIAL, Tp * p, Args&& ... args) KERBAL_NOEXCEPT
 			{
 				*p = Tp(kerbal::utility::forward<Args>(args)...);
 				return p;
@@ -152,22 +152,22 @@ namespace kerbal
 
 			template <typename Tp, typename ... Args>
 			KERBAL_CONSTEXPR14
-			Tp * _K_construct_at(Tp * p, Args&& ... args)
+			Tp * k_construct_at(Tp * p, Args&& ... args)
 					KERBAL_CONDITIONAL_NOEXCEPT(
-						noexcept(_K_construct_at_impl(
+						noexcept(k_construct_at_impl(
 							typename construct_at_impl_overload_ver<Tp, Args&&...>::type(),
 							p, kerbal::utility::forward<Args>(args)...))
 					)
 			{
 				typedef typename construct_at_impl_overload_ver<Tp, Args&&...>::type VER;
-				return _K_construct_at_impl(VER(), p, kerbal::utility::forward<Args>(args)...);
+				return k_construct_at_impl(VER(), p, kerbal::utility::forward<Args>(args)...);
 			}
 
 #	else
 
 			template <typename Tp, typename ... Args>
 			KERBAL_CONSTEXPR20
-			Tp * _K_construct_at(Tp * p, Args&& ... args)
+			Tp * k_construct_at(Tp * p, Args&& ... args)
 					KERBAL_CONDITIONAL_NOEXCEPT(
 						noexcept(std::construct_at(p, kerbal::utility::forward<Args>(args)...))
 					)
@@ -180,7 +180,7 @@ namespace kerbal
 
 			template <typename Tp, std::size_t N>
 			KERBAL_CONSTEXPR14
-			Tp (* _K_construct_at(Tp (*p) [N])) [N]
+			Tp (* k_construct_at(Tp (*p) [N])) [N]
 			{
 				kerbal::memory::uninitialized_value_construct(*p, *p + N);
 				return p;
@@ -189,7 +189,7 @@ namespace kerbal
 
 			template <typename Tp, typename Up, std::size_t N>
 			KERBAL_CONSTEXPR14
-			Tp (* _K_construct_at(Tp (*p) [N], Up (&&val) [N])) [N]
+			Tp (* k_construct_at(Tp (*p) [N], Up (&&val) [N])) [N]
 			{
 				kerbal::memory::uninitialized_move(val + 0, val + N, *p + 0);
 				return p;
@@ -198,7 +198,7 @@ namespace kerbal
 
 			template <typename Tp, typename Up, std::size_t N>
 			KERBAL_CONSTEXPR14
-			Tp (* _K_construct_at(Tp (*p) [N], Up (&val) [N])) [N]
+			Tp (* k_construct_at(Tp (*p) [N], Up (&val) [N])) [N]
 			{
 				kerbal::memory::uninitialized_copy(val + 0, val + N, *p + 0);
 				return p;
@@ -212,10 +212,10 @@ namespace kerbal
 		KERBAL_CONSTEXPR14
 		Tp * construct_at(Tp * p, Args&& ... args)
 				KERBAL_CONDITIONAL_NOEXCEPT(
-						noexcept(detail::_K_construct_at(p, kerbal::utility::forward<Args>(args)...))
+						noexcept(detail::k_construct_at(p, kerbal::utility::forward<Args>(args)...))
 				)
 		{
-			return detail::_K_construct_at(p, kerbal::utility::forward<Args>(args)...);
+			return detail::k_construct_at(p, kerbal::utility::forward<Args>(args)...);
 		}
 
 #	endif // __cplusplus >= 201103L
@@ -236,7 +236,7 @@ namespace kerbal
 
 			template <typename ForwardIterator>
 			KERBAL_CONSTEXPR20
-			void _K_uninitialized_value_construct(ForwardIterator first, ForwardIterator last, UI_VAL_CONSTRUCT_VER_DEFAULT)
+			void k_uninitialized_value_construct(ForwardIterator first, ForwardIterator last, UI_VAL_CONSTRUCT_VER_DEFAULT)
 			{
 				typedef ForwardIterator iterator;
 				iterator current(first);
@@ -264,7 +264,7 @@ namespace kerbal
 
 			template <typename ForwardIterator>
 			KERBAL_CONSTEXPR20
-			void _K_uninitialized_value_construct(ForwardIterator first, ForwardIterator last, UI_VAL_CONSTRUCT_VER_NOTHROW_ITER_ADVANCE)
+			void k_uninitialized_value_construct(ForwardIterator first, ForwardIterator last, UI_VAL_CONSTRUCT_VER_NOTHROW_ITER_ADVANCE)
 			{
 				typedef ForwardIterator iterator;
 				iterator current(first);
@@ -283,7 +283,7 @@ namespace kerbal
 
 			template <typename ForwardIterator>
 			KERBAL_CONSTEXPR14
-			void _K_uninitialized_value_construct(ForwardIterator first, ForwardIterator last, UI_VAL_CONSTRUCT_VER_NO_CATCH)
+			void k_uninitialized_value_construct(ForwardIterator first, ForwardIterator last, UI_VAL_CONSTRUCT_VER_NO_CATCH)
 			{
 				while (first != last) {
 					kerbal::memory::construct_at(&*first); // new (&*first) Tp ();
@@ -321,7 +321,7 @@ namespace kerbal
 
 #	endif
 
-			detail::_K_uninitialized_value_construct(first, last, VER());
+			detail::k_uninitialized_value_construct(first, last, VER());
 		}
 
 
@@ -340,7 +340,7 @@ namespace kerbal
 
 			template <typename ForwardIterator, typename SizeType>
 			KERBAL_CONSTEXPR20
-			ForwardIterator _K_uninitialized_value_construct_n(ForwardIterator first, SizeType n, UI_VAL_CONSTRUCT_N_VER_DEFAULT)
+			ForwardIterator k_uninitialized_value_construct_n(ForwardIterator first, SizeType n, UI_VAL_CONSTRUCT_N_VER_DEFAULT)
 			{
 				typedef ForwardIterator iterator;
 				iterator current(first);
@@ -370,7 +370,7 @@ namespace kerbal
 
 			template <typename ForwardIterator, typename SizeType>
 			KERBAL_CONSTEXPR20
-			ForwardIterator _K_uninitialized_value_construct_n(ForwardIterator first, SizeType n, UI_VAL_CONSTRUCT_N_VER_NOTHROW_ITER_ADVANCE)
+			ForwardIterator k_uninitialized_value_construct_n(ForwardIterator first, SizeType n, UI_VAL_CONSTRUCT_N_VER_NOTHROW_ITER_ADVANCE)
 			{
 				typedef ForwardIterator iterator;
 				iterator current(first);
@@ -391,7 +391,7 @@ namespace kerbal
 
 			template <typename ForwardIterator, typename SizeType>
 			KERBAL_CONSTEXPR14
-			ForwardIterator _K_uninitialized_value_construct_n(ForwardIterator first, SizeType n, UI_VAL_CONSTRUCT_N_VER_NO_CATCH)
+			ForwardIterator k_uninitialized_value_construct_n(ForwardIterator first, SizeType n, UI_VAL_CONSTRUCT_N_VER_NO_CATCH)
 			{
 				while (n > 0) {
 					--n;
@@ -431,7 +431,7 @@ namespace kerbal
 
 #	endif
 
-			return detail::_K_uninitialized_value_construct_n(first, n, VER());
+			return detail::k_uninitialized_value_construct_n(first, n, VER());
 		}
 
 
@@ -450,7 +450,7 @@ namespace kerbal
 
 			template <typename InputIterator, typename ForwardIterator>
 			KERBAL_CONSTEXPR20
-			ForwardIterator _K_uninitialized_copy(InputIterator first, InputIterator last, ForwardIterator to, UI_CPY_VER_DEFAULT)
+			ForwardIterator k_uninitialized_copy(InputIterator first, InputIterator last, ForwardIterator to, UI_CPY_VER_DEFAULT)
 			{
 				typedef ForwardIterator iterator;
 				iterator current(to);
@@ -480,7 +480,7 @@ namespace kerbal
 
 			template <typename InputIterator, typename ForwardIterator>
 			KERBAL_CONSTEXPR20
-			ForwardIterator _K_uninitialized_copy(InputIterator first, InputIterator last, ForwardIterator to, UI_CPY_VER_NOTHROW_ITER_ADVANCE)
+			ForwardIterator k_uninitialized_copy(InputIterator first, InputIterator last, ForwardIterator to, UI_CPY_VER_NOTHROW_ITER_ADVANCE)
 			{
 				typedef ForwardIterator iterator;
 				iterator current(to);
@@ -501,7 +501,7 @@ namespace kerbal
 
 			template <typename InputIterator, typename ForwardIterator>
 			KERBAL_CONSTEXPR14
-			ForwardIterator _K_uninitialized_copy(InputIterator first, InputIterator last, ForwardIterator to, UI_CPY_VER_NO_CATCH)
+			ForwardIterator k_uninitialized_copy(InputIterator first, InputIterator last, ForwardIterator to, UI_CPY_VER_NO_CATCH)
 			{
 				while (first != last) {
 					kerbal::memory::construct_at(&*to, *first); // new (&*to) Tp (*first);
@@ -541,7 +541,7 @@ namespace kerbal
 
 #	endif
 
-			return detail::_K_uninitialized_copy(first, last, to, VER());
+			return detail::k_uninitialized_copy(first, last, to, VER());
 		}
 
 
@@ -560,7 +560,7 @@ namespace kerbal
 
 			template <typename InputIterator, typename SizeType, typename ForwardIterator>
 			KERBAL_CONSTEXPR20
-			ForwardIterator _K_uninitialized_copy_n(InputIterator first, SizeType n, ForwardIterator to, UI_CPY_N_VER_DEFAULT)
+			ForwardIterator k_uninitialized_copy_n(InputIterator first, SizeType n, ForwardIterator to, UI_CPY_N_VER_DEFAULT)
 			{
 				typedef ForwardIterator iterator;
 				iterator current(to);
@@ -591,7 +591,7 @@ namespace kerbal
 
 			template <typename InputIterator, typename SizeType, typename ForwardIterator>
 			KERBAL_CONSTEXPR20
-			ForwardIterator _K_uninitialized_copy_n(InputIterator first, SizeType n, ForwardIterator to, UI_CPY_N_VER_NOTHROW_ITER_ADVANCE)
+			ForwardIterator k_uninitialized_copy_n(InputIterator first, SizeType n, ForwardIterator to, UI_CPY_N_VER_NOTHROW_ITER_ADVANCE)
 			{
 				typedef ForwardIterator iterator;
 				iterator current(to);
@@ -613,7 +613,7 @@ namespace kerbal
 
 			template <typename InputIterator, typename SizeType, typename ForwardIterator>
 			KERBAL_CONSTEXPR14
-			ForwardIterator _K_uninitialized_copy_n(InputIterator first, SizeType n, ForwardIterator to, UI_CPY_N_VER_NO_CATCH)
+			ForwardIterator k_uninitialized_copy_n(InputIterator first, SizeType n, ForwardIterator to, UI_CPY_N_VER_NO_CATCH)
 			{
 				while (n > 0) {
 					--n;
@@ -654,7 +654,7 @@ namespace kerbal
 
 #	endif
 
-			return detail::_K_uninitialized_copy_n(first, n, to, VER());
+			return detail::k_uninitialized_copy_n(first, n, to, VER());
 		}
 
 
@@ -673,7 +673,7 @@ namespace kerbal
 
 			template <typename InputIterator, typename ForwardIterator>
 			KERBAL_CONSTEXPR20
-			ForwardIterator _K_uninitialized_move(InputIterator first, InputIterator last, ForwardIterator to, UI_MOV_VER_DEFAULT)
+			ForwardIterator k_uninitialized_move(InputIterator first, InputIterator last, ForwardIterator to, UI_MOV_VER_DEFAULT)
 			{
 				typedef ForwardIterator iterator;
 				iterator current(to);
@@ -703,7 +703,7 @@ namespace kerbal
 
 			template <typename InputIterator, typename ForwardIterator>
 			KERBAL_CONSTEXPR20
-			ForwardIterator _K_uninitialized_move(InputIterator first, InputIterator last, ForwardIterator to, UI_MOV_VER_NOTHROW_ITER_ADVANCE)
+			ForwardIterator k_uninitialized_move(InputIterator first, InputIterator last, ForwardIterator to, UI_MOV_VER_NOTHROW_ITER_ADVANCE)
 			{
 				typedef ForwardIterator iterator;
 				iterator current(to);
@@ -724,7 +724,7 @@ namespace kerbal
 
 			template <typename InputIterator, typename ForwardIterator>
 			KERBAL_CONSTEXPR14
-			ForwardIterator _K_uninitialized_move(InputIterator first, InputIterator last, ForwardIterator to, UI_MOV_VER_NO_CATCH)
+			ForwardIterator k_uninitialized_move(InputIterator first, InputIterator last, ForwardIterator to, UI_MOV_VER_NO_CATCH)
 			{
 				while (first != last) {
 					kerbal::memory::construct_at(&*to, kerbal::compatibility::to_xvalue(*first)); // new (&*to) Tp (kerbal::compatibility::to_xvalue(*first));
@@ -764,7 +764,7 @@ namespace kerbal
 
 #	endif
 
-			return detail::_K_uninitialized_move(first, last, to, VER());
+			return detail::k_uninitialized_move(first, last, to, VER());
 		}
 
 
@@ -783,7 +783,7 @@ namespace kerbal
 
 			template <typename InputIterator, typename SizeType, typename ForwardIterator>
 			KERBAL_CONSTEXPR20
-			ForwardIterator _K_uninitialized_move_n(InputIterator first, SizeType n, ForwardIterator to, UI_MOV_N_VER_DEFAULT)
+			ForwardIterator k_uninitialized_move_n(InputIterator first, SizeType n, ForwardIterator to, UI_MOV_N_VER_DEFAULT)
 			{
 				typedef ForwardIterator iterator;
 				iterator current(to);
@@ -814,7 +814,7 @@ namespace kerbal
 
 			template <typename InputIterator, typename SizeType, typename ForwardIterator>
 			KERBAL_CONSTEXPR20
-			ForwardIterator _K_uninitialized_move_n(InputIterator first, SizeType n, ForwardIterator to, UI_MOV_N_VER_NOTHROW_ITER_ADVANCE)
+			ForwardIterator k_uninitialized_move_n(InputIterator first, SizeType n, ForwardIterator to, UI_MOV_N_VER_NOTHROW_ITER_ADVANCE)
 			{
 				typedef ForwardIterator iterator;
 				iterator current(to);
@@ -836,7 +836,7 @@ namespace kerbal
 
 			template <typename InputIterator, typename SizeType, typename ForwardIterator>
 			KERBAL_CONSTEXPR14
-			ForwardIterator _K_uninitialized_move_n(InputIterator first, SizeType n, ForwardIterator to, UI_MOV_N_VER_NO_CATCH)
+			ForwardIterator k_uninitialized_move_n(InputIterator first, SizeType n, ForwardIterator to, UI_MOV_N_VER_NO_CATCH)
 			{
 				while (n > 0) {
 					--n;
@@ -877,7 +877,7 @@ namespace kerbal
 
 #	endif
 
-			return detail::_K_uninitialized_move_n(first, n, to, VER());
+			return detail::k_uninitialized_move_n(first, n, to, VER());
 		}
 
 
@@ -1000,7 +1000,7 @@ namespace kerbal
 
 			template <typename ForwardIterator, typename SizeType, typename T>
 			KERBAL_CONSTEXPR20
-			ForwardIterator _K_uninitialized_fill_n(ForwardIterator first, SizeType n, const T & value, UI_FILL_N_VER_DEFAULT)
+			ForwardIterator k_uninitialized_fill_n(ForwardIterator first, SizeType n, const T & value, UI_FILL_N_VER_DEFAULT)
 			{
 				typedef ForwardIterator iterator;
 				iterator current(first);
@@ -1030,7 +1030,7 @@ namespace kerbal
 
 			template <typename ForwardIterator, typename SizeType, typename T>
 			KERBAL_CONSTEXPR20
-			ForwardIterator _K_uninitialized_fill_n(ForwardIterator first, SizeType n, const T & value, UI_FILL_N_VER_NOTHROW_ITER_ADVANCE)
+			ForwardIterator k_uninitialized_fill_n(ForwardIterator first, SizeType n, const T & value, UI_FILL_N_VER_NOTHROW_ITER_ADVANCE)
 			{
 				typedef ForwardIterator iterator;
 				iterator current(first);
@@ -1051,7 +1051,7 @@ namespace kerbal
 
 			template <typename ForwardIterator, typename SizeType, typename T>
 			KERBAL_CONSTEXPR14
-			ForwardIterator _K_uninitialized_fill_n(ForwardIterator first, SizeType n, const T & value, UI_FILL_N_VER_NO_CATCH)
+			ForwardIterator k_uninitialized_fill_n(ForwardIterator first, SizeType n, const T & value, UI_FILL_N_VER_NO_CATCH)
 			{
 				while (n > 0) {
 					--n;
@@ -1091,7 +1091,7 @@ namespace kerbal
 
 #	endif
 
-			return detail::_K_uninitialized_fill_n(first, n, value, VER());
+			return detail::k_uninitialized_fill_n(first, n, value, VER());
 		}
 
 	} // namespace memory

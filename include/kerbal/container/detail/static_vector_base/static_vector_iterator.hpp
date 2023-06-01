@@ -39,7 +39,7 @@ namespace kerbal
 		{
 
 			template <typename DerivedIterator, typename Pointer, typename StorageType>
-			class __stavec_iterbase:
+			class sv_iterbase:
 					//forward iterator interface
 					public kerbal::operators::dereferenceable<DerivedIterator, Pointer>, // it->
 					public kerbal::operators::equality_comparable<DerivedIterator>, // it != jt
@@ -69,7 +69,7 @@ namespace kerbal
 
 				public:
 					KERBAL_CONSTEXPR
-					explicit __stavec_iterbase(storage_type_for_iterator* current) KERBAL_NOEXCEPT :
+					explicit sv_iterbase(storage_type_for_iterator* current) KERBAL_NOEXCEPT :
 							current(current)
 					{
 					}
@@ -144,12 +144,12 @@ namespace kerbal
 			};
 
 			template <typename ValueType>
-			class __stavec_kiter;
+			class sv_kiter;
 
 			// Iterator to static_vector.
 			template <typename ValueType>
-			class __stavec_iter: public __stavec_iterbase<
-													__stavec_iter<ValueType>,
+			class sv_iter: public sv_iterbase<
+													sv_iter<ValueType>,
 													ValueType*,
 													kerbal::memory::raw_storage<ValueType>
 											>
@@ -158,14 +158,14 @@ namespace kerbal
 					template <typename Tp, std::size_t N>
 					friend class kerbal::container::static_vector;
 
-					friend class __stavec_kiter<ValueType>;
+					friend class sv_kiter<ValueType>;
 
 					typedef kerbal::memory::raw_storage<ValueType> storage_type;
-					typedef __stavec_iterbase<__stavec_iter<ValueType>, ValueType*, storage_type> super;
+					typedef sv_iterbase<sv_iter<ValueType>, ValueType*, storage_type> super;
 
 				public:
 					KERBAL_CONSTEXPR
-					explicit __stavec_iter(storage_type* current) KERBAL_NOEXCEPT :
+					explicit sv_iter(storage_type* current) KERBAL_NOEXCEPT :
 							super(current)
 					{
 					}
@@ -173,8 +173,8 @@ namespace kerbal
 
 			// Constant iterator to static_vector.
 			template <typename ValueType>
-			class __stavec_kiter: public __stavec_iterbase<
-													__stavec_kiter<ValueType>,
+			class sv_kiter: public sv_iterbase<
+													sv_kiter<ValueType>,
 													const ValueType*,
 													const kerbal::memory::raw_storage<ValueType>
 											>
@@ -184,18 +184,18 @@ namespace kerbal
 					friend class kerbal::container::static_vector;
 
 					typedef kerbal::memory::raw_storage<ValueType> storage_type;
-					typedef __stavec_iterbase<__stavec_kiter<ValueType>, const ValueType*, const storage_type> super;
-					typedef __stavec_iter<ValueType> iterator;
+					typedef sv_iterbase<sv_kiter<ValueType>, const ValueType*, const storage_type> super;
+					typedef sv_iter<ValueType> iterator;
 
 				public:
 					KERBAL_CONSTEXPR
-					explicit __stavec_kiter(const storage_type* current) KERBAL_NOEXCEPT :
+					explicit sv_kiter(const storage_type* current) KERBAL_NOEXCEPT :
 							super(current)
 					{
 					}
 
 					KERBAL_CONSTEXPR
-					__stavec_kiter(const iterator & current) KERBAL_NOEXCEPT :
+					sv_kiter(const iterator & current) KERBAL_NOEXCEPT :
 							super(current.current)
 					{
 					}

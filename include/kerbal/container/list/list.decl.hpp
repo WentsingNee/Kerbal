@@ -504,7 +504,7 @@ namespace kerbal
 						noexcept(list_allocator_overload::k_swap_allocator_if_propagate(
 								kerbal::utility::declval<list_allocator_overload&>(), kerbal::utility::declval<list_allocator_overload&>()
 						)) &&
-						noexcept(list_type_unrelated::_K_swap_type_unrelated(
+						noexcept(list_type_unrelated::k_swap_type_unrelated(
 								kerbal::utility::declval<list_type_unrelated&>(), kerbal::utility::declval<list_type_unrelated&>()
 						))
 				);

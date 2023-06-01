@@ -74,12 +74,12 @@ namespace kerbal
 			>
 			{
 				private:
-					typedef TupleImpl _K_tuple_impl;
+					typedef TupleImpl k_tuple_impl;
 
 					typedef kerbal::type_traits::tribool_is_true<
 						typename kerbal::type_traits::tribool_conjunction<
 							kerbal::type_traits::try_test_is_nothrow_constructible<
-								typename _K_tuple_impl::template super<HeadIndex>::type,
+								typename k_tuple_impl::template super<HeadIndex>::type,
 								kerbal::utility::in_place_t,
 								UArgs&&
 							>...
@@ -89,7 +89,7 @@ namespace kerbal
 					typedef kerbal::type_traits::tribool_is_true<
 						typename kerbal::type_traits::tribool_conjunction<
 							kerbal::type_traits::try_test_is_nothrow_constructible<
-								typename _K_tuple_impl::template super<TailIndex + sizeof...(HeadIndex)>::type,
+								typename k_tuple_impl::template super<TailIndex + sizeof...(HeadIndex)>::type,
 								kerbal::utility::in_place_t
 							>...
 						>::result
@@ -540,7 +540,7 @@ namespace kerbal
 
 				template <typename ... UArgs, std::size_t ... Index>
 				KERBAL_CONSTEXPR14
-				void _K_covariant_assign_impl(const kerbal::utility::tuple<UArgs...> & t, kerbal::utility::index_sequence<Index...>)
+				void k_covariant_assign_impl(const kerbal::utility::tuple<UArgs...> & t, kerbal::utility::index_sequence<Index...>)
 				{
 					kerbal::utility::ignore_unused(std::initializer_list<int>{
 						(
@@ -557,7 +557,7 @@ namespace kerbal
 				tuple& operator=(const kerbal::utility::tuple<UArgs...> & t)
 				{
 					KERBAL_STATIC_ASSERT(sizeof...(UArgs) == sizeof...(Args), "Wrong size tuple");
-					_K_covariant_assign_impl(t, kerbal::utility::make_index_sequence<TUPLE_SIZE::value>());
+					k_covariant_assign_impl(t, kerbal::utility::make_index_sequence<TUPLE_SIZE::value>());
 					return *this;
 				}
 
@@ -566,7 +566,7 @@ namespace kerbal
 
 				template <typename ... UArgs, std::size_t ... Index>
 				KERBAL_CONSTEXPR14
-				void _K_covariant_move_assign_impl(kerbal::utility::tuple<UArgs...> && t, kerbal::utility::index_sequence<Index...>)
+				void k_covariant_move_assign_impl(kerbal::utility::tuple<UArgs...> && t, kerbal::utility::index_sequence<Index...>)
 				{
 					kerbal::utility::ignore_unused(std::initializer_list<int>{
 						(
@@ -582,7 +582,7 @@ namespace kerbal
 				KERBAL_CONSTEXPR14
 				tuple& operator=(kerbal::utility::tuple<UArgs...> && t)
 				{
-					_K_covariant_move_assign_impl(kerbal::compatibility::move(t), kerbal::utility::make_index_sequence<TUPLE_SIZE::value>());
+					k_covariant_move_assign_impl(kerbal::compatibility::move(t), kerbal::utility::make_index_sequence<TUPLE_SIZE::value>());
 					return *this;
 				}
 
@@ -601,7 +601,7 @@ namespace kerbal
 				template <std::size_t ... Index>
 				KERBAL_CONSTEXPR14
 				tuple<typename reference<Index>::type...>
-				_K_ref_impl(kerbal::utility::index_sequence<Index...>) & KERBAL_NOEXCEPT
+				k_ref_impl(kerbal::utility::index_sequence<Index...>) & KERBAL_NOEXCEPT
 				{
 					return tuple<typename reference<Index>::type...>(this->template get<Index>()...);
 				}
@@ -611,12 +611,12 @@ namespace kerbal
 				KERBAL_CONSTEXPR14
 				auto ref() & KERBAL_NOEXCEPT ->
 						decltype(
-							kerbal::utility::declval<tuple &>()._K_ref_impl(
+							kerbal::utility::declval<tuple &>().k_ref_impl(
 								kerbal::utility::make_index_sequence<TUPLE_SIZE::value>()
 							)
 						)
 				{
-					return _K_ref_impl(kerbal::utility::make_index_sequence<TUPLE_SIZE::value>());
+					return k_ref_impl(kerbal::utility::make_index_sequence<TUPLE_SIZE::value>());
 				}
 
 
@@ -625,7 +625,7 @@ namespace kerbal
 				template <std::size_t ... Index>
 				KERBAL_CONSTEXPR14
 				tuple<typename const_reference<Index>::type...>
-				_K_cref_impl(kerbal::utility::index_sequence<Index...>) const & KERBAL_NOEXCEPT
+				k_cref_impl(kerbal::utility::index_sequence<Index...>) const & KERBAL_NOEXCEPT
 				{
 					return tuple<typename const_reference<Index>::type...>(this->template get<Index>()...);
 				}
@@ -635,23 +635,23 @@ namespace kerbal
 				KERBAL_CONSTEXPR14
 				auto ref() const & KERBAL_NOEXCEPT ->
 						decltype(
-							kerbal::utility::declval<const tuple &>()._K_cref_impl(
+							kerbal::utility::declval<const tuple &>().k_cref_impl(
 								kerbal::utility::make_index_sequence<TUPLE_SIZE::value>()
 							)
 						)
 				{
-					return _K_cref_impl(kerbal::utility::make_index_sequence<TUPLE_SIZE::value>());
+					return k_cref_impl(kerbal::utility::make_index_sequence<TUPLE_SIZE::value>());
 				}
 
 				KERBAL_CONSTEXPR14
 				auto cref() const & KERBAL_NOEXCEPT ->
 						decltype(
-							kerbal::utility::declval<const tuple &>()._K_cref_impl(
+							kerbal::utility::declval<const tuple &>().k_cref_impl(
 								kerbal::utility::make_index_sequence<TUPLE_SIZE::value>()
 							)
 						)
 				{
-					return _K_cref_impl(kerbal::utility::make_index_sequence<TUPLE_SIZE::value>());
+					return k_cref_impl(kerbal::utility::make_index_sequence<TUPLE_SIZE::value>());
 				}
 
 
@@ -659,7 +659,7 @@ namespace kerbal
 
 				template <typename Self, typename F, std::size_t ... Index>
 				KERBAL_CONSTEXPR
-				static Self&& _K_for_each_impl(Self && self, F f, kerbal::utility::index_sequence<Index...>)
+				static Self&& k_for_each_impl(Self && self, F f, kerbal::utility::index_sequence<Index...>)
 				{
 					return kerbal::utility::ignore_unused(std::initializer_list<int>{
 						(
@@ -677,28 +677,28 @@ namespace kerbal
 				KERBAL_CONSTEXPR14
 				tuple& for_each(F f) &
 				{
-					return _K_for_each_impl(*this, f, kerbal::utility::make_index_sequence<TUPLE_SIZE::value>());
+					return k_for_each_impl(*this, f, kerbal::utility::make_index_sequence<TUPLE_SIZE::value>());
 				}
 
 				template <typename F>
 				KERBAL_CONSTEXPR
 				const tuple& for_each(F f) const &
 				{
-					return _K_for_each_impl(*this, f, kerbal::utility::make_index_sequence<TUPLE_SIZE::value>());
+					return k_for_each_impl(*this, f, kerbal::utility::make_index_sequence<TUPLE_SIZE::value>());
 				}
 
 				template <typename F>
 				KERBAL_CONSTEXPR14
 				tuple&& for_each(F f) &&
 				{
-					return _K_for_each_impl(kerbal::compatibility::move(*this), f, kerbal::utility::make_index_sequence<TUPLE_SIZE::value>());
+					return k_for_each_impl(kerbal::compatibility::move(*this), f, kerbal::utility::make_index_sequence<TUPLE_SIZE::value>());
 				}
 
 				template <typename F>
 				KERBAL_CONSTEXPR
 				const tuple&& for_each(F f) const &&
 				{
-					return _K_for_each_impl(kerbal::compatibility::move(*this), f, kerbal::utility::make_index_sequence<TUPLE_SIZE::value>());
+					return k_for_each_impl(kerbal::compatibility::move(*this), f, kerbal::utility::make_index_sequence<TUPLE_SIZE::value>());
 				}
 
 
@@ -706,7 +706,7 @@ namespace kerbal
 
 				template <typename Self, typename F, std::size_t ... Index>
 				KERBAL_CONSTEXPR
-				static Self&& _K_rfor_each_impl(Self && self, F f, kerbal::utility::index_sequence<Index...>)
+				static Self&& k_rfor_each_impl(Self && self, F f, kerbal::utility::index_sequence<Index...>)
 				{
 					return kerbal::utility::ignore_unused(std::initializer_list<int>{
 						(
@@ -724,28 +724,28 @@ namespace kerbal
 				KERBAL_CONSTEXPR14
 				tuple& rfor_each(F f) &
 				{
-					return _K_rfor_each_impl(*this, f, kerbal::utility::make_index_sequence<TUPLE_SIZE::value>());
+					return k_rfor_each_impl(*this, f, kerbal::utility::make_index_sequence<TUPLE_SIZE::value>());
 				}
 
 				template <typename F>
 				KERBAL_CONSTEXPR
 				const tuple& rfor_each(F f) const &
 				{
-					return _K_rfor_each_impl(*this, f, kerbal::utility::make_index_sequence<TUPLE_SIZE::value>());
+					return k_rfor_each_impl(*this, f, kerbal::utility::make_index_sequence<TUPLE_SIZE::value>());
 				}
 
 				template <typename F>
 				KERBAL_CONSTEXPR14
 				tuple&& rfor_each(F f) &&
 				{
-					return _K_rfor_each_impl(kerbal::compatibility::move(*this), f, kerbal::utility::make_index_sequence<TUPLE_SIZE::value>());
+					return k_rfor_each_impl(kerbal::compatibility::move(*this), f, kerbal::utility::make_index_sequence<TUPLE_SIZE::value>());
 				}
 
 				template <typename F>
 				KERBAL_CONSTEXPR
 				const tuple&& rfor_each(F f) const &&
 				{
-					return _K_rfor_each_impl(kerbal::compatibility::move(*this), f, kerbal::utility::make_index_sequence<TUPLE_SIZE::value>());
+					return k_rfor_each_impl(kerbal::compatibility::move(*this), f, kerbal::utility::make_index_sequence<TUPLE_SIZE::value>());
 				}
 
 
@@ -753,7 +753,7 @@ namespace kerbal
 
 				template <typename Self, typename F, std::size_t ... Index>
 				KERBAL_CONSTEXPR
-				static auto _K_apply_to_impl(Self && self, F f, kerbal::utility::index_sequence<Index...>) ->
+				static auto k_apply_to_impl(Self && self, F f, kerbal::utility::index_sequence<Index...>) ->
 						decltype(f(kerbal::utility::forward<Self>(self).template get<Index>()...))
 				{
 					return f(kerbal::utility::forward<Self>(self).template get<Index>()...);
@@ -764,40 +764,40 @@ namespace kerbal
 				template <typename F>
 				KERBAL_CONSTEXPR14
 				auto apply_to(F f) & ->
-						decltype(_K_apply_to_impl(*this, f, kerbal::utility::make_index_sequence<TUPLE_SIZE::value>()))
+						decltype(k_apply_to_impl(*this, f, kerbal::utility::make_index_sequence<TUPLE_SIZE::value>()))
 				{
-					return _K_apply_to_impl(*this, f, kerbal::utility::make_index_sequence<TUPLE_SIZE::value>());
+					return k_apply_to_impl(*this, f, kerbal::utility::make_index_sequence<TUPLE_SIZE::value>());
 				}
 
 				template <typename F>
 				KERBAL_CONSTEXPR
 				auto apply_to(F f) const & ->
-						decltype(_K_apply_to_impl(*this, f, kerbal::utility::make_index_sequence<TUPLE_SIZE::value>()))
+						decltype(k_apply_to_impl(*this, f, kerbal::utility::make_index_sequence<TUPLE_SIZE::value>()))
 				{
-					return _K_apply_to_impl(*this, f, kerbal::utility::make_index_sequence<TUPLE_SIZE::value>());
+					return k_apply_to_impl(*this, f, kerbal::utility::make_index_sequence<TUPLE_SIZE::value>());
 				}
 
 				template <typename F>
 				KERBAL_CONSTEXPR14
 				auto apply_to(F f) && ->
-						decltype(_K_apply_to_impl(kerbal::compatibility::move(*this), f, kerbal::utility::make_index_sequence<TUPLE_SIZE::value>()))
+						decltype(k_apply_to_impl(kerbal::compatibility::move(*this), f, kerbal::utility::make_index_sequence<TUPLE_SIZE::value>()))
 				{
-					return _K_apply_to_impl(kerbal::compatibility::move(*this), f, kerbal::utility::make_index_sequence<TUPLE_SIZE::value>());
+					return k_apply_to_impl(kerbal::compatibility::move(*this), f, kerbal::utility::make_index_sequence<TUPLE_SIZE::value>());
 				}
 
 				template <typename F>
 				KERBAL_CONSTEXPR
 				auto apply_to(F f) const && ->
-						decltype(_K_apply_to_impl(kerbal::compatibility::move(*this), f, kerbal::utility::make_index_sequence<TUPLE_SIZE::value>()))
+						decltype(k_apply_to_impl(kerbal::compatibility::move(*this), f, kerbal::utility::make_index_sequence<TUPLE_SIZE::value>()))
 				{
-					return _K_apply_to_impl(kerbal::compatibility::move(*this), f, kerbal::utility::make_index_sequence<TUPLE_SIZE::value>());
+					return k_apply_to_impl(kerbal::compatibility::move(*this), f, kerbal::utility::make_index_sequence<TUPLE_SIZE::value>());
 				}
 
 			protected:
 
 				template <typename Self, typename F, typename JoinF, std::size_t ... Index>
 				KERBAL_CONSTEXPR
-				static int _K_join_impl2(Self && self, F f, JoinF joinf, kerbal::utility::index_sequence<Index...>)
+				static int k_join_impl2(Self && self, F f, JoinF joinf, kerbal::utility::index_sequence<Index...>)
 				{
 					return kerbal::utility::ignore_unused(std::initializer_list<int>{
 						(
@@ -819,11 +819,11 @@ namespace kerbal
 
 				template <typename Self, typename HeadF, typename F, typename JoinF, typename TailF, std::size_t N>
 				KERBAL_CONSTEXPR
-				static Self&& _K_join_impl(Self && self, HeadF headf, F f, JoinF joinf, TailF tailf, kerbal::type_traits::integral_constant<std::size_t, N>)
+				static Self&& k_join_impl(Self && self, HeadF headf, F f, JoinF joinf, TailF tailf, kerbal::type_traits::integral_constant<std::size_t, N>)
 				{
 					return
 						headf(),
-						_K_join_impl2(kerbal::utility::forward<Self>(self), f, joinf, kerbal::utility::make_index_sequence<2 * N - 1>()),
+						k_join_impl2(kerbal::utility::forward<Self>(self), f, joinf, kerbal::utility::make_index_sequence<2 * N - 1>()),
 						tailf(),
 						kerbal::utility::forward<Self>(self)
 					;
@@ -831,7 +831,7 @@ namespace kerbal
 
 				template <typename Self, typename HeadF, typename F, typename JoinF, typename TailF>
 				KERBAL_CONSTEXPR
-				static Self&& _K_join_impl(Self && self, HeadF headf, F /*f*/, JoinF /*joinf*/, TailF tailf, kerbal::type_traits::integral_constant<std::size_t, 0>)
+				static Self&& k_join_impl(Self && self, HeadF headf, F /*f*/, JoinF /*joinf*/, TailF tailf, kerbal::type_traits::integral_constant<std::size_t, 0>)
 				{
 					return headf(), tailf(), kerbal::utility::forward<Self>(self);
 				}
@@ -842,28 +842,28 @@ namespace kerbal
 				KERBAL_CONSTEXPR14
 				tuple& join(HeadF headf, F f, JoinF joinf, TailF tailf) &
 				{
-					return _K_join_impl(*this, headf, f, joinf, tailf, TUPLE_SIZE());
+					return k_join_impl(*this, headf, f, joinf, tailf, TUPLE_SIZE());
 				}
 
 				template <typename HeadF, typename F, typename JoinF, typename TailF>
 				KERBAL_CONSTEXPR
 				const tuple& join(HeadF headf, F f, JoinF joinf, TailF tailf) const &
 				{
-					return _K_join_impl(*this, headf, f, joinf, tailf, TUPLE_SIZE());
+					return k_join_impl(*this, headf, f, joinf, tailf, TUPLE_SIZE());
 				}
 
 				template <typename HeadF, typename F, typename JoinF, typename TailF>
 				KERBAL_CONSTEXPR14
 				tuple&& join(HeadF headf, F f, JoinF joinf, TailF tailf) &&
 				{
-					return _K_join_impl(kerbal::compatibility::move(*this), headf, f, joinf, tailf, TUPLE_SIZE());
+					return k_join_impl(kerbal::compatibility::move(*this), headf, f, joinf, tailf, TUPLE_SIZE());
 				}
 
 				template <typename HeadF, typename F, typename JoinF, typename TailF>
 				KERBAL_CONSTEXPR
 				const tuple&& join(HeadF headf, F f, JoinF joinf, TailF tailf) const &&
 				{
-					return _K_join_impl(kerbal::compatibility::move(*this), headf, f, joinf, tailf, TUPLE_SIZE());
+					return k_join_impl(kerbal::compatibility::move(*this), headf, f, joinf, tailf, TUPLE_SIZE());
 				}
 
 
@@ -872,7 +872,7 @@ namespace kerbal
 				template <typename Self, typename F, std::size_t ... Index>
 				KERBAL_CONSTEXPR
 				static
-				auto _K_transform_impl(Self && self, F f, kerbal::utility::index_sequence<Index...>) ->
+				auto k_transform_impl(Self && self, F f, kerbal::utility::index_sequence<Index...>) ->
 						decltype(kerbal::utility::make_tuple(
 								f(
 									kerbal::type_traits::integral_constant<std::size_t, Index>(),
@@ -893,33 +893,33 @@ namespace kerbal
 				template <typename F>
 				KERBAL_CONSTEXPR14
 				auto transform(F f) & ->
-						decltype(_K_transform_impl(*this, f, kerbal::utility::make_index_sequence<TUPLE_SIZE::value>()))
+						decltype(k_transform_impl(*this, f, kerbal::utility::make_index_sequence<TUPLE_SIZE::value>()))
 				{
-					return _K_transform_impl(*this, f, kerbal::utility::make_index_sequence<TUPLE_SIZE::value>());
+					return k_transform_impl(*this, f, kerbal::utility::make_index_sequence<TUPLE_SIZE::value>());
 				}
 
 				template <typename F>
 				KERBAL_CONSTEXPR
 				auto transform(F f) const & ->
-						decltype(_K_transform_impl(*this, f, kerbal::utility::make_index_sequence<TUPLE_SIZE::value>()))
+						decltype(k_transform_impl(*this, f, kerbal::utility::make_index_sequence<TUPLE_SIZE::value>()))
 				{
-					return _K_transform_impl(*this, f, kerbal::utility::make_index_sequence<TUPLE_SIZE::value>());
+					return k_transform_impl(*this, f, kerbal::utility::make_index_sequence<TUPLE_SIZE::value>());
 				}
 
 				template <typename F>
 				KERBAL_CONSTEXPR14
 				auto transform(F f) && ->
-						decltype(_K_transform_impl(kerbal::compatibility::move(*this), f, kerbal::utility::make_index_sequence<TUPLE_SIZE::value>()))
+						decltype(k_transform_impl(kerbal::compatibility::move(*this), f, kerbal::utility::make_index_sequence<TUPLE_SIZE::value>()))
 				{
-					return _K_transform_impl(kerbal::compatibility::move(*this), f, kerbal::utility::make_index_sequence<TUPLE_SIZE::value>());
+					return k_transform_impl(kerbal::compatibility::move(*this), f, kerbal::utility::make_index_sequence<TUPLE_SIZE::value>());
 				}
 
 				template <typename F>
 				KERBAL_CONSTEXPR
 				auto transform(F f) const && ->
-						decltype(_K_transform_impl(kerbal::compatibility::move(*this), f, kerbal::utility::make_index_sequence<TUPLE_SIZE::value>()))
+						decltype(k_transform_impl(kerbal::compatibility::move(*this), f, kerbal::utility::make_index_sequence<TUPLE_SIZE::value>()))
 				{
-					return _K_transform_impl(kerbal::compatibility::move(*this), f, kerbal::utility::make_index_sequence<TUPLE_SIZE::value>());
+					return k_transform_impl(kerbal::compatibility::move(*this), f, kerbal::utility::make_index_sequence<TUPLE_SIZE::value>());
 				}
 
 
@@ -929,7 +929,7 @@ namespace kerbal
 				KERBAL_CONSTEXPR
 				static
 				tuple<typename value_type<Index>::type...>
-				_K_select_impl(Self && self, kerbal::utility::index_sequence<Index...>)
+				k_select_impl(Self && self, kerbal::utility::index_sequence<Index...>)
 				{
 					return tuple<typename value_type<Index>::type...>(
 							kerbal::utility::forward<Self>(self).template get<Index>()...
@@ -941,17 +941,17 @@ namespace kerbal
 				template <std::size_t ... Index>
 				KERBAL_CONSTEXPR
 				auto select() const & ->
-						decltype(_K_select_impl(*this, kerbal::utility::index_sequence<Index...>()))
+						decltype(k_select_impl(*this, kerbal::utility::index_sequence<Index...>()))
 				{
-					return _K_select_impl(*this, kerbal::utility::index_sequence<Index...>());
+					return k_select_impl(*this, kerbal::utility::index_sequence<Index...>());
 				}
 
 				template <std::size_t ... Index>
 				KERBAL_CONSTEXPR14
 				auto select() && ->
-						decltype(_K_select_impl(kerbal::compatibility::move(*this), kerbal::utility::index_sequence<Index...>()))
+						decltype(k_select_impl(kerbal::compatibility::move(*this), kerbal::utility::index_sequence<Index...>()))
 				{
-					return _K_select_impl(kerbal::compatibility::move(*this), kerbal::utility::index_sequence<Index...>());
+					return k_select_impl(kerbal::compatibility::move(*this), kerbal::utility::index_sequence<Index...>());
 				}
 
 
@@ -961,7 +961,7 @@ namespace kerbal
 				KERBAL_CONSTEXPR
 				static
 				tuple<typename value_type<TUPLE_SIZE::value - 1 - Index>::type...>
-				_K_reverse_impl(Self && self, kerbal::utility::index_sequence<Index...>) KERBAL_NOEXCEPT
+				k_reverse_impl(Self && self, kerbal::utility::index_sequence<Index...>) KERBAL_NOEXCEPT
 				{
 					return tuple<typename value_type<TUPLE_SIZE::value - 1 - Index>::type...>(
 							kerbal::utility::forward<Self>(self).template get<TUPLE_SIZE::value - 1 - Index>()...
@@ -972,16 +972,16 @@ namespace kerbal
 
 				KERBAL_CONSTEXPR
 				auto reverse() const & ->
-						decltype(_K_reverse_impl(*this, kerbal::utility::make_index_sequence<TUPLE_SIZE::value>()))
+						decltype(k_reverse_impl(*this, kerbal::utility::make_index_sequence<TUPLE_SIZE::value>()))
 				{
-					return _K_reverse_impl(*this, kerbal::utility::make_index_sequence<TUPLE_SIZE::value>());
+					return k_reverse_impl(*this, kerbal::utility::make_index_sequence<TUPLE_SIZE::value>());
 				}
 
 				KERBAL_CONSTEXPR14
 				auto reverse() && ->
-						decltype(_K_reverse_impl(kerbal::compatibility::move(*this), kerbal::utility::make_index_sequence<TUPLE_SIZE::value>()))
+						decltype(k_reverse_impl(kerbal::compatibility::move(*this), kerbal::utility::make_index_sequence<TUPLE_SIZE::value>()))
 				{
-					return _K_reverse_impl(kerbal::compatibility::move(*this), kerbal::utility::make_index_sequence<TUPLE_SIZE::value>());
+					return k_reverse_impl(kerbal::compatibility::move(*this), kerbal::utility::make_index_sequence<TUPLE_SIZE::value>());
 				}
 
 
@@ -989,7 +989,7 @@ namespace kerbal
 
 				template <std::size_t ... Index>
 				KERBAL_CONSTEXPR14
-				void _K_swap_impl(tuple & ano, kerbal::utility::index_sequence<Index...>)
+				void k_swap_impl(tuple & ano, kerbal::utility::index_sequence<Index...>)
 				{
 					kerbal::utility::ignore_unused(std::initializer_list<int>{
 						(
@@ -1006,7 +1006,7 @@ namespace kerbal
 				KERBAL_CONSTEXPR14
 				void swap(tuple & ano)
 				{
-					_K_swap_impl(ano, kerbal::utility::make_index_sequence<TUPLE_SIZE::value>());
+					k_swap_impl(ano, kerbal::utility::make_index_sequence<TUPLE_SIZE::value>());
 				}
 
 
@@ -1014,15 +1014,15 @@ namespace kerbal
 
 				template <std::size_t N>
 				KERBAL_CONSTEXPR
-				bool _K_equal_to_impl(const tuple & ano, kerbal::type_traits::integral_constant<std::size_t, N>) const
+				bool k_equal_to_impl(const tuple & ano, kerbal::type_traits::integral_constant<std::size_t, N>) const
 				{
 					typedef kerbal::compare::equal_to<typename value_type<N>::type> Pred;
 					return static_cast<bool>(Pred()(this->template get<N>(), ano.template get<N>())) &&
-						   this->_K_equal_to_impl(ano, kerbal::type_traits::integral_constant<std::size_t, N + 1>());
+						   this->k_equal_to_impl(ano, kerbal::type_traits::integral_constant<std::size_t, N + 1>());
 				}
 
 				KERBAL_CONSTEXPR
-				bool _K_equal_to_impl(const tuple & ano, kerbal::type_traits::integral_constant<std::size_t, TUPLE_SIZE::value>) const
+				bool k_equal_to_impl(const tuple & ano, kerbal::type_traits::integral_constant<std::size_t, TUPLE_SIZE::value>) const
 				{
 					return true;
 				}
@@ -1032,7 +1032,7 @@ namespace kerbal
 				KERBAL_CONSTEXPR
 				bool operator==(const tuple & ano) const
 				{
-					return this->_K_equal_to_impl(ano, kerbal::type_traits::integral_constant<std::size_t, 0>());
+					return this->k_equal_to_impl(ano, kerbal::type_traits::integral_constant<std::size_t, 0>());
 				}
 
 
@@ -1040,15 +1040,15 @@ namespace kerbal
 
 				template <std::size_t N>
 				KERBAL_CONSTEXPR
-				bool _K_not_equal_to_impl(const tuple & ano, kerbal::type_traits::integral_constant<std::size_t, N>) const
+				bool k_not_equal_to_impl(const tuple & ano, kerbal::type_traits::integral_constant<std::size_t, N>) const
 				{
 					typedef kerbal::compare::not_equal_to<typename value_type<N>::type> Pred;
 					return static_cast<bool>(Pred()(this->template get<N>(), ano.template get<N>())) ||
-						   this->_K_not_equal_to_impl(ano, kerbal::type_traits::integral_constant<std::size_t, N + 1>());
+						   this->k_not_equal_to_impl(ano, kerbal::type_traits::integral_constant<std::size_t, N + 1>());
 				}
 
 				KERBAL_CONSTEXPR
-				bool _K_not_equal_to_impl(const tuple & ano, kerbal::type_traits::integral_constant<std::size_t, TUPLE_SIZE::value>) const
+				bool k_not_equal_to_impl(const tuple & ano, kerbal::type_traits::integral_constant<std::size_t, TUPLE_SIZE::value>) const
 				{
 					return false;
 				}
@@ -1058,7 +1058,7 @@ namespace kerbal
 				KERBAL_CONSTEXPR
 				bool operator!=(const tuple & ano) const
 				{
-					return this->_K_not_equal_to_impl(ano, kerbal::type_traits::integral_constant<std::size_t, 0>());
+					return this->k_not_equal_to_impl(ano, kerbal::type_traits::integral_constant<std::size_t, 0>());
 				}
 
 
@@ -1066,19 +1066,19 @@ namespace kerbal
 
 				template <std::size_t N>
 				KERBAL_CONSTEXPR
-				bool _K_less_impl(const tuple & ano, kerbal::type_traits::integral_constant<std::size_t, N>) const
+				bool k_less_impl(const tuple & ano, kerbal::type_traits::integral_constant<std::size_t, N>) const
 				{
 					typedef kerbal::compare::less<typename value_type<N>::type> Pred;
 					return
 							static_cast<bool>(Pred()(this->template get<N>(), ano.template get<N>())) /* *this < ano */ ||
 							(
 								!static_cast<bool>(Pred()(ano.template get<N>(), this->template get<N>())) /* *this <= ano */ &&
-								this->_K_less_impl(ano, kerbal::type_traits::integral_constant<std::size_t, N + 1>())
+								this->k_less_impl(ano, kerbal::type_traits::integral_constant<std::size_t, N + 1>())
 							);
 				}
 
 				KERBAL_CONSTEXPR
-				bool _K_less_impl(const tuple & ano, kerbal::type_traits::integral_constant<std::size_t, TUPLE_SIZE::value>) const
+				bool k_less_impl(const tuple & ano, kerbal::type_traits::integral_constant<std::size_t, TUPLE_SIZE::value>) const
 				{
 					return false;
 				}
@@ -1088,7 +1088,7 @@ namespace kerbal
 				KERBAL_CONSTEXPR
 				bool operator<(const tuple & ano) const
 				{
-					return this->_K_less_impl(ano, kerbal::type_traits::integral_constant<std::size_t, 0>());
+					return this->k_less_impl(ano, kerbal::type_traits::integral_constant<std::size_t, 0>());
 				}
 
 
@@ -1096,19 +1096,19 @@ namespace kerbal
 
 				template <std::size_t N>
 				KERBAL_CONSTEXPR
-				bool _K_greater_impl(const tuple & ano, kerbal::type_traits::integral_constant<std::size_t, N>) const
+				bool k_greater_impl(const tuple & ano, kerbal::type_traits::integral_constant<std::size_t, N>) const
 				{
 					typedef kerbal::compare::greater<typename value_type<N>::type> Pred;
 					return
 							static_cast<bool>(Pred()(this->template get<N>(), ano.template get<N>())) /* *this > ano */ ||
 							(
 								!static_cast<bool>(Pred()(ano.template get<N>(), this->template get<N>())) /* *this >= ano */ &&
-								this->_K_greater_impl(ano, kerbal::type_traits::integral_constant<std::size_t, N + 1>())
+								this->k_greater_impl(ano, kerbal::type_traits::integral_constant<std::size_t, N + 1>())
 							);
 				}
 
 				KERBAL_CONSTEXPR
-				bool _K_greater_impl(const tuple & ano, kerbal::type_traits::integral_constant<std::size_t, TUPLE_SIZE::value>) const
+				bool k_greater_impl(const tuple & ano, kerbal::type_traits::integral_constant<std::size_t, TUPLE_SIZE::value>) const
 				{
 					return false;
 				}
@@ -1118,7 +1118,7 @@ namespace kerbal
 				KERBAL_CONSTEXPR
 				bool operator>(const tuple & ano) const
 				{
-					return this->_K_greater_impl(ano, kerbal::type_traits::integral_constant<std::size_t, 0>());
+					return this->k_greater_impl(ano, kerbal::type_traits::integral_constant<std::size_t, 0>());
 				}
 
 
@@ -1126,20 +1126,20 @@ namespace kerbal
 
 				template <std::size_t N>
 				KERBAL_CONSTEXPR
-				bool _K_less_equal_impl(const tuple & ano, kerbal::type_traits::integral_constant<std::size_t, N>) const
+				bool k_less_equal_impl(const tuple & ano, kerbal::type_traits::integral_constant<std::size_t, N>) const
 				{
 					typedef kerbal::compare::less_equal<typename value_type<N>::type> Pred;
 					return
 							static_cast<bool>(Pred()(this->template get<N>(), ano.template get<N>())) /* *this <= ano */ &&
 							(
 									static_cast<bool>(Pred()(ano.template get<N>(), this->template get<N>())) ? /* ano <= *this */
-									this->_K_less_equal_impl(ano, kerbal::type_traits::integral_constant<std::size_t, N + 1>()) : /* *this == ano */
+									this->k_less_equal_impl(ano, kerbal::type_traits::integral_constant<std::size_t, N + 1>()) : /* *this == ano */
 									true /* *this < ano */
 							);
 				}
 
 				KERBAL_CONSTEXPR
-				bool _K_less_equal_impl(const tuple & ano, kerbal::type_traits::integral_constant<std::size_t, TUPLE_SIZE::value>) const
+				bool k_less_equal_impl(const tuple & ano, kerbal::type_traits::integral_constant<std::size_t, TUPLE_SIZE::value>) const
 				{
 					return true;
 				}
@@ -1149,7 +1149,7 @@ namespace kerbal
 				KERBAL_CONSTEXPR
 				bool operator<=(const tuple & ano) const
 				{
-					return this->_K_less_equal_impl(ano, kerbal::type_traits::integral_constant<std::size_t, 0>());
+					return this->k_less_equal_impl(ano, kerbal::type_traits::integral_constant<std::size_t, 0>());
 				}
 
 
@@ -1157,20 +1157,20 @@ namespace kerbal
 
 				template <std::size_t N>
 				KERBAL_CONSTEXPR
-				bool _K_greater_equal_impl(const tuple & ano, kerbal::type_traits::integral_constant<std::size_t, N>) const
+				bool k_greater_equal_impl(const tuple & ano, kerbal::type_traits::integral_constant<std::size_t, N>) const
 				{
 					typedef kerbal::compare::greater_equal<typename value_type<N>::type> Pred;
 					return
 							static_cast<bool>(Pred()(this->template get<N>(), ano.template get<N>())) /* *this >= ano */ &&
 							(
 									static_cast<bool>(Pred()(ano.template get<N>(), this->template get<N>())) ? /* ano >= *this */
-									this->_K_greater_equal_impl(ano, kerbal::type_traits::integral_constant<std::size_t, N + 1>()) : /* *this == ano */
+									this->k_greater_equal_impl(ano, kerbal::type_traits::integral_constant<std::size_t, N + 1>()) : /* *this == ano */
 									true /* *this > ano */
 							);
 				}
 
 				KERBAL_CONSTEXPR
-				bool _K_greater_equal_impl(const tuple & ano, kerbal::type_traits::integral_constant<std::size_t, TUPLE_SIZE::value>) const
+				bool k_greater_equal_impl(const tuple & ano, kerbal::type_traits::integral_constant<std::size_t, TUPLE_SIZE::value>) const
 				{
 					return true;
 				}
@@ -1180,7 +1180,7 @@ namespace kerbal
 				KERBAL_CONSTEXPR
 				bool operator>=(const tuple & ano) const
 				{
-					return this->_K_greater_equal_impl(ano, kerbal::type_traits::integral_constant<std::size_t, 0>());
+					return this->k_greater_equal_impl(ano, kerbal::type_traits::integral_constant<std::size_t, 0>());
 				}
 
 		};
@@ -1315,17 +1315,17 @@ namespace kerbal
 		{
 
 			template <typename T, typename>
-			struct _K_elements_type_vector_helper;
+			struct k_elements_type_vector_helper;
 
 			template <typename T, std::size_t ... I>
-			struct _K_elements_type_vector_helper<T, kerbal::utility::index_sequence<I...> >
+			struct k_elements_type_vector_helper<T, kerbal::utility::index_sequence<I...> >
 			{
 					typedef kerbal::tmp::type_vector<typename std::tuple_element<I, T>::type ...> type;
 			};
 
 			template <typename T>
 			struct elements_type_vector :
-					_K_elements_type_vector_helper<T, kerbal::utility::make_index_sequence<std::tuple_size<T>::value> >
+					k_elements_type_vector_helper<T, kerbal::utility::make_index_sequence<std::tuple_size<T>::value> >
 			{
 			};
 
@@ -1374,17 +1374,17 @@ namespace kerbal
 			};
 
 			template <bool in_the_first, std::size_t I, typename T, typename ... Ts>
-			struct _K_element_index_in_tuples_helper;
+			struct k_element_index_in_tuples_helper;
 
 			template <std::size_t I, typename T, typename ... Ts>
-			struct _K_element_index_in_tuples_helper<true, I, T, Ts...>
+			struct k_element_index_in_tuples_helper<true, I, T, Ts...>
 			{
 					typedef kerbal::type_traits::integral_constant<std::size_t, 0> tuple_index;
 					typedef kerbal::type_traits::integral_constant<std::size_t, I> tuple_inner_index;
 			};
 
 			template <std::size_t I, typename T, typename ... Ts>
-			struct _K_element_index_in_tuples_helper<false, I, T, Ts...>
+			struct k_element_index_in_tuples_helper<false, I, T, Ts...>
 			{
 				private:
 					typedef element_index_in_tuples<I - std::tuple_size<T>::value, Ts...> next;
@@ -1396,7 +1396,7 @@ namespace kerbal
 
 			template <std::size_t I, typename T, typename ... Ts>
 			struct element_index_in_tuples<I, T, Ts...> :
-					_K_element_index_in_tuples_helper<I < std::tuple_size<T>::value, I, T, Ts...>
+					k_element_index_in_tuples_helper<I < std::tuple_size<T>::value, I, T, Ts...>
 			{
 			};
 
@@ -1476,7 +1476,7 @@ namespace kerbal
 
 					template <std::size_t ... Index>
 					KERBAL_CONSTEXPR
-					static tuple_cat_result_type _K_cat_impl(kerbal::utility::index_sequence<Index...>, Tuples&& ... tuples)
+					static tuple_cat_result_type k_cat_impl(kerbal::utility::index_sequence<Index...>, Tuples&& ... tuples)
 					{
 						return tuple_cat_result_type(get_in_tuples<Index>(kerbal::utility::forward<Tuples>(tuples)...)...);
 					}
@@ -1484,7 +1484,7 @@ namespace kerbal
 					KERBAL_CONSTEXPR
 					static tuple_cat_result_type cat(Tuples&& ... tuples)
 					{
-						return _K_cat_impl(
+						return k_cat_impl(
 								kerbal::utility::make_index_sequence<SIZE_TOTAL::value>(),
 								kerbal::utility::forward<Tuples>(tuples)...);
 					}

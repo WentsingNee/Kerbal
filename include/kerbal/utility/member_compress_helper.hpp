@@ -77,7 +77,7 @@ namespace kerbal
 			class member_compress_helper_impl<T, false>
 			{
 				public:
-					T _K_member;
+					T k_member;
 
 				public:
 					typedef kerbal::type_traits::false_type IS_COMPRESSED;
@@ -130,7 +130,7 @@ namespace kerbal
 										std_is_nothrow_in_place_constructible<Args&&...>
 									>::value
 							) :
-							_K_member(kerbal::utility::forward<Args>(args)...)
+							k_member(kerbal::utility::forward<Args>(args)...)
 					{
 					}
 
@@ -146,7 +146,7 @@ namespace kerbal
 #				define FBODY(i) \
 					KERBAL_OPT_PPEXPAND_WITH_COMMA_N(THEAD_NOT_EMPTY, EMPTY, TARGS_DECL, i) \
 					explicit member_compress_helper_impl(kerbal::utility::in_place_t KERBAL_OPT_PPEXPAND_WITH_COMMA_N(LEFT_JOIN_COMMA, EMPTY, ARGS_DECL, i)): \
-							_K_member(KERBAL_OPT_PPEXPAND_WITH_COMMA_N(REMAINF, EMPTY, ARGS_USE, i)) \
+							k_member(KERBAL_OPT_PPEXPAND_WITH_COMMA_N(REMAINF, EMPTY, ARGS_USE, i)) \
 					{ \
 					}
 
@@ -184,7 +184,7 @@ namespace kerbal
 										try_test_is_nothrow_covariant_copy_constructible<U, J>
 									>::value
 							)) :
-							_K_member(src.member())
+							k_member(src.member())
 					{
 					}
 
@@ -206,7 +206,7 @@ namespace kerbal
 											try_test_is_nothrow_covariant_move_constructible<U, J>
 										>::value
 								)) :
-							_K_member(kerbal::compatibility::move(src).member())
+							k_member(kerbal::compatibility::move(src).member())
 					{
 					}
 
@@ -215,13 +215,13 @@ namespace kerbal
 					KERBAL_CONSTEXPR14
 					reference member() KERBAL_REFERENCE_OVERLOAD_TAG KERBAL_NOEXCEPT
 					{
-						return this->_K_member;
+						return this->k_member;
 					}
 
 					KERBAL_CONSTEXPR
 					const_reference member() KERBAL_CONST_REFERENCE_OVERLOAD_TAG KERBAL_NOEXCEPT
 					{
-						return this->_K_member;
+						return this->k_member;
 					}
 
 #			if __cplusplus >= 201103L
@@ -229,13 +229,13 @@ namespace kerbal
 					KERBAL_CONSTEXPR14
 					rvalue_reference member() && KERBAL_NOEXCEPT
 					{
-						return kerbal::compatibility::move(*this)._K_member;
+						return kerbal::compatibility::move(*this).k_member;
 					}
 
 					KERBAL_CONSTEXPR
 					const_rvalue_reference member() const && KERBAL_NOEXCEPT
 					{
-						return kerbal::compatibility::move(*this)._K_member;
+						return kerbal::compatibility::move(*this).k_member;
 					}
 
 #			endif
@@ -821,7 +821,7 @@ namespace kerbal
 		class member_compress_helper<T[N], I>
 		{
 			public:
-				T _K_member[N];
+				T k_member[N];
 
 			public:
 				typedef kerbal::type_traits::false_type IS_COMPRESSED;
@@ -882,7 +882,7 @@ namespace kerbal
 									try_test_is_nothrow_in_place_constructible_helper<const U (&)[N]>
 								>::value
 						) :
-						_K_member{src[I2]...}
+						k_member{src[I2]...}
 				{
 				}
 
@@ -905,7 +905,7 @@ namespace kerbal
 				template <typename U>
 				explicit member_compress_helper(kerbal::utility::in_place_t in_place, const U (&src)[N])
 				{
-					kerbal::algorithm::copy(src + 0, src + N, this->_K_member + 0);
+					kerbal::algorithm::copy(src + 0, src + N, this->k_member + 0);
 				}
 
 #		endif
@@ -923,7 +923,7 @@ namespace kerbal
 									try_test_is_nothrow_in_place_constructible_helper<U (&&)[N]>
 								>::value
 						) :
-						_K_member{kerbal::compatibility::move(src[I2])...}
+						k_member{kerbal::compatibility::move(src[I2])...}
 				{
 				}
 
@@ -954,7 +954,7 @@ namespace kerbal
 									try_test_is_nothrow_in_place_constructible_helper<std::initializer_list<U> >
 								>::value
 						) :
-						_K_member{ilist}
+						k_member{ilist}
 				{
 				}
 
@@ -963,7 +963,7 @@ namespace kerbal
 				template <typename U>
 				explicit member_compress_helper(kerbal::utility::in_place_t, const kerbal::assign::assign_list<U> & ilist)
 				{
-					kerbal::algorithm::copy(ilist.cbegin(), ilist.cend(), this->_K_member + 0);
+					kerbal::algorithm::copy(ilist.cbegin(), ilist.cend(), this->k_member + 0);
 				}
 
 #		endif
@@ -976,7 +976,7 @@ namespace kerbal
 				template <std::size_t ... I2, typename U, std::size_t J>
 				KERBAL_CONSTEXPR
 				explicit member_compress_helper(kerbal::utility::in_place_t, kerbal::utility::index_sequence<I2...>, const kerbal::utility::member_compress_helper<U, J> & src)
-						: _K_member{src.member()[I2]...}
+						: k_member{src.member()[I2]...}
 				{
 				}
 
@@ -999,7 +999,7 @@ namespace kerbal
 				KERBAL_CONSTEXPR
 				explicit member_compress_helper(const kerbal::utility::member_compress_helper<U, J> & src)
 				{
-					kerbal::algorithm::copy(src.member() + 0, src.member() + N, this->_K_member + 0);
+					kerbal::algorithm::copy(src.member() + 0, src.member() + N, this->k_member + 0);
 				}
 
 #		endif
@@ -1012,7 +1012,7 @@ namespace kerbal
 				template <std::size_t ... I2, typename U, std::size_t J>
 				KERBAL_CONSTEXPR
 				explicit member_compress_helper(kerbal::utility::in_place_t, kerbal::utility::index_sequence<I2...>, kerbal::utility::member_compress_helper<U, J> && src)
-						: _K_member{kerbal::compatibility::move(src).member()[I2]...}
+						: k_member{kerbal::compatibility::move(src).member()[I2]...}
 				{
 				}
 
@@ -1034,13 +1034,13 @@ namespace kerbal
 				KERBAL_CONSTEXPR14
 				reference member() KERBAL_REFERENCE_OVERLOAD_TAG KERBAL_NOEXCEPT
 				{
-					return this->_K_member;
+					return this->k_member;
 				}
 
 				KERBAL_CONSTEXPR
 				const_reference member() KERBAL_CONST_REFERENCE_OVERLOAD_TAG KERBAL_NOEXCEPT
 				{
-					return this->_K_member;
+					return this->k_member;
 				}
 
 #		if __cplusplus >= 201103L
@@ -1048,14 +1048,14 @@ namespace kerbal
 				KERBAL_CONSTEXPR14
 				rvalue_reference member() && KERBAL_NOEXCEPT
 				{
-//					return kerbal::compatibility::move(*this)._K_member; // compile failed in msvc2017
-					return static_cast<rvalue_reference>(kerbal::compatibility::move(*this)._K_member);
+//					return kerbal::compatibility::move(*this).k_member; // compile failed in msvc2017
+					return static_cast<rvalue_reference>(kerbal::compatibility::move(*this).k_member);
 				}
 
 				KERBAL_CONSTEXPR
 				const_rvalue_reference member() const && KERBAL_NOEXCEPT
 				{
-					return static_cast<const_rvalue_reference>(kerbal::compatibility::move(*this)._K_member);
+					return static_cast<const_rvalue_reference>(kerbal::compatibility::move(*this).k_member);
 				}
 
 #		endif
@@ -1079,13 +1079,13 @@ namespace kerbal
 #		endif
 
 			private:
-				T & _K_member;
+				T & k_member;
 
 			public:
 
 				KERBAL_CONSTEXPR14
 				explicit member_compress_helper(kerbal::utility::in_place_t, reference arg0) KERBAL_NOEXCEPT:
-						_K_member(arg0)
+						k_member(arg0)
 				{
 				}
 
@@ -1098,14 +1098,14 @@ namespace kerbal
 				template <std::size_t J>
 				KERBAL_CONSTEXPR14
 				explicit member_compress_helper(const member_compress_helper<T, J> & arg) KERBAL_NOEXCEPT:
-						_K_member(arg.member())
+						k_member(arg.member())
 				{
 				}
 
 				template <std::size_t J>
 				KERBAL_CONSTEXPR14
 				explicit member_compress_helper(const member_compress_helper<T&, J> & arg) KERBAL_NOEXCEPT:
-						_K_member(arg.member())
+						k_member(arg.member())
 				{
 				}
 
@@ -1145,7 +1145,7 @@ namespace kerbal
 				KERBAL_CONSTEXPR14
 				reference member() const KERBAL_NOEXCEPT
 				{
-					return this->_K_member;
+					return this->k_member;
 				}
 
 		};

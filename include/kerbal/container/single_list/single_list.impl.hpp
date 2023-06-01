@@ -623,7 +623,7 @@ namespace kerbal
 						noexcept(sl_allocator_overload::k_swap_allocator_if_propagate(
 								kerbal::utility::declval<sl_allocator_overload&>(), kerbal::utility::declval<sl_allocator_overload&>()
 						)) &&
-						noexcept(sl_type_unrelated::_K_swap_type_unrelated(
+						noexcept(sl_type_unrelated::k_swap_type_unrelated(
 								kerbal::utility::declval<sl_type_unrelated&>(), kerbal::utility::declval<sl_type_unrelated&>()
 						))
 				)
@@ -631,7 +631,7 @@ namespace kerbal
 			sl_allocator_overload::k_swap_allocator_if_propagate(
 					static_cast<sl_allocator_overload&>(*this),
 					static_cast<sl_allocator_overload&>(with));
-			sl_type_unrelated::_K_swap_type_unrelated(
+			sl_type_unrelated::k_swap_type_unrelated(
 					static_cast<sl_type_unrelated&>(*this),
 					static_cast<sl_type_unrelated&>(with));
 		}
@@ -674,14 +674,14 @@ namespace kerbal
 		KERBAL_CONSTEXPR20
 		void single_list<Tp, Allocator>::splice(const_iterator pos, single_list & other) KERBAL_NOEXCEPT
 		{
-			this->sl_type_unrelated::_K_splice(pos, other);
+			this->sl_type_unrelated::k_splice(pos, other);
 		}
 
 		template <typename Tp, typename Allocator>
 		KERBAL_CONSTEXPR20
 		void single_list<Tp, Allocator>::splice(const_iterator pos, single_list & other, const_iterator opos) KERBAL_NOEXCEPT
 		{
-			this->sl_type_unrelated::_K_splice(pos, other, opos);
+			this->sl_type_unrelated::k_splice(pos, other, opos);
 		}
 
 		template <typename Tp, typename Allocator>
@@ -689,7 +689,7 @@ namespace kerbal
 		void single_list<Tp, Allocator>::splice(const_iterator pos, single_list & other,
 												const_iterator first, const_iterator last) KERBAL_NOEXCEPT
 		{
-			this->sl_type_unrelated::_K_splice(pos, other, first, last);
+			this->sl_type_unrelated::k_splice(pos, other, first, last);
 		}
 
 #	if __cplusplus >= 201103L
@@ -698,14 +698,14 @@ namespace kerbal
 		KERBAL_CONSTEXPR20
 		void single_list<Tp, Allocator>::splice(const_iterator pos, single_list && other) KERBAL_NOEXCEPT
 		{
-			this->sl_type_unrelated::_K_splice(pos, kerbal::compatibility::move(other));
+			this->sl_type_unrelated::k_splice(pos, kerbal::compatibility::move(other));
 		}
 
 		template <typename Tp, typename Allocator>
 		KERBAL_CONSTEXPR20
 		void single_list<Tp, Allocator>::splice(const_iterator pos, single_list && other, const_iterator opos) KERBAL_NOEXCEPT
 		{
-			this->sl_type_unrelated::_K_splice(pos, kerbal::compatibility::move(other), opos);
+			this->sl_type_unrelated::k_splice(pos, kerbal::compatibility::move(other), opos);
 		}
 
 		template <typename Tp, typename Allocator>
@@ -713,7 +713,7 @@ namespace kerbal
 		void single_list<Tp, Allocator>::splice(const_iterator pos, single_list && other,
 												const_iterator first, const_iterator last) KERBAL_NOEXCEPT
 		{
-			this->sl_type_unrelated::_K_splice(pos, kerbal::compatibility::move(other), first, last);
+			this->sl_type_unrelated::k_splice(pos, kerbal::compatibility::move(other), first, last);
 		}
 
 #	endif

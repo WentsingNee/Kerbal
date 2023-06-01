@@ -33,10 +33,10 @@ namespace kerbal
 		{
 
 			template <typename Iter, typename Tag>
-			class __stride_iterator;
+			class stride_iterator_base;
 
 			template <typename Iter>
-			class __stride_iterator<Iter, std::input_iterator_tag> :
+			class stride_iterator_base<Iter, std::input_iterator_tag> :
 					public kerbal::operators::dereferenceable<
 							kerbal::iterator::stride_iterator<Iter>,
 							typename kerbal::iterator::iterator_traits<Iter>::pointer
@@ -64,13 +64,13 @@ namespace kerbal
 
 				public:
 					KERBAL_CONSTEXPR
-					explicit __stride_iterator(const Iter& current, const Iter& end, const difference_type& stride, const difference_type& out = 0)
+					explicit stride_iterator_base(const Iter& current, const Iter& end, const difference_type& stride, const difference_type& out = 0)
 							: stride(stride), out(out), current(current), end(end)
 					{
 					}
 
 					KERBAL_CONSTEXPR
-					explicit __stride_iterator(const Iter&, const Iter& current, const Iter& end, const difference_type& stride, const difference_type& out = 0)
+					explicit stride_iterator_base(const Iter&, const Iter& current, const Iter& end, const difference_type& stride, const difference_type& out = 0)
 							: stride(stride), out(out), current(current), end(end)
 					{
 					}
@@ -123,14 +123,14 @@ namespace kerbal
 			};
 
 			template <typename Iter>
-			class __stride_iterator<Iter, std::bidirectional_iterator_tag> :
-					public __stride_iterator<Iter, std::input_iterator_tag>,
+			class stride_iterator_base<Iter, std::bidirectional_iterator_tag> :
+					public stride_iterator_base<Iter, std::input_iterator_tag>,
 					public kerbal::operators::decrementable<
 							kerbal::iterator::stride_iterator<Iter>
 					> // it--
 			{
 				private:
-					typedef __stride_iterator<Iter, std::input_iterator_tag> super;
+					typedef stride_iterator_base<Iter, std::input_iterator_tag> super;
 					typedef kerbal::iterator::stride_iterator<Iter> stride_iterator;
 					typedef kerbal::iterator::iterator_traits<Iter> base_iterator_traits;
 
@@ -146,7 +146,7 @@ namespace kerbal
 
 				public:
 					KERBAL_CONSTEXPR
-					explicit __stride_iterator(const Iter& begin, const Iter& current, const Iter& end, const difference_type& stride, const difference_type& out = 0)
+					explicit stride_iterator_base(const Iter& begin, const Iter& current, const Iter& end, const difference_type& stride, const difference_type& out = 0)
 							: super(current, end, stride, out), begin(begin)
 					{
 					}
@@ -179,8 +179,8 @@ namespace kerbal
 			};
 
 			template <typename Iter>
-			class __stride_iterator<Iter, std::random_access_iterator_tag> :
-					public __stride_iterator<Iter, std::bidirectional_iterator_tag>,
+			class stride_iterator_base<Iter, std::random_access_iterator_tag> :
+					public stride_iterator_base<Iter, std::bidirectional_iterator_tag>,
 					public kerbal::operators::addable<
 							kerbal::iterator::stride_iterator<Iter>,
 							typename kerbal::iterator::iterator_traits<Iter>::difference_type
@@ -195,7 +195,7 @@ namespace kerbal
 					> // it - N
 			{
 				private:
-					typedef __stride_iterator<Iter, std::bidirectional_iterator_tag> super;
+					typedef stride_iterator_base<Iter, std::bidirectional_iterator_tag> super;
 					typedef kerbal::iterator::stride_iterator<Iter> stride_iterator;
 					typedef kerbal::iterator::iterator_traits<Iter> base_iterator_traits;
 
@@ -209,7 +209,7 @@ namespace kerbal
 
 				public:
 					KERBAL_CONSTEXPR
-					explicit __stride_iterator(const Iter& begin, const Iter& current, const Iter& end, const difference_type& stride, const difference_type& out = 0)
+					explicit stride_iterator_base(const Iter& begin, const Iter& current, const Iter& end, const difference_type& stride, const difference_type& out = 0)
 							: super(begin, current, end, stride, out)
 					{
 					}
@@ -295,10 +295,10 @@ namespace kerbal
 
 		template <typename Iter>
 		class stride_iterator :
-				public kerbal::iterator::detail::__stride_iterator<Iter, typename kerbal::iterator::iterator_traits<Iter>::iterator_category>
+				public kerbal::iterator::detail::stride_iterator_base<Iter, typename kerbal::iterator::iterator_traits<Iter>::iterator_category>
 		{
 			private:
-				typedef kerbal::iterator::detail::__stride_iterator<Iter, typename kerbal::iterator::iterator_traits<Iter>::iterator_category> super;
+				typedef kerbal::iterator::detail::stride_iterator_base<Iter, typename kerbal::iterator::iterator_traits<Iter>::iterator_category> super;
 
 			public:
 				typedef typename super::iterator_category		iterator_category;

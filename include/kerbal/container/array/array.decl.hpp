@@ -86,7 +86,7 @@ namespace kerbal
 				typedef const_equal_c_array& const_equal_c_array_reference;
 
 			public:
-				value_type _K_data[N];
+				value_type k_data[N];
 
 			public:
 

@@ -52,10 +52,10 @@ namespace kerbal
 
 
 			template <typename T, bool is_trivially_stored = is_raw_storage_trivially_stored_type<T>::value>
-			class _K_rawst_base;
+			class k_rawst_base;
 
 			template <typename T>
-			class _K_rawst_base<T, true>:
+			class k_rawst_base<T, true>:
 					private kerbal::utility::noncopyable
 			{
 				protected:
@@ -73,14 +73,14 @@ namespace kerbal
 
 					typedef value_type				storage_type;
 
-					storage_type _K_storage;
+					storage_type k_storage;
 
 				protected:
 
 #		if __cplusplus < 201103L
-					_K_rawst_base() KERBAL_NOEXCEPT {}
+					k_rawst_base() KERBAL_NOEXCEPT {}
 #		else
-					_K_rawst_base() = default;
+					k_rawst_base() = default;
 #		endif
 
 #			define EMPTY
@@ -92,8 +92,8 @@ namespace kerbal
 #			define ARGS_USE(i) KERBAL_MACRO_CONCAT(arg, i)
 #			define FBODY(i) \
 					KERBAL_OPT_PPEXPAND_WITH_COMMA_N(THEAD_NOT_EMPTY, EMPTY, TARGS_DECL, i) \
-					explicit _K_rawst_base(kerbal::utility::in_place_t KERBAL_OPT_PPEXPAND_WITH_COMMA_N(LEFT_JOIN_COMMA, EMPTY, ARGS_DECL, i)) : \
-							_K_storage(KERBAL_OPT_PPEXPAND_WITH_COMMA_N(REMAINF, EMPTY, ARGS_USE, i)) \
+					explicit k_rawst_base(kerbal::utility::in_place_t KERBAL_OPT_PPEXPAND_WITH_COMMA_N(LEFT_JOIN_COMMA, EMPTY, ARGS_DECL, i)) : \
+							k_storage(KERBAL_OPT_PPEXPAND_WITH_COMMA_N(REMAINF, EMPTY, ARGS_USE, i)) \
 					{ \
 					}
 
@@ -114,13 +114,13 @@ namespace kerbal
 					KERBAL_CONSTEXPR14 // note: mustn't be constexpr11 otherwise the compile can't distinguish this method with the const version
 					reference raw_value() KERBAL_REFERENCE_OVERLOAD_TAG KERBAL_NOEXCEPT
 					{
-						return this->_K_storage;
+						return this->k_storage;
 					}
 
 					KERBAL_CONSTEXPR14
 					const_reference raw_value() const KERBAL_REFERENCE_OVERLOAD_TAG KERBAL_NOEXCEPT
 					{
-						return this->_K_storage;
+						return this->k_storage;
 					}
 
 #		if __cplusplus >= 201103L
@@ -128,13 +128,13 @@ namespace kerbal
 					KERBAL_CONSTEXPR14
 					rvalue_reference raw_value() && noexcept
 					{
-						return static_cast<rvalue_reference>(this->_K_storage);
+						return static_cast<rvalue_reference>(this->k_storage);
 					}
 
 					KERBAL_CONSTEXPR14
 					const_rvalue_reference raw_value() const && noexcept
 					{
-						return static_cast<const_rvalue_reference>(this->_K_storage);
+						return static_cast<const_rvalue_reference>(this->k_storage);
 					}
 
 #		endif
@@ -142,13 +142,13 @@ namespace kerbal
 					KERBAL_CONSTEXPR14
 					pointer raw_pointer() KERBAL_NOEXCEPT
 					{
-						return &(this->_K_storage);
+						return &(this->k_storage);
 					}
 
 					KERBAL_CONSTEXPR14
 					const_pointer raw_pointer() const KERBAL_NOEXCEPT
 					{
-						return &(this->_K_storage);
+						return &(this->k_storage);
 					}
 
 					KERBAL_CONSTEXPR14
@@ -160,7 +160,7 @@ namespace kerbal
 
 
 			template <typename T, std::size_t N>
-			class _K_rawst_base<T[N], true>:
+			class k_rawst_base<T[N], true>:
 					private kerbal::utility::noncopyable
 			{
 				protected:
@@ -178,22 +178,22 @@ namespace kerbal
 
 					typedef value_type				storage_type;
 
-					storage_type _K_storage;
+					storage_type k_storage;
 
 				protected:
 
 #		if __cplusplus < 201103L
-					_K_rawst_base() KERBAL_NOEXCEPT {}
+					k_rawst_base() KERBAL_NOEXCEPT {}
 #		else
-					_K_rawst_base() = default;
+					k_rawst_base() = default;
 #		endif
 
 					template <typename U>
 					KERBAL_CONSTEXPR20
-					explicit _K_rawst_base(kerbal::utility::in_place_t, const U (&src) [N])
+					explicit k_rawst_base(kerbal::utility::in_place_t, const U (&src) [N])
 					{
 						for (std::size_t i = 0; i < N; ++i) {
-							this->_K_storage[i] = src[i];
+							this->k_storage[i] = src[i];
 						}
 					}
 
@@ -203,10 +203,10 @@ namespace kerbal
 #			define THEAD_NOT_EMPTY(exp) template <exp>
 #			define TARGS_DECL(i) typename KERBAL_MACRO_CONCAT(Arg, i)
 #			define ARGS_DECL(i) const KERBAL_MACRO_CONCAT(Arg, i) & KERBAL_MACRO_CONCAT(arg, i)
-#			define ARGS_USE(i) (this->_K_storage[i] = KERBAL_MACRO_CONCAT(arg, i), 0)
+#			define ARGS_USE(i) (this->k_storage[i] = KERBAL_MACRO_CONCAT(arg, i), 0)
 #			define FBODY(i) \
 					KERBAL_OPT_PPEXPAND_WITH_COMMA_N(THEAD_NOT_EMPTY, EMPTY, TARGS_DECL, i) \
-					explicit _K_rawst_base(kerbal::utility::in_place_t KERBAL_OPT_PPEXPAND_WITH_COMMA_N(LEFT_JOIN_COMMA, EMPTY, ARGS_DECL, i)) \
+					explicit k_rawst_base(kerbal::utility::in_place_t KERBAL_OPT_PPEXPAND_WITH_COMMA_N(LEFT_JOIN_COMMA, EMPTY, ARGS_DECL, i)) \
 					{ \
 						KERBAL_OPT_PPEXPAND_WITH_COMMA_N(REMAINF, EMPTY, ARGS_USE, i); \
 					}
@@ -228,13 +228,13 @@ namespace kerbal
 					KERBAL_CONSTEXPR14 // note: mustn't be constexpr11 otherwise the compile can't distinguish this method with the const version
 					reference raw_value() KERBAL_REFERENCE_OVERLOAD_TAG KERBAL_NOEXCEPT
 					{
-						return this->_K_storage;
+						return this->k_storage;
 					}
 
 					KERBAL_CONSTEXPR14
 					const_reference raw_value() const KERBAL_REFERENCE_OVERLOAD_TAG KERBAL_NOEXCEPT
 					{
-						return this->_K_storage;
+						return this->k_storage;
 					}
 
 #		if __cplusplus >= 201103L
@@ -242,13 +242,13 @@ namespace kerbal
 					KERBAL_CONSTEXPR14
 					rvalue_reference raw_value() && noexcept
 					{
-						return static_cast<rvalue_reference>(this->_K_storage);
+						return static_cast<rvalue_reference>(this->k_storage);
 					}
 
 					KERBAL_CONSTEXPR14
 					const_rvalue_reference raw_value() const && noexcept
 					{
-						return static_cast<const_rvalue_reference>(this->_K_storage);
+						return static_cast<const_rvalue_reference>(this->k_storage);
 					}
 
 #		endif
@@ -256,13 +256,13 @@ namespace kerbal
 					KERBAL_CONSTEXPR14
 					pointer raw_pointer() KERBAL_NOEXCEPT
 					{
-						return &(this->_K_storage);
+						return &(this->k_storage);
 					}
 
 					KERBAL_CONSTEXPR14
 					const_pointer raw_pointer() const KERBAL_NOEXCEPT
 					{
-						return &(this->_K_storage);
+						return &(this->k_storage);
 					}
 
 					KERBAL_CONSTEXPR14
@@ -274,7 +274,7 @@ namespace kerbal
 
 
 			template <typename T>
-			class _K_rawst_base<T, false>:
+			class k_rawst_base<T, false>:
 					private kerbal::utility::noncopyable
 			{
 				protected:
@@ -294,14 +294,14 @@ namespace kerbal
 						typename kerbal::type_traits::aligned_storage<sizeof(value_type), KERBAL_ALIGNOF(value_type)>::type
 					storage_type;
 
-					storage_type _K_storage;
+					storage_type k_storage;
 
 				protected:
 
 #		if __cplusplus < 201103L
-					_K_rawst_base() KERBAL_NOEXCEPT {}
+					k_rawst_base() KERBAL_NOEXCEPT {}
 #		else
-					_K_rawst_base() = default;
+					k_rawst_base() = default;
 #		endif
 
 #			define EMPTY
@@ -312,7 +312,7 @@ namespace kerbal
 #			define ARGS_USE(i) KERBAL_MACRO_CONCAT(arg, i)
 #			define FBODY(i) \
 					KERBAL_OPT_PPEXPAND_WITH_COMMA_N(THEAD_NOT_EMPTY, EMPTY, TARGS_DECL, i) \
-					explicit _K_rawst_base(kerbal::utility::in_place_t KERBAL_OPT_PPEXPAND_WITH_COMMA_N(LEFT_JOIN_COMMA, EMPTY, ARGS_DECL, i)) \
+					explicit k_rawst_base(kerbal::utility::in_place_t KERBAL_OPT_PPEXPAND_WITH_COMMA_N(LEFT_JOIN_COMMA, EMPTY, ARGS_DECL, i)) \
 					{ \
 						kerbal::memory::construct_at(this->raw_pointer() KERBAL_OPT_PPEXPAND_WITH_COMMA_N(LEFT_JOIN_COMMA, EMPTY, ARGS_USE, i)); \
 					}
@@ -356,12 +356,12 @@ namespace kerbal
 
 					pointer raw_pointer() KERBAL_NOEXCEPT
 					{
-						return reinterpret_cast<pointer>(&(this->_K_storage));
+						return reinterpret_cast<pointer>(&(this->k_storage));
 					}
 
 					const_pointer raw_pointer() const KERBAL_NOEXCEPT
 					{
-						return reinterpret_cast<const_pointer>(&(this->_K_storage));
+						return reinterpret_cast<const_pointer>(&(this->k_storage));
 					}
 
 					void destroy() KERBAL_NOEXCEPT

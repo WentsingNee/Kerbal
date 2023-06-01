@@ -77,7 +77,7 @@ namespace kerbal
 
 			template <typename Tp>
 			KERBAL_CONSTEXPR20
-			void _K_destroy_on(Tp & plc, DESTROY_ON_VER_DEFAULT)
+			void k_destroy_on(Tp & plc, DESTROY_ON_VER_DEFAULT)
 					KERBAL_CONDITIONAL_NOEXCEPT(
 							kerbal::type_traits::tribool_is_true<
 								kerbal::type_traits::try_test_is_nothrow_destructible<Tp>
@@ -89,14 +89,14 @@ namespace kerbal
 
 			template <typename Tp, std::size_t N>
 			KERBAL_CONSTEXPR20
-			void _K_destroy_on(Tp (& plc) [N], DESTROY_ON_VER_DEFAULT) KERBAL_NOEXCEPT
+			void k_destroy_on(Tp (& plc) [N], DESTROY_ON_VER_DEFAULT) KERBAL_NOEXCEPT
 			{
 				kerbal::memory::reverse_destroy(plc + 0, plc + N);
 			}
 
 			template <typename Tp>
 			KERBAL_CONSTEXPR14
-			void _K_destroy_on(Tp & /*plc*/, DESTROY_ON_VER_TRIVIALLY) KERBAL_NOEXCEPT
+			void k_destroy_on(Tp & /*plc*/, DESTROY_ON_VER_TRIVIALLY) KERBAL_NOEXCEPT
 			{
 			}
 
@@ -118,7 +118,7 @@ namespace kerbal
 		KERBAL_CONSTEXPR14
 		void destroy_on(Tp & plc)
 		{
-			detail::_K_destroy_on(plc, destroy_on_overload_version<Tp>());
+			detail::k_destroy_on(plc, destroy_on_overload_version<Tp>());
 		}
 
 		template <typename Tp>
@@ -141,7 +141,7 @@ namespace kerbal
 
 			template <typename ForwardIterator>
 			KERBAL_CONSTEXPR20
-			void _K_destroy(ForwardIterator first, ForwardIterator last, DESTROY_VER_DEFAULT) KERBAL_NOEXCEPT
+			void k_destroy(ForwardIterator first, ForwardIterator last, DESTROY_VER_DEFAULT) KERBAL_NOEXCEPT
 			{
 				while (first != last) {
 					kerbal::memory::destroy_on(*first);
@@ -151,7 +151,7 @@ namespace kerbal
 
 			template <typename ForwardIterator>
 			KERBAL_CONSTEXPR14
-			void _K_destroy(ForwardIterator /*first*/, ForwardIterator /*last*/, DESTROY_VER_TRIVIALLY) KERBAL_NOEXCEPT
+			void k_destroy(ForwardIterator /*first*/, ForwardIterator /*last*/, DESTROY_VER_TRIVIALLY) KERBAL_NOEXCEPT
 			{
 			}
 
@@ -175,7 +175,7 @@ namespace kerbal
 		{
 			typedef ForwardIterator iterator;
 			typedef typename kerbal::iterator::iterator_traits<iterator>::value_type value_type;
-			detail::_K_destroy(first, last, destroy_overload_version<value_type>());
+			detail::k_destroy(first, last, destroy_overload_version<value_type>());
 		}
 
 
@@ -191,7 +191,7 @@ namespace kerbal
 
 			template <typename ForwardIterator, typename SizeType>
 			KERBAL_CONSTEXPR20
-			ForwardIterator _K_destroy_n(ForwardIterator first, SizeType n, DESTROY_N_VER_DEFAULT) KERBAL_NOEXCEPT
+			ForwardIterator k_destroy_n(ForwardIterator first, SizeType n, DESTROY_N_VER_DEFAULT) KERBAL_NOEXCEPT
 			{
 				while (n > 0) {
 					--n;
@@ -203,7 +203,7 @@ namespace kerbal
 
 			template <typename ForwardIterator, typename SizeType>
 			KERBAL_CONSTEXPR14
-			ForwardIterator _K_destroy_n(ForwardIterator first, SizeType n, DESTROY_N_VER_TRIVIALLY) KERBAL_NOEXCEPT
+			ForwardIterator k_destroy_n(ForwardIterator first, SizeType n, DESTROY_N_VER_TRIVIALLY) KERBAL_NOEXCEPT
 			{
 				return kerbal::iterator::next(first, n);
 			}
@@ -228,7 +228,7 @@ namespace kerbal
 		{
 			typedef ForwardIterator iterator;
 			typedef typename kerbal::iterator::iterator_traits<iterator>::value_type value_type;
-			return detail::_K_destroy_n(first, n, destroy_n_overload_version<value_type>());
+			return detail::k_destroy_n(first, n, destroy_n_overload_version<value_type>());
 		}
 
 
@@ -244,7 +244,7 @@ namespace kerbal
 
 			template <typename BidirectionalIterator>
 			KERBAL_CONSTEXPR20
-			void _K_reverse_destroy(BidirectionalIterator first, BidirectionalIterator last, RE_DESTROY_VER_DEFAULT) KERBAL_NOEXCEPT
+			void k_reverse_destroy(BidirectionalIterator first, BidirectionalIterator last, RE_DESTROY_VER_DEFAULT) KERBAL_NOEXCEPT
 			{
 				while (first != last) {
 					--last;
@@ -254,7 +254,7 @@ namespace kerbal
 
 			template <typename BidirectionalIterator>
 			KERBAL_CONSTEXPR14
-			void _K_reverse_destroy(BidirectionalIterator /*first*/, BidirectionalIterator /*last*/, RE_DESTROY_VER_TRIVIALLY) KERBAL_NOEXCEPT
+			void k_reverse_destroy(BidirectionalIterator /*first*/, BidirectionalIterator /*last*/, RE_DESTROY_VER_TRIVIALLY) KERBAL_NOEXCEPT
 			{
 			}
 
@@ -278,7 +278,7 @@ namespace kerbal
 		{
 			typedef BidirectionalIterator iterator;
 			typedef typename kerbal::iterator::iterator_traits<iterator>::value_type value_type;
-			detail::_K_reverse_destroy(first, last, reverse_destroy_overload_version<value_type>());
+			detail::k_reverse_destroy(first, last, reverse_destroy_overload_version<value_type>());
 		}
 
 

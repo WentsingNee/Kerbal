@@ -140,7 +140,7 @@ namespace kerbal
 
 			template <typename Unsigned>
 			KERBAL_CONSTEXPR14
-			int _K_popcount_plain(Unsigned x) KERBAL_NOEXCEPT
+			int k_popcount_plain(Unsigned x) KERBAL_NOEXCEPT
 			{
 				int cnt = 0;
 				while (x) {
@@ -154,9 +154,9 @@ namespace kerbal
 
 			template <typename Unsigned>
 			KERBAL_CONSTEXPR14
-			int _K_basic_popcount(Unsigned x) KERBAL_NOEXCEPT
+			int k_basic_popcount(Unsigned x) KERBAL_NOEXCEPT
 			{
-				return _K_popcount_plain(x);
+				return k_popcount_plain(x);
 			}
 
 # else
@@ -164,7 +164,7 @@ namespace kerbal
 			// optimized-swar algorithm
 			template <typename Unsigned>
 			KERBAL_CONSTEXPR14
-			int _K_basic_popcount(Unsigned x) KERBAL_NOEXCEPT
+			int k_basic_popcount(Unsigned x) KERBAL_NOEXCEPT
 			{
 				typedef kerbal::numeric::repeat_byte<Unsigned, 0x55> _0x5555;
 				typedef kerbal::numeric::repeat_byte<Unsigned, 0x33> _0x3333;
@@ -191,9 +191,9 @@ namespace kerbal
 
 			template <typename Unsigned, std::size_t BitWidth>
 			KERBAL_CONSTEXPR14
-			int _K_popcount_intrinsic_aspect(Unsigned x, kerbal::type_traits::integral_constant<std::size_t, BitWidth>) KERBAL_NOEXCEPT
+			int k_popcount_intrinsic_aspect(Unsigned x, kerbal::type_traits::integral_constant<std::size_t, BitWidth>) KERBAL_NOEXCEPT
 			{
-				return _K_basic_popcount(x);
+				return k_basic_popcount(x);
 			}
 
 
@@ -201,13 +201,13 @@ namespace kerbal
 
 			template <typename Unsigned>
 			KERBAL_CONSTEXPR14
-			int _K_popcount_intrinsic_aspect(Unsigned x, kerbal::type_traits::integral_constant<std::size_t, 32>) KERBAL_NOEXCEPT
+			int k_popcount_intrinsic_aspect(Unsigned x, kerbal::type_traits::integral_constant<std::size_t, 32>) KERBAL_NOEXCEPT
 			{
 #		if __cplusplus >= 201402L
 #			if KERBAL_HAS_IS_CONSTANT_EVALUATED_SUPPORT
-					return KERBAL_IS_CONSTANT_EVALUATED() ? _K_basic_popcount(x) : _mm_popcnt_u32(x);
+					return KERBAL_IS_CONSTANT_EVALUATED() ? k_basic_popcount(x) : _mm_popcnt_u32(x);
 #			else
-					return _K_basic_popcount(x);
+					return k_basic_popcount(x);
 #			endif
 #		else
 				return _mm_popcnt_u32(x);
@@ -221,13 +221,13 @@ namespace kerbal
 
 			template <typename Unsigned>
 			KERBAL_CONSTEXPR14
-			int _K_popcount_intrinsic_aspect(Unsigned x, kerbal::type_traits::integral_constant<std::size_t, 64>) KERBAL_NOEXCEPT
+			int k_popcount_intrinsic_aspect(Unsigned x, kerbal::type_traits::integral_constant<std::size_t, 64>) KERBAL_NOEXCEPT
 			{
 #		if __cplusplus >= 201402L
 #			if KERBAL_HAS_IS_CONSTANT_EVALUATED_SUPPORT
-					return KERBAL_IS_CONSTANT_EVALUATED() ? _K_basic_popcount(x) : _mm_popcnt_u64(x);
+					return KERBAL_IS_CONSTANT_EVALUATED() ? k_basic_popcount(x) : _mm_popcnt_u64(x);
 #			else
-					return _K_basic_popcount(x);
+					return k_basic_popcount(x);
 #			endif
 #		else
 				return _mm_popcnt_u64(x);
@@ -242,10 +242,10 @@ namespace kerbal
 
 			template <typename Unsigned>
 			KERBAL_CONSTEXPR14
-			int _K_popcount_builtin_aspect(Unsigned x) KERBAL_NOEXCEPT
+			int k_popcount_builtin_aspect(Unsigned x) KERBAL_NOEXCEPT
 			{
 				typedef kerbal::type_traits::integral_constant<std::size_t, CHAR_BIT * sizeof(Unsigned)> BIT_WIDTH;
-				return _K_popcount_intrinsic_aspect(x, BIT_WIDTH());
+				return k_popcount_intrinsic_aspect(x, BIT_WIDTH());
 			}
 
 
@@ -253,7 +253,7 @@ namespace kerbal
 
 			KERBAL_CONSTEXPR
 			inline
-			int _K_popcount_builtin_aspect(unsigned int x) KERBAL_NOEXCEPT
+			int k_popcount_builtin_aspect(unsigned int x) KERBAL_NOEXCEPT
 			{
 				return KERBAL_BUILTIN_POPCOUNT(x);
 			}
@@ -265,7 +265,7 @@ namespace kerbal
 
 			KERBAL_CONSTEXPR
 			inline
-			int _K_popcount_builtin_aspect(unsigned long x) KERBAL_NOEXCEPT
+			int k_popcount_builtin_aspect(unsigned long x) KERBAL_NOEXCEPT
 			{
 				return KERBAL_BUILTIN_POPCOUNTL(x);
 			}
@@ -277,7 +277,7 @@ namespace kerbal
 
 			KERBAL_CONSTEXPR
 			inline
-			int _K_popcount_builtin_aspect(unsigned long long x) KERBAL_NOEXCEPT
+			int k_popcount_builtin_aspect(unsigned long long x) KERBAL_NOEXCEPT
 			{
 				return KERBAL_BUILTIN_POPCOUNTLL(x);
 			}
@@ -289,17 +289,17 @@ namespace kerbal
 
 			template <typename Unsigned>
 			KERBAL_CONSTEXPR
-			int _K_popcount_sign_aspect(Unsigned x, kerbal::type_traits::false_type) KERBAL_NOEXCEPT
+			int k_popcount_sign_aspect(Unsigned x, kerbal::type_traits::false_type) KERBAL_NOEXCEPT
 			{
-				return _K_popcount_builtin_aspect(x);
+				return k_popcount_builtin_aspect(x);
 			}
 
 			template <typename Signed>
 			KERBAL_CONSTEXPR
-			int _K_popcount_sign_aspect(Signed x, kerbal::type_traits::true_type) KERBAL_NOEXCEPT
+			int k_popcount_sign_aspect(Signed x, kerbal::type_traits::true_type) KERBAL_NOEXCEPT
 			{
 				typedef typename kerbal::type_traits::make_unsigned<Signed>::type unsigned_t;
-				return _K_popcount_sign_aspect(static_cast<unsigned_t>(x), kerbal::type_traits::false_type());
+				return k_popcount_sign_aspect(static_cast<unsigned_t>(x), kerbal::type_traits::false_type());
 			}
 
 		} // namespace detail
@@ -311,7 +311,7 @@ namespace kerbal
 		KERBAL_CONSTEXPR
 		int popcount(Tp x) KERBAL_NOEXCEPT
 		{
-			return kerbal::numeric::detail::_K_popcount_sign_aspect(x, kerbal::type_traits::is_signed<Tp>());
+			return kerbal::numeric::detail::k_popcount_sign_aspect(x, kerbal::type_traits::is_signed<Tp>());
 		}
 
 	} // namespace numeric

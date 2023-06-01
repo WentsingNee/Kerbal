@@ -71,9 +71,9 @@ namespace kerbal
 					typedef kerbal::iterator::reverse_iterator<const_iterator>	const_reverse_iterator;
 
 				protected:
-					pointer _K_buffer;
-					size_type _K_capacity;
-					size_type _K_size;
+					pointer k_buffer;
+					size_type k_capacity;
+					size_type k_size;
 
 				public:
 
@@ -103,11 +103,11 @@ namespace kerbal
 
 					template <typename Allocator, typename InputIterator>
 					KERBAL_CONSTEXPR20
-					void _K_range_copy_cnstrct_impl(Allocator & alloc, InputIterator first, InputIterator last, std::input_iterator_tag);
+					void k_range_copy_cnstrct_impl(Allocator & alloc, InputIterator first, InputIterator last, std::input_iterator_tag);
 
 					template <typename Allocator, typename ForwardIterator>
 					KERBAL_CONSTEXPR20
-					void _K_range_copy_cnstrct_impl(Allocator & alloc, ForwardIterator first, ForwardIterator last, std::forward_iterator_tag);
+					void k_range_copy_cnstrct_impl(Allocator & alloc, ForwardIterator first, ForwardIterator last, std::forward_iterator_tag);
 
 				public:
 
@@ -128,21 +128,21 @@ namespace kerbal
 
 					// move construct using allocator, allocator is equal
 					KERBAL_CONSTEXPR14
-					void _K_move_cnstrct_ua_ae(vector_allocator_unrelated && src) KERBAL_NOEXCEPT;
+					void k_move_cnstrct_ua_ae(vector_allocator_unrelated && src) KERBAL_NOEXCEPT;
 
 					// move construct using allocator, allocator is not equal
 					template <typename Allocator>
 					KERBAL_CONSTEXPR20
-					void _K_move_cnstrct_ua_ane(Allocator & this_alloc, vector_allocator_unrelated && src);
+					void k_move_cnstrct_ua_ane(Allocator & this_alloc, vector_allocator_unrelated && src);
 
 					template <typename Allocator>
 					KERBAL_CONSTEXPR20
-					void _K_move_cnstrct_ua_helper(Allocator & this_alloc, Allocator && src_alloc, vector_allocator_unrelated && src,
+					void k_move_cnstrct_ua_helper(Allocator & this_alloc, Allocator && src_alloc, vector_allocator_unrelated && src,
 												   kerbal::type_traits::false_type /*is_always_equal*/);
 
 					template <typename Allocator>
 					KERBAL_CONSTEXPR14
-					void _K_move_cnstrct_ua_helper(Allocator & this_alloc, Allocator && src_alloc, vector_allocator_unrelated && src,
+					void k_move_cnstrct_ua_helper(Allocator & this_alloc, Allocator && src_alloc, vector_allocator_unrelated && src,
 												   kerbal::type_traits::true_type /*is_always_equal*/) KERBAL_NOEXCEPT;
 
 				public:
@@ -176,11 +176,11 @@ namespace kerbal
 
 					template <typename Allocator, typename InputIterator>
 					KERBAL_CONSTEXPR20
-					void _K_range_assign_using_allocator_impl(Allocator & alloc, InputIterator first, InputIterator last, std::input_iterator_tag);
+					void k_range_assign_using_allocator_impl(Allocator & alloc, InputIterator first, InputIterator last, std::input_iterator_tag);
 
 					template <typename Allocator, typename ForwardIterator>
 					KERBAL_CONSTEXPR20
-					void _K_range_assign_using_allocator_impl(Allocator & alloc, ForwardIterator first, ForwardIterator last, std::forward_iterator_tag);
+					void k_range_assign_using_allocator_impl(Allocator & alloc, ForwardIterator first, ForwardIterator last, std::forward_iterator_tag);
 
 				public:
 
@@ -199,15 +199,15 @@ namespace kerbal
 
 					template <typename Allocator>
 					KERBAL_CONSTEXPR20
-					void _K_cpy_ass_ua_impl(Allocator & alloc, const Allocator & src_alloc, const vector_allocator_unrelated & src, CPYASS_VER_NOT_PROPAGATE);
+					void k_cpy_ass_ua_impl(Allocator & alloc, const Allocator & src_alloc, const vector_allocator_unrelated & src, CPYASS_VER_NOT_PROPAGATE);
 
 					template <typename Allocator>
 					KERBAL_CONSTEXPR20
-					void _K_cpy_ass_ua_impl(Allocator & alloc, const Allocator & src_alloc, const vector_allocator_unrelated & src, CPYASS_VER_PROPAGATE);
+					void k_cpy_ass_ua_impl(Allocator & alloc, const Allocator & src_alloc, const vector_allocator_unrelated & src, CPYASS_VER_PROPAGATE);
 
 					template <typename Allocator>
 					KERBAL_CONSTEXPR20
-					void _K_cpy_ass_ua_impl(Allocator & alloc, const Allocator & src_alloc, const vector_allocator_unrelated & src, CPYASS_VER_ALWAYS_EQUAL);
+					void k_cpy_ass_ua_impl(Allocator & alloc, const Allocator & src_alloc, const vector_allocator_unrelated & src, CPYASS_VER_ALWAYS_EQUAL);
 
 				public:
 
@@ -222,12 +222,12 @@ namespace kerbal
 					// move assign using allocator, allocator is equal
 					template <typename Allocator>
 					KERBAL_CONSTEXPR20
-					void _K_mov_ass_ua_ae(Allocator & alloc, vector_allocator_unrelated && src) KERBAL_NOEXCEPT;
+					void k_mov_ass_ua_ae(Allocator & alloc, vector_allocator_unrelated && src) KERBAL_NOEXCEPT;
 
 					// move assign using allocator, allocator is not equal
 					template <typename Allocator>
 					KERBAL_CONSTEXPR20
-					void _K_mov_ass_ua_ane(Allocator & alloc, Allocator && src_alloc, vector_allocator_unrelated && src);
+					void k_mov_ass_ua_ane(Allocator & alloc, Allocator && src_alloc, vector_allocator_unrelated && src);
 
 					typedef kerbal::type_traits::integral_constant<int, 0> MOVASS_VER_NOT_PROPAGATE;
 					typedef kerbal::type_traits::integral_constant<int, 1> MOVASS_VER_PROPAGATE;
@@ -235,15 +235,15 @@ namespace kerbal
 
 					template <typename Allocator>
 					KERBAL_CONSTEXPR20
-					void _K_mov_ass_ua_impl(Allocator & alloc, Allocator && src_alloc, vector_allocator_unrelated && src, MOVASS_VER_NOT_PROPAGATE);
+					void k_mov_ass_ua_impl(Allocator & alloc, Allocator && src_alloc, vector_allocator_unrelated && src, MOVASS_VER_NOT_PROPAGATE);
 
 					template <typename Allocator>
 					KERBAL_CONSTEXPR20
-					void _K_mov_ass_ua_impl(Allocator & alloc, Allocator && src_alloc, vector_allocator_unrelated && src, MOVASS_VER_PROPAGATE);
+					void k_mov_ass_ua_impl(Allocator & alloc, Allocator && src_alloc, vector_allocator_unrelated && src, MOVASS_VER_PROPAGATE);
 
 					template <typename Allocator>
 					KERBAL_CONSTEXPR20
-					void _K_mov_ass_ua_impl(Allocator & alloc, Allocator && /*src_alloc*/, vector_allocator_unrelated && src, MOVASS_VER_ALWAYS_EQUAL) KERBAL_NOEXCEPT;
+					void k_mov_ass_ua_impl(Allocator & alloc, Allocator && /*src_alloc*/, vector_allocator_unrelated && src, MOVASS_VER_ALWAYS_EQUAL) KERBAL_NOEXCEPT;
 
 				public:
 
@@ -435,11 +435,11 @@ namespace kerbal
 
 					template <typename Allocator, typename InputIterator>
 					KERBAL_CONSTEXPR20
-					iterator _K_range_insert_using_allocator_impl(Allocator & alloc, const_iterator pos, InputIterator first, InputIterator last, std::input_iterator_tag);
+					iterator k_range_insert_using_allocator_impl(Allocator & alloc, const_iterator pos, InputIterator first, InputIterator last, std::input_iterator_tag);
 
 					template <typename Allocator, typename ForwardIterator>
 					KERBAL_CONSTEXPR20
-					iterator _K_range_insert_using_allocator_impl(Allocator & alloc, const_iterator pos, ForwardIterator first, ForwardIterator last, std::forward_iterator_tag);
+					iterator k_range_insert_using_allocator_impl(Allocator & alloc, const_iterator pos, ForwardIterator first, ForwardIterator last, std::forward_iterator_tag);
 
 				public:
 					template <typename Allocator, typename InputIterator>
@@ -533,7 +533,7 @@ namespace kerbal
 					void resize_using_allocator(Allocator & alloc, size_type new_size, const_reference value);
 
 					KERBAL_CONSTEXPR14
-					static void _K_swap_type_unrelated(vector_allocator_unrelated & lhs, vector_allocator_unrelated & rhs) KERBAL_NOEXCEPT;
+					static void k_swap_type_unrelated(vector_allocator_unrelated & lhs, vector_allocator_unrelated & rhs) KERBAL_NOEXCEPT;
 
 
 				private:

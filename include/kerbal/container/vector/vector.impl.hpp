@@ -591,7 +591,7 @@ namespace kerbal
 						noexcept(vector_allocator_overload::k_swap_allocator_if_propagate(
 								kerbal::utility::declval<vector_allocator_overload&>(), kerbal::utility::declval<vector_allocator_overload&>()
 						)) &&
-						noexcept(vector_allocator_unrelated::_K_swap_type_unrelated(
+						noexcept(vector_allocator_unrelated::k_swap_type_unrelated(
 								kerbal::utility::declval<vector_allocator_unrelated&>(), kerbal::utility::declval<vector_allocator_unrelated&>()
 						))
 				)
@@ -599,7 +599,7 @@ namespace kerbal
 			vector_allocator_overload::k_swap_allocator_if_propagate(
 					static_cast<vector_allocator_overload&>(*this),
 					static_cast<vector_allocator_overload&>(with));
-			vector_allocator_unrelated::_K_swap_type_unrelated(
+			vector_allocator_unrelated::k_swap_type_unrelated(
 					static_cast<vector_allocator_unrelated&>(*this),
 					static_cast<vector_allocator_unrelated&>(with));
 		}
