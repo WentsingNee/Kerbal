@@ -12,6 +12,7 @@
 #ifndef KERBAL_TYPE_TRAITS_DETAIL_IS_NOTHROW_ASSIGNABLE_IS_NOTHROW_ASSIGNABLE_PART_HPP
 #define KERBAL_TYPE_TRAITS_DETAIL_IS_NOTHROW_ASSIGNABLE_IS_NOTHROW_ASSIGNABLE_PART_HPP
 
+#include <kerbal/type_traits/detail/is_nothrow_assignable/is_nothrow_assignable.noexcept.part.hpp>
 #include <kerbal/type_traits/detail/is_nothrow_assignable/is_nothrow_assignable.intrin.part.hpp>
 #include <kerbal/type_traits/detail/is_nothrow_assignable/is_nothrow_assignable.traits11.part.hpp>
 

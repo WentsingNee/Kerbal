@@ -12,6 +12,7 @@
 #ifndef KERBAL_TYPE_TRAITS_DETAIL_IS_NOTHROW_MOVE_CONSTRUCTIBLE_IS_NOTHROW_MOVE_CONSTRUCTIBLE_PART_HPP
 #define KERBAL_TYPE_TRAITS_DETAIL_IS_NOTHROW_MOVE_CONSTRUCTIBLE_IS_NOTHROW_MOVE_CONSTRUCTIBLE_PART_HPP
 
+#include <kerbal/type_traits/detail/is_nothrow_move_constructible/is_nothrow_move_constructible.noexcept.part.hpp>
 #include <kerbal/type_traits/detail/is_nothrow_move_constructible/is_nothrow_move_constructible.intrin.part.hpp>
 #include <kerbal/type_traits/detail/is_nothrow_move_constructible/is_nothrow_move_constructible.isntc.part.hpp>
 

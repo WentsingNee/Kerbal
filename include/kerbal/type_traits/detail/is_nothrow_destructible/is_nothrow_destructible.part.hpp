@@ -12,6 +12,7 @@
 #ifndef KERBAL_TYPE_TRAITS_DETAIL_IS_NOTHROW_DESTRUCTIBLE_IS_NOTHROW_DESTRUCTIBLE_PART_HPP
 #define KERBAL_TYPE_TRAITS_DETAIL_IS_NOTHROW_DESTRUCTIBLE_IS_NOTHROW_DESTRUCTIBLE_PART_HPP
 
+#include <kerbal/type_traits/detail/is_nothrow_destructible/is_nothrow_destructible.noexcept.part.hpp>
 #include <kerbal/type_traits/detail/is_nothrow_destructible/is_nothrow_destructible.intrin.part.hpp>
 #include <kerbal/type_traits/detail/is_nothrow_destructible/is_nothrow_destructible.isdes.part.hpp>
 
