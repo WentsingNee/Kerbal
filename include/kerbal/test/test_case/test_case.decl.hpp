@@ -121,7 +121,8 @@ namespace kerbal
 
 #define KERBAL_TEST_CASE(name, description) \
 	void name(kerbal::test::assert_record&); \
-	static const int KERBAL_JOIN_LINE(kerbal_test_register_unit_tag) KERBAL_ATTRIBUTE_UNUSED = (kerbal::test::detail::register_test_suit(#name, name, description), 0); \
+	static const int KERBAL_JOIN_LINE(kerbal_test_register_unit_tag) KERBAL_ATTRIBUTE_UNUSED = \
+		(kerbal::test::detail::register_test_suit(#name, name, description), 0); \
 	void name(kerbal::test::assert_record& record)
 
 
@@ -129,7 +130,8 @@ namespace kerbal
 	void name(kerbal::test::assert_record& record)
 
 #define KERBAL_TEMPLATE_TEST_CASE_INST(name, description, ...) \
-	static const int KERBAL_JOIN_LINE(kerbal_test_register_unit_tag) KERBAL_ATTRIBUTE_UNUSED = (kerbal::test::detail::register_test_suit(#name, name<__VA_ARGS__>, description), 0);
+	static const int KERBAL_JOIN_LINE(kerbal_test_register_unit_tag) KERBAL_ATTRIBUTE_UNUSED = \
+		(kerbal::test::detail::register_test_suit(#name "<" #__VA_ARGS__ ">", name<__VA_ARGS__>, description), 0);
 
 
 #define KERBAL_TEST_CHECK_EQUAL(lhs, rhs) do { \
