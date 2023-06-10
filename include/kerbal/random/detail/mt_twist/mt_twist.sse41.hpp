@@ -180,7 +180,7 @@ namespace kerbal
 						mt[i + 2] = static_cast<kerbal::compatibility::uint32_t>(_mm_extract_epi32(xmm_mti, 2)); // SSE4.1
 					} else if (SECOND_STEP_REMAIN::value == 1) {
 						__m128i xmm_mti = _mm_loadl_epi64(reinterpret_cast<const __m128i*>(&mt[i])); // SSE2
-						__m128i xmm_mtip1 = _mm_loadu_si32(&mt[i + 1]); // SSE2
+						__m128i xmm_mtip1 = _mm_cvtsi32_si128(*reinterpret_cast<int const *>(&mt[i + 1])); // SSE2
 						xmm_mtip1 = _mm_insert_epi32(xmm_mtip1, static_cast<int>(mt[0]), 1); // SSE4.1
 						__m128i xmm_y = _mm_or_si128( // SSE2
 								_mm_and_si128(xmm_UPPER_MASK, xmm_mti), // SSE2
