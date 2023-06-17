@@ -29,7 +29,8 @@
 #	include <initializer_list>
 #endif
 
-#include <kerbal/container/detail/forward_list_base.hpp>
+#include <kerbal/container/detail/forward_list_base/forward_list_base.impl.hpp>
+#include <kerbal/container/forward_list/forward_list.decl.hpp>
 
 
 namespace kerbal

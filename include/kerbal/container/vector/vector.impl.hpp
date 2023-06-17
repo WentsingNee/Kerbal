@@ -31,7 +31,8 @@
 #	include <initializer_list>
 #endif
 
-#include <kerbal/container/detail/vector_base.hpp>
+#include <kerbal/container/detail/vector_base/vector_base.impl.hpp>
+#include <kerbal/container/vector/vector.decl.hpp>
 
 
 namespace kerbal

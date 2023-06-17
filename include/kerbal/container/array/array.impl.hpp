@@ -24,7 +24,7 @@
 #	include <initializer_list>
 #endif
 
-#include <kerbal/container/array.hpp>
+#include <kerbal/container/array/array.decl.hpp>
 
 
 namespace kerbal
@@ -242,7 +242,8 @@ namespace kerbal
 		}
 
 		template <typename Tp, std::size_t N>
-		KERBAL_CONSTEXPR bool array<Tp, N>::empty() const KERBAL_NOEXCEPT
+		KERBAL_CONSTEXPR
+		bool array<Tp, N>::empty() const KERBAL_NOEXCEPT
 		{
 			return this->size() == 0;
 		}

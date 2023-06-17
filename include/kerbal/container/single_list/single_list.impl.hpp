@@ -30,7 +30,8 @@
 #	include <initializer_list>
 #endif
 
-#include <kerbal/container/detail/single_list_base.hpp>
+#include <kerbal/container/detail/single_list_base/single_list_base.impl.hpp>
+#include <kerbal/container/single_list/single_list.decl.hpp>
 
 
 namespace kerbal

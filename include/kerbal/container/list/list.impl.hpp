@@ -29,7 +29,8 @@
 #	include <initializer_list>
 #endif
 
-#include <kerbal/container/detail/list_base.hpp>
+#include <kerbal/container/detail/list_base/list_base.impl.hpp>
+#include <kerbal/container/list/list.decl.hpp>
 
 
 namespace kerbal

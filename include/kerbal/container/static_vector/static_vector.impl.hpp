@@ -45,7 +45,7 @@
 #	include <kerbal/type_traits/is_pointer.hpp>
 #endif
 
-#include <kerbal/container/static_vector.hpp>
+#include <kerbal/container/static_vector/static_vector.decl.hpp>
 
 
 namespace kerbal
