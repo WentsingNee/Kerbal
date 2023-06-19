@@ -50,10 +50,10 @@ namespace kerbal
 					typedef std::ptrdiff_t				difference_type;
 
 				protected:
-					pointer K_buffer;
-					size_type K_capacity;
-					size_type K_begin;
-					size_type K_size;
+					pointer k_buffer;
+					size_type k_capacity;
+					size_type k_begin;
+					size_type k_size;
 
 				protected:
 
@@ -77,21 +77,21 @@ namespace kerbal
 
 					// move construct using allocator, allocator is equal
 					KERBAL_CONSTEXPR14
-					void K_move_cnstrct_ua_ae(rbq_allocator_unrelated && src) KERBAL_NOEXCEPT;
+					void k_move_cnstrct_ua_ae(rbq_allocator_unrelated && src) KERBAL_NOEXCEPT;
 
 					// move construct using allocator, allocator is not equal
 					template <typename Allocator>
 					KERBAL_CONSTEXPR20
-					void K_move_cnstrct_ua_ane(Allocator & this_alloc, rbq_allocator_unrelated && src);
+					void k_move_cnstrct_ua_ane(Allocator & this_alloc, rbq_allocator_unrelated && src);
 
 					template <typename Allocator>
 					KERBAL_CONSTEXPR20
-					void K_move_cnstrct_ua_helper(Allocator & this_alloc, Allocator && src_alloc, rbq_allocator_unrelated && src,
+					void k_move_cnstrct_ua_helper(Allocator & this_alloc, Allocator && src_alloc, rbq_allocator_unrelated && src,
 												   kerbal::type_traits::false_type /*is_always_equal*/);
 
 					template <typename Allocator>
 					KERBAL_CONSTEXPR14
-					void K_move_cnstrct_ua_helper(Allocator & this_alloc, Allocator && src_alloc, rbq_allocator_unrelated && src,
+					void k_move_cnstrct_ua_helper(Allocator & this_alloc, Allocator && src_alloc, rbq_allocator_unrelated && src,
 												   kerbal::type_traits::true_type /*is_always_equal*/) KERBAL_NOEXCEPT;
 
 				public:
@@ -117,7 +117,7 @@ namespace kerbal
 				private:
 					template <typename Alloc>
 					KERBAL_CONSTEXPR20
-					void K_emplace_realloc_aux(Alloc & alloc);
+					void k_emplace_realloc_aux(Alloc & alloc);
 
 				public:
 
@@ -185,69 +185,69 @@ namespace kerbal
 
 				private:
 
-					bool K_no_wrapper() const KERBAL_NOEXCEPT
+					bool k_no_wrapper() const KERBAL_NOEXCEPT
 					{
-						return this->K_capacity - this->K_begin >= this->K_size;
+						return this->k_capacity - this->k_begin >= this->k_size;
 					}
 
 					KERBAL_CONSTEXPR
-					pointer K_first_begin() KERBAL_NOEXCEPT
+					pointer k_first_begin() KERBAL_NOEXCEPT
 					{
-						return this->K_buffer + this->K_begin;
+						return this->k_buffer + this->k_begin;
 					}
 
 					KERBAL_CONSTEXPR
-					pointer K_first_end() KERBAL_NOEXCEPT
+					pointer k_first_end() KERBAL_NOEXCEPT
 					{
-						return this->K_buffer + this->K_capacity;
+						return this->k_buffer + this->k_capacity;
 					}
 
 					KERBAL_CONSTEXPR
-					const_pointer K_first_begin() const KERBAL_NOEXCEPT
+					const_pointer k_first_begin() const KERBAL_NOEXCEPT
 					{
-						return this->K_buffer + this->K_begin;
+						return this->k_buffer + this->k_begin;
 					}
 
 					KERBAL_CONSTEXPR
-					const_pointer K_first_end() const KERBAL_NOEXCEPT
+					const_pointer k_first_end() const KERBAL_NOEXCEPT
 					{
-						return this->K_buffer + this->K_capacity;
+						return this->k_buffer + this->k_capacity;
 					}
 
 					KERBAL_CONSTEXPR
-					size_type K_first_len() const KERBAL_NOEXCEPT
+					size_type k_first_len() const KERBAL_NOEXCEPT
 					{
-						return this->K_capacity - this->K_begin;
+						return this->k_capacity - this->k_begin;
 					}
 
 					KERBAL_CONSTEXPR
-					pointer K_second_begin() KERBAL_NOEXCEPT
+					pointer k_second_begin() KERBAL_NOEXCEPT
 					{
-						return this->K_buffer;
+						return this->k_buffer;
 					}
 
 					KERBAL_CONSTEXPR
-					pointer K_second_end() KERBAL_NOEXCEPT
+					pointer k_second_end() KERBAL_NOEXCEPT
 					{
-						return this->K_buffer + this->K_second_len();
+						return this->k_buffer + this->k_second_len();
 					}
 
 					KERBAL_CONSTEXPR
-					const_pointer K_second_begin() const KERBAL_NOEXCEPT
+					const_pointer k_second_begin() const KERBAL_NOEXCEPT
 					{
-						return this->K_buffer;
+						return this->k_buffer;
 					}
 
 					KERBAL_CONSTEXPR
-					const_pointer K_second_end() const KERBAL_NOEXCEPT
+					const_pointer k_second_end() const KERBAL_NOEXCEPT
 					{
-						return this->K_buffer + this->K_second_len();
+						return this->k_buffer + this->k_second_len();
 					}
 
 					KERBAL_CONSTEXPR
-					size_type K_second_len() const KERBAL_NOEXCEPT
+					size_type k_second_len() const KERBAL_NOEXCEPT
 					{
-						return this->K_size - this->K_first_len();
+						return this->k_size - this->k_first_len();
 					}
 
 			};
