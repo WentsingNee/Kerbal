@@ -45,7 +45,7 @@ namespace kerbal
 		template <typename Allocator>
 		template <typename Callable, typename ... Args>
 		basic_thread<Allocator>::basic_thread(Callable&& fun, Args&& ... args) :
-				K_th_id()
+				k_th_id()
 		{
 			typedef typename detail::fun_args_pack_type<Callable, Args...>::type fun_args_pack_t;
 
@@ -64,23 +64,23 @@ namespace kerbal
 							basic_thread::apply(*fun_args_pack_p,
 											kerbal::utility::make_index_sequence<sizeof...(Args)>());
 						} catch (...) {
-							K_destroy_fun_args_pack(alloc, fun_args_pack_p);
+							k_destroy_fun_args_pack(alloc, fun_args_pack_p);
 							throw;
 						}
 
-						K_destroy_fun_args_pack(alloc, fun_args_pack_p);
+						k_destroy_fun_args_pack(alloc, fun_args_pack_p);
 						return NULL;
 					}
 			};
 
 			rebind_allocator alloc(rebind_alloc<fun_args_pack_t>());
-			fun_args_pack_t * fun_args_pack_p = K_build_fun_args_pack(
+			fun_args_pack_t * fun_args_pack_p = k_build_fun_args_pack(
 					alloc, kerbal::utility::forward<Callable>(fun), kerbal::utility::forward<Args>(args)...
 			);
 
-			int err = ::pthread_create(&this->K_th_id.native_handle, NULL, helper::start_rtn, fun_args_pack_p);
+			int err = ::pthread_create(&this->k_th_id.native_handle, NULL, helper::start_rtn, fun_args_pack_p);
 			if (err != 0) {
-				K_destroy_fun_args_pack(alloc, fun_args_pack_p);
+				k_destroy_fun_args_pack(alloc, fun_args_pack_p);
 				kerbal::utility::throw_this_exception_helper<
 						kerbal::parallel::thread_create_failed
 				>::throw_this_exception();
@@ -101,7 +101,7 @@ namespace kerbal
 		template <typename Allocator> \
 		template <typename Callable KERBAL_OPT_PPEXPAND_WITH_COMMA_N(LEFT_JOIN_COMMA, EMPTY, TARGS_DECL, i)> \
 		basic_thread<Allocator>::basic_thread(Callable fun KERBAL_OPT_PPEXPAND_WITH_COMMA_N(LEFT_JOIN_COMMA, EMPTY, ARGS_DECL, i)) : \
-				K_th_id() \
+				k_th_id() \
 		{ \
 			typedef kerbal::utility::tuple< \
 					typename kerbal::type_traits::decay<Callable>::type \
@@ -122,23 +122,23 @@ namespace kerbal
 						try { \
 							fun_args_pack_p->template get<0>()(KERBAL_OPT_PPEXPAND_WITH_COMMA_N(REMAINF, EMPTY, FUN_ARGS_PACK_EXPAND_ARG, i)); \
 						} catch (...) { \
-							K_destroy_fun_args_pack(alloc, fun_args_pack_p); \
+							k_destroy_fun_args_pack(alloc, fun_args_pack_p); \
 							throw; \
 						} \
  \
-						K_destroy_fun_args_pack(alloc, fun_args_pack_p); \
+						k_destroy_fun_args_pack(alloc, fun_args_pack_p); \
 						return NULL; \
 					} \
 			}; \
  \
 			rebind_allocator alloc(rebind_alloc<fun_args_pack_t>()); \
-			fun_args_pack_t * fun_args_pack_p = K_build_fun_args_pack( \
+			fun_args_pack_t * fun_args_pack_p = k_build_fun_args_pack( \
 					alloc, fun KERBAL_OPT_PPEXPAND_WITH_COMMA_N(LEFT_JOIN_COMMA, EMPTY, ARGS_USE, i) \
 			); \
  \
-			int err = ::pthread_create(&this->K_th_id.native_handle, NULL, helper::start_rtn, fun_args_pack_p); \
+			int err = ::pthread_create(&this->k_th_id.native_handle, NULL, helper::start_rtn, fun_args_pack_p); \
 			if (err != 0) { \
-				K_destroy_fun_args_pack(alloc, fun_args_pack_p); \
+				k_destroy_fun_args_pack(alloc, fun_args_pack_p); \
 				kerbal::utility::throw_this_exception_helper< \
 						kerbal::parallel::thread_create_failed \
 				>::throw_this_exception(); \
@@ -164,14 +164,14 @@ namespace kerbal
 		void basic_thread<Allocator>::join()
 		{
 			::pthread_join(this->native_handle(), NULL);
-			this->K_th_id = id();
+			this->k_th_id = id();
 		}
 
 		template <typename Allocator>
 		void basic_thread<Allocator>::detach()
 		{
 			::pthread_detach(this->native_handle());
-			this->K_th_id = id();
+			this->k_th_id = id();
 		}
 
 	} // namespace parallel

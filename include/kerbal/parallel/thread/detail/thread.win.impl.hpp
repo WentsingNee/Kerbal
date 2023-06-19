@@ -65,24 +65,24 @@ namespace kerbal
 							basic_thread::apply(*fun_args_pack_p,
 											kerbal::utility::make_index_sequence<sizeof...(Args)>());
 						} catch (...) {
-							K_destroy_fun_args_pack(alloc, fun_args_pack_p);
+							k_destroy_fun_args_pack(alloc, fun_args_pack_p);
 							throw;
 						}
 
-						K_destroy_fun_args_pack(alloc, fun_args_pack_p);
+						k_destroy_fun_args_pack(alloc, fun_args_pack_p);
 						return 0;
 					}
 			};
 
 			rebind_allocator alloc(rebind_alloc<fun_args_pack_t>());
-			fun_args_pack_t * fun_args_pack_p = K_build_fun_args_pack(
+			fun_args_pack_t * fun_args_pack_p = k_build_fun_args_pack(
 					alloc, kerbal::utility::forward<Callable>(fun), kerbal::utility::forward<Args>(args)...
 			);
 
 			unsigned thread_id;
 			this->K_th_id.native_handle = (HANDLE)::_beginthreadex(NULL, 0, helper::start_rtn, fun_args_pack_p, 0, &thread_id);
 			if (this->K_th_id.native_handle == 0) {
-				K_destroy_fun_args_pack(alloc, fun_args_pack_p);
+				k_destroy_fun_args_pack(alloc, fun_args_pack_p);
 				kerbal::utility::throw_this_exception_helper<
 						kerbal::parallel::thread_create_failed
 				>::throw_this_exception();
@@ -124,24 +124,24 @@ namespace kerbal
 						try { \
 							fun_args_pack_p->template get<0>()(KERBAL_OPT_PPEXPAND_WITH_COMMA_N(REMAINF, EMPTY, FUN_ARGS_PACK_EXPAND_ARG, i)); \
 						} catch (...) { \
-							K_destroy_fun_args_pack(alloc, fun_args_pack_p); \
+							k_destroy_fun_args_pack(alloc, fun_args_pack_p); \
 							throw; \
 						} \
  \
-						K_destroy_fun_args_pack(alloc, fun_args_pack_p); \
+						k_destroy_fun_args_pack(alloc, fun_args_pack_p); \
 						return NULL; \
 					} \
 			}; \
  \
 			rebind_allocator alloc(rebind_alloc<fun_args_pack_t>()); \
-			fun_args_pack_t * fun_args_pack_p = K_build_fun_args_pack( \
+			fun_args_pack_t * fun_args_pack_p = k_build_fun_args_pack( \
 					alloc, fun KERBAL_OPT_PPEXPAND_WITH_COMMA_N(LEFT_JOIN_COMMA, EMPTY, ARGS_USE, i) \
 			); \
  \
 			unsigned thread_id; \
 			this->K_th_id.native_handle = (HANDLE)::_beginthreadex(NULL, 0, helper::start_rtn, fun_args_pack_p, 0, &thread_id); \
 			if (this->K_th_id.native_handle == 0) { \
-				K_destroy_fun_args_pack(alloc, fun_args_pack_p); \
+				k_destroy_fun_args_pack(alloc, fun_args_pack_p); \
 				kerbal::utility::throw_this_exception_helper< \
 						kerbal::parallel::thread_create_failed \
 				>::throw_this_exception(); \

@@ -175,7 +175,7 @@ namespace kerbal
 				};
 
 			private:
-				id K_th_id;
+				id k_th_id;
 
 				typedef Allocator allocator_type;
 				typedef kerbal::memory::allocator_traits<allocator_type> allocator_traits;
@@ -192,7 +192,7 @@ namespace kerbal
 
 				KERBAL_CONSTEXPR
 				basic_thread() KERBAL_NOEXCEPT :
-						K_th_id()
+						k_th_id()
 				{
 				}
 
@@ -202,7 +202,7 @@ namespace kerbal
 
 				template <typename PackAllocator, typename Callable, typename ... Args>
 				static typename detail::fun_args_pack_type<Callable, Args...>::type *
-				K_build_fun_args_pack(PackAllocator & alloc, Callable && fun, Args && ... args);
+				k_build_fun_args_pack(PackAllocator & alloc, Callable && fun, Args && ... args);
 
 #	else
 
@@ -214,7 +214,7 @@ namespace kerbal
 #		define FBODY(i) \
 				template <typename PackAllocator, typename Callable KERBAL_OPT_PPEXPAND_WITH_COMMA_N(LEFT_JOIN_COMMA, EMPTY, TARGS_DECL, i)> \
 				static typename detail::fun_args_pack_type<Callable KERBAL_OPT_PPEXPAND_WITH_COMMA_N(LEFT_JOIN_COMMA, EMPTY, TARGS_USE, i)>::type * \
-				K_build_fun_args_pack(PackAllocator & alloc, Callable fun KERBAL_OPT_PPEXPAND_WITH_COMMA_N(LEFT_JOIN_COMMA, EMPTY, ARGS_DECL, i));
+				k_build_fun_args_pack(PackAllocator & alloc, Callable fun KERBAL_OPT_PPEXPAND_WITH_COMMA_N(LEFT_JOIN_COMMA, EMPTY, ARGS_DECL, i));
 
 				KERBAL_PPEXPAND_N(FBODY, KERBAL_PPEXPAND_EMPTY_SEPARATOR, 0)
 				KERBAL_PPEXPAND_N(FBODY, KERBAL_PPEXPAND_EMPTY_SEPARATOR, 19)
@@ -229,7 +229,7 @@ namespace kerbal
 #	endif
 
 				template <typename PackAllocator, typename FunArgsPack>
-				static void K_destroy_fun_args_pack(PackAllocator & alloc, FunArgsPack * fun_args_pack_p) KERBAL_NOEXCEPT;
+				static void k_destroy_fun_args_pack(PackAllocator & alloc, FunArgsPack * fun_args_pack_p) KERBAL_NOEXCEPT;
 
 
 #	if __cplusplus >= 201103L
@@ -279,9 +279,9 @@ namespace kerbal
 
 				KERBAL_CONSTEXPR14
 				basic_thread(basic_thread && ano) KERBAL_NOEXCEPT :
-						K_th_id(ano.K_th_id)
+						k_th_id(ano.k_th_id)
 				{
-					ano.K_th_id = id();
+					ano.k_th_id = id();
 				}
 
 #	endif
@@ -309,7 +309,7 @@ namespace kerbal
 				KERBAL_CONSTEXPR
 				bool joinable() const KERBAL_NOEXCEPT
 				{
-					return this->K_th_id != id();
+					return this->k_th_id != id();
 				}
 
 				void join();
@@ -319,13 +319,13 @@ namespace kerbal
 				KERBAL_CONSTEXPR14
 				void swap(basic_thread & ano)
 				{
-					kerbal::algorithm::swap(this->K_th_id, ano.K_th_id);
+					kerbal::algorithm::swap(this->k_th_id, ano.k_th_id);
 				}
 
 				KERBAL_CONSTEXPR
 				id get_id() const KERBAL_NOEXCEPT
 				{
-					return this->K_th_id;
+					return this->k_th_id;
 				}
 
 				KERBAL_CONSTEXPR
@@ -337,37 +337,37 @@ namespace kerbal
 				KERBAL_CONSTEXPR
 				bool operator==(const basic_thread & with) const KERBAL_NOEXCEPT
 				{
-					return this->K_th_id == with.K_th_id;
+					return this->k_th_id == with.k_th_id;
 				}
 
 				KERBAL_CONSTEXPR
 				bool operator!=(const basic_thread & with) const KERBAL_NOEXCEPT
 				{
-					return this->K_th_id != with.K_th_id;
+					return this->k_th_id != with.k_th_id;
 				}
 
 				KERBAL_CONSTEXPR
 				bool operator<(const basic_thread & with) const KERBAL_NOEXCEPT
 				{
-					return this->K_th_id < with.K_th_id;
+					return this->k_th_id < with.k_th_id;
 				}
 
 				KERBAL_CONSTEXPR
 				bool operator<=(const basic_thread & with) const KERBAL_NOEXCEPT
 				{
-					return this->K_th_id <= with.K_th_id;
+					return this->k_th_id <= with.k_th_id;
 				}
 
 				KERBAL_CONSTEXPR
 				bool operator>(const basic_thread & with) const KERBAL_NOEXCEPT
 				{
-					return this->K_th_id > with.K_th_id;
+					return this->k_th_id > with.k_th_id;
 				}
 
 				KERBAL_CONSTEXPR
 				bool operator>=(const basic_thread & with) const KERBAL_NOEXCEPT
 				{
-					return this->K_th_id >= with.K_th_id;
+					return this->k_th_id >= with.k_th_id;
 				}
 
 		};

@@ -14,8 +14,8 @@
 
 #include <kerbal/compatibility/static_assert.hpp>
 #include <kerbal/config/system.hpp>
-#include <kerbal/type_traits/const_deduction.hpp>
 #include <kerbal/type_traits/is_same.hpp>
+#include <kerbal/type_traits/remove_const.hpp>
 
 
 #include <kerbal/parallel/thread/thread.decl.hpp>
@@ -40,7 +40,7 @@ namespace kerbal
 		template <typename Allocator>
 		template <typename PackAllocator, typename Callable, typename ... Args>
 		typename detail::fun_args_pack_type<Callable, Args...>::type *
-		basic_thread<Allocator>::K_build_fun_args_pack(PackAllocator & alloc, Callable && fun, Args && ... args)
+		basic_thread<Allocator>::k_build_fun_args_pack(PackAllocator & alloc, Callable && fun, Args && ... args)
 		{
 			typedef kerbal::memory::allocator_traits<PackAllocator> allocator_traits;
 			typedef typename detail::fun_args_pack_type<Callable, Args...>::type fun_args_pack_t;
@@ -73,7 +73,7 @@ namespace kerbal
 		template <typename Allocator> \
 		template <typename PackAllocator, typename Callable KERBAL_OPT_PPEXPAND_WITH_COMMA_N(LEFT_JOIN_COMMA, EMPTY, TARGS_DECL, i)> \
 		typename detail::fun_args_pack_type<Callable KERBAL_OPT_PPEXPAND_WITH_COMMA_N(LEFT_JOIN_COMMA, EMPTY, TARGS_USE, i)>::type * \
-		basic_thread<Allocator>::K_build_fun_args_pack(PackAllocator & alloc, Callable fun KERBAL_OPT_PPEXPAND_WITH_COMMA_N(LEFT_JOIN_COMMA, EMPTY, ARGS_DECL, i)) \
+		basic_thread<Allocator>::k_build_fun_args_pack(PackAllocator & alloc, Callable fun KERBAL_OPT_PPEXPAND_WITH_COMMA_N(LEFT_JOIN_COMMA, EMPTY, ARGS_DECL, i)) \
 		{ \
 			typedef kerbal::memory::allocator_traits<PackAllocator> allocator_traits; \
 			typedef typename detail::fun_args_pack_type<Callable KERBAL_OPT_PPEXPAND_WITH_COMMA_N(LEFT_JOIN_COMMA, EMPTY, TARGS_USE, i)>::type fun_args_pack_t; \
@@ -109,7 +109,7 @@ namespace kerbal
 
 		template <typename Allocator>
 		template <typename PackAllocator, typename FunArgsPack>
-		void basic_thread<Allocator>::K_destroy_fun_args_pack(PackAllocator & alloc, FunArgsPack * fun_args_pack_p) KERBAL_NOEXCEPT
+		void basic_thread<Allocator>::k_destroy_fun_args_pack(PackAllocator & alloc, FunArgsPack * fun_args_pack_p) KERBAL_NOEXCEPT
 		{
 			typedef kerbal::memory::allocator_traits<PackAllocator> allocator_traits;
 			typedef FunArgsPack fun_args_pack_t;
