@@ -668,28 +668,28 @@ namespace kerbal
 					typename kerbal::type_traits::enable_if<is_radix_sort_acceptable_type>::type
 					static radix_sort_back_fill_after(const_iterator before_insert_pos,
 													  kerbal::type_traits::false_type /*asc*/, kerbal::type_traits::false_type /*unsigned*/,
-													  fl_allocator_unrelated buckets[], std::size_t BUCKETS_NUM) KERBAL_NOEXCEPT;
+													  fl_type_only buckets[], std::size_t BUCKETS_NUM) KERBAL_NOEXCEPT;
 
 					template <bool is_radix_sort_acceptable_type>
 					KERBAL_CONSTEXPR20
 					typename kerbal::type_traits::enable_if<is_radix_sort_acceptable_type>::type
 					static radix_sort_back_fill_after(const_iterator before_insert_pos,
 													  kerbal::type_traits::true_type /*desc*/, kerbal::type_traits::false_type /*unsigned*/,
-													  fl_allocator_unrelated buckets[], std::size_t BUCKETS_NUM) KERBAL_NOEXCEPT;
+													  fl_type_only buckets[], std::size_t BUCKETS_NUM) KERBAL_NOEXCEPT;
 
 					template <bool is_radix_sort_acceptable_type>
 					KERBAL_CONSTEXPR20
 					typename kerbal::type_traits::enable_if<is_radix_sort_acceptable_type>::type
 					static radix_sort_back_fill_after(const_iterator before_insert_pos,
 													  kerbal::type_traits::false_type /*asc*/, kerbal::type_traits::true_type /*signed*/,
-													  fl_allocator_unrelated buckets[], std::size_t BUCKETS_NUM) KERBAL_NOEXCEPT;
+													  fl_type_only buckets[], std::size_t BUCKETS_NUM) KERBAL_NOEXCEPT;
 
 					template <bool is_radix_sort_acceptable_type>
 					KERBAL_CONSTEXPR20
 					typename kerbal::type_traits::enable_if<is_radix_sort_acceptable_type>::type
 					static radix_sort_back_fill_after(const_iterator before_insert_pos,
 													  kerbal::type_traits::true_type /*desc*/, kerbal::type_traits::true_type /*signed*/,
-													  fl_allocator_unrelated buckets[], std::size_t BUCKETS_NUM) KERBAL_NOEXCEPT;
+													  fl_type_only buckets[], std::size_t BUCKETS_NUM) KERBAL_NOEXCEPT;
 
 					template <bool Order, std::size_t RADIX_BIT_WIDTH>
 					KERBAL_CONSTEXPR20
