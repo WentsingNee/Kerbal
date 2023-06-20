@@ -142,9 +142,9 @@ namespace kerbal
 
 #		if __cplusplus >= 201103L
 
-				template <typename T, typename ... Args>
+				template <typename ... Args>
 				KERBAL_CONSTEXPR14
-				static void construct(Alloc & alloc, T * p, Args && ... args)
+				static void construct(Alloc & alloc, pointer p, Args && ... args)
 						KERBAL_CONDITIONAL_NOEXCEPT(
 							noexcept(
 								kerbal::memory::detail::allocator_traits_construct_helper<Alloc>::construct(alloc, p, kerbal::utility::forward<Args>(args)...)
