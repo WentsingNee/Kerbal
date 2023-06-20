@@ -60,7 +60,9 @@ namespace kerbal
 				> // it - N
 			{
 				public:
-					typedef typename kerbal::memory::pointer_traits<PointerType>::element_type value_type;
+					typedef PointerType										pointer;
+					typedef typename kerbal::memory::pointer_traits<PointerType>::element_type
+																			value_type;
 
 				private:
 					typedef typename kerbal::memory::pointer_traits<PointerType>::template rebind<const value_type>::other const_pointer_type;
@@ -78,7 +80,6 @@ namespace kerbal
 				public:
 					typedef std::random_access_iterator_tag					iterator_category;
 					typedef typename iterator_traits::difference_type		difference_type;
-					typedef typename iterator_traits::pointer				pointer;
 					typedef typename iterator_traits::reference				reference;
 
 				protected:
@@ -198,9 +199,10 @@ namespace kerbal
 				> // it - N
 			{
 				public:
+					typedef PointerType										pointer;
 					typedef typename kerbal::type_traits::remove_const<
 						typename kerbal::memory::pointer_traits<PointerType>::element_type
-					>::type value_type;
+					>::type													value_type;
 
 				private:
 					typedef typename kerbal::memory::pointer_traits<PointerType>::template rebind<value_type>::other non_const_pointer_type;
@@ -218,7 +220,6 @@ namespace kerbal
 				public:
 					typedef std::random_access_iterator_tag					iterator_category;
 					typedef typename iterator_traits::difference_type		difference_type;
-					typedef typename iterator_traits::pointer				pointer;
 					typedef typename iterator_traits::reference				reference;
 
 				protected:
@@ -322,7 +323,7 @@ namespace kerbal
 					KERBAL_CONSTEXPR14
 					iterator cast_to_mutable() const KERBAL_NOEXCEPT
 					{
-						return iterator(const_cast<non_const_pointer_type>(this->current));
+						return iterator(non_const_pointer_type(this->current));
 					}
 
 			};
