@@ -90,9 +90,10 @@ namespace kerbal
 
 #	else
 
-		template <typename Allocator, typename Tp, typename ... Args>
+
+		template <typename Allocator, typename Pointer, typename ... Args>
 		KERBAL_CONSTEXPR14
-		Tp * construct_at_using_allocator(Allocator & alloc, Tp * p, Args&& ... args)
+		Pointer construct_at_using_allocator(Allocator & alloc, Pointer p, Args&& ... args)
 				KERBAL_CONDITIONAL_NOEXCEPT(
 					noexcept(kerbal::memory::allocator_traits<Allocator>::construct(alloc, p, kerbal::utility::forward<Args>(args)...))
 				)
