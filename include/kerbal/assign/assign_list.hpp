@@ -16,6 +16,7 @@
 
 #include <kerbal/compatibility/noexcept.hpp>
 #include <kerbal/container/detail/vector_base.hpp>
+#include <kerbal/memory/allocator_traits.hpp>
 #include <kerbal/utility/member_compress_helper.hpp>
 
 #include <memory>
@@ -32,8 +33,17 @@ namespace kerbal
 			private kerbal::utility::member_compress_helper<std::allocator<T> >
 		{
 			private:
-				typedef kerbal::utility::member_compress_helper<std::allocator<T> > super;
-				typedef kerbal::container::detail::vector_type_only<T> c;
+				typedef std::allocator<T> allocator;
+				typedef kerbal::utility::member_compress_helper<allocator>
+																	super;
+				typedef kerbal::memory::allocator_traits<allocator>	allocator_traits;
+
+			public:
+				typedef typename allocator_traits::pointer			pointer;
+				typedef typename allocator_traits::const_pointer	const_pointer;
+
+			private:
+				typedef kerbal::container::detail::vector_type_only<pointer> c;
 
 			public:
 				typedef T									value_type;

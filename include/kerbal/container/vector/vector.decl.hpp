@@ -54,20 +54,30 @@ namespace kerbal
 		template <typename T, typename Allocator>
 		class vector :
 			protected kerbal::container::detail::container_allocator_overload<Allocator>,
-			protected kerbal::container::detail::vector_type_only<T>
+			protected kerbal::container::detail::vector_type_only<typename kerbal::memory::allocator_traits<Allocator>::pointer>
 		{
 			private:
 				typedef kerbal::container::detail::container_allocator_overload<Allocator>
 																			vector_allocator_overload;
-				typedef kerbal::container::detail::vector_type_only<T>		vector_type_only;
+
+			public:
+				typedef typename vector_allocator_overload::allocator_type	allocator_type;
+				typedef kerbal::memory::allocator_traits<allocator_type>	allocator_traits;
+
+			private:
+				using vector_allocator_overload::alloc;
+
+			public:
+				typedef typename allocator_traits::pointer					pointer;
+				typedef typename allocator_traits::const_pointer			const_pointer;
+				typedef kerbal::container::detail::vector_type_only<pointer>
+																			vector_type_only;
 
 			public:
 				typedef typename vector_type_only::value_type				value_type;
 				typedef typename vector_type_only::const_type				const_type;
 				typedef typename vector_type_only::reference				reference;
 				typedef typename vector_type_only::const_reference			const_reference;
-				typedef typename vector_type_only::pointer					pointer;
-				typedef typename vector_type_only::const_pointer			const_pointer;
 
 #		if __cplusplus >= 201103L
 				typedef typename vector_type_only::rvalue_reference			rvalue_reference;
@@ -85,13 +95,6 @@ namespace kerbal
 			private:
 				typedef typename kerbal::type_traits::remove_all_extents<value_type>::type
 																			remove_all_extents_t;
-
-			public:
-				typedef typename vector_allocator_overload::allocator_type	allocator_type;
-				typedef kerbal::memory::allocator_traits<allocator_type>	allocator_traits;
-
-			private:
-				using vector_allocator_overload::alloc;
 
 			public:
 
