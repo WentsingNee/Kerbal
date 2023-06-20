@@ -56,7 +56,7 @@ namespace kerbal
 				private:
 					typedef typename kerbal::memory::pointer_traits<PointerType>::template rebind<const value_type>::other const_pointer_type;
 
-					friend class kerbal::container::detail::vector_type_only<value_type>;
+					friend class kerbal::container::detail::vector_type_only<PointerType>;
 
 					template <typename Up, typename Allocator>
 					friend class kerbal::container::vector;
@@ -184,7 +184,7 @@ namespace kerbal
 				private:
 					typedef typename kerbal::memory::pointer_traits<PointerType>::template rebind<value_type>::other non_const_pointer_type;
 
-					friend class kerbal::container::detail::vector_type_only<value_type>;
+					friend class kerbal::container::detail::vector_type_only<non_const_pointer_type>;
 
 					template <typename Up, typename Allocator>
 					friend class kerbal::container::vector;

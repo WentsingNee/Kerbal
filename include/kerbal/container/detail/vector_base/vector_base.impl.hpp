@@ -61,17 +61,17 @@ namespace kerbal
 		//===================
 		// construct/copy/destroy
 
-			template <typename Tp>
+			template <typename PointerType>
 			KERBAL_CONSTEXPR
-			vector_type_only<Tp>::vector_type_only() KERBAL_NOEXCEPT :
+			vector_type_only<PointerType>::vector_type_only() KERBAL_NOEXCEPT :
 					k_buffer(NULL), k_capacity(0), k_size(0)
 			{
 			}
 
-			template <typename Tp>
+			template <typename PointerType>
 			template <typename Allocator>
 			KERBAL_CONSTEXPR20
-			vector_type_only<Tp>::vector_type_only(Allocator & alloc, size_type count)
+			vector_type_only<PointerType>::vector_type_only(Allocator & alloc, size_type count)
 			{
 				if (count == 0) {
 					this->k_buffer = NULL;
@@ -103,10 +103,10 @@ namespace kerbal
 				this->k_size = count;
 			}
 
-			template <typename Tp>
+			template <typename PointerType>
 			template <typename Allocator>
 			KERBAL_CONSTEXPR20
-			vector_type_only<Tp>::vector_type_only(Allocator & alloc, size_type count, const_reference value)
+			vector_type_only<PointerType>::vector_type_only(Allocator & alloc, size_type count, const_reference value)
 			{
 				if (count == 0) {
 					this->k_buffer = NULL;
@@ -138,10 +138,10 @@ namespace kerbal
 				this->k_size = count;
 			}
 
-			template <typename Tp>
+			template <typename PointerType>
 			template <typename Allocator, typename InputIterator>
 			KERBAL_CONSTEXPR20
-			void vector_type_only<Tp>::k_range_copy_cnstrct_impl(Allocator & alloc, InputIterator first, InputIterator last,
+			void vector_type_only<PointerType>::k_range_copy_cnstrct_impl(Allocator & alloc, InputIterator first, InputIterator last,
 																			std::input_iterator_tag)
 			{
 				this->k_buffer = NULL;
@@ -168,10 +168,10 @@ namespace kerbal
 
 			}
 
-			template <typename Tp>
+			template <typename PointerType>
 			template <typename Allocator, typename ForwardIterator>
 			KERBAL_CONSTEXPR20
-			void vector_type_only<Tp>::k_range_copy_cnstrct_impl(Allocator & alloc, ForwardIterator first, ForwardIterator last,
+			void vector_type_only<PointerType>::k_range_copy_cnstrct_impl(Allocator & alloc, ForwardIterator first, ForwardIterator last,
 																			std::forward_iterator_tag)
 			{
 				size_type len = static_cast<size_type>(kerbal::iterator::distance(first, last));
@@ -206,19 +206,19 @@ namespace kerbal
 				this->k_size = len;
 			}
 
-			template <typename Tp>
+			template <typename PointerType>
 			template <typename Allocator, typename InputIterator>
 			KERBAL_CONSTEXPR20
-			vector_type_only<Tp>::vector_type_only(Allocator & alloc, InputIterator first, InputIterator last)
+			vector_type_only<PointerType>::vector_type_only(Allocator & alloc, InputIterator first, InputIterator last)
 			{
 				this->k_range_copy_cnstrct_impl(alloc, first, last, kerbal::iterator::iterator_category(first));
 			}
 
 #		if __cplusplus >= 201103L
 
-			template <typename Tp>
+			template <typename PointerType>
 			KERBAL_CONSTEXPR14
-			vector_type_only<Tp>::vector_type_only(vector_type_only && src) KERBAL_NOEXCEPT :
+			vector_type_only<PointerType>::vector_type_only(vector_type_only && src) KERBAL_NOEXCEPT :
 					k_buffer(src.k_buffer), k_capacity(src.k_capacity), k_size(src.k_size)
 			{
 				src.k_buffer = NULL;
@@ -227,9 +227,9 @@ namespace kerbal
 			}
 
 			// move construct using allocator, allocator is equal
-			template <typename Tp>
+			template <typename PointerType>
 			KERBAL_CONSTEXPR14
-			void vector_type_only<Tp>::k_move_cnstrct_ua_ae(vector_type_only && src) KERBAL_NOEXCEPT
+			void vector_type_only<PointerType>::k_move_cnstrct_ua_ae(vector_type_only && src) KERBAL_NOEXCEPT
 			{
 				this->k_buffer = src.k_buffer;
 				this->k_size = src.k_size;
@@ -240,10 +240,10 @@ namespace kerbal
 			}
 
 			// move construct using allocator, allocator is not equal
-			template <typename Tp>
+			template <typename PointerType>
 			template <typename Allocator>
 			KERBAL_CONSTEXPR20
-			void vector_type_only<Tp>::k_move_cnstrct_ua_ane(Allocator & this_alloc, vector_type_only && src)
+			void vector_type_only<PointerType>::k_move_cnstrct_ua_ane(Allocator & this_alloc, vector_type_only && src)
 			{
 				if (src.k_buffer != NULL) {
 					typedef kerbal::memory::allocator_traits<Allocator> allocator_traits;
@@ -274,10 +274,10 @@ namespace kerbal
 				}
 			}
 
-			template <typename Tp>
+			template <typename PointerType>
 			template <typename Allocator>
 			KERBAL_CONSTEXPR20
-			void vector_type_only<Tp>::k_move_cnstrct_ua_helper(Allocator & this_alloc, Allocator && src_alloc, vector_type_only && src,
+			void vector_type_only<PointerType>::k_move_cnstrct_ua_helper(Allocator & this_alloc, Allocator && src_alloc, vector_type_only && src,
 																		   kerbal::type_traits::false_type /*is_always_equal*/)
 			{
 				if (this_alloc != src_alloc) {
@@ -287,19 +287,19 @@ namespace kerbal
 				}
 			}
 
-			template <typename Tp>
+			template <typename PointerType>
 			template <typename Allocator>
 			KERBAL_CONSTEXPR14
-			void vector_type_only<Tp>::k_move_cnstrct_ua_helper(Allocator & /*this_alloc*/, Allocator && /*src_alloc*/, vector_type_only && src,
+			void vector_type_only<PointerType>::k_move_cnstrct_ua_helper(Allocator & /*this_alloc*/, Allocator && /*src_alloc*/, vector_type_only && src,
 																		   kerbal::type_traits::true_type /*is_always_equal*/) KERBAL_NOEXCEPT
 			{
 				this->k_move_cnstrct_ua_ae(kerbal::compatibility::move(src));
 			}
 
-			template <typename Tp>
+			template <typename PointerType>
 			template <typename Allocator>
 			KERBAL_CONSTEXPR14
-			vector_type_only<Tp>::vector_type_only(Allocator & this_alloc, Allocator && src_alloc, vector_type_only && src)
+			vector_type_only<PointerType>::vector_type_only(Allocator & this_alloc, Allocator && src_alloc, vector_type_only && src)
 					KERBAL_CONDITIONAL_NOEXCEPT(is_nothrow_move_constructible_using_allocator<Allocator>::value)
 			{
 				typedef kerbal::memory::allocator_traits<Allocator> allocator_traits;
@@ -310,10 +310,10 @@ namespace kerbal
 
 #		endif
 
-			template <typename Tp>
+			template <typename PointerType>
 			template <typename Allocator>
 			KERBAL_CONSTEXPR20
-			void vector_type_only<Tp>::k_destroy_using_allocator(Allocator & alloc) KERBAL_NOEXCEPT
+			void vector_type_only<PointerType>::k_destroy_using_allocator(Allocator & alloc) KERBAL_NOEXCEPT
 			{
 				typedef kerbal::memory::allocator_traits<Allocator> allocator_traits;
 
@@ -328,10 +328,10 @@ namespace kerbal
 		//===================
 		// assign
 
-			template <typename Tp>
+			template <typename PointerType>
 			template <typename Allocator>
 			KERBAL_CONSTEXPR20
-			void vector_type_only<Tp>::k_assign_using_allocator(Allocator & alloc, size_type new_size, const_reference value)
+			void vector_type_only<PointerType>::k_assign_using_allocator(Allocator & alloc, size_type new_size, const_reference value)
 			{
 				typedef kerbal::memory::allocator_traits<Allocator> allocator_traits;
 
@@ -385,10 +385,10 @@ namespace kerbal
 				}
 			}
 
-			template <typename Tp>
+			template <typename PointerType>
 			template <typename Allocator, typename InputIterator>
 			KERBAL_CONSTEXPR20
-			void vector_type_only<Tp>::k_range_assign_using_allocator_impl(Allocator & alloc, InputIterator first, InputIterator last, std::input_iterator_tag)
+			void vector_type_only<PointerType>::k_range_assign_using_allocator_impl(Allocator & alloc, InputIterator first, InputIterator last, std::input_iterator_tag)
 			{
 				iterator it(this->begin());
 				iterator end(this->end());
@@ -408,10 +408,10 @@ namespace kerbal
 				}
 			}
 
-			template <typename Tp>
+			template <typename PointerType>
 			template <typename Allocator, typename ForwardIterator>
 			KERBAL_CONSTEXPR20
-			void vector_type_only<Tp>::k_range_assign_using_allocator_impl(Allocator & alloc, ForwardIterator first, ForwardIterator last, std::forward_iterator_tag)
+			void vector_type_only<PointerType>::k_range_assign_using_allocator_impl(Allocator & alloc, ForwardIterator first, ForwardIterator last, std::forward_iterator_tag)
 			{
 				typedef kerbal::memory::allocator_traits<Allocator> allocator_traits;
 
@@ -466,22 +466,22 @@ namespace kerbal
 				}
 			}
 
-			template <typename Tp>
+			template <typename PointerType>
 			template <typename Allocator, typename InputIterator>
 			KERBAL_CONSTEXPR20
 			typename kerbal::type_traits::enable_if<
 					kerbal::iterator::is_input_compatible_iterator<InputIterator>::value
 			>::type
-			vector_type_only<Tp>::k_assign_using_allocator(Allocator & alloc, InputIterator first, InputIterator last)
+			vector_type_only<PointerType>::k_assign_using_allocator(Allocator & alloc, InputIterator first, InputIterator last)
 			{
 				this->k_range_assign_using_allocator_impl(alloc, first, last, kerbal::iterator::iterator_category(first));
 			}
 
 
-			template <typename Tp>
+			template <typename PointerType>
 			template <typename Allocator>
 			KERBAL_CONSTEXPR20
-			void vector_type_only<Tp>::k_cpy_ass_ua_impl(Allocator & alloc, const Allocator & src_alloc, const vector_type_only & src,
+			void vector_type_only<PointerType>::k_cpy_ass_ua_impl(Allocator & alloc, const Allocator & src_alloc, const vector_type_only & src,
 																	CPYASS_VER_NOT_PROPAGATE)
 			{
 				if (alloc != src_alloc) {
@@ -493,10 +493,10 @@ namespace kerbal
 				this->k_assign_using_allocator(alloc, src.cbegin().current, src.cend().current);
 			}
 
-			template <typename Tp>
+			template <typename PointerType>
 			template <typename Allocator>
 			KERBAL_CONSTEXPR20
-			void vector_type_only<Tp>::k_cpy_ass_ua_impl(Allocator & alloc, const Allocator & src_alloc, const vector_type_only & src,
+			void vector_type_only<PointerType>::k_cpy_ass_ua_impl(Allocator & alloc, const Allocator & src_alloc, const vector_type_only & src,
 																	CPYASS_VER_PROPAGATE)
 			{
 				if (alloc != src_alloc) {
@@ -509,19 +509,19 @@ namespace kerbal
 				this->k_assign_using_allocator(alloc, src.cbegin().current, src.cend().current);
 			}
 
-			template <typename Tp>
+			template <typename PointerType>
 			template <typename Allocator>
 			KERBAL_CONSTEXPR20
-			void vector_type_only<Tp>::k_cpy_ass_ua_impl(Allocator & alloc, const Allocator & /*src_alloc*/, const vector_type_only & src,
+			void vector_type_only<PointerType>::k_cpy_ass_ua_impl(Allocator & alloc, const Allocator & /*src_alloc*/, const vector_type_only & src,
 																	CPYASS_VER_ALWAYS_EQUAL)
 			{
 				this->k_assign_using_allocator(alloc, src.cbegin().current, src.cend().current);
 			}
 
-			template <typename Tp>
+			template <typename PointerType>
 			template <typename Allocator>
 			KERBAL_CONSTEXPR20
-			void vector_type_only<Tp>::k_assign_using_allocator(Allocator & alloc, const Allocator & src_alloc, const vector_type_only & src)
+			void vector_type_only<PointerType>::k_assign_using_allocator(Allocator & alloc, const Allocator & src_alloc, const vector_type_only & src)
 			{
 				typedef kerbal::memory::allocator_traits<Allocator> allocator_traits;
 				typedef typename allocator_traits::propagate_on_container_copy_assignment propagate;
@@ -544,10 +544,10 @@ namespace kerbal
 #		if __cplusplus >= 201103L
 
 			// move assign using allocator, allocator is equal
-			template <typename Tp>
+			template <typename PointerType>
 			template <typename Allocator>
 			KERBAL_CONSTEXPR20
-			void vector_type_only<Tp>::k_mov_ass_ua_ae(Allocator & alloc, vector_type_only && src) KERBAL_NOEXCEPT
+			void vector_type_only<PointerType>::k_mov_ass_ua_ae(Allocator & alloc, vector_type_only && src) KERBAL_NOEXCEPT
 			{
 				this->k_destroy_using_allocator(alloc);
 				this->k_buffer = src.k_buffer;
@@ -559,18 +559,18 @@ namespace kerbal
 			}
 
 			// move assign using allocator, allocator is not equal
-			template <typename Tp>
+			template <typename PointerType>
 			template <typename Allocator>
 			KERBAL_CONSTEXPR20
-			void vector_type_only<Tp>::k_mov_ass_ua_ane(Allocator & alloc, Allocator && /*src_alloc*/, vector_type_only && src)
+			void vector_type_only<PointerType>::k_mov_ass_ua_ane(Allocator & alloc, Allocator && /*src_alloc*/, vector_type_only && src)
 			{
 				this->k_assign_using_allocator(alloc, kerbal::iterator::make_move_iterator(src.begin().current), kerbal::iterator::make_move_iterator(src.end().current));
 			}
 
-			template <typename Tp>
+			template <typename PointerType>
 			template <typename Allocator>
 			KERBAL_CONSTEXPR20
-			void vector_type_only<Tp>::k_mov_ass_ua_impl(Allocator & alloc, Allocator && src_alloc, vector_type_only && src,
+			void vector_type_only<PointerType>::k_mov_ass_ua_impl(Allocator & alloc, Allocator && src_alloc, vector_type_only && src,
 																	MOVASS_VER_NOT_PROPAGATE)
 			{
 				if (alloc != src_alloc) {
@@ -580,10 +580,10 @@ namespace kerbal
 				}
 			}
 
-			template <typename Tp>
+			template <typename PointerType>
 			template <typename Allocator>
 			KERBAL_CONSTEXPR20
-			void vector_type_only<Tp>::k_mov_ass_ua_impl(Allocator & alloc, Allocator && src_alloc, vector_type_only && src,
+			void vector_type_only<PointerType>::k_mov_ass_ua_impl(Allocator & alloc, Allocator && src_alloc, vector_type_only && src,
 																	MOVASS_VER_PROPAGATE)
 			{
 				this->k_destroy_using_allocator(alloc);
@@ -599,19 +599,19 @@ namespace kerbal
 				src.k_size = 0;
 			}
 
-			template <typename Tp>
+			template <typename PointerType>
 			template <typename Allocator>
 			KERBAL_CONSTEXPR20
-			void vector_type_only<Tp>::k_mov_ass_ua_impl(Allocator & alloc, Allocator && /*src_alloc*/, vector_type_only && src,
+			void vector_type_only<PointerType>::k_mov_ass_ua_impl(Allocator & alloc, Allocator && /*src_alloc*/, vector_type_only && src,
 																	MOVASS_VER_ALWAYS_EQUAL) KERBAL_NOEXCEPT
 			{
 				this->k_mov_ass_ua_ae(alloc, kerbal::compatibility::move(src));
 			}
 
-			template <typename Tp>
+			template <typename PointerType>
 			template <typename Allocator>
 			KERBAL_CONSTEXPR20
-			void vector_type_only<Tp>::k_assign_using_allocator(Allocator & alloc, Allocator && src_alloc, vector_type_only && src)
+			void vector_type_only<PointerType>::k_assign_using_allocator(Allocator & alloc, Allocator && src_alloc, vector_type_only && src)
 					KERBAL_CONDITIONAL_NOEXCEPT(is_nothrow_move_assign_using_allocator<Allocator>::value)
 			{
 				typedef kerbal::memory::allocator_traits<Allocator> allocator_traits;
@@ -643,10 +643,10 @@ namespace kerbal
 		//===================
 		// element access
 
-			template <typename Tp>
+			template <typename PointerType>
 			KERBAL_CONSTEXPR20
-			typename vector_type_only<Tp>::reference
-			vector_type_only<Tp>::at(size_type index)
+			typename vector_type_only<PointerType>::reference
+			vector_type_only<PointerType>::at(size_type index)
 			{
 				if (index >= this->k_size) {
 					kerbal::utility::throw_this_exception_helper<std::out_of_range>::throw_this_exception((const char*)"range check fail in vector");
@@ -654,10 +654,10 @@ namespace kerbal
 				return (*this)[index];
 			}
 
-			template <typename Tp>
+			template <typename PointerType>
 			KERBAL_CONSTEXPR20
-			typename vector_type_only<Tp>::const_reference
-			vector_type_only<Tp>::at(size_type index) const
+			typename vector_type_only<PointerType>::const_reference
+			vector_type_only<PointerType>::at(size_type index) const
 			{
 				if (index >= this->k_size) {
 					kerbal::utility::throw_this_exception_helper<std::out_of_range>::throw_this_exception((const char*)"range check fail in vector");
@@ -665,58 +665,58 @@ namespace kerbal
 				return (*this)[index];
 			}
 
-			template <typename Tp>
+			template <typename PointerType>
 			KERBAL_CONSTEXPR20
-			typename vector_type_only<Tp>::reference
-			vector_type_only<Tp>::operator[](size_type index) KERBAL_NOEXCEPT
+			typename vector_type_only<PointerType>::reference
+			vector_type_only<PointerType>::operator[](size_type index) KERBAL_NOEXCEPT
 			{
 				return this->k_buffer[index];
 			}
 
-			template <typename Tp>
+			template <typename PointerType>
 			KERBAL_CONSTEXPR20
-			typename vector_type_only<Tp>::const_reference
-			vector_type_only<Tp>::operator[](size_type index) const KERBAL_NOEXCEPT
+			typename vector_type_only<PointerType>::const_reference
+			vector_type_only<PointerType>::operator[](size_type index) const KERBAL_NOEXCEPT
 			{
 				return this->k_buffer[index];
 			}
 
-			template <typename Tp>
+			template <typename PointerType>
 			KERBAL_CONSTEXPR20
-			typename vector_type_only<Tp>::reference
-			vector_type_only<Tp>::front()
+			typename vector_type_only<PointerType>::reference
+			vector_type_only<PointerType>::front()
 			{
 				return *this->begin();
 			}
 
-			template <typename Tp>
+			template <typename PointerType>
 			KERBAL_CONSTEXPR20
-			typename vector_type_only<Tp>::const_reference
-			vector_type_only<Tp>::front() const
+			typename vector_type_only<PointerType>::const_reference
+			vector_type_only<PointerType>::front() const
 			{
 				return *this->cbegin();
 			}
 
-			template <typename Tp>
+			template <typename PointerType>
 			KERBAL_CONSTEXPR20
-			typename vector_type_only<Tp>::reference
-			vector_type_only<Tp>::back()
+			typename vector_type_only<PointerType>::reference
+			vector_type_only<PointerType>::back()
 			{
 				return *this->rbegin();
 			}
 
-			template <typename Tp>
+			template <typename PointerType>
 			KERBAL_CONSTEXPR20
-			typename vector_type_only<Tp>::const_reference
-			vector_type_only<Tp>::back() const
+			typename vector_type_only<PointerType>::const_reference
+			vector_type_only<PointerType>::back() const
 			{
 				return *this->crbegin();
 			}
 
-			template <typename Tp>
+			template <typename PointerType>
 			KERBAL_CONSTEXPR
-			typename vector_type_only<Tp>::const_pointer
-			vector_type_only<Tp>::data() const KERBAL_NOEXCEPT
+			typename vector_type_only<PointerType>::const_pointer
+			vector_type_only<PointerType>::data() const KERBAL_NOEXCEPT
 			{
 				return this->k_buffer;
 			}
@@ -725,137 +725,137 @@ namespace kerbal
 		//===================
 		// iterator
 
-			template <typename Tp>
+			template <typename PointerType>
 			KERBAL_CONSTEXPR14
-			typename vector_type_only<Tp>::iterator
-			vector_type_only<Tp>::begin() KERBAL_NOEXCEPT
+			typename vector_type_only<PointerType>::iterator
+			vector_type_only<PointerType>::begin() KERBAL_NOEXCEPT
 			{
 				return iterator(this->k_buffer + 0);
 			}
 
-			template <typename Tp>
+			template <typename PointerType>
 			KERBAL_CONSTEXPR14
-			typename vector_type_only<Tp>::iterator
-			vector_type_only<Tp>::end() KERBAL_NOEXCEPT
+			typename vector_type_only<PointerType>::iterator
+			vector_type_only<PointerType>::end() KERBAL_NOEXCEPT
 			{
 				return iterator(this->k_buffer + this->k_size);
 			}
 
-			template <typename Tp>
+			template <typename PointerType>
 			KERBAL_CONSTEXPR
-			typename vector_type_only<Tp>::const_iterator
-			vector_type_only<Tp>::begin() const KERBAL_NOEXCEPT
+			typename vector_type_only<PointerType>::const_iterator
+			vector_type_only<PointerType>::begin() const KERBAL_NOEXCEPT
 			{
 				return this->cbegin();
 			}
 
-			template <typename Tp>
+			template <typename PointerType>
 			KERBAL_CONSTEXPR
-			typename vector_type_only<Tp>::const_iterator
-			vector_type_only<Tp>::end() const KERBAL_NOEXCEPT
+			typename vector_type_only<PointerType>::const_iterator
+			vector_type_only<PointerType>::end() const KERBAL_NOEXCEPT
 			{
 				return this->cend();
 			}
 
-			template <typename Tp>
+			template <typename PointerType>
 			KERBAL_CONSTEXPR
-			typename vector_type_only<Tp>::const_iterator
-			vector_type_only<Tp>::cbegin() const KERBAL_NOEXCEPT
+			typename vector_type_only<PointerType>::const_iterator
+			vector_type_only<PointerType>::cbegin() const KERBAL_NOEXCEPT
 			{
 				return const_iterator(this->k_buffer + 0);
 			}
 
-			template <typename Tp>
+			template <typename PointerType>
 			KERBAL_CONSTEXPR
-			typename vector_type_only<Tp>::const_iterator
-			vector_type_only<Tp>::cend() const KERBAL_NOEXCEPT
+			typename vector_type_only<PointerType>::const_iterator
+			vector_type_only<PointerType>::cend() const KERBAL_NOEXCEPT
 			{
 				return const_iterator(this->k_buffer + this->k_size);
 			}
 
-			template <typename Tp>
+			template <typename PointerType>
 			KERBAL_CONSTEXPR14
-			typename vector_type_only<Tp>::reverse_iterator
-			vector_type_only<Tp>::rbegin() KERBAL_NOEXCEPT
+			typename vector_type_only<PointerType>::reverse_iterator
+			vector_type_only<PointerType>::rbegin() KERBAL_NOEXCEPT
 			{
 				return reverse_iterator(this->end());
 			}
 
-			template <typename Tp>
+			template <typename PointerType>
 			KERBAL_CONSTEXPR14
-			typename vector_type_only<Tp>::reverse_iterator
-			vector_type_only<Tp>::rend() KERBAL_NOEXCEPT
+			typename vector_type_only<PointerType>::reverse_iterator
+			vector_type_only<PointerType>::rend() KERBAL_NOEXCEPT
 			{
 				return reverse_iterator(this->begin());
 			}
 
-			template <typename Tp>
+			template <typename PointerType>
 			KERBAL_CONSTEXPR14
-			typename vector_type_only<Tp>::const_reverse_iterator
-			vector_type_only<Tp>::rbegin() const KERBAL_NOEXCEPT
+			typename vector_type_only<PointerType>::const_reverse_iterator
+			vector_type_only<PointerType>::rbegin() const KERBAL_NOEXCEPT
 			{
 				return this->crbegin();
 			}
-			template <typename Tp>
+			template <typename PointerType>
 			KERBAL_CONSTEXPR14
-			typename vector_type_only<Tp>::const_reverse_iterator
-			vector_type_only<Tp>::rend() const KERBAL_NOEXCEPT
+			typename vector_type_only<PointerType>::const_reverse_iterator
+			vector_type_only<PointerType>::rend() const KERBAL_NOEXCEPT
 			{
 				return this->crend();
 			}
 
-			template <typename Tp>
+			template <typename PointerType>
 			KERBAL_CONSTEXPR14
-			typename vector_type_only<Tp>::const_reverse_iterator
-			vector_type_only<Tp>::crbegin() const KERBAL_NOEXCEPT
+			typename vector_type_only<PointerType>::const_reverse_iterator
+			vector_type_only<PointerType>::crbegin() const KERBAL_NOEXCEPT
 			{
 				return const_reverse_iterator(this->end());
 			}
 
-			template <typename Tp>
+			template <typename PointerType>
 			KERBAL_CONSTEXPR14
-			typename vector_type_only<Tp>::const_reverse_iterator
-			vector_type_only<Tp>::crend() const KERBAL_NOEXCEPT
+			typename vector_type_only<PointerType>::const_reverse_iterator
+			vector_type_only<PointerType>::crend() const KERBAL_NOEXCEPT
 			{
 				return const_reverse_iterator(this->cbegin());
 			}
 
-			template <typename Tp>
+			template <typename PointerType>
 			KERBAL_CONSTEXPR14
-			typename vector_type_only<Tp>::iterator
-			vector_type_only<Tp>::nth(size_type index)
+			typename vector_type_only<PointerType>::iterator
+			vector_type_only<PointerType>::nth(size_type index)
 			{
 				return this->begin() + index;
 			}
 
-			template <typename Tp>
+			template <typename PointerType>
 			KERBAL_CONSTEXPR
-			typename vector_type_only<Tp>::const_iterator
-			vector_type_only<Tp>::nth(size_type index) const
+			typename vector_type_only<PointerType>::const_iterator
+			vector_type_only<PointerType>::nth(size_type index) const
 			{
 				return this->cbegin() + index;
 			}
 
-			template <typename Tp>
+			template <typename PointerType>
 			KERBAL_CONSTEXPR
-			typename vector_type_only<Tp>::const_iterator
-			vector_type_only<Tp>::cnth(size_type index) const
+			typename vector_type_only<PointerType>::const_iterator
+			vector_type_only<PointerType>::cnth(size_type index) const
 			{
 				return this->cbegin() + index;
 			}
 
-			template <typename Tp>
+			template <typename PointerType>
 			KERBAL_CONSTEXPR14
-			typename vector_type_only<Tp>::size_type
-			vector_type_only<Tp>::index_of(iterator it)
+			typename vector_type_only<PointerType>::size_type
+			vector_type_only<PointerType>::index_of(iterator it)
 			{
 				return it - this->begin();
 			}
 
-			template <typename Tp>
+			template <typename PointerType>
 			KERBAL_CONSTEXPR
-			typename vector_type_only<Tp>::size_type
-			vector_type_only<Tp>::index_of(const_iterator it) const
+			typename vector_type_only<PointerType>::size_type
+			vector_type_only<PointerType>::index_of(const_iterator it) const
 			{
 				return it - this->cbegin();
 			}
@@ -864,33 +864,33 @@ namespace kerbal
 		//===================
 		// capacity
 
-			template <typename Tp>
+			template <typename PointerType>
 			KERBAL_CONSTEXPR
-			bool vector_type_only<Tp>::empty() const KERBAL_NOEXCEPT
+			bool vector_type_only<PointerType>::empty() const KERBAL_NOEXCEPT
 			{
 				return this->k_size == 0;
 			}
 
-			template <typename Tp>
+			template <typename PointerType>
 			KERBAL_CONSTEXPR
-			typename vector_type_only<Tp>::size_type
-			vector_type_only<Tp>::size() const KERBAL_NOEXCEPT
+			typename vector_type_only<PointerType>::size_type
+			vector_type_only<PointerType>::size() const KERBAL_NOEXCEPT
 			{
 				return this->k_size;
 			}
 
-			template <typename Tp>
+			template <typename PointerType>
 			KERBAL_CONSTEXPR
-			typename vector_type_only<Tp>::size_type
-			vector_type_only<Tp>::capacity() const KERBAL_NOEXCEPT
+			typename vector_type_only<PointerType>::size_type
+			vector_type_only<PointerType>::capacity() const KERBAL_NOEXCEPT
 			{
 				return this->k_capacity;
 			}
 
-			template <typename Tp>
+			template <typename PointerType>
 			template <typename Allocator>
 			KERBAL_CONSTEXPR20
-			void vector_type_only<Tp>::k_capacity_adjusted_realloc_aux(Allocator & alloc, pointer new_buffer, size_type new_capacity)
+			void vector_type_only<PointerType>::k_capacity_adjusted_realloc_aux(Allocator & alloc, pointer new_buffer, size_type new_capacity)
 			{
 				typedef kerbal::memory::allocator_traits<Allocator> allocator_traits;
 
@@ -908,10 +908,10 @@ namespace kerbal
 				allocator_traits::deallocate(alloc, this->k_buffer, this->k_capacity);
 			}
 
-			template <typename Tp>
+			template <typename PointerType>
 			template <typename Allocator>
 			KERBAL_CONSTEXPR20
-			void vector_type_only<Tp>::k_reserve_expand_buffer(kerbal::type_traits::false_type, Allocator & alloc, size_type new_capacity)
+			void vector_type_only<PointerType>::k_reserve_expand_buffer(kerbal::type_traits::false_type, Allocator & alloc, size_type new_capacity)
 			{
 				typedef kerbal::memory::allocator_traits<Allocator> allocator_traits;
 
@@ -930,10 +930,10 @@ namespace kerbal
 				this->k_capacity = new_capacity;
 			}
 
-			template <typename Tp>
+			template <typename PointerType>
 			template <typename Allocator>
 			KERBAL_CONSTEXPR20
-			void vector_type_only<Tp>::k_reserve_expand_buffer(kerbal::type_traits::true_type, Allocator & alloc, size_type new_capacity)
+			void vector_type_only<PointerType>::k_reserve_expand_buffer(kerbal::type_traits::true_type, Allocator & alloc, size_type new_capacity)
 			{
 				typedef kerbal::memory::allocator_traits<Allocator> allocator_traits;
 
@@ -948,10 +948,10 @@ namespace kerbal
 				this->k_capacity = new_capacity;
 			}
 
-			template <typename Tp>
+			template <typename PointerType>
 			template <typename Allocator>
 			KERBAL_CONSTEXPR20
-			void vector_type_only<Tp>::k_reserve_using_allocator(Allocator & alloc, size_type new_capacity)
+			void vector_type_only<PointerType>::k_reserve_using_allocator(Allocator & alloc, size_type new_capacity)
 			{
 				typedef kerbal::memory::allocator_traits<Allocator> allocator_traits;
 
@@ -963,10 +963,10 @@ namespace kerbal
 				this->k_reserve_expand_buffer(has_reallocate(), alloc, new_capacity);
 			}
 
-			template <typename Tp>
+			template <typename PointerType>
 			template <typename Allocator>
 			KERBAL_CONSTEXPR20
-			void vector_type_only<Tp>::k_shrink_buffer(kerbal::type_traits::false_type, Allocator & alloc)
+			void vector_type_only<PointerType>::k_shrink_buffer(kerbal::type_traits::false_type, Allocator & alloc)
 			{
 				typedef kerbal::memory::allocator_traits<Allocator> allocator_traits;
 
@@ -983,10 +983,10 @@ namespace kerbal
 				this->k_capacity = new_capacity;
 			}
 
-			template <typename Tp>
+			template <typename PointerType>
 			template <typename Allocator>
 			KERBAL_CONSTEXPR20
-			void vector_type_only<Tp>::k_shrink_buffer(kerbal::type_traits::true_type, Allocator & alloc)
+			void vector_type_only<PointerType>::k_shrink_buffer(kerbal::type_traits::true_type, Allocator & alloc)
 			{
 				typedef kerbal::memory::allocator_traits<Allocator> allocator_traits;
 
@@ -996,10 +996,10 @@ namespace kerbal
 				this->k_capacity = new_capacity;
 			}
 
-			template <typename Tp>
+			template <typename PointerType>
 			template <typename Allocator>
 			KERBAL_CONSTEXPR20
-			void vector_type_only<Tp>::k_shrink_to_fit_using_allocator(Allocator & alloc)
+			void vector_type_only<PointerType>::k_shrink_to_fit_using_allocator(Allocator & alloc)
 			{
 				typedef kerbal::memory::allocator_traits<Allocator> allocator_traits;
 
@@ -1021,10 +1021,10 @@ namespace kerbal
 		//===================
 		// insert
 
-			template <typename Tp>
+			template <typename PointerType>
 			template <typename Allocator>
 			KERBAL_CONSTEXPR20
-			void vector_type_only<Tp>::emplace_realloc_aux(Allocator & alloc, size_type insert_pos_index, pointer new_buffer, size_type new_capacity)
+			void vector_type_only<PointerType>::emplace_realloc_aux(Allocator & alloc, size_type insert_pos_index, pointer new_buffer, size_type new_capacity)
 			{
 				typedef kerbal::memory::allocator_traits<Allocator> allocator_traits;
 
@@ -1064,11 +1064,11 @@ namespace kerbal
 				++this->k_size;
 			}
 
-			template <typename Tp, typename Allocator>
+			template <typename Tp, typename PointerType, typename Allocator>
 			struct vector_emplace_helper
 			{
 					typedef Tp value_type;
-					typedef Tp* pointer;
+					typedef PointerType pointer;
 
 					Allocator & alloc;
 					kerbal::memory::raw_storage<value_type> storage;
@@ -1122,11 +1122,11 @@ namespace kerbal
 
 #		if __cplusplus >= 201103L
 
-			template <typename Tp>
+			template <typename PointerType>
 			template <typename Allocator, typename ... Args>
 			KERBAL_CONSTEXPR20
-			typename vector_type_only<Tp>::iterator
-			vector_type_only<Tp>::k_emplace_using_allocator(Allocator & alloc, const_iterator pos, Args&& ... args)
+			typename vector_type_only<PointerType>::iterator
+			vector_type_only<PointerType>::k_emplace_using_allocator(Allocator & alloc, const_iterator pos, Args&& ... args)
 			{
 				typedef kerbal::memory::allocator_traits<Allocator> allocator_traits;
 
@@ -1142,7 +1142,7 @@ namespace kerbal
 						kerbal::memory::construct_at_using_allocator(alloc, this->end().current, kerbal::utility::forward<Args>(args)...);
 						this->k_size = new_size;
 					} else {
-						vector_emplace_helper<Tp, Allocator> helper(alloc, kerbal::utility::forward<Args>(args)...);
+						vector_emplace_helper<value_type, pointer, Allocator> helper(alloc, kerbal::utility::forward<Args>(args)...);
 
 						// construct at the end
 						kerbal::memory::construct_at_using_allocator(alloc, this->end().current, kerbal::compatibility::to_xvalue(this->back()));
@@ -1225,10 +1225,10 @@ namespace kerbal
 
 
 #		define FBODY(i) \
-			template <typename Tp> \
+			template <typename PointerType> \
 			template <typename Allocator KERBAL_OPT_PPEXPAND_WITH_COMMA_N(LEFT_JOIN_COMMA, EMPTY, TARGS_DECL, i)> \
-			typename vector_type_only<Tp>::iterator \
-			vector_type_only<Tp>::k_emplace_using_allocator(Allocator & alloc, const_iterator pos KERBAL_OPT_PPEXPAND_WITH_COMMA_N(LEFT_JOIN_COMMA, EMPTY, ARGS_DECL, i)) \
+			typename vector_type_only<PointerType>::iterator \
+			vector_type_only<PointerType>::k_emplace_using_allocator(Allocator & alloc, const_iterator pos KERBAL_OPT_PPEXPAND_WITH_COMMA_N(LEFT_JOIN_COMMA, EMPTY, ARGS_DECL, i)) \
 			{ \
 				typedef kerbal::memory::allocator_traits<Allocator> allocator_traits; \
  \
@@ -1241,7 +1241,7 @@ namespace kerbal
 						kerbal::memory::construct_at_using_allocator(alloc, this->end().current KERBAL_OPT_PPEXPAND_WITH_COMMA_N(LEFT_JOIN_COMMA, EMPTY, ARGS_USE, i)); \
 						this->k_size = new_size; \
 					} else { \
-						vector_emplace_helper<Tp, Allocator> helper(alloc KERBAL_OPT_PPEXPAND_WITH_COMMA_N(LEFT_JOIN_COMMA, EMPTY, ARGS_USE, i)); \
+						vector_emplace_helper<value_type, pointer, Allocator> helper(alloc KERBAL_OPT_PPEXPAND_WITH_COMMA_N(LEFT_JOIN_COMMA, EMPTY, ARGS_USE, i)); \
  \
 						kerbal::memory::construct_at_using_allocator(alloc, this->end().current, kerbal::compatibility::to_xvalue(this->back())); \
 						this->k_size = new_size; \
@@ -1267,32 +1267,32 @@ namespace kerbal
 
 #		endif
 
-			template <typename Tp>
+			template <typename PointerType>
 			template <typename Allocator>
 			KERBAL_CONSTEXPR20
-			typename vector_type_only<Tp>::iterator
-			vector_type_only<Tp>::k_insert_using_allocator(Allocator & alloc, const_iterator pos, const_reference val)
+			typename vector_type_only<PointerType>::iterator
+			vector_type_only<PointerType>::k_insert_using_allocator(Allocator & alloc, const_iterator pos, const_reference val)
 			{
 				return this->k_emplace_using_allocator(alloc, pos, val);
 			}
 
 #		if __cplusplus >= 201103L
 
-			template <typename Tp>
+			template <typename PointerType>
 			template <typename Allocator>
 			KERBAL_CONSTEXPR20
-			typename vector_type_only<Tp>::iterator
-			vector_type_only<Tp>::k_insert_using_allocator(Allocator & alloc, const_iterator pos, rvalue_reference val)
+			typename vector_type_only<PointerType>::iterator
+			vector_type_only<PointerType>::k_insert_using_allocator(Allocator & alloc, const_iterator pos, rvalue_reference val)
 			{
 				return this->k_emplace_using_allocator(alloc, pos, kerbal::compatibility::move(val));
 			}
 
 #		endif
 
-			template <typename Tp>
+			template <typename PointerType>
 			template <typename Allocator>
 			KERBAL_CONSTEXPR20
-			void vector_type_only<Tp>::insert_realloc_aux(Allocator & alloc, size_type insert_pos_index, size_type n, pointer new_buffer, size_type new_capacity, size_type new_size)
+			void vector_type_only<PointerType>::insert_realloc_aux(Allocator & alloc, size_type insert_pos_index, size_type n, pointer new_buffer, size_type new_capacity, size_type new_size)
 			{
 				typedef kerbal::memory::allocator_traits<Allocator> allocator_traits;
 
@@ -1337,11 +1337,11 @@ namespace kerbal
 			}
 
 
-			template <typename Tp>
+			template <typename PointerType>
 			template <typename Allocator>
 			KERBAL_CONSTEXPR20
-			typename vector_type_only<Tp>::iterator
-			vector_type_only<Tp>::k_insert_using_allocator(Allocator & alloc, const_iterator pos, size_type n, const_reference val)
+			typename vector_type_only<PointerType>::iterator
+			vector_type_only<PointerType>::k_insert_using_allocator(Allocator & alloc, const_iterator pos, size_type n, const_reference val)
 			{
 				typedef kerbal::memory::allocator_traits<Allocator> allocator_traits;
 
@@ -1430,11 +1430,11 @@ namespace kerbal
 				return this->nth(insert_pos_index);
 			}
 
-			template <typename Tp>
+			template <typename PointerType>
 			template <typename Allocator, typename InputIterator>
 			KERBAL_CONSTEXPR20
-			typename vector_type_only<Tp>::iterator
-			vector_type_only<Tp>::k_range_insert_using_allocator_impl(Allocator & alloc, const_iterator pos, InputIterator first, InputIterator last, std::input_iterator_tag)
+			typename vector_type_only<PointerType>::iterator
+			vector_type_only<PointerType>::k_range_insert_using_allocator_impl(Allocator & alloc, const_iterator pos, InputIterator first, InputIterator last, std::input_iterator_tag)
 			{
 				typedef kerbal::memory::allocator_traits<Allocator> allocator_traits;
 
@@ -1547,11 +1547,11 @@ namespace kerbal
 				return this->nth(insert_pos_index);
 			}
 
-			template <typename Tp>
+			template <typename PointerType>
 			template <typename Allocator, typename ForwardIterator>
 			KERBAL_CONSTEXPR20
-			typename vector_type_only<Tp>::iterator
-			vector_type_only<Tp>::k_range_insert_using_allocator_impl(Allocator & alloc, const_iterator pos, ForwardIterator first, ForwardIterator last, std::forward_iterator_tag)
+			typename vector_type_only<PointerType>::iterator
+			vector_type_only<PointerType>::k_range_insert_using_allocator_impl(Allocator & alloc, const_iterator pos, ForwardIterator first, ForwardIterator last, std::forward_iterator_tag)
 			{
 				typedef kerbal::memory::allocator_traits<Allocator> allocator_traits;
 
@@ -1636,23 +1636,23 @@ namespace kerbal
 				return this->nth(insert_pos_index);
 			}
 
-			template <typename Tp>
+			template <typename PointerType>
 			template <typename Allocator, typename InputIterator>
 			KERBAL_CONSTEXPR20
 			typename kerbal::type_traits::enable_if<
 					kerbal::iterator::is_input_compatible_iterator<InputIterator>::value,
-					typename vector_type_only<Tp>::iterator
+					typename vector_type_only<PointerType>::iterator
 			>::type
-			vector_type_only<Tp>::k_insert_using_allocator(Allocator & alloc, const_iterator pos, InputIterator first, InputIterator last)
+			vector_type_only<PointerType>::k_insert_using_allocator(Allocator & alloc, const_iterator pos, InputIterator first, InputIterator last)
 			{
 				return this->k_range_insert_using_allocator_impl(alloc, pos, first, last, kerbal::iterator::iterator_category(first));
 			}
 
 
-			template <typename Tp>
+			template <typename PointerType>
 			template <typename Allocator>
 			KERBAL_CONSTEXPR20
-			void vector_type_only<Tp>::k_emplace_back_transfer_ele(Allocator & alloc, pointer new_buffer, size_type new_capacity)
+			void vector_type_only<PointerType>::k_emplace_back_transfer_ele(Allocator & alloc, pointer new_buffer, size_type new_capacity)
 			{
 				typedef kerbal::memory::allocator_traits<Allocator> allocator_traits;
 
@@ -1679,10 +1679,10 @@ namespace kerbal
 
 #		if __cplusplus >= 201103L
 
-			template <typename Tp>
+			template <typename PointerType>
 			template <typename Allocator, typename ... Args>
 			KERBAL_CONSTEXPR20
-			void vector_type_only<Tp>::k_emplace_back_ua_expand_buffer(kerbal::type_traits::false_type, Allocator & alloc, Args&& ... args)
+			void vector_type_only<PointerType>::k_emplace_back_ua_expand_buffer(kerbal::type_traits::false_type, Allocator & alloc, Args&& ... args)
 			{
 				typedef kerbal::memory::allocator_traits<Allocator> allocator_traits;
 
@@ -1710,10 +1710,10 @@ namespace kerbal
 				this->k_emplace_back_transfer_ele(alloc, new_buffer, new_capacity);
 			}
 
-			template <typename Tp>
+			template <typename PointerType>
 			template <typename Allocator, typename ... Args>
 			KERBAL_CONSTEXPR20
-			void vector_type_only<Tp>::k_emplace_back_ua_expand_buffer(kerbal::type_traits::true_type, Allocator & alloc, Args&& ... args)
+			void vector_type_only<PointerType>::k_emplace_back_ua_expand_buffer(kerbal::type_traits::true_type, Allocator & alloc, Args&& ... args)
 			{
 				typedef kerbal::memory::allocator_traits<Allocator> allocator_traits;
 
@@ -1734,11 +1734,11 @@ namespace kerbal
 				++this->k_size;
 			}
 
-			template <typename Tp>
+			template <typename PointerType>
 			template <typename Allocator, typename ... Args>
 			KERBAL_CONSTEXPR20
-			typename vector_type_only<Tp>::reference
-			vector_type_only<Tp>::k_emplace_back_using_allocator(Allocator & alloc, Args&& ... args)
+			typename vector_type_only<PointerType>::reference
+			vector_type_only<PointerType>::k_emplace_back_using_allocator(Allocator & alloc, Args&& ... args)
 			{
 				typedef kerbal::memory::allocator_traits<Allocator> allocator_traits;
 
@@ -1763,9 +1763,9 @@ namespace kerbal
 #		define ARGS_USE(i) KERBAL_MACRO_CONCAT(arg, i)
 #	if KERBAL_HAS_EXCEPTIONS_SUPPORT
 #		define FBODY_EXPAND_BUFFER(i) \
-			template <typename Tp> \
+			template <typename PointerType> \
 			template <typename Allocator KERBAL_OPT_PPEXPAND_WITH_COMMA_N(LEFT_JOIN_COMMA, EMPTY, TARGS_DECL, i)> \
-			void vector_type_only<Tp>::k_emplace_back_ua_expand_buffer(kerbal::type_traits::false_type, Allocator & alloc KERBAL_OPT_PPEXPAND_WITH_COMMA_N(LEFT_JOIN_COMMA, EMPTY, ARGS_DECL, i)) \
+			void vector_type_only<PointerType>::k_emplace_back_ua_expand_buffer(kerbal::type_traits::false_type, Allocator & alloc KERBAL_OPT_PPEXPAND_WITH_COMMA_N(LEFT_JOIN_COMMA, EMPTY, ARGS_DECL, i)) \
 			{ \
 				typedef kerbal::memory::allocator_traits<Allocator> allocator_traits; \
  \
@@ -1784,9 +1784,9 @@ namespace kerbal
 				this->k_emplace_back_transfer_ele(alloc, new_buffer, new_capacity); \
 			} \
  \
-			template <typename Tp> \
+			template <typename PointerType> \
 			template <typename Allocator KERBAL_OPT_PPEXPAND_WITH_COMMA_N(LEFT_JOIN_COMMA, EMPTY, TARGS_DECL, i)> \
-			void vector_type_only<Tp>::k_emplace_back_ua_expand_buffer(kerbal::type_traits::true_type, Allocator & alloc KERBAL_OPT_PPEXPAND_WITH_COMMA_N(LEFT_JOIN_COMMA, EMPTY, ARGS_DECL, i)) \
+			void vector_type_only<PointerType>::k_emplace_back_ua_expand_buffer(kerbal::type_traits::true_type, Allocator & alloc KERBAL_OPT_PPEXPAND_WITH_COMMA_N(LEFT_JOIN_COMMA, EMPTY, ARGS_DECL, i)) \
 			{ \
 				typedef kerbal::memory::allocator_traits<Allocator> allocator_traits; \
  \
@@ -1803,9 +1803,9 @@ namespace kerbal
 			}
 #	else // KERBAL_HAS_EXCEPTIONS_SUPPORT
 #		define FBODY_EXPAND_BUFFER(i) \
-			template <typename Tp> \
+			template <typename PointerType> \
 			template <typename Allocator KERBAL_OPT_PPEXPAND_WITH_COMMA_N(LEFT_JOIN_COMMA, EMPTY, TARGS_DECL, i)> \
-			void vector_type_only<Tp>::k_emplace_back_ua_expand_buffer(kerbal::type_traits::false_type, Allocator & alloc KERBAL_OPT_PPEXPAND_WITH_COMMA_N(LEFT_JOIN_COMMA, EMPTY, ARGS_DECL, i)) \
+			void vector_type_only<PointerType>::k_emplace_back_ua_expand_buffer(kerbal::type_traits::false_type, Allocator & alloc KERBAL_OPT_PPEXPAND_WITH_COMMA_N(LEFT_JOIN_COMMA, EMPTY, ARGS_DECL, i)) \
 			{ \
 				typedef kerbal::memory::allocator_traits<Allocator> allocator_traits; \
  \
@@ -1823,9 +1823,9 @@ namespace kerbal
  \
 				this->k_emplace_back_transfer_ele(alloc, new_buffer, new_capacity); \
 			} \
-			template <typename Tp> \
+			template <typename PointerType> \
 			template <typename Allocator KERBAL_OPT_PPEXPAND_WITH_COMMA_N(LEFT_JOIN_COMMA, EMPTY, TARGS_DECL, i)> \
-			void vector_type_only<Tp>::k_emplace_back_ua_expand_buffer(kerbal::type_traits::true_type, Allocator & alloc KERBAL_OPT_PPEXPAND_WITH_COMMA_N(LEFT_JOIN_COMMA, EMPTY, ARGS_DECL, i)) \
+			void vector_type_only<PointerType>::k_emplace_back_ua_expand_buffer(kerbal::type_traits::true_type, Allocator & alloc KERBAL_OPT_PPEXPAND_WITH_COMMA_N(LEFT_JOIN_COMMA, EMPTY, ARGS_DECL, i)) \
 			{ \
 				typedef kerbal::memory::allocator_traits<Allocator> allocator_traits; \
  \
@@ -1847,10 +1847,10 @@ namespace kerbal
 
 #		define FBODY(i) \
 			FBODY_EXPAND_BUFFER(i) \
-			template <typename Tp> \
+			template <typename PointerType> \
 			template <typename Allocator KERBAL_OPT_PPEXPAND_WITH_COMMA_N(LEFT_JOIN_COMMA, EMPTY, TARGS_DECL, i)> \
-			typename vector_type_only<Tp>::reference \
-			vector_type_only<Tp>::k_emplace_back_using_allocator(Allocator & alloc KERBAL_OPT_PPEXPAND_WITH_COMMA_N(LEFT_JOIN_COMMA, EMPTY, ARGS_DECL, i)) \
+			typename vector_type_only<PointerType>::reference \
+			vector_type_only<PointerType>::k_emplace_back_using_allocator(Allocator & alloc KERBAL_OPT_PPEXPAND_WITH_COMMA_N(LEFT_JOIN_COMMA, EMPTY, ARGS_DECL, i)) \
 			{ \
 				typedef kerbal::memory::allocator_traits<Allocator> allocator_traits; \
  \
@@ -1879,20 +1879,20 @@ namespace kerbal
 
 #		endif
 
-			template <typename Tp>
+			template <typename PointerType>
 			template <typename Allocator>
 			KERBAL_CONSTEXPR20
-			void vector_type_only<Tp>::k_push_back_using_allocator(Allocator & alloc, const_reference src)
+			void vector_type_only<PointerType>::k_push_back_using_allocator(Allocator & alloc, const_reference src)
 			{
 				this->k_emplace_back_using_allocator(alloc, src);
 			}
 
 #		if __cplusplus >= 201103L
 
-			template <typename Tp>
+			template <typename PointerType>
 			template <typename Allocator>
 			KERBAL_CONSTEXPR20
-			void vector_type_only<Tp>::k_push_back_using_allocator(Allocator & alloc, rvalue_reference src)
+			void vector_type_only<PointerType>::k_push_back_using_allocator(Allocator & alloc, rvalue_reference src)
 			{
 				this->k_emplace_back_using_allocator(alloc, kerbal::compatibility::move(src));
 			}
@@ -1904,11 +1904,11 @@ namespace kerbal
 		//===================
 		// erase
 
-			template <typename Tp>
+			template <typename PointerType>
 			template <typename Allocator>
 			KERBAL_CONSTEXPR20
-			typename vector_type_only<Tp>::iterator
-			vector_type_only<Tp>::k_erase_using_allocator(Allocator & alloc, const_iterator pos)
+			typename vector_type_only<PointerType>::iterator
+			vector_type_only<PointerType>::k_erase_using_allocator(Allocator & alloc, const_iterator pos)
 			{
 				iterator pos_mut(pos.cast_to_mutable());
 
@@ -1922,11 +1922,11 @@ namespace kerbal
 				return pos_mut;
 			}
 
-			template <typename Tp>
+			template <typename PointerType>
 			template <typename Allocator>
 			KERBAL_CONSTEXPR20
-			typename vector_type_only<Tp>::iterator
-			vector_type_only<Tp>::k_erase_using_allocator(Allocator & alloc, const_iterator first, const_iterator last)
+			typename vector_type_only<PointerType>::iterator
+			vector_type_only<PointerType>::k_erase_using_allocator(Allocator & alloc, const_iterator first, const_iterator last)
 			{
 				iterator first_mut(first.cast_to_mutable());
 				if (first == last) {
@@ -1941,19 +1941,19 @@ namespace kerbal
 				return first_mut;
 			}
 
-			template <typename Tp>
+			template <typename PointerType>
 			template <typename Allocator>
 			KERBAL_CONSTEXPR20
-			void vector_type_only<Tp>::k_pop_back_using_allocator(Allocator & alloc) KERBAL_NOEXCEPT
+			void vector_type_only<PointerType>::k_pop_back_using_allocator(Allocator & alloc) KERBAL_NOEXCEPT
 			{
 				kerbal::memory::destroy_on_using_allocator(alloc, this->back());
 				--this->k_size;
 			}
 
-			template <typename Tp>
+			template <typename PointerType>
 			template <typename Allocator>
 			KERBAL_CONSTEXPR20
-			void vector_type_only<Tp>::k_clear_using_allocator(Allocator & alloc) KERBAL_NOEXCEPT
+			void vector_type_only<PointerType>::k_clear_using_allocator(Allocator & alloc) KERBAL_NOEXCEPT
 			{
 				kerbal::memory::reverse_destroy_using_allocator(alloc, this->begin().current, this->end().current);
 				this->k_size = 0;
@@ -1963,10 +1963,10 @@ namespace kerbal
 		//===================
 		// operation
 
-			template <typename Tp>
+			template <typename PointerType>
 			template <typename Allocator>
 			KERBAL_CONSTEXPR20
-			void vector_type_only<Tp>::k_resize_transfer_ele(Allocator & alloc, pointer new_buffer, size_type new_capacity, size_type new_size)
+			void vector_type_only<PointerType>::k_resize_transfer_ele(Allocator & alloc, pointer new_buffer, size_type new_capacity, size_type new_size)
 			{
 				typedef kerbal::memory::allocator_traits<Allocator> allocator_traits;
 
@@ -1991,10 +1991,10 @@ namespace kerbal
 				this->k_size = new_size;
 			}
 
-			template <typename Tp>
+			template <typename PointerType>
 			template <typename Allocator>
 			KERBAL_CONSTEXPR20
-			void vector_type_only<Tp>::k_resize_expand_buffer(kerbal::type_traits::false_type, Allocator & alloc, size_type new_size)
+			void vector_type_only<PointerType>::k_resize_expand_buffer(kerbal::type_traits::false_type, Allocator & alloc, size_type new_size)
 			{
 				typedef kerbal::memory::allocator_traits<Allocator> allocator_traits;
 
@@ -2021,10 +2021,10 @@ namespace kerbal
 				this->k_resize_transfer_ele(alloc, new_buffer, new_capacity, new_size);
 			}
 
-			template <typename Tp>
+			template <typename PointerType>
 			template <typename Allocator>
 			KERBAL_CONSTEXPR20
-			void vector_type_only<Tp>::k_resize_expand_buffer(kerbal::type_traits::true_type, Allocator & alloc, size_type new_size)
+			void vector_type_only<PointerType>::k_resize_expand_buffer(kerbal::type_traits::true_type, Allocator & alloc, size_type new_size)
 			{
 				typedef kerbal::memory::allocator_traits<Allocator> allocator_traits;
 
@@ -2044,10 +2044,10 @@ namespace kerbal
 				this->k_size = new_size;
 			}
 
-			template <typename Tp>
+			template <typename PointerType>
 			template <typename Allocator>
 			KERBAL_CONSTEXPR20
-			void vector_type_only<Tp>::k_resize_expand_buffer(kerbal::type_traits::false_type, Allocator & alloc, size_type new_size, const_reference value)
+			void vector_type_only<PointerType>::k_resize_expand_buffer(kerbal::type_traits::false_type, Allocator & alloc, size_type new_size, const_reference value)
 			{
 				typedef kerbal::memory::allocator_traits<Allocator> allocator_traits;
 
@@ -2074,10 +2074,10 @@ namespace kerbal
 				this->k_resize_transfer_ele(alloc, new_buffer, new_capacity, new_size);
 			}
 
-			template <typename Tp>
+			template <typename PointerType>
 			template <typename Allocator>
 			KERBAL_CONSTEXPR20
-			void vector_type_only<Tp>::k_resize_expand_buffer(kerbal::type_traits::true_type, Allocator & alloc, size_type new_size, const_reference value)
+			void vector_type_only<PointerType>::k_resize_expand_buffer(kerbal::type_traits::true_type, Allocator & alloc, size_type new_size, const_reference value)
 			{
 				typedef kerbal::memory::allocator_traits<Allocator> allocator_traits;
 
@@ -2097,10 +2097,10 @@ namespace kerbal
 				this->k_size = new_size;
 			}
 
-			template <typename Tp>
+			template <typename PointerType>
 			template <typename Allocator>
 			KERBAL_CONSTEXPR20
-			void vector_type_only<Tp>::k_resize_using_allocator(Allocator & alloc, size_type new_size)
+			void vector_type_only<PointerType>::k_resize_using_allocator(Allocator & alloc, size_type new_size)
 			{
 				typedef kerbal::memory::allocator_traits<Allocator> allocator_traits;
 
@@ -2127,10 +2127,10 @@ namespace kerbal
 				}
 			}
 
-			template <typename Tp>
+			template <typename PointerType>
 			template <typename Allocator>
 			KERBAL_CONSTEXPR20
-			void vector_type_only<Tp>::k_resize_using_allocator(Allocator & alloc, size_type new_size, const_reference value)
+			void vector_type_only<PointerType>::k_resize_using_allocator(Allocator & alloc, size_type new_size, const_reference value)
 			{
 				typedef kerbal::memory::allocator_traits<Allocator> allocator_traits;
 
@@ -2157,9 +2157,9 @@ namespace kerbal
 				}
 			}
 
-			template <typename Tp>
+			template <typename PointerType>
 			KERBAL_CONSTEXPR14
-			void vector_type_only<Tp>::k_swap_type_unrelated(vector_type_only & lhs, vector_type_only & rhs) KERBAL_NOEXCEPT
+			void vector_type_only<PointerType>::k_swap_type_unrelated(vector_type_only & lhs, vector_type_only & rhs) KERBAL_NOEXCEPT
 			{
 				kerbal::algorithm::swap(lhs.k_buffer, rhs.k_buffer);
 				kerbal::algorithm::swap(lhs.k_size, rhs.k_size);
@@ -2168,10 +2168,10 @@ namespace kerbal
 
 
 
-			template <typename Tp>
+			template <typename PointerType>
 			template <typename Allocator>
 			KERBAL_CONSTEXPR20
-			void vector_type_only<Tp>::ui_move_if_noexcept_ow_copy_phase1(Allocator & alloc, pointer first, pointer last, pointer to)
+			void vector_type_only<PointerType>::ui_move_if_noexcept_ow_copy_phase1(Allocator & alloc, pointer first, pointer last, pointer to)
 					KERBAL_CONDITIONAL_NOEXCEPT(
 						noexcept(
 							kerbal::memory::ui_move_if_noexcept_ow_copy<Allocator, pointer, pointer>::phase1(alloc, first, last, to)
@@ -2181,10 +2181,10 @@ namespace kerbal
 				kerbal::memory::ui_move_if_noexcept_ow_copy<Allocator, pointer, pointer>::phase1(alloc, first, last, to);
 			}
 
-			template <typename Tp>
+			template <typename PointerType>
 			template <typename Allocator>
 			KERBAL_CONSTEXPR20
-			void vector_type_only<Tp>::ui_move_if_noexcept_ow_copy_phase2(Allocator & alloc, pointer first, pointer last) KERBAL_NOEXCEPT
+			void vector_type_only<PointerType>::ui_move_if_noexcept_ow_copy_phase2(Allocator & alloc, pointer first, pointer last) KERBAL_NOEXCEPT
 			{
 				kerbal::memory::ui_move_if_noexcept_ow_copy<Allocator, pointer, pointer>::phase2(alloc, first, last);
 			}
