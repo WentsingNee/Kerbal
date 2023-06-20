@@ -19,6 +19,7 @@
 #include <kerbal/iterator/iterator_traits.hpp>
 #include <kerbal/iterator/reverse_iterator.hpp>
 #include <kerbal/memory/allocator_traits.hpp>
+#include <kerbal/memory/pointer_traits.hpp>
 #include <kerbal/memory/uninitialized_using_allocator.hpp>
 #include <kerbal/type_traits/conditional.hpp>
 #include <kerbal/type_traits/enable_if.hpp>
@@ -44,16 +45,17 @@ namespace kerbal
 		namespace detail
 		{
 
-			template <typename T>
+			template <typename PointerType>
 			class vector_type_only
 			{
 				public:
-					typedef T							value_type;
+					typedef PointerType					pointer;
+					typedef typename kerbal::memory::pointer_traits<pointer>::element_type		value_type;
 					typedef const value_type			const_type;
+					typedef typename kerbal::memory::pointer_traits<PointerType>::template rebind<const_type>::other const_pointer;
+
 					typedef value_type&					reference;
 					typedef const value_type&			const_reference;
-					typedef value_type*					pointer;
-					typedef const value_type*			const_pointer;
 
 #		if __cplusplus >= 201103L
 					typedef value_type&&				rvalue_reference;
