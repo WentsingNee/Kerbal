@@ -65,8 +65,8 @@ namespace kerbal
 
 					typedef typename kerbal::type_traits::remove_all_extents<value_type>::type remove_all_extents_t;
 
-					typedef kerbal::container::detail::vec_iter<value_type>		iterator;
-					typedef kerbal::container::detail::vec_kiter<value_type>	const_iterator;
+					typedef kerbal::container::detail::vec_iter<pointer>		iterator;
+					typedef kerbal::container::detail::vec_kiter<const_pointer>	const_iterator;
 					typedef kerbal::iterator::reverse_iterator<iterator>		reverse_iterator;
 					typedef kerbal::iterator::reverse_iterator<const_iterator>	const_reverse_iterator;
 
