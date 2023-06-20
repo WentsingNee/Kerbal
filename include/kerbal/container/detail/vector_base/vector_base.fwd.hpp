@@ -25,10 +25,10 @@ namespace kerbal
 			template <typename Tp>
 			class vector_type_only;
 
-			template <typename Tp>
+			template <typename PointerType>
 			class vec_iter;
 
-			template <typename Tp>
+			template <typename PointerType>
 			class vec_kiter;
 
 		} // namespace detail
