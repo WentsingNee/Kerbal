@@ -65,6 +65,10 @@ namespace kerbal
 				{
 				}
 
+
+				KERBAL_CONSTEXPR14
+				static size_type minimum_alignment() KERBAL_NOEXCEPT;
+
 				KERBAL_CONSTEXPR20
 				static pointer allocate(size_type n);
 
@@ -121,6 +125,9 @@ namespace kerbal
 				default_allocator(const default_allocator<U> &) KERBAL_NOEXCEPT
 				{
 				}
+
+
+				typedef kerbal::memory::malloc_allocator<void>::MINIMUM_ALIGNMENT MINIMUM_ALIGNMENT;
 
 				static pointer allocate(size_type n);
 				static pointer allocate(size_type n, kerbal::memory::align_val_t align);

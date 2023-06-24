@@ -38,6 +38,15 @@ namespace kerbal
 	{
 
 		template <typename T>
+		KERBAL_CONSTEXPR14
+		typename default_allocator<T>::size_type
+		default_allocator<T>::minimum_alignment() KERBAL_NOEXCEPT
+		{
+			upstream_allocator up_alloc;
+			return up_alloc.minimum_alignment();
+		}
+
+		template <typename T>
 		KERBAL_CONSTEXPR20
 		typename default_allocator<T>::pointer
 		default_allocator<T>::allocate(size_type n)

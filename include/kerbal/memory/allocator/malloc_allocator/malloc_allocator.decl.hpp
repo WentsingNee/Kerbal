@@ -16,6 +16,7 @@
 
 #include <kerbal/compatibility/noexcept.hpp>
 #include <kerbal/memory/nothrow_t.hpp>
+#include <kerbal/memory/pointer_alignment.hpp>
 #include <kerbal/numeric/numeric_limits.hpp>
 #include <kerbal/type_traits/integral_constant.hpp>
 
@@ -62,6 +63,7 @@ namespace kerbal
 				}
 
 			public:
+				typedef kerbal::memory::DEFAULT_ALIGNMENT	MINIMUM_ALIGNMENT;
 
 				static pointer allocate(size_type n, kerbal::memory::nothrow_t) KERBAL_NOEXCEPT;
 				static pointer allocate(size_type n);
@@ -124,6 +126,8 @@ namespace kerbal
 						size_type,
 						kerbal::numeric::numeric_limits<size_type>::MAX::value / sizeof(value_type)
 				> MAX_SIZE;
+
+				typedef kerbal::memory::DEFAULT_ALIGNMENT	MINIMUM_ALIGNMENT;
 
 				static pointer allocate(size_type n, kerbal::memory::nothrow_t nothrow) KERBAL_NOEXCEPT;
 				static pointer allocate(size_type n);

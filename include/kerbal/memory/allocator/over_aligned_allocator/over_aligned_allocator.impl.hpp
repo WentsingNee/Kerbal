@@ -52,7 +52,7 @@ namespace kerbal
 		typename over_aligned_allocator<void, UpstreamAllocator>::pointer
 		over_aligned_allocator<void, UpstreamAllocator>::allocate(size_type size, align_val_t align, kerbal::memory::nothrow_t) KERBAL_NOEXCEPT
 		{
-			std::size_t basic_align = 1;
+			std::size_t basic_align = upstream_allocator_traits::minimum_alignment(upstream_alloc());
 
 			pointer p_raw = NULL;
 			if (align <= basic_align) {
@@ -100,7 +100,7 @@ namespace kerbal
 		typename over_aligned_allocator<void, UpstreamAllocator>::pointer
 		over_aligned_allocator<void, UpstreamAllocator>::allocate(size_type size, align_val_t align)
 		{
-			std::size_t basic_align = 1;
+			std::size_t basic_align = upstream_allocator_traits::minimum_alignment(upstream_alloc());
 
 			pointer p_raw = NULL;
 			if (align <= basic_align) {
@@ -122,7 +122,7 @@ namespace kerbal
 		template <typename UpstreamAllocator>
 		void over_aligned_allocator<void, UpstreamAllocator>::deallocate(pointer p, size_type size, align_val_t align) KERBAL_NOEXCEPT
 		{
-			std::size_t basic_align = 1;
+			std::size_t basic_align = upstream_allocator_traits::minimum_alignment(upstream_alloc());
 
 			if (align <= basic_align) {
 				upstream_allocator_traits::deallocate(upstream_alloc(), p, size);

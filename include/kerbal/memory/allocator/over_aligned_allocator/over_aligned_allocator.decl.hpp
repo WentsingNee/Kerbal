@@ -107,6 +107,13 @@ namespace kerbal
 			private:
 				typedef void * void_p;
 
+			public:
+				KERBAL_CONSTEXPR14
+				size_type minimum_alignment() const KERBAL_NOEXCEPT
+				{
+					return upstream_allocator_traits::minimum_alignment(upstream_alloc());
+				}
+
 			private:
 				static pointer do_align(pointer p_raw, align_val_t align) KERBAL_NOEXCEPT;
 
@@ -206,6 +213,13 @@ namespace kerbal
 				}
 
 			public:
+				KERBAL_CONSTEXPR14
+				size_type minimum_alignment() const KERBAL_NOEXCEPT
+				{
+					size_type super_ma = super_allocator_traits::minimum_alignment(void_alloc());
+					return super_ma > KERBAL_ALIGNOF(value_type) ? super_ma : KERBAL_ALIGNOF(value_type);
+				}
+
 				typedef kerbal::type_traits::integral_constant<
 						size_type,
 						kerbal::numeric::numeric_limits<size_type>::MAX::value / sizeof(value_type)
