@@ -39,6 +39,7 @@
 #include <kerbal/memory/allocator_traits/is_always_equal.hpp>
 #include <kerbal/memory/allocator_traits/rebind_alloc.hpp>
 #include <kerbal/memory/allocator_traits/allocate_one.hpp>
+#include <kerbal/memory/allocator_traits/minimum_alignment.hpp>
 #include <kerbal/memory/allocator_traits/deallocate_one.hpp>
 #include <kerbal/memory/allocator_traits/construct.hpp>
 #include <kerbal/memory/allocator_traits/destroy.hpp>
@@ -106,6 +107,15 @@ namespace kerbal
 						)
 				{
 					return kerbal::memory::detail::allocator_traits_allocate_one_helper<Alloc>::allocate_one(alloc);
+				}
+
+				KERBAL_CONSTEXPR14
+				static size_type minimum_alignment(const allocator_type & alloc)
+						KERBAL_CONDITIONAL_NOEXCEPT(
+							noexcept(kerbal::memory::detail::allocator_traits_minimum_alignment_helper<Alloc>::minimum_alignment(alloc))
+						)
+				{
+					return kerbal::memory::detail::allocator_traits_minimum_alignment_helper<Alloc>::minimum_alignment(alloc);
 				}
 
 				KERBAL_CONSTEXPR14
