@@ -38,6 +38,8 @@
 #include <kerbal/memory/allocator_traits/propagate_on_container_swap.hpp>
 #include <kerbal/memory/allocator_traits/is_always_equal.hpp>
 #include <kerbal/memory/allocator_traits/rebind_alloc.hpp>
+#include <kerbal/memory/allocator_traits/allocate_one.hpp>
+#include <kerbal/memory/allocator_traits/deallocate_one.hpp>
 #include <kerbal/memory/allocator_traits/construct.hpp>
 #include <kerbal/memory/allocator_traits/destroy.hpp>
 #include <kerbal/memory/allocator_traits/max_size.hpp>
@@ -98,12 +100,30 @@ namespace kerbal
 				}
 
 				KERBAL_CONSTEXPR14
+				static pointer allocate_one(allocator_type & alloc)
+						KERBAL_CONDITIONAL_NOEXCEPT(
+							noexcept(kerbal::memory::detail::allocator_traits_allocate_one_helper<Alloc>::allocate_one(alloc))
+						)
+				{
+					return kerbal::memory::detail::allocator_traits_allocate_one_helper<Alloc>::allocate_one(alloc);
+				}
+
+				KERBAL_CONSTEXPR14
 				static void deallocate(allocator_type & alloc, pointer p, size_type n)
 						KERBAL_CONDITIONAL_NOEXCEPT(
 							noexcept(alloc.deallocate(p, n))
 						)
 				{
 					alloc.deallocate(p, n);
+				}
+
+				KERBAL_CONSTEXPR14
+				static void deallocate_one(allocator_type & alloc, pointer p)
+						KERBAL_CONDITIONAL_NOEXCEPT(
+							noexcept(kerbal::memory::detail::allocator_traits_deallocate_one_helper<Alloc, pointer>::deallocate_one(alloc, p))
+						)
+				{
+					kerbal::memory::detail::allocator_traits_deallocate_one_helper<Alloc, pointer>::deallocate_one(alloc, p);
 				}
 
 #		if __cplusplus >= 201103L
