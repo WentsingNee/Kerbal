@@ -316,7 +316,7 @@ namespace kerbal
 			{
 				typedef kerbal::memory::allocator_traits<Allocator> allocator_traits;
 
-				if (this->k_buffer != NULL) {
+				if (allocator_traits::allow_deallocate_null::value || this->k_buffer != NULL) {
 					kerbal::memory::reverse_destroy_using_allocator(alloc, this->begin().current, this->end().current);
 					allocator_traits::deallocate(alloc, this->k_buffer, this->k_capacity);
 				}
@@ -373,7 +373,7 @@ namespace kerbal
 						}
 #		endif
 
-						if (this->k_buffer != NULL) {
+						if (allocator_traits::allow_deallocate_null::value || this->k_buffer != NULL) {
 							kerbal::memory::reverse_destroy_using_allocator(alloc, this->begin().current, this->end().current);
 							allocator_traits::deallocate(alloc, this->k_buffer, this->k_capacity);
 						}
@@ -454,7 +454,7 @@ namespace kerbal
 						}
 #		endif
 
-						if (this->k_buffer != NULL) {
+						if (allocator_traits::allow_deallocate_null::value || this->k_buffer != NULL) {
 							kerbal::memory::reverse_destroy_using_allocator(alloc, this->begin().current, this->end().current);
 							allocator_traits::deallocate(alloc, this->k_buffer, this->k_capacity);
 						}
