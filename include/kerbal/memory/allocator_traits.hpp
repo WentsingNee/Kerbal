@@ -41,6 +41,7 @@
 #include <kerbal/memory/allocator_traits/allocate_one.hpp>
 #include <kerbal/memory/allocator_traits/minimum_alignment.hpp>
 #include <kerbal/memory/allocator_traits/deallocate_one.hpp>
+#include <kerbal/memory/allocator_traits/allow_deallocate_null.hpp>
 #include <kerbal/memory/allocator_traits/construct.hpp>
 #include <kerbal/memory/allocator_traits/destroy.hpp>
 #include <kerbal/memory/allocator_traits/max_size.hpp>
@@ -135,6 +136,8 @@ namespace kerbal
 				{
 					kerbal::memory::detail::allocator_traits_deallocate_one_helper<Alloc, pointer>::deallocate_one(alloc, p);
 				}
+
+				typedef kerbal::memory::detail::allocator_allow_deallocate_null_traits_helper<allocator_type> allow_deallocate_null;
 
 #		if __cplusplus >= 201103L
 
