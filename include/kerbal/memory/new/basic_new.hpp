@@ -24,6 +24,12 @@ void * operator new(std::size_t size, kerbal::memory::basic_t)
 }
 
 inline
+void operator delete(void * p, kerbal::memory::basic_t) KERBAL_NOEXCEPT
+{
+	return kerbal::memory::malloc_allocator<void>::deallocate(p);
+}
+
+inline
 void operator delete(void * p, std::size_t /*size*/, kerbal::memory::basic_t) KERBAL_NOEXCEPT
 {
 	return kerbal::memory::malloc_allocator<void>::deallocate(p);
@@ -36,7 +42,13 @@ void * operator new[](std::size_t size, kerbal::memory::basic_t basic_new_tag)
 }
 
 inline
-void operator delete[](void * p, std::size_t size, kerbal::memory::basic_t basic_new_tag) KERBAL_NOEXCEPT
+void operator delete[](void * p, kerbal::memory::basic_t basic_new_tag) KERBAL_NOEXCEPT
+{
+	return kerbal::memory::malloc_allocator<void>::deallocate(p);
+}
+
+inline
+void operator delete[](void * p, std::size_t /*size*/, kerbal::memory::basic_t basic_new_tag) KERBAL_NOEXCEPT
 {
 	return kerbal::memory::malloc_allocator<void>::deallocate(p);
 }
