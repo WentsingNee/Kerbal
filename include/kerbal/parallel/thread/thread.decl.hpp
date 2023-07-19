@@ -12,6 +12,8 @@
 #ifndef KERBAL_PARALLEL_THREAD_THREAD_DECL_HPP
 #define KERBAL_PARALLEL_THREAD_THREAD_DECL_HPP
 
+#include <kerbal/parallel/thread/thread.fwd.hpp>
+
 #include <kerbal/algorithm/swap.hpp>
 #include <kerbal/compatibility/constexpr.hpp>
 #include <kerbal/compatibility/noexcept.hpp>
@@ -32,8 +34,6 @@
 
 #include <exception> // std::terminate
 
-
-#include <kerbal/parallel/thread/thread.fwd.hpp>
 
 #if KERBAL_PARALLEL_THREAD_MODE == KERBAL_PARALLEL_THREAD_MODE_POSIX
 #	include <kerbal/parallel/thread/detail/thread.posix.decl.hpp>
@@ -105,78 +105,163 @@ namespace kerbal
 
 #	endif
 
+
+			class basic_thread_allocator_unrelated : private kerbal::utility::noncopyable
+			{
+				public:
+					typedef kerbal::parallel::detail::thread_native_handle_type native_handle_type;
+
+					class id
+					{
+						public:
+							friend class basic_thread_allocator_unrelated;
+
+							template <typename Allocator>
+							friend class kerbal::parallel::basic_thread;
+
+						private:
+							native_handle_type native_handle;
+
+						public:
+
+							KERBAL_CONSTEXPR
+							id() KERBAL_NOEXCEPT:
+									native_handle(0)
+							{
+							}
+
+							KERBAL_CONSTEXPR
+							explicit id(native_handle_type th_id) KERBAL_NOEXCEPT:
+									native_handle(th_id)
+							{
+							}
+
+							KERBAL_CONSTEXPR
+							bool operator==(const id & with) const KERBAL_NOEXCEPT
+							{
+								return this->native_handle == with.native_handle;
+							}
+
+							KERBAL_CONSTEXPR
+							bool operator!=(const id & with) const KERBAL_NOEXCEPT
+							{
+								return this->native_handle != with.native_handle;
+							}
+
+							KERBAL_CONSTEXPR
+							bool operator<(const id & with) const KERBAL_NOEXCEPT
+							{
+								return this->native_handle < with.native_handle;
+							}
+
+							KERBAL_CONSTEXPR
+							bool operator<=(const id & with) const KERBAL_NOEXCEPT
+							{
+								return this->native_handle <= with.native_handle;
+							}
+
+							KERBAL_CONSTEXPR
+							bool operator>(const id & with) const KERBAL_NOEXCEPT
+							{
+								return this->native_handle > with.native_handle;
+							}
+
+							KERBAL_CONSTEXPR
+							bool operator>=(const id & with) const KERBAL_NOEXCEPT
+							{
+								return this->native_handle >= with.native_handle;
+							}
+					};
+
+				protected:
+					id k_th_id;
+
+				public:
+
+					KERBAL_CONSTEXPR
+					basic_thread_allocator_unrelated() KERBAL_NOEXCEPT :
+							k_th_id()
+					{
+					}
+
+#	if __cplusplus >= 201103L
+
+				public:
+
+					KERBAL_CONSTEXPR14
+					basic_thread_allocator_unrelated(basic_thread_allocator_unrelated && ano) KERBAL_NOEXCEPT :
+							k_th_id(ano.k_th_id)
+					{
+						ano.k_th_id = id();
+					}
+
+#	endif
+
+				public:
+
+					~basic_thread_allocator_unrelated()
+					{
+						if (this->joinable()) {
+							std::terminate();
+						}
+					}
+
+#	if __cplusplus >= 201103L
+
+					KERBAL_CONSTEXPR14
+					basic_thread_allocator_unrelated & operator=(basic_thread_allocator_unrelated && ano) KERBAL_NOEXCEPT
+					{
+						this->swap(ano);
+						return *this;
+					}
+
+#	endif
+
+					KERBAL_CONSTEXPR
+					bool joinable() const KERBAL_NOEXCEPT
+					{
+						return this->k_th_id != id();
+					}
+
+					void join();
+
+					void detach();
+
+					KERBAL_CONSTEXPR14
+					void swap(basic_thread_allocator_unrelated & ano) KERBAL_NOEXCEPT
+					{
+						kerbal::algorithm::swap(this->k_th_id, ano.k_th_id);
+					}
+
+					KERBAL_CONSTEXPR
+					id get_id() const KERBAL_NOEXCEPT
+					{
+						return this->k_th_id;
+					}
+
+					KERBAL_CONSTEXPR
+					native_handle_type native_handle() const KERBAL_NOEXCEPT
+					{
+						return this->get_id().native_handle;
+					}
+
+			};
+
 		} // namespace detail
 
 
 
 		template <typename Allocator>
-		class basic_thread: private kerbal::utility::noncopyable
+		class basic_thread : private kerbal::parallel::detail::basic_thread_allocator_unrelated
 		{
+			private:
+				typedef kerbal::parallel::detail::basic_thread_allocator_unrelated super;
+
 			public:
-				typedef detail::thread_native_handle_type native_handle_type;
-
-				class id
-				{
-					public:
-						friend class basic_thread;
-
-					private:
-						native_handle_type native_handle;
-
-					public:
-
-						KERBAL_CONSTEXPR
-						id() KERBAL_NOEXCEPT:
-								native_handle(0)
-						{
-						}
-
-						KERBAL_CONSTEXPR
-						explicit id(native_handle_type th_id) KERBAL_NOEXCEPT:
-								native_handle(th_id)
-						{
-						}
-
-						KERBAL_CONSTEXPR
-						bool operator==(const id & with) const KERBAL_NOEXCEPT
-						{
-							return this->native_handle == with.native_handle;
-						}
-
-						KERBAL_CONSTEXPR
-						bool operator!=(const id & with) const KERBAL_NOEXCEPT
-						{
-							return this->native_handle != with.native_handle;
-						}
-
-						KERBAL_CONSTEXPR
-						bool operator<(const id & with) const KERBAL_NOEXCEPT
-						{
-							return this->native_handle < with.native_handle;
-						}
-
-						KERBAL_CONSTEXPR
-						bool operator<=(const id & with) const KERBAL_NOEXCEPT
-						{
-							return this->native_handle <= with.native_handle;
-						}
-
-						KERBAL_CONSTEXPR
-						bool operator>(const id & with) const KERBAL_NOEXCEPT
-						{
-							return this->native_handle > with.native_handle;
-						}
-
-						KERBAL_CONSTEXPR
-						bool operator>=(const id & with) const KERBAL_NOEXCEPT
-						{
-							return this->native_handle >= with.native_handle;
-						}
-				};
+				typedef super::native_handle_type native_handle_type;
+				typedef super::id id;
 
 			private:
-				id k_th_id;
-
 				typedef Allocator allocator_type;
 				typedef kerbal::memory::allocator_traits<allocator_type> allocator_traits;
 
@@ -190,11 +275,18 @@ namespace kerbal
 
 			public:
 
-				KERBAL_CONSTEXPR
+#	if __cplusplus >= 201103L
+
+				basic_thread() = default;
+
+#	else
+
 				basic_thread() KERBAL_NOEXCEPT :
-						k_th_id()
+						super()
 				{
 				}
+
+#	endif
 
 			private:
 
@@ -279,21 +371,13 @@ namespace kerbal
 
 				KERBAL_CONSTEXPR14
 				basic_thread(basic_thread && ano) KERBAL_NOEXCEPT :
-						k_th_id(ano.k_th_id)
+						super(static_cast<super &&>(ano))
 				{
-					ano.k_th_id = id();
 				}
 
 #	endif
 
 			public:
-
-				~basic_thread()
-				{
-					if (this->joinable()) {
-						std::terminate();
-					}
-				}
 
 #	if __cplusplus >= 201103L
 
@@ -306,33 +390,18 @@ namespace kerbal
 
 #	endif
 
-				KERBAL_CONSTEXPR
-				bool joinable() const KERBAL_NOEXCEPT
-				{
-					return this->k_th_id != id();
-				}
-
-				void join();
-
-				void detach();
+				using super::joinable;
+				using super::join;
+				using super::detach;
 
 				KERBAL_CONSTEXPR14
-				void swap(basic_thread & ano)
+				void swap(basic_thread & ano) KERBAL_NOEXCEPT
 				{
-					kerbal::algorithm::swap(this->k_th_id, ano.k_th_id);
+					this->super::swap(static_cast<super &>(ano));
 				}
 
-				KERBAL_CONSTEXPR
-				id get_id() const KERBAL_NOEXCEPT
-				{
-					return this->k_th_id;
-				}
-
-				KERBAL_CONSTEXPR
-				native_handle_type native_handle() const KERBAL_NOEXCEPT
-				{
-					return this->get_id().native_handle;
-				}
+				using super::get_id;
+				using super::native_handle;
 
 				KERBAL_CONSTEXPR
 				bool operator==(const basic_thread & with) const KERBAL_NOEXCEPT

@@ -41,12 +41,31 @@ namespace kerbal
 	namespace parallel
 	{
 
+		namespace detail
+		{
+
+			inline
+			void basic_thread_allocator_unrelated::join()
+			{
+				::WaitForSingleObject(this->native_handle(), INFINITE);
+				this->k_th_id = id();
+			}
+
+			inline
+			void basic_thread_allocator_unrelated::detach()
+			{
+				this->k_th_id = id();
+			}
+
+		} // namespace detail
+
+
 #	if __cplusplus >= 201103L
 
 		template <typename Allocator>
 		template <typename Callable, typename ... Args>
 		basic_thread<Allocator>::basic_thread(Callable&& fun, Args&& ... args) :
-				K_th_id()
+				super()
 		{
 			typedef typename detail::fun_args_pack_type<Callable, Args...>::type fun_args_pack_t;
 
@@ -80,8 +99,8 @@ namespace kerbal
 			);
 
 			unsigned thread_id;
-			this->K_th_id.native_handle = (HANDLE)::_beginthreadex(NULL, 0, helper::start_rtn, fun_args_pack_p, 0, &thread_id);
-			if (this->K_th_id.native_handle == 0) {
+			this->k_th_id.native_handle = (HANDLE)::_beginthreadex(NULL, 0, helper::start_rtn, fun_args_pack_p, 0, &thread_id);
+			if (this->k_th_id.native_handle == 0) {
 				k_destroy_fun_args_pack(alloc, fun_args_pack_p);
 				kerbal::utility::throw_this_exception_helper<
 						kerbal::parallel::thread_create_failed
@@ -103,7 +122,7 @@ namespace kerbal
 		template <typename Allocator> \
 		template <typename Callable KERBAL_OPT_PPEXPAND_WITH_COMMA_N(LEFT_JOIN_COMMA, EMPTY, TARGS_DECL, i)> \
 		basic_thread<Allocator>::basic_thread(Callable fun KERBAL_OPT_PPEXPAND_WITH_COMMA_N(LEFT_JOIN_COMMA, EMPTY, ARGS_DECL, i)) : \
-				K_th_id() \
+				super() \
 		{ \
 			typedef kerbal::utility::tuple< \
 					typename kerbal::type_traits::decay<Callable>::type \
@@ -139,8 +158,8 @@ namespace kerbal
 			); \
  \
 			unsigned thread_id; \
-			this->K_th_id.native_handle = (HANDLE)::_beginthreadex(NULL, 0, helper::start_rtn, fun_args_pack_p, 0, &thread_id); \
-			if (this->K_th_id.native_handle == 0) { \
+			this->k_th_id.native_handle = (HANDLE)::_beginthreadex(NULL, 0, helper::start_rtn, fun_args_pack_p, 0, &thread_id); \
+			if (this->k_th_id.native_handle == 0) { \
 				k_destroy_fun_args_pack(alloc, fun_args_pack_p); \
 				kerbal::utility::throw_this_exception_helper< \
 						kerbal::parallel::thread_create_failed \
@@ -162,19 +181,6 @@ namespace kerbal
 #		undef FBODY
 
 #	endif
-
-		template <typename Allocator>
-		void basic_thread<Allocator>::join()
-		{
-			::WaitForSingleObject(this->native_handle(), INFINITE);
-			this->K_th_id = id();
-		}
-
-		template <typename Allocator>
-		void basic_thread<Allocator>::detach()
-		{
-			this->K_th_id = id();
-		}
 
 	} // namespace parallel
 

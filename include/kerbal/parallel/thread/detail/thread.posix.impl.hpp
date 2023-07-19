@@ -40,12 +40,32 @@ namespace kerbal
 	namespace parallel
 	{
 
+		namespace detail
+		{
+
+			inline
+			void basic_thread_allocator_unrelated::join()
+			{
+				::pthread_join(this->native_handle(), NULL);
+				this->k_th_id = id();
+			}
+
+			inline
+			void basic_thread_allocator_unrelated::detach()
+			{
+				::pthread_detach(this->native_handle());
+				this->k_th_id = id();
+			}
+
+		} // namespace detail
+
+
 #	if __cplusplus >= 201103L
 
 		template <typename Allocator>
 		template <typename Callable, typename ... Args>
 		basic_thread<Allocator>::basic_thread(Callable&& fun, Args&& ... args) :
-				k_th_id()
+				super()
 		{
 			typedef typename detail::fun_args_pack_type<Callable, Args...>::type fun_args_pack_t;
 
@@ -101,7 +121,7 @@ namespace kerbal
 		template <typename Allocator> \
 		template <typename Callable KERBAL_OPT_PPEXPAND_WITH_COMMA_N(LEFT_JOIN_COMMA, EMPTY, TARGS_DECL, i)> \
 		basic_thread<Allocator>::basic_thread(Callable fun KERBAL_OPT_PPEXPAND_WITH_COMMA_N(LEFT_JOIN_COMMA, EMPTY, ARGS_DECL, i)) : \
-				k_th_id() \
+				super() \
 		{ \
 			typedef kerbal::utility::tuple< \
 					typename kerbal::type_traits::decay<Callable>::type \
@@ -159,20 +179,6 @@ namespace kerbal
 #		undef FBODY
 
 #	endif
-
-		template <typename Allocator>
-		void basic_thread<Allocator>::join()
-		{
-			::pthread_join(this->native_handle(), NULL);
-			this->k_th_id = id();
-		}
-
-		template <typename Allocator>
-		void basic_thread<Allocator>::detach()
-		{
-			::pthread_detach(this->native_handle());
-			this->k_th_id = id();
-		}
 
 	} // namespace parallel
 
