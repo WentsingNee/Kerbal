@@ -13,49 +13,34 @@
 #define KERBAL_MEMORY_NEW_NOTHROW_NEW_HPP
 
 #include <kerbal/compatibility/noexcept.hpp>
+#include <kerbal/memory/allocator/malloc_allocator.hpp>
+#include <kerbal/memory/nothrow_t.hpp>
 
 #include <cstddef>
-#include <cstdlib>
-
-
-namespace kerbal
-{
-
-	namespace memory
-	{
-
-		struct nothrow_t
-		{
-		};
-
-	} // namespace memory
-
-} // namespace kerbal
 
 
 inline
-void * operator new(std::size_t size, kerbal::memory::nothrow_t) KERBAL_NOEXCEPT
+void * operator new(std::size_t size, kerbal::memory::nothrow_t nothrow) KERBAL_NOEXCEPT
 {
-	void * p = std::malloc(size);
-	return p;
+	return kerbal::memory::malloc_allocator<void>::allocate(size, nothrow);
 }
 
 inline
 void operator delete(void * p, std::size_t /*size*/, kerbal::memory::nothrow_t) KERBAL_NOEXCEPT
 {
-	std::free(p);
+	kerbal::memory::malloc_allocator<void>::deallocate(p);
 }
 
 inline
-void * operator new[](std::size_t size, kerbal::memory::nothrow_t nothrow_new_tag) KERBAL_NOEXCEPT
+void * operator new[](std::size_t size, kerbal::memory::nothrow_t nothrow) KERBAL_NOEXCEPT
 {
-	return ::operator new(size, nothrow_new_tag);
+	return kerbal::memory::malloc_allocator<void>::allocate(size, nothrow);
 }
 
 inline
-void operator delete[](void * p, std::size_t size, kerbal::memory::nothrow_t nothrow_new_tag) KERBAL_NOEXCEPT
+void operator delete[](void * p, std::size_t /*size*/, kerbal::memory::nothrow_t) KERBAL_NOEXCEPT
 {
-	::operator delete(p, size, nothrow_new_tag);
+	kerbal::memory::malloc_allocator<void>::deallocate(p);
 }
 
 
