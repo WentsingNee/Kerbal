@@ -717,7 +717,7 @@ namespace kerbal
 					typename kerbal::type_traits::enable_if<nothrow_while_construct, node*>::type
 					k_build_new_node_impl(NodeAllocator & alloc, Args&& ... args)
 							KERBAL_CONDITIONAL_NOEXCEPT(
-									noexcept(kerbal::memory::allocator_traits<NodeAllocator>::allocate(alloc, 1))
+								noexcept(kerbal::memory::allocator_traits<NodeAllocator>::allocate_one(alloc))
 							)
 					;
 
@@ -794,7 +794,7 @@ namespace kerbal
 					static void k_destroy_node(NodeAllocator & alloc, node_base * p_node_base)
 							KERBAL_CONDITIONAL_NOEXCEPT(
 								noexcept(kerbal::memory::allocator_traits<NodeAllocator>::destroy(alloc, kerbal::utility::declval<node*>())) &&
-								noexcept(kerbal::memory::allocator_traits<NodeAllocator>::deallocate(alloc, kerbal::utility::declval<node*>(), 1))
+								noexcept(kerbal::memory::allocator_traits<NodeAllocator>::deallocate_one(alloc, kerbal::utility::declval<node*>()))
 							)
 					;
 

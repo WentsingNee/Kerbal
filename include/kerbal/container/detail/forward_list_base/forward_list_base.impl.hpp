@@ -1338,11 +1338,11 @@ namespace kerbal
 			fl_type_only<Tp>::k_build_new_node_impl(NodeAllocator & alloc, Args&& ... args)
 			{
 				typedef kerbal::memory::allocator_traits<NodeAllocator> node_allocator_traits;
-				node * p = node_allocator_traits::allocate(alloc, 1);
+				node * p = node_allocator_traits::allocate_one(alloc);
 				try {
 					node_allocator_traits::construct(alloc, p, kerbal::utility::in_place_t(), kerbal::utility::forward<Args>(args)...);
 				} catch (...) {
-					node_allocator_traits::deallocate(alloc, p, 1);
+					node_allocator_traits::deallocate_one(alloc, p);
 					throw;
 				}
 				return p;
@@ -1357,11 +1357,11 @@ namespace kerbal
 			>::type
 			fl_type_only<Tp>::k_build_new_node_impl(NodeAllocator & alloc, Args&& ... args)
 					KERBAL_CONDITIONAL_NOEXCEPT(
-							noexcept(kerbal::memory::allocator_traits<NodeAllocator>::allocate(alloc, 1))
+							noexcept(kerbal::memory::allocator_traits<NodeAllocator>::allocate_one(alloc))
 					)
 			{
 				typedef kerbal::memory::allocator_traits<NodeAllocator> node_allocator_traits;
-				node * p = node_allocator_traits::allocate(alloc, 1);
+				node * p = node_allocator_traits::allocate_one(alloc);
 				node_allocator_traits::construct(alloc, p, kerbal::utility::in_place_t(), kerbal::utility::forward<Args>(args)...);
 				return p;
 			}
@@ -1395,7 +1395,7 @@ namespace kerbal
 			fl_type_only<Tp>::k_build_new_node(NodeAllocator & alloc, Args&& ... args)
 			{
 				typedef kerbal::memory::allocator_traits<NodeAllocator> node_allocator_traits;
-				node * p = node_allocator_traits::allocate(alloc, 1);
+				node * p = node_allocator_traits::allocate_one(alloc);
 				if (p == NULL) {
 					kerbal::utility::throw_this_exception_helper<kerbal::memory::bad_alloc>::throw_this_exception();
 				}
@@ -1420,11 +1420,11 @@ namespace kerbal
 			fl_type_only<Tp>::k_build_new_node(NodeAllocator & alloc KERBAL_OPT_PPEXPAND_WITH_COMMA_N(LEFT_JOIN_COMMA, EMPTY, ARGS_DECL, i)) \
 			{ \
 				typedef kerbal::memory::allocator_traits<NodeAllocator> node_allocator_traits; \
-				node * p = node_allocator_traits::allocate(alloc, 1); \
+				node * p = node_allocator_traits::allocate_one(alloc); \
 				try { \
 					node_allocator_traits::construct(alloc, p, kerbal::utility::in_place_t() KERBAL_OPT_PPEXPAND_WITH_COMMA_N(LEFT_JOIN_COMMA, EMPTY, ARGS_USE, i)); \
 				} catch (...) { \
-					node_allocator_traits::deallocate(alloc, p, 1); \
+					node_allocator_traits::deallocate_one(alloc, p); \
 					throw; \
 				} \
 				return p; \
@@ -1437,7 +1437,7 @@ namespace kerbal
 			fl_type_only<Tp>::k_build_new_node(NodeAllocator & alloc KERBAL_OPT_PPEXPAND_WITH_COMMA_N(LEFT_JOIN_COMMA, EMPTY, ARGS_DECL, i)) \
 			{ \
 				typedef kerbal::memory::allocator_traits<NodeAllocator> node_allocator_traits; \
-				node * p = node_allocator_traits::allocate(alloc, 1); \
+				node * p = node_allocator_traits::allocate_one(alloc); \
 				if (p == NULL) { \
 					kerbal::utility::throw_this_exception_helper<kerbal::memory::bad_alloc>::throw_this_exception(); \
 				} \
@@ -1593,7 +1593,7 @@ namespace kerbal
 				node * p_node = &p_node_base->template reinterpret_as<value_type>();
 				allocator_pointer_type p_node_act = static_cast<allocator_pointer_type>(p_node);
 				node_allocator_traits::destroy(alloc, p_node_act);
-				node_allocator_traits::deallocate(alloc, p_node_act, 1);
+				node_allocator_traits::deallocate_one(alloc, p_node_act);
 			}
 
 			template <typename Tp>
