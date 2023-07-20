@@ -13,7 +13,6 @@
 #define KERBAL_MEMORY_BAD_ALLOC_HPP
 
 #include <kerbal/compatibility/noexcept.hpp>
-#include <kerbal/utility/throw_this_exception.hpp>
 
 #include <exception>
 
