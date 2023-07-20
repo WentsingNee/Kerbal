@@ -1,5 +1,5 @@
 /**
- * @file       thread.impl.posix.hpp
+ * @file       thread.posix.impl.part.hpp
  * @brief
  * @date       2022-05-17
  * @author     Peter
@@ -9,8 +9,8 @@
  *   all rights reserved
  */
 
-#ifndef KERBAL_PARALLEL_THREAD_DETAIL_THREAD_POSIX_IMPL_HPP
-#define KERBAL_PARALLEL_THREAD_DETAIL_THREAD_POSIX_IMPL_HPP
+#ifndef KERBAL_PARALLEL_THREAD_DETAIL_THREAD_POSIX_IMPL_PART_HPP
+#define KERBAL_PARALLEL_THREAD_DETAIL_THREAD_POSIX_IMPL_PART_HPP
 
 #include <kerbal/memory/allocator_traits.hpp>
 #include <kerbal/type_traits/decay.hpp>
@@ -18,10 +18,8 @@
 #include <kerbal/utility/tuple.hpp>
 
 #if __cplusplus < 201103L
-
 #	include <kerbal/macro/macro_concat.hpp>
 #	include <kerbal/macro/ppexpand.hpp>
-
 #endif
 
 #if __cplusplus >= 201103L
@@ -184,4 +182,4 @@ namespace kerbal
 
 } // namespace kerbal
 
-#endif // KERBAL_PARALLEL_THREAD_DETAIL_THREAD_POSIX_IMPL_HPP
+#endif // KERBAL_PARALLEL_THREAD_DETAIL_THREAD_POSIX_IMPL_PART_HPP

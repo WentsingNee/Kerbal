@@ -1,5 +1,5 @@
 /**
- * @file       thread.decl.win.hpp
+ * @file       thread.win.decl.part.hpp
  * @brief
  * @date       2022-09-25
  * @author     Peter
@@ -9,8 +9,8 @@
  *   all rights reserved
  */
 
-#ifndef KERBAL_PARALLEL_THREAD_DETAIL_THREAD_WIN_DECL_HPP
-#define KERBAL_PARALLEL_THREAD_DETAIL_THREAD_WIN_DECL_HPP
+#ifndef KERBAL_PARALLEL_THREAD_DETAIL_THREAD_WIN_DECL_PART_HPP
+#define KERBAL_PARALLEL_THREAD_DETAIL_THREAD_WIN_DECL_PART_HPP
 
 #include <windows.h>
 
@@ -31,4 +31,4 @@ namespace kerbal
 } // namespace kerbal
 
 
-#endif // KERBAL_PARALLEL_THREAD_DETAIL_THREAD_WIN_DECL_HPP
+#endif // KERBAL_PARALLEL_THREAD_DETAIL_THREAD_WIN_DECL_PART_HPP
