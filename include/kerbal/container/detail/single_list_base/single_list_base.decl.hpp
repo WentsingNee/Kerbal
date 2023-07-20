@@ -13,6 +13,7 @@
 #define KERBAL_CONTAINER_DETAIL_SINGLE_LIST_BASE_SINGLE_LIST_BASE_DECL_HPP
 
 #include <kerbal/container/single_list/single_list.fwd.hpp>
+#include <kerbal/memory/allocator/monotonic_allocator/monotonic_allocator.fwd.hpp>
 
 #include <kerbal/compare/basic_compare.hpp>
 #include <kerbal/compatibility/constexpr.hpp>
@@ -801,7 +802,7 @@ namespace kerbal
 				private:
 					typedef kerbal::type_traits::integral_constant<int, 0>		CNSCTV_DES_VER_DEFAULT;
 					typedef kerbal::type_traits::integral_constant<int, 1>		CNSCTV_DES_VER_DESTROY_BUT_NO_DEALLOCATE;
-					typedef kerbal::type_traits::integral_constant<int, 2>		CNSCTV_DES_VER_NO_DEALLOCATE;
+					typedef kerbal::type_traits::integral_constant<int, 2>		CNSCTV_DES_VER_NO_DESTROY;
 
 					template <typename NodeAllocator>
 					KERBAL_CONSTEXPR20
@@ -821,7 +822,7 @@ namespace kerbal
 
 					template <typename NodeAllocator>
 					KERBAL_CONSTEXPR20
-					static void k_consecutive_destroy_node_impl(NodeAllocator & alloc, node_base * start, CNSCTV_DES_VER_NO_DEALLOCATE) KERBAL_NOEXCEPT;
+					static void k_consecutive_destroy_node_impl(NodeAllocator & alloc, node_base * start, CNSCTV_DES_VER_NO_DESTROY) KERBAL_NOEXCEPT;
 
 				protected:
 
@@ -832,6 +833,10 @@ namespace kerbal
 								noexcept(k_consecutive_destroy_node_impl(alloc, start, CNSCTV_DES_VER_DEFAULT()))
 							)
 					;
+
+					template <typename T, typename UpstreamAllocator>
+					KERBAL_CONSTEXPR20
+					static void k_consecutive_destroy_node(kerbal::memory::monotonic_allocator<T, UpstreamAllocator> & alloc, node_base * start);
 
 #			if __cplusplus >= 201703L
 #				if __has_include(<memory_resource>)

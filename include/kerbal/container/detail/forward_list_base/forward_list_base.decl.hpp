@@ -12,6 +12,9 @@
 #ifndef KERBAL_CONTAINER_DETAIL_FORWARD_LIST_BASE_FORWARD_LIST_BASE_DECL_HPP
 #define KERBAL_CONTAINER_DETAIL_FORWARD_LIST_BASE_FORWARD_LIST_BASE_DECL_HPP
 
+#include <kerbal/container/forward_list/forward_list.fwd.hpp>
+#include <kerbal/memory/allocator/monotonic_allocator/monotonic_allocator.fwd.hpp>
+
 #include <kerbal/compare/basic_compare.hpp>
 #include <kerbal/compatibility/constexpr.hpp>
 #include <kerbal/compatibility/noexcept.hpp>
@@ -31,8 +34,6 @@
 #		include <memory_resource>
 #	endif
 #endif
-
-#include <kerbal/container/forward_list/forward_list.fwd.hpp>
 
 #include <kerbal/container/detail/single_list_base/single_list_node.hpp>
 #include <kerbal/container/detail/forward_list_base/forward_list_iterator.hpp>
@@ -846,6 +847,10 @@ namespace kerbal
 					template <typename NodeAllocator>
 					KERBAL_CONSTEXPR20
 					static void k_consecutive_destroy_node(NodeAllocator & alloc, node_base * first, node_base * last) KERBAL_NOEXCEPT;
+
+					template <typename T, typename UpstreamAllocator>
+					KERBAL_CONSTEXPR20
+					static void k_consecutive_destroy_node(kerbal::memory::monotonic_allocator<T, UpstreamAllocator> & alloc, node_base * first, node_base * last) KERBAL_NOEXCEPT;
 
 #			if __cplusplus >= 201703L
 #				if __has_include(<memory_resource>)

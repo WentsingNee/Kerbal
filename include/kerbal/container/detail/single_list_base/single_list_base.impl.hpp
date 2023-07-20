@@ -1489,7 +1489,7 @@ namespace kerbal
 			template <typename Tp>
 			template <typename NodeAllocator>
 			KERBAL_CONSTEXPR20
-			void sl_type_only<Tp>::k_consecutive_destroy_node_impl(NodeAllocator & /*alloc*/, node_base * /*start*/, CNSCTV_DES_VER_NO_DEALLOCATE) KERBAL_NOEXCEPT
+			void sl_type_only<Tp>::k_consecutive_destroy_node_impl(NodeAllocator & /*alloc*/, node_base * /*start*/, CNSCTV_DES_VER_NO_DESTROY) KERBAL_NOEXCEPT
 			{
 			}
 
@@ -1502,6 +1502,19 @@ namespace kerbal
 					)
 			{
 				k_consecutive_destroy_node_impl(alloc, start, CNSCTV_DES_VER_DEFAULT());
+			}
+
+			template <typename Tp>
+			template <typename T, typename UpstreamAllocator>
+			KERBAL_CONSTEXPR20
+			void sl_type_only<Tp>::k_consecutive_destroy_node(kerbal::memory::monotonic_allocator<T, UpstreamAllocator> & alloc, node_base * start)
+			{
+				typedef typename kerbal::type_traits::conditional<
+						kerbal::type_traits::tribool_is_true<kerbal::type_traits::try_test_is_trivially_destructible<Tp> >::value,
+						CNSCTV_DES_VER_NO_DESTROY,
+						CNSCTV_DES_VER_DESTROY_BUT_NO_DEALLOCATE
+				>::type VER;
+				k_consecutive_destroy_node_impl(alloc, start, VER());
 			}
 
 #		if __cplusplus >= 201703L
