@@ -121,6 +121,15 @@ namespace kerbal
 				pointer allocate(size_type size, align_val_t align, kerbal::memory::nothrow_t) KERBAL_NOEXCEPT;
 				pointer allocate(size_type size, align_val_t align);
 
+			public:
+				typedef kerbal::type_traits::true_type allow_deallocate_null;
+
+			private:
+				void k_deallocate_upstream_allow_deallocate_null(pointer p, size_type size, align_val_t align, kerbal::type_traits::false_type) KERBAL_NOEXCEPT;
+				void k_deallocate_upstream_allow_deallocate_null(pointer p, size_type size, align_val_t align, kerbal::type_traits::true_type) KERBAL_NOEXCEPT;
+
+			public:
+
 				void deallocate(pointer p, size_type size, align_val_t align) KERBAL_NOEXCEPT;
 				void deallocate(pointer p, size_type size, align_val_t align, kerbal::memory::nothrow_t) KERBAL_NOEXCEPT;
 
@@ -229,6 +238,8 @@ namespace kerbal
 				pointer allocate(size_type n, align_val_t align, kerbal::memory::nothrow_t nothrow) KERBAL_NOEXCEPT;
 				pointer allocate(size_type n);
 				pointer allocate(size_type n, kerbal::memory::nothrow_t nothrow) KERBAL_NOEXCEPT;
+
+				typedef typename super_allocator_traits::allow_deallocate_null allow_deallocate_null;
 
 				void deallocate(pointer p, size_type n, align_val_t align) KERBAL_NOEXCEPT;
 				void deallocate(pointer p, size_type n, align_val_t align, kerbal::memory::nothrow_t nothrow) KERBAL_NOEXCEPT;

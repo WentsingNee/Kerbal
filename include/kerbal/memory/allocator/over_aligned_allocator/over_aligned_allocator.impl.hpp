@@ -120,8 +120,12 @@ namespace kerbal
 		}
 
 		template <typename UpstreamAllocator>
-		void over_aligned_allocator<void, UpstreamAllocator>::deallocate(pointer p, size_type size, align_val_t align) KERBAL_NOEXCEPT
+		void over_aligned_allocator<void, UpstreamAllocator>::k_deallocate_upstream_allow_deallocate_null(pointer p, size_type size, align_val_t align, kerbal::type_traits::false_type) KERBAL_NOEXCEPT
 		{
+			if (p == NULL) {
+				return;
+			}
+
 			std::size_t basic_align = upstream_allocator_traits::minimum_alignment(upstream_alloc());
 
 			if (align <= basic_align) {
@@ -140,6 +144,44 @@ namespace kerbal
 			void_p * pu = reinterpret_cast<void_p *>(pu_sz);
 			pointer p_raw = *pu;
 			upstream_allocator_traits::deallocate(upstream_alloc(), p_raw, raw_allocate_size);
+		}
+
+		template <typename UpstreamAllocator>
+		void over_aligned_allocator<void, UpstreamAllocator>::k_deallocate_upstream_allow_deallocate_null(pointer p, size_type size, align_val_t align, kerbal::type_traits::true_type) KERBAL_NOEXCEPT
+		{
+			pointer p_raw;
+			std::size_t raw_allocate_size;
+
+			if (p == NULL) {
+				p_raw = p;
+				raw_allocate_size = size;
+			} else {
+				std::size_t basic_align = upstream_allocator_traits::minimum_alignment(upstream_alloc());
+
+				if (align <= basic_align) {
+					p_raw = p;
+					raw_allocate_size = size;
+				} else {
+					raw_allocate_size =
+							kerbal::memory::alignment_maximum_offset(KERBAL_ALIGNOF(void_p), basic_align) +
+							sizeof(void_p) +
+							kerbal::memory::alignment_maximum_offset(align.val, KERBAL_ALIGNOF(void_p)) +
+							size
+					;
+					std::size_t pt_sz = reinterpret_cast<std::size_t>(p);
+					std::size_t pu_sz = kerbal::memory::align_floor(pt_sz - sizeof(void_p), KERBAL_ALIGNOF(void_p));
+					void_p * pu = reinterpret_cast<void_p *>(pu_sz);
+					p_raw = *pu;
+				}
+			}
+
+			upstream_allocator_traits::deallocate(upstream_alloc(), p_raw, raw_allocate_size);
+		}
+
+		template <typename UpstreamAllocator>
+		void over_aligned_allocator<void, UpstreamAllocator>::deallocate(pointer p, size_type size, align_val_t align) KERBAL_NOEXCEPT
+		{
+			this->k_deallocate_upstream_allow_deallocate_null(p, size, align, typename upstream_allocator_traits::allow_deallocate_null());
 		}
 
 		template <typename UpstreamAllocator>

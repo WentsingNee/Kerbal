@@ -72,7 +72,9 @@ namespace kerbal
 #	if __cplusplus > 201703L
 #		if KERBAL_HAS_IS_CONSTANT_EVALUATED_SUPPORT
 			if (KERBAL_IS_CONSTANT_EVALUATED()) {
-				std::allocator<T>().deallocate(p, n);
+				if (p != NULL) {
+					std::allocator<T>().deallocate(p, n);
+				}
 				return;
 			}
 #		endif

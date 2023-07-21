@@ -68,6 +68,8 @@ namespace kerbal
 				static pointer allocate(size_type n, kerbal::memory::nothrow_t) KERBAL_NOEXCEPT;
 				static pointer allocate(size_type n);
 
+				typedef kerbal::type_traits::true_type allow_deallocate_null;
+
 				static void deallocate(pointer p) KERBAL_NOEXCEPT;
 				static void deallocate(pointer p, size_type /*n*/) KERBAL_NOEXCEPT;
 				static void deallocate(pointer p, kerbal::memory::nothrow_t) KERBAL_NOEXCEPT;
@@ -131,6 +133,8 @@ namespace kerbal
 
 				static pointer allocate(size_type n, kerbal::memory::nothrow_t nothrow) KERBAL_NOEXCEPT;
 				static pointer allocate(size_type n);
+
+				typedef kerbal::type_traits::true_type allow_deallocate_null;
 
 				static void deallocate(pointer p, size_type n, kerbal::memory::nothrow_t nothrow) KERBAL_NOEXCEPT;
 				static void deallocate(pointer p, kerbal::memory::nothrow_t nothrow) KERBAL_NOEXCEPT;

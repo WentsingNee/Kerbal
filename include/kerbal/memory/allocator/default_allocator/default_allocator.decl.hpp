@@ -72,6 +72,9 @@ namespace kerbal
 				KERBAL_CONSTEXPR20
 				static pointer allocate(size_type n);
 
+
+				typedef typename upstream_allocator::allow_deallocate_null allow_deallocate_null;
+
 				KERBAL_CONSTEXPR20
 				static void deallocate(pointer p, size_type n) KERBAL_NOEXCEPT;
 
@@ -131,6 +134,9 @@ namespace kerbal
 
 				static pointer allocate(size_type n);
 				static pointer allocate(size_type n, kerbal::memory::align_val_t align);
+
+
+				typedef kerbal::memory::malloc_allocator<void>::allow_deallocate_null allow_deallocate_null;
 
 				static void deallocate(pointer p) KERBAL_NOEXCEPT;
 				static void deallocate(pointer p, size_type /*n*/) KERBAL_NOEXCEPT;

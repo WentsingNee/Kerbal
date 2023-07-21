@@ -276,6 +276,8 @@ namespace kerbal
 				pointer allocate_one();
 				pointer allocate(size_type n);
 
+				typedef kerbal::type_traits::false_type allow_deallocate_null;
+
 				void deallocate_one(pointer p) KERBAL_NOEXCEPT;
 				void deallocate(pointer p, size_type n) KERBAL_NOEXCEPT;
 
