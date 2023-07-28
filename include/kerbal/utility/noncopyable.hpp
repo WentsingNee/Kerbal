@@ -99,7 +99,7 @@ namespace kerbal
 
 			private:
 				noncopyable(const noncopyable &);
-				noncopyassignable& operator=(const noncopyassignable &);
+				noncopyable& operator=(const noncopyable &);
 		};
 
 #	else
