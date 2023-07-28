@@ -17,6 +17,7 @@
 #include <kerbal/algorithm/swap.hpp>
 #include <kerbal/compatibility/constexpr.hpp>
 #include <kerbal/compatibility/noexcept.hpp>
+#include <kerbal/function/invoke_r.hpp>
 #include <kerbal/memory/allocator_traits.hpp>
 #include <kerbal/type_traits/decay.hpp>
 #include <kerbal/utility/noncopyable.hpp>
@@ -28,7 +29,6 @@
 #endif
 
 #if __cplusplus >= 201103L
-#	include <kerbal/function/invoke.hpp>
 #	include <kerbal/utility/integer_sequence.hpp>
 #endif
 
@@ -323,7 +323,7 @@ namespace kerbal
 				static void apply(kerbal::utility::tuple<Callable, Args...> & pack,
 									kerbal::utility::integer_sequence<std::size_t, I...>)
 				{
-					kerbal::function::invoke(pack.template get<0>(), pack.template get<I + 1>()...);
+					kerbal::function::invoke_r<void>(pack.template get<0>(), pack.template get<I + 1>()...);
 				}
 
 			public:

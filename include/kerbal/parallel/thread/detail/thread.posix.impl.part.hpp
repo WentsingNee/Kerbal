@@ -108,7 +108,6 @@ namespace kerbal
 #	else
 
 #		define EMPTY
-#		define REMAINF(exp) exp
 #		define LEFT_JOIN_COMMA(exp) , exp
 #		define TARGS_DECL(i) typename KERBAL_MACRO_CONCAT(Arg, i)
 #		define TARGS_USE(i) typename kerbal::type_traits::decay<KERBAL_MACRO_CONCAT(Arg, i)>::type
@@ -138,7 +137,7 @@ namespace kerbal
 						rebind_allocator alloc(rebind_alloc<fun_args_pack_t>()); \
  \
 						try { \
-							fun_args_pack_p->template get<0>()(KERBAL_OPT_PPEXPAND_WITH_COMMA_N(REMAINF, EMPTY, FUN_ARGS_PACK_EXPAND_ARG, i)); \
+							kerbal::function::invoke_r<void>(fun_args_pack_p->template get<0>() KERBAL_OPT_PPEXPAND_WITH_COMMA_N(LEFT_JOIN_COMMA, EMPTY, FUN_ARGS_PACK_EXPAND_ARG, i)); \
 						} catch (...) { \
 							k_destroy_fun_args_pack(alloc, fun_args_pack_p); \
 							throw; \
@@ -167,7 +166,6 @@ namespace kerbal
 		KERBAL_PPEXPAND_N(FBODY, KERBAL_PPEXPAND_EMPTY_SEPARATOR, 19)
 
 #		undef EMPTY
-#		undef REMAINF
 #		undef LEFT_JOIN_COMMA
 #		undef TARGS_DECL
 #		undef TARGS_USE
