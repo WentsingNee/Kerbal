@@ -158,6 +158,8 @@ namespace kerbal
 
 #		else
 
+				static_vector(const kerbal::assign::assign_list<void> & src);
+
 				template <typename Up>
 				static_vector(const kerbal::assign::assign_list<Up> & src);
 
@@ -184,6 +186,8 @@ namespace kerbal
 				static_vector& operator=(std::initializer_list<value_type> src);
 
 #		else
+
+				static_vector& operator=(const kerbal::assign::assign_list<void> & src);
 
 				template <typename Up>
 				static_vector& operator=(const kerbal::assign::assign_list<Up> & src);
@@ -270,8 +274,12 @@ namespace kerbal
 
 #		else
 
+				void assign_unsafe(const kerbal::assign::assign_list<void> & src);
+
 				template <typename Up>
 				void assign_unsafe(const kerbal::assign::assign_list<Up> & src);
+
+				void assign(const kerbal::assign::assign_list<void> & src);
 
 				template <typename Up>
 				void assign(const kerbal::assign::assign_list<Up> & src);
@@ -530,6 +538,8 @@ namespace kerbal
 				iterator insert(const_iterator pos, std::initializer_list<Tp> ilist);
 
 #		else
+
+				iterator insert(const_iterator pos, const kerbal::assign::assign_list<void> & ilist);
 
 				template <typename Up>
 				iterator insert(const_iterator pos, const kerbal::assign::assign_list<Up> & ilist);

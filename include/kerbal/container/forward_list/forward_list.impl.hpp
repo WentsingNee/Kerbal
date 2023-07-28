@@ -192,10 +192,24 @@ namespace kerbal
 #	else
 
 		template <typename Tp, typename Allocator>
+		forward_list<Tp, Allocator>::forward_list(const kerbal::assign::assign_list<void> & src) :
+				fl_allocator_overload(),
+				fl_type_only()
+		{
+		}
+
+		template <typename Tp, typename Allocator>
 		template <typename Up>
 		forward_list<Tp, Allocator>::forward_list(const kerbal::assign::assign_list<Up> & src) :
 				fl_allocator_overload(),
 				fl_type_only(this->alloc(), src.cbegin(), src.cend())
+		{
+		}
+
+		template <typename Tp, typename Allocator>
+		forward_list<Tp, Allocator>::forward_list(const kerbal::assign::assign_list<void> & src, const Allocator& alloc) :
+				fl_allocator_overload(alloc),
+				fl_type_only()
 		{
 		}
 
@@ -257,6 +271,14 @@ namespace kerbal
 		}
 
 #	else
+
+		template <typename Tp, typename Allocator>
+		forward_list<Tp, Allocator>&
+		forward_list<Tp, Allocator>::operator=(const kerbal::assign::assign_list<void> & src)
+		{
+			this->assign(src);
+			return *this;
+		}
 
 		template <typename Tp, typename Allocator>
 		template <typename Up>
@@ -325,6 +347,12 @@ namespace kerbal
 		}
 
 #	else
+
+		template <typename Tp, typename Allocator>
+		void forward_list<Tp, Allocator>::assign(const kerbal::assign::assign_list<void> & src)
+		{
+			this->clear();
+		}
 
 		template <typename Tp, typename Allocator>
 		template <typename Up>
@@ -451,6 +479,13 @@ namespace kerbal
 		}
 
 #	else
+
+		template <typename Tp, typename Allocator>
+		typename forward_list<Tp, Allocator>::iterator
+		forward_list<Tp, Allocator>::insert_after(const_iterator pos, const kerbal::assign::assign_list<void> & src)
+		{
+			return pos.cast_to_mutable();
+		}
 
 		template <typename Tp, typename Allocator>
 		template <typename Up>

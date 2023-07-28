@@ -194,10 +194,24 @@ namespace kerbal
 #	else
 
 		template <typename Tp, typename Allocator>
+		vector<Tp, Allocator>::vector(const kerbal::assign::assign_list<void> & ilist) :
+				vector_allocator_overload(),
+				vector_type_only()
+		{
+		}
+
+		template <typename Tp, typename Allocator>
 		template <typename Up>
 		vector<Tp, Allocator>::vector(const kerbal::assign::assign_list<Up> & ilist) :
 				vector_allocator_overload(),
 				vector_type_only(this->alloc(), ilist.cbegin(), ilist.cend())
+		{
+		}
+
+		template <typename Tp, typename Allocator>
+		vector<Tp, Allocator>::vector(const kerbal::assign::assign_list<void> & ilist, const Allocator & allocator) :
+				vector_allocator_overload(allocator),
+				vector_type_only()
 		{
 		}
 
@@ -264,12 +278,19 @@ namespace kerbal
 #		else
 
 		template <typename Tp, typename Allocator>
+		vector<Tp, Allocator>&
+		vector<Tp, Allocator>::operator=(const kerbal::assign::assign_list<void> & ilist)
+		{
+			this->assign(ilist);
+			return *this;
+		}
+
+		template <typename Tp, typename Allocator>
 		template <typename Up>
-		KERBAL_CONSTEXPR20
 		vector<Tp, Allocator>&
 		vector<Tp, Allocator>::operator=(const kerbal::assign::assign_list<Up> & ilist)
 		{
-			this->assign(ilist.begin(), ilist.end());
+			this->assign(ilist);
 			return *this;
 		}
 
@@ -334,8 +355,13 @@ namespace kerbal
 #	else
 
 		template <typename Tp, typename Allocator>
+		void vector<Tp, Allocator>::assign(const kerbal::assign::assign_list<void> & ilist)
+		{
+			this->clear();
+		}
+
+		template <typename Tp, typename Allocator>
 		template <typename Up>
-		KERBAL_CONSTEXPR20
 		void vector<Tp, Allocator>::assign(const kerbal::assign::assign_list<Up> & ilist)
 		{
 			this->assign(ilist.cbegin(), ilist.cend());
@@ -458,6 +484,13 @@ namespace kerbal
 		}
 
 #		else
+
+		template <typename Tp, typename Allocator>
+		typename vector<Tp, Allocator>::iterator
+		vector<Tp, Allocator>::insert(const_iterator pos, const kerbal::assign::assign_list<void> & ilist)
+		{
+			return pos.cast_to_mutable();
+		}
 
 		template <typename Tp, typename Allocator>
 		template <typename Up>

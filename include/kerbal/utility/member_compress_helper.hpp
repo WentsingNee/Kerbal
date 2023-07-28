@@ -960,6 +960,10 @@ namespace kerbal
 
 #		else
 
+				explicit member_compress_helper(kerbal::utility::in_place_t, const kerbal::assign::assign_list<void> & ilist)
+				{
+				}
+
 				template <typename U>
 				explicit member_compress_helper(kerbal::utility::in_place_t, const kerbal::assign::assign_list<U> & ilist)
 				{

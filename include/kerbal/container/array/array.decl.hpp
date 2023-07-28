@@ -95,8 +95,12 @@ namespace kerbal
 				/** @brief Initialize the array with default value (Default constructor) */
 				array();
 
+				array(const kerbal::assign::assign_list<void> & src);
+
 				template <typename Up>
 				array(const kerbal::assign::assign_list<Up> & src);
+
+				array& operator=(const kerbal::assign::assign_list<void> & src);
 
 				template <typename Up>
 				array& operator=(const kerbal::assign::assign_list<Up> & src);
@@ -134,6 +138,8 @@ namespace kerbal
 				void assign(std::initializer_list<value_type> src);
 
 #		else
+
+				void assign(const kerbal::assign::assign_list<void> & src);
 
 				template <typename Up>
 				void assign(const kerbal::assign::assign_list<Up> & src);

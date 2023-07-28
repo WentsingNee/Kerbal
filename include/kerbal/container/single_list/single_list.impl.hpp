@@ -192,10 +192,24 @@ namespace kerbal
 #	else
 
 		template <typename Tp, typename Allocator>
+		single_list<Tp, Allocator>::single_list(const kerbal::assign::assign_list<void> & src) :
+				sl_allocator_overload(),
+				sl_type_only()
+		{
+		}
+
+		template <typename Tp, typename Allocator>
 		template <typename Up>
 		single_list<Tp, Allocator>::single_list(const kerbal::assign::assign_list<Up> & src) :
 				sl_allocator_overload(),
 				sl_type_only(this->alloc(), src.cbegin(), src.cend())
+		{
+		}
+
+		template <typename Tp, typename Allocator>
+		single_list<Tp, Allocator>::single_list(const kerbal::assign::assign_list<void> & src, const Allocator& alloc) :
+				sl_allocator_overload(alloc),
+				sl_type_only()
 		{
 		}
 
@@ -257,6 +271,14 @@ namespace kerbal
 		}
 
 #	else
+
+		template <typename Tp, typename Allocator>
+		single_list<Tp, Allocator>&
+		single_list<Tp, Allocator>::operator=(const kerbal::assign::assign_list<void> & src)
+		{
+			this->assign(src);
+			return *this;
+		}
 
 		template <typename Tp, typename Allocator>
 		template <typename Up>
@@ -325,6 +347,12 @@ namespace kerbal
 		}
 
 #	else
+
+		template <typename Tp, typename Allocator>
+		void single_list<Tp, Allocator>::assign(const kerbal::assign::assign_list<void> & src)
+		{
+			this->clear();
+		}
 
 		template <typename Tp, typename Allocator>
 		template <typename Up>
@@ -512,6 +540,13 @@ namespace kerbal
 		}
 
 #	else
+
+		template <typename Tp, typename Allocator>
+		typename single_list<Tp, Allocator>::iterator
+		single_list<Tp, Allocator>::insert(const_iterator pos, const kerbal::assign::assign_list<void> & src)
+		{
+			return pos.cast_to_mutable();
+		}
 
 		template <typename Tp, typename Allocator>
 		template <typename Up>
@@ -756,7 +791,14 @@ namespace kerbal
 #	else
 
 		template <typename Tp, typename Allocator>
-		single_list<Tp, Allocator>& single_list<Tp, Allocator>::operator+=(const kerbal::assign::assign_list<value_type> & with)
+		single_list<Tp, Allocator>& single_list<Tp, Allocator>::operator+=(const kerbal::assign::assign_list<void> & with)
+		{
+			return *this;
+		}
+
+		template <typename Tp, typename Allocator>
+		template <typename U>
+		single_list<Tp, Allocator>& single_list<Tp, Allocator>::operator+=(const kerbal::assign::assign_list<U> & with)
 		{
 			this->insert(this->cend(), with.cbegin(), with.cend());
 			return *this;

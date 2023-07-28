@@ -41,6 +41,11 @@ namespace kerbal
 		}
 
 		template <typename Tp, std::size_t N>
+		array<Tp, N>::array(const kerbal::assign::assign_list<void> & src)
+		{
+		}
+
+		template <typename Tp, std::size_t N>
 		template <typename Up>
 		array<Tp, N>::array(const kerbal::assign::assign_list<Up> & src)
 		{
@@ -48,10 +53,17 @@ namespace kerbal
 		}
 
 		template <typename Tp, std::size_t N>
+		array<Tp, N>& array<Tp, N>::operator=(const kerbal::assign::assign_list<void> & src)
+		{
+			this->assign(src);
+			return *this;
+		}
+
+		template <typename Tp, std::size_t N>
 		template <typename Up>
 		array<Tp, N>& array<Tp, N>::operator=(const kerbal::assign::assign_list<Up> & src)
 		{
-			this->assign(src.begin(), src.end());
+			this->assign(src);
 			return *this;
 		}
 
@@ -95,6 +107,11 @@ namespace kerbal
 		}
 
 #	else
+
+		template <typename Tp, std::size_t N>
+		void array<Tp, N>::assign(const kerbal::assign::assign_list<void> & src)
+		{
+		}
 
 		template <typename Tp, std::size_t N>
 		template <typename Up>

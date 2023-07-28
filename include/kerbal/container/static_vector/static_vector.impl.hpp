@@ -118,6 +118,12 @@ namespace kerbal
 #	else
 
 		template <typename Tp, std::size_t N>
+		static_vector<Tp, N>::static_vector(const kerbal::assign::assign_list<void> & src) :
+				super()
+		{
+		}
+
+		template <typename Tp, std::size_t N>
 		template <typename Up>
 		static_vector<Tp, N>::static_vector(const kerbal::assign::assign_list<Up> & src) :
 				super(src.cbegin(), src.cend())
@@ -162,10 +168,17 @@ namespace kerbal
 #	else
 
 		template <typename Tp, std::size_t N>
+		static_vector<Tp, N>& static_vector<Tp, N>::operator=(const kerbal::assign::assign_list<void> & src)
+		{
+			this->assign_unsafe(src);
+			return *this;
+		}
+
+		template <typename Tp, std::size_t N>
 		template <typename Up>
 		static_vector<Tp, N>& static_vector<Tp, N>::operator=(const kerbal::assign::assign_list<Up> & src)
 		{
-			this->assign_unsafe(src.cbegin(), src.cend());
+			this->assign_unsafe(src);
 			return *this;
 		}
 
@@ -398,10 +411,22 @@ namespace kerbal
 #	else
 
 		template <typename Tp, std::size_t N>
+		void static_vector<Tp, N>::assign_unsafe(const kerbal::assign::assign_list<void> & src)
+		{
+			this->clear();
+		}
+
+		template <typename Tp, std::size_t N>
 		template <typename Up>
 		void static_vector<Tp, N>::assign_unsafe(const kerbal::assign::assign_list<Up> & src)
 		{
 			this->assign_unsafe(src.cbegin(), src.cend());
+		}
+
+		template <typename Tp, std::size_t N>
+		void static_vector<Tp, N>::assign(const kerbal::assign::assign_list<void> & src)
+		{
+			this->clear();
 		}
 
 		template <typename Tp, std::size_t N>
@@ -906,6 +931,13 @@ namespace kerbal
 		}
 
 #	else
+
+		template <typename Tp, std::size_t N>
+		typename static_vector<Tp, N>::iterator
+		static_vector<Tp, N>::insert(const_iterator pos, const kerbal::assign::assign_list<void> & ilist)
+		{
+			return pos.cast_to_mutable();
+		}
 
 		template <typename Tp, std::size_t N>
 		template <typename Up>

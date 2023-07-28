@@ -225,8 +225,12 @@ namespace kerbal
 
 #		else
 
+				single_list(const kerbal::assign::assign_list<void> & src);
+
 				template <typename Up>
 				single_list(const kerbal::assign::assign_list<Up> & src);
+
+				single_list(const kerbal::assign::assign_list<void> & src, const Allocator& alloc);
 
 				template <typename Up>
 				single_list(const kerbal::assign::assign_list<Up> & src, const Allocator& alloc);
@@ -257,6 +261,8 @@ namespace kerbal
 				single_list& operator=(std::initializer_list<value_type> src);
 
 #		else
+
+				single_list& operator=(const kerbal::assign::assign_list<void> & src);
 
 				template <typename Up>
 				single_list& operator=(const kerbal::assign::assign_list<Up> & src);
@@ -291,6 +297,8 @@ namespace kerbal
 				void assign(std::initializer_list<value_type> src);
 
 #		else
+
+				void assign(const kerbal::assign::assign_list<void> & src);
 
 				template <typename Up>
 				void assign(const kerbal::assign::assign_list<Up> & src);
@@ -436,6 +444,8 @@ namespace kerbal
 
 #		else
 
+				iterator insert(const_iterator pos, const kerbal::assign::assign_list<void> & src);
+
 				template <typename Up>
 				iterator insert(const_iterator pos, const kerbal::assign::assign_list<Up> & src);
 
@@ -565,7 +575,10 @@ namespace kerbal
 
 #		else
 
-				single_list& operator+=(const kerbal::assign::assign_list<value_type> & with);
+				single_list& operator+=(const kerbal::assign::assign_list<void> & with);
+
+				template <typename U>
+				single_list& operator+=(const kerbal::assign::assign_list<U> & with);
 
 #		endif
 

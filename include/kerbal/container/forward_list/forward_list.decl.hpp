@@ -225,8 +225,12 @@ namespace kerbal
 
 #		else
 
+				forward_list(const kerbal::assign::assign_list<void> & src);
+
 				template <typename Up>
 				forward_list(const kerbal::assign::assign_list<Up> & src);
+
+				forward_list(const kerbal::assign::assign_list<void> & src, const Allocator& alloc);
 
 				template <typename Up>
 				forward_list(const kerbal::assign::assign_list<Up> & src, const Allocator& alloc);
@@ -257,6 +261,8 @@ namespace kerbal
 				forward_list& operator=(std::initializer_list<value_type> src);
 
 #		else
+
+				forward_list& operator=(const kerbal::assign::assign_list<void> & src);
 
 				template <typename Up>
 				forward_list& operator=(const kerbal::assign::assign_list<Up> & src);
@@ -291,6 +297,8 @@ namespace kerbal
 				void assign(std::initializer_list<value_type> src);
 
 #		else
+
+				void assign(const kerbal::assign::assign_list<void> & src);
 
 				template <typename Up>
 				void assign(const kerbal::assign::assign_list<Up> & src);
@@ -398,6 +406,8 @@ namespace kerbal
 				iterator insert_after(const_iterator pos, std::initializer_list<value_type> src);
 
 #		else
+
+				iterator insert_after(const_iterator pos, const kerbal::assign::assign_list<void> & src);
 
 				template <typename Up>
 				iterator insert_after(const_iterator pos, const kerbal::assign::assign_list<Up> & src);
