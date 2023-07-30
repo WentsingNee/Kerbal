@@ -89,32 +89,16 @@ namespace kerbal
 
 #	else
 
-		namespace detail
-		{
-
-			template <typename Allocator, typename Tp, typename ... Args>
-			KERBAL_CONSTEXPR14
-			Tp * k_construct_at_using_allocator(Allocator & alloc, Tp * p, Args&& ... args)
-					KERBAL_CONDITIONAL_NOEXCEPT(
-						noexcept(kerbal::memory::allocator_traits<Allocator>::construct(alloc, p, kerbal::utility::forward<Args>(args)...))
-					)
-			{
-				typedef kerbal::memory::allocator_traits<Allocator> allocator_traits;
-				allocator_traits::construct(alloc, p, kerbal::utility::forward<Args>(args)...);
-				return p;
-			}
-
-		} // namespace detail
-
-
 		template <typename Allocator, typename Tp, typename ... Args>
 		KERBAL_CONSTEXPR14
 		Tp * construct_at_using_allocator(Allocator & alloc, Tp * p, Args&& ... args)
 				KERBAL_CONDITIONAL_NOEXCEPT(
-						noexcept(detail::k_construct_at_using_allocator(alloc, p, kerbal::utility::forward<Args>(args)...))
+					noexcept(kerbal::memory::allocator_traits<Allocator>::construct(alloc, p, kerbal::utility::forward<Args>(args)...))
 				)
 		{
-			return detail::k_construct_at_using_allocator(alloc, p, kerbal::utility::forward<Args>(args)...);
+			typedef kerbal::memory::allocator_traits<Allocator> allocator_traits;
+			allocator_traits::construct(alloc, p, kerbal::utility::forward<Args>(args)...);
+			return p;
 		}
 
 #	endif // __cplusplus >= 201103L
