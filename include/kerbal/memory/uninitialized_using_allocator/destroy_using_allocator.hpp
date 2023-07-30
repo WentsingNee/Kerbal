@@ -75,8 +75,6 @@ namespace kerbal
 				kerbal::memory::allocator_traits<Allocator>::destroy(alloc, &plc);
 			}
 
-#		if __cplusplus >= 201103L
-
 			template <typename Allocator, typename Tp>
 			KERBAL_CONSTEXPR14
 			void k_destroy_on_using_allocator(Allocator & /*alloc*/, Tp & plc, kerbal::type_traits::false_type)
@@ -86,8 +84,6 @@ namespace kerbal
 			{
 				kerbal::memory::destroy_on(plc);
 			}
-
-#		endif
 
 		} // namespace detail
 
