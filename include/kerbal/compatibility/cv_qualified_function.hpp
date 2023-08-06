@@ -19,7 +19,11 @@
 #		include <kerbal/config/compiler_id.hpp>
 #		include <kerbal/config/compiler_private.hpp>
 
-#		if KERBAL_COMPILER_ID == KERBAL_COMPILER_ID_MSVC
+#		if KERBAL_COMPILER_ID == KERBAL_COMPILER_ID_GNU
+#			if !KERBAL_GNU_VERSION_MEETS(4, 9, 0)
+#				define KERBAL_HAS_CV_QUALIFIED_FUNCTION_SUPPORT 0
+#			endif
+#		elif KERBAL_COMPILER_ID == KERBAL_COMPILER_ID_MSVC
 #			if !KERBAL_MSVC_VERSION_MEETS(18, 0, 0)
 #				define KERBAL_HAS_CV_QUALIFIED_FUNCTION_SUPPORT 0
 #			endif
