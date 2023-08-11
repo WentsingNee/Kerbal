@@ -13,19 +13,54 @@ cmake_minimum_required(VERSION 3.10)
 include(cmake/version.cmake)
 project(
         Kerbal
+        VERSION "${KERBAL_VERSION}"
+        DESCRIPTION "Kerbal C++ Library"
         LANGUAGES CXX
-        VERSION ${KERBAL_VERSION}
 )
 
-file(GLOB_RECURSE kerbal_header ${PROJECT_SOURCE_DIR}/include/kerbal "${PROJECT_SOURCE_DIR}/include/*.hpp")
-add_library(Kerbal INTERFACE ${kerbal_header})
+include(cmake/aux_headers.cmake)
+
+aux_headers(kerbal_installed_headers "${PROJECT_SOURCE_DIR}/include" "${PROJECT_SOURCE_DIR}/include" "")
+
+if (${CMAKE_VERSION} VERSION_GREATER_EQUAL 3.19)
+    add_library(kerbal INTERFACE ${kerbal_installed_headers})
+else ()
+    add_library(kerbal INTERFACE)
+endif ()
+
+add_library(Kerbal::kerbal ALIAS kerbal)
+
+if (${CMAKE_VERSION} VERSION_GREATER_EQUAL 3.23)
+    target_sources(
+            kerbal INTERFACE
+            FILE_SET "kerbal_installed_headers"
+            TYPE HEADERS
+            BASE_DIRS "${PROJECT_SOURCE_DIR}/include"
+            FILES ${kerbal_installed_headers}
+    )
+endif ()
+
+set(${PROJECT_NAME}_INCLUDE_DIRS ${PROJECT_SOURCE_DIR}/include)
 
 target_include_directories(
-        Kerbal INTERFACE
-        $<BUILD_INTERFACE:${PROJECT_SOURCE_DIR}/include>
+        kerbal INTERFACE
+        $<BUILD_INTERFACE:${${PROJECT_NAME}_INCLUDE_DIRS}>
         $<INSTALL_INTERFACE:include>
 )
 
+target_compile_options(
+        kerbal INTERFACE
+        $<$<CXX_COMPILER_ID:MSVC>:/Zc:__cplusplus>
+)
+
+
+
+# Build Header Integration
+option(KERBAL_BUILD_HEADER_INTEGRATION "build header integration" OFF)
+include(cmake/header_integration.cmake)
+
+
+# Build Script
 option(KERBAL_BUILD_SCRIPT "build script" OFF)
 if (${KERBAL_BUILD_SCRIPT})
     add_subdirectory(script)
