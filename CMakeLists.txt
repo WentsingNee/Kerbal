@@ -66,6 +66,14 @@ if (${KERBAL_BUILD_SCRIPT})
     add_subdirectory(script)
 endif ()
 
+
+# Build Test
+option(KERBAL_BUILD_TEST "build test" OFF)
+if (${KERBAL_BUILD_TEST})
+    add_subdirectory(test)
+endif ()
+
+
 include(cmake/gnuInstall.cmake)
 include(cmake/cpack.cmake)
 
