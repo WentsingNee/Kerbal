@@ -112,8 +112,12 @@ namespace kerbal
 						void apply(kerbal::utility::integer_sequence<std::size_t, I...>)
 						{
 							try {
-								result_type result = kerbal::function::invoke(pack.template get<0>(), pack.template get<I + 1>()...);
-								promise.set_value(kerbal::compatibility::move(result));
+								if constexpr (kerbal::type_traits::is_same<result_type, vold>::value) {
+									kerbal::function::invoke(pack.template get<0>(), pack.template get<I + 1>()...);
+									promise.set_value();
+								} else {
+									promise.set_value(kerbal::function::invoke(pack.template get<0>(), pack.template get<I + 1>()...));
+								}
 							} catch (...) {
 								promise.set_exception(std::current_exception());
 							}
