@@ -2023,24 +2023,27 @@ namespace kerbal
 			list_node_chain<Tp>
 			list_type_only<Tp>::k_build_n_new_nodes_unguarded(NodeAllocator & alloc, size_type n, Args&& ... args)
 			{
-				std::size_t cnt = 0;
-				node * const start = k_build_new_node(alloc, kerbal::utility::forward<Args>(args)...);
-				node * back = start;
+				size_type cnt = 0;
+				node_base head;
+				node_base * prev = &head;
+
 #		if __cpp_exceptions
 				try {
 #		endif // __cpp_exceptions
-					++cnt;
-					while (cnt != n) {
+					do {
 						node * new_node = k_build_new_node(alloc, kerbal::utility::forward<Args>(args)...);
-						new_node->prev = back;
-						back->next = new_node;
-						back = new_node;
+						new_node->prev = prev;
+						prev->next = new_node;
+						prev = new_node;
 						++cnt;
-					}
-					return list_node_chain<Tp>(start, back);
+					} while (cnt != n);
+					return list_node_chain<Tp>(
+							&head.next->template reinterpret_as<value_type>(),
+							&prev->template reinterpret_as<value_type>()
+					);
 #		if __cpp_exceptions
 				} catch (...) {
-					k_consecutive_destroy_node(alloc, start);
+					k_consecutive_destroy_node(alloc, head.next);
 					throw;
 				}
 #		endif // __cpp_exceptions
@@ -2060,21 +2063,24 @@ namespace kerbal
 			list_node_chain<Tp> \
 			list_type_only<Tp>::k_build_n_new_nodes_unguarded(NodeAllocator & alloc, size_type n KERBAL_OPT_PPEXPAND_WITH_COMMA_N(LEFT_JOIN_COMMA, EMPTY, ARGS_DECL, i)) \
 			{ \
-				std::size_t cnt = 0; \
-				node * const start = k_build_new_node(alloc KERBAL_OPT_PPEXPAND_WITH_COMMA_N(LEFT_JOIN_COMMA, EMPTY, ARGS_USE, i)); \
-				node * back = start; \
+				size_type cnt = 0; \
+				node_base head; \
+				node_base * prev = &head; \
+ \
 				try { \
-					++cnt; \
-					while (cnt != n) { \
+					do { \
 						node * new_node = k_build_new_node(alloc KERBAL_OPT_PPEXPAND_WITH_COMMA_N(LEFT_JOIN_COMMA, EMPTY, ARGS_USE, i)); \
-						new_node->prev = back; \
-						back->next = new_node; \
-						back = new_node; \
+						new_node->prev = prev; \
+						prev->next = new_node; \
+						prev = new_node; \
 						++cnt; \
-					} \
-					return list_node_chain<Tp>(start, back); \
+					} while (cnt != n); \
+					return list_node_chain<Tp>( \
+							&head.next->template reinterpret_as<value_type>(), \
+							&prev->template reinterpret_as<value_type>() \
+					); \
 				} catch (...) { \
-					k_consecutive_destroy_node(alloc, start); \
+					k_consecutive_destroy_node(alloc, head.next); \
 					throw; \
 				} \
 			}
@@ -2085,18 +2091,21 @@ namespace kerbal
 			list_node_chain<Tp> \
 			list_type_only<Tp>::k_build_n_new_nodes_unguarded(NodeAllocator & alloc, size_type n KERBAL_OPT_PPEXPAND_WITH_COMMA_N(LEFT_JOIN_COMMA, EMPTY, ARGS_DECL, i)) \
 			{ \
-				std::size_t cnt = 0; \
-				node * const start = k_build_new_node(alloc KERBAL_OPT_PPEXPAND_WITH_COMMA_N(LEFT_JOIN_COMMA, EMPTY, ARGS_USE, i)); \
-				node * back = start; \
-				++cnt; \
-				while (cnt != n) { \
+				size_type cnt = 0; \
+				node_base head; \
+				node_base * prev = &head; \
+ \
+				do { \
 					node * new_node = k_build_new_node(alloc KERBAL_OPT_PPEXPAND_WITH_COMMA_N(LEFT_JOIN_COMMA, EMPTY, ARGS_USE, i)); \
-					new_node->prev = back; \
-					back->next = new_node; \
-					back = new_node; \
+					new_node->prev = prev; \
+					prev->next = new_node; \
+					prev = new_node; \
 					++cnt; \
-				} \
-				return list_node_chain<Tp>(start, back); \
+				} while (cnt != n); \
+				return list_node_chain<Tp>( \
+						&head.next->template reinterpret_as<value_type>(), \
+						&prev->template reinterpret_as<value_type>() \
+				); \
 			}
 #	endif // __cpp_exceptions
 
@@ -2122,23 +2131,26 @@ namespace kerbal
 			>::type
 			list_type_only<Tp>::k_build_new_nodes_range_unguarded(NodeAllocator & alloc, InputIterator first, InputIterator last)
 			{
-				node * const start = k_build_new_node(alloc, *first);
-				node * back = start;
+				node_base head;
+				node_base * prev = &head;
+
 #			if __cpp_exceptions
 				try {
 #			endif // __cpp_exceptions
-					++first;
-					while (first != last) {
-						node* new_node = k_build_new_node(alloc, *first);
-						new_node->prev = back;
-						back->next = new_node;
-						back = new_node;
+					do {
+						node * new_node = k_build_new_node(alloc, *first);
+						new_node->prev = prev;
+						prev->next = new_node;
+						prev = new_node;
 						++first;
-					}
-					return list_node_chain<Tp>(start, back);
+					} while (first != last);
+					return list_node_chain<Tp>(
+							&head.next->template reinterpret_as<value_type>(),
+							&prev->template reinterpret_as<value_type>()
+					);
 #			if __cpp_exceptions
 				} catch (...) {
-					k_consecutive_destroy_node(alloc, start);
+					k_consecutive_destroy_node(alloc, head.next);
 					throw;
 				}
 #			endif // __cpp_exceptions
