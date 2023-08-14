@@ -41,6 +41,8 @@ namespace kerbal
 	namespace parallel
 	{
 
+		class thread_pool;
+
 		namespace detail
 		{
 
@@ -51,15 +53,18 @@ namespace kerbal
 			template <>
 			class task_base<void>
 			{
+					friend class kerbal::parallel::thread_pool;
+
 				protected:
 					typedef void result_type;
 					std::promise<result_type> promise;
 
-					template <std::size_t ... I>
-					void apply(kerbal::utility::integer_sequence<std::size_t, I...>)
+					template <typename Pack, std::size_t ... I>
+					void apply(Pack & pack, kerbal::utility::integer_sequence<std::size_t, I...>)
 					{
 						try {
-							promise.set_value(kerbal::function::invoke(pack.template get<0>(), pack.template get<I + 1>()...));
+							kerbal::function::invoke(pack.template get<0>(), pack.template get<I + 1>()...);
+							promise.set_value();
 						} catch (...) {
 							promise.set_exception(std::current_exception());
 						}
@@ -69,16 +74,17 @@ namespace kerbal
 			template <typename R>
 			class task_base
 			{
+					friend class kerbal::parallel::thread_pool;
+
 				protected:
 					typedef R result_type;
 					std::promise<result_type> promise;
 
-					template <std::size_t ... I>
-					void apply(kerbal::utility::integer_sequence<std::size_t, I...>)
+					template <typename Pack, std::size_t ... I>
+					void apply(Pack & pack, kerbal::utility::integer_sequence<std::size_t, I...>)
 					{
 						try {
-							kerbal::function::invoke(pack.template get<0>(), pack.template get<I + 1>()...);
-							promise.set_value();
+							promise.set_value(kerbal::function::invoke(pack.template get<0>(), pack.template get<I + 1>()...));
 						} catch (...) {
 							promise.set_exception(std::current_exception());
 						}
@@ -93,7 +99,7 @@ namespace kerbal
 					typedef task_base<typename kerbal::function::invoke_result<F, Args...>::type> super;
 
 				public:
-					typedef super::result_type result_type;
+					typedef typename super::result_type result_type;
 
 					kerbal::utility::tuple<F, Args...> pack;
 
@@ -107,7 +113,7 @@ namespace kerbal
 
 					void operator()()
 					{
-						super::apply(kerbal::utility::make_index_sequence<sizeof...(Args)>());
+						super::apply(pack, kerbal::utility::make_index_sequence<sizeof...(Args)>());
 					}
 			};
 
@@ -135,7 +141,7 @@ namespace kerbal
 						k_threads_pool.emplace_back([this] {
 							while (!this->k_stopped.load()) {
 								std::unique_lock<std::mutex> lock(this->k_mutex);
-								this->k_cv.wait([this] {
+								this->k_cv.wait(lock, [this] {
 									return this->k_stopped.load() || !this->k_jobs_queue.empty();
 								});
 								if (this->k_stopped.load() && this->k_jobs_queue.empty()) {
