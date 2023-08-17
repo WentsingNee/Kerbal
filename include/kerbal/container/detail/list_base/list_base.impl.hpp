@@ -28,6 +28,7 @@
 #endif
 
 #if __cplusplus >= 201103L
+#	include <kerbal/compatibility/move.hpp>
 #	include <kerbal/iterator/move_iterator.hpp>
 #	include <kerbal/utility/forward.hpp>
 #endif

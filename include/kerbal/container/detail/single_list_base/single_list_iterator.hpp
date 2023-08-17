@@ -14,6 +14,7 @@
 
 #include <kerbal/container/detail/single_list_base/single_list_base.fwd.hpp>
 #include <kerbal/container/single_list/single_list.fwd.hpp>
+#include <kerbal/container/detail/single_list_base/single_list_node.hpp>
 
 #include <kerbal/operators/dereferenceable.hpp>
 #include <kerbal/operators/equality_comparable.hpp>

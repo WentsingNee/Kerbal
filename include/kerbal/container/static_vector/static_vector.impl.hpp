@@ -28,6 +28,7 @@
 #include <kerbal/type_traits/is_trivially_copy_constructible.hpp>
 #include <kerbal/type_traits/is_trivially_destructible.hpp>
 #include <kerbal/type_traits/tribool_constant.hpp>
+#include <kerbal/utility/compressed_pair.hpp>
 #include <kerbal/utility/in_place.hpp>
 #include <kerbal/utility/throw_this_exception.hpp>
 

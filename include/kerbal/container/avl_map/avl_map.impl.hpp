@@ -16,10 +16,15 @@
 #include <kerbal/container/avl_ordered/avl_ordered.impl.hpp>
 
 #include <kerbal/compatibility/constexpr.hpp>
-#include <kerbal/compatibility/move.hpp>
 #include <kerbal/compatibility/noexcept.hpp>
 #include <kerbal/container/associative_container_facility/unique_tag_t.hpp>
+#include <kerbal/utility/compressed_pair.hpp>
 #include <kerbal/utility/throw_this_exception.hpp>
+
+#if __cplusplus >= 201103L
+#	include <kerbal/compatibility/move.hpp>
+#	include <kerbal/utility/forward.hpp>
+#endif
 
 #include <stdexcept>
 

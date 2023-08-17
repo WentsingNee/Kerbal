@@ -22,6 +22,7 @@
 #include <kerbal/utility/compressed_pair.hpp>
 
 #if __cplusplus >= 201103L
+#	include <kerbal/compatibility/move.hpp>
 #	include <kerbal/utility/forward.hpp>
 #endif
 

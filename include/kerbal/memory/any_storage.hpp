@@ -13,6 +13,7 @@
 #define KERBAL_MEMORY_ANY_STORAGE_HPP
 
 #include <kerbal/compatibility/constexpr.hpp>
+#include <kerbal/compatibility/move.hpp>
 #include <kerbal/compatibility/noexcept.hpp>
 #include <kerbal/memory/allocator_traits.hpp>
 #include <kerbal/type_traits/aligned_storage.hpp>

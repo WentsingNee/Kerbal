@@ -26,6 +26,7 @@
 #include <kerbal/type_traits/is_function.hpp>
 #include <kerbal/type_traits/is_same.hpp>
 #include <kerbal/type_traits/tribool_constant.hpp>
+#include <kerbal/utility/compressed_pair.hpp>
 #include <kerbal/utility/declval.hpp>
 #include <kerbal/utility/in_place.hpp>
 
@@ -43,6 +44,7 @@
 
 #if !__cpp_exceptions
 #	include <kerbal/memory/bad_alloc.hpp>
+#	include <kerbal/utility/throw_this_exception.hpp>
 #endif
 
 #include <cstddef>

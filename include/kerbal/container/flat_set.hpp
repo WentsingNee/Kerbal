@@ -17,6 +17,12 @@
 #include <kerbal/container/detail/flat_set_base.hpp>
 #include <kerbal/container/flat_ordered.hpp>
 
+#include <memory>
+
+#if __cplusplus >= 201103L
+#	include <initializer_list>
+#endif
+
 
 namespace kerbal
 {

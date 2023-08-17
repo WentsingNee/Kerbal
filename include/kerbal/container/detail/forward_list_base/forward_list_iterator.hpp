@@ -15,6 +15,7 @@
 #include <kerbal/container/detail/forward_list_base/forward_list_base.fwd.hpp>
 #include <kerbal/autonm/forward_list/forward_list.fwd.hpp>
 #include <kerbal/container/forward_list/forward_list.fwd.hpp>
+#include <kerbal/container/detail/single_list_base/single_list_node.hpp>
 
 #include <kerbal/operators/dereferenceable.hpp>
 #include <kerbal/operators/equality_comparable.hpp>

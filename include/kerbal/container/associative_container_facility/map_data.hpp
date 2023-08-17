@@ -20,6 +20,11 @@
 #	include <kerbal/type_traits/remove_reference.hpp>
 #endif
 
+#if __cplusplus >= 201103L
+#	include <kerbal/compatibility/move.hpp>
+#	include <kerbal/utility/forward.hpp>
+#endif
+
 
 namespace kerbal
 {

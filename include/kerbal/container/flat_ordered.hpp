@@ -19,6 +19,12 @@
 #include <kerbal/compatibility/namespace_std_scope.hpp>
 #include <kerbal/container/vector.hpp>
 
+#include <memory>
+
+#if __cplusplus >= 201103L
+#	include <initializer_list>
+#endif
+
 #include <cstddef>
 
 

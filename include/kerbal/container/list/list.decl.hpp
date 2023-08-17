@@ -36,6 +36,8 @@
 #	include <initializer_list>
 #endif
 
+#include <cstddef>
+
 #include <kerbal/container/detail/container_rebind_allocator_overload.hpp>
 #include <kerbal/container/detail/list_base/list_base.decl.hpp>
 

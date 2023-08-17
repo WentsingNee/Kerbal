@@ -39,7 +39,7 @@
 #endif
 
 #if __cplusplus >= 201103L
-#	include <kerbal/utility/forward.hpp>
+#	include <kerbal/compatibility/move.hpp>
 #endif
 
 #include <cstddef>
