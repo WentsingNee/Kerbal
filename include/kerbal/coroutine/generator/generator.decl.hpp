@@ -20,6 +20,7 @@
 #include <kerbal/operators/dereferenceable.hpp>
 #include <kerbal/operators/equality_comparable.hpp>
 #include <kerbal/optional/optional.hpp>
+#include <kerbal/type_traits/remove_reference.hpp>
 #include <kerbal/utility/forward.hpp>
 
 #include <cstddef>
@@ -81,17 +82,20 @@ namespace kerbal
 
 			template <typename T>
 			class generator_iterator :
-					public kerbal::operators::dereferenceable<generator_iterator<T>, T*>, // it->
+					public kerbal::operators::dereferenceable<
+						generator_iterator<T>, typename kerbal::type_traits::remove_reference<T>::type *
+					>, // it->
 					public kerbal::operators::equality_comparable<generator_iterator<T> > // it != jt
 			{
 					friend class kerbal::coroutine::generator<T>;
 
 				public:
 					typedef std::input_iterator_tag		iterator_category;
-					typedef T							value_type;
+					typedef typename kerbal::type_traits::remove_reference<T>::type
+														value_type;
 					typedef std::ptrdiff_t				difference_type;
-					typedef T*							pointer;
-					typedef T&							reference;
+					typedef value_type *				pointer;
+					typedef value_type &				reference;
 
 				protected:
 					kerbal::coroutine::generator<T> * gen;
