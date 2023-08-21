@@ -13,6 +13,7 @@
 #define KERBAL_CONTAINER_DETAIL_FORWARD_LIST_BASE_FORWARD_LIST_BASE_IMPL_HPP
 
 #include <kerbal/algorithm/swap.hpp>
+#include <kerbal/assign/generic_assign.hpp>
 #include <kerbal/compare/basic_compare.hpp>
 #include <kerbal/iterator/iterator.hpp>
 #include <kerbal/type_traits/conditional.hpp>
@@ -348,7 +349,7 @@ namespace kerbal
 				const_iterator const cend(this->cend());
 				while (count != 0) {
 					if (it != cend) {
-						kerbal::operators::generic_assign(*it, val); // *it = val;
+						kerbal::assign::generic_assign(*it, val); // *it = val;
 						--count;
 						before_it = it;
 						++it;
@@ -373,7 +374,7 @@ namespace kerbal
 				const_iterator const cend(this->cend());
 				while (first != last) {
 					if (it != cend) {
-						kerbal::operators::generic_assign(*it, *first); // *it = *first;
+						kerbal::assign::generic_assign(*it, *first); // *it = *first;
 						++first;
 						before_it = it;
 						++it;

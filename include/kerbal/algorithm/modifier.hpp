@@ -17,6 +17,7 @@
 #include <kerbal/algorithm/binary_search.hpp>
 #include <kerbal/algorithm/querier.hpp>
 #include <kerbal/algorithm/swap.hpp>
+#include <kerbal/assign/generic_assign.hpp>
 #include <kerbal/compare/basic_compare.hpp>
 #include <kerbal/compare/binary_type_compare.hpp>
 #include <kerbal/compatibility/constexpr.hpp>
@@ -24,7 +25,6 @@
 #include <kerbal/compatibility/noexcept.hpp>
 #include <kerbal/iterator/iterator.hpp>
 #include <kerbal/iterator/iterator_traits.hpp>
-#include <kerbal/operators/generic_assign.hpp>
 #include <kerbal/utility/compressed_pair.hpp>
 
 
@@ -41,13 +41,13 @@ namespace kerbal
 				std::input_iterator_tag)
 										KERBAL_CONDITIONAL_NOEXCEPT(
 												noexcept(static_cast<bool>(first != last)) &&
-												noexcept(kerbal::operators::generic_assign(*to, *first)) &&
+												noexcept(kerbal::assign::generic_assign(*to, *first)) &&
 												noexcept(++to) &&
 												noexcept(++first)
 										)
 		{
 			while (first != last) {
-				kerbal::operators::generic_assign(*to, *first); // *to = *first;
+				kerbal::assign::generic_assign(*to, *first); // *to = *first;
 				++to;
 				++first;
 			}
@@ -70,7 +70,7 @@ namespace kerbal
 		copy_n(InputIterator first, SizeType n, OutputIterator to)
 		{
 			while (n > 0) {
-				kerbal::operators::generic_assign(*to, *first); // *to = *first;
+				kerbal::assign::generic_assign(*to, *first); // *to = *first;
 				--n;
 				++to;
 				++first;
@@ -88,14 +88,14 @@ namespace kerbal
 										KERBAL_CONDITIONAL_NOEXCEPT(
 												noexcept(static_cast<bool>(first != last)) &&
 												noexcept(static_cast<bool>(pred(*first))) &&
-												noexcept(kerbal::operators::generic_assign(*to, *first)) &&
+												noexcept(kerbal::assign::generic_assign(*to, *first)) &&
 												noexcept(++to) &&
 												noexcept(++first)
 										)
 		{
 			while (first != last) {
 				if (pred(*first)) {
-					kerbal::operators::generic_assign(*to, *first); // *to = *first;
+					kerbal::assign::generic_assign(*to, *first); // *to = *first;
 					++to;
 				}
 				++first;
@@ -114,7 +114,7 @@ namespace kerbal
 
 #	define EACH() do {\
 				if (pred(*first)) {\
-					kerbal::operators::generic_assign(*to, *first); /*  *to = *first; */\
+					kerbal::assign::generic_assign(*to, *first); /*  *to = *first; */\
 					++to;\
 				}\
 				++first;\
@@ -162,13 +162,13 @@ namespace kerbal
 															noexcept(static_cast<bool>(first != last)) &&
 															noexcept(--last) &&
 															noexcept(--to_last) &&
-															noexcept(kerbal::operators::generic_assign(*to_last, *last))
+															noexcept(kerbal::assign::generic_assign(*to_last, *last))
 													)
 		{
 			while (first != last) {
 				--last;
 				--to_last;
-				kerbal::operators::generic_assign(*to_last, *last); // *to_last = *last;
+				kerbal::assign::generic_assign(*to_last, *last); // *to_last = *last;
 			}
 			return to_last;
 		}
@@ -193,7 +193,7 @@ namespace kerbal
 				--last;
 				if (pred(*last)) {
 					--to_last;
-					kerbal::operators::generic_assign(*to_last, *last); // *to_last = *last;
+					kerbal::assign::generic_assign(*to_last, *last); // *to_last = *last;
 				}
 			}
 			return to_last;
@@ -212,7 +212,7 @@ namespace kerbal
 				--last;\
 				if (pred(*last)) {\
 					--to_last;\
-					kerbal::operators::generic_assign(*to_last, *last); /*  *to_last = *last; */\
+					kerbal::assign::generic_assign(*to_last, *last); /*  *to_last = *last; */\
 				}\
 			} while (false)
 
@@ -256,7 +256,7 @@ namespace kerbal
 		__move(InputIterator first, InputIterator last, OutputIterator to, std::input_iterator_tag)
 		{
 			 while (first != last) {
-				 kerbal::operators::generic_assign(*to, kerbal::compatibility::to_xvalue(*first));
+				 kerbal::assign::generic_assign(*to, kerbal::compatibility::to_xvalue(*first));
 				 // *to = kerbal::compatibility::to_xvalue(*first);
 				++to;
 				++first;
@@ -283,7 +283,7 @@ namespace kerbal
 			while (first != last) {
 				--last;
 				--to_last;
-				kerbal::operators::generic_assign(*to_last, kerbal::compatibility::to_xvalue(*last));
+				kerbal::assign::generic_assign(*to_last, kerbal::compatibility::to_xvalue(*last));
 				// *to_last = kerbal::compatibility::to_xvalue(*last);
 			}
 			return to_last;
@@ -309,12 +309,12 @@ namespace kerbal
 			while (a_first != a_last) {
 				if (b_first != b_last) {
 					if (cmp(*b_first, *a_first)) { // b < a
-						kerbal::operators::generic_assign(*to, *b_first); // *to = *b_first;
+						kerbal::assign::generic_assign(*to, *b_first); // *to = *b_first;
 						++to; // advance `to` before `b_first` and `a_first` 
 						      // in case of the advance of `b_first` or `a_first` throws exception
 						++b_first;
 					} else { // b >= a
-						kerbal::operators::generic_assign(*to, *a_first); // *to = *a_first;
+						kerbal::assign::generic_assign(*to, *a_first); // *to = *a_first;
 						++to;
 						++a_first;
 					}
@@ -408,7 +408,7 @@ namespace kerbal
 		{
 			while (first != last) {
 				--last;
-				kerbal::operators::generic_assign(*to, *last); // *to = *last;
+				kerbal::assign::generic_assign(*to, *last); // *to = *last;
 				++to;
 			}
 			return to;
@@ -425,7 +425,7 @@ namespace kerbal
 
 #	define EACH() do {\
 				--last;\
-				kerbal::operators::generic_assign(*to, *last); /*  *to = *last; */\
+				kerbal::assign::generic_assign(*to, *last); /*  *to = *last; */\
 				++to;\
 			} while (false)
 
@@ -706,7 +706,7 @@ namespace kerbal
 		{
 			while (first != last) {
 				if (pred(*first)) {
-					kerbal::operators::generic_assign(*first, new_val); // *first = new_val;
+					kerbal::assign::generic_assign(*first, new_val); // *first = new_val;
 				}
 				++first;
 			}
@@ -722,7 +722,7 @@ namespace kerbal
 
 #	define EACH() do {\
 				if (pred(*first)) {\
-					kerbal::operators::generic_assign(*first, new_val); /*  *first = new_val; */\
+					kerbal::assign::generic_assign(*first, new_val); /*  *first = new_val; */\
 				}\
 				++first;\
 			} while(false)
@@ -773,7 +773,7 @@ namespace kerbal
 		void __fill(ForwardIterator first, ForwardIterator last, const Tp & val, std::forward_iterator_tag)
 		{
 			while (first != last) {
-				kerbal::operators::generic_assign(*first, val); // *first = val;
+				kerbal::assign::generic_assign(*first, val); // *first = val;
 				++first;
 			}
 		}
@@ -786,7 +786,7 @@ namespace kerbal
 			typedef typename kerbal::iterator::iterator_traits<iterator>::difference_type difference_type;
 
 #	define EACH() do {\
-				kerbal::operators::generic_assign(*first, val); /*  *first = val;  */\
+				kerbal::assign::generic_assign(*first, val); /*  *first = val;  */\
 				++first;\
 			} while (false)
 
@@ -828,7 +828,7 @@ namespace kerbal
 					UnaryOperation unary_op, std::input_iterator_tag)
 		{
 			while (first != last) {
-				kerbal::operators::generic_assign(*out, unary_op(*first)); // *out = unary_op(*first);
+				kerbal::assign::generic_assign(*out, unary_op(*first)); // *out = unary_op(*first);
 				++out;
 				++first;
 			}
@@ -845,7 +845,7 @@ namespace kerbal
 			typedef typename kerbal::iterator::iterator_traits<iterator>::difference_type difference_type;
 
 #	define EACH() do {\
-				kerbal::operators::generic_assign(*out, unary_op(*first)); /*  *out = unary_op(*first); */\
+				kerbal::assign::generic_assign(*out, unary_op(*first)); /*  *out = unary_op(*first); */\
 				++out;\
 				++first;\
 			} while (false)
@@ -889,7 +889,7 @@ namespace kerbal
 				  OutputIterator out, BinaryOperation binary_op)
 		{
 			while (a_first != a_last) {
-				kerbal::operators::generic_assign(*out, binary_op(*a_first, *b_first));
+				kerbal::assign::generic_assign(*out, binary_op(*a_first, *b_first));
 				// *out = binary_op(*a_first, *b_first);
 				++out;
 				++a_first;
@@ -972,7 +972,7 @@ namespace kerbal
 				if (!static_cast<bool>(equal(*result, *first))) {
 					++result;
 					if (result != first) {
-						kerbal::operators::generic_assign(*result, *first); //*result = *first;
+						kerbal::assign::generic_assign(*result, *first); //*result = *first;
 					}
 				}
 				++first;

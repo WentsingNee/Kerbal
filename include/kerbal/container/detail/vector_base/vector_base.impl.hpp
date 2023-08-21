@@ -14,13 +14,13 @@
 
 #include <kerbal/algorithm/modifier.hpp>
 #include <kerbal/algorithm/swap.hpp>
+#include <kerbal/assign/generic_assign.hpp>
 #include <kerbal/compatibility/move.hpp>
 #include <kerbal/iterator/iterator.hpp>
 #include <kerbal/iterator/iterator_traits.hpp>
 #include <kerbal/memory/allocator_traits.hpp>
 #include <kerbal/memory/raw_storage.hpp>
 #include <kerbal/memory/uninitialized_using_allocator.hpp>
-#include <kerbal/operators/generic_assign.hpp>
 #include <kerbal/type_traits/enable_if.hpp>
 #include <kerbal/utility/compressed_pair.hpp>
 #include <kerbal/utility/throw_this_exception.hpp>
@@ -389,7 +389,7 @@ namespace kerbal
 				iterator end(this->end());
 				while (it != end) {
 					if (first != last) {
-						kerbal::operators::generic_assign(*it, *first);
+						kerbal::assign::generic_assign(*it, *first);
 						++first;
 						++it;
 					} else {
@@ -1096,7 +1096,7 @@ namespace kerbal
 						kerbal::algorithm::move_backward(insert_pos, this->end().current - 2, this->end().current - 1);
 						// A A A X X Y Z O O
 						//           ^
-						kerbal::operators::generic_assign(*insert_pos, kerbal::compatibility::to_xvalue(helper.storage.raw_value()));
+						kerbal::assign::generic_assign(*insert_pos, kerbal::compatibility::to_xvalue(helper.storage.raw_value()));
 						// *insert_pos = kerbal::compatibility::to_xvalue(helper.storage.raw_value());
 					}
 				} else { // new_size > this->k_capacity
@@ -1190,7 +1190,7 @@ namespace kerbal
 						kerbal::memory::construct_at_using_allocator(alloc, this->end().current, kerbal::compatibility::to_xvalue(this->back())); \
 						this->k_size = new_size; \
 						kerbal::algorithm::move_backward(insert_pos, this->end().current - 2, this->end().current - 1); \
-						kerbal::operators::generic_assign(*insert_pos, kerbal::compatibility::to_xvalue(helper.storage.raw_value())); \
+						kerbal::assign::generic_assign(*insert_pos, kerbal::compatibility::to_xvalue(helper.storage.raw_value())); \
 					} \
 				} else { \
 					FBODY_REALLOC(i); \

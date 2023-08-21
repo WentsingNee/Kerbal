@@ -17,10 +17,10 @@
 #include <kerbal/utility/compressed_pair/compressed_pair.fwd.hpp>
 
 #include <kerbal/algorithm/swap.hpp>
+#include <kerbal/assign/generic_assign.hpp>
 #include <kerbal/compatibility/method_overload_tag.hpp>
 #include <kerbal/compatibility/move.hpp>
 #include <kerbal/compatibility/noexcept.hpp>
-#include <kerbal/operators/generic_assign.hpp>
 #include <kerbal/tmp/type_vector.hpp>
 #include <kerbal/type_traits/is_same.hpp>
 #include <kerbal/utility/in_place.hpp>
@@ -375,8 +375,8 @@ namespace kerbal
 				KERBAL_CONSTEXPR14
 				compressed_pair& operator=(const kerbal::utility::compressed_pair<Tp2, Up2> & p)
 				{
-					kerbal::operators::generic_assign(this->first(), p.first());
-					kerbal::operators::generic_assign(this->second(), p.second());
+					kerbal::assign::generic_assign(this->first(), p.first());
+					kerbal::assign::generic_assign(this->second(), p.second());
 					return *this;
 				}
 
@@ -386,8 +386,8 @@ namespace kerbal
 				KERBAL_CONSTEXPR14
 				compressed_pair& operator=(kerbal::utility::compressed_pair<Tp2, Up2> && p)
 				{
-					kerbal::operators::generic_assign(this->first(), kerbal::compatibility::move(p).first());
-					kerbal::operators::generic_assign(this->second(), kerbal::compatibility::move(p).second());
+					kerbal::assign::generic_assign(this->first(), kerbal::compatibility::move(p).first());
+					kerbal::assign::generic_assign(this->second(), kerbal::compatibility::move(p).second());
 					return *this;
 				}
 

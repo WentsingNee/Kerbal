@@ -20,13 +20,13 @@
 #include <kerbal/optional/nullopt.hpp>
 
 #include <kerbal/algorithm/swap.hpp>
+#include <kerbal/assign/generic_assign.hpp>
 #include <kerbal/compatibility/constexpr.hpp>
 #include <kerbal/compatibility/method_overload_tag.hpp>
 #include <kerbal/compatibility/move.hpp>
 #include <kerbal/compatibility/namespace_std_scope.hpp>
 #include <kerbal/compatibility/noexcept.hpp>
 #include <kerbal/memory/raw_storage.hpp>
-#include <kerbal/operators/generic_assign.hpp>
 #include <kerbal/type_traits/decay.hpp>
 #include <kerbal/type_traits/enable_if.hpp>
 #include <kerbal/type_traits/is_same.hpp>
@@ -452,7 +452,7 @@ namespace kerbal
 				optional& operator=(const_reference src)
 				{
 					if (this->has_value()) {
-						kerbal::operators::generic_assign(this->k_storage.raw_value(), src);
+						kerbal::assign::generic_assign(this->k_storage.raw_value(), src);
 						// this->k_storage.raw_value() = src
 					} else {
 						this->k_storage.construct(src);
@@ -467,7 +467,7 @@ namespace kerbal
 				optional& operator=(rvalue_reference src)
 				{
 					if (this->has_value()) {
-						kerbal::operators::generic_assign(this->k_storage.raw_value(), kerbal::compatibility::move(src));
+						kerbal::assign::generic_assign(this->k_storage.raw_value(), kerbal::compatibility::move(src));
 						// this->k_storage.raw_value() = kerbal::compatibility::move(src);
 					} else {
 						this->k_storage.construct(kerbal::compatibility::move(src));
@@ -486,7 +486,7 @@ namespace kerbal
 				optional& operator=(const U & src)
 				{
 					if (this->has_value()) {
-						kerbal::operators::generic_assign(this->k_storage.raw_value(), src);
+						kerbal::assign::generic_assign(this->k_storage.raw_value(), src);
 						// this->k_storage.raw_value() = src;
 					} else {
 						this->k_storage.construct(src);
@@ -508,7 +508,7 @@ namespace kerbal
 				operator=(U && src)
 				{
 					if (this->has_value()) {
-						kerbal::operators::generic_assign(this->k_storage.raw_value(), kerbal::utility::forward<U>(src));
+						kerbal::assign::generic_assign(this->k_storage.raw_value(), kerbal::utility::forward<U>(src));
 						// this->k_storage.raw_value() = kerbal::utility::forward<U>(src);
 					} else {
 						this->k_storage.construct(kerbal::utility::forward<U>(src));
@@ -525,7 +525,7 @@ namespace kerbal
 				{
 					if (this->has_value()) {
 						if (src.has_value()) {
-							kerbal::operators::generic_assign(this->k_storage.raw_value(), src.ignored_get());
+							kerbal::assign::generic_assign(this->k_storage.raw_value(), src.ignored_get());
 							// this->k_storage.raw_value() = src.ignored_get();
 						} else {
 							this->k_storage.destroy();
@@ -547,7 +547,7 @@ namespace kerbal
 				{
 					if (this->has_value()) {
 						if (src.has_value()) {
-							kerbal::operators::generic_assign(this->k_storage.raw_value(), kerbal::compatibility::move(src).ignored_get());
+							kerbal::assign::generic_assign(this->k_storage.raw_value(), kerbal::compatibility::move(src).ignored_get());
 							// this->k_storage.raw_value() = kerbal::compatibility::move(src).ignored_get();
 						} else {
 							this->k_storage.destroy();
@@ -571,7 +571,7 @@ namespace kerbal
 				{
 					if (this->has_value()) {
 						if (src.has_value()) {
-							kerbal::operators::generic_assign(this->k_storage.raw_value(), src.ignored_get());
+							kerbal::assign::generic_assign(this->k_storage.raw_value(), src.ignored_get());
 							// this->k_storage.raw_value() = src.ignored_get();
 						} else {
 							this->k_storage.destroy();
@@ -594,7 +594,7 @@ namespace kerbal
 				{
 					if (this->has_value()) {
 						if (src.has_value()) {
-							kerbal::operators::generic_assign(this->k_storage.raw_value(), kerbal::compatibility::move(src).ignored_get());
+							kerbal::assign::generic_assign(this->k_storage.raw_value(), kerbal::compatibility::move(src).ignored_get());
 							// this->k_storage.raw_value() = kerbal::compatibility::move(src).ignored_get();
 						} else {
 							this->k_storage.destroy();

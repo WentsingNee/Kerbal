@@ -13,9 +13,9 @@
 #define KERBAL_ALGORITHM_SORT_DETAIL_MERGE_SORT_MERGE_HPP
 
 #include <kerbal/algorithm/modifier.hpp>
+#include <kerbal/assign/generic_assign.hpp>
 #include <kerbal/compatibility/constexpr.hpp>
 #include <kerbal/compatibility/noexcept.hpp>
-#include <kerbal/operators/generic_assign.hpp>
 
 
 namespace kerbal
@@ -36,10 +36,10 @@ namespace kerbal
 													noexcept(static_cast<bool>(buffer_first != buffer_last)) &&
 													noexcept(static_cast<bool>(mid != last)) &&
 													noexcept(static_cast<bool>(cmp(*mid, *buffer_first))) &&
-													noexcept(kerbal::operators::generic_assign(*to, *mid)) &&
+													noexcept(kerbal::assign::generic_assign(*to, *mid)) &&
 													noexcept(++to) &&
 													noexcept(++mid) &&
-													noexcept(kerbal::operators::generic_assign(*to, *buffer_first)) &&
+													noexcept(kerbal::assign::generic_assign(*to, *buffer_first)) &&
 													noexcept(++buffer_first) &&
 													noexcept(kerbal::algorithm::copy(buffer_first, buffer_last, to))
 											)
@@ -47,11 +47,11 @@ namespace kerbal
 				while (buffer_first != buffer_last) {
 					if (mid != last) {
 						if (cmp(*mid, *buffer_first)) { // mid < buffer_first
-							kerbal::operators::generic_assign(*to, *mid); // *to = *mid;
+							kerbal::assign::generic_assign(*to, *mid); // *to = *mid;
 							++to;
 							++mid;
 						} else { // b >= buffer_first
-							kerbal::operators::generic_assign(*to, *buffer_first); // *to = *buffer_first;
+							kerbal::assign::generic_assign(*to, *buffer_first); // *to = *buffer_first;
 							++to;
 							++buffer_first;
 						}

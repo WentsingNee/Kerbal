@@ -14,8 +14,8 @@
 
 #include <kerbal/algorithm/modifier.hpp>
 #include <kerbal/algorithm/swap.hpp>
+#include <kerbal/assign/generic_assign.hpp>
 #include <kerbal/compatibility/move.hpp>
-#include <kerbal/operators/generic_assign.hpp>
 #include <kerbal/utility/throw_this_exception.hpp>
 
 #include <cstddef>
@@ -79,7 +79,7 @@ namespace kerbal
 		{
 			iterator assign_it = this->begin();
 			while (assign_it != this->end() && static_cast<bool>(first != last)) {
-				kerbal::operators::generic_assign(*assign_it, *first); // *assign_it = *first;
+				kerbal::assign::generic_assign(*assign_it, *first); // *assign_it = *first;
 				++assign_it;
 				++first;
 			}

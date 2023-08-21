@@ -13,9 +13,9 @@
 #define KERBAL_ALGORITHM_SET_SET_SYMMETRIC_DIFFERENCE_HPP
 
 #include <kerbal/algorithm/modifier.hpp>
+#include <kerbal/assign/generic_assign.hpp>
 #include <kerbal/compare/binary_type_compare.hpp>
 #include <kerbal/compatibility/constexpr.hpp>
-#include <kerbal/operators/generic_assign.hpp>
 
 
 namespace kerbal
@@ -33,11 +33,11 @@ namespace kerbal
 			while (first1 != last1) {
 				if (first2 != last2) {
 					if (cmp(*first1, *first2)) { // *first1 < *first2
-						kerbal::operators::generic_assign(*d_first, *first1);
+						kerbal::assign::generic_assign(*d_first, *first1);
 						++d_first;
 						++first1;
 					} else if (cmp(*first2, *first1)) { // *first2 < *first1
-						kerbal::operators::generic_assign(*d_first, *first2);
+						kerbal::assign::generic_assign(*d_first, *first2);
 						++d_first;
 						++first2;
 					} else { // *first1 == *first2

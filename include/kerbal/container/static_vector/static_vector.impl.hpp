@@ -14,10 +14,10 @@
 
 #include <kerbal/algorithm/modifier.hpp>
 #include <kerbal/algorithm/swap.hpp>
+#include <kerbal/assign/generic_assign.hpp>
 #include <kerbal/compatibility/move.hpp>
 #include <kerbal/iterator/iterator.hpp>
 #include <kerbal/memory/raw_storage_uninitialized.hpp>
-#include <kerbal/operators/generic_assign.hpp>
 #include <kerbal/type_traits/enable_if.hpp>
 #include <kerbal/type_traits/integral_constant.hpp>
 #include <kerbal/type_traits/is_trivially_copy_assignable.hpp>
@@ -239,7 +239,7 @@ namespace kerbal
 			iterator end(this->end());
 			while (it != end) {
 				if (first != last) {
-					kerbal::operators::generic_assign(*it, *first); // *it = *first;
+					kerbal::assign::generic_assign(*it, *first); // *it = *first;
 					++first;
 					++it;
 				} else {
@@ -305,7 +305,7 @@ namespace kerbal
 			iterator end(this->end());
 			while (it != end) {
 				if (first != last) {
-					kerbal::operators::generic_assign(*it, *first); // *it = *first;
+					kerbal::assign::generic_assign(*it, *first); // *it = *first;
 					++first;
 					++it;
 				} else {
@@ -1050,7 +1050,7 @@ namespace kerbal
 
 				// A A A X X Y Z O O
 				//          ^
-				kerbal::operators::generic_assign(*pos_mut, kerbal::compatibility::move(helper.storage.raw_value()));
+				kerbal::assign::generic_assign(*pos_mut, kerbal::compatibility::move(helper.storage.raw_value()));
 				// *pos_mut = kerbal::compatibility::move(helper.storage.raw_value());
 			}
 			return pos_mut;
@@ -1092,7 +1092,7 @@ namespace kerbal
 				static_vector_emplace_helper<Tp> helper((kerbal::utility::in_place_t()) KERBAL_OPT_PPEXPAND_WITH_COMMA_N(LEFT_JOIN_COMMA, EMPTY, ARGS_USE, i)); \
 				this->push_back_unsafe(kerbal::compatibility::to_xvalue(this->back())); \
 				kerbal::algorithm::move_backward(mutable_pos, this->end() - 2, this->end() - 1); \
-				kerbal::operators::generic_assign(*mutable_pos, kerbal::compatibility::to_xvalue(helper.storage.raw_value())); \
+				kerbal::assign::generic_assign(*mutable_pos, kerbal::compatibility::to_xvalue(helper.storage.raw_value())); \
 			} \
 			return mutable_pos; \
 		} \

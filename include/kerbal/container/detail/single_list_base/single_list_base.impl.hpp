@@ -13,6 +13,7 @@
 #define KERBAL_CONTAINER_DETAIL_SINGLE_LIST_BASE_SINGLE_LIST_BASE_IMPL_HPP
 
 #include <kerbal/algorithm/swap.hpp>
+#include <kerbal/assign/generic_assign.hpp>
 #include <kerbal/iterator/iterator.hpp>
 #include <kerbal/type_traits/conditional.hpp>
 #include <kerbal/type_traits/enable_if.hpp>
@@ -483,7 +484,7 @@ namespace kerbal
 				const_iterator const end(this->cend());
 				while (count != 0) {
 					if (it != end) {
-						kerbal::operators::generic_assign(*it, val); // *it = val;
+						kerbal::assign::generic_assign(*it, val); // *it = val;
 						--count;
 						++it;
 					} else {
@@ -506,7 +507,7 @@ namespace kerbal
 				const_iterator const end(this->cend());
 				while (first != last) {
 					if (it != end) {
-						kerbal::operators::generic_assign(*it, *first); // *it = *first;
+						kerbal::assign::generic_assign(*it, *first); // *it = *first;
 						++first;
 						++it;
 					} else {

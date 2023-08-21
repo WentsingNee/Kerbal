@@ -13,8 +13,8 @@
 #define KERBAL_ALGORITHM_SET_SET_INTERSECTION_HPP
 
 #include <kerbal/compare/binary_type_compare.hpp>
+#include <kerbal/assign/generic_assign.hpp>
 #include <kerbal/compatibility/constexpr.hpp>
-#include <kerbal/operators/generic_assign.hpp>
 
 
 namespace kerbal
@@ -36,7 +36,7 @@ namespace kerbal
 					} else if (cmp(*first2, *first1)) { // *first2 < *first1
 						++first2;
 					} else { // *first1 == *first2
-						kerbal::operators::generic_assign(*d_first, *first1);
+						kerbal::assign::generic_assign(*d_first, *first1);
 						++d_first;
 						++first1;
 						++first2;

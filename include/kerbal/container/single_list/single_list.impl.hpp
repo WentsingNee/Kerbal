@@ -14,7 +14,6 @@
 
 #include <kerbal/compatibility/move.hpp>
 #include <kerbal/iterator/iterator.hpp>
-#include <kerbal/operators/generic_assign.hpp>
 #include <kerbal/utility/declval.hpp>
 
 #if __cplusplus < 201103L
