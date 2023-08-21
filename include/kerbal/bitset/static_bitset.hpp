@@ -12,7 +12,7 @@
 #ifndef KERBAL_BITSET_STATIC_BITSET_HPP
 #define KERBAL_BITSET_STATIC_BITSET_HPP
 
-#include <kerbal/bitset/fwd/static_bitset.fwd.hpp>
+#include <kerbal/bitset/static_bitset/static_bitset.fwd.hpp>
 
 #include <kerbal/algorithm/swap.hpp>
 #include <kerbal/compatibility/constexpr.hpp>

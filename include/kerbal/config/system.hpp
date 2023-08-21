@@ -47,12 +47,12 @@
 
 #ifndef KERBAL_SYSTEM
 
-#	include <kerbal/config/system/_0_freestanding.hpp>
-#	include <kerbal/config/system/_1_windows.hpp>
-#	include <kerbal/config/system/_2_linux.hpp>
-#	include <kerbal/config/system/_3_apple.hpp>
-#	include <kerbal/config/system/_4_android.hpp>
-#	include <kerbal/config/system/_5_wasm.hpp>
+#	include <kerbal/config/detail/system/_0_freestanding.part.hpp>
+#	include <kerbal/config/detail/system/_1_windows.part.hpp>
+#	include <kerbal/config/detail/system/_2_linux.part.hpp>
+#	include <kerbal/config/detail/system/_3_apple.part.hpp>
+#	include <kerbal/config/detail/system/_4_android.part.hpp>
+#	include <kerbal/config/detail/system/_5_wasm.part.hpp>
 
 
 #	ifndef KERBAL_SYSTEM

@@ -40,7 +40,7 @@
 #ifndef KERBAL_HASH_SHA1_HPP
 #define KERBAL_HASH_SHA1_HPP
 
-#include <kerbal/hash/detail/sha1_result.hpp>
+#include <kerbal/hash/sha1/sha1_result.hpp>
 
 #include <kerbal/compatibility/constexpr.hpp>
 #include <kerbal/compatibility/fixed_width_integer.hpp>
@@ -174,6 +174,6 @@ namespace kerbal
 
 } // namespace kerbal
 
-#include <kerbal/hash/impl/sha1.impl.hpp>
+#include <kerbal/hash/sha1/sha1.impl.hpp>
 
 #endif // KERBAL_HASH_SHA1_HPP

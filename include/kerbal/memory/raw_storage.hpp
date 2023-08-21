@@ -33,9 +33,9 @@
 #include <cstddef>
 
 #if __cplusplus >= 201103L
-#	include <kerbal/memory/detail/raw_storage/raw_storage_base.cxx11.hpp>
+#	include <kerbal/memory/detail/raw_storage/raw_storage_base.cxx11.part.hpp>
 #else
-#	include <kerbal/memory/detail/raw_storage/raw_storage_base.cxx98.hpp>
+#	include <kerbal/memory/detail/raw_storage/raw_storage_base.cxx98.part.hpp>
 #endif
 
 

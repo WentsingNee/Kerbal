@@ -12,7 +12,9 @@
 #ifndef KERBAL_TYPE_TRAITS_IS_NOTHROW_MOVE_ASSIGNABLE_HPP
 #define KERBAL_TYPE_TRAITS_IS_NOTHROW_MOVE_ASSIGNABLE_HPP
 
-#include <kerbal/type_traits/detail/is_nothrow_move_assignable/is_nothrow_move_assignable.part.hpp>
-#include <kerbal/type_traits/detail/is_nothrow_move_assignable/try_test_is_nothrow_move_assignable.part.hpp>
+#if __cplusplus >= 201103L
+#	include <kerbal/type_traits/detail/is_nothrow_move_assignable/is_nothrow_move_assignable.part.hpp>
+#	include <kerbal/type_traits/detail/is_nothrow_move_assignable/try_test_is_nothrow_move_assignable.part.hpp>
+#endif
 
 #endif // KERBAL_TYPE_TRAITS_IS_NOTHROW_MOVE_ASSIGNABLE_HPP

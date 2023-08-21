@@ -22,7 +22,7 @@
 #include <cstddef>
 #include <climits>
 
-#include <kerbal/random/detail/mt_twist/mt_twist.plain.hpp>
+#include <kerbal/random/detail/mt_twist/mt_twist.plain.part.hpp>
 
 
 #ifndef KERBAL_RANDOM_ENABLE_MT_TWIST_IE_OPTIMISE
@@ -39,27 +39,27 @@
 #if KERBAL_RANDOM_ENABLE_MT_TWIST_IE_OPTIMISE
 
 #	if __AVX512F__
-#		include <kerbal/random/detail/mt_twist/mt_twist.avx512f.hpp>
+#		include <kerbal/random/detail/mt_twist/mt_twist.avx512f.part.hpp>
 #	endif
 
 #	if __AVX2__
-#		include <kerbal/random/detail/mt_twist/mt_twist.avx2.hpp>
+#		include <kerbal/random/detail/mt_twist/mt_twist.avx2.part.hpp>
 #	endif
 
 #	if __SSE4_1__
-#		include <kerbal/random/detail/mt_twist/mt_twist.sse41.hpp>
+#		include <kerbal/random/detail/mt_twist/mt_twist.sse41.part.hpp>
 #	endif
 
 #	if __SSE2__
-#		include <kerbal/random/detail/mt_twist/mt_twist.sse2.hpp>
+#		include <kerbal/random/detail/mt_twist/mt_twist.sse2.part.hpp>
 #	endif
 
 #	if __ARM_FEATURE_SVE
-#		include <kerbal/random/detail/mt_twist/mt_twist.sve.hpp>
+#		include <kerbal/random/detail/mt_twist/mt_twist.sve.part.hpp>
 #	endif
 
 #	if __ARM_NEON
-#		include <kerbal/random/detail/mt_twist/mt_twist.neon.hpp>
+#		include <kerbal/random/detail/mt_twist/mt_twist.neon.part.hpp>
 #	endif
 
 #endif

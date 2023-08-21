@@ -13,35 +13,8 @@
 #ifndef KERBAL_TYPE_TRAITS_IS_RVALUE_REFERENCE_HPP
 #define KERBAL_TYPE_TRAITS_IS_RVALUE_REFERENCE_HPP
 
-#if __cplusplus < 201103L
-#	error This file requires compiler and library support for the ISO C++ 2011 standard.
+#if __cplusplus >= 201103L
+#	include <kerbal/type_traits/detail/is_rvalue_reference/is_rvalue_reference.cxx11.part.hpp>
 #endif
-
-#include <kerbal/ts/modules_ts/modules_ts.hpp>
-#include <kerbal/type_traits/integral_constant.hpp>
-
-
-namespace kerbal
-{
-
-	namespace type_traits
-	{
-
-		KERBAL_MODULE_EXPORT
-		template <typename>
-		struct is_rvalue_reference : kerbal::type_traits::false_type
-		{
-		};
-
-		KERBAL_MODULE_EXPORT
-		template <typename T>
-		struct is_rvalue_reference<T &&> : kerbal::type_traits::true_type
-		{
-		};
-
-	} // namespace type_traits
-
-} // namespace kerbal
-
 
 #endif // KERBAL_TYPE_TRAITS_IS_RVALUE_REFERENCE_HPP

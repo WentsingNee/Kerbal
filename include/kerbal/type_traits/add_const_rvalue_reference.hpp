@@ -13,47 +13,8 @@
 #ifndef KERBAL_TYPE_TRAITS_ADD_CONST_RVALUE_REFERENCE_HPP
 #define KERBAL_TYPE_TRAITS_ADD_CONST_RVALUE_REFERENCE_HPP
 
-#if __cplusplus < 201103L
-#	error This file requires compiler and library support for the ISO C++ 2011 standard.
+#if __cplusplus >= 201103L
+#	include <kerbal/type_traits/detail/add_const_rvalue_reference/add_const_rvalue_reference.cxx11.part.hpp>
 #endif
-
-#include <kerbal/ts/modules_ts/modules_ts.hpp>
-#include <kerbal/type_traits/is_referencable.hpp>
-
-
-namespace kerbal
-{
-
-	namespace type_traits
-	{
-
-		namespace detail
-		{
-
-			template <typename T, bool IsReferencable = kerbal::type_traits::is_referencable<T>::value>
-			struct add_const_rvalue_reference_helper
-			{
-					typedef const T && type;
-			};
-
-			template <typename T>
-			struct add_const_rvalue_reference_helper<T, false>
-			{
-					typedef T type;
-			};
-
-		} // namespace detail
-
-		KERBAL_MODULE_EXPORT
-		template <typename T>
-		struct add_const_rvalue_reference :
-				kerbal::type_traits::detail::add_const_rvalue_reference_helper<T>
-		{
-		};
-
-	} // namespace type_traits
-
-} // namespace kerbal
-
 
 #endif // KERBAL_TYPE_TRAITS_ADD_CONST_RVALUE_REFERENCE_HPP

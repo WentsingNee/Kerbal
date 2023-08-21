@@ -12,7 +12,7 @@
 #ifndef KERBAL_COMPARE_BINARY_TYPE_COMPARE_HPP
 #define KERBAL_COMPARE_BINARY_TYPE_COMPARE_HPP
 
-#include <kerbal/compare/fwd/sequence_compare.fwd.hpp>
+#include <kerbal/compare/sequence_compare/sequence_compare.fwd.hpp>
 
 #include <kerbal/compatibility/constexpr.hpp>
 #include <kerbal/compatibility/noexcept.hpp>

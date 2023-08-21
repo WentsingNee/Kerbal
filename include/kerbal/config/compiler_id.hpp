@@ -37,10 +37,10 @@
 
 #ifndef KERBAL_COMPILER_ID
 
-#	include <kerbal/config/compiler_id/_0_gnu.hpp>
-#	include <kerbal/config/compiler_id/_1_clang.hpp>
-#	include <kerbal/config/compiler_id/_2_msvc.hpp>
-#	include <kerbal/config/compiler_id/_3_icc.hpp>
+#	include <kerbal/config/detail/compiler_id/_0_gnu.part.hpp>
+#	include <kerbal/config/detail/compiler_id/_1_clang.part.hpp>
+#	include <kerbal/config/detail/compiler_id/_2_msvc.part.hpp>
+#	include <kerbal/config/detail/compiler_id/_3_icc.part.hpp>
 
 
 #	ifndef KERBAL_COMPILER_ID

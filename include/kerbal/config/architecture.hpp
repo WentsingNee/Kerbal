@@ -43,11 +43,11 @@
 
 #ifndef KERBAL_ARCHITECTURE
 
-#	include <kerbal/config/architecture/_0_x86.hpp>
-#	include <kerbal/config/architecture/_1_amd64.hpp>
-#	include <kerbal/config/architecture/_2_arm.hpp>
-#	include <kerbal/config/architecture/_3_aarch64.hpp>
-#	include <kerbal/config/architecture/_4_wasm.hpp>
+#	include <kerbal/config/detail/architecture/_0_x86.part.hpp>
+#	include <kerbal/config/detail/architecture/_1_amd64.part.hpp>
+#	include <kerbal/config/detail/architecture/_2_arm.part.hpp>
+#	include <kerbal/config/detail/architecture/_3_aarch64.part.hpp>
+#	include <kerbal/config/detail/architecture/_4_wasm.part.hpp>
 
 
 #	ifndef KERBAL_ARCHITECTURE

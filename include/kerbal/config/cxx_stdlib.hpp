@@ -33,9 +33,9 @@
 
 #ifndef KERBAL_CXX_STDLIB
 
-#	include <kerbal/config/cxx_stdlib/_0_libstdcxx.hpp>
-#	include <kerbal/config/cxx_stdlib/_1_libcxx.hpp>
-#	include <kerbal/config/cxx_stdlib/_2_msvc.hpp>
+#	include <kerbal/config/detail/cxx_stdlib/_0_libstdcxx.part.hpp>
+#	include <kerbal/config/detail/cxx_stdlib/_1_libcxx.part.hpp>
+#	include <kerbal/config/detail/cxx_stdlib/_2_msvc.part.hpp>
 
 
 #	ifndef KERBAL_CXX_STDLIB

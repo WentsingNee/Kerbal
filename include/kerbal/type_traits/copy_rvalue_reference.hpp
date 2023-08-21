@@ -13,36 +13,8 @@
 #ifndef KERBAL_TYPE_TRAITS_COPY_RVALUE_REFERENCE_HPP
 #define KERBAL_TYPE_TRAITS_COPY_RVALUE_REFERENCE_HPP
 
-#if __cplusplus < 201103L
-#	error This file requires compiler and library support for the ISO C++ 2011 standard.
+#if __cplusplus >= 201103L
+#	include <kerbal/type_traits/detail/copy_rvalue_reference/copy_rvalue_reference.cxx11.part.hpp>
 #endif
-
-#include <kerbal/ts/modules_ts/modules_ts.hpp>
-#include <kerbal/type_traits/conditional.hpp>
-#include <kerbal/type_traits/add_rvalue_reference.hpp>
-#include <kerbal/type_traits/is_rvalue_reference.hpp>
-
-
-namespace kerbal
-{
-
-	namespace type_traits
-	{
-
-		KERBAL_MODULE_EXPORT
-		template <typename From, typename To>
-		struct copy_rvalue_reference :
-				kerbal::type_traits::conditional<
-					kerbal::type_traits::is_rvalue_reference<From>::value,
-					kerbal::type_traits::add_rvalue_reference<To>,
-					To
-				>
-		{
-		};
-
-	} // namespace type_traits
-
-} // namespace kerbal
-
 
 #endif // KERBAL_TYPE_TRAITS_COPY_RVALUE_REFERENCE_HPP

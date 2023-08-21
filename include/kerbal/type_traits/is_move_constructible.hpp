@@ -12,7 +12,9 @@
 #ifndef KERBAL_TYPE_TRAITS_IS_MOVE_CONSTRUCTIBLE_HPP
 #define KERBAL_TYPE_TRAITS_IS_MOVE_CONSTRUCTIBLE_HPP
 
-#include <kerbal/type_traits/detail/is_move_constructible/is_move_constructible.part.hpp>
-#include <kerbal/type_traits/detail/is_move_constructible/try_test_is_move_constructible.part.hpp>
+#if __cplusplus >= 201103L
+#	include <kerbal/type_traits/detail/is_move_constructible/is_move_constructible.part.hpp>
+#	include <kerbal/type_traits/detail/is_move_constructible/try_test_is_move_constructible.part.hpp>
+#endif
 
 #endif // KERBAL_TYPE_TRAITS_IS_MOVE_CONSTRUCTIBLE_HPP

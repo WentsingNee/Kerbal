@@ -12,7 +12,7 @@
 #ifndef KERBAL_OPTIONAL_IS_OPTIONAL_HPP
 #define KERBAL_OPTIONAL_IS_OPTIONAL_HPP
 
-#include <kerbal/optional/fwd/optional.fwd.hpp>
+#include <kerbal/optional/optional/optional.fwd.hpp>
 
 #include <kerbal/type_traits/integral_constant.hpp>
 #include <kerbal/type_traits/remove_cv.hpp>

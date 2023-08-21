@@ -12,12 +12,12 @@
 #ifndef KERBAL_OPTIONAL_OPTIONAL_HPP
 #define KERBAL_OPTIONAL_OPTIONAL_HPP
 
-#include <kerbal/optional/fwd/optional.fwd.hpp>
+#include <kerbal/optional/optional/optional.fwd.hpp>
+#include <kerbal/optional/optional/detail/optional_hash_template.part.hpp>
 
 #include <kerbal/optional/bad_optional_access.hpp>
 #include <kerbal/optional/is_optional.hpp>
 #include <kerbal/optional/nullopt.hpp>
-#include <kerbal/optional/detail/optional_hash_template.hpp>
 
 #include <kerbal/algorithm/swap.hpp>
 #include <kerbal/compatibility/constexpr.hpp>
@@ -1190,6 +1190,6 @@ KERBAL_NAMESPACE_STD_BEGIN
 KERBAL_NAMESPACE_STD_END
 
 
-#include <kerbal/optional/detail/optional_compare.hpp>
+#include <kerbal/optional/optional/detail/optional_compare.part.hpp>
 
 #endif // KERBAL_OPTIONAL_OPTIONAL_HPP

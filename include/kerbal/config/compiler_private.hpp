@@ -16,13 +16,13 @@
 
 
 #if KERBAL_COMPILER_ID == KERBAL_COMPILER_ID_GNU
-#	include <kerbal/config/compiler_private/_0_gnu.hpp>
+#	include <kerbal/config/detail/compiler_private/_0_gnu.part.hpp>
 #elif KERBAL_COMPILER_ID == KERBAL_COMPILER_ID_CLANG
-#	include <kerbal/config/compiler_private/_1_clang.hpp>
+#	include <kerbal/config/detail/compiler_private/_1_clang.part.hpp>
 #elif KERBAL_COMPILER_ID == KERBAL_COMPILER_ID_MSVC
-#	include <kerbal/config/compiler_private/_2_msvc.hpp>
+#	include <kerbal/config/detail/compiler_private/_2_msvc.part.hpp>
 #elif KERBAL_COMPILER_ID == KERBAL_COMPILER_ID_ICC
-#	include <kerbal/config/compiler_private/_3_icc.hpp>
+#	include <kerbal/config/detail/compiler_private/_3_icc.part.hpp>
 #endif
 
 

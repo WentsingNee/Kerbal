@@ -13,6 +13,7 @@
 #define KERBAL_TYPE_TRAITS_DETAIL_COMPILER_INTRINSICS_PART__1_CLANG_PART_HPP
 
 #include <kerbal/config/compiler_private.hpp>
+#include <kerbal/config/cxx_stdlib.hpp>
 
 
 // https://clang.llvm.org/docs/LanguageExtensions.html#type-trait-primitives
@@ -505,7 +506,9 @@
 
 #ifndef KERBAL_HAS_INTRINSIC_IS_SCALAR_SUPPORT
 #	if KERBAL_CLANG_PRIVATE_HAS_BUILTIN(__is_scalar)
-#		define KERBAL_INTRINSIC_IS_SCALAR(T) __is_scalar(T)
+#		if KERBAL_CXX_STDLIB != KERBAL_CXX_STDLIB_LIBSTDCXX // under libstdc++, internal header <bits/cpp_type_traits.h> defined a class named __is_scalar
+#			define KERBAL_INTRINSIC_IS_SCALAR(T) __is_scalar(T)
+#		endif
 #	endif
 #endif
 
