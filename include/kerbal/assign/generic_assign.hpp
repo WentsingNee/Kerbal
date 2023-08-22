@@ -16,12 +16,14 @@
 
 #include <kerbal/compatibility/constexpr.hpp>
 #include <kerbal/compatibility/noexcept.hpp>
+#include <kerbal/compatibility/static_assert.hpp>
+#include <kerbal/iterator/iterator_traits.hpp>
+#include <kerbal/type_traits/extent.hpp>
+#include <kerbal/type_traits/integral_constant.hpp>
+#include <kerbal/type_traits/is_array.hpp>
+#include <kerbal/type_traits/logical.hpp>
 
 #if __cplusplus >= 201103L
-#	include <kerbal/compatibility/static_assert.hpp>
-#	include <kerbal/type_traits/extent.hpp>
-#	include <kerbal/type_traits/integral_constant.hpp>
-#	include <kerbal/type_traits/is_array.hpp>
 #	include <kerbal/type_traits/remove_reference.hpp>
 #	include <kerbal/utility/forward.hpp>
 #endif
@@ -34,6 +36,66 @@ namespace kerbal
 
 	namespace assign
 	{
+
+		namespace detail
+		{
+
+			template <typename InputIterator, typename OutputIterator>
+			KERBAL_CONSTEXPR14
+			void copy(InputIterator first, InputIterator last, OutputIterator out);
+
+			template <typename InputIterator, typename OutputIterator>
+			KERBAL_CONSTEXPR14
+			void k_copy(
+				InputIterator first, InputIterator last, OutputIterator out,
+				kerbal::type_traits::false_type
+			)
+			{
+				while (first != last) {
+					kerbal::assign::generic_assign(*out, *first);
+					++first;
+					++out;
+				}
+			}
+
+			template <typename InputIterator, typename OutputIterator>
+			KERBAL_CONSTEXPR14
+			void k_copy(
+				InputIterator first, InputIterator last, OutputIterator out,
+				kerbal::type_traits::true_type
+			)
+			{
+				typedef InputIterator iterator;
+				typedef typename kerbal::iterator::iterator_traits<iterator>::value_type array_type;
+				typedef kerbal::type_traits::extent<array_type> extent;
+
+				copy(&((*first)[0]), &((*(last - 1))[extent::value - 1]) + 1, &((*out)[0]));
+			}
+
+			template <typename InputIterator, typename OutputIterator>
+			KERBAL_CONSTEXPR14
+			void copy(InputIterator first, InputIterator last, OutputIterator out)
+			{
+				typedef typename kerbal::iterator::iterator_traits<InputIterator>::value_type input_value_type;
+				typedef typename kerbal::iterator::iterator_traits<OutputIterator>::value_type output_value_type;
+				typedef kerbal::type_traits::extent<input_value_type> input_extent;
+				typedef kerbal::type_traits::extent<output_value_type> output_extent;
+				KERBAL_STATIC_ASSERT(
+					input_extent::value == output_extent::value,
+					"input and output must have same length"
+				);
+
+				typedef kerbal::type_traits::conjunction<
+					kerbal::iterator::is_contiguous_iterator<InputIterator>,
+					kerbal::iterator::is_contiguous_iterator<OutputIterator>,
+					kerbal::type_traits::is_array<input_value_type>,
+					kerbal::type_traits::is_array<output_value_type>
+				> EXPAND;
+				k_copy(first, last, out, EXPAND());
+			}
+
+		} // namespace detail
+
 
 		template <typename T, typename U>
 		KERBAL_CONSTEXPR14
@@ -50,9 +112,10 @@ namespace kerbal
 		KERBAL_CONSTEXPR14
 		T (& generic_assign(T (& lhs)[N], const U (& rhs)[N]))[N]
 		{
-			for (std::size_t i = 0; i < N; ++i) {
-				kerbal::assign::generic_assign(lhs[i], rhs[i]);
-			}
+//			for (std::size_t i = 0; i < N; ++i) {
+//				kerbal::assign::generic_assign(lhs[i], rhs[i]);
+//			}
+			kerbal::assign::detail::copy(rhs + 0, rhs + N, lhs + 0);
 			return lhs;
 		}
 
