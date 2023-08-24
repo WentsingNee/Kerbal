@@ -12,6 +12,7 @@
 #ifndef KERBAL_ALGORITHM_MODIFIER_MODIFIER_FWD_HPP
 #define KERBAL_ALGORITHM_MODIFIER_MODIFIER_FWD_HPP
 
+#include <kerbal/assign/generic_assign/generic_assign.fwd.hpp>
 #include <kerbal/compatibility/constexpr.hpp>
 #include <kerbal/compatibility/noexcept.hpp>
 
@@ -37,7 +38,15 @@ namespace kerbal
 		template <typename InputIterator, typename OutputIterator, typename UnaryPredicate>
 		KERBAL_CONSTEXPR14
 		OutputIterator
-		copy_if(InputIterator first, InputIterator last, OutputIterator to, UnaryPredicate pred);
+		copy_if(InputIterator first, InputIterator last, OutputIterator to, UnaryPredicate pred)
+				KERBAL_CONDITIONAL_NOEXCEPT(
+					noexcept(static_cast<bool>(first != last)) &&
+					noexcept(static_cast<bool>(pred(*first))) &&
+					noexcept(kerbal::assign::generic_assign(*to, *first)) &&
+					noexcept(++to) &&
+					noexcept(++first)
+				)
+		;
 
 		template <typename BidirectionalIterator, typename OutputIterator>
 		KERBAL_CONSTEXPR14

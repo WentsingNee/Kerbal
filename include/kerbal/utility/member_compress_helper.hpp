@@ -40,7 +40,7 @@
 #	include <kerbal/utility/forward.hpp>
 #	include <kerbal/utility/integer_sequence.hpp>
 #else
-#	include <kerbal/algorithm/modifier.hpp>
+#	include <kerbal/algorithm/modifier/copy.hpp>
 #endif
 
 #if __cplusplus >= 201103L

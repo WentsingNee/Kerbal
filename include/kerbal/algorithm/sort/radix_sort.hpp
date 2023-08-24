@@ -12,7 +12,8 @@
 #ifndef KERBAL_ALGORITHM_SORT_RADIX_SORT_HPP
 #define KERBAL_ALGORITHM_SORT_RADIX_SORT_HPP
 
-#include <kerbal/algorithm/modifier.hpp>
+#include <kerbal/algorithm/modifier/copy.hpp>
+#include <kerbal/algorithm/modifier/reverse_copy.hpp>
 #include <kerbal/compatibility/static_assert.hpp>
 #include <kerbal/container/vector.hpp>
 #include <kerbal/iterator/iterator.hpp>

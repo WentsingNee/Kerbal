@@ -14,6 +14,8 @@
 
 #include <kerbal/bitset/static_bitset/static_bitset.fwd.hpp>
 
+#include <kerbal/algorithm/modifier/copy.hpp>
+#include <kerbal/algorithm/modifier/copy_backward.hpp>
 #include <kerbal/algorithm/swap.hpp>
 #include <kerbal/compatibility/constexpr.hpp>
 #include <kerbal/compatibility/namespace_std_scope.hpp>

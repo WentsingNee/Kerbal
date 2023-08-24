@@ -12,7 +12,8 @@
 #ifndef KERBAL_ALGORITHM_PARTITION_HPP
 #define KERBAL_ALGORITHM_PARTITION_HPP
 
-#include <kerbal/algorithm/querier.hpp>
+#include <kerbal/algorithm/querier/find_if.hpp>
+#include <kerbal/algorithm/querier/find_if_not.hpp>
 #include <kerbal/algorithm/swap.hpp>
 #include <kerbal/compatibility/constexpr.hpp>
 #include <kerbal/iterator/iterator.hpp>

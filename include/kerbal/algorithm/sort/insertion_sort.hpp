@@ -12,8 +12,9 @@
 #ifndef KERBAL_ALGORITHM_SORT_INSERTION_SORT_HPP
 #define KERBAL_ALGORITHM_SORT_INSERTION_SORT_HPP
 
-#include <kerbal/algorithm/binary_search.hpp>
-#include <kerbal/algorithm/modifier.hpp>
+#include <kerbal/algorithm/binary_search/upper_bound.hpp>
+#include <kerbal/algorithm/binary_search/upper_bound_backward.hpp>
+#include <kerbal/algorithm/modifier/move_backward.hpp>
 #include <kerbal/compare/basic_compare.hpp>
 #include <kerbal/compatibility/constexpr.hpp>
 #include <kerbal/compatibility/move.hpp>

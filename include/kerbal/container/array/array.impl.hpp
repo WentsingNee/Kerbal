@@ -12,7 +12,7 @@
 #ifndef KERBAL_CONTAINER_ARRAY_ARRAY_IMPL_HPP
 #define KERBAL_CONTAINER_ARRAY_ARRAY_IMPL_HPP
 
-#include <kerbal/algorithm/modifier.hpp>
+#include <kerbal/algorithm/modifier/fill.hpp>
 #include <kerbal/algorithm/swap.hpp>
 #include <kerbal/assign/generic_assign.hpp>
 #include <kerbal/compatibility/move.hpp>

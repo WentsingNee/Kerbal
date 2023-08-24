@@ -12,8 +12,12 @@
 #ifndef KERBAL_CONTAINER_DETAIL_FLAT_ORDERED_BASE_HPP
 #define KERBAL_CONTAINER_DETAIL_FLAT_ORDERED_BASE_HPP
 
-#include <kerbal/algorithm/binary_search.hpp>
-#include <kerbal/algorithm/modifier.hpp>
+#include <kerbal/algorithm/binary_search/equal_range.hpp>
+#include <kerbal/algorithm/binary_search/lower_bound.hpp>
+#include <kerbal/algorithm/binary_search/lower_bound_hint.hpp>
+#include <kerbal/algorithm/binary_search/upper_bound.hpp>
+#include <kerbal/algorithm/binary_search/upper_bound_hint.hpp>
+#include <kerbal/algorithm/modifier/unique.hpp>
 #include <kerbal/algorithm/sort.hpp>
 #include <kerbal/compatibility/move.hpp>
 #include <kerbal/compatibility/noexcept.hpp>

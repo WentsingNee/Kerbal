@@ -12,7 +12,7 @@
 #ifndef KERBAL_ALGORITHM_SORT_INPLACE_MERGE_SORT_HPP
 #define KERBAL_ALGORITHM_SORT_INPLACE_MERGE_SORT_HPP
 
-#include <kerbal/algorithm/modifier.hpp>
+#include <kerbal/algorithm/modifier/inplace_merge.hpp>
 #include <kerbal/compare/basic_compare.hpp>
 #include <kerbal/iterator/iterator.hpp>
 #include <kerbal/iterator/iterator_traits.hpp>

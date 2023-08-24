@@ -12,7 +12,7 @@
 #ifndef KERBAL_ALGORITHM_SET_SET_DIFFERENCE_HPP
 #define KERBAL_ALGORITHM_SET_SET_DIFFERENCE_HPP
 
-#include <kerbal/algorithm/modifier.hpp>
+#include <kerbal/algorithm/modifier/copy.hpp>
 #include <kerbal/assign/generic_assign.hpp>
 #include <kerbal/compare/binary_type_compare.hpp>
 #include <kerbal/compatibility/constexpr.hpp>

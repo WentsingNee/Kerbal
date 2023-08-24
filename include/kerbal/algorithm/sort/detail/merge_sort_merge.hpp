@@ -12,7 +12,7 @@
 #ifndef KERBAL_ALGORITHM_SORT_DETAIL_MERGE_SORT_MERGE_HPP
 #define KERBAL_ALGORITHM_SORT_DETAIL_MERGE_SORT_MERGE_HPP
 
-#include <kerbal/algorithm/modifier.hpp>
+#include <kerbal/algorithm/modifier/copy.hpp>
 #include <kerbal/assign/generic_assign.hpp>
 #include <kerbal/compatibility/constexpr.hpp>
 #include <kerbal/compatibility/noexcept.hpp>

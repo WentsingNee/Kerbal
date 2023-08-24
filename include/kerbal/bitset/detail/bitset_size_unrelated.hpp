@@ -12,7 +12,7 @@
 #ifndef KERBAL_BITSET_DETAIL_BITSET_SIZE_UNRELATED_HPP
 #define KERBAL_BITSET_DETAIL_BITSET_SIZE_UNRELATED_HPP
 
-#include <kerbal/algorithm/modifier.hpp>
+#include <kerbal/algorithm/modifier/fill.hpp>
 #include <kerbal/compare/sequence_compare.hpp>
 #include <kerbal/numeric/bit.hpp>
 #include <kerbal/type_traits/integral_constant.hpp>

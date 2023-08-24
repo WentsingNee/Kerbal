@@ -12,7 +12,6 @@
 #ifndef KERBAL_CONTAINER_DETAIL_FLAT_SET_BASE_HPP
 #define KERBAL_CONTAINER_DETAIL_FLAT_SET_BASE_HPP
 
-#include <kerbal/algorithm/binary_search.hpp>
 #include <kerbal/compatibility/move.hpp>
 #include <kerbal/iterator/iterator.hpp>
 #include <kerbal/iterator/iterator_traits.hpp>

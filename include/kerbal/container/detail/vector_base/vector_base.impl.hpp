@@ -12,7 +12,11 @@
 #ifndef KERBAL_CONTAINER_DETAIL_VECTOR_BASE_VECTOR_BASE_IMPL_HPP
 #define KERBAL_CONTAINER_DETAIL_VECTOR_BASE_VECTOR_BASE_IMPL_HPP
 
-#include <kerbal/algorithm/modifier.hpp>
+#include <kerbal/algorithm/modifier/copy.hpp>
+#include <kerbal/algorithm/modifier/copy_n.hpp>
+#include <kerbal/algorithm/modifier/fill.hpp>
+#include <kerbal/algorithm/modifier/move.hpp>
+#include <kerbal/algorithm/modifier/move_backward.hpp>
 #include <kerbal/algorithm/swap.hpp>
 #include <kerbal/assign/generic_assign.hpp>
 #include <kerbal/compatibility/move.hpp>

@@ -12,7 +12,7 @@
 #ifndef KERBAL_HASH_SHA1_SHA1_IMPL_HPP
 #define KERBAL_HASH_SHA1_SHA1_IMPL_HPP
 
-#include <kerbal/algorithm/modifier.hpp>
+#include <kerbal/algorithm/modifier/copy.hpp>
 #include <kerbal/compatibility/static_assert.hpp>
 #include <kerbal/iterator/iterator.hpp>
 #include <kerbal/numeric/bit.hpp>

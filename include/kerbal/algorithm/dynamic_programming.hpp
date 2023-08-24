@@ -12,8 +12,9 @@
 #ifndef KERBAL_ALGORITHM_DYNAMIC_PROGRAMMING_HPP
 #define KERBAL_ALGORITHM_DYNAMIC_PROGRAMMING_HPP
 
-#include <kerbal/algorithm/binary_search.hpp>
-#include <kerbal/algorithm/modifier.hpp>
+#include <kerbal/algorithm/binary_search/lower_bound.hpp>
+#include <kerbal/algorithm/modifier/fill.hpp>
+#include <kerbal/algorithm/modifier/iota.hpp>
 #include <kerbal/compare/basic_compare.hpp>
 #include <kerbal/compare/binary_type_compare.hpp>
 #include <kerbal/compatibility/constexpr.hpp>

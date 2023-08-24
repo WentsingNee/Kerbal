@@ -12,7 +12,7 @@
 #ifndef KERBAL_ALGORITHM_SORT_SELECTION_SORT_HPP
 #define KERBAL_ALGORITHM_SORT_SELECTION_SORT_HPP
 
-#include <kerbal/algorithm/querier.hpp>
+#include <kerbal/algorithm/querier.hpp> // min_element
 #include <kerbal/algorithm/swap.hpp>
 #include <kerbal/compare/basic_compare.hpp>
 #include <kerbal/compatibility/constexpr.hpp>
