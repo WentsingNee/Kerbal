@@ -61,6 +61,9 @@ namespace kerbal
 		KERBAL_CONSTEXPR
 		int countl_zero(T x) KERBAL_NOEXCEPT
 		{
+			// TODO
+//			return x == 0 ?
+//				   sizeof(T) * CHAR_BIT :
 			return kerbal::numeric::detail::countl_zero_sign_handler(x);
 		}
 
