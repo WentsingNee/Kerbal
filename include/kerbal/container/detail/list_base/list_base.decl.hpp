@@ -16,6 +16,7 @@
 #include <kerbal/memory/allocator/monotonic_allocator/monotonic_allocator.fwd.hpp>
 
 #include <kerbal/compare/basic_compare.hpp>
+#include <kerbal/compare/std_compare/std_compare.fwd.hpp>
 #include <kerbal/compatibility/constexpr.hpp>
 #include <kerbal/compatibility/noexcept.hpp>
 #include <kerbal/config/exceptions.hpp>
@@ -32,8 +33,6 @@
 #endif
 
 #include <cstddef>
-
-#include <functional> // std::less
 
 #if __cplusplus >= 201703L
 #	if __has_include(<memory_resource>)
