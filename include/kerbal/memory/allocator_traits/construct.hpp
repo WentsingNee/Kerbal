@@ -18,7 +18,7 @@
 
 #include <kerbal/compatibility/constexpr.hpp>
 #include <kerbal/compatibility/noexcept.hpp>
-#include <kerbal/memory/uninitialized.hpp>
+#include <kerbal/memory/uninitialized/construct_at.hpp>
 #include <kerbal/type_traits/integral_constant.hpp>
 #include <kerbal/utility/declval.hpp>
 
