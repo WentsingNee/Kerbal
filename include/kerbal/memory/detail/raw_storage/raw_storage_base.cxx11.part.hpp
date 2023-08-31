@@ -16,7 +16,7 @@
 #include <kerbal/compatibility/method_overload_tag.hpp>
 #include <kerbal/compatibility/move.hpp>
 #include <kerbal/compatibility/noexcept.hpp>
-#include <kerbal/memory/uninitialized.hpp>
+#include <kerbal/memory/uninitialized/destroy_at.hpp>
 #include <kerbal/type_traits/conditional.hpp>
 #include <kerbal/type_traits/integral_constant.hpp>
 #include <kerbal/type_traits/is_trivially_default_constructible.hpp>

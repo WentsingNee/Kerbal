@@ -22,7 +22,8 @@
 #include <kerbal/memory/bad_alloc.hpp>
 #include <kerbal/memory/bad_array_new_length.hpp>
 #include <kerbal/memory/pointer_alignment.hpp>
-#include <kerbal/memory/uninitialized.hpp>
+#include <kerbal/memory/uninitialized/construct_at.hpp>
+#include <kerbal/memory/uninitialized/destroy_at.hpp>
 #include <kerbal/numeric/numeric_limits.hpp>
 #include <kerbal/utility/in_place.hpp>
 #include <kerbal/utility/throw_this_exception.hpp>
