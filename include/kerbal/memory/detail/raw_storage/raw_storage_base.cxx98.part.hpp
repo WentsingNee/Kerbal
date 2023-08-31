@@ -16,7 +16,8 @@
 #include <kerbal/compatibility/constexpr.hpp>
 #include <kerbal/compatibility/method_overload_tag.hpp>
 #include <kerbal/compatibility/noexcept.hpp>
-#include <kerbal/memory/uninitialized.hpp>
+#include <kerbal/memory/uninitialized/construct_at.hpp>
+#include <kerbal/memory/uninitialized/destroy_at.hpp>
 #include <kerbal/type_traits/aligned_storage.hpp>
 #include <kerbal/type_traits/is_trivially_default_constructible.hpp>
 #include <kerbal/type_traits/is_trivially_destructible.hpp>

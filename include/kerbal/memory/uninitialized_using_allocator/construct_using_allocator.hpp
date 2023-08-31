@@ -17,6 +17,14 @@
 #include <kerbal/compatibility/noexcept.hpp>
 #include <kerbal/config/exceptions.hpp>
 #include <kerbal/memory/allocator_traits.hpp>
+#include <kerbal/memory/uninitialized/uninitialized_copy.hpp>
+#include <kerbal/memory/uninitialized/uninitialized_copy_n.hpp>
+#include <kerbal/memory/uninitialized/uninitialized_fill.hpp>
+#include <kerbal/memory/uninitialized/uninitialized_fill_n.hpp>
+#include <kerbal/memory/uninitialized/uninitialized_move.hpp>
+#include <kerbal/memory/uninitialized/uninitialized_move_n.hpp>
+#include <kerbal/memory/uninitialized/uninitialized_value_construct.hpp>
+#include <kerbal/memory/uninitialized/uninitialized_value_construct_n.hpp>
 #include <kerbal/memory/uninitialized_using_allocator/destroy_using_allocator.hpp>
 #include <kerbal/type_traits/conditional.hpp>
 #include <kerbal/type_traits/integral_constant.hpp>
