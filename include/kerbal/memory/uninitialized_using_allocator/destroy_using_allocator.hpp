@@ -17,6 +17,9 @@
 #include <kerbal/iterator/iterator_traits.hpp>
 #include <kerbal/memory/allocator_traits.hpp>
 #include <kerbal/memory/uninitialized/destroy.hpp>
+#include <kerbal/memory/uninitialized/destroy_on.hpp>
+#include <kerbal/memory/uninitialized/destroy_n.hpp>
+#include <kerbal/memory/uninitialized/reverse_destroy.hpp>
 #include <kerbal/type_traits/integral_constant.hpp>
 
 #if __cplusplus > 201703L
