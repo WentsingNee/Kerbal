@@ -28,6 +28,10 @@ endif ()
 set(CPACK_DEBIAN_PACKAGE_NAME libkerbal-dev)
 
 
+# Wix
+file(COPY "${PROJECT_SOURCE_DIR}/cmake/cpack/config/wix_patch.cmake" DESTINATION "${KERBAL_CONFIGURE_ASSETS_DIR}/cpack/config")
+
+
 set(CPACK_PROJECT_CONFIG_FILE "${PROJECT_SOURCE_DIR}/cmake/cpack/config.cmake")
 message(STATUS "CPACK_PROJECT_CONFIG_FILE: ${CPACK_PROJECT_CONFIG_FILE}")
 
