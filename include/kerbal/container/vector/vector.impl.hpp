@@ -217,7 +217,7 @@ namespace kerbal
 		KERBAL_CONSTEXPR20
 		vector<Tp, Allocator>::~vector()
 		{
-			vector_allocator_unrelated::destroy_using_allocator(this->alloc());
+			vector_allocator_unrelated::k_destroy_using_allocator(this->alloc());
 		}
 
 
@@ -279,7 +279,7 @@ namespace kerbal
 		KERBAL_CONSTEXPR20
 		void vector<Tp, Allocator>::assign(size_type new_size, const_reference value)
 		{
-			vector_allocator_unrelated::assign_using_allocator(this->alloc(), new_size, value);
+			vector_allocator_unrelated::k_assign_using_allocator(this->alloc(), new_size, value);
 		}
 
 		template <typename Tp, typename Allocator>
@@ -290,14 +290,14 @@ namespace kerbal
 		>::type
 		vector<Tp, Allocator>::assign(InputIterator first, InputIterator last)
 		{
-			vector_allocator_unrelated::assign_using_allocator(this->alloc(), first, last);
+			vector_allocator_unrelated::k_assign_using_allocator(this->alloc(), first, last);
 		}
 
 		template <typename Tp, typename Allocator>
 		KERBAL_CONSTEXPR20
 		void vector<Tp, Allocator>::assign(const vector & src)
 		{
-			this->vector_allocator_unrelated::assign_using_allocator(
+			this->vector_allocator_unrelated::k_assign_using_allocator(
 					this->alloc(),
 					src.alloc(),
 					static_cast<const vector_allocator_unrelated &>(src)
@@ -313,7 +313,7 @@ namespace kerbal
 						vector_allocator_unrelated::template is_nothrow_move_assign_using_allocator<allocator_type>::value
 				)
 		{
-			this->vector_allocator_unrelated::assign_using_allocator(
+			this->vector_allocator_unrelated::k_assign_using_allocator(
 					this->alloc(),
 					kerbal::compatibility::move(src.alloc()),
 					static_cast<vector_allocator_unrelated &&>(src)
@@ -352,14 +352,14 @@ namespace kerbal
 		KERBAL_CONSTEXPR20
 		void vector<Tp, Allocator>::reserve(size_type new_capacity)
 		{
-			vector_allocator_unrelated::reserve_using_allocator(this->alloc(), new_capacity);
+			vector_allocator_unrelated::k_reserve_using_allocator(this->alloc(), new_capacity);
 		}
 
 		template <typename Tp, typename Allocator>
 		KERBAL_CONSTEXPR20
 		void vector<Tp, Allocator>::shrink_to_fit()
 		{
-			vector_allocator_unrelated::shrink_to_fit_using_allocator(this->alloc());
+			vector_allocator_unrelated::k_shrink_to_fit_using_allocator(this->alloc());
 		}
 
 
@@ -374,7 +374,7 @@ namespace kerbal
 		typename vector<Tp, Allocator>::iterator
 		vector<Tp, Allocator>::emplace(const_iterator pos, Args&& ... args)
 		{
-			return vector_allocator_unrelated::emplace_using_allocator(this->alloc(), pos, kerbal::utility::forward<Args>(args)...);
+			return vector_allocator_unrelated::k_emplace_using_allocator(this->alloc(), pos, kerbal::utility::forward<Args>(args)...);
 		}
 
 #	else
@@ -391,7 +391,7 @@ namespace kerbal
 		typename vector<Tp, Allocator>::iterator \
 		vector<Tp, Allocator>::emplace(const_iterator pos KERBAL_OPT_PPEXPAND_WITH_COMMA_N(LEFT_JOIN_COMMA, EMPTY, ARGS_DECL, i)) \
 		{ \
-			return vector_allocator_unrelated::emplace_using_allocator(this->alloc(), pos KERBAL_OPT_PPEXPAND_WITH_COMMA_N(LEFT_JOIN_COMMA, EMPTY, ARGS_USE, i)); \
+			return vector_allocator_unrelated::k_emplace_using_allocator(this->alloc(), pos KERBAL_OPT_PPEXPAND_WITH_COMMA_N(LEFT_JOIN_COMMA, EMPTY, ARGS_USE, i)); \
 		}
 
 		KERBAL_PPEXPAND_N(FBODY, KERBAL_PPEXPAND_EMPTY_SEPARATOR, 0)
@@ -412,7 +412,7 @@ namespace kerbal
 		typename vector<Tp, Allocator>::iterator
 		vector<Tp, Allocator>::insert(const_iterator pos, const_reference val)
 		{
-			return vector_allocator_unrelated::insert_using_allocator(this->alloc(), pos, val);
+			return vector_allocator_unrelated::k_insert_using_allocator(this->alloc(), pos, val);
 		}
 
 #	if __cplusplus >= 201103L
@@ -422,7 +422,7 @@ namespace kerbal
 		typename vector<Tp, Allocator>::iterator
 		vector<Tp, Allocator>::insert(const_iterator pos, rvalue_reference val)
 		{
-			return vector_allocator_unrelated::insert_using_allocator(this->alloc(), pos, kerbal::compatibility::move(val));
+			return vector_allocator_unrelated::k_insert_using_allocator(this->alloc(), pos, kerbal::compatibility::move(val));
 		}
 
 #	endif
@@ -432,7 +432,7 @@ namespace kerbal
 		typename vector<Tp, Allocator>::iterator
 		vector<Tp, Allocator>::insert(const_iterator pos, size_type n, const_reference val)
 		{
-			return vector_allocator_unrelated::insert_using_allocator(this->alloc(), pos, n, val);
+			return vector_allocator_unrelated::k_insert_using_allocator(this->alloc(), pos, n, val);
 		}
 
 		template <typename Tp, typename Allocator>
@@ -444,7 +444,7 @@ namespace kerbal
 		>::type
 		vector<Tp, Allocator>::insert(const_iterator pos, InputIterator first, InputIterator last)
 		{
-			return vector_allocator_unrelated::insert_using_allocator(this->alloc(), pos, first, last);
+			return vector_allocator_unrelated::k_insert_using_allocator(this->alloc(), pos, first, last);
 		}
 
 #		if __cplusplus >= 201103L
@@ -479,7 +479,7 @@ namespace kerbal
 		typename vector<Tp, Allocator>::reference
 		vector<Tp, Allocator>::emplace_back(Args&& ... args)
 		{
-			return vector_allocator_unrelated::emplace_back_using_allocator(this->alloc(), kerbal::utility::forward<Args>(args)...);
+			return vector_allocator_unrelated::k_emplace_back_using_allocator(this->alloc(), kerbal::utility::forward<Args>(args)...);
 		}
 
 #	else
@@ -497,7 +497,7 @@ namespace kerbal
 		typename vector<Tp, Allocator>::reference \
 		vector<Tp, Allocator>::emplace_back(KERBAL_OPT_PPEXPAND_WITH_COMMA_N(REMAINF, EMPTY, ARGS_DECL, i)) \
 		{ \
-			return vector_allocator_unrelated::emplace_back_using_allocator(this->alloc() KERBAL_OPT_PPEXPAND_WITH_COMMA_N(LEFT_JOIN_COMMA, EMPTY, ARGS_USE, i)); \
+			return vector_allocator_unrelated::k_emplace_back_using_allocator(this->alloc() KERBAL_OPT_PPEXPAND_WITH_COMMA_N(LEFT_JOIN_COMMA, EMPTY, ARGS_USE, i)); \
 		}
 
 		KERBAL_PPEXPAND_N(FBODY, KERBAL_PPEXPAND_EMPTY_SEPARATOR, 0)
@@ -518,7 +518,7 @@ namespace kerbal
 		KERBAL_CONSTEXPR20
 		void vector<Tp, Allocator>::push_back(const_reference src)
 		{
-			vector_allocator_unrelated::push_back_using_allocator(this->alloc(), src);
+			vector_allocator_unrelated::k_push_back_using_allocator(this->alloc(), src);
 		}
 
 #	if __cplusplus >= 201103L
@@ -527,7 +527,7 @@ namespace kerbal
 		KERBAL_CONSTEXPR20
 		void vector<Tp, Allocator>::push_back(rvalue_reference src)
 		{
-			vector_allocator_unrelated::push_back_using_allocator(this->alloc(), kerbal::compatibility::move(src));
+			vector_allocator_unrelated::k_push_back_using_allocator(this->alloc(), kerbal::compatibility::move(src));
 		}
 
 #	endif
@@ -541,7 +541,7 @@ namespace kerbal
 		typename vector<Tp, Allocator>::iterator
 		vector<Tp, Allocator>::erase(const_iterator pos)
 		{
-			return vector_allocator_unrelated::erase_using_allocator(this->alloc(), pos);
+			return vector_allocator_unrelated::k_erase_using_allocator(this->alloc(), pos);
 		}
 
 		template <typename Tp, typename Allocator>
@@ -549,21 +549,21 @@ namespace kerbal
 		typename vector<Tp, Allocator>::iterator
 		vector<Tp, Allocator>::erase(const_iterator first, const_iterator last)
 		{
-			return vector_allocator_unrelated::erase_using_allocator(this->alloc(), first, last);
+			return vector_allocator_unrelated::k_erase_using_allocator(this->alloc(), first, last);
 		}
 
 		template <typename Tp, typename Allocator>
 		KERBAL_CONSTEXPR20
 		void vector<Tp, Allocator>::pop_back() KERBAL_NOEXCEPT
 		{
-			vector_allocator_unrelated::pop_back_using_allocator(this->alloc());
+			vector_allocator_unrelated::k_pop_back_using_allocator(this->alloc());
 		}
 
 		template <typename Tp, typename Allocator>
 		KERBAL_CONSTEXPR20
 		void vector<Tp, Allocator>::clear() KERBAL_NOEXCEPT
 		{
-			vector_allocator_unrelated::clear_using_allocator(this->alloc());
+			vector_allocator_unrelated::k_clear_using_allocator(this->alloc());
 		}
 
 
@@ -574,14 +574,14 @@ namespace kerbal
 		KERBAL_CONSTEXPR20
 		void vector<Tp, Allocator>::resize(size_type new_size)
 		{
-			vector_allocator_unrelated::resize_using_allocator(this->alloc(), new_size);
+			vector_allocator_unrelated::k_resize_using_allocator(this->alloc(), new_size);
 		}
 
 		template <typename Tp, typename Allocator>
 		KERBAL_CONSTEXPR20
 		void vector<Tp, Allocator>::resize(size_type new_size, const_reference value)
 		{
-			vector_allocator_unrelated::resize_using_allocator(this->alloc(), new_size, value);
+			vector_allocator_unrelated::k_resize_using_allocator(this->alloc(), new_size, value);
 		}
 
 		template <typename Tp, typename Allocator>

@@ -189,7 +189,7 @@ namespace kerbal
 				KERBAL_CONSTEXPR20
 				~forward_list()
 				{
-					this->fl_allocator_unrelated::destroy_using_allocator(this->semi_alloc());
+					this->fl_allocator_unrelated::k_destroy_using_allocator(this->semi_alloc());
 				}
 
 			public:
@@ -318,25 +318,25 @@ namespace kerbal
 				KERBAL_CONSTEXPR20
 				void clear()
 				{
-					this->fl_allocator_unrelated::clear_using_allocator(this->semi_alloc());
+					this->fl_allocator_unrelated::k_clear_using_allocator(this->semi_alloc());
 				}
 
 				KERBAL_CONSTEXPR20
 				iterator erase_after(const_iterator pos)
 				{
-					return fl_allocator_unrelated::erase_after_using_allocator(this->semi_alloc(), pos);
+					return fl_allocator_unrelated::k_erase_after_using_allocator(this->semi_alloc(), pos);
 				}
 
 				KERBAL_CONSTEXPR20
 				iterator erase_after(const_iterator first, const_iterator last)
 				{
-					return fl_allocator_unrelated::erase_after_using_allocator(this->semi_alloc(), first, last);
+					return fl_allocator_unrelated::k_erase_after_using_allocator(this->semi_alloc(), first, last);
 				}
 
 				KERBAL_CONSTEXPR20
 				void pop_front()
 				{
-					this->fl_allocator_unrelated::pop_front_using_allocator(this->semi_alloc());
+					this->fl_allocator_unrelated::k_pop_front_using_allocator(this->semi_alloc());
 				}
 
 			//===================
@@ -417,52 +417,52 @@ namespace kerbal
 				KERBAL_CONSTEXPR20
 				size_type remove_after_if(const_iterator first, const_iterator last, UnaryPredicate predicate)
 				{
-					return fl_allocator_unrelated::remove_after_if_using_allocator(this->semi_alloc(), first, last, predicate);
+					return fl_allocator_unrelated::k_remove_after_if_using_allocator(this->semi_alloc(), first, last, predicate);
 				}
 
 				template <typename UnaryPredicate>
 				KERBAL_CONSTEXPR20
 				size_type remove_if(UnaryPredicate predicate)
 				{
-					return fl_allocator_unrelated::remove_if_using_allocator(this->semi_alloc(), predicate);
+					return fl_allocator_unrelated::k_remove_if_using_allocator(this->semi_alloc(), predicate);
 				}
 
 				KERBAL_CONSTEXPR20
 				size_type remove_after(const_iterator first, const_iterator last, const_reference val)
 				{
-					return fl_allocator_unrelated::remove_after_using_allocator(this->semi_alloc(), first, last, val);
+					return fl_allocator_unrelated::k_remove_after_using_allocator(this->semi_alloc(), first, last, val);
 				}
 
 				KERBAL_CONSTEXPR20
 				size_type remove(const_reference val)
 				{
-					return fl_allocator_unrelated::remove_using_allocator(this->semi_alloc(), val);
+					return fl_allocator_unrelated::k_remove_using_allocator(this->semi_alloc(), val);
 				}
 
 				template <typename BinaryPredict>
 				KERBAL_CONSTEXPR20
 				size_type unique(const_iterator first, const_iterator last, BinaryPredict equal_to)
 				{
-					return fl_allocator_unrelated::unique_using_allocator(this->semi_alloc(), first, last, equal_to);
+					return fl_allocator_unrelated::k_unique_using_allocator(this->semi_alloc(), first, last, equal_to);
 				}
 
 				KERBAL_CONSTEXPR20
 				size_type unique(const_iterator first, const_iterator last)
 				{
-					return fl_allocator_unrelated::unique_using_allocator(this->semi_alloc(), first, last);
+					return fl_allocator_unrelated::k_unique_using_allocator(this->semi_alloc(), first, last);
 				}
 
 				template <typename BinaryPredict>
 				KERBAL_CONSTEXPR20
 				size_type unique(BinaryPredict equal_to)
 				{
-					return fl_allocator_unrelated::unique_using_allocator(this->semi_alloc(), equal_to);
+					return fl_allocator_unrelated::k_unique_using_allocator(this->semi_alloc(), equal_to);
 				}
 
 				KERBAL_CONSTEXPR20
 				size_type unique()
 				{
-					return fl_allocator_unrelated::unique_using_allocator(this->semi_alloc());
+					return fl_allocator_unrelated::k_unique_using_allocator(this->semi_alloc());
 				}
 
 				KERBAL_CONSTEXPR20

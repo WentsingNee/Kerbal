@@ -151,7 +151,7 @@ namespace kerbal
 				try {
 #		endif
 					while (first != last) {
-						this->emplace_back_using_allocator(alloc, *first);
+						this->k_emplace_back_using_allocator(alloc, *first);
 						++first;
 					}
 #		if __cpp_exceptions
@@ -312,7 +312,7 @@ namespace kerbal
 			template <typename Tp>
 			template <typename Allocator>
 			KERBAL_CONSTEXPR20
-			void vector_allocator_unrelated<Tp>::destroy_using_allocator(Allocator & alloc) KERBAL_NOEXCEPT
+			void vector_allocator_unrelated<Tp>::k_destroy_using_allocator(Allocator & alloc) KERBAL_NOEXCEPT
 			{
 				typedef kerbal::memory::allocator_traits<Allocator> allocator_traits;
 
@@ -330,7 +330,7 @@ namespace kerbal
 			template <typename Tp>
 			template <typename Allocator>
 			KERBAL_CONSTEXPR20
-			void vector_allocator_unrelated<Tp>::assign_using_allocator(Allocator & alloc, size_type new_size, const_reference value)
+			void vector_allocator_unrelated<Tp>::k_assign_using_allocator(Allocator & alloc, size_type new_size, const_reference value)
 			{
 				typedef kerbal::memory::allocator_traits<Allocator> allocator_traits;
 
@@ -397,12 +397,12 @@ namespace kerbal
 						++first;
 						++it;
 					} else {
-						this->erase_using_allocator(alloc, it, end);
+						this->k_erase_using_allocator(alloc, it, end);
 						return;
 					}
 				}
 				while (first != last) {
-					this->emplace_back_using_allocator(alloc, *first);
+					this->k_emplace_back_using_allocator(alloc, *first);
 					++first;
 				}
 			}
@@ -471,7 +471,7 @@ namespace kerbal
 			typename kerbal::type_traits::enable_if<
 					kerbal::iterator::is_input_compatible_iterator<InputIterator>::value
 			>::type
-			vector_allocator_unrelated<Tp>::assign_using_allocator(Allocator & alloc, InputIterator first, InputIterator last)
+			vector_allocator_unrelated<Tp>::k_assign_using_allocator(Allocator & alloc, InputIterator first, InputIterator last)
 			{
 				this->k_range_assign_using_allocator_impl(alloc, first, last, kerbal::iterator::iterator_category(first));
 			}
@@ -484,12 +484,12 @@ namespace kerbal
 																	CPYASS_VER_NOT_PROPAGATE)
 			{
 				if (alloc != src_alloc) {
-					this->destroy_using_allocator(alloc);
+					this->k_destroy_using_allocator(alloc);
 					this->k_buffer = NULL;
 					this->k_capacity = 0;
 					this->k_size = 0;
 				}
-				this->assign_using_allocator(alloc, src.cbegin().current, src.cend().current);
+				this->k_assign_using_allocator(alloc, src.cbegin().current, src.cend().current);
 			}
 
 			template <typename Tp>
@@ -499,13 +499,13 @@ namespace kerbal
 																	CPYASS_VER_PROPAGATE)
 			{
 				if (alloc != src_alloc) {
-					this->destroy_using_allocator(alloc);
+					this->k_destroy_using_allocator(alloc);
 					this->k_buffer = NULL;
 					this->k_capacity = 0;
 					this->k_size = 0;
 				}
 				alloc = src_alloc;
-				this->assign_using_allocator(alloc, src.cbegin().current, src.cend().current);
+				this->k_assign_using_allocator(alloc, src.cbegin().current, src.cend().current);
 			}
 
 			template <typename Tp>
@@ -514,13 +514,13 @@ namespace kerbal
 			void vector_allocator_unrelated<Tp>::k_cpy_ass_ua_impl(Allocator & alloc, const Allocator & /*src_alloc*/, const vector_allocator_unrelated & src,
 																	CPYASS_VER_ALWAYS_EQUAL)
 			{
-				this->assign_using_allocator(alloc, src.cbegin().current, src.cend().current);
+				this->k_assign_using_allocator(alloc, src.cbegin().current, src.cend().current);
 			}
 
 			template <typename Tp>
 			template <typename Allocator>
 			KERBAL_CONSTEXPR20
-			void vector_allocator_unrelated<Tp>::assign_using_allocator(Allocator & alloc, const Allocator & src_alloc, const vector_allocator_unrelated & src)
+			void vector_allocator_unrelated<Tp>::k_assign_using_allocator(Allocator & alloc, const Allocator & src_alloc, const vector_allocator_unrelated & src)
 			{
 				typedef kerbal::memory::allocator_traits<Allocator> allocator_traits;
 				typedef typename allocator_traits::propagate_on_container_copy_assignment propagate;
@@ -548,7 +548,7 @@ namespace kerbal
 			KERBAL_CONSTEXPR20
 			void vector_allocator_unrelated<Tp>::k_mov_ass_ua_ae(Allocator & alloc, vector_allocator_unrelated && src) KERBAL_NOEXCEPT
 			{
-				this->destroy_using_allocator(alloc);
+				this->k_destroy_using_allocator(alloc);
 				this->k_buffer = src.k_buffer;
 				this->k_capacity = src.k_capacity;
 				this->k_size = src.k_size;
@@ -563,7 +563,7 @@ namespace kerbal
 			KERBAL_CONSTEXPR20
 			void vector_allocator_unrelated<Tp>::k_mov_ass_ua_ane(Allocator & alloc, Allocator && /*src_alloc*/, vector_allocator_unrelated && src)
 			{
-				this->assign_using_allocator(alloc, kerbal::iterator::make_move_iterator(src.begin().current), kerbal::iterator::make_move_iterator(src.end().current));
+				this->k_assign_using_allocator(alloc, kerbal::iterator::make_move_iterator(src.begin().current), kerbal::iterator::make_move_iterator(src.end().current));
 			}
 
 			template <typename Tp>
@@ -585,7 +585,7 @@ namespace kerbal
 			void vector_allocator_unrelated<Tp>::k_mov_ass_ua_impl(Allocator & alloc, Allocator && src_alloc, vector_allocator_unrelated && src,
 																	MOVASS_VER_PROPAGATE)
 			{
-				this->destroy_using_allocator(alloc);
+				this->k_destroy_using_allocator(alloc);
 				this->k_buffer = NULL;
 				this->k_capacity = 0;
 				this->k_size = 0;
@@ -610,7 +610,7 @@ namespace kerbal
 			template <typename Tp>
 			template <typename Allocator>
 			KERBAL_CONSTEXPR20
-			void vector_allocator_unrelated<Tp>::assign_using_allocator(Allocator & alloc, Allocator && src_alloc, vector_allocator_unrelated && src)
+			void vector_allocator_unrelated<Tp>::k_assign_using_allocator(Allocator & alloc, Allocator && src_alloc, vector_allocator_unrelated && src)
 					KERBAL_CONDITIONAL_NOEXCEPT(is_nothrow_move_assign_using_allocator<Allocator>::value)
 			{
 				typedef kerbal::memory::allocator_traits<Allocator> allocator_traits;
@@ -889,7 +889,7 @@ namespace kerbal
 			template <typename Tp>
 			template <typename Allocator>
 			KERBAL_CONSTEXPR20
-			void vector_allocator_unrelated<Tp>::capacity_adjusted_realloc_aux(Allocator & alloc, pointer new_buffer, size_type new_capacity)
+			void vector_allocator_unrelated<Tp>::k_capacity_adjusted_realloc_aux(Allocator & alloc, pointer new_buffer, size_type new_capacity)
 			{
 				typedef kerbal::memory::allocator_traits<Allocator> allocator_traits;
 
@@ -926,7 +926,7 @@ namespace kerbal
 #		endif
 
 				if (this->k_buffer != NULL) {
-					this->capacity_adjusted_realloc_aux(alloc, new_buffer, new_capacity);
+					this->k_capacity_adjusted_realloc_aux(alloc, new_buffer, new_capacity);
 				}
 
 				this->k_buffer = new_buffer;
@@ -936,7 +936,7 @@ namespace kerbal
 			template <typename Tp>
 			template <typename Allocator>
 			KERBAL_CONSTEXPR20
-			void vector_allocator_unrelated<Tp>::shrink_to_fit_using_allocator(Allocator & alloc)
+			void vector_allocator_unrelated<Tp>::k_shrink_to_fit_using_allocator(Allocator & alloc)
 			{
 				typedef kerbal::memory::allocator_traits<Allocator> allocator_traits;
 
@@ -1074,7 +1074,7 @@ namespace kerbal
 			template <typename Allocator, typename ... Args>
 			KERBAL_CONSTEXPR20
 			typename vector_allocator_unrelated<Tp>::iterator
-			vector_allocator_unrelated<Tp>::emplace_using_allocator(Allocator & alloc, const_iterator pos, Args&& ... args)
+			vector_allocator_unrelated<Tp>::k_emplace_using_allocator(Allocator & alloc, const_iterator pos, Args&& ... args)
 			{
 				typedef kerbal::memory::allocator_traits<Allocator> allocator_traits;
 
@@ -1176,7 +1176,7 @@ namespace kerbal
 			template <typename Tp> \
 			template <typename Allocator KERBAL_OPT_PPEXPAND_WITH_COMMA_N(LEFT_JOIN_COMMA, EMPTY, TARGS_DECL, i)> \
 			typename vector_allocator_unrelated<Tp>::iterator \
-			vector_allocator_unrelated<Tp>::emplace_using_allocator(Allocator & alloc, const_iterator pos KERBAL_OPT_PPEXPAND_WITH_COMMA_N(LEFT_JOIN_COMMA, EMPTY, ARGS_DECL, i)) \
+			vector_allocator_unrelated<Tp>::k_emplace_using_allocator(Allocator & alloc, const_iterator pos KERBAL_OPT_PPEXPAND_WITH_COMMA_N(LEFT_JOIN_COMMA, EMPTY, ARGS_DECL, i)) \
 			{ \
 				typedef kerbal::memory::allocator_traits<Allocator> allocator_traits; \
  \
@@ -1219,9 +1219,9 @@ namespace kerbal
 			template <typename Allocator>
 			KERBAL_CONSTEXPR20
 			typename vector_allocator_unrelated<Tp>::iterator
-			vector_allocator_unrelated<Tp>::insert_using_allocator(Allocator & alloc, const_iterator pos, const_reference val)
+			vector_allocator_unrelated<Tp>::k_insert_using_allocator(Allocator & alloc, const_iterator pos, const_reference val)
 			{
-				return this->emplace_using_allocator(alloc, pos, val);
+				return this->k_emplace_using_allocator(alloc, pos, val);
 			}
 
 #		if __cplusplus >= 201103L
@@ -1230,9 +1230,9 @@ namespace kerbal
 			template <typename Allocator>
 			KERBAL_CONSTEXPR20
 			typename vector_allocator_unrelated<Tp>::iterator
-			vector_allocator_unrelated<Tp>::insert_using_allocator(Allocator & alloc, const_iterator pos, rvalue_reference val)
+			vector_allocator_unrelated<Tp>::k_insert_using_allocator(Allocator & alloc, const_iterator pos, rvalue_reference val)
 			{
-				return this->emplace_using_allocator(alloc, pos, kerbal::compatibility::move(val));
+				return this->k_emplace_using_allocator(alloc, pos, kerbal::compatibility::move(val));
 			}
 
 #		endif
@@ -1289,7 +1289,7 @@ namespace kerbal
 			template <typename Allocator>
 			KERBAL_CONSTEXPR20
 			typename vector_allocator_unrelated<Tp>::iterator
-			vector_allocator_unrelated<Tp>::insert_using_allocator(Allocator & alloc, const_iterator pos, size_type n, const_reference val)
+			vector_allocator_unrelated<Tp>::k_insert_using_allocator(Allocator & alloc, const_iterator pos, size_type n, const_reference val)
 			{
 				typedef kerbal::memory::allocator_traits<Allocator> allocator_traits;
 
@@ -1402,7 +1402,7 @@ namespace kerbal
 						KERBAL_CONSTEXPR20
 						~destroy_helper() KERBAL_NOEXCEPT
 						{
-							this->vt.destroy_using_allocator(alloc);
+							this->vt.k_destroy_using_allocator(alloc);
 						}
 
 				} auto_destroy_helper(alloc, vt);
@@ -1591,7 +1591,7 @@ namespace kerbal
 					kerbal::iterator::is_input_compatible_iterator<InputIterator>::value,
 					typename vector_allocator_unrelated<Tp>::iterator
 			>::type
-			vector_allocator_unrelated<Tp>::insert_using_allocator(Allocator & alloc, const_iterator pos, InputIterator first, InputIterator last)
+			vector_allocator_unrelated<Tp>::k_insert_using_allocator(Allocator & alloc, const_iterator pos, InputIterator first, InputIterator last)
 			{
 				return this->k_range_insert_using_allocator_impl(alloc, pos, first, last, kerbal::iterator::iterator_category(first));
 			}
@@ -1661,7 +1661,7 @@ namespace kerbal
 					}
 #		endif
 
-					this->emplace_back_realloc_aux(alloc, new_buffer, new_capacity);
+					this->k_emplace_back_realloc_aux(alloc, new_buffer, new_capacity);
 				}
 				return this->k_buffer[this->k_size];
 			}
@@ -1708,7 +1708,7 @@ namespace kerbal
 			template <typename Tp> \
 			template <typename Allocator KERBAL_OPT_PPEXPAND_WITH_COMMA_N(LEFT_JOIN_COMMA, EMPTY, TARGS_DECL, i)> \
 			typename vector_allocator_unrelated<Tp>::reference \
-			vector_allocator_unrelated<Tp>::emplace_back_using_allocator(Allocator & alloc KERBAL_OPT_PPEXPAND_WITH_COMMA_N(LEFT_JOIN_COMMA, EMPTY, ARGS_DECL, i)) \
+			vector_allocator_unrelated<Tp>::k_emplace_back_using_allocator(Allocator & alloc KERBAL_OPT_PPEXPAND_WITH_COMMA_N(LEFT_JOIN_COMMA, EMPTY, ARGS_DECL, i)) \
 			{ \
 				typedef kerbal::memory::allocator_traits<Allocator> allocator_traits; \
  \
@@ -1750,9 +1750,9 @@ namespace kerbal
 			template <typename Tp>
 			template <typename Allocator>
 			KERBAL_CONSTEXPR20
-			void vector_allocator_unrelated<Tp>::push_back_using_allocator(Allocator & alloc, const_reference src)
+			void vector_allocator_unrelated<Tp>::k_push_back_using_allocator(Allocator & alloc, const_reference src)
 			{
-				this->emplace_back_using_allocator(alloc, src);
+				this->k_emplace_back_using_allocator(alloc, src);
 			}
 
 #		if __cplusplus >= 201103L
@@ -1760,9 +1760,9 @@ namespace kerbal
 			template <typename Tp>
 			template <typename Allocator>
 			KERBAL_CONSTEXPR20
-			void vector_allocator_unrelated<Tp>::push_back_using_allocator(Allocator & alloc, rvalue_reference src)
+			void vector_allocator_unrelated<Tp>::k_push_back_using_allocator(Allocator & alloc, rvalue_reference src)
 			{
-				this->emplace_back_using_allocator(alloc, kerbal::compatibility::move(src));
+				this->k_emplace_back_using_allocator(alloc, kerbal::compatibility::move(src));
 			}
 
 #		endif
@@ -1776,7 +1776,7 @@ namespace kerbal
 			template <typename Allocator>
 			KERBAL_CONSTEXPR20
 			typename vector_allocator_unrelated<Tp>::iterator
-			vector_allocator_unrelated<Tp>::erase_using_allocator(Allocator & alloc, const_iterator pos)
+			vector_allocator_unrelated<Tp>::k_erase_using_allocator(Allocator & alloc, const_iterator pos)
 			{
 				iterator pos_mut(pos.cast_to_mutable());
 
@@ -1786,7 +1786,7 @@ namespace kerbal
 
 				// pre-condition: pos != cend()
 				kerbal::algorithm::move(pos_mut.current + 1, this->end().current, pos_mut.current);
-				this->pop_back_using_allocator(alloc);
+				this->k_pop_back_using_allocator(alloc);
 				return pos_mut;
 			}
 
@@ -1794,7 +1794,7 @@ namespace kerbal
 			template <typename Allocator>
 			KERBAL_CONSTEXPR20
 			typename vector_allocator_unrelated<Tp>::iterator
-			vector_allocator_unrelated<Tp>::erase_using_allocator(Allocator & alloc, const_iterator first, const_iterator last)
+			vector_allocator_unrelated<Tp>::k_erase_using_allocator(Allocator & alloc, const_iterator first, const_iterator last)
 			{
 				iterator first_mut(first.cast_to_mutable());
 				if (first == last) {
@@ -1812,7 +1812,7 @@ namespace kerbal
 			template <typename Tp>
 			template <typename Allocator>
 			KERBAL_CONSTEXPR20
-			void vector_allocator_unrelated<Tp>::pop_back_using_allocator(Allocator & alloc) KERBAL_NOEXCEPT
+			void vector_allocator_unrelated<Tp>::k_pop_back_using_allocator(Allocator & alloc) KERBAL_NOEXCEPT
 			{
 				kerbal::memory::destroy_on_using_allocator(alloc, this->back());
 				--this->k_size;
@@ -1821,7 +1821,7 @@ namespace kerbal
 			template <typename Tp>
 			template <typename Allocator>
 			KERBAL_CONSTEXPR20
-			void vector_allocator_unrelated<Tp>::clear_using_allocator(Allocator & alloc) KERBAL_NOEXCEPT
+			void vector_allocator_unrelated<Tp>::k_clear_using_allocator(Allocator & alloc) KERBAL_NOEXCEPT
 			{
 				kerbal::memory::reverse_destroy_using_allocator(alloc, this->begin().current, this->end().current);
 				this->k_size = 0;
@@ -1950,7 +1950,7 @@ namespace kerbal
 						}
 #		endif
 
-						this->resize_realloc_aux(alloc, new_buffer, new_capacity, new_size);
+						this->k_resize_realloc_aux(alloc, new_buffer, new_capacity, new_size);
 					}
 				}
 			}

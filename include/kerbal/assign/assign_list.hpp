@@ -54,17 +54,17 @@ namespace kerbal
 			public:
 				assign_list()
 				{
-					v.reserve_using_allocator(this->alloc(), 20);
+					v.k_reserve_using_allocator(this->alloc(), 20);
 				}
 
 				~assign_list() KERBAL_NOEXCEPT
 				{
-					v.template destroy_using_allocator(this->alloc());
+					v.template k_destroy_using_allocator(this->alloc());
 				}
 
 				assign_list& operator,(const_reference val)
 				{
-					v.push_back_using_allocator(this->alloc(), val);
+					v.k_push_back_using_allocator(this->alloc(), val);
 					return *this;
 				}
 

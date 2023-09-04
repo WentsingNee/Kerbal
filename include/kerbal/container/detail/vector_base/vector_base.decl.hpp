@@ -163,14 +163,14 @@ namespace kerbal
 
 					template <typename Allocator>
 					KERBAL_CONSTEXPR20
-					void destroy_using_allocator(Allocator & alloc) KERBAL_NOEXCEPT;
+					void k_destroy_using_allocator(Allocator & alloc) KERBAL_NOEXCEPT;
 
 				//===================
 				// assign
 
 					template <typename Allocator>
 					KERBAL_CONSTEXPR20
-					void assign_using_allocator(Allocator & alloc, size_type new_size, const_reference value);
+					void k_assign_using_allocator(Allocator & alloc, size_type new_size, const_reference value);
 
 				private:
 
@@ -189,7 +189,7 @@ namespace kerbal
 					typename kerbal::type_traits::enable_if<
 							kerbal::iterator::is_input_compatible_iterator<InputIterator>::value
 					>::type
-					assign_using_allocator(Allocator & alloc, InputIterator first, InputIterator last);
+					k_assign_using_allocator(Allocator & alloc, InputIterator first, InputIterator last);
 
 				private:
 
@@ -213,7 +213,7 @@ namespace kerbal
 
 					template <typename Allocator>
 					KERBAL_CONSTEXPR20
-					void assign_using_allocator(Allocator & alloc, const Allocator & src_alloc, const vector_allocator_unrelated & src);
+					void k_assign_using_allocator(Allocator & alloc, const Allocator & src_alloc, const vector_allocator_unrelated & src);
 
 #			if __cplusplus >= 201103L
 
@@ -255,7 +255,7 @@ namespace kerbal
 
 					template <typename Allocator>
 					KERBAL_CONSTEXPR20
-					void assign_using_allocator(Allocator & alloc, Allocator && src_alloc, vector_allocator_unrelated && src)
+					void k_assign_using_allocator(Allocator & alloc, Allocator && src_alloc, vector_allocator_unrelated && src)
 							KERBAL_CONDITIONAL_NOEXCEPT(is_nothrow_move_assign_using_allocator<Allocator>::value)
 					;
 
@@ -360,16 +360,16 @@ namespace kerbal
 				private:
 					template <typename Allocator>
 					KERBAL_CONSTEXPR20
-					void capacity_adjusted_realloc_aux(Allocator & alloc, pointer new_buffer, size_type new_capacity);
+					void k_capacity_adjusted_realloc_aux(Allocator & alloc, pointer new_buffer, size_type new_capacity);
 
 				public:
 					template <typename Allocator>
 					KERBAL_CONSTEXPR20
-					void reserve_using_allocator(Allocator & alloc, size_type new_capacity);
+					void k_reserve_using_allocator(Allocator & alloc, size_type new_capacity);
 
 					template <typename Allocator>
 					KERBAL_CONSTEXPR20
-					void shrink_to_fit_using_allocator(Allocator & alloc);
+					void k_shrink_to_fit_using_allocator(Allocator & alloc);
 
 				//===================
 				// insert
@@ -385,7 +385,7 @@ namespace kerbal
 
 					template <typename Allocator, typename ... Args>
 					KERBAL_CONSTEXPR20
-					iterator emplace_using_allocator(Allocator & alloc, const_iterator pos, Args&& ...args);
+					iterator k_emplace_using_allocator(Allocator & alloc, const_iterator pos, Args&& ...args);
 
 #			else
 
@@ -395,7 +395,7 @@ namespace kerbal
 #				define ARGS_DECL(i) const KERBAL_MACRO_CONCAT(Arg, i) & KERBAL_MACRO_CONCAT(arg, i)
 #				define FBODY(i) \
 					template <typename Allocator KERBAL_OPT_PPEXPAND_WITH_COMMA_N(LEFT_JOIN_COMMA, EMPTY, TARGS_DECL, i)> \
-					iterator emplace_using_allocator(Allocator & alloc, const_iterator pos KERBAL_OPT_PPEXPAND_WITH_COMMA_N(LEFT_JOIN_COMMA, EMPTY, ARGS_DECL, i));
+					iterator k_emplace_using_allocator(Allocator & alloc, const_iterator pos KERBAL_OPT_PPEXPAND_WITH_COMMA_N(LEFT_JOIN_COMMA, EMPTY, ARGS_DECL, i));
 
 					KERBAL_PPEXPAND_N(FBODY, KERBAL_PPEXPAND_EMPTY_SEPARATOR, 0)
 					KERBAL_PPEXPAND_N(FBODY, KERBAL_PPEXPAND_EMPTY_SEPARATOR, 20)
@@ -410,13 +410,13 @@ namespace kerbal
 
 					template <typename Allocator>
 					KERBAL_CONSTEXPR20
-					iterator insert_using_allocator(Allocator & alloc, const_iterator pos, const_reference val);
+					iterator k_insert_using_allocator(Allocator & alloc, const_iterator pos, const_reference val);
 
 #			if __cplusplus >= 201103L
 
 					template <typename Allocator>
 					KERBAL_CONSTEXPR20
-					iterator insert_using_allocator(Allocator & alloc, const_iterator pos, rvalue_reference val);
+					iterator k_insert_using_allocator(Allocator & alloc, const_iterator pos, rvalue_reference val);
 
 #			endif
 
@@ -429,7 +429,7 @@ namespace kerbal
 
 					template <typename Allocator>
 					KERBAL_CONSTEXPR20
-					iterator insert_using_allocator(Allocator & alloc, const_iterator pos, size_type n, const_reference val);
+					iterator k_insert_using_allocator(Allocator & alloc, const_iterator pos, size_type n, const_reference val);
 
 				private:
 
@@ -448,7 +448,7 @@ namespace kerbal
 							kerbal::iterator::is_input_compatible_iterator<InputIterator>::value,
 							iterator
 					>::type
-					insert_using_allocator(Allocator & alloc, const_iterator pos, InputIterator first, InputIterator last);
+					k_insert_using_allocator(Allocator & alloc, const_iterator pos, InputIterator first, InputIterator last);
 
 				private:
 					template <typename Allocator>
@@ -461,7 +461,7 @@ namespace kerbal
 
 					template <typename Allocator, typename ... Args>
 					KERBAL_CONSTEXPR20
-					reference emplace_back_using_allocator(Allocator & alloc, Args&& ...args);
+					reference k_emplace_back_using_allocator(Allocator & alloc, Args&& ...args);
 
 #			else
 
@@ -471,7 +471,7 @@ namespace kerbal
 #				define ARGS_DECL(i) const KERBAL_MACRO_CONCAT(Arg, i) & KERBAL_MACRO_CONCAT(arg, i)
 #				define FBODY(i) \
 					template <typename Allocator KERBAL_OPT_PPEXPAND_WITH_COMMA_N(LEFT_JOIN_COMMA, EMPTY, TARGS_DECL, i)> \
-					reference emplace_back_using_allocator(Allocator & alloc KERBAL_OPT_PPEXPAND_WITH_COMMA_N(LEFT_JOIN_COMMA, EMPTY, ARGS_DECL, i));
+					reference k_emplace_back_using_allocator(Allocator & alloc KERBAL_OPT_PPEXPAND_WITH_COMMA_N(LEFT_JOIN_COMMA, EMPTY, ARGS_DECL, i));
 
 					KERBAL_PPEXPAND_N(FBODY, KERBAL_PPEXPAND_EMPTY_SEPARATOR, 0)
 					KERBAL_PPEXPAND_N(FBODY, KERBAL_PPEXPAND_EMPTY_SEPARATOR, 20)
@@ -486,13 +486,13 @@ namespace kerbal
 
 					template <typename Allocator>
 					KERBAL_CONSTEXPR20
-					void push_back_using_allocator(Allocator & alloc, const_reference src);
+					void k_push_back_using_allocator(Allocator & alloc, const_reference src);
 
 #			if __cplusplus >= 201103L
 
 					template <typename Allocator>
 					KERBAL_CONSTEXPR20
-					void push_back_using_allocator(Allocator & alloc, rvalue_reference src);
+					void k_push_back_using_allocator(Allocator & alloc, rvalue_reference src);
 
 #			endif
 
@@ -501,19 +501,19 @@ namespace kerbal
 
 					template <typename Allocator>
 					KERBAL_CONSTEXPR20
-					iterator erase_using_allocator(Allocator & alloc, const_iterator pos);
+					iterator k_erase_using_allocator(Allocator & alloc, const_iterator pos);
 
 					template <typename Allocator>
 					KERBAL_CONSTEXPR20
-					iterator erase_using_allocator(Allocator & alloc, const_iterator first, const_iterator last);
+					iterator k_erase_using_allocator(Allocator & alloc, const_iterator first, const_iterator last);
 
 					template <typename Allocator>
 					KERBAL_CONSTEXPR20
-					void pop_back_using_allocator(Allocator & alloc) KERBAL_NOEXCEPT;
+					void k_pop_back_using_allocator(Allocator & alloc) KERBAL_NOEXCEPT;
 
 					template <typename Allocator>
 					KERBAL_CONSTEXPR20
-					void clear_using_allocator(Allocator & alloc) KERBAL_NOEXCEPT;
+					void k_clear_using_allocator(Allocator & alloc) KERBAL_NOEXCEPT;
 
 				//===================
 				// operation
@@ -526,11 +526,11 @@ namespace kerbal
 				public:
 					template <typename Allocator>
 					KERBAL_CONSTEXPR20
-					void resize_using_allocator(Allocator & alloc, size_type new_size);
+					void k_resize_using_allocator(Allocator & alloc, size_type new_size);
 
 					template <typename Allocator>
 					KERBAL_CONSTEXPR20
-					void resize_using_allocator(Allocator & alloc, size_type new_size, const_reference value);
+					void k_resize_using_allocator(Allocator & alloc, size_type new_size, const_reference value);
 
 					KERBAL_CONSTEXPR14
 					static void k_swap_type_unrelated(vector_allocator_unrelated & lhs, vector_allocator_unrelated & rhs) KERBAL_NOEXCEPT;

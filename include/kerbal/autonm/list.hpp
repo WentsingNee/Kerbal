@@ -191,7 +191,7 @@ namespace kerbal
 				KERBAL_CONSTEXPR20
 				~list()
 				{
-					this->list_allocator_unrelated::destroy_using_allocator(this->semi_alloc());
+					this->list_allocator_unrelated::k_destroy_using_allocator(this->semi_alloc());
 				}
 
 			public:
@@ -331,31 +331,31 @@ namespace kerbal
 				KERBAL_CONSTEXPR20
 				void clear()
 				{
-					list_allocator_unrelated::clear_using_allocator(this->semi_alloc());
+					list_allocator_unrelated::k_clear_using_allocator(this->semi_alloc());
 				}
 
 				KERBAL_CONSTEXPR20
 				iterator erase(const_iterator pos)
 				{
-					return list_allocator_unrelated::erase_using_allocator(this->semi_alloc(), pos);
+					return list_allocator_unrelated::k_erase_using_allocator(this->semi_alloc(), pos);
 				}
 
 				KERBAL_CONSTEXPR20
 				iterator erase(const_iterator first, const_iterator last)
 				{
-					return list_allocator_unrelated::erase_using_allocator(this->semi_alloc(), first, last);
+					return list_allocator_unrelated::k_erase_using_allocator(this->semi_alloc(), first, last);
 				}
 
 				KERBAL_CONSTEXPR20
 				void pop_front()
 				{
-					list_allocator_unrelated::pop_front_using_allocator(this->semi_alloc());
+					list_allocator_unrelated::k_pop_front_using_allocator(this->semi_alloc());
 				}
 
 				KERBAL_CONSTEXPR20
 				void pop_back()
 				{
-					list_allocator_unrelated::pop_back_using_allocator(this->semi_alloc());
+					list_allocator_unrelated::k_pop_back_using_allocator(this->semi_alloc());
 				}
 
 			//===================
@@ -449,53 +449,53 @@ namespace kerbal
 				KERBAL_CONSTEXPR20
 				size_type remove(const_reference val)
 				{
-					return list_allocator_unrelated::remove_using_allocator(this->semi_alloc(), val);
+					return list_allocator_unrelated::k_remove_using_allocator(this->semi_alloc(), val);
 				}
 
 				KERBAL_CONSTEXPR20
 				size_type remove(const_iterator first, const_iterator last, const_reference val)
 				{
-					return list_allocator_unrelated::remove_using_allocator(this->semi_alloc(), first, last, val);
+					return list_allocator_unrelated::k_remove_using_allocator(this->semi_alloc(), first, last, val);
 				}
 
 				template <typename UnaryPredicate>
 				KERBAL_CONSTEXPR20
 				size_type remove_if(UnaryPredicate predicate)
 				{
-					return list_allocator_unrelated::remove_if_using_allocator(this->semi_alloc(), predicate);
+					return list_allocator_unrelated::k_remove_if_using_allocator(this->semi_alloc(), predicate);
 				}
 
 				template <typename UnaryPredicate>
 				KERBAL_CONSTEXPR20
 				size_type remove_if(const_iterator first, const_iterator last, UnaryPredicate predicate)
 				{
-					return list_allocator_unrelated::remove_if_using_allocator(this->semi_alloc(), first, last, predicate);
+					return list_allocator_unrelated::k_remove_if_using_allocator(this->semi_alloc(), first, last, predicate);
 				}
 
 				KERBAL_CONSTEXPR20
 				size_type unique()
 				{
-					return list_allocator_unrelated::unique_using_allocator(this->semi_alloc());
+					return list_allocator_unrelated::k_unique_using_allocator(this->semi_alloc());
 				}
 
 				template <typename BinaryPredicate>
 				KERBAL_CONSTEXPR20
 				size_type unique(BinaryPredicate pred)
 				{
-					return list_allocator_unrelated::unique_using_allocator(this->semi_alloc(), pred);
+					return list_allocator_unrelated::k_unique_using_allocator(this->semi_alloc(), pred);
 				}
 
 				KERBAL_CONSTEXPR20
 				size_type unique(const_iterator first, const_iterator last)
 				{
-					return list_allocator_unrelated::unique_using_allocator(this->semi_alloc(), first, last);
+					return list_allocator_unrelated::k_unique_using_allocator(this->semi_alloc(), first, last);
 				}
 
 				template <typename BinaryPredicate>
 				KERBAL_CONSTEXPR20
 				size_type unique(const_iterator first, const_iterator last, BinaryPredicate pred)
 				{
-					return list_allocator_unrelated::unique_using_allocator(this->semi_alloc(), first, last, pred);
+					return list_allocator_unrelated::k_unique_using_allocator(this->semi_alloc(), first, last, pred);
 				}
 
 				KERBAL_CONSTEXPR20
