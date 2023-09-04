@@ -25,7 +25,7 @@ namespace kerbal
 			class list_type_unrelated;
 
 			template <typename Tp>
-			class list_allocator_unrelated;
+			class list_type_only;
 
 			class list_node_base;
 

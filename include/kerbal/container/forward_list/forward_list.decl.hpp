@@ -55,8 +55,8 @@ namespace kerbal
 			template <typename Tp, typename Allocator>
 			struct fl_typedef_helper
 			{
-					typedef kerbal::container::detail::fl_allocator_unrelated<Tp>						fl_allocator_unrelated;
-					typedef typename fl_allocator_unrelated::node 										node;
+					typedef kerbal::container::detail::fl_type_only<Tp>							fl_type_only;
+					typedef typename fl_type_only::node 										node;
 					typedef Allocator																	allocator_type;
 					typedef kerbal::container::detail::container_rebind_allocator_overload<
 							allocator_type, node
@@ -90,36 +90,36 @@ namespace kerbal
 		template <typename Tp, typename Allocator>
 		class forward_list:
 				protected detail::fl_typedef_helper<Tp, Allocator>::fl_allocator_overload,
-				protected detail::fl_typedef_helper<Tp, Allocator>::fl_allocator_unrelated
+				protected detail::fl_typedef_helper<Tp, Allocator>::fl_type_only
 		{
 			private:
-				typedef kerbal::container::detail::fl_type_unrelated					fl_type_unrelated;
-				typedef detail::fl_typedef_helper<Tp, Allocator>						fl_typedef_helper;
-				typedef typename fl_typedef_helper::fl_allocator_overload 				fl_allocator_overload;
-				typedef typename fl_typedef_helper::fl_allocator_unrelated				fl_allocator_unrelated;
+				typedef kerbal::container::detail::fl_type_unrelated			fl_type_unrelated;
+				typedef detail::fl_typedef_helper<Tp, Allocator>				fl_typedef_helper;
+				typedef typename fl_typedef_helper::fl_allocator_overload 		fl_allocator_overload;
+				typedef typename fl_typedef_helper::fl_type_only				fl_type_only;
 
 			public:
-				typedef typename fl_allocator_unrelated::value_type					value_type;
-				typedef typename fl_allocator_unrelated::const_type					const_type;
-				typedef typename fl_allocator_unrelated::reference					reference;
-				typedef typename fl_allocator_unrelated::const_reference			const_reference;
-				typedef typename fl_allocator_unrelated::pointer					pointer;
-				typedef typename fl_allocator_unrelated::const_pointer				const_pointer;
+				typedef typename fl_type_only::value_type				value_type;
+				typedef typename fl_type_only::const_type				const_type;
+				typedef typename fl_type_only::reference				reference;
+				typedef typename fl_type_only::const_reference			const_reference;
+				typedef typename fl_type_only::pointer					pointer;
+				typedef typename fl_type_only::const_pointer			const_pointer;
 
 #		if __cplusplus >= 201103L
-				typedef typename fl_allocator_unrelated::rvalue_reference			rvalue_reference;
-				typedef typename fl_allocator_unrelated::const_rvalue_reference		const_rvalue_reference;
+				typedef typename fl_type_only::rvalue_reference			rvalue_reference;
+				typedef typename fl_type_only::const_rvalue_reference	const_rvalue_reference;
 #		endif
 
-				typedef typename fl_allocator_unrelated::size_type					size_type;
-				typedef typename fl_allocator_unrelated::difference_type			difference_type;
+				typedef typename fl_type_only::size_type				size_type;
+				typedef typename fl_type_only::difference_type			difference_type;
 
-				typedef typename fl_allocator_unrelated::iterator					iterator;
-				typedef typename fl_allocator_unrelated::const_iterator				const_iterator;
+				typedef typename fl_type_only::iterator					iterator;
+				typedef typename fl_type_only::const_iterator			const_iterator;
 
 			private:
-				typedef typename fl_allocator_unrelated::node_base					node_base;
-				typedef typename fl_allocator_unrelated::node						node;
+				typedef typename fl_type_only::node_base				node_base;
+				typedef typename fl_type_only::node						node;
 
 				friend struct kerbal::container::detail::forward_list_node_size_helper<Tp, Allocator>;
 
@@ -153,7 +153,7 @@ namespace kerbal
 				explicit
 				forward_list(const Allocator& alloc) KERBAL_CONDITIONAL_NOEXCEPT(
 						fl_allocator_overload::is_nothrow_constructible_from_allocator_const_reference::value &&
-						fl_allocator_unrelated::is_nothrow_default_constructible::value
+						fl_type_only::is_nothrow_default_constructible::value
 				);
 
 				KERBAL_CONSTEXPR20
@@ -198,13 +198,13 @@ namespace kerbal
 				KERBAL_CONSTEXPR20
 				forward_list(forward_list && src) KERBAL_CONDITIONAL_NOEXCEPT(
 						fl_allocator_overload::is_nothrow_constructible_from_allocator_rvalue_reference::value &&
-						fl_allocator_unrelated::is_nothrow_move_constructible::value
+						fl_type_only::is_nothrow_move_constructible::value
 				);
 
 				KERBAL_CONSTEXPR20
 				forward_list(forward_list && src, const Allocator& alloc) KERBAL_CONDITIONAL_NOEXCEPT(
 						fl_allocator_overload::is_nothrow_constructible_from_allocator_const_reference::value &&
-						fl_allocator_unrelated::template is_nothrow_move_constructible_using_allocator<node_allocator_type>::value
+						fl_type_only::template is_nothrow_move_constructible_using_allocator<node_allocator_type>::value
 				);
 
 #		endif
@@ -274,7 +274,7 @@ namespace kerbal
 
 				KERBAL_CONSTEXPR20
 				void assign(forward_list&& src) KERBAL_CONDITIONAL_NOEXCEPT(
-						fl_allocator_unrelated::template is_nothrow_move_assign_using_allocator<node_allocator_type>::value
+						fl_type_only::template is_nothrow_move_assign_using_allocator<node_allocator_type>::value
 				);
 
 #		endif
@@ -294,23 +294,23 @@ namespace kerbal
 			//===================
 			// iterator
 
-				using fl_allocator_unrelated::before_begin;
-				using fl_allocator_unrelated::cbefore_begin;
+				using fl_type_only::before_begin;
+				using fl_type_only::cbefore_begin;
 
-				using fl_allocator_unrelated::begin;
-				using fl_allocator_unrelated::end;
+				using fl_type_only::begin;
+				using fl_type_only::end;
 
-				using fl_allocator_unrelated::cbegin;
-				using fl_allocator_unrelated::cend;
+				using fl_type_only::cbegin;
+				using fl_type_only::cend;
 
-				using fl_allocator_unrelated::nth;
-				using fl_allocator_unrelated::index_of;
+				using fl_type_only::nth;
+				using fl_type_only::index_of;
 
 			//===================
 			// capacity
 
-				using fl_allocator_unrelated::empty;
-				using fl_allocator_unrelated::size;
+				using fl_type_only::empty;
+				using fl_type_only::size;
 
 				KERBAL_CONSTEXPR
 				size_type max_size() const KERBAL_NOEXCEPT
@@ -321,7 +321,7 @@ namespace kerbal
 			//===================
 			// element access
 
-				using fl_allocator_unrelated::front;
+				using fl_type_only::front;
 
 			//===================
 			// insert
@@ -441,7 +441,7 @@ namespace kerbal
 
 				KERBAL_CONSTEXPR20
 				void clear() KERBAL_CONDITIONAL_NOEXCEPT(
-						noexcept(kerbal::utility::declthis<fl_allocator_unrelated>()->k_clear_using_allocator(
+						noexcept(kerbal::utility::declthis<fl_type_only>()->k_clear_using_allocator(
 								kerbal::utility::declthis<forward_list>()->alloc()
 						))
 				);

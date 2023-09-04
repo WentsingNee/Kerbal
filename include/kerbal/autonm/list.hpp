@@ -108,14 +108,14 @@ namespace kerbal
 		template <typename Tp, typename SemiAllocator>
 		class list :
 				protected kerbal::autonm::detail::list_typedef_helper<Tp, SemiAllocator>::list_semi_allocator_overload ,
-				protected kerbal::container::detail::list_allocator_unrelated<Tp>,
+				protected kerbal::container::detail::list_type_only<Tp>,
 				private kerbal::utility::noncopyable
 		{
 			private:
 				typedef kerbal::autonm::detail::list_typedef_helper<Tp, SemiAllocator>	list_typedef_helper;
 				typedef kerbal::container::detail::list_type_unrelated					list_type_unrelated;
 				typedef typename list_typedef_helper::list_semi_allocator_overload		list_semi_allocator_overload;
-				typedef kerbal::container::detail::list_allocator_unrelated<Tp>			list_allocator_unrelated;
+				typedef kerbal::container::detail::list_type_only<Tp>			list_type_only;
 
 			public:
 				typedef typename list_typedef_helper::auto_node				auto_node;
@@ -136,10 +136,10 @@ namespace kerbal
 				typedef std::size_t					size_type;
 				typedef std::ptrdiff_t				difference_type;
 
-				typedef typename list_allocator_unrelated::iterator					iterator;
-				typedef typename list_allocator_unrelated::const_iterator 			const_iterator;
-				typedef typename list_allocator_unrelated::reverse_iterator			reverse_iterator;
-				typedef typename list_allocator_unrelated::const_reverse_iterator 	const_reverse_iterator;
+				typedef typename list_type_only::iterator					iterator;
+				typedef typename list_type_only::const_iterator 			const_iterator;
+				typedef typename list_type_only::reverse_iterator			reverse_iterator;
+				typedef typename list_type_only::const_reverse_iterator 	const_reverse_iterator;
 
 			public:
 				typedef SemiAllocator										semi_allocator_type;
@@ -169,9 +169,9 @@ namespace kerbal
 				KERBAL_CONSTEXPR20
 				list()
 						KERBAL_CONDITIONAL_NOEXCEPT(
-								list_allocator_unrelated::is_nothrow_init_to_self_constructible::value
+								list_type_only::is_nothrow_init_to_self_constructible::value
 						) :
-						list_allocator_unrelated(kerbal::container::detail::init_list_node_ptr_to_self_tag())
+						list_type_only(kerbal::container::detail::init_list_node_ptr_to_self_tag())
 				{
 				}
 
@@ -180,9 +180,9 @@ namespace kerbal
 				KERBAL_CONSTEXPR20
 				list(list && src)
 						KERBAL_CONDITIONAL_NOEXCEPT(
-								list_allocator_unrelated::is_nothrow_move_constructible::value
+								list_type_only::is_nothrow_move_constructible::value
 						) :
-						list_allocator_unrelated(kerbal::compatibility::move(src))
+						list_type_only(kerbal::compatibility::move(src))
 				{
 				}
 
@@ -191,7 +191,7 @@ namespace kerbal
 				KERBAL_CONSTEXPR20
 				~list()
 				{
-					this->list_allocator_unrelated::k_destroy_using_allocator(this->semi_alloc());
+					this->list_type_only::k_destroy_using_allocator(this->semi_alloc());
 				}
 
 			public:
@@ -218,7 +218,7 @@ namespace kerbal
 				{
 					this->k_move_assign(
 							this->semi_alloc(),
-							static_cast<list_allocator_unrelated &&>(src)
+							static_cast<list_type_only &&>(src)
 					);
 				}
 
@@ -228,32 +228,32 @@ namespace kerbal
 			//===================
 			// element access
 
-				using list_allocator_unrelated::front;
-				using list_allocator_unrelated::back;
+				using list_type_only::front;
+				using list_type_only::back;
 
 			//===================
 			// iterator
 
-				using list_allocator_unrelated::begin;
-				using list_allocator_unrelated::end;
+				using list_type_only::begin;
+				using list_type_only::end;
 
-				using list_allocator_unrelated::cbegin;
-				using list_allocator_unrelated::cend;
+				using list_type_only::cbegin;
+				using list_type_only::cend;
 
-				using list_allocator_unrelated::rbegin;
-				using list_allocator_unrelated::rend;
+				using list_type_only::rbegin;
+				using list_type_only::rend;
 
-				using list_allocator_unrelated::crbegin;
-				using list_allocator_unrelated::crend;
+				using list_type_only::crbegin;
+				using list_type_only::crend;
 
-				using list_allocator_unrelated::nth;
-				using list_allocator_unrelated::index_of;
+				using list_type_only::nth;
+				using list_type_only::index_of;
 
 			//===================
 			// capacity
 
-				using list_allocator_unrelated::empty;
-				using list_allocator_unrelated::size;
+				using list_type_only::empty;
+				using list_type_only::size;
 
 			//===================
 			// insert
@@ -331,31 +331,31 @@ namespace kerbal
 				KERBAL_CONSTEXPR20
 				void clear()
 				{
-					list_allocator_unrelated::k_clear_using_allocator(this->semi_alloc());
+					list_type_only::k_clear_using_allocator(this->semi_alloc());
 				}
 
 				KERBAL_CONSTEXPR20
 				iterator erase(const_iterator pos)
 				{
-					return list_allocator_unrelated::k_erase_using_allocator(this->semi_alloc(), pos);
+					return list_type_only::k_erase_using_allocator(this->semi_alloc(), pos);
 				}
 
 				KERBAL_CONSTEXPR20
 				iterator erase(const_iterator first, const_iterator last)
 				{
-					return list_allocator_unrelated::k_erase_using_allocator(this->semi_alloc(), first, last);
+					return list_type_only::k_erase_using_allocator(this->semi_alloc(), first, last);
 				}
 
 				KERBAL_CONSTEXPR20
 				void pop_front()
 				{
-					list_allocator_unrelated::k_pop_front_using_allocator(this->semi_alloc());
+					list_type_only::k_pop_front_using_allocator(this->semi_alloc());
 				}
 
 				KERBAL_CONSTEXPR20
 				void pop_back()
 				{
-					list_allocator_unrelated::k_pop_back_using_allocator(this->semi_alloc());
+					list_type_only::k_pop_back_using_allocator(this->semi_alloc());
 				}
 
 			//===================
@@ -364,63 +364,63 @@ namespace kerbal
 				KERBAL_CONSTEXPR20
 				void reverse(const_iterator first, const_iterator last) KERBAL_NOEXCEPT
 				{
-					this->list_allocator_unrelated::k_reverse(first, last);
+					this->list_type_only::k_reverse(first, last);
 				}
 
 				KERBAL_CONSTEXPR20
 				void reverse() KERBAL_NOEXCEPT
 				{
-					this->list_allocator_unrelated::reverse();
+					this->list_type_only::reverse();
 				}
 
 				KERBAL_CONSTEXPR20
 				iterator rotate(const_iterator first, const_iterator n_first, const_iterator last) KERBAL_NOEXCEPT
 				{
-					return this->list_allocator_unrelated::rotate(first, n_first, last);
+					return this->list_type_only::rotate(first, n_first, last);
 				}
 
-				using list_allocator_unrelated::rotate;
+				using list_type_only::rotate;
 
 				template <typename BinaryPredict>
 				KERBAL_CONSTEXPR20
 				void merge(list & other, BinaryPredict cmp)
 						KERBAL_CONDITIONAL_NOEXCEPT(
 							noexcept(
-								kerbal::utility::declthis<list>()->list_allocator_unrelated::k_merge(static_cast<list_allocator_unrelated&>(other), cmp)
+								kerbal::utility::declthis<list>()->list_type_only::k_merge(static_cast<list_type_only&>(other), cmp)
 							)
 						)
 				{
-					this->list_allocator_unrelated::k_merge(static_cast<list_allocator_unrelated&>(other), cmp);
+					this->list_type_only::k_merge(static_cast<list_type_only&>(other), cmp);
 				}
 
 				KERBAL_CONSTEXPR20
 				void merge(list & other)
 						KERBAL_CONDITIONAL_NOEXCEPT(
 							noexcept(
-								kerbal::utility::declthis<list>()->list_allocator_unrelated::k_merge(static_cast<list_allocator_unrelated&>(other))
+								kerbal::utility::declthis<list>()->list_type_only::k_merge(static_cast<list_type_only&>(other))
 							)
 						)
 				{
-					this->list_allocator_unrelated::k_merge(static_cast<list_allocator_unrelated&>(other));
+					this->list_type_only::k_merge(static_cast<list_type_only&>(other));
 				}
 
 				template <typename BinaryPredict>
 				KERBAL_CONSTEXPR20
 				void sort(const_iterator first, const_iterator last, BinaryPredict cmp)
 						KERBAL_CONDITIONAL_NOEXCEPT(
-							noexcept(list_allocator_unrelated::k_sort(first, last, cmp))
+							noexcept(list_type_only::k_sort(first, last, cmp))
 						)
 				{
-					list_allocator_unrelated::k_sort(first, last, cmp);
+					list_type_only::k_sort(first, last, cmp);
 				}
 
 				KERBAL_CONSTEXPR20
 				void sort(const_iterator first, const_iterator last)
 						KERBAL_CONDITIONAL_NOEXCEPT(
-							noexcept(list_allocator_unrelated::k_sort(first, last))
+							noexcept(list_type_only::k_sort(first, last))
 						)
 				{
-					list_allocator_unrelated::k_sort(first, last);
+					list_type_only::k_sort(first, last);
 				}
 
 				template <typename BinaryPredict>
@@ -428,74 +428,74 @@ namespace kerbal
 				void sort(BinaryPredict cmp)
 						KERBAL_CONDITIONAL_NOEXCEPT(
 							noexcept(
-								kerbal::utility::declthis<list>()->list_allocator_unrelated::sort(cmp)
+								kerbal::utility::declthis<list>()->list_type_only::sort(cmp)
 							)
 						)
 				{
-					this->list_allocator_unrelated::sort(cmp);
+					this->list_type_only::sort(cmp);
 				}
 
 				KERBAL_CONSTEXPR20
 				void sort()
 						KERBAL_CONDITIONAL_NOEXCEPT(
 							noexcept(
-								kerbal::utility::declthis<list>()->list_allocator_unrelated::sort()
+								kerbal::utility::declthis<list>()->list_type_only::sort()
 							)
 						)
 				{
-					this->list_allocator_unrelated::sort();
+					this->list_type_only::sort();
 				}
 
 				KERBAL_CONSTEXPR20
 				size_type remove(const_reference val)
 				{
-					return list_allocator_unrelated::k_remove_using_allocator(this->semi_alloc(), val);
+					return list_type_only::k_remove_using_allocator(this->semi_alloc(), val);
 				}
 
 				KERBAL_CONSTEXPR20
 				size_type remove(const_iterator first, const_iterator last, const_reference val)
 				{
-					return list_allocator_unrelated::k_remove_using_allocator(this->semi_alloc(), first, last, val);
+					return list_type_only::k_remove_using_allocator(this->semi_alloc(), first, last, val);
 				}
 
 				template <typename UnaryPredicate>
 				KERBAL_CONSTEXPR20
 				size_type remove_if(UnaryPredicate predicate)
 				{
-					return list_allocator_unrelated::k_remove_if_using_allocator(this->semi_alloc(), predicate);
+					return list_type_only::k_remove_if_using_allocator(this->semi_alloc(), predicate);
 				}
 
 				template <typename UnaryPredicate>
 				KERBAL_CONSTEXPR20
 				size_type remove_if(const_iterator first, const_iterator last, UnaryPredicate predicate)
 				{
-					return list_allocator_unrelated::k_remove_if_using_allocator(this->semi_alloc(), first, last, predicate);
+					return list_type_only::k_remove_if_using_allocator(this->semi_alloc(), first, last, predicate);
 				}
 
 				KERBAL_CONSTEXPR20
 				size_type unique()
 				{
-					return list_allocator_unrelated::k_unique_using_allocator(this->semi_alloc());
+					return list_type_only::k_unique_using_allocator(this->semi_alloc());
 				}
 
 				template <typename BinaryPredicate>
 				KERBAL_CONSTEXPR20
 				size_type unique(BinaryPredicate pred)
 				{
-					return list_allocator_unrelated::k_unique_using_allocator(this->semi_alloc(), pred);
+					return list_type_only::k_unique_using_allocator(this->semi_alloc(), pred);
 				}
 
 				KERBAL_CONSTEXPR20
 				size_type unique(const_iterator first, const_iterator last)
 				{
-					return list_allocator_unrelated::k_unique_using_allocator(this->semi_alloc(), first, last);
+					return list_type_only::k_unique_using_allocator(this->semi_alloc(), first, last);
 				}
 
 				template <typename BinaryPredicate>
 				KERBAL_CONSTEXPR20
 				size_type unique(const_iterator first, const_iterator last, BinaryPredicate pred)
 				{
-					return list_allocator_unrelated::k_unique_using_allocator(this->semi_alloc(), first, last, pred);
+					return list_type_only::k_unique_using_allocator(this->semi_alloc(), first, last, pred);
 				}
 
 				KERBAL_CONSTEXPR20
@@ -543,52 +543,52 @@ namespace kerbal
 				KERBAL_CONSTEXPR20
 				static void set_difference(list & l1, const list & l2, list & lto, BinaryPredict cmp)
 				{
-					list_allocator_unrelated::k_set_difference(l1, l2, lto, cmp);
+					list_type_only::k_set_difference(l1, l2, lto, cmp);
 				}
 
 				KERBAL_CONSTEXPR20
 				static void set_difference(list & l1, const list & l2, list & lto)
 				{
-					list_allocator_unrelated::k_set_difference(l1, l2, lto);
+					list_type_only::k_set_difference(l1, l2, lto);
 				}
 
 				template <typename BinaryPredict>
 				KERBAL_CONSTEXPR20
 				static void set_intersection(list & l1, list & l2, list & lto, BinaryPredict cmp)
 				{
-					list_allocator_unrelated::k_set_intersection(l1, l2, lto, cmp);
+					list_type_only::k_set_intersection(l1, l2, lto, cmp);
 				}
 
 				KERBAL_CONSTEXPR20
 				static void set_intersection(list & l1, list & l2, list & lto)
 				{
-					list_allocator_unrelated::k_set_intersection(l1, l2, lto);
+					list_type_only::k_set_intersection(l1, l2, lto);
 				}
 
 				template <typename BinaryPredict>
 				KERBAL_CONSTEXPR20
 				static void set_symmetric_difference(list & l1, list & l2, list & lto, BinaryPredict cmp)
 				{
-					list_allocator_unrelated::k_set_symmetric_difference(l1, l2, lto, cmp);
+					list_type_only::k_set_symmetric_difference(l1, l2, lto, cmp);
 				}
 
 				KERBAL_CONSTEXPR20
 				static void set_symmetric_difference(list & l1, list & l2, list & lto)
 				{
-					list_allocator_unrelated::k_set_symmetric_difference(l1, l2, lto);
+					list_type_only::k_set_symmetric_difference(l1, l2, lto);
 				}
 
 				template <typename BinaryPredict>
 				KERBAL_CONSTEXPR20
 				static void set_union(list & l1, list & l2, list & lto, BinaryPredict cmp)
 				{
-					list_allocator_unrelated::k_set_union(l1, l2, lto, cmp);
+					list_type_only::k_set_union(l1, l2, lto, cmp);
 				}
 
 				KERBAL_CONSTEXPR20
 				static void set_union(list & l1, list & l2, list & lto)
 				{
-					list_allocator_unrelated::k_set_union(l1, l2, lto);
+					list_type_only::k_set_union(l1, l2, lto);
 				}
 
 #		if __cplusplus >= 201103L

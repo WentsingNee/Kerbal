@@ -33,7 +33,7 @@ namespace kerbal
 		{
 			private:
 				typedef kerbal::utility::member_compress_helper<std::allocator<Tp> > super;
-				typedef kerbal::container::detail::vector_allocator_unrelated<Tp> c;
+				typedef kerbal::container::detail::vector_type_only<Tp> c;
 
 			public:
 				typedef Tp									value_type;

@@ -50,7 +50,7 @@ namespace kerbal
 			{
 					friend class kerbal::container::detail::vec_kiter<Tp>;
 
-					friend class kerbal::container::detail::vector_allocator_unrelated<Tp>;
+					friend class kerbal::container::detail::vector_type_only<Tp>;
 
 					template <typename Up, typename Allocator>
 					friend class kerbal::container::vector;
@@ -168,7 +168,7 @@ namespace kerbal
 					public kerbal::operators::less_than_comparable<vec_kiter<Tp> >, // it > jt, it <= jt, it >= jt
 					public kerbal::operators::subtractable<vec_kiter<Tp>, typename kerbal::iterator::iterator_traits<const Tp*>::difference_type> // it - N
 			{
-					friend class kerbal::container::detail::vector_allocator_unrelated<Tp>;
+					friend class kerbal::container::detail::vector_type_only<Tp>;
 
 					template <typename Up, typename Allocator>
 					friend class kerbal::container::vector;

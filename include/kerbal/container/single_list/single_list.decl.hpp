@@ -55,8 +55,8 @@ namespace kerbal
 			template <typename Tp, typename Allocator>
 			struct sl_typedef_helper
 			{
-					typedef kerbal::container::detail::sl_allocator_unrelated<Tp>						sl_allocator_unrelated;
-					typedef typename sl_allocator_unrelated::node 										node;
+					typedef kerbal::container::detail::sl_type_only<Tp>						sl_type_only;
+					typedef typename sl_type_only::node 									node;
 					typedef Allocator																	allocator_type;
 					typedef kerbal::container::detail::container_rebind_allocator_overload<
 							allocator_type, node
@@ -90,36 +90,36 @@ namespace kerbal
 		template <typename Tp, typename Allocator>
 		class single_list:
 				protected detail::sl_typedef_helper<Tp, Allocator>::sl_allocator_overload,
-				protected detail::sl_typedef_helper<Tp, Allocator>::sl_allocator_unrelated
+				protected detail::sl_typedef_helper<Tp, Allocator>::sl_type_only
 		{
 			private:
-				typedef kerbal::container::detail::sl_type_unrelated					sl_type_unrelated;
-				typedef detail::sl_typedef_helper<Tp, Allocator>						sl_typedef_helper;
-				typedef typename sl_typedef_helper::sl_allocator_overload 				sl_allocator_overload;
-				typedef typename sl_typedef_helper::sl_allocator_unrelated				sl_allocator_unrelated;
+				typedef kerbal::container::detail::sl_type_unrelated			sl_type_unrelated;
+				typedef detail::sl_typedef_helper<Tp, Allocator>				sl_typedef_helper;
+				typedef typename sl_typedef_helper::sl_allocator_overload 		sl_allocator_overload;
+				typedef typename sl_typedef_helper::sl_type_only				sl_type_only;
 
 			public:
-				typedef typename sl_allocator_unrelated::value_type					value_type;
-				typedef typename sl_allocator_unrelated::const_type					const_type;
-				typedef typename sl_allocator_unrelated::reference					reference;
-				typedef typename sl_allocator_unrelated::const_reference			const_reference;
-				typedef typename sl_allocator_unrelated::pointer					pointer;
-				typedef typename sl_allocator_unrelated::const_pointer				const_pointer;
+				typedef typename sl_type_only::value_type				value_type;
+				typedef typename sl_type_only::const_type				const_type;
+				typedef typename sl_type_only::reference				reference;
+				typedef typename sl_type_only::const_reference			const_reference;
+				typedef typename sl_type_only::pointer					pointer;
+				typedef typename sl_type_only::const_pointer			const_pointer;
 
 #		if __cplusplus >= 201103L
-				typedef typename sl_allocator_unrelated::rvalue_reference			rvalue_reference;
-				typedef typename sl_allocator_unrelated::const_rvalue_reference		const_rvalue_reference;
+				typedef typename sl_type_only::rvalue_reference			rvalue_reference;
+				typedef typename sl_type_only::const_rvalue_reference	const_rvalue_reference;
 #		endif
 
-				typedef typename sl_allocator_unrelated::size_type					size_type;
-				typedef typename sl_allocator_unrelated::difference_type			difference_type;
+				typedef typename sl_type_only::size_type				size_type;
+				typedef typename sl_type_only::difference_type			difference_type;
 
-				typedef typename sl_allocator_unrelated::iterator					iterator;
-				typedef typename sl_allocator_unrelated::const_iterator				const_iterator;
+				typedef typename sl_type_only::iterator					iterator;
+				typedef typename sl_type_only::const_iterator			const_iterator;
 
 			private:
-				typedef typename sl_allocator_unrelated::node_base					node_base;
-				typedef typename sl_allocator_unrelated::node						node;
+				typedef typename sl_type_only::node_base				node_base;
+				typedef typename sl_type_only::node						node;
 
 				friend struct kerbal::container::detail::single_list_node_size_helper<Tp, Allocator>;
 
@@ -153,7 +153,7 @@ namespace kerbal
 				explicit
 				single_list(const Allocator& alloc) KERBAL_CONDITIONAL_NOEXCEPT(
 						sl_allocator_overload::is_nothrow_constructible_from_allocator_const_reference::value &&
-						sl_allocator_unrelated::is_nothrow_default_constructible::value
+						sl_type_only::is_nothrow_default_constructible::value
 				);
 
 				KERBAL_CONSTEXPR20
@@ -198,13 +198,13 @@ namespace kerbal
 				KERBAL_CONSTEXPR20
 				single_list(single_list && src) KERBAL_CONDITIONAL_NOEXCEPT(
 						sl_allocator_overload::is_nothrow_constructible_from_allocator_rvalue_reference::value &&
-						sl_allocator_unrelated::is_nothrow_move_constructible::value
+						sl_type_only::is_nothrow_move_constructible::value
 				);
 
 				KERBAL_CONSTEXPR20
 				single_list(single_list && src, const Allocator& alloc)  KERBAL_CONDITIONAL_NOEXCEPT(
 						sl_allocator_overload::is_nothrow_constructible_from_allocator_const_reference::value &&
-						sl_allocator_unrelated::template is_nothrow_move_constructible_using_allocator<node_allocator_type>::value
+						sl_type_only::template is_nothrow_move_constructible_using_allocator<node_allocator_type>::value
 				);
 
 #		endif
@@ -274,7 +274,7 @@ namespace kerbal
 
 				KERBAL_CONSTEXPR20
 				void assign(single_list&& src) KERBAL_CONDITIONAL_NOEXCEPT(
-						sl_allocator_unrelated::template is_nothrow_move_assign_using_allocator<node_allocator_type>::value
+						sl_type_only::template is_nothrow_move_assign_using_allocator<node_allocator_type>::value
 				);
 
 #		endif
@@ -294,26 +294,26 @@ namespace kerbal
 			//===================
 			// element access
 
-				using sl_allocator_unrelated::front;
-				using sl_allocator_unrelated::back;
+				using sl_type_only::front;
+				using sl_type_only::back;
 
 			//===================
 			// iterator
 
-				using sl_allocator_unrelated::begin;
-				using sl_allocator_unrelated::end;
+				using sl_type_only::begin;
+				using sl_type_only::end;
 
-				using sl_allocator_unrelated::cbegin;
-				using sl_allocator_unrelated::cend;
+				using sl_type_only::cbegin;
+				using sl_type_only::cend;
 
-				using sl_allocator_unrelated::nth;
-				using sl_allocator_unrelated::index_of;
+				using sl_type_only::nth;
+				using sl_type_only::index_of;
 
 			//===================
 			// capacity
 
-				using sl_allocator_unrelated::empty;
-				using sl_allocator_unrelated::size;
+				using sl_type_only::empty;
+				using sl_type_only::size;
 
 				KERBAL_CONSTEXPR
 				size_type max_size() const KERBAL_NOEXCEPT
@@ -478,7 +478,7 @@ namespace kerbal
 
 				KERBAL_CONSTEXPR20
 				void clear() KERBAL_CONDITIONAL_NOEXCEPT(
-						noexcept(kerbal::utility::declthis<sl_allocator_unrelated>()->k_clear_using_allocator(
+						noexcept(kerbal::utility::declthis<sl_type_only>()->k_clear_using_allocator(
 								kerbal::utility::declthis<single_list>()->alloc()
 						))
 				);
@@ -502,9 +502,9 @@ namespace kerbal
 						))
 				);
 
-				using sl_allocator_unrelated::iter_swap;
+				using sl_type_only::iter_swap;
 
-				using sl_allocator_unrelated::reverse;
+				using sl_type_only::reverse;
 
 				KERBAL_CONSTEXPR20
 				size_type remove(const_reference val);

@@ -25,7 +25,7 @@ namespace kerbal
 			class sl_type_unrelated;
 
 			template <typename Tp>
-			class sl_allocator_unrelated;
+			class sl_type_only;
 
 			class sl_node_base;
 

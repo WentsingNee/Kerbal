@@ -52,7 +52,7 @@ namespace kerbal
 					friend class kerbal::container::detail::fl_type_unrelated;
 
 					template <typename Tp>
-					friend class kerbal::container::detail::fl_allocator_unrelated;
+					friend class kerbal::container::detail::fl_type_only;
 
 					template <typename Tp>
 					friend class fl_iter;
@@ -63,7 +63,7 @@ namespace kerbal
 					friend class kerbal::container::detail::sl_type_unrelated;
 
 					template <typename Tp>
-					friend class kerbal::container::detail::sl_allocator_unrelated;
+					friend class kerbal::container::detail::sl_type_only;
 
 					template <typename Tp>
 					friend class sl_iter;

@@ -150,7 +150,7 @@ namespace kerbal
 				private:
 					typedef sl_iter_type_unrelated super;
 
-					friend class kerbal::container::detail::sl_allocator_unrelated<Tp>;
+					friend class kerbal::container::detail::sl_type_only<Tp>;
 
 					template <typename Up, typename Allocator>
 					friend class kerbal::container::single_list;
@@ -217,7 +217,7 @@ namespace kerbal
 				private:
 					typedef sl_kiter_type_unrelated super;
 
-					friend class kerbal::container::detail::sl_allocator_unrelated<Tp>;
+					friend class kerbal::container::detail::sl_type_only<Tp>;
 
 					template <typename Up, typename Allocator>
 					friend class kerbal::container::single_list;

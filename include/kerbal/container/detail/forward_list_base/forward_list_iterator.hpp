@@ -142,7 +142,7 @@ namespace kerbal
 					typedef fl_iter_type_unrelated super;
 
 					/// forward_list
-					friend class kerbal::container::detail::fl_allocator_unrelated<Tp>;
+					friend class kerbal::container::detail::fl_type_only<Tp>;
 
 					template <typename Up, typename Allocator>
 					friend class kerbal::container::forward_list;
@@ -213,7 +213,7 @@ namespace kerbal
 					typedef fl_kiter_type_unrelated super;
 
 					/// forward_list
-					friend class kerbal::container::detail::fl_allocator_unrelated<Tp>;
+					friend class kerbal::container::detail::fl_type_only<Tp>;
 
 					template <typename Up, typename Allocator>
 					friend class kerbal::container::forward_list;

@@ -54,32 +54,32 @@ namespace kerbal
 		template <typename Tp, typename Allocator>
 		class vector:
 				protected kerbal::container::detail::container_allocator_overload<Allocator>,
-				protected kerbal::container::detail::vector_allocator_unrelated<Tp>
+				protected kerbal::container::detail::vector_type_only<Tp>
 		{
 			private:
 				typedef kerbal::container::detail::container_allocator_overload<Allocator>	vector_allocator_overload;
-				typedef kerbal::container::detail::vector_allocator_unrelated<Tp>			vector_allocator_unrelated;
+				typedef kerbal::container::detail::vector_type_only<Tp>			vector_type_only;
 
 			public:
-				typedef typename vector_allocator_unrelated::value_type					value_type;
-				typedef typename vector_allocator_unrelated::const_type					const_type;
-				typedef typename vector_allocator_unrelated::reference					reference;
-				typedef typename vector_allocator_unrelated::const_reference			const_reference;
-				typedef typename vector_allocator_unrelated::pointer					pointer;
-				typedef typename vector_allocator_unrelated::const_pointer				const_pointer;
+				typedef typename vector_type_only::value_type				value_type;
+				typedef typename vector_type_only::const_type				const_type;
+				typedef typename vector_type_only::reference				reference;
+				typedef typename vector_type_only::const_reference			const_reference;
+				typedef typename vector_type_only::pointer					pointer;
+				typedef typename vector_type_only::const_pointer			const_pointer;
 
 #		if __cplusplus >= 201103L
-				typedef typename vector_allocator_unrelated::rvalue_reference			rvalue_reference;
-				typedef typename vector_allocator_unrelated::const_rvalue_reference		const_rvalue_reference;
+				typedef typename vector_type_only::rvalue_reference			rvalue_reference;
+				typedef typename vector_type_only::const_rvalue_reference	const_rvalue_reference;
 #		endif
 
-				typedef typename vector_allocator_unrelated::size_type					size_type;
-				typedef typename vector_allocator_unrelated::difference_type			difference_type;
+				typedef typename vector_type_only::size_type				size_type;
+				typedef typename vector_type_only::difference_type			difference_type;
 
-				typedef typename vector_allocator_unrelated::iterator					iterator;
-				typedef typename vector_allocator_unrelated::const_iterator				const_iterator;
-				typedef typename vector_allocator_unrelated::reverse_iterator			reverse_iterator;
-				typedef typename vector_allocator_unrelated::const_reverse_iterator		const_reverse_iterator;
+				typedef typename vector_type_only::iterator					iterator;
+				typedef typename vector_type_only::const_iterator			const_iterator;
+				typedef typename vector_type_only::reverse_iterator			reverse_iterator;
+				typedef typename vector_type_only::const_reverse_iterator	const_reverse_iterator;
 
 			private:
 				typedef typename kerbal::type_traits::remove_all_extents<value_type>::type remove_all_extents_t;
@@ -99,14 +99,14 @@ namespace kerbal
 				KERBAL_CONSTEXPR20
 				vector() KERBAL_CONDITIONAL_NOEXCEPT(
 						vector_allocator_overload::is_nothrow_default_constructible::value &&
-						vector_allocator_unrelated::is_nothrow_default_constructible::value
+						vector_type_only::is_nothrow_default_constructible::value
 				);
 
 				KERBAL_CONSTEXPR20
 				explicit
 				vector(const Allocator & allocator) KERBAL_CONDITIONAL_NOEXCEPT(
 						vector_allocator_overload::is_nothrow_constructible_from_allocator_const_reference::value &&
-						vector_allocator_unrelated::is_nothrow_default_constructible::value
+						vector_type_only::is_nothrow_default_constructible::value
 				);
 
 				KERBAL_CONSTEXPR20
@@ -151,13 +151,13 @@ namespace kerbal
 				KERBAL_CONSTEXPR20
 				vector(vector && src) KERBAL_CONDITIONAL_NOEXCEPT(
 						vector_allocator_overload::is_nothrow_constructible_from_allocator_rvalue_reference::value &&
-						vector_allocator_unrelated::is_nothrow_move_constructible::value
+						vector_type_only::is_nothrow_move_constructible::value
 				);
 
 				KERBAL_CONSTEXPR20
 				vector(vector && src, const Allocator & allocator) KERBAL_CONDITIONAL_NOEXCEPT(
 						vector_allocator_overload::is_nothrow_constructible_from_allocator_const_reference::value &&
-						vector_allocator_unrelated::template is_nothrow_move_constructible_using_allocator<allocator_type>::value
+						vector_type_only::template is_nothrow_move_constructible_using_allocator<allocator_type>::value
 				);
 
 
@@ -231,7 +231,7 @@ namespace kerbal
 
 				KERBAL_CONSTEXPR20
 				void assign(vector && src) KERBAL_CONDITIONAL_NOEXCEPT(
-						vector_allocator_unrelated::template is_nothrow_move_assign_using_allocator<allocator_type>::value
+						vector_type_only::template is_nothrow_move_assign_using_allocator<allocator_type>::value
 				);
 
 #		endif
@@ -252,37 +252,37 @@ namespace kerbal
 			//===================
 			// element access
 
-				using vector_allocator_unrelated::at;
-				using vector_allocator_unrelated::operator[];
-				using vector_allocator_unrelated::front;
-				using vector_allocator_unrelated::back;
-				using vector_allocator_unrelated::data;
+				using vector_type_only::at;
+				using vector_type_only::operator[];
+				using vector_type_only::front;
+				using vector_type_only::back;
+				using vector_type_only::data;
 
 			//===================
 			// iterator
 
-				using vector_allocator_unrelated::begin;
-				using vector_allocator_unrelated::end;
+				using vector_type_only::begin;
+				using vector_type_only::end;
 
-				using vector_allocator_unrelated::cbegin;
-				using vector_allocator_unrelated::cend;
+				using vector_type_only::cbegin;
+				using vector_type_only::cend;
 
-				using vector_allocator_unrelated::rbegin;
-				using vector_allocator_unrelated::rend;
+				using vector_type_only::rbegin;
+				using vector_type_only::rend;
 
-				using vector_allocator_unrelated::crbegin;
-				using vector_allocator_unrelated::crend;
+				using vector_type_only::crbegin;
+				using vector_type_only::crend;
 
-				using vector_allocator_unrelated::nth;
-				using vector_allocator_unrelated::cnth;
-				using vector_allocator_unrelated::index_of;
+				using vector_type_only::nth;
+				using vector_type_only::cnth;
+				using vector_type_only::index_of;
 
 			//===================
 			// capacity
 
-				using vector_allocator_unrelated::empty;
-				using vector_allocator_unrelated::size;
-				using vector_allocator_unrelated::capacity;
+				using vector_type_only::empty;
+				using vector_type_only::size;
+				using vector_type_only::capacity;
 
 				KERBAL_CONSTEXPR
 				size_type max_size() const KERBAL_NOEXCEPT
@@ -430,8 +430,8 @@ namespace kerbal
 						noexcept(vector_allocator_overload::k_swap_allocator_if_propagate(
 								kerbal::utility::declval<vector_allocator_overload&>(), kerbal::utility::declval<vector_allocator_overload&>()
 						)) &&
-						noexcept(vector_allocator_unrelated::k_swap_type_unrelated(
-								kerbal::utility::declval<vector_allocator_unrelated&>(), kerbal::utility::declval<vector_allocator_unrelated&>()
+						noexcept(vector_type_only::k_swap_type_unrelated(
+								kerbal::utility::declval<vector_type_only&>(), kerbal::utility::declval<vector_type_only&>()
 						))
 				);
 

@@ -23,7 +23,7 @@ namespace kerbal
 		{
 
 			template <typename Tp>
-			class vector_allocator_unrelated;
+			class vector_type_only;
 
 			template <typename Tp>
 			class vec_iter;

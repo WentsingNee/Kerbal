@@ -217,7 +217,7 @@ namespace kerbal
 			};
 
 			template <typename Tp>
-			class list_allocator_unrelated:
+			class list_type_only:
 					protected list_type_unrelated
 			{
 				private:
@@ -270,19 +270,19 @@ namespace kerbal
 					{
 					};
 
-					list_allocator_unrelated() = default; // for g++ early version
+					list_type_only() = default; // for g++ early version
 
 					using super::super;
 
 #			else
 
-					list_allocator_unrelated() KERBAL_NOEXCEPT
+					list_type_only() KERBAL_NOEXCEPT
 							: super()
 					{
 					}
 
 					explicit
-					list_allocator_unrelated(init_list_node_ptr_to_self_tag tag) KERBAL_NOEXCEPT
+					list_type_only(init_list_node_ptr_to_self_tag tag) KERBAL_NOEXCEPT
 							: super(tag)
 					{
 					}
@@ -291,15 +291,15 @@ namespace kerbal
 
 					template <typename NodeAllocator>
 					KERBAL_CONSTEXPR20
-					list_allocator_unrelated(NodeAllocator & alloc, size_type n);
+					list_type_only(NodeAllocator & alloc, size_type n);
 
 					template <typename NodeAllocator>
 					KERBAL_CONSTEXPR20
-					list_allocator_unrelated(NodeAllocator & alloc, size_type n, const_reference val);
+					list_type_only(NodeAllocator & alloc, size_type n, const_reference val);
 
 					template <typename NodeAllocator, typename InputIterator>
 					KERBAL_CONSTEXPR20
-					list_allocator_unrelated(NodeAllocator & alloc, InputIterator first, InputIterator last,
+					list_type_only(NodeAllocator & alloc, InputIterator first, InputIterator last,
 							typename kerbal::type_traits::enable_if<
 									kerbal::iterator::is_input_compatible_iterator<InputIterator>::value
 									, int
@@ -313,27 +313,27 @@ namespace kerbal
 					};
 
 					KERBAL_CONSTEXPR14
-					list_allocator_unrelated(list_allocator_unrelated && src) KERBAL_NOEXCEPT;
+					list_type_only(list_type_only && src) KERBAL_NOEXCEPT;
 
 				private:
 
 					// move construct using allocator, allocator is equal
 					KERBAL_CONSTEXPR14
-					void k_move_cnstrct_ua_ae(list_allocator_unrelated && src) KERBAL_NOEXCEPT;
+					void k_move_cnstrct_ua_ae(list_type_only && src) KERBAL_NOEXCEPT;
 
 					// move construct using allocator, allocator is not equal
 					template <typename NodeAllocator>
 					KERBAL_CONSTEXPR20
-					void k_move_cnstrct_ua_ane(NodeAllocator & this_alloc, list_allocator_unrelated && src);
+					void k_move_cnstrct_ua_ane(NodeAllocator & this_alloc, list_type_only && src);
 
 					template <typename NodeAllocator>
 					KERBAL_CONSTEXPR20
-					void k_move_cnstrct_ua_helper(NodeAllocator & this_alloc, NodeAllocator && src_alloc, list_allocator_unrelated && src,
+					void k_move_cnstrct_ua_helper(NodeAllocator & this_alloc, NodeAllocator && src_alloc, list_type_only && src,
 												   kerbal::type_traits::false_type /*is_always_equal*/);
 
 					template <typename NodeAllocator>
 					KERBAL_CONSTEXPR14
-					void k_move_cnstrct_ua_helper(NodeAllocator & this_alloc, NodeAllocator && src_alloc, list_allocator_unrelated && src,
+					void k_move_cnstrct_ua_helper(NodeAllocator & this_alloc, NodeAllocator && src_alloc, list_type_only && src,
 												   kerbal::type_traits::true_type /*is_always_equal*/) KERBAL_NOEXCEPT;
 
 				protected:
@@ -346,7 +346,7 @@ namespace kerbal
 
 					template <typename NodeAllocator>
 					KERBAL_CONSTEXPR14
-					list_allocator_unrelated(NodeAllocator & this_alloc, NodeAllocator && src_alloc, list_allocator_unrelated && src)
+					list_type_only(NodeAllocator & this_alloc, NodeAllocator && src_alloc, list_type_only && src)
 							KERBAL_CONDITIONAL_NOEXCEPT(is_nothrow_move_constructible_using_allocator<NodeAllocator>::value)
 					;
 
@@ -379,21 +379,21 @@ namespace kerbal
 
 					template <typename NodeAllocator>
 					KERBAL_CONSTEXPR20
-					void k_cpy_ass_ua_impl(NodeAllocator & alloc, const NodeAllocator & src_alloc, const list_allocator_unrelated & src, CPYASS_VER_NOT_PROPAGATE);
+					void k_cpy_ass_ua_impl(NodeAllocator & alloc, const NodeAllocator & src_alloc, const list_type_only & src, CPYASS_VER_NOT_PROPAGATE);
 
 					template <typename NodeAllocator>
 					KERBAL_CONSTEXPR20
-					void k_cpy_ass_ua_impl(NodeAllocator & alloc, const NodeAllocator & src_alloc, const list_allocator_unrelated & src, CPYASS_VER_PROPAGATE);
+					void k_cpy_ass_ua_impl(NodeAllocator & alloc, const NodeAllocator & src_alloc, const list_type_only & src, CPYASS_VER_PROPAGATE);
 
 					template <typename NodeAllocator>
 					KERBAL_CONSTEXPR20
-					void k_cpy_ass_ua_impl(NodeAllocator & alloc, const NodeAllocator & src_alloc, const list_allocator_unrelated & src, CPYASS_VER_ALWAYS_EQUAL);
+					void k_cpy_ass_ua_impl(NodeAllocator & alloc, const NodeAllocator & src_alloc, const list_type_only & src, CPYASS_VER_ALWAYS_EQUAL);
 
 				protected:
 
 					template <typename NodeAllocator>
 					KERBAL_CONSTEXPR20
-					void k_assign_using_allocator(NodeAllocator & alloc, const NodeAllocator & src_alloc, const list_allocator_unrelated & src);
+					void k_assign_using_allocator(NodeAllocator & alloc, const NodeAllocator & src_alloc, const list_type_only & src);
 
 #			if __cplusplus >= 201103L
 
@@ -401,19 +401,19 @@ namespace kerbal
 
 					template <typename NodeAllocator>
 					KERBAL_CONSTEXPR20
-					void k_move_assign(NodeAllocator & alloc, list_allocator_unrelated && src) KERBAL_NOEXCEPT;
+					void k_move_assign(NodeAllocator & alloc, list_type_only && src) KERBAL_NOEXCEPT;
 
 				private:
 
 					// move assign using allocator, allocator is equal
 					template <typename NodeAllocator>
 					KERBAL_CONSTEXPR20
-					void k_mov_ass_ua_ae(NodeAllocator & alloc, list_allocator_unrelated && src) KERBAL_NOEXCEPT;
+					void k_mov_ass_ua_ae(NodeAllocator & alloc, list_type_only && src) KERBAL_NOEXCEPT;
 
 					// move assign using allocator, allocator is not equal
 					template <typename NodeAllocator>
 					KERBAL_CONSTEXPR20
-					void k_mov_ass_ua_ane(NodeAllocator & alloc, list_allocator_unrelated && src);
+					void k_mov_ass_ua_ane(NodeAllocator & alloc, list_type_only && src);
 
 					typedef kerbal::type_traits::integral_constant<int, 0> MOVASS_VER_NOT_PROPAGATE;
 					typedef kerbal::type_traits::integral_constant<int, 1> MOVASS_VER_PROPAGATE;
@@ -421,15 +421,15 @@ namespace kerbal
 
 					template <typename NodeAllocator>
 					KERBAL_CONSTEXPR20
-					void k_mov_ass_ua_impl(NodeAllocator & alloc, NodeAllocator && src_alloc, list_allocator_unrelated && src, MOVASS_VER_NOT_PROPAGATE);
+					void k_mov_ass_ua_impl(NodeAllocator & alloc, NodeAllocator && src_alloc, list_type_only && src, MOVASS_VER_NOT_PROPAGATE);
 
 					template <typename NodeAllocator>
 					KERBAL_CONSTEXPR20
-					void k_mov_ass_ua_impl(NodeAllocator & alloc, NodeAllocator && src_alloc, list_allocator_unrelated && src, MOVASS_VER_PROPAGATE);
+					void k_mov_ass_ua_impl(NodeAllocator & alloc, NodeAllocator && src_alloc, list_type_only && src, MOVASS_VER_PROPAGATE);
 
 					template <typename NodeAllocator>
 					KERBAL_CONSTEXPR20
-					void k_mov_ass_ua_impl(NodeAllocator & alloc, NodeAllocator && /*src_alloc*/, list_allocator_unrelated && src, MOVASS_VER_ALWAYS_EQUAL) KERBAL_NOEXCEPT;
+					void k_mov_ass_ua_impl(NodeAllocator & alloc, NodeAllocator && /*src_alloc*/, list_type_only && src, MOVASS_VER_ALWAYS_EQUAL) KERBAL_NOEXCEPT;
 
 				protected:
 
@@ -441,7 +441,7 @@ namespace kerbal
 
 					template <typename NodeAllocator>
 					KERBAL_CONSTEXPR20
-					void k_assign_using_allocator(NodeAllocator & alloc, NodeAllocator && src_alloc, list_allocator_unrelated && src)
+					void k_assign_using_allocator(NodeAllocator & alloc, NodeAllocator && src_alloc, list_type_only && src)
 							KERBAL_CONDITIONAL_NOEXCEPT(is_nothrow_move_assign_using_allocator<NodeAllocator>::value)
 					;
 
@@ -675,8 +675,8 @@ namespace kerbal
 					KERBAL_CONSTEXPR20
 					void k_clear_using_allocator(NodeAllocator & alloc)
 							KERBAL_CONDITIONAL_NOEXCEPT(noexcept(k_erase_using_allocator(alloc,
-									kerbal::utility::declthis<list_allocator_unrelated>()->cbegin(),
-									kerbal::utility::declthis<list_allocator_unrelated>()->cend())
+									kerbal::utility::declthis<list_type_only>()->cbegin(),
+									kerbal::utility::declthis<list_type_only>()->cend())
 					));
 
 				//===================
@@ -711,12 +711,12 @@ namespace kerbal
 
 					template <typename BinaryPredict>
 					KERBAL_CONSTEXPR20
-					void k_merge_impl(list_allocator_unrelated & other, BinaryPredict cmp, MERGE_VER_NOTHROW) KERBAL_NOEXCEPT;
+					void k_merge_impl(list_type_only & other, BinaryPredict cmp, MERGE_VER_NOTHROW) KERBAL_NOEXCEPT;
 
 #				if __cpp_exceptions
 					template <typename BinaryPredict>
 					KERBAL_CONSTEXPR20
-					void k_merge_impl(list_allocator_unrelated & other, BinaryPredict cmp, MERGE_VER_MAY_THROW);
+					void k_merge_impl(list_type_only & other, BinaryPredict cmp, MERGE_VER_MAY_THROW);
 #				endif
 
 
@@ -724,10 +724,10 @@ namespace kerbal
 
 					template <typename BinaryPredict>
 					KERBAL_CONSTEXPR20
-					void k_merge(list_allocator_unrelated & other, BinaryPredict cmp);
+					void k_merge(list_type_only & other, BinaryPredict cmp);
 
 					KERBAL_CONSTEXPR20
-					void k_merge(list_allocator_unrelated & other);
+					void k_merge(list_type_only & other);
 
 
 				private:
@@ -769,13 +769,13 @@ namespace kerbal
 					KERBAL_CONSTEXPR20
 					typename kerbal::type_traits::enable_if<is_radix_sort_acceptable_type>::type
 					static k_radix_sort_back_fill(const_iterator insert_pos, kerbal::type_traits::false_type /*unsigned*/,
-												list_allocator_unrelated buckets[], std::size_t BUCKETS_NUM) KERBAL_NOEXCEPT;
+												list_type_only buckets[], std::size_t BUCKETS_NUM) KERBAL_NOEXCEPT;
 
 					template <bool is_radix_sort_acceptable_type>
 					KERBAL_CONSTEXPR20
 					typename kerbal::type_traits::enable_if<is_radix_sort_acceptable_type>::type
 					static k_radix_sort_back_fill(const_iterator insert_pos, kerbal::type_traits::true_type /*signed*/,
-												list_allocator_unrelated buckets[], std::size_t BUCKETS_NUM) KERBAL_NOEXCEPT;
+												list_type_only buckets[], std::size_t BUCKETS_NUM) KERBAL_NOEXCEPT;
 
 					template <std::size_t RADIX_BIT_WIDTH>
 					KERBAL_CONSTEXPR20
@@ -943,31 +943,31 @@ namespace kerbal
 
 					template <typename BinaryPredict>
 					KERBAL_CONSTEXPR20
-					static void k_set_difference(list_allocator_unrelated & l1, const list_allocator_unrelated & l2, list_allocator_unrelated & lto, BinaryPredict cmp);
+					static void k_set_difference(list_type_only & l1, const list_type_only & l2, list_type_only & lto, BinaryPredict cmp);
 
 					KERBAL_CONSTEXPR20
-					static void k_set_difference(list_allocator_unrelated & l1, const list_allocator_unrelated & l2, list_allocator_unrelated & lto);
-
-					template <typename BinaryPredict>
-					KERBAL_CONSTEXPR20
-					static void k_set_intersection(list_allocator_unrelated & l1, list_allocator_unrelated & l2, list_allocator_unrelated & lto, BinaryPredict cmp);
-
-					KERBAL_CONSTEXPR20
-					static void k_set_intersection(list_allocator_unrelated & l1, list_allocator_unrelated & l2, list_allocator_unrelated & lto);
+					static void k_set_difference(list_type_only & l1, const list_type_only & l2, list_type_only & lto);
 
 					template <typename BinaryPredict>
 					KERBAL_CONSTEXPR20
-					static void k_set_symmetric_difference(list_allocator_unrelated & l1, list_allocator_unrelated & l2, list_allocator_unrelated & lto, BinaryPredict cmp);
+					static void k_set_intersection(list_type_only & l1, list_type_only & l2, list_type_only & lto, BinaryPredict cmp);
 
 					KERBAL_CONSTEXPR20
-					static void k_set_symmetric_difference(list_allocator_unrelated & l1, list_allocator_unrelated & l2, list_allocator_unrelated & lto);
+					static void k_set_intersection(list_type_only & l1, list_type_only & l2, list_type_only & lto);
 
 					template <typename BinaryPredict>
 					KERBAL_CONSTEXPR20
-					static void k_set_union(list_allocator_unrelated & l1, list_allocator_unrelated & l2, list_allocator_unrelated & lto, BinaryPredict cmp);
+					static void k_set_symmetric_difference(list_type_only & l1, list_type_only & l2, list_type_only & lto, BinaryPredict cmp);
 
 					KERBAL_CONSTEXPR20
-					static void k_set_union(list_allocator_unrelated & l1, list_allocator_unrelated & l2, list_allocator_unrelated & lto);
+					static void k_set_symmetric_difference(list_type_only & l1, list_type_only & l2, list_type_only & lto);
+
+					template <typename BinaryPredict>
+					KERBAL_CONSTEXPR20
+					static void k_set_union(list_type_only & l1, list_type_only & l2, list_type_only & lto, BinaryPredict cmp);
+
+					KERBAL_CONSTEXPR20
+					static void k_set_union(list_type_only & l1, list_type_only & l2, list_type_only & lto);
 
 				//===================
 				// private

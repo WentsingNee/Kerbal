@@ -55,8 +55,8 @@ namespace kerbal
 			template <typename Tp, typename Allocator>
 			struct list_typedef_helper
 			{
-					typedef kerbal::container::detail::list_allocator_unrelated<Tp>						list_allocator_unrelated;
-					typedef typename list_allocator_unrelated::node 									node;
+					typedef kerbal::container::detail::list_type_only<Tp>					list_type_only;
+					typedef typename list_type_only::node 									node;
 					typedef Allocator																	allocator_type;
 					typedef kerbal::container::detail::container_rebind_allocator_overload<
 							allocator_type, node
@@ -90,38 +90,38 @@ namespace kerbal
 		template <typename Tp, typename Allocator>
 		class list:
 				protected detail::list_typedef_helper<Tp, Allocator>::list_allocator_overload,
-				protected detail::list_typedef_helper<Tp, Allocator>::list_allocator_unrelated
+				protected detail::list_typedef_helper<Tp, Allocator>::list_type_only
 		{
 			private:
-				typedef kerbal::container::detail::list_type_unrelated						list_type_unrelated;
-				typedef detail::list_typedef_helper<Tp, Allocator>							list_typedef_helper;
-				typedef typename list_typedef_helper::list_allocator_overload 				list_allocator_overload;
-				typedef typename list_typedef_helper::list_allocator_unrelated				list_allocator_unrelated;
+				typedef kerbal::container::detail::list_type_unrelated				list_type_unrelated;
+				typedef detail::list_typedef_helper<Tp, Allocator>					list_typedef_helper;
+				typedef typename list_typedef_helper::list_allocator_overload 		list_allocator_overload;
+				typedef typename list_typedef_helper::list_type_only				list_type_only;
 
 			public:
-				typedef typename list_allocator_unrelated::value_type					value_type;
-				typedef typename list_allocator_unrelated::const_type					const_type;
-				typedef typename list_allocator_unrelated::reference					reference;
-				typedef typename list_allocator_unrelated::const_reference				const_reference;
-				typedef typename list_allocator_unrelated::pointer						pointer;
-				typedef typename list_allocator_unrelated::const_pointer				const_pointer;
+				typedef typename list_type_only::value_type					value_type;
+				typedef typename list_type_only::const_type					const_type;
+				typedef typename list_type_only::reference					reference;
+				typedef typename list_type_only::const_reference			const_reference;
+				typedef typename list_type_only::pointer					pointer;
+				typedef typename list_type_only::const_pointer				const_pointer;
 
 #		if __cplusplus >= 201103L
-				typedef typename list_allocator_unrelated::rvalue_reference				rvalue_reference;
-				typedef typename list_allocator_unrelated::const_rvalue_reference		const_rvalue_reference;
+				typedef typename list_type_only::rvalue_reference			rvalue_reference;
+				typedef typename list_type_only::const_rvalue_reference		const_rvalue_reference;
 #		endif
 
-				typedef typename list_allocator_unrelated::size_type					size_type;
-				typedef typename list_allocator_unrelated::difference_type				difference_type;
+				typedef typename list_type_only::size_type					size_type;
+				typedef typename list_type_only::difference_type			difference_type;
 
-				typedef typename list_allocator_unrelated::iterator						iterator;
-				typedef typename list_allocator_unrelated::const_iterator				const_iterator;
-				typedef typename list_allocator_unrelated::reverse_iterator				reverse_iterator;
-				typedef typename list_allocator_unrelated::const_reverse_iterator		const_reverse_iterator;
+				typedef typename list_type_only::iterator					iterator;
+				typedef typename list_type_only::const_iterator				const_iterator;
+				typedef typename list_type_only::reverse_iterator			reverse_iterator;
+				typedef typename list_type_only::const_reverse_iterator		const_reverse_iterator;
 
 			private:
-				typedef typename list_allocator_unrelated::node_base					node_base;
-				typedef typename list_allocator_unrelated::node							node;
+				typedef typename list_type_only::node_base					node_base;
+				typedef typename list_type_only::node						node;
 
 				friend struct kerbal::container::detail::list_node_size_helper<Tp, Allocator>;
 
@@ -144,14 +144,14 @@ namespace kerbal
 				KERBAL_CONSTEXPR20
 				list() KERBAL_CONDITIONAL_NOEXCEPT(
 						list_allocator_overload::is_nothrow_default_constructible::value &&
-						list_allocator_unrelated::is_nothrow_init_to_self_constructible::value
+						list_type_only::is_nothrow_init_to_self_constructible::value
 				);
 
 				KERBAL_CONSTEXPR20
 				explicit
 				list(const Allocator& alloc) KERBAL_CONDITIONAL_NOEXCEPT(
 						list_allocator_overload::is_nothrow_constructible_from_allocator_const_reference::value &&
-						list_allocator_unrelated::is_nothrow_init_to_self_constructible::value
+						list_type_only::is_nothrow_init_to_self_constructible::value
 				);
 
 				KERBAL_CONSTEXPR20
@@ -196,13 +196,13 @@ namespace kerbal
 				KERBAL_CONSTEXPR20
 				list(list && src) KERBAL_CONDITIONAL_NOEXCEPT(
 						list_allocator_overload::is_nothrow_constructible_from_allocator_rvalue_reference::value &&
-						list_allocator_unrelated::is_nothrow_move_constructible::value
+						list_type_only::is_nothrow_move_constructible::value
 				);
 
 				KERBAL_CONSTEXPR20
 				list(list && src, const Allocator& alloc) KERBAL_CONDITIONAL_NOEXCEPT(
 						list_allocator_overload::is_nothrow_constructible_from_allocator_const_reference::value &&
-						list_allocator_unrelated::template is_nothrow_move_constructible_using_allocator<node_allocator_type>::value
+						list_type_only::template is_nothrow_move_constructible_using_allocator<node_allocator_type>::value
 				);
 
 #		endif
@@ -272,7 +272,7 @@ namespace kerbal
 
 				KERBAL_CONSTEXPR20
 				void assign(list&& src) KERBAL_CONDITIONAL_NOEXCEPT(
-						list_allocator_unrelated::template is_nothrow_move_assign_using_allocator<node_allocator_type>::value
+						list_type_only::template is_nothrow_move_assign_using_allocator<node_allocator_type>::value
 				);
 
 #		endif
@@ -292,26 +292,26 @@ namespace kerbal
 			//===================
 			// element access
 
-				using list_allocator_unrelated::front;
-				using list_allocator_unrelated::back;
+				using list_type_only::front;
+				using list_type_only::back;
 
 			//===================
 			// iterator
 
-				using list_allocator_unrelated::begin;
-				using list_allocator_unrelated::end;
+				using list_type_only::begin;
+				using list_type_only::end;
 
-				using list_allocator_unrelated::cbegin;
-				using list_allocator_unrelated::cend;
+				using list_type_only::cbegin;
+				using list_type_only::cend;
 
-				using list_allocator_unrelated::rbegin;
-				using list_allocator_unrelated::rend;
+				using list_type_only::rbegin;
+				using list_type_only::rend;
 
-				using list_allocator_unrelated::crbegin;
-				using list_allocator_unrelated::crend;
+				using list_type_only::crbegin;
+				using list_type_only::crend;
 
-				using list_allocator_unrelated::nth;
-				using list_allocator_unrelated::index_of;
+				using list_type_only::nth;
+				using list_type_only::index_of;
 
 			//===================
 			// capacity
@@ -485,7 +485,7 @@ namespace kerbal
 
 				KERBAL_CONSTEXPR20
 				void clear() KERBAL_CONDITIONAL_NOEXCEPT(
-						noexcept(kerbal::utility::declthis<list_allocator_unrelated>()->k_clear_using_allocator(
+						noexcept(kerbal::utility::declthis<list_type_only>()->k_clear_using_allocator(
 								kerbal::utility::declthis<list>()->alloc()
 						))
 				);
@@ -515,9 +515,9 @@ namespace kerbal
 				KERBAL_CONSTEXPR20
 				void reverse(const_iterator a, const_iterator b) KERBAL_NOEXCEPT;
 
-				using list_allocator_unrelated::reverse;
+				using list_type_only::reverse;
 
-				using list_allocator_unrelated::rotate;
+				using list_type_only::rotate;
 
 				template <typename BinaryPredict>
 				KERBAL_CONSTEXPR20
@@ -533,7 +533,7 @@ namespace kerbal
 				KERBAL_CONSTEXPR20
 				void sort(const_iterator first, const_iterator last);
 
-				using list_allocator_unrelated::sort;
+				using list_type_only::sort;
 
 				KERBAL_CONSTEXPR20
 				size_type remove(const_reference val);

@@ -57,7 +57,7 @@ namespace kerbal
 					friend class kerbal::container::detail::list_type_unrelated;
 
 					template <typename Tp>
-					friend class kerbal::container::detail::list_allocator_unrelated;
+					friend class kerbal::container::detail::list_type_only;
 
 					template <typename Tp, typename SemiAllocator>
 					friend class kerbal::autonm::list;

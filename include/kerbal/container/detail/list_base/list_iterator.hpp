@@ -162,7 +162,7 @@ namespace kerbal
 				private:
 					typedef list_iter_type_unrelated super;
 
-					friend class kerbal::container::detail::list_allocator_unrelated<Tp>;
+					friend class kerbal::container::detail::list_type_only<Tp>;
 
 					template <typename Up, typename Allocator>
 					friend class kerbal::container::list;
@@ -244,7 +244,7 @@ namespace kerbal
 				private:
 					typedef list_kiter_type_unrelated super;
 
-					friend class kerbal::container::detail::list_allocator_unrelated<Tp>;
+					friend class kerbal::container::detail::list_type_only<Tp>;
 
 					template <typename Up, typename Allocator>
 					friend class kerbal::container::list;
