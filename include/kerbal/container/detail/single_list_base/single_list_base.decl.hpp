@@ -375,6 +375,12 @@ namespace kerbal
 
 #			if __cplusplus >= 201103L
 
+				protected:
+
+					template <typename NodeAllocator>
+					KERBAL_CONSTEXPR20
+					void k_move_assign(NodeAllocator & alloc, sl_allocator_unrelated && src) KERBAL_NOEXCEPT;
+
 				private:
 
 					// move assign using allocator, allocator is equal

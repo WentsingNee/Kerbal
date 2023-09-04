@@ -195,6 +195,35 @@ namespace kerbal
 			public:
 
 			//===================
+			// move assign
+
+#		if __cplusplus >= 201103L
+
+				KERBAL_CONSTEXPR20
+				forward_list& operator=(forward_list && src)
+						KERBAL_CONDITIONAL_NOEXCEPT(
+							noexcept(
+								kerbal::utility::declthis<forward_list>()->assign(kerbal::compatibility::move(src))
+							)
+						)
+				{
+					this->assign(kerbal::compatibility::move(src));
+					return *this;
+				}
+
+				KERBAL_CONSTEXPR20
+				void assign(forward_list && src) KERBAL_NOEXCEPT
+				{
+					this->k_move_assign(
+							this->semi_alloc(),
+							static_cast<fl_allocator_unrelated &&>(src)
+					);
+				}
+
+#		endif
+
+
+			//===================
 			// element access
 
 				using fl_allocator_unrelated::front;
@@ -240,7 +269,7 @@ namespace kerbal
 				KERBAL_CONSTEXPR20
 				typename kerbal::type_traits::enable_if<
 						kerbal::iterator::is_forward_compatible_iterator<ForwardIterator>::value,
-						typename forward_list<Tp, SemiAllocator>::iterator
+						iterator
 				>::type
 				insert_after(const_iterator pos, ForwardIterator first, ForwardIterator last)
 				{

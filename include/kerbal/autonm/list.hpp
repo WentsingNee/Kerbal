@@ -197,6 +197,35 @@ namespace kerbal
 			public:
 
 			//===================
+			// move assign
+
+#		if __cplusplus >= 201103L
+
+				KERBAL_CONSTEXPR20
+				list& operator=(list && src)
+						KERBAL_CONDITIONAL_NOEXCEPT(
+							noexcept(
+								kerbal::utility::declthis<list>()->assign(kerbal::compatibility::move(src))
+							)
+						)
+				{
+					this->assign(kerbal::compatibility::move(src));
+					return *this;
+				}
+
+				KERBAL_CONSTEXPR20
+				void assign(list && src) KERBAL_NOEXCEPT
+				{
+					this->k_move_assign(
+							this->semi_alloc(),
+							static_cast<list_allocator_unrelated &&>(src)
+					);
+				}
+
+#		endif
+
+
+			//===================
 			// element access
 
 				using list_allocator_unrelated::front;
@@ -388,7 +417,7 @@ namespace kerbal
 				KERBAL_CONSTEXPR20
 				void sort(const_iterator first, const_iterator last)
 						KERBAL_CONDITIONAL_NOEXCEPT(
-								noexcept(list_allocator_unrelated::k_sort(first, last))
+							noexcept(list_allocator_unrelated::k_sort(first, last))
 						)
 				{
 					list_allocator_unrelated::k_sort(first, last);
@@ -398,7 +427,9 @@ namespace kerbal
 				KERBAL_CONSTEXPR20
 				void sort(BinaryPredict cmp)
 						KERBAL_CONDITIONAL_NOEXCEPT(
-							noexcept(kerbal::utility::declthis<list>()->list_allocator_unrelated::sort(cmp))
+							noexcept(
+								kerbal::utility::declthis<list>()->list_allocator_unrelated::sort(cmp)
+							)
 						)
 				{
 					this->list_allocator_unrelated::sort(cmp);
@@ -407,7 +438,9 @@ namespace kerbal
 				KERBAL_CONSTEXPR20
 				void sort()
 						KERBAL_CONDITIONAL_NOEXCEPT(
-							noexcept(kerbal::utility::declthis<list>()->list_allocator_unrelated::sort())
+							noexcept(
+								kerbal::utility::declthis<list>()->list_allocator_unrelated::sort()
+							)
 						)
 				{
 					this->list_allocator_unrelated::sort();

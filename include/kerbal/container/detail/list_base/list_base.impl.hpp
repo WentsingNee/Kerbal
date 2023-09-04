@@ -532,17 +532,25 @@ namespace kerbal
 
 #		if __cplusplus >= 201103L
 
-			// move assign using allocator, allocator is equal
 			template <typename Tp>
 			template <typename NodeAllocator>
 			KERBAL_CONSTEXPR20
-			void list_allocator_unrelated<Tp>::k_mov_ass_ua_ae(NodeAllocator & alloc, list_allocator_unrelated && src) KERBAL_NOEXCEPT
+			void list_allocator_unrelated<Tp>::k_move_assign(NodeAllocator & alloc, list_allocator_unrelated && src) KERBAL_NOEXCEPT
 			{
 				this->destroy_using_allocator(alloc);
 				this->list_type_unrelated::k_init_node_base();
 				if (!src.empty()) {
 					list_type_unrelated::k_swap_with_empty(static_cast<list_type_unrelated &>(src), static_cast<list_type_unrelated &>(*this));
 				}
+			}
+
+			// move assign using allocator, allocator is equal
+			template <typename Tp>
+			template <typename NodeAllocator>
+			KERBAL_CONSTEXPR20
+			void list_allocator_unrelated<Tp>::k_mov_ass_ua_ae(NodeAllocator & alloc, list_allocator_unrelated && src) KERBAL_NOEXCEPT
+			{
+				this->k_move_assign(alloc, kerbal::compatibility::move(src));
 			}
 
 			// move assign using allocator, allocator is not equal
