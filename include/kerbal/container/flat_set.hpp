@@ -12,6 +12,8 @@
 #ifndef KERBAL_CONTAINER_FLAT_SET_HPP
 #define KERBAL_CONTAINER_FLAT_SET_HPP
 
+#include <kerbal/ts/modules_ts/modules_ts.hpp>
+
 #include <kerbal/compare/basic_compare.hpp>
 #include <kerbal/compatibility/namespace_std_scope.hpp>
 #include <kerbal/container/detail/flat_set_base.hpp>
@@ -30,6 +32,7 @@ namespace kerbal
 	namespace container
 	{
 
+		KERBAL_MODULE_EXPORT
 		template <typename Tp, typename KeyCompare = kerbal::compare::less<Tp>, typename Allocator = std::allocator<Tp> >
 		class flat_set
 				: public kerbal::container::detail::flat_set_base<Tp, kerbal::container::flat_ordered<Tp, Tp, KeyCompare, default_extract<Tp, Tp>, Allocator> >
@@ -182,6 +185,7 @@ namespace kerbal
 
 		};
 
+		KERBAL_MODULE_EXPORT
 		template <typename Tp, typename KeyCompare = kerbal::compare::less<Tp>, typename Allocator = std::allocator<Tp> >
 		class flat_multiset
 				: public kerbal::container::detail::flat_multiset_base<Tp, kerbal::container::flat_ordered<Tp, Tp, KeyCompare, default_extract<Tp, Tp>, Allocator> >
@@ -338,6 +342,7 @@ namespace kerbal
 	namespace algorithm
 	{
 
+		KERBAL_MODULE_EXPORT
 		template <typename Tp, typename KeyCompare, typename Allocator>
 		KERBAL_CONSTEXPR14
 		void swap(kerbal::container::flat_set<Tp, KeyCompare, Allocator> & a,
@@ -347,6 +352,7 @@ namespace kerbal
 			a.swap(b);
 		}
 
+		KERBAL_MODULE_EXPORT
 		template <typename Tp, typename KeyCompare, typename Allocator>
 		KERBAL_CONSTEXPR14
 		void swap(kerbal::container::flat_multiset<Tp, KeyCompare, Allocator> & a,

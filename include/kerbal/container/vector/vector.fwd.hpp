@@ -12,6 +12,8 @@
 #ifndef KERBAL_CONTAINER_VECTOR_VECTOR_FWD_HPP
 #define KERBAL_CONTAINER_VECTOR_VECTOR_FWD_HPP
 
+#include <kerbal/ts/modules_ts/modules_ts.hpp>
+
 #include <kerbal/container/detail/vector_base/vector_base.fwd.hpp>
 
 #include <memory>
@@ -29,6 +31,7 @@ namespace kerbal
 	namespace container
 	{
 
+		KERBAL_MODULE_EXPORT
 		template <typename Tp, typename Allocator = std::allocator<Tp> >
 		class vector;
 
@@ -38,8 +41,11 @@ namespace kerbal
 
 		namespace pmr
 		{
+
+			KERBAL_MODULE_EXPORT
 			template <typename Tp>
 			using vector = kerbal::container::vector<Tp, std::pmr::polymorphic_allocator<Tp> >;
+
 		}
 
 #	endif

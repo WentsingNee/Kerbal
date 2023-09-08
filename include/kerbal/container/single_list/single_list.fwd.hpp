@@ -12,6 +12,8 @@
 #ifndef KERBAL_CONTAINER_SINGLE_LIST_SINGLE_LIST_FWD_HPP
 #define KERBAL_CONTAINER_SINGLE_LIST_SINGLE_LIST_FWD_HPP
 
+#include <kerbal/ts/modules_ts/modules_ts.hpp>
+
 #include <memory>
 
 #if __cplusplus >= 201703L
@@ -27,6 +29,7 @@ namespace kerbal
 	namespace container
 	{
 
+		KERBAL_MODULE_EXPORT
 		template <typename Tp, typename Allocator = std::allocator<Tp> >
 		class single_list;
 
@@ -35,13 +38,17 @@ namespace kerbal
 
 		namespace pmr
 		{
+
+			KERBAL_MODULE_EXPORT
 			template <typename Tp>
 			using single_list = kerbal::container::single_list<Tp, std::pmr::polymorphic_allocator<Tp> >;
+
 		}
 
 #	endif
 #endif
 
+		KERBAL_MODULE_EXPORT
 		template <typename Tp, typename Allocator = std::allocator<Tp> >
 		struct single_list_node_size;
 

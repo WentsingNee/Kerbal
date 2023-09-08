@@ -12,6 +12,8 @@
 #ifndef KERBAL_CONTAINER_VECTOR_VECTOR_DECL_HPP
 #define KERBAL_CONTAINER_VECTOR_VECTOR_DECL_HPP
 
+#include <kerbal/ts/modules_ts/modules_ts.hpp>
+
 #include <kerbal/algorithm/swap.hpp>
 #include <kerbal/assign/ilist.hpp>
 #include <kerbal/compare/sequence_compare.hpp>
@@ -51,6 +53,7 @@ namespace kerbal
 	namespace container
 	{
 
+		KERBAL_MODULE_EXPORT
 		template <typename Tp, typename Allocator>
 		class vector:
 				protected kerbal::container::detail::container_allocator_overload<Allocator>,
@@ -447,6 +450,7 @@ namespace kerbal
 
 #	if __cplusplus >= 201703L
 
+		KERBAL_MODULE_EXPORT
 		template <typename InputIterator, typename Alloc =
 					std::allocator<typename kerbal::iterator::iterator_traits<InputIterator>::value_type> >
 		vector(InputIterator, InputIterator, Alloc = Alloc())
@@ -455,6 +459,7 @@ namespace kerbal
 #	endif
 
 
+		KERBAL_MODULE_EXPORT
 		template <typename Tp, typename Allocator, typename Allocator2>
 		KERBAL_CONSTEXPR20
 		bool operator==(const vector<Tp, Allocator> & lhs, const vector<Tp, Allocator2> & rhs)
@@ -462,6 +467,7 @@ namespace kerbal
 			return kerbal::compare::sequence_equal_to(lhs.cbegin(), lhs.cend(), rhs.cbegin(), rhs.cend());
 		}
 
+		KERBAL_MODULE_EXPORT
 		template <typename Tp, typename Allocator, typename Allocator2>
 		KERBAL_CONSTEXPR20
 		bool operator!=(const vector<Tp, Allocator> & lhs, const vector<Tp, Allocator2> & rhs)
@@ -469,6 +475,7 @@ namespace kerbal
 			return kerbal::compare::sequence_not_equal_to(lhs.cbegin(), lhs.cend(), rhs.cbegin(), rhs.cend());
 		}
 
+		KERBAL_MODULE_EXPORT
 		template <typename Tp, typename Allocator, typename Allocator2>
 		KERBAL_CONSTEXPR20
 		bool operator<(const vector<Tp, Allocator> & lhs, const vector<Tp, Allocator2> & rhs)
@@ -476,6 +483,7 @@ namespace kerbal
 			return kerbal::compare::sequence_less(lhs.cbegin(), lhs.cend(), rhs.cbegin(), rhs.cend());
 		}
 
+		KERBAL_MODULE_EXPORT
 		template <typename Tp, typename Allocator, typename Allocator2>
 		KERBAL_CONSTEXPR20
 		bool operator<=(const vector<Tp, Allocator> & lhs, const vector<Tp, Allocator2> & rhs)
@@ -483,6 +491,7 @@ namespace kerbal
 			return kerbal::compare::sequence_less_equal(lhs.cbegin(), lhs.cend(), rhs.cbegin(), rhs.cend());
 		}
 
+		KERBAL_MODULE_EXPORT
 		template <typename Tp, typename Allocator, typename Allocator2>
 		KERBAL_CONSTEXPR20
 		bool operator>(const vector<Tp, Allocator> & lhs, const vector<Tp, Allocator2> & rhs)
@@ -490,6 +499,7 @@ namespace kerbal
 			return kerbal::compare::sequence_greater(lhs.cbegin(), lhs.cend(), rhs.cbegin(), rhs.cend());
 		}
 
+		KERBAL_MODULE_EXPORT
 		template <typename Tp, typename Allocator, typename Allocator2>
 		KERBAL_CONSTEXPR20
 		bool operator>=(const vector<Tp, Allocator> & lhs, const vector<Tp, Allocator2> & rhs)
@@ -502,6 +512,7 @@ namespace kerbal
 	namespace algorithm
 	{
 
+		KERBAL_MODULE_EXPORT
 		template <typename Tp, typename Allocator>
 		KERBAL_CONSTEXPR20
 		void swap(kerbal::container::vector<Tp, Allocator> & a, kerbal::container::vector<Tp, Allocator> & b)
@@ -517,6 +528,7 @@ namespace kerbal
 
 KERBAL_NAMESPACE_STD_BEGIN
 
+	KERBAL_MODULE_EXPORT
 	template <typename Tp, typename Allocator>
 	KERBAL_CONSTEXPR20
 	void swap(kerbal::container::vector<Tp, Allocator> & a, kerbal::container::vector<Tp, Allocator> & b)

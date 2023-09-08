@@ -12,6 +12,8 @@
 #ifndef KERBAL_CONTAINER_STATIC_VECTOR_STATIC_VECTOR_DECL_HPP
 #define KERBAL_CONTAINER_STATIC_VECTOR_STATIC_VECTOR_DECL_HPP
 
+#include <kerbal/ts/modules_ts/modules_ts.hpp>
+
 #include <kerbal/assign/ilist.hpp>
 #include <kerbal/compare/sequence_compare.hpp>
 #include <kerbal/compatibility/constexpr.hpp>
@@ -60,6 +62,7 @@ namespace kerbal
 		 * @tparam Tp Type of the elements.
 		 * @tparam N The maximum number of elements that the array can hold.
 		 */
+		KERBAL_MODULE_EXPORT
 		template <typename Tp, std::size_t N>
 		class static_vector :
 				protected kerbal::container::detail::sv_trivially_des_overload<Tp, N>
@@ -654,6 +657,7 @@ namespace kerbal
 
 		};
 
+		KERBAL_MODULE_EXPORT
 		template <typename Tp, std::size_t M, std::size_t N>
 		KERBAL_CONSTEXPR14
 		bool operator==(const static_vector<Tp, M> & lhs, const static_vector<Tp, N> & rhs)
@@ -661,6 +665,7 @@ namespace kerbal
 			return kerbal::compare::sequence_equal_to(lhs.cbegin(), lhs.cend(), rhs.cbegin(), rhs.cend());
 		}
 
+		KERBAL_MODULE_EXPORT
 		template <typename Tp, std::size_t M, std::size_t N>
 		KERBAL_CONSTEXPR14
 		bool operator!=(const static_vector<Tp, M> & lhs, const static_vector<Tp, N> & rhs)
@@ -668,6 +673,7 @@ namespace kerbal
 			return kerbal::compare::sequence_not_equal_to(lhs.cbegin(), lhs.cend(), rhs.cbegin(), rhs.cend());
 		}
 
+		KERBAL_MODULE_EXPORT
 		template <typename Tp, std::size_t M, std::size_t N>
 		KERBAL_CONSTEXPR14
 		bool operator<(const static_vector<Tp, M> & lhs, const static_vector<Tp, N> & rhs)
@@ -675,6 +681,7 @@ namespace kerbal
 			return kerbal::compare::sequence_less(lhs.cbegin(), lhs.cend(), rhs.cbegin(), rhs.cend());
 		}
 
+		KERBAL_MODULE_EXPORT
 		template <typename Tp, std::size_t M, std::size_t N>
 		KERBAL_CONSTEXPR14
 		bool operator<=(const static_vector<Tp, M> & lhs, const static_vector<Tp, N> & rhs)
@@ -682,6 +689,7 @@ namespace kerbal
 			return kerbal::compare::sequence_less_equal(lhs.cbegin(), lhs.cend(), rhs.cbegin(), rhs.cend());
 		}
 
+		KERBAL_MODULE_EXPORT
 		template <typename Tp, std::size_t M, std::size_t N>
 		KERBAL_CONSTEXPR14
 		bool operator>(const static_vector<Tp, M> & lhs, const static_vector<Tp, N> & rhs)
@@ -689,6 +697,7 @@ namespace kerbal
 			return kerbal::compare::sequence_greater(lhs.cbegin(), lhs.cend(), rhs.cbegin(), rhs.cend());
 		}
 
+		KERBAL_MODULE_EXPORT
 		template <typename Tp, std::size_t M, std::size_t N>
 		KERBAL_CONSTEXPR14
 		bool operator>=(const static_vector<Tp, M> & lhs, const static_vector<Tp, N> & rhs)
@@ -702,6 +711,7 @@ namespace kerbal
 	namespace algorithm
 	{
 
+		KERBAL_MODULE_EXPORT
 		template <typename Tp, std::size_t N>
 		KERBAL_CONSTEXPR14
 		void swap(kerbal::container::static_vector<Tp, N> & a, kerbal::container::static_vector<Tp, N> & b)
@@ -717,6 +727,7 @@ namespace kerbal
 
 KERBAL_NAMESPACE_STD_BEGIN
 
+	KERBAL_MODULE_EXPORT
 	template <typename Tp, std::size_t N>
 	KERBAL_CONSTEXPR14
 	void swap(kerbal::container::static_vector<Tp, N> & a, kerbal::container::static_vector<Tp, N> & b)

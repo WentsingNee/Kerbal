@@ -12,6 +12,8 @@
 #ifndef KERBAL_OPERATORS_ADDABLE_HPP
 #define KERBAL_OPERATORS_ADDABLE_HPP
 
+#include <kerbal/ts/modules_ts/modules_ts.hpp>
+
 #include <kerbal/compatibility/constexpr.hpp>
 #include <kerbal/compatibility/noexcept.hpp>
 
@@ -21,6 +23,7 @@ namespace kerbal
 	namespace operators
 	{
 
+		KERBAL_MODULE_EXPORT
 		template <typename Tp, typename Up = Tp>
 		struct addable
 		{
@@ -35,6 +38,7 @@ namespace kerbal
 				}
 		};
 
+		KERBAL_MODULE_EXPORT
 		template <typename Tp, typename Up>
 		struct addable_left
 		{

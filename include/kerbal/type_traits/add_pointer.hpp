@@ -14,6 +14,7 @@
 #define KERBAL_TYPE_TRAITS_ADD_POINTER_HPP
 
 #include <kerbal/ts/modules_ts/modules_ts.hpp>
+
 #include <kerbal/type_traits/is_referencable.hpp>
 #include <kerbal/type_traits/is_void.hpp>
 #include <kerbal/type_traits/logical.hpp>

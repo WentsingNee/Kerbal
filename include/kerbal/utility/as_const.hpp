@@ -12,6 +12,8 @@
 #ifndef KERBAL_UTILITY_AS_CONST_HPP
 #define KERBAL_UTILITY_AS_CONST_HPP
 
+#include <kerbal/ts/modules_ts/modules_ts.hpp>
+
 #include <kerbal/compatibility/constexpr.hpp>
 #include <kerbal/compatibility/noexcept.hpp>
 #include <kerbal/type_traits/add_const.hpp>
@@ -23,6 +25,7 @@ namespace kerbal
 	namespace utility
 	{
 
+		KERBAL_MODULE_EXPORT
 		template <typename Tp>
 		KERBAL_CONSTEXPR
 		typename kerbal::type_traits::add_const<Tp>::type &
@@ -33,6 +36,7 @@ namespace kerbal
 
 #	if __cplusplus >= 201103L
 
+		KERBAL_MODULE_EXPORT
 		template <typename Tp>
 		void as_const(const Tp&&) = delete;
 

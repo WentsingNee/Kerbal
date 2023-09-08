@@ -12,6 +12,8 @@
 #ifndef KERBAL_ALGORITHM_BINARY_SEARCH_LOWER_BOUND_HINT_HPP
 #define KERBAL_ALGORITHM_BINARY_SEARCH_LOWER_BOUND_HINT_HPP
 
+#include <kerbal/ts/modules_ts/modules_ts.hpp>
+
 #include <kerbal/algorithm/binary_search/lower_bound.hpp>
 #include <kerbal/algorithm/binary_search/lower_bound_backward.hpp>
 #include <kerbal/compare/binary_type_compare.hpp>
@@ -32,7 +34,7 @@ namespace kerbal
 			template <typename ForwardIterator, typename Tp, typename Comparator>
 			KERBAL_CONSTEXPR14
 			ForwardIterator
-			lower_bound_hint(ForwardIterator first, ForwardIterator last, const Tp& value,
+			k_lower_bound_hint(ForwardIterator first, ForwardIterator last, const Tp& value,
 								ForwardIterator hint, Comparator comparator, std::forward_iterator_tag)
 			{
 				if (hint == last) {
@@ -41,20 +43,20 @@ namespace kerbal
 				} else { // *hint >= value
 					last = hint; // both are right if last = hint or last = next(hint)
 				}
-				return kerbal::algorithm::detail::lower_bound_helper(first, last, value, comparator,
+				return kerbal::algorithm::detail::k_lower_bound(first, last, value, comparator,
 																	kerbal::iterator::iterator_category(first));
 			}
 
 			template <typename BidirectionalIterator, typename Tp, typename Comparator>
 			KERBAL_CONSTEXPR14
 			BidirectionalIterator
-			lower_bound_hint(BidirectionalIterator first, BidirectionalIterator last, const Tp& value,
+			k_lower_bound_hint(BidirectionalIterator first, BidirectionalIterator last, const Tp& value,
 								BidirectionalIterator hint, Comparator comparator, std::bidirectional_iterator_tag)
 			{
 				if (hint == last) {
 				} else if (comparator(*hint, value)) { //*hint < value
 					++hint;
-					return kerbal::algorithm::detail::lower_bound_helper(hint, last, value, comparator,
+					return kerbal::algorithm::detail::k_lower_bound(hint, last, value, comparator,
 																		kerbal::iterator::iterator_category(first));
 				} else { // *hint >= value
 				}
@@ -64,7 +66,7 @@ namespace kerbal
 			template <typename RandomAccessIterator, typename Tp, typename Comparator>
 			KERBAL_CONSTEXPR14
 			RandomAccessIterator
-			lower_bound_hint(RandomAccessIterator first, RandomAccessIterator last, const Tp& value,
+			k_lower_bound_hint(RandomAccessIterator first, RandomAccessIterator last, const Tp& value,
 								RandomAccessIterator hint, Comparator comparator, std::random_access_iterator_tag)
 			{
 				typedef RandomAccessIterator iterator;
@@ -75,13 +77,13 @@ namespace kerbal
 					if (kerbal::iterator::distance(hint, last) > 4) {
 						iterator hint_4(hint + 4);
 						if (comparator(*hint_4, value)) { // hint[4] < value
-							return kerbal::algorithm::detail::lower_bound_helper(kerbal::iterator::next(hint_4), last, value,
+							return kerbal::algorithm::detail::k_lower_bound(kerbal::iterator::next(hint_4), last, value,
 																				comparator, std::random_access_iterator_tag());
 						} else {
 							last = hint_4;
 						}
 					}
-					return kerbal::algorithm::detail::lower_bound_helper(hint, last, value, comparator, std::forward_iterator_tag());
+					return kerbal::algorithm::detail::k_lower_bound(hint, last, value, comparator, std::forward_iterator_tag());
 				} else { //*hint >= value
 				}
 				if (kerbal::iterator::distance(first, hint) > 4) {
@@ -89,7 +91,7 @@ namespace kerbal
 					if (comparator(*hint_4, value)) { // hint[-4] < value
 						first = hint_4;
 					} else {
-						return kerbal::algorithm::detail::lower_bound_helper(first, hint_4, value, comparator,
+						return kerbal::algorithm::detail::k_lower_bound(first, hint_4, value, comparator,
 																			std::random_access_iterator_tag());
 					}
 				}
@@ -98,15 +100,17 @@ namespace kerbal
 
 		} // namespace detail
 
+		KERBAL_MODULE_EXPORT
 		template <typename ForwardIterator, typename Tp, typename Comparator>
 		KERBAL_CONSTEXPR14
 		ForwardIterator
 		lower_bound_hint(ForwardIterator first, ForwardIterator last, const Tp& value, ForwardIterator hint, Comparator comparator)
 		{
-			return kerbal::algorithm::detail::lower_bound_hint(first, last, value, hint, comparator,
+			return kerbal::algorithm::detail::k_lower_bound_hint(first, last, value, hint, comparator,
 																kerbal::iterator::iterator_category(first));
 		}
 
+		KERBAL_MODULE_EXPORT
 		template <typename ForwardIterator, typename Tp>
 		KERBAL_CONSTEXPR14
 		ForwardIterator

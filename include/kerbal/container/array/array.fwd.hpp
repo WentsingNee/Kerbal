@@ -12,6 +12,8 @@
 #ifndef KERBAL_CONTAINER_ARRAY_ARRAY_FWD_HPP
 #define KERBAL_CONTAINER_ARRAY_ARRAY_FWD_HPP
 
+#include <kerbal/ts/modules_ts/modules_ts.hpp>
+
 #include <cstddef>
 
 
@@ -21,19 +23,9 @@ namespace kerbal
 	namespace container
 	{
 
+		KERBAL_MODULE_EXPORT
 		template <typename Tp, std::size_t N>
 		class array;
-
-		namespace detail
-		{
-
-			template <typename Tp>
-			class arr_iter;
-
-			template <typename Tp>
-			class arr_kiter;
-
-		} // namespace detail
 
 	} // namespace container
 

@@ -40,6 +40,8 @@
 #ifndef KERBAL_HASH_SHA1_HPP
 #define KERBAL_HASH_SHA1_HPP
 
+#include <kerbal/ts/modules_ts/modules_ts.hpp>
+
 #include <kerbal/hash/sha1/sha1_result.hpp>
 
 #include <kerbal/compatibility/constexpr.hpp>
@@ -91,6 +93,7 @@ namespace kerbal
 
 		};
 
+		KERBAL_MODULE_EXPORT
 		struct SHA1_policy
 		{
 			struct fast {};
@@ -130,6 +133,7 @@ namespace kerbal
 
 		};
 
+		KERBAL_MODULE_EXPORT
 		template <typename Policy>
 		class SHA1_context : protected SHA1_transform_overload<Policy>
 		{

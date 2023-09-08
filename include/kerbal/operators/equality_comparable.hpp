@@ -12,6 +12,8 @@
 #ifndef KERBAL_OPERATORS_EQUALITY_COMPARABLE_HPP
 #define KERBAL_OPERATORS_EQUALITY_COMPARABLE_HPP
 
+#include <kerbal/ts/modules_ts/modules_ts.hpp>
+
 #include <kerbal/compatibility/constexpr.hpp>
 #include <kerbal/compatibility/noexcept.hpp>
 
@@ -21,6 +23,7 @@ namespace kerbal
 	namespace operators
 	{
 
+		KERBAL_MODULE_EXPORT
 		template <typename Tp>
 		struct equality_comparable
 		{

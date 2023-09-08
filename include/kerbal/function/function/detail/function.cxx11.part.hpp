@@ -12,6 +12,8 @@
 #ifndef KERBAL_FUNCTION_FUNCTION_DETAIL_FUNCTION_CXX11_PART_HPP
 #define KERBAL_FUNCTION_FUNCTION_DETAIL_FUNCTION_CXX11_PART_HPP
 
+#include <kerbal/ts/modules_ts/modules_ts.hpp>
+
 #include <kerbal/function/function/function.fwd.hpp>
 #include <kerbal/function/bad_function_call.hpp>
 #include <kerbal/function/bad_function_cast.hpp>
@@ -380,6 +382,7 @@ namespace kerbal
 		} // namespace detail
 
 
+		KERBAL_MODULE_EXPORT
 		template <typename Ret, std::size_t Size, std::size_t Align, typename Allocator, typename ... TArgs>
 		class basic_function<Ret(TArgs...), Size, Align, Allocator> :
 				private kerbal::utility::member_compress_helper<Allocator>
@@ -919,6 +922,8 @@ namespace kerbal
 
 		};
 
+
+		KERBAL_MODULE_EXPORT
 		template <typename T, typename Fun, typename Allocator, std::size_t Size, std::size_t Align>
 		KERBAL_CONSTEXPR20
 		T* function_cast(basic_function<Fun, Size, Align, Allocator> * operand) KERBAL_NOEXCEPT
@@ -926,6 +931,7 @@ namespace kerbal
 			return operand->template get_pointer<T>();
 		}
 
+		KERBAL_MODULE_EXPORT
 		template <typename T, typename Fun, typename Allocator, std::size_t Size, std::size_t Align>
 		KERBAL_CONSTEXPR20
 		const T* function_cast(const basic_function<Fun, Size, Align, Allocator> * operand) KERBAL_NOEXCEPT
@@ -933,6 +939,7 @@ namespace kerbal
 			return operand->template get_pointer<T>();
 		}
 
+		KERBAL_MODULE_EXPORT
 		template <typename T, typename Fun, typename Allocator, std::size_t Size, std::size_t Align>
 		KERBAL_CONSTEXPR20
 		T function_cast(basic_function<Fun, Size, Align, Allocator> & operand)
@@ -940,6 +947,7 @@ namespace kerbal
 			return operand.template get<T>();
 		}
 
+		KERBAL_MODULE_EXPORT
 		template <typename T, typename Fun, typename Allocator, std::size_t Size, std::size_t Align>
 		KERBAL_CONSTEXPR20
 		const T function_cast(const basic_function<Fun, Size, Align, Allocator> & operand)
@@ -949,6 +957,7 @@ namespace kerbal
 
 #	if __cplusplus >= 201103L
 
+		KERBAL_MODULE_EXPORT
 		template <typename T, typename Fun, typename Allocator, std::size_t Size, std::size_t Align>
 		KERBAL_CONSTEXPR20
 		T function_cast(basic_function<Fun, Size, Align, Allocator> && operand)
@@ -963,6 +972,7 @@ namespace kerbal
 	namespace algorithm
 	{
 
+		KERBAL_MODULE_EXPORT
 		template <std::size_t Size, std::size_t Align, typename Allocator, typename Ret, typename ... TArgs>
 		KERBAL_CONSTEXPR20
 		void swap(kerbal::function::basic_function<Ret(TArgs...), Size, Align, Allocator> & a, kerbal::function::basic_function<Ret(TArgs...), Size, Align, Allocator> & b)
@@ -978,6 +988,7 @@ namespace kerbal
 
 KERBAL_NAMESPACE_STD_BEGIN
 
+	KERBAL_MODULE_EXPORT
 	template <std::size_t Size, std::size_t Align, typename Allocator, typename Ret, typename ... TArgs>
 	KERBAL_CONSTEXPR20
 	void swap(kerbal::function::basic_function<Ret(TArgs...), Size, Align, Allocator> & a, kerbal::function::basic_function<Ret(TArgs...), Size, Align, Allocator> & b)

@@ -12,6 +12,8 @@
 #ifndef KERBAL_CONTAINER_AVL_SET_AVL_SET_DECL_HPP
 #define KERBAL_CONTAINER_AVL_SET_AVL_SET_DECL_HPP
 
+#include <kerbal/ts/modules_ts/modules_ts.hpp>
+
 #include <kerbal/container/avl_set/avl_set.fwd.hpp>
 #include <kerbal/container/avl_ordered/avl_ordered.decl.hpp>
 
@@ -40,6 +42,7 @@ namespace kerbal
 	namespace container
 	{
 
+		KERBAL_MODULE_EXPORT
 		template <typename T, typename KeyCompare, typename Allocator>
 		class avl_set : protected kerbal::container::avl_ordered<T, kerbal::container::identity_extractor<T>, KeyCompare, Allocator>
 		{
@@ -450,22 +453,26 @@ namespace kerbal
 
 #	if __cplusplus >= 201703L
 
+		KERBAL_MODULE_EXPORT
 		template <typename InputIterator>
 		avl_set(InputIterator, InputIterator)
 		-> avl_set<typename kerbal::iterator::iterator_traits<InputIterator>::value_type>;
 
+		KERBAL_MODULE_EXPORT
 		template <typename InputIterator, typename KeyCompare,
 				typename = typename kerbal::type_traits::enable_if<!kerbal::memory::is_allocator<KeyCompare>::value>::type
 		>
 		avl_set(InputIterator, InputIterator, const KeyCompare &)
 		-> avl_set<typename kerbal::iterator::iterator_traits<InputIterator>::value_type, KeyCompare>;
 
+		KERBAL_MODULE_EXPORT
 		template <typename InputIterator, typename Allocator,
 				typename = typename kerbal::type_traits::enable_if<kerbal::memory::is_allocator<Allocator>::value>::type
 		>
 		avl_set(InputIterator, InputIterator, const Allocator &)
 		-> avl_set<typename kerbal::iterator::iterator_traits<InputIterator>::value_type, kerbal::compare::binary_type_less<void, void>, Allocator>;
 
+		KERBAL_MODULE_EXPORT
 		template <typename InputIterator, typename KeyCompare, typename Allocator,
 				typename = typename kerbal::type_traits::enable_if<kerbal::memory::is_allocator<Allocator>::value>::type
 		>
@@ -473,22 +480,26 @@ namespace kerbal
 		-> avl_set<typename kerbal::iterator::iterator_traits<InputIterator>::value_type, KeyCompare, Allocator>;
 
 
+		KERBAL_MODULE_EXPORT
 		template <typename T>
 		avl_set(std::initializer_list<T>)
 		-> avl_set<T>;
 
+		KERBAL_MODULE_EXPORT
 		template <typename T, typename KeyCompare,
 				typename = typename kerbal::type_traits::enable_if<!kerbal::memory::is_allocator<KeyCompare>::value>::type
 		>
 		avl_set(std::initializer_list<T>, const KeyCompare &)
 		-> avl_set<T, KeyCompare>;
 
+		KERBAL_MODULE_EXPORT
 		template <typename T, typename Allocator,
 				typename = typename kerbal::type_traits::enable_if<kerbal::memory::is_allocator<Allocator>::value>::type
 		>
 		avl_set(std::initializer_list<T>, const Allocator &)
 		-> avl_set<T, kerbal::compare::binary_type_less<void, void>, Allocator>;
 
+		KERBAL_MODULE_EXPORT
 		template <typename T, typename KeyCompare, typename Allocator,
 				typename = typename kerbal::type_traits::enable_if<!kerbal::memory::is_allocator<KeyCompare>::value>::type
 		>
@@ -498,6 +509,7 @@ namespace kerbal
 #	endif // if __cplusplus >= 201703L
 
 
+		KERBAL_MODULE_EXPORT
 		template <typename T, typename KeyCompare, typename Allocator, typename Allocator2>
 		KERBAL_CONSTEXPR20
 		bool operator==(const avl_set<T, KeyCompare, Allocator> & lhs, const avl_set<T, KeyCompare, Allocator2> & rhs)
@@ -508,6 +520,7 @@ namespace kerbal
 			return kerbal::compare::sequence_equal_to(lhs.cbegin(), lhs.cend(), rhs.cbegin(), rhs.cend());
 		}
 
+		KERBAL_MODULE_EXPORT
 		template <typename T, typename KeyCompare, typename Allocator, typename Allocator2>
 		KERBAL_CONSTEXPR20
 		bool operator!=(const avl_set<T, KeyCompare, Allocator> & lhs, const avl_set<T, KeyCompare, Allocator2> & rhs)
@@ -518,6 +531,7 @@ namespace kerbal
 			return kerbal::compare::sequence_not_equal_to(lhs.cbegin(), lhs.cend(), rhs.cbegin(), rhs.cend());
 		}
 
+		KERBAL_MODULE_EXPORT
 		template <typename T, typename KeyCompare, typename Allocator, typename Allocator2>
 		KERBAL_CONSTEXPR20
 		bool operator<(const avl_set<T, KeyCompare, Allocator> & lhs, const avl_set<T, KeyCompare, Allocator2> & rhs)
@@ -525,6 +539,7 @@ namespace kerbal
 			return kerbal::compare::sequence_less(lhs.cbegin(), lhs.cend(), rhs.cbegin(), rhs.cend());
 		}
 
+		KERBAL_MODULE_EXPORT
 		template <typename T, typename KeyCompare, typename Allocator, typename Allocator2>
 		KERBAL_CONSTEXPR20
 		bool operator<=(const avl_set<T, KeyCompare, Allocator> & lhs, const avl_set<T, KeyCompare, Allocator2> & rhs)
@@ -532,6 +547,7 @@ namespace kerbal
 			return kerbal::compare::sequence_less_equal(lhs.cbegin(), lhs.cend(), rhs.cbegin(), rhs.cend());
 		}
 
+		KERBAL_MODULE_EXPORT
 		template <typename T, typename KeyCompare, typename Allocator, typename Allocator2>
 		KERBAL_CONSTEXPR20
 		bool operator>(const avl_set<T, KeyCompare, Allocator> & lhs, const avl_set<T, KeyCompare, Allocator2> & rhs)
@@ -539,6 +555,7 @@ namespace kerbal
 			return kerbal::compare::sequence_greater(lhs.cbegin(), lhs.cend(), rhs.cbegin(), rhs.cend());
 		}
 
+		KERBAL_MODULE_EXPORT
 		template <typename T, typename KeyCompare, typename Allocator, typename Allocator2>
 		KERBAL_CONSTEXPR20
 		bool operator>=(const avl_set<T, KeyCompare, Allocator> & lhs, const avl_set<T, KeyCompare, Allocator2> & rhs)
@@ -551,6 +568,7 @@ namespace kerbal
 	namespace algorithm
 	{
 
+		KERBAL_MODULE_EXPORT
 		template <typename T, typename KeyCompare, typename Allocator>
 		KERBAL_CONSTEXPR20
 		void swap(kerbal::container::avl_set<T, KeyCompare, Allocator> & a, kerbal::container::avl_set<T, KeyCompare, Allocator> & b)
@@ -566,6 +584,7 @@ namespace kerbal
 
 KERBAL_NAMESPACE_STD_BEGIN
 
+	KERBAL_MODULE_EXPORT
 	template <typename T, typename KeyCompare, typename Allocator>
 	KERBAL_CONSTEXPR20
 	void swap(kerbal::container::avl_set<T, KeyCompare, Allocator> & a, kerbal::container::avl_set<T, KeyCompare, Allocator> & b)

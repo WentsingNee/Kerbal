@@ -12,6 +12,8 @@
 #ifndef KERBAL_CONTAINER_STATIC_FLAT_SET_HPP
 #define KERBAL_CONTAINER_STATIC_FLAT_SET_HPP
 
+#include <kerbal/ts/modules_ts/modules_ts.hpp>
+
 #include <kerbal/compare/basic_compare.hpp>
 #include <kerbal/compatibility/namespace_std_scope.hpp>
 #include <kerbal/container/detail/flat_set_base.hpp>
@@ -26,6 +28,7 @@ namespace kerbal
 	namespace container
 	{
 
+		KERBAL_MODULE_EXPORT
 		template <typename Tp, std::size_t N, typename KeyCompare = kerbal::compare::less<Tp> >
 		class static_flat_set
 				: public kerbal::container::detail::flat_set_base<Tp, kerbal::container::static_ordered<Tp, N, Tp, KeyCompare> >
@@ -193,6 +196,7 @@ namespace kerbal
 
 		};
 
+		KERBAL_MODULE_EXPORT
 		template <typename Tp, std::size_t N, typename KeyCompare = kerbal::compare::less<Tp> >
 		class static_flat_multiset
 				: public kerbal::container::detail::flat_multiset_base<Tp, kerbal::container::static_ordered<Tp, N, Tp, KeyCompare> >
@@ -366,6 +370,7 @@ namespace kerbal
 	namespace algorithm
 	{
 
+		KERBAL_MODULE_EXPORT
 		template <typename Tp, std::size_t N, typename KeyCompare>
 		KERBAL_CONSTEXPR14
 		void swap(kerbal::container::static_flat_set<Tp, N, KeyCompare> & a,
@@ -375,6 +380,7 @@ namespace kerbal
 			a.swap(b);
 		}
 
+		KERBAL_MODULE_EXPORT
 		template <typename Tp, std::size_t N, typename KeyCompare>
 		KERBAL_CONSTEXPR14
 		void swap(kerbal::container::static_flat_multiset<Tp, N, KeyCompare> & a,

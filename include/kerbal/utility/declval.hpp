@@ -12,6 +12,8 @@
 #ifndef KERBAL_UTILITY_DECLVAL_HPP
 #define KERBAL_UTILITY_DECLVAL_HPP
 
+#include <kerbal/ts/modules_ts/modules_ts.hpp>
+
 #include <kerbal/compatibility/noexcept.hpp>
 
 #if __cplusplus >= 201103L
@@ -29,6 +31,7 @@ namespace kerbal
 
 #	if __cplusplus >= 201103L
 
+		KERBAL_MODULE_EXPORT
 		template <typename Tp>
 		typename kerbal::type_traits::add_rvalue_reference<Tp>::type
 		declval() KERBAL_NOEXCEPT;
@@ -41,6 +44,7 @@ namespace kerbal
 
 #	endif
 
+		KERBAL_MODULE_EXPORT
 		template <typename Tp>
 		Tp*
 		declthis() KERBAL_NOEXCEPT;

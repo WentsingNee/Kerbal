@@ -12,6 +12,8 @@
 #ifndef KERBAL_CONTAINER_STATIC_ORDERED_HPP
 #define KERBAL_CONTAINER_STATIC_ORDERED_HPP
 
+#include <kerbal/ts/modules_ts/modules_ts.hpp>
+
 #include <kerbal/algorithm/swap.hpp>
 #include <kerbal/compare/basic_compare.hpp>
 #include <kerbal/compatibility/namespace_std_scope.hpp>
@@ -27,6 +29,7 @@ namespace kerbal
 	namespace container
 	{
 
+		KERBAL_MODULE_EXPORT
 		template <typename Entity, std::size_t N, typename Key = Entity,
 			typename KeyCompare = kerbal::compare::less<Key>, typename Extract = default_extract<Key, Entity> >
 		class static_ordered:
@@ -210,6 +213,7 @@ namespace kerbal
 	namespace algorithm
 	{
 
+		KERBAL_MODULE_EXPORT
 		template <typename Entity, std::size_t N, typename Key, typename KeyCompare, typename Extract>
 		KERBAL_CONSTEXPR14
 		void swap(kerbal::container::static_ordered<Entity, N, Key, KeyCompare, Extract> & a,

@@ -12,6 +12,8 @@
 #ifndef KERBAL_ALGORITHM_BINARY_SEARCH_LOWER_BOUND_HPP
 #define KERBAL_ALGORITHM_BINARY_SEARCH_LOWER_BOUND_HPP
 
+#include <kerbal/ts/modules_ts/modules_ts.hpp>
+
 #include <kerbal/compare/binary_type_compare.hpp>
 #include <kerbal/compatibility/constexpr.hpp>
 #include <kerbal/iterator/iterator.hpp>
@@ -30,7 +32,7 @@ namespace kerbal
 			template <typename ForwardIterator, typename Tp, typename Comparator>
 			KERBAL_CONSTEXPR14
 			ForwardIterator
-			lower_bound_helper(ForwardIterator first, ForwardIterator last, const Tp & value, Comparator comparator,
+			k_lower_bound(ForwardIterator first, ForwardIterator last, const Tp & value, Comparator comparator,
 								std::forward_iterator_tag)
 			{
 				while (static_cast<bool>(first != last) &&
@@ -56,7 +58,7 @@ namespace kerbal
 			template <typename RandomAccessIterator, typename Tp, typename Comparator>
 			KERBAL_CONSTEXPR14
 			RandomAccessIterator
-			lower_bound_helper(RandomAccessIterator first, RandomAccessIterator last, const Tp & value, Comparator comparator,
+			k_lower_bound(RandomAccessIterator first, RandomAccessIterator last, const Tp & value, Comparator comparator,
 								std::random_access_iterator_tag)
 			{
 				typedef RandomAccessIterator iterator;
@@ -82,14 +84,16 @@ namespace kerbal
 		/**
 		 * @param comparator requires: comparator(value_type, Tp)
 		 */
+		KERBAL_MODULE_EXPORT
 		template <typename ForwardIterator, typename Tp, typename Comparator>
 		KERBAL_CONSTEXPR14
 		ForwardIterator
 		lower_bound(ForwardIterator first, ForwardIterator last, const Tp & value, Comparator comparator)
 		{
-			return kerbal::algorithm::detail::lower_bound_helper(first, last, value, comparator, kerbal::iterator::iterator_category(first));
+			return kerbal::algorithm::detail::k_lower_bound(first, last, value, comparator, kerbal::iterator::iterator_category(first));
 		}
 
+		KERBAL_MODULE_EXPORT
 		template <typename ForwardIterator, typename Tp>
 		KERBAL_CONSTEXPR14
 		ForwardIterator

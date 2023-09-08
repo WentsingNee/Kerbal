@@ -17,6 +17,9 @@
 #	error This file requires compiler and library support for the ISO C++ 2011 standard.
 #endif
 
+
+#include <kerbal/ts/modules_ts/modules_ts.hpp>
+
 #include <kerbal/compatibility/constexpr.hpp>
 #include <kerbal/compatibility/noexcept.hpp>
 #include <kerbal/type_traits/is_lvalue_reference.hpp>
@@ -29,6 +32,7 @@ namespace kerbal
 	namespace utility
 	{
 
+		KERBAL_MODULE_EXPORT
 		template <typename Tp>
 		KERBAL_CONSTEXPR
 		Tp&& forward(typename kerbal::type_traits::remove_reference<Tp>::type & val) KERBAL_NOEXCEPT
@@ -36,6 +40,7 @@ namespace kerbal
 			return static_cast<Tp&&>(val);
 		}
 
+		KERBAL_MODULE_EXPORT
 		template <typename Tp>
 		KERBAL_CONSTEXPR
 		Tp&& forward(typename kerbal::type_traits::remove_reference<Tp>::type && val) KERBAL_NOEXCEPT

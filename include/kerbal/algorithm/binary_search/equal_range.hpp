@@ -12,6 +12,8 @@
 #ifndef KERBAL_ALGORITHM_BINARY_SEARCH_EQUAL_RANGE_HPP
 #define KERBAL_ALGORITHM_BINARY_SEARCH_EQUAL_RANGE_HPP
 
+#include <kerbal/ts/modules_ts/modules_ts.hpp>
+
 #include <kerbal/algorithm/binary_search/lower_bound.hpp>
 #include <kerbal/algorithm/binary_search/upper_bound.hpp>
 #include <kerbal/compare/binary_type_compare.hpp>
@@ -34,7 +36,7 @@ namespace kerbal
 			template <typename ForwardIterator, typename Tp, typename Comparator>
 			KERBAL_CONSTEXPR14
 			std::pair<ForwardIterator, ForwardIterator>
-			equal_range_helper(ForwardIterator first, ForwardIterator last, const Tp & value, Comparator comparator,
+			k_equal_range(ForwardIterator first, ForwardIterator last, const Tp & value, Comparator comparator,
 								std::forward_iterator_tag)
 			{
 				ForwardIterator lb(kerbal::algorithm::lower_bound(first, last, value, comparator));
@@ -44,7 +46,7 @@ namespace kerbal
 			template <typename RandomAccessIterator, typename Tp, typename Comparator>
 			KERBAL_CONSTEXPR14
 			std::pair<RandomAccessIterator, RandomAccessIterator>
-			equal_range_helper(RandomAccessIterator first, RandomAccessIterator last, const Tp & value, Comparator comparator,
+			k_equal_range(RandomAccessIterator first, RandomAccessIterator last, const Tp & value, Comparator comparator,
 								std::random_access_iterator_tag)
 			{
 				typedef RandomAccessIterator iterator;
@@ -78,14 +80,16 @@ namespace kerbal
 		 *
 		 * @param comparator requires: comparator(value_type, Tp) && comparator(Tp, value_type)
 		 */
+		KERBAL_MODULE_EXPORT
 		template <typename ForwardIterator, typename Tp, typename Comparator>
 		KERBAL_CONSTEXPR14
 		std::pair<ForwardIterator, ForwardIterator>
 		equal_range(ForwardIterator first, ForwardIterator last, const Tp & value, Comparator comparator)
 		{
-			return kerbal::algorithm::detail::equal_range_helper(first, last, value, comparator, kerbal::iterator::iterator_category(first));
+			return kerbal::algorithm::detail::k_equal_range(first, last, value, comparator, kerbal::iterator::iterator_category(first));
 		}
 
+		KERBAL_MODULE_EXPORT
 		template <typename ForwardIterator, typename Tp>
 		KERBAL_CONSTEXPR14
 		std::pair<ForwardIterator, ForwardIterator>

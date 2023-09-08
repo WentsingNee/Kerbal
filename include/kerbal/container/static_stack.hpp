@@ -12,6 +12,8 @@
 #ifndef KERBAL_CONTAINER_STATIC_STACK_HPP
 #define KERBAL_CONTAINER_STATIC_STACK_HPP
 
+#include <kerbal/ts/modules_ts/modules_ts.hpp>
+
 #include <kerbal/compatibility/namespace_std_scope.hpp>
 #include <kerbal/container/static_vector.hpp>
 
@@ -43,6 +45,7 @@ namespace kerbal
 		 * @tparam Tp Type of the elements.
 		 * @tparam N The maximum number of elements that the stack can hold.
 		 */
+		KERBAL_MODULE_EXPORT
 		template <typename Tp, std::size_t N>
 		class static_stack
 		{

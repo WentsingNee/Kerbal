@@ -12,6 +12,8 @@
 #ifndef KERBAL_ITERATOR_ITERATOR_HPP
 #define KERBAL_ITERATOR_ITERATOR_HPP
 
+#include <kerbal/ts/modules_ts/modules_ts.hpp>
+
 #include <kerbal/compatibility/constexpr.hpp>
 #include <kerbal/compatibility/noexcept.hpp>
 #include <kerbal/compatibility/static_assert.hpp>
@@ -59,6 +61,7 @@ namespace kerbal
 
 		} // namespace detail
 
+		KERBAL_MODULE_EXPORT
 		template <typename ForwardIterator>
 		KERBAL_CONSTEXPR
 		typename kerbal::iterator::iterator_traits<ForwardIterator>::difference_type
@@ -150,6 +153,7 @@ namespace kerbal
 
 		} // namespace detail
 
+		KERBAL_MODULE_EXPORT
 		template <typename ForwardIterator, typename Distance>
 		KERBAL_CONSTEXPR14
 		void advance(ForwardIterator & it, Distance dist)
@@ -188,6 +192,7 @@ namespace kerbal
 
 		} // namespace detail
 
+		KERBAL_MODULE_EXPORT
 		template <typename BidirectionalIterator, typename Distance>
 		KERBAL_CONSTEXPR
 		BidirectionalIterator prev(BidirectionalIterator it, Distance dist)
@@ -226,6 +231,7 @@ namespace kerbal
 
 		} // namespace detail
 
+		KERBAL_MODULE_EXPORT
 		template <typename BidirectionalIterator>
 		KERBAL_CONSTEXPR
 		BidirectionalIterator prev(BidirectionalIterator it)
@@ -264,6 +270,7 @@ namespace kerbal
 
 		} // namespace detail
 
+		KERBAL_MODULE_EXPORT
 		template <typename InputIterator, typename Distance>
 		KERBAL_CONSTEXPR
 		InputIterator next(InputIterator it, Distance dist)
@@ -302,6 +309,7 @@ namespace kerbal
 
 		} // namespace detail
 
+		KERBAL_MODULE_EXPORT
 		template <typename InputIterator>
 		KERBAL_CONSTEXPR
 		InputIterator next(InputIterator it)
@@ -347,6 +355,7 @@ namespace kerbal
 
 		} // namespace detail
 
+		KERBAL_MODULE_EXPORT
 		template <typename InputIterator, typename Distance>
 		KERBAL_CONSTEXPR14
 		Distance advance_at_most(InputIterator & it, Distance dist, InputIterator last)
@@ -382,6 +391,7 @@ namespace kerbal
 
 		} // namespace detail
 
+		KERBAL_MODULE_EXPORT
 		template <typename ForwardIterator, typename Distance>
 		KERBAL_CONSTEXPR
 		ForwardIterator next_at_most(ForwardIterator it, Distance dist, ForwardIterator last)
@@ -424,6 +434,7 @@ namespace kerbal
 
 		} // namespace detail
 
+		KERBAL_MODULE_EXPORT
 		template <typename BidirectionalIterator, typename Distance>
 		KERBAL_CONSTEXPR14
 		Distance retreat_at_most(BidirectionalIterator & it, Distance dist, BidirectionalIterator first)
@@ -461,6 +472,7 @@ namespace kerbal
 
 		} // namespace detail
 
+		KERBAL_MODULE_EXPORT
 		template <typename BidirectionalIterator, typename Distance>
 		KERBAL_CONSTEXPR
 		BidirectionalIterator prev_at_most(BidirectionalIterator it, Distance dist, BidirectionalIterator first)
@@ -518,6 +530,7 @@ namespace kerbal
 
 		} // namespace detail
 
+		KERBAL_MODULE_EXPORT
 		template <typename ForwardIterator>
 		KERBAL_CONSTEXPR
 		ForwardIterator
@@ -590,6 +603,7 @@ namespace kerbal
 
 		} // namespace detail
 
+		KERBAL_MODULE_EXPORT
 		template <typename ForwardIterator>
 		KERBAL_CONSTEXPR14
 		std::pair<ForwardIterator, typename kerbal::iterator::iterator_traits<ForwardIterator>::difference_type>
@@ -626,6 +640,7 @@ namespace kerbal
 
 		} // namespace detail
 
+		KERBAL_MODULE_EXPORT
 		template <typename ForwardIterator, typename Distance>
 		KERBAL_CONSTEXPR
 		bool distance_less_than(ForwardIterator first, ForwardIterator last, Distance dist)
@@ -661,6 +676,7 @@ namespace kerbal
 
 		} // namespace detail
 
+		KERBAL_MODULE_EXPORT
 		template <typename ForwardIterator, typename Distance>
 		KERBAL_CONSTEXPR
 		bool distance_equal_to(ForwardIterator first, ForwardIterator last, Distance dist)
@@ -696,6 +712,7 @@ namespace kerbal
 
 		} // namespace detail
 
+		KERBAL_MODULE_EXPORT
 		template <typename ForwardIterator, typename Distance>
 		KERBAL_CONSTEXPR
 		bool distance_greater_than(ForwardIterator first, ForwardIterator last, Distance dist)

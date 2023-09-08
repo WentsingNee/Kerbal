@@ -66,7 +66,6 @@ namespace kerbal
 #	if KERBAL_HAS_IS_CONSTANT_EVALUATED_SUPPORT
 
 		inline
-		KERBAL_CONSTEXPR14
 		void unreachable() KERBAL_NOEXCEPT
 		{
 			if (KERBAL_IS_CONSTANT_EVALUATED()) {

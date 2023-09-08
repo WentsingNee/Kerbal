@@ -12,6 +12,8 @@
 #ifndef KERBAL_ITERATOR_ITERATOR_TRAITS_HPP
 #define KERBAL_ITERATOR_ITERATOR_TRAITS_HPP
 
+#include <kerbal/ts/modules_ts/modules_ts.hpp>
+
 #include <kerbal/compatibility/constexpr.hpp>
 #include <kerbal/compatibility/noexcept.hpp>
 #include <kerbal/type_traits/integral_constant.hpp>
@@ -21,8 +23,6 @@
 
 #include <iterator>
 #include <cstddef>
-
-#include <kerbal/ts/modules_ts/modules_ts.hpp>
 
 
 namespace kerbal

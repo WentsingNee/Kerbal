@@ -12,6 +12,8 @@
 #ifndef KERBAL_ASSIGN_GENERIC_ASSIGN_HPP
 #define KERBAL_ASSIGN_GENERIC_ASSIGN_HPP
 
+#include <kerbal/ts/modules_ts/modules_ts.hpp>
+
 #include <kerbal/assign/generic_assign/generic_assign.fwd.hpp>
 
 #include <kerbal/compatibility/constexpr.hpp>
@@ -35,6 +37,7 @@ namespace kerbal
 	namespace assign
 	{
 
+		KERBAL_MODULE_EXPORT
 		template <typename Tp, typename Up>
 		KERBAL_CONSTEXPR14
 		Tp& generic_assign(Tp & lhs, const Up & rhs)
@@ -46,6 +49,7 @@ namespace kerbal
 			return lhs;
 		}
 
+		KERBAL_MODULE_EXPORT
 		template <typename Tp, typename Up, std::size_t N>
 		KERBAL_CONSTEXPR14
 		Tp (& generic_assign(Tp (& lhs)[N], const Up (& rhs)[N])
@@ -93,6 +97,7 @@ namespace kerbal
 
 		} // namespace detail
 
+		KERBAL_MODULE_EXPORT
 		template <typename Tp, typename Up>
 		KERBAL_CONSTEXPR14
 		Tp& generic_assign(Tp & lhs, Up && rhs)

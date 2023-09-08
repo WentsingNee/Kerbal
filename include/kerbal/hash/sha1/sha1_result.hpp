@@ -12,6 +12,8 @@
 #ifndef KERBAL_HASH_SHA1_SHA1_RESULT_HPP
 #define KERBAL_HASH_SHA1_SHA1_RESULT_HPP
 
+#include <kerbal/ts/modules_ts/modules_ts.hpp>
+
 #include <kerbal/compatibility/constexpr.hpp>
 #include <kerbal/compatibility/fixed_width_integer.hpp>
 #include <kerbal/compatibility/noexcept.hpp>
@@ -27,6 +29,7 @@ namespace kerbal
 	namespace hash
 	{
 
+		KERBAL_MODULE_EXPORT
 		class SHA1_result
 		{
 			private:

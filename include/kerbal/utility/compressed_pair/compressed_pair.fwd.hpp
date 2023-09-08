@@ -12,12 +12,16 @@
 #ifndef KERBAL_UTILITY_COMPRESSED_PAIR_COMPRESSED_PAIR_FWD_HPP
 #define KERBAL_UTILITY_COMPRESSED_PAIR_COMPRESSED_PAIR_FWD_HPP
 
+#include <kerbal/ts/modules_ts/modules_ts.hpp>
+
+
 namespace kerbal
 {
 
 	namespace utility
 	{
 
+		KERBAL_MODULE_EXPORT
 		template <typename T, typename U>
 		class compressed_pair;
 

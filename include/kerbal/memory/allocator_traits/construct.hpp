@@ -12,6 +12,8 @@
 #ifndef KERBAL_MEMORY_ALLOCATOR_TRAITS_CONSTRUCT_HPP
 #define KERBAL_MEMORY_ALLOCATOR_TRAITS_CONSTRUCT_HPP
 
+#include <kerbal/ts/modules_ts/modules_ts.hpp>
+
 #if __cplusplus >= 201703L
 #	include <kerbal/memory/allocator/std_allocator/std_allocator.fwd.hpp>
 #endif
@@ -75,6 +77,7 @@ namespace kerbal
 
 		} // namespace detail
 
+		KERBAL_MODULE_EXPORT
 		template <typename Alloc, typename T, typename ... Args>
 		struct allocator_has_construct: kerbal::memory::detail::allocator_has_construct_helper<Alloc, T, Args...>::type
 		{
@@ -136,6 +139,7 @@ namespace kerbal
 
 #	define TARGS_DECL(i) typename KERBAL_MACRO_CONCAT(Arg, i) = kerbal::tmp::tppter
 
+		KERBAL_MODULE_EXPORT
 		template <typename Alloc, typename T, KERBAL_PPEXPAND_WITH_COMMA_N(TARGS_DECL, 20)>
 		struct allocator_has_construct;
 
@@ -148,6 +152,7 @@ namespace kerbal
 #	define TARGS_DECL(i) typename KERBAL_MACRO_CONCAT(Arg, i)
 #	define TARGS_USE(i) KERBAL_MACRO_CONCAT(Arg, i)
 #	define DBODY(i) \
+		KERBAL_MODULE_EXPORT \
 		template <typename Alloc, typename T KERBAL_OPT_PPEXPAND_WITH_COMMA_N(LEFT_JOIN_COMMA, EMPTY, TARGS_DECL, i)> \
 		struct allocator_has_construct<Alloc, T KERBAL_OPT_PPEXPAND_WITH_COMMA_N(LEFT_JOIN_COMMA, EMPTY, TARGS_USE, i) > : \
 			kerbal::memory::detail::allocator_has_construct_helper<Alloc, T, kerbal::tmp::type_vector<KERBAL_OPT_PPEXPAND_WITH_COMMA_N(REMAINF, EMPTY, TARGS_USE, i)> >::type \
@@ -169,6 +174,7 @@ namespace kerbal
 
 #	if __cplusplus >= 201103L
 
+		KERBAL_MODULE_EXPORT
 		template <typename Alloc, typename T, typename ... Args>
 		struct allocator_could_use_construct : kerbal::memory::allocator_has_construct<Alloc, T, Args...>
 		{
@@ -179,6 +185,7 @@ namespace kerbal
 #	define TARGS_DECL(i) typename KERBAL_MACRO_CONCAT(Arg, i) = kerbal::tmp::tppter
 #	define TARGS_USE(i) KERBAL_MACRO_CONCAT(Arg, i)
 
+		KERBAL_MODULE_EXPORT
 		template <typename Alloc, typename T, KERBAL_PPEXPAND_WITH_COMMA_N(TARGS_DECL, 19)>
 		struct allocator_could_use_construct : kerbal::memory::allocator_has_construct<Alloc, T, KERBAL_PPEXPAND_WITH_COMMA_N(TARGS_USE, 19)>
 		{
@@ -191,6 +198,7 @@ namespace kerbal
 
 #	if __cplusplus >= 201703L
 
+		KERBAL_MODULE_EXPORT
 		template <typename T, typename ... Args>
 		struct allocator_could_use_construct<std::allocator<T>, T, Args...>: kerbal::type_traits::false_type
 		{

@@ -12,6 +12,8 @@
 #ifndef KERBAL_CONTAINER_PRIORITY_QUEUE_HPP
 #define KERBAL_CONTAINER_PRIORITY_QUEUE_HPP
 
+#include <kerbal/ts/modules_ts/modules_ts.hpp>
+
 #include <kerbal/algorithm/heap.hpp>
 #include <kerbal/assign/ilist.hpp>
 #include <kerbal/compatibility/move.hpp>
@@ -44,6 +46,7 @@ namespace kerbal
 	namespace container
 	{
 
+		KERBAL_MODULE_EXPORT
 		template <typename Tp, typename KeyCompare = kerbal::compare::less<Tp>, typename Container = kerbal::container::vector<Tp> >
 		class priority_queue :
 				private kerbal::utility::member_compress_helper<KeyCompare>
@@ -426,6 +429,7 @@ namespace kerbal
 	namespace algorithm
 	{
 
+		KERBAL_MODULE_EXPORT
 		template <typename Tp, typename KeyCompare, typename Container>
 		KERBAL_CONSTEXPR20
 		void swap(kerbal::container::priority_queue<Tp, KeyCompare, Container> & a, kerbal::container::priority_queue<Tp, KeyCompare, Container> & b)

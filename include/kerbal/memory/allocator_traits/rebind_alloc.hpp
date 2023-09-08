@@ -12,6 +12,8 @@
 #ifndef KERBAL_MEMORY_ALLOCATOR_TRAITS_REBIND_ALLOC_HPP
 #define KERBAL_MEMORY_ALLOCATOR_TRAITS_REBIND_ALLOC_HPP
 
+#include <kerbal/ts/modules_ts/modules_ts.hpp>
+
 #if __cplusplus >= 201703L
 #	include <kerbal/memory/allocator/std_allocator/std_allocator.fwd.hpp>
 #endif
@@ -31,11 +33,13 @@ namespace kerbal
 	namespace memory
 	{
 
+		KERBAL_MODULE_EXPORT
 		template <typename Alloc, typename , typename = kerbal::type_traits::void_type<>::type>
 		struct allocator_has_def_rebind_alloc: kerbal::type_traits::false_type
 		{
 		};
 
+		KERBAL_MODULE_EXPORT
 		template <typename Alloc, typename U>
 		struct allocator_has_def_rebind_alloc<
 				Alloc,
@@ -46,6 +50,7 @@ namespace kerbal
 		{
 		};
 
+		KERBAL_MODULE_EXPORT
 		template <typename Alloc, typename U>
 		struct allocator_could_use_rebind_alloc : kerbal::memory::allocator_has_def_rebind_alloc<Alloc, U>
 		{
@@ -53,6 +58,7 @@ namespace kerbal
 
 #	if __cplusplus >= 201703L
 
+		KERBAL_MODULE_EXPORT
 		template <typename T, typename U>
 		struct allocator_could_use_rebind_alloc<std::allocator<T>, U>: kerbal::type_traits::false_type
 		{

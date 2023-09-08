@@ -12,6 +12,8 @@
 #ifndef KERBAL_COMPARE_BASIC_COMPARE_HPP
 #define KERBAL_COMPARE_BASIC_COMPARE_HPP
 
+#include <kerbal/ts/modules_ts/modules_ts.hpp>
+
 #include <kerbal/compatibility/constexpr.hpp>
 #include <kerbal/compatibility/noexcept.hpp>
 #include <kerbal/config/exceptions.hpp>
@@ -41,11 +43,13 @@ namespace kerbal
 	{
 
 #define DEF_FWD(NAME) \
+		KERBAL_MODULE_EXPORT \
 		template <typename T = void> \
 		struct NAME;
 
 
 #define DEF_PLAIN(NAME, OP) \
+		KERBAL_MODULE_EXPORT \
 		template <typename T> \
 		struct NAME \
 		{ \
@@ -63,6 +67,7 @@ namespace kerbal
 #	if __cplusplus < 201103L
 
 #define DEF_VOID(NAME, OP) \
+		KERBAL_MODULE_EXPORT \
 		template <> \
 		struct NAME<void> \
 		{ \
@@ -79,6 +84,7 @@ namespace kerbal
 #	else
 
 #define DEF_VOID(NAME, OP) \
+		KERBAL_MODULE_EXPORT \
 		template <> \
 		struct NAME<void> \
 		{ \
@@ -121,6 +127,7 @@ namespace kerbal
 #	undef DEF
 
 
+		KERBAL_MODULE_EXPORT
 		template <typename T, std::size_t N>
 		struct equal_to<T[N]>
 		{
@@ -159,6 +166,7 @@ namespace kerbal
 		};
 
 
+		KERBAL_MODULE_EXPORT
 		template <typename T, std::size_t N>
 		struct not_equal_to<T[N]>
 		{
@@ -197,6 +205,7 @@ namespace kerbal
 		};
 
 
+		KERBAL_MODULE_EXPORT
 		template <typename T, std::size_t N>
 		struct less<T[N]>
 		{
@@ -237,6 +246,7 @@ namespace kerbal
 		};
 
 
+		KERBAL_MODULE_EXPORT
 		template <typename T, std::size_t N>
 		struct greater<T[N]>
 		{
@@ -277,6 +287,7 @@ namespace kerbal
 		};
 
 
+		KERBAL_MODULE_EXPORT
 		template <typename T, std::size_t N>
 		struct less_equal<T[N]>
 		{
@@ -320,6 +331,7 @@ namespace kerbal
 		};
 
 
+		KERBAL_MODULE_EXPORT
 		template <typename T, std::size_t N>
 		struct greater_equal<T[N]>
 		{
