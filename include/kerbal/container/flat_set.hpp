@@ -12,6 +12,8 @@
 #ifndef KERBAL_CONTAINER_FLAT_SET_HPP
 #define KERBAL_CONTAINER_FLAT_SET_HPP
 
+#include <kerbal/ts/modules_ts/modules_ts.hpp>
+
 #include <kerbal/compare/basic_compare.hpp>
 #include <kerbal/compatibility/namespace_std_scope.hpp>
 #include <kerbal/container/associative_container_facility/key_extractors/identity_extractor.hpp>
@@ -32,6 +34,7 @@ namespace kerbal
 	namespace container
 	{
 
+		KERBAL_MODULE_EXPORT
 		template <
 			typename T,
 			typename KeyCompare = kerbal::compare::less<T>,
@@ -220,6 +223,7 @@ namespace kerbal
 	namespace algorithm
 	{
 
+		KERBAL_MODULE_EXPORT
 		template <typename T, typename KeyCompare, typename Allocator>
 		KERBAL_CONSTEXPR14
 		void swap(
@@ -238,6 +242,7 @@ namespace kerbal
 
 KERBAL_NAMESPACE_STD_BEGIN
 
+	KERBAL_MODULE_EXPORT
 	template <typename T, typename KeyCompare, typename Allocator>
 	KERBAL_CONSTEXPR14
 	void swap(

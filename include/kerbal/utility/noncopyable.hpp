@@ -12,6 +12,8 @@
 #ifndef KERBAL_UTILITY_NONCOPYABLE_HPP
 #define KERBAL_UTILITY_NONCOPYABLE_HPP
 
+#include <kerbal/ts/modules_ts/modules_ts.hpp>
+
 #include <kerbal/compatibility/noexcept.hpp>
 
 
@@ -23,6 +25,7 @@ namespace kerbal
 
 #	if __cplusplus < 201103L
 
+		KERBAL_MODULE_EXPORT
 		class noncopyconstructible
 		{
 			protected:
@@ -36,6 +39,7 @@ namespace kerbal
 
 #	else
 
+		KERBAL_MODULE_EXPORT
 		class noncopyconstructible
 		{
 			protected:
@@ -50,6 +54,7 @@ namespace kerbal
 
 #	if __cplusplus < 201103L
 
+		KERBAL_MODULE_EXPORT
 		class noncopyassignable
 		{
 			protected:
@@ -63,6 +68,7 @@ namespace kerbal
 
 #	else
 
+		KERBAL_MODULE_EXPORT
 		class noncopyassignable
 		{
 			protected:
@@ -77,6 +83,7 @@ namespace kerbal
 
 #	if __cplusplus < 201103L
 
+		KERBAL_MODULE_EXPORT
 		class noncopyable
 		{
 			protected:
@@ -91,6 +98,7 @@ namespace kerbal
 
 #	else
 
+		KERBAL_MODULE_EXPORT
 		class noncopyable
 		{
 			protected:

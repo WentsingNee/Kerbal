@@ -12,6 +12,8 @@
 #ifndef KERBAL_ALGORITHM_MODIFIER_COPY_N_HPP
 #define KERBAL_ALGORITHM_MODIFIER_COPY_N_HPP
 
+#include <kerbal/ts/modules_ts/modules_ts.hpp>
+
 #include <kerbal/compatibility/constexpr.hpp>
 #include <kerbal/utility/compressed_pair.hpp>
 
@@ -24,6 +26,7 @@ namespace kerbal
 	namespace algorithm
 	{
 
+		KERBAL_MODULE_EXPORT
 		template <typename InputIterator, typename SizeType, typename OutputIterator>
 		KERBAL_CONSTEXPR14
 		kerbal::utility::compressed_pair<InputIterator, OutputIterator>

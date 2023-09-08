@@ -12,6 +12,8 @@
 #ifndef KERBAL_HASH_HASH_HPP
 #define KERBAL_HASH_HASH_HPP
 
+#include <kerbal/ts/modules_ts/modules_ts.hpp>
+
 #include <kerbal/compatibility/constexpr.hpp>
 #include <kerbal/compatibility/noexcept.hpp>
 #include <kerbal/compatibility/static_assert.hpp>
@@ -27,6 +29,7 @@ namespace kerbal
 	namespace hash
 	{
 
+		KERBAL_MODULE_EXPORT
 		template <typename T>
 		struct integral_hash
 		{
@@ -45,14 +48,17 @@ namespace kerbal
 		};
 
 		/// Primary class template hash.
+		KERBAL_MODULE_EXPORT
 		template <typename >
 		struct hash;
 
+		KERBAL_MODULE_EXPORT
 		template <>
 		struct hash<bool> : kerbal::hash::integral_hash<bool>
 		{
 		};
 
+		KERBAL_MODULE_EXPORT
 		template <>
 		struct hash<char> : kerbal::hash::integral_hash<char>
 		{
@@ -60,11 +66,13 @@ namespace kerbal
 
 #	if __cplusplus >= 201103L
 
+		KERBAL_MODULE_EXPORT
 		template <>
 		struct hash<char16_t> : kerbal::hash::integral_hash<char16_t>
 		{
 		};
 
+		KERBAL_MODULE_EXPORT
 		template <>
 		struct hash<char32_t> : kerbal::hash::integral_hash<char32_t>
 		{
@@ -72,56 +80,67 @@ namespace kerbal
 
 #	endif
 
+		KERBAL_MODULE_EXPORT
 		template <>
 		struct hash<signed char> : kerbal::hash::integral_hash<signed char>
 		{
 		};
 
+		KERBAL_MODULE_EXPORT
 		template <>
 		struct hash<unsigned char> : kerbal::hash::integral_hash<unsigned char>
 		{
 		};
 
+		KERBAL_MODULE_EXPORT
 		template <>
 		struct hash<short> : kerbal::hash::integral_hash<short>
 		{
 		};
 
+		KERBAL_MODULE_EXPORT
 		template <>
 		struct hash<unsigned short> : kerbal::hash::integral_hash<unsigned short>
 		{
 		};
 
+		KERBAL_MODULE_EXPORT
 		template <>
 		struct hash<int> : kerbal::hash::integral_hash<int>
 		{
 		};
 
+		KERBAL_MODULE_EXPORT
 		template <>
 		struct hash<unsigned int> : kerbal::hash::integral_hash<unsigned int>
 		{
 		};
 
+		KERBAL_MODULE_EXPORT
 		template <>
 		struct hash<long> : kerbal::hash::integral_hash<long>
 		{
 		};
 
+		KERBAL_MODULE_EXPORT
 		template <>
 		struct hash<unsigned long> : kerbal::hash::integral_hash<unsigned long>
 		{
 		};
 
+		KERBAL_MODULE_EXPORT
 		template <>
 		struct hash<long long> : kerbal::hash::integral_hash<long long>
 		{
 		};
 
+		KERBAL_MODULE_EXPORT
 		template <>
 		struct hash<unsigned long long> : kerbal::hash::integral_hash<unsigned long long>
 		{
 		};
 
+		KERBAL_MODULE_EXPORT
 		template <>
 		struct hash<float>
 		{
@@ -134,6 +153,7 @@ namespace kerbal
 				}
 		};
 
+		KERBAL_MODULE_EXPORT
 		template <>
 		struct hash<double>
 		{
@@ -146,6 +166,7 @@ namespace kerbal
 				}
 		};
 
+		KERBAL_MODULE_EXPORT
 		template <>
 		struct hash<long double>
 		{
@@ -158,6 +179,7 @@ namespace kerbal
 				}
 		};
 
+		KERBAL_MODULE_EXPORT
 		template <typename T>
 		struct hash<T *>
 		{

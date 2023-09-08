@@ -12,6 +12,8 @@
 #ifndef KERBAL_CONTAINER_STATIC_FLAT_MULTISET_HPP
 #define KERBAL_CONTAINER_STATIC_FLAT_MULTISET_HPP
 
+#include <kerbal/ts/modules_ts/modules_ts.hpp>
+
 #include <kerbal/compare/basic_compare.hpp>
 #include <kerbal/compatibility/namespace_std_scope.hpp>
 #include <kerbal/container/static_ordered.hpp>
@@ -31,6 +33,7 @@ namespace kerbal
 	namespace container
 	{
 
+		KERBAL_MODULE_EXPORT
 		template <
 			typename T,
 			std::size_t N,
@@ -233,6 +236,7 @@ namespace kerbal
 	namespace algorithm
 	{
 
+		KERBAL_MODULE_EXPORT
 		template <typename T, std::size_t N, typename KeyCompare>
 		KERBAL_CONSTEXPR14
 		void swap(
@@ -251,6 +255,7 @@ namespace kerbal
 
 KERBAL_NAMESPACE_STD_BEGIN
 
+	KERBAL_MODULE_EXPORT
 	template <typename T, std::size_t N, typename KeyCompare>
 	KERBAL_CONSTEXPR14
 	void swap(

@@ -12,6 +12,8 @@
 #ifndef KERBAL_ITERATOR_REVERSE_ITERATOR_HPP
 #define KERBAL_ITERATOR_REVERSE_ITERATOR_HPP
 
+#include <kerbal/ts/modules_ts/modules_ts.hpp>
+
 #include <kerbal/compatibility/constexpr.hpp>
 #include <kerbal/compatibility/noexcept.hpp>
 #include <kerbal/iterator/iterator.hpp>
@@ -54,6 +56,8 @@ namespace kerbal
 
 		} // namespace detail
 
+
+		KERBAL_MODULE_EXPORT
 		template <
 			typename Iter,
 			bool IsInplace = kerbal::iterator::detail::reverse_iterator_base_is_inplace<
@@ -397,6 +401,8 @@ namespace kerbal
 
 		} // namespace detail
 
+
+		KERBAL_MODULE_EXPORT
 		template <typename Iter, bool IsInplace>
 		class reverse_iterator :
 			public kerbal::iterator::detail::reverse_iterator_impl<
@@ -445,6 +451,8 @@ namespace kerbal
 
 #	endif
 
+
+		KERBAL_MODULE_EXPORT
 		template <typename Iter>
 		KERBAL_CONSTEXPR
 		reverse_iterator<Iter>
@@ -453,6 +461,7 @@ namespace kerbal
 			return reverse_iterator<Iter>(iter);
 		}
 
+		KERBAL_MODULE_EXPORT
 		template <typename T, std::size_t N>
 		KERBAL_CONSTEXPR
 		reverse_iterator<T *, false>

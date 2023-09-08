@@ -12,6 +12,8 @@
 #ifndef KERBAL_CONTAINER_STATIC_VECTOR_STATIC_VECTOR_DECL_HPP
 #define KERBAL_CONTAINER_STATIC_VECTOR_STATIC_VECTOR_DECL_HPP
 
+#include <kerbal/ts/modules_ts/modules_ts.hpp>
+
 #include <kerbal/assign/ilist.hpp>
 #include <kerbal/compare/sequence_compare.hpp>
 #include <kerbal/compatibility/constexpr.hpp>
@@ -61,6 +63,7 @@ namespace kerbal
 		 * @tparam T Type of the elements.
 		 * @tparam N The maximum number of elements that the array can hold.
 		 */
+		KERBAL_MODULE_EXPORT
 		template <typename T, std::size_t N>
 		class static_vector :
 			protected kerbal::container::detail::sv_trivially_des_overload<T, N>
@@ -667,6 +670,7 @@ namespace kerbal
 
 		};
 
+		KERBAL_MODULE_EXPORT
 		template <typename T, std::size_t M, std::size_t N>
 		KERBAL_CONSTEXPR14
 		bool operator==(
@@ -680,6 +684,7 @@ namespace kerbal
 			);
 		}
 
+		KERBAL_MODULE_EXPORT
 		template <typename T, std::size_t M, std::size_t N>
 		KERBAL_CONSTEXPR14
 		bool operator!=(
@@ -693,6 +698,7 @@ namespace kerbal
 			);
 		}
 
+		KERBAL_MODULE_EXPORT
 		template <typename T, std::size_t M, std::size_t N>
 		KERBAL_CONSTEXPR14
 		bool operator<(
@@ -706,6 +712,7 @@ namespace kerbal
 			);
 		}
 
+		KERBAL_MODULE_EXPORT
 		template <typename T, std::size_t M, std::size_t N>
 		KERBAL_CONSTEXPR14
 		bool operator<=(
@@ -719,6 +726,7 @@ namespace kerbal
 			);
 		}
 
+		KERBAL_MODULE_EXPORT
 		template <typename T, std::size_t M, std::size_t N>
 		KERBAL_CONSTEXPR14
 		bool operator>(
@@ -732,6 +740,7 @@ namespace kerbal
 			);
 		}
 
+		KERBAL_MODULE_EXPORT
 		template <typename T, std::size_t M, std::size_t N>
 		KERBAL_CONSTEXPR14
 		bool operator>=(
@@ -751,6 +760,7 @@ namespace kerbal
 	namespace algorithm
 	{
 
+		KERBAL_MODULE_EXPORT
 		template <typename T, std::size_t N>
 		KERBAL_CONSTEXPR14
 		void swap(
@@ -769,6 +779,7 @@ namespace kerbal
 
 KERBAL_NAMESPACE_STD_BEGIN
 
+	KERBAL_MODULE_EXPORT
 	template <typename T, std::size_t N>
 	KERBAL_CONSTEXPR14
 	void swap(

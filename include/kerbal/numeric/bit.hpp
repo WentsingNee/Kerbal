@@ -12,6 +12,8 @@
 #ifndef KERBAL_NUMERIC_BIT_HPP
 #define KERBAL_NUMERIC_BIT_HPP
 
+#include <kerbal/ts/modules_ts/modules_ts.hpp>
+
 #include <kerbal/compatibility/constexpr.hpp>
 #include <kerbal/compatibility/noexcept.hpp>
 #include <kerbal/container/array.hpp>
@@ -32,18 +34,21 @@ namespace kerbal
 	namespace numeric
 	{
 
+		KERBAL_MODULE_EXPORT
 		template <typename T>
 		struct bitarray_result_len:
 				kerbal::type_traits::integral_constant<std::size_t, sizeof(T) * CHAR_BIT>
 		{
 		};
 
+		KERBAL_MODULE_EXPORT
 		template <typename T>
 		struct bitarray_result
 		{
 				typedef kerbal::container::array<bool, bitarray_result_len<T>::value> type;
 		};
 
+		KERBAL_MODULE_EXPORT
 		template <typename T>
 		KERBAL_CONSTEXPR14
 		typename kerbal::numeric::bitarray_result<T>::type
@@ -62,18 +67,21 @@ namespace kerbal
 			return r;
 		}
 
+		KERBAL_MODULE_EXPORT
 		template <typename T>
 		struct octarray_result_len:
 				kerbal::type_traits::integral_constant<std::size_t, sizeof(T) * CHAR_BIT / 3 + (sizeof(T) * CHAR_BIT % 3 != 0)>
 		{
 		};
 
+		KERBAL_MODULE_EXPORT
 		template <typename T>
 		struct octarray_result
 		{
 				typedef kerbal::container::array<char, octarray_result_len<T>::value> type;
 		};
 
+		KERBAL_MODULE_EXPORT
 		template <typename T>
 		KERBAL_CONSTEXPR14
 		typename kerbal::numeric::octarray_result<T>::type
@@ -94,18 +102,21 @@ namespace kerbal
 			return r;
 		}
 
+		KERBAL_MODULE_EXPORT
 		template <typename T>
 		struct hexarray_result_len:
 				kerbal::type_traits::integral_constant<std::size_t, sizeof(T) * CHAR_BIT / 4 + (sizeof(T) * CHAR_BIT % 4 != 0)>
 		{
 		};
 
+		KERBAL_MODULE_EXPORT
 		template <typename T>
 		struct hexarray_result
 		{
 				typedef kerbal::container::array<char, hexarray_result_len<T>::value> type;
 		};
 
+		KERBAL_MODULE_EXPORT
 		template <typename T>
 		KERBAL_CONSTEXPR14
 		typename kerbal::numeric::hexarray_result<T>::type
@@ -151,6 +162,7 @@ namespace kerbal
 
 		} // namespace detail
 
+		KERBAL_MODULE_EXPORT
 		template <typename T>
 		KERBAL_CONSTEXPR
 		bool ispow2(T x) KERBAL_NOEXCEPT
@@ -181,6 +193,7 @@ namespace kerbal
 
 		} // namespace detail
 
+		KERBAL_MODULE_EXPORT
 		template <typename T>
 		KERBAL_CONSTEXPR
 		bool has_single_bit(T x) KERBAL_NOEXCEPT
@@ -195,6 +208,7 @@ namespace kerbal
 		 *
 		 * @warning Undefined behaviour if n < 0 or n > sizeof(T) * CHAR_BIT.
 		 */
+		KERBAL_MODULE_EXPORT
 		template <typename T>
 		KERBAL_CONSTEXPR
 		T mask(std::size_t n) KERBAL_NOEXCEPT
@@ -205,6 +219,7 @@ namespace kerbal
 					~(static_cast<unsigned_t>(~static_cast<unsigned_t>(0)) << n);
 		}
 
+		KERBAL_MODULE_EXPORT
 		template <typename T>
 		KERBAL_CONSTEXPR
 		T flip(T x, std::size_t pos) KERBAL_NOEXCEPT
@@ -213,6 +228,7 @@ namespace kerbal
 			return x ^ (static_cast<unsigned_t>(1) << pos);
 		}
 
+		KERBAL_MODULE_EXPORT
 		template <typename T>
 		KERBAL_CONSTEXPR
 		T flip_left_n(T x, std::size_t n) KERBAL_NOEXCEPT
@@ -221,6 +237,7 @@ namespace kerbal
 			return x ^ ~kerbal::numeric::mask<unsigned_t>(sizeof(unsigned_t) * CHAR_BIT - n);
 		}
 
+		KERBAL_MODULE_EXPORT
 		template <typename T>
 		KERBAL_CONSTEXPR
 		T flip_right_n(T x, std::size_t n) KERBAL_NOEXCEPT
@@ -229,6 +246,7 @@ namespace kerbal
 			return x ^ kerbal::numeric::mask<unsigned_t>(n);
 		}
 
+		KERBAL_MODULE_EXPORT
 		template <typename T>
 		KERBAL_CONSTEXPR
 		T reset_bit(T x, std::size_t pos) KERBAL_NOEXCEPT
@@ -237,6 +255,7 @@ namespace kerbal
 			return x & ~(static_cast<unsigned_t>(1) << pos);
 		}
 
+		KERBAL_MODULE_EXPORT
 		template <typename T>
 		KERBAL_CONSTEXPR
 		T reset_left_n(T x, std::size_t n) KERBAL_NOEXCEPT
@@ -245,6 +264,7 @@ namespace kerbal
 			return x & kerbal::numeric::mask<unsigned_t>(sizeof(unsigned_t) * CHAR_BIT - n);
 		}
 
+		KERBAL_MODULE_EXPORT
 		template <typename T>
 		KERBAL_CONSTEXPR
 		T reset_right_n(T x, std::size_t n) KERBAL_NOEXCEPT
@@ -253,6 +273,7 @@ namespace kerbal
 			return x & ~kerbal::numeric::mask<unsigned_t>(n);
 		}
 
+		KERBAL_MODULE_EXPORT
 		template <typename T>
 		KERBAL_CONSTEXPR
 		T set_bit(T x, std::size_t pos) KERBAL_NOEXCEPT
@@ -261,6 +282,7 @@ namespace kerbal
 			return x | (static_cast<unsigned_t>(1) << pos);
 		}
 
+		KERBAL_MODULE_EXPORT
 		template <typename T>
 		KERBAL_CONSTEXPR
 		T set_left_n(T x, std::size_t n) KERBAL_NOEXCEPT
@@ -269,6 +291,7 @@ namespace kerbal
 			return x | ~kerbal::numeric::mask<unsigned_t>(sizeof(unsigned_t) * CHAR_BIT - n);
 		}
 
+		KERBAL_MODULE_EXPORT
 		template <typename T>
 		KERBAL_CONSTEXPR
 		T set_right_n(T x, std::size_t n) KERBAL_NOEXCEPT
@@ -277,6 +300,7 @@ namespace kerbal
 			return x | kerbal::numeric::mask<unsigned_t>(n);
 		}
 
+		KERBAL_MODULE_EXPORT
 		template <typename T>
 		KERBAL_CONSTEXPR
 		bool get_bit(T x, std::size_t pos) KERBAL_NOEXCEPT
@@ -316,6 +340,7 @@ namespace kerbal
 
 		} // namespace detail
 
+		KERBAL_MODULE_EXPORT
 		template <typename T>
 		KERBAL_CONSTEXPR
 		T rotl(T x, int s) KERBAL_NOEXCEPT
@@ -351,6 +376,7 @@ namespace kerbal
 
 		} // namespace detail
 
+		KERBAL_MODULE_EXPORT
 		template <typename T>
 		KERBAL_CONSTEXPR
 		T rotr(T x, int s) KERBAL_NOEXCEPT

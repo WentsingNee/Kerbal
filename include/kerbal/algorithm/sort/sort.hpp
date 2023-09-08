@@ -12,6 +12,8 @@
 #ifndef KERBAL_ALGORITHM_SORT_SORT_HPP
 #define KERBAL_ALGORITHM_SORT_SORT_HPP
 
+#include <kerbal/ts/modules_ts/modules_ts.hpp>
+
 #include <kerbal/algorithm/sort/intro_sort.hpp>
 #include <kerbal/algorithm/sort/pigeonhole_sort.hpp>
 #include <kerbal/algorithm/sort/radix_sort.hpp>
@@ -180,6 +182,7 @@ namespace kerbal
 
 		} // namespace detail
 
+		KERBAL_MODULE_EXPORT
 		template <typename ForwardIterator, typename Compare>
 		KERBAL_CONSTEXPR14
 		void sort(ForwardIterator first, ForwardIterator last, Compare compare)
@@ -192,6 +195,7 @@ namespace kerbal
 			);
 		}
 
+		KERBAL_MODULE_EXPORT
 		template <typename ForwardIterator>
 		KERBAL_CONSTEXPR14
 		void sort(ForwardIterator first, ForwardIterator last)

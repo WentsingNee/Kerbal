@@ -12,12 +12,16 @@
 #ifndef KERBAL_UTILITY_PIECEWISE_CONSTRUCT_HPP
 #define KERBAL_UTILITY_PIECEWISE_CONSTRUCT_HPP
 
+#include <kerbal/ts/modules_ts/modules_ts.hpp>
+
+
 namespace kerbal
 {
 
 	namespace utility
 	{
 
+		KERBAL_MODULE_EXPORT
 		struct piecewise_construct_t
 		{
 		};

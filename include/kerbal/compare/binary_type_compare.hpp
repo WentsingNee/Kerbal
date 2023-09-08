@@ -12,6 +12,8 @@
 #ifndef KERBAL_COMPARE_BINARY_TYPE_COMPARE_HPP
 #define KERBAL_COMPARE_BINARY_TYPE_COMPARE_HPP
 
+#include <kerbal/ts/modules_ts/modules_ts.hpp>
+
 #include <kerbal/compare/sequence_compare/sequence_compare.fwd.hpp>
 
 #include <kerbal/compatibility/constexpr.hpp>
@@ -37,11 +39,13 @@ namespace kerbal
 	{
 
 #define DEF_FWD(NAME) \
+		KERBAL_MODULE_EXPORT \
 		template <typename T, typename U> \
 		struct KERBAL_MACRO_CONCAT(binary_type_, NAME); \
 
 
 #define DEF_PLAIN(NAME, OP) \
+		KERBAL_MODULE_EXPORT \
 		template <typename T, typename U> \
 		struct KERBAL_MACRO_CONCAT(binary_type_, NAME) \
 		{ \
@@ -66,6 +70,7 @@ namespace kerbal
 #	if __cplusplus < 201103L
 
 #define DEF_VOID_1(NAME, OP) \
+		KERBAL_MODULE_EXPORT \
 		template <typename U> \
 		struct KERBAL_MACRO_CONCAT(binary_type_, NAME)<void, U> \
 		{ \
@@ -82,6 +87,7 @@ namespace kerbal
 #	else
 
 #define DEF_VOID_1(NAME, OP) \
+		KERBAL_MODULE_EXPORT \
 		template <typename U> \
 		struct KERBAL_MACRO_CONCAT(binary_type_, NAME)<void, U> \
 		{ \
@@ -122,6 +128,7 @@ namespace kerbal
 #	if __cplusplus < 201103L
 
 #define DEF_VOID_2(NAME, OP) \
+		KERBAL_MODULE_EXPORT \
 		template <typename T> \
 		struct KERBAL_MACRO_CONCAT(binary_type_, NAME)<T, void> \
 		{ \
@@ -138,6 +145,7 @@ namespace kerbal
 #	else
 
 #define DEF_VOID_2(NAME, OP) \
+		KERBAL_MODULE_EXPORT \
 		template <typename T> \
 		struct KERBAL_MACRO_CONCAT(binary_type_, NAME)<T, void> \
 		{ \
@@ -183,6 +191,7 @@ namespace kerbal
 #	if __cplusplus < 201103L
 
 #define DEF_VOID_3(NAME, OP) \
+		KERBAL_MODULE_EXPORT \
 		template <> \
 		struct KERBAL_MACRO_CONCAT(binary_type_, NAME)<void, void> \
 		{ \
@@ -199,6 +208,7 @@ namespace kerbal
 #	else
 
 #define DEF_VOID_3(NAME, OP) \
+		KERBAL_MODULE_EXPORT \
 		template <> \
 		struct KERBAL_MACRO_CONCAT(binary_type_, NAME)<void, void> \
 		{ \
@@ -244,6 +254,7 @@ namespace kerbal
 
 
 #	define DEF_ARRAY_SPEC(NAME) \
+		KERBAL_MODULE_EXPORT \
 		template <typename T, typename U, std::size_t N> \
 		struct KERBAL_MACRO_CONCAT(binary_type_, NAME)<T[N], U[N]> \
 		{ \

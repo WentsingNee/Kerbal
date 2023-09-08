@@ -12,12 +12,16 @@
 #ifndef KERBAL_MEMORY_NOTHROW_T_HPP
 #define KERBAL_MEMORY_NOTHROW_T_HPP
 
+#include <kerbal/ts/modules_ts/modules_ts.hpp>
+
+
 namespace kerbal
 {
 
 	namespace memory
 	{
 
+		KERBAL_MODULE_EXPORT
 		struct nothrow_t
 		{
 		};

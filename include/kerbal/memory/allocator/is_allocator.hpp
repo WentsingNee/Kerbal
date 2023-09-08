@@ -12,6 +12,8 @@
 #ifndef KERBAL_MEMORY_ALLOCATOR_IS_ALLOCATOR_HPP
 #define KERBAL_MEMORY_ALLOCATOR_IS_ALLOCATOR_HPP
 
+#include <kerbal/ts/modules_ts/modules_ts.hpp>
+
 #include <kerbal/memory/allocator_traits.hpp>
 #include <kerbal/type_traits/integral_constant.hpp>
 #include <kerbal/type_traits/logical.hpp>
@@ -112,6 +114,7 @@ namespace kerbal
 
 		} // namespace detail
 
+		KERBAL_MODULE_EXPORT
 		template <typename T>
 		struct is_allocator :
 			kerbal::type_traits::conjunction<

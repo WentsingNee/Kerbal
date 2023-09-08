@@ -17,6 +17,8 @@
 #	error This file requires compiler and library support for the ISO C++ 2011 standard.
 #endif
 
+#include <kerbal/ts/modules_ts/modules_ts.hpp>
+
 #include <kerbal/type_traits/enable_if.hpp>
 #include <kerbal/type_traits/integral_constant.hpp>
 #include <kerbal/type_traits/remove_cvref.hpp>
@@ -31,6 +33,7 @@ namespace kerbal
 	namespace utility
 	{
 
+		KERBAL_MODULE_EXPORT
 		template <typename size_type, typename Ratio = std::ratio<1, 1>>
 		class storage : public std::chrono::duration<size_type, Ratio>
 		{
@@ -53,49 +56,56 @@ namespace kerbal
 				}
 		};
 
-		typedef std::ratio<1024, 1> kibi;
-		typedef std::ratio<1024 * 1024, 1> mebi;
-		typedef std::ratio<1024 * 1024 * 1024, 1> gibi;
+		KERBAL_MODULE_EXPORT typedef std::ratio<1024, 1> kibi;
+		KERBAL_MODULE_EXPORT typedef std::ratio<1024 * 1024, 1> mebi;
+		KERBAL_MODULE_EXPORT typedef std::ratio<1024 * 1024 * 1024, 1> gibi;
 
-		typedef storage<std::int64_t> Byte;
-		typedef storage<std::int64_t, std::kilo> KB;
-		typedef storage<std::int64_t, std::mega> MB;
-		typedef storage<std::int64_t, std::giga> GB;
+		KERBAL_MODULE_EXPORT typedef storage<std::int64_t> Byte;
+		KERBAL_MODULE_EXPORT typedef storage<std::int64_t, std::kilo> KB;
+		KERBAL_MODULE_EXPORT typedef storage<std::int64_t, std::mega> MB;
+		KERBAL_MODULE_EXPORT typedef storage<std::int64_t, std::giga> GB;
 
-		typedef storage<std::int64_t, kibi> KiB;
-		typedef storage<std::int64_t, mebi> MiB;
-		typedef storage<std::int64_t, gibi> GiB;
+		KERBAL_MODULE_EXPORT typedef storage<std::int64_t, kibi> KiB;
+		KERBAL_MODULE_EXPORT typedef storage<std::int64_t, mebi> MiB;
+		KERBAL_MODULE_EXPORT typedef storage<std::int64_t, gibi> GiB;
 
+		KERBAL_MODULE_EXPORT
 		constexpr Byte operator""_Byte(unsigned long long x)
 		{
 			return Byte(x);
 		}
 
+		KERBAL_MODULE_EXPORT
 		constexpr KB operator""_KB(unsigned long long x)
 		{
 			return KB(x);
 		}
 
+		KERBAL_MODULE_EXPORT
 		constexpr MB operator""_MB(unsigned long long x)
 		{
 			return MB(x);
 		}
 
+		KERBAL_MODULE_EXPORT
 		constexpr GB operator""_GB(unsigned long long x)
 		{
 			return GB(x);
 		}
 
+		KERBAL_MODULE_EXPORT
 		constexpr KiB operator""_KiB(unsigned long long x)
 		{
 			return KiB(x);
 		}
 
+		KERBAL_MODULE_EXPORT
 		constexpr MiB operator""_MiB(unsigned long long x)
 		{
 			return MiB(x);
 		}
 
+		KERBAL_MODULE_EXPORT
 		constexpr GiB operator""_GiB(unsigned long long x)
 		{
 			return GiB(x);
@@ -119,6 +129,7 @@ namespace kerbal
 
 		} // namespace detail
 
+		KERBAL_MODULE_EXPORT
 		template <typename Type>
 		struct is_storage :
 			kerbal::utility::detail::is_storage_helper<
@@ -127,6 +138,7 @@ namespace kerbal
 		{
 		};
 
+		KERBAL_MODULE_EXPORT
 		template <typename ToStor, typename size_type, typename Ratio>
 		constexpr
 		typename kerbal::type_traits::enable_if<is_storage<ToStor>::value, ToStor>::type

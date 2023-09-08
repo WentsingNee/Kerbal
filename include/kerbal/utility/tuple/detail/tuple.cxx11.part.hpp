@@ -16,6 +16,8 @@
 #	error This file requires compiler and library support for the ISO C++ 2011 standard.
 #endif
 
+#include <kerbal/ts/modules_ts/modules_ts.hpp>
+
 #include <kerbal/utility/tuple/tuple.fwd.hpp>
 
 #include <kerbal/algorithm/swap.hpp>
@@ -418,6 +420,8 @@ namespace kerbal
 
 		} // namespace detail
 
+
+		KERBAL_MODULE_EXPORT
 		template <typename ... Args>
 		struct tuple : detail::tuple_impl<kerbal::utility::make_index_sequence<sizeof...(Args)>, Args...>
 		{
@@ -1485,6 +1489,7 @@ namespace kerbal
 		};
 
 
+		KERBAL_MODULE_EXPORT
 		template <typename ... Args>
 		KERBAL_CONSTEXPR
 		kerbal::utility::tuple<
@@ -1502,12 +1507,14 @@ namespace kerbal
 
 #	if __cplusplus >= 201703L
 
+		KERBAL_MODULE_EXPORT
 		template <typename ... Args>
 		tuple(Args && ...) ->
 		tuple<typename kerbal::type_traits::remove_cvref<Args>::type...>;
 
 #	endif
 
+		KERBAL_MODULE_EXPORT
 		template <typename ... Args>
 		KERBAL_CONSTEXPR
 		kerbal::utility::tuple<Args & ...>
@@ -1516,6 +1523,7 @@ namespace kerbal
 			return kerbal::utility::tuple<Args & ...>(args...);
 		}
 
+		KERBAL_MODULE_EXPORT
 		template <typename ... Args>
 		KERBAL_CONSTEXPR
 		kerbal::utility::tuple<Args && ...>
@@ -1532,6 +1540,7 @@ namespace kerbal
 	namespace algorithm
 	{
 
+		KERBAL_MODULE_EXPORT
 		template <typename ... Args>
 		KERBAL_CONSTEXPR20
 		void swap(
@@ -1550,6 +1559,7 @@ namespace kerbal
 
 KERBAL_NAMESPACE_STD_BEGIN
 
+	KERBAL_MODULE_EXPORT
 	template <typename ... Args>
 	KERBAL_CONSTEXPR20
 	void swap(
@@ -1573,18 +1583,21 @@ KERBAL_NAMESPACE_STD_END
 
 KERBAL_NAMESPACE_STD_BEGIN
 
+	KERBAL_MODULE_EXPORT
 	template <typename ... Args>
 	struct tuple_size<kerbal::utility::tuple<Args...> > :
 		std::integral_constant<std::size_t, kerbal::utility::tuple<Args...>::TUPLE_SIZE::value>
 	{
 	};
 
+	KERBAL_MODULE_EXPORT
 	template <std::size_t I, typename ... Args>
 	struct tuple_element<I, kerbal::utility::tuple<Args...> > :
 		kerbal::utility::tuple<Args...>::template value_type<I>
 	{
 	};
 
+	KERBAL_MODULE_EXPORT
 	template <std::size_t I, typename ... Args>
 	KERBAL_CONSTEXPR14
 	typename kerbal::utility::tuple<Args...>::template reference<I>::type
@@ -1593,6 +1606,7 @@ KERBAL_NAMESPACE_STD_BEGIN
 		return t.template get<I>();
 	}
 
+	KERBAL_MODULE_EXPORT
 	template <std::size_t I, typename ... Args>
 	KERBAL_CONSTEXPR
 	typename kerbal::utility::tuple<Args...>::template const_reference<I>::type
@@ -1601,6 +1615,7 @@ KERBAL_NAMESPACE_STD_BEGIN
 		return t.template get<I>();
 	}
 
+	KERBAL_MODULE_EXPORT
 	template <std::size_t I, typename ... Args>
 	KERBAL_CONSTEXPR14
 	typename kerbal::utility::tuple<Args...>::template rvalue_reference<I>::type
@@ -1609,6 +1624,7 @@ KERBAL_NAMESPACE_STD_BEGIN
 		return kerbal::compatibility::move(t).template get<I>();
 	}
 
+	KERBAL_MODULE_EXPORT
 	template <std::size_t I, typename ... Args>
 	KERBAL_CONSTEXPR
 	typename kerbal::utility::tuple<Args...>::template const_rvalue_reference<I>::type
@@ -1810,6 +1826,8 @@ namespace kerbal
 
 		} // namespace detail
 
+
+		KERBAL_MODULE_EXPORT
 		template <typename ... Tuples>
 		KERBAL_CONSTEXPR
 		typename detail::tuple_cat_helper<Tuples...>::tuple_cat_result_type
@@ -1819,6 +1837,7 @@ namespace kerbal
 		}
 
 
+		KERBAL_MODULE_EXPORT
 		template <typename ... Args, typename ... UArgs>
 		KERBAL_CONSTEXPR
 		auto operator+(const tuple<Args...> & t0, const tuple<UArgs...> & t1) ->
@@ -1827,6 +1846,7 @@ namespace kerbal
 			return tuple_cat(t0, t1);
 		}
 
+		KERBAL_MODULE_EXPORT
 		template <typename ... Args, typename ... UArgs>
 		KERBAL_CONSTEXPR
 		auto operator+(const tuple<Args...> & t0, tuple<UArgs...> && t1) ->
@@ -1835,6 +1855,7 @@ namespace kerbal
 			return tuple_cat(t0, kerbal::compatibility::move(t1));
 		}
 
+		KERBAL_MODULE_EXPORT
 		template <typename ... Args, typename ... UArgs>
 		KERBAL_CONSTEXPR
 		auto operator+(tuple<Args...> && t0, const tuple<UArgs...> & t1) ->
@@ -1843,6 +1864,7 @@ namespace kerbal
 			return tuple_cat(kerbal::compatibility::move(t0), t1);
 		}
 
+		KERBAL_MODULE_EXPORT
 		template <typename ... Args, typename ... UArgs>
 		KERBAL_CONSTEXPR
 		auto operator+(tuple<Args...> && t0, tuple<UArgs...> && t1) ->

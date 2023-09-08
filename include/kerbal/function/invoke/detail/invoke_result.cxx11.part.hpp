@@ -12,6 +12,8 @@
 #ifndef KERBAL_FUNCTION_INVOKE_DETAIL_INVOKE_RESULT_CXX11_PART_HPP
 #define KERBAL_FUNCTION_INVOKE_DETAIL_INVOKE_RESULT_CXX11_PART_HPP
 
+#include <kerbal/ts/modules_ts/modules_ts.hpp>
+
 #include <kerbal/type_traits/remove_cvref.hpp>
 #include <kerbal/utility/declval.hpp>
 #include <kerbal/utility/reference_wrapper.hpp>
@@ -113,6 +115,7 @@ namespace kerbal
 		} // namespace detail
 
 
+		KERBAL_MODULE_EXPORT
 		template <typename Fun, typename ... Args>
 		struct invoke_result :
 			kerbal::function::detail::invoke_result_helper<

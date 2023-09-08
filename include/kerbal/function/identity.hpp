@@ -12,6 +12,8 @@
 #ifndef KERBAL_FUNCTION_IDENTITY_HPP
 #define KERBAL_FUNCTION_IDENTITY_HPP
 
+#include <kerbal/ts/modules_ts/modules_ts.hpp>
+
 #include <kerbal/compatibility/constexpr.hpp>
 #include <kerbal/compatibility/noexcept.hpp>
 
@@ -26,6 +28,7 @@ namespace kerbal
 	namespace function
 	{
 
+		KERBAL_MODULE_EXPORT
 		struct identity
 		{
 

@@ -12,6 +12,8 @@
 #ifndef KERBAL_CONTAINER_LIST_LIST_FWD_HPP
 #define KERBAL_CONTAINER_LIST_LIST_FWD_HPP
 
+#include <kerbal/ts/modules_ts/modules_ts.hpp>
+
 #include <memory>
 
 #if __cplusplus >= 201703L
@@ -27,6 +29,7 @@ namespace kerbal
 	namespace container
 	{
 
+		KERBAL_MODULE_EXPORT
 		template <typename T, typename Allocator = std::allocator<T> >
 		class list;
 
@@ -35,13 +38,17 @@ namespace kerbal
 
 		namespace pmr
 		{
+
+			KERBAL_MODULE_EXPORT
 			template <typename T>
 			using list = kerbal::container::list<T, std::pmr::polymorphic_allocator<T> >;
+
 		}
 
 #	endif
 #endif
 
+		KERBAL_MODULE_EXPORT
 		template <typename T, typename Allocator = std::allocator<T> >
 		struct list_node_size;
 

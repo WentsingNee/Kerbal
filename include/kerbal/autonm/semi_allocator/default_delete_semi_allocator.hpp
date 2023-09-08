@@ -12,6 +12,8 @@
 #ifndef KERBAL_AUTONM_SEMI_ALLOCATOR_DEFAULT_DELETE_SEMI_ALLOCATOR_HPP
 #define KERBAL_AUTONM_SEMI_ALLOCATOR_DEFAULT_DELETE_SEMI_ALLOCATOR_HPP
 
+#include <kerbal/ts/modules_ts/modules_ts.hpp>
+
 #include <kerbal/compatibility/constexpr.hpp>
 #include <kerbal/compatibility/noexcept.hpp>
 #include <kerbal/autonm/semi_allocator/semi_allocator_base.hpp>
@@ -23,6 +25,7 @@ namespace kerbal
 	namespace autonm
 	{
 
+		KERBAL_MODULE_EXPORT
 		template <typename T = void>
 		class default_delete_semi_allocator :
 			public semi_allocator_base<T>

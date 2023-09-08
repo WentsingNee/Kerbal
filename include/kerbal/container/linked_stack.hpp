@@ -12,6 +12,8 @@
 #ifndef KERBAL_CONTAINER_LINKED_STACK_HPP
 #define KERBAL_CONTAINER_LINKED_STACK_HPP
 
+#include <kerbal/ts/modules_ts/modules_ts.hpp>
+
 #include <kerbal/compatibility/namespace_std_scope.hpp>
 #include <kerbal/container/forward_list.hpp>
 
@@ -32,6 +34,7 @@ namespace kerbal
 	namespace container
 	{
 
+		KERBAL_MODULE_EXPORT
 		template <typename T, typename Sequence = kerbal::container::forward_list<T> >
 		class linked_stack
 		{

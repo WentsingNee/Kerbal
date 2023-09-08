@@ -12,6 +12,8 @@
 #ifndef KERBAL_TMP_TYPE_VECTOR_HPP
 #define KERBAL_TMP_TYPE_VECTOR_HPP
 
+#include <kerbal/ts/modules_ts/modules_ts.hpp>
+
 #include <kerbal/compatibility/static_assert.hpp>
 #include <kerbal/type_traits/integral_constant.hpp>
 #include <kerbal/type_traits/is_same.hpp>
@@ -35,6 +37,7 @@ namespace kerbal
 
 #	define TARGS_DECL(i) typename KERBAL_MACRO_CONCAT(T, i) = kerbal::tmp::tppter
 
+		KERBAL_MODULE_EXPORT
 		template <typename T0 = kerbal::tmp::tppter, KERBAL_PPEXPAND_WITH_COMMA_N(TARGS_DECL, 20)> \
 		struct type_vector;
 
@@ -46,6 +49,7 @@ namespace kerbal
 #	define TARGS_DECL(i) typename KERBAL_MACRO_CONCAT(T, i)
 #	define TARGS_USE(i) KERBAL_MACRO_CONCAT(T, i)
 #	define DBODY(i) \
+		KERBAL_MODULE_EXPORT \
 		template <KERBAL_OPT_PPEXPAND_WITH_COMMA_N(REMAINF, EMPTY, TARGS_DECL, i)> \
 		struct type_vector<KERBAL_OPT_PPEXPAND_WITH_COMMA_N(REMAINF, EMPTY, TARGS_USE, i)> \
 		{ \
@@ -63,6 +67,7 @@ namespace kerbal
 
 #else
 
+		KERBAL_MODULE_EXPORT
 		template <typename ... Args>
 		struct type_vector
 		{

@@ -12,6 +12,8 @@
 #ifndef KERBAL_TEST_TEST_CASE_TEST_CASE_DECL_HPP
 #define KERBAL_TEST_TEST_CASE_TEST_CASE_DECL_HPP
 
+#include <kerbal/ts/modules_ts/modules_ts.hpp>
+
 #include <kerbal/compatibility/noexcept.hpp>
 #include <kerbal/compatibility/static_assert.hpp>
 #include <kerbal/compatibility/attribute_unused.hpp>
@@ -29,6 +31,7 @@ namespace kerbal
 	namespace test
 	{
 
+		KERBAL_MODULE_EXPORT
 		struct test_case_running_result
 		{
 				enum circumstance
@@ -39,6 +42,7 @@ namespace kerbal
 				};
 		};
 
+		KERBAL_MODULE_EXPORT
 		struct assert_item
 		{
 				const char * file;
@@ -59,11 +63,13 @@ namespace kerbal
 				}
 		};
 
+		KERBAL_MODULE_EXPORT
 		struct assert_record
 		{
 				kerbal::container::vector<assert_item> items;
 		};
 
+		KERBAL_MODULE_EXPORT
 		struct test_case
 		{
 
@@ -86,6 +92,7 @@ namespace kerbal
 
 		};
 
+		KERBAL_MODULE_EXPORT
 		typedef kerbal::container::vector<test_case> register_list_type;
 
 		namespace detail
@@ -99,12 +106,16 @@ namespace kerbal
 
 		} // namespace detail
 
+		KERBAL_MODULE_EXPORT
 		int run_test_case(std::size_t case_id, int, char * []);
 
+		KERBAL_MODULE_EXPORT
 		int select_test_case(int argc, char * argv[]);
 
+		KERBAL_MODULE_EXPORT
 		int run_all_test_case(int argc, char * argv[]);
 
+		KERBAL_MODULE_EXPORT
 		template <typename T, typename U>
 		bool compare_and_out(const T & lhs, const U & rhs)
 		{
