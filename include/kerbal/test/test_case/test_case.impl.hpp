@@ -15,6 +15,7 @@
 #include <kerbal/compatibility/noexcept.hpp>
 #include <kerbal/config/exceptions.hpp>
 #include <kerbal/container/vector.hpp>
+#include <kerbal/costream/costream.hpp>
 #include <kerbal/test/runtime_timer.hpp>
 
 #include <cstddef>
@@ -105,7 +106,9 @@ namespace kerbal
 			}
 
 			if (failure == 0) {
-				printf("test case[%zu]: %s (%s): SUCCESS\n", case_id, name, description);
+				kerbal::costream::costream out(std::cout, kerbal::costream::GREEN);
+				out << "test case[" << case_id << "]: " << name << " (" << description << "): SUCCESS\n";
+//				printf("test case[%zu]: %s (%s): SUCCESS\n", case_id, name, description);
 			} else {
 				printf("test case[%zu]: %s (%s): FAILURE\n", case_id, name, description);
 			}
@@ -131,12 +134,14 @@ namespace kerbal
 			printf("time usage: --- (not supported)\n");
 #	endif
 
-			printf(" ------------------------\n");
-			printf("|SUCCESS    | %10d |\n", success);
-			printf("|FAILURE    | %10d |\n", failure);
-			printf("|------------------------|\n");
-			printf("|TOTAL      | %10d |\n", success + failure);
-			printf(" ------------------------\n");
+			printf(
+					" ------------------------\n"
+					"|SUCCESS    | %10d |\n"
+					"|FAILURE    | %10d |\n"
+					"|------------------------|\n"
+					"|TOTAL      | %10d |\n"
+					" ------------------------\n",
+			success, failure, success + failure);
 
 			if (failure == 0) {
 				return -1;
