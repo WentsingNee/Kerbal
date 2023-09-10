@@ -13,17 +13,16 @@
 #define KERBAL_FMT_FORMAT_HPP
 
 #include <kerbal/algorithm/modifier.hpp>
+#include <kerbal/container/vector.hpp>
 #include <kerbal/iterator/iterator_traits.hpp>
 #include <kerbal/fmt/formatter.hpp>
 #include <kerbal/fmt/format_error.hpp>
-#include <kerbal/type_traits/reference_deduction.hpp>
-#include <kerbal/type_traits/cv_deduction.hpp>
+#include <kerbal/type_traits/remove_reference.hpp>
 
 #if __cplusplus >= 201103L
 #	include <kerbal/utility/forward.hpp>
 #endif
 
-#include <vector>
 #include <iterator>
 
 
@@ -72,7 +71,7 @@ namespace kerbal
 					return r;
 				}
 
-				void parse_brace(size_t arg_id, const std::vector<formatter_and_value_pack> & pack)
+				void parse_brace(size_t arg_id, const kerbal::container::vector<formatter_and_value_pack> & pack)
 				{
 					if (*M_current >= '0' && *M_current <= '9') {
 						// {0
@@ -121,7 +120,7 @@ namespace kerbal
 					}
 				}
 
-				void parse(const std::vector<formatter_and_value_pack> & pack)
+				void parse(const kerbal::container::vector<formatter_and_value_pack> & pack)
 				{
 					size_t arg_id = 0;
 					while (M_current != M_last) {
@@ -164,7 +163,7 @@ namespace kerbal
 		template <typename OutputIterator, typename ForwardIterator>
 		OutputIterator
 		_format_to(OutputIterator out, ForwardIterator fmt_first, ForwardIterator fmt_last,
-							const std::vector<formatter_and_value_pack> & pack)
+							const kerbal::container::vector<formatter_and_value_pack> & pack)
 		{
 			kerbal::fmt::format_parse_context<OutputIterator, ForwardIterator> ctx(out, fmt_first, fmt_last);
 			ctx.parse(pack);
@@ -187,7 +186,7 @@ namespace kerbal
 		template <typename OutputIterator, typename ForwardIterator, typename ... Args>
 		OutputIterator format_range_to(OutputIterator out, ForwardIterator fmt_first, ForwardIterator fmt_last, Args&& ... args)
 		{
-			std::vector<formatter_and_value_pack> pack = {
+			kerbal::container::vector<formatter_and_value_pack> pack = {
 					formatter_and_value_pack{
 						v<
 							OutputIterator, ForwardIterator, typename kerbal::type_traits::remove_cvref<Args>::type
