@@ -323,7 +323,7 @@ namespace kerbal
 					void
 					insert(InputIterator first, InputIterator last)
 					{
-						this->ordered.unique_insert(first, last);
+						this->ordered.insert_unique(first, last);
 					}
 
 
