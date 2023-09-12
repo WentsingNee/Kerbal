@@ -13,7 +13,7 @@
 #define KERBAL_CONTAINER_STATIC_ORDERED_HPP
 
 #include <kerbal/algorithm/swap.hpp>
-#include <kerbal/compare/basic_compare.hpp>
+#include <kerbal/compare/binary_type_compare.hpp>
 #include <kerbal/compatibility/namespace_std_scope.hpp>
 #include <kerbal/container/associative_container_facility/key_extractors/identity_extractor.hpp>
 #include <kerbal/container/static_vector.hpp>
