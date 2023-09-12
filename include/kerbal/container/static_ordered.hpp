@@ -13,7 +13,7 @@
 #define KERBAL_CONTAINER_STATIC_ORDERED_HPP
 
 #include <kerbal/algorithm/swap.hpp>
-#include <kerbal/compare/basic_compare.hpp>
+#include <kerbal/compare/binary_type_compare.hpp>
 #include <kerbal/compatibility/constexpr.hpp>
 #include <kerbal/compatibility/namespace_std_scope.hpp>
 #include <kerbal/compatibility/noexcept.hpp>
@@ -39,7 +39,7 @@ namespace kerbal
 			typename Entity,
 			std::size_t N,
 			typename Extract = kerbal::container::identity_extractor<Entity>,
-			typename KeyCompare = kerbal::compare::less<>
+			typename KeyCompare = kerbal::compare::binary_type_less<void, void>
 		>
 		class static_ordered :
 			public kerbal::container::detail::flat_ordered_base<
