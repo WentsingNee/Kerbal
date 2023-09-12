@@ -406,7 +406,7 @@ namespace kerbal
 					KERBAL_CONSTEXPR14
 					void insert(InputIterator first, InputIterator last)
 					{
-						this->ordered.try_insert(first, last);
+						this->ordered.insert_unique(first, last);
 					}
 
 					KERBAL_CONSTEXPR14

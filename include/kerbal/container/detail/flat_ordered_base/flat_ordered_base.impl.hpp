@@ -57,7 +57,8 @@ namespace kerbal
 			template <typename Entity, typename Extract, typename KeyCompare, typename Sequence>
 			KERBAL_CONSTEXPR
 			flat_ordered_base<Entity, Extract, KeyCompare, Sequence>::flat_ordered_base(key_compare kc) :
-					key_compare_compress_helper(kc), sequence()
+					key_compare_compress_helper(kerbal::utility::in_place_t(), kc),
+					sequence()
 			{
 			}
 
@@ -69,7 +70,8 @@ namespace kerbal
 						kerbal::iterator::is_input_compatible_iterator<InputIterator>::value,
 						int
 					>::type
-			) : sequence(first, last)
+			) :
+				sequence(first, last)
 			{
 				this->k_sort();
 			}
@@ -82,7 +84,9 @@ namespace kerbal
 						kerbal::iterator::is_input_compatible_iterator<InputIterator>::value,
 						int
 					>::type
-			) : key_compare_compress_helper(kc), sequence(first, last)
+			) :
+				key_compare_compress_helper(kerbal::utility::in_place_t(), kc),
+				sequence(first, last)
 			{
 				this->k_sort();
 			}
@@ -231,7 +235,7 @@ namespace kerbal
 			template <typename Entity, typename Extract, typename KeyCompare, typename Sequence>
 			KERBAL_CONSTEXPR
 			typename flat_ordered_base<Entity, Extract, KeyCompare, Sequence>::const_reverse_iterator
-			flat_ordered_base<Entity, Extract, KeyCompare, Sequence>::flat_ordered_base<Entity, Extract, KeyCompare, Sequence>::crbegin() const
+			flat_ordered_base<Entity, Extract, KeyCompare, Sequence>::crbegin() const
 			{
 				return sequence.rbegin();
 			}
@@ -239,7 +243,7 @@ namespace kerbal
 			template <typename Entity, typename Extract, typename KeyCompare, typename Sequence>
 			KERBAL_CONSTEXPR
 			typename flat_ordered_base<Entity, Extract, KeyCompare, Sequence>::const_reverse_iterator
-			flat_ordered_base<Entity, Extract, KeyCompare, Sequence>::flat_ordered_base<Entity, Extract, KeyCompare, Sequence>::crend() const
+			flat_ordered_base<Entity, Extract, KeyCompare, Sequence>::crend() const
 			{
 				return sequence.rend();
 			}
@@ -247,7 +251,7 @@ namespace kerbal
 			template <typename Entity, typename Extract, typename KeyCompare, typename Sequence>
 			KERBAL_CONSTEXPR14
 			typename flat_ordered_base<Entity, Extract, KeyCompare, Sequence>::iterator
-			flat_ordered_base<Entity, Extract, KeyCompare, Sequence>::flat_ordered_base<Entity, Extract, KeyCompare, Sequence>::nth(size_type index)
+			flat_ordered_base<Entity, Extract, KeyCompare, Sequence>::nth(size_type index)
 			{
 				return sequence.nth(index);
 			}
@@ -358,6 +362,32 @@ namespace kerbal
 			flat_ordered_base<Entity, Extract, KeyCompare, Sequence>::lower_bound(const Key & key) const
 			{
 				return kerbal::algorithm::lower_bound(this->cbegin(), this->cend(), key,
+													  lower_bound_kc_adapter(this));
+			}
+
+			template <typename Entity, typename Extract, typename KeyCompare, typename Sequence>
+			template <typename Key>
+			KERBAL_CONSTEXPR14
+			typename flat_ordered_base<Entity, Extract, KeyCompare, Sequence>::template enable_if_transparent_lookup<
+					Key,
+					typename flat_ordered_base<Entity, Extract, KeyCompare, Sequence>::iterator
+			>::type
+			flat_ordered_base<Entity, Extract, KeyCompare, Sequence>::lower_bound(const Key & key, const_iterator hint)
+			{
+				return kerbal::algorithm::lower_bound_hint(this->begin(), this->end(), key, hint,
+													  lower_bound_kc_adapter(this));
+			}
+
+			template <typename Entity, typename Extract, typename KeyCompare, typename Sequence>
+			template <typename Key>
+			KERBAL_CONSTEXPR14
+			typename flat_ordered_base<Entity, Extract, KeyCompare, Sequence>::template enable_if_transparent_lookup<
+					Key,
+					typename flat_ordered_base<Entity, Extract, KeyCompare, Sequence>::const_iterator
+			>::type
+			flat_ordered_base<Entity, Extract, KeyCompare, Sequence>::lower_bound(const Key & key, const_iterator hint) const
+			{
+				return kerbal::algorithm::lower_bound(this->cbegin(), this->cend(), key, hint,
 													  lower_bound_kc_adapter(this));
 			}
 

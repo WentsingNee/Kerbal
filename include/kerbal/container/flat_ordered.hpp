@@ -15,8 +15,9 @@
 #include <kerbal/container/detail/flat_ordered_base.hpp>
 
 #include <kerbal/algorithm/swap.hpp>
-#include <kerbal/compare/basic_compare.hpp>
+#include <kerbal/compare/binary_type_compare.hpp>
 #include <kerbal/compatibility/namespace_std_scope.hpp>
+#include <kerbal/container/associative_container_facility/key_extractors/identity_extractor.hpp>
 #include <kerbal/container/vector.hpp>
 
 #include <memory>
@@ -34,11 +35,13 @@ namespace kerbal
 	namespace container
 	{
 
-		template <typename Entity, typename Key = Entity, typename KeyCompare = kerbal::compare::less<Key>,
-				typename Extract = default_extract<Key, Entity>, typename Allocator = std::allocator<Entity> >
+		template <typename Entity, typename Extract = kerbal::container::identity_extractor<Entity>,
+				typename KeyCompare = kerbal::compare::binary_type_less<void, void>,
+				typename Allocator = std::allocator<Entity>
+		>
 		class flat_ordered:
 				public kerbal::container::detail::flat_ordered_base<
-						Entity, Key, KeyCompare, Extract, kerbal::container::vector<Entity, Allocator>
+					Entity, Extract, KeyCompare, kerbal::container::vector<Entity, Allocator>
 				>
 		{
 			public:
@@ -46,8 +49,8 @@ namespace kerbal
 
 			private:
 				typedef kerbal::container::detail::flat_ordered_base<
-										Entity, Key, KeyCompare, Extract, Sequence
-								> super;
+					Entity, Extract, KeyCompare, kerbal::container::vector<Entity, Allocator>
+				> super;
 
 			public:
 				typedef typename super::key_compare			key_compare;
@@ -122,7 +125,7 @@ namespace kerbal
 
 				void assign(const flat_ordered& src)
 				{
-					this->assign(src.cbegin(), src.cend(), src.key_comp_obj());
+					this->assign(src.cbegin(), src.cend(), src.key_comp());
 				}
 
 				flat_ordered& operator=(const flat_ordered & src)
@@ -149,47 +152,47 @@ namespace kerbal
 				void swap(flat_ordered & ano)
 				{
 					this->sequence.swap(ano.sequence);
-					kerbal::algorithm::swap(this->key_comp_obj(), ano.key_comp_obj());
+					kerbal::algorithm::swap(this->key_comp(), ano.key_comp());
 				}
 
 				template <typename Allocator2>
-				friend bool operator==(const flat_ordered<Entity, Key, KeyCompare, Extract, Allocator> & lhs,
-										const flat_ordered<Entity, Key, KeyCompare, Extract, Allocator2> & rhs)
+				friend bool operator==(const flat_ordered<Entity, Extract, KeyCompare, Allocator> & lhs,
+										const flat_ordered<Entity, Extract, KeyCompare, Allocator2> & rhs)
 				{
 					return lhs.sequence == rhs.sequence;
 				}
 
 				template <typename Allocator2>
-				friend bool operator!=(const flat_ordered<Entity, Key, KeyCompare, Extract, Allocator> & lhs,
-										const flat_ordered<Entity, Key, KeyCompare, Extract, Allocator2> & rhs)
+				friend bool operator!=(const flat_ordered<Entity, Extract, KeyCompare, Allocator> & lhs,
+										const flat_ordered<Entity, Extract, KeyCompare, Allocator2> & rhs)
 				{
 					return lhs.sequence != rhs.sequence;
 				}
 
 				template <typename Allocator2>
-				friend bool operator<(const flat_ordered<Entity, Key, KeyCompare, Extract, Allocator> & lhs,
-										const flat_ordered<Entity, Key, KeyCompare, Extract, Allocator2> & rhs)
+				friend bool operator<(const flat_ordered<Entity, Extract, KeyCompare, Allocator> & lhs,
+										const flat_ordered<Entity, Extract, KeyCompare, Allocator2> & rhs)
 				{
 					return lhs.sequence < rhs.sequence;
 				}
 
 				template <typename Allocator2>
-				friend bool operator<=(const flat_ordered<Entity, Key, KeyCompare, Extract, Allocator> & lhs,
-										const flat_ordered<Entity, Key, KeyCompare, Extract, Allocator2> & rhs)
+				friend bool operator<=(const flat_ordered<Entity, Extract, KeyCompare, Allocator> & lhs,
+										const flat_ordered<Entity, Extract, KeyCompare, Allocator2> & rhs)
 				{
 					return lhs.sequence <= rhs.sequence;
 				}
 
 				template <typename Allocator2>
-				friend bool operator>(const flat_ordered<Entity, Key, KeyCompare, Extract, Allocator> & lhs,
-										const flat_ordered<Entity, Key, KeyCompare, Extract, Allocator2> & rhs)
+				friend bool operator>(const flat_ordered<Entity, Extract, KeyCompare, Allocator> & lhs,
+										const flat_ordered<Entity, Extract, KeyCompare, Allocator2> & rhs)
 				{
 					return lhs.sequence > rhs.sequence;
 				}
 
 				template <typename Allocator2>
-				friend bool operator>=(const flat_ordered<Entity, Key, KeyCompare, Extract, Allocator> & lhs,
-										const flat_ordered<Entity, Key, KeyCompare, Extract, Allocator2> & rhs)
+				friend bool operator>=(const flat_ordered<Entity, Extract, KeyCompare, Allocator> & lhs,
+										const flat_ordered<Entity, Extract, KeyCompare, Allocator2> & rhs)
 				{
 					return lhs.sequence >= rhs.sequence;
 				}
@@ -204,8 +207,8 @@ namespace kerbal
 
 		template <typename Entity, typename Key, typename KeyCompare, typename Extract, typename Allocator>
 		KERBAL_CONSTEXPR14
-		void swap(kerbal::container::flat_ordered<Entity, Key, KeyCompare, Extract, Allocator> & a,
-				  kerbal::container::flat_ordered<Entity, Key, KeyCompare, Extract, Allocator> & b)
+		void swap(kerbal::container::flat_ordered<Entity, Extract, KeyCompare, Allocator> & a,
+				  kerbal::container::flat_ordered<Entity, Extract, KeyCompare, Allocator> & b)
 				KERBAL_CONDITIONAL_NOEXCEPT(noexcept(a.swap(b)))
 		{
 			a.swap(b);
@@ -220,8 +223,8 @@ KERBAL_NAMESPACE_STD_BEGIN
 
 	template <typename Entity, typename Key, typename KeyCompare, typename Extract, typename Allocator>
 	KERBAL_CONSTEXPR14
-	void swap(kerbal::container::flat_ordered<Entity, Key, KeyCompare, Extract, Allocator> & a,
-			  kerbal::container::flat_ordered<Entity, Key, KeyCompare, Extract, Allocator> & b)
+	void swap(kerbal::container::flat_ordered<Entity, Extract, KeyCompare, Allocator> & a,
+			  kerbal::container::flat_ordered<Entity, Extract, KeyCompare, Allocator> & b)
 			KERBAL_CONDITIONAL_NOEXCEPT(noexcept(a.swap(b)))
 	{
 		a.swap(b);

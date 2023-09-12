@@ -250,9 +250,9 @@ namespace kerbal
 				protected:
 
 #			if __cplusplus >= 201103L
-
 					flat_ordered_base() = default;
-
+#			else
+					flat_ordered_base();
 #			endif
 
 					KERBAL_CONSTEXPR
@@ -418,6 +418,16 @@ namespace kerbal
 					KERBAL_CONSTEXPR14
 					typename enable_if_transparent_lookup<Key, const_iterator>::type
 					lower_bound(const Key & key) const;
+
+					template <typename Key>
+					KERBAL_CONSTEXPR14
+					typename enable_if_transparent_lookup<Key, iterator>::type
+					lower_bound(const Key & key, const_iterator hint);
+
+					template <typename Key>
+					KERBAL_CONSTEXPR14
+					typename enable_if_transparent_lookup<Key, const_iterator>::type
+					lower_bound(const Key & key, const_iterator hint) const;
 
 
 					KERBAL_CONSTEXPR14
