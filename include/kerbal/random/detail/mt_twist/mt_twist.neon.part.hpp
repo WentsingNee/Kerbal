@@ -21,7 +21,7 @@
 
 #include <arm_neon.h>
 
-#include <kerbal/random/detail/mt_twist/mt_twist.plain.hpp>
+#include <kerbal/random/detail/mt_twist/mt_twist.plain.part.hpp>
 
 
 namespace kerbal
