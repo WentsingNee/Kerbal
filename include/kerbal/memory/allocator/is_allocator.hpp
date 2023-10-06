@@ -34,17 +34,17 @@ namespace kerbal
 			template <typename T, typename = void>
 			struct is_allocator_allocator_traits_valid_helper : kerbal::type_traits::false_type
 			{
-            };
+			};
 
 			template <typename T>
 			struct is_allocator_allocator_traits_valid_helper<
-                    T,
-                    typename kerbal::type_traits::void_type<
-                        typename T::value_type,
-                        typename kerbal::memory::allocator_traits<T>::size_type,
-                        typename kerbal::memory::allocator_traits<T>::pointer
-                    >::type
-            > : kerbal::type_traits::true_type
+					T,
+					typename kerbal::type_traits::void_type<
+						typename T::value_type,
+						typename kerbal::memory::allocator_traits<T>::size_type,
+						typename kerbal::memory::allocator_traits<T>::pointer
+					>::type
+			> : kerbal::type_traits::true_type
 			{
 			};
 
@@ -73,7 +73,7 @@ namespace kerbal
 
 			template <typename T>
 			struct is_allocator_has_allocate_helper :
-                    is_allocator_has_allocate_impl<T>::type
+					is_allocator_has_allocate_impl<T>::type
 			{
 			};
 
@@ -105,9 +105,9 @@ namespace kerbal
 
 			template <typename T>
 			struct is_allocator_has_deallocate_helper :
-                    is_allocator_has_deallocate_impl<T>::type
-            {
-            };
+					is_allocator_has_deallocate_impl<T>::type
+			{
+			};
 
 		} // namespace detail
 
