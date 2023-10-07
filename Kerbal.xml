@@ -1,0 +1,156 @@
+<code_scheme name="Kerbal" version="173">
+  <Objective-C>
+    <option name="INDENT_C_STRUCT_MEMBERS" value="8" />
+    <option name="INDENT_CLASS_MEMBERS" value="8" />
+    <option name="INDENT_VISIBILITY_KEYWORDS" value="4" />
+    <option name="NAMESPACE_BRACE_PLACEMENT" value="2" />
+    <option name="FUNCTION_BRACE_PLACEMENT" value="2" />
+    <option name="SUPERCLASS_LIST_WRAP" value="1" />
+    <option name="SUPERCLASS_LIST_BEFORE_COLON" value="0" />
+    <option name="SUPERCLASS_LIST_AFTER_COLON" value="2" />
+    <option name="SPACE_AFTER_POINTER_IN_DECLARATION" value="true" />
+    <option name="SPACE_AFTER_REFERENCE_IN_DECLARATION" value="true" />
+    <option name="SPACE_BEFORE_DICTIONARY_LITERAL_COLON" value="true" />
+    <option name="TAG_PREFIX_OF_LINE_COMMENT" value="AT" />
+  </Objective-C>
+  <Objective-C-extensions>
+    <option name="TAG_PREFIX_OF_LINE_COMMENT" value="AT" />
+  </Objective-C-extensions>
+  <Objective-C-extensions>
+    <option name="TAG_PREFIX_OF_LINE_COMMENT" value="AT" />
+  </Objective-C-extensions>
+  <files>
+    <extensions>
+      <pair source="cpp" header="hpp" fileNamingConvention="NONE" />
+      <pair source="c" header="h" fileNamingConvention="NONE" />
+      <pair source="cu" header="cuh" fileNamingConvention="NONE" />
+    </extensions>
+  </files>
+  <codeStyleSettings language="ObjectiveC">
+    <option name="RIGHT_MARGIN" value="180" />
+    <option name="KEEP_FIRST_COLUMN_COMMENT" value="false" />
+    <option name="KEEP_CONTROL_STATEMENT_IN_ONE_LINE" value="false" />
+    <option name="CLASS_BRACE_STYLE" value="2" />
+    <option name="KEEP_SIMPLE_BLOCKS_IN_ONE_LINE" value="false" />
+    <option name="KEEP_SIMPLE_METHODS_IN_ONE_LINE" value="false" />
+    <option name="FOR_STATEMENT_WRAP" value="1" />
+    <option name="IF_BRACE_FORCE" value="3" />
+    <option name="DOWHILE_BRACE_FORCE" value="3" />
+    <option name="WHILE_BRACE_FORCE" value="3" />
+    <option name="FOR_BRACE_FORCE" value="3" />
+    <indentOptions>
+      <option name="USE_TAB_CHARACTER" value="true" />
+    </indentOptions>
+  </codeStyleSettings>
+  <codeStyleSettings language="XML">
+    <indentOptions>
+      <option name="CONTINUATION_INDENT_SIZE" value="4" />
+    </indentOptions>
+    <arrangement>
+      <rules>
+        <section>
+          <rule>
+            <match>
+              <AND>
+                <NAME>xmlns:android</NAME>
+                <XML_ATTRIBUTE />
+                <XML_NAMESPACE>^$</XML_NAMESPACE>
+              </AND>
+            </match>
+          </rule>
+        </section>
+        <section>
+          <rule>
+            <match>
+              <AND>
+                <NAME>xmlns:.*</NAME>
+                <XML_ATTRIBUTE />
+                <XML_NAMESPACE>^$</XML_NAMESPACE>
+              </AND>
+            </match>
+            <order>BY_NAME</order>
+          </rule>
+        </section>
+        <section>
+          <rule>
+            <match>
+              <AND>
+                <NAME>.*:id</NAME>
+                <XML_ATTRIBUTE />
+                <XML_NAMESPACE>http://schemas.android.com/apk/res/android</XML_NAMESPACE>
+              </AND>
+            </match>
+          </rule>
+        </section>
+        <section>
+          <rule>
+            <match>
+              <AND>
+                <NAME>.*:name</NAME>
+                <XML_ATTRIBUTE />
+                <XML_NAMESPACE>http://schemas.android.com/apk/res/android</XML_NAMESPACE>
+              </AND>
+            </match>
+          </rule>
+        </section>
+        <section>
+          <rule>
+            <match>
+              <AND>
+                <NAME>name</NAME>
+                <XML_ATTRIBUTE />
+                <XML_NAMESPACE>^$</XML_NAMESPACE>
+              </AND>
+            </match>
+          </rule>
+        </section>
+        <section>
+          <rule>
+            <match>
+              <AND>
+                <NAME>style</NAME>
+                <XML_ATTRIBUTE />
+                <XML_NAMESPACE>^$</XML_NAMESPACE>
+              </AND>
+            </match>
+          </rule>
+        </section>
+        <section>
+          <rule>
+            <match>
+              <AND>
+                <NAME>.*</NAME>
+                <XML_ATTRIBUTE />
+                <XML_NAMESPACE>^$</XML_NAMESPACE>
+              </AND>
+            </match>
+            <order>BY_NAME</order>
+          </rule>
+        </section>
+        <section>
+          <rule>
+            <match>
+              <AND>
+                <NAME>.*</NAME>
+                <XML_ATTRIBUTE />
+                <XML_NAMESPACE>http://schemas.android.com/apk/res/android</XML_NAMESPACE>
+              </AND>
+            </match>
+          </rule>
+        </section>
+        <section>
+          <rule>
+            <match>
+              <AND>
+                <NAME>.*</NAME>
+                <XML_ATTRIBUTE />
+                <XML_NAMESPACE>.*</XML_NAMESPACE>
+              </AND>
+            </match>
+            <order>BY_NAME</order>
+          </rule>
+        </section>
+      </rules>
+    </arrangement>
+  </codeStyleSettings>
+</code_scheme>
