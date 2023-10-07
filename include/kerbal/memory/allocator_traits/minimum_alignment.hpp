@@ -34,12 +34,18 @@ namespace kerbal
 
 		template <typename Alloc>
 		struct allocator_has_mem_minimum_alignment<Alloc, typename kerbal::type_traits::void_type<
+#	if __cplusplus >= 201103L // compatible with msvc
+				decltype(
+					kerbal::utility::declval<const Alloc&>().minimum_alignment()
+				)
+#	else
 				kerbal::type_traits::integral_constant<
 					std::size_t,
 					sizeof(
 						kerbal::utility::declval<const Alloc&>().minimum_alignment()
 					)
 				>
+#	endif
 		>::type >: kerbal::type_traits::true_type
 		{
 		};

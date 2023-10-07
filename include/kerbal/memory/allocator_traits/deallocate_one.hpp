@@ -33,6 +33,13 @@ namespace kerbal
 
 		template <typename Alloc, typename Pointer>
 		struct allocator_has_deallocate_one<Alloc, Pointer, typename kerbal::type_traits::void_type<
+#	if __cplusplus >= 201103L // compatible with msvc
+				decltype(
+					kerbal::utility::declval<Alloc&>().deallocate_one(
+						kerbal::utility::declval<Pointer>()
+					)
+				)
+#	else
 				kerbal::type_traits::integral_constant<
 					std::size_t,
 					sizeof(
@@ -42,6 +49,7 @@ namespace kerbal
 						0
 					)
 				>
+#	endif
 		>::type >: kerbal::type_traits::true_type
 		{
 		};

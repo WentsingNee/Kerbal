@@ -33,6 +33,11 @@ namespace kerbal
 
 		template <typename Alloc>
 		struct allocator_has_allocate_one<Alloc, typename kerbal::type_traits::void_type<
+#	if __cplusplus >= 201103L // compatible with msvc
+				decltype(
+					kerbal::utility::declval<Alloc&>().allocate_one()
+				)
+#	else
 				kerbal::type_traits::integral_constant<
 					std::size_t,
 					sizeof(
@@ -40,6 +45,7 @@ namespace kerbal
 						0
 					)
 				>
+#	endif
 		>::type >: kerbal::type_traits::true_type
 		{
 		};

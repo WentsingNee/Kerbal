@@ -34,6 +34,15 @@ namespace kerbal
 
 		template <typename Alloc, typename T>
 		struct allocator_has_reallocate<Alloc, T, typename kerbal::type_traits::void_type<
+#	if __cplusplus >= 201103L // compatible with msvc
+				decltype(
+					kerbal::utility::declval<Alloc&>().reallocate(
+						kerbal::utility::declval<T*>(),
+						kerbal::utility::declval<typename kerbal::memory::detail::allocator_size_type_traits_helper<Alloc>::type>(),
+						kerbal::utility::declval<typename kerbal::memory::detail::allocator_size_type_traits_helper<Alloc>::type>()
+					)
+				)
+#	else
 				kerbal::type_traits::integral_constant<
 					std::size_t,
 					sizeof(
@@ -45,6 +54,7 @@ namespace kerbal
 						0
 					)
 				>
+#	endif
 		>::type >: kerbal::type_traits::true_type
 		{
 		};
