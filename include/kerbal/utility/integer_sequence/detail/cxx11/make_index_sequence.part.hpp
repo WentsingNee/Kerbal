@@ -13,7 +13,7 @@
 #ifndef KERBAL_UTILITY_INTEGER_SEQUENCE_DETAIL_CXX11_MAKE_INDEX_SEQUENCE_PART_HPP
 #define KERBAL_UTILITY_INTEGER_SEQUENCE_DETAIL_CXX11_MAKE_INDEX_SEQUENCE_PART_HPP
 
-#include <kerbal/utility/integer_sequence/detail/cxx11/integer_sequence.part.hpp>
+#include <kerbal/utility/integer_sequence/detail/cxx11/make_integer_sequence.part.hpp>
 
 #include <cstddef>
 
