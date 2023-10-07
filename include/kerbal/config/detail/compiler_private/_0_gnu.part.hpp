@@ -56,9 +56,9 @@
 
 
 //===============
-// has_builtin
+// has_builtin (since gcc10)
 //
-// https://gcc.gnu.org/onlinedocs/cpp/_005f_005fhas_005fbuiltin.html#g_t_005f_005fhas_005fbuiltin
+// https://gcc.gnu.org/onlinedocs/gcc-10.1.0/cpp/_005f_005fhas_005fbuiltin.html#g_t_005f_005fhas_005fbuiltin
 
 #ifdef __has_builtin
 #	define KERBAL_GNU_PRIVATE_HAS_BUILTIN(x) __has_builtin(x)
