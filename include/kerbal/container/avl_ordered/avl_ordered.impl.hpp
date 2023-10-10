@@ -751,7 +751,10 @@ namespace kerbal
 		template <typename Entity, typename Extract, typename KeyCompare, typename Allocator>
 		template <typename Key>
 		KERBAL_CONSTEXPR20
-		typename avl_ordered<Entity, Extract, KeyCompare, Allocator>::const_iterator
+		typename avl_ordered<Entity, Extract, KeyCompare, Allocator>::template enable_if_transparent_lookup<
+			Key,
+			typename avl_ordered<Entity, Extract, KeyCompare, Allocator>::const_iterator
+		>::type
 		avl_ordered<Entity, Extract, KeyCompare, Allocator>::find(const Key & key) const
 		{
 			const Extract & e = this->extract();
@@ -761,7 +764,10 @@ namespace kerbal
 		template <typename Entity, typename Extract, typename KeyCompare, typename Allocator>
 		template <typename Key>
 		KERBAL_CONSTEXPR20
-		typename avl_ordered<Entity, Extract, KeyCompare, Allocator>::iterator
+		typename avl_ordered<Entity, Extract, KeyCompare, Allocator>::template enable_if_transparent_lookup<
+			Key,
+			typename avl_ordered<Entity, Extract, KeyCompare, Allocator>::iterator
+		>::type
 		avl_ordered<Entity, Extract, KeyCompare, Allocator>::find(const Key & key)
 		{
 			const Extract & e = this->extract();
@@ -789,7 +795,10 @@ namespace kerbal
 		template <typename Entity, typename Extract, typename KeyCompare, typename Allocator>
 		template <typename Key>
 		KERBAL_CONSTEXPR20
-		typename avl_ordered<Entity, Extract, KeyCompare, Allocator>::const_iterator
+		typename avl_ordered<Entity, Extract, KeyCompare, Allocator>::template enable_if_transparent_lookup<
+			Key,
+			typename avl_ordered<Entity, Extract, KeyCompare, Allocator>::const_iterator
+		>::type
 		avl_ordered<Entity, Extract, KeyCompare, Allocator>::lower_bound(const Key & key) const
 		{
 			const Extract & e = this->extract();
@@ -799,7 +808,10 @@ namespace kerbal
 		template <typename Entity, typename Extract, typename KeyCompare, typename Allocator>
 		template <typename Key>
 		KERBAL_CONSTEXPR20
-		typename avl_ordered<Entity, Extract, KeyCompare, Allocator>::iterator
+		typename avl_ordered<Entity, Extract, KeyCompare, Allocator>::template enable_if_transparent_lookup<
+			Key,
+			typename avl_ordered<Entity, Extract, KeyCompare, Allocator>::iterator
+		>::type
 		avl_ordered<Entity, Extract, KeyCompare, Allocator>::lower_bound(const Key & key)
 		{
 			const Extract & e = this->extract();
@@ -827,7 +839,10 @@ namespace kerbal
 		template <typename Entity, typename Extract, typename KeyCompare, typename Allocator>
 		template <typename Key>
 		KERBAL_CONSTEXPR20
-		typename avl_ordered<Entity, Extract, KeyCompare, Allocator>::const_iterator
+		typename avl_ordered<Entity, Extract, KeyCompare, Allocator>::template enable_if_transparent_lookup<
+			Key,
+			typename avl_ordered<Entity, Extract, KeyCompare, Allocator>::const_iterator
+		>::type
 		avl_ordered<Entity, Extract, KeyCompare, Allocator>::upper_bound(const Key & key) const
 		{
 			const Extract & e = this->extract();
@@ -837,7 +852,10 @@ namespace kerbal
 		template <typename Entity, typename Extract, typename KeyCompare, typename Allocator>
 		template <typename Key>
 		KERBAL_CONSTEXPR20
-		typename avl_ordered<Entity, Extract, KeyCompare, Allocator>::iterator
+		typename avl_ordered<Entity, Extract, KeyCompare, Allocator>::template enable_if_transparent_lookup<
+			Key,
+			typename avl_ordered<Entity, Extract, KeyCompare, Allocator>::iterator
+		>::type
 		avl_ordered<Entity, Extract, KeyCompare, Allocator>::upper_bound(const Key & key)
 		{
 			const Extract & e = this->extract();
@@ -871,10 +889,13 @@ namespace kerbal
 		template <typename Entity, typename Extract, typename KeyCompare, typename Allocator>
 		template <typename Key>
 		KERBAL_CONSTEXPR20
-		kerbal::utility::compressed_pair<
-			typename avl_ordered<Entity, Extract, KeyCompare, Allocator>::const_iterator,
-			typename avl_ordered<Entity, Extract, KeyCompare, Allocator>::const_iterator
-		>
+		typename avl_ordered<Entity, Extract, KeyCompare, Allocator>::template enable_if_transparent_lookup<
+			Key,
+			kerbal::utility::compressed_pair<
+				typename avl_ordered<Entity, Extract, KeyCompare, Allocator>::const_iterator,
+				typename avl_ordered<Entity, Extract, KeyCompare, Allocator>::const_iterator
+			>
+		>::type
 		avl_ordered<Entity, Extract, KeyCompare, Allocator>::equal_range(const Key & key) const
 		{
 			const Extract & e = this->extract();
@@ -884,10 +905,13 @@ namespace kerbal
 		template <typename Entity, typename Extract, typename KeyCompare, typename Allocator>
 		template <typename Key>
 		KERBAL_CONSTEXPR20
-		kerbal::utility::compressed_pair<
-			typename avl_ordered<Entity, Extract, KeyCompare, Allocator>::iterator,
-			typename avl_ordered<Entity, Extract, KeyCompare, Allocator>::iterator
-		>
+		typename avl_ordered<Entity, Extract, KeyCompare, Allocator>::template enable_if_transparent_lookup<
+			Key,
+			kerbal::utility::compressed_pair<
+				typename avl_ordered<Entity, Extract, KeyCompare, Allocator>::iterator,
+				typename avl_ordered<Entity, Extract, KeyCompare, Allocator>::iterator
+			>
+		>::type
 		avl_ordered<Entity, Extract, KeyCompare, Allocator>::equal_range(const Key & key)
 		{
 			const Extract & e = this->extract();
@@ -905,7 +929,11 @@ namespace kerbal
 		template <typename Entity, typename Extract, typename KeyCompare, typename Allocator>
 		template <typename Key>
 		KERBAL_CONSTEXPR20
-		bool avl_ordered<Entity, Extract, KeyCompare, Allocator>::contains(const Key & key) const
+		typename avl_ordered<Entity, Extract, KeyCompare, Allocator>::template enable_if_transparent_lookup<
+			Key,
+			bool
+		>::type
+		avl_ordered<Entity, Extract, KeyCompare, Allocator>::contains(const Key & key) const
 		{
 			const Extract & e = this->extract();
 			return this->avl_type_only::k_contains(key, e, this->key_comp());
@@ -1098,7 +1126,10 @@ namespace kerbal
 		template <typename Entity, typename Extract, typename KeyCompare, typename Allocator>
 		template <typename Key>
 		KERBAL_CONSTEXPR20
-		typename avl_ordered<Entity, Extract, KeyCompare, Allocator>::size_type
+		typename avl_ordered<Entity, Extract, KeyCompare, Allocator>::template enable_if_transparent_lookup<
+			Key,
+			typename avl_ordered<Entity, Extract, KeyCompare, Allocator>::size_type
+		>::type
 		avl_ordered<Entity, Extract, KeyCompare, Allocator>::erase(const Key & key) KERBAL_NOEXCEPT
 		{
 			return this->avl_type_only::k_erase_using_allocator(this->alloc(), key, this->extract(), this->key_comp());

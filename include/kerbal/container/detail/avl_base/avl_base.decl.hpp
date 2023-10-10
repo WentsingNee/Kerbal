@@ -514,13 +514,16 @@ namespace kerbal
 				//===================
 				// lookup
 
-				private:
+				protected:
+
 					template <typename Key, typename Extract, typename KeyCompare, typename Result>
 					struct enable_if_transparent_lookup :
 							kerbal::type_traits::enable_if<
 								(
 									kerbal::container::key_compare_is_transparent<KeyCompare>::value &&
-									!kerbal::type_traits::is_same<const Key &, const typename Extract::key_type &>::value
+									!kerbal::type_traits::is_same<const Key &, const typename Extract::key_type &>::value &&
+									!kerbal::type_traits::is_same<Key, const_iterator>::value &&
+									!kerbal::type_traits::is_same<Key, iterator>::value
 								),
 								Result
 							>

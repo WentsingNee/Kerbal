@@ -293,7 +293,10 @@ namespace kerbal
 		template <typename T, typename KeyCompare, typename Allocator>
 		template <typename Key>
 		KERBAL_CONSTEXPR20
-		typename avl_set<T, KeyCompare, Allocator>::const_iterator
+		typename avl_set<T, KeyCompare, Allocator>::template enable_if_transparent_lookup<
+			Key,
+			typename avl_set<T, KeyCompare, Allocator>::const_iterator
+		>::type
 		avl_set<T, KeyCompare, Allocator>::find(const Key & key) const
 		{
 			return this->avl_ordered::find(key);
@@ -310,7 +313,10 @@ namespace kerbal
 		template <typename T, typename KeyCompare, typename Allocator>
 		template <typename Key>
 		KERBAL_CONSTEXPR20
-		typename avl_set<T, KeyCompare, Allocator>::const_iterator
+		typename avl_set<T, KeyCompare, Allocator>::template enable_if_transparent_lookup<
+			Key,
+			typename avl_set<T, KeyCompare, Allocator>::const_iterator
+		>::type
 		avl_set<T, KeyCompare, Allocator>::lower_bound(const Key & key) const
 		{
 			return this->avl_ordered::lower_bound(key);
@@ -327,7 +333,10 @@ namespace kerbal
 		template <typename T, typename KeyCompare, typename Allocator>
 		template <typename Key>
 		KERBAL_CONSTEXPR20
-		typename avl_set<T, KeyCompare, Allocator>::const_iterator
+		typename avl_set<T, KeyCompare, Allocator>::template enable_if_transparent_lookup<
+			Key,
+			typename avl_set<T, KeyCompare, Allocator>::const_iterator
+		>::type
 		avl_set<T, KeyCompare, Allocator>::upper_bound(const Key & key) const
 		{
 			return this->avl_ordered::upper_bound(key);
@@ -347,10 +356,13 @@ namespace kerbal
 		template <typename T, typename KeyCompare, typename Allocator>
 		template <typename Key>
 		KERBAL_CONSTEXPR20
-		kerbal::utility::compressed_pair<
-			typename avl_set<T, KeyCompare, Allocator>::const_iterator,
-			typename avl_set<T, KeyCompare, Allocator>::const_iterator
-		>
+		typename avl_set<T, KeyCompare, Allocator>::template enable_if_transparent_lookup<
+			Key,
+			kerbal::utility::compressed_pair<
+				typename avl_set<T, KeyCompare, Allocator>::const_iterator,
+				typename avl_set<T, KeyCompare, Allocator>::const_iterator
+			>
+		>::type
 		avl_set<T, KeyCompare, Allocator>::equal_range(const Key & key) const
 		{
 			return this->avl_ordered::equal_range(key);
@@ -366,7 +378,8 @@ namespace kerbal
 		template <typename T, typename KeyCompare, typename Allocator>
 		template <typename Key>
 		KERBAL_CONSTEXPR20
-		bool avl_set<T, KeyCompare, Allocator>::contains(const Key & key) const
+		typename avl_set<T, KeyCompare, Allocator>::template enable_if_transparent_lookup<Key, bool>::type
+		avl_set<T, KeyCompare, Allocator>::contains(const Key & key) const
 		{
 			return this->avl_ordered::contains(key);
 		}
@@ -505,7 +518,10 @@ namespace kerbal
 		template <typename T, typename KeyCompare, typename Allocator>
 		template <typename Key>
 		KERBAL_CONSTEXPR20
-		typename avl_set<T, KeyCompare, Allocator>::size_type
+		typename avl_set<T, KeyCompare, Allocator>::template enable_if_transparent_lookup<
+			Key,
+			typename avl_set<T, KeyCompare, Allocator>::size_type
+		>::type
 		avl_set<T, KeyCompare, Allocator>::erase(const Key & key) KERBAL_NOEXCEPT
 		{
 			return this->avl_ordered::erase(key);
