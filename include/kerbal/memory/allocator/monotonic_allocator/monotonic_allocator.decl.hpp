@@ -250,7 +250,11 @@ namespace kerbal
 						kerbal::numeric::numeric_limits<size_type>::MAX::value / sizeof(value_type)
 				> MAX_SIZE;
 
-				typedef ALIGNOF_T MINIMUM_ALIGNMENT;
+				KERBAL_CONSTEXPR
+				static size_type minimum_alignment() KERBAL_NOEXCEPT
+				{
+					return ALIGNOF_T::value;
+				}
 
 				pointer allocate(size_type n);
 

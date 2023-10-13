@@ -19,6 +19,7 @@
 #include <kerbal/compatibility/namespace_std_scope.hpp>
 #include <kerbal/compatibility/noexcept.hpp>
 #include <kerbal/compatibility/static_assert.hpp>
+#include <kerbal/config/compiler_id.hpp>
 #include <kerbal/memory/allocator_traits.hpp>
 #include <kerbal/memory/nothrow_t.hpp>
 #include <kerbal/memory/pointer_alignment.hpp>
@@ -106,12 +107,14 @@ namespace kerbal
 			private:
 				typedef void * void_p;
 
+#		if __cplusplus < 201103L && KERBAL_COMPILER_ID == KERBAL_COMPILER_ID_CLANG // clang could not detect private member under cxx98
 			public:
 				KERBAL_CONSTEXPR14
 				size_type minimum_alignment() const KERBAL_NOEXCEPT
 				{
 					return upstream_allocator_traits::minimum_alignment(upstream_alloc());
 				}
+#		endif
 
 			private:
 				static pointer do_align(pointer p_raw, align_val_t align) KERBAL_NOEXCEPT;

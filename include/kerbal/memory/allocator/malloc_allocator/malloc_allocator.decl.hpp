@@ -14,6 +14,7 @@
 
 #include <kerbal/memory/allocator/malloc_allocator/malloc_allocator.fwd.hpp>
 
+#include <kerbal/compatibility/constexpr.hpp>
 #include <kerbal/compatibility/noexcept.hpp>
 #include <kerbal/memory/nothrow_t.hpp>
 #include <kerbal/memory/pointer_alignment.hpp>
@@ -63,7 +64,11 @@ namespace kerbal
 				}
 
 			public:
-				typedef kerbal::memory::DEFAULT_ALIGNMENT	MINIMUM_ALIGNMENT;
+				KERBAL_CONSTEXPR
+				static size_type minimum_alignment() KERBAL_NOEXCEPT
+				{
+					return kerbal::memory::DEFAULT_ALIGNMENT::value;
+				}
 
 				static pointer allocate(size_type n, kerbal::memory::nothrow_t) KERBAL_NOEXCEPT;
 				static pointer allocate(size_type n);
@@ -129,7 +134,11 @@ namespace kerbal
 						kerbal::numeric::numeric_limits<size_type>::MAX::value / sizeof(value_type)
 				> MAX_SIZE;
 
-				typedef kerbal::memory::DEFAULT_ALIGNMENT	MINIMUM_ALIGNMENT;
+				KERBAL_CONSTEXPR
+				static size_type minimum_alignment() KERBAL_NOEXCEPT
+				{
+					return kerbal::memory::DEFAULT_ALIGNMENT::value;
+				}
 
 				static pointer allocate(size_type n, kerbal::memory::nothrow_t nothrow) KERBAL_NOEXCEPT;
 				static pointer allocate(size_type n);

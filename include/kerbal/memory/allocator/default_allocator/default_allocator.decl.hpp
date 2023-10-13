@@ -15,6 +15,7 @@
 #include <kerbal/memory/allocator/default_allocator/default_allocator.fwd.hpp>
 
 #include <kerbal/compatibility/constexpr.hpp>
+#include <kerbal/compatibility/noexcept.hpp>
 #include <kerbal/memory/allocator/malloc_allocator.hpp>
 #include <kerbal/memory/allocator/over_aligned_allocator.hpp>
 #include <kerbal/memory/pointer_alignment.hpp>
@@ -130,7 +131,11 @@ namespace kerbal
 				}
 
 
-				typedef kerbal::memory::malloc_allocator<void>::MINIMUM_ALIGNMENT MINIMUM_ALIGNMENT;
+				KERBAL_CONSTEXPR
+				static size_type minimum_alignment() KERBAL_NOEXCEPT
+				{
+					return kerbal::memory::malloc_allocator<void>::minimum_alignment();
+				}
 
 				static pointer allocate(size_type n);
 				static pointer allocate(size_type n, kerbal::memory::align_val_t align);

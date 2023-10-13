@@ -28,23 +28,6 @@ namespace kerbal
 	{
 
 		template <typename Alloc, typename = kerbal::type_traits::void_type<>::type >
-		struct allocator_has_static_minimum_alignment: kerbal::type_traits::false_type
-		{
-		};
-
-		template <typename Alloc>
-		struct allocator_has_static_minimum_alignment<Alloc, typename kerbal::type_traits::void_type<
-				kerbal::type_traits::integral_constant<
-					std::size_t,
-					sizeof(
-						Alloc::MINIMUM_ALIGNMENT::value
-					)
-				>
-		>::type >: kerbal::type_traits::true_type
-		{
-		};
-
-		template <typename Alloc, typename = kerbal::type_traits::void_type<>::type >
 		struct allocator_has_mem_minimum_alignment: kerbal::type_traits::false_type
 		{
 		};
@@ -72,13 +55,9 @@ namespace kerbal
 			template <typename Alloc>
 			struct allocator_traits_minimum_alignment_ver :
 					kerbal::type_traits::conditional<
-						kerbal::memory::allocator_has_static_minimum_alignment<Alloc>::value,
-						ALLOCATOR_TRAITS_MINIMUM_ALIGNMENT_VER_STATIC,
-						typename kerbal::type_traits::conditional<
-							kerbal::memory::allocator_has_mem_minimum_alignment<Alloc>::value,
-							ALLOCATOR_TRAITS_MINIMUM_ALIGNMENT_VER_MEM,
-							ALLOCATOR_TRAITS_MINIMUM_ALIGNMENT_VER_NONE
-						>::type
+						kerbal::memory::allocator_has_mem_minimum_alignment<Alloc>::value,
+						ALLOCATOR_TRAITS_MINIMUM_ALIGNMENT_VER_MEM,
+						ALLOCATOR_TRAITS_MINIMUM_ALIGNMENT_VER_NONE
 					>::type
 			{
 			};
