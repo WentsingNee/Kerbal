@@ -15,7 +15,7 @@
 #include <kerbal/compatibility/constexpr.hpp>
 #include <kerbal/compatibility/namespace_std_scope.hpp>
 #include <kerbal/compatibility/noexcept.hpp>
-#include <kerbal/memory/allocator/malloc_allocator.hpp>
+#include <kerbal/memory/allocator/malloc_allocator/malloc_allocator.fwd.hpp>
 
 
 namespace kerbal

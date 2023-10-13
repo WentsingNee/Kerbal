@@ -14,7 +14,7 @@
 
 #include <kerbal/compatibility/namespace_std_scope.hpp>
 #include <kerbal/compatibility/noexcept.hpp>
-#include <kerbal/memory/allocator/default_allocator.hpp>
+#include <kerbal/memory/allocator/default_allocator/default_allocator.fwd.hpp>
 
 
 namespace kerbal

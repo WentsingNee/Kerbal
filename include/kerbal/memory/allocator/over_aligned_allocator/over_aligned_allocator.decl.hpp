@@ -14,6 +14,9 @@
 
 #include <kerbal/memory/allocator/over_aligned_allocator/over_aligned_allocator.fwd.hpp>
 
+// header(s) for default template argument(s)
+#include <kerbal/memory/allocator/malloc_allocator/malloc_allocator.decl.hpp>
+
 #include <kerbal/algorithm/swap.hpp>
 #include <kerbal/compatibility/constexpr.hpp>
 #include <kerbal/compatibility/namespace_std_scope.hpp>

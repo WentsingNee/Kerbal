@@ -14,6 +14,9 @@
 
 #include <kerbal/memory/allocator/monotonic_allocator/monotonic_allocator.decl.hpp>
 
+// header(s) for default template argument(s)
+#include <kerbal/memory/allocator/default_allocator/default_allocator.impl.hpp>
+
 #include <kerbal/compatibility/noexcept.hpp>
 #include <kerbal/memory/allocator_traits.hpp>
 #include <kerbal/memory/bad_alloc.hpp>

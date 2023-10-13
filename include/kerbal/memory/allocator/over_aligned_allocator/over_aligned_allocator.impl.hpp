@@ -14,6 +14,9 @@
 
 #include <kerbal/memory/allocator/over_aligned_allocator/over_aligned_allocator.decl.hpp>
 
+// header(s) for default template argument(s)
+#include <kerbal/memory/allocator/malloc_allocator/malloc_allocator.impl.hpp>
+
 #include <kerbal/compatibility/alignof.hpp>
 #include <kerbal/compatibility/noexcept.hpp>
 #include <kerbal/memory/allocator_traits.hpp>

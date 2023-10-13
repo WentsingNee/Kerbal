@@ -14,6 +14,9 @@
 
 #include <kerbal/memory/allocator/fixed_size_node_allocator/fixed_size_node_allocator.fwd.hpp>
 
+// header(s) for default template argument(s)
+#include <kerbal/memory/allocator/default_allocator/default_allocator.decl.hpp>
+
 #include <kerbal/algorithm/swap.hpp>
 #include <kerbal/autonm/forward_list.hpp>
 #include <kerbal/autonm/semi_allocator/discard_deallocate_semi_allocator.hpp>

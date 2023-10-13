@@ -167,4 +167,8 @@ namespace kerbal
 
 } // namespace kerbal
 
+#include <kerbal/memory/allocator/fixed_size_node_allocator/fixed_size_node_allocator.fwd.hpp>
+#include <kerbal/memory/allocator/monotonic_allocator/monotonic_allocator.fwd.hpp>
+#include <kerbal/memory/allocator/over_aligned_allocator/over_aligned_allocator.fwd.hpp>
+
 #endif // KERBAL_ALGORITHM_SWAP_HPP
