@@ -1,7 +1,7 @@
 /**
- * @file       invoke_callable_type.hpp
+ * @file       invoke_overload_ver_selector.cxx11.part.hpp
  * @brief
- * @date       2023-07-28
+ * @date       2023-10-13
  * @author     Peter
  * @copyright
  *      Peter of [ThinkSpirit Laboratory](http://thinkspirit.org/)
@@ -9,11 +9,12 @@
  *   all rights reserved
  */
 
-#ifndef KERBAL_FUNCTION_INVOKE_INVOKE_CALLABLE_TYPE_HPP
-#define KERBAL_FUNCTION_INVOKE_INVOKE_CALLABLE_TYPE_HPP
+#ifndef KERBAL_FUNCTION_INVOKE_DETAIL_INVOKE_OVERLOAD_VER_SELECTOR_CXX11_PART_HPP
+#define KERBAL_FUNCTION_INVOKE_DETAIL_INVOKE_OVERLOAD_VER_SELECTOR_CXX11_PART_HPP
+
+#include <kerbal/function/invoke/detail/invoke_overload_ver.hpp>
 
 #include <kerbal/type_traits/conditional.hpp>
-#include <kerbal/type_traits/integral_constant.hpp>
 #include <kerbal/type_traits/is_member_function_pointer.hpp>
 #include <kerbal/type_traits/is_member_object_pointer.hpp>
 #include <kerbal/type_traits/remove_cvref.hpp>
@@ -28,21 +29,17 @@ namespace kerbal
 		namespace detail
 		{
 
-			typedef kerbal::type_traits::integral_constant<int, 0> INVOKE_OVERLOAD_VER_CALLABLE;
-			typedef kerbal::type_traits::integral_constant<int, 1> INVOKE_OVERLOAD_VER_MEM_OBJ;
-			typedef kerbal::type_traits::integral_constant<int, 2> INVOKE_OVERLOAD_VER_MEM_FUN;
-
 			template <typename Fun, typename ... Args>
-			struct invoke_overload_selector;
+			struct invoke_overload_ver_selector;
 
 			template <typename Fun>
-			struct invoke_overload_selector<Fun>
+			struct invoke_overload_ver_selector<Fun>
 			{
-					typedef INVOKE_OVERLOAD_VER_CALLABLE type;
+					typedef kerbal::function::detail::INVOKE_OVERLOAD_VER_CALLABLE type;
 			};
 
 			template <typename Arg0, typename Arg1, typename ... Args>
-			struct invoke_overload_selector<Arg0, Arg1, Args...>
+			struct invoke_overload_ver_selector<Arg0, Arg1, Args...>
 			{
 				private:
 					typedef typename kerbal::type_traits::remove_cvref<Arg0>::type arg0_remove_cvref_type;
@@ -50,11 +47,11 @@ namespace kerbal
 				public:
 					typedef typename kerbal::type_traits::conditional<
 						kerbal::type_traits::is_member_object_pointer<arg0_remove_cvref_type>::value,
-						INVOKE_OVERLOAD_VER_MEM_OBJ,
+						kerbal::function::detail::INVOKE_OVERLOAD_VER_MEM_OBJ,
 						typename kerbal::type_traits::conditional<
 							kerbal::type_traits::is_member_function_pointer<arg0_remove_cvref_type>::value,
-							INVOKE_OVERLOAD_VER_MEM_FUN,
-							INVOKE_OVERLOAD_VER_CALLABLE
+							kerbal::function::detail::INVOKE_OVERLOAD_VER_MEM_FUN,
+							kerbal::function::detail::INVOKE_OVERLOAD_VER_CALLABLE
 						>::type
 					>::type type;
 			};
@@ -65,4 +62,4 @@ namespace kerbal
 
 } // namespace kerbal
 
-#endif // KERBAL_FUNCTION_INVOKE_INVOKE_CALLABLE_TYPE_HPP
+#endif // KERBAL_FUNCTION_INVOKE_DETAIL_INVOKE_OVERLOAD_VER_SELECTOR_CXX11_PART_HPP

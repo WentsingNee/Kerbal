@@ -12,7 +12,7 @@
 #ifndef KERBAL_FUNCTION_INVOKE_DETAIL_INVOKE_IS_NOTHROW_CXX11_PART_HPP
 #define KERBAL_FUNCTION_INVOKE_DETAIL_INVOKE_IS_NOTHROW_CXX11_PART_HPP
 
-#include <kerbal/function/invoke/invoke_callable_type.hpp>
+#include <kerbal/function/invoke/invoke_overload_ver_selector.hpp>
 
 #include <kerbal/utility/declval.hpp>
 
@@ -62,7 +62,7 @@ namespace kerbal
 		template <typename Fun, typename ... Args>
 		struct invoke_is_nothrow :
 				kerbal::function::detail::invoke_is_nothrow_helper<
-					typename kerbal::function::detail::invoke_overload_selector<Fun, Args...>::type, Fun, Args...
+					typename kerbal::function::detail::invoke_overload_ver_selector<Fun, Args...>::type, Fun, Args...
 				>::type
 		{
 		};

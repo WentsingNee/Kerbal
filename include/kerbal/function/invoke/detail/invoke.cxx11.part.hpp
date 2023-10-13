@@ -13,7 +13,7 @@
 #ifndef KERBAL_FUNCTION_INVOKE_DETAIL_INVOKE_CXX11_PART_HPP
 #define KERBAL_FUNCTION_INVOKE_DETAIL_INVOKE_CXX11_PART_HPP
 
-#include <kerbal/function/invoke/invoke_callable_type.hpp>
+#include <kerbal/function/invoke/invoke_overload_ver_selector.hpp>
 #include <kerbal/function/invoke/invoke_is_nothrow.hpp>
 #include <kerbal/function/invoke/invoke_result.hpp>
 
@@ -80,7 +80,7 @@ namespace kerbal
 					invoke_is_nothrow<Fun&&, Args&&...>::value
 				))
 		{
-			typedef typename kerbal::function::detail::invoke_overload_selector<Fun&&, Args&&...>::type VER;
+			typedef typename kerbal::function::detail::invoke_overload_ver_selector<Fun&&, Args&&...>::type VER;
 			return kerbal::function::detail::invoke_helper(VER(), kerbal::utility::forward<Fun>(f), kerbal::utility::forward<Args>(args)...);
 		}
 

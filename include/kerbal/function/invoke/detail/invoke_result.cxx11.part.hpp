@@ -14,7 +14,7 @@
 
 #include <kerbal/utility/declval.hpp>
 
-#include <kerbal/function/invoke/invoke_callable_type.hpp>
+#include <kerbal/function/invoke/invoke_overload_ver_selector.hpp>
 
 
 namespace kerbal
@@ -60,7 +60,7 @@ namespace kerbal
 		template <typename Fun, typename ... Args>
 		struct invoke_result :
 				kerbal::function::detail::invoke_result_helper<
-					typename kerbal::function::detail::invoke_overload_selector<Fun, Args...>::type, Fun, Args...
+					typename kerbal::function::detail::invoke_overload_ver_selector<Fun, Args...>::type, Fun, Args...
 				>
 		{
 		};
