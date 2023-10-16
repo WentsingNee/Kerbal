@@ -9,7 +9,7 @@
 #   all rights reserved
 #
 
-set(project_version_file_path "${CMAKE_SOURCE_DIR}/VERSION")
+set(project_version_file_path "${CMAKE_CURRENT_SOURCE_DIR}/VERSION")
 
 if (${KERBAL_UPDATE_VERSION})
     execute_process(
