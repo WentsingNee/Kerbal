@@ -227,7 +227,7 @@ namespace kerbal
 			{
 #		if __cplusplus >= 201402L
 #			if KERBAL_HAS_IS_CONSTANT_EVALUATED_SUPPORT
-					return KERBAL_IS_CONSTANT_EVALUATED() ? k_basic_popcount(x) : _mm_popcnt_u64(x);
+					return KERBAL_IS_CONSTANT_EVALUATED() ? k_basic_popcount(x) : static_cast<int>(_mm_popcnt_u64(x));
 #			else
 					return k_basic_popcount(x);
 #			endif

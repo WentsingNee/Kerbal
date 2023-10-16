@@ -48,9 +48,11 @@ namespace kerbal
 			KERBAL_CONSTEXPR
 			T muldiv_less_b(T a, T b, T c) KERBAL_NOEXCEPT
 			{
-				return (c - b < b) ?
+				return static_cast<T>(
+					(c - b < b) ?
 					a - muldiv_final(a, c - b, c) :
-					muldiv_final(a, b, c);
+					muldiv_final(a, b, c)
+				);
 			}
 
 			template <typename T>
@@ -166,9 +168,11 @@ namespace kerbal
 					const result_type max = k_base_eg.max();
 					result_type R = (max - min + 1);
 					result_type b = k_stored_y - min;
-					std::size_t J = R == 0 ?
-									(double)(K) * (double)(k_stored_y - min) / (max - min + 1.0) :
-									(K / R) * b + detail::muldiv_less_a<result_type>(K % R, b, R);
+					std::size_t J = static_cast<std::size_t>(
+							R == 0 ?
+							static_cast<double>(K) * static_cast<double>(k_stored_y - min) / (max - min + 1.0) :
+							(K / R) * b + detail::muldiv_less_a<result_type>(K % R, b, R)
+					);
 					result_type next = k_base_eg();
 					k_stored_y = k_stored[J];
 					k_stored[J] = next;

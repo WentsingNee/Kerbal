@@ -78,7 +78,7 @@ namespace kerbal
 #		endif
 			{
 				kerbal::memory::raw_storage_uninitialized_value_construct_n(this->storage, n);
-				this->len = n;
+				this->len = static_cast<size_compressed_type>(n);
 			}
 
 			template <typename Tp, std::size_t N>
@@ -90,7 +90,7 @@ namespace kerbal
 #		endif
 			{
 				kerbal::memory::raw_storage_uninitialized_fill_n(this->storage, n, val);
-				this->len = n;
+				this->len = static_cast<size_compressed_type>(n);
 			}
 
 			template <typename Tp, std::size_t N>
@@ -122,7 +122,7 @@ namespace kerbal
 					range_len = N;
 				}
 				kerbal::memory::raw_storage_uninitialized_copy_n(first, range_len, this->storage);
-				this->len = range_len;
+				this->len = static_cast<size_compressed_type>(range_len);
 			}
 
 			template <typename Tp, std::size_t N>

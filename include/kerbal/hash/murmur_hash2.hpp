@@ -108,7 +108,7 @@ namespace kerbal
 					typedef typename kerbal::iterator::iterator_traits<iterator>::difference_type difference_type;
 
 					difference_type len(kerbal::iterator::distance(first, last));
-					result_type h = seed ^ len;
+					result_type h = seed ^ static_cast<result_type>(len);
 
 					// 4 bytes at a time
 					while (len >= 4)

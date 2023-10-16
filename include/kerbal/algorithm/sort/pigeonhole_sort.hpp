@@ -45,6 +45,20 @@ namespace kerbal
 			{
 			};
 
+			template <typename T>
+			KERBAL_CONSTEXPR14
+			const T & pigeonhole_sort_hole_index(const T & data)
+			{
+				return data;
+			}
+
+			// suppress msvc warning of % calculation of bool
+			KERBAL_CONSTEXPR14
+			unsigned int pigeonhole_sort_hole_index(const bool & data) KERBAL_NOEXCEPT
+			{
+				return static_cast<unsigned int>(data);
+			}
+
 			template <typename ForwardIterator>
 			KERBAL_CONSTEXPR14
 			void pigeonhole_sort_fill(ForwardIterator first, ForwardIterator last, std::size_t cnt[])
@@ -52,7 +66,7 @@ namespace kerbal
 				typedef ForwardIterator iterator;
 
 				while (first != last) {
-					++cnt[*first % cnt_array_size<iterator>::value];
+					++cnt[pigeonhole_sort_hole_index(*first) % cnt_array_size<iterator>::value];
 					++first;
 				}
 			}

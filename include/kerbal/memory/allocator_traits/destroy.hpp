@@ -13,8 +13,39 @@
 #define KERBAL_MEMORY_ALLOCATOR_TRAITS_DESTROY_HPP
 
 #if __cplusplus >= 201703L
+
+#	include <kerbal/config/cxx_stdlib.hpp>
+
+#	ifndef KERBAL_STD_ALLOCATOR_DESTROY_DEPRECATED
+#		define KERBAL_STD_ALLOCATOR_DESTROY_DEPRECATED 1
+#	endif
+
+
+#	ifndef KERBAL_STD_POLYMORPHIC_ALLOCATOR_DESTROY_DEPRECATED
+#		if KERBAL_CXX_STDLIB == KERBAL_CXX_STDLIB_MSVC
+#			ifdef _CXX17_DEPRECATE_POLYMORPHIC_ALLOCATOR_DESTROY
+#				define KERBAL_STD_POLYMORPHIC_ALLOCATOR_DESTROY_DEPRECATED 1
+#			endif
+#		else
+#			if __cplusplus > 201703L
+#				define KERBAL_STD_POLYMORPHIC_ALLOCATOR_DESTROY_DEPRECATED 1
+#			endif
+#		endif
+#	endif
+
+#endif
+
+
+
+#if KERBAL_STD_ALLOCATOR_DESTROY_DEPRECATED
 #	include <kerbal/memory/allocator/std_allocator.fwd.hpp>
 #endif
+
+
+#if KERBAL_STD_POLYMORPHIC_ALLOCATOR_DESTROY_DEPRECATED
+#	include <kerbal/memory/allocator/std_pmr_allocator.fwd.hpp>
+#endif
+
 
 #include <kerbal/compatibility/constexpr.hpp>
 #include <kerbal/compatibility/noexcept.hpp>
@@ -70,7 +101,8 @@ namespace kerbal
 		{
 		};
 
-#	if __cplusplus >= 201703L
+
+#	if KERBAL_STD_ALLOCATOR_DESTROY_DEPRECATED
 
 		template <typename T, typename U>
 		struct allocator_could_use_destroy<std::allocator<T>, U>: kerbal::type_traits::false_type
@@ -79,7 +111,8 @@ namespace kerbal
 
 #	endif
 
-#	if __cplusplus > 201703L
+
+#	if KERBAL_STD_POLYMORPHIC_ALLOCATOR_DESTROY_DEPRECATED
 
 		template <typename T, typename U>
 		struct allocator_could_use_destroy<std::pmr::polymorphic_allocator<T>, U>: kerbal::type_traits::false_type

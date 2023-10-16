@@ -1210,10 +1210,10 @@ namespace kerbal
 			 */
 
 			kerbal::memory::raw_storage_uninitialized_move(l_arr.nth(s_len), l_arr.nth(l_len), s_arr.storage + s_len);
-			s_arr.len = l_len;
+			s_arr.len = static_cast<size_compressed_type>(l_len);
 
 			kerbal::memory::raw_storage_reverse_destroy(l_arr.storage + s_len, l_arr.storage + l_len);
-			l_arr.len = s_len;
+			l_arr.len = static_cast<size_compressed_type>(s_len);
 
 			kerbal::algorithm::range_swap(s_arr.begin(), s_arr.nth(s_len), l_arr.begin());
 		}
