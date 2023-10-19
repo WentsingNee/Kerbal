@@ -772,6 +772,12 @@ namespace kerbal
 
 			public:
 
+				/*
+				 *  f(kerbal::type_traits::integral_constant<std::size_t, 0>(), t.get<0>());
+				 *  f(kerbal::type_traits::integral_constant<std::size_t, 1>(), t.get<1>());
+				 *  f(kerbal::type_traits::integral_constant<std::size_t, 2>(), t.get<2>());
+				 *  and return the tuple self
+				 */
 				template <typename F>
 				KERBAL_CONSTEXPR14
 				tuple & for_each(F f) &
@@ -905,6 +911,9 @@ namespace kerbal
 
 			public:
 
+				/*
+				 * return f(t.get<0>(), t.get<1>(), t.get<2>(), ...)
+				 */
 				template <typename F>
 				KERBAL_CONSTEXPR14
 				auto apply_to(F f) & ->
@@ -1107,6 +1116,13 @@ namespace kerbal
 
 			public:
 
+				/*
+				 * return tuple(
+				 * 	     transform(kerbal::type_traits::integral_constant<std::size_t, 0>(), t.get<0>()),
+				 * 	     transform(kerbal::type_traits::integral_constant<std::size_t, 1>(), t.get<1>()),
+				 * 	     transform(kerbal::type_traits::integral_constant<std::size_t, 2>(), t.get<2>()), ...
+				 * 	)
+				 */
 				template <typename F>
 				KERBAL_CONSTEXPR14
 				auto transform(F f) & ->
@@ -1199,6 +1215,9 @@ namespace kerbal
 
 			public:
 
+				/*
+				 * return tuple(t.get<I1>(), t.get<I2>(), t.get<I3>())
+				 */
 				template <std::size_t ... Index>
 				KERBAL_CONSTEXPR
 				auto select() const & ->
@@ -1249,6 +1268,9 @@ namespace kerbal
 
 			public:
 
+				/*
+				 * return tuple(t.get<N - 1>(), t.get<N - 2>(), ..., t.get<0>())
+				 */
 				KERBAL_CONSTEXPR
 				auto reverse() const & ->
 					decltype(
