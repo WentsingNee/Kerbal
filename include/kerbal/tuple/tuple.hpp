@@ -9,13 +9,13 @@
  *   all rights reserved
  */
 
-#ifndef KERBAL_UTILITY_TUPLE_HPP
-#define KERBAL_UTILITY_TUPLE_HPP
+#ifndef KERBAL_TUPLE_TUPLE_HPP
+#define KERBAL_TUPLE_TUPLE_HPP
 
 #if __cplusplus < 201103L
-#	include <kerbal/utility/tuple/detail/tuple.cxx98.part.hpp>
+#	include <kerbal/tuple/tuple/detail/tuple.cxx98.part.hpp>
 #else
-#	include <kerbal/utility/tuple/detail/tuple.cxx11.part.hpp>
+#	include <kerbal/tuple/tuple/detail/tuple.cxx11.part.hpp>
 #endif
 
-#endif // KERBAL_UTILITY_TUPLE_HPP
+#endif // KERBAL_TUPLE_TUPLE_HPP
