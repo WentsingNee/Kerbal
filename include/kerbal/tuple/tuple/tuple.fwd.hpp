@@ -9,8 +9,8 @@
  *   all rights reserved
  */
 
-#ifndef KERBAL_UTILITY_TUPLE_TUPLE_FWD_HPP
-#define KERBAL_UTILITY_TUPLE_TUPLE_FWD_HPP
+#ifndef KERBAL_TUPLE_TUPLE_TUPLE_FWD_HPP
+#define KERBAL_TUPLE_TUPLE_TUPLE_FWD_HPP
 
 #include <kerbal/compatibility/constexpr.hpp>
 #include <kerbal/compatibility/noexcept.hpp>
@@ -111,9 +111,13 @@ namespace kerbal
 
 #endif
 
+
+		template <std::size_t I, typename Tp>
+		struct tuple_element;
+
 	} // namespace utility
 
 } // namespace kerbal
 
 
-#endif // KERBAL_UTILITY_TUPLE_TUPLE_FWD_HPP
+#endif // KERBAL_TUPLE_TUPLE_TUPLE_FWD_HPP
