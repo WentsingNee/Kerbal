@@ -1,7 +1,7 @@
 /**
- * @file       tuple.cxx11.part.hpp
+ * @file       tuple.decl.cxx11.part.hpp
  * @brief
- * @date       2020-07-22
+ * @date       2023-10-20
  * @author     Peter
  * @copyright
  *      Peter of [ThinkSpirit Laboratory](http://thinkspirit.org/)
@@ -9,14 +9,14 @@
  *   all rights reserved
  */
 
-#ifndef KERBAL_UTILITY_TUPLE_DETAIL_TUPLE_CXX11_PART_HPP
-#define KERBAL_UTILITY_TUPLE_DETAIL_TUPLE_CXX11_PART_HPP
+#ifndef KERBAL_TUPLE_TUPLE_DETAIL_TUPLE_DECL_CXX11_PART_HPP
+#define KERBAL_TUPLE_TUPLE_DETAIL_TUPLE_DECL_CXX11_PART_HPP
 
 #if __cplusplus < 201103L
 #	error This file requires compiler and library support for the ISO C++ 2011 standard.
 #endif
 
-#include <kerbal/utility/tuple/tuple.fwd.hpp>
+#include <kerbal/tuple/tuple/tuple.fwd.hpp>
 
 #include <kerbal/algorithm/swap.hpp>
 #include <kerbal/compare/basic_compare.hpp>
@@ -733,22 +733,6 @@ namespace kerbal
 				}
 
 
-			protected:
-
-				template <typename Self, typename F, std::size_t ... Index>
-				KERBAL_CONSTEXPR
-				static Self&& k_for_each_impl(Self && self, F f, kerbal::utility::index_sequence<Index...>)
-				{
-					return kerbal::utility::ignore_unused(std::initializer_list<int>{
-						(
-							f(
-								kerbal::type_traits::integral_constant<std::size_t, Index>(),
-								kerbal::utility::forward<Self>(self).template get<Index>()
-							), 0
-						)...
-					}), kerbal::utility::forward<Self>(self);
-				}
-
 			public:
 
 				/*
@@ -761,46 +745,33 @@ namespace kerbal
 				KERBAL_CONSTEXPR14
 				tuple& for_each(F f) &
 				{
-					return k_for_each_impl(*this, f, kerbal::utility::make_index_sequence<TUPLE_SIZE::value>());
+					return kerbal::utility::tuple_for_each(*this, f, kerbal::utility::make_index_sequence<TUPLE_SIZE::value>());
 				}
 
 				template <typename F>
 				KERBAL_CONSTEXPR
 				const tuple& for_each(F f) const &
 				{
-					return k_for_each_impl(*this, f, kerbal::utility::make_index_sequence<TUPLE_SIZE::value>());
+					return kerbal::utility::tuple_for_each(*this, f, kerbal::utility::make_index_sequence<TUPLE_SIZE::value>());
 				}
 
 				template <typename F>
 				KERBAL_CONSTEXPR14
 				tuple&& for_each(F f) &&
 				{
-					return k_for_each_impl(kerbal::compatibility::move(*this), f, kerbal::utility::make_index_sequence<TUPLE_SIZE::value>());
+					return kerbal::utility::tuple_for_each(kerbal::compatibility::move(*this), f, kerbal::utility::make_index_sequence<TUPLE_SIZE::value>());
 				}
 
 				template <typename F>
 				KERBAL_CONSTEXPR
 				const tuple&& for_each(F f) const &&
 				{
-					return k_for_each_impl(kerbal::compatibility::move(*this), f, kerbal::utility::make_index_sequence<TUPLE_SIZE::value>());
+					return kerbal::utility::tuple_for_each(kerbal::compatibility::move(*this), f, kerbal::utility::make_index_sequence<TUPLE_SIZE::value>());
 				}
 
 
 			protected:
 
-				template <typename Self, typename F, std::size_t ... Index>
-				KERBAL_CONSTEXPR
-				static Self&& k_rfor_each_impl(Self && self, F f, kerbal::utility::index_sequence<Index...>)
-				{
-					return kerbal::utility::ignore_unused(std::initializer_list<int>{
-						(
-							f(
-								kerbal::type_traits::integral_constant<std::size_t, TUPLE_SIZE::value - 1 - Index>(),
-								kerbal::utility::forward<Self>(self).template get<TUPLE_SIZE::value - 1 - Index>()
-							), 0
-						)...
-					}), kerbal::utility::forward<Self>(self);
-				}
 
 			public:
 
@@ -1672,4 +1643,4 @@ namespace kerbal
 
 } // namespace kerbal
 
-#endif // KERBAL_UTILITY_TUPLE_DETAIL_TUPLE_CXX11_PART_HPP
+#endif // KERBAL_TUPLE_TUPLE_DETAIL_TUPLE_DECL_CXX11_PART_HPP
