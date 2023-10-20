@@ -9,10 +9,10 @@
  *   all rights reserved
  */
 
-#ifndef KERBAL_UTILITY_TUPLE_DETAIL_TUPLE_CXX98_PART_HPP
-#define KERBAL_UTILITY_TUPLE_DETAIL_TUPLE_CXX98_PART_HPP
+#ifndef KERBAL_TUPLE_TUPLE_DETAIL_TUPLE_CXX98_PART_HPP
+#define KERBAL_TUPLE_TUPLE_DETAIL_TUPLE_CXX98_PART_HPP
 
-#include <kerbal/utility/tuple/tuple.fwd.hpp>
+#include <kerbal/tuple/tuple/tuple.fwd.hpp>
 
 #include <kerbal/algorithm/swap.hpp>
 #include <kerbal/compare/basic_compare.hpp>
@@ -719,4 +719,4 @@ KERBAL_NAMESPACE_STD_BEGIN
 
 KERBAL_NAMESPACE_STD_END
 
-#endif // KERBAL_UTILITY_TUPLE_DETAIL_TUPLE_CXX98_PART_HPP
+#endif // KERBAL_TUPLE_TUPLE_DETAIL_TUPLE_CXX98_PART_HPP
