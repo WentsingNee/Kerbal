@@ -1576,7 +1576,7 @@ namespace kerbal
 						// construct at the end
 						// A A A 1 2 3 4 5 6
 						// A A A 1 2 3 4 5 6 5 6
-						kerbal::memory::uninitialized_copy_using_allocator(alloc, this->cend().current - n, this->cend().current, this->end().current);
+						kerbal::memory::ui_move_if_noexcept_ow_copy<Allocator, pointer, pointer>::phase1(alloc, this->end().current - n, this->end().current, this->end().current);
 						this->k_size = new_size;
 
 						// A A A 1 2 3 4 5 6
@@ -1590,7 +1590,7 @@ namespace kerbal
 						// A A A 1 2 3
 						// A A A X X X X X 1 2 3
 
-						kerbal::memory::uninitialized_copy_using_allocator(alloc, pos.current, this->cend().current, insert_pos + n);
+						kerbal::memory::ui_move_if_noexcept_ow_copy<Allocator, pointer, pointer>::phase1(alloc, pos.cast_to_mutable().current, this->end().current, insert_pos + n);
 
 #		if KERBAL_HAS_EXCEPTIONS_SUPPORT
 						try {
