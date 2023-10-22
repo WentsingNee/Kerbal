@@ -583,6 +583,29 @@ namespace kerbal
 				//===================
 				// operation
 
+					KERBAL_CONSTEXPR14
+					static
+					const_iterator k_find_before(const_iterator before_begin, const_iterator end, const_reference target);
+
+					template <typename UnaryPredict>
+					KERBAL_CONSTEXPR14
+					static
+					const_iterator k_find_before_if(const_iterator before_begin, const_iterator end, UnaryPredict predict);
+
+					KERBAL_CONSTEXPR14
+					iterator find_before(const_reference target);
+
+					KERBAL_CONSTEXPR14
+					const_iterator find_before(const_reference target) const;
+
+					template <typename UnaryPredict>
+					KERBAL_CONSTEXPR14
+					iterator find_before_if(UnaryPredict predict);
+
+					template <typename UnaryPredict>
+					KERBAL_CONSTEXPR14
+					const_iterator find_before_if(UnaryPredict predict) const;
+
 					template <typename NodeAllocator>
 					KERBAL_CONSTEXPR20
 					void k_resize_using_allocator(NodeAllocator & alloc, size_type count);

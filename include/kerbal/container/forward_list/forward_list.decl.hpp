@@ -467,6 +467,9 @@ namespace kerbal
 			//===================
 			// operation
 
+				using fl_type_only::find_before;
+				using fl_type_only::find_before_if;
+
 				KERBAL_CONSTEXPR20
 				void resize(size_type count);
 

@@ -893,6 +893,73 @@ namespace kerbal
 		// operation
 
 			template <typename Tp>
+			KERBAL_CONSTEXPR14
+			typename fl_type_only<Tp>::const_iterator
+			fl_type_only<Tp>::k_find_before(const_iterator before_begin, const_iterator end, const_reference target)
+			{
+				const_iterator it = kerbal::iterator::next(before_begin);
+				while (it != end) {
+					if (*it == target) {
+						break;
+					}
+					before_begin = it;
+					++it;
+				}
+				return before_begin;
+			}
+
+			template <typename Tp>
+			template <typename UnaryPredict>
+			KERBAL_CONSTEXPR14
+			typename fl_type_only<Tp>::const_iterator
+			fl_type_only<Tp>::k_find_before_if(const_iterator before_begin, const_iterator end, UnaryPredict predict)
+			{
+				const_iterator it = kerbal::iterator::next(before_begin);
+				while (it != end) {
+					if (predict(*it)) {
+						break;
+					}
+					before_begin = it;
+					++it;
+				}
+				return before_begin;
+			}
+
+			template <typename Tp>
+			KERBAL_CONSTEXPR14
+			typename fl_type_only<Tp>::iterator
+			fl_type_only<Tp>::find_before(const_reference target)
+			{
+				return k_find_before(this->cbefore_begin(), this->cend(), target).cast_to_mutable();
+			}
+
+			template <typename Tp>
+			KERBAL_CONSTEXPR14
+			typename fl_type_only<Tp>::const_iterator
+			fl_type_only<Tp>::find_before(const_reference target) const
+			{
+				return k_find_before(this->cbefore_begin(), this->cend(), target);
+			}
+
+			template <typename Tp>
+			template <typename UnaryPredict>
+			KERBAL_CONSTEXPR14
+			typename fl_type_only<Tp>::iterator
+			fl_type_only<Tp>::find_before_if(UnaryPredict predict)
+			{
+				return k_find_before_if(this->cbefore_begin(), this->cend(), predict).cast_to_mutable();
+			}
+
+			template <typename Tp>
+			template <typename UnaryPredict>
+			KERBAL_CONSTEXPR14
+			typename fl_type_only<Tp>::const_iterator
+			fl_type_only<Tp>::find_before_if(UnaryPredict predict) const
+			{
+				return k_find_before_if(this->cbefore_begin(), this->cend(), predict);
+			}
+
+			template <typename Tp>
 			template <typename NodeAllocator>
 			KERBAL_CONSTEXPR20
 			void fl_type_only<Tp>::k_resize_using_allocator(NodeAllocator & alloc, size_type count)
