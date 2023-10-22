@@ -334,6 +334,12 @@ namespace kerbal
 				using fl_type_only::front;
 
 			//===================
+			// lookup
+
+				using fl_type_only::find_before;
+				using fl_type_only::find_before_if;
+
+			//===================
 			// insert
 
 				KERBAL_CONSTEXPR20

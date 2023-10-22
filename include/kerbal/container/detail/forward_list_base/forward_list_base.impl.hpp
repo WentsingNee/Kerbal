@@ -670,6 +670,111 @@ namespace kerbal
 
 
 		//===================
+		// lookup
+
+			template <typename T>
+			KERBAL_CONSTEXPR14
+			typename fl_type_only<T>::const_iterator
+			fl_type_only<T>::k_find_before_impl(const_iterator before_since, const_iterator end, const_reference target)
+			{
+				const_iterator it = kerbal::iterator::next(before_since);
+				while (it != end) {
+					if (*it == target) {
+						break;
+					}
+					before_since = it;
+					++it;
+				}
+				return before_since;
+			}
+
+			template <typename T>
+			template <typename UnaryPredict>
+			KERBAL_CONSTEXPR14
+			typename fl_type_only<T>::const_iterator
+			fl_type_only<T>::k_find_before_if_impl(const_iterator before_since, const_iterator end, UnaryPredict predict)
+			{
+				const_iterator it = kerbal::iterator::next(before_since);
+				while (it != end) {
+					if (predict(*it)) {
+						break;
+					}
+					before_since = it;
+					++it;
+				}
+				return before_since;
+			}
+
+			template <typename T>
+			KERBAL_CONSTEXPR14
+			typename fl_type_only<T>::iterator
+			fl_type_only<T>::find_before(const_reference target, const_iterator before_since)
+			{
+				return k_find_before_impl(before_since, this->cend(), target).cast_to_mutable();
+			}
+
+			template <typename T>
+			KERBAL_CONSTEXPR14
+			typename fl_type_only<T>::const_iterator
+			fl_type_only<T>::find_before(const_reference target, const_iterator before_since) const
+			{
+				return k_find_before_impl(before_since, this->cend(), target);
+			}
+
+			template <typename T>
+			template <typename UnaryPredict>
+			KERBAL_CONSTEXPR14
+			typename fl_type_only<T>::iterator
+			fl_type_only<T>::find_before_if(UnaryPredict predict, const_iterator before_since)
+			{
+				return k_find_before_if_impl(before_since, this->cend(), predict).cast_to_mutable();
+			}
+
+			template <typename T>
+			template <typename UnaryPredict>
+			KERBAL_CONSTEXPR14
+			typename fl_type_only<T>::const_iterator
+			fl_type_only<T>::find_before_if(UnaryPredict predict, const_iterator before_since) const
+			{
+				return k_find_before_if_impl(before_since, this->cend(), predict);
+			}
+
+			template <typename T>
+			KERBAL_CONSTEXPR14
+			typename fl_type_only<T>::iterator
+			fl_type_only<T>::find_before(const_reference target)
+			{
+				return this->find_before(target, this->cbefore_begin());
+			}
+
+			template <typename T>
+			KERBAL_CONSTEXPR14
+			typename fl_type_only<T>::const_iterator
+			fl_type_only<T>::find_before(const_reference target) const
+			{
+				return this->find_before(target, this->cbefore_begin());
+			}
+
+			template <typename T>
+			template <typename UnaryPredict>
+			KERBAL_CONSTEXPR14
+			typename fl_type_only<T>::iterator
+			fl_type_only<T>::find_before_if(UnaryPredict predict)
+			{
+				return this->find_before_if(predict, this->cbefore_begin());
+			}
+
+			template <typename T>
+			template <typename UnaryPredict>
+			KERBAL_CONSTEXPR14
+			typename fl_type_only<T>::const_iterator
+			fl_type_only<T>::find_before_if(UnaryPredict predict) const
+			{
+				return this->find_before_if(predict, this->cbefore_begin());
+			}
+
+
+		//===================
 		// insert
 
 			template <typename T>

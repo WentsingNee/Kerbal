@@ -244,6 +244,12 @@ namespace kerbal
 				using fl_type_only::index_of;
 
 			//===================
+			// lookup
+
+				using fl_type_only::find_before;
+				using fl_type_only::find_before_if;
+
+			//===================
 			// capacity
 
 				using fl_type_unrelated::empty;

@@ -463,6 +463,46 @@ namespace kerbal
 					const_reference front() const KERBAL_NOEXCEPT;
 
 				//===================
+				// lookup
+
+					KERBAL_CONSTEXPR14
+					static
+					const_iterator k_find_before_impl(const_iterator before_since, const_iterator end, const_reference target);
+
+					template <typename UnaryPredict>
+					KERBAL_CONSTEXPR14
+					static
+					const_iterator k_find_before_if_impl(const_iterator before_since, const_iterator end, UnaryPredict predict);
+
+					KERBAL_CONSTEXPR14
+					iterator find_before(const_reference target, const_iterator before_since);
+
+					KERBAL_CONSTEXPR14
+					const_iterator find_before(const_reference target, const_iterator before_since) const;
+
+					template <typename UnaryPredict>
+					KERBAL_CONSTEXPR14
+					iterator find_before_if(UnaryPredict predict, const_iterator before_since);
+
+					template <typename UnaryPredict>
+					KERBAL_CONSTEXPR14
+					const_iterator find_before_if(UnaryPredict predict, const_iterator before_since) const;
+
+					KERBAL_CONSTEXPR14
+					iterator find_before(const_reference target);
+
+					KERBAL_CONSTEXPR14
+					const_iterator find_before(const_reference target) const;
+
+					template <typename UnaryPredict>
+					KERBAL_CONSTEXPR14
+					iterator find_before_if(UnaryPredict predict);
+
+					template <typename UnaryPredict>
+					KERBAL_CONSTEXPR14
+					const_iterator find_before_if(UnaryPredict predict) const;
+
+				//===================
 				// insert
 
 					template <typename NodeAllocator>
