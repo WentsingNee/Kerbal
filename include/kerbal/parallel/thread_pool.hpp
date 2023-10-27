@@ -19,13 +19,12 @@
 #include <kerbal/function/invoke.hpp>
 #include <kerbal/parallel/thread.hpp>
 #include <kerbal/utility/forward.hpp>
+#include <kerbal/utility/integer_sequence.hpp>
 #include <kerbal/utility/tuple.hpp>
 #include <kerbal/type_traits/remove_reference.hpp>
 
 #if __cplusplus >= 201103L
-
 #	include <kerbal/utility/forward.hpp>
-
 #endif
 
 #include <queue>
@@ -33,6 +32,8 @@
 #include <condition_variable>
 #include <future>
 #include <stdexcept>
+
+#include <cstddef>
 
 
 namespace kerbal
@@ -48,6 +49,29 @@ namespace kerbal
 
 			template <typename R>
 			struct task_base;
+
+
+			template <typename Pack, typename IndexSeq>
+			struct task_result_type_helper;
+
+			template <typename Pack, std::size_t ... I>
+			struct task_result_type_helper<Pack, kerbal::utility::index_sequence<I...> > :
+					kerbal::function::invoke_result<
+						typename Pack::template reference<I>::type ...
+					>
+			{
+			};
+
+			template <typename F, typename ... Args>
+			struct task_typedef_helper
+			{
+					typedef kerbal::utility::tuple<F, Args...> pack_t;
+					typedef typename task_result_type_helper<
+						pack_t,
+						kerbal::utility::make_index_sequence<1 + sizeof...(Args)>
+					>::type result_t;
+					typedef task_base<result_t> task_super_t;
+			};
 
 
 			template <>
@@ -93,19 +117,21 @@ namespace kerbal
 
 
 			template <typename F, typename ... Args>
-			struct task : task_base<typename kerbal::function::invoke_result<F, Args...>::type>
+			struct task : task_typedef_helper<F, Args...>::task_super_t
 			{
 				private:
-					typedef task_base<typename kerbal::function::invoke_result<F, Args...>::type> super;
+					typedef task_typedef_helper<F, Args...> typedef_helper;
+					typedef typename typedef_helper::pack_t pack_t;
+					typedef typename typedef_helper::task_super_t super;
 
 				public:
-					typedef typename super::result_type result_type;
+					typedef typename typedef_helper::result_t result_type;
 
-					kerbal::utility::tuple<F, Args...> pack;
+					pack_t pack;
 
-					template <typename ... UArgs>
-					explicit task(F && f, UArgs && ... args) :
-							pack(kerbal::utility::forward<F>(f), kerbal::utility::forward<UArgs>(args)...)
+					template <typename FU, typename ... UArgs>
+					explicit task(FU && f, UArgs && ... args) :
+							pack(kerbal::utility::forward<FU>(f), kerbal::utility::forward<UArgs>(args)...)
 					{
 					}
 
@@ -122,7 +148,7 @@ namespace kerbal
 
 		class thread_pool
 		{
-				typedef kerbal::function::function<void()> job_type;
+				typedef kerbal::function::basic_function<void(), 16> job_type;
 
 				kerbal::container::vector<kerbal::parallel::thread> k_threads_pool;
 				std::queue<job_type> k_jobs_queue;
@@ -169,19 +195,41 @@ namespace kerbal
 					}
 				}
 
+			private:
+
+				template <typename F, typename ... Args>
+				struct commit_typedef_helper
+				{
+						typedef kerbal::parallel::detail::task<
+							typename kerbal::type_traits::remove_reference<F>::type,
+							typename kerbal::type_traits::remove_reference<Args>::type ...
+						> task_type;
+
+						typedef typename task_type::result_type result_type;
+				};
+
 			public:
 
-				template <class F, class... Args>
-				std::future<typename kerbal::function::invoke_result<F, Args...>::type>
+				template <typename F, typename ... Args>
+				std::future<typename commit_typedef_helper<F&&, Args&&...>::result_type>
 				commit(F && f, Args && ... args)
 				{
 					if (this->k_stopped.load()) {
 						throw std::runtime_error("commit on thread pool is stopped.");
 					}
 
-					using task_type = kerbal::parallel::detail::task<F, typename kerbal::type_traits::remove_reference<Args>::type ...>;
-					using result_type = typename task_type::result_type;
-					auto p_task = std::make_shared<task_type>(kerbal::utility::forward<F>(f), kerbal::utility::forward<Args>(args)...);
+					typedef commit_typedef_helper<F&&, Args&&...> commit_typedef_helper;
+					typedef typename commit_typedef_helper::task_type task_type;
+					typedef typename commit_typedef_helper::result_type result_type;
+
+					std::shared_ptr<task_type> p_task = std::make_shared<task_type>(
+							kerbal::utility::forward<F>(f),
+							kerbal::utility::forward<Args>(args)...
+					);
+//					task_type * p_task = new task_type(
+//							kerbal::utility::forward<F>(f),
+//							kerbal::utility::forward<Args>(args)...
+//					);
 					std::future<result_type> future = p_task->promise.get_future();
 					{
 						std::lock_guard<std::mutex> lock(k_mutex);
