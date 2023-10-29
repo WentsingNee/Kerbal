@@ -26,6 +26,8 @@
 #include <kerbal/memory/uninitialized/uninitialized_value_construct.hpp>
 #include <kerbal/memory/uninitialized/uninitialized_value_construct_n.hpp>
 #include <kerbal/memory/uninitialized_using_allocator/destroy_using_allocator.hpp>
+#include <kerbal/memory/uninitialized_using_allocator/destroy_on_using_allocator.hpp>
+#include <kerbal/memory/uninitialized_using_allocator/uninitialized_transaction_failed_destroy_using_allocator.hpp>
 #include <kerbal/type_traits/conditional.hpp>
 #include <kerbal/type_traits/integral_constant.hpp>
 #include <kerbal/utility/declval.hpp>

@@ -21,6 +21,7 @@
 #include <kerbal/iterator/iterator.hpp>
 #include <kerbal/memory/allocator_traits.hpp>
 #include <kerbal/memory/uninitialized_using_allocator.hpp>
+#include <kerbal/memory/uninitialized_using_allocator/reverse_destroy_using_allocator.hpp>
 
 #include <memory>
 

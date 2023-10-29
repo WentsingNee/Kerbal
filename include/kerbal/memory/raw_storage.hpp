@@ -19,6 +19,7 @@
 #include <kerbal/memory/uninitialized/construct_at.hpp>
 #include <kerbal/memory/uninitialized/default_construct_at.hpp>
 #include <kerbal/memory/uninitialized_using_allocator.hpp>
+#include <kerbal/memory/uninitialized_using_allocator/destroy_at_using_allocator.hpp>
 #include <kerbal/utility/declval.hpp>
 #include <kerbal/utility/in_place.hpp>
 
