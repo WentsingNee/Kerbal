@@ -13,6 +13,5 @@
 #define KERBAL_MEMORY_UNINITIALIZED_USING_ALLOCATOR_HPP
 
 #include <kerbal/memory/uninitialized_using_allocator/construct_using_allocator.hpp>
-#include <kerbal/memory/uninitialized_using_allocator/destroy_using_allocator.hpp>
 
 #endif // KERBAL_MEMORY_UNINITIALIZED_USING_ALLOCATOR_HPP
