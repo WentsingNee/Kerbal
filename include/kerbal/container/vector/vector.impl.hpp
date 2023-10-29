@@ -14,8 +14,6 @@
 
 #include <kerbal/compatibility/move.hpp>
 #include <kerbal/iterator/iterator.hpp>
-#include <kerbal/memory/uninitialized.hpp>
-#include <kerbal/memory/uninitialized_using_allocator.hpp>
 #include <kerbal/type_traits/enable_if.hpp>
 
 #if __cplusplus < 201103L

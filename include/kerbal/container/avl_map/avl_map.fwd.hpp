@@ -14,11 +14,6 @@
 
 #include <kerbal/compare/binary_type_compare.hpp>
 #include <kerbal/container/associative_container_facility/map_data.hpp>
-#include <kerbal/utility/compressed_pair.hpp>
-
-#if __cplusplus >= 201103L
-#	include <kerbal/utility/forward.hpp>
-#endif
 
 #include <memory>
 

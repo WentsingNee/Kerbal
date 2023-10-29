@@ -24,7 +24,6 @@
 #include <kerbal/type_traits/conditional.hpp>
 #include <kerbal/type_traits/enable_if.hpp>
 #include <kerbal/type_traits/is_function.hpp>
-#include <kerbal/type_traits/is_same.hpp>
 #include <kerbal/type_traits/tribool_constant.hpp>
 #include <kerbal/utility/compressed_pair.hpp>
 #include <kerbal/utility/declval.hpp>
@@ -36,10 +35,8 @@
 #endif
 
 #if __cplusplus >= 201103L
-
 #	include <kerbal/iterator/move_iterator.hpp>
 #	include <kerbal/utility/forward.hpp>
-
 #endif
 
 #if !__cpp_exceptions

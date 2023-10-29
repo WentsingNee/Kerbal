@@ -12,9 +12,6 @@
 #ifndef KERBAL_MEMORY_ALLOCATOR_TRAITS_HPP
 #define KERBAL_MEMORY_ALLOCATOR_TRAITS_HPP
 
-#include <kerbal/memory/allocator/std_allocator.fwd.hpp>
-#include <kerbal/memory/allocator/std_pmr_allocator.fwd.hpp>
-
 #include <kerbal/compatibility/constexpr.hpp>
 #include <kerbal/compatibility/noexcept.hpp>
 

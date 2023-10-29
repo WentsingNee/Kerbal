@@ -22,10 +22,6 @@
 #include <kerbal/type_traits/is_trivially_destructible.hpp>
 #include <kerbal/type_traits/tribool_constant.hpp>
 
-#if __cplusplus >= 201103L
-#	include <kerbal/utility/forward.hpp>
-#endif
-
 #include <cstddef>
 
 #if __cplusplus > 201703L

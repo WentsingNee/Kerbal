@@ -27,7 +27,6 @@
 #include <kerbal/type_traits/is_same.hpp>
 #include <kerbal/utility/in_place.hpp>
 #include <kerbal/utility/member_compress_helper.hpp>
-#include <kerbal/utility/throw_this_exception.hpp>
 
 #include <cstddef>
 
