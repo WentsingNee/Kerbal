@@ -19,7 +19,7 @@
 #include <kerbal/iterator/iterator_traits.hpp>
 #include <kerbal/iterator/reverse_iterator.hpp>
 #include <kerbal/memory/allocator_traits.hpp>
-#include <kerbal/memory/uninitialized_using_allocator.hpp>
+#include <kerbal/memory/uninitialized_using_allocator.hpp> // ui_move_if_noexcept_ow_copy
 #include <kerbal/type_traits/conditional.hpp>
 #include <kerbal/type_traits/enable_if.hpp>
 #include <kerbal/type_traits/integral_constant.hpp>

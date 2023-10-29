@@ -25,6 +25,7 @@
 #include <kerbal/memory/allocator_traits.hpp>
 #include <kerbal/memory/raw_storage.hpp>
 #include <kerbal/memory/uninitialized_using_allocator.hpp>
+#include <kerbal/memory/uninitialized_using_allocator/reverse_destroy_using_allocator.hpp>
 #include <kerbal/type_traits/enable_if.hpp>
 #include <kerbal/utility/compressed_pair.hpp>
 #include <kerbal/utility/throw_this_exception.hpp>
