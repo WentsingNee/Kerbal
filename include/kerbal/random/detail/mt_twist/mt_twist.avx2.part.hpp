@@ -15,6 +15,7 @@
 #include <kerbal/compatibility/fixed_width_integer.hpp>
 #include <kerbal/compatibility/noexcept.hpp>
 #include <kerbal/compatibility/static_assert.hpp>
+#include <kerbal/config/architecture.hpp>
 #include <kerbal/type_traits/integral_constant.hpp>
 
 #include <cstddef>
@@ -122,7 +123,18 @@ namespace kerbal
 								_mm256_maskload_epi32(reinterpret_cast<const int*>(&mt[i]), ymm_maskp1); // AVX2
 						__m256i ymm_mtip1 = _mm256_maskload_epi32(reinterpret_cast<const int*>(&mt[i + 1]), ymm_mask); // AVX2
 						// SECOND_STEP_REMAIN::value >= STEP::value always false
+
+#	if 0
 						ymm_mtip1 = _mm256_insert_epi32(ymm_mtip1, mt[0], SECOND_STEP_REMAIN::value); // AVX
+#	else
+						// support of _mm256_insert_epi32 are too bad
+
+						typedef kerbal::type_traits::integral_constant<std::size_t, 128 / 32> HALF_STEP;
+						__m128i xmm_insert_tmp = _mm256_extracti128_si256(ymm_mtip1, SECOND_STEP_REMAIN::value / HALF_STEP::value);
+						xmm_insert_tmp = _mm_insert_epi32(xmm_insert_tmp, mt[0], SECOND_STEP_REMAIN::value % HALF_STEP::value);
+						ymm_mtip1 = _mm256_inserti128_si256(ymm_mtip1, xmm_insert_tmp, SECOND_STEP_REMAIN::value / HALF_STEP::value);
+#	endif
+
 						__m256i ymm_y = _mm256_or_si256( // AVX2
 								_mm256_and_si256(ymm_UPPER_MASK, ymm_mti), // AVX2
 								_mm256_andnot_si256(ymm_UPPER_MASK, ymm_mtip1)); // AVX2
@@ -235,7 +247,23 @@ namespace kerbal
 								_mm256_maskload_epi64(reinterpret_cast<const long long*>(&mt[i]), ymm_maskp1); // AVX2
 						__m256i ymm_mtip1 = _mm256_maskload_epi64(reinterpret_cast<const long long*>(&mt[i + 1]), ymm_mask); // AVX2
 						// SECOND_STEP_REMAIN::value >= STEP::value always false
+
+#	if 0
 						ymm_mtip1 = _mm256_insert_epi64(ymm_mtip1, mt[0], SECOND_STEP_REMAIN::value); // AVX
+#	else
+						// support of _mm256_insert_epi64 are too bad
+
+						typedef kerbal::type_traits::integral_constant<std::size_t, 128 / 64> HALF_STEP;
+						__m128i xmm_insert_tmp = _mm256_extracti128_si256(ymm_mtip1, SECOND_STEP_REMAIN::value / HALF_STEP::value);
+#		if KERBAL_ARCHITECTURE == KERBAL_ARCHITECTURE_X86
+						xmm_insert_tmp = _mm_insert_epi32(xmm_insert_tmp, mt[0] >> 32, SECOND_STEP_REMAIN::value % HALF_STEP::value * 2 + 1);
+						xmm_insert_tmp = _mm_insert_epi32(xmm_insert_tmp, mt[0] & 0xffffffff, SECOND_STEP_REMAIN::value % HALF_STEP::value * 2);
+#		else
+						xmm_insert_tmp = _mm_insert_epi64(xmm_insert_tmp, mt[0], SECOND_STEP_REMAIN::value % HALF_STEP::value);
+#		endif
+						ymm_mtip1 = _mm256_inserti128_si256(ymm_mtip1, xmm_insert_tmp, SECOND_STEP_REMAIN::value / HALF_STEP::value);
+#	endif
+
 						__m256i ymm_y = _mm256_or_si256( // AVX2
 								_mm256_and_si256(ymm_UPPER_MASK, ymm_mti), // AVX2
 								_mm256_andnot_si256(ymm_UPPER_MASK, ymm_mtip1)); // AVX2
