@@ -12,7 +12,7 @@
 #ifndef KERBAL_CONTAINER_FORWARD_LIST_FORWARD_LIST_FWD_HPP
 #define KERBAL_CONTAINER_FORWARD_LIST_FORWARD_LIST_FWD_HPP
 
-#include <memory>
+#include <kerbal/memory/allocator/std_allocator.hpp>
 
 #if __cplusplus >= 201703L
 #	if __has_include(<memory_resource>)
