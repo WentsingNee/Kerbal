@@ -13,8 +13,7 @@
 #define KERBAL_CONTAINER_AVL_ORDERED_AVL_ORDERED_FWD_HPP
 
 #include <kerbal/compare/binary_type_compare.hpp>
-
-#include <memory>
+#include <kerbal/memory/allocator/std_allocator.hpp>
 
 
 namespace kerbal
