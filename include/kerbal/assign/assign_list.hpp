@@ -16,9 +16,8 @@
 
 #include <kerbal/compatibility/noexcept.hpp>
 #include <kerbal/container/detail/vector_base.hpp>
+#include <kerbal/memory/allocator/std_allocator.hpp>
 #include <kerbal/utility/member_compress_helper.hpp>
-
-#include <memory>
 
 
 namespace kerbal

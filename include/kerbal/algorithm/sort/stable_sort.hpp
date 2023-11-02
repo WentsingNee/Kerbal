@@ -19,11 +19,11 @@
 #include <kerbal/compatibility/noexcept.hpp>
 #include <kerbal/compatibility/static_assert.hpp>
 #include <kerbal/iterator/iterator.hpp>
+#include <kerbal/memory/allocator/std_allocator.hpp>
 #include <kerbal/memory/allocator_traits.hpp>
 #include <kerbal/memory/uninitialized_using_allocator.hpp>
 
 #include <cstddef>
-#include <memory>
 
 #include <kerbal/algorithm/sort/detail/merge_sort_merge.hpp>
 

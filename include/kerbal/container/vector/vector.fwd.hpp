@@ -14,7 +14,7 @@
 
 #include <kerbal/container/detail/vector_base/vector_base.fwd.hpp>
 
-#include <memory>
+#include <kerbal/memory/allocator/std_allocator.hpp>
 
 #if __cplusplus >= 201703L
 #	if __has_include(<memory_resource>)

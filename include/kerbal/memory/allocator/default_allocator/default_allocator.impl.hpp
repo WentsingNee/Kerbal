@@ -25,7 +25,7 @@
 #	include <kerbal/compatibility/is_constant_evaluated.hpp>
 
 #	if KERBAL_HAS_IS_CONSTANT_EVALUATED_SUPPORT
-#		include <memory>
+#		include <kerbal/memory/allocator/std_allocator.hpp>
 #	endif
 #endif
 

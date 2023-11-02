@@ -14,8 +14,7 @@
 
 #include <kerbal/compare/binary_type_compare.hpp>
 #include <kerbal/container/associative_container_facility/map_data.hpp>
-
-#include <memory>
+#include <kerbal/memory/allocator/std_allocator.hpp>
 
 
 namespace kerbal

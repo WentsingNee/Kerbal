@@ -22,8 +22,7 @@
 #include <kerbal/compatibility/noexcept.hpp>
 #include <kerbal/container/associative_container_facility/key_extractors/identity_extractor.hpp>
 #include <kerbal/container/vector.hpp>
-
-#include <memory>
+#include <kerbal/memory/allocator/std_allocator.hpp>
 
 #if __cplusplus >= 201103L
 #	include <initializer_list>

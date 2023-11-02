@@ -15,8 +15,7 @@
 #include <kerbal/compatibility/alignof.hpp>
 #include <kerbal/compatibility/constexpr.hpp>
 #include <kerbal/compatibility/noexcept.hpp>
-
-#include <memory>
+#include <kerbal/memory/allocator/std_allocator.hpp>
 
 #include <cstddef>
 
