@@ -117,6 +117,7 @@ namespace kerbal
 		{
 			typedef ForwardIterator iterator;
 			typedef typename kerbal::iterator::iterator_traits<iterator>::value_type value_type;
+			typedef typename kerbal::type_traits::make_unsigned<value_type>::type unsigned_value_type;
 			typedef kerbal::container::vector<value_type> bucket_type;
 
 			KERBAL_STATIC_ASSERT(is_radix_sort_acceptable_type<value_type>::value, "radix_sort only accepts integral type");
@@ -135,7 +136,7 @@ namespace kerbal
 
 			// first round
 			for (iterator it(first); it != last; ++it) {
-				int bucket_id = *it % BUCKETS_NUM::value;
+				int bucket_id = static_cast<unsigned_value_type>(*it) % BUCKETS_NUM::value;
 				buckets[0][bucket_id].push_back(*it);
 			}
 
@@ -150,7 +151,7 @@ namespace kerbal
 					typename bucket_type::iterator it(buckets_from[i].begin());
 					typename bucket_type::iterator end(buckets_from[i].end());
 					while (it != end) {
-						int bucket_id = (*it >> (RADIX_BIT_WIDTH * round)) % BUCKETS_NUM::value;
+						int bucket_id = (static_cast<unsigned_value_type>(*it) >> (RADIX_BIT_WIDTH * round)) % BUCKETS_NUM::value;
 						buckets_to[bucket_id].push_back(*it);
 						++it;
 					}
