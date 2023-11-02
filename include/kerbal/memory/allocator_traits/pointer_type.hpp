@@ -13,7 +13,7 @@
 #define KERBAL_MEMORY_ALLOCATOR_TRAITS_POINTER_TYPE_HPP
 
 #if __cplusplus >= 201703L
-#	include <kerbal/memory/allocator/std_allocator.fwd.hpp>
+#	include <kerbal/memory/allocator/std_allocator/std_allocator.fwd.hpp>
 #endif
 
 #include <kerbal/type_traits/integral_constant.hpp>

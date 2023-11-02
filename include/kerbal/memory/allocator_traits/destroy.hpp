@@ -38,12 +38,12 @@
 
 
 #if KERBAL_STD_ALLOCATOR_DESTROY_DEPRECATED
-#	include <kerbal/memory/allocator/std_allocator.fwd.hpp>
+#	include <kerbal/memory/allocator/std_allocator/std_allocator.fwd.hpp>
 #endif
 
 
 #if KERBAL_STD_POLYMORPHIC_ALLOCATOR_DESTROY_DEPRECATED
-#	include <kerbal/memory/allocator/std_pmr_allocator.fwd.hpp>
+#	include <kerbal/memory/allocator/std_pmr_allocator/std_pmr_allocator.fwd.hpp>
 #endif
 
 

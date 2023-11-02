@@ -13,7 +13,7 @@
 #define KERBAL_MEMORY_ALLOCATOR_TRAITS_IS_ALWAYS_EQUAL_HPP
 
 #if __cplusplus < 201103L || __cplusplus >= 201703L
-#	include <kerbal/memory/allocator/std_allocator.fwd.hpp>
+#	include <kerbal/memory/allocator/std_allocator/std_allocator.fwd.hpp>
 #endif
 
 #include <kerbal/type_traits/integral_constant.hpp>
