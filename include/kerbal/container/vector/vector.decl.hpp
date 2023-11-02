@@ -20,6 +20,7 @@
 #include <kerbal/compatibility/namespace_std_scope.hpp>
 #include <kerbal/compatibility/noexcept.hpp>
 #include <kerbal/iterator/iterator_traits.hpp>
+#include <kerbal/memory/allocator/std_allocator.hpp>
 #include <kerbal/memory/allocator_traits.hpp>
 #include <kerbal/type_traits/enable_if.hpp>
 #include <kerbal/type_traits/remove_all_extents.hpp>
@@ -32,8 +33,6 @@
 #if __cplusplus >= 201103L
 #	include <kerbal/utility/declval.hpp>
 #endif
-
-#include <memory>
 
 #if __cplusplus >= 201103L
 #	include <initializer_list>
