@@ -14,9 +14,16 @@
 
 #ifndef KERBAL_HAS_IS_NOTHROW_ASSIGNABLE_SUPPORT
 
-#include <kerbal/type_traits/detail/is_assignable/is_assignable.part.hpp>
+#if __cplusplus >= 201103L
+#	include <kerbal/type_traits/detail/is_assignable/is_assignable.part.hpp>
+#	if KERBAL_HAS_IS_ASSIGNABLE_SUPPORT
+#		define KERBAL_HAS_IS_NOTHROW_ASSIGNABLE_SUPPORT 1
+#	endif
+#endif
 
-#if __cplusplus >= 201103L && KERBAL_HAS_IS_ASSIGNABLE_SUPPORT
+
+
+#if KERBAL_HAS_IS_NOTHROW_ASSIGNABLE_SUPPORT
 
 #include <kerbal/type_traits/integral_constant.hpp>
 #include <kerbal/type_traits/is_assignable.hpp>
@@ -54,9 +61,7 @@ namespace kerbal
 
 } // namespace kerbal
 
-#define KERBAL_HAS_IS_NOTHROW_ASSIGNABLE_SUPPORT 1
-
-#endif // #if __cplusplus >= 201103L && KERBAL_HAS_IS_ASSIGNABLE_SUPPORT
+#endif // #if KERBAL_HAS_IS_NOTHROW_ASSIGNABLE_SUPPORT
 
 #endif // #ifndef KERBAL_HAS_IS_NOTHROW_ASSIGNABLE_SUPPORT
 

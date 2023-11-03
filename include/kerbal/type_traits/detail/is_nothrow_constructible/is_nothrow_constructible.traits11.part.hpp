@@ -14,9 +14,16 @@
 
 #ifndef KERBAL_HAS_IS_NOTHROW_CONSTRUCTIBLE_SUPPORT
 
-#include <kerbal/type_traits/detail/is_constructible/is_constructible.part.hpp>
+#if __cplusplus >= 201103L
+#	include <kerbal/type_traits/detail/is_constructible/is_constructible.part.hpp>
+#	if KERBAL_HAS_IS_CONSTRUCTIBLE_SUPPORT
+#		define KERBAL_HAS_IS_NOTHROW_CONSTRUCTIBLE_SUPPORT 1
+#	endif
+#endif
 
-#if __cplusplus >= 201103L && KERBAL_HAS_IS_CONSTRUCTIBLE_SUPPORT
+
+
+#if KERBAL_HAS_IS_NOTHROW_CONSTRUCTIBLE_SUPPORT
 
 #include <kerbal/type_traits/integral_constant.hpp>
 #include <kerbal/type_traits/logical.hpp>
@@ -55,9 +62,7 @@ namespace kerbal
 
 } // namespace kerbal
 
-#define KERBAL_HAS_IS_NOTHROW_CONSTRUCTIBLE_SUPPORT 1
-
-#endif // #if __cplusplus >= 201103L && KERBAL_HAS_IS_CONSTRUCTIBLE_SUPPORT
+#endif // #if KERBAL_HAS_IS_NOTHROW_CONSTRUCTIBLE_SUPPORT
 
 #endif // #ifndef KERBAL_HAS_IS_NOTHROW_CONSTRUCTIBLE_SUPPORT
 

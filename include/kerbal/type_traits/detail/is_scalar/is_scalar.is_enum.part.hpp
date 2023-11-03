@@ -17,6 +17,12 @@
 #include <kerbal/type_traits/detail/is_enum/is_enum.part.hpp>
 
 #if KERBAL_HAS_IS_ENUM_SUPPORT
+#	define KERBAL_HAS_IS_SCALAR_SUPPORT 1
+#endif
+
+
+
+#if KERBAL_HAS_IS_SCALAR_SUPPORT
 
 #include <kerbal/type_traits/integral_constant.hpp>
 #include <kerbal/type_traits/is_arithmetic.hpp>
@@ -54,9 +60,7 @@ namespace kerbal
 
 } // namespace kerbal
 
-#define KERBAL_HAS_IS_SCALAR_SUPPORT 1
-
-#endif // #if KERBAL_HAS_IS_ENUM_SUPPORT
+#endif // #if KERBAL_HAS_IS_SCALAR_SUPPORT
 
 #endif // #ifndef KERBAL_HAS_IS_SCALAR_SUPPORT
 

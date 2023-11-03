@@ -16,9 +16,16 @@
 
 #include <kerbal/type_traits/detail/compiler_intrinsics/compiler_intrinsics.hpp>
 
-#include <kerbal/type_traits/detail/is_destructible/is_destructible.part.hpp>
+#if KERBAL_HAS_INTRINSIC_IS_TRIVIALLY_DESTRUCTIBLE_SUPPORT
+#	include <kerbal/type_traits/detail/is_destructible/is_destructible.part.hpp>
+#	if KERBAL_HAS_IS_DESTRUCTIBLE_SUPPORT
+#		define KERBAL_HAS_IS_TRIVIALLY_DESTRUCTIBLE_SUPPORT 1
+#	endif
+#endif
 
-#if KERBAL_HAS_INTRINSIC_IS_TRIVIALLY_DESTRUCTIBLE_SUPPORT && KERBAL_HAS_IS_DESTRUCTIBLE_SUPPORT
+
+
+#if KERBAL_HAS_IS_TRIVIALLY_DESTRUCTIBLE_SUPPORT
 
 #include <kerbal/type_traits/integral_constant.hpp>
 #include <kerbal/type_traits/logical.hpp>
@@ -45,9 +52,7 @@ namespace kerbal
 
 } // namespace kerbal
 
-#define KERBAL_HAS_IS_TRIVIALLY_DESTRUCTIBLE_SUPPORT 1
-
-#endif // #if KERBAL_HAS_INTRINSIC_IS_TRIVIALLY_DESTRUCTIBLE_SUPPORT && KERBAL_HAS_IS_DESTRUCTIBLE_SUPPORT
+#endif // #if KERBAL_HAS_IS_TRIVIALLY_DESTRUCTIBLE_SUPPORT
 
 #endif // #ifndef KERBAL_HAS_IS_TRIVIALLY_DESTRUCTIBLE_SUPPORT
 

@@ -14,9 +14,18 @@
 
 #ifndef KERBAL_HAS_IS_ASSIGNABLE_SUPPORT
 
-#include <kerbal/config/compiler_id.hpp>
+#if __cplusplus >= 201103L
+#	define KERBAL_HAS_IS_ASSIGNABLE_SUPPORT 1
+#else
+#	include <kerbal/config/compiler_id.hpp>
+#	if KERBAL_COMPILER_ID != KERBAL_COMPILER_ID_MSVC
+#		define KERBAL_HAS_IS_ASSIGNABLE_SUPPORT 1
+#	endif
+#endif
 
-#if KERBAL_COMPILER_ID != KERBAL_COMPILER_ID_MSVC || __cplusplus >= 201103L
+
+
+#if KERBAL_HAS_IS_ASSIGNABLE_SUPPORT
 
 #include <kerbal/type_traits/integral_constant.hpp>
 #include <kerbal/type_traits/yes_no_type.hpp>
@@ -129,9 +138,7 @@ namespace kerbal
 
 } // namespace kerbal
 
-#define KERBAL_HAS_IS_ASSIGNABLE_SUPPORT 1
-
-#endif // #if KERBAL_COMPILER_ID != KERBAL_COMPILER_ID_MSVC || __cplusplus >= 201103L
+#endif // #if KERBAL_HAS_IS_ASSIGNABLE_SUPPORT
 
 #endif // #ifndef KERBAL_HAS_IS_ASSIGNABLE_SUPPORT
 

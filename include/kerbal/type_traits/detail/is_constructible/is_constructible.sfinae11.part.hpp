@@ -15,6 +15,12 @@
 #ifndef KERBAL_HAS_IS_CONSTRUCTIBLE_SUPPORT
 
 #if __cplusplus >= 201103L
+#	define KERBAL_HAS_IS_CONSTRUCTIBLE_SUPPORT 1
+#endif
+
+
+
+#if KERBAL_HAS_IS_CONSTRUCTIBLE_SUPPORT
 
 #include <kerbal/config/compiler_id.hpp>
 
@@ -134,9 +140,7 @@ namespace kerbal
 
 } // namespace kerbal
 
-#define KERBAL_HAS_IS_CONSTRUCTIBLE_SUPPORT 1
-
-#endif // #if __cplusplus >= 201103L
+#endif // #if KERBAL_HAS_IS_CONSTRUCTIBLE_SUPPORT
 
 #endif // #ifndef KERBAL_HAS_IS_CONSTRUCTIBLE_SUPPORT
 

@@ -17,6 +17,12 @@
 #include <kerbal/type_traits/detail/is_assignable/is_assignable.part.hpp>
 
 #if KERBAL_HAS_IS_ASSIGNABLE_SUPPORT
+#	define KERBAL_HAS_IS_MOVE_ASSIGNABLE_SUPPORT 1
+#endif
+
+
+
+#if KERBAL_HAS_IS_MOVE_ASSIGNABLE_SUPPORT
 
 #include <kerbal/type_traits/add_lvalue_reference.hpp>
 #include <kerbal/type_traits/add_rvalue_reference.hpp>
@@ -42,9 +48,7 @@ namespace kerbal
 
 } // namespace kerbal
 
-#define KERBAL_HAS_IS_MOVE_ASSIGNABLE_SUPPORT 1
-
-#endif // #if KERBAL_HAS_IS_ASSIGNABLE_SUPPORT
+#endif // #if KERBAL_HAS_IS_MOVE_ASSIGNABLE_SUPPORT
 
 #endif // #ifndef KERBAL_HAS_IS_MOVE_ASSIGNABLE_SUPPORT
 

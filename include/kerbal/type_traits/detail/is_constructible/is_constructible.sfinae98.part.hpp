@@ -17,6 +17,12 @@
 #include <kerbal/config/compiler_id.hpp>
 
 #if KERBAL_COMPILER_ID != KERBAL_COMPILER_ID_MSVC
+#	define KERBAL_HAS_IS_CONSTRUCTIBLE_SUPPORT 1
+#endif
+
+
+
+#if KERBAL_HAS_IS_CONSTRUCTIBLE_SUPPORT
 
 #include <kerbal/macro/macro_concat.hpp>
 #include <kerbal/macro/ppexpand.hpp>
@@ -129,9 +135,7 @@ namespace kerbal
 
 } // namespace kerbal
 
-#define KERBAL_HAS_IS_CONSTRUCTIBLE_SUPPORT 1
-
-#endif // #if KERBAL_COMPILER_ID != KERBAL_COMPILER_ID_MSVC
+#endif // #if KERBAL_HAS_IS_CONSTRUCTIBLE_SUPPORT
 
 #endif // #ifndef KERBAL_HAS_IS_CONSTRUCTIBLE_SUPPORT
 

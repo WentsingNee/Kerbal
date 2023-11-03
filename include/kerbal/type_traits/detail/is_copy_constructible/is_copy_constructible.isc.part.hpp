@@ -17,6 +17,12 @@
 #include <kerbal/type_traits/detail/is_constructible/is_constructible.part.hpp>
 
 #if KERBAL_HAS_IS_CONSTRUCTIBLE_SUPPORT
+#	define KERBAL_HAS_IS_COPY_CONSTRUCTIBLE_SUPPORT 1
+#endif
+
+
+
+#if KERBAL_HAS_IS_COPY_CONSTRUCTIBLE_SUPPORT
 
 #include <kerbal/type_traits/add_const_lvalue_reference.hpp>
 #include <kerbal/type_traits/conditional.hpp>
@@ -53,9 +59,7 @@ namespace kerbal
 
 } // namespace kerbal
 
-#define KERBAL_HAS_IS_COPY_CONSTRUCTIBLE_SUPPORT 1
-
-#endif // #if KERBAL_HAS_IS_CONSTRUCTIBLE_SUPPORT
+#endif // #if KERBAL_HAS_IS_COPY_CONSTRUCTIBLE_SUPPORT
 
 #endif // #ifndef KERBAL_HAS_IS_COPY_CONSTRUCTIBLE_SUPPORT
 

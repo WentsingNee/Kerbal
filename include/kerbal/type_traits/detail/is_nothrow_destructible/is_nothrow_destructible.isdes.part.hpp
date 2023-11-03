@@ -14,9 +14,16 @@
 
 #ifndef KERBAL_HAS_IS_NOTHROW_DESTRUCTIBLE_SUPPORT
 
-#include <kerbal/type_traits/detail/is_destructible/is_destructible.part.hpp>
+#if __cplusplus >= 201103L
+#	include <kerbal/type_traits/detail/is_destructible/is_destructible.part.hpp>
+#	if KERBAL_HAS_IS_DESTRUCTIBLE_SUPPORT
+#		define KERBAL_HAS_IS_NOTHROW_DESTRUCTIBLE_SUPPORT 1
+#	endif
+#endif
 
-#if __cplusplus >= 201103L && KERBAL_HAS_IS_DESTRUCTIBLE_SUPPORT
+
+
+#if KERBAL_HAS_IS_NOTHROW_DESTRUCTIBLE_SUPPORT
 
 #include <kerbal/type_traits/integral_constant.hpp>
 #include <kerbal/type_traits/is_destructible.hpp>
@@ -63,9 +70,7 @@ namespace kerbal
 
 } // namespace kerbal
 
-#define KERBAL_HAS_IS_NOTHROW_DESTRUCTIBLE_SUPPORT 1
-
-#endif // #if __cplusplus >= 201103L && KERBAL_HAS_IS_DESTRUCTIBLE_SUPPORT
+#endif // #if KERBAL_HAS_IS_NOTHROW_DESTRUCTIBLE_SUPPORT
 
 #endif // #ifndef KERBAL_HAS_IS_NOTHROW_DESTRUCTIBLE_SUPPORT
 

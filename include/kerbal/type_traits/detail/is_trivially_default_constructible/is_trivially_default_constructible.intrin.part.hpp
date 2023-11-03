@@ -17,6 +17,12 @@
 #include <kerbal/type_traits/detail/compiler_intrinsics/compiler_intrinsics.hpp>
 
 #if KERBAL_HAS_INTRINSIC_IS_TRIVIALLY_DEFAULT_CONSTRUCTIBLE_SUPPORT
+#	define KERBAL_HAS_IS_TRIVIALLY_DEFAULT_CONSTRUCTIBLE_SUPPORT 1
+#endif
+
+
+
+#if KERBAL_HAS_IS_TRIVIALLY_DEFAULT_CONSTRUCTIBLE_SUPPORT
 
 #include <kerbal/type_traits/integral_constant.hpp>
 #include <kerbal/type_traits/is_unbounded_array.hpp>
@@ -49,9 +55,7 @@ namespace kerbal
 
 } // namespace kerbal
 
-#define KERBAL_HAS_IS_TRIVIALLY_DEFAULT_CONSTRUCTIBLE_SUPPORT 1
-
-#endif // #if KERBAL_HAS_INTRINSIC_IS_TRIVIALLY_DEFAULT_CONSTRUCTIBLE_SUPPORT
+#endif // #if KERBAL_HAS_IS_TRIVIALLY_DEFAULT_CONSTRUCTIBLE_SUPPORT
 
 #endif // #ifndef KERBAL_HAS_IS_TRIVIALLY_DEFAULT_CONSTRUCTIBLE_SUPPORT
 

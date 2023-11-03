@@ -17,6 +17,12 @@
 #include <kerbal/type_traits/detail/compiler_intrinsics/compiler_intrinsics.hpp>
 
 #if KERBAL_HAS_INTRINSIC_IS_MOVE_ASSIGNABLE_SUPPORT
+#	define KERBAL_HAS_IS_MOVE_ASSIGNABLE_SUPPORT 1
+#endif
+
+
+
+#if KERBAL_HAS_IS_MOVE_ASSIGNABLE_SUPPORT
 
 #include <kerbal/type_traits/integral_constant.hpp>
 
@@ -37,9 +43,7 @@ namespace kerbal
 
 } // namespace kerbal
 
-#define KERBAL_HAS_IS_MOVE_ASSIGNABLE_SUPPORT 1
-
-#endif // #if KERBAL_HAS_INTRINSIC_IS_MOVE_ASSIGNABLE_SUPPORT
+#endif // #if KERBAL_HAS_IS_MOVE_ASSIGNABLE_SUPPORT
 
 #endif // #ifndef KERBAL_HAS_IS_MOVE_ASSIGNABLE_SUPPORT
 

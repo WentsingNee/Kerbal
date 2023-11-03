@@ -15,6 +15,12 @@
 #ifndef KERBAL_HAS_IS_CLASS_SUPPORT
 
 #if __cplusplus >= 201103L
+#	define KERBAL_HAS_IS_CLASS_SUPPORT 1
+#endif
+
+
+
+#if KERBAL_HAS_IS_CLASS_SUPPORT
 
 #include <kerbal/type_traits/integral_constant.hpp>
 
@@ -49,9 +55,7 @@ namespace kerbal
 
 } // namespace kerbal
 
-#define KERBAL_HAS_IS_CLASS_SUPPORT 1
-
-#endif // #if __cplusplus >= 201103L
+#endif // #if KERBAL_HAS_IS_CLASS_SUPPORT
 
 #endif // #ifndef KERBAL_HAS_IS_CLASS_SUPPORT
 
