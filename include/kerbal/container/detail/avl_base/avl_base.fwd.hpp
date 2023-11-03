@@ -13,11 +13,13 @@
 #define KERBAL_CONTAINER_DETAIL_AVL_BASE_AVL_BASE_FWD_HPP
 
 #ifndef KERBAL_AVL_ENABLE_VNULL
-#	define KERBAL_AVL_ENABLE_VNULL 1
+#	define KERBAL_AVL_ENABLE_VNULL 0
 #endif
 
 #include <kerbal/compatibility/constexpr.hpp>
 #include <kerbal/compatibility/noexcept.hpp>
+
+#include <cstddef>
 
 
 namespace kerbal
@@ -39,9 +41,34 @@ namespace kerbal
 			template <int = 0>
 			class avl_vnull_node_helper;
 
+#	if KERBAL_AVL_ENABLE_VNULL
+
+			template <int>
+			class avl_vnull_node_helper
+			{
+					static avl_node_base vnull_node;
+
+					friend inline
+					KERBAL_CONSTEXPR
+					avl_node_base * get_avl_vnull_node() KERBAL_NOEXCEPT
+					{
+						return &avl_vnull_node_helper<>::vnull_node;
+					}
+
+			};
+
+#	else
+
 			inline
 			KERBAL_CONSTEXPR
-			avl_node_base * get_avl_vnull_node() KERBAL_NOEXCEPT;
+			avl_node_base * get_avl_vnull_node() KERBAL_NOEXCEPT
+			{
+				return NULL;
+			}
+
+#	endif
+
+
 
 			class avl_iter_type_unrelated;
 
