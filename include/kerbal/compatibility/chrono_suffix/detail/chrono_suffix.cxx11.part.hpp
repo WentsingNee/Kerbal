@@ -32,7 +32,7 @@ namespace kerbal
 		{
 
 			KERBAL_CONSTEXPR
-			std::chrono::duration<long double, std::ratio<3600, 1>> operator""_h(long double hours)
+			std::chrono::duration<long double, std::ratio<3600, 1> > operator""_h(long double hours)
 			{
 				return std::chrono::duration<long double, std::ratio<3600, 1>> {hours};
 			}
