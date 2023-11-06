@@ -15,8 +15,19 @@
 #ifndef KERBAL_HAS_IS_TRIVIALLY_DESTRUCTIBLE_SUPPORT
 
 #if __cplusplus >= 201103L
-#	define KERBAL_HAS_IS_TRIVIALLY_DESTRUCTIBLE_SUPPORT 1
-#endif
+
+#	include <kerbal/config/compiler_id.hpp>
+
+#	if KERBAL_COMPILER_ID == KERBAL_COMPILER_ID_GNU
+#		include <kerbal/config/compiler_private.hpp>
+#		if KERBAL_GNU_VERSION_MEETS(5, 0, 0)
+#			define KERBAL_HAS_IS_TRIVIALLY_DESTRUCTIBLE_SUPPORT 1
+#		endif
+#	else
+#		define KERBAL_HAS_IS_TRIVIALLY_DESTRUCTIBLE_SUPPORT 1
+#	endif
+
+#endif // #if __cplusplus >= 201103L
 
 
 
