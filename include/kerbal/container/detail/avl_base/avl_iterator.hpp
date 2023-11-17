@@ -82,6 +82,12 @@ namespace kerbal
 						return lhs.current == rhs.current;
 					}
 
+					KERBAL_CONSTEXPR
+					node_base * current_as_node_base() const KERBAL_NOEXCEPT
+					{
+						return static_cast<node_base *>(this->current);
+					}
+
 			};
 
 			class avl_kiter_type_unrelated:
@@ -169,7 +175,8 @@ namespace kerbal
 					friend class avl_kiter<T>;
 
 				private:
-					typedef kerbal::iterator::iterator_traits<T*>			iterator_traits;
+					typedef T	k_value_type;
+					typedef kerbal::iterator::iterator_traits<k_value_type*>	iterator_traits;
 
 				public:
 					typedef std::bidirectional_iterator_tag					iterator_category;
@@ -198,7 +205,7 @@ namespace kerbal
 					KERBAL_CONSTEXPR14
 					reference operator*() const KERBAL_NOEXCEPT
 					{
-						return this->current->template reinterpret_as<T>().member();
+						return this->current->template reinterpret_as<k_value_type>().member();
 					}
 
 					KERBAL_CONSTEXPR14
