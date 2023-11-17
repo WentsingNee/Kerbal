@@ -1266,6 +1266,22 @@ namespace kerbal
 
 			template <typename Entity>
 			KERBAL_CONSTEXPR14
+			typename avl_type_only<Entity>::iterator_type_unrelated
+			avl_type_only<Entity>::begin_() KERBAL_NOEXCEPT
+			{
+				return iterator_type_unrelated(this->k_head.leftest_offspring());
+			}
+
+			template <typename Entity>
+			KERBAL_CONSTEXPR14
+			typename avl_type_only<Entity>::iterator_type_unrelated
+			avl_type_only<Entity>::end_() KERBAL_NOEXCEPT
+			{
+				return iterator_type_unrelated(&this->k_head);
+			}
+
+			template <typename Entity>
+			KERBAL_CONSTEXPR14
 			typename
 			avl_type_only<Entity>::iterator
 			avl_type_only<Entity>::
@@ -1856,77 +1872,77 @@ namespace kerbal
 		// insert
 
 			template <typename Entity>
-			template <typename Extract, typename KeyCompare>
+			template <typename Extract, typename KeyCompare, typename UpCaster>
 			KERBAL_CONSTEXPR14
 			typename
 			avl_type_only<Entity>::iterator
 			avl_type_only<Entity>::
-			k_emplace_hook_node(Extract & e, KeyCompare & kc, node * p)
+			k_emplace_hook_node(Extract & e, KeyCompare & kc, node_base * p_node_base, UpCaster up_caster)
 			{
 				if (this->k_head.left == get_avl_vnull_node()) {
-					this->k_head.left = p;
-					p->parent = &this->k_head;
+					this->k_head.left = p_node_base;
+					p_node_base->parent = &this->k_head;
 					++this->k_size;
 				} else {
-					const typename Extract::key_type & src_key = e(p->member());
+					const typename Extract::key_type & src_key = e(up_caster(p_node_base)->member());
 
 					node_base * cur_base = this->k_head.left;
 					while (true) {
 						if (
 							kc(
 								src_key,
-								e(node::reinterpret_as(cur_base)->member())
+								e(up_caster(cur_base)->member())
 							)
 						) { // src < p->member(), ** may throw here **
 							if (cur_base->left == get_avl_vnull_node()) {
-								cur_base->left = p;
+								cur_base->left = p_node_base;
 								break;
 							}
 							cur_base = cur_base->left;
 						} else {
 							if (cur_base->right == get_avl_vnull_node()) {
-								cur_base->right = p;
+								cur_base->right = p_node_base;
 								break;
 							}
 							cur_base = cur_base->right;
 						}
 					}
 
-					p->parent = cur_base;
+					p_node_base->parent = cur_base;
 					++this->k_size;
 					cur_base->height = 2;
 					k_emplace_rebalance(cur_base->parent);
 				}
-				return iterator(p);
+				return iterator(p_node_base);
 			}
 
 			template <typename Entity>
-			template <typename Extract, typename KeyCompare>
+			template <typename Extract, typename KeyCompare, typename UpCaster>
 			KERBAL_CONSTEXPR14
 			typename
 			avl_type_only<Entity>::unique_insert_r
 			avl_type_only<Entity>::
-			k_emplace_hook_node_unique(Extract & e, KeyCompare & kc, node * p)
+			k_emplace_hook_node_unique(Extract & e, KeyCompare & kc, node_base * p_node_base, UpCaster up_caster)
 			{
 				if (this->k_head.left == get_avl_vnull_node()) {
-					this->k_head.left = p;
-					p->parent = &this->k_head;
+					this->k_head.left = p_node_base;
+					p_node_base->parent = &this->k_head;
 					++this->k_size;
 				} else {
-					const typename Extract::key_type & src_key = e(p->member());
+					const typename Extract::key_type & src_key = e(up_caster(p_node_base)->member());
 
 					node_base * cur_base = this->k_head.left;
 					while (true) {
-						const typename Extract::key_type & cur_key = e(node::reinterpret_as(cur_base)->member());
+						const typename Extract::key_type & cur_key = e(up_caster(cur_base)->member());
 						if (kc(src_key, cur_key)) { // src_key < cur_key, ** may throw here **
 							if (cur_base->left == get_avl_vnull_node()) {
-								cur_base->left = p;
+								cur_base->left = p_node_base;
 								break;
 							}
 							cur_base = cur_base->left;
 						} else if (kc(cur_key, src_key)) { // cur_key < src_key
 							if (cur_base->right == get_avl_vnull_node()) {
-								cur_base->right = p;
+								cur_base->right = p_node_base;
 								break;
 							}
 							cur_base = cur_base->right;
@@ -1935,12 +1951,12 @@ namespace kerbal
 						}
 					}
 
-					p->parent = cur_base;
+					p_node_base->parent = cur_base;
 					++this->k_size;
 					cur_base->height = 2;
 					k_emplace_rebalance(cur_base->parent);
 				}
-				return unique_insert_r(iterator(p), true);
+				return unique_insert_r(iterator(p_node_base), true);
 			}
 
 			template <typename Entity>
@@ -2369,6 +2385,136 @@ namespace kerbal
 
 #	endif
 
+
+		//===================
+		// prepare_insert
+
+			template <typename Entity>
+			template <typename Extract, typename KeyCompare, typename UpCaster>
+			KERBAL_CONSTEXPR14
+			typename
+			avl_type_only<Entity>::prepare_hook_node_context
+			avl_type_only<Entity>::
+			k_prepare_hook_node(Extract & e, KeyCompare & kc, node_base * p_node_base, UpCaster up_caster)
+			{
+				if (this->k_head.left == get_avl_vnull_node()) {
+					return prepare_hook_node_context::make_head(&this->k_head.left);
+				} else {
+					const typename Extract::key_type & src_key = e(up_caster(p_node_base)->member());
+
+					node_base * cur_base = this->k_head.left;
+					while (true) {
+						if (kc(src_key, e(up_caster(cur_base)->member()))) { // src < p->member(), ** may throw here **
+							if (cur_base->left == get_avl_vnull_node()) {
+								return prepare_hook_node_context::make_sub(cur_base, &cur_base->left);
+							}
+							cur_base = cur_base->left;
+						} else {
+							if (cur_base->right == get_avl_vnull_node()) {
+								return prepare_hook_node_context::make_sub(cur_base, &cur_base->right);
+							}
+							cur_base = cur_base->right;
+						}
+					}
+				}
+			}
+
+			template <typename Entity>
+			KERBAL_CONSTEXPR14
+			typename
+			avl_type_only<Entity>::iterator
+			avl_type_only<Entity>::
+			k_complete_hook_node(const prepare_hook_node_context & context, node_base * p_node_base) KERBAL_NOEXCEPT
+			{
+				if (context.status == false) {
+					*(context.p_insert_pos) = p_node_base;
+					p_node_base->parent = &this->k_head;
+					++this->k_size;
+				} else {
+					*(context.p_insert_pos) = p_node_base;
+					node_base * cur_base = context.p_pos;
+					p_node_base->parent = cur_base;
+					++this->k_size;
+					cur_base->height = 2;
+					k_emplace_rebalance(cur_base->parent);
+				}
+				return iterator(p_node_base);
+			}
+
+			template <typename Entity>
+			template <typename Extract, typename KeyCompare, typename UpCaster>
+			KERBAL_CONSTEXPR14
+			typename
+			avl_type_only<Entity>::prepare_hook_node_unique_context
+			avl_type_only<Entity>::
+			k_prepare_hook_node_unique(Extract & e, KeyCompare & kc, node_base * p_node_base, UpCaster up_caster)
+			{
+				if (this->k_head.left == get_avl_vnull_node()) {
+					return prepare_hook_node_unique_context::make_head(&this->k_head.left);
+				} else {
+					const typename Extract::key_type & src_key = e(up_caster(p_node_base)->member());
+
+					node_base * cur_base = this->k_head.left;
+					while (true) {
+						const typename Extract::key_type & cur_key = e(up_caster(cur_base)->member());
+						if (kc(src_key, cur_key)) { // src_key < cur_key, ** may throw here **
+							if (cur_base->left == get_avl_vnull_node()) {
+								return prepare_hook_node_unique_context::make_sub(cur_base, &cur_base->left);
+							}
+							cur_base = cur_base->left;
+						} else if (kc(cur_key, src_key)) { // cur_key < src_key
+							if (cur_base->right == get_avl_vnull_node()) {
+								return prepare_hook_node_unique_context::make_sub(cur_base, &cur_base->right);
+							}
+							cur_base = cur_base->right;
+						} else { // src_key == cur_key
+							return prepare_hook_node_unique_context::make_duplicate(cur_base);
+						}
+					}
+				}
+			}
+
+			template <typename Entity>
+			KERBAL_CONSTEXPR14
+			typename
+			avl_type_only<Entity>::iterator
+			avl_type_only<Entity>::
+			k_complete_hook_node_unique(const prepare_hook_node_unique_context & context, node_base * p_node_base) KERBAL_NOEXCEPT
+			{
+				if (context.status == 0) {
+					*(context.p_insert_pos) = p_node_base;
+					p_node_base->parent = &this->k_head;
+					++this->k_size;
+				} else { // status == 1
+					*(context.p_insert_pos) = p_node_base;
+					node_base * cur_base = context.p_pos;
+					p_node_base->parent = cur_base;
+					++this->k_size;
+					cur_base->height = 2;
+					k_emplace_rebalance(cur_base->parent);
+				}
+				return iterator(p_node_base);
+			}
+
+			template <typename Entity>
+			KERBAL_CONSTEXPR14
+			typename
+			avl_type_only<Entity>::iterator
+			avl_type_only<Entity>::
+			k_complete_hook_node_duplicated(const prepare_hook_node_context & context) KERBAL_NOEXCEPT
+			{
+				return iterator(context.p_pos);
+			}
+
+			template <typename Entity>
+			KERBAL_CONSTEXPR14
+			typename
+			avl_type_only<Entity>::iterator
+			avl_type_only<Entity>::
+			k_complete_hook_node_duplicated(const prepare_hook_node_unique_context & context) KERBAL_NOEXCEPT
+			{
+				return iterator(context.p_pos);
+			}
 
 		//===================
 		// erase

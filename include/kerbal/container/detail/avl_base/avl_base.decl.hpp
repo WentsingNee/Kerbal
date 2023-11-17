@@ -13,6 +13,7 @@
 #define KERBAL_CONTAINER_DETAIL_AVL_BASE_AVL_BASE_DECL_HPP
 
 #include <kerbal/container/detail/avl_base/avl_base.fwd.hpp>
+#include <kerbal/container/detail/avl_multi_index_base/avl_multi_index_base.fwd.hpp>
 #include <kerbal/memory/allocator/monotonic_allocator/monotonic_allocator.fwd.hpp>
 
 #include <kerbal/container/detail/avl_base/avl_node.hpp>
@@ -164,6 +165,9 @@ namespace kerbal
 					template <typename Entity2, typename Extract, typename KeyCompare, typename Allocator>
 					friend struct avl_ordered_typedef_helper;
 
+					template <typename Entity2, typename ... PolicyField>
+					friend class kerbal::container::detail::avl_multi_index_base;
+
 				public:
 					typedef Entity						value_type;
 					typedef const value_type			const_type;
@@ -185,6 +189,8 @@ namespace kerbal
 					typedef kerbal::iterator::reverse_iterator<iterator>				reverse_iterator;
 					typedef kerbal::iterator::reverse_iterator<const_iterator>			const_reverse_iterator;
 					typedef kerbal::container::associative_unique_insert_r<iterator>	unique_insert_r;
+
+					typedef kerbal::container::detail::avl_iter_type_unrelated			iterator_type_unrelated;
 
 				protected:
 					typedef super::head_node									head_node;
@@ -618,6 +624,11 @@ namespace kerbal
 				// iterator
 
 				public:
+					KERBAL_CONSTEXPR14
+					iterator_type_unrelated begin_() KERBAL_NOEXCEPT;
+
+					KERBAL_CONSTEXPR14
+					iterator_type_unrelated end_() KERBAL_NOEXCEPT;
 
 					KERBAL_CONSTEXPR14
 					iterator begin() KERBAL_NOEXCEPT;
@@ -946,15 +957,15 @@ namespace kerbal
 				// insert
 
 				protected:
-					template <typename Extract, typename KeyCompare>
+					template <typename Extract, typename KeyCompare, typename UpCaster>
 					KERBAL_CONSTEXPR14
 					iterator
-					k_emplace_hook_node(Extract & e, KeyCompare & kc, node * p);
+					k_emplace_hook_node(Extract & e, KeyCompare & kc, node_base * p_node_base, UpCaster up_caster);
 
-					template <typename Extract, typename KeyCompare>
+					template <typename Extract, typename KeyCompare, typename UpCaster>
 					KERBAL_CONSTEXPR14
 					unique_insert_r
-					k_emplace_hook_node_unique(Extract & e, KeyCompare & kc, node * p);
+					k_emplace_hook_node_unique(Extract & e, KeyCompare & kc, node_base * p_node_base, UpCaster up_caster);
 
 					template <
 						typename NodeAllocator, typename Extract, typename KeyCompare
@@ -1180,6 +1191,122 @@ namespace kerbal
 					);
 
 #			endif
+
+
+				//===================
+				// prepare_insert
+
+				protected:
+
+					struct prepare_hook_node_context
+					{
+							bool status;
+							// 0 head
+							// 1 sub
+
+							node_base * p_pos;
+							node_base ** p_insert_pos;
+
+							KERBAL_CONSTEXPR
+							prepare_hook_node_context(bool status, node_base * p_parent, node_base ** p_insert_pos) KERBAL_NOEXCEPT :
+								status(status), p_pos(p_parent), p_insert_pos(p_insert_pos)
+							{
+							}
+
+							KERBAL_CONSTEXPR
+							static
+							prepare_hook_node_context
+							make_head(node_base ** p_insert_pos) KERBAL_NOEXCEPT
+							{
+								return prepare_hook_node_context(false, NULL, p_insert_pos);
+							}
+
+							KERBAL_CONSTEXPR
+							static
+							prepare_hook_node_context
+							make_sub(node_base * p_parent, node_base ** p_insert_pos) KERBAL_NOEXCEPT
+							{
+								return prepare_hook_node_context(true, p_parent, p_insert_pos);
+							}
+					};
+
+					template <typename Extract, typename KeyCompare, typename UpCaster>
+					KERBAL_CONSTEXPR14
+					prepare_hook_node_context k_prepare_hook_node(Extract & e, KeyCompare & kc, node_base * p_node_base, UpCaster up_caster);
+
+					KERBAL_CONSTEXPR14
+					iterator k_complete_hook_node(const prepare_hook_node_context & context, node_base * p_node_base) KERBAL_NOEXCEPT;
+
+
+					struct prepare_hook_node_unique_context
+					{
+							char status;
+							// 0 head
+							// 1 sub
+							// 2 duplicate
+
+							node_base * p_pos;
+							node_base ** p_insert_pos;
+
+							// for not exist
+							KERBAL_CONSTEXPR
+							prepare_hook_node_unique_context(char status, node_base * p_parent, node_base ** p_insert_pos) KERBAL_NOEXCEPT :
+								status(status), p_pos(p_parent), p_insert_pos(p_insert_pos)
+							{
+							}
+
+							// for duplicate
+							KERBAL_CONSTEXPR
+							prepare_hook_node_unique_context(node_base * p_pos) KERBAL_NOEXCEPT :
+								status(2), p_pos(p_pos), p_insert_pos(NULL)
+							{
+							}
+
+							KERBAL_CONSTEXPR
+							static
+							prepare_hook_node_unique_context
+							make_head(node_base ** p_insert_pos) KERBAL_NOEXCEPT
+							{
+								return prepare_hook_node_unique_context(0, NULL, p_insert_pos);
+							}
+
+							KERBAL_CONSTEXPR
+							static
+							prepare_hook_node_unique_context
+							make_sub(node_base * p_parent, node_base ** p_insert_pos) KERBAL_NOEXCEPT
+							{
+								return prepare_hook_node_unique_context(1, p_parent, p_insert_pos);
+							}
+
+							KERBAL_CONSTEXPR
+							static
+							prepare_hook_node_unique_context
+							make_duplicate(node_base * p_pos) KERBAL_NOEXCEPT
+							{
+								return prepare_hook_node_unique_context(p_pos);
+							}
+
+							KERBAL_CONSTEXPR
+							bool duplicated() const KERBAL_NOEXCEPT
+							{
+								return status == 2;
+							}
+
+					};
+
+					template <typename Extract, typename KeyCompare, typename UpCaster>
+					KERBAL_CONSTEXPR14
+					prepare_hook_node_unique_context
+					k_prepare_hook_node_unique(Extract & e, KeyCompare & kc, node_base * p_node_base, UpCaster up_caster);
+
+					KERBAL_CONSTEXPR14
+					iterator k_complete_hook_node_unique(const prepare_hook_node_unique_context & context, node_base * p_node_base) KERBAL_NOEXCEPT;
+
+					KERBAL_CONSTEXPR14
+					iterator k_complete_hook_node_duplicated(const prepare_hook_node_context & context) KERBAL_NOEXCEPT;
+
+					KERBAL_CONSTEXPR14
+					iterator k_complete_hook_node_duplicated(const prepare_hook_node_unique_context & context) KERBAL_NOEXCEPT;
 
 
 				//===================
