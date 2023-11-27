@@ -291,16 +291,16 @@ namespace kerbal
 						__m512i zmm_mtip1 = _mm512_set1_epi64(static_cast<long long>(mt[0])); // AVX512F
 						zmm_mtip1 = _mm512_mask_loadu_epi64(zmm_mtip1, k_mask, &mt[i + 1]); // AVX512F
 						// SECOND_STEP_REMAIN::value >= STEP::value always false
-						__m512i zmm_y = _mm512_ternarylogic_epi32(zmm_mti, zmm_UPPER_MASK, zmm_mtip1, 226); // AVX512F, 226 = 0b11100010
+						__m512i zmm_y = _mm512_ternarylogic_epi64(zmm_mti, zmm_UPPER_MASK, zmm_mtip1, 226); // AVX512F, 226 = 0b11100010
 						__m512i zmm_mag_mask = _mm512_and_si512(zmm_y, zmm_ONE); // AVX512F
-						zmm_mag_mask = _mm512_sub_epi32(zmm_ZERO, zmm_mag_mask); // AVX512F <=> _mm512_cmpeq_epi32(zmm_mag_mask, zmm_ONE) AVX512F
+						zmm_mag_mask = _mm512_sub_epi64(zmm_ZERO, zmm_mag_mask); // AVX512F <=> _mm512_cmpeq_epi64(zmm_mag_mask, zmm_ONE) AVX512F
 						zmm_mag_mask = _mm512_and_si512(zmm_mag_mask, zmm_A); // AVX512F
-						zmm_y = _mm512_srli_epi32(zmm_y, 1); // AVX512F
+						zmm_y = _mm512_srli_epi64(zmm_y, 1); // AVX512F
 						__m512i zmm_mtipm =
 								(SECOND_STEP_REMAIN::value + NPM::value + 1 >= STEP::value) ?
 								_mm512_loadu_si512(&mt[i - NPM::value]) : // AVX512F
 								_mm512_maskz_loadu_epi64(k_maskp1, &mt[i - NPM::value]); // AVX512F
-						zmm_mti = _mm512_ternarylogic_epi32(zmm_y, zmm_mag_mask, zmm_mtipm, 150); // AVX512F, 150 = 0b10010110
+						zmm_mti = _mm512_ternarylogic_epi64(zmm_y, zmm_mag_mask, zmm_mtipm, 150); // AVX512F, 150 = 0b10010110
 						_mm512_mask_storeu_epi64(&mt[i], k_maskp1, zmm_mti); // AVX512F
 					} else {
 
