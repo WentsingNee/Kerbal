@@ -27,7 +27,7 @@
 
 #ifndef KERBAL_RANDOM_ENABLE_MT_GENERATE_COPY_N_IE_OPTIMISE
 
-#	if __AVX512F__ || __AVX2__ || __SSE2__ || __ARM_FEATURE_SVE || __ARM_NEON
+#	if __AVX512F__ || __AVX2__ || __SSE2__ || __ARM_FEATURE_SVE || __ARM_NEON || __wasm_simd128__
 #		define KERBAL_RANDOM_ENABLE_MT_GENERATE_COPY_N_IE_OPTIMISE 1
 #	else
 #		define KERBAL_RANDOM_ENABLE_MT_GENERATE_COPY_N_IE_OPTIMISE 0
@@ -56,6 +56,10 @@
 
 #	if __ARM_NEON
 #		include <kerbal/random/detail/mt_generate_copy_n/mt_generate_copy_n.neon.part.hpp>
+#	endif
+
+#	if __wasm_simd128__
+#		include <kerbal/random/detail/mt_generate_copy_n/mt_generate_copy_n.wasm_simd128.part.hpp>
 #	endif
 
 #	include <kerbal/random/detail/mt_generate_copy_n/mt_generate_copy_n.plain.part.hpp>
@@ -108,6 +112,8 @@ namespace kerbal
 				sve::mt_generate_copy_n<U, D, S, B, T, C, L>(mt_nowr, outr, n);
 #		elif __ARM_NEON
 				neon::mt_generate_copy_n<U, D, S, B, T, C, L>(mt_nowr, outr, n);
+#		elif __wasm_simd128__
+				wasm_simd128::mt_generate_copy_n<U, D, S, B, T, C, L>(mt_nowr, outr, n);
 #		else
 				plain::mt_generate_copy_n<kerbal::compatibility::uint32_t, kerbal::compatibility::uint32_t *, U, D, S, B, T, C, L>(mt_now, out, n);
 #		endif
@@ -145,6 +151,8 @@ namespace kerbal
 				sve::mt_generate_copy_n<U, D, S, B, T, C, L>(mt_nowr, outr, n);
 #		elif __ARM_NEON
 				neon::mt_generate_copy_n<U, D, S, B, T, C, L>(mt_nowr, outr, n);
+#		elif __wasm_simd128__
+				wasm_simd128::mt_generate_copy_n<U, D, S, B, T, C, L>(mt_nowr, outr, n);
 #		else
 				plain::mt_generate_copy_n<kerbal::compatibility::uint64_t, kerbal::compatibility::uint64_t *, U, D, S, B, T, C, L>(mt_now, out, n);
 #		endif
