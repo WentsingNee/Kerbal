@@ -14,6 +14,7 @@
 #define KERBAL_COMPATIBILITY_TICK_COUNT_HPP
 
 #include <kerbal/compatibility/tick_count/tick_count.unix.part.hpp>
+#include <kerbal/compatibility/tick_count/tick_count.wasm.part.hpp>
 #include <kerbal/compatibility/tick_count/tick_count.win.part.hpp>
 
 #ifndef KERBAL_HAS_TICK_COUNT_SUPPORT
