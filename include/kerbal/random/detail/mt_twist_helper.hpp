@@ -63,7 +63,7 @@
 #	endif
 
 #	if __wasm_simd128__
-#		include <kerbal/random/detail/mt_twist/mt_twist.wasm_simd128.hpp>
+#		include <kerbal/random/detail/mt_twist/mt_twist.wasm_simd128.part.hpp>
 #	endif
 
 #	include <kerbal/random/detail/mt_twist/mt_twist.plain.part.hpp>
