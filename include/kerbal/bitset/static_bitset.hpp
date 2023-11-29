@@ -194,7 +194,12 @@ namespace kerbal
 				k_all_impl() const KERBAL_NOEXCEPT
 				{
 					return bitset_size_unrelated::all_chunk(k_block, BLOCK_SIZE::value - 1) &&
-							(static_cast<block_type>((~k_block[BLOCK_SIZE::value - 1]) << WASTE_SIZE::value) == 0);
+							(
+								static_cast<block_type>(
+									static_cast<block_type>(~k_block[BLOCK_SIZE::value - 1])
+									<< WASTE_SIZE::value
+								) == 0
+							);
 				}
 
 				template <bool c>
