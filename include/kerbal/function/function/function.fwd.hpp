@@ -18,6 +18,7 @@
 
 #include <memory>
 #include <stdexcept>
+#include <typeinfo>
 
 #include <cstddef>
 
@@ -48,7 +49,7 @@ namespace kerbal
 				public std::runtime_error
 		{
 			public:
-				bad_function_cast() :
+				bad_function_cast(const std::type_info & actual, const std::type_info & required) :
 						std::runtime_error("bad function cast")
 				{
 				}
