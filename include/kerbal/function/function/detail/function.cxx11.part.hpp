@@ -13,7 +13,8 @@
 #define KERBAL_FUNCTION_FUNCTION_DETAIL_FUNCTION_CXX11_PART_HPP
 
 #include <kerbal/function/function/function.fwd.hpp>
-#include <kerbal/function/function/bad_function_call.hpp>
+#include <kerbal/function/bad_function_call.hpp>
+#include <kerbal/function/bad_function_cast.hpp>
 
 #include <kerbal/algorithm/swap.hpp>
 #include <kerbal/compatibility/alignof.hpp>

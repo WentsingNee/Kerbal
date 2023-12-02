@@ -9,8 +9,8 @@
  *   all rights reserved
  */
 
-#ifndef KERBAL_FUNCTION_FUNCTION_BAD_FUNCTION_CALL_HPP
-#define KERBAL_FUNCTION_FUNCTION_BAD_FUNCTION_CALL_HPP
+#ifndef KERBAL_FUNCTION_BAD_FUNCTION_CALL_HPP
+#define KERBAL_FUNCTION_BAD_FUNCTION_CALL_HPP
 
 #include <kerbal/compatibility/noexcept.hpp>
 
@@ -36,4 +36,4 @@ namespace kerbal
 
 } // namespace kerbal
 
-#endif // KERBAL_FUNCTION_FUNCTION_BAD_FUNCTION_CALL_HPP
+#endif // KERBAL_FUNCTION_BAD_FUNCTION_CALL_HPP

@@ -17,8 +17,6 @@
 #include <kerbal/compatibility/noexcept.hpp>
 
 #include <memory>
-#include <stdexcept>
-#include <typeinfo>
 
 #include <cstddef>
 
@@ -44,16 +42,6 @@ namespace kerbal
 		template <typename Fun, typename T, std::size_t Size, std::size_t Align, typename Allocator>
 		KERBAL_CONSTEXPR20
 		const T* function_cast(const basic_function<Fun, Size, Align, Allocator> * operand) KERBAL_NOEXCEPT;
-
-		class bad_function_cast :
-				public std::runtime_error
-		{
-			public:
-				bad_function_cast(const std::type_info & actual, const std::type_info & required) :
-						std::runtime_error("bad function cast")
-				{
-				}
-		};
 
 	} // namespace function
 
