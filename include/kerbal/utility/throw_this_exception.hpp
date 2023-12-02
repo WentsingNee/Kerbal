@@ -14,6 +14,7 @@
 
 #include <kerbal/compatibility/constexpr.hpp>
 #include <kerbal/compatibility/noexcept.hpp>
+#include <kerbal/config/exceptions.hpp>
 
 #if __cplusplus < 201103L
 #	include <kerbal/macro/macro_concat.hpp>
@@ -24,7 +25,7 @@
 #	include <kerbal/utility/forward.hpp>
 #endif
 
-#if !__cpp_exceptions
+#if !KERBAL_HAS_EXCEPTIONS_SUPPORT
 #	include <cstdlib> // std::abort
 #endif
 
@@ -39,7 +40,7 @@ namespace kerbal
 		{
 			public:
 
-#	if __cpp_exceptions
+#	if KERBAL_HAS_EXCEPTIONS_SUPPORT
 
 #		if __cplusplus >= 201103L
 

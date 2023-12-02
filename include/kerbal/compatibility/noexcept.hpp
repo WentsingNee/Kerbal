@@ -12,7 +12,8 @@
 #ifndef KERBAL_COMPATIBILITY_NOEXCEPT_HPP
 #define KERBAL_COMPATIBILITY_NOEXCEPT_HPP
 
-#include <kerbal/config/compiler_id.hpp>
+#include <kerbal/config/exceptions.hpp>
+
 
 #ifndef KERBAL_NOEXCEPT
 #	if __cplusplus >= 201103L
@@ -33,7 +34,7 @@
 
 
 #ifndef KERBAL_CONDITIONAL_NOEXCEPT
-#	if __cpp_exceptions
+#	if KERBAL_HAS_EXCEPTIONS_SUPPORT
 #		if __cplusplus >= 201103L
 #			define KERBAL_CONDITIONAL_NOEXCEPT(cond) noexcept(cond)
 #		else

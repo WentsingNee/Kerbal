@@ -18,6 +18,7 @@
 #include <kerbal/compare/basic_compare.hpp>
 #include <kerbal/compatibility/constexpr.hpp>
 #include <kerbal/compatibility/noexcept.hpp>
+#include <kerbal/config/exceptions.hpp>
 #include <kerbal/memory/allocator_traits.hpp>
 #include <kerbal/type_traits/enable_if.hpp>
 #include <kerbal/type_traits/integral_constant.hpp>
@@ -602,7 +603,7 @@ namespace kerbal
 
 					typedef kerbal::type_traits::integral_constant<int, 0> MERGE_VER_NOTHROW;
 
-#				if __cpp_exceptions
+#				if KERBAL_HAS_EXCEPTIONS_SUPPORT
 					typedef kerbal::type_traits::integral_constant<int, 1> MERGE_VER_MAY_THROW;
 #				endif
 
@@ -610,7 +611,7 @@ namespace kerbal
 					KERBAL_CONSTEXPR14
 					void k_merge_impl(fl_type_only & other, BinaryPredict cmp, MERGE_VER_NOTHROW) KERBAL_NOEXCEPT;
 
-#				if __cpp_exceptions
+#				if KERBAL_HAS_EXCEPTIONS_SUPPORT
 					template <typename BinaryPredict>
 					KERBAL_CONSTEXPR20
 					void k_merge_impl(fl_type_only & other, BinaryPredict cmp, MERGE_VER_MAY_THROW);
@@ -629,7 +630,7 @@ namespace kerbal
 
 					typedef kerbal::type_traits::integral_constant<int, 0> MSM_VER_NOTHROW;
 
-#				if __cpp_exceptions
+#				if KERBAL_HAS_EXCEPTIONS_SUPPORT
 					typedef kerbal::type_traits::integral_constant<int, 1> MSM_VER_MAY_THROW;
 #				endif
 
@@ -637,7 +638,7 @@ namespace kerbal
 					KERBAL_CONSTEXPR14
 					static const_iterator k_merge_sort_merge_after_impl(const_iterator before_first, const_iterator before_mid, const_iterator before_last, BinaryPredict cmp, MSM_VER_NOTHROW);
 
-#				if __cpp_exceptions
+#				if KERBAL_HAS_EXCEPTIONS_SUPPORT
 					template <typename BinaryPredict>
 					KERBAL_CONSTEXPR20
 					static const_iterator k_merge_sort_merge_after_impl(const_iterator before_first, const_iterator before_mid, const_iterator before_last, BinaryPredict cmp, MSM_VER_MAY_THROW);
@@ -735,7 +736,7 @@ namespace kerbal
 
 #			if __cplusplus >= 201103L
 
-#				if __cpp_exceptions
+#				if KERBAL_HAS_EXCEPTIONS_SUPPORT
 
 					template <bool nothrow_while_construct, typename NodeAllocator, typename ... Args>
 					KERBAL_CONSTEXPR20

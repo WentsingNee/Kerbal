@@ -15,6 +15,7 @@
 #include <kerbal/algorithm/swap.hpp>
 #include <kerbal/assign/generic_assign.hpp>
 #include <kerbal/compare/basic_compare.hpp>
+#include <kerbal/config/exceptions.hpp>
 #include <kerbal/iterator/iterator.hpp>
 #include <kerbal/type_traits/conditional.hpp>
 #include <kerbal/type_traits/enable_if.hpp>
@@ -33,7 +34,7 @@
 #	include <kerbal/utility/forward.hpp>
 #endif
 
-#if !__cpp_exceptions
+#if !KERBAL_HAS_EXCEPTIONS_SUPPORT
 #	include <kerbal/memory/bad_alloc.hpp>
 #	include <kerbal/utility/throw_this_exception.hpp>
 #endif
@@ -978,7 +979,7 @@ namespace kerbal
 				other.k_head.next = NULL;
 			}
 
-#		if __cpp_exceptions
+#		if KERBAL_HAS_EXCEPTIONS_SUPPORT
 
 			template <typename Tp>
 			template <typename BinaryPredict>
@@ -1020,7 +1021,7 @@ namespace kerbal
 			void fl_type_only<Tp>::k_merge(fl_type_only & other, BinaryPredict cmp)
 			{
 
-#		if __cpp_exceptions
+#		if KERBAL_HAS_EXCEPTIONS_SUPPORT
 
 #			if __cplusplus >= 201103L
 
@@ -1080,7 +1081,7 @@ namespace kerbal
 				return before_last;
 			}
 
-#		if __cpp_exceptions
+#		if KERBAL_HAS_EXCEPTIONS_SUPPORT
 
 			template <typename Tp>
 			template <typename BinaryPredict>
@@ -1126,7 +1127,7 @@ namespace kerbal
 			fl_type_only<Tp>::k_merge_sort_merge_after(const_iterator before_first, const_iterator before_mid, const_iterator before_last, BinaryPredict cmp)
 			{
 
-#		if __cpp_exceptions
+#		if KERBAL_HAS_EXCEPTIONS_SUPPORT
 
 #			if __cplusplus >= 201103L
 
@@ -1327,7 +1328,7 @@ namespace kerbal
 
 #	if __cplusplus >= 201103L
 
-#		if __cpp_exceptions
+#		if KERBAL_HAS_EXCEPTIONS_SUPPORT
 
 			template <typename Tp>
 			template <bool nothrow_while_construct, typename NodeAllocator, typename ... Args>
@@ -1387,7 +1388,7 @@ namespace kerbal
 				return k_build_new_node_impl<nothrow_while_construct::value>(alloc, kerbal::utility::forward<Args>(args)...);
 			}
 
-#		else // __cpp_exceptions
+#		else // KERBAL_HAS_EXCEPTIONS_SUPPORT
 
 			template <typename Tp>
 			template <typename NodeAllocator, typename ... Args>
@@ -1404,7 +1405,7 @@ namespace kerbal
 				return p;
 			}
 
-#		endif // __cpp_exceptions
+#		endif // KERBAL_HAS_EXCEPTIONS_SUPPORT
 
 #	else // __cplusplus >= 201103L
 
@@ -1413,7 +1414,7 @@ namespace kerbal
 #		define TARGS_DECL(i) typename KERBAL_MACRO_CONCAT(Arg, i)
 #		define ARGS_DECL(i) const KERBAL_MACRO_CONCAT(Arg, i) & KERBAL_MACRO_CONCAT(arg, i)
 #		define ARGS_USE(i) KERBAL_MACRO_CONCAT(arg, i)
-#	if __cpp_exceptions
+#	if KERBAL_HAS_EXCEPTIONS_SUPPORT
 #		define FBODY(i) \
 			template <typename Tp> \
 			template <typename NodeAllocator KERBAL_OPT_PPEXPAND_WITH_COMMA_N(LEFT_JOIN_COMMA, EMPTY, TARGS_DECL, i)> \
@@ -1430,7 +1431,7 @@ namespace kerbal
 				} \
 				return p; \
 			}
-#	else // __cpp_exceptions
+#	else // KERBAL_HAS_EXCEPTIONS_SUPPORT
 #		define FBODY(i) \
 			template <typename Tp> \
 			template <typename NodeAllocator KERBAL_OPT_PPEXPAND_WITH_COMMA_N(LEFT_JOIN_COMMA, EMPTY, TARGS_DECL, i)> \
@@ -1445,7 +1446,7 @@ namespace kerbal
 				node_allocator_traits::construct(alloc, p, kerbal::utility::in_place_t() KERBAL_OPT_PPEXPAND_WITH_COMMA_N(LEFT_JOIN_COMMA, EMPTY, ARGS_USE, i)); \
 				return p; \
 			}
-#	endif // __cpp_exceptions
+#	endif // KERBAL_HAS_EXCEPTIONS_SUPPORT
 
 			KERBAL_PPEXPAND_N(FBODY, KERBAL_PPEXPAND_EMPTY_SEPARATOR, 0)
 			KERBAL_PPEXPAND_N(FBODY, KERBAL_PPEXPAND_EMPTY_SEPARATOR, 20)
@@ -1471,9 +1472,9 @@ namespace kerbal
 				--n;
 				node * const start = k_build_new_node(alloc, kerbal::utility::forward<Args>(args)...);
 				node * back = start;
-#		if __cpp_exceptions
+#		if KERBAL_HAS_EXCEPTIONS_SUPPORT
 				try {
-#		endif // __cpp_exceptions
+#		endif // KERBAL_HAS_EXCEPTIONS_SUPPORT
 					while (n != 0) {
 						node * new_node = k_build_new_node(alloc, kerbal::utility::forward<Args>(args)...);
 						back->next = new_node;
@@ -1481,12 +1482,12 @@ namespace kerbal
 						--n;
 					}
 					return sl_node_chain<Tp>(start, back);
-#		if __cpp_exceptions
+#		if KERBAL_HAS_EXCEPTIONS_SUPPORT
 				} catch (...) {
 					k_consecutive_destroy_node(alloc, start, NULL);
 					throw;
 				}
-#		endif // __cpp_exceptions
+#		endif // KERBAL_HAS_EXCEPTIONS_SUPPORT
 			}
 
 #	else
@@ -1496,7 +1497,7 @@ namespace kerbal
 #		define TARGS_DECL(i) typename KERBAL_MACRO_CONCAT(Arg, i)
 #		define ARGS_DECL(i) const KERBAL_MACRO_CONCAT(Arg, i) & KERBAL_MACRO_CONCAT(arg, i)
 #		define ARGS_USE(i) KERBAL_MACRO_CONCAT(arg, i)
-#	if __cpp_exceptions
+#	if KERBAL_HAS_EXCEPTIONS_SUPPORT
 #		define FBODY(i) \
 			template <typename Tp> \
 			template <typename NodeAllocator KERBAL_OPT_PPEXPAND_WITH_COMMA_N(LEFT_JOIN_COMMA, EMPTY, TARGS_DECL, i)> \
@@ -1519,7 +1520,7 @@ namespace kerbal
 					throw; \
 				} \
 			}
-#	else // __cpp_exceptions
+#	else // KERBAL_HAS_EXCEPTIONS_SUPPORT
 #		define FBODY(i) \
 			template <typename Tp> \
 			template <typename NodeAllocator KERBAL_OPT_PPEXPAND_WITH_COMMA_N(LEFT_JOIN_COMMA, EMPTY, TARGS_DECL, i)> \
@@ -1537,7 +1538,7 @@ namespace kerbal
 				} \
 				return sl_node_chain<Tp>(start, back); \
 			}
-#	endif // __cpp_exceptions
+#	endif // KERBAL_HAS_EXCEPTIONS_SUPPORT
 
 			KERBAL_PPEXPAND_N(FBODY, KERBAL_PPEXPAND_EMPTY_SEPARATOR, 0)
 			KERBAL_PPEXPAND_N(FBODY, KERBAL_PPEXPAND_EMPTY_SEPARATOR, 20)
@@ -1563,9 +1564,9 @@ namespace kerbal
 			{
 				node * const start = k_build_new_node(alloc, *first);
 				node * back = start;
-#			if __cpp_exceptions
+#			if KERBAL_HAS_EXCEPTIONS_SUPPORT
 				try {
-#			endif // __cpp_exceptions
+#			endif // KERBAL_HAS_EXCEPTIONS_SUPPORT
 					++first;
 					while (first != last) {
 						node* new_node = k_build_new_node(alloc, *first);
@@ -1574,12 +1575,12 @@ namespace kerbal
 						++first;
 					}
 					return sl_node_chain<Tp>(start, back);
-#			if __cpp_exceptions
+#			if KERBAL_HAS_EXCEPTIONS_SUPPORT
 				} catch (...) {
 					k_consecutive_destroy_node(alloc, start, NULL);
 					throw;
 				}
-#			endif // __cpp_exceptions
+#			endif // KERBAL_HAS_EXCEPTIONS_SUPPORT
 			}
 
 

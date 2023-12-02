@@ -17,6 +17,7 @@
 #include <kerbal/compatibility/constexpr.hpp>
 #include <kerbal/compatibility/move.hpp>
 #include <kerbal/compatibility/noexcept.hpp>
+#include <kerbal/config/exceptions.hpp>
 #include <kerbal/container/associative_container_facility/key_extractors/identity_extractor.hpp>
 #include <kerbal/container/associative_container_facility/unique_tag_t.hpp>
 #include <kerbal/iterator/iterator.hpp>
@@ -39,7 +40,7 @@
 #	include <kerbal/utility/forward.hpp>
 #endif
 
-#if !__cpp_exceptions
+#if !KERBAL_HAS_EXCEPTIONS_SUPPORT
 #	include <kerbal/memory/bad_alloc.hpp>
 #	include <kerbal/utility/throw_this_exception.hpp>
 #endif
@@ -378,11 +379,11 @@ namespace kerbal
 			KERBAL_CONSTEXPR20
 			avl_type_only<Entity>::avl_type_only(NodeAllocator & alloc, Extract & e, KeyCompare & kc, InputIterator first, InputIterator last)
 			{
-#	if __cpp_exceptions
+#	if KERBAL_HAS_EXCEPTIONS_SUPPORT
 				try {
 #	endif
 					this->k_insert_unique_using_allocator(alloc, e, kc, first, last);
-#	if __cpp_exceptions
+#	if KERBAL_HAS_EXCEPTIONS_SUPPORT
 				} catch (...) {
 					this->k_destroy_using_allocator(alloc);
 					throw;
@@ -395,11 +396,11 @@ namespace kerbal
 			KERBAL_CONSTEXPR20
 			avl_type_only<Entity>::avl_type_only(kerbal::container::unique_tag_t, NodeAllocator & alloc, Extract & e, KeyCompare & kc, InputIterator first, InputIterator last)
 			{
-#	if __cpp_exceptions
+#	if KERBAL_HAS_EXCEPTIONS_SUPPORT
 				try {
 #	endif
 					this->k_insert_unique_using_allocator(alloc, e, kc, first, last);
-#	if __cpp_exceptions
+#	if KERBAL_HAS_EXCEPTIONS_SUPPORT
 				} catch (...) {
 					this->k_destroy_using_allocator(alloc);
 					throw;
@@ -438,11 +439,11 @@ namespace kerbal
 			template <typename NodeAllocator, typename Extract, typename KeyCompare, typename U>
 			avl_type_only<Entity>::avl_type_only(NodeAllocator & alloc, Extract & e, KeyCompare & kc, const kerbal::assign::assign_list<U> & ilist)
 			{
-#	if __cpp_exceptions
+#	if KERBAL_HAS_EXCEPTIONS_SUPPORT
 				try {
 #	endif
 					this->k_insert_using_allocator(alloc, e, kc, ilist.cbegin(), ilist.cend());
-#	if __cpp_exceptions
+#	if KERBAL_HAS_EXCEPTIONS_SUPPORT
 				} catch (...) {
 					this->k_destroy_using_allocator(alloc);
 					throw;
@@ -460,11 +461,11 @@ namespace kerbal
 			template <typename NodeAllocator, typename Extract, typename KeyCompare, typename U>
 			avl_type_only<Entity>::avl_type_only(kerbal::container::unique_tag_t /*unique_tag*/, NodeAllocator & alloc, Extract & e, KeyCompare & kc, const kerbal::assign::assign_list<U> & ilist)
 			{
-#	if __cpp_exceptions
+#	if KERBAL_HAS_EXCEPTIONS_SUPPORT
 				try {
 #	endif
 					this->k_insert_unique_using_allocator(alloc, e, kc, ilist.cbegin(), ilist.cend());
-#	if __cpp_exceptions
+#	if KERBAL_HAS_EXCEPTIONS_SUPPORT
 				} catch (...) {
 					this->k_destroy_using_allocator(alloc);
 					throw;
@@ -523,11 +524,11 @@ namespace kerbal
 			void avl_type_only<Entity>::k_copy_cnstrct_impl(NodeAllocator & this_alloc, const avl_type_only & src, Extract & /*this_e*/, KeyCompare & /*this_kc*/,
 															COPY_CNSTRCT_VER_CLONE)
 			{
-#	if __cpp_exceptions
+#	if KERBAL_HAS_EXCEPTIONS_SUPPORT
 				try {
 #	endif
 					this->k_clone(this_alloc, &this->k_head, static_cast<const node *>(src.k_head.left));
-#	if __cpp_exceptions
+#	if KERBAL_HAS_EXCEPTIONS_SUPPORT
 				} catch (...) {
 					this->k_destroy_using_allocator(this_alloc);
 					throw;
@@ -543,11 +544,11 @@ namespace kerbal
 			void avl_type_only<Entity>::k_copy_cnstrct_impl(NodeAllocator & this_alloc, const avl_type_only & src, Extract & this_e, KeyCompare & this_kc,
 															COPY_CNSTRCT_VER_INSERT)
 			{
-#	if __cpp_exceptions
+#	if KERBAL_HAS_EXCEPTIONS_SUPPORT
 				try {
 #	endif
 					this->k_insert_using_allocator(this_alloc, this_e, this_kc, src.cbegin(), src.cend());
-#	if __cpp_exceptions
+#	if KERBAL_HAS_EXCEPTIONS_SUPPORT
 				} catch (...) {
 					this->k_destroy_using_allocator(this_alloc);
 					throw;
@@ -593,11 +594,11 @@ namespace kerbal
 			void avl_type_only<Entity>::k_move_cnstrct_impl(NodeAllocator & this_alloc, avl_type_only && src, Extract & /*this_e*/, KeyCompare & /*this_kc*/,
 															MOVE_CNSTRCT_VER_MOVE_CLONE)
 			{
-#	if __cpp_exceptions
+#	if KERBAL_HAS_EXCEPTIONS_SUPPORT
 				try {
 #	endif
 					this->k_move_clone(this_alloc, &this->k_head, static_cast<const node *>(src.k_head.left));
-#	if __cpp_exceptions
+#	if KERBAL_HAS_EXCEPTIONS_SUPPORT
 				} catch (...) {
 					this->k_destroy_using_allocator(this_alloc);
 					throw;
@@ -612,13 +613,13 @@ namespace kerbal
 			KERBAL_CONSTEXPR20
 			void avl_type_only<Entity>::k_move_cnstrct_impl(NodeAllocator & this_alloc, avl_type_only && src, Extract & this_e, KeyCompare & this_kc, MOVE_CNSTRCT_VER_MOVE_INSERT)
 			{
-#	if __cpp_exceptions
+#	if KERBAL_HAS_EXCEPTIONS_SUPPORT
 				try {
 #	endif
 					this->k_insert_using_allocator(this_alloc, this_e, this_kc,
 												 kerbal::iterator::make_move_iterator(src.begin()),
 												 kerbal::iterator::make_move_iterator(src.end()));
-#	if __cpp_exceptions
+#	if KERBAL_HAS_EXCEPTIONS_SUPPORT
 				} catch (...) {
 					this->k_destroy_using_allocator(this_alloc);
 					throw;
@@ -749,9 +750,9 @@ namespace kerbal
 
 				size_type i = 0;
 
-#			if __cpp_exceptions
+#			if KERBAL_HAS_EXCEPTIONS_SUPPORT
 				try {
-#			endif // if __cpp_exceptions
+#			endif // if KERBAL_HAS_EXCEPTIONS_SUPPORT
 					while (i < tmp_size && first != last) { // may throw here
 						node * p = &tmp_it->template reinterpret_as<value_type>();
 						++i;
@@ -760,12 +761,12 @@ namespace kerbal
 						this->k_emplace_hook_node(e, kc, p);
 						++first; // may throw here
 					}
-#			if __cpp_exceptions
+#			if KERBAL_HAS_EXCEPTIONS_SUPPORT
 				} catch (...) {
 					k_assign_destroy_n(alloc, tmp_it, tmp_size - i, &tmp_head);
 					throw;
 				}
-#			endif // if __cpp_exceptions
+#			endif // if KERBAL_HAS_EXCEPTIONS_SUPPORT
 
 				k_assign_destroy_n(alloc, tmp_it, tmp_size - i, &tmp_head);
 				this->k_insert_using_allocator(alloc, e, kc, first, last);
@@ -797,9 +798,9 @@ namespace kerbal
 
 				size_type i = 0;
 
-#			if __cpp_exceptions
+#			if KERBAL_HAS_EXCEPTIONS_SUPPORT
 				try {
-#			endif // if __cpp_exceptions
+#			endif // if KERBAL_HAS_EXCEPTIONS_SUPPORT
 					while (i < tmp_size && first != last) { // may throw here
 						node * p = &(tmp_it->template reinterpret_as<value_type>());
 						++i;
@@ -813,12 +814,12 @@ namespace kerbal
 						}
 						++first; // may throw here
 					}
-#			if __cpp_exceptions
+#			if KERBAL_HAS_EXCEPTIONS_SUPPORT
 				} catch (...) {
 					k_assign_destroy_n(alloc, tmp_it, tmp_size - i, &tmp_head);
 					throw;
 				}
-#			endif // if __cpp_exceptions
+#			endif // if KERBAL_HAS_EXCEPTIONS_SUPPORT
 
 				k_assign_destroy_n(alloc, tmp_it, tmp_size - i, &tmp_head);
 				this->k_insert_unique_using_allocator(alloc, e, kc, first, last);
@@ -854,18 +855,18 @@ namespace kerbal
 					this->k_destroy_using_allocator(this_alloc);
 
 					this->k_head.left = get_avl_vnull_node();
-#			if __cpp_exceptions
+#			if KERBAL_HAS_EXCEPTIONS_SUPPORT
 					try {
-#			endif // if __cpp_exceptions
+#			endif // if KERBAL_HAS_EXCEPTIONS_SUPPORT
 						this->k_clone(this_alloc, &this->k_head, static_cast<const node *>(src.k_head.left));
-#			if __cpp_exceptions
+#			if KERBAL_HAS_EXCEPTIONS_SUPPORT
 					} catch (...) {
 						this->k_destroy_using_allocator(this_alloc);
 						this->k_head.left = get_avl_vnull_node();
 						this->k_size = 0;
 						throw;
 					}
-#			endif // if __cpp_exceptions
+#			endif // if KERBAL_HAS_EXCEPTIONS_SUPPORT
 					this->k_size = src.k_size;
 				} else {
 					this->k_assign_using_allocator(this_alloc, this_e, this_kc, src.cbegin(), src.cend());
@@ -882,18 +883,18 @@ namespace kerbal
 					this_alloc = src_alloc;
 
 					this->k_head.left = get_avl_vnull_node();
-#			if __cpp_exceptions
+#			if KERBAL_HAS_EXCEPTIONS_SUPPORT
 					try {
-#			endif // if __cpp_exceptions
+#			endif // if KERBAL_HAS_EXCEPTIONS_SUPPORT
 						this->k_clone(this_alloc, &this->k_head, static_cast<const node *>(src.k_head.left));
-#			if __cpp_exceptions
+#			if KERBAL_HAS_EXCEPTIONS_SUPPORT
 					} catch (...) {
 						this->k_destroy_using_allocator(this_alloc);
 						this->k_head.left = get_avl_vnull_node();
 						this->k_size = 0;
 						throw;
 					}
-#			endif // if __cpp_exceptions
+#			endif // if KERBAL_HAS_EXCEPTIONS_SUPPORT
 					this->k_size = src.k_size;
 				} else {
 					this_alloc = src_alloc;
@@ -1542,11 +1543,11 @@ namespace kerbal
 			{
 				node * p = k_build_new_node(alloc, kerbal::utility::forward<Args>(args)...);
 
-#			if __cpp_exceptions
+#			if KERBAL_HAS_EXCEPTIONS_SUPPORT
 				try {
 #			endif
 					return this->k_emplace_hook_node(e, kc, p);
-#			if __cpp_exceptions
+#			if KERBAL_HAS_EXCEPTIONS_SUPPORT
 				} catch (...) {
 					k_destroy_node(alloc, p);
 					throw;
@@ -1562,7 +1563,7 @@ namespace kerbal
 			{
 				node * p = k_build_new_node(alloc, kerbal::utility::forward<Args>(args)...);
 
-#			if __cpp_exceptions
+#			if KERBAL_HAS_EXCEPTIONS_SUPPORT
 				try {
 #			endif
 					unique_insert_r ret(this->k_emplace_hook_node_unique(e, kc, p));
@@ -1570,7 +1571,7 @@ namespace kerbal
 						k_destroy_node(alloc, p);
 					}
 					return ret;
-#			if __cpp_exceptions
+#			if KERBAL_HAS_EXCEPTIONS_SUPPORT
 				} catch (...) {
 					k_destroy_node(alloc, p);
 					throw;
@@ -1586,7 +1587,7 @@ namespace kerbal
 #		define ARGS_DECL(i) const KERBAL_MACRO_CONCAT(Arg, i) & KERBAL_MACRO_CONCAT(arg, i)
 #		define ARGS_USE(i) KERBAL_MACRO_CONCAT(arg, i)
 
-#	if __cpp_exceptions
+#	if KERBAL_HAS_EXCEPTIONS_SUPPORT
 #		define FBODY(i) \
 			template <typename Entity> \
 			template <typename NodeAllocator, typename Extract, typename KeyCompare KERBAL_OPT_PPEXPAND_WITH_COMMA_N(LEFT_JOIN_COMMA, EMPTY, TARGS_DECL, i)> \
@@ -1951,11 +1952,11 @@ namespace kerbal
 				if (replace == this->cend()) {
 					p = node_allocator_traits::allocate(alloc, 1);
 
-#		if !__cpp_exceptions
+#		if !KERBAL_HAS_EXCEPTIONS_SUPPORT
 					if (p == NULL) {
 						kerbal::utility::throw_this_exception_helper<kerbal::memory::bad_alloc>::throw_this_exception();
 					}
-#		endif // __cpp_exceptions
+#		endif // KERBAL_HAS_EXCEPTIONS_SUPPORT
 
  				} else {
 					p = &replace.cast_to_mutable().current->template reinterpret_as<value_type>();
@@ -1965,11 +1966,11 @@ namespace kerbal
 
 				k_try_construct_node(alloc, p, kerbal::utility::forward<Args>(args)...);
 
-#			if __cpp_exceptions
+#			if KERBAL_HAS_EXCEPTIONS_SUPPORT
 				try {
 #			endif
 					return this->k_emplace_hook_node(e, kc, p);
-#			if __cpp_exceptions
+#			if KERBAL_HAS_EXCEPTIONS_SUPPORT
 				} catch (...) {
 					k_destroy_node(alloc, p);
 					throw;
@@ -1990,11 +1991,11 @@ namespace kerbal
 				if (replace == this->cend()) {
 					p = node_allocator_traits::allocate(alloc, 1);
 
-#		if !__cpp_exceptions
+#		if !KERBAL_HAS_EXCEPTIONS_SUPPORT
 					if (p == NULL) {
 						kerbal::utility::throw_this_exception_helper<kerbal::memory::bad_alloc>::throw_this_exception();
 					}
-#		endif // __cpp_exceptions
+#		endif // KERBAL_HAS_EXCEPTIONS_SUPPORT
 
  				} else {
 					p = &replace.cast_to_mutable().current->template reinterpret_as<value_type>();
@@ -2004,7 +2005,7 @@ namespace kerbal
 
 				k_try_construct_node(alloc, p, kerbal::utility::forward<Args>(args)...);
 
-#			if __cpp_exceptions
+#			if KERBAL_HAS_EXCEPTIONS_SUPPORT
 				try {
 #			endif
 					unique_insert_r ret(this->k_emplace_hook_node_unique(e, kc, p));
@@ -2012,7 +2013,7 @@ namespace kerbal
 						k_destroy_node(alloc, p);
 					}
 					return ret;
-#			if __cpp_exceptions
+#			if KERBAL_HAS_EXCEPTIONS_SUPPORT
 				} catch (...) {
 					k_destroy_node(alloc, p);
 					throw;
@@ -2028,7 +2029,7 @@ namespace kerbal
 #		define ARGS_DECL(i) const KERBAL_MACRO_CONCAT(Arg, i) & KERBAL_MACRO_CONCAT(arg, i)
 #		define ARGS_USE(i) KERBAL_MACRO_CONCAT(arg, i)
 
-#	if __cpp_exceptions
+#	if KERBAL_HAS_EXCEPTIONS_SUPPORT
 #		define FBODY(i) \
 			template <typename Entity> \
 			template <typename NodeAllocator, typename Extract, typename KeyCompare KERBAL_OPT_PPEXPAND_WITH_COMMA_N(LEFT_JOIN_COMMA, EMPTY, TARGS_DECL, i)> \
@@ -2413,7 +2414,7 @@ namespace kerbal
 
 #	if __cplusplus >= 201103L
 
-#		if __cpp_exceptions
+#		if KERBAL_HAS_EXCEPTIONS_SUPPORT
 
 			template <typename Entity>
 			template <bool nothrow_while_construct, typename NodeAllocator, typename ... Args>
@@ -2462,7 +2463,7 @@ namespace kerbal
 				k_try_construct_node_impl<nothrow_while_construct::value>(alloc, p, kerbal::utility::forward<Args>(args)...);
 			}
 
-#		else // __cpp_exceptions
+#		else // KERBAL_HAS_EXCEPTIONS_SUPPORT
 
 			template <typename Entity>
 			template <typename NodeAllocator, typename ... Args>
@@ -2473,7 +2474,7 @@ namespace kerbal
 				node_allocator_traits::construct(alloc, p, kerbal::utility::in_place_t(), kerbal::utility::forward<Args>(args)...);
 			}
 
-#		endif // __cpp_exceptions
+#		endif // KERBAL_HAS_EXCEPTIONS_SUPPORT
 
 #	else // __cplusplus >= 201103L
 
@@ -2482,7 +2483,7 @@ namespace kerbal
 #		define TARGS_DECL(i) typename KERBAL_MACRO_CONCAT(Arg, i)
 #		define ARGS_DECL(i) const KERBAL_MACRO_CONCAT(Arg, i) & KERBAL_MACRO_CONCAT(arg, i)
 #		define ARGS_USE(i) KERBAL_MACRO_CONCAT(arg, i)
-#	if __cpp_exceptions
+#	if KERBAL_HAS_EXCEPTIONS_SUPPORT
 #		define FBODY(i) \
 			template <typename Entity> \
 			template <typename NodeAllocator KERBAL_OPT_PPEXPAND_WITH_COMMA_N(LEFT_JOIN_COMMA, EMPTY, TARGS_DECL, i)> \
@@ -2496,7 +2497,7 @@ namespace kerbal
 					throw; \
 				} \
 			}
-#	else // __cpp_exceptions
+#	else // KERBAL_HAS_EXCEPTIONS_SUPPORT
 #		define FBODY(i) \
 			template <typename Entity> \
 			template <typename NodeAllocator KERBAL_OPT_PPEXPAND_WITH_COMMA_N(LEFT_JOIN_COMMA, EMPTY, TARGS_DECL, i)> \
@@ -2505,7 +2506,7 @@ namespace kerbal
 				typedef kerbal::memory::allocator_traits<NodeAllocator> node_allocator_traits; \
 				node_allocator_traits::construct(alloc, p, kerbal::utility::in_place_t() KERBAL_OPT_PPEXPAND_WITH_COMMA_N(LEFT_JOIN_COMMA, EMPTY, ARGS_USE, i)); \
 			}
-#	endif // __cpp_exceptions
+#	endif // KERBAL_HAS_EXCEPTIONS_SUPPORT
 
 			KERBAL_PPEXPAND_N(FBODY, KERBAL_PPEXPAND_EMPTY_SEPARATOR, 0)
 			KERBAL_PPEXPAND_N(FBODY, KERBAL_PPEXPAND_EMPTY_SEPARATOR, 20)
@@ -2532,11 +2533,11 @@ namespace kerbal
 				typedef kerbal::memory::allocator_traits<NodeAllocator> node_allocator_traits;
 				node * p = node_allocator_traits::allocate(alloc, 1);
 
-#		if !__cpp_exceptions
+#		if !KERBAL_HAS_EXCEPTIONS_SUPPORT
 				if (p == NULL) {
 					kerbal::utility::throw_this_exception_helper<kerbal::memory::bad_alloc>::throw_this_exception();
 				}
-#		endif // __cpp_exceptions
+#		endif // KERBAL_HAS_EXCEPTIONS_SUPPORT
 
 				k_try_construct_node(alloc, p, kerbal::utility::forward<Args>(args)...);
 				return p;
@@ -2549,7 +2550,7 @@ namespace kerbal
 #		define TARGS_DECL(i) typename KERBAL_MACRO_CONCAT(Arg, i)
 #		define ARGS_DECL(i) const KERBAL_MACRO_CONCAT(Arg, i) & KERBAL_MACRO_CONCAT(arg, i)
 #		define ARGS_USE(i) KERBAL_MACRO_CONCAT(arg, i)
-#	if __cpp_exceptions
+#	if KERBAL_HAS_EXCEPTIONS_SUPPORT
 #		define FBODY(i) \
 			template <typename Entity> \
 			template <typename NodeAllocator KERBAL_OPT_PPEXPAND_WITH_COMMA_N(LEFT_JOIN_COMMA, EMPTY, TARGS_DECL, i)> \
@@ -2561,7 +2562,7 @@ namespace kerbal
 				k_try_construct_node(alloc, p KERBAL_OPT_PPEXPAND_WITH_COMMA_N(LEFT_JOIN_COMMA, EMPTY, ARGS_USE, i)); \
 				return p; \
 			}
-#	else // __cpp_exceptions
+#	else // KERBAL_HAS_EXCEPTIONS_SUPPORT
 #		define FBODY(i) \
 			template <typename Entity> \
 			template <typename NodeAllocator KERBAL_OPT_PPEXPAND_WITH_COMMA_N(LEFT_JOIN_COMMA, EMPTY, TARGS_DECL, i)> \
@@ -2576,7 +2577,7 @@ namespace kerbal
 				k_try_construct_node(alloc, p KERBAL_OPT_PPEXPAND_WITH_COMMA_N(LEFT_JOIN_COMMA, EMPTY, ARGS_USE, i)); \
 				return p; \
 			}
-#	endif // __cpp_exceptions
+#	endif // KERBAL_HAS_EXCEPTIONS_SUPPORT
 
 			KERBAL_PPEXPAND_N(FBODY, KERBAL_PPEXPAND_EMPTY_SEPARATOR, 0)
 			KERBAL_PPEXPAND_N(FBODY, KERBAL_PPEXPAND_EMPTY_SEPARATOR, 20)

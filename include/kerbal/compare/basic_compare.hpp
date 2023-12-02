@@ -14,6 +14,7 @@
 
 #include <kerbal/compatibility/constexpr.hpp>
 #include <kerbal/compatibility/noexcept.hpp>
+#include <kerbal/config/exceptions.hpp>
 #include <kerbal/type_traits/integral_constant.hpp>
 
 #if __cplusplus >= 201103L
@@ -23,7 +24,7 @@
 #	include <kerbal/type_traits/remove_cvref.hpp>
 #	include <kerbal/utility/forward.hpp>
 
-#	if __cpp_exceptions
+#	if KERBAL_HAS_EXCEPTIONS_SUPPORT
 #		include <kerbal/type_traits/is_nothrow_default_constructible.hpp>
 #		include <kerbal/type_traits/tribool_constant.hpp>
 #		include <kerbal/utility/declval.hpp>
@@ -128,7 +129,7 @@ namespace kerbal
 			private:
 				typedef kerbal::compare::equal_to<T> ValuePredict;
 
-#	if __cplusplus >= 201103L && __cpp_exceptions
+#	if __cplusplus >= 201103L && KERBAL_HAS_EXCEPTIONS_SUPPORT
 
 				typedef kerbal::type_traits::bool_constant<
 						kerbal::type_traits::tribool_is_true<
@@ -168,7 +169,7 @@ namespace kerbal
 			private:
 				typedef kerbal::compare::not_equal_to<T> ValuePredict;
 
-#	if __cplusplus >= 201103L && __cpp_exceptions
+#	if __cplusplus >= 201103L && KERBAL_HAS_EXCEPTIONS_SUPPORT
 
 				typedef kerbal::type_traits::bool_constant<
 						kerbal::type_traits::tribool_is_true<
@@ -208,7 +209,7 @@ namespace kerbal
 			private:
 				typedef kerbal::compare::less<T> ValuePredict;
 
-#	if __cplusplus >= 201103L && __cpp_exceptions
+#	if __cplusplus >= 201103L && KERBAL_HAS_EXCEPTIONS_SUPPORT
 
 				typedef kerbal::type_traits::bool_constant<
 						kerbal::type_traits::tribool_is_true<
@@ -250,7 +251,7 @@ namespace kerbal
 			private:
 				typedef kerbal::compare::greater<T> ValuePredict;
 
-#	if __cplusplus >= 201103L && __cpp_exceptions
+#	if __cplusplus >= 201103L && KERBAL_HAS_EXCEPTIONS_SUPPORT
 
 				typedef kerbal::type_traits::bool_constant<
 						kerbal::type_traits::tribool_is_true<
@@ -292,7 +293,7 @@ namespace kerbal
 			private:
 				typedef kerbal::compare::less_equal<T> ValuePredict;
 
-#	if __cplusplus >= 201103L && __cpp_exceptions
+#	if __cplusplus >= 201103L && KERBAL_HAS_EXCEPTIONS_SUPPORT
 
 				typedef kerbal::type_traits::bool_constant<
 						kerbal::type_traits::tribool_is_true<
@@ -337,7 +338,7 @@ namespace kerbal
 			private:
 				typedef kerbal::compare::greater_equal<T> ValuePredict;
 
-#	if __cplusplus >= 201103L && __cpp_exceptions
+#	if __cplusplus >= 201103L && KERBAL_HAS_EXCEPTIONS_SUPPORT
 
 				typedef kerbal::type_traits::bool_constant<
 						kerbal::type_traits::tribool_is_true<

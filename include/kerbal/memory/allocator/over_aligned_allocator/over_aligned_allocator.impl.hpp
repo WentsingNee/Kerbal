@@ -19,6 +19,7 @@
 
 #include <kerbal/compatibility/alignof.hpp>
 #include <kerbal/compatibility/noexcept.hpp>
+#include <kerbal/config/exceptions.hpp>
 #include <kerbal/memory/allocator_traits.hpp>
 #include <kerbal/memory/bad_alloc.hpp>
 #include <kerbal/memory/bad_array_new_length.hpp>
@@ -59,18 +60,18 @@ namespace kerbal
 
 			pointer p_raw = NULL;
 			if (align <= basic_align) {
-#       if __cpp_exceptions
+#		if KERBAL_HAS_EXCEPTIONS_SUPPORT
 				try {
 					p_raw = upstream_allocator_traits::allocate(upstream_alloc(), size);
 				} catch (...) {
 					return NULL;
 				}
-#       else
-                p_raw = upstream_allocator_traits::allocate(upstream_alloc(), size);
-                if (p_raw == NULL) {
-                    return NULL;
-                }
-#       endif
+#		else
+				p_raw = upstream_allocator_traits::allocate(upstream_alloc(), size);
+				if (p_raw == NULL) {
+					return NULL;
+				}
+#		endif
 				return p_raw;
 			}
 
@@ -80,18 +81,18 @@ namespace kerbal
 					kerbal::memory::alignment_maximum_offset(align.val, KERBAL_ALIGNOF(void_p)) +
 					size
 			;
-#       if __cpp_exceptions
+#		if KERBAL_HAS_EXCEPTIONS_SUPPORT
 			try {
 				p_raw = upstream_allocator_traits::allocate(upstream_alloc(), raw_allocate_size);
 			} catch (...) {
 				return NULL;
 			}
-#       else
-            p_raw = upstream_allocator_traits::allocate(upstream_alloc(), raw_allocate_size);
-            if (p_raw == NULL) {
-                return NULL;
-            }
-#       endif
+#		else
+			p_raw = upstream_allocator_traits::allocate(upstream_alloc(), raw_allocate_size);
+			if (p_raw == NULL) {
+				return NULL;
+			}
+#		endif
 			if (p_raw == NULL) {
 				return NULL;
 			}

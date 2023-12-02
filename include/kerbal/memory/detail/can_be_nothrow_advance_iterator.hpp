@@ -12,7 +12,9 @@
 #ifndef KERBAL_MEMORY_DETAIL_CAN_BE_NOTHROW_ADVANCE_ITERATOR_HPP
 #define KERBAL_MEMORY_DETAIL_CAN_BE_NOTHROW_ADVANCE_ITERATOR_HPP
 
-#if __cpp_exceptions
+#include <kerbal/config/exceptions.hpp>
+
+#if KERBAL_HAS_EXCEPTIONS_SUPPORT
 #	if __cplusplus < 201103L
 #		include <kerbal/type_traits/is_pointer.hpp>
 #	else
@@ -33,7 +35,7 @@ namespace kerbal
 		namespace detail
 		{
 
-#	if __cpp_exceptions
+#	if KERBAL_HAS_EXCEPTIONS_SUPPORT
 
 #		if __cplusplus < 201103L
 

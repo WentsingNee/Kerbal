@@ -14,6 +14,7 @@
 
 #include <kerbal/compatibility/constexpr.hpp>
 #include <kerbal/compatibility/move.hpp>
+#include <kerbal/config/exceptions.hpp>
 #include <kerbal/memory/allocator_traits.hpp>
 #include <kerbal/memory/uninitialized_using_allocator/destroy_using_allocator.hpp>
 #include <kerbal/type_traits/conditional.hpp>
@@ -116,7 +117,7 @@ namespace kerbal
 			typedef kerbal::type_traits::integral_constant<int, 2> UI_VAL_CONSTRUCT_UA_VER_NO_CATCH;
 			typedef kerbal::type_traits::integral_constant<int, 3> UI_VAL_CONSTRUCT_UA_VER_NO_UA;
 
-#		if __cpp_exceptions
+#		if KERBAL_HAS_EXCEPTIONS_SUPPORT
 
 			template <typename Allocator, typename ForwardIterator>
 			KERBAL_CONSTEXPR20
@@ -197,7 +198,7 @@ namespace kerbal
 				detail::UI_VAL_CONSTRUCT_UA_VER_NO_UA
 			>::type AT_TRIVIALLY_DESTROY;
 
-#	if __cpp_exceptions
+#	if KERBAL_HAS_EXCEPTIONS_SUPPORT
 
 			typedef typename kerbal::type_traits::conditional<
 				detail::can_be_trivially_destroy_ua<value_type, Allocator>::value,
@@ -229,7 +230,7 @@ namespace kerbal
 			typedef kerbal::type_traits::integral_constant<int, 2> UI_VAL_CONSTRUCT_N_UA_VER_NO_CATCH;
 			typedef kerbal::type_traits::integral_constant<int, 3> UI_VAL_CONSTRUCT_N_UA_VER_NO_UA;
 
-#		if __cpp_exceptions
+#		if KERBAL_HAS_EXCEPTIONS_SUPPORT
 
 			template <typename Allocator, typename ForwardIterator, typename SizeType>
 			KERBAL_CONSTEXPR20
@@ -316,7 +317,7 @@ namespace kerbal
 				detail::UI_VAL_CONSTRUCT_N_UA_VER_NO_UA
 			>::type AT_TRIVIALLY_DESTROY;
 
-#	if __cpp_exceptions
+#	if KERBAL_HAS_EXCEPTIONS_SUPPORT
 
 			typedef typename kerbal::type_traits::conditional<
 				detail::can_be_trivially_destroy_ua<value_type, Allocator>::value,
@@ -348,7 +349,7 @@ namespace kerbal
 			typedef kerbal::type_traits::integral_constant<int, 2> UI_CPY_UA_VER_NO_CATCH;
 			typedef kerbal::type_traits::integral_constant<int, 3> UI_CPY_UA_VER_NO_UA;
 
-#		if __cpp_exceptions
+#		if KERBAL_HAS_EXCEPTIONS_SUPPORT
 
 			template <typename Allocator, typename InputIterator, typename ForwardIterator>
 			KERBAL_CONSTEXPR20
@@ -438,7 +439,7 @@ namespace kerbal
 				detail::UI_CPY_UA_VER_NO_UA
 			>::type AT_TRIVIALLY_DESTROY;
 
-#	if __cpp_exceptions
+#	if KERBAL_HAS_EXCEPTIONS_SUPPORT
 
 			typedef typename kerbal::type_traits::conditional<
 				detail::can_be_trivially_destroy_ua<output_value_type, Allocator>::value,
@@ -470,7 +471,7 @@ namespace kerbal
 			typedef kerbal::type_traits::integral_constant<int, 2> UI_CPY_N_UA_VER_NO_CATCH;
 			typedef kerbal::type_traits::integral_constant<int, 3> UI_CPY_N_UA_VER_NO_UA;
 
-#		if __cpp_exceptions
+#		if KERBAL_HAS_EXCEPTIONS_SUPPORT
 
 			template <typename Allocator, typename InputIterator, typename SizeType, typename ForwardIterator>
 			KERBAL_CONSTEXPR20
@@ -563,7 +564,7 @@ namespace kerbal
 				detail::UI_CPY_N_UA_VER_NO_UA
 			>::type AT_TRIVIALLY_DESTROY;
 
-#	if __cpp_exceptions
+#	if KERBAL_HAS_EXCEPTIONS_SUPPORT
 
 			typedef typename kerbal::type_traits::conditional<
 				detail::can_be_trivially_destroy_ua<output_value_type, Allocator>::value,
@@ -595,7 +596,7 @@ namespace kerbal
 			typedef kerbal::type_traits::integral_constant<int, 2> UI_MOV_UA_VER_NO_CATCH;
 			typedef kerbal::type_traits::integral_constant<int, 3> UI_MOV_UA_VER_NO_UA;
 
-#		if __cpp_exceptions
+#		if KERBAL_HAS_EXCEPTIONS_SUPPORT
 
 			template <typename Allocator, typename InputIterator, typename ForwardIterator>
 			KERBAL_CONSTEXPR20
@@ -690,7 +691,7 @@ namespace kerbal
 				detail::UI_MOV_UA_VER_NO_UA
 			>::type AT_TRIVIALLY_DESTROY;
 
-#	if __cpp_exceptions
+#	if KERBAL_HAS_EXCEPTIONS_SUPPORT
 
 			typedef ForwardIterator iterator;
 
@@ -724,7 +725,7 @@ namespace kerbal
 			typedef kerbal::type_traits::integral_constant<int, 2> UI_MOV_N_UA_VER_NO_CATCH;
 			typedef kerbal::type_traits::integral_constant<int, 3> UI_MOV_N_UA_VER_NO_UA;
 
-#		if __cpp_exceptions
+#		if KERBAL_HAS_EXCEPTIONS_SUPPORT
 
 			template <typename Allocator, typename InputIterator, typename SizeType, typename ForwardIterator>
 			KERBAL_CONSTEXPR20
@@ -822,7 +823,7 @@ namespace kerbal
 				detail::UI_MOV_N_UA_VER_NO_UA
 			>::type AT_TRIVIALLY_DESTROY;
 
-#	if __cpp_exceptions
+#	if KERBAL_HAS_EXCEPTIONS_SUPPORT
 
 			typedef ForwardIterator iterator;
 
@@ -856,7 +857,7 @@ namespace kerbal
 			typedef kerbal::type_traits::integral_constant<int, 2> UI_FILL_UA_VER_NO_CATCH;
 			typedef kerbal::type_traits::integral_constant<int, 3> UI_FILL_UA_VER_NO_UA;
 
-#		if __cpp_exceptions
+#		if KERBAL_HAS_EXCEPTIONS_SUPPORT
 
 			template <typename Allocator, typename ForwardIterator, typename T>
 			KERBAL_CONSTEXPR20
@@ -937,7 +938,7 @@ namespace kerbal
 				detail::UI_FILL_UA_VER_NO_UA
 			>::type AT_TRIVIALLY_DESTROY;
 
-#	if __cpp_exceptions
+#	if KERBAL_HAS_EXCEPTIONS_SUPPORT
 
 			typedef typename kerbal::type_traits::conditional<
 				detail::can_be_trivially_destroy_ua<value_type, Allocator>::value,
@@ -969,7 +970,7 @@ namespace kerbal
 			typedef kerbal::type_traits::integral_constant<int, 2> UI_FILL_N_UA_VER_NO_CATCH;
 			typedef kerbal::type_traits::integral_constant<int, 3> UI_FILL_N_UA_VER_NO_UA;
 
-#		if __cpp_exceptions
+#		if KERBAL_HAS_EXCEPTIONS_SUPPORT
 
 			template <typename Allocator, typename ForwardIterator, typename SizeType, typename T>
 			KERBAL_CONSTEXPR20
@@ -1056,7 +1057,7 @@ namespace kerbal
 				detail::UI_FILL_N_UA_VER_NO_UA
 			>::type AT_TRIVIALLY_DESTROY;
 
-#	if __cpp_exceptions
+#	if KERBAL_HAS_EXCEPTIONS_SUPPORT
 
 			typedef typename kerbal::type_traits::conditional<
 				detail::can_be_trivially_destroy_ua<value_type, Allocator>::value,

@@ -20,6 +20,7 @@
 #include <kerbal/algorithm/swap.hpp>
 #include <kerbal/assign/generic_assign.hpp>
 #include <kerbal/compatibility/move.hpp>
+#include <kerbal/config/exceptions.hpp>
 #include <kerbal/iterator/iterator.hpp>
 #include <kerbal/memory/raw_storage_uninitialized.hpp>
 #include <kerbal/type_traits/enable_if.hpp>
@@ -892,12 +893,12 @@ namespace kerbal
 
 				kerbal::memory::raw_storage_uninitialized_copy(pos, this->cend(), pos_mut.current + n);
 
-#		if __cpp_exceptions
+#		if KERBAL_HAS_EXCEPTIONS_SUPPORT
 				try {
 #		endif
 					kerbal::utility::compressed_pair<ForwardIterator, iterator> copy_n_r(kerbal::algorithm::copy_n(first, ori_size - insert_pos_index, pos_mut));
 					kerbal::memory::raw_storage_uninitialized_copy(copy_n_r.first(), last, copy_n_r.second().current);
-#		if __cpp_exceptions
+#		if KERBAL_HAS_EXCEPTIONS_SUPPORT
 				} catch (...) {
 					kerbal::memory::raw_storage_reverse_destroy(pos_mut.current + n, this->nth(new_size).current);
 					throw;

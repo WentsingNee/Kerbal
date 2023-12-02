@@ -13,6 +13,7 @@
 #define KERBAL_TEST_TEST_CASE_TEST_CASE_IMPL_HPP
 
 #include <kerbal/compatibility/noexcept.hpp>
+#include <kerbal/config/exceptions.hpp>
 #include <kerbal/container/vector.hpp>
 #include <kerbal/test/runtime_timer.hpp>
 
@@ -69,11 +70,11 @@ namespace kerbal
 			kerbal::test::runtime_timer timer;
 #	endif
 
-#	if __cpp_exceptions
+#	if KERBAL_HAS_EXCEPTIONS_SUPPORT
 			try {
 #	endif
 				call_ptr(record);
-#	if __cpp_exceptions
+#	if KERBAL_HAS_EXCEPTIONS_SUPPORT
 			} catch (...) {
 				record.items.back().result = test_case_running_result::EXCEPTION;
 				printf("test case[%zu]: %s (%s): EXCEPTION\n", case_id, name, description);

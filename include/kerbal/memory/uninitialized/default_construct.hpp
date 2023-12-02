@@ -14,6 +14,7 @@
 
 #include <kerbal/compatibility/constexpr.hpp>
 #include <kerbal/compatibility/noexcept.hpp>
+#include <kerbal/config/exceptions.hpp>
 #include <kerbal/iterator/iterator_traits.hpp>
 #include <kerbal/memory/uninitialized/destroy.hpp>
 #include <kerbal/type_traits/conditional.hpp>
@@ -134,7 +135,7 @@ namespace kerbal
 			typedef kerbal::type_traits::integral_constant<int, 2> UI_DFT_CONSTRUCT_VER_NO_CATCH;
 			typedef kerbal::type_traits::integral_constant<int, 3> UI_DFT_CONSTRUCT_VER_TRIVIALLY;
 
-#		if __cpp_exceptions
+#		if KERBAL_HAS_EXCEPTIONS_SUPPORT
 
 			template <typename ForwardIterator>
 			KERBAL_CONSTEXPR20
@@ -208,7 +209,7 @@ namespace kerbal
 			typedef ForwardIterator iterator;
 			typedef typename kerbal::iterator::iterator_traits<iterator>::value_type value_type;
 
-#	if __cpp_exceptions
+#	if KERBAL_HAS_EXCEPTIONS_SUPPORT
 
 			typedef typename kerbal::type_traits::conditional<
 					kerbal::type_traits::tribool_is_true<
@@ -256,7 +257,7 @@ namespace kerbal
 			typedef kerbal::type_traits::integral_constant<int, 2> UI_DFT_CONSTRUCT_N_VER_NO_CATCH;
 			typedef kerbal::type_traits::integral_constant<int, 3> UI_DFT_CONSTRUCT_N_VER_TRIVIALLY;
 
-#		if __cpp_exceptions
+#		if KERBAL_HAS_EXCEPTIONS_SUPPORT
 
 			template <typename ForwardIterator, typename SizeType>
 			KERBAL_CONSTEXPR20
@@ -337,7 +338,7 @@ namespace kerbal
 			typedef ForwardIterator iterator;
 			typedef typename kerbal::iterator::iterator_traits<iterator>::value_type value_type;
 
-#	if __cpp_exceptions
+#	if KERBAL_HAS_EXCEPTIONS_SUPPORT
 
 			typedef typename kerbal::type_traits::conditional<
 				kerbal::type_traits::tribool_is_true<

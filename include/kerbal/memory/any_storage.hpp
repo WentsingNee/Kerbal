@@ -15,6 +15,7 @@
 #include <kerbal/compatibility/constexpr.hpp>
 #include <kerbal/compatibility/move.hpp>
 #include <kerbal/compatibility/noexcept.hpp>
+#include <kerbal/config/exceptions.hpp>
 #include <kerbal/memory/allocator_traits.hpp>
 #include <kerbal/type_traits/aligned_storage.hpp>
 #include <kerbal/type_traits/integral_constant.hpp>
@@ -298,11 +299,11 @@ namespace kerbal
 					typedef kerbal::memory::allocator_traits<AnyNodeAllocator> allocator_traits;
 
 					any_node * stored_pos = allocator_traits::allocate_one(any_node_alloc);
-#			if __cpp_exceptions
+#			if KERBAL_HAS_EXCEPTIONS_SUPPORT
 					try {
 #			endif
 						allocator_traits::construct(any_node_alloc, stored_pos, kerbal::utility::in_place_t(), kerbal::utility::forward<Args>(args)...);
-#			if __cpp_exceptions
+#			if KERBAL_HAS_EXCEPTIONS_SUPPORT
 					} catch (...) {
 						allocator_traits::deallocate_one(any_node_alloc, stored_pos);
 						throw;
@@ -369,7 +370,7 @@ namespace kerbal
 #			define ARGS_DECL(i) KERBAL_MACRO_CONCAT(const Arg, i) & KERBAL_MACRO_CONCAT(arg, i)
 #			define ARGS_USE(i) KERBAL_MACRO_CONCAT(arg, i)
 
-#		if __cpp_exceptions
+#		if KERBAL_HAS_EXCEPTIONS_SUPPORT
 
 #			define CONSTRUCT_IMPL_NOT_EMBEDDED(i) \
 				template <typename T, typename AnyNodeAllocator KERBAL_OPT_PPEXPAND_WITH_COMMA_N(LEFT_JOIN_COMMA, EMPTY, TARGS_DECL, i)> \

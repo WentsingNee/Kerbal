@@ -22,6 +22,7 @@
 #include <kerbal/assign/ilist.hpp>
 #include <kerbal/compatibility/constexpr.hpp>
 #include <kerbal/compatibility/noexcept.hpp>
+#include <kerbal/config/exceptions.hpp>
 #include <kerbal/container/associative_container_facility/associative_unique_insert_r.hpp>
 #include <kerbal/container/associative_container_facility/key_compare_is_transparent.hpp>
 #include <kerbal/container/associative_container_facility/key_extractors/identity_extractor.hpp>
@@ -940,7 +941,7 @@ namespace kerbal
 
 #			if __cplusplus >= 201103L
 
-#				if __cpp_exceptions
+#				if KERBAL_HAS_EXCEPTIONS_SUPPORT
 
 					template <bool nothrow_while_construct, typename NodeAllocator, typename ... Args>
 					KERBAL_CONSTEXPR20

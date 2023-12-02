@@ -18,6 +18,7 @@
 #include <kerbal/compare/basic_compare.hpp>
 #include <kerbal/compatibility/constexpr.hpp>
 #include <kerbal/compatibility/noexcept.hpp>
+#include <kerbal/config/exceptions.hpp>
 #include <kerbal/memory/allocator_traits.hpp>
 #include <kerbal/type_traits/enable_if.hpp>
 #include <kerbal/type_traits/integral_constant.hpp>
@@ -704,7 +705,7 @@ namespace kerbal
 
 #			if __cplusplus >= 201103L
 
-#				if __cpp_exceptions
+#				if KERBAL_HAS_EXCEPTIONS_SUPPORT
 
 					template <bool nothrow_while_construct, typename NodeAllocator, typename ... Args>
 					KERBAL_CONSTEXPR20
