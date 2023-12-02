@@ -896,7 +896,7 @@ namespace kerbal
 					typedef typename kerbal::type_traits::remove_const<remove_reference>::type value_type;
 					KERBAL_STATIC_ASSERT(!(
 							kerbal::type_traits::is_reference<T>::value &&
-							!kerbal::type_traits::is_const<remove_reference>::value), "can not bind non-const reference to value from const any");
+							!kerbal::type_traits::is_const<remove_reference>::value), "can not bind non-const reference to value from const function");
 
 					return this->template obj_pos<value_type>()->member();
 				}
@@ -922,7 +922,7 @@ namespace kerbal
 					typedef typename kerbal::type_traits::remove_const<remove_reference>::type value_type;
 					KERBAL_STATIC_ASSERT(!(
 							kerbal::type_traits::is_reference<T>::value &&
-							!kerbal::type_traits::is_const<remove_reference>::value), "can not bind non-const reference to value from const any");
+							!kerbal::type_traits::is_const<remove_reference>::value), "can not bind non-const reference to value from const function");
 
 					if (!this->template contains_type<value_type>()) {
 						kerbal::utility::throw_this_exception_helper<kerbal::function::bad_function_cast>::throw_this_exception(this->type(), typeid(value_type));
