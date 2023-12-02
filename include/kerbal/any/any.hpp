@@ -211,8 +211,10 @@ namespace kerbal
 					}
 
 					KERBAL_CONSTEXPR20
-					static void swap(any & /*self*/, any & /*with*/) KERBAL_NOEXCEPT
+					static void swap(any & self, any & with) KERBAL_NOEXCEPT
 					{
+						// with -> self
+						with.k_mtable->swap_out(with, self);
 					}
 
 #	if KERBAL_ANY_TYPE_POLICY == KERBAL_ANY_TYPE_POLICY_FUNCTION
