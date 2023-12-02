@@ -302,7 +302,7 @@ namespace kerbal
 					KERBAL_CONSTEXPR20
 					static Ret invoke(const function & self, TArgs ... args)
 					{
-						return kerbal::function::invoke(self.template ignored_get<const T&>(), static_cast<TArgs>(args)...);
+						return kerbal::function::invoke(const_cast<T&>(self.template ignored_get<const T&>()), static_cast<TArgs>(args)...);
 					}
 			};
 
@@ -316,7 +316,7 @@ namespace kerbal
 					KERBAL_CONSTEXPR20
 					static void invoke(const function & self, TArgs ... args)
 					{
-						kerbal::function::invoke(self.template ignored_get<const T&>(), static_cast<TArgs>(args)...);
+						kerbal::function::invoke(const_cast<T&>(self.template ignored_get<const T&>()), static_cast<TArgs>(args)...);
 					}
 			};
 
