@@ -52,7 +52,7 @@ namespace kerbal
 
 					friend class kerbal::container::detail::vector_type_only<Tp>;
 
-					template <typename Up, typename Allocator>
+					KERBAL_CONTAINER_VECTOR_THEAD(Up, Allocator)
 					friend class kerbal::container::vector;
 
 				private:
@@ -170,7 +170,7 @@ namespace kerbal
 			{
 					friend class kerbal::container::detail::vector_type_only<Tp>;
 
-					template <typename Up, typename Allocator>
+					KERBAL_CONTAINER_VECTOR_THEAD(Up, Allocator)
 					friend class kerbal::container::vector;
 
 				private:

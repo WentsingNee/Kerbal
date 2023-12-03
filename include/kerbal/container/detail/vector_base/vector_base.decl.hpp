@@ -16,6 +16,8 @@
 
 #include <kerbal/compatibility/constexpr.hpp>
 #include <kerbal/compatibility/noexcept.hpp>
+#include <kerbal/concepts/constructible_from.hpp>
+#include <kerbal/concepts/destructible.hpp>
 #include <kerbal/iterator/iterator_traits.hpp>
 #include <kerbal/iterator/reverse_iterator.hpp>
 #include <kerbal/memory/allocator_traits.hpp>
@@ -403,6 +405,7 @@ namespace kerbal
 #			if __cplusplus >= 201103L
 
 					template <typename Allocator, typename ... Args>
+							KERBAL_REQUIRES((kerbal::concepts::constructible_from<Tp, Args...>))
 					KERBAL_CONSTEXPR20
 					iterator k_emplace_using_allocator(Allocator & alloc, const_iterator pos, Args&& ...args);
 
@@ -487,6 +490,7 @@ namespace kerbal
 
 				public:
 					template <typename Allocator, typename ... Args>
+							KERBAL_REQUIRES((kerbal::concepts::constructible_from<Tp, Args...>))
 					KERBAL_CONSTEXPR20
 					reference k_emplace_back_using_allocator(Allocator & alloc, Args&& ...args);
 

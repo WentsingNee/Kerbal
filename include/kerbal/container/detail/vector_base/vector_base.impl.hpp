@@ -20,6 +20,7 @@
 #include <kerbal/algorithm/swap.hpp>
 #include <kerbal/assign/generic_assign.hpp>
 #include <kerbal/compatibility/move.hpp>
+#include <kerbal/concepts/constructible_from.hpp>
 #include <kerbal/config/exceptions.hpp>
 #include <kerbal/iterator/iterator.hpp>
 #include <kerbal/iterator/iterator_traits.hpp>
@@ -1124,6 +1125,7 @@ namespace kerbal
 
 			template <typename Tp>
 			template <typename Allocator, typename ... Args>
+					KERBAL_REQUIRES((kerbal::concepts::constructible_from<Tp, Args...>))
 			KERBAL_CONSTEXPR20
 			typename vector_type_only<Tp>::iterator
 			vector_type_only<Tp>::k_emplace_using_allocator(Allocator & alloc, const_iterator pos, Args&& ... args)
@@ -1736,6 +1738,7 @@ namespace kerbal
 
 			template <typename Tp>
 			template <typename Allocator, typename ... Args>
+					KERBAL_REQUIRES((kerbal::concepts::constructible_from<Tp, Args...>))
 			KERBAL_CONSTEXPR20
 			typename vector_type_only<Tp>::reference
 			vector_type_only<Tp>::k_emplace_back_using_allocator(Allocator & alloc, Args&& ... args)
