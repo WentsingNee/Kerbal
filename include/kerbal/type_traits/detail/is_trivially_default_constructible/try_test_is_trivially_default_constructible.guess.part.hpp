@@ -23,7 +23,7 @@
 #endif
 
 
-#include <kerbal/type_traits/is_constructible.hpp>
+#include <kerbal/type_traits/is_default_constructible.hpp>
 #include <kerbal/type_traits/is_enum.hpp>
 #include <kerbal/type_traits/is_fundamental.hpp>
 #include <kerbal/type_traits/is_member_pointer.hpp>
@@ -59,7 +59,7 @@ namespace kerbal
 		template <typename T>
 		struct try_test_is_trivially_default_constructible :
 				kerbal::type_traits::tribool_conjunction<
-					kerbal::type_traits::try_test_is_constructible<T>,
+					kerbal::type_traits::try_test_is_default_constructible<T>,
 					kerbal::type_traits::detail::try_test_is_trivially_default_constructible_helper<
 						typename kerbal::type_traits::remove_all_extents<T>::type
 					>

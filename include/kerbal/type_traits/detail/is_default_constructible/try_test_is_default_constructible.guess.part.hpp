@@ -23,11 +23,15 @@
 #endif
 
 
-#include <kerbal/type_traits/is_constructible.hpp>
+#include <kerbal/type_traits/conditional.hpp>
 #include <kerbal/type_traits/is_enum.hpp>
+#include <kerbal/type_traits/is_function.hpp>
 #include <kerbal/type_traits/is_fundamental.hpp>
 #include <kerbal/type_traits/is_member_pointer.hpp>
 #include <kerbal/type_traits/is_pointer.hpp>
+#include <kerbal/type_traits/is_reference.hpp>
+#include <kerbal/type_traits/is_unbounded_array.hpp>
+#include <kerbal/type_traits/is_void.hpp>
 #include <kerbal/type_traits/remove_all_extents.hpp>
 #include <kerbal/type_traits/tribool_constant.hpp>
 
@@ -58,12 +62,18 @@ namespace kerbal
 
 		template <typename T>
 		struct try_test_is_default_constructible :
-				kerbal::type_traits::tribool_conjunction<
-					kerbal::type_traits::try_test_is_constructible<T>,
+				kerbal::type_traits::conditional<
+					kerbal::type_traits::disjunction<
+						kerbal::type_traits::is_function<T>,
+						kerbal::type_traits::is_reference<T>,
+						kerbal::type_traits::is_unbounded_array<T>,
+						kerbal::type_traits::is_void<T>
+					>::value,
+					kerbal::type_traits::tribool_false,
 					kerbal::type_traits::detail::try_test_is_default_constructible_helper<
 						typename kerbal::type_traits::remove_all_extents<T>::type
 					>
-				>::result
+				>::type
 		{
 		};
 
