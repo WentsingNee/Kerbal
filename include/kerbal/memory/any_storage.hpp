@@ -482,10 +482,12 @@ namespace kerbal
 #	if __cplusplus >= 201103L
 					KERBAL_STATIC_ASSERT(
 							kerbal::type_traits::tribool_is_true<
-								kerbal::type_traits::is_nothrow_move_constructible<
+								kerbal::type_traits::try_test_is_nothrow_move_constructible<
 									typename kerbal::type_traits::remove_all_extents<T>::type
 								>
-							>::value, "Static check failed!");
+							>::value,
+							"Static check failed!"
+					);
 #	endif
 
 					typedef T value_type;

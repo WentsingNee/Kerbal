@@ -97,9 +97,9 @@ namespace kerbal
 					KERBAL_CONSTEXPR
 					flat_ordered_key_compare_overload()
 							KERBAL_CONDITIONAL_NOEXCEPT(
-									kerbal::type_traits::tribool_is_true<
-										kerbal::type_traits::is_nothrow_default_constructible<super>
-									>::value
+								kerbal::type_traits::tribool_is_true<
+									kerbal::type_traits::try_test_is_nothrow_default_constructible<super>
+								>::value
 							)
 							: super(kerbal::utility::in_place_t())
 					{
@@ -109,9 +109,9 @@ namespace kerbal
 					explicit
 					flat_ordered_key_compare_overload(const key_compare & kc)
 							KERBAL_CONDITIONAL_NOEXCEPT(
-									kerbal::type_traits::tribool_is_true<
-										kerbal::type_traits::is_nothrow_copy_constructible<super>
-									>::value
+								kerbal::type_traits::tribool_is_true<
+									kerbal::type_traits::try_test_is_nothrow_copy_constructible<super>
+								>::value
 							)
 							: super(kerbal::utility::in_place_t(), kc)
 					{
