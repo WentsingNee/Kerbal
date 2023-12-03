@@ -21,6 +21,7 @@
 #include <kerbal/compatibility/constexpr.hpp>
 #include <kerbal/compatibility/move.hpp>
 #include <kerbal/compatibility/noexcept.hpp>
+#include <kerbal/concepts/constructible_from.hpp>
 #include <kerbal/config/exceptions.hpp>
 #include <kerbal/iterator/iterator.hpp>
 #include <kerbal/iterator/iterator_traits.hpp>
@@ -1344,6 +1345,7 @@ namespace kerbal
 
 			template <typename T>
 			template <typename Allocator, typename ... Args>
+				KERBAL_REQUIRES((kerbal::concepts::constructible_from<T, Args...>))
 			KERBAL_CONSTEXPR20
 			typename
 			vector_type_only<T>::iterator
@@ -2036,6 +2038,7 @@ namespace kerbal
 
 			template <typename T>
 			template <typename Allocator, typename ... Args>
+				KERBAL_REQUIRES((kerbal::concepts::constructible_from<T, Args...>))
 			KERBAL_CONSTEXPR20
 			typename
 			vector_type_only<T>::reference

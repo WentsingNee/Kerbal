@@ -51,7 +51,18 @@ namespace kerbal
 	namespace container
 	{
 
-		template <typename T, typename Allocator>
+#		if KERBAL_HAS_CONCEPTS_SUPPORT
+
+			template <typename T, typename ... Args>
+			concept vector_emplace_able = kerbal::concepts::constructible_from<T, Args...>;
+
+			template <typename T, typename ... Args>
+			concept vector_emplace_back_able = kerbal::concepts::constructible_from<T, Args...>;
+
+#		endif
+
+
+		KERBAL_CONTAINER_VECTOR_THEAD(T, Allocator)
 		class vector :
 			protected kerbal::container::detail::container_allocator_overload<Allocator>,
 			protected kerbal::container::detail::vector_type_only<T>
@@ -252,11 +263,17 @@ namespace kerbal
 				KERBAL_CONSTEXPR20
 				void assign(size_type new_size, const_reference value);
 
+#		if KERBAL_HAS_CONCEPTS_SUPPORT
+				template <kerbal::iterator::input_iterator InputIterator>
+				KERBAL_CONSTEXPR20
+				void
+#		else
 				template <typename InputIterator>
 				KERBAL_CONSTEXPR20
 				typename kerbal::type_traits::enable_if<
 					kerbal::iterator::is_input_compatible_iterator<InputIterator>::value
 				>::type
+#		endif
 				assign(InputIterator first, InputIterator last);
 
 #		if __cplusplus >= 201103L
@@ -326,6 +343,7 @@ namespace kerbal
 #		if __cplusplus >= 201103L
 
 				template <typename ... Args>
+					KERBAL_REQUIRES((vector_emplace_able<T, Args...>))
 				KERBAL_CONSTEXPR20
 				iterator emplace(const_iterator pos, Args && ... args);
 
@@ -390,6 +408,7 @@ namespace kerbal
 #		if __cplusplus >= 201103L
 
 				template <typename ... Args>
+					KERBAL_REQUIRES((vector_emplace_back_able<T, Args...>))
 				KERBAL_CONSTEXPR20
 				reference emplace_back(Args && ... args);
 

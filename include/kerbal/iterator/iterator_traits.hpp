@@ -14,6 +14,7 @@
 
 #include <kerbal/compatibility/constexpr.hpp>
 #include <kerbal/compatibility/noexcept.hpp>
+#include <kerbal/concepts/config.hpp>
 #include <kerbal/type_traits/integral_constant.hpp>
 #include <kerbal/type_traits/is_same.hpp>
 #include <kerbal/type_traits/remove_cv.hpp>
@@ -349,6 +350,13 @@ namespace kerbal
 		{
 			return typename kerbal::iterator::iterator_traits<T>::iterator_category();
 		}
+
+#	if KERBAL_HAS_CONCEPTS_SUPPORT
+
+		template <typename Tp>
+		concept input_iterator = kerbal::iterator::is_input_iterator<Tp>::value;
+
+#	endif
 
 	} // namespace iterator
 
