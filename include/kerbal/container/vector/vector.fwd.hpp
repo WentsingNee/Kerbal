@@ -14,6 +14,9 @@
 
 #include <kerbal/container/detail/vector_base/vector_base.fwd.hpp>
 
+#include <kerbal/concepts/config.hpp>
+#include <kerbal/container/erasable.hpp>
+
 #include <memory>
 
 #if __cplusplus >= 201703L
@@ -29,7 +32,12 @@ namespace kerbal
 	namespace container
 	{
 
+#define KERBAL_CONTAINER_VECTOR_THEAD(T, Allocator) \
+		template <typename T, typename Allocator> \
+			KERBAL_REQUIRES((kerbal::container::erasable<T, Allocator>))
+
 		template <typename T, typename Allocator = std::allocator<T> >
+			KERBAL_REQUIRES((kerbal::container::erasable<T, Allocator>))
 		class vector;
 
 

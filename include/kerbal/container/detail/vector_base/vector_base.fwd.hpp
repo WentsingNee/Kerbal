@@ -12,6 +12,9 @@
 #ifndef KERBAL_CONTAINER_DETAIL_VECTOR_BASE_VECTOR_BASE_FWD_HPP
 #define KERBAL_CONTAINER_DETAIL_VECTOR_BASE_VECTOR_BASE_FWD_HPP
 
+#include <kerbal/concepts/config.hpp>
+#include <kerbal/concepts/destructible.hpp>
+
 
 namespace kerbal
 {
@@ -21,6 +24,13 @@ namespace kerbal
 
 		namespace detail
 		{
+
+#	if KERBAL_HAS_CONCEPTS_SUPPORT
+
+			template <typename T>
+			concept vector_type_only_containable = kerbal::concepts::destructible<T>;
+
+#	endif
 
 			template <typename T>
 			class vector_type_only;
