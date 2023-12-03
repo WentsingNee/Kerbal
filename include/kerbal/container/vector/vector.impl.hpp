@@ -42,7 +42,7 @@ namespace kerbal
 	//===================
 	// construct/copy/destroy
 
-		template <typename T, typename Allocator>
+		KERBAL_CONTAINER_VECTOR_THEAD(T, Allocator)
 		KERBAL_CONSTEXPR20
 		vector<T, Allocator>::vector()
 				KERBAL_CONDITIONAL_NOEXCEPT(
@@ -54,7 +54,7 @@ namespace kerbal
 		{
 		}
 
-		template <typename T, typename Allocator>
+		KERBAL_CONTAINER_VECTOR_THEAD(T, Allocator)
 		KERBAL_CONSTEXPR20
 		vector<T, Allocator>::vector(const Allocator & allocator)
 				KERBAL_CONDITIONAL_NOEXCEPT(
@@ -66,7 +66,7 @@ namespace kerbal
 		{
 		}
 
-		template <typename T, typename Allocator>
+		KERBAL_CONTAINER_VECTOR_THEAD(T, Allocator)
 		KERBAL_CONSTEXPR20
 		vector<T, Allocator>::vector(size_type count) :
 				vector_allocator_overload(),
@@ -74,7 +74,7 @@ namespace kerbal
 		{
 		}
 
-		template <typename T, typename Allocator>
+		KERBAL_CONTAINER_VECTOR_THEAD(T, Allocator)
 		KERBAL_CONSTEXPR20
 		vector<T, Allocator>::vector(size_type count, const Allocator & allocator) :
 				vector_allocator_overload(allocator),
@@ -82,7 +82,7 @@ namespace kerbal
 		{
 		}
 
-		template <typename T, typename Allocator>
+		KERBAL_CONTAINER_VECTOR_THEAD(T, Allocator)
 		KERBAL_CONSTEXPR20
 		vector<T, Allocator>::vector(size_type count, const_reference value) :
 				vector_allocator_overload(),
@@ -90,7 +90,7 @@ namespace kerbal
 		{
 		}
 
-		template <typename T, typename Allocator>
+		KERBAL_CONTAINER_VECTOR_THEAD(T, Allocator)
 		KERBAL_CONSTEXPR20
 		vector<T, Allocator>::vector(size_type count, const_reference value, const Allocator & allocator) :
 				vector_allocator_overload(allocator),
@@ -99,7 +99,7 @@ namespace kerbal
 		}
 
 
-		template <typename T, typename Allocator>
+		KERBAL_CONTAINER_VECTOR_THEAD(T, Allocator)
 		template <typename InputIterator>
 		KERBAL_CONSTEXPR20
 		vector<T, Allocator>::vector(InputIterator first, InputIterator last,
@@ -113,7 +113,7 @@ namespace kerbal
 		{
 		}
 
-		template <typename T, typename Allocator>
+		KERBAL_CONTAINER_VECTOR_THEAD(T, Allocator)
 		template <typename InputIterator>
 		KERBAL_CONSTEXPR20
 		vector<T, Allocator>::vector(InputIterator first, InputIterator last, const Allocator & allocator,
@@ -127,7 +127,7 @@ namespace kerbal
 		{
 		}
 
-		template <typename T, typename Allocator>
+		KERBAL_CONTAINER_VECTOR_THEAD(T, Allocator)
 		KERBAL_CONSTEXPR20
 		vector<T, Allocator>::vector(const vector & src) :
 				vector_allocator_overload(src.alloc()),
@@ -135,7 +135,7 @@ namespace kerbal
 		{
 		}
 
-		template <typename T, typename Allocator>
+		KERBAL_CONTAINER_VECTOR_THEAD(T, Allocator)
 		KERBAL_CONSTEXPR20
 		vector<T, Allocator>::vector(const vector & src, const Allocator & allocator) :
 				vector_allocator_overload(allocator),
@@ -146,7 +146,7 @@ namespace kerbal
 
 #	if __cplusplus >= 201103L
 
-		template <typename T, typename Allocator>
+		KERBAL_CONTAINER_VECTOR_THEAD(T, Allocator)
 		KERBAL_CONSTEXPR20
 		vector<T, Allocator>::vector(vector && src)
 				KERBAL_CONDITIONAL_NOEXCEPT(
@@ -158,7 +158,7 @@ namespace kerbal
 		{
 		}
 
-		template <typename T, typename Allocator>
+		KERBAL_CONTAINER_VECTOR_THEAD(T, Allocator)
 		KERBAL_CONSTEXPR20
 		vector<T, Allocator>::vector(vector && src, const Allocator & allocator)
 				KERBAL_CONDITIONAL_NOEXCEPT(
@@ -175,14 +175,14 @@ namespace kerbal
 
 #	if __cplusplus >= 201103L
 
-		template <typename T, typename Allocator>
+		KERBAL_CONTAINER_VECTOR_THEAD(T, Allocator)
 		KERBAL_CONSTEXPR20
 		vector<T, Allocator>::vector(std::initializer_list<value_type> ilist) :
 				vector(ilist.begin(), ilist.end())
 		{
 		}
 
-		template <typename T, typename Allocator>
+		KERBAL_CONTAINER_VECTOR_THEAD(T, Allocator)
 		KERBAL_CONSTEXPR20
 		vector<T, Allocator>::vector(std::initializer_list<value_type> ilist, const Allocator & allocator) :
 				vector(ilist.begin(), ilist.end(), allocator)
@@ -191,14 +191,14 @@ namespace kerbal
 
 #	else
 
-		template <typename T, typename Allocator>
+		KERBAL_CONTAINER_VECTOR_THEAD(T, Allocator)
 		vector<T, Allocator>::vector(const kerbal::assign::assign_list<void> & ilist) :
 				vector_allocator_overload(),
 				vector_type_only()
 		{
 		}
 
-		template <typename T, typename Allocator>
+		KERBAL_CONTAINER_VECTOR_THEAD(T, Allocator)
 		template <typename U>
 		vector<T, Allocator>::vector(const kerbal::assign::assign_list<U> & ilist) :
 				vector_allocator_overload(),
@@ -206,14 +206,14 @@ namespace kerbal
 		{
 		}
 
-		template <typename T, typename Allocator>
+		KERBAL_CONTAINER_VECTOR_THEAD(T, Allocator)
 		vector<T, Allocator>::vector(const kerbal::assign::assign_list<void> & ilist, const Allocator & allocator) :
 				vector_allocator_overload(allocator),
 				vector_type_only()
 		{
 		}
 
-		template <typename T, typename Allocator>
+		KERBAL_CONTAINER_VECTOR_THEAD(T, Allocator)
 		template <typename U>
 		vector<T, Allocator>::vector(const kerbal::assign::assign_list<U> & ilist, const Allocator & allocator) :
 				vector_allocator_overload(allocator),
@@ -225,7 +225,7 @@ namespace kerbal
 
 
 
-		template <typename T, typename Allocator>
+		KERBAL_CONTAINER_VECTOR_THEAD(T, Allocator)
 		KERBAL_CONSTEXPR20
 		vector<T, Allocator>::~vector()
 		{
@@ -237,7 +237,7 @@ namespace kerbal
 	//===================
 	// assign
 
-		template <typename T, typename Allocator>
+		KERBAL_CONTAINER_VECTOR_THEAD(T, Allocator)
 		KERBAL_CONSTEXPR20
 		vector<T, Allocator>&
 		vector<T, Allocator>::operator=(const vector & src)
@@ -248,7 +248,7 @@ namespace kerbal
 
 #		if __cplusplus >= 201103L
 
-		template <typename T, typename Allocator>
+		KERBAL_CONTAINER_VECTOR_THEAD(T, Allocator)
 		KERBAL_CONSTEXPR20
 		vector<T, Allocator>&
 		vector<T, Allocator>::operator=(vector && src)
@@ -264,7 +264,7 @@ namespace kerbal
 
 #		if __cplusplus >= 201103L
 
-		template <typename T, typename Allocator>
+		KERBAL_CONTAINER_VECTOR_THEAD(T, Allocator)
 		KERBAL_CONSTEXPR20
 		vector<T, Allocator>&
 		vector<T, Allocator>::operator=(std::initializer_list<value_type> ilist)
@@ -275,7 +275,7 @@ namespace kerbal
 
 #		else
 
-		template <typename T, typename Allocator>
+		KERBAL_CONTAINER_VECTOR_THEAD(T, Allocator)
 		vector<T, Allocator>&
 		vector<T, Allocator>::operator=(const kerbal::assign::assign_list<void> & ilist)
 		{
@@ -283,7 +283,7 @@ namespace kerbal
 			return *this;
 		}
 
-		template <typename T, typename Allocator>
+		KERBAL_CONTAINER_VECTOR_THEAD(T, Allocator)
 		template <typename U>
 		vector<T, Allocator>&
 		vector<T, Allocator>::operator=(const kerbal::assign::assign_list<U> & ilist)
@@ -294,25 +294,31 @@ namespace kerbal
 
 #	endif
 
-		template <typename T, typename Allocator>
+		KERBAL_CONTAINER_VECTOR_THEAD(T, Allocator)
 		KERBAL_CONSTEXPR20
 		void vector<T, Allocator>::assign(size_type new_size, const_reference value)
 		{
 			vector_type_only::k_assign_using_allocator(this->alloc(), new_size, value);
 		}
 
-		template <typename T, typename Allocator>
+		KERBAL_CONTAINER_VECTOR_THEAD(T, Allocator)
+#	if KERBAL_HAS_CONCEPTS_SUPPORT
+		template <kerbal::iterator::input_iterator InputIterator>
+		KERBAL_CONSTEXPR20
+		void
+#	else
 		template <typename InputIterator>
 		KERBAL_CONSTEXPR20
 		typename kerbal::type_traits::enable_if<
 				kerbal::iterator::is_input_compatible_iterator<InputIterator>::value
 		>::type
+#	endif
 		vector<T, Allocator>::assign(InputIterator first, InputIterator last)
 		{
 			vector_type_only::k_assign_using_allocator(this->alloc(), first, last);
 		}
 
-		template <typename T, typename Allocator>
+		KERBAL_CONTAINER_VECTOR_THEAD(T, Allocator)
 		KERBAL_CONSTEXPR20
 		void vector<T, Allocator>::assign(const vector & src)
 		{
@@ -325,7 +331,7 @@ namespace kerbal
 
 #	if __cplusplus >= 201103L
 
-		template <typename T, typename Allocator>
+		KERBAL_CONTAINER_VECTOR_THEAD(T, Allocator)
 		KERBAL_CONSTEXPR20
 		void vector<T, Allocator>::assign(vector && src)
 				KERBAL_CONDITIONAL_NOEXCEPT(
@@ -343,7 +349,7 @@ namespace kerbal
 
 #	if __cplusplus >= 201103L
 
-		template <typename T, typename Allocator>
+		KERBAL_CONTAINER_VECTOR_THEAD(T, Allocator)
 		KERBAL_CONSTEXPR20
 		void vector<T, Allocator>::assign(std::initializer_list<value_type> ilist)
 		{
@@ -352,13 +358,13 @@ namespace kerbal
 
 #	else
 
-		template <typename T, typename Allocator>
+		KERBAL_CONTAINER_VECTOR_THEAD(T, Allocator)
 		void vector<T, Allocator>::assign(const kerbal::assign::assign_list<void> & ilist)
 		{
 			this->clear();
 		}
 
-		template <typename T, typename Allocator>
+		KERBAL_CONTAINER_VECTOR_THEAD(T, Allocator)
 		template <typename U>
 		void vector<T, Allocator>::assign(const kerbal::assign::assign_list<U> & ilist)
 		{
@@ -372,14 +378,14 @@ namespace kerbal
 	//===================
 	// capacity
 
-		template <typename T, typename Allocator>
+		KERBAL_CONTAINER_VECTOR_THEAD(T, Allocator)
 		KERBAL_CONSTEXPR20
 		void vector<T, Allocator>::reserve(size_type new_capacity)
 		{
 			vector_type_only::k_reserve_using_allocator(this->alloc(), new_capacity);
 		}
 
-		template <typename T, typename Allocator>
+		KERBAL_CONTAINER_VECTOR_THEAD(T, Allocator)
 		KERBAL_CONSTEXPR20
 		void vector<T, Allocator>::shrink_to_fit()
 		{
@@ -392,8 +398,9 @@ namespace kerbal
 
 #	if __cplusplus >= 201103L
 
-		template <typename T, typename Allocator>
+		KERBAL_CONTAINER_VECTOR_THEAD(T, Allocator)
 		template <typename ... Args>
+				KERBAL_REQUIRES((vector_emplace_able<T, Args...>))
 		KERBAL_CONSTEXPR20
 		typename vector<T, Allocator>::iterator
 		vector<T, Allocator>::emplace(const_iterator pos, Args&& ... args)
@@ -410,7 +417,7 @@ namespace kerbal
 #	define ARGS_DECL(i) const KERBAL_MACRO_CONCAT(Arg, i) & KERBAL_MACRO_CONCAT(arg, i)
 #	define ARGS_USE(i) KERBAL_MACRO_CONCAT(arg, i)
 #	define FBODY(i) \
-		template <typename T, typename Allocator> \
+		KERBAL_CONTAINER_VECTOR_THEAD(T, Allocator) \
 		KERBAL_OPT_PPEXPAND_WITH_COMMA_N(THEAD_NOT_EMPTY, EMPTY, TARGS_DECL, i) \
 		typename vector<T, Allocator>::iterator \
 		vector<T, Allocator>::emplace(const_iterator pos KERBAL_OPT_PPEXPAND_WITH_COMMA_N(LEFT_JOIN_COMMA, EMPTY, ARGS_DECL, i)) \
@@ -431,7 +438,7 @@ namespace kerbal
 
 #	endif
 
-		template <typename T, typename Allocator>
+		KERBAL_CONTAINER_VECTOR_THEAD(T, Allocator)
 		KERBAL_CONSTEXPR20
 		typename vector<T, Allocator>::iterator
 		vector<T, Allocator>::insert(const_iterator pos, const_reference val)
@@ -441,7 +448,7 @@ namespace kerbal
 
 #	if __cplusplus >= 201103L
 
-		template <typename T, typename Allocator>
+		KERBAL_CONTAINER_VECTOR_THEAD(T, Allocator)
 		KERBAL_CONSTEXPR20
 		typename vector<T, Allocator>::iterator
 		vector<T, Allocator>::insert(const_iterator pos, rvalue_reference val)
@@ -451,7 +458,7 @@ namespace kerbal
 
 #	endif
 
-		template <typename T, typename Allocator>
+		KERBAL_CONTAINER_VECTOR_THEAD(T, Allocator)
 		KERBAL_CONSTEXPR20
 		typename vector<T, Allocator>::iterator
 		vector<T, Allocator>::insert(const_iterator pos, size_type n, const_reference val)
@@ -459,7 +466,7 @@ namespace kerbal
 			return vector_type_only::k_insert_using_allocator(this->alloc(), pos, n, val);
 		}
 
-		template <typename T, typename Allocator>
+		KERBAL_CONTAINER_VECTOR_THEAD(T, Allocator)
 		template <typename InputIterator>
 		KERBAL_CONSTEXPR20
 		typename kerbal::type_traits::enable_if<
@@ -473,7 +480,7 @@ namespace kerbal
 
 #		if __cplusplus >= 201103L
 
-		template <typename T, typename Allocator>
+		KERBAL_CONTAINER_VECTOR_THEAD(T, Allocator)
 		KERBAL_CONSTEXPR20
 		typename vector<T, Allocator>::iterator
 		vector<T, Allocator>::insert(const_iterator pos, std::initializer_list<value_type> ilist)
@@ -483,14 +490,14 @@ namespace kerbal
 
 #		else
 
-		template <typename T, typename Allocator>
+		KERBAL_CONTAINER_VECTOR_THEAD(T, Allocator)
 		typename vector<T, Allocator>::iterator
 		vector<T, Allocator>::insert(const_iterator pos, const kerbal::assign::assign_list<void> & ilist)
 		{
 			return pos.cast_to_mutable();
 		}
 
-		template <typename T, typename Allocator>
+		KERBAL_CONTAINER_VECTOR_THEAD(T, Allocator)
 		template <typename U>
 		typename vector<T, Allocator>::iterator
 		vector<T, Allocator>::insert(const_iterator pos, const kerbal::assign::assign_list<U> & ilist)
@@ -504,8 +511,9 @@ namespace kerbal
 
 #	if __cplusplus >= 201103L
 
-		template <typename T, typename Allocator>
+		KERBAL_CONTAINER_VECTOR_THEAD(T, Allocator)
 		template <typename ... Args>
+				KERBAL_REQUIRES((vector_emplace_back_able<T, Args...>))
 		KERBAL_CONSTEXPR20
 		typename vector<T, Allocator>::reference
 		vector<T, Allocator>::emplace_back(Args&& ... args)
@@ -523,7 +531,7 @@ namespace kerbal
 #	define ARGS_DECL(i) const KERBAL_MACRO_CONCAT(Arg, i) & KERBAL_MACRO_CONCAT(arg, i)
 #	define ARGS_USE(i) KERBAL_MACRO_CONCAT(arg, i)
 #	define FBODY(i) \
-		template <typename T, typename Allocator> \
+		KERBAL_CONTAINER_VECTOR_THEAD(T, Allocator) \
 		KERBAL_OPT_PPEXPAND_WITH_COMMA_N(THEAD_NOT_EMPTY, EMPTY, TARGS_DECL, i) \
 		typename vector<T, Allocator>::reference \
 		vector<T, Allocator>::emplace_back(KERBAL_OPT_PPEXPAND_WITH_COMMA_N(REMAINF, EMPTY, ARGS_DECL, i)) \
@@ -545,7 +553,7 @@ namespace kerbal
 
 #	endif
 
-		template <typename T, typename Allocator>
+		KERBAL_CONTAINER_VECTOR_THEAD(T, Allocator)
 		KERBAL_CONSTEXPR20
 		void vector<T, Allocator>::push_back(const_reference src)
 		{
@@ -554,7 +562,7 @@ namespace kerbal
 
 #	if __cplusplus >= 201103L
 
-		template <typename T, typename Allocator>
+		KERBAL_CONTAINER_VECTOR_THEAD(T, Allocator)
 		KERBAL_CONSTEXPR20
 		void vector<T, Allocator>::push_back(rvalue_reference src)
 		{
@@ -567,7 +575,7 @@ namespace kerbal
 	//===================
 	// erase
 
-		template <typename T, typename Allocator>
+		KERBAL_CONTAINER_VECTOR_THEAD(T, Allocator)
 		KERBAL_CONSTEXPR20
 		typename vector<T, Allocator>::iterator
 		vector<T, Allocator>::erase(const_iterator pos)
@@ -575,7 +583,7 @@ namespace kerbal
 			return vector_type_only::k_erase_using_allocator(this->alloc(), pos);
 		}
 
-		template <typename T, typename Allocator>
+		KERBAL_CONTAINER_VECTOR_THEAD(T, Allocator)
 		KERBAL_CONSTEXPR20
 		typename vector<T, Allocator>::iterator
 		vector<T, Allocator>::erase(const_iterator first, const_iterator last)
@@ -583,14 +591,14 @@ namespace kerbal
 			return vector_type_only::k_erase_using_allocator(this->alloc(), first, last);
 		}
 
-		template <typename T, typename Allocator>
+		KERBAL_CONTAINER_VECTOR_THEAD(T, Allocator)
 		KERBAL_CONSTEXPR20
 		void vector<T, Allocator>::pop_back() KERBAL_NOEXCEPT
 		{
 			vector_type_only::k_pop_back_using_allocator(this->alloc());
 		}
 
-		template <typename T, typename Allocator>
+		KERBAL_CONTAINER_VECTOR_THEAD(T, Allocator)
 		KERBAL_CONSTEXPR20
 		void vector<T, Allocator>::clear() KERBAL_NOEXCEPT
 		{
@@ -601,21 +609,21 @@ namespace kerbal
 	//===================
 	// operation
 
-		template <typename T, typename Allocator>
+		KERBAL_CONTAINER_VECTOR_THEAD(T, Allocator)
 		KERBAL_CONSTEXPR20
 		void vector<T, Allocator>::resize(size_type new_size)
 		{
 			vector_type_only::k_resize_using_allocator(this->alloc(), new_size);
 		}
 
-		template <typename T, typename Allocator>
+		KERBAL_CONTAINER_VECTOR_THEAD(T, Allocator)
 		KERBAL_CONSTEXPR20
 		void vector<T, Allocator>::resize(size_type new_size, const_reference value)
 		{
 			vector_type_only::k_resize_using_allocator(this->alloc(), new_size, value);
 		}
 
-		template <typename T, typename Allocator>
+		KERBAL_CONTAINER_VECTOR_THEAD(T, Allocator)
 		KERBAL_CONSTEXPR20
 		void vector<T, Allocator>::swap(vector & with)
 				KERBAL_CONDITIONAL_NOEXCEPT(
