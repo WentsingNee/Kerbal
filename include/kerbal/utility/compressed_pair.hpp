@@ -401,16 +401,16 @@ namespace kerbal
 					return super0::member();
 				}
 
-				KERBAL_CONSTEXPR
-				first_type_const_reference first() KERBAL_CONST_REFERENCE_OVERLOAD_TAG KERBAL_NOEXCEPT
-				{
-					return super0::member();
-				}
-
 				KERBAL_CONSTEXPR14
 				second_type_reference second() KERBAL_REFERENCE_OVERLOAD_TAG KERBAL_NOEXCEPT
 				{
 					return super1::member();
+				}
+
+				KERBAL_CONSTEXPR
+				first_type_const_reference first() KERBAL_CONST_REFERENCE_OVERLOAD_TAG KERBAL_NOEXCEPT
+				{
+					return super0::member();
 				}
 
 				KERBAL_CONSTEXPR
@@ -427,16 +427,18 @@ namespace kerbal
 					return kerbal::compatibility::move(*this).super0::member();
 				}
 
-				KERBAL_CONSTEXPR
-				first_type_const_rvalue_reference first() const && KERBAL_NOEXCEPT
-				{
-					return kerbal::compatibility::move(*this).super0::member();
-				}
-
 				KERBAL_CONSTEXPR14
 				second_type_rvalue_reference second() && KERBAL_NOEXCEPT
 				{
 					return kerbal::compatibility::move(*this).super1::member();
+				}
+
+#			if KERBAL_HAS_CONST_RVALUE_REFERENCE_MEMBER_SUPPORT
+
+				KERBAL_CONSTEXPR
+				first_type_const_rvalue_reference first() const && KERBAL_NOEXCEPT
+				{
+					return kerbal::compatibility::move(*this).super0::member();
 				}
 
 				KERBAL_CONSTEXPR
@@ -444,6 +446,8 @@ namespace kerbal
 				{
 					return kerbal::compatibility::move(*this).super1::member();
 				}
+
+#			endif
 
 #		endif
 

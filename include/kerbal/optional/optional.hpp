@@ -704,6 +704,8 @@ namespace kerbal
 					return kerbal::compatibility::move(*this).ignored_get();
 				}
 
+#			if KERBAL_HAS_CONST_RVALUE_REFERENCE_MEMBER_SUPPORT
+
 				KERBAL_CONSTEXPR20
 				const_rvalue_reference value() const &&
 				{
@@ -713,17 +715,23 @@ namespace kerbal
 					return kerbal::compatibility::move(*this).ignored_get();
 				}
 
+#			endif
+
 				KERBAL_CONSTEXPR14
 				rvalue_reference ignored_get() && noexcept
 				{
-					return kerbal::compatibility::move(*this).k_storage.raw_value();
+					return kerbal::compatibility::move(this->k_storage).raw_value(); // compat with gcc4.8
 				}
+
+#			if KERBAL_HAS_CONST_RVALUE_REFERENCE_MEMBER_SUPPORT
 
 				KERBAL_CONSTEXPR
 				const_rvalue_reference ignored_get() const && noexcept
 				{
-					return kerbal::compatibility::move(*this).k_storage.raw_value();
+					return kerbal::compatibility::move(this->k_storage).raw_value();
 				}
+
+#			endif
 
 				KERBAL_CONSTEXPR14
 				rvalue_reference operator*() && noexcept
@@ -731,11 +739,15 @@ namespace kerbal
 					return kerbal::compatibility::move(*this).ignored_get();
 				}
 
+#			if KERBAL_HAS_CONST_RVALUE_REFERENCE_MEMBER_SUPPORT
+
 				KERBAL_CONSTEXPR
 				const_rvalue_reference operator*() const && noexcept
 				{
 					return kerbal::compatibility::move(*this).ignored_get();
 				}
+
+#			endif
 
 #			endif
 
