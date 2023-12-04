@@ -23,6 +23,7 @@
 #endif
 
 
+#include <kerbal/type_traits/is_assignable.hpp>
 #include <kerbal/type_traits/tribool_constant.hpp>
 
 
@@ -33,7 +34,11 @@ namespace kerbal
 	{
 
 		template <typename T, typename U>
-		struct try_test_is_nothrow_assignable : kerbal::type_traits::tribool_unspecified
+		struct try_test_is_nothrow_assignable :
+				kerbal::type_traits::tribool_conjunction<
+					kerbal::type_traits::try_test_is_assignable<T, U>,
+					kerbal::type_traits::tribool_unspecified
+				>::result
 		{
 		};
 

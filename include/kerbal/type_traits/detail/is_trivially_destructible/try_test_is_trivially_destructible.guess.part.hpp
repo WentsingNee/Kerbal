@@ -57,6 +57,7 @@ namespace kerbal
 
 		} // namespace detail
 
+
 		template <typename T>
 		struct try_test_is_trivially_destructible :
 				kerbal::type_traits::tribool_conjunction<
@@ -67,7 +68,6 @@ namespace kerbal
 				>::result
 		{
 		};
-
 
 	} // namespace type_traits
 

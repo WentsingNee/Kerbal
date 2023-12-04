@@ -23,16 +23,11 @@
 #endif
 
 
-#include <kerbal/type_traits/conditional.hpp>
-#include <kerbal/type_traits/is_array.hpp>
-#include <kerbal/type_traits/is_const.hpp>
+#include <kerbal/type_traits/is_copy_assignable.hpp>
 #include <kerbal/type_traits/is_enum.hpp>
-#include <kerbal/type_traits/is_function.hpp>
 #include <kerbal/type_traits/is_fundamental.hpp>
 #include <kerbal/type_traits/is_member_pointer.hpp>
 #include <kerbal/type_traits/is_pointer.hpp>
-#include <kerbal/type_traits/is_void.hpp>
-#include <kerbal/type_traits/logical.hpp>
 #include <kerbal/type_traits/remove_reference.hpp>
 #include <kerbal/type_traits/tribool_constant.hpp>
 
@@ -63,18 +58,12 @@ namespace kerbal
 
 		template <typename T>
 		struct try_test_is_nothrow_copy_assignable :
-				kerbal::type_traits::conditional<
-					kerbal::type_traits::disjunction<
-						kerbal::type_traits::is_array<T>,
-						kerbal::type_traits::is_const<typename kerbal::type_traits::remove_reference<T>::type>,
-						kerbal::type_traits::is_function<T>,
-						kerbal::type_traits::is_void<T>
-					>::value,
-					kerbal::type_traits::tribool_false,
+				kerbal::type_traits::tribool_conjunction<
+					kerbal::type_traits::try_test_is_copy_assignable<T>,
 					kerbal::type_traits::detail::try_test_is_nothrow_copy_assignable_helper<
 						typename kerbal::type_traits::remove_reference<T>::type
 					>
-				>::type
+				>::result
 		{
 		};
 
