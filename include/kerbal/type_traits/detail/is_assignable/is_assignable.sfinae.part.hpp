@@ -19,10 +19,16 @@
 #if KERBAL_COMPILER_ID != KERBAL_COMPILER_ID_MSVC || __cplusplus >= 201103L
 
 #include <kerbal/type_traits/integral_constant.hpp>
-#include <kerbal/type_traits/is_reference.hpp>
-#include <kerbal/type_traits/logical.hpp>
 #include <kerbal/type_traits/yes_no_type.hpp>
-#include <kerbal/utility/declval.hpp>
+
+#if __cplusplus >= 201103L
+#	include <kerbal/type_traits/add_rvalue_reference.hpp>
+#else
+#	include <kerbal/type_traits/add_lvalue_reference.hpp>
+#	include <kerbal/type_traits/is_array.hpp>
+#	include <kerbal/type_traits/is_function.hpp>
+#	include <kerbal/type_traits/is_reference.hpp>
+#endif
 
 #include <cstddef>
 
@@ -36,10 +42,54 @@ namespace kerbal
 		namespace detail
 		{
 
+#	if __cplusplus >= 201103L
+
+			template <typename T>
+			struct is_assignable_compat_declval
+			{
+					static
+					typename kerbal::type_traits::add_rvalue_reference<T>::type
+					decl();
+			};
+
+#	else
+			// under C++98, return type of kerbal::utility::declval<T>() will be added with lvalue reference
+
+			template <typename T, bool>
+			struct is_assignable_compat_declval_helper;
+
+			template <typename T>
+			struct is_assignable_compat_declval_helper<T, false>
+			{
+					static T decl();
+			};
+
+			template <typename T>
+			struct is_assignable_compat_declval_helper<T, true>
+			{
+					static
+					typename kerbal::type_traits::add_lvalue_reference<T>::type
+					decl();
+			};
+
+			template <typename T>
+			struct is_assignable_compat_declval :
+					is_assignable_compat_declval_helper<
+						T,
+						kerbal::type_traits::is_array<T>::value ||
+						kerbal::type_traits::is_function<T>::value ||
+						kerbal::type_traits::is_reference<T>::value
+					>
+			{
+			};
+
+#	endif
+
 			template <typename T, typename U>
 			struct is_assignable_helper
 			{
 				private:
+
 					template <typename T2, typename U2>
 					static kerbal::type_traits::no_type test(...);
 
@@ -47,7 +97,7 @@ namespace kerbal
 
 					template <typename T2, typename U2>
 					static kerbal::type_traits::yes_type test(char(*)[sizeof(
-							kerbal::utility::declval<T2>() = kerbal::utility::declval<U2>(),
+							is_assignable_compat_declval<T2>::decl() = is_assignable_compat_declval<U2>::decl(),
 							0
 					)]);
 
@@ -55,7 +105,7 @@ namespace kerbal
 
 					template <typename T2, typename U2>
 					static kerbal::type_traits::yes_type test(char *, decltype(
-							kerbal::utility::declval<T2>() = kerbal::utility::declval<U2>(),
+							is_assignable_compat_declval<T2>::decl() = is_assignable_compat_declval<U2>::decl(),
 							0
 					) = 0);
 
@@ -71,10 +121,7 @@ namespace kerbal
 
 		template <typename T, typename U>
 		struct is_assignable :
-				kerbal::type_traits::conjunction<
-					kerbal::type_traits::is_reference<T>,
-					typename kerbal::type_traits::detail::is_assignable_helper<T, U>::type
-				>
+				kerbal::type_traits::detail::is_assignable_helper<T, U>::type
 		{
 		};
 
