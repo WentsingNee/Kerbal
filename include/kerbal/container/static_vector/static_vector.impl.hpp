@@ -1119,7 +1119,7 @@ namespace kerbal
 				// construct at the end
 				// A A A 1 2 3 4 5 6
 				// A A A 1 2 3 4 5 6 5 6
-				kerbal::memory::raw_storage_uninitialized_copy(this->cend() - n, this->cend(), this->end().current);
+				kerbal::memory::raw_storage_uninitialized_move(this->end() - n, this->end(), this->end().current);
 				this->len = static_cast<size_compressed_type>(new_size);
 
 				// A A A 1 2 3 4 5 6
@@ -1133,7 +1133,7 @@ namespace kerbal
 				// A A A 1 2 3
 				// A A A X X X X X 1 2 3
 
-				kerbal::memory::raw_storage_uninitialized_copy(pos, this->cend(), pos_mut.current + n);
+				kerbal::memory::raw_storage_uninitialized_move(pos.cast_to_mutable(), this->end(), pos_mut.current + n);
 
 #		if KERBAL_HAS_EXCEPTIONS_SUPPORT
 				try {
