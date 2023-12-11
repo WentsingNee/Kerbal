@@ -32,7 +32,7 @@ C++ 模板库, 具有：
 | [compatibility](include/kerbal/compatibility/) | 为兼容性提供的宏                                                                          |
 | [config](include/kerbal/config/)               | 架构, 编译器, 系统平台, 标准库环境检测                                                            |
 | [container](include/kerbal/container/)         | `array`, `vector`, `static_vector`, `list`, `forward_list`, `priority_queue`, ... |
-| [function](include/kerbal/function/)           | `function_traits`, `invoke` 等                                                     |
+| [function](include/kerbal/function/)           | `function`, `function_traits`, `invoke`, `invoke_r` 等                             |
 | [hash](include/kerbal/hash/)                   | 哈希支持                                                                              |
 | [iterator](include/kerbal/iterator/)           | 迭代器支持                                                                             |
 | [macro](include/kerbal/macro/)                 | 宏设施                                                                               |
