@@ -12,11 +12,20 @@
 #ifndef KERBAL_RANDOM_SUBTRACT_WITH_CARRY_ENGINE_HPP
 #define KERBAL_RANDOM_SUBTRACT_WITH_CARRY_ENGINE_HPP
 
+#include <kerbal/compatibility/constexpr.hpp>
+#include <kerbal/compatibility/noexcept.hpp>
+#include <kerbal/compatibility/static_assert.hpp>
 #include <kerbal/compatibility/fixed_width_integer.hpp>
+#include <kerbal/iterator/iterator_traits.hpp>
+#include <kerbal/numeric/numeric_limits.hpp>
+#include <kerbal/random/discard_block_engine.hpp>
 #include <kerbal/random/linear_congruential_engine.hpp>
 #include <kerbal/type_traits/integral_constant.hpp>
+#include <kerbal/type_traits/is_same.hpp>
+#include <kerbal/type_traits/size_compressed_type.hpp>
 
 #include <cstddef>
+
 
 namespace kerbal
 {
@@ -27,6 +36,25 @@ namespace kerbal
 		template <typename UIntType, std::size_t W, std::size_t S, std::size_t R>
 		class subtract_with_carry_engine
 		{
+			private:
+				KERBAL_STATIC_ASSERT((
+					kerbal::type_traits::is_same<UIntType, unsigned short>::value ||
+					kerbal::type_traits::is_same<UIntType, unsigned int>::value ||
+					kerbal::type_traits::is_same<UIntType, unsigned long>::value ||
+					kerbal::type_traits::is_same<UIntType, unsigned long long>::value),
+					"The result type generated should be one of: unsigned short, unsigned int, unsigned long, or unsigned long long"
+				);
+
+				KERBAL_STATIC_ASSERT(
+					10 < W <= kerbal::numeric::numeric_limits<UIntType>::DIGITS::value,
+					"W should match the requirement: 10 < W <= kerbal::numeric::numeric_limits<UIntType>::DIGITS::value"
+				);
+
+				KERBAL_STATIC_ASSERT(
+					0 < S && S < R,
+					"S and R should match the requirement: 0 < S < R"
+				);
+
 			public:
 				typedef UIntType result_type;
 
@@ -37,40 +65,112 @@ namespace kerbal
 				typedef kerbal::type_traits::integral_constant<result_type, 19780503u> DEFAULT_SEED;
 
 			private:
-				result_type _K_state[LONG_LAG::value];
-				result_type _K_carry;
-				std::size_t _K_index;
+				typedef kerbal::type_traits::integral_constant<result_type, 1ull << W> m;
+				typedef typename kerbal::type_traits::size_compressed_type<LONG_LAG::value>::type	index_type;
+
+			private:
+				result_type k_state[LONG_LAG::value];
+				index_type k_index;
+				unsigned char k_carry;
 
 			public:
+				KERBAL_CONSTEXPR14
 				explicit
-				subtract_with_carry_engine(result_type seed = DEFAULT_SEED::value)
+				subtract_with_carry_engine(result_type seed = DEFAULT_SEED::value) KERBAL_NOEXCEPT
+				{
+					this->seed(seed);
+				}
+
+				KERBAL_CONSTEXPR14
+				result_type operator()() KERBAL_NOEXCEPT
+				{
+					result_type x_s = k_state[k_index >= S ? k_index - S : k_index + R - S]; // k_state[(k_index - S) % R]
+					result_type x_r = k_state[k_index];
+					result_type y = x_s - x_r - k_carry;
+					result_type r = y % m::value;
+					k_state[k_index] = r;
+					++k_index;
+					if (k_index == LONG_LAG::value) {
+						k_index = 0;
+					}
+					k_carry = x_s < (x_r + k_carry);
+					return r;
+				}
+
+				KERBAL_CONSTEXPR14
+				void discard(unsigned long long n) KERBAL_NOEXCEPT
+				{
+					while (n != 0) {
+						--n;
+						(*this)();
+					}
+				}
+
+				KERBAL_CONSTEXPR14
+				void seed(const result_type & seed = DEFAULT_SEED::value) KERBAL_NOEXCEPT
 				{
 					kerbal::random::linear_congruential_engine<result_type, 40014u, 0u, 2147483563u>
 							lcg(seed == 0u ? DEFAULT_SEED::value : seed);
 
-					const std::size_t __n = (WORD_SIZE::value + 31) / 32;
+					typedef kerbal::type_traits::integral_constant<std::size_t, (WORD_SIZE::value + 31) / 32> N;
 
 					for (std::size_t i = 0; i < LONG_LAG::value; ++i) {
-						result_type sum = 0u;
+						result_type sum = lcg() % m::value;
 						result_type factor = 1u;
-						for (std::size_t j = 0; j < __n; ++j) {
-							sum += lcg() * factor;
-//							sum += __detail::__mod<uint_least32_t,
-//									__detail::_Shift<uint_least32_t, 32>::__value>
-//											 (lcg()) * factor;
-							factor *= __detail::_Shift<_UIntType, 32>::__value;
+						for (std::size_t j = 1; j < N::value; ++j) {
+							factor = detail::static_mul_mod<result_type, (1ull << 32) % m::value, m::value>::cacl(factor);
+							sum = detail::add_mod<result_type, m::value>::cacl(
+								sum,
+								detail::partial_static_mul_mod<result_type, m::value>::cacl(lcg(), factor)
+							);
 						}
-						_K_state[i] = __detail::__mod<_UIntType,
-								__detail::_Shift<_UIntType, WORD_SIZE::value>::__value>(sum);
+						k_state[i] = sum;
 					}
-					_K_carry = (_K_state[LONG_LAG::value - 1] == 0) ? 1 : 0;
-					_K_index = 0;
+					k_carry = (k_state[LONG_LAG::value - 1] == 0) ? 1 : 0;
+					k_index = 0;
+				}
+
+				template <typename OutputIterator>
+				KERBAL_CONSTEXPR14
+				void generate(OutputIterator first, OutputIterator last)
+				{
+					while (first != last) {
+						*first = (*this)();
+						++first;
+					}
+				}
+
+				template <typename OutputIterator>
+				KERBAL_CONSTEXPR14
+				OutputIterator generate_n(OutputIterator first, typename kerbal::iterator::iterator_traits<OutputIterator>::difference_type n)
+				{
+					while (n != 0) {
+						--n;
+						*first = (*this)();
+						++first;
+					}
+					return first;
+				}
+
+				KERBAL_CONSTEXPR
+				static result_type min() KERBAL_NOEXCEPT
+				{
+					return 0;
+				}
+
+				KERBAL_CONSTEXPR
+				static result_type max() KERBAL_NOEXCEPT
+				{
+					return m::value - 1u;
 				}
 
 		};
 
-		typedef kerbal::random::subtract_with_carry_engine<kerbal::compatibility::uint32_t , 24, 10, 24> ranlux24_base;
+		typedef kerbal::random::subtract_with_carry_engine<kerbal::compatibility::uint32_t, 24, 10, 24> ranlux24_base;
 		typedef kerbal::random::subtract_with_carry_engine<kerbal::compatibility::uint64_t, 48, 5, 12> ranlux48_base;
+
+		typedef kerbal::random::discard_block_engine<kerbal::random::ranlux24_base, 223, 23> ranlux24;
+		typedef kerbal::random::discard_block_engine<kerbal::random::ranlux48_base, 389, 11> ranlux48;
 
 	} // namespace random
 
