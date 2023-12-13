@@ -16,13 +16,8 @@
 #include <kerbal/compatibility/fixed_width_integer.hpp>
 #include <kerbal/compatibility/noexcept.hpp>
 #include <kerbal/random/linear_congruential_engine.hpp>
-#include <kerbal/type_traits/integral_constant.hpp>
+#include <kerbal/type_traits/is_nothrow_constructible.hpp>
 #include <kerbal/utility/declval.hpp>
-
-#if __cplusplus >= 201103L
-#	include <random>
-#	include <type_traits>
-#endif
 
 
 namespace kerbal
@@ -40,53 +35,53 @@ namespace kerbal
 			public:
 				typedef kerbal::compatibility::uint32_t result_type;
 
-				rand48_base _K_base_eg;
+				rand48_base k_base_eg;
 
 			public:
 
 				KERBAL_CONSTEXPR
 				rand48()
 						KERBAL_CONDITIONAL_NOEXCEPT((
-								std::is_nothrow_constructible<rand48_base, result_type>::value
+							kerbal::type_traits::is_nothrow_constructible<rand48_base, result_type>::value
 						)) :
-						_K_base_eg((1 << 16) | 0x330e)
+						k_base_eg((1 << 16) | 0x330e)
 				{
 				}
 
 				KERBAL_CONSTEXPR
 				explicit rand48(result_type seed)
 						KERBAL_CONDITIONAL_NOEXCEPT((
-								std::is_nothrow_constructible<rand48_base, result_type>::value
+							kerbal::type_traits::is_nothrow_constructible<rand48_base, result_type>::value
 						)) :
-						_K_base_eg((seed << 16) | 0x330e)
+						k_base_eg((seed << 16) | 0x330e)
 				{
 				}
 
 				KERBAL_CONSTEXPR14
 				void seed(result_type seed)
 						KERBAL_CONDITIONAL_NOEXCEPT(
-								noexcept(_K_base_eg.seed(seed))
+							noexcept(k_base_eg.seed(seed))
 						)
 				{
-					_K_base_eg.seed((seed << 16) | 0x330e);
+					k_base_eg.seed((seed << 16) | 0x330e);
 				}
 
 				KERBAL_CONSTEXPR14
 				result_type operator()()
 						KERBAL_CONDITIONAL_NOEXCEPT(
-							noexcept(_K_base_eg())
+							noexcept(k_base_eg())
 						)
 				{
-					return static_cast<result_type>(_K_base_eg() >> 17);
+					return static_cast<result_type>(k_base_eg() >> 17);
 				}
 
 				KERBAL_CONSTEXPR14
 				void discard(unsigned long long times)
 						KERBAL_CONDITIONAL_NOEXCEPT(
-								noexcept(_K_base_eg.discard(times))
+							noexcept(k_base_eg.discard(times))
 						)
 				{
-					_K_base_eg.discard(times);
+					k_base_eg.discard(times);
 				}
 
 				KERBAL_CONSTEXPR
@@ -104,19 +99,19 @@ namespace kerbal
 				KERBAL_CONSTEXPR
 				bool operator==(const rand48 & rhs) const
 						KERBAL_CONDITIONAL_NOEXCEPT(
-								noexcept(kerbal::utility::declval<rand48_base>() == kerbal::utility::declval<rand48_base>())
+							noexcept(kerbal::utility::declval<rand48_base>() == kerbal::utility::declval<rand48_base>())
 						)
 				{
-					return this->_K_base_eg == rhs._K_base_eg;
+					return this->k_base_eg == rhs.k_base_eg;
 				}
 
 				KERBAL_CONSTEXPR
 				bool operator!=(const rand48 & rhs) const
 						KERBAL_CONDITIONAL_NOEXCEPT(
-								noexcept(kerbal::utility::declval<rand48_base>() != kerbal::utility::declval<rand48_base>())
+							noexcept(kerbal::utility::declval<rand48_base>() != kerbal::utility::declval<rand48_base>())
 						)
 				{
-					return this->_K_base_eg != rhs._K_base_eg;
+					return this->k_base_eg != rhs.k_base_eg;
 				}
 
 		};
