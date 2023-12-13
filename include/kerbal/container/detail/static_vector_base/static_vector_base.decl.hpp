@@ -17,10 +17,9 @@
 #include <kerbal/iterator/iterator_traits.hpp>
 #include <kerbal/memory/raw_storage.hpp>
 #include <kerbal/memory/raw_storage_uninitialized.hpp>
-#include <kerbal/numeric/numeric_limits.hpp>
-#include <kerbal/type_traits/conditional.hpp>
 #include <kerbal/type_traits/enable_if.hpp>
 #include <kerbal/type_traits/is_trivially_destructible.hpp>
+#include <kerbal/type_traits/size_compressed_type.hpp>
 #include <kerbal/type_traits/tribool_constant.hpp>
 
 #include <cstddef>
@@ -36,21 +35,6 @@ namespace kerbal
 
 		namespace detail
 		{
-
-			template <std::size_t N>
-			struct static_vector_size_compressed_type_def_helper
-			{
-					typedef typename
-					kerbal::type_traits::conditional<
-							N <= kerbal::numeric::numeric_limits<unsigned short>::MAX::value,
-							unsigned short,
-							typename kerbal::type_traits::conditional<
-									N <= kerbal::numeric::numeric_limits<unsigned int>::MAX::value,
-									unsigned int,
-									std::size_t
-							>::type
-					>::type type;
-			};
 
 			template <typename Tp, std::size_t N>
 			class static_vector_base
@@ -75,7 +59,7 @@ namespace kerbal
 					typedef detail::sv_kiter<value_type>				const_iterator;
 
 				protected:
-					typedef typename static_vector_size_compressed_type_def_helper<N>::type	size_compressed_type;
+					typedef typename kerbal::type_traits::size_compressed_type<N>::type	size_compressed_type;
 					typedef kerbal::memory::raw_storage<value_type> storage_type;
 
 				protected:
