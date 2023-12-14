@@ -17,6 +17,7 @@
 #include <kerbal/algorithm/modifier/copy.hpp>
 #include <kerbal/algorithm/modifier/copy_backward.hpp>
 #include <kerbal/algorithm/swap.hpp>
+#include <kerbal/compare/minmax.hpp>
 #include <kerbal/compatibility/constexpr.hpp>
 #include <kerbal/compatibility/namespace_std_scope.hpp>
 #include <kerbal/compatibility/noexcept.hpp>
@@ -180,7 +181,7 @@ namespace kerbal
 				KERBAL_CONSTEXPR14
 				void for_each(size_type left, size_type len, Func f) const
 				{
-					size_type right = (SIZE::value - left < len) ? SIZE::value : (left + len);
+					size_type right = kerbal::compare::min(SIZE::value, left + len);
 					for (size_type i = left; i < right; ++i) {
 						f(i, this->test(i));
 					}

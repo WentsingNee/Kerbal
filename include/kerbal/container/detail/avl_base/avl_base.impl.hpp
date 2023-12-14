@@ -14,6 +14,7 @@
 
 #include <kerbal/container/detail/avl_base/avl_base.decl.hpp>
 
+#include <kerbal/compare/minmax.hpp>
 #include <kerbal/compatibility/constexpr.hpp>
 #include <kerbal/compatibility/move.hpp>
 #include <kerbal/compatibility/noexcept.hpp>
@@ -115,7 +116,7 @@ namespace kerbal
 					node_base * p_base = p_head->as_node_base();
 					node_base::height_t height_of_left = node_base::height_of(p_base->left);
 					node_base::height_t height_of_right = node_base::height_of(p_base->right);
-					node_base::height_t new_height = 1 + (height_of_left > height_of_right ? height_of_left : height_of_right);
+					node_base::height_t new_height = 1 + kerbal::compare::max(height_of_left, height_of_right);
 					if (p_base->height == new_height) {
 						break;
 					}
@@ -2393,7 +2394,7 @@ namespace kerbal
 					return AVL_NORMAL_RESULT_NOT_BALANCED;
 				}
 
-				height = 1 + (lheight > rheight ? lheight : rheight);
+				height = 1 + kerbal::compare::max(lheight, rheight);
 				if (height != p->height) {
 					return AVL_NORMAL_RESULT_DEPTH_CACHED_WRONG;
 				}

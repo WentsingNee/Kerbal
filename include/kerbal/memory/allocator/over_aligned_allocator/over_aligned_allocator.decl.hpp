@@ -18,6 +18,7 @@
 #include <kerbal/memory/allocator/malloc_allocator/malloc_allocator.decl.hpp>
 
 #include <kerbal/algorithm/swap.hpp>
+#include <kerbal/compare/minmax.hpp>
 #include <kerbal/compatibility/constexpr.hpp>
 #include <kerbal/compatibility/namespace_std_scope.hpp>
 #include <kerbal/compatibility/noexcept.hpp>
@@ -230,8 +231,10 @@ namespace kerbal
 				KERBAL_CONSTEXPR14
 				size_type minimum_alignment() const KERBAL_NOEXCEPT
 				{
-					size_type super_ma = super_allocator_traits::minimum_alignment(void_alloc());
-					return super_ma > KERBAL_ALIGNOF(value_type) ? super_ma : KERBAL_ALIGNOF(value_type);
+					return kerbal::compare::max(
+						super_allocator_traits::minimum_alignment(void_alloc()),
+						KERBAL_ALIGNOF(value_type)
+					);
 				}
 
 				typedef kerbal::type_traits::integral_constant<

@@ -14,6 +14,7 @@
 
 #include <kerbal/container/detail/avl_base/avl_base.fwd.hpp>
 
+#include <kerbal/compare/minmax.hpp>
 #include <kerbal/compatibility/constexpr.hpp>
 #include <kerbal/compatibility/is_constant_evaluated.hpp>
 #include <kerbal/compatibility/method_overload_tag.hpp>
@@ -293,7 +294,7 @@ namespace kerbal
 					KERBAL_CONSTEXPR14
 					void update_height(height_t hl, height_t hr) KERBAL_NOEXCEPT
 					{
-						this->height = 1 + (hl > hr ? hl : hr);
+						this->height = 1 + kerbal::compare::max(hl, hr);
 					}
 
 					KERBAL_CONSTEXPR14
