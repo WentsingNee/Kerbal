@@ -48,7 +48,7 @@ namespace kerbal
 		{
 
 			template <typename R>
-			struct task_base;
+			class task_base;
 
 
 			template <typename Pack, typename IndexSeq>
@@ -117,14 +117,16 @@ namespace kerbal
 
 
 			template <typename F, typename ... Args>
-			struct task : task_typedef_helper<F, Args...>::task_super_t
+			class task : private task_typedef_helper<F, Args...>::task_super_t
 			{
 				private:
 					typedef task_typedef_helper<F, Args...> typedef_helper;
 					typedef typename typedef_helper::pack_t pack_t;
 					typedef typename typedef_helper::task_super_t super;
 
-				public:
+					friend class kerbal::parallel::thread_pool;
+
+				private:
 					typedef typename typedef_helper::result_t result_type;
 
 					pack_t pack;
@@ -134,8 +136,6 @@ namespace kerbal
 							pack(kerbal::utility::forward<FU>(f), kerbal::utility::forward<UArgs>(args)...)
 					{
 					}
-
-				public:
 
 					void operator()()
 					{
@@ -150,37 +150,51 @@ namespace kerbal
 		{
 				typedef kerbal::function::move_only_function<void()> job_type;
 
-				kerbal::container::vector<kerbal::parallel::thread> k_threads_pool;
+				kerbal::container::vector<kerbal::parallel::thread> k_workers;
 				std::queue<job_type> k_jobs_queue;
 				std::mutex k_mutex;
 				std::condition_variable k_cv;
 				std::atomic<bool> k_stopped;
 				std::atomic<unsigned int> k_idle_threads_num;
 
+			private:
+				struct worker
+				{
+						thread_pool * self;
+
+						worker(thread_pool * self) :
+								self(self)
+						{
+						}
+
+						void operator()() const
+						{
+							while (!self->k_stopped.load()) {
+								std::unique_lock<std::mutex> lock(self->k_mutex);
+								self->k_cv.wait(lock, [self = this->self] {
+									return self->k_stopped.load() || !self->k_jobs_queue.empty();
+								});
+								if (self->k_stopped.load() && self->k_jobs_queue.empty()) {
+									return;
+								}
+								job_type job(kerbal::compatibility::move(self->k_jobs_queue.front()));
+								self->k_jobs_queue.pop();
+								lock.unlock();
+								--self->k_idle_threads_num;
+								job();
+								++self->k_idle_threads_num;
+							}
+						}
+				};
+
 			public:
 				explicit
 				thread_pool(unsigned int init_size = 4) :
 						k_stopped(false), k_idle_threads_num(init_size)
 				{
-					k_threads_pool.reserve(init_size);
-					for (size_t i = 0; i < this->k_idle_threads_num; ++i) {
-						k_threads_pool.emplace_back([this] {
-							while (!this->k_stopped.load()) {
-								std::unique_lock<std::mutex> lock(this->k_mutex);
-								this->k_cv.wait(lock, [this] {
-									return this->k_stopped.load() || !this->k_jobs_queue.empty();
-								});
-								if (this->k_stopped.load() && this->k_jobs_queue.empty()) {
-									return;
-								}
-								job_type job(kerbal::compatibility::move(this->k_jobs_queue.front()));
-								this->k_jobs_queue.pop();
-								lock.unlock();
-								--this->k_idle_threads_num;
-								job();
-								++this->k_idle_threads_num;
-							}
-						});
+					k_workers.reserve(init_size);
+					for (size_t i = 0; i < init_size; ++i) {
+						k_workers.emplace_back(worker(this));
 					}
 				}
 
@@ -188,7 +202,7 @@ namespace kerbal
 				{
 					this->k_stopped.store(true);
 					this->k_cv.notify_all();
-					for (auto & thread: this->k_threads_pool) {
+					for (auto & thread: this->k_workers) {
 						if (thread.joinable()) {
 							thread.join();
 						}
@@ -222,10 +236,10 @@ namespace kerbal
 					typedef typename commit_typedef_helper::task_type task_type;
 					typedef typename commit_typedef_helper::result_type result_type;
 
-					std::unique_ptr<task_type> p_task = std::make_unique<task_type>(
+					std::unique_ptr<task_type> p_task(new task_type(
 							kerbal::utility::forward<F>(f),
 							kerbal::utility::forward<Args>(args)...
-					);
+					));
 					std::future<result_type> future = p_task->promise.get_future();
 					{
 						std::lock_guard<std::mutex> lock(k_mutex);
