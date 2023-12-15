@@ -17,6 +17,7 @@
 #include <kerbal/container/vector.hpp>
 #include <kerbal/function/invoke.hpp>
 #include <kerbal/function/move_only_function.hpp>
+#include <kerbal/memory/unique_ptr.hpp>
 #include <kerbal/parallel/thread.hpp>
 #include <kerbal/utility/forward.hpp>
 #include <kerbal/utility/integer_sequence.hpp>
@@ -236,7 +237,7 @@ namespace kerbal
 					typedef typename commit_typedef_helper::task_type task_type;
 					typedef typename commit_typedef_helper::result_type result_type;
 
-					std::unique_ptr<task_type> p_task(new task_type(
+					kerbal::memory::unique_ptr<task_type> p_task(new task_type(
 							kerbal::utility::forward<F>(f),
 							kerbal::utility::forward<Args>(args)...
 					));
