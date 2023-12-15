@@ -15,7 +15,6 @@
 #include <kerbal/compatibility/noexcept.hpp>
 
 #include <stdexcept>
-#include <typeinfo>
 
 
 namespace kerbal

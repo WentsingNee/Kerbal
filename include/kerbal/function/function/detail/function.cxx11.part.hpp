@@ -28,7 +28,6 @@
 #include <kerbal/function/invoke.hpp>
 #include <kerbal/memory/allocator_traits.hpp>
 #include <kerbal/memory/any_storage.hpp>
-#include <kerbal/type_traits/aligned_storage.hpp>
 #include <kerbal/type_traits/enable_if.hpp>
 #include <kerbal/type_traits/integral_constant.hpp>
 #include <kerbal/type_traits/is_const.hpp>
@@ -55,14 +54,6 @@
 #if __cplusplus < 201103L
 #	include <kerbal/macro/macro_concat.hpp>
 #	include <kerbal/macro/ppexpand.hpp>
-#endif
-
-#if __cplusplus > 201703L
-#	include <kerbal/compatibility/is_constant_evaluated.hpp>
-
-#	if KERBAL_HAS_IS_CONSTANT_EVALUATED_SUPPORT
-#		include <memory>
-#	endif
 #endif
 
 #include <cstddef>
