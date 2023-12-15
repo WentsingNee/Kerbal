@@ -16,8 +16,9 @@
 #include <kerbal/function/bad_function_call.hpp>
 #include <kerbal/function/bad_function_cast.hpp>
 
+#include <kerbal/function/detail/is_function_embedded_stored_type.hpp>
+
 #include <kerbal/algorithm/swap.hpp>
-#include <kerbal/compatibility/alignof.hpp>
 #include <kerbal/compatibility/constexpr.hpp>
 #include <kerbal/compatibility/method_overload_tag.hpp>
 #include <kerbal/compatibility/move.hpp>
@@ -29,11 +30,9 @@
 #include <kerbal/memory/allocator_traits.hpp>
 #include <kerbal/memory/any_storage.hpp>
 #include <kerbal/type_traits/enable_if.hpp>
-#include <kerbal/type_traits/integral_constant.hpp>
 #include <kerbal/type_traits/is_const.hpp>
 #include <kerbal/type_traits/is_reference.hpp>
 #include <kerbal/type_traits/is_same.hpp>
-#include <kerbal/type_traits/remove_all_extents.hpp>
 #include <kerbal/type_traits/remove_const.hpp>
 #include <kerbal/type_traits/remove_reference.hpp>
 #include <kerbal/type_traits/tribool_constant.hpp>
@@ -45,10 +44,7 @@
 #if __cplusplus >= 201103L
 #	include <kerbal/type_traits/is_lvalue_reference.hpp>
 #	include <kerbal/type_traits/is_nothrow_constructible.hpp>
-#	include <kerbal/type_traits/is_nothrow_move_constructible.hpp>
 #	include <kerbal/utility/forward.hpp>
-#else
-#	include <kerbal/type_traits/is_nothrow_copy_constructible.hpp>
 #endif
 
 #if __cplusplus < 201103L
@@ -86,25 +82,6 @@ namespace kerbal
 
 	namespace function
 	{
-
-		template <typename T, std::size_t Size, std::size_t Align>
-		struct is_function_embedded_stored_type :
-				kerbal::type_traits::bool_constant<
-						sizeof(T) <= Size && KERBAL_ALIGNOF(T) <= Align &&
-						kerbal::type_traits::tribool_is_true<
-#	if __cplusplus >= 201103L
-							kerbal::type_traits::try_test_is_nothrow_move_constructible
-#	else
-							kerbal::type_traits::try_test_is_nothrow_copy_constructible
-#	endif
-							<
-								typename kerbal::type_traits::remove_all_extents<T>::type
-							>
-						>::value
-				>
-		{
-		};
-
 
 		namespace detail
 		{
@@ -284,40 +261,8 @@ namespace kerbal
 
 
 			template <typename T, std::size_t Size, std::size_t Align, typename Allocator, typename Ret, typename ... TArgs>
-			struct function_manager_collection_invoke_base
+			struct function_manager_collection
 			{
-				private:
-					typedef kerbal::function::basic_function<Ret(TArgs...), Size, Align, Allocator>								function;
-
-				public:
-					KERBAL_CONSTEXPR20
-					static Ret invoke(const function & self, TArgs ... args)
-					{
-						return kerbal::function::invoke(const_cast<T&>(self.template ignored_get<const T&>()), static_cast<TArgs>(args)...);
-					}
-			};
-
-			template <typename T, std::size_t Size, std::size_t Align, typename Allocator, typename ... TArgs>
-			struct function_manager_collection_invoke_base<T, Size, Align, Allocator, void, TArgs...>
-			{
-				private:
-					typedef kerbal::function::basic_function<void(TArgs...), Size, Align, Allocator>								function;
-
-				public:
-					KERBAL_CONSTEXPR20
-					static void invoke(const function & self, TArgs ... args)
-					{
-						kerbal::function::invoke(const_cast<T&>(self.template ignored_get<const T&>()), static_cast<TArgs>(args)...);
-					}
-			};
-
-			template <typename T, std::size_t Size, std::size_t Align, typename Allocator, typename Ret, typename ... TArgs>
-			struct function_manager_collection :
-					public function_manager_collection_invoke_base<T, Size, Align, Allocator, Ret, TArgs...>
-			{
-				private:
-					typedef function_manager_collection_invoke_base<T, Size, Align, Allocator, Ret, TArgs...> super;
-
 				private:
 					typedef kerbal::function::basic_function<Ret(TArgs...), Size, Align, Allocator>		function;
 					typedef kerbal::memory::detail::any_node<T>											any_node;
@@ -330,6 +275,12 @@ namespace kerbal
 
 					KERBAL_STATIC_ASSERT(!kerbal::type_traits::is_const<T>::value, "T couldn't be const");
 					KERBAL_STATIC_ASSERT(!kerbal::type_traits::is_reference<T>::value, "T couldn't be reference");
+
+					KERBAL_CONSTEXPR20
+					static Ret invoke(const function & self, TArgs ... args)
+					{
+						return kerbal::function::invoke(const_cast<T&>(self.template ignored_get<const T&>()), static_cast<TArgs>(args)...);
+					}
 
 					KERBAL_CONSTEXPR20
 					static void destroy(function & self) KERBAL_NOEXCEPT
@@ -400,7 +351,7 @@ namespace kerbal
 #			if __cplusplus >= 201703L
 					inline
 #			endif
-					static const manager_table mtable = manager_table(super::invoke, destroy, clone, xfer, swap_out, swap TYPE_INFO_ENTRY);
+					static const manager_table mtable = manager_table(invoke, destroy, clone, xfer, swap_out, swap TYPE_INFO_ENTRY);
 #		else
 					static const manager_table mtable;
 #		endif
@@ -421,7 +372,7 @@ namespace kerbal
 
 			template <typename T, std::size_t Size, std::size_t Align, typename Allocator, typename Ret, typename ... TArgs>
 			const typename function_manager_collection<T, Size, Align, Allocator, Ret, TArgs...>::manager_table
-			function_manager_collection<T, Size, Align, Allocator, Ret, TArgs...>::mtable(super::invoke, destroy, clone, swap_out, swap TYPE_INFO_ENTRY);
+			function_manager_collection<T, Size, Align, Allocator, Ret, TArgs...>::mtable(invoke, destroy, clone, swap_out, swap TYPE_INFO_ENTRY);
 
 #	endif
 
