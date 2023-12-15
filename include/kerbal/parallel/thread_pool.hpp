@@ -15,8 +15,8 @@
 #include <kerbal/compatibility/move.hpp>
 #include <kerbal/compatibility/noexcept.hpp>
 #include <kerbal/container/vector.hpp>
-#include <kerbal/function/function.hpp>
 #include <kerbal/function/invoke.hpp>
+#include <kerbal/function/move_only_function.hpp>
 #include <kerbal/parallel/thread.hpp>
 #include <kerbal/utility/forward.hpp>
 #include <kerbal/utility/integer_sequence.hpp>
@@ -148,7 +148,7 @@ namespace kerbal
 
 		class thread_pool
 		{
-				typedef kerbal::function::basic_function<void(), 16> job_type;
+				typedef kerbal::function::move_only_function<void()> job_type;
 
 				kerbal::container::vector<kerbal::parallel::thread> k_threads_pool;
 				std::queue<job_type> k_jobs_queue;
@@ -222,18 +222,14 @@ namespace kerbal
 					typedef typename commit_typedef_helper::task_type task_type;
 					typedef typename commit_typedef_helper::result_type result_type;
 
-					std::shared_ptr<task_type> p_task = std::make_shared<task_type>(
+					std::unique_ptr<task_type> p_task = std::make_unique<task_type>(
 							kerbal::utility::forward<F>(f),
 							kerbal::utility::forward<Args>(args)...
 					);
-//					task_type * p_task = new task_type(
-//							kerbal::utility::forward<F>(f),
-//							kerbal::utility::forward<Args>(args)...
-//					);
 					std::future<result_type> future = p_task->promise.get_future();
 					{
 						std::lock_guard<std::mutex> lock(k_mutex);
-						k_jobs_queue.emplace([p_task] {
+						k_jobs_queue.emplace([p_task = kerbal::compatibility::move(p_task)] {
 							(*p_task)();
 						});
 					}
