@@ -20,7 +20,12 @@
 
 #include <cstdio>
 #include <cstdlib>
-#include <iostream>
+
+#include <kerbal/config/architecture.hpp>
+
+#if KERBAL_ARCHITECTURE != KERBAL_ARCHITECTURE_RISCV
+#	include <iostream>
+#endif
 
 
 namespace kerbal
@@ -140,8 +145,13 @@ namespace kerbal
 						file, line,
 						left_statement, right_statement
 					);
+#if KERBAL_ARCHITECTURE != KERBAL_ARCHITECTURE_RISCV
 					std::printf("    left value: "); std::cout << lhs << std::endl;
 					std::printf("   right value: "); std::cout << rhs << std::endl;
+#else
+					std::printf("    left value: --unsupported under riscv\n");
+					std::printf("   right value: --unsupported under riscv\n");
+#endif
 					std::puts("");
 					record.items.back().result = kerbal::test::test_case_running_result::FAILURE;
 				}
