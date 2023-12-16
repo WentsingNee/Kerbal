@@ -20,6 +20,7 @@
 #include <kerbal/numeric/numeric_limits.hpp>
 #include <kerbal/random/discard_block_engine.hpp>
 #include <kerbal/random/linear_congruential_engine.hpp>
+#include <kerbal/type_traits/enable_if.hpp>
 #include <kerbal/type_traits/integral_constant.hpp>
 #include <kerbal/type_traits/is_same.hpp>
 #include <kerbal/type_traits/size_compressed_type.hpp>
@@ -32,6 +33,27 @@ namespace kerbal
 
 	namespace random
 	{
+
+		namespace detail
+		{
+
+			template <typename ResultType, std::size_t N, ResultType k, ResultType m>
+			struct subtract_with_carry_engine_factor
+			{
+				typedef typename subtract_with_carry_engine_factor<ResultType, N - 1, k, m>::type last;
+				typedef kerbal::type_traits::integral_constant<
+					ResultType,
+					detail::static_mul_mod<ResultType, k, m>::cacl(last::value)
+				> type;
+			};
+
+			template <typename ResultType, ResultType k, ResultType m>
+			struct subtract_with_carry_engine_factor<ResultType, 0, k, m>
+			{
+				typedef kerbal::type_traits::integral_constant<ResultType, 1> type;
+			};
+
+		} // namespace detail
 
 		template <typename UIntType, std::size_t W, std::size_t S, std::size_t R>
 		class subtract_with_carry_engine
@@ -106,25 +128,48 @@ namespace kerbal
 					}
 				}
 
+				typedef kerbal::random::linear_congruential_engine<result_type, 40014u, 0u, 2147483563u> LCG;
+
+				template <result_type K, std::size_t I>
+				KERBAL_CONSTEXPR14
+				static
+				typename kerbal::type_traits::enable_if<I == 0, result_type>::type
+				expand(LCG & lcg)
+				{
+					return lcg() % m::value;
+				}
+
+				template <result_type K, std::size_t I>
+				KERBAL_CONSTEXPR14
+				static
+				typename kerbal::type_traits::enable_if<I != 0, result_type>::type
+				expand(LCG & lcg)
+				{
+					typedef typename detail::subtract_with_carry_engine_factor<result_type, I, K, m::value>::type factor;
+					result_type lhs = expand<K, I - 1>(lcg);
+					result_type rhs = detail::static_mul_mod<result_type, factor::value, m::value>::cacl(lcg());
+					return detail::add_mod<result_type, m::value>::cacl(lhs, rhs);
+				}
+
 				KERBAL_CONSTEXPR14
 				void seed(const result_type & seed = DEFAULT_SEED::value) KERBAL_NOEXCEPT
 				{
-					kerbal::random::linear_congruential_engine<result_type, 40014u, 0u, 2147483563u>
-							lcg(seed == 0u ? DEFAULT_SEED::value : seed);
+					LCG lcg(seed == 0u ? DEFAULT_SEED::value : seed);
 
 					typedef kerbal::type_traits::integral_constant<std::size_t, (WORD_SIZE::value + 31) / 32> N;
 
 					for (std::size_t i = 0; i < LONG_LAG::value; ++i) {
-						result_type sum = lcg() % m::value;
-						result_type factor = 1u;
-						for (std::size_t j = 1; j < N::value; ++j) {
-							factor = detail::static_mul_mod<result_type, (1ull << 32) % m::value, m::value>::cacl(factor);
-							sum = detail::add_mod<result_type, m::value>::cacl(
-								sum,
-								detail::partial_static_mul_mod<result_type, m::value>::cacl(lcg(), factor)
-							);
-						}
-						k_state[i] = sum;
+						// result_type sum = lcg() % m::value;
+						// result_type factor = 1u;
+						// for (std::size_t j = 1; j < N::value; ++j) {
+						// 	factor = detail::static_mul_mod<result_type, (1ull << 32) % m::value, m::value>::cacl(factor);
+						// 	sum = detail::add_mod<result_type, m::value>::cacl(
+						// 		sum,
+						// 		detail::partial_static_mul_mod<result_type, m::value>::cacl(lcg(), factor)
+						// 	);
+						// }
+						// k_state[i] = sum;
+						k_state[i] = expand<(1ull << 32) % m::value, N::value - 1>(lcg);
 					}
 					k_carry = (k_state[LONG_LAG::value - 1] == 0) ? 1 : 0;
 					k_index = 0;
