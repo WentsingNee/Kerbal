@@ -25,9 +25,33 @@
 #include <kerbal/random/detail/mt_twist/mt_twist.plain.part.hpp>
 
 
+#ifndef KERBAL_HAS_RISCV_V_SUPPORT
+
+#	include <kerbal/config/compiler_id.hpp>
+#	include <kerbal/config/compiler_private.hpp>
+
+#	if KERBAL_COMPILER_ID == KERBAL_COMPILER_ID_GNU
+#		if KERBAL_GNU_VERSION_MEETS(13, 0, 0)
+#			if __riscv_v
+#				define KERBAL_HAS_RISCV_V_SUPPORT 1
+#			endif
+#		endif
+#	elif KERBAL_COMPILER_ID == KERBAL_COMPILER_ID_CLANG
+#		if KERBAL_CLANG_VERSION_MEETS(17, 0, 0)
+#			if __riscv_v
+#				define KERBAL_HAS_RISCV_V_SUPPORT 1
+#			endif
+#		endif
+#	endif
+
+#endif
+
+
 #ifndef KERBAL_RANDOM_ENABLE_MT_TWIST_IE_OPTIMISE
 
-#	if __AVX512F__ || __AVX2__ || __SSE4_1__ || __SSE2__ || __ARM_FEATURE_SVE || __ARM_NEON
+#	if __AVX512F__ || __AVX2__ || __SSE4_1__ || __SSE2__ || \
+		__ARM_FEATURE_SVE || __ARM_NEON || \
+		KERBAL_HAS_RISCV_V_SUPPORT
 #		define KERBAL_RANDOM_ENABLE_MT_TWIST_IE_OPTIMISE 1
 #	else
 #		define KERBAL_RANDOM_ENABLE_MT_TWIST_IE_OPTIMISE 0
@@ -60,6 +84,10 @@
 
 #	if __ARM_NEON
 #		include <kerbal/random/detail/mt_twist/mt_twist.neon.part.hpp>
+#	endif
+
+#	if KERBAL_HAS_RISCV_V_SUPPORT
+#		include <kerbal/random/detail/mt_twist/mt_twist.riscv_v.part.hpp>
 #	endif
 
 #endif
@@ -97,6 +125,8 @@ namespace kerbal
 				sve::mt_twist<N, M, R, A>(mtr);
 #		elif __ARM_NEON
 				neon::mt_twist<N, M, R, A>(mtr);
+#		elif KERBAL_HAS_RISCV_V_SUPPORT
+				riscv_v::mt_twist<N, M, R, A>(mtr);
 #		else
 				plain::mt_twist<kerbal::compatibility::uint32_t, N, M, R, A>(mt);
 #		endif
@@ -121,6 +151,8 @@ namespace kerbal
 				sve::mt_twist<N, M, R, A>(mtr);
 #		elif __ARM_NEON
 				neon::mt_twist<N, M, R, A>(mtr);
+#		elif KERBAL_HAS_RISCV_V_SUPPORT
+				riscv_v::mt_twist<N, M, R, A>(mtr);
 #		else
 				plain::mt_twist<kerbal::compatibility::uint64_t, N, M, R, A>(mt);
 #		endif

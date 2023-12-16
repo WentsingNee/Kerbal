@@ -16,6 +16,7 @@ set(KERBAL_IE_LIST
         mmx sse sse2 sse3 ssse3 sse4.1 sse4.2 avx avx2 avx512f
         bmi bmi2 sha
         neon sve
+        riscv-v
 )
 
 
@@ -113,6 +114,10 @@ function(kerbal_ies_required)
             endif ()
             if (ie STREQUAL "neon")
                 __kerbal_check_supports_neon_flags_and_cache()
+                continue()
+            endif ()
+            if (${ie} STREQUAL "riscv-v")
+                check_compiler_support_ie_flags(${ie} "-march=rv64gv")
                 continue()
             endif ()
 
