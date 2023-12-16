@@ -13,9 +13,9 @@
 #define KERBAL_RANDOM_SUBTRACT_WITH_CARRY_ENGINE_HPP
 
 #include <kerbal/compatibility/constexpr.hpp>
+#include <kerbal/compatibility/fixed_width_integer.hpp>
 #include <kerbal/compatibility/noexcept.hpp>
 #include <kerbal/compatibility/static_assert.hpp>
-#include <kerbal/compatibility/fixed_width_integer.hpp>
 #include <kerbal/iterator/iterator_traits.hpp>
 #include <kerbal/numeric/numeric_limits.hpp>
 #include <kerbal/random/discard_block_engine.hpp>
@@ -46,7 +46,7 @@ namespace kerbal
 				);
 
 				KERBAL_STATIC_ASSERT(
-					10 < W <= kerbal::numeric::numeric_limits<UIntType>::DIGITS::value,
+					10 < W && W <= kerbal::numeric::numeric_limits<UIntType>::DIGITS::value,
 					"W should match the requirement: 10 < W <= kerbal::numeric::numeric_limits<UIntType>::DIGITS::value"
 				);
 
