@@ -20,7 +20,12 @@
 
 #include <cstdio>
 #include <cstdlib>
-#include <iostream>
+
+#include <kerbal/config/architecture.hpp>
+
+#if KERBAL_ARCHITECTURE != KERBAL_ARCHITECTURE_RISCV
+#	include <iostream>
+#endif
 
 
 namespace kerbal
@@ -110,8 +115,13 @@ namespace kerbal
 		{
 			if (lhs != rhs) {
 				puts("CHECK EQUAL FAILED!");
+#if KERBAL_ARCHITECTURE != KERBAL_ARCHITECTURE_RISCV
 				printf(" left is: "); std::cout << lhs << std::endl;
 				printf("right is: "); std::cout << rhs << std::endl;
+#else
+				printf(" left is: --unsupported under riscv\n");
+				printf("right is: --unsupported under riscv\n");
+#endif
 				return true;
 			}
 			return false;
