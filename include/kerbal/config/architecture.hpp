@@ -39,6 +39,10 @@
 #	define KERBAL_ARCHITECTURE_WASM 4
 #endif
 
+#ifndef KERBAL_ARCHITECTURE_RISCV
+#	define KERBAL_ARCHITECTURE_RISCV 5
+#endif
+
 
 
 #ifndef KERBAL_ARCHITECTURE
@@ -48,6 +52,7 @@
 #	include <kerbal/config/detail/architecture/_2_arm.part.hpp>
 #	include <kerbal/config/detail/architecture/_3_aarch64.part.hpp>
 #	include <kerbal/config/detail/architecture/_4_wasm.part.hpp>
+#	include <kerbal/config/detail/architecture/_5_riscv.part.hpp>
 
 
 #	ifndef KERBAL_ARCHITECTURE
