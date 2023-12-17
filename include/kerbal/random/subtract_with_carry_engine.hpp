@@ -12,6 +12,7 @@
 #ifndef KERBAL_RANDOM_SUBTRACT_WITH_CARRY_ENGINE_HPP
 #define KERBAL_RANDOM_SUBTRACT_WITH_CARRY_ENGINE_HPP
 
+#include <kerbal/algorithm/modifier/copy.hpp>
 #include <kerbal/compatibility/constexpr.hpp>
 #include <kerbal/compatibility/fixed_width_integer.hpp>
 #include <kerbal/compatibility/noexcept.hpp>
@@ -99,12 +100,48 @@ namespace kerbal
 				KERBAL_CONSTEXPR14
 				explicit
 				subtract_with_carry_engine(result_type seed = DEFAULT_SEED::value) KERBAL_NOEXCEPT
+#		if __cplusplus >= 201402L
+						: k_state{}, k_index(0), k_carry(false)
+#		endif
 				{
 					this->seed(seed);
 				}
 
 				KERBAL_CONSTEXPR14
 				result_type operator()() KERBAL_NOEXCEPT
+				{
+					if (this->k_index == LONG_LAG::value) {
+						this->twist();
+						this->k_index = 0;
+					}
+					result_type r = this->k_state[this->k_index++];
+					return r;
+				}
+
+				KERBAL_CONSTEXPR14
+				void twist() KERBAL_NOEXCEPT
+				{
+					std::size_t i = 0;
+					for (; i < S; ++i) {
+						result_type x_s = k_state[i + R - S]; // k_state[(i - S) % R]
+						result_type x_r = k_state[i];
+						result_type y = x_s - x_r - k_carry;
+						result_type r = y % m::value;
+						k_state[i] = r;
+						k_carry = x_s < (x_r + k_carry);
+					}
+					for (; i < LONG_LAG::value; ++i) {
+						result_type x_s = k_state[i - S]; // k_state[(i - S) % R]
+						result_type x_r = k_state[i];
+						result_type y = x_s - x_r - k_carry;
+						result_type r = y % m::value;
+						k_state[i] = r;
+						k_carry = x_s < (x_r + k_carry);
+					}
+				}
+
+				KERBAL_CONSTEXPR14
+				result_type next() KERBAL_NOEXCEPT
 				{
 					result_type x_s = k_state[k_index >= S ? k_index - S : k_index + R - S]; // k_state[(k_index - S) % R]
 					result_type x_r = k_state[k_index];
@@ -173,6 +210,7 @@ namespace kerbal
 					}
 					k_carry = (k_state[LONG_LAG::value - 1] == 0) ? 1 : 0;
 					k_index = 0;
+					this->twist();
 				}
 
 				template <typename OutputIterator>
@@ -185,16 +223,39 @@ namespace kerbal
 					}
 				}
 
+			private:
+
+				template <typename OutputIterator>
+				KERBAL_CONSTEXPR14
+				OutputIterator k_generate_n_helper(OutputIterator first, typename kerbal::iterator::iterator_traits<OutputIterator>::difference_type n)
+				{
+					first = kerbal::algorithm::copy(this->k_state + this->k_index, this->k_state + this->k_index + n, first);
+					this->k_index += n;
+					return first;
+				}
+
+			public:
+
 				template <typename OutputIterator>
 				KERBAL_CONSTEXPR14
 				OutputIterator generate_n(OutputIterator first, typename kerbal::iterator::iterator_traits<OutputIterator>::difference_type n)
 				{
-					while (n != 0) {
-						--n;
-						*first = (*this)();
-						++first;
+					std::size_t this_round_remain = LONG_LAG::value - this->k_index;
+					if (static_cast<std::size_t>(n) <= this_round_remain) {
+						return this->k_generate_n_helper(first, n);
 					}
-					return first;
+					first = this->k_generate_n_helper(first, this_round_remain);
+					n -= this_round_remain;
+					this->twist();
+					this->k_index = 0;
+
+					for (std::size_t round = 0; round < n / LONG_LAG::value; ++round) {
+						first = this->k_generate_n_helper(first, LONG_LAG::value);
+						this->twist();
+						this->k_index = 0;
+					}
+					n %= LONG_LAG::value;
+					return this->k_generate_n_helper(first, n);
 				}
 
 				KERBAL_CONSTEXPR
