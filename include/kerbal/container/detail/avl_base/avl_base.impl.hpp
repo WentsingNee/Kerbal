@@ -2338,16 +2338,28 @@ namespace kerbal
 				const value_type * lmaxi = NULL;
 				node_base::height_t lheight = 0;
 				avl_normal_result_t lresult = avl_normal_impl(p->left, lmini, lmaxi, lheight, e, kc);
-				if (lresult != 0) {
+				if (lresult != AVL_NORMAL_RESULT_CORRECT) {
 					return lresult;
+				}
+
+				if (p->right != get_avl_vnull_node()) {
+					if (p->right->parent != p) {
+						return AVL_NORMAL_RESULT_BAD_PARENT;
+					}
 				}
 
 				const value_type * rmini = NULL;
 				const value_type * rmaxi = NULL;
 				node_base::height_t rheight = 0;
 				avl_normal_result_t rresult = avl_normal_impl(p->right, rmini, rmaxi, rheight, e, kc);
-				if (rresult != 0) {
+				if (rresult != AVL_NORMAL_RESULT_CORRECT) {
 					return rresult;
+				}
+
+				if (p->left != get_avl_vnull_node()) {
+					if (p->left->parent != p) {
+						return AVL_NORMAL_RESULT_BAD_PARENT;
+					}
 				}
 
 				const value_type & mid_value = p->reinterpret_as<value_type>().member();
