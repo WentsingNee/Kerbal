@@ -1154,7 +1154,7 @@ namespace kerbal
 		typename avl_ordered<Entity, Extract, KeyCompare, Allocator>::iterator
 		avl_ordered<Entity, Extract, KeyCompare, Allocator>::replace_emplace(const_iterator replace, Args&& ... args)
 		{
-			return this->avl_type_only::k_replace_emplace(this->alloc(), this->extract(), this->key_comp(), replace, kerbal::utility::forward<Args>(args)...);
+			return this->avl_type_only::k_replace_emplace_using_allocator(this->alloc(), this->extract(), this->key_comp(), replace, kerbal::utility::forward<Args>(args)...);
 		}
 
 		template <typename Entity, typename Extract, typename KeyCompare, typename Allocator>
