@@ -73,8 +73,9 @@ namespace kerbal
 				typedef typename avl_ordered::key_compare					key_compare;
 
 			private:
-				typedef typename avl_ordered::node_base					node_base;
-				typedef typename avl_ordered::node						node;
+				typedef typename avl_ordered::avl_node_base					avl_node_base;
+				typedef typename avl_ordered::node							node;
+				typedef typename avl_node_base::height_t					height_t;
 
 			public:
 				typedef Allocator										allocator_type;
@@ -440,7 +441,7 @@ namespace kerbal
 				}
 
 				KERBAL_CONSTEXPR20
-				typename node_base::height_t height() const KERBAL_NOEXCEPT
+				height_t height() const KERBAL_NOEXCEPT
 				{
 					return avl_ordered::height();
 				}

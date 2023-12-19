@@ -16,6 +16,8 @@
 #	define KERBAL_AVL_ENABLE_VNULL 1
 #endif
 
+#include <kerbal/container/detail/bst_base/bst.fwd.hpp>
+
 #include <kerbal/compatibility/constexpr.hpp>
 #include <kerbal/compatibility/noexcept.hpp>
 
@@ -29,9 +31,15 @@ namespace kerbal
 		namespace detail
 		{
 
-			class avl_head_node;
-
 			class avl_node_base;
+
+			KERBAL_CONSTEXPR14
+			inline
+			avl_node_base * as_avl_node_base(bst_head_node * self) KERBAL_NOEXCEPT;
+
+			KERBAL_CONSTEXPR
+			inline
+			const avl_node_base * as_avl_node_base(const bst_head_node * self) KERBAL_NOEXCEPT;
 
 			template <typename Tp>
 			class avl_node;

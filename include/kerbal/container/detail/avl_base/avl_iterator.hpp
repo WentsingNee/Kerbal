@@ -49,7 +49,7 @@ namespace kerbal
 					typedef std::ptrdiff_t									difference_type;
 
 				protected:
-					typedef kerbal::container::detail::avl_head_node		head_node;
+					typedef kerbal::container::detail::bst_head_node		head_node;
 					typedef kerbal::container::detail::avl_node_base		node_base;
 					typedef head_node *										ptr_to_head_node;
 					ptr_to_head_node current;
@@ -65,14 +65,14 @@ namespace kerbal
 					KERBAL_CONSTEXPR14
 					avl_iter_type_unrelated& operator++() KERBAL_NOEXCEPT
 					{
-						current = this->current->as_node_base()->inorder_next();
+						current = this->current->as_node_base()->inorder_next(get_avl_vnull_node());
 						return *this;
 					}
 
 					KERBAL_CONSTEXPR14
 					avl_iter_type_unrelated& operator--() KERBAL_NOEXCEPT
 					{
-						current = this->current->inorder_prev();
+						current = this->current->inorder_prev(get_avl_vnull_node());
 						return *this;
 					}
 
@@ -102,7 +102,7 @@ namespace kerbal
 					typedef std::ptrdiff_t									difference_type;
 
 				protected:
-					typedef kerbal::container::detail::avl_head_node		head_node;
+					typedef kerbal::container::detail::bst_head_node		head_node;
 					typedef kerbal::container::detail::avl_node_base		node_base;
 					typedef const head_node *								const_ptr_to_head_node;
 					const_ptr_to_head_node current;
@@ -125,14 +125,14 @@ namespace kerbal
 					KERBAL_CONSTEXPR14
 					avl_kiter_type_unrelated& operator++() KERBAL_NOEXCEPT
 					{
-						current = this->current->as_node_base()->inorder_next();
+						current = this->current->as_node_base()->inorder_next(get_avl_vnull_node());
 						return *this;
 					}
 
 					KERBAL_CONSTEXPR14
 					avl_kiter_type_unrelated& operator--() KERBAL_NOEXCEPT
 					{
-						current = this->current->inorder_prev();
+						current = this->current->inorder_prev(get_avl_vnull_node());
 						return *this;
 					}
 
@@ -198,7 +198,7 @@ namespace kerbal
 					KERBAL_CONSTEXPR14
 					reference operator*() const KERBAL_NOEXCEPT
 					{
-						return this->current->template reinterpret_as<T>().member();
+						return as_avl_node_base(this->current)->template reinterpret_as<T>().member();
 					}
 
 					KERBAL_CONSTEXPR14
@@ -281,7 +281,7 @@ namespace kerbal
 					KERBAL_CONSTEXPR14
 					reference operator*() const KERBAL_NOEXCEPT
 					{
-						return this->current->template reinterpret_as<T>().member();
+						return as_avl_node_base(this->current)->template reinterpret_as<T>().member();
 					}
 
 					KERBAL_CONSTEXPR14

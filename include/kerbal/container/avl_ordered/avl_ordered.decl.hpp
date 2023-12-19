@@ -103,8 +103,9 @@ namespace kerbal
 				typedef KeyCompare											key_compare;
 
 			protected:
-				typedef typename avl_type_only::node_base					node_base;
+				typedef typename avl_type_only::avl_node_base				avl_node_base;
 				typedef typename avl_type_only::node						node;
+				typedef typename avl_node_base::height_t					height_t;
 
 			public:
 				typedef Allocator														allocator_type;
@@ -773,7 +774,7 @@ namespace kerbal
 				}
 
 				KERBAL_CONSTEXPR20
-				typename node_base::height_t height() const KERBAL_NOEXCEPT
+				height_t height() const KERBAL_NOEXCEPT
 				{
 					return avl_type_only::height();
 				}
