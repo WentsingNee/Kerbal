@@ -14,6 +14,7 @@
 
 #include <kerbal/container/detail/bst_base/bst.fwd.hpp>
 #include <kerbal/container/detail/avl_base/avl_base.fwd.hpp>
+#include <kerbal/container/detail/rb_base/rb_base.fwd.hpp>
 
 #include <kerbal/compatibility/constexpr.hpp>
 #include <kerbal/compatibility/is_constant_evaluated.hpp>
@@ -41,6 +42,8 @@ namespace kerbal
 
 					friend class kerbal::container::detail::bst_kiter_type_unrelated<VNULL_HELPER>;
 
+				// avl-tree
+
 					friend class kerbal::container::detail::avl_node_base;
 
 					friend class kerbal::container::detail::avl_type_unrelated;
@@ -48,6 +51,14 @@ namespace kerbal
 					template <typename Entity>
 					friend class kerbal::container::detail::avl_type_only;
 
+				// rb-tree
+
+					friend class kerbal::container::detail::rb_node_base;
+
+					friend class kerbal::container::detail::rb_type_unrelated;
+
+					template <typename Entity>
+					friend class kerbal::container::detail::rb_type_only;
 
 				protected:
 					typedef kerbal::container::detail::bst_node_base<VNULL_HELPER> bst_node_base;
@@ -120,12 +131,23 @@ namespace kerbal
 
 					friend class kerbal::container::detail::bst_kiter_type_unrelated<VNULL_HELPER>;
 
+				// avl-tree
+
 					friend class kerbal::container::detail::avl_node_base;
 
 					friend class kerbal::container::detail::avl_type_unrelated;
 
 					template <typename Entity>
 					friend class kerbal::container::detail::avl_type_only;
+
+				// rb-tree
+
+					friend class kerbal::container::detail::rb_node_base;
+
+					friend class kerbal::container::detail::rb_type_unrelated;
+
+					template <typename Entity>
+					friend class kerbal::container::detail::rb_type_only;
 
 				protected:
 					typedef class kerbal::container::detail::bst_head_node<VNULL_HELPER> bst_head_node;
