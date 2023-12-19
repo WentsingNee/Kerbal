@@ -1,7 +1,7 @@
 /**
- * @file       bst.fwd.hpp
+ * @file       rb_iterator.decl.hpp
  * @brief
- * @date       2023-12-18
+ * @date       2023-12-19
  * @author     Peter
  * @copyright
  *      Peter of [ThinkSpirit Laboratory](http://thinkspirit.org/)
@@ -9,12 +9,8 @@
  *   all rights reserved
  */
 
-#ifndef KERBAL_CONTAINER_DETAIL_BST_BASE_BST_FWD_HPP
-#define KERBAL_CONTAINER_DETAIL_BST_BASE_BST_FWD_HPP
-
-#ifndef KERBAL_AVL_ENABLE_VNULL
-#	define KERBAL_AVL_ENABLE_VNULL 1
-#endif
+#ifndef KERBAL_CONTAINER_DETAIL_RB_BASE_RB_ITERATOR_DECL_HPP
+#define KERBAL_CONTAINER_DETAIL_RB_BASE_RB_ITERATOR_DECL_HPP
 
 namespace kerbal
 {
@@ -25,8 +21,6 @@ namespace kerbal
 		namespace detail
 		{
 
-			class bst_head_node;
-			class bst_node_base;
 
 		} // namespace detail
 
@@ -34,4 +28,4 @@ namespace kerbal
 
 } // namespace kerbal
 
-#endif // KERBAL_CONTAINER_DETAIL_BST_BASE_BST_FWD_HPP
+#endif // KERBAL_CONTAINER_DETAIL_RB_BASE_RB_ITERATOR_DECL_HPP

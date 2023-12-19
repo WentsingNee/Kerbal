@@ -2291,8 +2291,8 @@ namespace kerbal
 					return lresult;
 				}
 
-				if (p->right != get_avl_vnull_node()) {
-					if (p->right->parent != p) {
+				if (p->left != get_avl_vnull_node()) {
+					if (p->left->parent != p) {
 						return AVL_NORMAL_RESULT_BAD_PARENT;
 					}
 				}
@@ -2305,12 +2305,13 @@ namespace kerbal
 					return rresult;
 				}
 
-				if (p->left != get_avl_vnull_node()) {
-					if (p->left->parent != p) {
+				if (p->right != get_avl_vnull_node()) {
+					if (p->right->parent != p) {
 						return AVL_NORMAL_RESULT_BAD_PARENT;
 					}
 				}
 
+				// BST Check
 				const value_type & mid_value = p->reinterpret_as<value_type>().member();
 				if (lmaxi != NULL) {
 					if (!kc(e(*lmaxi), e(mid_value))) {

@@ -12,10 +12,6 @@
 #ifndef KERBAL_CONTAINER_DETAIL_AVL_BASE_AVL_BASE_FWD_HPP
 #define KERBAL_CONTAINER_DETAIL_AVL_BASE_AVL_BASE_FWD_HPP
 
-#ifndef KERBAL_AVL_ENABLE_VNULL
-#	define KERBAL_AVL_ENABLE_VNULL 1
-#endif
-
 #include <kerbal/container/detail/bst_base/bst.fwd.hpp>
 
 #include <kerbal/compatibility/constexpr.hpp>
