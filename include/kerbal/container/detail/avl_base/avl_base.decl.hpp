@@ -73,8 +73,10 @@ namespace kerbal
 					typedef std::ptrdiff_t				difference_type;
 
 				protected:
-					typedef kerbal::container::detail::avl_head_node			head_node;
-					typedef kerbal::container::detail::avl_node_base			node_base;
+					typedef kerbal::container::detail::avl_node_base			avl_node_base;
+					typedef avl_node_base::bst_head_node						head_node;
+					typedef avl_node_base::bst_node_base						bst_node_base;
+					typedef avl_node_base::height_t								height_t;
 
 				protected:
 					head_node			k_head;
@@ -83,7 +85,7 @@ namespace kerbal
 				protected:
 					KERBAL_CONSTEXPR14
 					avl_type_unrelated() KERBAL_NOEXCEPT :
-						k_size(0u)
+						k_head(get_avl_vnull_node()), k_size(0u)
 					{
 					}
 
@@ -117,11 +119,6 @@ namespace kerbal
 					}
 
 				protected:
-					KERBAL_CONSTEXPR14
-					static void k_left_rotate(node_base * g, node_base * p) KERBAL_NOEXCEPT;
-
-					KERBAL_CONSTEXPR14
-					static void k_right_rotate(node_base * g, node_base * p) KERBAL_NOEXCEPT;
 
 					KERBAL_CONSTEXPR14
 					void k_emplace_rebalance(head_node * p_head) KERBAL_NOEXCEPT;
@@ -131,20 +128,20 @@ namespace kerbal
 
 				private:
 					KERBAL_CONSTEXPR14
-					node_base * k_unhook_node_and_get_successor_right_not_null(node_base * p_base) KERBAL_NOEXCEPT;
+					avl_node_base * k_unhook_node_and_get_successor_right_not_null(avl_node_base * p_base) KERBAL_NOEXCEPT;
 
 					KERBAL_CONSTEXPR14
-					head_node * k_unhook_node_and_get_successor_right_null(node_base * p_base) KERBAL_NOEXCEPT;
+					head_node * k_unhook_node_and_get_successor_right_null(avl_node_base * p_base) KERBAL_NOEXCEPT;
 
 					KERBAL_CONSTEXPR14
-					void k_unhook_node_right_null(node_base * p_base) KERBAL_NOEXCEPT;
+					void k_unhook_node_right_null(avl_node_base * p_base) KERBAL_NOEXCEPT;
 
 				protected:
 					KERBAL_CONSTEXPR14
-					head_node * k_unhook_node_and_get_successor(node_base * p_base) KERBAL_NOEXCEPT;
+					head_node * k_unhook_node_and_get_successor(avl_node_base * p_base) KERBAL_NOEXCEPT;
 
 					KERBAL_CONSTEXPR14
-					void k_unhook_node(node_base * p_base) KERBAL_NOEXCEPT;
+					void k_unhook_node(avl_node_base * p_base) KERBAL_NOEXCEPT;
 
 				//===================
 				// operation
@@ -188,7 +185,7 @@ namespace kerbal
 
 				protected:
 					typedef super::head_node									head_node;
-					typedef super::node_base 									node_base;
+					typedef super::avl_node_base 								avl_node_base;
 					typedef kerbal::container::detail::avl_node<value_type>		node;
 
 				public:
@@ -526,7 +523,7 @@ namespace kerbal
 
 					template <typename NodeAllocator>
 					KERBAL_CONSTEXPR20
-					static void k_assign_destroy_n(NodeAllocator & alloc, node_base * start, size_type size, head_node * head);
+					static void k_assign_destroy_n(NodeAllocator & alloc, avl_node_base * start, size_type size, head_node * head);
 
 				public:
 
@@ -738,20 +735,20 @@ namespace kerbal
 					template <typename Extract, typename KeyCompare, typename Key>
 					KERBAL_CONSTEXPR14
 					static
-					const node_base *
+					const avl_node_base *
 					k_lower_bound_helper(
 						Extract & e, KeyCompare & kc,
 						const Key & key,
-						const node_base * p_base, const node_base * lbound
+						const avl_node_base * p_base, const avl_node_base * lbound
 					);
 
 					template <typename Extract, typename KeyCompare, typename Key>
 					KERBAL_CONSTEXPR14
 					static
-					const node_base *
+					const avl_node_base *
 					k_upper_bound_helper(
 						Extract & e, KeyCompare & kc, const Key & key,
-						const node_base * p_base, const node_base * ubound
+						const avl_node_base * p_base, const avl_node_base * ubound
 					);
 
 				private:
@@ -1379,7 +1376,7 @@ namespace kerbal
 					template <typename F>
 					KERBAL_CONSTEXPR20
 					static
-					void pre_order_impl(const node_base * p_base, F f);
+					void pre_order_impl(const avl_node_base * p_base, F f);
 
 					template <typename F>
 					KERBAL_CONSTEXPR20
@@ -1391,9 +1388,9 @@ namespace kerbal
 					static
 					avl_normal_result_t
 					avl_normal_impl(
-						const node_base * p,
+						const avl_node_base * p,
 						const value_type * & mini, const value_type * & maxi,
-						node_base::height_t & depth,
+						height_t & depth,
 						Extract & e, KeyCompare & kc
 					);
 
@@ -1404,7 +1401,7 @@ namespace kerbal
 					avl_normal(Extract & e, KeyCompare & kc) const;
 
 					KERBAL_CONSTEXPR20
-					node_base::height_t
+					height_t
 					height() const KERBAL_NOEXCEPT;
 
 
@@ -1524,7 +1521,7 @@ namespace kerbal
 					template <typename NodeAllocator>
 					KERBAL_CONSTEXPR20
 					static
-					void k_destroy_node(NodeAllocator & alloc, node_base * p_base);
+					void k_destroy_node(NodeAllocator & alloc, avl_node_base * p_base);
 
 				private:
 					typedef kerbal::type_traits::integral_constant<int, 0>		DES_OFF_VER_DEFAULT;
@@ -1535,7 +1532,7 @@ namespace kerbal
 					KERBAL_CONSTEXPR20
 					static
 					void k_destroy_node_and_offsprings_impl(
-						NodeAllocator & alloc, node_base * start,
+						NodeAllocator & alloc, avl_node_base * start,
 						DES_OFF_VER_DEFAULT
 					) KERBAL_NOEXCEPT;
 
@@ -1543,7 +1540,7 @@ namespace kerbal
 					KERBAL_CONSTEXPR20
 					static
 					void k_destroy_node_and_offsprings_impl(
-						NodeAllocator & alloc, node_base * start,
+						NodeAllocator & alloc, avl_node_base * start,
 						DES_OFF_VER_DESTROY_BUT_NO_DEALLOCATE
 					) KERBAL_NOEXCEPT;
 
@@ -1551,7 +1548,7 @@ namespace kerbal
 					KERBAL_CONSTEXPR20
 					static
 					void k_destroy_node_and_offsprings_impl(
-						NodeAllocator & /*alloc*/, node_base * /*start*/,
+						NodeAllocator & /*alloc*/, avl_node_base * /*start*/,
 						DES_OFF_VER_NO_DESTROY
 					) KERBAL_NOEXCEPT;
 
@@ -1560,12 +1557,12 @@ namespace kerbal
 					template <typename NodeAllocator>
 					KERBAL_CONSTEXPR20
 					static
-					void k_destroy_node_and_offsprings(NodeAllocator & alloc, node_base * start);
+					void k_destroy_node_and_offsprings(NodeAllocator & alloc, avl_node_base * start);
 
 					template <typename T, typename UpstreamAllocator>
 					KERBAL_CONSTEXPR20
 					static
-					void k_destroy_node_and_offsprings(kerbal::memory::monotonic_allocator<T, UpstreamAllocator> & alloc, node_base * start);
+					void k_destroy_node_and_offsprings(kerbal::memory::monotonic_allocator<T, UpstreamAllocator> & alloc, avl_node_base * start);
 
 
 #		if __cplusplus >= 201703L
@@ -1573,7 +1570,7 @@ namespace kerbal
 
 					template <typename Node>
 					KERBAL_CONSTEXPR20
-					static void k_destroy_node_and_offsprings(std::pmr::polymorphic_allocator<Node> & alloc, node_base * start)
+					static void k_destroy_node_and_offsprings(std::pmr::polymorphic_allocator<Node> & alloc, avl_node_base * start)
 						KERBAL_CONDITIONAL_NOEXCEPT(
 							(
 								!kerbal::type_traits::try_test_is_trivially_destructible<Entity>::IS_TRUE::value ?

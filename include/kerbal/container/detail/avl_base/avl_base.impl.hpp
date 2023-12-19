@@ -77,99 +77,45 @@ namespace kerbal
 			inline
 			void
 			avl_type_unrelated::
-			k_left_rotate(node_base * g, node_base * p) KERBAL_NOEXCEPT
-			{
-				/*
-						 a
-						 |
-						 g                         a
-						  \                        |
-						   p                       p
-						 /   \                   /   \
-					  [l]     [r]               g     [r]
-												 \
-												  [l]
-				 */
-
-				node_base * l = p->left;
-
-				g->right = l;
-				set_parent_ignore_null(l, g);
-
-				p->left = g;
-				g->parent = p;
-			}
-
-			KERBAL_CONSTEXPR14
-			inline
-			void
-			avl_type_unrelated::
-			k_right_rotate(node_base * g, node_base * p) KERBAL_NOEXCEPT
-			{
-				/*
-							 a
-							 |
-							 g                     a
-							/                      |
-						   p                       p
-						 /   \                   /   \
-					  [l]     [r]             [l]     g
-													 /
-												  [r]
-				 */
-
-				node_base * r = p->right;
-
-				g->left = r;
-				set_parent_ignore_null(r, g);
-
-				p->right = g;
-				g->parent = p;
-			}
-
-			KERBAL_CONSTEXPR14
-			inline
-			void
-			avl_type_unrelated::
 			k_emplace_rebalance(head_node * p_head) KERBAL_NOEXCEPT
 			{
 				while (p_head != &this->k_head) {
-					node_base * p_base = p_head->as_node_base();
-					node_base::height_t height_of_left = node_base::height_of(p_base->left);
-					node_base::height_t height_of_right = node_base::height_of(p_base->right);
-					node_base::height_t new_height = 1 + kerbal::compare::max(height_of_left, height_of_right);
+					avl_node_base * p_base = avl_node_base::as(p_head);
+					height_t height_of_left = avl_node_base::height_of(p_base->left);
+					height_t height_of_right = avl_node_base::height_of(p_base->right);
+					height_t new_height = 1 + kerbal::compare::max(height_of_left, height_of_right);
 					if (p_base->height == new_height) {
 						break;
 					}
 					p_base->height = new_height;
 
-					node_base * p = NULL;
+					avl_node_base * p = NULL;
 					if (height_of_left > height_of_right + 1) { // bfactor > +1
-						node_base * & left = p;
-						left = p_base->left;
-						if (node_base::height_of(left->left) < node_base::height_of(left->right)) {
-							node_base * new_left = left->right;
-							k_left_rotate(left, new_left);
+						avl_node_base * & left = p;
+						left = avl_node_base::as(p_base->left);
+						if (avl_node_base::height_of(left->left) < avl_node_base::height_of(left->right)) {
+							bst_node_base * new_left = left->right;
+							bst_node_base::left_rotate(left, new_left);
 							p_base->left = new_left;
 							new_left->parent = p_base;
 							left->update_height();
-							left = new_left;
+							left = avl_node_base::as(new_left);
 						}
 						p_head = p_base->parent;
-						k_right_rotate(p_base, left);
+						bst_node_base::right_rotate(p_base, left);
 					} else if (height_of_right > height_of_left + 1) { // bfactor < -1
-						node_base * & right = p;
-						right = p_base->right;
-						if (node_base::height_of(right->left) > node_base::height_of(right->right)) {
-							node_base * new_right = right->left;
-							k_right_rotate(right, new_right);
+						avl_node_base * & right = p;
+						right = avl_node_base::as(p_base->right);
+						if (avl_node_base::height_of(right->left) > avl_node_base::height_of(right->right)) {
+							bst_node_base * new_right = right->left;
+							bst_node_base::right_rotate(right, new_right);
 							p_base->right = new_right;
 							new_right->parent = p_base;
 							right->update_height();
-							right = new_right;
+							right = avl_node_base::as(new_right);
 						}
 						p_head = p_base->parent;
-						k_left_rotate(p_base, right);
+						bst_node_base::left_rotate(p_base, right);
 					} else {
 						p_head = p_base->parent;
 						continue;
@@ -181,7 +127,7 @@ namespace kerbal
 					}
 					p->parent = p_head;
 					p_base->update_height();
-					p->update_height(p->left->height, p->right->height); // <=> p->update_height(); p's sons both not NULL
+					p->update_height(avl_node_base::as(p->left)->height, avl_node_base::as(p->right)->height); // <=> p->update_height(); p's sons both not NULL
 					break;
 				}
 			}
@@ -194,38 +140,38 @@ namespace kerbal
 			{
 				bool not_reach_head = p_head != &this->k_head;
 				while (not_reach_head) {
-					node_base * p_base = p_head->as_node_base();
-					node_base::height_t height_of_left = node_base::height_of(p_base->left);
-					node_base::height_t height_of_right = node_base::height_of(p_base->right);
+					avl_node_base * p_base = avl_node_base::as(p_head);
+					height_t height_of_left = avl_node_base::height_of(p_base->left);
+					height_t height_of_right = avl_node_base::height_of(p_base->right);
 					p_base->update_height(height_of_left, height_of_right);
 
-					node_base * p = NULL;
+					avl_node_base * p = NULL;
 					if (height_of_left > height_of_right + 1) { // bfactor > +1
-						node_base * & left = p;
-						left = p_base->left;
-						if (node_base::height_of(left->left) < node_base::height_of(left->right)) {
-							node_base * new_left = left->right;
-							k_left_rotate(left, new_left);
+						avl_node_base * & left = p;
+						left = avl_node_base::as(p_base->left);
+						if (avl_node_base::height_of(left->left) < avl_node_base::height_of(left->right)) {
+							bst_node_base * new_left = left->right;
+							bst_node_base::left_rotate(left, new_left);
 							p_base->left = new_left;
 							new_left->parent = p_base;
 							left->update_height();
-							left = new_left;
+							left = avl_node_base::as(new_left);
 						}
 						p_head = p_base->parent;
-						k_right_rotate(p_base, left);
+						bst_node_base::right_rotate(p_base, left);
 					} else if (height_of_right > height_of_left + 1) { // bfactor < -1
-						node_base * & right = p;
-						right = p_base->right;
-						if (node_base::height_of(right->left) > node_base::height_of(right->right)) {
-							node_base * new_right = right->left;
-							k_right_rotate(right, new_right);
+						avl_node_base * & right = p;
+						right = avl_node_base::as(p_base->right);
+						if (avl_node_base::height_of(right->left) > avl_node_base::height_of(right->right)) {
+							bst_node_base * new_right = right->left;
+							bst_node_base::right_rotate(right, new_right);
 							p_base->right = new_right;
 							new_right->parent = p_base;
 							right->update_height();
-							right = new_right;
+							right = avl_node_base::as(new_right);
 						}
 						p_head = p_base->parent;
-						k_left_rotate(p_base, right);
+						bst_node_base::left_rotate(p_base, right);
 					} else {
 						p_head = p_base->parent;
 						not_reach_head = p_head != &this->k_head;
@@ -240,17 +186,17 @@ namespace kerbal
 					}
 					p->parent = p_head;
 					p_base->update_height();
-					p->update_height(p->left->height, p->right->height); // <=> p->update_height(); p's sons both not NULL
+					p->update_height(avl_node_base::as(p->left)->height, avl_node_base::as(p->right)->height); // <=> p->update_height(); p's sons both not NULL
 				}
 			}
 
 			KERBAL_CONSTEXPR14
 			inline
-			avl_type_unrelated::node_base *
+			avl_type_unrelated::avl_node_base *
 			avl_type_unrelated::
-			k_unhook_node_and_get_successor_right_not_null(node_base * p_base) KERBAL_NOEXCEPT
+			k_unhook_node_and_get_successor_right_not_null(avl_node_base * p_base) KERBAL_NOEXCEPT
 			{
-				node_base * replacer = p_base->right;
+				bst_node_base * replacer = p_base->right;
 				head_node * parent = p_base->parent;
 				head_node * start = replacer;
 				if (replacer->left != get_avl_vnull_node()) {
@@ -282,16 +228,16 @@ namespace kerbal
 				set_parent_ignore_null(p_base->left, replacer);
 
 				k_remove_rebalance(start);
-				return replacer;
+				return avl_node_base::as(replacer);
 			}
 
 			KERBAL_CONSTEXPR14
 			inline
 			avl_type_unrelated::head_node *
 			avl_type_unrelated::
-			k_unhook_node_and_get_successor_right_null(node_base * p_base) KERBAL_NOEXCEPT
+			k_unhook_node_and_get_successor_right_null(avl_node_base * p_base) KERBAL_NOEXCEPT
 			{
-				node_base * replacer = p_base->left;
+				bst_node_base * replacer = p_base->left;
 				head_node * parent = p_base->parent;
 				head_node * successor = parent;
 				set_parent_ignore_null(replacer, parent);
@@ -315,9 +261,9 @@ namespace kerbal
 			inline
 			void
 			avl_type_unrelated::
-			k_unhook_node_right_null(node_base * p_base) KERBAL_NOEXCEPT
+			k_unhook_node_right_null(avl_node_base * p_base) KERBAL_NOEXCEPT
 			{
-				node_base * replacer = p_base->left;
+				bst_node_base * replacer = p_base->left;
 				head_node * parent = p_base->parent;
 				set_parent_ignore_null(replacer, parent);
 
@@ -333,7 +279,7 @@ namespace kerbal
 			inline
 			avl_type_unrelated::head_node *
 			avl_type_unrelated::
-			k_unhook_node_and_get_successor(node_base * p_base) KERBAL_NOEXCEPT
+			k_unhook_node_and_get_successor(avl_node_base * p_base) KERBAL_NOEXCEPT
 			{
 				head_node * p_next = NULL;
 				if (p_base->right != get_avl_vnull_node()) {
@@ -349,7 +295,7 @@ namespace kerbal
 			inline
 			void
 			avl_type_unrelated::
-			k_unhook_node(node_base * p_base) KERBAL_NOEXCEPT
+			k_unhook_node(avl_node_base * p_base) KERBAL_NOEXCEPT
 			{
 				if (p_base->right != get_avl_vnull_node()) {
 					this->k_unhook_node_and_get_successor_right_not_null(p_base);
@@ -868,7 +814,7 @@ namespace kerbal
 			avl_type_only<Entity>::
 			k_destroy_using_allocator(NodeAllocator & alloc) KERBAL_NOEXCEPT
 			{
-				k_destroy_node_and_offsprings(alloc, this->k_head.left);
+				k_destroy_node_and_offsprings(alloc, avl_node_base::as(this->k_head.left));
 			}
 
 
@@ -1113,12 +1059,12 @@ namespace kerbal
 			KERBAL_CONSTEXPR20
 			void
 			avl_type_only<Entity>::
-			k_assign_destroy_n(NodeAllocator & alloc, node_base * start, size_type size, head_node * head)
+			k_assign_destroy_n(NodeAllocator & alloc, avl_node_base * start, size_type size, head_node * head)
 			{
 				for (size_type i = 0; i < size; ++i) {
 					head_node * next = start->postorder_next(head);
 					k_destroy_node(alloc, start);
-					start = next->as_node_base();
+					start = avl_node_base::as(next);
 				}
 			}
 
@@ -1138,16 +1084,16 @@ namespace kerbal
 				}
 
 				// move current tree to tmp
-				head_node tmp_head;
+				head_node tmp_head(get_avl_vnull_node());
 				tmp_head.left = this->k_head.left;
 				tmp_head.left->parent = &tmp_head;
 				this->k_head.left = get_avl_vnull_node();
 				size_type tmp_size = this->k_size;
 				this->k_size = 0;
 
-				node_base * tmp_it = tmp_head.leftest_offspring();
+				avl_node_base * tmp_it = avl_node_base::as(tmp_head.leftest_offspring());
 				if (tmp_it->right != get_avl_vnull_node()) { // only correct under avl
-					tmp_it = tmp_it->right;
+					tmp_it = avl_node_base::as(tmp_it->right);
 				}
 
 				// tmp_it advances in post-order
@@ -1160,7 +1106,7 @@ namespace kerbal
 					while (i < tmp_size && first != last) { // may throw here
 						node * p = node::reinterpret_as(tmp_it);
 						++i;
-						tmp_it = tmp_it->postorder_next(&tmp_head)->as_node_base();
+						tmp_it = avl_node_base::as(tmp_it->postorder_next(&tmp_head));
 						k_reuse_node(alloc, p, *first); // may throw here
 						this->k_emplace_hook_node(e, kc, p);
 						++first; // may throw here
@@ -1192,16 +1138,16 @@ namespace kerbal
 				}
 
 				// move current tree to tmp
-				head_node tmp_head;
+				head_node tmp_head(get_avl_vnull_node());
 				tmp_head.left = this->k_head.left;
 				tmp_head.left->parent = &tmp_head;
 				this->k_head.left = get_avl_vnull_node();
 				size_type tmp_size = this->k_size;
 				this->k_size = 0;
 
-				node_base * tmp_it = tmp_head.leftest_offspring();
+				avl_node_base * tmp_it = avl_node_base::as(tmp_head.leftest_offspring());
 				if (tmp_it->right != get_avl_vnull_node()) { // only correct under avl
-					tmp_it = tmp_it->right;
+					tmp_it = avl_node_base::as(tmp_it->right);
 				}
 
 
@@ -1213,7 +1159,7 @@ namespace kerbal
 					while (i < tmp_size && first != last) { // may throw here
 						node * p = node::reinterpret_as(tmp_it);
 						++i;
-						tmp_it = tmp_it->postorder_next(&tmp_head)->as_node_base();
+						tmp_it = avl_node_base::as(tmp_it->postorder_next(&tmp_head));
 						head_node * parent_backup = p->parent;
 						k_reuse_node(alloc, p, *first); // may throw here
 						if (!this->k_emplace_hook_node_unique(e, kc, p).insert_happen()) { // rollback
@@ -1399,13 +1345,13 @@ namespace kerbal
 				const Key & key
 			) const
 			{
-				const node_base * cur_base = this->k_head.left;
+				const avl_node_base * cur_base = avl_node_base::as(this->k_head.left);
 				while (cur_base != get_avl_vnull_node()) {
 					const typename Extract::key_type & cur_key = e(node::reinterpret_as(cur_base)->member());
 					if (kc(key, cur_key)) { // key < cur_key
-						cur_base = cur_base->left;
+						cur_base = avl_node_base::as(cur_base->left);
 					} else if (kc(cur_key, key)) { // cur_key < key
-						cur_base = cur_base->right;
+						cur_base = avl_node_base::as(cur_base->right);
 					} else {
 						return const_iterator(cur_base);
 					}
@@ -1479,20 +1425,20 @@ namespace kerbal
 			template <typename Extract, typename KeyCompare, typename Key>
 			KERBAL_CONSTEXPR14
 			typename
-			avl_type_only<Entity>::node_base const *
+			avl_type_only<Entity>::avl_node_base const *
 			avl_type_only<Entity>::
 			k_lower_bound_helper(
 				Extract & e, KeyCompare & kc,
 				const Key & key,
-				const node_base * cur_base, const node_base * lbound
+				const avl_node_base * cur_base, const avl_node_base * lbound
 			)
 			{
 				while (cur_base != get_avl_vnull_node()) {
 					if (kc(e(node::reinterpret_as(cur_base)->member()), key)) { // cur_key < key
-						cur_base = cur_base->right;
+						cur_base = avl_node_base::as(cur_base->right);
 					} else { // cur_key >= key
 						lbound = cur_base;
-						cur_base = cur_base->left;
+						cur_base = avl_node_base::as(cur_base->left);
 					}
 				}
 				return lbound;
@@ -1502,20 +1448,20 @@ namespace kerbal
 			template <typename Extract, typename KeyCompare, typename Key>
 			KERBAL_CONSTEXPR14
 			typename
-			avl_type_only<Entity>::node_base const *
+			avl_type_only<Entity>::avl_node_base const *
 			avl_type_only<Entity>::
 			k_upper_bound_helper(
 				Extract & e, KeyCompare & kc,
 				const Key & key,
-				const node_base * cur_base, const node_base * ubound
+				const avl_node_base * cur_base, const avl_node_base * ubound
 			)
 			{
 				while (cur_base != get_avl_vnull_node()) {
 					if (kc(key, e(node::reinterpret_as(cur_base)->member()))) { // key < cur_key
 						ubound = cur_base;
-						cur_base = cur_base->left;
+						cur_base = avl_node_base::as(cur_base->left);
 					} else { // key >= cur_key
-						cur_base = cur_base->right;
+						cur_base = avl_node_base::as(cur_base->right);
 					}
 				}
 				return ubound;
@@ -1532,8 +1478,8 @@ namespace kerbal
 				const Key & key
 			) const
 			{
-				const node_base * lbound = this->k_head.as_node_base();
-				lbound = k_lower_bound_helper(e, kc, key, this->k_head.left, lbound);
+				const avl_node_base * lbound = avl_node_base::as(&this->k_head);
+				lbound = k_lower_bound_helper(e, kc, key, avl_node_base::as(this->k_head.left), lbound);
 				return const_iterator(lbound);
 			}
 
@@ -1610,8 +1556,8 @@ namespace kerbal
 				const Key & key
 			) const
 			{
-				const node_base * ubound = this->k_head.as_node_base();
-				ubound = k_upper_bound_helper(e, kc, key, this->k_head.left, ubound);
+				const avl_node_base * ubound = avl_node_base::as(&this->k_head);
+				ubound = k_upper_bound_helper(e, kc, key, avl_node_base::as(this->k_head.left), ubound);
 				return const_iterator(ubound);
 			}
 
@@ -1690,21 +1636,21 @@ namespace kerbal
 				const Key & key
 			) const
 			{
-				const node_base * lbound = this->k_head.as_node_base();
-				const node_base * ubound = lbound;
-				const node_base * cur_base = this->k_head.left;
+				const avl_node_base * lbound = avl_node_base::as(&this->k_head);
+				const avl_node_base * ubound = lbound;
+				const avl_node_base * cur_base = avl_node_base::as(this->k_head.left);
 				while (cur_base != get_avl_vnull_node()) {
 					const typename Extract::key_type & cur_key = e(node::reinterpret_as(cur_base)->member());
 					if (kc(key, cur_key)) { // key < cur_key
 						lbound = cur_base;
 						ubound = cur_base;
-						cur_base = cur_base->left;
+						cur_base = avl_node_base::as(cur_base->left);
 					} else if (kc(cur_key, key)) { // cur_key < key
-						cur_base = cur_base->right;
+						cur_base = avl_node_base::as(cur_base->right);
 					} else { // key == cur_key
 						lbound = cur_base;
-						lbound = k_lower_bound_helper(e, kc, key, cur_base->left, lbound);
-						ubound = k_upper_bound_helper(e, kc, key, cur_base->right, ubound);
+						lbound = k_lower_bound_helper(e, kc, key, avl_node_base::as(cur_base->left), lbound);
+						ubound = k_upper_bound_helper(e, kc, key, avl_node_base::as(cur_base->right), ubound);
 						break;
 					}
 				}
@@ -1807,13 +1753,13 @@ namespace kerbal
 				const Key & key
 			) const
 			{
-				const node_base * cur_base = this->k_head.left;
+				const avl_node_base * cur_base = avl_node_base::as(this->k_head.left);
 				while (cur_base != get_avl_vnull_node()) {
 					const typename Extract::key_type & cur_key = e(node::reinterpret_as(cur_base)->member());
 					if (kc(key, cur_key)) { // key < cur_key
-						cur_base = cur_base->left;
+						cur_base = avl_node_base::as(cur_base->left);
 					} else if (kc(cur_key, key)) { // cur_key < key
-						cur_base = cur_base->right;
+						cur_base = avl_node_base::as(cur_base->right);
 					} else { // key == cur_key
 						return true;
 					}
@@ -1870,7 +1816,7 @@ namespace kerbal
 				} else {
 					const typename Extract::key_type & src_key = e(p->member());
 
-					node_base * cur_base = this->k_head.left;
+					avl_node_base * cur_base = avl_node_base::as(this->k_head.left);
 					while (true) {
 						if (
 							kc(
@@ -1882,13 +1828,13 @@ namespace kerbal
 								cur_base->left = p;
 								break;
 							}
-							cur_base = cur_base->left;
+							cur_base = avl_node_base::as(cur_base->left);
 						} else {
 							if (cur_base->right == get_avl_vnull_node()) {
 								cur_base->right = p;
 								break;
 							}
-							cur_base = cur_base->right;
+							cur_base = avl_node_base::as(cur_base->right);
 						}
 					}
 
@@ -1915,7 +1861,7 @@ namespace kerbal
 				} else {
 					const typename Extract::key_type & src_key = e(p->member());
 
-					node_base * cur_base = this->k_head.left;
+					avl_node_base * cur_base = avl_node_base::as(this->k_head.left);
 					while (true) {
 						const typename Extract::key_type & cur_key = e(node::reinterpret_as(cur_base)->member());
 						if (kc(src_key, cur_key)) { // src_key < cur_key, ** may throw here **
@@ -1923,13 +1869,13 @@ namespace kerbal
 								cur_base->left = p;
 								break;
 							}
-							cur_base = cur_base->left;
+							cur_base = avl_node_base::as(cur_base->left);
 						} else if (kc(cur_key, src_key)) { // cur_key < src_key
 							if (cur_base->right == get_avl_vnull_node()) {
 								cur_base->right = p;
 								break;
 							}
-							cur_base = cur_base->right;
+							cur_base = avl_node_base::as(cur_base->right);
 						} else { // src_key == cur_key
 							return unique_insert_r(iterator(cur_base), false);
 						}
@@ -2111,7 +2057,7 @@ namespace kerbal
 					this->k_head.left = p;
 					p->parent = &this->k_head;
 				} else {
-					node_base * cur_base = this->k_head.left;
+					avl_node_base * cur_base = avl_node_base::as(this->k_head.left);
 					while (true) {
 						const_reference cur_key = node::reinterpret_as(cur_base)->member();
 						if (kc(src_key, cur_key)) { // src_key < cur_key, ** may throw here **
@@ -2120,14 +2066,14 @@ namespace kerbal
 								cur_base->left = p;
 								break;
 							}
-							cur_base = cur_base->left;
+							cur_base = avl_node_base::as(cur_base->left);
 						} else if (kc(cur_key, src_key)) { // cur_key < src_key
 							if (cur_base->right == get_avl_vnull_node()) {
 								p = k_build_new_node(alloc, FORWARD(U, src_key));
 								cur_base->right = p;
 								break;
 							}
-							cur_base = cur_base->right;
+							cur_base = avl_node_base::as(cur_base->right);
 						} else {
 							return unique_insert_r(iterator(cur_base), false);
 						}
@@ -2381,7 +2327,7 @@ namespace kerbal
 			avl_type_only<Entity>::
 			k_erase_not_end_using_allocator_unsafe(NodeAllocator & alloc, const_iterator pos) KERBAL_NOEXCEPT
 			{
-				node_base * cur_base = pos.cast_to_mutable().current->as_node_base();
+				avl_node_base * cur_base = avl_node_base::as(pos.cast_to_mutable().current);
 				iterator ret(this->avl_type_unrelated::k_unhook_node_and_get_successor(cur_base));
 				k_destroy_node(alloc, cur_base);
 				return ret;
@@ -2476,7 +2422,7 @@ namespace kerbal
 			avl_type_only<Entity>::
 			k_clear_using_allocator(NodeAllocator & alloc) KERBAL_NOEXCEPT
 			{
-				k_destroy_node_and_offsprings(alloc, this->k_head.left);
+				k_destroy_node_and_offsprings(alloc, avl_node_base::as(this->k_head.left));
 				this->k_head.left = get_avl_vnull_node();
 				this->k_size = 0;
 			}
@@ -2630,7 +2576,7 @@ namespace kerbal
 			{
 				node * p = node::reinterpret_as(other_it.cast_to_mutable().current);
 
-				avl_head_node * next = NULL;
+				head_node * next = NULL;
 				if (this->k_size == 0) {
 					next = other.k_unhook_node_and_get_successor(p);
 					this->k_head.left = p;
@@ -2641,7 +2587,7 @@ namespace kerbal
 				} else {
 					const typename ThisExtract::key_type & other_key = this_e(p->member());
 
-					node_base * cur_base = this->k_head.left;
+					avl_node_base * cur_base = avl_node_base::as(this->k_head.left);
 					while (true) {
 						if (
 							this_kc(
@@ -2654,14 +2600,14 @@ namespace kerbal
 								cur_base->left = p;
 								break;
 							}
-							cur_base = cur_base->left;
+							cur_base = avl_node_base::as(cur_base->left);
 						} else {
 							if (cur_base->right == get_avl_vnull_node()) {
 								next = other.k_unhook_node_and_get_successor(p);
 								cur_base->right = p;
 								break;
 							}
-							cur_base = cur_base->right;
+							cur_base = avl_node_base::as(cur_base->right);
 						}
 					}
 
@@ -2689,7 +2635,7 @@ namespace kerbal
 			{
 				node * p = node::reinterpret_as(other_it.cast_to_mutable().current);
 
-				avl_head_node * next = NULL;
+				head_node * next = NULL;
 				if (this->k_size == 0) {
 					next = other.k_unhook_node_and_get_successor(p);
 					this->k_head.left = p;
@@ -2700,7 +2646,7 @@ namespace kerbal
 				} else {
 					const typename ThisExtract::key_type & other_key = this_e(p->member());
 
-					node_base * cur_base = this->k_head.left;
+					avl_node_base * cur_base = avl_node_base::as(this->k_head.left);
 					while (true) {
 						const typename ThisExtract::key_type & cur_key = this_e(node::reinterpret_as(cur_base)->member());
 						if (this_kc(other_key, cur_key)) { // other < p->member(), ** may throw here **
@@ -2709,14 +2655,14 @@ namespace kerbal
 								cur_base->left = p;
 								break;
 							}
-							cur_base = cur_base->left;
+							cur_base = avl_node_base::as(cur_base->left);
 						} else if (this_kc(cur_key, other_key)) { // p->member() < other
 							if (cur_base->right == get_avl_vnull_node()) {
 								next = other.k_unhook_node_and_get_successor(p);
 								cur_base->right = p;
 								break;
 							}
-							cur_base = cur_base->right;
+							cur_base = avl_node_base::as(cur_base->right);
 						} else {
 							return unique_insert_r((++other_it).cast_to_mutable(), false);
 						}
@@ -2825,7 +2771,7 @@ namespace kerbal
 			KERBAL_CONSTEXPR20
 			void
 			avl_type_only<Entity>::
-			pre_order_impl(const node_base * p_base, F f)
+			pre_order_impl(const avl_node_base * p_base, F f)
 			{
 				while (p_base != get_avl_vnull_node()) {
 					const node * p = node::reinterpret_as(p_base);
@@ -2842,7 +2788,7 @@ namespace kerbal
 			avl_type_only<Entity>::
 			pre_order(F f) const
 			{
-				node_base * p = static_cast<node_base *>(this->k_head.left);
+				avl_node_base * p = avl_node_base::as(this->k_head.left);
 				pre_order_impl(p, f);
 			}
 
@@ -2852,9 +2798,9 @@ namespace kerbal
 			avl_normal_result_t
 			avl_type_only<Entity>::
 			avl_normal_impl(
-				const node_base * p,
+				const avl_node_base * p,
 				const value_type * & mini, const value_type * & maxi,
-				node_base::height_t & height,
+				height_t & height,
 				Extract & e, KeyCompare & kc
 			)
 			{
@@ -2868,16 +2814,16 @@ namespace kerbal
 				// Sub Trees Check
 				const value_type * lmini = NULL;
 				const value_type * lmaxi = NULL;
-				node_base::height_t lheight = 0;
-				avl_normal_result_t lresult = avl_normal_impl(p->left, lmini, lmaxi, lheight, e, kc);
+				height_t lheight = 0;
+				avl_normal_result_t lresult = avl_normal_impl(avl_node_base::as(p->left), lmini, lmaxi, lheight, e, kc);
 				if (lresult != AVL_NORMAL_RESULT_CORRECT) {
 					return lresult;
 				}
 
 				const value_type * rmini = NULL;
 				const value_type * rmaxi = NULL;
-				node_base::height_t rheight = 0;
-				avl_normal_result_t rresult = avl_normal_impl(p->right, rmini, rmaxi, rheight, e, kc);
+				height_t rheight = 0;
+				avl_normal_result_t rresult = avl_normal_impl(avl_node_base::as(p->right), rmini, rmaxi, rheight, e, kc);
 				if (rresult != AVL_NORMAL_RESULT_CORRECT) {
 					return rresult;
 				}
@@ -2944,18 +2890,18 @@ namespace kerbal
 			{
 				const value_type * mini = NULL;
 				const value_type * maxi = NULL;
-				node_base::height_t height = 0;
-				return avl_normal_impl(this->k_head.left, mini, maxi, height, e, kc);
+				height_t height = 0;
+				return avl_normal_impl(avl_node_base::as(this->k_head.left), mini, maxi, height, e, kc);
 			}
 
 			template <typename Entity>
 			KERBAL_CONSTEXPR20
 			typename
-			avl_type_only<Entity>::node_base::height_t
+			avl_type_only<Entity>::height_t
 			avl_type_only<Entity>::
 			height() const KERBAL_NOEXCEPT
 			{
-				return node_base::height_of(this->k_head.left);
+				return avl_node_base::height_of(this->k_head.left);
 			}
 
 
@@ -3238,7 +3184,7 @@ namespace kerbal
 			KERBAL_CONSTEXPR20
 			void
 			avl_type_only<Entity>::
-			k_destroy_node(NodeAllocator & alloc, node_base * p_node_base)
+			k_destroy_node(NodeAllocator & alloc, avl_node_base * p_node_base)
 			{
 				typedef kerbal::memory::allocator_traits<NodeAllocator> node_allocator_traits;
 				typedef typename node_allocator_traits::pointer allocator_pointer_type;
@@ -3260,7 +3206,7 @@ namespace kerbal
 			void
 			avl_type_only<Entity>::
 			k_destroy_node_and_offsprings_impl(
-				NodeAllocator & alloc, node_base * start,
+				NodeAllocator & alloc, avl_node_base * start,
 				DES_OFF_VER_DEFAULT
 			) KERBAL_NOEXCEPT
 			{
@@ -3272,13 +3218,13 @@ namespace kerbal
 				// l: left son
 				// r: right son
 				// u: uncle
-				head_node * p = start->as_head();
+				head_node * p = start;
 				head_node * Gg = start->parent;
 				while (p != Gg) {
 					head_node * u = p->as_node_base()->parent;
-					node_base * l = p->left;
-					node_base * r = p->as_node_base()->right;
-					k_destroy_node(alloc, p->as_node_base());
+					avl_node_base * l = avl_node_base::as(p->left);
+					avl_node_base * r = avl_node_base::as(p->as_node_base()->right);
+					k_destroy_node(alloc, avl_node_base::as(p->as_node_base()));
 					if (l != get_avl_vnull_node()) {
 						if (r != get_avl_vnull_node()) {
 							// l != NULL && r != NULL
@@ -3310,7 +3256,7 @@ namespace kerbal
 			void
 			avl_type_only<Entity>::
 			k_destroy_node_and_offsprings_impl(
-				NodeAllocator & alloc, node_base * start,
+				NodeAllocator & alloc, avl_node_base * start,
 				DES_OFF_VER_DEFAULT
 			) KERBAL_NOEXCEPT
 			{
@@ -3322,13 +3268,13 @@ namespace kerbal
 				// l: left son
 				// r: right son
 				// u: uncle
-				head_node * p = start->as_head();
+				head_node * p = start;
 				head_node * Gg = start->parent;
 				head_node * u = Gg;
 				while (p != Gg) {
-					node_base * l = p->left;
-					node_base * r = p->as_node_base()->right;
-					k_destroy_node(alloc, p->as_node_base());
+					avl_node_base * l = avl_node_base::as(p->left);
+					avl_node_base * r = avl_node_base::as(p->as_node_base()->right);
+					k_destroy_node(alloc, avl_node_base::as(p->as_node_base()));
 					if (l != get_avl_vnull_node()) {
 						if (r != get_avl_vnull_node()) {
 							// l != NULL && r != NULL
@@ -3361,13 +3307,13 @@ namespace kerbal
 			void
 			avl_type_only<Entity>::
 			k_destroy_node_and_offsprings_impl(
-				NodeAllocator & alloc, node_base * start,
+				NodeAllocator & alloc, avl_node_base * start,
 				DES_OFF_VER_DEFAULT ver
 			) KERBAL_NOEXCEPT
 			{
 				while (start != get_avl_vnull_node()) {
-					k_destroy_node_and_offsprings_impl(alloc, start->left, ver);
-					node_base * right = start->right;
+					k_destroy_node_and_offsprings_impl(alloc, avl_node_base::as(start->left), ver);
+					avl_node_base * right = avl_node_base::as(start->right);
 					k_destroy_node(alloc, start);
 					start = right;
 				}
@@ -3381,15 +3327,15 @@ namespace kerbal
 			void
 			avl_type_only<Entity>::
 			k_destroy_node_and_offsprings_impl(
-				NodeAllocator & alloc, node_base * start,
+				NodeAllocator & alloc, avl_node_base * start,
 				DES_OFF_VER_DESTROY_BUT_NO_DEALLOCATE ver
 			) KERBAL_NOEXCEPT
 			{
 				typedef kerbal::memory::allocator_traits<NodeAllocator> node_allocator_traits;
 
 				while (start != get_avl_vnull_node()) {
-					k_destroy_node_and_offsprings_impl(alloc, start->left, ver);
-					node_base * right = start->right;
+					k_destroy_node_and_offsprings_impl(alloc, avl_node_base::as(start->left), ver);
+					avl_node_base * right = avl_node_base::as(start->right);
 
 					node * p_node = node::reinterpret_as(start);
 					node_allocator_traits::destroy(alloc, p_node);
@@ -3404,7 +3350,7 @@ namespace kerbal
 			void
 			avl_type_only<Entity>::
 			k_destroy_node_and_offsprings_impl(
-				NodeAllocator & /*alloc*/, node_base * /*start*/,
+				NodeAllocator & /*alloc*/, avl_node_base * /*start*/,
 				DES_OFF_VER_NO_DESTROY
 			) KERBAL_NOEXCEPT
 			{
@@ -3417,7 +3363,7 @@ namespace kerbal
 			avl_type_only<Entity>::
 			k_destroy_node_and_offsprings(
 				NodeAllocator & alloc,
-				node_base * start
+				avl_node_base * start
 			)
 			{
 				k_destroy_node_and_offsprings_impl(alloc, start, DES_OFF_VER_DEFAULT());
@@ -3430,7 +3376,7 @@ namespace kerbal
 			avl_type_only<Entity>::
 			k_destroy_node_and_offsprings(
 				kerbal::memory::monotonic_allocator<T, UpstreamAllocator> & alloc,
-				node_base * start
+				avl_node_base * start
 			)
 			{
 				typedef typename kerbal::type_traits::conditional<
@@ -3452,7 +3398,7 @@ namespace kerbal
 			avl_type_only<Entity>::
 			k_destroy_node_and_offsprings(
 				std::pmr::polymorphic_allocator<Node> & alloc,
-				node_base * start
+				avl_node_base * start
 			)
 				KERBAL_CONDITIONAL_NOEXCEPT(
 					(
