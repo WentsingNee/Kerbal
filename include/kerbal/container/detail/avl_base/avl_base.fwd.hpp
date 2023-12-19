@@ -16,6 +16,8 @@
 #	define KERBAL_AVL_ENABLE_VNULL 1
 #endif
 
+#include <kerbal/container/detail/bst_base/bst.fwd.hpp>
+
 #include <kerbal/compatibility/constexpr.hpp>
 #include <kerbal/compatibility/noexcept.hpp>
 
@@ -29,8 +31,6 @@ namespace kerbal
 		namespace detail
 		{
 
-			class avl_head_node;
-
 			class avl_node_base;
 
 			template <typename T>
@@ -42,10 +42,6 @@ namespace kerbal
 			inline
 			KERBAL_CONSTEXPR
 			avl_node_base * get_avl_vnull_node() KERBAL_NOEXCEPT;
-
-			class avl_iter_type_unrelated;
-
-			class avl_kiter_type_unrelated;
 
 			template <typename T>
 			class avl_iter;
