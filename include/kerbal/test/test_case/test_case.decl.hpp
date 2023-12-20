@@ -19,8 +19,11 @@
 #include <kerbal/macro/join_line.hpp>
 
 #include <cstdio>
-#include <cstdlib>
 #include <iostream>
+
+
+#define KERBAL_TEST_ENV kerbal_test_record
+#define KERBAL_TEST_ENV_ARG kerbal::test::assert_record & KERBAL_TEST_ENV
 
 
 namespace kerbal
@@ -97,6 +100,55 @@ namespace kerbal
 				const char * description
 			) KERBAL_NOEXCEPT;
 
+			inline
+			bool check_impl(
+				KERBAL_TEST_ENV_ARG,
+				char const * file, int line, bool result,
+				char const * statement
+			)
+			{
+				KERBAL_TEST_ENV.items.emplace_back(file, line, statement);
+				if (!result) {
+					printf(
+						"CHECK FAILED!\n"
+						"details:\n"
+						"    location: %s:%d\n"
+						"    statement: %s\n\n",
+						file, line, statement
+					);
+					KERBAL_TEST_ENV.items.back().result = kerbal::test::test_case_running_result::FAILURE;
+				}
+				return !result;
+			}
+
+			template <typename Lhs, typename Rhs>
+			bool check_equal_impl(
+				KERBAL_TEST_ENV_ARG,
+				char const * file, int line,
+				bool result, char const * statement,
+				char const * left_statement, char const * right_statement,
+				Lhs const & lhs, Rhs const & rhs
+			)
+			{
+				KERBAL_TEST_ENV.items.emplace_back(file, line, statement);
+				if (!result) {
+					printf(
+						"CHECK EQUAL FAILED!\n"
+						"details:\n"
+						"    location: %s:%d\n"
+						"    left statement: %s\n"
+						"   right statement: %s\n",
+						file, line,
+						left_statement, right_statement
+					);
+					printf("    left value: "); std::cout << lhs << std::endl;
+					printf("   right value: "); std::cout << rhs << std::endl;
+					puts("");
+					KERBAL_TEST_ENV.items.back().result = kerbal::test::test_case_running_result::FAILURE;
+				}
+				return !result;
+			}
+
 		} // namespace detail
 
 		int run_test_case(std::size_t case_id, int, char * []);
@@ -105,32 +157,23 @@ namespace kerbal
 
 		int run_all_test_case(int argc, char * argv[]);
 
-		template <typename T, typename U>
-		bool compare_and_out(const T & lhs, const U & rhs)
-		{
-			if (lhs != rhs) {
-				puts("CHECK EQUAL FAILED!");
-				printf(" left is: "); std::cout << lhs << std::endl;
-				printf("right is: "); std::cout << rhs << std::endl;
-				return true;
-			}
-			return false;
-		}
-
 	} // namespace test
 
 } // namespace kerbal
 
 
 #define KERBAL_TEST_CASE(name, description) \
-	void name(kerbal::test::assert_record &); \
+	void name(KERBAL_TEST_ENV_ARG); \
 	static const int KERBAL_JOIN_LINE(kerbal_test_register_unit_tag) KERBAL_ATTRIBUTE_UNUSED = \
 		(kerbal::test::detail::register_test_suit(#name, name, description), 0); \
-	void name(kerbal::test::assert_record & record)
-
+	void name(KERBAL_TEST_ENV_ARG)
 
 #define KERBAL_TEMPLATE_TEST_CASE(name, description) \
-	void name(kerbal::test::assert_record & record)
+	void name(KERBAL_TEST_ENV_ARG)
+
+#define KERBAL_INVOKE_SUB_TEST_CASE(sub_case, ...) do { \
+	sub_case(KERBAL_TEST_ENV, __VA_ARGS__); \
+} while (false)
 
 #define KERBAL_TEMPLATE_TEST_CASE_INST(name, description, ...) \
 	static const int KERBAL_JOIN_LINE(kerbal_test_register_unit_tag) KERBAL_ATTRIBUTE_UNUSED = \
@@ -138,32 +181,12 @@ namespace kerbal
 
 
 #define KERBAL_TEST_CHECK_EQUAL(lhs, rhs) do { \
-	record.items.emplace_back(+__FILE__, __LINE__, +(#lhs " == " #rhs)); \
-	if (kerbal::test::compare_and_out((lhs), (rhs))) { \
-		puts( \
-			"CHECK EQUAL FAILED!\n" \
-			"details: \n" \
-			"    left statement: " #lhs "\n" \
-			"    right statement: " #rhs "\n" \
-		); \
-		printf("    location: " __FILE__ ":%d\n", __LINE__); \
-		record.items.back().result = kerbal::test::test_case_running_result::FAILURE; \
-	} \
+	kerbal::test::detail::check_equal_impl(KERBAL_TEST_ENV, __FILE__, __LINE__, static_cast<bool>((lhs) == (rhs)), (#lhs " == " #rhs), #lhs, #rhs, (lhs), (rhs)) \
 } while (false)
 
 #define KERBAL_TEST_CHECK(statement) do { \
-	record.items.emplace_back(+__FILE__, __LINE__, +(#statement " == true")); \
-	if (!static_cast<bool>((statement))) { \
-		puts( \
-			"CHECK FAILED!\n" \
-			"details: \n" \
-			"    statement: " #statement "\n" \
-		); \
-		printf("    location: " __FILE__ ":%d\n", __LINE__); \
-		record.items.back().result = kerbal::test::test_case_running_result::FAILURE; \
-	} \
+	kerbal::test::detail::check_impl(KERBAL_TEST_ENV, __FILE__, __LINE__, static_cast<bool>(statement), #statement) \
 } while (false)
-
 
 #define KERBAL_TEST_CHECK_EQUAL_STATIC(lhs, rhs) do { \
 	KERBAL_STATIC_ASSERT((lhs) == (rhs), "Check failed!"); \
