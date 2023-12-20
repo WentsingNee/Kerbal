@@ -43,8 +43,8 @@ namespace kerbal
 			int register_test_suit(
 					const char * name,
 					kerbal::test::test_case::call_ptr_t call_ptr,
-					const char * description)
-			KERBAL_NOEXCEPT
+					const char * description
+			) KERBAL_NOEXCEPT
 			{
 				kerbal::test::detail::get_register_list().emplace_back(name, call_ptr, description);
 				return 0;
@@ -139,9 +139,9 @@ namespace kerbal
 			printf(" ------------------------\n");
 
 			if (failure == 0) {
-				return -1;
-			} else {
 				return 0;
+			} else {
+				return 1;
 			}
 		}
 
