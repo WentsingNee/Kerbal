@@ -20,8 +20,11 @@
 #include <kerbal/type_traits/void_type.hpp>
 
 #include <cstdio>
-#include <cstdlib>
 #include <iostream>
+
+
+#define KERBAL_TEST_ENV kerbal_test_record
+#define KERBAL_TEST_ENV_ARG kerbal::test::assert_record & KERBAL_TEST_ENV
 
 
 namespace kerbal
@@ -101,13 +104,13 @@ namespace kerbal
 
 			inline
 			bool k_check_impl(
-				kerbal::test::assert_record & record,
+				KERBAL_TEST_ENV_ARG,
 				char const * file, int line,
 				bool result,
 				char const * statement
 			)
 			{
-				record.items.emplace_back(file, statement, line);
+				KERBAL_TEST_ENV.items.emplace_back(file, statement, line);
 				if (!result) {
 					std::printf(
 						"CHECK FAILED!\n"
@@ -116,21 +119,21 @@ namespace kerbal
 						"    statement: %s\n\n",
 						file, line, statement
 					);
-					record.items.back().result = kerbal::test::test_case_running_result::FAILURE;
+					KERBAL_TEST_ENV.items.back().result = kerbal::test::test_case_running_result::FAILURE;
 				}
 				return !result;
 			}
 
 			template <typename Lhs, typename Rhs>
 			bool k_check_equal_impl(
-				kerbal::test::assert_record & record,
+				KERBAL_TEST_ENV_ARG,
 				char const * file, int line,
 				char const * statement,
 				char const * left_statement, char const * right_statement,
 				Lhs const & lhs, Rhs const & rhs
 			)
 			{
-				record.items.emplace_back(file, statement, line);
+				KERBAL_TEST_ENV.items.emplace_back(file, statement, line);
 				bool result = static_cast<bool>(lhs == rhs);
 				if (!result) {
 					std::printf(
@@ -145,7 +148,7 @@ namespace kerbal
 					std::printf("    left value: "); std::cout << lhs << std::endl;
 					std::printf("   right value: "); std::cout << rhs << std::endl;
 					std::puts("");
-					record.items.back().result = kerbal::test::test_case_running_result::FAILURE;
+					KERBAL_TEST_ENV.items.back().result = kerbal::test::test_case_running_result::FAILURE;
 				}
 				return !result;
 			}
@@ -164,15 +167,19 @@ namespace kerbal
 
 
 #define KERBAL_TEST_CASE(name, description) \
-	void name(kerbal::test::assert_record &); \
+	void name(KERBAL_TEST_ENV_ARG); \
 	static const kerbal::type_traits::void_type<> \
 	KERBAL_JOIN_LINE(kerbal_test_register_unit_tag) KERBAL_ATTRIBUTE_UNUSED = \
 		(kerbal::test::detail::register_test_suit(#name, name, description)); \
-	void name(kerbal::test::assert_record & record)
+	void name(KERBAL_TEST_ENV_ARG)
 
 
 #define KERBAL_TEMPLATE_TEST_CASE(name, description) \
-	void name(kerbal::test::assert_record & record)
+	void name(KERBAL_TEST_ENV_ARG)
+
+#define KERBAL_INVOKE_SUB_TEST_CASE(sub_case, ...) do { \
+	sub_case(KERBAL_TEST_ENV, __VA_ARGS__); \
+} while (false)
 
 #define KERBAL_TEMPLATE_TEST_CASE_INST(name, description, ...) \
 	static const kerbal::type_traits::void_type<> \
@@ -182,7 +189,7 @@ namespace kerbal
 
 #define KERBAL_TEST_CHECK_EQUAL(lhs, rhs) do { \
 	kerbal::test::detail::k_check_equal_impl( \
-		record, \
+		KERBAL_TEST_ENV, \
 		__FILE__, __LINE__, \
 		(#lhs " == " #rhs), \
 		#lhs, #rhs, \
@@ -192,7 +199,7 @@ namespace kerbal
 
 #define KERBAL_TEST_CHECK(statement) do { \
 	kerbal::test::detail::k_check_impl( \
-		record, \
+		KERBAL_TEST_ENV, \
 		__FILE__, __LINE__, \
 		static_cast<bool>(statement), \
 		#statement \
