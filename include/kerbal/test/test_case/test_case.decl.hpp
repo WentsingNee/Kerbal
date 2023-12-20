@@ -97,6 +97,57 @@ namespace kerbal
 				const char * description
 			) KERBAL_NOEXCEPT;
 
+			inline
+			bool k_check_impl(
+				kerbal::test::assert_record & record,
+				char const * file, int line,
+				bool result,
+				char const * statement
+			)
+			{
+				record.items.emplace_back(file, line, statement);
+				if (!result) {
+					std::printf(
+						"CHECK FAILED!\n"
+						"details:\n"
+						"    location: %s:%d\n"
+						"    statement: %s\n\n",
+						file, line, statement
+					);
+					record.items.back().result = kerbal::test::test_case_running_result::FAILURE;
+				}
+				return !result;
+			}
+
+			template <typename Lhs, typename Rhs>
+			bool k_check_equal_impl(
+				kerbal::test::assert_record & record,
+				char const * file, int line,
+				char const * statement,
+				char const * left_statement, char const * right_statement,
+				Lhs const & lhs, Rhs const & rhs
+			)
+			{
+				record.items.emplace_back(file, line, statement);
+				bool result = static_cast<bool>(lhs == rhs);
+				if (!result) {
+					std::printf(
+						"CHECK EQUAL FAILED!\n"
+						"details:\n"
+						"    location: %s:%d\n"
+						"    left statement: %s\n"
+						"   right statement: %s\n",
+						file, line,
+						left_statement, right_statement
+					);
+					std::printf("    left value: "); std::cout << lhs << std::endl;
+					std::printf("   right value: "); std::cout << rhs << std::endl;
+					std::puts("");
+					record.items.back().result = kerbal::test::test_case_running_result::FAILURE;
+				}
+				return !result;
+			}
+
 		} // namespace detail
 
 		int run_test_case(std::size_t case_id, int, char * []);
@@ -104,18 +155,6 @@ namespace kerbal
 		int select_test_case(int argc, char * argv[]);
 
 		int run_all_test_case(int argc, char * argv[]);
-
-		template <typename T, typename U>
-		bool compare_and_out(const T & lhs, const U & rhs)
-		{
-			if (lhs != rhs) {
-				puts("CHECK EQUAL FAILED!");
-				printf(" left is: "); std::cout << lhs << std::endl;
-				printf("right is: "); std::cout << rhs << std::endl;
-				return true;
-			}
-			return false;
-		}
 
 	} // namespace test
 
@@ -138,30 +177,22 @@ namespace kerbal
 
 
 #define KERBAL_TEST_CHECK_EQUAL(lhs, rhs) do { \
-	record.items.emplace_back(+__FILE__, __LINE__, +(#lhs " == " #rhs)); \
-	if (kerbal::test::compare_and_out((lhs), (rhs))) { \
-		puts( \
-			"CHECK EQUAL FAILED!\n" \
-			"details: \n" \
-			"    left statement: " #lhs "\n" \
-			"    right statement: " #rhs "\n" \
-		); \
-		printf("    location: " __FILE__ ":%d\n", __LINE__); \
-		record.items.back().result = kerbal::test::test_case_running_result::FAILURE; \
-	} \
+	kerbal::test::detail::k_check_equal_impl( \
+		record, \
+		__FILE__, __LINE__, \
+		(#lhs " == " #rhs), \
+		#lhs, #rhs, \
+		(lhs), (rhs) \
+	); \
 } while (false)
 
 #define KERBAL_TEST_CHECK(statement) do { \
-	record.items.emplace_back(+__FILE__, __LINE__, +(#statement " == true")); \
-	if (!static_cast<bool>((statement))) { \
-		puts( \
-			"CHECK FAILED!\n" \
-			"details: \n" \
-			"    statement: " #statement "\n" \
-		); \
-		printf("    location: " __FILE__ ":%d\n", __LINE__); \
-		record.items.back().result = kerbal::test::test_case_running_result::FAILURE; \
-	} \
+	kerbal::test::detail::k_check_impl( \
+		record, \
+		__FILE__, __LINE__, \
+		static_cast<bool>(statement), \
+		#statement \
+	); \
 } while (false)
 
 
