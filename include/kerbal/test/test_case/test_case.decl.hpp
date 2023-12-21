@@ -165,10 +165,10 @@ namespace kerbal
 
 
 #define KERBAL_TEST_CASE(name, description) \
-	void name(KERBAL_TEST_ENV_ARG); \
+	inline void name(KERBAL_TEST_ENV_ARG); \
 	static const int KERBAL_JOIN_LINE(kerbal_test_register_unit_tag) KERBAL_ATTRIBUTE_UNUSED = \
 		(kerbal::test::detail::register_test_suit(#name, name, description), 0); \
-	void name(KERBAL_TEST_ENV_ARG)
+	inline void name(KERBAL_TEST_ENV_ARG)
 
 
 #define KERBAL_TEMPLATE_TEST_CASE(name, description) \
