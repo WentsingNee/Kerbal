@@ -12,7 +12,7 @@
 #ifndef KERBAL_BITSET_DETAIL_BITSET_REFERENCE_HPP
 #define KERBAL_BITSET_DETAIL_BITSET_REFERENCE_HPP
 
-#include <kerbal/bitset/fwd/static_bitset.fwd.hpp>
+#include <kerbal/bitset/static_bitset/static_bitset.fwd.hpp>
 
 #include <kerbal/numeric/bit.hpp>
 
