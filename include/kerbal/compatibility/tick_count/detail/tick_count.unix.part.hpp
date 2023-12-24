@@ -1,5 +1,5 @@
 /**
- * @file       tick_count.win.part.hpp
+ * @file       tick_count.unix.part.hpp
  * @brief
  * @date       2023-06-04
  * @author     Peter
@@ -9,24 +9,23 @@
  *   all rights reserved
  */
 
-#ifndef KERBAL_COMPATIBILITY_TICK_COUNT_TICK_COUNT_WIN_PART_HPP
-#define KERBAL_COMPATIBILITY_TICK_COUNT_TICK_COUNT_WIN_PART_HPP
+#ifndef KERBAL_COMPATIBILITY_TICK_COUNT_DETAIL_TICK_COUNT_UNIX_PART_HPP
+#define KERBAL_COMPATIBILITY_TICK_COUNT_DETAIL_TICK_COUNT_UNIX_PART_HPP
 
 #ifndef KERBAL_HAS_TICK_COUNT_SUPPORT
 
 #include <kerbal/config/system.hpp>
 
-#if KERBAL_SYSTEM == KERBAL_SYSTEM_WINDOWS
+#if KERBAL_SYSTEM == KERBAL_SYSTEM_LINUX || \
+    KERBAL_SYSTEM == KERBAL_SYSTEM_APPLE
 
 #define KERBAL_HAS_TICK_COUNT_SUPPORT 1
 
 #include <kerbal/compatibility/noexcept.hpp>
 
-#ifndef NOMINMAX
-#	define NOMINMAX
-#endif
-
-#include <windows.h>
+#include <time.h>
+#include <unistd.h>
+#include <pwd.h>
 
 
 namespace kerbal
@@ -38,7 +37,9 @@ namespace kerbal
 		inline
 		unsigned long get_tick_count()  KERBAL_NOEXCEPT
 		{
-			return GetTickCount();
+			struct timespec ts;
+			clock_gettime(CLOCK_MONOTONIC, &ts);
+			return (ts.tv_sec * 1000 + ts.tv_nsec / 1000000);
 		}
 
 	} // namespace compatibility
@@ -46,8 +47,8 @@ namespace kerbal
 } // namespace kerbal
 
 
-#endif // #if KERBAL_SYSTEM == KERBAL_SYSTEM_WINDOWS
+#endif
 
 #endif // #ifndef KERBAL_HAS_TICK_COUNT_SUPPORT
 
-#endif // KERBAL_COMPATIBILITY_TICK_COUNT_TICK_COUNT_WIN_PART_HPP
+#endif // KERBAL_COMPATIBILITY_TICK_COUNT_DETAIL_TICK_COUNT_UNIX_PART_HPP
