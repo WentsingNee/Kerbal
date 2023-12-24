@@ -26,29 +26,26 @@ add_subdirectory(include)
 
 # Build Header Integration
 option(KERBAL_BUILD_HEADER_INTEGRATION "build header integration" OFF)
-include(cmake/header_integration.cmake)
+if (KERBAL_BUILD_HEADER_INTEGRATION)
+    include(cmake/header_integration.cmake)
+endif ()
 
 
 # Build Script
 option(KERBAL_BUILD_SCRIPT "build script" OFF)
-if (${KERBAL_BUILD_SCRIPT})
+if (KERBAL_BUILD_SCRIPT)
     add_subdirectory(script)
 endif ()
 
 
 # Build Test
 option(KERBAL_BUILD_TEST "build test" OFF)
-if (${KERBAL_BUILD_TEST})
+if (KERBAL_BUILD_TEST)
     add_subdirectory(test)
 endif ()
 
 
-include(cmake/gnuInstall.cmake)
-include(cmake/cpack.cmake)
-
-
-# pretty printer
-
+# Pretty Printer
 message(STATUS "Checking pretty printer module exist")
 
 if (EXISTS ${PROJECT_SOURCE_DIR}/pretty_printer/CMakeLists.txt)
@@ -61,9 +58,14 @@ endif ()
 
 option(KERBAL_INSTALL_PRETTY_PRINTER "install pretty printer" ${KERBAL_PRETTY_PRINTER_MODULE_EXIST})
 
-if (${KERBAL_INSTALL_PRETTY_PRINTER})
+if (KERBAL_INSTALL_PRETTY_PRINTER)
     if (NOT ${KERBAL_PRETTY_PRINTER_MODULE_EXIST})
         message(FATAL_ERROR "You haven't download pretty_printer submodule")
     endif ()
     add_subdirectory(pretty_printer)
 endif ()
+
+
+# Installation & Packing
+include(cmake/gnuInstall.cmake)
+include(cmake/cpack.cmake)
