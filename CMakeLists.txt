@@ -18,6 +18,7 @@ project(
         LANGUAGES CXX
 )
 
+include(cmake/modules.cmake)
 
 # Kerbal Library Target
 set(${PROJECT_NAME}_INCLUDE_DIRS ${PROJECT_SOURCE_DIR}/include)

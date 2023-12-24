@@ -9,10 +9,12 @@
 #   all rights reserved
 #
 
-include(${PROJECT_SOURCE_DIR}/cmake/aux_headers.cmake)
+include(Kerbal/aux_headers)
 
 
-aux_headers(kerbal_installed_headers "${PROJECT_SOURCE_DIR}/include" "${PROJECT_SOURCE_DIR}/include" "")
+kerbal_aux_headers(
+        kerbal_installed_headers "${PROJECT_SOURCE_DIR}/include"
+)
 
 if (${CMAKE_VERSION} VERSION_GREATER_EQUAL 3.19)
     add_library(kerbal INTERFACE ${kerbal_installed_headers})

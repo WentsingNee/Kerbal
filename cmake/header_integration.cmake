@@ -9,7 +9,7 @@
 #   all rights reserved
 #
 
-include(cmake/aux_headers.cmake)
+include(Kerbal/aux_headers)
 
 set(kerbal_public_header_block_patterns
         ".*part\.hpp$"
@@ -20,12 +20,11 @@ if (NOT KERBAL_ENABLE_OPENMP)
     list(APPEND kerbal_public_header_block_patterns "^kerbal/openmp/*")
 endif ()
 
-
-message(STATUS "kerbal_public_header_block_patterns: ${kerbal_public_header_block_patterns}")
-
-
-
-aux_headers(kerbal_public_headers "${PROJECT_SOURCE_DIR}/include" "" "${kerbal_public_header_block_patterns}")
+kerbal_aux_headers(
+        kerbal_public_headers "${PROJECT_SOURCE_DIR}/include/kerbal"
+        RELATIVE "${PROJECT_SOURCE_DIR}/include"
+        BLOCK_PATTERNS ${kerbal_public_header_block_patterns}
+)
 
 
 set(content_of_kerbal_header_integration
