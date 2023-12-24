@@ -70,6 +70,11 @@ namespace kerbal
 
 #		if __cplusplus < 201103L
 
+				KERBAL_CONSTEXPR
+				raw_storage() KERBAL_NOEXCEPT
+				{
+				}
+
 #			define EMPTY
 #			define REMAINF(exp) exp
 #			define LEFT_JOIN_COMMA(exp) , exp
@@ -100,10 +105,6 @@ namespace kerbal
 				using super::super;
 #		endif
 
-				KERBAL_CONSTEXPR
-				raw_storage() KERBAL_NOEXCEPT
-				{
-				}
 
 				KERBAL_CONSTEXPR14
 				void default_construct()
