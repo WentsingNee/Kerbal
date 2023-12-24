@@ -46,6 +46,7 @@ write_basic_package_version_file(
         "${CMAKE_CURRENT_BINARY_DIR}/${PROJECT_NAME}ConfigVersion.cmake"
         VERSION ${CMAKE_PROJECT_VERSION}
         COMPATIBILITY AnyNewerVersion
+        ARCH_INDEPENDENT
 )
 
 install(
