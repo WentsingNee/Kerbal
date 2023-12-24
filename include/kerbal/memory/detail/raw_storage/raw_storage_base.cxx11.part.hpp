@@ -101,10 +101,7 @@ namespace kerbal
 
 				public:
 
-					KERBAL_CONSTEXPR20
-					k_rawst_base() KERBAL_NOEXCEPT
-					{
-					}
+					k_rawst_base() = default;
 
 					template <typename ... Args>
 					KERBAL_CONSTEXPR20
@@ -229,10 +226,7 @@ namespace kerbal
 
 				public:
 
-					KERBAL_CONSTEXPR20
-					k_rawst_base() KERBAL_NOEXCEPT
-					{
-					}
+					k_rawst_base() = default;
 
 					template <typename U>
 					KERBAL_CONSTEXPR20
@@ -353,10 +347,7 @@ namespace kerbal
 
 				public:
 
-					KERBAL_CONSTEXPR
-					k_rawst_base() KERBAL_NOEXCEPT
-					{
-					}
+					k_rawst_base() = default;
 
 					template <typename ... Args>
 					KERBAL_CONSTEXPR
@@ -476,10 +467,7 @@ namespace kerbal
 
 				public:
 
-					KERBAL_CONSTEXPR
-					k_rawst_base() KERBAL_NOEXCEPT
-					{
-					}
+					k_rawst_base() = default;
 
 					template <typename U>
 					KERBAL_CONSTEXPR
@@ -602,10 +590,7 @@ namespace kerbal
 
 				public:
 
-					KERBAL_CONSTEXPR
-					k_rawst_base() KERBAL_NOEXCEPT
-					{
-					}
+					k_rawst_base() = default;
 
 					template <typename ... Args>
 					KERBAL_CONSTEXPR
@@ -728,10 +713,7 @@ namespace kerbal
 
 				public:
 
-					KERBAL_CONSTEXPR
-					k_rawst_base() KERBAL_NOEXCEPT
-					{
-					}
+					k_rawst_base() = default;
 
 					template <typename U>
 					KERBAL_CONSTEXPR
