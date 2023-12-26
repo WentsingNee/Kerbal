@@ -20,6 +20,7 @@ kerbal_aux_headers(
         RELATIVE "${CMAKE_CURRENT_SOURCE_DIR}"
         BLOCK_PATTERNS
             "openmp/*"
+            "parallel/*"
 )
 
 kerbal_aux_headers(
@@ -27,10 +28,16 @@ kerbal_aux_headers(
         RELATIVE "${CMAKE_CURRENT_SOURCE_DIR}"
 )
 
+kerbal_aux_headers(
+        headers_relative_kerbal-parallel "${PROJECT_SOURCE_DIR}/include/kerbal/parallel"
+        RELATIVE "${CMAKE_CURRENT_SOURCE_DIR}"
+)
+
 
 foreach (lib
     kerbal
     kerbal-omp
+    kerbal-parallel
 )
 
     set(headers_relative ${headers_relative_${lib}})
@@ -134,3 +141,18 @@ if (OpenMP_FOUND)
             $<BUILD_INTERFACE:OpenMP::OpenMP_CXX>
     )
 endif ()
+
+
+## kerbal-parallel
+
+target_link_libraries(
+        kerbal-parallel INTERFACE
+        kerbal
+)
+
+include(FindThreads)
+
+target_link_libraries(
+        kerbal-parallel INTERFACE
+        Threads::Threads
+)
