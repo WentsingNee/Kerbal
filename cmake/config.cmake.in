@@ -1,7 +1,39 @@
 @PACKAGE_INIT@
 
-include("${CMAKE_CURRENT_LIST_DIR}/@PROJECT_NAME@Targets.cmake")
-check_required_components("@PROJECT_NAME@")
+
+list(APPEND CMAKE_MODULE_PATH ${CMAKE_CURRENT_LIST_DIR}/Modules)
+
+include("${CMAKE_CURRENT_LIST_DIR}/@PROJECT_NAME@Targets-kerbal.cmake")
 
 get_target_property(@PROJECT_NAME@_INCLUDE_DIRS @PROJECT_NAME@::kerbal INTERFACE_INCLUDE_DIRECTORIES)
-list(APPEND CMAKE_MODULE_PATH ${CMAKE_CURRENT_LIST_DIR}/Modules)
+
+function(__kerbal_relative_to_absolute _Out_list_name list)
+    set(result)
+    foreach (header ${list})
+        list(APPEND result
+            ${Kerbal_INCLUDE_DIRS}/${header}
+        )
+    endforeach ()
+    set(${_Out_list_name} ${result} PARENT_SCOPE)
+endfunction()
+
+
+## kerbal
+
+__kerbal_relative_to_absolute(@PROJECT_NAME@_HEADERS_kerbal "@Kerbal_HEADERS_RELATIVE_kerbal@")
+set(@PROJECT_NAME@_PUBLIC_HEADERS_RELATIVE_kerbal "@Kerbal_PUBLIC_HEADERS_RELATIVE_kerbal@")
+__kerbal_relative_to_absolute(@PROJECT_NAME@_PUBLIC_HEADERS_kerbal "${@PROJECT_NAME@_PUBLIC_HEADERS_RELATIVE_kerbal}")
+
+
+## kerbal-omp
+
+include(FindOpenMP)
+if (OpenMP_FOUND)
+    include("${CMAKE_CURRENT_LIST_DIR}/@PROJECT_NAME@Targets-kerbal-omp.cmake")
+    __kerbal_relative_to_absolute(@PROJECT_NAME@_HEADERS_kerbal-omp "@Kerbal_HEADERS_RELATIVE_kerbal-omp@")
+    set(@PROJECT_NAME@_PUBLIC_HEADERS_RELATIVE_kerbal-omp "@Kerbal_PUBLIC_HEADERS_RELATIVE_kerbal-omp@")
+    __kerbal_relative_to_absolute(@PROJECT_NAME@_PUBLIC_HEADERS_kerbal-omp "${@PROJECT_NAME@_PUBLIC_HEADERS_RELATIVE_kerbal-omp}")
+endif ()
+
+
+check_required_components("@PROJECT_NAME@")

@@ -9,23 +9,6 @@
 #   all rights reserved
 #
 
-include(Kerbal/aux_headers)
-
-set(kerbal_public_header_block_patterns
-        ".*part\.hpp$"
-        "detail/"
-)
-
-if (NOT KERBAL_ENABLE_OPENMP)
-    list(APPEND kerbal_public_header_block_patterns "^kerbal/openmp/*")
-endif ()
-
-kerbal_aux_headers(
-        kerbal_public_headers "${PROJECT_SOURCE_DIR}/include/kerbal"
-        RELATIVE "${PROJECT_SOURCE_DIR}/include"
-        BLOCK_PATTERNS ${kerbal_public_header_block_patterns}
-)
-
 
 set(content_of_kerbal_header_integration
     "
@@ -43,7 +26,7 @@ set(content_of_kerbal_header_integration
 
 "
 )
-foreach (header ${kerbal_public_headers})
+foreach (header ${Kerbal_PUBLIC_HEADERS_RELATIVE_kerbal})
     string(APPEND content_of_kerbal_header_integration "#include <${header}>\n")
 endforeach ()
 set(kerbal_header_integration_filename "${CMAKE_BINARY_DIR}/kerbal_header_integration.cpp")

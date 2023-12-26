@@ -12,29 +12,6 @@
 include(GNUInstallDirs)
 include(CMakePackageConfigHelpers)
 
-if (${CMAKE_VERSION} VERSION_GREATER_EQUAL 3.23)
-    install(
-            TARGETS kerbal
-            EXPORT ${PROJECT_NAME}Targets
-            FILE_SET "kerbal_installed_headers"
-    )
-else ()
-    install(
-            TARGETS kerbal
-            EXPORT ${PROJECT_NAME}Targets
-    )
-    # Header
-    install(
-            FILES ${kerbal_installed_headers}
-            TYPE INCLUDE
-    )
-endif ()
-
-install(
-        EXPORT ${PROJECT_NAME}Targets
-        NAMESPACE ${PROJECT_NAME}::
-        DESTINATION "${CMAKE_INSTALL_DATADIR}/cmake/${PROJECT_NAME}"
-)
 
 configure_package_config_file(
         "${PROJECT_SOURCE_DIR}/cmake/config.cmake.in"
