@@ -14,6 +14,7 @@
 #define KERBAL_TYPE_TRAITS_POINTER_RANK_HPP
 
 #include <kerbal/ts/modules_ts/modules_ts.hpp>
+
 #include <kerbal/type_traits/is_pointer.hpp>
 #include <kerbal/type_traits/remove_pointer.hpp>
 
@@ -26,6 +27,7 @@ namespace kerbal
 	namespace type_traits
 	{
 
+		KERBAL_MODULE_EXPORT
 		template <typename T>
 		struct pointer_rank;
 
