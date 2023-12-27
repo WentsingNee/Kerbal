@@ -38,8 +38,8 @@ namespace kerbal
 #	define VAR_LIST ,...
 
 #	define IS_FUNCTION_VAR_LIST_DEF(VAR_L, CV_QUALIFIER, REF_QUALIFIER, NOEXCEPT_QUALIFIER) \
-		template <typename Ret, typename ... Args> \
 		KERBAL_MODULE_EXPORT \
+		template <typename Ret, typename ... Args> \
 		struct is_function<Ret(Args... VAR_L) CV_QUALIFIER REF_QUALIFIER NOEXCEPT_QUALIFIER> : kerbal::type_traits::true_type {}; \
 
 #	define IS_FUNCTION_CV_DEF(CV_QUALIFIER, REF_QUALIFIER, NOEXCEPT_QUALIFIER) \
