@@ -30,6 +30,7 @@
 #include <kerbal/numeric/numeric_limits.hpp>
 #include <kerbal/type_traits/integral_constant.hpp>
 #include <kerbal/type_traits/is_same.hpp>
+#include <kerbal/utility/declval.hpp>
 #include <kerbal/utility/in_place.hpp>
 #include <kerbal/utility/member_compress_helper.hpp>
 
@@ -293,7 +294,11 @@ namespace kerbal
 			kerbal::memory::over_aligned_allocator<T, UpstreamAllocator> & rhs
 		)
 			KERBAL_CONDITIONAL_NOEXCEPT(
-				noexcept(lhs.swap(rhs))
+				noexcept(
+					kerbal::utility::declval<kerbal::memory::over_aligned_allocator<T, UpstreamAllocator> &>().swap(
+						kerbal::utility::declval<kerbal::memory::over_aligned_allocator<T, UpstreamAllocator> &>()
+					)
+				)
 			)
 		{
 			lhs.swap(rhs);
@@ -313,7 +318,11 @@ KERBAL_NAMESPACE_STD_BEGIN
 		kerbal::memory::over_aligned_allocator<T, UpstreamAllocator> & rhs
 	)
 		KERBAL_CONDITIONAL_NOEXCEPT(
-			noexcept(lhs.swap(rhs))
+			noexcept(
+				kerbal::utility::declval<kerbal::memory::over_aligned_allocator<T, UpstreamAllocator> &>().swap(
+					kerbal::utility::declval<kerbal::memory::over_aligned_allocator<T, UpstreamAllocator> &>()
+				)
+			)
 		)
 	{
 		lhs.swap(rhs);
