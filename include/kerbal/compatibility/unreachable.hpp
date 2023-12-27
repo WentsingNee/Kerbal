@@ -16,6 +16,7 @@
 #include <kerbal/config/compiler_private.hpp>
 
 #include <kerbal/compatibility/noexcept.hpp>
+#include <kerbal/compatibility/is_constant_evaluated.hpp>
 
 
 #ifndef KERBAL_HAS_BUILTIN_UNREACHABLE_SUPPORT
@@ -61,11 +62,26 @@ namespace kerbal
 
 #if KERBAL_HAS_BUILTIN_UNREACHABLE_SUPPORT
 
+#	if KERBAL_HAS_IS_CONSTANT_EVALUATED_SUPPORT
+
+		inline
+		void unreachable() KERBAL_NOEXCEPT
+		{
+			if (KERBAL_IS_CONSTANT_EVALUATED()) {
+				return;
+			}
+			KERBAL_BUILTIN_UNREACHABLE();
+		}
+
+#	else
+
 		inline
 		void unreachable() KERBAL_NOEXCEPT
 		{
 			KERBAL_BUILTIN_UNREACHABLE();
 		}
+
+#	endif
 
 #else
 
