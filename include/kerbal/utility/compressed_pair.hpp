@@ -20,6 +20,7 @@
 #include <kerbal/assign/generic_assign.hpp>
 #include <kerbal/compatibility/method_overload_tag.hpp>
 #include <kerbal/compatibility/move.hpp>
+#include <kerbal/compatibility/namespace_std_scope.hpp>
 #include <kerbal/compatibility/noexcept.hpp>
 #include <kerbal/tmp/type_vector.hpp>
 #include <kerbal/type_traits/is_same.hpp>
@@ -31,8 +32,6 @@
 #	include <kerbal/type_traits/tribool_constant.hpp>
 #   include <kerbal/utility/forward.hpp>
 #endif
-
-#include <kerbal/compatibility/namespace_std_scope.hpp>
 
 
 KERBAL_NAMESPACE_STD_BEGIN
@@ -578,6 +577,38 @@ namespace kerbal
 	} // namespace utility
 
 } // namespace kerbal
+
+
+namespace kerbal
+{
+
+	namespace algorithm
+	{
+
+		template <typename Tp, typename Up>
+		KERBAL_CONSTEXPR20
+		void swap(kerbal::utility::compressed_pair<Tp, Up> & a, kerbal::utility::compressed_pair<Tp, Up> & b)
+				KERBAL_CONDITIONAL_NOEXCEPT(noexcept(a.swap(b)))
+		{
+			a.swap(b);
+		}
+
+	} // namespace algorithm
+
+} // namespace kerbal
+
+
+KERBAL_NAMESPACE_STD_BEGIN
+
+	template <typename Tp, typename Up>
+	KERBAL_CONSTEXPR20
+	void swap(kerbal::utility::compressed_pair<Tp, Up> & a, kerbal::utility::compressed_pair<Tp, Up> & b)
+			KERBAL_CONDITIONAL_NOEXCEPT(noexcept(a.swap(b)))
+	{
+		a.swap(b);
+	}
+
+KERBAL_NAMESPACE_STD_END
 
 
 #if __cplusplus >= 201103L
