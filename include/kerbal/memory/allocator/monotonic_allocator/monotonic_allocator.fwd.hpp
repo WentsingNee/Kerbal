@@ -15,6 +15,7 @@
 #include <kerbal/compatibility/namespace_std_scope.hpp>
 #include <kerbal/compatibility/noexcept.hpp>
 #include <kerbal/memory/allocator/default_allocator/default_allocator.fwd.hpp>
+#include <kerbal/utility/declval.hpp>
 
 
 namespace kerbal
@@ -37,7 +38,11 @@ namespace kerbal
 			kerbal::memory::monotonic_allocator<T, UpstreamAllocator> & rhs
 		)
 			KERBAL_CONDITIONAL_NOEXCEPT(
-				noexcept(lhs.swap(rhs))
+				noexcept(
+					kerbal::utility::declval<kerbal::memory::monotonic_allocator<T, UpstreamAllocator> &>().swap(
+						kerbal::utility::declval<kerbal::memory::monotonic_allocator<T, UpstreamAllocator> &>()
+					)
+				)
 			)
 		;
 
@@ -54,7 +59,11 @@ KERBAL_NAMESPACE_STD_BEGIN
 			kerbal::memory::monotonic_allocator<T, UpstreamAllocator> & rhs
 	)
 	KERBAL_CONDITIONAL_NOEXCEPT(
-		noexcept(lhs.swap(rhs))
+		noexcept(
+			kerbal::utility::declval<kerbal::memory::monotonic_allocator<T, UpstreamAllocator> &>().swap(
+				kerbal::utility::declval<kerbal::memory::monotonic_allocator<T, UpstreamAllocator> &>()
+			)
+		)
 	);
 
 KERBAL_NAMESPACE_STD_END

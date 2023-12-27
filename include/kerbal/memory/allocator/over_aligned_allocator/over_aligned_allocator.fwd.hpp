@@ -16,6 +16,7 @@
 #include <kerbal/compatibility/namespace_std_scope.hpp>
 #include <kerbal/compatibility/noexcept.hpp>
 #include <kerbal/memory/allocator/malloc_allocator/malloc_allocator.fwd.hpp>
+#include <kerbal/utility/declval.hpp>
 
 
 namespace kerbal
@@ -39,7 +40,11 @@ namespace kerbal
 			kerbal::memory::over_aligned_allocator<T, UpstreamAllocator> & rhs
 		)
 			KERBAL_CONDITIONAL_NOEXCEPT(
-				noexcept(lhs.swap(rhs))
+				noexcept(
+					kerbal::utility::declval<kerbal::memory::over_aligned_allocator<T, UpstreamAllocator> &>().swap(
+						kerbal::utility::declval<kerbal::memory::over_aligned_allocator<T, UpstreamAllocator> &>()
+					)
+				)
 			)
 		;
 
@@ -57,7 +62,11 @@ KERBAL_NAMESPACE_STD_BEGIN
 			kerbal::memory::over_aligned_allocator<T, UpstreamAllocator> & rhs
 	)
 	KERBAL_CONDITIONAL_NOEXCEPT(
-		noexcept(lhs.swap(rhs))
+		noexcept(
+			kerbal::utility::declval<kerbal::memory::over_aligned_allocator<T, UpstreamAllocator> &>().swap(
+				kerbal::utility::declval<kerbal::memory::over_aligned_allocator<T, UpstreamAllocator> &>()
+			)
+		)
 	);
 
 KERBAL_NAMESPACE_STD_END
