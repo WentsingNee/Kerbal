@@ -266,7 +266,7 @@ namespace kerbal
 				KERBAL_CONSTEXPR14
 				void swap(over_aligned_allocator & other) KERBAL_NOEXCEPT
 				{
-					this->void_alloc().swap(other.void_alloc());
+					kerbal::algorithm::swap(this->void_alloc(), other.void_alloc());
 				}
 
 		};
