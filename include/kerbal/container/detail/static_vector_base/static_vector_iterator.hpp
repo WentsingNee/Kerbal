@@ -12,6 +12,8 @@
 #ifndef KERBAL_CONTAINER_DETAIL_STATIC_VECTOR_BASE_STATIC_VECTOR_ITERATOR_HPP
 #define KERBAL_CONTAINER_DETAIL_STATIC_VECTOR_BASE_STATIC_VECTOR_ITERATOR_HPP
 
+#include <kerbal/container/static_vector/static_vector.fwd.hpp>
+
 #include <kerbal/compatibility/constexpr.hpp>
 #include <kerbal/compatibility/noexcept.hpp>
 #include <kerbal/iterator/iterator_traits.hpp>
@@ -31,9 +33,6 @@ namespace kerbal
 
 	namespace container
 	{
-
-		template <typename Tp, std::size_t N>
-		class static_vector;
 
 		namespace detail
 		{
