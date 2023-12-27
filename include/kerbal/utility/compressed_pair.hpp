@@ -15,6 +15,7 @@
 #include <kerbal/config/compiler_id.hpp>
 
 #include <kerbal/utility/compressed_pair/compressed_pair.fwd.hpp>
+#include <kerbal/utility/std_pair/std_pair.fwd.hpp>
 
 #include <kerbal/algorithm/swap.hpp>
 #include <kerbal/assign/generic_assign.hpp>
@@ -32,16 +33,6 @@
 #	include <kerbal/type_traits/tribool_constant.hpp>
 #   include <kerbal/utility/forward.hpp>
 #endif
-
-
-KERBAL_NAMESPACE_STD_BEGIN
-	template <typename T, typename U>
-# if KERBAL_COMPILER_ID == KERBAL_COMPILER_ID_MSVC
-	struct pair;
-# else
-	class pair;
-# endif
-KERBAL_NAMESPACE_STD_END
 
 
 namespace kerbal
