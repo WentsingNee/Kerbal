@@ -22,7 +22,6 @@ namespace kerbal
 	namespace function
 	{
 
-
 		class bad_function_cast :
 				public std::runtime_error
 		{

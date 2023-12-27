@@ -24,7 +24,7 @@ namespace kerbal
 	{
 
 		class bad_any_cast :
-					public std::logic_error
+				public std::logic_error
 		{
 			public:
 				bad_any_cast() :

@@ -49,7 +49,7 @@ namespace kerbal
 					return *this->ptr;
 				}
 		};
-		
+
 		template <typename Tp>
 		KERBAL_CONSTEXPR
 		reference_wrapper<Tp>
