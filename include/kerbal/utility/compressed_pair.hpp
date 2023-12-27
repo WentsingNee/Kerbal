@@ -588,21 +588,18 @@ KERBAL_NAMESPACE_STD_END
 
 #if __cplusplus >= 201103L
 
+#include <kerbal/utility/std_tuple/std_tuple.fwd.hpp>
+
 #include <type_traits> // std::integral_constant
 
-KERBAL_NAMESPACE_STD_BEGIN
 
-	template <typename Tp>
-	struct tuple_size;
+KERBAL_NAMESPACE_STD_BEGIN
 
 	template <typename Tp, typename Up>
 	struct tuple_size<kerbal::utility::compressed_pair<Tp, Up> > :
 			std::integral_constant<std::size_t, 2>
 	{
 	};
-
-	template <std::size_t I, typename Tp>
-	struct tuple_element;
 
 	template <std::size_t I, typename Tp, typename Up>
 	struct tuple_element<I, kerbal::utility::compressed_pair<Tp, Up> > :

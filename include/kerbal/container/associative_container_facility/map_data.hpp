@@ -184,21 +184,18 @@ namespace kerbal
 
 #if __cplusplus >= 201103L
 
+#include <kerbal/utility/std_tuple/std_tuple.fwd.hpp>
+
 #include <type_traits> // std::integral_constant
 
-KERBAL_NAMESPACE_STD_BEGIN
 
-	template <typename T>
-	struct tuple_size;
+KERBAL_NAMESPACE_STD_BEGIN
 
 	template <typename K, typename M>
 	struct tuple_size<kerbal::container::map_data<K, M> > :
 			std::integral_constant<std::size_t, 2>
 	{
 	};
-
-	template <std::size_t I, typename T>
-	struct tuple_element;
 
 	template <std::size_t I, typename K, typename M>
 	struct tuple_element<I, kerbal::container::map_data<K, M> > :
