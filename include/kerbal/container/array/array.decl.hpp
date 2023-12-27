@@ -30,7 +30,7 @@
 #	include <initializer_list>
 #endif
 
-#include <kerbal/container/detail/array_iterator.hpp>
+#include <kerbal/container/detail/array_base/array_iterator.hpp>
 
 
 namespace kerbal

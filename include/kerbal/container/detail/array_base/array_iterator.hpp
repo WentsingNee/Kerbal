@@ -9,9 +9,10 @@
  *   all rights reserved
  */
 
-#ifndef KERBAL_CONTAINER_DETAIL_ARRAY_ITERATOR_HPP
-#define KERBAL_CONTAINER_DETAIL_ARRAY_ITERATOR_HPP
+#ifndef KERBAL_CONTAINER_DETAIL_ARRAY_BASE_ARRAY_ITERATOR_HPP
+#define KERBAL_CONTAINER_DETAIL_ARRAY_BASE_ARRAY_ITERATOR_HPP
 
+#include <kerbal/container/detail/array_base/array_base.fwd.hpp>
 #include <kerbal/container/array/array.fwd.hpp>
 
 #include <kerbal/compatibility/constexpr.hpp>
@@ -315,4 +316,4 @@ namespace kerbal
 } //namespace kerbal
 
 
-#endif // KERBAL_CONTAINER_DETAIL_ARRAY_ITERATOR_HPP
+#endif // KERBAL_CONTAINER_DETAIL_ARRAY_BASE_ARRAY_ITERATOR_HPP
