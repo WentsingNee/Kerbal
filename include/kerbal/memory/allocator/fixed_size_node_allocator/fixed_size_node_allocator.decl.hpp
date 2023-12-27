@@ -318,7 +318,11 @@ namespace kerbal
 				kerbal::memory::fixed_size_node_allocator<T, UpstreamAllocator> & rhs
 		)
 		KERBAL_CONDITIONAL_NOEXCEPT(
-			noexcept(lhs.swap(rhs))
+			noexcept(
+				kerbal::utility::declval<kerbal::memory::fixed_size_node_allocator<T, UpstreamAllocator> &>().swap(
+					kerbal::utility::declval<kerbal::memory::fixed_size_node_allocator<T, UpstreamAllocator> &>()
+				)
+			)
 		)
 		{
 			lhs.swap(rhs);
@@ -337,7 +341,11 @@ KERBAL_NAMESPACE_STD_BEGIN
 			kerbal::memory::fixed_size_node_allocator<T, UpstreamAllocator> & rhs
 	)
 	KERBAL_CONDITIONAL_NOEXCEPT(
-		noexcept(lhs.swap(rhs))
+		noexcept(
+			kerbal::utility::declval<kerbal::memory::fixed_size_node_allocator<T, UpstreamAllocator> &>().swap(
+				kerbal::utility::declval<kerbal::memory::fixed_size_node_allocator<T, UpstreamAllocator> &>()
+			)
+		)
 	)
 	{
 		lhs.swap(rhs);
