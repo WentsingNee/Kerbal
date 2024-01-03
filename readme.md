@@ -12,6 +12,9 @@ language [English](readme.md) | [汉](readme.zh.md)
 ![GitHub code size in bytes](https://img.shields.io/github/languages/code-size/WentsingNee/Kerbal)
 ![GitHub test code size in bytes](https://img.shields.io/github/languages/code-size/WentsingNee/KerbalTest?label=code%20size%20of%20test)
 
+![Lines of code](https://img.shields.io/tokei/lines/github/WentsingNee/Kerbal)
+![Lines of test code](https://img.shields.io/tokei/lines/github/WentsingNee/KerbalTest?label=total%20lines%20of%20test%20code)
+
 ![GitHub last commit](https://img.shields.io/github/last-commit/WentsingNee/Kerbal)
 ![GitHub commit activity](https://img.shields.io/github/commit-activity/y/WentsingNee/Kerbal)
 ![GitHub commit activity](https://img.shields.io/github/commit-activity/m/WentsingNee/Kerbal)
