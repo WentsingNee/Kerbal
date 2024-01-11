@@ -21,6 +21,8 @@
 #include <kerbal/numeric/numeric_limits.hpp>
 #include <kerbal/random/discard_block_engine.hpp>
 #include <kerbal/random/linear_congruential_engine.hpp>
+#include <kerbal/smath/add_mod_sm.hpp>
+#include <kerbal/smath/multiply_mod_sa_b_sm.hpp>
 #include <kerbal/type_traits/enable_if.hpp>
 #include <kerbal/type_traits/integral_constant.hpp>
 #include <kerbal/type_traits/is_same.hpp>
@@ -44,7 +46,7 @@ namespace kerbal
 				typedef typename subtract_with_carry_engine_factor<ResultType, N - 1, k, m>::type last;
 				typedef kerbal::type_traits::integral_constant<
 					ResultType,
-					detail::static_mul_mod<ResultType, k, m>::cacl(last::value)
+					kerbal::smath::multiply_mod_sa_b_sm<ResultType, k, m>::cacl(last::value)
 				> type;
 			};
 
@@ -184,8 +186,8 @@ namespace kerbal
 				{
 					typedef typename detail::subtract_with_carry_engine_factor<result_type, I, K, m::value>::type factor;
 					result_type lhs = expand<K, I - 1>(lcg);
-					result_type rhs = detail::static_mul_mod<result_type, factor::value, m::value>::cacl(lcg());
-					return detail::add_mod<result_type, m::value>::cacl(lhs, rhs);
+					result_type rhs = kerbal::smath::multiply_mod_sa_b_sm<result_type, factor::value, m::value>::cacl(lcg());
+					return kerbal::smath::add_mod_sm<result_type, m::value>::cacl(lhs, rhs);
 				}
 
 				KERBAL_CONSTEXPR14
