@@ -20,6 +20,7 @@
 #include <kerbal/iterator/iterator.hpp>
 #include <kerbal/iterator/iterator_traits.hpp>
 #include <kerbal/numeric/numeric_limits.hpp>
+#include <kerbal/smath/two_pow_sn_minus_one.hpp>
 #include <kerbal/type_traits/integral_constant.hpp>
 
 #include <cstddef>
@@ -33,39 +34,6 @@ namespace kerbal
 
 	namespace random
 	{
-
-		namespace detail
-		{
-
-			template <typename UIntType, std::size_t W, bool /* W == digits(UIntType) */>
-			struct _1_shift_W_minus_1_helper;
-
-			template <typename UIntType, std::size_t W>
-			struct _1_shift_W_minus_1_helper<UIntType, W, true>
-			{
-					typedef kerbal::type_traits::integral_constant<
-						UIntType,
-						~static_cast<UIntType>(0u)
-					> type;
-			};
-
-			template <typename UIntType, std::size_t W>
-			struct _1_shift_W_minus_1_helper<UIntType, W, false>
-			{
-					typedef kerbal::type_traits::integral_constant<
-						UIntType,
-						(static_cast<UIntType>(1u) << W) - 1u
-					> type;
-			};
-
-			template <typename UIntType, std::size_t W>
-			struct _1_shift_W_minus_1 :
-				public _1_shift_W_minus_1_helper<UIntType, W, (W == kerbal::numeric::numeric_limits<UIntType>::DIGITS::value)>::type
-			{
-			};
-
-		} // namespace detail
-
 
 		template <
 			typename UIntType, std::size_t W,
@@ -94,17 +62,17 @@ namespace kerbal
 				KERBAL_STATIC_ASSERT(L <= W,    "the following relations shall hold: L <= W");
 				KERBAL_STATIC_ASSERT(
 					W <= kerbal::numeric::numeric_limits<UIntType>::DIGITS::value,
-					"the following relations shall hold: w <= numeric_limits<UIntType>::digits"
+					"the following relations shall hold: W <= numeric_limits<UIntType>::digits"
 				);
 
-				// (1 << W) - 1u
-				typedef detail::_1_shift_W_minus_1<UIntType, W> _1_shift_W_minus_1;
+				// (2 ** W) - 1u
+				typedef kerbal::smath::two_pow_sn_minus_one<UIntType, W> two_pow_sn_minus_one;
 
-				KERBAL_STATIC_ASSERT(A <= _1_shift_W_minus_1::value, "the following relations shall hold: A <= (1u << W) - 1u");
-				KERBAL_STATIC_ASSERT(B <= _1_shift_W_minus_1::value, "the following relations shall hold: B <= (1u << W) - 1u");
-				KERBAL_STATIC_ASSERT(C <= _1_shift_W_minus_1::value, "the following relations shall hold: C <= (1u << W) - 1u");
-				KERBAL_STATIC_ASSERT(D <= _1_shift_W_minus_1::value, "the following relations shall hold: D <= (1u << W) - 1u");
-				KERBAL_STATIC_ASSERT(F <= _1_shift_W_minus_1::value, "the following relations shall hold: F <= (1u << W) - 1u");
+				KERBAL_STATIC_ASSERT(A <= two_pow_sn_minus_one::value, "the following relations shall hold: A <= (2 ** W) - 1u");
+				KERBAL_STATIC_ASSERT(B <= two_pow_sn_minus_one::value, "the following relations shall hold: B <= (2 ** W) - 1u");
+				KERBAL_STATIC_ASSERT(C <= two_pow_sn_minus_one::value, "the following relations shall hold: C <= (2 ** W) - 1u");
+				KERBAL_STATIC_ASSERT(D <= two_pow_sn_minus_one::value, "the following relations shall hold: D <= (2 ** W) - 1u");
+				KERBAL_STATIC_ASSERT(F <= two_pow_sn_minus_one::value, "the following relations shall hold: F <= (2 ** W) - 1u");
 
 			public:
 				typedef UIntType result_type;
@@ -295,7 +263,7 @@ namespace kerbal
 				KERBAL_CONSTEXPR
 				static result_type max() KERBAL_NOEXCEPT
 				{
-					return _1_shift_W_minus_1::value;
+					return two_pow_sn_minus_one::value;
 				}
 
 				KERBAL_CONSTEXPR14
