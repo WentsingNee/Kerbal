@@ -2,17 +2,18 @@
 
 language [English](readme.md) | [汉](readme.zh.md)
 
-[![Codacy grade](https://img.shields.io/codacy/grade/d8cf41ae4db84f36bbbab26ff3e3a0bd?label=Codacy&nbsp;代码质量评级)](https://www.codacy.com/gh/WentsingNee/Kerbal/dashboard?utm_source=github.com&amp;utm_medium=referral&amp;utm_content=WentsingNee/Kerbal&amp;utm_campaign=Badge_Grade)
-![GitHub code size in bytes](https://img.shields.io/github/languages/code-size/WentsingNee/Kerbal?label=代码大小)
-![Lines of code](https://img.shields.io/tokei/lines/github/WentsingNee/Kerbal?label=代码总行数)
-![GitHub test_code size in bytes](https://img.shields.io/github/languages/code-size/WentsingNee/KerbalTest?label=测试代码大小)
-![Lines of test_code](https://img.shields.io/tokei/lines/github/WentsingNee/KerbalTest?label=测试代码总行数)
-![License](https://img.shields.io/github/license/WentsingNee/Kerbal?label=协议)
+![Static Badge](https://img.shields.io/badge/%E7%9F%A5%E4%B9%8E-IceBear-blue?link=https%3A%2F%2Fwww.zhihu.com%2Fpeople%2Fpeter-43-43-80)
+![Codacy grade](https://img.shields.io/codacy/grade/d8cf41ae4db84f36bbbab26ff3e3a0bd?label=%E4%BB%A3%E7%A0%81%E8%B4%A8%E9%87%8F%E8%AF%84%E7%BA%A7&link=https%3A%2F%2Fapp.codacy.com%2Fgh%2FWentsingNee%2FKerbal%2Fdashboard)
+![Vcpkg Version](https://img.shields.io/vcpkg/v/kerbal)
+![License](https://img.shields.io/github/license/WentsingNee/Kerbal?label=%E5%8D%8F%E8%AE%AE)
 
-![GitHub last commit](https://img.shields.io/github/last-commit/WentsingNee/Kerbal?label=上次提交)
-![GitHub commit activity](https://img.shields.io/github/commit-activity/y/WentsingNee/Kerbal?label=年均提交次数)
-![GitHub commit activity](https://img.shields.io/github/commit-activity/m/WentsingNee/Kerbal?label=月均提交次数)
-![GitHub commit activity](https://img.shields.io/github/commit-activity/w/WentsingNee/Kerbal?label=周均提交次数)
+![GitHub code size in bytes](https://img.shields.io/github/languages/code-size/WentsingNee/Kerbal?label=%E4%BB%A3%E7%A0%81%E5%A4%A7%E5%B0%8F)
+![GitHub test code size in bytes](https://img.shields.io/github/languages/code-size/WentsingNee/KerbalTest?label=%E6%B5%8B%E8%AF%95%E4%BB%A3%E7%A0%81%E5%A4%A7%E5%B0%8F)
+
+![GitHub last commit](https://img.shields.io/github/last-commit/WentsingNee/Kerbal?label=%E4%B8%8A%E6%AC%A1%E6%8F%90%E4%BA%A4)
+![GitHub commit activity](https://img.shields.io/github/commit-activity/y/WentsingNee/Kerbal?label=%E5%B9%B4%E5%9D%87%E6%8F%90%E4%BA%A4%E6%AC%A1%E6%95%B0)
+![GitHub commit activity](https://img.shields.io/github/commit-activity/m/WentsingNee/Kerbal?label=%E6%9C%88%E5%9D%87%E6%8F%90%E4%BA%A4%E6%AC%A1%E6%95%B0)
+![GitHub commit activity](https://img.shields.io/github/commit-activity/w/WentsingNee/Kerbal?label=%E5%91%A8%E5%9D%87%E6%8F%90%E4%BA%A4%E6%AC%A1%E6%95%B0)
 
 C++ 模板库, 具有:
 

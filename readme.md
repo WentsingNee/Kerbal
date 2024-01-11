@@ -2,12 +2,13 @@
 
 language [English](readme.md) | [汉](readme.zh.md)
 
-[![Codacy grade](https://img.shields.io/codacy/grade/d8cf41ae4db84f36bbbab26ff3e3a0bd)](https://www.codacy.com/gh/WentsingNee/Kerbal/dashboard?utm_source=github.com&amp;utm_medium=referral&amp;utm_content=WentsingNee/Kerbal&amp;utm_campaign=Badge_Grade)
-![GitHub code size in bytes](https://img.shields.io/github/languages/code-size/WentsingNee/Kerbal)
-![Lines of code](https://img.shields.io/tokei/lines/github/WentsingNee/Kerbal)
-![GitHub test code size in bytes](https://img.shields.io/github/languages/code-size/WentsingNee/KerbalTest?label=code%20size%20of%20test)
-![Lines of test code](https://img.shields.io/tokei/lines/github/WentsingNee/KerbalTest?label=total%20lines%20of%20test%20code)
+![Static Badge](https://img.shields.io/badge/zhihu-IceBear-blue?link=https%3A%2F%2Fwww.zhihu.com%2Fpeople%2Fpeter-43-43-80)
+![Codacy grade](https://img.shields.io/codacy/grade/d8cf41ae4db84f36bbbab26ff3e3a0bd?link=https%3A%2F%2Fapp.codacy.com%2Fgh%2FWentsingNee%2FKerbal%2Fdashboard)
+![Vcpkg Version](https://img.shields.io/vcpkg/v/kerbal)
 ![License](https://img.shields.io/github/license/WentsingNee/Kerbal)
+
+![GitHub code size in bytes](https://img.shields.io/github/languages/code-size/WentsingNee/Kerbal)
+![GitHub test code size in bytes](https://img.shields.io/github/languages/code-size/WentsingNee/KerbalTest?label=code%20size%20of%20test)
 
 ![GitHub last commit](https://img.shields.io/github/last-commit/WentsingNee/Kerbal)
 ![GitHub commit activity](https://img.shields.io/github/commit-activity/y/WentsingNee/Kerbal)
