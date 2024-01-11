@@ -18,7 +18,7 @@
 #include <kerbal/numeric/numeric_limits.hpp>
 #include <kerbal/type_traits/type_identity.hpp>
 
-#include <kerbal/smath/multiply_mod_sa_b_sm.hpp>
+#include <kerbal/smath/detail/is_never_overflow_for_mul_mod.hpp>
 
 
 namespace kerbal
@@ -53,7 +53,6 @@ namespace kerbal
 				private:
 					KERBAL_STATIC_ASSERT(m != 0, "static check failed");
 
-				public:
 					KERBAL_CONSTEXPR14
 					static ResultType cacl_impl2(ResultType a, ResultType b) KERBAL_NOEXCEPT
 					{
