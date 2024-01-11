@@ -97,6 +97,57 @@ namespace kerbal
 						i = NPM::value;
 					}
 
+#if 0 // mtsimd
+					if (FIRST_STEP_REMAIN::value != 0) {
+						__m256i ymm_mti = _mm256_loadu_si256(reinterpret_cast<const __m256i *>(&mt[i])); // AVX
+						__m256i ymm_mtip1 = _mm256_loadu_si256(reinterpret_cast<const __m256i *>(&mt[i + 1])); // AVX
+						__m256i ymm_y = _mm256_or_si256( // AVX2
+							_mm256_and_si256(ymm_UPPER_MASK, ymm_mti), // AVX2
+							_mm256_andnot_si256(ymm_UPPER_MASK, ymm_mtip1) // AVX2
+						);
+						__m256i ymm_mag_mask = _mm256_and_si256(ymm_y, ymm_ONE); // AVX2
+						ymm_mag_mask = _mm256_sub_epi32(ymm_ZERO, ymm_mag_mask); // AVX2 <=> _mm256_cmpeq_epi32(ymm_mag_mask, ymm_ONE) AVX2
+						ymm_mag_mask = _mm256_and_si256(ymm_mag_mask, ymm_A); // AVX2
+						ymm_y = _mm256_srli_epi32(ymm_y, 1); // AVX2
+						ymm_mti = _mm256_xor_si256(ymm_y, ymm_mag_mask); // AVX2
+
+						const __m256i ymm_maskload_mask1 = _mm256_setr_epi32(
+							FIRST_STEP_REMAIN::value >= 1 ? -1 : 0,
+							FIRST_STEP_REMAIN::value >= 2 ? -1 : 0,
+							FIRST_STEP_REMAIN::value >= 3 ? -1 : 0,
+							FIRST_STEP_REMAIN::value >= 4 ? -1 : 0,
+							FIRST_STEP_REMAIN::value >= 5 ? -1 : 0,
+							FIRST_STEP_REMAIN::value >= 6 ? -1 : 0,
+							FIRST_STEP_REMAIN::value >= 7 ? -1 : 0,
+							0
+						);
+						const __m256i ymm_maskload_mask2 = _mm256_setr_epi32(
+							FIRST_STEP_REMAIN::value < 1 ? -1 : 0,
+							FIRST_STEP_REMAIN::value < 2 ? -1 : 0,
+							FIRST_STEP_REMAIN::value < 3 ? -1 : 0,
+							FIRST_STEP_REMAIN::value < 4 ? -1 : 0,
+							FIRST_STEP_REMAIN::value < 5 ? -1 : 0,
+							FIRST_STEP_REMAIN::value < 6 ? -1 : 0,
+							FIRST_STEP_REMAIN::value < 7 ? -1 : 0,
+							0
+						);
+
+						__m256i ymm_mtipm1 = _mm256_maskload_epi32(
+							reinterpret_cast<const int *>(&mt[i + M]),
+							ymm_maskload_mask1
+						); // AVX2
+						__m256i ymm_mtipm2 = _mm256_maskload_epi32(
+							reinterpret_cast<const int *>(&mt[-FIRST_STEP_REMAIN::value]),
+							ymm_maskload_mask2
+						); // AVX2
+						__m256i ymm_mtipm = _mm256_or_si256(ymm_mtipm1, ymm_mtipm2); // AVX2
+						ymm_mti = _mm256_xor_si256(ymm_mti, ymm_mtipm); // AVX2
+						_mm256_storeu_si256(reinterpret_cast<__m256i *>(&mt[i]), ymm_mti); // AVX
+						i += STEP::value;
+					}
+#endif
+
+
 					for (; i + STEP::value <= N - 1; i += STEP::value) {
 						__m256i ymm_mti = _mm256_loadu_si256(reinterpret_cast<const __m256i *>(&mt[i])); // AVX
 						__m256i ymm_mtip1 = _mm256_loadu_si256(reinterpret_cast<const __m256i *>(&mt[i + 1])); // AVX
@@ -220,6 +271,49 @@ namespace kerbal
 
 						i = NPM::value;
 					}
+
+#if 0 // mtsimd
+					if (FIRST_STEP_REMAIN::value != 0) {
+						__m256i ymm_mti = _mm256_loadu_si256(reinterpret_cast<const __m256i *>(&mt[i])); // AVX
+						__m256i ymm_mtip1 = _mm256_loadu_si256(reinterpret_cast<const __m256i *>(&mt[i + 1])); // AVX
+						__m256i ymm_y = _mm256_or_si256( // AVX2
+							_mm256_and_si256(ymm_UPPER_MASK, ymm_mti), // AVX2
+							_mm256_andnot_si256(ymm_UPPER_MASK, ymm_mtip1) // AVX2
+						);
+						__m256i ymm_mag_mask = _mm256_and_si256(ymm_y, ymm_ONE); // AVX2
+						ymm_mag_mask = _mm256_sub_epi64(ymm_ZERO, ymm_mag_mask); // AVX2 <=> _mm256_cmpeq_epi64(ymm_mag_mask, ymm_ONE) AVX2
+						ymm_mag_mask = _mm256_and_si256(ymm_mag_mask, ymm_A); // AVX2
+						ymm_y = _mm256_srli_epi64(ymm_y, 1); // AVX2
+						ymm_mti = _mm256_xor_si256(ymm_y, ymm_mag_mask); // AVX2
+
+						const __m256i ymm_maskload_mask1 = _mm256_setr_epi64x(
+							FIRST_STEP_REMAIN::value >= 1 ? -1 : 0,
+							FIRST_STEP_REMAIN::value >= 2 ? -1 : 0,
+							FIRST_STEP_REMAIN::value >= 3 ? -1 : 0,
+							0
+						);
+						const __m256i ymm_maskload_mask2 = _mm256_setr_epi64x(
+							FIRST_STEP_REMAIN::value < 1 ? -1 : 0,
+							FIRST_STEP_REMAIN::value < 2 ? -1 : 0,
+							FIRST_STEP_REMAIN::value < 3 ? -1 : 0,
+							0
+						);
+
+						__m256i ymm_mtipm1 = _mm256_maskload_epi64(
+							reinterpret_cast<const long long *>(&mt[i + M]),
+							ymm_maskload_mask1
+						); // AVX2
+						__m256i ymm_mtipm2 = _mm256_maskload_epi64(
+							reinterpret_cast<const long long *>(&mt[-FIRST_STEP_REMAIN::value]),
+							ymm_maskload_mask2
+						); // AVX2
+						__m256i ymm_mtipm = _mm256_or_si256(ymm_mtipm1, ymm_mtipm2); // AVX2
+						ymm_mti = _mm256_xor_si256(ymm_mti, ymm_mtipm); // AVX2
+						_mm256_storeu_si256(reinterpret_cast<__m256i *>(&mt[i]), ymm_mti); // AVX
+						i += STEP::value;
+					}
+#endif
+
 
 					for (; i + STEP::value <= N - 1; i += STEP::value) {
 						__m256i ymm_mti = _mm256_loadu_si256(reinterpret_cast<const __m256i *>(&mt[i])); // AVX

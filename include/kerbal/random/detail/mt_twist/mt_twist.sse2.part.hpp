@@ -107,6 +107,35 @@ namespace kerbal
 
 					i = NPM::value;
 
+#if 0 // mtsimd
+
+					if (FIRST_STEP_REMAIN::value != 0) {
+						__m128i xmm_mti = _mm_loadu_si128(reinterpret_cast<const __m128i *>(&mt[i])); // SSE2
+						__m128i xmm_mtip1 = _mm_loadu_si128(reinterpret_cast<const __m128i *>(&mt[i + 1])); // SSE2
+						__m128i xmm_y = _mm_or_si128( // SSE2
+							_mm_and_si128(xmm_UPPER_MASK, xmm_mti), // SSE2
+							_mm_andnot_si128(xmm_UPPER_MASK, xmm_mtip1) // SSE2
+						);
+						__m128i xmm_mag_mask = _mm_and_si128(xmm_y, xmm_ONE); // SSE2
+						xmm_mag_mask = _mm_sub_epi32(xmm_ZERO, xmm_mag_mask); // SSE2 <=> _mm_cmpeq_epi32(xmm_mag_mask, xmm_ONE) SSE2
+						xmm_mag_mask = _mm_and_si128(xmm_mag_mask, xmm_A); // SSE2
+						xmm_y = _mm_srli_epi32(xmm_y, 1); // SSE2
+						xmm_mti = _mm_xor_si128(xmm_y, xmm_mag_mask); // SSE2
+						_mm_storeu_si128(reinterpret_cast<__m128i *>(&mt[i]), xmm_mti); // SSE2
+
+						unsigned int j = 0;
+						for (; j < FIRST_STEP_REMAIN::value; ++j) {
+							mt[i] ^= mt[i + M];
+							++i;
+						}
+						for (; j < STEP::value; ++j) {
+							mt[i] ^= mt[i - NPM::value];
+							++i;
+						}
+					}
+
+#endif
+
 					for (; i + STEP::value <= N - 1; i += STEP::value) {
 						__m128i xmm_mti = _mm_loadu_si128(reinterpret_cast<const __m128i *>(&mt[i])); // SSE2
 						__m128i xmm_mtip1 = _mm_loadu_si128(reinterpret_cast<const __m128i *>(&mt[i + 1])); // SSE2
