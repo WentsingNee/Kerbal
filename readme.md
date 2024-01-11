@@ -23,6 +23,86 @@ C++ template library with:
 
 
 
+### Install ###
+
+#### I) Install via Vcpkg ####
+
+Vcpkg environment is required, see [Vcpkg](https://github.com/microsoft/vcpkg)
+
+```shell
+vcpkg install kerbal
+```
+
+#### II) Install via Source ####
+
+1) clone repository
+
+```shell
+git clone https://github.com/WentsingNee/Kerbal.git
+cd Kerbal
+```
+
+2) clone git submodules (if you need)
+
+```shell
+git submodule init
+git submodule update
+```
+
+3) configure by CMake
+
+```shell
+mkdir build
+cmake -S . -B build/ \
+    -DCMAKE_BUILD_TYPE=Release
+
+    # the following arguments are optional
+
+    # the path prefix to install Kerbal
+    -DCMAKE_INSTALL_PREFIX=`the-path-prefix-you-want-to-install`
+    # default is set to your system path
+
+    # the package generator(s) enabled during the cpack stage
+    -DCPACK_GENERATOR=`package-generators-you-want`
+    # default is set to "DEB;STGZ;TGZ;ZIP"
+
+    # whether install pretty printer files
+    # git submodule of `pretty_printer` is required to be existed
+    -DKERBAL_INSTALL_PRETTY_PRINTER=True # or False
+    # default value is decided by the existence of `pretty_printer` submodule
+```
+
+4) install
+
+```shell
+cd build
+cmake --build . --target install
+```
+
+then Kerbal will be installed to `CMAKE_INSTALL_PREFIX`
+
+5) generate package (if you need)
+
+```shell
+cd build
+cpack .
+```
+
+
+
+### Integrate Kerbal In Your CMake Project ###
+
+```cmake
+find_package(Kerbal REQUIRED)
+target_link_libraries(
+        your-target PRIVATE
+        Kerbal::kerbal
+        [Kerbal::kerbal-omp] # maybe required when you have used Kerbal::omp module
+)
+```
+
+
+
 ### Sub Libraries Overview ###
 
 | Library                                        | Brief                                                                                                                      |

@@ -23,6 +23,86 @@ C++ 模板库, 具有:
 
 
 
+### 安装说明 ###
+
+#### I) 通过 Vcpkg 安装
+
+必须有 Vcpkg 环境, 详见: [Vcpkg](https://github.com/microsoft/vcpkg)
+
+```shell
+vcpkg install kerbal
+```
+
+#### II) 通过源码安装 ####
+
+1) 克隆仓库
+
+```shell
+git clone https://github.com/WentsingNee/Kerbal.git
+cd Kerbal
+```
+
+2) 克隆 git 子模块仓库 (如果你需要的话)
+
+```shell
+git submodule init
+git submodule update
+```
+
+3) 通过 CMake 配置
+
+```shell
+mkdir build
+cmake -S . -B build/ \
+    -DCMAKE_BUILD_TYPE=Release
+
+    # 以下参数是可选的
+
+    # 安装 Kerbal 的目录前缀
+    -DCMAKE_INSTALL_PREFIX=`你想要的目录前缀`
+    # 默认会被设置为你的系统目录
+
+    # cpack 阶段要启用的包生成器
+    -DCPACK_GENERATOR=`你想要的包生成器`
+    # 默认设为: "DEB;STGZ;TGZ;ZIP"
+
+    # 是否要安装 pretty printer 文件
+    # git `pretty_printer` 子模块必须已存在
+    -DKERBAL_INSTALL_PRETTY_PRINTER=True # 或者是 False
+    # 默认值是根据 git `pretty_printer` 子模块是否已存在决定的
+```
+
+4) 安装
+
+```shell
+cd build
+cmake --build . --target install
+```
+
+执行完毕后, Kerbal 就会被安装进 `CMAKE_INSTALL_PREFIX` 目录中
+
+5) 生成安装包 (如果你需要的话)
+
+```shell
+cd build
+cpack .
+```
+
+
+
+### 将 Kerbal 集成进你的 CMake 项目 ###
+
+```cmake
+find_package(Kerbal REQUIRED)
+target_link_libraries(
+        your-target PRIVATE
+        Kerbal::kerbal
+        [Kerbal::kerbal-omp] # 当你使用到 Kerbal::omp 模块时, 这行可能是需要的
+)
+```
+
+
+
 ### 子库 ###
 
 | 库                                              | 简介                                                                             |
