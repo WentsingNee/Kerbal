@@ -14,8 +14,12 @@
 
 #include <kerbal/type_traits/detail/is_nothrow_copy_assignable/is_nothrow_copy_assignable.part.hpp>
 
+#include <kerbal/config/exceptions.hpp>
+
 #if KERBAL_HAS_IS_NOTHROW_COPY_ASSIGNABLE_SUPPORT
 #	include <kerbal/type_traits/detail/is_nothrow_copy_assignable/try_test_is_nothrow_copy_assignable.defi.part.hpp>
+#elif KERBAL_HAS_EXCEPTIONS_SUPPORT
+#	include <kerbal/type_traits/detail/is_nothrow_copy_assignable/try_test_is_nothrow_copy_assignable.noexcept.part.hpp>
 #else
 #	include <kerbal/type_traits/detail/is_nothrow_copy_assignable/try_test_is_nothrow_copy_assignable.guess.part.hpp>
 #endif

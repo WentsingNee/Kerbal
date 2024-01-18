@@ -14,8 +14,12 @@
 
 #include <kerbal/type_traits/detail/is_nothrow_default_constructible/is_nothrow_default_constructible.part.hpp>
 
+#include <kerbal/config/exceptions.hpp>
+
 #if KERBAL_HAS_IS_NOTHROW_DEFAULT_CONSTRUCTIBLE_SUPPORT
 #	include <kerbal/type_traits/detail/is_nothrow_default_constructible/try_test_is_nothrow_default_constructible.defi.part.hpp>
+#elif KERBAL_HAS_EXCEPTIONS_SUPPORT
+#	include <kerbal/type_traits/detail/is_nothrow_default_constructible/try_test_is_nothrow_default_constructible.noexcept.part.hpp>
 #else
 #	include <kerbal/type_traits/detail/is_nothrow_default_constructible/try_test_is_nothrow_default_constructible.guess.part.hpp>
 #endif
