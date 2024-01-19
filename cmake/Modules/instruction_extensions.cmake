@@ -16,6 +16,7 @@ set(KERBAL_IE_LIST
         mmx sse sse2 sse3 ssse3 sse4.1 sse4.2 avx avx2 avx512f
         bmi bmi2 sha
         neon sve
+        wasm_simd128
 )
 
 
@@ -113,6 +114,10 @@ function(kerbal_ies_required)
             endif ()
             if (ie STREQUAL "neon")
                 __kerbal_check_supports_neon_flags_and_cache()
+                continue()
+            endif ()
+            if (${ie} STREQUAL "wasm_simd128")
+                __kerbal_check_supports_ie_flags_and_cache(${ie} "-msimd128")
                 continue()
             endif ()
 
