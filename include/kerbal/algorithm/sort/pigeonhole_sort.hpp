@@ -53,6 +53,7 @@ namespace kerbal
 			}
 
 			// suppress msvc warning of % calculation of bool
+			inline
 			KERBAL_CONSTEXPR14
 			unsigned int pigeonhole_sort_hole_index(const bool & data) KERBAL_NOEXCEPT
 			{
