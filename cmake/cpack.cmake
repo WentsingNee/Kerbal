@@ -24,4 +24,8 @@ endif ()
 set(CPACK_DEBIAN_PACKAGE_NAME libkerbal-dev)
 
 
+# NuGet
+set(CPACK_NUGET_PACKAGE_AUTHORS ${CPACK_PACKAGE_CONTACT})
+
+
 include(CPack)
