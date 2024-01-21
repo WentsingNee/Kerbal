@@ -14,6 +14,10 @@
 
 #include <kerbal/ts/modules_ts/modules_ts.hpp>
 
+
+KERBAL_MODULE_GLOBAL
+
+
 #include <kerbal/config/compiler_id.hpp>
 
 #include <kerbal/utility/compressed_pair/compressed_pair.fwd.hpp>
@@ -36,6 +40,10 @@
 #	include <kerbal/utility/declval.hpp>
 #	include <kerbal/utility/forward.hpp>
 #endif
+
+
+KERBAL_EXPORT_MODULE_DECLARE_SUPPRESS(kerbal.utility.compressed_pair)
+
 
 
 namespace kerbal

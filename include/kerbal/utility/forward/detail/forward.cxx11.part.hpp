@@ -20,10 +20,28 @@
 
 #include <kerbal/ts/modules_ts/modules_ts.hpp>
 
+KERBAL_MODULE_GLOBAL
+
+
 #include <kerbal/compatibility/constexpr.hpp>
 #include <kerbal/compatibility/noexcept.hpp>
 #include <kerbal/type_traits/is_lvalue_reference.hpp>
 #include <kerbal/type_traits/remove_reference.hpp>
+
+
+KERBAL_START_MODULE
+KERBAL_EXPORT_MODULE(kerbal.utility.forward)
+
+
+#if KERBAL_ENABLE_MODULES_kerbal_utility_forward
+
+// import kerbal.type_traits;
+
+#else
+
+
+#endif
+
 
 
 namespace kerbal

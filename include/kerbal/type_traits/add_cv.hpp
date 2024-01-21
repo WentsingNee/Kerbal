@@ -15,8 +15,23 @@
 
 #include <kerbal/ts/modules_ts/modules_ts.hpp>
 
+KERBAL_MODULE_GLOBAL
+
+
+KERBAL_EXPORT_MODULE_DECLARE(kerbal.type_traits.add_cv)
+
+
+#if KERBAL_ENABLE_MODULES
+
+import kerbal.type_traits.add_const;
+import kerbal.type_traits.add_volatile;
+
+#else
+
 #include <kerbal/type_traits/add_const.hpp>
 #include <kerbal/type_traits/add_volatile.hpp>
+
+#endif
 
 
 namespace kerbal
