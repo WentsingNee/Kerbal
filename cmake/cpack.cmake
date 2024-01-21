@@ -15,6 +15,11 @@ set(CPACK_PACKAGE_CONTACT "Wentsing Nee")
 set(CPACK_PACKAGE_DESCRIPTION "Kerbal C++ Library")
 set(CPACK_RESOURCE_FILE_LICENSE ${PROJECT_SOURCE_DIR}/LICENSE)
 
+
+file(GLOB_RECURSE cpack_config_files "${CMAKE_BINARY_DIR}/configure_assets/cpack/config/*.cmake")
+list(APPEND CPACK_PROJECT_CONFIG_FILE ${cpack_config_files})
+
+
 if (NOT DEFINED CPACK_GENERATOR)
     set(CPACK_GENERATOR DEB STGZ TGZ ZIP)
 endif ()
