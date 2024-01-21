@@ -32,12 +32,12 @@ namespace kerbal
 			OutputIterator
 			k_move(InputIterator first, InputIterator last, OutputIterator to, std::input_iterator_tag)
 			{
-				 while (first != last) {
-					 kerbal::assign::generic_assign(*to, kerbal::compatibility::to_xvalue(*first));
-					 // *to = kerbal::compatibility::to_xvalue(*first);
+				while (first != last) {
+					kerbal::assign::generic_assign(*to, kerbal::compatibility::to_xvalue(*first));
+					// *to = kerbal::compatibility::to_xvalue(*first);
 					++to;
 					++first;
-				 }
+				}
 				return to;
 			}
 
