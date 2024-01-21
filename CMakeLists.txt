@@ -86,3 +86,70 @@ endif ()
 # Installation & Packing
 include(cmake/gnuInstall.cmake)
 include(cmake/cpack.cmake)
+
+
+cmake_policy(SET CMP0155 NEW) # Scanning for imports
+
+
+
+add_executable(use_module use_module.cpp)
+
+#foreach (module_source_file ${Kerbal_PUBLIC_HEADERS_RELATIVE_kerbal})
+foreach (module_source_file "kerbal/utility/forward.hpp")
+    string(REGEX MATCH "(.*)\.hpp" _ "${module_source_file}")
+    set(module_name "${CMAKE_MATCH_1}")
+    string(REPLACE "/" "_" module_name "${module_name}")
+#    message(STATUS ${module_name})
+
+    file(READ "${CMAKE_CURRENT_SOURCE_DIR}/include/${module_source_file}" module_source_content)
+    if (
+            NOT module_source_content MATCHES "KERBAL_EXPORT_MODULE_DECLARE\\(([^\\)]+)\\)"
+    )
+#        message(STATUS "exclude ${module_source_file}")
+        continue()
+    endif()
+
+#    message(STATUS "CMAKE_MATCH_1 ${CMAKE_MATCH_1}")
+
+    if (
+            module_source_content MATCHES "#define KERBAL_EXPORT_MODULE_DECLARE"
+    )
+        message(WARNING "exclude ${module_source_file}")
+        continue()
+    endif()
+
+    string(REGEX REPLACE "KERBAL_EXPORT_MODULE_DECLARE\\(([^\\)]+)\\)"
+            "
+
+#define KERBAL_ENABLE_MODULES_${module_name} 1
+"
+            module_source_content
+            "${module_source_content}"
+    )
+
+    string(REPLACE "KERBAL_MODULE_GLOBAL" "module;" module_source_content "${module_source_content}")
+    set(cppm_file_path "${CMAKE_CURRENT_BINARY_DIR}/cppm/${module_name}.cppm")
+    file(WRITE
+            "${cppm_file_path}"
+            "${module_source_content}"
+    )
+
+    target_sources(
+            use_module
+            PUBLIC
+            FILE_SET kerbal_modules
+            TYPE CXX_MODULES
+            FILES "${cppm_file_path}"
+    )
+#    message(STATUS "cppm_file_path ${cppm_file_path}")
+endforeach ()
+
+
+target_sources(
+        use_module
+        PUBLIC
+        FILE_SET kerbal_modules
+        TYPE CXX_MODULES
+        FILES "foo.cppm"
+)
+
