@@ -14,8 +14,15 @@
 
 #include <kerbal/ts/modules_ts/modules_ts.hpp>
 
+KERBAL_MODULE_GLOBAL
+
+
 #include <kerbal/compatibility/constexpr.hpp>
 #include <kerbal/compatibility/noexcept.hpp>
+
+
+KERBAL_EXPORT_MODULE_DECLARE(kerbal.operators.equality_comparable)
+
 
 namespace kerbal
 {
@@ -24,11 +31,11 @@ namespace kerbal
 	{
 
 		KERBAL_MODULE_EXPORT
-		template <typename Tp>
+		template <typename T>
 		struct equality_comparable
 		{
 				KERBAL_CONSTEXPR
-				friend bool operator!=(const Tp & lhs, const Tp & rhs)
+				friend bool operator!=(const T & lhs, const T & rhs)
 #	if KERBAL_COMPILER_ID != KERBAL_COMPILER_ID_ICC
 						KERBAL_CONDITIONAL_NOEXCEPT(noexcept(static_cast<bool>(lhs == rhs)))
 #	endif

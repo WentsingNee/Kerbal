@@ -14,8 +14,26 @@
 #define KERBAL_TYPE_TRAITS_IS_REFERENCABLE_HPP
 
 #include <kerbal/ts/modules_ts/modules_ts.hpp>
-#include <kerbal/type_traits/integral_constant.hpp>
+
+
+KERBAL_MODULE_GLOBAL
+
+
 #include <kerbal/type_traits/void_type.hpp>
+
+
+KERBAL_EXPORT_MODULE_DECLARE(kerbal.type_traits.is_referencable)
+
+
+#if KERBAL_ENABLE_MODULES
+
+import kerbal.type_traits.integral_constant;
+
+#else
+
+#include <kerbal/type_traits/integral_constant.hpp>
+
+#endif
 
 
 namespace kerbal

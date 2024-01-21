@@ -14,7 +14,12 @@
 
 #include <kerbal/ts/modules_ts/modules_ts.hpp>
 
+KERBAL_MODULE_GLOBAL
+
 #include <kerbal/compatibility/noexcept.hpp>
+
+
+KERBAL_EXPORT_MODULE_DECLARE(kerbal.utility.noncopyable)
 
 
 namespace kerbal

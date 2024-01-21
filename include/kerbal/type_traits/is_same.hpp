@@ -13,12 +13,29 @@
 #define KERBAL_TYPE_TRAITS_IS_SAME_HPP
 
 #include <kerbal/ts/modules_ts/modules_ts.hpp>
-#include <kerbal/type_traits/integral_constant.hpp>
+
+
+KERBAL_MODULE_GLOBAL
+
 
 #if __cplusplus < 201103L
 #	include <kerbal/macro/ppexpand.hpp>
 #else
 #	include <kerbal/type_traits/logical.hpp>
+#endif
+
+
+KERBAL_EXPORT_MODULE_DECLARE(kerbal.type_traits.same)
+
+
+#if KERBAL_ENABLE_MODULES
+
+import kerbal.type_traits.integral_constant;
+
+#else
+
+#include <kerbal/type_traits/integral_constant.hpp>
+
 #endif
 
 

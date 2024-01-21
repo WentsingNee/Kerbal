@@ -12,8 +12,18 @@
 #ifndef KERBAL_UTILITY_INTEGER_SEQUENCE_DETAIL_CXX11_MAKE_INTEGER_SEQUENCE_PART_HPP
 #define KERBAL_UTILITY_INTEGER_SEQUENCE_DETAIL_CXX11_MAKE_INTEGER_SEQUENCE_PART_HPP
 
+#include <kerbal/ts/modules_ts/modules_ts.hpp>
+
+KERBAL_MODULE_GLOBAL
+
+
 #include <kerbal/config/compiler_id.hpp>
 #include <kerbal/config/compiler_private.hpp>
+
+#include <cstddef>
+
+
+KERBAL_EXPORT_MODULE_DECLARE(kerbal.utility.integer_sequence)
 
 
 #if KERBAL_COMPILER_ID == KERBAL_COMPILER_ID_GNU

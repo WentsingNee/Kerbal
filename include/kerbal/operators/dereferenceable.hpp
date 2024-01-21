@@ -14,9 +14,26 @@
 
 #include <kerbal/ts/modules_ts/modules_ts.hpp>
 
+KERBAL_MODULE_GLOBAL
+
+
 #include <kerbal/compatibility/constexpr.hpp>
 #include <kerbal/compatibility/noexcept.hpp>
+
+
+KERBAL_EXPORT_MODULE_DECLARE(kerbal.operators.dereferenceable)
+
+
+#if KERBAL_ENABLE_MODULES
+
+import kerbal.utility.declval;
+
+#else
+
 #include <kerbal/utility/declval.hpp>
+
+#endif
+
 
 namespace kerbal
 {
@@ -25,18 +42,18 @@ namespace kerbal
 	{
 
 		KERBAL_MODULE_EXPORT
-		template <typename Tp, typename Ptr>
+		template <typename T, typename Ptr>
 		struct dereferenceable
 		{
 				KERBAL_CONSTEXPR14
 				Ptr operator->() const
 						KERBAL_CONDITIONAL_NOEXCEPT(
-								noexcept(&(*static_cast<const Tp&>(*
+								noexcept(&(*static_cast<const T&>(*
 									kerbal::utility::declthis<const dereferenceable>()
 								)))
 						)
 				{
-					return &(*static_cast<const Tp&>(*this));
+					return &(*static_cast<const T&>(*this));
 				}
 		};
 

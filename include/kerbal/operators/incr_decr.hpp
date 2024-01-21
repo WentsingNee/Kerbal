@@ -14,12 +14,18 @@
 
 #include <kerbal/ts/modules_ts/modules_ts.hpp>
 
+KERBAL_MODULE_GLOBAL
+
+
 #include <kerbal/compatibility/constexpr.hpp>
 #include <kerbal/compatibility/noexcept.hpp>
 
 #if __cplusplus >= 201103L
 #	include <kerbal/type_traits/is_nothrow_copy_constructible.hpp>
 #endif
+
+
+KERBAL_EXPORT_MODULE_DECLARE(kerbal.operators.incr_decr)
 
 
 namespace kerbal
@@ -29,38 +35,38 @@ namespace kerbal
 	{
 
 		KERBAL_MODULE_EXPORT
-		template <typename Tp>
+		template <typename T>
 		struct incrementable
 		{
 				KERBAL_CONSTEXPR14
-				friend Tp operator++(Tp& x, int)
+				friend T operator++(T & x, int)
 #	if KERBAL_COMPILER_ID != KERBAL_COMPILER_ID_ICC
 						KERBAL_CONDITIONAL_NOEXCEPT(
-							kerbal::type_traits::try_test_is_nothrow_copy_constructible<Tp>::IS_TRUE::value &&
+							kerbal::type_traits::try_test_is_nothrow_copy_constructible<T>::IS_TRUE::value &&
 							noexcept(++x)
 						)
 #	endif
 				{
-					Tp tmp(x);
+					T tmp(x);
 					++x;
 					return tmp;
 				}
 		};
 
 		KERBAL_MODULE_EXPORT
-		template <class Tp>
+		template <typename T>
 		struct decrementable
 		{
 				KERBAL_CONSTEXPR14
-				friend Tp operator--(Tp& x, int)
+				friend T operator--(T & x, int)
 #	if KERBAL_COMPILER_ID != KERBAL_COMPILER_ID_ICC
 						KERBAL_CONDITIONAL_NOEXCEPT(
-							kerbal::type_traits::try_test_is_nothrow_copy_constructible<Tp>::IS_TRUE::value &&
+							kerbal::type_traits::try_test_is_nothrow_copy_constructible<T>::IS_TRUE::value &&
 							noexcept(--x)
 						)
 #	endif
 				{
-					Tp tmp(x);
+					T tmp(x);
 					--x;
 					return tmp;
 				}
