@@ -27,10 +27,10 @@ namespace kerbal
 		namespace detail
 		{
 
-			template <typename BidirectionalIterator, typename OutputIterator>
+			template <typename BidirectionalIterator, typename BidirectionalOutputIterator>
 			KERBAL_CONSTEXPR14
-			OutputIterator
-			k_copy_backward(BidirectionalIterator first, BidirectionalIterator last, OutputIterator to_last, std::bidirectional_iterator_tag)
+			BidirectionalOutputIterator
+			k_copy_backward(BidirectionalIterator first, BidirectionalIterator last, BidirectionalOutputIterator to_last, std::bidirectional_iterator_tag)
 				KERBAL_CONDITIONAL_NOEXCEPT(
 					noexcept(static_cast<bool>(first != last)) &&
 					noexcept(--last) &&
@@ -48,10 +48,10 @@ namespace kerbal
 
 		} // namespace detail
 
-		template <typename BidirectionalIterator, typename OutputIterator>
+		template <typename BidirectionalIterator, typename BidirectionalOutputIterator>
 		KERBAL_CONSTEXPR14
-		OutputIterator
-		copy_backward(BidirectionalIterator first, BidirectionalIterator last, OutputIterator to_last)
+		BidirectionalOutputIterator
+		copy_backward(BidirectionalIterator first, BidirectionalIterator last, BidirectionalOutputIterator to_last)
 		{
 			return kerbal::algorithm::detail::k_copy_backward(
 				first, last, to_last,
