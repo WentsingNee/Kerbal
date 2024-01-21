@@ -22,12 +22,12 @@ namespace kerbal
 	namespace algorithm
 	{
 
-		template <typename BidirectionalIterator, typename OutputIterator, typename UnaryPredicate>
+		template <typename BidirectionalIterator, typename BidirectionalOutputIterator, typename UnaryPredicate>
 		KERBAL_CONSTEXPR14
-		OutputIterator
+		BidirectionalOutputIterator
 		copy_backward_if(
 			BidirectionalIterator first, BidirectionalIterator last,
-			OutputIterator to_last, UnaryPredicate pred
+			BidirectionalOutputIterator to_last, UnaryPredicate pred
 		)
 		{
 			while (first != last) {
