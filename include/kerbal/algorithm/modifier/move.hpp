@@ -15,6 +15,7 @@
 #include <kerbal/assign/generic_assign.hpp>
 #include <kerbal/compatibility/constexpr.hpp>
 #include <kerbal/compatibility/move.hpp>
+#include <kerbal/compatibility/noexcept.hpp>
 #include <kerbal/iterator/iterator_traits.hpp>
 
 
@@ -31,6 +32,12 @@ namespace kerbal
 			KERBAL_CONSTEXPR14
 			OutputIterator
 			k_move(InputIterator first, InputIterator last, OutputIterator to, std::input_iterator_tag)
+					KERBAL_CONDITIONAL_NOEXCEPT(
+						noexcept(static_cast<bool>(first != last)) &&
+						noexcept(kerbal::assign::generic_assign(*to, kerbal::compatibility::to_xvalue(*first))) &&
+						noexcept(++to) &&
+						noexcept(++first)
+					)
 			{
 				while (first != last) {
 					kerbal::assign::generic_assign(*to, kerbal::compatibility::to_xvalue(*first));
