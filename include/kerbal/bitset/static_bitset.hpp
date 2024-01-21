@@ -14,7 +14,11 @@
 
 #include <kerbal/ts/modules_ts/modules_ts.hpp>
 
-#include <kerbal/bitset/static_bitset/static_bitset.fwd.hpp>
+KERBAL_MODULE_GLOBAL
+
+
+#include <kerbal/bitset/detail/bitset_size_unrelated.hpp>
+#include <kerbal/bitset/detail/default_block_type.hpp>
 
 #include <kerbal/algorithm/modifier/copy.hpp>
 #include <kerbal/algorithm/modifier/copy_backward.hpp>
@@ -27,13 +31,26 @@
 #include <kerbal/container/array.hpp>
 #include <kerbal/numeric/bit.hpp>
 #include <kerbal/type_traits/enable_if.hpp>
-#include <kerbal/type_traits/integral_constant.hpp>
 #include <kerbal/type_traits/sign_deduction.hpp>
 
 #include <cstddef>
 
-#include <kerbal/bitset/detail/bitset_size_unrelated.hpp>
-#include <kerbal/bitset/detail/default_block_type.hpp>
+
+KERBAL_EXPORT_MODULE_DECLARE(kerbal.iterator.static_bitset)
+
+
+#if KERBAL_ENABLE_MODULES
+
+import kerbal.type_traits.integral_constant;
+
+#else
+
+#include <kerbal/type_traits/integral_constant.hpp>
+
+#endif
+
+
+#include <kerbal/bitset/static_bitset/static_bitset.fwd.hpp>
 
 
 namespace kerbal

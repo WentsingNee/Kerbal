@@ -14,6 +14,9 @@
 
 #include <kerbal/ts/modules_ts/modules_ts.hpp>
 
+KERBAL_MODULE_GLOBAL
+
+
 #include <kerbal/utility/member_compress_helper/member_compress_helper.fwd.hpp>
 
 #include <kerbal/assign/ilist.hpp>
@@ -25,7 +28,6 @@
 #include <kerbal/type_traits/add_lvalue_reference.hpp>
 #include <kerbal/type_traits/add_const_lvalue_reference.hpp>
 #include <kerbal/type_traits/can_be_empty_base.hpp>
-#include <kerbal/type_traits/integral_constant.hpp>
 #include <kerbal/type_traits/remove_volatile.hpp>
 #include <kerbal/utility/declval.hpp>
 #include <kerbal/utility/in_place.hpp>
@@ -56,6 +58,20 @@
 
 #if __cplusplus >= 201103L
 #	include <initializer_list>
+#endif
+
+
+KERBAL_EXPORT_MODULE_DECLARE_SUPPRESS(kerbal.utility.member_compress_helper)
+
+
+#if KERBAL_ENABLE_MODULES
+
+import kerbal.type_traits.integral_constant;
+
+#else
+
+#include <kerbal/type_traits/integral_constant.hpp>
+
 #endif
 
 

@@ -14,12 +14,18 @@
 
 #include <kerbal/ts/modules_ts/modules_ts.hpp>
 
+KERBAL_MODULE_GLOBAL
+
+
 #include <kerbal/compatibility/constexpr.hpp>
 #include <kerbal/compatibility/noexcept.hpp>
 
 #if __cplusplus >= 201103L
 #	include <kerbal/type_traits/is_nothrow_copy_constructible.hpp>
 #endif
+
+
+KERBAL_EXPORT_MODULE_DECLARE(kerbal.operators.incr_decr)
 
 
 namespace kerbal
@@ -49,7 +55,7 @@ namespace kerbal
 		};
 
 		KERBAL_MODULE_EXPORT
-		template <class T>
+		template <typename T>
 		struct decrementable
 		{
 				KERBAL_CONSTEXPR14
