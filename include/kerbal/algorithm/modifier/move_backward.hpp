@@ -28,10 +28,10 @@ namespace kerbal
 		namespace detail
 		{
 
-			template <typename BidirectionalIterator, typename OutputIterator>
+			template <typename BidirectionalIterator, typename BidirectionalOutputIterator>
 			KERBAL_CONSTEXPR14
-			OutputIterator
-			k_move_backward(BidirectionalIterator first, BidirectionalIterator last, OutputIterator to_last,
+			BidirectionalOutputIterator
+			k_move_backward(BidirectionalIterator first, BidirectionalIterator last, BidirectionalOutputIterator to_last,
 							std::bidirectional_iterator_tag)
 					KERBAL_CONDITIONAL_NOEXCEPT(
 						noexcept(static_cast<bool>(first != last)) &&
@@ -51,10 +51,10 @@ namespace kerbal
 
 		} // namespace detail
 
-		template <typename BidirectionalIterator, typename OutputIterator>
+		template <typename BidirectionalIterator, typename BidirectionalOutputIterator>
 		KERBAL_CONSTEXPR14
-		OutputIterator
-		move_backward(BidirectionalIterator first, BidirectionalIterator last, OutputIterator to_last)
+		BidirectionalOutputIterator
+		move_backward(BidirectionalIterator first, BidirectionalIterator last, BidirectionalOutputIterator to_last)
 		{
 			return kerbal::algorithm::detail::k_move_backward(first, last, to_last, kerbal::iterator::iterator_category(first));
 		}
