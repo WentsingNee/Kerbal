@@ -14,6 +14,9 @@
 
 #include <kerbal/ts/modules_ts/modules_ts.hpp>
 
+KERBAL_MODULE_GLOBAL
+
+
 #include <kerbal/compatibility/noexcept.hpp>
 #include <kerbal/config/exceptions.hpp>
 
@@ -28,6 +31,15 @@
 
 #if !KERBAL_HAS_EXCEPTIONS_SUPPORT
 #	include <cstdlib> // std::abort
+#endif
+
+
+KERBAL_EXPORT_MODULE_DECLARE(kerbal.utility.throw_this_exception)
+
+
+#if KERBAL_ENABLE_MODULES
+#else
+
 #endif
 
 
