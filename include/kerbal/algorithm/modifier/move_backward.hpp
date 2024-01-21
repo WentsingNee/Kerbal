@@ -15,6 +15,7 @@
 #include <kerbal/assign/generic_assign.hpp>
 #include <kerbal/compatibility/constexpr.hpp>
 #include <kerbal/compatibility/move.hpp>
+#include <kerbal/compatibility/noexcept.hpp>
 #include <kerbal/iterator/iterator_traits.hpp>
 
 
@@ -34,6 +35,12 @@ namespace kerbal
 				BidirectionalIterator first, BidirectionalIterator last, OutputIterator to_last,
 				std::bidirectional_iterator_tag
 			)
+				KERBAL_CONDITIONAL_NOEXCEPT(
+					noexcept(static_cast<bool>(first != last)) &&
+					noexcept(--last) &&
+					noexcept(--to_last) &&
+					noexcept(kerbal::assign::generic_assign(*to_last, kerbal::compatibility::to_xvalue(*last)))
+				)
 			{
 				while (first != last) {
 					--last;
