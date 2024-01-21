@@ -14,8 +14,30 @@
 #define KERBAL_TYPE_TRAITS_IS_VOID_HPP
 
 #include <kerbal/ts/modules_ts/modules_ts.hpp>
-#include <kerbal/type_traits/integral_constant.hpp>
+
+
+KERBAL_MODULE_GLOBAL
+
+
 #include <kerbal/type_traits/remove_cv.hpp>
+
+
+KERBAL_EXPORT_MODULE_DECLARE(kerbal.type_traits.is_void)
+
+
+#if KERBAL_ENABLE_MODULES
+
+import kerbal.type_traits.add_const;
+import kerbal.type_traits.add_volatile;
+import kerbal.type_traits.integral_constant;
+
+#else
+
+#include <kerbal/type_traits/add_const.hpp>
+#include <kerbal/type_traits/add_volatile.hpp>
+#include <kerbal/type_traits/integral_constant.hpp>
+
+#endif
 
 
 namespace kerbal

@@ -14,7 +14,8 @@
 
 #include <kerbal/ts/modules_ts/modules_ts.hpp>
 
-#include <kerbal/assign/generic_assign/generic_assign.fwd.hpp>
+KERBAL_MODULE_GLOBAL
+
 
 #include <kerbal/compatibility/constexpr.hpp>
 #include <kerbal/compatibility/noexcept.hpp>
@@ -22,13 +23,33 @@
 #if __cplusplus >= 201103L
 #	include <kerbal/compatibility/static_assert.hpp>
 #	include <kerbal/type_traits/extent.hpp>
-#	include <kerbal/type_traits/integral_constant.hpp>
 #	include <kerbal/type_traits/is_array.hpp>
 #	include <kerbal/type_traits/remove_reference.hpp>
 #	include <kerbal/utility/forward.hpp>
 #endif
 
 #include <cstddef>
+
+
+KERBAL_EXPORT_MODULE_DECLARE_SUPPRESS(kerbal.operators.generic_assign)
+
+
+#if KERBAL_ENABLE_MODULES
+
+#if __cplusplus >= 201103L
+	import kerbal.type_traits.integral_constant;
+#endif
+
+#else
+
+#if __cplusplus >= 201103L
+#	include <kerbal/type_traits/integral_constant.hpp>
+#endif
+
+#endif
+
+
+#include <kerbal/assign/generic_assign/generic_assign.fwd.hpp>
 
 
 namespace kerbal

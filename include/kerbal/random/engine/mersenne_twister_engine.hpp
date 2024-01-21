@@ -14,6 +14,9 @@
 
 #include <kerbal/ts/modules_ts/modules_ts.hpp>
 
+KERBAL_MODULE_GLOBAL
+
+
 #include <kerbal/compare/sequence_compare.hpp>
 #include <kerbal/compatibility/constexpr.hpp>
 #include <kerbal/compatibility/fixed_width_integer.hpp>
@@ -23,12 +26,25 @@
 #include <kerbal/iterator/iterator_traits.hpp>
 #include <kerbal/numeric/numeric_limits.hpp>
 #include <kerbal/smath/two_pow_sn_minus_one.hpp>
-#include <kerbal/type_traits/integral_constant.hpp>
 
 #include <cstddef>
 
 #include <kerbal/random/engine/detail/mt_generate_copy_n_helper.hpp>
 #include <kerbal/random/engine/detail/mt_twist_helper.hpp>
+
+
+KERBAL_EXPORT_MODULE_DECLARE(kerbal.random.mersenne_twister_engine)
+
+
+#if KERBAL_ENABLE_MODULES
+
+import kerbal.type_traits.integral_constant;
+
+#else
+
+#include <kerbal/type_traits/integral_constant.hpp>
+
+#endif
 
 
 namespace kerbal

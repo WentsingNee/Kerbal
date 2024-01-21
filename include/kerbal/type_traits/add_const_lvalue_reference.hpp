@@ -15,7 +15,21 @@
 
 #include <kerbal/ts/modules_ts/modules_ts.hpp>
 
+KERBAL_MODULE_GLOBAL
+
+
+KERBAL_EXPORT_MODULE_DECLARE(kerbal.type_traits.add_const_lvalue_reference)
+
+
+#if KERBAL_ENABLE_MODULES
+
+import kerbal.type_traits.is_referencable;
+
+#else
+
 #include <kerbal/type_traits/is_referencable.hpp>
+
+#endif
 
 
 namespace kerbal

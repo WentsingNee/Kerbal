@@ -14,15 +14,35 @@
 
 #include <kerbal/ts/modules_ts/modules_ts.hpp>
 
+KERBAL_MODULE_GLOBAL
+
+
 #include <kerbal/compatibility/constexpr.hpp>
 #include <kerbal/compatibility/noexcept.hpp>
-#include <kerbal/type_traits/integral_constant.hpp>
+
 #include <kerbal/type_traits/is_same.hpp>
 #include <kerbal/type_traits/remove_cv.hpp>
 #include <kerbal/type_traits/void_type.hpp>
 
 #include <iterator>
 #include <cstddef>
+
+
+KERBAL_EXPORT_MODULE_DECLARE(kerbal.iterator.iterator_traits)
+
+
+#if KERBAL_ENABLE_MODULES
+
+import kerbal.type_traits.integral_constant;
+// import kerbal.type_traits.is_same;
+// import kerbal.type_traits.remove_cv;
+// import kerbal.type_traits.void_type;
+
+#else
+
+#include <kerbal/type_traits/integral_constant.hpp>
+
+#endif
 
 
 namespace kerbal

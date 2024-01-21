@@ -14,15 +14,35 @@
 
 #include <kerbal/ts/modules_ts/modules_ts.hpp>
 
+KERBAL_MODULE_GLOBAL
+
+
 #include <kerbal/compatibility/constexpr.hpp>
 #include <kerbal/compatibility/noexcept.hpp>
 #include <kerbal/compatibility/static_assert.hpp>
+
+#include <iterator>
+
+
+KERBAL_EXPORT_MODULE_DECLARE(kerbal.iterator.iterator)
+
+
+#if KERBAL_ENABLE_MODULES
+
+import kerbal.iterator.iterator_traits;
+import kerbal.type_traits.integral_constant;
+import kerbal.type_traits.sign_deduction;
+
+#else
+
 #include <kerbal/iterator/iterator_traits.hpp>
 #include <kerbal/type_traits/integral_constant.hpp>
 #include <kerbal/type_traits/sign_deduction.hpp>
 
 #include <iterator>
 #include <utility>
+
+#endif
 
 
 namespace kerbal

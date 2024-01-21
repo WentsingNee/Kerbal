@@ -14,9 +14,25 @@
 
 #include <kerbal/ts/modules_ts/modules_ts.hpp>
 
+KERBAL_MODULE_GLOBAL
+
+
 #include <kerbal/compatibility/constexpr.hpp>
 #include <kerbal/compatibility/noexcept.hpp>
+
+
+KERBAL_EXPORT_MODULE_DECLARE(kerbal.operators.dereferenceable)
+
+
+#if KERBAL_ENABLE_MODULES
+
+import kerbal.utility.declval;
+
+#else
+
 #include <kerbal/utility/declval.hpp>
+
+#endif
 
 
 namespace kerbal

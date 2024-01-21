@@ -14,7 +14,13 @@
 
 #include <kerbal/ts/modules_ts/modules_ts.hpp>
 
+KERBAL_MODULE_GLOBAL
+
+
 #include <cstddef>
+
+
+KERBAL_EXPORT_MODULE_DECLARE(kerbal.utility.in_place)
 
 
 namespace kerbal

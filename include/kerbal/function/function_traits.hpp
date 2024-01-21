@@ -14,9 +14,11 @@
 
 #include <kerbal/ts/modules_ts/modules_ts.hpp>
 
+KERBAL_MODULE_GLOBAL
+
+
 #include <kerbal/compatibility/cv_qualified_function.hpp>
 #include <kerbal/tmp/type_vector.hpp>
-#include <kerbal/type_traits/integral_constant.hpp>
 
 #if __cplusplus < 201103L
 #	include <kerbal/macro/macro_concat.hpp>
@@ -24,6 +26,20 @@
 #endif
 
 #include <cstddef>
+
+
+KERBAL_EXPORT_MODULE_DECLARE(kerbal.function.function_traits)
+
+
+#if KERBAL_ENABLE_MODULES
+
+import kerbal.type_traits.integral_constant;
+
+#else
+
+#include <kerbal/type_traits/integral_constant.hpp>
+
+#endif
 
 
 namespace kerbal

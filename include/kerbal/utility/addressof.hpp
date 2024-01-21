@@ -14,6 +14,9 @@
 
 #include <kerbal/ts/modules_ts/modules_ts.hpp>
 
+KERBAL_MODULE_GLOBAL
+
+
 #include <kerbal/config/compiler_id.hpp>
 #include <kerbal/config/compiler_private.hpp>
 
@@ -54,6 +57,10 @@
 #		include <memory>
 #	endif
 #endif
+
+
+
+KERBAL_EXPORT_MODULE_DECLARE(kerbal.utility.addressof)
 
 
 namespace kerbal
