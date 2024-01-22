@@ -13,6 +13,7 @@
 #define KERBAL_CONTAINER_ASSOCIATIVE_CONTAINER_FACILITY_MAP_DATA_HPP
 
 #include <kerbal/compatibility/constexpr.hpp>
+#include <kerbal/compatibility/namespace_std_scope.hpp>
 #include <kerbal/compatibility/noexcept.hpp>
 #include <kerbal/utility/compressed_pair.hpp>
 

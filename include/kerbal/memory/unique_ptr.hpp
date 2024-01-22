@@ -13,6 +13,7 @@
 #define KERBAL_MEMORY_UNIQUE_PTR_HPP
 
 #include <kerbal/algorithm/swap.hpp>
+#include <kerbal/compatibility/constexpr.hpp>
 #include <kerbal/compatibility/noexcept.hpp>
 #include <kerbal/memory/guard.hpp>
 
@@ -20,6 +21,7 @@
 #	include <kerbal/compatibility/move.hpp>
 #	include <kerbal/type_traits/enable_if.hpp>
 #	include <kerbal/type_traits/is_array.hpp>
+#	include <kerbal/utility/declval.hpp>
 #	include <kerbal/utility/forward.hpp>
 #else
 #	include <kerbal/macro/macro_concat.hpp>

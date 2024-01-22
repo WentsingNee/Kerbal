@@ -16,6 +16,7 @@
 #include <kerbal/compatibility/noexcept.hpp>
 #include <kerbal/compatibility/static_assert.hpp>
 #include <kerbal/iterator/iterator_traits.hpp>
+#include <kerbal/type_traits/integral_constant.hpp>
 #include <kerbal/type_traits/sign_deduction.hpp>
 
 

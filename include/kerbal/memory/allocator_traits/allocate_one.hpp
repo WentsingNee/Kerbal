@@ -19,6 +19,10 @@
 #include <kerbal/type_traits/void_type.hpp>
 #include <kerbal/utility/declval.hpp>
 
+#if __cplusplus < 201103L
+#	include <cstddef>
+#endif
+
 
 namespace kerbal
 {
