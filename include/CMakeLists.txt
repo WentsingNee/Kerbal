@@ -37,7 +37,7 @@ foreach (lib
 
     set(build_headers)
     foreach (header ${headers_relative})
-        list(APPEND build_headers "${CMAKE_CURRENT_SOURCE_DIR}/${header}")
+        list(APPEND build_headers "${header}")
     endforeach ()
 
     kerbal_list_regex_filter(
@@ -67,9 +67,11 @@ foreach (lib
             ALIAS ${lib}
     )
 
-    target_sources(${lib} INTERFACE
-            $<BUILD_INTERFACE:${build_headers}>
-    )
+    foreach (header ${headers_relative})
+        target_sources(${lib} INTERFACE
+                $<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}/${header}>
+        )
+    endforeach ()
 
     foreach (header ${headers_relative})
         target_sources(${lib} INTERFACE
