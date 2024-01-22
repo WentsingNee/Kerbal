@@ -240,28 +240,28 @@ namespace kerbal
 				}
 
 				template <std::size_t M>
-				friend KERBAL_CONSTEXPR14
-				bool operator==(const static_stack<Tp, M> & lhs, const static_stack<Tp, N> & rhs);
+				KERBAL_CONSTEXPR14
+				friend bool operator==(const static_stack<Tp, M> & lhs, const static_stack<Tp, N> & rhs);
 
 				template <std::size_t M>
-				friend KERBAL_CONSTEXPR14
-				bool operator!=(const static_stack<Tp, M> & lhs, const static_stack<Tp, N> & rhs);
+				KERBAL_CONSTEXPR14
+				friend bool operator!=(const static_stack<Tp, M> & lhs, const static_stack<Tp, N> & rhs);
 
 				template <std::size_t M>
-				friend KERBAL_CONSTEXPR14
-				bool operator<(const static_stack<Tp, M> & lhs, const static_stack<Tp, N> & rhs);
+				KERBAL_CONSTEXPR14
+				friend bool operator<(const static_stack<Tp, M> & lhs, const static_stack<Tp, N> & rhs);
 
 				template <std::size_t M>
-				friend KERBAL_CONSTEXPR14
-				bool operator<=(const static_stack<Tp, M> & lhs, const static_stack<Tp, N> & rhs);
+				KERBAL_CONSTEXPR14
+				friend bool operator<=(const static_stack<Tp, M> & lhs, const static_stack<Tp, N> & rhs);
 
 				template <std::size_t M>
-				friend KERBAL_CONSTEXPR14
-				bool operator>(const static_stack<Tp, M> & lhs, const static_stack<Tp, N> & rhs);
+				KERBAL_CONSTEXPR14
+				friend bool operator>(const static_stack<Tp, M> & lhs, const static_stack<Tp, N> & rhs);
 
 				template <std::size_t M>
-				friend KERBAL_CONSTEXPR14
-				bool operator>=(const static_stack<Tp, M> & lhs, const static_stack<Tp, N> & rhs);
+				KERBAL_CONSTEXPR14
+				friend bool operator>=(const static_stack<Tp, M> & lhs, const static_stack<Tp, N> & rhs);
 
 		};
 

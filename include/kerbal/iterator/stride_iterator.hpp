@@ -107,15 +107,15 @@ namespace kerbal
 						return static_cast<stride_iterator&>(*this);
 					}
 
-					friend KERBAL_CONSTEXPR
-					bool operator==(const stride_iterator& lhs, const stride_iterator& rhs)
+					KERBAL_CONSTEXPR
+					friend bool operator==(const stride_iterator& lhs, const stride_iterator& rhs)
 					{
 						return static_cast<bool>(lhs.current == rhs.current) &&
 								static_cast<bool>(lhs.out == rhs.out);
 					}
 
-					friend KERBAL_CONSTEXPR
-					bool operator!=(const stride_iterator& lhs, const stride_iterator& rhs)
+					KERBAL_CONSTEXPR
+					friend bool operator!=(const stride_iterator& lhs, const stride_iterator& rhs)
 					{
 						return static_cast<bool>(lhs.current != rhs.current) ||
 							   static_cast<bool>(lhs.out != rhs.out);
@@ -217,8 +217,8 @@ namespace kerbal
 					/*
 					 * @precondition lhs.stride == rhs.stride
 					 */
-					friend KERBAL_CONSTEXPR14
-					difference_type
+					KERBAL_CONSTEXPR14
+					friend difference_type
 					operator-(const stride_iterator& lhs, const stride_iterator& rhs)
 					{
 						difference_type dist(kerbal::iterator::distance(rhs.current, lhs.current) - rhs.out + lhs.out);
@@ -246,8 +246,8 @@ namespace kerbal
 						return *(static_cast<const stride_iterator&>(*this) + dist);
 					}
 
-					friend KERBAL_CONSTEXPR14
-					bool operator<(const stride_iterator& lhs, const stride_iterator& rhs)
+					KERBAL_CONSTEXPR14
+					friend bool operator<(const stride_iterator& lhs, const stride_iterator& rhs)
 					{
 						if (lhs.current < rhs.current) {
 							return true;
@@ -257,8 +257,8 @@ namespace kerbal
 						return lhs.out < rhs.out;
 					}
 
-					friend KERBAL_CONSTEXPR14
-					bool operator<=(const stride_iterator& lhs, const stride_iterator& rhs)
+					KERBAL_CONSTEXPR14
+					friend bool operator<=(const stride_iterator& lhs, const stride_iterator& rhs)
 					{
 						if (lhs.current < rhs.current) {
 							return true;
@@ -268,8 +268,8 @@ namespace kerbal
 						return lhs.out <= rhs.out;
 					}
 
-					friend KERBAL_CONSTEXPR14
-					bool operator>(const stride_iterator& lhs, const stride_iterator& rhs)
+					KERBAL_CONSTEXPR14
+					friend bool operator>(const stride_iterator& lhs, const stride_iterator& rhs)
 					{
 						if (lhs.current < rhs.current) {
 							return false;
@@ -279,8 +279,8 @@ namespace kerbal
 						return lhs.out > rhs.out;
 					}
 
-					friend KERBAL_CONSTEXPR14
-					bool operator>=(const stride_iterator& lhs, const stride_iterator& rhs)
+					KERBAL_CONSTEXPR14
+					friend bool operator>=(const stride_iterator& lhs, const stride_iterator& rhs)
 					{
 						if (lhs.current < rhs.current) {
 							return false;

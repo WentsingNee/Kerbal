@@ -103,8 +103,8 @@ namespace kerbal
 						return static_cast<arr_iter&>(*this);
 					}
 
-					friend KERBAL_CONSTEXPR
-					bool operator==(const arr_iter & lhs, const arr_iter & rhs) KERBAL_NOEXCEPT
+					KERBAL_CONSTEXPR
+					friend bool operator==(const arr_iter & lhs, const arr_iter & rhs) KERBAL_NOEXCEPT
 					{
 						return lhs.current == rhs.current;
 					}
@@ -122,8 +122,8 @@ namespace kerbal
 					//===================
 					//random access iterator interface
 
-					friend KERBAL_CONSTEXPR
-					difference_type
+					KERBAL_CONSTEXPR
+					friend difference_type
 					operator-(const arr_iter & lhs, const arr_iter & rhs) KERBAL_NOEXCEPT
 					{
 						return lhs.current - rhs.current;
@@ -149,8 +149,8 @@ namespace kerbal
 						return *(static_cast<const arr_iter&>(*this) + dist);
 					}
 
-					friend KERBAL_CONSTEXPR
-					bool operator<(const arr_iter & lhs, const arr_iter & rhs) KERBAL_NOEXCEPT
+					KERBAL_CONSTEXPR
+					friend bool operator<(const arr_iter & lhs, const arr_iter & rhs) KERBAL_NOEXCEPT
 					{
 						return lhs.current < rhs.current;
 					}
@@ -226,8 +226,8 @@ namespace kerbal
 						return static_cast<arr_kiter&>(*this);
 					}
 
-					friend KERBAL_CONSTEXPR
-					bool operator==(const arr_kiter & lhs, const arr_kiter & rhs) KERBAL_NOEXCEPT
+					KERBAL_CONSTEXPR
+					friend bool operator==(const arr_kiter & lhs, const arr_kiter & rhs) KERBAL_NOEXCEPT
 					{
 						return lhs.current == rhs.current;
 					}
@@ -245,8 +245,8 @@ namespace kerbal
 					//===================
 					//random access iterator interface
 
-					friend KERBAL_CONSTEXPR
-					difference_type
+					KERBAL_CONSTEXPR
+					friend difference_type
 					operator-(const arr_kiter & lhs, const arr_kiter & rhs) KERBAL_NOEXCEPT
 					{
 						return lhs.current - rhs.current;
@@ -272,8 +272,8 @@ namespace kerbal
 						return *(static_cast<const arr_kiter&>(*this) + dist);
 					}
 
-					friend KERBAL_CONSTEXPR
-					bool operator<(const arr_kiter & lhs, const arr_kiter & rhs) KERBAL_NOEXCEPT
+					KERBAL_CONSTEXPR
+					friend bool operator<(const arr_kiter & lhs, const arr_kiter & rhs) KERBAL_NOEXCEPT
 					{
 						return lhs.current < rhs.current;
 					}

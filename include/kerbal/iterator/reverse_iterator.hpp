@@ -219,8 +219,8 @@ namespace kerbal
 						return static_cast<reverse_iterator&>(*this);
 					}
 
-					friend KERBAL_CONSTEXPR
-					bool operator==(const reverse_iterator& lhs, const reverse_iterator& rhs)
+					KERBAL_CONSTEXPR
+					friend bool operator==(const reverse_iterator& lhs, const reverse_iterator& rhs)
 #	if KERBAL_COMPILER_ID != KERBAL_COMPILER_ID_ICC
 							KERBAL_CONDITIONAL_NOEXCEPT(noexcept(lhs.iter == rhs.iter))
 #	endif
@@ -228,8 +228,8 @@ namespace kerbal
 						return lhs.iter == rhs.iter;
 					}
 
-					friend KERBAL_CONSTEXPR
-					bool operator!=(const reverse_iterator& lhs, const reverse_iterator& rhs)
+					KERBAL_CONSTEXPR
+					friend bool operator!=(const reverse_iterator& lhs, const reverse_iterator& rhs)
 #	if KERBAL_COMPILER_ID != KERBAL_COMPILER_ID_ICC
 							KERBAL_CONDITIONAL_NOEXCEPT(noexcept(lhs.iter != rhs.iter))
 #	endif
@@ -299,8 +299,8 @@ namespace kerbal
 				//===================
 				//random access iterator interface
 
-					friend KERBAL_CONSTEXPR
-					difference_type
+					KERBAL_CONSTEXPR
+					friend difference_type
 					operator-(const reverse_iterator& lhs, const reverse_iterator& rhs)
 #	if KERBAL_COMPILER_ID != KERBAL_COMPILER_ID_ICC
 							KERBAL_CONDITIONAL_NOEXCEPT(noexcept(rhs.iter - lhs.iter))
@@ -331,8 +331,8 @@ namespace kerbal
 						return *(static_cast<const reverse_iterator&>(*this) + dist);
 					}
 
-					friend KERBAL_CONSTEXPR
-					bool operator<(const reverse_iterator& lhs, const reverse_iterator& rhs)
+					KERBAL_CONSTEXPR
+					friend bool operator<(const reverse_iterator& lhs, const reverse_iterator& rhs)
 #	if KERBAL_COMPILER_ID != KERBAL_COMPILER_ID_ICC
 							KERBAL_CONDITIONAL_NOEXCEPT(noexcept(lhs.iter > rhs.iter))
 #	endif
@@ -340,8 +340,8 @@ namespace kerbal
 						return lhs.iter > rhs.iter;
 					}
 
-					friend KERBAL_CONSTEXPR
-					bool operator<=(const reverse_iterator& lhs, const reverse_iterator& rhs)
+					KERBAL_CONSTEXPR
+					friend bool operator<=(const reverse_iterator& lhs, const reverse_iterator& rhs)
 #	if KERBAL_COMPILER_ID != KERBAL_COMPILER_ID_ICC
 							KERBAL_CONDITIONAL_NOEXCEPT(noexcept(lhs.iter >= rhs.iter))
 #	endif
@@ -349,8 +349,8 @@ namespace kerbal
 						return lhs.iter >= rhs.iter;
 					}
 
-					friend KERBAL_CONSTEXPR
-					bool operator>(const reverse_iterator& lhs, const reverse_iterator& rhs)
+					KERBAL_CONSTEXPR
+					friend bool operator>(const reverse_iterator& lhs, const reverse_iterator& rhs)
 #	if KERBAL_COMPILER_ID != KERBAL_COMPILER_ID_ICC
 							KERBAL_CONDITIONAL_NOEXCEPT(noexcept(lhs.iter < rhs.iter))
 #	endif
@@ -358,8 +358,8 @@ namespace kerbal
 						return lhs.iter < rhs.iter;
 					}
 
-					friend KERBAL_CONSTEXPR
-					bool operator>=(const reverse_iterator& lhs, const reverse_iterator& rhs)
+					KERBAL_CONSTEXPR
+					friend bool operator>=(const reverse_iterator& lhs, const reverse_iterator& rhs)
 #	if KERBAL_COMPILER_ID != KERBAL_COMPILER_ID_ICC
 							KERBAL_CONDITIONAL_NOEXCEPT(noexcept(lhs.iter <= rhs.iter))
 #	endif

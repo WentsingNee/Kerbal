@@ -89,8 +89,8 @@ namespace kerbal
 						return static_cast<DerivedIterator&>(*this);
 					}
 
-					friend KERBAL_CONSTEXPR
-					bool operator==(const DerivedIterator & lhs, const DerivedIterator & rhs) KERBAL_NOEXCEPT
+					KERBAL_CONSTEXPR
+					friend bool operator==(const DerivedIterator & lhs, const DerivedIterator & rhs) KERBAL_NOEXCEPT
 					{
 						return lhs.current == rhs.current;
 					}
@@ -108,8 +108,8 @@ namespace kerbal
 					//===================
 					//random access iterator interface
 
-					friend KERBAL_CONSTEXPR
-					difference_type
+					KERBAL_CONSTEXPR
+					friend difference_type
 					operator-(const DerivedIterator & lhs, const DerivedIterator & rhs) KERBAL_NOEXCEPT
 					{
 						return lhs.current - rhs.current;
@@ -135,8 +135,8 @@ namespace kerbal
 						return *(static_cast<const DerivedIterator&>(*this) + dist);
 					}
 
-					friend KERBAL_CONSTEXPR
-					bool operator<(const DerivedIterator & lhs, const DerivedIterator & rhs) KERBAL_NOEXCEPT
+					KERBAL_CONSTEXPR
+					friend bool operator<(const DerivedIterator & lhs, const DerivedIterator & rhs) KERBAL_NOEXCEPT
 					{
 						return lhs.current < rhs.current;
 					}

@@ -71,8 +71,8 @@ namespace kerbal
 						return *this;
 					}
 
-					friend KERBAL_CONSTEXPR
-					bool operator==(const sl_iter_type_unrelated & lhs, const sl_iter_type_unrelated & rhs) KERBAL_NOEXCEPT
+					KERBAL_CONSTEXPR
+					friend bool operator==(const sl_iter_type_unrelated & lhs, const sl_iter_type_unrelated & rhs) KERBAL_NOEXCEPT
 					{
 						return lhs.current == rhs.current;
 					}
@@ -126,8 +126,8 @@ namespace kerbal
 						return *this;
 					}
 
-					friend KERBAL_CONSTEXPR
-					bool operator==(const sl_kiter_type_unrelated & lhs, const sl_kiter_type_unrelated & rhs) KERBAL_NOEXCEPT
+					KERBAL_CONSTEXPR
+					friend bool operator==(const sl_kiter_type_unrelated & lhs, const sl_kiter_type_unrelated & rhs) KERBAL_NOEXCEPT
 					{
 						return lhs.current == rhs.current;
 					}
@@ -199,8 +199,8 @@ namespace kerbal
 						return *this;
 					}
 
-					friend KERBAL_CONSTEXPR
-					bool operator==(const sl_iter & lhs, const sl_iter & rhs) KERBAL_NOEXCEPT
+					KERBAL_CONSTEXPR
+					friend bool operator==(const sl_iter & lhs, const sl_iter & rhs) KERBAL_NOEXCEPT
 					{
 						return static_cast<const super&>(lhs) == static_cast<const super&>(rhs);
 					}
@@ -273,8 +273,8 @@ namespace kerbal
 						return *this;
 					}
 
-					friend KERBAL_CONSTEXPR
-					bool operator==(const sl_kiter & lhs, const sl_kiter & rhs) KERBAL_NOEXCEPT
+					KERBAL_CONSTEXPR
+					friend bool operator==(const sl_kiter & lhs, const sl_kiter & rhs) KERBAL_NOEXCEPT
 					{
 						return static_cast<const super&>(lhs) == static_cast<const super&>(rhs);
 					}
