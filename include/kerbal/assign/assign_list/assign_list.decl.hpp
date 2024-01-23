@@ -13,9 +13,9 @@
 #define KERBAL_ASSIGN_ASSIGN_LIST_ASSIGN_LIST_DECL_HPP
 
 #include <kerbal/assign/assign_list/assign_list.fwd.hpp>
+#include <kerbal/container/detail/vector_base/vector_base.decl.hpp>
 
 #include <kerbal/compatibility/noexcept.hpp>
-#include <kerbal/container/detail/vector_base.hpp>
 #include <kerbal/utility/member_compress_helper.hpp>
 
 #include <memory>
@@ -52,51 +52,23 @@ namespace kerbal
 				}
 
 			public:
-				assign_list()
-				{
-					v.k_reserve_using_allocator(this->alloc(), 20);
-				}
+				assign_list();
 
-				~assign_list() KERBAL_NOEXCEPT
-				{
-					v.template k_destroy_using_allocator(this->alloc());
-				}
+				~assign_list() KERBAL_NOEXCEPT;
 
-				assign_list & operator,(const_reference val)
-				{
-					v.k_push_back_using_allocator(this->alloc(), val);
-					return *this;
-				}
+				assign_list & operator,(const_reference val);
 
-				iterator begin()
-				{
-					return v.begin();
-				}
+				iterator begin();
 
-				iterator end()
-				{
-					return v.end();
-				}
+				iterator end();
 
-				const_iterator begin() const
-				{
-					return v.begin();
-				}
+				const_iterator begin() const;
 
-				const_iterator end() const
-				{
-					return v.end();
-				}
+				const_iterator end() const;
 
-				const_iterator cbegin() const
-				{
-					return v.begin();
-				}
+				const_iterator cbegin() const;
 
-				const_iterator cend() const
-				{
-					return v.end();
-				}
+				const_iterator cend() const;
 		};
 
 		template <>
