@@ -12,6 +12,9 @@
 #ifndef KERBAL_ALGORITHM_MODIFIER_COPY_N_HPP
 #define KERBAL_ALGORITHM_MODIFIER_COPY_N_HPP
 
+#include <kerbal/algorithm/modifier/copy_n/copy_n.fwd.hpp>
+
+#include <kerbal/assign/generic_assign.hpp>
 #include <kerbal/compatibility/constexpr.hpp>
 #include <kerbal/utility/compressed_pair.hpp>
 
