@@ -53,7 +53,6 @@
 
 #if __cplusplus >= 201103L
 #	include <initializer_list>
-#	include <type_traits>
 #endif
 
 
@@ -107,15 +106,10 @@ namespace kerbal
 
 #			if __cplusplus >= 201103L
 
-					template <typename ... Args>
-					struct std_is_nothrow_in_place_constructible :
-							kerbal::type_traits::tribool_constant<
-								!!std::is_nothrow_constructible<T, Args...>::value
-							>
-					{
-					};
-
-					// under vs2017, `try_test_is_nothrow_in_place_constructible` may cause compile error of inst.container.static_vector
+					/* under vs2017, if not use compiler intrinsic version of `is_nothrow_constructible`,
+					 * it may cause compile error in a few of cases, such as the instantiation test of
+					 * `reverse_iterator<iterator without default constructor>`
+					 */
 					template <typename ... Args>
 					struct try_test_is_nothrow_in_place_constructible :
 							kerbal::type_traits::try_test_is_nothrow_constructible<T, Args...>
@@ -127,7 +121,7 @@ namespace kerbal
 					explicit member_compress_helper_impl(kerbal::utility::in_place_t, Args&& ... args)
 							KERBAL_CONDITIONAL_NOEXCEPT(
 									kerbal::type_traits::tribool_is_true<
-										std_is_nothrow_in_place_constructible<Args&&...>
+										try_test_is_nothrow_in_place_constructible<Args&&...>
 									>::value
 							) :
 							k_member(kerbal::utility::forward<Args>(args)...)
