@@ -53,6 +53,8 @@
 
 #if __cplusplus >= 201103L
 #	include <initializer_list>
+#else
+#	include <kerbal/assign/assign_list/assign_list.decl.hpp>
 #endif
 
 
@@ -981,5 +983,11 @@ namespace kerbal
 	} // namespace utility
 
 } // namespace kerbal
+
+
+#if __cplusplus < 201103L
+#	include <kerbal/assign/assign_list/assign_list.impl.hpp>
+#endif
+
 
 #endif // KERBAL_UTILITY_MEMBER_COMPRESS_HELPER_HPP
