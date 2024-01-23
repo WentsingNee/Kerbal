@@ -13,7 +13,7 @@
 #define KERBAL_ASSIGN_ASSIGN_LIST_ASSIGN_LIST_IMPL_HPP
 
 #include <kerbal/assign/assign_list/assign_list.decl.hpp>
-// #include <kerbal/container/detail/vector_base/vector_base.impl.hpp>
+#include <kerbal/container/detail/vector_base/vector_base.impl.hpp>
 
 #include <kerbal/compatibility/noexcept.hpp>
 
