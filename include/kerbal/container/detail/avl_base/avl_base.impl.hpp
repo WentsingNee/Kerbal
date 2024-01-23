@@ -332,18 +332,16 @@ namespace kerbal
 
 			template <typename Extract, typename KeyCompare>
 			struct avl_stateless_comparable:
-					kerbal::type_traits::tribool_is_true<
-						typename kerbal::type_traits::tribool_conjunction<
-							typename kerbal::type_traits::tribool_disjunction<
-								kerbal::type_traits::try_test_is_empty<Extract>,
-								kerbal::type_traits::is_function<Extract>
-							>::result,
-							typename kerbal::type_traits::tribool_disjunction<
-								kerbal::type_traits::try_test_is_empty<KeyCompare>,
-								kerbal::type_traits::is_function<KeyCompare>
-							>::result
+					kerbal::type_traits::tribool_conjunction<
+						typename kerbal::type_traits::tribool_disjunction<
+							kerbal::type_traits::try_test_is_empty<Extract>,
+							kerbal::type_traits::is_function<Extract>
+						>::result,
+						typename kerbal::type_traits::tribool_disjunction<
+							kerbal::type_traits::try_test_is_empty<KeyCompare>,
+							kerbal::type_traits::is_function<KeyCompare>
 						>::result
-					>
+					>::result::IS_TRUE
 			{
 			};
 
@@ -2812,7 +2810,7 @@ namespace kerbal
 			void avl_type_only<Entity>::k_destroy_node_and_offsprings(kerbal::memory::monotonic_allocator<T, UpstreamAllocator> & alloc, node_base * start)
 			{
 				typedef typename kerbal::type_traits::conditional<
-						kerbal::type_traits::tribool_is_true<kerbal::type_traits::try_test_is_trivially_destructible<Entity> >::value,
+						kerbal::type_traits::try_test_is_trivially_destructible<Entity>::IS_TRUE::value,
 						DES_OFF_VER_NO_DESTROY,
 						DES_OFF_VER_DESTROY_BUT_NO_DEALLOCATE
 				>::type VER;

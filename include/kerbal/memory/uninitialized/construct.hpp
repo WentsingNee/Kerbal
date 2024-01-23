@@ -139,13 +139,11 @@ namespace kerbal
 			struct construct_at_impl_overload_ver
 			{
 					typedef typename kerbal::type_traits::conditional<
-						kerbal::type_traits::tribool_is_true<
-							typename kerbal::type_traits::tribool_conjunction<
-								kerbal::type_traits::try_test_is_trivially_constructible<Tp, Args...>,
-								kerbal::type_traits::try_test_is_trivially_move_assignable<Tp>,
-								kerbal::type_traits::try_test_is_trivially_destructible<Tp>
-							>::result
-						>::value,
+						kerbal::type_traits::tribool_conjunction<
+							kerbal::type_traits::try_test_is_trivially_constructible<Tp, Args...>,
+							kerbal::type_traits::try_test_is_trivially_move_assignable<Tp>,
+							kerbal::type_traits::try_test_is_trivially_destructible<Tp>
+						>::result::IS_TRUE::value,
 						CONSTRUCT_AT_VER_TRIVIAL,
 						CONSTRUCT_AT_VER_DEFAULT
 					>::type type;
@@ -305,9 +303,7 @@ namespace kerbal
 			typedef typename kerbal::iterator::iterator_traits<iterator>::value_type value_type;
 
 			typedef typename kerbal::type_traits::conditional<
-					kerbal::type_traits::tribool_is_true<
-							kerbal::type_traits::try_test_is_trivially_destructible<value_type>
-					>::value,
+					kerbal::type_traits::try_test_is_trivially_destructible<value_type>::IS_TRUE::value,
 					detail::UI_VAL_CONSTRUCT_VER_NO_CATCH,
 					typename kerbal::type_traits::conditional<
 							detail::can_be_nothrow_advance_iterator<iterator>::value,
@@ -415,9 +411,7 @@ namespace kerbal
 			typedef typename kerbal::iterator::iterator_traits<iterator>::value_type value_type;
 
 			typedef typename kerbal::type_traits::conditional<
-					kerbal::type_traits::tribool_is_true<
-							kerbal::type_traits::try_test_is_trivially_destructible<value_type>
-					>::value,
+					kerbal::type_traits::try_test_is_trivially_destructible<value_type>::IS_TRUE::value,
 					detail::UI_VAL_CONSTRUCT_N_VER_NO_CATCH,
 					typename kerbal::type_traits::conditional<
 							detail::can_be_nothrow_advance_iterator<iterator>::value,
@@ -525,9 +519,7 @@ namespace kerbal
 			typedef typename kerbal::iterator::iterator_traits<iterator>::value_type value_type;
 
 			typedef typename kerbal::type_traits::conditional<
-					kerbal::type_traits::tribool_is_true<
-							kerbal::type_traits::try_test_is_trivially_destructible<value_type>
-					>::value,
+					kerbal::type_traits::try_test_is_trivially_destructible<value_type>::IS_TRUE::value,
 					detail::UI_CPY_VER_NO_CATCH,
 					typename kerbal::type_traits::conditional<
 							detail::can_be_nothrow_advance_iterator<iterator>::value,
@@ -638,9 +630,7 @@ namespace kerbal
 			typedef typename kerbal::iterator::iterator_traits<iterator>::value_type value_type;
 
 			typedef typename kerbal::type_traits::conditional<
-					kerbal::type_traits::tribool_is_true<
-							kerbal::type_traits::try_test_is_trivially_destructible<value_type>
-					>::value,
+					kerbal::type_traits::try_test_is_trivially_destructible<value_type>::IS_TRUE::value,
 					detail::UI_CPY_N_VER_NO_CATCH,
 					typename kerbal::type_traits::conditional<
 							detail::can_be_nothrow_advance_iterator<iterator>::value,
@@ -748,9 +738,7 @@ namespace kerbal
 			typedef typename kerbal::iterator::iterator_traits<iterator>::value_type value_type;
 
 			typedef typename kerbal::type_traits::conditional<
-					kerbal::type_traits::tribool_is_true<
-							kerbal::type_traits::try_test_is_trivially_destructible<value_type>
-					>::value,
+					kerbal::type_traits::try_test_is_trivially_destructible<value_type>::IS_TRUE::value,
 					detail::UI_MOV_VER_NO_CATCH,
 					typename kerbal::type_traits::conditional<
 							detail::can_be_nothrow_advance_iterator<iterator>::value,
@@ -861,9 +849,7 @@ namespace kerbal
 			typedef typename kerbal::iterator::iterator_traits<iterator>::value_type value_type;
 
 			typedef typename kerbal::type_traits::conditional<
-					kerbal::type_traits::tribool_is_true<
-							kerbal::type_traits::try_test_is_trivially_destructible<value_type>
-					>::value,
+					kerbal::type_traits::try_test_is_trivially_destructible<value_type>::IS_TRUE::value,
 					detail::UI_MOV_N_VER_NO_CATCH,
 					typename kerbal::type_traits::conditional<
 							detail::can_be_nothrow_advance_iterator<iterator>::value,
@@ -965,9 +951,7 @@ namespace kerbal
 			typedef typename kerbal::iterator::iterator_traits<iterator>::value_type value_type;
 
 			typedef typename kerbal::type_traits::conditional<
-					kerbal::type_traits::tribool_is_true<
-							kerbal::type_traits::try_test_is_trivially_destructible<value_type>
-					>::value,
+					kerbal::type_traits::try_test_is_trivially_destructible<value_type>::IS_TRUE::value,
 					detail::UI_FILL_VER_NO_CATCH,
 					typename kerbal::type_traits::conditional<
 							detail::can_be_nothrow_advance_iterator<iterator>::value,
@@ -1075,9 +1059,7 @@ namespace kerbal
 			typedef typename kerbal::iterator::iterator_traits<iterator>::value_type value_type;
 
 			typedef typename kerbal::type_traits::conditional<
-					kerbal::type_traits::tribool_is_true<
-							kerbal::type_traits::try_test_is_trivially_destructible<value_type>
-					>::value,
+					kerbal::type_traits::try_test_is_trivially_destructible<value_type>::IS_TRUE::value,
 					detail::UI_FILL_N_VER_NO_CATCH,
 					typename kerbal::type_traits::conditional<
 							detail::can_be_nothrow_advance_iterator<iterator>::value,

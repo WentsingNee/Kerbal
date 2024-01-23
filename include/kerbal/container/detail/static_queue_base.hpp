@@ -15,7 +15,6 @@
 #include <kerbal/compatibility/constexpr.hpp>
 #include <kerbal/memory/raw_storage.hpp>
 #include <kerbal/type_traits/is_trivially_destructible.hpp>
-#include <kerbal/type_traits/tribool_constant.hpp>
 
 #include <cstddef>
 
@@ -51,7 +50,8 @@ namespace kerbal
 			};
 
 			template <typename Tp, std::size_t N, bool is_trivially_destructible =
-					kerbal::type_traits::tribool_is_true<kerbal::type_traits::try_test_is_trivially_destructible<Tp> >::value>
+					kerbal::type_traits::try_test_is_trivially_destructible<Tp>::IS_TRUE::value
+			>
 			class static_queue_base;
 
 			template <typename Tp, std::size_t N>

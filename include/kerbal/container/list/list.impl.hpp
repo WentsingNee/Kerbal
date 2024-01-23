@@ -46,9 +46,7 @@ namespace kerbal
 		KERBAL_CONSTEXPR20
 		list<Tp, Allocator>::list()
 				KERBAL_CONDITIONAL_NOEXCEPT(
-						kerbal::type_traits::tribool_is_true<
-							typename list_allocator_overload::try_test_is_nothrow_default_constructible
-						>::value &&
+						list_allocator_overload::try_test_is_nothrow_default_constructible::IS_TRUE::value &&
 						list_type_only::is_nothrow_init_to_self_constructible::value
 				) :
 				list_allocator_overload(),
@@ -60,9 +58,7 @@ namespace kerbal
 		KERBAL_CONSTEXPR20
 		list<Tp, Allocator>::list(const Allocator& alloc)
 				KERBAL_CONDITIONAL_NOEXCEPT(
-						kerbal::type_traits::tribool_is_true<
-							typename list_allocator_overload::template try_test_is_nothrow_constructible_from_allocator<const Allocator &>
-						>::value &&
+						list_allocator_overload::template try_test_is_nothrow_constructible_from_allocator<const Allocator &>::IS_TRUE::value &&
 						list_type_only::is_nothrow_init_to_self_constructible::value
 				) :
 				list_allocator_overload(alloc),
@@ -148,9 +144,7 @@ namespace kerbal
 		KERBAL_CONSTEXPR20
 		list<Tp, Allocator>::list(list&& src)
 				KERBAL_CONDITIONAL_NOEXCEPT(
-						kerbal::type_traits::tribool_is_true<
-							typename list_allocator_overload::template try_test_is_nothrow_constructible_from_allocator<Allocator &&>
-						>::value &&
+						list_allocator_overload::template try_test_is_nothrow_constructible_from_allocator<Allocator &&>::IS_TRUE::value &&
 						list_type_only::is_nothrow_move_constructible::value
 				) :
 				list_allocator_overload(kerbal::compatibility::move(src.alloc())),
@@ -162,9 +156,7 @@ namespace kerbal
 		KERBAL_CONSTEXPR20
 		list<Tp, Allocator>::list(list&& src, const Allocator& alloc)
 				KERBAL_CONDITIONAL_NOEXCEPT(
-						kerbal::type_traits::tribool_is_true<
-							typename list_allocator_overload::template try_test_is_nothrow_constructible_from_allocator<const Allocator &>
-						>::value &&
+						list_allocator_overload::template try_test_is_nothrow_constructible_from_allocator<const Allocator &>::IS_TRUE::value &&
 						list_type_only::template is_nothrow_move_constructible_using_allocator<node_allocator_type>::value
 				) :
 				list_allocator_overload(alloc),

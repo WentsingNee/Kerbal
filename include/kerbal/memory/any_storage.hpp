@@ -26,7 +26,6 @@
 #if __cplusplus >= 201103L
 #	include <kerbal/type_traits/is_nothrow_move_constructible.hpp>
 #	include <kerbal/type_traits/remove_all_extents.hpp>
-#	include <kerbal/type_traits/tribool_constant.hpp>
 #	include <kerbal/utility/forward.hpp>
 #endif
 
@@ -482,11 +481,9 @@ namespace kerbal
 
 #	if __cplusplus >= 201103L
 					KERBAL_STATIC_ASSERT(
-							kerbal::type_traits::tribool_is_true<
-								kerbal::type_traits::try_test_is_nothrow_move_constructible<
-									typename kerbal::type_traits::remove_all_extents<T>::type
-								>
-							>::value,
+							kerbal::type_traits::try_test_is_nothrow_move_constructible<
+								typename kerbal::type_traits::remove_all_extents<T>::type
+							>::IS_TRUE::value,
 							"Static check failed!"
 					);
 #	endif

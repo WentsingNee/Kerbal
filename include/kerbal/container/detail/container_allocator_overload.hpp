@@ -23,7 +23,6 @@
 
 #if __cplusplus >= 201103L
 #	include <kerbal/type_traits/is_nothrow_constructible.hpp>
-#	include <kerbal/type_traits/tribool_constant.hpp>
 #endif
 
 
@@ -52,9 +51,10 @@ namespace kerbal
 #			if __cplusplus >= 201103L
 
 					struct is_nothrow_default_constructible :
-							kerbal::type_traits::tribool_is_true<
-								kerbal::type_traits::try_test_is_nothrow_constructible<super, kerbal::utility::in_place_t>
-							>
+							kerbal::type_traits::try_test_is_nothrow_constructible<
+								super,
+								kerbal::utility::in_place_t
+							>::IS_TRUE
 					{
 					};
 
@@ -70,9 +70,11 @@ namespace kerbal
 #			if __cplusplus >= 201103L
 
 					struct is_nothrow_constructible_from_allocator_const_reference :
-							kerbal::type_traits::tribool_is_true<
-								kerbal::type_traits::try_test_is_nothrow_constructible<super, kerbal::utility::in_place_t, const Allocator &>
-							>
+							kerbal::type_traits::try_test_is_nothrow_constructible<
+								super,
+								kerbal::utility::in_place_t,
+								const Allocator &
+							>::IS_TRUE
 					{
 					};
 
@@ -90,9 +92,11 @@ namespace kerbal
 #			if __cplusplus >= 201103L
 
 					struct is_nothrow_constructible_from_allocator_rvalue_reference :
-							kerbal::type_traits::tribool_is_true<
-								kerbal::type_traits::try_test_is_nothrow_constructible<super, kerbal::utility::in_place_t, Allocator &&>
-							>
+							kerbal::type_traits::try_test_is_nothrow_constructible<
+								super,
+								kerbal::utility::in_place_t,
+								Allocator &&
+							>::IS_TRUE
 					{
 					};
 

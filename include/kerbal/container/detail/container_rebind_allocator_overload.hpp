@@ -22,7 +22,6 @@
 
 #if __cplusplus >= 201103L
 #	include <kerbal/type_traits/is_nothrow_constructible.hpp>
-#	include <kerbal/type_traits/tribool_constant.hpp>
 #	include <kerbal/utility/forward.hpp>
 #endif
 
@@ -79,7 +78,7 @@ namespace kerbal
 					KERBAL_CONSTEXPR
 					container_rebind_allocator_overload()
 							KERBAL_CONDITIONAL_NOEXCEPT(
-								kerbal::type_traits::tribool_is_true<try_test_is_nothrow_default_constructible>::value
+								try_test_is_nothrow_default_constructible::IS_TRUE::value
 							)
 							: super(kerbal::utility::in_place_t())
 					{
@@ -99,7 +98,7 @@ namespace kerbal
 					explicit
 					container_rebind_allocator_overload(Allocator2 && allocator)
 							KERBAL_CONDITIONAL_NOEXCEPT(
-								kerbal::type_traits::tribool_is_true<try_test_is_nothrow_constructible_from_allocator<Allocator2 &&> >::value
+								try_test_is_nothrow_constructible_from_allocator<Allocator2 &&>::IS_TRUE::value
 							)
 							: super(kerbal::utility::in_place_t(), kerbal::utility::forward<Allocator2>(allocator))
 					{

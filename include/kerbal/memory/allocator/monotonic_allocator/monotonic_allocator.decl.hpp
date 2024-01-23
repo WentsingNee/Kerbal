@@ -198,7 +198,7 @@ namespace kerbal
 
 				monotonic_allocator(const monotonic_allocator & src)
 						KERBAL_CONDITIONAL_NOEXCEPT(
-							kerbal::type_traits::tribool_is_true<try_test_is_nothrow_copy_constructible>::value
+							try_test_is_nothrow_copy_constructible::IS_TRUE::value
 						)
 				;
 
@@ -208,7 +208,7 @@ namespace kerbal
 
 				monotonic_allocator(monotonic_allocator && src)
 						KERBAL_CONDITIONAL_NOEXCEPT(
-							kerbal::type_traits::tribool_is_true<try_test_is_nothrow_move_constructible>::value
+							try_test_is_nothrow_move_constructible::IS_TRUE::value
 						)
 				;
 
@@ -221,7 +221,7 @@ namespace kerbal
 				template <typename U, typename UpstreamAllocator2>
 				monotonic_allocator(const monotonic_allocator<U, UpstreamAllocator2> &)
 						KERBAL_CONDITIONAL_NOEXCEPT(
-							kerbal::type_traits::tribool_is_true<try_test_is_nothrow_constructible_from_other>::value
+							try_test_is_nothrow_constructible_from_other::IS_TRUE::value
 						)
 				;
 
@@ -233,7 +233,7 @@ namespace kerbal
 
 				monotonic_allocator & operator=(monotonic_allocator && src)
 						KERBAL_CONDITIONAL_NOEXCEPT(
-							kerbal::type_traits::tribool_is_true<try_test_is_nothrow_move_assignable>::value
+							try_test_is_nothrow_move_assignable::IS_TRUE::value
 						)
 				;
 
@@ -287,7 +287,7 @@ namespace kerbal
 
 				void swap(monotonic_allocator & other)
 						KERBAL_CONDITIONAL_NOEXCEPT(
-							kerbal::type_traits::tribool_is_true<try_test_is_nothrow_swappable>::value
+							try_test_is_nothrow_swappable::IS_TRUE::value
 						)
 				;
 

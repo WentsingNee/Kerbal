@@ -42,7 +42,6 @@
 #if __cplusplus >= 201703L
 #	if __has_include(<memory_resource>)
 #		include <kerbal/type_traits/is_trivially_destructible.hpp>
-#		include <kerbal/type_traits/tribool_constant.hpp>
 #		include <memory_resource>
 #	endif
 #endif
@@ -1648,9 +1647,9 @@ namespace kerbal
 			void fl_type_only<Tp>::k_consecutive_destroy_node(kerbal::memory::monotonic_allocator<T, UpstreamAllocator> & alloc, node_base * first, node_base * last) KERBAL_NOEXCEPT
 			{
 				typedef typename kerbal::type_traits::conditional<
-						kerbal::type_traits::tribool_is_true<kerbal::type_traits::try_test_is_trivially_destructible<Tp> >::value,
-						CNSCTV_DES_VER_NO_DESTROY,
-						CNSCTV_DES_VER_DESTROY_BUT_NO_DEALLOCATE
+					kerbal::type_traits::try_test_is_trivially_destructible<Tp>::IS_TRUE::value,
+					CNSCTV_DES_VER_NO_DESTROY,
+					CNSCTV_DES_VER_DESTROY_BUT_NO_DEALLOCATE
 				>::type VER;
 				k_consecutive_destroy_node_impl(alloc, first, last, VER());
 			}
@@ -1667,7 +1666,7 @@ namespace kerbal
 				typedef typename node_allocator_traits::value_type real_value_type;
 
 				if (typeid(*alloc.resource()) == typeid(std::pmr::monotonic_buffer_resource)) {
-					if constexpr (!kerbal::type_traits::tribool_is_true<kerbal::type_traits::try_test_is_trivially_destructible<real_value_type> >::value) {
+					if constexpr (!kerbal::type_traits::try_test_is_trivially_destructible<real_value_type>::IS_TRUE::value) {
 						k_consecutive_destroy_node_impl(alloc, first, last, CNSCTV_DES_VER_DESTROY_BUT_NO_DEALLOCATE());
 					}
 				} else {

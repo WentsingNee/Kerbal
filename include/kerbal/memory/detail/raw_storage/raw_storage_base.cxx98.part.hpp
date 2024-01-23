@@ -41,12 +41,10 @@ namespace kerbal
 
 			template <typename T>
 			struct is_raw_storage_trivially_stored_type :
-					kerbal::type_traits::tribool_is_true<
-						typename kerbal::type_traits::tribool_conjunction<
-							kerbal::type_traits::try_test_is_trivially_default_constructible<T>,
-							kerbal::type_traits::try_test_is_trivially_destructible<T>
-						>::result
-					>
+					kerbal::type_traits::tribool_conjunction<
+						kerbal::type_traits::try_test_is_trivially_default_constructible<T>,
+						kerbal::type_traits::try_test_is_trivially_destructible<T>
+					>::result::IS_TRUE
 			{
 			};
 

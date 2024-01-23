@@ -27,10 +27,6 @@
 #include <kerbal/utility/in_place.hpp>
 #include <kerbal/utility/throw_this_exception.hpp>
 
-#if __cplusplus >= 201103L
-#	include <kerbal/type_traits/tribool_constant.hpp>
-#endif
-
 #include <cstddef>
 
 
@@ -52,7 +48,7 @@ namespace kerbal
 		template <typename T, typename UpstreamAllocator>
 		monotonic_allocator<T, UpstreamAllocator>::monotonic_allocator(const monotonic_allocator & src)
 				KERBAL_CONDITIONAL_NOEXCEPT(
-					kerbal::type_traits::tribool_is_true<try_test_is_nothrow_copy_constructible>::value
+					try_test_is_nothrow_copy_constructible::IS_TRUE::value
 				) :
 				upstream_allocator_overload(src.upstream_alloc()),
 				k_list(),
@@ -67,7 +63,7 @@ namespace kerbal
 		template <typename T, typename UpstreamAllocator>
 		monotonic_allocator<T, UpstreamAllocator>::monotonic_allocator(monotonic_allocator && src)
 				KERBAL_CONDITIONAL_NOEXCEPT(
-					kerbal::type_traits::tribool_is_true<try_test_is_nothrow_move_constructible>::value
+					try_test_is_nothrow_move_constructible::IS_TRUE::value
 				) :
 				monotonic_allocator()
 		{
@@ -80,7 +76,7 @@ namespace kerbal
 		template <typename U, typename UpstreamAllocator2>
 		monotonic_allocator<T, UpstreamAllocator>::monotonic_allocator(const monotonic_allocator<U, UpstreamAllocator2> &)
 				KERBAL_CONDITIONAL_NOEXCEPT(
-					kerbal::type_traits::tribool_is_true<try_test_is_nothrow_constructible_from_other>::value
+					try_test_is_nothrow_constructible_from_other::IS_TRUE::value
 				) :
 				k_list(),
 				k_current_pure_buffer_head(NULL),
@@ -111,7 +107,7 @@ namespace kerbal
 		monotonic_allocator<T, UpstreamAllocator> &
 		monotonic_allocator<T, UpstreamAllocator>::operator=(monotonic_allocator && src)
 				KERBAL_CONDITIONAL_NOEXCEPT(
-					kerbal::type_traits::tribool_is_true<try_test_is_nothrow_move_assignable>::value
+					try_test_is_nothrow_move_assignable::IS_TRUE::value
 				)
 		{
 			this->swap(src);
@@ -201,7 +197,7 @@ namespace kerbal
 		template <typename T, typename UpstreamAllocator>
 		void monotonic_allocator<T, UpstreamAllocator>::swap(monotonic_allocator & other)
 				KERBAL_CONDITIONAL_NOEXCEPT(
-					kerbal::type_traits::tribool_is_true<try_test_is_nothrow_swappable>::value
+					try_test_is_nothrow_swappable::IS_TRUE::value
 				)
 		{
 			upstream_allocator_overload::k_swap_allocator_if_propagate(

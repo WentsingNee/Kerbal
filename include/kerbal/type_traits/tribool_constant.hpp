@@ -31,6 +31,10 @@ namespace kerbal
 		struct tribool_constant : kerbal::type_traits::integral_constant<int, I>
 		{
 				KERBAL_STATIC_ASSERT(I == -1 || I == 0 || I == 1, "I is invalid");
+
+				typedef kerbal::type_traits::bool_constant<I == -1> IS_UNSPECIFIED;
+				typedef kerbal::type_traits::bool_constant<I ==  0> IS_FALSE;
+				typedef kerbal::type_traits::bool_constant<I ==  1> IS_TRUE;
 		};
 
 		typedef kerbal::type_traits::tribool_constant<-1> tribool_unspecified;

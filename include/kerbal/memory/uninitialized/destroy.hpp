@@ -18,7 +18,6 @@
 #include <kerbal/iterator/iterator_traits.hpp>
 #include <kerbal/type_traits/integral_constant.hpp>
 #include <kerbal/type_traits/is_trivially_destructible.hpp>
-#include <kerbal/type_traits/tribool_constant.hpp>
 
 #if __cplusplus >= 201103L
 #	include <kerbal/type_traits/is_nothrow_destructible.hpp>
@@ -79,9 +78,7 @@ namespace kerbal
 			KERBAL_CONSTEXPR20
 			void k_destroy_on(Tp & plc, DESTROY_ON_VER_DEFAULT)
 					KERBAL_CONDITIONAL_NOEXCEPT(
-							kerbal::type_traits::tribool_is_true<
-								kerbal::type_traits::try_test_is_nothrow_destructible<Tp>
-							>::value
+						kerbal::type_traits::try_test_is_nothrow_destructible<Tp>::IS_TRUE::value
 					)
 			{
 				plc.~Tp();
@@ -105,11 +102,9 @@ namespace kerbal
 		template <typename Tp>
 		struct destroy_on_overload_version :
 				kerbal::type_traits::conditional<
-						kerbal::type_traits::tribool_is_true<
-								kerbal::type_traits::try_test_is_trivially_destructible<Tp>
-						>::value,
-						detail::DESTROY_ON_VER_TRIVIALLY,
-						detail::DESTROY_ON_VER_DEFAULT
+					kerbal::type_traits::try_test_is_trivially_destructible<Tp>::IS_TRUE::value,
+					detail::DESTROY_ON_VER_TRIVIALLY,
+					detail::DESTROY_ON_VER_DEFAULT
 				>::type
 		{
 		};
@@ -160,11 +155,9 @@ namespace kerbal
 		template <typename Tp>
 		struct destroy_overload_version:
 				kerbal::type_traits::conditional<
-						kerbal::type_traits::tribool_is_true<
-								kerbal::type_traits::try_test_is_trivially_destructible<Tp>
-						>::value,
-						detail::DESTROY_VER_TRIVIALLY,
-						detail::DESTROY_VER_DEFAULT
+					kerbal::type_traits::try_test_is_trivially_destructible<Tp>::IS_TRUE::value,
+					detail::DESTROY_VER_TRIVIALLY,
+					detail::DESTROY_VER_DEFAULT
 				>::type
 		{
 		};
@@ -213,11 +206,9 @@ namespace kerbal
 		template <typename Tp>
 		struct destroy_n_overload_version:
 				kerbal::type_traits::conditional<
-						kerbal::type_traits::tribool_is_true<
-								kerbal::type_traits::try_test_is_trivially_destructible<Tp>
-						>::value,
-						detail::DESTROY_N_VER_TRIVIALLY,
-						detail::DESTROY_N_VER_DEFAULT
+					kerbal::type_traits::try_test_is_trivially_destructible<Tp>::IS_TRUE::value,
+					detail::DESTROY_N_VER_TRIVIALLY,
+					detail::DESTROY_N_VER_DEFAULT
 				>::type
 		{
 		};
@@ -263,11 +254,9 @@ namespace kerbal
 		template <typename Tp>
 		struct reverse_destroy_overload_version:
 				kerbal::type_traits::conditional<
-						kerbal::type_traits::tribool_is_true<
-								kerbal::type_traits::try_test_is_trivially_destructible<Tp>
-						>::value,
-						detail::RE_DESTROY_VER_TRIVIALLY,
-						detail::RE_DESTROY_VER_DEFAULT
+					kerbal::type_traits::try_test_is_trivially_destructible<Tp>::IS_TRUE::value,
+					detail::RE_DESTROY_VER_TRIVIALLY,
+					detail::RE_DESTROY_VER_DEFAULT
 				>::type
 		{
 		};

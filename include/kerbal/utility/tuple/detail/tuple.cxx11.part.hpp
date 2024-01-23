@@ -76,24 +76,20 @@ namespace kerbal
 				private:
 					typedef TupleImpl k_tuple_impl;
 
-					typedef kerbal::type_traits::tribool_is_true<
-						typename kerbal::type_traits::tribool_conjunction<
-							kerbal::type_traits::try_test_is_nothrow_constructible<
-								typename k_tuple_impl::template super<HeadIndex>::type,
-								kerbal::utility::in_place_t,
-								UArgs&&
-							>...
-						>::result
-					> is_head_nothrow_constructible;
+					typedef typename kerbal::type_traits::tribool_conjunction<
+						kerbal::type_traits::try_test_is_nothrow_constructible<
+							typename k_tuple_impl::template super<HeadIndex>::type,
+							kerbal::utility::in_place_t,
+							UArgs&&
+						>...
+					>::result::IS_TRUE is_head_nothrow_constructible;
 
-					typedef kerbal::type_traits::tribool_is_true<
-						typename kerbal::type_traits::tribool_conjunction<
-							kerbal::type_traits::try_test_is_nothrow_constructible<
-								typename k_tuple_impl::template super<TailIndex + sizeof...(HeadIndex)>::type,
-								kerbal::utility::in_place_t
-							>...
-						>::result
-					> is_tail_nothrow_constructible;
+					typedef typename kerbal::type_traits::tribool_conjunction<
+						kerbal::type_traits::try_test_is_nothrow_constructible<
+							typename k_tuple_impl::template super<TailIndex + sizeof...(HeadIndex)>::type,
+							kerbal::utility::in_place_t
+						>...
+					>::result::IS_TRUE is_tail_nothrow_constructible;
 
 				public:
 					typedef kerbal::type_traits::conjunction<
@@ -198,11 +194,9 @@ namespace kerbal
 				protected:
 
 					struct is_nothrow_default_constructible :
-							kerbal::type_traits::tribool_is_true<
-								typename kerbal::type_traits::tribool_conjunction<
-									kerbal::type_traits::try_test_is_nothrow_default_constructible<typename super<Index>::type>...
-								>::result
-							>
+							kerbal::type_traits::tribool_conjunction<
+								kerbal::type_traits::try_test_is_nothrow_default_constructible<typename super<Index>::type>...
+							>::result::IS_TRUE
 					{
 					};
 
@@ -268,11 +262,9 @@ namespace kerbal
 
 					template <typename ... UArgs>
 					struct is_nothrow_completely_init_constructible :
-							kerbal::type_traits::tribool_is_true<
-								typename kerbal::type_traits::tribool_conjunction<
-									kerbal::type_traits::try_test_is_nothrow_constructible<typename super<Index>::type, kerbal::utility::in_place_t, UArgs&&>...
-								>::result
-							>
+							kerbal::type_traits::tribool_conjunction<
+								kerbal::type_traits::try_test_is_nothrow_constructible<typename super<Index>::type, kerbal::utility::in_place_t, UArgs&&>...
+							>::result::IS_TRUE
 					{
 					};
 

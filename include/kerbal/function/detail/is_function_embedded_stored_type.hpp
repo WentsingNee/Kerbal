@@ -15,7 +15,6 @@
 #include <kerbal/compatibility/alignof.hpp>
 #include <kerbal/type_traits/integral_constant.hpp>
 #include <kerbal/type_traits/remove_all_extents.hpp>
-#include <kerbal/type_traits/tribool_constant.hpp>
 
 #if __cplusplus >= 201103L
 #	include <kerbal/type_traits/is_nothrow_move_constructible.hpp>
@@ -36,16 +35,14 @@ namespace kerbal
 		struct is_function_embedded_stored_type :
 				kerbal::type_traits::bool_constant<
 						sizeof(T) <= Size && KERBAL_ALIGNOF(T) <= Align &&
-						kerbal::type_traits::tribool_is_true<
 #	if __cplusplus >= 201103L
-							kerbal::type_traits::try_test_is_nothrow_move_constructible
+						kerbal::type_traits::try_test_is_nothrow_move_constructible
 #	else
-							kerbal::type_traits::try_test_is_nothrow_copy_constructible
+						kerbal::type_traits::try_test_is_nothrow_copy_constructible
 #	endif
-							<
-								typename kerbal::type_traits::remove_all_extents<T>::type
-							>
-						>::value
+						<
+							typename kerbal::type_traits::remove_all_extents<T>::type
+						>::IS_TRUE::value
 				>
 		{
 		};

@@ -224,13 +224,11 @@ namespace kerbal
 		void static_vector<Tp, N>::assign_unsafe(size_type new_size, const_reference val)
 		{
 			struct enable_optimization:
-					kerbal::type_traits::tribool_is_true<
-						typename kerbal::type_traits::tribool_conjunction<
-							kerbal::type_traits::try_test_is_trivially_copy_constructible<remove_all_extents_t>,
-							kerbal::type_traits::try_test_is_trivially_copy_assignable<remove_all_extents_t>,
-							kerbal::type_traits::try_test_is_trivially_destructible<remove_all_extents_t>
-						>::result
-					>
+					kerbal::type_traits::tribool_conjunction<
+						kerbal::type_traits::try_test_is_trivially_copy_constructible<remove_all_extents_t>,
+						kerbal::type_traits::try_test_is_trivially_copy_assignable<remove_all_extents_t>,
+						kerbal::type_traits::try_test_is_trivially_destructible<remove_all_extents_t>
+					>::result::IS_TRUE
 			{
 			};
 
@@ -953,7 +951,8 @@ namespace kerbal
 
 
 		template <typename Tp, bool =
-			kerbal::type_traits::tribool_is_true<kerbal::type_traits::try_test_is_trivially_destructible<Tp> >::value>
+			kerbal::type_traits::try_test_is_trivially_destructible<Tp>::IS_TRUE::value
+		>
 		struct static_vector_emplace_helper;
 
 		template <typename Tp>

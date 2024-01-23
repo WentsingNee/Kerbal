@@ -66,9 +66,7 @@ namespace kerbal
 		{
 
 			template <typename T, bool =
-					kerbal::type_traits::tribool_is_true<
-						kerbal::type_traits::try_test_can_be_empty_base<T>
-					>::value
+					kerbal::type_traits::try_test_can_be_empty_base<T>::IS_TRUE::value
 			>
 			class member_compress_helper_impl;
 
@@ -120,9 +118,7 @@ namespace kerbal
 					KERBAL_CONSTEXPR
 					explicit member_compress_helper_impl(kerbal::utility::in_place_t, Args&& ... args)
 							KERBAL_CONDITIONAL_NOEXCEPT(
-									kerbal::type_traits::tribool_is_true<
-										try_test_is_nothrow_in_place_constructible<Args&&...>
-									>::value
+								try_test_is_nothrow_in_place_constructible<Args&&...>::IS_TRUE::value
 							) :
 							k_member(kerbal::utility::forward<Args>(args)...)
 					{
@@ -174,9 +170,7 @@ namespace kerbal
 					KERBAL_CONSTEXPR
 					explicit member_compress_helper_impl(const kerbal::utility::member_compress_helper<U, J> & src)
 							KERBAL_CONDITIONAL_NOEXCEPT((
-									kerbal::type_traits::tribool_is_true<
-										try_test_is_nothrow_covariant_copy_constructible<U, J>
-									>::value
+								try_test_is_nothrow_covariant_copy_constructible<U, J>::IS_TRUE::value
 							)) :
 							k_member(src.member())
 					{
@@ -195,11 +189,9 @@ namespace kerbal
 					template <typename U, std::size_t J>
 					KERBAL_CONSTEXPR
 					explicit member_compress_helper_impl(kerbal::utility::member_compress_helper<U, J> && src)
-								KERBAL_CONDITIONAL_NOEXCEPT((
-										kerbal::type_traits::tribool_is_true<
-											try_test_is_nothrow_covariant_move_constructible<U, J>
-										>::value
-								)) :
+							KERBAL_CONDITIONAL_NOEXCEPT((
+								try_test_is_nothrow_covariant_move_constructible<U, J>::IS_TRUE::value
+							)) :
 							k_member(kerbal::compatibility::move(src).member())
 					{
 					}
@@ -281,9 +273,7 @@ namespace kerbal
 					KERBAL_CONSTEXPR
 					explicit member_compress_helper_impl(kerbal::utility::in_place_t, Args&& ... args)
 							KERBAL_CONDITIONAL_NOEXCEPT(
-									kerbal::type_traits::tribool_is_true<
-										try_test_is_nothrow_in_place_constructible<Args&&...>
-									>::value
+								try_test_is_nothrow_in_place_constructible<Args&&...>::IS_TRUE::value
 							) :
 							super(kerbal::utility::forward<Args>(args)...)
 					{
@@ -336,9 +326,7 @@ namespace kerbal
 					KERBAL_CONSTEXPR
 					explicit member_compress_helper_impl(const kerbal::utility::member_compress_helper<U, J> & src)
 							KERBAL_CONDITIONAL_NOEXCEPT((
-									kerbal::type_traits::tribool_is_true<
-										try_test_is_nothrow_covariant_copy_constructible<U, J>
-									>::value
+								try_test_is_nothrow_covariant_copy_constructible<U, J>::IS_TRUE::value
 							)) :
 							super(src.member())
 					{
@@ -358,9 +346,7 @@ namespace kerbal
 					KERBAL_CONSTEXPR
 					explicit member_compress_helper_impl(kerbal::utility::member_compress_helper<U, J> && src)
 							KERBAL_CONDITIONAL_NOEXCEPT((
-									kerbal::type_traits::tribool_is_true<
-										try_test_is_nothrow_covariant_move_constructible<U, J>
-									>::value
+								try_test_is_nothrow_covariant_move_constructible<U, J>::IS_TRUE::value
 							)) :
 							super(kerbal::compatibility::move(src).member())
 					{
@@ -443,9 +429,7 @@ namespace kerbal
 					KERBAL_CONSTEXPR
 					explicit member_compress_helper_impl(kerbal::utility::in_place_t, Args&& ... args)
 							KERBAL_CONDITIONAL_NOEXCEPT(
-									kerbal::type_traits::tribool_is_true<
-										try_test_is_nothrow_in_place_constructible<Args&&...>
-									>::value
+								try_test_is_nothrow_in_place_constructible<Args&&...>::IS_TRUE::value
 							) :
 							super(kerbal::utility::forward<Args>(args)...)
 					{
@@ -498,9 +482,7 @@ namespace kerbal
 					KERBAL_CONSTEXPR
 					explicit member_compress_helper_impl(const kerbal::utility::member_compress_helper<U, J> & src)
 							KERBAL_CONDITIONAL_NOEXCEPT((
-									kerbal::type_traits::tribool_is_true<
-										try_test_is_nothrow_covariant_copy_constructible<U, J>
-									>::value
+								try_test_is_nothrow_covariant_copy_constructible<U, J>::IS_TRUE::value
 							)) :
 							super(src.member())
 					{
@@ -520,9 +502,7 @@ namespace kerbal
 					KERBAL_CONSTEXPR
 					explicit member_compress_helper_impl(kerbal::utility::member_compress_helper<U, J> && src)
 							KERBAL_CONDITIONAL_NOEXCEPT((
-									kerbal::type_traits::tribool_is_true<
-										try_test_is_nothrow_covariant_move_constructible<U, J>
-									>::value
+								try_test_is_nothrow_covariant_move_constructible<U, J>::IS_TRUE::value
 							)) :
 							super(kerbal::compatibility::move(src).member())
 					{
@@ -623,11 +603,9 @@ namespace kerbal
 				template <typename ... Args>
 				KERBAL_CONSTEXPR
 				explicit member_compress_helper(kerbal::utility::in_place_t in_place, Args&& ... args)
-						KERBAL_CONDITIONAL_NOEXCEPT((
-								kerbal::type_traits::tribool_is_true<
-										try_test_is_nothrow_in_place_constructible<Args&&...>
-								>::value
-						)) :
+						KERBAL_CONDITIONAL_NOEXCEPT(
+							try_test_is_nothrow_in_place_constructible<Args&&...>::IS_TRUE::value
+						) :
 						super(in_place, kerbal::utility::forward<Args>(args)...)
 				{
 				}
@@ -677,9 +655,7 @@ namespace kerbal
 				KERBAL_CONSTEXPR
 				explicit member_compress_helper(const kerbal::utility::member_compress_helper<U, J> & src)
 						KERBAL_CONDITIONAL_NOEXCEPT((
-								kerbal::type_traits::tribool_is_true<
-									try_test_is_nothrow_covariant_copy_constructible<U, J>
-								>::value
+							try_test_is_nothrow_covariant_copy_constructible<U, J>::IS_TRUE::value
 						)) :
 						super(src)
 				{
@@ -700,9 +676,7 @@ namespace kerbal
 				KERBAL_CONSTEXPR
 				explicit member_compress_helper(kerbal::utility::member_compress_helper<U, J> && src)
 						KERBAL_CONDITIONAL_NOEXCEPT((
-								kerbal::type_traits::tribool_is_true<
-									try_test_is_nothrow_covariant_move_constructible<U, J>
-								>::value
+							try_test_is_nothrow_covariant_move_constructible<U, J>::IS_TRUE::value
 						)) :
 						super(kerbal::compatibility::move(src))
 				{
@@ -857,9 +831,7 @@ namespace kerbal
 				KERBAL_CONSTEXPR
 				explicit member_compress_helper(kerbal::utility::in_place_t in_place)
 						KERBAL_CONDITIONAL_NOEXCEPT(
-								kerbal::type_traits::tribool_is_true<
-									try_test_is_nothrow_in_place_constructible_helper<>
-								>::value
+							try_test_is_nothrow_in_place_constructible_helper<>::IS_TRUE::value
 						)
 				{
 				}
@@ -873,9 +845,7 @@ namespace kerbal
 				KERBAL_CONSTEXPR
 				explicit member_compress_helper(kerbal::utility::in_place_t, kerbal::utility::index_sequence<I2...>, const U (&src)[N])
 						KERBAL_CONDITIONAL_NOEXCEPT(
-								kerbal::type_traits::tribool_is_true<
-									try_test_is_nothrow_in_place_constructible_helper<const U (&)[N]>
-								>::value
+							try_test_is_nothrow_in_place_constructible_helper<const U (&)[N]>::IS_TRUE::value
 						) :
 						k_member{src[I2]...}
 				{
@@ -887,9 +857,7 @@ namespace kerbal
 				KERBAL_CONSTEXPR
 				explicit member_compress_helper(kerbal::utility::in_place_t in_place, const U (&src)[N])
 						KERBAL_CONDITIONAL_NOEXCEPT(
-								kerbal::type_traits::tribool_is_true<
-									try_test_is_nothrow_in_place_constructible_helper<const U (&)[N]>
-								>::value
+							try_test_is_nothrow_in_place_constructible_helper<const U (&)[N]>::IS_TRUE::value
 						) :
 						member_compress_helper(in_place, kerbal::utility::make_index_sequence<N>(), src)
 				{
@@ -914,9 +882,7 @@ namespace kerbal
 				KERBAL_CONSTEXPR
 				explicit member_compress_helper(kerbal::utility::in_place_t, kerbal::utility::index_sequence<I2...>, U (&&src)[N])
 						KERBAL_CONDITIONAL_NOEXCEPT(
-								kerbal::type_traits::tribool_is_true<
-									try_test_is_nothrow_in_place_constructible_helper<U (&&)[N]>
-								>::value
+							try_test_is_nothrow_in_place_constructible_helper<U (&&)[N]>::IS_TRUE::value
 						) :
 						k_member{kerbal::compatibility::move(src[I2])...}
 				{
@@ -928,9 +894,7 @@ namespace kerbal
 				KERBAL_CONSTEXPR
 				explicit member_compress_helper(kerbal::utility::in_place_t in_place, U (&&src)[N])
 						KERBAL_CONDITIONAL_NOEXCEPT(
-								kerbal::type_traits::tribool_is_true<
-									try_test_is_nothrow_in_place_constructible_helper<U (&&)[N]>
-								>::value
+							try_test_is_nothrow_in_place_constructible_helper<U (&&)[N]>::IS_TRUE::value
 						) :
 						member_compress_helper(in_place, kerbal::utility::make_index_sequence<N>(), kerbal::compatibility::move(src))
 				{
@@ -945,9 +909,7 @@ namespace kerbal
 				KERBAL_CONSTEXPR
 				explicit member_compress_helper(kerbal::utility::in_place_t, std::initializer_list<U> ilist)
 						KERBAL_CONDITIONAL_NOEXCEPT(
-								kerbal::type_traits::tribool_is_true<
-									try_test_is_nothrow_in_place_constructible_helper<std::initializer_list<U> >
-								>::value
+							try_test_is_nothrow_in_place_constructible_helper<std::initializer_list<U> >::IS_TRUE::value
 						) :
 						k_member{ilist}
 				{
@@ -1117,10 +1079,10 @@ namespace kerbal
 				KERBAL_CONSTEXPR14
 				member_compress_helper& operator=(const member_compress_helper & arg)
 						KERBAL_CONDITIONAL_NOEXCEPT(
-								noexcept(kerbal::assign::generic_assign(
-										kerbal::utility::declthis<member_compress_helper>()->member(),
-										arg.member()
-								))
+							noexcept(kerbal::assign::generic_assign(
+								kerbal::utility::declthis<member_compress_helper>()->member(),
+								arg.member()
+							))
 						)
 				{
 					kerbal::assign::generic_assign(this->member(), arg.member());
@@ -1131,10 +1093,10 @@ namespace kerbal
 				KERBAL_CONSTEXPR14
 				member_compress_helper& operator=(const member_compress_helper<U, J> & arg)
 						KERBAL_CONDITIONAL_NOEXCEPT(
-								noexcept(kerbal::assign::generic_assign(
-										kerbal::utility::declthis<member_compress_helper>()->member(),
-										arg.member()
-								))
+							noexcept(kerbal::assign::generic_assign(
+								kerbal::utility::declthis<member_compress_helper>()->member(),
+								arg.member()
+							))
 						)
 				{
 					kerbal::assign::generic_assign(this->member(), arg.member());

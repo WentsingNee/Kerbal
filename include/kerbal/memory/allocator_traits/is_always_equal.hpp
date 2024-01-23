@@ -18,7 +18,6 @@
 
 #include <kerbal/type_traits/integral_constant.hpp>
 #include <kerbal/type_traits/is_empty.hpp>
-#include <kerbal/type_traits/tribool_constant.hpp>
 #include <kerbal/type_traits/void_type.hpp>
 
 
@@ -61,9 +60,7 @@ namespace kerbal
 
 			template <typename Alloc, bool = kerbal::memory::allocator_could_use_is_always_equal<Alloc>::value>
 			struct allocator_is_always_equal_traits_helper:
-					kerbal::type_traits::tribool_is_true<
-						kerbal::type_traits::try_test_is_empty<Alloc>
-					>
+					kerbal::type_traits::try_test_is_empty<Alloc>::IS_TRUE
 			{
 			};
 

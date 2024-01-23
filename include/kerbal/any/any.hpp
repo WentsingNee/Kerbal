@@ -33,7 +33,6 @@
 #include <kerbal/type_traits/remove_all_extents.hpp>
 #include <kerbal/type_traits/remove_const.hpp>
 #include <kerbal/type_traits/remove_reference.hpp>
-#include <kerbal/type_traits/tribool_constant.hpp>
 #include <kerbal/utility/declval.hpp>
 #include <kerbal/utility/in_place.hpp>
 #include <kerbal/utility/member_compress_helper.hpp>
@@ -90,16 +89,14 @@ namespace kerbal
 		struct is_any_embedded_stored_type :
 				kerbal::type_traits::bool_constant<
 						sizeof(T) <= Size && KERBAL_ALIGNOF(T) <= Align &&
-						kerbal::type_traits::tribool_is_true<
 #	if __cplusplus >= 201103L
-							kerbal::type_traits::try_test_is_nothrow_move_constructible
+						kerbal::type_traits::try_test_is_nothrow_move_constructible
 #	else
-							kerbal::type_traits::try_test_is_nothrow_copy_constructible
+						kerbal::type_traits::try_test_is_nothrow_copy_constructible
 #	endif
-							<
-								typename kerbal::type_traits::remove_all_extents<T>::type
-							>
-						>::value
+						<
+							typename kerbal::type_traits::remove_all_extents<T>::type
+						>::IS_TRUE::value
 				>
 		{
 		};
@@ -479,13 +476,11 @@ namespace kerbal
 				KERBAL_CONSTEXPR20
 				basic_any(basic_any && src)
 						KERBAL_CONDITIONAL_NOEXCEPT((
-								kerbal::type_traits::tribool_is_true<
-									kerbal::type_traits::try_test_is_nothrow_constructible<
-										allocator_compress_helper,
-										kerbal::utility::in_place_t,
-										void_allocator_type &&
-									>
-								>::value
+							kerbal::type_traits::try_test_is_nothrow_constructible<
+								allocator_compress_helper,
+								kerbal::utility::in_place_t,
+								void_allocator_type &&
+							>::IS_TRUE::value
 						)) :
 						allocator_compress_helper(kerbal::utility::in_place_t(), kerbal::compatibility::move(src.void_alloc())),
 						k_mtable(src.k_mtable)

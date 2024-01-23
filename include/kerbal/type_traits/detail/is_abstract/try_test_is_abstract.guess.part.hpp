@@ -41,9 +41,7 @@ namespace kerbal
 		template <typename T>
 		struct try_test_is_abstract :
 				kerbal::type_traits::conditional<
-					kerbal::type_traits::tribool_is_false<
-						kerbal::type_traits::try_test_is_class<T>
-					>::value,
+					kerbal::type_traits::try_test_is_class<T>::IS_FALSE::value,
 					kerbal::type_traits::tribool_false,
 					kerbal::type_traits::tribool_unspecified
 				>::type

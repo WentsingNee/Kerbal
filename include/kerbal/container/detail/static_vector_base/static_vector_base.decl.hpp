@@ -20,7 +20,6 @@
 #include <kerbal/type_traits/enable_if.hpp>
 #include <kerbal/type_traits/is_trivially_destructible.hpp>
 #include <kerbal/type_traits/size_compressed_type.hpp>
-#include <kerbal/type_traits/tribool_constant.hpp>
 
 #include <cstddef>
 
@@ -129,7 +128,8 @@ namespace kerbal
 			};
 
 			template <typename Tp, std::size_t N, bool is_trivially_destructible =
-					kerbal::type_traits::tribool_is_true<kerbal::type_traits::try_test_is_trivially_destructible<Tp> >::value>
+					kerbal::type_traits::try_test_is_trivially_destructible<Tp>::IS_TRUE::value
+			>
 			class sv_trivially_des_overload;
 
 			template <typename Tp, std::size_t N>

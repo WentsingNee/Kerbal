@@ -53,7 +53,7 @@ namespace kerbal
 		KERBAL_CONSTEXPR14
 		void swap(Tp & lhs, Tp & rhs)
 				KERBAL_CONDITIONAL_NOEXCEPT(
-						kerbal::type_traits::tribool_is_true<try_test_is_nothrow_swappable<Tp> >::value
+					try_test_is_nothrow_swappable<Tp>::IS_TRUE::value
 				)
 		;
 
@@ -66,7 +66,7 @@ namespace kerbal
 		KERBAL_CONSTEXPR14
 		void swap(Tp & lhs, Tp & rhs)
 				KERBAL_CONDITIONAL_NOEXCEPT(
-						kerbal::type_traits::tribool_is_true<try_test_is_nothrow_swappable<Tp> >::value
+					try_test_is_nothrow_swappable<Tp>::IS_TRUE::value
 				)
 		{
 			Tp t(kerbal::compatibility::to_xvalue(lhs));

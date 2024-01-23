@@ -18,7 +18,6 @@
 #include <kerbal/numeric/numeric_limits.hpp>
 #include <kerbal/type_traits/integral_constant.hpp>
 #include <kerbal/type_traits/is_trivially_copyable.hpp>
-#include <kerbal/type_traits/tribool_constant.hpp>
 #include <kerbal/utility/throw_this_exception.hpp>
 
 #include <cstdlib>
@@ -33,9 +32,7 @@ namespace kerbal
 
 		template <typename T>
 		struct is_trivially_reallocate_type:
-				kerbal::type_traits::tribool_is_true<
-					kerbal::type_traits::try_test_is_trivially_copyable<T>
-				>
+				kerbal::type_traits::try_test_is_trivially_copyable<T>::IS_TRUE
 		{
 		};
 

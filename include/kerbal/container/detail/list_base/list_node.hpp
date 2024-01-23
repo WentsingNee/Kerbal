@@ -30,7 +30,6 @@
 
 #if __cplusplus >= 201103L
 #	include <kerbal/type_traits/is_nothrow_constructible.hpp>
-#	include <kerbal/type_traits/tribool_constant.hpp>
 #	include <kerbal/utility/forward.hpp>
 #endif
 
@@ -134,9 +133,9 @@ namespace kerbal
 					KERBAL_CONSTEXPR
 					explicit list_node(kerbal::utility::in_place_t in_place, Args&& ... args)
 							KERBAL_CONDITIONAL_NOEXCEPT((
-									kerbal::type_traits::tribool_is_true<
-										kerbal::type_traits::try_test_is_nothrow_constructible<member_compress_helper, kerbal::utility::in_place_t, Args&&...>
-									>::value
+								kerbal::type_traits::try_test_is_nothrow_constructible<
+									member_compress_helper, kerbal::utility::in_place_t, Args&&...
+								>::IS_TRUE::value
 							))
 							: member_compress_helper(in_place, kerbal::utility::forward<Args>(args)...)
 					{

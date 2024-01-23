@@ -31,7 +31,6 @@
 #include <kerbal/type_traits/enable_if.hpp>
 #include <kerbal/type_traits/is_same.hpp>
 #include <kerbal/type_traits/is_trivially_destructible.hpp>
-#include <kerbal/type_traits/tribool_constant.hpp>
 #include <kerbal/utility/in_place.hpp>
 #include <kerbal/utility/throw_this_exception.hpp>
 
@@ -58,7 +57,8 @@ namespace kerbal
 		{
 
 			template <typename T, bool is_trivially_destructible =
-					kerbal::type_traits::tribool_is_true<kerbal::type_traits::try_test_is_trivially_destructible<T> >::value>
+					kerbal::type_traits::try_test_is_trivially_destructible<T>::IS_TRUE::value
+			>
 			class optional_base;
 
 			template <typename T>

@@ -35,7 +35,6 @@
 #include <kerbal/type_traits/is_same.hpp>
 #include <kerbal/type_traits/remove_const.hpp>
 #include <kerbal/type_traits/remove_reference.hpp>
-#include <kerbal/type_traits/tribool_constant.hpp>
 #include <kerbal/utility/declval.hpp>
 #include <kerbal/utility/in_place.hpp>
 #include <kerbal/utility/member_compress_helper.hpp>
@@ -494,13 +493,11 @@ namespace kerbal
 				KERBAL_CONSTEXPR20
 				basic_function(basic_function && src)
 						KERBAL_CONDITIONAL_NOEXCEPT((
-								kerbal::type_traits::tribool_is_true<
-									kerbal::type_traits::try_test_is_nothrow_constructible<
-										allocator_compress_helper,
-										kerbal::utility::in_place_t,
-										void_allocator_type &&
-									>
-								>::value
+							kerbal::type_traits::try_test_is_nothrow_constructible<
+								allocator_compress_helper,
+								kerbal::utility::in_place_t,
+								void_allocator_type &&
+							>::IS_TRUE::value
 						)) :
 						allocator_compress_helper(kerbal::utility::in_place_t(), kerbal::compatibility::move(src.void_alloc())),
 						k_mtable(src.k_mtable)

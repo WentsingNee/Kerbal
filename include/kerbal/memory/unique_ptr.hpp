@@ -99,9 +99,7 @@ namespace kerbal
 				KERBAL_CONSTEXPR20
 				unique_ptr()
 						KERBAL_CONDITIONAL_NOEXCEPT(
-							kerbal::type_traits::tribool_is_true<
-								try_test_is_nothrow_default_constructible
-							>::value
+							try_test_is_nothrow_default_constructible::IS_TRUE::value
 						) :
 						k_ptr(NULL)
 				{
@@ -121,9 +119,7 @@ namespace kerbal
 				KERBAL_CONSTEXPR20
 				unique_ptr(std::nullptr_t)
 						KERBAL_CONDITIONAL_NOEXCEPT(
-							kerbal::type_traits::tribool_is_true<
-								try_test_is_nothrow_constructible_from_nullptr
-							>::value
+							try_test_is_nothrow_constructible_from_nullptr::IS_TRUE::value
 						) :
 						k_ptr(NULL)
 				{
@@ -144,9 +140,7 @@ namespace kerbal
 				KERBAL_CONSTEXPR20
 				explicit unique_ptr(pointer ptr)
 						KERBAL_CONDITIONAL_NOEXCEPT(
-							kerbal::type_traits::tribool_is_true<
-								try_test_is_nothrow_constructible_from_ptr
-							>::value
+							try_test_is_nothrow_constructible_from_ptr::IS_TRUE::value
 						) :
 						k_ptr(ptr)
 				{
@@ -168,9 +162,7 @@ namespace kerbal
 				KERBAL_CONSTEXPR20
 				unique_ptr(pointer ptr, const deleter_type & deleter)
 						KERBAL_CONDITIONAL_NOEXCEPT(
-							kerbal::type_traits::tribool_is_true<
-								try_test_is_nothrow_constructible_from_ptr_and_copy_from_deleter
-							>::value
+							try_test_is_nothrow_constructible_from_ptr_and_copy_from_deleter::IS_TRUE::value
 						) :
 						deleter_compress_helper(kerbal::utility::in_place_t(), deleter),
 						k_ptr(ptr)
@@ -195,9 +187,7 @@ namespace kerbal
 				KERBAL_CONSTEXPR20
 				unique_ptr(pointer ptr, deleter_type && deleter)
 						KERBAL_CONDITIONAL_NOEXCEPT(
-							kerbal::type_traits::tribool_is_true<
-								try_test_is_nothrow_constructible_from_ptr_and_move_from_deleter
-							>::value
+							try_test_is_nothrow_constructible_from_ptr_and_move_from_deleter::IS_TRUE::value
 						) :
 						deleter_compress_helper(kerbal::utility::in_place_t(), kerbal::compatibility::move(deleter)),
 						k_ptr(ptr)
@@ -220,9 +210,7 @@ namespace kerbal
 				KERBAL_CONSTEXPR20
 				unique_ptr(unique_ptr && src)
 						KERBAL_CONDITIONAL_NOEXCEPT(
-							kerbal::type_traits::tribool_is_true<
-								try_test_is_nothrow_move_constructible
-							>::value
+							try_test_is_nothrow_move_constructible::IS_TRUE::value
 						) :
 						deleter_compress_helper(kerbal::utility::in_place_t(), kerbal::compatibility::move(src.get_deleter())),
 						k_ptr(src.k_ptr)
@@ -251,9 +239,7 @@ namespace kerbal
 						typename kerbal::type_traits::enable_if<!kerbal::type_traits::is_array<U>::value, int>::type = 0
 				)
 						KERBAL_CONDITIONAL_NOEXCEPT((
-							kerbal::type_traits::tribool_is_true<
-								try_test_is_nothrow_covariant_move_constructible<U, UDeleter>
-							>::value
+							try_test_is_nothrow_covariant_move_constructible<U, UDeleter>::IS_TRUE::value
 						)) :
 						deleter_compress_helper(kerbal::utility::in_place_t(), kerbal::compatibility::move(src.get_deleter())),
 						k_ptr(src.k_ptr)
@@ -288,9 +274,7 @@ namespace kerbal
 				KERBAL_CONSTEXPR20
 				unique_ptr & operator=(unique_ptr && src)
 						KERBAL_CONDITIONAL_NOEXCEPT(
-							kerbal::type_traits::tribool_is_true<
-								try_test_is_nothrow_move_assignable
-							>::value
+							try_test_is_nothrow_move_assignable::IS_TRUE::value
 						)
 				{
 					this->reset();
@@ -448,9 +432,7 @@ namespace kerbal
 
 				unique_ptr()
 						KERBAL_CONDITIONAL_NOEXCEPT(
-							kerbal::type_traits::tribool_is_true<
-								try_test_is_nothrow_default_constructible
-							>::value
+							try_test_is_nothrow_default_constructible::IS_TRUE::value
 						) :
 						k_ptr(NULL)
 				{
@@ -470,9 +452,7 @@ namespace kerbal
 				KERBAL_CONSTEXPR20
 				unique_ptr(std::nullptr_t)
 						KERBAL_CONDITIONAL_NOEXCEPT(
-							kerbal::type_traits::tribool_is_true<
-								try_test_is_nothrow_constructible_from_nullptr
-							>::value
+							try_test_is_nothrow_constructible_from_nullptr::IS_TRUE::value
 						) :
 						k_ptr(NULL)
 				{
@@ -493,9 +473,7 @@ namespace kerbal
 				KERBAL_CONSTEXPR20
 				explicit unique_ptr(pointer ptr)
 						KERBAL_CONDITIONAL_NOEXCEPT(
-							kerbal::type_traits::tribool_is_true<
-								try_test_is_nothrow_constructible_from_ptr
-							>::value
+							try_test_is_nothrow_constructible_from_ptr::IS_TRUE::value
 						) :
 						k_ptr(ptr)
 				{
@@ -517,9 +495,7 @@ namespace kerbal
 				KERBAL_CONSTEXPR20
 				unique_ptr(pointer ptr, const deleter_type & deleter)
 						KERBAL_CONDITIONAL_NOEXCEPT(
-							kerbal::type_traits::tribool_is_true<
-								try_test_is_nothrow_constructible_from_ptr_and_copy_from_deleter
-							>::value
+							try_test_is_nothrow_constructible_from_ptr_and_copy_from_deleter::IS_TRUE::value
 						) :
 						deleter_compress_helper(kerbal::utility::in_place_t(), deleter), k_ptr(ptr)
 				{
@@ -543,9 +519,7 @@ namespace kerbal
 				KERBAL_CONSTEXPR20
 				unique_ptr(pointer ptr, deleter_type && deleter)
 						KERBAL_CONDITIONAL_NOEXCEPT(
-							kerbal::type_traits::tribool_is_true<
-								try_test_is_nothrow_constructible_from_ptr_and_move_from_deleter
-							>::value
+							try_test_is_nothrow_constructible_from_ptr_and_move_from_deleter::IS_TRUE::value
 						) :
 						deleter_compress_helper(kerbal::utility::in_place_t(), kerbal::compatibility::move(deleter)), k_ptr(ptr)
 				{
@@ -567,9 +541,7 @@ namespace kerbal
 				KERBAL_CONSTEXPR20
 				unique_ptr(unique_ptr && src)
 						KERBAL_CONDITIONAL_NOEXCEPT(
-							kerbal::type_traits::tribool_is_true<
-								try_test_is_nothrow_move_constructible
-							>::value
+							try_test_is_nothrow_move_constructible::IS_TRUE::value
 						) :
 						deleter_compress_helper(kerbal::utility::in_place_t(), kerbal::compatibility::move(src.get_deleter())),
 						k_ptr(src.k_ptr)
@@ -604,9 +576,7 @@ namespace kerbal
 				KERBAL_CONSTEXPR20
 				unique_ptr & operator=(unique_ptr && src)
 						KERBAL_CONDITIONAL_NOEXCEPT(
-							kerbal::type_traits::tribool_is_true<
-								try_test_is_nothrow_move_assignable
-							>::value
+							try_test_is_nothrow_move_assignable::IS_TRUE::value
 						)
 				{
 					this->reset();

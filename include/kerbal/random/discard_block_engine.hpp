@@ -27,7 +27,6 @@
 #	include <kerbal/type_traits/is_nothrow_copy_constructible.hpp>
 #	include <kerbal/type_traits/is_nothrow_default_constructible.hpp>
 #	include <kerbal/type_traits/is_nothrow_move_constructible.hpp>
-#	include <kerbal/type_traits/tribool_constant.hpp>
 #endif
 
 
@@ -55,9 +54,7 @@ namespace kerbal
 				KERBAL_CONSTEXPR
 				discard_block_engine()
 						KERBAL_CONDITIONAL_NOEXCEPT(
-							kerbal::type_traits::tribool_is_true<
-								kerbal::type_traits::try_test_is_nothrow_default_constructible<Engine>
-							>::value
+							kerbal::type_traits::try_test_is_nothrow_default_constructible<Engine>::IS_TRUE::value
 						) :
 						k_base_eg(), k_idx(0)
 				{
@@ -66,9 +63,7 @@ namespace kerbal
 				KERBAL_CONSTEXPR
 				explicit discard_block_engine(const result_type & seed)
 						KERBAL_CONDITIONAL_NOEXCEPT((
-							kerbal::type_traits::tribool_is_true<
-								kerbal::type_traits::try_test_is_nothrow_constructible<Engine, result_type>
-							>::value
+							kerbal::type_traits::try_test_is_nothrow_constructible<Engine, result_type>::IS_TRUE::value
 						)) :
 						k_base_eg(seed), k_idx(0)
 				{
@@ -77,9 +72,7 @@ namespace kerbal
 				KERBAL_CONSTEXPR
 				explicit discard_block_engine(const Engine & engine)
 						KERBAL_CONDITIONAL_NOEXCEPT(
-							kerbal::type_traits::tribool_is_true<
-								kerbal::type_traits::try_test_is_nothrow_copy_constructible<Engine>
-							>::value
+							kerbal::type_traits::try_test_is_nothrow_copy_constructible<Engine>::IS_TRUE::value
 						) :
 						k_base_eg(engine), k_idx(0)
 				{
@@ -90,9 +83,7 @@ namespace kerbal
 				KERBAL_CONSTEXPR
 				explicit discard_block_engine(Engine && engine)
 						KERBAL_CONDITIONAL_NOEXCEPT(
-							kerbal::type_traits::tribool_is_true<
-								kerbal::type_traits::try_test_is_nothrow_move_constructible<Engine>
-							>::value
+							kerbal::type_traits::try_test_is_nothrow_move_constructible<Engine>::IS_TRUE::value
 						) :
 						k_base_eg(kerbal::compatibility::move(engine)), k_idx(0)
 				{

@@ -39,12 +39,10 @@ namespace kerbal
 		template <typename T>
 		struct try_test_is_final :
 				kerbal::type_traits::conditional<
-					kerbal::type_traits::tribool_is_false<
-						typename kerbal::type_traits::tribool_disjunction<
-							kerbal::type_traits::try_test_is_class<T>,
-							kerbal::type_traits::try_test_is_union<T>
-						>::result
-					>::value,
+					typename kerbal::type_traits::tribool_disjunction<
+						kerbal::type_traits::try_test_is_class<T>,
+						kerbal::type_traits::try_test_is_union<T>
+					>::result::IS_FALSE::value,
 					kerbal::type_traits::tribool_false,
 					kerbal::type_traits::tribool_unspecified
 				>::type

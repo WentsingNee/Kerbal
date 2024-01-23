@@ -16,7 +16,6 @@
 #include <kerbal/type_traits/conditional.hpp>
 #include <kerbal/type_traits/integral_constant.hpp>
 #include <kerbal/type_traits/is_trivially_destructible.hpp>
-#include <kerbal/type_traits/tribool_constant.hpp>
 
 
 namespace kerbal
@@ -33,9 +32,7 @@ namespace kerbal
 					kerbal::type_traits::conditional<
 						kerbal::memory::allocator_could_use_destroy<Allocator, T>::value,
 						kerbal::type_traits::false_type,
-						kerbal::type_traits::tribool_is_true<
-							kerbal::type_traits::try_test_is_trivially_destructible<T>
-						>
+						typename kerbal::type_traits::try_test_is_trivially_destructible<T>::IS_TRUE
 					>::type
 			{
 			};

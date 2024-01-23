@@ -56,7 +56,6 @@
 
 #if __cplusplus >= 201103L
 #	include <kerbal/type_traits/is_nothrow_destructible.hpp>
-#	include <kerbal/type_traits/tribool_constant.hpp>
 #endif
 
 #include <cstddef>
@@ -133,9 +132,7 @@ namespace kerbal
 					KERBAL_CONSTEXPR20
 					static void k_destroy(kerbal::type_traits::false_type, Alloc &, T * p)
 							KERBAL_CONDITIONAL_NOEXCEPT(
-								kerbal::type_traits::tribool_is_true<
-									kerbal::type_traits::try_test_is_nothrow_destructible<T>
-								>::value
+								kerbal::type_traits::try_test_is_nothrow_destructible<T>::IS_TRUE::value
 							)
 					{
 						kerbal::memory::destroy_at(p);

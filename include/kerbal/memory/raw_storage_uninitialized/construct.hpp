@@ -21,7 +21,6 @@
 #include <kerbal/type_traits/conditional.hpp>
 #include <kerbal/type_traits/integral_constant.hpp>
 #include <kerbal/type_traits/is_trivially_destructible.hpp>
-#include <kerbal/type_traits/tribool_constant.hpp>
 
 #include <kerbal/memory/detail/can_be_nothrow_advance_iterator.hpp>
 
@@ -115,9 +114,7 @@ namespace kerbal
 			typedef typename raw_storage::value_type value_type;
 
 			typedef typename kerbal::type_traits::conditional<
-					kerbal::type_traits::tribool_is_true<
-							kerbal::type_traits::try_test_is_trivially_destructible<value_type>
-					>::value,
+					kerbal::type_traits::try_test_is_trivially_destructible<value_type>::IS_TRUE::value,
 					detail::RAWST_UI_VAL_CONSTRUCT_VER_NO_CATCH,
 					typename kerbal::type_traits::conditional<
 							detail::can_be_nothrow_advance_iterator<iterator>::value,
@@ -226,9 +223,7 @@ namespace kerbal
 			typedef typename raw_storage::value_type value_type;
 
 			typedef typename kerbal::type_traits::conditional<
-					kerbal::type_traits::tribool_is_true<
-							kerbal::type_traits::try_test_is_trivially_destructible<value_type>
-					>::value,
+					kerbal::type_traits::try_test_is_trivially_destructible<value_type>::IS_TRUE::value,
 					detail::RAWST_UI_VAL_CONSTRUCT_N_VER_NO_CATCH,
 					typename kerbal::type_traits::conditional<
 							detail::can_be_nothrow_advance_iterator<iterator>::value,
@@ -337,9 +332,7 @@ namespace kerbal
 			typedef typename raw_storage::value_type value_type;
 
 			typedef typename kerbal::type_traits::conditional<
-					kerbal::type_traits::tribool_is_true<
-							kerbal::type_traits::try_test_is_trivially_destructible<value_type>
-					>::value,
+					kerbal::type_traits::try_test_is_trivially_destructible<value_type>::IS_TRUE::value,
 					detail::RAWST_UICPY_VER_NO_CATCH,
 					typename kerbal::type_traits::conditional<
 							detail::can_be_nothrow_advance_iterator<iterator>::value,
@@ -451,9 +444,7 @@ namespace kerbal
 			typedef typename raw_storage::value_type value_type;
 
 			typedef typename kerbal::type_traits::conditional<
-					kerbal::type_traits::tribool_is_true<
-							kerbal::type_traits::try_test_is_trivially_destructible<value_type>
-					>::value,
+					kerbal::type_traits::try_test_is_trivially_destructible<value_type>::IS_TRUE::value,
 					detail::RAWST_UICPY_N_VER_NO_CATCH,
 					typename kerbal::type_traits::conditional<
 							detail::can_be_nothrow_advance_iterator<iterator>::value,
@@ -562,9 +553,7 @@ namespace kerbal
 			typedef typename raw_storage::value_type value_type;
 
 			typedef typename kerbal::type_traits::conditional<
-					kerbal::type_traits::tribool_is_true<
-							kerbal::type_traits::try_test_is_trivially_destructible<value_type>
-					>::value,
+					kerbal::type_traits::try_test_is_trivially_destructible<value_type>::IS_TRUE::value,
 					detail::RAWST_UIMOV_VER_NO_CATCH,
 					typename kerbal::type_traits::conditional<
 							detail::can_be_nothrow_advance_iterator<iterator>::value,
@@ -676,9 +665,7 @@ namespace kerbal
 			typedef typename raw_storage::value_type value_type;
 
 			typedef typename kerbal::type_traits::conditional<
-					kerbal::type_traits::tribool_is_true<
-							kerbal::type_traits::try_test_is_trivially_destructible<value_type>
-					>::value,
+					kerbal::type_traits::try_test_is_trivially_destructible<value_type>::IS_TRUE::value,
 					detail::RAWST_UIMOV_N_VER_NO_CATCH,
 					typename kerbal::type_traits::conditional<
 							detail::can_be_nothrow_advance_iterator<iterator>::value,
@@ -781,9 +768,7 @@ namespace kerbal
 			typedef typename raw_storage::value_type value_type;
 
 			typedef typename kerbal::type_traits::conditional<
-					kerbal::type_traits::tribool_is_true<
-							kerbal::type_traits::try_test_is_trivially_destructible<value_type>
-					>::value,
+					kerbal::type_traits::try_test_is_trivially_destructible<value_type>::IS_TRUE::value,
 					detail::RAWST_UIFILL_VER_NO_CATCH,
 					typename kerbal::type_traits::conditional<
 							detail::can_be_nothrow_advance_iterator<iterator>::value,
@@ -892,9 +877,7 @@ namespace kerbal
 			typedef typename raw_storage::value_type value_type;
 
 			typedef typename kerbal::type_traits::conditional<
-					kerbal::type_traits::tribool_is_true<
-							kerbal::type_traits::try_test_is_trivially_destructible<value_type>
-					>::value,
+					kerbal::type_traits::try_test_is_trivially_destructible<value_type>::IS_TRUE::value,
 					detail::RAWST_UIFILL_N_VER_NO_CATCH,
 					typename kerbal::type_traits::conditional<
 							detail::can_be_nothrow_advance_iterator<iterator>::value,

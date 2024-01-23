@@ -62,13 +62,11 @@ namespace kerbal
 		template <typename T>
 		struct try_test_is_destructible :
 				kerbal::type_traits::conditional<
-					kerbal::type_traits::tribool_is_true<
-						typename kerbal::type_traits::tribool_disjunction<
-							kerbal::type_traits::is_function<T>,
-							kerbal::type_traits::is_unbounded_array<T>,
-							kerbal::type_traits::is_void<T>
-						>::result
-					>::value,
+					kerbal::type_traits::tribool_disjunction<
+						kerbal::type_traits::is_function<T>,
+						kerbal::type_traits::is_unbounded_array<T>,
+						kerbal::type_traits::is_void<T>
+					>::result::IS_TRUE::value,
 					kerbal::type_traits::tribool_false,
 					typename kerbal::type_traits::tribool_disjunction<
 						kerbal::type_traits::is_reference<T>,

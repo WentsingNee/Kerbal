@@ -21,7 +21,6 @@
 #include <kerbal/type_traits/integral_constant.hpp>
 #include <kerbal/type_traits/is_trivially_default_constructible.hpp>
 #include <kerbal/type_traits/is_trivially_destructible.hpp>
-#include <kerbal/type_traits/tribool_constant.hpp>
 
 #include <cstddef>
 
@@ -103,9 +102,7 @@ namespace kerbal
 		template <typename Tp>
 		struct default_construct_at_overload_version :
 				kerbal::type_traits::conditional<
-					kerbal::type_traits::tribool_is_true<
-						kerbal::type_traits::try_test_is_trivially_default_constructible<Tp>
-					>::value,
+					kerbal::type_traits::try_test_is_trivially_default_constructible<Tp>::IS_TRUE::value,
 					detail::DFT_CNSTRCT_AT_VER_TRIVIALLY,
 					detail::DFT_CNSTRCT_AT_VER_DEFAULT
 				>::type
@@ -212,14 +209,10 @@ namespace kerbal
 #	if KERBAL_HAS_EXCEPTIONS_SUPPORT
 
 			typedef typename kerbal::type_traits::conditional<
-					kerbal::type_traits::tribool_is_true<
-						kerbal::type_traits::try_test_is_trivially_default_constructible<value_type>
-					>::value,
+					kerbal::type_traits::try_test_is_trivially_default_constructible<value_type>::IS_TRUE::value,
 					detail::UI_DFT_CONSTRUCT_VER_TRIVIALLY,
 					typename kerbal::type_traits::conditional<
-						kerbal::type_traits::tribool_is_true<
-							kerbal::type_traits::try_test_is_trivially_destructible<value_type>
-						>::value,
+						kerbal::type_traits::try_test_is_trivially_destructible<value_type>::IS_TRUE::value,
 						detail::UI_DFT_CONSTRUCT_VER_NO_CATCH,
 						typename kerbal::type_traits::conditional<
 							detail::can_be_nothrow_advance_iterator<iterator>::value,
@@ -232,9 +225,7 @@ namespace kerbal
 #	else
 
 			typedef typename kerbal::type_traits::conditional<
-					kerbal::type_traits::tribool_is_true<
-						kerbal::type_traits::try_test_is_trivially_default_constructible<value_type>
-					>::value,
+					kerbal::type_traits::try_test_is_trivially_default_constructible<value_type>::IS_TRUE::value,
 					detail::UI_DFT_CONSTRUCT_VER_TRIVIALLY,
 					detail::UI_DFT_CONSTRUCT_VER_NO_CATCH
 			>::type VER;
@@ -341,14 +332,10 @@ namespace kerbal
 #	if KERBAL_HAS_EXCEPTIONS_SUPPORT
 
 			typedef typename kerbal::type_traits::conditional<
-				kerbal::type_traits::tribool_is_true<
-					kerbal::type_traits::try_test_is_trivially_default_constructible<value_type>
-				>::value,
+				kerbal::type_traits::try_test_is_trivially_default_constructible<value_type>::IS_TRUE::value,
 				detail::UI_DFT_CONSTRUCT_N_VER_TRIVIALLY,
 				typename kerbal::type_traits::conditional<
-					kerbal::type_traits::tribool_is_true<
-						kerbal::type_traits::try_test_is_trivially_destructible<value_type>
-					>::value,
+					kerbal::type_traits::try_test_is_trivially_destructible<value_type>::IS_TRUE::value,
 					detail::UI_DFT_CONSTRUCT_N_VER_NO_CATCH,
 					typename kerbal::type_traits::conditional<
 						detail::can_be_nothrow_advance_iterator<iterator>::value,
@@ -361,9 +348,7 @@ namespace kerbal
 #	else
 
 			typedef typename kerbal::type_traits::conditional<
-				kerbal::type_traits::tribool_is_true<
-					kerbal::type_traits::try_test_is_trivially_default_constructible<value_type>
-				>::value,
+				kerbal::type_traits::try_test_is_trivially_default_constructible<value_type>::IS_TRUE::value,
 				detail::UI_DFT_CONSTRUCT_N_VER_TRIVIALLY,
 				detail::UI_DFT_CONSTRUCT_N_VER_NO_CATCH
 			>::type VER;

@@ -57,10 +57,8 @@ namespace kerbal
 		KERBAL_CONSTEXPR20
 		forward_list<Tp, Allocator>::forward_list(const Allocator& alloc)
 				KERBAL_CONDITIONAL_NOEXCEPT(
-						kerbal::type_traits::tribool_is_true<
-							typename fl_allocator_overload::template try_test_is_nothrow_constructible_from_allocator<const Allocator &>
-						>::value &&
-						fl_type_only::is_nothrow_default_constructible::value
+					fl_allocator_overload::template try_test_is_nothrow_constructible_from_allocator<const Allocator &>::IS_TRUE::value &&
+					fl_type_only::is_nothrow_default_constructible::value
 				) :
 				fl_allocator_overload(alloc),
 				fl_type_only()
@@ -145,10 +143,8 @@ namespace kerbal
 		KERBAL_CONSTEXPR20
 		forward_list<Tp, Allocator>::forward_list(forward_list && src)
 				KERBAL_CONDITIONAL_NOEXCEPT(
-						kerbal::type_traits::tribool_is_true<
-							typename fl_allocator_overload::template try_test_is_nothrow_constructible_from_allocator<Allocator &&>
-						>::value &&
-						fl_type_only::is_nothrow_move_constructible::value
+					fl_allocator_overload::template try_test_is_nothrow_constructible_from_allocator<Allocator &&>::IS_TRUE::value &&
+					fl_type_only::is_nothrow_move_constructible::value
 				) :
 				fl_allocator_overload(kerbal::compatibility::move(src.alloc())),
 				fl_type_only(static_cast<fl_type_only &&>(src))
@@ -159,10 +155,8 @@ namespace kerbal
 		KERBAL_CONSTEXPR20
 		forward_list<Tp, Allocator>::forward_list(forward_list && src, const Allocator& alloc)
 				KERBAL_CONDITIONAL_NOEXCEPT(
-						kerbal::type_traits::tribool_is_true<
-							typename fl_allocator_overload::template try_test_is_nothrow_constructible_from_allocator<const Allocator &>
-						>::value &&
-						fl_type_only::template is_nothrow_move_constructible_using_allocator<node_allocator_type>::value
+					fl_allocator_overload::template try_test_is_nothrow_constructible_from_allocator<const Allocator &>::IS_TRUE::value &&
+					fl_type_only::template is_nothrow_move_constructible_using_allocator<node_allocator_type>::value
 				) :
 				fl_allocator_overload(alloc),
 				fl_type_only(this->alloc(),

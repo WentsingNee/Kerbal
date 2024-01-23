@@ -21,7 +21,6 @@
 #include <kerbal/type_traits/integral_constant.hpp>
 #include <kerbal/type_traits/is_trivially_default_constructible.hpp>
 #include <kerbal/type_traits/is_trivially_destructible.hpp>
-#include <kerbal/type_traits/tribool_constant.hpp>
 #include <kerbal/utility/forward.hpp>
 #include <kerbal/utility/in_place.hpp>
 #include <kerbal/utility/integer_sequence.hpp>
@@ -43,13 +42,9 @@ namespace kerbal
 			template <typename T>
 			struct rawst_base_selector:
 					kerbal::type_traits::conditional<
-						kerbal::type_traits::tribool_is_true<
-							kerbal::type_traits::try_test_is_trivially_destructible<T>
-						>::value,
+						kerbal::type_traits::try_test_is_trivially_destructible<T>::IS_TRUE::value,
 						typename kerbal::type_traits::conditional<
-							kerbal::type_traits::tribool_is_true<
-								kerbal::type_traits::try_test_is_trivially_default_constructible<T>
-							>::value,
+							kerbal::type_traits::try_test_is_trivially_default_constructible<T>::IS_TRUE::value,
 							kerbal::type_traits::integral_constant<int, 1>,
 							kerbal::type_traits::integral_constant<int, 2>
 						>::type,
