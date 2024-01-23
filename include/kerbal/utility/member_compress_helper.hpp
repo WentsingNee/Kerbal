@@ -154,50 +154,6 @@ namespace kerbal
 
 #			endif
 
-#			if __cplusplus >= 201103L
-
-					template <typename U, std::size_t J>
-					struct try_test_is_nothrow_covariant_copy_constructible :
-							kerbal::type_traits::try_test_is_nothrow_constructible<
-								T, typename kerbal::utility::member_compress_helper<U, J>::const_reference
-							>
-					{
-					};
-
-#			endif
-
-					template <typename U, std::size_t J>
-					KERBAL_CONSTEXPR
-					explicit member_compress_helper_impl(const kerbal::utility::member_compress_helper<U, J> & src)
-							KERBAL_CONDITIONAL_NOEXCEPT((
-								try_test_is_nothrow_covariant_copy_constructible<U, J>::IS_TRUE::value
-							)) :
-							k_member(src.member())
-					{
-					}
-
-#			if __cplusplus >= 201103L
-
-					template <typename U, std::size_t J>
-					struct try_test_is_nothrow_covariant_move_constructible :
-							kerbal::type_traits::try_test_is_nothrow_constructible<
-								T, typename kerbal::utility::member_compress_helper<U, J>::rvalue_reference
-							>
-					{
-					};
-
-					template <typename U, std::size_t J>
-					KERBAL_CONSTEXPR
-					explicit member_compress_helper_impl(kerbal::utility::member_compress_helper<U, J> && src)
-							KERBAL_CONDITIONAL_NOEXCEPT((
-								try_test_is_nothrow_covariant_move_constructible<U, J>::IS_TRUE::value
-							)) :
-							k_member(kerbal::compatibility::move(src).member())
-					{
-					}
-
-#			endif
-
 					KERBAL_CONSTEXPR14
 					reference member() KERBAL_REFERENCE_OVERLOAD_TAG KERBAL_NOEXCEPT
 					{
@@ -309,50 +265,6 @@ namespace kerbal
 
 #			endif
 
-
-#			if __cplusplus >= 201103L
-
-					template <typename U, std::size_t J>
-					struct try_test_is_nothrow_covariant_copy_constructible :
-							kerbal::type_traits::try_test_is_nothrow_constructible<
-								super, typename kerbal::utility::member_compress_helper<U, J>::const_reference
-							>
-					{
-					};
-
-#			endif
-
-					template <typename U, std::size_t J>
-					KERBAL_CONSTEXPR
-					explicit member_compress_helper_impl(const kerbal::utility::member_compress_helper<U, J> & src)
-							KERBAL_CONDITIONAL_NOEXCEPT((
-								try_test_is_nothrow_covariant_copy_constructible<U, J>::IS_TRUE::value
-							)) :
-							super(src.member())
-					{
-					}
-
-#			if __cplusplus >= 201103L
-
-					template <typename U, std::size_t J>
-					struct try_test_is_nothrow_covariant_move_constructible :
-							kerbal::type_traits::try_test_is_nothrow_constructible<
-								super, typename kerbal::utility::member_compress_helper<U, J>::rvalue_reference
-							>
-					{
-					};
-
-					template <typename U, std::size_t J>
-					KERBAL_CONSTEXPR
-					explicit member_compress_helper_impl(kerbal::utility::member_compress_helper<U, J> && src)
-							KERBAL_CONDITIONAL_NOEXCEPT((
-								try_test_is_nothrow_covariant_move_constructible<U, J>::IS_TRUE::value
-							)) :
-							super(kerbal::compatibility::move(src).member())
-					{
-					}
-
-#			endif
 
 					KERBAL_CONSTEXPR14
 					reference member() KERBAL_REFERENCE_OVERLOAD_TAG KERBAL_NOEXCEPT
@@ -466,51 +378,6 @@ namespace kerbal
 #			endif
 
 
-#			if __cplusplus >= 201103L
-
-					template <typename U, std::size_t J>
-					struct try_test_is_nothrow_covariant_copy_constructible :
-							kerbal::type_traits::try_test_is_nothrow_constructible<
-								super, typename kerbal::utility::member_compress_helper<U, J>::const_reference
-							>
-					{
-					};
-
-#			endif
-
-					template <typename U, std::size_t J>
-					KERBAL_CONSTEXPR
-					explicit member_compress_helper_impl(const kerbal::utility::member_compress_helper<U, J> & src)
-							KERBAL_CONDITIONAL_NOEXCEPT((
-								try_test_is_nothrow_covariant_copy_constructible<U, J>::IS_TRUE::value
-							)) :
-							super(src.member())
-					{
-					}
-
-#			if __cplusplus >= 201103L
-
-					template <typename U, std::size_t J>
-					struct try_test_is_nothrow_covariant_move_constructible :
-							kerbal::type_traits::try_test_is_nothrow_constructible<
-								super, typename kerbal::utility::member_compress_helper<U, J>::rvalue_reference
-							>
-					{
-					};
-
-					template <typename U, std::size_t J>
-					KERBAL_CONSTEXPR
-					explicit member_compress_helper_impl(kerbal::utility::member_compress_helper<U, J> && src)
-							KERBAL_CONDITIONAL_NOEXCEPT((
-								try_test_is_nothrow_covariant_move_constructible<U, J>::IS_TRUE::value
-							)) :
-							super(kerbal::compatibility::move(src).member())
-					{
-					}
-
-#			endif
-
-
 				// note: `member_compress_helper_impl` couldn't inherit from `noncopyassignable` in pursuit of more effective compression effect
 
 #			if __cplusplus < 201103L
@@ -596,7 +463,7 @@ namespace kerbal
 
 				template <typename ... Args>
 				struct try_test_is_nothrow_in_place_constructible :
-						kerbal::type_traits::try_test_is_nothrow_constructible<super, kerbal::utility::in_place_t, Args...>
+						super::template try_test_is_nothrow_in_place_constructible<Args...>
 				{
 				};
 
@@ -643,8 +510,8 @@ namespace kerbal
 
 				template <typename U, std::size_t J>
 				struct try_test_is_nothrow_covariant_copy_constructible :
-						kerbal::type_traits::try_test_is_nothrow_constructible<
-							super, const kerbal::utility::member_compress_helper<U, J> &
+						super::template try_test_is_nothrow_in_place_constructible<
+							typename kerbal::utility::member_compress_helper<U, J>::const_reference
 						>
 				{
 				};
@@ -657,7 +524,7 @@ namespace kerbal
 						KERBAL_CONDITIONAL_NOEXCEPT((
 							try_test_is_nothrow_covariant_copy_constructible<U, J>::IS_TRUE::value
 						)) :
-						super(src)
+						super(kerbal::utility::in_place_t(), src.member())
 				{
 				}
 
@@ -666,8 +533,8 @@ namespace kerbal
 
 				template <typename U, std::size_t J>
 				struct try_test_is_nothrow_covariant_move_constructible :
-						kerbal::type_traits::try_test_is_nothrow_constructible<
-							super, kerbal::utility::member_compress_helper<U, J> &&
+						super::template try_test_is_nothrow_in_place_constructible<
+							typename kerbal::utility::member_compress_helper<U, J>::rvalue_reference
 						>
 				{
 				};
@@ -678,7 +545,7 @@ namespace kerbal
 						KERBAL_CONDITIONAL_NOEXCEPT((
 							try_test_is_nothrow_covariant_move_constructible<U, J>::IS_TRUE::value
 						)) :
-						super(kerbal::compatibility::move(src))
+						super(kerbal::utility::in_place_t(), kerbal::compatibility::move(src).member())
 				{
 				}
 
