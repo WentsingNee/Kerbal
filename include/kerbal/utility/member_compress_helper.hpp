@@ -581,7 +581,8 @@ namespace kerbal
 		} // namespace detail
 
 		template <typename T, std::size_t I>
-		class member_compress_helper: public detail::member_compress_helper_impl<T>
+		class member_compress_helper :
+				public kerbal::utility::detail::member_compress_helper_impl<T>
 		{
 			private:
 				typedef kerbal::utility::detail::member_compress_helper_impl<T> super;
@@ -598,20 +599,40 @@ namespace kerbal
 
 			public:
 
-#		if __cplusplus < 201103L
+#		if __cplusplus >= 201103L
+
+				member_compress_helper() = default;
+
+#		else
 
 				member_compress_helper()
 				{
 				}
 
-#		else
-
-				member_compress_helper() = default;
-
 #		endif
 
 
-#		if __cplusplus < 201103L
+#		if __cplusplus >= 201103L
+
+				template <typename ... Args>
+				struct try_test_is_nothrow_in_place_constructible :
+						kerbal::type_traits::try_test_is_nothrow_constructible<super, kerbal::utility::in_place_t, Args...>
+				{
+				};
+
+				template <typename ... Args>
+				KERBAL_CONSTEXPR
+				explicit member_compress_helper(kerbal::utility::in_place_t in_place, Args&& ... args)
+						KERBAL_CONDITIONAL_NOEXCEPT((
+								kerbal::type_traits::tribool_is_true<
+										try_test_is_nothrow_in_place_constructible<Args&&...>
+								>::value
+						)) :
+						super(in_place, kerbal::utility::forward<Args>(args)...)
+				{
+				}
+
+#		else
 
 #			define EMPTY
 #			define LEFT_JOIN_COMMA(exp) , exp
@@ -636,26 +657,6 @@ namespace kerbal
 #			undef ARGS_DECL
 #			undef ARGS_USE
 #			undef FBODY
-
-#		else
-
-				template <typename ... Args>
-				struct try_test_is_nothrow_in_place_constructible :
-						kerbal::type_traits::try_test_is_nothrow_constructible<super, kerbal::utility::in_place_t, Args...>
-				{
-				};
-
-				template <typename ... Args>
-				KERBAL_CONSTEXPR
-				explicit member_compress_helper(kerbal::utility::in_place_t in_place, Args&& ... args)
-						KERBAL_CONDITIONAL_NOEXCEPT((
-								kerbal::type_traits::tribool_is_true<
-										try_test_is_nothrow_in_place_constructible<Args&&...>
-								>::value
-						)) :
-						super(in_place, kerbal::utility::forward<Args>(args)...)
-				{
-				}
 
 #		endif
 
