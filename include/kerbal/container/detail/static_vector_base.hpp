@@ -12,6 +12,7 @@
 #ifndef KERBAL_CONTAINER_DETAIL_STATIC_VECTOR_BASE_HPP
 #define KERBAL_CONTAINER_DETAIL_STATIC_VECTOR_BASE_HPP
 
+#include <kerbal/container/detail/static_vector_base/static_vector_base.fwd.hpp>
 #include <kerbal/container/detail/static_vector_base/static_vector_base.decl.hpp>
 #include <kerbal/container/detail/static_vector_base/static_vector_base.impl.hpp>
 
