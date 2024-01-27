@@ -30,10 +30,6 @@ namespace kerbal
 				{
 				}
 
-				~noncopyconstructible() KERBAL_NOEXCEPT
-				{
-				}
-
 			private:
 				noncopyconstructible(const noncopyconstructible &) KERBAL_NOEXCEPT;
 		};
@@ -44,8 +40,6 @@ namespace kerbal
 		{
 			protected:
 				noncopyconstructible() = default;
-
-				~noncopyconstructible() = default;
 
 			private:
 				noncopyconstructible(const noncopyconstructible &) = delete;
@@ -63,10 +57,6 @@ namespace kerbal
 				{
 				}
 
-				~noncopyassignable() KERBAL_NOEXCEPT
-				{
-				}
-
 			private:
 				noncopyassignable& operator=(const noncopyassignable &) KERBAL_NOEXCEPT;
 		};
@@ -77,8 +67,6 @@ namespace kerbal
 		{
 			protected:
 				noncopyassignable() = default;
-
-				~noncopyassignable()  = default;
 
 			private:
 				noncopyassignable& operator=(const noncopyassignable &) = delete;
