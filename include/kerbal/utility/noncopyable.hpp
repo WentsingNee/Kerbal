@@ -111,7 +111,7 @@ namespace kerbal
 
 			private:
 				noncopyable(const noncopyable &) = delete;
-				noncopyassignable& operator=(const noncopyassignable &) = delete;
+				noncopyable& operator=(const noncopyable &) = delete;
 		};
 
 #	endif
