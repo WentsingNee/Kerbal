@@ -33,6 +33,7 @@
 #		include <kerbal/type_traits/is_nothrow_constructible.hpp>
 #		include <kerbal/type_traits/is_nothrow_default_constructible.hpp>
 #		include <kerbal/type_traits/is_nothrow_move_assignable.hpp>
+#		include <kerbal/type_traits/tribool_constant.hpp>
 #	endif
 
 #endif
@@ -63,86 +64,183 @@ namespace kerbal
 				typedef T* pointer;
 				typedef Deleter deleter_type;
 
+#		if __cplusplus >= 201103L && KERBAL_HAS_EXCEPTIONS_SUPPORT
+
+				// forward declare to solve the problem of compile error under msvc
+				struct is_nothrow_reset :
+					kerbal::type_traits::bool_constant<
+						noexcept(
+							kerbal::utility::declval<deleter_type &>()(
+								kerbal::utility::declval<pointer>()
+							)
+						)
+					>
+				{
+				};
+
+#		endif
+
 			protected:
 				pointer k_ptr;
 
 			public:
+
+#		if __cplusplus >= 201103L && KERBAL_HAS_EXCEPTIONS_SUPPORT
+
+				struct try_test_is_nothrow_default_constructible :
+					kerbal::type_traits::try_test_is_nothrow_default_constructible<deleter_compress_helper>
+				{
+				};
+
+#		endif
+
 				KERBAL_CONSTEXPR20
 				unique_ptr()
 						KERBAL_CONDITIONAL_NOEXCEPT(
-							kerbal::type_traits::is_nothrow_default_constructible<deleter_compress_helper>::value
+							kerbal::type_traits::tribool_is_true<
+								try_test_is_nothrow_default_constructible
+							>::value
 						) :
 						k_ptr(NULL)
 				{
 				}
 
-#			if __cplusplus >= 201103L
+#		if __cplusplus >= 201103L
+
+#			if KERBAL_HAS_EXCEPTIONS_SUPPORT
+
+				struct try_test_is_nothrow_constructible_from_nullptr :
+					kerbal::type_traits::try_test_is_nothrow_default_constructible<deleter_compress_helper>
+				{
+				};
+
+#			endif
 
 				KERBAL_CONSTEXPR20
 				unique_ptr(std::nullptr_t)
 						KERBAL_CONDITIONAL_NOEXCEPT(
-							kerbal::type_traits::is_nothrow_default_constructible<deleter_compress_helper>::value
+							kerbal::type_traits::tribool_is_true<
+								try_test_is_nothrow_constructible_from_nullptr
+							>::value
 						) :
 						k_ptr(NULL)
 				{
 				}
 
-#			endif
+#		endif
 
+
+#		if __cplusplus >= 201103L && KERBAL_HAS_EXCEPTIONS_SUPPORT
+
+				struct try_test_is_nothrow_constructible_from_ptr :
+					kerbal::type_traits::try_test_is_nothrow_default_constructible<deleter_compress_helper>
+				{
+				};
+
+#		endif
 
 				KERBAL_CONSTEXPR20
 				explicit unique_ptr(pointer ptr)
 						KERBAL_CONDITIONAL_NOEXCEPT(
-							kerbal::type_traits::is_nothrow_default_constructible<deleter_compress_helper>::value
+							kerbal::type_traits::tribool_is_true<
+								try_test_is_nothrow_constructible_from_ptr
+							>::value
 						) :
 						k_ptr(ptr)
 				{
 				}
 
+#		if __cplusplus >= 201103L && KERBAL_HAS_EXCEPTIONS_SUPPORT
+
+				struct try_test_is_nothrow_constructible_from_ptr_and_copy_from_deleter :
+					kerbal::type_traits::try_test_is_nothrow_constructible<
+						deleter_compress_helper,
+						kerbal::utility::in_place_t,
+						const deleter_type &
+					>
+				{
+				};
+
+#		endif
+
 				KERBAL_CONSTEXPR20
 				unique_ptr(pointer ptr, const deleter_type & deleter)
-						KERBAL_CONDITIONAL_NOEXCEPT((
-							kerbal::type_traits::is_nothrow_constructible<
-								deleter_compress_helper,
-								kerbal::utility::in_place_t,
-								const deleter_type &
+						KERBAL_CONDITIONAL_NOEXCEPT(
+							kerbal::type_traits::tribool_is_true<
+								try_test_is_nothrow_constructible_from_ptr_and_copy_from_deleter
 							>::value
-						)) :
+						) :
 						deleter_compress_helper(kerbal::utility::in_place_t(), deleter),
 						k_ptr(ptr)
 				{
 				}
 
-#			if __cplusplus >= 201103L
+#		if __cplusplus >= 201103L
+
+#			if KERBAL_HAS_EXCEPTIONS_SUPPORT
+
+				struct try_test_is_nothrow_constructible_from_ptr_and_move_from_deleter :
+					kerbal::type_traits::try_test_is_nothrow_constructible<
+						deleter_compress_helper,
+						kerbal::utility::in_place_t,
+						deleter_type &&
+					>
+				{
+				};
+
+#			endif
 
 				KERBAL_CONSTEXPR20
 				unique_ptr(pointer ptr, deleter_type && deleter)
-						KERBAL_CONDITIONAL_NOEXCEPT((
-							kerbal::type_traits::is_nothrow_constructible<
-								deleter_compress_helper,
-								kerbal::utility::in_place_t,
-								deleter_type &&
+						KERBAL_CONDITIONAL_NOEXCEPT(
+							kerbal::type_traits::tribool_is_true<
+								try_test_is_nothrow_constructible_from_ptr_and_move_from_deleter
 							>::value
-						)) :
+						) :
 						deleter_compress_helper(kerbal::utility::in_place_t(), kerbal::compatibility::move(deleter)),
 						k_ptr(ptr)
 				{
 				}
 
+#			if KERBAL_HAS_EXCEPTIONS_SUPPORT
+
+				struct try_test_is_nothrow_move_constructible :
+					kerbal::type_traits::try_test_is_nothrow_constructible<
+						deleter_compress_helper,
+						kerbal::utility::in_place_t,
+						deleter_type &&
+					>
+				{
+				};
+
+#			endif
+
 				KERBAL_CONSTEXPR20
 				unique_ptr(unique_ptr && src)
-						KERBAL_CONDITIONAL_NOEXCEPT((
-							kerbal::type_traits::is_nothrow_constructible<
-								deleter_compress_helper,
-								kerbal::utility::in_place_t,
-								deleter_type &&
+						KERBAL_CONDITIONAL_NOEXCEPT(
+							kerbal::type_traits::tribool_is_true<
+								try_test_is_nothrow_move_constructible
 							>::value
-						)) :
+						) :
 						deleter_compress_helper(kerbal::utility::in_place_t(), kerbal::compatibility::move(src.get_deleter())),
 						k_ptr(src.k_ptr)
 				{
 					src.k_ptr = nullptr;
 				}
+
+#			if KERBAL_HAS_EXCEPTIONS_SUPPORT
+
+				template <typename U, typename UDeleter>
+				struct try_test_is_nothrow_covariant_move_constructible :
+					kerbal::type_traits::try_test_is_nothrow_constructible<
+						deleter_compress_helper,
+						kerbal::utility::in_place_t,
+						typename unique_ptr<U, UDeleter>::deleter_type &&
+					>
+				{
+				};
+
+#			endif
 
 				template <typename U, typename UDeleter>
 				KERBAL_CONSTEXPR20
@@ -151,10 +249,8 @@ namespace kerbal
 						typename kerbal::type_traits::enable_if<!kerbal::type_traits::is_array<U>::value, int>::type = 0
 				)
 						KERBAL_CONDITIONAL_NOEXCEPT((
-							kerbal::type_traits::is_nothrow_constructible<
-								deleter_compress_helper,
-								kerbal::utility::in_place_t,
-								typename unique_ptr<U, UDeleter>::deleter_type &&
+							kerbal::type_traits::tribool_is_true<
+								try_test_is_nothrow_covariant_move_constructible<U, UDeleter>
 							>::value
 						)) :
 						deleter_compress_helper(kerbal::utility::in_place_t(), kerbal::compatibility::move(src.get_deleter())),
@@ -163,7 +259,7 @@ namespace kerbal
 					src.k_ptr = nullptr;
 				}
 
-#			endif
+#		endif
 
 				KERBAL_CONSTEXPR20
 				~unique_ptr()
@@ -173,15 +269,26 @@ namespace kerbal
 					}
 				}
 
-#			if __cplusplus >= 201103L
+#		if __cplusplus >= 201103L
+
+#			if KERBAL_HAS_EXCEPTIONS_SUPPORT
+
+				struct try_test_is_nothrow_move_assignable :
+					kerbal::type_traits::tribool_conjunction<
+						is_nothrow_reset,
+						kerbal::type_traits::try_test_is_nothrow_move_assignable<deleter_type>
+					>::result
+				{
+				};
+
+#			endif
 
 				KERBAL_CONSTEXPR20
 				unique_ptr & operator=(unique_ptr && src)
 						KERBAL_CONDITIONAL_NOEXCEPT(
-							noexcept(
-								kerbal::utility::declthis<unique_ptr>()->reset()
-							) &&
-							kerbal::type_traits::is_nothrow_move_assignable<deleter_type>::value
+							kerbal::type_traits::tribool_is_true<
+								try_test_is_nothrow_move_assignable
+							>::value
 						)
 				{
 					this->reset();
@@ -193,38 +300,30 @@ namespace kerbal
 
 				KERBAL_CONSTEXPR20
 				unique_ptr & operator=(std::nullptr_t)
-						KERBAL_CONDITIONAL_NOEXCEPT(
-							noexcept(
-								kerbal::utility::declthis<unique_ptr>()->reset()
-							)
-						)
+						KERBAL_CONDITIONAL_NOEXCEPT((
+							is_nothrow_reset::value
+						))
 				{
 					this->reset();
 					return *this;
 				}
 
-#			endif
+#		endif
 
 				KERBAL_CONSTEXPR20
 				void reset()
-						KERBAL_CONDITIONAL_NOEXCEPT(
-							noexcept(
-								kerbal::utility::declthis<unique_ptr>()->reset(NULL)
-							)
-						)
+						KERBAL_CONDITIONAL_NOEXCEPT((
+							is_nothrow_reset::value
+						))
 				{
 					this->reset(NULL);
 				}
 
 				KERBAL_CONSTEXPR20
 				void reset(pointer p)
-						KERBAL_CONDITIONAL_NOEXCEPT(
-							noexcept(
-								kerbal::utility::declval<deleter_type &>()(
-									kerbal::utility::declval<pointer>()
-								)
-							)
-						)
+						KERBAL_CONDITIONAL_NOEXCEPT((
+							is_nothrow_reset::value
+						))
 				{
 					if (this->k_ptr != NULL) {
 						this->get_deleter()(this->k_ptr);
@@ -316,85 +415,167 @@ namespace kerbal
 				typedef T* pointer;
 				typedef Deleter deleter_type;
 
+#		if __cplusplus >= 201103L && KERBAL_HAS_EXCEPTIONS_SUPPORT
+
+				struct is_nothrow_reset :
+					kerbal::type_traits::bool_constant<
+						noexcept(
+							kerbal::utility::declval<deleter_type &>()(
+								kerbal::utility::declval<pointer>()
+							)
+						)
+					>
+				{
+				};
+
+#		endif
+
 			protected:
 				pointer k_ptr;
 
 			public:
+
+#		if __cplusplus >= 201103L && KERBAL_HAS_EXCEPTIONS_SUPPORT
+
+				struct try_test_is_nothrow_default_constructible :
+					kerbal::type_traits::try_test_is_nothrow_default_constructible<deleter_compress_helper>
+				{
+				};
+
+#		endif
+
 				unique_ptr()
 						KERBAL_CONDITIONAL_NOEXCEPT(
-							kerbal::type_traits::is_nothrow_default_constructible<deleter_compress_helper>::value
+							kerbal::type_traits::tribool_is_true<
+								try_test_is_nothrow_default_constructible
+							>::value
 						) :
 						k_ptr(NULL)
 				{
 				}
 
-#			if __cplusplus >= 201103L
+#		if __cplusplus >= 201103L
+
+#			if KERBAL_HAS_EXCEPTIONS_SUPPORT
+
+				struct try_test_is_nothrow_constructible_from_nullptr :
+					kerbal::type_traits::try_test_is_nothrow_default_constructible<deleter_compress_helper>
+				{
+				};
+
+#			endif
 
 				KERBAL_CONSTEXPR20
 				unique_ptr(std::nullptr_t)
 						KERBAL_CONDITIONAL_NOEXCEPT(
-							kerbal::type_traits::is_nothrow_default_constructible<deleter_compress_helper>::value
+							kerbal::type_traits::tribool_is_true<
+								try_test_is_nothrow_constructible_from_nullptr
+							>::value
 						) :
 						k_ptr(NULL)
 				{
 				}
 
-#			endif
+#		endif
 
+
+#		if __cplusplus >= 201103L && KERBAL_HAS_EXCEPTIONS_SUPPORT
+
+				struct try_test_is_nothrow_constructible_from_ptr :
+					kerbal::type_traits::try_test_is_nothrow_default_constructible<deleter_compress_helper>
+				{
+				};
+
+#		endif
 
 				KERBAL_CONSTEXPR20
 				explicit unique_ptr(pointer ptr)
 						KERBAL_CONDITIONAL_NOEXCEPT(
-							kerbal::type_traits::is_nothrow_default_constructible<deleter_compress_helper>::value
+							kerbal::type_traits::tribool_is_true<
+								try_test_is_nothrow_constructible_from_ptr
+							>::value
 						) :
 						k_ptr(ptr)
 				{
 				}
 
+#		if __cplusplus >= 201103L && KERBAL_HAS_EXCEPTIONS_SUPPORT
+
+				struct try_test_is_nothrow_constructible_from_ptr_and_copy_from_deleter :
+					kerbal::type_traits::try_test_is_nothrow_constructible<
+						deleter_compress_helper,
+						kerbal::utility::in_place_t,
+						const deleter_type &
+					>
+				{
+				};
+
+#		endif
+
 				KERBAL_CONSTEXPR20
 				unique_ptr(pointer ptr, const deleter_type & deleter)
-						KERBAL_CONDITIONAL_NOEXCEPT((
-							kerbal::type_traits::is_nothrow_constructible<
-								deleter_compress_helper,
-								kerbal::utility::in_place_t,
-								const deleter_type &
+						KERBAL_CONDITIONAL_NOEXCEPT(
+							kerbal::type_traits::tribool_is_true<
+								try_test_is_nothrow_constructible_from_ptr_and_copy_from_deleter
 							>::value
-						)) :
+						) :
 						deleter_compress_helper(kerbal::utility::in_place_t(), deleter), k_ptr(ptr)
 				{
 				}
 
-#			if __cplusplus >= 201103L
+#		if __cplusplus >= 201103L
+
+#			if KERBAL_HAS_EXCEPTIONS_SUPPORT
+
+				struct try_test_is_nothrow_constructible_from_ptr_and_move_from_deleter :
+					kerbal::type_traits::try_test_is_nothrow_constructible<
+						deleter_compress_helper,
+						kerbal::utility::in_place_t,
+						deleter_type &&
+					>
+				{
+				};
+
+#			endif
 
 				KERBAL_CONSTEXPR20
 				unique_ptr(pointer ptr, deleter_type && deleter)
-						KERBAL_CONDITIONAL_NOEXCEPT((
-							kerbal::type_traits::is_nothrow_constructible<
-								deleter_compress_helper,
-								kerbal::utility::in_place_t,
-								deleter_type &&
+						KERBAL_CONDITIONAL_NOEXCEPT(
+							kerbal::type_traits::tribool_is_true<
+								try_test_is_nothrow_constructible_from_ptr_and_move_from_deleter
 							>::value
-						)) :
+						) :
 						deleter_compress_helper(kerbal::utility::in_place_t(), kerbal::compatibility::move(deleter)), k_ptr(ptr)
 				{
 				}
 
+#			if KERBAL_HAS_EXCEPTIONS_SUPPORT
+
+				struct try_test_is_nothrow_move_constructible :
+					kerbal::type_traits::try_test_is_nothrow_constructible<
+						deleter_compress_helper,
+						kerbal::utility::in_place_t,
+						deleter_type &&
+					>
+				{
+				};
+
+#			endif
+
 				KERBAL_CONSTEXPR20
 				unique_ptr(unique_ptr && src)
-						KERBAL_CONDITIONAL_NOEXCEPT((
-							kerbal::type_traits::is_nothrow_constructible<
-								deleter_compress_helper,
-								kerbal::utility::in_place_t,
-								deleter_type &&
+						KERBAL_CONDITIONAL_NOEXCEPT(
+							kerbal::type_traits::tribool_is_true<
+								try_test_is_nothrow_move_constructible
 							>::value
-						)) :
+						) :
 						deleter_compress_helper(kerbal::utility::in_place_t(), kerbal::compatibility::move(src.get_deleter())),
 						k_ptr(src.k_ptr)
 				{
 					src.k_ptr = nullptr;
 				}
 
-#			endif
+#		endif
 
 				KERBAL_CONSTEXPR20
 				~unique_ptr()
@@ -404,15 +585,26 @@ namespace kerbal
 					}
 				}
 
-#			if __cplusplus >= 201103L
+#		if __cplusplus >= 201103L
+
+#			if KERBAL_HAS_EXCEPTIONS_SUPPORT
+
+				struct try_test_is_nothrow_move_assignable :
+					kerbal::type_traits::tribool_conjunction<
+						is_nothrow_reset,
+						kerbal::type_traits::try_test_is_nothrow_move_assignable<deleter_type>
+					>::result
+				{
+				};
+
+#			endif
 
 				KERBAL_CONSTEXPR20
 				unique_ptr & operator=(unique_ptr && src)
 						KERBAL_CONDITIONAL_NOEXCEPT(
-							noexcept(
-								kerbal::utility::declthis<unique_ptr>()->reset()
-							) &&
-							kerbal::type_traits::is_nothrow_move_assignable<deleter_type>::value
+							kerbal::type_traits::tribool_is_true<
+								try_test_is_nothrow_move_assignable
+							>::value
 						)
 				{
 					this->reset();
@@ -424,38 +616,30 @@ namespace kerbal
 
 				KERBAL_CONSTEXPR20
 				unique_ptr & operator=(std::nullptr_t)
-						KERBAL_CONDITIONAL_NOEXCEPT(
-							noexcept(
-								kerbal::utility::declthis<unique_ptr>()->reset()
-							)
-						)
+						KERBAL_CONDITIONAL_NOEXCEPT((
+							is_nothrow_reset::value
+						))
 				{
 					this->reset();
 					return *this;
 				}
 
-#			endif
+#		endif
 
 				KERBAL_CONSTEXPR20
 				void reset()
-						KERBAL_CONDITIONAL_NOEXCEPT(
-							noexcept(
-								kerbal::utility::declthis<unique_ptr>()->reset(NULL)
-							)
-						)
+						KERBAL_CONDITIONAL_NOEXCEPT((
+							is_nothrow_reset::value
+						))
 				{
 					this->reset(NULL);
 				}
 
 				KERBAL_CONSTEXPR20
 				void reset(pointer p)
-						KERBAL_CONDITIONAL_NOEXCEPT(
-							noexcept(
-								kerbal::utility::declval<deleter_type &>()(
-									kerbal::utility::declval<pointer>()
-								)
-							)
-						)
+						KERBAL_CONDITIONAL_NOEXCEPT((
+							is_nothrow_reset::value
+						))
 				{
 					if (this->k_ptr != NULL) {
 						this->get_deleter()(this->k_ptr);
