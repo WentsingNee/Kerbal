@@ -111,7 +111,8 @@ namespace kerbal
 #	if KERBAL_HAS_EXCEPTIONS_SUPPORT
 
 			typedef ForwardIterator iterator;
-			typedef typename kerbal::iterator::iterator_traits<iterator>::value_type value_type;
+			typedef typename kerbal::iterator::iterator_traits<iterator>::value_type raw_storage;
+			typedef typename raw_storage::value_type value_type;
 
 			typedef typename kerbal::type_traits::conditional<
 					kerbal::type_traits::tribool_is_true<
@@ -221,7 +222,8 @@ namespace kerbal
 #	if KERBAL_HAS_EXCEPTIONS_SUPPORT
 
 			typedef ForwardIterator iterator;
-			typedef typename kerbal::iterator::iterator_traits<iterator>::value_type value_type;
+			typedef typename kerbal::iterator::iterator_traits<iterator>::value_type raw_storage;
+			typedef typename raw_storage::value_type value_type;
 
 			typedef typename kerbal::type_traits::conditional<
 					kerbal::type_traits::tribool_is_true<
@@ -331,7 +333,8 @@ namespace kerbal
 #	if KERBAL_HAS_EXCEPTIONS_SUPPORT
 
 			typedef ForwardIterator iterator;
-			typedef typename kerbal::iterator::iterator_traits<iterator>::value_type value_type;
+			typedef typename kerbal::iterator::iterator_traits<iterator>::value_type raw_storage;
+			typedef typename raw_storage::value_type value_type;
 
 			typedef typename kerbal::type_traits::conditional<
 					kerbal::type_traits::tribool_is_true<
@@ -444,7 +447,8 @@ namespace kerbal
 #	if KERBAL_HAS_EXCEPTIONS_SUPPORT
 
 			typedef ForwardIterator iterator;
-			typedef typename kerbal::iterator::iterator_traits<iterator>::value_type value_type;
+			typedef typename kerbal::iterator::iterator_traits<iterator>::value_type raw_storage;
+			typedef typename raw_storage::value_type value_type;
 
 			typedef typename kerbal::type_traits::conditional<
 					kerbal::type_traits::tribool_is_true<
@@ -554,7 +558,8 @@ namespace kerbal
 #	if KERBAL_HAS_EXCEPTIONS_SUPPORT
 
 			typedef ForwardIterator iterator;
-			typedef typename kerbal::iterator::iterator_traits<iterator>::value_type value_type;
+			typedef typename kerbal::iterator::iterator_traits<iterator>::value_type raw_storage;
+			typedef typename raw_storage::value_type value_type;
 
 			typedef typename kerbal::type_traits::conditional<
 					kerbal::type_traits::tribool_is_true<
@@ -667,7 +672,8 @@ namespace kerbal
 #	if KERBAL_HAS_EXCEPTIONS_SUPPORT
 
 			typedef ForwardIterator iterator;
-			typedef typename kerbal::iterator::iterator_traits<iterator>::value_type value_type;
+			typedef typename kerbal::iterator::iterator_traits<iterator>::value_type raw_storage;
+			typedef typename raw_storage::value_type value_type;
 
 			typedef typename kerbal::type_traits::conditional<
 					kerbal::type_traits::tribool_is_true<
@@ -771,7 +777,8 @@ namespace kerbal
 #	if KERBAL_HAS_EXCEPTIONS_SUPPORT
 
 			typedef ForwardIterator iterator;
-			typedef typename kerbal::iterator::iterator_traits<iterator>::value_type value_type;
+			typedef typename kerbal::iterator::iterator_traits<iterator>::value_type raw_storage;
+			typedef typename raw_storage::value_type value_type;
 
 			typedef typename kerbal::type_traits::conditional<
 					kerbal::type_traits::tribool_is_true<
@@ -881,7 +888,8 @@ namespace kerbal
 #	if KERBAL_HAS_EXCEPTIONS_SUPPORT
 
 			typedef ForwardIterator iterator;
-			typedef typename kerbal::iterator::iterator_traits<iterator>::value_type value_type;
+			typedef typename kerbal::iterator::iterator_traits<iterator>::value_type raw_storage;
+			typedef typename raw_storage::value_type value_type;
 
 			typedef typename kerbal::type_traits::conditional<
 					kerbal::type_traits::tribool_is_true<
