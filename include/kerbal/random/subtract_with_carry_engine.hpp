@@ -31,6 +31,9 @@
 #include <cstddef>
 
 
+#define WAY 1
+
+
 namespace kerbal
 {
 
@@ -109,63 +112,7 @@ namespace kerbal
 					this->seed(seed);
 				}
 
-				KERBAL_CONSTEXPR14
-				result_type operator()() KERBAL_NOEXCEPT
-				{
-					if (this->k_index == LONG_LAG::value) {
-						this->twist();
-						this->k_index = 0;
-					}
-					result_type r = this->k_state[this->k_index++];
-					return r;
-				}
-
-				KERBAL_CONSTEXPR14
-				void twist() KERBAL_NOEXCEPT
-				{
-					std::size_t i = 0;
-					for (; i < S; ++i) {
-						result_type x_s = k_state[i + R - S]; // k_state[(i - S) % R]
-						result_type x_r = k_state[i];
-						result_type y = x_s - x_r - k_carry;
-						result_type r = y % m::value;
-						k_state[i] = r;
-						k_carry = x_s < (x_r + k_carry);
-					}
-					for (; i < LONG_LAG::value; ++i) {
-						result_type x_s = k_state[i - S]; // k_state[(i - S) % R]
-						result_type x_r = k_state[i];
-						result_type y = x_s - x_r - k_carry;
-						result_type r = y % m::value;
-						k_state[i] = r;
-						k_carry = x_s < (x_r + k_carry);
-					}
-				}
-
-				KERBAL_CONSTEXPR14
-				result_type next() KERBAL_NOEXCEPT
-				{
-					result_type x_s = k_state[k_index >= S ? k_index - S : k_index + R - S]; // k_state[(k_index - S) % R]
-					result_type x_r = k_state[k_index];
-					result_type y = x_s - x_r - k_carry;
-					result_type r = y % m::value;
-					k_state[k_index] = r;
-					++k_index;
-					if (k_index == LONG_LAG::value) {
-						k_index = 0;
-					}
-					k_carry = x_s < (x_r + k_carry);
-					return r;
-				}
-
-				KERBAL_CONSTEXPR14
-				void discard(unsigned long long n) KERBAL_NOEXCEPT
-				{
-					while (n != 0) {
-						--n;
-						(*this)();
-					}
-				}
+			private:
 
 				typedef kerbal::random::linear_congruential_engine<result_type, 40014u, 0u, 2147483563u> LCG;
 
@@ -212,7 +159,76 @@ namespace kerbal
 					}
 					k_carry = (k_state[LONG_LAG::value - 1] == 0) ? 1 : 0;
 					k_index = 0;
+#	if WAY == 1
 					this->twist();
+#	endif
+				}
+
+				KERBAL_CONSTEXPR14
+				void twist() KERBAL_NOEXCEPT
+				{
+					std::size_t i = 0;
+					for (; i < S; ++i) {
+						result_type x_s = k_state[i + R - S]; // k_state[(i - S) % R]
+						result_type x_r = k_state[i];
+						result_type y = x_s - x_r - k_carry;
+						result_type r = y % m::value;
+						k_state[i] = r;
+						k_carry = x_s < (x_r + k_carry);
+					}
+					for (; i < LONG_LAG::value; ++i) {
+						result_type x_s = k_state[i - S]; // k_state[(i - S) % R]
+						result_type x_r = k_state[i];
+						result_type y = x_s - x_r - k_carry;
+						result_type r = y % m::value;
+						k_state[i] = r;
+						k_carry = x_s < (x_r + k_carry);
+					}
+				}
+
+
+#	if WAY == 0
+
+			public:
+				KERBAL_CONSTEXPR14
+				result_type operator()() KERBAL_NOEXCEPT
+				{
+					result_type x_s = k_state[k_index >= S ? k_index - S : k_index + R - S]; // k_state[(k_index - S) % R]
+					result_type x_r = k_state[k_index];
+					result_type y = x_s - x_r - k_carry;
+					result_type r = y % m::value;
+					k_state[k_index] = r;
+					++k_index;
+					if (k_index == LONG_LAG::value) {
+						k_index = 0;
+					}
+					k_carry = x_s < (x_r + k_carry);
+					return r;
+				}
+
+#	else
+
+			public:
+				KERBAL_CONSTEXPR14
+				result_type operator()() KERBAL_NOEXCEPT
+				{
+					if (this->k_index == LONG_LAG::value) {
+						this->twist();
+						this->k_index = 0;
+					}
+					result_type r = this->k_state[this->k_index++];
+					return r;
+				}
+
+#	endif
+
+				KERBAL_CONSTEXPR14
+				void discard(unsigned long long n) KERBAL_NOEXCEPT
+				{
+					while (n != 0) {
+						--n;
+						(*this)();
+					}
 				}
 
 				template <typename OutputIterator>
