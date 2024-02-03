@@ -110,12 +110,6 @@ namespace kerbal
 					}
 
 					KERBAL_CONSTEXPR14
-					static bool is_black(const bst_node_base * p) KERBAL_NOEXCEPT
-					{
-						return is_black(as_rb_node_base(p));
-					}
-
-					KERBAL_CONSTEXPR14
 					static bool is_black(const rb_node_base * p) KERBAL_NOEXCEPT
 					{
 #	if KERBAL_AVL_ENABLE_VNULL
