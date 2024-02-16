@@ -49,32 +49,12 @@ namespace kerbal
 				typedef RandomAccessIterator iterator;
 				typedef typename kerbal::iterator::iterator_traits<iterator>::difference_type difference_type;
 
-#		define EACH() do { \
-					--last; \
-					kerbal::algorithm::iter_swap(first, last); \
-					++first; \
-				} while (false)
-
-				difference_type trip_count(kerbal::iterator::distance(first, last) >> 1);
-				difference_type remain(trip_count & 3);
-				for (trip_count >>= 2; trip_count > 0; --trip_count) {
-					EACH();
-					EACH();
-					EACH();
-					EACH();
+				difference_type dist(kerbal::iterator::distance(first, last) >> 1);
+				for (difference_type i = 0; i < dist; ++i) {
+					--last;
+					kerbal::algorithm::iter_swap(first, last);
+					++first;
 				}
-
-				if (remain >= 2) {
-					EACH();
-					EACH();
-					remain -= 2;
-				}
-				if (remain >= 1) {
-					EACH();
-				}
-
-#		undef EACH
-
 			}
 
 		} // namespace detail
