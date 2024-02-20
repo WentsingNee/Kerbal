@@ -13,7 +13,6 @@
 #define KERBAL_CONTAINER_DETAIL_VECTOR_BASE_VECTOR_BASE_IMPL_HPP
 
 #include <kerbal/algorithm/modifier/copy.hpp>
-#include <kerbal/algorithm/modifier/copy_n.hpp>
 #include <kerbal/algorithm/modifier/fill.hpp>
 #include <kerbal/algorithm/modifier/move.hpp>
 #include <kerbal/algorithm/modifier/move_backward.hpp>
@@ -46,6 +45,7 @@
 
 #include <stdexcept>
 
+#include <kerbal/algorithm/modifier/detail/copy_n/basic_copy_n.hpp>
 #include <kerbal/container/detail/vector_base/vector_base.decl.hpp>
 
 
@@ -432,8 +432,8 @@ namespace kerbal
 					 * b b b b b b x x
 					 */
 					if (new_size <= this->k_capacity) {
-						kerbal::utility::compressed_pair<ForwardIterator, pointer> copy_n_r(kerbal::algorithm::copy_n(first, ori_size, this->k_buffer));
-						kerbal::memory::uninitialized_copy_using_allocator(alloc, copy_n_r.first(), last, copy_n_r.second());
+						kerbal::algorithm::detail::basic_copy_n_ret<ForwardIterator, pointer> copy_n_r(kerbal::algorithm::detail::basic_copy_n(first, ori_size, this->k_buffer));
+						kerbal::memory::uninitialized_copy_using_allocator(alloc, copy_n_r.first, last, copy_n_r.second);
 						this->k_size = new_size;
 					} else { // new_size > this->capacity
 						size_type new_capacity = new_size;
@@ -1501,10 +1501,10 @@ namespace kerbal
 #		if KERBAL_HAS_EXCEPTIONS_SUPPORT
 						try {
 #		endif
-							kerbal::utility::compressed_pair<pointer, pointer> copy_n_r(kerbal::algorithm::copy_n(vt.begin().current, ori_size - insert_pos_index, insert_pos));
-							ui_move_if_noexcept_ow_copy_phase1(alloc, copy_n_r.first(), vt.end().current, copy_n_r.second());
+							kerbal::algorithm::detail::basic_copy_n_ret<pointer, pointer> copy_n_r(kerbal::algorithm::detail::basic_copy_n(vt.begin().current, ori_size - insert_pos_index, insert_pos));
+							ui_move_if_noexcept_ow_copy_phase1(alloc, copy_n_r.first, vt.end().current, copy_n_r.second);
 							this->k_size = new_size;
-							ui_move_if_noexcept_ow_copy_phase2(alloc, copy_n_r.first(), vt.end().current);
+							ui_move_if_noexcept_ow_copy_phase2(alloc, copy_n_r.first, vt.end().current);
 							vt.k_size = ori_size - insert_pos_index;
 #		if KERBAL_HAS_EXCEPTIONS_SUPPORT
 						} catch (...) {
@@ -1595,8 +1595,8 @@ namespace kerbal
 #		if KERBAL_HAS_EXCEPTIONS_SUPPORT
 						try {
 #		endif
-							kerbal::utility::compressed_pair<ForwardIterator, pointer> copy_n_r(kerbal::algorithm::copy_n(first, ori_size - insert_pos_index, insert_pos));
-							kerbal::memory::uninitialized_copy_using_allocator(alloc, copy_n_r.first(), last, copy_n_r.second());
+							kerbal::algorithm::detail::basic_copy_n_ret<ForwardIterator, pointer> copy_n_r(kerbal::algorithm::detail::basic_copy_n(first, ori_size - insert_pos_index, insert_pos));
+							kerbal::memory::uninitialized_copy_using_allocator(alloc, copy_n_r.first, last, copy_n_r.second);
 #		if KERBAL_HAS_EXCEPTIONS_SUPPORT
 						} catch (...) {
 							kerbal::memory::reverse_destroy_using_allocator(alloc, insert_pos + n, this->nth(new_size).current);
