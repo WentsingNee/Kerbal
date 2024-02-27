@@ -12,6 +12,7 @@
 #ifndef KERBAL_CONTAINER_DETAIL_FLAT_SET_BASE_HPP
 #define KERBAL_CONTAINER_DETAIL_FLAT_SET_BASE_HPP
 
+#include <kerbal/assign/ilist.hpp>
 #include <kerbal/compatibility/constexpr.hpp>
 #include <kerbal/compatibility/move.hpp>
 #include <kerbal/container/associative_container_facility/associative_unique_insert_r.hpp>
@@ -120,6 +121,32 @@ namespace kerbal
 					{
 					}
 
+#			else
+
+					flat_set_base(const kerbal::assign::assign_list<void> & ilist) :
+						super()
+					{
+					}
+
+					flat_set_base(const kerbal::assign::assign_list<void> & ilist, key_compare kc) :
+						super(kc)
+					{
+					}
+
+					template <typename U>
+					flat_set_base(const kerbal::assign::assign_list<U> & ilist) :
+						super()
+					{
+						this->assign(ilist.cbegin(), ilist.cend());
+					}
+
+					template <typename U>
+					flat_set_base(const kerbal::assign::assign_list<U> & ilist, key_compare kc) :
+						super(kc)
+					{
+						this->assign(ilist.cbegin(), ilist.cend());
+					}
+
 #			endif
 
 				public:
@@ -171,6 +198,31 @@ namespace kerbal
 					void assign(std::initializer_list<value_type> ilist, key_compare kc)
 					{
 						this->assign(ilist.begin(), ilist.end(), kc);
+					}
+
+#			else
+
+					void assign(const kerbal::assign::assign_list<void> & ilist)
+					{
+						this->clear();
+					}
+
+					void assign(const kerbal::assign::assign_list<void> & ilist, key_compare kc)
+					{
+						this->clear();
+						this->key_comp() = kc;
+					}
+
+					template <typename U>
+					void assign(const kerbal::assign::assign_list<U> & ilist)
+					{
+						this->assign(ilist.cbegin(), ilist.cend());
+					}
+
+					template <typename U>
+					void assign(const kerbal::assign::assign_list<U> & ilist, key_compare kc)
+					{
+						this->assign(ilist.cbegin(), ilist.cend(), kc);
 					}
 
 #			endif
