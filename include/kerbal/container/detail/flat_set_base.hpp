@@ -14,13 +14,12 @@
 
 #include <kerbal/compatibility/constexpr.hpp>
 #include <kerbal/compatibility/move.hpp>
+#include <kerbal/container/associative_container_facility/associative_unique_insert_r.hpp>
 #include <kerbal/iterator/iterator.hpp>
 #include <kerbal/iterator/iterator_traits.hpp>
 #include <kerbal/type_traits/enable_if.hpp>
 
 #include <kerbal/container/detail/flat_set_common_base.hpp>
-
-#include <utility> // std::pair
 
 #if __cplusplus >= 201103L
 #	include <initializer_list>
@@ -62,6 +61,7 @@ namespace kerbal
 
 					typedef typename super::const_iterator				const_iterator;
 					typedef typename super::const_reverse_iterator		const_reverse_iterator;
+					typedef kerbal::container::associative_unique_insert_r<const_iterator> unique_insert_r;
 
 				protected:
 					KERBAL_CONSTEXPR
@@ -170,29 +170,29 @@ namespace kerbal
 #			endif
 
 					KERBAL_CONSTEXPR14
-					std::pair<const_iterator, bool> insert(const_reference src)
+					unique_insert_r insert(const_reference src)
 					{
-						return this->ordered.try_insert(src);
+						return this->ordered.unique_insert(src);
 					}
 
 					KERBAL_CONSTEXPR14
-					std::pair<const_iterator, bool> insert(const_iterator hint, const_reference src)
+					unique_insert_r insert(const_iterator hint, const_reference src)
 					{
-						return this->ordered.try_insert(hint, src);
+						return this->ordered.unique_insert(hint, src);
 					}
 
 #			if __cplusplus >= 201103L
 
 					KERBAL_CONSTEXPR14
-					std::pair<const_iterator, bool> insert(rvalue_reference src)
+					unique_insert_r insert(rvalue_reference src)
 					{
-						return this->ordered.try_insert(kerbal::compatibility::move(src));
+						return this->ordered.unique_insert(kerbal::compatibility::move(src));
 					}
 
 					KERBAL_CONSTEXPR14
-					std::pair<const_iterator, bool> insert(const_iterator hint, rvalue_reference src)
+					unique_insert_r insert(const_iterator hint, rvalue_reference src)
 					{
-						return this->ordered.try_insert(hint, kerbal::compatibility::move(src));
+						return this->ordered.unique_insert(hint, kerbal::compatibility::move(src));
 					}
 
 #			endif
@@ -201,7 +201,7 @@ namespace kerbal
 					KERBAL_CONSTEXPR14
 					void insert(InputIterator first, InputIterator last)
 					{
-						this->ordered.try_insert(first, last);
+						this->ordered.unique_insert(first, last);
 					}
 
 					KERBAL_CONSTEXPR14

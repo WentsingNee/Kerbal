@@ -22,6 +22,7 @@
 #include <kerbal/compatibility/constexpr.hpp>
 #include <kerbal/compatibility/move.hpp>
 #include <kerbal/compatibility/noexcept.hpp>
+#include <kerbal/container/associative_container_facility/associative_unique_insert_r.hpp>
 #include <kerbal/iterator/iterator.hpp>
 #include <kerbal/iterator/iterator_traits.hpp>
 #include <kerbal/type_traits/enable_if.hpp>
@@ -124,6 +125,7 @@ namespace kerbal
 					typedef typename Sequence::const_iterator			const_iterator;
 					typedef typename Sequence::reverse_iterator			reverse_iterator;
 					typedef typename Sequence::const_reverse_iterator	const_reverse_iterator;
+					typedef kerbal::container::associative_unique_insert_r<iterator> unique_insert_r;
 
 				protected:
 					Sequence sequence;
@@ -690,8 +692,8 @@ namespace kerbal
 
 				protected:
 					KERBAL_CONSTEXPR14
-					std::pair<iterator, bool>
-					k_try_insert_impl(iterator ub, const_reference src)
+					unique_insert_r
+					k_unique_insert_impl(iterator ub, const_reference src)
 					{
 						Extract extract;
 						bool inserted = false;
@@ -701,28 +703,30 @@ namespace kerbal
 							ub = sequence.insert(ub, src);
 							inserted = true;
 						}
-						return std::make_pair(ub, inserted);
+						return unique_insert_r(ub, inserted);
 					}
 
 				public:
 					KERBAL_CONSTEXPR14
-					std::pair<iterator, bool> try_insert(const_reference src)
+					unique_insert_r
+					unique_insert(const_reference src)
 					{
-						return this->k_try_insert_impl(this->upper_bound(Extract()(src)), src);
+						return this->k_unique_insert_impl(this->upper_bound(Extract()(src)), src);
 					}
 
 					KERBAL_CONSTEXPR14
-					std::pair<iterator, bool> try_insert(const_iterator hint, const_reference src)
+					unique_insert_r
+					unique_insert(const_iterator hint, const_reference src)
 					{
-						return this->k_try_insert_impl(this->upper_bound(Extract()(src), hint), src);
+						return this->k_unique_insert_impl(this->upper_bound(Extract()(src), hint), src);
 					}
 
 #			if __cplusplus >= 201103L
 
 				protected:
 					KERBAL_CONSTEXPR14
-					std::pair<iterator, bool>
-					k_try_insert_impl(iterator ub, rvalue_reference src)
+					unique_insert_r
+					k_unique_insert_impl(iterator ub, rvalue_reference src)
 					{
 						Extract extract;
 						bool inserted = false;
@@ -732,20 +736,22 @@ namespace kerbal
 							ub = sequence.insert(ub, kerbal::compatibility::move(src));
 							inserted = true;
 						}
-						return std::make_pair(ub, inserted);
+						return unique_insert_r(ub, inserted);
 					}
 
 				public:
 					KERBAL_CONSTEXPR14
-					std::pair<iterator, bool> try_insert(rvalue_reference src)
+					unique_insert_r
+					unique_insert(rvalue_reference src)
 					{
-						return this->k_try_insert_impl(this->upper_bound(Extract()(src)), kerbal::compatibility::move(src));
+						return this->k_unique_insert_impl(this->upper_bound(Extract()(src)), kerbal::compatibility::move(src));
 					}
 
 					KERBAL_CONSTEXPR14
-					std::pair<iterator, bool> try_insert(const_iterator hint, rvalue_reference src)
+					unique_insert_r
+					unique_insert(const_iterator hint, rvalue_reference src)
 					{
-						return this->k_try_insert_impl(this->upper_bound(Extract()(src), hint), kerbal::compatibility::move(src));
+						return this->k_unique_insert_impl(this->upper_bound(Extract()(src), hint), kerbal::compatibility::move(src));
 					}
 
 #			endif
@@ -777,7 +783,7 @@ namespace kerbal
 							kerbal::iterator::is_input_compatible_iterator<InputIterator>::value,
 							InputIterator
 					>::type
-					try_insert(InputIterator first, InputIterator last)
+					unique_insert(InputIterator first, InputIterator last)
 					{
 						while (first != last && this->size() != this->max_size()) {
 							sequence.push_back(*first);
@@ -790,7 +796,7 @@ namespace kerbal
 						sequence.erase(unique_last, sequence.end());
 
 						while (first != last && this->size() != this->max_size()) {
-							this->try_insert(*first);
+							this->unique_insert(*first);
 							++first;
 						}
 						return first;
