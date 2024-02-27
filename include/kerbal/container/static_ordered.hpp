@@ -15,6 +15,7 @@
 #include <kerbal/algorithm/swap.hpp>
 #include <kerbal/compare/basic_compare.hpp>
 #include <kerbal/compatibility/namespace_std_scope.hpp>
+#include <kerbal/container/associative_container_facility/key_extractors/identity_extractor.hpp>
 #include <kerbal/container/static_vector.hpp>
 
 #include <kerbal/container/detail/flat_ordered_base.hpp>
@@ -37,7 +38,7 @@ namespace kerbal
 			std::size_t N,
 			typename Key = Entity,
 			typename KeyCompare = kerbal::compare::less<Key>,
-			typename Extract = default_extract<Key, Entity>
+			typename Extract = kerbal::container::identity_extractor<Entity>
 		>
 		class static_ordered:
 				public kerbal::container::detail::flat_ordered_base<

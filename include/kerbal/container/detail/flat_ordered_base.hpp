@@ -47,43 +47,6 @@ namespace kerbal
 	namespace container
 	{
 
-		template <typename Key, typename Entity>
-		struct default_extract;
-
-		template <typename Key, typename Value>
-		struct default_extract<Key, std::pair<Key, Value> >
-		{
-				typedef std::pair<Key, Value> Pair;
-
-				KERBAL_CONSTEXPR
-				Key& operator()(Pair & p) const KERBAL_NOEXCEPT
-				{
-					return p.first;
-				}
-
-				KERBAL_CONSTEXPR
-				const Key& operator()(const Pair & p) const KERBAL_NOEXCEPT
-				{
-					return p.first;
-				}
-		};
-
-		template <typename Key>
-		struct default_extract<Key, Key>
-		{
-				KERBAL_CONSTEXPR
-				Key& operator()(Key & key) const KERBAL_NOEXCEPT
-				{
-					return key;
-				}
-
-				KERBAL_CONSTEXPR
-				const Key& operator()(const Key & key) const KERBAL_NOEXCEPT
-				{
-					return key;
-				}
-		};
-
 		namespace detail
 		{
 

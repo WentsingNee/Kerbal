@@ -15,6 +15,7 @@
 
 #include <kerbal/compare/basic_compare.hpp>
 #include <kerbal/compatibility/namespace_std_scope.hpp>
+#include <kerbal/container/associative_container_facility/key_extractors/identity_extractor.hpp>
 #include <kerbal/container/flat_ordered.hpp>
 
 #include <kerbal/container/detail/flat_multiset_base.hpp>
@@ -36,11 +37,11 @@ namespace kerbal
 		class flat_multiset :
 				public kerbal::container::detail::flat_multiset_base<
 					Tp,
-					kerbal::container::flat_ordered<Tp, Tp, KeyCompare, default_extract<Tp, Tp>, Allocator>
+					kerbal::container::flat_ordered<Tp, Tp, KeyCompare, kerbal::container::identity_extractor<Tp, Tp>, Allocator>
 				>
 		{
 			private:
-				typedef kerbal::container::flat_ordered<Tp, Tp, KeyCompare, default_extract<Tp, Tp>, Allocator> Ordered;
+				typedef kerbal::container::flat_ordered<Tp, Tp, KeyCompare, kerbal::container::identity_extractor<Tp, Tp>, Allocator> Ordered;
 				typedef kerbal::container::detail::flat_multiset_base<Tp, Ordered> super;
 
 			public:
