@@ -118,6 +118,32 @@ namespace kerbal
 					{
 					}
 
+#			else
+
+					flat_multiset_base(const kerbal::assign::assign_list<void> & ilist) :
+						super()
+					{
+					}
+
+					flat_multiset_base(const kerbal::assign::assign_list<void> & ilist, key_compare kc) :
+						super(kc)
+					{
+					}
+
+					template <typename U>
+					flat_multiset_base(const kerbal::assign::assign_list<U> & ilist) :
+						super()
+					{
+						this->assign(ilist.cbegin(), this->cend());
+					}
+
+					template <typename U>
+					flat_multiset_base(const kerbal::assign::assign_list<U> & ilist, key_compare kc) :
+						super(kc)
+					{
+						this->assign(ilist.cbegin(), this->cend());
+					}
+
 #			endif
 
 				public:

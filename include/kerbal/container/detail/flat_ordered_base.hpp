@@ -19,6 +19,7 @@
 #include <kerbal/algorithm/binary_search/upper_bound_hint.hpp>
 #include <kerbal/algorithm/modifier/unique.hpp>
 #include <kerbal/algorithm/sort.hpp>
+#include <kerbal/assign/ilist.hpp>
 #include <kerbal/compatibility/constexpr.hpp>
 #include <kerbal/compatibility/move.hpp>
 #include <kerbal/compatibility/noexcept.hpp>
@@ -395,6 +396,32 @@ namespace kerbal
 					{
 					}
 
+#			else
+
+					flat_ordered_base(const kerbal::assign::assign_list<void> & ilist) :
+						key_compare_overload(), sequence()
+					{
+					}
+
+					flat_ordered_base(const kerbal::assign::assign_list<void> & ilist, key_compare kc) :
+						key_compare_overload(kc), sequence()
+					{
+					}
+
+					template <typename U>
+					flat_ordered_base(const kerbal::assign::assign_list<U> & ilist) :
+						key_compare_overload(), sequence(ilist.cbegin(), ilist.cend())
+					{
+						this->k_sort();
+					}
+
+					template <typename U>
+					flat_ordered_base(const kerbal::assign::assign_list<U> & ilist, key_compare kc) :
+						key_compare_overload(kc), sequence(ilist.cbegin(), ilist.cend())
+					{
+						this->k_sort();
+					}
+
 #			endif
 
 				public:
@@ -432,6 +459,31 @@ namespace kerbal
 					void assign(std::initializer_list<value_type> ilist, key_compare kc)
 					{
 						this->assign(ilist.begin(), ilist.end(), kc);
+					}
+
+#			else
+
+					void assign(const kerbal::assign::assign_list<void> & ilist)
+					{
+						this->clear();
+					}
+
+					void assign(const kerbal::assign::assign_list<void> & ilist, key_compare kc)
+					{
+						this->clear();
+						this->key_comp_obj() = kc;
+					}
+
+					template <typename U>
+					void assign(const kerbal::assign::assign_list<U> & ilist)
+					{
+						this->assign(ilist.cbegin(), ilist.cend());
+					}
+
+					template <typename U>
+					void assign(const kerbal::assign::assign_list<U> & ilist, key_compare kc)
+					{
+						this->assign(ilist.cbegin(), ilist.cend(), kc);
 					}
 
 #			endif
