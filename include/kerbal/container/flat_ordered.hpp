@@ -17,6 +17,7 @@
 #include <kerbal/algorithm/swap.hpp>
 #include <kerbal/compare/basic_compare.hpp>
 #include <kerbal/compatibility/namespace_std_scope.hpp>
+#include <kerbal/container/associative_container_facility/key_extractors/identity_extractor.hpp>
 #include <kerbal/container/vector.hpp>
 
 #include <memory>
@@ -35,7 +36,7 @@ namespace kerbal
 	{
 
 		template <typename Entity, typename Key = Entity, typename KeyCompare = kerbal::compare::less<Key>,
-				typename Extract = default_extract<Key, Entity>, typename Allocator = std::allocator<Entity> >
+				typename Extract = kerbal::container::identity_extractor<Entity>, typename Allocator = std::allocator<Entity> >
 		class flat_ordered:
 				public kerbal::container::detail::flat_ordered_base<
 						Entity, Key, KeyCompare, Extract, kerbal::container::vector<Entity, Allocator>
