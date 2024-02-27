@@ -12,6 +12,7 @@
 #ifndef KERBAL_CONTAINER_FLAT_SET_HPP
 #define KERBAL_CONTAINER_FLAT_SET_HPP
 
+#include <kerbal/assign/assign_list.hpp>
 #include <kerbal/compare/basic_compare.hpp>
 #include <kerbal/compatibility/namespace_std_scope.hpp>
 #include <kerbal/container/associative_container_facility/key_extractors/identity_extractor.hpp>
@@ -111,6 +112,20 @@ namespace kerbal
 				{
 				}
 
+#		else
+
+				template <typename U>
+				flat_set(const kerbal::assign::assign_list<U> & ilist) :
+						super(ilist)
+				{
+				}
+
+				template <typename U>
+				flat_set(const kerbal::assign::assign_list<U> & ilist, key_compare kc) :
+						super(ilist, kc)
+				{
+				}
+
 #		endif
 
 				void assign(const flat_set & src)
@@ -127,6 +142,15 @@ namespace kerbal
 #		if __cplusplus >= 201103L
 
 				flat_set& operator=(std::initializer_list<value_type> ilist)
+				{
+					this->super::assign(ilist);
+					return *this;
+				}
+
+#		else
+
+				template <typename U>
+				flat_set& operator=(const kerbal::assign::assign_list<U> & ilist)
 				{
 					this->super::assign(ilist);
 					return *this;
