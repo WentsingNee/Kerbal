@@ -13,6 +13,7 @@
 #ifndef KERBAL_CONTAINER_DETAIL_FLAT_MULTISET_BASE_HPP
 #define KERBAL_CONTAINER_DETAIL_FLAT_MULTISET_BASE_HPP
 
+#include <kerbal/assign/ilist.hpp>
 #include <kerbal/compatibility/constexpr.hpp>
 #include <kerbal/compatibility/move.hpp>
 #include <kerbal/iterator/iterator.hpp>
@@ -116,6 +117,32 @@ namespace kerbal
 					flat_multiset_base(std::initializer_list<value_type> ilist, key_compare kc) :
 						flat_multiset_base(ilist.begin(), ilist.end(), kc)
 					{
+					}
+
+#			else
+
+					flat_multiset_base(const kerbal::assign::assign_list<void> & ilist) :
+						super()
+					{
+					}
+
+					flat_multiset_base(const kerbal::assign::assign_list<void> & ilist, key_compare kc) :
+						super(kc)
+					{
+					}
+
+					template <typename U>
+					flat_multiset_base(const kerbal::assign::assign_list<U> & ilist) :
+						super()
+					{
+						this->assign(ilist.cbegin(), this->cend());
+					}
+
+					template <typename U>
+					flat_multiset_base(const kerbal::assign::assign_list<U> & ilist, key_compare kc) :
+						super(kc)
+					{
+						this->assign(ilist.cbegin(), this->cend());
 					}
 
 #			endif
