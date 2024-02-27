@@ -15,8 +15,9 @@
 #include <kerbal/algorithm/swap.hpp>
 #include <kerbal/compare/basic_compare.hpp>
 #include <kerbal/compatibility/namespace_std_scope.hpp>
-#include <kerbal/container/detail/flat_ordered_base.hpp>
 #include <kerbal/container/static_vector.hpp>
+
+#include <kerbal/container/detail/flat_ordered_base.hpp>
 
 #if __cplusplus >= 201103L
 #	include <initializer_list>
