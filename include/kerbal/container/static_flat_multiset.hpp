@@ -35,11 +35,11 @@ namespace kerbal
 		class static_flat_multiset :
 				public kerbal::container::detail::flat_multiset_base<
 					Tp,
-					kerbal::container::static_ordered<Tp, N, Tp, KeyCompare>
+					kerbal::container::static_ordered<Tp, N, kerbal::container::identity_extractor<Tp>, KeyCompare>
 				>
 		{
 			private:
-				typedef kerbal::container::static_ordered<Tp, N, Tp, KeyCompare> Ordered;
+				typedef kerbal::container::static_ordered<Tp, N, kerbal::container::identity_extractor<Tp>, KeyCompare> Ordered;
 				typedef kerbal::container::detail::flat_multiset_base<Tp, Ordered> super;
 
 			public:

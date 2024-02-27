@@ -96,7 +96,7 @@ namespace kerbal
 			};
 
 
-			template <typename Entity, typename Key, typename KeyCompare, typename Extract, typename Sequence>
+			template <typename Entity, typename Extract, typename KeyCompare, typename Sequence>
 			class flat_ordered_base:
 					private flat_ordered_key_compare_overload<KeyCompare>
 			{
@@ -104,8 +104,6 @@ namespace kerbal
 					typedef flat_ordered_key_compare_overload<KeyCompare> key_compare_overload;
 
 				public:
-					typedef KeyCompare				key_compare;
-					typedef Key						key_type;
 					typedef Entity					value_type;
 					typedef const value_type		const_type;
 					typedef value_type&				reference;
@@ -126,6 +124,9 @@ namespace kerbal
 					typedef typename Sequence::reverse_iterator			reverse_iterator;
 					typedef typename Sequence::const_reverse_iterator	const_reverse_iterator;
 					typedef kerbal::container::associative_unique_insert_r<iterator> unique_insert_r;
+
+					typedef typename Extract::key_type					key_type;
+					typedef KeyCompare									key_compare;
 
 				protected:
 					Sequence sequence;

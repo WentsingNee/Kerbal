@@ -36,13 +36,12 @@ namespace kerbal
 		template <
 			typename Entity,
 			std::size_t N,
-			typename Key = Entity,
-			typename KeyCompare = kerbal::compare::less<Key>,
-			typename Extract = kerbal::container::identity_extractor<Entity>
+			typename Extract = kerbal::container::identity_extractor<Entity>,
+			typename KeyCompare = kerbal::compare::less<>
 		>
 		class static_ordered:
 				public kerbal::container::detail::flat_ordered_base<
-						Entity, Key, KeyCompare, Extract, kerbal::container::static_vector<Entity, N>
+						Entity, Extract, KeyCompare, kerbal::container::static_vector<Entity, N>
 				>
 		{
 			public:
@@ -50,7 +49,7 @@ namespace kerbal
 
 			private:
 				typedef kerbal::container::detail::flat_ordered_base<
-						Entity, Key, KeyCompare, Extract, Sequence
+						Entity, Extract, KeyCompare, Sequence
 				> super;
 
 			public:
@@ -167,48 +166,48 @@ namespace kerbal
 
 				template <std::size_t M>
 				KERBAL_CONSTEXPR14
-				friend bool operator==(const static_ordered<Entity, M, Key, KeyCompare, Extract> & lhs,
-										const static_ordered<Entity, N, Key, KeyCompare, Extract> & rhs)
+				friend bool operator==(const static_ordered<Entity, M, Extract, KeyCompare> & lhs,
+										const static_ordered<Entity, N, Extract, KeyCompare> & rhs)
 				{
 					return lhs.sequence == rhs.sequence;
 				}
 
 				template <std::size_t M>
 				KERBAL_CONSTEXPR14
-				friend bool operator!=(const static_ordered<Entity, M, Key, KeyCompare, Extract> & lhs,
-										const static_ordered<Entity, N, Key, KeyCompare, Extract> & rhs)
+				friend bool operator!=(const static_ordered<Entity, M, Extract, KeyCompare> & lhs,
+										const static_ordered<Entity, N, Extract, KeyCompare> & rhs)
 				{
 					return lhs.sequence != rhs.sequence;
 				}
 
 				template <std::size_t M>
 				KERBAL_CONSTEXPR14
-				friend bool operator<(const static_ordered<Entity, M, Key, KeyCompare, Extract> & lhs,
-										const static_ordered<Entity, N, Key, KeyCompare, Extract> & rhs)
+				friend bool operator<(const static_ordered<Entity, M, Extract, KeyCompare> & lhs,
+										const static_ordered<Entity, N, Extract, KeyCompare> & rhs)
 				{
 					return lhs.sequence < rhs.sequence;
 				}
 
 				template <std::size_t M>
 				KERBAL_CONSTEXPR14
-				friend bool operator<=(const static_ordered<Entity, M, Key, KeyCompare, Extract> & lhs,
-										const static_ordered<Entity, N, Key, KeyCompare, Extract> & rhs)
+				friend bool operator<=(const static_ordered<Entity, M, Extract, KeyCompare> & lhs,
+										const static_ordered<Entity, N, Extract, KeyCompare> & rhs)
 				{
 					return lhs.sequence <= rhs.sequence;
 				}
 
 				template <std::size_t M>
 				KERBAL_CONSTEXPR14
-				friend bool operator>(const static_ordered<Entity, M, Key, KeyCompare, Extract> & lhs,
-										const static_ordered<Entity, N, Key, KeyCompare, Extract> & rhs)
+				friend bool operator>(const static_ordered<Entity, M, Extract, KeyCompare> & lhs,
+										const static_ordered<Entity, N, Extract, KeyCompare> & rhs)
 				{
 					return lhs.sequence > rhs.sequence;
 				}
 
 				template <std::size_t M>
 				KERBAL_CONSTEXPR14
-				friend bool operator>=(const static_ordered<Entity, M, Key, KeyCompare, Extract> & lhs,
-										const static_ordered<Entity, N, Key, KeyCompare, Extract> & rhs)
+				friend bool operator>=(const static_ordered<Entity, M, Extract, KeyCompare> & lhs,
+										const static_ordered<Entity, N, Extract, KeyCompare> & rhs)
 				{
 					return lhs.sequence >= rhs.sequence;
 				}
@@ -221,10 +220,10 @@ namespace kerbal
 	namespace algorithm
 	{
 
-		template <typename Entity, std::size_t N, typename Key, typename KeyCompare, typename Extract>
+		template <typename Entity, std::size_t N, typename Extract, typename KeyCompare>
 		KERBAL_CONSTEXPR14
-		void swap(kerbal::container::static_ordered<Entity, N, Key, KeyCompare, Extract> & a,
-				  kerbal::container::static_ordered<Entity, N, Key, KeyCompare, Extract> & b)
+		void swap(kerbal::container::static_ordered<Entity, N, Extract, KeyCompare> & a,
+				  kerbal::container::static_ordered<Entity, N, Extract, KeyCompare> & b)
 				KERBAL_CONDITIONAL_NOEXCEPT(noexcept(a.swap(b)))
 		{
 			a.swap(b);
@@ -237,10 +236,10 @@ namespace kerbal
 
 KERBAL_NAMESPACE_STD_BEGIN
 
-	template <typename Entity, std::size_t N, typename Key, typename KeyCompare, typename Extract>
+	template <typename Entity, std::size_t N, typename Extract, typename KeyCompare>
 	KERBAL_CONSTEXPR14
-	void swap(kerbal::container::static_ordered<Entity, N, Key, KeyCompare, Extract> & a,
-			  kerbal::container::static_ordered<Entity, N, Key, KeyCompare, Extract> & b)
+	void swap(kerbal::container::static_ordered<Entity, N, Extract, KeyCompare> & a,
+			  kerbal::container::static_ordered<Entity, N, Extract, KeyCompare> & b)
 			KERBAL_CONDITIONAL_NOEXCEPT(noexcept(a.swap(b)))
 	{
 		a.swap(b);

@@ -36,16 +36,14 @@ namespace kerbal
 		class flat_set :
 				public kerbal::container::detail::flat_set_base<
 					Tp,
-					kerbal::container::flat_ordered<Tp, Tp, KeyCompare, kerbal::container::identity_extractor<Tp>, Allocator>
+					kerbal::container::flat_ordered<Tp, kerbal::container::identity_extractor<Tp>, KeyCompare, Allocator>
 				>
 		{
 			private:
-				typedef kerbal::container::flat_ordered<Tp, Tp, KeyCompare, kerbal::container::identity_extractor<Tp>, Allocator> Ordered;
+				typedef kerbal::container::flat_ordered<Tp, kerbal::container::identity_extractor<Tp>, KeyCompare, Allocator> Ordered;
 				typedef kerbal::container::detail::flat_set_base<Tp, Ordered> super;
 
 			public:
-				typedef typename super::key_compare			key_compare;
-				typedef typename super::key_type			key_type;
 				typedef typename super::value_type			value_type;
 				typedef typename super::const_type			const_type;
 				typedef typename super::reference			reference;
@@ -65,6 +63,9 @@ namespace kerbal
 
 				typedef typename super::const_iterator				const_iterator;
 				typedef typename super::const_reverse_iterator		const_reverse_iterator;
+
+				typedef typename super::key_type			key_type;
+				typedef typename super::key_compare			key_compare;
 
 			public:
 
