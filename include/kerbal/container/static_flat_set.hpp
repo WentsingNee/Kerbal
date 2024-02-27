@@ -12,6 +12,7 @@
 #ifndef KERBAL_CONTAINER_STATIC_FLAT_SET_HPP
 #define KERBAL_CONTAINER_STATIC_FLAT_SET_HPP
 
+#include <kerbal/assign/ilist.hpp>
 #include <kerbal/compare/basic_compare.hpp>
 #include <kerbal/compatibility/constexpr.hpp>
 #include <kerbal/compatibility/namespace_std_scope.hpp>
@@ -123,6 +124,20 @@ namespace kerbal
 				{
 				}
 
+#		else
+
+				template <typename U>
+				static_flat_set(const kerbal::assign::assign_list<U> & ilist) :
+					super(ilist)
+				{
+				}
+
+				template <typename U>
+				static_flat_set(const kerbal::assign::assign_list<U> & ilist, key_compare kc) :
+					super(ilist, kc)
+				{
+				}
+
 #		endif
 
 				using super::assign;
@@ -144,6 +159,15 @@ namespace kerbal
 
 				KERBAL_CONSTEXPR14
 				static_flat_set & operator=(std::initializer_list<value_type> ilist)
+				{
+					this->super::assign(ilist);
+					return *this;
+				}
+
+#		else
+
+				template <typename U>
+				static_flat_set & operator=(const kerbal::assign::assign_list<U> & ilist)
 				{
 					this->super::assign(ilist);
 					return *this;
