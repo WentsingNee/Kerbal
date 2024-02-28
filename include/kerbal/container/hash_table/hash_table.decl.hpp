@@ -446,13 +446,13 @@ namespace kerbal
 				KERBAL_CONSTEXPR20
 				void reserve(size_type new_size)
 				{
-					this->hash_table_base::reserve_using_allocator(this->hash(), this->key_equal_obj(), this->bucket_alloc(), new_size);
+					this->hash_table_base::reserve_using_allocator(this->hash(), this->bucket_alloc(), new_size);
 				}
 
 				KERBAL_CONSTEXPR20
 				void rehash(size_type new_bucket_count)
 				{
-					this->hash_table_base::rehash(this->hash(), this->key_equal_obj(), this->bucket_alloc(), new_bucket_count);
+					this->hash_table_base::rehash(this->hash(), this->bucket_alloc(), new_bucket_count);
 				}
 
 		};

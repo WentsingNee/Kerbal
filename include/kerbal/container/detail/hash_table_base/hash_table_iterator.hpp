@@ -145,7 +145,7 @@ namespace kerbal
 				public:
 
 					KERBAL_CONSTEXPR14
-					explicit hash_table_kiter(iterator iter) KERBAL_NOEXCEPT
+					hash_table_kiter(iterator iter) KERBAL_NOEXCEPT
 							: k_current(iter.k_current)
 					{
 					}

@@ -15,7 +15,8 @@
 #include <kerbal/compatibility/constexpr.hpp>
 #include <kerbal/compatibility/noexcept.hpp>
 
-#include "hash_table.decl.hpp"
+#include <kerbal/container/hash_table/hash_table.decl.hpp>
+
 
 namespace kerbal
 {
@@ -78,7 +79,7 @@ namespace kerbal
 		hash_table<Entity, Extract, Hash, KeyEqual, NodeAllocator, BucketAllocator>::
 		~hash_table()
 		{
-			this->hash_table_base::destroy(this->node_alloc(), this->bucket_alloc());
+			this->hash_table_base::destroy_using_allocator(this->node_alloc(), this->bucket_alloc());
 		}
 
 
@@ -89,7 +90,7 @@ namespace kerbal
 		hash_table<Entity, Extract, Hash, KeyEqual, NodeAllocator, BucketAllocator>::
 		clear()
 		{
-			this->hash_table_base::clear(this->node_alloc());
+			this->hash_table_base::clear_using_allocator(this->node_alloc());
 		}
 
 

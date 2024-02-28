@@ -132,7 +132,7 @@ namespace kerbal
 
 					template <typename NodeAlloc, typename BucketAlloc>
 					KERBAL_CONSTEXPR20
-					void destroy(NodeAlloc & node_alloc, BucketAlloc & bucket_alloc);
+					void destroy_using_allocator(NodeAlloc & node_alloc, BucketAlloc & bucket_alloc);
 
 				//===================
 				// Iterators
@@ -146,13 +146,13 @@ namespace kerbal
 					KERBAL_CONSTEXPR14
 					const_iterator begin() const KERBAL_NOEXCEPT
 					{
-						return iterator(this->k_head.k_next);
+						return const_iterator(this->k_head.k_next);
 					}
 
 					KERBAL_CONSTEXPR14
 					const_iterator cbegin() const KERBAL_NOEXCEPT
 					{
-						return iterator(this->k_head.k_next);
+						return const_iterator(this->k_head.k_next);
 					}
 
 					KERBAL_CONSTEXPR14
@@ -164,13 +164,13 @@ namespace kerbal
 					KERBAL_CONSTEXPR14
 					const_iterator end() const KERBAL_NOEXCEPT
 					{
-						return iterator(NULL);
+						return const_iterator(NULL);
 					}
 
 					KERBAL_CONSTEXPR14
 					const_iterator cend() const KERBAL_NOEXCEPT
 					{
-						return iterator(NULL);
+						return const_iterator(NULL);
 					}
 
 				//===================
@@ -198,17 +198,17 @@ namespace kerbal
 				// Modifiers
 
 				protected:
-					template <typename Hash, typename KeyEqual>
+					template <typename Hash>
 					KERBAL_CONSTEXPR20
-					iterator k_emplace_hook_node(Hash & hash, KeyEqual & key_equal, node * p);
+					iterator k_emplace_hook_node(Hash & hash, node * p);
 
 					template <typename Hash, typename KeyEqual>
 					KERBAL_CONSTEXPR20
 					unique_insert_r k_emplace_hook_node_unique(Hash & hash, KeyEqual & key_equal, node * p);
 
-					template <typename Hash, typename KeyEqual>
+					template <typename Hash>
 					KERBAL_CONSTEXPR20
-					void k_rehash_hook_node(Hash & hash, KeyEqual & key_equal, node * p);
+					void k_rehash_hook_node(Hash & hash, node * p);
 
 #		if __cplusplus >= 201103L
 
@@ -370,24 +370,24 @@ namespace kerbal
 						this->k_max_load_factor = mlf;
 					}
 
-					template <typename Hash, typename KeyEqual, typename BucketAlloc>
+					template <typename Hash, typename BucketAlloc>
 					KERBAL_CONSTEXPR20
-					void reserve_using_allocator(Hash & hash, KeyEqual & key_equal, BucketAlloc & bucket_alloc, size_type new_size)
+					void reserve_using_allocator(Hash & hash, BucketAlloc & bucket_alloc, size_type new_size)
 					{
 						size_type new_bucket_count = k_first_prime_greater_equal_than(new_size / this->max_load_factor());
-						this->k_rehash_unchecked(hash, key_equal, bucket_alloc, new_bucket_count);
+						this->k_rehash_unchecked(hash, bucket_alloc, new_bucket_count);
 					}
 
-					template <typename Hash, typename KeyEqual, typename BucketAlloc>
+					template <typename Hash, typename BucketAlloc>
 					KERBAL_CONSTEXPR20
-					void k_rehash_unchecked(Hash & hash, KeyEqual & key_equal, BucketAlloc & bucket_alloc, size_type new_bucket_count) KERBAL_NOEXCEPT;
+					void k_rehash_unchecked(Hash & hash, BucketAlloc & bucket_alloc, size_type new_bucket_count) KERBAL_NOEXCEPT;
 
-					template <typename Hash, typename KeyEqual, typename BucketAlloc>
+					template <typename Hash, typename BucketAlloc>
 					KERBAL_CONSTEXPR20
-					void rehash(Hash & hash, KeyEqual & key_equal, BucketAlloc & bucket_alloc, size_type new_bucket_count)
+					void rehash(Hash & hash, BucketAlloc & bucket_alloc, size_type new_bucket_count)
 					{
 						size_type minimum_bucket_count = this->size() / this->max_load_factor();
-						this->k_rehash_unchecked(hash, key_equal, bucket_alloc, new_bucket_count < minimum_bucket_count ? minimum_bucket_count : new_bucket_count);
+						this->k_rehash_unchecked(hash, bucket_alloc, new_bucket_count < minimum_bucket_count ? minimum_bucket_count : new_bucket_count);
 					}
 
 
@@ -416,13 +416,15 @@ namespace kerbal
 						this->k_buckets = k_create_buckets(bucket_alloc, bucket_count);
 					}
 
+					template <typename Hash>
 					KERBAL_CONSTEXPR20
-					static size_type k_find_next_bucket_id(size_type start, bucket_type * buckets, size_type bucket_count) KERBAL_NOEXCEPT
+					size_type k_bucket_id_of_front(Hash & hash)
 					{
-						do {
-							++start;
-						} while (buckets[start] == NULL);
-						return start;
+						Extract & extract = this->extract();
+
+						node * front_node = static_cast<node *>(this->k_head.k_next);
+						hash_result_type front_hash = front_node->get_cached_hash_code(extract, hash);
+						return k_hash_result_to_bucket_id(front_hash);
 					}
 
 #		if __cplusplus >= 201103L

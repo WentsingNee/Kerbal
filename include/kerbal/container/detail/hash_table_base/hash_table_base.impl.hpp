@@ -60,7 +60,7 @@ namespace kerbal
 			KERBAL_CONSTEXPR20
 			void
 			hash_table_base<Entity, Extract, HashCachePolicy>::
-			destroy(NodeAlloc & node_alloc, BucketAlloc & bucket_alloc)
+			destroy_using_allocator(NodeAlloc & node_alloc, BucketAlloc & bucket_alloc)
 			{
 				k_destroy_node_chain(node_alloc, this->k_head.k_next, NULL);
 				k_destroy_buckets(bucket_alloc, this->k_buckets, this->k_bucket_count);
@@ -68,6 +68,17 @@ namespace kerbal
 
 		//===================
 		// Modifiers
+
+			template <typename Entity, typename Extract, typename HashCachePolicy>
+			template <typename Hash>
+			KERBAL_CONSTEXPR20
+			typename hash_table_base<Entity, Extract, HashCachePolicy>::iterator
+			hash_table_base<Entity, Extract, HashCachePolicy>::k_emplace_hook_node(Hash & hash, node * p)
+			{
+				this->k_rehash_hook_node(hash, p);
+				++this->k_size;
+				return iterator(p);
+			}
 
 			template <typename Entity, typename Extract, typename HashCachePolicy>
 			template <typename Hash, typename KeyEqual>
@@ -80,25 +91,33 @@ namespace kerbal
 
 				const key_type & key = extract(p->member());
 				hash_result_type hash_code = p->get_cached_hash_code(extract, hash);
-				size_type bucket_id_in = k_hash_result_to_bucket_id(hash_code);
-				size_type bucket_id_next = k_find_next_bucket_id(bucket_id_in, this->k_buckets, this->k_bucket_count);
+				size_type bucket_id_in = this->k_hash_result_to_bucket_id(hash_code);
 				bucket_type & bucket_in = this->k_buckets[bucket_id_in];
-				bucket_type & bucket_next = this->k_buckets[bucket_id_next];
 
-				node_type_unrelated * prev = bucket_next;
+				node_type_unrelated * prev = bucket_in;
 				// for (size_type i = 0; i <= this->k_bucket_count; ++i) {
 				// 	std::printf("%zu  %p\n", i, this->k_buckets[i]);
 				// }
 				// std::printf("%zu/%zu %zu  %zu\n", hash_code, this->k_bucket_count, bucket_id_in, bucket_id_next);
 				// std::printf("\n");
 				node * cur = static_cast<node *>(prev->k_next);
-				while (prev != bucket_next) {
+				while (true) {
+					if (cur == NULL) {
+						break;
+					}
 					hash_result_type cur_hash_code = cur->get_cached_hash_code(extract, hash);
 
 					if (cur_hash_code == hash_code) { // same hash
 						if (key_equal(extract(cur->member()), key)) { // same key
 							return unique_insert_r(static_cast<node_type_unrelated *>(cur), false);
 						} // else: same hash but different key => other elements in the same bucket
+					} else {
+						size_type bucket_id_cur= this->k_hash_result_to_bucket_id(cur_hash_code);
+						if (bucket_id_cur != bucket_id_in) {
+							bucket_type & bucket_cur = this->k_buckets[bucket_id_cur];
+							bucket_cur = p;
+							break;
+						}
 					}
 					prev = cur;
 					cur = static_cast<node *>(cur->k_next);
@@ -107,55 +126,39 @@ namespace kerbal
 				//   hook node on chain
 				p->k_next = cur;
 				prev->k_next = p;
-				//   adjust bucket
-				if (bucket_in != NULL) {
-					bucket_in = bucket_next;
-				}
-				bucket_next = p;
 
 				++this->k_size;
 				return unique_insert_r(static_cast<node_type_unrelated *>(p), true);
 			}
 
 			template <typename Entity, typename Extract, typename HashCachePolicy>
-			template <typename Hash, typename KeyEqual>
-			KERBAL_CONSTEXPR20
-			typename hash_table_base<Entity, Extract, HashCachePolicy>::iterator
-			hash_table_base<Entity, Extract, HashCachePolicy>::k_emplace_hook_node(Hash & hash, KeyEqual & key_equal, node * p)
-			{
-				this->k_rehash_hook_node(hash, key_equal, p);
-				++this->k_size;
-				return iterator(p);
-			}
-
-			template <typename Entity, typename Extract, typename HashCachePolicy>
-			template <typename Hash, typename KeyEqual>
+			template <typename Hash>
 			KERBAL_CONSTEXPR20
 			void
-			hash_table_base<Entity, Extract, HashCachePolicy>::k_rehash_hook_node(Hash & hash, KeyEqual & key_equal, node * p)
+			hash_table_base<Entity, Extract, HashCachePolicy>::k_rehash_hook_node(Hash & hash, node * p)
 			{
 				Extract & extract = this->extract();
 
 				hash_result_type hash_code = p->get_cached_hash_code(extract, hash);
-				size_type bucket_id_in = k_hash_result_to_bucket_id(hash_code);
-				size_type bucket_id_next = k_find_next_bucket_id(bucket_id_in, this->k_buckets, this->k_bucket_count);
+				size_type bucket_id_in = this->k_hash_result_to_bucket_id(hash_code);
 				bucket_type & bucket_in = this->k_buckets[bucket_id_in];
-				bucket_type & bucket_next = this->k_buckets[bucket_id_next];
 
-				node_type_unrelated * prev = bucket_next;
+				node_type_unrelated * prev = bucket_in;
 				node * cur = static_cast<node *>(prev->k_next);
-				while (prev != bucket_next) {
-					prev = cur;
-					cur = static_cast<node *>(cur->k_next);
-				}
 				// insert node
 				//   hook node on chain
 				p->k_next = cur;
 				prev->k_next = p;
-				//   adjust bucket
-				if (bucket_in != NULL) {
-					bucket_in = bucket_next;
+
+				if (cur == NULL) {
+					return;
 				}
+				hash_result_type hash_code_next = cur->get_cached_hash_code(extract, hash);
+				size_type bucket_id_next = this->k_hash_result_to_bucket_id(hash_code_next);
+				if (bucket_id_in == bucket_id_next) {
+					return;
+				}
+				bucket_type & bucket_next = this->k_buckets[bucket_id_next];
 				bucket_next = p;
 			}
 
@@ -172,7 +175,7 @@ namespace kerbal
 				const key_type & key = extract(p->member());
 				hash_result_type hash_code = hash(key);
 				p->set_cached_hash_code(hash_code);
-				size_type bucket_id = k_hash_result_to_bucket_id(hash_code);
+				size_type bucket_id = this->k_hash_result_to_bucket_id(hash_code);
 				bucket_type & bucket_in = this->k_buckets[bucket_id];
 
 				if (bucket_in == NULL) {
@@ -217,7 +220,7 @@ namespace kerbal
 				KERBAL_STATIC_ASSERT((kerbal::type_traits::is_same<typename Hash::result_type, hash_result_type>::value), "should same");
 
 				if (this->size() + 1 > this->bucket_count() * this->max_load_factor()) {
-					this->reserve_using_allocator(hash, key_equal, bucket_alloc, 2 * this->size());
+					this->reserve_using_allocator(hash, bucket_alloc, 2 * this->size());
 				}
 
 				node * p = k_build_new_node(node_alloc, kerbal::utility::forward<Args>(args)...);
@@ -239,7 +242,7 @@ namespace kerbal
 				KERBAL_STATIC_ASSERT((kerbal::type_traits::is_same<typename Hash::result_type, hash_result_type>::value), "should same");
 
 				if (this->size() + 1 > this->bucket_count() * this->max_load_factor()) {
-					this->reserve_using_allocator(hash, key_equal, bucket_alloc, 2 * this->size());
+					this->reserve_using_allocator(hash, bucket_alloc, 2 * this->size());
 				}
 
 				node * p = k_build_new_node(node_alloc, kerbal::utility::forward<Args>(args)...);
@@ -303,7 +306,7 @@ namespace kerbal
 				k_destroy_node_chain(node_alloc, this->k_head.k_next, NULL);
 				this->k_head.k_next = NULL;
 				this->k_size = 0;
-				kerbal::algorithm::fill(this->k_buckets, this->k_buckets + this->k_bucket_count, static_cast<bucket_type>(NULL));
+				kerbal::algorithm::fill(this->k_buckets, this->k_buckets + this->k_bucket_count, static_cast<bucket_type>(&this->k_head));
 			}
 
 
@@ -312,10 +315,10 @@ namespace kerbal
 		// Hash policy
 
 			template <typename Entity, typename Extract, typename HashCachePolicy>
-			template <typename Hash, typename KeyEqual, typename BucketAlloc>
+			template <typename Hash, typename BucketAlloc>
 			KERBAL_CONSTEXPR20
 			void hash_table_base<Entity, Extract, HashCachePolicy>::
-			k_rehash_unchecked(Hash & hash, KeyEqual & key_equal, BucketAlloc & bucket_alloc, size_type new_bucket_count) KERBAL_NOEXCEPT
+			k_rehash_unchecked(Hash & hash, BucketAlloc & bucket_alloc, size_type new_bucket_count) KERBAL_NOEXCEPT
 			{
 				k_destroy_buckets(bucket_alloc, this->k_buckets, this->k_bucket_count);
 				this->k_buckets = this->k_create_buckets(bucket_alloc, new_bucket_count);
@@ -326,7 +329,7 @@ namespace kerbal
 
 				while (cur != NULL) {
 					node * next = static_cast<node *>(cur->k_next);
-					k_rehash_hook_node(hash, key_equal, cur);
+					this->k_rehash_hook_node(hash, cur);
 					cur = next;
 				}
 
@@ -367,9 +370,8 @@ namespace kerbal
 			{
 				typedef kerbal::memory::allocator_traits<BucketAlloc> bucket_allocator_traits;
 
-				bucket_type * new_buckets = bucket_allocator_traits::allocate(bucket_alloc, new_bucket_count + 1);
-				kerbal::algorithm::fill(new_buckets, new_buckets + new_bucket_count, static_cast<bucket_type>(NULL));
-				new_buckets[new_bucket_count] = &this->k_head;
+				bucket_type * new_buckets = bucket_allocator_traits::allocate(bucket_alloc, new_bucket_count);
+				kerbal::algorithm::fill(new_buckets, new_buckets + new_bucket_count, static_cast<bucket_type>(&this->k_head));
 				return new_buckets;
 			}
 
@@ -382,7 +384,7 @@ namespace kerbal
 			{
 				typedef kerbal::memory::allocator_traits<BucketAlloc> bucket_allocator_traits;
 
-				bucket_allocator_traits::deallocate(bucket_alloc, buckets, new_bucket_count + 1);
+				bucket_allocator_traits::deallocate(bucket_alloc, buckets, new_bucket_count);
 			}
 
 
