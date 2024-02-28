@@ -14,6 +14,7 @@
 
 #include <kerbal/compatibility/constexpr.hpp>
 #include <kerbal/compatibility/noexcept.hpp>
+#include <kerbal/container/associative_container_facility/associative_unique_insert_r.hpp>
 #include <kerbal/iterator/iterator_traits.hpp>
 #include <kerbal/numeric/numeric_limits.hpp>
 #include <kerbal/type_traits/enable_if.hpp>
@@ -48,7 +49,7 @@ namespace kerbal
 					typedef kerbal::container::detail::hash_table_node_type_unrelated						node_type_unrelated;
 					typedef kerbal::container::detail::hash_table_node_type_only<Entity>					node_type_only;
 					typedef typename kerbal::container::detail::hash_table_node<Entity, HashCachePolicy>	node;
-					typedef node_type_only *																bucket_type;
+					typedef node_type_unrelated *															bucket_type;
 			};
 
 			template <typename Entity, typename Extract, typename HashCachePolicy>
@@ -69,7 +70,6 @@ namespace kerbal
 					typedef typename hash_table_base_typedef_helper::bucket_type				bucket_type;
 
 				public:
-					typedef typename Extract::key_type			key_type;
 					typedef Entity								value_type;
 					typedef const value_type					const_type;
 					typedef value_type &						reference;
@@ -89,10 +89,13 @@ namespace kerbal
 					typedef kerbal::container::detail::hash_table_kiter<Entity>						const_local_iterator;
 					typedef kerbal::container::detail::hash_table_iter<Entity>						iterator;
 					typedef kerbal::container::detail::hash_table_kiter<Entity>						const_iterator;
+					typedef kerbal::container::associative_unique_insert_r<iterator>				unique_insert_r;
 
 //					typedef kerbal::type_traits::integral_constant<size_t, sizeof(node)>		NODE_SIZE;
 
 					typedef kerbal::utility::member_compress_helper<Extract> extract_compress_helper;
+
+					typedef typename Extract::key_type			key_type;
 
 					typedef kerbal::container::detail::hash_cache_policy_traits<HashCachePolicy>		hash_cache_policy_traits;
 					typedef typename hash_cache_policy_traits::hash_result_type							hash_result_type;
@@ -195,46 +198,57 @@ namespace kerbal
 				// Modifiers
 
 				protected:
-
-					template <typename Hash>
+					template <typename Hash, typename KeyEqual>
 					KERBAL_CONSTEXPR20
-					void k_hook_node_bucket_empty(Hash & hash, node * p, bucket_type & bucket_in);
+					iterator k_emplace_hook_node(Hash & hash, KeyEqual & key_equal, node * p);
 
 					template <typename Hash, typename KeyEqual>
 					KERBAL_CONSTEXPR20
-					void k_hook_node(Hash & hash, KeyEqual & key_equal, node * p);
+					unique_insert_r k_emplace_hook_node_unique(Hash & hash, KeyEqual & key_equal, node * p);
 
 					template <typename Hash, typename KeyEqual>
 					KERBAL_CONSTEXPR20
-					bool k_hook_node_no_exists(Hash & hash, KeyEqual & key_equal, node * p);
+					void k_rehash_hook_node(Hash & hash, KeyEqual & key_equal, node * p);
 
 #		if __cplusplus >= 201103L
 
 					template <typename Hash, typename KeyEqual, typename NodeAlloc, typename BucketAlloc, typename ... Args>
 					KERBAL_CONSTEXPR20
-					iterator emplace(Hash & hash, KeyEqual & key_equal, NodeAlloc & node_alloc, BucketAlloc & bucket_alloc, Args&& ... args);
+					iterator emplace_using_allocator(Hash & hash, KeyEqual & key_equal, NodeAlloc & node_alloc, BucketAlloc & bucket_alloc, Args&& ... args);
+
+					template <typename Hash, typename KeyEqual, typename NodeAlloc, typename BucketAlloc, typename ... Args>
+					KERBAL_CONSTEXPR20
+					unique_insert_r emplace_unique_using_allocator(Hash & hash, KeyEqual & key_equal, NodeAlloc & node_alloc, BucketAlloc & bucket_alloc, Args&& ... args);
 
 #		endif
 
 //					template <typename NodeAlloc, typename BucketAlloc>
 //					KERBAL_CONSTEXPR20
-//					iterator emplace(NodeAlloc & node_alloc, BucketAlloc & bucket_alloc, const_reference src);
+//					iterator emplace_using_allocator(NodeAlloc & node_alloc, BucketAlloc & bucket_alloc, const_reference src);
 //
 //#		if __cplusplus >= 201103L
 //
 //					template <typename NodeAlloc, typename BucketAlloc>
 //					KERBAL_CONSTEXPR20
-//					iterator emplace(NodeAlloc & node_alloc, BucketAlloc & bucket_alloc, rvalue_reference src);
+//					iterator emplace_unique_using_allocator(NodeAlloc & node_alloc, BucketAlloc & bucket_alloc, rvalue_reference src);
 //
 //#		endif
 
-					template <typename NodeAlloc>
+					template <typename Hash, typename KeyEqual, typename NodeAlloc, typename BucketAlloc>
 					KERBAL_CONSTEXPR20
-					iterator erase(const_iterator pos, NodeAlloc & node_alloc);
+					iterator insert_using_allocator(Hash & hash, KeyEqual & key_equal, NodeAlloc & node_alloc, BucketAlloc & bucket_alloc, const_reference src);
+
+					template <typename Hash, typename KeyEqual, typename NodeAlloc, typename BucketAlloc, typename ... Args>
+					KERBAL_CONSTEXPR20
+					unique_insert_r insert_unique_using_allocator(Hash & hash, KeyEqual & key_equal, NodeAlloc & node_alloc, BucketAlloc & bucket_alloc, const_reference src);
 
 					template <typename NodeAlloc>
 					KERBAL_CONSTEXPR20
-					void clear(NodeAlloc & node_alloc);
+					iterator erase_using_allocator(const_iterator pos, NodeAlloc & node_alloc);
+
+					template <typename NodeAlloc>
+					KERBAL_CONSTEXPR20
+					void clear_using_allocator(NodeAlloc & node_alloc);
 
 				//===================
 				// Lookup
@@ -358,7 +372,7 @@ namespace kerbal
 
 					template <typename Hash, typename KeyEqual, typename BucketAlloc>
 					KERBAL_CONSTEXPR20
-					void reserve(Hash & hash, KeyEqual & key_equal, BucketAlloc & bucket_alloc, size_type new_size)
+					void reserve_using_allocator(Hash & hash, KeyEqual & key_equal, BucketAlloc & bucket_alloc, size_type new_size)
 					{
 						size_type new_bucket_count = k_first_prime_greater_equal_than(new_size / this->max_load_factor());
 						this->k_rehash_unchecked(hash, key_equal, bucket_alloc, new_bucket_count);
@@ -388,14 +402,27 @@ namespace kerbal
 
 					template <typename BucketAlloc>
 					KERBAL_CONSTEXPR20
-					static bucket_type * k_create_new_buckets(BucketAlloc & bucket_alloc, size_type new_bucket_count);
+					bucket_type * k_create_buckets(BucketAlloc & bucket_alloc, size_type new_bucket_count);
+
+					template <typename BucketAlloc>
+					KERBAL_CONSTEXPR20
+					static void k_destroy_buckets(BucketAlloc & bucket_alloc, bucket_type * buckets, size_type new_bucket_count);
 
 					template <typename BucketAlloc>
 					KERBAL_CONSTEXPR20
 					void k_init_buckets(BucketAlloc & bucket_alloc, size_type bucket_count = 17)
 					{
 						this->k_bucket_count = bucket_count;
-						this->k_buckets = k_create_new_buckets(bucket_alloc, bucket_count);
+						this->k_buckets = k_create_buckets(bucket_alloc, bucket_count);
+					}
+
+					KERBAL_CONSTEXPR20
+					static size_type k_find_next_bucket_id(size_type start, bucket_type * buckets, size_type bucket_count) KERBAL_NOEXCEPT
+					{
+						do {
+							++start;
+						} while (buckets[start] == NULL);
+						return start;
 					}
 
 #		if __cplusplus >= 201103L

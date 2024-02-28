@@ -67,7 +67,7 @@ namespace kerbal
 					typedef typename iterator_traits::pointer				pointer;
 					typedef typename iterator_traits::reference				reference;
 
-				protected:
+				public:
 					KERBAL_CONSTEXPR14
 					explicit hash_table_iter(node_type_unrelated * current) KERBAL_NOEXCEPT
 							: k_current(current)
@@ -135,15 +135,17 @@ namespace kerbal
 					typedef typename iterator_traits::pointer				pointer;
 					typedef typename iterator_traits::reference				reference;
 
-				protected:
+				public:
 					KERBAL_CONSTEXPR14
 					explicit hash_table_kiter(const node_type_unrelated * current) KERBAL_NOEXCEPT
 							: k_current(current)
 					{
 					}
 
+				public:
+
 					KERBAL_CONSTEXPR14
-					hash_table_kiter(iterator iter) KERBAL_NOEXCEPT
+					explicit hash_table_kiter(iterator iter) KERBAL_NOEXCEPT
 							: k_current(iter.k_current)
 					{
 					}
