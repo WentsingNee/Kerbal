@@ -14,6 +14,7 @@
 
 #include <kerbal/compatibility/constexpr.hpp>
 #include <kerbal/compatibility/noexcept.hpp>
+#include <kerbal/container/associative_container_facility/associative_unique_insert_r.hpp>
 #include <kerbal/memory/allocator_traits.hpp>
 #include <kerbal/memory/bad_alloc.hpp>
 #include <kerbal/numeric/numeric_limits.hpp>
@@ -144,6 +145,7 @@ namespace kerbal
 //				typedef typename hash_table_base::const_local_iterator		const_local_iterator;
 				typedef typename hash_table_base::iterator					iterator;
 				typedef typename hash_table_base::const_iterator			const_iterator;
+				typedef typename hash_table_base::unique_insert_r			unique_insert_r;
 
 //				typedef typename hash_table_base::NODE_SIZE					NODE_SIZE;
 //				typedef typename hash_table_base::CACHE_HASH_RESULT			CACHE_HASH_RESULT;
@@ -331,117 +333,43 @@ namespace kerbal
 				template <typename ... Args >
 				iterator emplace(Args&& ... args);
 
-#		else
-
-#			define EMPTY
-#			define REMAINF(exp) exp
-#			define THEAD_NOT_EMPTY(exp) template <exp>
-#			define TARGS_DECL(i) typename KERBAL_MACRO_CONCAT(Arg, i)
-#			define ARGS_DECL(i) const KERBAL_MACRO_CONCAT(Arg, i) & KERBAL_MACRO_CONCAT(arg, i)
-#			define FBODY(i) \
-				KERBAL_OPT_PPEXPAND_WITH_COMMA_N(THEAD_NOT_EMPTY, EMPTY, TARGS_DECL, i) \
-				iterator emplace(KERBAL_OPT_PPEXPAND_WITH_COMMA_N(REMAINF, EMPTY, ARGS_DECL, i));
-
-				KERBAL_PPEXPAND_N(FBODY, KERBAL_PPEXPAND_EMPTY_SEPARATOR, 0)
-				KERBAL_PPEXPAND_N(FBODY, KERBAL_PPEXPAND_EMPTY_SEPARATOR, 20)
-
-#			undef EMPTY
-#			undef REMAINF
-#			undef THEAD_NOT_EMPTY
-#			undef TARGS_DECL
-#			undef ARGS_DECL
-#			undef FBODY
-
-#		endif
-
-
-#		if __cplusplus >= 201103L
+				template <typename ... Args >
+				unique_insert_r
+				emplace_unique(Args&& ... args);
 
 				template <typename ... Args >
 				iterator emplace_hint(const_iterator hint, Args&& ... args);
 
-#		else
-
-#			define EMPTY
-#			define LEFT_JOIN_COMMA(exp) , exp
-#			define THEAD_NOT_EMPTY(exp) template <exp>
-#			define TARGS_DECL(i) typename KERBAL_MACRO_CONCAT(Arg, i)
-#			define ARGS_DECL(i) const KERBAL_MACRO_CONCAT(Arg, i) & KERBAL_MACRO_CONCAT(arg, i)
-#			define FBODY(i) \
-				KERBAL_OPT_PPEXPAND_WITH_COMMA_N(THEAD_NOT_EMPTY, EMPTY, TARGS_DECL, i) \
-				iterator emplace_hint(const_iterator hint KERBAL_OPT_PPEXPAND_WITH_COMMA_N(LEFT_JOIN_COMMA, EMPTY, ARGS_DECL, i));
-
-				KERBAL_PPEXPAND_N(FBODY, KERBAL_PPEXPAND_EMPTY_SEPARATOR, 0)
-				KERBAL_PPEXPAND_N(FBODY, KERBAL_PPEXPAND_EMPTY_SEPARATOR, 20)
-
-#			undef EMPTY
-#			undef LEFT_JOIN_COMMA
-#			undef THEAD_NOT_EMPTY
-#			undef TARGS_DECL
-#			undef ARGS_DECL
-#			undef FBODY
-
-#		endif
-
-
-#		if __cplusplus >= 201103L
-
 				template <typename ... Args >
-				kerbal::utility::compressed_pair<iterator, bool>
-				emplace_no_exists(Args&& ... args);
+				unique_insert_r
+				emplace_unique_hint(const_iterator hint, Args&& ... args);
 
 #		else
 
 #			define EMPTY
 #			define REMAINF(exp) exp
-#			define THEAD_NOT_EMPTY(exp) template <exp>
-#			define TARGS_DECL(i) typename KERBAL_MACRO_CONCAT(Arg, i)
-#			define ARGS_DECL(i) const KERBAL_MACRO_CONCAT(Arg, i) & KERBAL_MACRO_CONCAT(arg, i)
-#			define FBODY(i) \
-				KERBAL_OPT_PPEXPAND_WITH_COMMA_N(THEAD_NOT_EMPTY, EMPTY, TARGS_DECL, i) \
-				kerbal::utility::compressed_pair<iterator, bool> \
-				emplace_no_exists(KERBAL_OPT_PPEXPAND_WITH_COMMA_N(REMAINF, EMPTY, ARGS_DECL, i));
-
-				KERBAL_PPEXPAND_N(FBODY, KERBAL_PPEXPAND_EMPTY_SEPARATOR, 0)
-				KERBAL_PPEXPAND_N(FBODY, KERBAL_PPEXPAND_EMPTY_SEPARATOR, 20)
-
-#			undef EMPTY
-#			undef REMAINF
-#			undef THEAD_NOT_EMPTY
-#			undef TARGS_DECL
-#			undef ARGS_DECL
-#			undef FBODY
-
-#		endif
-
-
-#		if __cplusplus >= 201103L
-
-				template <typename ... Args >
-				kerbal::utility::compressed_pair<iterator, bool>
-				emplace_hint_no_exists(const_iterator hint, Args&& ... args);
-
-#		else
-
-#			define EMPTY
 #			define LEFT_JOIN_COMMA(exp) , exp
 #			define THEAD_NOT_EMPTY(exp) template <exp>
 #			define TARGS_DECL(i) typename KERBAL_MACRO_CONCAT(Arg, i)
 #			define ARGS_DECL(i) const KERBAL_MACRO_CONCAT(Arg, i) & KERBAL_MACRO_CONCAT(arg, i)
+
 #			define FBODY(i) \
 				KERBAL_OPT_PPEXPAND_WITH_COMMA_N(THEAD_NOT_EMPTY, EMPTY, TARGS_DECL, i) \
-				kerbal::utility::compressed_pair<iterator, bool> \
-				emplace_hint_no_exists(const_iterator hint KERBAL_OPT_PPEXPAND_WITH_COMMA_N(LEFT_JOIN_COMMA, EMPTY, ARGS_DECL, i));
+				iterator emplace(KERBAL_OPT_PPEXPAND_WITH_COMMA_N(REMAINF, EMPTY, ARGS_DECL, i)); \
+ \
+				KERBAL_OPT_PPEXPAND_WITH_COMMA_N(THEAD_NOT_EMPTY, EMPTY, TARGS_DECL, i) \
+				unique_insert_r \
+				emplace_unique(KERBAL_OPT_PPEXPAND_WITH_COMMA_N(REMAINF, EMPTY, ARGS_DECL, i)); \
+ \
+				KERBAL_OPT_PPEXPAND_WITH_COMMA_N(THEAD_NOT_EMPTY, EMPTY, TARGS_DECL, i) \
+				iterator emplace_hint(const_iterator hint KERBAL_OPT_PPEXPAND_WITH_COMMA_N(LEFT_JOIN_COMMA, EMPTY, ARGS_DECL, i)); \
+ \
+				KERBAL_OPT_PPEXPAND_WITH_COMMA_N(THEAD_NOT_EMPTY, EMPTY, TARGS_DECL, i) \
+				unique_insert_r \
+				emplace_unique_hint(const_iterator hint KERBAL_OPT_PPEXPAND_WITH_COMMA_N(LEFT_JOIN_COMMA, EMPTY, ARGS_DECL, i));
 
 				KERBAL_PPEXPAND_N(FBODY, KERBAL_PPEXPAND_EMPTY_SEPARATOR, 0)
 				KERBAL_PPEXPAND_N(FBODY, KERBAL_PPEXPAND_EMPTY_SEPARATOR, 20)
-
-#			undef EMPTY
-#			undef LEFT_JOIN_COMMA
-#			undef THEAD_NOT_EMPTY
-#			undef TARGS_DECL
-#			undef ARGS_DECL
-#			undef FBODY
 
 #		endif
 
@@ -469,26 +397,22 @@ namespace kerbal
 #		endif
 
 
-				kerbal::utility::compressed_pair<iterator, bool> insert_no_exists(const_reference src);
+				unique_insert_r insert_unique(const_reference src);
+				unique_insert_r insert_unique(const_iterator hint, const_reference src);
 
 #		if __cplusplus >= 201103L
-				kerbal::utility::compressed_pair<iterator, bool> insert_no_exists(rvalue_reference src);
-#		endif
-
-				kerbal::utility::compressed_pair<iterator, bool> insert_no_exists(const_iterator hint, const_reference src);
-
-#		if __cplusplus >= 201103L
-				kerbal::utility::compressed_pair<iterator, bool> insert_no_exists(const_iterator hint, rvalue_reference src);
+				unique_insert_r insert_unique(rvalue_reference src);
+				unique_insert_r insert_unique(const_iterator hint, rvalue_reference src);
 #		endif
 
 				template <typename InputIterator>
-				void insert_no_exists(InputIterator first, InputIterator last);
+				void insert_unique(InputIterator first, InputIterator last);
 
 #		if __cplusplus >= 201103L
-				void insert_no_exists(std::initializer_list<value_type> ilist);
+				void insert_unique(std::initializer_list<value_type> ilist);
 #		else
 				template <typename Up>
-				void insert_no_exists(const kerbal::assign::assign_list<Up> & ilist);
+				void insert_unique(const kerbal::assign::assign_list<Up> & ilist);
 #		endif
 
 
@@ -522,7 +446,7 @@ namespace kerbal
 				KERBAL_CONSTEXPR20
 				void reserve(size_type new_size)
 				{
-					this->hash_table_base::reserve(this->hash(), this->key_equal_obj(), this->bucket_alloc(), new_size);
+					this->hash_table_base::reserve_using_allocator(this->hash(), this->key_equal_obj(), this->bucket_alloc(), new_size);
 				}
 
 				KERBAL_CONSTEXPR20

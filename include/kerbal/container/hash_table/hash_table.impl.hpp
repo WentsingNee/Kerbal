@@ -102,7 +102,21 @@ namespace kerbal
 		typename hash_table<Entity, Extract, Hash, KeyEqual, NodeAllocator, BucketAllocator>::iterator
 		hash_table<Entity, Extract, Hash, KeyEqual, NodeAllocator, BucketAllocator>::emplace(Args&& ... args)
 		{
-			return this->hash_table_base::emplace(
+			return this->hash_table_base::emplace_using_allocator(
+					this->hash(), this->key_equal_obj(),
+					this->node_alloc(), this->bucket_alloc(),
+					kerbal::utility::forward<Args>(args)...
+			);
+		}
+
+		template <typename Entity, typename Extract, typename Hash, typename KeyEqual,
+				typename NodeAllocator, typename BucketAllocator
+		>
+		template <typename ... Args>
+		typename hash_table<Entity, Extract, Hash, KeyEqual, NodeAllocator, BucketAllocator>::unique_insert_r
+		hash_table<Entity, Extract, Hash, KeyEqual, NodeAllocator, BucketAllocator>::emplace_unique(Args&& ... args)
+		{
+			return this->hash_table_base::emplace_unique_using_allocator(
 					this->hash(), this->key_equal_obj(),
 					this->node_alloc(), this->bucket_alloc(),
 					kerbal::utility::forward<Args>(args)...
@@ -112,32 +126,19 @@ namespace kerbal
 #	endif
 
 
-/*		template <typename Entity, typename Extract, typename Hash, typename KeyEqual,
+		template <typename Entity, typename Extract, typename Hash, typename KeyEqual,
 				typename NodeAllocator, typename BucketAllocator
 		>
 		typename hash_table<Entity, Extract, Hash, KeyEqual, NodeAllocator, BucketAllocator>::iterator
 		hash_table<Entity, Extract, Hash, KeyEqual, NodeAllocator, BucketAllocator>::
 		insert(const_reference src)
 		{
-			if (this->size() + 1 > this->bucket_count() * this->max_load_factor()) {
-				this->reserve(2 * this->size());
-			}
-
-			Extract extract = this->extract();
-			const key_type & key = extract(src);
-			hasher & hasher = this->hash();
-			hash_result_type hash_code = hasher(key);
-			size_type bucket_id = hash_code % this->bucket_count();
-			bucket_type & bucket_in = this->k_buckets[bucket_id];
-
-			const_local_iterator pos(this->k_determine_insert_pos(key, bucket_in).first);
-
-			hash_table_node * p = this->k_build_new_hash_node(this->node_alloc(), src);
-			p->set_cached_hash_code(hash_code);
-			bucket_in.k_hook_node_after(pos, p);
-			++this->k_size;
-			return iterator(this->k_buckets + bucket_id, this->k_buckets + this->k_bucket_count, pos.cast_to_mutable());
-		}*/
+			return this->hash_table_base::insert_using_allocator(
+					this->hash(), this->key_equal_obj(),
+					this->node_alloc(), this->bucket_alloc(),
+					src
+			);
+		}
 
 		template <typename Entity, typename Extract, typename Hash, typename KeyEqual,
 				typename NodeAllocator, typename BucketAllocator
@@ -153,42 +154,19 @@ namespace kerbal
 			}
 		}
 
-		/*template <typename Entity, typename Extract, typename Hash, typename KeyEqual,
+		template <typename Entity, typename Extract, typename Hash, typename KeyEqual,
 				typename NodeAllocator, typename BucketAllocator
 		>
-		kerbal::utility::compressed_pair<
-				typename hash_table<Entity, Extract, Hash, KeyEqual, NodeAllocator, BucketAllocator>::iterator,
-				bool
-		>
+		typename hash_table<Entity, Extract, Hash, KeyEqual, NodeAllocator, BucketAllocator>::unique_insert_r
 		hash_table<Entity, Extract, Hash, KeyEqual, NodeAllocator, BucketAllocator>::
-		insert_no_exists(const_reference src)
+		insert_unique(const_reference src)
 		{
-			Extract extract = this->extract();
-			const key_type & key = extract(src);
-			hash_result_type hash_code = this->hash()(key);
-			size_type bucket_id = hash_code % this->bucket_count();
-			bucket_type & bucket_in = this->k_buckets[bucket_id];
-
-			kerbal::utility::compressed_pair<const_local_iterator, bool> pos_result(this->k_determine_insert_pos(key, bucket_in));
-
-			if (pos_result.second) {
-				iterator pos(this->k_buckets + bucket_id, this->k_buckets + this->k_bucket_count, pos_result);
-				return std::make_pair(pos, true);
-			}
-
-			if (this->size() + 1 > this->bucket_count() * this->max_load_factor()) {
-				this->reserve(2 * this->size());
-			}
-
-			hash_table_node * p = this->k_build_new_hash_node(this->node_alloc(), src);
-			hash_code = this->hash()(key);
-			bucket_id = hash_code % this->bucket_count();
-			p->set_cached_hash_code(hash_code);
-			this->k_buckets[bucket_id].k_hook_node_after(pos_result.first, p);
-			++this->k_size;
-			iterator pos(this->k_buckets + bucket_id, this->k_buckets + this->k_bucket_count, pos.cast_to_mutable());
-			return std::make_pair(pos, false);
-		}*/
+			return this->hash_table_base::insert_unique_using_allocator(
+					this->hash(), this->key_equal_obj(),
+					this->node_alloc(), this->bucket_alloc(),
+					src
+			);
+		}
 
 		template <typename Entity, typename Extract, typename Hash, typename KeyEqual,
 				typename NodeAllocator, typename BucketAllocator
@@ -196,10 +174,10 @@ namespace kerbal
 		template <typename InputIterator>
 		void
 		hash_table<Entity, Extract, Hash, KeyEqual, NodeAllocator, BucketAllocator>::
-		insert_no_exists(InputIterator first, InputIterator last)
+		insert_unique(InputIterator first, InputIterator last)
 		{
 			while (first != last) {
-				this->insert_no_exists(*first);
+				this->insert_unique(*first);
 				++first;
 			}
 		}
