@@ -15,6 +15,7 @@
 #include <kerbal/compatibility/constexpr.hpp>
 #include <kerbal/compatibility/noexcept.hpp>
 #include <kerbal/container/associative_container_facility/associative_unique_insert_r.hpp>
+#include <kerbal/container/associative_container_facility/unique_tag_t.hpp>
 #include <kerbal/iterator/iterator_traits.hpp>
 #include <kerbal/numeric/numeric_limits.hpp>
 #include <kerbal/type_traits/enable_if.hpp>
@@ -119,6 +120,22 @@ namespace kerbal
 					template <typename BucketAlloc>
 					KERBAL_CONSTEXPR20
 					hash_table_base(BucketAlloc & bucket_alloc, size_type bucket_count);
+
+					template <typename Extract, typename Hash, typename KeyEqual, typename NodeAlloc, typename BucketAlloc, typename InputIterator>
+					KERBAL_CONSTEXPR20
+					hash_table_base(
+						Extract & extract, Hash & hash, KeyEqual & key_equal,
+						NodeAlloc & node_alloc, BucketAlloc & bucket_alloc,
+						InputIterator first, InputIterator last
+					);
+
+					template <typename Extract, typename Hash, typename KeyEqual, typename NodeAlloc, typename BucketAlloc, typename InputIterator>
+					KERBAL_CONSTEXPR20
+					hash_table_base(
+						Extract & extract, Hash & hash, KeyEqual & key_equal,
+						NodeAlloc & node_alloc, BucketAlloc & bucket_alloc,
+						kerbal::container::unique_tag_t, InputIterator first, InputIterator last
+					);
 
 					template <typename NodeAlloc, typename BucketAlloc>
 					KERBAL_CONSTEXPR20
