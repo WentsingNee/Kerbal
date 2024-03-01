@@ -17,7 +17,9 @@
 #include <kerbal/compatibility/noexcept.hpp>
 #include <kerbal/compatibility/static_assert.hpp>
 #include <kerbal/config/exceptions.hpp>
+#include <kerbal/container/associative_container_facility/unique_tag_t.hpp>
 #include <kerbal/memory/allocator_traits.hpp>
+#include <kerbal/memory/uninitialized/construct.hpp>
 #include <kerbal/type_traits/is_same.hpp>
 
 #include <kerbal/container/detail/hash_table_base/hash_table_base.decl.hpp>
@@ -53,6 +55,44 @@ namespace kerbal
 			{
 				// this->k_init_buckets(bucket_alloc, k_first_prime_greater_equal_than(bucket_count));
 				this->k_init_buckets(bucket_alloc, bucket_count);
+			}
+
+			template <typename Entity, typename HashCachePolicy>
+			template <typename Extract, typename Hash, typename KeyEqual, typename NodeAlloc, typename BucketAlloc, typename InputIterator>
+			KERBAL_CONSTEXPR20
+			hash_table_base<Entity, HashCachePolicy>::
+			hash_table_base(
+				Extract & extract, Hash & hash, KeyEqual & key_equal,
+				NodeAlloc & node_alloc, BucketAlloc & bucket_alloc,
+				InputIterator first, InputIterator last
+			) :
+					k_size(0),
+					k_max_load_factor(1)
+			{
+				this->k_init_buckets(bucket_alloc, 7);
+				while (first != last) {
+					this->emplace_using_allocator(extract, hash, key_equal, node_alloc, bucket_alloc, *first);
+					++first;
+				}
+			}
+
+			template <typename Entity, typename HashCachePolicy>
+			template <typename Extract, typename Hash, typename KeyEqual, typename NodeAlloc, typename BucketAlloc, typename InputIterator>
+			KERBAL_CONSTEXPR20
+			hash_table_base<Entity, HashCachePolicy>::
+			hash_table_base(
+				Extract & extract, Hash & hash, KeyEqual & key_equal,
+				NodeAlloc & node_alloc, BucketAlloc & bucket_alloc,
+				kerbal::container::unique_tag_t, InputIterator first, InputIterator last
+			) :
+					k_size(0),
+					k_max_load_factor(1)
+			{
+				this->k_init_buckets(bucket_alloc, 7);
+				while (first != last) {
+					this->emplace_unique_using_allocator(extract, hash, key_equal, node_alloc, bucket_alloc, *first);
+					++first;
+				}
 			}
 
 			template <typename Entity, typename HashCachePolicy>
@@ -323,7 +363,8 @@ namespace kerbal
 				typedef kerbal::memory::allocator_traits<BucketAlloc> bucket_allocator_traits;
 
 				bucket_type * new_buckets = bucket_allocator_traits::allocate(bucket_alloc, new_bucket_count);
-				kerbal::algorithm::fill(new_buckets, new_buckets + new_bucket_count, static_cast<bucket_type>(&this->k_head));
+				// kerbal::algorithm::fill(new_buckets, new_buckets + new_bucket_count, static_cast<bucket_type>(&this->k_head));
+				kerbal::memory::uninitialized_fill(new_buckets, new_buckets + new_bucket_count, static_cast<bucket_type>(&this->k_head));
 				return new_buckets;
 			}
 
