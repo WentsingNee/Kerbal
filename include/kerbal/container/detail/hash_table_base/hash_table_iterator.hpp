@@ -40,10 +40,7 @@ namespace kerbal
 					public kerbal::operators::incrementable<hash_table_iter<Entity> > // it++
 			{
 				private:
-					template <typename Entity2,
-							typename Extract,
-							typename HashCachePolicy
-					>
+					template <typename Entity2, typename HashCachePolicy>
 					friend class kerbal::container::detail::hash_table_base;
 
 					friend class kerbal::container::detail::hash_table_kiter<Entity>;
@@ -108,10 +105,7 @@ namespace kerbal
 					public kerbal::operators::incrementable<hash_table_kiter<Entity> > // it++
 			{
 				private:
-					template <typename Entity2,
-							typename Extract,
-							typename HashCachePolicy
-					>
+					template <typename Entity2, typename HashCachePolicy>
 					friend class kerbal::container::detail::hash_table_base;
 
 					friend class kerbal::container::detail::hash_table_iter<Entity>;
