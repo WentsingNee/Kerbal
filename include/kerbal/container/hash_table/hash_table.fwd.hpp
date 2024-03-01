@@ -28,6 +28,14 @@ namespace kerbal
 		template <typename Entity,
 				typename Extract = kerbal::container::identity_extractor<Entity>,
 				typename Hash = kerbal::hash::hash<typename Extract::key_type>,
+				typename NodeAllocatorBR = std::allocator<Entity>,
+				typename BucketAllocatorBR = std::allocator<Entity>
+		>
+		struct hash_table_node_size;
+
+		template <typename Entity,
+				typename Extract = kerbal::container::identity_extractor<Entity>,
+				typename Hash = kerbal::hash::hash<typename Extract::key_type>,
 				typename KeyEqual = kerbal::compare::equal_to<>,
 				typename NodeAllocatorBR = std::allocator<Entity>,
 				typename BucketAllocatorBR = std::allocator<Entity>
