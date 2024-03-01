@@ -30,8 +30,6 @@ namespace kerbal
 		KERBAL_CONSTEXPR20
 		hash_table<Entity, Extract, Hash, KeyEqual, NodeAllocator, BucketAllocator>::
 		hash_table() :
-				hash_compress_helper(kerbal::utility::in_place_t()),
-				key_equal_compress_helper(kerbal::utility::in_place_t()),
 				hash_table_base(this->bucket_alloc())
 		{
 		}
@@ -42,8 +40,6 @@ namespace kerbal
 		KERBAL_CONSTEXPR20
 		hash_table<Entity, Extract, Hash, KeyEqual, NodeAllocator, BucketAllocator>::
 		hash_table(size_type bucket_count) :
-				hash_compress_helper(kerbal::utility::in_place_t()),
-				key_equal_compress_helper(kerbal::utility::in_place_t()),
 				hash_table_base(this->bucket_alloc(), bucket_count)
 		{
 		}
@@ -104,7 +100,7 @@ namespace kerbal
 		hash_table<Entity, Extract, Hash, KeyEqual, NodeAllocator, BucketAllocator>::emplace(Args&& ... args)
 		{
 			return this->hash_table_base::emplace_using_allocator(
-					this->hash(), this->key_equal_obj(),
+					this->extract(), this->hash(), this->key_equal_obj(),
 					this->node_alloc(), this->bucket_alloc(),
 					kerbal::utility::forward<Args>(args)...
 			);
@@ -118,7 +114,7 @@ namespace kerbal
 		hash_table<Entity, Extract, Hash, KeyEqual, NodeAllocator, BucketAllocator>::emplace_unique(Args&& ... args)
 		{
 			return this->hash_table_base::emplace_unique_using_allocator(
-					this->hash(), this->key_equal_obj(),
+					this->extract(), this->hash(), this->key_equal_obj(),
 					this->node_alloc(), this->bucket_alloc(),
 					kerbal::utility::forward<Args>(args)...
 			);
@@ -135,7 +131,7 @@ namespace kerbal
 		insert(const_reference src)
 		{
 			return this->hash_table_base::insert_using_allocator(
-					this->hash(), this->key_equal_obj(),
+					this->extract(), this->hash(), this->key_equal_obj(),
 					this->node_alloc(), this->bucket_alloc(),
 					src
 			);
@@ -163,7 +159,7 @@ namespace kerbal
 		insert_unique(const_reference src)
 		{
 			return this->hash_table_base::insert_unique_using_allocator(
-					this->hash(), this->key_equal_obj(),
+					this->extract(), this->hash(), this->key_equal_obj(),
 					this->node_alloc(), this->bucket_alloc(),
 					src
 			);
