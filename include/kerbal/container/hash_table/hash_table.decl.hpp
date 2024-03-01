@@ -14,13 +14,10 @@
 
 #include <kerbal/compatibility/constexpr.hpp>
 #include <kerbal/compatibility/noexcept.hpp>
-#include <kerbal/container/associative_container_facility/associative_unique_insert_r.hpp>
 #include <kerbal/memory/allocator_traits.hpp>
-#include <kerbal/memory/bad_alloc.hpp>
 #include <kerbal/numeric/numeric_limits.hpp>
-#include <kerbal/utility/compressed_pair.hpp>
+#include <kerbal/type_traits/integral_constant.hpp>
 #include <kerbal/utility/member_compress_helper.hpp>
-#include <kerbal/utility/throw_this_exception.hpp>
 
 #if __cplusplus >= 201103L
 #	include <kerbal/utility/forward.hpp>
@@ -59,7 +56,7 @@ namespace kerbal
 			struct hash_table_typedef_helper
 			{
 					typedef typename kerbal::container::detail::hash_node_traits<Entity, Hash>::hash_result_cache_policy	hash_result_cache_policy;
-					typedef kerbal::container::detail::hash_table_base<Entity, Extract, hash_result_cache_policy>		hash_table_base;
+					typedef kerbal::container::detail::hash_table_base<Entity, hash_result_cache_policy>		hash_table_base;
 
 					typedef typename hash_table_base::node				node;
 					typedef typename hash_table_base::bucket_type		bucket_type;
@@ -82,6 +79,18 @@ namespace kerbal
 
 		} // namespace detail
 
+
+		template <typename Entity, typename Extract, typename Hash, typename NodeAllocatorBR, typename BucketAllocatorBR>
+		struct hash_table_node_size :
+				kerbal::type_traits::integral_constant<std::size_t,
+					sizeof(
+						typename kerbal::container::detail::hash_table_typedef_helper<Entity, Extract, Hash, NodeAllocatorBR, BucketAllocatorBR>::node
+					)
+				>
+		{
+		};
+
+
 		template <typename Entity,
 				typename Extract,
 				typename Hash,
@@ -90,6 +99,7 @@ namespace kerbal
 				typename BucketAllocatorBR
 		>
 		class hash_table:
+				private kerbal::utility::member_compress_helper<Extract>,
 				private kerbal::utility::member_compress_helper<Hash>,
 				private kerbal::utility::member_compress_helper<KeyEqual>,
 				private kerbal::container::detail::hash_table_typedef_helper<
@@ -124,7 +134,7 @@ namespace kerbal
 				typedef typename hash_table_typedef_helper::hash_table_base						hash_table_base;
 
 			public:
-				typedef typename hash_table_base::key_type					key_type;
+				// typedef typename hash_table_base::key_type					key_type;
 				typedef typename hash_table_base::value_type				value_type;
 				typedef typename hash_table_base::const_type				const_type;
 				typedef typename hash_table_base::reference					reference;
@@ -146,6 +156,11 @@ namespace kerbal
 				typedef typename hash_table_base::iterator					iterator;
 				typedef typename hash_table_base::const_iterator			const_iterator;
 				typedef typename hash_table_base::unique_insert_r			unique_insert_r;
+
+
+				typedef kerbal::utility::member_compress_helper<Extract> extract_compress_helper;
+
+				typedef typename Extract::key_type			key_type;
 
 //				typedef typename hash_table_base::NODE_SIZE					NODE_SIZE;
 //				typedef typename hash_table_base::CACHE_HASH_RESULT			CACHE_HASH_RESULT;
@@ -273,13 +288,13 @@ namespace kerbal
 				KERBAL_CONSTEXPR
 				Extract & extract() KERBAL_NOEXCEPT
 				{
-					return hash_table_base::extract();
+					return extract_compress_helper::member();
 				}
 
 				KERBAL_CONSTEXPR
 				const Extract & extract() const KERBAL_NOEXCEPT
 				{
-					return hash_table_base::extract();
+					return extract_compress_helper::member();
 				}
 
 				KERBAL_CONSTEXPR14
@@ -446,13 +461,13 @@ namespace kerbal
 				KERBAL_CONSTEXPR20
 				void reserve(size_type new_size)
 				{
-					this->hash_table_base::reserve_using_allocator(this->hash(), this->bucket_alloc(), new_size);
+					this->hash_table_base::reserve_using_allocator(this->extract(), this->hash(), this->bucket_alloc(), new_size);
 				}
 
 				KERBAL_CONSTEXPR20
 				void rehash(size_type new_bucket_count)
 				{
-					this->hash_table_base::rehash(this->hash(), this->bucket_alloc(), new_bucket_count);
+					this->hash_table_base::rehash(this->extract(), this->hash(), this->bucket_alloc(), new_bucket_count);
 				}
 
 		};

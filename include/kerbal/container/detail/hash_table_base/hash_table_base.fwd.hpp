@@ -33,7 +33,7 @@ namespace kerbal
 		namespace detail
 		{
 
-			template <typename Entity, typename Extract, typename HashCachePolicy>
+			template <typename Entity, typename HashCachePolicy>
 			class hash_table_base;
 
 

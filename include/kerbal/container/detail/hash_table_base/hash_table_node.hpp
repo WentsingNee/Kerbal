@@ -59,10 +59,7 @@ namespace kerbal
 			class hash_table_node_type_unrelated
 			{
 				private:
-					template <typename Entity2,
-							typename Extract,
-							typename HashCachePolicy
-					>
+					template <typename Entity2, typename HashCachePolicy>
 					friend class kerbal::container::detail::hash_table_base;
 
 					template <typename Entity>
@@ -93,10 +90,7 @@ namespace kerbal
 					typedef hash_table_node_type_unrelated super;
 					typedef kerbal::utility::member_compress_helper<Entity> data;
 
-					template <typename Entity2,
-							typename Extract,
-							typename HashCachePolicy
-					>
+					template <typename Entity2, typename HashCachePolicy>
 					friend class kerbal::container::detail::hash_table_base;
 
 					friend class kerbal::container::detail::hash_table_node_type_unrelated;
@@ -216,10 +210,7 @@ namespace kerbal
 				private:
 					typedef hash_table_node_type_only<Entity> super;
 
-					template <typename Entity2,
-							typename Extract,
-							typename HashCachePolicy2
-					>
+					template <typename Entity2, typename HashCachePolicy>
 					friend class kerbal::container::detail::hash_table_base;
 
 				protected:
