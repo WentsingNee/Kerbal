@@ -14,6 +14,7 @@
 
 #include <kerbal/compatibility/constexpr.hpp>
 #include <kerbal/compatibility/noexcept.hpp>
+#include <kerbal/container/associative_container_facility/unique_tag_t.hpp>
 #include <kerbal/memory/allocator_traits.hpp>
 #include <kerbal/numeric/numeric_limits.hpp>
 #include <kerbal/type_traits/integral_constant.hpp>
@@ -278,8 +279,24 @@ namespace kerbal
 				);
 
 				KERBAL_CONSTEXPR20
+				hash_table(hash_table const & src);
+
+				KERBAL_CONSTEXPR20
+				hash_table(hash_table const & src, kerbal::container::unique_tag_t);
+
+				KERBAL_CONSTEXPR20
 				~hash_table();
 
+
+			//===================
+			// Assign
+
+				hash_table & operator=(hash_table const & src)
+				{
+					this->clear();
+					this->insert(src.cbegin(), src.cend());
+					return *this;
+				}
 
 			//===================
 			// Observers
@@ -341,21 +358,26 @@ namespace kerbal
 
 			public:
 
+				KERBAL_CONSTEXPR20
 				void clear();
 
 #		if __cplusplus >= 201103L
 
 				template <typename ... Args >
+				KERBAL_CONSTEXPR20
 				iterator emplace(Args&& ... args);
 
 				template <typename ... Args >
+				KERBAL_CONSTEXPR20
 				unique_insert_r
 				emplace_unique(Args&& ... args);
 
 				template <typename ... Args >
+				KERBAL_CONSTEXPR20
 				iterator emplace_hint(const_iterator hint, Args&& ... args);
 
 				template <typename ... Args >
+				KERBAL_CONSTEXPR20
 				unique_insert_r
 				emplace_unique_hint(const_iterator hint, Args&& ... args);
 
@@ -389,22 +411,28 @@ namespace kerbal
 #		endif
 
 
+				KERBAL_CONSTEXPR20
 				iterator insert(const_reference src);
 
 #		if __cplusplus >= 201103L
+				KERBAL_CONSTEXPR20
 				iterator insert(rvalue_reference src);
 #		endif
 
+				KERBAL_CONSTEXPR20
 				iterator insert(const_iterator hint, const_reference src);
 
 #		if __cplusplus >= 201103L
+				KERBAL_CONSTEXPR20
 				iterator insert(const_iterator hint, rvalue_reference src);
 #		endif
 
 				template <typename InputIterator>
+				KERBAL_CONSTEXPR20
 				void insert(InputIterator first, InputIterator last);
 
 #		if __cplusplus >= 201103L
+				KERBAL_CONSTEXPR20
 				void insert(std::initializer_list<value_type> ilist);
 #		else
 				template <typename Up>
@@ -412,18 +440,26 @@ namespace kerbal
 #		endif
 
 
+				KERBAL_CONSTEXPR20
 				unique_insert_r insert_unique(const_reference src);
+
+				KERBAL_CONSTEXPR20
 				unique_insert_r insert_unique(const_iterator hint, const_reference src);
 
 #		if __cplusplus >= 201103L
+				KERBAL_CONSTEXPR20
 				unique_insert_r insert_unique(rvalue_reference src);
+
+				KERBAL_CONSTEXPR20
 				unique_insert_r insert_unique(const_iterator hint, rvalue_reference src);
 #		endif
 
 				template <typename InputIterator>
+				KERBAL_CONSTEXPR20
 				void insert_unique(InputIterator first, InputIterator last);
 
 #		if __cplusplus >= 201103L
+				KERBAL_CONSTEXPR20
 				void insert_unique(std::initializer_list<value_type> ilist);
 #		else
 				template <typename Up>
@@ -431,12 +467,16 @@ namespace kerbal
 #		endif
 
 
+				KERBAL_CONSTEXPR20
 				iterator erase(const_iterator pos);
 
+				KERBAL_CONSTEXPR20
 				iterator erase(const_iterator first, const_iterator last);
 
+				KERBAL_CONSTEXPR20
 				iterator erase(const key_type & key);
 
+				KERBAL_CONSTEXPR20
 				void swap(hash_table & with);
 
 			//===================
@@ -446,7 +486,7 @@ namespace kerbal
 				using hash_table_base::max_bucket_count;
 				using hash_table_base::bucket_size;
 
-				KERBAL_CONSTEXPR14
+				KERBAL_CONSTEXPR20
 				size_type bucket(const key_type & key) const
 				{
 					return this->hash_table_base::bucket(this->hash(), key);
