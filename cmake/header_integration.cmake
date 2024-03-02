@@ -26,7 +26,7 @@ set(content_of_kerbal_header_integration
 
 "
 )
-foreach (header ${Kerbal_PUBLIC_HEADERS_RELATIVE_kerbal})
+foreach (header IN LISTS Kerbal_PUBLIC_HEADERS_RELATIVE_kerbal)
     string(APPEND content_of_kerbal_header_integration "#include <${header}>\n")
 endforeach ()
 set(kerbal_header_integration_filename "${KERBAL_CONFIGURE_ASSETS_DIR}/kerbal_header_integration.cpp")

@@ -9,7 +9,7 @@ get_target_property(@PROJECT_NAME@_INCLUDE_DIRS @PROJECT_NAME@::kerbal INTERFACE
 
 function(__kerbal_relative_to_absolute _Out_list_name list)
     set(result)
-    foreach (header ${list})
+    foreach (header IN LISTS list)
         list(APPEND result
             ${Kerbal_INCLUDE_DIRS}/${header}
         )
