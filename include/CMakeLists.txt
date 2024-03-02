@@ -36,29 +36,21 @@ foreach (
 
     set(headers_relative ${headers_relative_${lib}})
 
-    set(build_headers)
-    foreach (header IN LISTS headers_relative)
-        list(APPEND build_headers "${header}")
-    endforeach ()
-
     kerbal_list_regex_filter(
             public_headers_relative "${headers_relative}"
             BLOCK_PATTERNS
                 ".*part\.hpp$"
                 "detail/"
     )
+    set(${CMAKE_PROJECT_NAME}_PUBLIC_HEADERS_RELATIVE_${lib} ${public_headers_relative} PARENT_SCOPE)
 
-    set(public_headers)
     foreach (header IN LISTS public_headers_relative)
-        list(APPEND public_headers
-                $<BUILD_INTERFACE:${PROJECT_SOURCE_DIR}/include/${header}>
-                $<INSTALL_INTERFACE:include/${header}>
-        )
+        list(APPEND public_headers "${CMAKE_CURRENT_SOURCE_DIR}/${header}")
     endforeach ()
-
+    set(${CMAKE_PROJECT_NAME}_PUBLIC_HEADERS_${lib} ${public_headers} PARENT_SCOPE)
 
     if (${CMAKE_VERSION} VERSION_GREATER_EQUAL 3.19)
-        add_library(${lib} INTERFACE ${build_headers})
+        add_library(${lib} INTERFACE ${headers_relative})
     else ()
         add_library(${lib} INTERFACE)
     endif ()
@@ -71,11 +63,6 @@ foreach (
     foreach (header IN LISTS headers_relative)
         target_sources(${lib} INTERFACE
                 $<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}/${header}>
-        )
-    endforeach ()
-
-    foreach (header IN LISTS headers_relative)
-        target_sources(${lib} INTERFACE
                 $<INSTALL_INTERFACE:include/${header}>
         )
     endforeach ()
@@ -103,13 +90,6 @@ foreach (
                 DESTINATION ${CMAKE_INSTALL_INCLUDEDIR}/${path}
         )
     endforeach ()
-
-
-    set(${CMAKE_PROJECT_NAME}_HEADERS_RELATIVE_${lib} ${headers_relative} PARENT_SCOPE)
-    set(${CMAKE_PROJECT_NAME}_PUBLIC_HEADERS_RELATIVE_${lib} ${public_headers_relative} PARENT_SCOPE)
-
-    set(${CMAKE_PROJECT_NAME}_PUBLIC_HEADERS_${lib} ${public_headers} PARENT_SCOPE)
-
 endforeach ()
 
 
