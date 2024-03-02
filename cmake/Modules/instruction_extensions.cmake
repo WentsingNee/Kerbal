@@ -83,7 +83,7 @@ function(kerbal_ies_required)
 
     set(required_ies ${ARGN})
 
-    foreach (ie ${required_ies})
+    foreach (ie IN LISTS required_ies)
         if (DEFINED KERBAL_SUPPORT_${ie})
             message(STATUS "Checking compiler support ${ie} -- Cached")
             message(STATUS "Cached KERBAL_SUPPORT_${ie} = ${KERBAL_SUPPORT_${ie}}")
@@ -163,7 +163,7 @@ function(kerbal_target_with_ies)
         message(FATAL_ERROR "Target is not exist. target: ${target}")
     endif ()
 
-    foreach (ie ${ies})
+    foreach (ie IN LISTS ies)
         if (NOT KERBAL_SUPPORT_${ie})
             if (mode STREQUAL "REQUIRED")
                 message(FATAL_ERROR "Compiler doesn't support ${ie}")

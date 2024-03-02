@@ -28,7 +28,8 @@ kerbal_aux_headers(
 )
 
 
-foreach (lib
+foreach (
+    lib IN ITEMS
     kerbal
     kerbal-omp
 )
@@ -36,7 +37,7 @@ foreach (lib
     set(headers_relative ${headers_relative_${lib}})
 
     set(build_headers)
-    foreach (header ${headers_relative})
+    foreach (header IN LISTS headers_relative)
         list(APPEND build_headers "${header}")
     endforeach ()
 
@@ -48,7 +49,7 @@ foreach (lib
     )
 
     set(public_headers)
-    foreach (header ${public_headers_relative})
+    foreach (header IN LISTS public_headers_relative)
         list(APPEND public_headers
                 $<BUILD_INTERFACE:${PROJECT_SOURCE_DIR}/include/${header}>
                 $<INSTALL_INTERFACE:include/${header}>
@@ -67,13 +68,13 @@ foreach (lib
             ALIAS ${lib}
     )
 
-    foreach (header ${headers_relative})
+    foreach (header IN LISTS headers_relative)
         target_sources(${lib} INTERFACE
                 $<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}/${header}>
         )
     endforeach ()
 
-    foreach (header ${headers_relative})
+    foreach (header IN LISTS headers_relative)
         target_sources(${lib} INTERFACE
                 $<INSTALL_INTERFACE:include/${header}>
         )
@@ -95,7 +96,7 @@ foreach (lib
             DESTINATION "${CMAKE_INSTALL_DATADIR}/cmake/${PROJECT_NAME}"
     )
     # Header
-    foreach (header ${headers_relative})
+    foreach (header IN LISTS headers_relative)
         get_filename_component(path ${header} DIRECTORY)
         install(
                 FILES ${header}
