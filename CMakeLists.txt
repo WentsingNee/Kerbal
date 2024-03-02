@@ -55,6 +55,13 @@ if (KERBAL_BUILD_SCRIPT)
 endif ()
 
 
+# Build Src
+option(KERBAL_BUILD_SRC "build src" ON)
+if (KERBAL_BUILD_SRC)
+    add_subdirectory(src)
+endif ()
+
+
 # Build Test
 option(KERBAL_BUILD_TEST "build test" OFF)
 if (KERBAL_BUILD_TEST)
