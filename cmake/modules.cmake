@@ -19,7 +19,7 @@ set(
         "${PROJECT_SOURCE_DIR}/cmake/Modules/list_ext.cmake"
 )
 
-foreach (module ${kerbal_modules})
+foreach (module IN LISTS kerbal_modules)
     install(
             FILES
             "${module}"
