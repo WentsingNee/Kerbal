@@ -17,8 +17,7 @@
 #include <kerbal/compatibility/constexpr.hpp>
 #include <kerbal/compatibility/noexcept.hpp>
 #include <kerbal/numeric/bit/detail/single_bit_bsearch.hpp>
-#include <kerbal/type_traits/enable_if.hpp>
-#include <kerbal/type_traits/integral_constant.hpp>
+#include <kerbal/smath/has_single_bit.hpp>
 
 #include <climits>
 
@@ -36,27 +35,25 @@ namespace kerbal
 			{
 
 				template <typename Unsigned>
-				KERBAL_CONSTEXPR
-				typename kerbal::type_traits::enable_if<
-						single_bit_bsearch_depth<CHAR_BIT * sizeof(Unsigned)>::value != -1,
-						int
-				>::type
-				countr_zero(Unsigned x) KERBAL_NOEXCEPT
+				KERBAL_CONSTEXPR14
+				int countr_zero_impl(Unsigned x, kerbal::type_traits::false_type) KERBAL_NOEXCEPT
 				{
-					typedef kerbal::type_traits::integral_constant<std::size_t, CHAR_BIT * sizeof(Unsigned)> DIGIT;
-					typedef kerbal::numeric::detail::single_bit_bsearch_depth<DIGIT::value> N;
-					return kerbal::numeric::detail::single_bit_bsearch<Unsigned, N::value - 1>::f(x & (-x)) + (x == 0 ? 1 : 0);
+					return kerbal::numeric::detail::plain::countr_zero(x);
+				}
+
+				template <typename Unsigned>
+				KERBAL_CONSTEXPR
+				int countr_zero_impl(Unsigned x, kerbal::type_traits::true_type) KERBAL_NOEXCEPT
+				{
+					return kerbal::numeric::detail::single_bit_bsearch<Unsigned>::f(x & (-x)) + (x == 0 ? 1 : 0);
 				}
 
 				template <typename Unsigned>
 				KERBAL_CONSTEXPR14
-				typename kerbal::type_traits::enable_if<
-						single_bit_bsearch_depth<CHAR_BIT * sizeof(Unsigned)>::value == -1,
-						int
-				>::type
-				countr_zero(Unsigned x) KERBAL_NOEXCEPT
+				int countr_zero(Unsigned x) KERBAL_NOEXCEPT
 				{
-					return kerbal::numeric::detail::plain::countr_zero(x);
+					typedef kerbal::smath::has_single_bit<std::size_t, CHAR_BIT * sizeof(Unsigned)> type_digit_is_pow_of_2;
+					return countr_zero_impl(x, type_digit_is_pow_of_2());
 				}
 
 			} // namespace bsearch
