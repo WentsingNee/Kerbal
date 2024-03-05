@@ -114,14 +114,14 @@ namespace kerbal
 #		if __cplusplus >= 201103L
 
 				KERBAL_CONSTEXPR14
-				static_priority_queue(std::initializer_list<value_type> src) :
-						static_priority_queue(src.begin(), src.end())
+				static_priority_queue(std::initializer_list<value_type> ilist) :
+						static_priority_queue(ilist.begin(), ilist.end())
 				{
 				}
 
 				KERBAL_CONSTEXPR14
-				static_priority_queue(std::initializer_list<value_type> src, value_compare vc) :
-						static_priority_queue(src.begin(), src.end(), vc)
+				static_priority_queue(std::initializer_list<value_type> ilist, value_compare vc) :
+						static_priority_queue(ilist.begin(), ilist.end(), vc)
 				{
 				}
 

@@ -141,39 +141,39 @@ namespace kerbal
 #		if __cplusplus >= 201103L
 
 				KERBAL_CONSTEXPR20
-				priority_queue(std::initializer_list<value_type> src) :
-						priority_queue(src.begin(), src.end())
+				priority_queue(std::initializer_list<value_type> ilist) :
+						priority_queue(ilist.begin(), ilist.end())
 				{
 				}
 
 				KERBAL_CONSTEXPR20
-				priority_queue(std::initializer_list<value_type> src, const value_compare & vc) :
-						priority_queue(src.begin(), src.end(), vc)
+				priority_queue(std::initializer_list<value_type> ilist, const value_compare & vc) :
+						priority_queue(ilist.begin(), ilist.end(), vc)
 				{
 				}
 
 #		else
 
-				priority_queue(const kerbal::assign::assign_list<void> & src) :
+				priority_queue(const kerbal::assign::assign_list<void> & ilist) :
 						kc_compress_helper(kerbal::utility::in_place_t()), c()
 				{
 				}
 
 				template <typename Up>
-				priority_queue(const kerbal::assign::assign_list<Up> & src) :
-						kc_compress_helper(kerbal::utility::in_place_t()), c(src.cbegin(), src.cend())
+				priority_queue(const kerbal::assign::assign_list<Up> & ilist) :
+						kc_compress_helper(kerbal::utility::in_place_t()), c(ilist.cbegin(), ilist.cend())
 				{
 					kerbal::algorithm::make_heap(c.begin(), c.end(), this->vc());
 				}
 
-				priority_queue(const kerbal::assign::assign_list<void> & src, const value_compare & vc) :
+				priority_queue(const kerbal::assign::assign_list<void> & ilist, const value_compare & vc) :
 						kc_compress_helper(kerbal::utility::in_place_t(), vc), c()
 				{
 				}
 
 				template <typename Up>
-				priority_queue(const kerbal::assign::assign_list<Up> & src, const value_compare & vc) :
-						kc_compress_helper(kerbal::utility::in_place_t(), vc), c(src.cbegin(), src.cend())
+				priority_queue(const kerbal::assign::assign_list<Up> & ilist, const value_compare & vc) :
+						kc_compress_helper(kerbal::utility::in_place_t(), vc), c(ilist.cbegin(), ilist.cend())
 				{
 					kerbal::algorithm::make_heap(c.begin(), c.end(), this->vc());
 				}
@@ -338,21 +338,21 @@ namespace kerbal
 #		if __cplusplus >= 201103L
 
 				KERBAL_CONSTEXPR20
-				void push(std::initializer_list<value_type> src)
+				void push(std::initializer_list<value_type> ilist)
 				{
-					this->push(src.begin(), src.end());
+					this->push(ilist.begin(), ilist.end());
 				}
 
 #		else
 
-				void push(const kerbal::assign::assign_list<void> & src)
+				void push(const kerbal::assign::assign_list<void> & ilist)
 				{
 				}
 
 				template <typename Up>
-				void push(const kerbal::assign::assign_list<Up> & src)
+				void push(const kerbal::assign::assign_list<Up> & ilist)
 				{
-					this->push(src.cbegin(), src.cend());
+					this->push(ilist.cbegin(), ilist.cend());
 				}
 
 #		endif

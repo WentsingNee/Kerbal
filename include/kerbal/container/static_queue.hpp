@@ -101,8 +101,8 @@ namespace kerbal
 #			if __cplusplus >= 201103L
 
 				KERBAL_CONSTEXPR14
-				static_queue(std::initializer_list<value_type> src)
-						: static_queue(src.begin(), src.end())
+				static_queue(std::initializer_list<value_type> ilist)
+						: static_queue(ilist.begin(), ilist.end())
 				{
 				}
 

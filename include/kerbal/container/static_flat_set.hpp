@@ -94,14 +94,14 @@ namespace kerbal
 #		if __cplusplus >= 201103L
 
 				KERBAL_CONSTEXPR14
-				static_flat_set(std::initializer_list<value_type> src) :
-						super(src)
+				static_flat_set(std::initializer_list<value_type> ilist) :
+						super(ilist)
 				{
 				}
 
 				KERBAL_CONSTEXPR14
-				static_flat_set(std::initializer_list<value_type> src, key_compare kc) :
-						super(src, kc)
+				static_flat_set(std::initializer_list<value_type> ilist, key_compare kc) :
+						super(ilist, kc)
 				{
 				}
 
@@ -123,9 +123,9 @@ namespace kerbal
 #		if __cplusplus >= 201103L
 
 				KERBAL_CONSTEXPR14
-				static_flat_set& operator=(std::initializer_list<value_type> src)
+				static_flat_set& operator=(std::initializer_list<value_type> ilist)
 				{
-					this->super::assign(src);
+					this->super::assign(ilist);
 					return *this;
 				}
 
@@ -261,14 +261,14 @@ namespace kerbal
 #		if __cplusplus >= 201103L
 
 				KERBAL_CONSTEXPR14
-				static_flat_multiset(std::initializer_list<value_type> src) :
-						super(src)
+				static_flat_multiset(std::initializer_list<value_type> ilist) :
+						super(ilist)
 				{
 				}
 
 				KERBAL_CONSTEXPR14
-				static_flat_multiset(std::initializer_list<value_type> src, key_compare kc) :
-						super(src, kc)
+				static_flat_multiset(std::initializer_list<value_type> ilist, key_compare kc) :
+						super(ilist, kc)
 				{
 				}
 
@@ -290,9 +290,9 @@ namespace kerbal
 #		if __cplusplus >= 201103L
 
 				KERBAL_CONSTEXPR14
-				static_flat_multiset& operator=(std::initializer_list<value_type> src)
+				static_flat_multiset& operator=(std::initializer_list<value_type> ilist)
 				{
-					this->super::assign(src);
+					this->super::assign(ilist);
 					return *this;
 				}
 
