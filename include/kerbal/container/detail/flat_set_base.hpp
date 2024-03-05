@@ -17,6 +17,8 @@
 #include <kerbal/iterator/iterator.hpp>
 #include <kerbal/iterator/iterator_traits.hpp>
 #include <kerbal/type_traits/enable_if.hpp>
+#include <kerbal/utility/compressed_pair.hpp>
+
 
 namespace kerbal
 {
@@ -193,7 +195,8 @@ namespace kerbal
 					}
 
 					KERBAL_CONSTEXPR14
-					std::pair<const_iterator, const_iterator> equal_range(const key_type & key) const
+					kerbal::utility::compressed_pair<const_iterator, const_iterator>
+					equal_range(const key_type & key) const
 					{
 						return ordered.equal_range(key);
 					}

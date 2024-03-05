@@ -29,14 +29,13 @@
 #include <kerbal/type_traits/enable_if.hpp>
 #include <kerbal/type_traits/is_same.hpp>
 #include <kerbal/utility/as_const.hpp>
+#include <kerbal/utility/compressed_pair.hpp>
 #include <kerbal/utility/member_compress_helper.hpp>
 
 #if __cplusplus >= 201103L
 #	include <kerbal/type_traits/is_nothrow_copy_constructible.hpp>
 #	include <kerbal/type_traits/is_nothrow_default_constructible.hpp>
 #endif
-
-#include <utility> // std::pair
 
 #if __cplusplus >= 201103L
 #	include <initializer_list>
@@ -682,7 +681,7 @@ namespace kerbal
 					}
 
 					KERBAL_CONSTEXPR14
-					std::pair<iterator, iterator>
+					kerbal::utility::compressed_pair<iterator, iterator>
 					equal_range(const key_type & key)
 					{
 						return kerbal::algorithm::equal_range(this->begin(), this->end(), key,
@@ -690,7 +689,7 @@ namespace kerbal
 					}
 
 					KERBAL_CONSTEXPR14
-					std::pair<const_iterator, const_iterator>
+					kerbal::utility::compressed_pair<const_iterator, const_iterator>
 					equal_range(const key_type & key) const
 					{
 						return kerbal::algorithm::equal_range(this->cbegin(), this->cend(), key,
@@ -698,7 +697,7 @@ namespace kerbal
 					}
 
 					KERBAL_CONSTEXPR14
-					std::pair<iterator, iterator>
+					kerbal::utility::compressed_pair<iterator, iterator>
 					equal_range(const key_type & key, const_iterator hint)
 					{
 						return kerbal::algorithm::equal_range(this->begin(), this->end(), key,
@@ -706,7 +705,7 @@ namespace kerbal
 					}
 
 					KERBAL_CONSTEXPR14
-					std::pair<const_iterator, const_iterator>
+					kerbal::utility::compressed_pair<const_iterator, const_iterator>
 					equal_range(const key_type & key, const_iterator hint) const
 					{
 						return kerbal::algorithm::equal_range(this->cbegin(), this->cend(), key,
@@ -746,14 +745,14 @@ namespace kerbal
 					KERBAL_CONSTEXPR14
 					size_type count(const key_type & key) const
 					{
-						std::pair<const_iterator, const_iterator> p(this->equal_range(key));
+						kerbal::utility::compressed_pair<const_iterator, const_iterator> p(this->equal_range(key));
 						return kerbal::iterator::distance(p.first, p.second);
 					}
 
 					KERBAL_CONSTEXPR14
 					size_type count(const key_type & key, const_iterator hint) const
 					{
-						std::pair<const_iterator, const_iterator> p(this->equal_range(key, hint));
+						kerbal::utility::compressed_pair<const_iterator, const_iterator> p(this->equal_range(key, hint));
 						return kerbal::iterator::distance(p.first, p.second);
 					}
 
@@ -941,9 +940,9 @@ namespace kerbal
 					KERBAL_CONSTEXPR14
 					size_type erase(const key_type & key)
 					{
-						std::pair<iterator, iterator> p(this->equal_range(key));
-						size_type dis(kerbal::iterator::distance(p.first, p.second));
-						this->erase(p.first, p.second);
+						kerbal::utility::compressed_pair<iterator, iterator> p(this->equal_range(key));
+						size_type dis(kerbal::iterator::distance(p.first(), p.second()));
+						this->erase(p.first(), p.second());
 						return dis;
 					}
 
