@@ -151,17 +151,17 @@ namespace kerbal
 
 				/**
 				 * @brief Construct the array by coping the contents in initializer list
-				 * @param src An initializer list
+				 * @param ilist An initializer list
 				 */
 				KERBAL_CONSTEXPR14
-				static_vector(std::initializer_list<value_type> src);
+				static_vector(std::initializer_list<value_type> ilist);
 
 #		else
 
-				static_vector(const kerbal::assign::assign_list<void> & src);
+				static_vector(const kerbal::assign::assign_list<void> & ilist);
 
 				template <typename Up>
-				static_vector(const kerbal::assign::assign_list<Up> & src);
+				static_vector(const kerbal::assign::assign_list<Up> & ilist);
 
 #		endif
 
@@ -179,18 +179,18 @@ namespace kerbal
 
 				/**
 				 * @brief Assign the array by using the content of an initializer list
-				 * @param src the initializer list
+				 * @param ilist the initializer list
 				 * @return the reference to the array be assigned
 				 */
 				KERBAL_CONSTEXPR14
-				static_vector& operator=(std::initializer_list<value_type> src);
+				static_vector& operator=(std::initializer_list<value_type> ilist);
 
 #		else
 
-				static_vector& operator=(const kerbal::assign::assign_list<void> & src);
+				static_vector& operator=(const kerbal::assign::assign_list<void> & ilist);
 
 				template <typename Up>
-				static_vector& operator=(const kerbal::assign::assign_list<Up> & src);
+				static_vector& operator=(const kerbal::assign::assign_list<Up> & ilist);
 
 #		endif
 
@@ -264,25 +264,25 @@ namespace kerbal
 
 				/**
 				 * @brief Assign the array by using the content of an initializer list
-				 * @param src the initializer list
+				 * @param ilist the initializer list
 				 */
 				KERBAL_CONSTEXPR14
-				void assign_unsafe(std::initializer_list<value_type> src);
+				void assign_unsafe(std::initializer_list<value_type> ilist);
 
 				KERBAL_CONSTEXPR20
-				void assign(std::initializer_list<value_type> src);
+				void assign(std::initializer_list<value_type> ilist);
 
 #		else
 
-				void assign_unsafe(const kerbal::assign::assign_list<void> & src);
+				void assign_unsafe(const kerbal::assign::assign_list<void> & ilist);
 
 				template <typename Up>
-				void assign_unsafe(const kerbal::assign::assign_list<Up> & src);
+				void assign_unsafe(const kerbal::assign::assign_list<Up> & ilist);
 
-				void assign(const kerbal::assign::assign_list<void> & src);
+				void assign(const kerbal::assign::assign_list<void> & ilist);
 
 				template <typename Up>
-				void assign(const kerbal::assign::assign_list<Up> & src);
+				void assign(const kerbal::assign::assign_list<Up> & ilist);
 
 #		endif
 

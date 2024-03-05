@@ -212,22 +212,22 @@ namespace kerbal
 #		if __cplusplus >= 201103L
 
 				KERBAL_CONSTEXPR20
-				list(std::initializer_list<value_type> src);
+				list(std::initializer_list<value_type> ilist);
 
 				KERBAL_CONSTEXPR20
-				list(std::initializer_list<value_type> src, const Allocator& alloc);
+				list(std::initializer_list<value_type> ilist, const Allocator& alloc);
 
 #		else
 
-				list(const kerbal::assign::assign_list<void> & src);
+				list(const kerbal::assign::assign_list<void> & ilist);
 
 				template <typename Up>
-				list(const kerbal::assign::assign_list<Up> & src);
+				list(const kerbal::assign::assign_list<Up> & ilist);
 
-				list(const kerbal::assign::assign_list<void> & src, const Allocator& alloc);
+				list(const kerbal::assign::assign_list<void> & ilist, const Allocator& alloc);
 
 				template <typename Up>
-				list(const kerbal::assign::assign_list<Up> & src, const Allocator& alloc);
+				list(const kerbal::assign::assign_list<Up> & ilist, const Allocator& alloc);
 
 #		endif
 
@@ -252,14 +252,14 @@ namespace kerbal
 #		if __cplusplus >= 201103L
 
 				KERBAL_CONSTEXPR20
-				list& operator=(std::initializer_list<value_type> src);
+				list& operator=(std::initializer_list<value_type> ilist);
 
 #		else
 
-				list& operator=(const kerbal::assign::assign_list<void> & src);
+				list& operator=(const kerbal::assign::assign_list<void> & ilist);
 
 				template <typename Up>
-				list& operator=(const kerbal::assign::assign_list<Up> & src);
+				list& operator=(const kerbal::assign::assign_list<Up> & ilist);
 
 #		endif
 
@@ -288,14 +288,14 @@ namespace kerbal
 #		if __cplusplus >= 201103L
 
 				KERBAL_CONSTEXPR20
-				void assign(std::initializer_list<value_type> src);
+				void assign(std::initializer_list<value_type> ilist);
 
 #		else
 
-				void assign(const kerbal::assign::assign_list<void> & src);
+				void assign(const kerbal::assign::assign_list<void> & ilist);
 
 				template <typename Up>
-				void assign(const kerbal::assign::assign_list<Up> & src);
+				void assign(const kerbal::assign::assign_list<Up> & ilist);
 
 #		endif
 
@@ -440,14 +440,14 @@ namespace kerbal
 #		if __cplusplus >= 201103L
 
 				KERBAL_CONSTEXPR20
-				iterator insert(const_iterator pos, std::initializer_list<value_type> src);
+				iterator insert(const_iterator pos, std::initializer_list<value_type> ilist);
 
 #		else
 
-				iterator insert(const_iterator pos, const kerbal::assign::assign_list<void> & src);
+				iterator insert(const_iterator pos, const kerbal::assign::assign_list<void> & ilist);
 
 				template <typename Up>
-				iterator insert(const_iterator pos, const kerbal::assign::assign_list<Up> & src);
+				iterator insert(const_iterator pos, const kerbal::assign::assign_list<Up> & ilist);
 
 #		endif
 
@@ -659,7 +659,7 @@ namespace kerbal
 				-> list<typename kerbal::iterator::iterator_traits<InputIterator>::value_type, Alloc>;
 
 		template <typename Tp, typename Alloc = std::allocator<Tp> >
-		list(std::initializer_list<Tp> src, Alloc = Alloc()) -> list<Tp, Alloc>;
+		list(std::initializer_list<Tp>, Alloc = Alloc()) -> list<Tp, Alloc>;
 
 #	endif
 

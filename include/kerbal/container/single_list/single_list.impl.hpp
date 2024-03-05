@@ -171,22 +171,22 @@ namespace kerbal
 
 		template <typename Tp, typename Allocator>
 		KERBAL_CONSTEXPR20
-		single_list<Tp, Allocator>::single_list(std::initializer_list<value_type> src) :
-				single_list(src.begin(), src.end())
+		single_list<Tp, Allocator>::single_list(std::initializer_list<value_type> ilist) :
+				single_list(ilist.begin(), ilist.end())
 		{
 		}
 
 		template <typename Tp, typename Allocator>
 		KERBAL_CONSTEXPR20
-		single_list<Tp, Allocator>::single_list(std::initializer_list<value_type> src, const Allocator& alloc) :
-				single_list(src.begin(), src.end(), alloc)
+		single_list<Tp, Allocator>::single_list(std::initializer_list<value_type> ilist, const Allocator& alloc) :
+				single_list(ilist.begin(), ilist.end(), alloc)
 		{
 		}
 
 #	else
 
 		template <typename Tp, typename Allocator>
-		single_list<Tp, Allocator>::single_list(const kerbal::assign::assign_list<void> & src) :
+		single_list<Tp, Allocator>::single_list(const kerbal::assign::assign_list<void> & ilist) :
 				sl_allocator_overload(),
 				sl_type_only()
 		{
@@ -194,14 +194,14 @@ namespace kerbal
 
 		template <typename Tp, typename Allocator>
 		template <typename Up>
-		single_list<Tp, Allocator>::single_list(const kerbal::assign::assign_list<Up> & src) :
+		single_list<Tp, Allocator>::single_list(const kerbal::assign::assign_list<Up> & ilist) :
 				sl_allocator_overload(),
-				sl_type_only(this->alloc(), src.cbegin(), src.cend())
+				sl_type_only(this->alloc(), ilist.cbegin(), ilist.cend())
 		{
 		}
 
 		template <typename Tp, typename Allocator>
-		single_list<Tp, Allocator>::single_list(const kerbal::assign::assign_list<void> & src, const Allocator& alloc) :
+		single_list<Tp, Allocator>::single_list(const kerbal::assign::assign_list<void> & ilist, const Allocator& alloc) :
 				sl_allocator_overload(alloc),
 				sl_type_only()
 		{
@@ -209,9 +209,9 @@ namespace kerbal
 
 		template <typename Tp, typename Allocator>
 		template <typename Up>
-		single_list<Tp, Allocator>::single_list(const kerbal::assign::assign_list<Up> & src, const Allocator& alloc) :
+		single_list<Tp, Allocator>::single_list(const kerbal::assign::assign_list<Up> & ilist, const Allocator& alloc) :
 				sl_allocator_overload(alloc),
-				sl_type_only(this->alloc(), src.cbegin(), src.cend())
+				sl_type_only(this->alloc(), ilist.cbegin(), ilist.cend())
 		{
 		}
 
@@ -258,9 +258,9 @@ namespace kerbal
 		template <typename Tp, typename Allocator>
 		KERBAL_CONSTEXPR20
 		single_list<Tp, Allocator>&
-		single_list<Tp, Allocator>::operator=(std::initializer_list<value_type> src)
+		single_list<Tp, Allocator>::operator=(std::initializer_list<value_type> ilist)
 		{
-			this->assign(src);
+			this->assign(ilist);
 			return *this;
 		}
 
@@ -268,18 +268,18 @@ namespace kerbal
 
 		template <typename Tp, typename Allocator>
 		single_list<Tp, Allocator>&
-		single_list<Tp, Allocator>::operator=(const kerbal::assign::assign_list<void> & src)
+		single_list<Tp, Allocator>::operator=(const kerbal::assign::assign_list<void> & ilist)
 		{
-			this->assign(src);
+			this->assign(ilist);
 			return *this;
 		}
 
 		template <typename Tp, typename Allocator>
 		template <typename Up>
 		single_list<Tp, Allocator>&
-		single_list<Tp, Allocator>::operator=(const kerbal::assign::assign_list<Up> & src)
+		single_list<Tp, Allocator>::operator=(const kerbal::assign::assign_list<Up> & ilist)
 		{
-			this->assign(src);
+			this->assign(ilist);
 			return *this;
 		}
 
@@ -335,24 +335,24 @@ namespace kerbal
 
 		template <typename Tp, typename Allocator>
 		KERBAL_CONSTEXPR20
-		void single_list<Tp, Allocator>::assign(std::initializer_list<value_type> src)
+		void single_list<Tp, Allocator>::assign(std::initializer_list<value_type> ilist)
 		{
-			this->assign(src.begin(), src.end());
+			this->assign(ilist.begin(), ilist.end());
 		}
 
 #	else
 
 		template <typename Tp, typename Allocator>
-		void single_list<Tp, Allocator>::assign(const kerbal::assign::assign_list<void> & src)
+		void single_list<Tp, Allocator>::assign(const kerbal::assign::assign_list<void> & ilist)
 		{
 			this->clear();
 		}
 
 		template <typename Tp, typename Allocator>
 		template <typename Up>
-		void single_list<Tp, Allocator>::assign(const kerbal::assign::assign_list<Up> & src)
+		void single_list<Tp, Allocator>::assign(const kerbal::assign::assign_list<Up> & ilist)
 		{
-			this->assign(src.cbegin(), src.cend());
+			this->assign(ilist.cbegin(), ilist.cend());
 		}
 
 #	endif
@@ -528,16 +528,16 @@ namespace kerbal
 		template <typename Tp, typename Allocator>
 		KERBAL_CONSTEXPR20
 		typename single_list<Tp, Allocator>::iterator
-		single_list<Tp, Allocator>::insert(const_iterator pos, std::initializer_list<value_type> src)
+		single_list<Tp, Allocator>::insert(const_iterator pos, std::initializer_list<value_type> ilist)
 		{
-			return this->insert(pos, src.begin(), src.end());
+			return this->insert(pos, ilist.begin(), ilist.end());
 		}
 
 #	else
 
 		template <typename Tp, typename Allocator>
 		typename single_list<Tp, Allocator>::iterator
-		single_list<Tp, Allocator>::insert(const_iterator pos, const kerbal::assign::assign_list<void> & src)
+		single_list<Tp, Allocator>::insert(const_iterator pos, const kerbal::assign::assign_list<void> & ilist)
 		{
 			return pos.cast_to_mutable();
 		}
@@ -545,9 +545,9 @@ namespace kerbal
 		template <typename Tp, typename Allocator>
 		template <typename Up>
 		typename single_list<Tp, Allocator>::iterator
-		single_list<Tp, Allocator>::insert(const_iterator pos, const kerbal::assign::assign_list<Up> & src)
+		single_list<Tp, Allocator>::insert(const_iterator pos, const kerbal::assign::assign_list<Up> & ilist)
 		{
-			return this->insert(pos, src.begin(), src.end());
+			return this->insert(pos, ilist.begin(), ilist.end());
 		}
 
 #	endif

@@ -40,29 +40,29 @@ namespace kerbal
 		}
 
 		template <typename Tp, std::size_t N>
-		array<Tp, N>::array(const kerbal::assign::assign_list<void> & src)
+		array<Tp, N>::array(const kerbal::assign::assign_list<void> & ilist)
 		{
 		}
 
 		template <typename Tp, std::size_t N>
 		template <typename Up>
-		array<Tp, N>::array(const kerbal::assign::assign_list<Up> & src)
+		array<Tp, N>::array(const kerbal::assign::assign_list<Up> & ilist)
 		{
-			this->assign(src.cbegin(), src.cend());
+			this->assign(ilist.cbegin(), ilist.cend());
 		}
 
 		template <typename Tp, std::size_t N>
-		array<Tp, N>& array<Tp, N>::operator=(const kerbal::assign::assign_list<void> & src)
+		array<Tp, N>& array<Tp, N>::operator=(const kerbal::assign::assign_list<void> & ilist)
 		{
-			this->assign(src);
+			this->assign(ilist);
 			return *this;
 		}
 
 		template <typename Tp, std::size_t N>
 		template <typename Up>
-		array<Tp, N>& array<Tp, N>::operator=(const kerbal::assign::assign_list<Up> & src)
+		array<Tp, N>& array<Tp, N>::operator=(const kerbal::assign::assign_list<Up> & ilist)
 		{
-			this->assign(src);
+			this->assign(ilist);
 			return *this;
 		}
 
@@ -100,23 +100,23 @@ namespace kerbal
 
 		template <typename Tp, std::size_t N>
 		KERBAL_CONSTEXPR14
-		void array<Tp, N>::assign(std::initializer_list<value_type> src)
+		void array<Tp, N>::assign(std::initializer_list<value_type> ilist)
 		{
-			this->assign(src.begin(), src.end());
+			this->assign(ilist.begin(), ilist.end());
 		}
 
 #	else
 
 		template <typename Tp, std::size_t N>
-		void array<Tp, N>::assign(const kerbal::assign::assign_list<void> & src)
+		void array<Tp, N>::assign(const kerbal::assign::assign_list<void> & ilist)
 		{
 		}
 
 		template <typename Tp, std::size_t N>
 		template <typename Up>
-		void array<Tp, N>::assign(const kerbal::assign::assign_list<Up> & src)
+		void array<Tp, N>::assign(const kerbal::assign::assign_list<Up> & ilist)
 		{
-			this->assign(src.begin(), src.end());
+			this->assign(ilist.begin(), ilist.end());
 		}
 
 #	endif

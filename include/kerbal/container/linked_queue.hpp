@@ -88,8 +88,8 @@ namespace kerbal
 #		if __cplusplus >= 201103L
 
 				KERBAL_CONSTEXPR20
-				linked_queue(std::initializer_list<value_type> src)
-						: c(src)
+				linked_queue(std::initializer_list<value_type> ilist)
+						: c(ilist)
 				{
 				}
 

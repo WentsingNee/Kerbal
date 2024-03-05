@@ -116,23 +116,23 @@ namespace kerbal
 
 		template <typename Tp, std::size_t N>
 		KERBAL_CONSTEXPR14
-		static_vector<Tp, N>::static_vector(std::initializer_list<value_type> src) :
-				static_vector(src.begin(), src.end())
+		static_vector<Tp, N>::static_vector(std::initializer_list<value_type> ilist) :
+				static_vector(ilist.begin(), ilist.end())
 		{
 		}
 
 #	else
 
 		template <typename Tp, std::size_t N>
-		static_vector<Tp, N>::static_vector(const kerbal::assign::assign_list<void> & src) :
+		static_vector<Tp, N>::static_vector(const kerbal::assign::assign_list<void> & ilist) :
 				super()
 		{
 		}
 
 		template <typename Tp, std::size_t N>
 		template <typename Up>
-		static_vector<Tp, N>::static_vector(const kerbal::assign::assign_list<Up> & src) :
-				super(src.cbegin(), src.cend())
+		static_vector<Tp, N>::static_vector(const kerbal::assign::assign_list<Up> & ilist) :
+				super(ilist.cbegin(), ilist.cend())
 		{
 		}
 
@@ -165,26 +165,26 @@ namespace kerbal
 
 		template <typename Tp, std::size_t N>
 		KERBAL_CONSTEXPR14
-		static_vector<Tp, N>& static_vector<Tp, N>::operator=(std::initializer_list<value_type> src)
+		static_vector<Tp, N>& static_vector<Tp, N>::operator=(std::initializer_list<value_type> ilist)
 		{
-			this->assign_unsafe(src.begin(), src.end());
+			this->assign_unsafe(ilist.begin(), ilist.end());
 			return *this;
 		}
 
 #	else
 
 		template <typename Tp, std::size_t N>
-		static_vector<Tp, N>& static_vector<Tp, N>::operator=(const kerbal::assign::assign_list<void> & src)
+		static_vector<Tp, N>& static_vector<Tp, N>::operator=(const kerbal::assign::assign_list<void> & ilist)
 		{
-			this->assign_unsafe(src);
+			this->assign_unsafe(ilist);
 			return *this;
 		}
 
 		template <typename Tp, std::size_t N>
 		template <typename Up>
-		static_vector<Tp, N>& static_vector<Tp, N>::operator=(const kerbal::assign::assign_list<Up> & src)
+		static_vector<Tp, N>& static_vector<Tp, N>::operator=(const kerbal::assign::assign_list<Up> & ilist)
 		{
-			this->assign_unsafe(src);
+			this->assign_unsafe(ilist);
 			return *this;
 		}
 
@@ -400,44 +400,44 @@ namespace kerbal
 
 		template <typename Tp, std::size_t N>
 		KERBAL_CONSTEXPR14
-		void static_vector<Tp, N>::assign_unsafe(std::initializer_list<value_type> src)
+		void static_vector<Tp, N>::assign_unsafe(std::initializer_list<value_type> ilist)
 		{
-			this->assign_unsafe(src.begin(), src.end());
+			this->assign_unsafe(ilist.begin(), ilist.end());
 		}
 
 		template <typename Tp, std::size_t N>
 		KERBAL_CONSTEXPR20
-		void static_vector<Tp, N>::assign(std::initializer_list<value_type> src)
+		void static_vector<Tp, N>::assign(std::initializer_list<value_type> ilist)
 		{
-			this->assign(src.begin(), src.end());
+			this->assign(ilist.begin(), ilist.end());
 		}
 
 #	else
 
 		template <typename Tp, std::size_t N>
-		void static_vector<Tp, N>::assign_unsafe(const kerbal::assign::assign_list<void> & src)
+		void static_vector<Tp, N>::assign_unsafe(const kerbal::assign::assign_list<void> & ilist)
 		{
 			this->clear();
 		}
 
 		template <typename Tp, std::size_t N>
 		template <typename Up>
-		void static_vector<Tp, N>::assign_unsafe(const kerbal::assign::assign_list<Up> & src)
+		void static_vector<Tp, N>::assign_unsafe(const kerbal::assign::assign_list<Up> & ilist)
 		{
-			this->assign_unsafe(src.cbegin(), src.cend());
+			this->assign_unsafe(ilist.cbegin(), ilist.cend());
 		}
 
 		template <typename Tp, std::size_t N>
-		void static_vector<Tp, N>::assign(const kerbal::assign::assign_list<void> & src)
+		void static_vector<Tp, N>::assign(const kerbal::assign::assign_list<void> & ilist)
 		{
 			this->clear();
 		}
 
 		template <typename Tp, std::size_t N>
 		template <typename Up>
-		void static_vector<Tp, N>::assign(const kerbal::assign::assign_list<Up> & src)
+		void static_vector<Tp, N>::assign(const kerbal::assign::assign_list<Up> & ilist)
 		{
-			this->assign(src.cbegin(), src.cend());
+			this->assign(ilist.cbegin(), ilist.cend());
 		}
 
 #	endif

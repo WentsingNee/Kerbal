@@ -101,13 +101,13 @@ namespace kerbal
 
 #		if __cplusplus >= 201103L
 
-				flat_set(std::initializer_list<value_type> src) :
-						super(src)
+				flat_set(std::initializer_list<value_type> ilist) :
+						super(ilist)
 				{
 				}
 
-				flat_set(std::initializer_list<value_type> src, key_compare kc) :
-						super(src, kc)
+				flat_set(std::initializer_list<value_type> ilist, key_compare kc) :
+						super(ilist, kc)
 				{
 				}
 
@@ -126,9 +126,9 @@ namespace kerbal
 
 #		if __cplusplus >= 201103L
 
-				flat_set& operator=(std::initializer_list<value_type> src)
+				flat_set& operator=(std::initializer_list<value_type> ilist)
 				{
-					this->super::assign(src);
+					this->super::assign(ilist);
 					return *this;
 				}
 

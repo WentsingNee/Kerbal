@@ -95,15 +95,15 @@ namespace kerbal
 				/** @brief Initialize the array with default value (Default constructor) */
 				array();
 
-				array(const kerbal::assign::assign_list<void> & src);
+				array(const kerbal::assign::assign_list<void> & ilist);
 
 				template <typename Up>
-				array(const kerbal::assign::assign_list<Up> & src);
+				array(const kerbal::assign::assign_list<Up> & ilist);
 
-				array& operator=(const kerbal::assign::assign_list<void> & src);
+				array& operator=(const kerbal::assign::assign_list<void> & ilist);
 
 				template <typename Up>
-				array& operator=(const kerbal::assign::assign_list<Up> & src);
+				array& operator=(const kerbal::assign::assign_list<Up> & ilist);
 
 #		endif
 
@@ -132,17 +132,17 @@ namespace kerbal
 #		if __cplusplus >= 201103L
 				/**
 				 * @brief Assign the array by using the content of an initializer list
-				 * @param src the initializer list
+				 * @param ilist the initializer list
 				 */
 				KERBAL_CONSTEXPR14
-				void assign(std::initializer_list<value_type> src);
+				void assign(std::initializer_list<value_type> ilist);
 
 #		else
 
-				void assign(const kerbal::assign::assign_list<void> & src);
+				void assign(const kerbal::assign::assign_list<void> & ilist);
 
 				template <typename Up>
-				void assign(const kerbal::assign::assign_list<Up> & src);
+				void assign(const kerbal::assign::assign_list<Up> & ilist);
 
 #		endif
 

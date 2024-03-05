@@ -112,14 +112,14 @@ namespace kerbal
 #		if __cplusplus >= 201103L
 
 				KERBAL_CONSTEXPR14
-				static_ordered(std::initializer_list<value_type> src) :
-						super(src)
+				static_ordered(std::initializer_list<value_type> ilist) :
+						super(ilist)
 				{
 				}
 
 				KERBAL_CONSTEXPR14
-				static_ordered(std::initializer_list<value_type> src, key_compare kc) :
-						super(src, kc)
+				static_ordered(std::initializer_list<value_type> ilist, key_compare kc) :
+						super(ilist, kc)
 				{
 				}
 
@@ -143,9 +143,9 @@ namespace kerbal
 #		if __cplusplus >= 201103L
 
 				KERBAL_CONSTEXPR14
-				static_ordered& operator=(std::initializer_list<value_type> src)
+				static_ordered& operator=(std::initializer_list<value_type> ilist)
 				{
-					this->assign(src);
+					this->assign(ilist);
 					return *this;
 				}
 

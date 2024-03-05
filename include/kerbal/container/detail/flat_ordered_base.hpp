@@ -379,14 +379,14 @@ namespace kerbal
 #			if __cplusplus >= 201103L
 
 					KERBAL_CONSTEXPR14
-					flat_ordered_base(std::initializer_list<value_type> src) :
-							flat_ordered_base(src.begin(), src.end())
+					flat_ordered_base(std::initializer_list<value_type> ilist) :
+							flat_ordered_base(ilist.begin(), ilist.end())
 					{
 					}
 
 					KERBAL_CONSTEXPR14
-					flat_ordered_base(std::initializer_list<value_type> src, key_compare kc) :
-							flat_ordered_base(src.begin(), src.end(), kc)
+					flat_ordered_base(std::initializer_list<value_type> ilist, key_compare kc) :
+							flat_ordered_base(ilist.begin(), ilist.end(), kc)
 					{
 					}
 
@@ -418,15 +418,15 @@ namespace kerbal
 #			if __cplusplus >= 201103L
 
 					KERBAL_CONSTEXPR14
-					void assign(std::initializer_list<value_type> src)
+					void assign(std::initializer_list<value_type> ilist)
 					{
-						this->assign(src.begin(), src.end());
+						this->assign(ilist.begin(), ilist.end());
 					}
 
 					KERBAL_CONSTEXPR14
-					void assign(std::initializer_list<value_type> src, key_compare kc)
+					void assign(std::initializer_list<value_type> ilist, key_compare kc)
 					{
-						this->assign(src.begin(), src.end(), kc);
+						this->assign(ilist.begin(), ilist.end(), kc);
 					}
 
 #			endif

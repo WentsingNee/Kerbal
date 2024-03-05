@@ -81,8 +81,8 @@ namespace kerbal
 #		if __cplusplus >= 201103L
 
 				KERBAL_CONSTEXPR14
-				static_stack(std::initializer_list<value_type> src) :
-						c(src)
+				static_stack(std::initializer_list<value_type> ilist) :
+						c(ilist)
 				{
 				}
 

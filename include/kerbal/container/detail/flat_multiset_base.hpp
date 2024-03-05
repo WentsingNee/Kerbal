@@ -102,14 +102,14 @@ namespace kerbal
 #			if __cplusplus >= 201103L
 
 					KERBAL_CONSTEXPR14
-					flat_multiset_base(std::initializer_list<value_type> src) :
-							flat_multiset_base(src.begin(), src.end())
+					flat_multiset_base(std::initializer_list<value_type> ilist) :
+							flat_multiset_base(ilist.begin(), ilist.end())
 					{
 					}
 
 					KERBAL_CONSTEXPR14
-					flat_multiset_base(std::initializer_list<value_type> src, key_compare kc) :
-							flat_multiset_base(src.begin(), src.end(), kc)
+					flat_multiset_base(std::initializer_list<value_type> ilist, key_compare kc) :
+							flat_multiset_base(ilist.begin(), ilist.end(), kc)
 					{
 					}
 
@@ -152,15 +152,15 @@ namespace kerbal
 #			if __cplusplus >= 201103L
 
 					KERBAL_CONSTEXPR14
-					void assign(std::initializer_list<value_type> src)
+					void assign(std::initializer_list<value_type> ilist)
 					{
-						this->assign(src.begin(), src.end());
+						this->assign(ilist.begin(), ilist.end());
 					}
 
 					KERBAL_CONSTEXPR14
-					void assign(std::initializer_list<value_type> src, key_compare kc)
+					void assign(std::initializer_list<value_type> ilist, key_compare kc)
 					{
-						this->assign(src.begin(), src.end(), kc);
+						this->assign(ilist.begin(), ilist.end(), kc);
 					}
 
 #			endif
