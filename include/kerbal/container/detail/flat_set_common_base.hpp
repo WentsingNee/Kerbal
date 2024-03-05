@@ -14,8 +14,7 @@
 #define KERBAL_CONTAINER_DETAIL_FLAT_SET_COMMON_BASE_HPP
 
 #include <kerbal/compatibility/constexpr.hpp>
-
-#include <utility> // std::pair
+#include <kerbal/utility/compressed_pair.hpp>
 
 
 namespace kerbal
@@ -193,7 +192,8 @@ namespace kerbal
 					}
 
 					KERBAL_CONSTEXPR14
-					std::pair<const_iterator, const_iterator> equal_range(const key_type & key) const
+					kerbal::utility::compressed_pair<const_iterator, const_iterator>
+					equal_range(const key_type & key) const
 					{
 						return ordered.equal_range(key);
 					}
