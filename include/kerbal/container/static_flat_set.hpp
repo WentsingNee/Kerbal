@@ -31,8 +31,11 @@ namespace kerbal
 	{
 
 		template <typename Tp, std::size_t N, typename KeyCompare = kerbal::compare::less<Tp> >
-		class static_flat_set
-				: public kerbal::container::detail::flat_set_base<Tp, kerbal::container::static_ordered<Tp, N, Tp, KeyCompare> >
+		class static_flat_set :
+				public kerbal::container::detail::flat_set_base<
+					Tp,
+					kerbal::container::static_ordered<Tp, N, Tp, KeyCompare>
+				>
 		{
 			private:
 				typedef kerbal::container::static_ordered<Tp, N, Tp, KeyCompare> Ordered;
@@ -198,8 +201,11 @@ namespace kerbal
 		};
 
 		template <typename Tp, std::size_t N, typename KeyCompare = kerbal::compare::less<Tp> >
-		class static_flat_multiset
-				: public kerbal::container::detail::flat_multiset_base<Tp, kerbal::container::static_ordered<Tp, N, Tp, KeyCompare> >
+		class static_flat_multiset :
+				public kerbal::container::detail::flat_multiset_base<
+					Tp,
+					kerbal::container::static_ordered<Tp, N, Tp, KeyCompare>
+				>
 		{
 			private:
 				typedef kerbal::container::static_ordered<Tp, N, Tp, KeyCompare> Ordered;

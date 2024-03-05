@@ -31,8 +31,13 @@ namespace kerbal
 	namespace container
 	{
 
-		template <typename Entity, std::size_t N, typename Key = Entity,
-			typename KeyCompare = kerbal::compare::less<Key>, typename Extract = default_extract<Key, Entity> >
+		template <
+			typename Entity,
+			std::size_t N,
+			typename Key = Entity,
+			typename KeyCompare = kerbal::compare::less<Key>,
+			typename Extract = default_extract<Key, Entity>
+		>
 		class static_ordered:
 				public kerbal::container::detail::flat_ordered_base<
 						Entity, Key, KeyCompare, Extract, kerbal::container::static_vector<Entity, N>
@@ -43,8 +48,8 @@ namespace kerbal
 
 			private:
 				typedef kerbal::container::detail::flat_ordered_base<
-										Entity, Key, KeyCompare, Extract, Sequence
-								> super;
+						Entity, Key, KeyCompare, Extract, Sequence
+				> super;
 
 			public:
 				typedef typename super::key_compare			key_compare;
