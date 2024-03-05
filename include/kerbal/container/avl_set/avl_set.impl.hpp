@@ -239,7 +239,7 @@ namespace kerbal
 		}
 
 
-#		if __cplusplus >= 201103L
+#	if __cplusplus >= 201103L
 
 		template <typename T, typename KeyCompare, typename Allocator>
 		KERBAL_CONSTEXPR20
@@ -257,7 +257,7 @@ namespace kerbal
 			this->avl_ordered::assign_unique(ilist);
 		}
 
-#		else
+#	else
 
 		template <typename T, typename KeyCompare, typename Allocator>
 		template <typename U>
@@ -275,7 +275,7 @@ namespace kerbal
 			this->avl_ordered::assign_unique(ilist);
 		}
 
-#		endif
+#	endif
 
 
 
