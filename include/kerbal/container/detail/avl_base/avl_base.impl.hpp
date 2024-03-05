@@ -381,7 +381,7 @@ namespace kerbal
 #	if KERBAL_HAS_EXCEPTIONS_SUPPORT
 				try {
 #	endif
-					this->k_insert_unique_using_allocator(alloc, e, kc, first, last);
+					this->k_insert_using_allocator(alloc, e, kc, first, last);
 #	if KERBAL_HAS_EXCEPTIONS_SUPPORT
 				} catch (...) {
 					this->k_destroy_using_allocator(alloc);
