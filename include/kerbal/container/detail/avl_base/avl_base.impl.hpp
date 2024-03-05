@@ -2146,7 +2146,7 @@ namespace kerbal
 
 				node * p = NULL;
 				if (replace == this->cend()) {
-					p = node_allocator_traits::allocate(alloc, 1);
+					p = node_allocator_traits::allocate_one(alloc);
 
 #		if !KERBAL_HAS_EXCEPTIONS_SUPPORT
 					if (p == NULL) {
@@ -2185,7 +2185,7 @@ namespace kerbal
 
 				node * p = NULL;
 				if (replace == this->cend()) {
-					p = node_allocator_traits::allocate(alloc, 1);
+					p = node_allocator_traits::allocate_one(alloc);
 
 #		if !KERBAL_HAS_EXCEPTIONS_SUPPORT
 					if (p == NULL) {
@@ -2236,7 +2236,7 @@ namespace kerbal
  \
 				node * p = NULL; \
 				if (replace == this->cend()) { \
-					p = node_allocator_traits::allocate(alloc, 1); \
+					p = node_allocator_traits::allocate_one(alloc); \
  				} else { \
 					p = &replace.cast_to_mutable().current->template reinterpret_as<value_type>(); \
 					this->k_unhook_node(p); \
@@ -2262,7 +2262,7 @@ namespace kerbal
  \
 				node * p = NULL; \
 				if (replace == this->cend()) { \
-					p = node_allocator_traits::allocate(alloc, 1); \
+					p = node_allocator_traits::allocate_one(alloc); \
  				} else { \
 					p = &replace.cast_to_mutable().current->template reinterpret_as<value_type>(); \
 					this->k_unhook_node(p); \
@@ -2293,7 +2293,7 @@ namespace kerbal
  \
 				node * p = NULL; \
 				if (replace == this->cend()) { \
-					p = node_allocator_traits::allocate(alloc, 1); \
+					p = node_allocator_traits::allocate_one(alloc); \
  \
 					if (p == NULL) { \
 						kerbal::utility::throw_this_exception_helper<kerbal::memory::bad_alloc>::throw_this_exception(); \
@@ -2318,7 +2318,7 @@ namespace kerbal
  \
 				node * p = NULL; \
 				if (replace == this->cend()) { \
-					p = node_allocator_traits::allocate(alloc, 1); \
+					p = node_allocator_traits::allocate_one(alloc); \
  \
 					if (p == NULL) { \
 						kerbal::utility::throw_this_exception_helper<kerbal::memory::bad_alloc>::throw_this_exception(); \
@@ -2828,7 +2828,7 @@ namespace kerbal
 				try {
 					node_allocator_traits::construct(alloc, p, kerbal::utility::in_place_t(), kerbal::utility::forward<Args>(args)...);
 				} catch (...) {
-					node_allocator_traits::deallocate(alloc, p, 1);
+					node_allocator_traits::deallocate_one(alloc, p);
 					throw;
 				}
 			}
@@ -2893,7 +2893,7 @@ namespace kerbal
 				try { \
 					node_allocator_traits::construct(alloc, p, kerbal::utility::in_place_t() KERBAL_OPT_PPEXPAND_WITH_COMMA_N(LEFT_JOIN_COMMA, EMPTY, ARGS_USE, i)); \
 				} catch (...) { \
-					node_allocator_traits::deallocate(alloc, p, 1); \
+					node_allocator_traits::deallocate_one(alloc, p); \
 					throw; \
 				} \
 			}
@@ -2931,7 +2931,7 @@ namespace kerbal
 			avl_type_only<Entity>::k_build_new_node(NodeAllocator & alloc, Args && ... args)
 			{
 				typedef kerbal::memory::allocator_traits<NodeAllocator> node_allocator_traits;
-				node * p = node_allocator_traits::allocate(alloc, 1);
+				node * p = node_allocator_traits::allocate_one(alloc);
 
 #		if !KERBAL_HAS_EXCEPTIONS_SUPPORT
 				if (p == NULL) {
@@ -2958,7 +2958,7 @@ namespace kerbal
 			avl_type_only<Entity>::k_build_new_node(NodeAllocator & alloc KERBAL_OPT_PPEXPAND_WITH_COMMA_N(LEFT_JOIN_COMMA, EMPTY, ARGS_DECL, i)) \
 			{ \
 				typedef kerbal::memory::allocator_traits<NodeAllocator> node_allocator_traits; \
-				node * p = node_allocator_traits::allocate(alloc, 1); \
+				node * p = node_allocator_traits::allocate_one(alloc); \
 				k_try_construct_node(alloc, p KERBAL_OPT_PPEXPAND_WITH_COMMA_N(LEFT_JOIN_COMMA, EMPTY, ARGS_USE, i)); \
 				return p; \
 			}
@@ -2970,7 +2970,7 @@ namespace kerbal
 			avl_type_only<Entity>::k_build_new_node(NodeAllocator & alloc KERBAL_OPT_PPEXPAND_WITH_COMMA_N(LEFT_JOIN_COMMA, EMPTY, ARGS_DECL, i)) \
 			{ \
 				typedef kerbal::memory::allocator_traits<NodeAllocator> node_allocator_traits; \
-				node * p = node_allocator_traits::allocate(alloc, 1); \
+				node * p = node_allocator_traits::allocate_one(alloc); \
 				if (p == NULL) { \
 					kerbal::utility::throw_this_exception_helper<kerbal::memory::bad_alloc>::throw_this_exception(); \
 				} \
@@ -3046,7 +3046,7 @@ namespace kerbal
 				node * p_node = &p_node_base->template reinterpret_as<Entity>();
 				allocator_pointer_type p_node_act = static_cast<allocator_pointer_type>(p_node);
 				node_allocator_traits::destroy(alloc, p_node_act);
-				node_allocator_traits::deallocate(alloc, p_node_act, 1);
+				node_allocator_traits::deallocate_one(alloc, p_node_act);
 			}
 
 
