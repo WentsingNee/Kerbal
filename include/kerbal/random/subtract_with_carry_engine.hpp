@@ -23,6 +23,7 @@
 #include <kerbal/random/linear_congruential_engine.hpp>
 #include <kerbal/smath/add_mod_sm.hpp>
 #include <kerbal/smath/multiply_mod_sa_b_sm.hpp>
+#include <kerbal/smath/multiply_mod_sa_sb_sm.hpp>
 #include <kerbal/type_traits/enable_if.hpp>
 #include <kerbal/type_traits/integral_constant.hpp>
 #include <kerbal/type_traits/is_same.hpp>
@@ -46,17 +47,14 @@ namespace kerbal
 			template <typename ResultType, std::size_t N, ResultType k, ResultType m>
 			struct subtract_with_carry_engine_factor
 			{
-				typedef typename subtract_with_carry_engine_factor<ResultType, N - 1, k, m>::type last;
-				typedef kerbal::type_traits::integral_constant<
-					ResultType,
-					kerbal::smath::multiply_mod_sa_b_sm<ResultType, k, m>::cacl(last::value)
-				> type;
+					typedef typename subtract_with_carry_engine_factor<ResultType, N - 1, k, m>::type last;
+					typedef kerbal::smath::multiply_mod_sa_sb_sm<ResultType, k, last::value, m> type;
 			};
 
 			template <typename ResultType, ResultType k, ResultType m>
 			struct subtract_with_carry_engine_factor<ResultType, 0, k, m>
 			{
-				typedef kerbal::type_traits::integral_constant<ResultType, 1> type;
+					typedef kerbal::type_traits::integral_constant<ResultType, 1> type;
 			};
 
 		} // namespace detail
