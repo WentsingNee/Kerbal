@@ -11,6 +11,7 @@
 
 include(GNUInstallDirs)
 
+set(configure_assets_dir "${PROJECT_BINARY_DIR}/configure_assets")
 
 set(
         kerbal_modules
@@ -29,8 +30,8 @@ foreach (module ${kerbal_modules})
     file(
             COPY
             "${module}"
-            DESTINATION "${PROJECT_BINARY_DIR}/Modules/Kerbal/"
+            DESTINATION "${configure_assets_dir}/Modules/Kerbal/"
     )
 endforeach ()
 
-list(APPEND CMAKE_MODULE_PATH ${PROJECT_BINARY_DIR}/Modules)
+list(APPEND CMAKE_MODULE_PATH ${configure_assets_dir}/Modules)
