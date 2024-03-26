@@ -18,6 +18,9 @@ project(
         LANGUAGES CXX
 )
 
+set(KERBAL_CONFIGURE_ASSETS_DIR "${PROJECT_BINARY_DIR}/configure_assets")
+
+
 include(cmake/modules.cmake)
 
 # Kerbal Library Target

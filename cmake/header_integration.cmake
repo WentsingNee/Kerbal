@@ -29,7 +29,7 @@ set(content_of_kerbal_header_integration
 foreach (header ${Kerbal_PUBLIC_HEADERS_RELATIVE_kerbal})
     string(APPEND content_of_kerbal_header_integration "#include <${header}>\n")
 endforeach ()
-set(kerbal_header_integration_filename "${CMAKE_BINARY_DIR}/kerbal_header_integration.cpp")
+set(kerbal_header_integration_filename "${KERBAL_CONFIGURE_ASSETS_DIR}/kerbal_header_integration.cpp")
 file(WRITE "${kerbal_header_integration_filename}" "${content_of_kerbal_header_integration}")
 add_library(kerbal_header_integration OBJECT "${kerbal_header_integration_filename}")
 target_link_libraries(kerbal_header_integration PRIVATE ${CMAKE_PROJECT_NAME}::kerbal)

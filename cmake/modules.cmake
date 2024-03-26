@@ -29,8 +29,8 @@ foreach (module ${kerbal_modules})
     file(
             COPY
             "${module}"
-            DESTINATION "${PROJECT_BINARY_DIR}/Modules/Kerbal/"
+            DESTINATION "${KERBAL_CONFIGURE_ASSETS_DIR}/Modules/Kerbal/"
     )
 endforeach ()
 
-list(APPEND CMAKE_MODULE_PATH ${PROJECT_BINARY_DIR}/Modules)
+list(APPEND CMAKE_MODULE_PATH ${KERBAL_CONFIGURE_ASSETS_DIR}/Modules)
