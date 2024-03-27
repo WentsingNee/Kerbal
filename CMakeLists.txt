@@ -86,3 +86,20 @@ endif ()
 # Installation & Packing
 include(cmake/gnuInstall.cmake)
 include(cmake/cpack.cmake)
+
+
+# Draft Release
+add_custom_target(
+        create_packages
+        ${CMAKE_CPACK_COMMAND}
+        WORKING_DIRECTORY "${CMAKE_BINARY_DIR}"
+)
+
+add_custom_target(
+        draft_release
+        ${CMAKE_COMMAND}
+        -DTAG_NAME=\"draft_release_of_v${KERBAL_VERSION}\"
+        -DVERSION="${KERBAL_VERSION}"
+        -P "${PROJECT_SOURCE_DIR}/cmake/draft_release.cmake"
+        DEPENDS create_packages
+)
