@@ -12,7 +12,9 @@
 #ifndef KERBAL_FUNCTION_INVOKE_DETAIL_INVOKE_RESULT_CXX11_PART_HPP
 #define KERBAL_FUNCTION_INVOKE_DETAIL_INVOKE_RESULT_CXX11_PART_HPP
 
+#include <kerbal/type_traits/remove_cvref.hpp>
 #include <kerbal/utility/declval.hpp>
+#include <kerbal/utility/reference_wrapper.hpp>
 
 #include <kerbal/function/invoke/invoke_overload_ver_selector.hpp>
 
@@ -37,21 +39,75 @@ namespace kerbal
 					) type;
 			};
 
-			template <typename MemObjPtr, typename T, typename ... Args>
-			struct invoke_result_helper<INVOKE_OVERLOAD_VER_MEM_OBJ, MemObjPtr, T, Args...>
+			template <typename MemObjPtr, typename TOri, typename T, typename ... Args>
+			struct invoke_result_helper_of_mem_obj
 			{
 					typedef decltype(
-						kerbal::utility::declval<T>().*(kerbal::utility::declval<MemObjPtr>())
+						kerbal::utility::declval<TOri>().*(kerbal::utility::declval<MemObjPtr>())
+					) type;
+			};
+
+			template <typename MemObjPtr, typename TOri, typename T, typename ... Args>
+			struct invoke_result_helper_of_mem_obj<MemObjPtr, TOri, T *, Args...>
+			{
+					typedef decltype(
+						kerbal::utility::declval<TOri>()->*(kerbal::utility::declval<MemObjPtr>())
+					) type;
+			};
+
+			template <typename MemObjPtr, typename TOri, typename T, typename ... Args>
+			struct invoke_result_helper_of_mem_obj<MemObjPtr, TOri, kerbal::utility::reference_wrapper<T>, Args...>
+			{
+					typedef decltype(
+						kerbal::utility::declval<TOri>().get().*(kerbal::utility::declval<MemObjPtr>())
+					) type;
+			};
+
+			template <typename MemObjPtr, typename T, typename ... Args>
+			struct invoke_result_helper<INVOKE_OVERLOAD_VER_MEM_OBJ, MemObjPtr, T, Args...> :
+					invoke_result_helper_of_mem_obj<
+						MemObjPtr,
+						T, typename kerbal::type_traits::remove_cvref<T>::type,
+						Args...
+					>
+			{
+			};
+
+			template <typename MemFunPtr, typename TOri, typename T, typename ... Args>
+			struct invoke_result_helper_of_mem_fun
+			{
+					typedef decltype(
+						(kerbal::utility::declval<TOri>().*kerbal::utility::declval<MemFunPtr>())
+							(kerbal::utility::declval<Args>()...)
+					) type;
+			};
+
+			template <typename MemFunPtr, typename TOri, typename T, typename ... Args>
+			struct invoke_result_helper_of_mem_fun<MemFunPtr, TOri, T *, Args...>
+			{
+					typedef decltype(
+						(kerbal::utility::declval<TOri>()->*kerbal::utility::declval<MemFunPtr>())
+							(kerbal::utility::declval<Args>()...)
+					) type;
+			};
+
+			template <typename MemFunPtr, typename TOri, typename T, typename ... Args>
+			struct invoke_result_helper_of_mem_fun<MemFunPtr, TOri, kerbal::utility::reference_wrapper<T>, Args...>
+			{
+					typedef decltype(
+						(kerbal::utility::declval<TOri>().get().*kerbal::utility::declval<MemFunPtr>())
+							(kerbal::utility::declval<Args>()...)
 					) type;
 			};
 
 			template <typename MemFunPtr, typename T, typename ... Args>
-			struct invoke_result_helper<INVOKE_OVERLOAD_VER_MEM_FUN, MemFunPtr, T, Args...>
+			struct invoke_result_helper<INVOKE_OVERLOAD_VER_MEM_FUN, MemFunPtr, T, Args...> :
+					invoke_result_helper_of_mem_fun<
+						MemFunPtr,
+						T, typename kerbal::type_traits::remove_cvref<T>::type,
+						Args...
+					>
 			{
-					typedef decltype(
-						(kerbal::utility::declval<T>().*kerbal::utility::declval<MemFunPtr>())
-							(kerbal::utility::declval<Args>()...)
-					) type;
 			};
 
 		} // namespace detail
