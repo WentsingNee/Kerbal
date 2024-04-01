@@ -17,6 +17,10 @@
 #include <kerbal/container/detail/flat_set_base.hpp>
 #include <kerbal/container/static_ordered.hpp>
 
+#if __cplusplus >= 201103L
+#	include <initializer_list>
+#endif
+
 #include <cstddef>
 
 

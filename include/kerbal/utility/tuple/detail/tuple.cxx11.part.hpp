@@ -46,6 +46,10 @@
 #include <kerbal/utility/integer_sequence.hpp>
 #include <kerbal/utility/member_compress_helper.hpp>
 
+#if __cplusplus >= 201103L
+#	include <initializer_list>
+#endif
+
 #include <cstddef>
 
 

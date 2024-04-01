@@ -43,6 +43,10 @@
 #	include <kerbal/utility/forward.hpp>
 #endif
 
+#if __cplusplus >= 201103L
+#	include <initializer_list>
+#endif
+
 #include <cstddef>
 #include <stdexcept>
 

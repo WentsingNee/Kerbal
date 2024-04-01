@@ -19,6 +19,7 @@
 #include <kerbal/algorithm/binary_search/upper_bound_hint.hpp>
 #include <kerbal/algorithm/modifier/unique.hpp>
 #include <kerbal/algorithm/sort.hpp>
+#include <kerbal/compatibility/constexpr.hpp>
 #include <kerbal/compatibility/move.hpp>
 #include <kerbal/compatibility/noexcept.hpp>
 #include <kerbal/iterator/iterator.hpp>
@@ -34,6 +35,10 @@
 #endif
 
 #include <utility> // std::pair
+
+#if __cplusplus >= 201103L
+#	include <initializer_list>
+#endif
 
 
 namespace kerbal

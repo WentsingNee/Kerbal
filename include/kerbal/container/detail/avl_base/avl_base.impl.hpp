@@ -46,6 +46,10 @@
 #	include <kerbal/utility/throw_this_exception.hpp>
 #endif
 
+#if __cplusplus >= 201103L
+#	include <initializer_list>
+#endif
+
 #include <cstddef>
 
 

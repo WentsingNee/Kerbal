@@ -62,6 +62,8 @@
 #		include <kerbal/random/detail/mt_twist/mt_twist.neon.part.hpp>
 #	endif
 
+#	include <kerbal/random/detail/mt_twist/mt_twist.plain.part.hpp>
+
 #endif
 
 

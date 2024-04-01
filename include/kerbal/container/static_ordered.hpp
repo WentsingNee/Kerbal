@@ -18,6 +18,10 @@
 #include <kerbal/container/detail/flat_ordered_base.hpp>
 #include <kerbal/container/static_vector.hpp>
 
+#if __cplusplus >= 201103L
+#	include <initializer_list>
+#endif
+
 #include <cstddef>
 
 

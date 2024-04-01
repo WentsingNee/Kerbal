@@ -28,6 +28,10 @@
 
 #include <stdexcept>
 
+#if __cplusplus >= 201103L
+#	include <initializer_list>
+#endif
+
 
 namespace kerbal
 {

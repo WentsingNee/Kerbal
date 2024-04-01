@@ -58,6 +58,8 @@
 #		include <kerbal/random/detail/mt_generate_copy_n/mt_generate_copy_n.neon.part.hpp>
 #	endif
 
+#	include <kerbal/random/detail/mt_generate_copy_n/mt_generate_copy_n.plain.part.hpp>
+
 #endif
 
 #undef EACH

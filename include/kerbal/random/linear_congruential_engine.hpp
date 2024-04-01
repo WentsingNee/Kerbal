@@ -22,6 +22,8 @@
 #include <kerbal/type_traits/integral_constant.hpp>
 #include <kerbal/type_traits/type_identity.hpp>
 
+#include <climits>
+
 
 namespace kerbal
 {
