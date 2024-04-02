@@ -49,7 +49,7 @@ foreach (
     endforeach ()
     set(${CMAKE_PROJECT_NAME}_PUBLIC_HEADERS_${lib} ${public_headers} PARENT_SCOPE)
 
-    if (${CMAKE_VERSION} VERSION_GREATER_EQUAL 3.19)
+    if (CMAKE_VERSION VERSION_GREATER_EQUAL 3.19)
         add_library(${lib} INTERFACE ${headers_relative})
     else ()
         add_library(${lib} INTERFACE)

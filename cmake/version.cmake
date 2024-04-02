@@ -11,7 +11,7 @@
 
 set(project_version_file_path "${CMAKE_CURRENT_SOURCE_DIR}/VERSION")
 
-if (${KERBAL_UPDATE_VERSION})
+if (KERBAL_UPDATE_VERSION)
     execute_process(
             COMMAND date "+%Y-%-m-%-d"
             OUTPUT_VARIABLE date
@@ -39,7 +39,7 @@ endif ()
 #endif ()
 
 
-if (${KERBAL_UPDATE_VERSION})
+if (KERBAL_UPDATE_VERSION)
     message(STATUS "Updated version ${KERBAL_VERSION} to ${project_version_file_path}")
     file(WRITE "${project_version_file_path}" ${KERBAL_VERSION})
 endif ()

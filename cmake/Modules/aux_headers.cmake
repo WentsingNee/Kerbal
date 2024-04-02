@@ -56,7 +56,7 @@ function(kerbal_aux_headers _OUTPUT_LIST_NAME dir)
     endforeach ()
 
     list(LENGTH headers_list headers_list_len)
-    if (${headers_list_len} EQUAL 0)
+    if (headers_list_len EQUAL 0)
         message(WARNING "headers list is empty")
     endif ()
 
