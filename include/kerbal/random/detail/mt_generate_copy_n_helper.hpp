@@ -99,7 +99,7 @@ namespace kerbal
 #		elif __ARM_NEON
 				neon::mt_generate_copy_n<U, D, S, B, T, C, L>(mt_nowr, outr, n);
 #		else
-				plain::mt_generate_copy_n<kerbal::compatibility::uint32_t, U, D, S, B, T, C, L>(mt_now, out, n);
+				plain::mt_generate_copy_n<kerbal::compatibility::uint32_t, kerbal::compatibility::uint32_t *, U, D, S, B, T, C, L>(mt_now, out, n);
 #		endif
 			}
 
@@ -128,7 +128,7 @@ namespace kerbal
 #		elif __ARM_NEON
 				neon::mt_generate_copy_n<U, D, S, B, T, C, L>(mt_nowr, outr, n);
 #		else
-				plain::mt_generate_copy_n<kerbal::compatibility::uint64_t, U, D, S, B, T, C, L>(mt_now, out, n);
+				plain::mt_generate_copy_n<kerbal::compatibility::uint64_t, kerbal::compatibility::uint64_t *, U, D, S, B, T, C, L>(mt_now, out, n);
 #		endif
 			}
 
@@ -139,7 +139,7 @@ namespace kerbal
 			KERBAL_CONSTEXPR14
 			void mt_generate_copy_n_fix_integer_simd_dispatch(const UIntType mt_now[], UIntType * out, std::size_t n, kerbal::type_traits::integral_constant<std::size_t, Size>) KERBAL_NOEXCEPT
 			{
-				plain::mt_generate_copy_n<UIntType, U, D, S, B, T, C, L>(mt_now, out, n);
+				plain::mt_generate_copy_n<UIntType, UIntType *, U, D, S, B, T, C, L>(mt_now, out, n);
 			}
 
 #endif // KERBAL_RANDOM_ENABLE_MT_GENERATE_COPY_N_IE_OPTIMISE
