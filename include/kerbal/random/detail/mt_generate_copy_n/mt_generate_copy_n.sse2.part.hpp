@@ -68,7 +68,8 @@ namespace kerbal
 						xmm_shift = _mm_srli_epi32(xmm_y, L); // SSE2
 						xmm_y = _mm_xor_si128(xmm_y, xmm_shift); // SSE2
 
-						_mm_storeu_si128(reinterpret_cast<__m128i*>(&out[i]), xmm_y); // SSE2
+						_mm_storeu_si128(reinterpret_cast<__m128i*>(out), xmm_y); // SSE2
+						out += STEP::value;
 					}
 
 					while (i < n) {
@@ -111,7 +112,8 @@ namespace kerbal
 						xmm_shift = _mm_srli_epi64(xmm_y, L); // SSE2
 						xmm_y = _mm_xor_si128(xmm_y, xmm_shift); // SSE2
 
-						_mm_storeu_si128(reinterpret_cast<__m128i*>(&out[i]), xmm_y); // SSE2
+						_mm_storeu_si128(reinterpret_cast<__m128i*>(out), xmm_y); // SSE2
+						out += STEP::value;
 					}
 
 					while (i < n) {

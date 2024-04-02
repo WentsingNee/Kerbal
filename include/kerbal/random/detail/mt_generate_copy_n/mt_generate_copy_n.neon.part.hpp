@@ -68,7 +68,8 @@ namespace kerbal
 						q_shift = vshrq_n_u32(q_y, L);
 						q_y = veorq_u32(q_y, q_shift);
 
-						vst1q_u32(&out[i], q_y);
+						vst1q_u32(out, q_y);
+						out += STEP::value;
 					}
 
 					while (i < n) {
@@ -111,7 +112,8 @@ namespace kerbal
 						q_shift = vshrq_n_u64(q_y, L);
 						q_y = veorq_u64(q_y, q_shift);
 
-						vst1q_u64(&out[i], q_y);
+						vst1q_u64(out, q_y);
+						out += STEP::value;
 					}
 
 					while (i < n) {
