@@ -65,6 +65,10 @@
 #endif
 
 
+#undef EACH1
+#undef EACH2
+
+
 namespace kerbal
 {
 
