@@ -447,17 +447,17 @@ namespace kerbal
 					result_type a_pow_times_mod_m = detail::pow_mod<result_type, a, m>::cacl(times);
 					state_value = detail::partial_static_mul_mod<ResultType, m>::cacl(a_pow_times_mod_m, state_value);
 					if (c != 0) {
+						result_type sigma = 0;
 						if (a == 1) {
 							if (m != 0) {
 								times %= m;
 							}
-							result_type c_mul_times_mod_m = detail::static_mul_mod<result_type, c, m>::cacl(times);
-							state_value = detail::add_mod<result_type, m>::cacl(state_value, c_mul_times_mod_m);
+							sigma = times;
 						} else {
-							result_type sigma = detail::sigma_pow_mod<result_type, a, m>::cacl(times);
-							sigma = detail::static_mul_mod<result_type, c, m>::cacl(sigma);
-							state_value = detail::add_mod<result_type, m>::cacl(state_value, sigma);
+							sigma = detail::sigma_pow_mod<result_type, a, m>::cacl(times);
 						}
+						sigma = detail::static_mul_mod<result_type, c, m>::cacl(sigma);
+						state_value = detail::add_mod<result_type, m>::cacl(state_value, sigma);
 					}
 				}
 
