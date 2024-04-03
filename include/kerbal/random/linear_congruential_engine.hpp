@@ -446,6 +446,9 @@ namespace kerbal
 					state_value = detail::partial_static_mul_mod<ResultType, m>::cacl(a_pow_times_mod_m, state_value);
 					if (c != 0) {
 						if (a == 1) {
+							if (m != 0) {
+								times %= m;
+							}
 							result_type c_mul_times_mod_m = detail::static_mul_mod<result_type, c, m>::cacl(times);
 							state_value = detail::add_mod<result_type, m>::cacl(state_value, c_mul_times_mod_m);
 						} else {
