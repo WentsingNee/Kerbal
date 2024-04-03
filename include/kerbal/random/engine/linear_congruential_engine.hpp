@@ -20,7 +20,9 @@
 #include <kerbal/iterator/iterator_traits.hpp>
 #include <kerbal/smath/add_mod_sm.hpp>
 #include <kerbal/smath/multiply_mod_sa_b_sm.hpp>
+#include <kerbal/smath/multiply_mod_sa_sb_sm.hpp>
 #include <kerbal/smath/pow_mod_sa_n_sm.hpp>
+#include <kerbal/smath/pow_mod_sa_sn_sm.hpp>
 #include <kerbal/smath/sigma_pow_mod_sa_n_sm.hpp>
 #include <kerbal/smath/xmod.hpp>
 #include <kerbal/type_traits/conditional.hpp>
@@ -98,6 +100,26 @@ namespace kerbal
 						result_type sigma = kerbal::smath::sigma_pow_mod_sa_n_sm<result_type, a, m>::f(times);
 						sigma = kerbal::smath::multiply_mod_sa_b_sm<result_type, c, m>::f(sigma);
 						state_value = kerbal::smath::add_mod_sm<result_type, m>::f(state_value, sigma);
+					}
+				}
+
+				template <unsigned long long times>
+				KERBAL_CONSTEXPR14
+				void static_discard() KERBAL_NOEXCEPT
+				{
+					if (times == 0) {
+						return ;
+					}
+					/*
+					 * s_{i+n} = a^{n} \times s_i + c \times \sum_{i=0}^{n-1} a^i
+					 *         = a ** n * s_i + c * (a ** (n - 1) + a ** (n - 2) + ... + a + 1)
+					 */
+					typedef kerbal::smath::pow_mod_sa_sn_sm<result_type, unsigned long long, a, times, m> a_pow_times_mod_m;
+					state_value = kerbal::smath::multiply_mod_sa_b_sm<ResultType, a_pow_times_mod_m::value, m>::f(state_value);
+					if (c != 0) {
+						constexpr result_type sigma = kerbal::smath::sigma_pow_mod_sa_n_sm<result_type, a, m>::f(times);
+						typedef kerbal::smath::multiply_mod_sa_sb_sm<result_type, c, sigma, m> sigma2;
+						state_value = kerbal::smath::add_mod_sm<result_type, m>::f(state_value, sigma2::value);
 					}
 				}
 
