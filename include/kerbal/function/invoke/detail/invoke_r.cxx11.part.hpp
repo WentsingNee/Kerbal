@@ -57,7 +57,7 @@ namespace kerbal
 						invoke_r_is_nothrow<R, MemObjPtr, T&&, Args&&...>::value
 					))
 			{
-				KERBAL_STATIC_ASSERT(sizeof...(Args) >= 0, "Wrong Args num");
+				KERBAL_STATIC_ASSERT(sizeof...(Args) == 0, "Wrong Args num");
 				return static_cast<R>(
 					kerbal::utility::forward<T>(o).*mem_obj_ptr
 				);
@@ -70,7 +70,7 @@ namespace kerbal
 						invoke_r_is_nothrow<R, MemObjPtr, T *, Args&&...>::value
 					))
 			{
-				KERBAL_STATIC_ASSERT(sizeof...(Args) >= 0, "Wrong Args num");
+				KERBAL_STATIC_ASSERT(sizeof...(Args) == 0, "Wrong Args num");
 				return static_cast<R>(
 					p->*mem_obj_ptr
 				);
@@ -83,7 +83,7 @@ namespace kerbal
 						invoke_r_is_nothrow<R, MemObjPtr, T&, Args&&...>::value
 					))
 			{
-				KERBAL_STATIC_ASSERT(sizeof...(Args) >= 0, "Wrong Args num");
+				KERBAL_STATIC_ASSERT(sizeof...(Args) == 0, "Wrong Args num");
 				return static_cast<R>(
 					rw.get().*mem_obj_ptr
 				);

@@ -53,7 +53,7 @@ namespace kerbal
 						invoke_is_nothrow<MemObjPtr, T&&, Args&&...>::value
 					))
 			{
-				KERBAL_STATIC_ASSERT(sizeof...(Args) >= 0, "Wrong Args num");
+				KERBAL_STATIC_ASSERT(sizeof...(Args) == 0, "Wrong Args num");
 				return kerbal::utility::forward<T>(o).*mem_obj_ptr;
 			}
 

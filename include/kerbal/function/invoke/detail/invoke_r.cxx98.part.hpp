@@ -18,6 +18,7 @@
 
 #include <kerbal/macro/macro_concat.hpp>
 #include <kerbal/macro/ppexpand.hpp>
+#include <kerbal/tmp/type_vector.hpp>
 #include <kerbal/type_traits/add_const_lvalue_reference.hpp>
 #include <kerbal/utility/reference_wrapper.hpp>
 
@@ -53,7 +54,7 @@ namespace kerbal
 			template <typename R, typename MemObjPtr, typename T KERBAL_OPT_PPEXPAND_WITH_COMMA_N(LEFT_JOIN_COMMA, EMPTY, TARGS_DECL, i)> \
 			R invoke_r_helper(INVOKE_OVERLOAD_VER_MEM_OBJ, MemObjPtr mem_obj_ptr, T & o KERBAL_OPT_PPEXPAND_WITH_COMMA_N(LEFT_JOIN_COMMA, EMPTY, ARGS_DECL, i)) \
 			{ \
-				KERBAL_STATIC_ASSERT(i >= 0, "Wrong Args num"); \
+				KERBAL_STATIC_ASSERT(kerbal::tmp::type_vector<KERBAL_OPT_PPEXPAND_WITH_COMMA_N(REMAINF, EMPTY, TARGS_USE, i)>::SIZE::value == 0, "Wrong Args num"); \
 				return static_cast<R>( \
 					o.*mem_obj_ptr \
 				); \
@@ -62,7 +63,7 @@ namespace kerbal
 			template <typename R, typename MemObjPtr, typename T KERBAL_OPT_PPEXPAND_WITH_COMMA_N(LEFT_JOIN_COMMA, EMPTY, TARGS_DECL, i)> \
 			R invoke_r_helper(INVOKE_OVERLOAD_VER_MEM_OBJ, MemObjPtr mem_obj_ptr, T * p KERBAL_OPT_PPEXPAND_WITH_COMMA_N(LEFT_JOIN_COMMA, EMPTY, ARGS_DECL, i)) \
 			{ \
-				KERBAL_STATIC_ASSERT(i >= 0, "Wrong Args num"); \
+				KERBAL_STATIC_ASSERT(kerbal::tmp::type_vector<KERBAL_OPT_PPEXPAND_WITH_COMMA_N(REMAINF, EMPTY, TARGS_USE, i)>::SIZE::value == 0, "Wrong Args num"); \
 				return static_cast<R>( \
 					p->*mem_obj_ptr \
 				); \
@@ -71,7 +72,7 @@ namespace kerbal
 			template <typename R, typename MemObjPtr, typename T KERBAL_OPT_PPEXPAND_WITH_COMMA_N(LEFT_JOIN_COMMA, EMPTY, TARGS_DECL, i)> \
 			R invoke_r_helper(INVOKE_OVERLOAD_VER_MEM_OBJ, MemObjPtr mem_obj_ptr, kerbal::utility::reference_wrapper<T> rw KERBAL_OPT_PPEXPAND_WITH_COMMA_N(LEFT_JOIN_COMMA, EMPTY, ARGS_DECL, i)) \
 			{ \
-				KERBAL_STATIC_ASSERT(i >= 0, "Wrong Args num"); \
+				KERBAL_STATIC_ASSERT(kerbal::tmp::type_vector<KERBAL_OPT_PPEXPAND_WITH_COMMA_N(REMAINF, EMPTY, TARGS_USE, i)>::SIZE::value == 0, "Wrong Args num"); \
 				return static_cast<R>( \
 					rw.get().*mem_obj_ptr \
 				); \
