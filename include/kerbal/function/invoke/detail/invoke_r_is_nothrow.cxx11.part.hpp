@@ -14,9 +14,7 @@
 
 #include <kerbal/function/invoke/invoke_overload_ver_selector.hpp>
 
-#include <kerbal/type_traits/conditional.hpp>
 #include <kerbal/type_traits/integral_constant.hpp>
-#include <kerbal/type_traits/is_pointer.hpp>
 #include <kerbal/type_traits/remove_cvref.hpp>
 #include <kerbal/utility/declval.hpp>
 #include <kerbal/utility/reference_wrapper.hpp>
@@ -30,42 +28,6 @@ namespace kerbal
 
 		namespace detail
 		{
-
-			template <typename T>
-			struct invoke_r_object_type_not_reference_wrapper :
-					kerbal::type_traits::conditional<
-						kerbal::type_traits::is_pointer<T>::value,
-						kerbal::type_traits::integral_constant<int, 1>,
-						kerbal::type_traits::integral_constant<int, 0>
-					>::type
-			{
-			};
-
-			template <typename T>
-			struct invoke_r_object_type_helper;
-
-			template <typename T>
-			struct invoke_r_object_type_helper :
-					invoke_r_object_type_not_reference_wrapper<T>
-			{
-			};
-
-			template <typename T>
-			struct invoke_r_object_type_helper<kerbal::utility::reference_wrapper<T> > :
-					kerbal::type_traits::integral_constant<int, 2>
-			{
-			};
-
-			/**
-			 *  Object -> 0
-			 *  Pointer -> 1
-			 *  reference_wrapper -> 2
-			 */
-			template <typename T>
-			struct invoke_r_object_type :
-					invoke_r_object_type_helper<typename kerbal::type_traits::remove_cvref<T>::type>
-			{
-			};
 
 			template <typename Ver, typename R, typename Fun, typename ... Args>
 			struct invoke_r_is_nothrow_helper;
@@ -82,11 +44,8 @@ namespace kerbal
 					> type;
 			};
 
-			template <int ObjectType, typename R, typename MemObjPtr, typename T>
-			struct invoke_r_is_nothrow_helper_of_mem_obj;
-
-			template <typename R, typename MemObjPtr, typename T>
-			struct invoke_r_is_nothrow_helper_of_mem_obj<0, R, MemObjPtr, T>
+			template <typename R, typename MemObjPtr, typename TOri, typename T>
+			struct invoke_r_is_nothrow_helper_of_mem_obj
 			{
 					typedef kerbal::type_traits::bool_constant<
 						noexcept(
@@ -97,25 +56,25 @@ namespace kerbal
 					> type;
 			};
 
-			template <typename R, typename MemObjPtr, typename P>
-			struct invoke_r_is_nothrow_helper_of_mem_obj<1, R, MemObjPtr, P>
+			template <typename R, typename MemObjPtr, typename TOri, typename T>
+			struct invoke_r_is_nothrow_helper_of_mem_obj<R, MemObjPtr, TOri, T *>
 			{
 					typedef kerbal::type_traits::bool_constant<
 						noexcept(
 							static_cast<R>(
-								kerbal::utility::declval<P>()->*kerbal::utility::declval<MemObjPtr>()
+								kerbal::utility::declval<TOri>()->*kerbal::utility::declval<MemObjPtr>()
 							)
 						)
 					> type;
 			};
 
-			template <typename R, typename MemObjPtr, typename Rw>
-			struct invoke_r_is_nothrow_helper_of_mem_obj<2, R, MemObjPtr, Rw>
+			template <typename R, typename MemObjPtr, typename TOri, typename T>
+			struct invoke_r_is_nothrow_helper_of_mem_obj<R, MemObjPtr, TOri, kerbal::utility::reference_wrapper<T> >
 			{
 					typedef kerbal::type_traits::bool_constant<
 						noexcept(
 							static_cast<R>(
-								kerbal::utility::declval<Rw>().get().*kerbal::utility::declval<MemObjPtr>()
+								kerbal::utility::declval<TOri>().get().*kerbal::utility::declval<MemObjPtr>()
 							)
 						)
 					> type;
@@ -124,48 +83,45 @@ namespace kerbal
 			template <typename R, typename MemObjPtr, typename T, typename ... Args>
 			struct invoke_r_is_nothrow_helper<INVOKE_OVERLOAD_VER_MEM_OBJ, R, MemObjPtr, T, Args...> :
 					invoke_r_is_nothrow_helper_of_mem_obj<
-						kerbal::function::detail::invoke_r_object_type<T>::value,
-						R, MemObjPtr, T
+						R, MemObjPtr,
+						T, typename kerbal::type_traits::remove_cvref<T>::type
 					>
 			{
 			};
 
-			template <int ObjectType, typename R, typename MemFunPtr, typename T, typename ... Args>
-			struct invoke_r_is_nothrow_helper_of_mem_fun;
-
-			template <typename R, typename MemFunPtr, typename T, typename ... Args>
-			struct invoke_r_is_nothrow_helper_of_mem_fun<0, R, MemFunPtr, T, Args...>
+			template <typename R, typename MemFunPtr, typename TOri, typename T, typename ... Args>
+			struct invoke_r_is_nothrow_helper_of_mem_fun
 			{
 					typedef kerbal::type_traits::bool_constant<
 						noexcept(
 							static_cast<R>(
-								(kerbal::utility::declval<T>().*kerbal::utility::declval<MemFunPtr>())
+								(kerbal::utility::declval<TOri>().*kerbal::utility::declval<MemFunPtr>())
 									(kerbal::utility::declval<Args>()...)
 							)
 						)
 					> type;
 			};
 
-			template <typename R, typename MemFunPtr, typename P, typename ... Args>
-			struct invoke_r_is_nothrow_helper_of_mem_fun<1, R, MemFunPtr, P, Args...>
+			template <typename R, typename MemFunPtr, typename TOri, typename T, typename ... Args>
+			struct invoke_r_is_nothrow_helper_of_mem_fun<R, MemFunPtr, TOri, T *, Args...>
 			{
 					typedef kerbal::type_traits::bool_constant<
 						noexcept(
 							static_cast<R>(
-								(kerbal::utility::declval<P>()->*kerbal::utility::declval<MemFunPtr>())
+								(kerbal::utility::declval<TOri>()->*kerbal::utility::declval<MemFunPtr>())
 									(kerbal::utility::declval<Args>()...)
 							)
 						)
 					> type;
 			};
 
-			template <typename R, typename MemFunPtr, typename Rw, typename ... Args>
-			struct invoke_r_is_nothrow_helper_of_mem_fun<2, R, MemFunPtr, Rw, Args...>
+			template <typename R, typename MemFunPtr, typename TOri, typename T, typename ... Args>
+			struct invoke_r_is_nothrow_helper_of_mem_fun<R, MemFunPtr, TOri, kerbal::utility::reference_wrapper<T>, Args...>
 			{
 					typedef kerbal::type_traits::bool_constant<
 						noexcept(
 							static_cast<R>(
-								(kerbal::utility::declval<Rw>().get().*kerbal::utility::declval<MemFunPtr>())
+								(kerbal::utility::declval<TOri>().get().*kerbal::utility::declval<MemFunPtr>())
 									(kerbal::utility::declval<Args>()...)
 							)
 						)
@@ -175,8 +131,9 @@ namespace kerbal
 			template <typename R, typename MemFunPtr, typename T, typename ... Args>
 			struct invoke_r_is_nothrow_helper<INVOKE_OVERLOAD_VER_MEM_FUN, R, MemFunPtr, T, Args...> :
 					invoke_r_is_nothrow_helper_of_mem_fun<
-						kerbal::function::detail::invoke_r_object_type<T>::value,
-						R, MemFunPtr, T, Args...
+						R, MemFunPtr,
+						T, typename kerbal::type_traits::remove_cvref<T>::type,
+						Args...
 					>
 			{
 			};
