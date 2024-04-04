@@ -80,7 +80,7 @@ namespace kerbal
 			KERBAL_CONSTEXPR
 			R invoke_r_helper(INVOKE_OVERLOAD_VER_MEM_OBJ, MemObjPtr mem_obj_ptr, kerbal::utility::reference_wrapper<T> rw, Args&& ...)
 					KERBAL_CONDITIONAL_NOEXCEPT((
-						invoke_r_is_nothrow<R, MemObjPtr, T&, Args&&...>::value
+						invoke_r_is_nothrow<R, MemObjPtr, kerbal::utility::reference_wrapper<T>, Args&&...>::value
 					))
 			{
 				KERBAL_STATIC_ASSERT(sizeof...(Args) == 0, "Wrong Args num");
@@ -121,7 +121,7 @@ namespace kerbal
 			KERBAL_CONSTEXPR
 			R invoke_r_helper(INVOKE_OVERLOAD_VER_MEM_FUN, MemFunPtr mem_fun_ptr, kerbal::utility::reference_wrapper<T> rw, Args&& ... args)
 					KERBAL_CONDITIONAL_NOEXCEPT((
-						invoke_r_is_nothrow<R, MemFunPtr, T&, Args&&...>::value
+						invoke_r_is_nothrow<R, MemFunPtr, kerbal::utility::reference_wrapper<T>, Args&&...>::value
 					))
 			{
 				return static_cast<R>(
