@@ -1,0 +1,182 @@
+name: Kerbal Build Test
+
+on:
+  push:
+    branches:
+      - main
+      - main.fwd
+
+env:
+  BUILD_TYPE: Release
+
+jobs:
+  build:
+    strategy:
+      fail-fast: false
+      matrix:
+        include:
+          - os: ubuntu-latest
+            compiler: g++
+            cxx_standard: 98
+          - os: ubuntu-latest
+            compiler: g++
+            cxx_standard: 11
+          - os: ubuntu-latest
+            compiler: g++
+            cxx_standard: 14
+          - os: ubuntu-latest
+            compiler: g++
+            cxx_standard: 17
+          - os: ubuntu-latest
+            compiler: g++
+            cxx_standard: 20
+
+          - os: ubuntu-latest
+            compiler: clang++
+            cxx_standard: 98
+          - os: ubuntu-latest
+            compiler: clang++
+            cxx_standard: 11
+          - os: ubuntu-latest
+            compiler: clang++
+            cxx_standard: 14
+          - os: ubuntu-latest
+            compiler: clang++
+            cxx_standard: 17
+          - os: ubuntu-latest
+            compiler: clang++
+            cxx_standard: 20
+
+          - os: windows-latest
+            compiler: msvc
+            generator: "Visual Studio 17 2022"
+            cxx_standard: 14
+          - os: windows-latest
+            compiler: msvc
+            generator: "Visual Studio 17 2022"
+            cxx_standard: 17
+          - os: windows-latest
+            compiler: msvc
+            generator: "Visual Studio 17 2022"
+            cxx_standard: 20
+
+          - os: windows-2019
+            compiler: msvc
+            generator: "Visual Studio 16 2019"
+            cxx_standard: 14
+          - os: windows-2019
+            compiler: msvc
+            generator: "Visual Studio 16 2019"
+            cxx_standard: 17
+          - os: windows-2019
+            compiler: msvc
+            generator: "Visual Studio 16 2019"
+            cxx_standard: 20
+
+          - os: macos-latest
+            compiler: clang++
+            cxx_standard: 98
+          - os: macos-latest
+            compiler: clang++
+            cxx_standard: 11
+          - os: macos-latest
+            compiler: clang++
+            cxx_standard: 14
+          - os: macos-latest
+            compiler: clang++
+            cxx_standard: 17
+          - os: macos-latest
+            compiler: clang++
+            cxx_standard: 20
+
+    runs-on: ${{matrix.os}}
+    continue-on-error: false
+
+    steps:
+      - name: Show CMake Version
+        run: cmake --version
+
+      - name: Show Generators Support
+        run: cmake --help
+
+      - name: Restore Source Directory From Cache
+        uses: actions/cache@v4
+        with:
+          path: |
+            ${{github.workspace}}/Kerbal
+          key: KerbalBuildTest_source_cache-${{github.run_id}}
+          restore-keys: KerbalBuildTest_source_cache
+
+      - name: Restore Build Directory From Cache
+        uses: actions/cache@v4
+        with:
+          path: |
+            ${{github.workspace}}/KerbalTest-build
+          key: KerbalBuildTest_build_cache-${{matrix.os}}-${{matrix.compiler}}-${{matrix.cxx_standard}}-${{github.run_id}}
+          restore-keys: KerbalBuildTest_build_cache-${{matrix.os}}-${{matrix.compiler}}-${{matrix.cxx_standard}}
+
+      - name: Clone Kerbal
+        uses: actions/checkout@v4
+        with:
+          repository: WentsingNee/Kerbal
+          path: Kerbal
+          submodules: 'true'
+
+      - name: Install Kerbal
+        run: >
+          cmake
+          -S ${{github.workspace}}/Kerbal
+          -B ${{github.workspace}}/Kerbal-build
+          -DCMAKE_INSTALL_PREFIX=${{github.workspace}}/Kerbal-install
+
+          cmake --build ${{github.workspace}}/Kerbal-build --target install
+
+      - name: Configure KerbalTest
+        if: matrix.compiler != 'msvc'
+        run: >
+          cmake
+          -S ${{github.workspace}}/Kerbal/test
+          -B ${{github.workspace}}/KerbalTest-build
+          -DCMAKE_BUILD_TYPE=${{env.BUILD_TYPE}}
+          -DCMAKE_CXX_COMPILER=${{matrix.compiler}}
+          -DCMAKE_CXX_STANDARD=${{matrix.cxx_standard}}
+          -DCMAKE_PREFIX_PATH=${{github.workspace}}/Kerbal-install
+          -DKTEST_USE_LIBCXX=${{matrix.stdlib}}
+          -DKTEST_ENABLE_PRECOMPILE_HEADER=OFF
+          -DKTEST_CI="github"
+
+      - name: Configure KerbalTest (MSVC)
+        if: matrix.compiler == 'msvc'
+        run: >
+          cmake
+          -S ${{github.workspace}}/Kerbal/test
+          -B ${{github.workspace}}/KerbalTest-build
+          -G "${{matrix.generator}}"
+          -DCMAKE_CXX_STANDARD=${{matrix.cxx_standard}}
+          -DCMAKE_PREFIX_PATH=${{github.workspace}}/Kerbal-install
+          -DKTEST_ENABLE_PRECOMPILE_HEADER=OFF
+          -DKTEST_CI="github"
+
+      - name: Show Environment Kerbal Detected
+        run: >
+          cmake --build ${{github.workspace}}/KerbalTest-build --config ${{env.BUILD_TYPE}} --target
+          utest.config.architecture
+          utest.config.compiler_id
+          utest.config.compiler_version
+          utest.config.cxx_stdlib
+          utest.config.language_standard
+          utest.config.system
+
+          cmake --build ${{github.workspace}}/KerbalTest-build --config ${{env.BUILD_TYPE}} --target
+          run_utest.config.architecture
+          run_utest.config.compiler_id
+          run_utest.config.compiler_version
+          run_utest.config.cxx_stdlib
+          run_utest.config.language_standard
+          run_utest.config.system
+
+      - name: Build
+        run: cmake --build ${{github.workspace}}/KerbalTest-build --config ${{env.BUILD_TYPE}} --parallel
+
+      - name: Run Unit Test
+        run: cmake --build ${{github.workspace}}/KerbalTest-build --config ${{env.BUILD_TYPE}} --target runm_utest
