@@ -6,9 +6,6 @@ on:
       - main
       - main.fwd
 
-env:
-  BUILD_TYPE: Release
-
 jobs:
   build:
     strategy:
@@ -91,6 +88,8 @@ jobs:
 
     runs-on: ${{matrix.os}}
     continue-on-error: false
+    env:
+      BUILD_TYPE: Release
 
     steps:
       - name: Show CMake Version
@@ -180,3 +179,51 @@ jobs:
 
       - name: Run Unit Test
         run: cmake --build ${{github.workspace}}/KerbalTest-build --config ${{env.BUILD_TYPE}} --target runm_utest
+
+  pack:
+    continue-on-error: false
+    strategy:
+      fail-fast: false
+      matrix:
+        include:
+          - os: ubuntu-latest
+            cpack_generators: "DEB;STGZ;TGZ;ZIP;"
+            platform: "ubuntu"
+          - os: windows-latest
+            cpack_generators: "NuGet;NSIS;WIX;ZIP;"
+            platform: "windows"
+          - os: macos-latest
+            cpack_generators: "DragNDrop;ZIP;"
+            platform: "macos"
+
+    runs-on: ${{matrix.os}}
+    needs: build
+
+    steps:
+      - name: Show CPack Generators Support
+        run: cpack --help
+
+      - name: Clone Kerbal
+        uses: actions/checkout@v4
+        with:
+          repository: WentsingNee/Kerbal
+          path: Kerbal
+          submodules: 'true'
+
+      - name: CPack Kerbal
+        run: >
+          cmake
+          -S ${{github.workspace}}/Kerbal/
+          -B ${{github.workspace}}/Kerbal-pack/
+          -DCMAKE_BUILD_TYPE=Release
+          -DCPACK_BUNDLE_NAME="Kerbal"
+
+          cd ${{github.workspace}}/Kerbal-pack/
+
+          cpack -G "${{matrix.cpack_generators}}"
+
+      - name: Upload Package
+        uses: actions/upload-artifact@v4
+        with:
+          name: Kerbal-${{github.sha}}-${{matrix.platform}}
+          path: ${{github.workspace}}/Kerbal-pack/packages
