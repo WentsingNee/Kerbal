@@ -146,16 +146,16 @@ function(kerbal_target_with_ies)
 
     set(ies "${_IEs}")
 
-    if (NOT _SCOPE MATCHES "^((PUBLIC)|(PRIVATE)|(SILENCE))$")
-        message(FATAL_ERROR "SCOPE must be one of: PUBLIC PRIVATE SILENCE, but is: ${_SCOPE}")
+    if (NOT _SCOPE MATCHES "^((PUBLIC)|(PRIVATE)|(INTERFACE))$")
+        message(FATAL_ERROR "SCOPE must be one of: PUBLIC PRIVATE INTERFACE, but is: ${_SCOPE}")
     endif ()
     set(scope "${_SCOPE}")
 
     if (NOT _MODE)
         set(_MODE "REQUIRED")
     endif ()
-    if (NOT _MODE MATCHES "^((REQUIRED)|(WARNING)|(INTERFACE))$")
-        message(FATAL_ERROR "MODE must be one of: REQUIRED WARNING INTERFACE, but is: ${_MODE}")
+    if (NOT _MODE MATCHES "^((REQUIRED)|(WARNING)|(SILENCE))$")
+        message(FATAL_ERROR "MODE must be one of: REQUIRED WARNING SILENCE, but is: ${_MODE}")
     endif ()
     set(mode "${_MODE}")
 
