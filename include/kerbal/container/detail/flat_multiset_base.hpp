@@ -1,16 +1,17 @@
 /**
- * @file       flat_set_base.hpp
+ * @file       flat_multiset_base.hpp
  * @brief
- * @date       2019-12-15
+ * @date       2024-04-07
  * @author     Peter
+ * @remark     split from kerbal/container/detail/flat_set_base.hpp
  * @copyright
  *      Peter of [ThinkSpirit Laboratory](http://thinkspirit.org/)
  *   of [Nanjing University of Information Science & Technology](http://www.nuist.edu.cn/)
  *   all rights reserved
  */
 
-#ifndef KERBAL_CONTAINER_DETAIL_FLAT_SET_BASE_HPP
-#define KERBAL_CONTAINER_DETAIL_FLAT_SET_BASE_HPP
+#ifndef KERBAL_CONTAINER_DETAIL_FLAT_MULTISET_BASE_HPP
+#define KERBAL_CONTAINER_DETAIL_FLAT_MULTISET_BASE_HPP
 
 #include <kerbal/compatibility/constexpr.hpp>
 #include <kerbal/compatibility/move.hpp>
@@ -19,8 +20,6 @@
 #include <kerbal/type_traits/enable_if.hpp>
 
 #include <kerbal/container/detail/flat_set_common_base.hpp>
-
-#include <utility> // std::pair
 
 #if __cplusplus >= 201103L
 #	include <initializer_list>
@@ -37,7 +36,7 @@ namespace kerbal
 		{
 
 			template <typename Tp, typename Ordered>
-			class flat_set_base: public flat_set_common_base<Tp, Ordered>
+			class flat_multiset_base : public flat_set_common_base<Tp, Ordered>
 			{
 				private:
 					typedef flat_set_common_base<Tp, Ordered> super;
@@ -65,21 +64,21 @@ namespace kerbal
 
 				protected:
 					KERBAL_CONSTEXPR
-					flat_set_base() :
+					flat_multiset_base() :
 							super()
 					{
 					}
 
 					KERBAL_CONSTEXPR
-					explicit flat_set_base(key_compare kc) :
+					explicit flat_multiset_base(key_compare kc) :
 							super(kc)
 					{
 					}
 
 					template <typename InputIterator>
 					KERBAL_CONSTEXPR14
-					flat_set_base(InputIterator first, InputIterator last,
-								  typename kerbal::type_traits::enable_if<
+					flat_multiset_base(InputIterator first, InputIterator last,
+									   typename kerbal::type_traits::enable_if<
 								kerbal::iterator::is_input_compatible_iterator<InputIterator>::value,
 								int
 							>::type = 0) :
@@ -90,8 +89,8 @@ namespace kerbal
 
 					template <typename InputIterator>
 					KERBAL_CONSTEXPR14
-					flat_set_base(InputIterator first, InputIterator last, key_compare kc,
-								  typename kerbal::type_traits::enable_if<
+					flat_multiset_base(InputIterator first, InputIterator last, key_compare kc,
+									   typename kerbal::type_traits::enable_if<
 								kerbal::iterator::is_input_compatible_iterator<InputIterator>::value,
 								int
 							>::type = 0) :
@@ -103,14 +102,14 @@ namespace kerbal
 #			if __cplusplus >= 201103L
 
 					KERBAL_CONSTEXPR14
-					flat_set_base(std::initializer_list<value_type> src) :
-							flat_set_base(src.begin(), src.end())
+					flat_multiset_base(std::initializer_list<value_type> src) :
+							flat_multiset_base(src.begin(), src.end())
 					{
 					}
 
 					KERBAL_CONSTEXPR14
-					flat_set_base(std::initializer_list<value_type> src, key_compare kc) :
-							flat_set_base(src.begin(), src.end(), kc)
+					flat_multiset_base(std::initializer_list<value_type> src, key_compare kc) :
+							flat_multiset_base(src.begin(), src.end(), kc)
 					{
 					}
 
@@ -121,13 +120,13 @@ namespace kerbal
 					KERBAL_CONSTEXPR14
 					size_type count(const key_type & key) const
 					{
-						return this->contains(key) ? 1 : 0;
+						return this->ordered.count(key);
 					}
 
 					KERBAL_CONSTEXPR14
 					size_type count(const key_type & key, const_iterator hint) const
 					{
-						return this->contains(key, hint) ? 1 : 0;
+						return this->ordered.count(key, hint);
 					}
 
 					template <typename InputIterator>
@@ -137,8 +136,7 @@ namespace kerbal
 					>::type
 					assign(InputIterator first, InputIterator last)
 					{
-						this->clear();
-						this->insert(first, last);
+						this->ordered.assign(first, last);
 					}
 
 					template <typename InputIterator>
@@ -148,9 +146,7 @@ namespace kerbal
 					>::type
 					assign(InputIterator first, InputIterator last, key_compare kc)
 					{
-						this->clear();
-						this->key_comp_obj() = kc;
-						this->insert(first, last);
+						this->ordered.assign(first, last, kc);
 					}
 
 #			if __cplusplus >= 201103L
@@ -170,29 +166,29 @@ namespace kerbal
 #			endif
 
 					KERBAL_CONSTEXPR14
-					std::pair<const_iterator, bool> insert(const_reference src)
+					const_iterator insert(const_reference src)
 					{
-						return this->ordered.try_insert(src);
+						return this->ordered.insert(src);
 					}
 
 					KERBAL_CONSTEXPR14
-					std::pair<const_iterator, bool> insert(const_iterator hint, const_reference src)
+					const_iterator insert(const_iterator hint, const_reference src)
 					{
-						return this->ordered.try_insert(hint, src);
+						return this->ordered.insert(hint, src);
 					}
 
 #			if __cplusplus >= 201103L
 
 					KERBAL_CONSTEXPR14
-					std::pair<const_iterator, bool> insert(rvalue_reference src)
+					const_iterator insert(rvalue_reference src)
 					{
-						return this->ordered.try_insert(kerbal::compatibility::move(src));
+						return this->ordered.insert(kerbal::compatibility::move(src));
 					}
 
 					KERBAL_CONSTEXPR14
-					std::pair<const_iterator, bool> insert(const_iterator hint, rvalue_reference src)
+					const_iterator insert(const_iterator hint, rvalue_reference src)
 					{
-						return this->ordered.try_insert(hint, kerbal::compatibility::move(src));
+						return this->ordered.insert(hint, kerbal::compatibility::move(src));
 					}
 
 #			endif
@@ -201,19 +197,13 @@ namespace kerbal
 					KERBAL_CONSTEXPR14
 					void insert(InputIterator first, InputIterator last)
 					{
-						this->ordered.try_insert(first, last);
+						this->ordered.insert(first, last);
 					}
 
 					KERBAL_CONSTEXPR14
-					const_iterator erase(const key_type & key)
+					size_type erase(const key_type & key)
 					{
-						return this->ordered.erase_one(key);
-					}
-
-					KERBAL_CONSTEXPR14
-					const_iterator erase(const_iterator hint, const key_type & key)
-					{
-						return this->erase(this->find(key, hint));
+						return this->ordered.erase(key);
 					}
 
 			};
@@ -225,4 +215,4 @@ namespace kerbal
 } // namespace kerbal
 
 
-#endif // KERBAL_CONTAINER_DETAIL_FLAT_SET_BASE_HPP
+#endif // KERBAL_CONTAINER_DETAIL_FLAT_MULTISET_BASE_HPP

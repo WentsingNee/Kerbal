@@ -17,6 +17,7 @@
 #include <kerbal/container/flat_ordered.hpp>
 
 #include <kerbal/container/detail/flat_set_base.hpp>
+#include <kerbal/container/detail/flat_multiset_base.hpp>
 
 #include <memory>
 
