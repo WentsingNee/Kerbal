@@ -1751,7 +1751,7 @@ namespace kerbal
 					typedef typename allocator_traits::has_reallocate has_reallocate;
 					this->k_emplace_back_ua_expand_buffer(has_reallocate(), alloc, kerbal::utility::forward<Args>(args)...);
 				}
-				return this->k_buffer[this->k_size];
+				return this->k_buffer[ori_size];
 			}
 
 #		else
@@ -1863,7 +1863,7 @@ namespace kerbal
 					typedef typename allocator_traits::has_reallocate has_reallocate; \
 					this->k_emplace_back_ua_expand_buffer(has_reallocate(), alloc KERBAL_OPT_PPEXPAND_WITH_COMMA_N(LEFT_JOIN_COMMA, EMPTY, ARGS_USE, i)); \
 				} \
-				return this->k_buffer[this->k_size]; \
+				return this->k_buffer[ori_size]; \
 			}
 
 			KERBAL_PPEXPAND_N(FBODY, KERBAL_PPEXPAND_EMPTY_SEPARATOR, 0)
