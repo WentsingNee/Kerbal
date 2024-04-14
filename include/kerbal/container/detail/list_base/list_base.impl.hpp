@@ -40,8 +40,8 @@
 #	include <kerbal/utility/throw_this_exception.hpp>
 #endif
 
-#include <cstddef> // std::size_t
 #include <climits> // CHAR_BIT
+#include <cstddef> // std::size_t
 
 #if __cplusplus >= 201703L
 #	if __has_include(<memory_resource>)
