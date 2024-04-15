@@ -9,8 +9,8 @@
  *   all rights reserved
  */
 
-#ifndef KERBAL_MATH_BIG_INTEGER_IMPL_HPP
-#define KERBAL_MATH_BIG_INTEGER_IMPL_HPP
+#ifndef KERBAL_MATH_IMPL_BIG_INTEGER_IMPL_HPP
+#define KERBAL_MATH_IMPL_BIG_INTEGER_IMPL_HPP
 
 #include <kerbal/math/big_integer.hpp>
 
@@ -128,4 +128,4 @@ namespace kerbal
 
 } // namespace kerbal
 
-#endif // KERBAL_MATH_BIG_INTEGER_IMPL_HPP
+#endif // KERBAL_MATH_IMPL_BIG_INTEGER_IMPL_HPP
