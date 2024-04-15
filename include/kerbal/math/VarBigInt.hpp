@@ -1,17 +1,16 @@
 /**
- * @file		VarBigint.hpp
+ * @file       VarBigInt.hpp
  * @brief
- * @date		2018年7月22日
- * @author		Peter
- * @copyright	Peter
+ * @date       2018-07-22
+ * @author     Peter
  * @copyright
- <a href="http://thinkspirit.org/">ThinkSpirit Laboratory</a>
- of
- <a href="http://www.nuist.edu.cn/">Nanjing University of Information Science & Technology</a>
+ *      Peter of [ThinkSpirit Laboratory](http://thinkspirit.org/)
+ *   of [Nanjing University of Information Science & Technology](http://www.nuist.edu.cn/)
+ *   all rights reserved
  */
 
-#ifndef INCLUDE_KERBAL_MATH_VARBIGINT_HPP_
-#define INCLUDE_KERBAL_MATH_VARBIGINT_HPP_
+#ifndef KERBAL_MATH_VARBIGINT_HPP
+#define KERBAL_MATH_VARBIGINT_HPP
 
 #include <iostream>
 #include <deque>
@@ -726,4 +725,4 @@ namespace kerbal
 }
 
 
-#endif /* INCLUDE_KERBAL_MATH_VARBIGINT_HPP_ */
+#endif // KERBAL_MATH_VARBIGINT_HPP
