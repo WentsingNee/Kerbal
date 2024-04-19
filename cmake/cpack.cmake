@@ -12,6 +12,7 @@
 set(CPACK_PACKAGE_NAME ${CMAKE_PROJECT_NAME})
 set(CPACK_PACKAGE_VERSION ${CMAKE_PROJECT_VERSION})
 set(CPACK_PACKAGE_CONTACT "Wentsing Nee")
+set(CPACK_PACKAGE_VENDOR "Wentsing Nee")
 set(CPACK_PACKAGE_DESCRIPTION ${CMAKE_PROJECT_DESCRIPTION})
 set(CPACK_RESOURCE_FILE_LICENSE ${PROJECT_SOURCE_DIR}/LICENSE)
 
@@ -73,3 +74,15 @@ set(CPACK_PROJECT_CONFIG_FILE "${PROJECT_SOURCE_DIR}/cmake/cpack/config.cmake")
 message(STATUS "CPACK_PROJECT_CONFIG_FILE: ${CPACK_PROJECT_CONFIG_FILE}")
 
 include(CPack)
+
+## NuGet
+#cpack_add_component_group(
+#        groupname
+##        [DISPLAY_NAME name]
+##        [DESCRIPTION description]
+##        [PARENT_GROUP parent]
+##        [EXPANDED]
+##        [BOLD_TITLE]
+#)
+
+file(COPY "${PROJECT_SOURCE_DIR}/cmake/cpack/config/nuget_patch.cmake" DESTINATION "${KERBAL_CONFIGURE_ASSETS_DIR}/cpack/config")

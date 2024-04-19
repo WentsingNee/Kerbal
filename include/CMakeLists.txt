@@ -102,6 +102,7 @@ foreach (
         install(
                 FILES ${header}
                 DESTINATION ${CMAKE_INSTALL_INCLUDEDIR}/${path}
+                COMPONENT XXX
         )
     endforeach ()
 endforeach ()
