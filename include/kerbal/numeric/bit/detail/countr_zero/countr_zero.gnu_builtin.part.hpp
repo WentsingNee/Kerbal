@@ -143,7 +143,10 @@ namespace kerbal
 					KERBAL_STATIC_ASSERT(S::value <= I::value, "digits of unsigned short type is greater than that of unsigned int type");
 					return S::value == I::value ?
 							KERBAL_BUILTIN_COUNTR_ZERO(x) :
-							KERBAL_BUILTIN_COUNTR_ZERO(static_cast<unsigned int>(1u) << S::value | static_cast<unsigned int>(x));
+							KERBAL_BUILTIN_COUNTR_ZERO(
+								(static_cast<unsigned int>(1u) << S::value) | static_cast<unsigned int>(x)
+							)
+					;
 				}
 
 				KERBAL_CONSTEXPR
@@ -155,8 +158,11 @@ namespace kerbal
 					KERBAL_STATIC_ASSERT(C::value <= I::value, "digits of unsigned char type is greater than that of unsigned int type");
 					return C::value == I::value ?
 							KERBAL_BUILTIN_COUNTR_ZERO(x) :
-							KERBAL_BUILTIN_COUNTR_ZERO(static_cast<unsigned int>(1u) << C::value | static_cast<unsigned int>(x));
-				 }
+							KERBAL_BUILTIN_COUNTR_ZERO(
+								(static_cast<unsigned int>(1u) << C::value) | static_cast<unsigned int>(x)
+							)
+					;
+				}
 
 #	endif
 
