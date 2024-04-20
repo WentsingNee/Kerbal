@@ -42,7 +42,7 @@ namespace kerbal
 			KERBAL_CONSTEXPR
 			int countr_zero_sign_handler_impl(Signed x, kerbal::type_traits::true_type) KERBAL_NOEXCEPT
 			{
-				KERBAL_STATIC_ASSERT(kerbal::type_traits::is_unsigned<Signed>::value, "x should be signed");
+				KERBAL_STATIC_ASSERT(kerbal::type_traits::is_signed<Signed>::value, "x should be signed");
 				typedef typename kerbal::type_traits::make_unsigned<Signed>::type unsigned_t;
 				return countr_zero_sign_handler_impl(static_cast<unsigned_t>(x), kerbal::type_traits::false_type());
 			}
