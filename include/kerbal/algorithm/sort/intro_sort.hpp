@@ -20,6 +20,7 @@
 #include <kerbal/compatibility/constexpr.hpp>
 #include <kerbal/container/static_stack.hpp>
 #include <kerbal/iterator/iterator.hpp>
+#include <kerbal/numeric/bit/countl_zero.hpp>
 
 #include <climits>
 #include <cstddef>
@@ -38,12 +39,7 @@ namespace kerbal
 			KERBAL_CONSTEXPR14
 			Size lg(Size n)
 			{
-				Size k = 0;
-				while (n > 1) {
-					++k;
-					n >>= 1;
-				}
-				return k;
+				return sizeof(n) * CHAR_BIT - kerbal::numeric::countl_zero(n);
 			}
 
 			template <typename BidirectionalIterator, typename Compare>
