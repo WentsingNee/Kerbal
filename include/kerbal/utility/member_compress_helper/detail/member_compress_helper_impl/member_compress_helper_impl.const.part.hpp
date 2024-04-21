@@ -68,18 +68,6 @@ namespace kerbal
 
 #			if __cplusplus >= 201103L
 
-					member_compress_helper_impl() = default;
-
-#			else
-
-					member_compress_helper_impl()
-					{
-					}
-
-#			endif
-
-#			if __cplusplus >= 201103L
-
 					template <typename ... Args>
 					struct try_test_is_nothrow_in_place_constructible :
 						kerbal::type_traits::try_test_is_nothrow_constructible<super, Args...>

@@ -17,5 +17,6 @@
 #include <kerbal/utility/member_compress_helper/detail/member_compress_helper/member_compress_helper.default.part.hpp>
 #include <kerbal/utility/member_compress_helper/detail/member_compress_helper/member_compress_helper.array.part.hpp>
 #include <kerbal/utility/member_compress_helper/detail/member_compress_helper/member_compress_helper.ref.part.hpp>
+#include <kerbal/utility/member_compress_helper/detail/member_compress_helper/member_compress_helper.const.part.hpp>
 
 #endif // KERBAL_UTILITY_MEMBER_COMPRESS_HELPER_HPP
