@@ -236,6 +236,34 @@ jobs:
           name: Kerbal-${{github.sha}}-${{matrix.platform}}
           path: ${{github.workspace}}/Kerbal-pack/packages
 
+      - name: Create Release
+        id: create_release
+        uses: actions/create-release@v1
+        env:
+          GITHUB_TOKEN: ${{secrets.KERBAL_UPLOAD_DOXYGEN_DOC_TOKEN}} # This token is provided by Actions, you do not need to create your own token
+        with:
+          repo: Kerbal
+          tag_name: v2024.4.1
+          commitish: ${{env.ref_name}}
+          release_name: Release ${{github.ref}}
+          body: |
+            This is a release committed by GitHub Action
+            Kerbal branch: env.refname: ${{env.ref_name}}
+            github.ref: ${{github.ref}}
+          draft: true
+          prerelease: true
+
+      - name: Upload Release Asset
+        id: upload-release-asset
+        uses: actions/upload-release-asset@v1
+        env:
+          GITHUB_TOKEN: ${{secrets.KERBAL_UPLOAD_DOXYGEN_DOC_TOKEN}}
+        with:
+          upload_url: ${{steps.create_release.outputs.upload_url}} # This pulls from the CREATE RELEASE step above, referencing it's ID to get its outputs object, which include a `upload_url`. See this blog post for more info: https://jasonet.co/posts/new-features-of-github-actions/#passing-data-to-future-steps
+          asset_path: ${{github.workspace}}/Kerbal-pack/packages/2024.4.1/Kerbal-2024.4.1-Linux.deb
+          asset_name: Kerbal-2024.4.1-Linux.deb
+          asset_content_type: application/vnd.debian.binary-package
+
   update-doc:
     if: github.ref_name == 'main'
     continue-on-error: false
