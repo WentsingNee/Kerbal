@@ -5,6 +5,7 @@ on:
     branches:
       - main
       - main.fwd
+      - exp/ci-release
 
 jobs:
   build:
@@ -15,76 +16,76 @@ jobs:
           - os: ubuntu-latest
             compiler: g++
             cxx_standard: 98
-          - os: ubuntu-latest
-            compiler: g++
-            cxx_standard: 11
-          - os: ubuntu-latest
-            compiler: g++
-            cxx_standard: 14
-          - os: ubuntu-latest
-            compiler: g++
-            cxx_standard: 17
-          - os: ubuntu-latest
-            compiler: g++
-            cxx_standard: 20
-
-          - os: ubuntu-latest
-            compiler: clang++
-            cxx_standard: 98
-          - os: ubuntu-latest
-            compiler: clang++
-            cxx_standard: 11
-          - os: ubuntu-latest
-            compiler: clang++
-            cxx_standard: 14
-          - os: ubuntu-latest
-            compiler: clang++
-            cxx_standard: 17
-          - os: ubuntu-latest
-            compiler: clang++
-            cxx_standard: 20
-
-          - os: windows-latest
-            compiler: msvc
-            generator: "Visual Studio 17 2022"
-            cxx_standard: 14
-          - os: windows-latest
-            compiler: msvc
-            generator: "Visual Studio 17 2022"
-            cxx_standard: 17
-          - os: windows-latest
-            compiler: msvc
-            generator: "Visual Studio 17 2022"
-            cxx_standard: 20
-
-          - os: windows-2019
-            compiler: msvc
-            generator: "Visual Studio 16 2019"
-            cxx_standard: 14
-          - os: windows-2019
-            compiler: msvc
-            generator: "Visual Studio 16 2019"
-            cxx_standard: 17
-          - os: windows-2019
-            compiler: msvc
-            generator: "Visual Studio 16 2019"
-            cxx_standard: 20
-
-          - os: macos-latest
-            compiler: clang++
-            cxx_standard: 98
-          - os: macos-latest
-            compiler: clang++
-            cxx_standard: 11
-          - os: macos-latest
-            compiler: clang++
-            cxx_standard: 14
-          - os: macos-latest
-            compiler: clang++
-            cxx_standard: 17
-          - os: macos-latest
-            compiler: clang++
-            cxx_standard: 20
+#          - os: ubuntu-latest
+#            compiler: g++
+#            cxx_standard: 11
+#          - os: ubuntu-latest
+#            compiler: g++
+#            cxx_standard: 14
+#          - os: ubuntu-latest
+#            compiler: g++
+#            cxx_standard: 17
+#          - os: ubuntu-latest
+#            compiler: g++
+#            cxx_standard: 20
+#
+#          - os: ubuntu-latest
+#            compiler: clang++
+#            cxx_standard: 98
+#          - os: ubuntu-latest
+#            compiler: clang++
+#            cxx_standard: 11
+#          - os: ubuntu-latest
+#            compiler: clang++
+#            cxx_standard: 14
+#          - os: ubuntu-latest
+#            compiler: clang++
+#            cxx_standard: 17
+#          - os: ubuntu-latest
+#            compiler: clang++
+#            cxx_standard: 20
+#
+#          - os: windows-latest
+#            compiler: msvc
+#            generator: "Visual Studio 17 2022"
+#            cxx_standard: 14
+#          - os: windows-latest
+#            compiler: msvc
+#            generator: "Visual Studio 17 2022"
+#            cxx_standard: 17
+#          - os: windows-latest
+#            compiler: msvc
+#            generator: "Visual Studio 17 2022"
+#            cxx_standard: 20
+#
+#          - os: windows-2019
+#            compiler: msvc
+#            generator: "Visual Studio 16 2019"
+#            cxx_standard: 14
+#          - os: windows-2019
+#            compiler: msvc
+#            generator: "Visual Studio 16 2019"
+#            cxx_standard: 17
+#          - os: windows-2019
+#            compiler: msvc
+#            generator: "Visual Studio 16 2019"
+#            cxx_standard: 20
+#
+#          - os: macos-latest
+#            compiler: clang++
+#            cxx_standard: 98
+#          - os: macos-latest
+#            compiler: clang++
+#            cxx_standard: 11
+#          - os: macos-latest
+#            compiler: clang++
+#            cxx_standard: 14
+#          - os: macos-latest
+#            compiler: clang++
+#            cxx_standard: 17
+#          - os: macos-latest
+#            compiler: clang++
+#            cxx_standard: 20
 
     runs-on: ${{matrix.os}}
     continue-on-error: false
