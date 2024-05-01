@@ -76,7 +76,8 @@ namespace kerbal
 
 #if KERBAL_RANDOM_ENABLE_MT_GENERATE_COPY_N_IE_OPTIMISE
 
-			template <typename UIntType, std::size_t U, UIntType D, std::size_t S,
+			template <
+					typename UIntType, std::size_t U, UIntType D, std::size_t S,
 					UIntType B, std::size_t T,
 					UIntType C, std::size_t L
 			>
@@ -105,7 +106,8 @@ namespace kerbal
 #		endif
 			}
 
-			template <typename UIntType, std::size_t U, UIntType D, std::size_t S,
+			template <
+					typename UIntType, std::size_t U, UIntType D, std::size_t S,
 					UIntType B, std::size_t T,
 					UIntType C, std::size_t L
 			>
@@ -134,7 +136,8 @@ namespace kerbal
 #		endif
 			}
 
-			template <typename UIntType, std::size_t U, UIntType D, std::size_t S,
+			template <
+					typename UIntType, std::size_t U, UIntType D, std::size_t S,
 					UIntType B, std::size_t T,
 					UIntType C, std::size_t L, std::size_t Size
 			>
@@ -147,7 +150,8 @@ namespace kerbal
 #endif // KERBAL_RANDOM_ENABLE_MT_GENERATE_COPY_N_IE_OPTIMISE
 
 
-			template <typename UIntType, std::size_t U, UIntType D, std::size_t S,
+			template <
+					typename UIntType, std::size_t U, UIntType D, std::size_t S,
 					UIntType B, std::size_t T,
 					UIntType C, std::size_t L
 			>

@@ -68,11 +68,12 @@ namespace kerbal
 
 
 		template <
-				typename UIntType,
-				std::size_t W, std::size_t N, std::size_t M, std::size_t R,
-				UIntType A, std::size_t U, UIntType D, std::size_t S,
-				UIntType B, std::size_t T,
-				UIntType C, std::size_t L, UIntType F
+				typename UIntType, std::size_t W,
+				std::size_t N, std::size_t M, std::size_t R, UIntType A,
+				std::size_t U, UIntType D,
+				std::size_t S, UIntType B,
+				std::size_t T, UIntType C,
+				std::size_t L, UIntType F
 		>
 		class mersenne_twister_engine :
 				detail::mt_twist_helper<UIntType, N, M, R, A>,
@@ -313,27 +314,30 @@ namespace kerbal
 
 
 //		template <
-//				typename UIntType,
-//				std::size_t W, std::size_t N, std::size_t M, std::size_t R,
-//				UIntType A, std::size_t U, UIntType D, std::size_t S,
-//				UIntType B, std::size_t T,
-//				UIntType C, std::size_t L, UIntType F
+//				typename UIntType, std::size_t W,
+//				std::size_t N, std::size_t M, std::size_t R, UIntType A,
+//				std::size_t U, UIntType D,
+//				std::size_t S, UIntType B,
+//				std::size_t T, UIntType C,
+//				std::size_t L, UIntType F
 //		>
 //		class mersenne_twister_engine;
 
 		typedef kerbal::random::mersenne_twister_engine<
-				kerbal::compatibility::uint32_t,
-				32, 624, 397, 31,
-				0x9908b0dfUL, 11, 0xffffffffUL, 7,
-				0x9d2c5680UL, 15,
-				0xefc60000UL, 18, 1812433253UL> mt19937;
+				kerbal::compatibility::uint32_t, 32,
+				624, 397, 31, 0x9908b0dfUL,
+				11, 0xffffffffUL,
+				7, 0x9d2c5680UL,
+				15, 0xefc60000UL,
+				18, 1812433253UL> mt19937;
 
 		typedef kerbal::random::mersenne_twister_engine<
-				kerbal::compatibility::uint64_t,
-				64, 312, 156, 31,
-				0xb5026f5aa96619e9ULL, 29, 0x5555555555555555ULL, 17,
-				0x71d67fffeda60000ULL, 37,
-				0xfff7eee000000000ULL, 43, 6364136223846793005ULL> mt19937_64;
+				kerbal::compatibility::uint64_t, 64,
+				312, 156, 31, 0xb5026f5aa96619e9ULL,
+				29, 0x5555555555555555ULL,
+				17, 0x71d67fffeda60000ULL,
+				37, 0xfff7eee000000000ULL,
+				43, 6364136223846793005ULL> mt19937_64;
 
 
 	} // namespace random
