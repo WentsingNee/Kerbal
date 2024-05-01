@@ -30,18 +30,19 @@ namespace kerbal
 		namespace detail
 		{
 
-			namespace plain
-			{
-
-#		define EACH(i) do { \
-					result_type y = mt_now[i]; \
-					y ^= (y >> U) & D; \
-					y ^= (y << S) & B; \
-					y ^= (y << T) & C; \
-					y ^= y >> L;       \
-					*out = y;          \
+#		define EACH(i) \
+				do { \
+					result_type z = mt_now[i]; \
+					z ^= (z >> U) & D; \
+					z ^= (z << S) & B; \
+					z ^= (z << T) & C; \
+					z ^= z >> L;       \
+					*out = z;          \
 					++out;             \
 				} while (0)
+
+			namespace plain
+			{
 
 				template <typename UIntType, typename OutputIterator, std::size_t U, UIntType D, std::size_t S,
 						UIntType B, std::size_t T,
