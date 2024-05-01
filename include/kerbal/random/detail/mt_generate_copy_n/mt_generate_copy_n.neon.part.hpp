@@ -56,25 +56,25 @@ namespace kerbal
 
 					std::size_t i = 0;
 					for (; i + STEP::value <= n; i += STEP::value) {
-						uint32x4_t q_y = vld1q_u32(reinterpret_cast< ::uint32_t const *>(&mt_now[i]));
+						uint32x4_t q_mti = vld1q_u32(reinterpret_cast< ::uint32_t const *>(&mt_now[i]));
 						uint32x4_t q_shift, q_and;
 
-						q_shift = vshrq_n_u32(q_y, U);
+						q_shift = vshrq_n_u32(q_mti, U);
 						q_and = vandq_u32(q_shift, q_D);
-						q_y = veorq_u32(q_y, q_and);
+						q_mti = veorq_u32(q_mti, q_and);
 
-						q_shift = vshlq_n_u32(q_y, S);
+						q_shift = vshlq_n_u32(q_mti, S);
 						q_and = vandq_u32(q_shift, q_B);
-						q_y = veorq_u32(q_y, q_and);
+						q_mti = veorq_u32(q_mti, q_and);
 
-						q_shift = vshlq_n_u32(q_y, T);
+						q_shift = vshlq_n_u32(q_mti, T);
 						q_and = vandq_u32(q_shift, q_C);
-						q_y = veorq_u32(q_y, q_and);
+						q_mti = veorq_u32(q_mti, q_and);
 
-						q_shift = vshrq_n_u32(q_y, L);
-						q_y = veorq_u32(q_y, q_shift);
+						q_shift = vshrq_n_u32(q_mti, L);
+						q_mti = veorq_u32(q_mti, q_shift);
 
-						vst1q_u32(reinterpret_cast< ::uint32_t *>(out), q_y);
+						vst1q_u32(reinterpret_cast< ::uint32_t *>(out), q_mti);
 						out += STEP::value;
 					}
 
@@ -106,25 +106,25 @@ namespace kerbal
 
 					std::size_t i = 0;
 					for (; i + STEP::value <= n; i += STEP::value) {
-						uint64x2_t q_y = vld1q_u64(reinterpret_cast< ::uint64_t const *>(&mt_now[i]));
+						uint64x2_t q_mti = vld1q_u64(reinterpret_cast< ::uint64_t const *>(&mt_now[i]));
 						uint64x2_t q_shift, q_and;
 
-						q_shift = vshrq_n_u64(q_y, U);
+						q_shift = vshrq_n_u64(q_mti, U);
 						q_and = vandq_u64(q_shift, q_D);
-						q_y = veorq_u64(q_y, q_and);
+						q_mti = veorq_u64(q_mti, q_and);
 
-						q_shift = vshlq_n_u64(q_y, S);
+						q_shift = vshlq_n_u64(q_mti, S);
 						q_and = vandq_u64(q_shift, q_B);
-						q_y = veorq_u64(q_y, q_and);
+						q_mti = veorq_u64(q_mti, q_and);
 
-						q_shift = vshlq_n_u64(q_y, T);
+						q_shift = vshlq_n_u64(q_mti, T);
 						q_and = vandq_u64(q_shift, q_C);
-						q_y = veorq_u64(q_y, q_and);
+						q_mti = veorq_u64(q_mti, q_and);
 
-						q_shift = vshrq_n_u64(q_y, L);
-						q_y = veorq_u64(q_y, q_shift);
+						q_shift = vshrq_n_u64(q_mti, L);
+						q_mti = veorq_u64(q_mti, q_shift);
 
-						vst1q_u64(reinterpret_cast< ::uint64_t *>(out), q_y);
+						vst1q_u64(reinterpret_cast< ::uint64_t *>(out), q_mti);
 						out += STEP::value;
 					}
 

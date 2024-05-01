@@ -52,50 +52,50 @@ namespace kerbal
 
 					std::size_t i = 0;
 					for (; i + STEP::value <= n; i += STEP::value) {
-						__m256i ymm_y = _mm256_loadu_si256(reinterpret_cast<const __m256i *>(&mt_now[i])); // AVX
+						__m256i ymm_mti = _mm256_loadu_si256(reinterpret_cast<const __m256i *>(&mt_now[i])); // AVX
 						__m256i ymm_shift, ymm_and;
 
-						ymm_shift = _mm256_srli_epi32(ymm_y, U); // AVX2
+						ymm_shift = _mm256_srli_epi32(ymm_mti, U); // AVX2
 						ymm_and = _mm256_and_si256(ymm_shift, ymm_D); // AVX2
-						ymm_y = _mm256_xor_si256(ymm_y, ymm_and); // AVX2
+						ymm_mti = _mm256_xor_si256(ymm_mti, ymm_and); // AVX2
 
-						ymm_shift = _mm256_slli_epi32(ymm_y, S); // AVX2
+						ymm_shift = _mm256_slli_epi32(ymm_mti, S); // AVX2
 						ymm_and = _mm256_and_si256(ymm_shift, ymm_B); // AVX2
-						ymm_y = _mm256_xor_si256(ymm_y, ymm_and); // AVX2
+						ymm_mti = _mm256_xor_si256(ymm_mti, ymm_and); // AVX2
 
-						ymm_shift = _mm256_slli_epi32(ymm_y, T); // AVX2
+						ymm_shift = _mm256_slli_epi32(ymm_mti, T); // AVX2
 						ymm_and = _mm256_and_si256(ymm_shift, ymm_C); // AVX2
-						ymm_y = _mm256_xor_si256(ymm_y, ymm_and); // AVX2
+						ymm_mti = _mm256_xor_si256(ymm_mti, ymm_and); // AVX2
 
-						ymm_shift = _mm256_srli_epi32(ymm_y, L); // AVX2
-						ymm_y = _mm256_xor_si256(ymm_y, ymm_shift); // AVX2
+						ymm_shift = _mm256_srli_epi32(ymm_mti, L); // AVX2
+						ymm_mti = _mm256_xor_si256(ymm_mti, ymm_shift); // AVX2
 
-						_mm256_storeu_si256(reinterpret_cast<__m256i *>(&out[i]), ymm_y); // AVX
+						_mm256_storeu_si256(reinterpret_cast<__m256i *>(&out[i]), ymm_mti); // AVX
 					}
 
 					{
 						__m256i ymm_iota = _mm256_setr_epi32(0, 1, 2, 3, 4, 5, 6, 7); // AVX
 						__m256i ymm_mask = _mm256_cmpgt_epi32(_mm256_set1_epi32(static_cast<int>(n - i)), ymm_iota); // AVX2
 
-						__m256i ymm_y = _mm256_maskload_epi32(reinterpret_cast<const int *>(&mt_now[i]), ymm_mask); // AVX2
+						__m256i ymm_mti = _mm256_maskload_epi32(reinterpret_cast<const int *>(&mt_now[i]), ymm_mask); // AVX2
 						__m256i ymm_shift, ymm_and;
 
-						ymm_shift = _mm256_srli_epi32(ymm_y, U); // AVX2
+						ymm_shift = _mm256_srli_epi32(ymm_mti, U); // AVX2
 						ymm_and = _mm256_and_si256(ymm_shift, ymm_D); // AVX2
-						ymm_y = _mm256_xor_si256(ymm_y, ymm_and); // AVX2
+						ymm_mti = _mm256_xor_si256(ymm_mti, ymm_and); // AVX2
 
-						ymm_shift = _mm256_slli_epi32(ymm_y, S); // AVX2
+						ymm_shift = _mm256_slli_epi32(ymm_mti, S); // AVX2
 						ymm_and = _mm256_and_si256(ymm_shift, ymm_B); // AVX2
-						ymm_y = _mm256_xor_si256(ymm_y, ymm_and); // AVX2
+						ymm_mti = _mm256_xor_si256(ymm_mti, ymm_and); // AVX2
 
-						ymm_shift = _mm256_slli_epi32(ymm_y, T); // AVX2
+						ymm_shift = _mm256_slli_epi32(ymm_mti, T); // AVX2
 						ymm_and = _mm256_and_si256(ymm_shift, ymm_C); // AVX2
-						ymm_y = _mm256_xor_si256(ymm_y, ymm_and); // AVX2
+						ymm_mti = _mm256_xor_si256(ymm_mti, ymm_and); // AVX2
 
-						ymm_shift = _mm256_srli_epi32(ymm_y, L); // AVX2
-						ymm_y = _mm256_xor_si256(ymm_y, ymm_shift); // AVX2
+						ymm_shift = _mm256_srli_epi32(ymm_mti, L); // AVX2
+						ymm_mti = _mm256_xor_si256(ymm_mti, ymm_shift); // AVX2
 
-						_mm256_maskstore_epi32(reinterpret_cast<int *>(&out[i]), ymm_mask, ymm_y); // AVX2
+						_mm256_maskstore_epi32(reinterpret_cast<int *>(&out[i]), ymm_mask, ymm_mti); // AVX2
 					}
 
 				}
@@ -119,50 +119,50 @@ namespace kerbal
 
 					std::size_t i = 0;
 					for (; i + STEP::value <= n; i += STEP::value) {
-						__m256i ymm_y = _mm256_loadu_si256(reinterpret_cast<const __m256i *>(&mt_now[i])); // AVX
+						__m256i ymm_mti = _mm256_loadu_si256(reinterpret_cast<const __m256i *>(&mt_now[i])); // AVX
 						__m256i ymm_shift, ymm_and;
 
-						ymm_shift = _mm256_srli_epi64(ymm_y, U); // AVX2
+						ymm_shift = _mm256_srli_epi64(ymm_mti, U); // AVX2
 						ymm_and = _mm256_and_si256(ymm_shift, ymm_D); // AVX2
-						ymm_y = _mm256_xor_si256(ymm_y, ymm_and); // AVX2
+						ymm_mti = _mm256_xor_si256(ymm_mti, ymm_and); // AVX2
 
-						ymm_shift = _mm256_slli_epi64(ymm_y, S); // AVX2
+						ymm_shift = _mm256_slli_epi64(ymm_mti, S); // AVX2
 						ymm_and = _mm256_and_si256(ymm_shift, ymm_B); // AVX2
-						ymm_y = _mm256_xor_si256(ymm_y, ymm_and); // AVX2
+						ymm_mti = _mm256_xor_si256(ymm_mti, ymm_and); // AVX2
 
-						ymm_shift = _mm256_slli_epi64(ymm_y, T); // AVX2
+						ymm_shift = _mm256_slli_epi64(ymm_mti, T); // AVX2
 						ymm_and = _mm256_and_si256(ymm_shift, ymm_C); // AVX2
-						ymm_y = _mm256_xor_si256(ymm_y, ymm_and); // AVX2
+						ymm_mti = _mm256_xor_si256(ymm_mti, ymm_and); // AVX2
 
-						ymm_shift = _mm256_srli_epi64(ymm_y, L); // AVX2
-						ymm_y = _mm256_xor_si256(ymm_y, ymm_shift); // AVX2
+						ymm_shift = _mm256_srli_epi64(ymm_mti, L); // AVX2
+						ymm_mti = _mm256_xor_si256(ymm_mti, ymm_shift); // AVX2
 
-						_mm256_storeu_si256(reinterpret_cast<__m256i *>(&out[i]), ymm_y); // AVX
+						_mm256_storeu_si256(reinterpret_cast<__m256i *>(&out[i]), ymm_mti); // AVX
 					}
 
 					{
 						__m256i ymm_iota = _mm256_setr_epi64x(0, 1, 2, 3); // AVX
 						__m256i ymm_mask = _mm256_cmpgt_epi64(_mm256_set1_epi64x(static_cast<int>(n - i)), ymm_iota); // AVX2
 
-						__m256i ymm_y = _mm256_maskload_epi64(reinterpret_cast<const long long int *>(&mt_now[i]), ymm_mask); // AVX2
+						__m256i ymm_mti = _mm256_maskload_epi64(reinterpret_cast<const long long int *>(&mt_now[i]), ymm_mask); // AVX2
 						__m256i ymm_shift, ymm_and;
 
-						ymm_shift = _mm256_srli_epi64(ymm_y, U); // AVX2
+						ymm_shift = _mm256_srli_epi64(ymm_mti, U); // AVX2
 						ymm_and = _mm256_and_si256(ymm_shift, ymm_D); // AVX2
-						ymm_y = _mm256_xor_si256(ymm_y, ymm_and); // AVX2
+						ymm_mti = _mm256_xor_si256(ymm_mti, ymm_and); // AVX2
 
-						ymm_shift = _mm256_slli_epi64(ymm_y, S); // AVX2
+						ymm_shift = _mm256_slli_epi64(ymm_mti, S); // AVX2
 						ymm_and = _mm256_and_si256(ymm_shift, ymm_B); // AVX2
-						ymm_y = _mm256_xor_si256(ymm_y, ymm_and); // AVX2
+						ymm_mti = _mm256_xor_si256(ymm_mti, ymm_and); // AVX2
 
-						ymm_shift = _mm256_slli_epi64(ymm_y, T); // AVX2
+						ymm_shift = _mm256_slli_epi64(ymm_mti, T); // AVX2
 						ymm_and = _mm256_and_si256(ymm_shift, ymm_C); // AVX2
-						ymm_y = _mm256_xor_si256(ymm_y, ymm_and); // AVX2
+						ymm_mti = _mm256_xor_si256(ymm_mti, ymm_and); // AVX2
 
-						ymm_shift = _mm256_srli_epi64(ymm_y, L); // AVX2
-						ymm_y = _mm256_xor_si256(ymm_y, ymm_shift); // AVX2
+						ymm_shift = _mm256_srli_epi64(ymm_mti, L); // AVX2
+						ymm_mti = _mm256_xor_si256(ymm_mti, ymm_shift); // AVX2
 
-						_mm256_maskstore_epi64(reinterpret_cast<long long int *>(&out[i]), ymm_mask, ymm_y); // AVX2
+						_mm256_maskstore_epi64(reinterpret_cast<long long int *>(&out[i]), ymm_mask, ymm_mti); // AVX2
 					}
 
 				}
