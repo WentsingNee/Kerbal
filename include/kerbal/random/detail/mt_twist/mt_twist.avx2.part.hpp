@@ -22,6 +22,8 @@
 
 #include <immintrin.h>
 
+#include <kerbal/random/detail/mt_twist/mt_twist.plain.part.hpp>
+
 
 namespace kerbal
 {
@@ -153,9 +155,7 @@ namespace kerbal
 					} else {
 
 						// i = N - 1;
-
-						result_type y = (mt[N - 1] & UPPER_MASK::value) | (mt[0] & LOWER_MASK::value);
-						mt[N - 1] = mt[M - 1] ^ (y >> 1) ^ ((y & 0x1UL) ? A : 0);
+						EACH3();
 					}
 
 				}
@@ -282,9 +282,7 @@ namespace kerbal
 					} else {
 
 						// i = N - 1;
-
-						result_type y = (mt[N - 1] & UPPER_MASK::value) | (mt[0] & LOWER_MASK::value);
-						mt[N - 1] = mt[M - 1] ^ (y >> 1) ^ ((y & 0x1UL) ? A : 0);
+						EACH3();
 					}
 
 				}

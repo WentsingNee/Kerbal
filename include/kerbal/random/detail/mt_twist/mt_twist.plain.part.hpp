@@ -41,6 +41,12 @@ namespace kerbal
 					mt[i] = mt[(i) - (NPM::value)] ^ (y >> 1) ^ ((y & 0x1UL) ? A : 0); \
 				} while (false)
 
+#		define EACH3() \
+				do { \
+					result_type y = (mt[N - 1] & UPPER_MASK::value) | (mt[0] & LOWER_MASK::value); \
+					mt[N - 1] = mt[M - 1] ^ (y >> 1) ^ ((y & 0x1UL) ? A : 0); \
+				} while (0)
+
 			namespace plain
 			{
 
@@ -62,8 +68,7 @@ namespace kerbal
 					for (; i < N - 1; ++i) {
 						EACH2(i);
 					}
-					result_type y = (mt[N - 1] & UPPER_MASK::value) | (mt[0] & LOWER_MASK::value);
-					mt[N - 1] = mt[M - 1] ^ (y >> 1) ^ ((y & 0x1UL) ? A : 0);
+					EACH3();
 				}
 
 			} // namespace plain

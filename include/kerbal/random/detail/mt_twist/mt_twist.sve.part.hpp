@@ -22,6 +22,8 @@
 
 #include <arm_sve.h>
 
+#include <kerbal/random/detail/mt_twist/mt_twist.plain.part.hpp>
+
 
 namespace kerbal
 {
@@ -100,8 +102,7 @@ namespace kerbal
 						pg = svwhilelt_b32(i, N - 1);
 					} while (svptest_any(SVTRUE, pg));
 
-					result_type y = (mt[N - 1] & UPPER_MASK::value) | (mt[0] & LOWER_MASK::value);
-					mt[N - 1] = mt[M - 1] ^ (y >> 1) ^ ((y & 0x1UL) ? A : 0);
+					EACH3();
 				}
 
 				template <std::size_t N, std::size_t M, std::size_t R, kerbal::compatibility::uint64_t A>
@@ -169,8 +170,7 @@ namespace kerbal
 						pg = svwhilelt_b64(i, N - 1);
 					} while (svptest_any(SVTRUE, pg));
 
-					result_type y = (mt[N - 1] & UPPER_MASK::value) | (mt[0] & LOWER_MASK::value);
-					mt[N - 1] = mt[M - 1] ^ (y >> 1) ^ ((y & 0x1UL) ? A : 0);
+					EACH3();
 				}
 
 			} // namespace sve
