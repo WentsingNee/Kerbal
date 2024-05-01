@@ -195,8 +195,7 @@ namespace kerbal
 
 						_mm_storel_epi64(reinterpret_cast<__m128i *>(&mt[i]), xmm_mti); // SSE2
 					} else {
-						result_type y = (mt[N - 1] & UPPER_MASK::value) | (mt[0] & LOWER_MASK::value);
-						mt[N - 1] = mt[M - 1] ^ (y >> 1) ^ ((y & 0x1UL) ? A : 0);
+						EACH3();
 					}
 
 				}
