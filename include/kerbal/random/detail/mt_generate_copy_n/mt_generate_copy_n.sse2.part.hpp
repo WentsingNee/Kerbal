@@ -56,25 +56,25 @@ namespace kerbal
 
 					unsigned int i = 0; // Note: gcc unreasonable warning: iteration 4611686018427387903 invokes undefined behavior [-Waggressive-loop-optimizations]
 					for (; i + STEP::value <= n; i += STEP::value) {
-						__m128i xmm_y = _mm_loadu_si128(reinterpret_cast<const __m128i *>(&mt_now[i])); // SSE2
+						__m128i xmm_mti = _mm_loadu_si128(reinterpret_cast<const __m128i *>(&mt_now[i])); // SSE2
 						__m128i xmm_shift, xmm_and;
 
-						xmm_shift = _mm_srli_epi32(xmm_y, U); // SSE2
+						xmm_shift = _mm_srli_epi32(xmm_mti, U); // SSE2
 						xmm_and = _mm_and_si128(xmm_shift, xmm_D); // SSE2
-						xmm_y = _mm_xor_si128(xmm_y, xmm_and); // SSE2
+						xmm_mti = _mm_xor_si128(xmm_mti, xmm_and); // SSE2
 
-						xmm_shift = _mm_slli_epi32(xmm_y, S); // SSE2
+						xmm_shift = _mm_slli_epi32(xmm_mti, S); // SSE2
 						xmm_and = _mm_and_si128(xmm_shift, xmm_B); // SSE2
-						xmm_y = _mm_xor_si128(xmm_y, xmm_and); // SSE2
+						xmm_mti = _mm_xor_si128(xmm_mti, xmm_and); // SSE2
 
-						xmm_shift = _mm_slli_epi32(xmm_y, T); // SSE2
+						xmm_shift = _mm_slli_epi32(xmm_mti, T); // SSE2
 						xmm_and = _mm_and_si128(xmm_shift, xmm_C); // SSE2
-						xmm_y = _mm_xor_si128(xmm_y, xmm_and); // SSE2
+						xmm_mti = _mm_xor_si128(xmm_mti, xmm_and); // SSE2
 
-						xmm_shift = _mm_srli_epi32(xmm_y, L); // SSE2
-						xmm_y = _mm_xor_si128(xmm_y, xmm_shift); // SSE2
+						xmm_shift = _mm_srli_epi32(xmm_mti, L); // SSE2
+						xmm_mti = _mm_xor_si128(xmm_mti, xmm_shift); // SSE2
 
-						_mm_storeu_si128(reinterpret_cast<__m128i *>(out), xmm_y); // SSE2
+						_mm_storeu_si128(reinterpret_cast<__m128i *>(out), xmm_mti); // SSE2
 						out += STEP::value;
 					}
 
@@ -106,25 +106,25 @@ namespace kerbal
 
 					unsigned int i = 0; // Note: gcc unreasonable warning: iteration 4611686018427387903 invokes undefined behavior [-Waggressive-loop-optimizations]
 					for (; i + STEP::value <= n; i += STEP::value) {
-						__m128i xmm_y = _mm_loadu_si128(reinterpret_cast<const __m128i *>(&mt_now[i])); // SSE2
+						__m128i xmm_mti = _mm_loadu_si128(reinterpret_cast<const __m128i *>(&mt_now[i])); // SSE2
 						__m128i xmm_shift, xmm_and;
 
-						xmm_shift = _mm_srli_epi64(xmm_y, U); // SSE2
+						xmm_shift = _mm_srli_epi64(xmm_mti, U); // SSE2
 						xmm_and = _mm_and_si128(xmm_shift, xmm_D); // SSE2
-						xmm_y = _mm_xor_si128(xmm_y, xmm_and); // SSE2
+						xmm_mti = _mm_xor_si128(xmm_mti, xmm_and); // SSE2
 
-						xmm_shift = _mm_slli_epi64(xmm_y, S); // SSE2
+						xmm_shift = _mm_slli_epi64(xmm_mti, S); // SSE2
 						xmm_and = _mm_and_si128(xmm_shift, xmm_B); // SSE2
-						xmm_y = _mm_xor_si128(xmm_y, xmm_and); // SSE2
+						xmm_mti = _mm_xor_si128(xmm_mti, xmm_and); // SSE2
 
-						xmm_shift = _mm_slli_epi64(xmm_y, T); // SSE2
+						xmm_shift = _mm_slli_epi64(xmm_mti, T); // SSE2
 						xmm_and = _mm_and_si128(xmm_shift, xmm_C); // SSE2
-						xmm_y = _mm_xor_si128(xmm_y, xmm_and); // SSE2
+						xmm_mti = _mm_xor_si128(xmm_mti, xmm_and); // SSE2
 
-						xmm_shift = _mm_srli_epi64(xmm_y, L); // SSE2
-						xmm_y = _mm_xor_si128(xmm_y, xmm_shift); // SSE2
+						xmm_shift = _mm_srli_epi64(xmm_mti, L); // SSE2
+						xmm_mti = _mm_xor_si128(xmm_mti, xmm_shift); // SSE2
 
-						_mm_storeu_si128(reinterpret_cast<__m128i *>(out), xmm_y); // SSE2
+						_mm_storeu_si128(reinterpret_cast<__m128i *>(out), xmm_mti); // SSE2
 						out += STEP::value;
 					}
 

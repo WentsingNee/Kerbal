@@ -61,25 +61,25 @@ namespace kerbal
 					index_t i = 0;
 					svbool_t pg = svwhilelt_b32(i, n);
 					do {
-						svuint32_t sv_y = svld1(pg, reinterpret_cast< ::uint32_t const *>(&mt_now[i]));
+						svuint32_t sv_mti = svld1(pg, reinterpret_cast< ::uint32_t const *>(&mt_now[i]));
 						svuint32_t sv_shift, sv_and;
 
-						sv_shift = svlsr_x(pg, sv_y, U);
+						sv_shift = svlsr_x(pg, sv_mti, U);
 						sv_and = svand_x(pg, sv_shift, sv_D);
-						sv_y = sveor_x(pg, sv_y, sv_and);
+						sv_mti = sveor_x(pg, sv_mti, sv_and);
 
-						sv_shift = svlsl_x(pg, sv_y, S);
+						sv_shift = svlsl_x(pg, sv_mti, S);
 						sv_and = svand_x(pg, sv_shift, sv_B);
-						sv_y = sveor_x(pg, sv_y, sv_and);
+						sv_mti = sveor_x(pg, sv_mti, sv_and);
 
-						sv_shift = svlsl_x(pg, sv_y, T);
+						sv_shift = svlsl_x(pg, sv_mti, T);
 						sv_and = svand_x(pg, sv_shift, sv_C);
-						sv_y = sveor_x(pg, sv_y, sv_and);
+						sv_mti = sveor_x(pg, sv_mti, sv_and);
 
-						sv_shift = svlsr_x(pg, sv_y, L);
-						sv_y = sveor_x(pg, sv_y, sv_shift);
+						sv_shift = svlsr_x(pg, sv_mti, L);
+						sv_mti = sveor_x(pg, sv_mti, sv_shift);
 
-						svst1(pg, reinterpret_cast< ::uint32_t *>(&out[i]), sv_y);
+						svst1(pg, reinterpret_cast< ::uint32_t *>(&out[i]), sv_mti);
 
 						i += STEP;
 						pg = svwhilelt_b32(i, n);
@@ -114,25 +114,25 @@ namespace kerbal
 					index_t i = 0;
 					svbool_t pg = svwhilelt_b64(i, n);
 					do {
-						svuint64_t sv_y = svld1(pg, reinterpret_cast< ::uint64_t const *>(&mt_now[i]));
+						svuint64_t sv_mti = svld1(pg, reinterpret_cast< ::uint64_t const *>(&mt_now[i]));
 						svuint64_t sv_shift, sv_and;
 
-						sv_shift = svlsr_x(pg, sv_y, U);
+						sv_shift = svlsr_x(pg, sv_mti, U);
 						sv_and = svand_x(pg, sv_shift, sv_D);
-						sv_y = sveor_x(pg, sv_y, sv_and);
+						sv_mti = sveor_x(pg, sv_mti, sv_and);
 
-						sv_shift = svlsl_x(pg, sv_y, S);
+						sv_shift = svlsl_x(pg, sv_mti, S);
 						sv_and = svand_x(pg, sv_shift, sv_B);
-						sv_y = sveor_x(pg, sv_y, sv_and);
+						sv_mti = sveor_x(pg, sv_mti, sv_and);
 
-						sv_shift = svlsl_x(pg, sv_y, T);
+						sv_shift = svlsl_x(pg, sv_mti, T);
 						sv_and = svand_x(pg, sv_shift, sv_C);
-						sv_y = sveor_x(pg, sv_y, sv_and);
+						sv_mti = sveor_x(pg, sv_mti, sv_and);
 
-						sv_shift = svlsr_x(pg, sv_y, L);
-						sv_y = sveor_x(pg, sv_y, sv_shift);
+						sv_shift = svlsr_x(pg, sv_mti, L);
+						sv_mti = sveor_x(pg, sv_mti, sv_shift);
 
-						svst1(pg, reinterpret_cast< ::uint64_t *>(&out[i]), sv_y);
+						svst1(pg, reinterpret_cast< ::uint64_t *>(&out[i]), sv_mti);
 
 						i += STEP;
 						pg = svwhilelt_b64(i, n);
