@@ -33,6 +33,34 @@ namespace kerbal
 			namespace avx512f
 			{
 
+#			define GENERATE_AVX512F_U32() do { \
+						zmm_shift = _mm512_srli_epi32(zmm_mti, U); /* AVX512F */ \
+						zmm_mti = _mm512_ternarylogic_epi32(zmm_shift, zmm_D, zmm_mti, 106); /* AVX512F, 106 = 0b01101010, (a & b) ^ c */ \
+ \
+						zmm_shift = _mm512_slli_epi32(zmm_mti, S); /* AVX512F */ \
+						zmm_mti = _mm512_ternarylogic_epi32(zmm_shift, zmm_B, zmm_mti, 106); /* AVX512F, 106 = 0b01101010, (a & b) ^ c */ \
+ \
+						zmm_shift = _mm512_slli_epi32(zmm_mti, T); /* AVX512F */ \
+						zmm_mti = _mm512_ternarylogic_epi32(zmm_shift, zmm_C, zmm_mti, 106); /* AVX512F, 106 = 0b01101010, (a & b) ^ c */ \
+ \
+						zmm_shift = _mm512_srli_epi32(zmm_mti, L); /* AVX512F */ \
+						zmm_mti = _mm512_xor_si512(zmm_mti, zmm_shift); /* AVX512F */ \
+					} while (false)
+
+#			define GENERATE_AVX512F_U64() do { \
+						zmm_shift = _mm512_srli_epi64(zmm_mti, U); /* AVX512F */ \
+						zmm_mti = _mm512_ternarylogic_epi64(zmm_shift, zmm_D, zmm_mti, 106); /* AVX512F, 106 = 0b01101010, (a & b) ^ c */ \
+ \
+						zmm_shift = _mm512_slli_epi64(zmm_mti, S); /* AVX512F */ \
+						zmm_mti = _mm512_ternarylogic_epi64(zmm_shift, zmm_B, zmm_mti, 106); /* AVX512F, 106 = 0b01101010, (a & b) ^ c */ \
+ \
+						zmm_shift = _mm512_slli_epi64(zmm_mti, T); /* AVX512F */ \
+						zmm_mti = _mm512_ternarylogic_epi64(zmm_shift, zmm_C, zmm_mti, 106); /* AVX512F, 106 = 0b01101010, (a & b) ^ c */ \
+ \
+						zmm_shift = _mm512_srli_epi64(zmm_mti, L); /* AVX512F */ \
+						zmm_mti = _mm512_xor_si512(zmm_mti, zmm_shift); /* AVX512F */ \
+					} while (false)
+
 				template <
 					std::size_t U, kerbal::compatibility::uint32_t D,
 					std::size_t S, kerbal::compatibility::uint32_t B,
@@ -55,17 +83,7 @@ namespace kerbal
 						__m512i zmm_mti = _mm512_loadu_si512(&mt_now[i]); // AVX512F
 						__m512i zmm_shift;
 
-						zmm_shift = _mm512_srli_epi32(zmm_mti, U); // AVX512F
-						zmm_mti = _mm512_ternarylogic_epi32(zmm_shift, zmm_D, zmm_mti, 106); // AVX512F, 106 = 0b01101010, (a & b) ^ c
-
-						zmm_shift = _mm512_slli_epi32(zmm_mti, S); // AVX512F
-						zmm_mti = _mm512_ternarylogic_epi32(zmm_shift, zmm_B, zmm_mti, 106); // AVX512F, 106 = 0b01101010, (a & b) ^ c
-
-						zmm_shift = _mm512_slli_epi32(zmm_mti, T); // AVX512F
-						zmm_mti = _mm512_ternarylogic_epi32(zmm_shift, zmm_C, zmm_mti, 106); // AVX512F, 106 = 0b01101010, (a & b) ^ c
-
-						zmm_shift = _mm512_srli_epi32(zmm_mti, L); // AVX512F
-						zmm_mti = _mm512_xor_si512(zmm_mti, zmm_shift); // AVX512F
+						GENERATE_AVX512F_U32();
 
 						_mm512_storeu_si512(&out[i], zmm_mti); // AVX512F
 					}
@@ -76,17 +94,7 @@ namespace kerbal
 						__m512i zmm_mti = _mm512_maskz_loadu_epi32(k_mask, &mt_now[i]); // AVX512F
 						__m512i zmm_shift;
 
-						zmm_shift = _mm512_srli_epi32(zmm_mti, U); // AVX512F
-						zmm_mti = _mm512_ternarylogic_epi32(zmm_shift, zmm_D, zmm_mti, 106); // AVX512F, 106 = 0b01101010, (a & b) ^ c
-
-						zmm_shift = _mm512_slli_epi32(zmm_mti, S); // AVX512F
-						zmm_mti = _mm512_ternarylogic_epi32(zmm_shift, zmm_B, zmm_mti, 106); // AVX512F, 106 = 0b01101010, (a & b) ^ c
-
-						zmm_shift = _mm512_slli_epi32(zmm_mti, T); // AVX512F
-						zmm_mti = _mm512_ternarylogic_epi32(zmm_shift, zmm_C, zmm_mti, 106); // AVX512F, 106 = 0b01101010, (a & b) ^ c
-
-						zmm_shift = _mm512_srli_epi32(zmm_mti, L); // AVX512F
-						zmm_mti = _mm512_xor_si512(zmm_mti, zmm_shift); // AVX512F
+						GENERATE_AVX512F_U32();
 
 						_mm512_mask_storeu_epi32(&out[i], k_mask, zmm_mti); // AVX512F
 					}
@@ -115,17 +123,7 @@ namespace kerbal
 						__m512i zmm_mti = _mm512_loadu_si512(&mt_now[i]); // AVX512F
 						__m512i zmm_shift;
 
-						zmm_shift = _mm512_srli_epi64(zmm_mti, U); // AVX512F
-						zmm_mti = _mm512_ternarylogic_epi64(zmm_shift, zmm_D, zmm_mti, 106); // AVX512F, 106 = 0b01101010, (a & b) ^ c
-
-						zmm_shift = _mm512_slli_epi64(zmm_mti, S); // AVX512F
-						zmm_mti = _mm512_ternarylogic_epi64(zmm_shift, zmm_B, zmm_mti, 106); // AVX512F, 106 = 0b01101010, (a & b) ^ c
-
-						zmm_shift = _mm512_slli_epi64(zmm_mti, T); // AVX512F
-						zmm_mti = _mm512_ternarylogic_epi64(zmm_shift, zmm_C, zmm_mti, 106); // AVX512F, 106 = 0b01101010, (a & b) ^ c
-
-						zmm_shift = _mm512_srli_epi64(zmm_mti, L); // AVX512F
-						zmm_mti = _mm512_xor_si512(zmm_mti, zmm_shift); // AVX512F
+						GENERATE_AVX512F_U64();
 
 						_mm512_storeu_si512(&out[i], zmm_mti); // AVX512F
 					}
@@ -139,17 +137,7 @@ namespace kerbal
 						__m512i zmm_mti = _mm512_maskz_loadu_epi64(k_mask, &mt_now[i]); // AVX512F
 						__m512i zmm_shift;
 
-						zmm_shift = _mm512_srli_epi64(zmm_mti, U); // AVX512F
-						zmm_mti = _mm512_ternarylogic_epi64(zmm_shift, zmm_D, zmm_mti, 106); // AVX512F, 106 = 0b01101010, (a & b) ^ c
-
-						zmm_shift = _mm512_slli_epi64(zmm_mti, S); // AVX512F
-						zmm_mti = _mm512_ternarylogic_epi64(zmm_shift, zmm_B, zmm_mti, 106); // AVX512F, 106 = 0b01101010, (a & b) ^ c
-
-						zmm_shift = _mm512_slli_epi64(zmm_mti, T); // AVX512F
-						zmm_mti = _mm512_ternarylogic_epi64(zmm_shift, zmm_C, zmm_mti, 106); // AVX512F, 106 = 0b01101010, (a & b) ^ c
-
-						zmm_shift = _mm512_srli_epi64(zmm_mti, L); // AVX512F
-						zmm_mti = _mm512_xor_si512(zmm_mti, zmm_shift); // AVX512F
+						GENERATE_AVX512F_U64();
 
 						_mm512_mask_storeu_epi64(&out[i], k_mask, zmm_mti); // AVX512F
 					}
