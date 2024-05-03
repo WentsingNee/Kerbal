@@ -1,5 +1,5 @@
 /**
- * @file       costream.win.part.hpp
+ * @file       costream.hpp
  * @brief
  * @date       2023-9-10
  * @author     Peter
@@ -9,8 +9,8 @@
  *   all rights reserved
  */
 
-#ifndef KERBAL_COSTREAM_DETAIL_COSTREAM_WIN_PART_HPP
-#define KERBAL_COSTREAM_DETAIL_COSTREAM_WIN_PART_HPP
+#ifndef KERBAL_COSTREAM_WIN_COSTREAM_HPP
+#define KERBAL_COSTREAM_WIN_COSTREAM_HPP
 
 #ifndef NOMINMAX
 #	define NOMINMAX
@@ -18,7 +18,7 @@
 
 #include <kerbal/compatibility/constexpr.hpp>
 #include <kerbal/container/linked_stack.hpp>
-#include <kerbal/costream/palette.hpp>
+#include <kerbal/costream/win/palette.hpp>
 
 #include <iostream>
 
@@ -81,13 +81,15 @@ namespace kerbal
 				} static const bakup;
 
 				std::ostream & k_bind_ostream;
-				kerbal::costream::palette k_foreground, k_background;
+				kerbal::costream::win::palette k_foreground, k_background;
 
 			public:
 				KERBAL_CONSTEXPR
-				costream(std::ostream & bind_ostream,
-						 kerbal::costream::palette foreground = kerbal::costream::INIT,
-						 kerbal::costream::palette background = kerbal::costream::INIT) :
+				costream(
+						std::ostream & bind_ostream,
+						kerbal::costream::win::palette foreground = kerbal::costream::win::INIT,
+						kerbal::costream::win::palette background = kerbal::costream::win::INIT
+				) :
 						k_bind_ostream(bind_ostream),
 						k_foreground(foreground),
 						k_background(background)
@@ -100,11 +102,11 @@ namespace kerbal
 					HANDLE handle = bakup.handle;
 					WORD colorOld = bakup.init_color;
 					WORD color = (
-									this->k_background == kerbal::costream::INIT ?
+									this->k_background == kerbal::costream::win::INIT ?
 									bakup.init_background :
 									this->k_background.ID
 								) * 16 + (
-									this->k_foreground == kerbal::costream::INIT ?
+									this->k_foreground == kerbal::costream::win::INIT ?
 									bakup.init_foreground :
 									this->k_foreground.ID
 								);
@@ -129,4 +131,4 @@ namespace kerbal
 
 } // namespace kerbal
 
-#endif // KERBAL_COSTREAM_DETAIL_COSTREAM_WIN_PART_HPP
+#endif // KERBAL_COSTREAM_WIN_COSTREAM_HPP
