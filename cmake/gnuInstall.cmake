@@ -14,7 +14,7 @@ include(CMakePackageConfigHelpers)
 
 
 configure_package_config_file(
-        "${PROJECT_SOURCE_DIR}/cmake/config.cmake.in"
+        "${PROJECT_SOURCE_DIR}/cmake/config.in.cmake"
         "${KERBAL_CONFIGURE_ASSETS_DIR}/${PROJECT_NAME}Config.cmake"
         INSTALL_DESTINATION "${CMAKE_INSTALL_DATADIR}/cmake/${PROJECT_NAME}"
 )
