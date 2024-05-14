@@ -84,6 +84,11 @@ namespace kerbal
 		KERBAL_CONSTEXPR20
 		hash_table<Entity, Extract, Hash, KeyEqual, NodeAllocator, BucketAllocator>::
 		hash_table(hash_table const & src) :
+			extract_compress_helper(kerbal::utility::in_place_t(), src.extract()),
+			hash_compress_helper(kerbal::utility::in_place_t(), src.hash()),
+			key_equal_compress_helper(kerbal::utility::in_place_t(), src.key_equal_obj()),
+			node_allocator_overload(),
+			bucket_allocator_overload(),
 			hash_table_base(
 				this->extract(), this->hash(), this->key_equal_obj(),
 				this->node_alloc(), this->bucket_alloc(),
@@ -99,6 +104,11 @@ namespace kerbal
 		KERBAL_CONSTEXPR20
 		hash_table<Entity, Extract, Hash, KeyEqual, NodeAllocator, BucketAllocator>::
 		hash_table(hash_table const & src, kerbal::container::unique_tag_t tag) :
+			extract_compress_helper(kerbal::utility::in_place_t(), src.extract()),
+			hash_compress_helper(kerbal::utility::in_place_t(), src.hash()),
+			key_equal_compress_helper(kerbal::utility::in_place_t(), src.key_equal_obj()),
+			node_allocator_overload(),
+			bucket_allocator_overload(),
 			hash_table_base(
 				this->extract(), this->hash(), this->key_equal_obj(),
 				this->node_alloc(), this->bucket_alloc(),

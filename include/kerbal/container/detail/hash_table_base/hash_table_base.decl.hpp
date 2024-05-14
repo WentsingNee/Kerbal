@@ -511,19 +511,19 @@ namespace kerbal
 
 					template <typename NodeAlloc>
 					KERBAL_CONSTEXPR20
-					static void k_destroy_node_chain(NodeAlloc & node_alloc, node_type_unrelated * first, node_type_unrelated * last) KERBAL_NOEXCEPT
+					static void k_destroy_node_chain(NodeAlloc & node_alloc, node * first, node * last) KERBAL_NOEXCEPT
 					{
-						node_type_unrelated * it = first;
+						node * it = first;
 						while (it != last) {
 							node_type_unrelated * next = it->k_next;
 							k_destroy_node(node_alloc, it);
-							it = next;
+							it = static_cast<node *>(next);
 						}
 					}
 
 					template <typename NodeAlloc>
 					KERBAL_CONSTEXPR20
-					static void k_destroy_node(NodeAlloc & node_alloc, node_type_unrelated * p) KERBAL_NOEXCEPT;
+					static void k_destroy_node(NodeAlloc & node_alloc, node * p) KERBAL_NOEXCEPT;
 
 			};
 
