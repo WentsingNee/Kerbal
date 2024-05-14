@@ -16,8 +16,10 @@
 
 #include <kerbal/compatibility/constexpr.hpp>
 #include <kerbal/compatibility/noexcept.hpp>
+#include <kerbal/compatibility/static_assert.hpp>
 #include <kerbal/macro/macro_concat.hpp>
 #include <kerbal/type_traits/integral_constant.hpp>
+#include <kerbal/type_traits/is_array.hpp>
 #include <kerbal/type_traits/remove_reference.hpp>
 
 #if __cplusplus >= 201103L
@@ -49,6 +51,13 @@ namespace kerbal
 								noexcept(static_cast<bool>(lhs OP rhs)) \
 						) \
 				{ \
+					KERBAL_STATIC_ASSERT( \
+						!( \
+							kerbal::type_traits::is_array<T>::value && \
+							kerbal::type_traits::is_array<U>::value \
+						), \
+						"comparison between two arrays" \
+					); \
 					return static_cast<bool>(lhs OP rhs); \
 				} \
 		};

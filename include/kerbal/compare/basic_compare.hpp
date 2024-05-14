@@ -14,8 +14,10 @@
 
 #include <kerbal/compatibility/constexpr.hpp>
 #include <kerbal/compatibility/noexcept.hpp>
+#include <kerbal/compatibility/static_assert.hpp>
 #include <kerbal/config/exceptions.hpp>
 #include <kerbal/type_traits/integral_constant.hpp>
+#include <kerbal/type_traits/is_array.hpp>
 
 #if __cplusplus >= 201103L
 
@@ -55,6 +57,7 @@ namespace kerbal
 								noexcept(static_cast<bool>(lhs OP rhs)) \
 						) \
 				{ \
+					KERBAL_STATIC_ASSERT(!kerbal::type_traits::is_array<T>::value, "comparison between two arrays"); \
 					return static_cast<bool>(lhs OP rhs); \
 				} \
 		};
@@ -72,6 +75,7 @@ namespace kerbal
 				template <typename T> \
 				bool operator()(const T & lhs, const T & rhs) const \
 				{ \
+					KERBAL_STATIC_ASSERT(!kerbal::type_traits::is_array<T>::value, "comparison between two arrays"); \
 					return static_cast<bool>(lhs OP rhs); \
 				} \
 		};
@@ -95,6 +99,7 @@ namespace kerbal
 					typedef typename kerbal::type_traits::remove_cvref<T>::type T0; \
 					typedef typename kerbal::type_traits::remove_cvref<U>::type U0; \
 					KERBAL_STATIC_ASSERT((kerbal::type_traits::is_same<T0, U0>::value), "lhs and rhs must be same type"); \
+					KERBAL_STATIC_ASSERT(!kerbal::type_traits::is_array<T0>::value, "comparison between two arrays"); \
 					return static_cast<bool>(kerbal::utility::forward<T>(lhs) OP kerbal::utility::forward<U>(rhs)); \
 				} \
 		};
