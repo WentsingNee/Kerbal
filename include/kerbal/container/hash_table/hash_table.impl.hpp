@@ -13,6 +13,7 @@
 #define KERBAL_CONTAINER_HASH_TABLE_HASH_TABLE_IMPL_HPP
 
 #include <kerbal/compatibility/constexpr.hpp>
+#include <kerbal/compatibility/move.hpp>
 #include <kerbal/compatibility/noexcept.hpp>
 #include <kerbal/container/associative_container_facility/unique_tag_t.hpp>
 
@@ -25,52 +26,60 @@ namespace kerbal
 	namespace container
 	{
 
-		template <typename Entity, typename Extract, typename Hash, typename KeyEqual,
-				typename NodeAllocator, typename BucketAllocator
+	//===================
+	// Constructor/Destructor
+
+		template <
+			typename Entity, typename Extract, typename Hash, typename KeyEqual,
+			typename NodeAllocator, typename BucketAllocator
 		>
 		KERBAL_CONSTEXPR20
 		hash_table<Entity, Extract, Hash, KeyEqual, NodeAllocator, BucketAllocator>::
 		hash_table() :
-				hash_table_base(this->bucket_alloc())
+			hash_table_base(this->bucket_alloc())
 		{
 		}
 
-		template <typename Entity, typename Extract, typename Hash, typename KeyEqual,
-				typename NodeAllocator, typename BucketAllocator
+		template <
+			typename Entity, typename Extract, typename Hash, typename KeyEqual,
+			typename NodeAllocator, typename BucketAllocator
 		>
 		KERBAL_CONSTEXPR20
 		hash_table<Entity, Extract, Hash, KeyEqual, NodeAllocator, BucketAllocator>::
 		hash_table(size_type bucket_count) :
-				hash_table_base(this->bucket_alloc(), bucket_count)
+			hash_table_base(this->bucket_alloc(), bucket_count)
 		{
 		}
 
-		template <typename Entity, typename Extract, typename Hash, typename KeyEqual,
-				typename NodeAllocator, typename BucketAllocator
+		template <
+			typename Entity, typename Extract, typename Hash, typename KeyEqual,
+			typename NodeAllocator, typename BucketAllocator
 		>
 		KERBAL_CONSTEXPR20
 		hash_table<Entity, Extract, Hash, KeyEqual, NodeAllocator, BucketAllocator>::
 		hash_table(size_type bucket_count, const Hash & hash) :
-				hash_compress_helper(kerbal::utility::in_place_t(), hash),
-				key_equal_compress_helper(kerbal::utility::in_place_t()),
-				hash_table_base(this->bucket_alloc(), bucket_count)
+			hash_compress_helper(kerbal::utility::in_place_t(), hash),
+			key_equal_compress_helper(kerbal::utility::in_place_t()),
+			hash_table_base(this->bucket_alloc(), bucket_count)
 		{
 		}
 
-		template <typename Entity, typename Extract, typename Hash, typename KeyEqual,
-				typename NodeAllocator, typename BucketAllocator
+		template <
+			typename Entity, typename Extract, typename Hash, typename KeyEqual,
+			typename NodeAllocator, typename BucketAllocator
 		>
 		KERBAL_CONSTEXPR20
 		hash_table<Entity, Extract, Hash, KeyEqual, NodeAllocator, BucketAllocator>::
 		hash_table(size_type bucket_count, const Hash & hash, const key_equal & key_equal) :
-				hash_compress_helper(kerbal::utility::in_place_t(), hash),
-				key_equal_compress_helper(kerbal::utility::in_place_t(), key_equal),
-				hash_table_base(this->bucket_alloc(), bucket_count)
+			hash_compress_helper(kerbal::utility::in_place_t(), hash),
+			key_equal_compress_helper(kerbal::utility::in_place_t(), key_equal),
+			hash_table_base(this->bucket_alloc(), bucket_count)
 		{
 		}
 
-		template <typename Entity, typename Extract, typename Hash, typename KeyEqual,
-				typename NodeAllocator, typename BucketAllocator
+		template <
+			typename Entity, typename Extract, typename Hash, typename KeyEqual,
+			typename NodeAllocator, typename BucketAllocator
 		>
 		KERBAL_CONSTEXPR20
 		hash_table<Entity, Extract, Hash, KeyEqual, NodeAllocator, BucketAllocator>::
@@ -83,8 +92,9 @@ namespace kerbal
 		{
 		}
 
-		template <typename Entity, typename Extract, typename Hash, typename KeyEqual,
-				typename NodeAllocator, typename BucketAllocator
+		template <
+			typename Entity, typename Extract, typename Hash, typename KeyEqual,
+			typename NodeAllocator, typename BucketAllocator
 		>
 		KERBAL_CONSTEXPR20
 		hash_table<Entity, Extract, Hash, KeyEqual, NodeAllocator, BucketAllocator>::
@@ -97,8 +107,9 @@ namespace kerbal
 		{
 		}
 
-		template <typename Entity, typename Extract, typename Hash, typename KeyEqual,
-				typename NodeAllocator, typename BucketAllocator
+		template <
+			typename Entity, typename Extract, typename Hash, typename KeyEqual,
+			typename NodeAllocator, typename BucketAllocator
 		>
 		KERBAL_CONSTEXPR20
 		hash_table<Entity, Extract, Hash, KeyEqual, NodeAllocator, BucketAllocator>::
@@ -108,22 +119,30 @@ namespace kerbal
 		}
 
 
-		template <typename Entity, typename Extract, typename Hash, typename KeyEqual,
-				typename NodeAllocator, typename BucketAllocator
+	//===================
+	// Lookup
+
+		template <
+			typename Entity, typename Extract, typename Hash, typename KeyEqual,
+			typename NodeAllocator, typename BucketAllocator
 		>
 		KERBAL_CONSTEXPR20
-		void
+		typename hash_table<Entity, Extract, Hash, KeyEqual, NodeAllocator, BucketAllocator>::iterator
 		hash_table<Entity, Extract, Hash, KeyEqual, NodeAllocator, BucketAllocator>::
-		clear()
+		find(key_type const & key)
 		{
-			this->hash_table_base::clear_using_allocator(this->node_alloc());
+			return this->hash_table_base::find(this->extract(), this->hash(), this->key_equal_obj(), key);
 		}
 
 
+	//===================
+	// Insert
+
 #	if __cplusplus >= 201103L
 
-		template <typename Entity, typename Extract, typename Hash, typename KeyEqual,
-				typename NodeAllocator, typename BucketAllocator
+		template <
+			typename Entity, typename Extract, typename Hash, typename KeyEqual,
+			typename NodeAllocator, typename BucketAllocator
 		>
 		template <typename ... Args>
 		KERBAL_CONSTEXPR20
@@ -137,26 +156,28 @@ namespace kerbal
 			);
 		}
 
-		template <typename Entity, typename Extract, typename Hash, typename KeyEqual,
-				typename NodeAllocator, typename BucketAllocator
+		template <
+			typename Entity, typename Extract, typename Hash, typename KeyEqual,
+			typename NodeAllocator, typename BucketAllocator
 		>
 		template <typename ... Args>
 		KERBAL_CONSTEXPR20
 		typename hash_table<Entity, Extract, Hash, KeyEqual, NodeAllocator, BucketAllocator>::unique_insert_r
-		hash_table<Entity, Extract, Hash, KeyEqual, NodeAllocator, BucketAllocator>::emplace_unique(Args&& ... args)
+		hash_table<Entity, Extract, Hash, KeyEqual, NodeAllocator, BucketAllocator>::emplace_unique(Args && ... args)
 		{
 			return this->hash_table_base::emplace_unique_using_allocator(
-					this->extract(), this->hash(), this->key_equal_obj(),
-					this->node_alloc(), this->bucket_alloc(),
-					kerbal::utility::forward<Args>(args)...
+				this->extract(), this->hash(), this->key_equal_obj(),
+				this->node_alloc(), this->bucket_alloc(),
+				kerbal::utility::forward<Args>(args)...
 			);
 		}
 
 #	endif
 
 
-		template <typename Entity, typename Extract, typename Hash, typename KeyEqual,
-				typename NodeAllocator, typename BucketAllocator
+		template <
+			typename Entity, typename Extract, typename Hash, typename KeyEqual,
+			typename NodeAllocator, typename BucketAllocator
 		>
 		KERBAL_CONSTEXPR20
 		typename hash_table<Entity, Extract, Hash, KeyEqual, NodeAllocator, BucketAllocator>::iterator
@@ -164,14 +185,35 @@ namespace kerbal
 		insert(const_reference src)
 		{
 			return this->hash_table_base::insert_using_allocator(
-					this->extract(), this->hash(), this->key_equal_obj(),
-					this->node_alloc(), this->bucket_alloc(),
-					src
+				this->extract(), this->hash(), this->key_equal_obj(),
+				this->node_alloc(), this->bucket_alloc(),
+				src
 			);
 		}
 
-		template <typename Entity, typename Extract, typename Hash, typename KeyEqual,
-				typename NodeAllocator, typename BucketAllocator
+#	if __cplusplus >= 201103L
+
+		template <
+			typename Entity, typename Extract, typename Hash, typename KeyEqual,
+			typename NodeAllocator, typename BucketAllocator
+		>
+		KERBAL_CONSTEXPR20
+		typename hash_table<Entity, Extract, Hash, KeyEqual, NodeAllocator, BucketAllocator>::iterator
+		hash_table<Entity, Extract, Hash, KeyEqual, NodeAllocator, BucketAllocator>::
+		insert(rvalue_reference src)
+		{
+			return this->hash_table_base::insert_using_allocator(
+				this->extract(), this->hash(), this->key_equal_obj(),
+				this->node_alloc(), this->bucket_alloc(),
+				kerbal::compatibility::move(src)
+			);
+		}
+
+#	endif
+
+		template <
+			typename Entity, typename Extract, typename Hash, typename KeyEqual,
+			typename NodeAllocator, typename BucketAllocator
 		>
 		template <typename InputIterator>
 		KERBAL_CONSTEXPR20
@@ -185,8 +227,39 @@ namespace kerbal
 			}
 		}
 
-		template <typename Entity, typename Extract, typename Hash, typename KeyEqual,
-				typename NodeAllocator, typename BucketAllocator
+#	if __cplusplus >= 201103L
+
+		template <
+			typename Entity, typename Extract, typename Hash, typename KeyEqual,
+			typename NodeAllocator, typename BucketAllocator
+		>
+		KERBAL_CONSTEXPR20
+		void
+		hash_table<Entity, Extract, Hash, KeyEqual, NodeAllocator, BucketAllocator>::
+		insert(std::initializer_list<value_type> ilist)
+		{
+			this->insert(ilist.begin(), ilist.end());
+		}
+
+#	else
+
+		template <
+			typename Entity, typename Extract, typename Hash, typename KeyEqual,
+			typename NodeAllocator, typename BucketAllocator
+		>
+		template <typename U>
+		void
+		hash_table<Entity, Extract, Hash, KeyEqual, NodeAllocator, BucketAllocator>::
+		insert(const kerbal::assign::assign_list<U> & ilist)
+		{
+			this->insert(ilist.cbegin(), ilist.cend());
+		}
+
+#	endif
+
+		template <
+			typename Entity, typename Extract, typename Hash, typename KeyEqual,
+			typename NodeAllocator, typename BucketAllocator
 		>
 		KERBAL_CONSTEXPR20
 		typename hash_table<Entity, Extract, Hash, KeyEqual, NodeAllocator, BucketAllocator>::unique_insert_r
@@ -194,14 +267,35 @@ namespace kerbal
 		insert_unique(const_reference src)
 		{
 			return this->hash_table_base::insert_unique_using_allocator(
-					this->extract(), this->hash(), this->key_equal_obj(),
-					this->node_alloc(), this->bucket_alloc(),
-					src
+				this->extract(), this->hash(), this->key_equal_obj(),
+				this->node_alloc(), this->bucket_alloc(),
+				src
 			);
 		}
 
-		template <typename Entity, typename Extract, typename Hash, typename KeyEqual,
-				typename NodeAllocator, typename BucketAllocator
+#	if __cplusplus >= 201103L
+
+		template <
+			typename Entity, typename Extract, typename Hash, typename KeyEqual,
+			typename NodeAllocator, typename BucketAllocator
+		>
+		KERBAL_CONSTEXPR20
+		typename hash_table<Entity, Extract, Hash, KeyEqual, NodeAllocator, BucketAllocator>::unique_insert_r
+		hash_table<Entity, Extract, Hash, KeyEqual, NodeAllocator, BucketAllocator>::
+		insert_unique(rvalue_reference src)
+		{
+			return this->hash_table_base::insert_unique_using_allocator(
+				this->extract(), this->hash(), this->key_equal_obj(),
+				this->node_alloc(), this->bucket_alloc(),
+				kerbal::compatibility::move(src)
+			);
+		}
+
+#	endif
+
+		template <
+			typename Entity, typename Extract, typename Hash, typename KeyEqual,
+			typename NodeAllocator, typename BucketAllocator
 		>
 		template <typename InputIterator>
 		KERBAL_CONSTEXPR20
@@ -215,24 +309,85 @@ namespace kerbal
 			}
 		}
 
+#	if __cplusplus >= 201103L
 
-
-/*
-		template <typename Entity, typename Extract, typename Hash, typename KeyEqual,
-				typename NodeAllocator, typename BucketAllocator
+		template <
+			typename Entity, typename Extract, typename Hash, typename KeyEqual,
+			typename NodeAllocator, typename BucketAllocator
 		>
+		KERBAL_CONSTEXPR20
+		void
 		hash_table<Entity, Extract, Hash, KeyEqual, NodeAllocator, BucketAllocator>::
+		insert_unique(std::initializer_list<value_type> ilist)
+		{
+			this->insert_unique(ilist.begin(), ilist.end());
+		}
 
-		template <typename Entity, typename Extract, typename Hash, typename KeyEqual,
-				typename NodeAllocator, typename BucketAllocator
-		>
-		hash_table<Entity, Extract, Hash, KeyEqual, NodeAllocator, BucketAllocator>::
+#	else
 
-		template <typename Entity, typename Extract, typename Hash, typename KeyEqual,
-				typename NodeAllocator, typename BucketAllocator
+		template <
+			typename Entity, typename Extract, typename Hash, typename KeyEqual,
+			typename NodeAllocator, typename BucketAllocator
 		>
+		template <typename U>
+		void
 		hash_table<Entity, Extract, Hash, KeyEqual, NodeAllocator, BucketAllocator>::
-*/
+		insert_unique(const kerbal::assign::assign_list<U> & ilist)
+		{
+			this->insert_unique(ilist.cbegin(), ilist.cend());
+		}
+
+#	endif
+
+
+
+	//===================
+	// Erase
+
+		template <
+			typename Entity, typename Extract, typename Hash, typename KeyEqual,
+			typename NodeAllocator, typename BucketAllocator
+		>
+		KERBAL_CONSTEXPR20
+		void
+		hash_table<Entity, Extract, Hash, KeyEqual, NodeAllocator, BucketAllocator>::
+		clear()
+		{
+			this->hash_table_base::clear_using_allocator(this->node_alloc());
+		}
+
+		template <
+			typename Entity, typename Extract, typename Hash, typename KeyEqual,
+			typename NodeAllocator, typename BucketAllocator
+		>
+		typename hash_table<Entity, Extract, Hash, KeyEqual, NodeAllocator, BucketAllocator>::iterator
+		hash_table<Entity, Extract, Hash, KeyEqual, NodeAllocator, BucketAllocator>::
+		erase(const_iterator pos)
+		{
+			return this->hash_table_base::erase_using_allocator(this->extract(), this->hash(), this->node_alloc(), pos);
+		}
+
+		template <
+			typename Entity, typename Extract, typename Hash, typename KeyEqual,
+			typename NodeAllocator, typename BucketAllocator
+		>
+		typename hash_table<Entity, Extract, Hash, KeyEqual, NodeAllocator, BucketAllocator>::iterator
+		hash_table<Entity, Extract, Hash, KeyEqual, NodeAllocator, BucketAllocator>::
+		erase(const_iterator first, const_iterator last)
+		{
+			return this->hash_table_base::erase_using_allocator(this->extract(), this->hash(), this->node_alloc(), first, last);
+		}
+
+		template <
+			typename Entity, typename Extract, typename Hash, typename KeyEqual,
+			typename NodeAllocator, typename BucketAllocator
+		>
+		typename hash_table<Entity, Extract, Hash, KeyEqual, NodeAllocator, BucketAllocator>::iterator
+		hash_table<Entity, Extract, Hash, KeyEqual, NodeAllocator, BucketAllocator>::
+		erase(key_type const & key)
+		{
+			return this->hash_table_base::erase_using_allocator(this->extract(), this->hash(), this->key_equal_obj(), this->node_alloc(), key);
+		}
 
 	} // namespace container
 
