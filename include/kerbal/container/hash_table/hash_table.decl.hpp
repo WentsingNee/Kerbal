@@ -193,6 +193,9 @@ namespace kerbal
 				}
 
 
+			//===================
+			// Constructor/Destructor
+
 			public:
 				KERBAL_CONSTEXPR20
 				hash_table();
@@ -354,12 +357,15 @@ namespace kerbal
 				using hash_table_base::max_size;
 
 			//===================
-			// Modifiers
-
-			public:
+			// Lookup
 
 				KERBAL_CONSTEXPR20
-				void clear();
+				iterator find(key_type const & key);
+
+			//===================
+			// Insert
+
+			public:
 
 #		if __cplusplus >= 201103L
 
@@ -419,6 +425,7 @@ namespace kerbal
 				iterator insert(rvalue_reference src);
 #		endif
 
+/*
 				KERBAL_CONSTEXPR20
 				iterator insert(const_iterator hint, const_reference src);
 
@@ -426,6 +433,7 @@ namespace kerbal
 				KERBAL_CONSTEXPR20
 				iterator insert(const_iterator hint, rvalue_reference src);
 #		endif
+*/
 
 				template <typename InputIterator>
 				KERBAL_CONSTEXPR20
@@ -435,8 +443,8 @@ namespace kerbal
 				KERBAL_CONSTEXPR20
 				void insert(std::initializer_list<value_type> ilist);
 #		else
-				template <typename Up>
-				void insert(const kerbal::assign::assign_list<Up> & ilist);
+				template <typename U>
+				void insert(const kerbal::assign::assign_list<U> & ilist);
 #		endif
 
 
@@ -467,6 +475,12 @@ namespace kerbal
 #		endif
 
 
+			//===================
+			// Erase
+
+				KERBAL_CONSTEXPR20
+				void clear();
+
 				KERBAL_CONSTEXPR20
 				iterator erase(const_iterator pos);
 
@@ -474,7 +488,10 @@ namespace kerbal
 				iterator erase(const_iterator first, const_iterator last);
 
 				KERBAL_CONSTEXPR20
-				iterator erase(const key_type & key);
+				iterator erase(key_type const & key);
+
+			//===================
+			// Modifiers
 
 				KERBAL_CONSTEXPR20
 				void swap(hash_table & with);
@@ -487,7 +504,7 @@ namespace kerbal
 				using hash_table_base::bucket_size;
 
 				KERBAL_CONSTEXPR20
-				size_type bucket(const key_type & key) const
+				size_type bucket(key_type const & key) const
 				{
 					return this->hash_table_base::bucket(this->hash(), key);
 				}
