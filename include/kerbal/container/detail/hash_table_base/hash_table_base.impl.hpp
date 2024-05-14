@@ -105,7 +105,7 @@ namespace kerbal
 			hash_table_base<Entity, HashCachePolicy>::
 			destroy_using_allocator(NodeAlloc & node_alloc, BucketAlloc & bucket_alloc)
 			{
-				k_destroy_node_chain(node_alloc, this->k_head.k_next, NULL);
+				k_destroy_node_chain(node_alloc, static_cast<node *>(this->k_head.k_next), NULL);
 				k_destroy_buckets(bucket_alloc, this->k_buckets, this->k_bucket_count);
 			}
 
@@ -148,14 +148,14 @@ namespace kerbal
 					if (cur == NULL) {
 						break;
 					}
-					hash_result_type cur_hash_code = cur->get_cached_hash_code(extract, hash);
+					hash_result_type hash_code_cur = cur->get_cached_hash_code(extract, hash);
 
-					if (cur_hash_code == hash_code) { // same hash
+					if (hash_code_cur == hash_code) { // same hash
 						if (key_equal(extract(cur->member()), key)) { // same key
 							return unique_insert_r(static_cast<node_type_unrelated *>(cur), false);
 						} // else: same hash but different key => other elements in the same bucket
 					} else {
-						size_type bucket_id_cur= this->k_hash_result_to_bucket_id(cur_hash_code);
+						size_type bucket_id_cur= this->k_hash_result_to_bucket_id(hash_code_cur);
 						if (bucket_id_cur != bucket_id_in) {
 							bucket_type & bucket_cur = this->k_buckets[bucket_id_cur];
 							bucket_cur = p;
@@ -449,7 +449,7 @@ namespace kerbal
 			hash_table_base<Entity, HashCachePolicy>::
 			clear_using_allocator(NodeAlloc & node_alloc)
 			{
-				k_destroy_node_chain(node_alloc, this->k_head.k_next, NULL);
+				k_destroy_node_chain(node_alloc, static_cast<node *>(this->k_head.k_next), NULL);
 				this->k_head.k_next = NULL;
 				this->k_size = 0;
 				kerbal::algorithm::fill(this->k_buckets, this->k_buckets + this->k_bucket_count, static_cast<bucket_type>(&this->k_head));
@@ -683,12 +683,11 @@ namespace kerbal
 			template <typename NodeAlloc>
 			KERBAL_CONSTEXPR20
 			void hash_table_base<Entity, HashCachePolicy>::
-			k_destroy_node(NodeAlloc & node_alloc, node_type_unrelated * p) KERBAL_NOEXCEPT
+			k_destroy_node(NodeAlloc & node_alloc, node * p) KERBAL_NOEXCEPT
 			{
 				typedef kerbal::memory::allocator_traits<NodeAlloc> ht_node_allocator_traits;
-				node * p_to_node = static_cast<node *>(p);
-				ht_node_allocator_traits::destroy(node_alloc, p_to_node);
-				ht_node_allocator_traits::deallocate_one(node_alloc, p_to_node);
+				ht_node_allocator_traits::destroy(node_alloc, p);
+				ht_node_allocator_traits::deallocate_one(node_alloc, p);
 			}
 
 		} // namespace detail
