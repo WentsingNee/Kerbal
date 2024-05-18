@@ -222,21 +222,25 @@ namespace kerbal
 			//===================
 			// iterator
 
+				KERBAL_CONSTEXPR20
 				const_iterator begin() const
 				{
 					return this->avl_ordered::cbegin();
 				}
 
+				KERBAL_CONSTEXPR20
 				const_iterator end() const
 				{
 					return this->avl_ordered::cend();
 				}
 
+				KERBAL_CONSTEXPR20
 				const_reverse_iterator rbegin() const
 				{
 					return this->avl_ordered::crbegin();
 				}
 
+				KERBAL_CONSTEXPR20
 				const_reverse_iterator rend() const
 				{
 					return this->avl_ordered::crend();
