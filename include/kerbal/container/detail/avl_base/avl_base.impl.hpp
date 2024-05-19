@@ -493,10 +493,10 @@ namespace kerbal
 					}
 					pnew->parent = parent;
 					pnew->height = src_node->height;
-					k_trans_clone<UnaryOperation>(this_alloc, pnew, static_cast<const node *>(src_node->right), true);
+					k_trans_clone<UnaryOperation>(this_alloc, pnew, node::reinterpret_as(src_node->right), true);
 
 					parent = pnew;
-					src_node = static_cast<const node *>(src_node->left);
+					src_node = node::reinterpret_as(src_node->left);
 					which = false;
 				}
 			}
@@ -530,7 +530,7 @@ namespace kerbal
 #	if KERBAL_HAS_EXCEPTIONS_SUPPORT
 				try {
 #	endif
-					this->k_clone(this_alloc, &this->k_head, static_cast<const node *>(src.k_head.left));
+					this->k_clone(this_alloc, &this->k_head, node::reinterpret_as(src.k_head.left));
 #	if KERBAL_HAS_EXCEPTIONS_SUPPORT
 				} catch (...) {
 					this->k_destroy_using_allocator(this_alloc);
@@ -600,7 +600,7 @@ namespace kerbal
 #	if KERBAL_HAS_EXCEPTIONS_SUPPORT
 				try {
 #	endif
-					this->k_move_clone(this_alloc, &this->k_head, static_cast<const node *>(src.k_head.left));
+					this->k_move_clone(this_alloc, &this->k_head, node::reinterpret_as(src.k_head.left));
 #	if KERBAL_HAS_EXCEPTIONS_SUPPORT
 				} catch (...) {
 					this->k_destroy_using_allocator(this_alloc);
@@ -861,7 +861,7 @@ namespace kerbal
 #			if KERBAL_HAS_EXCEPTIONS_SUPPORT
 					try {
 #			endif // if KERBAL_HAS_EXCEPTIONS_SUPPORT
-						this->k_clone(this_alloc, &this->k_head, static_cast<const node *>(src.k_head.left));
+						this->k_clone(this_alloc, &this->k_head, node::reinterpret_as(src.k_head.left));
 #			if KERBAL_HAS_EXCEPTIONS_SUPPORT
 					} catch (...) {
 						this->k_destroy_using_allocator(this_alloc);
@@ -889,7 +889,7 @@ namespace kerbal
 #			if KERBAL_HAS_EXCEPTIONS_SUPPORT
 					try {
 #			endif // if KERBAL_HAS_EXCEPTIONS_SUPPORT
-						this->k_clone(this_alloc, &this->k_head, static_cast<const node *>(src.k_head.left));
+						this->k_clone(this_alloc, &this->k_head, node::reinterpret_as(src.k_head.left));
 #			if KERBAL_HAS_EXCEPTIONS_SUPPORT
 					} catch (...) {
 						this->k_destroy_using_allocator(this_alloc);
@@ -2309,7 +2309,7 @@ namespace kerbal
 			void avl_type_only<Entity>::pre_order_impl(const node_base * p_base, F f)
 			{
 				while (p_base != get_avl_vnull_node()) {
-					node * p = static_cast<node *>(p_base);
+					node * p = node::reinterpret_as(p_base);
 					f(p->value);
 					pre_order_impl(p->left, f);
 					p_base = p->right;
