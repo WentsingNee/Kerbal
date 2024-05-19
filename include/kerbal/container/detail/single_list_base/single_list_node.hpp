@@ -149,7 +149,7 @@ namespace kerbal
 						return static_cast<const sl_node *>(p);
 					}
 
-				using member_compress_helper::member;
+					using member_compress_helper::member;
 
 			};
 
