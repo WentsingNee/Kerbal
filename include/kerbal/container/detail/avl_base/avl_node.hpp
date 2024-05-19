@@ -323,8 +323,7 @@ namespace kerbal
 
 					friend class kerbal::container::detail::avl_type_unrelated;
 
-					template <typename Entity>
-					friend class kerbal::container::detail::avl_type_only;
+					friend class kerbal::container::detail::avl_type_only<T>;
 
 				public:
 
