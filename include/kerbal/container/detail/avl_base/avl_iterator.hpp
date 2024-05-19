@@ -163,8 +163,7 @@ namespace kerbal
 				private:
 					typedef avl_iter_type_unrelated super;
 
-					template <typename Entity>
-					friend class kerbal::container::detail::avl_type_only;
+					friend class kerbal::container::detail::avl_type_only<T>;
 
 					typedef kerbal::container::detail::avl_node<T> node;
 					friend class avl_kiter<T>;
@@ -240,8 +239,7 @@ namespace kerbal
 				private:
 					typedef avl_kiter_type_unrelated super;
 
-					template <typename Entity>
-					friend class kerbal::container::detail::avl_type_only;
+					friend class kerbal::container::detail::avl_type_only<T>;
 
 					typedef kerbal::container::detail::avl_node<T> node;
 					typedef avl_iter<T> iterator;
