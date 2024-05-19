@@ -151,6 +151,7 @@ namespace kerbal
 					template <typename Up, typename SemiAllocator>
 					friend class kerbal::autonm::forward_list;
 
+					typedef kerbal::container::detail::sl_node<Tp>			node;
 					friend class fl_kiter<Tp>;
 
 				private:
@@ -184,7 +185,7 @@ namespace kerbal
 					KERBAL_CONSTEXPR14
 					reference operator*() const KERBAL_NOEXCEPT
 					{
-						return this->current->template reinterpret_as<Tp>().member();
+						return node::reinterpret_as(this->current)->member();
 					}
 
 					KERBAL_CONSTEXPR14
@@ -222,6 +223,7 @@ namespace kerbal
 					template <typename Up, typename SemiAllocator>
 					friend class kerbal::autonm::forward_list;
 
+					typedef kerbal::container::detail::sl_node<Tp>			node;
 					typedef fl_iter<Tp> iterator;
 
 				private:
@@ -262,7 +264,7 @@ namespace kerbal
 					KERBAL_CONSTEXPR14
 					reference operator*() const KERBAL_NOEXCEPT
 					{
-						return this->current->template reinterpret_as<Tp>().member();
+						return node::reinterpret_as(this->current)->member();
 					}
 
 					KERBAL_CONSTEXPR14

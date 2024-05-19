@@ -166,6 +166,7 @@ namespace kerbal
 					template <typename Entity>
 					friend class kerbal::container::detail::avl_type_only;
 
+					typedef kerbal::container::detail::avl_node<T> node;
 					friend class avl_kiter<T>;
 
 				private:
@@ -198,7 +199,7 @@ namespace kerbal
 					KERBAL_CONSTEXPR14
 					reference operator*() const KERBAL_NOEXCEPT
 					{
-						return this->current->template reinterpret_as<T>().member();
+						return node::reinterpret_as(this->current)->member();
 					}
 
 					KERBAL_CONSTEXPR14
@@ -242,6 +243,7 @@ namespace kerbal
 					template <typename Entity>
 					friend class kerbal::container::detail::avl_type_only;
 
+					typedef kerbal::container::detail::avl_node<T> node;
 					typedef avl_iter<T> iterator;
 
 				private:
@@ -281,7 +283,7 @@ namespace kerbal
 					KERBAL_CONSTEXPR14
 					reference operator*() const KERBAL_NOEXCEPT
 					{
-						return this->current->template reinterpret_as<T>().member();
+						return node::reinterpret_as(this->current)->member();
 					}
 
 					KERBAL_CONSTEXPR14

@@ -83,38 +83,6 @@ namespace kerbal
 					{
 					}
 
-					template <typename Tp>
-					KERBAL_CONSTEXPR14
-					list_node<Tp> & reinterpret_as() KERBAL_REFERENCE_OVERLOAD_TAG KERBAL_NOEXCEPT
-					{
-						return static_cast<list_node<Tp> &>(*this);
-					}
-
-					template <typename Tp>
-					KERBAL_CONSTEXPR14
-					const list_node<Tp> & reinterpret_as() KERBAL_CONST_REFERENCE_OVERLOAD_TAG KERBAL_NOEXCEPT
-					{
-						return static_cast<const list_node<Tp> &>(*this);
-					}
-
-#			if __cplusplus >= 201103L
-
-					template <typename Tp>
-					KERBAL_CONSTEXPR14
-					list_node<Tp> && reinterpret_as() && KERBAL_NOEXCEPT
-					{
-						return static_cast<list_node<Tp> &&>(*this);
-					}
-
-					template <typename Tp>
-					KERBAL_CONSTEXPR14
-					const list_node<Tp> && reinterpret_as() const && KERBAL_NOEXCEPT
-					{
-						return static_cast<const list_node<Tp> &&>(*this);
-					}
-
-#			endif
-
 			};
 
 			template <typename Tp>
@@ -168,6 +136,22 @@ namespace kerbal
 #				undef FBODY
 
 #		endif
+
+					KERBAL_CONSTEXPR14
+					static
+					list_node *
+					reinterpret_as(list_node_base * p) KERBAL_NOEXCEPT
+					{
+						return static_cast<list_node *>(p);
+					}
+
+					KERBAL_CONSTEXPR14
+					static
+					const list_node *
+					reinterpret_as(const list_node_base * p) KERBAL_NOEXCEPT
+					{
+						return static_cast<const list_node *>(p);
+					}
 
 				using member_compress_helper::member;
 

@@ -757,7 +757,7 @@ namespace kerbal
 				try {
 #			endif // if KERBAL_HAS_EXCEPTIONS_SUPPORT
 					while (i < tmp_size && first != last) { // may throw here
-						node * p = &tmp_it->template reinterpret_as<value_type>();
+						node * p = node::reinterpret_as(tmp_it);
 						++i;
 						tmp_it = tmp_it->postorder_next(&tmp_head)->as_node_base();
 						k_reuse_node(alloc, p, *first); // may throw here
@@ -805,7 +805,7 @@ namespace kerbal
 				try {
 #			endif // if KERBAL_HAS_EXCEPTIONS_SUPPORT
 					while (i < tmp_size && first != last) { // may throw here
-						node * p = &(tmp_it->template reinterpret_as<value_type>());
+						node * p = node::reinterpret_as(tmp_it);
 						++i;
 						tmp_it = tmp_it->postorder_next(&tmp_head)->as_node_base();
 						head_node * parent_backup = p->parent;
@@ -1140,7 +1140,7 @@ namespace kerbal
 			{
 				const node_base * cur_base = this->k_head.left;
 				while (cur_base != get_avl_vnull_node()) {
-					const typename Extract::key_type & cur_key = e(cur_base->reinterpret_as<value_type>().member());
+					const typename Extract::key_type & cur_key = e(node::reinterpret_as(cur_base)->member());
 					if (kc(key, cur_key)) { // key < cur_key
 						cur_base = cur_base->left;
 					} else if (kc(cur_key, key)) { // cur_key < key
@@ -1199,7 +1199,7 @@ namespace kerbal
 			avl_type_only<Entity>::k_lower_bound_helper(const node_base * cur_base, const node_base * lbound, const Key & key, Extract & e, KeyCompare & kc)
 			{
 				while (cur_base != get_avl_vnull_node()) {
-					if (kc(e(cur_base->reinterpret_as<value_type>().member()), key)) { // cur_key < key
+					if (kc(e(node::reinterpret_as(cur_base)->member()), key)) { // cur_key < key
 						cur_base = cur_base->right;
 					} else { // key >= cur_key
 						lbound = cur_base;
@@ -1216,7 +1216,7 @@ namespace kerbal
 			avl_type_only<Entity>::k_upper_bound_helper(const node_base * cur_base, const node_base * ubound, const Key & key, Extract & e, KeyCompare & kc)
 			{
 				while (cur_base != get_avl_vnull_node()) {
-					if (kc(key, e(cur_base->reinterpret_as<value_type>().member()))) { // key < cur_key
+					if (kc(key, e(node::reinterpret_as(cur_base)->member()))) { // key < cur_key
 						ubound = cur_base;
 						cur_base = cur_base->left;
 					} else { // key >= cur_key
@@ -1341,7 +1341,7 @@ namespace kerbal
 				const node_base * ubound = lbound;
 				const node_base * cur_base = this->k_head.left;
 				while (cur_base != get_avl_vnull_node()) {
-					const typename Extract::key_type & cur_key = e(cur_base->reinterpret_as<value_type>().member());
+					const typename Extract::key_type & cur_key = e(node::reinterpret_as(cur_base)->member());
 					if (kc(key, cur_key)) { // key < cur_key
 						lbound = cur_base;
 						ubound = cur_base;
@@ -1423,7 +1423,7 @@ namespace kerbal
 			{
 				const node_base * cur_base = this->k_head.left;
 				while (cur_base != get_avl_vnull_node()) {
-					const typename Extract::key_type & cur_key = e(cur_base->reinterpret_as<value_type>().member());
+					const typename Extract::key_type & cur_key = e(node::reinterpret_as(cur_base)->member());
 					if (kc(key, cur_key)) { // key < cur_key
 						cur_base = cur_base->left;
 					} else if (kc(cur_key, key)) { // cur_key < key
@@ -1471,7 +1471,7 @@ namespace kerbal
 				} else {
 					node_base * cur_base = this->k_head.left;
 					while (true) {
-						if (kc(e(p->member()), e(cur_base->reinterpret_as<value_type>().member()))) { // src < p->member(), ** may throw here **
+						if (kc(e(p->member()), e(node::reinterpret_as(cur_base)->member()))) { // src < p->member(), ** may throw here **
 							if (cur_base->left == get_avl_vnull_node()) {
 								cur_base->left = p;
 								break;
@@ -1509,7 +1509,7 @@ namespace kerbal
 
 					node_base * cur_base = this->k_head.left;
 					while (true) {
-						const typename Extract::key_type & cur_key = e(cur_base->reinterpret_as<value_type>().member());
+						const typename Extract::key_type & cur_key = e(node::reinterpret_as(cur_base)->member());
 						if (kc(src_key, cur_key)) { // src_key < cur_key, ** may throw here **
 							if (cur_base->left == get_avl_vnull_node()) {
 								cur_base->left = p;
@@ -1686,7 +1686,7 @@ namespace kerbal
 				} else {
 					node_base * cur_base = this->k_head.left;
 					while (true) {
-						const_reference cur_key = cur_base->reinterpret_as<value_type>().member();
+						const_reference cur_key = node::reinterpret_as(cur_base)->member();
 						if (kc(src_key, cur_key)) { // src_key < cur_key, ** may throw here **
 							if (cur_base->left == get_avl_vnull_node()) {
 								p = k_build_new_node(alloc, FORWARD(U, src_key));
@@ -1962,7 +1962,7 @@ namespace kerbal
 #		endif // KERBAL_HAS_EXCEPTIONS_SUPPORT
 
  				} else {
-					p = &replace.cast_to_mutable().current->template reinterpret_as<value_type>();
+					p = node::reinterpret_as(replace.cast_to_mutable().current);
 					this->k_unhook_node(p);
 					node_allocator_traits::destroy(alloc, p);
 				}
@@ -2001,7 +2001,7 @@ namespace kerbal
 #		endif // KERBAL_HAS_EXCEPTIONS_SUPPORT
 
  				} else {
-					p = &replace.cast_to_mutable().current->template reinterpret_as<value_type>();
+					p = node::reinterpret_as(replace.cast_to_mutable().current);
 					this->k_unhook_node(p);
 					node_allocator_traits::destroy(alloc, p);
 				}
@@ -2045,7 +2045,7 @@ namespace kerbal
 				if (replace == this->cend()) { \
 					p = node_allocator_traits::allocate_one(alloc); \
  				} else { \
-					p = &replace.cast_to_mutable().current->template reinterpret_as<value_type>(); \
+					p = node::reinterpret_as(replace.cast_to_mutable().current); \
 					this->k_unhook_node(p); \
 					node_allocator_traits::destroy(alloc, p); \
 				} \
@@ -2071,7 +2071,7 @@ namespace kerbal
 				if (replace == this->cend()) { \
 					p = node_allocator_traits::allocate_one(alloc); \
  				} else { \
-					p = &replace.cast_to_mutable().current->template reinterpret_as<value_type>(); \
+					p = node::reinterpret_as(replace.cast_to_mutable().current); \
 					this->k_unhook_node(p); \
 					node_allocator_traits::destroy(alloc, p); \
 				} \
@@ -2107,7 +2107,7 @@ namespace kerbal
 					} \
  \
  				} else { \
-					p = &replace.cast_to_mutable().current->template reinterpret_as<value_type>(); \
+					p = node::reinterpret_as(replace.cast_to_mutable().current); \
 					this->k_unhook_node(p); \
 					node_allocator_traits::destroy(alloc, p); \
 				} \
@@ -2132,7 +2132,7 @@ namespace kerbal
 					} \
  \
  				} else { \
-					p = &replace.cast_to_mutable().current->template reinterpret_as<value_type>(); \
+					p = node::reinterpret_as(replace.cast_to_mutable().current); \
 					this->k_unhook_node(p); \
 					node_allocator_traits::destroy(alloc, p); \
 				} \
@@ -2168,7 +2168,7 @@ namespace kerbal
 			typename avl_type_only<Entity>::const_iterator
 			avl_type_only<Entity>::k_splice(ThisExtract & this_e, ThisKeyCompare & this_kc, avl_type_only & other, const_iterator other_it)
 			{
-				node * p = &other_it.cast_to_mutable().current->template reinterpret_as<value_type>();
+				node * p = node::reinterpret_as(other_it.cast_to_mutable().current);
 
 				avl_head_node * next = NULL;
 				if (this->k_size == 0) {
@@ -2181,7 +2181,7 @@ namespace kerbal
 				} else {
 					node_base * cur_base = this->k_head.left;
 					while (true) {
-						if (this_kc(this_e(p->member()), this_e(cur_base->reinterpret_as<value_type>().member()))) { // other < p->member(), ** may throw here **
+						if (this_kc(this_e(p->member()), this_e(node::reinterpret_as(cur_base)->member()))) { // other < p->member(), ** may throw here **
 							if (cur_base->left == get_avl_vnull_node()) {
 								next = other.k_unhook_node_and_get_successor(p);
 								cur_base->left = p;
@@ -2215,7 +2215,7 @@ namespace kerbal
 			typename avl_type_only<Entity>::unique_insert_r
 			avl_type_only<Entity>::k_splice_unique(ThisExtract & this_e, ThisKeyCompare & this_kc, avl_type_only & other, const_iterator other_it)
 			{
-				node * p = &other_it.cast_to_mutable().current->template reinterpret_as<value_type>();
+				node * p = node::reinterpret_as(other_it.cast_to_mutable().current);
 
 				avl_head_node * next = NULL;
 				if (this->k_size == 0) {
@@ -2229,7 +2229,7 @@ namespace kerbal
 					node_base * cur_base = this->k_head.left;
 					while (true) {
 						const typename ThisExtract::key_type & other_key = this_e(p->member());
-						const typename ThisExtract::key_type & cur_key = this_e(cur_base->reinterpret_as<value_type>().member());
+						const typename ThisExtract::key_type & cur_key = this_e(node::reinterpret_as(cur_base)->member());
 						if (this_kc(other_key, cur_key)) { // other < p->member(), ** may throw here **
 							if (cur_base->left == get_avl_vnull_node()) {
 								next = other.k_unhook_node_and_get_successor(p);
@@ -2365,7 +2365,7 @@ namespace kerbal
 					}
 				}
 
-				const value_type & mid_value = p->reinterpret_as<value_type>().member();
+				const value_type & mid_value = node::reinterpret_as(p)->member();
 				if (lmaxi != NULL) {
 					if (!kc(e(*lmaxi), e(mid_value))) {
 						return AVL_NORMAL_RESULT_BST_INVALID;
@@ -2658,7 +2658,7 @@ namespace kerbal
 				typedef kerbal::memory::allocator_traits<NodeAllocator> node_allocator_traits;
 				typedef typename node_allocator_traits::pointer allocator_pointer_type;
 
-				node * p_node = &p_node_base->template reinterpret_as<Entity>();
+				node * p_node = node::reinterpret_as(p_node_base);
 				allocator_pointer_type p_node_act = static_cast<allocator_pointer_type>(p_node);
 				node_allocator_traits::destroy(alloc, p_node_act);
 				node_allocator_traits::deallocate_one(alloc, p_node_act);
@@ -2786,7 +2786,7 @@ namespace kerbal
 					k_destroy_node_and_offsprings_impl(alloc, start->left, ver);
 					node_base * right = start->right;
 
-					node * p_node = &start->template reinterpret_as<Entity>();
+					node * p_node = node::reinterpret_as(start);
 					node_allocator_traits::destroy(alloc, p_node);
 
 					start = right;

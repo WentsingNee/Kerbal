@@ -701,7 +701,7 @@ namespace kerbal
 			typename sl_type_only<Tp>::reference
 			sl_type_only<Tp>::back() KERBAL_NOEXCEPT
 			{
-				return this->end().current->template reinterpret_as<Tp>().member();
+				return node::reinterpret_as(this->end().current)->member();
 			}
 
 			template <typename Tp>
@@ -709,7 +709,7 @@ namespace kerbal
 			typename sl_type_only<Tp>::const_reference
 			sl_type_only<Tp>::back() const KERBAL_NOEXCEPT
 			{
-				return this->cend().current->template reinterpret_as<Tp>().member();
+				return node::reinterpret_as(this->cend().current)->member();
 			}
 
 
@@ -1447,7 +1447,7 @@ namespace kerbal
 					)
 			{
 				typedef kerbal::memory::allocator_traits<NodeAllocator> node_allocator_traits;
-				node * p_node = &p_node_base->template reinterpret_as<Tp>();
+				node * p_node = node::reinterpret_as(p_node_base);
 				node_allocator_traits::destroy(alloc, p_node);
 				node_allocator_traits::deallocate_one(alloc, p_node);
 			}
@@ -1481,7 +1481,7 @@ namespace kerbal
 				node_base * current_node_base = start;
 				while (current_node_base != NULL) {
 					node_base * next = current_node_base->next;
-					node * p_node = &current_node_base->template reinterpret_as<Tp>();
+					node * p_node = node::reinterpret_as(current_node_base);
 					node_allocator_traits::destroy(alloc, p_node);
 					current_node_base = next;
 				}

@@ -657,7 +657,7 @@ namespace kerbal
 			typename fl_type_only<Tp>::reference
 			fl_type_only<Tp>::front() KERBAL_NOEXCEPT
 			{
-				return this->k_head.next->template reinterpret_as<Tp>().member();
+				return node::reinterpret_as(this->k_head.next)->member();
 			}
 
 			template <typename Tp>
@@ -665,7 +665,7 @@ namespace kerbal
 			typename fl_type_only<Tp>::const_reference
 			fl_type_only<Tp>::front() const KERBAL_NOEXCEPT
 			{
-				return this->k_head.next->template reinterpret_as<Tp>().member();
+				return node::reinterpret_as(this->k_head.next)->member();
 			}
 
 
@@ -1591,7 +1591,7 @@ namespace kerbal
 				typedef kerbal::memory::allocator_traits<NodeAllocator> node_allocator_traits;
 				typedef typename node_allocator_traits::pointer allocator_pointer_type;
 
-				node * p_node = &p_node_base->template reinterpret_as<value_type>();
+				node * p_node = node::reinterpret_as(p_node_base);
 				allocator_pointer_type p_node_act = static_cast<allocator_pointer_type>(p_node);
 				node_allocator_traits::destroy(alloc, p_node_act);
 				node_allocator_traits::deallocate_one(alloc, p_node_act);
@@ -1619,7 +1619,7 @@ namespace kerbal
 
 				while (first != last) {
 					node_base * next = first->next;
-					node * p_node = &first->template reinterpret_as<value_type>();
+					node * p_node = node::reinterpret_as(first);
 					allocator_pointer_type p_node_act = static_cast<allocator_pointer_type>(p_node);
 					node_allocator_traits::destroy(alloc, p_node_act);
 					first = next;

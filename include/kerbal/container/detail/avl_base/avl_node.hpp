@@ -80,38 +80,6 @@ namespace kerbal
 					const avl_node_base * as_node_base() const KERBAL_NOEXCEPT;
 
 
-					template <typename T>
-					KERBAL_CONSTEXPR14
-					avl_node<T> & reinterpret_as() KERBAL_REFERENCE_OVERLOAD_TAG KERBAL_NOEXCEPT
-					{
-						return static_cast<avl_node<T> &>(*this);
-					}
-
-					template <typename T>
-					KERBAL_CONSTEXPR14
-					const avl_node<T> & reinterpret_as() KERBAL_CONST_REFERENCE_OVERLOAD_TAG KERBAL_NOEXCEPT
-					{
-						return static_cast<const avl_node<T> &>(*this);
-					}
-
-#			if __cplusplus >= 201103L
-
-					template <typename T>
-					KERBAL_CONSTEXPR14
-					avl_node<T> && reinterpret_as() && KERBAL_NOEXCEPT
-					{
-						return static_cast<avl_node<T> &&>(*this);
-					}
-
-					template <typename T>
-					KERBAL_CONSTEXPR14
-					const avl_node<T> && reinterpret_as() const && KERBAL_NOEXCEPT
-					{
-						return static_cast<const avl_node<T> &&>(*this);
-					}
-
-#			endif
-
 					KERBAL_CONSTEXPR14
 					const avl_node_base *
 					leftest_offspring() const KERBAL_NOEXCEPT;
@@ -393,6 +361,38 @@ namespace kerbal
 #				undef FBODY
 
 #		endif
+
+					KERBAL_CONSTEXPR14
+					static
+					avl_node *
+					reinterpret_as(avl_node_base * p) KERBAL_NOEXCEPT
+					{
+						return static_cast<avl_node *>(p);
+					}
+
+					KERBAL_CONSTEXPR14
+					static
+					const avl_node *
+					reinterpret_as(const avl_node_base * p) KERBAL_NOEXCEPT
+					{
+						return static_cast<const avl_node *>(p);
+					}
+
+					KERBAL_CONSTEXPR14
+					static
+					avl_node *
+					reinterpret_as(avl_head_node * p) KERBAL_NOEXCEPT
+					{
+						return static_cast<avl_node *>(p);
+					}
+
+					KERBAL_CONSTEXPR14
+					static
+					const avl_node *
+					reinterpret_as(const avl_head_node * p) KERBAL_NOEXCEPT
+					{
+						return static_cast<const avl_node *>(p);
+					}
 
 					using member_compress_helper::member;
 

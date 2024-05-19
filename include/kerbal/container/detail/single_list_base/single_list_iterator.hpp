@@ -156,6 +156,7 @@ namespace kerbal
 					template <typename Up, typename Allocator>
 					friend class kerbal::container::single_list;
 
+					typedef kerbal::container::detail::sl_node<Tp>			node;
 					friend class sl_kiter<Tp>;
 
 				private:
@@ -189,7 +190,7 @@ namespace kerbal
 					KERBAL_CONSTEXPR14
 					reference operator*() const KERBAL_NOEXCEPT
 					{
-						return this->refer_node_ptr()->template reinterpret_as<Tp>().member();
+						return node::reinterpret_as(this->refer_node_ptr())->member();
 					}
 
 					KERBAL_CONSTEXPR14
@@ -223,6 +224,7 @@ namespace kerbal
 					template <typename Up, typename Allocator>
 					friend class kerbal::container::single_list;
 
+					typedef kerbal::container::detail::sl_node<Tp>			node;
 					typedef sl_iter<Tp> iterator;
 
 				private:
@@ -263,7 +265,7 @@ namespace kerbal
 					KERBAL_CONSTEXPR14
 					reference operator*() const KERBAL_NOEXCEPT
 					{
-						return this->refer_node_ptr()->template reinterpret_as<Tp>().member();
+						return node::reinterpret_as(this->refer_node_ptr())->member();
 					}
 
 					KERBAL_CONSTEXPR14

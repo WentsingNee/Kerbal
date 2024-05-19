@@ -640,7 +640,7 @@ namespace kerbal
 			typename list_type_only<Tp>::reference
 			list_type_only<Tp>::front() KERBAL_NOEXCEPT
 			{
-				return this->k_head.next->template reinterpret_as<Tp>().member();
+				return node::reinterpret_as(this->k_head.next)->member();
 			}
 
 			template <typename Tp>
@@ -648,7 +648,7 @@ namespace kerbal
 			typename list_type_only<Tp>::const_reference
 			list_type_only<Tp>::front() const KERBAL_NOEXCEPT
 			{
-				return this->k_head.next->template reinterpret_as<Tp>().member();
+				return node::reinterpret_as(this->k_head.next)->member();
 			}
 
 			template <typename Tp>
@@ -656,7 +656,7 @@ namespace kerbal
 			typename list_type_only<Tp>::reference
 			list_type_only<Tp>::back() KERBAL_NOEXCEPT
 			{
-				return this->k_head.prev->template reinterpret_as<Tp>().member();
+				return node::reinterpret_as(this->k_head.prev)->member();
 			}
 
 			template <typename Tp>
@@ -664,7 +664,7 @@ namespace kerbal
 			typename list_type_only<Tp>::const_reference
 			list_type_only<Tp>::back() const KERBAL_NOEXCEPT
 			{
-				return this->k_head.prev->template reinterpret_as<Tp>().member();
+				return node::reinterpret_as(this->k_head.prev)->member();
 			}
 
 
@@ -2038,8 +2038,8 @@ namespace kerbal
 						++cnt;
 					} while (cnt != n);
 					return list_node_chain<Tp>(
-							&head.next->template reinterpret_as<value_type>(),
-							&prev->template reinterpret_as<value_type>()
+							node::reinterpret_as(head.next),
+							node::reinterpret_as(prev)
 					);
 #		if KERBAL_HAS_EXCEPTIONS_SUPPORT
 				} catch (...) {
@@ -2076,8 +2076,8 @@ namespace kerbal
 						++cnt; \
 					} while (cnt != n); \
 					return list_node_chain<Tp>( \
-							&head.next->template reinterpret_as<value_type>(), \
-							&prev->template reinterpret_as<value_type>() \
+							node::reinterpret_as(head.next), \
+							node::reinterpret_as(prev) \
 					); \
 				} catch (...) { \
 					k_consecutive_destroy_node(alloc, head.next); \
@@ -2103,8 +2103,8 @@ namespace kerbal
 					++cnt; \
 				} while (cnt != n); \
 				return list_node_chain<Tp>( \
-						&head.next->template reinterpret_as<value_type>(), \
-						&prev->template reinterpret_as<value_type>() \
+						node::reinterpret_as(head.next), \
+						node::reinterpret_as(prev) \
 				); \
 			}
 #	endif // KERBAL_HAS_EXCEPTIONS_SUPPORT
@@ -2145,8 +2145,8 @@ namespace kerbal
 						++first;
 					} while (first != last);
 					return list_node_chain<Tp>(
-							&head.next->template reinterpret_as<value_type>(),
-							&prev->template reinterpret_as<value_type>()
+							node::reinterpret_as(head.next),
+							node::reinterpret_as(prev)
 					);
 #			if KERBAL_HAS_EXCEPTIONS_SUPPORT
 				} catch (...) {
@@ -2179,7 +2179,7 @@ namespace kerbal
 				typedef kerbal::memory::allocator_traits<NodeAllocator> node_allocator_traits;
 				typedef typename node_allocator_traits::pointer allocator_pointer_type;
 
-				node * p_node = &p_node_base->template reinterpret_as<Tp>();
+				node * p_node = node::reinterpret_as(p_node_base);
 				allocator_pointer_type p_node_act = static_cast<allocator_pointer_type>(p_node);
 				node_allocator_traits::destroy(alloc, p_node_act);
 				node_allocator_traits::deallocate_one(alloc, p_node_act);
@@ -2218,7 +2218,7 @@ namespace kerbal
 				node_base * current_node_base = start;
 				while (current_node_base != NULL) {
 					node_base * next = current_node_base->next;
-					node * p_node = &current_node_base->template reinterpret_as<Tp>();
+					node * p_node = node::reinterpret_as(current_node_base);
 					allocator_pointer_type p_node_act = static_cast<allocator_pointer_type>(p_node);
 					node_allocator_traits::destroy(alloc, p_node_act);
 					current_node_base = next;
