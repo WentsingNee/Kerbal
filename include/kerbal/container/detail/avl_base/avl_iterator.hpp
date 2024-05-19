@@ -160,7 +160,7 @@ namespace kerbal
 
 			template <typename T>
 			class avl_iter:
-				avl_iter_type_unrelated,
+				protected avl_iter_type_unrelated,
 				// forward iterator interface
 				public kerbal::operators::dereferenceable<avl_iter<T>, T *>, // it->
 				public kerbal::operators::equality_comparable<avl_iter<T> >, // it != jt
@@ -238,7 +238,7 @@ namespace kerbal
 
 			template <typename T>
 			class avl_kiter:
-				avl_kiter_type_unrelated,
+				protected avl_kiter_type_unrelated,
 				// forward iterator interface
 				public kerbal::operators::dereferenceable<avl_kiter<T>, const T *>, // it->
 				public kerbal::operators::equality_comparable<avl_kiter<T> >, // it != jt
