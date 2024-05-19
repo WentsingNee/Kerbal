@@ -310,7 +310,7 @@ namespace kerbal
 
 			template <typename T>
 			class avl_node :
-				public avl_node_base,
+				protected avl_node_base,
 				private kerbal::utility::member_compress_helper<T>
 			{
 				private:
