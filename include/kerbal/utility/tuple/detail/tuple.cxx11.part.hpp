@@ -42,6 +42,7 @@
 #include <kerbal/type_traits/tribool_constant.hpp>
 #include <kerbal/utility/declval.hpp>
 #include <kerbal/utility/forward.hpp>
+#include <kerbal/utility/forward_like.hpp>
 #include <kerbal/utility/ignore_unused.hpp>
 #include <kerbal/utility/integer_sequence.hpp>
 #include <kerbal/utility/member_compress_helper.hpp>
@@ -682,7 +683,7 @@ namespace kerbal
 						(
 							f(
 								kerbal::type_traits::integral_constant<std::size_t, Index>(),
-								kerbal::utility::forward<Self>(self).template get<Index>()
+								kerbal::utility::forward_like<Self>(self.template get<Index>())
 							), 0
 						)...
 					}), kerbal::utility::forward<Self>(self);
@@ -729,7 +730,7 @@ namespace kerbal
 						(
 							f(
 								kerbal::type_traits::integral_constant<std::size_t, TUPLE_SIZE::value - 1 - Index>(),
-								kerbal::utility::forward<Self>(self).template get<TUPLE_SIZE::value - 1 - Index>()
+								kerbal::utility::forward_like<Self>(self.template get<TUPLE_SIZE::value - 1 - Index>())
 							), 0
 						)...
 					}), kerbal::utility::forward<Self>(self);
@@ -771,9 +772,9 @@ namespace kerbal
 				template <typename Self, typename F, std::size_t ... Index>
 				KERBAL_CONSTEXPR
 				static auto k_apply_to_impl(Self && self, F f, kerbal::utility::index_sequence<Index...>) ->
-						decltype(f(kerbal::utility::forward<Self>(self).template get<Index>()...))
+						decltype(f(kerbal::utility::forward_like<Self>(self.template get<Index>()...)))
 				{
-					return f(kerbal::utility::forward<Self>(self).template get<Index>()...);
+					return f(kerbal::utility::forward_like<Self>(self.template get<Index>()...));
 				}
 
 			public:
@@ -822,7 +823,7 @@ namespace kerbal
 							(
 								f(
 									kerbal::type_traits::integral_constant<std::size_t, Index / 2>(),
-									kerbal::utility::forward<Self>(self).template get<Index / 2>()
+									kerbal::utility::forward_like<Self>(self.template get<Index / 2>())
 								), 0
 							) :
 							(
@@ -893,14 +894,14 @@ namespace kerbal
 						decltype(kerbal::utility::make_tuple(
 								f(
 									kerbal::type_traits::integral_constant<std::size_t, Index>(),
-									kerbal::utility::forward<Self>(self).template get<Index>()
+									kerbal::utility::forward_like<Self>(self.template get<Index>())
 								)...
 						))
 				{
 					return kerbal::utility::make_tuple(
 							f(
 								kerbal::type_traits::integral_constant<std::size_t, Index>(),
-								kerbal::utility::forward<Self>(self).template get<Index>()
+								kerbal::utility::forward_like<Self>(self.template get<Index>())
 							)...
 					);
 				}
@@ -949,7 +950,7 @@ namespace kerbal
 				k_select_impl(Self && self, kerbal::utility::index_sequence<Index...>)
 				{
 					return tuple<typename value_type<Index>::type...>(
-							kerbal::utility::forward<Self>(self).template get<Index>()...
+							kerbal::utility::forward_like<Self>(self.template get<Index>())...
 					);
 				}
 
@@ -981,7 +982,7 @@ namespace kerbal
 				k_reverse_impl(Self && self, kerbal::utility::index_sequence<Index...>) KERBAL_NOEXCEPT
 				{
 					return tuple<typename value_type<TUPLE_SIZE::value - 1 - Index>::type...>(
-							kerbal::utility::forward<Self>(self).template get<TUPLE_SIZE::value - 1 - Index>()...
+							kerbal::utility::forward_like<Self>(self.template get<TUPLE_SIZE::value - 1 - Index>())...
 					);
 				}
 
