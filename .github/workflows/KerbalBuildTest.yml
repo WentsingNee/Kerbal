@@ -177,7 +177,7 @@ jobs:
           run_utest.config.system
 
       - name: Build
-        run: cmake --build ${{github.workspace}}/KerbalTest-build --config ${{env.BUILD_TYPE}} --parallel
+        run: cmake --build ${{github.workspace}}/KerbalTest-build --config ${{env.BUILD_TYPE}}
 
       - name: Run Unit Test
         run: cmake --build ${{github.workspace}}/KerbalTest-build --config ${{env.BUILD_TYPE}} --target runm_utest
