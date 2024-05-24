@@ -73,6 +73,12 @@ namespace kerbal
 					{
 					}
 
+					KERBAL_CONSTEXPR
+					avl_head_node(int) KERBAL_NOEXCEPT :
+							left(NULL)
+					{
+					}
+
 					KERBAL_CONSTEXPR14
 					avl_node_base * as_node_base() KERBAL_NOEXCEPT;
 
@@ -154,7 +160,7 @@ namespace kerbal
 
 					KERBAL_CONSTEXPR
 					avl_node_base(int) KERBAL_NOEXCEPT :
-							parent(NULL), right(NULL), height(0)
+							super(0), parent(NULL), right(NULL), height(0)
 					{
 					}
 
