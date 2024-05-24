@@ -164,6 +164,7 @@ jobs:
           utest.config.compiler_version
           utest.config.cxx_stdlib
           utest.config.language_standard
+          utest.config.sizeof_types
           utest.config.system
 
           cmake --build ${{github.workspace}}/KerbalTest-build --config ${{env.BUILD_TYPE}} --target
@@ -172,6 +173,7 @@ jobs:
           run_utest.config.compiler_version
           run_utest.config.cxx_stdlib
           run_utest.config.language_standard
+          run_utest.config.sizeof_types
           run_utest.config.system
 
       - name: Build
