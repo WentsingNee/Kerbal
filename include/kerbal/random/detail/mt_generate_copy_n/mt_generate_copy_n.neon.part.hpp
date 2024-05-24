@@ -50,7 +50,7 @@ namespace kerbal
 
 					std::size_t i = 0;
 					for (; i + STEP::value <= n; i += STEP::value) {
-						uint32x4_t q_y = vld1q_u32(&mt_now[i]);
+						uint32x4_t q_y = vld1q_u32(reinterpret_cast< ::uint32_t const *>(&mt_now[i]));
 						uint32x4_t q_shift, q_and;
 
 						q_shift = vshrq_n_u32(q_y, U);
@@ -68,7 +68,7 @@ namespace kerbal
 						q_shift = vshrq_n_u32(q_y, L);
 						q_y = veorq_u32(q_y, q_shift);
 
-						vst1q_u32(out, q_y);
+						vst1q_u32(reinterpret_cast< ::uint32_t *>(out), q_y);
 						out += STEP::value;
 					}
 
@@ -94,7 +94,7 @@ namespace kerbal
 
 					std::size_t i = 0;
 					for (; i + STEP::value <= n; i += STEP::value) {
-						uint64x2_t q_y = vld1q_u64(&mt_now[i]);
+						uint64x2_t q_y = vld1q_u64(reinterpret_cast< ::uint64_t const *>(&mt_now[i]));
 						uint64x2_t q_shift, q_and;
 
 						q_shift = vshrq_n_u64(q_y, U);
@@ -112,7 +112,7 @@ namespace kerbal
 						q_shift = vshrq_n_u64(q_y, L);
 						q_y = veorq_u64(q_y, q_shift);
 
-						vst1q_u64(out, q_y);
+						vst1q_u64(reinterpret_cast< ::uint64_t *>(out), q_y);
 						out += STEP::value;
 					}
 

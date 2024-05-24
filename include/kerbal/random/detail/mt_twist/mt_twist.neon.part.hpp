@@ -37,7 +37,7 @@ namespace kerbal
 			{
 
 				template <std::size_t N, std::size_t M, std::size_t R, kerbal::compatibility::uint32_t A>
-				void mt_twist(kerbal::compatibility::uint32_t mt[]) KERBAL_NOEXCEPT
+				void mt_twist(kerbal::compatibility::uint32_t mto[]) KERBAL_NOEXCEPT
 				{
 					typedef kerbal::compatibility::uint32_t result_type;
 
@@ -46,6 +46,7 @@ namespace kerbal
 					KERBAL_STATIC_ASSERT(N >= M, "N should >= M");
 					typedef kerbal::type_traits::integral_constant<std::size_t, N - M> NPM;
 
+					::uint32_t * mt = reinterpret_cast< ::uint32_t *>(mto);
 					typedef kerbal::type_traits::integral_constant<std::size_t, 128 / 32> STEP;
 					const uint32x4_t q_UPPER_MASK = vdupq_n_u32(UPPER_MASK::value);
 					const uint32x4_t q_ONE = vdupq_n_u32(1);
@@ -144,7 +145,7 @@ namespace kerbal
 				}
 
 				template <std::size_t N, std::size_t M, std::size_t R, kerbal::compatibility::uint64_t A>
-				void mt_twist(kerbal::compatibility::uint64_t mt[]) KERBAL_NOEXCEPT
+				void mt_twist(kerbal::compatibility::uint64_t mto[]) KERBAL_NOEXCEPT
 				{
 					typedef kerbal::compatibility::uint64_t result_type;
 
@@ -153,6 +154,7 @@ namespace kerbal
 					KERBAL_STATIC_ASSERT(N >= M, "N should >= M");
 					typedef kerbal::type_traits::integral_constant<std::size_t, N - M> NPM;
 
+					::uint64_t * mt = reinterpret_cast< ::uint64_t *>(mto);
 					typedef kerbal::type_traits::integral_constant<std::size_t, 128 / 64> STEP;
 					const uint64x2_t q_UPPER_MASK = vdupq_n_u64(UPPER_MASK::value);
 					const uint64x2_t q_ZERO = vdupq_n_u64(0);
