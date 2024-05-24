@@ -15,6 +15,7 @@
 #include <kerbal/compatibility/fixed_width_integer.hpp>
 #include <kerbal/compatibility/noexcept.hpp>
 #include <kerbal/compatibility/static_assert.hpp>
+#include <kerbal/type_traits/conditional.hpp>
 #include <kerbal/type_traits/integral_constant.hpp>
 
 #include <cstddef>
@@ -35,15 +36,21 @@ namespace kerbal
 			{
 
 				template <std::size_t N, std::size_t M, std::size_t R, kerbal::compatibility::uint32_t A>
-				void mt_twist(kerbal::compatibility::uint32_t mt[]) KERBAL_NOEXCEPT
+				void mt_twist(kerbal::compatibility::uint32_t mto[]) KERBAL_NOEXCEPT
 				{
 					typedef kerbal::compatibility::uint32_t result_type;
+					typedef typename kerbal::type_traits::conditional<
+						sizeof(std::size_t) == 4,
+						::uint32_t,
+						::uint64_t
+					>::type index_t;
 
 					typedef kerbal::type_traits::integral_constant<result_type, (~static_cast<result_type>(0)) << R> UPPER_MASK; // most significant w-r bits
 					typedef kerbal::type_traits::integral_constant<result_type, ~UPPER_MASK::value> LOWER_MASK; // least significant r bits
 					KERBAL_STATIC_ASSERT(N >= M, "N should >= M");
 					typedef kerbal::type_traits::integral_constant<std::size_t, N - M> NPM;
 
+					::uint32_t * mt = reinterpret_cast< ::uint32_t *>(mto);
 					const std::size_t STEP = svcntw();
 					const svuint32_t sv_UPPER_MASK = svdup_u32(UPPER_MASK::value);
 					const svuint32_t sv_ZERO = svdup_u32(0);
@@ -51,7 +58,7 @@ namespace kerbal
 					const svuint32_t sv_A = svdup_u32(A);
 					svbool_t SVTRUE = svptrue_b32();
 
-					std::size_t i = 0;
+					index_t i = 0;
 					svbool_t pg = svwhilelt_b32(i, NPM::value);
 					do {
 						svuint32_t sv_mti = svld1(pg, &mt[i]);
@@ -98,15 +105,21 @@ namespace kerbal
 				}
 
 				template <std::size_t N, std::size_t M, std::size_t R, kerbal::compatibility::uint64_t A>
-				void mt_twist(kerbal::compatibility::uint64_t mt[]) KERBAL_NOEXCEPT
+				void mt_twist(kerbal::compatibility::uint64_t mto[]) KERBAL_NOEXCEPT
 				{
 					typedef kerbal::compatibility::uint64_t result_type;
+					typedef typename kerbal::type_traits::conditional<
+						sizeof(std::size_t) == 4,
+						::uint32_t,
+						::uint64_t
+					>::type index_t;
 
 					typedef kerbal::type_traits::integral_constant<result_type, (~static_cast<result_type>(0)) << R> UPPER_MASK; // most significant w-r bits
 					typedef kerbal::type_traits::integral_constant<result_type, ~UPPER_MASK::value> LOWER_MASK; // least significant r bits
 					KERBAL_STATIC_ASSERT(N >= M, "N should >= M");
-					typedef kerbal::type_traits::integral_constant<std::size_t, N - M> NPM;
+					typedef kerbal::type_traits::integral_constant<index_t, N - M> NPM;
 
+					::uint64_t * mt = reinterpret_cast< ::uint64_t *>(mto);
 					const std::size_t STEP = svcntd();
 					const svuint64_t sv_UPPER_MASK = svdup_u64(UPPER_MASK::value);
 					const svuint64_t sv_ZERO = svdup_u64(0);
@@ -114,7 +127,7 @@ namespace kerbal
 					const svuint64_t sv_A = svdup_u64(A);
 					svbool_t SVTRUE = svptrue_b64();
 
-					std::size_t i = 0;
+					index_t i = 0;
 					svbool_t pg = svwhilelt_b64(i, NPM::value);
 					do {
 						svuint64_t sv_mti = svld1(pg, &mt[i]);

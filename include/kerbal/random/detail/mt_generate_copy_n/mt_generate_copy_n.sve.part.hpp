@@ -14,6 +14,7 @@
 
 #include <kerbal/compatibility/fixed_width_integer.hpp>
 #include <kerbal/compatibility/noexcept.hpp>
+#include <kerbal/type_traits/conditional.hpp>
 #include <kerbal/type_traits/integral_constant.hpp>
 
 #include <cstddef>
@@ -37,18 +38,25 @@ namespace kerbal
 						kerbal::compatibility::uint32_t B, std::size_t T,
 						kerbal::compatibility::uint32_t C, std::size_t L
 				>
-				void mt_generate_copy_n(const kerbal::compatibility::uint32_t mt_now[], kerbal::compatibility::uint32_t * out, std::size_t n) KERBAL_NOEXCEPT
+				void mt_generate_copy_n(const kerbal::compatibility::uint32_t mt_now[], kerbal::compatibility::uint32_t * out, std::size_t no) KERBAL_NOEXCEPT
 				{
+					typedef typename kerbal::type_traits::conditional<
+						sizeof(std::size_t) == 4,
+						::uint32_t,
+						::uint64_t
+					>::type index_t;
+
+					const index_t n = static_cast<index_t>(no);
 					const std::size_t STEP = svcntw();
 					const svuint32_t sv_B = svdup_u32(B);
 					const svuint32_t sv_C = svdup_u32(C);
 					const svuint32_t sv_D = svdup_u32(D);
 					svbool_t SVTRUE = svptrue_b32();
 
-					std::size_t i = 0;
+					index_t i = 0;
 					svbool_t pg = svwhilelt_b32(i, n);
 					do {
-						svuint32_t sv_y = svld1(pg, &mt_now[i]);
+						svuint32_t sv_y = svld1(pg, reinterpret_cast< ::uint32_t const *>(&mt_now[i]));
 						svuint32_t sv_shift, sv_and;
 
 						sv_shift = svlsr_x(pg, sv_y, U);
@@ -66,7 +74,7 @@ namespace kerbal
 						sv_shift = svlsr_x(pg, sv_y, L);
 						sv_y = sveor_x(pg, sv_y, sv_shift);
 
-						svst1(pg, &out[i], sv_y);
+						svst1(pg, reinterpret_cast< ::uint32_t *>(&out[i]), sv_y);
 
 						i += STEP;
 						pg = svwhilelt_b32(i, n);
@@ -77,18 +85,25 @@ namespace kerbal
 						kerbal::compatibility::uint64_t B, std::size_t T,
 						kerbal::compatibility::uint64_t C, std::size_t L
 				>
-				void mt_generate_copy_n(const kerbal::compatibility::uint64_t mt_now[], kerbal::compatibility::uint64_t * out, std::size_t n) KERBAL_NOEXCEPT
+				void mt_generate_copy_n(const kerbal::compatibility::uint64_t mt_now[], kerbal::compatibility::uint64_t * out, std::size_t no) KERBAL_NOEXCEPT
 				{
+					typedef typename kerbal::type_traits::conditional<
+						sizeof(std::size_t) == 4,
+						::uint32_t,
+						::uint64_t
+					>::type index_t;
+
+					const index_t n = static_cast<index_t>(no);
 					const std::size_t STEP = svcntd();
 					const svuint64_t sv_B = svdup_u64(B);
 					const svuint64_t sv_C = svdup_u64(C);
 					const svuint64_t sv_D = svdup_u64(D);
 					svbool_t SVTRUE = svptrue_b64();
 
-					std::size_t i = 0;
+					index_t i = 0;
 					svbool_t pg = svwhilelt_b64(i, n);
 					do {
-						svuint64_t sv_y = svld1(pg, &mt_now[i]);
+						svuint64_t sv_y = svld1(pg, reinterpret_cast< ::uint64_t const *>(&mt_now[i]));
 						svuint64_t sv_shift, sv_and;
 
 						sv_shift = svlsr_x(pg, sv_y, U);
@@ -106,7 +121,7 @@ namespace kerbal
 						sv_shift = svlsr_x(pg, sv_y, L);
 						sv_y = sveor_x(pg, sv_y, sv_shift);
 
-						svst1(pg, &out[i], sv_y);
+						svst1(pg, reinterpret_cast< ::uint64_t *>(&out[i]), sv_y);
 
 						i += STEP;
 						pg = svwhilelt_b64(i, n);
