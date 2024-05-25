@@ -276,7 +276,7 @@ namespace kerbal
 
 				/**
 				 * @brief Swap the array with another one.
-				 * @param with another array to be swaped with
+				 * @param with another array to be swapped with
 				 */
 				KERBAL_CONSTEXPR14
 				void swap(array & with);
