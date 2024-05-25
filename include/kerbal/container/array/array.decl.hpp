@@ -261,7 +261,6 @@ namespace kerbal
 				/**
 				 * @brief 返回与该 array 所等价的 C 风格数组类型的引用, 方便与专门为 C 风格数组类型设计的 API 交互
 				 * @return 与该 array 所等价的 C 风格数组类型的引用
-				 * @warning 必须保证数组元素存满时才可调用此方法
 				 */
 				KERBAL_CONSTEXPR14
 				equal_c_array_reference c_arr() KERBAL_NOEXCEPT;
