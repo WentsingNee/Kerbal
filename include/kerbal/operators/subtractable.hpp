@@ -15,6 +15,7 @@
 #include <kerbal/compatibility/constexpr.hpp>
 #include <kerbal/compatibility/noexcept.hpp>
 
+
 namespace kerbal
 {
 
@@ -25,9 +26,10 @@ namespace kerbal
 		struct subtractable
 		{
 				KERBAL_CONSTEXPR14
-				friend T operator-(T lhs, const U& rhs)
+				friend
+				T operator-(T lhs, const U & rhs)
 #	if KERBAL_COMPILER_ID != KERBAL_COMPILER_ID_ICC
-						KERBAL_CONDITIONAL_NOEXCEPT(noexcept(lhs -= rhs))
+					KERBAL_CONDITIONAL_NOEXCEPT(noexcept(lhs -= rhs))
 #	endif
 				{
 					lhs -= rhs;

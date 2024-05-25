@@ -27,21 +27,26 @@ namespace kerbal
 	namespace function
 	{
 
-		template <typename Fun, std::size_t Size = sizeof(void*), std::size_t Align = Size, typename Allocator = std::allocator<char> >
+		template <
+			typename Fun,
+			std::size_t Size = sizeof(void *),
+			std::size_t Align = Size,
+			typename Allocator = std::allocator<char>
+		>
 		class basic_function;
 
 #	if __cplusplus >= 201103L
 		template <typename Fun>
-		using function = basic_function<Fun, sizeof(void*), KERBAL_ALIGNOF(void*), std::allocator<char> >;
+		using function = basic_function<Fun, sizeof(void *), KERBAL_ALIGNOF(void *), std::allocator<char> >;
 #	endif
 
 		template <typename T, typename Fun, std::size_t Size, std::size_t Align, typename Allocator>
 		KERBAL_CONSTEXPR20
-		T* function_cast(basic_function<Fun, Size, Align, Allocator> * operand) KERBAL_NOEXCEPT;
+		T * function_cast(basic_function<Fun, Size, Align, Allocator> * operand) KERBAL_NOEXCEPT;
 
 		template <typename T, typename Fun, std::size_t Size, std::size_t Align, typename Allocator>
 		KERBAL_CONSTEXPR20
-		const T* function_cast(const basic_function<Fun, Size, Align, Allocator> * operand) KERBAL_NOEXCEPT;
+		const T * function_cast(const basic_function<Fun, Size, Align, Allocator> * operand) KERBAL_NOEXCEPT;
 
 		template <typename T, typename Fun, std::size_t Size, std::size_t Align, typename Allocator>
 		KERBAL_CONSTEXPR20

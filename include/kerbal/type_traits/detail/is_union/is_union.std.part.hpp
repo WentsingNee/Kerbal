@@ -47,7 +47,8 @@ namespace kerbal
 	{
 
 		template <typename T>
-		struct is_union : kerbal::type_traits::bool_constant<std::is_union<T>::value>
+		struct is_union :
+			kerbal::type_traits::bool_constant<std::is_union<T>::value>
 		{
 		};
 

@@ -35,7 +35,7 @@ namespace kerbal
 
 		template <typename T>
 		struct is_nothrow_destructible :
-				kerbal::type_traits::bool_constant<KERBAL_INTRINSIC_IS_NOTHROW_DESTRUCTIBLE(T)>
+			kerbal::type_traits::bool_constant<KERBAL_INTRINSIC_IS_NOTHROW_DESTRUCTIBLE(T)>
 		{
 		};
 

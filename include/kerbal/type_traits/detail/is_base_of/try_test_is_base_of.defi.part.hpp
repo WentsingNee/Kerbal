@@ -25,9 +25,9 @@ namespace kerbal
 
 		template <typename Base, typename Derived>
 		struct try_test_is_base_of :
-				kerbal::type_traits::tribool_constant<
-					!!kerbal::type_traits::is_base_of<Base, Derived>::value
-				>
+			kerbal::type_traits::tribool_constant<
+				!!kerbal::type_traits::is_base_of<Base, Derived>::value
+			>
 		{
 		};
 

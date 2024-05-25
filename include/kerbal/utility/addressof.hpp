@@ -81,10 +81,14 @@ namespace kerbal
 #		if __cplusplus >= 201103L
 			return std::addressof(arg);
 #		else
-			return static_cast<T*>(
-						static_cast<void*>(
-							&const_cast<char&>(
-								(const volatile char&)(arg))));
+			return
+				static_cast<T *>(
+					static_cast<void *>(
+						&const_cast<char &>(
+							(const volatile char &)(arg)
+						)
+					)
+				);
 #		endif
 
 		}

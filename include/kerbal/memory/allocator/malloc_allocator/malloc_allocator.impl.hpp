@@ -75,7 +75,8 @@ namespace kerbal
 
 
 		template <typename T>
-		typename malloc_allocator<T>::pointer
+		typename
+		malloc_allocator<T>::pointer
 		malloc_allocator<T>::allocate(size_type n, kerbal::memory::nothrow_t nothrow) KERBAL_NOEXCEPT
 		{
 			if (n > MAX_SIZE::value) {
@@ -86,7 +87,8 @@ namespace kerbal
 		}
 
 		template <typename T>
-		typename malloc_allocator<T>::pointer
+		typename
+		malloc_allocator<T>::pointer
 		malloc_allocator<T>::allocate(size_type n)
 		{
 			if (n > MAX_SIZE::value) {

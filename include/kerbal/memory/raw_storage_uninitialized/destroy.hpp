@@ -59,14 +59,22 @@ namespace kerbal
 
 			template <typename ForwardIterator>
 			KERBAL_CONSTEXPR14
-			void raw_storage_transaction_failed_destroy(ForwardIterator first, ForwardIterator last, std::forward_iterator_tag) KERBAL_NOEXCEPT
+			void
+			raw_storage_transaction_failed_destroy(
+				ForwardIterator first, ForwardIterator last,
+				std::forward_iterator_tag
+			) KERBAL_NOEXCEPT
 			{
 				raw_storage_destroy(first, last);
 			}
 
 			template <typename BidirectionalIterator>
 			KERBAL_CONSTEXPR14
-			void raw_storage_transaction_failed_destroy(BidirectionalIterator first, BidirectionalIterator last, std::bidirectional_iterator_tag) KERBAL_NOEXCEPT
+			void
+			raw_storage_transaction_failed_destroy(
+				BidirectionalIterator first, BidirectionalIterator last,
+				std::bidirectional_iterator_tag
+			) KERBAL_NOEXCEPT
 			{
 				raw_storage_reverse_destroy(first, last);
 			}
@@ -77,7 +85,10 @@ namespace kerbal
 		KERBAL_CONSTEXPR14
 		void raw_storage_transaction_failed_destroy(ForwardIterator first, ForwardIterator last) KERBAL_NOEXCEPT
 		{
-			detail::raw_storage_transaction_failed_destroy(first, last, kerbal::iterator::iterator_category(first));
+			detail::raw_storage_transaction_failed_destroy(
+				first, last,
+				kerbal::iterator::iterator_category(first)
+			);
 		}
 
 	} // namespace memory

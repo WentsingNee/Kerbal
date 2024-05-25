@@ -56,9 +56,9 @@ namespace kerbal
 
 			template <typename Pack, std::size_t ... I>
 			struct task_result_type_helper<Pack, kerbal::utility::index_sequence<I...> > :
-					kerbal::function::invoke_result<
-						typename Pack::template reference<I>::type ...
-					>
+				kerbal::function::invoke_result<
+					typename Pack::template reference<I>::type ...
+				>
 			{
 			};
 
@@ -133,7 +133,7 @@ namespace kerbal
 
 					template <typename FU, typename ... UArgs>
 					explicit task(FU && f, UArgs && ... args) :
-							pack(kerbal::utility::forward<FU>(f), kerbal::utility::forward<UArgs>(args)...)
+						pack(kerbal::utility::forward<FU>(f), kerbal::utility::forward<UArgs>(args)...)
 					{
 					}
 
@@ -163,7 +163,7 @@ namespace kerbal
 						thread_pool * self;
 
 						worker(thread_pool * self) :
-								self(self)
+							self(self)
 						{
 						}
 
@@ -190,7 +190,7 @@ namespace kerbal
 			public:
 				explicit
 				thread_pool(unsigned int init_size = 4) :
-						k_stopped(false), k_idle_threads_num(init_size)
+					k_stopped(false), k_idle_threads_num(init_size)
 				{
 					k_workers.reserve(init_size);
 					for (size_t i = 0; i < init_size; ++i) {
@@ -225,20 +225,20 @@ namespace kerbal
 			public:
 
 				template <typename F, typename ... Args>
-				std::future<typename commit_typedef_helper<F&&, Args&&...>::result_type>
+				std::future<typename commit_typedef_helper<F &&, Args && ...>::result_type>
 				commit(F && f, Args && ... args)
 				{
 					if (this->k_stopped.load()) {
 						throw std::runtime_error("commit on thread pool is stopped.");
 					}
 
-					typedef commit_typedef_helper<F&&, Args&&...> commit_typedef_helper;
+					typedef commit_typedef_helper<F &&, Args && ...> commit_typedef_helper;
 					typedef typename commit_typedef_helper::task_type task_type;
 					typedef typename commit_typedef_helper::result_type result_type;
 
 					kerbal::memory::unique_ptr<task_type> p_task(new task_type(
-							kerbal::utility::forward<F>(f),
-							kerbal::utility::forward<Args>(args)...
+						kerbal::utility::forward<F>(f),
+						kerbal::utility::forward<Args>(args)...
 					));
 					std::future<result_type> future = p_task->promise.get_future();
 					{

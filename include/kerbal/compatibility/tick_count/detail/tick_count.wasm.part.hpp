@@ -32,7 +32,7 @@ namespace kerbal
 	{
 
 		inline
-		unsigned long get_tick_count()  KERBAL_NOEXCEPT
+		unsigned long get_tick_count() KERBAL_NOEXCEPT
 		{
 			return static_cast<unsigned long>(emscripten_get_now());
 		}

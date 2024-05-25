@@ -36,8 +36,8 @@ namespace kerbal
 			struct two_pow_sn_helper<ResultType, N, true>
 			{
 					typedef kerbal::type_traits::integral_constant<
-							ResultType,
-							0
+						ResultType,
+						0
 					> type;
 			};
 
@@ -45,8 +45,8 @@ namespace kerbal
 			struct two_pow_sn_helper<ResultType, N, false>
 			{
 					typedef kerbal::type_traits::integral_constant<
-							ResultType,
-							static_cast<ResultType>(1u) << N
+						ResultType,
+						static_cast<ResultType>(1u) << N
 					> type;
 			};
 
@@ -58,13 +58,16 @@ namespace kerbal
 		 */
 		template <typename ResultType, std::size_t N>
 		struct two_pow_sn :
-				kerbal::smath::detail::two_pow_sn_helper<
-					ResultType, N,
-					N == kerbal::numeric::numeric_limits<ResultType>::DIGITS::value
-				>::type
+			kerbal::smath::detail::two_pow_sn_helper<
+				ResultType, N,
+				N == kerbal::numeric::numeric_limits<ResultType>::DIGITS::value
+			>::type
 		{
 			private:
-				KERBAL_STATIC_ASSERT(kerbal::type_traits::is_unsigned<ResultType>::value, "ResultType should be unsigned");
+				KERBAL_STATIC_ASSERT(
+					kerbal::type_traits::is_unsigned<ResultType>::value,
+					"ResultType should be unsigned"
+				);
 		};
 
 	} // namespace smath

@@ -46,15 +46,15 @@ namespace kerbal
 
 			public:
 				KERBAL_CONSTEXPR
-				normal_distribution() KERBAL_NOEXCEPT
-						: mean(0.0), stddev(1.0)
+				normal_distribution() KERBAL_NOEXCEPT :
+					mean(0.0), stddev(1.0)
 				{
 				}
 
 				KERBAL_CONSTEXPR
 				explicit
-				normal_distribution(const result_type & mean, const result_type & stddev = 1.0) KERBAL_NOEXCEPT
-						: mean(mean), stddev(stddev)
+				normal_distribution(const result_type & mean, const result_type & stddev = 1.0) KERBAL_NOEXCEPT :
+					mean(mean), stddev(stddev)
 				{
 				}
 
@@ -64,12 +64,14 @@ namespace kerbal
 					return std_normal_distribution(eg) * stddev + mean;
 				}
 
-				KERBAL_CONSTEXPR result_type min() const KERBAL_NOEXCEPT
+				KERBAL_CONSTEXPR
+				result_type min() const KERBAL_NOEXCEPT
 				{
 					return std::numeric_limits<result_type>::min();
 				}
 
-				KERBAL_CONSTEXPR result_type max() const KERBAL_NOEXCEPT
+				KERBAL_CONSTEXPR
+				result_type max() const KERBAL_NOEXCEPT
 				{
 					return std::numeric_limits<result_type>::max();
 				}

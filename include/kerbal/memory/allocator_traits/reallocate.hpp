@@ -28,16 +28,19 @@ namespace kerbal
 	{
 
 		template <typename Alloc, typename T, typename = kerbal::type_traits::void_type<>::type >
-		struct allocator_has_reallocate: kerbal::type_traits::false_type
+		struct allocator_has_reallocate :
+			kerbal::type_traits::false_type
 		{
 		};
 
 		template <typename Alloc, typename T>
-		struct allocator_has_reallocate<Alloc, T, typename kerbal::type_traits::void_type<
+		struct allocator_has_reallocate<
+			Alloc, T,
+			typename kerbal::type_traits::void_type<
 #	if __cplusplus >= 201103L // compatible with msvc
 				decltype(
-					kerbal::utility::declval<Alloc&>().reallocate(
-						kerbal::utility::declval<T*>(),
+					kerbal::utility::declval<Alloc &>().reallocate(
+						kerbal::utility::declval<T *>(),
 						kerbal::utility::declval<typename kerbal::memory::detail::allocator_size_type_traits_helper<Alloc>::type>(),
 						kerbal::utility::declval<typename kerbal::memory::detail::allocator_size_type_traits_helper<Alloc>::type>()
 					)
@@ -46,8 +49,8 @@ namespace kerbal
 				kerbal::type_traits::integral_constant<
 					std::size_t,
 					sizeof(
-						kerbal::utility::declval<Alloc&>().reallocate(
-							kerbal::utility::declval<T*>(),
+						kerbal::utility::declval<Alloc &>().reallocate(
+							kerbal::utility::declval<T *>(),
 							kerbal::utility::declval<typename kerbal::memory::detail::allocator_size_type_traits_helper<Alloc>::type>(),
 							kerbal::utility::declval<typename kerbal::memory::detail::allocator_size_type_traits_helper<Alloc>::type>()
 						),
@@ -55,14 +58,19 @@ namespace kerbal
 					)
 				>
 #	endif
-		>::type >: kerbal::type_traits::true_type
+			>::type
+		> :
+			kerbal::type_traits::true_type
 		{
 		};
 
 		namespace detail
 		{
 
-			template <typename Alloc, bool = kerbal::memory::allocator_has_reallocate<Alloc, typename Alloc::value_type>::value>
+			template <
+				typename Alloc,
+				bool = kerbal::memory::allocator_has_reallocate<Alloc, typename Alloc::value_type>::value
+			>
 			struct allocator_traits_reallocate_helper;
 
 			template <typename Alloc>
@@ -79,10 +87,11 @@ namespace kerbal
 
 				public:
 					KERBAL_CONSTEXPR14
-					static pointer reallocate(Alloc & alloc, pointer p, size_type ori_size, size_type new_size)
-							KERBAL_CONDITIONAL_NOEXCEPT(
-								noexcept(alloc.reallocate(p, ori_size, new_size))
-							)
+					static
+					pointer reallocate(Alloc & alloc, pointer p, size_type ori_size, size_type new_size)
+						KERBAL_CONDITIONAL_NOEXCEPT(
+							noexcept(alloc.reallocate(p, ori_size, new_size))
+						)
 					{
 						return alloc.reallocate(p, ori_size, new_size);
 					}

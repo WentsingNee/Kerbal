@@ -31,7 +31,7 @@ namespace kerbal
 
 		template <typename ... Args>
 		KERBAL_CONSTEXPR14
-		void ignore_unused(Args&& ...) KERBAL_NOEXCEPT
+		void ignore_unused(Args && ...) KERBAL_NOEXCEPT
 		{
 		}
 
@@ -39,7 +39,7 @@ namespace kerbal
 
 		template <typename ... Args>
 		KERBAL_CONSTEXPR
-		int ignore_unused(Args&& ...) KERBAL_NOEXCEPT
+		int ignore_unused(Args && ...) KERBAL_NOEXCEPT
 		{
 			return 0;
 		}
@@ -52,7 +52,7 @@ namespace kerbal
 		template <KERBAL_PPEXPAND_WITH_COMMA_N(TARGS_DECL, i)> \
 		void ignore_unused(KERBAL_PPEXPAND_WITH_COMMA_N(ARGS_DECL, i)) KERBAL_NOEXCEPT \
 		{ \
-		}
+		} \
 
 		KERBAL_PPEXPAND_N(FBODY, KERBAL_PPEXPAND_EMPTY_SEPARATOR, 19)
 

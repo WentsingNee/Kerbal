@@ -33,12 +33,14 @@ namespace kerbal
 		{
 
 			template <typename T>
-			struct is_null_pointer_helper : kerbal::type_traits::false_type
+			struct is_null_pointer_helper :
+				kerbal::type_traits::false_type
 			{
 			};
 
 			template <>
-			struct is_null_pointer_helper<decltype(nullptr)> : kerbal::type_traits::true_type
+			struct is_null_pointer_helper<decltype(nullptr)> :
+				kerbal::type_traits::true_type
 			{
 			};
 
@@ -47,9 +49,9 @@ namespace kerbal
 		KERBAL_MODULE_EXPORT
 		template <typename T>
 		struct is_null_pointer :
-				kerbal::type_traits::detail::is_null_pointer_helper<
-					typename kerbal::type_traits::remove_cv<T>::type
-				>
+			kerbal::type_traits::detail::is_null_pointer_helper<
+				typename kerbal::type_traits::remove_cv<T>::type
+			>
 		{
 		};
 

@@ -103,7 +103,10 @@ namespace kerbal
 		KERBAL_CONSTEXPR14
 		ForwardIterator min_element(ForwardIterator first, ForwardIterator last, BinaryPredicate pred)
 		{
-			return kerbal::compare::detail::extreme_element(first, last, pred, kerbal::iterator::iterator_category(first));
+			return kerbal::compare::detail::extreme_element(
+				first, last, pred,
+				kerbal::iterator::iterator_category(first)
+			);
 		}
 
 		template <typename ForwardIterator>
@@ -120,7 +123,10 @@ namespace kerbal
 		KERBAL_CONSTEXPR14
 		ForwardIterator max_element(ForwardIterator first, ForwardIterator last, BinaryPredicate pred)
 		{
-			return kerbal::compare::detail::extreme_element(first, last, pred, kerbal::iterator::iterator_category(first));
+			return kerbal::compare::detail::extreme_element(
+				first, last, pred,
+				kerbal::iterator::iterator_category(first)
+			);
 		}
 
 		template <typename ForwardIterator>
@@ -140,7 +146,10 @@ namespace kerbal
 			template <typename ForwardIterator, typename BinaryPredicate>
 			KERBAL_CONSTEXPR14
 			kerbal::utility::compressed_pair<ForwardIterator, ForwardIterator>
-			minmax_element(ForwardIterator first, ForwardIterator last, BinaryPredicate pred, std::forward_iterator_tag)
+			minmax_element(
+				ForwardIterator first, ForwardIterator last, BinaryPredicate pred,
+				std::forward_iterator_tag
+			)
 			{
 				typedef ForwardIterator iterator;
 
@@ -163,7 +172,10 @@ namespace kerbal
 			template <typename RandomAccessIterator, typename BinaryPredicate>
 			KERBAL_CONSTEXPR14
 			kerbal::utility::compressed_pair<RandomAccessIterator, RandomAccessIterator>
-			minmax_element(RandomAccessIterator first, RandomAccessIterator last, BinaryPredicate pred, std::random_access_iterator_tag)
+			minmax_element(
+				RandomAccessIterator first, RandomAccessIterator last, BinaryPredicate pred,
+				std::random_access_iterator_tag
+			)
 			{
 				typedef RandomAccessIterator iterator;
 				typedef typename kerbal::iterator::iterator_traits<iterator>::difference_type difference_type;
@@ -214,7 +226,10 @@ namespace kerbal
 		kerbal::utility::compressed_pair<ForwardIterator, ForwardIterator>
 		minmax_element(ForwardIterator first, ForwardIterator last, BinaryPredicate pred)
 		{
-			return kerbal::compare::detail::minmax_element(first, last, pred, kerbal::iterator::iterator_category(first));
+			return kerbal::compare::detail::minmax_element(
+				first, last, pred,
+				kerbal::iterator::iterator_category(first)
+			);
 		}
 
 		template <typename ForwardIterator>

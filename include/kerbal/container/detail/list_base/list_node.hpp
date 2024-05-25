@@ -49,7 +49,7 @@ namespace kerbal
 			{
 			};
 
-			class list_node_base: private kerbal::utility::noncopyable
+			class list_node_base : private kerbal::utility::noncopyable
 			{
 				private:
 					friend class kerbal::container::detail::list_type_unrelated;
@@ -67,28 +67,28 @@ namespace kerbal
 					friend class list_kiter;
 
 				public:
-					list_node_base* prev;
-					list_node_base* next;
+					list_node_base * prev;
+					list_node_base * next;
 
 				protected:
 					KERBAL_CONSTEXPR
 					list_node_base() KERBAL_NOEXCEPT :
-							prev(NULL), next(NULL)
+						prev(NULL), next(NULL)
 					{
 					}
 
 					KERBAL_CONSTEXPR
 					explicit list_node_base(init_list_node_ptr_to_self_tag) KERBAL_NOEXCEPT :
-							prev(this), next(this)
+						prev(this), next(this)
 					{
 					}
 
 			};
 
 			template <typename T>
-			class list_node:
-					public list_node_base,
-					private kerbal::utility::member_compress_helper<T>
+			class list_node :
+				public list_node_base,
+				private kerbal::utility::member_compress_helper<T>
 			{
 				private:
 					typedef kerbal::utility::member_compress_helper<T> member_compress_helper;
@@ -99,13 +99,13 @@ namespace kerbal
 
 					template <typename ... Args>
 					KERBAL_CONSTEXPR
-					explicit list_node(kerbal::utility::in_place_t in_place, Args&& ... args)
-							KERBAL_CONDITIONAL_NOEXCEPT((
-								kerbal::type_traits::try_test_is_nothrow_constructible<
-									member_compress_helper, kerbal::utility::in_place_t, Args&&...
-								>::IS_TRUE::value
-							))
-							: member_compress_helper(in_place, kerbal::utility::forward<Args>(args)...)
+					explicit list_node(kerbal::utility::in_place_t in_place, Args && ... args)
+						KERBAL_CONDITIONAL_NOEXCEPT((
+							kerbal::type_traits::try_test_is_nothrow_constructible<
+								member_compress_helper, kerbal::utility::in_place_t, Args && ...
+							>::IS_TRUE::value
+						)) :
+						member_compress_helper(in_place, kerbal::utility::forward<Args>(args)...)
 					{
 					}
 
@@ -119,10 +119,10 @@ namespace kerbal
 #				define ARGS_USE(i) KERBAL_MACRO_CONCAT(arg, i)
 #				define FBODY(i) \
 					KERBAL_OPT_PPEXPAND_WITH_COMMA_N(THEAD_NOT_EMPTY, EMPTY, TARGS_DECL, i) \
-					explicit list_node(kerbal::utility::in_place_t in_place KERBAL_OPT_PPEXPAND_WITH_COMMA_N(LEFT_JOIN_COMMA, EMPTY, ARGS_DECL, i)) \
-							: member_compress_helper(in_place KERBAL_OPT_PPEXPAND_WITH_COMMA_N(LEFT_JOIN_COMMA, EMPTY, ARGS_USE, i)) \
+					explicit list_node(kerbal::utility::in_place_t in_place KERBAL_OPT_PPEXPAND_WITH_COMMA_N(LEFT_JOIN_COMMA, EMPTY, ARGS_DECL, i)) : \
+						member_compress_helper(in_place KERBAL_OPT_PPEXPAND_WITH_COMMA_N(LEFT_JOIN_COMMA, EMPTY, ARGS_USE, i)) \
 					{ \
-					}
+					} \
 
 					KERBAL_PPEXPAND_N(FBODY, KERBAL_PPEXPAND_EMPTY_SEPARATOR, 0)
 					KERBAL_PPEXPAND_N(FBODY, KERBAL_PPEXPAND_EMPTY_SEPARATOR, 20)
@@ -165,7 +165,7 @@ namespace kerbal
 
 					KERBAL_CONSTEXPR
 					list_node_base_chain(list_node_base * start, list_node_base * back) KERBAL_NOEXCEPT :
-							start(start), back(back)
+						start(start), back(back)
 					{
 					}
 
@@ -179,7 +179,7 @@ namespace kerbal
 
 					KERBAL_CONSTEXPR
 					list_node_chain(list_node<T> * start, list_node<T> * back) KERBAL_NOEXCEPT :
-							start(start), back(back)
+						start(start), back(back)
 					{
 					}
 

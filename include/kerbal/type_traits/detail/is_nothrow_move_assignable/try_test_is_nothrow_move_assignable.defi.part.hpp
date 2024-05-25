@@ -25,9 +25,9 @@ namespace kerbal
 
 		template <typename T>
 		struct try_test_is_nothrow_move_assignable :
-				kerbal::type_traits::tribool_constant<
-					!!kerbal::type_traits::is_nothrow_move_assignable<T>::value
-				>
+			kerbal::type_traits::tribool_constant<
+				!!kerbal::type_traits::is_nothrow_move_assignable<T>::value
+			>
 		{
 		};
 

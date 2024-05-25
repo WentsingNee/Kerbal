@@ -45,14 +45,12 @@ namespace kerbal
 	namespace memory
 	{
 
-
-
 		template <typename T>
 		class k_rawst_agent;
 
 		template <typename T>
 		class k_rawst_agent:
-				public kerbal::memory::detail::k_rawst_base<T>
+			public kerbal::memory::detail::k_rawst_base<T>
 		{
 			private:
 				typedef k_rawst_agent this_type;
@@ -84,9 +82,9 @@ namespace kerbal
 #			define FBODY(i) \
 				KERBAL_OPT_PPEXPAND_WITH_COMMA_N(THEAD_NOT_EMPTY, EMPTY, TARGS_DECL, i) \
 				explicit k_rawst_agent(kerbal::utility::in_place_t in_place KERBAL_OPT_PPEXPAND_WITH_COMMA_N(LEFT_JOIN_COMMA, EMPTY, ARGS_DECL, i)) : \
-						super(in_place KERBAL_OPT_PPEXPAND_WITH_COMMA_N(LEFT_JOIN_COMMA, EMPTY, ARGS_USE, i)) \
+					super(in_place KERBAL_OPT_PPEXPAND_WITH_COMMA_N(LEFT_JOIN_COMMA, EMPTY, ARGS_USE, i)) \
 				{ \
-				}
+				} \
 
 				KERBAL_PPEXPAND_N(FBODY, KERBAL_PPEXPAND_EMPTY_SEPARATOR, 0)
 				KERBAL_PPEXPAND_N(FBODY, KERBAL_PPEXPAND_EMPTY_SEPARATOR, 20)
@@ -124,7 +122,7 @@ namespace kerbal
 				void construct(KERBAL_OPT_PPEXPAND_WITH_COMMA_N(REMAINF, EMPTY, ARGS_DECL, i)) \
 				{ \
 					kerbal::memory::construct_at(this->raw_pointer() KERBAL_OPT_PPEXPAND_WITH_COMMA_N(LEFT_JOIN_COMMA, EMPTY, ARGS_USE, i)); \
-				}
+				} \
 
 				KERBAL_PPEXPAND_N(FBODY, KERBAL_PPEXPAND_EMPTY_SEPARATOR, 0)
 				KERBAL_PPEXPAND_N(FBODY, KERBAL_PPEXPAND_EMPTY_SEPARATOR, 20)
@@ -142,15 +140,15 @@ namespace kerbal
 
 				template <typename ... Args>
 				KERBAL_CONSTEXPR14
-				void construct(Args&& ... args)
-						KERBAL_CONDITIONAL_NOEXCEPT(
-							noexcept(
-								kerbal::memory::construct_at(
-									kerbal::utility::declthis<this_type>()->raw_pointer(),
-									kerbal::utility::forward<Args>(args)...
-								)
+				void construct(Args && ... args)
+					KERBAL_CONDITIONAL_NOEXCEPT(
+						noexcept(
+							kerbal::memory::construct_at(
+								kerbal::utility::declthis<this_type>()->raw_pointer(),
+								kerbal::utility::forward<Args>(args)...
 							)
 						)
+					)
 				{
 					kerbal::memory::construct_at(this->raw_pointer(), kerbal::utility::forward<Args>(args)...);
 				}
@@ -170,7 +168,7 @@ namespace kerbal
 				void construct_using_allocator(Alloc & alloc KERBAL_OPT_PPEXPAND_WITH_COMMA_N(LEFT_JOIN_COMMA, EMPTY, ARGS_DECL, i)) \
 				{ \
 					kerbal::memory::construct_at_using_allocator(alloc, this->raw_pointer() KERBAL_OPT_PPEXPAND_WITH_COMMA_N(LEFT_JOIN_COMMA, EMPTY, ARGS_USE, i)); \
-				}
+				} \
 
 				KERBAL_PPEXPAND_N(FBODY, KERBAL_PPEXPAND_EMPTY_SEPARATOR, 0)
 				KERBAL_PPEXPAND_N(FBODY, KERBAL_PPEXPAND_EMPTY_SEPARATOR, 20)
@@ -186,16 +184,16 @@ namespace kerbal
 
 				template <typename Alloc, typename ... Args>
 				KERBAL_CONSTEXPR14
-				void construct_using_allocator(Alloc & alloc, Args&& ... args)
-						KERBAL_CONDITIONAL_NOEXCEPT(
-							noexcept(
-								kerbal::memory::construct_at_using_allocator(
-									alloc,
-									kerbal::utility::declthis<this_type>()->raw_pointer(),
-									kerbal::utility::forward<Args>(args)...
-								)
+				void construct_using_allocator(Alloc & alloc, Args && ... args)
+					KERBAL_CONDITIONAL_NOEXCEPT(
+						noexcept(
+							kerbal::memory::construct_at_using_allocator(
+								alloc,
+								kerbal::utility::declthis<this_type>()->raw_pointer(),
+								kerbal::utility::forward<Args>(args)...
 							)
 						)
+					)
 				{
 					kerbal::memory::construct_at_using_allocator(alloc, this->raw_pointer(), kerbal::utility::forward<Args>(args)...);
 				}
@@ -231,18 +229,18 @@ namespace kerbal
 #		if __cplusplus < 201103L
 
 				explicit k_rawst_agent(kerbal::utility::in_place_t in_place) :
-						super(in_place)
+					super(in_place)
 				{
 				}
 
 				explicit k_rawst_agent(kerbal::utility::in_place_t in_place, const_reference src) :
-						super(in_place, src)
+					super(in_place, src)
 				{
 				}
 
 				template <typename U>
 				explicit k_rawst_agent(kerbal::utility::in_place_t in_place, const U (&src)[N]) :
-						super(in_place, src)
+					super(in_place, src)
 				{
 				}
 
@@ -259,9 +257,9 @@ namespace kerbal
 
 				KERBAL_CONSTEXPR14
 				void construct()
-						KERBAL_CONDITIONAL_NOEXCEPT(
-							noexcept(kerbal::memory::construct_at(kerbal::utility::declthis<this_type>()->raw_pointer()))
-						)
+					KERBAL_CONDITIONAL_NOEXCEPT(
+						noexcept(kerbal::memory::construct_at(kerbal::utility::declthis<this_type>()->raw_pointer()))
+					)
 				{
 					kerbal::memory::construct_at(this->raw_pointer());
 				}
@@ -269,18 +267,18 @@ namespace kerbal
 				template <typename Alloc>
 				KERBAL_CONSTEXPR14
 				void construct_using_allocator(Alloc & alloc)
-						KERBAL_CONDITIONAL_NOEXCEPT(
-							noexcept(kerbal::memory::construct_at_using_allocator(alloc, kerbal::utility::declthis<this_type>()->raw_pointer()))
-						)
+					KERBAL_CONDITIONAL_NOEXCEPT(
+						noexcept(kerbal::memory::construct_at_using_allocator(alloc, kerbal::utility::declthis<this_type>()->raw_pointer()))
+					)
 				{
 					kerbal::memory::construct_at_using_allocator(alloc, this->raw_pointer());
 				}
 
 				KERBAL_CONSTEXPR14
 				void construct(const_reference src)
-						KERBAL_CONDITIONAL_NOEXCEPT(
-							noexcept(kerbal::memory::construct_at(kerbal::utility::declthis<this_type>()->raw_pointer(), src))
-						)
+					KERBAL_CONDITIONAL_NOEXCEPT(
+						noexcept(kerbal::memory::construct_at(kerbal::utility::declthis<this_type>()->raw_pointer(), src))
+					)
 				{
 					kerbal::memory::construct_at(this->raw_pointer(), src);
 				}
@@ -288,9 +286,9 @@ namespace kerbal
 				template <typename Alloc>
 				KERBAL_CONSTEXPR14
 				void construct_using_allocator(Alloc & alloc, const_reference src)
-						KERBAL_CONDITIONAL_NOEXCEPT(
-							noexcept(kerbal::memory::construct_at_using_allocator(alloc, kerbal::utility::declthis<this_type>()->raw_pointer(), src))
-						)
+					KERBAL_CONDITIONAL_NOEXCEPT(
+						noexcept(kerbal::memory::construct_at_using_allocator(alloc, kerbal::utility::declthis<this_type>()->raw_pointer(), src))
+					)
 				{
 					kerbal::memory::construct_at_using_allocator(alloc, this->raw_pointer(), src);
 				}
@@ -298,9 +296,9 @@ namespace kerbal
 				template <typename U>
 				KERBAL_CONSTEXPR14
 				void construct(const U (&src)[N])
-						KERBAL_CONDITIONAL_NOEXCEPT(
-							noexcept(kerbal::memory::construct_at(kerbal::utility::declthis<this_type>()->raw_pointer(), src))
-						)
+					KERBAL_CONDITIONAL_NOEXCEPT(
+						noexcept(kerbal::memory::construct_at(kerbal::utility::declthis<this_type>()->raw_pointer(), src))
+					)
 				{
 					kerbal::memory::construct_at(this->raw_pointer(), src);
 				}
@@ -308,9 +306,9 @@ namespace kerbal
 				template <typename Alloc, typename U>
 				KERBAL_CONSTEXPR14
 				void construct_using_allocator(Alloc & alloc, const U (&src)[N])
-						KERBAL_CONDITIONAL_NOEXCEPT(
-							noexcept(kerbal::memory::construct_at_using_allocator(alloc, kerbal::utility::declthis<this_type>()->raw_pointer(), src))
-						)
+					KERBAL_CONDITIONAL_NOEXCEPT(
+						noexcept(kerbal::memory::construct_at_using_allocator(alloc, kerbal::utility::declthis<this_type>()->raw_pointer(), src))
+					)
 				{
 					kerbal::memory::construct_at_using_allocator(alloc, this->raw_pointer(), src);
 				}
@@ -319,12 +317,12 @@ namespace kerbal
 
 				KERBAL_CONSTEXPR14
 				void construct(rvalue_reference src)
-						KERBAL_CONDITIONAL_NOEXCEPT(
-							noexcept(kerbal::memory::construct_at(
-								kerbal::utility::declthis<this_type>()->raw_pointer(),
-								kerbal::compatibility::move(src)
-							))
-						)
+					KERBAL_CONDITIONAL_NOEXCEPT(
+						noexcept(kerbal::memory::construct_at(
+							kerbal::utility::declthis<this_type>()->raw_pointer(),
+							kerbal::compatibility::move(src)
+						))
+					)
 				{
 					kerbal::memory::construct_at(this->raw_pointer(), kerbal::compatibility::move(src));
 				}
@@ -332,13 +330,13 @@ namespace kerbal
 				template <typename Alloc>
 				KERBAL_CONSTEXPR14
 				void construct_using_allocator(Alloc & alloc, rvalue_reference src)
-						KERBAL_CONDITIONAL_NOEXCEPT(
-							noexcept(kerbal::memory::construct_at_using_allocator(
-								alloc,
-								kerbal::utility::declthis<this_type>()->raw_pointer(),
-								kerbal::compatibility::move(src)
-							))
-						)
+					KERBAL_CONDITIONAL_NOEXCEPT(
+						noexcept(kerbal::memory::construct_at_using_allocator(
+							alloc,
+							kerbal::utility::declthis<this_type>()->raw_pointer(),
+							kerbal::compatibility::move(src)
+						))
+					)
 				{
 					kerbal::memory::construct_at_using_allocator(alloc, this->raw_pointer(), kerbal::compatibility::move(src));
 				}
@@ -346,12 +344,12 @@ namespace kerbal
 				template <typename U>
 				KERBAL_CONSTEXPR14
 				void construct(U (&&src)[N])
-						KERBAL_CONDITIONAL_NOEXCEPT(
-							noexcept(kerbal::memory::construct_at(
-								kerbal::utility::declthis<this_type>()->raw_pointer(),
-								kerbal::compatibility::move(src)
-							))
-						)
+					KERBAL_CONDITIONAL_NOEXCEPT(
+						noexcept(kerbal::memory::construct_at(
+							kerbal::utility::declthis<this_type>()->raw_pointer(),
+							kerbal::compatibility::move(src)
+						))
+					)
 				{
 					kerbal::memory::construct_at(this->raw_pointer(), kerbal::compatibility::move(src));
 				}
@@ -359,13 +357,13 @@ namespace kerbal
 				template <typename Alloc, typename U>
 				KERBAL_CONSTEXPR14
 				void construct_using_allocator(Alloc & alloc, U (&&src)[N])
-						KERBAL_CONDITIONAL_NOEXCEPT(
-							noexcept(kerbal::memory::construct_at_using_allocator(
-								alloc,
-								kerbal::utility::declthis<this_type>()->raw_pointer(),
-								kerbal::compatibility::move(src)
-							))
-						)
+					KERBAL_CONDITIONAL_NOEXCEPT(
+						noexcept(kerbal::memory::construct_at_using_allocator(
+							alloc,
+							kerbal::utility::declthis<this_type>()->raw_pointer(),
+							kerbal::compatibility::move(src)
+						))
+					)
 				{
 					kerbal::memory::construct_at_using_allocator(alloc, this->raw_pointer(), kerbal::compatibility::move(src));
 				}
@@ -377,7 +375,8 @@ namespace kerbal
 
 
 		template <typename T>
-		class raw_storage: public kerbal::memory::k_rawst_agent<T>
+		class raw_storage :
+			public kerbal::memory::k_rawst_agent<T>
 		{
 			private:
 				typedef raw_storage this_type;
@@ -410,9 +409,9 @@ namespace kerbal
 #			define FBODY(i) \
 				KERBAL_OPT_PPEXPAND_WITH_COMMA_N(THEAD_NOT_EMPTY, EMPTY, TARGS_DECL, i) \
 				explicit raw_storage(kerbal::utility::in_place_t in_place KERBAL_OPT_PPEXPAND_WITH_COMMA_N(LEFT_JOIN_COMMA, EMPTY, ARGS_DECL, i)) : \
-						super(in_place KERBAL_OPT_PPEXPAND_WITH_COMMA_N(LEFT_JOIN_COMMA, EMPTY, ARGS_USE, i)) \
+					super(in_place KERBAL_OPT_PPEXPAND_WITH_COMMA_N(LEFT_JOIN_COMMA, EMPTY, ARGS_USE, i)) \
 				{ \
-				}
+				} \
 
 				KERBAL_PPEXPAND_N(FBODY, KERBAL_PPEXPAND_EMPTY_SEPARATOR, 0)
 				KERBAL_PPEXPAND_N(FBODY, KERBAL_PPEXPAND_EMPTY_SEPARATOR, 20)
@@ -437,9 +436,9 @@ namespace kerbal
 
 				KERBAL_CONSTEXPR14
 				void default_construct()
-						KERBAL_CONDITIONAL_NOEXCEPT(
-							noexcept(kerbal::memory::default_construct_at(kerbal::utility::declthis<this_type>()->raw_pointer()))
-						)
+					KERBAL_CONDITIONAL_NOEXCEPT(
+						noexcept(kerbal::memory::default_construct_at(kerbal::utility::declthis<this_type>()->raw_pointer()))
+					)
 				{
 					kerbal::memory::default_construct_at(this->raw_pointer());
 				}
@@ -447,9 +446,9 @@ namespace kerbal
 				template <typename Alloc>
 				KERBAL_CONSTEXPR14
 				void destroy_using_allocator(Alloc & alloc)
-						KERBAL_CONDITIONAL_NOEXCEPT(
-							noexcept(kerbal::memory::destroy_at_using_allocator(alloc, kerbal::utility::declthis<this_type>()->raw_pointer()))
-						)
+					KERBAL_CONDITIONAL_NOEXCEPT(
+						noexcept(kerbal::memory::destroy_at_using_allocator(alloc, kerbal::utility::declthis<this_type>()->raw_pointer()))
+					)
 				{
 					kerbal::memory::destroy_at_using_allocator(alloc, this->raw_pointer());
 				}

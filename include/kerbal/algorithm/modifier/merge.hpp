@@ -28,9 +28,11 @@ namespace kerbal
 		template <typename InputIterator1, typename InputIterator2, typename OutputIterator, typename CompareFuntion>
 		KERBAL_CONSTEXPR14
 		OutputIterator
-		merge(InputIterator1 a_first, InputIterator1 a_last,
+		merge(
+			InputIterator1 a_first, InputIterator1 a_last,
 			InputIterator2 b_first, InputIterator2 b_last,
-			OutputIterator to, CompareFuntion cmp)
+			OutputIterator to, CompareFuntion cmp
+		)
 		{
 			while (a_first != a_last) {
 				if (b_first != b_last) {
@@ -54,15 +56,22 @@ namespace kerbal
 		template <typename InputIterator1, typename InputIterator2, typename OutputIterator>
 		KERBAL_CONSTEXPR14
 		OutputIterator
-		merge(InputIterator1 a_first, InputIterator1 a_last,
+		merge(
+			InputIterator1 a_first, InputIterator1 a_last,
 			InputIterator2 b_first, InputIterator2 b_last,
-			OutputIterator to)
+			OutputIterator to
+		)
 		{
 			typedef InputIterator1 iterator1;
 			typedef InputIterator2 iterator2;
 			typedef typename kerbal::iterator::iterator_traits<iterator1>::value_type type1;
 			typedef typename kerbal::iterator::iterator_traits<iterator2>::value_type type2;
-			return kerbal::algorithm::merge(a_first, a_last, b_first, b_last, to, kerbal::compare::binary_type_less<type2, type1>());
+			return kerbal::algorithm::merge(
+				a_first, a_last,
+				b_first, b_last,
+				to,
+				kerbal::compare::binary_type_less<type2, type1>()
+			);
 		}
 
 	} // namespace algorithm

@@ -40,7 +40,8 @@ namespace kerbal
 #	define IS_FUNCTION_VAR_LIST_DEF(VAR_L, CV_QUALIFIER, REF_QUALIFIER, NOEXCEPT_QUALIFIER) \
 		KERBAL_MODULE_EXPORT \
 		template <typename Ret, typename ... Args> \
-		struct is_function<Ret(Args... VAR_L) CV_QUALIFIER REF_QUALIFIER NOEXCEPT_QUALIFIER> : kerbal::type_traits::true_type {}; \
+		struct is_function<Ret(Args... VAR_L) CV_QUALIFIER REF_QUALIFIER NOEXCEPT_QUALIFIER> : \
+			kerbal::type_traits::true_type {}; \
 
 #	define IS_FUNCTION_CV_DEF(CV_QUALIFIER, REF_QUALIFIER, NOEXCEPT_QUALIFIER) \
 		IS_FUNCTION_VAR_LIST_DEF(EMPTY,    CV_QUALIFIER, REF_QUALIFIER, NOEXCEPT_QUALIFIER) \
@@ -75,16 +76,16 @@ namespace kerbal
 		KERBAL_MODULE_EXPORT
 		template <typename T>
 		struct is_function :
-				kerbal::type_traits::bool_constant<
-					!kerbal::type_traits::is_const<const T>::value
-				>
+			kerbal::type_traits::bool_constant<
+				!kerbal::type_traits::is_const<const T>::value
+			>
 		{
 		};
 
 		KERBAL_MODULE_EXPORT
 		template <typename T>
 		struct is_function<T &> :
-				kerbal::type_traits::false_type
+			kerbal::type_traits::false_type
 		{
 		};
 

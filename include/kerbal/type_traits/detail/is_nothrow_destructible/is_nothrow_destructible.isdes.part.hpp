@@ -44,9 +44,9 @@ namespace kerbal
 
 			template <typename T>
 			struct is_nothrow_destructible_impl :
-					kerbal::type_traits::bool_constant<
-						noexcept(kerbal::utility::declval<T*>()->~T())
-					>
+				kerbal::type_traits::bool_constant<
+					noexcept(kerbal::utility::declval<T *>()->~T())
+				>
 			{
 			};
 
@@ -54,15 +54,15 @@ namespace kerbal
 
 		template <typename T>
 		struct is_nothrow_destructible :
-				kerbal::type_traits::conjunction<
-					kerbal::type_traits::is_destructible<T>,
-					kerbal::type_traits::disjunction<
-						kerbal::type_traits::is_reference<T>,
-						kerbal::type_traits::detail::is_nothrow_destructible_impl<
-							typename kerbal::type_traits::remove_all_extents<T>::type
-						>
+			kerbal::type_traits::conjunction<
+				kerbal::type_traits::is_destructible<T>,
+				kerbal::type_traits::disjunction<
+					kerbal::type_traits::is_reference<T>,
+					kerbal::type_traits::detail::is_nothrow_destructible_impl<
+						typename kerbal::type_traits::remove_all_extents<T>::type
 					>
 				>
+			>
 		{
 		};
 

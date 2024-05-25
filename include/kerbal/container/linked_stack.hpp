@@ -40,14 +40,14 @@ namespace kerbal
 			public:
 				typedef T						value_type;
 				typedef const value_type		const_type;
-				typedef value_type&				reference;
-				typedef const value_type&		const_reference;
-				typedef value_type*				pointer;
-				typedef const value_type*		const_pointer;
+				typedef value_type &			reference;
+				typedef const value_type &		const_reference;
+				typedef value_type *			pointer;
+				typedef const value_type *		const_pointer;
 
 #		if __cplusplus >= 201103L
-				typedef value_type&&			rvalue_reference;
-				typedef const value_type&&		const_rvalue_reference;
+				typedef value_type &&			rvalue_reference;
+				typedef const value_type &&		const_rvalue_reference;
 #		endif
 
 				typedef typename Sequence::allocator_type			allocator_type;
@@ -60,15 +60,15 @@ namespace kerbal
 
 			public:
 				KERBAL_CONSTEXPR20
-				linked_stack()
-						: c()
+				linked_stack() :
+					c()
 				{
 				}
 
 				KERBAL_CONSTEXPR20
 				explicit
-				linked_stack(const allocator_type & alloc)
-						: c(alloc)
+				linked_stack(const allocator_type & alloc) :
+					c(alloc)
 				{
 				}
 
@@ -122,7 +122,7 @@ namespace kerbal
 
 				template <typename ... Args>
 				KERBAL_CONSTEXPR20
-				reference emplace(Args&& ... args)
+				reference emplace(Args && ... args)
 				{
 					return c.emplace_front(kerbal::utility::forward<Args>(args)...);
 				}
@@ -140,7 +140,7 @@ namespace kerbal
 				reference emplace(KERBAL_OPT_PPEXPAND_WITH_COMMA_N(REMAINF, EMPTY, ARGS_DECL, i)) \
 				{ \
 					return c.emplace_front(KERBAL_OPT_PPEXPAND_WITH_COMMA_N(REMAINF, EMPTY, ARGS_USE, i)); \
-				}
+				} \
 
 				KERBAL_PPEXPAND_N(FBODY, KERBAL_PPEXPAND_EMPTY_SEPARATOR, 0)
 				KERBAL_PPEXPAND_N(FBODY, KERBAL_PPEXPAND_EMPTY_SEPARATOR, 20)
@@ -178,37 +178,61 @@ namespace kerbal
 				 * @param rhs another stack
 				 */
 				KERBAL_CONSTEXPR20
-				friend bool operator==(const linked_stack<T, Sequence> & lhs, const linked_stack<T, Sequence> & rhs)
+				friend
+				bool operator==(
+					const linked_stack<T, Sequence> & lhs,
+					const linked_stack<T, Sequence> & rhs
+				)
 				{
 					return lhs.c == rhs.c;
 				}
 
 				KERBAL_CONSTEXPR20
-				friend bool operator!=(const linked_stack<T, Sequence> & lhs, const linked_stack<T, Sequence> & rhs)
+				friend
+				bool operator!=(
+					const linked_stack<T, Sequence> & lhs,
+					const linked_stack<T, Sequence> & rhs
+				)
 				{
 					return lhs.c != rhs.c;
 				}
 
 				KERBAL_CONSTEXPR20
-				friend bool operator<(const linked_stack<T, Sequence> & lhs, const linked_stack<T, Sequence> & rhs)
+				friend
+				bool operator<(
+					const linked_stack<T, Sequence> & lhs,
+					const linked_stack<T, Sequence> & rhs
+				)
 				{
 					return lhs.c < rhs.c;
 				}
 
 				KERBAL_CONSTEXPR20
-				friend bool operator<=(const linked_stack<T, Sequence> & lhs, const linked_stack<T, Sequence> & rhs)
+				friend
+				bool operator<=(
+					const linked_stack<T, Sequence> & lhs,
+					const linked_stack<T, Sequence> & rhs
+				)
 				{
 					return lhs.c <= rhs.c;
 				}
 
 				KERBAL_CONSTEXPR20
-				friend bool operator>(const linked_stack<T, Sequence> & lhs, const linked_stack<T, Sequence> & rhs)
+				friend
+				bool operator>(
+					const linked_stack<T, Sequence> & lhs,
+					const linked_stack<T, Sequence> & rhs
+				)
 				{
 					return lhs.c > rhs.c;
 				}
 
 				KERBAL_CONSTEXPR20
-				friend bool operator>=(const linked_stack<T, Sequence> & lhs, const linked_stack<T, Sequence> & rhs)
+				friend
+				bool operator>=(
+					const linked_stack<T, Sequence> & lhs,
+					const linked_stack<T, Sequence> & rhs
+				)
 				{
 					return lhs.c >= rhs.c;
 				}
@@ -237,8 +261,11 @@ namespace kerbal
 
 		template <typename T, typename Sequence>
 		KERBAL_CONSTEXPR20
-		void swap(kerbal::container::linked_stack<T, Sequence> & a, kerbal::container::linked_stack<T, Sequence> & b)
-				KERBAL_CONDITIONAL_NOEXCEPT(noexcept(a.swap(b)))
+		void swap(
+			kerbal::container::linked_stack<T, Sequence> & a,
+			kerbal::container::linked_stack<T, Sequence> & b
+		)
+			KERBAL_CONDITIONAL_NOEXCEPT(noexcept(a.swap(b)))
 		{
 			a.swap(b);
 		}
@@ -252,8 +279,11 @@ KERBAL_NAMESPACE_STD_BEGIN
 
 	template <typename T, typename Sequence>
 	KERBAL_CONSTEXPR14
-	void swap(kerbal::container::linked_stack<T, Sequence> & a, kerbal::container::linked_stack<T, Sequence> & b)
-			KERBAL_CONDITIONAL_NOEXCEPT(noexcept(a.swap(b)))
+	void swap(
+		kerbal::container::linked_stack<T, Sequence> & a,
+		kerbal::container::linked_stack<T, Sequence> & b
+	)
+		KERBAL_CONDITIONAL_NOEXCEPT(noexcept(a.swap(b)))
 	{
 		a.swap(b);
 	}

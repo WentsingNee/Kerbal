@@ -43,12 +43,12 @@ namespace kerbal
 				using super::count;
 
 				storage() :
-						super()
+					super()
 				{
 				}
 
 				storage(const super & src) :
-						super(src)
+					super(src)
 				{
 				}
 		};
@@ -106,26 +106,31 @@ namespace kerbal
 		{
 
 			template <typename>
-			struct is_storage_helper: kerbal::type_traits::false_type
+			struct is_storage_helper :
+				kerbal::type_traits::false_type
 			{
 			};
 
 			template <typename size_type, typename Ratio>
-			struct is_storage_helper<storage<size_type, Ratio> > : kerbal::type_traits::true_type
+			struct is_storage_helper<storage<size_type, Ratio> > :
+				kerbal::type_traits::true_type
 			{
 			};
 
 		} // namespace detail
 
 		template <typename Type>
-		struct is_storage: kerbal::utility::detail::is_storage_helper<typename kerbal::type_traits::remove_cvref<Type>::type>
+		struct is_storage :
+			kerbal::utility::detail::is_storage_helper<
+				typename kerbal::type_traits::remove_cvref<Type>::type
+			>
 		{
 		};
 
 		template <typename ToStor, typename size_type, typename Ratio>
 		constexpr
 		typename kerbal::type_traits::enable_if<is_storage<ToStor>::value, ToStor>::type
-		storage_cast(const storage<size_type, Ratio>& d)
+		storage_cast(const storage<size_type, Ratio> & d)
 		{
 			return ToStor(std::chrono::duration_cast<typename ToStor::super>(d));
 		}

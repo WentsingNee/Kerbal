@@ -38,13 +38,14 @@ namespace kerbal
 
 			template <typename T>
 			struct is_allocator_allocator_traits_valid_helper<
-					T,
-					typename kerbal::type_traits::void_type<
-						typename T::value_type,
-						typename kerbal::memory::allocator_traits<T>::size_type,
-						typename kerbal::memory::allocator_traits<T>::pointer
-					>::type
-			> : kerbal::type_traits::true_type
+				T,
+				typename kerbal::type_traits::void_type<
+					typename T::value_type,
+					typename kerbal::memory::allocator_traits<T>::size_type,
+					typename kerbal::memory::allocator_traits<T>::pointer
+				>::type
+			> :
+				kerbal::type_traits::true_type
 			{
 			};
 
@@ -57,12 +58,12 @@ namespace kerbal
 
 					template <typename T2>
 					static kerbal::type_traits::yes_type test(char (*)[sizeof(
-							kerbal::utility::declval<T2&>().allocate(
-								kerbal::utility::declval<
-									typename kerbal::memory::allocator_traits<T2>::size_type
-								>()
-							),
-							0
+						kerbal::utility::declval<T2 &>().allocate(
+							kerbal::utility::declval<
+								typename kerbal::memory::allocator_traits<T2>::size_type
+							>()
+						),
+						0
 					)]);
 
 				public:
@@ -73,7 +74,7 @@ namespace kerbal
 
 			template <typename T>
 			struct is_allocator_has_allocate_helper :
-					is_allocator_has_allocate_impl<T>::type
+				is_allocator_has_allocate_impl<T>::type
 			{
 			};
 
@@ -86,15 +87,15 @@ namespace kerbal
 
 					template <typename T2>
 					static kerbal::type_traits::yes_type test(char (*)[sizeof(
-							kerbal::utility::declval<T2&>().deallocate(
-								kerbal::utility::declval<
-									typename kerbal::memory::allocator_traits<T2>::pointer
-								>(),
-								kerbal::utility::declval<
-									typename kerbal::memory::allocator_traits<T2>::size_type
-								>()
-							),
-							0
+						kerbal::utility::declval<T2 &>().deallocate(
+							kerbal::utility::declval<
+								typename kerbal::memory::allocator_traits<T2>::pointer
+							>(),
+							kerbal::utility::declval<
+								typename kerbal::memory::allocator_traits<T2>::size_type
+							>()
+						),
+						0
 					)]);
 
 				public:
@@ -105,7 +106,7 @@ namespace kerbal
 
 			template <typename T>
 			struct is_allocator_has_deallocate_helper :
-					is_allocator_has_deallocate_impl<T>::type
+				is_allocator_has_deallocate_impl<T>::type
 			{
 			};
 
@@ -113,11 +114,11 @@ namespace kerbal
 
 		template <typename T>
 		struct is_allocator :
-				kerbal::type_traits::conjunction<
-					kerbal::memory::detail::is_allocator_allocator_traits_valid_helper<T>,
-					kerbal::memory::detail::is_allocator_has_allocate_helper<T>,
-					kerbal::memory::detail::is_allocator_has_deallocate_helper<T>
-				>
+			kerbal::type_traits::conjunction<
+				kerbal::memory::detail::is_allocator_allocator_traits_valid_helper<T>,
+				kerbal::memory::detail::is_allocator_has_allocate_helper<T>,
+				kerbal::memory::detail::is_allocator_has_deallocate_helper<T>
+			>
 		{
 		};
 

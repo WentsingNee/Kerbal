@@ -31,12 +31,12 @@ namespace kerbal
 			KERBAL_CONSTEXPR14
 			OutputIterator
 			k_copy(InputIterator first, InputIteratorEnd last, OutputIterator to, std::input_iterator_tag)
-					KERBAL_CONDITIONAL_NOEXCEPT(
-						noexcept(static_cast<bool>(first != last)) &&
-						noexcept(kerbal::assign::generic_assign(*to, *first)) &&
-						noexcept(++to) &&
-						noexcept(++first)
-					)
+				KERBAL_CONDITIONAL_NOEXCEPT(
+					noexcept(static_cast<bool>(first != last)) &&
+					noexcept(kerbal::assign::generic_assign(*to, *first)) &&
+					noexcept(++to) &&
+					noexcept(++first)
+				)
 			{
 				while (first != last) {
 					kerbal::assign::generic_assign(*to, *first); // *to = *first;
@@ -53,7 +53,10 @@ namespace kerbal
 		OutputIterator
 		copy(InputIterator first, InputIterator last, OutputIterator to)
 		{
-			return kerbal::algorithm::detail::k_copy(first, last, to, kerbal::iterator::iterator_category(first));
+			return kerbal::algorithm::detail::k_copy(
+				first, last, to,
+				kerbal::iterator::iterator_category(first)
+			);
 		}
 
 	} // namespace algorithm

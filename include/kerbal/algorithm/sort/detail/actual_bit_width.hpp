@@ -29,17 +29,20 @@ namespace kerbal
 		{
 
 			template <typename T>
-			struct actual_bit_width_helper: kerbal::type_traits::integral_constant<std::size_t, sizeof(T) * CHAR_BIT>
+			struct actual_bit_width_helper :
+				kerbal::type_traits::integral_constant<std::size_t, sizeof(T) * CHAR_BIT>
 			{
 			};
 
 			template <>
-			struct actual_bit_width_helper<bool>: kerbal::type_traits::integral_constant<std::size_t, 1>
+			struct actual_bit_width_helper<bool> :
+				kerbal::type_traits::integral_constant<std::size_t, 1>
 			{
 			};
 
 			template <typename T>
-			struct actual_bit_width: actual_bit_width_helper<typename kerbal::type_traits::remove_cv<T>::type>
+			struct actual_bit_width :
+				actual_bit_width_helper<typename kerbal::type_traits::remove_cv<T>::type>
 			{
 			};
 

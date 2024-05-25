@@ -44,15 +44,15 @@ namespace kerbal
 
 		template <typename UpstreamAllocator>
 		class over_aligned_allocator<void, UpstreamAllocator> :
-				private kerbal::utility::member_compress_helper<UpstreamAllocator>
+			private kerbal::utility::member_compress_helper<UpstreamAllocator>
 		{
 			private:
 				typedef kerbal::utility::member_compress_helper<UpstreamAllocator> upstream_allocator_compress_helper;
 				typedef kerbal::memory::allocator_traits<UpstreamAllocator> upstream_allocator_traits;
 
 				KERBAL_STATIC_ASSERT(
-						(kerbal::type_traits::is_same<void, typename upstream_allocator_traits::value_type>::value),
-						"UpstreamAllocator should be void type allocator"
+					(kerbal::type_traits::is_same<void, typename upstream_allocator_traits::value_type>::value),
+					"UpstreamAllocator should be void type allocator"
 				);
 
 			public:
@@ -94,17 +94,17 @@ namespace kerbal
 
 				KERBAL_CONSTEXPR
 				over_aligned_allocator(const UpstreamAllocator & src) :
-						upstream_allocator_compress_helper(kerbal::utility::in_place_t(), src)
+					upstream_allocator_compress_helper(kerbal::utility::in_place_t(), src)
 				{
 				}
 
 				template <typename U>
 				KERBAL_CONSTEXPR
 				over_aligned_allocator(const over_aligned_allocator<U> & src) :
-						upstream_allocator_compress_helper(
-							kerbal::utility::in_place_t(),
-							static_cast<const over_aligned_allocator<void> &>(src).upstream_alloc()
-						)
+					upstream_allocator_compress_helper(
+						kerbal::utility::in_place_t(),
+						static_cast<const over_aligned_allocator<void> &>(src).upstream_alloc()
+					)
 				{
 				}
 
@@ -131,8 +131,15 @@ namespace kerbal
 				typedef kerbal::type_traits::true_type allow_deallocate_null;
 
 			private:
-				void k_deallocate_upstream_allow_deallocate_null(pointer p, size_type size, align_val_t align, kerbal::type_traits::false_type) KERBAL_NOEXCEPT;
-				void k_deallocate_upstream_allow_deallocate_null(pointer p, size_type size, align_val_t align, kerbal::type_traits::true_type) KERBAL_NOEXCEPT;
+				void k_deallocate_upstream_allow_deallocate_null(
+					pointer p, size_type size, align_val_t align,
+					kerbal::type_traits::false_type
+				) KERBAL_NOEXCEPT;
+
+				void k_deallocate_upstream_allow_deallocate_null(
+					pointer p, size_type size, align_val_t align,
+					kerbal::type_traits::true_type
+				) KERBAL_NOEXCEPT;
 
 			public:
 
@@ -162,7 +169,7 @@ namespace kerbal
 
 		template <typename T, typename UpstreamAllocator>
 		class over_aligned_allocator :
-				private kerbal::memory::over_aligned_allocator<void, UpstreamAllocator>
+			private kerbal::memory::over_aligned_allocator<void, UpstreamAllocator>
 		{
 			private:
 				typedef kerbal::memory::over_aligned_allocator<void, UpstreamAllocator> super;
@@ -210,20 +217,20 @@ namespace kerbal
 
 				KERBAL_CONSTEXPR
 				over_aligned_allocator(const UpstreamAllocator & src) :
-						super(src)
+					super(src)
 				{
 				}
 
 				KERBAL_CONSTEXPR
 				over_aligned_allocator(const over_aligned_allocator<void, UpstreamAllocator> & src) :
-						super(src)
+					super(src)
 				{
 				}
 
 				template <typename U>
 				KERBAL_CONSTEXPR
 				over_aligned_allocator(const over_aligned_allocator<U, UpstreamAllocator> & src) :
-						super(src.void_alloc())
+					super(src.void_alloc())
 				{
 				}
 
@@ -238,8 +245,8 @@ namespace kerbal
 				}
 
 				typedef kerbal::type_traits::integral_constant<
-						size_type,
-						kerbal::numeric::numeric_limits<size_type>::MAX::value / sizeof(value_type)
+					size_type,
+					kerbal::numeric::numeric_limits<size_type>::MAX::value / sizeof(value_type)
 				> MAX_SIZE;
 
 				pointer allocate(size_type n, align_val_t align);
@@ -282,11 +289,12 @@ namespace kerbal
 		template <typename T, typename UpstreamAllocator>
 		KERBAL_CONSTEXPR14
 		void swap(
-				kerbal::memory::over_aligned_allocator<T, UpstreamAllocator> & lhs,
-				kerbal::memory::over_aligned_allocator<T, UpstreamAllocator> & rhs)
-				KERBAL_CONDITIONAL_NOEXCEPT(
-					noexcept(lhs.swap(rhs))
-				)
+			kerbal::memory::over_aligned_allocator<T, UpstreamAllocator> & lhs,
+			kerbal::memory::over_aligned_allocator<T, UpstreamAllocator> & rhs
+		)
+			KERBAL_CONDITIONAL_NOEXCEPT(
+				noexcept(lhs.swap(rhs))
+			)
 		{
 			lhs.swap(rhs);
 		}
@@ -301,11 +309,12 @@ KERBAL_NAMESPACE_STD_BEGIN
 	template <typename T, typename UpstreamAllocator>
 	KERBAL_CONSTEXPR14
 	void swap(
-			kerbal::memory::over_aligned_allocator<T, UpstreamAllocator> & lhs,
-			kerbal::memory::over_aligned_allocator<T, UpstreamAllocator> & rhs)
-			KERBAL_CONDITIONAL_NOEXCEPT(
-				noexcept(lhs.swap(rhs))
-			)
+		kerbal::memory::over_aligned_allocator<T, UpstreamAllocator> & lhs,
+		kerbal::memory::over_aligned_allocator<T, UpstreamAllocator> & rhs
+	)
+		KERBAL_CONDITIONAL_NOEXCEPT(
+			noexcept(lhs.swap(rhs))
+		)
 	{
 		lhs.swap(rhs);
 	}

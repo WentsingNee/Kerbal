@@ -101,8 +101,8 @@ namespace kerbal
 			differece_type limit;
 
 			KERBAL_CONSTEXPR
-			explicit shell_sort_minimun_limit_hibbard_policy(differece_type limit = 8)
-					: limit(limit)
+			explicit shell_sort_minimun_limit_hibbard_policy(differece_type limit = 8) :
+				limit(limit)
 			{
 			}
 

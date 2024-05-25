@@ -36,7 +36,7 @@ namespace kerbal
 
 		template <typename K, typename M>
 		class map_data :
-				public kerbal::utility::compressed_pair<K, M>
+			public kerbal::utility::compressed_pair<K, M>
 		{
 			private:
 				typedef kerbal::utility::compressed_pair<K, M> super;
@@ -80,7 +80,7 @@ namespace kerbal
 				template <typename K2>
 				KERBAL_CONSTEXPR14
 				map_data(K2 && k, kerbal::utility::compressed_pair_default_construct_tag tag) :
-						super(kerbal::utility::forward<K2>(k), tag)
+					super(kerbal::utility::forward<K2>(k), tag)
 				{
 				}
 
@@ -88,7 +88,7 @@ namespace kerbal
 
 				template <typename K2>
 				map_data(const K2 & k, kerbal::utility::compressed_pair_default_construct_tag tag) :
-						super(k, tag)
+					super(k, tag)
 				{
 				}
 
@@ -100,10 +100,10 @@ namespace kerbal
 				template <typename K2, typename M2>
 				KERBAL_CONSTEXPR14
 				map_data(K2 && k, M2 && m) :
-						super(
-							kerbal::utility::forward<K2>(k),
-							kerbal::utility::forward<M2>(m)
-						)
+					super(
+						kerbal::utility::forward<K2>(k),
+						kerbal::utility::forward<M2>(m)
+					)
 				{
 				}
 
@@ -111,7 +111,7 @@ namespace kerbal
 
 				template <typename K2, typename M2>
 				map_data(const K2 & k, const M2 & m) :
-						super(k, m)
+					super(k, m)
 				{
 				}
 
@@ -123,7 +123,7 @@ namespace kerbal
 				template <typename Tuple>
 				KERBAL_CONSTEXPR14
 				map_data(Tuple && tuple) :
-						super(tuple)
+					super(tuple)
 				{
 				}
 
@@ -131,7 +131,7 @@ namespace kerbal
 
 				template <typename Tuple>
 				map_data(const Tuple & tuple) :
-						super(tuple)
+					super(tuple)
 				{
 				}
 
@@ -143,7 +143,11 @@ namespace kerbal
 				template <typename TupleK, typename TupleV>
 				KERBAL_CONSTEXPR
 				map_data(kerbal::utility::piecewise_construct_t tag, TupleK && args_for_key, TupleV && args_for_value) :
-						super(tag, kerbal::utility::forward<TupleK>(args_for_key), kerbal::utility::forward<TupleV>(args_for_value))
+					super(
+						tag,
+						kerbal::utility::forward<TupleK>(args_for_key),
+						kerbal::utility::forward<TupleV>(args_for_value)
+					)
 				{
 				}
 
@@ -180,10 +184,10 @@ namespace kerbal
 #	if __cplusplus >= 201703L
 
 		template <typename K, typename M>
-		map_data(K && k, M && m)
-		-> map_data<
-				typename kerbal::type_traits::remove_reference<K>::type,
-				typename kerbal::type_traits::remove_reference<K>::type
+		map_data(K && k, M && m) ->
+		map_data<
+			typename kerbal::type_traits::remove_reference<K>::type,
+			typename kerbal::type_traits::remove_reference<K>::type
 		>;
 
 
@@ -206,13 +210,13 @@ KERBAL_NAMESPACE_STD_BEGIN
 
 	template <typename K, typename M>
 	struct tuple_size<kerbal::container::map_data<K, M> > :
-			std::integral_constant<std::size_t, 2>
+		std::integral_constant<std::size_t, 2>
 	{
 	};
 
 	template <std::size_t I, typename K, typename M>
 	struct tuple_element<I, kerbal::container::map_data<K, M> > :
-			kerbal::container::map_data<K, M>::template value_type<I>
+		kerbal::container::map_data<K, M>::template value_type<I>
 	{
 	};
 

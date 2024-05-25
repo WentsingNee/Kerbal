@@ -87,17 +87,17 @@ namespace kerbal
 
 		template <typename T, std::size_t Size, std::size_t Align>
 		struct is_any_embedded_stored_type :
-				kerbal::type_traits::bool_constant<
-						sizeof(T) <= Size && KERBAL_ALIGNOF(T) <= Align &&
+			kerbal::type_traits::bool_constant<
+				sizeof(T) <= Size && KERBAL_ALIGNOF(T) <= Align &&
 #	if __cplusplus >= 201103L
-						kerbal::type_traits::try_test_is_nothrow_move_constructible
+				kerbal::type_traits::try_test_is_nothrow_move_constructible
 #	else
-						kerbal::type_traits::try_test_is_nothrow_copy_constructible
+				kerbal::type_traits::try_test_is_nothrow_copy_constructible
 #	endif
-						<
-							typename kerbal::type_traits::remove_all_extents<T>::type
-						>::IS_TRUE::value
-				>
+				<
+					typename kerbal::type_traits::remove_all_extents<T>::type
+				>::IS_TRUE::value
+			>
 		{
 		};
 
@@ -137,32 +137,34 @@ namespace kerbal
 
 					KERBAL_CONSTEXPR
 					any_manager_table(
-							  destroy_entry_type destroy
-							, clone_entry_type clone
+						  destroy_entry_type destroy
+						, clone_entry_type clone
 #	if __cplusplus >= 201103L
-							, xfer_entry_type						xfer
+						, xfer_entry_type						xfer
 #	endif
-							, swap_out_entry_type swap_out, swap_entry_type swap
+						, swap_out_entry_type swap_out, swap_entry_type swap
 #	if KERBAL_ANY_TYPE_POLICY != KERBAL_ANY_TYPE_POLICY_DISABLE
-							, type_info_entry_type					type_info
+						, type_info_entry_type					type_info
 #	endif
 					) KERBAL_NOEXCEPT
-							: destroy(destroy)
-							, clone(clone)
+						: destroy(destroy)
+						, clone(clone)
 #	if __cplusplus >= 201103L
-							, xfer(xfer)
+						, xfer(xfer)
 #	endif
-							, swap_out(swap_out)
-							, swap(swap)
+						, swap_out(swap_out)
+						, swap(swap)
 #	if KERBAL_ANY_TYPE_POLICY != KERBAL_ANY_TYPE_POLICY_DISABLE
-							, type_info(type_info)
+						, type_info(type_info)
 #	endif
 					{
 					}
 
 			};
 
-			template <typename T, std::size_t Size, std::size_t Align, typename Allocator>
+			template <
+				typename T, std::size_t Size, std::size_t Align, typename Allocator
+			>
 			struct any_manager_collection;
 
 			template <std::size_t Size, std::size_t Align, typename Allocator>
@@ -241,7 +243,9 @@ namespace kerbal
 #	if __cplusplus >= 201103L
 
 #		if __cplusplus < 201703L
-			template <std::size_t Size, std::size_t Align, typename Allocator>
+			template <
+				std::size_t Size, std::size_t Align, typename Allocator
+			>
 			KERBAL_CONSTEXPR
 			const typename any_manager_collection<void, Size, Align, Allocator>::manager_table
 			any_manager_collection<void, Size, Align, Allocator>::mtable;
@@ -249,7 +253,9 @@ namespace kerbal
 
 #	else
 
-			template <std::size_t Size, std::size_t Align, typename Allocator>
+			template <
+				std::size_t Size, std::size_t Align, typename Allocator
+			>
 			const typename any_manager_collection<void, Size, Align, Allocator>::manager_table
 			any_manager_collection<void, Size, Align, Allocator>::mtable(destroy, clone, swap_out, swap TYPE_INFO_ENTRY);
 
@@ -258,7 +264,9 @@ namespace kerbal
 #	undef TYPE_INFO_ENTRY
 
 
-			template <typename T, std::size_t Size, std::size_t Align, typename Allocator>
+			template <
+				typename T, std::size_t Size, std::size_t Align, typename Allocator
+			>
 			struct any_manager_collection
 			{
 				private:
@@ -284,7 +292,11 @@ namespace kerbal
 					static void clone(any & self, const any & ano)
 					{
 						const any_node * p_to_src = ano.template obj_pos<T>();
-						self.k_storage.template construct<T>(is_embedded_stored_type(), self.void_alloc(), p_to_src->member());
+						self.k_storage.template construct<T>(
+							is_embedded_stored_type(),
+							self.void_alloc(),
+							p_to_src->member()
+						);
 					}
 
 #	if __cplusplus >= 201103L
@@ -292,7 +304,12 @@ namespace kerbal
 					KERBAL_CONSTEXPR20
 					static void xfer(any & self, any && ano) KERBAL_NOEXCEPT
 					{
-						self.k_storage.template xfer<T>(is_embedded_stored_type(), self.void_alloc(), kerbal::compatibility::move(ano.k_storage), ano.void_alloc());
+						self.k_storage.template xfer<T>(
+							is_embedded_stored_type(),
+							self.void_alloc(),
+							kerbal::compatibility::move(ano.k_storage),
+							ano.void_alloc()
+						);
 					}
 
 #	endif
@@ -300,7 +317,12 @@ namespace kerbal
 					KERBAL_CONSTEXPR20
 					static void swap_out(any & self, any & out) KERBAL_NOEXCEPT
 					{
-						out.k_storage.template xfer<T>(is_embedded_stored_type(), out.void_alloc(), kerbal::compatibility::to_xvalue(self.k_storage), self.void_alloc());
+						out.k_storage.template xfer<T>(
+							is_embedded_stored_type(),
+							out.void_alloc(),
+							kerbal::compatibility::to_xvalue(self.k_storage),
+							self.void_alloc()
+						);
 					}
 
 					KERBAL_CONSTEXPR20
@@ -309,13 +331,23 @@ namespace kerbal
 						typename any::any_storage_type tmp;
 
 						// self -> tmp
-						tmp.template xfer<T>(is_embedded_stored_type(), self.void_alloc(), kerbal::compatibility::to_xvalue(self.k_storage), self.void_alloc());
+						tmp.template xfer<T>(
+							is_embedded_stored_type(),
+							self.void_alloc(),
+							kerbal::compatibility::to_xvalue(self.k_storage),
+							self.void_alloc()
+						);
 
 						// with -> self
 						with.k_mtable->swap_out(with, self);
 
 						// tmp -> with
-						with.k_storage.template xfer<T>(is_embedded_stored_type(), with.void_alloc(), kerbal::compatibility::to_xvalue(tmp), with.void_alloc());
+						with.k_storage.template xfer<T>(
+							is_embedded_stored_type(),
+							with.void_alloc(),
+							kerbal::compatibility::to_xvalue(tmp),
+							with.void_alloc()
+						);
 					}
 
 #	if KERBAL_ANY_TYPE_POLICY == KERBAL_ANY_TYPE_POLICY_FUNCTION
@@ -354,7 +386,9 @@ namespace kerbal
 #	if __cplusplus >= 201103L
 
 #		if __cplusplus < 201703L
-			template <typename T, std::size_t Size, std::size_t Align, typename Allocator>
+			template <
+				typename T, std::size_t Size, std::size_t Align, typename Allocator
+			>
 			KERBAL_CONSTEXPR
 			const typename any_manager_collection<T, Size, Align, Allocator>::manager_table
 			any_manager_collection<T, Size, Align, Allocator>::mtable;
@@ -362,7 +396,9 @@ namespace kerbal
 
 #	else
 
-			template <typename T, std::size_t Size, std::size_t Align, typename Allocator>
+			template <
+				typename T, std::size_t Size, std::size_t Align, typename Allocator
+			>
 			const typename any_manager_collection<T, Size, Align, Allocator>::manager_table
 			any_manager_collection<T, Size, Align, Allocator>::mtable(destroy, clone, swap_out, swap TYPE_INFO_ENTRY);
 
@@ -373,20 +409,24 @@ namespace kerbal
 		} // namespace detail
 
 
-		template <std::size_t Size, std::size_t Align, typename Allocator>
+		template <
+			std::size_t Size, std::size_t Align, typename Allocator
+		>
 		class basic_any :
-				private kerbal::utility::member_compress_helper<Allocator>
+			private kerbal::utility::member_compress_helper<Allocator>
 		{
 			private:
 
 				friend struct detail::any_manager_table<Size, Align, Allocator>;
 
-				template <typename T, std::size_t Size2, std::size_t Align2, typename Allocator2>
+				template <
+					typename T, std::size_t Size2, std::size_t Align2, typename Allocator2
+				>
 				friend struct kerbal::any::detail::any_manager_collection;
 
 				template <typename T>
 				struct is_embedded_stored_type :
-						is_any_embedded_stored_type<T, Size, Align>
+					is_any_embedded_stored_type<T, Size, Align>
 				{
 				};
 
@@ -449,14 +489,14 @@ namespace kerbal
 
 				KERBAL_CONSTEXPR20
 				basic_any() KERBAL_NOEXCEPT :
-						k_mtable(mtable_of_type<void>())
+					k_mtable(mtable_of_type<void>())
 				{
 				}
 
 				KERBAL_CONSTEXPR20
 				basic_any(const basic_any & src) :
-						allocator_compress_helper(kerbal::utility::in_place_t(), src.void_alloc()),
-						k_mtable(src.k_mtable)
+					allocator_compress_helper(kerbal::utility::in_place_t(), src.void_alloc()),
+					k_mtable(src.k_mtable)
 				{
 					this->k_mtable->clone(*this, src);
 				}
@@ -465,15 +505,18 @@ namespace kerbal
 
 				KERBAL_CONSTEXPR20
 				basic_any(basic_any && src)
-						KERBAL_CONDITIONAL_NOEXCEPT((
-							kerbal::type_traits::try_test_is_nothrow_constructible<
-								allocator_compress_helper,
-								kerbal::utility::in_place_t,
-								void_allocator_type &&
-							>::IS_TRUE::value
-						)) :
-						allocator_compress_helper(kerbal::utility::in_place_t(), kerbal::compatibility::move(src.void_alloc())),
-						k_mtable(src.k_mtable)
+					KERBAL_CONDITIONAL_NOEXCEPT((
+						kerbal::type_traits::try_test_is_nothrow_constructible<
+							allocator_compress_helper,
+							kerbal::utility::in_place_t,
+							void_allocator_type &&
+						>::IS_TRUE::value
+					)) :
+					allocator_compress_helper(
+						kerbal::utility::in_place_t(),
+						kerbal::compatibility::move(src.void_alloc())
+					),
+					k_mtable(src.k_mtable)
 				{
 					this->k_mtable->xfer(*this, kerbal::compatibility::move(src));
 					src.k_mtable = mtable_of_type<void>();
@@ -484,19 +527,27 @@ namespace kerbal
 
 #	if __cplusplus >= 201103L
 
-				template <typename T, typename = typename kerbal::type_traits::enable_if<
-						!kerbal::type_traits::is_same<
+				template <
+					typename T,
+					typename =
+						typename kerbal::type_traits::enable_if<
+							!kerbal::type_traits::is_same<
 								typename kerbal::type_traits::remove_reference<T>::type,
 								basic_any
-						>::value
-				>::type>
+							>::value
+						>::type
+				>
 				KERBAL_CONSTEXPR20
 				explicit basic_any(T && value) :
-						k_mtable(NULL)
+					k_mtable(NULL)
 				{
 					typedef typename kerbal::type_traits::remove_reference<T>::type remove_reference;
 					typedef typename kerbal::type_traits::remove_const<remove_reference>::type value_type;
-					this->k_storage.template construct<value_type>(is_embedded_stored_type<value_type>(), this->void_alloc(), kerbal::utility::forward<T>(value));
+					this->k_storage.template construct<value_type>(
+						is_embedded_stored_type<value_type>(),
+						this->void_alloc(),
+						kerbal::utility::forward<T>(value)
+					);
 					this->k_mtable = mtable_of_type<value_type>();
 				}
 
@@ -504,16 +555,21 @@ namespace kerbal
 
 				template <typename T>
 				KERBAL_CONSTEXPR20
-				explicit basic_any(const T & value,
-							typename kerbal::type_traits::enable_if<
-									!kerbal::type_traits::is_same<T, basic_any>::value,
-									int
-							>::type = 0
+				explicit basic_any(
+					const T & value,
+					typename kerbal::type_traits::enable_if<
+						!kerbal::type_traits::is_same<T, basic_any>::value,
+						int
+					>::type = 0
 				) :
-						k_mtable(NULL)
+					k_mtable(NULL)
 				{
 					typedef T value_type;
-					this->k_storage.template construct<value_type>(is_embedded_stored_type<value_type>(), this->void_alloc(), value);
+					this->k_storage.template construct<value_type>(
+						is_embedded_stored_type<value_type>(),
+						this->void_alloc(),
+						value
+					);
 					this->k_mtable = mtable_of_type<value_type>();
 				}
 
@@ -524,12 +580,16 @@ namespace kerbal
 
 				template <typename T, typename ... Args>
 				KERBAL_CONSTEXPR20
-				explicit basic_any(kerbal::utility::in_place_type_t<T>, Args&& ... args) :
-						k_mtable(NULL)
+				explicit basic_any(kerbal::utility::in_place_type_t<T>, Args && ... args) :
+					k_mtable(NULL)
 				{
 					typedef typename kerbal::type_traits::remove_reference<T>::type remove_reference;
 					typedef typename kerbal::type_traits::remove_const<remove_reference>::type value_type;
-					this->k_storage.template construct<value_type>(is_embedded_stored_type<value_type>(), this->void_alloc(), kerbal::utility::forward<Args>(args)...);
+					this->k_storage.template construct<value_type>(
+						is_embedded_stored_type<value_type>(),
+						this->void_alloc(),
+						kerbal::utility::forward<Args>(args)...
+					);
 					this->k_mtable = mtable_of_type<value_type>();
 				}
 
@@ -543,13 +603,17 @@ namespace kerbal
 #			define FBODY(i) \
 				template <typename T KERBAL_OPT_PPEXPAND_WITH_COMMA_N(LEFT_JOIN_COMMA, EMPTY, TARGS_DECL, i)> \
 				explicit basic_any(kerbal::utility::in_place_type_t<T> KERBAL_OPT_PPEXPAND_WITH_COMMA_N(LEFT_JOIN_COMMA, EMPTY, ARGS_DECL, i)) : \
-						k_mtable(NULL) \
+					k_mtable(NULL) \
 				{ \
 					typedef typename kerbal::type_traits::remove_reference<T>::type remove_reference; \
 					typedef typename kerbal::type_traits::remove_const<remove_reference>::type value_type; \
-					this->k_storage.template construct<value_type>(is_embedded_stored_type<value_type>(), this->void_alloc() KERBAL_OPT_PPEXPAND_WITH_COMMA_N(LEFT_JOIN_COMMA, EMPTY, ARGS_USE, i)); \
+					this->k_storage.template construct<value_type>( \
+						is_embedded_stored_type<value_type>(), \
+						this->void_alloc() \
+						KERBAL_OPT_PPEXPAND_WITH_COMMA_N(LEFT_JOIN_COMMA, EMPTY, ARGS_USE, i) \
+					); \
 					this->k_mtable = mtable_of_type<value_type>(); \
-				}
+				} \
 
 				KERBAL_PPEXPAND_N(FBODY, KERBAL_PPEXPAND_EMPTY_SEPARATOR, 0)
 				KERBAL_PPEXPAND_N(FBODY, KERBAL_PPEXPAND_EMPTY_SEPARATOR, 20)
@@ -574,7 +638,7 @@ namespace kerbal
 
 				template <typename T>
 				KERBAL_CONSTEXPR20
-				basic_any& operator=(T && value)
+				basic_any & operator=(T && value)
 				{
 					this->assign(kerbal::utility::forward<T>(value));
 					return *this;
@@ -584,7 +648,7 @@ namespace kerbal
 
 				template <typename T>
 				KERBAL_CONSTEXPR20
-				basic_any& operator=(const T & value)
+				basic_any & operator=(const T & value)
 				{
 					this->assign(value);
 					return *this;
@@ -593,7 +657,7 @@ namespace kerbal
 #	endif
 
 				KERBAL_CONSTEXPR20
-				basic_any& operator=(const basic_any & src)
+				basic_any & operator=(const basic_any & src)
 				{
 					this->assign(src);
 					return *this;
@@ -602,14 +666,14 @@ namespace kerbal
 #	if __cplusplus >= 201103L
 
 				KERBAL_CONSTEXPR20
-				basic_any& operator=(basic_any && src)
-						KERBAL_CONDITIONAL_NOEXCEPT(
-								noexcept(
-									kerbal::utility::declthis<basic_any>()->assign(
-										kerbal::utility::declval<basic_any&&>()
-									)
-								)
+				basic_any & operator=(basic_any && src)
+					KERBAL_CONDITIONAL_NOEXCEPT(
+						noexcept(
+							kerbal::utility::declthis<basic_any>()->assign(
+								kerbal::utility::declval<basic_any &&>()
+							)
 						)
+					)
 				{
 					this->assign(kerbal::compatibility::move(src));
 					return *this;
@@ -623,17 +687,21 @@ namespace kerbal
 				template <typename T>
 				KERBAL_CONSTEXPR20
 				typename kerbal::type_traits::enable_if<
-						!kerbal::type_traits::is_same<
-							typename kerbal::type_traits::remove_reference<T>::type,
-							basic_any
-						>::value
+					!kerbal::type_traits::is_same<
+						typename kerbal::type_traits::remove_reference<T>::type,
+						basic_any
+					>::value
 				>::type
 				assign(T && value)
 				{
 					typedef typename kerbal::type_traits::remove_reference<T>::type remove_reference;
 					typedef typename kerbal::type_traits::remove_const<remove_reference>::type value_type;
 					this->k_mtable->destroy(*this);
-					this->k_storage.template construct<value_type>(is_embedded_stored_type<value_type>(), this->void_alloc(), value);
+					this->k_storage.template construct<value_type>(
+						is_embedded_stored_type<value_type>(),
+						this->void_alloc(),
+						value
+					);
 					this->k_mtable = mtable_of_type<value_type>();
 				}
 
@@ -645,7 +713,11 @@ namespace kerbal
 				{
 					typedef T value_type;
 					this->k_mtable->destroy(*this);
-					this->k_storage.template construct<value_type>(is_embedded_stored_type<value_type>(), this->void_alloc(), value);
+					this->k_storage.template construct<value_type>(
+						is_embedded_stored_type<value_type>(),
+						this->void_alloc(),
+						value
+					);
 					this->k_mtable = mtable_of_type<value_type>();
 				}
 
@@ -684,12 +756,16 @@ namespace kerbal
 
 				template <typename T, typename ... Args>
 				KERBAL_CONSTEXPR20
-				void emplace(Args&& ... args)
+				void emplace(Args && ... args)
 				{
 					typedef typename kerbal::type_traits::remove_reference<T>::type remove_reference;
 					typedef typename kerbal::type_traits::remove_const<remove_reference>::type value_type;
 					this->k_mtable->destroy(*this);
-					this->k_storage.template construct<value_type>(is_embedded_stored_type<value_type>(), this->void_alloc(), kerbal::utility::forward<Args>(args)...);
+					this->k_storage.template construct<value_type>(
+						is_embedded_stored_type<value_type>(),
+						this->void_alloc(),
+						kerbal::utility::forward<Args>(args)...
+					);
 					this->k_mtable = mtable_of_type<value_type>();
 				}
 
@@ -708,9 +784,13 @@ namespace kerbal
 					typedef typename kerbal::type_traits::remove_reference<T>::type remove_reference; \
 					typedef typename kerbal::type_traits::remove_const<remove_reference>::type value_type; \
 					this->k_mtable->destroy(*this); \
-					this->k_storage.template construct<value_type>(is_embedded_stored_type<value_type>(), this->void_alloc() KERBAL_OPT_PPEXPAND_WITH_COMMA_N(LEFT_JOIN_COMMA, EMPTY, ARGS_USE, i)); \
+					this->k_storage.template construct<value_type>( \
+						is_embedded_stored_type<value_type>(), \
+						this->void_alloc() \
+						KERBAL_OPT_PPEXPAND_WITH_COMMA_N(LEFT_JOIN_COMMA, EMPTY, ARGS_USE, i) \
+					); \
 					this->k_mtable = mtable_of_type<value_type>(); \
-				}
+				} \
 
 				KERBAL_PPEXPAND_N(FBODY, KERBAL_PPEXPAND_EMPTY_SEPARATOR, 0)
 				KERBAL_PPEXPAND_N(FBODY, KERBAL_PPEXPAND_EMPTY_SEPARATOR, 20)
@@ -772,7 +852,7 @@ namespace kerbal
 
 				template <typename T>
 				KERBAL_CONSTEXPR20
-				T* ignored_get_pointer() KERBAL_NOEXCEPT
+				T * ignored_get_pointer() KERBAL_NOEXCEPT
 				{
 					typedef typename kerbal::type_traits::remove_const<T>::type value_type;
 					return &(this->template obj_pos<value_type>()->member());
@@ -780,7 +860,7 @@ namespace kerbal
 
 				template <typename T>
 				KERBAL_CONSTEXPR20
-				const T* ignored_get_pointer() const KERBAL_NOEXCEPT
+				const T * ignored_get_pointer() const KERBAL_NOEXCEPT
 				{
 					typedef typename kerbal::type_traits::remove_const<T>::type value_type;
 					return &(this->template obj_pos<value_type>()->member());
@@ -788,24 +868,26 @@ namespace kerbal
 
 				template <typename T>
 				KERBAL_CONSTEXPR20
-				T* get_pointer() KERBAL_NOEXCEPT
+				T * get_pointer() KERBAL_NOEXCEPT
 				{
 					typedef typename kerbal::type_traits::remove_const<T>::type value_type;
 
-					return this->template contains_type<value_type>() ?
-						   &(this->template obj_pos<value_type>()->member()) :
-						   NULL;
+					return
+						this->template contains_type<value_type>() ?
+						&(this->template obj_pos<value_type>()->member()) :
+						NULL;
 				}
 
 				template <typename T>
 				KERBAL_CONSTEXPR20
-				const T* get_pointer() const KERBAL_NOEXCEPT
+				const T * get_pointer() const KERBAL_NOEXCEPT
 				{
 					typedef typename kerbal::type_traits::remove_const<T>::type value_type;
 
-					return this->template contains_type<value_type>() ?
-						   &(this->template obj_pos<value_type>()->member()) :
-						   NULL;
+					return
+						this->template contains_type<value_type>() ?
+						&(this->template obj_pos<value_type>()->member()) :
+						NULL;
 				}
 
 				template <typename T>
@@ -824,9 +906,13 @@ namespace kerbal
 				{
 					typedef typename kerbal::type_traits::remove_reference<T>::type remove_reference;
 					typedef typename kerbal::type_traits::remove_const<remove_reference>::type value_type;
-					KERBAL_STATIC_ASSERT(!(
+					KERBAL_STATIC_ASSERT(
+						!(
 							kerbal::type_traits::is_reference<T>::value &&
-							!kerbal::type_traits::is_const<remove_reference>::value), "can not bind non-const reference to value from const any");
+							!kerbal::type_traits::is_const<remove_reference>::value
+						),
+						"can not bind non-const reference to value from const any"
+					);
 
 					return this->template obj_pos<value_type>()->member();
 				}
@@ -850,9 +936,13 @@ namespace kerbal
 				{
 					typedef typename kerbal::type_traits::remove_reference<T>::type remove_reference;
 					typedef typename kerbal::type_traits::remove_const<remove_reference>::type value_type;
-					KERBAL_STATIC_ASSERT(!(
+					KERBAL_STATIC_ASSERT(
+						!(
 							kerbal::type_traits::is_reference<T>::value &&
-							!kerbal::type_traits::is_const<remove_reference>::value), "can not bind non-const reference to value from const any");
+							!kerbal::type_traits::is_const<remove_reference>::value
+						),
+						"can not bind non-const reference to value from const any"
+					);
 
 					if (!this->template contains_type<value_type>()) {
 						kerbal::utility::throw_this_exception_helper<kerbal::any::bad_any_cast>::throw_this_exception();
@@ -866,7 +956,10 @@ namespace kerbal
 				KERBAL_CONSTEXPR20
 				T ignored_get() &&
 				{
-					KERBAL_STATIC_ASSERT(!kerbal::type_traits::is_lvalue_reference<T>::value, "T shouldn't be lvalue reference");
+					KERBAL_STATIC_ASSERT(
+						!kerbal::type_traits::is_lvalue_reference<T>::value,
+						"T shouldn't be lvalue reference"
+					);
 
 					typedef typename kerbal::type_traits::remove_reference<T>::type remove_reference;
 					typedef typename kerbal::type_traits::remove_const<remove_reference>::type value_type;
@@ -878,7 +971,10 @@ namespace kerbal
 				KERBAL_CONSTEXPR20
 				T get() &&
 				{
-					KERBAL_STATIC_ASSERT(!kerbal::type_traits::is_lvalue_reference<T>::value, "T shouldn't be lvalue reference");
+					KERBAL_STATIC_ASSERT(
+						!kerbal::type_traits::is_lvalue_reference<T>::value,
+						"T shouldn't be lvalue reference"
+					);
 
 					typedef typename kerbal::type_traits::remove_reference<T>::type remove_reference;
 					typedef typename kerbal::type_traits::remove_const<remove_reference>::type value_type;
@@ -895,14 +991,14 @@ namespace kerbal
 
 		template <typename T, std::size_t Size, std::size_t Align, typename Allocator>
 		KERBAL_CONSTEXPR20
-		T* any_cast(basic_any<Size, Align, Allocator> * operand) KERBAL_NOEXCEPT
+		T * any_cast(basic_any<Size, Align, Allocator> * operand) KERBAL_NOEXCEPT
 		{
 			return operand->template get_pointer<T>();
 		}
 
 		template <typename T, std::size_t Size, std::size_t Align, typename Allocator>
 		KERBAL_CONSTEXPR20
-		const T* any_cast(const basic_any<Size, Align, Allocator> * operand) KERBAL_NOEXCEPT
+		const T * any_cast(const basic_any<Size, Align, Allocator> * operand) KERBAL_NOEXCEPT
 		{
 			return operand->template get_pointer<T>();
 		}
@@ -939,8 +1035,11 @@ namespace kerbal
 
 		template <std::size_t Size, std::size_t Align, typename Allocator>
 		KERBAL_CONSTEXPR20
-		void swap(kerbal::any::basic_any<Size, Align, Allocator> & a, kerbal::any::basic_any<Size, Align, Allocator> & b)
-				KERBAL_CONDITIONAL_NOEXCEPT(noexcept(a.swap(b)))
+		void swap(
+			kerbal::any::basic_any<Size, Align, Allocator> & a,
+			kerbal::any::basic_any<Size, Align, Allocator> & b
+		)
+			KERBAL_CONDITIONAL_NOEXCEPT(noexcept(a.swap(b)))
 		{
 			a.swap(b);
 		}
@@ -954,8 +1053,11 @@ KERBAL_NAMESPACE_STD_BEGIN
 
 	template <std::size_t Size, std::size_t Align, typename Allocator>
 	KERBAL_CONSTEXPR20
-	void swap(kerbal::any::basic_any<Size, Align, Allocator> & a, kerbal::any::basic_any<Size, Align, Allocator> & b)
-			KERBAL_CONDITIONAL_NOEXCEPT(noexcept(a.swap(b)))
+	void swap(
+		kerbal::any::basic_any<Size, Align, Allocator> & a,
+		kerbal::any::basic_any<Size, Align, Allocator> & b
+	)
+		KERBAL_CONDITIONAL_NOEXCEPT(noexcept(a.swap(b)))
 	{
 		a.swap(b);
 	}

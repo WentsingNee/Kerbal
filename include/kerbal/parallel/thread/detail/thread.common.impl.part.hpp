@@ -50,9 +50,9 @@ namespace kerbal
 
 			try {
 				allocator_traits::construct(
-						alloc, fun_args_pack_p,
-						kerbal::utility::forward<Callable>(fun),
-						kerbal::utility::forward<Args>(args)...
+					alloc, fun_args_pack_p,
+					kerbal::utility::forward<Callable>(fun),
+					kerbal::utility::forward<Args>(args)...
 				);
 			} catch (...) {
 				allocator_traits::deallocate(alloc, fun_args_pack_p, 1);
@@ -83,9 +83,9 @@ namespace kerbal
  \
 			try { \
 				allocator_traits::construct( \
-						alloc, fun_args_pack_p, \
-						fun \
-						KERBAL_OPT_PPEXPAND_WITH_COMMA_N(LEFT_JOIN_COMMA, EMPTY, ARGS_USE, i) \
+					alloc, fun_args_pack_p, \
+					fun \
+					KERBAL_OPT_PPEXPAND_WITH_COMMA_N(LEFT_JOIN_COMMA, EMPTY, ARGS_USE, i) \
 				); \
 			} catch (...) { \
 				allocator_traits::deallocate(alloc, fun_args_pack_p, 1); \
@@ -93,7 +93,7 @@ namespace kerbal
 			} \
  \
 			return fun_args_pack_p; \
-		}
+		} \
 
 		KERBAL_PPEXPAND_N(FBODY, KERBAL_PPEXPAND_EMPTY_SEPARATOR, 0)
 		KERBAL_PPEXPAND_N(FBODY, KERBAL_PPEXPAND_EMPTY_SEPARATOR, 19)
@@ -114,12 +114,15 @@ namespace kerbal
 		{
 			typedef kerbal::memory::allocator_traits<PackAllocator> allocator_traits;
 			typedef FunArgsPack fun_args_pack_t;
-			KERBAL_STATIC_ASSERT((
+			KERBAL_STATIC_ASSERT(
+				(
 					kerbal::type_traits::is_same<
 						typename kerbal::type_traits::remove_const<typename allocator_traits::value_type>::type,
 						typename kerbal::type_traits::remove_const<fun_args_pack_t>::type
 					>::value
-			), "types mismatch");
+				),
+				"types mismatch"
+			);
 
 			allocator_traits::destroy(alloc, fun_args_pack_p);
 			allocator_traits::deallocate(alloc, fun_args_pack_p, 1);

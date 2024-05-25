@@ -48,13 +48,13 @@ namespace kerbal
 
 			template <typename T>
 			struct try_test_is_copy_assignable_helper :
-					kerbal::type_traits::tribool_disjunction<
-						kerbal::type_traits::try_test_is_enum<T>,
-						kerbal::type_traits::is_fundamental<T>,
-						kerbal::type_traits::is_member_pointer<T>,
-						kerbal::type_traits::is_pointer<T>,
-						kerbal::type_traits::tribool_unspecified
-					>::result
+				kerbal::type_traits::tribool_disjunction<
+					kerbal::type_traits::try_test_is_enum<T>,
+					kerbal::type_traits::is_fundamental<T>,
+					kerbal::type_traits::is_member_pointer<T>,
+					kerbal::type_traits::is_pointer<T>,
+					kerbal::type_traits::tribool_unspecified
+				>::result
 			{
 			};
 
@@ -63,18 +63,18 @@ namespace kerbal
 
 		template <typename T>
 		struct try_test_is_copy_assignable :
-				kerbal::type_traits::conditional<
-					kerbal::type_traits::disjunction<
-						kerbal::type_traits::is_array<T>,
-						kerbal::type_traits::is_const<typename kerbal::type_traits::remove_reference<T>::type>,
-						kerbal::type_traits::is_function<T>,
-						kerbal::type_traits::is_void<T>
-					>::value,
-					kerbal::type_traits::tribool_false,
-					kerbal::type_traits::detail::try_test_is_copy_assignable_helper<
-						typename kerbal::type_traits::remove_reference<T>::type
-					>
-				>::type
+			kerbal::type_traits::conditional<
+				kerbal::type_traits::disjunction<
+					kerbal::type_traits::is_array<T>,
+					kerbal::type_traits::is_const<typename kerbal::type_traits::remove_reference<T>::type>,
+					kerbal::type_traits::is_function<T>,
+					kerbal::type_traits::is_void<T>
+				>::value,
+				kerbal::type_traits::tribool_false,
+				kerbal::type_traits::detail::try_test_is_copy_assignable_helper<
+					typename kerbal::type_traits::remove_reference<T>::type
+				>
+			>::type
 		{
 		};
 

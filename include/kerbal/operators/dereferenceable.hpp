@@ -16,6 +16,7 @@
 #include <kerbal/compatibility/noexcept.hpp>
 #include <kerbal/utility/declval.hpp>
 
+
 namespace kerbal
 {
 
@@ -27,13 +28,15 @@ namespace kerbal
 		{
 				KERBAL_CONSTEXPR14
 				Ptr operator->() const
-						KERBAL_CONDITIONAL_NOEXCEPT(
-								noexcept(&(*static_cast<const T&>(*
-									kerbal::utility::declthis<const dereferenceable>()
-								)))
+					KERBAL_CONDITIONAL_NOEXCEPT(
+						noexcept(
+							&(*static_cast<const T &>(*
+								kerbal::utility::declthis<const dereferenceable>()
+							))
 						)
+					)
 				{
-					return &(*static_cast<const T&>(*this));
+					return &(*static_cast<const T &>(*this));
 				}
 		};
 

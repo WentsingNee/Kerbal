@@ -32,13 +32,15 @@ namespace kerbal
 			typedef Key key_type;
 
 			KERBAL_CONSTEXPR
-			key_type & operator()(value_type & key) const KERBAL_NOEXCEPT
+			key_type &
+			operator()(value_type & key) const KERBAL_NOEXCEPT
 			{
 				return key;
 			}
 
 			KERBAL_CONSTEXPR
-			const key_type & operator()(const value_type & key) const KERBAL_NOEXCEPT
+			const key_type &
+			operator()(const value_type & key) const KERBAL_NOEXCEPT
 			{
 				return key;
 			}
@@ -51,7 +53,8 @@ namespace kerbal
 			typedef Key key_type;
 
 			KERBAL_CONSTEXPR
-			const key_type & operator()(value_type & key) const KERBAL_NOEXCEPT
+			const key_type &
+			operator()(value_type & key) const KERBAL_NOEXCEPT
 			{
 				return key;
 			}

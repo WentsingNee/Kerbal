@@ -24,8 +24,10 @@ namespace kerbal
 
 		template <typename InputIterator1, typename InputIterator2, typename BinaryPredict>
 		KERBAL_CONSTEXPR14
-		bool includes(InputIterator1 first1, InputIterator1 last1,
-					  InputIterator2 first2, InputIterator2 last2, BinaryPredict cmp)
+		bool includes(
+			InputIterator1 first1, InputIterator1 last1,
+			InputIterator2 first2, InputIterator2 last2, BinaryPredict cmp
+		)
 		{
 			while (first2 != last2) {
 				if (first1 != last1) {
@@ -46,10 +48,16 @@ namespace kerbal
 
 		template <typename InputIterator1, typename InputIterator2>
 		KERBAL_CONSTEXPR14
-		bool includes(InputIterator1 first1, InputIterator1 last1,
-					  InputIterator2 first2, InputIterator2 last2)
+		bool includes(
+			InputIterator1 first1, InputIterator1 last1,
+			InputIterator2 first2, InputIterator2 last2
+		)
 		{
-			return kerbal::algorithm::includes(first1, last1, first2, last2, kerbal::compare::binary_type_less<void, void>());
+			return kerbal::algorithm::includes(
+				first1, last1,
+				first2, last2,
+				kerbal::compare::binary_type_less<void, void>()
+			);
 		}
 
 	} // namespace algorithm

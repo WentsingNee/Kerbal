@@ -44,13 +44,15 @@ namespace kerbal
 
 			public:
 				KERBAL_CONSTEXPR
-				explicit murmur_hash2_context(result_type seed = 97u) : seed(seed)
+				explicit murmur_hash2_context(result_type seed = 97u) :
+					seed(seed)
 				{
 				}
 
 			private:
 				KERBAL_CONSTEXPR14
-				static result_type final(result_type h) KERBAL_NOEXCEPT
+				static
+				result_type final(result_type h) KERBAL_NOEXCEPT
 				{
 					// Do a few final mixes of the hash to ensure the last few bytes are well-incorporated.
 					h ^= h >> 13u;
@@ -61,8 +63,10 @@ namespace kerbal
 
 				template <typename ForwardIterator>
 				KERBAL_CONSTEXPR14
-				result_type digest_helper(ForwardIterator first, ForwardIterator last,
-										kerbal::type_traits::type_identity<kerbal::compatibility::uint32_t>) const
+				result_type digest_helper(
+					ForwardIterator first, ForwardIterator last,
+					kerbal::type_traits::type_identity<kerbal::compatibility::uint32_t>
+				) const
 				{
 					typedef ForwardIterator iterator;
 					typedef typename kerbal::iterator::iterator_traits<iterator>::difference_type difference_type;
@@ -71,8 +75,7 @@ namespace kerbal
 					result_type h = seed ^ len * 4;
 
 					// 4 bytes at a time
-					while (first != last)
-					{
+					while (first != last) {
 						result_type k = *first;
 						k *= M::value;
 						k ^= k >> 24u;
@@ -87,7 +90,8 @@ namespace kerbal
 
 				template <typename ForwardIterator>
 				KERBAL_CONSTEXPR14
-				static result_type char4tolong1(ForwardIterator & it)
+				static
+				result_type char4tolong1(ForwardIterator & it)
 				{
 					typedef ForwardIterator iterator;
 					typedef typename kerbal::iterator::iterator_traits<iterator>::value_type value_type;
@@ -103,8 +107,10 @@ namespace kerbal
 
 				template <typename ForwardIterator>
 				KERBAL_CONSTEXPR14
-				result_type digest_helper(ForwardIterator first, ForwardIterator last,
-										kerbal::type_traits::type_identity<unsigned char>) const
+				result_type digest_helper(
+					ForwardIterator first, ForwardIterator last,
+					kerbal::type_traits::type_identity<unsigned char>
+				) const
 				{
 					typedef ForwardIterator iterator;
 					typedef typename kerbal::iterator::iterator_traits<iterator>::difference_type difference_type;
@@ -113,8 +119,7 @@ namespace kerbal
 					result_type h = seed ^ static_cast<result_type>(len);
 
 					// 4 bytes at a time
-					while (len >= 4)
-					{
+					while (len >= 4) {
 						result_type k = char4tolong1(first);
 						k *= M::value;
 						k ^= k >> 24u;

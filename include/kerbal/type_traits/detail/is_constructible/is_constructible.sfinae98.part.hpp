@@ -66,8 +66,8 @@ namespace kerbal
  \
 					template <typename T2> \
 					static kerbal::type_traits::yes_type test(char(*)[sizeof( \
-							new (kerbal::utility::declval<void*>()) T2(KERBAL_OPT_PPEXPAND_WITH_COMMA_N(REMAINF, EMPTY, TARGS_USE2, i)), \
-							0 \
+						new (kerbal::utility::declval<void *>()) T2(KERBAL_OPT_PPEXPAND_WITH_COMMA_N(REMAINF, EMPTY, TARGS_USE2, i)), \
+						0 \
 					)]); \
  \
 				public: \
@@ -77,13 +77,13 @@ namespace kerbal
 			}; \
  \
 			template <typename T KERBAL_OPT_PPEXPAND_WITH_COMMA_N(LEFT_JOIN_COMMA, EMPTY, TARGS_DECL, i)> \
-			struct KERBAL_MACRO_CONCAT(is_constructible_helper_, i)<T& KERBAL_OPT_PPEXPAND_WITH_COMMA_N(LEFT_JOIN_COMMA, EMPTY, TARGS_USE, i)> \
+			struct KERBAL_MACRO_CONCAT(is_constructible_helper_, i)<T & KERBAL_OPT_PPEXPAND_WITH_COMMA_N(LEFT_JOIN_COMMA, EMPTY, TARGS_USE, i)> \
 			{ \
 					typedef kerbal::type_traits::conjunction< \
 						kerbal::type_traits::bool_constant<i == 1>, \
-						typename KERBAL_MACRO_CONCAT(is_constructible_helper_, i)<T* KERBAL_OPT_PPEXPAND_WITH_COMMA_N(LEFT_JOIN_COMMA, EMPTY, TARGS_USE3, i)>::type \
+						typename KERBAL_MACRO_CONCAT(is_constructible_helper_, i)<T * KERBAL_OPT_PPEXPAND_WITH_COMMA_N(LEFT_JOIN_COMMA, EMPTY, TARGS_USE3, i)>::type \
 					> type; \
-			};
+			}; \
 
 			KERBAL_PPEXPAND_N(TBODY, KERBAL_PPEXPAND_EMPTY_SEPARATOR, 0)
 			KERBAL_PPEXPAND_N(TBODY, KERBAL_PPEXPAND_EMPTY_SEPARATOR, 20)
@@ -112,14 +112,14 @@ namespace kerbal
 #	define TBODY(i) \
 		template <typename T KERBAL_OPT_PPEXPAND_WITH_COMMA_N(LEFT_JOIN_COMMA, EMPTY, TARGS_DECL2, i)> \
 		struct is_constructible<T KERBAL_OPT_PPEXPAND_WITH_COMMA_N(LEFT_JOIN_COMMA, EMPTY, TARGS_USE, i)> : \
-				kerbal::type_traits::conjunction< \
-					kerbal::type_traits::negation< \
-						kerbal::type_traits::is_unbounded_array<T> \
-					>, \
-					typename kerbal::type_traits::detail::KERBAL_MACRO_CONCAT(is_constructible_helper_, i)<T KERBAL_OPT_PPEXPAND_WITH_COMMA_N(LEFT_JOIN_COMMA, EMPTY, TARGS_USE, i)>::type \
-				> \
+			kerbal::type_traits::conjunction< \
+				kerbal::type_traits::negation< \
+					kerbal::type_traits::is_unbounded_array<T> \
+				>, \
+				typename kerbal::type_traits::detail::KERBAL_MACRO_CONCAT(is_constructible_helper_, i)<T KERBAL_OPT_PPEXPAND_WITH_COMMA_N(LEFT_JOIN_COMMA, EMPTY, TARGS_USE, i)>::type \
+			> \
 		{ \
-		};
+		}; \
 
 		KERBAL_PPEXPAND_N(TBODY, KERBAL_PPEXPAND_EMPTY_SEPARATOR, 0)
 		KERBAL_PPEXPAND_N(TBODY, KERBAL_PPEXPAND_EMPTY_SEPARATOR, 20)

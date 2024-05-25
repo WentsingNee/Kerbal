@@ -36,7 +36,7 @@ namespace kerbal
 	{
 
 		inline
-		unsigned long get_tick_count()  KERBAL_NOEXCEPT
+		unsigned long get_tick_count() KERBAL_NOEXCEPT
 		{
 			return GetTickCount();
 		}

@@ -43,9 +43,9 @@ namespace kerbal
 
 		template <typename T, typename ... Args>
 		struct is_nothrow_constructible :
-				kerbal::type_traits::bool_constant<
-					KERBAL_INTRINSIC_IS_NOTHROW_CONSTRUCTIBLE(T, Args...)
-				>
+			kerbal::type_traits::bool_constant<
+				KERBAL_INTRINSIC_IS_NOTHROW_CONSTRUCTIBLE(T, Args...)
+			>
 		{
 		};
 
@@ -63,11 +63,11 @@ namespace kerbal
 #	define TBODY(i) \
 		template <typename T KERBAL_OPT_PPEXPAND_WITH_COMMA_N(LEFT_JOIN_COMMA, EMPTY, TARGS_DECL2, i)> \
 		struct is_nothrow_constructible<T KERBAL_OPT_PPEXPAND_WITH_COMMA_N(LEFT_JOIN_COMMA, EMPTY, TARGS_USE, i)> : \
-				kerbal::type_traits::bool_constant< \
-					KERBAL_INTRINSIC_IS_NOTHROW_CONSTRUCTIBLE(T KERBAL_OPT_PPEXPAND_WITH_COMMA_N(LEFT_JOIN_COMMA, EMPTY, TARGS_USE, i)) \
-				> \
+			kerbal::type_traits::bool_constant< \
+				KERBAL_INTRINSIC_IS_NOTHROW_CONSTRUCTIBLE(T KERBAL_OPT_PPEXPAND_WITH_COMMA_N(LEFT_JOIN_COMMA, EMPTY, TARGS_USE, i)) \
+			> \
 		{ \
-		};
+		}; \
 
 		KERBAL_PPEXPAND_N(TBODY, KERBAL_PPEXPAND_EMPTY_SEPARATOR, 0)
 		KERBAL_PPEXPAND_N(TBODY, KERBAL_PPEXPAND_EMPTY_SEPARATOR, 19)

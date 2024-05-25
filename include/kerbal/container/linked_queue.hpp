@@ -44,14 +44,14 @@ namespace kerbal
 			public:
 				typedef T						value_type;
 				typedef const value_type		const_type;
-				typedef value_type&				reference;
-				typedef const value_type&		const_reference;
-				typedef value_type*				pointer;
-				typedef const value_type*		const_pointer;
+				typedef value_type &			reference;
+				typedef const value_type &		const_reference;
+				typedef value_type *			pointer;
+				typedef const value_type *		const_pointer;
 
 #		if __cplusplus >= 201103L
-				typedef value_type&&			rvalue_reference;
-				typedef const value_type&&		const_rvalue_reference;
+				typedef value_type &&			rvalue_reference;
+				typedef const value_type &&		const_rvalue_reference;
 #		endif
 
 				typedef typename Sequence::allocator_type			allocator_type;
@@ -64,34 +64,36 @@ namespace kerbal
 
 			public:
 				KERBAL_CONSTEXPR20
-				linked_queue()
-						: c()
+				linked_queue() :
+					c()
 				{
 				}
 
 				KERBAL_CONSTEXPR20
-				explicit linked_queue(const allocator_type & alloc)
-						: c(alloc)
+				explicit
+				linked_queue(const allocator_type & alloc) :
+					c(alloc)
 				{
 				}
 
 				template <typename InputIterator>
 				KERBAL_CONSTEXPR20
-				linked_queue(InputIterator first, InputIterator last,
-						typename kerbal::type_traits::enable_if<
-								kerbal::iterator::is_input_compatible_iterator<InputIterator>::value
-								, int
-						>::type = 0
-				)
-						: c(first, last)
+				linked_queue(
+					InputIterator first, InputIterator last,
+					typename kerbal::type_traits::enable_if<
+						kerbal::iterator::is_input_compatible_iterator<InputIterator>::value,
+						int
+					>::type = 0
+				) :
+					c(first, last)
 				{
 				}
 
 #		if __cplusplus >= 201103L
 
 				KERBAL_CONSTEXPR20
-				linked_queue(std::initializer_list<value_type> ilist)
-						: c(ilist)
+				linked_queue(std::initializer_list<value_type> ilist) :
+					c(ilist)
 				{
 				}
 
@@ -159,7 +161,7 @@ namespace kerbal
 
 				template <typename ... Args>
 				KERBAL_CONSTEXPR20
-				reference emplace(Args&& ... args)
+				reference emplace(Args && ... args)
 				{
 					return c.emplace_back(kerbal::utility::forward<Args>(args)...);
 				}
@@ -177,7 +179,7 @@ namespace kerbal
 				reference emplace(KERBAL_OPT_PPEXPAND_WITH_COMMA_N(REMAINF, EMPTY, ARGS_DECL, i)) \
 				{ \
 					return c.emplace_back(KERBAL_OPT_PPEXPAND_WITH_COMMA_N(REMAINF, EMPTY, ARGS_USE, i)); \
-				}
+				} \
 
 				KERBAL_PPEXPAND_N(FBODY, KERBAL_PPEXPAND_EMPTY_SEPARATOR, 0)
 				KERBAL_PPEXPAND_N(FBODY, KERBAL_PPEXPAND_EMPTY_SEPARATOR, 20)
@@ -215,37 +217,61 @@ namespace kerbal
 				 * @param rhs another queue
 				 */
 				KERBAL_CONSTEXPR20
-				friend bool operator==(const linked_queue<T, Sequence> & lhs, const linked_queue<T, Sequence> & rhs)
+				friend
+				bool operator==(
+					const linked_queue<T, Sequence> & lhs,
+					const linked_queue<T, Sequence> & rhs
+				)
 				{
 					return lhs.c == rhs.c;
 				}
 
 				KERBAL_CONSTEXPR20
-				friend bool operator!=(const linked_queue<T, Sequence> & lhs, const linked_queue<T, Sequence> & rhs)
+				friend
+				bool operator!=(
+					const linked_queue<T, Sequence> & lhs,
+					const linked_queue<T, Sequence> & rhs
+				)
 				{
 					return lhs.c != rhs.c;
 				}
 
 				KERBAL_CONSTEXPR20
-				friend bool operator<(const linked_queue<T, Sequence> & lhs, const linked_queue<T, Sequence> & rhs)
+				friend
+				bool operator<(
+					const linked_queue<T, Sequence> & lhs,
+					const linked_queue<T, Sequence> & rhs
+				)
 				{
 					return lhs.c < rhs.c;
 				}
 
 				KERBAL_CONSTEXPR20
-				friend bool operator<=(const linked_queue<T, Sequence> & lhs, const linked_queue<T, Sequence> & rhs)
+				friend
+				bool operator<=(
+					const linked_queue<T, Sequence> & lhs,
+					const linked_queue<T, Sequence> & rhs
+				)
 				{
 					return lhs.c <= rhs.c;
 				}
 
 				KERBAL_CONSTEXPR20
-				friend bool operator>(const linked_queue<T, Sequence> & lhs, const linked_queue<T, Sequence> & rhs)
+				friend
+				bool operator>(
+					const linked_queue<T, Sequence> & lhs,
+					const linked_queue<T, Sequence> & rhs
+				)
 				{
 					return lhs.c > rhs.c;
 				}
 
 				KERBAL_CONSTEXPR20
-				friend bool operator>=(const linked_queue<T, Sequence> & lhs, const linked_queue<T, Sequence> & rhs)
+				friend
+				bool operator>=(
+					const linked_queue<T, Sequence> & lhs,
+					const linked_queue<T, Sequence> & rhs
+				)
 				{
 					return lhs.c >= rhs.c;
 				}
@@ -255,8 +281,8 @@ namespace kerbal
 #	if __cplusplus >= 201703L
 
 		template <typename InputIterator>
-		linked_queue(InputIterator, InputIterator)
-				-> linked_queue<typename kerbal::iterator::iterator_traits<InputIterator>::value_type>;
+		linked_queue(InputIterator, InputIterator) ->
+		linked_queue<typename kerbal::iterator::iterator_traits<InputIterator>::value_type>;
 
 #	if __has_include(<memory_resource>)
 
@@ -278,8 +304,11 @@ namespace kerbal
 
 		template <typename T, typename Sequence>
 		KERBAL_CONSTEXPR20
-		void swap(kerbal::container::linked_queue<T, Sequence> & a, kerbal::container::linked_queue<T, Sequence> & b)
-				KERBAL_CONDITIONAL_NOEXCEPT(noexcept(a.swap(b)))
+		void swap(
+			kerbal::container::linked_queue<T, Sequence> & a,
+			kerbal::container::linked_queue<T, Sequence> & b
+		)
+			KERBAL_CONDITIONAL_NOEXCEPT(noexcept(a.swap(b)))
 		{
 			a.swap(b);
 		}
@@ -293,8 +322,11 @@ KERBAL_NAMESPACE_STD_BEGIN
 
 	template <typename T, typename Sequence>
 	KERBAL_CONSTEXPR14
-	void swap(kerbal::container::linked_queue<T, Sequence> & a, kerbal::container::linked_queue<T, Sequence> & b)
-			KERBAL_CONDITIONAL_NOEXCEPT(noexcept(a.swap(b)))
+	void swap(
+		kerbal::container::linked_queue<T, Sequence> & a,
+		kerbal::container::linked_queue<T, Sequence> & b
+	)
+		KERBAL_CONDITIONAL_NOEXCEPT(noexcept(a.swap(b)))
 	{
 		a.swap(b);
 	}

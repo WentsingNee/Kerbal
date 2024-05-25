@@ -26,22 +26,22 @@ namespace kerbal
 		{
 			public:
 				static_container_empty_exception() :
-						std::logic_error("the static container is empty")
+					std::logic_error("the static container is empty")
 				{
 				}
 		};
 
 		class static_container_full_exception:
-				public std::logic_error
+			public std::logic_error
 		{
 			public:
 				static_container_full_exception() :
-						std::logic_error("the static container is full")
+					std::logic_error("the static container is full")
 				{
 				}
 
 				explicit static_container_full_exception(std::size_t /*max_capacity*/) :
-						std::logic_error("the static container is full")
+					std::logic_error("the static container is full")
 				{
 				}
 		};

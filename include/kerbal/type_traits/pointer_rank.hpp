@@ -40,21 +40,21 @@ namespace kerbal
 
 			template <typename T>
 			struct pointer_rank_helper<T, true>:
-					kerbal::type_traits::integral_constant<
-						std::size_t,
-						1 + kerbal::type_traits::pointer_rank<
-							typename kerbal::type_traits::remove_pointer<T>::type
-						>::value
-					>
+				kerbal::type_traits::integral_constant<
+					std::size_t,
+					1 + kerbal::type_traits::pointer_rank<
+						typename kerbal::type_traits::remove_pointer<T>::type
+					>::value
+				>
 			{
 			};
 
 			template <typename T>
 			struct pointer_rank_helper<T, false>:
-					kerbal::type_traits::integral_constant<
-						std::size_t,
-						0
-					>
+				kerbal::type_traits::integral_constant<
+					std::size_t,
+					0
+				>
 			{
 			};
 
@@ -63,9 +63,9 @@ namespace kerbal
 		KERBAL_MODULE_EXPORT
 		template <typename T>
 		struct pointer_rank :
-				kerbal::type_traits::detail::pointer_rank_helper<
-					T, kerbal::type_traits::is_pointer<T>::value
-				>
+			kerbal::type_traits::detail::pointer_rank_helper<
+				T, kerbal::type_traits::is_pointer<T>::value
+			>
 		{
 		};
 

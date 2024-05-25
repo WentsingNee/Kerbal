@@ -43,13 +43,13 @@ namespace kerbal
 
 			template <typename T>
 			struct try_test_is_trivially_default_constructible_helper :
-					kerbal::type_traits::tribool_disjunction<
-						kerbal::type_traits::try_test_is_enum<T>,
-						kerbal::type_traits::is_fundamental<T>,
-						kerbal::type_traits::is_member_pointer<T>,
-						kerbal::type_traits::is_pointer<T>,
-						kerbal::type_traits::tribool_unspecified
-					>::result
+				kerbal::type_traits::tribool_disjunction<
+					kerbal::type_traits::try_test_is_enum<T>,
+					kerbal::type_traits::is_fundamental<T>,
+					kerbal::type_traits::is_member_pointer<T>,
+					kerbal::type_traits::is_pointer<T>,
+					kerbal::type_traits::tribool_unspecified
+				>::result
 			{
 			};
 
@@ -58,12 +58,12 @@ namespace kerbal
 
 		template <typename T>
 		struct try_test_is_trivially_default_constructible :
-				kerbal::type_traits::tribool_conjunction<
-					kerbal::type_traits::try_test_is_default_constructible<T>,
-					kerbal::type_traits::detail::try_test_is_trivially_default_constructible_helper<
-						typename kerbal::type_traits::remove_all_extents<T>::type
-					>
-				>::result
+			kerbal::type_traits::tribool_conjunction<
+				kerbal::type_traits::try_test_is_default_constructible<T>,
+				kerbal::type_traits::detail::try_test_is_trivially_default_constructible_helper<
+					typename kerbal::type_traits::remove_all_extents<T>::type
+				>
+			>::result
 		{
 		};
 

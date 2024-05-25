@@ -41,12 +41,12 @@ namespace kerbal
 		KERBAL_MODULE_EXPORT
 		template <typename T>
 		struct can_be_empty_base :
-				kerbal::type_traits::conjunction<
-					kerbal::type_traits::negation<
-						kerbal::type_traits::is_final<T>
-					>,
-					kerbal::type_traits::is_empty<T>
-				>
+			kerbal::type_traits::conjunction<
+				kerbal::type_traits::negation<
+					kerbal::type_traits::is_final<T>
+				>,
+				kerbal::type_traits::is_empty<T>
+			>
 		{
 		};
 
@@ -55,12 +55,12 @@ namespace kerbal
 
 		template <typename T>
 		struct try_test_can_be_empty_base :
-				kerbal::type_traits::tribool_conjunction<
-					typename kerbal::type_traits::tribool_negation<
-						kerbal::type_traits::try_test_is_final<T>
-					>::result,
-					kerbal::type_traits::try_test_is_empty<T>
-				>::result
+			kerbal::type_traits::tribool_conjunction<
+				typename kerbal::type_traits::tribool_negation<
+					kerbal::type_traits::try_test_is_final<T>
+				>::result,
+				kerbal::type_traits::try_test_is_empty<T>
+			>::result
 		{
 		};
 

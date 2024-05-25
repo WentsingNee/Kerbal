@@ -33,9 +33,9 @@ namespace kerbal
 
 		template <typename T, typename ... Args>
 		struct try_test_is_trivially_constructible :
-				kerbal::type_traits::tribool_constant<
-					!!kerbal::type_traits::is_trivially_constructible<T, Args...>::value
-				>
+			kerbal::type_traits::tribool_constant<
+				!!kerbal::type_traits::is_trivially_constructible<T, Args...>::value
+			>
 		{
 		};
 
@@ -53,11 +53,11 @@ namespace kerbal
 #	define TBODY(i) \
 		template <typename T KERBAL_OPT_PPEXPAND_WITH_COMMA_N(LEFT_JOIN_COMMA, EMPTY, TARGS_DECL2, i)> \
 		struct try_test_is_trivially_constructible<T KERBAL_OPT_PPEXPAND_WITH_COMMA_N(LEFT_JOIN_COMMA, EMPTY, TARGS_USE, i)> : \
-				kerbal::type_traits::tribool_constant< \
-					!!kerbal::type_traits::is_trivially_constructible<T KERBAL_OPT_PPEXPAND_WITH_COMMA_N(LEFT_JOIN_COMMA, EMPTY, TARGS_USE, i)>::value \
-				> \
+			kerbal::type_traits::tribool_constant< \
+				!!kerbal::type_traits::is_trivially_constructible<T KERBAL_OPT_PPEXPAND_WITH_COMMA_N(LEFT_JOIN_COMMA, EMPTY, TARGS_USE, i)>::value \
+			> \
 		{ \
-		};
+		}; \
 
 		KERBAL_PPEXPAND_N(TBODY, KERBAL_PPEXPAND_EMPTY_SEPARATOR, 0)
 		KERBAL_PPEXPAND_N(TBODY, KERBAL_PPEXPAND_EMPTY_SEPARATOR, 19)

@@ -30,8 +30,10 @@ namespace kerbal
 			template <typename BidirectionalIterator, typename OutputIterator>
 			KERBAL_CONSTEXPR14
 			OutputIterator
-			k_reverse_copy(BidirectionalIterator first, BidirectionalIterator last, OutputIterator to,
-							std::bidirectional_iterator_tag)
+			k_reverse_copy(
+				BidirectionalIterator first, BidirectionalIterator last, OutputIterator to,
+				std::bidirectional_iterator_tag
+			)
 			{
 				while (first != last) {
 					--last;
@@ -44,8 +46,10 @@ namespace kerbal
 			template <typename RandomAccessIterator, typename OutputIterator>
 			KERBAL_CONSTEXPR14
 			OutputIterator
-			k_reverse_copy(RandomAccessIterator first, RandomAccessIterator last, OutputIterator to,
-							std::random_access_iterator_tag)
+			k_reverse_copy(
+				RandomAccessIterator first, RandomAccessIterator last, OutputIterator to,
+				std::random_access_iterator_tag
+			)
 			{
 				typedef RandomAccessIterator iterator;
 				typedef typename kerbal::iterator::iterator_traits<iterator>::difference_type difference_type;
@@ -86,7 +90,10 @@ namespace kerbal
 		OutputIterator
 		reverse_copy(BidirectionalIterator first, BidirectionalIterator last, OutputIterator to)
 		{
-			return kerbal::algorithm::detail::k_reverse_copy(first, last, to, kerbal::iterator::iterator_category(first));
+			return kerbal::algorithm::detail::k_reverse_copy(
+				first, last, to,
+				kerbal::iterator::iterator_category(first)
+			);
 		}
 
 	} // namespace algorithm

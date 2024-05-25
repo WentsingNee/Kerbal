@@ -41,8 +41,16 @@ namespace kerbal
 		namespace detail \
 		{ \
  \
-			template <typename R, typename Fun KERBAL_OPT_PPEXPAND_WITH_COMMA_N(LEFT_JOIN_COMMA, EMPTY, TARGS_DECL, i)> \
-			R invoke_r_helper(INVOKE_OVERLOAD_VER_CALLABLE, Fun f KERBAL_OPT_PPEXPAND_WITH_COMMA_N(LEFT_JOIN_COMMA, EMPTY, ARGS_DECL, i)) \
+			template < \
+				typename R, \
+				typename Fun \
+				KERBAL_OPT_PPEXPAND_WITH_COMMA_N(LEFT_JOIN_COMMA, EMPTY, TARGS_DECL, i) \
+			> \
+			R invoke_r_helper( \
+				INVOKE_OVERLOAD_VER_CALLABLE, \
+				Fun f \
+				KERBAL_OPT_PPEXPAND_WITH_COMMA_N(LEFT_JOIN_COMMA, EMPTY, ARGS_DECL, i) \
+			) \
 			{ \
 				return static_cast<R>( \
 					f( \
@@ -51,35 +59,82 @@ namespace kerbal
 				); \
 			} \
  \
-			template <typename R, typename MemObjPtr, typename T KERBAL_OPT_PPEXPAND_WITH_COMMA_N(LEFT_JOIN_COMMA, EMPTY, TARGS_DECL, i)> \
-			R invoke_r_helper(INVOKE_OVERLOAD_VER_MEM_OBJ, MemObjPtr mem_obj_ptr, T & o KERBAL_OPT_PPEXPAND_WITH_COMMA_N(LEFT_JOIN_COMMA, EMPTY, ARGS_DECL, i)) \
+			template < \
+				typename R, \
+				typename MemObjPtr, typename T \
+				KERBAL_OPT_PPEXPAND_WITH_COMMA_N(LEFT_JOIN_COMMA, EMPTY, TARGS_DECL, i) \
+			> \
+			R invoke_r_helper( \
+				INVOKE_OVERLOAD_VER_MEM_OBJ, \
+				MemObjPtr mem_obj_ptr, T & o \
+				KERBAL_OPT_PPEXPAND_WITH_COMMA_N(LEFT_JOIN_COMMA, EMPTY, ARGS_DECL, i) \
+			) \
 			{ \
-				KERBAL_STATIC_ASSERT(kerbal::tmp::type_vector<KERBAL_OPT_PPEXPAND_WITH_COMMA_N(REMAINF, EMPTY, TARGS_USE, i)>::SIZE::value == 0, "Wrong Args num"); \
+				KERBAL_STATIC_ASSERT( \
+					kerbal::tmp::type_vector< \
+						KERBAL_OPT_PPEXPAND_WITH_COMMA_N(REMAINF, EMPTY, TARGS_USE, i) \
+					>::SIZE::value == 0, \
+					"Wrong Args num" \
+				); \
 				return static_cast<R>( \
 					o.*mem_obj_ptr \
 				); \
 			} \
  \
-			template <typename R, typename MemObjPtr, typename T KERBAL_OPT_PPEXPAND_WITH_COMMA_N(LEFT_JOIN_COMMA, EMPTY, TARGS_DECL, i)> \
-			R invoke_r_helper(INVOKE_OVERLOAD_VER_MEM_OBJ, MemObjPtr mem_obj_ptr, T * p KERBAL_OPT_PPEXPAND_WITH_COMMA_N(LEFT_JOIN_COMMA, EMPTY, ARGS_DECL, i)) \
+			template < \
+				typename R, typename MemObjPtr, \
+				typename T \
+				KERBAL_OPT_PPEXPAND_WITH_COMMA_N(LEFT_JOIN_COMMA, EMPTY, TARGS_DECL, i) \
+			> \
+			R invoke_r_helper( \
+				INVOKE_OVERLOAD_VER_MEM_OBJ, \
+				MemObjPtr mem_obj_ptr, T * p \
+				KERBAL_OPT_PPEXPAND_WITH_COMMA_N(LEFT_JOIN_COMMA, EMPTY, ARGS_DECL, i) \
+			) \
 			{ \
-				KERBAL_STATIC_ASSERT(kerbal::tmp::type_vector<KERBAL_OPT_PPEXPAND_WITH_COMMA_N(REMAINF, EMPTY, TARGS_USE, i)>::SIZE::value == 0, "Wrong Args num"); \
+				KERBAL_STATIC_ASSERT( \
+					kerbal::tmp::type_vector< \
+						KERBAL_OPT_PPEXPAND_WITH_COMMA_N(REMAINF, EMPTY, TARGS_USE, i) \
+					>::SIZE::value == 0, \
+					"Wrong Args num" \
+				); \
 				return static_cast<R>( \
 					p->*mem_obj_ptr \
 				); \
 			} \
  \
-			template <typename R, typename MemObjPtr, typename T KERBAL_OPT_PPEXPAND_WITH_COMMA_N(LEFT_JOIN_COMMA, EMPTY, TARGS_DECL, i)> \
-			R invoke_r_helper(INVOKE_OVERLOAD_VER_MEM_OBJ, MemObjPtr mem_obj_ptr, kerbal::utility::reference_wrapper<T> rw KERBAL_OPT_PPEXPAND_WITH_COMMA_N(LEFT_JOIN_COMMA, EMPTY, ARGS_DECL, i)) \
+			template < \
+				typename R, \
+				typename MemObjPtr, typename T \
+				KERBAL_OPT_PPEXPAND_WITH_COMMA_N(LEFT_JOIN_COMMA, EMPTY, TARGS_DECL, i) \
+			> \
+			R invoke_r_helper( \
+				INVOKE_OVERLOAD_VER_MEM_OBJ, \
+				MemObjPtr mem_obj_ptr, kerbal::utility::reference_wrapper<T> rw \
+				KERBAL_OPT_PPEXPAND_WITH_COMMA_N(LEFT_JOIN_COMMA, EMPTY, ARGS_DECL, i) \
+			) \
 			{ \
-				KERBAL_STATIC_ASSERT(kerbal::tmp::type_vector<KERBAL_OPT_PPEXPAND_WITH_COMMA_N(REMAINF, EMPTY, TARGS_USE, i)>::SIZE::value == 0, "Wrong Args num"); \
+				KERBAL_STATIC_ASSERT( \
+					kerbal::tmp::type_vector< \
+						KERBAL_OPT_PPEXPAND_WITH_COMMA_N(REMAINF, EMPTY, TARGS_USE, i) \
+					>::SIZE::value == 0, \
+					"Wrong Args num" \
+				); \
 				return static_cast<R>( \
 					rw.get().*mem_obj_ptr \
 				); \
 			} \
  \
-			template <typename R, typename MemFunPtr, typename T KERBAL_OPT_PPEXPAND_WITH_COMMA_N(LEFT_JOIN_COMMA, EMPTY, TARGS_DECL, i)> \
-			R invoke_r_helper(INVOKE_OVERLOAD_VER_MEM_FUN, MemFunPtr mem_fun_ptr, T & o KERBAL_OPT_PPEXPAND_WITH_COMMA_N(LEFT_JOIN_COMMA, EMPTY, ARGS_DECL, i)) \
+			template < \
+				typename R, \
+				typename MemFunPtr, typename T \
+				KERBAL_OPT_PPEXPAND_WITH_COMMA_N(LEFT_JOIN_COMMA, EMPTY, TARGS_DECL, i) \
+			> \
+			R invoke_r_helper( \
+				INVOKE_OVERLOAD_VER_MEM_FUN, \
+				MemFunPtr mem_fun_ptr, T & o \
+				KERBAL_OPT_PPEXPAND_WITH_COMMA_N(LEFT_JOIN_COMMA, EMPTY, ARGS_DECL, i) \
+			) \
 			{ \
 				return static_cast<R>( \
 					(o.*mem_fun_ptr)( \
@@ -88,8 +143,16 @@ namespace kerbal
 				); \
 			} \
  \
-			template <typename R, typename MemFunPtr, typename T KERBAL_OPT_PPEXPAND_WITH_COMMA_N(LEFT_JOIN_COMMA, EMPTY, TARGS_DECL, i)> \
-			R invoke_r_helper(INVOKE_OVERLOAD_VER_MEM_FUN, MemFunPtr mem_fun_ptr, T * p KERBAL_OPT_PPEXPAND_WITH_COMMA_N(LEFT_JOIN_COMMA, EMPTY, ARGS_DECL, i)) \
+			template < \
+				typename R, \
+				typename MemFunPtr, typename T \
+				KERBAL_OPT_PPEXPAND_WITH_COMMA_N(LEFT_JOIN_COMMA, EMPTY, TARGS_DECL, i) \
+			> \
+			R invoke_r_helper( \
+				INVOKE_OVERLOAD_VER_MEM_FUN, \
+				MemFunPtr mem_fun_ptr, T * p \
+				KERBAL_OPT_PPEXPAND_WITH_COMMA_N(LEFT_JOIN_COMMA, EMPTY, ARGS_DECL, i) \
+			) \
 			{ \
 				return static_cast<R>( \
 					(p->*mem_fun_ptr)( \
@@ -98,8 +161,16 @@ namespace kerbal
 				); \
 			} \
  \
-			template <typename R, typename MemFunPtr, typename T KERBAL_OPT_PPEXPAND_WITH_COMMA_N(LEFT_JOIN_COMMA, EMPTY, TARGS_DECL, i)> \
-			R invoke_r_helper(INVOKE_OVERLOAD_VER_MEM_FUN, MemFunPtr mem_fun_ptr, kerbal::utility::reference_wrapper<T> rw KERBAL_OPT_PPEXPAND_WITH_COMMA_N(LEFT_JOIN_COMMA, EMPTY, ARGS_DECL, i)) \
+			template < \
+				typename R, \
+				typename MemFunPtr, typename T \
+				KERBAL_OPT_PPEXPAND_WITH_COMMA_N(LEFT_JOIN_COMMA, EMPTY, TARGS_DECL, i) \
+			> \
+			R invoke_r_helper( \
+				INVOKE_OVERLOAD_VER_MEM_FUN, \
+				MemFunPtr mem_fun_ptr, kerbal::utility::reference_wrapper<T> rw \
+				KERBAL_OPT_PPEXPAND_WITH_COMMA_N(LEFT_JOIN_COMMA, EMPTY, ARGS_DECL, i) \
+			) \
 			{ \
 				return static_cast<R>( \
 					(rw.get().*mem_fun_ptr)( \
@@ -110,11 +181,25 @@ namespace kerbal
  \
 		} /* namespace detail */ \
  \
-		template <typename R, typename Fun KERBAL_OPT_PPEXPAND_WITH_COMMA_N(LEFT_JOIN_COMMA, EMPTY, TARGS_DECL, i)> \
-		R invoke_r(Fun f KERBAL_OPT_PPEXPAND_WITH_COMMA_N(LEFT_JOIN_COMMA, EMPTY, ARGS_DECL, i)) \
+		template < \
+			typename R, \
+			typename Fun \
+			KERBAL_OPT_PPEXPAND_WITH_COMMA_N(LEFT_JOIN_COMMA, EMPTY, TARGS_DECL, i) \
+		> \
+		R invoke_r( \
+			Fun f \
+			KERBAL_OPT_PPEXPAND_WITH_COMMA_N(LEFT_JOIN_COMMA, EMPTY, ARGS_DECL, i) \
+		) \
 		{ \
-			typedef typename kerbal::function::detail::invoke_overload_ver_selector<Fun & KERBAL_OPT_PPEXPAND_WITH_COMMA_N(LEFT_JOIN_COMMA, EMPTY, TARGS_USE, i)>::type VER; \
-			return kerbal::function::detail::invoke_r_helper<R>(VER(), f KERBAL_OPT_PPEXPAND_WITH_COMMA_N(LEFT_JOIN_COMMA, EMPTY, ARGS_USE, i)); \
+			typedef typename kerbal::function::detail::invoke_overload_ver_selector< \
+				Fun & \
+				KERBAL_OPT_PPEXPAND_WITH_COMMA_N(LEFT_JOIN_COMMA, EMPTY, TARGS_USE, i) \
+			>::type VER; \
+			return kerbal::function::detail::invoke_r_helper<R>( \
+				VER(), \
+				f \
+				KERBAL_OPT_PPEXPAND_WITH_COMMA_N(LEFT_JOIN_COMMA, EMPTY, ARGS_USE, i) \
+			); \
 		} \
 
 

@@ -34,7 +34,8 @@ namespace kerbal
 	{
 
 		template <typename T>
-		struct is_class : kerbal::type_traits::bool_constant<KERBAL_INTRINSIC_IS_CLASS(T)>
+		struct is_class :
+			kerbal::type_traits::bool_constant<KERBAL_INTRINSIC_IS_CLASS(T)>
 		{
 		};
 

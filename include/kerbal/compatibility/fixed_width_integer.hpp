@@ -54,7 +54,10 @@ namespace kerbal
 						>::type
 					>::type type;
 
-					KERBAL_STATIC_ASSERT(!(kerbal::type_traits::is_same<type, void>::value), "doesn't support this width");
+					KERBAL_STATIC_ASSERT(
+						!(kerbal::type_traits::is_same<type, void>::value),
+						"doesn't support this width"
+					);
 			};
 
 			template <int width>
@@ -83,7 +86,10 @@ namespace kerbal
 						>::type
 					>::type type;
 
-					KERBAL_STATIC_ASSERT(!(kerbal::type_traits::is_same<type, void>::value), "doesn't support this width");
+					KERBAL_STATIC_ASSERT(
+						!(kerbal::type_traits::is_same<type, void>::value),
+						"doesn't support this width"
+					);
 			};
 
 		} // namespace detail

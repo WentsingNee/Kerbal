@@ -30,13 +30,18 @@ namespace kerbal
 		namespace detail
 		{
 
-			template <typename T, bool = kerbal::type_traits::is_arithmetic<T>::value>
-			struct is_signed_helper: kerbal::type_traits::false_type
+			template <
+				typename T,
+				bool = kerbal::type_traits::is_arithmetic<T>::value
+			>
+			struct is_signed_helper :
+				kerbal::type_traits::false_type
 			{
 			};
 
 			template <typename T>
-			struct is_signed_helper<T, true>: kerbal::type_traits::bool_constant<T(-1) < T(0)>
+			struct is_signed_helper<T, true> :
+				kerbal::type_traits::bool_constant<T(-1) < T(0)>
 			{
 			};
 
@@ -44,19 +49,20 @@ namespace kerbal
 
 		KERBAL_MODULE_EXPORT
 		template <typename T>
-		struct is_signed: kerbal::type_traits::detail::is_signed_helper<T>
+		struct is_signed :
+			kerbal::type_traits::detail::is_signed_helper<T>
 		{
 		};
 
 		KERBAL_MODULE_EXPORT
 		template <typename T>
 		struct is_unsigned :
-				kerbal::type_traits::conjunction<
-					kerbal::type_traits::is_arithmetic<T>,
-					kerbal::type_traits::negation<
-						kerbal::type_traits::is_signed<T>
-					>
+			kerbal::type_traits::conjunction<
+				kerbal::type_traits::is_arithmetic<T>,
+				kerbal::type_traits::negation<
+					kerbal::type_traits::is_signed<T>
 				>
+			>
 		{
 		};
 
@@ -65,7 +71,8 @@ namespace kerbal
 		{
 
 			template <typename T>
-			struct make_unsigned_helper: kerbal::type_traits::type_identity<T>
+			struct make_unsigned_helper :
+				kerbal::type_traits::type_identity<T>
 			{
 			};
 
@@ -75,32 +82,38 @@ namespace kerbal
 			};*/
 
 			template <>
-			struct make_unsigned_helper<char>: kerbal::type_traits::type_identity<unsigned char>
+			struct make_unsigned_helper<char> :
+				kerbal::type_traits::type_identity<unsigned char>
 			{
 			};
 
 			template <>
-			struct make_unsigned_helper<signed char>: kerbal::type_traits::type_identity<unsigned char>
+			struct make_unsigned_helper<signed char> :
+				kerbal::type_traits::type_identity<unsigned char>
 			{
 			};
 
 			template <>
-			struct make_unsigned_helper<short>: kerbal::type_traits::type_identity<unsigned short>
+			struct make_unsigned_helper<short> :
+				kerbal::type_traits::type_identity<unsigned short>
 			{
 			};
 
 			template <>
-			struct make_unsigned_helper<int>: kerbal::type_traits::type_identity<unsigned int>
+			struct make_unsigned_helper<int> :
+				kerbal::type_traits::type_identity<unsigned int>
 			{
 			};
 
 			template <>
-			struct make_unsigned_helper<long>: kerbal::type_traits::type_identity<unsigned long>
+			struct make_unsigned_helper<long> :
+				kerbal::type_traits::type_identity<unsigned long>
 			{
 			};
 
 			template <>
-			struct make_unsigned_helper<long long>: kerbal::type_traits::type_identity<unsigned long long>
+			struct make_unsigned_helper<long long> :
+				kerbal::type_traits::type_identity<unsigned long long>
 			{
 			};
 
@@ -109,12 +122,12 @@ namespace kerbal
 		KERBAL_MODULE_EXPORT
 		template <typename T>
 		struct make_unsigned:
-				kerbal::type_traits::copy_cv<
-					T,
-					typename kerbal::type_traits::detail::make_unsigned_helper<
-						typename kerbal::type_traits::remove_cv<T>::type
-					>::type
-				>
+			kerbal::type_traits::copy_cv<
+				T,
+				typename kerbal::type_traits::detail::make_unsigned_helper<
+					typename kerbal::type_traits::remove_cv<T>::type
+				>::type
+			>
 		{
 		};
 
@@ -124,37 +137,44 @@ namespace kerbal
 		{
 
 			template <typename T>
-			struct make_signed_helper: kerbal::type_traits::type_identity<T>
+			struct make_signed_helper :
+				kerbal::type_traits::type_identity<T>
 			{
 			};
 
 			template <>
-			struct make_signed_helper<char>: kerbal::type_traits::type_identity<signed char>
+			struct make_signed_helper<char> :
+				kerbal::type_traits::type_identity<signed char>
 			{
 			};
 
 			template <>
-			struct make_signed_helper<unsigned char>: kerbal::type_traits::type_identity<signed char>
+			struct make_signed_helper<unsigned char> :
+				kerbal::type_traits::type_identity<signed char>
 			{
 			};
 
 			template <>
-			struct make_signed_helper<unsigned short>: kerbal::type_traits::type_identity<signed short>
+			struct make_signed_helper<unsigned short> :
+				kerbal::type_traits::type_identity<signed short>
 			{
 			};
 
 			template <>
-			struct make_signed_helper<unsigned int>: kerbal::type_traits::type_identity<signed int>
+			struct make_signed_helper<unsigned int> :
+				kerbal::type_traits::type_identity<signed int>
 			{
 			};
 
 			template <>
-			struct make_signed_helper<unsigned long>: kerbal::type_traits::type_identity<signed long>
+			struct make_signed_helper<unsigned long> :
+				kerbal::type_traits::type_identity<signed long>
 			{
 			};
 
 			template <>
-			struct make_signed_helper<unsigned long long>: kerbal::type_traits::type_identity<signed long long>
+			struct make_signed_helper<unsigned long long> :
+				kerbal::type_traits::type_identity<signed long long>
 			{
 			};
 
@@ -163,12 +183,12 @@ namespace kerbal
 		KERBAL_MODULE_EXPORT
 		template <typename T>
 		struct make_signed:
-				kerbal::type_traits::copy_cv<
-					T,
-					typename kerbal::type_traits::detail::make_signed_helper<
-						typename kerbal::type_traits::remove_cv<T>::type
-					>::type
-				>
+			kerbal::type_traits::copy_cv<
+				T,
+				typename kerbal::type_traits::detail::make_signed_helper<
+					typename kerbal::type_traits::remove_cv<T>::type
+				>::type
+			>
 		{
 		};
 

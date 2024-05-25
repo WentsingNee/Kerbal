@@ -64,7 +64,7 @@ namespace kerbal
 
 			public:
 				typedef T element_type;
-				typedef T* pointer;
+				typedef T * pointer;
 				typedef Deleter deleter_type;
 
 #		if __cplusplus >= 201103L && KERBAL_HAS_EXCEPTIONS_SUPPORT
@@ -399,7 +399,7 @@ namespace kerbal
 
 			public:
 				typedef T element_type;
-				typedef T* pointer;
+				typedef T * pointer;
 				typedef Deleter deleter_type;
 
 #		if __cplusplus >= 201103L && KERBAL_HAS_EXCEPTIONS_SUPPORT
@@ -691,7 +691,7 @@ namespace kerbal
 		template <typename T, typename ... Args>
 		KERBAL_CONSTEXPR20
 		kerbal::memory::unique_ptr<T>
-		make_unique(Args&& ... args)
+		make_unique(Args && ... args)
 		{
 			return kerbal::memory::unique_ptr<T>(new T(kerbal::utility::forward<Args>(args)...));
 		}
@@ -710,7 +710,7 @@ namespace kerbal
 		make_unique(KERBAL_OPT_PPEXPAND_WITH_COMMA_N(REMAINF, EMPTY, ARGS_DECL, i)) \
 		{ \
 			return kerbal::memory::unique_ptr<T>(new T(KERBAL_OPT_PPEXPAND_WITH_COMMA_N(REMAINF, EMPTY, ARGS_USE, i))); \
-		}
+		} \
 
 		KERBAL_PPEXPAND_N(FBODY, KERBAL_PPEXPAND_EMPTY_SEPARATOR, 0)
 		KERBAL_PPEXPAND_N(FBODY, KERBAL_PPEXPAND_EMPTY_SEPARATOR, 20)

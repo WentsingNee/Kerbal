@@ -48,7 +48,7 @@ namespace kerbal
 		KERBAL_MODULE_EXPORT
 		template <typename T>
 		struct add_const_rvalue_reference :
-				kerbal::type_traits::detail::add_const_rvalue_reference_helper<T>
+			kerbal::type_traits::detail::add_const_rvalue_reference_helper<T>
 		{
 		};
 

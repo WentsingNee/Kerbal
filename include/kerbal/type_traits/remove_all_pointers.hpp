@@ -28,13 +28,13 @@ namespace kerbal
 		KERBAL_MODULE_EXPORT
 		template <typename T>
 		struct remove_all_pointers:
-				kerbal::type_traits::conditional<
-					kerbal::type_traits::is_pointer<T>::value,
-					kerbal::type_traits::remove_all_pointers<
-						typename kerbal::type_traits::remove_pointer<T>::type
-					>,
-					kerbal::type_traits::remove_pointer<T>
-				>::type
+			kerbal::type_traits::conditional<
+				kerbal::type_traits::is_pointer<T>::value,
+				kerbal::type_traits::remove_all_pointers<
+					typename kerbal::type_traits::remove_pointer<T>::type
+				>,
+				kerbal::type_traits::remove_pointer<T>
+			>::type
 		{
 		};
 

@@ -42,9 +42,9 @@ namespace kerbal
 		KERBAL_MODULE_EXPORT
 		template <typename T>
 		struct is_member_pointer :
-				kerbal::type_traits::detail::is_member_pointer_helper<
-					typename kerbal::type_traits::remove_cv<T>::type
-				>
+			kerbal::type_traits::detail::is_member_pointer_helper<
+				typename kerbal::type_traits::remove_cv<T>::type
+			>
 		{
 		};
 

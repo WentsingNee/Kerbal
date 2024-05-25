@@ -51,8 +51,8 @@ namespace kerbal
 				struct fun_args_pack_type
 				{
 						typedef kerbal::utility::tuple<
-								typename kerbal::type_traits::decay<Callable>::type,
-								typename kerbal::type_traits::decay<Args>::type ...
+							typename kerbal::type_traits::decay<Callable>::type,
+							typename kerbal::type_traits::decay<Args>::type ...
 						> type;
 				};
 
@@ -80,8 +80,8 @@ namespace kerbal
 				struct fun_args_pack_type<Callable KERBAL_OPT_PPEXPAND_WITH_COMMA_N(LEFT_JOIN_COMMA, EMPTY, TARGS_USE1, i)> \
 				{ \
 						typedef kerbal::utility::tuple< \
-								typename kerbal::type_traits::decay<Callable>::type \
-								KERBAL_OPT_PPEXPAND_WITH_COMMA_N(LEFT_JOIN_COMMA, EMPTY, TARGS_USE2, i) \
+							typename kerbal::type_traits::decay<Callable>::type \
+							KERBAL_OPT_PPEXPAND_WITH_COMMA_N(LEFT_JOIN_COMMA, EMPTY, TARGS_USE2, i) \
 						> type; \
 				};
 
@@ -118,13 +118,13 @@ namespace kerbal
 
 							KERBAL_CONSTEXPR
 							id() KERBAL_NOEXCEPT:
-									native_handle(0)
+								native_handle(0)
 							{
 							}
 
 							KERBAL_CONSTEXPR
 							explicit id(native_handle_type th_id) KERBAL_NOEXCEPT:
-									native_handle(th_id)
+								native_handle(th_id)
 							{
 							}
 
@@ -172,7 +172,7 @@ namespace kerbal
 
 					KERBAL_CONSTEXPR
 					basic_thread_allocator_unrelated() KERBAL_NOEXCEPT :
-							k_th_id()
+						k_th_id()
 					{
 					}
 
@@ -182,7 +182,7 @@ namespace kerbal
 
 					KERBAL_CONSTEXPR14
 					basic_thread_allocator_unrelated(basic_thread_allocator_unrelated && ano) KERBAL_NOEXCEPT :
-							k_th_id(ano.k_th_id)
+						k_th_id(ano.k_th_id)
 					{
 						ano.k_th_id = id();
 					}
@@ -274,7 +274,7 @@ namespace kerbal
 #	else
 
 				basic_thread() KERBAL_NOEXCEPT :
-						super()
+					super()
 				{
 				}
 
@@ -298,7 +298,7 @@ namespace kerbal
 #		define FBODY(i) \
 				template <typename PackAllocator, typename Callable KERBAL_OPT_PPEXPAND_WITH_COMMA_N(LEFT_JOIN_COMMA, EMPTY, TARGS_DECL, i)> \
 				static typename detail::fun_args_pack_type<Callable KERBAL_OPT_PPEXPAND_WITH_COMMA_N(LEFT_JOIN_COMMA, EMPTY, TARGS_USE, i)>::type * \
-				k_build_fun_args_pack(PackAllocator & alloc, Callable fun KERBAL_OPT_PPEXPAND_WITH_COMMA_N(LEFT_JOIN_COMMA, EMPTY, ARGS_DECL, i));
+				k_build_fun_args_pack(PackAllocator & alloc, Callable fun KERBAL_OPT_PPEXPAND_WITH_COMMA_N(LEFT_JOIN_COMMA, EMPTY, ARGS_DECL, i)); \
 
 				KERBAL_PPEXPAND_N(FBODY, KERBAL_PPEXPAND_EMPTY_SEPARATOR, 0)
 				KERBAL_PPEXPAND_N(FBODY, KERBAL_PPEXPAND_EMPTY_SEPARATOR, 19)
@@ -321,8 +321,10 @@ namespace kerbal
 			private:
 
 				template <typename Callable, typename ... Args, std::size_t ... I>
-				static void apply(kerbal::utility::tuple<Callable, Args...> & pack,
-									kerbal::utility::integer_sequence<std::size_t, I...>)
+				static void apply(
+					kerbal::utility::tuple<Callable, Args...> & pack,
+					kerbal::utility::integer_sequence<std::size_t, I...>
+				)
 				{
 					kerbal::function::invoke_r<void>(
 						pack.template get<0>(),
@@ -334,7 +336,7 @@ namespace kerbal
 
 				template <typename Callable, typename ... Args>
 				explicit
-				basic_thread(Callable&& fun, Args&& ... args);
+				basic_thread(Callable && fun, Args && ... args);
 
 #	else
 
@@ -347,7 +349,7 @@ namespace kerbal
 #		define FBODY(i) \
 				template <typename Callable KERBAL_OPT_PPEXPAND_WITH_COMMA_N(LEFT_JOIN_COMMA, EMPTY, TARGS_DECL, i)> \
 				explicit \
-				basic_thread(Callable fun KERBAL_OPT_PPEXPAND_WITH_COMMA_N(LEFT_JOIN_COMMA, EMPTY, ARGS_DECL, i));
+				basic_thread(Callable fun KERBAL_OPT_PPEXPAND_WITH_COMMA_N(LEFT_JOIN_COMMA, EMPTY, ARGS_DECL, i)); \
 
 				KERBAL_PPEXPAND_N(FBODY, KERBAL_PPEXPAND_EMPTY_SEPARATOR, 0)
 				KERBAL_PPEXPAND_N(FBODY, KERBAL_PPEXPAND_EMPTY_SEPARATOR, 19)
@@ -366,7 +368,7 @@ namespace kerbal
 
 				KERBAL_CONSTEXPR14
 				basic_thread(basic_thread && ano) KERBAL_NOEXCEPT :
-						super(static_cast<super &&>(ano))
+					super(static_cast<super &&>(ano))
 				{
 				}
 

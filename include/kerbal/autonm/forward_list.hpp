@@ -46,7 +46,7 @@ namespace kerbal
 
 			template <typename T>
 			class autonm_sl_node :
-					public kerbal::container::detail::sl_node<T>
+				public kerbal::container::detail::sl_node<T>
 			{
 				private:
 					typedef kerbal::container::detail::sl_node<T> super;
@@ -54,7 +54,7 @@ namespace kerbal
 				public:
 					KERBAL_CONSTEXPR
 					autonm_sl_node() :
-							super(kerbal::utility::in_place_t())
+						super(kerbal::utility::in_place_t())
 					{
 					}
 
@@ -63,8 +63,8 @@ namespace kerbal
 
 					template <typename ... Args>
 					KERBAL_CONSTEXPR
-					explicit autonm_sl_node(kerbal::utility::in_place_t in_place, Args&& ... args)
-							: super(in_place, kerbal::utility::forward<Args>(args)...)
+					explicit autonm_sl_node(kerbal::utility::in_place_t in_place, Args && ... args) :
+						super(in_place, kerbal::utility::forward<Args>(args)...)
 					{
 					}
 
@@ -78,10 +78,13 @@ namespace kerbal
 #				define ARGS_USE(i) KERBAL_MACRO_CONCAT(arg, i)
 #				define FBODY(i) \
 					KERBAL_OPT_PPEXPAND_WITH_COMMA_N(THEAD_NOT_EMPTY, EMPTY, TARGS_DECL, i) \
-					explicit autonm_sl_node(kerbal::utility::in_place_t in_place KERBAL_OPT_PPEXPAND_WITH_COMMA_N(LEFT_JOIN_COMMA, EMPTY, ARGS_DECL, i)) \
-							: super(in_place KERBAL_OPT_PPEXPAND_WITH_COMMA_N(LEFT_JOIN_COMMA, EMPTY, ARGS_USE, i)) \
+					explicit autonm_sl_node( \
+						kerbal::utility::in_place_t in_place \
+						KERBAL_OPT_PPEXPAND_WITH_COMMA_N(LEFT_JOIN_COMMA, EMPTY, ARGS_DECL, i) \
+					) : \
+						super(in_place KERBAL_OPT_PPEXPAND_WITH_COMMA_N(LEFT_JOIN_COMMA, EMPTY, ARGS_USE, i)) \
 					{ \
-					}
+					} \
 
 					KERBAL_PPEXPAND_N(FBODY, KERBAL_PPEXPAND_EMPTY_SEPARATOR, 0)
 					KERBAL_PPEXPAND_N(FBODY, KERBAL_PPEXPAND_EMPTY_SEPARATOR, 20)
@@ -101,26 +104,26 @@ namespace kerbal
 			template <typename T, typename SemiAllocator>
 			struct fl_typedef_helper
 			{
-					typedef kerbal::autonm::detail::autonm_sl_node<T>										auto_node;
-					typedef SemiAllocator																	semi_allocator_type;
+					typedef kerbal::autonm::detail::autonm_sl_node<T>				auto_node;
+					typedef SemiAllocator											semi_allocator_type;
 					typedef kerbal::container::detail::container_rebind_allocator_overload<
 						semi_allocator_type, auto_node
-					>																						fl_semi_allocator_overload;
+					>																fl_semi_allocator_overload;
 			};
 
 		} // namespace detail
 
 		template <typename T, typename SemiAllocator>
 		class forward_list :
-				protected kerbal::autonm::detail::fl_typedef_helper<T, SemiAllocator>::fl_semi_allocator_overload,
-				protected kerbal::container::detail::fl_type_only<T>,
-				private kerbal::utility::noncopyable
+			protected kerbal::autonm::detail::fl_typedef_helper<T, SemiAllocator>::fl_semi_allocator_overload,
+			protected kerbal::container::detail::fl_type_only<T>,
+			private kerbal::utility::noncopyable
 		{
 			private:
-				typedef kerbal::autonm::detail::fl_typedef_helper<T, SemiAllocator>	fl_typedef_helper;
+				typedef kerbal::autonm::detail::fl_typedef_helper<T, SemiAllocator>		fl_typedef_helper;
 				typedef kerbal::container::detail::fl_type_unrelated					fl_type_unrelated;
 				typedef typename fl_typedef_helper::fl_semi_allocator_overload			fl_semi_allocator_overload;
-				typedef kerbal::container::detail::fl_type_only<T>			fl_type_only;
+				typedef kerbal::container::detail::fl_type_only<T>						fl_type_only;
 
 			public:
 				typedef typename fl_typedef_helper::auto_node				auto_node;
@@ -128,14 +131,14 @@ namespace kerbal
 			public:
 				typedef T							value_type;
 				typedef const value_type			const_type;
-				typedef value_type&					reference;
-				typedef const value_type&			const_reference;
-				typedef value_type*					pointer;
-				typedef const value_type*			const_pointer;
+				typedef value_type &				reference;
+				typedef const value_type &			const_reference;
+				typedef value_type *				pointer;
+				typedef const value_type *			const_pointer;
 
 #		if __cplusplus >= 201103L
-				typedef value_type&&				rvalue_reference;
-				typedef const value_type&&			const_rvalue_reference;
+				typedef value_type &&				rvalue_reference;
+				typedef const value_type &&			const_rvalue_reference;
 #		endif
 
 				typedef std::size_t					size_type;
@@ -145,10 +148,10 @@ namespace kerbal
 				typedef typename fl_type_only::const_iterator 			const_iterator;
 
 			public:
-				typedef SemiAllocator										semi_allocator_type;
+				typedef SemiAllocator									semi_allocator_type;
 
 			private:
-				typedef typename fl_semi_allocator_overload::rebind_allocator_type	 		node_semi_allocator_type;
+				typedef typename fl_semi_allocator_overload::rebind_allocator_type			node_semi_allocator_type;
 				typedef typename fl_semi_allocator_overload::rebind_allocator_traits		node_semi_allocator_traits;
 
 			private:
@@ -171,10 +174,10 @@ namespace kerbal
 
 				KERBAL_CONSTEXPR20
 				forward_list()
-						KERBAL_CONDITIONAL_NOEXCEPT(
-								fl_type_only::is_nothrow_default_constructible::value
-						) :
-						fl_type_only()
+					KERBAL_CONDITIONAL_NOEXCEPT(
+						fl_type_only::is_nothrow_default_constructible::value
+					) :
+					fl_type_only()
 				{
 				}
 
@@ -182,10 +185,10 @@ namespace kerbal
 
 				KERBAL_CONSTEXPR20
 				forward_list(forward_list && src)
-						KERBAL_CONDITIONAL_NOEXCEPT(
-								fl_type_only::is_nothrow_move_constructible::value
-						) :
-						fl_type_only(kerbal::compatibility::move(src))
+					KERBAL_CONDITIONAL_NOEXCEPT(
+						fl_type_only::is_nothrow_move_constructible::value
+					) :
+					fl_type_only(kerbal::compatibility::move(src))
 				{
 				}
 
@@ -205,12 +208,12 @@ namespace kerbal
 #		if __cplusplus >= 201103L
 
 				KERBAL_CONSTEXPR20
-				forward_list& operator=(forward_list && src)
-						KERBAL_CONDITIONAL_NOEXCEPT(
-							noexcept(
-								kerbal::utility::declthis<forward_list>()->assign(kerbal::compatibility::move(src))
-							)
+				forward_list & operator=(forward_list && src)
+					KERBAL_CONDITIONAL_NOEXCEPT(
+						noexcept(
+							kerbal::utility::declthis<forward_list>()->assign(kerbal::compatibility::move(src))
 						)
+					)
 				{
 					this->assign(kerbal::compatibility::move(src));
 					return *this;
@@ -220,8 +223,8 @@ namespace kerbal
 				void assign(forward_list && src) KERBAL_NOEXCEPT
 				{
 					this->k_move_assign(
-							this->semi_alloc(),
-							static_cast<fl_type_only &&>(src)
+						this->semi_alloc(),
+						static_cast<fl_type_only &&>(src)
 					);
 				}
 
@@ -279,8 +282,8 @@ namespace kerbal
 				template <typename ForwardIterator>
 				KERBAL_CONSTEXPR20
 				typename kerbal::type_traits::enable_if<
-						kerbal::iterator::is_forward_compatible_iterator<ForwardIterator>::value,
-						iterator
+					kerbal::iterator::is_forward_compatible_iterator<ForwardIterator>::value,
+					iterator
 				>::type
 				insert_after(const_iterator before_pos, ForwardIterator first, ForwardIterator last)
 				{
@@ -306,8 +309,8 @@ namespace kerbal
 				template <typename ForwardIterator>
 				KERBAL_CONSTEXPR20
 				typename kerbal::type_traits::enable_if<
-						kerbal::iterator::is_forward_compatible_iterator<ForwardIterator>::value,
-						typename forward_list<T, SemiAllocator>::iterator
+					kerbal::iterator::is_forward_compatible_iterator<ForwardIterator>::value,
+					typename forward_list<T, SemiAllocator>::iterator
 				>::type
 				insert_after(const_iterator before_pos, ForwardIterator first, ForwardIterator last)
 				{
@@ -368,24 +371,29 @@ namespace kerbal
 				template <typename BinaryPredict>
 				KERBAL_CONSTEXPR20
 				void merge(forward_list & other, BinaryPredict cmp)
-						KERBAL_CONDITIONAL_NOEXCEPT(
-							noexcept(
-								kerbal::utility::declthis<forward_list>()->fl_type_only::k_merge(static_cast<fl_type_only&>(other), cmp)
+					KERBAL_CONDITIONAL_NOEXCEPT(
+						noexcept(
+							kerbal::utility::declthis<forward_list>()->fl_type_only::k_merge(
+								static_cast<fl_type_only &>(other),
+								cmp
 							)
 						)
+					)
 				{
-					fl_type_only::k_merge(static_cast<fl_type_only&>(other), cmp);
+					fl_type_only::k_merge(static_cast<fl_type_only &>(other), cmp);
 				}
 
 				KERBAL_CONSTEXPR20
 				void merge(forward_list & other)
-						KERBAL_CONDITIONAL_NOEXCEPT(
-							noexcept(
-								kerbal::utility::declthis<forward_list>()->fl_type_only::k_merge(static_cast<fl_type_only&>(other))
+					KERBAL_CONDITIONAL_NOEXCEPT(
+						noexcept(
+							kerbal::utility::declthis<forward_list>()->fl_type_only::k_merge(
+								static_cast<fl_type_only &>(other)
 							)
 						)
+					)
 				{
-					this->fl_type_only::k_merge(static_cast<fl_type_only&>(other));
+					this->fl_type_only::k_merge(static_cast<fl_type_only &>(other));
 				}
 
 				template <typename BinaryPredict>
@@ -404,22 +412,22 @@ namespace kerbal
 				template <typename BinaryPredict>
 				KERBAL_CONSTEXPR20
 				void sort(BinaryPredict cmp)
-						KERBAL_CONDITIONAL_NOEXCEPT(
-							noexcept(
-								kerbal::utility::declthis<forward_list>()->fl_type_only::k_sort(cmp)
-							)
+					KERBAL_CONDITIONAL_NOEXCEPT(
+						noexcept(
+							kerbal::utility::declthis<forward_list>()->fl_type_only::k_sort(cmp)
 						)
+					)
 				{
 					this->fl_type_only::k_sort(cmp);
 				}
 
 				KERBAL_CONSTEXPR20
 				void sort()
-						KERBAL_CONDITIONAL_NOEXCEPT(
-							noexcept(
-								kerbal::utility::declthis<forward_list>()->fl_type_only::k_sort()
-							)
+					KERBAL_CONDITIONAL_NOEXCEPT(
+						noexcept(
+							kerbal::utility::declthis<forward_list>()->fl_type_only::k_sort()
 						)
+					)
 				{
 					this->fl_type_only::k_sort();
 				}
@@ -477,19 +485,30 @@ namespace kerbal
 				}
 
 				KERBAL_CONSTEXPR20
-				void splice_after(const_iterator before_pos, forward_list & other) KERBAL_NOEXCEPT
+				void splice_after(
+					const_iterator before_pos,
+					forward_list & other
+				) KERBAL_NOEXCEPT
 				{
 					fl_type_unrelated::k_splice_after(before_pos, other);
 				}
 
 				KERBAL_CONSTEXPR20
-				void splice_after(const_iterator before_pos, forward_list & /*other*/, const_iterator before_opos) KERBAL_NOEXCEPT
+				void splice_after(
+					const_iterator before_pos,
+					forward_list & /*other*/,
+					const_iterator before_opos
+				) KERBAL_NOEXCEPT
 				{
 					fl_type_unrelated::k_splice_after(before_pos, before_opos);
 				}
 
 				KERBAL_CONSTEXPR20
-				void splice_after(const_iterator before_pos, forward_list & /*other*/, const_iterator before_first, const_iterator last) KERBAL_NOEXCEPT
+				void splice_after(
+					const_iterator before_pos,
+					forward_list & /*other*/,
+					const_iterator before_first, const_iterator last
+				) KERBAL_NOEXCEPT
 				{
 					fl_type_unrelated::k_splice_after(before_pos, before_first, last);
 				}
@@ -497,7 +516,10 @@ namespace kerbal
 #		if __cplusplus >= 201103L
 
 				KERBAL_CONSTEXPR20
-				void splice_after(const_iterator before_pos, forward_list && other) KERBAL_NOEXCEPT
+				void splice_after(
+					const_iterator before_pos,
+					forward_list && other
+				) KERBAL_NOEXCEPT
 				{
 					fl_type_unrelated::k_splice_after(before_pos, other);
 				}
@@ -508,10 +530,10 @@ namespace kerbal
 				void swap(forward_list & with) KERBAL_NOEXCEPT
 				{
 					fl_semi_allocator_overload::k_swap_allocator_if_propagate(
-						static_cast<fl_semi_allocator_overload&>(*this),
-						static_cast<fl_semi_allocator_overload&>(with)
+						static_cast<fl_semi_allocator_overload &>(*this),
+						static_cast<fl_semi_allocator_overload &>(with)
 					);
-					fl_type_unrelated ::k_swap_type_unrelated(
+					fl_type_unrelated::k_swap_type_unrelated(
 						static_cast<fl_type_unrelated &>(*this),
 						static_cast<fl_type_unrelated &>(with)
 					);
@@ -521,44 +543,80 @@ namespace kerbal
 
 		template <typename T, typename SemiAllocator>
 		KERBAL_CONSTEXPR20
-		bool operator==(const forward_list<T, SemiAllocator> & lhs, const forward_list<T, SemiAllocator> & rhs)
+		bool operator==(
+			const forward_list<T, SemiAllocator> & lhs,
+			const forward_list<T, SemiAllocator> & rhs
+		)
 		{
-			return kerbal::compare::sequence_equal_to(lhs.cbegin(), lhs.cend(), rhs.cbegin(), rhs.cend());
+			return kerbal::compare::sequence_equal_to(
+				lhs.cbegin(), lhs.cend(),
+				rhs.cbegin(), rhs.cend()
+			);
 		}
 
 		template <typename T, typename SemiAllocator>
 		KERBAL_CONSTEXPR20
-		bool operator!=(const forward_list<T, SemiAllocator> & lhs, const forward_list<T, SemiAllocator> & rhs)
+		bool operator!=(
+			const forward_list<T, SemiAllocator> & lhs,
+			const forward_list<T, SemiAllocator> & rhs
+		)
 		{
-			return kerbal::compare::sequence_not_equal_to(lhs.cbegin(), lhs.cend(), rhs.cbegin(), rhs.cend());
+			return kerbal::compare::sequence_not_equal_to(
+				lhs.cbegin(), lhs.cend(),
+				rhs.cbegin(), rhs.cend()
+			);
 		}
 
 		template <typename T, typename SemiAllocator>
 		KERBAL_CONSTEXPR20
-		bool operator<(const forward_list<T, SemiAllocator> & lhs, const forward_list<T, SemiAllocator> & rhs)
+		bool operator<(
+			const forward_list<T, SemiAllocator> & lhs,
+			const forward_list<T, SemiAllocator> & rhs
+		)
 		{
-			return kerbal::compare::sequence_less(lhs.cbegin(), lhs.cend(), rhs.cbegin(), rhs.cend());
+			return kerbal::compare::sequence_less(
+				lhs.cbegin(), lhs.cend(),
+				rhs.cbegin(), rhs.cend()
+			);
 		}
 
 		template <typename T, typename SemiAllocator>
 		KERBAL_CONSTEXPR20
-		bool operator>(const forward_list<T, SemiAllocator> & lhs, const forward_list<T, SemiAllocator> & rhs)
+		bool operator>(
+			const forward_list<T, SemiAllocator> & lhs,
+			const forward_list<T, SemiAllocator> & rhs
+		)
 		{
-			return kerbal::compare::sequence_greater(lhs.cbegin(), lhs.cend(), rhs.cbegin(), rhs.cend());
+			return kerbal::compare::sequence_greater(
+				lhs.cbegin(), lhs.cend(),
+				rhs.cbegin(), rhs.cend()
+			);
 		}
 
 		template <typename T, typename SemiAllocator>
 		KERBAL_CONSTEXPR20
-		bool operator<=(const forward_list<T, SemiAllocator> & lhs, const forward_list<T, SemiAllocator> & rhs)
+		bool operator<=(
+			const forward_list<T, SemiAllocator> & lhs,
+			const forward_list<T, SemiAllocator> & rhs
+		)
 		{
-			return kerbal::compare::sequence_less_equal(lhs.cbegin(), lhs.cend(), rhs.cbegin(), rhs.cend());
+			return kerbal::compare::sequence_less_equal(
+				lhs.cbegin(), lhs.cend(),
+				rhs.cbegin(), rhs.cend()
+			);
 		}
 
 		template <typename T, typename SemiAllocator>
 		KERBAL_CONSTEXPR20
-		bool operator>=(const forward_list<T, SemiAllocator> & lhs, const forward_list<T, SemiAllocator> & rhs)
+		bool operator>=(
+			const forward_list<T, SemiAllocator> & lhs,
+			const forward_list<T, SemiAllocator> & rhs
+		)
 		{
-			return kerbal::compare::sequence_greater_equal(lhs.cbegin(), lhs.cend(), rhs.cbegin(), rhs.cend());
+			return kerbal::compare::sequence_greater_equal(
+				lhs.cbegin(), lhs.cend(),
+				rhs.cbegin(), rhs.cend()
+			);
 		}
 
 	} // namespace autonm
@@ -568,8 +626,11 @@ namespace kerbal
 
 		template <typename T, typename SemiAllocator>
 		KERBAL_CONSTEXPR20
-		void swap(kerbal::autonm::forward_list<T, SemiAllocator> & a, kerbal::autonm::forward_list<T, SemiAllocator> & b)
-				KERBAL_CONDITIONAL_NOEXCEPT(noexcept(a.swap(b)))
+		void swap(
+			kerbal::autonm::forward_list<T, SemiAllocator> & a,
+			kerbal::autonm::forward_list<T, SemiAllocator> & b
+		)
+			KERBAL_CONDITIONAL_NOEXCEPT(noexcept(a.swap(b)))
 		{
 			a.swap(b);
 		}
@@ -583,8 +644,11 @@ KERBAL_NAMESPACE_STD_BEGIN
 
 	template <typename T, typename SemiAllocator>
 	KERBAL_CONSTEXPR20
-	void swap(kerbal::autonm::forward_list<T, SemiAllocator> & a, kerbal::autonm::forward_list<T, SemiAllocator> & b)
-			KERBAL_CONDITIONAL_NOEXCEPT(noexcept(a.swap(b)))
+	void swap(
+		kerbal::autonm::forward_list<T, SemiAllocator> & a,
+		kerbal::autonm::forward_list<T, SemiAllocator> & b
+	)
+		KERBAL_CONDITIONAL_NOEXCEPT(noexcept(a.swap(b)))
 	{
 		a.swap(b);
 	}

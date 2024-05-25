@@ -46,9 +46,11 @@ namespace kerbal
 			 *         true
 			 * }
 			 */
-			return (lhs.has_value() && rhs.has_value()) ?
-				   (lhs.ignored_get() == rhs.ignored_get()) :
-				   lhs.has_value() == rhs.has_value();
+			return
+				(lhs.has_value() && rhs.has_value()) ?
+				(lhs.ignored_get() == rhs.ignored_get()) :
+				lhs.has_value() == rhs.has_value()
+			;
 		}
 
 		template <typename T, typename U>
@@ -67,9 +69,11 @@ namespace kerbal
 			 *         false
 			 * }
 			 */
-			return (lhs.has_value() && rhs.has_value()) ?
-				   (lhs.ignored_get() != rhs.ignored_get()) :
-				   lhs.has_value() != rhs.has_value();
+			return
+				(lhs.has_value() && rhs.has_value()) ?
+				(lhs.ignored_get() != rhs.ignored_get()) :
+				lhs.has_value() != rhs.has_value()
+			;
 		}
 
 		template <typename T, typename U>

@@ -50,13 +50,16 @@ namespace kerbal
 					}
 			};
 
-			template <typename T, std::size_t N, bool is_trivially_destructible =
+			template <
+				typename T, std::size_t N,
+				bool is_trivially_destructible =
 					kerbal::type_traits::try_test_is_trivially_destructible<T>::IS_TRUE::value
 			>
 			class static_queue_base;
 
 			template <typename T, std::size_t N>
-			class static_queue_base<T, N, false>: protected static_queue_ring_helper<N>
+			class static_queue_base<T, N, false> :
+				protected static_queue_ring_helper<N>
 			{
 				public:
 					typedef T				value_type;
@@ -72,11 +75,10 @@ namespace kerbal
 					kerbal::memory::raw_storage<value_type> storage[N + 1];
 
 					KERBAL_CONSTEXPR20
-					static_queue_base() KERBAL_NOEXCEPT
+					static_queue_base() KERBAL_NOEXCEPT :
+						ibegin(0), iend(0)
 #			if __cplusplus >= 201103L
-							: ibegin(0), iend(0), storage()
-#			else
-							: ibegin(0), iend(0)
+						, storage()
 #			endif
 					{
 					}
@@ -99,7 +101,8 @@ namespace kerbal
 			};
 
 			template <typename T, std::size_t N>
-			class static_queue_base<T, N, true>: protected static_queue_ring_helper<N>
+			class static_queue_base<T, N, true> :
+				protected static_queue_ring_helper<N>
 			{
 				public:
 					typedef T				value_type;
@@ -115,11 +118,10 @@ namespace kerbal
 					kerbal::memory::raw_storage<value_type> storage[N + 1];
 
 					KERBAL_CONSTEXPR
-					static_queue_base() KERBAL_NOEXCEPT
+					static_queue_base() KERBAL_NOEXCEPT :
+						ibegin(0), iend(0)
 #			if __cplusplus >= 201103L
-							: ibegin(0), iend(0), storage()
-#			else
-							: ibegin(0), iend(0)
+						, storage()
 #			endif
 					{
 					}

@@ -33,17 +33,17 @@ namespace kerbal
 
 		template <typename T, std::size_t Size, std::size_t Align>
 		struct is_function_embedded_stored_type :
-				kerbal::type_traits::bool_constant<
-						sizeof(T) <= Size && KERBAL_ALIGNOF(T) <= Align &&
+			kerbal::type_traits::bool_constant<
+				sizeof(T) <= Size && KERBAL_ALIGNOF(T) <= Align &&
 #	if __cplusplus >= 201103L
-						kerbal::type_traits::try_test_is_nothrow_move_constructible
+				kerbal::type_traits::try_test_is_nothrow_move_constructible
 #	else
-						kerbal::type_traits::try_test_is_nothrow_copy_constructible
+				kerbal::type_traits::try_test_is_nothrow_copy_constructible
 #	endif
-						<
-							typename kerbal::type_traits::remove_all_extents<T>::type
-						>::IS_TRUE::value
-				>
+				<
+					typename kerbal::type_traits::remove_all_extents<T>::type
+				>::IS_TRUE::value
+			>
 		{
 		};
 

@@ -25,9 +25,9 @@ namespace kerbal
 
 		template <typename T, typename U>
 		struct try_test_is_assignable :
-				kerbal::type_traits::tribool_constant<
-					!!kerbal::type_traits::is_assignable<T, U>::value
-				>
+			kerbal::type_traits::tribool_constant<
+				!!kerbal::type_traits::is_assignable<T, U>::value
+			>
 		{
 		};
 

@@ -42,12 +42,19 @@ namespace kerbal
 					++out;             \
 				} while (0)
 
-				template <typename UIntType, typename OutputIterator, std::size_t U, UIntType D, std::size_t S,
-						UIntType B, std::size_t T,
-						UIntType C, std::size_t L
+				template <
+					typename UIntType, typename OutputIterator,
+					std::size_t U, UIntType D,
+					std::size_t S, UIntType B,
+					std::size_t T, UIntType C,
+					std::size_t L
 				>
 				KERBAL_CONSTEXPR14
-				OutputIterator mt_generate_copy_n(const UIntType mt_now[], OutputIterator out, std::size_t n)
+				OutputIterator mt_generate_copy_n(
+					const UIntType mt_now[],
+					OutputIterator out,
+					std::size_t n
+				)
 				{
 					typedef UIntType result_type;
 

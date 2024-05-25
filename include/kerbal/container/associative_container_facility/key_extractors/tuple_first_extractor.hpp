@@ -58,14 +58,18 @@ namespace kerbal
 				private:
 					template <typename KeyType, typename ValueType>
 					KERBAL_CONSTEXPR
-					static KeyType & k_extract(ValueType & t, TFE_VER_USE_FIRST_DATA_MEMBER) KERBAL_NOEXCEPT
+					static
+					KeyType &
+					k_extract(ValueType & t, TFE_VER_USE_FIRST_DATA_MEMBER) KERBAL_NOEXCEPT
 					{
 						return t.first;
 					}
 
 					template <typename KeyType, typename ValueType>
 					KERBAL_CONSTEXPR
-					static KeyType & k_extract(ValueType & t, TFE_VER_USE_FIRST_MEMBER_FUNCTION) KERBAL_NOEXCEPT
+					static
+					KeyType &
+					k_extract(ValueType & t, TFE_VER_USE_FIRST_MEMBER_FUNCTION) KERBAL_NOEXCEPT
 					{
 						return t.first();
 					}
@@ -74,7 +78,9 @@ namespace kerbal
 
 					template <typename KeyType, typename ValueType>
 					KERBAL_CONSTEXPR
-					static KeyType & k_extract(ValueType & t, TFE_VER_USE_STD_GET_0) KERBAL_NOEXCEPT
+					static
+					KeyType &
+					k_extract(ValueType & t, TFE_VER_USE_STD_GET_0) KERBAL_NOEXCEPT
 					{
 						return std::get<0>(t);
 					}
@@ -84,7 +90,9 @@ namespace kerbal
 				public:
 					template <typename KeyType, typename ValueType>
 					KERBAL_CONSTEXPR
-					static KeyType & k_extract(ValueType & t) KERBAL_NOEXCEPT
+					static
+					KeyType &
+					k_extract(ValueType & t) KERBAL_NOEXCEPT
 					{
 						typedef typename tuple_first_extractor_policy<ValueType>::result VER;
 						return k_extract<KeyType>(t, VER());
@@ -104,13 +112,15 @@ namespace kerbal
 				typedef Key key_type;
 
 				KERBAL_CONSTEXPR
-				key_type & operator()(value_type & p) const KERBAL_NOEXCEPT
+				key_type &
+				operator()(value_type & p) const KERBAL_NOEXCEPT
 				{
 					return kerbal::container::detail::tuple_first_extractor_helper::k_extract<key_type>(p);
 				}
 
 				KERBAL_CONSTEXPR
-				const key_type & operator()(const value_type & p) const KERBAL_NOEXCEPT
+				const key_type &
+				operator()(const value_type & p) const KERBAL_NOEXCEPT
 				{
 					return kerbal::container::detail::tuple_first_extractor_helper::k_extract<const key_type>(p);
 				}
@@ -123,7 +133,8 @@ namespace kerbal
 				typedef Key key_type;
 
 				KERBAL_CONSTEXPR
-				const key_type & operator()(value_type & p) const KERBAL_NOEXCEPT
+				const key_type &
+				operator()(value_type & p) const KERBAL_NOEXCEPT
 				{
 					return kerbal::container::detail::tuple_first_extractor_helper::k_extract<const key_type>(p);
 				}

@@ -25,9 +25,9 @@ namespace kerbal
 
 		template <typename T>
 		struct try_test_is_default_constructible :
-				kerbal::type_traits::tribool_constant<
-					!!kerbal::type_traits::is_default_constructible<T>::value
-				>
+			kerbal::type_traits::tribool_constant<
+				!!kerbal::type_traits::is_default_constructible<T>::value
+			>
 		{
 		};
 

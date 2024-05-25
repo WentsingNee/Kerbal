@@ -28,11 +28,11 @@ namespace kerbal
 		KERBAL_MODULE_EXPORT
 		template <typename From, typename To>
 		struct copy_lvalue_reference :
-				kerbal::type_traits::conditional<
-					kerbal::type_traits::is_lvalue_reference<From>::value,
-					typename kerbal::type_traits::add_lvalue_reference<To>::type,
-					To
-				>
+			kerbal::type_traits::conditional<
+				kerbal::type_traits::is_lvalue_reference<From>::value,
+				typename kerbal::type_traits::add_lvalue_reference<To>::type,
+				To
+			>
 		{
 		};
 

@@ -50,7 +50,7 @@ namespace kerbal
 		struct type_vector<KERBAL_OPT_PPEXPAND_WITH_COMMA_N(REMAINF, EMPTY, TARGS_USE, i)> \
 		{ \
 				typedef kerbal::type_traits::integral_constant<std::size_t, i> SIZE; \
-		};
+		}; \
 
 		KERBAL_PPEXPAND_N(DBODY, KERBAL_PPEXPAND_EMPTY_SEPARATOR, 0)
 		KERBAL_PPEXPAND_N(DBODY, KERBAL_PPEXPAND_EMPTY_SEPARATOR, 20)
@@ -83,7 +83,7 @@ namespace kerbal
 
 		template <std::size_t I, typename T0, KERBAL_PPEXPAND_WITH_COMMA_N(TARGS_DECL, 19)>
 		struct type_vector_at<type_vector<T0, KERBAL_PPEXPAND_WITH_COMMA_N(TARGS_USE, 19)>, I> :
-				type_vector_at<type_vector<KERBAL_PPEXPAND_WITH_COMMA_N(TARGS_USE, 19)>, I - 1>
+			type_vector_at<type_vector<KERBAL_PPEXPAND_WITH_COMMA_N(TARGS_USE, 19)>, I - 1>
 		{
 		};
 
@@ -94,7 +94,15 @@ namespace kerbal
 				typedef T0 result;
 
 			private:
-				KERBAL_STATIC_ASSERT(!(kerbal::type_traits::is_same<result, kerbal::tmp::tppter>::value), "Index out of range");
+				KERBAL_STATIC_ASSERT(
+					!(
+						kerbal::type_traits::is_same<
+							result,
+							kerbal::tmp::tppter
+						>::value
+					),
+					"Index out of range"
+				);
 		};
 
 #	undef TARGS_DECL
@@ -107,7 +115,7 @@ namespace kerbal
 
 		template <std::size_t I, typename T, typename ... Args>
 		struct type_vector_at<type_vector<T, Args...>, I> :
-				type_vector_at<type_vector<Args...>, I - 1>
+			type_vector_at<type_vector<Args...>, I - 1>
 		{
 				KERBAL_STATIC_ASSERT(I <= sizeof...(Args), "Index out of range");
 		};
@@ -181,9 +189,9 @@ namespace kerbal
 
 			public:
 				typedef typename type_vector_push_front<
-						typename type_vector_spilit<remain, N - 1>::head,
-						front
-				>::result				head;
+					typename type_vector_spilit<remain, N - 1>::head,
+					front
+				>::result														head;
 
 				typedef typename type_vector_spilit<remain, N - 1>::tail		tail;
 		};
@@ -219,8 +227,8 @@ namespace kerbal
 
 			public:
 				typedef typename type_vector_push_back<
-						typename type_vector_reverse<remain>::result,
-						front
+					typename type_vector_reverse<remain>::result,
+					front
 				>::result				result;
 
 		};
@@ -237,18 +245,23 @@ namespace kerbal
 		struct type_vector_find;
 
 		template <typename T, typename ... Args>
-		struct type_vector_find<type_vector<T, Args...>, T> : kerbal::type_traits::integral_constant<std::size_t, 0>
+		struct type_vector_find<type_vector<T, Args...>, T> :
+			kerbal::type_traits::integral_constant<std::size_t, 0>
 		{
 		};
 
 		template <typename T, typename U, typename ... Args>
 		struct type_vector_find<type_vector<U, Args...>, T> :
-				kerbal::type_traits::integral_constant<std::size_t, type_vector_find<type_vector<Args...>, T>::value + 1>
+			kerbal::type_traits::integral_constant<
+				std::size_t,
+				type_vector_find<type_vector<Args...>, T>::value + 1
+			>
 		{
 		};
 
 		template <typename T>
-		struct type_vector_find<type_vector<>, T> : kerbal::type_traits::integral_constant<std::size_t, 0>
+		struct type_vector_find<type_vector<>, T> :
+			kerbal::type_traits::integral_constant<std::size_t, 0>
 		{
 		};
 

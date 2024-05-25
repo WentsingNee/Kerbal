@@ -32,13 +32,13 @@ namespace kerbal
 		KERBAL_MODULE_EXPORT
 		template <typename T>
 		struct is_fundamental :
-				kerbal::type_traits::disjunction<
+			kerbal::type_traits::disjunction<
 #	if __cplusplus >= 201103L
-					kerbal::type_traits::is_null_pointer<T>,
+				kerbal::type_traits::is_null_pointer<T>,
 #	endif
-					kerbal::type_traits::is_arithmetic<T>,
-					kerbal::type_traits::is_void<T>
-				>
+				kerbal::type_traits::is_arithmetic<T>,
+				kerbal::type_traits::is_void<T>
+			>
 		{
 		};
 

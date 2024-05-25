@@ -59,9 +59,9 @@ namespace kerbal
 
 		template <typename T, typename U>
 		struct is_trivially_assignable :
-				kerbal::type_traits::bool_constant<
-					std::is_trivially_assignable<T, U>::value
-				>
+			kerbal::type_traits::bool_constant<
+				std::is_trivially_assignable<T, U>::value
+			>
 		{
 		};
 

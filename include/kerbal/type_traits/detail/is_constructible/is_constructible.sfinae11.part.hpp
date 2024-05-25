@@ -76,9 +76,13 @@ namespace kerbal
 
 					template <typename T2>
 					static kerbal::type_traits::yes_type test(char *, decltype(
-							::new (kerbal::type_traits::detail::is_constructible_placement_new_helper(),
-								kerbal::utility::declval<void*>()) T2(kerbal::utility::declval<Args>()...),
-							0
+						::new (
+							kerbal::type_traits::detail::is_constructible_placement_new_helper(),
+							kerbal::utility::declval<void *>()
+						) T2(
+							kerbal::utility::declval<Args>()...
+						),
+						0
 					) = 0);
 
 				public:
@@ -89,37 +93,40 @@ namespace kerbal
 
 			template <typename T, typename ... Args>
 			struct is_constructible_helper :
-					is_constructible_impl<T, Args...>::type
+				is_constructible_impl<T, Args...>::type
 			{
 			};
 
 			template <typename T, typename U>
-			struct is_constructible_helper<T&, U> :
-					is_constructible_impl<T*, typename kerbal::type_traits::remove_reference<U>::type *>::type
+			struct is_constructible_helper<T &, U> :
+				is_constructible_impl<T *, typename kerbal::type_traits::remove_reference<U>::type *>::type
 			{
 			};
 
 			template <typename T, typename U>
-			struct is_constructible_helper<T&, U&&> :
-					kerbal::type_traits::false_type
+			struct is_constructible_helper<T &, U &&> :
+				kerbal::type_traits::false_type
 			{
 			};
 
 			template <typename T, typename ... Args>
-			struct is_constructible_helper<T&, Args...> :
-					kerbal::type_traits::false_type
+			struct is_constructible_helper<T &, Args...> :
+				kerbal::type_traits::false_type
 			{
 			};
 
 			template <typename T, typename U>
-			struct is_constructible_helper<T&&, U> :
-					is_constructible_impl<T*, typename kerbal::type_traits::remove_reference<U>::type *>::type
+			struct is_constructible_helper<T &&, U> :
+				is_constructible_impl<
+					T *,
+					typename kerbal::type_traits::remove_reference<U>::type *
+				>::type
 			{
 			};
 
 			template <typename T, typename ... Args>
-			struct is_constructible_helper<T&&, Args...> :
-					kerbal::type_traits::false_type
+			struct is_constructible_helper<T &&, Args...> :
+				kerbal::type_traits::false_type
 			{
 			};
 
@@ -127,12 +134,12 @@ namespace kerbal
 
 		template <typename T, typename ... Args>
 		struct is_constructible :
-				kerbal::type_traits::conjunction<
-					kerbal::type_traits::negation<
-						kerbal::type_traits::is_unbounded_array<T>
-					>,
-					kerbal::type_traits::detail::is_constructible_helper<T, Args...>
-				>
+			kerbal::type_traits::conjunction<
+				kerbal::type_traits::negation<
+					kerbal::type_traits::is_unbounded_array<T>
+				>,
+				kerbal::type_traits::detail::is_constructible_helper<T, Args...>
+			>
 		{
 		};
 

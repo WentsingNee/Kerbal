@@ -29,11 +29,11 @@ namespace kerbal
 
 			template <typename T, typename Allocator>
 			struct can_be_trivially_destroy_ua :
-					kerbal::type_traits::conditional<
-						kerbal::memory::allocator_could_use_destroy<Allocator, T>::value,
-						kerbal::type_traits::false_type,
-						typename kerbal::type_traits::try_test_is_trivially_destructible<T>::IS_TRUE
-					>::type
+				kerbal::type_traits::conditional<
+					kerbal::memory::allocator_could_use_destroy<Allocator, T>::value,
+					kerbal::type_traits::false_type,
+					typename kerbal::type_traits::try_test_is_trivially_destructible<T>::IS_TRUE
+				>::type
 			{
 			};
 

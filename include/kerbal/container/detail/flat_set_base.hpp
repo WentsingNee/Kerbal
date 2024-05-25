@@ -37,7 +37,7 @@ namespace kerbal
 		{
 
 			template <typename T, typename Ordered>
-			class flat_set_base: public flat_set_common_base<T, Ordered>
+			class flat_set_base : public flat_set_common_base<T, Ordered>
 			{
 				private:
 					typedef flat_set_common_base<T, Ordered> super;
@@ -62,41 +62,47 @@ namespace kerbal
 
 					typedef typename super::const_iterator				const_iterator;
 					typedef typename super::const_reverse_iterator		const_reverse_iterator;
-					typedef kerbal::container::associative_unique_insert_r<const_iterator> unique_insert_r;
+					typedef kerbal::container::associative_unique_insert_r<const_iterator>
+																		unique_insert_r;
 
 				protected:
 					KERBAL_CONSTEXPR
 					flat_set_base() :
-							super()
+						super()
 					{
 					}
 
 					KERBAL_CONSTEXPR
 					explicit flat_set_base(key_compare kc) :
-							super(kc)
+						super(kc)
 					{
 					}
 
 					template <typename InputIterator>
 					KERBAL_CONSTEXPR14
-					flat_set_base(InputIterator first, InputIterator last,
-								  typename kerbal::type_traits::enable_if<
-								kerbal::iterator::is_input_compatible_iterator<InputIterator>::value,
-								int
-							>::type = 0) :
-							super()
+					flat_set_base(
+						InputIterator first, InputIterator last,
+						typename kerbal::type_traits::enable_if<
+							kerbal::iterator::is_input_compatible_iterator<InputIterator>::value,
+							int
+						>::type = 0
+					) :
+						super()
 					{
 						this->assign(first, last);
 					}
 
 					template <typename InputIterator>
 					KERBAL_CONSTEXPR14
-					flat_set_base(InputIterator first, InputIterator last, key_compare kc,
-								  typename kerbal::type_traits::enable_if<
-								kerbal::iterator::is_input_compatible_iterator<InputIterator>::value,
-								int
-							>::type = 0) :
-							super(kc)
+					flat_set_base(
+						InputIterator first, InputIterator last,
+						key_compare kc,
+						typename kerbal::type_traits::enable_if<
+							kerbal::iterator::is_input_compatible_iterator<InputIterator>::value,
+							int
+						>::type = 0
+					) :
+						super(kc)
 					{
 						this->assign(first, last);
 					}
@@ -105,13 +111,13 @@ namespace kerbal
 
 					KERBAL_CONSTEXPR14
 					flat_set_base(std::initializer_list<value_type> ilist) :
-							flat_set_base(ilist.begin(), ilist.end())
+						flat_set_base(ilist.begin(), ilist.end())
 					{
 					}
 
 					KERBAL_CONSTEXPR14
 					flat_set_base(std::initializer_list<value_type> ilist, key_compare kc) :
-							flat_set_base(ilist.begin(), ilist.end(), kc)
+						flat_set_base(ilist.begin(), ilist.end(), kc)
 					{
 					}
 
@@ -134,7 +140,7 @@ namespace kerbal
 					template <typename InputIterator>
 					KERBAL_CONSTEXPR14
 					typename kerbal::type_traits::enable_if<
-							kerbal::iterator::is_input_compatible_iterator<InputIterator>::value
+						kerbal::iterator::is_input_compatible_iterator<InputIterator>::value
 					>::type
 					assign(InputIterator first, InputIterator last)
 					{
@@ -145,7 +151,7 @@ namespace kerbal
 					template <typename InputIterator>
 					KERBAL_CONSTEXPR14
 					typename kerbal::type_traits::enable_if<
-							kerbal::iterator::is_input_compatible_iterator<InputIterator>::value
+						kerbal::iterator::is_input_compatible_iterator<InputIterator>::value
 					>::type
 					assign(InputIterator first, InputIterator last, key_compare kc)
 					{

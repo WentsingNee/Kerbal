@@ -26,7 +26,11 @@ namespace kerbal
 		namespace detail
 		{
 
-			template <typename T, bool IsReferencable = kerbal::type_traits::is_referencable<T>::value>
+			template <
+				typename T,
+				bool IsReferencable =
+					kerbal::type_traits::is_referencable<T>::value
+			>
 			struct add_lvalue_reference_helper
 			{
 					typedef T & type;
@@ -43,7 +47,7 @@ namespace kerbal
 		KERBAL_MODULE_EXPORT
 		template <typename T>
 		struct add_lvalue_reference :
-				kerbal::type_traits::detail::add_lvalue_reference_helper<T>
+			kerbal::type_traits::detail::add_lvalue_reference_helper<T>
 		{
 		};
 

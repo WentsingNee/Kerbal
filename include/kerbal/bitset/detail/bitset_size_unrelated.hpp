@@ -33,8 +33,8 @@ namespace kerbal
 		{
 
 			template <typename Block>
-			struct bitset_bits_per_block
-					: kerbal::type_traits::integral_constant<std::size_t, CHAR_BIT * sizeof(Block)>
+			struct bitset_bits_per_block :
+				kerbal::type_traits::integral_constant<std::size_t, CHAR_BIT * sizeof(Block)>
 			{
 			};
 
@@ -47,7 +47,10 @@ namespace kerbal
 					typedef std::size_t									block_size_type;
 
 				protected:
-					typedef kerbal::type_traits::integral_constant<block_type, static_cast<block_type>(~static_cast<block_type>(0))> ALL_ONE;
+					typedef kerbal::type_traits::integral_constant<
+						block_type,
+						static_cast<block_type>(~static_cast<block_type>(0))
+					> ALL_ONE;
 
 					KERBAL_CONSTEXPR14
 					static bool all_chunk(const block_type block[], block_size_type trunk_size) KERBAL_NOEXCEPT
@@ -117,8 +120,8 @@ namespace kerbal
 						std::size_t i = 0;
 						for (; i + 8 <= trunk_size; i += 8) {
 							if ((
-									block[i] & block[i + 1] & block[i + 2] & block[i + 3] &
-									block[i + 4] & block[i + 5] & block[i + 6] & block[i + 7]
+								block[i] & block[i + 1] & block[i + 2] & block[i + 3] &
+								block[i + 4] & block[i + 5] & block[i + 6] & block[i + 7]
 							) != ALL_ONE::value) {
 								return false;
 							}
@@ -127,7 +130,7 @@ namespace kerbal
 						std::size_t remain(trunk_size % 8);
 						if (remain >= 4) {
 							if ((
-									block[i] & block[i + 1] & block[i + 2] & block[i + 3]
+								block[i] & block[i + 1] & block[i + 2] & block[i + 3]
 							) != ALL_ONE::value) {
 								return false;
 							}
@@ -223,8 +226,8 @@ namespace kerbal
 						std::size_t i = 0;
 						for (; i + 8 <= trunk_size; i += 8) {
 							if (
-									block[i] | block[i + 1] | block[i + 2] | block[i + 3] |
-									block[i + 4] | block[i + 5] | block[i + 6] | block[i + 7]
+								block[i] | block[i + 1] | block[i + 2] | block[i + 3] |
+								block[i + 4] | block[i + 5] | block[i + 6] | block[i + 7]
 							) {
 								return true;
 							}
@@ -337,8 +340,8 @@ namespace kerbal
 					static bool equal_chunk(const block_type block[], const block_type ano[], block_size_type trunk_size) KERBAL_NOEXCEPT
 					{
 						return kerbal::compare::sequence_equal_to(
-								block, block + trunk_size,
-								ano, ano + trunk_size
+							block, block + trunk_size,
+							ano, ano + trunk_size
 						);
 					}
 

@@ -30,7 +30,10 @@ namespace kerbal
 
 			template <typename InputIterator, typename Type>
 			KERBAL_CONSTEXPR14
-			std::size_t k_count(InputIterator first, InputIterator last, const Type & value, std::input_iterator_tag)
+			std::size_t k_count(
+				InputIterator first, InputIterator last, const Type & value,
+				std::input_iterator_tag
+			)
 			{
 				std::size_t cnt = 0;
 				while (first != last) {
@@ -44,7 +47,10 @@ namespace kerbal
 
 			template <typename RandomAccessIterator, typename Type>
 			KERBAL_CONSTEXPR14
-			std::size_t k_count(RandomAccessIterator first, RandomAccessIterator last, const Type & value, std::random_access_iterator_tag)
+			std::size_t k_count(
+				RandomAccessIterator first, RandomAccessIterator last, const Type & value,
+				std::random_access_iterator_tag
+			)
 			{
 				typedef RandomAccessIterator iterator;
 				typedef typename kerbal::iterator::iterator_traits<iterator>::difference_type difference_type;
@@ -87,7 +93,10 @@ namespace kerbal
 		KERBAL_CONSTEXPR14
 		std::size_t count(InputIterator first, InputIterator last, const Type & value)
 		{
-			return kerbal::algorithm::detail::k_count(first, last, value, kerbal::iterator::iterator_category(first));
+			return kerbal::algorithm::detail::k_count(
+				first, last, value,
+				kerbal::iterator::iterator_category(first)
+			);
 		}
 
 	} // namespace algorithm

@@ -66,7 +66,9 @@ namespace kerbal
 		namespace detail
 		{
 
-			template <typename T, bool =
+			template <
+				typename T,
+				bool =
 					kerbal::type_traits::try_test_can_be_empty_base<T>::IS_TRUE::value
 			>
 			class member_compress_helper_impl;
@@ -111,17 +113,17 @@ namespace kerbal
 					 */
 					template <typename ... Args>
 					struct try_test_is_nothrow_in_place_constructible :
-							kerbal::type_traits::try_test_is_nothrow_constructible<T, Args...>
+						kerbal::type_traits::try_test_is_nothrow_constructible<T, Args...>
 					{
 					};
 
 					template <typename ... Args>
 					KERBAL_CONSTEXPR
-					explicit member_compress_helper_impl(kerbal::utility::in_place_t, Args&& ... args)
-							KERBAL_CONDITIONAL_NOEXCEPT(
-								try_test_is_nothrow_in_place_constructible<Args&&...>::IS_TRUE::value
-							) :
-							k_member(kerbal::utility::forward<Args>(args)...)
+					explicit member_compress_helper_impl(kerbal::utility::in_place_t, Args && ... args)
+						KERBAL_CONDITIONAL_NOEXCEPT(
+							try_test_is_nothrow_in_place_constructible<Args && ...>::IS_TRUE::value
+						) :
+						k_member(kerbal::utility::forward<Args>(args)...)
 					{
 					}
 
@@ -136,10 +138,13 @@ namespace kerbal
 #				define ARGS_USE(i) KERBAL_MACRO_CONCAT(arg, i)
 #				define FBODY(i) \
 					KERBAL_OPT_PPEXPAND_WITH_COMMA_N(THEAD_NOT_EMPTY, EMPTY, TARGS_DECL, i) \
-					explicit member_compress_helper_impl(kerbal::utility::in_place_t KERBAL_OPT_PPEXPAND_WITH_COMMA_N(LEFT_JOIN_COMMA, EMPTY, ARGS_DECL, i)): \
-							k_member(KERBAL_OPT_PPEXPAND_WITH_COMMA_N(REMAINF, EMPTY, ARGS_USE, i)) \
+					explicit member_compress_helper_impl( \
+						kerbal::utility::in_place_t \
+						KERBAL_OPT_PPEXPAND_WITH_COMMA_N(LEFT_JOIN_COMMA, EMPTY, ARGS_DECL, i) \
+					): \
+						k_member(KERBAL_OPT_PPEXPAND_WITH_COMMA_N(REMAINF, EMPTY, ARGS_USE, i)) \
 					{ \
-					}
+					} \
 
 					KERBAL_PPEXPAND_N(FBODY, KERBAL_PPEXPAND_EMPTY_SEPARATOR, 0)
 					KERBAL_PPEXPAND_N(FBODY, KERBAL_PPEXPAND_EMPTY_SEPARATOR, 20)
@@ -187,7 +192,7 @@ namespace kerbal
 
 			template <typename T>
 			class member_compress_helper_impl<T, true>:
-					private kerbal::type_traits::remove_volatile<T>::type
+				private kerbal::type_traits::remove_volatile<T>::type
 			{
 				private:
 					typedef typename kerbal::type_traits::remove_volatile<T>::type super;
@@ -222,17 +227,17 @@ namespace kerbal
 
 					template <typename ... Args>
 					struct try_test_is_nothrow_in_place_constructible :
-							kerbal::type_traits::try_test_is_nothrow_constructible<super, Args...>
+						kerbal::type_traits::try_test_is_nothrow_constructible<super, Args...>
 					{
 					};
 
 					template <typename ... Args>
 					KERBAL_CONSTEXPR
-					explicit member_compress_helper_impl(kerbal::utility::in_place_t, Args&& ... args)
-							KERBAL_CONDITIONAL_NOEXCEPT(
-								try_test_is_nothrow_in_place_constructible<Args&&...>::IS_TRUE::value
-							) :
-							super(kerbal::utility::forward<Args>(args)...)
+					explicit member_compress_helper_impl(kerbal::utility::in_place_t, Args && ... args)
+						KERBAL_CONDITIONAL_NOEXCEPT(
+							try_test_is_nothrow_in_place_constructible<Args && ...>::IS_TRUE::value
+						) :
+						super(kerbal::utility::forward<Args>(args)...)
 					{
 					}
 
@@ -247,10 +252,12 @@ namespace kerbal
 #				define ARGS_USE(i) KERBAL_MACRO_CONCAT(arg, i)
 #				define FBODY(i) \
 					KERBAL_OPT_PPEXPAND_WITH_COMMA_N(THEAD_NOT_EMPTY, EMPTY, TARGS_DECL, i) \
-					explicit member_compress_helper_impl(kerbal::utility::in_place_t KERBAL_OPT_PPEXPAND_WITH_COMMA_N(LEFT_JOIN_COMMA, EMPTY, ARGS_DECL, i)): \
-							super(KERBAL_OPT_PPEXPAND_WITH_COMMA_N(REMAINF, EMPTY, ARGS_USE, i)) \
+					explicit member_compress_helper_impl(kerbal::utility::in_place_t \
+						KERBAL_OPT_PPEXPAND_WITH_COMMA_N(LEFT_JOIN_COMMA, EMPTY, ARGS_DECL, i) \
+					): \
+						super(KERBAL_OPT_PPEXPAND_WITH_COMMA_N(REMAINF, EMPTY, ARGS_USE, i)) \
 					{ \
-					}
+					} \
 
 					KERBAL_PPEXPAND_N(FBODY, KERBAL_PPEXPAND_EMPTY_SEPARATOR, 0)
 					KERBAL_PPEXPAND_N(FBODY, KERBAL_PPEXPAND_EMPTY_SEPARATOR, 20)
@@ -299,7 +306,7 @@ namespace kerbal
 
 			template <typename T>
 			class member_compress_helper_impl<const T, true>:
-					private kerbal::type_traits::remove_volatile<T>::type
+				private kerbal::type_traits::remove_volatile<T>::type
 			{
 				private:
 					typedef typename kerbal::type_traits::remove_volatile<T>::type super;
@@ -334,17 +341,17 @@ namespace kerbal
 
 					template <typename ... Args>
 					struct try_test_is_nothrow_in_place_constructible :
-							kerbal::type_traits::try_test_is_nothrow_constructible<super, Args...>
+						kerbal::type_traits::try_test_is_nothrow_constructible<super, Args...>
 					{
 					};
 
 					template <typename ... Args>
 					KERBAL_CONSTEXPR
-					explicit member_compress_helper_impl(kerbal::utility::in_place_t, Args&& ... args)
-							KERBAL_CONDITIONAL_NOEXCEPT(
-								try_test_is_nothrow_in_place_constructible<Args&&...>::IS_TRUE::value
-							) :
-							super(kerbal::utility::forward<Args>(args)...)
+					explicit member_compress_helper_impl(kerbal::utility::in_place_t, Args && ... args)
+						KERBAL_CONDITIONAL_NOEXCEPT(
+							try_test_is_nothrow_in_place_constructible<Args && ...>::IS_TRUE::value
+						) :
+						super(kerbal::utility::forward<Args>(args)...)
 					{
 					}
 
@@ -359,10 +366,13 @@ namespace kerbal
 #				define ARGS_USE(i) KERBAL_MACRO_CONCAT(arg, i)
 #				define FBODY(i) \
 					KERBAL_OPT_PPEXPAND_WITH_COMMA_N(THEAD_NOT_EMPTY, EMPTY, TARGS_DECL, i) \
-					explicit member_compress_helper_impl(kerbal::utility::in_place_t KERBAL_OPT_PPEXPAND_WITH_COMMA_N(LEFT_JOIN_COMMA, EMPTY, ARGS_DECL, i)): \
-							super(KERBAL_OPT_PPEXPAND_WITH_COMMA_N(REMAINF, EMPTY, ARGS_USE, i)) \
+					explicit member_compress_helper_impl( \
+						kerbal::utility::in_place_t \
+						KERBAL_OPT_PPEXPAND_WITH_COMMA_N(LEFT_JOIN_COMMA, EMPTY, ARGS_DECL, i) \
+					): \
+						super(KERBAL_OPT_PPEXPAND_WITH_COMMA_N(REMAINF, EMPTY, ARGS_USE, i)) \
 					{ \
-					}
+					} \
 
 					KERBAL_PPEXPAND_N(FBODY, KERBAL_PPEXPAND_EMPTY_SEPARATOR, 0)
 					KERBAL_PPEXPAND_N(FBODY, KERBAL_PPEXPAND_EMPTY_SEPARATOR, 20)
@@ -384,13 +394,13 @@ namespace kerbal
 #			if __cplusplus < 201103L
 
 				private:
-					member_compress_helper_impl& operator=(const member_compress_helper_impl &);
+					member_compress_helper_impl & operator=(const member_compress_helper_impl &);
 
 #			else
 
 				public:
-					member_compress_helper_impl& operator=(const member_compress_helper_impl &) = delete;
-					member_compress_helper_impl& operator=(member_compress_helper_impl &&) = delete;
+					member_compress_helper_impl & operator=(const member_compress_helper_impl &) = delete;
+					member_compress_helper_impl & operator=(member_compress_helper_impl &&) = delete;
 
 #			endif
 
@@ -430,7 +440,7 @@ namespace kerbal
 
 		template <typename T, std::size_t I>
 		class member_compress_helper :
-				public kerbal::utility::detail::member_compress_helper_impl<T>
+			public kerbal::utility::detail::member_compress_helper_impl<T>
 		{
 			private:
 				typedef kerbal::utility::detail::member_compress_helper_impl<T> super;
@@ -464,17 +474,17 @@ namespace kerbal
 
 				template <typename ... Args>
 				struct try_test_is_nothrow_in_place_constructible :
-						super::template try_test_is_nothrow_in_place_constructible<Args...>
+					super::template try_test_is_nothrow_in_place_constructible<Args...>
 				{
 				};
 
 				template <typename ... Args>
 				KERBAL_CONSTEXPR
-				explicit member_compress_helper(kerbal::utility::in_place_t in_place, Args&& ... args)
-						KERBAL_CONDITIONAL_NOEXCEPT(
-							try_test_is_nothrow_in_place_constructible<Args&&...>::IS_TRUE::value
-						) :
-						super(in_place, kerbal::utility::forward<Args>(args)...)
+				explicit member_compress_helper(kerbal::utility::in_place_t in_place, Args && ... args)
+					KERBAL_CONDITIONAL_NOEXCEPT(
+						try_test_is_nothrow_in_place_constructible<Args && ...>::IS_TRUE::value
+					) :
+					super(in_place, kerbal::utility::forward<Args>(args)...)
 				{
 				}
 
@@ -488,10 +498,13 @@ namespace kerbal
 #			define ARGS_USE(i) KERBAL_MACRO_CONCAT(arg, i)
 #			define FBODY(i) \
 				KERBAL_OPT_PPEXPAND_WITH_COMMA_N(THEAD_NOT_EMPTY, EMPTY, TARGS_DECL, i) \
-				explicit member_compress_helper(kerbal::utility::in_place_t in_place KERBAL_OPT_PPEXPAND_WITH_COMMA_N(LEFT_JOIN_COMMA, EMPTY, ARGS_DECL, i)): \
-						super(in_place KERBAL_OPT_PPEXPAND_WITH_COMMA_N(LEFT_JOIN_COMMA, EMPTY, ARGS_USE, i)) \
+				explicit member_compress_helper( \
+					kerbal::utility::in_place_t in_place \
+					KERBAL_OPT_PPEXPAND_WITH_COMMA_N(LEFT_JOIN_COMMA, EMPTY, ARGS_DECL, i) \
+				): \
+					super(in_place KERBAL_OPT_PPEXPAND_WITH_COMMA_N(LEFT_JOIN_COMMA, EMPTY, ARGS_USE, i)) \
 				{ \
-				}
+				} \
 
 				KERBAL_PPEXPAND_N(FBODY, KERBAL_PPEXPAND_EMPTY_SEPARATOR, 0)
 				KERBAL_PPEXPAND_N(FBODY, KERBAL_PPEXPAND_EMPTY_SEPARATOR, 20)
@@ -511,9 +524,9 @@ namespace kerbal
 
 				template <typename U, std::size_t J>
 				struct try_test_is_nothrow_covariant_copy_constructible :
-						super::template try_test_is_nothrow_in_place_constructible<
-							typename kerbal::utility::member_compress_helper<U, J>::const_reference
-						>
+					super::template try_test_is_nothrow_in_place_constructible<
+						typename kerbal::utility::member_compress_helper<U, J>::const_reference
+					>
 				{
 				};
 
@@ -522,10 +535,10 @@ namespace kerbal
 				template <typename U, std::size_t J>
 				KERBAL_CONSTEXPR
 				explicit member_compress_helper(const kerbal::utility::member_compress_helper<U, J> & src)
-						KERBAL_CONDITIONAL_NOEXCEPT((
-							try_test_is_nothrow_covariant_copy_constructible<U, J>::IS_TRUE::value
-						)) :
-						super(kerbal::utility::in_place_t(), src.member())
+					KERBAL_CONDITIONAL_NOEXCEPT((
+						try_test_is_nothrow_covariant_copy_constructible<U, J>::IS_TRUE::value
+					)) :
+					super(kerbal::utility::in_place_t(), src.member())
 				{
 				}
 
@@ -534,19 +547,19 @@ namespace kerbal
 
 				template <typename U, std::size_t J>
 				struct try_test_is_nothrow_covariant_move_constructible :
-						super::template try_test_is_nothrow_in_place_constructible<
-							typename kerbal::utility::member_compress_helper<U, J>::rvalue_reference
-						>
+					super::template try_test_is_nothrow_in_place_constructible<
+						typename kerbal::utility::member_compress_helper<U, J>::rvalue_reference
+					>
 				{
 				};
 
 				template <typename U, std::size_t J>
 				KERBAL_CONSTEXPR
 				explicit member_compress_helper(kerbal::utility::member_compress_helper<U, J> && src)
-						KERBAL_CONDITIONAL_NOEXCEPT((
-							try_test_is_nothrow_covariant_move_constructible<U, J>::IS_TRUE::value
-						)) :
-						super(kerbal::utility::in_place_t(), kerbal::compatibility::move(src).member())
+					KERBAL_CONDITIONAL_NOEXCEPT((
+						try_test_is_nothrow_covariant_move_constructible<U, J>::IS_TRUE::value
+					)) :
+					super(kerbal::utility::in_place_t(), kerbal::compatibility::move(src).member())
 				{
 				}
 
@@ -558,19 +571,19 @@ namespace kerbal
 				template <typename Tuple, std::size_t ... J>
 				KERBAL_CONSTEXPR
 				explicit member_compress_helper(kerbal::utility::index_sequence<J...>, Tuple && args) :
-						super(kerbal::utility::in_place_t(), kerbal::utility::forward<Tuple>(args).template get<J>()...)
+					super(kerbal::utility::in_place_t(), kerbal::utility::forward<Tuple>(args).template get<J>()...)
 				{
 				}
 
 				template <typename Tuple>
 				KERBAL_CONSTEXPR
 				explicit member_compress_helper(kerbal::utility::piecewise_construct_t, Tuple && args) :
-						member_compress_helper(
-							kerbal::utility::make_index_sequence<
-								kerbal::type_traits::remove_cvref<Tuple>::type::TUPLE_SIZE::value
-							>(),
-							kerbal::utility::forward<Tuple>(args)
-						)
+					member_compress_helper(
+						kerbal::utility::make_index_sequence<
+							kerbal::type_traits::remove_cvref<Tuple>::type::TUPLE_SIZE::value
+						>(),
+						kerbal::utility::forward<Tuple>(args)
+					)
 				{
 				}
 
@@ -590,12 +603,14 @@ namespace kerbal
 				template <typename U>
 				KERBAL_CONSTEXPR14
 				void assign(U && arg)
-						KERBAL_CONDITIONAL_NOEXCEPT(
-								noexcept(kerbal::assign::generic_assign(
-										kerbal::utility::declthis<member_compress_helper>()->member(),
-										kerbal::utility::forward<U>(arg)
-								))
+					KERBAL_CONDITIONAL_NOEXCEPT(
+						noexcept(
+							kerbal::assign::generic_assign(
+								kerbal::utility::declthis<member_compress_helper>()->member(),
+								kerbal::utility::forward<U>(arg)
+							)
 						)
+					)
 				{
 					kerbal::assign::generic_assign(this->member(), kerbal::utility::forward<U>(arg));
 				}
@@ -605,13 +620,15 @@ namespace kerbal
 
 				template <typename U, std::size_t J>
 				KERBAL_CONSTEXPR14
-				member_compress_helper& operator=(const member_compress_helper<U, J> & arg)
-						KERBAL_CONDITIONAL_NOEXCEPT(
-								noexcept(kerbal::assign::generic_assign(
-										kerbal::utility::declthis<member_compress_helper>()->member(),
-										arg.member()
-								))
+				member_compress_helper & operator=(const member_compress_helper<U, J> & arg)
+					KERBAL_CONDITIONAL_NOEXCEPT(
+						noexcept(
+							kerbal::assign::generic_assign(
+								kerbal::utility::declthis<member_compress_helper>()->member(),
+								arg.member()
+							)
 						)
+					)
 				{
 					kerbal::assign::generic_assign(this->member(), arg.member());
 					return *this;
@@ -621,15 +638,20 @@ namespace kerbal
 
 				template <typename U, std::size_t J>
 				KERBAL_CONSTEXPR14
-				member_compress_helper& operator=(member_compress_helper<U, J> && arg)
-						KERBAL_CONDITIONAL_NOEXCEPT(
-								noexcept(kerbal::assign::generic_assign(
-										kerbal::utility::declthis<member_compress_helper>()->member(),
-										kerbal::compatibility::move(arg).member()
-								))
+				member_compress_helper & operator=(member_compress_helper<U, J> && arg)
+					KERBAL_CONDITIONAL_NOEXCEPT(
+						noexcept(
+							kerbal::assign::generic_assign(
+								kerbal::utility::declthis<member_compress_helper>()->member(),
+								kerbal::compatibility::move(arg).member()
+							)
 						)
+					)
 				{
-					kerbal::assign::generic_assign(this->member(), kerbal::compatibility::move(arg).member());
+					kerbal::assign::generic_assign(
+						this->member(),
+						kerbal::compatibility::move(arg).member()
+					);
 					return *this;
 				}
 
@@ -645,31 +667,31 @@ namespace kerbal
 
 			template <typename T, typename ... Args>
 			struct member_compress_helper_array_try_test_is_nothrow_in_place_constructible_helper :
-					kerbal::type_traits::tribool_unspecified
+				kerbal::type_traits::tribool_unspecified
 			{
 			};
 
 			template <typename T>
 			struct member_compress_helper_array_try_test_is_nothrow_in_place_constructible_helper<T> :
-					kerbal::type_traits::try_test_is_nothrow_default_constructible<T>
+				kerbal::type_traits::try_test_is_nothrow_default_constructible<T>
 			{
 			};
 
 			template <typename T, typename U, std::size_t N>
 			struct member_compress_helper_array_try_test_is_nothrow_in_place_constructible_helper<T, const U (&)[N]> :
-					kerbal::type_traits::try_test_is_nothrow_constructible<T, const U &>
+				kerbal::type_traits::try_test_is_nothrow_constructible<T, const U &>
 			{
 			};
 
 			template <typename T, typename U, std::size_t N>
 			struct member_compress_helper_array_try_test_is_nothrow_in_place_constructible_helper<T, U (&&)[N]> :
-					kerbal::type_traits::try_test_is_nothrow_constructible<T, U &&>
+				kerbal::type_traits::try_test_is_nothrow_constructible<T, U &&>
 			{
 			};
 
 			template <typename T, typename U>
 			struct member_compress_helper_array_try_test_is_nothrow_in_place_constructible_helper<T, std::initializer_list<U> > :
-					kerbal::type_traits::try_test_is_nothrow_constructible<T, const U &>
+				kerbal::type_traits::try_test_is_nothrow_constructible<T, const U &>
 			{
 			};
 
@@ -714,7 +736,7 @@ namespace kerbal
 
 				template <typename ... Args>
 				struct try_test_is_nothrow_in_place_constructible_helper :
-						detail::member_compress_helper_array_try_test_is_nothrow_in_place_constructible_helper<T, Args...>
+					detail::member_compress_helper_array_try_test_is_nothrow_in_place_constructible_helper<T, Args...>
 				{
 				};
 
@@ -722,9 +744,9 @@ namespace kerbal
 
 				KERBAL_CONSTEXPR
 				explicit member_compress_helper(kerbal::utility::in_place_t in_place)
-						KERBAL_CONDITIONAL_NOEXCEPT(
-							try_test_is_nothrow_in_place_constructible_helper<>::IS_TRUE::value
-						)
+					KERBAL_CONDITIONAL_NOEXCEPT(
+						try_test_is_nothrow_in_place_constructible_helper<>::IS_TRUE::value
+					)
 				{
 				}
 
@@ -735,11 +757,15 @@ namespace kerbal
 
 				template <std::size_t ... I2, typename U>
 				KERBAL_CONSTEXPR
-				explicit member_compress_helper(kerbal::utility::in_place_t, kerbal::utility::index_sequence<I2...>, const U (&src)[N])
-						KERBAL_CONDITIONAL_NOEXCEPT(
-							try_test_is_nothrow_in_place_constructible_helper<const U (&)[N]>::IS_TRUE::value
-						) :
-						k_member{src[I2]...}
+				explicit member_compress_helper(
+					kerbal::utility::in_place_t,
+					kerbal::utility::index_sequence<I2...>,
+					const U (&src)[N]
+				)
+					KERBAL_CONDITIONAL_NOEXCEPT(
+						try_test_is_nothrow_in_place_constructible_helper<const U (&)[N]>::IS_TRUE::value
+					) :
+					k_member{src[I2]...}
 				{
 				}
 
@@ -748,10 +774,10 @@ namespace kerbal
 				template <typename U>
 				KERBAL_CONSTEXPR
 				explicit member_compress_helper(kerbal::utility::in_place_t in_place, const U (&src)[N])
-						KERBAL_CONDITIONAL_NOEXCEPT(
-							try_test_is_nothrow_in_place_constructible_helper<const U (&)[N]>::IS_TRUE::value
-						) :
-						member_compress_helper(in_place, kerbal::utility::make_index_sequence<N>(), src)
+					KERBAL_CONDITIONAL_NOEXCEPT(
+						try_test_is_nothrow_in_place_constructible_helper<const U (&)[N]>::IS_TRUE::value
+					) :
+					member_compress_helper(in_place, kerbal::utility::make_index_sequence<N>(), src)
 				{
 				}
 
@@ -772,11 +798,15 @@ namespace kerbal
 
 				template <std::size_t ... I2, typename U>
 				KERBAL_CONSTEXPR
-				explicit member_compress_helper(kerbal::utility::in_place_t, kerbal::utility::index_sequence<I2...>, U (&&src)[N])
-						KERBAL_CONDITIONAL_NOEXCEPT(
-							try_test_is_nothrow_in_place_constructible_helper<U (&&)[N]>::IS_TRUE::value
-						) :
-						k_member{kerbal::compatibility::move(src[I2])...}
+				explicit member_compress_helper(
+					kerbal::utility::in_place_t,
+					kerbal::utility::index_sequence<I2...>,
+					U (&& src)[N]
+				)
+					KERBAL_CONDITIONAL_NOEXCEPT(
+						try_test_is_nothrow_in_place_constructible_helper<U (&&)[N]>::IS_TRUE::value
+					) :
+					k_member{kerbal::compatibility::move(src[I2])...}
 				{
 				}
 
@@ -785,10 +815,14 @@ namespace kerbal
 				template <typename U>
 				KERBAL_CONSTEXPR
 				explicit member_compress_helper(kerbal::utility::in_place_t in_place, U (&&src)[N])
-						KERBAL_CONDITIONAL_NOEXCEPT(
-							try_test_is_nothrow_in_place_constructible_helper<U (&&)[N]>::IS_TRUE::value
-						) :
-						member_compress_helper(in_place, kerbal::utility::make_index_sequence<N>(), kerbal::compatibility::move(src))
+					KERBAL_CONDITIONAL_NOEXCEPT(
+						try_test_is_nothrow_in_place_constructible_helper<U (&&)[N]>::IS_TRUE::value
+					) :
+					member_compress_helper(
+						in_place,
+						kerbal::utility::make_index_sequence<N>(),
+						kerbal::compatibility::move(src)
+					)
 				{
 				}
 
@@ -800,21 +834,23 @@ namespace kerbal
 				template <typename U>
 				KERBAL_CONSTEXPR
 				explicit member_compress_helper(kerbal::utility::in_place_t, std::initializer_list<U> ilist)
-						KERBAL_CONDITIONAL_NOEXCEPT(
-							try_test_is_nothrow_in_place_constructible_helper<std::initializer_list<U> >::IS_TRUE::value
-						) :
-						k_member{ilist}
+					KERBAL_CONDITIONAL_NOEXCEPT(
+						try_test_is_nothrow_in_place_constructible_helper<std::initializer_list<U> >::IS_TRUE::value
+					) :
+					k_member{ilist}
 				{
 				}
 
 #		else
 
-				explicit member_compress_helper(kerbal::utility::in_place_t, const kerbal::assign::assign_list<void> & ilist)
+				explicit
+				member_compress_helper(kerbal::utility::in_place_t, const kerbal::assign::assign_list<void> & ilist)
 				{
 				}
 
 				template <typename U>
-				explicit member_compress_helper(kerbal::utility::in_place_t, const kerbal::assign::assign_list<U> & ilist)
+				explicit
+				member_compress_helper(kerbal::utility::in_place_t, const kerbal::assign::assign_list<U> & ilist)
 				{
 					kerbal::algorithm::copy(ilist.cbegin(), ilist.cend(), this->k_member + 0);
 				}
@@ -828,8 +864,13 @@ namespace kerbal
 
 				template <std::size_t ... I2, typename U, std::size_t J>
 				KERBAL_CONSTEXPR
-				explicit member_compress_helper(kerbal::utility::in_place_t, kerbal::utility::index_sequence<I2...>, const kerbal::utility::member_compress_helper<U, J> & src)
-						: k_member{src.member()[I2]...}
+				explicit
+				member_compress_helper(
+					kerbal::utility::in_place_t,
+					kerbal::utility::index_sequence<I2...>,
+					const kerbal::utility::member_compress_helper<U, J> & src
+				) :
+					k_member{src.member()[I2]...}
 				{
 				}
 
@@ -837,12 +878,12 @@ namespace kerbal
 
 				template <typename U, std::size_t J>
 				KERBAL_CONSTEXPR
-				explicit member_compress_helper(const kerbal::utility::member_compress_helper<U, J> & src)
-						: member_compress_helper(
-							kerbal::utility::in_place_t(),
-							kerbal::utility::make_index_sequence<N>(),
-							src
-						)
+				explicit member_compress_helper(const kerbal::utility::member_compress_helper<U, J> & src) :
+					member_compress_helper(
+						kerbal::utility::in_place_t(),
+						kerbal::utility::make_index_sequence<N>(),
+						src
+					)
 				{
 				}
 
@@ -864,8 +905,13 @@ namespace kerbal
 
 				template <std::size_t ... I2, typename U, std::size_t J>
 				KERBAL_CONSTEXPR
-				explicit member_compress_helper(kerbal::utility::in_place_t, kerbal::utility::index_sequence<I2...>, kerbal::utility::member_compress_helper<U, J> && src)
-						: k_member{kerbal::compatibility::move(src).member()[I2]...}
+				explicit
+				member_compress_helper(
+					kerbal::utility::in_place_t,
+					kerbal::utility::index_sequence<I2...>,
+					kerbal::utility::member_compress_helper<U, J> && src
+				) :
+					k_member{kerbal::compatibility::move(src).member()[I2]...}
 				{
 				}
 
@@ -873,12 +919,13 @@ namespace kerbal
 
 				template <typename U, std::size_t J>
 				KERBAL_CONSTEXPR
-				explicit member_compress_helper(kerbal::utility::member_compress_helper<U, J> && src)
-						: member_compress_helper(
-							kerbal::utility::in_place_t(),
-							kerbal::utility::make_index_sequence<N>(),
-							kerbal::compatibility::move(src)
-						)
+				explicit
+				member_compress_helper(kerbal::utility::member_compress_helper<U, J> && src) :
+					member_compress_helper(
+						kerbal::utility::in_place_t(),
+						kerbal::utility::make_index_sequence<N>(),
+						kerbal::compatibility::move(src)
+					)
 				{
 				}
 
@@ -917,18 +964,18 @@ namespace kerbal
 
 
 		template <typename T, std::size_t I>
-		class member_compress_helper<T&, I>
+		class member_compress_helper<T &, I>
 		{
 			public:
 				typedef kerbal::type_traits::false_type IS_COMPRESSED;
 
-				typedef T&																	value_type;
-				typedef typename kerbal::type_traits::add_lvalue_reference<T&>::type		reference;
-				typedef typename kerbal::type_traits::add_const_lvalue_reference<T&>::type	const_reference;
+				typedef T &																	value_type;
+				typedef typename kerbal::type_traits::add_lvalue_reference<T &>::type		reference;
+				typedef typename kerbal::type_traits::add_const_lvalue_reference<T &>::type	const_reference;
 
 #		if __cplusplus >= 201103L
-				typedef typename kerbal::type_traits::add_rvalue_reference<T&>::type		rvalue_reference;
-				typedef typename kerbal::type_traits::add_const_rvalue_reference<T&>::type	const_rvalue_reference;
+				typedef typename kerbal::type_traits::add_rvalue_reference<T &>::type		rvalue_reference;
+				typedef typename kerbal::type_traits::add_const_rvalue_reference<T &>::type	const_rvalue_reference;
 #		endif
 
 			private:
@@ -938,7 +985,7 @@ namespace kerbal
 
 				KERBAL_CONSTEXPR14
 				explicit member_compress_helper(kerbal::utility::in_place_t, reference arg0) KERBAL_NOEXCEPT:
-						k_member(arg0)
+					k_member(arg0)
 				{
 				}
 
@@ -951,14 +998,14 @@ namespace kerbal
 				template <std::size_t J>
 				KERBAL_CONSTEXPR14
 				explicit member_compress_helper(const member_compress_helper<T, J> & arg) KERBAL_NOEXCEPT:
-						k_member(arg.member())
+					k_member(arg.member())
 				{
 				}
 
 				template <std::size_t J>
 				KERBAL_CONSTEXPR14
-				explicit member_compress_helper(const member_compress_helper<T&, J> & arg) KERBAL_NOEXCEPT:
-						k_member(arg.member())
+				explicit member_compress_helper(const member_compress_helper<T &, J> & arg) KERBAL_NOEXCEPT:
+					k_member(arg.member())
 				{
 				}
 
@@ -969,13 +1016,15 @@ namespace kerbal
 				}
 
 				KERBAL_CONSTEXPR14
-				member_compress_helper& operator=(const member_compress_helper & arg)
-						KERBAL_CONDITIONAL_NOEXCEPT(
-							noexcept(kerbal::assign::generic_assign(
+				member_compress_helper & operator=(const member_compress_helper & arg)
+					KERBAL_CONDITIONAL_NOEXCEPT(
+						noexcept(
+							kerbal::assign::generic_assign(
 								kerbal::utility::declthis<member_compress_helper>()->member(),
 								arg.member()
-							))
+							)
 						)
+					)
 				{
 					kerbal::assign::generic_assign(this->member(), arg.member());
 					return *this;
@@ -983,13 +1032,15 @@ namespace kerbal
 
 				template <typename U, std::size_t J>
 				KERBAL_CONSTEXPR14
-				member_compress_helper& operator=(const member_compress_helper<U, J> & arg)
-						KERBAL_CONDITIONAL_NOEXCEPT(
-							noexcept(kerbal::assign::generic_assign(
+				member_compress_helper & operator=(const member_compress_helper<U, J> & arg)
+					KERBAL_CONDITIONAL_NOEXCEPT(
+						noexcept(
+							kerbal::assign::generic_assign(
 								kerbal::utility::declthis<member_compress_helper>()->member(),
 								arg.member()
-							))
+							)
 						)
+					)
 				{
 					kerbal::assign::generic_assign(this->member(), arg.member());
 					return *this;

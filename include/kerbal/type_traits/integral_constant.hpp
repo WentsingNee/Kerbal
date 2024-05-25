@@ -35,7 +35,8 @@ namespace kerbal
 				typedef Type value_type;
 				typedef integral_constant<Type, val> type;
 
-				KERBAL_CONSTEXPR operator value_type() const KERBAL_NOEXCEPT
+				KERBAL_CONSTEXPR
+				operator value_type() const KERBAL_NOEXCEPT
 				{
 					return value;
 				}

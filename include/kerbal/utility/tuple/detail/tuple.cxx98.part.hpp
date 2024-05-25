@@ -170,7 +170,7 @@ namespace kerbal
 #	define DBODY(i) \
 		template <KERBAL_OPT_PPEXPAND_WITH_COMMA_N(REMAINF, EMPTY, TARGS_DECL, i)> \
 		struct tuple<KERBAL_OPT_PPEXPAND_WITH_COMMA_N(REMAINF, EMPTY, TARGS_USE, i)> \
-				KERBAL_OPT_PPEXPAND_WITH_COMMA_N(LEFT_JOIN_COLON, EMPTY, SUPER_TYPE, i) \
+			KERBAL_OPT_PPEXPAND_WITH_COMMA_N(LEFT_JOIN_COLON, EMPTY, SUPER_TYPE, i) \
 		{ \
 			protected: \
 				typedef kerbal::tmp::type_vector<KERBAL_OPT_PPEXPAND_WITH_COMMA_N(REMAINF, EMPTY, TARGS_USE, i)> targs_vector; \
@@ -236,34 +236,34 @@ namespace kerbal
  \
 				KERBAL_CONSTEXPR \
 				tuple() \
-						KERBAL_OPT_PPEXPAND_WITH_COMMA_N(LEFT_JOIN_COLON, EMPTY, DFT_CNSTRCTOR_INIT_SUPER_TYPE, i) \
+					KERBAL_OPT_PPEXPAND_WITH_COMMA_N(LEFT_JOIN_COLON, EMPTY, DFT_CNSTRCTOR_INIT_SUPER_TYPE, i) \
 				{ \
 				} \
  \
 				template <KERBAL_PPEXPAND_WITH_COMMA_N(EACH_INIT_CNSTRCTOR_TARGS_DECL, i)> \
 				KERBAL_CONSTEXPR \
 				explicit tuple(KERBAL_PPEXPAND_WITH_COMMA_N(EACH_INIT_CNSTRCTOR_ARGS_DECL, i)) \
-						KERBAL_OPT_PPEXPAND_WITH_COMMA_N(LEFT_JOIN_COLON, EMPTY, EACH_INIT_CNSTRCTOR_INIT_SUPER_TYPE, i) \
+					KERBAL_OPT_PPEXPAND_WITH_COMMA_N(LEFT_JOIN_COLON, EMPTY, EACH_INIT_CNSTRCTOR_INIT_SUPER_TYPE, i) \
 				{ \
 				} \
  \
 				template <KERBAL_PPEXPAND_WITH_COMMA_N(EACH_CONST_INIT_CNSTRCTOR_TARGS_DECL, i)> \
 				KERBAL_CONSTEXPR \
 				explicit tuple(KERBAL_PPEXPAND_WITH_COMMA_N(EACH_CONST_INIT_CNSTRCTOR_ARGS_DECL, i)) \
-						KERBAL_OPT_PPEXPAND_WITH_COMMA_N(LEFT_JOIN_COLON, EMPTY, EACH_CONST_INIT_CNSTRCTOR_INIT_SUPER_TYPE, i) \
+					KERBAL_OPT_PPEXPAND_WITH_COMMA_N(LEFT_JOIN_COLON, EMPTY, EACH_CONST_INIT_CNSTRCTOR_INIT_SUPER_TYPE, i) \
 				{ \
 				} \
  \
 				template <KERBAL_PPEXPAND_WITH_COMMA_N(VARIANCE_INIT_CNSTRCTOR_TARGS_DECL, i)> \
 				KERBAL_CONSTEXPR \
 				explicit tuple(const kerbal::utility::tuple<KERBAL_PPEXPAND_WITH_COMMA_N(VARIANCE_INIT_CNSTRCTOR_TARGS_USE, i)> & t) \
-						KERBAL_OPT_PPEXPAND_WITH_COMMA_N(LEFT_JOIN_COLON, EMPTY, VARIANCE_INIT_CNSTRCTOR_INIT_SUPER_TYPE, i) \
+					KERBAL_OPT_PPEXPAND_WITH_COMMA_N(LEFT_JOIN_COLON, EMPTY, VARIANCE_INIT_CNSTRCTOR_INIT_SUPER_TYPE, i) \
 				{ \
 				} \
  \
 				template <KERBAL_PPEXPAND_WITH_COMMA_N(VARIANCE_ASSIGN_TARGS_DECL, i)> \
 				KERBAL_CONSTEXPR14 \
-				tuple& operator=(const kerbal::utility::tuple<KERBAL_PPEXPAND_WITH_COMMA_N(VARIANCE_ASSIGN_TARGS_USE, i)> & t) \
+				tuple & operator=(const kerbal::utility::tuple<KERBAL_PPEXPAND_WITH_COMMA_N(VARIANCE_ASSIGN_TARGS_USE, i)> & t) \
 				{ \
 					KERBAL_PPEXPAND_WITH_COMMA_N(VARIANCE_ASSIGN_EACH_ASSIGN, i); \
 					return *this; \
@@ -324,7 +324,7 @@ namespace kerbal
  \
 				template <typename F> \
 				KERBAL_CONSTEXPR14 \
-				tuple& for_each(F f) \
+				tuple & for_each(F f) \
 				{ \
 					KERBAL_PPEXPAND_WITH_COMMA_N(FOR_EACH_EACH_APPLY, i); \
 					return *this; \
@@ -332,7 +332,7 @@ namespace kerbal
  \
 				template <typename F> \
 				KERBAL_CONSTEXPR14 \
-				const tuple& for_each(F f) const \
+				const tuple & for_each(F f) const \
 				{ \
 					KERBAL_PPEXPAND_WITH_COMMA_N(FOR_EACH_EACH_APPLY, i); \
 					return *this; \
@@ -340,7 +340,7 @@ namespace kerbal
  \
 				template <typename F> \
 				KERBAL_CONSTEXPR14 \
-				tuple& rfor_each(F f) \
+				tuple & rfor_each(F f) \
 				{ \
 					KERBAL_PPEXPAND_WITH_COMMA_N(RFOR_EACH_EACH_APPLY, i); \
 					return *this; \
@@ -348,7 +348,7 @@ namespace kerbal
  \
 				template <typename F> \
 				KERBAL_CONSTEXPR14 \
-				const tuple& rfor_each(F f) const \
+				const tuple & rfor_each(F f) const \
 				{ \
 					KERBAL_PPEXPAND_WITH_COMMA_N(RFOR_EACH_EACH_APPLY, i); \
 					return *this; \
@@ -376,8 +376,9 @@ namespace kerbal
 				bool k_equal_to_impl(const tuple & ano, kerbal::type_traits::integral_constant<std::size_t, N>) const \
 				{ \
 					typedef kerbal::compare::equal_to<typename value_type<N>::type> Pred; \
-					return static_cast<bool>(Pred()(this->template get<N>(), ano.template get<N>())) && \
-						   this->k_equal_to_impl(ano, kerbal::type_traits::integral_constant<std::size_t, N + 1>()); \
+					return \
+						static_cast<bool>(Pred()(this->template get<N>(), ano.template get<N>())) && \
+						this->k_equal_to_impl(ano, kerbal::type_traits::integral_constant<std::size_t, N + 1>()); \
 				} \
  \
 				KERBAL_CONSTEXPR \
@@ -402,8 +403,9 @@ namespace kerbal
 				bool k_not_equal_to_impl(const tuple & ano, kerbal::type_traits::integral_constant<std::size_t, N>) const \
 				{ \
 					typedef kerbal::compare::not_equal_to<typename value_type<N>::type> Pred; \
-					return static_cast<bool>(Pred()(this->template get<N>(), ano.template get<N>())) || \
-						   this->k_not_equal_to_impl(ano, kerbal::type_traits::integral_constant<std::size_t, N + 1>()); \
+					return \
+						static_cast<bool>(Pred()(this->template get<N>(), ano.template get<N>())) || \
+						this->k_not_equal_to_impl(ano, kerbal::type_traits::integral_constant<std::size_t, N + 1>()); \
 				} \
  \
 				KERBAL_CONSTEXPR \
@@ -429,11 +431,11 @@ namespace kerbal
 				{ \
 					typedef kerbal::compare::less<typename value_type<N>::type> Pred; \
 					return \
-							static_cast<bool>(Pred()(this->template get<N>(), ano.template get<N>())) /* *this < ano */ || \
-							( \
-								!static_cast<bool>(Pred()(ano.template get<N>(), this->template get<N>())) /* *this <= ano */ && \
-								this->k_less_impl(ano, kerbal::type_traits::integral_constant<std::size_t, N + 1>()) \
-							); \
+						static_cast<bool>(Pred()(this->template get<N>(), ano.template get<N>())) /* *this < ano */ || \
+						( \
+							!static_cast<bool>(Pred()(ano.template get<N>(), this->template get<N>())) /* *this <= ano */ && \
+							this->k_less_impl(ano, kerbal::type_traits::integral_constant<std::size_t, N + 1>()) \
+						); \
 				} \
  \
 				KERBAL_CONSTEXPR \
@@ -459,11 +461,11 @@ namespace kerbal
 				{ \
 					typedef kerbal::compare::greater<typename value_type<N>::type> Pred; \
 					return \
-							static_cast<bool>(Pred()(this->template get<N>(), ano.template get<N>())) /* *this > ano */ || \
-							( \
-								!static_cast<bool>(Pred()(ano.template get<N>(), this->template get<N>())) /* *this >= ano */ && \
-								this->k_greater_impl(ano, kerbal::type_traits::integral_constant<std::size_t, N + 1>()) \
-							); \
+						static_cast<bool>(Pred()(this->template get<N>(), ano.template get<N>())) /* *this > ano */ || \
+						( \
+							!static_cast<bool>(Pred()(ano.template get<N>(), this->template get<N>())) /* *this >= ano */ && \
+							this->k_greater_impl(ano, kerbal::type_traits::integral_constant<std::size_t, N + 1>()) \
+						); \
 				} \
  \
 				KERBAL_CONSTEXPR \
@@ -489,12 +491,12 @@ namespace kerbal
 				{ \
 					typedef kerbal::compare::less_equal<typename value_type<N>::type> Pred; \
 					return \
-							static_cast<bool>(Pred()(this->template get<N>(), ano.template get<N>())) /* *this <= ano */ && \
-							( \
-									static_cast<bool>(Pred()(ano.template get<N>(), this->template get<N>())) ? /* ano <= *this */ \
-									this->k_less_equal_impl(ano, kerbal::type_traits::integral_constant<std::size_t, N + 1>()) : /* *this == ano */ \
-									true /* *this < ano */ \
-							); \
+						static_cast<bool>(Pred()(this->template get<N>(), ano.template get<N>())) /* *this <= ano */ && \
+						( \
+							static_cast<bool>(Pred()(ano.template get<N>(), this->template get<N>())) ? /* ano <= *this */ \
+							this->k_less_equal_impl(ano, kerbal::type_traits::integral_constant<std::size_t, N + 1>()) : /* *this == ano */ \
+							true /* *this < ano */ \
+						); \
 				} \
  \
 				KERBAL_CONSTEXPR \
@@ -520,12 +522,12 @@ namespace kerbal
 				{ \
 					typedef kerbal::compare::greater_equal<typename value_type<N>::type> Pred; \
 					return \
-							static_cast<bool>(Pred()(this->template get<N>(), ano.template get<N>())) /* *this >= ano */ && \
-							( \
-									static_cast<bool>(Pred()(ano.template get<N>(), this->template get<N>())) ? /* ano >= *this */ \
-									this->k_greater_equal_impl(ano, kerbal::type_traits::integral_constant<std::size_t, N + 1>()) : /* *this == ano */ \
-									true /* *this > ano */ \
-							); \
+						static_cast<bool>(Pred()(this->template get<N>(), ano.template get<N>())) /* *this >= ano */ && \
+						( \
+							static_cast<bool>(Pred()(ano.template get<N>(), this->template get<N>())) ? /* ano >= *this */ \
+							this->k_greater_equal_impl(ano, kerbal::type_traits::integral_constant<std::size_t, N + 1>()) : /* *this == ano */ \
+							true /* *this > ano */ \
+						); \
 				} \
  \
 				KERBAL_CONSTEXPR \
@@ -542,7 +544,7 @@ namespace kerbal
 					return this->k_greater_equal_impl(ano, kerbal::type_traits::integral_constant<std::size_t, 0>()); \
 				} \
  \
-		};
+		}; \
 
 		KERBAL_PPEXPAND_N(DBODY, KERBAL_PPEXPAND_EMPTY_SEPARATOR, 19)
 
@@ -601,9 +603,9 @@ namespace kerbal
 		make_tuple(KERBAL_OPT_PPEXPAND_WITH_COMMA_N(REMAINF, EMPTY, ARGS_DECL, i)) \
 		{ \
 			return kerbal::utility::tuple<KERBAL_OPT_PPEXPAND_WITH_COMMA_N(REMAINF, EMPTY, TARGS_USE, i)>( \
-					KERBAL_OPT_PPEXPAND_WITH_COMMA_N(REMAINF, EMPTY, ARGS_USE, i) \
+				KERBAL_OPT_PPEXPAND_WITH_COMMA_N(REMAINF, EMPTY, ARGS_USE, i) \
 			); \
-		}
+		} \
 
 		KERBAL_PPEXPAND_N(FBODY, KERBAL_PPEXPAND_EMPTY_SEPARATOR, 0)
 		KERBAL_PPEXPAND_N(FBODY, KERBAL_PPEXPAND_EMPTY_SEPARATOR, 19)
@@ -632,9 +634,9 @@ namespace kerbal
 		tie(KERBAL_OPT_PPEXPAND_WITH_COMMA_N(REMAINF, EMPTY, ARGS_DECL, i)) \
 		{ \
 			return kerbal::utility::tuple<KERBAL_OPT_PPEXPAND_WITH_COMMA_N(REMAINF, EMPTY, TARGS_USE, i)>( \
-					KERBAL_OPT_PPEXPAND_WITH_COMMA_N(REMAINF, EMPTY, ARGS_USE, i) \
+				KERBAL_OPT_PPEXPAND_WITH_COMMA_N(REMAINF, EMPTY, ARGS_USE, i) \
 			); \
-		}
+		} \
 
 		KERBAL_PPEXPAND_N(FBODY, KERBAL_PPEXPAND_EMPTY_SEPARATOR, 19)
 
@@ -662,12 +664,14 @@ namespace kerbal
 #	define FBODY(i) \
 		KERBAL_OPT_PPEXPAND_WITH_COMMA_N(THEAD_NOT_EMPTY, EMPTY, TARGS_DECL, i) \
 		inline \
-		void swap(kerbal::utility::tuple<KERBAL_OPT_PPEXPAND_WITH_COMMA_N(REMAINF, EMPTY, TARGS_USE, i)> & a, \
-				  kerbal::utility::tuple<KERBAL_OPT_PPEXPAND_WITH_COMMA_N(REMAINF, EMPTY, TARGS_USE, i)> & b) \
-				KERBAL_CONDITIONAL_NOEXCEPT(noexcept(a.swap(b))) \
+		void swap( \
+			kerbal::utility::tuple<KERBAL_OPT_PPEXPAND_WITH_COMMA_N(REMAINF, EMPTY, TARGS_USE, i)> & a, \
+			kerbal::utility::tuple<KERBAL_OPT_PPEXPAND_WITH_COMMA_N(REMAINF, EMPTY, TARGS_USE, i)> & b \
+		) \
+			KERBAL_CONDITIONAL_NOEXCEPT(noexcept(a.swap(b))) \
 		{ \
 			a.swap(b); \
-		}
+		} \
 
 		KERBAL_PPEXPAND_N(FBODY, KERBAL_PPEXPAND_EMPTY_SEPARATOR, 0)
 		KERBAL_PPEXPAND_N(FBODY, KERBAL_PPEXPAND_EMPTY_SEPARATOR, 19)
@@ -694,12 +698,14 @@ KERBAL_NAMESPACE_STD_BEGIN
 #	define FBODY(i) \
 	KERBAL_OPT_PPEXPAND_WITH_COMMA_N(THEAD_NOT_EMPTY, EMPTY, TARGS_DECL, i) \
 	inline \
-	void swap(kerbal::utility::tuple<KERBAL_OPT_PPEXPAND_WITH_COMMA_N(REMAINF, EMPTY, TARGS_USE, i)> & a, \
-			  kerbal::utility::tuple<KERBAL_OPT_PPEXPAND_WITH_COMMA_N(REMAINF, EMPTY, TARGS_USE, i)> & b) \
-			KERBAL_CONDITIONAL_NOEXCEPT(noexcept(a.swap(b))) \
+	void swap( \
+		kerbal::utility::tuple<KERBAL_OPT_PPEXPAND_WITH_COMMA_N(REMAINF, EMPTY, TARGS_USE, i)> & a, \
+		 kerbal::utility::tuple<KERBAL_OPT_PPEXPAND_WITH_COMMA_N(REMAINF, EMPTY, TARGS_USE, i)> & b \
+	) \
+		KERBAL_CONDITIONAL_NOEXCEPT(noexcept(a.swap(b))) \
 	{ \
 		a.swap(b); \
-	}
+	} \
 
 	KERBAL_PPEXPAND_N(FBODY, KERBAL_PPEXPAND_EMPTY_SEPARATOR, 0)
 	KERBAL_PPEXPAND_N(FBODY, KERBAL_PPEXPAND_EMPTY_SEPARATOR, 19)

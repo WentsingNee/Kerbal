@@ -42,7 +42,7 @@ namespace kerbal
 
 		template <typename T, typename ... Args>
 		struct try_test_is_constructible :
-				kerbal::type_traits::tribool_unspecified
+			kerbal::type_traits::tribool_unspecified
 		{
 		};
 
@@ -60,7 +60,7 @@ namespace kerbal
 #	define TBODY(i) \
 		template <typename T KERBAL_OPT_PPEXPAND_WITH_COMMA_N(LEFT_JOIN_COMMA, EMPTY, TARGS_DECL2, i)> \
 		struct try_test_is_constructible<T KERBAL_OPT_PPEXPAND_WITH_COMMA_N(LEFT_JOIN_COMMA, EMPTY, TARGS_USE, i)> : \
-				kerbal::type_traits::tribool_unspecified \
+			kerbal::type_traits::tribool_unspecified \
 		{ \
 		};
 

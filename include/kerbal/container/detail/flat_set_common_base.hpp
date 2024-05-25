@@ -31,38 +31,38 @@ namespace kerbal
 			class flat_set_common_base
 			{
 				public:
-					typedef typename Ordered::key_compare			key_compare;
-					typedef typename Ordered::key_type				key_type;
-					typedef typename Ordered::value_type			value_type;
-					typedef typename Ordered::const_type			const_type;
-					typedef typename Ordered::reference				reference;
-					typedef typename Ordered::const_reference		const_reference;
-					typedef typename Ordered::pointer				pointer;
-					typedef typename Ordered::const_pointer			const_pointer;
+					typedef typename Ordered::key_compare				key_compare;
+					typedef typename Ordered::key_type					key_type;
+					typedef typename Ordered::value_type				value_type;
+					typedef typename Ordered::const_type				const_type;
+					typedef typename Ordered::reference					reference;
+					typedef typename Ordered::const_reference			const_reference;
+					typedef typename Ordered::pointer					pointer;
+					typedef typename Ordered::const_pointer				const_pointer;
 
 #		if __cplusplus >= 201103L
-					typedef typename Ordered::rvalue_reference				rvalue_reference;
-					typedef typename Ordered::const_rvalue_reference		const_rvalue_reference;
+					typedef typename Ordered::rvalue_reference			rvalue_reference;
+					typedef typename Ordered::const_rvalue_reference	const_rvalue_reference;
 #		endif
 
-					typedef typename Ordered::size_type						size_type;
-					typedef typename Ordered::difference_type				difference_type;
+					typedef typename Ordered::size_type					size_type;
+					typedef typename Ordered::difference_type			difference_type;
 
-					typedef typename Ordered::const_iterator				const_iterator;
-					typedef typename Ordered::const_reverse_iterator		const_reverse_iterator;
+					typedef typename Ordered::const_iterator			const_iterator;
+					typedef typename Ordered::const_reverse_iterator	const_reverse_iterator;
 
 				protected:
 
 					Ordered ordered;
 
 					KERBAL_CONSTEXPR14
-					key_compare& key_comp_obj()
+					key_compare & key_comp_obj()
 					{
 						return ordered.key_comp_obj();
 					}
 
 					KERBAL_CONSTEXPR14
-					const key_compare& key_comp_obj() const
+					const key_compare & key_comp_obj() const
 					{
 						return ordered.key_comp_obj();
 					}
@@ -70,7 +70,7 @@ namespace kerbal
 				public:
 
 					KERBAL_CONSTEXPR14
-					const key_compare& key_comp() const
+					const key_compare & key_comp() const
 					{
 						return ordered.key_comp();
 					}
@@ -78,13 +78,13 @@ namespace kerbal
 				protected:
 					KERBAL_CONSTEXPR
 					flat_set_common_base() :
-							ordered()
+						ordered()
 					{
 					}
 
 					KERBAL_CONSTEXPR
 					explicit flat_set_common_base(key_compare kc) :
-							ordered(kc)
+						ordered(kc)
 					{
 					}
 

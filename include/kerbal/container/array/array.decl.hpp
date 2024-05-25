@@ -45,45 +45,45 @@ namespace kerbal
 			public:
 
 				/// @brief Type of the elements.
-				typedef T value_type;
+				typedef T										value_type;
 
 				/// @brief Constant type of the elements.
-				typedef const value_type const_type;
+				typedef const value_type						const_type;
 
 				/// @brief Reference of the elements.
-				typedef value_type& reference;
+				typedef value_type &							reference;
 
 				/// @brief Constant reference of the elements.
-				typedef const value_type& const_reference;
+				typedef const value_type &						const_reference;
 
 				/// @brief Pointer type to the elements.
-				typedef value_type* pointer;
+				typedef value_type *							pointer;
 
 				/// @brief Constant pointer type to the elements.
-				typedef const value_type* const_pointer;
+				typedef const value_type *						const_pointer;
 
 #		if __cplusplus >= 201103L
-				typedef value_type&& rvalue_reference;
-				typedef const value_type&& const_rvalue_reference;
+				typedef value_type &&							rvalue_reference;
+				typedef const value_type &&						const_rvalue_reference;
 #		endif
 
-				typedef std::size_t size_type;
-				typedef std::ptrdiff_t difference_type;
+				typedef std::size_t								size_type;
+				typedef std::ptrdiff_t							difference_type;
 
 				/// @brief Iterator to array.
-				typedef kerbal::container::detail::arr_iter<value_type> iterator;
+				typedef kerbal::container::detail::arr_iter<value_type>		iterator;
 				/// @brief Constant iterator to array.
-				typedef kerbal::container::detail::arr_kiter<value_type> const_iterator;
+				typedef kerbal::container::detail::arr_kiter<value_type>	const_iterator;
 				/// @brief Reverse iterator to array.
-				typedef kerbal::iterator::reverse_iterator<iterator> reverse_iterator;
+				typedef kerbal::iterator::reverse_iterator<iterator>		reverse_iterator;
 				/// @brief Constant reverse iterator to array.
-				typedef kerbal::iterator::reverse_iterator<const_iterator> const_reverse_iterator;
+				typedef kerbal::iterator::reverse_iterator<const_iterator>	const_reverse_iterator;
 
 				/// @brief 与该 array 所等价的 C 风格数组的类型, 即 value_type[N]
-				typedef value_type equal_c_array[N];
-				typedef equal_c_array& equal_c_array_reference;
-				typedef const value_type const_equal_c_array[N];
-				typedef const_equal_c_array& const_equal_c_array_reference;
+				typedef value_type											equal_c_array[N];
+				typedef equal_c_array &										equal_c_array_reference;
+				typedef const value_type									const_equal_c_array[N];
+				typedef const_equal_c_array &								const_equal_c_array_reference;
 
 			public:
 				value_type k_data[N];
@@ -100,10 +100,10 @@ namespace kerbal
 				template <typename U>
 				array(const kerbal::assign::assign_list<U> & ilist);
 
-				array& operator=(const kerbal::assign::assign_list<void> & ilist);
+				array & operator=(const kerbal::assign::assign_list<void> & ilist);
 
 				template <typename U>
-				array& operator=(const kerbal::assign::assign_list<U> & ilist);
+				array & operator=(const kerbal::assign::assign_list<U> & ilist);
 
 #		endif
 
@@ -124,7 +124,7 @@ namespace kerbal
 				 */
 				template <typename InputIterator>
 				typename kerbal::type_traits::enable_if<
-						kerbal::iterator::is_input_compatible_iterator<InputIterator>::value
+					kerbal::iterator::is_input_compatible_iterator<InputIterator>::value
 				>::type
 				KERBAL_CONSTEXPR14
 				assign(InputIterator first, InputIterator last);
@@ -355,7 +355,7 @@ namespace kerbal
 		template <typename T, std::size_t N>
 		KERBAL_CONSTEXPR14
 		void swap(kerbal::container::array<T, N> & a, kerbal::container::array<T, N> & b)
-				KERBAL_CONDITIONAL_NOEXCEPT(noexcept(a.swap(b)))
+			KERBAL_CONDITIONAL_NOEXCEPT(noexcept(a.swap(b)))
 		{
 			a.swap(b);
 		}
@@ -370,7 +370,7 @@ KERBAL_NAMESPACE_STD_BEGIN
 	template <typename T, std::size_t N>
 	KERBAL_CONSTEXPR14
 	void swap(kerbal::container::array<T, N> & a, kerbal::container::array<T, N> & b)
-			KERBAL_CONDITIONAL_NOEXCEPT(noexcept(a.swap(b)))
+		KERBAL_CONDITIONAL_NOEXCEPT(noexcept(a.swap(b)))
 	{
 		a.swap(b);
 	}

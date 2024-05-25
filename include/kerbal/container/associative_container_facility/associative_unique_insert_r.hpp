@@ -25,7 +25,7 @@ namespace kerbal
 
 		template <typename Iterator>
 		class associative_unique_insert_r :
-				public kerbal::utility::compressed_pair<Iterator, bool>
+			public kerbal::utility::compressed_pair<Iterator, bool>
 		{
 			private:
 				typedef kerbal::utility::compressed_pair<Iterator, bool> super;
@@ -37,25 +37,25 @@ namespace kerbal
 				template <typename UIterator>
 				KERBAL_CONSTEXPR
 				associative_unique_insert_r(const UIterator & pos, bool result) :
-						super(pos, result)
+					super(pos, result)
 				{
 				}
 
 				template <typename UIterator>
 				KERBAL_CONSTEXPR
 				associative_unique_insert_r(const associative_unique_insert_r<UIterator> & src) :
-						super(src.position(), src.insert_happen())
+					super(src.position(), src.insert_happen())
 				{
 				}
 
 				KERBAL_CONSTEXPR14
-				iterator& position() KERBAL_NOEXCEPT
+				iterator & position() KERBAL_NOEXCEPT
 				{
 					return super::first();
 				}
 
 				KERBAL_CONSTEXPR
-				const iterator& position() const KERBAL_NOEXCEPT
+				const iterator & position() const KERBAL_NOEXCEPT
 				{
 					return super::first();
 				}

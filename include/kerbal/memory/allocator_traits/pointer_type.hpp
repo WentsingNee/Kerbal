@@ -27,28 +27,31 @@ namespace kerbal
 	{
 
 		template <typename Alloc, typename = kerbal::type_traits::void_type<>::type>
-		struct allocator_has_def_pointer: kerbal::type_traits::false_type
+		struct allocator_has_def_pointer :
+			kerbal::type_traits::false_type
 		{
 		};
 
 		template <typename Alloc>
 		struct allocator_has_def_pointer<
-				Alloc,
-				typename kerbal::type_traits::void_type<typename Alloc::pointer>::type
+			Alloc,
+			typename kerbal::type_traits::void_type<typename Alloc::pointer>::type
 		> :
-				kerbal::type_traits::true_type
+			kerbal::type_traits::true_type
 		{
 		};
 
 		template <typename Alloc>
-		struct allocator_could_use_pointer_def : kerbal::memory::allocator_has_def_pointer<Alloc>
+		struct allocator_could_use_pointer_def :
+			kerbal::memory::allocator_has_def_pointer<Alloc>
 		{
 		};
 
 #	if __cplusplus >= 201703L
 
 		template <typename T>
-		struct allocator_could_use_pointer_def<std::allocator<T> >: kerbal::type_traits::false_type
+		struct allocator_could_use_pointer_def<std::allocator<T> > :
+			kerbal::type_traits::false_type
 		{
 		};
 
@@ -60,7 +63,7 @@ namespace kerbal
 			template <typename Alloc, bool = kerbal::memory::allocator_could_use_pointer_def<Alloc>::value>
 			struct allocator_pointer_traits_helper
 			{
-					typedef typename Alloc::value_type* type;
+					typedef typename Alloc::value_type * type;
 			};
 
 			template <typename Alloc>

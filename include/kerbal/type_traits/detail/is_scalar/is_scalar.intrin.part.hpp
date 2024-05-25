@@ -34,7 +34,8 @@ namespace kerbal
 	{
 
 		template <typename T>
-		struct is_scalar : kerbal::type_traits::bool_constant<KERBAL_INTRINSIC_IS_SCALAR(T)>
+		struct is_scalar :
+			kerbal::type_traits::bool_constant<KERBAL_INTRINSIC_IS_SCALAR(T)>
 		{
 		};
 

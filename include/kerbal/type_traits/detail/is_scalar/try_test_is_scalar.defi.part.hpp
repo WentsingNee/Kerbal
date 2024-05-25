@@ -25,9 +25,9 @@ namespace kerbal
 
 		template <typename T>
 		struct try_test_is_scalar :
-				kerbal::type_traits::tribool_constant<
-					!!kerbal::type_traits::is_scalar<T>::value
-				>
+			kerbal::type_traits::tribool_constant<
+				!!kerbal::type_traits::is_scalar<T>::value
+			>
 		{
 		};
 

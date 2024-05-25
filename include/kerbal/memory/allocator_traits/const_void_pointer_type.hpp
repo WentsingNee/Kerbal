@@ -25,23 +25,27 @@ namespace kerbal
 	{
 
 		template <typename Alloc, typename = kerbal::type_traits::void_type<>::type>
-		struct allocator_has_def_const_void_pointer: kerbal::type_traits::false_type
+		struct allocator_has_def_const_void_pointer :
+			kerbal::type_traits::false_type
 		{
 		};
 
 		template <typename Alloc>
 		struct allocator_has_def_const_void_pointer<
-				Alloc,
-				typename kerbal::type_traits::void_type<typename Alloc::const_void_pointer>::type
+			Alloc,
+			typename kerbal::type_traits::void_type<typename Alloc::const_void_pointer>::type
 		> :
-				kerbal::type_traits::true_type
+			kerbal::type_traits::true_type
 		{
 		};
 
 		namespace detail
 		{
 
-			template <typename Alloc, bool = kerbal::memory::allocator_has_def_const_void_pointer<Alloc>::value>
+			template <
+				typename Alloc,
+				bool = kerbal::memory::allocator_has_def_const_void_pointer<Alloc>::value
+			>
 			struct allocator_const_void_pointer_traits_helper
 			{
 				private:

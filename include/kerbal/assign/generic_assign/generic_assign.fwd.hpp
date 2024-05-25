@@ -32,10 +32,10 @@ namespace kerbal
 
 		template <typename T, typename U>
 		KERBAL_CONSTEXPR14
-		T& generic_assign(T& lhs, const U& rhs)
-				KERBAL_CONDITIONAL_NOEXCEPT(
-					noexcept(lhs = rhs)
-				)
+		T & generic_assign(T & lhs, const U & rhs)
+			KERBAL_CONDITIONAL_NOEXCEPT(
+				noexcept(lhs = rhs)
+			)
 		;
 
 		template <typename T, typename U, std::size_t N>
@@ -50,34 +50,39 @@ namespace kerbal
 
 			template <typename T, typename U>
 			KERBAL_CONSTEXPR14
-			void k_generic_assign(T& lhs, U&& rhs, kerbal::type_traits::false_type)
-					KERBAL_CONDITIONAL_NOEXCEPT(
-						noexcept(lhs = kerbal::utility::forward<U>(rhs))
-					)
+			void k_generic_assign(T & lhs, U && rhs, kerbal::type_traits::false_type)
+				KERBAL_CONDITIONAL_NOEXCEPT(
+					noexcept(lhs = kerbal::utility::forward<U>(rhs))
+				)
 			;
 
 			template <typename T, typename U>
 			KERBAL_CONSTEXPR14
-			void k_generic_assign(T& lhs, U&& rhs, kerbal::type_traits::true_type)
-					KERBAL_CONDITIONAL_NOEXCEPT(
-						noexcept(
-							kerbal::assign::generic_assign(lhs[0], kerbal::utility::forward<decltype(rhs[0])>(rhs[0]))
+			void k_generic_assign(T & lhs, U && rhs, kerbal::type_traits::true_type)
+				KERBAL_CONDITIONAL_NOEXCEPT(
+					noexcept(
+						kerbal::assign::generic_assign(
+							lhs[0],
+							kerbal::utility::forward<decltype(rhs[0])>(rhs[0])
 						)
 					)
+				)
 			;
 
 		} // namespace detail
 
 		template <typename T, typename U>
 		KERBAL_CONSTEXPR14
-		T& generic_assign(T& lhs, U&& rhs)
-				KERBAL_CONDITIONAL_NOEXCEPT(
-					noexcept(
-						kerbal::assign::detail::k_generic_assign(
-							lhs, kerbal::utility::forward<U>(rhs), kerbal::type_traits::is_array<T>()
-						)
+		T & generic_assign(T & lhs, U && rhs)
+			KERBAL_CONDITIONAL_NOEXCEPT(
+				noexcept(
+					kerbal::assign::detail::k_generic_assign(
+						lhs,
+						kerbal::utility::forward<U>(rhs),
+						kerbal::type_traits::is_array<T>()
 					)
 				)
+			)
 		;
 
 #	endif

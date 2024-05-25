@@ -33,11 +33,11 @@ namespace kerbal
 		KERBAL_MODULE_EXPORT
 		template <typename From, typename To>
 		struct copy_rvalue_reference :
-				kerbal::type_traits::conditional<
-					kerbal::type_traits::is_rvalue_reference<From>::value,
-					kerbal::type_traits::add_rvalue_reference<To>,
-					To
-				>
+			kerbal::type_traits::conditional<
+				kerbal::type_traits::is_rvalue_reference<From>::value,
+				kerbal::type_traits::add_rvalue_reference<To>,
+				To
+			>
 		{
 		};
 

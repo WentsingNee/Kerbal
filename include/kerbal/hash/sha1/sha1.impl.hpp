@@ -75,8 +75,8 @@ namespace kerbal
 
 		constexpr
 		SHA1_context_base::SHA1_context_base() noexcept :
-				state { 0x67452301, 0xEFCDAB89, 0x98BADCFE, 0x10325476, 0xC3D2E1F0 },
-				count { 0, 0 }, buffer { }
+			state{0x67452301, 0xEFCDAB89, 0x98BADCFE, 0x10325476, 0xC3D2E1F0},
+			count{0, 0}, buffer{}
 		{
 		}
 
@@ -310,8 +310,10 @@ namespace kerbal
 		template <typename Policy>
 		template <typename RandomAccessIterator>
 		KERBAL_CONSTEXPR14
-		void SHA1_context<Policy>::update_helper(RandomAccessIterator first, RandomAccessIterator last,
-													std::random_access_iterator_tag) KERBAL_NOEXCEPT
+		void SHA1_context<Policy>::update_helper(
+			RandomAccessIterator first, RandomAccessIterator last,
+			std::random_access_iterator_tag
+		) KERBAL_NOEXCEPT
 		{
 			typedef RandomAccessIterator iterator;
 			typedef typename kerbal::iterator::iterator_traits<iterator>::difference_type difference_type;
@@ -392,7 +394,10 @@ namespace kerbal
 		{
 			typedef ForwardIterator iterator;
 			typedef typename kerbal::iterator::iterator_traits<iterator>::value_type value_type;
-			KERBAL_STATIC_ASSERT((kerbal::type_traits::is_same<value_type, uint8_t>::value), "Iterator must refers to uint8_t");
+			KERBAL_STATIC_ASSERT(
+				(kerbal::type_traits::is_same<value_type, uint8_t>::value),
+				"Iterator must refers to uint8_t"
+			);
 
 			this->update_helper(first, last, kerbal::iterator::iterator_category(first));
 		}
@@ -403,14 +408,14 @@ namespace kerbal
 		SHA1_context<Policy>::digest() KERBAL_NOEXCEPT
 		{
 			const uint8_t final_count[8] = {
-					static_cast<uint8_t>(this->count[1] >> 24),
-					static_cast<uint8_t>(this->count[1] >> 16),
-					static_cast<uint8_t>(this->count[1] >> 8),
-					static_cast<uint8_t>(this->count[1] >> 0),
-					static_cast<uint8_t>(this->count[0] >> 24),
-					static_cast<uint8_t>(this->count[0] >> 16),
-					static_cast<uint8_t>(this->count[0] >> 8),
-					static_cast<uint8_t>(this->count[0] >> 0),
+				static_cast<uint8_t>(this->count[1] >> 24),
+				static_cast<uint8_t>(this->count[1] >> 16),
+				static_cast<uint8_t>(this->count[1] >> 8),
+				static_cast<uint8_t>(this->count[1] >> 0),
+				static_cast<uint8_t>(this->count[0] >> 24),
+				static_cast<uint8_t>(this->count[0] >> 16),
+				static_cast<uint8_t>(this->count[0] >> 8),
+				static_cast<uint8_t>(this->count[0] >> 0),
 			}; /* Endian independent */
 
 			{

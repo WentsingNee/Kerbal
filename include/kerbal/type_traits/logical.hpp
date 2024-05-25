@@ -25,80 +25,85 @@ namespace kerbal
 
 		KERBAL_MODULE_EXPORT
 		template <typename T>
-		struct negation: kerbal::type_traits::bool_constant<!T::value>
+		struct negation :
+			kerbal::type_traits::bool_constant<!T::value>
 		{
 		};
 
 #	if __cplusplus < 201103L
 
-		template <typename T0 = kerbal::type_traits::true_type,
-					typename T1 = kerbal::type_traits::true_type,
-					typename T2 = kerbal::type_traits::true_type,
-					typename T3 = kerbal::type_traits::true_type,
-					typename T4 = kerbal::type_traits::true_type,
-					typename T5 = kerbal::type_traits::true_type,
-					typename T6 = kerbal::type_traits::true_type,
-					typename T7 = kerbal::type_traits::true_type,
-					typename T8 = kerbal::type_traits::true_type,
-					typename T9 = kerbal::type_traits::true_type,
-					typename T10 = kerbal::type_traits::true_type,
-					typename T11 = kerbal::type_traits::true_type,
-					typename T12 = kerbal::type_traits::true_type,
-					typename T13 = kerbal::type_traits::true_type,
-					typename T14 = kerbal::type_traits::true_type
+		template <
+			typename T0 = kerbal::type_traits::true_type,
+			typename T1 = kerbal::type_traits::true_type,
+			typename T2 = kerbal::type_traits::true_type,
+			typename T3 = kerbal::type_traits::true_type,
+			typename T4 = kerbal::type_traits::true_type,
+			typename T5 = kerbal::type_traits::true_type,
+			typename T6 = kerbal::type_traits::true_type,
+			typename T7 = kerbal::type_traits::true_type,
+			typename T8 = kerbal::type_traits::true_type,
+			typename T9 = kerbal::type_traits::true_type,
+			typename T10 = kerbal::type_traits::true_type,
+			typename T11 = kerbal::type_traits::true_type,
+			typename T12 = kerbal::type_traits::true_type,
+			typename T13 = kerbal::type_traits::true_type,
+			typename T14 = kerbal::type_traits::true_type
 		>
-		struct conjunction : kerbal::type_traits::conditional<
-											T0::value,
-											conjunction<T1, T2, T3, T4, T5, T6, T7, T8, T9, T10, T11, T12, T13, T14>,
-											kerbal::type_traits::false_type
-									>::type
+		struct conjunction :
+			kerbal::type_traits::conditional<
+				T0::value,
+				conjunction<T1, T2, T3, T4, T5, T6, T7, T8, T9, T10, T11, T12, T13, T14>,
+				kerbal::type_traits::false_type
+			>::type
 		{
 		};
 
 		template <>
-		struct conjunction <>: kerbal::type_traits::true_type
+		struct conjunction<> : kerbal::type_traits::true_type
 		{
 		};
 
 
-		template <typename T0 = kerbal::type_traits::true_type,
-					typename T1 = kerbal::type_traits::false_type,
-					typename T2 = kerbal::type_traits::false_type,
-					typename T3 = kerbal::type_traits::false_type,
-					typename T4 = kerbal::type_traits::false_type,
-					typename T5 = kerbal::type_traits::false_type,
-					typename T6 = kerbal::type_traits::false_type,
-					typename T7 = kerbal::type_traits::false_type,
-					typename T8 = kerbal::type_traits::false_type,
-					typename T9 = kerbal::type_traits::false_type,
-					typename T10 = kerbal::type_traits::false_type,
-					typename T11 = kerbal::type_traits::false_type,
-					typename T12 = kerbal::type_traits::false_type,
-					typename T13 = kerbal::type_traits::false_type,
-					typename T14 = kerbal::type_traits::false_type
+		template <
+			typename T0 = kerbal::type_traits::true_type,
+			typename T1 = kerbal::type_traits::false_type,
+			typename T2 = kerbal::type_traits::false_type,
+			typename T3 = kerbal::type_traits::false_type,
+			typename T4 = kerbal::type_traits::false_type,
+			typename T5 = kerbal::type_traits::false_type,
+			typename T6 = kerbal::type_traits::false_type,
+			typename T7 = kerbal::type_traits::false_type,
+			typename T8 = kerbal::type_traits::false_type,
+			typename T9 = kerbal::type_traits::false_type,
+			typename T10 = kerbal::type_traits::false_type,
+			typename T11 = kerbal::type_traits::false_type,
+			typename T12 = kerbal::type_traits::false_type,
+			typename T13 = kerbal::type_traits::false_type,
+			typename T14 = kerbal::type_traits::false_type
 		>
-		struct disjunction : kerbal::type_traits::conditional<
-											T0::value,
-											kerbal::type_traits::true_type,
-											disjunction<T1, T2, T3, T4, T5, T6, T7, T8, T9, T10, T11, T12, T13, T14>
-									>::type
+		struct disjunction :
+			kerbal::type_traits::conditional<
+				T0::value,
+				kerbal::type_traits::true_type,
+				disjunction<T1, T2, T3, T4, T5, T6, T7, T8, T9, T10, T11, T12, T13, T14>
+			>::type
 		{
 		};
 
 		template <>
-		struct disjunction <>: kerbal::type_traits::true_type
+		struct disjunction<> : kerbal::type_traits::true_type
 		{
 		};
 
 		template <typename T>
-		struct disjunction <T>: kerbal::type_traits::bool_constant<T::value>
+		struct disjunction<T> : kerbal::type_traits::bool_constant<T::value>
 		{
 		};
 
 #	else
 
 		KERBAL_MODULE_EXPORT
-		template <typename ...Args>
+		template <typename ... Args>
 		struct conjunction;
 
 		KERBAL_MODULE_EXPORT
@@ -108,17 +113,18 @@ namespace kerbal
 		};
 
 		KERBAL_MODULE_EXPORT
-		template <typename T, typename ...Args>
-		struct conjunction<T, Args...> : kerbal::type_traits::conditional<
-															T::value,
-															conjunction <Args...>,
-															kerbal::type_traits::false_type
-													>::type
+		template <typename T, typename ... Args>
+		struct conjunction<T, Args...> :
+			kerbal::type_traits::conditional<
+				T::value,
+				conjunction<Args...>,
+				kerbal::type_traits::false_type
+			>::type
 		{
 		};
 
 		KERBAL_MODULE_EXPORT
-		template <typename ...Args>
+		template <typename ... Args>
 		struct disjunction;
 
 		KERBAL_MODULE_EXPORT
@@ -134,12 +140,13 @@ namespace kerbal
 		};
 
 		KERBAL_MODULE_EXPORT
-		template <typename T, typename ...Args>
-		struct disjunction<T, Args...> : kerbal::type_traits::conditional<
-															T::value,
-															kerbal::type_traits::true_type,
-															disjunction <Args...>
-													>::type
+		template <typename T, typename ... Args>
+		struct disjunction<T, Args...> :
+			kerbal::type_traits::conditional<
+				T::value,
+				kerbal::type_traits::true_type,
+				disjunction<Args...>
+			>::type
 		{
 		};
 

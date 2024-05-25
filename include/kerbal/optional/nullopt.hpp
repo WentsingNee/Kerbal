@@ -24,9 +24,9 @@ namespace kerbal
 	namespace optional
 	{
 
-		struct nullopt_t:
-				public kerbal::operators::equality_comparable<nullopt_t>,
-				public kerbal::operators::less_than_comparable<nullopt_t>
+		struct nullopt_t :
+			public kerbal::operators::equality_comparable<nullopt_t>,
+			public kerbal::operators::less_than_comparable<nullopt_t>
 		{
 				KERBAL_CONSTEXPR
 				bool operator==(const nullopt_t &) const KERBAL_NOEXCEPT

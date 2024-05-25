@@ -69,13 +69,13 @@ namespace kerbal
 				protected:
 					KERBAL_CONSTEXPR
 					avl_head_node() KERBAL_NOEXCEPT :
-							left(get_avl_vnull_node())
+						left(get_avl_vnull_node())
 					{
 					}
 
 					KERBAL_CONSTEXPR
 					avl_head_node(int) KERBAL_NOEXCEPT :
-							left(NULL)
+						left(NULL)
 					{
 					}
 
@@ -94,23 +94,23 @@ namespace kerbal
 					avl_node_base *
 					leftest_offspring() KERBAL_NOEXCEPT
 					{
-						return const_cast<avl_node_base*>(
-							static_cast<const avl_head_node*>(this)->leftest_offspring()
+						return const_cast<avl_node_base *>(
+							static_cast<const avl_head_node *>(this)->leftest_offspring()
 						);
 					}
 
 					KERBAL_CONSTEXPR14
 					inline
-					const avl_head_node*
+					const avl_head_node *
 					inorder_prev() const KERBAL_NOEXCEPT;
 
 					KERBAL_CONSTEXPR14
 					inline
-					avl_head_node*
+					avl_head_node *
 					inorder_prev() KERBAL_NOEXCEPT
 					{
-						return const_cast<avl_head_node*>(
-							static_cast<const avl_head_node*>(this)->inorder_prev()
+						return const_cast<avl_head_node *>(
+							static_cast<const avl_head_node *>(this)->inorder_prev()
 						);
 					}
 
@@ -118,7 +118,7 @@ namespace kerbal
 
 
 
-			class avl_node_base: protected kerbal::container::detail::avl_head_node
+			class avl_node_base : protected kerbal::container::detail::avl_head_node
 			{
 				private:
 					typedef kerbal::container::detail::avl_head_node super;
@@ -154,13 +154,13 @@ namespace kerbal
 				protected:
 					KERBAL_CONSTEXPR
 					avl_node_base() KERBAL_NOEXCEPT :
-							parent(NULL), right(get_avl_vnull_node()), height(1)
+						parent(NULL), right(get_avl_vnull_node()), height(1)
 					{
 					}
 
 					KERBAL_CONSTEXPR
 					avl_node_base(int) KERBAL_NOEXCEPT :
-							super(0), parent(NULL), right(NULL), height(0)
+						super(0), parent(NULL), right(NULL), height(0)
 					{
 					}
 
@@ -177,11 +177,11 @@ namespace kerbal
 
 					KERBAL_CONSTEXPR14
 					inline
-					avl_head_node*
+					avl_head_node *
 					inorder_next() KERBAL_NOEXCEPT
 					{
-						return const_cast<avl_head_node*>(
-							static_cast<const avl_node_base*>(this)->inorder_next()
+						return const_cast<avl_head_node *>(
+							static_cast<const avl_node_base *>(this)->inorder_next()
 						);
 					}
 
@@ -211,11 +211,11 @@ namespace kerbal
 
 					KERBAL_CONSTEXPR14
 					inline
-					avl_head_node*
+					avl_head_node *
 					postorder_next(const avl_head_node * head) KERBAL_NOEXCEPT
 					{
-						return const_cast<avl_head_node*>(
-							static_cast<const avl_node_base*>(this)->postorder_next(head)
+						return const_cast<avl_head_node *>(
+							static_cast<const avl_node_base *>(this)->postorder_next(head)
 						);
 					}
 
@@ -236,13 +236,15 @@ namespace kerbal
 					avl_node_base *
 					rightest_offspring() KERBAL_NOEXCEPT
 					{
-						return const_cast<avl_node_base*>(
-							static_cast<const avl_node_base*>(this)->rightest_offspring()
+						return const_cast<avl_node_base *>(
+							static_cast<const avl_node_base *>(this)->rightest_offspring()
 						);
 					}
 
 					KERBAL_CONSTEXPR14
-					static height_t height_of(const avl_node_base * p) KERBAL_NOEXCEPT
+					static
+					height_t
+					height_of(const avl_node_base * p) KERBAL_NOEXCEPT
 					{
 #	if KERBAL_AVL_ENABLE_VNULL
 
@@ -307,9 +309,9 @@ namespace kerbal
 
 
 			template <typename T>
-			class avl_node:
-					public avl_node_base,
-					private kerbal::utility::member_compress_helper<T>
+			class avl_node :
+				public avl_node_base,
+				private kerbal::utility::member_compress_helper<T>
 			{
 				private:
 					typedef avl_node_base node_base;
@@ -330,13 +332,14 @@ namespace kerbal
 
 					template <typename ... Args>
 					KERBAL_CONSTEXPR
-					explicit avl_node(kerbal::utility::in_place_t in_place, Args&& ... args)
-							KERBAL_CONDITIONAL_NOEXCEPT((
-								kerbal::type_traits::try_test_is_nothrow_constructible<
-									member_compress_helper, kerbal::utility::in_place_t, Args&&...
-								>::IS_TRUE::value
-							))
-							: node_base(), member_compress_helper(in_place, kerbal::utility::forward<Args>(args)...)
+					explicit
+					avl_node(kerbal::utility::in_place_t in_place, Args && ... args)
+						KERBAL_CONDITIONAL_NOEXCEPT((
+							kerbal::type_traits::try_test_is_nothrow_constructible<
+								member_compress_helper, kerbal::utility::in_place_t, Args && ...
+							>::IS_TRUE::value
+						)) :
+						node_base(), member_compress_helper(in_place, kerbal::utility::forward<Args>(args)...)
 					{
 					}
 
@@ -350,10 +353,11 @@ namespace kerbal
 #				define ARGS_USE(i) KERBAL_MACRO_CONCAT(arg, i)
 #				define FBODY(i) \
 					KERBAL_OPT_PPEXPAND_WITH_COMMA_N(THEAD_NOT_EMPTY, EMPTY, TARGS_DECL, i) \
-					explicit avl_node(kerbal::utility::in_place_t in_place KERBAL_OPT_PPEXPAND_WITH_COMMA_N(LEFT_JOIN_COMMA, EMPTY, ARGS_DECL, i)) \
-							: node_base(), member_compress_helper(in_place KERBAL_OPT_PPEXPAND_WITH_COMMA_N(LEFT_JOIN_COMMA, EMPTY, ARGS_USE, i)) \
+					explicit \
+					avl_node(kerbal::utility::in_place_t in_place KERBAL_OPT_PPEXPAND_WITH_COMMA_N(LEFT_JOIN_COMMA, EMPTY, ARGS_DECL, i)) : \
+						node_base(), member_compress_helper(in_place KERBAL_OPT_PPEXPAND_WITH_COMMA_N(LEFT_JOIN_COMMA, EMPTY, ARGS_USE, i)) \
 					{ \
-					}
+					} \
 
 					KERBAL_PPEXPAND_N(FBODY, KERBAL_PPEXPAND_EMPTY_SEPARATOR, 0)
 					KERBAL_PPEXPAND_N(FBODY, KERBAL_PPEXPAND_EMPTY_SEPARATOR, 20)
@@ -449,8 +453,9 @@ namespace kerbal
 
 			KERBAL_CONSTEXPR14
 			inline
-			const avl_head_node*
-			avl_head_node::inorder_prev() const KERBAL_NOEXCEPT
+			const avl_head_node *
+			avl_head_node::
+			inorder_prev() const KERBAL_NOEXCEPT
 			{
 				const avl_head_node * current = this;
 				if (current->left == get_avl_vnull_node()) {
@@ -471,7 +476,8 @@ namespace kerbal
 			KERBAL_CONSTEXPR14
 			inline
 			const avl_head_node *
-			avl_node_base::inorder_next() const KERBAL_NOEXCEPT
+			avl_node_base::
+			inorder_next() const KERBAL_NOEXCEPT
 			{
 				const avl_head_node * current = this;
 				if (current->as_node_base()->right == get_avl_vnull_node()) {
@@ -496,11 +502,11 @@ namespace kerbal
 			template <int>
 			class avl_vnull_node_helper
 			{
-				static avl_node_base vnull_node;
+					static avl_node_base vnull_node;
 
-				friend inline
-				KERBAL_CONSTEXPR
-				avl_node_base * get_avl_vnull_node() KERBAL_NOEXCEPT;
+					friend inline
+					KERBAL_CONSTEXPR
+					avl_node_base * get_avl_vnull_node() KERBAL_NOEXCEPT;
 
 			};
 
@@ -513,7 +519,8 @@ namespace kerbal
 
 			inline
 			KERBAL_CONSTEXPR
-			avl_node_base * get_avl_vnull_node() KERBAL_NOEXCEPT
+			avl_node_base *
+			get_avl_vnull_node() KERBAL_NOEXCEPT
 			{
 #	if KERBAL_AVL_ENABLE_VNULL
 				return &avl_vnull_node_helper<>::vnull_node;

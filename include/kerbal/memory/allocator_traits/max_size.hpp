@@ -37,44 +37,52 @@ namespace kerbal
 		{
 
 			template <typename Alloc, typename = kerbal::type_traits::void_type<>::type>
-			struct allocator_has_max_size_helper : kerbal::type_traits::false_type
+			struct allocator_has_max_size_helper :
+				kerbal::type_traits::false_type
 			{
 			};
 
 			template <typename Alloc>
-			struct allocator_has_max_size_helper<Alloc, typename kerbal::type_traits::void_type<
+			struct allocator_has_max_size_helper<
+				Alloc,
+				typename kerbal::type_traits::void_type<
 #	if __cplusplus >= 201103L // compatible with msvc
-					decltype(static_cast<std::size_t>(kerbal::utility::declval<const Alloc&>().max_size()))
+					decltype(static_cast<std::size_t>(kerbal::utility::declval<const Alloc &>().max_size()))
 #	else
 					kerbal::type_traits::integral_constant<
 						std::size_t,
 						sizeof(
-							static_cast<std::size_t>(kerbal::utility::declval<const Alloc&>().max_size()),
+							static_cast<std::size_t>(kerbal::utility::declval<const Alloc &>().max_size()),
 							0
 						)
 					>
 #	endif
-			>::type>: kerbal::type_traits::true_type
+				>::type
+			> :
+				kerbal::type_traits::true_type
 			{
 			};
 
 		} // namespace detail
 
 		template <typename Alloc>
-		struct allocator_has_max_size : kerbal::memory::detail::allocator_has_max_size_helper<Alloc>
+		struct allocator_has_max_size :
+			kerbal::memory::detail::allocator_has_max_size_helper<Alloc>
 		{
 		};
 
 
 		template <typename Alloc>
-		struct allocator_could_use_max_size : kerbal::memory::allocator_has_max_size<Alloc>
+		struct allocator_could_use_max_size :
+			kerbal::memory::allocator_has_max_size<Alloc>
 		{
 		};
 
 #	if __cplusplus >= 201703L
 
 		template <typename T>
-		struct allocator_could_use_max_size<std::allocator<T> >: kerbal::type_traits::false_type
+		struct allocator_could_use_max_size<std::allocator<T> > :
+			kerbal::type_traits::false_type
 		{
 		};
 
@@ -93,10 +101,11 @@ namespace kerbal
 
 				public:
 					KERBAL_CONSTEXPR
-					static size_type max_size(const Alloc & /*alloc*/)
-							KERBAL_CONDITIONAL_NOEXCEPT(
-									noexcept(kerbal::numeric::numeric_limits<size_type>::MAX::value / sizeof(value_type))
-							)
+					static
+					size_type max_size(const Alloc & /*alloc*/)
+						KERBAL_CONDITIONAL_NOEXCEPT(
+							noexcept(kerbal::numeric::numeric_limits<size_type>::MAX::value / sizeof(value_type))
+						)
 					{
 						return kerbal::numeric::numeric_limits<size_type>::MAX::value / sizeof(value_type);
 					}
@@ -110,10 +119,11 @@ namespace kerbal
 
 				public:
 					KERBAL_CONSTEXPR
-					static size_type max_size(const Alloc & alloc)
-							KERBAL_CONDITIONAL_NOEXCEPT(
-									noexcept(kerbal::utility::declval<const Alloc&>().max_size())
-							)
+					static
+					size_type max_size(const Alloc & alloc)
+						KERBAL_CONDITIONAL_NOEXCEPT(
+							noexcept(kerbal::utility::declval<const Alloc &>().max_size())
+						)
 					{
 						return alloc.max_size();
 					}

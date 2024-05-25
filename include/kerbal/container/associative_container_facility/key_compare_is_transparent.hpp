@@ -29,10 +29,10 @@ namespace kerbal
 
 		template <typename KeyCompare>
 		struct key_compare_is_transparent<
-					KeyCompare,
-					typename kerbal::type_traits::void_type<typename KeyCompare::is_transparent>::type
-				> :
-				kerbal::type_traits::true_type
+			KeyCompare,
+			typename kerbal::type_traits::void_type<typename KeyCompare::is_transparent>::type
+		> :
+			kerbal::type_traits::true_type
 		{
 		};
 

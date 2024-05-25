@@ -24,10 +24,11 @@ namespace kerbal
 	{
 
 		class bad_alloc :
-				public std::exception
+			public std::exception
 		{
 			public:
-				virtual const char * what() const KERBAL_NOEXCEPT
+				virtual
+				const char * what() const KERBAL_NOEXCEPT
 				{
 					return "bad alloc";
 				}

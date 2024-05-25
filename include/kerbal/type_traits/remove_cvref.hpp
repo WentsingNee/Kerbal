@@ -26,9 +26,9 @@ namespace kerbal
 		KERBAL_MODULE_EXPORT
 		template <typename T>
 		struct remove_cvref :
-				kerbal::type_traits::remove_cv<
-					typename kerbal::type_traits::remove_reference<T>::type
-				>
+			kerbal::type_traits::remove_cv<
+				typename kerbal::type_traits::remove_reference<T>::type
+			>
 		{
 		};
 

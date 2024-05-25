@@ -32,9 +32,11 @@ namespace kerbal
 		namespace detail
 		{
 
-			template <typename T,
-					bool IsArray = kerbal::type_traits::is_array<T>::value,
-					bool IsFunction = kerbal::type_traits::is_function<T>::value>
+			template <
+				typename T,
+				bool IsArray = kerbal::type_traits::is_array<T>::value,
+				bool IsFunction = kerbal::type_traits::is_function<T>::value
+			>
 			struct decay_selector;
 
 			template <typename T>

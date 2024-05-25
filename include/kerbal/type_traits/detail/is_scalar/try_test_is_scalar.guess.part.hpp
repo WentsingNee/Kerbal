@@ -46,25 +46,25 @@ namespace kerbal
 
 		template <typename T>
 		struct try_test_is_scalar :
-				kerbal::type_traits::conditional<
+			kerbal::type_traits::conditional<
+				kerbal::type_traits::disjunction<
+					kerbal::type_traits::is_arithmetic<T>,
+					kerbal::type_traits::is_member_pointer<T>,
+#		if __cplusplus >= 201103L
+					kerbal::type_traits::is_null_pointer<T>,
+#		endif
+					kerbal::type_traits::is_pointer<T>
+				>::value,
+				kerbal::type_traits::tribool_true,
+				typename kerbal::type_traits::conditional<
 					kerbal::type_traits::disjunction<
-						kerbal::type_traits::is_arithmetic<T>,
-						kerbal::type_traits::is_member_pointer<T>,
-#				if __cplusplus >= 201103L
-						kerbal::type_traits::is_null_pointer<T>,
-#				endif
-						kerbal::type_traits::is_pointer<T>
+						kerbal::type_traits::is_array<T>,
+						kerbal::type_traits::is_reference<T>
 					>::value,
-					kerbal::type_traits::tribool_true,
-					typename kerbal::type_traits::conditional<
-						kerbal::type_traits::disjunction<
-							kerbal::type_traits::is_array<T>,
-							kerbal::type_traits::is_reference<T>
-						>::value,
-						kerbal::type_traits::tribool_false,
-						kerbal::type_traits::try_test_is_enum<T>
-					>::type
+					kerbal::type_traits::tribool_false,
+					kerbal::type_traits::try_test_is_enum<T>
 				>::type
+			>::type
 		{
 		};
 

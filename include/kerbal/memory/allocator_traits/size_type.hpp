@@ -26,16 +26,17 @@ namespace kerbal
 	{
 
 		template <typename Alloc, typename = kerbal::type_traits::void_type<>::type>
-		struct allocator_has_def_size_type: kerbal::type_traits::false_type
+		struct allocator_has_def_size_type :
+			kerbal::type_traits::false_type
 		{
 		};
 
 		template <typename Alloc>
 		struct allocator_has_def_size_type<
-				Alloc,
-				typename kerbal::type_traits::void_type<typename Alloc::size_type>::type
+			Alloc,
+			typename kerbal::type_traits::void_type<typename Alloc::size_type>::type
 		> :
-				kerbal::type_traits::true_type
+			kerbal::type_traits::true_type
 		{
 		};
 

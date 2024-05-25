@@ -33,18 +33,18 @@ namespace kerbal
 			public:
 				KERBAL_CONSTEXPR
 				reference_wrapper(T & val) KERBAL_NOEXCEPT :
-									ptr(&val)
+					ptr(&val)
 				{
 				}
 
 				KERBAL_CONSTEXPR
-				operator T&() const KERBAL_NOEXCEPT
+				operator T &() const KERBAL_NOEXCEPT
 				{
 					return *this->ptr;
 				}
 
 				KERBAL_CONSTEXPR
-				T& get() const KERBAL_NOEXCEPT
+				T & get() const KERBAL_NOEXCEPT
 				{
 					return *this->ptr;
 				}

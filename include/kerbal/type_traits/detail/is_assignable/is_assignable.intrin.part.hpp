@@ -35,7 +35,7 @@ namespace kerbal
 
 		template <typename T, typename U>
 		struct is_assignable :
-				kerbal::type_traits::bool_constant<KERBAL_INTRINSIC_IS_ASSIGNABLE(T, U)>
+			kerbal::type_traits::bool_constant<KERBAL_INTRINSIC_IS_ASSIGNABLE(T, U)>
 		{
 		};
 

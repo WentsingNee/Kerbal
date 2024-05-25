@@ -34,12 +34,16 @@ namespace kerbal
 	namespace container
 	{
 
-		template <typename T, typename KeyCompare = kerbal::compare::less<T>, typename Allocator = std::allocator<T> >
+		template <
+			typename T,
+			typename KeyCompare = kerbal::compare::less<T>,
+			typename Allocator = std::allocator<T>
+		>
 		class flat_set :
-				public kerbal::container::detail::flat_set_base<
-					T,
-					kerbal::container::flat_ordered<T, kerbal::container::identity_extractor<T>, KeyCompare, Allocator>
-				>
+			public kerbal::container::detail::flat_set_base<
+				T,
+				kerbal::container::flat_ordered<T, kerbal::container::identity_extractor<T>, KeyCompare, Allocator>
+			>
 		{
 			private:
 				typedef kerbal::container::flat_ordered<T, kerbal::container::identity_extractor<T>, KeyCompare, Allocator> Ordered;
@@ -72,44 +76,48 @@ namespace kerbal
 			public:
 
 				flat_set() :
-						super()
+					super()
 				{
 				}
 
 				explicit flat_set(key_compare kc) :
-						super(kc)
+					super(kc)
 				{
 				}
 
 				template <typename InputIterator>
-				flat_set(InputIterator first, InputIterator last,
-						typename kerbal::type_traits::enable_if<
-							kerbal::iterator::is_input_compatible_iterator<InputIterator>::value,
-							int
-						>::type = 0) :
-						super(first, last)
+				flat_set(
+					InputIterator first, InputIterator last,
+					typename kerbal::type_traits::enable_if<
+						kerbal::iterator::is_input_compatible_iterator<InputIterator>::value,
+						int
+					>::type = 0
+				) :
+					super(first, last)
 				{
 				}
 
 				template <typename InputIterator>
-				flat_set(InputIterator first, InputIterator last, key_compare kc,
-						typename kerbal::type_traits::enable_if<
-							kerbal::iterator::is_input_compatible_iterator<InputIterator>::value,
-							int
-						>::type = 0) :
-						super(first, last, kc)
+				flat_set(
+					InputIterator first, InputIterator last, key_compare kc,
+					typename kerbal::type_traits::enable_if<
+						kerbal::iterator::is_input_compatible_iterator<InputIterator>::value,
+						int
+					>::type = 0
+				) :
+					super(first, last, kc)
 				{
 				}
 
 #		if __cplusplus >= 201103L
 
 				flat_set(std::initializer_list<value_type> ilist) :
-						super(ilist)
+					super(ilist)
 				{
 				}
 
 				flat_set(std::initializer_list<value_type> ilist, key_compare kc) :
-						super(ilist, kc)
+					super(ilist, kc)
 				{
 				}
 
@@ -120,7 +128,7 @@ namespace kerbal
 					this->ordered.assign(src.ordered);
 				}
 
-				flat_set& operator=(const flat_set & src)
+				flat_set & operator=(const flat_set & src)
 				{
 					this->assign(src);
 					return *this;
@@ -128,7 +136,7 @@ namespace kerbal
 
 #		if __cplusplus >= 201103L
 
-				flat_set& operator=(std::initializer_list<value_type> ilist)
+				flat_set & operator=(std::initializer_list<value_type> ilist)
 				{
 					this->super::assign(ilist);
 					return *this;
@@ -147,43 +155,61 @@ namespace kerbal
 				}
 
 				template <typename Allocator2>
-				friend bool operator==(const flat_set<T, KeyCompare, Allocator> & lhs,
-										const flat_set<T, KeyCompare, Allocator2> & rhs)
+				friend
+				bool operator==(
+					const flat_set<T, KeyCompare, Allocator> & lhs,
+					const flat_set<T, KeyCompare, Allocator2> & rhs
+				)
 				{
 					return lhs.ordered == rhs.ordered;
 				}
 
 				template <typename Allocator2>
-				friend bool operator!=(const flat_set<T, KeyCompare, Allocator> & lhs,
-										const flat_set<T, KeyCompare, Allocator2> & rhs)
+				friend
+				bool operator!=(
+					const flat_set<T, KeyCompare, Allocator> & lhs,
+					const flat_set<T, KeyCompare, Allocator2> & rhs
+				)
 				{
 					return lhs.ordered != rhs.ordered;
 				}
 
 				template <typename Allocator2>
-				friend bool operator<(const flat_set<T, KeyCompare, Allocator> & lhs,
-										const flat_set<T, KeyCompare, Allocator2> & rhs)
+				friend
+				bool operator<(
+					const flat_set<T, KeyCompare, Allocator> & lhs,
+					const flat_set<T, KeyCompare, Allocator2> & rhs
+				)
 				{
 					return lhs.ordered < rhs.ordered;
 				}
 
 				template <typename Allocator2>
-				friend bool operator<=(const flat_set<T, KeyCompare, Allocator> & lhs,
-										const flat_set<T, KeyCompare, Allocator2> & rhs)
+				friend
+				bool operator<=(
+					const flat_set<T, KeyCompare, Allocator> & lhs,
+					const flat_set<T, KeyCompare, Allocator2> & rhs
+				)
 				{
 					return lhs.ordered <= rhs.ordered;
 				}
 
 				template <typename Allocator2>
-				friend bool operator>(const flat_set<T, KeyCompare, Allocator> & lhs,
-										const flat_set<T, KeyCompare, Allocator2> & rhs)
+				friend
+				bool operator>(
+					const flat_set<T, KeyCompare, Allocator> & lhs,
+					const flat_set<T, KeyCompare, Allocator2> & rhs
+				)
 				{
 					return lhs.ordered > rhs.ordered;
 				}
 
 				template <typename Allocator2>
-				friend bool operator>=(const flat_set<T, KeyCompare, Allocator> & lhs,
-										const flat_set<T, KeyCompare, Allocator2> & rhs)
+				friend
+				bool operator>=(
+					const flat_set<T, KeyCompare, Allocator> & lhs,
+					const flat_set<T, KeyCompare, Allocator2> & rhs
+				)
 				{
 					return lhs.ordered >= rhs.ordered;
 				}
@@ -198,9 +224,11 @@ namespace kerbal
 
 		template <typename T, typename KeyCompare, typename Allocator>
 		KERBAL_CONSTEXPR14
-		void swap(kerbal::container::flat_set<T, KeyCompare, Allocator> & a,
-				  kerbal::container::flat_set<T, KeyCompare, Allocator> & b)
-				KERBAL_CONDITIONAL_NOEXCEPT(noexcept(a.swap(b)))
+		void swap(
+			kerbal::container::flat_set<T, KeyCompare, Allocator> & a,
+			kerbal::container::flat_set<T, KeyCompare, Allocator> & b
+		)
+			KERBAL_CONDITIONAL_NOEXCEPT(noexcept(a.swap(b)))
 		{
 			a.swap(b);
 		}
@@ -214,9 +242,11 @@ KERBAL_NAMESPACE_STD_BEGIN
 
 	template <typename T, typename KeyCompare, typename Allocator>
 	KERBAL_CONSTEXPR14
-	void swap(kerbal::container::flat_set<T, KeyCompare, Allocator> & a,
-			  kerbal::container::flat_set<T, KeyCompare, Allocator> & b)
-			KERBAL_CONDITIONAL_NOEXCEPT(noexcept(a.swap(b)))
+	void swap(
+		kerbal::container::flat_set<T, KeyCompare, Allocator> & a,
+		kerbal::container::flat_set<T, KeyCompare, Allocator> & b
+	)
+		KERBAL_CONDITIONAL_NOEXCEPT(noexcept(a.swap(b)))
 	{
 		a.swap(b);
 	}

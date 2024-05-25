@@ -41,17 +41,17 @@ namespace kerbal
 
 		template <typename T>
 		struct is_move_constructible :
-				kerbal::type_traits::conditional<
-					kerbal::type_traits::disjunction<
-						kerbal::type_traits::is_array<T>,
-						kerbal::type_traits::is_function<T>
-					>::value,
-					kerbal::type_traits::false_type,
-					kerbal::type_traits::is_constructible<
-						T,
-						typename kerbal::type_traits::add_rvalue_reference<T>::type
-					>
-				>::type
+			kerbal::type_traits::conditional<
+				kerbal::type_traits::disjunction<
+					kerbal::type_traits::is_array<T>,
+					kerbal::type_traits::is_function<T>
+				>::value,
+				kerbal::type_traits::false_type,
+				kerbal::type_traits::is_constructible<
+					T,
+					typename kerbal::type_traits::add_rvalue_reference<T>::type
+				>
+			>::type
 		{
 		};
 

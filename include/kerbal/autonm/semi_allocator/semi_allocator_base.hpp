@@ -29,7 +29,7 @@ namespace kerbal
 		{
 			public:
 				typedef T					value_type;
-				typedef value_type*			pointer;
+				typedef value_type *		pointer;
 				typedef std::size_t			size_type;
 
 				KERBAL_CONSTEXPR14

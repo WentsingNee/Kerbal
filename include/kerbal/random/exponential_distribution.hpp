@@ -37,8 +37,9 @@ namespace kerbal
 
 			public:
 
-				KERBAL_CONSTEXPR exponential_distribution(RealType lambda = 1.0) KERBAL_NOEXCEPT :
-						lambda(lambda)
+				KERBAL_CONSTEXPR
+				exponential_distribution(RealType lambda = 1.0) KERBAL_NOEXCEPT :
+					lambda(lambda)
 				{
 				}
 
@@ -49,12 +50,14 @@ namespace kerbal
 					return -std::log(result_type(1) - dis(eg)) / this->lambda;
 				}
 
-				KERBAL_CONSTEXPR result_type min() const KERBAL_NOEXCEPT
+				KERBAL_CONSTEXPR
+				result_type min() const KERBAL_NOEXCEPT
 				{
 					return 0;
 				}
 
-				KERBAL_CONSTEXPR result_type max() const KERBAL_NOEXCEPT
+				KERBAL_CONSTEXPR
+				result_type max() const KERBAL_NOEXCEPT
 				{
 					return std::numeric_limits<result_type>::max();
 				}

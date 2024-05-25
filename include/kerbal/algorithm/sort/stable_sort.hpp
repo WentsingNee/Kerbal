@@ -39,9 +39,11 @@ namespace kerbal
 
 			template <typename ForwardIterator, typename Compare>
 			KERBAL_CONSTEXPR14
-			bool stable_sort_n_afford_buffer_small_size(ForwardIterator & first,
-														typename kerbal::iterator::iterator_traits<ForwardIterator>::difference_type len,
-														Compare, std::forward_iterator_tag)
+			bool stable_sort_n_afford_buffer_small_size(
+				ForwardIterator & first,
+				typename kerbal::iterator::iterator_traits<ForwardIterator>::difference_type len,
+				Compare, std::forward_iterator_tag
+			)
 			{
 				if (len == 0) {
 					return true;
@@ -55,9 +57,11 @@ namespace kerbal
 
 			template <typename ForwardIterator, typename Compare>
 			KERBAL_CONSTEXPR14
-			bool stable_sort_n_afford_buffer_small_size(ForwardIterator & first,
-														typename kerbal::iterator::iterator_traits<ForwardIterator>::difference_type len,
-														Compare cmp, std::bidirectional_iterator_tag)
+			bool stable_sort_n_afford_buffer_small_size(
+				ForwardIterator & first,
+				typename kerbal::iterator::iterator_traits<ForwardIterator>::difference_type len,
+				Compare cmp, std::bidirectional_iterator_tag
+			)
 			{
 				typedef ForwardIterator iterator;
 
@@ -78,8 +82,10 @@ namespace kerbal
 		template <typename ForwardIterator, typename ForwardIterator2, typename Compare>
 		KERBAL_CONSTEXPR14
 		ForwardIterator
-		stable_sort_n_afford_buffer(ForwardIterator first, typename kerbal::iterator::iterator_traits<ForwardIterator>::difference_type len,
-									ForwardIterator2 buffer, Compare cmp)
+		stable_sort_n_afford_buffer(
+			ForwardIterator first, typename kerbal::iterator::iterator_traits<ForwardIterator>::difference_type len,
+			ForwardIterator2 buffer, Compare cmp
+		)
 		{
 			typedef ForwardIterator iterator;
 			typedef ForwardIterator2 buffer_iterator;
@@ -113,8 +119,10 @@ namespace kerbal
 		template <typename ForwardIterator, typename ForwardIterator2>
 		KERBAL_CONSTEXPR14
 		ForwardIterator
-		stable_sort_n_afford_buffer(ForwardIterator first, typename kerbal::iterator::iterator_traits<ForwardIterator>::difference_type len,
-									ForwardIterator2 buffer)
+		stable_sort_n_afford_buffer(
+			ForwardIterator first, typename kerbal::iterator::iterator_traits<ForwardIterator>::difference_type len,
+			ForwardIterator2 buffer
+		)
 		{
 			typedef ForwardIterator iterator;
 			typedef typename kerbal::iterator::iterator_traits<iterator>::value_type value_type;
@@ -144,16 +152,20 @@ namespace kerbal
 		template <typename ForwardIterator, typename Allocator, typename Compare>
 		KERBAL_CONSTEXPR20
 		ForwardIterator
-		stable_sort_n_afford_allocator(ForwardIterator first, typename kerbal::iterator::iterator_traits<ForwardIterator>::difference_type len,
-										Allocator & allocator, Compare cmp)
+		stable_sort_n_afford_allocator(
+			ForwardIterator first, typename kerbal::iterator::iterator_traits<ForwardIterator>::difference_type len,
+			Allocator & allocator, Compare cmp
+		)
 		{
 			typedef ForwardIterator iterator;
 			typedef typename kerbal::iterator::iterator_traits<iterator>::difference_type difference_type;
 			typedef typename kerbal::iterator::iterator_traits<iterator>::value_type value_type;
 			typedef kerbal::memory::allocator_traits<Allocator> allocator_traits;
 
-			KERBAL_STATIC_ASSERT((kerbal::type_traits::is_same<value_type, typename allocator_traits::value_type>::value),
-								 "the afforded allocator doesn't provide the support of type which the iterator refers to");
+			KERBAL_STATIC_ASSERT(
+				(kerbal::type_traits::is_same<value_type, typename allocator_traits::value_type>::value),
+				"the afforded allocator doesn't provide the support of type which the iterator refers to"
+			);
 
 			difference_type buffer_length(len - len / 2);
 			value_type * const buffer = allocator_traits::allocate(allocator, buffer_length);
@@ -166,7 +178,7 @@ namespace kerbal
 
 					KERBAL_CONSTEXPR20
 					dealloc_helper(Allocator & allocator, difference_type const & buffer_length, value_type * const & buffer) KERBAL_NOEXCEPT :
-							allocator(allocator), buffer_length(buffer_length), buffer(buffer)
+						allocator(allocator), buffer_length(buffer_length), buffer(buffer)
 					{
 					}
 
@@ -188,7 +200,7 @@ namespace kerbal
 
 					KERBAL_CONSTEXPR20
 					destroy_helper(Allocator & allocator, difference_type const & buffer_length, value_type * const & buffer) KERBAL_NOEXCEPT :
-							allocator(allocator), buffer_length(buffer_length), buffer(buffer)
+						allocator(allocator), buffer_length(buffer_length), buffer(buffer)
 					{
 					}
 
@@ -206,8 +218,10 @@ namespace kerbal
 		template <typename ForwardIterator, typename Allocator>
 		KERBAL_CONSTEXPR20
 		ForwardIterator
-		stable_sort_n_afford_allocator(ForwardIterator first, typename kerbal::iterator::iterator_traits<ForwardIterator>::difference_type len,
-										Allocator & allocator)
+		stable_sort_n_afford_allocator(
+			ForwardIterator first, typename kerbal::iterator::iterator_traits<ForwardIterator>::difference_type len,
+			Allocator & allocator
+		)
 		{
 			typedef ForwardIterator iterator;
 			typedef typename kerbal::iterator::iterator_traits<iterator>::value_type value_type;

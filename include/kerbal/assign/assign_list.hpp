@@ -29,7 +29,7 @@ namespace kerbal
 
 		template <typename T>
 		class assign_list :
-				private kerbal::utility::member_compress_helper<std::allocator<T> >
+			private kerbal::utility::member_compress_helper<std::allocator<T> >
 		{
 			private:
 				typedef kerbal::utility::member_compress_helper<std::allocator<T> > super;
@@ -37,8 +37,8 @@ namespace kerbal
 
 			public:
 				typedef T									value_type;
-				typedef T&									reference;
-				typedef const T&							const_reference;
+				typedef T &									reference;
+				typedef const T &							const_reference;
 				typedef typename c::iterator				iterator;
 				typedef typename c::const_iterator			const_iterator;
 				typedef std::allocator<T>					allocator_type;
@@ -62,7 +62,7 @@ namespace kerbal
 					v.template k_destroy_using_allocator(this->alloc());
 				}
 
-				assign_list& operator,(const_reference val)
+				assign_list & operator,(const_reference val)
 				{
 					v.k_push_back_using_allocator(this->alloc(), val);
 					return *this;

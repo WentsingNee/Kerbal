@@ -23,10 +23,12 @@ namespace kerbal
 	namespace function
 	{
 
-		class bad_function_call : public std::exception
+		class bad_function_call :
+			public std::exception
 		{
 			public:
-				virtual const char * what() const KERBAL_NOEXCEPT
+				virtual
+				const char * what() const KERBAL_NOEXCEPT
 				{
 					return "bad function call";
 				}

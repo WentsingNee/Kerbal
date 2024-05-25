@@ -47,7 +47,8 @@ namespace kerbal
 #	if __cplusplus < 201103L
 
 		template <typename K, typename M, typename KeyCompare, typename Allocator>
-		avl_map<K, M, KeyCompare, Allocator>::avl_map()
+		avl_map<K, M, KeyCompare, Allocator>::
+		avl_map()
 		{
 		}
 
@@ -55,54 +56,72 @@ namespace kerbal
 
 		template <typename K, typename M, typename KeyCompare, typename Allocator>
 		KERBAL_CONSTEXPR20
-		avl_map<K, M, KeyCompare, Allocator>::avl_map(const Allocator & alloc) :
-				avl_ordered(alloc)
+		avl_map<K, M, KeyCompare, Allocator>::
+		avl_map(const Allocator & alloc) :
+			avl_ordered(alloc)
 		{
 		}
 
 		template <typename K, typename M, typename KeyCompare, typename Allocator>
 		KERBAL_CONSTEXPR20
-		avl_map<K, M, KeyCompare, Allocator>::avl_map(const KeyCompare & kc) :
-				avl_ordered(kc)
+		avl_map<K, M, KeyCompare, Allocator>::
+		avl_map(const KeyCompare & kc) :
+			avl_ordered(kc)
 		{
 		}
 
 		template <typename K, typename M, typename KeyCompare, typename Allocator>
 		KERBAL_CONSTEXPR20
-		avl_map<K, M, KeyCompare, Allocator>::avl_map(const KeyCompare & kc, const Allocator & alloc) :
-				avl_ordered(kc, alloc)
-		{
-		}
-
-		template <typename K, typename M, typename KeyCompare, typename Allocator>
-		template <typename InputIterator>
-		KERBAL_CONSTEXPR20
-		avl_map<K, M, KeyCompare, Allocator>::avl_map(InputIterator first, InputIterator last) :
-				avl_ordered(kerbal::container::unique_tag_t(), first, last)
+		avl_map<K, M, KeyCompare, Allocator>::
+		avl_map(const KeyCompare & kc, const Allocator & alloc) :
+			avl_ordered(kc, alloc)
 		{
 		}
 
 		template <typename K, typename M, typename KeyCompare, typename Allocator>
 		template <typename InputIterator>
 		KERBAL_CONSTEXPR20
-		avl_map<K, M, KeyCompare, Allocator>::avl_map(InputIterator first, InputIterator last, const Allocator & alloc) :
-				avl_ordered(kerbal::container::unique_tag_t(), first, last, alloc)
+		avl_map<K, M, KeyCompare, Allocator>::
+		avl_map(
+			InputIterator first, InputIterator last
+		) :
+			avl_ordered(kerbal::container::unique_tag_t(), first, last)
 		{
 		}
 
 		template <typename K, typename M, typename KeyCompare, typename Allocator>
 		template <typename InputIterator>
 		KERBAL_CONSTEXPR20
-		avl_map<K, M, KeyCompare, Allocator>::avl_map(InputIterator first, InputIterator last, const KeyCompare & kc) :
-				avl_ordered(kerbal::container::unique_tag_t(), first, last, kc)
+		avl_map<K, M, KeyCompare, Allocator>::
+		avl_map(
+			InputIterator first, InputIterator last,
+			const Allocator & alloc
+		) :
+			avl_ordered(kerbal::container::unique_tag_t(), first, last, alloc)
 		{
 		}
 
 		template <typename K, typename M, typename KeyCompare, typename Allocator>
 		template <typename InputIterator>
 		KERBAL_CONSTEXPR20
-		avl_map<K, M, KeyCompare, Allocator>::avl_map(InputIterator first, InputIterator last, const KeyCompare & kc, const Allocator & alloc) :
-				avl_ordered(kerbal::container::unique_tag_t(), first, last, kc, alloc)
+		avl_map<K, M, KeyCompare, Allocator>::
+		avl_map(
+			InputIterator first, InputIterator last,
+			const KeyCompare & kc
+		) :
+			avl_ordered(kerbal::container::unique_tag_t(), first, last, kc)
+		{
+		}
+
+		template <typename K, typename M, typename KeyCompare, typename Allocator>
+		template <typename InputIterator>
+		KERBAL_CONSTEXPR20
+		avl_map<K, M, KeyCompare, Allocator>::
+		avl_map(
+			InputIterator first, InputIterator last,
+			const KeyCompare & kc, const Allocator & alloc
+		) :
+			avl_ordered(kerbal::container::unique_tag_t(), first, last, kc, alloc)
 		{
 		}
 
@@ -110,29 +129,44 @@ namespace kerbal
 
 		template <typename K, typename M, typename KeyCompare, typename Allocator>
 		KERBAL_CONSTEXPR20
-		avl_map<K, M, KeyCompare, Allocator>::avl_map(std::initializer_list<value_type> ilist) :
-				avl_ordered(kerbal::container::unique_tag_t(), ilist)
+		avl_map<K, M, KeyCompare, Allocator>::
+		avl_map(
+			std::initializer_list<value_type> ilist
+		) :
+			avl_ordered(kerbal::container::unique_tag_t(), ilist)
 		{
 		}
 
 		template <typename K, typename M, typename KeyCompare, typename Allocator>
 		KERBAL_CONSTEXPR20
-		avl_map<K, M, KeyCompare, Allocator>::avl_map(std::initializer_list<value_type> ilist, const Allocator & alloc) :
-				avl_ordered(kerbal::container::unique_tag_t(), ilist, alloc)
+		avl_map<K, M, KeyCompare, Allocator>::
+		avl_map(
+			std::initializer_list<value_type> ilist,
+			const Allocator & alloc
+		) :
+			avl_ordered(kerbal::container::unique_tag_t(), ilist, alloc)
 		{
 		}
 
 		template <typename K, typename M, typename KeyCompare, typename Allocator>
 		KERBAL_CONSTEXPR20
-		avl_map<K, M, KeyCompare, Allocator>::avl_map(std::initializer_list<value_type> ilist, const KeyCompare & kc) :
-				avl_ordered(kerbal::container::unique_tag_t(), ilist, kc)
+		avl_map<K, M, KeyCompare, Allocator>::
+		avl_map(
+			std::initializer_list<value_type> ilist,
+			const KeyCompare & kc
+		) :
+			avl_ordered(kerbal::container::unique_tag_t(), ilist, kc)
 		{
 		}
 
 		template <typename K, typename M, typename KeyCompare, typename Allocator>
 		KERBAL_CONSTEXPR20
-		avl_map<K, M, KeyCompare, Allocator>::avl_map(std::initializer_list<value_type> ilist, const KeyCompare & kc, const Allocator & alloc) :
-				avl_ordered(kerbal::container::unique_tag_t(), ilist, kc, alloc)
+		avl_map<K, M, KeyCompare, Allocator>::
+		avl_map(
+			std::initializer_list<value_type> ilist,
+			const KeyCompare & kc, const Allocator & alloc
+		) :
+			avl_ordered(kerbal::container::unique_tag_t(), ilist, kc, alloc)
 		{
 		}
 
@@ -140,29 +174,44 @@ namespace kerbal
 
 		template <typename K, typename M, typename KeyCompare, typename Allocator>
 		template <typename U>
-		avl_map<K, M, KeyCompare, Allocator>::avl_map(const kerbal::assign::assign_list<U> & ilist) :
-				avl_ordered(kerbal::container::unique_tag_t(), ilist)
+		avl_map<K, M, KeyCompare, Allocator>::
+		avl_map(
+			const kerbal::assign::assign_list<U> & ilist
+		) :
+			avl_ordered(kerbal::container::unique_tag_t(), ilist)
 		{
 		}
 
 		template <typename K, typename M, typename KeyCompare, typename Allocator>
 		template <typename U>
-		avl_map<K, M, KeyCompare, Allocator>::avl_map(const kerbal::assign::assign_list<U> & ilist, const Allocator & alloc) :
-				avl_ordered(kerbal::container::unique_tag_t(), ilist, alloc)
+		avl_map<K, M, KeyCompare, Allocator>::
+		avl_map(
+			const kerbal::assign::assign_list<U> & ilist,
+			const Allocator & alloc
+		) :
+			avl_ordered(kerbal::container::unique_tag_t(), ilist, alloc)
 		{
 		}
 
 		template <typename K, typename M, typename KeyCompare, typename Allocator>
 		template <typename U>
-		avl_map<K, M, KeyCompare, Allocator>::avl_map(const kerbal::assign::assign_list<U> & ilist, const KeyCompare & kc) :
-				avl_ordered(kerbal::container::unique_tag_t(), ilist, kc)
+		avl_map<K, M, KeyCompare, Allocator>::
+		avl_map(
+			const kerbal::assign::assign_list<U> & ilist,
+			const KeyCompare & kc
+		) :
+			avl_ordered(kerbal::container::unique_tag_t(), ilist, kc)
 		{
 		}
 
 		template <typename K, typename M, typename KeyCompare, typename Allocator>
 		template <typename U>
-		avl_map<K, M, KeyCompare, Allocator>::avl_map(const kerbal::assign::assign_list<U> & ilist, const KeyCompare & kc, const Allocator & alloc) :
-				avl_ordered(kerbal::container::unique_tag_t(), ilist, kc, alloc)
+		avl_map<K, M, KeyCompare, Allocator>::
+		avl_map(
+			const kerbal::assign::assign_list<U> & ilist,
+			const KeyCompare & kc, const Allocator & alloc
+		) :
+			avl_ordered(kerbal::container::unique_tag_t(), ilist, kc, alloc)
 		{
 		}
 
@@ -170,15 +219,17 @@ namespace kerbal
 
 		template <typename K, typename M, typename KeyCompare, typename Allocator>
 		KERBAL_CONSTEXPR20
-		avl_map<K, M, KeyCompare, Allocator>::avl_map(const avl_map & src) :
-				avl_ordered(static_cast<const avl_ordered &>(src))
+		avl_map<K, M, KeyCompare, Allocator>::
+		avl_map(const avl_map & src) :
+			avl_ordered(static_cast<const avl_ordered &>(src))
 		{
 		}
 
 		template <typename K, typename M, typename KeyCompare, typename Allocator>
 		KERBAL_CONSTEXPR20
-		avl_map<K, M, KeyCompare, Allocator>::avl_map(const avl_map & src, const Allocator & alloc) :
-				avl_ordered(static_cast<const avl_ordered &>(src), alloc)
+		avl_map<K, M, KeyCompare, Allocator>::
+		avl_map(const avl_map & src, const Allocator & alloc) :
+			avl_ordered(static_cast<const avl_ordered &>(src), alloc)
 		{
 		}
 
@@ -186,15 +237,17 @@ namespace kerbal
 
 		template <typename K, typename M, typename KeyCompare, typename Allocator>
 		KERBAL_CONSTEXPR20
-		avl_map<K, M, KeyCompare, Allocator>::avl_map(avl_map && src) :
-				avl_ordered(static_cast<avl_ordered &&>(src))
+		avl_map<K, M, KeyCompare, Allocator>::
+		avl_map(avl_map && src) :
+			avl_ordered(static_cast<avl_ordered &&>(src))
 		{
 		}
 
 		template <typename K, typename M, typename KeyCompare, typename Allocator>
 		KERBAL_CONSTEXPR20
-		avl_map<K, M, KeyCompare, Allocator>::avl_map(avl_map && src, const Allocator & alloc) :
-				avl_ordered(static_cast<avl_ordered &&>(src), alloc)
+		avl_map<K, M, KeyCompare, Allocator>::
+		avl_map(avl_map && src, const Allocator & alloc) :
+			avl_ordered(static_cast<avl_ordered &&>(src), alloc)
 		{
 		}
 
@@ -209,7 +262,8 @@ namespace kerbal
 		template <typename K, typename M, typename KeyCompare, typename Allocator>
 		KERBAL_CONSTEXPR20
 		avl_map<K, M, KeyCompare, Allocator> &
-		avl_map<K, M, KeyCompare, Allocator>::operator=(const avl_map & src)
+		avl_map<K, M, KeyCompare, Allocator>::
+		operator=(const avl_map & src)
 		{
 			this->assign(src);
 			return *this;
@@ -217,7 +271,9 @@ namespace kerbal
 
 		template <typename K, typename M, typename KeyCompare, typename Allocator>
 		KERBAL_CONSTEXPR20
-		void avl_map<K, M, KeyCompare, Allocator>::assign(const avl_map & src)
+		void
+		avl_map<K, M, KeyCompare, Allocator>::
+		assign(const avl_map & src)
 		{
 			this->avl_ordered::assign(static_cast<const avl_ordered &>(src));
 		}
@@ -227,7 +283,8 @@ namespace kerbal
 		template <typename K, typename M, typename KeyCompare, typename Allocator>
 		KERBAL_CONSTEXPR20
 		avl_map<K, M, KeyCompare, Allocator> &
-		avl_map<K, M, KeyCompare, Allocator>::operator=(avl_map && src)
+		avl_map<K, M, KeyCompare, Allocator>::
+		operator=(avl_map && src)
 		{
 			this->assign(kerbal::compatibility::move(src));
 			return *this;
@@ -235,7 +292,9 @@ namespace kerbal
 
 		template <typename K, typename M, typename KeyCompare, typename Allocator>
 		KERBAL_CONSTEXPR20
-		void avl_map<K, M, KeyCompare, Allocator>::assign(avl_map && src)
+		void
+		avl_map<K, M, KeyCompare, Allocator>::
+		assign(avl_map && src)
 		{
 			this->avl_ordered::assign(static_cast<avl_ordered &&>(src));
 		}
@@ -245,17 +304,21 @@ namespace kerbal
 		template <typename K, typename M, typename KeyCompare, typename Allocator>
 		template <typename InputIterator>
 		KERBAL_CONSTEXPR20
-		void avl_map<K, M, KeyCompare, Allocator>::assign(InputIterator first, InputIterator last)
+		void
+		avl_map<K, M, KeyCompare, Allocator>::
+		assign(InputIterator first, InputIterator last)
 		{
 			this->avl_ordered::assign_unique(first, last);
 		}
+
 
 #	if __cplusplus >= 201103L
 
 		template <typename K, typename M, typename KeyCompare, typename Allocator>
 		KERBAL_CONSTEXPR20
 		avl_map<K, M, KeyCompare, Allocator> &
-		avl_map<K, M, KeyCompare, Allocator>::operator=(std::initializer_list<value_type> ilist)
+		avl_map<K, M, KeyCompare, Allocator>::
+		operator=(std::initializer_list<value_type> ilist)
 		{
 			this->assign(ilist);
 			return *this;
@@ -263,7 +326,9 @@ namespace kerbal
 
 		template <typename K, typename M, typename KeyCompare, typename Allocator>
 		KERBAL_CONSTEXPR20
-		void avl_map<K, M, KeyCompare, Allocator>::assign(std::initializer_list<value_type> ilist)
+		void
+		avl_map<K, M, KeyCompare, Allocator>::
+		assign(std::initializer_list<value_type> ilist)
 		{
 			this->avl_ordered::assign_unique(ilist);
 		}
@@ -273,7 +338,8 @@ namespace kerbal
 		template <typename K, typename M, typename KeyCompare, typename Allocator>
 		template <typename U>
 		avl_map<K, M, KeyCompare, Allocator> &
-		avl_map<K, M, KeyCompare, Allocator>::operator=(const kerbal::assign::assign_list<U> & ilist)
+		avl_map<K, M, KeyCompare, Allocator>::
+		operator=(const kerbal::assign::assign_list<U> & ilist)
 		{
 			this->assign(ilist);
 			return *this;
@@ -281,7 +347,9 @@ namespace kerbal
 
 		template <typename K, typename M, typename KeyCompare, typename Allocator>
 		template <typename U>
-		void avl_map<K, M, KeyCompare, Allocator>::assign(const kerbal::assign::assign_list<U> & ilist)
+		void
+		avl_map<K, M, KeyCompare, Allocator>::
+		assign(const kerbal::assign::assign_list<U> & ilist)
 		{
 			this->avl_ordered::assign_unique(ilist);
 		}
@@ -295,16 +363,20 @@ namespace kerbal
 
 		template <typename K, typename M, typename KeyCompare, typename Allocator>
 		KERBAL_CONSTEXPR20
-		typename avl_map<K, M, KeyCompare, Allocator>::const_iterator
-		avl_map<K, M, KeyCompare, Allocator>::find(const key_type & key) const
+		typename
+		avl_map<K, M, KeyCompare, Allocator>::const_iterator
+		avl_map<K, M, KeyCompare, Allocator>::
+		find(const key_type & key) const
 		{
 			return this->avl_ordered::find(key);
 		}
 
 		template <typename K, typename M, typename KeyCompare, typename Allocator>
 		KERBAL_CONSTEXPR20
-		typename avl_map<K, M, KeyCompare, Allocator>::iterator
-		avl_map<K, M, KeyCompare, Allocator>::find(const key_type & key)
+		typename
+		avl_map<K, M, KeyCompare, Allocator>::iterator
+		avl_map<K, M, KeyCompare, Allocator>::
+		find(const key_type & key)
 		{
 			return this->avl_ordered::find(key);
 		}
@@ -312,11 +384,13 @@ namespace kerbal
 		template <typename K, typename M, typename KeyCompare, typename Allocator>
 		template <typename Key>
 		KERBAL_CONSTEXPR20
-		typename avl_map<K, M, KeyCompare, Allocator>::template enable_if_transparent_lookup<
+		typename
+		avl_map<K, M, KeyCompare, Allocator>::template enable_if_transparent_lookup<
 			Key,
 			typename avl_map<K, M, KeyCompare, Allocator>::const_iterator
 		>::type
-		avl_map<K, M, KeyCompare, Allocator>::find(const Key & key) const
+		avl_map<K, M, KeyCompare, Allocator>::
+		find(const Key & key) const
 		{
 			return this->avl_ordered::find(key);
 		}
@@ -324,27 +398,33 @@ namespace kerbal
 		template <typename K, typename M, typename KeyCompare, typename Allocator>
 		template <typename Key>
 		KERBAL_CONSTEXPR20
-		typename avl_map<K, M, KeyCompare, Allocator>::template enable_if_transparent_lookup<
+		typename
+		avl_map<K, M, KeyCompare, Allocator>::template enable_if_transparent_lookup<
 			Key,
 			typename avl_map<K, M, KeyCompare, Allocator>::iterator
 		>::type
-		avl_map<K, M, KeyCompare, Allocator>::find(const Key & key)
+		avl_map<K, M, KeyCompare, Allocator>::
+		find(const Key & key)
 		{
 			return this->avl_ordered::find(key);
 		}
 
 		template <typename K, typename M, typename KeyCompare, typename Allocator>
 		KERBAL_CONSTEXPR20
-		typename avl_map<K, M, KeyCompare, Allocator>::const_iterator
-		avl_map<K, M, KeyCompare, Allocator>::lower_bound(const key_type & key) const
+		typename
+		avl_map<K, M, KeyCompare, Allocator>::const_iterator
+		avl_map<K, M, KeyCompare, Allocator>::
+		lower_bound(const key_type & key) const
 		{
 			return this->avl_ordered::lower_bound(key);
 		}
 
 		template <typename K, typename M, typename KeyCompare, typename Allocator>
 		KERBAL_CONSTEXPR20
-		typename avl_map<K, M, KeyCompare, Allocator>::iterator
-		avl_map<K, M, KeyCompare, Allocator>::lower_bound(const key_type & key)
+		typename
+		avl_map<K, M, KeyCompare, Allocator>::iterator
+		avl_map<K, M, KeyCompare, Allocator>::
+		lower_bound(const key_type & key)
 		{
 			return this->avl_ordered::lower_bound(key);
 		}
@@ -352,11 +432,13 @@ namespace kerbal
 		template <typename K, typename M, typename KeyCompare, typename Allocator>
 		template <typename Key>
 		KERBAL_CONSTEXPR20
-		typename avl_map<K, M, KeyCompare, Allocator>::template enable_if_transparent_lookup<
+		typename
+		avl_map<K, M, KeyCompare, Allocator>::template enable_if_transparent_lookup<
 			Key,
 			typename avl_map<K, M, KeyCompare, Allocator>::const_iterator
 		>::type
-		avl_map<K, M, KeyCompare, Allocator>::lower_bound(const Key & key) const
+		avl_map<K, M, KeyCompare, Allocator>::
+		lower_bound(const Key & key) const
 		{
 			return this->avl_ordered::lower_bound(key);
 		}
@@ -364,27 +446,33 @@ namespace kerbal
 		template <typename K, typename M, typename KeyCompare, typename Allocator>
 		template <typename Key>
 		KERBAL_CONSTEXPR20
-		typename avl_map<K, M, KeyCompare, Allocator>::template enable_if_transparent_lookup<
+		typename
+		avl_map<K, M, KeyCompare, Allocator>::template enable_if_transparent_lookup<
 			Key,
 			typename avl_map<K, M, KeyCompare, Allocator>::iterator
 		>::type
-		avl_map<K, M, KeyCompare, Allocator>::lower_bound(const Key & key)
+		avl_map<K, M, KeyCompare, Allocator>::
+		lower_bound(const Key & key)
 		{
 			return this->avl_ordered::lower_bound(key);
 		}
 
 		template <typename K, typename M, typename KeyCompare, typename Allocator>
 		KERBAL_CONSTEXPR20
-		typename avl_map<K, M, KeyCompare, Allocator>::const_iterator
-		avl_map<K, M, KeyCompare, Allocator>::upper_bound(const key_type & key) const
+		typename
+		avl_map<K, M, KeyCompare, Allocator>::const_iterator
+		avl_map<K, M, KeyCompare, Allocator>::
+		upper_bound(const key_type & key) const
 		{
 			return this->avl_ordered::upper_bound(key);
 		}
 
 		template <typename K, typename M, typename KeyCompare, typename Allocator>
 		KERBAL_CONSTEXPR20
-		typename avl_map<K, M, KeyCompare, Allocator>::iterator
-		avl_map<K, M, KeyCompare, Allocator>::upper_bound(const key_type & key)
+		typename
+		avl_map<K, M, KeyCompare, Allocator>::iterator
+		avl_map<K, M, KeyCompare, Allocator>::
+		upper_bound(const key_type & key)
 		{
 			return this->avl_ordered::upper_bound(key);
 		}
@@ -392,11 +480,13 @@ namespace kerbal
 		template <typename K, typename M, typename KeyCompare, typename Allocator>
 		template <typename Key>
 		KERBAL_CONSTEXPR20
-		typename avl_map<K, M, KeyCompare, Allocator>::template enable_if_transparent_lookup<
+		typename
+		avl_map<K, M, KeyCompare, Allocator>::template enable_if_transparent_lookup<
 			Key,
 			typename avl_map<K, M, KeyCompare, Allocator>::const_iterator
 		>::type
-		avl_map<K, M, KeyCompare, Allocator>::upper_bound(const Key & key) const
+		avl_map<K, M, KeyCompare, Allocator>::
+		upper_bound(const Key & key) const
 		{
 			return this->avl_ordered::upper_bound(key);
 		}
@@ -404,11 +494,13 @@ namespace kerbal
 		template <typename K, typename M, typename KeyCompare, typename Allocator>
 		template <typename Key>
 		KERBAL_CONSTEXPR20
-		typename avl_map<K, M, KeyCompare, Allocator>::template enable_if_transparent_lookup<
+		typename
+		avl_map<K, M, KeyCompare, Allocator>::template enable_if_transparent_lookup<
 			Key,
 			typename avl_map<K, M, KeyCompare, Allocator>::iterator
 		>::type
-		avl_map<K, M, KeyCompare, Allocator>::upper_bound(const Key & key)
+		avl_map<K, M, KeyCompare, Allocator>::
+		upper_bound(const Key & key)
 		{
 			return this->avl_ordered::upper_bound(key);
 		}
@@ -419,7 +511,8 @@ namespace kerbal
 			typename avl_map<K, M, KeyCompare, Allocator>::const_iterator,
 			typename avl_map<K, M, KeyCompare, Allocator>::const_iterator
 		>
-		avl_map<K, M, KeyCompare, Allocator>::equal_range(const key_type & key) const
+		avl_map<K, M, KeyCompare, Allocator>::
+		equal_range(const key_type & key) const
 		{
 			return this->avl_ordered::equal_range(key);
 		}
@@ -430,7 +523,8 @@ namespace kerbal
 			typename avl_map<K, M, KeyCompare, Allocator>::iterator,
 			typename avl_map<K, M, KeyCompare, Allocator>::iterator
 		>
-		avl_map<K, M, KeyCompare, Allocator>::equal_range(const key_type & key)
+		avl_map<K, M, KeyCompare, Allocator>::
+		equal_range(const key_type & key)
 		{
 			return this->avl_ordered::equal_range(key);
 		}
@@ -438,14 +532,16 @@ namespace kerbal
 		template <typename K, typename M, typename KeyCompare, typename Allocator>
 		template <typename Key>
 		KERBAL_CONSTEXPR20
-		typename avl_map<K, M, KeyCompare, Allocator>::template enable_if_transparent_lookup<
+		typename
+		avl_map<K, M, KeyCompare, Allocator>::template enable_if_transparent_lookup<
 			Key,
 			kerbal::utility::compressed_pair<
 				typename avl_map<K, M, KeyCompare, Allocator>::const_iterator,
 				typename avl_map<K, M, KeyCompare, Allocator>::const_iterator
 			>
 		>::type
-		avl_map<K, M, KeyCompare, Allocator>::equal_range(const Key & key) const
+		avl_map<K, M, KeyCompare, Allocator>::
+		equal_range(const Key & key) const
 		{
 			return this->avl_ordered::equal_range(key);
 		}
@@ -453,21 +549,25 @@ namespace kerbal
 		template <typename K, typename M, typename KeyCompare, typename Allocator>
 		template <typename Key>
 		KERBAL_CONSTEXPR20
-		typename avl_map<K, M, KeyCompare, Allocator>::template enable_if_transparent_lookup<
+		typename
+		avl_map<K, M, KeyCompare, Allocator>::template enable_if_transparent_lookup<
 			Key,
 			kerbal::utility::compressed_pair<
 				typename avl_map<K, M, KeyCompare, Allocator>::iterator,
 				typename avl_map<K, M, KeyCompare, Allocator>::iterator
 			>
 		>::type
-		avl_map<K, M, KeyCompare, Allocator>::equal_range(const Key & key)
+		avl_map<K, M, KeyCompare, Allocator>::
+		equal_range(const Key & key)
 		{
 			return this->avl_ordered::equal_range(key);
 		}
 
 		template <typename K, typename M, typename KeyCompare, typename Allocator>
 		KERBAL_CONSTEXPR20
-		bool avl_map<K, M, KeyCompare, Allocator>::contains(const key_type & key) const
+		bool
+		avl_map<K, M, KeyCompare, Allocator>::
+		contains(const key_type & key) const
 		{
 			return this->avl_ordered::contains(key);
 		}
@@ -475,11 +575,13 @@ namespace kerbal
 		template <typename K, typename M, typename KeyCompare, typename Allocator>
 		template <typename Key>
 		KERBAL_CONSTEXPR20
-		typename avl_map<K, M, KeyCompare, Allocator>::template enable_if_transparent_lookup<
+		typename
+		avl_map<K, M, KeyCompare, Allocator>::template enable_if_transparent_lookup<
 			Key,
 			bool
 		>::type
-		avl_map<K, M, KeyCompare, Allocator>::contains(const Key & key) const
+		avl_map<K, M, KeyCompare, Allocator>::
+		contains(const Key & key) const
 		{
 			return this->avl_ordered::contains(key);
 		}
@@ -494,8 +596,10 @@ namespace kerbal
 		template <typename K, typename M, typename KeyCompare, typename Allocator>
 		template <typename ... Args>
 		KERBAL_CONSTEXPR20
-		typename avl_map<K, M, KeyCompare, Allocator>::unique_insert_r
-		avl_map<K, M, KeyCompare, Allocator>::emplace(Args&& ... args)
+		typename
+		avl_map<K, M, KeyCompare, Allocator>::unique_insert_r
+		avl_map<K, M, KeyCompare, Allocator>::
+		emplace(Args && ... args)
 		{
 			return this->avl_ordered::emplace_unique(kerbal::utility::forward<Args>(args)...);
 		}
@@ -511,11 +615,13 @@ namespace kerbal
 #	define FBODY(i) \
 		template <typename K, typename M, typename KeyCompare, typename Allocator> \
 		KERBAL_OPT_PPEXPAND_WITH_COMMA_N(THEAD_NOT_EMPTY, EMPTY, TARGS_DECL, i) \
-		typename avl_map<K, M, KeyCompare, Allocator>::unique_insert_r \
-		avl_map<K, M, KeyCompare, Allocator>::emplace(KERBAL_OPT_PPEXPAND_WITH_COMMA_N(REMAINF, EMPTY, ARGS_DECL, i)) \
+		typename \
+		avl_map<K, M, KeyCompare, Allocator>::unique_insert_r \
+		avl_map<K, M, KeyCompare, Allocator>:: \
+		emplace(KERBAL_OPT_PPEXPAND_WITH_COMMA_N(REMAINF, EMPTY, ARGS_DECL, i)) \
 		{ \
 			return this->avl_ordered::emplace_unique(KERBAL_OPT_PPEXPAND_WITH_COMMA_N(REMAINF, EMPTY, ARGS_USE, i)); \
-		}
+		} \
 
 //		KERBAL_PPEXPAND_N(FBODY, KERBAL_PPEXPAND_EMPTY_SEPARATOR, 0) = delete; // because map_data doesn't support default construct
 		KERBAL_PPEXPAND_N(FBODY, KERBAL_PPEXPAND_EMPTY_SEPARATOR, 20)
@@ -533,8 +639,10 @@ namespace kerbal
 
 		template <typename K, typename M, typename KeyCompare, typename Allocator>
 		KERBAL_CONSTEXPR20
-		typename avl_map<K, M, KeyCompare, Allocator>::unique_insert_r
-		avl_map<K, M, KeyCompare, Allocator>::insert(const_reference src)
+		typename
+		avl_map<K, M, KeyCompare, Allocator>::unique_insert_r
+		avl_map<K, M, KeyCompare, Allocator>::
+		insert(const_reference src)
 		{
 			return this->avl_ordered::insert_unique(src);
 		}
@@ -543,8 +651,10 @@ namespace kerbal
 
 		template <typename K, typename M, typename KeyCompare, typename Allocator>
 		KERBAL_CONSTEXPR20
-		typename avl_map<K, M, KeyCompare, Allocator>::unique_insert_r
-		avl_map<K, M, KeyCompare, Allocator>::insert(rvalue_reference src)
+		typename
+		avl_map<K, M, KeyCompare, Allocator>::unique_insert_r
+		avl_map<K, M, KeyCompare, Allocator>::
+		insert(rvalue_reference src)
 		{
 			return this->avl_ordered::insert_unique(kerbal::compatibility::move(src));
 		}
@@ -555,7 +665,8 @@ namespace kerbal
 		template <typename InputIterator>
 		KERBAL_CONSTEXPR20
 		void
-		avl_map<K, M, KeyCompare, Allocator>::insert(InputIterator first, InputIterator last)
+		avl_map<K, M, KeyCompare, Allocator>::
+		insert(InputIterator first, InputIterator last)
 		{
 			this->avl_ordered::insert_unique(first, last);
 		}
@@ -564,7 +675,9 @@ namespace kerbal
 
 		template <typename K, typename M, typename KeyCompare, typename Allocator>
 		KERBAL_CONSTEXPR20
-		void avl_map<K, M, KeyCompare, Allocator>::insert(std::initializer_list<value_type> ilist)
+		void
+		avl_map<K, M, KeyCompare, Allocator>::
+		insert(std::initializer_list<value_type> ilist)
 		{
 			this->avl_ordered::insert_unique(ilist);
 		}
@@ -573,7 +686,9 @@ namespace kerbal
 
 		template <typename K, typename M, typename KeyCompare, typename Allocator>
 		template <typename U>
-		void avl_map<K, M, KeyCompare, Allocator>::insert(const kerbal::assign::assign_list<U> & ilist)
+		void
+		avl_map<K, M, KeyCompare, Allocator>::
+		insert(const kerbal::assign::assign_list<U> & ilist)
 		{
 			this->avl_ordered::insert_unique(ilist);
 		}
@@ -586,32 +701,42 @@ namespace kerbal
 
 		template <typename K, typename M, typename KeyCompare, typename Allocator>
 		KERBAL_CONSTEXPR20
-		typename avl_map<K, M, KeyCompare, Allocator>::mapped_type &
-		avl_map<K, M, KeyCompare, Allocator>::at(const key_type & key)
+		typename
+		avl_map<K, M, KeyCompare, Allocator>::mapped_type &
+		avl_map<K, M, KeyCompare, Allocator>::
+		at(const key_type & key)
 		{
 			iterator pos = this->find(key);
 			if (pos == this->cend()) {
-				kerbal::utility::throw_this_exception_helper<std::out_of_range>::throw_this_exception((const char*)"element not found");
+				kerbal::utility::throw_this_exception_helper<std::out_of_range>::throw_this_exception(
+					(const char *) "element not found"
+				);
 			}
 			return pos->value();
 		}
 
 		template <typename K, typename M, typename KeyCompare, typename Allocator>
 		KERBAL_CONSTEXPR20
-		const typename avl_map<K, M, KeyCompare, Allocator>::mapped_type &
-		avl_map<K, M, KeyCompare, Allocator>::at(const key_type & key) const
+		typename
+		avl_map<K, M, KeyCompare, Allocator>::mapped_type const &
+		avl_map<K, M, KeyCompare, Allocator>::
+		at(const key_type & key) const
 		{
 			const_iterator pos = this->find(key);
 			if (pos == this->cend()) {
-				kerbal::utility::throw_this_exception_helper<std::out_of_range>::throw_this_exception((const char*)"element not found");
+				kerbal::utility::throw_this_exception_helper<std::out_of_range>::throw_this_exception(
+					(const char *) "element not found"
+				);
 			}
 			return pos->value();
 		}
 
 		template <typename K, typename M, typename KeyCompare, typename Allocator>
 		KERBAL_CONSTEXPR20
-		typename avl_map<K, M, KeyCompare, Allocator>::mapped_type &
-		avl_map<K, M, KeyCompare, Allocator>::operator[](const key_type & key)
+		typename
+		avl_map<K, M, KeyCompare, Allocator>::mapped_type &
+		avl_map<K, M, KeyCompare, Allocator>::
+		operator[](const key_type & key)
 		{
 			return this->emplace_unique(key, kerbal::utility::compressed_pair_default_construct_tag()).position()->value();
 		}
@@ -622,32 +747,40 @@ namespace kerbal
 
 		template <typename K, typename M, typename KeyCompare, typename Allocator>
 		KERBAL_CONSTEXPR20
-		typename avl_map<K, M, KeyCompare, Allocator>::iterator
-		avl_map<K, M, KeyCompare, Allocator>::erase_not_end_unsafe(const_iterator pos) KERBAL_NOEXCEPT
+		typename
+		avl_map<K, M, KeyCompare, Allocator>::iterator
+		avl_map<K, M, KeyCompare, Allocator>::
+		erase_not_end_unsafe(const_iterator pos) KERBAL_NOEXCEPT
 		{
 			return this->avl_ordered::erase_not_end_unsafe(pos);
 		}
 
 		template <typename K, typename M, typename KeyCompare, typename Allocator>
 		KERBAL_CONSTEXPR20
-		typename avl_map<K, M, KeyCompare, Allocator>::iterator
-		avl_map<K, M, KeyCompare, Allocator>::erase(const_iterator pos) KERBAL_NOEXCEPT
+		typename
+		avl_map<K, M, KeyCompare, Allocator>::iterator
+		avl_map<K, M, KeyCompare, Allocator>::
+		erase(const_iterator pos) KERBAL_NOEXCEPT
 		{
 			return this->avl_ordered::erase(pos);
 		}
 
 		template <typename K, typename M, typename KeyCompare, typename Allocator>
 		KERBAL_CONSTEXPR20
-		typename avl_map<K, M, KeyCompare, Allocator>::iterator
-		avl_map<K, M, KeyCompare, Allocator>::erase(const_iterator first, const_iterator last) KERBAL_NOEXCEPT
+		typename
+		avl_map<K, M, KeyCompare, Allocator>::iterator
+		avl_map<K, M, KeyCompare, Allocator>::
+		erase(const_iterator first, const_iterator last) KERBAL_NOEXCEPT
 		{
 			return this->avl_ordered::erase(first, last);
 		}
 
 		template <typename K, typename M, typename KeyCompare, typename Allocator>
 		KERBAL_CONSTEXPR20
-		typename avl_map<K, M, KeyCompare, Allocator>::size_type
-		avl_map<K, M, KeyCompare, Allocator>::erase(const key_type & key) KERBAL_NOEXCEPT
+		typename
+		avl_map<K, M, KeyCompare, Allocator>::size_type
+		avl_map<K, M, KeyCompare, Allocator>::
+		erase(const key_type & key) KERBAL_NOEXCEPT
 		{
 			return this->avl_ordered::erase(key);
 		}
@@ -655,18 +788,22 @@ namespace kerbal
 		template <typename K, typename M, typename KeyCompare, typename Allocator>
 		template <typename Key>
 		KERBAL_CONSTEXPR20
-		typename avl_map<K, M, KeyCompare, Allocator>::template enable_if_transparent_lookup<
+		typename
+		avl_map<K, M, KeyCompare, Allocator>::template enable_if_transparent_lookup<
 			Key,
 			typename avl_map<K, M, KeyCompare, Allocator>::size_type
 		>::type
-		avl_map<K, M, KeyCompare, Allocator>::erase(const Key & key) KERBAL_NOEXCEPT
+		avl_map<K, M, KeyCompare, Allocator>::
+		erase(const Key & key) KERBAL_NOEXCEPT
 		{
 			return this->avl_ordered::erase(key);
 		}
 
 		template <typename K, typename M, typename KeyCompare, typename Allocator>
 		KERBAL_CONSTEXPR20
-		void avl_map<K, M, KeyCompare, Allocator>::clear() KERBAL_NOEXCEPT
+		void
+		avl_map<K, M, KeyCompare, Allocator>::
+		clear() KERBAL_NOEXCEPT
 		{
 			this->avl_ordered::clear();
 		}
@@ -676,7 +813,9 @@ namespace kerbal
 
 		template <typename K, typename M, typename KeyCompare, typename Allocator>
 		KERBAL_CONSTEXPR20
-		void avl_map<K, M, KeyCompare, Allocator>::swap(avl_map & other)
+		void
+		avl_map<K, M, KeyCompare, Allocator>::
+		swap(avl_map & other)
 		{
 			this->avl_ordered::swap(static_cast<avl_ordered &>(other));
 		}

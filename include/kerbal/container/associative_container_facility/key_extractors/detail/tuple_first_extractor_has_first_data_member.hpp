@@ -40,16 +40,16 @@ namespace kerbal
 
 					template <typename ValueType2>
 					static kerbal::type_traits::yes_type test(char(*)[sizeof(
-							kerbal::utility::declval<ValueType2>().first,
-							0
+						kerbal::utility::declval<ValueType2>().first,
+						0
 					)]);
 
 #else
 
 					template <typename ValueType2>
 					static kerbal::type_traits::yes_type test(char *, decltype(
-							kerbal::utility::declval<ValueType2>().first,
-							0
+						kerbal::utility::declval<ValueType2>().first,
+						0
 					) = 0);
 
 #endif
@@ -62,7 +62,7 @@ namespace kerbal
 
 			template <typename ValueType>
 			struct tuple_first_extractor_has_first_data_member :
-					kerbal::container::detail::tuple_first_extractor_has_first_data_member_helper<ValueType>::type
+				kerbal::container::detail::tuple_first_extractor_has_first_data_member_helper<ValueType>::type
 			{
 			};
 

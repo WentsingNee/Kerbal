@@ -35,12 +35,13 @@ namespace kerbal
 		template <typename T, typename UpstreamAllocator>
 		KERBAL_CONSTEXPR14
 		void swap(
-				kerbal::memory::over_aligned_allocator<T, UpstreamAllocator> & lhs,
-				kerbal::memory::over_aligned_allocator<T, UpstreamAllocator> & rhs
+			kerbal::memory::over_aligned_allocator<T, UpstreamAllocator> & lhs,
+			kerbal::memory::over_aligned_allocator<T, UpstreamAllocator> & rhs
 		)
-		KERBAL_CONDITIONAL_NOEXCEPT(
-			noexcept(lhs.swap(rhs))
-		);
+			KERBAL_CONDITIONAL_NOEXCEPT(
+				noexcept(lhs.swap(rhs))
+			)
+		;
 
 	} // namespace algorithm
 

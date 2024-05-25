@@ -43,11 +43,18 @@ namespace kerbal
 			 *                          pointer direct to first element for C-array).
 			 *
 			 */
-			template <typename ForwardIterator, typename NextContainer, typename EqualPredict, typename BackInsertIterator>
+			template <
+				typename ForwardIterator,
+				typename NextContainer,
+				typename EqualPredict,
+				typename BackInsertIterator
+			>
 			KERBAL_CONSTEXPR14
 			ForwardIterator
-			longest_matched_suffix_prefix_helper(ForwardIterator pattern_first, ForwardIterator pattern_last,
-					const NextContainer & next_container, EqualPredict equal_predict, BackInsertIterator back_inserter)
+			longest_matched_suffix_prefix_helper(
+				ForwardIterator pattern_first, ForwardIterator pattern_last,
+				const NextContainer & next_container, EqualPredict equal_predict, BackInsertIterator back_inserter
+			)
 			{
 				typedef ForwardIterator pattern_iterator;
 				pattern_iterator i_pattern(pattern_first);
@@ -79,39 +86,57 @@ namespace kerbal
 
 		} // namespace detail
 
-		template <typename ForwardIterator, typename NextContainer, typename EqualPredict>
+		template <
+			typename ForwardIterator,
+			typename NextContainer,
+			typename EqualPredict
+		>
 		KERBAL_CONSTEXPR14
 		ForwardIterator
-		longest_matched_suffix_prefix(ForwardIterator pattern_first, ForwardIterator pattern_last,
-				NextContainer & next_container, EqualPredict equal_predict)
+		longest_matched_suffix_prefix(
+			ForwardIterator pattern_first, ForwardIterator pattern_last,
+			NextContainer & next_container, EqualPredict equal_predict
+		)
 		{
-			return kerbal::algorithm::detail::longest_matched_suffix_prefix_helper
-					(pattern_first, pattern_last, next_container, equal_predict, kerbal::iterator::general_inserter(next_container));
+			return kerbal::algorithm::detail::longest_matched_suffix_prefix_helper(
+				pattern_first, pattern_last, next_container, equal_predict,
+				kerbal::iterator::general_inserter(next_container)
+			);
 		}
 
 		template <typename ForwardIterator, typename NextContainer>
 		KERBAL_CONSTEXPR14
 		ForwardIterator
-		longest_matched_suffix_prefix(ForwardIterator pattern_first, ForwardIterator pattern_last,
-				NextContainer & next_container)
+		longest_matched_suffix_prefix(
+			ForwardIterator pattern_first, ForwardIterator pattern_last,
+			NextContainer & next_container
+		)
 		{
 			typedef ForwardIterator pattern_iterator;
 			typedef typename kerbal::iterator::iterator_traits<pattern_iterator>::value_type T;
-			return kerbal::algorithm::longest_matched_suffix_prefix
-					(pattern_first, pattern_last, next_container, kerbal::compare::equal_to<T>());
+			return kerbal::algorithm::longest_matched_suffix_prefix(
+				pattern_first, pattern_last, next_container, kerbal::compare::equal_to<T>()
+			);
 		}
 
 
 		namespace detail
 		{
 
-			template <typename BidirectionalHostIterator, typename ForwardPatternIterator, typename EqualPredict, typename NextContainer>
+			template <
+				typename BidirectionalHostIterator,
+				typename ForwardPatternIterator,
+				typename EqualPredict,
+				typename NextContainer
+			>
 			KERBAL_CONSTEXPR14
 			BidirectionalHostIterator
-			kmp_helper(BidirectionalHostIterator host_first, const BidirectionalHostIterator host_last,
+			kmp_helper(
+				BidirectionalHostIterator host_first, const BidirectionalHostIterator host_last,
 				const ForwardPatternIterator pattern_first, const ForwardPatternIterator pattern_last,
 				EqualPredict equal_predict, const NextContainer & lsp,
-				std::bidirectional_iterator_tag /*host_iterator_type*/, std::forward_iterator_tag /*pattern_iterator_type*/)
+				std::bidirectional_iterator_tag /*host_iterator_type*/, std::forward_iterator_tag /*pattern_iterator_type*/
+			)
 			{
 				typedef BidirectionalHostIterator host_iterator;
 				typedef ForwardPatternIterator pattern_iterator;
@@ -148,26 +173,41 @@ namespace kerbal
 
 		} // namespace detail
 
-		template <typename BidirectionalHostIterator, typename ForwardPatternIterator, typename EqualPredict, typename NextContainer>
+		template <
+			typename BidirectionalHostIterator,
+			typename ForwardPatternIterator,
+			typename EqualPredict,
+			typename NextContainer
+		>
 		KERBAL_CONSTEXPR14
 		BidirectionalHostIterator
-		kmp(BidirectionalHostIterator host_first, BidirectionalHostIterator host_last,
+		kmp(
+			BidirectionalHostIterator host_first, BidirectionalHostIterator host_last,
 			ForwardPatternIterator pattern_first, ForwardPatternIterator pattern_last,
-			EqualPredict equal_predict, const NextContainer & lsp)
+			EqualPredict equal_predict, const NextContainer & lsp
+		)
 		{
-			return kerbal::algorithm::detail::kmp_helper(host_first, host_last, pattern_first, pattern_last, equal_predict, lsp,
-					kerbal::iterator::iterator_category(host_first),
-					kerbal::iterator::iterator_category(pattern_first));
+			return kerbal::algorithm::detail::kmp_helper(
+				host_first, host_last, pattern_first, pattern_last, equal_predict, lsp,
+				kerbal::iterator::iterator_category(host_first),
+				kerbal::iterator::iterator_category(pattern_first)
+			);
 		}
 
 		namespace detail
 		{
 
-			template <typename BidirectionalHostIterator, typename ForwardPatternIterator, typename EqualPredict>
+			template <
+				typename BidirectionalHostIterator,
+				typename ForwardPatternIterator,
+				typename EqualPredict
+			>
 			BidirectionalHostIterator
-			kmp_lsp_buffer_agent(BidirectionalHostIterator host_first, BidirectionalHostIterator host_last,
+			kmp_lsp_buffer_agent(
+				BidirectionalHostIterator host_first, BidirectionalHostIterator host_last,
 				ForwardPatternIterator pattern_first, ForwardPatternIterator pattern_last, EqualPredict equal_predict,
-				std::forward_iterator_tag /*pattern_iterator_type*/)
+				std::forward_iterator_tag /*pattern_iterator_type*/
+			)
 			{
 				typedef ForwardPatternIterator pattern_iterator;
 				typedef typename kerbal::iterator::iterator_traits<pattern_iterator>::difference_type pattern_difference_type;
@@ -186,28 +226,46 @@ namespace kerbal
 
 		} // namespace detail
 
-		template <typename BidirectionalHostIterator, typename ForwardPatternIterator, typename EqualPredict>
+		template <
+			typename BidirectionalHostIterator,
+			typename ForwardPatternIterator,
+			typename EqualPredict
+		>
 		BidirectionalHostIterator
-		kmp(BidirectionalHostIterator host_first, BidirectionalHostIterator host_last,
-			ForwardPatternIterator pattern_first, ForwardPatternIterator pattern_last, EqualPredict equal_predict)
+		kmp(
+			BidirectionalHostIterator host_first, BidirectionalHostIterator host_last,
+			ForwardPatternIterator pattern_first, ForwardPatternIterator pattern_last, EqualPredict equal_predict
+		)
 		{
-			return kerbal::algorithm::detail::kmp_lsp_buffer_agent(host_first, host_last,
-					pattern_first, pattern_last, equal_predict, kerbal::iterator::iterator_category(pattern_first));
+			return kerbal::algorithm::detail::kmp_lsp_buffer_agent(
+				host_first, host_last,
+				pattern_first, pattern_last,
+				equal_predict, kerbal::iterator::iterator_category(pattern_first)
+			);
 		}
 
 		template <typename BidirectionalHostIterator, typename ForwardPatternIterator>
 		BidirectionalHostIterator
-		kmp(BidirectionalHostIterator host_first, BidirectionalHostIterator host_last,
-			ForwardPatternIterator pattern_first, ForwardPatternIterator pattern_last)
+		kmp(
+			BidirectionalHostIterator host_first, BidirectionalHostIterator host_last,
+			ForwardPatternIterator pattern_first, ForwardPatternIterator pattern_last
+		)
 		{
 			typedef typename kerbal::iterator::iterator_traits<BidirectionalHostIterator>::value_type host_value_type;
-			return kerbal::algorithm::kmp(host_first, host_last, pattern_first, pattern_last,
-					kerbal::compare::equal_to<host_value_type>());
+			return kerbal::algorithm::kmp(
+				host_first, host_last,
+				pattern_first, pattern_last,
+				kerbal::compare::equal_to<host_value_type>()
+			);
 		}
 
-		inline const char* kmp(const char* host, const char* pattern)
+		inline
+		const char * kmp(const char * host, const char * pattern)
 		{
-			return kerbal::algorithm::kmp(host, host + std::strlen(host), pattern, pattern + std::strlen(pattern));
+			return kerbal::algorithm::kmp(
+				host, host + std::strlen(host),
+				pattern, pattern + std::strlen(pattern)
+			);
 		}
 
 	} // namespace algorithm

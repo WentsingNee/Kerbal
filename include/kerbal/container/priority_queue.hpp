@@ -45,9 +45,13 @@ namespace kerbal
 	namespace container
 	{
 
-		template <typename T, typename KeyCompare = kerbal::compare::less<T>, typename Container = kerbal::container::vector<T> >
+		template <
+			typename T,
+			typename KeyCompare = kerbal::compare::less<T>,
+			typename Container = kerbal::container::vector<T>
+		>
 		class priority_queue :
-				private kerbal::utility::member_compress_helper<KeyCompare>
+			private kerbal::utility::member_compress_helper<KeyCompare>
 		{
 			private:
 				typedef kerbal::utility::member_compress_helper<KeyCompare> kc_compress_helper;
@@ -76,11 +80,13 @@ namespace kerbal
 
 			private:
 				KERBAL_STATIC_ASSERT(
-						(kerbal::type_traits::is_same<
-								typename Container::value_type,
-								value_type
-						>::value),
-						"Container::value_type should be same as T"
+					(
+						kerbal::type_traits::is_same<
+							typename Container::value_type,
+							value_type
+						>::value
+					),
+					"Container::value_type should be same as T"
 				);
 
 			private:
@@ -105,36 +111,40 @@ namespace kerbal
 
 				KERBAL_CONSTEXPR20
 				priority_queue() :
-						kc_compress_helper(kerbal::utility::in_place_t()), c()
+					kc_compress_helper(kerbal::utility::in_place_t()), c()
 				{
 				}
 
 				KERBAL_CONSTEXPR20
 				explicit priority_queue(const value_compare & vc) :
-						kc_compress_helper(kerbal::utility::in_place_t(), vc), c()
+					kc_compress_helper(kerbal::utility::in_place_t(), vc), c()
 				{
 				}
 
 				template <typename InputIterator>
 				KERBAL_CONSTEXPR20
-				priority_queue(InputIterator first, InputIterator last,
-								typename kerbal::type_traits::enable_if<
-										kerbal::iterator::is_input_compatible_iterator<InputIterator>::value,
-										int
-								>::type = 0) :
-						kc_compress_helper(kerbal::utility::in_place_t()), c(first, last)
+				priority_queue(
+					InputIterator first, InputIterator last,
+					typename kerbal::type_traits::enable_if<
+						kerbal::iterator::is_input_compatible_iterator<InputIterator>::value,
+						int
+					>::type = 0
+				) :
+					kc_compress_helper(kerbal::utility::in_place_t()), c(first, last)
 				{
 					kerbal::algorithm::make_heap(c.begin(), c.end(), this->vc());
 				}
 
 				template <typename InputIterator>
 				KERBAL_CONSTEXPR20
-				priority_queue(InputIterator first, InputIterator last, const value_compare & vc,
-								typename kerbal::type_traits::enable_if<
-										kerbal::iterator::is_input_compatible_iterator<InputIterator>::value,
-										int
-								>::type = 0) :
-						kc_compress_helper(kerbal::utility::in_place_t(), vc), c(first, last)
+				priority_queue(
+					InputIterator first, InputIterator last, const value_compare & vc,
+					typename kerbal::type_traits::enable_if<
+						kerbal::iterator::is_input_compatible_iterator<InputIterator>::value,
+						int
+					>::type = 0
+				) :
+					kc_compress_helper(kerbal::utility::in_place_t(), vc), c(first, last)
 				{
 					kerbal::algorithm::make_heap(c.begin(), c.end(), this->vc());
 				}
@@ -143,38 +153,38 @@ namespace kerbal
 
 				KERBAL_CONSTEXPR20
 				priority_queue(std::initializer_list<value_type> ilist) :
-						priority_queue(ilist.begin(), ilist.end())
+					priority_queue(ilist.begin(), ilist.end())
 				{
 				}
 
 				KERBAL_CONSTEXPR20
 				priority_queue(std::initializer_list<value_type> ilist, const value_compare & vc) :
-						priority_queue(ilist.begin(), ilist.end(), vc)
+					priority_queue(ilist.begin(), ilist.end(), vc)
 				{
 				}
 
 #		else
 
 				priority_queue(const kerbal::assign::assign_list<void> & ilist) :
-						kc_compress_helper(kerbal::utility::in_place_t()), c()
+					kc_compress_helper(kerbal::utility::in_place_t()), c()
 				{
 				}
 
 				template <typename U>
 				priority_queue(const kerbal::assign::assign_list<U> & ilist) :
-						kc_compress_helper(kerbal::utility::in_place_t()), c(ilist.cbegin(), ilist.cend())
+					kc_compress_helper(kerbal::utility::in_place_t()), c(ilist.cbegin(), ilist.cend())
 				{
 					kerbal::algorithm::make_heap(c.begin(), c.end(), this->vc());
 				}
 
 				priority_queue(const kerbal::assign::assign_list<void> & ilist, const value_compare & vc) :
-						kc_compress_helper(kerbal::utility::in_place_t(), vc), c()
+					kc_compress_helper(kerbal::utility::in_place_t(), vc), c()
 				{
 				}
 
 				template <typename U>
 				priority_queue(const kerbal::assign::assign_list<U> & ilist, const value_compare & vc) :
-						kc_compress_helper(kerbal::utility::in_place_t(), vc), c(ilist.cbegin(), ilist.cend())
+					kc_compress_helper(kerbal::utility::in_place_t(), vc), c(ilist.cbegin(), ilist.cend())
 				{
 					kerbal::algorithm::make_heap(c.begin(), c.end(), this->vc());
 				}
@@ -187,9 +197,9 @@ namespace kerbal
 
 				KERBAL_CONSTEXPR20
 				const_reference top() const
-						KERBAL_CONDITIONAL_NOEXCEPT(
-								noexcept(c.front())
-						)
+					KERBAL_CONDITIONAL_NOEXCEPT(
+						noexcept(c.front())
+					)
 				{
 					return c.front();
 				}
@@ -200,72 +210,72 @@ namespace kerbal
 
 				KERBAL_CONSTEXPR
 				const_iterator begin() const
-						KERBAL_CONDITIONAL_NOEXCEPT(
-								noexcept(c.cbegin())
-						)
+					KERBAL_CONDITIONAL_NOEXCEPT(
+						noexcept(c.cbegin())
+					)
 				{
 					return c.cbegin();
 				}
 
 				KERBAL_CONSTEXPR
 				const_iterator end() const
-						KERBAL_CONDITIONAL_NOEXCEPT(
-								noexcept(c.cend())
-						)
+					KERBAL_CONDITIONAL_NOEXCEPT(
+						noexcept(c.cend())
+					)
 				{
 					return c.cend();
 				}
 
 				KERBAL_CONSTEXPR
 				const_iterator cbegin() const
-						KERBAL_CONDITIONAL_NOEXCEPT(
-								noexcept(c.cbegin())
-						)
+					KERBAL_CONDITIONAL_NOEXCEPT(
+						noexcept(c.cbegin())
+					)
 				{
 					return c.cbegin();
 				}
 
 				KERBAL_CONSTEXPR
 				const_iterator cend() const
-						KERBAL_CONDITIONAL_NOEXCEPT(
-								noexcept(c.cend())
-						)
+					KERBAL_CONDITIONAL_NOEXCEPT(
+						noexcept(c.cend())
+					)
 				{
 					return c.cend();
 				}
 
 				KERBAL_CONSTEXPR14
 				const_reverse_iterator rbegin() const
-						KERBAL_CONDITIONAL_NOEXCEPT(
-								noexcept(c.crbegin())
-						)
+					KERBAL_CONDITIONAL_NOEXCEPT(
+						noexcept(c.crbegin())
+					)
 				{
 					return c.crbegin();
 				}
 
 				KERBAL_CONSTEXPR14
 				const_reverse_iterator rend() const
-						KERBAL_CONDITIONAL_NOEXCEPT(
-								noexcept(c.crend())
-						)
+					KERBAL_CONDITIONAL_NOEXCEPT(
+						noexcept(c.crend())
+					)
 				{
 					return c.crend();
 				}
 
 				KERBAL_CONSTEXPR14
 				const_reverse_iterator crbegin() const
-						KERBAL_CONDITIONAL_NOEXCEPT(
-								noexcept(c.crbegin())
-						)
+					KERBAL_CONDITIONAL_NOEXCEPT(
+						noexcept(c.crbegin())
+					)
 				{
 					return c.crbegin();
 				}
 
 				KERBAL_CONSTEXPR14
 				const_reverse_iterator crend() const
-						KERBAL_CONDITIONAL_NOEXCEPT(
-								noexcept(c.crend())
-						)
+					KERBAL_CONDITIONAL_NOEXCEPT(
+						noexcept(c.crend())
+					)
 				{
 					return c.crend();
 				}
@@ -276,27 +286,27 @@ namespace kerbal
 
 				KERBAL_CONSTEXPR
 				bool empty() const
-						KERBAL_CONDITIONAL_NOEXCEPT(
-								noexcept(c.empty())
-						)
+					KERBAL_CONDITIONAL_NOEXCEPT(
+						noexcept(c.empty())
+					)
 				{
 					return c.empty();
 				}
 
 				KERBAL_CONSTEXPR
 				size_type size() const
-						KERBAL_CONDITIONAL_NOEXCEPT(
-								noexcept(c.size())
-						)
+					KERBAL_CONDITIONAL_NOEXCEPT(
+						noexcept(c.size())
+					)
 				{
 					return c.size();
 				}
 
 				KERBAL_CONSTEXPR
 				size_type max_size() const
-						KERBAL_CONDITIONAL_NOEXCEPT(
-								noexcept(c.max_size())
-						)
+					KERBAL_CONDITIONAL_NOEXCEPT(
+						noexcept(c.max_size())
+					)
 				{
 					return c.max_size();
 				}
@@ -363,7 +373,7 @@ namespace kerbal
 
 				template <typename ... Args>
 				KERBAL_CONSTEXPR20
-				void emplace(Args&& ... args)
+				void emplace(Args && ... args)
 				{
 					c.emplace_back(kerbal::utility::forward<Args>(args)...);
 					kerbal::algorithm::push_heap(c.begin(), c.end(), this->vc());
@@ -384,7 +394,7 @@ namespace kerbal
 				{ \
 					c.emplace_back(KERBAL_OPT_PPEXPAND_WITH_COMMA_N(REMAINF, EMPTY, ARGS_USE, i)); \
 					kerbal::algorithm::push_heap(c.begin(), c.end(), this->vc()); \
-				}
+				} \
 
 				KERBAL_PPEXPAND_N(FBODY, KERBAL_PPEXPAND_EMPTY_SEPARATOR, 0)
 				KERBAL_PPEXPAND_N(FBODY, KERBAL_PPEXPAND_EMPTY_SEPARATOR, 20)
@@ -429,8 +439,11 @@ namespace kerbal
 
 		template <typename T, typename KeyCompare, typename Container>
 		KERBAL_CONSTEXPR20
-		void swap(kerbal::container::priority_queue<T, KeyCompare, Container> & a, kerbal::container::priority_queue<T, KeyCompare, Container> & b)
-				KERBAL_CONDITIONAL_NOEXCEPT(noexcept(a.swap(b)))
+		void swap(
+			kerbal::container::priority_queue<T, KeyCompare, Container> & a,
+			kerbal::container::priority_queue<T, KeyCompare, Container> & b
+		)
+			KERBAL_CONDITIONAL_NOEXCEPT(noexcept(a.swap(b)))
 		{
 			a.swap(b);
 		}
@@ -444,8 +457,11 @@ KERBAL_NAMESPACE_STD_BEGIN
 
 	template <typename T, typename KeyCompare, typename Container>
 	KERBAL_CONSTEXPR20
-	void swap(kerbal::container::priority_queue<T, KeyCompare, Container> & a, kerbal::container::priority_queue<T, KeyCompare, Container> & b)
-			KERBAL_CONDITIONAL_NOEXCEPT(noexcept(a.swap(b)))
+	void swap(
+		kerbal::container::priority_queue<T, KeyCompare, Container> & a,
+		kerbal::container::priority_queue<T, KeyCompare, Container> & b
+	)
+		KERBAL_CONDITIONAL_NOEXCEPT(noexcept(a.swap(b)))
 	{
 		a.swap(b);
 	}

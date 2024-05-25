@@ -42,9 +42,11 @@ namespace kerbal
 
 			template <typename T, T N>
 			struct make_integer_sequence_helper_loop<T, N, false> :
-					kerbal::utility::detail::concat_integer_sequence<
-						T, typename kerbal::utility::detail::make_integer_sequence_helper<T, N - 1>::type, N - 1
-					>
+				kerbal::utility::detail::concat_integer_sequence<
+					T,
+					typename kerbal::utility::detail::make_integer_sequence_helper<T, N - 1>::type,
+					N - 1
+				>
 			{
 			};
 
@@ -55,14 +57,16 @@ namespace kerbal
 			};
 
 			template <typename T, T N>
-			struct make_integer_sequence_helper: kerbal::utility::detail::make_integer_sequence_helper_loop<T, N, N == 0>
+			struct make_integer_sequence_helper :
+				kerbal::utility::detail::make_integer_sequence_helper_loop<T, N, N == 0>
 			{
 			};
 
 		} // namespace detail
 
 		template <typename T, T N>
-		using make_integer_sequence = typename kerbal::utility::detail::make_integer_sequence_helper<T, N>::type;
+		using make_integer_sequence =
+			typename kerbal::utility::detail::make_integer_sequence_helper<T, N>::type;
 
 	} // namespace utility
 

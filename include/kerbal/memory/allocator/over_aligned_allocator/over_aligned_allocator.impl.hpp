@@ -38,8 +38,10 @@ namespace kerbal
 	{
 
 		template <typename UpstreamAllocator>
-		typename over_aligned_allocator<void, UpstreamAllocator>::pointer
-		over_aligned_allocator<void, UpstreamAllocator>::do_align(pointer p_raw, align_val_t align) KERBAL_NOEXCEPT
+		typename
+		over_aligned_allocator<void, UpstreamAllocator>::pointer
+		over_aligned_allocator<void, UpstreamAllocator>::
+		do_align(pointer p_raw, align_val_t align) KERBAL_NOEXCEPT
 		{
 			std::size_t p_raw_sz = reinterpret_cast<std::size_t>(p_raw);
 
@@ -54,8 +56,10 @@ namespace kerbal
 		}
 
 		template <typename UpstreamAllocator>
-		typename over_aligned_allocator<void, UpstreamAllocator>::pointer
-		over_aligned_allocator<void, UpstreamAllocator>::allocate(size_type size, align_val_t align, kerbal::memory::nothrow_t) KERBAL_NOEXCEPT
+		typename
+		over_aligned_allocator<void, UpstreamAllocator>::pointer
+		over_aligned_allocator<void, UpstreamAllocator>::
+		allocate(size_type size, align_val_t align, kerbal::memory::nothrow_t) KERBAL_NOEXCEPT
 		{
 			std::size_t basic_align = upstream_allocator_traits::minimum_alignment(upstream_alloc());
 
@@ -77,10 +81,10 @@ namespace kerbal
 			}
 
 			std::size_t raw_allocate_size =
-					kerbal::memory::alignment_maximum_offset(KERBAL_ALIGNOF(void_p), basic_align) +
-							sizeof(void_p) +
-					kerbal::memory::alignment_maximum_offset(align.val, KERBAL_ALIGNOF(void_p)) +
-					size
+				kerbal::memory::alignment_maximum_offset(KERBAL_ALIGNOF(void_p), basic_align) +
+				sizeof(void_p) +
+				kerbal::memory::alignment_maximum_offset(align.val, KERBAL_ALIGNOF(void_p)) +
+				size
 			;
 #		if KERBAL_HAS_EXCEPTIONS_SUPPORT
 			try {
@@ -102,8 +106,10 @@ namespace kerbal
 		}
 
 		template <typename UpstreamAllocator>
-		typename over_aligned_allocator<void, UpstreamAllocator>::pointer
-		over_aligned_allocator<void, UpstreamAllocator>::allocate(size_type size, align_val_t align)
+		typename
+		over_aligned_allocator<void, UpstreamAllocator>::pointer
+		over_aligned_allocator<void, UpstreamAllocator>::
+		allocate(size_type size, align_val_t align)
 		{
 			std::size_t basic_align = upstream_allocator_traits::minimum_alignment(upstream_alloc());
 
@@ -114,10 +120,10 @@ namespace kerbal
 			}
 
 			std::size_t raw_allocate_size =
-					kerbal::memory::alignment_maximum_offset(KERBAL_ALIGNOF(void_p), basic_align) +
-							sizeof(void_p) +
-					kerbal::memory::alignment_maximum_offset(align.val, KERBAL_ALIGNOF(void_p)) +
-					size
+				kerbal::memory::alignment_maximum_offset(KERBAL_ALIGNOF(void_p), basic_align) +
+				sizeof(void_p) +
+				kerbal::memory::alignment_maximum_offset(align.val, KERBAL_ALIGNOF(void_p)) +
+				size
 			;
 			p_raw = upstream_allocator_traits::allocate(upstream_alloc(), raw_allocate_size);
 
@@ -125,7 +131,12 @@ namespace kerbal
 		}
 
 		template <typename UpstreamAllocator>
-		void over_aligned_allocator<void, UpstreamAllocator>::k_deallocate_upstream_allow_deallocate_null(pointer p, size_type size, align_val_t align, kerbal::type_traits::false_type) KERBAL_NOEXCEPT
+		void
+		over_aligned_allocator<void, UpstreamAllocator>::
+		k_deallocate_upstream_allow_deallocate_null(
+			pointer p, size_type size, align_val_t align,
+			kerbal::type_traits::false_type
+		) KERBAL_NOEXCEPT
 		{
 			if (p == NULL) {
 				return;
@@ -139,10 +150,10 @@ namespace kerbal
 			}
 
 			std::size_t raw_allocate_size =
-					kerbal::memory::alignment_maximum_offset(KERBAL_ALIGNOF(void_p), basic_align) +
-					sizeof(void_p) +
-					kerbal::memory::alignment_maximum_offset(align.val, KERBAL_ALIGNOF(void_p)) +
-					size
+				kerbal::memory::alignment_maximum_offset(KERBAL_ALIGNOF(void_p), basic_align) +
+				sizeof(void_p) +
+				kerbal::memory::alignment_maximum_offset(align.val, KERBAL_ALIGNOF(void_p)) +
+				size
 			;
 			std::size_t pt_sz = reinterpret_cast<std::size_t>(p);
 			std::size_t pu_sz = kerbal::memory::align_floor(pt_sz - sizeof(void_p), KERBAL_ALIGNOF(void_p));
@@ -152,7 +163,12 @@ namespace kerbal
 		}
 
 		template <typename UpstreamAllocator>
-		void over_aligned_allocator<void, UpstreamAllocator>::k_deallocate_upstream_allow_deallocate_null(pointer p, size_type size, align_val_t align, kerbal::type_traits::true_type) KERBAL_NOEXCEPT
+		void
+		over_aligned_allocator<void, UpstreamAllocator>::
+		k_deallocate_upstream_allow_deallocate_null(
+			pointer p, size_type size, align_val_t align,
+			kerbal::type_traits::true_type
+		) KERBAL_NOEXCEPT
 		{
 			pointer p_raw;
 			std::size_t raw_allocate_size;
@@ -168,10 +184,10 @@ namespace kerbal
 					raw_allocate_size = size;
 				} else {
 					raw_allocate_size =
-							kerbal::memory::alignment_maximum_offset(KERBAL_ALIGNOF(void_p), basic_align) +
-							sizeof(void_p) +
-							kerbal::memory::alignment_maximum_offset(align.val, KERBAL_ALIGNOF(void_p)) +
-							size
+						kerbal::memory::alignment_maximum_offset(KERBAL_ALIGNOF(void_p), basic_align) +
+						sizeof(void_p) +
+						kerbal::memory::alignment_maximum_offset(align.val, KERBAL_ALIGNOF(void_p)) +
+						size
 					;
 					std::size_t pt_sz = reinterpret_cast<std::size_t>(p);
 					std::size_t pu_sz = kerbal::memory::align_floor(pt_sz - sizeof(void_p), KERBAL_ALIGNOF(void_p));
@@ -184,13 +200,20 @@ namespace kerbal
 		}
 
 		template <typename UpstreamAllocator>
-		void over_aligned_allocator<void, UpstreamAllocator>::deallocate(pointer p, size_type size, align_val_t align) KERBAL_NOEXCEPT
+		void
+		over_aligned_allocator<void, UpstreamAllocator>::
+		deallocate(pointer p, size_type size, align_val_t align) KERBAL_NOEXCEPT
 		{
-			this->k_deallocate_upstream_allow_deallocate_null(p, size, align, typename upstream_allocator_traits::allow_deallocate_null());
+			this->k_deallocate_upstream_allow_deallocate_null(
+				p, size, align,
+				typename upstream_allocator_traits::allow_deallocate_null()
+			);
 		}
 
 		template <typename UpstreamAllocator>
-		void over_aligned_allocator<void, UpstreamAllocator>::deallocate(pointer p, size_type size, align_val_t align, kerbal::memory::nothrow_t) KERBAL_NOEXCEPT
+		void
+		over_aligned_allocator<void, UpstreamAllocator>::
+		deallocate(pointer p, size_type size, align_val_t align, kerbal::memory::nothrow_t) KERBAL_NOEXCEPT
 		{
 			deallocate(p, size, align);
 		}
@@ -198,8 +221,10 @@ namespace kerbal
 
 
 		template <typename T, typename UpstreamAllocator>
-		typename over_aligned_allocator<T, UpstreamAllocator>::pointer
-		over_aligned_allocator<T, UpstreamAllocator>::allocate(size_type n, align_val_t align)
+		typename
+		over_aligned_allocator<T, UpstreamAllocator>::pointer
+		over_aligned_allocator<T, UpstreamAllocator>::
+		allocate(size_type n, align_val_t align)
 		{
 			if (n > MAX_SIZE::value) {
 				kerbal::utility::throw_this_exception_helper<kerbal::memory::bad_array_new_length>::throw_this_exception();
@@ -209,8 +234,10 @@ namespace kerbal
 		}
 
 		template <typename T, typename UpstreamAllocator>
-		typename over_aligned_allocator<T, UpstreamAllocator>::pointer
-		over_aligned_allocator<T, UpstreamAllocator>::allocate(size_type n, align_val_t align, kerbal::memory::nothrow_t nothrow) KERBAL_NOEXCEPT
+		typename
+		over_aligned_allocator<T, UpstreamAllocator>::pointer
+		over_aligned_allocator<T, UpstreamAllocator>::
+		allocate(size_type n, align_val_t align, kerbal::memory::nothrow_t nothrow) KERBAL_NOEXCEPT
 		{
 			if (n > MAX_SIZE::value) {
 				return NULL;
@@ -220,21 +247,27 @@ namespace kerbal
 		}
 
 		template <typename T, typename UpstreamAllocator>
-		typename over_aligned_allocator<T, UpstreamAllocator>::pointer
-		over_aligned_allocator<T, UpstreamAllocator>::allocate(size_type n)
+		typename
+		over_aligned_allocator<T, UpstreamAllocator>::pointer
+		over_aligned_allocator<T, UpstreamAllocator>::
+		allocate(size_type n)
 		{
 			return this->allocate(n, KERBAL_ALIGNOF(value_type));
 		}
 
 		template <typename T, typename UpstreamAllocator>
-		typename over_aligned_allocator<T, UpstreamAllocator>::pointer
-		over_aligned_allocator<T, UpstreamAllocator>::allocate(size_type n, kerbal::memory::nothrow_t nothrow) KERBAL_NOEXCEPT
+		typename
+		over_aligned_allocator<T, UpstreamAllocator>::pointer
+		over_aligned_allocator<T, UpstreamAllocator>::
+		allocate(size_type n, kerbal::memory::nothrow_t nothrow) KERBAL_NOEXCEPT
 		{
 			return this->allocate(n, KERBAL_ALIGNOF(value_type), nothrow);
 		}
 
 		template <typename T, typename UpstreamAllocator>
-		void over_aligned_allocator<T, UpstreamAllocator>::deallocate(pointer p, size_type n, align_val_t align) KERBAL_NOEXCEPT
+		void
+		over_aligned_allocator<T, UpstreamAllocator>::
+		deallocate(pointer p, size_type n, align_val_t align) KERBAL_NOEXCEPT
 		{
 			if (n > MAX_SIZE::value) {
 				kerbal::utility::throw_this_exception_helper<kerbal::memory::bad_array_new_length>::throw_this_exception();
@@ -243,7 +276,9 @@ namespace kerbal
 		}
 
 		template <typename T, typename UpstreamAllocator>
-		void over_aligned_allocator<T, UpstreamAllocator>::deallocate(pointer p, size_type n, align_val_t align, kerbal::memory::nothrow_t nothrow) KERBAL_NOEXCEPT
+		void
+		over_aligned_allocator<T, UpstreamAllocator>::
+		deallocate(pointer p, size_type n, align_val_t align, kerbal::memory::nothrow_t nothrow) KERBAL_NOEXCEPT
 		{
 			if (n > MAX_SIZE::value) {
 				kerbal::utility::throw_this_exception_helper<kerbal::memory::bad_array_new_length>::throw_this_exception();
@@ -252,13 +287,17 @@ namespace kerbal
 		}
 
 		template <typename T, typename UpstreamAllocator>
-		void over_aligned_allocator<T, UpstreamAllocator>::deallocate(pointer p, size_type n) KERBAL_NOEXCEPT
+		void
+		over_aligned_allocator<T, UpstreamAllocator>::
+		deallocate(pointer p, size_type n) KERBAL_NOEXCEPT
 		{
 			this->deallocate(p, n, KERBAL_ALIGNOF(value_type));
 		}
 
 		template <typename T, typename UpstreamAllocator>
-		void over_aligned_allocator<T, UpstreamAllocator>::deallocate(pointer p, size_type n, kerbal::memory::nothrow_t nothrow) KERBAL_NOEXCEPT
+		void
+		over_aligned_allocator<T, UpstreamAllocator>::
+		deallocate(pointer p, size_type n, kerbal::memory::nothrow_t nothrow) KERBAL_NOEXCEPT
 		{
 			this->deallocate(p, n, KERBAL_ALIGNOF(value_type), nothrow);
 		}

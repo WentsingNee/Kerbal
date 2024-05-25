@@ -34,30 +34,33 @@ namespace kerbal
 
 			public:
 				KERBAL_CONSTEXPR
-				uniform_real_distribution() KERBAL_NOEXCEPT
-						: a(0.0), b(1.0)
+				uniform_real_distribution() KERBAL_NOEXCEPT :
+					a(0.0), b(1.0)
 				{
 				}
 
 				KERBAL_CONSTEXPR
-				uniform_real_distribution(const result_type & a, const result_type & b) KERBAL_NOEXCEPT
-						: a(a), b(b)
+				uniform_real_distribution(const result_type & a, const result_type & b) KERBAL_NOEXCEPT :
+					a(a), b(b)
 				{
 				}
 
 				template <typename Engine>
-				KERBAL_CONSTEXPR result_type operator()(Engine & eg) const
+				KERBAL_CONSTEXPR
+				result_type operator()(Engine & eg) const
 				{
 					return static_cast<result_type>(eg()) / (eg.max() - eg.min())
 							* (b - a) + a;
 				}
 
-				KERBAL_CONSTEXPR result_type min() const KERBAL_NOEXCEPT
+				KERBAL_CONSTEXPR
+				result_type min() const KERBAL_NOEXCEPT
 				{
 					return this->a;
 				}
 
-				KERBAL_CONSTEXPR result_type max() const KERBAL_NOEXCEPT
+				KERBAL_CONSTEXPR
+				result_type max() const KERBAL_NOEXCEPT
 				{
 					return this->b;
 				}

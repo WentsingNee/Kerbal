@@ -34,11 +34,11 @@ namespace kerbal
 				friend class kerbal::parallel::basic_thread;
 
 				friend class kerbal::utility::throw_this_exception_helper<
-						kerbal::parallel::thread_create_failed
+					kerbal::parallel::thread_create_failed
 				>;
 
 				thread_create_failed() KERBAL_NOEXCEPT:
-						std::runtime_error("can't create basic_thread")
+					std::runtime_error("can't create basic_thread")
 				{
 				}
 

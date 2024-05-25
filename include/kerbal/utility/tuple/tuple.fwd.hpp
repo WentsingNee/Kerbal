@@ -52,7 +52,7 @@ namespace kerbal
 		KERBAL_OPT_PPEXPAND_WITH_COMMA_N(THEAD_NOT_EMPTY, EMPTY, TARGS_DECL, i) \
 		inline \
 		kerbal::utility::tuple<KERBAL_OPT_PPEXPAND_WITH_COMMA_N(REMAINF, EMPTY, TARGS_USE, i)> \
-		make_tuple(KERBAL_OPT_PPEXPAND_WITH_COMMA_N(REMAINF, EMPTY, ARGS_DECL, i));
+		make_tuple(KERBAL_OPT_PPEXPAND_WITH_COMMA_N(REMAINF, EMPTY, ARGS_DECL, i)); \
 
 		KERBAL_PPEXPAND_N(FBODY, KERBAL_PPEXPAND_EMPTY_SEPARATOR, 0)
 		KERBAL_PPEXPAND_N(FBODY, KERBAL_PPEXPAND_EMPTY_SEPARATOR, 19)
@@ -76,7 +76,7 @@ namespace kerbal
 		KERBAL_OPT_PPEXPAND_WITH_COMMA_N(THEAD_NOT_EMPTY, EMPTY, TARGS_DECL, i) \
 		inline \
 		kerbal::utility::tuple<KERBAL_OPT_PPEXPAND_WITH_COMMA_N(REMAINF, EMPTY, TARGS_USE, i)> \
-		tie(KERBAL_OPT_PPEXPAND_WITH_COMMA_N(REMAINF, EMPTY, ARGS_DECL, i));
+		tie(KERBAL_OPT_PPEXPAND_WITH_COMMA_N(REMAINF, EMPTY, ARGS_DECL, i)); \
 
 		KERBAL_PPEXPAND_N(FBODY, KERBAL_PPEXPAND_EMPTY_SEPARATOR, 19)
 
@@ -97,17 +97,17 @@ namespace kerbal
 		template <typename ... Args>
 		KERBAL_CONSTEXPR
 		kerbal::utility::tuple<typename kerbal::type_traits::remove_cvref<Args>::type...>
-		make_tuple(Args&& ... args);
+		make_tuple(Args && ... args);
 
 		template <typename ... Args>
 		KERBAL_CONSTEXPR
-		kerbal::utility::tuple<Args&...>
-		tie(Args& ... args) KERBAL_NOEXCEPT;
+		kerbal::utility::tuple<Args & ...>
+		tie(Args & ... args) KERBAL_NOEXCEPT;
 
 		template <typename ... Args>
 		KERBAL_CONSTEXPR
-		kerbal::utility::tuple<Args&&...>
-		forward_as_tuple(Args&& ... args);
+		kerbal::utility::tuple<Args && ...>
+		forward_as_tuple(Args && ... args);
 
 #endif
 

@@ -30,7 +30,7 @@ namespace kerbal
 
 		template <typename T, std::size_t N>
 		KERBAL_CONSTEXPR
-		T* begin(T (&arr)[N]) KERBAL_NOEXCEPT
+		T * begin(T (&arr)[N]) KERBAL_NOEXCEPT
 		{
 			return arr;
 		}
@@ -40,8 +40,8 @@ namespace kerbal
 		template <typename Container>
 		KERBAL_CONSTEXPR
 		auto begin(Container & container)
-					KERBAL_CONDITIONAL_NOEXCEPT(noexcept(container.begin()))
-					-> decltype(container.begin())
+			KERBAL_CONDITIONAL_NOEXCEPT(noexcept(container.begin()))
+			-> decltype(container.begin())
 		{
 			return container.begin();
 		}
@@ -49,8 +49,8 @@ namespace kerbal
 		template <typename Container>
 		KERBAL_CONSTEXPR
 		auto begin(const Container & container)
-					KERBAL_CONDITIONAL_NOEXCEPT(noexcept(container.begin()))
-					-> decltype(container.begin())
+			KERBAL_CONDITIONAL_NOEXCEPT(noexcept(container.begin()))
+			-> decltype(container.begin())
 		{
 			return container.begin();
 		}
@@ -82,8 +82,8 @@ namespace kerbal
 		template <typename Container>
 		KERBAL_CONSTEXPR
 		auto cbegin(const Container & container)
-					KERBAL_CONDITIONAL_NOEXCEPT(noexcept(kerbal::container::begin(container)))
-					-> decltype(kerbal::container::begin(container))
+			KERBAL_CONDITIONAL_NOEXCEPT(noexcept(kerbal::container::begin(container)))
+			-> decltype(kerbal::container::begin(container))
 		{
 			return kerbal::container::begin(container);
 		}
@@ -91,7 +91,7 @@ namespace kerbal
 #	else
 
 		template <typename T, std::size_t N>
-		const T* cbegin(T (&arr)[N]) KERBAL_NOEXCEPT
+		const T * cbegin(T (&arr)[N]) KERBAL_NOEXCEPT
 		{
 			return arr;
 		}
@@ -111,7 +111,7 @@ namespace kerbal
 
 		template <typename T, std::size_t N>
 		KERBAL_CONSTEXPR
-		T* end(T (&arr)[N]) KERBAL_NOEXCEPT
+		T * end(T (&arr)[N]) KERBAL_NOEXCEPT
 		{
 			return arr + N;
 		}
@@ -121,8 +121,8 @@ namespace kerbal
 		template <typename Container>
 		KERBAL_CONSTEXPR
 		auto end(Container & container)
-					KERBAL_CONDITIONAL_NOEXCEPT(noexcept(container.end()))
-					-> decltype(container.end())
+			KERBAL_CONDITIONAL_NOEXCEPT(noexcept(container.end()))
+			-> decltype(container.end())
 		{
 			return container.end();
 		}
@@ -130,8 +130,8 @@ namespace kerbal
 		template <typename Container>
 		KERBAL_CONSTEXPR
 		auto end(const Container & container)
-					KERBAL_CONDITIONAL_NOEXCEPT(noexcept(container.end()))
-					-> decltype(container.end())
+			KERBAL_CONDITIONAL_NOEXCEPT(noexcept(container.end()))
+			-> decltype(container.end())
 		{
 			return container.end();
 		}
@@ -163,8 +163,8 @@ namespace kerbal
 		template <typename Container>
 		KERBAL_CONSTEXPR
 		auto cend(const Container & container)
-					KERBAL_CONDITIONAL_NOEXCEPT(noexcept(kerbal::container::end(container)))
-					-> decltype(kerbal::container::end(container))
+			KERBAL_CONDITIONAL_NOEXCEPT(noexcept(kerbal::container::end(container)))
+			-> decltype(kerbal::container::end(container))
 		{
 			return kerbal::container::end(container);
 		}
@@ -172,7 +172,7 @@ namespace kerbal
 #	else
 
 		template <typename T, std::size_t N>
-		const T* cend(T (&arr)[N]) KERBAL_NOEXCEPT
+		const T * cend(T (&arr)[N]) KERBAL_NOEXCEPT
 		{
 			return arr + N;
 		}
@@ -192,10 +192,10 @@ namespace kerbal
 
 		template <typename T, std::size_t N>
 		KERBAL_CONSTEXPR
-		kerbal::iterator::reverse_iterator<T*, false>
+		kerbal::iterator::reverse_iterator<T *, false>
 		rbegin(T (&arr)[N]) KERBAL_NOEXCEPT
 		{
-			return kerbal::iterator::reverse_iterator<T*, false>(arr + N);
+			return kerbal::iterator::reverse_iterator<T *, false>(arr + N);
 		}
 
 #	if __cplusplus >= 201103L
@@ -203,8 +203,8 @@ namespace kerbal
 		template <typename Container>
 		KERBAL_CONSTEXPR
 		auto rbegin(Container & container)
-					KERBAL_CONDITIONAL_NOEXCEPT(noexcept(container.rbegin()))
-					-> decltype(container.rbegin())
+			KERBAL_CONDITIONAL_NOEXCEPT(noexcept(container.rbegin()))
+			-> decltype(container.rbegin())
 		{
 			return container.rbegin();
 		}
@@ -212,8 +212,8 @@ namespace kerbal
 		template <typename Container>
 		KERBAL_CONSTEXPR
 		auto rbegin(const Container & container)
-					KERBAL_CONDITIONAL_NOEXCEPT(noexcept(container.rbegin()))
-					-> decltype(container.rbegin())
+			KERBAL_CONDITIONAL_NOEXCEPT(noexcept(container.rbegin()))
+			-> decltype(container.rbegin())
 		{
 			return container.rbegin();
 		}
@@ -245,8 +245,8 @@ namespace kerbal
 		template <typename Container>
 		KERBAL_CONSTEXPR
 		auto crbegin(const Container & container)
-					KERBAL_CONDITIONAL_NOEXCEPT(noexcept(kerbal::container::rbegin(container)))
-					-> decltype(kerbal::container::rbegin(container))
+			KERBAL_CONDITIONAL_NOEXCEPT(noexcept(kerbal::container::rbegin(container)))
+			-> decltype(kerbal::container::rbegin(container))
 		{
 			return kerbal::container::rbegin(container);
 		}
@@ -254,10 +254,10 @@ namespace kerbal
 #	else
 
 		template <typename T, std::size_t N>
-		kerbal::iterator::reverse_iterator<const T*, false>
+		kerbal::iterator::reverse_iterator<const T *, false>
 		crbegin(T (&arr)[N]) KERBAL_NOEXCEPT
 		{
-			return kerbal::iterator::reverse_iterator<const T*, false>(arr + N);
+			return kerbal::iterator::reverse_iterator<const T *, false>(arr + N);
 		}
 
 		template <typename Container>
@@ -275,10 +275,10 @@ namespace kerbal
 
 		template <typename T, std::size_t N>
 		KERBAL_CONSTEXPR
-		kerbal::iterator::reverse_iterator<T*, false>
+		kerbal::iterator::reverse_iterator<T *, false>
 		rend(T (&arr)[N]) KERBAL_NOEXCEPT
 		{
-			return kerbal::iterator::reverse_iterator<T*, false>(arr);
+			return kerbal::iterator::reverse_iterator<T *, false>(arr);
 		}
 
 #	if __cplusplus >= 201103L
@@ -286,8 +286,8 @@ namespace kerbal
 		template <typename Container>
 		KERBAL_CONSTEXPR
 		auto rend(Container & container)
-					KERBAL_CONDITIONAL_NOEXCEPT(noexcept(container.rend()))
-					-> decltype(container.rend())
+			KERBAL_CONDITIONAL_NOEXCEPT(noexcept(container.rend()))
+			-> decltype(container.rend())
 		{
 			return container.rend();
 		}
@@ -295,8 +295,8 @@ namespace kerbal
 		template <typename Container>
 		KERBAL_CONSTEXPR
 		auto rend(const Container & container)
-					KERBAL_CONDITIONAL_NOEXCEPT(noexcept(container.rend()))
-					-> decltype(container.rend())
+			KERBAL_CONDITIONAL_NOEXCEPT(noexcept(container.rend()))
+			-> decltype(container.rend())
 		{
 			return container.rend();
 		}
@@ -328,8 +328,8 @@ namespace kerbal
 		template <typename Container>
 		KERBAL_CONSTEXPR
 		auto crend(const Container & container)
-					KERBAL_CONDITIONAL_NOEXCEPT(noexcept(kerbal::container::rend(container)))
-					-> decltype(kerbal::container::rend(container))
+			KERBAL_CONDITIONAL_NOEXCEPT(noexcept(kerbal::container::rend(container)))
+			-> decltype(kerbal::container::rend(container))
 		{
 			return kerbal::container::rend(container);
 		}
@@ -337,10 +337,10 @@ namespace kerbal
 #	else
 
 		template <typename T, std::size_t N>
-		kerbal::iterator::reverse_iterator<const T*, false>
+		kerbal::iterator::reverse_iterator<const T *, false>
 		crend(T (&arr)[N]) KERBAL_NOEXCEPT
 		{
-			return kerbal::iterator::reverse_iterator<const T*, false>(arr);
+			return kerbal::iterator::reverse_iterator<const T *, false>(arr);
 		}
 
 		template <typename Container>
@@ -368,8 +368,8 @@ namespace kerbal
 		template <typename Container>
 		KERBAL_CONSTEXPR
 		auto size(const Container & container)
-					KERBAL_CONDITIONAL_NOEXCEPT(noexcept(container.size()))
-					-> decltype(container.size())
+			KERBAL_CONDITIONAL_NOEXCEPT(noexcept(container.size()))
+			-> decltype(container.size())
 		{
 			return container.size();
 		}
@@ -401,8 +401,8 @@ namespace kerbal
 		template <typename Container>
 		KERBAL_CONSTEXPR
 		auto empty(const Container & container)
-					KERBAL_CONDITIONAL_NOEXCEPT(noexcept(container.empty()))
-					-> decltype(container.empty())
+			KERBAL_CONDITIONAL_NOEXCEPT(noexcept(container.empty()))
+			-> decltype(container.empty())
 		{
 			return container.empty();
 		}
@@ -423,7 +423,7 @@ namespace kerbal
 
 		template <typename T, std::size_t N>
 		KERBAL_CONSTEXPR14
-		T* nth(T (&arr)[N], std::size_t index) KERBAL_NOEXCEPT
+		T * nth(T (& arr)[N], std::size_t index) KERBAL_NOEXCEPT
 		{
 			return arr + index;
 		}
@@ -433,8 +433,8 @@ namespace kerbal
 		template <typename Container>
 		KERBAL_CONSTEXPR14
 		auto nth(Container & container, typename Container::size_type index)
-					KERBAL_CONDITIONAL_NOEXCEPT(noexcept(kerbal::iterator::next(kerbal::container::begin(container), index)))
-					-> decltype(kerbal::iterator::next(kerbal::container::begin(container), index))
+			KERBAL_CONDITIONAL_NOEXCEPT(noexcept(kerbal::iterator::next(kerbal::container::begin(container), index)))
+			-> decltype(kerbal::iterator::next(kerbal::container::begin(container), index))
 		{
 			return kerbal::iterator::next(kerbal::container::begin(container), index);
 		}
@@ -442,8 +442,8 @@ namespace kerbal
 		template <typename Container>
 		KERBAL_CONSTEXPR14
 		auto nth(const Container & container, typename Container::size_type index)
-					KERBAL_CONDITIONAL_NOEXCEPT(noexcept(kerbal::iterator::next(kerbal::container::cbegin(container), index)))
-					-> decltype(kerbal::iterator::next(kerbal::container::cbegin(container), index))
+			KERBAL_CONDITIONAL_NOEXCEPT(noexcept(kerbal::iterator::next(kerbal::container::cbegin(container), index)))
+			-> decltype(kerbal::iterator::next(kerbal::container::cbegin(container), index))
 		{
 			return kerbal::iterator::next(kerbal::container::cbegin(container), index);
 		}
@@ -489,8 +489,8 @@ namespace kerbal
 		template <typename Container>
 		KERBAL_CONSTEXPR14
 		auto index_of(Container & container, typename Container::iterator it)
-					KERBAL_CONDITIONAL_NOEXCEPT(noexcept(kerbal::iterator::distance(kerbal::container::begin(container), it)))
-					-> decltype(kerbal::iterator::distance(kerbal::container::begin(container), it))
+			KERBAL_CONDITIONAL_NOEXCEPT(noexcept(kerbal::iterator::distance(kerbal::container::begin(container), it)))
+			-> decltype(kerbal::iterator::distance(kerbal::container::begin(container), it))
 		{
 			return kerbal::iterator::distance(kerbal::container::begin(container), it);
 		}
@@ -498,8 +498,8 @@ namespace kerbal
 		template <typename Container>
 		KERBAL_CONSTEXPR14
 		auto index_of(const Container & container, typename Container::const_iterator it)
-					KERBAL_CONDITIONAL_NOEXCEPT(noexcept(kerbal::iterator::distance(kerbal::container::cbegin(container), it)))
-					-> decltype(kerbal::iterator::distance(kerbal::container::cbegin(container), it))
+			KERBAL_CONDITIONAL_NOEXCEPT(noexcept(kerbal::iterator::distance(kerbal::container::cbegin(container), it)))
+			-> decltype(kerbal::iterator::distance(kerbal::container::cbegin(container), it))
 		{
 			return kerbal::iterator::distance(kerbal::container::cbegin(container), it);
 		}

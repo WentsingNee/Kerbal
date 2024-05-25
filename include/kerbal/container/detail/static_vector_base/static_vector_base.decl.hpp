@@ -43,12 +43,12 @@ namespace kerbal
 					typedef const T					const_type;
 					typedef value_type &			reference;
 					typedef const value_type &		const_reference;
-					typedef value_type*				pointer;
-					typedef const value_type*		const_pointer;
+					typedef value_type *			pointer;
+					typedef const value_type *		const_pointer;
 
 #			if __cplusplus >= 201103L
-					typedef value_type&&			rvalue_reference;
-					typedef const value_type&&		const_rvalue_reference;
+					typedef value_type &&			rvalue_reference;
+					typedef const value_type &&		const_rvalue_reference;
 #			endif
 
 					typedef std::size_t				size_type;
@@ -88,23 +88,27 @@ namespace kerbal
 
 					template <typename InputIterator>
 					KERBAL_CONSTEXPR14
-					void k_range_copy_cnstrctr(InputIterator first, InputIterator last,
-											   std::input_iterator_tag);
+					void k_range_copy_cnstrctr(
+						InputIterator first, InputIterator last,
+						std::input_iterator_tag
+					);
 
 					template <typename ForwardIterator>
 					KERBAL_CONSTEXPR14
-					void k_range_copy_cnstrctr(ForwardIterator first, ForwardIterator last,
-											   std::forward_iterator_tag);
+					void k_range_copy_cnstrctr(
+						ForwardIterator first, ForwardIterator last,
+						std::forward_iterator_tag
+					);
 
 				protected:
 
 					template <typename InputIterator>
 					KERBAL_CONSTEXPR14
 					static_vector_base(InputIterator first, InputIterator last,
-							typename kerbal::type_traits::enable_if<
-									kerbal::iterator::is_input_compatible_iterator<InputIterator>::value,
-									int
-							>::type = 0
+						typename kerbal::type_traits::enable_if<
+							kerbal::iterator::is_input_compatible_iterator<InputIterator>::value,
+							int
+						>::type = 0
 					);
 
 					KERBAL_CONSTEXPR14
@@ -127,33 +131,35 @@ namespace kerbal
 
 			};
 
-			template <typename T, std::size_t N, bool is_trivially_destructible =
+			template <
+				typename T, std::size_t N,
+				bool is_trivially_destructible =
 					kerbal::type_traits::try_test_is_trivially_destructible<T>::IS_TRUE::value
 			>
 			class sv_trivially_des_overload;
 
 			template <typename T, std::size_t N>
 			class sv_trivially_des_overload<T, N, false> :
-					protected kerbal::container::detail::static_vector_base<T, N>
+				protected kerbal::container::detail::static_vector_base<T, N>
 			{
 				private:
 					typedef kerbal::container::detail::static_vector_base<T, N> super;
 
 				public:
-					typedef typename super::value_type			value_type;
-					typedef typename super::const_type			const_type;
-					typedef typename super::reference			reference;
-					typedef typename super::const_reference		const_reference;
-					typedef typename super::pointer				pointer;
-					typedef typename super::const_pointer		const_pointer;
+					typedef typename super::value_type				value_type;
+					typedef typename super::const_type				const_type;
+					typedef typename super::reference				reference;
+					typedef typename super::const_reference			const_reference;
+					typedef typename super::pointer					pointer;
+					typedef typename super::const_pointer			const_pointer;
 
 #			if __cplusplus >= 201103L
-					typedef typename super::rvalue_reference				rvalue_reference;
-					typedef typename super::const_rvalue_reference			const_rvalue_reference;
+					typedef typename super::rvalue_reference		rvalue_reference;
+					typedef typename super::const_rvalue_reference	const_rvalue_reference;
 #			endif
 
-					typedef typename super::size_type			size_type;
-					typedef typename super::difference_type		difference_type;
+					typedef typename super::size_type				size_type;
+					typedef typename super::difference_type			difference_type;
 
 				protected:
 					typedef typename super::size_compressed_type	size_compressed_type;
@@ -161,13 +167,13 @@ namespace kerbal
 
 					KERBAL_CONSTEXPR20
 					sv_trivially_des_overload() KERBAL_NOEXCEPT :
-							super()
+						super()
 					{
 					}
 
 					KERBAL_CONSTEXPR20
 					sv_trivially_des_overload(const sv_trivially_des_overload & src) :
-							super(static_cast<const super &>(src))
+						super(static_cast<const super &>(src))
 					{
 					}
 
@@ -175,7 +181,7 @@ namespace kerbal
 
 					KERBAL_CONSTEXPR20
 					sv_trivially_des_overload(sv_trivially_des_overload && src) :
-							super(static_cast<super &&>(src))
+						super(static_cast<super &&>(src))
 					{
 					}
 
@@ -183,25 +189,26 @@ namespace kerbal
 
 					KERBAL_CONSTEXPR20
 					explicit sv_trivially_des_overload(size_type n) :
-							super(n)
+						super(n)
 					{
 					}
 
 					KERBAL_CONSTEXPR20
 					sv_trivially_des_overload(size_type n, const_reference val) :
-							super(n, val)
+						super(n, val)
 					{
 					}
 
 					template <typename InputIterator>
 					KERBAL_CONSTEXPR20
-					sv_trivially_des_overload(InputIterator first, InputIterator last,
-											  typename kerbal::type_traits::enable_if<
-													  kerbal::iterator::is_input_compatible_iterator<InputIterator>::value,
-													  int
-											  >::type = 0
+					sv_trivially_des_overload(
+						InputIterator first, InputIterator last,
+						typename kerbal::type_traits::enable_if<
+							kerbal::iterator::is_input_compatible_iterator<InputIterator>::value,
+							int
+						>::type = 0
 					) :
-							super(first, last)
+						super(first, last)
 					{
 					}
 
@@ -215,26 +222,26 @@ namespace kerbal
 
 			template <typename T, std::size_t N>
 			class sv_trivially_des_overload<T, N, true> :
-					protected kerbal::container::detail::static_vector_base<T, N>
+				protected kerbal::container::detail::static_vector_base<T, N>
 			{
 				private:
 					typedef kerbal::container::detail::static_vector_base<T, N> super;
 
 				public:
-					typedef typename super::value_type			value_type;
-					typedef typename super::const_type			const_type;
-					typedef typename super::reference			reference;
-					typedef typename super::const_reference		const_reference;
-					typedef typename super::pointer				pointer;
-					typedef typename super::const_pointer		const_pointer;
+					typedef typename super::value_type				value_type;
+					typedef typename super::const_type				const_type;
+					typedef typename super::reference				reference;
+					typedef typename super::const_reference			const_reference;
+					typedef typename super::pointer					pointer;
+					typedef typename super::const_pointer			const_pointer;
 
 #			if __cplusplus >= 201103L
-					typedef typename super::rvalue_reference				rvalue_reference;
-					typedef typename super::const_rvalue_reference			const_rvalue_reference;
+					typedef typename super::rvalue_reference		rvalue_reference;
+					typedef typename super::const_rvalue_reference	const_rvalue_reference;
 #			endif
 
-					typedef typename super::size_type			size_type;
-					typedef typename super::difference_type		difference_type;
+					typedef typename super::size_type				size_type;
+					typedef typename super::difference_type			difference_type;
 
 				protected:
 					typedef typename super::size_compressed_type	size_compressed_type;
@@ -242,13 +249,13 @@ namespace kerbal
 
 					KERBAL_CONSTEXPR
 					sv_trivially_des_overload() KERBAL_NOEXCEPT :
-							super()
+						super()
 					{
 					}
 
 					KERBAL_CONSTEXPR14
 					sv_trivially_des_overload(const sv_trivially_des_overload & src) :
-							super(static_cast<const super &>(src))
+						super(static_cast<const super &>(src))
 					{
 					}
 
@@ -256,7 +263,7 @@ namespace kerbal
 
 					KERBAL_CONSTEXPR14
 					sv_trivially_des_overload(sv_trivially_des_overload && src) :
-							super(static_cast<super &&>(src))
+						super(static_cast<super &&>(src))
 					{
 					}
 
@@ -264,25 +271,26 @@ namespace kerbal
 
 					KERBAL_CONSTEXPR14
 					explicit sv_trivially_des_overload(size_type n) :
-							super(n)
+						super(n)
 					{
 					}
 
 					KERBAL_CONSTEXPR14
 					sv_trivially_des_overload(size_type n, const_reference val) :
-							super(n, val)
+						super(n, val)
 					{
 					}
 
 					template <typename InputIterator>
 					KERBAL_CONSTEXPR14
-					sv_trivially_des_overload(InputIterator first, InputIterator last,
-											  typename kerbal::type_traits::enable_if<
-													  kerbal::iterator::is_input_compatible_iterator<InputIterator>::value,
-													  int
-											  >::type = 0
+					sv_trivially_des_overload(
+						InputIterator first, InputIterator last,
+						typename kerbal::type_traits::enable_if<
+							kerbal::iterator::is_input_compatible_iterator<InputIterator>::value,
+							int
+						>::type = 0
 					) :
-							super(first, last)
+						super(first, last)
 					{
 					}
 

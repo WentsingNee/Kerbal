@@ -38,16 +38,16 @@ namespace kerbal
 
 		template <typename T>
 		struct is_trivially_default_constructible :
-				kerbal::type_traits::conjunction<
-					kerbal::type_traits::negation<
-						kerbal::type_traits::is_unbounded_array<T>
-					>,
-					kerbal::type_traits::bool_constant<
-						KERBAL_INTRINSIC_IS_TRIVIALLY_DEFAULT_CONSTRUCTIBLE(
-							typename kerbal::type_traits::remove_all_extents<T>::type
-						)
-					>
+			kerbal::type_traits::conjunction<
+				kerbal::type_traits::negation<
+					kerbal::type_traits::is_unbounded_array<T>
+				>,
+				kerbal::type_traits::bool_constant<
+					KERBAL_INTRINSIC_IS_TRIVIALLY_DEFAULT_CONSTRUCTIBLE(
+						typename kerbal::type_traits::remove_all_extents<T>::type
+					)
 				>
+			>
 		{
 		};
 

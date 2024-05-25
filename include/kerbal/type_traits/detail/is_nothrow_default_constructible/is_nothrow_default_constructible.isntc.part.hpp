@@ -37,14 +37,14 @@ namespace kerbal
 
 		template <typename T>
 		struct is_nothrow_default_constructible :
-				kerbal::type_traits::conjunction<
-					kerbal::type_traits::negation<
-						kerbal::type_traits::is_unbounded_array<T>
-					>,
-					kerbal::type_traits::is_nothrow_constructible<
-						typename kerbal::type_traits::remove_all_extents<T>::type
-					>
+			kerbal::type_traits::conjunction<
+				kerbal::type_traits::negation<
+					kerbal::type_traits::is_unbounded_array<T>
+				>,
+				kerbal::type_traits::is_nothrow_constructible<
+					typename kerbal::type_traits::remove_all_extents<T>::type
 				>
+			>
 		{
 		};
 

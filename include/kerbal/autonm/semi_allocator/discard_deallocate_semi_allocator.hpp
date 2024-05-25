@@ -25,7 +25,7 @@ namespace kerbal
 
 		template <typename T = void>
 		class discard_deallocate_semi_allocator :
-				public semi_allocator_base<T>
+			public semi_allocator_base<T>
 		{
 			private:
 				typedef semi_allocator_base<T> super;

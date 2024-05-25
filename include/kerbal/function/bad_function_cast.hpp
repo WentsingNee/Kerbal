@@ -23,11 +23,11 @@ namespace kerbal
 	{
 
 		class bad_function_cast :
-				public std::runtime_error
+			public std::runtime_error
 		{
 			public:
 				bad_function_cast(const std::type_info & actual, const std::type_info & required) :
-						std::runtime_error("bad function cast")
+					std::runtime_error("bad function cast")
 				{
 				}
 		};

@@ -30,34 +30,42 @@ namespace kerbal
 	namespace memory
 	{
 
-		template <typename Alloc, typename = kerbal::type_traits::void_type<>::type >
-		struct allocator_has_allocate_one: kerbal::type_traits::false_type
+		template <typename Alloc, typename = kerbal::type_traits::void_type<>::type>
+		struct allocator_has_allocate_one :
+			kerbal::type_traits::false_type
 		{
 		};
 
 		template <typename Alloc>
-		struct allocator_has_allocate_one<Alloc, typename kerbal::type_traits::void_type<
+		struct allocator_has_allocate_one<
+			Alloc,
+			typename kerbal::type_traits::void_type<
 #	if __cplusplus >= 201103L // compatible with msvc
 				decltype(
-					kerbal::utility::declval<Alloc&>().allocate_one()
+					kerbal::utility::declval<Alloc &>().allocate_one()
 				)
 #	else
 				kerbal::type_traits::integral_constant<
 					std::size_t,
 					sizeof(
-						kerbal::utility::declval<Alloc&>().allocate_one(),
+						kerbal::utility::declval<Alloc &>().allocate_one(),
 						0
 					)
 				>
 #	endif
-		>::type >: kerbal::type_traits::true_type
+			>::type
+		> :
+			kerbal::type_traits::true_type
 		{
 		};
 
 		namespace detail
 		{
 
-			template <typename Alloc, bool = kerbal::memory::allocator_has_allocate_one<Alloc>::value>
+			template <
+				typename Alloc,
+				bool = kerbal::memory::allocator_has_allocate_one<Alloc>::value
+			>
 			struct allocator_traits_allocate_one_helper;
 
 			template <typename Alloc>
@@ -68,10 +76,11 @@ namespace kerbal
 
 				public:
 					KERBAL_CONSTEXPR14
-					static pointer allocate_one(Alloc & alloc)
-							KERBAL_CONDITIONAL_NOEXCEPT(
-								noexcept(alloc.allocate(1))
-							)
+					static
+					pointer allocate_one(Alloc & alloc)
+						KERBAL_CONDITIONAL_NOEXCEPT(
+							noexcept(alloc.allocate(1))
+						)
 					{
 						return alloc.allocate(1);
 					}
@@ -85,10 +94,11 @@ namespace kerbal
 
 				public:
 					KERBAL_CONSTEXPR14
-					static pointer allocate_one(Alloc & alloc)
-							KERBAL_CONDITIONAL_NOEXCEPT(
-								noexcept(alloc.allocate_one())
-							)
+					static
+					pointer allocate_one(Alloc & alloc)
+						KERBAL_CONDITIONAL_NOEXCEPT(
+							noexcept(alloc.allocate_one())
+						)
 					{
 						return alloc.allocate_one();
 					}

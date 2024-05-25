@@ -25,12 +25,15 @@ namespace kerbal
 
 		template <typename Unsigned, Unsigned x>
 		struct has_single_bit :
-				kerbal::type_traits::bool_constant<
-					x != 0 && ((x & (x - 1)) == 0)
-				>
+			kerbal::type_traits::bool_constant<
+				x != 0 && ((x & (x - 1)) == 0)
+			>
 		{
 			private:
-				KERBAL_STATIC_ASSERT(kerbal::type_traits::is_unsigned<Unsigned>::value, "Type should be unsigned");
+				KERBAL_STATIC_ASSERT(
+					kerbal::type_traits::is_unsigned<Unsigned>::value,
+					"Type should be unsigned"
+				);
 		};
 
 	} // namespace smath

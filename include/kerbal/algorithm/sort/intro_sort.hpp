@@ -105,7 +105,7 @@ namespace kerbal
 
 					KERBAL_CONSTEXPR
 					nonrecursive_intro_sort_callee_info(iterator first, iterator last, std::size_t depth_limit):
-							first(first), last(last), depth_limit(depth_limit)
+						first(first), last(last), depth_limit(depth_limit)
 					{
 					}
 			};

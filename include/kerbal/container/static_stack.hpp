@@ -57,12 +57,12 @@ namespace kerbal
 
 				typedef T						value_type;
 				typedef const T					const_type;
-				typedef T&						reference;
-				typedef const T&				const_reference;
+				typedef T &						reference;
+				typedef const T &				const_reference;
 
 #		if __cplusplus >= 201103L
-				typedef value_type&&			rvalue_reference;
-				typedef const value_type&&		const_rvalue_reference;
+				typedef value_type &&			rvalue_reference;
+				typedef const value_type &&		const_rvalue_reference;
 #		endif
 
 				typedef typename container_type::size_type					size_type;
@@ -76,7 +76,7 @@ namespace kerbal
 			public:
 				KERBAL_CONSTEXPR
 				static_stack() :
-						c()
+					c()
 				{
 				}
 
@@ -84,7 +84,7 @@ namespace kerbal
 
 				KERBAL_CONSTEXPR14
 				static_stack(std::initializer_list<value_type> ilist) :
-						c(ilist)
+					c(ilist)
 				{
 				}
 
@@ -146,7 +146,7 @@ namespace kerbal
 
 				template <typename ... Args>
 				KERBAL_CONSTEXPR14
-				reference emplace(Args&& ... args)
+				reference emplace(Args && ... args)
 				{
 					return c.emplace_back(kerbal::utility::forward<Args>(args)...);
 				}
@@ -164,7 +164,7 @@ namespace kerbal
 				reference emplace(KERBAL_OPT_PPEXPAND_WITH_COMMA_N(REMAINF, EMPTY, ARGS_DECL, i)) \
 				{ \
 					return c.emplace_back(KERBAL_OPT_PPEXPAND_WITH_COMMA_N(REMAINF, EMPTY, ARGS_USE, i)); \
-				}
+				} \
 
 				KERBAL_PPEXPAND_N(FBODY, KERBAL_PPEXPAND_EMPTY_SEPARATOR, 0)
 				KERBAL_PPEXPAND_N(FBODY, KERBAL_PPEXPAND_EMPTY_SEPARATOR, 20)
@@ -247,27 +247,51 @@ namespace kerbal
 
 				template <std::size_t M>
 				KERBAL_CONSTEXPR14
-				friend bool operator==(const static_stack<T, M> & lhs, const static_stack<T, N> & rhs);
+				friend
+				bool operator==(
+					const static_stack<T, M> & lhs,
+					const static_stack<T, N> & rhs
+				);
 
 				template <std::size_t M>
 				KERBAL_CONSTEXPR14
-				friend bool operator!=(const static_stack<T, M> & lhs, const static_stack<T, N> & rhs);
+				friend
+				bool operator!=(
+					const static_stack<T, M> & lhs,
+					const static_stack<T, N> & rhs
+				);
 
 				template <std::size_t M>
 				KERBAL_CONSTEXPR14
-				friend bool operator<(const static_stack<T, M> & lhs, const static_stack<T, N> & rhs);
+				friend
+				bool operator<(
+					const static_stack<T, M> & lhs,
+					const static_stack<T, N> & rhs
+				);
 
 				template <std::size_t M>
 				KERBAL_CONSTEXPR14
-				friend bool operator<=(const static_stack<T, M> & lhs, const static_stack<T, N> & rhs);
+				friend
+				bool operator<=(
+					const static_stack<T, M> & lhs,
+					const static_stack<T, N> & rhs
+				);
 
 				template <std::size_t M>
 				KERBAL_CONSTEXPR14
-				friend bool operator>(const static_stack<T, M> & lhs, const static_stack<T, N> & rhs);
+				friend
+				bool operator>(
+					const static_stack<T, M> & lhs,
+					const static_stack<T, N> & rhs
+				);
 
 				template <std::size_t M>
 				KERBAL_CONSTEXPR14
-				friend bool operator>=(const static_stack<T, M> & lhs, const static_stack<T, N> & rhs);
+				friend
+				bool operator>=(
+					const static_stack<T, M> & lhs,
+					const static_stack<T, N> & rhs
+				);
 
 		};
 
@@ -277,42 +301,60 @@ namespace kerbal
 		 */
 		template <typename T, std::size_t M, std::size_t N>
 		KERBAL_CONSTEXPR14
-		bool operator==(const static_stack<T, M> & lhs, const static_stack<T, N> & rhs)
+		bool operator==(
+			const static_stack<T, M> & lhs,
+			const static_stack<T, N> & rhs
+		)
 		{
 			return lhs.c == rhs.c;
 		}
 
 		template <typename T, std::size_t M, std::size_t N>
 		KERBAL_CONSTEXPR14
-		bool operator!=(const static_stack<T, M> & lhs, const static_stack<T, N> & rhs)
+		bool operator!=(
+			const static_stack<T, M> & lhs,
+			const static_stack<T, N> & rhs
+		)
 		{
 			return lhs.c != rhs.c;
 		}
 
 		template <typename T, std::size_t M, std::size_t N>
 		KERBAL_CONSTEXPR14
-		bool operator<(const static_stack<T, M> & lhs, const static_stack<T, N> & rhs)
+		bool operator<(
+			const static_stack<T, M> & lhs,
+			const static_stack<T, N> & rhs
+		)
 		{
 			return lhs.c < rhs.c;
 		}
 
 		template <typename T, std::size_t M, std::size_t N>
 		KERBAL_CONSTEXPR14
-		bool operator<=(const static_stack<T, M> & lhs, const static_stack<T, N> & rhs)
+		bool operator<=(
+			const static_stack<T, M> & lhs,
+			const static_stack<T, N> & rhs
+		)
 		{
 			return lhs.c <= rhs.c;
 		}
 
 		template <typename T, std::size_t M, std::size_t N>
 		KERBAL_CONSTEXPR14
-		bool operator>(const static_stack<T, M> & lhs, const static_stack<T, N> & rhs)
+		bool operator>(
+			const static_stack<T, M> & lhs,
+			const static_stack<T, N> & rhs
+		)
 		{
 			return lhs.c > rhs.c;
 		}
 
 		template <typename T, std::size_t M, std::size_t N>
 		KERBAL_CONSTEXPR14
-		bool operator>=(const static_stack<T, M> & lhs, const static_stack<T, N> & rhs)
+		bool operator>=(
+			const static_stack<T, M> & lhs,
+			const static_stack<T, N> & rhs
+		)
 		{
 			return lhs.c >= rhs.c;
 		}
@@ -325,8 +367,11 @@ namespace kerbal
 
 		template <typename T, std::size_t N>
 		KERBAL_CONSTEXPR14
-		void swap(kerbal::container::static_stack<T, N> & a, kerbal::container::static_stack<T, N> & b)
-				KERBAL_CONDITIONAL_NOEXCEPT(noexcept(a.swap(b)))
+		void swap(
+			kerbal::container::static_stack<T, N> & a,
+			kerbal::container::static_stack<T, N> & b
+		)
+		KERBAL_CONDITIONAL_NOEXCEPT(noexcept(a.swap(b)))
 		{
 			a.swap(b);
 		}
@@ -340,8 +385,11 @@ KERBAL_NAMESPACE_STD_BEGIN
 
 	template <typename T, std::size_t N>
 	KERBAL_CONSTEXPR14
-	void swap(kerbal::container::static_stack<T, N> & a, kerbal::container::static_stack<T, N> & b)
-			KERBAL_CONDITIONAL_NOEXCEPT(noexcept(a.swap(b)))
+	void swap(
+		kerbal::container::static_stack<T, N> & a,
+		kerbal::container::static_stack<T, N> & b
+	)
+	KERBAL_CONDITIONAL_NOEXCEPT(noexcept(a.swap(b)))
 	{
 		a.swap(b);
 	}

@@ -75,7 +75,9 @@ namespace kerbal
 
 			KERBAL_CONSTEXPR14
 			inline
-			bool list_type_unrelated::empty() const KERBAL_NOEXCEPT
+			bool
+			list_type_unrelated::
+			empty() const KERBAL_NOEXCEPT
 			{
 				return this->basic_begin() == this->basic_end();
 			}
@@ -83,7 +85,8 @@ namespace kerbal
 			KERBAL_CONSTEXPR14
 			inline
 			list_type_unrelated::size_type
-			list_type_unrelated::size() const KERBAL_NOEXCEPT
+			list_type_unrelated::
+			size() const KERBAL_NOEXCEPT
 			{
 				basic_const_iterator first(this->basic_begin());
 				basic_const_iterator last(this->basic_end());
@@ -101,7 +104,9 @@ namespace kerbal
 
 			KERBAL_CONSTEXPR14
 			inline
-			void list_type_unrelated::k_iter_swap(basic_const_iterator a, basic_const_iterator b) KERBAL_NOEXCEPT
+			void
+			list_type_unrelated::
+			k_iter_swap(basic_const_iterator a, basic_const_iterator b) KERBAL_NOEXCEPT
 			{
 				node_base * pa = a.cast_to_mutable().current;
 				node_base * pb = b.cast_to_mutable().current;
@@ -113,7 +118,9 @@ namespace kerbal
 
 			KERBAL_CONSTEXPR14
 			inline
-			void list_type_unrelated::k_reverse(basic_const_iterator first, basic_const_iterator last) KERBAL_NOEXCEPT
+			void
+			list_type_unrelated::
+			k_reverse(basic_const_iterator first, basic_const_iterator last) KERBAL_NOEXCEPT
 			{
 				basic_iterator first_mut(first.cast_to_mutable());
 				basic_iterator last_mut(last.cast_to_mutable());
@@ -132,7 +139,9 @@ namespace kerbal
 
 			KERBAL_CONSTEXPR14
 			inline
-			void list_type_unrelated::reverse() KERBAL_NOEXCEPT
+			void
+			list_type_unrelated::
+			reverse() KERBAL_NOEXCEPT
 			{
 				k_reverse(this->basic_cbegin(), this->basic_cend());
 			}
@@ -140,7 +149,8 @@ namespace kerbal
 			KERBAL_CONSTEXPR14
 			inline
 			list_type_unrelated::basic_iterator
-			list_type_unrelated::k_rotate(basic_const_iterator first, basic_const_iterator n_first, basic_const_iterator last) KERBAL_NOEXCEPT
+			list_type_unrelated::
+			k_rotate(basic_const_iterator first, basic_const_iterator n_first, basic_const_iterator last) KERBAL_NOEXCEPT
 			{
 				basic_iterator first_mut(first.cast_to_mutable());
 				basic_iterator n_first_mut(n_first.cast_to_mutable());
@@ -161,7 +171,12 @@ namespace kerbal
 
 			KERBAL_CONSTEXPR14
 			inline
-			void list_type_unrelated::k_splice(basic_const_iterator pos, list_type_unrelated & other) KERBAL_NOEXCEPT
+			void
+			list_type_unrelated::
+			k_splice(
+				basic_const_iterator pos,
+				list_type_unrelated & other
+			) KERBAL_NOEXCEPT
 			{
 				list_type_unrelated::k_splice(pos, other.basic_begin(), other.basic_end());
 			}
@@ -170,7 +185,12 @@ namespace kerbal
 
 			KERBAL_CONSTEXPR14
 			inline
-			void list_type_unrelated::k_splice(basic_const_iterator pos, list_type_unrelated && other) KERBAL_NOEXCEPT
+			void
+			list_type_unrelated::
+			k_splice(
+				basic_const_iterator pos,
+				list_type_unrelated && other
+			) KERBAL_NOEXCEPT
 			{
 				list_type_unrelated::k_splice(pos, other.basic_begin(), other.basic_end());
 			}
@@ -179,7 +199,12 @@ namespace kerbal
 
 			KERBAL_CONSTEXPR14
 			inline
-			void list_type_unrelated::k_splice(basic_const_iterator pos, basic_const_iterator opos) KERBAL_NOEXCEPT
+			void
+			list_type_unrelated::
+			k_splice(
+				basic_const_iterator pos,
+				basic_const_iterator opos
+			) KERBAL_NOEXCEPT
 			{
 				basic_iterator opos_mut(opos.cast_to_mutable());
 				node_base * p = list_type_unrelated::k_unhook_node(opos_mut);
@@ -188,7 +213,12 @@ namespace kerbal
 
 			KERBAL_CONSTEXPR14
 			inline
-			void list_type_unrelated::k_splice(basic_const_iterator pos, basic_const_iterator first, basic_const_iterator last) KERBAL_NOEXCEPT
+			void
+			list_type_unrelated::
+			k_splice(
+				basic_const_iterator pos,
+				basic_const_iterator first, basic_const_iterator last
+			) KERBAL_NOEXCEPT
 			{
 				if (first == last) {
 					return;
@@ -237,7 +267,9 @@ namespace kerbal
 
 			KERBAL_CONSTEXPR14
 			inline
-			void list_type_unrelated::k_hook_node(basic_const_iterator pos, node_base * p) KERBAL_NOEXCEPT
+			void
+			list_type_unrelated::
+			k_hook_node(basic_const_iterator pos, node_base * p) KERBAL_NOEXCEPT
 			{
 				basic_iterator pos_mut(pos.cast_to_mutable());
 				node_base * next = pos_mut.current;
@@ -249,7 +281,9 @@ namespace kerbal
 
 			KERBAL_CONSTEXPR14
 			inline
-			void list_type_unrelated::k_hook_node(basic_const_iterator pos, node_base * start, node_base * back) KERBAL_NOEXCEPT
+			void
+			list_type_unrelated::
+			k_hook_node(basic_const_iterator pos, node_base * start, node_base * back) KERBAL_NOEXCEPT
 			{
 				// (?, ?)
 				// (?, 1) (0, 2) (1, 3) (2, ?)
@@ -264,7 +298,8 @@ namespace kerbal
 			KERBAL_CONSTEXPR14
 			inline
 			list_type_unrelated::node_base *
-			list_type_unrelated::k_unhook_node(basic_iterator pos) KERBAL_NOEXCEPT
+			list_type_unrelated::
+			k_unhook_node(basic_iterator pos) KERBAL_NOEXCEPT
 			{
 				node_base * p = pos.current;
 				p->prev->next = p->next;
@@ -275,7 +310,8 @@ namespace kerbal
 			KERBAL_CONSTEXPR14
 			inline
 			list_node_base_chain
-			list_type_unrelated::k_unhook_node(basic_iterator first, basic_iterator last) KERBAL_NOEXCEPT
+			list_type_unrelated::
+			k_unhook_node(basic_iterator first, basic_iterator last) KERBAL_NOEXCEPT
 			{
 				node_base * start = first.current;
 				node_base * prev = start->prev;
@@ -288,7 +324,12 @@ namespace kerbal
 
 			KERBAL_CONSTEXPR14
 			inline
-			void list_type_unrelated::k_swap_with_empty(list_type_unrelated& not_empty_list, list_type_unrelated& empty_list) KERBAL_NOEXCEPT
+			void
+			list_type_unrelated::
+			k_swap_with_empty(
+				list_type_unrelated & not_empty_list,
+				list_type_unrelated & empty_list
+			) KERBAL_NOEXCEPT
 			{
 				empty_list.k_head.prev = not_empty_list.k_head.prev;
 				empty_list.k_head.prev->next = &empty_list.k_head;
@@ -299,7 +340,12 @@ namespace kerbal
 
 			KERBAL_CONSTEXPR14
 			inline
-			void list_type_unrelated::k_swap_type_unrelated(list_type_unrelated & lhs, list_type_unrelated & rhs) KERBAL_NOEXCEPT
+			void
+			list_type_unrelated::
+			k_swap_type_unrelated(
+				list_type_unrelated & lhs,
+				list_type_unrelated & rhs
+			) KERBAL_NOEXCEPT
 			{
 				bool is_rhs_empty = rhs.empty();
 				if (lhs.empty()) {
@@ -335,8 +381,12 @@ namespace kerbal
 			template <typename T>
 			template <typename NodeAllocator>
 			KERBAL_CONSTEXPR20
-			list_type_only<T>::list_type_only(NodeAllocator & alloc, size_type n) :
-					super(init_list_node_ptr_to_self_tag())
+			list_type_only<T>::
+			list_type_only(
+				NodeAllocator & alloc,
+				size_type n
+			) :
+				super(init_list_node_ptr_to_self_tag())
 			{
 				if (n == 0) {
 					return;
@@ -348,8 +398,12 @@ namespace kerbal
 			template <typename T>
 			template <typename NodeAllocator>
 			KERBAL_CONSTEXPR20
-			list_type_only<T>::list_type_only(NodeAllocator & alloc, size_type n, const_reference val) :
-					super(init_list_node_ptr_to_self_tag())
+			list_type_only<T>::
+			list_type_only(
+				NodeAllocator & alloc,
+				size_type n, const_reference val
+			) :
+				super(init_list_node_ptr_to_self_tag())
 			{
 				if (n == 0) {
 					return;
@@ -361,65 +415,86 @@ namespace kerbal
 			template <typename T>
 			template <typename NodeAllocator, typename InputIterator>
 			KERBAL_CONSTEXPR20
-			list_type_only<T>::list_type_only(NodeAllocator & alloc, InputIterator first, InputIterator last,
-					typename kerbal::type_traits::enable_if<
-							kerbal::iterator::is_input_compatible_iterator<InputIterator>::value, int
-					>::type) :
-					super(init_list_node_ptr_to_self_tag())
+			list_type_only<T>::
+			list_type_only(
+				NodeAllocator & alloc,
+				InputIterator first, InputIterator last,
+				typename kerbal::type_traits::enable_if<
+					kerbal::iterator::is_input_compatible_iterator<InputIterator>::value, int
+				>::type
+			) :
+				super(init_list_node_ptr_to_self_tag())
 			{
 				k_insert_using_allocator(alloc, this->cend(), first, last);
 			}
 
-#		if __cplusplus >= 201103L
+#	if __cplusplus >= 201103L
 
 			template <typename T>
 			KERBAL_CONSTEXPR14
-			list_type_only<T>::list_type_only(list_type_only && src) KERBAL_NOEXCEPT :
-					super(detail::init_list_node_ptr_to_self_tag())
+			list_type_only<T>::
+			list_type_only(list_type_only && src) KERBAL_NOEXCEPT :
+				super(detail::init_list_node_ptr_to_self_tag())
 			{
 				if (src.empty()) {
 					return;
 				}
 				list_type_unrelated::k_swap_with_empty(
-						static_cast<list_type_unrelated &>(src),
-						static_cast<list_type_unrelated &>(*this));
+					static_cast<list_type_unrelated &>(src),
+					static_cast<list_type_unrelated &>(*this)
+				);
 			}
 
 			// move construct using allocator, allocator is equal
 			template <typename T>
 			KERBAL_CONSTEXPR14
-			void list_type_only<T>::k_move_cnstrct_ua_ae(list_type_only && src) KERBAL_NOEXCEPT
+			void
+			list_type_only<T>::
+			k_move_cnstrct_ua_ae(list_type_only && src) KERBAL_NOEXCEPT
 			{
 				if (src.empty()) {
 					return;
 				}
 				list_type_unrelated::k_swap_with_empty(
-						static_cast<list_type_unrelated &>(src),
-						static_cast<list_type_unrelated &>(*this));
+					static_cast<list_type_unrelated &>(src),
+					static_cast<list_type_unrelated &>(*this)
+				);
 			}
 
 			// move construct using allocator, allocator is not equal
 			template <typename T>
 			template <typename NodeAllocator>
 			KERBAL_CONSTEXPR20
-			void list_type_only<T>::k_move_cnstrct_ua_ane(NodeAllocator & this_alloc, list_type_only && src)
+			void
+			list_type_only<T>::
+			k_move_cnstrct_ua_ane(
+				NodeAllocator & this_alloc,
+				list_type_only && src
+			)
 			{
 				if (src.empty()) {
 					return;
 				}
 				list_node_chain<T> chain(
-						k_build_new_nodes_range_unguarded(
-								this_alloc,
-								kerbal::iterator::make_move_iterator(src.begin()),
-								kerbal::iterator::make_move_iterator(src.end())));
+					k_build_new_nodes_range_unguarded(
+						this_alloc,
+						kerbal::iterator::make_move_iterator(src.begin()),
+						kerbal::iterator::make_move_iterator(src.end())
+					)
+				);
 				list_type_unrelated::k_hook_node(this->cend(), chain.start, chain.back);
 			}
 
 			template <typename T>
 			template <typename NodeAllocator>
 			KERBAL_CONSTEXPR20
-			void list_type_only<T>::k_move_cnstrct_ua_helper(NodeAllocator & this_alloc, NodeAllocator && src_alloc, list_type_only && src,
-																		 kerbal::type_traits::false_type /*is_always_equal*/)
+			void
+			list_type_only<T>::
+			k_move_cnstrct_ua_helper(
+				NodeAllocator & this_alloc,
+				NodeAllocator && src_alloc, list_type_only && src,
+				kerbal::type_traits::false_type /*is_always_equal*/
+			)
 			{
 				if (this_alloc != src_alloc) {
 					this->k_move_cnstrct_ua_ane(this_alloc, kerbal::compatibility::move(src));
@@ -431,8 +506,13 @@ namespace kerbal
 			template <typename T>
 			template <typename NodeAllocator>
 			KERBAL_CONSTEXPR14
-			void list_type_only<T>::k_move_cnstrct_ua_helper(NodeAllocator & /*this_alloc*/, NodeAllocator && /*src_alloc*/, list_type_only && src,
-																		 kerbal::type_traits::true_type /*is_always_equal*/) KERBAL_NOEXCEPT
+			void
+			list_type_only<T>::
+			k_move_cnstrct_ua_helper(
+				NodeAllocator & /*this_alloc*/,
+				NodeAllocator && /*src_alloc*/, list_type_only && src,
+				kerbal::type_traits::true_type /*is_always_equal*/
+			) KERBAL_NOEXCEPT
 			{
 				this->k_move_cnstrct_ua_ae(kerbal::compatibility::move(src));
 			}
@@ -440,22 +520,34 @@ namespace kerbal
 			template <typename T>
 			template <typename NodeAllocator>
 			KERBAL_CONSTEXPR14
-			list_type_only<T>::list_type_only(NodeAllocator & this_alloc, NodeAllocator && src_alloc, list_type_only && src)
-					KERBAL_CONDITIONAL_NOEXCEPT(is_nothrow_move_constructible_using_allocator<NodeAllocator>::value) :
-					super(init_list_node_ptr_to_self_tag())
+			list_type_only<T>::
+			list_type_only(
+				NodeAllocator & this_alloc,
+				NodeAllocator && src_alloc, list_type_only && src
+			)
+				KERBAL_CONDITIONAL_NOEXCEPT(
+					is_nothrow_move_constructible_using_allocator<NodeAllocator>::value
+				) :
+				super(init_list_node_ptr_to_self_tag())
 			{
 				typedef kerbal::memory::allocator_traits<NodeAllocator> allocator_traits;
 				typedef typename allocator_traits::is_always_equal is_always_equal;
 
-				this->k_move_cnstrct_ua_helper(this_alloc, kerbal::compatibility::move(src_alloc), kerbal::compatibility::move(src), is_always_equal());
+				this->k_move_cnstrct_ua_helper(
+					this_alloc,
+					kerbal::compatibility::move(src_alloc), kerbal::compatibility::move(src),
+					is_always_equal()
+				);
 			}
 
-#		endif
+#	endif
 
 			template <typename T>
 			template <typename NodeAllocator>
 			KERBAL_CONSTEXPR20
-			void list_type_only<T>::k_destroy_using_allocator(NodeAllocator & alloc) KERBAL_NOEXCEPT
+			void
+			list_type_only<T>::
+			k_destroy_using_allocator(NodeAllocator & alloc) KERBAL_NOEXCEPT
 			{
 				if (this->empty()) {
 					return;
@@ -471,7 +563,12 @@ namespace kerbal
 			template <typename T>
 			template <typename NodeAllocator>
 			KERBAL_CONSTEXPR20
-			void list_type_only<T>::k_assign_using_allocator(NodeAllocator & alloc, size_type count, const_reference val)
+			void
+			list_type_only<T>::
+			k_assign_using_allocator(
+				NodeAllocator & alloc,
+				size_type count, const_reference val
+			)
 			{
 				iterator it(this->begin());
 				const_iterator const end(this->cend());
@@ -492,9 +589,13 @@ namespace kerbal
 			template <typename NodeAllocator, typename InputIterator>
 			KERBAL_CONSTEXPR20
 			typename kerbal::type_traits::enable_if<
-					kerbal::iterator::is_input_compatible_iterator<InputIterator>::value
+				kerbal::iterator::is_input_compatible_iterator<InputIterator>::value
 			>::type
-			list_type_only<T>::k_assign_using_allocator(NodeAllocator & alloc, InputIterator first, InputIterator last)
+			list_type_only<T>::
+			k_assign_using_allocator(
+				NodeAllocator & alloc,
+				InputIterator first, InputIterator last
+			)
 			{
 				iterator it(this->begin());
 				const_iterator const end(this->cend());
@@ -514,7 +615,13 @@ namespace kerbal
 			template <typename T>
 			template <typename NodeAllocator>
 			KERBAL_CONSTEXPR20
-			void list_type_only<T>::k_cpy_ass_ua_impl(NodeAllocator & alloc, const NodeAllocator & src_alloc, const list_type_only & src, CPYASS_VER_NOT_PROPAGATE)
+			void
+			list_type_only<T>::
+			k_cpy_ass_ua_impl(
+				NodeAllocator & alloc,
+				const NodeAllocator & src_alloc, const list_type_only & src,
+				CPYASS_VER_NOT_PROPAGATE
+			)
 			{
 				if (alloc != src_alloc) {
 					this->k_destroy_using_allocator(alloc);
@@ -526,7 +633,13 @@ namespace kerbal
 			template <typename T>
 			template <typename NodeAllocator>
 			KERBAL_CONSTEXPR20
-			void list_type_only<T>::k_cpy_ass_ua_impl(NodeAllocator & alloc, const NodeAllocator & src_alloc, const list_type_only & src, CPYASS_VER_PROPAGATE)
+			void
+			list_type_only<T>::
+			k_cpy_ass_ua_impl(
+				NodeAllocator & alloc,
+				const NodeAllocator & src_alloc, const list_type_only & src,
+				CPYASS_VER_PROPAGATE
+			)
 			{
 				if (alloc != src_alloc) {
 					this->k_destroy_using_allocator(alloc);
@@ -539,7 +652,13 @@ namespace kerbal
 			template <typename T>
 			template <typename NodeAllocator>
 			KERBAL_CONSTEXPR20
-			void list_type_only<T>::k_cpy_ass_ua_impl(NodeAllocator & alloc, const NodeAllocator & /*src_alloc*/, const list_type_only & src, CPYASS_VER_ALWAYS_EQUAL)
+			void
+			list_type_only<T>::
+			k_cpy_ass_ua_impl(
+				NodeAllocator & alloc,
+				const NodeAllocator & /*src_alloc*/, const list_type_only & src,
+				CPYASS_VER_ALWAYS_EQUAL
+			)
 			{
 				this->k_assign_using_allocator(alloc, src.cbegin(), src.cend());
 			}
@@ -547,20 +666,25 @@ namespace kerbal
 			template <typename T>
 			template <typename NodeAllocator>
 			KERBAL_CONSTEXPR20
-			void list_type_only<T>::k_assign_using_allocator(NodeAllocator & alloc, const NodeAllocator & src_alloc, const list_type_only & src)
+			void
+			list_type_only<T>::
+			k_assign_using_allocator(
+				NodeAllocator & alloc,
+				const NodeAllocator & src_alloc, const list_type_only & src
+			)
 			{
 				typedef kerbal::memory::allocator_traits<NodeAllocator> allocator_traits;
 				typedef typename allocator_traits::propagate_on_container_copy_assignment propagate;
 				typedef typename allocator_traits::is_always_equal is_always_equal;
 
 				typedef typename kerbal::type_traits::conditional<
-						is_always_equal::value,
-						CPYASS_VER_ALWAYS_EQUAL,
-						typename kerbal::type_traits::conditional<
-								propagate::value,
-								CPYASS_VER_PROPAGATE,
-								CPYASS_VER_NOT_PROPAGATE
-						>::type
+					is_always_equal::value,
+					CPYASS_VER_ALWAYS_EQUAL,
+					typename kerbal::type_traits::conditional<
+						propagate::value,
+						CPYASS_VER_PROPAGATE,
+						CPYASS_VER_NOT_PROPAGATE
+					>::type
 				>::type VER;
 
 				this->k_cpy_ass_ua_impl(alloc, src_alloc, src, VER());
@@ -572,12 +696,17 @@ namespace kerbal
 			template <typename T>
 			template <typename NodeAllocator>
 			KERBAL_CONSTEXPR20
-			void list_type_only<T>::k_move_assign(NodeAllocator & alloc, list_type_only && src) KERBAL_NOEXCEPT
+			void
+			list_type_only<T>::
+			k_move_assign(NodeAllocator & alloc, list_type_only && src) KERBAL_NOEXCEPT
 			{
 				this->k_destroy_using_allocator(alloc);
 				this->list_type_unrelated::k_init_node_base();
 				if (!src.empty()) {
-					list_type_unrelated::k_swap_with_empty(static_cast<list_type_unrelated &>(src), static_cast<list_type_unrelated &>(*this));
+					list_type_unrelated::k_swap_with_empty(
+						static_cast<list_type_unrelated &>(src),
+						static_cast<list_type_unrelated &>(*this)
+					);
 				}
 			}
 
@@ -585,7 +714,9 @@ namespace kerbal
 			template <typename T>
 			template <typename NodeAllocator>
 			KERBAL_CONSTEXPR20
-			void list_type_only<T>::k_mov_ass_ua_ae(NodeAllocator & alloc, list_type_only && src) KERBAL_NOEXCEPT
+			void
+			list_type_only<T>::
+			k_mov_ass_ua_ae(NodeAllocator & alloc, list_type_only && src) KERBAL_NOEXCEPT
 			{
 				this->k_move_assign(alloc, kerbal::compatibility::move(src));
 			}
@@ -594,19 +725,27 @@ namespace kerbal
 			template <typename T>
 			template <typename NodeAllocator>
 			KERBAL_CONSTEXPR20
-			void list_type_only<T>::k_mov_ass_ua_ane(NodeAllocator & alloc, list_type_only && src)
+			void
+			list_type_only<T>::
+			k_mov_ass_ua_ane(NodeAllocator & alloc, list_type_only && src)
 			{
 				this->k_assign_using_allocator(
-						alloc,
-						kerbal::iterator::make_move_iterator(src.begin()),
-						kerbal::iterator::make_move_iterator(src.end()));
+					alloc,
+					kerbal::iterator::make_move_iterator(src.begin()),
+					kerbal::iterator::make_move_iterator(src.end())
+				);
 			}
 
 			template <typename T>
 			template <typename NodeAllocator>
 			KERBAL_CONSTEXPR20
-			void list_type_only<T>::k_mov_ass_ua_impl(NodeAllocator & alloc, NodeAllocator && src_alloc, list_type_only && src,
-																  MOVASS_VER_NOT_PROPAGATE)
+			void
+			list_type_only<T>::
+			k_mov_ass_ua_impl(
+				NodeAllocator & alloc,
+				NodeAllocator && src_alloc, list_type_only && src,
+				MOVASS_VER_NOT_PROPAGATE
+			)
 			{
 				if (alloc != src_alloc) {
 					this->k_mov_ass_ua_ane(alloc, kerbal::compatibility::move(src));
@@ -618,22 +757,35 @@ namespace kerbal
 			template <typename T>
 			template <typename NodeAllocator>
 			KERBAL_CONSTEXPR20
-			void list_type_only<T>::k_mov_ass_ua_impl(NodeAllocator & alloc, NodeAllocator && src_alloc, list_type_only && src,
-																  MOVASS_VER_PROPAGATE)
+			void
+			list_type_only<T>::
+			k_mov_ass_ua_impl(
+				NodeAllocator & alloc,
+				NodeAllocator && src_alloc, list_type_only && src,
+				MOVASS_VER_PROPAGATE
+			)
 			{
 				this->k_destroy_using_allocator(alloc);
 				this->list_type_unrelated::k_init_node_base();
 				alloc = kerbal::compatibility::move(src_alloc);
 				if (!src.empty()) {
-					list_type_unrelated::k_swap_with_empty(static_cast<list_type_unrelated &>(src), static_cast<list_type_unrelated &>(*this));
+					list_type_unrelated::k_swap_with_empty(
+						static_cast<list_type_unrelated &>(src),
+						static_cast<list_type_unrelated &>(*this)
+					);
 				}
 			}
 
 			template <typename T>
 			template <typename NodeAllocator>
 			KERBAL_CONSTEXPR20
-			void list_type_only<T>::k_mov_ass_ua_impl(NodeAllocator & alloc, NodeAllocator && /*src_alloc*/, list_type_only && src,
-																  MOVASS_VER_ALWAYS_EQUAL) KERBAL_NOEXCEPT
+			void
+			list_type_only<T>::
+			k_mov_ass_ua_impl(
+				NodeAllocator & alloc,
+				NodeAllocator && /*src_alloc*/, list_type_only && src,
+				MOVASS_VER_ALWAYS_EQUAL
+			) KERBAL_NOEXCEPT
 			{
 				this->k_mov_ass_ua_ae(alloc, kerbal::compatibility::move(src));
 			}
@@ -641,28 +793,33 @@ namespace kerbal
 			template <typename T>
 			template <typename NodeAllocator>
 			KERBAL_CONSTEXPR20
-			void list_type_only<T>::k_assign_using_allocator(NodeAllocator & alloc, NodeAllocator && src_alloc, list_type_only && src)
-					KERBAL_CONDITIONAL_NOEXCEPT(is_nothrow_move_assign_using_allocator<NodeAllocator>::value)
+			void
+			list_type_only<T>::
+			k_assign_using_allocator(
+				NodeAllocator & alloc,
+				NodeAllocator && src_alloc, list_type_only && src
+			)
+				KERBAL_CONDITIONAL_NOEXCEPT(is_nothrow_move_assign_using_allocator<NodeAllocator>::value)
 			{
 				typedef kerbal::memory::allocator_traits<NodeAllocator> allocator_traits;
 				typedef typename allocator_traits::propagate_on_container_move_assignment propagate;
 				typedef typename allocator_traits::is_always_equal is_always_equal;
 
 				typedef typename kerbal::type_traits::conditional<
-						is_always_equal::value,
-						MOVASS_VER_ALWAYS_EQUAL,
-						typename kerbal::type_traits::conditional<
-								propagate::value,
-								MOVASS_VER_PROPAGATE,
-								MOVASS_VER_NOT_PROPAGATE
-						>::type
+					is_always_equal::value,
+					MOVASS_VER_ALWAYS_EQUAL,
+					typename kerbal::type_traits::conditional<
+						propagate::value,
+						MOVASS_VER_PROPAGATE,
+						MOVASS_VER_NOT_PROPAGATE
+					>::type
 				>::type VER;
 
 				this->k_mov_ass_ua_impl(
-						alloc,
-						kerbal::compatibility::move(src_alloc),
-						kerbal::compatibility::move(src),
-						VER()
+					alloc,
+					kerbal::compatibility::move(src_alloc),
+					kerbal::compatibility::move(src),
+					VER()
 				);
 			}
 
@@ -674,32 +831,40 @@ namespace kerbal
 
 			template <typename T>
 			KERBAL_CONSTEXPR20
-			typename list_type_only<T>::reference
-			list_type_only<T>::front() KERBAL_NOEXCEPT
+			typename
+			list_type_only<T>::reference
+			list_type_only<T>::
+			front() KERBAL_NOEXCEPT
 			{
 				return node::reinterpret_as(this->k_head.next)->member();
 			}
 
 			template <typename T>
 			KERBAL_CONSTEXPR20
-			typename list_type_only<T>::const_reference
-			list_type_only<T>::front() const KERBAL_NOEXCEPT
+			typename
+			list_type_only<T>::const_reference
+			list_type_only<T>::
+			front() const KERBAL_NOEXCEPT
 			{
 				return node::reinterpret_as(this->k_head.next)->member();
 			}
 
 			template <typename T>
 			KERBAL_CONSTEXPR20
-			typename list_type_only<T>::reference
-			list_type_only<T>::back() KERBAL_NOEXCEPT
+			typename
+			list_type_only<T>::reference
+			list_type_only<T>::
+			back() KERBAL_NOEXCEPT
 			{
 				return node::reinterpret_as(this->k_head.prev)->member();
 			}
 
 			template <typename T>
 			KERBAL_CONSTEXPR20
-			typename list_type_only<T>::const_reference
-			list_type_only<T>::back() const KERBAL_NOEXCEPT
+			typename
+			list_type_only<T>::const_reference
+			list_type_only<T>::
+			back() const KERBAL_NOEXCEPT
 			{
 				return node::reinterpret_as(this->k_head.prev)->member();
 			}
@@ -710,128 +875,160 @@ namespace kerbal
 
 			template <typename T>
 			KERBAL_CONSTEXPR20
-			typename list_type_only<T>::iterator
-			list_type_only<T>::begin() KERBAL_NOEXCEPT
+			typename
+			list_type_only<T>::iterator
+			list_type_only<T>::
+			begin() KERBAL_NOEXCEPT
 			{
 				return iterator(this->k_head.next);
 			}
 
 			template <typename T>
 			KERBAL_CONSTEXPR20
-			typename list_type_only<T>::const_iterator
-			list_type_only<T>::begin() const KERBAL_NOEXCEPT
+			typename
+			list_type_only<T>::const_iterator
+			list_type_only<T>::
+			begin() const KERBAL_NOEXCEPT
 			{
 				return const_iterator(this->k_head.next);
 			}
 
 			template <typename T>
 			KERBAL_CONSTEXPR20
-			typename list_type_only<T>::const_iterator
-			list_type_only<T>::cbegin() const KERBAL_NOEXCEPT
+			typename
+			list_type_only<T>::const_iterator
+			list_type_only<T>::
+			cbegin() const KERBAL_NOEXCEPT
 			{
 				return this->begin();
 			}
 
 			template <typename T>
 			KERBAL_CONSTEXPR20
-			typename list_type_only<T>::iterator
-			list_type_only<T>::end() KERBAL_NOEXCEPT
+			typename
+			list_type_only<T>::iterator
+			list_type_only<T>::
+			end() KERBAL_NOEXCEPT
 			{
 				return iterator(&this->k_head);
 			}
 
 			template <typename T>
 			KERBAL_CONSTEXPR20
-			typename list_type_only<T>::const_iterator
-			list_type_only<T>::end() const KERBAL_NOEXCEPT
+			typename
+			list_type_only<T>::const_iterator
+			list_type_only<T>::
+			end() const KERBAL_NOEXCEPT
 			{
 				return const_iterator(&this->k_head);
 			}
 
 			template <typename T>
 			KERBAL_CONSTEXPR20
-			typename list_type_only<T>::const_iterator
-			list_type_only<T>::cend() const KERBAL_NOEXCEPT
+			typename
+			list_type_only<T>::const_iterator
+			list_type_only<T>::
+			cend() const KERBAL_NOEXCEPT
 			{
 				return this->end();
 			}
 
 			template <typename T>
 			KERBAL_CONSTEXPR20
-			typename list_type_only<T>::reverse_iterator
-			list_type_only<T>::rbegin() KERBAL_NOEXCEPT
+			typename
+			list_type_only<T>::reverse_iterator
+			list_type_only<T>::
+			rbegin() KERBAL_NOEXCEPT
 			{
 				return reverse_iterator(this->end());
 			}
 
 			template <typename T>
 			KERBAL_CONSTEXPR20
-			typename list_type_only<T>::const_reverse_iterator
-			list_type_only<T>::rbegin() const KERBAL_NOEXCEPT
+			typename
+			list_type_only<T>::const_reverse_iterator
+			list_type_only<T>::
+			rbegin() const KERBAL_NOEXCEPT
 			{
 				return const_reverse_iterator(this->end());
 			}
 
 			template <typename T>
 			KERBAL_CONSTEXPR20
-			typename list_type_only<T>::const_reverse_iterator
-			list_type_only<T>::crbegin() const KERBAL_NOEXCEPT
+			typename
+			list_type_only<T>::const_reverse_iterator
+			list_type_only<T>::
+			crbegin() const KERBAL_NOEXCEPT
 			{
 				return this->rbegin();
 			}
 
 			template <typename T>
 			KERBAL_CONSTEXPR20
-			typename list_type_only<T>::reverse_iterator
-			list_type_only<T>::rend() KERBAL_NOEXCEPT
+			typename
+			list_type_only<T>::reverse_iterator
+			list_type_only<T>::
+			rend() KERBAL_NOEXCEPT
 			{
 				return reverse_iterator(this->begin());
 			}
 
 			template <typename T>
 			KERBAL_CONSTEXPR20
-			typename list_type_only<T>::const_reverse_iterator
-			list_type_only<T>::rend() const KERBAL_NOEXCEPT
+			typename
+			list_type_only<T>::const_reverse_iterator
+			list_type_only<T>::
+			rend() const KERBAL_NOEXCEPT
 			{
 				return const_reverse_iterator(this->begin());
 			}
 
 			template <typename T>
 			KERBAL_CONSTEXPR20
-			typename list_type_only<T>::const_reverse_iterator
-			list_type_only<T>::crend() const KERBAL_NOEXCEPT
+			typename
+			list_type_only<T>::const_reverse_iterator
+			list_type_only<T>::
+			crend() const KERBAL_NOEXCEPT
 			{
 				return this->rend();
 			}
 
 			template <typename T>
 			KERBAL_CONSTEXPR20
-			typename list_type_only<T>::iterator
-			list_type_only<T>::nth(size_type index) KERBAL_NOEXCEPT
+			typename
+			list_type_only<T>::iterator
+			list_type_only<T>::
+			nth(size_type index) KERBAL_NOEXCEPT
 			{
 				return kerbal::iterator::next(this->begin(), index);
 			}
 
 			template <typename T>
 			KERBAL_CONSTEXPR20
-			typename list_type_only<T>::const_iterator
-			list_type_only<T>::nth(size_type index) const KERBAL_NOEXCEPT
+			typename
+			list_type_only<T>::const_iterator
+			list_type_only<T>::
+			nth(size_type index) const KERBAL_NOEXCEPT
 			{
 				return kerbal::iterator::next(this->cbegin(), index);
 			}
 
 			template <typename T>
 			KERBAL_CONSTEXPR20
-			typename list_type_only<T>::size_type
-			list_type_only<T>::index_of(iterator it) KERBAL_NOEXCEPT
+			typename
+			list_type_only<T>::size_type
+			list_type_only<T>::
+			index_of(iterator it) KERBAL_NOEXCEPT
 			{
 				return kerbal::iterator::distance(this->begin(), it);
 			}
 
 			template <typename T>
 			KERBAL_CONSTEXPR20
-			typename list_type_only<T>::size_type
-			list_type_only<T>::index_of(const_iterator it) const KERBAL_NOEXCEPT
+			typename
+			list_type_only<T>::size_type
+			list_type_only<T>::
+			index_of(const_iterator it) const KERBAL_NOEXCEPT
 			{
 				return kerbal::iterator::distance(this->cbegin(), it);
 			}
@@ -843,7 +1040,9 @@ namespace kerbal
 			template <typename T>
 			template <typename NodeAllocator>
 			KERBAL_CONSTEXPR20
-			void list_type_only<T>::k_push_front_using_allocator(NodeAllocator & alloc, const_reference val)
+			void
+			list_type_only<T>::
+			k_push_front_using_allocator(NodeAllocator & alloc, const_reference val)
 			{
 				this->k_emplace_front_using_allocator(alloc, val);
 			}
@@ -853,7 +1052,9 @@ namespace kerbal
 			template <typename T>
 			template <typename NodeAllocator>
 			KERBAL_CONSTEXPR20
-			void list_type_only<T>::k_push_front_using_allocator(NodeAllocator & alloc, rvalue_reference val)
+			void
+			list_type_only<T>::
+			k_push_front_using_allocator(NodeAllocator & alloc, rvalue_reference val)
 			{
 				this->k_emplace_front_using_allocator(alloc, kerbal::compatibility::move(val));
 			}
@@ -865,8 +1066,10 @@ namespace kerbal
 			template <typename T>
 			template <typename NodeAllocator, typename ... Args>
 			KERBAL_CONSTEXPR20
-			typename list_type_only<T>::reference
-			list_type_only<T>::k_emplace_front_using_allocator(NodeAllocator & alloc, Args&& ... args)
+			typename
+			list_type_only<T>::reference
+			list_type_only<T>::
+			k_emplace_front_using_allocator(NodeAllocator & alloc, Args && ... args)
 			{
 				return *k_emplace_using_allocator(alloc, this->cbegin(), kerbal::utility::forward<Args>(args)...);
 			}
@@ -880,12 +1083,20 @@ namespace kerbal
 #		define ARGS_USE(i) KERBAL_MACRO_CONCAT(arg, i)
 #		define FBODY(i) \
 			template <typename T> \
-			template <typename NodeAllocator KERBAL_OPT_PPEXPAND_WITH_COMMA_N(LEFT_JOIN_COMMA, EMPTY, TARGS_DECL, i)> \
-			typename list_type_only<T>::reference \
-			list_type_only<T>::k_emplace_front_using_allocator(NodeAllocator & alloc KERBAL_OPT_PPEXPAND_WITH_COMMA_N(LEFT_JOIN_COMMA, EMPTY, ARGS_DECL, i)) \
+			template < \
+				typename NodeAllocator \
+				KERBAL_OPT_PPEXPAND_WITH_COMMA_N(LEFT_JOIN_COMMA, EMPTY, TARGS_DECL, i) \
+			> \
+			typename \
+			list_type_only<T>::reference \
+			list_type_only<T>:: \
+			k_emplace_front_using_allocator( \
+				NodeAllocator & alloc \
+				KERBAL_OPT_PPEXPAND_WITH_COMMA_N(LEFT_JOIN_COMMA, EMPTY, ARGS_DECL, i) \
+			) \
 			{ \
 				return *k_emplace_using_allocator(alloc, this->cbegin() KERBAL_OPT_PPEXPAND_WITH_COMMA_N(LEFT_JOIN_COMMA, EMPTY, ARGS_USE, i)); \
-			}
+			} \
 
 			KERBAL_PPEXPAND_N(FBODY, KERBAL_PPEXPAND_EMPTY_SEPARATOR, 0)
 			KERBAL_PPEXPAND_N(FBODY, KERBAL_PPEXPAND_EMPTY_SEPARATOR, 20)
@@ -902,7 +1113,9 @@ namespace kerbal
 			template <typename T>
 			template <typename NodeAllocator>
 			KERBAL_CONSTEXPR20
-			void list_type_only<T>::k_push_back_using_allocator(NodeAllocator & alloc, const_reference val)
+			void
+			list_type_only<T>::
+			k_push_back_using_allocator(NodeAllocator & alloc, const_reference val)
 			{
 				this->k_emplace_back_using_allocator(alloc, val);
 			}
@@ -912,7 +1125,9 @@ namespace kerbal
 			template <typename T>
 			template <typename NodeAllocator>
 			KERBAL_CONSTEXPR20
-			void list_type_only<T>::k_push_back_using_allocator(NodeAllocator & alloc, rvalue_reference val)
+			void
+			list_type_only<T>::
+			k_push_back_using_allocator(NodeAllocator & alloc, rvalue_reference val)
 			{
 				this->k_emplace_back_using_allocator(alloc, kerbal::compatibility::move(val));
 			}
@@ -924,8 +1139,10 @@ namespace kerbal
 			template <typename T>
 			template <typename NodeAllocator, typename ... Args>
 			KERBAL_CONSTEXPR20
-			typename list_type_only<T>::reference
-			list_type_only<T>::k_emplace_back_using_allocator(NodeAllocator & alloc, Args&& ... args)
+			typename
+			list_type_only<T>::reference
+			list_type_only<T>::
+			k_emplace_back_using_allocator(NodeAllocator & alloc, Args && ... args)
 			{
 				return *k_emplace_using_allocator(alloc, this->cend(), kerbal::utility::forward<Args>(args)...);
 			}
@@ -939,12 +1156,20 @@ namespace kerbal
 #		define ARGS_USE(i) KERBAL_MACRO_CONCAT(arg, i)
 #		define FBODY(i) \
 			template <typename T> \
-			template <typename NodeAllocator KERBAL_OPT_PPEXPAND_WITH_COMMA_N(LEFT_JOIN_COMMA, EMPTY, TARGS_DECL, i)> \
-			typename list_type_only<T>::reference \
-			list_type_only<T>::k_emplace_back_using_allocator(NodeAllocator & alloc KERBAL_OPT_PPEXPAND_WITH_COMMA_N(LEFT_JOIN_COMMA, EMPTY, ARGS_DECL, i)) \
+			template < \
+				typename NodeAllocator \
+				KERBAL_OPT_PPEXPAND_WITH_COMMA_N(LEFT_JOIN_COMMA, EMPTY, TARGS_DECL, i) \
+			> \
+			typename \
+			list_type_only<T>::reference \
+			list_type_only<T>:: \
+			k_emplace_back_using_allocator( \
+				NodeAllocator & alloc \
+				KERBAL_OPT_PPEXPAND_WITH_COMMA_N(LEFT_JOIN_COMMA, EMPTY, ARGS_DECL, i) \
+			) \
 			{ \
 				return *k_emplace_using_allocator(alloc, this->cend() KERBAL_OPT_PPEXPAND_WITH_COMMA_N(LEFT_JOIN_COMMA, EMPTY, ARGS_USE, i)); \
-			}
+			} \
 
 			KERBAL_PPEXPAND_N(FBODY, KERBAL_PPEXPAND_EMPTY_SEPARATOR, 0)
 			KERBAL_PPEXPAND_N(FBODY, KERBAL_PPEXPAND_EMPTY_SEPARATOR, 20)
@@ -961,8 +1186,14 @@ namespace kerbal
 			template <typename T>
 			template <typename NodeAllocator>
 			KERBAL_CONSTEXPR20
-			typename list_type_only<T>::iterator
-			list_type_only<T>::k_insert_using_allocator(NodeAllocator & alloc, const_iterator pos, const_reference val)
+			typename
+			list_type_only<T>::iterator
+			list_type_only<T>::
+			k_insert_using_allocator(
+				NodeAllocator & alloc,
+				const_iterator pos,
+				const_reference val
+			)
 			{
 				return k_emplace_using_allocator(alloc, pos, val);
 			}
@@ -970,8 +1201,14 @@ namespace kerbal
 			template <typename T>
 			template <typename NodeAllocator>
 			KERBAL_CONSTEXPR20
-			typename list_type_only<T>::iterator
-			list_type_only<T>::k_insert_using_allocator(NodeAllocator & alloc, const_iterator pos, size_type n, const_reference val)
+			typename
+			list_type_only<T>::iterator
+			list_type_only<T>::
+			k_insert_using_allocator(
+				NodeAllocator & alloc,
+				const_iterator pos,
+				size_type n, const_reference val
+			)
 			{
 				if (n == 0) {
 					return pos.cast_to_mutable();
@@ -985,10 +1222,15 @@ namespace kerbal
 			template <typename NodeAllocator, typename InputIterator>
 			KERBAL_CONSTEXPR20
 			typename kerbal::type_traits::enable_if<
-					kerbal::iterator::is_input_compatible_iterator<InputIterator>::value,
-					typename list_type_only<T>::iterator
+				kerbal::iterator::is_input_compatible_iterator<InputIterator>::value,
+				typename list_type_only<T>::iterator
 			>::type
-			list_type_only<T>::k_insert_using_allocator(NodeAllocator & alloc, const_iterator pos, InputIterator first, InputIterator last)
+			list_type_only<T>::
+			k_insert_using_allocator(
+				NodeAllocator & alloc,
+				const_iterator pos,
+				InputIterator first, InputIterator last
+			)
 			{
 				if (first == last) {
 					return pos.cast_to_mutable();
@@ -1003,8 +1245,14 @@ namespace kerbal
 			template <typename T>
 			template <typename NodeAllocator>
 			KERBAL_CONSTEXPR20
-			typename list_type_only<T>::iterator
-			list_type_only<T>::k_insert_using_allocator(NodeAllocator & alloc, const_iterator pos, rvalue_reference val)
+			typename
+			list_type_only<T>::iterator
+			list_type_only<T>::
+			k_insert_using_allocator(
+				NodeAllocator & alloc,
+				const_iterator pos,
+				rvalue_reference val
+			)
 			{
 				return k_emplace_using_allocator(alloc, pos, kerbal::compatibility::move(val));
 			}
@@ -1016,10 +1264,16 @@ namespace kerbal
 			template <typename T>
 			template <typename NodeAllocator, typename ... Args>
 			KERBAL_CONSTEXPR20
-			typename list_type_only<T>::iterator
-			list_type_only<T>::k_emplace_using_allocator(NodeAllocator & alloc, const_iterator pos, Args&& ... args)
+			typename
+			list_type_only<T>::iterator
+			list_type_only<T>::
+			k_emplace_using_allocator(
+				NodeAllocator & alloc,
+				const_iterator pos,
+				Args && ... args
+			)
 			{
-				node *p = k_build_new_node(alloc, kerbal::utility::forward<Args>(args)...);
+				node * p = k_build_new_node(alloc, kerbal::utility::forward<Args>(args)...);
 				list_type_unrelated::k_hook_node(pos, p);
 				return iterator(p);
 			}
@@ -1033,14 +1287,26 @@ namespace kerbal
 #		define ARGS_USE(i) KERBAL_MACRO_CONCAT(arg, i)
 #		define FBODY(i) \
 			template <typename T> \
-			template <typename NodeAllocator KERBAL_OPT_PPEXPAND_WITH_COMMA_N(LEFT_JOIN_COMMA, EMPTY, TARGS_DECL, i)> \
-			typename list_type_only<T>::iterator \
-			list_type_only<T>::k_emplace_using_allocator(NodeAllocator & alloc, const_iterator pos KERBAL_OPT_PPEXPAND_WITH_COMMA_N(LEFT_JOIN_COMMA, EMPTY, ARGS_DECL, i)) \
+			template < \
+				typename NodeAllocator \
+				KERBAL_OPT_PPEXPAND_WITH_COMMA_N(LEFT_JOIN_COMMA, EMPTY, TARGS_DECL, i) \
+			> \
+			typename \
+			list_type_only<T>::iterator \
+			list_type_only<T>:: \
+			k_emplace_using_allocator( \
+				NodeAllocator & alloc, \
+				const_iterator pos \
+				KERBAL_OPT_PPEXPAND_WITH_COMMA_N(LEFT_JOIN_COMMA, EMPTY, ARGS_DECL, i) \
+			) \
 			{ \
-				node *p = k_build_new_node(alloc KERBAL_OPT_PPEXPAND_WITH_COMMA_N(LEFT_JOIN_COMMA, EMPTY, ARGS_USE, i)); \
+				node * p = k_build_new_node( \
+					alloc \
+					KERBAL_OPT_PPEXPAND_WITH_COMMA_N(LEFT_JOIN_COMMA, EMPTY, ARGS_USE, i) \
+				); \
 				list_type_unrelated::k_hook_node(pos, p); \
 				return iterator(p); \
-			}
+			} \
 
 			KERBAL_PPEXPAND_N(FBODY, KERBAL_PPEXPAND_EMPTY_SEPARATOR, 0)
 			KERBAL_PPEXPAND_N(FBODY, KERBAL_PPEXPAND_EMPTY_SEPARATOR, 20)
@@ -1061,7 +1327,9 @@ namespace kerbal
 			template <typename T>
 			template <typename NodeAllocator>
 			KERBAL_CONSTEXPR20
-			void list_type_only<T>::k_pop_front_using_allocator(NodeAllocator & alloc)
+			void
+			list_type_only<T>::
+			k_pop_front_using_allocator(NodeAllocator & alloc)
 			{
 				k_erase_using_allocator(alloc, this->cbegin());
 			}
@@ -1069,7 +1337,9 @@ namespace kerbal
 			template <typename T>
 			template <typename NodeAllocator>
 			KERBAL_CONSTEXPR20
-			void list_type_only<T>::k_pop_back_using_allocator(NodeAllocator & alloc)
+			void
+			list_type_only<T>::
+			k_pop_back_using_allocator(NodeAllocator & alloc)
 			{
 				k_erase_using_allocator(alloc, kerbal::iterator::prev(this->cend()));
 			}
@@ -1077,8 +1347,13 @@ namespace kerbal
 			template <typename T>
 			template <typename NodeAllocator>
 			KERBAL_CONSTEXPR20
-			typename list_type_only<T>::iterator
-			list_type_only<T>::k_erase_using_allocator(NodeAllocator & alloc, const_iterator pos)
+			typename
+			list_type_only<T>::iterator
+			list_type_only<T>::
+			k_erase_using_allocator(
+				NodeAllocator & alloc,
+				const_iterator pos
+			)
 			{
 				iterator pos_mut(pos.cast_to_mutable());
 				node_base * p = list_type_unrelated::k_unhook_node(pos_mut++);
@@ -1089,8 +1364,13 @@ namespace kerbal
 			template <typename T>
 			template <typename NodeAllocator>
 			KERBAL_CONSTEXPR20
-			typename list_type_only<T>::iterator
-			list_type_only<T>::k_erase_using_allocator(NodeAllocator & alloc, const_iterator first, const_iterator last)
+			typename
+			list_type_only<T>::iterator
+			list_type_only<T>::
+			k_erase_using_allocator(
+				NodeAllocator & alloc,
+				const_iterator first, const_iterator last
+			)
 			{
 				iterator last_mut(last.cast_to_mutable());
 				if (first != last) {
@@ -1105,11 +1385,18 @@ namespace kerbal
 			template <typename T>
 			template <typename NodeAllocator>
 			KERBAL_CONSTEXPR20
-			void list_type_only<T>::k_clear_using_allocator(NodeAllocator & alloc)
-					KERBAL_CONDITIONAL_NOEXCEPT(noexcept(k_erase_using_allocator(alloc,
+			void
+			list_type_only<T>::
+			k_clear_using_allocator(NodeAllocator & alloc)
+				KERBAL_CONDITIONAL_NOEXCEPT(
+					noexcept(
+						k_erase_using_allocator(
+							alloc,
 							kerbal::utility::declthis<list_type_only>()->cbegin(),
-							kerbal::utility::declthis<list_type_only>()->cend())
-					))
+							kerbal::utility::declthis<list_type_only>()->cend()
+						)
+					)
+				)
 			{
 				k_erase_using_allocator(alloc, this->cbegin(), this->cend());
 			}
@@ -1121,7 +1408,9 @@ namespace kerbal
 			template <typename T>
 			template <typename NodeAllocator>
 			KERBAL_CONSTEXPR20
-			void list_type_only<T>::k_resize_using_allocator(NodeAllocator & alloc, size_type count)
+			void
+			list_type_only<T>::
+			k_resize_using_allocator(NodeAllocator & alloc, size_type count)
 			{
 				const_iterator it(this->cbegin());
 				const_iterator const cend(this->cend());
@@ -1138,7 +1427,9 @@ namespace kerbal
 			template <typename T>
 			template <typename NodeAllocator>
 			KERBAL_CONSTEXPR20
-			void list_type_only<T>::k_resize_using_allocator(NodeAllocator & alloc, size_type count, const_reference value)
+			void
+			list_type_only<T>::
+			k_resize_using_allocator(NodeAllocator & alloc, size_type count, const_reference value)
 			{
 				const_iterator it(this->cbegin());
 				const_iterator const cend(this->cend());
@@ -1152,22 +1443,28 @@ namespace kerbal
 
 			template <typename T>
 			KERBAL_CONSTEXPR20
-			void list_type_only<T>::k_iter_swap(const_iterator a, const_iterator b) KERBAL_NOEXCEPT
+			void
+			list_type_only<T>::
+			k_iter_swap(const_iterator a, const_iterator b) KERBAL_NOEXCEPT
 			{
 				list_type_unrelated::k_iter_swap(a, b);
 			}
 
 			template <typename T>
 			KERBAL_CONSTEXPR20
-			void list_type_only<T>::k_reverse(const_iterator first, const_iterator last) KERBAL_NOEXCEPT
+			void
+			list_type_only<T>::
+			k_reverse(const_iterator first, const_iterator last) KERBAL_NOEXCEPT
 			{
 				list_type_unrelated::k_reverse(first, last);
 			}
 
 			template <typename T>
 			KERBAL_CONSTEXPR20
-			typename list_type_only<T>::iterator
-			list_type_only<T>::rotate(const_iterator first, const_iterator n_first, const_iterator last) KERBAL_NOEXCEPT
+			typename
+			list_type_only<T>::iterator
+			list_type_only<T>::
+			rotate(const_iterator first, const_iterator n_first, const_iterator last) KERBAL_NOEXCEPT
 			{
 				return iterator(list_type_unrelated::k_rotate(first, n_first, last));
 			}
@@ -1175,7 +1472,12 @@ namespace kerbal
 			template <typename T>
 			template <typename BinaryPredict>
 			KERBAL_CONSTEXPR20
-			void list_type_only<T>::k_merge_impl(list_type_only & other, BinaryPredict cmp, MERGE_VER_NOTHROW) KERBAL_NOEXCEPT
+			void
+			list_type_only<T>::
+			k_merge_impl(
+				list_type_only & other,
+				BinaryPredict cmp, MERGE_VER_NOTHROW
+			) KERBAL_NOEXCEPT
 			{
 				const_iterator it(this->cbegin());
 				const_iterator const end(this->cend());
@@ -1206,7 +1508,12 @@ namespace kerbal
 			template <typename T>
 			template <typename BinaryPredict>
 			KERBAL_CONSTEXPR20
-			void list_type_only<T>::k_merge_impl(list_type_only & other, BinaryPredict cmp, MERGE_VER_MAY_THROW)
+			void
+			list_type_only<T>::
+			k_merge_impl(
+				list_type_only & other, BinaryPredict cmp,
+				MERGE_VER_MAY_THROW
+			)
 			{
 				const_iterator it(this->cbegin());
 				const_iterator const end(this->cend());
@@ -1244,7 +1551,9 @@ namespace kerbal
 			template <typename T>
 			template <typename BinaryPredict>
 			KERBAL_CONSTEXPR20
-			void list_type_only<T>::k_merge(list_type_only & other, BinaryPredict cmp)
+			void
+			list_type_only<T>::
+			k_merge(list_type_only & other, BinaryPredict cmp)
 			{
 
 #		if KERBAL_HAS_EXCEPTIONS_SUPPORT
@@ -1252,9 +1561,12 @@ namespace kerbal
 #			if __cplusplus >= 201103L
 
 				typedef typename kerbal::type_traits::conditional<
-					noexcept(cmp(
+					noexcept(
+						cmp(
 							kerbal::utility::declval<const_reference>(),
-							kerbal::utility::declval<const_reference>())),
+							kerbal::utility::declval<const_reference>()
+						)
+					),
 					MERGE_VER_NOTHROW,
 					MERGE_VER_MAY_THROW
 				>::type MERGE_VERSION;
@@ -1272,7 +1584,9 @@ namespace kerbal
 
 			template <typename T>
 			KERBAL_CONSTEXPR20
-			void list_type_only<T>::k_merge(list_type_only& other)
+			void
+			list_type_only<T>::
+			k_merge(list_type_only & other)
 			{
 				this->k_merge(other, kerbal::compare::less<value_type>());
 			}
@@ -1281,11 +1595,18 @@ namespace kerbal
 			template <typename BinaryPredict>
 			inline
 			KERBAL_CONSTEXPR20
-			void list_type_only<T>::k_merge_sort_merge(const_iterator first, const_iterator mid, const_iterator last, BinaryPredict cmp, MSM_VER_NOTHROW)
+			void
+			list_type_only<T>::
+			k_merge_sort_merge(
+				const_iterator first, const_iterator mid, const_iterator last,
+				BinaryPredict cmp,
+				MSM_VER_NOTHROW
+			)
 			{
 				const_iterator before_mid(kerbal::iterator::prev(mid));
 				const_iterator i(first);
 				const_iterator j(mid);
+
 				while (i != mid) {
 					if (j != last) {
 						if (cmp(*j, *i)) {
@@ -1307,11 +1628,18 @@ namespace kerbal
 			template <typename BinaryPredict>
 			inline
 			KERBAL_CONSTEXPR20
-			void list_type_only<T>::k_merge_sort_merge(const_iterator first, const_iterator mid, const_iterator last, BinaryPredict cmp, MSM_VER_MAY_THROW)
+			void
+			list_type_only<T>::
+			k_merge_sort_merge(
+				const_iterator first, const_iterator mid, const_iterator last,
+				BinaryPredict cmp,
+				MSM_VER_MAY_THROW
+			)
 			{
 				const_iterator before_mid(kerbal::iterator::prev(mid));
 				const_iterator i(first);
 				const_iterator j(mid);
+
 				try {
 					while (i != mid) {
 						if (j != last) {
@@ -1339,7 +1667,12 @@ namespace kerbal
 			template <typename BinaryPredict>
 			inline
 			KERBAL_CONSTEXPR20
-			void list_type_only<T>::k_merge_sort_merge(const_iterator first, const_iterator mid, const_iterator last, BinaryPredict cmp)
+			void
+			list_type_only<T>::
+			k_merge_sort_merge(
+				const_iterator first, const_iterator mid, const_iterator last,
+				BinaryPredict cmp
+			)
 			{
 
 #		if KERBAL_HAS_EXCEPTIONS_SUPPORT
@@ -1347,11 +1680,14 @@ namespace kerbal
 #			if __cplusplus >= 201103L
 
 				typedef typename kerbal::type_traits::conditional<
-						noexcept(cmp(
-								kerbal::utility::declval<const_reference>(),
-								kerbal::utility::declval<const_reference>())),
-						MSM_VER_NOTHROW,
-						MSM_VER_MAY_THROW
+					noexcept(
+						cmp(
+							kerbal::utility::declval<const_reference>(),
+							kerbal::utility::declval<const_reference>()
+						)
+					),
+					MSM_VER_NOTHROW,
+					MSM_VER_MAY_THROW
 				>::type MSM_VERSION;
 
 #			else
@@ -1368,8 +1704,10 @@ namespace kerbal
 			template <typename T>
 			template <typename BinaryPredict>
 			KERBAL_CONSTEXPR20
-			typename list_type_only<T>::const_iterator
-			list_type_only<T>::k_merge_sort_n(const_iterator first, difference_type len, BinaryPredict cmp)
+			typename
+			list_type_only<T>::const_iterator
+			list_type_only<T>::
+			k_merge_sort_n(const_iterator first, difference_type len, BinaryPredict cmp)
 			{
 				if (len == 0) {
 					return first;
@@ -1403,7 +1741,9 @@ namespace kerbal
 			template <typename T>
 			template <typename BinaryPredict>
 			KERBAL_CONSTEXPR20
-			void list_type_only<T>::k_merge_sort(const_iterator first, const_iterator last, BinaryPredict cmp)
+			void
+			list_type_only<T>::
+			k_merge_sort(const_iterator first, const_iterator last, BinaryPredict cmp)
 			{
 				k_merge_sort_n(first, kerbal::iterator::distance(first, last), cmp);
 			}
@@ -1411,9 +1751,12 @@ namespace kerbal
 			template <typename T>
 			template <std::size_t RADIX_BIT_WIDTH>
 			KERBAL_CONSTEXPR20
-			void list_type_only<T>::k_radix_sort(
-					const_iterator first, const_iterator last, kerbal::type_traits::false_type asc,
-					kerbal::type_traits::integral_constant<std::size_t, RADIX_BIT_WIDTH>) KERBAL_NOEXCEPT
+			void
+			list_type_only<T>::
+			k_radix_sort(
+				const_iterator first, const_iterator last, kerbal::type_traits::false_type asc,
+				kerbal::type_traits::integral_constant<std::size_t, RADIX_BIT_WIDTH>
+			) KERBAL_NOEXCEPT
 			{
 				typedef kerbal::type_traits::integral_constant<std::size_t, 1 << RADIX_BIT_WIDTH> BUCKETS_NUM;
 				list_type_unrelated buckets[2][BUCKETS_NUM::value];
@@ -1460,9 +1803,12 @@ namespace kerbal
 			template <typename T>
 			template <std::size_t RADIX_BIT_WIDTH>
 			KERBAL_CONSTEXPR20
-			void list_type_only<T>::k_radix_sort(
-					const_iterator first, const_iterator last, kerbal::type_traits::true_type desc,
-					kerbal::type_traits::integral_constant<std::size_t, RADIX_BIT_WIDTH>) KERBAL_NOEXCEPT
+			void
+			list_type_only<T>::
+			k_radix_sort(
+				const_iterator first, const_iterator last, kerbal::type_traits::true_type desc,
+				kerbal::type_traits::integral_constant<std::size_t, RADIX_BIT_WIDTH>
+			) KERBAL_NOEXCEPT
 			{
 				typedef kerbal::type_traits::integral_constant<std::size_t, 1 << RADIX_BIT_WIDTH> BUCKETS_NUM;
 				list_type_unrelated buckets[2][BUCKETS_NUM::value];
@@ -1509,17 +1855,22 @@ namespace kerbal
 			template <typename T>
 			template <typename Order>
 			KERBAL_CONSTEXPR20
-			void list_type_only<T>::k_radix_sort(const_iterator first, const_iterator last, Order /*order*/) KERBAL_NOEXCEPT
+			void
+			list_type_only<T>::
+			k_radix_sort(const_iterator first, const_iterator last, Order /*order*/) KERBAL_NOEXCEPT
 			{
-				k_radix_sort(first, last, kerbal::type_traits::bool_constant<Order::value>(),
-						   kerbal::type_traits::integral_constant<std::size_t, CHAR_BIT>());
+				k_radix_sort(
+					first, last, kerbal::type_traits::bool_constant<Order::value>(),
+					kerbal::type_traits::integral_constant<std::size_t, CHAR_BIT>()
+				);
 			}
 
 			template <typename T>
 			template <bool is_radix_sort_acceptable_type>
 			KERBAL_CONSTEXPR20
 			typename kerbal::type_traits::enable_if<is_radix_sort_acceptable_type>::type
-			list_type_only<T>::k_radix_sort(const_iterator first, const_iterator last) KERBAL_NOEXCEPT
+			list_type_only<T>::
+			k_radix_sort(const_iterator first, const_iterator last) KERBAL_NOEXCEPT
 			{
 				k_radix_sort(first, last, kerbal::type_traits::false_type());
 			}
@@ -1528,7 +1879,8 @@ namespace kerbal
 			template <bool is_radix_sort_acceptable_type, typename BinaryPredict>
 			KERBAL_CONSTEXPR20
 			typename kerbal::type_traits::enable_if<is_radix_sort_acceptable_type>::type
-			list_type_only<T>::k_sort_method_overload(const_iterator first, const_iterator last, BinaryPredict cmp)
+			list_type_only<T>::
+			k_sort_method_overload(const_iterator first, const_iterator last, BinaryPredict cmp)
 			{
 				k_merge_sort(first, last, cmp);
 			}
@@ -1537,7 +1889,8 @@ namespace kerbal
 			template <bool is_radix_sort_acceptable_type>
 			KERBAL_CONSTEXPR20
 			typename kerbal::type_traits::enable_if<is_radix_sort_acceptable_type>::type
-			list_type_only<T>::k_sort_method_overload(const_iterator first, const_iterator last, kerbal::compare::less<value_type> /*cmp*/)
+			list_type_only<T>::
+			k_sort_method_overload(const_iterator first, const_iterator last, kerbal::compare::less<value_type> /*cmp*/)
 			{
 				k_radix_sort(first, last, kerbal::type_traits::false_type());
 			}
@@ -1546,7 +1899,8 @@ namespace kerbal
 			template <bool is_radix_sort_acceptable_type>
 			KERBAL_CONSTEXPR20
 			typename kerbal::type_traits::enable_if<is_radix_sort_acceptable_type>::type
-			list_type_only<T>::k_sort_method_overload(const_iterator first, const_iterator last, kerbal::compare::greater<value_type> /*cmp*/)
+			list_type_only<T>::
+			k_sort_method_overload(const_iterator first, const_iterator last, kerbal::compare::greater<value_type> /*cmp*/)
 			{
 				k_radix_sort(first, last, kerbal::type_traits::true_type());
 			}
@@ -1555,7 +1909,8 @@ namespace kerbal
 			template <bool is_radix_sort_acceptable_type>
 			KERBAL_CONSTEXPR20
 			typename kerbal::type_traits::enable_if<is_radix_sort_acceptable_type>::type
-			list_type_only<T>::k_sort_method_overload(const_iterator first, const_iterator last, kerbal::compare::less<void> /*cmp*/)
+			list_type_only<T>::
+			k_sort_method_overload(const_iterator first, const_iterator last, kerbal::compare::less<void> /*cmp*/)
 			{
 				k_radix_sort(first, last, kerbal::type_traits::false_type());
 			}
@@ -1564,7 +1919,8 @@ namespace kerbal
 			template <bool is_radix_sort_acceptable_type>
 			KERBAL_CONSTEXPR20
 			typename kerbal::type_traits::enable_if<is_radix_sort_acceptable_type>::type
-			list_type_only<T>::k_sort_method_overload(const_iterator first, const_iterator last, kerbal::compare::greater<void> /*cmp*/)
+			list_type_only<T>::
+			k_sort_method_overload(const_iterator first, const_iterator last, kerbal::compare::greater<void> /*cmp*/)
 			{
 				k_radix_sort(first, last, kerbal::type_traits::true_type());
 			}
@@ -1573,7 +1929,8 @@ namespace kerbal
 			template <bool is_radix_sort_acceptable_type>
 			KERBAL_CONSTEXPR20
 			typename kerbal::type_traits::enable_if<is_radix_sort_acceptable_type>::type
-			list_type_only<T>::k_sort_method_overload(const_iterator first, const_iterator last, std::less<value_type> /*cmp*/)
+			list_type_only<T>::
+			k_sort_method_overload(const_iterator first, const_iterator last, std::less<value_type> /*cmp*/)
 			{
 				k_radix_sort(first, last, kerbal::type_traits::false_type());
 			}
@@ -1582,7 +1939,8 @@ namespace kerbal
 			template <bool is_radix_sort_acceptable_type>
 			KERBAL_CONSTEXPR20
 			typename kerbal::type_traits::enable_if<is_radix_sort_acceptable_type>::type
-			list_type_only<T>::k_sort_method_overload(const_iterator first, const_iterator last, std::greater<value_type> /*cmp*/)
+			list_type_only<T>::
+			k_sort_method_overload(const_iterator first, const_iterator last, std::greater<value_type> /*cmp*/)
 			{
 				k_radix_sort(first, last, kerbal::type_traits::true_type());
 			}
@@ -1593,7 +1951,8 @@ namespace kerbal
 			template <bool is_radix_sort_acceptable_type>
 			KERBAL_CONSTEXPR20
 			typename kerbal::type_traits::enable_if<is_radix_sort_acceptable_type>::type
-			list_type_only<T>::k_sort_method_overload(const_iterator first, const_iterator last, std::less<void> /*cmp*/)
+			list_type_only<T>::
+			k_sort_method_overload(const_iterator first, const_iterator last, std::less<void> /*cmp*/)
 			{
 				k_radix_sort(first, last, kerbal::type_traits::false_type());
 			}
@@ -1602,7 +1961,8 @@ namespace kerbal
 			template <bool is_radix_sort_acceptable_type>
 			KERBAL_CONSTEXPR20
 			typename kerbal::type_traits::enable_if<is_radix_sort_acceptable_type>::type
-			list_type_only<T>::k_sort_method_overload(const_iterator first, const_iterator last, std::greater<void> /*cmp*/)
+			list_type_only<T>::
+			k_sort_method_overload(const_iterator first, const_iterator last, std::greater<void> /*cmp*/)
 			{
 				k_radix_sort(first, last, kerbal::type_traits::true_type());
 			}
@@ -1613,7 +1973,8 @@ namespace kerbal
 			template <bool is_radix_sort_acceptable_type, typename BinaryPredict>
 			KERBAL_CONSTEXPR20
 			typename kerbal::type_traits::enable_if<!is_radix_sort_acceptable_type>::type
-			list_type_only<T>::k_sort_method_overload(const_iterator first, const_iterator last, BinaryPredict cmp)
+			list_type_only<T>::
+			k_sort_method_overload(const_iterator first, const_iterator last, BinaryPredict cmp)
 			{
 				k_merge_sort(first, last, cmp);
 			}
@@ -1621,7 +1982,9 @@ namespace kerbal
 			template <typename T>
 			template <typename BinaryPredict>
 			KERBAL_CONSTEXPR20
-			void list_type_only<T>::k_sort(const_iterator first, const_iterator last, BinaryPredict cmp)
+			void
+			list_type_only<T>::
+			k_sort(const_iterator first, const_iterator last, BinaryPredict cmp)
 			{
 //				k_merge_sort(first, last, cmp);
 				k_sort_method_overload<is_list_radix_sort_acceptable_type<value_type>::value>(first, last, cmp);
@@ -1629,7 +1992,9 @@ namespace kerbal
 
 			template <typename T>
 			KERBAL_CONSTEXPR20
-			void list_type_only<T>::k_sort(const_iterator first, const_iterator last)
+			void
+			list_type_only<T>::
+			k_sort(const_iterator first, const_iterator last)
 			{
 				k_sort(first, last, kerbal::compare::less<value_type>());
 			}
@@ -1637,14 +2002,18 @@ namespace kerbal
 			template <typename T>
 			template <typename BinaryPredict>
 			KERBAL_CONSTEXPR20
-			void list_type_only<T>::sort(BinaryPredict cmp)
+			void
+			list_type_only<T>::
+			sort(BinaryPredict cmp)
 			{
 				k_sort(this->begin(), this->end(), cmp);
 			}
 
 			template <typename T>
 			KERBAL_CONSTEXPR20
-			void list_type_only<T>::sort()
+			void
+			list_type_only<T>::
+			sort()
 			{
 				k_sort(this->begin(), this->end());
 			}
@@ -1652,8 +2021,10 @@ namespace kerbal
 			template <typename T>
 			template <typename NodeAllocator>
 			KERBAL_CONSTEXPR20
-			typename list_type_only<T>::size_type
-			list_type_only<T>::k_remove_using_allocator(NodeAllocator & alloc, const_reference val)
+			typename
+			list_type_only<T>::size_type
+			list_type_only<T>::
+			k_remove_using_allocator(NodeAllocator & alloc, const_reference val)
 			{
 				return k_remove_using_allocator(alloc, this->cbegin(), this->cend(), val);
 			}
@@ -1661,8 +2032,10 @@ namespace kerbal
 			template <typename T>
 			template <typename NodeAllocator>
 			KERBAL_CONSTEXPR20
-			typename list_type_only<T>::size_type
-			list_type_only<T>::k_remove_using_allocator(NodeAllocator & alloc, const_iterator first, const_iterator last, const_reference val)
+			typename
+			list_type_only<T>::size_type
+			list_type_only<T>::
+			k_remove_using_allocator(NodeAllocator & alloc, const_iterator first, const_iterator last, const_reference val)
 			{
 				return k_remove_if_using_allocator(alloc, first, last, remove_predict(val));
 			}
@@ -1670,8 +2043,10 @@ namespace kerbal
 			template <typename T>
 			template <typename NodeAllocator, typename UnaryPredicate>
 			KERBAL_CONSTEXPR20
-			typename list_type_only<T>::size_type
-			list_type_only<T>::k_remove_if_using_allocator(NodeAllocator & alloc, UnaryPredicate predicate)
+			typename
+			list_type_only<T>::size_type
+			list_type_only<T>::
+			k_remove_if_using_allocator(NodeAllocator & alloc, UnaryPredicate predicate)
 			{
 				return k_remove_if_using_allocator(alloc, this->cbegin(), this->cend(), predicate);
 			}
@@ -1679,8 +2054,10 @@ namespace kerbal
 			template <typename T>
 			template <typename NodeAllocator, typename UnaryPredicate>
 			KERBAL_CONSTEXPR20
-			typename list_type_only<T>::size_type
-			list_type_only<T>::k_remove_if_using_allocator(NodeAllocator & alloc, const_iterator first, const_iterator last, UnaryPredicate predicate)
+			typename
+			list_type_only<T>::size_type
+			list_type_only<T>::
+			k_remove_if_using_allocator(NodeAllocator & alloc, const_iterator first, const_iterator last, UnaryPredicate predicate)
 			{
 				size_type i = 0;
 				while (first != last) {
@@ -1699,8 +2076,12 @@ namespace kerbal
 			template <typename T>
 			template <typename NodeAllocator>
 			KERBAL_CONSTEXPR20
-			typename list_type_only<T>::size_type
-			list_type_only<T>::k_unique_using_allocator(NodeAllocator & alloc)
+			typename
+			list_type_only<T>::size_type
+			list_type_only<T>::
+			k_unique_using_allocator(
+				NodeAllocator & alloc
+			)
 			{
 				return k_unique_using_allocator(alloc, this->cbegin(), this->cend());
 			}
@@ -1708,8 +2089,13 @@ namespace kerbal
 			template <typename T>
 			template <typename NodeAllocator, typename BinaryPredicate>
 			KERBAL_CONSTEXPR20
-			typename list_type_only<T>::size_type
-			list_type_only<T>::k_unique_using_allocator(NodeAllocator & alloc, BinaryPredicate pred)
+			typename
+			list_type_only<T>::size_type
+			list_type_only<T>::
+			k_unique_using_allocator(
+				NodeAllocator & alloc,
+				BinaryPredicate pred
+			)
 			{
 				return k_unique_using_allocator(alloc, this->cbegin(), this->cend(), pred);
 			}
@@ -1717,8 +2103,13 @@ namespace kerbal
 			template <typename T>
 			template <typename NodeAllocator>
 			KERBAL_CONSTEXPR20
-			typename list_type_only<T>::size_type
-			list_type_only<T>::k_unique_using_allocator(NodeAllocator & alloc, const_iterator first, const_iterator last)
+			typename
+			list_type_only<T>::size_type
+			list_type_only<T>::
+			k_unique_using_allocator(
+				NodeAllocator & alloc,
+				const_iterator first, const_iterator last
+			)
 			{
 				return k_unique_using_allocator(alloc, first, last, kerbal::compare::equal_to<value_type>());
 			}
@@ -1726,14 +2117,18 @@ namespace kerbal
 			template <typename T>
 			template <typename NodeAllocator, typename BinaryPredicate>
 			KERBAL_CONSTEXPR20
-			typename list_type_only<T>::size_type
-			list_type_only<T>::k_unique_using_allocator(NodeAllocator & alloc, const_iterator first, const_iterator last, BinaryPredicate pred)
+			typename
+			list_type_only<T>::size_type
+			list_type_only<T>::
+			k_unique_using_allocator(
+				NodeAllocator & alloc,
+				const_iterator first, const_iterator last,
+				BinaryPredicate pred
+			)
 			{
 				size_type r = 0;
-
 				if (first != last) {
 					const_iterator forward(first); ++forward;
-
 					while (forward != last) {
 						if (pred(*first, *forward)) {
 							node_base * p = list_type_unrelated::k_unhook_node(forward++.cast_to_mutable());
@@ -1746,14 +2141,20 @@ namespace kerbal
 						}
 					}
 				}
-
 				return r;
 			}
 
 			template <typename T>
 			template <typename BinaryPredict>
 			KERBAL_CONSTEXPR20
-			void list_type_only<T>::k_set_difference(list_type_only & l1, const list_type_only & l2, list_type_only & lto, BinaryPredict cmp)
+			void
+			list_type_only<T>::
+			k_set_difference(
+				list_type_only & l1,
+				const list_type_only & l2,
+				list_type_only & lto,
+				BinaryPredict cmp
+			)
 			{
 				const_iterator it1(l1.cbegin());
 				const_iterator it2(l2.cbegin());
@@ -1779,15 +2180,31 @@ namespace kerbal
 
 			template <typename T>
 			KERBAL_CONSTEXPR20
-			void list_type_only<T>::k_set_difference(list_type_only & l1, const list_type_only & l2, list_type_only & lto)
+			void
+			list_type_only<T>::
+			k_set_difference(
+				list_type_only & l1,
+				const list_type_only & l2,
+				list_type_only & lto
+			)
 			{
-				list_type_only::k_set_difference(l1, l2, lto, kerbal::compare::less<value_type>());
+				list_type_only::k_set_difference(
+					l1, l2, lto,
+					kerbal::compare::less<value_type>()
+				);
 			}
 
 			template <typename T>
 			template <typename BinaryPredict>
 			KERBAL_CONSTEXPR20
-			void list_type_only<T>::k_set_intersection(list_type_only & l1, list_type_only & l2, list_type_only & lto, BinaryPredict cmp)
+			void
+			list_type_only<T>::
+			k_set_intersection(
+				list_type_only & l1,
+				list_type_only & l2,
+				list_type_only & lto,
+				BinaryPredict cmp
+			)
 			{
 				const_iterator it1(l1.cbegin());
 				const_iterator it2(l2.cbegin());
@@ -1812,15 +2229,31 @@ namespace kerbal
 
 			template <typename T>
 			KERBAL_CONSTEXPR20
-			void list_type_only<T>::k_set_intersection(list_type_only & l1, list_type_only & l2, list_type_only & lto)
+			void
+			list_type_only<T>::
+			k_set_intersection(
+				list_type_only & l1,
+				list_type_only & l2,
+				list_type_only & lto
+			)
 			{
-				list_type_only::k_set_intersection(l1, l2, lto, kerbal::compare::less<value_type>());
+				list_type_only::k_set_intersection(
+					l1, l2, lto,
+					kerbal::compare::less<value_type>()
+				);
 			}
 
 			template <typename T>
 			template <typename BinaryPredict>
 			KERBAL_CONSTEXPR20
-			void list_type_only<T>::k_set_symmetric_difference(list_type_only & l1, list_type_only & l2, list_type_only & lto, BinaryPredict cmp)
+			void
+			list_type_only<T>::
+			k_set_symmetric_difference(
+				list_type_only & l1,
+				list_type_only & l2,
+				list_type_only & lto,
+				BinaryPredict cmp
+			)
 			{
 				const_iterator it1(l1.cbegin());
 				const_iterator it2(l2.cbegin());
@@ -1847,15 +2280,31 @@ namespace kerbal
 
 			template <typename T>
 			KERBAL_CONSTEXPR20
-			void list_type_only<T>::k_set_symmetric_difference(list_type_only & l1, list_type_only & l2, list_type_only & lto)
+			void
+			list_type_only<T>::
+			k_set_symmetric_difference(
+				list_type_only & l1,
+				list_type_only & l2,
+				list_type_only & lto
+			)
 			{
-				list_type_only::k_set_symmetric_difference(l1, l2, lto, kerbal::compare::less<value_type>());
+				list_type_only::k_set_symmetric_difference(
+					l1, l2, lto,
+					kerbal::compare::less<value_type>()
+				);
 			}
 
 			template <typename T>
 			template <typename BinaryPredict>
 			KERBAL_CONSTEXPR20
-			void list_type_only<T>::k_set_union(list_type_only & l1, list_type_only & l2, list_type_only & lto, BinaryPredict cmp)
+			void
+			list_type_only<T>::
+			k_set_union(
+				list_type_only & l1,
+				list_type_only & l2,
+				list_type_only & lto,
+				BinaryPredict cmp
+			)
 			{
 				const_iterator it1(l1.cbegin());
 				const_iterator it2(l2.cbegin());
@@ -1883,9 +2332,18 @@ namespace kerbal
 
 			template <typename T>
 			KERBAL_CONSTEXPR20
-			void list_type_only<T>::k_set_union(list_type_only & l1, list_type_only & l2, list_type_only & lto)
+			void
+			list_type_only<T>::
+			k_set_union(
+				list_type_only & l1,
+				list_type_only & l2,
+				list_type_only & lto
+			)
 			{
-				list_type_only::k_set_union(l1, l2, lto, kerbal::compare::less<value_type>());
+				list_type_only::k_set_union(
+					l1, l2, lto,
+					kerbal::compare::less<value_type>()
+				);
 			}
 
 
@@ -1900,10 +2358,14 @@ namespace kerbal
 			template <bool nothrow_while_construct, typename NodeAllocator, typename ... Args>
 			KERBAL_CONSTEXPR20
 			typename kerbal::type_traits::enable_if<
-					!nothrow_while_construct,
-					typename list_type_only<T>::node*
+				!nothrow_while_construct,
+				typename list_type_only<T>::node *
 			>::type
-			list_type_only<T>::k_build_new_node_impl(NodeAllocator & alloc, Args&& ... args)
+			list_type_only<T>::
+			k_build_new_node_impl(
+				NodeAllocator & alloc,
+				Args && ... args
+			)
 			{
 				typedef kerbal::memory::allocator_traits<NodeAllocator> node_allocator_traits;
 				node * p = node_allocator_traits::allocate_one(alloc);
@@ -1920,13 +2382,17 @@ namespace kerbal
 			template <bool nothrow_while_construct, typename NodeAllocator, typename ... Args>
 			KERBAL_CONSTEXPR20
 			typename kerbal::type_traits::enable_if<
-					nothrow_while_construct,
-					typename list_type_only<T>::node*
+				nothrow_while_construct,
+				typename list_type_only<T>::node *
 			>::type
-			list_type_only<T>::k_build_new_node_impl(NodeAllocator & alloc, Args&& ... args)
-					KERBAL_CONDITIONAL_NOEXCEPT(
-							noexcept(kerbal::memory::allocator_traits<NodeAllocator>::allocate_one(alloc))
-					)
+			list_type_only<T>::
+			k_build_new_node_impl(
+				NodeAllocator & alloc,
+				Args && ... args
+			)
+				KERBAL_CONDITIONAL_NOEXCEPT(
+					noexcept(kerbal::memory::allocator_traits<NodeAllocator>::allocate_one(alloc))
+				)
 			{
 				typedef kerbal::memory::allocator_traits<NodeAllocator> node_allocator_traits;
 				node * p = node_allocator_traits::allocate_one(alloc);
@@ -1937,18 +2403,23 @@ namespace kerbal
 			template <typename T>
 			template <typename NodeAllocator, typename ... Args>
 			KERBAL_CONSTEXPR20
-			typename list_type_only<T>::node*
-			list_type_only<T>::k_build_new_node(NodeAllocator & alloc, Args&& ... args)
+			typename
+			list_type_only<T>::node *
+			list_type_only<T>::
+			k_build_new_node(
+				NodeAllocator & alloc,
+				Args && ... args
+			)
 			{
 				typedef kerbal::memory::allocator_traits<NodeAllocator> node_allocator_traits;
 				typedef
 				kerbal::type_traits::bool_constant<
-						noexcept(
-								node_allocator_traits::construct(
-										alloc, kerbal::utility::declval<node*>(),
-										kerbal::utility::in_place_t(), kerbal::utility::forward<Args>(args)...
-								)
+					noexcept(
+						node_allocator_traits::construct(
+							alloc, kerbal::utility::declval<node *>(),
+							kerbal::utility::in_place_t(), kerbal::utility::forward<Args>(args)...
 						)
+					)
 				> nothrow_while_construct;
 
 				return k_build_new_node_impl<nothrow_while_construct::value>(alloc, kerbal::utility::forward<Args>(args)...);
@@ -1959,8 +2430,13 @@ namespace kerbal
 			template <typename T>
 			template <typename NodeAllocator, typename ... Args>
 			KERBAL_CONSTEXPR20
-			typename list_type_only<T>::node*
-			list_type_only<T>::k_build_new_node(NodeAllocator & alloc, Args&& ... args)
+			typename
+			list_type_only<T>::node *
+			list_type_only<T>::
+			k_build_new_node(
+				NodeAllocator & alloc,
+				Args && ... args
+			)
 			{
 				typedef kerbal::memory::allocator_traits<NodeAllocator> node_allocator_traits;
 				node * p = node_allocator_traits::allocate_one(alloc);
@@ -1980,12 +2456,22 @@ namespace kerbal
 #		define TARGS_DECL(i) typename KERBAL_MACRO_CONCAT(Arg, i)
 #		define ARGS_DECL(i) const KERBAL_MACRO_CONCAT(Arg, i) & KERBAL_MACRO_CONCAT(arg, i)
 #		define ARGS_USE(i) KERBAL_MACRO_CONCAT(arg, i)
+
 #	if KERBAL_HAS_EXCEPTIONS_SUPPORT
+
 #		define FBODY(i) \
 			template <typename T> \
-			template <typename NodeAllocator KERBAL_OPT_PPEXPAND_WITH_COMMA_N(LEFT_JOIN_COMMA, EMPTY, TARGS_DECL, i)> \
-			typename list_type_only<T>::node* \
-			list_type_only<T>::k_build_new_node(NodeAllocator & alloc KERBAL_OPT_PPEXPAND_WITH_COMMA_N(LEFT_JOIN_COMMA, EMPTY, ARGS_DECL, i)) \
+			template < \
+				typename NodeAllocator \
+				KERBAL_OPT_PPEXPAND_WITH_COMMA_N(LEFT_JOIN_COMMA, EMPTY, TARGS_DECL, i) \
+			> \
+			typename \
+			list_type_only<T>::node * \
+			list_type_only<T>:: \
+			k_build_new_node( \
+				NodeAllocator & alloc \
+				KERBAL_OPT_PPEXPAND_WITH_COMMA_N(LEFT_JOIN_COMMA, EMPTY, ARGS_DECL, i) \
+			) \
 			{ \
 				typedef kerbal::memory::allocator_traits<NodeAllocator> node_allocator_traits; \
 				node * p = node_allocator_traits::allocate_one(alloc); \
@@ -1996,13 +2482,20 @@ namespace kerbal
 					throw; \
 				} \
 				return p; \
-			}
+			} \
+
 #	else // KERBAL_HAS_EXCEPTIONS_SUPPORT
+
 #		define FBODY(i) \
 			template <typename T> \
 			template <typename NodeAllocator KERBAL_OPT_PPEXPAND_WITH_COMMA_N(LEFT_JOIN_COMMA, EMPTY, TARGS_DECL, i)> \
-			typename list_type_only<T>::node* \
-			list_type_only<T>::k_build_new_node(NodeAllocator & alloc KERBAL_OPT_PPEXPAND_WITH_COMMA_N(LEFT_JOIN_COMMA, EMPTY, ARGS_DECL, i)) \
+			typename \
+			list_type_only<T>::node * \
+			list_type_only<T>:: \
+			k_build_new_node( \
+				NodeAllocator & alloc \
+				KERBAL_OPT_PPEXPAND_WITH_COMMA_N(LEFT_JOIN_COMMA, EMPTY, ARGS_DECL, i) \
+			) \
 			{ \
 				typedef kerbal::memory::allocator_traits<NodeAllocator> node_allocator_traits; \
 				node * p = node_allocator_traits::allocate_one(alloc); \
@@ -2011,7 +2504,8 @@ namespace kerbal
 				} \
 				node_allocator_traits::construct(alloc, p, kerbal::utility::in_place_t() KERBAL_OPT_PPEXPAND_WITH_COMMA_N(LEFT_JOIN_COMMA, EMPTY, ARGS_USE, i)); \
 				return p; \
-			}
+			} \
+
 #	endif // KERBAL_HAS_EXCEPTIONS_SUPPORT
 
 			KERBAL_PPEXPAND_N(FBODY, KERBAL_PPEXPAND_EMPTY_SEPARATOR, 0)
@@ -2033,7 +2527,11 @@ namespace kerbal
 			template <typename NodeAllocator, typename... Args>
 			KERBAL_CONSTEXPR20
 			list_node_chain<T>
-			list_type_only<T>::k_build_n_new_nodes_unguarded(NodeAllocator & alloc, size_type n, Args&& ... args)
+			list_type_only<T>::
+			k_build_n_new_nodes_unguarded(
+				NodeAllocator & alloc,
+				size_type n, Args && ... args
+			)
 			{
 				size_type cnt = 0;
 				node_base head;
@@ -2050,8 +2548,8 @@ namespace kerbal
 						++cnt;
 					} while (cnt != n);
 					return list_node_chain<T>(
-							node::reinterpret_as(head.next),
-							node::reinterpret_as(prev)
+						node::reinterpret_as(head.next),
+						node::reinterpret_as(prev)
 					);
 #		if KERBAL_HAS_EXCEPTIONS_SUPPORT
 				} catch (...) {
@@ -2068,12 +2566,19 @@ namespace kerbal
 #		define TARGS_DECL(i) typename KERBAL_MACRO_CONCAT(Arg, i)
 #		define ARGS_DECL(i) const KERBAL_MACRO_CONCAT(Arg, i) & KERBAL_MACRO_CONCAT(arg, i)
 #		define ARGS_USE(i) KERBAL_MACRO_CONCAT(arg, i)
+
 #	if KERBAL_HAS_EXCEPTIONS_SUPPORT
+
 #		define FBODY(i) \
 			template <typename T> \
 			template <typename NodeAllocator KERBAL_OPT_PPEXPAND_WITH_COMMA_N(LEFT_JOIN_COMMA, EMPTY, TARGS_DECL, i)> \
 			list_node_chain<T> \
-			list_type_only<T>::k_build_n_new_nodes_unguarded(NodeAllocator & alloc, size_type n KERBAL_OPT_PPEXPAND_WITH_COMMA_N(LEFT_JOIN_COMMA, EMPTY, ARGS_DECL, i)) \
+			list_type_only<T>:: \
+			k_build_n_new_nodes_unguarded( \
+				NodeAllocator & alloc, \
+				size_type n \
+				KERBAL_OPT_PPEXPAND_WITH_COMMA_N(LEFT_JOIN_COMMA, EMPTY, ARGS_DECL, i) \
+			) \
 			{ \
 				size_type cnt = 0; \
 				node_base head; \
@@ -2088,20 +2593,27 @@ namespace kerbal
 						++cnt; \
 					} while (cnt != n); \
 					return list_node_chain<T>( \
-							node::reinterpret_as(head.next), \
-							node::reinterpret_as(prev) \
+						node::reinterpret_as(head.next), \
+						node::reinterpret_as(prev) \
 					); \
 				} catch (...) { \
 					k_consecutive_destroy_node(alloc, head.next); \
 					throw; \
 				} \
-			}
+			} \
+
 #	else // KERBAL_HAS_EXCEPTIONS_SUPPORT
+
 #		define FBODY(i) \
 			template <typename T> \
 			template <typename NodeAllocator KERBAL_OPT_PPEXPAND_WITH_COMMA_N(LEFT_JOIN_COMMA, EMPTY, TARGS_DECL, i)> \
 			list_node_chain<T> \
-			list_type_only<T>::k_build_n_new_nodes_unguarded(NodeAllocator & alloc, size_type n KERBAL_OPT_PPEXPAND_WITH_COMMA_N(LEFT_JOIN_COMMA, EMPTY, ARGS_DECL, i)) \
+			list_type_only<T>:: \
+			k_build_n_new_nodes_unguarded( \
+				NodeAllocator & alloc, \
+				size_type n \
+				KERBAL_OPT_PPEXPAND_WITH_COMMA_N(LEFT_JOIN_COMMA, EMPTY, ARGS_DECL, i) \
+			) \
 			{ \
 				size_type cnt = 0; \
 				node_base head; \
@@ -2115,10 +2627,11 @@ namespace kerbal
 					++cnt; \
 				} while (cnt != n); \
 				return list_node_chain<T>( \
-						node::reinterpret_as(head.next), \
-						node::reinterpret_as(prev) \
+					node::reinterpret_as(head.next), \
+					node::reinterpret_as(prev) \
 				); \
-			}
+			} \
+
 #	endif // KERBAL_HAS_EXCEPTIONS_SUPPORT
 
 			KERBAL_PPEXPAND_N(FBODY, KERBAL_PPEXPAND_EMPTY_SEPARATOR, 0)
@@ -2138,10 +2651,14 @@ namespace kerbal
 			template <typename NodeAllocator, typename InputIterator>
 			KERBAL_CONSTEXPR20
 			typename kerbal::type_traits::enable_if<
-					kerbal::iterator::is_input_compatible_iterator<InputIterator>::value,
-					list_node_chain<T>
+				kerbal::iterator::is_input_compatible_iterator<InputIterator>::value,
+				list_node_chain<T>
 			>::type
-			list_type_only<T>::k_build_new_nodes_range_unguarded(NodeAllocator & alloc, InputIterator first, InputIterator last)
+			list_type_only<T>::
+			k_build_new_nodes_range_unguarded(
+				NodeAllocator & alloc,
+				InputIterator first, InputIterator last
+			)
 			{
 				node_base head;
 				node_base * prev = &head;
@@ -2157,8 +2674,8 @@ namespace kerbal
 						++first;
 					} while (first != last);
 					return list_node_chain<T>(
-							node::reinterpret_as(head.next),
-							node::reinterpret_as(prev)
+						node::reinterpret_as(head.next),
+						node::reinterpret_as(prev)
 					);
 #			if KERBAL_HAS_EXCEPTIONS_SUPPORT
 				} catch (...) {
@@ -2172,21 +2689,23 @@ namespace kerbal
 			template <typename T>
 			template <typename NodeAllocator>
 			KERBAL_CONSTEXPR20
-			void list_type_only<T>::k_destroy_node(NodeAllocator & alloc, node_base* p_node_base)
-					KERBAL_CONDITIONAL_NOEXCEPT(
-						noexcept(
-							kerbal::memory::allocator_traits<NodeAllocator>::destroy(
-								alloc,
-								kerbal::utility::declval<typename kerbal::memory::allocator_traits<NodeAllocator>::pointer>()
-							)
-						) &&
-						noexcept(
-							kerbal::memory::allocator_traits<NodeAllocator>::deallocate_one(
-								alloc,
-								kerbal::utility::declval<typename kerbal::memory::allocator_traits<NodeAllocator>::pointer>()
-							)
+			void
+			list_type_only<T>::
+			k_destroy_node(NodeAllocator & alloc, node_base * p_node_base)
+				KERBAL_CONDITIONAL_NOEXCEPT(
+					noexcept(
+						kerbal::memory::allocator_traits<NodeAllocator>::destroy(
+							alloc,
+							kerbal::utility::declval<typename kerbal::memory::allocator_traits<NodeAllocator>::pointer>()
+						)
+					) &&
+					noexcept(
+						kerbal::memory::allocator_traits<NodeAllocator>::deallocate_one(
+							alloc,
+							kerbal::utility::declval<typename kerbal::memory::allocator_traits<NodeAllocator>::pointer>()
 						)
 					)
+				)
 			{
 				typedef kerbal::memory::allocator_traits<NodeAllocator> node_allocator_traits;
 				typedef typename node_allocator_traits::pointer allocator_pointer_type;
@@ -2200,10 +2719,16 @@ namespace kerbal
 			template <typename T>
 			template <typename NodeAllocator>
 			KERBAL_CONSTEXPR20
-			void list_type_only<T>::k_consecutive_destroy_node_impl(NodeAllocator & alloc, node_base * start, CNSCTV_DES_VER_DEFAULT)
-					KERBAL_CONDITIONAL_NOEXCEPT(
-							noexcept(k_destroy_node(alloc, kerbal::utility::declval<node_base*>()))
-					)
+			void
+			list_type_only<T>::
+			k_consecutive_destroy_node_impl(
+				NodeAllocator & alloc,
+				node_base * start,
+				CNSCTV_DES_VER_DEFAULT
+			)
+				KERBAL_CONDITIONAL_NOEXCEPT(
+					noexcept(k_destroy_node(alloc, kerbal::utility::declval<node_base *>()))
+				)
 			{
 				node_base * current_node_base = start;
 				while (current_node_base != NULL) {
@@ -2216,13 +2741,19 @@ namespace kerbal
 			template <typename T>
 			template <typename NodeAllocator>
 			KERBAL_CONSTEXPR20
-			void list_type_only<T>::k_consecutive_destroy_node_impl(NodeAllocator & alloc, node_base * start, CNSCTV_DES_VER_DESTROY_BUT_NO_DEALLOCATE)
-					KERBAL_CONDITIONAL_NOEXCEPT(
-							noexcept(kerbal::memory::allocator_traits<NodeAllocator>::destroy(
-									alloc,
-									kerbal::utility::declval<typename kerbal::memory::allocator_traits<NodeAllocator>::pointer>())
-							)
+			void
+			list_type_only<T>::
+			k_consecutive_destroy_node_impl(
+				NodeAllocator & alloc,
+				node_base * start,
+				CNSCTV_DES_VER_DESTROY_BUT_NO_DEALLOCATE
+			)
+				KERBAL_CONDITIONAL_NOEXCEPT(
+					noexcept(kerbal::memory::allocator_traits<NodeAllocator>::destroy(
+						alloc,
+						kerbal::utility::declval<typename kerbal::memory::allocator_traits<NodeAllocator>::pointer>())
 					)
+				)
 			{
 				typedef kerbal::memory::allocator_traits<NodeAllocator> node_allocator_traits;
 				typedef typename node_allocator_traits::pointer allocator_pointer_type;
@@ -2240,17 +2771,28 @@ namespace kerbal
 			template <typename T>
 			template <typename NodeAllocator>
 			KERBAL_CONSTEXPR20
-			void list_type_only<T>::k_consecutive_destroy_node_impl(NodeAllocator & /*alloc*/, node_base * /*start*/, CNSCTV_DES_VER_NO_DESTROY) KERBAL_NOEXCEPT
+			void
+			list_type_only<T>::
+			k_consecutive_destroy_node_impl(
+				NodeAllocator & /*alloc*/,
+				node_base * /*start*/,
+				CNSCTV_DES_VER_NO_DESTROY
+			) KERBAL_NOEXCEPT
 			{
 			}
 
 			template <typename T>
 			template <typename NodeAllocator>
 			KERBAL_CONSTEXPR20
-			void list_type_only<T>::k_consecutive_destroy_node(NodeAllocator & alloc, node_base * start)
-					KERBAL_CONDITIONAL_NOEXCEPT(
-							noexcept(k_consecutive_destroy_node_impl(alloc, start, CNSCTV_DES_VER_DEFAULT()))
-					)
+			void
+			list_type_only<T>::
+			k_consecutive_destroy_node(
+				NodeAllocator & alloc,
+				node_base * start
+			)
+				KERBAL_CONDITIONAL_NOEXCEPT(
+					noexcept(k_consecutive_destroy_node_impl(alloc, start, CNSCTV_DES_VER_DEFAULT()))
+				)
 			{
 				k_consecutive_destroy_node_impl(alloc, start, CNSCTV_DES_VER_DEFAULT());
 			}
@@ -2258,7 +2800,12 @@ namespace kerbal
 			template <typename T>
 			template <typename U, typename UpstreamAllocator>
 			KERBAL_CONSTEXPR20
-			void list_type_only<T>::k_consecutive_destroy_node(kerbal::memory::monotonic_allocator<U, UpstreamAllocator> & alloc, node_base * start)
+			void
+			list_type_only<T>::
+			k_consecutive_destroy_node(
+				kerbal::memory::monotonic_allocator<U, UpstreamAllocator> & alloc,
+				node_base * start
+			)
 			{
 				typedef typename kerbal::type_traits::conditional<
 					kerbal::type_traits::try_test_is_trivially_destructible<T>::IS_TRUE::value,
@@ -2274,15 +2821,20 @@ namespace kerbal
 			template <typename T>
 			template <typename Node>
 			KERBAL_CONSTEXPR20
-			void list_type_only<T>::k_consecutive_destroy_node(std::pmr::polymorphic_allocator<Node> & alloc, node_base * start)
-					KERBAL_CONDITIONAL_NOEXCEPT(
-						(
-							!kerbal::type_traits::try_test_is_trivially_destructible<T>::IS_TRUE::value ?
-							noexcept(k_consecutive_destroy_node_impl(alloc, start, CNSCTV_DES_VER_DESTROY_BUT_NO_DEALLOCATE())) :
-							true
-						) &&
-						noexcept(k_consecutive_destroy_node_impl(alloc, start, CNSCTV_DES_VER_DEFAULT()))
-					)
+			void
+			list_type_only<T>::
+			k_consecutive_destroy_node(
+				std::pmr::polymorphic_allocator<Node> & alloc,
+				node_base * start
+			)
+				KERBAL_CONDITIONAL_NOEXCEPT(
+					(
+						!kerbal::type_traits::try_test_is_trivially_destructible<T>::IS_TRUE::value ?
+						noexcept(k_consecutive_destroy_node_impl(alloc, start, CNSCTV_DES_VER_DESTROY_BUT_NO_DEALLOCATE())) :
+						true
+					) &&
+					noexcept(k_consecutive_destroy_node_impl(alloc, start, CNSCTV_DES_VER_DEFAULT()))
+				)
 			{
 				if (typeid(*alloc.resource()) == typeid(std::pmr::monotonic_buffer_resource)) {
 					if constexpr (!kerbal::type_traits::try_test_is_trivially_destructible<T>::IS_TRUE::value) {

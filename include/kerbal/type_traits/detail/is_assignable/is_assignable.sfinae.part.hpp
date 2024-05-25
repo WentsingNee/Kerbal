@@ -83,12 +83,12 @@ namespace kerbal
 
 			template <typename T>
 			struct is_assignable_compat_declval :
-					is_assignable_compat_declval_helper<
-						T,
-						kerbal::type_traits::is_array<T>::value ||
-						kerbal::type_traits::is_function<T>::value ||
-						kerbal::type_traits::is_reference<T>::value
-					>
+				is_assignable_compat_declval_helper<
+					T,
+					kerbal::type_traits::is_array<T>::value ||
+					kerbal::type_traits::is_function<T>::value ||
+					kerbal::type_traits::is_reference<T>::value
+				>
 			{
 			};
 
@@ -106,16 +106,16 @@ namespace kerbal
 
 					template <typename T2, typename U2>
 					static kerbal::type_traits::yes_type test(char(*)[sizeof(
-							is_assignable_compat_declval<T2>::decl() = is_assignable_compat_declval<U2>::decl(),
-							0
+						is_assignable_compat_declval<T2>::decl() = is_assignable_compat_declval<U2>::decl(),
+						0
 					)]);
 
 #else
 
 					template <typename T2, typename U2>
 					static kerbal::type_traits::yes_type test(char *, decltype(
-							is_assignable_compat_declval<T2>::decl() = is_assignable_compat_declval<U2>::decl(),
-							0
+						is_assignable_compat_declval<T2>::decl() = is_assignable_compat_declval<U2>::decl(),
+						0
 					) = 0);
 
 #endif
@@ -130,7 +130,7 @@ namespace kerbal
 
 		template <typename T, typename U>
 		struct is_assignable :
-				kerbal::type_traits::detail::is_assignable_helper<T, U>::type
+			kerbal::type_traits::detail::is_assignable_helper<T, U>::type
 		{
 		};
 

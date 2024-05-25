@@ -42,7 +42,7 @@ namespace kerbal
 #	endif
 
 		template <typename T>
-		T*
+		T *
 		declthis() KERBAL_NOEXCEPT;
 
 	} // namespace utility

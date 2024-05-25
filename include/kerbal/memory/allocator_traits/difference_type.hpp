@@ -25,16 +25,17 @@ namespace kerbal
 	{
 
 		template <typename Alloc, typename = kerbal::type_traits::void_type<>::type>
-		struct allocator_has_def_difference_type: kerbal::type_traits::false_type
+		struct allocator_has_def_difference_type :
+			kerbal::type_traits::false_type
 		{
 		};
 
 		template <typename Alloc>
 		struct allocator_has_def_difference_type<
-				Alloc,
-				typename kerbal::type_traits::void_type<typename Alloc::difference_type>::type
+			Alloc,
+			typename kerbal::type_traits::void_type<typename Alloc::difference_type>::type
 		> :
-				kerbal::type_traits::true_type
+			kerbal::type_traits::true_type
 		{
 		};
 

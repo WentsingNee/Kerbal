@@ -30,12 +30,13 @@ namespace kerbal
 		struct incrementable
 		{
 				KERBAL_CONSTEXPR14
-				friend T operator++(T& x, int)
+				friend
+				T operator++(T & x, int)
 #	if KERBAL_COMPILER_ID != KERBAL_COMPILER_ID_ICC
-						KERBAL_CONDITIONAL_NOEXCEPT(
-							kerbal::type_traits::try_test_is_nothrow_copy_constructible<T>::IS_TRUE::value &&
-							noexcept(++x)
-						)
+					KERBAL_CONDITIONAL_NOEXCEPT(
+						kerbal::type_traits::try_test_is_nothrow_copy_constructible<T>::IS_TRUE::value &&
+						noexcept(++x)
+					)
 #	endif
 				{
 					T tmp(x);
@@ -48,12 +49,13 @@ namespace kerbal
 		struct decrementable
 		{
 				KERBAL_CONSTEXPR14
-				friend T operator--(T& x, int)
+				friend
+				T operator--(T & x, int)
 #	if KERBAL_COMPILER_ID != KERBAL_COMPILER_ID_ICC
-						KERBAL_CONDITIONAL_NOEXCEPT(
-							kerbal::type_traits::try_test_is_nothrow_copy_constructible<T>::IS_TRUE::value &&
-							noexcept(--x)
-						)
+					KERBAL_CONDITIONAL_NOEXCEPT(
+						kerbal::type_traits::try_test_is_nothrow_copy_constructible<T>::IS_TRUE::value &&
+						noexcept(--x)
+					)
 #	endif
 				{
 					T tmp(x);

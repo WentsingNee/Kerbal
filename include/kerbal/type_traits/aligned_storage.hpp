@@ -26,14 +26,14 @@ namespace kerbal
 		template <std::size_t Len, std::size_t Alignment>
 		struct aligned_storage
 		{
-			union type
-			{
-				unsigned char k_data[Len];
-
-				struct KERBAL_ALIGNAS(Alignment)
+				union type
 				{
-				} k_align;
-			};
+						unsigned char k_data[Len];
+
+						struct KERBAL_ALIGNAS(Alignment)
+						{
+						} k_align;
+				};
 		};
 
 	} // namespace type_traits

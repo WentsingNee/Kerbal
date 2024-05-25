@@ -43,11 +43,14 @@
 #define KERBAL_CLANG_VERSION_MEETS(major, minor, patchlevel) \
 ( \
 	KERBAL_CLANG_MAJOR > (major) || \
-	(KERBAL_CLANG_MAJOR == (major) && \
-		(KERBAL_CLANG_MINOR > (minor) || \
-		(KERBAL_CLANG_MINOR == (minor) && \
-			KERBAL_CLANG_PATCHLEVEL >= (patchlevel) \
-		) \
+	( \
+		KERBAL_CLANG_MAJOR == (major) && \
+		( \
+			KERBAL_CLANG_MINOR > (minor) || \
+			( \
+				KERBAL_CLANG_MINOR == (minor) && \
+				KERBAL_CLANG_PATCHLEVEL >= (patchlevel) \
+			) \
 		) \
 	) \
 )

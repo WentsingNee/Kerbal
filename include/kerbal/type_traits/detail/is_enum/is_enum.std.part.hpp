@@ -47,7 +47,8 @@ namespace kerbal
 	{
 
 		template <typename T>
-		struct is_enum : kerbal::type_traits::bool_constant<std::is_enum<T>::value>
+		struct is_enum :
+			kerbal::type_traits::bool_constant<std::is_enum<T>::value>
 		{
 		};
 

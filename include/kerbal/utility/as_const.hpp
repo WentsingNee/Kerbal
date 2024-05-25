@@ -26,7 +26,7 @@ namespace kerbal
 		template <typename T>
 		KERBAL_CONSTEXPR
 		typename kerbal::type_traits::add_const<T>::type &
-		as_const(T& ref) KERBAL_NOEXCEPT
+		as_const(T & ref) KERBAL_NOEXCEPT
 		{
 			return ref;
 		}
@@ -34,7 +34,7 @@ namespace kerbal
 #	if __cplusplus >= 201103L
 
 		template <typename T>
-		void as_const(const T&&) = delete;
+		void as_const(const T &&) = delete;
 
 #	endif
 

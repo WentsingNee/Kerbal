@@ -48,9 +48,9 @@ namespace kerbal
 
 		template <typename Base, typename Derived>
 		struct is_base_of :
-				kerbal::type_traits::bool_constant<
-					std::is_base_of<Base, Derived>::value
-				>
+			kerbal::type_traits::bool_constant<
+				std::is_base_of<Base, Derived>::value
+			>
 		{
 		};
 

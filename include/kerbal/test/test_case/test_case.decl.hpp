@@ -41,19 +41,20 @@ namespace kerbal
 
 		struct assert_item
 		{
-				const char* file;
+				const char * file;
 				int line;
-				const char* item;
+				const char * item;
 				test_case_running_result::circumstance result;
 
-				assert_item(const char * file,
-						int line,
-						const char * item) KERBAL_NOEXCEPT
-					:
-						file(file),
-						line(line),
-						item(item),
-						result(test_case_running_result::SUCCESS)
+				assert_item(
+					const char * file,
+					int line,
+					const char * item
+				) KERBAL_NOEXCEPT :
+					file(file),
+					line(line),
+					item(item),
+					result(test_case_running_result::SUCCESS)
 				{
 				}
 		};
@@ -66,19 +67,20 @@ namespace kerbal
 		struct test_case
 		{
 
-				typedef void (*call_ptr_t) (kerbal::test::assert_record&);
+				typedef void (*call_ptr_t) (kerbal::test::assert_record &);
 
 				const char * name;
 				call_ptr_t call_ptr;
 				const char * description;
 
-				test_case(const char * name,
-						  call_ptr_t call_ptr,
-						  const char * description) KERBAL_NOEXCEPT
-					:
-						name(name),
-						call_ptr(call_ptr),
-						description(description)
+				test_case(
+					const char * name,
+					call_ptr_t call_ptr,
+					const char * description
+				) KERBAL_NOEXCEPT :
+					name(name),
+					call_ptr(call_ptr),
+					description(description)
 				{
 				}
 
@@ -90,20 +92,21 @@ namespace kerbal
 		{
 
 			int register_test_suit(
-					const char * name,
-					kerbal::test::test_case::call_ptr_t call_ptr,
-					const char * description) KERBAL_NOEXCEPT;
+				const char * name,
+				kerbal::test::test_case::call_ptr_t call_ptr,
+				const char * description
+			) KERBAL_NOEXCEPT;
 
 		} // namespace detail
 
 		int run_test_case(std::size_t case_id, int, char * []);
 
-		int select_test_case(int argc, char* argv[]);
+		int select_test_case(int argc, char * argv[]);
 
-		int run_all_test_case(int argc, char* argv[]);
+		int run_all_test_case(int argc, char * argv[]);
 
 		template <typename T, typename U>
-		bool compare_and_out(const T& lhs, const U& rhs)
+		bool compare_and_out(const T & lhs, const U & rhs)
 		{
 			if (lhs != rhs) {
 				puts("CHECK EQUAL FAILED!");
@@ -120,14 +123,14 @@ namespace kerbal
 
 
 #define KERBAL_TEST_CASE(name, description) \
-	void name(kerbal::test::assert_record&); \
+	void name(kerbal::test::assert_record &); \
 	static const int KERBAL_JOIN_LINE(kerbal_test_register_unit_tag) KERBAL_ATTRIBUTE_UNUSED = \
 		(kerbal::test::detail::register_test_suit(#name, name, description), 0); \
-	void name(kerbal::test::assert_record& record)
+	void name(kerbal::test::assert_record & record)
 
 
 #define KERBAL_TEMPLATE_TEST_CASE(name, description) \
-	void name(kerbal::test::assert_record& record)
+	void name(kerbal::test::assert_record & record)
 
 #define KERBAL_TEMPLATE_TEST_CASE_INST(name, description, ...) \
 	static const int KERBAL_JOIN_LINE(kerbal_test_register_unit_tag) KERBAL_ATTRIBUTE_UNUSED = \

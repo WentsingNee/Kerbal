@@ -26,9 +26,11 @@ namespace kerbal
 		template <typename InputIterator, typename ForwardIterator, typename BinaryPredicate>
 		KERBAL_CONSTEXPR14
 		InputIterator
-		find_first_of(InputIterator first, InputIterator last,
-						ForwardIterator s_first, ForwardIterator s_last,
-						BinaryPredicate pred)
+		find_first_of(
+			InputIterator first, InputIterator last,
+			ForwardIterator s_first, ForwardIterator s_last,
+			BinaryPredicate pred
+		)
 		{
 			while (first != last) {
 				for (ForwardIterator it(s_first); it != s_last; ++it) {
@@ -44,14 +46,18 @@ namespace kerbal
 		template <typename InputIterator, typename ForwardIterator>
 		KERBAL_CONSTEXPR14
 		InputIterator
-		find_first_of(InputIterator first, InputIterator last,
-						ForwardIterator s_first, ForwardIterator s_last)
+		find_first_of(
+			InputIterator first, InputIterator last,
+			ForwardIterator s_first, ForwardIterator s_last
+		)
 		{
 			typedef typename kerbal::iterator::iterator_traits<InputIterator>::value_type value_type1;
 			typedef typename kerbal::iterator::iterator_traits<ForwardIterator>::value_type value_type2;
 
-			return kerbal::algorithm::find_first_of(first, last, s_first, s_last,
-					kerbal::compare::binary_type_equal_to<value_type1, value_type2>());
+			return kerbal::algorithm::find_first_of(
+				first, last, s_first, s_last,
+				kerbal::compare::binary_type_equal_to<value_type1, value_type2>()
+			);
 		}
 
 	} // namespace algorithm

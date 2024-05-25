@@ -83,7 +83,10 @@ namespace kerbal
 #if KERBAL_RANDOM_ENABLE_MT_TWIST_IE_OPTIMISE
 
 			template <typename UIntType, std::size_t N, std::size_t M, std::size_t R, UIntType A>
-			void mt_twist_fix_integer_simd_dispatch(UIntType mt[N], kerbal::type_traits::integral_constant<std::size_t, 32>) KERBAL_NOEXCEPT
+			void mt_twist_fix_integer_simd_dispatch(
+				UIntType mt[N],
+				kerbal::type_traits::integral_constant<std::size_t, 32>
+			) KERBAL_NOEXCEPT
 			{
 				kerbal::compatibility::uint32_t * mtr = reinterpret_cast<kerbal::compatibility::uint32_t *>(mt);
 
@@ -109,7 +112,10 @@ namespace kerbal
 			}
 
 			template <typename UIntType, std::size_t N, std::size_t M, std::size_t R, UIntType A>
-			void mt_twist_fix_integer_simd_dispatch(UIntType mt[N], kerbal::type_traits::integral_constant<std::size_t, 64>) KERBAL_NOEXCEPT
+			void mt_twist_fix_integer_simd_dispatch(
+				UIntType mt[N],
+				kerbal::type_traits::integral_constant<std::size_t, 64>
+			) KERBAL_NOEXCEPT
 			{
 				kerbal::compatibility::uint64_t * mtr = reinterpret_cast<kerbal::compatibility::uint64_t *>(mt);
 
@@ -134,7 +140,10 @@ namespace kerbal
 
 			template <typename UIntType, std::size_t N, std::size_t M, std::size_t R, UIntType A, std::size_t Size>
 			KERBAL_CONSTEXPR14
-			void mt_twist_fix_integer_simd_dispatch(UIntType mt[N], kerbal::type_traits::integral_constant<std::size_t, Size>) KERBAL_NOEXCEPT
+			void mt_twist_fix_integer_simd_dispatch(
+				UIntType mt[N],
+				kerbal::type_traits::integral_constant<std::size_t, Size>
+			) KERBAL_NOEXCEPT
 			{
 				plain::mt_twist<UIntType, N, M, R, A>(mt);
 			}
@@ -153,7 +162,10 @@ namespace kerbal
 
 					static void fix_integer_type_dispatch(UIntType mt[N]) KERBAL_NOEXCEPT
 					{
-						mt_twist_fix_integer_simd_dispatch<UIntType, N, M, R, A>(mt, kerbal::type_traits::integral_constant<std::size_t, CHAR_BIT * sizeof(UIntType)>());
+						mt_twist_fix_integer_simd_dispatch<UIntType, N, M, R, A>(
+							mt,
+							kerbal::type_traits::integral_constant<std::size_t, CHAR_BIT * sizeof(UIntType)>()
+						);
 					}
 
 					KERBAL_CONSTEXPR14
@@ -164,8 +176,8 @@ namespace kerbal
 
 #		if KERBAL_HAS_IS_CONSTANT_EVALUATED_SUPPORT
 						KERBAL_IS_CONSTANT_EVALUATED() ?
-								plain::mt_twist<UIntType, N, M, R, A>(mt) :
-								fix_integer_type_dispatch(mt);
+							plain::mt_twist<UIntType, N, M, R, A>(mt) :
+							fix_integer_type_dispatch(mt);
 #		else
 						plain::mt_twist<UIntType, N, M, R, A>(mt);
 #		endif

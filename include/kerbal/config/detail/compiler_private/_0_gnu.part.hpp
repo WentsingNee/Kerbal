@@ -43,11 +43,14 @@
 #define KERBAL_GNU_VERSION_MEETS(major, minor, patchlevel) \
 ( \
 	KERBAL_GNU_MAJOR > (major) || \
-	(KERBAL_GNU_MAJOR == (major) && \
-		(KERBAL_GNU_MINOR > (minor) || \
-		(KERBAL_GNU_MINOR == (minor) && \
-			KERBAL_GNU_PATCHLEVEL >= (patchlevel) \
-		) \
+	( \
+		KERBAL_GNU_MAJOR == (major) && \
+		( \
+			KERBAL_GNU_MINOR > (minor) || \
+			( \
+				KERBAL_GNU_MINOR == (minor) && \
+				KERBAL_GNU_PATCHLEVEL >= (patchlevel) \
+			) \
 		) \
 	) \
 )

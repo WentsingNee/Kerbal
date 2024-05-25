@@ -58,7 +58,7 @@ namespace kerbal
 
 			public:
 				friend
-				std::ostream& operator<<(std::ostream& out, const SHA1_result & result)
+				std::ostream & operator<<(std::ostream & out, const SHA1_result & result)
 				{
 					char tmp[41];
 					tmp[40] = '\0';

@@ -39,7 +39,7 @@ namespace kerbal
 
 			template <typename T>
 			struct try_test_is_standard_layout_helper :
-					kerbal::type_traits::try_test_is_scalar<T>
+				kerbal::type_traits::try_test_is_scalar<T>
 			{
 			};
 
@@ -47,9 +47,9 @@ namespace kerbal
 
 		template <typename T>
 		struct try_test_is_standard_layout :
-				kerbal::type_traits::detail::try_test_is_standard_layout_helper<
-					typename kerbal::type_traits::remove_all_extents<T>::type
-				>
+			kerbal::type_traits::detail::try_test_is_standard_layout_helper<
+				typename kerbal::type_traits::remove_all_extents<T>::type
+			>
 		{
 		};
 

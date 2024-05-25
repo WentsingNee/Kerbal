@@ -37,10 +37,10 @@ namespace kerbal
 
 		template <typename T>
 		struct is_nothrow_move_assignable :
-				kerbal::type_traits::is_nothrow_assignable<
-					typename kerbal::type_traits::add_lvalue_reference<T>::type,
-					typename kerbal::type_traits::add_rvalue_reference<T>::type
-				>
+			kerbal::type_traits::is_nothrow_assignable<
+				typename kerbal::type_traits::add_lvalue_reference<T>::type,
+				typename kerbal::type_traits::add_rvalue_reference<T>::type
+			>
 		{
 		};
 

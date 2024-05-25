@@ -47,7 +47,8 @@ namespace kerbal
 	{
 
 		template <typename T>
-		struct is_empty : kerbal::type_traits::bool_constant<std::is_empty<T>::value>
+		struct is_empty :
+			kerbal::type_traits::bool_constant<std::is_empty<T>::value>
 		{
 		};
 

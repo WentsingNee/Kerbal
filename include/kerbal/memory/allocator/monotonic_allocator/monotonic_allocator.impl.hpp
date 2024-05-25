@@ -38,23 +38,23 @@ namespace kerbal
 
 		template <typename T, typename UpstreamAllocator>
 		monotonic_allocator<T, UpstreamAllocator>::monotonic_allocator() KERBAL_NOEXCEPT :
-				k_list(),
-				k_current_pure_buffer_head(NULL),
-				k_current_used_in_bytes(0),
-				k_current_buffer_end(NULL)
+			k_list(),
+			k_current_pure_buffer_head(NULL),
+			k_current_used_in_bytes(0),
+			k_current_buffer_end(NULL)
 		{
 		}
 
 		template <typename T, typename UpstreamAllocator>
 		monotonic_allocator<T, UpstreamAllocator>::monotonic_allocator(const monotonic_allocator & src)
-				KERBAL_CONDITIONAL_NOEXCEPT(
-					try_test_is_nothrow_copy_constructible::IS_TRUE::value
-				) :
-				upstream_allocator_overload(src.upstream_alloc()),
-				k_list(),
-				k_current_pure_buffer_head(NULL),
-				k_current_used_in_bytes(0),
-				k_current_buffer_end(NULL)
+			KERBAL_CONDITIONAL_NOEXCEPT(
+				try_test_is_nothrow_copy_constructible::IS_TRUE::value
+			) :
+			upstream_allocator_overload(src.upstream_alloc()),
+			k_list(),
+			k_current_pure_buffer_head(NULL),
+			k_current_used_in_bytes(0),
+			k_current_buffer_end(NULL)
 		{
 		}
 
@@ -62,10 +62,10 @@ namespace kerbal
 
 		template <typename T, typename UpstreamAllocator>
 		monotonic_allocator<T, UpstreamAllocator>::monotonic_allocator(monotonic_allocator && src)
-				KERBAL_CONDITIONAL_NOEXCEPT(
-					try_test_is_nothrow_move_constructible::IS_TRUE::value
-				) :
-				monotonic_allocator()
+			KERBAL_CONDITIONAL_NOEXCEPT(
+				try_test_is_nothrow_move_constructible::IS_TRUE::value
+			) :
+			monotonic_allocator()
 		{
 			this->swap(src);
 		}
@@ -75,13 +75,13 @@ namespace kerbal
 		template <typename T, typename UpstreamAllocator>
 		template <typename U, typename UpstreamAllocator2>
 		monotonic_allocator<T, UpstreamAllocator>::monotonic_allocator(const monotonic_allocator<U, UpstreamAllocator2> &)
-				KERBAL_CONDITIONAL_NOEXCEPT(
-					try_test_is_nothrow_constructible_from_other::IS_TRUE::value
-				) :
-				k_list(),
-				k_current_pure_buffer_head(NULL),
-				k_current_used_in_bytes(0),
-				k_current_buffer_end(NULL)
+			KERBAL_CONDITIONAL_NOEXCEPT(
+				try_test_is_nothrow_constructible_from_other::IS_TRUE::value
+			) :
+			k_list(),
+			k_current_pure_buffer_head(NULL),
+			k_current_used_in_bytes(0),
+			k_current_buffer_end(NULL)
 		{
 		}
 
@@ -106,9 +106,9 @@ namespace kerbal
 		template <typename T, typename UpstreamAllocator>
 		monotonic_allocator<T, UpstreamAllocator> &
 		monotonic_allocator<T, UpstreamAllocator>::operator=(monotonic_allocator && src)
-				KERBAL_CONDITIONAL_NOEXCEPT(
-					try_test_is_nothrow_move_assignable::IS_TRUE::value
-				)
+			KERBAL_CONDITIONAL_NOEXCEPT(
+				try_test_is_nothrow_move_assignable::IS_TRUE::value
+			)
 		{
 			this->swap(src);
 			return *this;
@@ -118,7 +118,8 @@ namespace kerbal
 
 
 		template <typename T, typename UpstreamAllocator>
-		typename monotonic_allocator<T, UpstreamAllocator>::size_type
+		typename
+		monotonic_allocator<T, UpstreamAllocator>::size_type
 		monotonic_allocator<T, UpstreamAllocator>::get_next_pure_buffer_size() const
 		{
 			if (this->k_current_pure_buffer_head == NULL) {
@@ -139,10 +140,10 @@ namespace kerbal
 
 			std::size_t const basic_align = allocator_traits::minimum_alignment(upstream_alloc());
 			std::size_t gross_buffer_size =
-					kerbal::memory::alignment_maximum_offset(KERBAL_ALIGNOF(U), basic_align) +
-					sizeof(U) +
-					kerbal::memory::alignment_maximum_offset(ALIGNOF_T::value, KERBAL_ALIGNOF(U)) +
-					next_pure_buffer_size
+				kerbal::memory::alignment_maximum_offset(KERBAL_ALIGNOF(U), basic_align) +
+				sizeof(U) +
+				kerbal::memory::alignment_maximum_offset(ALIGNOF_T::value, KERBAL_ALIGNOF(U)) +
+				next_pure_buffer_size
 			;
 
 			void * const p_gross = allocator_traits::allocate(upstream_alloc(), gross_buffer_size);
@@ -161,14 +162,16 @@ namespace kerbal
 		}
 
 		template <typename T, typename UpstreamAllocator>
-		typename monotonic_allocator<T, UpstreamAllocator>::pointer
+		typename
+		monotonic_allocator<T, UpstreamAllocator>::pointer
 		monotonic_allocator<T, UpstreamAllocator>::allocate(size_type n)
 		{
 			return this->allocate(n, kerbal::memory::align_val_t(KERBAL_ALIGNOF(value_type)));
 		}
 
 		template <typename T, typename UpstreamAllocator>
-		typename monotonic_allocator<T, UpstreamAllocator>::pointer
+		typename
+		monotonic_allocator<T, UpstreamAllocator>::pointer
 		monotonic_allocator<T, UpstreamAllocator>::allocate(size_type n, kerbal::memory::align_val_t align)
 		{
 			if (n > MAX_SIZE::value) {
@@ -196,13 +199,13 @@ namespace kerbal
 
 		template <typename T, typename UpstreamAllocator>
 		void monotonic_allocator<T, UpstreamAllocator>::swap(monotonic_allocator & other)
-				KERBAL_CONDITIONAL_NOEXCEPT(
-					try_test_is_nothrow_swappable::IS_TRUE::value
-				)
+			KERBAL_CONDITIONAL_NOEXCEPT(
+				try_test_is_nothrow_swappable::IS_TRUE::value
+			)
 		{
 			upstream_allocator_overload::k_swap_allocator_if_propagate(
-					static_cast<upstream_allocator_overload &>(*this),
-					static_cast<upstream_allocator_overload &>(other)
+				static_cast<upstream_allocator_overload &>(*this),
+				static_cast<upstream_allocator_overload &>(other)
 			);
 			this->k_list.swap(other.k_list);
 			kerbal::algorithm::swap(this->k_current_pure_buffer_head, other.k_current_pure_buffer_head);

@@ -49,10 +49,10 @@ namespace kerbal
 				}
 
 				KERBAL_CONSTEXPR20
-				void operator()(T* ptr) const
-						KERBAL_CONDITIONAL_NOEXCEPT(
-							kerbal::type_traits::try_test_is_nothrow_destructible<T>::IS_TRUE::value
-						)
+				void operator()(T * ptr) const
+					KERBAL_CONDITIONAL_NOEXCEPT(
+						kerbal::type_traits::try_test_is_nothrow_destructible<T>::IS_TRUE::value
+					)
 				{
 					delete ptr;
 				}
@@ -82,10 +82,10 @@ namespace kerbal
 				}
 
 				KERBAL_CONSTEXPR20
-				void operator()(T* ptr) const
-						KERBAL_CONDITIONAL_NOEXCEPT(
-							kerbal::type_traits::try_test_is_nothrow_destructible<T>::IS_TRUE::value
-						)
+				void operator()(T * ptr) const
+					KERBAL_CONDITIONAL_NOEXCEPT(
+						kerbal::type_traits::try_test_is_nothrow_destructible<T>::IS_TRUE::value
+					)
 				{
 					delete[] ptr;
 				}

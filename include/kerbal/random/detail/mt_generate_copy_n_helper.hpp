@@ -76,11 +76,19 @@ namespace kerbal
 
 #if KERBAL_RANDOM_ENABLE_MT_GENERATE_COPY_N_IE_OPTIMISE
 
-			template <typename UIntType, std::size_t U, UIntType D, std::size_t S,
-					UIntType B, std::size_t T,
-					UIntType C, std::size_t L
+			template <
+				typename UIntType,
+				std::size_t U, UIntType D,
+				std::size_t S, UIntType B,
+				std::size_t T, UIntType C,
+				std::size_t L
 			>
-			void mt_generate_copy_n_fix_integer_simd_dispatch(const UIntType mt_now[], UIntType * out, std::size_t n, kerbal::type_traits::integral_constant<std::size_t, 32>) KERBAL_NOEXCEPT
+			void mt_generate_copy_n_fix_integer_simd_dispatch(
+				const UIntType mt_now[],
+				UIntType * out,
+				std::size_t n,
+				kerbal::type_traits::integral_constant<std::size_t, 32>
+			) KERBAL_NOEXCEPT
 			{
 				const kerbal::compatibility::uint32_t * mt_nowr = reinterpret_cast<const kerbal::compatibility::uint32_t *>(mt_now);
 				kerbal::compatibility::uint32_t * outr = reinterpret_cast<kerbal::compatibility::uint32_t *>(out);
@@ -105,11 +113,19 @@ namespace kerbal
 #		endif
 			}
 
-			template <typename UIntType, std::size_t U, UIntType D, std::size_t S,
-					UIntType B, std::size_t T,
-					UIntType C, std::size_t L
+			template <
+				typename UIntType,
+				std::size_t U, UIntType D,
+				std::size_t S, UIntType B,
+				std::size_t T, UIntType C,
+				std::size_t L
 			>
-			void mt_generate_copy_n_fix_integer_simd_dispatch(const UIntType mt_now[], UIntType * out, std::size_t n, kerbal::type_traits::integral_constant<std::size_t, 64>) KERBAL_NOEXCEPT
+			void mt_generate_copy_n_fix_integer_simd_dispatch(
+				const UIntType mt_now[],
+				UIntType * out,
+				std::size_t n,
+				kerbal::type_traits::integral_constant<std::size_t, 64>
+			) KERBAL_NOEXCEPT
 			{
 				const kerbal::compatibility::uint64_t * mt_nowr = reinterpret_cast<const kerbal::compatibility::uint64_t *>(mt_now);
 				kerbal::compatibility::uint64_t * outr = reinterpret_cast<kerbal::compatibility::uint64_t *>(out);
@@ -134,12 +150,21 @@ namespace kerbal
 #		endif
 			}
 
-			template <typename UIntType, std::size_t U, UIntType D, std::size_t S,
-					UIntType B, std::size_t T,
-					UIntType C, std::size_t L, std::size_t Size
+			template <
+				typename UIntType,
+				std::size_t U, UIntType D,
+				std::size_t S, UIntType B,
+				std::size_t T, UIntType C,
+				std::size_t L,
+				std::size_t Size
 			>
 			KERBAL_CONSTEXPR14
-			void mt_generate_copy_n_fix_integer_simd_dispatch(const UIntType mt_now[], UIntType * out, std::size_t n, kerbal::type_traits::integral_constant<std::size_t, Size>) KERBAL_NOEXCEPT
+			void mt_generate_copy_n_fix_integer_simd_dispatch(
+				const UIntType mt_now[],
+				UIntType * out,
+				std::size_t n,
+				kerbal::type_traits::integral_constant<std::size_t, Size>
+			) KERBAL_NOEXCEPT
 			{
 				plain::mt_generate_copy_n<UIntType, UIntType *, U, D, S, B, T, C, L>(mt_now, out, n);
 			}
@@ -147,9 +172,12 @@ namespace kerbal
 #endif // KERBAL_RANDOM_ENABLE_MT_GENERATE_COPY_N_IE_OPTIMISE
 
 
-			template <typename UIntType, std::size_t U, UIntType D, std::size_t S,
-					UIntType B, std::size_t T,
-					UIntType C, std::size_t L
+			template <
+				typename UIntType,
+				std::size_t U, UIntType D,
+				std::size_t S, UIntType B,
+				std::size_t T, UIntType C,
+				std::size_t L
 			>
 			class mt_generate_copy_n_helper
 			{
@@ -161,7 +189,10 @@ namespace kerbal
 
 					static void fix_integer_type_dispatch(const result_type mt_now[], result_type * out, std::size_t n) KERBAL_NOEXCEPT
 					{
-						mt_generate_copy_n_fix_integer_simd_dispatch<UIntType, U, D, S, B, T, C, L>(mt_now, out, n, kerbal::type_traits::integral_constant<std::size_t, CHAR_BIT * sizeof(UIntType)>());
+						mt_generate_copy_n_fix_integer_simd_dispatch<UIntType, U, D, S, B, T, C, L>(
+							mt_now, out, n,
+							kerbal::type_traits::integral_constant<std::size_t, CHAR_BIT * sizeof(UIntType)>()
+						);
 					}
 
 					KERBAL_CONSTEXPR14
@@ -172,8 +203,8 @@ namespace kerbal
 
 #		if KERBAL_HAS_IS_CONSTANT_EVALUATED_SUPPORT
 						KERBAL_IS_CONSTANT_EVALUATED() ?
-								void(plain::mt_generate_copy_n<UIntType, result_type *, U, D, S, B, T, C, L>(mt_now, out, n)) :
-								fix_integer_type_dispatch(mt_now, out, n);
+							void(plain::mt_generate_copy_n<UIntType, result_type *, U, D, S, B, T, C, L>(mt_now, out, n)) :
+							fix_integer_type_dispatch(mt_now, out, n);
 #		else
 						plain::mt_generate_copy_n<UIntType, result_type *, U, D, S, B, T, C, L>(mt_now, out, n);
 #		endif

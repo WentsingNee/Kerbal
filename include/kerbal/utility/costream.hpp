@@ -41,17 +41,20 @@ namespace kerbal
 				public:
 					const int ID;
 
-					KERBAL_CONSTEXPR Color_t(int ID = -1) :
-							ID(ID)
+					KERBAL_CONSTEXPR
+					Color_t(int ID = -1) :
+						ID(ID)
 					{
 					}
 
-					KERBAL_CONSTEXPR bool operator==(const Color_t & with) const
+					KERBAL_CONSTEXPR
+					bool operator==(const Color_t & with) const
 					{
 						return this->ID == with.ID;
 					}
 
-					KERBAL_CONSTEXPR bool operator!=(const Color_t & with) const
+					KERBAL_CONSTEXPR
+					bool operator!=(const Color_t & with) const
 					{
 						return this->ID != with.ID;
 					}
@@ -79,7 +82,7 @@ namespace kerbal
 			;
 #endif
 
-			template <std::ostream& bind_ostream>
+			template <std::ostream & bind_ostream>
 			class costream
 			{
 				protected:
@@ -98,9 +101,9 @@ namespace kerbal
 							}
 
 							Init_bakup(DWORD handle) :
-									handle(::GetStdHandle(handle)), init_color(get_init_color()),
-									init_background(init_color >> 4),
-									init_foreground(init_color % 16)
+								handle(::GetStdHandle(handle)), init_color(get_init_color()),
+								init_background(init_color >> 4),
+								init_foreground(init_color % 16)
 							{
 							}
 
@@ -116,21 +119,21 @@ namespace kerbal
 
 				public:
 					KERBAL_CONSTEXPR costream(Color_t foreground = INIT, Color_t background = INIT) :
-							foreground(foreground), background(background)
+						foreground(foreground), background(background)
 					{
 					}
 
 					template <class Type>
-					const costream& operator<<(const Type & src) const
+					const costream & operator<<(const Type & src) const
 					{
 #if KERBAL_SYSTEM == KERBAL_SYSTEM_WINDOWS
 						HANDLE handle = bakup.handle;
 						WORD colorOld = bakup.init_color;
 						WORD color = (
-								this->background == INIT ?
-										bakup.init_background : this->background.ID) * 16
-								+ (this->foreground == INIT ?
-										bakup.init_foreground : this->foreground.ID);
+							this->background == INIT ?
+								bakup.init_background : this->background.ID) * 16
+							+ (this->foreground == INIT ?
+								bakup.init_foreground : this->foreground.ID);
 						SetConsoleTextAttribute(handle, color);
 						bind_ostream << src;
 						SetConsoleTextAttribute(handle, colorOld);
@@ -163,7 +166,7 @@ namespace kerbal
 						return *this;
 					}
 
-					const costream& operator<<(std::ostream& (*pf)(std::ostream&)) const
+					const costream & operator<<(std::ostream & (* pf)(std::ostream &)) const
 					{
 						pf(bind_ostream);
 						return *this;
@@ -171,7 +174,7 @@ namespace kerbal
 			};
 
 #if KERBAL_SYSTEM == KERBAL_SYSTEM_WINDOWS
-			template <std::ostream& bind_ostream>
+			template <std::ostream & bind_ostream>
 			const typename costream<bind_ostream>::Init_bakup costream<bind_ostream>::bakup(
 			STD_OUTPUT_HANDLE);
 

@@ -38,7 +38,7 @@ namespace kerbal
 
 #define DEF_FWD(NAME) \
 		template <typename T, typename U> \
-		struct KERBAL_MACRO_CONCAT(binary_type_, NAME);
+		struct KERBAL_MACRO_CONCAT(binary_type_, NAME); \
 
 
 #define DEF_PLAIN(NAME, OP) \
@@ -47,9 +47,9 @@ namespace kerbal
 		{ \
 				KERBAL_CONSTEXPR \
 				bool operator()(const T & lhs, const U & rhs) const \
-						KERBAL_CONDITIONAL_NOEXCEPT( \
-								noexcept(static_cast<bool>(lhs OP rhs)) \
-						) \
+					KERBAL_CONDITIONAL_NOEXCEPT( \
+						noexcept(static_cast<bool>(lhs OP rhs)) \
+					) \
 				{ \
 					KERBAL_STATIC_ASSERT( \
 						!( \
@@ -60,7 +60,7 @@ namespace kerbal
 					); \
 					return static_cast<bool>(lhs OP rhs); \
 				} \
-		};
+		}; \
 
 
 #	if __cplusplus < 201103L
@@ -77,7 +77,7 @@ namespace kerbal
 				{ \
 					return static_cast<bool>(KERBAL_MACRO_CONCAT(binary_type_, NAME)<T, U>()(lhs, rhs)); \
 				} \
-		};
+		}; \
 
 #	else
 
@@ -109,12 +109,12 @@ namespace kerbal
 				template <typename T> \
 				KERBAL_CONSTEXPR \
 				bool operator()(T && lhs, const U & rhs) const \
-						KERBAL_CONDITIONAL_NOEXCEPT(is_nothrow_invokable<T>::value) \
+					KERBAL_CONDITIONAL_NOEXCEPT(is_nothrow_invokable<T>::value) \
 				{ \
 					typedef typename kerbal::type_traits::remove_reference<T>::type TRRef; \
 					return static_cast<bool>(KERBAL_MACRO_CONCAT(binary_type_, NAME)<TRRef, U>()(kerbal::utility::forward<T>(lhs), rhs)); \
 				} \
-		};
+		}; \
 
 #	endif
 
@@ -133,7 +133,7 @@ namespace kerbal
 				{ \
 					return static_cast<bool>(KERBAL_MACRO_CONCAT(binary_type_, NAME)<T, U>()(lhs, rhs)); \
 				} \
-		};
+		}; \
 
 #	else
 
@@ -165,12 +165,17 @@ namespace kerbal
 				template <typename U> \
 				KERBAL_CONSTEXPR \
 				bool operator()(const T & lhs, U && rhs) const \
-						KERBAL_CONDITIONAL_NOEXCEPT(is_nothrow_invokable<U>::value) \
+					KERBAL_CONDITIONAL_NOEXCEPT(is_nothrow_invokable<U>::value) \
 				{ \
 					typedef typename kerbal::type_traits::remove_reference<U>::type URRef; \
-					return static_cast<bool>(KERBAL_MACRO_CONCAT(binary_type_, NAME)<T, URRef>()(lhs, kerbal::utility::forward<U>(rhs))); \
+					return static_cast<bool>( \
+						KERBAL_MACRO_CONCAT(binary_type_, NAME)<T, URRef>()( \
+							lhs, \
+							kerbal::utility::forward<U>(rhs) \
+						) \
+					); \
 				} \
-		};
+		}; \
 
 #	endif
 
@@ -189,7 +194,7 @@ namespace kerbal
 				{ \
 					return static_cast<bool>(KERBAL_MACRO_CONCAT(binary_type_, NAME)<T, U>()(lhs, rhs)); \
 				} \
-		};
+		}; \
 
 #	else
 
@@ -222,13 +227,18 @@ namespace kerbal
 				template <typename T, typename U> \
 				KERBAL_CONSTEXPR \
 				bool operator()(T && lhs, U && rhs) const \
-						KERBAL_CONDITIONAL_NOEXCEPT((is_nothrow_invokable<T, U>::value)) \
+					KERBAL_CONDITIONAL_NOEXCEPT((is_nothrow_invokable<T, U>::value)) \
 				{ \
 					typedef typename kerbal::type_traits::remove_reference<T>::type TRRef; \
 					typedef typename kerbal::type_traits::remove_reference<U>::type URRef; \
-					return static_cast<bool>(KERBAL_MACRO_CONCAT(binary_type_, NAME)<TRRef, URRef>()(kerbal::utility::forward<T>(lhs), kerbal::utility::forward<U>(rhs))); \
+					return static_cast<bool>( \
+						KERBAL_MACRO_CONCAT(binary_type_, NAME)<TRRef, URRef>()( \
+							kerbal::utility::forward<T>(lhs), \
+							kerbal::utility::forward<U>(rhs) \
+						) \
+					); \
 				} \
-		};
+		}; \
 
 #	endif
 
@@ -239,11 +249,19 @@ namespace kerbal
 		{ \
 				KERBAL_CONSTEXPR14 \
 				bool operator()(const T (&lhs)[N], const U (&rhs)[N]) const \
-						KERBAL_CONDITIONAL_NOEXCEPT(noexcept( \
-							static_cast<bool>(kerbal::compare::KERBAL_MACRO_CONCAT(sequence_, NAME)(lhs, rhs, KERBAL_MACRO_CONCAT(binary_type_, NAME)<T, U>())) \
-						)) \
+					KERBAL_CONDITIONAL_NOEXCEPT(noexcept( \
+						static_cast<bool>( \
+							kerbal::compare::KERBAL_MACRO_CONCAT(sequence_, NAME)( \
+								lhs, rhs, KERBAL_MACRO_CONCAT(binary_type_, NAME)<T, U>() \
+							) \
+						) \
+					)) \
 				{ \
-					return static_cast<bool>(kerbal::compare::KERBAL_MACRO_CONCAT(sequence_, NAME)(lhs, rhs, KERBAL_MACRO_CONCAT(binary_type_, NAME)<T, U>())); \
+					return static_cast<bool>( \
+						kerbal::compare::KERBAL_MACRO_CONCAT(sequence_, NAME)( \
+							lhs, rhs, KERBAL_MACRO_CONCAT(binary_type_, NAME)<T, U>() \
+						) \
+					); \
 				} \
 		};
 

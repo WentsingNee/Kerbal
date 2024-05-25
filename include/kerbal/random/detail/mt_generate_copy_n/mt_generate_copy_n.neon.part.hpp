@@ -35,11 +35,17 @@ namespace kerbal
 			namespace neon
 			{
 
-				template <std::size_t U, kerbal::compatibility::uint32_t D, std::size_t S,
-						kerbal::compatibility::uint32_t B, std::size_t T,
-						kerbal::compatibility::uint32_t C, std::size_t L
+				template <
+					std::size_t U, kerbal::compatibility::uint32_t D,
+					std::size_t S, kerbal::compatibility::uint32_t B,
+					std::size_t T, kerbal::compatibility::uint32_t C,
+					std::size_t L
 				>
-				void mt_generate_copy_n(const kerbal::compatibility::uint32_t mt_now[], kerbal::compatibility::uint32_t * out, std::size_t n) KERBAL_NOEXCEPT
+				void mt_generate_copy_n(
+					const kerbal::compatibility::uint32_t mt_now[],
+					kerbal::compatibility::uint32_t * out,
+					std::size_t n
+				) KERBAL_NOEXCEPT
 				{
 					typedef kerbal::compatibility::uint32_t result_type;
 
@@ -79,11 +85,17 @@ namespace kerbal
 
 				}
 
-				template <std::size_t U, kerbal::compatibility::uint64_t D, std::size_t S,
-						kerbal::compatibility::uint64_t B, std::size_t T,
-						kerbal::compatibility::uint64_t C, std::size_t L
+				template <
+					std::size_t U, kerbal::compatibility::uint64_t D,
+					std::size_t S, kerbal::compatibility::uint64_t B,
+					std::size_t T, kerbal::compatibility::uint64_t C,
+					std::size_t L
 				>
-				void mt_generate_copy_n(const kerbal::compatibility::uint64_t mt_now[], kerbal::compatibility::uint64_t * out, std::size_t n) KERBAL_NOEXCEPT
+				void mt_generate_copy_n(
+					const kerbal::compatibility::uint64_t mt_now[],
+					kerbal::compatibility::uint64_t * out,
+					std::size_t n
+				) KERBAL_NOEXCEPT
 				{
 					typedef kerbal::compatibility::uint64_t result_type;
 

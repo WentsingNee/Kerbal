@@ -37,15 +37,15 @@ namespace kerbal
 
 			public:
 
-				explicit istream_engine(std::istream& fin) :
-						fin(fin)
+				explicit istream_engine(std::istream & fin) :
+					fin(fin)
 				{
 				}
 
 				result_type operator()()
 				{
 					result_type ret;
-					fin.get().read(reinterpret_cast<char*>(&ret), sizeof(result_type));
+					fin.get().read(reinterpret_cast<char *>(&ret), sizeof(result_type));
 
 					return ret;
 				}
@@ -57,12 +57,17 @@ namespace kerbal
 					}
 				}
 
-				static KERBAL_CONSTEXPR result_type min() KERBAL_NOEXCEPT
+
+				KERBAL_CONSTEXPR
+				static
+				result_type min() KERBAL_NOEXCEPT
 				{
 					return std::numeric_limits<result_type>::min();
 				}
 
-				static KERBAL_CONSTEXPR result_type max() KERBAL_NOEXCEPT
+				KERBAL_CONSTEXPR
+				static
+				result_type max() KERBAL_NOEXCEPT
 				{
 					return std::numeric_limits<result_type>::max();
 				}

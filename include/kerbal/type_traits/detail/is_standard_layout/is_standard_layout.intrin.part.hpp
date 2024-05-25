@@ -34,7 +34,8 @@ namespace kerbal
 	{
 
 		template <typename T>
-		struct is_standard_layout : kerbal::type_traits::bool_constant<KERBAL_INTRINSIC_IS_STANDARD_LAYOUT(T)>
+		struct is_standard_layout :
+			kerbal::type_traits::bool_constant<KERBAL_INTRINSIC_IS_STANDARD_LAYOUT(T)>
 		{
 		};
 

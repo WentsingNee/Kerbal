@@ -32,11 +32,11 @@ namespace kerbal
 		{
 
 			class avl_iter_type_unrelated:
-					//forward iterator interface
-					public kerbal::operators::equality_comparable<avl_iter_type_unrelated>, // it != jt
-					public kerbal::operators::incrementable<avl_iter_type_unrelated>, // it++
-					//bidirectional iterator interface
-					public kerbal::operators::decrementable<avl_iter_type_unrelated> // it--
+				// forward iterator interface
+				public kerbal::operators::equality_comparable<avl_iter_type_unrelated>, // it != jt
+				public kerbal::operators::incrementable<avl_iter_type_unrelated>, // it++
+				// bidirectional iterator interface
+				public kerbal::operators::decrementable<avl_iter_type_unrelated> // it--
 			{
 				private:
 					friend class kerbal::container::detail::avl_kiter_type_unrelated;
@@ -56,28 +56,32 @@ namespace kerbal
 
 				protected:
 					KERBAL_CONSTEXPR
-					avl_iter_type_unrelated(ptr_to_head_node current) KERBAL_NOEXCEPT
-							: current(current)
+					avl_iter_type_unrelated(ptr_to_head_node current) KERBAL_NOEXCEPT :
+						current(current)
 					{
 					}
 
 				protected:
 					KERBAL_CONSTEXPR14
-					avl_iter_type_unrelated& operator++() KERBAL_NOEXCEPT
+					avl_iter_type_unrelated & operator++() KERBAL_NOEXCEPT
 					{
 						current = this->current->as_node_base()->inorder_next();
 						return *this;
 					}
 
 					KERBAL_CONSTEXPR14
-					avl_iter_type_unrelated& operator--() KERBAL_NOEXCEPT
+					avl_iter_type_unrelated & operator--() KERBAL_NOEXCEPT
 					{
 						current = this->current->inorder_prev();
 						return *this;
 					}
 
 					KERBAL_CONSTEXPR
-					friend bool operator==(const avl_iter_type_unrelated & lhs, const avl_iter_type_unrelated & rhs) KERBAL_NOEXCEPT
+					friend
+					bool operator==(
+						const avl_iter_type_unrelated & lhs,
+						const avl_iter_type_unrelated & rhs
+					) KERBAL_NOEXCEPT
 					{
 						return lhs.current == rhs.current;
 					}
@@ -85,11 +89,11 @@ namespace kerbal
 			};
 
 			class avl_kiter_type_unrelated:
-					//forward iterator interface
-					public kerbal::operators::equality_comparable<avl_kiter_type_unrelated>, // it != jt
-					public kerbal::operators::incrementable<avl_kiter_type_unrelated>, // it++
-					//bidirectional iterator interface
-					public kerbal::operators::decrementable<avl_kiter_type_unrelated> // it--
+				// forward iterator interface
+				public kerbal::operators::equality_comparable<avl_kiter_type_unrelated>, // it != jt
+				public kerbal::operators::incrementable<avl_kiter_type_unrelated>, // it++
+				// bidirectional iterator interface
+				public kerbal::operators::decrementable<avl_kiter_type_unrelated> // it--
 			{
 				private:
 					typedef avl_iter_type_unrelated basic_iterator;
@@ -110,34 +114,38 @@ namespace kerbal
 				protected:
 					KERBAL_CONSTEXPR
 					explicit avl_kiter_type_unrelated(const_ptr_to_head_node current) KERBAL_NOEXCEPT :
-							current(current)
+						current(current)
 					{
 					}
 
 				public:
 					KERBAL_CONSTEXPR
 					avl_kiter_type_unrelated(const basic_iterator & iter) KERBAL_NOEXCEPT :
-							current(iter.current)
+						current(iter.current)
 					{
 					}
 
 				protected:
 					KERBAL_CONSTEXPR14
-					avl_kiter_type_unrelated& operator++() KERBAL_NOEXCEPT
+					avl_kiter_type_unrelated & operator++() KERBAL_NOEXCEPT
 					{
 						current = this->current->as_node_base()->inorder_next();
 						return *this;
 					}
 
 					KERBAL_CONSTEXPR14
-					avl_kiter_type_unrelated& operator--() KERBAL_NOEXCEPT
+					avl_kiter_type_unrelated & operator--() KERBAL_NOEXCEPT
 					{
 						current = this->current->inorder_prev();
 						return *this;
 					}
 
 					KERBAL_CONSTEXPR
-					friend bool operator==(const avl_kiter_type_unrelated & lhs, const avl_kiter_type_unrelated & rhs) KERBAL_NOEXCEPT
+					friend
+					bool operator==(
+						const avl_kiter_type_unrelated & lhs,
+						const avl_kiter_type_unrelated & rhs
+					) KERBAL_NOEXCEPT
 					{
 						return lhs.current == rhs.current;
 					}
@@ -152,13 +160,13 @@ namespace kerbal
 
 			template <typename T>
 			class avl_iter:
-					avl_iter_type_unrelated,
-					//forward iterator interface
-					public kerbal::operators::dereferenceable<avl_iter<T>, T*>, // it->
-					public kerbal::operators::equality_comparable<avl_iter<T> >, // it != jt
-					public kerbal::operators::incrementable<avl_iter<T> >, // it++
-					//bidirectional iterator interface
-					public kerbal::operators::decrementable<avl_iter<T> > // it--
+				avl_iter_type_unrelated,
+				// forward iterator interface
+				public kerbal::operators::dereferenceable<avl_iter<T>, T *>, // it->
+				public kerbal::operators::equality_comparable<avl_iter<T> >, // it != jt
+				public kerbal::operators::incrementable<avl_iter<T> >, // it++
+				// bidirectional iterator interface
+				public kerbal::operators::decrementable<avl_iter<T> > // it--
 			{
 				private:
 					typedef avl_iter_type_unrelated super;
@@ -170,7 +178,7 @@ namespace kerbal
 					friend class avl_kiter<T>;
 
 				private:
-					typedef kerbal::iterator::iterator_traits<T*>			iterator_traits;
+					typedef kerbal::iterator::iterator_traits<T *>			iterator_traits;
 
 				public:
 					typedef std::bidirectional_iterator_tag					iterator_category;
@@ -182,19 +190,19 @@ namespace kerbal
 				protected:
 					KERBAL_CONSTEXPR
 					explicit avl_iter(ptr_to_head_node current) KERBAL_NOEXCEPT :
-							super(current)
+						super(current)
 					{
 					}
 
 					KERBAL_CONSTEXPR
 					explicit avl_iter(const avl_iter_type_unrelated & iter) KERBAL_NOEXCEPT :
-							super(iter)
+						super(iter)
 					{
 					}
 
 				public:
 					//===================
-					//forward iterator interface
+					// forward iterator interface
 
 					KERBAL_CONSTEXPR14
 					reference operator*() const KERBAL_NOEXCEPT
@@ -203,23 +211,24 @@ namespace kerbal
 					}
 
 					KERBAL_CONSTEXPR14
-					avl_iter& operator++() KERBAL_NOEXCEPT
+					avl_iter & operator++() KERBAL_NOEXCEPT
 					{
 						super::operator++();
 						return *this;
 					}
 
 					KERBAL_CONSTEXPR
-					friend bool operator==(const avl_iter & lhs, const avl_iter & rhs) KERBAL_NOEXCEPT
+					friend
+					bool operator==(const avl_iter & lhs, const avl_iter & rhs) KERBAL_NOEXCEPT
 					{
 						return static_cast<const super &>(lhs) == static_cast<const super &>(rhs);
 					}
 
 					//===================
-					//bidirectional iterator interface
+					// bidirectional iterator interface
 
 					KERBAL_CONSTEXPR14
-					avl_iter& operator--() KERBAL_NOEXCEPT
+					avl_iter & operator--() KERBAL_NOEXCEPT
 					{
 						super::operator--();
 						return *this;
@@ -229,13 +238,13 @@ namespace kerbal
 
 			template <typename T>
 			class avl_kiter:
-					avl_kiter_type_unrelated,
-					//forward iterator interface
-					public kerbal::operators::dereferenceable<avl_kiter<T>, const T*>, // it->
-					public kerbal::operators::equality_comparable<avl_kiter<T> >, // it != jt
-					public kerbal::operators::incrementable<avl_kiter<T> >, // it++
-					//bidirectional iterator interface
-					public kerbal::operators::decrementable<avl_kiter<T> > // it--
+				avl_kiter_type_unrelated,
+				// forward iterator interface
+				public kerbal::operators::dereferenceable<avl_kiter<T>, const T *>, // it->
+				public kerbal::operators::equality_comparable<avl_kiter<T> >, // it != jt
+				public kerbal::operators::incrementable<avl_kiter<T> >, // it++
+				// bidirectional iterator interface
+				public kerbal::operators::decrementable<avl_kiter<T> > // it--
 			{
 				private:
 					typedef avl_kiter_type_unrelated super;
@@ -247,7 +256,7 @@ namespace kerbal
 					typedef avl_iter<T> iterator;
 
 				private:
-					typedef kerbal::iterator::iterator_traits<const T*>	iterator_traits;
+					typedef kerbal::iterator::iterator_traits<const T *>	iterator_traits;
 
 				public:
 					typedef std::bidirectional_iterator_tag					iterator_category;
@@ -259,26 +268,26 @@ namespace kerbal
 				protected:
 					KERBAL_CONSTEXPR
 					explicit avl_kiter(const_ptr_to_head_node current) KERBAL_NOEXCEPT :
-							super(current)
+						super(current)
 					{
 					}
 
 					KERBAL_CONSTEXPR
 					explicit avl_kiter(const avl_kiter_type_unrelated & iter) KERBAL_NOEXCEPT :
-							super(iter)
+						super(iter)
 					{
 					}
 
 				public:
 					KERBAL_CONSTEXPR
 					avl_kiter(const iterator & iter) KERBAL_NOEXCEPT :
-							super(iter.current)
+						super(iter.current)
 					{
 					}
 
 				public:
 					//===================
-					//forward iterator interface
+					// forward iterator interface
 
 					KERBAL_CONSTEXPR14
 					reference operator*() const KERBAL_NOEXCEPT
@@ -287,23 +296,24 @@ namespace kerbal
 					}
 
 					KERBAL_CONSTEXPR14
-					avl_kiter& operator++() KERBAL_NOEXCEPT
+					avl_kiter & operator++() KERBAL_NOEXCEPT
 					{
 						super::operator++();
 						return *this;
 					}
 
 					KERBAL_CONSTEXPR
-					friend bool operator==(const avl_kiter & lhs, const avl_kiter & rhs) KERBAL_NOEXCEPT
+					friend
+					bool operator==(const avl_kiter & lhs, const avl_kiter & rhs) KERBAL_NOEXCEPT
 					{
 						return static_cast<const super &>(lhs) == static_cast<const super &>(rhs);
 					}
 
 					//===================
-					//bidirectional iterator interface
+					// bidirectional iterator interface
 
 					KERBAL_CONSTEXPR14
-					avl_kiter& operator--() KERBAL_NOEXCEPT
+					avl_kiter & operator--() KERBAL_NOEXCEPT
 					{
 						super::operator--();
 						return *this;

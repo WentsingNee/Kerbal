@@ -55,14 +55,14 @@ namespace kerbal
 
 				typedef T							value_type;
 				typedef const value_type			const_type;
-				typedef value_type&					reference;
-				typedef const value_type&			const_reference;
-				typedef value_type*					pointer;
-				typedef const value_type*			const_pointer;
+				typedef value_type &				reference;
+				typedef const value_type &			const_reference;
+				typedef value_type *				pointer;
+				typedef const value_type *			const_pointer;
 
 #		if __cplusplus >= 201103L
-				typedef value_type&&				rvalue_reference;
-				typedef const value_type&&			const_rvalue_reference;
+				typedef value_type &&				rvalue_reference;
+				typedef const value_type &&			const_rvalue_reference;
 #		endif
 
 				typedef typename container_type::size_type					size_type;
@@ -79,36 +79,40 @@ namespace kerbal
 			public:
 				KERBAL_CONSTEXPR
 				static_priority_queue() :
-						c(), vc()
+					c(), vc()
 				{
 				}
 
 				KERBAL_CONSTEXPR
 				explicit static_priority_queue(value_compare kc) :
-						c(), vc(kc)
+					c(), vc(kc)
 				{
 				}
 
 				template <typename InputIterator>
 				KERBAL_CONSTEXPR14
-				static_priority_queue(InputIterator first, InputIterator last,
-						typename kerbal::type_traits::enable_if<
-								kerbal::iterator::is_input_compatible_iterator<InputIterator>::value,
-								int
-						>::type = 0) :
-						c(first, last), vc()
+				static_priority_queue(
+					InputIterator first, InputIterator last,
+					typename kerbal::type_traits::enable_if<
+						kerbal::iterator::is_input_compatible_iterator<InputIterator>::value,
+						int
+					>::type = 0
+				) :
+					c(first, last), vc()
 				{
 					kerbal::algorithm::make_heap(c.begin(), c.end(), this->vc);
 				}
 
 				template <typename InputIterator>
 				KERBAL_CONSTEXPR14
-				static_priority_queue(InputIterator first, InputIterator last, value_compare kc,
-						typename kerbal::type_traits::enable_if<
-								kerbal::iterator::is_input_compatible_iterator<InputIterator>::value,
-								int
-						>::type = 0) :
-						c(first, last), vc(kc)
+				static_priority_queue(
+					InputIterator first, InputIterator last, value_compare kc,
+					typename kerbal::type_traits::enable_if<
+						kerbal::iterator::is_input_compatible_iterator<InputIterator>::value,
+						int
+					>::type = 0
+				) :
+					c(first, last), vc(kc)
 				{
 					kerbal::algorithm::make_heap(c.begin(), c.end(), this->vc);
 				}
@@ -117,13 +121,13 @@ namespace kerbal
 
 				KERBAL_CONSTEXPR14
 				static_priority_queue(std::initializer_list<value_type> ilist) :
-						static_priority_queue(ilist.begin(), ilist.end())
+					static_priority_queue(ilist.begin(), ilist.end())
 				{
 				}
 
 				KERBAL_CONSTEXPR14
 				static_priority_queue(std::initializer_list<value_type> ilist, value_compare vc) :
-						static_priority_queue(ilist.begin(), ilist.end(), vc)
+					static_priority_queue(ilist.begin(), ilist.end(), vc)
 				{
 				}
 
@@ -171,7 +175,7 @@ namespace kerbal
 				{
 					if (this->full()) {
 						kerbal::utility::throw_this_exception_helper<std::logic_error>::throw_this_exception(
-							(const char*)"Out of storage space"
+							(const char *) "Out of storage space"
 						);
 					}
 					this->push_unsafe(val);
@@ -211,7 +215,7 @@ namespace kerbal
 				{
 					if (this->full()) {
 						kerbal::utility::throw_this_exception_helper<std::logic_error>::throw_this_exception(
-							(const char*)"Out of storage space"
+							(const char *) "Out of storage space"
 						);
 					}
 					this->push_unsafe(kerbal::compatibility::move(val));
@@ -223,7 +227,7 @@ namespace kerbal
 
 				template <typename ... Args>
 				KERBAL_CONSTEXPR14
-				void emplace_unsafe(Args&& ... args)
+				void emplace_unsafe(Args && ... args)
 				{
 					c.emplace_back_unsafe(kerbal::utility::forward<Args>(args)...);
 					kerbal::algorithm::push_heap(c.begin(), c.end(), vc);
@@ -231,11 +235,11 @@ namespace kerbal
 
 				template <typename ... Args>
 				KERBAL_CONSTEXPR20
-				void emplace(Args&& ... args)
+				void emplace(Args && ... args)
 				{
 					if (this->full()) {
 						kerbal::utility::throw_this_exception_helper<std::logic_error>::throw_this_exception(
-							(const char*)"Out of storage space"
+							(const char *) "Out of storage space"
 						);
 					}
 					this->emplace_unsafe(kerbal::utility::forward<Args>(args)...);
@@ -262,11 +266,11 @@ namespace kerbal
 				{ \
 					if (this->full()) { \
 						kerbal::utility::throw_this_exception_helper<std::logic_error>::throw_this_exception( \
-							(const char*)"Out of storage space" \
+							(const char *) "Out of storage space" \
 						); \
 					} \
 					this->emplace_unsafe(KERBAL_OPT_PPEXPAND_WITH_COMMA_N(REMAINF, EMPTY, ARGS_USE, i)); \
-				}
+				} \
 
 				KERBAL_PPEXPAND_N(FBODY, KERBAL_PPEXPAND_EMPTY_SEPARATOR, 0)
 				KERBAL_PPEXPAND_N(FBODY, KERBAL_PPEXPAND_EMPTY_SEPARATOR, 20)
@@ -293,7 +297,7 @@ namespace kerbal
 				{
 					if (c.empty()) {
 						kerbal::utility::throw_this_exception_helper<std::logic_error>::throw_this_exception(
-							(const char*)"Static priority queue is empty"
+							(const char *) "Static priority queue is empty"
 						);
 					}
 					this->pop_unsafe();
@@ -365,9 +369,11 @@ namespace kerbal
 
 		template <typename T, std::size_t N, typename KeyCompare>
 		KERBAL_CONSTEXPR14
-		void swap(kerbal::container::static_priority_queue<T, N, KeyCompare> & a,
-				  kerbal::container::static_priority_queue<T, N, KeyCompare> & b)
-				KERBAL_CONDITIONAL_NOEXCEPT(noexcept(a.swap(b)))
+		void swap(
+			kerbal::container::static_priority_queue<T, N, KeyCompare> & a,
+			kerbal::container::static_priority_queue<T, N, KeyCompare> & b
+		)
+			KERBAL_CONDITIONAL_NOEXCEPT(noexcept(a.swap(b)))
 		{
 			a.swap(b);
 		}
@@ -381,9 +387,11 @@ KERBAL_NAMESPACE_STD_BEGIN
 
 	template <typename T, std::size_t N, typename KeyCompare>
 	KERBAL_CONSTEXPR14
-	void swap(kerbal::container::static_priority_queue<T, N, KeyCompare> & a,
-			  kerbal::container::static_priority_queue<T, N, KeyCompare> & b)
-			KERBAL_CONDITIONAL_NOEXCEPT(noexcept(a.swap(b)))
+	void swap(
+		kerbal::container::static_priority_queue<T, N, KeyCompare> & a,
+		kerbal::container::static_priority_queue<T, N, KeyCompare> & b
+	)
+	KERBAL_CONDITIONAL_NOEXCEPT(noexcept(a.swap(b)))
 	{
 		a.swap(b);
 	}

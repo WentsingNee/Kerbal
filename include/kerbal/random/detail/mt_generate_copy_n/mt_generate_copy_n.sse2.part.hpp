@@ -35,11 +35,17 @@ namespace kerbal
 			namespace sse2
 			{
 
-				template <std::size_t U, kerbal::compatibility::uint32_t D, std::size_t S,
-						kerbal::compatibility::uint32_t B, std::size_t T,
-						kerbal::compatibility::uint32_t C, std::size_t L
+				template <
+					std::size_t U, kerbal::compatibility::uint32_t D,
+					std::size_t S, kerbal::compatibility::uint32_t B,
+					std::size_t T, kerbal::compatibility::uint32_t C,
+					std::size_t L
 				>
-				void mt_generate_copy_n(const kerbal::compatibility::uint32_t mt_now[], kerbal::compatibility::uint32_t * out, std::size_t n) KERBAL_NOEXCEPT
+				void mt_generate_copy_n(
+					const kerbal::compatibility::uint32_t mt_now[],
+					kerbal::compatibility::uint32_t * out,
+					std::size_t n
+				) KERBAL_NOEXCEPT
 				{
 					typedef kerbal::compatibility::uint32_t result_type;
 
@@ -50,7 +56,7 @@ namespace kerbal
 
 					unsigned int i = 0; // Note: gcc unreasonable warning: iteration 4611686018427387903 invokes undefined behavior [-Waggressive-loop-optimizations]
 					for (; i + STEP::value <= n; i += STEP::value) {
-						__m128i xmm_y = _mm_loadu_si128(reinterpret_cast<const __m128i*>(&mt_now[i])); // SSE2
+						__m128i xmm_y = _mm_loadu_si128(reinterpret_cast<const __m128i *>(&mt_now[i])); // SSE2
 						__m128i xmm_shift, xmm_and;
 
 						xmm_shift = _mm_srli_epi32(xmm_y, U); // SSE2
@@ -68,7 +74,7 @@ namespace kerbal
 						xmm_shift = _mm_srli_epi32(xmm_y, L); // SSE2
 						xmm_y = _mm_xor_si128(xmm_y, xmm_shift); // SSE2
 
-						_mm_storeu_si128(reinterpret_cast<__m128i*>(out), xmm_y); // SSE2
+						_mm_storeu_si128(reinterpret_cast<__m128i *>(out), xmm_y); // SSE2
 						out += STEP::value;
 					}
 
@@ -79,11 +85,17 @@ namespace kerbal
 
 				}
 
-				template <std::size_t U, kerbal::compatibility::uint64_t D, std::size_t S,
-						kerbal::compatibility::uint64_t B, std::size_t T,
-						kerbal::compatibility::uint64_t C, std::size_t L
+				template <
+					std::size_t U, kerbal::compatibility::uint64_t D,
+					std::size_t S, kerbal::compatibility::uint64_t B,
+					std::size_t T, kerbal::compatibility::uint64_t C,
+					std::size_t L
 				>
-				void mt_generate_copy_n(const kerbal::compatibility::uint64_t mt_now[], kerbal::compatibility::uint64_t * out, std::size_t n) KERBAL_NOEXCEPT
+				void mt_generate_copy_n(
+					const kerbal::compatibility::uint64_t mt_now[],
+					kerbal::compatibility::uint64_t * out,
+					std::size_t n
+				) KERBAL_NOEXCEPT
 				{
 					typedef kerbal::compatibility::uint64_t result_type;
 
@@ -94,7 +106,7 @@ namespace kerbal
 
 					unsigned int i = 0; // Note: gcc unreasonable warning: iteration 4611686018427387903 invokes undefined behavior [-Waggressive-loop-optimizations]
 					for (; i + STEP::value <= n; i += STEP::value) {
-						__m128i xmm_y = _mm_loadu_si128(reinterpret_cast<const __m128i*>(&mt_now[i])); // SSE2
+						__m128i xmm_y = _mm_loadu_si128(reinterpret_cast<const __m128i *>(&mt_now[i])); // SSE2
 						__m128i xmm_shift, xmm_and;
 
 						xmm_shift = _mm_srli_epi64(xmm_y, U); // SSE2
@@ -112,7 +124,7 @@ namespace kerbal
 						xmm_shift = _mm_srli_epi64(xmm_y, L); // SSE2
 						xmm_y = _mm_xor_si128(xmm_y, xmm_shift); // SSE2
 
-						_mm_storeu_si128(reinterpret_cast<__m128i*>(out), xmm_y); // SSE2
+						_mm_storeu_si128(reinterpret_cast<__m128i *>(out), xmm_y); // SSE2
 						out += STEP::value;
 					}
 

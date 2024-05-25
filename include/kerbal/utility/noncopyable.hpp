@@ -58,7 +58,7 @@ namespace kerbal
 				}
 
 			private:
-				noncopyassignable& operator=(const noncopyassignable &) KERBAL_NOEXCEPT;
+				noncopyassignable & operator=(const noncopyassignable &) KERBAL_NOEXCEPT;
 		};
 
 #	else
@@ -69,7 +69,7 @@ namespace kerbal
 				noncopyassignable() = default;
 
 			private:
-				noncopyassignable& operator=(const noncopyassignable &) = delete;
+				noncopyassignable & operator=(const noncopyassignable &) = delete;
 		};
 
 #	endif
@@ -86,7 +86,7 @@ namespace kerbal
 
 			private:
 				noncopyable(const noncopyable &);
-				noncopyable& operator=(const noncopyable &);
+				noncopyable & operator=(const noncopyable &);
 		};
 
 #	else
@@ -98,7 +98,7 @@ namespace kerbal
 
 			private:
 				noncopyable(const noncopyable &) = delete;
-				noncopyable& operator=(const noncopyable &) = delete;
+				noncopyable & operator=(const noncopyable &) = delete;
 		};
 
 #	endif

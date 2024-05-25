@@ -27,9 +27,9 @@ namespace kerbal
 		KERBAL_MODULE_EXPORT
 		template <typename T>
 		struct remove_cv :
-				kerbal::type_traits::remove_const<
-					typename kerbal::type_traits::remove_volatile<T>::type
-				>
+			kerbal::type_traits::remove_const<
+				typename kerbal::type_traits::remove_volatile<T>::type
+			>
 		{
 		};
 

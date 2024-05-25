@@ -29,8 +29,10 @@ namespace kerbal
 			template <typename InputIterator, typename OutputIterator, typename UnaryOperation>
 			KERBAL_CONSTEXPR14
 			OutputIterator
-			k_transform(InputIterator first, InputIterator last, OutputIterator out,
-						UnaryOperation unary_op, std::input_iterator_tag)
+			k_transform(
+				InputIterator first, InputIterator last, OutputIterator out,
+				UnaryOperation unary_op, std::input_iterator_tag
+			)
 			{
 				while (first != last) {
 					kerbal::assign::generic_assign(*out, unary_op(*first)); // *out = unary_op(*first);
@@ -47,14 +49,19 @@ namespace kerbal
 		OutputIterator
 		transform(InputIterator first, InputIterator last, OutputIterator out, UnaryOperation unary_op)
 		{
-			return kerbal::algorithm::detail::k_transform(first, last, out, unary_op, kerbal::iterator::iterator_category(first));
+			return kerbal::algorithm::detail::k_transform(
+				first, last, out, unary_op,
+				kerbal::iterator::iterator_category(first)
+			);
 		}
 
-		template <typename InputIterator1, typename InputIterator2, typename OutputIterator, typename BinaryOperation >
+		template <typename InputIterator1, typename InputIterator2, typename OutputIterator, typename BinaryOperation>
 		KERBAL_CONSTEXPR14
 		OutputIterator
-		transform(InputIterator1 a_first, InputIterator1 a_last, InputIterator2 b_first,
-				  OutputIterator out, BinaryOperation binary_op)
+		transform(
+			InputIterator1 a_first, InputIterator1 a_last, InputIterator2 b_first,
+			OutputIterator out, BinaryOperation binary_op
+		)
 		{
 			while (a_first != a_last) {
 				kerbal::assign::generic_assign(*out, binary_op(*a_first, *b_first));

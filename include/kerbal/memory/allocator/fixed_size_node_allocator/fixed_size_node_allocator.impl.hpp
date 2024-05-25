@@ -44,16 +44,18 @@ namespace kerbal
 		}
 
 		template <typename T, typename UpstreamAllocator>
-		typename fixed_size_node_allocator<T, UpstreamAllocator>::pointer
+		typename
+		fixed_size_node_allocator<T, UpstreamAllocator>::pointer
 		fixed_size_node_allocator<T, UpstreamAllocator>::allocate_one()
 		{
 			if (this->k_free_list.empty()) {
 				memory_blocks_type * allocated_blocks_ptr = this->build_memory_block();
 				this->k_allocated_blocks_ptr_list.push_front(allocated_blocks_ptr->k_allocated_blocks_ptr_node);
 				this->k_free_list.k_hook_node_after(
-						this->k_free_list.basic_before_begin(),
-						&allocated_blocks_ptr->k_embedded_block[0].interpret_as_free_list_node(),
-						&allocated_blocks_ptr->k_embedded_block[BLOCK_LENGTH::value - 1].interpret_as_free_list_node());
+					this->k_free_list.basic_before_begin(),
+					&allocated_blocks_ptr->k_embedded_block[0].interpret_as_free_list_node(),
+					&allocated_blocks_ptr->k_embedded_block[BLOCK_LENGTH::value - 1].interpret_as_free_list_node()
+				);
 			}
 
 			free_list_node_type * p_free_list_node = this->k_free_list.k_unhook_node_after(this->k_free_list.basic_before_begin());
@@ -61,7 +63,8 @@ namespace kerbal
 		}
 
 		template <typename T, typename UpstreamAllocator>
-		typename fixed_size_node_allocator<T, UpstreamAllocator>::pointer
+		typename
+		fixed_size_node_allocator<T, UpstreamAllocator>::pointer
 		fixed_size_node_allocator<T, UpstreamAllocator>::allocate(size_type n)
 		{
 			if (n != 1) {
@@ -90,7 +93,8 @@ namespace kerbal
 		}
 
 		template <typename T, typename UpstreamAllocator>
-		typename fixed_size_node_allocator<T, UpstreamAllocator>::pointer
+		typename
+		fixed_size_node_allocator<T, UpstreamAllocator>::pointer
 		fixed_size_node_allocator<T, UpstreamAllocator>::size_over_large_allocate(size_type n)
 		{
 			typedef kerbal::memory::allocator_traits<size_over_large_allocator> allocator_traits;
@@ -106,7 +110,7 @@ namespace kerbal
 
 		template <typename T, typename UpstreamAllocator>
 		void fixed_size_node_allocator<T, UpstreamAllocator>::swap(fixed_size_node_allocator & other)
-				KERBAL_CONDITIONAL_NOEXCEPT(is_nothrow_swappable::value)
+			KERBAL_CONDITIONAL_NOEXCEPT(is_nothrow_swappable::value)
 		{
 			kerbal::algorithm::swap(this->size_over_large_alloc(), other.size_over_large_alloc());
 			kerbal::algorithm::swap(this->memory_block_alloc(), other.memory_block_alloc());
@@ -115,7 +119,8 @@ namespace kerbal
 		}
 
 		template <typename T, typename UpstreamAllocator>
-		typename fixed_size_node_allocator<T, UpstreamAllocator>::memory_blocks_type *
+		typename
+		fixed_size_node_allocator<T, UpstreamAllocator>::memory_blocks_type *
 		fixed_size_node_allocator<T, UpstreamAllocator>::build_memory_block()
 		{
 			typedef kerbal::memory::allocator_traits<memory_blocks_allocator> allocator_traits;

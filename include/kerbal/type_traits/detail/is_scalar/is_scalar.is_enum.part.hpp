@@ -43,15 +43,15 @@ namespace kerbal
 
 		template <typename T>
 		struct is_scalar :
-				kerbal::type_traits::disjunction<
-#			if __cplusplus >= 201103L
-					kerbal::type_traits::is_null_pointer<T>,
-#			endif
-					kerbal::type_traits::is_arithmetic<T>,
-					kerbal::type_traits::is_enum<T>,
-					kerbal::type_traits::is_member_pointer<T>,
-					kerbal::type_traits::is_pointer<T>
-				>
+			kerbal::type_traits::disjunction<
+#		if __cplusplus >= 201103L
+				kerbal::type_traits::is_null_pointer<T>,
+#		endif
+				kerbal::type_traits::is_arithmetic<T>,
+				kerbal::type_traits::is_enum<T>,
+				kerbal::type_traits::is_member_pointer<T>,
+				kerbal::type_traits::is_pointer<T>
+			>
 		{
 		};
 

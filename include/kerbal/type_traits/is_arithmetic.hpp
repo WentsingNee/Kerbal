@@ -28,10 +28,10 @@ namespace kerbal
 		KERBAL_MODULE_EXPORT
 		template <class T>
 		struct is_arithmetic :
-				kerbal::type_traits::disjunction<
-					kerbal::type_traits::is_integral<T>,
-					kerbal::type_traits::is_floating_point<T>
-				>
+			kerbal::type_traits::disjunction<
+				kerbal::type_traits::is_integral<T>,
+				kerbal::type_traits::is_floating_point<T>
+			>
 		{
 		};
 

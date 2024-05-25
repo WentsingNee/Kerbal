@@ -23,7 +23,11 @@ namespace kerbal
 	namespace container
 	{
 
-		template <typename T, typename KeyCompare = kerbal::compare::binary_type_less<void, void>, typename Allocator = std::allocator<T> >
+		template <
+			typename T,
+			typename KeyCompare = kerbal::compare::binary_type_less<void, void>,
+			typename Allocator = std::allocator<T>
+		>
 		class avl_set;
 
 	} // namespace container

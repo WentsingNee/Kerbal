@@ -130,8 +130,8 @@ namespace kerbal
 
 			public:
 				typedef kerbal::type_traits::integral_constant<
-						size_type,
-						kerbal::numeric::numeric_limits<size_type>::MAX::value / sizeof(value_type)
+					size_type,
+					kerbal::numeric::numeric_limits<size_type>::MAX::value / sizeof(value_type)
 				> MAX_SIZE;
 
 				KERBAL_CONSTEXPR

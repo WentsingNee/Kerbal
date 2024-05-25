@@ -23,32 +23,37 @@ namespace kerbal
 	{
 
 		template <typename Alloc, typename = kerbal::type_traits::void_type<>::type>
-		struct allocator_has_def_allow_deallocate_null: kerbal::type_traits::false_type
+		struct allocator_has_def_allow_deallocate_null :
+			kerbal::type_traits::false_type
 		{
 		};
 
 		template <typename Alloc>
 		struct allocator_has_def_allow_deallocate_null<
-				Alloc,
-				typename kerbal::type_traits::void_type<typename Alloc::allow_deallocate_null>::type
+			Alloc,
+			typename kerbal::type_traits::void_type<typename Alloc::allow_deallocate_null>::type
 		> :
-				kerbal::type_traits::true_type
+			kerbal::type_traits::true_type
 		{
 		};
 
 		namespace detail
 		{
 
-			template <typename Alloc, bool = kerbal::memory::allocator_has_def_allow_deallocate_null<Alloc>::value>
-			struct allocator_allow_deallocate_null_traits_helper : kerbal::type_traits::false_type
+			template <
+				typename Alloc,
+				bool = kerbal::memory::allocator_has_def_allow_deallocate_null<Alloc>::value
+			>
+			struct allocator_allow_deallocate_null_traits_helper :
+				kerbal::type_traits::false_type
 			{
 			};
 
 			template <typename Alloc>
 			struct allocator_allow_deallocate_null_traits_helper<Alloc, true> :
-					kerbal::type_traits::bool_constant<
-						Alloc::allow_deallocate_null::value
-					>
+				kerbal::type_traits::bool_constant<
+					Alloc::allow_deallocate_null::value
+				>
 			{
 			};
 
