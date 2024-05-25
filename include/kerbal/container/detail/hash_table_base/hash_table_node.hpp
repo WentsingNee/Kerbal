@@ -113,11 +113,11 @@ namespace kerbal
 #				define LEFT_JOIN_COMMA(exp) , exp
 #				define THEAD_NOT_EMPTY(exp) template <exp>
 #				define TARGS_DECL(i) typename KERBAL_MACRO_CONCAT(Arg, i)
-#				define ARGS_DECL(i) const KERBAL_MACRO_CONCAT(Arg, i) & KERBAL_MACRO_CONCAT(arg, i)
+#				define ARGS_DECL(i) KERBAL_MACRO_CONCAT(Arg, i) const & KERBAL_MACRO_CONCAT(arg, i)
 #				define ARGS_USE(i) KERBAL_MACRO_CONCAT(arg, i)
 #				define FBODY(i) \
 					KERBAL_OPT_PPEXPAND_WITH_COMMA_N(THEAD_NOT_EMPTY, EMPTY, TARGS_DECL, i) \
-					explicit hash_table_node_hash_unrelated(kerbal::utility::in_place_t in_place KERBAL_OPT_PPEXPAND_WITH_COMMA_N(LEFT_JOIN_COMMA, EMPTY, ARGS_DECL, i)) \
+					explicit hash_table_node_type_only(kerbal::utility::in_place_t in_place KERBAL_OPT_PPEXPAND_WITH_COMMA_N(LEFT_JOIN_COMMA, EMPTY, ARGS_DECL, i)) \
 							: data(in_place KERBAL_OPT_PPEXPAND_WITH_COMMA_N(LEFT_JOIN_COMMA, EMPTY, ARGS_USE, i)) \
 					{ \
 					}
@@ -166,7 +166,7 @@ namespace kerbal
 #				define LEFT_JOIN_COMMA(exp) , exp
 #				define THEAD_NOT_EMPTY(exp) template <exp>
 #				define TARGS_DECL(i) typename KERBAL_MACRO_CONCAT(Arg, i)
-#				define ARGS_DECL(i) const KERBAL_MACRO_CONCAT(Arg, i) & KERBAL_MACRO_CONCAT(arg, i)
+#				define ARGS_DECL(i) KERBAL_MACRO_CONCAT(Arg, i) const & KERBAL_MACRO_CONCAT(arg, i)
 #				define ARGS_USE(i) KERBAL_MACRO_CONCAT(arg, i)
 #				define FBODY(i) \
 					KERBAL_OPT_PPEXPAND_WITH_COMMA_N(THEAD_NOT_EMPTY, EMPTY, TARGS_DECL, i) \
@@ -187,6 +187,22 @@ namespace kerbal
 #				undef FBODY
 
 #		endif
+
+					KERBAL_CONSTEXPR14
+					static
+					hash_table_node *
+					reinterpret_as(hash_table_node_type_unrelated * self) KERBAL_NOEXCEPT
+					{
+						return static_cast<hash_table_node *>(self);
+					}
+
+					KERBAL_CONSTEXPR14
+					static
+					const hash_table_node *
+					reinterpret_as(const hash_table_node_type_unrelated * self) KERBAL_NOEXCEPT
+					{
+						return static_cast<const hash_table_node *>(self);
+					}
 
 					KERBAL_CONSTEXPR14
 					void set_cached_hash_code(hash_result_type hash_code) KERBAL_NOEXCEPT
@@ -217,6 +233,8 @@ namespace kerbal
 					typedef kerbal::type_traits::false_type		CACHE_HASH_RESULT;
 					typedef HashResult							hash_result_type;
 
+				public:
+
 #		if __cplusplus >= 201103L
 					using super::super;
 #		else
@@ -225,7 +243,7 @@ namespace kerbal
 #				define LEFT_JOIN_COMMA(exp) , exp
 #				define THEAD_NOT_EMPTY(exp) template <exp>
 #				define TARGS_DECL(i) typename KERBAL_MACRO_CONCAT(Arg, i)
-#				define ARGS_DECL(i) const KERBAL_MACRO_CONCAT(Arg, i) & KERBAL_MACRO_CONCAT(arg, i)
+#				define ARGS_DECL(i) KERBAL_MACRO_CONCAT(Arg, i) const & KERBAL_MACRO_CONCAT(arg, i)
 #				define ARGS_USE(i) KERBAL_MACRO_CONCAT(arg, i)
 #				define FBODY(i) \
 					KERBAL_OPT_PPEXPAND_WITH_COMMA_N(THEAD_NOT_EMPTY, EMPTY, TARGS_DECL, i) \
@@ -246,6 +264,22 @@ namespace kerbal
 #				undef FBODY
 
 #		endif
+
+					KERBAL_CONSTEXPR14
+					static
+					hash_table_node *
+					reinterpret_as(hash_table_node_type_unrelated * self) KERBAL_NOEXCEPT
+					{
+						return static_cast<hash_table_node *>(self);
+					}
+
+					KERBAL_CONSTEXPR14
+					static
+					const hash_table_node *
+					reinterpret_as(const hash_table_node_type_unrelated * self) KERBAL_NOEXCEPT
+					{
+						return static_cast<const hash_table_node *>(self);
+					}
 
 					KERBAL_CONSTEXPR14
 					void set_cached_hash_code(hash_result_type /*hash_code*/) KERBAL_NOEXCEPT
