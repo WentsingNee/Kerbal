@@ -12,7 +12,7 @@
 #ifndef KERBAL_CONTAINER_HASH_TABLE_HASH_TABLE_FWD_HPP
 #define KERBAL_CONTAINER_HASH_TABLE_HASH_TABLE_FWD_HPP
 
-#include <kerbal/compare/basic_compare.hpp>
+#include <kerbal/compare/binary_type_compare.hpp>
 #include <kerbal/container/associative_container_facility/key_extractors/identity_extractor.hpp>
 #include <kerbal/hash/hash.hpp>
 
@@ -36,7 +36,7 @@ namespace kerbal
 		template <typename Entity,
 				typename Extract = kerbal::container::identity_extractor<Entity>,
 				typename Hash = kerbal::hash::hash<typename Extract::key_type>,
-				typename KeyEqual = kerbal::compare::equal_to<>,
+				typename KeyEqual = kerbal::compare::binary_type_equal_to<void, void>,
 				typename NodeAllocatorBR = std::allocator<Entity>,
 				typename BucketAllocatorBR = std::allocator<Entity>
 		>

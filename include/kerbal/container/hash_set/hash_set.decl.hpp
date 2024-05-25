@@ -12,14 +12,13 @@
 #ifndef KERBAL_CONTAINER_HASH_SET_HASH_SET_DECL_HPP
 #define KERBAL_CONTAINER_HASH_SET_HASH_SET_DECL_HPP
 
-#include <kerbal/container/hash_table/hash_table.decl.hpp>
-
-
 #include <kerbal/assign/ilist.hpp>
 #include <kerbal/compatibility/constexpr.hpp>
 #include <kerbal/compatibility/noexcept.hpp>
 #include <kerbal/container/associative_container_facility/associative_unique_insert_r.hpp>
 #include <kerbal/container/associative_container_facility/key_extractors/identity_extractor.hpp>
+#include <kerbal/iterator/iterator_traits.hpp>
+#include <kerbal/type_traits/enable_if.hpp>
 #include <kerbal/utility/compressed_pair.hpp>
 
 #if __cplusplus < 201103L
@@ -32,6 +31,9 @@
 #endif
 
 
+#include <kerbal/container/hash_table/hash_table.decl.hpp>
+
+
 namespace kerbal
 {
 
@@ -40,11 +42,16 @@ namespace kerbal
 
 		template <typename T, typename Hash, typename KeyEqual, typename NodeAllocator, typename BucketAllocator>
 		class hash_set :
-			protected kerbal::container::hash_table<T, kerbal::container::identity_extractor<T>, Hash, KeyEqual, NodeAllocator, BucketAllocator>
+			protected kerbal::container::hash_table<
+				T, kerbal::container::identity_extractor<T>, Hash, KeyEqual,
+				NodeAllocator, BucketAllocator
+			>
 		{
 			private:
-				typedef kerbal::container::hash_table<T, kerbal::container::identity_extractor<T>, Hash, KeyEqual, NodeAllocator, BucketAllocator> hash_table;
-
+				typedef kerbal::container::hash_table<
+					T, kerbal::container::identity_extractor<T>, Hash, KeyEqual,
+					NodeAllocator, BucketAllocator
+				>															hash_table;
 
 			public:
 				typedef typename hash_table::value_type						value_type;
@@ -64,19 +71,12 @@ namespace kerbal
 
 				typedef typename hash_table::const_iterator					iterator;
 				typedef typename hash_table::const_iterator					const_iterator;
-				typedef typename hash_table::const_reverse_iterator			reverse_iterator;
-				typedef typename hash_table::const_reverse_iterator			const_reverse_iterator;
 				typedef kerbal::container::associative_unique_insert_r<const_iterator>
 																			unique_insert_r;
 
 				typedef typename hash_table::key_type						key_type;
-				typedef typename hash_table::key_compare					key_compare;
+				typedef typename hash_table::key_equal						key_equal;
 
-			private:
-				typedef typename hash_table::node_base						node_base;
-				typedef typename hash_table::node							node;
-
-			public:
 				typedef NodeAllocator										node_allocator_type;
 				typedef BucketAllocator										bucket_allocator_type;
 
@@ -144,16 +144,16 @@ namespace kerbal
 #		else
 
 				template <typename U>
-				hash_set(const kerbal::assign::assign_list<U> & ilist);
+				hash_set(kerbal::assign::assign_list<U> const & ilist);
 
 				template <typename U>
-				hash_set(const kerbal::assign::assign_list<U> & ilist, NodeAllocator const & node_alloc, BucketAllocator const & bucket_alloc);
+				hash_set(kerbal::assign::assign_list<U> const & ilist, NodeAllocator const & node_alloc, BucketAllocator const & bucket_alloc);
 
 				template <typename U>
-				hash_set(const kerbal::assign::assign_list<U> & ilist, KeyEqual const & ke);
+				hash_set(kerbal::assign::assign_list<U> const & ilist, KeyEqual const & ke);
 
 				template <typename U>
-				hash_set(const kerbal::assign::assign_list<U> & ilist, KeyEqual const & ke, NodeAllocator const & node_alloc, BucketAllocator const & bucket_alloc);
+				hash_set(kerbal::assign::assign_list<U> const & ilist, KeyEqual const & ke, NodeAllocator const & node_alloc, BucketAllocator const & bucket_alloc);
 
 #		endif
 
@@ -195,7 +195,10 @@ namespace kerbal
 
 				template <typename InputIterator>
 				KERBAL_CONSTEXPR20
-				void assign(InputIterator first, InputIterator last);
+				typename kerbal::type_traits::enable_if<
+					kerbal::iterator::is_input_compatible_iterator<InputIterator>::value
+				>::type
+				assign(InputIterator first, InputIterator last);
 
 #		if __cplusplus >= 201103L
 
@@ -234,21 +237,6 @@ namespace kerbal
 				using hash_table::cbegin;
 				using hash_table::cend;
 
-				KERBAL_CONSTEXPR20
-				const_reverse_iterator rbegin() const
-				{
-					return this->hash_table::crbegin();
-				}
-
-				KERBAL_CONSTEXPR20
-				const_reverse_iterator rend() const
-				{
-					return this->hash_table::crend();
-				}
-
-				using hash_table::crbegin;
-				using hash_table::crend;
-
 			//===================
 			// capacity
 
@@ -264,12 +252,14 @@ namespace kerbal
 
 				template <typename Key, typename Result>
 				struct enable_if_transparent_lookup :
-						hash_table::template enable_if_transparent_lookup<Key, Result>
+					hash_table::template enable_if_transparent_lookup<Key, Result>
 				{
 				};
 */
 
 			public:
+
+				using hash_table::contains;
 
 				KERBAL_CONSTEXPR20
 				const_iterator find(const_reference key) const;
@@ -293,16 +283,6 @@ namespace kerbal
 					kerbal::utility::compressed_pair<const_iterator, const_iterator>
 				>::type
 				equal_range(const Key & key) const;
-*/
-
-				KERBAL_CONSTEXPR20
-				bool contains(const_reference key) const;
-
-/*
-				template <typename Key>
-				KERBAL_CONSTEXPR20
-				typename enable_if_transparent_lookup<Key, bool>::type
-				contains(const Key & key) const;
 */
 
 			//===================
@@ -349,7 +329,10 @@ namespace kerbal
 
 				template <typename InputIterator>
 				KERBAL_CONSTEXPR20
-				void insert(InputIterator first, InputIterator last);
+				typename kerbal::type_traits::enable_if<
+					kerbal::iterator::is_input_compatible_iterator<InputIterator>::value
+				>::type
+				insert(InputIterator first, InputIterator last);
 
 #		if __cplusplus >= 201103L
 
@@ -359,7 +342,7 @@ namespace kerbal
 #		else
 
 				template <typename U>
-				void insert(const kerbal::assign::assign_list<U> & ilist);
+				void insert(kerbal::assign::assign_list<U> const & ilist);
 
 #		endif
 
@@ -377,13 +360,13 @@ namespace kerbal
 				iterator erase(const_iterator first, const_iterator last) KERBAL_NOEXCEPT;
 
 				KERBAL_CONSTEXPR20
-				size_type erase(const key_type & key) KERBAL_NOEXCEPT;
+				size_type erase(key_type const & key) KERBAL_NOEXCEPT;
 
 /*
 				template <typename Key>
 				KERBAL_CONSTEXPR20
 				typename enable_if_transparent_lookup<Key, size_type>::type
-				erase(const Key & pos) KERBAL_NOEXCEPT;
+				erase(Key const & pos) KERBAL_NOEXCEPT;
 */
 
 				KERBAL_CONSTEXPR20
@@ -405,7 +388,7 @@ namespace kerbal
 #			define LEFT_JOIN_COMMA(exp) , exp
 #			define THEAD_NOT_EMPTY(exp) template <exp>
 #			define TARGS_DECL(i) typename KERBAL_MACRO_CONCAT(Arg, i)
-#			define ARGS_DECL(i) const KERBAL_MACRO_CONCAT(Arg, i) & KERBAL_MACRO_CONCAT(arg, i)
+#			define ARGS_DECL(i) KERBAL_MACRO_CONCAT(Arg, i) const & KERBAL_MACRO_CONCAT(arg, i)
 #			define FBODY(i) \
 				KERBAL_OPT_PPEXPAND_WITH_COMMA_N(THEAD_NOT_EMPTY, EMPTY, TARGS_DECL, i) \
 				unique_insert_r replace_emplace(const_iterator replace KERBAL_OPT_PPEXPAND_WITH_COMMA_N(LEFT_JOIN_COMMA, EMPTY, ARGS_DECL, i));
@@ -431,6 +414,16 @@ namespace kerbal
 
 				KERBAL_CONSTEXPR20
 				void swap(hash_set & other);
+
+			//===================
+			// Hash policy
+
+			public:
+
+				using hash_table::load_factor;
+				using hash_table::max_load_factor;
+				using hash_table::reserve;
+				using hash_table::rehash;
 
 		};
 

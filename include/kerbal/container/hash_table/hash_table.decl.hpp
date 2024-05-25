@@ -12,11 +12,15 @@
 #ifndef KERBAL_CONTAINER_HASH_TABLE_HASH_TABLE_DECL_HPP
 #define KERBAL_CONTAINER_HASH_TABLE_HASH_TABLE_DECL_HPP
 
+#include <kerbal/assign/assign_list.hpp>
 #include <kerbal/compatibility/constexpr.hpp>
+#include <kerbal/compatibility/namespace_std_scope.hpp>
 #include <kerbal/compatibility/noexcept.hpp>
 #include <kerbal/container/associative_container_facility/unique_tag_t.hpp>
+#include <kerbal/iterator/iterator_traits.hpp>
 #include <kerbal/memory/allocator_traits.hpp>
 #include <kerbal/numeric/numeric_limits.hpp>
+#include <kerbal/type_traits/enable_if.hpp>
 #include <kerbal/type_traits/integral_constant.hpp>
 #include <kerbal/utility/member_compress_helper.hpp>
 
@@ -64,14 +68,14 @@ namespace kerbal
 					typedef typename node_allocator_br_traits::template rebind_alloc<node>::other				node_allocator_type;
 					typedef typename node_allocator_br_traits::template rebind_traits<node>::other				node_allocator_traits;
 					typedef kerbal::container::detail::container_rebind_allocator_overload<
-							NodeAllocatorBR, node
+						NodeAllocatorBR, node
 					>																							node_allocator_overload;
 
 					typedef kerbal::memory::allocator_traits<BucketAllocatorBR>									bucket_allocator_br_traits;
 					typedef typename bucket_allocator_br_traits::template rebind_alloc<bucket_type>::other		bucket_allocator_type;
 					typedef typename bucket_allocator_br_traits::template rebind_traits<bucket_type>::other		bucket_allocator_traits;
 					typedef kerbal::container::detail::container_rebind_allocator_overload<
-							BucketAllocatorBR, bucket_type
+						BucketAllocatorBR, bucket_type
 					>																							bucket_allocator_overload;
 
 			};
@@ -81,21 +85,22 @@ namespace kerbal
 
 		template <typename Entity, typename Extract, typename Hash, typename NodeAllocatorBR, typename BucketAllocatorBR>
 		struct hash_table_node_size :
-				kerbal::type_traits::integral_constant<std::size_t,
-					sizeof(
-						typename kerbal::container::detail::hash_table_typedef_helper<Entity, Extract, Hash, NodeAllocatorBR, BucketAllocatorBR>::node
-					)
-				>
+			kerbal::type_traits::integral_constant<std::size_t,
+				sizeof(
+					typename kerbal::container::detail::hash_table_typedef_helper<Entity, Extract, Hash, NodeAllocatorBR, BucketAllocatorBR>::node
+				)
+			>
 		{
 		};
 
 
-		template <typename Entity,
-				typename Extract,
-				typename Hash,
-				typename KeyEqual,
-				typename NodeAllocatorBR,
-				typename BucketAllocatorBR
+		template <
+			typename Entity,
+			typename Extract,
+			typename Hash,
+			typename KeyEqual,
+			typename NodeAllocatorBR,
+			typename BucketAllocatorBR
 		>
 		class hash_table:
 				private kerbal::utility::member_compress_helper<Extract>,
@@ -116,6 +121,7 @@ namespace kerbal
 					Entity, Extract, Hash, NodeAllocatorBR, BucketAllocatorBR
 				>																				hash_table_typedef_helper;
 
+				typedef kerbal::utility::member_compress_helper<Extract>						extract_compress_helper;
 				typedef kerbal::utility::member_compress_helper<Hash>							hash_compress_helper;
 				typedef kerbal::utility::member_compress_helper<KeyEqual>						key_equal_compress_helper;
 
@@ -133,19 +139,22 @@ namespace kerbal
 				typedef typename hash_table_typedef_helper::hash_table_base						hash_table_base;
 
 			public:
-				// typedef typename hash_table_base::key_type					key_type;
 				typedef typename hash_table_base::value_type				value_type;
 				typedef typename hash_table_base::const_type				const_type;
 				typedef typename hash_table_base::reference					reference;
 				typedef typename hash_table_base::const_reference			const_reference;
+				typedef typename hash_table_base::pointer					pointer;
+				typedef typename hash_table_base::const_pointer				const_pointer;
 
 #		if __cplusplus >= 201103L
 				typedef typename hash_table_base::rvalue_reference			rvalue_reference;
 				typedef typename hash_table_base::const_rvalue_reference	const_rvalue_reference;
 #		endif
 
+				typedef Extract								extractor;
+				typedef typename extractor::key_type		key_type;
 				typedef Hash								hasher;
-				typedef typename Hash::result_type			hash_result_type;
+				typedef typename hasher::result_type		hash_result_type;
 				typedef KeyEqual							key_equal;
 				typedef std::size_t							size_type;
 				typedef std::ptrdiff_t						difference_type;
@@ -157,34 +166,30 @@ namespace kerbal
 				typedef typename hash_table_base::unique_insert_r			unique_insert_r;
 
 
-				typedef kerbal::utility::member_compress_helper<Extract> extract_compress_helper;
-
-				typedef typename Extract::key_type			key_type;
-
 //				typedef typename hash_table_base::NODE_SIZE					NODE_SIZE;
-//				typedef typename hash_table_base::CACHE_HASH_RESULT			CACHE_HASH_RESULT;
+				typedef typename hash_table_base::CACHE_HASH_RESULT			CACHE_HASH_RESULT;
 
 			protected:
 
-				KERBAL_CONSTEXPR14
+				KERBAL_CONSTEXPR20
 				node_allocator_type & node_alloc() KERBAL_NOEXCEPT
 				{
 					return node_allocator_overload::alloc();
 				}
 
-				KERBAL_CONSTEXPR
+				KERBAL_CONSTEXPR20
 				const node_allocator_type & node_alloc() const KERBAL_NOEXCEPT
 				{
 					return node_allocator_overload::alloc();
 				}
 
-				KERBAL_CONSTEXPR14
+				KERBAL_CONSTEXPR20
 				bucket_allocator_type & bucket_alloc() KERBAL_NOEXCEPT
 				{
 					return bucket_allocator_overload::alloc();
 				}
 
-				KERBAL_CONSTEXPR
+				KERBAL_CONSTEXPR20
 				const bucket_allocator_type & bucket_alloc() const KERBAL_NOEXCEPT
 				{
 					return bucket_allocator_overload::alloc();
@@ -208,16 +213,17 @@ namespace kerbal
 				hash_table(size_type bucket_count, const Hash & hash, const key_equal & key_equal);
 
 				KERBAL_CONSTEXPR20
-				hash_table(size_type bucket_count, const Hash & hash, const key_equal & key_equal,
-							const NodeAllocatorBR & nodeAllocatorBr);
+				hash_table(
+					size_type bucket_count, const Hash & hash, const key_equal & key_equal,
+					const NodeAllocatorBR & nodeAllocatorBr
+				);
 
 				KERBAL_CONSTEXPR20
-				hash_table(size_type bucket_count, const Hash & hash, const key_equal & key_equal,
-							const NodeAllocatorBR & nodeAllocatorBr, const BucketAllocatorBR & bucketAllocatorBr);
+				hash_table(
+					size_type bucket_count, const Hash & hash, const key_equal & key_equal,
+					const NodeAllocatorBR & nodeAllocatorBr, const BucketAllocatorBR & bucketAllocatorBr
+				);
 
-			protected:
-
-			public:
 				template <typename InputIterator>
 				KERBAL_CONSTEXPR20
 				hash_table(
@@ -298,48 +304,76 @@ namespace kerbal
 			//===================
 			// Assign
 
+			public:
+
+				KERBAL_CONSTEXPR20
 				hash_table & operator=(hash_table const & src)
 				{
 					this->clear();
-					this->insert(src.cbegin(), src.cend());
+					this->insert(src.cbegin(), src.cend()); // TODO
 					return *this;
 				}
+
+				template <typename InputIterator>
+				KERBAL_CONSTEXPR20
+				typename kerbal::type_traits::enable_if<
+					kerbal::iterator::is_input_compatible_iterator<InputIterator>::value
+				>::type
+				assign(InputIterator first, InputIterator last);
+
+				KERBAL_CONSTEXPR20
+				void assign(hash_table const & src);
+
+#		if __cplusplus >= 201103L
+				KERBAL_CONSTEXPR20
+				void assign(hash_table && src);
+#		endif
+
+#		if __cplusplus >= 201103L
+				KERBAL_CONSTEXPR20
+				void assign(std::initializer_list<value_type> ilist);
+#		else
+				template <typename U>
+				KERBAL_CONSTEXPR20
+				void assign(kerbal::assign::assign_list<U> const & ilist);
+#		endif
 
 			//===================
 			// Observers
 
 			public:
-				KERBAL_CONSTEXPR
+
+				KERBAL_CONSTEXPR20
 				Extract & extract() KERBAL_NOEXCEPT
 				{
 					return extract_compress_helper::member();
 				}
 
-				KERBAL_CONSTEXPR
+				KERBAL_CONSTEXPR20
 				const Extract & extract() const KERBAL_NOEXCEPT
 				{
 					return extract_compress_helper::member();
 				}
 
-				KERBAL_CONSTEXPR14
+				KERBAL_CONSTEXPR20
 				Hash & hash() KERBAL_NOEXCEPT
 				{
 					return hash_compress_helper::member();
 				}
 
-				KERBAL_CONSTEXPR
+				KERBAL_CONSTEXPR20
 				const Hash & hash() const KERBAL_NOEXCEPT
 				{
 					return hash_compress_helper::member();
 				}
 
-				KERBAL_CONSTEXPR14
+				KERBAL_CONSTEXPR20
 				key_equal & key_equal_obj() KERBAL_NOEXCEPT
 				{
 					return key_equal_compress_helper::member();
 				}
 
-				KERBAL_CONSTEXPR
+				KERBAL_CONSTEXPR20
 				const key_equal & key_equal_obj() const KERBAL_NOEXCEPT
 				{
 					return key_equal_compress_helper::member();
@@ -348,23 +382,48 @@ namespace kerbal
 			//===================
 			// Iterators
 
+			public:
+
 				using hash_table_base::begin;
 				using hash_table_base::cbegin;
+
 				using hash_table_base::end;
 				using hash_table_base::cend;
 
 			//===================
 			// Capacity
 
+			public:
+
 				using hash_table_base::empty;
 				using hash_table_base::size;
 				using hash_table_base::max_size;
 
 			//===================
+			// Bucket interface
+
+			public:
+
+				using hash_table_base::bucket_count;
+				using hash_table_base::max_bucket_count;
+				using hash_table_base::bucket_size;
+
+				KERBAL_CONSTEXPR20
+				size_type bucket(key_type const & key) const
+				{
+					return this->hash_table_base::bucket(this->hash(), key);
+				}
+
+			//===================
 			// Lookup
+
+			public:
 
 				KERBAL_CONSTEXPR20
 				iterator find(key_type const & key);
+
+				KERBAL_CONSTEXPR20
+				const_iterator find(key_type const & key) const;
 
 			//===================
 			// Insert
@@ -398,7 +457,7 @@ namespace kerbal
 #			define LEFT_JOIN_COMMA(exp) , exp
 #			define THEAD_NOT_EMPTY(exp) template <exp>
 #			define TARGS_DECL(i) typename KERBAL_MACRO_CONCAT(Arg, i)
-#			define ARGS_DECL(i) const KERBAL_MACRO_CONCAT(Arg, i) & KERBAL_MACRO_CONCAT(arg, i)
+#			define ARGS_DECL(i) KERBAL_MACRO_CONCAT(Arg, i) const & KERBAL_MACRO_CONCAT(arg, i)
 
 #			define FBODY(i) \
 				KERBAL_OPT_PPEXPAND_WITH_COMMA_N(THEAD_NOT_EMPTY, EMPTY, TARGS_DECL, i) \
@@ -418,30 +477,38 @@ namespace kerbal
 				KERBAL_PPEXPAND_N(FBODY, KERBAL_PPEXPAND_EMPTY_SEPARATOR, 0)
 				KERBAL_PPEXPAND_N(FBODY, KERBAL_PPEXPAND_EMPTY_SEPARATOR, 20)
 
+#			undef EMPTY
+#			undef REMAINF
+#			undef LEFT_JOIN_COMMA
+#			undef THEAD_NOT_EMPTY
+#			undef TARGS_DECL
+#			undef ARGS_DECL
+#			undef FBODY
+
 #		endif
 
 
 				KERBAL_CONSTEXPR20
 				iterator insert(const_reference src);
 
-#		if __cplusplus >= 201103L
-				KERBAL_CONSTEXPR20
-				iterator insert(rvalue_reference src);
-#		endif
-
-/*
 				KERBAL_CONSTEXPR20
 				iterator insert(const_iterator hint, const_reference src);
 
+
 #		if __cplusplus >= 201103L
+				KERBAL_CONSTEXPR20
+				iterator insert(rvalue_reference src);
+
 				KERBAL_CONSTEXPR20
 				iterator insert(const_iterator hint, rvalue_reference src);
 #		endif
-*/
 
 				template <typename InputIterator>
 				KERBAL_CONSTEXPR20
-				void insert(InputIterator first, InputIterator last);
+				typename kerbal::type_traits::enable_if<
+					kerbal::iterator::is_input_compatible_iterator<InputIterator>::value
+				>::type
+				insert(InputIterator first, InputIterator last);
 
 #		if __cplusplus >= 201103L
 				KERBAL_CONSTEXPR20
@@ -468,7 +535,10 @@ namespace kerbal
 
 				template <typename InputIterator>
 				KERBAL_CONSTEXPR20
-				void insert_unique(InputIterator first, InputIterator last);
+				typename kerbal::type_traits::enable_if<
+					kerbal::iterator::is_input_compatible_iterator<InputIterator>::value
+				>::type
+				insert_unique(InputIterator first, InputIterator last);
 
 #		if __cplusplus >= 201103L
 				KERBAL_CONSTEXPR20
@@ -482,6 +552,8 @@ namespace kerbal
 			//===================
 			// Erase
 
+			public:
+
 				KERBAL_CONSTEXPR20
 				void clear();
 
@@ -489,32 +561,26 @@ namespace kerbal
 				iterator erase(const_iterator pos);
 
 				KERBAL_CONSTEXPR20
-				iterator erase(const_iterator first, const_iterator last);
+				size_type erase(const_iterator first, const_iterator last);
 
 				KERBAL_CONSTEXPR20
-				iterator erase(key_type const & key);
+				size_type erase(key_type const & key);
 
 			//===================
 			// Modifiers
 
+			public:
+
 				KERBAL_CONSTEXPR20
 				void swap(hash_table & with);
 
-			//===================
-			// Bucket interface
-
-				using hash_table_base::bucket_count;
-				using hash_table_base::max_bucket_count;
-				using hash_table_base::bucket_size;
-
 				KERBAL_CONSTEXPR20
-				size_type bucket(key_type const & key) const
-				{
-					return this->hash_table_base::bucket(this->hash(), key);
-				}
+				void merge(hash_table & with);
 
 			//===================
 			// Hash policy
+
+			public:
 
 				using hash_table_base::load_factor;
 				using hash_table_base::max_load_factor;
@@ -533,8 +599,97 @@ namespace kerbal
 
 		};
 
+/*
+		template <
+			typename Entity,
+			typename Extract,
+			typename Hash,
+			typename KeyEqual,
+			typename NodeAllocatorBR,
+			typename BucketAllocatorBR
+		>
+		KERBAL_CONSTEXPR20
+		bool operator==(
+			const hash_table<Entity, Extract, Hash, KeyEqual, NodeAllocatorBR, BucketAllocatorBR> & lhs,
+			const hash_table<Entity, Extract, Hash, KeyEqual, NodeAllocatorBR, BucketAllocatorBR2> & rhs
+		)
+		{
+			if (lhs.size() != rhs.size()) {
+				return false;
+			}
+			return ;
+		}
+
+		template <
+			typename Entity,
+			typename Extract,
+			typename Hash,
+			typename KeyEqual,
+			typename NodeAllocatorBR,
+			typename BucketAllocatorBR
+		>
+		KERBAL_CONSTEXPR20
+		bool operator!=(
+			const hash_table<Entity, Extract, Hash, KeyEqual, NodeAllocatorBR, BucketAllocatorBR> & lhs,
+			const hash_table<Entity, Extract, Hash, KeyEqual, NodeAllocatorBR, BucketAllocatorBR2> & rhs
+		)
+		{
+			if (lhs.size() != rhs.size()) {
+				return true;
+			}
+			return ;
+		}
+*/
+
 	} // namespace container
 
+	namespace algorithm
+	{
+
+		template <
+			typename Entity,
+			typename Extract,
+			typename Hash,
+			typename KeyEqual,
+			typename NodeAllocatorBR,
+			typename BucketAllocatorBR
+		>
+		KERBAL_CONSTEXPR20
+		void swap(
+			kerbal::container::hash_table<Entity, Extract, Hash, KeyEqual, NodeAllocatorBR, BucketAllocatorBR> & a,
+			kerbal::container::hash_table<Entity, Extract, Hash, KeyEqual, NodeAllocatorBR, BucketAllocatorBR> & b
+		)
+			KERBAL_CONDITIONAL_NOEXCEPT(noexcept(a.swap(b)))
+		{
+			a.swap(b);
+		}
+
+	} // namespace algorithm
+
 } // namespace kerbal
+
+
+KERBAL_NAMESPACE_STD_BEGIN
+
+	template <
+		typename Entity,
+		typename Extract,
+		typename Hash,
+		typename KeyEqual,
+		typename NodeAllocatorBR,
+		typename BucketAllocatorBR
+	>
+	KERBAL_CONSTEXPR20
+	void swap(
+		kerbal::container::hash_table<Entity, Extract, Hash, KeyEqual, NodeAllocatorBR, BucketAllocatorBR> & a,
+		kerbal::container::hash_table<Entity, Extract, Hash, KeyEqual, NodeAllocatorBR, BucketAllocatorBR> & b
+	)
+		KERBAL_CONDITIONAL_NOEXCEPT(noexcept(a.swap(b)))
+	{
+		a.swap(b);
+	}
+
+KERBAL_NAMESPACE_STD_END
+
 
 #endif // KERBAL_CONTAINER_HASH_TABLE_HASH_TABLE_DECL_HPP
