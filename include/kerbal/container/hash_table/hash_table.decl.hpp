@@ -25,14 +25,12 @@
 #endif
 
 #if __cplusplus < 201103L
-#	include <kerbal/assign/assign_list.hpp>
-#else
-#	include <initializer_list>
-#endif
-
-#if __cplusplus < 201103L
 #	include <kerbal/macro/macro_concat.hpp>
 #	include <kerbal/macro/ppexpand.hpp>
+#endif
+
+#if __cplusplus >= 201103L
+#	include <initializer_list>
 #endif
 
 #include <cstddef>
@@ -222,63 +220,69 @@ namespace kerbal
 			public:
 				template <typename InputIterator>
 				KERBAL_CONSTEXPR20
-				hash_table(InputIterator first, InputIterator last,
-							typename kerbal::type_traits::enable_if<
-									kerbal::iterator::is_input_compatible_iterator<InputIterator>::value
-									, int
-						   >::type = 0
+				hash_table(
+					InputIterator first, InputIterator last,
+					typename kerbal::type_traits::enable_if<
+						kerbal::iterator::is_input_compatible_iterator<InputIterator>::value,
+						int
+					>::type = 0
 				);
 
 				template <typename InputIterator>
 				KERBAL_CONSTEXPR20
-				hash_table(InputIterator first, InputIterator last,
-							size_type bucket_count,
-							typename kerbal::type_traits::enable_if<
-									kerbal::iterator::is_input_compatible_iterator<InputIterator>::value
-									, int
-							>::type = 0
+				hash_table(
+					InputIterator first, InputIterator last,
+					size_type bucket_count,
+					typename kerbal::type_traits::enable_if<
+						kerbal::iterator::is_input_compatible_iterator<InputIterator>::value,
+						int
+					>::type = 0
 				);
 
 				template <typename InputIterator>
 				KERBAL_CONSTEXPR20
-				hash_table(InputIterator first, InputIterator last,
-							size_type bucket_count, const Hash & hash,
-							typename kerbal::type_traits::enable_if<
-									kerbal::iterator::is_input_compatible_iterator<InputIterator>::value
-									, int
-							>::type = 0
+				hash_table(
+					InputIterator first, InputIterator last,
+					size_type bucket_count, const Hash & hash,
+					typename kerbal::type_traits::enable_if<
+						kerbal::iterator::is_input_compatible_iterator<InputIterator>::value,
+						int
+					>::type = 0
 				);
 
 				template <typename InputIterator>
 				KERBAL_CONSTEXPR20
-				hash_table(InputIterator first, InputIterator last,
-							size_type bucket_count, const Hash & hash, const key_equal & key_equal,
-							typename kerbal::type_traits::enable_if<
-									kerbal::iterator::is_input_compatible_iterator<InputIterator>::value
-									, int
-							>::type = 0
+				hash_table(
+					InputIterator first, InputIterator last,
+					size_type bucket_count, const Hash & hash, const key_equal & key_equal,
+					typename kerbal::type_traits::enable_if<
+						kerbal::iterator::is_input_compatible_iterator<InputIterator>::value,
+						int
+					>::type = 0
 				);
 
 				template <typename InputIterator>
 				KERBAL_CONSTEXPR20
-				hash_table(InputIterator first, InputIterator last,
-							size_type bucket_count, const Hash & hash, const key_equal & key_equal,
-							const NodeAllocatorBR & nodeAllocatorBr,
-							typename kerbal::type_traits::enable_if<
-									kerbal::iterator::is_input_compatible_iterator<InputIterator>::value
-									, int
-							>::type = 0
+				hash_table(
+					InputIterator first, InputIterator last,
+					size_type bucket_count, const Hash & hash, const key_equal & key_equal,
+					const NodeAllocatorBR & nodeAllocatorBr,
+					typename kerbal::type_traits::enable_if<
+						kerbal::iterator::is_input_compatible_iterator<InputIterator>::value,
+						int
+					>::type = 0
 				);
 
 				template <typename InputIterator>
 				KERBAL_CONSTEXPR20
-				hash_table(InputIterator first, InputIterator last,
-							size_type bucket_count, const Hash & hash, const key_equal & key_equal,
-							const NodeAllocatorBR & nodeAllocatorBr, const BucketAllocatorBR & bucketAllocatorBr,
-							typename kerbal::type_traits::enable_if<
-									kerbal::iterator::is_input_compatible_iterator<InputIterator>::value
-									, int
-							>::type = 0
+				hash_table(
+					InputIterator first, InputIterator last,
+					size_type bucket_count, const Hash & hash, const key_equal & key_equal,
+					const NodeAllocatorBR & nodeAllocatorBr, const BucketAllocatorBR & bucketAllocatorBr,
+					typename kerbal::type_traits::enable_if<
+						kerbal::iterator::is_input_compatible_iterator<InputIterator>::value,
+						int
+					>::type = 0
 				);
 
 				KERBAL_CONSTEXPR20
