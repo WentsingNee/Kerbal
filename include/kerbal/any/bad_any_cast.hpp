@@ -24,15 +24,15 @@ namespace kerbal
 	{
 
 		class bad_any_cast :
-				public std::logic_error
+			public std::logic_error
 		{
 			public:
 				bad_any_cast() :
-						std::logic_error("bad any_cast")
+					std::logic_error("bad any_cast")
 				{
 				}
 
-				virtual const char* what() const KERBAL_NOEXCEPT
+				virtual const char * what() const KERBAL_NOEXCEPT
 				{
 					return "bad any_cast";
 				}

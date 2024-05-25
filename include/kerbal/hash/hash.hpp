@@ -159,12 +159,12 @@ namespace kerbal
 		};
 
 		template <typename T>
-		struct hash<T*>
+		struct hash<T *>
 		{
 				typedef std::size_t result_type;
-				typedef T* argument_type;
+				typedef T * argument_type;
 
-				std::size_t operator()(T* p) const KERBAL_NOEXCEPT
+				std::size_t operator()(T * p) const KERBAL_NOEXCEPT
 				{
 					return reinterpret_cast<std::size_t>(p);
 				}

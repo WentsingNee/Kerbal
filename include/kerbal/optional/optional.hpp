@@ -56,7 +56,9 @@ namespace kerbal
 		namespace detail
 		{
 
-			template <typename T, bool is_trivially_destructible =
+			template <
+				typename T,
+				bool is_trivially_destructible =
 					kerbal::type_traits::try_test_is_trivially_destructible<T>::IS_TRUE::value
 			>
 			class optional_base;
@@ -84,7 +86,7 @@ namespace kerbal
 
 					KERBAL_CONSTEXPR20
 					optional_base() KERBAL_NOEXCEPT :
-							k_has_value(false)
+						k_has_value(false)
 					{
 					}
 
@@ -92,8 +94,8 @@ namespace kerbal
 
 					template <typename ... Args>
 					KERBAL_CONSTEXPR20
-					explicit optional_base(kerbal::utility::in_place_t in_place, Args&& ... args) :
-							k_storage(in_place, kerbal::utility::forward<Args>(args)...), k_has_value(true)
+					explicit optional_base(kerbal::utility::in_place_t in_place, Args && ... args) :
+						k_storage(in_place, kerbal::utility::forward<Args>(args)...), k_has_value(true)
 					{
 					}
 
@@ -108,9 +110,9 @@ namespace kerbal
 #				define FBODY(i) \
 					KERBAL_OPT_PPEXPAND_WITH_COMMA_N(THEAD_NOT_EMPTY, EMPTY, TARGS_DECL, i) \
 					explicit optional_base(kerbal::utility::in_place_t in_place KERBAL_OPT_PPEXPAND_WITH_COMMA_N(LEFT_JOIN_COMMA, EMPTY, ARGS_DECL, i)) : \
-							k_storage(in_place KERBAL_OPT_PPEXPAND_WITH_COMMA_N(LEFT_JOIN_COMMA, EMPTY, ARGS_USE, i)), k_has_value(true) \
+						k_storage(in_place KERBAL_OPT_PPEXPAND_WITH_COMMA_N(LEFT_JOIN_COMMA, EMPTY, ARGS_USE, i)), k_has_value(true) \
 					{ \
-					}
+					} \
 
 					KERBAL_PPEXPAND_N(FBODY, KERBAL_PPEXPAND_EMPTY_SEPARATOR, 0)
 					KERBAL_PPEXPAND_N(FBODY, KERBAL_PPEXPAND_EMPTY_SEPARATOR, 20)
@@ -157,7 +159,7 @@ namespace kerbal
 				protected:
 					KERBAL_CONSTEXPR
 					optional_base() KERBAL_NOEXCEPT :
-							k_has_value(false)
+						k_has_value(false)
 					{
 					}
 
@@ -165,8 +167,9 @@ namespace kerbal
 
 					template <typename ... Args>
 					KERBAL_CONSTEXPR
-					explicit optional_base(kerbal::utility::in_place_t in_place, Args&& ... args) :
-							k_storage(in_place, kerbal::utility::forward<Args>(args)...), k_has_value(true)
+					explicit optional_base(kerbal::utility::in_place_t in_place, Args && ... args) :
+						k_storage(in_place, kerbal::utility::forward<Args>(args)...),
+						k_has_value(true)
 					{
 					}
 
@@ -181,9 +184,10 @@ namespace kerbal
 #				define FBODY(i) \
 					KERBAL_OPT_PPEXPAND_WITH_COMMA_N(THEAD_NOT_EMPTY, EMPTY, TARGS_DECL, i) \
 					explicit optional_base(kerbal::utility::in_place_t in_place KERBAL_OPT_PPEXPAND_WITH_COMMA_N(LEFT_JOIN_COMMA, EMPTY, ARGS_DECL, i)) : \
-							k_storage(in_place KERBAL_OPT_PPEXPAND_WITH_COMMA_N(LEFT_JOIN_COMMA, EMPTY, ARGS_USE, i)), k_has_value(true) \
+						k_storage(in_place KERBAL_OPT_PPEXPAND_WITH_COMMA_N(LEFT_JOIN_COMMA, EMPTY, ARGS_USE, i)), \
+						k_has_value(true) \
 					{ \
-					}
+					} \
 
 					KERBAL_PPEXPAND_N(FBODY, KERBAL_PPEXPAND_EMPTY_SEPARATOR, 0)
 					KERBAL_PPEXPAND_N(FBODY, KERBAL_PPEXPAND_EMPTY_SEPARATOR, 20)
@@ -204,21 +208,21 @@ namespace kerbal
 
 		template <typename T>
 		class optional :
-				protected kerbal::optional::detail::optional_base<T>
+			protected kerbal::optional::detail::optional_base<T>
 		{
 			private:
 				typedef kerbal::optional::detail::optional_base<T> super;
 
 			public:
 				typedef T						value_type;
-				typedef value_type&				reference;
-				typedef const value_type&		const_reference;
-				typedef value_type*				pointer;
-				typedef const value_type*		const_pointer;
+				typedef value_type &			reference;
+				typedef const value_type &		const_reference;
+				typedef value_type *			pointer;
+				typedef const value_type *		const_pointer;
 
 #		if __cplusplus >= 201103L
-				typedef value_type&&			rvalue_reference;
-				typedef const value_type&&		const_rvalue_reference;
+				typedef value_type &&			rvalue_reference;
+				typedef const value_type &&		const_rvalue_reference;
 #		endif
 
 			public:
@@ -271,7 +275,7 @@ namespace kerbal
 				 */
 				KERBAL_CONSTEXPR
 				explicit optional(const_reference src) :
-						super(kerbal::utility::in_place_t(), src)
+					super(kerbal::utility::in_place_t(), src)
 				{
 				}
 
@@ -279,7 +283,7 @@ namespace kerbal
 
 				KERBAL_CONSTEXPR
 				explicit optional(rvalue_reference src) :
-						super(kerbal::utility::in_place_t(), kerbal::compatibility::move(src))
+					super(kerbal::utility::in_place_t(), kerbal::compatibility::move(src))
 				{
 				}
 
@@ -302,22 +306,27 @@ namespace kerbal
 				template <typename U>
 				KERBAL_CONSTEXPR
 				explicit optional(const U & src) :
-						super(kerbal::utility::in_place_t(), src)
+					super(kerbal::utility::in_place_t(), src)
 				{
 				}
 
 #		else
 
 				template <typename U, typename = typename kerbal::type_traits::enable_if<
-						(
-								!kerbal::optional::is_optional<typename kerbal::type_traits::remove_reference<U>::type>::value &&
-								!kerbal::type_traits::is_same<typename kerbal::type_traits::remove_reference<U>::type, kerbal::optional::nullopt_t>::value
-						),
-						int
+					(
+						!kerbal::optional::is_optional<
+							typename kerbal::type_traits::remove_reference<U>::type
+						>::value &&
+						!kerbal::type_traits::is_same<
+							typename kerbal::type_traits::remove_reference<U>::type,
+							kerbal::optional::nullopt_t
+						>::value
+					),
+					int
 				>::type>
 				KERBAL_CONSTEXPR
 				explicit optional(U && src) :
-						super(kerbal::utility::in_place_t(), kerbal::utility::forward<U>(src))
+					super(kerbal::utility::in_place_t(), kerbal::utility::forward<U>(src))
 				{
 				}
 
@@ -335,7 +344,7 @@ namespace kerbal
 				 */
 				KERBAL_CONSTEXPR14
 				optional(const optional & src) :
-						super()
+					super()
 				{
 					if (src.has_value()) {
 						this->k_storage.construct(src.ignored_get());
@@ -347,7 +356,7 @@ namespace kerbal
 
 				KERBAL_CONSTEXPR14
 				optional(optional && src) :
-						super()
+					super()
 				{
 					if (src.has_value()) {
 						this->k_storage.construct(kerbal::compatibility::move(src).ignored_get());
@@ -365,7 +374,7 @@ namespace kerbal
 				template <typename U>
 				KERBAL_CONSTEXPR14
 				explicit optional(const optional<U> & src) :
-						super()
+					super()
 				{
 					if (src.has_value()) {
 						this->k_storage.construct(src.ignored_get());
@@ -378,7 +387,7 @@ namespace kerbal
 				template <typename U>
 				KERBAL_CONSTEXPR14
 				optional(optional<U> && src) :
-						super()
+					super()
 				{
 					if (src.has_value()) {
 						this->k_storage.construct(kerbal::compatibility::move(src).ignored_get());
@@ -393,8 +402,8 @@ namespace kerbal
 
 				template <typename ... Args>
 				KERBAL_CONSTEXPR
-				explicit optional(kerbal::utility::in_place_t in_place, Args&& ... args) :
-						super(in_place, kerbal::utility::forward<Args>(args)...)
+				explicit optional(kerbal::utility::in_place_t in_place, Args && ... args) :
+					super(in_place, kerbal::utility::forward<Args>(args)...)
 				{
 				}
 
@@ -409,9 +418,9 @@ namespace kerbal
 #			define FBODY(i) \
 				KERBAL_OPT_PPEXPAND_WITH_COMMA_N(THEAD_NOT_EMPTY, EMPTY, TARGS_DECL, i) \
 				explicit optional(kerbal::utility::in_place_t in_place KERBAL_OPT_PPEXPAND_WITH_COMMA_N(LEFT_JOIN_COMMA, EMPTY, ARGS_DECL, i)) : \
-						super(in_place KERBAL_OPT_PPEXPAND_WITH_COMMA_N(LEFT_JOIN_COMMA, EMPTY, ARGS_USE, i)) \
+					super(in_place KERBAL_OPT_PPEXPAND_WITH_COMMA_N(LEFT_JOIN_COMMA, EMPTY, ARGS_USE, i)) \
 				{ \
-				}
+				} \
 
 				KERBAL_PPEXPAND_N(FBODY, KERBAL_PPEXPAND_EMPTY_SEPARATOR, 0)
 				KERBAL_PPEXPAND_N(FBODY, KERBAL_PPEXPAND_EMPTY_SEPARATOR, 20)
@@ -430,7 +439,7 @@ namespace kerbal
 			// assign
 
 				KERBAL_CONSTEXPR14
-				optional& operator=(const kerbal::optional::nullopt_t &)
+				optional & operator=(const kerbal::optional::nullopt_t &)
 				{
 					this->reset();
 					return *this;
@@ -439,7 +448,7 @@ namespace kerbal
 #	if __cplusplus >= 201103L
 
 				KERBAL_CONSTEXPR14
-				optional& operator=(kerbal::optional::nullopt_t &&)
+				optional & operator=(kerbal::optional::nullopt_t &&)
 				{
 					this->reset();
 					return *this;
@@ -449,7 +458,7 @@ namespace kerbal
 
 
 				KERBAL_CONSTEXPR14
-				optional& operator=(const_reference src)
+				optional & operator=(const_reference src)
 				{
 					if (this->has_value()) {
 						kerbal::assign::generic_assign(this->k_storage.raw_value(), src);
@@ -464,7 +473,7 @@ namespace kerbal
 #	if __cplusplus >= 201103L
 
 				KERBAL_CONSTEXPR14
-				optional& operator=(rvalue_reference src)
+				optional & operator=(rvalue_reference src)
 				{
 					if (this->has_value()) {
 						kerbal::assign::generic_assign(this->k_storage.raw_value(), kerbal::compatibility::move(src));
@@ -483,7 +492,7 @@ namespace kerbal
 
 				template <typename U>
 				KERBAL_CONSTEXPR14
-				optional& operator=(const U & src)
+				optional & operator=(const U & src)
 				{
 					if (this->has_value()) {
 						kerbal::assign::generic_assign(this->k_storage.raw_value(), src);
@@ -501,10 +510,16 @@ namespace kerbal
 				KERBAL_CONSTEXPR14
 				typename kerbal::type_traits::enable_if<
 					(
-						!kerbal::optional::is_optional<typename kerbal::type_traits::remove_reference<U>::type>::value &&
-						!kerbal::type_traits::is_same<typename kerbal::type_traits::remove_reference<U>::type, kerbal::optional::nullopt_t>::value
+						!kerbal::optional::is_optional<
+							typename kerbal::type_traits::remove_reference<U>::type
+						>::value &&
+						!kerbal::type_traits::is_same<
+							typename kerbal::type_traits::remove_reference<U>::type,
+							kerbal::optional::nullopt_t
+						>::value
 					),
-				optional&>::type
+					optional &
+				>::type
 				operator=(U && src)
 				{
 					if (this->has_value()) {
@@ -521,7 +536,7 @@ namespace kerbal
 
 
 				KERBAL_CONSTEXPR14
-				optional& operator=(const optional & src)
+				optional & operator=(const optional & src)
 				{
 					if (this->has_value()) {
 						if (src.has_value()) {
@@ -543,7 +558,7 @@ namespace kerbal
 #	if __cplusplus >= 201103L
 
 				KERBAL_CONSTEXPR14
-				optional& operator=(optional && src)
+				optional & operator=(optional && src)
 				{
 					if (this->has_value()) {
 						if (src.has_value()) {
@@ -567,7 +582,7 @@ namespace kerbal
 
 				template <typename U>
 				KERBAL_CONSTEXPR14
-				optional& operator=(const optional<U> & src)
+				optional & operator=(const optional<U> & src)
 				{
 					if (this->has_value()) {
 						if (src.has_value()) {
@@ -590,7 +605,7 @@ namespace kerbal
 
 				template <typename U>
 				KERBAL_CONSTEXPR14
-				optional& operator=(optional<U> && src)
+				optional & operator=(optional<U> && src)
 				{
 					if (this->has_value()) {
 						if (src.has_value()) {
@@ -800,9 +815,11 @@ namespace kerbal
 				typename kerbal::type_traits::decay<const value_type>::type
 				value_or(U & default_value) const
 				{
-					return this->has_value() ?
-						   this->ignored_get() :
-						   static_cast<typename kerbal::type_traits::decay<const value_type>::type>(default_value);
+					return
+						this->has_value() ?
+						this->ignored_get() :
+						static_cast<typename kerbal::type_traits::decay<const value_type>::type>(default_value)
+					;
 				}
 
 #		else
@@ -812,9 +829,13 @@ namespace kerbal
 				typename kerbal::type_traits::decay<const value_type>::type
 				value_or(U && default_value) const &
 				{
-					return this->has_value() ?
-						   this->ignored_get() :
-						   static_cast<typename kerbal::type_traits::decay<const value_type>::type>(kerbal::utility::forward<U>(default_value));
+					return
+						this->has_value() ?
+						this->ignored_get() :
+						static_cast<typename kerbal::type_traits::decay<const value_type>::type>(
+							kerbal::utility::forward<U>(default_value)
+						)
+					;
 				}
 
 				template <typename U>
@@ -822,9 +843,11 @@ namespace kerbal
 				typename kerbal::type_traits::decay<value_type>::type
 				value_or(U && default_value) &&
 				{
-					return this->has_value() ?
-						   kerbal::compatibility::move(*this).ignored_get() :
-						   static_cast<typename kerbal::type_traits::decay<value_type>::type>(kerbal::utility::forward<U>(default_value));
+					return
+						this->has_value() ?
+						kerbal::compatibility::move(*this).ignored_get() :
+						static_cast<typename kerbal::type_traits::decay<value_type>::type>(kerbal::utility::forward<U>(default_value))
+					;
 				}
 
 #		endif
@@ -832,17 +855,21 @@ namespace kerbal
 				KERBAL_CONSTEXPR14
 				reference reference_or(reference default_value) KERBAL_REFERENCE_OVERLOAD_TAG KERBAL_NOEXCEPT
 				{
-					return this->has_value() ?
-						   this->ignored_get() :
-						   default_value;
+					return
+						this->has_value() ?
+						this->ignored_get() :
+						default_value
+					;
 				}
 
 				KERBAL_CONSTEXPR
 				const_reference reference_or(const_reference default_value) const KERBAL_REFERENCE_OVERLOAD_TAG KERBAL_NOEXCEPT
 				{
-					return this->has_value() ?
-						   this->ignored_get() :
-						   default_value;
+					return
+						this->has_value() ?
+						this->ignored_get() :
+						default_value
+					;
 				}
 
 
@@ -868,7 +895,7 @@ namespace kerbal
 				 */
 				template <typename ... Args>
 				KERBAL_CONSTEXPR14
-				optional& emplace(Args&& ... args)
+				optional & emplace(Args && ... args)
 				{
 					this->reset();
 					this->k_storage.construct(kerbal::utility::forward<Args>(args)...);
@@ -886,13 +913,13 @@ namespace kerbal
 #			define ARGS_USE(i) KERBAL_MACRO_CONCAT(arg, i)
 #			define FBODY(i) \
 				KERBAL_OPT_PPEXPAND_WITH_COMMA_N(THEAD_NOT_EMPTY, EMPTY, TARGS_DECL, i) \
-				optional& emplace(KERBAL_OPT_PPEXPAND_WITH_COMMA_N(REMAINF, EMPTY, ARGS_DECL, i)) \
+				optional & emplace(KERBAL_OPT_PPEXPAND_WITH_COMMA_N(REMAINF, EMPTY, ARGS_DECL, i)) \
 				{ \
 					this->reset(); \
 					this->k_storage.construct(KERBAL_OPT_PPEXPAND_WITH_COMMA_N(REMAINF, EMPTY, ARGS_USE, i)); \
 					this->k_has_value = true; \
 					return *this; \
-				}
+				} \
 
 				KERBAL_PPEXPAND_N(FBODY, KERBAL_PPEXPAND_EMPTY_SEPARATOR, 0)
 				KERBAL_PPEXPAND_N(FBODY, KERBAL_PPEXPAND_EMPTY_SEPARATOR, 20)
@@ -938,12 +965,12 @@ namespace kerbal
 
 
 		template <typename T>
-		class optional<T&>
+		class optional<T &>
 		{
 			public:
 				typedef T				value_type;
-				typedef T&				reference;
-				typedef T*				pointer;
+				typedef T &				reference;
+				typedef T *				pointer;
 
 			protected:
 				pointer k_ptr;
@@ -952,19 +979,19 @@ namespace kerbal
 
 				KERBAL_CONSTEXPR
 				optional() KERBAL_NOEXCEPT :
-						k_ptr(NULL)
+					k_ptr(NULL)
 				{
 				}
 
 				KERBAL_CONSTEXPR
 				optional(const kerbal::optional::nullopt_t &) KERBAL_NOEXCEPT :
-						k_ptr(NULL)
+					k_ptr(NULL)
 				{
 				}
 
 				KERBAL_CONSTEXPR
 				optional(reference val) KERBAL_NOEXCEPT :
-						k_ptr(&val)
+					k_ptr(&val)
 				{
 				}
 
@@ -1047,7 +1074,7 @@ namespace kerbal
 			// modifier
 
 				KERBAL_CONSTEXPR14
-				optional& emplace(reference val) KERBAL_NOEXCEPT
+				optional & emplace(reference val) KERBAL_NOEXCEPT
 				{
 					this->k_ptr = &val;
 					return *this;
@@ -1078,9 +1105,13 @@ namespace kerbal
 		>
 		make_optional(T && value)
 		{
-			return kerbal::optional::optional<
-						typename kerbal::type_traits::remove_reference<T>::type
-					>(kerbal::utility::forward<T>(value));
+			return
+				kerbal::optional::optional<
+					typename kerbal::type_traits::remove_reference<T>::type
+				>(
+					kerbal::utility::forward<T>(value)
+				)
+			;
 		}
 
 #	else
@@ -1109,15 +1140,16 @@ namespace kerbal
 #	else
 
 		template <typename T>
-		kerbal::optional::optional<T> make_optional()
+		kerbal::optional::optional<T>
+		make_optional()
 		{
 			return kerbal::optional::optional<T>(kerbal::utility::in_place_t());
 		}
 
 		template <typename T, typename Arg0>
 		typename kerbal::type_traits::enable_if<
-				!kerbal::type_traits::is_same<T, Arg0>::value,
-				kerbal::optional::optional<T>
+			!kerbal::type_traits::is_same<T, Arg0>::value,
+			kerbal::optional::optional<T>
 		>::type
 		make_optional(const Arg0 & arg0)
 		{
@@ -1135,7 +1167,7 @@ namespace kerbal
 		make_optional(const Arg0 & arg0, KERBAL_OPT_PPEXPAND_WITH_COMMA_N(REMAINF, EMPTY, ARGS_DECL, i)) \
 		{ \
 			return kerbal::optional::optional<T>(kerbal::utility::in_place_t(), arg0, KERBAL_OPT_PPEXPAND_WITH_COMMA_N(REMAINF, EMPTY, ARGS_USE, i)); \
-		}
+		} \
 
 		KERBAL_PPEXPAND_N(FBODY, KERBAL_PPEXPAND_EMPTY_SEPARATOR, 19)
 
@@ -1164,8 +1196,11 @@ namespace kerbal
 
 		template <typename T>
 		KERBAL_CONSTEXPR14
-		void swap(kerbal::optional::optional<T> & a, kerbal::optional::optional<T> & b)
-				KERBAL_CONDITIONAL_NOEXCEPT(noexcept(a.swap(b)))
+		void swap(
+			kerbal::optional::optional<T> & a,
+			kerbal::optional::optional<T> & b
+		)
+			KERBAL_CONDITIONAL_NOEXCEPT(noexcept(a.swap(b)))
 		{
 			a.swap(b);
 		}
@@ -1178,11 +1213,11 @@ namespace kerbal
 
 		template <typename T>
 		struct hash<kerbal::optional::optional<T> > :
-				public kerbal::optional::optional_hash_template<
-						kerbal::optional::optional<T>,
-						kerbal::hash::hash<T>,
-						static_cast<std::size_t>(-3333)
-				>
+			public kerbal::optional::optional_hash_template<
+				kerbal::optional::optional<T>,
+				kerbal::hash::hash<T>,
+				static_cast<std::size_t>(-3333)
+			>
 		{
 		};
 
@@ -1192,13 +1227,18 @@ namespace kerbal
 
 
 KERBAL_NAMESPACE_STD_BEGIN
+
 	template <typename T>
 	KERBAL_CONSTEXPR14
-	void swap(kerbal::optional::optional<T> & a, kerbal::optional::optional<T> & b)
-			KERBAL_CONDITIONAL_NOEXCEPT(noexcept(a.swap(b)))
+	void swap(
+		kerbal::optional::optional<T> & a,
+		kerbal::optional::optional<T> & b
+	)
+		KERBAL_CONDITIONAL_NOEXCEPT(noexcept(a.swap(b)))
 	{
 		a.swap(b);
 	}
+
 KERBAL_NAMESPACE_STD_END
 
 

@@ -29,7 +29,10 @@ namespace kerbal
 		 */
 		template <typename ForwardIterator, typename T, typename Comparator>
 		KERBAL_CONSTEXPR14
-		bool binary_search(ForwardIterator first, ForwardIterator last, const T& value, Comparator comparator)
+		bool binary_search(
+			ForwardIterator first, ForwardIterator last, const T & value,
+			Comparator comparator
+		)
 		{
 			typedef ForwardIterator iterator;
 			iterator lb(kerbal::algorithm::lower_bound(first, last, value, comparator));
@@ -40,7 +43,10 @@ namespace kerbal
 		KERBAL_CONSTEXPR14
 		bool binary_search(ForwardIterator first, ForwardIterator last, const T & value)
 		{
-			return kerbal::algorithm::binary_search(first, last, value, kerbal::compare::binary_type_less<void, void>());
+			return kerbal::algorithm::binary_search(
+				first, last, value,
+				kerbal::compare::binary_type_less<void, void>()
+			);
 		}
 
 	} // namespace algorithm

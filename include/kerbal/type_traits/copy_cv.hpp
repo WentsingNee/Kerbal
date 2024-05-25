@@ -27,9 +27,9 @@ namespace kerbal
 		KERBAL_MODULE_EXPORT
 		template <typename From, typename To>
 		struct copy_cv :
-				kerbal::type_traits::copy_const<
-					From, typename kerbal::type_traits::copy_volatile<From, To>::type
-				>
+			kerbal::type_traits::copy_const<
+				From, typename kerbal::type_traits::copy_volatile<From, To>::type
+			>
 		{
 		};
 

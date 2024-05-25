@@ -32,8 +32,10 @@ namespace kerbal
 			template <typename ForwardIterator, typename UnaryPredicate>
 			KERBAL_CONSTEXPR14
 			ForwardIterator
-			partition(ForwardIterator first, ForwardIterator last,
-						UnaryPredicate pred, std::forward_iterator_tag)
+			partition(
+				ForwardIterator first, ForwardIterator last,
+				UnaryPredicate pred, std::forward_iterator_tag
+			)
 			{
 				first = kerbal::algorithm::find_if_not(first, last, pred);
 				if (first != last) {
@@ -51,8 +53,10 @@ namespace kerbal
 
 			template <typename BidirectionalIterator, typename UnaryPredicate>
 			KERBAL_CONSTEXPR14
-			bool partition_move_first_iter(BidirectionalIterator &first, BidirectionalIterator &last,
-											 UnaryPredicate &pred, std::bidirectional_iterator_tag)
+			bool partition_move_first_iter(
+				BidirectionalIterator &first, BidirectionalIterator &last,
+				UnaryPredicate &pred, std::bidirectional_iterator_tag
+			)
 			{
 				while (first != last) {
 					if (pred(*first)) {
@@ -66,8 +70,10 @@ namespace kerbal
 
 			template <typename BidirectionalIterator, typename UnaryPredicate>
 			KERBAL_CONSTEXPR14
-			bool partition_move_last_iter(BidirectionalIterator &first, BidirectionalIterator &last,
-											UnaryPredicate &pred, std::bidirectional_iterator_tag)
+			bool partition_move_last_iter(
+				BidirectionalIterator &first, BidirectionalIterator &last,
+				UnaryPredicate &pred, std::bidirectional_iterator_tag
+			)
 			{
 				while (first != last) {
 					if (pred(*last)) {
@@ -82,15 +88,23 @@ namespace kerbal
 			template <typename BidirectionalIterator, typename UnaryPredicate>
 			KERBAL_CONSTEXPR14
 			BidirectionalIterator
-			partition(BidirectionalIterator first, BidirectionalIterator last,
-						UnaryPredicate pred, std::bidirectional_iterator_tag)
+			partition(
+				BidirectionalIterator first, BidirectionalIterator last,
+				UnaryPredicate pred, std::bidirectional_iterator_tag
+			)
 			{
 				while (true) {
-					if (kerbal::algorithm::detail::partition_move_first_iter(first, last, pred, kerbal::iterator::iterator_category(first))) {
+					if (kerbal::algorithm::detail::partition_move_first_iter(
+						first, last, pred,
+						kerbal::iterator::iterator_category(first))
+					) {
 						return first;
 					}
 					--last;
-					if (kerbal::algorithm::detail::partition_move_last_iter(first, last, pred, kerbal::iterator::iterator_category(first))) {
+					if (kerbal::algorithm::detail::partition_move_last_iter(
+						first, last, pred,
+						kerbal::iterator::iterator_category(first))
+					) {
 						return first;
 					}
 					kerbal::algorithm::iter_swap(first, last);
@@ -104,7 +118,10 @@ namespace kerbal
 		KERBAL_CONSTEXPR14
 		ForwardIterator partition(ForwardIterator first, ForwardIterator last, UnaryPredicate pred)
 		{
-			return kerbal::algorithm::detail::partition(first, last, pred, kerbal::iterator::iterator_category(first));
+			return kerbal::algorithm::detail::partition(
+				first, last, pred,
+				kerbal::iterator::iterator_category(first)
+			);
 		}
 
 

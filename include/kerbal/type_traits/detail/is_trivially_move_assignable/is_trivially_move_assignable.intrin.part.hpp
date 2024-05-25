@@ -35,9 +35,9 @@ namespace kerbal
 
 		template <typename T>
 		struct is_trivially_move_assignable :
-				kerbal::type_traits::bool_constant<
-					KERBAL_INTRINSIC_IS_TRIVIALLY_MOVE_ASSIGNABLE(T)
-				>
+			kerbal::type_traits::bool_constant<
+				KERBAL_INTRINSIC_IS_TRIVIALLY_MOVE_ASSIGNABLE(T)
+			>
 		{
 		};
 

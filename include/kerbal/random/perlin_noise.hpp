@@ -66,8 +66,8 @@ namespace kerbal
 				template <typename Engine>
 				KERBAL_CONSTEXPR14
 				explicit
-				perlin_noise(Engine & eg, int octaves = 4, result_type amp_falloff = 0.5f)
-						: perlin(), octaves(octaves), amp_falloff(amp_falloff)
+				perlin_noise(Engine & eg, int octaves = 4, result_type amp_falloff = 0.5f) :
+					perlin(), octaves(octaves), amp_falloff(amp_falloff)
 				{
 					this->reset(eg);
 				}
@@ -77,8 +77,8 @@ namespace kerbal
 			public:
 				template <typename Engine>
 				explicit
-				perlin_noise(Engine & eg, int octaves = 4, result_type amp_falloff = 0.5f)
-						: octaves(octaves), amp_falloff(amp_falloff)
+				perlin_noise(Engine & eg, int octaves = 4, result_type amp_falloff = 0.5f) :
+					octaves(octaves), amp_falloff(amp_falloff)
 				{
 					this->reset(eg);
 				}

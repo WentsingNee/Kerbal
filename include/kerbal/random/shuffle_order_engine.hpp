@@ -89,36 +89,36 @@ namespace kerbal
 			public:
 				KERBAL_CONSTEXPR14
 				shuffle_order_engine()
-						KERBAL_CONDITIONAL_NOEXCEPT(
-							kerbal::type_traits::try_test_is_nothrow_default_constructible<
-								Engine
-							>::IS_TRUE::value
-						) :
-						k_base_eg(), k_stored_y()
+					KERBAL_CONDITIONAL_NOEXCEPT(
+						kerbal::type_traits::try_test_is_nothrow_default_constructible<
+							Engine
+						>::IS_TRUE::value
+					) :
+					k_base_eg(), k_stored_y()
 				{
 					k_init();
 				}
 
 				KERBAL_CONSTEXPR14
 				explicit shuffle_order_engine(result_type seed)
-						KERBAL_CONDITIONAL_NOEXCEPT((
-							kerbal::type_traits::try_test_is_nothrow_constructible<
-								Engine, result_type
-							>::IS_TRUE::value
-						)) :
-						k_base_eg(seed), k_stored_y()
+					KERBAL_CONDITIONAL_NOEXCEPT((
+						kerbal::type_traits::try_test_is_nothrow_constructible<
+							Engine, result_type
+						>::IS_TRUE::value
+					)) :
+					k_base_eg(seed), k_stored_y()
 				{
 					k_init();
 				}
 
 				KERBAL_CONSTEXPR14
 				explicit shuffle_order_engine(const Engine & engine)
-						KERBAL_CONDITIONAL_NOEXCEPT(
-							kerbal::type_traits::try_test_is_nothrow_copy_constructible<
-								Engine
-							>::IS_TRUE::value
-						) :
-						k_base_eg(engine), k_stored_y()
+					KERBAL_CONDITIONAL_NOEXCEPT(
+						kerbal::type_traits::try_test_is_nothrow_copy_constructible<
+							Engine
+						>::IS_TRUE::value
+					) :
+					k_base_eg(engine), k_stored_y()
 				{
 					k_init();
 				}
@@ -127,12 +127,12 @@ namespace kerbal
 
 				KERBAL_CONSTEXPR14
 				explicit shuffle_order_engine(Engine && engine)
-						KERBAL_CONDITIONAL_NOEXCEPT(
-							kerbal::type_traits::try_test_is_nothrow_move_constructible<
-								Engine
-							>::IS_TRUE::value
-						) :
-						k_base_eg(kerbal::compatibility::move(engine)), k_stored_y()
+					KERBAL_CONDITIONAL_NOEXCEPT(
+						kerbal::type_traits::try_test_is_nothrow_move_constructible<
+							Engine
+						>::IS_TRUE::value
+					) :
+					k_base_eg(kerbal::compatibility::move(engine)), k_stored_y()
 				{
 					k_init();
 				}
@@ -159,18 +159,18 @@ namespace kerbal
 
 				KERBAL_CONSTEXPR14
 				result_type operator()()
-						KERBAL_CONDITIONAL_NOEXCEPT(
-								noexcept(k_base_eg())
-						)
+					KERBAL_CONDITIONAL_NOEXCEPT(
+						noexcept(k_base_eg())
+					)
 				{
 					const result_type min = k_base_eg.min();
 					const result_type max = k_base_eg.max();
 					result_type R = (max - min + 1);
 					result_type b = k_stored_y - min;
 					std::size_t J = static_cast<std::size_t>(
-							R == 0 ?
-							static_cast<double>(K) * static_cast<double>(k_stored_y - min) / (max - min + 1.0) :
-							(K / R) * b + detail::muldiv_less_a<result_type>(K % R, b, R)
+						R == 0 ?
+						static_cast<double>(K) * static_cast<double>(k_stored_y - min) / (max - min + 1.0) :
+						(K / R) * b + detail::muldiv_less_a<result_type>(K % R, b, R)
 					);
 					result_type next = k_base_eg();
 					k_stored_y = k_stored[J];
@@ -180,9 +180,9 @@ namespace kerbal
 
 				KERBAL_CONSTEXPR14
 				void discard(unsigned long long times)
-						KERBAL_CONDITIONAL_NOEXCEPT(
-								noexcept(kerbal::utility::declthis<shuffle_order_engine>()->operator()())
-						)
+					KERBAL_CONDITIONAL_NOEXCEPT(
+						noexcept(kerbal::utility::declthis<shuffle_order_engine>()->operator()())
+					)
 				{
 					while (times != 0) {
 						--times;
@@ -192,18 +192,18 @@ namespace kerbal
 
 				KERBAL_CONSTEXPR
 				static result_type min()
-						KERBAL_CONDITIONAL_NOEXCEPT(
-								noexcept(Engine::min())
-						)
+					KERBAL_CONDITIONAL_NOEXCEPT(
+						noexcept(Engine::min())
+					)
 				{
 					return Engine::min();
 				}
 
 				KERBAL_CONSTEXPR
 				static result_type max()
-						KERBAL_CONDITIONAL_NOEXCEPT(
-								noexcept(Engine::max())
-						)
+					KERBAL_CONDITIONAL_NOEXCEPT(
+						noexcept(Engine::max())
+					)
 				{
 					return Engine::max();
 				}

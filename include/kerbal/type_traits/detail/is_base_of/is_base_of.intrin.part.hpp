@@ -35,9 +35,9 @@ namespace kerbal
 
 		template <typename Base, typename Derived>
 		struct is_base_of :
-				kerbal::type_traits::bool_constant<
-					KERBAL_INTRINSIC_IS_BASE_OF(Base, Derived)
-				>
+			kerbal::type_traits::bool_constant<
+				KERBAL_INTRINSIC_IS_BASE_OF(Base, Derived)
+			>
 		{
 		};
 

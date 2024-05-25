@@ -59,21 +59,23 @@ namespace kerbal
 				typedef Ret										return_type; \
 				typedef kerbal::type_traits::integral_constant<std::size_t, i>		args_num; \
 				typedef kerbal::tmp::type_vector<KERBAL_OPT_PPEXPAND_WITH_COMMA_N(REMAINF, EMPTY, TARGS_USE, i)>			args_vector; \
-		};
+		}; \
 
 #	define FUNCTION_TRAITS_CV_DEF(i, CV_QUALIFIER, IS_CONST, IS_VOLATILE) \
 		FUNCTION_TRAITS_VAR_LIST_DEF(i, EMPTY,    false_type, CV_QUALIFIER, IS_CONST, IS_VOLATILE) \
-		FUNCTION_TRAITS_VAR_LIST_DEF(i, VAR_LIST, true_type,  CV_QUALIFIER, IS_CONST, IS_VOLATILE)
+		FUNCTION_TRAITS_VAR_LIST_DEF(i, VAR_LIST, true_type,  CV_QUALIFIER, IS_CONST, IS_VOLATILE) \
 
 #if KERBAL_HAS_CV_QUALIFIED_FUNCTION_SUPPORT
 #	define DBODY(i) \
 		FUNCTION_TRAITS_CV_DEF(i, EMPTY, false_type, false_type) \
 		FUNCTION_TRAITS_CV_DEF(i, const, true_type, false_type) \
 		FUNCTION_TRAITS_CV_DEF(i, volatile, false_type, true_type) \
-		FUNCTION_TRAITS_CV_DEF(i, const volatile, true_type, true_type)
+		FUNCTION_TRAITS_CV_DEF(i, const volatile, true_type, true_type) \
+
 #else
 #	define DBODY(i) \
-		FUNCTION_TRAITS_CV_DEF(i, EMPTY, false_type, false_type)
+		FUNCTION_TRAITS_CV_DEF(i, EMPTY, false_type, false_type) \
+
 #endif
 
 		KERBAL_PPEXPAND_N(DBODY, KERBAL_PPEXPAND_EMPTY_SEPARATOR, 0)
@@ -117,22 +119,22 @@ namespace kerbal
 				typedef Ret										return_type; \
 				typedef kerbal::type_traits::integral_constant<std::size_t, sizeof...(Args)>	args_num; \
 				typedef kerbal::tmp::type_vector<Args...>										args_vector; \
-		};
+		}; \
 
 #	define FUNCTION_TRAITS_CV_DEF(CV_QUALIFIER, IS_CONST, IS_VOLATILE, REF_QUALIFIER, IS_LREF, IS_RREF, NOEXCEPT_QUALIFIER, IS_NOEXCEPT) \
 		FUNCTION_TRAITS_VAR_LIST_DEF(EMPTY,    false_type, CV_QUALIFIER, IS_CONST, IS_VOLATILE, REF_QUALIFIER, IS_LREF, IS_RREF, NOEXCEPT_QUALIFIER, IS_NOEXCEPT) \
-		FUNCTION_TRAITS_VAR_LIST_DEF(VAR_LIST, true_type,  CV_QUALIFIER, IS_CONST, IS_VOLATILE, REF_QUALIFIER, IS_LREF, IS_RREF, NOEXCEPT_QUALIFIER, IS_NOEXCEPT)
+		FUNCTION_TRAITS_VAR_LIST_DEF(VAR_LIST, true_type,  CV_QUALIFIER, IS_CONST, IS_VOLATILE, REF_QUALIFIER, IS_LREF, IS_RREF, NOEXCEPT_QUALIFIER, IS_NOEXCEPT) \
 
 #	define FUNCTION_TRAITS_REF_DEF(REF_QUALIFIER, IS_LREF, IS_RREF, NOEXCEPT_QUALIFIER, IS_NOEXCEPT) \
 		FUNCTION_TRAITS_CV_DEF(EMPTY,          false_type, false_type, REF_QUALIFIER, IS_LREF, IS_RREF, NOEXCEPT_QUALIFIER, IS_NOEXCEPT) \
 		FUNCTION_TRAITS_CV_DEF(const,          true_type,  false_type, REF_QUALIFIER, IS_LREF, IS_RREF, NOEXCEPT_QUALIFIER, IS_NOEXCEPT) \
 		FUNCTION_TRAITS_CV_DEF(volatile,       false_type, true_type,  REF_QUALIFIER, IS_LREF, IS_RREF, NOEXCEPT_QUALIFIER, IS_NOEXCEPT) \
-		FUNCTION_TRAITS_CV_DEF(const volatile, true_type,  true_type,  REF_QUALIFIER, IS_LREF, IS_RREF, NOEXCEPT_QUALIFIER, IS_NOEXCEPT)
+		FUNCTION_TRAITS_CV_DEF(const volatile, true_type,  true_type,  REF_QUALIFIER, IS_LREF, IS_RREF, NOEXCEPT_QUALIFIER, IS_NOEXCEPT) \
 
 #	define FUNCTION_TRAITS_NOEXCEPT_DEF(NOEXCEPT_QUALIFIER, IS_NOEXCEPT) \
 		FUNCTION_TRAITS_REF_DEF(EMPTY, false_type, false_type, NOEXCEPT_QUALIFIER, IS_NOEXCEPT) \
 		FUNCTION_TRAITS_REF_DEF(&,     true_type,  false_type, NOEXCEPT_QUALIFIER, IS_NOEXCEPT) \
-		FUNCTION_TRAITS_REF_DEF(&&,    false_type, true_type,  NOEXCEPT_QUALIFIER, IS_NOEXCEPT)
+		FUNCTION_TRAITS_REF_DEF(&&,    false_type, true_type,  NOEXCEPT_QUALIFIER, IS_NOEXCEPT) \
 
 
 		FUNCTION_TRAITS_NOEXCEPT_DEF(EMPTY,    false_type)

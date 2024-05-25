@@ -27,14 +27,21 @@ namespace kerbal
 		namespace detail
 		{
 
-			template <typename T, typename = kerbal::type_traits::void_type<>::type>
-			struct is_referencable_helper : kerbal::type_traits::false_type
+			template <
+				typename T,
+				typename = kerbal::type_traits::void_type<>::type
+			>
+			struct is_referencable_helper :
+				kerbal::type_traits::false_type
 			{
 			};
 
 			template <typename T>
-			struct is_referencable_helper<T, typename kerbal::type_traits::void_type<T &>::type> :
-					kerbal::type_traits::true_type
+			struct is_referencable_helper<
+				T,
+				typename kerbal::type_traits::void_type<T &>::type
+			> :
+				kerbal::type_traits::true_type
 			{
 			};
 
@@ -42,7 +49,8 @@ namespace kerbal
 
 		KERBAL_MODULE_EXPORT
 		template <typename T>
-		struct is_referencable : kerbal::type_traits::detail::is_referencable_helper<T>
+		struct is_referencable :
+			kerbal::type_traits::detail::is_referencable_helper<T>
 		{
 		};
 

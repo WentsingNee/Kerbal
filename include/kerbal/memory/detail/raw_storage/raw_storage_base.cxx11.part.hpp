@@ -41,15 +41,15 @@ namespace kerbal
 
 			template <typename T>
 			struct rawst_base_selector:
-					kerbal::type_traits::conditional<
-						kerbal::type_traits::try_test_is_trivially_destructible<T>::IS_TRUE::value,
-						typename kerbal::type_traits::conditional<
-							kerbal::type_traits::try_test_is_trivially_default_constructible<T>::IS_TRUE::value,
-							kerbal::type_traits::integral_constant<int, 1>,
-							kerbal::type_traits::integral_constant<int, 2>
-						>::type,
-						kerbal::type_traits::integral_constant<int, 0>
-					>::type
+				kerbal::type_traits::conditional<
+					kerbal::type_traits::try_test_is_trivially_destructible<T>::IS_TRUE::value,
+					typename kerbal::type_traits::conditional<
+						kerbal::type_traits::try_test_is_trivially_default_constructible<T>::IS_TRUE::value,
+						kerbal::type_traits::integral_constant<int, 1>,
+						kerbal::type_traits::integral_constant<int, 2>
+					>::type,
+					kerbal::type_traits::integral_constant<int, 0>
+				>::type
 			{
 			};
 
@@ -59,19 +59,19 @@ namespace kerbal
 
 			template <typename T>
 			class k_rawst_base<T, 0>:
-					private kerbal::utility::noncopyable
+				private kerbal::utility::noncopyable
 			{
 				protected:
 					typedef T						value_type;
 					typedef const value_type		const_type;
-					typedef value_type&				reference;
-					typedef const value_type&		const_reference;
-					typedef value_type*				pointer;
-					typedef const value_type*		const_pointer;
+					typedef value_type &			reference;
+					typedef const value_type &		const_reference;
+					typedef value_type *			pointer;
+					typedef const value_type *		const_pointer;
 
 #		if __cplusplus >= 201103L
-					typedef value_type&&			rvalue_reference;
-					typedef const value_type&&		const_rvalue_reference;
+					typedef value_type &&			rvalue_reference;
+					typedef const value_type &&		const_rvalue_reference;
 #		endif
 
 					typedef union storage_type
@@ -85,8 +85,8 @@ namespace kerbal
 
 							template <typename ... Args>
 							KERBAL_CONSTEXPR20
-							explicit storage_type(kerbal::utility::in_place_t, Args&& ... args) :
-									k_val(kerbal::utility::forward<Args>(args)...)
+							explicit storage_type(kerbal::utility::in_place_t, Args && ... args) :
+								k_val(kerbal::utility::forward<Args>(args)...)
 							{
 							}
 
@@ -108,7 +108,7 @@ namespace kerbal
 
 					template <typename ... Args>
 					KERBAL_CONSTEXPR20
-					explicit k_rawst_base(kerbal::utility::in_place_t in_place, Args&& ... args) :
+					explicit k_rawst_base(kerbal::utility::in_place_t in_place, Args && ... args) :
 						k_storage(in_place, kerbal::utility::forward<Args>(args)...)
 					{
 					}
@@ -166,19 +166,19 @@ namespace kerbal
 
 			template <typename T, std::size_t N>
 			class k_rawst_base<T[N], 0>:
-					private kerbal::utility::noncopyable
+				private kerbal::utility::noncopyable
 			{
 				protected:
 					typedef T						value_type [N];
 					typedef const value_type		const_type;
-					typedef value_type&				reference;
-					typedef const value_type&		const_reference;
-					typedef value_type*				pointer;
-					typedef const value_type*		const_pointer;
+					typedef value_type &			reference;
+					typedef const value_type &		const_reference;
+					typedef value_type *			pointer;
+					typedef const value_type *		const_pointer;
 
 #		if __cplusplus >= 201103L
-					typedef value_type&&			rvalue_reference;
-					typedef const value_type&&		const_rvalue_reference;
+					typedef value_type &&			rvalue_reference;
+					typedef const value_type &&		const_rvalue_reference;
 #		endif
 
 					typedef union storage_type
@@ -193,28 +193,28 @@ namespace kerbal
 							template <std::size_t ... I, typename U>
 							KERBAL_CONSTEXPR20
 							explicit storage_type(kerbal::utility::in_place_t, kerbal::utility::index_sequence<I...>, std::initializer_list<U> ilist) :
-									k_val{*(ilist.begin() + I)...}
+								k_val{*(ilist.begin() + I)...}
 							{
 							}
 
 							template <std::size_t ... I, typename U>
 							KERBAL_CONSTEXPR20
 							explicit storage_type(kerbal::utility::in_place_t, kerbal::utility::index_sequence<I...>, U (&src) [N]) :
-									k_val{src[I]...}
+								k_val{src[I]...}
 							{
 							}
 
 							template <std::size_t ... I, typename U>
 							KERBAL_CONSTEXPR20
 							explicit storage_type(kerbal::utility::in_place_t, kerbal::utility::index_sequence<I...>, U (&&src) [N]) :
-									k_val{kerbal::compatibility::move(src)[I]...}
+								k_val{kerbal::compatibility::move(src)[I]...}
 							{
 							}
 
 							template <typename ... Args>
 							KERBAL_CONSTEXPR20
-							explicit storage_type(kerbal::utility::in_place_t, Args&& ... args) :
-									k_val{kerbal::utility::forward<Args>(args)...}
+							explicit storage_type(kerbal::utility::in_place_t, Args && ... args) :
+								k_val{kerbal::utility::forward<Args>(args)...}
 							{
 							}
 
@@ -257,7 +257,7 @@ namespace kerbal
 
 					template <typename ... Args>
 					KERBAL_CONSTEXPR20
-					explicit k_rawst_base(kerbal::utility::in_place_t in_place, Args&& ... args) :
+					explicit k_rawst_base(kerbal::utility::in_place_t in_place, Args && ... args) :
 						k_storage(in_place, kerbal::utility::forward<Args>(args)...)
 					{
 					}
@@ -315,19 +315,19 @@ namespace kerbal
 
 			template <typename T>
 			class k_rawst_base<T, 1>:
-					private kerbal::utility::noncopyable
+				private kerbal::utility::noncopyable
 			{
 				protected:
 					typedef T						value_type;
 					typedef const value_type		const_type;
-					typedef value_type&				reference;
-					typedef const value_type&		const_reference;
-					typedef value_type*				pointer;
-					typedef const value_type*		const_pointer;
+					typedef value_type &			reference;
+					typedef const value_type &		const_reference;
+					typedef value_type *			pointer;
+					typedef const value_type *		const_pointer;
 
 #		if __cplusplus >= 201103L
-					typedef value_type&&			rvalue_reference;
-					typedef const value_type&&		const_rvalue_reference;
+					typedef value_type &&			rvalue_reference;
+					typedef const value_type &&		const_rvalue_reference;
 #		endif
 
 					typedef union storage_type
@@ -336,14 +336,14 @@ namespace kerbal
 
 							KERBAL_CONSTEXPR
 							storage_type() KERBAL_NOEXCEPT:
-									k_val()
+								k_val()
 							{
 							}
 
 							template <typename ... Args>
 							KERBAL_CONSTEXPR
-							explicit storage_type(kerbal::utility::in_place_t, Args&& ... args) :
-									k_val(kerbal::utility::forward<Args>(args)...)
+							explicit storage_type(kerbal::utility::in_place_t, Args && ... args) :
+								k_val(kerbal::utility::forward<Args>(args)...)
 							{
 							}
 
@@ -360,7 +360,7 @@ namespace kerbal
 
 					template <typename ... Args>
 					KERBAL_CONSTEXPR
-					explicit k_rawst_base(kerbal::utility::in_place_t in_place, Args&& ... args) :
+					explicit k_rawst_base(kerbal::utility::in_place_t in_place, Args && ... args) :
 						k_storage(in_place, kerbal::utility::forward<Args>(args)...)
 					{
 					}
@@ -417,19 +417,19 @@ namespace kerbal
 
 			template <typename T, std::size_t N>
 			class k_rawst_base<T[N], 1>:
-					private kerbal::utility::noncopyable
+				private kerbal::utility::noncopyable
 			{
 				protected:
 					typedef T						value_type [N];
 					typedef const value_type		const_type;
-					typedef value_type&				reference;
-					typedef const value_type&		const_reference;
-					typedef value_type*				pointer;
-					typedef const value_type*		const_pointer;
+					typedef value_type &			reference;
+					typedef const value_type &		const_reference;
+					typedef value_type *			pointer;
+					typedef const value_type *		const_pointer;
 
 #		if __cplusplus >= 201103L
-					typedef value_type&&			rvalue_reference;
-					typedef const value_type&&		const_rvalue_reference;
+					typedef value_type &&			rvalue_reference;
+					typedef const value_type &&		const_rvalue_reference;
 #		endif
 
 					typedef union storage_type
@@ -438,35 +438,35 @@ namespace kerbal
 
 							KERBAL_CONSTEXPR
 							storage_type() KERBAL_NOEXCEPT:
-									k_val{}
+								k_val{}
 							{
 							}
 
 							template <std::size_t ... I, typename U>
 							KERBAL_CONSTEXPR
 							explicit storage_type(kerbal::utility::in_place_t, kerbal::utility::index_sequence<I...>, std::initializer_list<U> ilist) :
-									k_val{*(ilist.begin() + I)...}
+								k_val{*(ilist.begin() + I)...}
 							{
 							}
 
 							template <std::size_t ... I, typename U>
 							KERBAL_CONSTEXPR
 							explicit storage_type(kerbal::utility::in_place_t, kerbal::utility::index_sequence<I...>, U (&src) [N]) :
-									k_val{src[I]...}
+								k_val{src[I]...}
 							{
 							}
 
 							template <std::size_t ... I, typename U>
 							KERBAL_CONSTEXPR
 							explicit storage_type(kerbal::utility::in_place_t, kerbal::utility::index_sequence<I...>, U (&&src) [N]) :
-									k_val{kerbal::compatibility::move(src)[I]...}
+								k_val{kerbal::compatibility::move(src)[I]...}
 							{
 							}
 
 							template <typename ... Args>
 							KERBAL_CONSTEXPR
-							explicit storage_type(kerbal::utility::in_place_t, Args&& ... args) :
-									k_val{kerbal::utility::forward<Args>(args)...}
+							explicit storage_type(kerbal::utility::in_place_t, Args && ... args) :
+								k_val{kerbal::utility::forward<Args>(args)...}
 							{
 							}
 
@@ -504,7 +504,7 @@ namespace kerbal
 
 					template <typename ... Args>
 					KERBAL_CONSTEXPR
-					explicit k_rawst_base(kerbal::utility::in_place_t in_place, Args&& ... args) :
+					explicit k_rawst_base(kerbal::utility::in_place_t in_place, Args && ... args) :
 						k_storage(in_place, kerbal::utility::forward<Args>(args)...)
 					{
 					}
@@ -561,19 +561,19 @@ namespace kerbal
 
 			template <typename T>
 			class k_rawst_base<T, 2>:
-					private kerbal::utility::noncopyable
+				private kerbal::utility::noncopyable
 			{
 				protected:
 					typedef T						value_type;
 					typedef const value_type		const_type;
-					typedef value_type&				reference;
-					typedef const value_type&		const_reference;
-					typedef value_type*				pointer;
-					typedef const value_type*		const_pointer;
+					typedef value_type &			reference;
+					typedef const value_type &		const_reference;
+					typedef value_type *			pointer;
+					typedef const value_type *		const_pointer;
 
 #		if __cplusplus >= 201103L
-					typedef value_type&&			rvalue_reference;
-					typedef const value_type&&		const_rvalue_reference;
+					typedef value_type &&			rvalue_reference;
+					typedef const value_type &&		const_rvalue_reference;
 #		endif
 
 					struct empty {};
@@ -585,14 +585,14 @@ namespace kerbal
 
 							KERBAL_CONSTEXPR
 							storage_type() KERBAL_NOEXCEPT:
-									k_empty()
+								k_empty()
 							{
 							}
 
 							template <typename ... Args>
 							KERBAL_CONSTEXPR
-							explicit storage_type(kerbal::utility::in_place_t, Args&& ... args) :
-									k_val(kerbal::utility::forward<Args>(args)...)
+							explicit storage_type(kerbal::utility::in_place_t, Args && ... args) :
+								k_val(kerbal::utility::forward<Args>(args)...)
 							{
 							}
 
@@ -609,7 +609,7 @@ namespace kerbal
 
 					template <typename ... Args>
 					KERBAL_CONSTEXPR
-					explicit k_rawst_base(kerbal::utility::in_place_t in_place, Args&& ... args) :
+					explicit k_rawst_base(kerbal::utility::in_place_t in_place, Args && ... args) :
 						k_storage(in_place, kerbal::utility::forward<Args>(args)...)
 					{
 					}
@@ -666,19 +666,19 @@ namespace kerbal
 
 			template <typename T, std::size_t N>
 			class k_rawst_base<T[N], 2>:
-					private kerbal::utility::noncopyable
+				private kerbal::utility::noncopyable
 			{
 				protected:
 					typedef T						value_type [N];
 					typedef const value_type		const_type;
-					typedef value_type&				reference;
-					typedef const value_type&		const_reference;
-					typedef value_type*				pointer;
-					typedef const value_type*		const_pointer;
+					typedef value_type &			reference;
+					typedef const value_type &		const_reference;
+					typedef value_type *			pointer;
+					typedef const value_type *		const_pointer;
 
 #		if __cplusplus >= 201103L
-					typedef value_type&&			rvalue_reference;
-					typedef const value_type&&		const_rvalue_reference;
+					typedef value_type &&			rvalue_reference;
+					typedef const value_type &&		const_rvalue_reference;
 #		endif
 
 					struct empty {};
@@ -690,35 +690,35 @@ namespace kerbal
 
 							KERBAL_CONSTEXPR
 							storage_type() KERBAL_NOEXCEPT:
-									k_empty()
+								k_empty()
 							{
 							}
 
 							template <std::size_t ... I, typename U>
 							KERBAL_CONSTEXPR
 							explicit storage_type(kerbal::utility::in_place_t, kerbal::utility::index_sequence<I...>, std::initializer_list<U> ilist) :
-									k_val{*(ilist.begin() + I)...}
+								k_val{*(ilist.begin() + I)...}
 							{
 							}
 
 							template <std::size_t ... I, typename U>
 							KERBAL_CONSTEXPR
 							explicit storage_type(kerbal::utility::in_place_t, kerbal::utility::index_sequence<I...>, U (&src) [N]) :
-									k_val{src[I]...}
+								k_val{src[I]...}
 							{
 							}
 
 							template <std::size_t ... I, typename U>
 							KERBAL_CONSTEXPR
 							explicit storage_type(kerbal::utility::in_place_t, kerbal::utility::index_sequence<I...>, U (&&src) [N]) :
-									k_val{kerbal::compatibility::move(src)[I]...}
+								k_val{kerbal::compatibility::move(src)[I]...}
 							{
 							}
 
 							template <typename ... Args>
 							KERBAL_CONSTEXPR
-							explicit storage_type(kerbal::utility::in_place_t, Args&& ... args) :
-									k_val{kerbal::utility::forward<Args>(args)...}
+							explicit storage_type(kerbal::utility::in_place_t, Args && ... args) :
+								k_val{kerbal::utility::forward<Args>(args)...}
 							{
 							}
 
@@ -756,7 +756,7 @@ namespace kerbal
 
 					template <typename ... Args>
 					KERBAL_CONSTEXPR
-					explicit k_rawst_base(kerbal::utility::in_place_t in_place, Args&& ... args) :
+					explicit k_rawst_base(kerbal::utility::in_place_t in_place, Args && ... args) :
 						k_storage(in_place, kerbal::utility::forward<Args>(args)...)
 					{
 					}

@@ -32,8 +32,10 @@ namespace kerbal
 
 #		define TARGS_DECL(i) typename = U
 
-		template <typename T, typename U,
-				KERBAL_PPEXPAND_WITH_COMMA_N(TARGS_DECL, 20)
+		template <
+			typename T,
+			typename U,
+			KERBAL_PPEXPAND_WITH_COMMA_N(TARGS_DECL, 20)
 		>
 		struct is_same : kerbal::type_traits::false_type
 		{
@@ -46,10 +48,10 @@ namespace kerbal
 		KERBAL_MODULE_EXPORT
 		template <typename T, typename U, typename ... Types>
 		struct is_same:
-				kerbal::type_traits::conjunction<
-					kerbal::type_traits::is_same<T, U>,
-					kerbal::type_traits::is_same<T, Types>...
-				>
+			kerbal::type_traits::conjunction<
+				kerbal::type_traits::is_same<T, U>,
+				kerbal::type_traits::is_same<T, Types>...
+			>
 		{
 		};
 

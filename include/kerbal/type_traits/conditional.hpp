@@ -22,7 +22,7 @@ namespace kerbal
 	{
 
 		KERBAL_MODULE_EXPORT
-		template <bool condition, typename TrueType, typename FalseType>
+		template <bool Condition, typename TrueType, typename FalseType>
 		struct conditional
 		{
 				typedef TrueType type;

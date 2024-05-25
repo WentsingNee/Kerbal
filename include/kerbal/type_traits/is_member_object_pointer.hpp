@@ -28,12 +28,12 @@ namespace kerbal
 		KERBAL_MODULE_EXPORT
 		template <typename T>
 		struct is_member_object_pointer :
-				kerbal::type_traits::conjunction<
-					kerbal::type_traits::is_member_pointer<T>,
-					kerbal::type_traits::negation<
-						kerbal::type_traits::is_member_function_pointer<T>
-					>
+			kerbal::type_traits::conjunction<
+				kerbal::type_traits::is_member_pointer<T>,
+				kerbal::type_traits::negation<
+					kerbal::type_traits::is_member_function_pointer<T>
 				>
+			>
 		{
 		};
 

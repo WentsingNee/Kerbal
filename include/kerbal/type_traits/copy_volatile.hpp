@@ -28,11 +28,11 @@ namespace kerbal
 		KERBAL_MODULE_EXPORT
 		template <typename From, typename To>
 		struct copy_volatile:
-				kerbal::type_traits::conditional<
-					kerbal::type_traits::is_volatile<From>::value,
-					typename kerbal::type_traits::add_volatile<To>::type,
-					To
-				>
+			kerbal::type_traits::conditional<
+				kerbal::type_traits::is_volatile<From>::value,
+				typename kerbal::type_traits::add_volatile<To>::type,
+				To
+			>
 		{
 		};
 

@@ -72,7 +72,7 @@ namespace kerbal
 
 					template <typename ... Args>
 					KERBAL_CONSTEXPR
-					explicit any_node(kerbal::utility::in_place_t in_place, Args&& ... args)
+					explicit any_node(kerbal::utility::in_place_t in_place, Args && ... args)
 							: member_compress_helper(in_place, kerbal::utility::forward<Args>(args)...)
 					{
 					}
@@ -90,7 +90,7 @@ namespace kerbal
 					explicit any_node(kerbal::utility::in_place_t in_place KERBAL_OPT_PPEXPAND_WITH_COMMA_N(LEFT_JOIN_COMMA, EMPTY, ARGS_DECL, i)) \
 							: member_compress_helper(in_place KERBAL_OPT_PPEXPAND_WITH_COMMA_N(LEFT_JOIN_COMMA, EMPTY, ARGS_USE, i)) \
 					{ \
-					}
+					} \
 
 					KERBAL_PPEXPAND_N(FBODY, KERBAL_PPEXPAND_EMPTY_SEPARATOR, 0)
 					KERBAL_PPEXPAND_N(FBODY, KERBAL_PPEXPAND_EMPTY_SEPARATOR, 20)
@@ -291,7 +291,7 @@ namespace kerbal
 
 				template <typename T, typename AnyNodeAllocator, typename ... Args>
 				KERBAL_CONSTEXPR20
-				void k_construct_impl(kerbal::type_traits::false_type /*embedded*/, AnyNodeAllocator & any_node_alloc, Args&& ... args)
+				void k_construct_impl(kerbal::type_traits::false_type /*embedded*/, AnyNodeAllocator & any_node_alloc, Args && ... args)
 				{
 					typedef T value_type;
 					typedef typename kerbal::memory::detail::any_node<value_type> any_node;
@@ -312,7 +312,7 @@ namespace kerbal
 				}
 
 				template <typename T, typename AnyNodeAllocator, typename ... Args>
-				void k_construct_impl(kerbal::type_traits::true_type /*embedded*/, AnyNodeAllocator & any_node_alloc, Args&& ... args)
+				void k_construct_impl(kerbal::type_traits::true_type /*embedded*/, AnyNodeAllocator & any_node_alloc, Args && ... args)
 				{
 					typedef T value_type;
 					typedef typename kerbal::memory::detail::any_node<value_type> any_node;
@@ -326,7 +326,7 @@ namespace kerbal
 
 				template <typename T, typename Allocator, typename ... Args>
 				KERBAL_CONSTEXPR20
-				void construct(kerbal::type_traits::false_type embedded, Allocator & alloc, Args&& ... args)
+				void construct(kerbal::type_traits::false_type embedded, Allocator & alloc, Args && ... args)
 				{
 					typedef typename kerbal::type_traits::remove_const<T>::type value_type;
 					typedef kerbal::memory::allocator_traits<Allocator>								allocator_traits;
@@ -340,7 +340,7 @@ namespace kerbal
 
 				template <typename T, typename Allocator, typename ... Args>
 				KERBAL_CONSTEXPR20
-				void construct(kerbal::type_traits::true_type embedded, Allocator & alloc, Args&& ... args)
+				void construct(kerbal::type_traits::true_type embedded, Allocator & alloc, Args && ... args)
 				{
 					typedef typename kerbal::type_traits::remove_const<T>::type value_type;
 					typedef kerbal::memory::allocator_traits<Allocator>								allocator_traits;
@@ -445,7 +445,7 @@ namespace kerbal
  \
 					any_node_allocator_type any_node_alloc(alloc); \
 					this->k_construct_impl<value_type>(embedded, any_node_alloc KERBAL_OPT_PPEXPAND_WITH_COMMA_N(LEFT_JOIN_COMMA, EMPTY, ARGS_USE, i)); \
-				}
+				} \
 
 
 				KERBAL_PPEXPAND_N(FBODY, KERBAL_PPEXPAND_EMPTY_SEPARATOR, 0)
@@ -492,7 +492,7 @@ namespace kerbal
 					typedef typename kerbal::memory::detail::any_node<value_type> any_node;
 
 					any_node * anop = ano.template k_obj_pos_impl<value_type>(embedded);
-					any_node * stored_pos = reinterpret_cast<any_node*>(&this->k_storage.buffer);
+					any_node * stored_pos = reinterpret_cast<any_node *>(&this->k_storage.buffer);
 
 					typedef kerbal::memory::allocator_traits<SelfAnyNodeAlloctor> self_allocator_traits;
 					self_allocator_traits::construct(self_alloc, stored_pos, kerbal::utility::in_place_t(), kerbal::compatibility::to_xvalue(anop->member()));

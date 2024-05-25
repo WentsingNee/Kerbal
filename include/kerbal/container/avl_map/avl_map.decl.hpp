@@ -50,12 +50,12 @@ namespace kerbal
 
 		template <typename K, typename M, typename KeyCompare, typename Allocator>
 		class avl_map :
-				protected kerbal::container::avl_ordered<
-					kerbal::container::map_data<K, M>,
-					kerbal::container::tuple_first_extractor<kerbal::container::map_data<K, M>, K>,
-					KeyCompare,
-					Allocator
-				>
+			protected kerbal::container::avl_ordered<
+				kerbal::container::map_data<K, M>,
+				kerbal::container::tuple_first_extractor<kerbal::container::map_data<K, M>, K>,
+				KeyCompare,
+				Allocator
+			>
 		{
 			private:
 				typedef kerbal::container::avl_ordered<
@@ -129,48 +129,81 @@ namespace kerbal
 
 				template <typename InputIterator>
 				KERBAL_CONSTEXPR20
-				avl_map(InputIterator first, InputIterator last);
+				avl_map(
+					InputIterator first, InputIterator last
+				);
 
 				template <typename InputIterator>
 				KERBAL_CONSTEXPR20
-				avl_map(InputIterator first, InputIterator last, const Allocator & alloc);
+				avl_map(
+					InputIterator first, InputIterator last,
+					const Allocator & alloc
+				);
 
 				template <typename InputIterator>
 				KERBAL_CONSTEXPR20
-				avl_map(InputIterator first, InputIterator last, const KeyCompare & kc);
+				avl_map(
+					InputIterator first, InputIterator last,
+					const KeyCompare & kc
+				);
 
 				template <typename InputIterator>
 				KERBAL_CONSTEXPR20
-				avl_map(InputIterator first, InputIterator last, const KeyCompare & kc, const Allocator & alloc);
+				avl_map(
+					InputIterator first, InputIterator last,
+					const KeyCompare & kc, const Allocator & alloc
+				);
 
 
 #		if __cplusplus >= 201103L
 
 				KERBAL_CONSTEXPR20
-				avl_map(std::initializer_list<value_type> ilist);
+				avl_map(
+					std::initializer_list<value_type> ilist
+				);
 
 				KERBAL_CONSTEXPR20
-				avl_map(std::initializer_list<value_type> ilist, const Allocator & alloc);
+				avl_map(
+					std::initializer_list<value_type> ilist,
+					const Allocator & alloc
+				);
 
 				KERBAL_CONSTEXPR20
-				avl_map(std::initializer_list<value_type> ilist, const KeyCompare & kc);
+				avl_map(
+					std::initializer_list<value_type> ilist,
+					const KeyCompare & kc
+				);
 
 				KERBAL_CONSTEXPR20
-				avl_map(std::initializer_list<value_type> ilist, const KeyCompare & kc, const Allocator & alloc);
+				avl_map(
+					std::initializer_list<value_type> ilist,
+					const KeyCompare & kc, const Allocator & alloc
+				);
 
 #		else
 
 				template <typename U>
-				avl_map(const kerbal::assign::assign_list<U> & ilist);
+				avl_map(
+					const kerbal::assign::assign_list<U> & ilist
+				);
 
 				template <typename U>
-				avl_map(const kerbal::assign::assign_list<U> & ilist, const Allocator & alloc);
+				avl_map(
+					const kerbal::assign::assign_list<U> & ilist,
+					const Allocator & alloc
+				);
 
 				template <typename U>
-				avl_map(const kerbal::assign::assign_list<U> & ilist, const KeyCompare & kc);
+				avl_map(
+					const kerbal::assign::assign_list<U> & ilist,
+					const KeyCompare & kc
+				);
 
 				template <typename U>
-				avl_map(const kerbal::assign::assign_list<U> & ilist, const KeyCompare & kc, const Allocator & alloc);
+				avl_map(
+					const kerbal::assign::assign_list<U> & ilist,
+					const KeyCompare & kc, const Allocator & alloc
+				);
 
 #		endif
 
@@ -262,7 +295,7 @@ namespace kerbal
 
 				template <typename Key, typename Result>
 				struct enable_if_transparent_lookup :
-						avl_ordered::template enable_if_transparent_lookup<Key, Result>
+					avl_ordered::template enable_if_transparent_lookup<Key, Result>
 				{
 				};
 
@@ -355,7 +388,7 @@ namespace kerbal
 
 				template <typename ... Args>
 				KERBAL_CONSTEXPR20
-				unique_insert_r emplace(Args&& ... args);
+				unique_insert_r emplace(Args && ... args);
 
 #		else
 
@@ -366,7 +399,7 @@ namespace kerbal
 #			define ARGS_DECL(i) const KERBAL_MACRO_CONCAT(Arg, i) & KERBAL_MACRO_CONCAT(arg, i)
 #			define FBODY(i) \
 				KERBAL_OPT_PPEXPAND_WITH_COMMA_N(THEAD_NOT_EMPTY, EMPTY, TARGS_DECL, i) \
-				unique_insert_r emplace(KERBAL_OPT_PPEXPAND_WITH_COMMA_N(REMAINF, EMPTY, ARGS_DECL, i));
+				unique_insert_r emplace(KERBAL_OPT_PPEXPAND_WITH_COMMA_N(REMAINF, EMPTY, ARGS_DECL, i)); \
 
 				KERBAL_PPEXPAND_N(FBODY, KERBAL_PPEXPAND_EMPTY_SEPARATOR, 0)
 				KERBAL_PPEXPAND_N(FBODY, KERBAL_PPEXPAND_EMPTY_SEPARATOR, 20)
@@ -466,9 +499,9 @@ namespace kerbal
 
 		template <typename Entity>
 		struct avl_map_entity_key :
-				kerbal::type_traits::remove_const<
-					typename std::tuple_element<0, Entity>::type
-				>
+			kerbal::type_traits::remove_const<
+				typename std::tuple_element<0, Entity>::type
+			>
 		{
 		};
 
@@ -479,111 +512,218 @@ namespace kerbal
 
 		template <typename InputIterator>
 		struct avl_map_iter_key :
-				avl_map_entity_key<typename kerbal::iterator::iterator_traits<InputIterator>::value_type>
+			avl_map_entity_key<typename kerbal::iterator::iterator_traits<InputIterator>::value_type>
 		{
 		};
 
 		template <typename InputIterator>
 		struct avl_map_iter_map :
-				avl_map_entity_map<typename kerbal::iterator::iterator_traits<InputIterator>::value_type>
+			avl_map_entity_map<typename kerbal::iterator::iterator_traits<InputIterator>::value_type>
 		{
 		};
 
 
 		template <typename InputIterator>
-		avl_map(InputIterator, InputIterator)
-		-> avl_map<typename avl_map_iter_key<InputIterator>::type, typename avl_map_iter_map<InputIterator>::type>;
+		avl_map(
+			InputIterator, InputIterator
+		) ->
+		avl_map<
+			typename avl_map_iter_key<InputIterator>::type,
+			typename avl_map_iter_map<InputIterator>::type
+		>;
 
-		template <typename InputIterator, typename KeyCompare,
-				typename = typename kerbal::type_traits::enable_if<!kerbal::memory::is_allocator<KeyCompare>::value>::type
+		template <
+			typename InputIterator,
+			typename KeyCompare,
+			typename =
+				typename kerbal::type_traits::enable_if<
+					!kerbal::memory::is_allocator<KeyCompare>::value
+				>::type
 		>
-		avl_map(InputIterator, InputIterator, const KeyCompare &)
-		-> avl_map<typename avl_map_iter_key<InputIterator>::type, typename avl_map_iter_map<InputIterator>::type, KeyCompare>;
+		avl_map(
+			InputIterator, InputIterator,
+			const KeyCompare &
+		) ->
+		avl_map<
+			typename avl_map_iter_key<InputIterator>::type,
+			typename avl_map_iter_map<InputIterator>::type,
+			KeyCompare
+		>;
 
-		template <typename InputIterator, typename Allocator,
-				typename = typename kerbal::type_traits::enable_if<kerbal::memory::is_allocator<Allocator>::value>::type
+		template <
+			typename InputIterator,
+			typename Allocator,
+			typename =
+				typename kerbal::type_traits::enable_if<
+					kerbal::memory::is_allocator<Allocator>::value
+				>::type
 		>
-		avl_map(InputIterator, InputIterator, const Allocator &)
-		-> avl_map<typename avl_map_iter_key<InputIterator>::type, typename avl_map_iter_map<InputIterator>::type, kerbal::compare::binary_type_less<void, void>, Allocator>;
+		avl_map(
+			InputIterator, InputIterator,
+			const Allocator &
+		) ->
+		avl_map<
+			typename avl_map_iter_key<InputIterator>::type,
+			typename avl_map_iter_map<InputIterator>::type,
+			kerbal::compare::binary_type_less<void, void>,
+			Allocator
+		>;
 
-		template <typename InputIterator, typename KeyCompare, typename Allocator,
-				typename = typename kerbal::type_traits::enable_if<kerbal::memory::is_allocator<Allocator>::value>::type
+		template <
+			typename InputIterator,
+			typename KeyCompare,
+			typename Allocator,
+			typename =
+				typename kerbal::type_traits::enable_if<
+					kerbal::memory::is_allocator<Allocator>::value
+				>::type
 		>
-		avl_map(InputIterator, InputIterator, const KeyCompare &, const Allocator &)
-		-> avl_map<typename avl_map_iter_key<InputIterator>::type, typename avl_map_iter_map<InputIterator>::type, KeyCompare, Allocator>;
+		avl_map(
+			InputIterator, InputIterator,
+			const KeyCompare &, const Allocator &
+		) ->
+		avl_map<
+			typename avl_map_iter_key<InputIterator>::type,
+			typename avl_map_iter_map<InputIterator>::type,
+			KeyCompare,
+			Allocator
+		>;
 
 
 		template <typename K, typename M>
-		avl_map(std::initializer_list<kerbal::container::map_data<K, M> >)
-		-> avl_map<K, M>;
+		avl_map(
+			std::initializer_list<kerbal::container::map_data<K, M> >
+		) ->
+		avl_map<K, M>;
 
-		template <typename K, typename M, typename KeyCompare,
-				typename = typename kerbal::type_traits::enable_if<!kerbal::memory::is_allocator<KeyCompare>::value>::type
+		template <
+			typename K, typename M, typename KeyCompare,
+			typename =
+				typename kerbal::type_traits::enable_if<
+					!kerbal::memory::is_allocator<KeyCompare>::value
+				>::type
 		>
-		avl_map(std::initializer_list<kerbal::container::map_data<K, M> >, const KeyCompare &)
-		-> avl_map<K, M, KeyCompare>;
+		avl_map(
+			std::initializer_list<kerbal::container::map_data<K, M> >,
+			const KeyCompare &
+		) ->
+		avl_map<K, M, KeyCompare>;
 
-		template <typename K, typename M, typename Allocator,
-				typename = typename kerbal::type_traits::enable_if<kerbal::memory::is_allocator<Allocator>::value>::type
+		template <
+			typename K, typename M, typename Allocator,
+			typename =
+				typename kerbal::type_traits::enable_if<
+					kerbal::memory::is_allocator<Allocator>::value
+				>::type
 		>
-		avl_map(std::initializer_list<kerbal::container::map_data<K, M> >, const Allocator &)
-		-> avl_map<K, M, kerbal::compare::binary_type_less<void, void>, Allocator>;
+		avl_map(
+			std::initializer_list<kerbal::container::map_data<K, M> >,
+			const Allocator &
+		) ->
+		avl_map<
+			K, M,
+			kerbal::compare::binary_type_less<void, void>,
+			Allocator
+		>;
 
-		template <typename K, typename M, typename KeyCompare, typename Allocator,
-				typename = typename kerbal::type_traits::enable_if<kerbal::memory::is_allocator<Allocator>::value>::type
+		template <
+			typename K, typename M, typename KeyCompare, typename Allocator,
+			typename =
+				typename kerbal::type_traits::enable_if<
+					kerbal::memory::is_allocator<Allocator>::value
+				>::type
 		>
-		avl_map(std::initializer_list<kerbal::container::map_data<K, M> >, const KeyCompare &, const Allocator &)
-		-> avl_map<K, M, KeyCompare, Allocator>;
+		avl_map(
+			std::initializer_list<kerbal::container::map_data<K, M> >,
+			const KeyCompare &, const Allocator &
+		) ->
+		avl_map<K, M, KeyCompare, Allocator>;
 
 #	endif // if __cplusplus >= 201703L
 
 
 		template <typename K, typename M, typename KeyCompare, typename Allocator, typename Allocator2>
 		KERBAL_CONSTEXPR20
-		bool operator==(const avl_map<K, M, KeyCompare, Allocator> & lhs, const avl_map<K, M, KeyCompare, Allocator2> & rhs)
+		bool operator==(
+			const avl_map<K, M, KeyCompare, Allocator> & lhs,
+			const avl_map<K, M, KeyCompare, Allocator2> & rhs
+		)
 		{
 			if (lhs.size() != rhs.size()) {
 				return false;
 			}
-			return kerbal::compare::sequence_equal_to(lhs.cbegin(), lhs.cend(), rhs.cbegin(), rhs.cend());
+			return kerbal::compare::sequence_equal_to(
+				lhs.cbegin(), lhs.cend(),
+				rhs.cbegin(), rhs.cend()
+			);
 		}
 
 		template <typename K, typename M, typename KeyCompare, typename Allocator, typename Allocator2>
 		KERBAL_CONSTEXPR20
-		bool operator!=(const avl_map<K, M, KeyCompare, Allocator> & lhs, const avl_map<K, M, KeyCompare, Allocator2> & rhs)
+		bool operator!=(
+			const avl_map<K, M, KeyCompare, Allocator> & lhs,
+			const avl_map<K, M, KeyCompare, Allocator2> & rhs
+		)
 		{
 			if (lhs.size() != rhs.size()) {
 				return true;
 			}
-			return kerbal::compare::sequence_not_equal_to(lhs.cbegin(), lhs.cend(), rhs.cbegin(), rhs.cend());
+			return kerbal::compare::sequence_not_equal_to(
+				lhs.cbegin(), lhs.cend(),
+				rhs.cbegin(), rhs.cend()
+			);
 		}
 
 		template <typename K, typename M, typename KeyCompare, typename Allocator, typename Allocator2>
 		KERBAL_CONSTEXPR20
-		bool operator<(const avl_map<K, M, KeyCompare, Allocator> & lhs, const avl_map<K, M, KeyCompare, Allocator2> & rhs)
+		bool operator<(
+			const avl_map<K, M, KeyCompare, Allocator> & lhs,
+			const avl_map<K, M, KeyCompare, Allocator2> & rhs
+		)
 		{
-			return kerbal::compare::sequence_less(lhs.cbegin(), lhs.cend(), rhs.cbegin(), rhs.cend());
+			return kerbal::compare::sequence_less(
+				lhs.cbegin(), lhs.cend(),
+				rhs.cbegin(), rhs.cend()
+			);
 		}
 
 		template <typename K, typename M, typename KeyCompare, typename Allocator, typename Allocator2>
 		KERBAL_CONSTEXPR20
-		bool operator<=(const avl_map<K, M, KeyCompare, Allocator> & lhs, const avl_map<K, M, KeyCompare, Allocator2> & rhs)
+		bool operator<=(
+			const avl_map<K, M, KeyCompare, Allocator> & lhs,
+			const avl_map<K, M, KeyCompare, Allocator2> & rhs
+		)
 		{
-			return kerbal::compare::sequence_less_equal(lhs.cbegin(), lhs.cend(), rhs.cbegin(), rhs.cend());
+			return kerbal::compare::sequence_less_equal(
+				lhs.cbegin(), lhs.cend(),
+				rhs.cbegin(), rhs.cend()
+			);
 		}
 
 		template <typename K, typename M, typename KeyCompare, typename Allocator, typename Allocator2>
 		KERBAL_CONSTEXPR20
-		bool operator>(const avl_map<K, M, KeyCompare, Allocator> & lhs, const avl_map<K, M, KeyCompare, Allocator2> & rhs)
+		bool operator>(
+			const avl_map<K, M, KeyCompare, Allocator> & lhs,
+			const avl_map<K, M, KeyCompare, Allocator2> & rhs
+		)
 		{
-			return kerbal::compare::sequence_greater(lhs.cbegin(), lhs.cend(), rhs.cbegin(), rhs.cend());
+			return kerbal::compare::sequence_greater(
+				lhs.cbegin(), lhs.cend(),
+				rhs.cbegin(), rhs.cend()
+			);
 		}
 
 		template <typename K, typename M, typename KeyCompare, typename Allocator, typename Allocator2>
 		KERBAL_CONSTEXPR20
-		bool operator>=(const avl_map<K, M, KeyCompare, Allocator> & lhs, const avl_map<K, M, KeyCompare, Allocator2> & rhs)
+		bool operator>=(
+			const avl_map<K, M, KeyCompare, Allocator> & lhs,
+			const avl_map<K, M, KeyCompare, Allocator2> & rhs
+		)
 		{
-			return kerbal::compare::sequence_greater_equal(lhs.cbegin(), lhs.cend(), rhs.cbegin(), rhs.cend());
+			return kerbal::compare::sequence_greater_equal(
+				lhs.cbegin(), lhs.cend(),
+				rhs.cbegin(), rhs.cend()
+			);
 		}
 
 	} // namespace container
@@ -593,8 +733,11 @@ namespace kerbal
 
 		template <typename K, typename M, typename KeyCompare, typename Allocator>
 		KERBAL_CONSTEXPR20
-		void swap(kerbal::container::avl_map<K, M, KeyCompare, Allocator> & a, kerbal::container::avl_map<K, M, KeyCompare, Allocator> & b)
-				KERBAL_CONDITIONAL_NOEXCEPT(noexcept(a.swap(b)))
+		void swap(
+			kerbal::container::avl_map<K, M, KeyCompare, Allocator> & a,
+			kerbal::container::avl_map<K, M, KeyCompare, Allocator> & b
+		)
+			KERBAL_CONDITIONAL_NOEXCEPT(noexcept(a.swap(b)))
 		{
 			a.swap(b);
 		}
@@ -608,8 +751,11 @@ KERBAL_NAMESPACE_STD_BEGIN
 
 	template <typename K, typename M, typename KeyCompare, typename Allocator>
 	KERBAL_CONSTEXPR20
-	void swap(kerbal::container::avl_map<K, M, KeyCompare, Allocator> & a, kerbal::container::avl_map<K, M, KeyCompare, Allocator> & b)
-			KERBAL_CONDITIONAL_NOEXCEPT(noexcept(a.swap(b)))
+	void swap(
+		kerbal::container::avl_map<K, M, KeyCompare, Allocator> & a,
+		kerbal::container::avl_map<K, M, KeyCompare, Allocator> & b
+	)
+		KERBAL_CONDITIONAL_NOEXCEPT(noexcept(a.swap(b)))
 	{
 		a.swap(b);
 	}

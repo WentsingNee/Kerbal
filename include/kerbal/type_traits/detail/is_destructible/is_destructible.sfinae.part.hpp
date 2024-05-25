@@ -24,7 +24,6 @@
 #endif
 
 
-
 #if KERBAL_HAS_IS_DESTRUCTIBLE_SUPPORT
 
 #include <kerbal/type_traits/integral_constant.hpp>
@@ -60,16 +59,16 @@ namespace kerbal
 
 					template <typename T2>
 					static kerbal::type_traits::yes_type test(char(*)[sizeof(
-							kerbal::utility::declval<T2*>()->~T2(),
-							0
+						kerbal::utility::declval<T2 *>()->~T2(),
+						0
 					)]);
 
 #else
 
 					template <typename T2>
 					static kerbal::type_traits::yes_type test(char *, decltype(
-							kerbal::utility::declval<T2*>()->~T2(),
-							0
+						kerbal::utility::declval<T2 *>()->~T2(),
+						0
 					) = 0);
 
 #endif
@@ -84,21 +83,21 @@ namespace kerbal
 
 		template <typename T>
 		struct is_destructible :
-				kerbal::type_traits::conjunction<
-					kerbal::type_traits::negation<
-						kerbal::type_traits::disjunction<
-							kerbal::type_traits::is_function<T>,
-							kerbal::type_traits::is_unbounded_array<T>,
-							kerbal::type_traits::is_void<T>
-						>
-					>,
+			kerbal::type_traits::conjunction<
+				kerbal::type_traits::negation<
 					kerbal::type_traits::disjunction<
-						kerbal::type_traits::is_reference<T>,
-						typename kerbal::type_traits::detail::is_destructible_helper<
-							typename kerbal::type_traits::remove_all_extents<T>::type
-						>::type
+						kerbal::type_traits::is_function<T>,
+						kerbal::type_traits::is_unbounded_array<T>,
+						kerbal::type_traits::is_void<T>
 					>
+				>,
+				kerbal::type_traits::disjunction<
+					kerbal::type_traits::is_reference<T>,
+					typename kerbal::type_traits::detail::is_destructible_helper<
+						typename kerbal::type_traits::remove_all_extents<T>::type
+					>::type
 				>
+			>
 		{
 		};
 

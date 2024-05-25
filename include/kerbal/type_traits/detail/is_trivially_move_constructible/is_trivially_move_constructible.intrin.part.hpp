@@ -40,17 +40,17 @@ namespace kerbal
 
 		template <typename T>
 		struct is_trivially_move_constructible :
-				kerbal::type_traits::conditional<
-					kerbal::type_traits::disjunction<
-						kerbal::type_traits::is_array<T>,
-						kerbal::type_traits::is_function<T>
-					>::value,
-					kerbal::type_traits::false_type,
-					kerbal::type_traits::disjunction<
-						kerbal::type_traits::is_reference<T>,
-						kerbal::type_traits::bool_constant<KERBAL_INTRINSIC_IS_TRIVIALLY_MOVE_CONSTRUCTIBLE(T)>
-					>
-				>::type
+			kerbal::type_traits::conditional<
+				kerbal::type_traits::disjunction<
+					kerbal::type_traits::is_array<T>,
+					kerbal::type_traits::is_function<T>
+				>::value,
+				kerbal::type_traits::false_type,
+				kerbal::type_traits::disjunction<
+					kerbal::type_traits::is_reference<T>,
+					kerbal::type_traits::bool_constant<KERBAL_INTRINSIC_IS_TRIVIALLY_MOVE_CONSTRUCTIBLE(T)>
+				>
+			>::type
 		{
 		};
 

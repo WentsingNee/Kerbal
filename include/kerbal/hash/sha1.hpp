@@ -149,7 +149,10 @@ namespace kerbal
 
 				template <typename RandomAccessIterator>
 				KERBAL_CONSTEXPR14
-				void update_helper(RandomAccessIterator first, RandomAccessIterator last, std::random_access_iterator_tag) KERBAL_NOEXCEPT;
+				void update_helper(
+					RandomAccessIterator first, RandomAccessIterator last,
+					std::random_access_iterator_tag
+				) KERBAL_NOEXCEPT;
 
 			public:
 				/*

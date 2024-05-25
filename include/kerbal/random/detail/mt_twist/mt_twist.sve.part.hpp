@@ -64,8 +64,8 @@ namespace kerbal
 						svuint32_t sv_mti = svld1(pg, &mt[i]);
 						svuint32_t sv_mtip1 = svld1(pg, &mt[i + 1]);
 						svuint32_t sv_y = svorr_x(pg,
-								svand_x(pg, sv_mti, sv_UPPER_MASK),
-								svbic_x(pg, sv_mtip1, sv_UPPER_MASK));
+							svand_x(pg, sv_mti, sv_UPPER_MASK),
+							svbic_x(pg, sv_mtip1, sv_UPPER_MASK));
 						svuint32_t sv_mag_mask = svand_x(pg, sv_y, sv_ONE);
 						sv_mag_mask = svsub_x(pg, sv_ZERO, sv_mag_mask);
 						sv_mag_mask = svand_x(pg, sv_mag_mask, sv_A);
@@ -85,8 +85,8 @@ namespace kerbal
 						svuint32_t sv_mti = svld1(pg, &mt[i]);
 						svuint32_t sv_mtip1 = svld1(pg, &mt[i + 1]);
 						svuint32_t sv_y = svorr_x(pg,
-								svand_x(pg, sv_mti, sv_UPPER_MASK),
-								svbic_x(pg, sv_mtip1, sv_UPPER_MASK));
+							svand_x(pg, sv_mti, sv_UPPER_MASK),
+							svbic_x(pg, sv_mtip1, sv_UPPER_MASK));
 						svuint32_t sv_mag_mask = svand_x(pg, sv_y, sv_ONE);
 						sv_mag_mask = svsub_x(pg, sv_ZERO, sv_mag_mask);
 						sv_mag_mask = svand_x(pg, sv_mag_mask, sv_A);
@@ -133,8 +133,8 @@ namespace kerbal
 						svuint64_t sv_mti = svld1(pg, &mt[i]);
 						svuint64_t sv_mtip1 = svld1(pg, &mt[i + 1]);
 						svuint64_t sv_y = svorr_x(pg,
-								svand_x(pg, sv_mti, sv_UPPER_MASK),
-								svbic_x(pg, sv_mtip1, sv_UPPER_MASK));
+							svand_x(pg, sv_mti, sv_UPPER_MASK),
+							svbic_x(pg, sv_mtip1, sv_UPPER_MASK));
 						svuint64_t sv_mag_mask = svand_x(pg, sv_y, sv_ONE);
 						sv_mag_mask = svsub_x(pg, sv_ZERO, sv_mag_mask);
 						sv_mag_mask = svand_x(pg, sv_mag_mask, sv_A);
@@ -154,8 +154,8 @@ namespace kerbal
 						svuint64_t sv_mti = svld1(pg, &mt[i]);
 						svuint64_t sv_mtip1 = svld1(pg, &mt[i + 1]);
 						svuint64_t sv_y = svorr_x(pg,
-								svand_x(pg, sv_mti, sv_UPPER_MASK),
-								svbic_x(pg, sv_mtip1, sv_UPPER_MASK));
+							svand_x(pg, sv_mti, sv_UPPER_MASK),
+							svbic_x(pg, sv_mtip1, sv_UPPER_MASK));
 						svuint64_t sv_mag_mask = svand_x(pg, sv_y, sv_ONE);
 						sv_mag_mask = svsub_x(pg, sv_ZERO, sv_mag_mask);
 						sv_mag_mask = svand_x(pg, sv_mag_mask, sv_A);

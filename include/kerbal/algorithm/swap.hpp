@@ -37,24 +37,24 @@ namespace kerbal
 
 		template <typename T>
 		struct try_test_is_nothrow_swappable :
-				kerbal::type_traits::tribool_conjunction<
+			kerbal::type_traits::tribool_conjunction<
 #	if __cplusplus >= 201103L
-					kerbal::type_traits::try_test_is_nothrow_move_constructible<T>,
-					kerbal::type_traits::try_test_is_nothrow_move_assignable<T>
+				kerbal::type_traits::try_test_is_nothrow_move_constructible<T>,
+				kerbal::type_traits::try_test_is_nothrow_move_assignable<T>
 #	else
-					kerbal::type_traits::try_test_is_nothrow_copy_constructible<T>,
-					kerbal::type_traits::try_test_is_nothrow_copy_assignable<T>
+				kerbal::type_traits::try_test_is_nothrow_copy_constructible<T>,
+				kerbal::type_traits::try_test_is_nothrow_copy_assignable<T>
 #	endif
-				>::result
+			>::result
 		{
 		};
 
 		template <typename T>
 		KERBAL_CONSTEXPR14
 		void swap(T & lhs, T & rhs)
-				KERBAL_CONDITIONAL_NOEXCEPT(
-					try_test_is_nothrow_swappable<T>::IS_TRUE::value
-				)
+			KERBAL_CONDITIONAL_NOEXCEPT(
+				try_test_is_nothrow_swappable<T>::IS_TRUE::value
+			)
 		;
 
 		template <typename T, std::size_t N>
@@ -65,9 +65,9 @@ namespace kerbal
 		template <typename T>
 		KERBAL_CONSTEXPR14
 		void swap(T & lhs, T & rhs)
-				KERBAL_CONDITIONAL_NOEXCEPT(
-					try_test_is_nothrow_swappable<T>::IS_TRUE::value
-				)
+			KERBAL_CONDITIONAL_NOEXCEPT(
+				try_test_is_nothrow_swappable<T>::IS_TRUE::value
+			)
 		{
 			T t(kerbal::compatibility::to_xvalue(lhs));
 			lhs = kerbal::compatibility::to_xvalue(rhs);
@@ -77,9 +77,9 @@ namespace kerbal
 		template <typename ForwardIterator1, typename ForwardIterator2>
 		KERBAL_CONSTEXPR14
 		void iter_swap(ForwardIterator1 lhs, ForwardIterator2 rhs)
-				KERBAL_CONDITIONAL_NOEXCEPT(
-						noexcept(kerbal::algorithm::swap(*lhs, *rhs))
-				)
+			KERBAL_CONDITIONAL_NOEXCEPT(
+				noexcept(kerbal::algorithm::swap(*lhs, *rhs))
+			)
 		{
 			kerbal::algorithm::swap(*lhs, *rhs);
 		}
@@ -90,14 +90,16 @@ namespace kerbal
 			template <typename ForwardIterator1, typename ForwardIterator2>
 			KERBAL_CONSTEXPR14
 			ForwardIterator2
-			range_swap_helper(ForwardIterator1 a_first, ForwardIterator1 a_last, ForwardIterator2 b_first,
-							std::forward_iterator_tag)
-					KERBAL_CONDITIONAL_NOEXCEPT(
-							noexcept(static_cast<bool>(a_first != a_last)) &&
-							noexcept(kerbal::algorithm::iter_swap(a_first, b_first)) &&
-							noexcept(++a_first) &&
-							noexcept(++b_first)
-					)
+			range_swap_helper(
+				ForwardIterator1 a_first, ForwardIterator1 a_last, ForwardIterator2 b_first,
+				std::forward_iterator_tag
+			)
+				KERBAL_CONDITIONAL_NOEXCEPT(
+					noexcept(static_cast<bool>(a_first != a_last)) &&
+					noexcept(kerbal::algorithm::iter_swap(a_first, b_first)) &&
+					noexcept(++a_first) &&
+					noexcept(++b_first)
+				)
 			{
 				while (a_first != a_last) {
 					kerbal::algorithm::iter_swap(a_first, b_first);
@@ -110,16 +112,18 @@ namespace kerbal
 			template <typename RandomAccessIterator1, typename ForwardIterator2>
 			KERBAL_CONSTEXPR14
 			ForwardIterator2
-			range_swap_helper(RandomAccessIterator1 a_first, RandomAccessIterator1 a_last, ForwardIterator2 b_first,
-							std::random_access_iterator_tag)
+			range_swap_helper(
+				RandomAccessIterator1 a_first, RandomAccessIterator1 a_last, ForwardIterator2 b_first,
+				std::random_access_iterator_tag
+			)
 			{
 				typedef RandomAccessIterator1 iterator;
 				typedef typename kerbal::iterator::iterator_traits<iterator>::difference_type difference_type;
 
-#		define EACH() do {\
-					kerbal::algorithm::iter_swap(a_first, b_first);\
-					++a_first;\
-					++b_first;\
+#		define EACH() do { \
+					kerbal::algorithm::iter_swap(a_first, b_first); \
+					++a_first; \
+					++b_first; \
 				} while (false)
 
 				difference_type trip_count(kerbal::iterator::distance(a_first, a_last));
@@ -152,8 +156,10 @@ namespace kerbal
 		ForwardIterator2
 		range_swap(ForwardIterator1 a_first, ForwardIterator1 a_last, ForwardIterator2 b_first)
 		{
-			return kerbal::algorithm::detail::range_swap_helper(a_first, a_last, b_first,
-									kerbal::iterator::iterator_category(a_first));
+			return kerbal::algorithm::detail::range_swap_helper(
+				a_first, a_last, b_first,
+				kerbal::iterator::iterator_category(a_first)
+			);
 		}
 
 		template <typename T, std::size_t N>

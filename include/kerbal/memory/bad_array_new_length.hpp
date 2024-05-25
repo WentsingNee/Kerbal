@@ -23,10 +23,11 @@ namespace kerbal
 	{
 
 		class bad_array_new_length :
-				public kerbal::memory::bad_alloc
+			public kerbal::memory::bad_alloc
 		{
 			public:
-				virtual const char * what() const KERBAL_NOEXCEPT
+				virtual
+				const char * what() const KERBAL_NOEXCEPT
 				{
 					return "bad array new length";
 				}

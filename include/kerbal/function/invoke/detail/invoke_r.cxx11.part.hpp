@@ -38,10 +38,10 @@ namespace kerbal
 
 			template <typename R, typename Fun, typename ... Args>
 			KERBAL_CONSTEXPR
-			R invoke_r_helper(INVOKE_OVERLOAD_VER_CALLABLE, Fun && f, Args&& ... args)
-					KERBAL_CONDITIONAL_NOEXCEPT((
-						invoke_r_is_nothrow<R, Fun, Args&&...>::value
-					))
+			R invoke_r_helper(INVOKE_OVERLOAD_VER_CALLABLE, Fun && f, Args && ... args)
+				KERBAL_CONDITIONAL_NOEXCEPT((
+					invoke_r_is_nothrow<R, Fun, Args && ...>::value
+				))
 			{
 				return static_cast<R>(
 					kerbal::utility::forward<Fun>(f)(
@@ -52,10 +52,10 @@ namespace kerbal
 
 			template <typename R, typename MemObjPtr, typename T, typename ... Args>
 			KERBAL_CONSTEXPR
-			R invoke_r_helper(INVOKE_OVERLOAD_VER_MEM_OBJ, MemObjPtr mem_obj_ptr, T&& o, Args&& ...)
-					KERBAL_CONDITIONAL_NOEXCEPT((
-						invoke_r_is_nothrow<R, MemObjPtr, T&&, Args&&...>::value
-					))
+			R invoke_r_helper(INVOKE_OVERLOAD_VER_MEM_OBJ, MemObjPtr mem_obj_ptr, T && o, Args && ...)
+				KERBAL_CONDITIONAL_NOEXCEPT((
+					invoke_r_is_nothrow<R, MemObjPtr, T &&, Args && ...>::value
+				))
 			{
 				KERBAL_STATIC_ASSERT(sizeof...(Args) == 0, "Wrong Args num");
 				return static_cast<R>(
@@ -65,10 +65,10 @@ namespace kerbal
 
 			template <typename R, typename MemObjPtr, typename T, typename ... Args>
 			KERBAL_CONSTEXPR
-			R invoke_r_helper(INVOKE_OVERLOAD_VER_MEM_OBJ, MemObjPtr mem_obj_ptr, T * p, Args&& ...)
-					KERBAL_CONDITIONAL_NOEXCEPT((
-						invoke_r_is_nothrow<R, MemObjPtr, T *, Args&&...>::value
-					))
+			R invoke_r_helper(INVOKE_OVERLOAD_VER_MEM_OBJ, MemObjPtr mem_obj_ptr, T * p, Args && ...)
+				KERBAL_CONDITIONAL_NOEXCEPT((
+					invoke_r_is_nothrow<R, MemObjPtr, T *, Args && ...>::value
+				))
 			{
 				KERBAL_STATIC_ASSERT(sizeof...(Args) == 0, "Wrong Args num");
 				return static_cast<R>(
@@ -78,10 +78,10 @@ namespace kerbal
 
 			template <typename R, typename MemObjPtr, typename T, typename ... Args>
 			KERBAL_CONSTEXPR
-			R invoke_r_helper(INVOKE_OVERLOAD_VER_MEM_OBJ, MemObjPtr mem_obj_ptr, kerbal::utility::reference_wrapper<T> rw, Args&& ...)
-					KERBAL_CONDITIONAL_NOEXCEPT((
-						invoke_r_is_nothrow<R, MemObjPtr, kerbal::utility::reference_wrapper<T>, Args&&...>::value
-					))
+			R invoke_r_helper(INVOKE_OVERLOAD_VER_MEM_OBJ, MemObjPtr mem_obj_ptr, kerbal::utility::reference_wrapper<T> rw, Args && ...)
+				KERBAL_CONDITIONAL_NOEXCEPT((
+					invoke_r_is_nothrow<R, MemObjPtr, kerbal::utility::reference_wrapper<T>, Args && ...>::value
+				))
 			{
 				KERBAL_STATIC_ASSERT(sizeof...(Args) == 0, "Wrong Args num");
 				return static_cast<R>(
@@ -91,10 +91,10 @@ namespace kerbal
 
 			template <typename R, typename MemFunPtr, typename T, typename ... Args>
 			KERBAL_CONSTEXPR
-			R invoke_r_helper(INVOKE_OVERLOAD_VER_MEM_FUN, MemFunPtr mem_fun_ptr, T&& o, Args&& ... args)
-					KERBAL_CONDITIONAL_NOEXCEPT((
-						invoke_r_is_nothrow<R, MemFunPtr, T&&, Args&&...>::value
-					))
+			R invoke_r_helper(INVOKE_OVERLOAD_VER_MEM_FUN, MemFunPtr mem_fun_ptr, T && o, Args && ... args)
+				KERBAL_CONDITIONAL_NOEXCEPT((
+					invoke_r_is_nothrow<R, MemFunPtr, T &&, Args && ...>::value
+				))
 			{
 				return static_cast<R>(
 					(kerbal::utility::forward<T>(o).*mem_fun_ptr)(
@@ -105,10 +105,10 @@ namespace kerbal
 
 			template <typename R, typename MemFunPtr, typename T, typename ... Args>
 			KERBAL_CONSTEXPR
-			R invoke_r_helper(INVOKE_OVERLOAD_VER_MEM_FUN, MemFunPtr mem_fun_ptr, T * p, Args&& ... args)
-					KERBAL_CONDITIONAL_NOEXCEPT((
-						invoke_r_is_nothrow<R, MemFunPtr, T *, Args&&...>::value
-					))
+			R invoke_r_helper(INVOKE_OVERLOAD_VER_MEM_FUN, MemFunPtr mem_fun_ptr, T * p, Args && ... args)
+				KERBAL_CONDITIONAL_NOEXCEPT((
+					invoke_r_is_nothrow<R, MemFunPtr, T *, Args && ...>::value
+				))
 			{
 				return static_cast<R>(
 					(p->*mem_fun_ptr)(
@@ -119,10 +119,10 @@ namespace kerbal
 
 			template <typename R, typename MemFunPtr, typename T, typename ... Args>
 			KERBAL_CONSTEXPR
-			R invoke_r_helper(INVOKE_OVERLOAD_VER_MEM_FUN, MemFunPtr mem_fun_ptr, kerbal::utility::reference_wrapper<T> rw, Args&& ... args)
-					KERBAL_CONDITIONAL_NOEXCEPT((
-						invoke_r_is_nothrow<R, MemFunPtr, kerbal::utility::reference_wrapper<T>, Args&&...>::value
-					))
+			R invoke_r_helper(INVOKE_OVERLOAD_VER_MEM_FUN, MemFunPtr mem_fun_ptr, kerbal::utility::reference_wrapper<T> rw, Args && ... args)
+				KERBAL_CONDITIONAL_NOEXCEPT((
+					invoke_r_is_nothrow<R, MemFunPtr, kerbal::utility::reference_wrapper<T>, Args && ...>::value
+				))
 			{
 				return static_cast<R>(
 					(rw.get().*mem_fun_ptr)(
@@ -136,13 +136,17 @@ namespace kerbal
 
 		template <typename R, typename Fun, typename ... Args>
 		KERBAL_CONSTEXPR
-		R invoke_r(Fun && f, Args&& ... args)
-				KERBAL_CONDITIONAL_NOEXCEPT((
-					invoke_r_is_nothrow<R, Fun&&, Args&&...>::value
-				))
+		R invoke_r(Fun && f, Args && ... args)
+			KERBAL_CONDITIONAL_NOEXCEPT((
+				invoke_r_is_nothrow<R, Fun &&, Args && ...>::value
+			))
 		{
-			typedef typename kerbal::function::detail::invoke_overload_ver_selector<Fun&&, Args&&...>::type VER;
-			return kerbal::function::detail::invoke_r_helper<R>(VER(), kerbal::utility::forward<Fun>(f), kerbal::utility::forward<Args>(args)...);
+			typedef typename kerbal::function::detail::invoke_overload_ver_selector<Fun &&, Args && ...>::type VER;
+			return kerbal::function::detail::invoke_r_helper<R>(
+				VER(),
+				kerbal::utility::forward<Fun>(f),
+				kerbal::utility::forward<Args>(args)...
+			);
 		}
 
 	} // namespace function

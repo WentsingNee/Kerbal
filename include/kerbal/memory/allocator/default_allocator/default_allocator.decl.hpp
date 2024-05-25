@@ -44,7 +44,10 @@ namespace kerbal
 				typedef kerbal::type_traits::true_type		is_always_equal;
 
 			private:
-				typedef kerbal::memory::over_aligned_allocator<value_type, kerbal::memory::malloc_allocator<void> > upstream_allocator;
+				typedef kerbal::memory::over_aligned_allocator<
+					value_type,
+					kerbal::memory::malloc_allocator<void>
+				> upstream_allocator;
 
 			public:
 
@@ -99,7 +102,7 @@ namespace kerbal
 		{
 			public:
 				typedef void						value_type;
-				typedef value_type*					pointer;
+				typedef value_type *				pointer;
 
 				typedef std::size_t					size_type;
 				typedef std::ptrdiff_t				difference_type;
@@ -108,7 +111,10 @@ namespace kerbal
 				typedef kerbal::type_traits::true_type		is_always_equal;
 
 			private:
-				typedef kerbal::memory::over_aligned_allocator<value_type, kerbal::memory::malloc_allocator<void> > over_aligned_allocator;
+				typedef kerbal::memory::over_aligned_allocator<
+					value_type,
+					kerbal::memory::malloc_allocator<void>
+				> over_aligned_allocator;
 
 			public:
 

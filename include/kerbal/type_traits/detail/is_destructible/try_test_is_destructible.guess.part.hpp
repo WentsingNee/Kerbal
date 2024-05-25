@@ -47,13 +47,13 @@ namespace kerbal
 
 			template <typename T>
 			struct try_test_is_destructible_helper :
-					kerbal::type_traits::tribool_disjunction<
-						kerbal::type_traits::try_test_is_enum<T>,
-						kerbal::type_traits::is_fundamental<T>,
-						kerbal::type_traits::is_member_pointer<T>,
-						kerbal::type_traits::is_pointer<T>,
-						kerbal::type_traits::tribool_unspecified
-					>::result
+				kerbal::type_traits::tribool_disjunction<
+					kerbal::type_traits::try_test_is_enum<T>,
+					kerbal::type_traits::is_fundamental<T>,
+					kerbal::type_traits::is_member_pointer<T>,
+					kerbal::type_traits::is_pointer<T>,
+					kerbal::type_traits::tribool_unspecified
+				>::result
 			{
 			};
 
@@ -61,20 +61,20 @@ namespace kerbal
 
 		template <typename T>
 		struct try_test_is_destructible :
-				kerbal::type_traits::conditional<
-					kerbal::type_traits::tribool_disjunction<
-						kerbal::type_traits::is_function<T>,
-						kerbal::type_traits::is_unbounded_array<T>,
-						kerbal::type_traits::is_void<T>
-					>::result::IS_TRUE::value,
-					kerbal::type_traits::tribool_false,
-					typename kerbal::type_traits::tribool_disjunction<
-						kerbal::type_traits::is_reference<T>,
-						kerbal::type_traits::detail::try_test_is_destructible_helper<
-							typename kerbal::type_traits::remove_all_extents<T>::type
-						>
-					>::result
-				>::type
+			kerbal::type_traits::conditional<
+				kerbal::type_traits::tribool_disjunction<
+					kerbal::type_traits::is_function<T>,
+					kerbal::type_traits::is_unbounded_array<T>,
+					kerbal::type_traits::is_void<T>
+				>::result::IS_TRUE::value,
+				kerbal::type_traits::tribool_false,
+				typename kerbal::type_traits::tribool_disjunction<
+					kerbal::type_traits::is_reference<T>,
+					kerbal::type_traits::detail::try_test_is_destructible_helper<
+						typename kerbal::type_traits::remove_all_extents<T>::type
+					>
+				>::result
+			>::type
 		{
 		};
 

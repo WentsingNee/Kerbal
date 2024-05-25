@@ -51,7 +51,11 @@ namespace kerbal
 				private:
 					typedef kerbal::container::detail::sl_node_base free_list_node;
 
-					typename kerbal::type_traits::aligned_storage<sizeof(free_list_node), KERBAL_ALIGNOF(free_list_node)>::type k_free_list_node;
+					typename kerbal::type_traits::aligned_storage<
+						sizeof(free_list_node),
+						KERBAL_ALIGNOF(free_list_node)
+					>::type k_free_list_node;
+
 					typename kerbal::type_traits::aligned_storage<Size, Align>::type k_data;
 
 				public:
@@ -65,19 +69,19 @@ namespace kerbal
 			struct fsn_alloc_memory_blocks
 			{
 					typedef typename kerbal::autonm::forward_list<
-							fsn_alloc_memory_blocks*,
-							kerbal::autonm::discard_deallocate_semi_allocator<fsn_alloc_memory_blocks*>
+						fsn_alloc_memory_blocks *,
+						kerbal::autonm::discard_deallocate_semi_allocator<fsn_alloc_memory_blocks *>
 					>::auto_node auto_node;
 
 					auto_node k_allocated_blocks_ptr_node;
 					embedded_block<sizeof(T), KERBAL_ALIGNOF(T)> k_embedded_block[N];
 
 					fsn_alloc_memory_blocks() KERBAL_NOEXCEPT :
-							k_allocated_blocks_ptr_node(kerbal::utility::in_place_t(), this)
+						k_allocated_blocks_ptr_node(kerbal::utility::in_place_t(), this)
 					{
 						for (std::size_t i = 0; i < N - 1; ++i) {
 							this->k_embedded_block[i].interpret_as_free_list_node().next =
-									&this->k_embedded_block[i + 1].interpret_as_free_list_node();
+								&this->k_embedded_block[i + 1].interpret_as_free_list_node();
 						}
 						this->k_embedded_block[N - 1].interpret_as_free_list_node().next = NULL;
 					}
@@ -96,20 +100,20 @@ namespace kerbal
 					typedef kerbal::memory::detail::fsn_alloc_memory_blocks<value_type, BLOCK_LENGTH::value>
 																										memory_blocks_type;
 					typedef kerbal::autonm::forward_list<
-							memory_blocks_type*,
-							kerbal::autonm::discard_deallocate_semi_allocator<memory_blocks_type*>
+						memory_blocks_type *,
+						kerbal::autonm::discard_deallocate_semi_allocator<memory_blocks_type *>
 					>																					allocated_blocks_ptr_list_type;
 					typedef kerbal::container::detail::sl_node_base										free_list_node_type;
 					typedef kerbal::container::detail::fl_type_unrelated 								free_list_type;
 
 					typedef kerbal::container::detail::container_rebind_allocator_overload<
-							UpstreamAllocator,
-							value_type
+						UpstreamAllocator,
+						value_type
 					>																					size_over_large_allocator_rebind_overload;
 
 					typedef kerbal::container::detail::container_rebind_allocator_overload<
-							UpstreamAllocator,
-							memory_blocks_type
+						UpstreamAllocator,
+						memory_blocks_type
 					>																					memory_blocks_allocator_rebind_overload;
 
 			};
@@ -118,10 +122,14 @@ namespace kerbal
 
 
 		template <typename T, typename UpstreamAllocator>
-		class fixed_size_node_allocator:
-				private kerbal::utility::noncopyassignable,
-				protected kerbal::memory::detail::fixed_size_node_allocator_typedef_helper<T, UpstreamAllocator>::size_over_large_allocator_rebind_overload,
-				protected kerbal::memory::detail::fixed_size_node_allocator_typedef_helper<T, UpstreamAllocator>::memory_blocks_allocator_rebind_overload
+		class fixed_size_node_allocator :
+			private kerbal::utility::noncopyassignable,
+			protected kerbal::memory::detail::fixed_size_node_allocator_typedef_helper<
+				T, UpstreamAllocator
+			>::size_over_large_allocator_rebind_overload,
+			protected kerbal::memory::detail::fixed_size_node_allocator_typedef_helper<
+				T, UpstreamAllocator
+			>::memory_blocks_allocator_rebind_overload
 		{
 			private:
 				typedef kerbal::memory::detail::fixed_size_node_allocator_typedef_helper<T, UpstreamAllocator> typedef_helper;
@@ -205,18 +213,18 @@ namespace kerbal
 			public:
 
 				typedef kerbal::type_traits::bool_constant<
-						noexcept(
-							kerbal::algorithm::swap(
-								kerbal::utility::declval<size_over_large_allocator &>(),
-								kerbal::utility::declval<size_over_large_allocator &>()
-							)
-						) &&
-						noexcept(
-							kerbal::algorithm::swap(
-								kerbal::utility::declval<memory_blocks_allocator &>(),
-								kerbal::utility::declval<memory_blocks_allocator &>()
-							)
+					noexcept(
+						kerbal::algorithm::swap(
+							kerbal::utility::declval<size_over_large_allocator &>(),
+							kerbal::utility::declval<size_over_large_allocator &>()
 						)
+					) &&
+					noexcept(
+						kerbal::algorithm::swap(
+							kerbal::utility::declval<memory_blocks_allocator &>(),
+							kerbal::utility::declval<memory_blocks_allocator &>()
+						)
+					)
 				> is_nothrow_swappable;
 
 #		endif
@@ -237,8 +245,8 @@ namespace kerbal
 #		endif
 
 				fixed_size_node_allocator(const fixed_size_node_allocator & src) KERBAL_NOEXCEPT :
-						size_over_large_allocator_rebind_overload(src.size_over_large_alloc()),
-						memory_blocks_allocator_rebind_overload(src.memory_block_alloc())
+					size_over_large_allocator_rebind_overload(src.size_over_large_alloc()),
+					memory_blocks_allocator_rebind_overload(src.memory_block_alloc())
 				{
 				}
 
@@ -247,8 +255,8 @@ namespace kerbal
 				typedef is_nothrow_swappable is_nothrow_move_constructible;
 
 				fixed_size_node_allocator(fixed_size_node_allocator && src)
-						KERBAL_CONDITIONAL_NOEXCEPT(is_nothrow_move_constructible::value) :
-						fixed_size_node_allocator()
+					KERBAL_CONDITIONAL_NOEXCEPT(is_nothrow_move_constructible::value) :
+					fixed_size_node_allocator()
 				{
 					this->swap(src);
 				}
@@ -267,7 +275,7 @@ namespace kerbal
 				typedef is_nothrow_swappable is_nothrow_move_assignable;
 
 				fixed_size_node_allocator & operator=(fixed_size_node_allocator && src)
-						KERBAL_CONDITIONAL_NOEXCEPT(is_nothrow_move_assignable::value)
+					KERBAL_CONDITIONAL_NOEXCEPT(is_nothrow_move_assignable::value)
 				{
 					this->swap(src);
 					return *this;
@@ -295,7 +303,7 @@ namespace kerbal
 				}
 
 				void swap(fixed_size_node_allocator & other)
-						KERBAL_CONDITIONAL_NOEXCEPT(is_nothrow_swappable::value)
+					KERBAL_CONDITIONAL_NOEXCEPT(is_nothrow_swappable::value)
 				;
 
 			private:
@@ -314,12 +322,12 @@ namespace kerbal
 
 		template <typename T, typename UpstreamAllocator>
 		void swap(
-				kerbal::memory::fixed_size_node_allocator<T, UpstreamAllocator> & lhs,
-				kerbal::memory::fixed_size_node_allocator<T, UpstreamAllocator> & rhs
+			kerbal::memory::fixed_size_node_allocator<T, UpstreamAllocator> & lhs,
+			kerbal::memory::fixed_size_node_allocator<T, UpstreamAllocator> & rhs
 		)
-		KERBAL_CONDITIONAL_NOEXCEPT(
-			noexcept(lhs.swap(rhs))
-		)
+			KERBAL_CONDITIONAL_NOEXCEPT(
+				noexcept(lhs.swap(rhs))
+			)
 		{
 			lhs.swap(rhs);
 		}
@@ -333,12 +341,12 @@ KERBAL_NAMESPACE_STD_BEGIN
 
 	template <typename T, typename UpstreamAllocator>
 	void swap(
-			kerbal::memory::fixed_size_node_allocator<T, UpstreamAllocator> & lhs,
-			kerbal::memory::fixed_size_node_allocator<T, UpstreamAllocator> & rhs
+		kerbal::memory::fixed_size_node_allocator<T, UpstreamAllocator> & lhs,
+		kerbal::memory::fixed_size_node_allocator<T, UpstreamAllocator> & rhs
 	)
-	KERBAL_CONDITIONAL_NOEXCEPT(
-		noexcept(lhs.swap(rhs))
-	)
+		KERBAL_CONDITIONAL_NOEXCEPT(
+			noexcept(lhs.swap(rhs))
+		)
 	{
 		lhs.swap(rhs);
 	}

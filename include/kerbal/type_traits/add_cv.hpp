@@ -27,9 +27,9 @@ namespace kerbal
 		KERBAL_MODULE_EXPORT
 		template <typename T>
 		struct add_cv :
-				kerbal::type_traits::add_const<
-					typename kerbal::type_traits::add_volatile<T>::type
-				>
+			kerbal::type_traits::add_const<
+				typename kerbal::type_traits::add_volatile<T>::type
+			>
 		{
 		};
 

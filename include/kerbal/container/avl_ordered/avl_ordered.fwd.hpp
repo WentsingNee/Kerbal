@@ -23,7 +23,12 @@ namespace kerbal
 	namespace container
 	{
 
-		template <typename Entity, typename Extract, typename KeyCompare = kerbal::compare::binary_type_less<void, void>, typename Allocator = std::allocator<Entity> >
+		template <
+			typename Entity,
+			typename Extract,
+			typename KeyCompare = kerbal::compare::binary_type_less<void, void>,
+			typename Allocator = std::allocator<Entity>
+		>
 		class avl_ordered;
 
 	} // namespace container

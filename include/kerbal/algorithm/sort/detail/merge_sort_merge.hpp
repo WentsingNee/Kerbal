@@ -29,20 +29,22 @@ namespace kerbal
 
 			template <typename ForwardIterator1, typename ForwardIterator2, typename Compare>
 			KERBAL_CONSTEXPR14
-			void merge_sort_merge(ForwardIterator1 buffer_first, ForwardIterator1 buffer_last,
-									ForwardIterator2 mid, ForwardIterator2 last,
-									ForwardIterator2 to, Compare cmp)
-											KERBAL_CONDITIONAL_NOEXCEPT(
-													noexcept(static_cast<bool>(buffer_first != buffer_last)) &&
-													noexcept(static_cast<bool>(mid != last)) &&
-													noexcept(static_cast<bool>(cmp(*mid, *buffer_first))) &&
-													noexcept(kerbal::assign::generic_assign(*to, *mid)) &&
-													noexcept(++to) &&
-													noexcept(++mid) &&
-													noexcept(kerbal::assign::generic_assign(*to, *buffer_first)) &&
-													noexcept(++buffer_first) &&
-													noexcept(kerbal::algorithm::copy(buffer_first, buffer_last, to))
-											)
+			void merge_sort_merge(
+				ForwardIterator1 buffer_first, ForwardIterator1 buffer_last,
+				ForwardIterator2 mid, ForwardIterator2 last,
+				ForwardIterator2 to, Compare cmp
+			)
+				KERBAL_CONDITIONAL_NOEXCEPT(
+					noexcept(static_cast<bool>(buffer_first != buffer_last)) &&
+					noexcept(static_cast<bool>(mid != last)) &&
+					noexcept(static_cast<bool>(cmp(*mid, *buffer_first))) &&
+					noexcept(kerbal::assign::generic_assign(*to, *mid)) &&
+					noexcept(++to) &&
+					noexcept(++mid) &&
+					noexcept(kerbal::assign::generic_assign(*to, *buffer_first)) &&
+					noexcept(++buffer_first) &&
+					noexcept(kerbal::algorithm::copy(buffer_first, buffer_last, to))
+				)
 			{
 				while (buffer_first != buffer_last) {
 					if (mid != last) {

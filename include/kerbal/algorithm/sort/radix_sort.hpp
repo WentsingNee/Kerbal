@@ -36,11 +36,13 @@ namespace kerbal
 
 			template <typename ForwardIterator>
 			KERBAL_CONSTEXPR20
-			void radix_sort_back_fill(ForwardIterator first,
-					kerbal::type_traits::false_type /*asc*/,
-					kerbal::type_traits::false_type /*unsigned*/,
-					const kerbal::container::vector<typename kerbal::iterator::iterator_traits<ForwardIterator>::value_type> buckets[],
-					std::size_t BUCKETS_NUM)
+			void radix_sort_back_fill(
+				ForwardIterator first,
+				kerbal::type_traits::false_type /*asc*/,
+				kerbal::type_traits::false_type /*unsigned*/,
+				const kerbal::container::vector<typename kerbal::iterator::iterator_traits<ForwardIterator>::value_type> buckets[],
+				std::size_t BUCKETS_NUM
+			)
 			{
 				for (std::size_t i = 0; i < BUCKETS_NUM; ++i) {
 					first = kerbal::algorithm::copy(buckets[i].data(), buckets[i].data() + buckets[i].size(), first);
@@ -49,11 +51,13 @@ namespace kerbal
 
 			template <typename ForwardIterator>
 			KERBAL_CONSTEXPR20
-			void radix_sort_back_fill(ForwardIterator first,
-					kerbal::type_traits::true_type /*desc*/,
-					kerbal::type_traits::false_type /*unsigned*/,
-					const kerbal::container::vector<typename kerbal::iterator::iterator_traits<ForwardIterator>::value_type> buckets[],
-					std::size_t BUCKETS_NUM)
+			void radix_sort_back_fill(
+				ForwardIterator first,
+				kerbal::type_traits::true_type /*desc*/,
+				kerbal::type_traits::false_type /*unsigned*/,
+				const kerbal::container::vector<typename kerbal::iterator::iterator_traits<ForwardIterator>::value_type> buckets[],
+				std::size_t BUCKETS_NUM
+			)
 			{
 				std::size_t i = BUCKETS_NUM;
 				while (i > 0) {
@@ -64,11 +68,13 @@ namespace kerbal
 
 			template <typename ForwardIterator>
 			KERBAL_CONSTEXPR20
-			void radix_sort_back_fill(ForwardIterator first,
-					kerbal::type_traits::false_type /*asc*/,
-					kerbal::type_traits::true_type /*signed*/,
-					const kerbal::container::vector<typename kerbal::iterator::iterator_traits<ForwardIterator>::value_type> buckets[],
-					std::size_t BUCKETS_NUM)
+			void radix_sort_back_fill(
+				ForwardIterator first,
+				kerbal::type_traits::false_type /*asc*/,
+				kerbal::type_traits::true_type /*signed*/,
+				const kerbal::container::vector<typename kerbal::iterator::iterator_traits<ForwardIterator>::value_type> buckets[],
+				std::size_t BUCKETS_NUM
+			)
 			{
 				for (std::size_t i = BUCKETS_NUM / 2; i < BUCKETS_NUM; ++i) {
 					first = kerbal::algorithm::copy(buckets[i].data(), buckets[i].data() + buckets[i].size(), first);
@@ -80,11 +86,13 @@ namespace kerbal
 
 			template <typename ForwardIterator>
 			KERBAL_CONSTEXPR20
-			void radix_sort_back_fill(ForwardIterator first,
-					kerbal::type_traits::true_type /*desc*/,
-					kerbal::type_traits::true_type /*signed*/,
-					const kerbal::container::vector<typename kerbal::iterator::iterator_traits<ForwardIterator>::value_type> buckets[],
-					std::size_t BUCKETS_NUM)
+			void radix_sort_back_fill(
+				ForwardIterator first,
+				kerbal::type_traits::true_type /*desc*/,
+				kerbal::type_traits::true_type /*signed*/,
+				const kerbal::container::vector<typename kerbal::iterator::iterator_traits<ForwardIterator>::value_type> buckets[],
+				std::size_t BUCKETS_NUM
+			)
 			{
 				{
 					std::size_t i = BUCKETS_NUM / 2;
@@ -105,15 +113,17 @@ namespace kerbal
 		} // namespace detail
 
 		template <typename ValueType>
-		struct is_radix_sort_acceptable_type:
-				kerbal::type_traits::is_integral<ValueType>
+		struct is_radix_sort_acceptable_type :
+			kerbal::type_traits::is_integral<ValueType>
 		{
 		};
 
 		template <typename ForwardIterator, typename Order, std::size_t RADIX_BIT_WIDTH>
 		KERBAL_CONSTEXPR20
-		void radix_sort(ForwardIterator first, ForwardIterator last,
-						Order order, kerbal::type_traits::integral_constant<std::size_t, RADIX_BIT_WIDTH> /*radix_bit_width*/)
+		void radix_sort(
+			ForwardIterator first, ForwardIterator last,
+			Order order, kerbal::type_traits::integral_constant<std::size_t, RADIX_BIT_WIDTH> /*radix_bit_width*/
+		)
 		{
 			typedef ForwardIterator iterator;
 			typedef typename kerbal::iterator::iterator_traits<iterator>::value_type value_type;
@@ -158,17 +168,21 @@ namespace kerbal
 				}
 			}
 
-			kerbal::algorithm::detail::radix_sort_back_fill(first, order,
-															kerbal::type_traits::is_signed<value_type>(),
-															buckets[(ROUNDS::value + 1) % 2], BUCKETS_NUM::value);
+			kerbal::algorithm::detail::radix_sort_back_fill(
+				first, order,
+				kerbal::type_traits::is_signed<value_type>(),
+				buckets[(ROUNDS::value + 1) % 2], BUCKETS_NUM::value
+			);
 		}
 
 		template <typename ForwardIterator, typename Order>
 		KERBAL_CONSTEXPR20
 		void radix_sort(ForwardIterator first, ForwardIterator last, Order /*order*/)
 		{
-			kerbal::algorithm::radix_sort(first, last, kerbal::type_traits::bool_constant<Order::value>(),
-											kerbal::type_traits::integral_constant<std::size_t, CHAR_BIT>());
+			kerbal::algorithm::radix_sort(
+				first, last, kerbal::type_traits::bool_constant<Order::value>(),
+				kerbal::type_traits::integral_constant<std::size_t, CHAR_BIT>()
+			);
 		}
 
 		template <typename ForwardIterator>

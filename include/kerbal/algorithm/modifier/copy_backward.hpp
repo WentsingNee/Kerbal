@@ -31,12 +31,12 @@ namespace kerbal
 			KERBAL_CONSTEXPR14
 			OutputIterator
 			k_copy_backward(BidirectionalIterator first, BidirectionalIterator last, OutputIterator to_last, std::bidirectional_iterator_tag)
-					KERBAL_CONDITIONAL_NOEXCEPT(
-						noexcept(static_cast<bool>(first != last)) &&
-						noexcept(--last) &&
-						noexcept(--to_last) &&
-						noexcept(kerbal::assign::generic_assign(*to_last, *last))
-					)
+				KERBAL_CONDITIONAL_NOEXCEPT(
+					noexcept(static_cast<bool>(first != last)) &&
+					noexcept(--last) &&
+					noexcept(--to_last) &&
+					noexcept(kerbal::assign::generic_assign(*to_last, *last))
+				)
 			{
 				while (first != last) {
 					--last;
@@ -53,7 +53,10 @@ namespace kerbal
 		OutputIterator
 		copy_backward(BidirectionalIterator first, BidirectionalIterator last, OutputIterator to_last)
 		{
-			return kerbal::algorithm::detail::k_copy_backward(first, last, to_last, kerbal::iterator::iterator_category(first));
+			return kerbal::algorithm::detail::k_copy_backward(
+				first, last, to_last,
+				kerbal::iterator::iterator_category(first)
+			);
 		}
 
 	} // namespace algorithm

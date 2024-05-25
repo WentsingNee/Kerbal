@@ -41,7 +41,7 @@ namespace kerbal
 
 		template <typename Base, typename Derived>
 		struct try_test_is_base_of :
-				kerbal::type_traits::tribool_unspecified
+			kerbal::type_traits::tribool_unspecified
 		{
 		};
 

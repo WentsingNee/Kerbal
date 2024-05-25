@@ -27,26 +27,30 @@ namespace kerbal
 	namespace memory
 	{
 
-		template <typename Alloc, typename = kerbal::type_traits::void_type<>::type >
-		struct allocator_has_mem_minimum_alignment: kerbal::type_traits::false_type
+		template <typename Alloc, typename = kerbal::type_traits::void_type<>::type>
+		struct allocator_has_mem_minimum_alignment : kerbal::type_traits::false_type
 		{
 		};
 
 		template <typename Alloc>
-		struct allocator_has_mem_minimum_alignment<Alloc, typename kerbal::type_traits::void_type<
+		struct allocator_has_mem_minimum_alignment<
+			Alloc,
+			typename kerbal::type_traits::void_type<
 #	if __cplusplus >= 201103L // compatible with msvc
 				decltype(
-					kerbal::utility::declval<const Alloc&>().minimum_alignment()
+					kerbal::utility::declval<const Alloc &>().minimum_alignment()
 				)
 #	else
 				kerbal::type_traits::integral_constant<
 					std::size_t,
 					sizeof(
-						kerbal::utility::declval<const Alloc&>().minimum_alignment()
+						kerbal::utility::declval<const Alloc &>().minimum_alignment()
 					)
 				>
 #	endif
-		>::type >: kerbal::type_traits::true_type
+			>::type
+		> :
+			kerbal::type_traits::true_type
 		{
 		};
 
@@ -60,11 +64,11 @@ namespace kerbal
 
 			template <typename Alloc>
 			struct allocator_traits_minimum_alignment_ver :
-					kerbal::type_traits::conditional<
-						kerbal::memory::allocator_has_mem_minimum_alignment<Alloc>::value,
-						ALLOCATOR_TRAITS_MINIMUM_ALIGNMENT_VER_MEM,
-						ALLOCATOR_TRAITS_MINIMUM_ALIGNMENT_VER_NONE
-					>::type
+				kerbal::type_traits::conditional<
+					kerbal::memory::allocator_has_mem_minimum_alignment<Alloc>::value,
+					ALLOCATOR_TRAITS_MINIMUM_ALIGNMENT_VER_MEM,
+					ALLOCATOR_TRAITS_MINIMUM_ALIGNMENT_VER_NONE
+				>::type
 			{
 			};
 
@@ -81,7 +85,8 @@ namespace kerbal
 
 				public:
 					KERBAL_CONSTEXPR14
-					static size_type minimum_alignment(const Alloc & /*alloc*/) KERBAL_NOEXCEPT
+					static
+					size_type minimum_alignment(const Alloc & /*alloc*/) KERBAL_NOEXCEPT
 					{
 						return size_type(1u);
 					}
@@ -95,7 +100,8 @@ namespace kerbal
 
 				public:
 					KERBAL_CONSTEXPR14
-					static size_type minimum_alignment(const Alloc & /*alloc*/) KERBAL_NOEXCEPT
+					static
+					size_type minimum_alignment(const Alloc & /*alloc*/) KERBAL_NOEXCEPT
 					{
 						return Alloc::MINIMUM_ALIGNMENT::value;
 					}
@@ -109,7 +115,8 @@ namespace kerbal
 
 				public:
 					KERBAL_CONSTEXPR14
-					static size_type minimum_alignment(const Alloc & alloc) KERBAL_NOEXCEPT
+					static
+					size_type minimum_alignment(const Alloc & alloc) KERBAL_NOEXCEPT
 					{
 						return alloc.minimum_alignment();
 					}

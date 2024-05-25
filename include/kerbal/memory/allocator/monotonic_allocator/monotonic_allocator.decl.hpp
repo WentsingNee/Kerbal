@@ -58,7 +58,7 @@ namespace kerbal
 
 					KERBAL_CONSTEXPR
 					mono_alloc_memory_block(void * gross_buffer, std::size_t gross_size_in_bytes) KERBAL_NOEXCEPT :
-							gross_buffer(gross_buffer), gross_size_in_bytes(gross_size_in_bytes)
+						gross_buffer(gross_buffer), gross_size_in_bytes(gross_size_in_bytes)
 					{
 					}
 			};
@@ -66,25 +66,25 @@ namespace kerbal
 
 			template <typename T>
 			struct monotonic_allocator_alignof_t :
-					kerbal::type_traits::integral_constant<std::size_t, KERBAL_ALIGNOF(T)>
+				kerbal::type_traits::integral_constant<std::size_t, KERBAL_ALIGNOF(T)>
 			{
 			};
 
 			template <>
 			struct monotonic_allocator_alignof_t<void> :
-					kerbal::memory::DEFAULT_ALIGNMENT
+				kerbal::memory::DEFAULT_ALIGNMENT
 			{
 			};
 
 			template <typename T>
 			struct monotonic_allocator_sizeof_t :
-					kerbal::type_traits::integral_constant<std::size_t, sizeof(T)>
+				kerbal::type_traits::integral_constant<std::size_t, sizeof(T)>
 			{
 			};
 
 			template <>
 			struct monotonic_allocator_sizeof_t<void> :
-					kerbal::type_traits::integral_constant<std::size_t, 1>
+				kerbal::type_traits::integral_constant<std::size_t, 1>
 			{
 			};
 
@@ -114,18 +114,24 @@ namespace kerbal
 
 		template <typename T, typename UpstreamAllocator>
 		class monotonic_allocator :
-				private kerbal::utility::noncopyassignable,
-				protected kerbal::memory::detail::monotonic_allocator_typedef_helper<T, UpstreamAllocator>::upstream_allocator_overload
+			private kerbal::utility::noncopyassignable,
+			protected kerbal::memory::detail::monotonic_allocator_typedef_helper<
+				T,
+				UpstreamAllocator
+			>::upstream_allocator_overload
 		{
 			private:
 				typedef kerbal::memory::detail::monotonic_allocator_typedef_helper<T, UpstreamAllocator> typedef_helper;
 
-				KERBAL_STATIC_ASSERT((
+				KERBAL_STATIC_ASSERT(
+					(
 						kerbal::type_traits::is_same<
 							typename kerbal::memory::allocator_traits<UpstreamAllocator>::value_type,
 							void
 						>::value
-				), "allocator_traits<UpstreamAllocator>::value_type must be void");
+					),
+					"allocator_traits<UpstreamAllocator>::value_type must be void"
+				);
 
 				typedef typename typedef_helper::memory_block		memory_block;
 				typedef typename typedef_helper::auto_list			auto_list;
@@ -175,12 +181,12 @@ namespace kerbal
 #	if __cplusplus >= 201103L
 
 				typedef kerbal::type_traits::tribool_constant<
-						noexcept(
-							upstream_allocator_overload::k_swap_allocator_if_propagate(
-								kerbal::utility::declval<upstream_allocator_overload &>(),
-								kerbal::utility::declval<upstream_allocator_overload &>()
-							)
+					noexcept(
+						upstream_allocator_overload::k_swap_allocator_if_propagate(
+							kerbal::utility::declval<upstream_allocator_overload &>(),
+							kerbal::utility::declval<upstream_allocator_overload &>()
 						)
+					)
 				> try_test_is_nothrow_swappable;
 
 #	else
@@ -193,13 +199,13 @@ namespace kerbal
 				monotonic_allocator() KERBAL_NOEXCEPT;
 
 				typedef kerbal::type_traits::try_test_is_nothrow_copy_constructible<
-						upstream_allocator_overload
+					upstream_allocator_overload
 				> try_test_is_nothrow_copy_constructible;
 
 				monotonic_allocator(const monotonic_allocator & src)
-						KERBAL_CONDITIONAL_NOEXCEPT(
-							try_test_is_nothrow_copy_constructible::IS_TRUE::value
-						)
+					KERBAL_CONDITIONAL_NOEXCEPT(
+						try_test_is_nothrow_copy_constructible::IS_TRUE::value
+					)
 				;
 
 #		if __cplusplus >= 201103L
@@ -207,22 +213,22 @@ namespace kerbal
 				typedef try_test_is_nothrow_swappable try_test_is_nothrow_move_constructible;
 
 				monotonic_allocator(monotonic_allocator && src)
-						KERBAL_CONDITIONAL_NOEXCEPT(
-							try_test_is_nothrow_move_constructible::IS_TRUE::value
-						)
+					KERBAL_CONDITIONAL_NOEXCEPT(
+						try_test_is_nothrow_move_constructible::IS_TRUE::value
+					)
 				;
 
 #		endif
 
 				typedef kerbal::type_traits::try_test_is_nothrow_default_constructible<
-						upstream_allocator_overload
+					upstream_allocator_overload
 				> try_test_is_nothrow_constructible_from_other;
 
 				template <typename U, typename UpstreamAllocator2>
 				monotonic_allocator(const monotonic_allocator<U, UpstreamAllocator2> &)
-						KERBAL_CONDITIONAL_NOEXCEPT(
-							try_test_is_nothrow_constructible_from_other::IS_TRUE::value
-						)
+					KERBAL_CONDITIONAL_NOEXCEPT(
+						try_test_is_nothrow_constructible_from_other::IS_TRUE::value
+					)
 				;
 
 				~monotonic_allocator();
@@ -232,9 +238,9 @@ namespace kerbal
 				typedef try_test_is_nothrow_swappable try_test_is_nothrow_move_assignable;
 
 				monotonic_allocator & operator=(monotonic_allocator && src)
-						KERBAL_CONDITIONAL_NOEXCEPT(
-							try_test_is_nothrow_move_assignable::IS_TRUE::value
-						)
+					KERBAL_CONDITIONAL_NOEXCEPT(
+						try_test_is_nothrow_move_assignable::IS_TRUE::value
+					)
 				;
 
 #		endif
@@ -249,8 +255,8 @@ namespace kerbal
 			public:
 
 				typedef kerbal::type_traits::integral_constant<
-						size_type,
-						kerbal::numeric::numeric_limits<size_type>::MAX::value / sizeof(value_type)
+					size_type,
+					kerbal::numeric::numeric_limits<size_type>::MAX::value / sizeof(value_type)
 				> MAX_SIZE;
 
 				KERBAL_CONSTEXPR
@@ -286,9 +292,9 @@ namespace kerbal
 				}
 
 				void swap(monotonic_allocator & other)
-						KERBAL_CONDITIONAL_NOEXCEPT(
-							try_test_is_nothrow_swappable::IS_TRUE::value
-						)
+					KERBAL_CONDITIONAL_NOEXCEPT(
+						try_test_is_nothrow_swappable::IS_TRUE::value
+					)
 				;
 
 		};
@@ -300,12 +306,12 @@ namespace kerbal
 
 		template <typename T, typename UpstreamAllocator>
 		void swap(
-				kerbal::memory::monotonic_allocator<T, UpstreamAllocator> & lhs,
-				kerbal::memory::monotonic_allocator<T, UpstreamAllocator> & rhs
+			kerbal::memory::monotonic_allocator<T, UpstreamAllocator> & lhs,
+			kerbal::memory::monotonic_allocator<T, UpstreamAllocator> & rhs
 		)
-		KERBAL_CONDITIONAL_NOEXCEPT(
-			noexcept(lhs.swap(rhs))
-		)
+			KERBAL_CONDITIONAL_NOEXCEPT(
+				noexcept(lhs.swap(rhs))
+			)
 		{
 			lhs.swap(rhs);
 		}

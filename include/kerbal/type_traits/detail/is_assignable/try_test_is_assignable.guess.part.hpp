@@ -33,7 +33,8 @@ namespace kerbal
 	{
 
 		template <typename T, typename U>
-		struct try_test_is_assignable : kerbal::type_traits::tribool_unspecified
+		struct try_test_is_assignable :
+			kerbal::type_traits::tribool_unspecified
 		{
 		};
 

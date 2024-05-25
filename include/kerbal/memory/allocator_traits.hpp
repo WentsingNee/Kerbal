@@ -144,7 +144,7 @@ namespace kerbal
 
 				template <typename T, typename ... Args>
 				KERBAL_CONSTEXPR14
-				static void construct(Alloc & alloc, T * p, Args&& ... args)
+				static void construct(Alloc & alloc, T * p, Args && ... args)
 						KERBAL_CONDITIONAL_NOEXCEPT(
 							noexcept(
 								kerbal::memory::detail::allocator_traits_construct_helper<Alloc>::construct(alloc, p, kerbal::utility::forward<Args>(args)...)
@@ -166,7 +166,7 @@ namespace kerbal
 				static void construct(Alloc & alloc, T * p KERBAL_OPT_PPEXPAND_WITH_COMMA_N(LEFT_JOIN_COMMA, EMPTY, ARGS_DECL, i)) \
 				{ \
 					kerbal::memory::detail::allocator_traits_construct_helper<Alloc>::construct(alloc, p KERBAL_OPT_PPEXPAND_WITH_COMMA_N(LEFT_JOIN_COMMA, EMPTY, ARGS_USE, i)); \
-				}
+				} \
 
 				KERBAL_PPEXPAND_N(FBODY, KERBAL_PPEXPAND_EMPTY_SEPARATOR, 0)
 				KERBAL_PPEXPAND_N(FBODY, KERBAL_PPEXPAND_EMPTY_SEPARATOR, 19)

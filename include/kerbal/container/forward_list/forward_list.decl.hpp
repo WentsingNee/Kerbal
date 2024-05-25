@@ -57,12 +57,12 @@ namespace kerbal
 			template <typename T, typename Allocator>
 			struct fl_typedef_helper
 			{
-					typedef kerbal::container::detail::fl_type_only<T>							fl_type_only;
-					typedef typename fl_type_only::node 										node;
-					typedef Allocator																	allocator_type;
+					typedef kerbal::container::detail::fl_type_only<T>			fl_type_only;
+					typedef typename fl_type_only::node 						node;
+					typedef Allocator											allocator_type;
 					typedef kerbal::container::detail::container_rebind_allocator_overload<
 							allocator_type, node
-					>																					fl_allocator_overload;
+					>															fl_allocator_overload;
 			};
 
 		} // namespace detail
@@ -74,25 +74,25 @@ namespace kerbal
 			template <typename T, typename Allocator>
 			struct forward_list_node_size_helper
 			{
-					typedef kerbal::type_traits::integral_constant<
-							std::size_t,
-							sizeof(typename kerbal::container::forward_list<T, Allocator>::node)
-					> type;
+				typedef kerbal::type_traits::integral_constant<
+					std::size_t,
+					sizeof(typename kerbal::container::forward_list<T, Allocator>::node)
+				> type;
 			};
 
 		} // namespace detail
 
 		template <typename T, typename Allocator>
 		struct forward_list_node_size :
-				kerbal::container::detail::forward_list_node_size_helper<T, Allocator>::type
+			kerbal::container::detail::forward_list_node_size_helper<T, Allocator>::type
 		{
 		};
 
 
 		template <typename T, typename Allocator>
-		class forward_list:
-				protected detail::fl_typedef_helper<T, Allocator>::fl_allocator_overload,
-				protected detail::fl_typedef_helper<T, Allocator>::fl_type_only
+		class forward_list :
+			protected detail::fl_typedef_helper<T, Allocator>::fl_allocator_overload,
+			protected detail::fl_typedef_helper<T, Allocator>::fl_type_only
 		{
 			private:
 				typedef kerbal::container::detail::fl_type_unrelated			fl_type_unrelated;
@@ -153,61 +153,70 @@ namespace kerbal
 
 				KERBAL_CONSTEXPR20
 				explicit
-				forward_list(const Allocator& alloc) KERBAL_CONDITIONAL_NOEXCEPT(
+				forward_list(const Allocator & alloc)
+					KERBAL_CONDITIONAL_NOEXCEPT(
 						fl_allocator_overload::template try_test_is_nothrow_constructible_from_allocator<const Allocator &>::IS_TRUE::value &&
 						fl_type_only::is_nothrow_default_constructible::value
-				);
+					)
+				;
 
 				KERBAL_CONSTEXPR20
 				forward_list(const forward_list & src);
 
 				KERBAL_CONSTEXPR20
-				forward_list(const forward_list & src, const Allocator& alloc);
+				forward_list(const forward_list & src, const Allocator & alloc);
 
 				KERBAL_CONSTEXPR20
 				explicit
 				forward_list(size_type n);
 
 				KERBAL_CONSTEXPR20
-				forward_list(size_type n, const Allocator& alloc);
+				forward_list(size_type n, const Allocator & alloc);
 
 				KERBAL_CONSTEXPR20
 				forward_list(size_type n, const_reference val);
 
 				KERBAL_CONSTEXPR20
-				forward_list(size_type n, const_reference val, const Allocator& alloc);
+				forward_list(size_type n, const_reference val, const Allocator & alloc);
 
 				template <typename InputIterator>
 				KERBAL_CONSTEXPR20
-				forward_list(InputIterator first, InputIterator last,
-						typename kerbal::type_traits::enable_if<
-								kerbal::iterator::is_input_compatible_iterator<InputIterator>::value
-								, int
-						>::type = 0
+				forward_list(
+					InputIterator first, InputIterator last,
+					typename kerbal::type_traits::enable_if<
+						kerbal::iterator::is_input_compatible_iterator<InputIterator>::value,
+						int
+					>::type = 0
 				);
 
 				template <typename InputIterator>
 				KERBAL_CONSTEXPR20
-				forward_list(InputIterator first, InputIterator last, const Allocator& alloc,
-						typename kerbal::type_traits::enable_if<
-								kerbal::iterator::is_input_compatible_iterator<InputIterator>::value
-								, int
-						>::type = 0
+				forward_list(
+					InputIterator first, InputIterator last,
+					const Allocator & alloc,
+					typename kerbal::type_traits::enable_if<
+						kerbal::iterator::is_input_compatible_iterator<InputIterator>::value,
+						int
+					>::type = 0
 				);
 
 #		if __cplusplus >= 201103L
 
 				KERBAL_CONSTEXPR20
-				forward_list(forward_list && src) KERBAL_CONDITIONAL_NOEXCEPT(
+				forward_list(forward_list && src)
+					KERBAL_CONDITIONAL_NOEXCEPT(
 						fl_allocator_overload::template try_test_is_nothrow_constructible_from_allocator<Allocator &&>::IS_TRUE::value &&
 						fl_type_only::is_nothrow_move_constructible::value
-				);
+					)
+				;
 
 				KERBAL_CONSTEXPR20
-				forward_list(forward_list && src, const Allocator& alloc) KERBAL_CONDITIONAL_NOEXCEPT(
+				forward_list(forward_list && src, const Allocator & alloc)
+					KERBAL_CONDITIONAL_NOEXCEPT(
 						fl_allocator_overload::template try_test_is_nothrow_constructible_from_allocator<const Allocator &>::IS_TRUE::value &&
 						fl_type_only::template is_nothrow_move_constructible_using_allocator<node_allocator_type>::value
-				);
+					)
+				;
 
 #		endif
 
@@ -217,7 +226,7 @@ namespace kerbal
 				forward_list(std::initializer_list<value_type> ilist);
 
 				KERBAL_CONSTEXPR20
-				forward_list(std::initializer_list<value_type> ilist, const Allocator& alloc);
+				forward_list(std::initializer_list<value_type> ilist, const Allocator & alloc);
 
 #		else
 
@@ -226,10 +235,10 @@ namespace kerbal
 				template <typename U>
 				forward_list(const kerbal::assign::assign_list<U> & ilist);
 
-				forward_list(const kerbal::assign::assign_list<void> & ilist, const Allocator& alloc);
+				forward_list(const kerbal::assign::assign_list<void> & ilist, const Allocator & alloc);
 
 				template <typename U>
-				forward_list(const kerbal::assign::assign_list<U> & ilist, const Allocator& alloc);
+				forward_list(const kerbal::assign::assign_list<U> & ilist, const Allocator & alloc);
 
 #		endif
 
@@ -240,28 +249,32 @@ namespace kerbal
 			// assign
 
 				KERBAL_CONSTEXPR20
-				forward_list& operator=(const forward_list & src);
+				forward_list & operator=(const forward_list & src);
 
 #		if __cplusplus >= 201103L
 
 				KERBAL_CONSTEXPR20
-				forward_list& operator=(forward_list && src) KERBAL_CONDITIONAL_NOEXCEPT(
-						noexcept(kerbal::utility::declthis<forward_list>()->assign(kerbal::compatibility::move(src)))
-				);
+				forward_list & operator=(forward_list && src)
+					KERBAL_CONDITIONAL_NOEXCEPT(
+						noexcept(
+							kerbal::utility::declthis<forward_list>()->assign(kerbal::compatibility::move(src))
+						)
+					)
+				;
 
 #		endif
 
 #		if __cplusplus >= 201103L
 
 				KERBAL_CONSTEXPR20
-				forward_list& operator=(std::initializer_list<value_type> ilist);
+				forward_list & operator=(std::initializer_list<value_type> ilist);
 
 #		else
 
-				forward_list& operator=(const kerbal::assign::assign_list<void> & ilist);
+				forward_list & operator=(const kerbal::assign::assign_list<void> & ilist);
 
 				template <typename U>
-				forward_list& operator=(const kerbal::assign::assign_list<U> & ilist);
+				forward_list & operator=(const kerbal::assign::assign_list<U> & ilist);
 
 #		endif
 
@@ -274,16 +287,18 @@ namespace kerbal
 				template <typename InputIterator>
 				KERBAL_CONSTEXPR20
 				typename kerbal::type_traits::enable_if<
-						kerbal::iterator::is_input_compatible_iterator<InputIterator>::value
+					kerbal::iterator::is_input_compatible_iterator<InputIterator>::value
 				>::type
 				assign(InputIterator first, InputIterator last);
 
 #		if __cplusplus >= 201103L
 
 				KERBAL_CONSTEXPR20
-				void assign(forward_list&& src) KERBAL_CONDITIONAL_NOEXCEPT(
+				void assign(forward_list && src)
+					KERBAL_CONDITIONAL_NOEXCEPT(
 						fl_type_only::template is_nothrow_move_assign_using_allocator<node_allocator_type>::value
-				);
+					)
+				;
 
 #		endif
 
@@ -356,7 +371,7 @@ namespace kerbal
 
 				template <typename ... Args>
 				KERBAL_CONSTEXPR20
-				reference emplace_front(Args&& ... args);
+				reference emplace_front(Args && ... args);
 
 #		else
 
@@ -367,7 +382,7 @@ namespace kerbal
 #			define ARGS_DECL(i) const KERBAL_MACRO_CONCAT(Arg, i) & KERBAL_MACRO_CONCAT(arg, i)
 #			define FBODY(i) \
 				KERBAL_OPT_PPEXPAND_WITH_COMMA_N(THEAD_NOT_EMPTY, EMPTY, TARGS_DECL, i) \
-				reference emplace_front(KERBAL_OPT_PPEXPAND_WITH_COMMA_N(REMAINF, EMPTY, ARGS_DECL, i));
+				reference emplace_front(KERBAL_OPT_PPEXPAND_WITH_COMMA_N(REMAINF, EMPTY, ARGS_DECL, i)); \
 
 				KERBAL_PPEXPAND_N(FBODY, KERBAL_PPEXPAND_EMPTY_SEPARATOR, 0)
 				KERBAL_PPEXPAND_N(FBODY, KERBAL_PPEXPAND_EMPTY_SEPARATOR, 20)
@@ -390,8 +405,8 @@ namespace kerbal
 				template <typename InputIterator>
 				KERBAL_CONSTEXPR20
 				typename kerbal::type_traits::enable_if<
-						kerbal::iterator::is_input_compatible_iterator<InputIterator>::value,
-						iterator
+					kerbal::iterator::is_input_compatible_iterator<InputIterator>::value,
+					iterator
 				>::type
 				insert_after(const_iterator before_pos, InputIterator first, InputIterator last);
 
@@ -420,7 +435,7 @@ namespace kerbal
 
 				template <typename ... Args>
 				KERBAL_CONSTEXPR20
-				iterator emplace_after(const_iterator before_pos, Args&& ... args);
+				iterator emplace_after(const_iterator before_pos, Args && ... args);
 
 #		else
 
@@ -431,7 +446,7 @@ namespace kerbal
 #			define ARGS_DECL(i) const KERBAL_MACRO_CONCAT(Arg, i) & KERBAL_MACRO_CONCAT(arg, i)
 #			define FBODY(i) \
 				KERBAL_OPT_PPEXPAND_WITH_COMMA_N(THEAD_NOT_EMPTY, EMPTY, TARGS_DECL, i) \
-				iterator emplace_after(const_iterator before_pos KERBAL_OPT_PPEXPAND_WITH_COMMA_N(LEFT_JOIN_COMMA, EMPTY, ARGS_DECL, i));
+				iterator emplace_after(const_iterator before_pos KERBAL_OPT_PPEXPAND_WITH_COMMA_N(LEFT_JOIN_COMMA, EMPTY, ARGS_DECL, i)); \
 
 				KERBAL_PPEXPAND_N(FBODY, KERBAL_PPEXPAND_EMPTY_SEPARATOR, 0)
 				KERBAL_PPEXPAND_N(FBODY, KERBAL_PPEXPAND_EMPTY_SEPARATOR, 20)
@@ -458,11 +473,15 @@ namespace kerbal
 				iterator erase_after(const_iterator before_first, const_iterator last);
 
 				KERBAL_CONSTEXPR20
-				void clear() KERBAL_CONDITIONAL_NOEXCEPT(
-						noexcept(kerbal::utility::declthis<fl_type_only>()->k_clear_using_allocator(
+				void clear()
+					KERBAL_CONDITIONAL_NOEXCEPT(
+						noexcept(
+							kerbal::utility::declthis<fl_type_only>()->k_clear_using_allocator(
 								kerbal::utility::declthis<forward_list>()->alloc()
-						))
-				);
+							)
+						)
+					)
+				;
 
 			//===================
 			// operation
@@ -474,14 +493,22 @@ namespace kerbal
 				void resize(size_type count, const_reference value);
 
 				KERBAL_CONSTEXPR20
-				void swap(forward_list & with) KERBAL_CONDITIONAL_NOEXCEPT(
-						noexcept(fl_allocator_overload::k_swap_allocator_if_propagate(
-								kerbal::utility::declval<fl_allocator_overload&>(), kerbal::utility::declval<fl_allocator_overload&>()
-						)) &&
-						noexcept(fl_type_unrelated::k_swap_type_unrelated(
-								kerbal::utility::declval<fl_type_unrelated&>(), kerbal::utility::declval<fl_type_unrelated&>()
-						))
-				);
+				void swap(forward_list & with)
+					KERBAL_CONDITIONAL_NOEXCEPT(
+						noexcept(
+							fl_allocator_overload::k_swap_allocator_if_propagate(
+								kerbal::utility::declval<fl_allocator_overload &>(),
+								kerbal::utility::declval<fl_allocator_overload &>()
+							)
+						) &&
+						noexcept(
+							fl_type_unrelated::k_swap_type_unrelated(
+								kerbal::utility::declval<fl_type_unrelated &>(),
+								kerbal::utility::declval<fl_type_unrelated &>()
+							)
+						)
+					)
+				;
 
 				KERBAL_CONSTEXPR20
 				void iter_swap_after(const_iterator before_a, const_iterator before_b) KERBAL_NOEXCEPT;
@@ -541,69 +568,117 @@ namespace kerbal
 				size_type unique();
 
 				KERBAL_CONSTEXPR20
-				void splice_after(const_iterator before_pos, forward_list & other) KERBAL_NOEXCEPT;
+				void splice_after(
+					const_iterator before_pos, forward_list & other
+				) KERBAL_NOEXCEPT;
 
 				KERBAL_CONSTEXPR20
-				void splice_after(const_iterator before_pos, forward_list & other, const_iterator opos) KERBAL_NOEXCEPT;
+				void splice_after(
+					const_iterator before_pos, forward_list & other,
+					const_iterator opos
+				) KERBAL_NOEXCEPT;
 
 				KERBAL_CONSTEXPR20
-				void splice_after(const_iterator before_pos, forward_list & other, const_iterator before_first, const_iterator last) KERBAL_NOEXCEPT;
+				void splice_after(
+					const_iterator before_pos, forward_list & other,
+					const_iterator before_first, const_iterator last
+				) KERBAL_NOEXCEPT;
 
 		};
 
 #	if __cplusplus >= 201703L
 
-		template <typename InputIterator, typename Alloc =
-					std::allocator<typename kerbal::iterator::iterator_traits<InputIterator>::value_type> >
-		forward_list(InputIterator, InputIterator, Alloc = Alloc())
-				-> forward_list<typename kerbal::iterator::iterator_traits<InputIterator>::value_type, Alloc>;
+		template <
+			typename InputIterator,
+			typename Alloc =
+				std::allocator<typename kerbal::iterator::iterator_traits<InputIterator>::value_type>
+		>
+		forward_list(InputIterator, InputIterator, Alloc = Alloc()) ->
+		forward_list<typename kerbal::iterator::iterator_traits<InputIterator>::value_type, Alloc>;
 
 		template <typename T, typename Alloc = std::allocator<T> >
-		forward_list(std::initializer_list<T>, Alloc = Alloc()) -> forward_list<T, Alloc>;
+		forward_list(std::initializer_list<T>, Alloc = Alloc()) ->
+		forward_list<T, Alloc>;
 
 #	endif
 
 
 		template <typename T, typename Allocator>
 		KERBAL_CONSTEXPR20
-		bool operator==(const forward_list<T, Allocator> & lhs, const forward_list<T, Allocator> & rhs)
+		bool operator==(
+			const forward_list<T, Allocator> & lhs,
+			const forward_list<T, Allocator> & rhs
+		)
 		{
-			return kerbal::compare::sequence_equal_to(lhs.cbegin(), lhs.cend(), rhs.cbegin(), rhs.cend());
+			return kerbal::compare::sequence_equal_to(
+				lhs.cbegin(), lhs.cend(),
+				rhs.cbegin(), rhs.cend()
+			);
 		}
 
 		template <typename T, typename Allocator>
 		KERBAL_CONSTEXPR20
-		bool operator!=(const forward_list<T, Allocator> & lhs, const forward_list<T, Allocator> & rhs)
+		bool operator!=(
+			const forward_list<T, Allocator> & lhs,
+			const forward_list<T, Allocator> & rhs
+		)
 		{
-			return kerbal::compare::sequence_not_equal_to(lhs.cbegin(), lhs.cend(), rhs.cbegin(), rhs.cend());
+			return kerbal::compare::sequence_not_equal_to(
+				lhs.cbegin(), lhs.cend(),
+				rhs.cbegin(), rhs.cend()
+			);
 		}
 
 		template <typename T, typename Allocator>
 		KERBAL_CONSTEXPR20
-		bool operator<(const forward_list<T, Allocator> & lhs, const forward_list<T, Allocator> & rhs)
+		bool operator<(
+			const forward_list<T, Allocator> & lhs,
+			const forward_list<T, Allocator> & rhs
+		)
 		{
-			return kerbal::compare::sequence_less(lhs.cbegin(), lhs.cend(), rhs.cbegin(), rhs.cend());
+			return kerbal::compare::sequence_less(
+				lhs.cbegin(), lhs.cend(),
+				rhs.cbegin(), rhs.cend()
+			);
 		}
 
 		template <typename T, typename Allocator>
 		KERBAL_CONSTEXPR20
-		bool operator>(const forward_list<T, Allocator> & lhs, const forward_list<T, Allocator> & rhs)
+		bool operator>(
+			const forward_list<T, Allocator> & lhs,
+			const forward_list<T, Allocator> & rhs
+		)
 		{
-			return kerbal::compare::sequence_greater(lhs.cbegin(), lhs.cend(), rhs.cbegin(), rhs.cend());
+			return kerbal::compare::sequence_greater(
+				lhs.cbegin(), lhs.cend(),
+				rhs.cbegin(), rhs.cend()
+			);
 		}
 
 		template <typename T, typename Allocator>
 		KERBAL_CONSTEXPR20
-		bool operator<=(const forward_list<T, Allocator> & lhs, const forward_list<T, Allocator> & rhs)
+		bool operator<=(
+			const forward_list<T, Allocator> & lhs,
+			const forward_list<T, Allocator> & rhs
+		)
 		{
-			return kerbal::compare::sequence_less_equal(lhs.cbegin(), lhs.cend(), rhs.cbegin(), rhs.cend());
+			return kerbal::compare::sequence_less_equal(
+				lhs.cbegin(), lhs.cend(),
+				rhs.cbegin(), rhs.cend()
+			);
 		}
 
 		template <typename T, typename Allocator>
 		KERBAL_CONSTEXPR20
-		bool operator>=(const forward_list<T, Allocator> & lhs, const forward_list<T, Allocator> & rhs)
+		bool operator>=(
+			const forward_list<T, Allocator> & lhs,
+			const forward_list<T, Allocator> & rhs
+		)
 		{
-			return kerbal::compare::sequence_greater_equal(lhs.cbegin(), lhs.cend(), rhs.cbegin(), rhs.cend());
+			return kerbal::compare::sequence_greater_equal(
+				lhs.cbegin(), lhs.cend(),
+				rhs.cbegin(), rhs.cend()
+			);
 		}
 
 	} // namespace container
@@ -613,8 +688,11 @@ namespace kerbal
 
 		template <typename T, typename Allocator>
 		KERBAL_CONSTEXPR20
-		void swap(kerbal::container::forward_list<T, Allocator> & a, kerbal::container::forward_list<T, Allocator> & b)
-				KERBAL_CONDITIONAL_NOEXCEPT(noexcept(a.swap(b)))
+		void swap(
+			kerbal::container::forward_list<T, Allocator> & a,
+			kerbal::container::forward_list<T, Allocator> & b
+		)
+			KERBAL_CONDITIONAL_NOEXCEPT(noexcept(a.swap(b)))
 		{
 			a.swap(b);
 		}
@@ -628,8 +706,11 @@ KERBAL_NAMESPACE_STD_BEGIN
 
 	template <typename T, typename Allocator>
 	KERBAL_CONSTEXPR20
-	void swap(kerbal::container::forward_list<T, Allocator> & a, kerbal::container::forward_list<T, Allocator> & b)
-			KERBAL_CONDITIONAL_NOEXCEPT(noexcept(a.swap(b)))
+	void swap(
+		kerbal::container::forward_list<T, Allocator> & a,
+		kerbal::container::forward_list<T, Allocator> & b
+	)
+		KERBAL_CONDITIONAL_NOEXCEPT(noexcept(a.swap(b)))
 	{
 		a.swap(b);
 	}

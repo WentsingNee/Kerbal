@@ -37,7 +37,10 @@ namespace kerbal
 #	define LEFT_JOIN_COMMA(exp) , exp
 #	define TARGS_DECL(i) typename = kerbal::tmp::tppter
 
-			template <typename Fun KERBAL_OPT_PPEXPAND_WITH_COMMA_N(LEFT_JOIN_COMMA, EMPTY, TARGS_DECL, 20), typename = kerbal::tmp::tppter>
+			template <
+				typename Fun KERBAL_OPT_PPEXPAND_WITH_COMMA_N(LEFT_JOIN_COMMA, EMPTY, TARGS_DECL, 20),
+				typename = kerbal::tmp::tppter
+			>
 			struct invoke_overload_ver_selector;
 
 #	undef LEFT_JOIN_COMMA
@@ -68,7 +71,7 @@ namespace kerbal
 							kerbal::function::detail::INVOKE_OVERLOAD_VER_CALLABLE \
 						>::type \
 					>::type type; \
-			};
+			}; \
 
 			KERBAL_PPEXPAND_N(TBODY, KERBAL_PPEXPAND_EMPTY_SEPARATOR, 20)
 

@@ -43,20 +43,20 @@ namespace kerbal
 
 		template <typename T>
 		struct try_test_is_empty :
-				kerbal::type_traits::conditional<
-					kerbal::type_traits::disjunction<
-#			if KERBAL_HAS_IS_ENUM_SUPPORT
-						kerbal::type_traits::is_enum<T>,
-#			endif
-						kerbal::type_traits::is_array<T>,
-						kerbal::type_traits::is_fundamental<T>,
-						kerbal::type_traits::is_member_pointer<T>,
-						kerbal::type_traits::is_pointer<T>,
-						kerbal::type_traits::is_reference<T>
-					>::value,
-					kerbal::type_traits::tribool_false,
-					kerbal::type_traits::tribool_unspecified
-				>::type
+			kerbal::type_traits::conditional<
+				kerbal::type_traits::disjunction<
+#		if KERBAL_HAS_IS_ENUM_SUPPORT
+					kerbal::type_traits::is_enum<T>,
+#		endif
+					kerbal::type_traits::is_array<T>,
+					kerbal::type_traits::is_fundamental<T>,
+					kerbal::type_traits::is_member_pointer<T>,
+					kerbal::type_traits::is_pointer<T>,
+					kerbal::type_traits::is_reference<T>
+				>::value,
+				kerbal::type_traits::tribool_false,
+				kerbal::type_traits::tribool_unspecified
+			>::type
 		{
 		};
 

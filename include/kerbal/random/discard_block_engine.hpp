@@ -53,28 +53,28 @@ namespace kerbal
 
 				KERBAL_CONSTEXPR
 				discard_block_engine()
-						KERBAL_CONDITIONAL_NOEXCEPT(
-							kerbal::type_traits::try_test_is_nothrow_default_constructible<Engine>::IS_TRUE::value
-						) :
-						k_base_eg(), k_idx(0)
+					KERBAL_CONDITIONAL_NOEXCEPT(
+						kerbal::type_traits::try_test_is_nothrow_default_constructible<Engine>::IS_TRUE::value
+					) :
+					k_base_eg(), k_idx(0)
 				{
 				}
 
 				KERBAL_CONSTEXPR
 				explicit discard_block_engine(const result_type & seed)
-						KERBAL_CONDITIONAL_NOEXCEPT((
-							kerbal::type_traits::try_test_is_nothrow_constructible<Engine, result_type>::IS_TRUE::value
-						)) :
-						k_base_eg(seed), k_idx(0)
+					KERBAL_CONDITIONAL_NOEXCEPT((
+						kerbal::type_traits::try_test_is_nothrow_constructible<Engine, result_type>::IS_TRUE::value
+					)) :
+					k_base_eg(seed), k_idx(0)
 				{
 				}
 
 				KERBAL_CONSTEXPR
 				explicit discard_block_engine(const Engine & engine)
-						KERBAL_CONDITIONAL_NOEXCEPT(
-							kerbal::type_traits::try_test_is_nothrow_copy_constructible<Engine>::IS_TRUE::value
-						) :
-						k_base_eg(engine), k_idx(0)
+					KERBAL_CONDITIONAL_NOEXCEPT(
+						kerbal::type_traits::try_test_is_nothrow_copy_constructible<Engine>::IS_TRUE::value
+					) :
+					k_base_eg(engine), k_idx(0)
 				{
 				}
 
@@ -82,10 +82,10 @@ namespace kerbal
 
 				KERBAL_CONSTEXPR
 				explicit discard_block_engine(Engine && engine)
-						KERBAL_CONDITIONAL_NOEXCEPT(
-							kerbal::type_traits::try_test_is_nothrow_move_constructible<Engine>::IS_TRUE::value
-						) :
-						k_base_eg(kerbal::compatibility::move(engine)), k_idx(0)
+					KERBAL_CONDITIONAL_NOEXCEPT(
+						kerbal::type_traits::try_test_is_nothrow_move_constructible<Engine>::IS_TRUE::value
+					) :
+					k_base_eg(kerbal::compatibility::move(engine)), k_idx(0)
 				{
 				}
 
@@ -93,18 +93,18 @@ namespace kerbal
 
 				KERBAL_CONSTEXPR14
 				void seed()
-						KERBAL_CONDITIONAL_NOEXCEPT(
-								noexcept(k_base_eg.seed())
-						)
+					KERBAL_CONDITIONAL_NOEXCEPT(
+						noexcept(k_base_eg.seed())
+					)
 				{
 					this->k_base_eg.seed();
 				}
 
 				KERBAL_CONSTEXPR14
 				void seed(const result_type & seed)
-						KERBAL_CONDITIONAL_NOEXCEPT(
-								noexcept(k_base_eg.seed(seed))
-						)
+					KERBAL_CONDITIONAL_NOEXCEPT(
+						noexcept(k_base_eg.seed(seed))
+					)
 				{
 					this->k_base_eg.seed(seed);
 				}
@@ -117,10 +117,10 @@ namespace kerbal
 
 				KERBAL_CONSTEXPR14
 				result_type operator()()
-						KERBAL_CONDITIONAL_NOEXCEPT(
-								noexcept(k_base_eg.discard(P - R)) &&
-								noexcept(k_base_eg())
-						)
+					KERBAL_CONDITIONAL_NOEXCEPT(
+						noexcept(k_base_eg.discard(P - R)) &&
+						noexcept(k_base_eg())
+					)
 				{
 					if (this->k_idx == R) {
 						this->k_base_eg.discard(P - R);
@@ -132,9 +132,9 @@ namespace kerbal
 
 				KERBAL_CONSTEXPR14
 				void discard(unsigned long long times)
-						KERBAL_CONDITIONAL_NOEXCEPT(
-								noexcept(k_base_eg.discard(times))
-						)
+					KERBAL_CONDITIONAL_NOEXCEPT(
+						noexcept(k_base_eg.discard(times))
+					)
 				{
 /*
 					// plain version that the calculation may overflow
@@ -235,44 +235,48 @@ namespace kerbal
 
 				KERBAL_CONSTEXPR
 				static result_type min()
-						KERBAL_CONDITIONAL_NOEXCEPT(
-								noexcept(Engine::min())
-						)
+					KERBAL_CONDITIONAL_NOEXCEPT(
+						noexcept(Engine::min())
+					)
 				{
 					return Engine::min();
 				}
 
 				KERBAL_CONSTEXPR
 				static result_type max()
-						KERBAL_CONDITIONAL_NOEXCEPT(
-								noexcept(Engine::max())
-						)
+					KERBAL_CONDITIONAL_NOEXCEPT(
+						noexcept(Engine::max())
+					)
 				{
 					return Engine::max();
 				}
 
 				KERBAL_CONSTEXPR
 				bool operator==(const discard_block_engine & rhs) const
-						KERBAL_CONDITIONAL_NOEXCEPT(
-							noexcept(static_cast<bool>(
-								k_base_eg == rhs.k_base_eg
-							))
+					KERBAL_CONDITIONAL_NOEXCEPT(
+						noexcept(
+							static_cast<bool>(k_base_eg == rhs.k_base_eg)
 						)
+					)
 				{
-					return this->k_idx == rhs.k_idx &&
-						   static_cast<bool>(this->k_base_eg == rhs.k_base_eg);
+					return
+						this->k_idx == rhs.k_idx &&
+						static_cast<bool>(this->k_base_eg == rhs.k_base_eg)
+					;
 				}
 
 				KERBAL_CONSTEXPR
 				bool operator!=(const discard_block_engine & rhs) const
-						KERBAL_CONDITIONAL_NOEXCEPT(
-							noexcept(static_cast<bool>(
-								k_base_eg != rhs.k_base_eg
-							))
+					KERBAL_CONDITIONAL_NOEXCEPT(
+						noexcept(
+							static_cast<bool>(k_base_eg != rhs.k_base_eg)
 						)
+					)
 				{
-					return this->k_idx != rhs.k_idx ||
-						   static_cast<bool>(this->k_base_eg != rhs.k_base_eg);
+					return
+						this->k_idx != rhs.k_idx ||
+						static_cast<bool>(this->k_base_eg != rhs.k_base_eg)
+					;
 				}
 
 		};

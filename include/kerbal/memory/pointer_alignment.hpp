@@ -29,7 +29,7 @@ namespace kerbal
 #ifdef __STDCPP_DEFAULT_NEW_ALIGNMENT__
 		typedef kerbal::type_traits::integral_constant<std::size_t, __STDCPP_DEFAULT_NEW_ALIGNMENT__> DEFAULT_ALIGNMENT;
 #else
-		typedef kerbal::type_traits::integral_constant<std::size_t, sizeof(void*)> DEFAULT_ALIGNMENT;
+		typedef kerbal::type_traits::integral_constant<std::size_t, sizeof(void *)> DEFAULT_ALIGNMENT;
 #endif
 
 
@@ -39,7 +39,7 @@ namespace kerbal
 
 				KERBAL_CONSTEXPR
 				align_val_t(std::size_t val = kerbal::memory::DEFAULT_ALIGNMENT::value) KERBAL_NOEXCEPT :
-						val(val)
+					val(val)
 				{
 				}
 
@@ -69,14 +69,14 @@ namespace kerbal
 		inline
 		T * align_ceil(T * p, std::size_t align) KERBAL_NOEXCEPT
 		{
-			return reinterpret_cast<T*>(align_ceil(reinterpret_cast<std::size_t>(p), align));
+			return reinterpret_cast<T *>(align_ceil(reinterpret_cast<std::size_t>(p), align));
 		}
 
 		template <typename T>
 		inline
 		T * align_floor(T * p, std::size_t align) KERBAL_NOEXCEPT
 		{
-			return reinterpret_cast<T*>(align_floor(reinterpret_cast<std::size_t>(p), align));
+			return reinterpret_cast<T *>(align_floor(reinterpret_cast<std::size_t>(p), align));
 		}
 
 		namespace detail
@@ -97,10 +97,11 @@ namespace kerbal
 					KERBAL_CONSTEXPR
 					static std::size_t alignment_maximum_offset(std::size_t align) KERBAL_NOEXCEPT
 					{
-						return alignment_maximum_offset(align,
-														KERBAL_ALIGNOF(T) >= kerbal::memory::DEFAULT_ALIGNMENT::value ?
-														KERBAL_ALIGNOF(T) :
-														kerbal::memory::DEFAULT_ALIGNMENT::value
+						return alignment_maximum_offset(
+							align,
+							KERBAL_ALIGNOF(T) >= kerbal::memory::DEFAULT_ALIGNMENT::value ?
+							KERBAL_ALIGNOF(T) :
+							kerbal::memory::DEFAULT_ALIGNMENT::value
 						);
 					}
 			};

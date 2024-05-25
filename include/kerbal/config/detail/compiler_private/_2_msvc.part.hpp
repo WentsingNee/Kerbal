@@ -45,11 +45,14 @@
 #define KERBAL_MSVC_VERSION_MEETS(major, minor, patchlevel) \
 ( \
 	KERBAL_MSVC_MAJOR > (major) || \
-	(KERBAL_MSVC_MAJOR == (major) && \
-		(KERBAL_MSVC_MINOR > (minor) || \
-		(KERBAL_MSVC_MINOR == (minor) && \
-			KERBAL_MSVC_PATCHLEVEL >= (patchlevel) \
-		) \
+	( \
+		KERBAL_MSVC_MAJOR == (major) && \
+		( \
+			KERBAL_MSVC_MINOR > (minor) || \
+			( \
+				KERBAL_MSVC_MINOR == (minor) && \
+				KERBAL_MSVC_PATCHLEVEL >= (patchlevel) \
+			) \
 		) \
 	) \
 )

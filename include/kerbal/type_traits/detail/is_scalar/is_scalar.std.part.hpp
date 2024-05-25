@@ -47,7 +47,8 @@ namespace kerbal
 	{
 
 		template <typename T>
-		struct is_scalar : kerbal::type_traits::bool_constant<std::is_scalar<T>::value>
+		struct is_scalar :
+			kerbal::type_traits::bool_constant<std::is_scalar<T>::value>
 		{
 		};
 

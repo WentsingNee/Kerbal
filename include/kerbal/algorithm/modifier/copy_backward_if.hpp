@@ -25,8 +25,10 @@ namespace kerbal
 		template <typename BidirectionalIterator, typename OutputIterator, typename UnaryPredicate>
 		KERBAL_CONSTEXPR14
 		OutputIterator
-		copy_backward_if(BidirectionalIterator first, BidirectionalIterator last,
-							OutputIterator to_last, UnaryPredicate pred)
+		copy_backward_if(
+			BidirectionalIterator first, BidirectionalIterator last,
+			OutputIterator to_last, UnaryPredicate pred
+		)
 		{
 			while (first != last) {
 				--last;

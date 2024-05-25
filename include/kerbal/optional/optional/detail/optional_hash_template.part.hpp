@@ -32,9 +32,10 @@ namespace kerbal
 				KERBAL_CONSTEXPR
 				std::size_t operator()(const OptionalType & opt) const
 				{
-					return opt.has_value() ?
-						   ValueTypeHash()(opt.ignored_get()) :
-						   NulloptHash;
+					return
+						opt.has_value() ?
+						ValueTypeHash()(opt.ignored_get()) :
+						NulloptHash;
 				}
 		};
 

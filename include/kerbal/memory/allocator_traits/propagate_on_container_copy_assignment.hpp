@@ -23,32 +23,39 @@ namespace kerbal
 	{
 
 		template <typename Alloc, typename = kerbal::type_traits::void_type<>::type>
-		struct allocator_has_def_propagate_on_container_copy_assignment: kerbal::type_traits::false_type
+		struct allocator_has_def_propagate_on_container_copy_assignment :
+			kerbal::type_traits::false_type
 		{
 		};
 
 		template <typename Alloc>
 		struct allocator_has_def_propagate_on_container_copy_assignment<
-				Alloc,
-				typename kerbal::type_traits::void_type<typename Alloc::propagate_on_container_copy_assignment>::type
+			Alloc,
+			typename kerbal::type_traits::void_type<
+				typename Alloc::propagate_on_container_copy_assignment
+			>::type
 		> :
-				kerbal::type_traits::true_type
+			kerbal::type_traits::true_type
 		{
 		};
 
 		namespace detail
 		{
 
-			template <typename Alloc, bool = kerbal::memory::allocator_has_def_propagate_on_container_copy_assignment<Alloc>::value>
-			struct allocator_propagate_on_container_copy_assignment_traits_helper : kerbal::type_traits::false_type
+			template <
+				typename Alloc,
+				bool = kerbal::memory::allocator_has_def_propagate_on_container_copy_assignment<Alloc>::value
+			>
+			struct allocator_propagate_on_container_copy_assignment_traits_helper :
+				kerbal::type_traits::false_type
 			{
 			};
 
 			template <typename Alloc>
 			struct allocator_propagate_on_container_copy_assignment_traits_helper<Alloc, true> :
-					kerbal::type_traits::bool_constant<
-						Alloc::propagate_on_container_copy_assignment::value
-					>
+				kerbal::type_traits::bool_constant<
+					Alloc::propagate_on_container_copy_assignment::value
+				>
 			{
 			};
 

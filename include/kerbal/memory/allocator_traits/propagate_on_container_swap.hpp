@@ -23,32 +23,39 @@ namespace kerbal
 	{
 
 		template <typename Alloc, typename = kerbal::type_traits::void_type<>::type>
-		struct allocator_has_def_propagate_on_container_swap: kerbal::type_traits::false_type
+		struct allocator_has_def_propagate_on_container_swap :
+			kerbal::type_traits::false_type
 		{
 		};
 
 		template <typename Alloc>
 		struct allocator_has_def_propagate_on_container_swap<
-				Alloc,
-				typename kerbal::type_traits::void_type<typename Alloc::propagate_on_container_swap>::type
+			Alloc,
+			typename kerbal::type_traits::void_type<
+				typename Alloc::propagate_on_container_swap
+			>::type
 		> :
-				kerbal::type_traits::true_type
+			kerbal::type_traits::true_type
 		{
 		};
 
 		namespace detail
 		{
 
-			template <typename Alloc, bool = kerbal::memory::allocator_has_def_propagate_on_container_swap<Alloc>::value>
-			struct allocator_propagate_on_container_swap_traits_helper: kerbal::type_traits::false_type
+			template <
+				typename Alloc,
+				bool = kerbal::memory::allocator_has_def_propagate_on_container_swap<Alloc>::value
+			>
+			struct allocator_propagate_on_container_swap_traits_helper :
+				kerbal::type_traits::false_type
 			{
 			};
 
 			template <typename Alloc>
 			struct allocator_propagate_on_container_swap_traits_helper<Alloc, true> :
-					kerbal::type_traits::bool_constant<
-						Alloc::propagate_on_container_swap::value
-					>
+				kerbal::type_traits::bool_constant<
+					Alloc::propagate_on_container_swap::value
+				>
 			{
 			};
 

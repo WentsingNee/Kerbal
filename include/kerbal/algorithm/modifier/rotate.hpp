@@ -53,7 +53,10 @@ namespace kerbal
 			template <typename ForwardIterator>
 			KERBAL_CONSTEXPR14
 			ForwardIterator
-			rotate(ForwardIterator first, ForwardIterator n_first, ForwardIterator last, std::forward_iterator_tag)
+			rotate(
+				ForwardIterator first, ForwardIterator n_first, ForwardIterator last,
+				std::forward_iterator_tag
+			)
 			{
 				typedef ForwardIterator iterator;
 
@@ -83,8 +86,10 @@ namespace kerbal
 			template <typename RandomAccessIterator>
 			KERBAL_CONSTEXPR14
 			RandomAccessIterator
-			rotate(RandomAccessIterator first, RandomAccessIterator n_first, RandomAccessIterator last,
-					 std::random_access_iterator_tag)
+			rotate(
+				RandomAccessIterator first, RandomAccessIterator n_first, RandomAccessIterator last,
+				std::random_access_iterator_tag
+			)
 			{
 				typedef RandomAccessIterator iterator;
 				typedef typename kerbal::iterator::iterator_traits<iterator>::difference_type difference_type;
@@ -143,7 +148,10 @@ namespace kerbal
 		ForwardIterator
 		rotate(ForwardIterator first, ForwardIterator n_first, ForwardIterator last)
 		{
-			return kerbal::algorithm::detail::rotate(first, n_first, last, kerbal::iterator::iterator_category(first));
+			return kerbal::algorithm::detail::rotate(
+				first, n_first, last,
+				kerbal::iterator::iterator_category(first)
+			);
 		}
 
 	} // namespace algorithm

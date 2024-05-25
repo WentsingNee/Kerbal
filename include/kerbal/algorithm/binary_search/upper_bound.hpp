@@ -30,11 +30,15 @@ namespace kerbal
 			template <typename ForwardIterator, typename T, typename Comparator>
 			KERBAL_CONSTEXPR14
 			ForwardIterator
-			upper_bound_helper(ForwardIterator first, ForwardIterator last, const T & value, Comparator comparator,
-								std::forward_iterator_tag)
+			upper_bound_helper(
+				ForwardIterator first, ForwardIterator last, const T & value, Comparator comparator,
+				std::forward_iterator_tag
+			)
 			{
-				while (static_cast<bool>(first != last) && !static_cast<bool>(comparator(value, *first))) {
-					// value >= *first
+				while (
+					static_cast<bool>(first != last) &&
+					!static_cast<bool>(comparator(value, *first)) // value >= *first
+				) {
 					++first;
 				}
 				return first;
@@ -43,8 +47,10 @@ namespace kerbal
 			template <typename RandomAccessIterator, typename T, typename Comparator>
 			KERBAL_CONSTEXPR14
 			RandomAccessIterator
-			upper_bound_helper(RandomAccessIterator first, RandomAccessIterator last, const T & value, Comparator comparator,
-								std::random_access_iterator_tag)
+			upper_bound_helper(
+				RandomAccessIterator first, RandomAccessIterator last, const T & value, Comparator comparator,
+				std::random_access_iterator_tag
+			)
 			{
 				typedef RandomAccessIterator iterator;
 				typedef typename kerbal::iterator::iterator_traits<iterator>::difference_type difference_type;
@@ -74,7 +80,10 @@ namespace kerbal
 		ForwardIterator
 		upper_bound(ForwardIterator first, ForwardIterator last, const T & value, Comparator comparator)
 		{
-			return kerbal::algorithm::detail::upper_bound_helper(first, last, value, comparator, kerbal::iterator::iterator_category(first));
+			return kerbal::algorithm::detail::upper_bound_helper(
+				first, last, value, comparator,
+				kerbal::iterator::iterator_category(first)
+			);
 		}
 
 		template <typename ForwardIterator, typename T>
@@ -84,7 +93,10 @@ namespace kerbal
 		{
 			typedef ForwardIterator iterator;
 			typedef typename kerbal::iterator::iterator_traits<iterator>::value_type type;
-			return kerbal::algorithm::upper_bound(first, last, value, kerbal::compare::binary_type_less<T, type>());
+			return kerbal::algorithm::upper_bound(
+				first, last, value,
+				kerbal::compare::binary_type_less<T, type>()
+			);
 		}
 
 	} // namespace algorithm

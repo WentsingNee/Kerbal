@@ -39,7 +39,7 @@ namespace kerbal
 			};
 
 			template <>
-			struct static_assert_helper<true>: kerbal::type_traits::true_type
+			struct static_assert_helper<true> : kerbal::type_traits::true_type
 			{
 			};
 

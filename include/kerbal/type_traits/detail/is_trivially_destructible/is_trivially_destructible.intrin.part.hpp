@@ -39,12 +39,12 @@ namespace kerbal
 
 		template <typename T>
 		struct is_trivially_destructible :
-				kerbal::type_traits::conjunction<
-					kerbal::type_traits::is_destructible<T>, // under gcc, intrinsic is_trivially_destructible gives wrong answer when the type's destructor is deleted
-					kerbal::type_traits::bool_constant<
-						KERBAL_INTRINSIC_IS_TRIVIALLY_DESTRUCTIBLE(T)
-					>
+			kerbal::type_traits::conjunction<
+				kerbal::type_traits::is_destructible<T>, // under gcc, intrinsic is_trivially_destructible gives wrong answer when the type's destructor is deleted
+				kerbal::type_traits::bool_constant<
+					KERBAL_INTRINSIC_IS_TRIVIALLY_DESTRUCTIBLE(T)
 				>
+			>
 		{
 		};
 

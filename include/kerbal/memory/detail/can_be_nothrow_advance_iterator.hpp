@@ -41,7 +41,7 @@ namespace kerbal
 
 			template <typename Iterator>
 			struct can_be_nothrow_advance_iterator :
-					kerbal::type_traits::is_pointer<Iterator>
+				kerbal::type_traits::is_pointer<Iterator>
 			{
 			};
 
@@ -49,7 +49,11 @@ namespace kerbal
 
 			template <typename Iterator>
 			struct can_be_nothrow_advance_iterator :
-					kerbal::type_traits::bool_constant<noexcept(++(kerbal::utility::declval<Iterator&>()))>
+				kerbal::type_traits::bool_constant<
+					noexcept(
+						++(kerbal::utility::declval<Iterator &>())
+					)
+				>
 			{
 			};
 
@@ -59,7 +63,7 @@ namespace kerbal
 
 			template <typename Iterator>
 			struct can_be_nothrow_advance_iterator :
-					kerbal::type_traits::true_type
+				kerbal::type_traits::true_type
 			{
 			};
 

@@ -26,7 +26,8 @@ namespace kerbal
 
 		KERBAL_MODULE_EXPORT
 		template <typename T>
-		struct is_compound : kerbal::type_traits::bool_constant<!is_fundamental<T>::value>
+		struct is_compound :
+			kerbal::type_traits::bool_constant<!is_fundamental<T>::value>
 		{
 		};
 

@@ -40,10 +40,10 @@ namespace kerbal
 		KERBAL_MODULE_EXPORT
 		template <typename T>
 		struct is_reference :
-				kerbal::type_traits::disjunction<
-					kerbal::type_traits::is_lvalue_reference<T>,
-					kerbal::type_traits::is_rvalue_reference<T>
-				>
+			kerbal::type_traits::disjunction<
+				kerbal::type_traits::is_lvalue_reference<T>,
+				kerbal::type_traits::is_rvalue_reference<T>
+			>
 		{
 		};
 

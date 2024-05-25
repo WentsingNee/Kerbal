@@ -40,7 +40,7 @@ namespace kerbal
 	{
 
 		template <typename T, std::size_t N>
-		class static_queue: protected kerbal::container::detail::static_queue_base<T, N>
+		class static_queue : protected kerbal::container::detail::static_queue_base<T, N>
 		{
 			private:
 				typedef kerbal::container::detail::static_queue_base<T, N> super;
@@ -48,26 +48,26 @@ namespace kerbal
 			public:
 				typedef T						value_type;
 				typedef const T					const_type;
-				typedef T&						reference;
-				typedef const T&				const_reference;
+				typedef T &						reference;
+				typedef const T &				const_reference;
 
 #		if __cplusplus >= 201103L
-				typedef value_type&&			rvalue_reference;
-				typedef const value_type&&		const_rvalue_reference;
+				typedef value_type &&			rvalue_reference;
+				typedef const value_type &&		const_rvalue_reference;
 #		endif
 
 				typedef std::size_t					size_type;
 
 			public:
 				KERBAL_CONSTEXPR
-				static_queue() KERBAL_NOEXCEPT
-						: super()
+				static_queue() KERBAL_NOEXCEPT :
+					super()
 				{
 				}
 
 				KERBAL_CONSTEXPR14
-				static_queue(const static_queue & src)
-						: super()
+				static_queue(const static_queue & src) :
+					super()
 				{
 					for (size_type j = src.ibegin; j != src.iend; j = src.next(j)) {
 						this->push(src.storage[j].raw_value());
@@ -77,8 +77,8 @@ namespace kerbal
 #			if __cplusplus >= 201103L
 
 				KERBAL_CONSTEXPR14
-				static_queue(static_queue && src)
-						: super()
+				static_queue(static_queue && src) :
+					super()
 				{
 					for (size_type j = src.ibegin; j != src.iend; j = src.next(j)) {
 						this->push(kerbal::compatibility::move(src).storage[j].raw_value());
@@ -89,8 +89,8 @@ namespace kerbal
 
 				template <typename ForwardIterator>
 				KERBAL_CONSTEXPR14
-				static_queue(ForwardIterator first, ForwardIterator last)
-						: super()
+				static_queue(ForwardIterator first, ForwardIterator last) :
+					super()
 				{
 					while (static_cast<bool>(first != last) && this->iend != N) {
 						this->push(*first);
@@ -101,15 +101,15 @@ namespace kerbal
 #			if __cplusplus >= 201103L
 
 				KERBAL_CONSTEXPR14
-				static_queue(std::initializer_list<value_type> ilist)
-						: static_queue(ilist.begin(), ilist.end())
+				static_queue(std::initializer_list<value_type> ilist) :
+					static_queue(ilist.begin(), ilist.end())
 				{
 				}
 
 #			endif
 
 				KERBAL_CONSTEXPR14
-				static_queue& operator=(const static_queue & src)
+				static_queue & operator=(const static_queue & src)
 				{
 					this->assign(src);
 					return *this;
@@ -118,7 +118,7 @@ namespace kerbal
 #			if __cplusplus >= 201103L
 
 				KERBAL_CONSTEXPR14
-				static_queue& operator=(static_queue && src)
+				static_queue & operator=(static_queue && src)
 				{
 					this->assign(kerbal::compatibility::move(src));
 					return *this;
@@ -171,7 +171,7 @@ namespace kerbal
 
 				template <typename ... Args>
 				KERBAL_CONSTEXPR14
-				reference emplace(Args&& ... args)
+				reference emplace(Args && ... args)
 				{
 					this->storage[this->iend].construct(kerbal::utility::forward<Args>(args)...);
 					size_type iback = this->iend;
@@ -195,7 +195,7 @@ namespace kerbal
 					size_type iback = this->iend; \
 					this->iend = this->next(this->iend); \
 					return this->storage[iback]; \
-				}
+				} \
 
 				KERBAL_PPEXPAND_N(FBODY, KERBAL_PPEXPAND_EMPTY_SEPARATOR, 0)
 				KERBAL_PPEXPAND_N(FBODY, KERBAL_PPEXPAND_EMPTY_SEPARATOR, 20)
@@ -226,9 +226,11 @@ namespace kerbal
 				KERBAL_CONSTEXPR
 				size_type size() const KERBAL_NOEXCEPT
 				{
-					return this->ibegin <= this->iend ?
-							this->iend - this->ibegin :
-							N + 1 - (this->ibegin - this->iend);
+					return
+						this->ibegin <= this->iend ?
+						this->iend - this->ibegin :
+						N + 1 - (this->ibegin - this->iend)
+					;
 				}
 
 				KERBAL_CONSTEXPR
@@ -261,7 +263,7 @@ namespace kerbal
 					return this->storage[this->prev(this->iend)].raw_value();
 				}
 
-				void swap(static_queue& with);
+				void swap(static_queue & with);
 
 		};
 

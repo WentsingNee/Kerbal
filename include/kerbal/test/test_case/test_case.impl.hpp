@@ -41,10 +41,10 @@ namespace kerbal
 
 			inline
 			int register_test_suit(
-					const char * name,
-					kerbal::test::test_case::call_ptr_t call_ptr,
-					const char * description)
-			KERBAL_NOEXCEPT
+				const char * name,
+				kerbal::test::test_case::call_ptr_t call_ptr,
+				const char * description
+			) KERBAL_NOEXCEPT
 			{
 				kerbal::test::detail::get_register_list().emplace_back(name, call_ptr, description);
 				return 0;

@@ -37,10 +37,10 @@ namespace kerbal
 
 		template <typename T>
 		struct is_trivially_copy_assignable :
-				kerbal::type_traits::is_trivially_assignable<
-					typename kerbal::type_traits::add_lvalue_reference<T>::type,
-					typename kerbal::type_traits::add_const_lvalue_reference<T>::type
-				>
+			kerbal::type_traits::is_trivially_assignable<
+				typename kerbal::type_traits::add_lvalue_reference<T>::type,
+				typename kerbal::type_traits::add_const_lvalue_reference<T>::type
+			>
 		{
 		};
 

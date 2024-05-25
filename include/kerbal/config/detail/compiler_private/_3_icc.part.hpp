@@ -45,11 +45,14 @@
 #define KERBAL_ICC_VERSION_MEETS(major, minor, patchlevel) \
 ( \
 	KERBAL_ICC_MAJOR > (major) || \
-	(KERBAL_ICC_MAJOR == (major) && \
-		(KERBAL_ICC_MINOR > (minor) || \
-		(KERBAL_ICC_MINOR == (minor) && \
-			KERBAL_ICC_PATCHLEVEL >= (patchlevel) \
-		) \
+	( \
+		KERBAL_ICC_MAJOR == (major) && \
+		( \
+			KERBAL_ICC_MINOR > (minor) || \
+			( \
+				KERBAL_ICC_MINOR == (minor) && \
+				KERBAL_ICC_PATCHLEVEL >= (patchlevel) \
+			) \
 		) \
 	) \
 )

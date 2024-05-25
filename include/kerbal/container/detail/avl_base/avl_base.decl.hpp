@@ -83,7 +83,7 @@ namespace kerbal
 				protected:
 					KERBAL_CONSTEXPR14
 					avl_type_unrelated() KERBAL_NOEXCEPT :
-							k_size(0u)
+						k_size(0u)
 					{
 					}
 
@@ -91,8 +91,8 @@ namespace kerbal
 
 					KERBAL_CONSTEXPR14
 					avl_type_unrelated(avl_type_unrelated && src) KERBAL_NOEXCEPT :
-							k_head(0),
-							k_size(src.k_size)
+						k_head(0),
+						k_size(src.k_size)
 					{
 						this->k_head.left = src.k_head.left;
 						set_parent_ignore_null(this->k_head.left, &this->k_head);
@@ -204,35 +204,63 @@ namespace kerbal
 
 					template <typename NodeAllocator, typename Extract, typename KeyCompare, typename InputIterator>
 					KERBAL_CONSTEXPR20
-					avl_type_only(NodeAllocator & alloc, Extract & e, KeyCompare & kc, InputIterator first, InputIterator last);
+					avl_type_only(
+						NodeAllocator & alloc, Extract & e, KeyCompare & kc,
+						InputIterator first, InputIterator last
+					);
 
 					template <typename NodeAllocator, typename Extract, typename KeyCompare, typename InputIterator>
 					KERBAL_CONSTEXPR20
-					avl_type_only(kerbal::container::unique_tag_t, NodeAllocator & alloc, Extract & e, KeyCompare & kc, InputIterator first, InputIterator last);
+					avl_type_only(
+						kerbal::container::unique_tag_t,
+						NodeAllocator & alloc, Extract & e, KeyCompare & kc,
+						InputIterator first, InputIterator last
+					);
 
 #			if __cplusplus >= 201103L
 
 					template <typename NodeAllocator, typename Extract, typename KeyCompare>
 					KERBAL_CONSTEXPR20
-					avl_type_only(NodeAllocator & alloc, Extract & e, KeyCompare & kc, std::initializer_list<value_type> ilist);
+					avl_type_only(
+						NodeAllocator & alloc, Extract & e, KeyCompare & kc,
+						std::initializer_list<value_type> ilist
+					);
 
 					template <typename NodeAllocator, typename Extract, typename KeyCompare>
 					KERBAL_CONSTEXPR20
-					avl_type_only(kerbal::container::unique_tag_t unique_tag, NodeAllocator & alloc, Extract & e, KeyCompare & kc, std::initializer_list<value_type> ilist);
+					avl_type_only(
+						kerbal::container::unique_tag_t unique_tag,
+						NodeAllocator & alloc, Extract & e, KeyCompare & kc,
+						std::initializer_list<value_type> ilist
+					);
 
 #			else
 
 					template <typename NodeAllocator, typename Extract, typename KeyCompare>
-					avl_type_only(NodeAllocator & alloc, Extract & e, KeyCompare & kc, const kerbal::assign::assign_list<void> & ilist);
+					avl_type_only(
+						NodeAllocator & alloc, Extract & e, KeyCompare & kc,
+						const kerbal::assign::assign_list<void> & ilist
+					);
 
 					template <typename NodeAllocator, typename Extract, typename KeyCompare, typename U>
-					avl_type_only(NodeAllocator & alloc, Extract & e, KeyCompare & kc, const kerbal::assign::assign_list<U> & ilist);
+					avl_type_only(
+						NodeAllocator & alloc, Extract & e, KeyCompare & kc,
+						const kerbal::assign::assign_list<U> & ilist
+					);
 
 					template <typename NodeAllocator, typename Extract, typename KeyCompare>
-					avl_type_only(kerbal::container::unique_tag_t unique_tag, NodeAllocator & alloc, Extract & e, KeyCompare & kc, const kerbal::assign::assign_list<void> & ilist);
+					avl_type_only(
+						kerbal::container::unique_tag_t unique_tag,
+						NodeAllocator & alloc, Extract & e, KeyCompare & kc,
+						const kerbal::assign::assign_list<void> & ilist
+					);
 
 					template <typename NodeAllocator, typename Extract, typename KeyCompare, typename U>
-					avl_type_only(kerbal::container::unique_tag_t unique_tag, NodeAllocator & alloc, Extract & e, KeyCompare & kc, const kerbal::assign::assign_list<U> & ilist);
+					avl_type_only(
+						kerbal::container::unique_tag_t unique_tag,
+						NodeAllocator & alloc, Extract & e, KeyCompare & kc,
+						const kerbal::assign::assign_list<U> & ilist
+					);
 
 #			endif
 
@@ -278,16 +306,27 @@ namespace kerbal
 
 					template <typename NodeAllocator, typename Extract, typename KeyCompare>
 					KERBAL_CONSTEXPR20
-					void k_copy_cnstrct_impl(NodeAllocator & this_alloc, Extract & this_e, KeyCompare & this_kc, const avl_type_only & src, COPY_CNSTRCT_VER_CLONE);
+					void k_copy_cnstrct_impl(
+						NodeAllocator & this_alloc, Extract & this_e, KeyCompare & this_kc,
+						const avl_type_only & src,
+						COPY_CNSTRCT_VER_CLONE
+					);
 
 					template <typename NodeAllocator, typename Extract, typename KeyCompare>
 					KERBAL_CONSTEXPR20
-					void k_copy_cnstrct_impl(NodeAllocator & this_alloc, Extract & this_e, KeyCompare & this_kc, const avl_type_only & src, COPY_CNSTRCT_VER_INSERT);
+					void k_copy_cnstrct_impl(
+						NodeAllocator & this_alloc, Extract & this_e, KeyCompare & this_kc,
+						const avl_type_only & src,
+						COPY_CNSTRCT_VER_INSERT
+					);
 
 				public:
 					template <typename NodeAllocator, typename Extract, typename KeyCompare>
 					KERBAL_CONSTEXPR20
-					avl_type_only(NodeAllocator & this_alloc, Extract & this_e, KeyCompare & this_kc, const avl_type_only & src);
+					avl_type_only(
+						NodeAllocator & this_alloc, Extract & this_e, KeyCompare & this_kc,
+						const avl_type_only & src
+					);
 
 #			if __cplusplus >= 201103L
 
@@ -302,41 +341,68 @@ namespace kerbal
 
 					template <typename NodeAllocator, typename Extract, typename KeyCompare>
 					KERBAL_CONSTEXPR20
-					void k_move_cnstrct_impl(NodeAllocator & /*this_alloc*/, Extract & /*this_e*/, KeyCompare & /*this_kc*/, avl_type_only && src, MOVE_CNSTRCT_VER_XFER) KERBAL_NOEXCEPT;
+					void k_move_cnstrct_impl(
+						NodeAllocator & /*this_alloc*/, Extract & /*this_e*/, KeyCompare & /*this_kc*/,
+						avl_type_only && src,
+						MOVE_CNSTRCT_VER_XFER
+					) KERBAL_NOEXCEPT;
 
 					template <typename NodeAllocator, typename Extract, typename KeyCompare>
 					KERBAL_CONSTEXPR20
-					void k_move_cnstrct_impl(NodeAllocator & this_alloc, Extract & /*this_e*/, KeyCompare & /*this_kc*/, avl_type_only && src, MOVE_CNSTRCT_VER_MOVE_CLONE);
+					void k_move_cnstrct_impl(
+						NodeAllocator & this_alloc, Extract & /*this_e*/, KeyCompare & /*this_kc*/,
+						avl_type_only && src,
+						MOVE_CNSTRCT_VER_MOVE_CLONE
+					);
 
 					template <typename NodeAllocator, typename Extract, typename KeyCompare>
 					KERBAL_CONSTEXPR20
-					void k_move_cnstrct_impl(NodeAllocator & this_alloc, Extract & this_e, KeyCompare & this_kc, avl_type_only && src, MOVE_CNSTRCT_VER_MOVE_INSERT);
+					void k_move_cnstrct_impl(
+						NodeAllocator & this_alloc, Extract & this_e, KeyCompare & this_kc,
+						avl_type_only && src,
+						MOVE_CNSTRCT_VER_MOVE_INSERT
+					);
 
 					// move construct using allocator, allocator is equal
 					template <typename NodeAllocator, typename Extract, typename KeyCompare>
 					KERBAL_CONSTEXPR14
-					void k_move_cnstrct_ua_ae(NodeAllocator & this_alloc, Extract & this_e, KeyCompare & this_kc, avl_type_only && src) KERBAL_NOEXCEPT;
+					void k_move_cnstrct_ua_ae(
+						NodeAllocator & this_alloc, Extract & this_e, KeyCompare & this_kc,
+						avl_type_only && src
+					) KERBAL_NOEXCEPT;
 
 					// move construct using allocator, allocator is not equal
 					template <typename NodeAllocator, typename Extract, typename KeyCompare>
 					KERBAL_CONSTEXPR20
-					void k_move_cnstrct_ua_ane(NodeAllocator & this_alloc, Extract & this_e, KeyCompare & this_kc, avl_type_only && src);
+					void k_move_cnstrct_ua_ane(
+						NodeAllocator & this_alloc, Extract & this_e, KeyCompare & this_kc,
+						avl_type_only && src
+					);
 
 					template <typename NodeAllocator, typename Extract, typename KeyCompare>
 					KERBAL_CONSTEXPR20
-					void k_move_cnstrct_ua_helper(NodeAllocator & this_alloc, Extract & this_e, KeyCompare & this_kc, NodeAllocator && src_alloc, avl_type_only && src,
-												   kerbal::type_traits::false_type /*is_always_equal*/);
+					void k_move_cnstrct_ua_helper(
+						NodeAllocator & this_alloc, Extract & this_e, KeyCompare & this_kc,
+						NodeAllocator && src_alloc, avl_type_only && src,
+						kerbal::type_traits::false_type /*is_always_equal*/
+					);
 
 					template <typename NodeAllocator, typename Extract, typename KeyCompare>
 					KERBAL_CONSTEXPR14
-					void k_move_cnstrct_ua_helper(NodeAllocator & this_alloc, Extract & this_e, KeyCompare & this_kc, NodeAllocator && /*src_alloc*/, avl_type_only && src,
-												  kerbal::type_traits::true_type /*is_always_equal*/) KERBAL_NOEXCEPT;
+					void k_move_cnstrct_ua_helper(
+						NodeAllocator & this_alloc, Extract & this_e, KeyCompare & this_kc,
+						NodeAllocator && /*src_alloc*/, avl_type_only && src,
+						kerbal::type_traits::true_type /*is_always_equal*/
+					) KERBAL_NOEXCEPT;
 
 				public:
 
 					template <typename NodeAllocator, typename Extract, typename KeyCompare>
 					KERBAL_CONSTEXPR20
-					avl_type_only(NodeAllocator & this_alloc, Extract & this_e, KeyCompare & this_kc, NodeAllocator && src_alloc, avl_type_only && src);
+					avl_type_only(
+						NodeAllocator & this_alloc, Extract & this_e, KeyCompare & this_kc,
+						NodeAllocator && src_alloc, avl_type_only && src
+					);
 
 #			endif
 
@@ -358,24 +424,36 @@ namespace kerbal
 
 					template <typename NodeAllocator, typename Extract, typename KeyCompare, typename InputIterator>
 					KERBAL_CONSTEXPR20
-					void k_assign_using_allocator(NodeAllocator & alloc, Extract & e, KeyCompare & kc, InputIterator first, InputIterator last);
+					void k_assign_using_allocator(
+						NodeAllocator & alloc, Extract & e, KeyCompare & kc,
+						InputIterator first, InputIterator last
+					);
 
 					template <typename NodeAllocator, typename Extract, typename KeyCompare, typename InputIterator>
 					KERBAL_CONSTEXPR20
-					void k_assign_unique_using_allocator(NodeAllocator & alloc, Extract & e, KeyCompare & kc, InputIterator first, InputIterator last);
+					void k_assign_unique_using_allocator(
+						NodeAllocator & alloc, Extract & e, KeyCompare & kc,
+						InputIterator first, InputIterator last
+					);
 
 #		if __cplusplus >= 201103L
 
 					template <typename NodeAllocator, typename Extract, typename KeyCompare>
 					KERBAL_CONSTEXPR20
-					void k_assign_using_allocator(NodeAllocator & alloc, Extract & e, KeyCompare & kc, std::initializer_list<value_type> ilist)
+					void k_assign_using_allocator(
+						NodeAllocator & alloc, Extract & e, KeyCompare & kc,
+						std::initializer_list<value_type> ilist
+					)
 					{
 						this->k_assign_using_allocator(alloc, e, kc, ilist.begin(), ilist.end());
 					}
 
 					template <typename NodeAllocator, typename Extract, typename KeyCompare>
 					KERBAL_CONSTEXPR20
-					void k_assign_unique_using_allocator(NodeAllocator & alloc, Extract & e, KeyCompare & kc, std::initializer_list<value_type> ilist)
+					void k_assign_unique_using_allocator(
+						NodeAllocator & alloc, Extract & e, KeyCompare & kc,
+						std::initializer_list<value_type> ilist
+					)
 					{
 						this->k_assign_unique_using_allocator(alloc, e, kc, ilist.begin(), ilist.end());
 					}
@@ -383,25 +461,37 @@ namespace kerbal
 #		else
 
 					template <typename NodeAllocator, typename Extract, typename KeyCompare>
-					void k_assign_using_allocator(NodeAllocator & alloc, Extract & e, KeyCompare & kc, const kerbal::assign::assign_list<void> & ilist)
+					void k_assign_using_allocator(
+						NodeAllocator & alloc, Extract & e, KeyCompare & kc,
+						const kerbal::assign::assign_list<void> & ilist
+					)
 					{
 						this->k_clear_using_allocator(alloc);
 					}
 
 					template <typename NodeAllocator, typename Extract, typename KeyCompare, typename U>
-					void k_assign_using_allocator(NodeAllocator & alloc, Extract & e, KeyCompare & kc, const kerbal::assign::assign_list<U> & ilist)
+					void k_assign_using_allocator(
+						NodeAllocator & alloc, Extract & e, KeyCompare & kc,
+						const kerbal::assign::assign_list<U> & ilist
+					)
 					{
 						this->k_assign_using_allocator(alloc, e, kc, ilist.cbegin(), ilist.cend());
 					}
 
 					template <typename NodeAllocator, typename Extract, typename KeyCompare>
-					void k_assign_unique_using_allocator(NodeAllocator & alloc, Extract & e, KeyCompare & kc, const kerbal::assign::assign_list<void> & ilist)
+					void k_assign_unique_using_allocator(
+						NodeAllocator & alloc, Extract & e, KeyCompare & kc,
+						const kerbal::assign::assign_list<void> & ilist
+					)
 					{
 						this->k_clear_using_allocator(alloc);
 					}
 
 					template <typename NodeAllocator, typename Extract, typename KeyCompare, typename U>
-					void k_assign_unique_using_allocator(NodeAllocator & alloc, Extract & e, KeyCompare & kc, const kerbal::assign::assign_list<U> & ilist)
+					void k_assign_unique_using_allocator(
+						NodeAllocator & alloc, Extract & e, KeyCompare & kc,
+						const kerbal::assign::assign_list<U> & ilist
+					)
 					{
 						this->k_assign_unique_using_allocator(alloc, e, kc, ilist.cbegin(), ilist.cend());
 					}
@@ -410,7 +500,10 @@ namespace kerbal
 
 					template <typename NodeAllocator, typename Extract, typename KeyCompare, typename InputIterator>
 					KERBAL_CONSTEXPR20
-					void k_assign_sorted_using_allocator(NodeAllocator & alloc, Extract & e, KeyCompare & kc, InputIterator first, InputIterator last);
+					void k_assign_sorted_using_allocator(
+						NodeAllocator & alloc, Extract & e, KeyCompare & kc,
+						InputIterator first, InputIterator last
+					);
 
 				private:
 
@@ -420,21 +513,36 @@ namespace kerbal
 
 					template <typename NodeAllocator, typename Extract, typename KeyCompare>
 					KERBAL_CONSTEXPR20
-					void k_cpy_ass_ua_impl(NodeAllocator & this_alloc, Extract & this_e, KeyCompare & this_kc, const NodeAllocator & src_alloc, const avl_type_only & src, CPYASS_VER_NOT_PROPAGATE);
+					void k_cpy_ass_ua_impl(
+						NodeAllocator & this_alloc, Extract & this_e, KeyCompare & this_kc,
+						const NodeAllocator & src_alloc, const avl_type_only & src,
+						CPYASS_VER_NOT_PROPAGATE
+					);
 
 					template <typename NodeAllocator, typename Extract, typename KeyCompare>
 					KERBAL_CONSTEXPR20
-					void k_cpy_ass_ua_impl(NodeAllocator & this_alloc, Extract & this_e, KeyCompare & this_kc, const NodeAllocator & src_alloc, const avl_type_only & src, CPYASS_VER_PROPAGATE);
+					void k_cpy_ass_ua_impl(
+						NodeAllocator & this_alloc, Extract & this_e, KeyCompare & this_kc,
+						const NodeAllocator & src_alloc, const avl_type_only & src,
+						CPYASS_VER_PROPAGATE
+					);
 
 					template <typename NodeAllocator, typename Extract, typename KeyCompare>
 					KERBAL_CONSTEXPR20
-					void k_cpy_ass_ua_impl(NodeAllocator & this_alloc, Extract & this_e, KeyCompare & this_kc, const NodeAllocator & src_alloc, const avl_type_only & src, CPYASS_VER_ALWAYS_EQUAL);
+					void k_cpy_ass_ua_impl(
+						NodeAllocator & this_alloc, Extract & this_e, KeyCompare & this_kc,
+						const NodeAllocator & src_alloc, const avl_type_only & src,
+						CPYASS_VER_ALWAYS_EQUAL
+					);
 
 				protected:
 
 					template <typename NodeAllocator, typename Extract, typename KeyCompare>
 					KERBAL_CONSTEXPR20
-					void k_assign_using_allocator(NodeAllocator & this_alloc, Extract & this_e, KeyCompare & this_kc, const NodeAllocator & src_alloc, const avl_type_only & src);
+					void k_assign_using_allocator(
+						NodeAllocator & this_alloc, Extract & this_e, KeyCompare & this_kc,
+						const NodeAllocator & src_alloc, const avl_type_only & src
+					);
 
 #			if __cplusplus >= 201103L
 
@@ -443,12 +551,18 @@ namespace kerbal
 					// move assign using allocator, allocator is equal
 					template <typename NodeAllocator, typename Extract, typename KeyCompare>
 					KERBAL_CONSTEXPR20
-					void k_mov_ass_ua_ae(NodeAllocator & this_alloc, Extract & this_e, KeyCompare & this_kc, avl_type_only && src) KERBAL_NOEXCEPT;
+					void k_mov_ass_ua_ae(
+						NodeAllocator & this_alloc, Extract & this_e, KeyCompare & this_kc,
+						avl_type_only && src
+					) KERBAL_NOEXCEPT;
 
 					// move assign using allocator, allocator is not equal
 					template <typename NodeAllocator, typename Extract, typename KeyCompare>
 					KERBAL_CONSTEXPR20
-					void k_mov_ass_ua_ane(NodeAllocator & this_alloc, Extract & this_e, KeyCompare & this_kc, avl_type_only && src);
+					void k_mov_ass_ua_ane(
+						NodeAllocator & this_alloc, Extract & this_e, KeyCompare & this_kc,
+						avl_type_only && src
+					);
 
 					typedef kerbal::type_traits::integral_constant<int, 0> MOVASS_VER_NOT_PROPAGATE;
 					typedef kerbal::type_traits::integral_constant<int, 1> MOVASS_VER_PROPAGATE;
@@ -456,28 +570,43 @@ namespace kerbal
 
 					template <typename NodeAllocator, typename Extract, typename KeyCompare>
 					KERBAL_CONSTEXPR20
-					void k_mov_ass_ua_impl(NodeAllocator & this_alloc, Extract & this_e, KeyCompare & this_kc, NodeAllocator && src_alloc, avl_type_only && src, MOVASS_VER_NOT_PROPAGATE);
+					void k_mov_ass_ua_impl(
+						NodeAllocator & this_alloc, Extract & this_e, KeyCompare & this_kc,
+						NodeAllocator && src_alloc, avl_type_only && src,
+						MOVASS_VER_NOT_PROPAGATE
+					);
 
 					template <typename NodeAllocator, typename Extract, typename KeyCompare>
 					KERBAL_CONSTEXPR20
-					void k_mov_ass_ua_impl(NodeAllocator & this_alloc, Extract & this_e, KeyCompare & this_kc, NodeAllocator && src_alloc, avl_type_only && src, MOVASS_VER_PROPAGATE);
+					void k_mov_ass_ua_impl(
+						NodeAllocator & this_alloc, Extract & this_e, KeyCompare & this_kc,
+						NodeAllocator && src_alloc, avl_type_only && src,
+						MOVASS_VER_PROPAGATE
+					);
 
 					template <typename NodeAllocator, typename Extract, typename KeyCompare>
 					KERBAL_CONSTEXPR20
-					void k_mov_ass_ua_impl(NodeAllocator & this_alloc, Extract & this_e, KeyCompare & this_kc, NodeAllocator && /*src_alloc*/, avl_type_only && src, MOVASS_VER_ALWAYS_EQUAL) KERBAL_NOEXCEPT;
+					void k_mov_ass_ua_impl(
+						NodeAllocator & this_alloc, Extract & this_e, KeyCompare & this_kc,
+						NodeAllocator && /*src_alloc*/, avl_type_only && src,
+						MOVASS_VER_ALWAYS_EQUAL
+					) KERBAL_NOEXCEPT;
 
 				protected:
 
 					template <typename NodeAllocator>
 					struct is_nothrow_move_assign_using_allocator :
-							kerbal::memory::allocator_traits<NodeAllocator>::is_always_equal
+						kerbal::memory::allocator_traits<NodeAllocator>::is_always_equal
 					{
 					};
 
 					template <typename NodeAllocator, typename Extract, typename KeyCompare>
 					KERBAL_CONSTEXPR20
-					void k_assign_using_allocator(NodeAllocator & this_alloc, Extract & this_e, KeyCompare & this_kc, NodeAllocator && src_alloc, avl_type_only && src)
-							KERBAL_CONDITIONAL_NOEXCEPT(is_nothrow_move_assign_using_allocator<NodeAllocator>::value)
+					void k_assign_using_allocator(
+						NodeAllocator & this_alloc, Extract & this_e, KeyCompare & this_kc,
+						NodeAllocator && src_alloc, avl_type_only && src
+					)
+						KERBAL_CONDITIONAL_NOEXCEPT(is_nothrow_move_assign_using_allocator<NodeAllocator>::value)
 					;
 
 #			endif
@@ -538,102 +667,186 @@ namespace kerbal
 
 				protected:
 
-					template <typename Extract, typename KeyCompare, typename Key, typename Result>
+					template <
+						typename Extract, typename KeyCompare, typename Key,
+						typename Result
+					>
 					struct enable_if_transparent_lookup :
-							kerbal::type_traits::enable_if<
-								(
-									kerbal::container::key_compare_is_transparent<KeyCompare>::value &&
-									!kerbal::type_traits::is_same<const Key &, const typename Extract::key_type &>::value &&
-									!kerbal::type_traits::is_same<Key, const_iterator>::value &&
-									!kerbal::type_traits::is_same<Key, iterator>::value
-								),
-								Result
-							>
+						kerbal::type_traits::enable_if<
+							(
+								kerbal::container::key_compare_is_transparent<KeyCompare>::value &&
+								!kerbal::type_traits::is_same<const Key &, const typename Extract::key_type &>::value &&
+								!kerbal::type_traits::is_same<Key, const_iterator>::value &&
+								!kerbal::type_traits::is_same<Key, iterator>::value
+							),
+							Result
+						>
 					{
 					};
 
 				private:
 					template <typename Extract, typename KeyCompare, typename Key>
 					KERBAL_CONSTEXPR14
-					const_iterator k_find_impl(Extract & e, KeyCompare & kc, const Key & key) const;
+					const_iterator
+					k_find_impl(
+						Extract & e, KeyCompare & kc,
+						const Key & key
+					) const;
 
 				public:
 					template <typename Extract, typename KeyCompare>
 					KERBAL_CONSTEXPR14
-					const_iterator k_find(Extract & e, KeyCompare & kc, const typename Extract::key_type & key) const;
+					const_iterator
+					k_find(
+						Extract & e, KeyCompare & kc,
+						const typename Extract::key_type & key
+					) const;
 
 					template <typename Extract, typename KeyCompare>
 					KERBAL_CONSTEXPR14
-					iterator k_find(Extract & e, KeyCompare & kc, const typename Extract::key_type & key);
+					iterator
+					k_find(
+						Extract & e, KeyCompare & kc,
+						const typename Extract::key_type & key
+					);
 
 					template <typename Extract, typename KeyCompare, typename Key>
 					KERBAL_CONSTEXPR14
-					typename enable_if_transparent_lookup<Extract, KeyCompare, Key, const_iterator>::type
-					k_find(Extract & e, KeyCompare & kc, const Key & key) const;
+					typename enable_if_transparent_lookup<
+						Extract, KeyCompare, Key,
+						const_iterator
+					>::type
+					k_find(
+						Extract & e, KeyCompare & kc,
+						const Key & key
+					) const;
 
 					template <typename Extract, typename KeyCompare, typename Key>
 					KERBAL_CONSTEXPR14
-					typename enable_if_transparent_lookup<Extract, KeyCompare, Key, iterator>::type
-					k_find(Extract & e, KeyCompare & kc, const Key & key);
+					typename enable_if_transparent_lookup<
+						Extract, KeyCompare, Key,
+						iterator
+					>::type
+					k_find(
+						Extract & e, KeyCompare & kc,
+						const Key & key
+					);
 
 				private:
 					template <typename Extract, typename KeyCompare, typename Key>
 					KERBAL_CONSTEXPR14
-					static const node_base *
-					k_lower_bound_helper(Extract & e, KeyCompare & kc, const Key & key, const node_base * p_base, const node_base * lbound);
+					static
+					const node_base *
+					k_lower_bound_helper(
+						Extract & e, KeyCompare & kc,
+						const Key & key,
+						const node_base * p_base, const node_base * lbound
+					);
 
 					template <typename Extract, typename KeyCompare, typename Key>
 					KERBAL_CONSTEXPR14
-					static const node_base *
-					k_upper_bound_helper(Extract & e, KeyCompare & kc, const Key & key, const node_base * p_base, const node_base * ubound);
+					static
+					const node_base *
+					k_upper_bound_helper(
+						Extract & e, KeyCompare & kc, const Key & key,
+						const node_base * p_base, const node_base * ubound
+					);
 
 				private:
 					template <typename Extract, typename KeyCompare, typename Key>
 					KERBAL_CONSTEXPR14
-					const_iterator k_lower_bound_impl(Extract & e, KeyCompare & kc, const Key & key) const;
+					const_iterator
+					k_lower_bound_impl(
+						Extract & e, KeyCompare & kc,
+						const Key & key
+					) const;
 
 				public:
 					template <typename Extract, typename KeyCompare>
 					KERBAL_CONSTEXPR14
-					const_iterator k_lower_bound(Extract & e, KeyCompare & kc, const typename Extract::key_type & key) const;
+					const_iterator
+					k_lower_bound(
+						Extract & e, KeyCompare & kc,
+						const typename Extract::key_type & key
+					) const;
 
 					template <typename Extract, typename KeyCompare>
 					KERBAL_CONSTEXPR14
-					iterator k_lower_bound(Extract & e, KeyCompare & kc, const typename Extract::key_type & key);
+					iterator
+					k_lower_bound(
+						Extract & e, KeyCompare & kc,
+						const typename Extract::key_type & key
+					);
 
 					template <typename Extract, typename KeyCompare, typename Key>
 					KERBAL_CONSTEXPR14
-					typename enable_if_transparent_lookup<Extract, KeyCompare, Key, const_iterator>::type
-					k_lower_bound(Extract & e, KeyCompare & kc, const Key & key) const;
+					typename enable_if_transparent_lookup<
+						Extract, KeyCompare, Key,
+						const_iterator
+					>::type
+					k_lower_bound(
+						Extract & e, KeyCompare & kc,
+						const Key & key
+					) const;
 
 					template <typename Extract, typename KeyCompare, typename Key>
 					KERBAL_CONSTEXPR14
-					typename enable_if_transparent_lookup<Extract, KeyCompare, Key, iterator>::type
-					k_lower_bound(Extract & e, KeyCompare & kc, const Key & key);
+					typename enable_if_transparent_lookup<
+						Extract, KeyCompare, Key,
+						iterator
+					>::type
+					k_lower_bound(
+						Extract & e, KeyCompare & kc,
+						const Key & key
+					);
 
 				private:
 					template <typename Extract, typename KeyCompare, typename Key>
 					KERBAL_CONSTEXPR14
-					const_iterator k_upper_bound_impl(Extract & e, KeyCompare & kc, const Key & key) const;
+					const_iterator
+					k_upper_bound_impl(
+						Extract & e, KeyCompare & kc,
+						const Key & key
+					) const;
 
 				public:
 					template <typename Extract, typename KeyCompare>
 					KERBAL_CONSTEXPR14
-					const_iterator k_upper_bound(Extract & e, KeyCompare & kc, const typename Extract::key_type & key) const;
+					const_iterator
+					k_upper_bound(
+						Extract & e, KeyCompare & kc,
+						const typename Extract::key_type & key
+					) const;
 
 					template <typename Extract, typename KeyCompare>
 					KERBAL_CONSTEXPR14
-					iterator k_upper_bound(Extract & e, KeyCompare & kc, const typename Extract::key_type & key);
+					iterator
+					k_upper_bound(
+						Extract & e, KeyCompare & kc,
+						const typename Extract::key_type & key
+					);
 
 					template <typename Extract, typename KeyCompare, typename Key>
 					KERBAL_CONSTEXPR14
-					typename enable_if_transparent_lookup<Extract, KeyCompare, Key, const_iterator>::type
-					k_upper_bound(Extract & e, KeyCompare & kc, const Key & key) const;
+					typename enable_if_transparent_lookup<
+						Extract, KeyCompare, Key,
+						const_iterator
+					>::type
+					k_upper_bound(
+						Extract & e, KeyCompare & kc,
+						const Key & key
+					) const;
 
 					template <typename Extract, typename KeyCompare, typename Key>
 					KERBAL_CONSTEXPR14
-					typename enable_if_transparent_lookup<Extract, KeyCompare, Key, iterator>::type
-					k_upper_bound(Extract & e, KeyCompare & kc, const Key & key);
+					typename enable_if_transparent_lookup<
+						Extract, KeyCompare, Key,
+						iterator
+					>::type
+					k_upper_bound(
+						Extract & e, KeyCompare & kc,
+						const Key & key
+					);
 
 				private:
 					template <typename Extract, typename KeyCompare, typename Key>
@@ -642,7 +855,10 @@ namespace kerbal
 						const_iterator,
 						const_iterator
 					>
-					k_equal_range_impl(Extract & e, KeyCompare & kc, const Key & key) const;
+					k_equal_range_impl(
+						Extract & e, KeyCompare & kc,
+						const Key & key
+					) const;
 
 				public:
 					template <typename Extract, typename KeyCompare>
@@ -651,7 +867,10 @@ namespace kerbal
 						const_iterator,
 						const_iterator
 					>
-					k_equal_range(Extract & e, KeyCompare & kc, const typename Extract::key_type & key) const;
+					k_equal_range(
+						Extract & e, KeyCompare & kc,
+						const typename Extract::key_type & key
+					) const;
 
 					template <typename Extract, typename KeyCompare>
 					KERBAL_CONSTEXPR14
@@ -659,44 +878,66 @@ namespace kerbal
 						iterator,
 						iterator
 					>
-					k_equal_range(Extract & e, KeyCompare & kc, const typename Extract::key_type & key);
+					k_equal_range(
+						Extract & e, KeyCompare & kc,
+						const typename Extract::key_type & key
+					);
 
 					template <typename Extract, typename KeyCompare, typename Key>
 					KERBAL_CONSTEXPR14
 					typename enable_if_transparent_lookup<
-							Extract, KeyCompare, Key,
-							kerbal::utility::compressed_pair<
-								const_iterator,
-								const_iterator
-							>
+						Extract, KeyCompare, Key,
+						kerbal::utility::compressed_pair<
+							const_iterator,
+							const_iterator
+						>
 					>::type
-					k_equal_range(Extract & e, KeyCompare & kc, const Key & key) const;
+					k_equal_range(
+						Extract & e, KeyCompare & kc,
+						const Key & key
+					) const;
 
 					template <typename Extract, typename KeyCompare, typename Key>
 					KERBAL_CONSTEXPR14
 					typename enable_if_transparent_lookup<
-							Extract, KeyCompare, Key,
-							kerbal::utility::compressed_pair<
-								iterator,
-								iterator
-							>
+						Extract, KeyCompare, Key,
+						kerbal::utility::compressed_pair<
+							iterator,
+							iterator
+						>
 					>::type
-					k_equal_range(Extract & e, KeyCompare & kc, const Key & key);
+					k_equal_range(
+						Extract & e, KeyCompare & kc,
+						const Key & key
+					);
 
 				private:
 					template <typename Extract, typename KeyCompare, typename Key>
 					KERBAL_CONSTEXPR14
-					bool k_contains_impl(Extract & e, KeyCompare & kc, const Key & key) const;
+					bool k_contains_impl(
+						Extract & e, KeyCompare & kc,
+						const Key & key
+					) const;
 
 				public:
 					template <typename Extract, typename KeyCompare>
 					KERBAL_CONSTEXPR14
-					bool k_contains(Extract & e, KeyCompare & kc, const typename Extract::key_type & key) const;
+					bool
+					k_contains(
+						Extract & e, KeyCompare & kc,
+						const typename Extract::key_type & key
+					) const;
 
 					template <typename Extract, typename KeyCompare, typename Key>
 					KERBAL_CONSTEXPR14
-					typename enable_if_transparent_lookup<Extract, KeyCompare, Key, bool>::type
-					k_contains(Extract & e, KeyCompare & kc, const Key & key) const;
+					typename enable_if_transparent_lookup<
+						Extract, KeyCompare, Key,
+						bool
+					>::type
+					k_contains(
+						Extract & e, KeyCompare & kc,
+						const Key & key
+					) const;
 
 
 				//===================
@@ -705,31 +946,59 @@ namespace kerbal
 				protected:
 					template <typename Extract, typename KeyCompare>
 					KERBAL_CONSTEXPR14
-					iterator k_emplace_hook_node(Extract & e, KeyCompare & kc, node * p);
+					iterator
+					k_emplace_hook_node(Extract & e, KeyCompare & kc, node * p);
 
 					template <typename Extract, typename KeyCompare>
 					KERBAL_CONSTEXPR14
-					unique_insert_r k_emplace_hook_node_unique(Extract & e, KeyCompare & kc, node * p);
+					unique_insert_r
+					k_emplace_hook_node_unique(Extract & e, KeyCompare & kc, node * p);
 
-					template <typename NodeAllocator, typename Extract, typename KeyCompare>
+					template <
+						typename NodeAllocator, typename Extract, typename KeyCompare
+					>
 					KERBAL_CONSTEXPR20
-					iterator k_emplace_ua_aux(NodeAllocator & alloc, Extract & e, KeyCompare & kc, node * p);
+					iterator
+					k_emplace_ua_aux(
+						NodeAllocator & alloc, Extract & e, KeyCompare & kc,
+						node * p
+					);
 
-					template <typename NodeAllocator, typename Extract, typename KeyCompare>
+					template <
+						typename NodeAllocator, typename Extract, typename KeyCompare
+					>
 					KERBAL_CONSTEXPR20
-					unique_insert_r k_emplace_unique_ua_aux(NodeAllocator & alloc, Extract & e, KeyCompare & kc, node * p);
+					unique_insert_r
+					k_emplace_unique_ua_aux(
+						NodeAllocator & alloc, Extract & e, KeyCompare & kc,
+						node * p
+					);
 
 				public:
 
 #			if __cplusplus >= 201103L
 
-					template <typename NodeAllocator, typename Extract, typename KeyCompare, typename ... Args>
+					template <
+						typename NodeAllocator, typename Extract, typename KeyCompare,
+						typename ... Args
+					>
 					KERBAL_CONSTEXPR20
-					iterator k_emplace_using_allocator(NodeAllocator & alloc, Extract & e, KeyCompare & kc, Args&& ... args);
+					iterator
+					k_emplace_using_allocator(
+						NodeAllocator & alloc, Extract & e, KeyCompare & kc,
+						Args && ... args
+					);
 
-					template <typename NodeAllocator, typename Extract, typename KeyCompare, typename ... Args>
+					template <
+						typename NodeAllocator, typename Extract, typename KeyCompare,
+						typename ... Args
+					>
 					KERBAL_CONSTEXPR20
-					unique_insert_r k_emplace_unique_using_allocator(NodeAllocator & alloc, Extract & e, KeyCompare & kc, Args&& ... args);
+					unique_insert_r
+					k_emplace_unique_using_allocator(
+						NodeAllocator & alloc, Extract & e, KeyCompare & kc,
+						Args && ... args
+					);
 
 #			else
 
@@ -738,11 +1007,25 @@ namespace kerbal
 #				define TARGS_DECL(i) typename KERBAL_MACRO_CONCAT(Arg, i)
 #				define ARGS_DECL(i) const KERBAL_MACRO_CONCAT(Arg, i) & KERBAL_MACRO_CONCAT(arg, i)
 #				define FBODY(i) \
-					template <typename NodeAllocator, typename Extract, typename KeyCompare KERBAL_OPT_PPEXPAND_WITH_COMMA_N(LEFT_JOIN_COMMA, EMPTY, TARGS_DECL, i)> \
-					iterator k_emplace_using_allocator(NodeAllocator & alloc, Extract & e, KeyCompare & kc KERBAL_OPT_PPEXPAND_WITH_COMMA_N(LEFT_JOIN_COMMA, EMPTY, ARGS_DECL, i)); \
+					template < \
+						typename NodeAllocator, typename Extract, typename KeyCompare \
+						KERBAL_OPT_PPEXPAND_WITH_COMMA_N(LEFT_JOIN_COMMA, EMPTY, TARGS_DECL, i) \
+					> \
+					iterator \
+					k_emplace_using_allocator( \
+						NodeAllocator & alloc, Extract & e, KeyCompare & kc \
+						KERBAL_OPT_PPEXPAND_WITH_COMMA_N(LEFT_JOIN_COMMA, EMPTY, ARGS_DECL, i) \
+					); \
  \
-					template <typename NodeAllocator, typename Extract, typename KeyCompare KERBAL_OPT_PPEXPAND_WITH_COMMA_N(LEFT_JOIN_COMMA, EMPTY, TARGS_DECL, i)> \
-					unique_insert_r k_emplace_unique_using_allocator(NodeAllocator & alloc, Extract & e, KeyCompare & kc KERBAL_OPT_PPEXPAND_WITH_COMMA_N(LEFT_JOIN_COMMA, EMPTY, ARGS_DECL, i));
+					template < \
+						typename NodeAllocator, typename Extract, typename KeyCompare \
+						KERBAL_OPT_PPEXPAND_WITH_COMMA_N(LEFT_JOIN_COMMA, EMPTY, TARGS_DECL, i) \
+					> \
+					unique_insert_r \
+					k_emplace_unique_using_allocator( \
+						NodeAllocator & alloc, Extract & e, KeyCompare & kc \
+						KERBAL_OPT_PPEXPAND_WITH_COMMA_N(LEFT_JOIN_COMMA, EMPTY, ARGS_DECL, i) \
+					); \
 
 					KERBAL_PPEXPAND_N(FBODY, KERBAL_PPEXPAND_EMPTY_SEPARATOR, 0)
 					KERBAL_PPEXPAND_N(FBODY, KERBAL_PPEXPAND_EMPTY_SEPARATOR, 20)
@@ -758,80 +1041,131 @@ namespace kerbal
 
 					template <typename NodeAllocator, typename Extract, typename KeyCompare, typename U>
 					KERBAL_CONSTEXPR20
+					unique_insert_r
 #			if __cplusplus >= 201103L
-					unique_insert_r k_emplace_unique_delay_build(NodeAllocator & alloc, Extract & e, KeyCompare & kc, U && src_key);
+					k_emplace_unique_delay_build(NodeAllocator & alloc, Extract & e, KeyCompare & kc, U && src_key);
 #			else
-					unique_insert_r k_emplace_unique_delay_build(NodeAllocator & alloc, Extract & e, KeyCompare & kc, const U & src_key);
+					k_emplace_unique_delay_build(NodeAllocator & alloc, Extract & e, KeyCompare & kc, const U & src_key);
 #			endif
 
 					template <typename NodeAllocator, typename KeyCompare>
 					KERBAL_CONSTEXPR20
-					unique_insert_r k_emplace_unique_using_allocator(NodeAllocator & alloc, kerbal::container::identity_extractor<Entity> & e,
-																   KeyCompare & kc, const_reference src_key);
+					unique_insert_r
+					k_emplace_unique_using_allocator(
+						NodeAllocator & alloc,
+						kerbal::container::identity_extractor<Entity> & e,
+						KeyCompare & kc,
+						const_reference src_key
+					);
 
 #			if __cplusplus >= 201103L
 
 					template <typename NodeAllocator, typename KeyCompare>
 					KERBAL_CONSTEXPR20
-					unique_insert_r k_emplace_unique_using_allocator(NodeAllocator & alloc, kerbal::container::identity_extractor<Entity> & e,
-																   KeyCompare & kc, rvalue_reference src_key);
+					unique_insert_r
+					k_emplace_unique_using_allocator(
+						NodeAllocator & alloc,
+						kerbal::container::identity_extractor<Entity> & e,
+						KeyCompare & kc,
+						rvalue_reference src_key
+					);
 
 #			endif
 
 					template <typename NodeAllocator, typename Extract, typename KeyCompare>
 					KERBAL_CONSTEXPR20
-					iterator k_insert_using_allocator(NodeAllocator & alloc, Extract & e, KeyCompare & kc, const_reference src);
+					iterator
+					k_insert_using_allocator(
+						NodeAllocator & alloc, Extract & e, KeyCompare & kc,
+						const_reference src
+					);
 
 					template <typename NodeAllocator, typename Extract, typename KeyCompare>
 					KERBAL_CONSTEXPR20
-					unique_insert_r k_insert_unique_using_allocator(NodeAllocator & alloc, Extract & e, KeyCompare & kc, const_reference src);
+					unique_insert_r
+					k_insert_unique_using_allocator(
+						NodeAllocator & alloc, Extract & e, KeyCompare & kc,
+						const_reference src
+					);
 
 
 #			if __cplusplus >= 201103L
 
 					template <typename NodeAllocator, typename Extract, typename KeyCompare>
 					KERBAL_CONSTEXPR20
-					iterator k_insert_using_allocator(NodeAllocator & alloc, Extract & e, KeyCompare & kc, rvalue_reference src);
+					iterator
+					k_insert_using_allocator(
+						NodeAllocator & alloc, Extract & e, KeyCompare & kc,
+						rvalue_reference src
+					);
 
 					template <typename NodeAllocator, typename Extract, typename KeyCompare>
 					KERBAL_CONSTEXPR20
-					unique_insert_r k_insert_unique_using_allocator(NodeAllocator & alloc, Extract & e, KeyCompare & kc, rvalue_reference src);
+					unique_insert_r
+					k_insert_unique_using_allocator(
+						NodeAllocator & alloc, Extract & e, KeyCompare & kc,
+						rvalue_reference src
+					);
 
 #			endif
 
 
 					template <typename NodeAllocator, typename Extract, typename KeyCompare, typename InputIterator>
 					KERBAL_CONSTEXPR20
-					void k_insert_using_allocator(NodeAllocator & alloc, Extract & e, KeyCompare & kc, InputIterator first, InputIterator last);
+					void k_insert_using_allocator(
+						NodeAllocator & alloc, Extract & e, KeyCompare & kc,
+						InputIterator first, InputIterator last
+					);
 
 					template <typename NodeAllocator, typename Extract, typename KeyCompare, typename InputIterator>
 					KERBAL_CONSTEXPR20
-					void k_insert_unique_using_allocator(NodeAllocator & alloc, Extract & e, KeyCompare & kc, InputIterator first, InputIterator last);
+					void k_insert_unique_using_allocator(
+						NodeAllocator & alloc, Extract & e, KeyCompare & kc,
+						InputIterator first, InputIterator last
+					);
 
 
 #			if __cplusplus >= 201103L
 
 					template <typename NodeAllocator, typename Extract, typename KeyCompare>
 					KERBAL_CONSTEXPR20
-					void k_insert_using_allocator(NodeAllocator & alloc, Extract & e, KeyCompare & kc, std::initializer_list<value_type> ilist);
+					void k_insert_using_allocator(
+						NodeAllocator & alloc, Extract & e, KeyCompare & kc,
+						std::initializer_list<value_type> ilist
+					);
 
 					template <typename NodeAllocator, typename Extract, typename KeyCompare>
 					KERBAL_CONSTEXPR20
-					void k_insert_unique_using_allocator(NodeAllocator & alloc, Extract & e, KeyCompare & kc, std::initializer_list<value_type> ilist);
+					void k_insert_unique_using_allocator(
+						NodeAllocator & alloc, Extract & e, KeyCompare & kc,
+						std::initializer_list<value_type> ilist
+					);
 
 #			else
 
 					template <typename NodeAllocator, typename Extract, typename KeyCompare>
-					void k_insert_using_allocator(NodeAllocator & alloc, Extract & e, KeyCompare & kc, const kerbal::assign::assign_list<void> & ilist);
+					void k_insert_using_allocator(
+						NodeAllocator & alloc, Extract & e, KeyCompare & kc,
+						const kerbal::assign::assign_list<void> & ilist
+					);
 
 					template <typename NodeAllocator, typename Extract, typename KeyCompare, typename U>
-					void k_insert_using_allocator(NodeAllocator & alloc, Extract & e, KeyCompare & kc, const kerbal::assign::assign_list<U> & ilist);
+					void k_insert_using_allocator(
+						NodeAllocator & alloc, Extract & e, KeyCompare & kc,
+						const kerbal::assign::assign_list<U> & ilist
+					);
 
 					template <typename NodeAllocator, typename Extract, typename KeyCompare>
-					void k_insert_unique_using_allocator(NodeAllocator & alloc, Extract & e, KeyCompare & kc, const kerbal::assign::assign_list<void> & ilist);
+					void k_insert_unique_using_allocator(
+						NodeAllocator & alloc, Extract & e, KeyCompare & kc,
+						const kerbal::assign::assign_list<void> & ilist
+					);
 
 					template <typename NodeAllocator, typename Extract, typename KeyCompare, typename U>
-					void k_insert_unique_using_allocator(NodeAllocator & alloc, Extract & e, KeyCompare & kc, const kerbal::assign::assign_list<U> & ilist);
+					void k_insert_unique_using_allocator(
+						NodeAllocator & alloc, Extract & e, KeyCompare & kc,
+						const kerbal::assign::assign_list<U> & ilist
+					);
 
 #			endif
 
@@ -845,28 +1179,45 @@ namespace kerbal
 					 */
 					template <typename NodeAllocator>
 					KERBAL_CONSTEXPR20
-					iterator k_erase_not_end_using_allocator_unsafe(NodeAllocator & alloc, const_iterator pos) KERBAL_NOEXCEPT;
+					iterator
+					k_erase_not_end_using_allocator_unsafe(NodeAllocator & alloc, const_iterator pos) KERBAL_NOEXCEPT;
 
 					template <typename NodeAllocator>
 					KERBAL_CONSTEXPR20
-					iterator k_erase_using_allocator(NodeAllocator & alloc, const_iterator pos) KERBAL_NOEXCEPT;
+					iterator
+					k_erase_using_allocator(
+						NodeAllocator & alloc,
+						const_iterator pos
+					) KERBAL_NOEXCEPT;
 
 					template <typename NodeAllocator>
 					KERBAL_CONSTEXPR20
-					iterator k_erase_using_allocator(NodeAllocator & alloc, const_iterator first, const_iterator last) KERBAL_NOEXCEPT;
+					iterator
+					k_erase_using_allocator(
+						NodeAllocator & alloc,
+						const_iterator first, const_iterator last
+					) KERBAL_NOEXCEPT;
 
 					template <typename NodeAllocator, typename Extract, typename KeyCompare>
 					KERBAL_CONSTEXPR20
-					size_type k_erase_using_allocator(NodeAllocator & alloc, Extract & e, KeyCompare & kc, const typename Extract::key_type & key) KERBAL_NOEXCEPT;
+					size_type
+					k_erase_using_allocator(
+						NodeAllocator & alloc, Extract & e, KeyCompare & kc,
+						const typename Extract::key_type & key
+					) KERBAL_NOEXCEPT;
 
 					template <typename NodeAllocator, typename Extract, typename KeyCompare, typename Key>
 					KERBAL_CONSTEXPR20
 					typename enable_if_transparent_lookup<Extract, KeyCompare, Key, size_type>::type
-					k_erase_using_allocator(NodeAllocator & alloc, Extract & e, KeyCompare & kc, const Key & key) KERBAL_NOEXCEPT;
+					k_erase_using_allocator(
+						NodeAllocator & alloc, Extract & e, KeyCompare & kc,
+						const Key & key
+					) KERBAL_NOEXCEPT;
 
 					template <typename NodeAllocator>
 					KERBAL_CONSTEXPR20
-					void k_clear_using_allocator(NodeAllocator & alloc) KERBAL_NOEXCEPT;
+					void
+					k_clear_using_allocator(NodeAllocator & alloc) KERBAL_NOEXCEPT;
 
 
 				//===================
@@ -882,13 +1233,29 @@ namespace kerbal
 
 #			if __cplusplus >= 201103L
 
-					template <typename NodeAllocator, typename Extract, typename KeyCompare, typename ... Args>
+					template <
+						typename NodeAllocator, typename Extract, typename KeyCompare,
+						typename ... Args
+					>
 					KERBAL_CONSTEXPR20
-					iterator k_replace_emplace_using_allocator(NodeAllocator & alloc, Extract & e, KeyCompare & kc, const_iterator replace, Args&& ... args);
+					iterator
+					k_replace_emplace_using_allocator(
+						NodeAllocator & alloc, Extract & e, KeyCompare & kc,
+						const_iterator replace,
+						Args && ... args
+					);
 
-					template <typename NodeAllocator, typename Extract, typename KeyCompare, typename ... Args>
+					template <
+						typename NodeAllocator, typename Extract, typename KeyCompare,
+						typename ... Args
+					>
 					KERBAL_CONSTEXPR20
-					unique_insert_r k_replace_emplace_unique_using_allocator(NodeAllocator & alloc, Extract & e, KeyCompare & kc, const_iterator replace, Args&& ... args);
+					unique_insert_r
+					k_replace_emplace_unique_using_allocator(
+						NodeAllocator & alloc, Extract & e, KeyCompare & kc,
+						const_iterator replace,
+						Args && ... args
+					);
 
 #			else
 
@@ -897,11 +1264,27 @@ namespace kerbal
 #				define TARGS_DECL(i) typename KERBAL_MACRO_CONCAT(Arg, i)
 #				define ARGS_DECL(i) const KERBAL_MACRO_CONCAT(Arg, i) & KERBAL_MACRO_CONCAT(arg, i)
 #				define FBODY(i) \
-					template <typename NodeAllocator, typename Extract, typename KeyCompare KERBAL_OPT_PPEXPAND_WITH_COMMA_N(LEFT_JOIN_COMMA, EMPTY, TARGS_DECL, i)> \
-					iterator k_replace_emplace_using_allocator(NodeAllocator & alloc, Extract & e, KeyCompare & kc, const_iterator replace KERBAL_OPT_PPEXPAND_WITH_COMMA_N(LEFT_JOIN_COMMA, EMPTY, ARGS_DECL, i)); \
+					template < \
+						typename NodeAllocator, typename Extract, typename KeyCompare \
+						KERBAL_OPT_PPEXPAND_WITH_COMMA_N(LEFT_JOIN_COMMA, EMPTY, TARGS_DECL, i) \
+					> \
+					iterator \
+					k_replace_emplace_using_allocator( \
+						NodeAllocator & alloc, Extract & e, KeyCompare & kc, \
+						const_iterator replace \
+						KERBAL_OPT_PPEXPAND_WITH_COMMA_N(LEFT_JOIN_COMMA, EMPTY, ARGS_DECL, i) \
+					); \
  \
-					template <typename NodeAllocator, typename Extract, typename KeyCompare KERBAL_OPT_PPEXPAND_WITH_COMMA_N(LEFT_JOIN_COMMA, EMPTY, TARGS_DECL, i)> \
-					unique_insert_r k_replace_emplace_unique_using_allocator(NodeAllocator & alloc, Extract & e, KeyCompare & kc, const_iterator replace KERBAL_OPT_PPEXPAND_WITH_COMMA_N(LEFT_JOIN_COMMA, EMPTY, ARGS_DECL, i));
+					template < \
+						typename NodeAllocator, typename Extract, typename KeyCompare \
+						KERBAL_OPT_PPEXPAND_WITH_COMMA_N(LEFT_JOIN_COMMA, EMPTY, TARGS_DECL, i) \
+					> \
+					unique_insert_r \
+					k_replace_emplace_unique_using_allocator( \
+						NodeAllocator & alloc, Extract & e, KeyCompare & kc, \
+						const_iterator replace \
+						KERBAL_OPT_PPEXPAND_WITH_COMMA_N(LEFT_JOIN_COMMA, EMPTY, ARGS_DECL, i) \
+					); \
 
 					KERBAL_PPEXPAND_N(FBODY, KERBAL_PPEXPAND_EMPTY_SEPARATOR, 0)
 					KERBAL_PPEXPAND_N(FBODY, KERBAL_PPEXPAND_EMPTY_SEPARATOR, 20)
@@ -920,38 +1303,53 @@ namespace kerbal
 
 					template <typename ThisExtract, typename ThisKeyCompare>
 					KERBAL_CONSTEXPR20
-					const_iterator k_splice(ThisExtract & this_e, ThisKeyCompare & this_kc, avl_type_only & other, const_iterator other_it);
+					const_iterator
+					k_splice(
+						ThisExtract & this_e, ThisKeyCompare & this_kc,
+						avl_type_only & other, const_iterator other_it
+					);
 
 					template <typename ThisExtract, typename ThisKeyCompare>
 					KERBAL_CONSTEXPR20
-					unique_insert_r k_splice_unique(ThisExtract & this_e, ThisKeyCompare & this_kc, avl_type_only & other, const_iterator other_it);
+					unique_insert_r
+					k_splice_unique(
+						ThisExtract & this_e, ThisKeyCompare & this_kc,
+						avl_type_only & other, const_iterator other_it
+					);
 
 					template <typename ThisExtract, typename ThisKeyCompare>
 					KERBAL_CONSTEXPR20
 					void k_merge(
-							ThisExtract & this_e, ThisKeyCompare & this_kc,
-							avl_type_only & other, const_iterator other_begin, const_iterator other_end
+						ThisExtract & this_e, ThisKeyCompare & this_kc,
+						avl_type_only & other, const_iterator other_begin, const_iterator other_end
 					);
 
 					template <typename ThisExtract, typename ThisKeyCompare>
 					KERBAL_CONSTEXPR20
 					void k_merge_unique(
-							ThisExtract & this_e, ThisKeyCompare & this_kc,
-							avl_type_only & other, const_iterator other_begin, const_iterator other_end
+						ThisExtract & this_e, ThisKeyCompare & this_kc,
+						avl_type_only & other, const_iterator other_begin, const_iterator other_end
 					);
 
 					template <typename ThisExtract, typename ThisKeyCompare>
 					KERBAL_CONSTEXPR20
-					void k_merge(ThisExtract & this_e, ThisKeyCompare & this_kc, avl_type_only & other);
+					void k_merge(
+						ThisExtract & this_e, ThisKeyCompare & this_kc,
+						avl_type_only & other
+					);
 
 					template <typename ThisExtract, typename ThisKeyCompare>
 					KERBAL_CONSTEXPR20
-					void k_merge_unique(ThisExtract & this_e, ThisKeyCompare & this_kc, avl_type_only & other);
+					void k_merge_unique(
+						ThisExtract & this_e, ThisKeyCompare & this_kc,
+						avl_type_only & other
+					);
 
 
 					template <typename F>
 					KERBAL_CONSTEXPR20
-					static void pre_order_impl(const node_base * p_base, F f);
+					static
+					void pre_order_impl(const node_base * p_base, F f);
 
 					template <typename F>
 					KERBAL_CONSTEXPR20
@@ -960,15 +1358,24 @@ namespace kerbal
 				private:
 					template <typename Extract, typename KeyCompare>
 					KERBAL_CONSTEXPR20
-					static avl_normal_result_t avl_normal_impl(const node_base * p, const value_type * & mini, const value_type * & maxi, node_base::height_t & depth, Extract & e, KeyCompare & kc);
+					static
+					avl_normal_result_t
+					avl_normal_impl(
+						const node_base * p,
+						const value_type * & mini, const value_type * & maxi,
+						node_base::height_t & depth,
+						Extract & e, KeyCompare & kc
+					);
 
 				protected:
 					template <typename Extract, typename KeyCompare>
 					KERBAL_CONSTEXPR20
-					avl_normal_result_t avl_normal(Extract & e, KeyCompare & kc) const;
+					avl_normal_result_t
+					avl_normal(Extract & e, KeyCompare & kc) const;
 
 					KERBAL_CONSTEXPR20
-					node_base::height_t height() const KERBAL_NOEXCEPT;
+					node_base::height_t
+					height() const KERBAL_NOEXCEPT;
 
 
 				//===================
@@ -984,19 +1391,20 @@ namespace kerbal
 					KERBAL_CONSTEXPR20
 					static
 					typename kerbal::type_traits::enable_if<!nothrow_while_construct>::type
-					k_try_construct_node_impl(NodeAllocator & alloc, node * p, Args&& ... args);
+					k_try_construct_node_impl(NodeAllocator & alloc, node * p, Args && ... args);
 
 					template <bool nothrow_while_construct, typename NodeAllocator, typename ... Args>
 					KERBAL_CONSTEXPR20
 					static
 					typename kerbal::type_traits::enable_if<nothrow_while_construct>::type
-					k_try_construct_node_impl(NodeAllocator & alloc, node * p, Args&& ... args);
+					k_try_construct_node_impl(NodeAllocator & alloc, node * p, Args && ... args);
 
 #				endif
 
 					template <typename NodeAllocator, typename ... Args>
 					KERBAL_CONSTEXPR20
-					static void k_try_construct_node(NodeAllocator & alloc, node * p, Args&& ... args);
+					static
+					void k_try_construct_node(NodeAllocator & alloc, node * p, Args && ... args);
 
 #			else
 
@@ -1006,7 +1414,8 @@ namespace kerbal
 #				define ARGS_DECL(i) const KERBAL_MACRO_CONCAT(Arg, i) & KERBAL_MACRO_CONCAT(arg, i)
 #				define FBODY(i) \
 					template <typename NodeAllocator KERBAL_OPT_PPEXPAND_WITH_COMMA_N(LEFT_JOIN_COMMA, EMPTY, TARGS_DECL, i)> \
-					static void k_try_construct_node(NodeAllocator & alloc, node * p KERBAL_OPT_PPEXPAND_WITH_COMMA_N(LEFT_JOIN_COMMA, EMPTY, ARGS_DECL, i));
+					static \
+					void k_try_construct_node(NodeAllocator & alloc, node * p KERBAL_OPT_PPEXPAND_WITH_COMMA_N(LEFT_JOIN_COMMA, EMPTY, ARGS_DECL, i)); \
 
 					KERBAL_PPEXPAND_N(FBODY, KERBAL_PPEXPAND_EMPTY_SEPARATOR, 0)
 					KERBAL_PPEXPAND_N(FBODY, KERBAL_PPEXPAND_EMPTY_SEPARATOR, 20)
@@ -1024,7 +1433,9 @@ namespace kerbal
 
 					template <typename NodeAllocator, typename ... Args>
 					KERBAL_CONSTEXPR20
-					static node* k_build_new_node(NodeAllocator & alloc, Args&& ... args);
+					static
+					node *
+					k_build_new_node(NodeAllocator & alloc, Args && ... args);
 
 #			else
 
@@ -1034,7 +1445,9 @@ namespace kerbal
 #				define ARGS_DECL(i) const KERBAL_MACRO_CONCAT(Arg, i) & KERBAL_MACRO_CONCAT(arg, i)
 #				define FBODY(i) \
 					template <typename NodeAllocator KERBAL_OPT_PPEXPAND_WITH_COMMA_N(LEFT_JOIN_COMMA, EMPTY, TARGS_DECL, i)> \
-					static node* k_build_new_node(NodeAllocator & alloc KERBAL_OPT_PPEXPAND_WITH_COMMA_N(LEFT_JOIN_COMMA, EMPTY, ARGS_DECL, i));
+					static \
+					node * \
+					k_build_new_node(NodeAllocator & alloc KERBAL_OPT_PPEXPAND_WITH_COMMA_N(LEFT_JOIN_COMMA, EMPTY, ARGS_DECL, i)); \
 
 					KERBAL_PPEXPAND_N(FBODY, KERBAL_PPEXPAND_EMPTY_SEPARATOR, 0)
 					KERBAL_PPEXPAND_N(FBODY, KERBAL_PPEXPAND_EMPTY_SEPARATOR, 20)
@@ -1052,7 +1465,8 @@ namespace kerbal
 
 					template <typename NodeAllocator, typename ... Args>
 					KERBAL_CONSTEXPR20
-					static void k_reuse_node(NodeAllocator & alloc, node * p, Args&& ... args);
+					static
+					void k_reuse_node(NodeAllocator & alloc, node * p, Args && ... args);
 
 #			else
 
@@ -1062,7 +1476,8 @@ namespace kerbal
 #				define ARGS_DECL(i) const KERBAL_MACRO_CONCAT(Arg, i) & KERBAL_MACRO_CONCAT(arg, i)
 #				define FBODY(i) \
 					template <typename NodeAllocator KERBAL_OPT_PPEXPAND_WITH_COMMA_N(LEFT_JOIN_COMMA, EMPTY, TARGS_DECL, i)> \
-					static void k_reuse_node(NodeAllocator & alloc, node * p KERBAL_OPT_PPEXPAND_WITH_COMMA_N(LEFT_JOIN_COMMA, EMPTY, ARGS_DECL, i));
+					static \
+					void k_reuse_node(NodeAllocator & alloc, node * p KERBAL_OPT_PPEXPAND_WITH_COMMA_N(LEFT_JOIN_COMMA, EMPTY, ARGS_DECL, i)); \
 
 					KERBAL_PPEXPAND_N(FBODY, KERBAL_PPEXPAND_EMPTY_SEPARATOR, 0)
 					KERBAL_PPEXPAND_N(FBODY, KERBAL_PPEXPAND_EMPTY_SEPARATOR, 20)
@@ -1078,7 +1493,8 @@ namespace kerbal
 
 					template <typename NodeAllocator>
 					KERBAL_CONSTEXPR20
-					static void k_destroy_node(NodeAllocator & alloc, node_base * p_base);
+					static
+					void k_destroy_node(NodeAllocator & alloc, node_base * p_base);
 
 				private:
 					typedef kerbal::type_traits::integral_constant<int, 0>		DES_OFF_VER_DEFAULT;
@@ -1087,25 +1503,39 @@ namespace kerbal
 
 					template <typename NodeAllocator>
 					KERBAL_CONSTEXPR20
-					static void k_destroy_node_and_offsprings_impl(NodeAllocator & alloc, node_base * start, DES_OFF_VER_DEFAULT) KERBAL_NOEXCEPT;
+					static
+					void k_destroy_node_and_offsprings_impl(
+						NodeAllocator & alloc, node_base * start,
+						DES_OFF_VER_DEFAULT
+					) KERBAL_NOEXCEPT;
 
 					template <typename NodeAllocator>
 					KERBAL_CONSTEXPR20
-					static void k_destroy_node_and_offsprings_impl(NodeAllocator & alloc, node_base * start, DES_OFF_VER_DESTROY_BUT_NO_DEALLOCATE) KERBAL_NOEXCEPT;
+					static
+					void k_destroy_node_and_offsprings_impl(
+						NodeAllocator & alloc, node_base * start,
+						DES_OFF_VER_DESTROY_BUT_NO_DEALLOCATE
+					) KERBAL_NOEXCEPT;
 
 					template <typename NodeAllocator>
 					KERBAL_CONSTEXPR20
-					static void k_destroy_node_and_offsprings_impl(NodeAllocator & /*alloc*/, node_base * /*start*/, DES_OFF_VER_NO_DESTROY) KERBAL_NOEXCEPT;
+					static
+					void k_destroy_node_and_offsprings_impl(
+						NodeAllocator & /*alloc*/, node_base * /*start*/,
+						DES_OFF_VER_NO_DESTROY
+					) KERBAL_NOEXCEPT;
 
 				protected:
 
 					template <typename NodeAllocator>
 					KERBAL_CONSTEXPR20
-					static void k_destroy_node_and_offsprings(NodeAllocator & alloc, node_base * start);
+					static
+					void k_destroy_node_and_offsprings(NodeAllocator & alloc, node_base * start);
 
 					template <typename T, typename UpstreamAllocator>
 					KERBAL_CONSTEXPR20
-					static void k_destroy_node_and_offsprings(kerbal::memory::monotonic_allocator<T, UpstreamAllocator> & alloc, node_base * start);
+					static
+					void k_destroy_node_and_offsprings(kerbal::memory::monotonic_allocator<T, UpstreamAllocator> & alloc, node_base * start);
 
 
 #		if __cplusplus >= 201703L
@@ -1114,14 +1544,14 @@ namespace kerbal
 					template <typename Node>
 					KERBAL_CONSTEXPR20
 					static void k_destroy_node_and_offsprings(std::pmr::polymorphic_allocator<Node> & alloc, node_base * start)
-							KERBAL_CONDITIONAL_NOEXCEPT(
-								(
-									!kerbal::type_traits::try_test_is_trivially_destructible<Entity>::IS_TRUE::value ?
-									noexcept(k_destroy_node_and_offsprings_impl(alloc, start, DES_OFF_VER_DESTROY_BUT_NO_DEALLOCATE())) :
-									true
-								) &&
-								noexcept(k_destroy_node_and_offsprings_impl(alloc, start, DES_OFF_VER_DEFAULT()))
-							)
+						KERBAL_CONDITIONAL_NOEXCEPT(
+							(
+								!kerbal::type_traits::try_test_is_trivially_destructible<Entity>::IS_TRUE::value ?
+								noexcept(k_destroy_node_and_offsprings_impl(alloc, start, DES_OFF_VER_DESTROY_BUT_NO_DEALLOCATE())) :
+								true
+							) &&
+							noexcept(k_destroy_node_and_offsprings_impl(alloc, start, DES_OFF_VER_DEFAULT()))
+						)
 					;
 
 #			endif

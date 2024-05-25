@@ -52,13 +52,14 @@ namespace kerbal
 	{
 
 		template <typename T, typename Allocator>
-		class vector:
-				protected kerbal::container::detail::container_allocator_overload<Allocator>,
-				protected kerbal::container::detail::vector_type_only<T>
+		class vector :
+			protected kerbal::container::detail::container_allocator_overload<Allocator>,
+			protected kerbal::container::detail::vector_type_only<T>
 		{
 			private:
-				typedef kerbal::container::detail::container_allocator_overload<Allocator>	vector_allocator_overload;
-				typedef kerbal::container::detail::vector_type_only<T>			vector_type_only;
+				typedef kerbal::container::detail::container_allocator_overload<Allocator>
+																			vector_allocator_overload;
+				typedef kerbal::container::detail::vector_type_only<T>		vector_type_only;
 
 			public:
 				typedef typename vector_type_only::value_type				value_type;
@@ -82,11 +83,12 @@ namespace kerbal
 				typedef typename vector_type_only::const_reverse_iterator	const_reverse_iterator;
 
 			private:
-				typedef typename kerbal::type_traits::remove_all_extents<value_type>::type remove_all_extents_t;
+				typedef typename kerbal::type_traits::remove_all_extents<value_type>::type
+																			remove_all_extents_t;
 
 			public:
-				typedef typename vector_allocator_overload::allocator_type				allocator_type;
-				typedef kerbal::memory::allocator_traits<allocator_type>				allocator_traits;
+				typedef typename vector_allocator_overload::allocator_type	allocator_type;
+				typedef kerbal::memory::allocator_traits<allocator_type>	allocator_traits;
 
 			private:
 				using vector_allocator_overload::alloc;
@@ -97,17 +99,21 @@ namespace kerbal
 			// construct/copy/destroy
 
 				KERBAL_CONSTEXPR20
-				vector() KERBAL_CONDITIONAL_NOEXCEPT(
+				vector()
+					KERBAL_CONDITIONAL_NOEXCEPT(
 						vector_allocator_overload::is_nothrow_default_constructible::value &&
 						vector_type_only::is_nothrow_default_constructible::value
-				);
+					)
+				;
 
 				KERBAL_CONSTEXPR20
 				explicit
-				vector(const Allocator & allocator) KERBAL_CONDITIONAL_NOEXCEPT(
+				vector(const Allocator & allocator)
+					KERBAL_CONDITIONAL_NOEXCEPT(
 						vector_allocator_overload::is_nothrow_constructible_from_allocator_const_reference::value &&
 						vector_type_only::is_nothrow_default_constructible::value
-				);
+					)
+				;
 
 				KERBAL_CONSTEXPR20
 				explicit
@@ -124,20 +130,23 @@ namespace kerbal
 
 				template <typename InputIterator>
 				KERBAL_CONSTEXPR20
-				vector(InputIterator first, InputIterator last,
-						typename kerbal::type_traits::enable_if<
-								kerbal::iterator::is_input_compatible_iterator<InputIterator>::value
-								, int
-						>::type = 0
+				vector(
+					InputIterator first, InputIterator last,
+					typename kerbal::type_traits::enable_if<
+						kerbal::iterator::is_input_compatible_iterator<InputIterator>::value,
+						int
+					>::type = 0
 				);
 
 				template <typename InputIterator>
 				KERBAL_CONSTEXPR20
-				vector(InputIterator first, InputIterator last, const Allocator & allocator,
-						typename kerbal::type_traits::enable_if<
-								kerbal::iterator::is_input_compatible_iterator<InputIterator>::value
-								, int
-						>::type = 0
+				vector(
+					InputIterator first, InputIterator last,
+					const Allocator & allocator,
+					typename kerbal::type_traits::enable_if<
+						kerbal::iterator::is_input_compatible_iterator<InputIterator>::value,
+						int
+					>::type = 0
 				);
 
 				KERBAL_CONSTEXPR20
@@ -149,17 +158,20 @@ namespace kerbal
 #		if __cplusplus >= 201103L
 
 				KERBAL_CONSTEXPR20
-				vector(vector && src) KERBAL_CONDITIONAL_NOEXCEPT(
+				vector(vector && src)
+					KERBAL_CONDITIONAL_NOEXCEPT(
 						vector_allocator_overload::is_nothrow_constructible_from_allocator_rvalue_reference::value &&
 						vector_type_only::is_nothrow_move_constructible::value
-				);
+					)
+				;
 
 				KERBAL_CONSTEXPR20
-				vector(vector && src, const Allocator & allocator) KERBAL_CONDITIONAL_NOEXCEPT(
+				vector(vector && src, const Allocator & allocator)
+					KERBAL_CONDITIONAL_NOEXCEPT(
 						vector_allocator_overload::is_nothrow_constructible_from_allocator_const_reference::value &&
 						vector_type_only::template is_nothrow_move_constructible_using_allocator<allocator_type>::value
-				);
-
+					)
+				;
 
 #		endif
 
@@ -192,28 +204,32 @@ namespace kerbal
 			// assign
 
 				KERBAL_CONSTEXPR20
-				vector& operator=(const vector & src);
+				vector & operator=(const vector & src);
 
 #		if __cplusplus >= 201103L
 
 				KERBAL_CONSTEXPR20
-				vector& operator=(vector && src) KERBAL_CONDITIONAL_NOEXCEPT(
-						noexcept(kerbal::utility::declthis<vector>()->assign(kerbal::compatibility::move(src)))
-				);
+				vector & operator=(vector && src)
+					KERBAL_CONDITIONAL_NOEXCEPT(
+						noexcept(
+							kerbal::utility::declthis<vector>()->assign(kerbal::compatibility::move(src))
+						)
+					)
+				;
 
 #		endif
 
 #		if __cplusplus >= 201103L
 
 				KERBAL_CONSTEXPR20
-				vector& operator=(std::initializer_list<value_type> ilist);
+				vector & operator=(std::initializer_list<value_type> ilist);
 
 #		else
 
-				vector& operator=(const kerbal::assign::assign_list<void> & ilist);
+				vector & operator=(const kerbal::assign::assign_list<void> & ilist);
 
 				template <typename U>
-				vector& operator=(const kerbal::assign::assign_list<U> & ilist);
+				vector & operator=(const kerbal::assign::assign_list<U> & ilist);
 
 #		endif
 
@@ -225,7 +241,7 @@ namespace kerbal
 				template <typename InputIterator>
 				KERBAL_CONSTEXPR20
 				typename kerbal::type_traits::enable_if<
-						kerbal::iterator::is_input_compatible_iterator<InputIterator>::value
+					kerbal::iterator::is_input_compatible_iterator<InputIterator>::value
 				>::type
 				assign(InputIterator first, InputIterator last);
 
@@ -235,9 +251,11 @@ namespace kerbal
 #		if __cplusplus >= 201103L
 
 				KERBAL_CONSTEXPR20
-				void assign(vector && src) KERBAL_CONDITIONAL_NOEXCEPT(
+				void assign(vector && src)
+					KERBAL_CONDITIONAL_NOEXCEPT(
 						vector_type_only::template is_nothrow_move_assign_using_allocator<allocator_type>::value
-				);
+					)
+				;
 
 #		endif
 
@@ -309,7 +327,7 @@ namespace kerbal
 
 				template <typename ... Args>
 				KERBAL_CONSTEXPR20
-				iterator emplace(const_iterator pos, Args&& ...args);
+				iterator emplace(const_iterator pos, Args && ... args);
 
 #		else
 
@@ -320,7 +338,7 @@ namespace kerbal
 #			define ARGS_DECL(i) const KERBAL_MACRO_CONCAT(Arg, i) & KERBAL_MACRO_CONCAT(arg, i)
 #			define FBODY(i) \
 				KERBAL_OPT_PPEXPAND_WITH_COMMA_N(THEAD_NOT_EMPTY, EMPTY, TARGS_DECL, i) \
-				iterator emplace(const_iterator pos KERBAL_OPT_PPEXPAND_WITH_COMMA_N(LEFT_JOIN_COMMA, EMPTY, ARGS_DECL, i));
+				iterator emplace(const_iterator pos KERBAL_OPT_PPEXPAND_WITH_COMMA_N(LEFT_JOIN_COMMA, EMPTY, ARGS_DECL, i)); \
 
 				KERBAL_PPEXPAND_N(FBODY, KERBAL_PPEXPAND_EMPTY_SEPARATOR, 0)
 				KERBAL_PPEXPAND_N(FBODY, KERBAL_PPEXPAND_EMPTY_SEPARATOR, 20)
@@ -350,8 +368,8 @@ namespace kerbal
 				template <typename InputIterator>
 				KERBAL_CONSTEXPR20
 				typename kerbal::type_traits::enable_if<
-						kerbal::iterator::is_input_compatible_iterator<InputIterator>::value,
-						iterator
+					kerbal::iterator::is_input_compatible_iterator<InputIterator>::value,
+					iterator
 				>::type
 				insert(const_iterator pos, InputIterator first, InputIterator last);
 
@@ -374,7 +392,7 @@ namespace kerbal
 
 				template <typename ... Args>
 				KERBAL_CONSTEXPR20
-				reference emplace_back(Args&& ...args);
+				reference emplace_back(Args && ... args);
 
 #		else
 
@@ -385,7 +403,7 @@ namespace kerbal
 #			define ARGS_DECL(i) const KERBAL_MACRO_CONCAT(Arg, i) & KERBAL_MACRO_CONCAT(arg, i)
 #			define FBODY(i) \
 				KERBAL_OPT_PPEXPAND_WITH_COMMA_N(THEAD_NOT_EMPTY, EMPTY, TARGS_DECL, i) \
-				reference emplace_back(KERBAL_OPT_PPEXPAND_WITH_COMMA_N(REMAINF, EMPTY, ARGS_DECL, i));
+				reference emplace_back(KERBAL_OPT_PPEXPAND_WITH_COMMA_N(REMAINF, EMPTY, ARGS_DECL, i)); \
 
 				KERBAL_PPEXPAND_N(FBODY, KERBAL_PPEXPAND_EMPTY_SEPARATOR, 0)
 				KERBAL_PPEXPAND_N(FBODY, KERBAL_PPEXPAND_EMPTY_SEPARATOR, 20)
@@ -434,67 +452,114 @@ namespace kerbal
 				void resize(size_type new_size, const_reference value);
 
 				KERBAL_CONSTEXPR20
-				void swap(vector & with) KERBAL_CONDITIONAL_NOEXCEPT(
-						noexcept(vector_allocator_overload::k_swap_allocator_if_propagate(
-								kerbal::utility::declval<vector_allocator_overload&>(), kerbal::utility::declval<vector_allocator_overload&>()
-						)) &&
-						noexcept(vector_type_only::k_swap_type_unrelated(
-								kerbal::utility::declval<vector_type_only&>(), kerbal::utility::declval<vector_type_only&>()
-						))
-				);
+				void swap(vector & with)
+					KERBAL_CONDITIONAL_NOEXCEPT(
+						noexcept(
+							vector_allocator_overload::k_swap_allocator_if_propagate(
+								kerbal::utility::declval<vector_allocator_overload &>(),
+								kerbal::utility::declval<vector_allocator_overload &>()
+							)
+						) &&
+						noexcept(
+							vector_type_only::k_swap_type_unrelated(
+								kerbal::utility::declval<vector_type_only &>(),
+								kerbal::utility::declval<vector_type_only &>()
+							)
+						)
+					)
+				;
 
 		};
 
 #	if __cplusplus >= 201703L
 
-		template <typename InputIterator, typename Alloc =
-					std::allocator<typename kerbal::iterator::iterator_traits<InputIterator>::value_type> >
-		vector(InputIterator, InputIterator, Alloc = Alloc())
-				-> vector<typename kerbal::iterator::iterator_traits<InputIterator>::value_type, Alloc>;
+		template <
+			typename InputIterator,
+			typename Alloc =
+				std::allocator<typename kerbal::iterator::iterator_traits<InputIterator>::value_type>
+		>
+		vector(InputIterator, InputIterator, Alloc = Alloc()) ->
+		vector<typename kerbal::iterator::iterator_traits<InputIterator>::value_type, Alloc>;
 
 #	endif
 
 
 		template <typename T, typename Allocator, typename Allocator2>
 		KERBAL_CONSTEXPR20
-		bool operator==(const vector<T, Allocator> & lhs, const vector<T, Allocator2> & rhs)
+		bool operator==(
+			const vector<T, Allocator> & lhs,
+			const vector<T, Allocator2> & rhs
+		)
 		{
-			return kerbal::compare::sequence_equal_to(lhs.cbegin(), lhs.cend(), rhs.cbegin(), rhs.cend());
+			return kerbal::compare::sequence_equal_to(
+				lhs.cbegin(), lhs.cend(),
+				rhs.cbegin(), rhs.cend()
+			);
 		}
 
 		template <typename T, typename Allocator, typename Allocator2>
 		KERBAL_CONSTEXPR20
-		bool operator!=(const vector<T, Allocator> & lhs, const vector<T, Allocator2> & rhs)
+		bool operator!=(
+			const vector<T, Allocator> & lhs,
+			const vector<T, Allocator2> & rhs
+		)
 		{
-			return kerbal::compare::sequence_not_equal_to(lhs.cbegin(), lhs.cend(), rhs.cbegin(), rhs.cend());
+			return kerbal::compare::sequence_not_equal_to(
+				lhs.cbegin(), lhs.cend(),
+				rhs.cbegin(), rhs.cend()
+			);
 		}
 
 		template <typename T, typename Allocator, typename Allocator2>
 		KERBAL_CONSTEXPR20
-		bool operator<(const vector<T, Allocator> & lhs, const vector<T, Allocator2> & rhs)
+		bool operator<(
+			const vector<T, Allocator> & lhs,
+			const vector<T, Allocator2> & rhs
+		)
 		{
-			return kerbal::compare::sequence_less(lhs.cbegin(), lhs.cend(), rhs.cbegin(), rhs.cend());
+			return kerbal::compare::sequence_less(
+				lhs.cbegin(), lhs.cend(),
+				rhs.cbegin(), rhs.cend()
+			);
 		}
 
 		template <typename T, typename Allocator, typename Allocator2>
 		KERBAL_CONSTEXPR20
-		bool operator<=(const vector<T, Allocator> & lhs, const vector<T, Allocator2> & rhs)
+		bool operator<=(
+			const vector<T, Allocator> & lhs,
+			const vector<T, Allocator2> & rhs
+		)
 		{
-			return kerbal::compare::sequence_less_equal(lhs.cbegin(), lhs.cend(), rhs.cbegin(), rhs.cend());
+			return kerbal::compare::sequence_less_equal(
+				lhs.cbegin(), lhs.cend(),
+				rhs.cbegin(), rhs.cend()
+			);
 		}
 
 		template <typename T, typename Allocator, typename Allocator2>
 		KERBAL_CONSTEXPR20
-		bool operator>(const vector<T, Allocator> & lhs, const vector<T, Allocator2> & rhs)
+		bool operator>(
+			const vector<T, Allocator> & lhs,
+			const vector<T, Allocator2> & rhs
+		)
 		{
-			return kerbal::compare::sequence_greater(lhs.cbegin(), lhs.cend(), rhs.cbegin(), rhs.cend());
+			return kerbal::compare::sequence_greater(
+				lhs.cbegin(), lhs.cend(),
+				rhs.cbegin(), rhs.cend()
+			);
 		}
 
 		template <typename T, typename Allocator, typename Allocator2>
 		KERBAL_CONSTEXPR20
-		bool operator>=(const vector<T, Allocator> & lhs, const vector<T, Allocator2> & rhs)
+		bool operator>=(
+			const vector<T, Allocator> & lhs,
+			const vector<T, Allocator2> & rhs
+		)
 		{
-			return kerbal::compare::sequence_greater_equal(lhs.cbegin(), lhs.cend(), rhs.cbegin(), rhs.cend());
+			return kerbal::compare::sequence_greater_equal(
+				lhs.cbegin(), lhs.cend(),
+				rhs.cbegin(), rhs.cend()
+			);
 		}
 
 	} // namespace container
@@ -504,8 +569,11 @@ namespace kerbal
 
 		template <typename T, typename Allocator>
 		KERBAL_CONSTEXPR20
-		void swap(kerbal::container::vector<T, Allocator> & a, kerbal::container::vector<T, Allocator> & b)
-				KERBAL_CONDITIONAL_NOEXCEPT(noexcept(a.swap(b)))
+		void swap(
+			kerbal::container::vector<T, Allocator> & a,
+			kerbal::container::vector<T, Allocator> & b
+		)
+			KERBAL_CONDITIONAL_NOEXCEPT(noexcept(a.swap(b)))
 		{
 			a.swap(b);
 		}
@@ -519,8 +587,11 @@ KERBAL_NAMESPACE_STD_BEGIN
 
 	template <typename T, typename Allocator>
 	KERBAL_CONSTEXPR20
-	void swap(kerbal::container::vector<T, Allocator> & a, kerbal::container::vector<T, Allocator> & b)
-			KERBAL_CONDITIONAL_NOEXCEPT(noexcept(a.swap(b)))
+	void swap(
+		kerbal::container::vector<T, Allocator> & a,
+		kerbal::container::vector<T, Allocator> & b
+	)
+		KERBAL_CONDITIONAL_NOEXCEPT(noexcept(a.swap(b)))
 	{
 		a.swap(b);
 	}

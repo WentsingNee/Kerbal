@@ -42,7 +42,12 @@ namespace kerbal
 
 			template <typename T, typename U>
 			struct is_nothrow_assignable_helper :
-					kerbal::type_traits::bool_constant<noexcept(kerbal::utility::declval<T>() = kerbal::utility::declval<U>())>
+				kerbal::type_traits::bool_constant<
+					noexcept(
+						kerbal::utility::declval<T>() =
+						kerbal::utility::declval<U>()
+					)
+				>
 			{
 			};
 
@@ -50,10 +55,10 @@ namespace kerbal
 
 		template <typename T, typename U>
 		struct is_nothrow_assignable :
-				kerbal::type_traits::conjunction<
-					kerbal::type_traits::is_assignable<T, U>,
-					kerbal::type_traits::detail::is_nothrow_assignable_helper<T, U>
-				>
+			kerbal::type_traits::conjunction<
+				kerbal::type_traits::is_assignable<T, U>,
+				kerbal::type_traits::detail::is_nothrow_assignable_helper<T, U>
+			>
 		{
 		};
 

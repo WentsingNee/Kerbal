@@ -59,9 +59,9 @@ namespace kerbal
 
 		template <typename T>
 		struct is_trivially_destructible :
-				kerbal::type_traits::bool_constant<
-					std::is_trivially_destructible<T>::value
-				>
+			kerbal::type_traits::bool_constant<
+				std::is_trivially_destructible<T>::value
+			>
 		{
 		};
 

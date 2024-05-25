@@ -31,7 +31,10 @@ namespace kerbal
 		template <typename IntType = int>
 		class poisson_distribution
 		{
-				KERBAL_STATIC_ASSERT(kerbal::type_traits::is_integral<IntType>::value, "IntType must be an integral type");
+				KERBAL_STATIC_ASSERT(
+					kerbal::type_traits::is_integral<IntType>::value,
+					"IntType must be an integral type"
+				);
 
 			public:
 				typedef IntType result_type;
@@ -41,15 +44,15 @@ namespace kerbal
 
 			public:
 				KERBAL_CONSTEXPR
-				poisson_distribution() KERBAL_NOEXCEPT
-						: _mean(1.0)
+				poisson_distribution() KERBAL_NOEXCEPT :
+					_mean(1.0)
 				{
 				}
 
 				KERBAL_CONSTEXPR
 				explicit
-				poisson_distribution(double mean) KERBAL_NOEXCEPT
-						: _mean(mean)
+				poisson_distribution(double mean) KERBAL_NOEXCEPT :
+					_mean(mean)
 				{
 				}
 
@@ -61,9 +64,9 @@ namespace kerbal
 
 				template <typename Engine>
 				result_type operator()(Engine & eg) const
-						KERBAL_CONDITIONAL_NOEXCEPT(
-							noexcept(kerbal::utility::declval<kerbal::random::uniform_real_distribution<double> >()(eg))
-						)
+					KERBAL_CONDITIONAL_NOEXCEPT(
+						noexcept(kerbal::utility::declval<kerbal::random::uniform_real_distribution<double> >()(eg))
+					)
 				{
 					kerbal::random::uniform_real_distribution<double> urdis(0, ::exp(this->_mean));
 					double s = urdis(eg);
@@ -92,14 +95,14 @@ namespace kerbal
 
 				KERBAL_CONSTEXPR
 				friend
-				bool operator==(const poisson_distribution& lhs, const poisson_distribution& rhs) KERBAL_NOEXCEPT
+				bool operator==(const poisson_distribution & lhs, const poisson_distribution & rhs) KERBAL_NOEXCEPT
 				{
 					return lhs._mean == rhs._mean;
 				}
 
 				KERBAL_CONSTEXPR
 				friend
-				bool operator!=(const poisson_distribution& lhs, const poisson_distribution& rhs) KERBAL_NOEXCEPT
+				bool operator!=(const poisson_distribution & lhs, const poisson_distribution & rhs) KERBAL_NOEXCEPT
 				{
 					return lhs._mean != rhs._mean;
 				}

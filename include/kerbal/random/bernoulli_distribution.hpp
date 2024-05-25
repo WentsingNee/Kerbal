@@ -32,8 +32,9 @@ namespace kerbal
 
 			public:
 
-				KERBAL_CONSTEXPR bernoulli_distribution(double probability = 0.5) KERBAL_NOEXCEPT :
-						probability(probability)
+				KERBAL_CONSTEXPR
+				bernoulli_distribution(double probability = 0.5) KERBAL_NOEXCEPT :
+					probability(probability)
 				{
 				}
 
@@ -44,12 +45,14 @@ namespace kerbal
 					return (eg() - eg.min() < this->probability * (eg.max() - eg.min())) ? false : true;
 				}
 
-				KERBAL_CONSTEXPR result_type min() const KERBAL_NOEXCEPT
+				KERBAL_CONSTEXPR
+				result_type min() const KERBAL_NOEXCEPT
 				{
 					return false;
 				}
 
-				KERBAL_CONSTEXPR result_type max() const KERBAL_NOEXCEPT
+				KERBAL_CONSTEXPR
+				result_type max() const KERBAL_NOEXCEPT
 				{
 					return true;
 				}

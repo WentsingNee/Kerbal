@@ -41,10 +41,10 @@ namespace kerbal
 
 			template <typename T>
 			struct is_raw_storage_trivially_stored_type :
-					kerbal::type_traits::tribool_conjunction<
-						kerbal::type_traits::try_test_is_trivially_default_constructible<T>,
-						kerbal::type_traits::try_test_is_trivially_destructible<T>
-					>::result::IS_TRUE
+				kerbal::type_traits::tribool_conjunction<
+					kerbal::type_traits::try_test_is_trivially_default_constructible<T>,
+					kerbal::type_traits::try_test_is_trivially_destructible<T>
+				>::result::IS_TRUE
 			{
 			};
 
@@ -53,20 +53,20 @@ namespace kerbal
 			class k_rawst_base;
 
 			template <typename T>
-			class k_rawst_base<T, true>:
-					private kerbal::utility::noncopyable
+			class k_rawst_base<T, true> :
+				private kerbal::utility::noncopyable
 			{
 				protected:
 					typedef T						value_type;
 					typedef const value_type		const_type;
-					typedef value_type&				reference;
-					typedef const value_type&		const_reference;
-					typedef value_type*				pointer;
-					typedef const value_type*		const_pointer;
+					typedef value_type &			reference;
+					typedef const value_type &		const_reference;
+					typedef value_type *			pointer;
+					typedef const value_type *		const_pointer;
 
 #		if __cplusplus >= 201103L
-					typedef value_type&&			rvalue_reference;
-					typedef const value_type&&		const_rvalue_reference;
+					typedef value_type &&			rvalue_reference;
+					typedef const value_type &&		const_rvalue_reference;
 #		endif
 
 					typedef value_type				storage_type;
@@ -91,9 +91,9 @@ namespace kerbal
 #			define FBODY(i) \
 					KERBAL_OPT_PPEXPAND_WITH_COMMA_N(THEAD_NOT_EMPTY, EMPTY, TARGS_DECL, i) \
 					explicit k_rawst_base(kerbal::utility::in_place_t KERBAL_OPT_PPEXPAND_WITH_COMMA_N(LEFT_JOIN_COMMA, EMPTY, ARGS_DECL, i)) : \
-							k_storage(KERBAL_OPT_PPEXPAND_WITH_COMMA_N(REMAINF, EMPTY, ARGS_USE, i)) \
+						k_storage(KERBAL_OPT_PPEXPAND_WITH_COMMA_N(REMAINF, EMPTY, ARGS_USE, i)) \
 					{ \
-					}
+					} \
 
 					KERBAL_PPEXPAND_N(FBODY, KERBAL_PPEXPAND_EMPTY_SEPARATOR, 0)
 					KERBAL_PPEXPAND_N(FBODY, KERBAL_PPEXPAND_EMPTY_SEPARATOR, 20)
@@ -158,20 +158,20 @@ namespace kerbal
 
 
 			template <typename T, std::size_t N>
-			class k_rawst_base<T[N], true>:
-					private kerbal::utility::noncopyable
+			class k_rawst_base<T[N], true> :
+				private kerbal::utility::noncopyable
 			{
 				protected:
 					typedef T						value_type [N];
 					typedef const value_type		const_type;
-					typedef value_type&				reference;
-					typedef const value_type&		const_reference;
-					typedef value_type*				pointer;
-					typedef const value_type*		const_pointer;
+					typedef value_type &			reference;
+					typedef const value_type &		const_reference;
+					typedef value_type *			pointer;
+					typedef const value_type *		const_pointer;
 
 #		if __cplusplus >= 201103L
-					typedef value_type&&			rvalue_reference;
-					typedef const value_type&&		const_rvalue_reference;
+					typedef value_type &&			rvalue_reference;
+					typedef const value_type &&		const_rvalue_reference;
 #		endif
 
 					typedef value_type				storage_type;
@@ -207,7 +207,7 @@ namespace kerbal
 					explicit k_rawst_base(kerbal::utility::in_place_t KERBAL_OPT_PPEXPAND_WITH_COMMA_N(LEFT_JOIN_COMMA, EMPTY, ARGS_DECL, i)) \
 					{ \
 						KERBAL_OPT_PPEXPAND_WITH_COMMA_N(REMAINF, EMPTY, ARGS_USE, i); \
-					}
+					} \
 
 					KERBAL_PPEXPAND_N(FBODY, KERBAL_PPEXPAND_EMPTY_SEPARATOR, 0)
 					KERBAL_PPEXPAND_N(FBODY, KERBAL_PPEXPAND_EMPTY_SEPARATOR, 20)
@@ -272,25 +272,26 @@ namespace kerbal
 
 
 			template <typename T>
-			class k_rawst_base<T, false>:
-					private kerbal::utility::noncopyable
+			class k_rawst_base<T, false> :
+				private kerbal::utility::noncopyable
 			{
 				protected:
 					typedef T						value_type;
 					typedef const value_type		const_type;
-					typedef value_type&				reference;
-					typedef const value_type&		const_reference;
-					typedef value_type*				pointer;
-					typedef const value_type*		const_pointer;
+					typedef value_type &			reference;
+					typedef const value_type &		const_reference;
+					typedef value_type *			pointer;
+					typedef const value_type *		const_pointer;
 
 #		if __cplusplus >= 201103L
-					typedef value_type&&			rvalue_reference;
-					typedef const value_type&&		const_rvalue_reference;
+					typedef value_type &&			rvalue_reference;
+					typedef const value_type &&		const_rvalue_reference;
 #		endif
 
-					typedef
-						typename kerbal::type_traits::aligned_storage<sizeof(value_type), KERBAL_ALIGNOF(value_type)>::type
-					storage_type;
+					typedef typename kerbal::type_traits::aligned_storage<
+						sizeof(value_type),
+						KERBAL_ALIGNOF(value_type)
+					>::type storage_type;
 
 					storage_type k_storage;
 
@@ -313,7 +314,7 @@ namespace kerbal
 					explicit k_rawst_base(kerbal::utility::in_place_t KERBAL_OPT_PPEXPAND_WITH_COMMA_N(LEFT_JOIN_COMMA, EMPTY, ARGS_DECL, i)) \
 					{ \
 						kerbal::memory::construct_at(this->raw_pointer() KERBAL_OPT_PPEXPAND_WITH_COMMA_N(LEFT_JOIN_COMMA, EMPTY, ARGS_USE, i)); \
-					}
+					} \
 
 					KERBAL_PPEXPAND_N(FBODY, KERBAL_PPEXPAND_EMPTY_SEPARATOR, 0)
 					KERBAL_PPEXPAND_N(FBODY, KERBAL_PPEXPAND_EMPTY_SEPARATOR, 20)

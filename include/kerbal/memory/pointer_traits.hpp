@@ -48,7 +48,7 @@ namespace kerbal
 #		endif
 
 			template <typename T>
-			struct pointer_element_type_traits_impl<T*>
+			struct pointer_element_type_traits_impl<T *>
 			{
 					typedef T type;
 			};
@@ -99,9 +99,9 @@ namespace kerbal
 #		endif
 
 			template <typename T, typename U>
-			struct pointer_traits_rebind_helper<T*, U>
+			struct pointer_traits_rebind_helper<T *, U>
 			{
-					typedef U* type;
+					typedef U * type;
 			};
 
 		} // namespace detail
@@ -123,9 +123,9 @@ namespace kerbal
 		};
 
 		template <typename T>
-		struct pointer_traits<T*>
+		struct pointer_traits<T *>
 		{
-				typedef T* pointer;
+				typedef T * pointer;
 
 				typedef T element_type;
 
@@ -134,7 +134,7 @@ namespace kerbal
 				template <typename U>
 				struct rebind
 				{
-						typedef typename kerbal::memory::detail::pointer_traits_rebind_helper<T*, U>::type other;
+						typedef typename kerbal::memory::detail::pointer_traits_rebind_helper<T *, U>::type other;
 				};
 
 		};

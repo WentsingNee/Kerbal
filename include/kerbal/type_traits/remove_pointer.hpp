@@ -33,7 +33,7 @@ namespace kerbal
 			};
 
 			template <typename T, typename U>
-			struct remove_pointer_helper<T, U*>
+			struct remove_pointer_helper<T, U *>
 			{
 					typedef U type;
 			};
@@ -43,9 +43,9 @@ namespace kerbal
 		KERBAL_MODULE_EXPORT
 		template <typename T>
 		struct remove_pointer :
-				kerbal::type_traits::detail::remove_pointer_helper<
-					T, typename kerbal::type_traits::remove_cv<T>::type
-				>
+			kerbal::type_traits::detail::remove_pointer_helper<
+				T, typename kerbal::type_traits::remove_cv<T>::type
+			>
 		{
 		};
 

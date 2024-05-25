@@ -30,8 +30,10 @@ namespace kerbal
 			template <typename ForwardIterator>
 			KERBAL_CONSTEXPR14
 			ForwardIterator
-			heap_left_son(ForwardIterator first, ForwardIterator parent, ForwardIterator last,
-							std::forward_iterator_tag)
+			heap_left_son(
+				ForwardIterator first, ForwardIterator parent, ForwardIterator last,
+				std::forward_iterator_tag
+			)
 			{
 				if (parent == last) {
 					return last;
@@ -54,8 +56,10 @@ namespace kerbal
 			template <typename RandomAccessIterator>
 			KERBAL_CONSTEXPR
 			RandomAccessIterator
-			heap_left_son(RandomAccessIterator first, RandomAccessIterator parent, RandomAccessIterator last,
-							std::random_access_iterator_tag)
+			heap_left_son(
+				RandomAccessIterator first, RandomAccessIterator parent, RandomAccessIterator last,
+				std::random_access_iterator_tag
+			)
 			{
 				return kerbal::iterator::next_at_most(parent, kerbal::iterator::distance(first, parent) + 1, last);
 			}
@@ -73,8 +77,10 @@ namespace kerbal
 			 */
 			template <typename ForwardIterator, typename Compare>
 			KERBAL_CONSTEXPR14
-			void adjust_down_unguarded(ForwardIterator first, ForwardIterator current_adjust, ForwardIterator last,
-										Compare cmp, std::forward_iterator_tag)
+			void adjust_down_unguarded(
+				ForwardIterator first, ForwardIterator current_adjust, ForwardIterator last,
+				Compare cmp, std::forward_iterator_tag
+			)
 			{
 				typedef ForwardIterator iterator;
 				typedef typename kerbal::iterator::iterator_traits<iterator>::difference_type difference_type;
@@ -106,8 +112,10 @@ namespace kerbal
 
 			template <typename RandomAccessIterator, typename Compare>
 			KERBAL_CONSTEXPR14
-			void adjust_down_unguarded(RandomAccessIterator first, RandomAccessIterator current_adjust,
-										RandomAccessIterator last, Compare cmp, std::random_access_iterator_tag)
+			void adjust_down_unguarded(
+				RandomAccessIterator first, RandomAccessIterator current_adjust,
+				RandomAccessIterator last, Compare cmp, std::random_access_iterator_tag
+			)
 			{
 				typedef RandomAccessIterator iterator;
 
@@ -134,8 +142,10 @@ namespace kerbal
 
 			template <typename ForwardIterator, typename Compare>
 			KERBAL_CONSTEXPR14
-			void adjust_down_unguarded(ForwardIterator first, ForwardIterator current_adjust, ForwardIterator last,
-										Compare cmp)
+			void adjust_down_unguarded(
+				ForwardIterator first, ForwardIterator current_adjust, ForwardIterator last,
+				Compare cmp
+			)
 			{
 				adjust_down_unguarded(first, current_adjust, last, cmp, kerbal::iterator::iterator_category(first));
 			}
@@ -145,8 +155,10 @@ namespace kerbal
 			 */
 			template <typename ForwardIterator, typename Compare>
 			KERBAL_CONSTEXPR14
-			void adjust_top_down_unguarded(ForwardIterator first, ForwardIterator last, Compare cmp,
-											std::forward_iterator_tag)
+			void adjust_top_down_unguarded(
+				ForwardIterator first, ForwardIterator last, Compare cmp,
+				std::forward_iterator_tag
+			)
 			{
 				typedef ForwardIterator iterator;
 				typedef typename kerbal::iterator::iterator_traits<iterator>::difference_type difference_type;
@@ -182,8 +194,10 @@ namespace kerbal
 			 */
 			template <typename RandomAccessIterator, typename Compare>
 			KERBAL_CONSTEXPR14
-			void adjust_top_down_unguarded(RandomAccessIterator first, RandomAccessIterator last, Compare cmp,
-											std::random_access_iterator_tag)
+			void adjust_top_down_unguarded(
+				RandomAccessIterator first, RandomAccessIterator last, Compare cmp,
+				std::random_access_iterator_tag
+			)
 			{
 				typedef RandomAccessIterator iterator;
 
@@ -228,8 +242,11 @@ namespace kerbal
 			typedef BidirectionalIterator iterator;
 			iterator current_adjust(kerbal::iterator::prev(last));
 			while (current_adjust != first) {
-				iterator parent(kerbal::iterator::prev(
-						kerbal::iterator::midden_iterator(first, kerbal::iterator::next(current_adjust))));
+				iterator parent(
+					kerbal::iterator::prev(
+						kerbal::iterator::midden_iterator(first, kerbal::iterator::next(current_adjust))
+					)
+				);
 				if (cmp(*parent, *current_adjust)) {
 					kerbal::algorithm::iter_swap(parent, current_adjust);
 					current_adjust = parent;

@@ -37,9 +37,9 @@ namespace kerbal
 			// check whether a * (m - 1) will exceed the representation range of Integer type
 			template <typename ResultType, ResultType a, ResultType m, typename Integer>
 			struct is_never_overflow_for_mul_mod :
-					kerbal::type_traits::bool_constant<
-							m - 1 <= kerbal::numeric::numeric_limits<Integer>::MAX::value / a
-					>
+				kerbal::type_traits::bool_constant<
+					m - 1 <= kerbal::numeric::numeric_limits<Integer>::MAX::value / a
+				>
 			{
 			};
 
@@ -49,7 +49,7 @@ namespace kerbal
 				private:
 					template <typename Integer>
 					struct is_never_overflow :
-							is_never_overflow_for_mul_mod<ResultType, a, m, Integer>
+						is_never_overflow_for_mul_mod<ResultType, a, m, Integer>
 					{
 					};
 
@@ -78,12 +78,12 @@ namespace kerbal
 			template <typename ResultType, ResultType a, ResultType m>
 			struct static_mul_mod_selector
 			{
-					typedef kerbal::type_traits::integral_constant<
-							int,
-							m != 0 ?
-								((a % m != 0) ? 0 : 1) :
-								2
-					> type;
+				typedef kerbal::type_traits::integral_constant<
+					int,
+					m != 0 ?
+						((a % m != 0) ? 0 : 1) :
+						2
+				> type;
 			};
 
 			template <typename ResultType, ResultType a, ResultType m, int>
@@ -91,7 +91,7 @@ namespace kerbal
 
 			template <typename ResultType, ResultType a, ResultType m>
 			struct static_mul_mod_impl :
-					static_mul_mod_impl_dispatch<ResultType, a, m, static_mul_mod_selector<ResultType, a, m>::type::value>
+				static_mul_mod_impl_dispatch<ResultType, a, m, static_mul_mod_selector<ResultType, a, m>::type::value>
 			{
 			};
 
@@ -122,9 +122,10 @@ namespace kerbal
 
 						ResultType t0 = a * (s % Q::value);
 						ResultType t1 =
-								R::value <= Q::value ?
-								R::value * (s / Q::value) :
-								static_mul_mod_impl<ResultType, R::value, m>::cacl(s / Q::value);
+							R::value <= Q::value ?
+							R::value * (s / Q::value) :
+							static_mul_mod_impl<ResultType, R::value, m>::cacl(s / Q::value)
+						;
 						return t0 - t1 + (t0 < t1) * m;
 					}
 
@@ -223,9 +224,10 @@ namespace kerbal
 
 						ResultType t0 = a * (s % q);
 						ResultType t1 =
-								r <= q ?
-								r * (s / q) :
-								cacl_impl2(r, s / q);
+							r <= q ?
+							r * (s / q) :
+							cacl_impl2(r, s / q)
+						;
 						return t0 - t1 + (t0 < t1) * m;
 					}
 
@@ -414,11 +416,11 @@ namespace kerbal
 				KERBAL_CONSTEXPR
 				explicit
 				linear_congruential_engine(const result_type & seed = DEFAULT_SEED::value) KERBAL_NOEXCEPT :
-						state_value(
-								m == 0u ?
-								(seed == 0u ? 1u : seed) :
-								(seed % m == 0u ? 1u : seed)
-						)
+					state_value(
+						m == 0u ?
+						(seed == 0u ? 1u : seed) :
+						(seed % m == 0u ? 1u : seed)
+					)
 				{
 				}
 
@@ -519,10 +521,17 @@ namespace kerbal
 
 		};
 
-		typedef kerbal::random::linear_congruential_engine<kerbal::compatibility::uint32_t, 16807, 0, 2147483647>
-										minstd_rand0;
-		typedef kerbal::random::linear_congruential_engine<kerbal::compatibility::uint32_t, 48271, 0, 2147483647>
-										minstd_rand;
+		typedef
+		kerbal::random::linear_congruential_engine<
+			kerbal::compatibility::uint32_t,
+			16807, 0, 2147483647
+		> minstd_rand0;
+
+		typedef
+		kerbal::random::linear_congruential_engine<
+			kerbal::compatibility::uint32_t,
+			48271, 0, 2147483647
+		> minstd_rand;
 
 	} // namespace random
 

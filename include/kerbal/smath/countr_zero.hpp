@@ -33,21 +33,21 @@ namespace kerbal
 
 			template <typename Unsigned, Unsigned x>
 			struct countr_zero_is_zero_impl<Unsigned, x, false> :
-					kerbal::type_traits::integral_constant<int, 0>
+				kerbal::type_traits::integral_constant<int, 0>
 			{
 			};
 
 			template <typename Unsigned, Unsigned x>
 			struct countr_zero_is_zero_impl<Unsigned, x, true> :
-					kerbal::type_traits::integral_constant<
-						int,
-						countr_zero_is_zero_impl<
-							Unsigned,
-							(x >> 1) | (
-								static_cast<Unsigned>(1u) << (sizeof(Unsigned) * CHAR_BIT - 1)
-							)
-						>::value + 1
-					>
+				kerbal::type_traits::integral_constant<
+					int,
+					countr_zero_is_zero_impl<
+						Unsigned,
+						(x >> 1) | (
+							static_cast<Unsigned>(1u) << (sizeof(Unsigned) * CHAR_BIT - 1)
+						)
+					>::value + 1
+				>
 			{
 			};
 
@@ -58,16 +58,16 @@ namespace kerbal
 
 			template <typename Unsigned, Unsigned x>
 			struct countr_zero_is_zero_handler<Unsigned, x, false> :
-					countr_zero_is_zero_impl<Unsigned, x>
+				countr_zero_is_zero_impl<Unsigned, x>
 			{
 			};
 
 			template <typename Unsigned, Unsigned x>
 			struct countr_zero_is_zero_handler<Unsigned, x, true> :
-					kerbal::type_traits::integral_constant<
-						int,
-						CHAR_BIT * sizeof(Unsigned)
-					>
+				kerbal::type_traits::integral_constant<
+					int,
+					CHAR_BIT * sizeof(Unsigned)
+				>
 			{
 			};
 
@@ -75,10 +75,13 @@ namespace kerbal
 
 		template <typename Unsigned, Unsigned x>
 		struct countr_zero :
-				kerbal::smath::detail::countr_zero_is_zero_handler<Unsigned, x>
+			kerbal::smath::detail::countr_zero_is_zero_handler<Unsigned, x>
 		{
 			private:
-				KERBAL_STATIC_ASSERT(kerbal::type_traits::is_unsigned<Unsigned>::value, "Type should be unsigned");
+				KERBAL_STATIC_ASSERT(
+					kerbal::type_traits::is_unsigned<Unsigned>::value,
+					"Type should be unsigned"
+				);
 		};
 
 	} // namespace smath

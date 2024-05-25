@@ -44,7 +44,7 @@ namespace kerbal
 
 #define DEF_FWD(NAME) \
 		template <typename T = void> \
-		struct NAME;
+		struct NAME; \
 
 
 #define DEF_PLAIN(NAME, OP) \
@@ -53,14 +53,14 @@ namespace kerbal
 		{ \
 				KERBAL_CONSTEXPR \
 				bool operator()(const T & lhs, const T & rhs) const \
-						KERBAL_CONDITIONAL_NOEXCEPT( \
-								noexcept(static_cast<bool>(lhs OP rhs)) \
-						) \
+					KERBAL_CONDITIONAL_NOEXCEPT( \
+						noexcept(static_cast<bool>(lhs OP rhs)) \
+					) \
 				{ \
 					KERBAL_STATIC_ASSERT(!kerbal::type_traits::is_array<T>::value, "comparison between two arrays"); \
 					return static_cast<bool>(lhs OP rhs); \
 				} \
-		};
+		}; \
 
 
 #	if __cplusplus < 201103L
@@ -78,7 +78,7 @@ namespace kerbal
 					KERBAL_STATIC_ASSERT(!kerbal::type_traits::is_array<T>::value, "comparison between two arrays"); \
 					return static_cast<bool>(lhs OP rhs); \
 				} \
-		};
+		}; \
 
 #	else
 
@@ -92,9 +92,9 @@ namespace kerbal
 				template <typename T, typename U> \
 				KERBAL_CONSTEXPR \
 				bool operator()(T && lhs, U && rhs) const \
-						KERBAL_CONDITIONAL_NOEXCEPT( \
-							noexcept(static_cast<bool>(kerbal::utility::forward<T>(lhs) OP kerbal::utility::forward<U>(rhs))) \
-						) \
+					KERBAL_CONDITIONAL_NOEXCEPT( \
+						noexcept(static_cast<bool>(kerbal::utility::forward<T>(lhs) OP kerbal::utility::forward<U>(rhs))) \
+					) \
 				{ \
 					typedef typename kerbal::type_traits::remove_cvref<T>::type T0; \
 					typedef typename kerbal::type_traits::remove_cvref<U>::type U0; \
@@ -102,7 +102,7 @@ namespace kerbal
 					KERBAL_STATIC_ASSERT(!kerbal::type_traits::is_array<T0>::value, "comparison between two arrays"); \
 					return static_cast<bool>(kerbal::utility::forward<T>(lhs) OP kerbal::utility::forward<U>(rhs)); \
 				} \
-		};
+		}; \
 
 #	endif
 
@@ -136,20 +136,20 @@ namespace kerbal
 #	if __cplusplus >= 201103L && KERBAL_HAS_EXCEPTIONS_SUPPORT
 
 				typedef kerbal::type_traits::bool_constant<
-						kerbal::type_traits::try_test_is_nothrow_default_constructible<ValuePredict>::IS_TRUE::value &&
-						noexcept(
-							kerbal::utility::declval<ValuePredict>()(
-								kerbal::utility::declval<T>(), kerbal::utility::declval<T>()
-							)
+					kerbal::type_traits::try_test_is_nothrow_default_constructible<ValuePredict>::IS_TRUE::value &&
+					noexcept(
+						kerbal::utility::declval<ValuePredict>()(
+							kerbal::utility::declval<T>(), kerbal::utility::declval<T>()
 						)
+					)
 				> IS_NOTHROW_COMPARABLE;
 
 #	endif
 
 			public:
 				KERBAL_CONSTEXPR14
-				bool operator()(const T (&lhs) [N], const T (&rhs) [N]) const
-						KERBAL_CONDITIONAL_NOEXCEPT(IS_NOTHROW_COMPARABLE::value)
+				bool operator()(const T (& lhs)[N], const T (& rhs)[N]) const
+					KERBAL_CONDITIONAL_NOEXCEPT(IS_NOTHROW_COMPARABLE::value)
 				{
 					ValuePredict pred;
 					for (std::size_t i = 0; i < N; ++i) {
@@ -174,20 +174,20 @@ namespace kerbal
 #	if __cplusplus >= 201103L && KERBAL_HAS_EXCEPTIONS_SUPPORT
 
 				typedef kerbal::type_traits::bool_constant<
-						kerbal::type_traits::try_test_is_nothrow_default_constructible<ValuePredict>::IS_TRUE::value &&
-						noexcept(
-							kerbal::utility::declval<ValuePredict>()(
-								kerbal::utility::declval<T>(), kerbal::utility::declval<T>()
-							)
+					kerbal::type_traits::try_test_is_nothrow_default_constructible<ValuePredict>::IS_TRUE::value &&
+					noexcept(
+						kerbal::utility::declval<ValuePredict>()(
+							kerbal::utility::declval<T>(), kerbal::utility::declval<T>()
 						)
+					)
 				> IS_NOTHROW_COMPARABLE;
 
 #	endif
 
 			public:
 				KERBAL_CONSTEXPR14
-				bool operator()(const T (&lhs) [N], const T (&rhs) [N]) const
-						KERBAL_CONDITIONAL_NOEXCEPT(IS_NOTHROW_COMPARABLE::value)
+				bool operator()(const T (& lhs)[N], const T (& rhs)[N]) const
+					KERBAL_CONDITIONAL_NOEXCEPT(IS_NOTHROW_COMPARABLE::value)
 				{
 					ValuePredict pred;
 					for (std::size_t i = 0; i < N; ++i) {
@@ -212,20 +212,20 @@ namespace kerbal
 #	if __cplusplus >= 201103L && KERBAL_HAS_EXCEPTIONS_SUPPORT
 
 				typedef kerbal::type_traits::bool_constant<
-						kerbal::type_traits::try_test_is_nothrow_default_constructible<ValuePredict>::IS_TRUE::value &&
-						noexcept(
-							kerbal::utility::declval<ValuePredict>()(
-								kerbal::utility::declval<T>(), kerbal::utility::declval<T>()
-							)
+					kerbal::type_traits::try_test_is_nothrow_default_constructible<ValuePredict>::IS_TRUE::value &&
+					noexcept(
+						kerbal::utility::declval<ValuePredict>()(
+							kerbal::utility::declval<T>(), kerbal::utility::declval<T>()
 						)
+					)
 				> IS_NOTHROW_COMPARABLE;
 
 #	endif
 
 			public:
 				KERBAL_CONSTEXPR14
-				bool operator()(const T (&lhs) [N], const T (&rhs) [N]) const
-						KERBAL_CONDITIONAL_NOEXCEPT(IS_NOTHROW_COMPARABLE::value)
+				bool operator()(const T (& lhs)[N], const T (& rhs) [N]) const
+					KERBAL_CONDITIONAL_NOEXCEPT(IS_NOTHROW_COMPARABLE::value)
 				{
 					ValuePredict pred;
 					for (std::size_t i = 0; i < N; ++i) {
@@ -252,20 +252,20 @@ namespace kerbal
 #	if __cplusplus >= 201103L && KERBAL_HAS_EXCEPTIONS_SUPPORT
 
 				typedef kerbal::type_traits::bool_constant<
-						kerbal::type_traits::try_test_is_nothrow_default_constructible<ValuePredict>::IS_TRUE::value &&
-						noexcept(
-							kerbal::utility::declval<ValuePredict>()(
-								kerbal::utility::declval<T>(), kerbal::utility::declval<T>()
-							)
+					kerbal::type_traits::try_test_is_nothrow_default_constructible<ValuePredict>::IS_TRUE::value &&
+					noexcept(
+						kerbal::utility::declval<ValuePredict>()(
+							kerbal::utility::declval<T>(), kerbal::utility::declval<T>()
 						)
+					)
 				> IS_NOTHROW_COMPARABLE;
 
 #	endif
 
 			public:
 				KERBAL_CONSTEXPR14
-				bool operator()(const T (&lhs) [N], const T (&rhs) [N]) const
-						KERBAL_CONDITIONAL_NOEXCEPT(IS_NOTHROW_COMPARABLE::value)
+				bool operator()(const T (& lhs)[N], const T (& rhs)[N]) const
+					KERBAL_CONDITIONAL_NOEXCEPT(IS_NOTHROW_COMPARABLE::value)
 				{
 					ValuePredict pred;
 					for (std::size_t i = 0; i < N; ++i) {
@@ -292,20 +292,20 @@ namespace kerbal
 #	if __cplusplus >= 201103L && KERBAL_HAS_EXCEPTIONS_SUPPORT
 
 				typedef kerbal::type_traits::bool_constant<
-						kerbal::type_traits::try_test_is_nothrow_default_constructible<ValuePredict>::IS_TRUE::value &&
-						noexcept(
-							kerbal::utility::declval<ValuePredict>()(
-								kerbal::utility::declval<T>(), kerbal::utility::declval<T>()
-							)
+					kerbal::type_traits::try_test_is_nothrow_default_constructible<ValuePredict>::IS_TRUE::value &&
+					noexcept(
+						kerbal::utility::declval<ValuePredict>()(
+							kerbal::utility::declval<T>(), kerbal::utility::declval<T>()
 						)
+					)
 				> IS_NOTHROW_COMPARABLE;
 
 #	endif
 
 			public:
 				KERBAL_CONSTEXPR14
-				bool operator()(const T (&lhs) [N], const T (&rhs) [N]) const
-						KERBAL_CONDITIONAL_NOEXCEPT(IS_NOTHROW_COMPARABLE::value)
+				bool operator()(const T (& lhs)[N], const T (& rhs)[N]) const
+					KERBAL_CONDITIONAL_NOEXCEPT(IS_NOTHROW_COMPARABLE::value)
 				{
 					ValuePredict pred;
 					for (std::size_t i = 0; i < N; ++i) {
@@ -335,20 +335,20 @@ namespace kerbal
 #	if __cplusplus >= 201103L && KERBAL_HAS_EXCEPTIONS_SUPPORT
 
 				typedef kerbal::type_traits::bool_constant<
-						kerbal::type_traits::try_test_is_nothrow_default_constructible<ValuePredict>::IS_TRUE::value &&
-						noexcept(
-							kerbal::utility::declval<ValuePredict>()(
-								kerbal::utility::declval<T>(), kerbal::utility::declval<T>()
-							)
+					kerbal::type_traits::try_test_is_nothrow_default_constructible<ValuePredict>::IS_TRUE::value &&
+					noexcept(
+						kerbal::utility::declval<ValuePredict>()(
+							kerbal::utility::declval<T>(), kerbal::utility::declval<T>()
 						)
+					)
 				> IS_NOTHROW_COMPARABLE;
 
 #	endif
 
 			public:
 				KERBAL_CONSTEXPR14
-				bool operator()(const T (&lhs) [N], const T (&rhs) [N]) const
-						KERBAL_CONDITIONAL_NOEXCEPT(IS_NOTHROW_COMPARABLE::value)
+				bool operator()(const T (& lhs)[N], const T (& rhs)[N]) const
+					KERBAL_CONDITIONAL_NOEXCEPT(IS_NOTHROW_COMPARABLE::value)
 				{
 					ValuePredict pred;
 					for (std::size_t i = 0; i < N; ++i) {

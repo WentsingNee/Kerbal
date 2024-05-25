@@ -21,7 +21,7 @@ namespace kerbal
 	{
 
 		KERBAL_MODULE_EXPORT
-		template <bool condition, typename T = void>
+		template <bool Condition, typename T = void>
 		struct enable_if
 		{
 		};

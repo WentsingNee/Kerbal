@@ -26,9 +26,11 @@ namespace kerbal
 
 		template <typename InputIterator1, typename InputIterator2, typename OutputIterator, typename BinaryPredict>
 		KERBAL_CONSTEXPR14
-		OutputIterator set_union(InputIterator1 first1, InputIterator1 last1,
-								 InputIterator2 first2, InputIterator2 last2,
-								 OutputIterator d_first, BinaryPredict cmp)
+		OutputIterator set_union(
+			InputIterator1 first1, InputIterator1 last1,
+			InputIterator2 first2, InputIterator2 last2,
+			OutputIterator d_first, BinaryPredict cmp
+		)
 		{
 			while (first1 != last1) {
 				if (first2 != last2) {
@@ -54,11 +56,18 @@ namespace kerbal
 
 		template <typename InputIterator1, typename InputIterator2, typename OutputIterator>
 		KERBAL_CONSTEXPR14
-		OutputIterator set_union(InputIterator1 first1, InputIterator1 last1,
-								 InputIterator2 first2, InputIterator2 last2,
-								 OutputIterator d_first)
+		OutputIterator set_union(
+			InputIterator1 first1, InputIterator1 last1,
+			InputIterator2 first2, InputIterator2 last2,
+			OutputIterator d_first
+		)
 		{
-			return kerbal::algorithm::set_union(first1, last1, first2, last2, d_first, kerbal::compare::binary_type_less<void, void>());
+			return kerbal::algorithm::set_union(
+				first1, last1,
+				first2, last2,
+				d_first,
+				kerbal::compare::binary_type_less<void, void>()
+			);
 		}
 
 	} // namespace algorithm

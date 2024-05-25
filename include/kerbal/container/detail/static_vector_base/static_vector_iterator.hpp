@@ -39,22 +39,31 @@ namespace kerbal
 
 			template <typename DerivedIterator, typename Pointer, typename StorageType>
 			class sv_iterbase:
-					//forward iterator interface
-					public kerbal::operators::dereferenceable<DerivedIterator, Pointer>, // it->
-					public kerbal::operators::equality_comparable<DerivedIterator>, // it != jt
-					public kerbal::operators::incrementable<DerivedIterator>, // it++
-					//bidirectional iterator interface
-					public kerbal::operators::decrementable<DerivedIterator>, // it--
-					//random access iterator interface
-					public kerbal::operators::addable<DerivedIterator, typename kerbal::iterator::iterator_traits<Pointer>::difference_type>, // it + N
-					public kerbal::operators::addable_left<DerivedIterator, typename kerbal::iterator::iterator_traits<Pointer>::difference_type>,// N + it
-					public kerbal::operators::less_than_comparable<DerivedIterator>, // it > jt, it <= jt, it >= jt
-					public kerbal::operators::subtractable<DerivedIterator, typename kerbal::iterator::iterator_traits<Pointer>::difference_type> // it - N
+				// forward iterator interface
+				public kerbal::operators::dereferenceable<DerivedIterator, Pointer>, // it->
+				public kerbal::operators::equality_comparable<DerivedIterator>, // it != jt
+				public kerbal::operators::incrementable<DerivedIterator>, // it++
+				// bidirectional iterator interface
+				public kerbal::operators::decrementable<DerivedIterator>, // it--
+				// random access iterator interface
+				public kerbal::operators::addable<
+					DerivedIterator,
+					typename kerbal::iterator::iterator_traits<Pointer>::difference_type
+				>, // it + N
+				public kerbal::operators::addable_left<
+					DerivedIterator,
+					typename kerbal::iterator::iterator_traits<Pointer>::difference_type
+				>,// N + it
+				public kerbal::operators::less_than_comparable<DerivedIterator>, // it > jt, it <= jt, it >= jt
+				public kerbal::operators::subtractable<
+					DerivedIterator,
+					typename kerbal::iterator::iterator_traits<Pointer>::difference_type
+				> // it - N
 			{
 				protected:
 					typedef StorageType storage_type_for_iterator;
 
-					storage_type_for_iterator* current;
+					storage_type_for_iterator * current;
 
 				private:
 					typedef kerbal::iterator::iterator_traits<Pointer>		iterator_traits;
@@ -68,13 +77,13 @@ namespace kerbal
 
 				public:
 					KERBAL_CONSTEXPR
-					explicit sv_iterbase(storage_type_for_iterator* current) KERBAL_NOEXCEPT :
-							current(current)
+					explicit sv_iterbase(storage_type_for_iterator * current) KERBAL_NOEXCEPT :
+						current(current)
 					{
 					}
 
 					//===================
-					//forward iterator interface
+					// forward iterator interface
 
 					KERBAL_CONSTEXPR14
 					reference operator*() const KERBAL_NOEXCEPT
@@ -83,30 +92,31 @@ namespace kerbal
 					}
 
 					KERBAL_CONSTEXPR14
-					DerivedIterator& operator++() KERBAL_NOEXCEPT
+					DerivedIterator & operator++() KERBAL_NOEXCEPT
 					{
 						++this->current;
-						return static_cast<DerivedIterator&>(*this);
+						return static_cast<DerivedIterator &>(*this);
 					}
 
 					KERBAL_CONSTEXPR
-					friend bool operator==(const DerivedIterator & lhs, const DerivedIterator & rhs) KERBAL_NOEXCEPT
+					friend
+					bool operator==(const DerivedIterator & lhs, const DerivedIterator & rhs) KERBAL_NOEXCEPT
 					{
 						return lhs.current == rhs.current;
 					}
 
 					//===================
-					//bidirectional iterator interface
+					// bidirectional iterator interface
 
 					KERBAL_CONSTEXPR14
-					DerivedIterator& operator--() KERBAL_NOEXCEPT
+					DerivedIterator & operator--() KERBAL_NOEXCEPT
 					{
 						--this->current;
-						return static_cast<DerivedIterator&>(*this);
+						return static_cast<DerivedIterator &>(*this);
 					}
 
 					//===================
-					//random access iterator interface
+					// random access iterator interface
 
 					KERBAL_CONSTEXPR
 					friend difference_type
@@ -116,27 +126,28 @@ namespace kerbal
 					}
 
 					KERBAL_CONSTEXPR14
-					DerivedIterator& operator+=(const difference_type & delta) KERBAL_NOEXCEPT
+					DerivedIterator & operator+=(const difference_type & delta) KERBAL_NOEXCEPT
 					{
 						this->current += delta;
-						return static_cast<DerivedIterator&>(*this);
+						return static_cast<DerivedIterator &>(*this);
 					}
 
 					KERBAL_CONSTEXPR14
-					DerivedIterator& operator-=(const difference_type & delta) KERBAL_NOEXCEPT
+					DerivedIterator & operator-=(const difference_type & delta) KERBAL_NOEXCEPT
 					{
 						this->current -= delta;
-						return static_cast<DerivedIterator&>(*this);
+						return static_cast<DerivedIterator &>(*this);
 					}
 
 					KERBAL_CONSTEXPR14
 					reference operator[](const difference_type & dist) const KERBAL_NOEXCEPT
 					{
-						return *(static_cast<const DerivedIterator&>(*this) + dist);
+						return *(static_cast<const DerivedIterator &>(*this) + dist);
 					}
 
 					KERBAL_CONSTEXPR
-					friend bool operator<(const DerivedIterator & lhs, const DerivedIterator & rhs) KERBAL_NOEXCEPT
+					friend
+					bool operator<(const DerivedIterator & lhs, const DerivedIterator & rhs) KERBAL_NOEXCEPT
 					{
 						return lhs.current < rhs.current;
 					}
@@ -147,11 +158,12 @@ namespace kerbal
 
 			// Iterator to static_vector.
 			template <typename ValueType>
-			class sv_iter: public sv_iterbase<
-													sv_iter<ValueType>,
-													ValueType*,
-													kerbal::memory::raw_storage<ValueType>
-											>
+			class sv_iter :
+				public sv_iterbase<
+					sv_iter<ValueType>,
+					ValueType *,
+					kerbal::memory::raw_storage<ValueType>
+				>
 			{
 				private:
 					template <typename T, std::size_t N>
@@ -160,42 +172,51 @@ namespace kerbal
 					friend class sv_kiter<ValueType>;
 
 					typedef kerbal::memory::raw_storage<ValueType> storage_type;
-					typedef sv_iterbase<sv_iter<ValueType>, ValueType*, storage_type> super;
+					typedef sv_iterbase<
+						sv_iter<ValueType>,
+						ValueType *,
+						storage_type
+					> super;
 
 				public:
 					KERBAL_CONSTEXPR
-					explicit sv_iter(storage_type* current) KERBAL_NOEXCEPT :
-							super(current)
+					explicit sv_iter(storage_type * current) KERBAL_NOEXCEPT :
+						super(current)
 					{
 					}
 			};
 
 			// Constant iterator to static_vector.
 			template <typename ValueType>
-			class sv_kiter: public sv_iterbase<
-													sv_kiter<ValueType>,
-													const ValueType*,
-													const kerbal::memory::raw_storage<ValueType>
-											>
+			class sv_kiter :
+				public sv_iterbase<
+					sv_kiter<ValueType>,
+					const ValueType *,
+					const kerbal::memory::raw_storage<ValueType>
+				>
 			{
 				private:
 					template <typename T, std::size_t N>
 					friend class kerbal::container::static_vector;
 
 					typedef kerbal::memory::raw_storage<ValueType> storage_type;
-					typedef sv_iterbase<sv_kiter<ValueType>, const ValueType*, const storage_type> super;
+					typedef sv_iterbase<
+						sv_kiter<ValueType>,
+						const ValueType *,
+						const storage_type
+					> super;
 					typedef sv_iter<ValueType> iterator;
 
 				public:
 					KERBAL_CONSTEXPR
-					explicit sv_kiter(const storage_type* current) KERBAL_NOEXCEPT :
-							super(current)
+					explicit sv_kiter(const storage_type * current) KERBAL_NOEXCEPT :
+						super(current)
 					{
 					}
 
 					KERBAL_CONSTEXPR
 					sv_kiter(const iterator & current) KERBAL_NOEXCEPT :
-							super(current.current)
+						super(current.current)
 					{
 					}
 
@@ -203,7 +224,7 @@ namespace kerbal
 					KERBAL_CONSTEXPR14
 					iterator cast_to_mutable() const KERBAL_NOEXCEPT
 					{
-						return iterator(const_cast<storage_type*>(this->current));
+						return iterator(const_cast<storage_type *>(this->current));
 					}
 
 			};

@@ -65,36 +65,41 @@ namespace kerbal
 				protected:
 					KERBAL_CONSTEXPR
 					flat_multiset_base() :
-							super()
+						super()
 					{
 					}
 
 					KERBAL_CONSTEXPR
 					explicit flat_multiset_base(key_compare kc) :
-							super(kc)
+						super(kc)
 					{
 					}
 
 					template <typename InputIterator>
 					KERBAL_CONSTEXPR14
-					flat_multiset_base(InputIterator first, InputIterator last,
-									   typename kerbal::type_traits::enable_if<
-								kerbal::iterator::is_input_compatible_iterator<InputIterator>::value,
-								int
-							>::type = 0) :
-							super()
+					flat_multiset_base(
+						InputIterator first, InputIterator last,
+						typename kerbal::type_traits::enable_if<
+							kerbal::iterator::is_input_compatible_iterator<InputIterator>::value,
+							int
+						>::type = 0
+					) :
+						super()
 					{
 						this->assign(first, last);
 					}
 
 					template <typename InputIterator>
 					KERBAL_CONSTEXPR14
-					flat_multiset_base(InputIterator first, InputIterator last, key_compare kc,
-									   typename kerbal::type_traits::enable_if<
-								kerbal::iterator::is_input_compatible_iterator<InputIterator>::value,
-								int
-							>::type = 0) :
-							super(kc)
+					flat_multiset_base(
+						InputIterator first, InputIterator last,
+						key_compare kc,
+						typename kerbal::type_traits::enable_if<
+							kerbal::iterator::is_input_compatible_iterator<InputIterator>::value,
+							int
+						>::type = 0
+					) :
+						super(kc)
 					{
 						this->assign(first, last);
 					}
@@ -103,13 +108,13 @@ namespace kerbal
 
 					KERBAL_CONSTEXPR14
 					flat_multiset_base(std::initializer_list<value_type> ilist) :
-							flat_multiset_base(ilist.begin(), ilist.end())
+						flat_multiset_base(ilist.begin(), ilist.end())
 					{
 					}
 
 					KERBAL_CONSTEXPR14
 					flat_multiset_base(std::initializer_list<value_type> ilist, key_compare kc) :
-							flat_multiset_base(ilist.begin(), ilist.end(), kc)
+						flat_multiset_base(ilist.begin(), ilist.end(), kc)
 					{
 					}
 
@@ -132,7 +137,7 @@ namespace kerbal
 					template <typename InputIterator>
 					KERBAL_CONSTEXPR14
 					typename kerbal::type_traits::enable_if<
-							kerbal::iterator::is_input_compatible_iterator<InputIterator>::value
+						kerbal::iterator::is_input_compatible_iterator<InputIterator>::value
 					>::type
 					assign(InputIterator first, InputIterator last)
 					{
@@ -142,7 +147,7 @@ namespace kerbal
 					template <typename InputIterator>
 					KERBAL_CONSTEXPR14
 					typename kerbal::type_traits::enable_if<
-							kerbal::iterator::is_input_compatible_iterator<InputIterator>::value
+						kerbal::iterator::is_input_compatible_iterator<InputIterator>::value
 					>::type
 					assign(InputIterator first, InputIterator last, key_compare kc)
 					{

@@ -19,20 +19,21 @@
 
 #include <omp.h>
 
+
 namespace kerbal
 {
 
 	namespace openmp
 	{
 
-		class mutex: private kerbal::utility::noncopyable
+		class mutex : private kerbal::utility::noncopyable
 		{
 			private:
 				::omp_lock_t omp_lock;
 
 			public:
-				mutex() KERBAL_NOEXCEPT
-						: omp_lock()
+				mutex() KERBAL_NOEXCEPT :
+					omp_lock()
 				{
 					::omp_init_lock(&omp_lock);
 				}
@@ -59,14 +60,14 @@ namespace kerbal
 
 		};
 
-		class nest_mutex: private kerbal::utility::noncopyable
+		class nest_mutex : private kerbal::utility::noncopyable
 		{
 			private:
 				::omp_nest_lock_t omp_lock;
 
 			public:
-				nest_mutex() KERBAL_NOEXCEPT
-						: omp_lock()
+				nest_mutex() KERBAL_NOEXCEPT :
+					omp_lock()
 				{
 					::omp_init_nest_lock(&omp_lock);
 				}

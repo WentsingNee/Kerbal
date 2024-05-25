@@ -59,9 +59,9 @@ namespace kerbal
 
 		template <typename T, typename ... Args>
 		struct is_trivially_constructible :
-				kerbal::type_traits::bool_constant<
-					std::is_trivially_constructible<T, Args...>::value
-				>
+			kerbal::type_traits::bool_constant<
+				std::is_trivially_constructible<T, Args...>::value
+			>
 		{
 		};
 

@@ -76,7 +76,7 @@ namespace kerbal
 			typedef kerbal::memory::allocator_traits<Allocator> allocator_traits; \
 			allocator_traits::construct(alloc, p KERBAL_OPT_PPEXPAND_WITH_COMMA_N(LEFT_JOIN_COMMA, EMPTY, ARGS_USE, i)); \
 			return p; \
-		}
+		} \
 
 		KERBAL_PPEXPAND_N(FBODY, KERBAL_PPEXPAND_EMPTY_SEPARATOR, 0)
 		KERBAL_PPEXPAND_N(FBODY, KERBAL_PPEXPAND_EMPTY_SEPARATOR, 20)
@@ -92,10 +92,10 @@ namespace kerbal
 
 		template <typename Allocator, typename T, typename ... Args>
 		KERBAL_CONSTEXPR14
-		T * construct_at_using_allocator(Allocator & alloc, T * p, Args&& ... args)
-				KERBAL_CONDITIONAL_NOEXCEPT(
-					noexcept(kerbal::memory::allocator_traits<Allocator>::construct(alloc, p, kerbal::utility::forward<Args>(args)...))
-				)
+		T * construct_at_using_allocator(Allocator & alloc, T * p, Args && ... args)
+			KERBAL_CONDITIONAL_NOEXCEPT(
+				noexcept(kerbal::memory::allocator_traits<Allocator>::construct(alloc, p, kerbal::utility::forward<Args>(args)...))
+			)
 		{
 			typedef kerbal::memory::allocator_traits<Allocator> allocator_traits;
 			allocator_traits::construct(alloc, p, kerbal::utility::forward<Args>(args)...);
@@ -121,7 +121,12 @@ namespace kerbal
 
 			template <typename Allocator, typename ForwardIterator>
 			KERBAL_CONSTEXPR20
-			void k_uninitialized_value_construct_using_allocator(Allocator & alloc, ForwardIterator first, ForwardIterator last, UI_VAL_CONSTRUCT_UA_VER_DEFAULT)
+			void
+			k_uninitialized_value_construct_using_allocator(
+				Allocator & alloc,
+				ForwardIterator first, ForwardIterator last,
+				UI_VAL_CONSTRUCT_UA_VER_DEFAULT
+			)
 			{
 				typedef ForwardIterator iterator;
 				iterator current(first);
@@ -149,7 +154,12 @@ namespace kerbal
 
 			template <typename Allocator, typename ForwardIterator>
 			KERBAL_CONSTEXPR20
-			void k_uninitialized_value_construct_using_allocator(Allocator & alloc, ForwardIterator first, ForwardIterator last, UI_VAL_CONSTRUCT_UA_VER_NOTHROW_ITER_ADVANCE)
+			void
+			k_uninitialized_value_construct_using_allocator(
+				Allocator & alloc,
+				ForwardIterator first, ForwardIterator last,
+				UI_VAL_CONSTRUCT_UA_VER_NOTHROW_ITER_ADVANCE
+			)
 			{
 				typedef ForwardIterator iterator;
 				iterator current(first);
@@ -168,7 +178,12 @@ namespace kerbal
 
 			template <typename Allocator, typename ForwardIterator>
 			KERBAL_CONSTEXPR14
-			void k_uninitialized_value_construct_using_allocator(Allocator & alloc, ForwardIterator first, ForwardIterator last, UI_VAL_CONSTRUCT_UA_VER_NO_CATCH)
+			void
+			k_uninitialized_value_construct_using_allocator(
+				Allocator & alloc,
+				ForwardIterator first, ForwardIterator last,
+				UI_VAL_CONSTRUCT_UA_VER_NO_CATCH
+			)
 			{
 				while (first != last) {
 					kerbal::memory::construct_at_using_allocator(alloc, &*first); // new (&*first) T ();
@@ -178,7 +193,12 @@ namespace kerbal
 
 			template <typename Allocator, typename ForwardIterator>
 			KERBAL_CONSTEXPR14
-			void k_uninitialized_value_construct_using_allocator(Allocator & /*alloc*/, ForwardIterator first, ForwardIterator last, UI_VAL_CONSTRUCT_UA_VER_NO_UA)
+			void
+			k_uninitialized_value_construct_using_allocator(
+				Allocator & /*alloc*/,
+				ForwardIterator first, ForwardIterator last,
+				UI_VAL_CONSTRUCT_UA_VER_NO_UA
+			)
 			{
 				kerbal::memory::uninitialized_value_construct(first, last);
 			}
@@ -234,7 +254,12 @@ namespace kerbal
 
 			template <typename Allocator, typename ForwardIterator, typename SizeType>
 			KERBAL_CONSTEXPR20
-			ForwardIterator k_uninitialized_value_construct_n_using_allocator(Allocator & alloc, ForwardIterator first, SizeType n, UI_VAL_CONSTRUCT_N_UA_VER_DEFAULT)
+			ForwardIterator
+			k_uninitialized_value_construct_n_using_allocator(
+				Allocator & alloc,
+				ForwardIterator first, SizeType n,
+				UI_VAL_CONSTRUCT_N_UA_VER_DEFAULT
+			)
 			{
 				typedef ForwardIterator iterator;
 				iterator current(first);
@@ -264,7 +289,12 @@ namespace kerbal
 
 			template <typename Allocator, typename ForwardIterator, typename SizeType>
 			KERBAL_CONSTEXPR20
-			ForwardIterator k_uninitialized_value_construct_n_using_allocator(Allocator & alloc, ForwardIterator first, SizeType n, UI_VAL_CONSTRUCT_N_UA_VER_NOTHROW_ITER_ADVANCE)
+			ForwardIterator
+			k_uninitialized_value_construct_n_using_allocator(
+				Allocator & alloc,
+				ForwardIterator first, SizeType n,
+				UI_VAL_CONSTRUCT_N_UA_VER_NOTHROW_ITER_ADVANCE
+			)
 			{
 				typedef ForwardIterator iterator;
 				iterator current(first);
@@ -285,7 +315,12 @@ namespace kerbal
 
 			template <typename Allocator, typename ForwardIterator, typename SizeType>
 			KERBAL_CONSTEXPR14
-			ForwardIterator k_uninitialized_value_construct_n_using_allocator(Allocator & alloc, ForwardIterator first, SizeType n, UI_VAL_CONSTRUCT_N_UA_VER_NO_CATCH)
+			ForwardIterator
+			k_uninitialized_value_construct_n_using_allocator(
+				Allocator & alloc,
+				ForwardIterator first, SizeType n,
+				UI_VAL_CONSTRUCT_N_UA_VER_NO_CATCH
+			)
 			{
 				while (n > 0) {
 					--n;
@@ -297,7 +332,12 @@ namespace kerbal
 
 			template <typename Allocator, typename ForwardIterator, typename SizeType>
 			KERBAL_CONSTEXPR14
-			ForwardIterator k_uninitialized_value_construct_n_using_allocator(Allocator & /*alloc*/, ForwardIterator first, SizeType n, UI_VAL_CONSTRUCT_N_UA_VER_NO_UA)
+			ForwardIterator
+			k_uninitialized_value_construct_n_using_allocator(
+				Allocator & /*alloc*/,
+				ForwardIterator first, SizeType n,
+				UI_VAL_CONSTRUCT_N_UA_VER_NO_UA
+			)
 			{
 				return kerbal::memory::uninitialized_value_construct_n(first, n);
 			}
@@ -353,7 +393,12 @@ namespace kerbal
 
 			template <typename Allocator, typename InputIterator, typename ForwardIterator>
 			KERBAL_CONSTEXPR20
-			ForwardIterator k_uninitialized_copy_using_allocator(Allocator & alloc, InputIterator first, InputIterator last, ForwardIterator to, UI_CPY_UA_VER_DEFAULT)
+			ForwardIterator
+			k_uninitialized_copy_using_allocator(
+				Allocator & alloc,
+				InputIterator first, InputIterator last, ForwardIterator to,
+				UI_CPY_UA_VER_DEFAULT
+			)
 			{
 				typedef ForwardIterator iterator;
 				iterator current(to);
@@ -383,7 +428,12 @@ namespace kerbal
 
 			template <typename Allocator, typename InputIterator, typename ForwardIterator>
 			KERBAL_CONSTEXPR20
-			ForwardIterator k_uninitialized_copy_using_allocator(Allocator & alloc, InputIterator first, InputIterator last, ForwardIterator to, UI_CPY_UA_VER_NOTHROW_ITER_ADVANCE)
+			ForwardIterator
+			k_uninitialized_copy_using_allocator(
+				Allocator & alloc,
+				InputIterator first, InputIterator last, ForwardIterator to,
+				UI_CPY_UA_VER_NOTHROW_ITER_ADVANCE
+			)
 			{
 				typedef ForwardIterator iterator;
 				iterator current(to);
@@ -404,7 +454,12 @@ namespace kerbal
 
 			template <typename Allocator, typename InputIterator, typename ForwardIterator>
 			KERBAL_CONSTEXPR14
-			ForwardIterator k_uninitialized_copy_using_allocator(Allocator & alloc, InputIterator first, InputIterator last, ForwardIterator to, UI_CPY_UA_VER_NO_CATCH)
+			ForwardIterator
+			k_uninitialized_copy_using_allocator(
+				Allocator & alloc,
+				InputIterator first, InputIterator last, ForwardIterator to,
+				UI_CPY_UA_VER_NO_CATCH
+			)
 			{
 				while (first != last) {
 					kerbal::memory::construct_at_using_allocator(alloc, &*to, *first); // new (&*to) T (*first);
@@ -416,7 +471,12 @@ namespace kerbal
 
 			template <typename Allocator, typename InputIterator, typename ForwardIterator>
 			KERBAL_CONSTEXPR14
-			ForwardIterator k_uninitialized_copy_using_allocator(Allocator & /*alloc*/, InputIterator first, InputIterator last, ForwardIterator to, UI_CPY_UA_VER_NO_UA)
+			ForwardIterator
+			k_uninitialized_copy_using_allocator(
+				Allocator & /*alloc*/,
+				InputIterator first, InputIterator last, ForwardIterator to,
+				UI_CPY_UA_VER_NO_UA
+			)
 			{
 				return kerbal::memory::uninitialized_copy(first, last, to);
 			}
@@ -475,7 +535,12 @@ namespace kerbal
 
 			template <typename Allocator, typename InputIterator, typename SizeType, typename ForwardIterator>
 			KERBAL_CONSTEXPR20
-			ForwardIterator k_uninitialized_copy_n_using_allocator(Allocator & alloc, InputIterator first, SizeType n, ForwardIterator to, UI_CPY_N_UA_VER_DEFAULT)
+			ForwardIterator
+			k_uninitialized_copy_n_using_allocator(
+				Allocator & alloc,
+				InputIterator first, SizeType n, ForwardIterator to,
+				UI_CPY_N_UA_VER_DEFAULT
+			)
 			{
 				typedef ForwardIterator iterator;
 				iterator current(to);
@@ -506,7 +571,12 @@ namespace kerbal
 
 			template <typename Allocator, typename InputIterator, typename SizeType, typename ForwardIterator>
 			KERBAL_CONSTEXPR20
-			ForwardIterator k_uninitialized_copy_n_using_allocator(Allocator & alloc, InputIterator first, SizeType n, ForwardIterator to, UI_CPY_N_UA_VER_NOTHROW_ITER_ADVANCE)
+			ForwardIterator
+			k_uninitialized_copy_n_using_allocator(
+				Allocator & alloc,
+				InputIterator first, SizeType n, ForwardIterator to,
+				UI_CPY_N_UA_VER_NOTHROW_ITER_ADVANCE
+			)
 			{
 				typedef ForwardIterator iterator;
 				iterator current(to);
@@ -528,7 +598,12 @@ namespace kerbal
 
 			template <typename Allocator, typename InputIterator, typename SizeType, typename ForwardIterator>
 			KERBAL_CONSTEXPR14
-			ForwardIterator k_uninitialized_copy_n_using_allocator(Allocator & alloc, InputIterator first, SizeType n, ForwardIterator to, UI_CPY_N_UA_VER_NO_CATCH)
+			ForwardIterator
+			k_uninitialized_copy_n_using_allocator(
+				Allocator & alloc,
+				InputIterator first, SizeType n, ForwardIterator to,
+				UI_CPY_N_UA_VER_NO_CATCH
+			)
 			{
 				while (n > 0) {
 					--n;
@@ -541,7 +616,12 @@ namespace kerbal
 
 			template <typename Allocator, typename InputIterator, typename SizeType, typename ForwardIterator>
 			KERBAL_CONSTEXPR14
-			ForwardIterator k_uninitialized_copy_n_using_allocator(Allocator & /*alloc*/, InputIterator first, SizeType n, ForwardIterator to, UI_CPY_N_UA_VER_NO_UA)
+			ForwardIterator
+			k_uninitialized_copy_n_using_allocator(
+				Allocator & /*alloc*/,
+				InputIterator first, SizeType n, ForwardIterator to,
+				UI_CPY_N_UA_VER_NO_UA
+			)
 			{
 				return kerbal::memory::uninitialized_copy_n(first, n, to);
 			}
@@ -600,7 +680,12 @@ namespace kerbal
 
 			template <typename Allocator, typename InputIterator, typename ForwardIterator>
 			KERBAL_CONSTEXPR20
-			ForwardIterator k_uninitialized_move_using_allocator(Allocator & alloc, InputIterator first, InputIterator last, ForwardIterator to, UI_MOV_UA_VER_DEFAULT)
+			ForwardIterator
+			k_uninitialized_move_using_allocator(
+				Allocator & alloc,
+				InputIterator first, InputIterator last, ForwardIterator to,
+				UI_MOV_UA_VER_DEFAULT
+			)
 			{
 				typedef ForwardIterator iterator;
 				iterator current(to);
@@ -630,7 +715,12 @@ namespace kerbal
 
 			template <typename Allocator, typename InputIterator, typename ForwardIterator>
 			KERBAL_CONSTEXPR20
-			ForwardIterator k_uninitialized_move_using_allocator(Allocator & alloc, InputIterator first, InputIterator last, ForwardIterator to, UI_MOV_UA_VER_NOTHROW_ITER_ADVANCE)
+			ForwardIterator
+			k_uninitialized_move_using_allocator(
+				Allocator & alloc,
+				InputIterator first, InputIterator last, ForwardIterator to,
+				UI_MOV_UA_VER_NOTHROW_ITER_ADVANCE
+			)
 			{
 				typedef ForwardIterator iterator;
 				iterator current(to);
@@ -651,7 +741,12 @@ namespace kerbal
 
 			template <typename Allocator, typename InputIterator, typename ForwardIterator>
 			KERBAL_CONSTEXPR14
-			ForwardIterator k_uninitialized_move_using_allocator(Allocator & alloc, InputIterator first, InputIterator last, ForwardIterator to, UI_MOV_UA_VER_NO_CATCH)
+			ForwardIterator
+			k_uninitialized_move_using_allocator(
+				Allocator & alloc,
+				InputIterator first, InputIterator last, ForwardIterator to,
+				UI_MOV_UA_VER_NO_CATCH
+			)
 			{
 				while (first != last) {
 					kerbal::memory::construct_at_using_allocator(alloc, &*to, kerbal::compatibility::to_xvalue(*first)); // new (&*to) T (kerbal::compatibility::to_xvalue(*first));
@@ -663,7 +758,12 @@ namespace kerbal
 
 			template <typename Allocator, typename InputIterator, typename ForwardIterator>
 			KERBAL_CONSTEXPR14
-			ForwardIterator k_uninitialized_move_using_allocator(Allocator & /*alloc*/, InputIterator first, InputIterator last, ForwardIterator to, UI_MOV_UA_VER_NO_UA)
+			ForwardIterator
+			k_uninitialized_move_using_allocator(
+				Allocator & /*alloc*/,
+				InputIterator first, InputIterator last, ForwardIterator to,
+				UI_MOV_UA_VER_NO_UA
+			)
 			{
 				return kerbal::memory::uninitialized_move(first, last, to);
 			}
@@ -729,7 +829,12 @@ namespace kerbal
 
 			template <typename Allocator, typename InputIterator, typename SizeType, typename ForwardIterator>
 			KERBAL_CONSTEXPR20
-			ForwardIterator k_uninitialized_move_n_using_allocator(Allocator & alloc, InputIterator first, SizeType n, ForwardIterator to, UI_MOV_N_UA_VER_DEFAULT)
+			ForwardIterator
+			k_uninitialized_move_n_using_allocator(
+				Allocator & alloc,
+				InputIterator first, SizeType n, ForwardIterator to,
+				UI_MOV_N_UA_VER_DEFAULT
+			)
 			{
 				typedef ForwardIterator iterator;
 				iterator current(to);
@@ -760,7 +865,12 @@ namespace kerbal
 
 			template <typename Allocator, typename InputIterator, typename SizeType, typename ForwardIterator>
 			KERBAL_CONSTEXPR20
-			ForwardIterator k_uninitialized_move_n_using_allocator(Allocator & alloc, InputIterator first, SizeType n, ForwardIterator to, UI_MOV_N_UA_VER_NOTHROW_ITER_ADVANCE)
+			ForwardIterator
+			k_uninitialized_move_n_using_allocator(
+				Allocator & alloc,
+				InputIterator first, SizeType n, ForwardIterator to,
+				UI_MOV_N_UA_VER_NOTHROW_ITER_ADVANCE
+			)
 			{
 				typedef ForwardIterator iterator;
 				iterator current(to);
@@ -782,7 +892,12 @@ namespace kerbal
 
 			template <typename Allocator, typename InputIterator, typename SizeType, typename ForwardIterator>
 			KERBAL_CONSTEXPR14
-			ForwardIterator k_uninitialized_move_n_using_allocator(Allocator & alloc, InputIterator first, SizeType n, ForwardIterator to, UI_MOV_N_UA_VER_NO_CATCH)
+			ForwardIterator
+			k_uninitialized_move_n_using_allocator(
+				Allocator & alloc,
+				InputIterator first, SizeType n, ForwardIterator to,
+				UI_MOV_N_UA_VER_NO_CATCH
+			)
 			{
 				while (n > 0) {
 					--n;
@@ -795,7 +910,12 @@ namespace kerbal
 
 			template <typename Allocator, typename InputIterator, typename SizeType, typename ForwardIterator>
 			KERBAL_CONSTEXPR14
-			ForwardIterator k_uninitialized_move_n_using_allocator(Allocator & /*alloc*/, InputIterator first, SizeType n, ForwardIterator to, UI_MOV_N_UA_VER_NO_UA)
+			ForwardIterator
+			k_uninitialized_move_n_using_allocator(
+				Allocator & /*alloc*/,
+				InputIterator first, SizeType n, ForwardIterator to,
+				UI_MOV_N_UA_VER_NO_UA
+			)
 			{
 				return kerbal::memory::uninitialized_move_n(first, n, to);
 			}
@@ -861,7 +981,12 @@ namespace kerbal
 
 			template <typename Allocator, typename ForwardIterator, typename T>
 			KERBAL_CONSTEXPR20
-			void uninitialized_fill_using_allocator(Allocator & alloc, ForwardIterator first, ForwardIterator last, const T & value, UI_FILL_UA_VER_DEFAULT)
+			void
+			uninitialized_fill_using_allocator(
+				Allocator & alloc,
+				ForwardIterator first, ForwardIterator last, const T & value,
+				UI_FILL_UA_VER_DEFAULT
+			)
 			{
 				typedef ForwardIterator iterator;
 				iterator current(first);
@@ -889,7 +1014,12 @@ namespace kerbal
 
 			template <typename Allocator, typename ForwardIterator, typename T>
 			KERBAL_CONSTEXPR20
-			void uninitialized_fill_using_allocator(Allocator & alloc, ForwardIterator first, ForwardIterator last, const T & value, UI_FILL_UA_VER_NOTHROW_ITER_ADVANCE)
+			void
+			uninitialized_fill_using_allocator(
+				Allocator & alloc,
+				ForwardIterator first, ForwardIterator last, const T & value,
+				UI_FILL_UA_VER_NOTHROW_ITER_ADVANCE
+			)
 			{
 				typedef ForwardIterator iterator;
 				iterator current(first);
@@ -908,7 +1038,12 @@ namespace kerbal
 
 			template <typename Allocator, typename ForwardIterator, typename T>
 			KERBAL_CONSTEXPR14
-			void uninitialized_fill_using_allocator(Allocator & alloc, ForwardIterator first, ForwardIterator last, const T & value, UI_FILL_UA_VER_NO_CATCH)
+			void
+			uninitialized_fill_using_allocator(
+				Allocator & alloc,
+				ForwardIterator first, ForwardIterator last, const T & value,
+				UI_FILL_UA_VER_NO_CATCH
+			)
 			{
 				while (first != last) {
 					kerbal::memory::construct_at_using_allocator(alloc, &*first, value); // new (&*first) T (value);
@@ -918,7 +1053,12 @@ namespace kerbal
 
 			template <typename Allocator, typename ForwardIterator, typename T>
 			KERBAL_CONSTEXPR14
-			void uninitialized_fill_using_allocator(Allocator & /*alloc*/, ForwardIterator first, ForwardIterator last, const T & value, UI_FILL_UA_VER_NO_UA)
+			void
+			uninitialized_fill_using_allocator(
+				Allocator & /*alloc*/,
+				ForwardIterator first, ForwardIterator last, const T & value,
+				UI_FILL_UA_VER_NO_UA
+			)
 			{
 				kerbal::memory::uninitialized_fill(first, last, value);
 			}
@@ -974,7 +1114,12 @@ namespace kerbal
 
 			template <typename Allocator, typename ForwardIterator, typename SizeType, typename T>
 			KERBAL_CONSTEXPR20
-			ForwardIterator k_uninitialized_fill_n_using_allocator(Allocator & alloc, ForwardIterator first, SizeType n, const T & value, UI_FILL_N_UA_VER_DEFAULT)
+			ForwardIterator
+			k_uninitialized_fill_n_using_allocator(
+				Allocator & alloc,
+				ForwardIterator first, SizeType n, const T & value,
+				UI_FILL_N_UA_VER_DEFAULT
+			)
 			{
 				typedef ForwardIterator iterator;
 				iterator current(first);
@@ -1004,7 +1149,12 @@ namespace kerbal
 
 			template <typename Allocator, typename ForwardIterator, typename SizeType, typename T>
 			KERBAL_CONSTEXPR20
-			ForwardIterator k_uninitialized_fill_n_using_allocator(Allocator & alloc, ForwardIterator first, SizeType n, const T & value, UI_FILL_N_UA_VER_NOTHROW_ITER_ADVANCE)
+			ForwardIterator
+			k_uninitialized_fill_n_using_allocator(
+				Allocator & alloc,
+				ForwardIterator first, SizeType n, const T & value,
+				UI_FILL_N_UA_VER_NOTHROW_ITER_ADVANCE
+			)
 			{
 				typedef ForwardIterator iterator;
 				iterator current(first);
@@ -1025,7 +1175,12 @@ namespace kerbal
 
 			template <typename Allocator, typename ForwardIterator, typename SizeType, typename T>
 			KERBAL_CONSTEXPR14
-			ForwardIterator k_uninitialized_fill_n_using_allocator(Allocator & alloc, ForwardIterator first, SizeType n, const T & value, UI_FILL_N_UA_VER_NO_CATCH)
+			ForwardIterator
+			k_uninitialized_fill_n_using_allocator(
+				Allocator & alloc,
+				ForwardIterator first, SizeType n, const T & value,
+				UI_FILL_N_UA_VER_NO_CATCH
+			)
 			{
 				while (n > 0) {
 					--n;
@@ -1037,7 +1192,12 @@ namespace kerbal
 
 			template <typename Allocator, typename ForwardIterator, typename SizeType, typename T>
 			KERBAL_CONSTEXPR14
-			ForwardIterator k_uninitialized_fill_n_using_allocator(Allocator & /*alloc*/, ForwardIterator first, SizeType n, const T & value, UI_FILL_N_UA_VER_NO_UA)
+			ForwardIterator
+			k_uninitialized_fill_n_using_allocator(
+				Allocator & /*alloc*/,
+				ForwardIterator first, SizeType n, const T & value,
+				UI_FILL_N_UA_VER_NO_UA
+			)
 			{
 				return kerbal::memory::uninitialized_fill_n(first, n, value);
 			}
@@ -1091,7 +1251,12 @@ namespace kerbal
 
 			template <typename Allocator, typename ForwardIterator, typename OutputIterator>
 			KERBAL_CONSTEXPR14
-			void k_ui_move_if_noexcept_ow_copy_phase1(Allocator & alloc, ForwardIterator first, ForwardIterator last, OutputIterator to, UI_MOV_IF_NOEXCEPT_OW_CPY_VER_COPY)
+			void
+			k_ui_move_if_noexcept_ow_copy_phase1(
+				Allocator & alloc,
+				ForwardIterator first, ForwardIterator last, OutputIterator to,
+				UI_MOV_IF_NOEXCEPT_OW_CPY_VER_COPY
+			)
 			{
 				kerbal::memory::uninitialized_copy_using_allocator(alloc, first, last, to);
 			}
@@ -1100,7 +1265,12 @@ namespace kerbal
 
 			template <typename Allocator, typename ForwardIterator, typename OutputIterator>
 			KERBAL_CONSTEXPR14
-			void k_ui_move_if_noexcept_ow_copy_phase1(Allocator & alloc, ForwardIterator first, ForwardIterator last, OutputIterator to, UI_MOV_IF_NOEXCEPT_OW_CPY_VER_MOVE) KERBAL_NOEXCEPT
+			void
+			k_ui_move_if_noexcept_ow_copy_phase1(
+				Allocator & alloc,
+				ForwardIterator first, ForwardIterator last, OutputIterator to,
+				UI_MOV_IF_NOEXCEPT_OW_CPY_VER_MOVE
+			) KERBAL_NOEXCEPT
 			{
 				while (first != last) {
 					kerbal::memory::construct_at_using_allocator(alloc, &*to, kerbal::compatibility::move(*first)); // new (&*to) T (kerbal::compatibility::move(*first));
@@ -1114,7 +1284,12 @@ namespace kerbal
 
 			template <typename Allocator, typename ForwardIterator>
 			KERBAL_CONSTEXPR14
-			void k_ui_move_if_noexcept_ow_copy_phase2(Allocator & alloc, ForwardIterator first, ForwardIterator last, UI_MOV_IF_NOEXCEPT_OW_CPY_VER_COPY) KERBAL_NOEXCEPT
+			void
+			k_ui_move_if_noexcept_ow_copy_phase2(
+				Allocator & alloc,
+				ForwardIterator first, ForwardIterator last,
+				UI_MOV_IF_NOEXCEPT_OW_CPY_VER_COPY
+			) KERBAL_NOEXCEPT
 			{
 				kerbal::memory::destroy_using_allocator(alloc, first, last);
 			}
@@ -1123,7 +1298,12 @@ namespace kerbal
 
 			template <typename Allocator, typename ForwardIterator>
 			KERBAL_CONSTEXPR14
-			void k_ui_move_if_noexcept_ow_copy_phase2(Allocator & /*alloc*/, ForwardIterator /*first*/, ForwardIterator /*last*/, UI_MOV_IF_NOEXCEPT_OW_CPY_VER_MOVE) KERBAL_NOEXCEPT
+			void
+			k_ui_move_if_noexcept_ow_copy_phase2(
+				Allocator & /*alloc*/,
+				ForwardIterator /*first*/, ForwardIterator /*last*/,
+				UI_MOV_IF_NOEXCEPT_OW_CPY_VER_MOVE
+			) KERBAL_NOEXCEPT
 			{
 			}
 
@@ -1141,7 +1321,10 @@ namespace kerbal
 
 				typedef typename kerbal::type_traits::conditional<
 					(
-						noexcept(kerbal::utility::declval<ForwardIterator &>() != kerbal::utility::declval<ForwardIterator &>()) &&
+						noexcept(
+							kerbal::utility::declval<ForwardIterator &>() !=
+							kerbal::utility::declval<ForwardIterator &>()
+						) &&
 						noexcept(++kerbal::utility::declval<ForwardIterator &>()) &&
 						noexcept(++kerbal::utility::declval<OutputIterator &>()) &&
 						noexcept(

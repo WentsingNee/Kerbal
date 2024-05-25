@@ -34,7 +34,8 @@ namespace kerbal
 	{
 
 		template <typename T>
-		struct is_final : kerbal::type_traits::bool_constant<KERBAL_INTRINSIC_IS_FINAL(T)>
+		struct is_final :
+			kerbal::type_traits::bool_constant<KERBAL_INTRINSIC_IS_FINAL(T)>
 		{
 		};
 

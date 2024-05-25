@@ -20,14 +20,14 @@ namespace kerbal
 	namespace test
 	{
 
-		template <typename ObjectType, typename CountingType = std::ptrdiff_t >
+		template <typename ObjectType, typename CountingType = std::ptrdiff_t>
 		class object_count
 		{
 			public:
 				typedef CountingType counting_type;
 
 			private:
-				static counting_type& ref()
+				static counting_type & ref()
 				{
 					static counting_type counter(0);
 					return counter;
@@ -39,7 +39,7 @@ namespace kerbal
 					++ref();
 				}
 
-				object_count(const object_count&)
+				object_count(const object_count &)
 				{
 					++ref();
 				}
@@ -50,7 +50,8 @@ namespace kerbal
 				}
 
 			public:
-				static const counting_type& get_count()
+				static
+				const counting_type & get_count()
 				{
 					return ref();
 				}

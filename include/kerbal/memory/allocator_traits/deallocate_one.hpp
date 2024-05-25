@@ -30,15 +30,18 @@ namespace kerbal
 	{
 
 		template <typename Alloc, typename Pointer, typename = kerbal::type_traits::void_type<>::type >
-		struct allocator_has_deallocate_one: kerbal::type_traits::false_type
+		struct allocator_has_deallocate_one :
+			kerbal::type_traits::false_type
 		{
 		};
 
 		template <typename Alloc, typename Pointer>
-		struct allocator_has_deallocate_one<Alloc, Pointer, typename kerbal::type_traits::void_type<
+		struct allocator_has_deallocate_one<
+			Alloc, Pointer,
+			typename kerbal::type_traits::void_type<
 #	if __cplusplus >= 201103L // compatible with msvc
 				decltype(
-					kerbal::utility::declval<Alloc&>().deallocate_one(
+					kerbal::utility::declval<Alloc &>().deallocate_one(
 						kerbal::utility::declval<Pointer>()
 					)
 				)
@@ -46,21 +49,27 @@ namespace kerbal
 				kerbal::type_traits::integral_constant<
 					std::size_t,
 					sizeof(
-						kerbal::utility::declval<Alloc&>().deallocate_one(
+						kerbal::utility::declval<Alloc &>().deallocate_one(
 							kerbal::utility::declval<Pointer>()
 						),
 						0
 					)
 				>
 #	endif
-		>::type >: kerbal::type_traits::true_type
+			>::type
+		> :
+			kerbal::type_traits::true_type
 		{
 		};
 
 		namespace detail
 		{
 
-			template <typename Alloc, typename Pointer, bool = kerbal::memory::allocator_has_deallocate_one<Alloc, Pointer>::value>
+			template <
+				typename Alloc,
+				typename Pointer,
+				bool = kerbal::memory::allocator_has_deallocate_one<Alloc, Pointer>::value
+			>
 			struct allocator_traits_deallocate_one_helper;
 
 			template <typename Alloc, typename Pointer>
@@ -68,10 +77,11 @@ namespace kerbal
 			{
 				public:
 					KERBAL_CONSTEXPR14
-					static void deallocate_one(Alloc & alloc, Pointer p)
-							KERBAL_CONDITIONAL_NOEXCEPT(
-								noexcept(alloc.deallocate(p, 1))
-							)
+					static
+					void deallocate_one(Alloc & alloc, Pointer p)
+						KERBAL_CONDITIONAL_NOEXCEPT(
+							noexcept(alloc.deallocate(p, 1))
+						)
 					{
 						alloc.deallocate(p, 1);
 					}
@@ -82,10 +92,11 @@ namespace kerbal
 			{
 				public:
 					KERBAL_CONSTEXPR14
-					static void deallocate_one(Alloc & alloc, Pointer p)
-							KERBAL_CONDITIONAL_NOEXCEPT(
-								noexcept(alloc.deallocate_one(p))
-							)
+					static
+					void deallocate_one(Alloc & alloc, Pointer p)
+						KERBAL_CONDITIONAL_NOEXCEPT(
+							noexcept(alloc.deallocate_one(p))
+						)
 					{
 						alloc.deallocate_one(p);
 					}

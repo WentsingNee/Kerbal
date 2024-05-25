@@ -45,7 +45,11 @@ namespace kerbal
 
 			template <typename ForwardIterator>
 			KERBAL_CONSTEXPR20
-			void raw_storage_uninitialized_value_construct(ForwardIterator first, ForwardIterator last, RAWST_UI_VAL_CONSTRUCT_VER_DEFAULT)
+			void
+			raw_storage_uninitialized_value_construct(
+				ForwardIterator first, ForwardIterator last,
+				RAWST_UI_VAL_CONSTRUCT_VER_DEFAULT
+			)
 			{
 				typedef ForwardIterator iterator;
 				iterator current(first);
@@ -73,7 +77,11 @@ namespace kerbal
 
 			template <typename ForwardIterator>
 			KERBAL_CONSTEXPR20
-			void raw_storage_uninitialized_value_construct(ForwardIterator first, ForwardIterator last, RAWST_UI_VAL_CONSTRUCT_VER_NOTHROW_ITER_ADVANCE)
+			void
+			raw_storage_uninitialized_value_construct(
+				ForwardIterator first, ForwardIterator last,
+				RAWST_UI_VAL_CONSTRUCT_VER_NOTHROW_ITER_ADVANCE
+			)
 			{
 				typedef ForwardIterator iterator;
 				iterator current(first);
@@ -92,7 +100,11 @@ namespace kerbal
 
 			template <typename ForwardIterator>
 			KERBAL_CONSTEXPR14
-			void raw_storage_uninitialized_value_construct(ForwardIterator first, ForwardIterator last, RAWST_UI_VAL_CONSTRUCT_VER_NO_CATCH)
+			void
+			raw_storage_uninitialized_value_construct(
+				ForwardIterator first, ForwardIterator last,
+				RAWST_UI_VAL_CONSTRUCT_VER_NO_CATCH
+			)
 			{
 				while (first != last) {
 					first->construct();
@@ -114,13 +126,13 @@ namespace kerbal
 			typedef typename raw_storage::value_type value_type;
 
 			typedef typename kerbal::type_traits::conditional<
-					kerbal::type_traits::try_test_is_trivially_destructible<value_type>::IS_TRUE::value,
-					detail::RAWST_UI_VAL_CONSTRUCT_VER_NO_CATCH,
-					typename kerbal::type_traits::conditional<
-							detail::can_be_nothrow_advance_iterator<iterator>::value,
-							detail::RAWST_UI_VAL_CONSTRUCT_VER_NOTHROW_ITER_ADVANCE,
-							detail::RAWST_UI_VAL_CONSTRUCT_VER_DEFAULT
-					>::type
+				kerbal::type_traits::try_test_is_trivially_destructible<value_type>::IS_TRUE::value,
+				detail::RAWST_UI_VAL_CONSTRUCT_VER_NO_CATCH,
+				typename kerbal::type_traits::conditional<
+					detail::can_be_nothrow_advance_iterator<iterator>::value,
+					detail::RAWST_UI_VAL_CONSTRUCT_VER_NOTHROW_ITER_ADVANCE,
+					detail::RAWST_UI_VAL_CONSTRUCT_VER_DEFAULT
+				>::type
 			>::type VER;
 
 #	else
@@ -148,7 +160,11 @@ namespace kerbal
 
 			template <typename ForwardIterator, typename SizeType>
 			KERBAL_CONSTEXPR20
-			ForwardIterator raw_storage_uninitialized_value_construct_n(ForwardIterator first, SizeType n, RAWST_UI_VAL_CONSTRUCT_N_VER_DEFAULT)
+			ForwardIterator
+			raw_storage_uninitialized_value_construct_n(
+				ForwardIterator first, SizeType n,
+				RAWST_UI_VAL_CONSTRUCT_N_VER_DEFAULT
+			)
 			{
 				typedef ForwardIterator iterator;
 				iterator current(first);
@@ -178,7 +194,11 @@ namespace kerbal
 
 			template <typename ForwardIterator, typename SizeType>
 			KERBAL_CONSTEXPR20
-			ForwardIterator raw_storage_uninitialized_value_construct_n(ForwardIterator first, SizeType n, RAWST_UI_VAL_CONSTRUCT_N_VER_NOTHROW_ITER_ADVANCE)
+			ForwardIterator
+			raw_storage_uninitialized_value_construct_n(
+				ForwardIterator first, SizeType n,
+				RAWST_UI_VAL_CONSTRUCT_N_VER_NOTHROW_ITER_ADVANCE
+			)
 			{
 				typedef ForwardIterator iterator;
 				iterator current(first);
@@ -199,7 +219,11 @@ namespace kerbal
 
 			template <typename ForwardIterator, typename SizeType>
 			KERBAL_CONSTEXPR14
-			ForwardIterator raw_storage_uninitialized_value_construct_n(ForwardIterator first, SizeType n, RAWST_UI_VAL_CONSTRUCT_N_VER_NO_CATCH)
+			ForwardIterator
+			raw_storage_uninitialized_value_construct_n(
+				ForwardIterator first, SizeType n,
+				RAWST_UI_VAL_CONSTRUCT_N_VER_NO_CATCH
+			)
 			{
 				while (n > 0) {
 					--n;
@@ -223,13 +247,13 @@ namespace kerbal
 			typedef typename raw_storage::value_type value_type;
 
 			typedef typename kerbal::type_traits::conditional<
-					kerbal::type_traits::try_test_is_trivially_destructible<value_type>::IS_TRUE::value,
-					detail::RAWST_UI_VAL_CONSTRUCT_N_VER_NO_CATCH,
-					typename kerbal::type_traits::conditional<
-							detail::can_be_nothrow_advance_iterator<iterator>::value,
-							detail::RAWST_UI_VAL_CONSTRUCT_N_VER_NOTHROW_ITER_ADVANCE,
-							detail::RAWST_UI_VAL_CONSTRUCT_N_VER_DEFAULT
-					>::type
+				kerbal::type_traits::try_test_is_trivially_destructible<value_type>::IS_TRUE::value,
+				detail::RAWST_UI_VAL_CONSTRUCT_N_VER_NO_CATCH,
+				typename kerbal::type_traits::conditional<
+					detail::can_be_nothrow_advance_iterator<iterator>::value,
+					detail::RAWST_UI_VAL_CONSTRUCT_N_VER_NOTHROW_ITER_ADVANCE,
+					detail::RAWST_UI_VAL_CONSTRUCT_N_VER_DEFAULT
+				>::type
 			>::type VER;
 
 #	else
@@ -257,7 +281,11 @@ namespace kerbal
 
 			template <typename InputIterator, typename ForwardIterator>
 			KERBAL_CONSTEXPR20
-			ForwardIterator raw_storage_uninitialized_copy(InputIterator first, InputIterator last, ForwardIterator to, RAWST_UICPY_VER_DEFAULT)
+			ForwardIterator
+			raw_storage_uninitialized_copy(
+				InputIterator first, InputIterator last, ForwardIterator to,
+				RAWST_UICPY_VER_DEFAULT
+			)
 			{
 				typedef ForwardIterator iterator;
 				iterator current(to);
@@ -287,7 +315,11 @@ namespace kerbal
 
 			template <typename InputIterator, typename ForwardIterator>
 			KERBAL_CONSTEXPR20
-			ForwardIterator raw_storage_uninitialized_copy(InputIterator first, InputIterator last, ForwardIterator to, RAWST_UICPY_VER_NOTHROW_ITER_ADVANCE)
+			ForwardIterator
+			raw_storage_uninitialized_copy(
+				InputIterator first, InputIterator last, ForwardIterator to,
+				RAWST_UICPY_VER_NOTHROW_ITER_ADVANCE
+			)
 			{
 				typedef ForwardIterator iterator;
 				iterator current(to);
@@ -308,7 +340,11 @@ namespace kerbal
 
 			template <typename InputIterator, typename ForwardIterator>
 			KERBAL_CONSTEXPR14
-			ForwardIterator raw_storage_uninitialized_copy(InputIterator first, InputIterator last, ForwardIterator to, RAWST_UICPY_VER_NO_CATCH)
+			ForwardIterator
+			raw_storage_uninitialized_copy(
+				InputIterator first, InputIterator last, ForwardIterator to,
+				RAWST_UICPY_VER_NO_CATCH
+			)
 			{
 				while (first != last) {
 					to->construct(*first);
@@ -332,13 +368,13 @@ namespace kerbal
 			typedef typename raw_storage::value_type value_type;
 
 			typedef typename kerbal::type_traits::conditional<
-					kerbal::type_traits::try_test_is_trivially_destructible<value_type>::IS_TRUE::value,
-					detail::RAWST_UICPY_VER_NO_CATCH,
-					typename kerbal::type_traits::conditional<
-							detail::can_be_nothrow_advance_iterator<iterator>::value,
-							detail::RAWST_UICPY_VER_NOTHROW_ITER_ADVANCE,
-							detail::RAWST_UICPY_VER_DEFAULT
-					>::type
+				kerbal::type_traits::try_test_is_trivially_destructible<value_type>::IS_TRUE::value,
+				detail::RAWST_UICPY_VER_NO_CATCH,
+				typename kerbal::type_traits::conditional<
+					detail::can_be_nothrow_advance_iterator<iterator>::value,
+					detail::RAWST_UICPY_VER_NOTHROW_ITER_ADVANCE,
+					detail::RAWST_UICPY_VER_DEFAULT
+				>::type
 			>::type VER;
 
 #	else
@@ -366,7 +402,11 @@ namespace kerbal
 
 			template <typename InputIterator, typename SizeType, typename ForwardIterator>
 			KERBAL_CONSTEXPR20
-			ForwardIterator raw_storage_uninitialized_copy_n(InputIterator first, SizeType n, ForwardIterator to, RAWST_UICPY_N_VER_DEFAULT)
+			ForwardIterator
+			raw_storage_uninitialized_copy_n(
+				InputIterator first, SizeType n, ForwardIterator to,
+				RAWST_UICPY_N_VER_DEFAULT
+			)
 			{
 				typedef ForwardIterator iterator;
 				iterator current(to);
@@ -397,7 +437,11 @@ namespace kerbal
 
 			template <typename InputIterator, typename SizeType, typename ForwardIterator>
 			KERBAL_CONSTEXPR20
-			ForwardIterator raw_storage_uninitialized_copy_n(InputIterator first, SizeType n, ForwardIterator to, RAWST_UICPY_N_VER_NOTHROW_ITER_ADVANCE)
+			ForwardIterator
+			raw_storage_uninitialized_copy_n(
+				InputIterator first, SizeType n, ForwardIterator to,
+				RAWST_UICPY_N_VER_NOTHROW_ITER_ADVANCE
+			)
 			{
 				typedef ForwardIterator iterator;
 				iterator current(to);
@@ -419,7 +463,11 @@ namespace kerbal
 
 			template <typename InputIterator, typename SizeType, typename ForwardIterator>
 			KERBAL_CONSTEXPR14
-			ForwardIterator raw_storage_uninitialized_copy_n(InputIterator first, SizeType n, ForwardIterator to, RAWST_UICPY_N_VER_NO_CATCH)
+			ForwardIterator
+			raw_storage_uninitialized_copy_n(
+				InputIterator first, SizeType n, ForwardIterator to,
+				RAWST_UICPY_N_VER_NO_CATCH
+			)
 			{
 				while (n > 0) {
 					--n;
@@ -444,13 +492,13 @@ namespace kerbal
 			typedef typename raw_storage::value_type value_type;
 
 			typedef typename kerbal::type_traits::conditional<
-					kerbal::type_traits::try_test_is_trivially_destructible<value_type>::IS_TRUE::value,
-					detail::RAWST_UICPY_N_VER_NO_CATCH,
-					typename kerbal::type_traits::conditional<
-							detail::can_be_nothrow_advance_iterator<iterator>::value,
-							detail::RAWST_UICPY_N_VER_NOTHROW_ITER_ADVANCE,
-							detail::RAWST_UICPY_N_VER_DEFAULT
-					>::type
+				kerbal::type_traits::try_test_is_trivially_destructible<value_type>::IS_TRUE::value,
+				detail::RAWST_UICPY_N_VER_NO_CATCH,
+				typename kerbal::type_traits::conditional<
+					detail::can_be_nothrow_advance_iterator<iterator>::value,
+					detail::RAWST_UICPY_N_VER_NOTHROW_ITER_ADVANCE,
+					detail::RAWST_UICPY_N_VER_DEFAULT
+				>::type
 			>::type VER;
 
 #	else
@@ -478,7 +526,11 @@ namespace kerbal
 
 			template <typename InputIterator, typename ForwardIterator>
 			KERBAL_CONSTEXPR20
-			ForwardIterator raw_storage_uninitialized_move(InputIterator first, InputIterator last, ForwardIterator to, RAWST_UIMOV_VER_DEFAULT)
+			ForwardIterator
+			raw_storage_uninitialized_move(
+				InputIterator first, InputIterator last, ForwardIterator to,
+				RAWST_UIMOV_VER_DEFAULT
+			)
 			{
 				typedef ForwardIterator iterator;
 				iterator current(to);
@@ -508,7 +560,11 @@ namespace kerbal
 
 			template <typename InputIterator, typename ForwardIterator>
 			KERBAL_CONSTEXPR20
-			ForwardIterator raw_storage_uninitialized_move(InputIterator first, InputIterator last, ForwardIterator to, RAWST_UIMOV_VER_NOTHROW_ITER_ADVANCE)
+			ForwardIterator
+			raw_storage_uninitialized_move(
+				InputIterator first, InputIterator last, ForwardIterator to,
+				RAWST_UIMOV_VER_NOTHROW_ITER_ADVANCE
+			)
 			{
 				typedef ForwardIterator iterator;
 				iterator current(to);
@@ -529,7 +585,11 @@ namespace kerbal
 
 			template <typename InputIterator, typename ForwardIterator>
 			KERBAL_CONSTEXPR14
-			ForwardIterator raw_storage_uninitialized_move(InputIterator first, InputIterator last, ForwardIterator to, RAWST_UIMOV_VER_NO_CATCH)
+			ForwardIterator
+			raw_storage_uninitialized_move(
+				InputIterator first, InputIterator last, ForwardIterator to,
+				RAWST_UIMOV_VER_NO_CATCH
+			)
 			{
 				while (first != last) {
 					to->construct(kerbal::compatibility::to_xvalue(*first));
@@ -553,13 +613,13 @@ namespace kerbal
 			typedef typename raw_storage::value_type value_type;
 
 			typedef typename kerbal::type_traits::conditional<
-					kerbal::type_traits::try_test_is_trivially_destructible<value_type>::IS_TRUE::value,
-					detail::RAWST_UIMOV_VER_NO_CATCH,
-					typename kerbal::type_traits::conditional<
-							detail::can_be_nothrow_advance_iterator<iterator>::value,
-							detail::RAWST_UIMOV_VER_NOTHROW_ITER_ADVANCE,
-							detail::RAWST_UIMOV_VER_DEFAULT
-					>::type
+				kerbal::type_traits::try_test_is_trivially_destructible<value_type>::IS_TRUE::value,
+				detail::RAWST_UIMOV_VER_NO_CATCH,
+				typename kerbal::type_traits::conditional<
+					detail::can_be_nothrow_advance_iterator<iterator>::value,
+					detail::RAWST_UIMOV_VER_NOTHROW_ITER_ADVANCE,
+					detail::RAWST_UIMOV_VER_DEFAULT
+				>::type
 			>::type VER;
 
 #	else
@@ -587,7 +647,11 @@ namespace kerbal
 
 			template <typename InputIterator, typename SizeType, typename ForwardIterator>
 			KERBAL_CONSTEXPR20
-			ForwardIterator raw_storage_uninitialized_move_n(InputIterator first, SizeType n, ForwardIterator to, RAWST_UIMOV_N_VER_DEFAULT)
+			ForwardIterator
+			raw_storage_uninitialized_move_n(
+				InputIterator first, SizeType n, ForwardIterator to,
+				RAWST_UIMOV_N_VER_DEFAULT
+			)
 			{
 				typedef ForwardIterator iterator;
 				iterator current(to);
@@ -618,7 +682,11 @@ namespace kerbal
 
 			template <typename InputIterator, typename SizeType, typename ForwardIterator>
 			KERBAL_CONSTEXPR20
-			ForwardIterator raw_storage_uninitialized_move_n(InputIterator first, SizeType n, ForwardIterator to, RAWST_UIMOV_N_VER_NOTHROW_ITER_ADVANCE)
+			ForwardIterator
+			raw_storage_uninitialized_move_n(
+				InputIterator first, SizeType n, ForwardIterator to,
+				RAWST_UIMOV_N_VER_NOTHROW_ITER_ADVANCE
+			)
 			{
 				typedef ForwardIterator iterator;
 				iterator current(to);
@@ -640,7 +708,11 @@ namespace kerbal
 
 			template <typename InputIterator, typename SizeType, typename ForwardIterator>
 			KERBAL_CONSTEXPR14
-			ForwardIterator raw_storage_uninitialized_move_n(InputIterator first, SizeType n, ForwardIterator to, RAWST_UIMOV_N_VER_NO_CATCH)
+			ForwardIterator
+			raw_storage_uninitialized_move_n(
+				InputIterator first, SizeType n, ForwardIterator to,
+				RAWST_UIMOV_N_VER_NO_CATCH
+			)
 			{
 				while (n > 0) {
 					--n;
@@ -665,13 +737,13 @@ namespace kerbal
 			typedef typename raw_storage::value_type value_type;
 
 			typedef typename kerbal::type_traits::conditional<
-					kerbal::type_traits::try_test_is_trivially_destructible<value_type>::IS_TRUE::value,
-					detail::RAWST_UIMOV_N_VER_NO_CATCH,
-					typename kerbal::type_traits::conditional<
-							detail::can_be_nothrow_advance_iterator<iterator>::value,
-							detail::RAWST_UIMOV_N_VER_NOTHROW_ITER_ADVANCE,
-							detail::RAWST_UIMOV_N_VER_DEFAULT
-					>::type
+				kerbal::type_traits::try_test_is_trivially_destructible<value_type>::IS_TRUE::value,
+				detail::RAWST_UIMOV_N_VER_NO_CATCH,
+				typename kerbal::type_traits::conditional<
+					detail::can_be_nothrow_advance_iterator<iterator>::value,
+					detail::RAWST_UIMOV_N_VER_NOTHROW_ITER_ADVANCE,
+					detail::RAWST_UIMOV_N_VER_DEFAULT
+				>::type
 			>::type VER;
 
 #	else
@@ -699,7 +771,11 @@ namespace kerbal
 
 			template <typename ForwardIterator, typename T>
 			KERBAL_CONSTEXPR20
-			void raw_storage_uninitialized_fill(ForwardIterator first, ForwardIterator last, const T & value, RAWST_UIFILL_VER_DEFAULT)
+			void
+			raw_storage_uninitialized_fill(
+				ForwardIterator first, ForwardIterator last, const T & value,
+				RAWST_UIFILL_VER_DEFAULT
+			)
 			{
 				typedef ForwardIterator iterator;
 				iterator current(first);
@@ -727,7 +803,11 @@ namespace kerbal
 
 			template <typename ForwardIterator, typename T>
 			KERBAL_CONSTEXPR20
-			void raw_storage_uninitialized_fill(ForwardIterator first, ForwardIterator last, const T & value, RAWST_UIFILL_VER_NOTHROW_ITER_ADVANCE)
+			void
+			raw_storage_uninitialized_fill(
+				ForwardIterator first, ForwardIterator last, const T & value,
+				RAWST_UIFILL_VER_NOTHROW_ITER_ADVANCE
+			)
 			{
 				typedef ForwardIterator iterator;
 				iterator current(first);
@@ -746,7 +826,11 @@ namespace kerbal
 
 			template <typename ForwardIterator, typename T>
 			KERBAL_CONSTEXPR14
-			void raw_storage_uninitialized_fill(ForwardIterator first, ForwardIterator last, const T & value, RAWST_UIFILL_VER_NO_CATCH)
+			void
+			raw_storage_uninitialized_fill(
+				ForwardIterator first, ForwardIterator last, const T & value,
+				RAWST_UIFILL_VER_NO_CATCH
+			)
 			{
 				while (first != last) {
 					first->construct(value);
@@ -768,13 +852,13 @@ namespace kerbal
 			typedef typename raw_storage::value_type value_type;
 
 			typedef typename kerbal::type_traits::conditional<
-					kerbal::type_traits::try_test_is_trivially_destructible<value_type>::IS_TRUE::value,
-					detail::RAWST_UIFILL_VER_NO_CATCH,
-					typename kerbal::type_traits::conditional<
-							detail::can_be_nothrow_advance_iterator<iterator>::value,
-							detail::RAWST_UIFILL_VER_NOTHROW_ITER_ADVANCE,
-							detail::RAWST_UIFILL_VER_DEFAULT
-					>::type
+				kerbal::type_traits::try_test_is_trivially_destructible<value_type>::IS_TRUE::value,
+				detail::RAWST_UIFILL_VER_NO_CATCH,
+				typename kerbal::type_traits::conditional<
+					detail::can_be_nothrow_advance_iterator<iterator>::value,
+					detail::RAWST_UIFILL_VER_NOTHROW_ITER_ADVANCE,
+					detail::RAWST_UIFILL_VER_DEFAULT
+				>::type
 			>::type VER;
 
 #	else
@@ -802,7 +886,11 @@ namespace kerbal
 
 			template <typename ForwardIterator, typename SizeType, typename T>
 			KERBAL_CONSTEXPR20
-			ForwardIterator raw_storage_uninitialized_fill_n(ForwardIterator first, SizeType n, const T & value, RAWST_UIFILL_N_VER_DEFAULT)
+			ForwardIterator
+			raw_storage_uninitialized_fill_n(
+				ForwardIterator first, SizeType n, const T & value,
+				RAWST_UIFILL_N_VER_DEFAULT
+			)
 			{
 				typedef ForwardIterator iterator;
 				iterator current(first);
@@ -832,7 +920,11 @@ namespace kerbal
 
 			template <typename ForwardIterator, typename SizeType, typename T>
 			KERBAL_CONSTEXPR20
-			ForwardIterator raw_storage_uninitialized_fill_n(ForwardIterator first, SizeType n, const T & value, RAWST_UIFILL_N_VER_NOTHROW_ITER_ADVANCE)
+			ForwardIterator
+			raw_storage_uninitialized_fill_n(
+				ForwardIterator first, SizeType n, const T & value,
+				RAWST_UIFILL_N_VER_NOTHROW_ITER_ADVANCE
+			)
 			{
 				typedef ForwardIterator iterator;
 				iterator current(first);
@@ -853,7 +945,11 @@ namespace kerbal
 
 			template <typename ForwardIterator, typename SizeType, typename T>
 			KERBAL_CONSTEXPR14
-			ForwardIterator raw_storage_uninitialized_fill_n(ForwardIterator first, SizeType n, const T & value, RAWST_UIFILL_N_VER_NO_CATCH)
+			ForwardIterator
+			raw_storage_uninitialized_fill_n(
+				ForwardIterator first, SizeType n, const T & value,
+				RAWST_UIFILL_N_VER_NO_CATCH
+			)
 			{
 				while (n > 0) {
 					--n;
@@ -877,13 +973,13 @@ namespace kerbal
 			typedef typename raw_storage::value_type value_type;
 
 			typedef typename kerbal::type_traits::conditional<
-					kerbal::type_traits::try_test_is_trivially_destructible<value_type>::IS_TRUE::value,
-					detail::RAWST_UIFILL_N_VER_NO_CATCH,
-					typename kerbal::type_traits::conditional<
-							detail::can_be_nothrow_advance_iterator<iterator>::value,
-							detail::RAWST_UIFILL_N_VER_NOTHROW_ITER_ADVANCE,
-							detail::RAWST_UIFILL_N_VER_DEFAULT
-					>::type
+				kerbal::type_traits::try_test_is_trivially_destructible<value_type>::IS_TRUE::value,
+				detail::RAWST_UIFILL_N_VER_NO_CATCH,
+				typename kerbal::type_traits::conditional<
+					detail::can_be_nothrow_advance_iterator<iterator>::value,
+					detail::RAWST_UIFILL_N_VER_NOTHROW_ITER_ADVANCE,
+					detail::RAWST_UIFILL_N_VER_DEFAULT
+				>::type
 			>::type VER;
 
 #	else

@@ -42,9 +42,9 @@ namespace kerbal
 		KERBAL_MODULE_EXPORT
 		template <typename T>
 		struct is_void :
-				kerbal::type_traits::detail::is_void_helper<
-					typename kerbal::type_traits::remove_cv<T>::type
-				>
+			kerbal::type_traits::detail::is_void_helper<
+				typename kerbal::type_traits::remove_cv<T>::type
+			>
 		{
 		};
 

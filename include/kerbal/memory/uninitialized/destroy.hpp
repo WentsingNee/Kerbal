@@ -77,9 +77,9 @@ namespace kerbal
 			template <typename T>
 			KERBAL_CONSTEXPR20
 			void k_destroy_on(T & plc, DESTROY_ON_VER_DEFAULT)
-					KERBAL_CONDITIONAL_NOEXCEPT(
-						kerbal::type_traits::try_test_is_nothrow_destructible<T>::IS_TRUE::value
-					)
+				KERBAL_CONDITIONAL_NOEXCEPT(
+					kerbal::type_traits::try_test_is_nothrow_destructible<T>::IS_TRUE::value
+				)
 			{
 				plc.~T();
 			}
@@ -101,11 +101,11 @@ namespace kerbal
 
 		template <typename T>
 		struct destroy_on_overload_version :
-				kerbal::type_traits::conditional<
-					kerbal::type_traits::try_test_is_trivially_destructible<T>::IS_TRUE::value,
-					detail::DESTROY_ON_VER_TRIVIALLY,
-					detail::DESTROY_ON_VER_DEFAULT
-				>::type
+			kerbal::type_traits::conditional<
+				kerbal::type_traits::try_test_is_trivially_destructible<T>::IS_TRUE::value,
+				detail::DESTROY_ON_VER_TRIVIALLY,
+				detail::DESTROY_ON_VER_DEFAULT
+			>::type
 		{
 		};
 
@@ -154,11 +154,11 @@ namespace kerbal
 
 		template <typename T>
 		struct destroy_overload_version:
-				kerbal::type_traits::conditional<
-					kerbal::type_traits::try_test_is_trivially_destructible<T>::IS_TRUE::value,
-					detail::DESTROY_VER_TRIVIALLY,
-					detail::DESTROY_VER_DEFAULT
-				>::type
+			kerbal::type_traits::conditional<
+				kerbal::type_traits::try_test_is_trivially_destructible<T>::IS_TRUE::value,
+				detail::DESTROY_VER_TRIVIALLY,
+				detail::DESTROY_VER_DEFAULT
+			>::type
 		{
 		};
 
@@ -184,7 +184,11 @@ namespace kerbal
 
 			template <typename ForwardIterator, typename SizeType>
 			KERBAL_CONSTEXPR20
-			ForwardIterator k_destroy_n(ForwardIterator first, SizeType n, DESTROY_N_VER_DEFAULT) KERBAL_NOEXCEPT
+			ForwardIterator
+			k_destroy_n(
+				ForwardIterator first, SizeType n,
+				DESTROY_N_VER_DEFAULT
+			) KERBAL_NOEXCEPT
 			{
 				while (n > 0) {
 					--n;
@@ -196,7 +200,11 @@ namespace kerbal
 
 			template <typename ForwardIterator, typename SizeType>
 			KERBAL_CONSTEXPR14
-			ForwardIterator k_destroy_n(ForwardIterator first, SizeType n, DESTROY_N_VER_TRIVIALLY) KERBAL_NOEXCEPT
+			ForwardIterator
+			k_destroy_n(
+				ForwardIterator first, SizeType n,
+				DESTROY_N_VER_TRIVIALLY
+			) KERBAL_NOEXCEPT
 			{
 				return kerbal::iterator::next(first, n);
 			}
@@ -205,11 +213,11 @@ namespace kerbal
 
 		template <typename T>
 		struct destroy_n_overload_version:
-				kerbal::type_traits::conditional<
-					kerbal::type_traits::try_test_is_trivially_destructible<T>::IS_TRUE::value,
-					detail::DESTROY_N_VER_TRIVIALLY,
-					detail::DESTROY_N_VER_DEFAULT
-				>::type
+			kerbal::type_traits::conditional<
+				kerbal::type_traits::try_test_is_trivially_destructible<T>::IS_TRUE::value,
+				detail::DESTROY_N_VER_TRIVIALLY,
+				detail::DESTROY_N_VER_DEFAULT
+			>::type
 		{
 		};
 
@@ -235,7 +243,11 @@ namespace kerbal
 
 			template <typename BidirectionalIterator>
 			KERBAL_CONSTEXPR20
-			void k_reverse_destroy(BidirectionalIterator first, BidirectionalIterator last, RE_DESTROY_VER_DEFAULT) KERBAL_NOEXCEPT
+			void
+			k_reverse_destroy(
+				BidirectionalIterator first, BidirectionalIterator last,
+				RE_DESTROY_VER_DEFAULT
+			) KERBAL_NOEXCEPT
 			{
 				while (first != last) {
 					--last;
@@ -245,7 +257,11 @@ namespace kerbal
 
 			template <typename BidirectionalIterator>
 			KERBAL_CONSTEXPR14
-			void k_reverse_destroy(BidirectionalIterator /*first*/, BidirectionalIterator /*last*/, RE_DESTROY_VER_TRIVIALLY) KERBAL_NOEXCEPT
+			void
+			k_reverse_destroy(
+				BidirectionalIterator /*first*/, BidirectionalIterator /*last*/,
+				RE_DESTROY_VER_TRIVIALLY
+			) KERBAL_NOEXCEPT
 			{
 			}
 
@@ -253,11 +269,11 @@ namespace kerbal
 
 		template <typename T>
 		struct reverse_destroy_overload_version:
-				kerbal::type_traits::conditional<
-					kerbal::type_traits::try_test_is_trivially_destructible<T>::IS_TRUE::value,
-					detail::RE_DESTROY_VER_TRIVIALLY,
-					detail::RE_DESTROY_VER_DEFAULT
-				>::type
+			kerbal::type_traits::conditional<
+				kerbal::type_traits::try_test_is_trivially_destructible<T>::IS_TRUE::value,
+				detail::RE_DESTROY_VER_TRIVIALLY,
+				detail::RE_DESTROY_VER_DEFAULT
+			>::type
 		{
 		};
 
@@ -280,14 +296,22 @@ namespace kerbal
 
 			template <typename ForwardIterator>
 			KERBAL_CONSTEXPR14
-			void uninitialized_transaction_failed_destroy(ForwardIterator first, ForwardIterator last, std::forward_iterator_tag) KERBAL_NOEXCEPT
+			void
+			uninitialized_transaction_failed_destroy(
+				ForwardIterator first, ForwardIterator last,
+				std::forward_iterator_tag
+			) KERBAL_NOEXCEPT
 			{
 				kerbal::memory::destroy(first, last);
 			}
 
 			template <typename BidirectionalIterator>
 			KERBAL_CONSTEXPR14
-			void uninitialized_transaction_failed_destroy(BidirectionalIterator first, BidirectionalIterator last, std::bidirectional_iterator_tag) KERBAL_NOEXCEPT
+			void
+			uninitialized_transaction_failed_destroy(
+				BidirectionalIterator first, BidirectionalIterator last,
+				std::bidirectional_iterator_tag
+			) KERBAL_NOEXCEPT
 			{
 				kerbal::memory::reverse_destroy(first, last);
 			}

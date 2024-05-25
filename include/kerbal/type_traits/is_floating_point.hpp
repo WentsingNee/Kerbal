@@ -52,9 +52,9 @@ namespace kerbal
 		KERBAL_MODULE_EXPORT
 		template <typename T>
 		struct is_floating_point :
-				kerbal::type_traits::detail::is_floating_point_helper<
-					typename kerbal::type_traits::remove_cv<T>::type
-				>
+			kerbal::type_traits::detail::is_floating_point_helper<
+				typename kerbal::type_traits::remove_cv<T>::type
+			>
 		{
 		};
 

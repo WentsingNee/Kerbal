@@ -42,7 +42,8 @@ namespace kerbal
 
 			public:
 				KERBAL_CONSTEXPR
-				explicit murmur_hash2_context(result_type seed = 97u) : seed(seed)
+				explicit murmur_hash2_context(result_type seed = 97u) :
+					seed(seed)
 				{
 				}
 
@@ -59,8 +60,10 @@ namespace kerbal
 
 				template <typename ForwardIterator>
 				KERBAL_CONSTEXPR14
-				result_type digest_helper(ForwardIterator first, ForwardIterator last,
-										kerbal::type_traits::type_identity<kerbal::compatibility::uint32_t>) const
+				result_type digest_helper(
+					ForwardIterator first, ForwardIterator last,
+					kerbal::type_traits::type_identity<kerbal::compatibility::uint32_t>
+				) const
 				{
 					typedef ForwardIterator iterator;
 					typedef typename kerbal::iterator::iterator_traits<iterator>::difference_type difference_type;

@@ -45,8 +45,8 @@ namespace kerbal
 				// 0 < _p < 1
 				KERBAL_CONSTEXPR
 				explicit
-				binomial_distribution(result_type n, double p = 0.5) KERBAL_NOEXCEPT
-						: _n(n), _p(p)
+				binomial_distribution(result_type n, double p = 0.5) KERBAL_NOEXCEPT :
+					_n(n), _p(p)
 				{
 				}
 
@@ -64,9 +64,9 @@ namespace kerbal
 
 				template <typename Engine>
 				result_type operator()(Engine & eg) const
-						KERBAL_CONDITIONAL_NOEXCEPT(
-							noexcept(kerbal::utility::declval<kerbal::random::uniform_real_distribution<double> >()(eg))
-						)
+					KERBAL_CONDITIONAL_NOEXCEPT(
+						noexcept(kerbal::utility::declval<kerbal::random::uniform_real_distribution<double> >()(eg))
+					)
 				{
 					kerbal::random::uniform_real_distribution<double> urdis(0, 1.0);
 					double s = urdis(eg);
@@ -99,14 +99,20 @@ namespace kerbal
 
 				KERBAL_CONSTEXPR
 				friend
-				bool operator==(const binomial_distribution& lhs, const binomial_distribution& rhs) KERBAL_NOEXCEPT
+				bool operator==(
+					const binomial_distribution & lhs,
+					const binomial_distribution & rhs
+				) KERBAL_NOEXCEPT
 				{
 					return lhs._n == rhs._n && lhs._p == rhs._p;
 				}
 
 				KERBAL_CONSTEXPR
 				friend
-				bool operator!=(const binomial_distribution& lhs, const binomial_distribution& rhs) KERBAL_NOEXCEPT
+				bool operator!=(
+					const binomial_distribution & lhs,
+					const binomial_distribution & rhs
+				) KERBAL_NOEXCEPT
 				{
 					return lhs._n != rhs._n || lhs._p != rhs._p;
 				}

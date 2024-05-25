@@ -24,10 +24,11 @@ namespace kerbal
 	{
 
 		class bad_optional_access:
-				public std::exception
+			public std::exception
 		{
 			public:
-				virtual const char* what() const KERBAL_NOEXCEPT
+				virtual
+				const char * what() const KERBAL_NOEXCEPT
 				{
 					return "Attempted to access the value of an uninitialized optional object.";
 				}

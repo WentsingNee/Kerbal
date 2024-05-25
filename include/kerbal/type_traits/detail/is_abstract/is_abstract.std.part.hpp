@@ -47,7 +47,8 @@ namespace kerbal
 	{
 
 		template <typename T>
-		struct is_abstract : kerbal::type_traits::bool_constant<std::is_abstract<T>::value>
+		struct is_abstract :
+			kerbal::type_traits::bool_constant<std::is_abstract<T>::value>
 		{
 		};
 

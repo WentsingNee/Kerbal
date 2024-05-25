@@ -44,14 +44,14 @@ namespace kerbal
 
 			template <typename T>
 			struct try_test_is_trivially_destructible_helper :
-					kerbal::type_traits::tribool_disjunction<
-						kerbal::type_traits::try_test_is_enum<T>,
-						kerbal::type_traits::is_fundamental<T>,
-						kerbal::type_traits::is_member_pointer<T>,
-						kerbal::type_traits::is_pointer<T>,
-						kerbal::type_traits::is_reference<T>,
-						kerbal::type_traits::tribool_unspecified
-					>::result
+				kerbal::type_traits::tribool_disjunction<
+					kerbal::type_traits::try_test_is_enum<T>,
+					kerbal::type_traits::is_fundamental<T>,
+					kerbal::type_traits::is_member_pointer<T>,
+					kerbal::type_traits::is_pointer<T>,
+					kerbal::type_traits::is_reference<T>,
+					kerbal::type_traits::tribool_unspecified
+				>::result
 			{
 			};
 

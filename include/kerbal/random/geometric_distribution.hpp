@@ -43,8 +43,8 @@ namespace kerbal
 				// 0 < _p < 1
 				KERBAL_CONSTEXPR
 				explicit
-				geometric_distribution(double p = 0.5) KERBAL_NOEXCEPT
-						: _p(p)
+				geometric_distribution(double p = 0.5) KERBAL_NOEXCEPT :
+					_p(p)
 				{
 				}
 
@@ -57,9 +57,11 @@ namespace kerbal
 				template <typename Engine>
 				KERBAL_CONSTEXPR14
 				result_type operator()(Engine & eg) const
-						KERBAL_CONDITIONAL_NOEXCEPT(
-							noexcept(kerbal::utility::declval<kerbal::random::uniform_real_distribution<double> >()(eg))
+					KERBAL_CONDITIONAL_NOEXCEPT(
+						noexcept(
+							kerbal::utility::declval<kerbal::random::uniform_real_distribution<double> >()(eg)
 						)
+					)
 				{
 					kerbal::random::uniform_real_distribution<double> urdis(0, 1.0 / _p);
 					double s = urdis(eg);
@@ -88,14 +90,20 @@ namespace kerbal
 
 				KERBAL_CONSTEXPR
 				friend
-				bool operator==(const geometric_distribution& lhs, const geometric_distribution& rhs) KERBAL_NOEXCEPT
+				bool operator==(
+					const geometric_distribution & lhs,
+					const geometric_distribution & rhs
+				) KERBAL_NOEXCEPT
 				{
 					return lhs._p == rhs._p;
 				}
 
 				KERBAL_CONSTEXPR
 				friend
-				bool operator!=(const geometric_distribution& lhs, const geometric_distribution& rhs) KERBAL_NOEXCEPT
+				bool operator!=(
+					const geometric_distribution & lhs,
+					const geometric_distribution & rhs
+				) KERBAL_NOEXCEPT
 				{
 					return lhs._p != rhs._p;
 				}

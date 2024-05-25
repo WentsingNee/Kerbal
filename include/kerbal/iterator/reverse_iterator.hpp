@@ -41,20 +41,24 @@ namespace kerbal
 		{
 
 			template <typename BidirectionalIterator>
-			struct reverse_iterator_base_is_inplace : kerbal::type_traits::false_type
+			struct reverse_iterator_base_is_inplace :
+				kerbal::type_traits::false_type
 			{
 			};
 
 			template <typename T>
-			struct reverse_iterator_base_is_inplace<T *> : kerbal::type_traits::true_type
+			struct reverse_iterator_base_is_inplace<T *> :
+				kerbal::type_traits::true_type
 			{
 			};
 
 		} // namespace detail
 
-		template <typename Iter, bool IsInplace = kerbal::iterator::detail::reverse_iterator_base_is_inplace<
-										typename kerbal::type_traits::remove_cv<Iter>::type
-								>::value
+		template <
+			typename Iter,
+			bool IsInplace = kerbal::iterator::detail::reverse_iterator_base_is_inplace<
+				typename kerbal::type_traits::remove_cv<Iter>::type
+			>::value
 		>
 		class reverse_iterator;
 
@@ -83,23 +87,23 @@ namespace kerbal
 
 					KERBAL_CONSTEXPR
 					explicit reverse_iterator_base()
-							KERBAL_CONDITIONAL_NOEXCEPT(
-								kerbal::type_traits::try_test_is_nothrow_default_constructible<
-									iterator_type
-								>::IS_TRUE::value
-							)
-							: iter()
+						KERBAL_CONDITIONAL_NOEXCEPT(
+							kerbal::type_traits::try_test_is_nothrow_default_constructible<
+								iterator_type
+							>::IS_TRUE::value
+						) :
+						iter()
 					{
 					}
 
 					KERBAL_CONSTEXPR
 					explicit reverse_iterator_base(const iterator_type & iter)
-							KERBAL_CONDITIONAL_NOEXCEPT(
-								kerbal::type_traits::try_test_is_nothrow_copy_constructible<
-									iterator_type
-								>::IS_TRUE::value
-							)
-							: iter(iter)
+						KERBAL_CONDITIONAL_NOEXCEPT(
+							kerbal::type_traits::try_test_is_nothrow_copy_constructible<
+								iterator_type
+							>::IS_TRUE::value
+						) :
+						iter(iter)
 					{
 					}
 
@@ -133,14 +137,14 @@ namespace kerbal
 					iterator_type iter;
 
 					KERBAL_CONSTEXPR
-					explicit reverse_iterator_base()
-							: iter(kerbal::iterator::prev(iterator_type()))
+					explicit reverse_iterator_base() :
+						iter(kerbal::iterator::prev(iterator_type()))
 					{
 					}
 
 					KERBAL_CONSTEXPR
-					explicit reverse_iterator_base(const iterator_type & iter)
-							: iter(kerbal::iterator::prev(iter))
+					explicit reverse_iterator_base(const iterator_type & iter) :
+						iter(kerbal::iterator::prev(iter))
 					{
 					}
 
@@ -163,21 +167,21 @@ namespace kerbal
 
 			template <typename Iter, bool IsInplace>
 			class reverse_iterator_impl<Iter, std::bidirectional_iterator_tag, IsInplace> :
-					public kerbal::iterator::detail::reverse_iterator_base<Iter, IsInplace>,
+				public kerbal::iterator::detail::reverse_iterator_base<Iter, IsInplace>,
 
-					//input iterator interface
-					public kerbal::operators::dereferenceable<
-							kerbal::iterator::reverse_iterator<Iter, IsInplace>,
-							typename kerbal::iterator::iterator_traits<Iter>::pointer
-					>, // it->
-					public kerbal::operators::incrementable<
-							kerbal::iterator::reverse_iterator<Iter, IsInplace>
-					>, // it++
+				// input iterator interface
+				public kerbal::operators::dereferenceable<
+					kerbal::iterator::reverse_iterator<Iter, IsInplace>,
+					typename kerbal::iterator::iterator_traits<Iter>::pointer
+				>, // it->
+				public kerbal::operators::incrementable<
+					kerbal::iterator::reverse_iterator<Iter, IsInplace>
+				>, // it++
 
-					//bidirectional iterator interface
-					public kerbal::operators::decrementable<
-							kerbal::iterator::reverse_iterator<Iter, IsInplace>
-					> // it--
+				// bidirectional iterator interface
+				public kerbal::operators::decrementable<
+					kerbal::iterator::reverse_iterator<Iter, IsInplace>
+				> // it--
 			{
 				private:
 					typedef kerbal::iterator::detail::reverse_iterator_base<Iter, IsInplace> super;
@@ -194,78 +198,88 @@ namespace kerbal
 
 				protected:
 					KERBAL_CONSTEXPR
-					explicit reverse_iterator_impl()
-							: super()
+					explicit reverse_iterator_impl() :
+						super()
 					{
 					}
 
 					KERBAL_CONSTEXPR
-					explicit reverse_iterator_impl(const Iter& iter)
-							: super(iter)
+					explicit reverse_iterator_impl(const Iter & iter) :
+						super(iter)
 					{
 					}
 
 				public:
 
 				//===================
-				//input iterator interface
+				// input iterator interface
 
 					KERBAL_CONSTEXPR14
-					reverse_iterator& operator++()
-							KERBAL_CONDITIONAL_NOEXCEPT(noexcept(--(kerbal::utility::declthis<this_type>()->iter)))
+					reverse_iterator & operator++()
+						KERBAL_CONDITIONAL_NOEXCEPT(
+							noexcept(
+								--(kerbal::utility::declthis<this_type>()->iter)
+							)
+						)
 					{
 						--this->iter;
-						return static_cast<reverse_iterator&>(*this);
+						return static_cast<reverse_iterator &>(*this);
 					}
 
 					KERBAL_CONSTEXPR
-					friend bool operator==(const reverse_iterator& lhs, const reverse_iterator& rhs)
+					friend
+					bool operator==(const reverse_iterator & lhs, const reverse_iterator & rhs)
 #	if KERBAL_COMPILER_ID != KERBAL_COMPILER_ID_ICC
-							KERBAL_CONDITIONAL_NOEXCEPT(noexcept(lhs.iter == rhs.iter))
+						KERBAL_CONDITIONAL_NOEXCEPT(noexcept(lhs.iter == rhs.iter))
 #	endif
 					{
 						return lhs.iter == rhs.iter;
 					}
 
 					KERBAL_CONSTEXPR
-					friend bool operator!=(const reverse_iterator& lhs, const reverse_iterator& rhs)
+					friend
+					bool operator!=(const reverse_iterator & lhs, const reverse_iterator & rhs)
 #	if KERBAL_COMPILER_ID != KERBAL_COMPILER_ID_ICC
-							KERBAL_CONDITIONAL_NOEXCEPT(noexcept(lhs.iter != rhs.iter))
+						KERBAL_CONDITIONAL_NOEXCEPT(noexcept(lhs.iter != rhs.iter))
 #	endif
 					{
 						return lhs.iter != rhs.iter;
 					}
 
 				//===================
-				//bidirectional iterator interface
+				// bidirectional iterator interface
 
 					KERBAL_CONSTEXPR14
-					reverse_iterator& operator--()
-					KERBAL_CONDITIONAL_NOEXCEPT(noexcept(++kerbal::utility::declthis<this_type>()->iter))
+					reverse_iterator & operator--()
+						KERBAL_CONDITIONAL_NOEXCEPT(
+							noexcept(
+								++kerbal::utility::declthis<this_type>()->iter
+							)
+						)
 					{
 						++this->iter;
-						return static_cast<reverse_iterator&>(*this);
+						return static_cast<reverse_iterator &>(*this);
 					}
 
 			};
 
 			template <typename Iter, bool IsInplace>
 			class reverse_iterator_impl<Iter, std::random_access_iterator_tag, IsInplace> :
-					public reverse_iterator_impl<Iter, std::bidirectional_iterator_tag, IsInplace>,
+				public reverse_iterator_impl<Iter, std::bidirectional_iterator_tag, IsInplace>,
 
-					//random access iterator interface
-					public kerbal::operators::addable<
-							kerbal::iterator::reverse_iterator<Iter, IsInplace>,
-							typename kerbal::iterator::iterator_traits<Iter>::difference_type
-					>, // it + N
-					public kerbal::operators::addable_left<
-							kerbal::iterator::reverse_iterator<Iter, IsInplace>,
-							typename kerbal::iterator::iterator_traits<Iter>::difference_type
-					>, // N + it
-					public kerbal::operators::subtractable<
-							kerbal::iterator::reverse_iterator<Iter, IsInplace>,
-							typename kerbal::iterator::iterator_traits<Iter>::difference_type
-					> // it - N
+				// random access iterator interface
+				public kerbal::operators::addable<
+					kerbal::iterator::reverse_iterator<Iter, IsInplace>,
+					typename kerbal::iterator::iterator_traits<Iter>::difference_type
+				>, // it + N
+				public kerbal::operators::addable_left<
+					kerbal::iterator::reverse_iterator<Iter, IsInplace>,
+					typename kerbal::iterator::iterator_traits<Iter>::difference_type
+				>, // N + it
+				public kerbal::operators::subtractable<
+					kerbal::iterator::reverse_iterator<Iter, IsInplace>,
+					typename kerbal::iterator::iterator_traits<Iter>::difference_type
+				> // it - N
 			{
 				private:
 					typedef reverse_iterator_impl<Iter, std::bidirectional_iterator_tag, IsInplace> super;
@@ -282,85 +296,98 @@ namespace kerbal
 
 				protected:
 					KERBAL_CONSTEXPR
-					explicit reverse_iterator_impl()
-							: super()
+					explicit reverse_iterator_impl() :
+						super()
 					{
 					}
 
 					KERBAL_CONSTEXPR
-					explicit reverse_iterator_impl(const Iter& iter)
-							: super(iter)
+					explicit reverse_iterator_impl(const Iter & iter) :
+						super(iter)
 					{
 					}
 
 				public:
 
 				//===================
-				//random access iterator interface
+				// random access iterator interface
 
 					KERBAL_CONSTEXPR
-					friend difference_type
-					operator-(const reverse_iterator& lhs, const reverse_iterator& rhs)
+					friend
+					difference_type
+					operator-(const reverse_iterator & lhs, const reverse_iterator & rhs)
 #	if KERBAL_COMPILER_ID != KERBAL_COMPILER_ID_ICC
-							KERBAL_CONDITIONAL_NOEXCEPT(noexcept(rhs.iter - lhs.iter))
+						KERBAL_CONDITIONAL_NOEXCEPT(noexcept(rhs.iter - lhs.iter))
 #	endif
 					{
 						return rhs.iter - lhs.iter;
 					}
 
 					KERBAL_CONSTEXPR14
-					reverse_iterator& operator+=(const difference_type& delta)
-							KERBAL_CONDITIONAL_NOEXCEPT(noexcept(kerbal::utility::declthis<this_type>()->iter -= delta))
+					reverse_iterator & operator+=(const difference_type & delta)
+						KERBAL_CONDITIONAL_NOEXCEPT(
+							noexcept(
+								kerbal::utility::declthis<this_type>()->iter -= delta
+							)
+						)
 					{
 						this->iter -= delta;
-						return static_cast<reverse_iterator&>(*this);
+						return static_cast<reverse_iterator &>(*this);
 					}
 
 					KERBAL_CONSTEXPR14
-					reverse_iterator& operator-=(const difference_type& delta)
-							KERBAL_CONDITIONAL_NOEXCEPT(noexcept(kerbal::utility::declthis<this_type>()->iter += delta))
+					reverse_iterator & operator-=(const difference_type & delta)
+						KERBAL_CONDITIONAL_NOEXCEPT(
+							noexcept(
+								kerbal::utility::declthis<this_type>()->iter += delta
+							)
+						)
 					{
 						this->iter += delta;
-						return static_cast<reverse_iterator&>(*this);
+						return static_cast<reverse_iterator &>(*this);
 					}
 
 					KERBAL_CONSTEXPR14
-					reference operator[](const difference_type& dist) const
+					reference operator[](const difference_type & dist) const
 					{
-						return *(static_cast<const reverse_iterator&>(*this) + dist);
+						return *(static_cast<const reverse_iterator &>(*this) + dist);
 					}
 
 					KERBAL_CONSTEXPR
-					friend bool operator<(const reverse_iterator& lhs, const reverse_iterator& rhs)
+					friend
+					bool operator<(const reverse_iterator & lhs, const reverse_iterator & rhs)
 #	if KERBAL_COMPILER_ID != KERBAL_COMPILER_ID_ICC
-							KERBAL_CONDITIONAL_NOEXCEPT(noexcept(lhs.iter > rhs.iter))
+						KERBAL_CONDITIONAL_NOEXCEPT(noexcept(lhs.iter > rhs.iter))
 #	endif
 					{
 						return lhs.iter > rhs.iter;
 					}
 
 					KERBAL_CONSTEXPR
-					friend bool operator<=(const reverse_iterator& lhs, const reverse_iterator& rhs)
+					friend
+					bool operator<=(const reverse_iterator & lhs, const reverse_iterator & rhs)
 #	if KERBAL_COMPILER_ID != KERBAL_COMPILER_ID_ICC
-							KERBAL_CONDITIONAL_NOEXCEPT(noexcept(lhs.iter >= rhs.iter))
+						KERBAL_CONDITIONAL_NOEXCEPT(noexcept(lhs.iter >= rhs.iter))
 #	endif
 					{
 						return lhs.iter >= rhs.iter;
 					}
 
 					KERBAL_CONSTEXPR
-					friend bool operator>(const reverse_iterator& lhs, const reverse_iterator& rhs)
+					friend
+					bool operator>(const reverse_iterator & lhs, const reverse_iterator & rhs)
 #	if KERBAL_COMPILER_ID != KERBAL_COMPILER_ID_ICC
-							KERBAL_CONDITIONAL_NOEXCEPT(noexcept(lhs.iter < rhs.iter))
+						KERBAL_CONDITIONAL_NOEXCEPT(noexcept(lhs.iter < rhs.iter))
 #	endif
 					{
 						return lhs.iter < rhs.iter;
 					}
 
 					KERBAL_CONSTEXPR
-					friend bool operator>=(const reverse_iterator& lhs, const reverse_iterator& rhs)
+					friend
+					bool operator>=(const reverse_iterator & lhs, const reverse_iterator & rhs)
 #	if KERBAL_COMPILER_ID != KERBAL_COMPILER_ID_ICC
-							KERBAL_CONDITIONAL_NOEXCEPT(noexcept(lhs.iter <= rhs.iter))
+						KERBAL_CONDITIONAL_NOEXCEPT(noexcept(lhs.iter <= rhs.iter))
 #	endif
 					{
 						return lhs.iter <= rhs.iter;
@@ -372,13 +399,21 @@ namespace kerbal
 
 		template <typename Iter, bool IsInplace>
 		class reverse_iterator :
-				public kerbal::iterator::detail::reverse_iterator_impl<Iter, typename kerbal::iterator::iterator_traits<Iter>::iterator_category, IsInplace>
+			public kerbal::iterator::detail::reverse_iterator_impl<
+				Iter,
+				typename kerbal::iterator::iterator_traits<Iter>::iterator_category,
+				IsInplace
+			>
 		{
 			public:
 				typedef Iter iterator_type;
 
 			private:
-				typedef kerbal::iterator::detail::reverse_iterator_impl<iterator_type, typename kerbal::iterator::iterator_traits<iterator_type>::iterator_category, IsInplace> super;
+				typedef kerbal::iterator::detail::reverse_iterator_impl<
+					iterator_type,
+					typename kerbal::iterator::iterator_traits<iterator_type>::iterator_category,
+					IsInplace
+				> super;
 
 			public:
 				typedef typename super::iterator_category		iterator_category;
@@ -389,14 +424,14 @@ namespace kerbal
 
 			public:
 				KERBAL_CONSTEXPR
-				explicit reverse_iterator()
-						: super()
+				explicit reverse_iterator() :
+					super()
 				{
 				}
 
 				KERBAL_CONSTEXPR
-				explicit reverse_iterator(const iterator_type& iter)
-						: super(iter)
+				explicit reverse_iterator(const iterator_type & iter) :
+					super(iter)
 				{
 				}
 
@@ -405,24 +440,25 @@ namespace kerbal
 #	if __cplusplus >= 201703L
 
 		template <typename BidirectionalIterator>
-		reverse_iterator(const BidirectionalIterator&) -> reverse_iterator<BidirectionalIterator>;
+		reverse_iterator(const BidirectionalIterator &) ->
+		reverse_iterator<BidirectionalIterator>;
 
 #	endif
 
 		template <typename Iter>
 		KERBAL_CONSTEXPR
 		reverse_iterator<Iter>
-		make_reverse_iterator(const Iter& iter)
+		make_reverse_iterator(const Iter & iter)
 		{
 			return reverse_iterator<Iter>(iter);
 		}
 
 		template <typename T, std::size_t N>
 		KERBAL_CONSTEXPR
-		reverse_iterator<T*, false>
+		reverse_iterator<T *, false>
 		make_reverse_iterator(T (&arr) [N])
 		{
-			return reverse_iterator<T*, false>(arr);
+			return reverse_iterator<T *, false>(arr);
 		}
 
 	} // namespace iterator

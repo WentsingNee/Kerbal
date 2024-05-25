@@ -31,7 +31,7 @@ namespace kerbal
 	namespace test
 	{
 
-		class runtime_timer: kerbal::utility::noncopyable
+		class runtime_timer : kerbal::utility::noncopyable
 		{
 			protected:
 				unsigned long start_time;
@@ -39,7 +39,7 @@ namespace kerbal
 			public:
 
 				runtime_timer() :
-						start_time(kerbal::compatibility::get_tick_count())
+					start_time(kerbal::compatibility::get_tick_count())
 				{
 				}
 

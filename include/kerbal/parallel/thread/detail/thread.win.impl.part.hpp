@@ -62,8 +62,8 @@ namespace kerbal
 
 		template <typename Allocator>
 		template <typename Callable, typename ... Args>
-		basic_thread<Allocator>::basic_thread(Callable&& fun, Args&& ... args) :
-				super()
+		basic_thread<Allocator>::basic_thread(Callable && fun, Args && ... args) :
+			super()
 		{
 			typedef typename detail::fun_args_pack_type<Callable, Args...>::type fun_args_pack_t;
 
@@ -74,13 +74,15 @@ namespace kerbal
 			{
 					static unsigned int __stdcall start_rtn(void * fun_args_pack_v)
 					{
-						fun_args_pack_t * fun_args_pack_p = static_cast<fun_args_pack_t*>(fun_args_pack_v);
+						fun_args_pack_t * fun_args_pack_p = static_cast<fun_args_pack_t *>(fun_args_pack_v);
 
 						rebind_allocator alloc(rebind_alloc<fun_args_pack_t>());
 
 						try {
-							basic_thread::apply(*fun_args_pack_p,
-											kerbal::utility::make_index_sequence<sizeof...(Args)>());
+							basic_thread::apply(
+								*fun_args_pack_p,
+								kerbal::utility::make_index_sequence<sizeof...(Args)>()
+							);
 						} catch (...) {
 							k_destroy_fun_args_pack(alloc, fun_args_pack_p);
 							throw;
@@ -93,7 +95,7 @@ namespace kerbal
 
 			rebind_allocator alloc(rebind_alloc<fun_args_pack_t>());
 			fun_args_pack_t * fun_args_pack_p = k_build_fun_args_pack(
-					alloc, kerbal::utility::forward<Callable>(fun), kerbal::utility::forward<Args>(args)...
+				alloc, kerbal::utility::forward<Callable>(fun), kerbal::utility::forward<Args>(args)...
 			);
 
 			unsigned thread_id;
@@ -101,7 +103,7 @@ namespace kerbal
 			if (this->k_th_id.native_handle == 0) {
 				k_destroy_fun_args_pack(alloc, fun_args_pack_p);
 				kerbal::utility::throw_this_exception_helper<
-						kerbal::parallel::thread_create_failed
+					kerbal::parallel::thread_create_failed
 				>::throw_this_exception();
 			}
 		}
@@ -119,11 +121,11 @@ namespace kerbal
 		template <typename Allocator> \
 		template <typename Callable KERBAL_OPT_PPEXPAND_WITH_COMMA_N(LEFT_JOIN_COMMA, EMPTY, TARGS_DECL, i)> \
 		basic_thread<Allocator>::basic_thread(Callable fun KERBAL_OPT_PPEXPAND_WITH_COMMA_N(LEFT_JOIN_COMMA, EMPTY, ARGS_DECL, i)) : \
-				super() \
+			super() \
 		{ \
 			typedef kerbal::utility::tuple< \
-					typename kerbal::type_traits::decay<Callable>::type \
-					KERBAL_OPT_PPEXPAND_WITH_COMMA_N(LEFT_JOIN_COMMA, EMPTY, TARGS_USE, i) \
+				typename kerbal::type_traits::decay<Callable>::type \
+				KERBAL_OPT_PPEXPAND_WITH_COMMA_N(LEFT_JOIN_COMMA, EMPTY, TARGS_USE, i) \
 			> fun_args_pack_t; \
  \
 			typedef typename allocator_traits::template rebind_alloc<fun_args_pack_t>::other rebind_allocator; \
@@ -133,12 +135,15 @@ namespace kerbal
 			{ \
 					static void * start_rtn(void * fun_args_pack_v) \
 					{ \
-						fun_args_pack_t * fun_args_pack_p = static_cast<fun_args_pack_t*>(fun_args_pack_v); \
+						fun_args_pack_t * fun_args_pack_p = static_cast<fun_args_pack_t *>(fun_args_pack_v); \
  \
 						rebind_allocator alloc(rebind_alloc<fun_args_pack_t>()); \
  \
 						try { \
-							kerbal::function::invoke_r<void>(fun_args_pack_p->template get<0>() KERBAL_OPT_PPEXPAND_WITH_COMMA_N(LEFT_JOIN_COMMA, EMPTY, FUN_ARGS_PACK_EXPAND_ARG, i)); \
+							kerbal::function::invoke_r<void>( \
+								fun_args_pack_p->template get<0>() \
+								KERBAL_OPT_PPEXPAND_WITH_COMMA_N(LEFT_JOIN_COMMA, EMPTY, FUN_ARGS_PACK_EXPAND_ARG, i) \
+							); \
 						} catch (...) { \
 							k_destroy_fun_args_pack(alloc, fun_args_pack_p); \
 							throw; \
@@ -151,7 +156,7 @@ namespace kerbal
  \
 			rebind_allocator alloc(rebind_alloc<fun_args_pack_t>()); \
 			fun_args_pack_t * fun_args_pack_p = k_build_fun_args_pack( \
-					alloc, fun KERBAL_OPT_PPEXPAND_WITH_COMMA_N(LEFT_JOIN_COMMA, EMPTY, ARGS_USE, i) \
+				alloc, fun KERBAL_OPT_PPEXPAND_WITH_COMMA_N(LEFT_JOIN_COMMA, EMPTY, ARGS_USE, i) \
 			); \
  \
 			unsigned thread_id; \
@@ -159,10 +164,10 @@ namespace kerbal
 			if (this->k_th_id.native_handle == 0) { \
 				k_destroy_fun_args_pack(alloc, fun_args_pack_p); \
 				kerbal::utility::throw_this_exception_helper< \
-						kerbal::parallel::thread_create_failed \
+					kerbal::parallel::thread_create_failed \
 				>::throw_this_exception(); \
 			} \
-		}
+		} \
 
 		KERBAL_PPEXPAND_N(FBODY, KERBAL_PPEXPAND_EMPTY_SEPARATOR, 0)
 		KERBAL_PPEXPAND_N(FBODY, KERBAL_PPEXPAND_EMPTY_SEPARATOR, 19)

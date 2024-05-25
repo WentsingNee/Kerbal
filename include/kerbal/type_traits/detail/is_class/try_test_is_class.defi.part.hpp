@@ -25,9 +25,9 @@ namespace kerbal
 
 		template <typename T>
 		struct try_test_is_class :
-				kerbal::type_traits::tribool_constant<
-					!!kerbal::type_traits::is_class<T>::value
-				>
+			kerbal::type_traits::tribool_constant<
+				!!kerbal::type_traits::is_class<T>::value
+			>
 		{
 		};
 

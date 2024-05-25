@@ -50,10 +50,10 @@ namespace kerbal
 
 			template <typename Iter>
 			class move_iterator_impl<Iter, std::input_iterator_tag> :
-					//input iterator interface
-					public kerbal::operators::incrementable<
-							kerbal::iterator::move_iterator<Iter>
-					> // it++
+				// input iterator interface
+				public kerbal::operators::incrementable<
+					kerbal::iterator::move_iterator<Iter>
+				> // it++
 			{
 				private:
 					typedef Iter iterator_type;
@@ -73,21 +73,21 @@ namespace kerbal
 					typedef typename base_iterator_traits::difference_type		difference_type;
 					typedef iterator_type										pointer;
 					typedef typename kerbal::type_traits::conditional<
-							kerbal::type_traits::is_reference<base_iterator_reference>::value,
-							typename kerbal::type_traits::add_rvalue_reference<value_type>::type,
-							base_iterator_reference
+						kerbal::type_traits::is_reference<base_iterator_reference>::value,
+						typename kerbal::type_traits::add_rvalue_reference<value_type>::type,
+						base_iterator_reference
 					>::type 													reference;
 
 				protected:
 					KERBAL_CONSTEXPR
-					explicit move_iterator_impl()
-							: iter()
+					explicit move_iterator_impl() :
+						iter()
 					{
 					}
 
 					KERBAL_CONSTEXPR
-					explicit move_iterator_impl(const Iter& iter)
-							: iter(iter)
+					explicit move_iterator_impl(const Iter & iter) :
+						iter(iter)
 					{
 					}
 
@@ -106,29 +106,35 @@ namespace kerbal
 					}
 
 				//===================
-				//input iterator interface
+				// input iterator interface
 
 					KERBAL_CONSTEXPR14
-					move_iterator& operator++()
-							KERBAL_CONDITIONAL_NOEXCEPT(noexcept(++(kerbal::utility::declthis<this_type>()->iter)))
+					move_iterator & operator++()
+						KERBAL_CONDITIONAL_NOEXCEPT(
+							noexcept(
+								++(kerbal::utility::declthis<this_type>()->iter)
+							)
+						)
 					{
 						++this->iter;
-						return static_cast<move_iterator&>(*this);
+						return static_cast<move_iterator &>(*this);
 					}
 
 					KERBAL_CONSTEXPR14
-					friend bool operator==(const move_iterator& lhs, const move_iterator& rhs)
+					friend
+					bool operator==(const move_iterator & lhs, const move_iterator & rhs)
 #		if KERBAL_COMPILER_ID == KERBAL_COMPILER_ID_ICC && __cplusplus >+ 201703L
-							KERBAL_CONDITIONAL_NOEXCEPT(noexcept(lhs.iter == rhs.iter))
+						KERBAL_CONDITIONAL_NOEXCEPT(noexcept(lhs.iter == rhs.iter))
 #		endif
 					{
 						return lhs.iter == rhs.iter;
 					}
 
 					KERBAL_CONSTEXPR14
-					friend bool operator!=(const move_iterator& lhs, const move_iterator& rhs)
+					friend
+					bool operator!=(const move_iterator & lhs, const move_iterator & rhs)
 #		if KERBAL_COMPILER_ID == KERBAL_COMPILER_ID_ICC && __cplusplus >+ 201703L
-							KERBAL_CONDITIONAL_NOEXCEPT(noexcept(lhs.iter != rhs.iter))
+						KERBAL_CONDITIONAL_NOEXCEPT(noexcept(lhs.iter != rhs.iter))
 #		endif
 					{
 						return lhs.iter != rhs.iter;
@@ -138,7 +144,7 @@ namespace kerbal
 
 			template <typename Iter>
 			class move_iterator_impl<Iter, std::forward_iterator_tag> :
-					public move_iterator_impl<Iter, std::input_iterator_tag>
+				public move_iterator_impl<Iter, std::input_iterator_tag>
 			{
 				private:
 					typedef move_iterator_impl<Iter, std::input_iterator_tag> super;
@@ -155,14 +161,14 @@ namespace kerbal
 
 				protected:
 					KERBAL_CONSTEXPR
-					explicit move_iterator_impl()
-							: super()
+					explicit move_iterator_impl() :
+						super()
 					{
 					}
 
 					KERBAL_CONSTEXPR
-					explicit move_iterator_impl(const Iter& iter)
-							: super(iter)
+					explicit move_iterator_impl(const Iter & iter) :
+						super(iter)
 					{
 					}
 
@@ -170,12 +176,12 @@ namespace kerbal
 
 			template <typename Iter>
 			class move_iterator_impl<Iter, std::bidirectional_iterator_tag> :
-					public move_iterator_impl<Iter, std::forward_iterator_tag>,
+				public move_iterator_impl<Iter, std::forward_iterator_tag>,
 
-					//bidirectional iterator interface
-					public kerbal::operators::decrementable<
-							kerbal::iterator::move_iterator<Iter>
-					> // it--
+				// bidirectional iterator interface
+				public kerbal::operators::decrementable<
+					kerbal::iterator::move_iterator<Iter>
+				> // it--
 			{
 				private:
 					typedef move_iterator_impl<Iter, std::forward_iterator_tag> super;
@@ -192,49 +198,49 @@ namespace kerbal
 
 				protected:
 					KERBAL_CONSTEXPR
-					explicit move_iterator_impl()
-							: super()
+					explicit move_iterator_impl() :
+						super()
 					{
 					}
 
 					KERBAL_CONSTEXPR
-					explicit move_iterator_impl(const Iter& iter)
-							: super(iter)
+					explicit move_iterator_impl(const Iter & iter) :
+						super(iter)
 					{
 					}
 
 				public:
 
 				//===================
-				//bidirectional iterator interface
+				// bidirectional iterator interface
 
 					KERBAL_CONSTEXPR14
-					move_iterator& operator--()
+					move_iterator & operator--()
 					KERBAL_CONDITIONAL_NOEXCEPT(noexcept(--kerbal::utility::declthis<this_type>()->iter))
 					{
 						--this->iter;
-						return static_cast<move_iterator&>(*this);
+						return static_cast<move_iterator &>(*this);
 					}
 
 			};
 
 			template <typename Iter>
 			class move_iterator_impl<Iter, std::random_access_iterator_tag> :
-					public move_iterator_impl<Iter, std::bidirectional_iterator_tag>,
+				public move_iterator_impl<Iter, std::bidirectional_iterator_tag>,
 
-					//random access iterator interface
-					public kerbal::operators::addable<
-							kerbal::iterator::move_iterator<Iter>,
-							typename kerbal::iterator::iterator_traits<Iter>::difference_type
-					>, // it + N
-					public kerbal::operators::addable_left<
-							kerbal::iterator::move_iterator<Iter>,
-							typename kerbal::iterator::iterator_traits<Iter>::difference_type
-					>, // N + it
-					public kerbal::operators::subtractable<
-							kerbal::iterator::move_iterator<Iter>,
-							typename kerbal::iterator::iterator_traits<Iter>::difference_type
-					> // it - N
+				// random access iterator interface
+				public kerbal::operators::addable<
+					kerbal::iterator::move_iterator<Iter>,
+					typename kerbal::iterator::iterator_traits<Iter>::difference_type
+				>, // it + N
+				public kerbal::operators::addable_left<
+					kerbal::iterator::move_iterator<Iter>,
+					typename kerbal::iterator::iterator_traits<Iter>::difference_type
+				>, // N + it
+				public kerbal::operators::subtractable<
+					kerbal::iterator::move_iterator<Iter>,
+					typename kerbal::iterator::iterator_traits<Iter>::difference_type
+				> // it - N
 			{
 				private:
 					typedef move_iterator_impl<Iter, std::bidirectional_iterator_tag> super;
@@ -251,85 +257,90 @@ namespace kerbal
 
 				protected:
 					KERBAL_CONSTEXPR
-					explicit move_iterator_impl()
-							: super()
+					explicit move_iterator_impl() :
+						super()
 					{
 					}
 
 					KERBAL_CONSTEXPR
-					explicit move_iterator_impl(const Iter& iter)
-							: super(iter)
+					explicit move_iterator_impl(const Iter & iter) :
+						super(iter)
 					{
 					}
 
 				public:
 
 				//===================
-				//random access iterator interface
+				// random access iterator interface
 
-					friend KERBAL_CONSTEXPR
+					KERBAL_CONSTEXPR
+					friend
 					difference_type
-					operator-(const move_iterator& lhs, const move_iterator& rhs)
+					operator-(const move_iterator & lhs, const move_iterator & rhs)
 #		if KERBAL_COMPILER_ID == KERBAL_COMPILER_ID_ICC && __cplusplus >+ 201703L
-							KERBAL_CONDITIONAL_NOEXCEPT(noexcept(lhs.iter - rhs.iter))
+						KERBAL_CONDITIONAL_NOEXCEPT(noexcept(lhs.iter - rhs.iter))
 #		endif
 					{
 						return lhs.iter - rhs.iter;
 					}
 
 					KERBAL_CONSTEXPR14
-					move_iterator& operator+=(const difference_type& delta)
-							KERBAL_CONDITIONAL_NOEXCEPT(noexcept(kerbal::utility::declthis<this_type>()->iter += delta))
+					move_iterator & operator+=(const difference_type & delta)
+						KERBAL_CONDITIONAL_NOEXCEPT(noexcept(kerbal::utility::declthis<this_type>()->iter += delta))
 					{
 						this->iter += delta;
-						return static_cast<move_iterator&>(*this);
+						return static_cast<move_iterator &>(*this);
 					}
 
 					KERBAL_CONSTEXPR14
-					move_iterator& operator-=(const difference_type& delta)
-							KERBAL_CONDITIONAL_NOEXCEPT(noexcept(kerbal::utility::declthis<this_type>()->iter -= delta))
+					move_iterator & operator-=(const difference_type & delta)
+						KERBAL_CONDITIONAL_NOEXCEPT(noexcept(kerbal::utility::declthis<this_type>()->iter -= delta))
 					{
 						this->iter -= delta;
-						return static_cast<move_iterator&>(*this);
+						return static_cast<move_iterator &>(*this);
 					}
 
 					KERBAL_CONSTEXPR14
-					reference operator[](const difference_type& dist) const
+					reference operator[](const difference_type & dist) const
 					{
-						return *(static_cast<const move_iterator&>(*this) + dist);
+						return *(static_cast<const move_iterator &>(*this) + dist);
 					}
 
 					KERBAL_CONSTEXPR14
-					friend bool operator<(const move_iterator& lhs, const move_iterator& rhs)
+					friend
+					bool operator<(const move_iterator & lhs, const move_iterator & rhs)
 #		if KERBAL_COMPILER_ID == KERBAL_COMPILER_ID_ICC && __cplusplus >+ 201703L
-							KERBAL_CONDITIONAL_NOEXCEPT(noexcept(lhs.iter < rhs.iter))
+						KERBAL_CONDITIONAL_NOEXCEPT(noexcept(lhs.iter < rhs.iter))
 #		endif
 					{
 						return lhs.iter < rhs.iter;
 					}
 
 					KERBAL_CONSTEXPR14
-					friend bool operator<=(const move_iterator& lhs, const move_iterator& rhs)
+					friend
+					bool operator<=(const move_iterator & lhs, const move_iterator & rhs)
 #		if KERBAL_COMPILER_ID == KERBAL_COMPILER_ID_ICC && __cplusplus >+ 201703L
-							KERBAL_CONDITIONAL_NOEXCEPT(noexcept(lhs.iter <= rhs.iter))
+						KERBAL_CONDITIONAL_NOEXCEPT(noexcept(lhs.iter <= rhs.iter))
 #		endif
 					{
 						return lhs.iter <= rhs.iter;
 					}
 
 					KERBAL_CONSTEXPR14
-					friend bool operator>(const move_iterator& lhs, const move_iterator& rhs)
+					friend
+					bool operator>(const move_iterator & lhs, const move_iterator & rhs)
 #		if KERBAL_COMPILER_ID == KERBAL_COMPILER_ID_ICC && __cplusplus >+ 201703L
-							KERBAL_CONDITIONAL_NOEXCEPT(noexcept(lhs.iter > rhs.iter))
+						KERBAL_CONDITIONAL_NOEXCEPT(noexcept(lhs.iter > rhs.iter))
 #		endif
 					{
 						return lhs.iter > rhs.iter;
 					}
 
 					KERBAL_CONSTEXPR14
-					friend bool operator>=(const move_iterator& lhs, const move_iterator& rhs)
+					friend
+					bool operator>=(const move_iterator & lhs, const move_iterator & rhs)
 #		if KERBAL_COMPILER_ID == KERBAL_COMPILER_ID_ICC && __cplusplus >+ 201703L
-							KERBAL_CONDITIONAL_NOEXCEPT(noexcept(lhs.iter >= rhs.iter))
+						KERBAL_CONDITIONAL_NOEXCEPT(noexcept(lhs.iter >= rhs.iter))
 #		endif
 					{
 						return lhs.iter >= rhs.iter;
@@ -341,13 +352,19 @@ namespace kerbal
 
 		template <typename Iter>
 		class move_iterator :
-				public kerbal::iterator::detail::move_iterator_impl<Iter, typename kerbal::iterator::iterator_traits<Iter>::iterator_category>
+			public kerbal::iterator::detail::move_iterator_impl<
+				Iter,
+				typename kerbal::iterator::iterator_traits<Iter>::iterator_category
+			>
 		{
 			public:
 				typedef Iter iterator_type;
 
 			private:
-				typedef kerbal::iterator::detail::move_iterator_impl<iterator_type, typename kerbal::iterator::iterator_traits<iterator_type>::iterator_category> super;
+				typedef kerbal::iterator::detail::move_iterator_impl<
+					iterator_type,
+					typename kerbal::iterator::iterator_traits<iterator_type>::iterator_category
+				> super;
 
 			public:
 				typedef typename super::iterator_category		iterator_category;
@@ -358,14 +375,14 @@ namespace kerbal
 
 			public:
 				KERBAL_CONSTEXPR
-				explicit move_iterator()
-						: super()
+				explicit move_iterator() :
+					super()
 				{
 				}
 
 				KERBAL_CONSTEXPR
-				explicit move_iterator(const iterator_type& iter)
-						: super(iter)
+				explicit move_iterator(const iterator_type & iter) :
+					super(iter)
 				{
 				}
 
@@ -374,24 +391,24 @@ namespace kerbal
 #	if __cplusplus >= 201703L
 
 		template <typename InputIterator>
-		move_iterator(const InputIterator&) -> move_iterator<InputIterator>;
+		move_iterator(const InputIterator &) -> move_iterator<InputIterator>;
 
 #	endif
 
 		template <typename Iter>
 		KERBAL_CONSTEXPR
 		move_iterator<Iter>
-		make_move_iterator(const Iter& iter)
+		make_move_iterator(const Iter & iter)
 		{
 			return move_iterator<Iter>(iter);
 		}
 
 		template <typename T, std::size_t N>
 		KERBAL_CONSTEXPR
-		move_iterator<T*>
+		move_iterator<T *>
 		make_move_iterator(T (&arr) [N])
 		{
-			return move_iterator<T*>(arr);
+			return move_iterator<T *>(arr);
 		}
 
 	} // namespace iterator

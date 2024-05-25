@@ -27,13 +27,13 @@ namespace kerbal
 		KERBAL_CONSTEXPR14
 		OutputIterator
 		copy_if(InputIterator first, InputIterator last, OutputIterator to, UnaryPredicate pred)
-				KERBAL_CONDITIONAL_NOEXCEPT(
-					noexcept(static_cast<bool>(first != last)) &&
-					noexcept(static_cast<bool>(pred(*first))) &&
-					noexcept(kerbal::assign::generic_assign(*to, *first)) &&
-					noexcept(++to) &&
-					noexcept(++first)
-				)
+			KERBAL_CONDITIONAL_NOEXCEPT(
+				noexcept(static_cast<bool>(first != last)) &&
+				noexcept(static_cast<bool>(pred(*first))) &&
+				noexcept(kerbal::assign::generic_assign(*to, *first)) &&
+				noexcept(++to) &&
+				noexcept(++first)
+			)
 		{
 			while (first != last) {
 				if (pred(*first)) {

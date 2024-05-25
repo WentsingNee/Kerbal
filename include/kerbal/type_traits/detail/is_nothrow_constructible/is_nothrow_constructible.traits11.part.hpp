@@ -41,9 +41,9 @@ namespace kerbal
 
 			template <typename T, typename ... Args>
 			struct is_nothrow_constructible_helper :
-					kerbal::type_traits::bool_constant<
-						noexcept(T(kerbal::utility::declval<Args>()...))
-					>
+				kerbal::type_traits::bool_constant<
+					noexcept(T(kerbal::utility::declval<Args>()...))
+				>
 			{
 			};
 
@@ -51,10 +51,10 @@ namespace kerbal
 
 		template <typename T, typename ... Args>
 		struct is_nothrow_constructible :
-				kerbal::type_traits::conjunction<
-					kerbal::type_traits::is_constructible<T, Args...>,
-					kerbal::type_traits::detail::is_nothrow_constructible_helper<T, Args...>
-				>
+			kerbal::type_traits::conjunction<
+				kerbal::type_traits::is_constructible<T, Args...>,
+				kerbal::type_traits::detail::is_nothrow_constructible_helper<T, Args...>
+			>
 		{
 		};
 

@@ -28,11 +28,11 @@ namespace kerbal
 		KERBAL_MODULE_EXPORT
 		template <typename From, typename To>
 		struct copy_const :
-				kerbal::type_traits::conditional<
-					kerbal::type_traits::is_const<From>::value,
-					typename kerbal::type_traits::add_const<To>::type,
-					To
-				>
+			kerbal::type_traits::conditional<
+				kerbal::type_traits::is_const<From>::value,
+				typename kerbal::type_traits::add_const<To>::type,
+				To
+			>
 		{
 		};
 

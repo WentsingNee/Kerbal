@@ -29,28 +29,31 @@ namespace kerbal
 	{
 
 		template <typename Alloc, typename = kerbal::type_traits::void_type<>::type>
-		struct allocator_has_def_const_pointer: kerbal::type_traits::false_type
+		struct allocator_has_def_const_pointer :
+			kerbal::type_traits::false_type
 		{
 		};
 
 		template <typename Alloc>
 		struct allocator_has_def_const_pointer<
-				Alloc,
-				typename kerbal::type_traits::void_type<typename Alloc::const_pointer>::type
+			Alloc,
+			typename kerbal::type_traits::void_type<typename Alloc::const_pointer>::type
 		> :
-				kerbal::type_traits::true_type
+			kerbal::type_traits::true_type
 		{
 		};
 
 		template <typename Alloc>
-		struct allocator_could_use_const_pointer_def : kerbal::memory::allocator_has_def_const_pointer<Alloc>
+		struct allocator_could_use_const_pointer_def :
+			kerbal::memory::allocator_has_def_const_pointer<Alloc>
 		{
 		};
 
 #	if __cplusplus >= 201703L
 
 		template <typename T>
-		struct allocator_could_use_const_pointer_def<std::allocator<T> >: kerbal::type_traits::false_type
+		struct allocator_could_use_const_pointer_def<std::allocator<T> > :
+			kerbal::type_traits::false_type
 		{
 		};
 
@@ -59,7 +62,10 @@ namespace kerbal
 		namespace detail
 		{
 
-			template <typename Alloc, bool = kerbal::memory::allocator_could_use_const_pointer_def<Alloc>::value>
+			template <
+				typename Alloc,
+				bool = kerbal::memory::allocator_could_use_const_pointer_def<Alloc>::value
+			>
 			struct allocator_const_pointer_traits_helper
 			{
 				private:

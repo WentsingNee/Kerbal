@@ -28,28 +28,31 @@ namespace kerbal
 	{
 
 		template <typename Alloc, typename = kerbal::type_traits::void_type<>::type>
-		struct allocator_has_def_is_always_equal: kerbal::type_traits::false_type
+		struct allocator_has_def_is_always_equal :
+			kerbal::type_traits::false_type
 		{
 		};
 
 		template <typename Alloc>
 		struct allocator_has_def_is_always_equal<
-				Alloc,
-				typename kerbal::type_traits::void_type<typename Alloc::is_always_equal>::type
+			Alloc,
+			typename kerbal::type_traits::void_type<typename Alloc::is_always_equal>::type
 		> :
-				kerbal::type_traits::true_type
+			kerbal::type_traits::true_type
 		{
 		};
 
 		template <typename Alloc>
-		struct allocator_could_use_is_always_equal : kerbal::memory::allocator_has_def_is_always_equal<Alloc>
+		struct allocator_could_use_is_always_equal :
+			kerbal::memory::allocator_has_def_is_always_equal<Alloc>
 		{
 		};
 
 #	if __cplusplus >= 201703L
 
 		template <typename T>
-		struct allocator_could_use_is_always_equal<std::allocator<T> >: kerbal::type_traits::false_type
+		struct allocator_could_use_is_always_equal<std::allocator<T> > :
+			kerbal::type_traits::false_type
 		{
 		};
 
@@ -60,15 +63,15 @@ namespace kerbal
 
 			template <typename Alloc, bool = kerbal::memory::allocator_could_use_is_always_equal<Alloc>::value>
 			struct allocator_is_always_equal_traits_helper:
-					kerbal::type_traits::try_test_is_empty<Alloc>::IS_TRUE
+				kerbal::type_traits::try_test_is_empty<Alloc>::IS_TRUE
 			{
 			};
 
 			template <typename Alloc>
 			struct allocator_is_always_equal_traits_helper<Alloc, true>:
-					kerbal::type_traits::bool_constant<
-							Alloc::is_always_equal::value
-					>
+				kerbal::type_traits::bool_constant<
+					Alloc::is_always_equal::value
+				>
 			{
 			};
 
@@ -76,7 +79,7 @@ namespace kerbal
 
 			template <typename T>
 			struct allocator_is_always_equal_traits_helper<std::allocator<T>, false> :
-					kerbal::type_traits::true_type
+				kerbal::type_traits::true_type
 			{
 			};
 

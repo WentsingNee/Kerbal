@@ -31,8 +31,8 @@ namespace kerbal
 	{
 
 		template <typename T>
-		struct is_trivially_reallocate_type:
-				kerbal::type_traits::try_test_is_trivially_copyable<T>::IS_TRUE
+		struct is_trivially_reallocate_type :
+			kerbal::type_traits::try_test_is_trivially_copyable<T>::IS_TRUE
 		{
 		};
 
@@ -47,7 +47,7 @@ namespace kerbal
 			{
 				protected:
 					typedef T					value_type;
-					typedef value_type*			pointer;
+					typedef value_type *		pointer;
 					typedef std::size_t			size_type;
 
 				public:
@@ -75,12 +75,12 @@ namespace kerbal
 		} // namespace detail
 
 		template <typename T>
-		class reallocable_allocator:
-				public detail::reallocable_allocator_realloc_overload_helper<T>
+		class reallocable_allocator :
+			public detail::reallocable_allocator_realloc_overload_helper<T>
 		{
 			public:
 				typedef T							value_type;
-				typedef value_type*					pointer;
+				typedef value_type *				pointer;
 
 				typedef std::size_t					size_type;
 				typedef std::ptrdiff_t				difference_type;
@@ -91,8 +91,8 @@ namespace kerbal
 				static pointer allocate(size_type n)
 				{
 					typedef kerbal::type_traits::integral_constant<
-							size_type,
-							kerbal::numeric::numeric_limits<size_type>::MAX::value / sizeof(value_type)
+						size_type,
+						kerbal::numeric::numeric_limits<size_type>::MAX::value / sizeof(value_type)
 					> MAX_SIZE;
 
 					if (n > MAX_SIZE::value) {

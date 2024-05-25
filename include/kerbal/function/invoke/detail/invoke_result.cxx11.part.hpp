@@ -115,9 +115,9 @@ namespace kerbal
 
 		template <typename Fun, typename ... Args>
 		struct invoke_result :
-				kerbal::function::detail::invoke_result_helper<
-					typename kerbal::function::detail::invoke_overload_ver_selector<Fun, Args...>::type, Fun, Args...
-				>
+			kerbal::function::detail::invoke_result_helper<
+				typename kerbal::function::detail::invoke_overload_ver_selector<Fun, Args...>::type, Fun, Args...
+			>
 		{
 		};
 

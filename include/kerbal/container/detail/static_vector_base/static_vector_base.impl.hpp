@@ -36,9 +36,9 @@ namespace kerbal
 			template <typename T, std::size_t N>
 			KERBAL_CONSTEXPR
 			static_vector_base<T, N>::static_vector_base() KERBAL_NOEXCEPT :
-					len(0)
+				len(0)
 #		if __cplusplus >= 201103L
-					, storage()
+				, storage()
 #		endif
 			{
 			}
@@ -46,9 +46,9 @@ namespace kerbal
 			template <typename T, std::size_t N>
 			KERBAL_CONSTEXPR14
 			static_vector_base<T, N>::static_vector_base(const static_vector_base & src) :
-					len(0)
+				len(0)
 #		if __cplusplus >= 201103L
-					, storage()
+				, storage()
 #		endif
 			{
 				kerbal::memory::raw_storage_uninitialized_copy_n(src.cbegin(), src.len, this->storage);
@@ -60,8 +60,8 @@ namespace kerbal
 			template <typename T, std::size_t N>
 			KERBAL_CONSTEXPR14
 			static_vector_base<T, N>::static_vector_base(static_vector_base && src) :
-					len(0)
-					, storage()
+				len(0)
+				, storage()
 			{
 				kerbal::memory::raw_storage_uninitialized_move_n(src.begin(), src.len, this->storage);
 				this->len = src.len;
@@ -72,9 +72,9 @@ namespace kerbal
 			template <typename T, std::size_t N>
 			KERBAL_CONSTEXPR14
 			static_vector_base<T, N>::static_vector_base(size_type n) :
-					len(0)
+				len(0)
 #		if __cplusplus >= 201103L
-					, storage()
+				, storage()
 #		endif
 			{
 				kerbal::memory::raw_storage_uninitialized_value_construct_n(this->storage, n);
@@ -84,9 +84,9 @@ namespace kerbal
 			template <typename T, std::size_t N>
 			KERBAL_CONSTEXPR14
 			static_vector_base<T, N>::static_vector_base(size_type n, const_reference val) :
-					len(0)
+				len(0)
 #		if __cplusplus >= 201103L
-					, storage()
+				, storage()
 #		endif
 			{
 				kerbal::memory::raw_storage_uninitialized_fill_n(this->storage, n, val);
@@ -96,9 +96,12 @@ namespace kerbal
 			template <typename T, std::size_t N>
 			template <typename InputIterator>
 			KERBAL_CONSTEXPR14
-			void static_vector_base<T, N>::
-			k_range_copy_cnstrctr(InputIterator first, InputIterator last,
-								  std::input_iterator_tag)
+			void
+			static_vector_base<T, N>::
+			k_range_copy_cnstrctr(
+				InputIterator first, InputIterator last,
+				std::input_iterator_tag
+			)
 			{
 				// input iterator, no throw copy constructible
 				// if any exception thrown, static_vector_base will do the cleanup job
@@ -113,9 +116,12 @@ namespace kerbal
 			template <typename T, std::size_t N>
 			template <typename ForwardIterator>
 			KERBAL_CONSTEXPR14
-			void static_vector_base<T, N>::
-			k_range_copy_cnstrctr(ForwardIterator first, ForwardIterator last,
-								  std::forward_iterator_tag)
+			void
+			static_vector_base<T, N>::
+			k_range_copy_cnstrctr(
+				ForwardIterator first, ForwardIterator last,
+				std::forward_iterator_tag
+			)
 			{
 				size_type range_len(kerbal::iterator::distance(first, last));
 				if (range_len > N) {
@@ -128,15 +134,16 @@ namespace kerbal
 			template <typename T, std::size_t N>
 			template <typename InputIterator>
 			KERBAL_CONSTEXPR14
-			static_vector_base<T, N>::static_vector_base(InputIterator first, InputIterator last,
-					typename kerbal::type_traits::enable_if<
-							kerbal::iterator::is_input_compatible_iterator<InputIterator>::value
-							, int
-					>::type
+			static_vector_base<T, N>::static_vector_base(
+				InputIterator first, InputIterator last,
+				typename kerbal::type_traits::enable_if<
+					kerbal::iterator::is_input_compatible_iterator<InputIterator>::value,
+					int
+				>::type
 			) :
-					len(0)
+				len(0)
 #		if __cplusplus >= 201103L
-					, storage()
+				, storage()
 #		endif
 			{
 				this->k_range_copy_cnstrctr(first, last, kerbal::iterator::iterator_category(first));
@@ -144,7 +151,8 @@ namespace kerbal
 
 			template <typename T, std::size_t N>
 			KERBAL_CONSTEXPR14
-			typename static_vector_base<T, N>::iterator
+			typename
+			static_vector_base<T, N>::iterator
 			static_vector_base<T, N>::begin() KERBAL_NOEXCEPT
 			{
 				return iterator(this->storage + 0);
@@ -152,7 +160,8 @@ namespace kerbal
 
 			template <typename T, std::size_t N>
 			KERBAL_CONSTEXPR
-			typename static_vector_base<T, N>::const_iterator
+			typename
+			static_vector_base<T, N>::const_iterator
 			static_vector_base<T, N>::begin() const KERBAL_NOEXCEPT
 			{
 				return const_iterator(this->storage + 0);
@@ -160,7 +169,8 @@ namespace kerbal
 
 			template <typename T, std::size_t N>
 			KERBAL_CONSTEXPR
-			typename static_vector_base<T, N>::const_iterator
+			typename
+			static_vector_base<T, N>::const_iterator
 			static_vector_base<T, N>::cbegin() const KERBAL_NOEXCEPT
 			{
 				return this->begin();
@@ -168,7 +178,8 @@ namespace kerbal
 
 			template <typename T, std::size_t N>
 			KERBAL_CONSTEXPR14
-			typename static_vector_base<T, N>::iterator
+			typename
+			static_vector_base<T, N>::iterator
 			static_vector_base<T, N>::end() KERBAL_NOEXCEPT
 			{
 				return iterator(this->storage + this->len);
@@ -176,7 +187,8 @@ namespace kerbal
 
 			template <typename T, std::size_t N>
 			KERBAL_CONSTEXPR
-			typename static_vector_base<T, N>::const_iterator
+			typename
+			static_vector_base<T, N>::const_iterator
 			static_vector_base<T, N>::end() const KERBAL_NOEXCEPT
 			{
 				return const_iterator(this->storage + this->len);
@@ -184,7 +196,8 @@ namespace kerbal
 
 			template <typename T, std::size_t N>
 			KERBAL_CONSTEXPR
-			typename static_vector_base<T, N>::const_iterator
+			typename
+			static_vector_base<T, N>::const_iterator
 			static_vector_base<T, N>::cend() const KERBAL_NOEXCEPT
 			{
 				return this->end();

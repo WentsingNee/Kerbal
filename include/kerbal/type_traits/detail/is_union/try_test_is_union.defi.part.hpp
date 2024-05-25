@@ -25,9 +25,9 @@ namespace kerbal
 
 		template <typename T>
 		struct try_test_is_union :
-				kerbal::type_traits::tribool_constant<
-					!!kerbal::type_traits::is_union<T>::value
-				>
+			kerbal::type_traits::tribool_constant<
+				!!kerbal::type_traits::is_union<T>::value
+			>
 		{
 		};
 
