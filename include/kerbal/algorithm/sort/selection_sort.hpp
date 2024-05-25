@@ -12,9 +12,9 @@
 #ifndef KERBAL_ALGORITHM_SORT_SELECTION_SORT_HPP
 #define KERBAL_ALGORITHM_SORT_SELECTION_SORT_HPP
 
-#include <kerbal/algorithm/querier.hpp> // min_element
 #include <kerbal/algorithm/swap.hpp>
 #include <kerbal/compare/basic_compare.hpp>
+#include <kerbal/compare/minmax_element.hpp>
 #include <kerbal/compatibility/constexpr.hpp>
 #include <kerbal/iterator/iterator.hpp>
 
@@ -32,7 +32,7 @@ namespace kerbal
 			typedef ForwardIterator iterator;
 
 			while (first != last) {
-				iterator j(kerbal::algorithm::min_element(first, last, cmp));
+				iterator j(kerbal::compare::min_element(first, last, cmp));
 				if (first != j) {
 					if (cmp(*j, *first)) {
 						kerbal::algorithm::iter_swap(j, first);
