@@ -15,7 +15,6 @@
 #include <kerbal/config/compiler_id.hpp>
 #include <kerbal/config/compiler_private.hpp>
 
-#include <kerbal/compatibility/constexpr.hpp>
 #include <kerbal/compatibility/noexcept.hpp>
 
 
@@ -63,7 +62,6 @@ namespace kerbal
 #if KERBAL_HAS_BUILTIN_UNREACHABLE_SUPPORT
 
 		inline
-		KERBAL_CONSTEXPR14
 		void unreachable() KERBAL_NOEXCEPT
 		{
 			KERBAL_BUILTIN_UNREACHABLE();
@@ -82,7 +80,6 @@ namespace kerbal
 #	else
 
 		inline
-		KERBAL_CONSTEXPR14
 		void unreachable() KERBAL_NOEXCEPT
 		{
 		}
