@@ -34,6 +34,13 @@
 #			define KERBAL_BUILTIN_UNREACHABLE() __builtin_unreachable()
 #		endif
 
+#	elif KERBAL_COMPILER_ID == KERBAL_COMPILER_ID_MSVC
+
+#		if 1
+#			define KERBAL_HAS_BUILTIN_UNREACHABLE_SUPPORT 1
+#			define KERBAL_BUILTIN_UNREACHABLE() __assume(false)
+#		endif
+
 #	elif KERBAL_COMPILER_ID == KERBAL_COMPILER_ID_ICC
 
 #		if KERBAL_ICC_PRIVATE_HAS_BUILTIN(__builtin_unreachable)
