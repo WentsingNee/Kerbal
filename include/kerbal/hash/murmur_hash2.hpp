@@ -69,8 +69,7 @@ namespace kerbal
 					result_type h = seed ^ len * 4;
 
 					// 4 bytes at a time
-					while (first != last)
-					{
+					while (first != last) {
 						result_type k = *first;
 						k *= M::value;
 						k ^= k >> 24u;
@@ -111,8 +110,7 @@ namespace kerbal
 					result_type h = seed ^ static_cast<result_type>(len);
 
 					// 4 bytes at a time
-					while (len >= 4)
-					{
+					while (len >= 4) {
 						result_type k = char4tolong1(first);
 						k *= M::value;
 						k ^= k >> 24u;
