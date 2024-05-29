@@ -14,7 +14,7 @@
 
 #include <kerbal/type_traits/detail/is_base_of/is_base_of.part.hpp>
 
-#if KERBAL_HAS_IS_BASE_OF_SUPPORT
+#if KERBAL_SUPPORTS_IS_BASE_OF
 #	include <kerbal/type_traits/detail/is_base_of/try_test_is_base_of.defi.part.hpp>
 #else
 #	include <kerbal/type_traits/detail/is_base_of/try_test_is_base_of.guess.part.hpp>

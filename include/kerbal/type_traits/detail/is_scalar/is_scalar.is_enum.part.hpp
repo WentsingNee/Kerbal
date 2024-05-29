@@ -12,17 +12,17 @@
 #ifndef KERBAL_TYPE_TRAITS_DETAIL_IS_SCALAR_IS_SCALAR_IS_ENUM_PART_HPP
 #define KERBAL_TYPE_TRAITS_DETAIL_IS_SCALAR_IS_SCALAR_IS_ENUM_PART_HPP
 
-#ifndef KERBAL_HAS_IS_SCALAR_SUPPORT
+#ifndef KERBAL_SUPPORTS_IS_SCALAR
 
 #include <kerbal/type_traits/detail/is_enum/is_enum.part.hpp>
 
-#if KERBAL_HAS_IS_ENUM_SUPPORT
-#	define KERBAL_HAS_IS_SCALAR_SUPPORT 1
+#if KERBAL_SUPPORTS_IS_ENUM
+#	define KERBAL_SUPPORTS_IS_SCALAR 1
 #endif
 
 
 
-#if KERBAL_HAS_IS_SCALAR_SUPPORT
+#if KERBAL_SUPPORTS_IS_SCALAR
 
 #include <kerbal/type_traits/is_arithmetic.hpp>
 #include <kerbal/type_traits/is_enum.hpp>
@@ -59,8 +59,8 @@ namespace kerbal
 
 } // namespace kerbal
 
-#endif // #if KERBAL_HAS_IS_SCALAR_SUPPORT
+#endif // #if KERBAL_SUPPORTS_IS_SCALAR
 
-#endif // #ifndef KERBAL_HAS_IS_SCALAR_SUPPORT
+#endif // #ifndef KERBAL_SUPPORTS_IS_SCALAR
 
 #endif // KERBAL_TYPE_TRAITS_DETAIL_IS_SCALAR_IS_SCALAR_IS_ENUM_PART_HPP

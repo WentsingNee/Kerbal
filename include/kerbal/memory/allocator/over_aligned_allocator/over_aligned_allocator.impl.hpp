@@ -65,7 +65,7 @@ namespace kerbal
 
 			pointer p_raw = NULL;
 			if (align <= basic_align) {
-#		if KERBAL_HAS_EXCEPTIONS_SUPPORT
+#		if KERBAL_SUPPORTS_EXCEPTIONS
 				try {
 					p_raw = upstream_allocator_traits::allocate(upstream_alloc(), size);
 				} catch (...) {
@@ -86,7 +86,7 @@ namespace kerbal
 				kerbal::memory::alignment_maximum_offset(align.val, KERBAL_ALIGNOF(void_p)) +
 				size
 			;
-#		if KERBAL_HAS_EXCEPTIONS_SUPPORT
+#		if KERBAL_SUPPORTS_EXCEPTIONS
 			try {
 				p_raw = upstream_allocator_traits::allocate(upstream_alloc(), raw_allocate_size);
 			} catch (...) {

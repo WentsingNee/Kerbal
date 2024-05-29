@@ -12,17 +12,17 @@
 #ifndef KERBAL_TYPE_TRAITS_DETAIL_IS_ENUM_IS_ENUM_INTRIN_PART_HPP
 #define KERBAL_TYPE_TRAITS_DETAIL_IS_ENUM_IS_ENUM_INTRIN_PART_HPP
 
-#ifndef KERBAL_HAS_IS_ENUM_SUPPORT
+#ifndef KERBAL_SUPPORTS_IS_ENUM
 
 #include <kerbal/type_traits/detail/compiler_intrinsics/compiler_intrinsics.hpp>
 
 #if KERBAL_PRIVATE_HAS_INTRINSIC_IS_ENUM
-#	define KERBAL_HAS_IS_ENUM_SUPPORT 1
+#	define KERBAL_SUPPORTS_IS_ENUM 1
 #endif
 
 
 
-#if KERBAL_HAS_IS_ENUM_SUPPORT
+#if KERBAL_SUPPORTS_IS_ENUM
 
 #include <kerbal/type_traits/integral_constant.hpp>
 
@@ -43,8 +43,8 @@ namespace kerbal
 
 } // namespace kerbal
 
-#endif // #if KERBAL_HAS_IS_ENUM_SUPPORT
+#endif // #if KERBAL_SUPPORTS_IS_ENUM
 
-#endif // #ifndef KERBAL_HAS_IS_ENUM_SUPPORT
+#endif // #ifndef KERBAL_SUPPORTS_IS_ENUM
 
 #endif // KERBAL_TYPE_TRAITS_DETAIL_IS_ENUM_IS_ENUM_INTRIN_PART_HPP

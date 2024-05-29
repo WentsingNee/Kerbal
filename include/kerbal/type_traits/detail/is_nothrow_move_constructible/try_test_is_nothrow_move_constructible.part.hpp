@@ -14,7 +14,7 @@
 
 #include <kerbal/type_traits/detail/is_nothrow_move_constructible/is_nothrow_move_constructible.part.hpp>
 
-#if KERBAL_HAS_IS_NOTHROW_MOVE_CONSTRUCTIBLE_SUPPORT
+#if KERBAL_SUPPORTS_IS_NOTHROW_MOVE_CONSTRUCTIBLE
 #	include <kerbal/type_traits/detail/is_nothrow_move_constructible/try_test_is_nothrow_move_constructible.defi.part.hpp>
 #else
 #	include <kerbal/type_traits/detail/is_nothrow_move_constructible/try_test_is_nothrow_move_constructible.guess.part.hpp>

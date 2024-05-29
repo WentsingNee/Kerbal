@@ -14,7 +14,7 @@
 
 #include <kerbal/type_traits/detail/is_trivially_default_constructible/is_trivially_default_constructible.part.hpp>
 
-#if KERBAL_HAS_IS_TRIVIALLY_DEFAULT_CONSTRUCTIBLE_SUPPORT
+#if KERBAL_SUPPORTS_IS_TRIVIALLY_DEFAULT_CONSTRUCTIBLE
 #	include <kerbal/type_traits/detail/is_trivially_default_constructible/try_test_is_trivially_default_constructible.defi.part.hpp>
 #else
 #	include <kerbal/type_traits/detail/is_trivially_default_constructible/try_test_is_trivially_default_constructible.guess.part.hpp>

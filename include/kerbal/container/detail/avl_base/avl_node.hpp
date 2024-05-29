@@ -248,7 +248,7 @@ namespace kerbal
 					{
 #	if KERBAL_AVL_ENABLE_VNULL
 
-#		if KERBAL_HAS_IS_CONSTANT_EVALUATED_SUPPORT
+#		if KERBAL_SUPPORTS_IS_CONSTANT_EVALUATED
 						if (KERBAL_IS_CONSTANT_EVALUATED()) {
 							if (p == get_avl_vnull_node()) {
 								return 0;
@@ -288,7 +288,7 @@ namespace kerbal
 					{
 #	if KERBAL_AVL_ENABLE_VNULL
 
-#		if KERBAL_HAS_IS_CONSTANT_EVALUATED_SUPPORT
+#		if KERBAL_SUPPORTS_IS_CONSTANT_EVALUATED
 						if (KERBAL_IS_CONSTANT_EVALUATED()) {
 							if (p_base == get_avl_vnull_node()) {
 								return ;

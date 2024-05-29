@@ -902,7 +902,7 @@ namespace kerbal
 
 #			if __cplusplus >= 201103L
 
-#				if KERBAL_HAS_EXCEPTIONS_SUPPORT
+#				if KERBAL_SUPPORTS_EXCEPTIONS
 
 					template <bool nothrow_while_construct, typename NodeAllocator, typename ... Args>
 					KERBAL_CONSTEXPR20

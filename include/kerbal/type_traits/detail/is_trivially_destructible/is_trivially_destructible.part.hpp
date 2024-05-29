@@ -15,8 +15,8 @@
 #include <kerbal/type_traits/detail/is_trivially_destructible/is_trivially_destructible.intrin.part.hpp>
 #include <kerbal/type_traits/detail/is_trivially_destructible/is_trivially_destructible.std.part.hpp>
 
-#ifndef KERBAL_HAS_IS_TRIVIALLY_DESTRUCTIBLE_SUPPORT
-#	define KERBAL_HAS_IS_TRIVIALLY_DESTRUCTIBLE_SUPPORT 0
+#ifndef KERBAL_SUPPORTS_IS_TRIVIALLY_DESTRUCTIBLE
+#	define KERBAL_SUPPORTS_IS_TRIVIALLY_DESTRUCTIBLE 0
 
 #	if KERBAL_TYPE_TRAITS_DEBUG_WARNING
 

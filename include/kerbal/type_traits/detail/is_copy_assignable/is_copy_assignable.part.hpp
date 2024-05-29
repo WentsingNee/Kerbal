@@ -15,8 +15,8 @@
 #include <kerbal/type_traits/detail/is_copy_assignable/is_copy_assignable.intrin.part.hpp>
 #include <kerbal/type_traits/detail/is_copy_assignable/is_copy_assignable.isa.part.hpp>
 
-#ifndef KERBAL_HAS_IS_COPY_ASSIGNABLE_SUPPORT
-#	define KERBAL_HAS_IS_COPY_ASSIGNABLE_SUPPORT 0
+#ifndef KERBAL_SUPPORTS_IS_COPY_ASSIGNABLE
+#	define KERBAL_SUPPORTS_IS_COPY_ASSIGNABLE 0
 
 #	if KERBAL_TYPE_TRAITS_DEBUG_WARNING
 

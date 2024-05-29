@@ -206,7 +206,7 @@ namespace kerbal
 			int k_popcount_intrinsic_aspect(Unsigned x, kerbal::type_traits::integral_constant<std::size_t, 32>) KERBAL_NOEXCEPT
 			{
 #		if __cplusplus >= 201402L
-#			if KERBAL_HAS_IS_CONSTANT_EVALUATED_SUPPORT
+#			if KERBAL_SUPPORTS_IS_CONSTANT_EVALUATED
 				return KERBAL_IS_CONSTANT_EVALUATED() ? k_basic_popcount(x) : _mm_popcnt_u32(x);
 #			else
 				return k_basic_popcount(x);
@@ -226,7 +226,7 @@ namespace kerbal
 			int k_popcount_intrinsic_aspect(Unsigned x, kerbal::type_traits::integral_constant<std::size_t, 64>) KERBAL_NOEXCEPT
 			{
 #		if __cplusplus >= 201402L
-#			if KERBAL_HAS_IS_CONSTANT_EVALUATED_SUPPORT
+#			if KERBAL_SUPPORTS_IS_CONSTANT_EVALUATED
 				return KERBAL_IS_CONSTANT_EVALUATED() ? k_basic_popcount(x) : static_cast<int>(_mm_popcnt_u64(x));
 #			else
 				return k_basic_popcount(x);

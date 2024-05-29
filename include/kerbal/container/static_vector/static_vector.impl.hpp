@@ -1135,12 +1135,12 @@ namespace kerbal
 
 				kerbal::memory::raw_storage_uninitialized_copy(pos, this->cend(), pos_mut.current + n);
 
-#		if KERBAL_HAS_EXCEPTIONS_SUPPORT
+#		if KERBAL_SUPPORTS_EXCEPTIONS
 				try {
 #		endif
 					kerbal::utility::compressed_pair<ForwardIterator, iterator> copy_n_r(kerbal::algorithm::copy_n(first, ori_size - insert_pos_index, pos_mut));
 					kerbal::memory::raw_storage_uninitialized_copy(copy_n_r.first(), last, copy_n_r.second().current);
-#		if KERBAL_HAS_EXCEPTIONS_SUPPORT
+#		if KERBAL_SUPPORTS_EXCEPTIONS
 				} catch (...) {
 					kerbal::memory::raw_storage_reverse_destroy(pos_mut.current + n, this->nth(new_size).current);
 					throw;

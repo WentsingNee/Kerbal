@@ -12,15 +12,15 @@
 #ifndef KERBAL_TYPE_TRAITS_DETAIL_IS_FINAL_IS_FINAL_STD_PART_HPP
 #define KERBAL_TYPE_TRAITS_DETAIL_IS_FINAL_IS_FINAL_STD_PART_HPP
 
-#ifndef KERBAL_HAS_IS_FINAL_SUPPORT
+#ifndef KERBAL_SUPPORTS_IS_FINAL
 
 #if __cplusplus >= 201103L
-#	define KERBAL_HAS_IS_FINAL_SUPPORT 1
+#	define KERBAL_SUPPORTS_IS_FINAL 1
 #endif
 
 
 
-#if KERBAL_HAS_IS_FINAL_SUPPORT
+#if KERBAL_SUPPORTS_IS_FINAL
 
 #include <kerbal/type_traits/integral_constant.hpp>
 
@@ -56,8 +56,8 @@ namespace kerbal
 
 } // namespace kerbal
 
-#endif // #if KERBAL_HAS_IS_FINAL_SUPPORT
+#endif // #if KERBAL_SUPPORTS_IS_FINAL
 
-#endif // #ifndef KERBAL_HAS_IS_FINAL_SUPPORT
+#endif // #ifndef KERBAL_SUPPORTS_IS_FINAL
 
 #endif // KERBAL_TYPE_TRAITS_DETAIL_IS_FINAL_IS_FINAL_STD_PART_HPP

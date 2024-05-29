@@ -15,8 +15,8 @@
 #include <kerbal/type_traits/detail/is_copy_constructible/is_copy_constructible.intrin.part.hpp>
 #include <kerbal/type_traits/detail/is_copy_constructible/is_copy_constructible.isc.part.hpp>
 
-#ifndef KERBAL_HAS_IS_COPY_CONSTRUCTIBLE_SUPPORT
-#	define KERBAL_HAS_IS_COPY_CONSTRUCTIBLE_SUPPORT 0
+#ifndef KERBAL_SUPPORTS_IS_COPY_CONSTRUCTIBLE
+#	define KERBAL_SUPPORTS_IS_COPY_CONSTRUCTIBLE 0
 
 #	if KERBAL_TYPE_TRAITS_DEBUG_WARNING
 

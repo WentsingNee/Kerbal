@@ -15,8 +15,8 @@
 #include <kerbal/type_traits/detail/is_union/is_union.intrin.part.hpp>
 #include <kerbal/type_traits/detail/is_union/is_union.std.part.hpp>
 
-#ifndef KERBAL_HAS_IS_UNION_SUPPORT
-#	define KERBAL_HAS_IS_UNION_SUPPORT 0
+#ifndef KERBAL_SUPPORTS_IS_UNION
+#	define KERBAL_SUPPORTS_IS_UNION 0
 
 #	if KERBAL_TYPE_TRAITS_DEBUG_WARNING
 

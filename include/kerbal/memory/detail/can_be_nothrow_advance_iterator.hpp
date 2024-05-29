@@ -14,7 +14,7 @@
 
 #include <kerbal/config/exceptions.hpp>
 
-#if KERBAL_HAS_EXCEPTIONS_SUPPORT
+#if KERBAL_SUPPORTS_EXCEPTIONS
 #	if __cplusplus < 201103L
 #		include <kerbal/type_traits/is_pointer.hpp>
 #	else
@@ -35,7 +35,7 @@ namespace kerbal
 		namespace detail
 		{
 
-#	if KERBAL_HAS_EXCEPTIONS_SUPPORT
+#	if KERBAL_SUPPORTS_EXCEPTIONS
 
 #		if __cplusplus < 201103L
 

@@ -12,15 +12,15 @@
 #ifndef KERBAL_TYPE_TRAITS_DETAIL_IS_UNION_IS_UNION_STD_PART_HPP
 #define KERBAL_TYPE_TRAITS_DETAIL_IS_UNION_IS_UNION_STD_PART_HPP
 
-#ifndef KERBAL_HAS_IS_UNION_SUPPORT
+#ifndef KERBAL_SUPPORTS_IS_UNION
 
 #if __cplusplus >= 201103L
-#	define KERBAL_HAS_IS_UNION_SUPPORT 1
+#	define KERBAL_SUPPORTS_IS_UNION 1
 #endif
 
 
 
-#if KERBAL_HAS_IS_UNION_SUPPORT
+#if KERBAL_SUPPORTS_IS_UNION
 
 #include <kerbal/type_traits/integral_constant.hpp>
 
@@ -56,8 +56,8 @@ namespace kerbal
 
 } // namespace kerbal
 
-#endif // #if KERBAL_HAS_IS_UNION_SUPPORT
+#endif // #if KERBAL_SUPPORTS_IS_UNION
 
-#endif // #ifndef KERBAL_HAS_IS_UNION_SUPPORT
+#endif // #ifndef KERBAL_SUPPORTS_IS_UNION
 
 #endif // KERBAL_TYPE_TRAITS_DETAIL_IS_UNION_IS_UNION_STD_PART_HPP

@@ -174,7 +174,7 @@ namespace kerbal
 
 #	if __cplusplus >= 201402L
 
-#		if KERBAL_HAS_IS_CONSTANT_EVALUATED_SUPPORT
+#		if KERBAL_SUPPORTS_IS_CONSTANT_EVALUATED
 						KERBAL_IS_CONSTANT_EVALUATED() ?
 							plain::mt_twist<UIntType, N, M, R, A>(mt) :
 							fix_integer_type_dispatch(mt);

@@ -66,15 +66,15 @@ namespace kerbal
 
 			kerbal::test::assert_record record;
 
-#	if KERBAL_HAS_RUNTIME_TIMER_SUPPORT
+#	if KERBAL_SUPPORTS_RUNTIME_TIMER
 			kerbal::test::runtime_timer timer;
 #	endif
 
-#	if KERBAL_HAS_EXCEPTIONS_SUPPORT
+#	if KERBAL_SUPPORTS_EXCEPTIONS
 			try {
 #	endif
 				call_ptr(record);
-#	if KERBAL_HAS_EXCEPTIONS_SUPPORT
+#	if KERBAL_SUPPORTS_EXCEPTIONS
 			} catch (...) {
 				record.items.back().result = test_case_running_result::EXCEPTION;
 				printf("test case[%zu]: %s (%s): EXCEPTION\n", case_id, name, description);
@@ -82,7 +82,7 @@ namespace kerbal
 			}
 #	endif
 
-#	if KERBAL_HAS_RUNTIME_TIMER_SUPPORT
+#	if KERBAL_SUPPORTS_RUNTIME_TIMER
 			unsigned long time_usage = timer.count();
 #	endif
 
@@ -110,7 +110,7 @@ namespace kerbal
 				printf("test case[%zu]: %s (%s): FAILURE\n", case_id, name, description);
 			}
 
-#	if KERBAL_HAS_RUNTIME_TIMER_SUPPORT
+#	if KERBAL_SUPPORTS_RUNTIME_TIMER
 			{
 				unsigned long milliseconds = time_usage;
 				unsigned long seconds = milliseconds / 1000;

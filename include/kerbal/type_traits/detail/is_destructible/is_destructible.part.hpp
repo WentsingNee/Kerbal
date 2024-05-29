@@ -15,8 +15,8 @@
 #include <kerbal/type_traits/detail/is_destructible/is_destructible.intrin.part.hpp>
 #include <kerbal/type_traits/detail/is_destructible/is_destructible.sfinae.part.hpp>
 
-#ifndef KERBAL_HAS_IS_DESTRUCTIBLE_SUPPORT
-#	define KERBAL_HAS_IS_DESTRUCTIBLE_SUPPORT 0
+#ifndef KERBAL_SUPPORTS_IS_DESTRUCTIBLE
+#	define KERBAL_SUPPORTS_IS_DESTRUCTIBLE 0
 
 #	if KERBAL_TYPE_TRAITS_DEBUG_WARNING
 

@@ -15,8 +15,8 @@
 #include <kerbal/type_traits/detail/is_abstract/is_abstract.intrin.part.hpp>
 #include <kerbal/type_traits/detail/is_abstract/is_abstract.std.part.hpp>
 
-#ifndef KERBAL_HAS_IS_ABSTRACT_SUPPORT
-#	define KERBAL_HAS_IS_ABSTRACT_SUPPORT 0
+#ifndef KERBAL_SUPPORTS_IS_ABSTRACT
+#	define KERBAL_SUPPORTS_IS_ABSTRACT 0
 
 #	if KERBAL_TYPE_TRAITS_DEBUG_WARNING
 

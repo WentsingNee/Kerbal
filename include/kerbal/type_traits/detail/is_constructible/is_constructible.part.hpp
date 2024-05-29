@@ -16,8 +16,8 @@
 #include <kerbal/type_traits/detail/is_constructible/is_constructible.sfinae11.part.hpp>
 #include <kerbal/type_traits/detail/is_constructible/is_constructible.sfinae98.part.hpp>
 
-#ifndef KERBAL_HAS_IS_CONSTRUCTIBLE_SUPPORT
-#	define KERBAL_HAS_IS_CONSTRUCTIBLE_SUPPORT 0
+#ifndef KERBAL_SUPPORTS_IS_CONSTRUCTIBLE
+#	define KERBAL_SUPPORTS_IS_CONSTRUCTIBLE 0
 
 #	if KERBAL_TYPE_TRAITS_DEBUG_WARNING
 

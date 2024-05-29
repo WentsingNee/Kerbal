@@ -15,8 +15,8 @@
 #include <kerbal/type_traits/detail/is_class/is_class.intrin.part.hpp>
 #include <kerbal/type_traits/detail/is_class/is_class.std.part.hpp>
 
-#ifndef KERBAL_HAS_IS_CLASS_SUPPORT
-#	define KERBAL_HAS_IS_CLASS_SUPPORT 0
+#ifndef KERBAL_SUPPORTS_IS_CLASS
+#	define KERBAL_SUPPORTS_IS_CLASS 0
 
 #	if KERBAL_TYPE_TRAITS_DEBUG_WARNING
 

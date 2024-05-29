@@ -45,7 +45,7 @@ namespace kerbal
 		struct try_test_is_empty :
 			kerbal::type_traits::conditional<
 				kerbal::type_traits::disjunction<
-#		if KERBAL_HAS_IS_ENUM_SUPPORT
+#		if KERBAL_SUPPORTS_IS_ENUM
 					kerbal::type_traits::is_enum<T>,
 #		endif
 					kerbal::type_traits::is_array<T>,

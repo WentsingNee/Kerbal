@@ -14,7 +14,7 @@
 
 #include <kerbal/type_traits/detail/is_empty/is_empty.part.hpp>
 
-#if KERBAL_HAS_IS_EMPTY_SUPPORT
+#if KERBAL_SUPPORTS_IS_EMPTY
 #	include <kerbal/type_traits/detail/is_empty/try_test_is_empty.defi.part.hpp>
 #else
 #	include <kerbal/type_traits/detail/is_empty/try_test_is_empty.guess.part.hpp>

@@ -14,7 +14,7 @@
 
 #include <kerbal/type_traits/detail/is_copy_assignable/is_copy_assignable.part.hpp>
 
-#if KERBAL_HAS_IS_COPY_ASSIGNABLE_SUPPORT
+#if KERBAL_SUPPORTS_IS_COPY_ASSIGNABLE
 #	include <kerbal/type_traits/detail/is_copy_assignable/try_test_is_copy_assignable.defi.part.hpp>
 #else
 #	include <kerbal/type_traits/detail/is_copy_assignable/try_test_is_copy_assignable.guess.part.hpp>

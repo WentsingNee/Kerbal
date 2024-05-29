@@ -12,12 +12,12 @@
 #ifndef KERBAL_CONFIG_EXCEPTIONS_HPP
 #define KERBAL_CONFIG_EXCEPTIONS_HPP
 
-#ifndef KERBAL_HAS_EXCEPTIONS_SUPPORT
+#ifndef KERBAL_SUPPORTS_EXCEPTIONS
 
 #	ifdef __cpp_exceptions
 
 #		if __cpp_exceptions
-#			define KERBAL_HAS_EXCEPTIONS_SUPPORT 1
+#			define KERBAL_SUPPORTS_EXCEPTIONS 1
 #		endif
 
 #	else // ifdef __cpp_exceptions
@@ -28,17 +28,17 @@
 #		if KERBAL_COMPILER_ID == KERBAL_COMPILER_ID_GNU // g++4.8 doesn't define __cpp_exceptions in global
 #			if !KERBAL_GNU_VERSION_MEETS(5, 0, 0)
 #				ifdef __EXCEPTIONS
-#					define KERBAL_HAS_EXCEPTIONS_SUPPORT 1
+#					define KERBAL_SUPPORTS_EXCEPTIONS 1
 #				endif
 #			endif
 #		endif
 
 #	endif // ifdef __cpp_exceptions
 
-#	ifndef KERBAL_HAS_EXCEPTIONS_SUPPORT
-#		define KERBAL_HAS_EXCEPTIONS_SUPPORT 0
+#	ifndef KERBAL_SUPPORTS_EXCEPTIONS
+#		define KERBAL_SUPPORTS_EXCEPTIONS 0
 #	endif
 
-#endif // ifndef KERBAL_HAS_EXCEPTIONS_SUPPORT
+#endif // ifndef KERBAL_SUPPORTS_EXCEPTIONS
 
 #endif // KERBAL_CONFIG_EXCEPTIONS_HPP

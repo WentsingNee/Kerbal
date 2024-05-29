@@ -16,8 +16,8 @@
 #include <kerbal/type_traits/detail/is_trivially_default_constructible/is_trivially_default_constructible.istric.part.hpp>
 #include <kerbal/type_traits/detail/is_trivially_default_constructible/is_trivially_default_constructible.std.part.hpp>
 
-#ifndef KERBAL_HAS_IS_TRIVIALLY_DEFAULT_CONSTRUCTIBLE_SUPPORT
-#	define KERBAL_HAS_IS_TRIVIALLY_DEFAULT_CONSTRUCTIBLE_SUPPORT 0
+#ifndef KERBAL_SUPPORTS_IS_TRIVIALLY_DEFAULT_CONSTRUCTIBLE
+#	define KERBAL_SUPPORTS_IS_TRIVIALLY_DEFAULT_CONSTRUCTIBLE 0
 
 #	if KERBAL_TYPE_TRAITS_DEBUG_WARNING
 

@@ -15,11 +15,11 @@
 
 #include <kerbal/compatibility/tick_count.hpp>
 
-#ifndef KERBAL_HAS_RUNTIME_TIMER_SUPPORT
+#ifndef KERBAL_SUPPORTS_RUNTIME_TIMER
 
-#	if KERBAL_HAS_TICK_COUNT_SUPPORT
+#	if KERBAL_SUPPORTS_TICK_COUNT
 
-#		define KERBAL_HAS_RUNTIME_TIMER_SUPPORT 1
+#		define KERBAL_SUPPORTS_RUNTIME_TIMER 1
 
 
 #include <kerbal/utility/noncopyable.hpp>
@@ -60,13 +60,13 @@ namespace kerbal
 } //namespace kerbal
 
 
-#	else // if KERBAL_HAS_TICK_COUNT_SUPPORT
+#	else // if KERBAL_SUPPORTS_TICK_COUNT
 
-#		define KERBAL_HAS_RUNTIME_TIMER_SUPPORT 0
+#		define KERBAL_SUPPORTS_RUNTIME_TIMER 0
 
-#	endif // if KERBAL_HAS_TICK_COUNT_SUPPORT
+#	endif // if KERBAL_SUPPORTS_TICK_COUNT
 
-#endif // if KERBAL_HAS_RUNTIME_TIMER_SUPPORT
+#endif // if KERBAL_SUPPORTS_RUNTIME_TIMER
 
 
 #endif // KERBAL_TEST_RUNTIME_TIMER_HPP

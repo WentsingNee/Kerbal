@@ -14,7 +14,7 @@
 
 #include <kerbal/type_traits/detail/is_union/is_union.part.hpp>
 
-#if KERBAL_HAS_IS_UNION_SUPPORT
+#if KERBAL_SUPPORTS_IS_UNION
 #	include <kerbal/type_traits/detail/is_union/try_test_is_union.defi.part.hpp>
 #else
 #	include <kerbal/type_traits/detail/is_union/try_test_is_union.guess.part.hpp>
