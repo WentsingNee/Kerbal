@@ -1,5 +1,5 @@
 /**
- * @file       attribute_unused.hpp
+ * @file       unused.hpp
  * @brief
  * @date       2022-01-21
  * @author     Peter
@@ -9,8 +9,8 @@
  *   all rights reserved
  */
 
-#ifndef KERBAL_COMPATIBILITY_ATTRIBUTE_UNUSED_HPP
-#define KERBAL_COMPATIBILITY_ATTRIBUTE_UNUSED_HPP
+#ifndef KERBAL_ATTRIBUTE_UNUSED_HPP
+#define KERBAL_ATTRIBUTE_UNUSED_HPP
 
 #if __cplusplus >= 201703L
 #	define KERBAL_ATTRIBUTE_UNUSED [[maybe_unused]]
@@ -63,4 +63,4 @@
 #	endif
 
 
-#endif // KERBAL_COMPATIBILITY_ATTRIBUTE_UNUSED_HPP
+#endif // KERBAL_ATTRIBUTE_UNUSED_HPP
