@@ -26,7 +26,7 @@
 #	include <kerbal/type_traits/remove_cvref.hpp>
 #	include <kerbal/utility/forward.hpp>
 
-#	if KERBAL_HAS_EXCEPTIONS_SUPPORT
+#	if KERBAL_SUPPORTS_EXCEPTIONS
 #		include <kerbal/type_traits/is_nothrow_default_constructible.hpp>
 #		include <kerbal/utility/declval.hpp>
 #	endif
@@ -133,7 +133,7 @@ namespace kerbal
 			private:
 				typedef kerbal::compare::equal_to<T> ValuePredict;
 
-#	if __cplusplus >= 201103L && KERBAL_HAS_EXCEPTIONS_SUPPORT
+#	if __cplusplus >= 201103L && KERBAL_SUPPORTS_EXCEPTIONS
 
 				typedef kerbal::type_traits::bool_constant<
 					kerbal::type_traits::try_test_is_nothrow_default_constructible<ValuePredict>::IS_TRUE::value &&
@@ -171,7 +171,7 @@ namespace kerbal
 			private:
 				typedef kerbal::compare::not_equal_to<T> ValuePredict;
 
-#	if __cplusplus >= 201103L && KERBAL_HAS_EXCEPTIONS_SUPPORT
+#	if __cplusplus >= 201103L && KERBAL_SUPPORTS_EXCEPTIONS
 
 				typedef kerbal::type_traits::bool_constant<
 					kerbal::type_traits::try_test_is_nothrow_default_constructible<ValuePredict>::IS_TRUE::value &&
@@ -209,7 +209,7 @@ namespace kerbal
 			private:
 				typedef kerbal::compare::less<T> ValuePredict;
 
-#	if __cplusplus >= 201103L && KERBAL_HAS_EXCEPTIONS_SUPPORT
+#	if __cplusplus >= 201103L && KERBAL_SUPPORTS_EXCEPTIONS
 
 				typedef kerbal::type_traits::bool_constant<
 					kerbal::type_traits::try_test_is_nothrow_default_constructible<ValuePredict>::IS_TRUE::value &&
@@ -249,7 +249,7 @@ namespace kerbal
 			private:
 				typedef kerbal::compare::greater<T> ValuePredict;
 
-#	if __cplusplus >= 201103L && KERBAL_HAS_EXCEPTIONS_SUPPORT
+#	if __cplusplus >= 201103L && KERBAL_SUPPORTS_EXCEPTIONS
 
 				typedef kerbal::type_traits::bool_constant<
 					kerbal::type_traits::try_test_is_nothrow_default_constructible<ValuePredict>::IS_TRUE::value &&
@@ -289,7 +289,7 @@ namespace kerbal
 			private:
 				typedef kerbal::compare::less_equal<T> ValuePredict;
 
-#	if __cplusplus >= 201103L && KERBAL_HAS_EXCEPTIONS_SUPPORT
+#	if __cplusplus >= 201103L && KERBAL_SUPPORTS_EXCEPTIONS
 
 				typedef kerbal::type_traits::bool_constant<
 					kerbal::type_traits::try_test_is_nothrow_default_constructible<ValuePredict>::IS_TRUE::value &&
@@ -332,7 +332,7 @@ namespace kerbal
 			private:
 				typedef kerbal::compare::greater_equal<T> ValuePredict;
 
-#	if __cplusplus >= 201103L && KERBAL_HAS_EXCEPTIONS_SUPPORT
+#	if __cplusplus >= 201103L && KERBAL_SUPPORTS_EXCEPTIONS
 
 				typedef kerbal::type_traits::bool_constant<
 					kerbal::type_traits::try_test_is_nothrow_default_constructible<ValuePredict>::IS_TRUE::value &&

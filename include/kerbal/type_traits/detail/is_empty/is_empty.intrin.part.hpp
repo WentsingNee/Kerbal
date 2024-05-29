@@ -12,17 +12,17 @@
 #ifndef KERBAL_TYPE_TRAITS_DETAIL_IS_EMPTY_IS_EMPTY_INTRIN_PART_HPP
 #define KERBAL_TYPE_TRAITS_DETAIL_IS_EMPTY_IS_EMPTY_INTRIN_PART_HPP
 
-#ifndef KERBAL_HAS_IS_EMPTY_SUPPORT
+#ifndef KERBAL_SUPPORTS_IS_EMPTY
 
 #include <kerbal/type_traits/detail/compiler_intrinsics/compiler_intrinsics.hpp>
 
 #if KERBAL_PRIVATE_HAS_INTRINSIC_IS_EMPTY
-#	define KERBAL_HAS_IS_EMPTY_SUPPORT 1
+#	define KERBAL_SUPPORTS_IS_EMPTY 1
 #endif
 
 
 
-#if KERBAL_HAS_IS_EMPTY_SUPPORT
+#if KERBAL_SUPPORTS_IS_EMPTY
 
 #include <kerbal/type_traits/integral_constant.hpp>
 
@@ -43,8 +43,8 @@ namespace kerbal
 
 } // namespace kerbal
 
-#endif // #if KERBAL_HAS_IS_EMPTY_SUPPORT
+#endif // #if KERBAL_SUPPORTS_IS_EMPTY
 
-#endif // #ifndef KERBAL_HAS_IS_EMPTY_SUPPORT
+#endif // #ifndef KERBAL_SUPPORTS_IS_EMPTY
 
 #endif // KERBAL_TYPE_TRAITS_DETAIL_IS_EMPTY_IS_EMPTY_INTRIN_PART_HPP

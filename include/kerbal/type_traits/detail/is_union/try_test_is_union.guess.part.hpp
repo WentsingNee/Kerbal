@@ -46,10 +46,10 @@ namespace kerbal
 		struct try_test_is_union :
 			kerbal::type_traits::conditional<
 				kerbal::type_traits::disjunction<
-#		if KERBAL_HAS_IS_CLASS_SUPPORT
+#		if KERBAL_SUPPORTS_IS_CLASS
 					kerbal::type_traits::is_class<T>,
 #		endif
-#		if KERBAL_HAS_IS_ENUM_SUPPORT
+#		if KERBAL_SUPPORTS_IS_ENUM
 					kerbal::type_traits::is_enum<T>,
 #		endif
 					kerbal::type_traits::is_array<T>,

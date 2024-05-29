@@ -16,57 +16,57 @@
 #include <kerbal/config/compiler_private.hpp>
 
 
-#ifndef KERBAL_HAS_IS_CONSTANT_EVALUATED_SUPPORT
+#ifndef KERBAL_SUPPORTS_IS_CONSTANT_EVALUATED
 
 #	if KERBAL_COMPILER_ID == KERBAL_COMPILER_ID_GNU
 
 #		if KERBAL_GNU_PRIVATE_HAS_BUILTIN(__builtin_is_constant_evaluated)
-#			define KERBAL_HAS_IS_CONSTANT_EVALUATED_SUPPORT 1
+#			define KERBAL_SUPPORTS_IS_CONSTANT_EVALUATED 1
 #			define KERBAL_IS_CONSTANT_EVALUATED() (__builtin_is_constant_evaluated())
 #		endif
 
 #	elif KERBAL_COMPILER_ID == KERBAL_COMPILER_ID_CLANG
 
 #		if KERBAL_CLANG_PRIVATE_HAS_BUILTIN(__builtin_is_constant_evaluated)
-#			define KERBAL_HAS_IS_CONSTANT_EVALUATED_SUPPORT 1
+#			define KERBAL_SUPPORTS_IS_CONSTANT_EVALUATED 1
 #			define KERBAL_IS_CONSTANT_EVALUATED() (__builtin_is_constant_evaluated())
 #		endif
 
 #	elif KERBAL_COMPILER_ID == KERBAL_COMPILER_ID_MSVC
 
 #		if KERBAL_MSVC_VERSION_MEETS(19, 25, 0) // vs2019
-#			define KERBAL_HAS_IS_CONSTANT_EVALUATED_SUPPORT 1
+#			define KERBAL_SUPPORTS_IS_CONSTANT_EVALUATED 1
 #			define KERBAL_IS_CONSTANT_EVALUATED() (__builtin_is_constant_evaluated())
 #		endif
 
 #	elif KERBAL_COMPILER_ID == KERBAL_COMPILER_ID_ICC
 
 #		if KERBAL_ICC_PRIVATE_HAS_BUILTIN(__builtin_is_constant_evaluated)
-#			define KERBAL_HAS_IS_CONSTANT_EVALUATED_SUPPORT 1
+#			define KERBAL_SUPPORTS_IS_CONSTANT_EVALUATED 1
 #			define KERBAL_IS_CONSTANT_EVALUATED() (__builtin_is_constant_evaluated())
 #		endif
 
 #	endif
 
 
-#	ifndef KERBAL_HAS_IS_CONSTANT_EVALUATED_SUPPORT
+#	ifndef KERBAL_SUPPORTS_IS_CONSTANT_EVALUATED
 #		if __cplusplus > 201703L
 #			include <type_traits>
 #			if __cpp_lib_is_constant_evaluated >= 201811L
-#				define KERBAL_HAS_IS_CONSTANT_EVALUATED_SUPPORT 1
+#				define KERBAL_SUPPORTS_IS_CONSTANT_EVALUATED 1
 #				define KERBAL_IS_CONSTANT_EVALUATED() (std::is_constant_evaluated())
 #			endif
 #		endif
 #	endif
 
 
-#	ifndef KERBAL_HAS_IS_CONSTANT_EVALUATED_SUPPORT
-#		define KERBAL_HAS_IS_CONSTANT_EVALUATED_SUPPORT 0
+#	ifndef KERBAL_SUPPORTS_IS_CONSTANT_EVALUATED
+#		define KERBAL_SUPPORTS_IS_CONSTANT_EVALUATED 0
 #	endif
 
-#else // ifdef KERBAL_HAS_IS_CONSTANT_EVALUATED_SUPPORT
+#else // ifdef KERBAL_SUPPORTS_IS_CONSTANT_EVALUATED
 
-#	if KERBAL_HAS_IS_CONSTANT_EVALUATED_SUPPORT
+#	if KERBAL_SUPPORTS_IS_CONSTANT_EVALUATED
 
 #		ifndef KERBAL_IS_CONSTANT_EVALUATED
 #			error "Macro KERBAL_IS_CONSTANT_EVALUATED has not been defined yet!"

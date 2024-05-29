@@ -15,8 +15,8 @@
 #include <kerbal/type_traits/detail/is_nothrow_destructible/is_nothrow_destructible.intrin.part.hpp>
 #include <kerbal/type_traits/detail/is_nothrow_destructible/is_nothrow_destructible.isdes.part.hpp>
 
-#ifndef KERBAL_HAS_IS_NOTHROW_DESTRUCTIBLE_SUPPORT
-#	define KERBAL_HAS_IS_NOTHROW_DESTRUCTIBLE_SUPPORT 0
+#ifndef KERBAL_SUPPORTS_IS_NOTHROW_DESTRUCTIBLE
+#	define KERBAL_SUPPORTS_IS_NOTHROW_DESTRUCTIBLE 0
 
 #	if KERBAL_TYPE_TRAITS_DEBUG_WARNING
 

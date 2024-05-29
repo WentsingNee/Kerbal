@@ -16,8 +16,8 @@
 #include <kerbal/type_traits/detail/is_scalar/is_scalar.is_enum.part.hpp>
 #include <kerbal/type_traits/detail/is_scalar/is_scalar.std.part.hpp>
 
-#ifndef KERBAL_HAS_IS_SCALAR_SUPPORT
-#	define KERBAL_HAS_IS_SCALAR_SUPPORT 0
+#ifndef KERBAL_SUPPORTS_IS_SCALAR
+#	define KERBAL_SUPPORTS_IS_SCALAR 0
 
 #	if KERBAL_TYPE_TRAITS_DEBUG_WARNING
 

@@ -438,7 +438,7 @@ namespace kerbal
 					return kerbal::compatibility::move(*this).super1::member();
 				}
 
-#			if KERBAL_HAS_CONST_RVALUE_REFERENCE_MEMBER_SUPPORT
+#			if KERBAL_SUPPORTS_CONST_RVALUE_REFERENCE_MEMBER
 
 				KERBAL_CONSTEXPR
 				first_type_const_rvalue_reference first() const && KERBAL_NOEXCEPT

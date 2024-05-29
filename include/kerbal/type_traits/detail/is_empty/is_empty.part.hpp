@@ -15,8 +15,8 @@
 #include <kerbal/type_traits/detail/is_empty/is_empty.intrin.part.hpp>
 #include <kerbal/type_traits/detail/is_empty/is_empty.std.part.hpp>
 
-#ifndef KERBAL_HAS_IS_EMPTY_SUPPORT
-#	define KERBAL_HAS_IS_EMPTY_SUPPORT 0
+#ifndef KERBAL_SUPPORTS_IS_EMPTY
+#	define KERBAL_SUPPORTS_IS_EMPTY 0
 
 #	if KERBAL_TYPE_TRAITS_DEBUG_WARNING
 

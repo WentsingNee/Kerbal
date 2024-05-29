@@ -14,7 +14,7 @@
 
 #include <kerbal/type_traits/detail/is_assignable/is_assignable.part.hpp>
 
-#if KERBAL_HAS_IS_ASSIGNABLE_SUPPORT
+#if KERBAL_SUPPORTS_IS_ASSIGNABLE
 #	include <kerbal/type_traits/detail/is_assignable/try_test_is_assignable.defi.part.hpp>
 #else
 #	include <kerbal/type_traits/detail/is_assignable/try_test_is_assignable.guess.part.hpp>

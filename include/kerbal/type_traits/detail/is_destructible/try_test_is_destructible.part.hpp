@@ -14,7 +14,7 @@
 
 #include <kerbal/type_traits/detail/is_destructible/is_destructible.part.hpp>
 
-#if KERBAL_HAS_IS_DESTRUCTIBLE_SUPPORT
+#if KERBAL_SUPPORTS_IS_DESTRUCTIBLE
 #	include <kerbal/type_traits/detail/is_destructible/try_test_is_destructible.defi.part.hpp>
 #else
 #	include <kerbal/type_traits/detail/is_destructible/try_test_is_destructible.guess.part.hpp>

@@ -42,7 +42,7 @@
 #	include <kerbal/utility/forward.hpp>
 #endif
 
-#if !KERBAL_HAS_EXCEPTIONS_SUPPORT
+#if !KERBAL_SUPPORTS_EXCEPTIONS
 #	include <kerbal/memory/bad_alloc.hpp>
 #endif
 
@@ -116,17 +116,17 @@ namespace kerbal
 
 					this->k_capacity = src.k_size;
 					this->k_buffer = allocator_traits::allocate(this_alloc, this->k_capacity);
-#		if !KERBAL_HAS_EXCEPTIONS_SUPPORT
+#		if !KERBAL_SUPPORTS_EXCEPTIONS
 					if (this->k_buffer == NULL) {
 						kerbal::utility::throw_this_exception_helper<kerbal::memory::bad_alloc>::throw_this_exception();
 					}
 #		endif
 
-#		if KERBAL_HAS_EXCEPTIONS_SUPPORT
+#		if KERBAL_SUPPORTS_EXCEPTIONS
 					try {
 #		endif
 						kerbal::memory::uninitialized_move_using_allocator(this_alloc, src.begin().current, src.end().current, this->k_buffer);
-#		if KERBAL_HAS_EXCEPTIONS_SUPPORT
+#		if KERBAL_SUPPORTS_EXCEPTIONS
 					} catch (...) {
 						allocator_traits::deallocate(this_alloc, this->k_buffer, this->k_capacity);
 						throw;
@@ -215,17 +215,17 @@ namespace kerbal
 
 				this->k_capacity = count;
 				this->k_buffer = allocator_traits::allocate(alloc, this->k_capacity);
-#		if !KERBAL_HAS_EXCEPTIONS_SUPPORT
+#		if !KERBAL_SUPPORTS_EXCEPTIONS
 				if (this->k_buffer == NULL) {
 					kerbal::utility::throw_this_exception_helper<kerbal::memory::bad_alloc>::throw_this_exception();
 				}
 #		endif
 
-#		if KERBAL_HAS_EXCEPTIONS_SUPPORT
+#		if KERBAL_SUPPORTS_EXCEPTIONS
 				try {
 #		endif
 					kerbal::memory::uninitialized_value_construct_using_allocator(alloc, this->k_buffer, this->k_buffer + count);
-#		if KERBAL_HAS_EXCEPTIONS_SUPPORT
+#		if KERBAL_SUPPORTS_EXCEPTIONS
 				} catch (...) {
 					allocator_traits::deallocate(alloc, this->k_buffer, this->k_capacity);
 					throw;
@@ -254,17 +254,17 @@ namespace kerbal
 
 				this->k_capacity = count;
 				this->k_buffer = allocator_traits::allocate(alloc, this->k_capacity);
-#		if !KERBAL_HAS_EXCEPTIONS_SUPPORT
+#		if !KERBAL_SUPPORTS_EXCEPTIONS
 				if (this->k_buffer == NULL) {
 					kerbal::utility::throw_this_exception_helper<kerbal::memory::bad_alloc>::throw_this_exception();
 				}
 #		endif
 
-#		if KERBAL_HAS_EXCEPTIONS_SUPPORT
+#		if KERBAL_SUPPORTS_EXCEPTIONS
 				try {
 #		endif
 					kerbal::memory::uninitialized_fill_using_allocator(alloc, this->k_buffer, this->k_buffer + count, value);
-#		if KERBAL_HAS_EXCEPTIONS_SUPPORT
+#		if KERBAL_SUPPORTS_EXCEPTIONS
 				} catch (...) {
 					allocator_traits::deallocate(alloc, this->k_buffer, this->k_capacity);
 					throw;
@@ -287,14 +287,14 @@ namespace kerbal
 				this->k_capacity = 0;
 				this->k_size = 0;
 
-#		if KERBAL_HAS_EXCEPTIONS_SUPPORT
+#		if KERBAL_SUPPORTS_EXCEPTIONS
 				try {
 #		endif
 					while (first != last) {
 						this->k_emplace_back_using_allocator(alloc, *first);
 						++first;
 					}
-#		if KERBAL_HAS_EXCEPTIONS_SUPPORT
+#		if KERBAL_SUPPORTS_EXCEPTIONS
 				} catch (...) {
 					if (this->k_buffer != NULL) {
 						typedef kerbal::memory::allocator_traits<Allocator> allocator_traits;
@@ -330,17 +330,17 @@ namespace kerbal
 
 				this->k_capacity = len;
 				this->k_buffer = allocator_traits::allocate(alloc, this->k_capacity);
-#		if !KERBAL_HAS_EXCEPTIONS_SUPPORT
+#		if !KERBAL_SUPPORTS_EXCEPTIONS
 				if (this->k_buffer == NULL) {
 					kerbal::utility::throw_this_exception_helper<kerbal::memory::bad_alloc>::throw_this_exception();
 				}
 #		endif
 
-#		if KERBAL_HAS_EXCEPTIONS_SUPPORT
+#		if KERBAL_SUPPORTS_EXCEPTIONS
 				try {
 #		endif
 					kerbal::memory::uninitialized_copy_using_allocator(alloc, first, last, this->k_buffer);
-#		if KERBAL_HAS_EXCEPTIONS_SUPPORT
+#		if KERBAL_SUPPORTS_EXCEPTIONS
 				} catch (...) {
 					allocator_traits::deallocate(alloc, this->k_buffer, this->k_capacity);
 					throw;
@@ -625,17 +625,17 @@ namespace kerbal
 					} else { // new_size > this->capacity
 						size_type new_capacity = new_size;
 						pointer new_buffer = allocator_traits::allocate(alloc, new_capacity);
-#		if !KERBAL_HAS_EXCEPTIONS_SUPPORT
+#		if !KERBAL_SUPPORTS_EXCEPTIONS
 						if (new_buffer == NULL) {
 							kerbal::utility::throw_this_exception_helper<kerbal::memory::bad_alloc>::throw_this_exception();
 						}
 #		endif
 
-#		if KERBAL_HAS_EXCEPTIONS_SUPPORT
+#		if KERBAL_SUPPORTS_EXCEPTIONS
 						try {
 #		endif
 							kerbal::memory::uninitialized_fill_using_allocator(alloc, new_buffer, new_buffer + new_size, value);
-#		if KERBAL_HAS_EXCEPTIONS_SUPPORT
+#		if KERBAL_SUPPORTS_EXCEPTIONS
 						} catch (...) {
 							allocator_traits::deallocate(alloc, new_buffer, new_capacity);
 							throw;
@@ -720,17 +720,17 @@ namespace kerbal
 					} else { // new_size > this->capacity
 						size_type new_capacity = new_size;
 						pointer new_buffer = allocator_traits::allocate(alloc, new_capacity);
-#		if !KERBAL_HAS_EXCEPTIONS_SUPPORT
+#		if !KERBAL_SUPPORTS_EXCEPTIONS
 						if (new_buffer == NULL) {
 							kerbal::utility::throw_this_exception_helper<kerbal::memory::bad_alloc>::throw_this_exception();
 						}
 #		endif
 
-#		if KERBAL_HAS_EXCEPTIONS_SUPPORT
+#		if KERBAL_SUPPORTS_EXCEPTIONS
 						try {
 #		endif
 							kerbal::memory::uninitialized_copy_using_allocator(alloc, first, last, new_buffer);
-#		if KERBAL_HAS_EXCEPTIONS_SUPPORT
+#		if KERBAL_SUPPORTS_EXCEPTIONS
 						} catch (...) {
 							allocator_traits::deallocate(alloc, new_buffer, new_capacity);
 							throw;
@@ -1083,11 +1083,11 @@ namespace kerbal
 			{
 				typedef kerbal::memory::allocator_traits<Allocator> allocator_traits;
 
-#		if KERBAL_HAS_EXCEPTIONS_SUPPORT
+#		if KERBAL_SUPPORTS_EXCEPTIONS
 				try {
 #		endif
 					ui_move_if_noexcept_ow_copy_phase1(alloc, this->begin().current, this->end().current, new_buffer);
-#		if KERBAL_HAS_EXCEPTIONS_SUPPORT
+#		if KERBAL_SUPPORTS_EXCEPTIONS
 				} catch (...) {
 					allocator_traits::deallocate(alloc, new_buffer, new_capacity);
 					throw;
@@ -1110,7 +1110,7 @@ namespace kerbal
 				typedef kerbal::memory::allocator_traits<Allocator> allocator_traits;
 
 				pointer new_buffer = allocator_traits::allocate(alloc, new_capacity);
-#		if !KERBAL_HAS_EXCEPTIONS_SUPPORT
+#		if !KERBAL_SUPPORTS_EXCEPTIONS
 				if (new_buffer == NULL) {
 					kerbal::utility::throw_this_exception_helper<kerbal::memory::bad_alloc>::throw_this_exception();
 				}
@@ -1137,7 +1137,7 @@ namespace kerbal
 				typedef kerbal::memory::allocator_traits<Allocator> allocator_traits;
 
 				pointer new_buffer = allocator_traits::reallocate(alloc, this->k_buffer, this->k_capacity, new_capacity);
-#		if !KERBAL_HAS_EXCEPTIONS_SUPPORT
+#		if !KERBAL_SUPPORTS_EXCEPTIONS
 				if (new_buffer == NULL) {
 					kerbal::utility::throw_this_exception_helper<kerbal::memory::bad_alloc>::throw_this_exception();
 				}
@@ -1175,7 +1175,7 @@ namespace kerbal
 
 				size_type new_capacity = this->k_size;
 				pointer new_buffer = allocator_traits::allocate(alloc, new_capacity);
-#		if !KERBAL_HAS_EXCEPTIONS_SUPPORT
+#		if !KERBAL_SUPPORTS_EXCEPTIONS
 				if (new_buffer == NULL) {
 					kerbal::utility::throw_this_exception_helper<kerbal::memory::bad_alloc>::throw_this_exception();
 				}
@@ -1244,7 +1244,7 @@ namespace kerbal
 					pointer insert_pos = this->k_buffer + insert_pos_index;
 					pointer emplace_pos = new_buffer + insert_pos_index;
 
-#		if KERBAL_HAS_EXCEPTIONS_SUPPORT
+#		if KERBAL_SUPPORTS_EXCEPTIONS
 					try {
 						try {
 							ui_move_if_noexcept_ow_copy_phase1(alloc, this->begin().current, insert_pos, new_buffer);
@@ -1262,10 +1262,10 @@ namespace kerbal
 						allocator_traits::deallocate(alloc, new_buffer, new_capacity);
 						throw;
 					}
-#		else // KERBAL_HAS_EXCEPTIONS_SUPPORT
+#		else // KERBAL_SUPPORTS_EXCEPTIONS
 					ui_move_if_noexcept_ow_copy_phase1(alloc, this->begin().current, insert_pos, new_buffer);
 					ui_move_if_noexcept_ow_copy_phase1(alloc, insert_pos, this->end().current, emplace_pos + 1);
-#		endif // KERBAL_HAS_EXCEPTIONS_SUPPORT
+#		endif // KERBAL_SUPPORTS_EXCEPTIONS
 
 					ui_move_if_noexcept_ow_copy_phase2(alloc, this->begin().current, this->end().current);
 					allocator_traits::deallocate(alloc, this->k_buffer, this->k_capacity);
@@ -1381,18 +1381,18 @@ namespace kerbal
 				} else { // new_size > this->k_capacity
 					size_type new_capacity = this->k_capacity == 0 ? 1 : 2 * this->k_capacity;
 					pointer new_buffer = allocator_traits::allocate(alloc, new_capacity);
-#		if !KERBAL_HAS_EXCEPTIONS_SUPPORT
+#		if !KERBAL_SUPPORTS_EXCEPTIONS
 					if (new_buffer == NULL) {
 						kerbal::utility::throw_this_exception_helper<kerbal::memory::bad_alloc>::throw_this_exception();
 					}
 #		endif
 					pointer emplace_pos = new_buffer + insert_pos_index;
 
-#		if KERBAL_HAS_EXCEPTIONS_SUPPORT
+#		if KERBAL_SUPPORTS_EXCEPTIONS
 					try {
 #		endif
 						kerbal::memory::construct_at_using_allocator(alloc, emplace_pos, kerbal::utility::forward<Args>(args)...);
-#		if KERBAL_HAS_EXCEPTIONS_SUPPORT
+#		if KERBAL_SUPPORTS_EXCEPTIONS
 					} catch (...) {
 						allocator_traits::deallocate(alloc, new_buffer, new_capacity);
 						throw;
@@ -1412,7 +1412,7 @@ namespace kerbal
 #		define ARGS_DECL(i) const KERBAL_MACRO_CONCAT(Arg, i) & KERBAL_MACRO_CONCAT(arg, i)
 #		define ARGS_USE(i) KERBAL_MACRO_CONCAT(arg, i)
 
-#	if KERBAL_HAS_EXCEPTIONS_SUPPORT
+#	if KERBAL_SUPPORTS_EXCEPTIONS
 
 #		define FBODY_REALLOC(i) \
 				{ \
@@ -1430,7 +1430,7 @@ namespace kerbal
 					this->emplace_realloc_aux(alloc, insert_pos_index, new_buffer, new_capacity); \
 				} \
 
-#	else // KERBAL_HAS_EXCEPTIONS_SUPPORT
+#	else // KERBAL_SUPPORTS_EXCEPTIONS
 
 #		define FBODY_REALLOC(i) \
 				{ \
@@ -1448,7 +1448,7 @@ namespace kerbal
 					this->emplace_realloc_aux(alloc, insert_pos_index, new_buffer, new_capacity); \
 				} \
 
-#	endif // KERBAL_HAS_EXCEPTIONS_SUPPORT
+#	endif // KERBAL_SUPPORTS_EXCEPTIONS
 
 
 #		define FBODY(i) \
@@ -1553,7 +1553,7 @@ namespace kerbal
 					pointer insert_pos = this->k_buffer + insert_pos_index;
 					pointer new_insert_pos = new_buffer + insert_pos_index;
 
-#		if KERBAL_HAS_EXCEPTIONS_SUPPORT
+#		if KERBAL_SUPPORTS_EXCEPTIONS
 					try {
 						try {
 							// A A A 1 2 3
@@ -1575,10 +1575,10 @@ namespace kerbal
 						allocator_traits::deallocate(alloc, new_buffer, new_capacity);
 						throw;
 					}
-#		else // KERBAL_HAS_EXCEPTIONS_SUPPORT
+#		else // KERBAL_SUPPORTS_EXCEPTIONS
 					ui_move_if_noexcept_ow_copy_phase1(alloc, this->begin().current, insert_pos, new_buffer);
 					ui_move_if_noexcept_ow_copy_phase1(alloc, insert_pos, this->end().current, new_insert_pos + n);
-#		endif // KERBAL_HAS_EXCEPTIONS_SUPPORT
+#		endif // KERBAL_SUPPORTS_EXCEPTIONS
 
 					ui_move_if_noexcept_ow_copy_phase2(alloc, this->begin().current, this->end().current);
 					allocator_traits::deallocate(alloc, this->k_buffer, this->k_capacity);
@@ -1641,13 +1641,13 @@ namespace kerbal
 						// A A A 1 2 3
 						// A A A 1 2 3 X X
 						kerbal::memory::uninitialized_fill_using_allocator(alloc, this->end().current, insert_pos + n, val);
-#		if KERBAL_HAS_EXCEPTIONS_SUPPORT
+#		if KERBAL_SUPPORTS_EXCEPTIONS
 						try {
 #		endif
 							// A A A 1 2 3
 							// A A A 1 2 3 X X 1 2 3
 							kerbal::memory::uninitialized_copy_using_allocator(alloc, pos.current, this->cend().current, insert_pos + n);
-#		if KERBAL_HAS_EXCEPTIONS_SUPPORT
+#		if KERBAL_SUPPORTS_EXCEPTIONS
 						} catch (...) {
 							kerbal::memory::reverse_destroy_using_allocator(alloc, this->end().current, insert_pos + n);
 							throw;
@@ -1664,20 +1664,20 @@ namespace kerbal
 
 					size_type new_capacity = 2 * new_size;
 					pointer new_buffer = allocator_traits::allocate(alloc, new_capacity);
-#		if !KERBAL_HAS_EXCEPTIONS_SUPPORT
+#		if !KERBAL_SUPPORTS_EXCEPTIONS
 					if (new_buffer == NULL) {
 						kerbal::utility::throw_this_exception_helper<kerbal::memory::bad_alloc>::throw_this_exception();
 					}
 #		endif
 					pointer new_insert_pos = new_buffer + insert_pos_index;
 
-#		if KERBAL_HAS_EXCEPTIONS_SUPPORT
+#		if KERBAL_SUPPORTS_EXCEPTIONS
 					try {
 #		endif
 						// A A A 1 2 3
 						// O O O X X X X X O O O
 						kerbal::memory::uninitialized_fill_using_allocator(alloc, new_insert_pos, new_insert_pos + n, val);
-#		if KERBAL_HAS_EXCEPTIONS_SUPPORT
+#		if KERBAL_SUPPORTS_EXCEPTIONS
 					} catch (...) {
 						allocator_traits::deallocate(alloc, new_buffer, new_capacity);
 						throw;
@@ -1764,7 +1764,7 @@ namespace kerbal
 
 						kerbal::memory::uninitialized_copy_using_allocator(alloc, pos.current, this->cend().current, insert_pos + n);
 
-#		if KERBAL_HAS_EXCEPTIONS_SUPPORT
+#		if KERBAL_SUPPORTS_EXCEPTIONS
 						try {
 #		endif
 							kerbal::algorithm::detail::basic_copy_n_ret<pointer, pointer> copy_n_r(kerbal::algorithm::detail::basic_copy_n(vt.begin().current, ori_size - insert_pos_index, insert_pos));
@@ -1772,7 +1772,7 @@ namespace kerbal
 							this->k_size = new_size;
 							ui_move_if_noexcept_ow_copy_phase2(alloc, copy_n_r.first, vt.end().current);
 							vt.k_size = ori_size - insert_pos_index;
-#		if KERBAL_HAS_EXCEPTIONS_SUPPORT
+#		if KERBAL_SUPPORTS_EXCEPTIONS
 						} catch (...) {
 							kerbal::memory::reverse_destroy_using_allocator(alloc, insert_pos + n, this->nth(new_size).current);
 							throw;
@@ -1785,20 +1785,20 @@ namespace kerbal
 
 					size_type new_capacity = 2 * new_size;
 					pointer new_buffer = allocator_traits::allocate(alloc, new_capacity);
-#		if !KERBAL_HAS_EXCEPTIONS_SUPPORT
+#		if !KERBAL_SUPPORTS_EXCEPTIONS
 					if (new_buffer == NULL) {
 						kerbal::utility::throw_this_exception_helper<kerbal::memory::bad_alloc>::throw_this_exception();
 					}
 #		endif
 					pointer new_insert_pos = new_buffer + insert_pos_index;
 
-#		if KERBAL_HAS_EXCEPTIONS_SUPPORT
+#		if KERBAL_SUPPORTS_EXCEPTIONS
 					try {
 #		endif
 						// A A A 1 2 3
 						// O O O X X X X X O O O
 						ui_move_if_noexcept_ow_copy_phase1(alloc, vt.begin().current, vt.end().current, new_insert_pos);
-#		if KERBAL_HAS_EXCEPTIONS_SUPPORT
+#		if KERBAL_SUPPORTS_EXCEPTIONS
 					} catch (...) {
 						allocator_traits::deallocate(alloc, new_buffer, new_capacity);
 						throw;
@@ -1869,14 +1869,14 @@ namespace kerbal
 							alloc, pos.cast_to_mutable().current, this->end().current, insert_pos + n
 						);
 
-#		if KERBAL_HAS_EXCEPTIONS_SUPPORT
+#		if KERBAL_SUPPORTS_EXCEPTIONS
 						try {
 #		endif
 							kerbal::algorithm::detail::basic_copy_n_ret<ForwardIterator, pointer> copy_n_r(
 								kerbal::algorithm::detail::basic_copy_n(first, ori_size - insert_pos_index, insert_pos)
 							);
 							kerbal::memory::uninitialized_copy_using_allocator(alloc, copy_n_r.first, last, copy_n_r.second);
-#		if KERBAL_HAS_EXCEPTIONS_SUPPORT
+#		if KERBAL_SUPPORTS_EXCEPTIONS
 						} catch (...) {
 							kerbal::memory::reverse_destroy_using_allocator(alloc, insert_pos + n, this->nth(new_size).current);
 							throw;
@@ -1890,20 +1890,20 @@ namespace kerbal
 
 					size_type new_capacity = 2 * new_size;
 					pointer new_buffer = allocator_traits::allocate(alloc, new_capacity);
-#		if !KERBAL_HAS_EXCEPTIONS_SUPPORT
+#		if !KERBAL_SUPPORTS_EXCEPTIONS
 					if (new_buffer == NULL) {
 						kerbal::utility::throw_this_exception_helper<kerbal::memory::bad_alloc>::throw_this_exception();
 					}
 #		endif
 					pointer new_insert_pos = new_buffer + insert_pos_index;
 
-#		if KERBAL_HAS_EXCEPTIONS_SUPPORT
+#		if KERBAL_SUPPORTS_EXCEPTIONS
 					try {
 #		endif
 						// A A A 1 2 3
 						// O O O X X X X X O O O
 						kerbal::memory::uninitialized_copy_using_allocator(alloc, first, last, new_insert_pos);
-#		if KERBAL_HAS_EXCEPTIONS_SUPPORT
+#		if KERBAL_SUPPORTS_EXCEPTIONS
 					} catch (...) {
 						allocator_traits::deallocate(alloc, new_buffer, new_capacity);
 						throw;
@@ -1946,11 +1946,11 @@ namespace kerbal
 				typedef kerbal::memory::allocator_traits<Allocator> allocator_traits;
 
 				if (this->k_buffer != NULL) {
-#		if KERBAL_HAS_EXCEPTIONS_SUPPORT
+#		if KERBAL_SUPPORTS_EXCEPTIONS
 					try {
 #		endif
 						ui_move_if_noexcept_ow_copy_phase1(alloc, this->begin().current, this->end().current, new_buffer);
-#		if KERBAL_HAS_EXCEPTIONS_SUPPORT
+#		if KERBAL_SUPPORTS_EXCEPTIONS
 					} catch (...) {
 						pointer emplace_pos = new_buffer + this->k_size;
 						kerbal::memory::destroy_at_using_allocator(alloc, emplace_pos);
@@ -1984,18 +1984,18 @@ namespace kerbal
 				size_type ori_size = this->k_size;
 				size_type new_capacity = this->k_capacity == 0 ? 1 : this->k_capacity * 2;
 				pointer new_buffer = allocator_traits::allocate(alloc, new_capacity);
-#		if !KERBAL_HAS_EXCEPTIONS_SUPPORT
+#		if !KERBAL_SUPPORTS_EXCEPTIONS
 				if (new_buffer == NULL) {
 					kerbal::utility::throw_this_exception_helper<kerbal::memory::bad_alloc>::throw_this_exception();
 				}
 #		endif
 				pointer emplace_pos = new_buffer + ori_size;
 
-#		if KERBAL_HAS_EXCEPTIONS_SUPPORT
+#		if KERBAL_SUPPORTS_EXCEPTIONS
 				try {
 #		endif
 					kerbal::memory::construct_at_using_allocator(alloc, emplace_pos, kerbal::utility::forward<Args>(args)...);
-#		if KERBAL_HAS_EXCEPTIONS_SUPPORT
+#		if KERBAL_SUPPORTS_EXCEPTIONS
 				} catch (...) {
 					allocator_traits::deallocate(alloc, new_buffer, new_capacity);
 					throw;
@@ -2021,7 +2021,7 @@ namespace kerbal
 				size_type ori_size = this->k_size;
 				size_type new_capacity = this->k_capacity == 0 ? 1 : this->k_capacity * 2;
 				pointer new_buffer = allocator_traits::reallocate(alloc, this->k_buffer, this->k_capacity, new_capacity);
-#		if !KERBAL_HAS_EXCEPTIONS_SUPPORT
+#		if !KERBAL_SUPPORTS_EXCEPTIONS
 				if (new_buffer == NULL) {
 					kerbal::utility::throw_this_exception_helper<kerbal::memory::bad_alloc>::throw_this_exception();
 				}
@@ -2068,7 +2068,7 @@ namespace kerbal
 #		define ARGS_DECL(i) const KERBAL_MACRO_CONCAT(Arg, i) & KERBAL_MACRO_CONCAT(arg, i)
 #		define ARGS_USE(i) KERBAL_MACRO_CONCAT(arg, i)
 
-#	if KERBAL_HAS_EXCEPTIONS_SUPPORT
+#	if KERBAL_SUPPORTS_EXCEPTIONS
 
 #		define FBODY_EXPAND_BUFFER(i) \
 			template <typename T> \
@@ -2128,7 +2128,7 @@ namespace kerbal
 				++this->k_size; \
 			} \
 
-#	else // KERBAL_HAS_EXCEPTIONS_SUPPORT
+#	else // KERBAL_SUPPORTS_EXCEPTIONS
 
 #		define FBODY_EXPAND_BUFFER(i) \
 			template <typename T> \
@@ -2190,7 +2190,7 @@ namespace kerbal
 				++this->k_size; \
 			} \
 
-#	endif // KERBAL_HAS_EXCEPTIONS_SUPPORT
+#	endif // KERBAL_SUPPORTS_EXCEPTIONS
 
 #		define FBODY(i) \
 			FBODY_EXPAND_BUFFER(i) \
@@ -2349,11 +2349,11 @@ namespace kerbal
 				typedef kerbal::memory::allocator_traits<Allocator> allocator_traits;
 
 				if (this->k_buffer != NULL) {
-#		if KERBAL_HAS_EXCEPTIONS_SUPPORT
+#		if KERBAL_SUPPORTS_EXCEPTIONS
 					try {
 #		endif
 						ui_move_if_noexcept_ow_copy_phase1(alloc, this->begin().current, this->end().current, new_buffer);
-#		if KERBAL_HAS_EXCEPTIONS_SUPPORT
+#		if KERBAL_SUPPORTS_EXCEPTIONS
 					} catch (...) {
 						size_type ori_size = this->k_size;
 						kerbal::memory::reverse_destroy_using_allocator(alloc, new_buffer + ori_size, new_buffer + new_size);
@@ -2385,17 +2385,17 @@ namespace kerbal
 				size_type ori_size = this->k_size;
 				size_type new_capacity = 2 * new_size;
 				pointer new_buffer = allocator_traits::allocate(alloc, new_capacity);
-#		if !KERBAL_HAS_EXCEPTIONS_SUPPORT
+#		if !KERBAL_SUPPORTS_EXCEPTIONS
 				if (new_buffer == NULL) {
 					kerbal::utility::throw_this_exception_helper<kerbal::memory::bad_alloc>::throw_this_exception();
 				}
 #		endif
 
-#		if KERBAL_HAS_EXCEPTIONS_SUPPORT
+#		if KERBAL_SUPPORTS_EXCEPTIONS
 				try {
 #		endif
 					kerbal::memory::uninitialized_value_construct_using_allocator(alloc, new_buffer + ori_size, new_buffer + new_size);
-#		if KERBAL_HAS_EXCEPTIONS_SUPPORT
+#		if KERBAL_SUPPORTS_EXCEPTIONS
 				} catch (...) {
 					allocator_traits::deallocate(alloc, new_buffer, new_capacity);
 					throw;
@@ -2421,7 +2421,7 @@ namespace kerbal
 				size_type ori_size = this->k_size;
 				size_type new_capacity = 2 * new_size;
 				pointer new_buffer = allocator_traits::reallocate(alloc, this->k_buffer, this->k_capacity, new_capacity);
-#		if !KERBAL_HAS_EXCEPTIONS_SUPPORT
+#		if !KERBAL_SUPPORTS_EXCEPTIONS
 				if (new_buffer == NULL) {
 					kerbal::utility::throw_this_exception_helper<kerbal::memory::bad_alloc>::throw_this_exception();
 				}
@@ -2450,17 +2450,17 @@ namespace kerbal
 				size_type ori_size = this->k_size;
 				size_type new_capacity = 2 * new_size;
 				pointer new_buffer = allocator_traits::allocate(alloc, new_capacity);
-#		if !KERBAL_HAS_EXCEPTIONS_SUPPORT
+#		if !KERBAL_SUPPORTS_EXCEPTIONS
 				if (new_buffer == NULL) {
 					kerbal::utility::throw_this_exception_helper<kerbal::memory::bad_alloc>::throw_this_exception();
 				}
 #		endif
 
-#		if KERBAL_HAS_EXCEPTIONS_SUPPORT
+#		if KERBAL_SUPPORTS_EXCEPTIONS
 				try {
 #		endif
 					kerbal::memory::uninitialized_fill_using_allocator(alloc, new_buffer + ori_size, new_buffer + new_size, value);
-#		if KERBAL_HAS_EXCEPTIONS_SUPPORT
+#		if KERBAL_SUPPORTS_EXCEPTIONS
 				} catch (...) {
 					allocator_traits::deallocate(alloc, new_buffer, new_capacity);
 					throw;
@@ -2486,7 +2486,7 @@ namespace kerbal
 				size_type ori_size = this->k_size;
 				size_type new_capacity = 2 * new_size;
 				pointer new_buffer = allocator_traits::reallocate(alloc, this->k_buffer, this->k_capacity, new_capacity);
-#		if !KERBAL_HAS_EXCEPTIONS_SUPPORT
+#		if !KERBAL_SUPPORTS_EXCEPTIONS
 				if (new_buffer == NULL) {
 					kerbal::utility::throw_this_exception_helper<kerbal::memory::bad_alloc>::throw_this_exception();
 				}

@@ -14,7 +14,7 @@
 
 #include <kerbal/type_traits/detail/is_trivially_destructible/is_trivially_destructible.part.hpp>
 
-#if KERBAL_HAS_IS_TRIVIALLY_DESTRUCTIBLE_SUPPORT
+#if KERBAL_SUPPORTS_IS_TRIVIALLY_DESTRUCTIBLE
 #	include <kerbal/type_traits/detail/is_trivially_destructible/try_test_is_trivially_destructible.defi.part.hpp>
 #else
 #	include <kerbal/type_traits/detail/is_trivially_destructible/try_test_is_trivially_destructible.guess.part.hpp>

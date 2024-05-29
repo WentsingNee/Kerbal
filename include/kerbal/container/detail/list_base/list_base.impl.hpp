@@ -36,7 +36,7 @@
 #	include <kerbal/utility/forward.hpp>
 #endif
 
-#if !KERBAL_HAS_EXCEPTIONS_SUPPORT
+#if !KERBAL_SUPPORTS_EXCEPTIONS
 #	include <kerbal/memory/bad_alloc.hpp>
 #	include <kerbal/utility/throw_this_exception.hpp>
 #endif
@@ -1503,7 +1503,7 @@ namespace kerbal
 				other.k_init_node_base();
 			}
 
-#		if KERBAL_HAS_EXCEPTIONS_SUPPORT
+#		if KERBAL_SUPPORTS_EXCEPTIONS
 
 			template <typename T>
 			template <typename BinaryPredict>
@@ -1556,7 +1556,7 @@ namespace kerbal
 			k_merge(list_type_only & other, BinaryPredict cmp)
 			{
 
-#		if KERBAL_HAS_EXCEPTIONS_SUPPORT
+#		if KERBAL_SUPPORTS_EXCEPTIONS
 
 #			if __cplusplus >= 201103L
 
@@ -1622,7 +1622,7 @@ namespace kerbal
 				j.cast_to_mutable().current->prev = before_mid.cast_to_mutable().current;
 			}
 
-#		if KERBAL_HAS_EXCEPTIONS_SUPPORT
+#		if KERBAL_SUPPORTS_EXCEPTIONS
 
 			template <typename T>
 			template <typename BinaryPredict>
@@ -1675,7 +1675,7 @@ namespace kerbal
 			)
 			{
 
-#		if KERBAL_HAS_EXCEPTIONS_SUPPORT
+#		if KERBAL_SUPPORTS_EXCEPTIONS
 
 #			if __cplusplus >= 201103L
 
@@ -2366,7 +2366,7 @@ namespace kerbal
 
 #	if __cplusplus >= 201103L
 
-#		if KERBAL_HAS_EXCEPTIONS_SUPPORT
+#		if KERBAL_SUPPORTS_EXCEPTIONS
 
 			template <typename T>
 			template <bool nothrow_while_construct, typename NodeAllocator, typename ... Args>
@@ -2439,7 +2439,7 @@ namespace kerbal
 				return k_build_new_node_impl<nothrow_while_construct::value>(alloc, kerbal::utility::forward<Args>(args)...);
 			}
 
-#		else // KERBAL_HAS_EXCEPTIONS_SUPPORT
+#		else // KERBAL_SUPPORTS_EXCEPTIONS
 
 			template <typename T>
 			template <typename NodeAllocator, typename ... Args>
@@ -2461,7 +2461,7 @@ namespace kerbal
 				return p;
 			}
 
-#		endif // KERBAL_HAS_EXCEPTIONS_SUPPORT
+#		endif // KERBAL_SUPPORTS_EXCEPTIONS
 
 #	else // __cplusplus >= 201103L
 
@@ -2471,7 +2471,7 @@ namespace kerbal
 #		define ARGS_DECL(i) const KERBAL_MACRO_CONCAT(Arg, i) & KERBAL_MACRO_CONCAT(arg, i)
 #		define ARGS_USE(i) KERBAL_MACRO_CONCAT(arg, i)
 
-#	if KERBAL_HAS_EXCEPTIONS_SUPPORT
+#	if KERBAL_SUPPORTS_EXCEPTIONS
 
 #		define FBODY(i) \
 			template <typename T> \
@@ -2498,7 +2498,7 @@ namespace kerbal
 				return p; \
 			} \
 
-#	else // KERBAL_HAS_EXCEPTIONS_SUPPORT
+#	else // KERBAL_SUPPORTS_EXCEPTIONS
 
 #		define FBODY(i) \
 			template <typename T> \
@@ -2520,7 +2520,7 @@ namespace kerbal
 				return p; \
 			} \
 
-#	endif // KERBAL_HAS_EXCEPTIONS_SUPPORT
+#	endif // KERBAL_SUPPORTS_EXCEPTIONS
 
 			KERBAL_PPEXPAND_N(FBODY, KERBAL_PPEXPAND_EMPTY_SEPARATOR, 0)
 			KERBAL_PPEXPAND_N(FBODY, KERBAL_PPEXPAND_EMPTY_SEPARATOR, 20)
@@ -2551,9 +2551,9 @@ namespace kerbal
 				node_base head;
 				node_base * prev = &head;
 
-#		if KERBAL_HAS_EXCEPTIONS_SUPPORT
+#		if KERBAL_SUPPORTS_EXCEPTIONS
 				try {
-#		endif // KERBAL_HAS_EXCEPTIONS_SUPPORT
+#		endif // KERBAL_SUPPORTS_EXCEPTIONS
 					do {
 						node * new_node = k_build_new_node(alloc, kerbal::utility::forward<Args>(args)...);
 						new_node->prev = prev;
@@ -2565,12 +2565,12 @@ namespace kerbal
 						node::reinterpret_as(head.next),
 						node::reinterpret_as(prev)
 					);
-#		if KERBAL_HAS_EXCEPTIONS_SUPPORT
+#		if KERBAL_SUPPORTS_EXCEPTIONS
 				} catch (...) {
 					k_consecutive_destroy_node(alloc, head.next);
 					throw;
 				}
-#		endif // KERBAL_HAS_EXCEPTIONS_SUPPORT
+#		endif // KERBAL_SUPPORTS_EXCEPTIONS
 			}
 
 #	else
@@ -2581,7 +2581,7 @@ namespace kerbal
 #		define ARGS_DECL(i) const KERBAL_MACRO_CONCAT(Arg, i) & KERBAL_MACRO_CONCAT(arg, i)
 #		define ARGS_USE(i) KERBAL_MACRO_CONCAT(arg, i)
 
-#	if KERBAL_HAS_EXCEPTIONS_SUPPORT
+#	if KERBAL_SUPPORTS_EXCEPTIONS
 
 #		define FBODY(i) \
 			template <typename T> \
@@ -2616,7 +2616,7 @@ namespace kerbal
 				} \
 			} \
 
-#	else // KERBAL_HAS_EXCEPTIONS_SUPPORT
+#	else // KERBAL_SUPPORTS_EXCEPTIONS
 
 #		define FBODY(i) \
 			template <typename T> \
@@ -2646,7 +2646,7 @@ namespace kerbal
 				); \
 			} \
 
-#	endif // KERBAL_HAS_EXCEPTIONS_SUPPORT
+#	endif // KERBAL_SUPPORTS_EXCEPTIONS
 
 			KERBAL_PPEXPAND_N(FBODY, KERBAL_PPEXPAND_EMPTY_SEPARATOR, 0)
 			KERBAL_PPEXPAND_N(FBODY, KERBAL_PPEXPAND_EMPTY_SEPARATOR, 20)
@@ -2677,9 +2677,9 @@ namespace kerbal
 				node_base head;
 				node_base * prev = &head;
 
-#			if KERBAL_HAS_EXCEPTIONS_SUPPORT
+#			if KERBAL_SUPPORTS_EXCEPTIONS
 				try {
-#			endif // KERBAL_HAS_EXCEPTIONS_SUPPORT
+#			endif // KERBAL_SUPPORTS_EXCEPTIONS
 					do {
 						node * new_node = k_build_new_node(alloc, *first);
 						new_node->prev = prev;
@@ -2691,12 +2691,12 @@ namespace kerbal
 						node::reinterpret_as(head.next),
 						node::reinterpret_as(prev)
 					);
-#			if KERBAL_HAS_EXCEPTIONS_SUPPORT
+#			if KERBAL_SUPPORTS_EXCEPTIONS
 				} catch (...) {
 					k_consecutive_destroy_node(alloc, head.next);
 					throw;
 				}
-#			endif // KERBAL_HAS_EXCEPTIONS_SUPPORT
+#			endif // KERBAL_SUPPORTS_EXCEPTIONS
 			}
 
 
