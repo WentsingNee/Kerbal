@@ -14,7 +14,7 @@
 
 #include <kerbal/type_traits/detail/is_standard_layout/is_standard_layout.part.hpp>
 
-#if KERBAL_HAS_IS_STANDARD_LAYOUT_SUPPORT
+#if KERBAL_SUPPORTS_IS_STANDARD_LAYOUT
 #	include <kerbal/type_traits/detail/is_standard_layout/try_test_is_standard_layout.defi.part.hpp>
 #else
 #	include <kerbal/type_traits/detail/is_standard_layout/try_test_is_standard_layout.guess.part.hpp>

@@ -23,7 +23,7 @@
 #if __cplusplus > 201703L
 #	include <kerbal/compatibility/is_constant_evaluated.hpp>
 
-#	if KERBAL_HAS_IS_CONSTANT_EVALUATED_SUPPORT
+#	if KERBAL_SUPPORTS_IS_CONSTANT_EVALUATED
 #		include <memory>
 #	endif
 #endif
@@ -53,7 +53,7 @@ namespace kerbal
 		{
 
 #	if __cplusplus > 201703L
-#		if KERBAL_HAS_IS_CONSTANT_EVALUATED_SUPPORT
+#		if KERBAL_SUPPORTS_IS_CONSTANT_EVALUATED
 			if (KERBAL_IS_CONSTANT_EVALUATED()) {
 				return std::allocator<T>().allocate(n);
 			}
@@ -70,7 +70,7 @@ namespace kerbal
 		{
 
 #	if __cplusplus > 201703L
-#		if KERBAL_HAS_IS_CONSTANT_EVALUATED_SUPPORT
+#		if KERBAL_SUPPORTS_IS_CONSTANT_EVALUATED
 			if (KERBAL_IS_CONSTANT_EVALUATED()) {
 				if (p != NULL) {
 					std::allocator<T>().deallocate(p, n);

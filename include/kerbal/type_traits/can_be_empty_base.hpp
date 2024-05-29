@@ -18,14 +18,14 @@
 #include <kerbal/type_traits/tribool_constant.hpp>
 
 
-#if	KERBAL_HAS_IS_EMPTY_SUPPORT && KERBAL_HAS_IS_FINAL_SUPPORT
-#	define KERBAL_HAS_CAN_BE_EMPTY_BASE_SUPPORT 1
+#if	KERBAL_SUPPORTS_IS_EMPTY && KERBAL_SUPPORTS_IS_FINAL
+#	define KERBAL_SUPPORTS_CAN_BE_EMPTY_BASE 1
 #else
-#	define KERBAL_HAS_CAN_BE_EMPTY_BASE_SUPPORT 0
+#	define KERBAL_SUPPORTS_CAN_BE_EMPTY_BASE 0
 #endif
 
 
-#if KERBAL_HAS_CAN_BE_EMPTY_BASE_SUPPORT
+#if KERBAL_SUPPORTS_CAN_BE_EMPTY_BASE
 #	include <kerbal/type_traits/logical.hpp>
 #endif
 
@@ -36,7 +36,7 @@ namespace kerbal
 	namespace type_traits
 	{
 
-#if	KERBAL_HAS_CAN_BE_EMPTY_BASE_SUPPORT
+#if	KERBAL_SUPPORTS_CAN_BE_EMPTY_BASE
 
 		KERBAL_MODULE_EXPORT
 		template <typename T>

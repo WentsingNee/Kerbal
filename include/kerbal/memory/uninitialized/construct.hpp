@@ -231,7 +231,7 @@ namespace kerbal
 			typedef kerbal::type_traits::integral_constant<int, 1> UI_VAL_CONSTRUCT_VER_NOTHROW_ITER_ADVANCE;
 			typedef kerbal::type_traits::integral_constant<int, 2> UI_VAL_CONSTRUCT_VER_NO_CATCH;
 
-#		if KERBAL_HAS_EXCEPTIONS_SUPPORT
+#		if KERBAL_SUPPORTS_EXCEPTIONS
 
 			template <typename ForwardIterator>
 			KERBAL_CONSTEXPR20
@@ -297,7 +297,7 @@ namespace kerbal
 		void uninitialized_value_construct(ForwardIterator first, ForwardIterator last)
 		{
 
-#	if KERBAL_HAS_EXCEPTIONS_SUPPORT
+#	if KERBAL_SUPPORTS_EXCEPTIONS
 
 			typedef ForwardIterator iterator;
 			typedef typename kerbal::iterator::iterator_traits<iterator>::value_type value_type;
@@ -333,7 +333,7 @@ namespace kerbal
 			typedef kerbal::type_traits::integral_constant<int, 1> UI_VAL_CONSTRUCT_N_VER_NOTHROW_ITER_ADVANCE;
 			typedef kerbal::type_traits::integral_constant<int, 2> UI_VAL_CONSTRUCT_N_VER_NO_CATCH;
 
-#		if KERBAL_HAS_EXCEPTIONS_SUPPORT
+#		if KERBAL_SUPPORTS_EXCEPTIONS
 
 			template <typename ForwardIterator, typename SizeType>
 			KERBAL_CONSTEXPR20
@@ -405,7 +405,7 @@ namespace kerbal
 		ForwardIterator uninitialized_value_construct_n(ForwardIterator first, SizeType n)
 		{
 
-#	if KERBAL_HAS_EXCEPTIONS_SUPPORT
+#	if KERBAL_SUPPORTS_EXCEPTIONS
 
 			typedef ForwardIterator iterator;
 			typedef typename kerbal::iterator::iterator_traits<iterator>::value_type value_type;
@@ -441,7 +441,7 @@ namespace kerbal
 			typedef kerbal::type_traits::integral_constant<int, 1> UI_CPY_VER_NOTHROW_ITER_ADVANCE;
 			typedef kerbal::type_traits::integral_constant<int, 2> UI_CPY_VER_NO_CATCH;
 
-#		if KERBAL_HAS_EXCEPTIONS_SUPPORT
+#		if KERBAL_SUPPORTS_EXCEPTIONS
 
 			template <typename InputIterator, typename ForwardIterator>
 			KERBAL_CONSTEXPR20
@@ -513,7 +513,7 @@ namespace kerbal
 		ForwardIterator uninitialized_copy(InputIterator first, InputIterator last, ForwardIterator to)
 		{
 
-#	if KERBAL_HAS_EXCEPTIONS_SUPPORT
+#	if KERBAL_SUPPORTS_EXCEPTIONS
 
 			typedef ForwardIterator iterator;
 			typedef typename kerbal::iterator::iterator_traits<iterator>::value_type value_type;
@@ -549,7 +549,7 @@ namespace kerbal
 			typedef kerbal::type_traits::integral_constant<int, 1> UI_CPY_N_VER_NOTHROW_ITER_ADVANCE;
 			typedef kerbal::type_traits::integral_constant<int, 2> UI_CPY_N_VER_NO_CATCH;
 
-#		if KERBAL_HAS_EXCEPTIONS_SUPPORT
+#		if KERBAL_SUPPORTS_EXCEPTIONS
 
 			template <typename InputIterator, typename SizeType, typename ForwardIterator>
 			KERBAL_CONSTEXPR20
@@ -624,7 +624,7 @@ namespace kerbal
 		ForwardIterator uninitialized_copy_n(InputIterator first, SizeType n, ForwardIterator to)
 		{
 
-#	if KERBAL_HAS_EXCEPTIONS_SUPPORT
+#	if KERBAL_SUPPORTS_EXCEPTIONS
 
 			typedef ForwardIterator iterator;
 			typedef typename kerbal::iterator::iterator_traits<iterator>::value_type value_type;
@@ -660,7 +660,7 @@ namespace kerbal
 			typedef kerbal::type_traits::integral_constant<int, 1> UI_MOV_VER_NOTHROW_ITER_ADVANCE;
 			typedef kerbal::type_traits::integral_constant<int, 2> UI_MOV_VER_NO_CATCH;
 
-#		if KERBAL_HAS_EXCEPTIONS_SUPPORT
+#		if KERBAL_SUPPORTS_EXCEPTIONS
 
 			template <typename InputIterator, typename ForwardIterator>
 			KERBAL_CONSTEXPR20
@@ -732,7 +732,7 @@ namespace kerbal
 		ForwardIterator uninitialized_move(InputIterator first, InputIterator last, ForwardIterator to)
 		{
 
-#	if KERBAL_HAS_EXCEPTIONS_SUPPORT
+#	if KERBAL_SUPPORTS_EXCEPTIONS
 
 			typedef ForwardIterator iterator;
 			typedef typename kerbal::iterator::iterator_traits<iterator>::value_type value_type;
@@ -768,7 +768,7 @@ namespace kerbal
 			typedef kerbal::type_traits::integral_constant<int, 1> UI_MOV_N_VER_NOTHROW_ITER_ADVANCE;
 			typedef kerbal::type_traits::integral_constant<int, 2> UI_MOV_N_VER_NO_CATCH;
 
-#		if KERBAL_HAS_EXCEPTIONS_SUPPORT
+#		if KERBAL_SUPPORTS_EXCEPTIONS
 
 			template <typename InputIterator, typename SizeType, typename ForwardIterator>
 			KERBAL_CONSTEXPR20
@@ -843,7 +843,7 @@ namespace kerbal
 		ForwardIterator uninitialized_move_n(InputIterator first, SizeType n, ForwardIterator to)
 		{
 
-#	if KERBAL_HAS_EXCEPTIONS_SUPPORT
+#	if KERBAL_SUPPORTS_EXCEPTIONS
 
 			typedef ForwardIterator iterator;
 			typedef typename kerbal::iterator::iterator_traits<iterator>::value_type value_type;
@@ -879,7 +879,7 @@ namespace kerbal
 			typedef kerbal::type_traits::integral_constant<int, 1> UI_FILL_VER_NOTHROW_ITER_ADVANCE;
 			typedef kerbal::type_traits::integral_constant<int, 2> UI_FILL_VER_NO_CATCH;
 
-#		if KERBAL_HAS_EXCEPTIONS_SUPPORT
+#		if KERBAL_SUPPORTS_EXCEPTIONS
 
 			template <typename ForwardIterator, typename T>
 			KERBAL_CONSTEXPR20
@@ -945,7 +945,7 @@ namespace kerbal
 		void uninitialized_fill(ForwardIterator first, ForwardIterator last, const T & value)
 		{
 
-#	if KERBAL_HAS_EXCEPTIONS_SUPPORT
+#	if KERBAL_SUPPORTS_EXCEPTIONS
 
 			typedef ForwardIterator iterator;
 			typedef typename kerbal::iterator::iterator_traits<iterator>::value_type value_type;
@@ -981,7 +981,7 @@ namespace kerbal
 			typedef kerbal::type_traits::integral_constant<int, 1> UI_FILL_N_VER_NOTHROW_ITER_ADVANCE;
 			typedef kerbal::type_traits::integral_constant<int, 2> UI_FILL_N_VER_NO_CATCH;
 
-#		if KERBAL_HAS_EXCEPTIONS_SUPPORT
+#		if KERBAL_SUPPORTS_EXCEPTIONS
 
 			template <typename ForwardIterator, typename SizeType, typename T>
 			KERBAL_CONSTEXPR20
@@ -1053,7 +1053,7 @@ namespace kerbal
 		ForwardIterator uninitialized_fill_n(ForwardIterator first, SizeType n, const T & value)
 		{
 
-#	if KERBAL_HAS_EXCEPTIONS_SUPPORT
+#	if KERBAL_SUPPORTS_EXCEPTIONS
 
 			typedef ForwardIterator iterator;
 			typedef typename kerbal::iterator::iterator_traits<iterator>::value_type value_type;

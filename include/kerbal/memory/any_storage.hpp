@@ -37,7 +37,7 @@
 #if __cplusplus > 201703L
 #	include <kerbal/compatibility/is_constant_evaluated.hpp>
 
-#	if KERBAL_HAS_IS_CONSTANT_EVALUATED_SUPPORT
+#	if KERBAL_SUPPORTS_IS_CONSTANT_EVALUATED
 #		include <memory>
 #	endif
 #endif
@@ -165,7 +165,7 @@ namespace kerbal
 				{
 
 #			if __cplusplus > 201703L
-#				if KERBAL_HAS_IS_CONSTANT_EVALUATED_SUPPORT
+#				if KERBAL_SUPPORTS_IS_CONSTANT_EVALUATED
 					if (KERBAL_IS_CONSTANT_EVALUATED()) {
 						return this->k_obj_pos_impl<T>(kerbal::type_traits::false_type());
 					}
@@ -212,7 +212,7 @@ namespace kerbal
 				{
 
 #			if __cplusplus > 201703L
-#				if KERBAL_HAS_IS_CONSTANT_EVALUATED_SUPPORT
+#				if KERBAL_SUPPORTS_IS_CONSTANT_EVALUATED
 					if (KERBAL_IS_CONSTANT_EVALUATED()) {
 						return this->k_obj_pos_impl<T>(kerbal::type_traits::false_type());
 					}
@@ -273,7 +273,7 @@ namespace kerbal
 					any_node_allocator_type any_node_alloc(alloc);
 
 #			if __cplusplus > 201703L
-#				if KERBAL_HAS_IS_CONSTANT_EVALUATED_SUPPORT
+#				if KERBAL_SUPPORTS_IS_CONSTANT_EVALUATED
 					if (KERBAL_IS_CONSTANT_EVALUATED()) {
 						this->k_destroy_impl<T>(kerbal::type_traits::false_type(), any_node_alloc);
 						return;
@@ -298,11 +298,11 @@ namespace kerbal
 					typedef kerbal::memory::allocator_traits<AnyNodeAllocator> allocator_traits;
 
 					any_node * stored_pos = allocator_traits::allocate_one(any_node_alloc);
-#			if KERBAL_HAS_EXCEPTIONS_SUPPORT
+#			if KERBAL_SUPPORTS_EXCEPTIONS
 					try {
 #			endif
 						allocator_traits::construct(any_node_alloc, stored_pos, kerbal::utility::in_place_t(), kerbal::utility::forward<Args>(args)...);
-#			if KERBAL_HAS_EXCEPTIONS_SUPPORT
+#			if KERBAL_SUPPORTS_EXCEPTIONS
 					} catch (...) {
 						allocator_traits::deallocate_one(any_node_alloc, stored_pos);
 						throw;
@@ -350,7 +350,7 @@ namespace kerbal
 					any_node_allocator_type any_node_alloc(alloc);
 
 #			if __cplusplus > 201703L
-#				if KERBAL_HAS_IS_CONSTANT_EVALUATED_SUPPORT
+#				if KERBAL_SUPPORTS_IS_CONSTANT_EVALUATED
 					if (KERBAL_IS_CONSTANT_EVALUATED()) {
 						this->k_construct_impl<value_type>(kerbal::type_traits::false_type(), any_node_alloc, kerbal::utility::forward<Args>(args)...);
 						return;
@@ -369,7 +369,7 @@ namespace kerbal
 #			define ARGS_DECL(i) KERBAL_MACRO_CONCAT(const Arg, i) & KERBAL_MACRO_CONCAT(arg, i)
 #			define ARGS_USE(i) KERBAL_MACRO_CONCAT(arg, i)
 
-#		if KERBAL_HAS_EXCEPTIONS_SUPPORT
+#		if KERBAL_SUPPORTS_EXCEPTIONS
 
 #			define CONSTRUCT_IMPL_NOT_EMBEDDED(i) \
 				template <typename T, typename AnyNodeAllocator KERBAL_OPT_PPEXPAND_WITH_COMMA_N(LEFT_JOIN_COMMA, EMPTY, TARGS_DECL, i)> \
@@ -514,7 +514,7 @@ namespace kerbal
 				{
 
 #			if __cplusplus > 201703L
-#				if KERBAL_HAS_IS_CONSTANT_EVALUATED_SUPPORT
+#				if KERBAL_SUPPORTS_IS_CONSTANT_EVALUATED
 					if (KERBAL_IS_CONSTANT_EVALUATED()) {
 						this->k_xfer_impl(kerbal::type_traits::false_type(), kerbal::compatibility::move(ano));
 						return;

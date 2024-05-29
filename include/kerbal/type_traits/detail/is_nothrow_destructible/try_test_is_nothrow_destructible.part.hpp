@@ -14,7 +14,7 @@
 
 #include <kerbal/type_traits/detail/is_nothrow_destructible/is_nothrow_destructible.part.hpp>
 
-#if KERBAL_HAS_IS_NOTHROW_DESTRUCTIBLE_SUPPORT
+#if KERBAL_SUPPORTS_IS_NOTHROW_DESTRUCTIBLE
 #	include <kerbal/type_traits/detail/is_nothrow_destructible/try_test_is_nothrow_destructible.defi.part.hpp>
 #else
 #	include <kerbal/type_traits/detail/is_nothrow_destructible/try_test_is_nothrow_destructible.guess.part.hpp>

@@ -14,7 +14,7 @@
 
 #include <kerbal/type_traits/detail/is_class/is_class.part.hpp>
 
-#if KERBAL_HAS_IS_CLASS_SUPPORT
+#if KERBAL_SUPPORTS_IS_CLASS
 #	include <kerbal/type_traits/detail/is_class/try_test_is_class.defi.part.hpp>
 #else
 #	include <kerbal/type_traits/detail/is_class/try_test_is_class.guess.part.hpp>

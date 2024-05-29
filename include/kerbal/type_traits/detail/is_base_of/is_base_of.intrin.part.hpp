@@ -12,17 +12,17 @@
 #ifndef KERBAL_TYPE_TRAITS_DETAIL_IS_BASE_OF_IS_BASE_OF_INTRIN_PART_HPP
 #define KERBAL_TYPE_TRAITS_DETAIL_IS_BASE_OF_IS_BASE_OF_INTRIN_PART_HPP
 
-#ifndef KERBAL_HAS_IS_BASE_OF_SUPPORT
+#ifndef KERBAL_SUPPORTS_IS_BASE_OF
 
 #include <kerbal/type_traits/detail/compiler_intrinsics/compiler_intrinsics.hpp>
 
 #if KERBAL_PRIVATE_HAS_INTRINSIC_IS_BASE_OF
-#	define KERBAL_HAS_IS_BASE_OF_SUPPORT 1
+#	define KERBAL_SUPPORTS_IS_BASE_OF 1
 #endif
 
 
 
-#if KERBAL_HAS_IS_BASE_OF_SUPPORT
+#if KERBAL_SUPPORTS_IS_BASE_OF
 
 #include <kerbal/type_traits/integral_constant.hpp>
 
@@ -45,8 +45,8 @@ namespace kerbal
 
 } // namespace kerbal
 
-#endif // #if KERBAL_HAS_IS_BASE_OF_SUPPORT
+#endif // #if KERBAL_SUPPORTS_IS_BASE_OF
 
-#endif // #ifndef KERBAL_HAS_IS_BASE_OF_SUPPORT
+#endif // #ifndef KERBAL_SUPPORTS_IS_BASE_OF
 
 #endif // KERBAL_TYPE_TRAITS_DETAIL_IS_BASE_OF_IS_BASE_OF_INTRIN_PART_HPP

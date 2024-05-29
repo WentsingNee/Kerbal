@@ -31,7 +31,7 @@
 #if __cplusplus >= 201103L
 #	include <kerbal/config/exceptions.hpp>
 
-#	if KERBAL_HAS_EXCEPTIONS_SUPPORT
+#	if KERBAL_SUPPORTS_EXCEPTIONS
 #		include <kerbal/type_traits/is_nothrow_constructible.hpp>
 #		include <kerbal/type_traits/is_nothrow_default_constructible.hpp>
 #		include <kerbal/type_traits/is_nothrow_move_assignable.hpp>
@@ -66,7 +66,7 @@ namespace kerbal
 				typedef T* pointer;
 				typedef Deleter deleter_type;
 
-#		if __cplusplus >= 201103L && KERBAL_HAS_EXCEPTIONS_SUPPORT
+#		if __cplusplus >= 201103L && KERBAL_SUPPORTS_EXCEPTIONS
 
 				// forward declare to solve the problem of compile error under msvc
 				struct is_nothrow_reset :
@@ -87,7 +87,7 @@ namespace kerbal
 
 			public:
 
-#		if __cplusplus >= 201103L && KERBAL_HAS_EXCEPTIONS_SUPPORT
+#		if __cplusplus >= 201103L && KERBAL_SUPPORTS_EXCEPTIONS
 
 				struct try_test_is_nothrow_default_constructible :
 					kerbal::type_traits::try_test_is_nothrow_default_constructible<deleter_compress_helper>
@@ -107,7 +107,7 @@ namespace kerbal
 
 #		if __cplusplus >= 201103L
 
-#			if KERBAL_HAS_EXCEPTIONS_SUPPORT
+#			if KERBAL_SUPPORTS_EXCEPTIONS
 
 				struct try_test_is_nothrow_constructible_from_nullptr :
 					kerbal::type_traits::try_test_is_nothrow_default_constructible<deleter_compress_helper>
@@ -128,7 +128,7 @@ namespace kerbal
 #		endif
 
 
-#		if __cplusplus >= 201103L && KERBAL_HAS_EXCEPTIONS_SUPPORT
+#		if __cplusplus >= 201103L && KERBAL_SUPPORTS_EXCEPTIONS
 
 				struct try_test_is_nothrow_constructible_from_ptr :
 					kerbal::type_traits::try_test_is_nothrow_default_constructible<deleter_compress_helper>
@@ -146,7 +146,7 @@ namespace kerbal
 				{
 				}
 
-#		if __cplusplus >= 201103L && KERBAL_HAS_EXCEPTIONS_SUPPORT
+#		if __cplusplus >= 201103L && KERBAL_SUPPORTS_EXCEPTIONS
 
 				struct try_test_is_nothrow_constructible_from_ptr_and_copy_from_deleter :
 					kerbal::type_traits::try_test_is_nothrow_constructible<
@@ -171,7 +171,7 @@ namespace kerbal
 
 #		if __cplusplus >= 201103L
 
-#			if KERBAL_HAS_EXCEPTIONS_SUPPORT
+#			if KERBAL_SUPPORTS_EXCEPTIONS
 
 				struct try_test_is_nothrow_constructible_from_ptr_and_move_from_deleter :
 					kerbal::type_traits::try_test_is_nothrow_constructible<
@@ -194,7 +194,7 @@ namespace kerbal
 				{
 				}
 
-#			if KERBAL_HAS_EXCEPTIONS_SUPPORT
+#			if KERBAL_SUPPORTS_EXCEPTIONS
 
 				struct try_test_is_nothrow_move_constructible :
 					kerbal::type_traits::try_test_is_nothrow_constructible<
@@ -218,7 +218,7 @@ namespace kerbal
 					src.k_ptr = nullptr;
 				}
 
-#			if KERBAL_HAS_EXCEPTIONS_SUPPORT
+#			if KERBAL_SUPPORTS_EXCEPTIONS
 
 				template <typename U, typename UDeleter>
 				struct try_test_is_nothrow_covariant_move_constructible :
@@ -259,7 +259,7 @@ namespace kerbal
 
 #		if __cplusplus >= 201103L
 
-#			if KERBAL_HAS_EXCEPTIONS_SUPPORT
+#			if KERBAL_SUPPORTS_EXCEPTIONS
 
 				struct try_test_is_nothrow_move_assignable :
 					kerbal::type_traits::tribool_conjunction<
@@ -401,7 +401,7 @@ namespace kerbal
 				typedef T* pointer;
 				typedef Deleter deleter_type;
 
-#		if __cplusplus >= 201103L && KERBAL_HAS_EXCEPTIONS_SUPPORT
+#		if __cplusplus >= 201103L && KERBAL_SUPPORTS_EXCEPTIONS
 
 				struct is_nothrow_reset :
 					kerbal::type_traits::bool_constant<
@@ -421,7 +421,7 @@ namespace kerbal
 
 			public:
 
-#		if __cplusplus >= 201103L && KERBAL_HAS_EXCEPTIONS_SUPPORT
+#		if __cplusplus >= 201103L && KERBAL_SUPPORTS_EXCEPTIONS
 
 				struct try_test_is_nothrow_default_constructible :
 					kerbal::type_traits::try_test_is_nothrow_default_constructible<deleter_compress_helper>
@@ -440,7 +440,7 @@ namespace kerbal
 
 #		if __cplusplus >= 201103L
 
-#			if KERBAL_HAS_EXCEPTIONS_SUPPORT
+#			if KERBAL_SUPPORTS_EXCEPTIONS
 
 				struct try_test_is_nothrow_constructible_from_nullptr :
 					kerbal::type_traits::try_test_is_nothrow_default_constructible<deleter_compress_helper>
@@ -461,7 +461,7 @@ namespace kerbal
 #		endif
 
 
-#		if __cplusplus >= 201103L && KERBAL_HAS_EXCEPTIONS_SUPPORT
+#		if __cplusplus >= 201103L && KERBAL_SUPPORTS_EXCEPTIONS
 
 				struct try_test_is_nothrow_constructible_from_ptr :
 					kerbal::type_traits::try_test_is_nothrow_default_constructible<deleter_compress_helper>
@@ -479,7 +479,7 @@ namespace kerbal
 				{
 				}
 
-#		if __cplusplus >= 201103L && KERBAL_HAS_EXCEPTIONS_SUPPORT
+#		if __cplusplus >= 201103L && KERBAL_SUPPORTS_EXCEPTIONS
 
 				struct try_test_is_nothrow_constructible_from_ptr_and_copy_from_deleter :
 					kerbal::type_traits::try_test_is_nothrow_constructible<
@@ -503,7 +503,7 @@ namespace kerbal
 
 #		if __cplusplus >= 201103L
 
-#			if KERBAL_HAS_EXCEPTIONS_SUPPORT
+#			if KERBAL_SUPPORTS_EXCEPTIONS
 
 				struct try_test_is_nothrow_constructible_from_ptr_and_move_from_deleter :
 					kerbal::type_traits::try_test_is_nothrow_constructible<
@@ -525,7 +525,7 @@ namespace kerbal
 				{
 				}
 
-#			if KERBAL_HAS_EXCEPTIONS_SUPPORT
+#			if KERBAL_SUPPORTS_EXCEPTIONS
 
 				struct try_test_is_nothrow_move_constructible :
 					kerbal::type_traits::try_test_is_nothrow_constructible<
@@ -561,7 +561,7 @@ namespace kerbal
 
 #		if __cplusplus >= 201103L
 
-#			if KERBAL_HAS_EXCEPTIONS_SUPPORT
+#			if KERBAL_SUPPORTS_EXCEPTIONS
 
 				struct try_test_is_nothrow_move_assignable :
 					kerbal::type_traits::tribool_conjunction<

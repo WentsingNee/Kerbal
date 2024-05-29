@@ -25,7 +25,7 @@
 #	include <kerbal/utility/forward.hpp>
 #endif
 
-#if !KERBAL_HAS_EXCEPTIONS_SUPPORT
+#if !KERBAL_SUPPORTS_EXCEPTIONS
 #	include <cstdlib> // std::abort
 #endif
 
@@ -40,7 +40,7 @@ namespace kerbal
 		{
 			public:
 
-#	if KERBAL_HAS_EXCEPTIONS_SUPPORT
+#	if KERBAL_SUPPORTS_EXCEPTIONS
 
 #		if __cplusplus >= 201103L
 

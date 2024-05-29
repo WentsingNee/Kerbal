@@ -14,7 +14,7 @@
 
 #include <kerbal/type_traits/detail/is_trivially_move_constructible/is_trivially_move_constructible.part.hpp>
 
-#if KERBAL_HAS_IS_TRIVIALLY_MOVE_CONSTRUCTIBLE_SUPPORT
+#if KERBAL_SUPPORTS_IS_TRIVIALLY_MOVE_CONSTRUCTIBLE
 #	include <kerbal/type_traits/detail/is_trivially_move_constructible/try_test_is_trivially_move_constructible.defi.part.hpp>
 #else
 #	include <kerbal/type_traits/detail/is_trivially_move_constructible/try_test_is_trivially_move_constructible.guess.part.hpp>

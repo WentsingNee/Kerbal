@@ -19,15 +19,15 @@
 #	if KERBAL_COMPILER_ID == KERBAL_COMPILER_ID_GNU
 #		include <kerbal/config/compiler_private.hpp>
 #		if KERBAL_GNU_VERSION_MEETS(5, 0, 0)
-#			define KERBAL_HAS_UTILITY_STORAGE_SUPPORT 1
+#			define KERBAL_SUPPORTS_UTILITY_STORAGE 1
 #		endif
 #	else
-#		define KERBAL_HAS_UTILITY_STORAGE_SUPPORT 1
+#		define KERBAL_SUPPORTS_UTILITY_STORAGE 1
 #	endif
 
 #endif
 
-#if KERBAL_HAS_UTILITY_STORAGE_SUPPORT
+#if KERBAL_SUPPORTS_UTILITY_STORAGE
 #	include <kerbal/utility/storage/detail/storage.cxx11.part.hpp>
 #endif
 
