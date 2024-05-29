@@ -68,6 +68,7 @@ namespace kerbal
 
 #if KERBAL_HAS_BUILTIN_UNREACHABLE_SUPPORT
 
+		[[noreturn]]
 		inline
 		void unreachable() KERBAL_NOEXCEPT
 		{
@@ -78,6 +79,7 @@ namespace kerbal
 
 #	if __cpp_lib_unreachable >= 202202L
 
+		[[noreturn]]
 		inline
 		void unreachable()
 		{
@@ -86,6 +88,7 @@ namespace kerbal
 
 #	else
 
+		[[noreturn]]
 		inline
 		void unreachable() KERBAL_NOEXCEPT
 		{
