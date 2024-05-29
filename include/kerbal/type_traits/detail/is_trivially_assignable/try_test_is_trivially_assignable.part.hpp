@@ -14,7 +14,7 @@
 
 #include <kerbal/type_traits/detail/is_trivially_assignable/is_trivially_assignable.part.hpp>
 
-#if KERBAL_HAS_IS_TRIVIALLY_ASSIGNABLE_SUPPORT
+#if KERBAL_SUPPORTS_IS_TRIVIALLY_ASSIGNABLE
 #	include <kerbal/type_traits/detail/is_trivially_assignable/try_test_is_trivially_assignable.defi.part.hpp>
 #else
 #	include <kerbal/type_traits/detail/is_trivially_assignable/try_test_is_trivially_assignable.guess.part.hpp>

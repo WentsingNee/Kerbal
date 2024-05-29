@@ -201,7 +201,7 @@ namespace kerbal
 
 #	if __cplusplus >= 201402L
 
-#		if KERBAL_HAS_IS_CONSTANT_EVALUATED_SUPPORT
+#		if KERBAL_SUPPORTS_IS_CONSTANT_EVALUATED
 						KERBAL_IS_CONSTANT_EVALUATED() ?
 							void(plain::mt_generate_copy_n<UIntType, result_type *, U, D, S, B, T, C, L>(mt_now, out, n)) :
 							fix_integer_type_dispatch(mt_now, out, n);

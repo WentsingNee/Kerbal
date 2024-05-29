@@ -14,7 +14,7 @@
 
 #include <kerbal/type_traits/detail/is_final/is_final.part.hpp>
 
-#if KERBAL_HAS_IS_FINAL_SUPPORT
+#if KERBAL_SUPPORTS_IS_FINAL
 #	include <kerbal/type_traits/detail/is_final/try_test_is_final.defi.part.hpp>
 #else
 #	include <kerbal/type_traits/detail/is_final/try_test_is_final.guess.part.hpp>

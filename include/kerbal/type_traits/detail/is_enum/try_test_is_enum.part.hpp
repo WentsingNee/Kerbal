@@ -14,7 +14,7 @@
 
 #include <kerbal/type_traits/detail/is_enum/is_enum.part.hpp>
 
-#if KERBAL_HAS_IS_ENUM_SUPPORT
+#if KERBAL_SUPPORTS_IS_ENUM
 #	include <kerbal/type_traits/detail/is_enum/try_test_is_enum.defi.part.hpp>
 #else
 #	include <kerbal/type_traits/detail/is_enum/try_test_is_enum.guess.part.hpp>

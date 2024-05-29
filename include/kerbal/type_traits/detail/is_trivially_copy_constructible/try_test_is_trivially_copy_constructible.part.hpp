@@ -14,7 +14,7 @@
 
 #include <kerbal/type_traits/detail/is_trivially_copy_constructible/is_trivially_copy_constructible.part.hpp>
 
-#if KERBAL_HAS_IS_TRIVIALLY_COPY_CONSTRUCTIBLE_SUPPORT
+#if KERBAL_SUPPORTS_IS_TRIVIALLY_COPY_CONSTRUCTIBLE
 #	include <kerbal/type_traits/detail/is_trivially_copy_constructible/try_test_is_trivially_copy_constructible.defi.part.hpp>
 #else
 #	include <kerbal/type_traits/detail/is_trivially_copy_constructible/try_test_is_trivially_copy_constructible.guess.part.hpp>

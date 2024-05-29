@@ -132,7 +132,7 @@ namespace kerbal
 			typedef kerbal::type_traits::integral_constant<int, 2> UI_DFT_CONSTRUCT_VER_NO_CATCH;
 			typedef kerbal::type_traits::integral_constant<int, 3> UI_DFT_CONSTRUCT_VER_TRIVIALLY;
 
-#		if KERBAL_HAS_EXCEPTIONS_SUPPORT
+#		if KERBAL_SUPPORTS_EXCEPTIONS
 
 			template <typename ForwardIterator>
 			KERBAL_CONSTEXPR20
@@ -222,7 +222,7 @@ namespace kerbal
 			typedef ForwardIterator iterator;
 			typedef typename kerbal::iterator::iterator_traits<iterator>::value_type value_type;
 
-#	if KERBAL_HAS_EXCEPTIONS_SUPPORT
+#	if KERBAL_SUPPORTS_EXCEPTIONS
 
 			typedef typename kerbal::type_traits::conditional<
 				kerbal::type_traits::try_test_is_trivially_default_constructible<value_type>::IS_TRUE::value,
@@ -264,7 +264,7 @@ namespace kerbal
 			typedef kerbal::type_traits::integral_constant<int, 2> UI_DFT_CONSTRUCT_N_VER_NO_CATCH;
 			typedef kerbal::type_traits::integral_constant<int, 3> UI_DFT_CONSTRUCT_N_VER_TRIVIALLY;
 
-#		if KERBAL_HAS_EXCEPTIONS_SUPPORT
+#		if KERBAL_SUPPORTS_EXCEPTIONS
 
 			template <typename ForwardIterator, typename SizeType>
 			KERBAL_CONSTEXPR20
@@ -361,7 +361,7 @@ namespace kerbal
 			typedef ForwardIterator iterator;
 			typedef typename kerbal::iterator::iterator_traits<iterator>::value_type value_type;
 
-#	if KERBAL_HAS_EXCEPTIONS_SUPPORT
+#	if KERBAL_SUPPORTS_EXCEPTIONS
 
 			typedef typename kerbal::type_traits::conditional<
 				kerbal::type_traits::try_test_is_trivially_default_constructible<value_type>::IS_TRUE::value,

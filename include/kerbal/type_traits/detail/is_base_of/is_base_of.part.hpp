@@ -15,8 +15,8 @@
 #include <kerbal/type_traits/detail/is_base_of/is_base_of.intrin.part.hpp>
 #include <kerbal/type_traits/detail/is_base_of/is_base_of.std.part.hpp>
 
-#ifndef KERBAL_HAS_IS_BASE_OF_SUPPORT
-#	define KERBAL_HAS_IS_BASE_OF_SUPPORT 0
+#ifndef KERBAL_SUPPORTS_IS_BASE_OF
+#	define KERBAL_SUPPORTS_IS_BASE_OF 0
 
 #	if KERBAL_TYPE_TRAITS_DEBUG_WARNING
 

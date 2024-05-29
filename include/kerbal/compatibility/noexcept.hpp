@@ -34,7 +34,7 @@
 
 
 #ifndef KERBAL_CONDITIONAL_NOEXCEPT
-#	if KERBAL_HAS_EXCEPTIONS_SUPPORT
+#	if KERBAL_SUPPORTS_EXCEPTIONS
 #		if __cplusplus >= 201103L
 #			define KERBAL_CONDITIONAL_NOEXCEPT(cond) noexcept(cond)
 #		else

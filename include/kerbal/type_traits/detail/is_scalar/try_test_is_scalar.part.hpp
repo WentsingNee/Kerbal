@@ -14,7 +14,7 @@
 
 #include <kerbal/type_traits/detail/is_scalar/is_scalar.part.hpp>
 
-#if KERBAL_HAS_IS_SCALAR_SUPPORT
+#if KERBAL_SUPPORTS_IS_SCALAR
 #	include <kerbal/type_traits/detail/is_scalar/try_test_is_scalar.defi.part.hpp>
 #else
 #	include <kerbal/type_traits/detail/is_scalar/try_test_is_scalar.guess.part.hpp>

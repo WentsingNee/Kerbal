@@ -910,7 +910,7 @@ namespace kerbal
 
 					typedef kerbal::type_traits::integral_constant<int, 0> MERGE_VER_NOTHROW;
 
-#				if KERBAL_HAS_EXCEPTIONS_SUPPORT
+#				if KERBAL_SUPPORTS_EXCEPTIONS
 					typedef kerbal::type_traits::integral_constant<int, 1> MERGE_VER_MAY_THROW;
 #				endif
 
@@ -918,7 +918,7 @@ namespace kerbal
 					KERBAL_CONSTEXPR20
 					void k_merge_impl(list_type_only & other, BinaryPredict cmp, MERGE_VER_NOTHROW) KERBAL_NOEXCEPT;
 
-#				if KERBAL_HAS_EXCEPTIONS_SUPPORT
+#				if KERBAL_SUPPORTS_EXCEPTIONS
 					template <typename BinaryPredict>
 					KERBAL_CONSTEXPR20
 					void k_merge_impl(list_type_only & other, BinaryPredict cmp, MERGE_VER_MAY_THROW);
@@ -937,7 +937,7 @@ namespace kerbal
 
 					typedef kerbal::type_traits::integral_constant<int, 0> MSM_VER_NOTHROW;
 
-#				if KERBAL_HAS_EXCEPTIONS_SUPPORT
+#				if KERBAL_SUPPORTS_EXCEPTIONS
 					typedef kerbal::type_traits::integral_constant<int, 1> MSM_VER_MAY_THROW;
 #				endif
 
@@ -951,7 +951,7 @@ namespace kerbal
 						MSM_VER_NOTHROW
 					);
 
-#				if KERBAL_HAS_EXCEPTIONS_SUPPORT
+#				if KERBAL_SUPPORTS_EXCEPTIONS
 					template <typename BinaryPredict>
 					KERBAL_CONSTEXPR20
 					static
@@ -1235,7 +1235,7 @@ namespace kerbal
 
 #			if __cplusplus >= 201103L
 
-#				if KERBAL_HAS_EXCEPTIONS_SUPPORT
+#				if KERBAL_SUPPORTS_EXCEPTIONS
 
 					template <bool nothrow_while_construct, typename NodeAllocator, typename ... Args>
 					KERBAL_CONSTEXPR20

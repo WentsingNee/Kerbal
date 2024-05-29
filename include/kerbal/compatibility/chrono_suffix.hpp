@@ -19,15 +19,15 @@
 #	if KERBAL_COMPILER_ID == KERBAL_COMPILER_ID_GNU
 #		include <kerbal/config/compiler_private.hpp>
 #		if KERBAL_GNU_VERSION_MEETS(5, 0, 0)
-#			define KERBAL_HAS_COMPATIBILITY_CHRONO_SUFFIX_SUPPORT 1
+#			define KERBAL_SUPPORTS_COMPATIBILITY_CHRONO_SUFFIX 1
 #		endif
 #	else
-#		define KERBAL_HAS_COMPATIBILITY_CHRONO_SUFFIX_SUPPORT 1
+#		define KERBAL_SUPPORTS_COMPATIBILITY_CHRONO_SUFFIX 1
 #	endif
 
 #endif
 
-#if KERBAL_HAS_COMPATIBILITY_CHRONO_SUFFIX_SUPPORT
+#if KERBAL_SUPPORTS_COMPATIBILITY_CHRONO_SUFFIX
 #	include <kerbal/compatibility/chrono_suffix/detail/chrono_suffix.cxx11.part.hpp>
 #endif
 

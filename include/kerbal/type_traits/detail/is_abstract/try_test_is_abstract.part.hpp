@@ -14,7 +14,7 @@
 
 #include <kerbal/type_traits/detail/is_abstract/is_abstract.part.hpp>
 
-#if KERBAL_HAS_IS_ABSTRACT_SUPPORT
+#if KERBAL_SUPPORTS_IS_ABSTRACT
 #	include <kerbal/type_traits/detail/is_abstract/try_test_is_abstract.defi.part.hpp>
 #else
 #	include <kerbal/type_traits/detail/is_abstract/try_test_is_abstract.guess.part.hpp>
