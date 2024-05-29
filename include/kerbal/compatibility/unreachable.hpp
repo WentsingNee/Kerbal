@@ -18,26 +18,26 @@
 #include <kerbal/compatibility/noexcept.hpp>
 
 
-#ifndef KERBAL_HAS_BUILTIN_UNREACHABLE_SUPPORT
+#ifndef KERBAL_PRIVATE_HAS_BUILTIN_UNREACHABLE
 
 #	if KERBAL_COMPILER_ID == KERBAL_COMPILER_ID_GNU
 
 #		if KERBAL_GNU_PRIVATE_HAS_BUILTIN(__builtin_unreachable)
-#			define KERBAL_HAS_BUILTIN_UNREACHABLE_SUPPORT 1
+#			define KERBAL_PRIVATE_HAS_BUILTIN_UNREACHABLE 1
 #			define KERBAL_BUILTIN_UNREACHABLE() __builtin_unreachable()
 #		endif
 
 #	elif KERBAL_COMPILER_ID == KERBAL_COMPILER_ID_CLANG
 
 #		if KERBAL_CLANG_PRIVATE_HAS_BUILTIN(__builtin_unreachable)
-#			define KERBAL_HAS_BUILTIN_UNREACHABLE_SUPPORT 1
+#			define KERBAL_PRIVATE_HAS_BUILTIN_UNREACHABLE 1
 #			define KERBAL_BUILTIN_UNREACHABLE() __builtin_unreachable()
 #		endif
 
 #	elif KERBAL_COMPILER_ID == KERBAL_COMPILER_ID_ICC
 
 #		if KERBAL_ICC_PRIVATE_HAS_BUILTIN(__builtin_unreachable)
-#			define KERBAL_HAS_BUILTIN_UNREACHABLE_SUPPORT 1
+#			define KERBAL_PRIVATE_HAS_BUILTIN_UNREACHABLE 1
 #			define KERBAL_BUILTIN_UNREACHABLE() __builtin_unreachable()
 #		endif
 
@@ -46,7 +46,7 @@
 #endif
 
 
-#if !KERBAL_HAS_BUILTIN_UNREACHABLE_SUPPORT
+#if !KERBAL_PRIVATE_HAS_BUILTIN_UNREACHABLE
 #	if __cplusplus > 202002L
 #		include <utility>
 #	endif
@@ -59,7 +59,7 @@ namespace kerbal
 	namespace compatibility
 	{
 
-#if KERBAL_HAS_BUILTIN_UNREACHABLE_SUPPORT
+#if KERBAL_PRIVATE_HAS_BUILTIN_UNREACHABLE
 
 		inline
 		void unreachable() KERBAL_NOEXCEPT
