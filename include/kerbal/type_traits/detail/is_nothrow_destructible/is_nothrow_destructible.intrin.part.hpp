@@ -16,7 +16,7 @@
 
 #include <kerbal/type_traits/detail/compiler_intrinsics/compiler_intrinsics.hpp>
 
-#if KERBAL_HAS_INTRINSIC_IS_NOTHROW_DESTRUCTIBLE_SUPPORT
+#if KERBAL_PRIVATE_HAS_INTRINSIC_IS_NOTHROW_DESTRUCTIBLE
 #	define KERBAL_HAS_IS_NOTHROW_DESTRUCTIBLE_SUPPORT 1
 #endif
 
