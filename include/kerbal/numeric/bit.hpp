@@ -32,25 +32,25 @@ namespace kerbal
 	namespace numeric
 	{
 
-		template <typename Tp>
+		template <typename T>
 		struct bitarray_result_len:
-				kerbal::type_traits::integral_constant<std::size_t, sizeof(Tp) * CHAR_BIT>
+				kerbal::type_traits::integral_constant<std::size_t, sizeof(T) * CHAR_BIT>
 		{
 		};
 
-		template <typename Tp>
+		template <typename T>
 		struct bitarray_result
 		{
-				typedef kerbal::container::array<bool, bitarray_result_len<Tp>::value> type;
+				typedef kerbal::container::array<bool, bitarray_result_len<T>::value> type;
 		};
 
-		template <typename Tp>
+		template <typename T>
 		KERBAL_CONSTEXPR14
-		typename kerbal::numeric::bitarray_result<Tp>::type
-		bitarray(Tp x) KERBAL_NOEXCEPT
+		typename kerbal::numeric::bitarray_result<T>::type
+		bitarray(T x) KERBAL_NOEXCEPT
 		{
-			typedef kerbal::numeric::bitarray_result_len<Tp> BIT_ARRAY_LEN;
-			typename kerbal::numeric::bitarray_result<Tp>::type r
+			typedef kerbal::numeric::bitarray_result_len<T> BIT_ARRAY_LEN;
+			typename kerbal::numeric::bitarray_result<T>::type r
 #		if __cplusplus >= 201402L
 				= {}
 #		endif
@@ -62,25 +62,25 @@ namespace kerbal
 			return r;
 		}
 
-		template <typename Tp>
+		template <typename T>
 		struct octarray_result_len:
-				kerbal::type_traits::integral_constant<std::size_t, sizeof(Tp) * CHAR_BIT / 3 + (sizeof(Tp) * CHAR_BIT % 3 != 0)>
+				kerbal::type_traits::integral_constant<std::size_t, sizeof(T) * CHAR_BIT / 3 + (sizeof(T) * CHAR_BIT % 3 != 0)>
 		{
 		};
 
-		template <typename Tp>
+		template <typename T>
 		struct octarray_result
 		{
-				typedef kerbal::container::array<char, octarray_result_len<Tp>::value> type;
+				typedef kerbal::container::array<char, octarray_result_len<T>::value> type;
 		};
 
-		template <typename Tp>
+		template <typename T>
 		KERBAL_CONSTEXPR14
-		typename kerbal::numeric::octarray_result<Tp>::type
-		octarray(Tp x) KERBAL_NOEXCEPT
+		typename kerbal::numeric::octarray_result<T>::type
+		octarray(T x) KERBAL_NOEXCEPT
 		{
-			typedef kerbal::numeric::octarray_result_len<Tp> OCT_ARRAY_LEN;
-			typename kerbal::numeric::octarray_result<Tp>::type r
+			typedef kerbal::numeric::octarray_result_len<T> OCT_ARRAY_LEN;
+			typename kerbal::numeric::octarray_result<T>::type r
 #		if __cplusplus >= 201402L
 				= {}
 #		endif
@@ -94,25 +94,25 @@ namespace kerbal
 			return r;
 		}
 
-		template <typename Tp>
+		template <typename T>
 		struct hexarray_result_len:
-				kerbal::type_traits::integral_constant<std::size_t, sizeof(Tp) * CHAR_BIT / 4 + (sizeof(Tp) * CHAR_BIT % 4 != 0)>
+				kerbal::type_traits::integral_constant<std::size_t, sizeof(T) * CHAR_BIT / 4 + (sizeof(T) * CHAR_BIT % 4 != 0)>
 		{
 		};
 
-		template <typename Tp>
+		template <typename T>
 		struct hexarray_result
 		{
-				typedef kerbal::container::array<char, hexarray_result_len<Tp>::value> type;
+				typedef kerbal::container::array<char, hexarray_result_len<T>::value> type;
 		};
 
-		template <typename Tp>
+		template <typename T>
 		KERBAL_CONSTEXPR14
-		typename kerbal::numeric::hexarray_result<Tp>::type
-		hexarray(Tp x) KERBAL_NOEXCEPT
+		typename kerbal::numeric::hexarray_result<T>::type
+		hexarray(T x) KERBAL_NOEXCEPT
 		{
-			typedef hexarray_result_len<Tp> HEX_ARRAY_LEN;
-			typename kerbal::numeric::hexarray_result<Tp>::type r
+			typedef hexarray_result_len<T> HEX_ARRAY_LEN;
+			typename kerbal::numeric::hexarray_result<T>::type r
 #		if __cplusplus >= 201402L
 				= {}
 #		endif
@@ -151,11 +151,11 @@ namespace kerbal
 
 		} // namespace detail
 
-		template <typename Tp>
+		template <typename T>
 		KERBAL_CONSTEXPR
-		bool ispow2(Tp x) KERBAL_NOEXCEPT
+		bool ispow2(T x) KERBAL_NOEXCEPT
 		{
-			return kerbal::numeric::detail::ispow2_helper(x, kerbal::type_traits::is_signed<Tp>());
+			return kerbal::numeric::detail::ispow2_helper(x, kerbal::type_traits::is_signed<T>());
 		}
 
 
@@ -181,11 +181,11 @@ namespace kerbal
 
 		} // namespace detail
 
-		template <typename Tp>
+		template <typename T>
 		KERBAL_CONSTEXPR
-		bool has_single_bit(Tp x) KERBAL_NOEXCEPT
+		bool has_single_bit(T x) KERBAL_NOEXCEPT
 		{
-			return kerbal::numeric::detail::has_single_bit_helper(x, kerbal::type_traits::is_signed<Tp>());
+			return kerbal::numeric::detail::has_single_bit_helper(x, kerbal::type_traits::is_signed<T>());
 		}
 
 
@@ -193,93 +193,93 @@ namespace kerbal
 		/**
 		 * Generate 00...0011...11 (n 1 right)
 		 *
-		 * @warning Undefined behaviour if n < 0 or n > sizeof(Tp) * CHAR_BIT.
+		 * @warning Undefined behaviour if n < 0 or n > sizeof(T) * CHAR_BIT.
 		 */
-		template <typename Tp>
+		template <typename T>
 		KERBAL_CONSTEXPR
-		Tp mask(std::size_t n) KERBAL_NOEXCEPT
+		T mask(std::size_t n) KERBAL_NOEXCEPT
 		{
-			typedef typename kerbal::type_traits::make_unsigned<Tp>::type unsigned_t;
+			typedef typename kerbal::type_traits::make_unsigned<T>::type unsigned_t;
 			return n == sizeof(unsigned_t) * CHAR_BIT ?
 					~static_cast<unsigned_t>(0) :
 					~(static_cast<unsigned_t>(~static_cast<unsigned_t>(0)) << n);
 		}
 
-		template <typename Tp>
+		template <typename T>
 		KERBAL_CONSTEXPR
-		Tp flip(Tp x, std::size_t pos) KERBAL_NOEXCEPT
+		T flip(T x, std::size_t pos) KERBAL_NOEXCEPT
 		{
-			typedef typename kerbal::type_traits::make_unsigned<Tp>::type unsigned_t;
+			typedef typename kerbal::type_traits::make_unsigned<T>::type unsigned_t;
 			return x ^ (static_cast<unsigned_t>(1) << pos);
 		}
 
-		template <typename Tp>
+		template <typename T>
 		KERBAL_CONSTEXPR
-		Tp flip_left_n(Tp x, std::size_t n) KERBAL_NOEXCEPT
+		T flip_left_n(T x, std::size_t n) KERBAL_NOEXCEPT
 		{
-			typedef typename kerbal::type_traits::make_unsigned<Tp>::type unsigned_t;
+			typedef typename kerbal::type_traits::make_unsigned<T>::type unsigned_t;
 			return x ^ ~kerbal::numeric::mask<unsigned_t>(sizeof(unsigned_t) * CHAR_BIT - n);
 		}
 
-		template <typename Tp>
+		template <typename T>
 		KERBAL_CONSTEXPR
-		Tp flip_right_n(Tp x, std::size_t n) KERBAL_NOEXCEPT
+		T flip_right_n(T x, std::size_t n) KERBAL_NOEXCEPT
 		{
-			typedef typename kerbal::type_traits::make_unsigned<Tp>::type unsigned_t;
+			typedef typename kerbal::type_traits::make_unsigned<T>::type unsigned_t;
 			return x ^ kerbal::numeric::mask<unsigned_t>(n);
 		}
 
-		template <typename Tp>
+		template <typename T>
 		KERBAL_CONSTEXPR
-		Tp reset_bit(Tp x, std::size_t pos) KERBAL_NOEXCEPT
+		T reset_bit(T x, std::size_t pos) KERBAL_NOEXCEPT
 		{
-			typedef typename kerbal::type_traits::make_unsigned<Tp>::type unsigned_t;
+			typedef typename kerbal::type_traits::make_unsigned<T>::type unsigned_t;
 			return x & ~(static_cast<unsigned_t>(1) << pos);
 		}
 
-		template <typename Tp>
+		template <typename T>
 		KERBAL_CONSTEXPR
-		Tp reset_left_n(Tp x, std::size_t n) KERBAL_NOEXCEPT
+		T reset_left_n(T x, std::size_t n) KERBAL_NOEXCEPT
 		{
-			typedef typename kerbal::type_traits::make_unsigned<Tp>::type unsigned_t;
+			typedef typename kerbal::type_traits::make_unsigned<T>::type unsigned_t;
 			return x & kerbal::numeric::mask<unsigned_t>(sizeof(unsigned_t) * CHAR_BIT - n);
 		}
 
-		template <typename Tp>
+		template <typename T>
 		KERBAL_CONSTEXPR
-		Tp reset_right_n(Tp x, std::size_t n) KERBAL_NOEXCEPT
+		T reset_right_n(T x, std::size_t n) KERBAL_NOEXCEPT
 		{
-			typedef typename kerbal::type_traits::make_unsigned<Tp>::type unsigned_t;
+			typedef typename kerbal::type_traits::make_unsigned<T>::type unsigned_t;
 			return x & ~kerbal::numeric::mask<unsigned_t>(n);
 		}
 
-		template <typename Tp>
+		template <typename T>
 		KERBAL_CONSTEXPR
-		Tp set_bit(Tp x, std::size_t pos) KERBAL_NOEXCEPT
+		T set_bit(T x, std::size_t pos) KERBAL_NOEXCEPT
 		{
-			typedef typename kerbal::type_traits::make_unsigned<Tp>::type unsigned_t;
+			typedef typename kerbal::type_traits::make_unsigned<T>::type unsigned_t;
 			return x | (static_cast<unsigned_t>(1) << pos);
 		}
 
-		template <typename Tp>
+		template <typename T>
 		KERBAL_CONSTEXPR
-		Tp set_left_n(Tp x, std::size_t n) KERBAL_NOEXCEPT
+		T set_left_n(T x, std::size_t n) KERBAL_NOEXCEPT
 		{
-			typedef typename kerbal::type_traits::make_unsigned<Tp>::type unsigned_t;
+			typedef typename kerbal::type_traits::make_unsigned<T>::type unsigned_t;
 			return x | ~kerbal::numeric::mask<unsigned_t>(sizeof(unsigned_t) * CHAR_BIT - n);
 		}
 
-		template <typename Tp>
+		template <typename T>
 		KERBAL_CONSTEXPR
-		Tp set_right_n(Tp x, std::size_t n) KERBAL_NOEXCEPT
+		T set_right_n(T x, std::size_t n) KERBAL_NOEXCEPT
 		{
-			typedef typename kerbal::type_traits::make_unsigned<Tp>::type unsigned_t;
+			typedef typename kerbal::type_traits::make_unsigned<T>::type unsigned_t;
 			return x | kerbal::numeric::mask<unsigned_t>(n);
 		}
 
-		template <typename Tp>
+		template <typename T>
 		KERBAL_CONSTEXPR
-		bool get_bit(Tp x, std::size_t pos) KERBAL_NOEXCEPT
+		bool get_bit(T x, std::size_t pos) KERBAL_NOEXCEPT
 		{
 			return (x >> pos) & 1;
 		}
@@ -316,11 +316,11 @@ namespace kerbal
 
 		} // namespace detail
 
-		template <typename Tp>
+		template <typename T>
 		KERBAL_CONSTEXPR
-		Tp rotl(Tp x, int s) KERBAL_NOEXCEPT
+		T rotl(T x, int s) KERBAL_NOEXCEPT
 		{
-			return kerbal::numeric::detail::rotl_helper(x, s % (sizeof(Tp) * CHAR_BIT), kerbal::type_traits::is_signed<Tp>());
+			return kerbal::numeric::detail::rotl_helper(x, s % (sizeof(T) * CHAR_BIT), kerbal::type_traits::is_signed<T>());
 		}
 
 		namespace detail
@@ -351,11 +351,11 @@ namespace kerbal
 
 		} // namespace detail
 
-		template <typename Tp>
+		template <typename T>
 		KERBAL_CONSTEXPR
-		Tp rotr(Tp x, int s) KERBAL_NOEXCEPT
+		T rotr(T x, int s) KERBAL_NOEXCEPT
 		{
-			return kerbal::numeric::detail::rotr_helper(x, s % (sizeof(Tp) * CHAR_BIT), kerbal::type_traits::is_signed<Tp>());
+			return kerbal::numeric::detail::rotr_helper(x, s % (sizeof(T) * CHAR_BIT), kerbal::type_traits::is_signed<T>());
 		}
 
 	} // namespace numeric

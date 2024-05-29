@@ -54,10 +54,10 @@ namespace kerbal
 		namespace detail
 		{
 
-			template <typename Tp, typename Allocator>
+			template <typename T, typename Allocator>
 			struct list_typedef_helper
 			{
-					typedef kerbal::container::detail::list_type_only<Tp>					list_type_only;
+					typedef kerbal::container::detail::list_type_only<T>					list_type_only;
 					typedef typename list_type_only::node 									node;
 					typedef Allocator																	allocator_type;
 					typedef kerbal::container::detail::container_rebind_allocator_overload<
@@ -71,32 +71,32 @@ namespace kerbal
 		namespace detail
 		{
 
-			template <typename Tp, typename Allocator>
+			template <typename T, typename Allocator>
 			struct list_node_size_helper
 			{
 					typedef kerbal::type_traits::integral_constant<
 							std::size_t,
-							sizeof(typename kerbal::container::list<Tp, Allocator>::node)
+							sizeof(typename kerbal::container::list<T, Allocator>::node)
 					> type;
 			};
 
 		} // namespace detail
 
-		template <typename Tp, typename Allocator>
+		template <typename T, typename Allocator>
 		struct list_node_size :
-				kerbal::container::detail::list_node_size_helper<Tp, Allocator>::type
+				kerbal::container::detail::list_node_size_helper<T, Allocator>::type
 		{
 		};
 
 
-		template <typename Tp, typename Allocator>
+		template <typename T, typename Allocator>
 		class list:
-				protected detail::list_typedef_helper<Tp, Allocator>::list_allocator_overload,
-				protected detail::list_typedef_helper<Tp, Allocator>::list_type_only
+				protected detail::list_typedef_helper<T, Allocator>::list_allocator_overload,
+				protected detail::list_typedef_helper<T, Allocator>::list_type_only
 		{
 			private:
 				typedef kerbal::container::detail::list_type_unrelated				list_type_unrelated;
-				typedef detail::list_typedef_helper<Tp, Allocator>					list_typedef_helper;
+				typedef detail::list_typedef_helper<T, Allocator>					list_typedef_helper;
 				typedef typename list_typedef_helper::list_allocator_overload 		list_allocator_overload;
 				typedef typename list_typedef_helper::list_type_only				list_type_only;
 
@@ -125,7 +125,7 @@ namespace kerbal
 				typedef typename list_type_only::node_base					node_base;
 				typedef typename list_type_only::node						node;
 
-				friend struct kerbal::container::detail::list_node_size_helper<Tp, Allocator>;
+				friend struct kerbal::container::detail::list_node_size_helper<T, Allocator>;
 
 			public:
 				typedef Allocator														allocator_type;
@@ -221,13 +221,13 @@ namespace kerbal
 
 				list(const kerbal::assign::assign_list<void> & ilist);
 
-				template <typename Up>
-				list(const kerbal::assign::assign_list<Up> & ilist);
+				template <typename U>
+				list(const kerbal::assign::assign_list<U> & ilist);
 
 				list(const kerbal::assign::assign_list<void> & ilist, const Allocator& alloc);
 
-				template <typename Up>
-				list(const kerbal::assign::assign_list<Up> & ilist, const Allocator& alloc);
+				template <typename U>
+				list(const kerbal::assign::assign_list<U> & ilist, const Allocator& alloc);
 
 #		endif
 
@@ -258,8 +258,8 @@ namespace kerbal
 
 				list& operator=(const kerbal::assign::assign_list<void> & ilist);
 
-				template <typename Up>
-				list& operator=(const kerbal::assign::assign_list<Up> & ilist);
+				template <typename U>
+				list& operator=(const kerbal::assign::assign_list<U> & ilist);
 
 #		endif
 
@@ -294,8 +294,8 @@ namespace kerbal
 
 				void assign(const kerbal::assign::assign_list<void> & ilist);
 
-				template <typename Up>
-				void assign(const kerbal::assign::assign_list<Up> & ilist);
+				template <typename U>
+				void assign(const kerbal::assign::assign_list<U> & ilist);
 
 #		endif
 
@@ -446,8 +446,8 @@ namespace kerbal
 
 				iterator insert(const_iterator pos, const kerbal::assign::assign_list<void> & ilist);
 
-				template <typename Up>
-				iterator insert(const_iterator pos, const kerbal::assign::assign_list<Up> & ilist);
+				template <typename U>
+				iterator insert(const_iterator pos, const kerbal::assign::assign_list<U> & ilist);
 
 #		endif
 
@@ -658,70 +658,70 @@ namespace kerbal
 		list(InputIterator, InputIterator, Alloc = Alloc())
 				-> list<typename kerbal::iterator::iterator_traits<InputIterator>::value_type, Alloc>;
 
-		template <typename Tp, typename Alloc = std::allocator<Tp> >
-		list(std::initializer_list<Tp>, Alloc = Alloc()) -> list<Tp, Alloc>;
+		template <typename T, typename Alloc = std::allocator<T> >
+		list(std::initializer_list<T>, Alloc = Alloc()) -> list<T, Alloc>;
 
 #	endif
 
 
-		template <typename Tp, typename Allocator>
+		template <typename T, typename Allocator>
 		KERBAL_CONSTEXPR20
-		list<Tp, Allocator> operator+(const list<Tp, Allocator> & lhs, const list<Tp, Allocator> & rhs);
+		list<T, Allocator> operator+(const list<T, Allocator> & lhs, const list<T, Allocator> & rhs);
 
 #	if __cplusplus >= 201103L
 
-		template <typename Tp, typename Allocator>
+		template <typename T, typename Allocator>
 		KERBAL_CONSTEXPR20
-		list<Tp, Allocator> operator+(const list<Tp, Allocator> & lhs, list<Tp, Allocator> && rhs);
+		list<T, Allocator> operator+(const list<T, Allocator> & lhs, list<T, Allocator> && rhs);
 
-		template <typename Tp, typename Allocator>
+		template <typename T, typename Allocator>
 		KERBAL_CONSTEXPR20
-		list<Tp, Allocator> operator+(list<Tp, Allocator> && lhs, const list<Tp, Allocator> & rhs);
+		list<T, Allocator> operator+(list<T, Allocator> && lhs, const list<T, Allocator> & rhs);
 
-		template <typename Tp, typename Allocator>
+		template <typename T, typename Allocator>
 		KERBAL_CONSTEXPR20
-		list<Tp, Allocator> operator+(list<Tp, Allocator> && lhs, list<Tp, Allocator> && rhs);
+		list<T, Allocator> operator+(list<T, Allocator> && lhs, list<T, Allocator> && rhs);
 
 #	endif
 
-		template <typename Tp, typename Allocator, typename Allocator2>
+		template <typename T, typename Allocator, typename Allocator2>
 		KERBAL_CONSTEXPR20
-		bool operator==(const list<Tp, Allocator> & lhs, const list<Tp, Allocator2> & rhs)
+		bool operator==(const list<T, Allocator> & lhs, const list<T, Allocator2> & rhs)
 		{
 			return kerbal::compare::sequence_equal_to(lhs.cbegin(), lhs.cend(), rhs.cbegin(), rhs.cend());
 		}
 
-		template <typename Tp, typename Allocator, typename Allocator2>
+		template <typename T, typename Allocator, typename Allocator2>
 		KERBAL_CONSTEXPR20
-		bool operator!=(const list<Tp, Allocator> & lhs, const list<Tp, Allocator2> & rhs)
+		bool operator!=(const list<T, Allocator> & lhs, const list<T, Allocator2> & rhs)
 		{
 			return kerbal::compare::sequence_not_equal_to(lhs.cbegin(), lhs.cend(), rhs.cbegin(), rhs.cend());
 		}
 
-		template <typename Tp, typename Allocator, typename Allocator2>
+		template <typename T, typename Allocator, typename Allocator2>
 		KERBAL_CONSTEXPR20
-		bool operator<(const list<Tp, Allocator> & lhs, const list<Tp, Allocator2> & rhs)
+		bool operator<(const list<T, Allocator> & lhs, const list<T, Allocator2> & rhs)
 		{
 			return kerbal::compare::sequence_less(lhs.cbegin(), lhs.cend(), rhs.cbegin(), rhs.cend());
 		}
 
-		template <typename Tp, typename Allocator, typename Allocator2>
+		template <typename T, typename Allocator, typename Allocator2>
 		KERBAL_CONSTEXPR20
-		bool operator>(const list<Tp, Allocator> & lhs, const list<Tp, Allocator2> & rhs)
+		bool operator>(const list<T, Allocator> & lhs, const list<T, Allocator2> & rhs)
 		{
 			return kerbal::compare::sequence_greater(lhs.cbegin(), lhs.cend(), rhs.cbegin(), rhs.cend());
 		}
 
-		template <typename Tp, typename Allocator, typename Allocator2>
+		template <typename T, typename Allocator, typename Allocator2>
 		KERBAL_CONSTEXPR20
-		bool operator<=(const list<Tp, Allocator> & lhs, const list<Tp, Allocator2> & rhs)
+		bool operator<=(const list<T, Allocator> & lhs, const list<T, Allocator2> & rhs)
 		{
 			return kerbal::compare::sequence_less_equal(lhs.cbegin(), lhs.cend(), rhs.cbegin(), rhs.cend());
 		}
 
-		template <typename Tp, typename Allocator, typename Allocator2>
+		template <typename T, typename Allocator, typename Allocator2>
 		KERBAL_CONSTEXPR20
-		bool operator>=(const list<Tp, Allocator> & lhs, const list<Tp, Allocator2> & rhs)
+		bool operator>=(const list<T, Allocator> & lhs, const list<T, Allocator2> & rhs)
 		{
 			return kerbal::compare::sequence_greater_equal(lhs.cbegin(), lhs.cend(), rhs.cbegin(), rhs.cend());
 		}
@@ -731,9 +731,9 @@ namespace kerbal
 	namespace algorithm
 	{
 
-		template <typename Tp, typename Allocator>
+		template <typename T, typename Allocator>
 		KERBAL_CONSTEXPR20
-		void swap(kerbal::container::list<Tp, Allocator> & a, kerbal::container::list<Tp, Allocator> & b)
+		void swap(kerbal::container::list<T, Allocator> & a, kerbal::container::list<T, Allocator> & b)
 				KERBAL_CONDITIONAL_NOEXCEPT(noexcept(a.swap(b)))
 		{
 			a.swap(b);
@@ -746,9 +746,9 @@ namespace kerbal
 
 KERBAL_NAMESPACE_STD_BEGIN
 
-	template <typename Tp, typename Allocator>
+	template <typename T, typename Allocator>
 	KERBAL_CONSTEXPR20
-	void swap(kerbal::container::list<Tp, Allocator> & a, kerbal::container::list<Tp, Allocator> & b)
+	void swap(kerbal::container::list<T, Allocator> & a, kerbal::container::list<T, Allocator> & b)
 			KERBAL_CONDITIONAL_NOEXCEPT(noexcept(a.swap(b)))
 	{
 		a.swap(b);

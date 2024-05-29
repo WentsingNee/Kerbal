@@ -39,13 +39,13 @@ namespace kerbal
 	namespace container
 	{
 
-		template <typename Tp, std::size_t N>
+		template <typename T, std::size_t N>
 		class array
 		{
 			public:
 
 				/// @brief Type of the elements.
-				typedef Tp value_type;
+				typedef T value_type;
 
 				/// @brief Constant type of the elements.
 				typedef const value_type const_type;
@@ -97,13 +97,13 @@ namespace kerbal
 
 				array(const kerbal::assign::assign_list<void> & ilist);
 
-				template <typename Up>
-				array(const kerbal::assign::assign_list<Up> & ilist);
+				template <typename U>
+				array(const kerbal::assign::assign_list<U> & ilist);
 
 				array& operator=(const kerbal::assign::assign_list<void> & ilist);
 
-				template <typename Up>
-				array& operator=(const kerbal::assign::assign_list<Up> & ilist);
+				template <typename U>
+				array& operator=(const kerbal::assign::assign_list<U> & ilist);
 
 #		endif
 
@@ -141,8 +141,8 @@ namespace kerbal
 
 				void assign(const kerbal::assign::assign_list<void> & ilist);
 
-				template <typename Up>
-				void assign(const kerbal::assign::assign_list<Up> & ilist);
+				template <typename U>
+				void assign(const kerbal::assign::assign_list<U> & ilist);
 
 #		endif
 
@@ -290,58 +290,58 @@ namespace kerbal
 
 		};
 
-		template <typename Tp, std::size_t M, std::size_t N>
+		template <typename T, std::size_t M, std::size_t N>
 		KERBAL_CONSTEXPR
-		bool operator==(const array<Tp, M> &, const array<Tp, N> &) KERBAL_NOEXCEPT
+		bool operator==(const array<T, M> &, const array<T, N> &) KERBAL_NOEXCEPT
 		{
 			return false;
 		}
 
-		template <typename Tp, std::size_t M, std::size_t N>
+		template <typename T, std::size_t M, std::size_t N>
 		KERBAL_CONSTEXPR
-		bool operator!=(const array<Tp, M> &, const array<Tp, N> &) KERBAL_NOEXCEPT
+		bool operator!=(const array<T, M> &, const array<T, N> &) KERBAL_NOEXCEPT
 		{
 			return true;
 		}
 
-		template <typename Tp, std::size_t N>
+		template <typename T, std::size_t N>
 		KERBAL_CONSTEXPR14
-		bool operator==(const array<Tp, N> & lhs, const array<Tp, N> & rhs)
+		bool operator==(const array<T, N> & lhs, const array<T, N> & rhs)
 		{
 			return kerbal::compare::sequence_equal_to(lhs.cbegin(), lhs.cend(), rhs.cbegin(), rhs.cend());
 		}
 
-		template <typename Tp, std::size_t N>
+		template <typename T, std::size_t N>
 		KERBAL_CONSTEXPR14
-		bool operator!=(const array<Tp, N> & lhs, const array<Tp, N> & rhs)
+		bool operator!=(const array<T, N> & lhs, const array<T, N> & rhs)
 		{
 			return kerbal::compare::sequence_not_equal_to(lhs.cbegin(), lhs.cend(), rhs.cbegin(), rhs.cend());
 		}
 
-		template <typename Tp, std::size_t M, std::size_t N>
+		template <typename T, std::size_t M, std::size_t N>
 		KERBAL_CONSTEXPR14
-		bool operator<(const array<Tp, M> & lhs, const array<Tp, N> & rhs)
+		bool operator<(const array<T, M> & lhs, const array<T, N> & rhs)
 		{
 			return kerbal::compare::sequence_less(lhs.cbegin(), lhs.cend(), rhs.cbegin(), rhs.cend());
 		}
 
-		template <typename Tp, std::size_t M, std::size_t N>
+		template <typename T, std::size_t M, std::size_t N>
 		KERBAL_CONSTEXPR14
-		bool operator<=(const array<Tp, M> & lhs, const array<Tp, N> & rhs)
+		bool operator<=(const array<T, M> & lhs, const array<T, N> & rhs)
 		{
 			return kerbal::compare::sequence_less_equal(lhs.cbegin(), lhs.cend(), rhs.cbegin(), rhs.cend());
 		}
 
-		template <typename Tp, std::size_t M, std::size_t N>
+		template <typename T, std::size_t M, std::size_t N>
 		KERBAL_CONSTEXPR14
-		bool operator>(const array<Tp, M> & lhs, const array<Tp, N> & rhs)
+		bool operator>(const array<T, M> & lhs, const array<T, N> & rhs)
 		{
 			return kerbal::compare::sequence_greater(lhs.cbegin(), lhs.cend(), rhs.cbegin(), rhs.cend());
 		}
 
-		template <typename Tp, std::size_t M, std::size_t N>
+		template <typename T, std::size_t M, std::size_t N>
 		KERBAL_CONSTEXPR14
-		bool operator>=(const array<Tp, M> & lhs, const array<Tp, N> & rhs)
+		bool operator>=(const array<T, M> & lhs, const array<T, N> & rhs)
 		{
 			return kerbal::compare::sequence_greater_equal(lhs.cbegin(), lhs.cend(), rhs.cbegin(), rhs.cend());
 		}
@@ -352,9 +352,9 @@ namespace kerbal
 	namespace algorithm
 	{
 
-		template <typename Tp, std::size_t N>
+		template <typename T, std::size_t N>
 		KERBAL_CONSTEXPR14
-		void swap(kerbal::container::array<Tp, N> & a, kerbal::container::array<Tp, N> & b)
+		void swap(kerbal::container::array<T, N> & a, kerbal::container::array<T, N> & b)
 				KERBAL_CONDITIONAL_NOEXCEPT(noexcept(a.swap(b)))
 		{
 			a.swap(b);
@@ -367,9 +367,9 @@ namespace kerbal
 
 KERBAL_NAMESPACE_STD_BEGIN
 
-	template <typename Tp, std::size_t N>
+	template <typename T, std::size_t N>
 	KERBAL_CONSTEXPR14
-	void swap(kerbal::container::array<Tp, N> & a, kerbal::container::array<Tp, N> & b)
+	void swap(kerbal::container::array<T, N> & a, kerbal::container::array<T, N> & b)
 			KERBAL_CONDITIONAL_NOEXCEPT(noexcept(a.swap(b)))
 	{
 		a.swap(b);

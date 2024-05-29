@@ -21,16 +21,16 @@ namespace kerbal
 	{
 
 		KERBAL_MODULE_EXPORT
-		template <bool condition, typename Tp = void>
+		template <bool condition, typename T = void>
 		struct enable_if
 		{
 		};
 
 		KERBAL_MODULE_EXPORT
-		template <typename Tp>
-		struct enable_if<true, Tp>
+		template <typename T>
+		struct enable_if<true, T>
 		{
-				typedef Tp type;
+				typedef T type;
 		};
 
 	} // namespace type_traits

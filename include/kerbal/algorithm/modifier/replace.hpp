@@ -22,9 +22,9 @@ namespace kerbal
 	namespace algorithm
 	{
 
-		template <typename ForwardIterator, typename Tp>
+		template <typename ForwardIterator, typename T>
 		KERBAL_CONSTEXPR14
-		void replace(ForwardIterator first, ForwardIterator last, const Tp & old_val, const Tp & new_val)
+		void replace(ForwardIterator first, ForwardIterator last, const T & old_val, const T & new_val)
 		{
 			while (first != last) {
 				if (*first == old_val) {

@@ -38,27 +38,27 @@ namespace kerbal
 		namespace detail
 		{
 
-			template <typename Tp>
+			template <typename T>
 			class arr_iter:
 					//forward iterator interface
-					public kerbal::operators::dereferenceable<arr_iter<Tp>, Tp*>, // it->
-					public kerbal::operators::equality_comparable<arr_iter<Tp> >, // it != jt
-					public kerbal::operators::incrementable<arr_iter<Tp> >, // it++
+					public kerbal::operators::dereferenceable<arr_iter<T>, T*>, // it->
+					public kerbal::operators::equality_comparable<arr_iter<T> >, // it != jt
+					public kerbal::operators::incrementable<arr_iter<T> >, // it++
 					//bidirectional iterator interface
-					public kerbal::operators::decrementable<arr_iter<Tp> >, // it--
+					public kerbal::operators::decrementable<arr_iter<T> >, // it--
 					//random access iterator interface
-					public kerbal::operators::addable<arr_iter<Tp>, typename kerbal::iterator::iterator_traits<Tp*>::difference_type>, // it + N
-					public kerbal::operators::addable_left<arr_iter<Tp>, typename kerbal::iterator::iterator_traits<Tp*>::difference_type>,// N + it
-					public kerbal::operators::less_than_comparable<arr_iter<Tp> >, // it > jt, it <= jt, it >= jt
-					public kerbal::operators::subtractable<arr_iter<Tp>, typename kerbal::iterator::iterator_traits<Tp*>::difference_type> // it - N
+					public kerbal::operators::addable<arr_iter<T>, typename kerbal::iterator::iterator_traits<T*>::difference_type>, // it + N
+					public kerbal::operators::addable_left<arr_iter<T>, typename kerbal::iterator::iterator_traits<T*>::difference_type>,// N + it
+					public kerbal::operators::less_than_comparable<arr_iter<T> >, // it > jt, it <= jt, it >= jt
+					public kerbal::operators::subtractable<arr_iter<T>, typename kerbal::iterator::iterator_traits<T*>::difference_type> // it - N
 			{
-					friend class kerbal::container::detail::arr_kiter<Tp>;
+					friend class kerbal::container::detail::arr_kiter<T>;
 
-					template <typename Up, std::size_t N>
+					template <typename U, std::size_t N>
 					friend class kerbal::container::array;
 
 				private:
-					typedef kerbal::iterator::iterator_traits<Tp*>			iterator_traits;
+					typedef kerbal::iterator::iterator_traits<T*>			iterator_traits;
 
 				public:
 					typedef std::random_access_iterator_tag					iterator_category;
@@ -156,26 +156,26 @@ namespace kerbal
 					}
 			};
 
-			template <typename Tp>
+			template <typename T>
 			class arr_kiter:
 					//forward iterator interface
-					public kerbal::operators::dereferenceable<arr_kiter<Tp>, const Tp*>, // it->
-					public kerbal::operators::equality_comparable<arr_kiter<Tp> >, // it != jt
-					public kerbal::operators::incrementable<arr_kiter<Tp> >, // it++
+					public kerbal::operators::dereferenceable<arr_kiter<T>, const T*>, // it->
+					public kerbal::operators::equality_comparable<arr_kiter<T> >, // it != jt
+					public kerbal::operators::incrementable<arr_kiter<T> >, // it++
 					//bidirectional iterator interface
-					public kerbal::operators::decrementable<arr_kiter<Tp> >, // it--
+					public kerbal::operators::decrementable<arr_kiter<T> >, // it--
 					//random access iterator interface
-					public kerbal::operators::addable<arr_kiter<Tp>, typename kerbal::iterator::iterator_traits<const Tp*>::difference_type>, // it + N
-					public kerbal::operators::addable_left<arr_kiter<Tp>, typename kerbal::iterator::iterator_traits<const Tp*>::difference_type>,// N + it
-					public kerbal::operators::less_than_comparable<arr_kiter<Tp> >, // it > jt, it <= jt, it >= jt
-					public kerbal::operators::subtractable<arr_kiter<Tp>, typename kerbal::iterator::iterator_traits<const Tp*>::difference_type> // it - N
+					public kerbal::operators::addable<arr_kiter<T>, typename kerbal::iterator::iterator_traits<const T*>::difference_type>, // it + N
+					public kerbal::operators::addable_left<arr_kiter<T>, typename kerbal::iterator::iterator_traits<const T*>::difference_type>,// N + it
+					public kerbal::operators::less_than_comparable<arr_kiter<T> >, // it > jt, it <= jt, it >= jt
+					public kerbal::operators::subtractable<arr_kiter<T>, typename kerbal::iterator::iterator_traits<const T*>::difference_type> // it - N
 			{
-					template <typename Up, std::size_t N>
+					template <typename U, std::size_t N>
 					friend class kerbal::container::array;
 
 				private:
-					typedef kerbal::iterator::iterator_traits<const Tp*>			iterator_traits;
-					typedef kerbal::container::detail::arr_iter<Tp> iterator;
+					typedef kerbal::iterator::iterator_traits<const T*>			iterator_traits;
+					typedef kerbal::container::detail::arr_iter<T> iterator;
 
 				public:
 					typedef std::random_access_iterator_tag					iterator_category;
@@ -282,7 +282,7 @@ namespace kerbal
 					KERBAL_CONSTEXPR14
 					iterator cast_to_mutable() const KERBAL_NOEXCEPT
 					{
-						return iterator(const_cast<Tp*>(this->current));
+						return iterator(const_cast<T*>(this->current));
 					}
 
 			};
@@ -297,14 +297,14 @@ namespace kerbal
 		namespace detail
 		{
 
-			template <typename Tp>
-			struct reverse_iterator_base_is_inplace<kerbal::container::detail::arr_iter<Tp> >:
+			template <typename T>
+			struct reverse_iterator_base_is_inplace<kerbal::container::detail::arr_iter<T> >:
 					kerbal::type_traits::true_type
 			{
 			};
 
-			template <typename Tp>
-			struct reverse_iterator_base_is_inplace<kerbal::container::detail::arr_kiter<Tp> >:
+			template <typename T>
+			struct reverse_iterator_base_is_inplace<kerbal::container::detail::arr_kiter<T> >:
 					kerbal::type_traits::true_type
 			{
 			};

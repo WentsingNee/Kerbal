@@ -44,7 +44,7 @@ namespace kerbal
 	namespace container
 	{
 
-		template <typename Tp, typename KeyCompare = kerbal::compare::less<Tp>, typename Container = kerbal::container::vector<Tp> >
+		template <typename T, typename KeyCompare = kerbal::compare::less<T>, typename Container = kerbal::container::vector<T> >
 		class priority_queue :
 				private kerbal::utility::member_compress_helper<KeyCompare>
 		{
@@ -55,7 +55,7 @@ namespace kerbal
 				typedef Container		container_type;
 				typedef KeyCompare		value_compare;
 
-				typedef Tp											value_type;
+				typedef T											value_type;
 				typedef typename container_type::const_type			const_type;
 				typedef typename container_type::reference			reference;
 				typedef typename container_type::const_reference	const_reference;
@@ -79,7 +79,7 @@ namespace kerbal
 								typename Container::value_type,
 								value_type
 						>::value),
-						"Container::value_type should be same as Tp"
+						"Container::value_type should be same as T"
 				);
 
 			private:
@@ -159,8 +159,8 @@ namespace kerbal
 				{
 				}
 
-				template <typename Up>
-				priority_queue(const kerbal::assign::assign_list<Up> & ilist) :
+				template <typename U>
+				priority_queue(const kerbal::assign::assign_list<U> & ilist) :
 						kc_compress_helper(kerbal::utility::in_place_t()), c(ilist.cbegin(), ilist.cend())
 				{
 					kerbal::algorithm::make_heap(c.begin(), c.end(), this->vc());
@@ -171,8 +171,8 @@ namespace kerbal
 				{
 				}
 
-				template <typename Up>
-				priority_queue(const kerbal::assign::assign_list<Up> & ilist, const value_compare & vc) :
+				template <typename U>
+				priority_queue(const kerbal::assign::assign_list<U> & ilist, const value_compare & vc) :
 						kc_compress_helper(kerbal::utility::in_place_t(), vc), c(ilist.cbegin(), ilist.cend())
 				{
 					kerbal::algorithm::make_heap(c.begin(), c.end(), this->vc());
@@ -349,8 +349,8 @@ namespace kerbal
 				{
 				}
 
-				template <typename Up>
-				void push(const kerbal::assign::assign_list<Up> & ilist)
+				template <typename U>
+				void push(const kerbal::assign::assign_list<U> & ilist)
 				{
 					this->push(ilist.cbegin(), ilist.cend());
 				}
@@ -426,9 +426,9 @@ namespace kerbal
 	namespace algorithm
 	{
 
-		template <typename Tp, typename KeyCompare, typename Container>
+		template <typename T, typename KeyCompare, typename Container>
 		KERBAL_CONSTEXPR20
-		void swap(kerbal::container::priority_queue<Tp, KeyCompare, Container> & a, kerbal::container::priority_queue<Tp, KeyCompare, Container> & b)
+		void swap(kerbal::container::priority_queue<T, KeyCompare, Container> & a, kerbal::container::priority_queue<T, KeyCompare, Container> & b)
 				KERBAL_CONDITIONAL_NOEXCEPT(noexcept(a.swap(b)))
 		{
 			a.swap(b);
@@ -441,9 +441,9 @@ namespace kerbal
 
 KERBAL_NAMESPACE_STD_BEGIN
 
-	template <typename Tp, typename KeyCompare, typename Container>
+	template <typename T, typename KeyCompare, typename Container>
 	KERBAL_CONSTEXPR20
-	void swap(kerbal::container::priority_queue<Tp, KeyCompare, Container> & a, kerbal::container::priority_queue<Tp, KeyCompare, Container> & b)
+	void swap(kerbal::container::priority_queue<T, KeyCompare, Container> & a, kerbal::container::priority_queue<T, KeyCompare, Container> & b)
 			KERBAL_CONDITIONAL_NOEXCEPT(noexcept(a.swap(b)))
 	{
 		a.swap(b);

@@ -49,24 +49,24 @@ namespace kerbal
 				private:
 					friend class kerbal::container::detail::fl_type_unrelated;
 
-					template <typename Tp>
+					template <typename T>
 					friend class kerbal::container::detail::fl_type_only;
 
-					template <typename Tp>
+					template <typename T>
 					friend class fl_iter;
 
-					template <typename Tp>
+					template <typename T>
 					friend class fl_kiter;
 
 					friend class kerbal::container::detail::sl_type_unrelated;
 
-					template <typename Tp>
+					template <typename T>
 					friend class kerbal::container::detail::sl_type_only;
 
-					template <typename Tp>
+					template <typename T>
 					friend class sl_iter;
 
-					template <typename Tp>
+					template <typename T>
 					friend class sl_kiter;
 
 				public:
@@ -81,13 +81,13 @@ namespace kerbal
 
 			};
 
-			template <typename Tp>
+			template <typename T>
 			class sl_node:
 					public sl_node_base,
-					private kerbal::utility::member_compress_helper<Tp>
+					private kerbal::utility::member_compress_helper<T>
 			{
 				private:
-					typedef kerbal::utility::member_compress_helper<Tp> member_compress_helper;
+					typedef kerbal::utility::member_compress_helper<T> member_compress_helper;
 
 				public:
 
@@ -167,14 +167,14 @@ namespace kerbal
 
 			};
 
-			template <typename Tp>
+			template <typename T>
 			struct sl_node_chain
 			{
-					sl_node<Tp> * start;
-					sl_node<Tp> * back;
+					sl_node<T> * start;
+					sl_node<T> * back;
 
 					KERBAL_CONSTEXPR
-					sl_node_chain(sl_node<Tp> * start, sl_node<Tp> * back) KERBAL_NOEXCEPT :
+					sl_node_chain(sl_node<T> * start, sl_node<T> * back) KERBAL_NOEXCEPT :
 							start(start), back(back)
 					{
 					}

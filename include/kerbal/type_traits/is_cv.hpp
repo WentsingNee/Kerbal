@@ -30,8 +30,8 @@ namespace kerbal
 		};
 
 		KERBAL_MODULE_EXPORT
-		template <typename Tp>
-		struct is_cv<const volatile Tp> : kerbal::type_traits::true_type
+		template <typename T>
+		struct is_cv<const volatile T> : kerbal::type_traits::true_type
 		{
 		};
 

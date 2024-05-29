@@ -386,12 +386,12 @@ namespace kerbal
 			return move_iterator<Iter>(iter);
 		}
 
-		template <typename Tp, std::size_t N>
+		template <typename T, std::size_t N>
 		KERBAL_CONSTEXPR
-		move_iterator<Tp*>
-		make_move_iterator(Tp (&arr) [N])
+		move_iterator<T*>
+		make_move_iterator(T (&arr) [N])
 		{
-			return move_iterator<Tp*>(arr);
+			return move_iterator<T*>(arr);
 		}
 
 	} // namespace iterator

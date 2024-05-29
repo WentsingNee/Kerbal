@@ -21,7 +21,7 @@ namespace kerbal
 	namespace container
 	{
 
-		template <typename Tp, std::size_t N>
+		template <typename T, std::size_t N>
 		class static_vector;
 
 	} // namespace container

@@ -68,26 +68,26 @@ namespace kerbal
 
 		KERBAL_MODULE_EXPORT
 		/// Partial specialization for pointer types.
-		template <typename Tp>
-		struct iterator_traits<Tp*>
+		template <typename T>
+		struct iterator_traits<T*>
 		{
 				typedef std::random_access_iterator_tag		iterator_category;
-				typedef Tp									value_type;
+				typedef T									value_type;
 				typedef std::ptrdiff_t						difference_type;
-				typedef Tp*									pointer;
-				typedef Tp&									reference;
+				typedef T*									pointer;
+				typedef T&									reference;
 		};
 
 		KERBAL_MODULE_EXPORT
 		/// Partial specialization for const pointer types.
-		template <typename Tp>
-		struct iterator_traits<const Tp*>
+		template <typename T>
+		struct iterator_traits<const T*>
 		{
 				typedef std::random_access_iterator_tag		iterator_category;
-				typedef Tp									value_type;
+				typedef T									value_type;
 				typedef std::ptrdiff_t						difference_type;
-				typedef const Tp*							pointer;
-				typedef const Tp&							reference;
+				typedef const T*							pointer;
+				typedef const T&							reference;
 		};
 
 
@@ -100,15 +100,15 @@ namespace kerbal
 			{
 			};
 
-			template <typename Tp>
+			template <typename T>
 			struct is_iterator_helper<
-					Tp,
+					T,
 					typename kerbal::type_traits::void_type<
-						typename kerbal::iterator::iterator_traits<Tp>::iterator_category,
-						typename kerbal::iterator::iterator_traits<Tp>::value_type,
-						typename kerbal::iterator::iterator_traits<Tp>::difference_type,
-						typename kerbal::iterator::iterator_traits<Tp>::pointer,
-						typename kerbal::iterator::iterator_traits<Tp>::reference
+						typename kerbal::iterator::iterator_traits<T>::iterator_category,
+						typename kerbal::iterator::iterator_traits<T>::value_type,
+						typename kerbal::iterator::iterator_traits<T>::difference_type,
+						typename kerbal::iterator::iterator_traits<T>::pointer,
+						typename kerbal::iterator::iterator_traits<T>::reference
 					>::type
 				>
 				: kerbal::type_traits::true_type
@@ -118,8 +118,8 @@ namespace kerbal
 		} // namespace detail
 
 		KERBAL_MODULE_EXPORT
-		template <typename Tp>
-		struct is_iterator: kerbal::iterator::detail::is_iterator_helper<typename kerbal::type_traits::remove_cv<Tp>::type>
+		template <typename T>
+		struct is_iterator: kerbal::iterator::detail::is_iterator_helper<typename kerbal::type_traits::remove_cv<T>::type>
 		{
 		};
 
@@ -128,79 +128,79 @@ namespace kerbal
 		namespace detail
 		{
 
-			template <typename Tp, typename RequiredCategory, typename = kerbal::type_traits::void_type<>::type >
+			template <typename T, typename RequiredCategory, typename = kerbal::type_traits::void_type<>::type >
 			struct iterator_category_matches_required_helper: kerbal::type_traits::false_type
 			{
 			};
 
-			template <typename Tp, typename RequiredCategory>
+			template <typename T, typename RequiredCategory>
 			struct iterator_category_matches_required_helper<
-					Tp,
+					T,
 					RequiredCategory,
 					typename kerbal::type_traits::void_type<
-						typename kerbal::iterator::iterator_traits<Tp>::iterator_category
+						typename kerbal::iterator::iterator_traits<T>::iterator_category
 					>::type
 				>
-				: kerbal::type_traits::is_same<typename kerbal::iterator::iterator_traits<Tp>::iterator_category, RequiredCategory>
+				: kerbal::type_traits::is_same<typename kerbal::iterator::iterator_traits<T>::iterator_category, RequiredCategory>
 			{
 			};
 
 		} // namespace detail
 
-		template <typename Tp, typename RequiredCategory>
+		template <typename T, typename RequiredCategory>
 		struct iterator_category_matches_required:
 				kerbal::iterator::detail::iterator_category_matches_required_helper<
-					typename kerbal::type_traits::remove_cv<Tp>::type,
+					typename kerbal::type_traits::remove_cv<T>::type,
 					RequiredCategory
 				>
 		{
 		};
 
 		KERBAL_MODULE_EXPORT
-		template <typename Tp>
+		template <typename T>
 		struct is_output_iterator:
 				kerbal::iterator::detail::iterator_category_matches_required_helper<
-					typename kerbal::type_traits::remove_cv<Tp>::type,
+					typename kerbal::type_traits::remove_cv<T>::type,
 					std::output_iterator_tag
 				>
 		{
 		};
 
 		KERBAL_MODULE_EXPORT
-		template <typename Tp>
+		template <typename T>
 		struct is_input_iterator:
 				kerbal::iterator::detail::iterator_category_matches_required_helper<
-					typename kerbal::type_traits::remove_cv<Tp>::type,
+					typename kerbal::type_traits::remove_cv<T>::type,
 					std::input_iterator_tag
 				>
 		{
 		};
 
 		KERBAL_MODULE_EXPORT
-		template <typename Tp>
+		template <typename T>
 		struct is_forward_iterator:
 				kerbal::iterator::detail::iterator_category_matches_required_helper<
-					typename kerbal::type_traits::remove_cv<Tp>::type,
+					typename kerbal::type_traits::remove_cv<T>::type,
 					std::forward_iterator_tag
 				>
 		{
 		};
 
 		KERBAL_MODULE_EXPORT
-		template <typename Tp>
+		template <typename T>
 		struct is_bidirectional_iterator:
 				kerbal::iterator::detail::iterator_category_matches_required_helper<
-					typename kerbal::type_traits::remove_cv<Tp>::type,
+					typename kerbal::type_traits::remove_cv<T>::type,
 					std::bidirectional_iterator_tag
 				>
 		{
 		};
 
 		KERBAL_MODULE_EXPORT
-		template <typename Tp>
+		template <typename T>
 		struct is_random_access_iterator:
 				kerbal::iterator::detail::iterator_category_matches_required_helper<
-					typename kerbal::type_traits::remove_cv<Tp>::type,
+					typename kerbal::type_traits::remove_cv<T>::type,
 					std::random_access_iterator_tag
 				>
 		{
@@ -211,124 +211,124 @@ namespace kerbal
 
 #	if __cplusplus > 201703L
 
-			template <typename Tp, typename = kerbal::type_traits::void_type<>::type>
+			template <typename T, typename = kerbal::type_traits::void_type<>::type>
 			struct is_contiguous_iterator_check_through_std_iterator_traits: kerbal::type_traits::false_type
 			{
 			};
 
-			template <typename Tp>
+			template <typename T>
 			struct is_contiguous_iterator_check_through_std_iterator_traits<
-						Tp,
+						T,
 						typename kerbal::type_traits::void_type<
-							typename std::iterator_traits<Tp>::iterator_concept
+							typename std::iterator_traits<T>::iterator_concept
 						>::type
 					> :
 					kerbal::type_traits::is_same<
-						typename std::iterator_traits<Tp>::iterator_concept,
+						typename std::iterator_traits<T>::iterator_concept,
 						std::contiguous_iterator_tag
 					>
 			{
 			};
 
-			template <typename Tp, typename = kerbal::type_traits::void_type<>::type>
+			template <typename T, typename = kerbal::type_traits::void_type<>::type>
 			struct is_contiguous_iterator_check_through_iterator_concept: kerbal::type_traits::false_type
 			{
 			};
 
-			template <typename Tp>
+			template <typename T>
 			struct is_contiguous_iterator_check_through_iterator_concept<
-						Tp,
+						T,
 						typename kerbal::type_traits::void_type<
-							typename Tp::iterator_concept
+							typename T::iterator_concept
 						>::type
 					> :
 					kerbal::type_traits::is_same<
-						typename Tp::iterator_concept,
+						typename T::iterator_concept,
 						std::contiguous_iterator_tag
 					>
 			{
 			};
 
-			template <typename Tp>
+			template <typename T>
 			struct is_contiguous_iterator_helper:
 					kerbal::type_traits::bool_constant<
-						is_contiguous_iterator_check_through_std_iterator_traits<Tp>::value ||
-						is_contiguous_iterator_check_through_iterator_concept<Tp>::value
+						is_contiguous_iterator_check_through_std_iterator_traits<T>::value ||
+						is_contiguous_iterator_check_through_iterator_concept<T>::value
 					>
 			{
 			};
 
 #	else
 
-			template <typename Tp>
+			template <typename T>
 			struct is_contiguous_iterator_helper: kerbal::type_traits::false_type
 			{
 			};
 
 #	endif
 
-			template <typename Tp>
-			struct is_contiguous_iterator_helper<Tp*>: kerbal::type_traits::true_type
+			template <typename T>
+			struct is_contiguous_iterator_helper<T*>: kerbal::type_traits::true_type
 			{
 			};
 
 		} // namespace detail
 
 		KERBAL_MODULE_EXPORT
-		template <typename Tp>
+		template <typename T>
 		struct is_contiguous_iterator:
 				kerbal::iterator::detail::is_contiguous_iterator_helper<
-					typename kerbal::type_traits::remove_cv<Tp>::type
+					typename kerbal::type_traits::remove_cv<T>::type
 				>
 		{
 		};
 
 
 		KERBAL_MODULE_EXPORT
-		template <typename Tp>
-		struct is_random_access_compatible_iterator: kerbal::iterator::is_random_access_iterator<Tp>
+		template <typename T>
+		struct is_random_access_compatible_iterator: kerbal::iterator::is_random_access_iterator<T>
 		{
 		};
 
 		KERBAL_MODULE_EXPORT
-		template <typename Tp>
+		template <typename T>
 		struct is_bidirectional_compatible_iterator:
 				kerbal::type_traits::bool_constant<
-					kerbal::iterator::is_random_access_compatible_iterator<Tp>::value ||
-					kerbal::iterator::is_bidirectional_iterator<Tp>::value
+					kerbal::iterator::is_random_access_compatible_iterator<T>::value ||
+					kerbal::iterator::is_bidirectional_iterator<T>::value
 				>
 		{
 		};
 
 		KERBAL_MODULE_EXPORT
-		template <typename Tp>
+		template <typename T>
 		struct is_forward_compatible_iterator:
 				kerbal::type_traits::bool_constant<
-					kerbal::iterator::is_bidirectional_compatible_iterator<Tp>::value ||
-					kerbal::iterator::is_forward_iterator<Tp>::value
+					kerbal::iterator::is_bidirectional_compatible_iterator<T>::value ||
+					kerbal::iterator::is_forward_iterator<T>::value
 				>
 		{
 		};
 
 		KERBAL_MODULE_EXPORT
-		template <typename Tp>
+		template <typename T>
 		struct is_input_compatible_iterator:
 				kerbal::type_traits::bool_constant<
-					kerbal::iterator::is_forward_compatible_iterator<Tp>::value ||
-					kerbal::iterator::is_input_iterator<Tp>::value
+					kerbal::iterator::is_forward_compatible_iterator<T>::value ||
+					kerbal::iterator::is_input_iterator<T>::value
 				>
 		{
 		};
 
 		KERBAL_MODULE_EXPORT
-		template <typename Tp>
+		template <typename T>
 		inline
 		KERBAL_CONSTEXPR
-		typename kerbal::iterator::iterator_traits<Tp>::iterator_category
-		iterator_category(const Tp&)
-				KERBAL_CONDITIONAL_NOEXCEPT(noexcept(typename kerbal::iterator::iterator_traits<Tp>::iterator_category()))
+		typename kerbal::iterator::iterator_traits<T>::iterator_category
+		iterator_category(const T&)
+				KERBAL_CONDITIONAL_NOEXCEPT(noexcept(typename kerbal::iterator::iterator_traits<T>::iterator_category()))
 		{
-			return typename kerbal::iterator::iterator_traits<Tp>::iterator_category();
+			return typename kerbal::iterator::iterator_traits<T>::iterator_category();
 		}
 
 	} // namespace iterator

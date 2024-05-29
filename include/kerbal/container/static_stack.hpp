@@ -44,19 +44,19 @@ namespace kerbal
 		 *          automatic storage duration. It is more effective than std::stack because
 		 *          std::stack store elements on heap storage duration (that's required memory
 		 *          allocate and deallocate).
-		 * @tparam Tp Type of the elements.
+		 * @tparam T Type of the elements.
 		 * @tparam N The maximum number of elements that the stack can hold.
 		 */
-		template <typename Tp, std::size_t N>
+		template <typename T, std::size_t N>
 		class static_stack
 		{
 			public:
-				typedef kerbal::container::static_vector<Tp, N>		container_type;
+				typedef kerbal::container::static_vector<T, N>		container_type;
 
-				typedef Tp						value_type;
-				typedef const Tp				const_type;
-				typedef Tp&						reference;
-				typedef const Tp&				const_reference;
+				typedef T						value_type;
+				typedef const T					const_type;
+				typedef T&						reference;
+				typedef const T&				const_reference;
 
 #		if __cplusplus >= 201103L
 				typedef value_type&&			rvalue_reference;
@@ -245,27 +245,27 @@ namespace kerbal
 
 				template <std::size_t M>
 				KERBAL_CONSTEXPR14
-				friend bool operator==(const static_stack<Tp, M> & lhs, const static_stack<Tp, N> & rhs);
+				friend bool operator==(const static_stack<T, M> & lhs, const static_stack<T, N> & rhs);
 
 				template <std::size_t M>
 				KERBAL_CONSTEXPR14
-				friend bool operator!=(const static_stack<Tp, M> & lhs, const static_stack<Tp, N> & rhs);
+				friend bool operator!=(const static_stack<T, M> & lhs, const static_stack<T, N> & rhs);
 
 				template <std::size_t M>
 				KERBAL_CONSTEXPR14
-				friend bool operator<(const static_stack<Tp, M> & lhs, const static_stack<Tp, N> & rhs);
+				friend bool operator<(const static_stack<T, M> & lhs, const static_stack<T, N> & rhs);
 
 				template <std::size_t M>
 				KERBAL_CONSTEXPR14
-				friend bool operator<=(const static_stack<Tp, M> & lhs, const static_stack<Tp, N> & rhs);
+				friend bool operator<=(const static_stack<T, M> & lhs, const static_stack<T, N> & rhs);
 
 				template <std::size_t M>
 				KERBAL_CONSTEXPR14
-				friend bool operator>(const static_stack<Tp, M> & lhs, const static_stack<Tp, N> & rhs);
+				friend bool operator>(const static_stack<T, M> & lhs, const static_stack<T, N> & rhs);
 
 				template <std::size_t M>
 				KERBAL_CONSTEXPR14
-				friend bool operator>=(const static_stack<Tp, M> & lhs, const static_stack<Tp, N> & rhs);
+				friend bool operator>=(const static_stack<T, M> & lhs, const static_stack<T, N> & rhs);
 
 		};
 
@@ -273,44 +273,44 @@ namespace kerbal
 		 * Judge whether the stack is equal to the other one.
 		 * @param rhs another stack
 		 */
-		template <typename Tp, std::size_t M, std::size_t N>
+		template <typename T, std::size_t M, std::size_t N>
 		KERBAL_CONSTEXPR14
-		bool operator==(const static_stack<Tp, M> & lhs, const static_stack<Tp, N> & rhs)
+		bool operator==(const static_stack<T, M> & lhs, const static_stack<T, N> & rhs)
 		{
 			return lhs.c == rhs.c;
 		}
 
-		template <typename Tp, std::size_t M, std::size_t N>
+		template <typename T, std::size_t M, std::size_t N>
 		KERBAL_CONSTEXPR14
-		bool operator!=(const static_stack<Tp, M> & lhs, const static_stack<Tp, N> & rhs)
+		bool operator!=(const static_stack<T, M> & lhs, const static_stack<T, N> & rhs)
 		{
 			return lhs.c != rhs.c;
 		}
 
-		template <typename Tp, std::size_t M, std::size_t N>
+		template <typename T, std::size_t M, std::size_t N>
 		KERBAL_CONSTEXPR14
-		bool operator<(const static_stack<Tp, M> & lhs, const static_stack<Tp, N> & rhs)
+		bool operator<(const static_stack<T, M> & lhs, const static_stack<T, N> & rhs)
 		{
 			return lhs.c < rhs.c;
 		}
 
-		template <typename Tp, std::size_t M, std::size_t N>
+		template <typename T, std::size_t M, std::size_t N>
 		KERBAL_CONSTEXPR14
-		bool operator<=(const static_stack<Tp, M> & lhs, const static_stack<Tp, N> & rhs)
+		bool operator<=(const static_stack<T, M> & lhs, const static_stack<T, N> & rhs)
 		{
 			return lhs.c <= rhs.c;
 		}
 
-		template <typename Tp, std::size_t M, std::size_t N>
+		template <typename T, std::size_t M, std::size_t N>
 		KERBAL_CONSTEXPR14
-		bool operator>(const static_stack<Tp, M> & lhs, const static_stack<Tp, N> & rhs)
+		bool operator>(const static_stack<T, M> & lhs, const static_stack<T, N> & rhs)
 		{
 			return lhs.c > rhs.c;
 		}
 
-		template <typename Tp, std::size_t M, std::size_t N>
+		template <typename T, std::size_t M, std::size_t N>
 		KERBAL_CONSTEXPR14
-		bool operator>=(const static_stack<Tp, M> & lhs, const static_stack<Tp, N> & rhs)
+		bool operator>=(const static_stack<T, M> & lhs, const static_stack<T, N> & rhs)
 		{
 			return lhs.c >= rhs.c;
 		}
@@ -321,9 +321,9 @@ namespace kerbal
 	namespace algorithm
 	{
 
-		template <typename Tp, std::size_t N>
+		template <typename T, std::size_t N>
 		KERBAL_CONSTEXPR14
-		void swap(kerbal::container::static_stack<Tp, N> & a, kerbal::container::static_stack<Tp, N> & b)
+		void swap(kerbal::container::static_stack<T, N> & a, kerbal::container::static_stack<T, N> & b)
 				KERBAL_CONDITIONAL_NOEXCEPT(noexcept(a.swap(b)))
 		{
 			a.swap(b);
@@ -336,9 +336,9 @@ namespace kerbal
 
 KERBAL_NAMESPACE_STD_BEGIN
 
-	template <typename Tp, std::size_t N>
+	template <typename T, std::size_t N>
 	KERBAL_CONSTEXPR14
-	void swap(kerbal::container::static_stack<Tp, N> & a, kerbal::container::static_stack<Tp, N> & b)
+	void swap(kerbal::container::static_stack<T, N> & a, kerbal::container::static_stack<T, N> & b)
 			KERBAL_CONDITIONAL_NOEXCEPT(noexcept(a.swap(b)))
 	{
 		a.swap(b);

@@ -27,18 +27,18 @@ namespace kerbal
 	namespace hash
 	{
 
-		template <typename Tp>
+		template <typename T>
 		struct integral_hash
 		{
 			private:
-				KERBAL_STATIC_ASSERT(kerbal::type_traits::is_integral<Tp>::value, "");
+				KERBAL_STATIC_ASSERT(kerbal::type_traits::is_integral<T>::value, "");
 
 			public:
 				typedef std::size_t result_type;
-				typedef Tp argument_type;
+				typedef T argument_type;
 
 				KERBAL_CONSTEXPR
-				result_type operator()(const Tp & val) const KERBAL_NOEXCEPT
+				result_type operator()(const T & val) const KERBAL_NOEXCEPT
 				{
 					return static_cast<std::size_t>(val);
 				}
@@ -158,13 +158,13 @@ namespace kerbal
 				}
 		};
 
-		template <typename Tp>
-		struct hash<Tp*>
+		template <typename T>
+		struct hash<T*>
 		{
 				typedef std::size_t result_type;
-				typedef Tp* argument_type;
+				typedef T* argument_type;
 
-				std::size_t operator()(Tp* p) const KERBAL_NOEXCEPT
+				std::size_t operator()(T* p) const KERBAL_NOEXCEPT
 				{
 					return reinterpret_cast<std::size_t>(p);
 				}

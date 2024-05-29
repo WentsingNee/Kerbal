@@ -39,13 +39,13 @@ namespace kerbal
 	//==================
 	// forward declare
 
-		template <typename Tp>
+		template <typename T>
 		KERBAL_CONSTEXPR14
-		void destroy_on(Tp & plc);
+		void destroy_on(T & plc);
 
-		template <typename Tp>
+		template <typename T>
 		KERBAL_CONSTEXPR14
-		void destroy_at(Tp * p);
+		void destroy_at(T * p);
 
 		template <typename ForwardIterator>
 		KERBAL_CONSTEXPR14
@@ -74,51 +74,51 @@ namespace kerbal
 			typedef kerbal::type_traits::integral_constant<int, 0>		DESTROY_ON_VER_DEFAULT;
 			typedef kerbal::type_traits::integral_constant<int, 1>		DESTROY_ON_VER_TRIVIALLY;
 
-			template <typename Tp>
+			template <typename T>
 			KERBAL_CONSTEXPR20
-			void k_destroy_on(Tp & plc, DESTROY_ON_VER_DEFAULT)
+			void k_destroy_on(T & plc, DESTROY_ON_VER_DEFAULT)
 					KERBAL_CONDITIONAL_NOEXCEPT(
-						kerbal::type_traits::try_test_is_nothrow_destructible<Tp>::IS_TRUE::value
+						kerbal::type_traits::try_test_is_nothrow_destructible<T>::IS_TRUE::value
 					)
 			{
-				plc.~Tp();
+				plc.~T();
 			}
 
-			template <typename Tp, std::size_t N>
+			template <typename T, std::size_t N>
 			KERBAL_CONSTEXPR20
-			void k_destroy_on(Tp (& plc) [N], DESTROY_ON_VER_DEFAULT) KERBAL_NOEXCEPT
+			void k_destroy_on(T (& plc) [N], DESTROY_ON_VER_DEFAULT) KERBAL_NOEXCEPT
 			{
 				kerbal::memory::reverse_destroy(plc + 0, plc + N);
 			}
 
-			template <typename Tp>
+			template <typename T>
 			KERBAL_CONSTEXPR14
-			void k_destroy_on(Tp & /*plc*/, DESTROY_ON_VER_TRIVIALLY) KERBAL_NOEXCEPT
+			void k_destroy_on(T & /*plc*/, DESTROY_ON_VER_TRIVIALLY) KERBAL_NOEXCEPT
 			{
 			}
 
 		} // namespace detail
 
-		template <typename Tp>
+		template <typename T>
 		struct destroy_on_overload_version :
 				kerbal::type_traits::conditional<
-					kerbal::type_traits::try_test_is_trivially_destructible<Tp>::IS_TRUE::value,
+					kerbal::type_traits::try_test_is_trivially_destructible<T>::IS_TRUE::value,
 					detail::DESTROY_ON_VER_TRIVIALLY,
 					detail::DESTROY_ON_VER_DEFAULT
 				>::type
 		{
 		};
 
-		template <typename Tp>
+		template <typename T>
 		KERBAL_CONSTEXPR14
-		void destroy_on(Tp & plc)
+		void destroy_on(T & plc)
 		{
-			detail::k_destroy_on(plc, destroy_on_overload_version<Tp>());
+			detail::k_destroy_on(plc, destroy_on_overload_version<T>());
 		}
 
-		template <typename Tp>
+		template <typename T>
 		KERBAL_CONSTEXPR14
-		void destroy_at(Tp * p)
+		void destroy_at(T * p)
 		{
 			kerbal::memory::destroy_on(*p);
 		}
@@ -152,10 +152,10 @@ namespace kerbal
 
 		} // namespace detail
 
-		template <typename Tp>
+		template <typename T>
 		struct destroy_overload_version:
 				kerbal::type_traits::conditional<
-					kerbal::type_traits::try_test_is_trivially_destructible<Tp>::IS_TRUE::value,
+					kerbal::type_traits::try_test_is_trivially_destructible<T>::IS_TRUE::value,
 					detail::DESTROY_VER_TRIVIALLY,
 					detail::DESTROY_VER_DEFAULT
 				>::type
@@ -203,10 +203,10 @@ namespace kerbal
 
 		} // namespace detail
 
-		template <typename Tp>
+		template <typename T>
 		struct destroy_n_overload_version:
 				kerbal::type_traits::conditional<
-					kerbal::type_traits::try_test_is_trivially_destructible<Tp>::IS_TRUE::value,
+					kerbal::type_traits::try_test_is_trivially_destructible<T>::IS_TRUE::value,
 					detail::DESTROY_N_VER_TRIVIALLY,
 					detail::DESTROY_N_VER_DEFAULT
 				>::type
@@ -251,10 +251,10 @@ namespace kerbal
 
 		} // namespace detail
 
-		template <typename Tp>
+		template <typename T>
 		struct reverse_destroy_overload_version:
 				kerbal::type_traits::conditional<
-					kerbal::type_traits::try_test_is_trivially_destructible<Tp>::IS_TRUE::value,
+					kerbal::type_traits::try_test_is_trivially_destructible<T>::IS_TRUE::value,
 					detail::RE_DESTROY_VER_TRIVIALLY,
 					detail::RE_DESTROY_VER_DEFAULT
 				>::type

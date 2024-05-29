@@ -29,7 +29,7 @@ namespace kerbal
 	namespace container
 	{
 
-		template <typename Tp, typename Allocator = std::allocator<Tp> >
+		template <typename T, typename Allocator = std::allocator<T> >
 		class vector;
 
 
@@ -38,8 +38,8 @@ namespace kerbal
 
 		namespace pmr
 		{
-			template <typename Tp>
-			using vector = kerbal::container::vector<Tp, std::pmr::polymorphic_allocator<Tp> >;
+			template <typename T>
+			using vector = kerbal::container::vector<T, std::pmr::polymorphic_allocator<T> >;
 		}
 
 #	endif

@@ -240,8 +240,8 @@ namespace kerbal
 				{
 				}
 
-				template <typename Up>
-				explicit k_rawst_agent(kerbal::utility::in_place_t in_place, const Up (&src)[N]) :
+				template <typename U>
+				explicit k_rawst_agent(kerbal::utility::in_place_t in_place, const U (&src)[N]) :
 						super(in_place, src)
 				{
 				}
@@ -295,9 +295,9 @@ namespace kerbal
 					kerbal::memory::construct_at_using_allocator(alloc, this->raw_pointer(), src);
 				}
 
-				template <typename Up>
+				template <typename U>
 				KERBAL_CONSTEXPR14
-				void construct(const Up (&src)[N])
+				void construct(const U (&src)[N])
 						KERBAL_CONDITIONAL_NOEXCEPT(
 							noexcept(kerbal::memory::construct_at(kerbal::utility::declthis<this_type>()->raw_pointer(), src))
 						)
@@ -305,9 +305,9 @@ namespace kerbal
 					kerbal::memory::construct_at(this->raw_pointer(), src);
 				}
 
-				template <typename Alloc, typename Up>
+				template <typename Alloc, typename U>
 				KERBAL_CONSTEXPR14
-				void construct_using_allocator(Alloc & alloc, const Up (&src)[N])
+				void construct_using_allocator(Alloc & alloc, const U (&src)[N])
 						KERBAL_CONDITIONAL_NOEXCEPT(
 							noexcept(kerbal::memory::construct_at_using_allocator(alloc, kerbal::utility::declthis<this_type>()->raw_pointer(), src))
 						)
@@ -343,9 +343,9 @@ namespace kerbal
 					kerbal::memory::construct_at_using_allocator(alloc, this->raw_pointer(), kerbal::compatibility::move(src));
 				}
 
-				template <typename Up>
+				template <typename U>
 				KERBAL_CONSTEXPR14
-				void construct(Up (&&src)[N])
+				void construct(U (&&src)[N])
 						KERBAL_CONDITIONAL_NOEXCEPT(
 							noexcept(kerbal::memory::construct_at(
 								kerbal::utility::declthis<this_type>()->raw_pointer(),
@@ -356,9 +356,9 @@ namespace kerbal
 					kerbal::memory::construct_at(this->raw_pointer(), kerbal::compatibility::move(src));
 				}
 
-				template <typename Alloc, typename Up>
+				template <typename Alloc, typename U>
 				KERBAL_CONSTEXPR14
-				void construct_using_allocator(Alloc & alloc, Up (&&src)[N])
+				void construct_using_allocator(Alloc & alloc, U (&&src)[N])
 						KERBAL_CONDITIONAL_NOEXCEPT(
 							noexcept(kerbal::memory::construct_at_using_allocator(
 								alloc,

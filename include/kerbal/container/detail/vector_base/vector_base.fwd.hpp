@@ -22,13 +22,13 @@ namespace kerbal
 		namespace detail
 		{
 
-			template <typename Tp>
+			template <typename T>
 			class vector_type_only;
 
-			template <typename Tp>
+			template <typename T>
 			class vec_iter;
 
-			template <typename Tp>
+			template <typename T>
 			class vec_kiter;
 
 		} // namespace detail

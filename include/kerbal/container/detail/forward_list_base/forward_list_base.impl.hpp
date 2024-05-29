@@ -219,17 +219,17 @@ namespace kerbal
 #	if __cplusplus >= 201103L
 
 			// pre-cond: allocator allows
-			template <typename Tp>
+			template <typename T>
 			KERBAL_CONSTEXPR14
-			fl_type_only<Tp>::fl_type_only(fl_type_only && src) KERBAL_NOEXCEPT :
+			fl_type_only<T>::fl_type_only(fl_type_only && src) KERBAL_NOEXCEPT :
 					fl_type_unrelated(static_cast<fl_type_unrelated&&>(src))
 			{
 			}
 
 			// move construct using allocator, allocator is equal
-			template <typename Tp>
+			template <typename T>
 			KERBAL_CONSTEXPR14
-			void fl_type_only<Tp>::k_move_cnstrct_ua_ae(fl_type_only && src) KERBAL_NOEXCEPT
+			void fl_type_only<T>::k_move_cnstrct_ua_ae(fl_type_only && src) KERBAL_NOEXCEPT
 			{
 				fl_type_unrelated::k_swap_type_unrelated(
 						static_cast<fl_type_unrelated &>(src),
@@ -237,15 +237,15 @@ namespace kerbal
 			}
 
 			// move construct using allocator, allocator is not equal
-			template <typename Tp>
+			template <typename T>
 			template <typename NodeAllocator>
 			KERBAL_CONSTEXPR20
-			void fl_type_only<Tp>::k_move_cnstrct_ua_ane(NodeAllocator & this_alloc, fl_type_only && src)
+			void fl_type_only<T>::k_move_cnstrct_ua_ane(NodeAllocator & this_alloc, fl_type_only && src)
 			{
 				if (src.empty()) {
 					return;
 				}
-				sl_node_chain<Tp> chain(
+				sl_node_chain<T> chain(
 						k_build_new_nodes_range_unguarded(
 								this_alloc,
 								kerbal::iterator::make_move_iterator(src.begin()),
@@ -253,10 +253,10 @@ namespace kerbal
 				fl_type_unrelated::k_hook_node_after(this->basic_before_begin(), chain.start, chain.back);
 			}
 
-			template <typename Tp>
+			template <typename T>
 			template <typename NodeAllocator>
 			KERBAL_CONSTEXPR20
-			void fl_type_only<Tp>::k_move_cnstrct_ua_helper(NodeAllocator & this_alloc, NodeAllocator && src_alloc, fl_type_only && src,
+			void fl_type_only<T>::k_move_cnstrct_ua_helper(NodeAllocator & this_alloc, NodeAllocator && src_alloc, fl_type_only && src,
 																	   kerbal::type_traits::false_type /*is_always_equal*/)
 			{
 				if (this_alloc != src_alloc) {
@@ -266,19 +266,19 @@ namespace kerbal
 				}
 			}
 
-			template <typename Tp>
+			template <typename T>
 			template <typename NodeAllocator>
 			KERBAL_CONSTEXPR14
-			void fl_type_only<Tp>::k_move_cnstrct_ua_helper(NodeAllocator & /*this_alloc*/, NodeAllocator && /*src_alloc*/, fl_type_only && src,
+			void fl_type_only<T>::k_move_cnstrct_ua_helper(NodeAllocator & /*this_alloc*/, NodeAllocator && /*src_alloc*/, fl_type_only && src,
 																	   kerbal::type_traits::true_type /*is_always_equal*/) KERBAL_NOEXCEPT
 			{
 				this->k_move_cnstrct_ua_ae(kerbal::compatibility::move(src));
 			}
 
-			template <typename Tp>
+			template <typename T>
 			template <typename NodeAllocator>
 			KERBAL_CONSTEXPR14
-			fl_type_only<Tp>::fl_type_only(NodeAllocator & this_alloc, NodeAllocator && src_alloc, fl_type_only && src)
+			fl_type_only<T>::fl_type_only(NodeAllocator & this_alloc, NodeAllocator && src_alloc, fl_type_only && src)
 					KERBAL_CONDITIONAL_NOEXCEPT(is_nothrow_move_constructible_using_allocator<NodeAllocator>::value) :
 					fl_type_unrelated()
 			{
@@ -290,36 +290,36 @@ namespace kerbal
 
 #	endif
 
-			template <typename Tp>
+			template <typename T>
 			template <typename NodeAllocator>
 			KERBAL_CONSTEXPR20
-			fl_type_only<Tp>::fl_type_only(NodeAllocator & alloc, size_type n) :
+			fl_type_only<T>::fl_type_only(NodeAllocator & alloc, size_type n) :
 					fl_type_unrelated()
 			{
 				if (n == 0) {
 					return;
 				}
-				sl_node_chain<Tp> chain(k_build_n_new_nodes_unguarded(alloc, n));
+				sl_node_chain<T> chain(k_build_n_new_nodes_unguarded(alloc, n));
 				k_hook_node_after(this->basic_cbefore_begin(), chain.start, chain.back);
 			}
 
-			template <typename Tp>
+			template <typename T>
 			template <typename NodeAllocator>
 			KERBAL_CONSTEXPR20
-			fl_type_only<Tp>::fl_type_only(NodeAllocator & alloc, size_type n, const_reference val) :
+			fl_type_only<T>::fl_type_only(NodeAllocator & alloc, size_type n, const_reference val) :
 					fl_type_unrelated()
 			{
 				if (n == 0) {
 					return;
 				}
-				sl_node_chain<Tp> chain(k_build_n_new_nodes_unguarded(alloc, n, val));
+				sl_node_chain<T> chain(k_build_n_new_nodes_unguarded(alloc, n, val));
 				k_hook_node_after(this->basic_cbefore_begin(), chain.start, chain.back);
 			}
 
-			template <typename Tp>
+			template <typename T>
 			template <typename NodeAllocator, typename InputIterator>
 			KERBAL_CONSTEXPR20
-			fl_type_only<Tp>::fl_type_only(NodeAllocator & alloc, InputIterator first, InputIterator last,
+			fl_type_only<T>::fl_type_only(NodeAllocator & alloc, InputIterator first, InputIterator last,
 					typename kerbal::type_traits::enable_if<
 							kerbal::iterator::is_input_compatible_iterator<InputIterator>::value, int
 					>::type) :
@@ -328,10 +328,10 @@ namespace kerbal
 				k_insert_after_using_allocator(alloc, this->cbefore_begin(), first, last);
 			}
 
-			template <typename Tp>
+			template <typename T>
 			template <typename NodeAllocator>
 			KERBAL_CONSTEXPR20
-			void fl_type_only<Tp>::k_destroy_using_allocator(NodeAllocator & alloc) KERBAL_NOEXCEPT
+			void fl_type_only<T>::k_destroy_using_allocator(NodeAllocator & alloc) KERBAL_NOEXCEPT
 			{
 				this->k_consecutive_destroy_node(alloc, this->k_head.next, NULL);
 			}
@@ -340,10 +340,10 @@ namespace kerbal
 		//===================
 		// assign
 
-			template <typename Tp>
+			template <typename T>
 			template <typename NodeAllocator>
 			KERBAL_CONSTEXPR20
-			void fl_type_only<Tp>::k_assign_using_allocator(NodeAllocator & alloc, size_type count, const_reference val)
+			void fl_type_only<T>::k_assign_using_allocator(NodeAllocator & alloc, size_type count, const_reference val)
 			{
 				const_iterator before_it(this->before_begin());
 				iterator it(this->begin());
@@ -362,13 +362,13 @@ namespace kerbal
 				k_erase_after_using_allocator(alloc, before_it, cend);
 			}
 
-			template <typename Tp>
+			template <typename T>
 			template <typename NodeAllocator, typename InputIterator>
 			KERBAL_CONSTEXPR20
 			typename kerbal::type_traits::enable_if<
 					kerbal::iterator::is_input_compatible_iterator<InputIterator>::value
 			>::type
-			fl_type_only<Tp>::k_assign_using_allocator(NodeAllocator & alloc, InputIterator first, InputIterator last)
+			fl_type_only<T>::k_assign_using_allocator(NodeAllocator & alloc, InputIterator first, InputIterator last)
 			{
 				iterator before_it(this->before_begin());
 				iterator it(this->begin());
@@ -387,10 +387,10 @@ namespace kerbal
 				k_erase_after_using_allocator(alloc, before_it, cend);
 			}
 
-			template <typename Tp>
+			template <typename T>
 			template <typename NodeAllocator>
 			KERBAL_CONSTEXPR20
-			void fl_type_only<Tp>::k_cpy_ass_ua_impl(NodeAllocator & alloc, const NodeAllocator & src_alloc, const fl_type_only & src, CPYASS_VER_NOT_PROPAGATE)
+			void fl_type_only<T>::k_cpy_ass_ua_impl(NodeAllocator & alloc, const NodeAllocator & src_alloc, const fl_type_only & src, CPYASS_VER_NOT_PROPAGATE)
 			{
 				if (alloc != src_alloc) {
 					this->k_destroy_using_allocator(alloc);
@@ -399,10 +399,10 @@ namespace kerbal
 				this->k_assign_using_allocator(alloc, src.cbegin(), src.cend());
 			}
 
-			template <typename Tp>
+			template <typename T>
 			template <typename NodeAllocator>
 			KERBAL_CONSTEXPR20
-			void fl_type_only<Tp>::k_cpy_ass_ua_impl(NodeAllocator & alloc, const NodeAllocator & src_alloc, const fl_type_only & src, CPYASS_VER_PROPAGATE)
+			void fl_type_only<T>::k_cpy_ass_ua_impl(NodeAllocator & alloc, const NodeAllocator & src_alloc, const fl_type_only & src, CPYASS_VER_PROPAGATE)
 			{
 				if (alloc != src_alloc) {
 					this->k_destroy_using_allocator(alloc);
@@ -412,18 +412,18 @@ namespace kerbal
 				this->k_assign_using_allocator(alloc, src.cbegin(), src.cend());
 			}
 
-			template <typename Tp>
+			template <typename T>
 			template <typename NodeAllocator>
 			KERBAL_CONSTEXPR20
-			void fl_type_only<Tp>::k_cpy_ass_ua_impl(NodeAllocator & alloc, const NodeAllocator & /*src_alloc*/, const fl_type_only & src, CPYASS_VER_ALWAYS_EQUAL)
+			void fl_type_only<T>::k_cpy_ass_ua_impl(NodeAllocator & alloc, const NodeAllocator & /*src_alloc*/, const fl_type_only & src, CPYASS_VER_ALWAYS_EQUAL)
 			{
 				this->k_assign_using_allocator(alloc, src.cbegin(), src.cend());
 			}
 
-			template <typename Tp>
+			template <typename T>
 			template <typename NodeAllocator>
 			KERBAL_CONSTEXPR20
-			void fl_type_only<Tp>::k_assign_using_allocator(NodeAllocator & alloc, const NodeAllocator & src_alloc, const fl_type_only & src)
+			void fl_type_only<T>::k_assign_using_allocator(NodeAllocator & alloc, const NodeAllocator & src_alloc, const fl_type_only & src)
 			{
 				typedef kerbal::memory::allocator_traits<NodeAllocator> allocator_traits;
 				typedef typename allocator_traits::propagate_on_container_copy_assignment propagate;
@@ -445,10 +445,10 @@ namespace kerbal
 
 #		if __cplusplus >= 201103L
 
-			template <typename Tp>
+			template <typename T>
 			template <typename NodeAllocator>
 			KERBAL_CONSTEXPR20
-			void fl_type_only<Tp>::k_move_assign(NodeAllocator & alloc, fl_type_only && src) KERBAL_NOEXCEPT
+			void fl_type_only<T>::k_move_assign(NodeAllocator & alloc, fl_type_only && src) KERBAL_NOEXCEPT
 			{
 				this->k_destroy_using_allocator(alloc);
 				this->k_head.next = NULL;
@@ -456,19 +456,19 @@ namespace kerbal
 			}
 
 			// move assign using allocator, allocator is equal
-			template <typename Tp>
+			template <typename T>
 			template <typename NodeAllocator>
 			KERBAL_CONSTEXPR20
-			void fl_type_only<Tp>::k_mov_ass_ua_ae(NodeAllocator & alloc, fl_type_only && src) KERBAL_NOEXCEPT
+			void fl_type_only<T>::k_mov_ass_ua_ae(NodeAllocator & alloc, fl_type_only && src) KERBAL_NOEXCEPT
 			{
 				this->k_move_assign(alloc, kerbal::compatibility::move(src));
 			}
 
 			// move assign using allocator, allocator is not equal
-			template <typename Tp>
+			template <typename T>
 			template <typename NodeAllocator>
 			KERBAL_CONSTEXPR20
-			void fl_type_only<Tp>::k_mov_ass_ua_ane(NodeAllocator & alloc, fl_type_only && src)
+			void fl_type_only<T>::k_mov_ass_ua_ane(NodeAllocator & alloc, fl_type_only && src)
 			{
 				this->k_assign_using_allocator(
 						alloc,
@@ -476,10 +476,10 @@ namespace kerbal
 						kerbal::iterator::make_move_iterator(src.end()));
 			}
 
-			template <typename Tp>
+			template <typename T>
 			template <typename NodeAllocator>
 			KERBAL_CONSTEXPR20
-			void fl_type_only<Tp>::k_mov_ass_ua_impl(NodeAllocator & alloc, NodeAllocator && src_alloc, fl_type_only && src,
+			void fl_type_only<T>::k_mov_ass_ua_impl(NodeAllocator & alloc, NodeAllocator && src_alloc, fl_type_only && src,
 																MOVASS_VER_NOT_PROPAGATE)
 			{
 				if (alloc != src_alloc) {
@@ -489,10 +489,10 @@ namespace kerbal
 				}
 			}
 
-			template <typename Tp>
+			template <typename T>
 			template <typename NodeAllocator>
 			KERBAL_CONSTEXPR20
-			void fl_type_only<Tp>::k_mov_ass_ua_impl(NodeAllocator & alloc, NodeAllocator && src_alloc, fl_type_only && src,
+			void fl_type_only<T>::k_mov_ass_ua_impl(NodeAllocator & alloc, NodeAllocator && src_alloc, fl_type_only && src,
 																MOVASS_VER_PROPAGATE)
 			{
 				this->k_destroy_using_allocator(alloc);
@@ -501,19 +501,19 @@ namespace kerbal
 				fl_type_unrelated::k_swap_type_unrelated(static_cast<fl_type_unrelated &>(src), static_cast<fl_type_unrelated &>(*this));
 			}
 
-			template <typename Tp>
+			template <typename T>
 			template <typename NodeAllocator>
 			KERBAL_CONSTEXPR20
-			void fl_type_only<Tp>::k_mov_ass_ua_impl(NodeAllocator & alloc, NodeAllocator && /*src_alloc*/, fl_type_only && src,
+			void fl_type_only<T>::k_mov_ass_ua_impl(NodeAllocator & alloc, NodeAllocator && /*src_alloc*/, fl_type_only && src,
 																MOVASS_VER_ALWAYS_EQUAL) KERBAL_NOEXCEPT
 			{
 				this->k_mov_ass_ua_ae(alloc, kerbal::compatibility::move(src));
 			}
 
-			template <typename Tp>
+			template <typename T>
 			template <typename NodeAllocator>
 			KERBAL_CONSTEXPR20
-			void fl_type_only<Tp>::k_assign_using_allocator(NodeAllocator & alloc, NodeAllocator && src_alloc, fl_type_only && src)
+			void fl_type_only<T>::k_assign_using_allocator(NodeAllocator & alloc, NodeAllocator && src_alloc, fl_type_only && src)
 					KERBAL_CONDITIONAL_NOEXCEPT(is_nothrow_move_assign_using_allocator<NodeAllocator>::value)
 			{
 				typedef kerbal::memory::allocator_traits<NodeAllocator> allocator_traits;
@@ -544,106 +544,106 @@ namespace kerbal
 		//===================
 		// iterator
 
-			template <typename Tp>
+			template <typename T>
 			KERBAL_CONSTEXPR14
-			typename fl_type_only<Tp>::iterator
-			fl_type_only<Tp>::before_begin() KERBAL_NOEXCEPT
+			typename fl_type_only<T>::iterator
+			fl_type_only<T>::before_begin() KERBAL_NOEXCEPT
 			{
 				return iterator(&this->k_head);
 			}
 
-			template <typename Tp>
+			template <typename T>
 			KERBAL_CONSTEXPR14
-			typename fl_type_only<Tp>::const_iterator
-			fl_type_only<Tp>::before_begin() const KERBAL_NOEXCEPT
+			typename fl_type_only<T>::const_iterator
+			fl_type_only<T>::before_begin() const KERBAL_NOEXCEPT
 			{
 				return const_iterator(&this->k_head);
 			}
 
-			template <typename Tp>
+			template <typename T>
 			KERBAL_CONSTEXPR14
-			typename fl_type_only<Tp>::const_iterator
-			fl_type_only<Tp>::cbefore_begin() const KERBAL_NOEXCEPT
+			typename fl_type_only<T>::const_iterator
+			fl_type_only<T>::cbefore_begin() const KERBAL_NOEXCEPT
 			{
 				return const_iterator(&this->k_head);
 			}
 
-			template <typename Tp>
+			template <typename T>
 			KERBAL_CONSTEXPR14
-			typename fl_type_only<Tp>::iterator
-			fl_type_only<Tp>::begin() KERBAL_NOEXCEPT
+			typename fl_type_only<T>::iterator
+			fl_type_only<T>::begin() KERBAL_NOEXCEPT
 			{
 				return iterator(this->k_head.next);
 			}
 
-			template <typename Tp>
+			template <typename T>
 			KERBAL_CONSTEXPR14
-			typename fl_type_only<Tp>::const_iterator
-			fl_type_only<Tp>::begin() const KERBAL_NOEXCEPT
+			typename fl_type_only<T>::const_iterator
+			fl_type_only<T>::begin() const KERBAL_NOEXCEPT
 			{
 				return const_iterator(this->k_head.next);
 			}
 
-			template <typename Tp>
+			template <typename T>
 			KERBAL_CONSTEXPR14
-			typename fl_type_only<Tp>::const_iterator
-			fl_type_only<Tp>::cbegin() const KERBAL_NOEXCEPT
+			typename fl_type_only<T>::const_iterator
+			fl_type_only<T>::cbegin() const KERBAL_NOEXCEPT
 			{
 				return const_iterator(this->k_head.next);
 			}
 
-			template <typename Tp>
+			template <typename T>
 			KERBAL_CONSTEXPR14
-			typename fl_type_only<Tp>::iterator
-			fl_type_only<Tp>::end() KERBAL_NOEXCEPT
+			typename fl_type_only<T>::iterator
+			fl_type_only<T>::end() KERBAL_NOEXCEPT
 			{
 				return iterator(NULL);
 			}
 
-			template <typename Tp>
+			template <typename T>
 			KERBAL_CONSTEXPR14
-			typename fl_type_only<Tp>::const_iterator
-			fl_type_only<Tp>::end() const KERBAL_NOEXCEPT
+			typename fl_type_only<T>::const_iterator
+			fl_type_only<T>::end() const KERBAL_NOEXCEPT
 			{
 				return const_iterator(NULL);
 			}
 
-			template <typename Tp>
+			template <typename T>
 			KERBAL_CONSTEXPR14
-			typename fl_type_only<Tp>::const_iterator
-			fl_type_only<Tp>::cend() const KERBAL_NOEXCEPT
+			typename fl_type_only<T>::const_iterator
+			fl_type_only<T>::cend() const KERBAL_NOEXCEPT
 			{
 				return const_iterator(NULL);
 			}
 
-			template <typename Tp>
+			template <typename T>
 			KERBAL_CONSTEXPR14
-			typename fl_type_only<Tp>::iterator
-			fl_type_only<Tp>::nth(size_type index) KERBAL_NOEXCEPT
+			typename fl_type_only<T>::iterator
+			fl_type_only<T>::nth(size_type index) KERBAL_NOEXCEPT
 			{
 				return kerbal::iterator::next(this->begin(), index);
 			}
 
-			template <typename Tp>
+			template <typename T>
 			KERBAL_CONSTEXPR14
-			typename fl_type_only<Tp>::const_iterator
-			fl_type_only<Tp>::nth(size_type index) const KERBAL_NOEXCEPT
+			typename fl_type_only<T>::const_iterator
+			fl_type_only<T>::nth(size_type index) const KERBAL_NOEXCEPT
 			{
 				return kerbal::iterator::next(this->cbegin(), index);
 			}
 
-			template <typename Tp>
+			template <typename T>
 			KERBAL_CONSTEXPR14
-			typename fl_type_only<Tp>::size_type
-			fl_type_only<Tp>::index_of(iterator it) KERBAL_NOEXCEPT
+			typename fl_type_only<T>::size_type
+			fl_type_only<T>::index_of(iterator it) KERBAL_NOEXCEPT
 			{
 				return kerbal::iterator::distance(this->begin(), it);
 			}
 
-			template <typename Tp>
+			template <typename T>
 			KERBAL_CONSTEXPR14
-			typename fl_type_only<Tp>::size_type
-			fl_type_only<Tp>::index_of(const_iterator it) const KERBAL_NOEXCEPT
+			typename fl_type_only<T>::size_type
+			fl_type_only<T>::index_of(const_iterator it) const KERBAL_NOEXCEPT
 			{
 				return kerbal::iterator::distance(this->cbegin(), it);
 			}
@@ -652,18 +652,18 @@ namespace kerbal
 		//===================
 		// element access
 
-			template <typename Tp>
+			template <typename T>
 			KERBAL_CONSTEXPR14
-			typename fl_type_only<Tp>::reference
-			fl_type_only<Tp>::front() KERBAL_NOEXCEPT
+			typename fl_type_only<T>::reference
+			fl_type_only<T>::front() KERBAL_NOEXCEPT
 			{
 				return node::reinterpret_as(this->k_head.next)->member();
 			}
 
-			template <typename Tp>
+			template <typename T>
 			KERBAL_CONSTEXPR14
-			typename fl_type_only<Tp>::const_reference
-			fl_type_only<Tp>::front() const KERBAL_NOEXCEPT
+			typename fl_type_only<T>::const_reference
+			fl_type_only<T>::front() const KERBAL_NOEXCEPT
 			{
 				return node::reinterpret_as(this->k_head.next)->member();
 			}
@@ -672,20 +672,20 @@ namespace kerbal
 		//===================
 		// insert
 
-			template <typename Tp>
+			template <typename T>
 			template <typename NodeAllocator>
 			KERBAL_CONSTEXPR20
-			void fl_type_only<Tp>::k_push_front_using_allocator(NodeAllocator & alloc, const_reference val)
+			void fl_type_only<T>::k_push_front_using_allocator(NodeAllocator & alloc, const_reference val)
 			{
 				this->k_emplace_front_using_allocator(alloc, val);
 			}
 
 #		if __cplusplus >= 201103L
 
-			template <typename Tp>
+			template <typename T>
 			template <typename NodeAllocator>
 			KERBAL_CONSTEXPR20
-			void fl_type_only<Tp>::k_push_front_using_allocator(NodeAllocator & alloc, rvalue_reference val)
+			void fl_type_only<T>::k_push_front_using_allocator(NodeAllocator & alloc, rvalue_reference val)
 			{
 				this->k_emplace_front_using_allocator(alloc, kerbal::compatibility::move(val));
 			}
@@ -694,11 +694,11 @@ namespace kerbal
 
 #		if __cplusplus >= 201103L
 
-			template <typename Tp>
+			template <typename T>
 			template <typename NodeAllocator, typename ... Args>
 			KERBAL_CONSTEXPR20
-			typename fl_type_only<Tp>::reference
-			fl_type_only<Tp>::k_emplace_front_using_allocator(NodeAllocator & alloc, Args&& ... args)
+			typename fl_type_only<T>::reference
+			fl_type_only<T>::k_emplace_front_using_allocator(NodeAllocator & alloc, Args&& ... args)
 			{
 				node *p = k_build_new_node(alloc, kerbal::utility::forward<Args>(args)...);
 				fl_type_unrelated::k_hook_node_after(this->basic_cbefore_begin(), p);
@@ -713,10 +713,10 @@ namespace kerbal
 #		define ARGS_DECL(i) const KERBAL_MACRO_CONCAT(Arg, i) & KERBAL_MACRO_CONCAT(arg, i)
 #		define ARGS_USE(i) KERBAL_MACRO_CONCAT(arg, i)
 #		define FBODY(i) \
-			template <typename Tp> \
+			template <typename T> \
 			template <typename NodeAllocator KERBAL_OPT_PPEXPAND_WITH_COMMA_N(LEFT_JOIN_COMMA, EMPTY, TARGS_DECL, i)> \
-			typename fl_type_only<Tp>::reference \
-			fl_type_only<Tp>::k_emplace_front_using_allocator(NodeAllocator & alloc KERBAL_OPT_PPEXPAND_WITH_COMMA_N(LEFT_JOIN_COMMA, EMPTY, ARGS_DECL, i)) \
+			typename fl_type_only<T>::reference \
+			fl_type_only<T>::k_emplace_front_using_allocator(NodeAllocator & alloc KERBAL_OPT_PPEXPAND_WITH_COMMA_N(LEFT_JOIN_COMMA, EMPTY, ARGS_DECL, i)) \
 			{ \
 				node *p = k_build_new_node(alloc KERBAL_OPT_PPEXPAND_WITH_COMMA_N(LEFT_JOIN_COMMA, EMPTY, ARGS_USE, i)); \
 				fl_type_unrelated::k_hook_node_after(this->basic_cbefore_begin(), p); \
@@ -735,53 +735,53 @@ namespace kerbal
 
 #		endif
 
-			template <typename Tp>
+			template <typename T>
 			template <typename NodeAllocator>
 			KERBAL_CONSTEXPR20
-			typename fl_type_only<Tp>::iterator
-			fl_type_only<Tp>::k_insert_after_using_allocator(NodeAllocator & alloc, const_iterator pos, const_reference val)
+			typename fl_type_only<T>::iterator
+			fl_type_only<T>::k_insert_after_using_allocator(NodeAllocator & alloc, const_iterator pos, const_reference val)
 			{
 				return k_emplace_after_using_allocator(alloc, pos, val);
 			}
 
-			template <typename Tp>
+			template <typename T>
 			template <typename NodeAllocator>
 			KERBAL_CONSTEXPR20
-			typename fl_type_only<Tp>::iterator
-			fl_type_only<Tp>::k_insert_after_using_allocator(NodeAllocator & alloc, const_iterator pos, size_type n, const_reference val)
+			typename fl_type_only<T>::iterator
+			fl_type_only<T>::k_insert_after_using_allocator(NodeAllocator & alloc, const_iterator pos, size_type n, const_reference val)
 			{
 				if (n == 0) {
 					return pos.cast_to_mutable();
 				}
-				sl_node_chain<Tp> chain(k_build_n_new_nodes_unguarded(alloc, n, val));
+				sl_node_chain<T> chain(k_build_n_new_nodes_unguarded(alloc, n, val));
 				fl_type_unrelated::k_hook_node_after(pos, chain.start, chain.back);
 				return iterator(chain.back);
 			}
 
-			template <typename Tp>
+			template <typename T>
 			template <typename NodeAllocator, typename InputIterator>
 			KERBAL_CONSTEXPR20
 			typename kerbal::type_traits::enable_if<
 					kerbal::iterator::is_input_compatible_iterator<InputIterator>::value,
-					typename fl_type_only<Tp>::iterator
+					typename fl_type_only<T>::iterator
 			>::type
-			fl_type_only<Tp>::k_insert_after_using_allocator(NodeAllocator & alloc, const_iterator pos, InputIterator first, InputIterator last)
+			fl_type_only<T>::k_insert_after_using_allocator(NodeAllocator & alloc, const_iterator pos, InputIterator first, InputIterator last)
 			{
 				if (first == last) {
 					return pos.cast_to_mutable();
 				}
-				sl_node_chain<Tp> chain(k_build_new_nodes_range_unguarded(alloc, first, last));
+				sl_node_chain<T> chain(k_build_new_nodes_range_unguarded(alloc, first, last));
 				fl_type_unrelated::k_hook_node_after(pos, chain.start, chain.back);
 				return iterator(chain.back);
 			}
 
 #		if __cplusplus >= 201103L
 
-			template <typename Tp>
+			template <typename T>
 			template <typename NodeAllocator>
 			KERBAL_CONSTEXPR20
-			typename fl_type_only<Tp>::iterator
-			fl_type_only<Tp>::k_insert_after_using_allocator(NodeAllocator & alloc, const_iterator pos, rvalue_reference val)
+			typename fl_type_only<T>::iterator
+			fl_type_only<T>::k_insert_after_using_allocator(NodeAllocator & alloc, const_iterator pos, rvalue_reference val)
 			{
 				return k_emplace_after_using_allocator(alloc, pos, kerbal::compatibility::move(val));
 			}
@@ -790,11 +790,11 @@ namespace kerbal
 
 #		if __cplusplus >= 201103L
 
-			template <typename Tp>
+			template <typename T>
 			template <typename NodeAllocator, typename ... Args>
 			KERBAL_CONSTEXPR20
-			typename fl_type_only<Tp>::iterator
-			fl_type_only<Tp>::k_emplace_after_using_allocator(NodeAllocator & alloc, const_iterator pos, Args&& ... args)
+			typename fl_type_only<T>::iterator
+			fl_type_only<T>::k_emplace_after_using_allocator(NodeAllocator & alloc, const_iterator pos, Args&& ... args)
 			{
 				node *p = k_build_new_node(alloc, kerbal::utility::forward<Args>(args)...);
 				fl_type_unrelated::k_hook_node_after(pos, p);
@@ -809,10 +809,10 @@ namespace kerbal
 #		define ARGS_DECL(i) const KERBAL_MACRO_CONCAT(Arg, i) & KERBAL_MACRO_CONCAT(arg, i)
 #		define ARGS_USE(i) KERBAL_MACRO_CONCAT(arg, i)
 #		define FBODY(i) \
-			template <typename Tp> \
+			template <typename T> \
 			template <typename NodeAllocator KERBAL_OPT_PPEXPAND_WITH_COMMA_N(LEFT_JOIN_COMMA, EMPTY, TARGS_DECL, i)> \
-			typename fl_type_only<Tp>::iterator \
-			fl_type_only<Tp>::k_emplace_after_using_allocator(NodeAllocator & alloc, const_iterator pos KERBAL_OPT_PPEXPAND_WITH_COMMA_N(LEFT_JOIN_COMMA, EMPTY, ARGS_DECL, i)) \
+			typename fl_type_only<T>::iterator \
+			fl_type_only<T>::k_emplace_after_using_allocator(NodeAllocator & alloc, const_iterator pos KERBAL_OPT_PPEXPAND_WITH_COMMA_N(LEFT_JOIN_COMMA, EMPTY, ARGS_DECL, i)) \
 			{ \
 				node *p = k_build_new_node(alloc KERBAL_OPT_PPEXPAND_WITH_COMMA_N(LEFT_JOIN_COMMA, EMPTY, ARGS_USE, i)); \
 				fl_type_unrelated::k_hook_node_after(pos, p); \
@@ -835,19 +835,19 @@ namespace kerbal
 		//===================
 		// erase
 
-			template <typename Tp>
+			template <typename T>
 			template <typename NodeAllocator>
 			KERBAL_CONSTEXPR20
-			void fl_type_only<Tp>::k_pop_front_using_allocator(NodeAllocator & alloc)
+			void fl_type_only<T>::k_pop_front_using_allocator(NodeAllocator & alloc)
 			{
 				k_erase_after_using_allocator(alloc, this->cbefore_begin());
 			}
 
-			template <typename Tp>
+			template <typename T>
 			template <typename NodeAllocator>
 			KERBAL_CONSTEXPR20
-			typename fl_type_only<Tp>::iterator
-			fl_type_only<Tp>::k_erase_after_using_allocator(NodeAllocator & alloc, const_iterator pos)
+			typename fl_type_only<T>::iterator
+			fl_type_only<T>::k_erase_after_using_allocator(NodeAllocator & alloc, const_iterator pos)
 			{
 				iterator pos_mut(pos.cast_to_mutable());
 				node_base * p = fl_type_unrelated::k_unhook_node_after(pos_mut);
@@ -855,11 +855,11 @@ namespace kerbal
 				return ++pos_mut;
 			}
 
-			template <typename Tp>
+			template <typename T>
 			template <typename NodeAllocator>
 			KERBAL_CONSTEXPR20
-			typename fl_type_only<Tp>::iterator
-			fl_type_only<Tp>::k_erase_after_using_allocator(NodeAllocator & alloc, const_iterator first, const_iterator last)
+			typename fl_type_only<T>::iterator
+			fl_type_only<T>::k_erase_after_using_allocator(NodeAllocator & alloc, const_iterator first, const_iterator last)
 			{
 				iterator first_mut(first.cast_to_mutable());
 				iterator last_mut(last.cast_to_mutable());
@@ -871,10 +871,10 @@ namespace kerbal
 				return ++first_mut;
 			}
 
-			template <typename Tp>
+			template <typename T>
 			template <typename NodeAllocator>
 			KERBAL_CONSTEXPR20
-			void fl_type_only<Tp>::k_clear_using_allocator(NodeAllocator & alloc)
+			void fl_type_only<T>::k_clear_using_allocator(NodeAllocator & alloc)
 					KERBAL_CONDITIONAL_NOEXCEPT(
 							noexcept(kerbal::utility::declthis<fl_type_only>()->k_consecutive_destroy_node(
 									alloc,
@@ -891,10 +891,10 @@ namespace kerbal
 		//===================
 		// operation
 
-			template <typename Tp>
+			template <typename T>
 			template <typename NodeAllocator>
 			KERBAL_CONSTEXPR20
-			void fl_type_only<Tp>::k_resize_using_allocator(NodeAllocator & alloc, size_type count)
+			void fl_type_only<T>::k_resize_using_allocator(NodeAllocator & alloc, size_type count)
 			{
 				const_iterator before_it(this->before_begin());
 				iterator it(this->begin());
@@ -906,7 +906,7 @@ namespace kerbal
 						++it;
 					} else {
 						// pre-condition: count != 0
-						sl_node_chain<Tp> chain(k_build_n_new_nodes_unguarded(alloc, count));
+						sl_node_chain<T> chain(k_build_n_new_nodes_unguarded(alloc, count));
 						fl_type_unrelated::k_hook_node_after(before_it, chain.start, chain.back);
 						return;
 					}
@@ -914,10 +914,10 @@ namespace kerbal
 				k_erase_after_using_allocator(alloc, before_it, cend);
 			}
 
-			template <typename Tp>
+			template <typename T>
 			template <typename NodeAllocator>
 			KERBAL_CONSTEXPR20
-			void fl_type_only<Tp>::k_resize_using_allocator(NodeAllocator & alloc, size_type count, const_reference value)
+			void fl_type_only<T>::k_resize_using_allocator(NodeAllocator & alloc, size_type count, const_reference value)
 			{
 				const_iterator before_it(this->before_begin());
 				iterator it(this->begin());
@@ -929,7 +929,7 @@ namespace kerbal
 						++it;
 					} else {
 						// pre-condition: count != 0
-						sl_node_chain<Tp> chain(k_build_n_new_nodes_unguarded(alloc, count, value));
+						sl_node_chain<T> chain(k_build_n_new_nodes_unguarded(alloc, count, value));
 						fl_type_unrelated::k_hook_node_after(before_it, chain.start, chain.back);
 						return;
 					}
@@ -937,24 +937,24 @@ namespace kerbal
 				k_erase_after_using_allocator(alloc, before_it, cend);
 			}
 
-			template <typename Tp>
+			template <typename T>
 			KERBAL_CONSTEXPR14
-			void fl_type_only<Tp>::k_iter_swap_after(const_iterator a, const_iterator b) KERBAL_NOEXCEPT
+			void fl_type_only<T>::k_iter_swap_after(const_iterator a, const_iterator b) KERBAL_NOEXCEPT
 			{
 				fl_type_unrelated::k_iter_swap_after(a, b);
 			}
 
-			template <typename Tp>
+			template <typename T>
 			KERBAL_CONSTEXPR14
-			void fl_type_only<Tp>::k_reverse_after(const_iterator first, const_iterator last) KERBAL_NOEXCEPT
+			void fl_type_only<T>::k_reverse_after(const_iterator first, const_iterator last) KERBAL_NOEXCEPT
 			{
 				fl_type_unrelated::k_reverse_after(first, last);
 			}
 
-			template <typename Tp>
+			template <typename T>
 			template <typename BinaryPredict>
 			KERBAL_CONSTEXPR14
-			void fl_type_only<Tp>::k_merge_impl(fl_type_only & other, BinaryPredict cmp, MERGE_VER_NOTHROW) KERBAL_NOEXCEPT
+			void fl_type_only<T>::k_merge_impl(fl_type_only & other, BinaryPredict cmp, MERGE_VER_NOTHROW) KERBAL_NOEXCEPT
 			{
 				const_iterator it_other(other.cbegin());
 				const_iterator it_this_before(this->cbefore_begin());
@@ -980,10 +980,10 @@ namespace kerbal
 
 #		if KERBAL_HAS_EXCEPTIONS_SUPPORT
 
-			template <typename Tp>
+			template <typename T>
 			template <typename BinaryPredict>
 			KERBAL_CONSTEXPR20
-			void fl_type_only<Tp>::k_merge_impl(fl_type_only & other, BinaryPredict cmp, MERGE_VER_MAY_THROW)
+			void fl_type_only<T>::k_merge_impl(fl_type_only & other, BinaryPredict cmp, MERGE_VER_MAY_THROW)
 			{
 				const_iterator it_other(other.cbegin());
 				const_iterator it_this_before(this->cbefore_begin());
@@ -1014,10 +1014,10 @@ namespace kerbal
 
 #		endif
 
-			template <typename Tp>
+			template <typename T>
 			template <typename BinaryPredict>
 			KERBAL_CONSTEXPR14
-			void fl_type_only<Tp>::k_merge(fl_type_only & other, BinaryPredict cmp)
+			void fl_type_only<T>::k_merge(fl_type_only & other, BinaryPredict cmp)
 			{
 
 #		if KERBAL_HAS_EXCEPTIONS_SUPPORT
@@ -1043,18 +1043,18 @@ namespace kerbal
 
 			}
 
-			template <typename Tp>
+			template <typename T>
 			KERBAL_CONSTEXPR14
-			void fl_type_only<Tp>::k_merge(fl_type_only & other)
+			void fl_type_only<T>::k_merge(fl_type_only & other)
 			{
 				this->k_merge(other, kerbal::compare::less<value_type>());
 			}
 
-			template <typename Tp>
+			template <typename T>
 			template <typename BinaryPredict>
 			KERBAL_CONSTEXPR14
-			typename fl_type_only<Tp>::const_iterator
-			fl_type_only<Tp>::k_merge_sort_merge_after_impl(const_iterator before_first, const_iterator before_mid, const_iterator before_last, BinaryPredict cmp, MSM_VER_NOTHROW)
+			typename fl_type_only<T>::const_iterator
+			fl_type_only<T>::k_merge_sort_merge_after_impl(const_iterator before_first, const_iterator before_mid, const_iterator before_last, BinaryPredict cmp, MSM_VER_NOTHROW)
 			{
 				const_iterator mid(before_mid); ++mid;
 				const_iterator last(before_last); ++last;
@@ -1082,11 +1082,11 @@ namespace kerbal
 
 #		if KERBAL_HAS_EXCEPTIONS_SUPPORT
 
-			template <typename Tp>
+			template <typename T>
 			template <typename BinaryPredict>
 			KERBAL_CONSTEXPR20
-			typename fl_type_only<Tp>::const_iterator
-			fl_type_only<Tp>::k_merge_sort_merge_after_impl(const_iterator before_first, const_iterator before_mid, const_iterator before_last, BinaryPredict cmp, MSM_VER_MAY_THROW)
+			typename fl_type_only<T>::const_iterator
+			fl_type_only<T>::k_merge_sort_merge_after_impl(const_iterator before_first, const_iterator before_mid, const_iterator before_last, BinaryPredict cmp, MSM_VER_MAY_THROW)
 			{
 				const_iterator mid(before_mid); ++mid;
 				const_iterator last(before_last); ++last;
@@ -1119,11 +1119,11 @@ namespace kerbal
 
 #		endif
 
-			template <typename Tp>
+			template <typename T>
 			template <typename BinaryPredict>
 			KERBAL_CONSTEXPR14
-			typename fl_type_only<Tp>::const_iterator
-			fl_type_only<Tp>::k_merge_sort_merge_after(const_iterator before_first, const_iterator before_mid, const_iterator before_last, BinaryPredict cmp)
+			typename fl_type_only<T>::const_iterator
+			fl_type_only<T>::k_merge_sort_merge_after(const_iterator before_first, const_iterator before_mid, const_iterator before_last, BinaryPredict cmp)
 			{
 
 #		if KERBAL_HAS_EXCEPTIONS_SUPPORT
@@ -1149,11 +1149,11 @@ namespace kerbal
 
 			}
 
-			template <typename Tp>
+			template <typename T>
 			template <typename BinaryPredict>
 			KERBAL_CONSTEXPR14
-			typename fl_type_only<Tp>::const_iterator
-			fl_type_only<Tp>::k_merge_sort_n_after(const_iterator before_first, size_type n, BinaryPredict cmp)
+			typename fl_type_only<T>::const_iterator
+			fl_type_only<T>::k_merge_sort_n_after(const_iterator before_first, size_type n, BinaryPredict cmp)
 			{
 				if (n == 0) {
 					return before_first;
@@ -1184,49 +1184,49 @@ namespace kerbal
 				return k_merge_sort_merge_after(before_first, before_mid, before_last, cmp);
 			}
 
-			template <typename Tp>
+			template <typename T>
 			template <typename BinaryPredict>
 			KERBAL_CONSTEXPR14
-			void fl_type_only<Tp>::k_merge_sort_after(const_iterator first, const_iterator last, BinaryPredict cmp)
+			void fl_type_only<T>::k_merge_sort_after(const_iterator first, const_iterator last, BinaryPredict cmp)
 			{
 				k_merge_sort_n_after(first, kerbal::iterator::distance(first, last) - 1, cmp);
 			}
 
-			template <typename Tp>
+			template <typename T>
 			template <typename BinaryPredict>
 			KERBAL_CONSTEXPR14
-			void fl_type_only<Tp>::k_sort_after(const_iterator first, const_iterator last, BinaryPredict cmp)
+			void fl_type_only<T>::k_sort_after(const_iterator first, const_iterator last, BinaryPredict cmp)
 			{
 				k_merge_sort_after(first, last, cmp);
 			}
 
-			template <typename Tp>
+			template <typename T>
 			KERBAL_CONSTEXPR14
-			void fl_type_only<Tp>::k_sort_after(const_iterator first, const_iterator last)
+			void fl_type_only<T>::k_sort_after(const_iterator first, const_iterator last)
 			{
 				k_sort_after(first, last, kerbal::compare::less<value_type>());
 			}
 
-			template <typename Tp>
+			template <typename T>
 			template <typename BinaryPredict>
 			KERBAL_CONSTEXPR14
-			void fl_type_only<Tp>::k_sort(BinaryPredict cmp)
+			void fl_type_only<T>::k_sort(BinaryPredict cmp)
 			{
 				k_sort_after(this->cbefore_begin(), this->cend(), cmp);
 			}
 
-			template <typename Tp>
+			template <typename T>
 			KERBAL_CONSTEXPR14
-			void fl_type_only<Tp>::k_sort()
+			void fl_type_only<T>::k_sort()
 			{
 				k_sort(kerbal::compare::less<value_type>());
 			}
 
-			template <typename Tp>
+			template <typename T>
 			template <typename NodeAllocator, typename UnaryPredicate>
 			KERBAL_CONSTEXPR20
-			typename fl_type_only<Tp>::size_type
-			fl_type_only<Tp>::k_remove_after_if_using_allocator(NodeAllocator & alloc, const_iterator first, const_iterator last, UnaryPredicate predicate)
+			typename fl_type_only<T>::size_type
+			fl_type_only<T>::k_remove_after_if_using_allocator(NodeAllocator & alloc, const_iterator first, const_iterator last, UnaryPredicate predicate)
 			{
 				size_type cnt = 0;
 				const_iterator before_first(first);
@@ -1244,38 +1244,38 @@ namespace kerbal
 				return cnt;
 			}
 
-			template <typename Tp>
+			template <typename T>
 			template <typename NodeAllocator, typename UnaryPredicate>
 			KERBAL_CONSTEXPR20
-			typename fl_type_only<Tp>::size_type
-			fl_type_only<Tp>::k_remove_if_using_allocator(NodeAllocator & alloc, UnaryPredicate predicate)
+			typename fl_type_only<T>::size_type
+			fl_type_only<T>::k_remove_if_using_allocator(NodeAllocator & alloc, UnaryPredicate predicate)
 			{
 				return k_remove_after_if_using_allocator(alloc, this->cbefore_begin(), this->cend(), predicate);
 			}
 
-			template <typename Tp>
+			template <typename T>
 			template <typename NodeAllocator>
 			KERBAL_CONSTEXPR20
-			typename fl_type_only<Tp>::size_type
-			fl_type_only<Tp>::k_remove_after_using_allocator(NodeAllocator & alloc, const_iterator first, const_iterator last, const_reference val)
+			typename fl_type_only<T>::size_type
+			fl_type_only<T>::k_remove_after_using_allocator(NodeAllocator & alloc, const_iterator first, const_iterator last, const_reference val)
 			{
 				return k_remove_after_if_using_allocator(alloc, first, last, remove_predict(val));
 			}
 
-			template <typename Tp>
+			template <typename T>
 			template <typename NodeAllocator>
 			KERBAL_CONSTEXPR20
-			typename fl_type_only<Tp>::size_type
-			fl_type_only<Tp>::k_remove_using_allocator(NodeAllocator & alloc, const_reference val)
+			typename fl_type_only<T>::size_type
+			fl_type_only<T>::k_remove_using_allocator(NodeAllocator & alloc, const_reference val)
 			{
 				return k_remove_after_using_allocator(alloc, this->cbefore_begin(), this->cend(), val);
 			}
 
-			template <typename Tp>
+			template <typename T>
 			template <typename NodeAllocator, typename BinaryPredict>
 			KERBAL_CONSTEXPR20
-			typename fl_type_only<Tp>::size_type
-			fl_type_only<Tp>::k_unique_using_allocator(NodeAllocator & alloc, const_iterator first, const_iterator last, BinaryPredict equal_to)
+			typename fl_type_only<T>::size_type
+			fl_type_only<T>::k_unique_using_allocator(NodeAllocator & alloc, const_iterator first, const_iterator last, BinaryPredict equal_to)
 			{
 				size_type cnt = 0;
 				if (first != last) {
@@ -1294,29 +1294,29 @@ namespace kerbal
 				return cnt;
 			}
 
-			template <typename Tp>
+			template <typename T>
 			template <typename NodeAllocator>
 			KERBAL_CONSTEXPR20
-			typename fl_type_only<Tp>::size_type
-			fl_type_only<Tp>::k_unique_using_allocator(NodeAllocator & alloc, const_iterator first, const_iterator last)
+			typename fl_type_only<T>::size_type
+			fl_type_only<T>::k_unique_using_allocator(NodeAllocator & alloc, const_iterator first, const_iterator last)
 			{
 				return k_unique_using_allocator(alloc, first, last, kerbal::compare::equal_to<value_type>());
 			}
 
-			template <typename Tp>
+			template <typename T>
 			template <typename NodeAllocator, typename BinaryPredict>
 			KERBAL_CONSTEXPR20
-			typename fl_type_only<Tp>::size_type
-			fl_type_only<Tp>::k_unique_using_allocator(NodeAllocator & alloc, BinaryPredict equal_to)
+			typename fl_type_only<T>::size_type
+			fl_type_only<T>::k_unique_using_allocator(NodeAllocator & alloc, BinaryPredict equal_to)
 			{
 				return k_unique_using_allocator(alloc, this->cbegin(), this->cend(), equal_to);
 			}
 
-			template <typename Tp>
+			template <typename T>
 			template <typename NodeAllocator>
 			KERBAL_CONSTEXPR20
-			typename fl_type_only<Tp>::size_type
-			fl_type_only<Tp>::k_unique_using_allocator(NodeAllocator & alloc)
+			typename fl_type_only<T>::size_type
+			fl_type_only<T>::k_unique_using_allocator(NodeAllocator & alloc)
 			{
 				return this->k_unique_using_allocator(alloc, kerbal::compare::equal_to<value_type>());
 			}
@@ -1329,14 +1329,14 @@ namespace kerbal
 
 #		if KERBAL_HAS_EXCEPTIONS_SUPPORT
 
-			template <typename Tp>
+			template <typename T>
 			template <bool nothrow_while_construct, typename NodeAllocator, typename ... Args>
 			KERBAL_CONSTEXPR20
 			typename kerbal::type_traits::enable_if<
 					!nothrow_while_construct,
-					typename fl_type_only<Tp>::node*
+					typename fl_type_only<T>::node*
 			>::type
-			fl_type_only<Tp>::k_build_new_node_impl(NodeAllocator & alloc, Args&& ... args)
+			fl_type_only<T>::k_build_new_node_impl(NodeAllocator & alloc, Args&& ... args)
 			{
 				typedef kerbal::memory::allocator_traits<NodeAllocator> node_allocator_traits;
 				node * p = node_allocator_traits::allocate_one(alloc);
@@ -1349,14 +1349,14 @@ namespace kerbal
 				return p;
 			}
 
-			template <typename Tp>
+			template <typename T>
 			template <bool nothrow_while_construct, typename NodeAllocator, typename ... Args>
 			KERBAL_CONSTEXPR20
 			typename kerbal::type_traits::enable_if<
 					nothrow_while_construct,
-					typename fl_type_only<Tp>::node*
+					typename fl_type_only<T>::node*
 			>::type
-			fl_type_only<Tp>::k_build_new_node_impl(NodeAllocator & alloc, Args&& ... args)
+			fl_type_only<T>::k_build_new_node_impl(NodeAllocator & alloc, Args&& ... args)
 					KERBAL_CONDITIONAL_NOEXCEPT(
 							noexcept(kerbal::memory::allocator_traits<NodeAllocator>::allocate_one(alloc))
 					)
@@ -1367,11 +1367,11 @@ namespace kerbal
 				return p;
 			}
 
-			template <typename Tp>
+			template <typename T>
 			template <typename NodeAllocator, typename ... Args>
 			KERBAL_CONSTEXPR20
-			typename fl_type_only<Tp>::node*
-			fl_type_only<Tp>::k_build_new_node(NodeAllocator & alloc, Args&& ... args)
+			typename fl_type_only<T>::node*
+			fl_type_only<T>::k_build_new_node(NodeAllocator & alloc, Args&& ... args)
 			{
 				typedef kerbal::memory::allocator_traits<NodeAllocator> node_allocator_traits;
 				typedef
@@ -1389,11 +1389,11 @@ namespace kerbal
 
 #		else // KERBAL_HAS_EXCEPTIONS_SUPPORT
 
-			template <typename Tp>
+			template <typename T>
 			template <typename NodeAllocator, typename ... Args>
 			KERBAL_CONSTEXPR20
-			typename fl_type_only<Tp>::node*
-			fl_type_only<Tp>::k_build_new_node(NodeAllocator & alloc, Args&& ... args)
+			typename fl_type_only<T>::node*
+			fl_type_only<T>::k_build_new_node(NodeAllocator & alloc, Args&& ... args)
 			{
 				typedef kerbal::memory::allocator_traits<NodeAllocator> node_allocator_traits;
 				node * p = node_allocator_traits::allocate_one(alloc);
@@ -1415,10 +1415,10 @@ namespace kerbal
 #		define ARGS_USE(i) KERBAL_MACRO_CONCAT(arg, i)
 #	if KERBAL_HAS_EXCEPTIONS_SUPPORT
 #		define FBODY(i) \
-			template <typename Tp> \
+			template <typename T> \
 			template <typename NodeAllocator KERBAL_OPT_PPEXPAND_WITH_COMMA_N(LEFT_JOIN_COMMA, EMPTY, TARGS_DECL, i)> \
-			typename fl_type_only<Tp>::node* \
-			fl_type_only<Tp>::k_build_new_node(NodeAllocator & alloc KERBAL_OPT_PPEXPAND_WITH_COMMA_N(LEFT_JOIN_COMMA, EMPTY, ARGS_DECL, i)) \
+			typename fl_type_only<T>::node* \
+			fl_type_only<T>::k_build_new_node(NodeAllocator & alloc KERBAL_OPT_PPEXPAND_WITH_COMMA_N(LEFT_JOIN_COMMA, EMPTY, ARGS_DECL, i)) \
 			{ \
 				typedef kerbal::memory::allocator_traits<NodeAllocator> node_allocator_traits; \
 				node * p = node_allocator_traits::allocate_one(alloc); \
@@ -1432,10 +1432,10 @@ namespace kerbal
 			}
 #	else // KERBAL_HAS_EXCEPTIONS_SUPPORT
 #		define FBODY(i) \
-			template <typename Tp> \
+			template <typename T> \
 			template <typename NodeAllocator KERBAL_OPT_PPEXPAND_WITH_COMMA_N(LEFT_JOIN_COMMA, EMPTY, TARGS_DECL, i)> \
-			typename fl_type_only<Tp>::node* \
-			fl_type_only<Tp>::k_build_new_node(NodeAllocator & alloc KERBAL_OPT_PPEXPAND_WITH_COMMA_N(LEFT_JOIN_COMMA, EMPTY, ARGS_DECL, i)) \
+			typename fl_type_only<T>::node* \
+			fl_type_only<T>::k_build_new_node(NodeAllocator & alloc KERBAL_OPT_PPEXPAND_WITH_COMMA_N(LEFT_JOIN_COMMA, EMPTY, ARGS_DECL, i)) \
 			{ \
 				typedef kerbal::memory::allocator_traits<NodeAllocator> node_allocator_traits; \
 				node * p = node_allocator_traits::allocate_one(alloc); \
@@ -1462,11 +1462,11 @@ namespace kerbal
 
 #	if __cplusplus >= 201103L
 
-			template <typename Tp>
+			template <typename T>
 			template <typename NodeAllocator, typename... Args>
 			KERBAL_CONSTEXPR20
-			sl_node_chain<Tp>
-			fl_type_only<Tp>::k_build_n_new_nodes_unguarded(NodeAllocator & alloc, size_type n, Args&& ... args)
+			sl_node_chain<T>
+			fl_type_only<T>::k_build_n_new_nodes_unguarded(NodeAllocator & alloc, size_type n, Args&& ... args)
 			{
 				--n;
 				node * const start = k_build_new_node(alloc, kerbal::utility::forward<Args>(args)...);
@@ -1480,7 +1480,7 @@ namespace kerbal
 						back = new_node;
 						--n;
 					}
-					return sl_node_chain<Tp>(start, back);
+					return sl_node_chain<T>(start, back);
 #		if KERBAL_HAS_EXCEPTIONS_SUPPORT
 				} catch (...) {
 					k_consecutive_destroy_node(alloc, start, NULL);
@@ -1498,10 +1498,10 @@ namespace kerbal
 #		define ARGS_USE(i) KERBAL_MACRO_CONCAT(arg, i)
 #	if KERBAL_HAS_EXCEPTIONS_SUPPORT
 #		define FBODY(i) \
-			template <typename Tp> \
+			template <typename T> \
 			template <typename NodeAllocator KERBAL_OPT_PPEXPAND_WITH_COMMA_N(LEFT_JOIN_COMMA, EMPTY, TARGS_DECL, i)> \
-			sl_node_chain<Tp> \
-			fl_type_only<Tp>::k_build_n_new_nodes_unguarded(NodeAllocator & alloc, size_type n KERBAL_OPT_PPEXPAND_WITH_COMMA_N(LEFT_JOIN_COMMA, EMPTY, ARGS_DECL, i)) \
+			sl_node_chain<T> \
+			fl_type_only<T>::k_build_n_new_nodes_unguarded(NodeAllocator & alloc, size_type n KERBAL_OPT_PPEXPAND_WITH_COMMA_N(LEFT_JOIN_COMMA, EMPTY, ARGS_DECL, i)) \
 			{ \
 				--n; \
 				node * const start = k_build_new_node(alloc KERBAL_OPT_PPEXPAND_WITH_COMMA_N(LEFT_JOIN_COMMA, EMPTY, ARGS_USE, i)); \
@@ -1513,7 +1513,7 @@ namespace kerbal
 						back = new_node; \
 						--n; \
 					} \
-					return sl_node_chain<Tp>(start, back); \
+					return sl_node_chain<T>(start, back); \
 				} catch (...) { \
 					k_consecutive_destroy_node(alloc, start, NULL); \
 					throw; \
@@ -1521,10 +1521,10 @@ namespace kerbal
 			}
 #	else // KERBAL_HAS_EXCEPTIONS_SUPPORT
 #		define FBODY(i) \
-			template <typename Tp> \
+			template <typename T> \
 			template <typename NodeAllocator KERBAL_OPT_PPEXPAND_WITH_COMMA_N(LEFT_JOIN_COMMA, EMPTY, TARGS_DECL, i)> \
-			sl_node_chain<Tp> \
-			fl_type_only<Tp>::k_build_n_new_nodes_unguarded(NodeAllocator & alloc, size_type n KERBAL_OPT_PPEXPAND_WITH_COMMA_N(LEFT_JOIN_COMMA, EMPTY, ARGS_DECL, i)) \
+			sl_node_chain<T> \
+			fl_type_only<T>::k_build_n_new_nodes_unguarded(NodeAllocator & alloc, size_type n KERBAL_OPT_PPEXPAND_WITH_COMMA_N(LEFT_JOIN_COMMA, EMPTY, ARGS_DECL, i)) \
 			{ \
 				--n; \
 				node * const start = k_build_new_node(alloc KERBAL_OPT_PPEXPAND_WITH_COMMA_N(LEFT_JOIN_COMMA, EMPTY, ARGS_USE, i)); \
@@ -1535,7 +1535,7 @@ namespace kerbal
 					back = new_node; \
 					--n; \
 				} \
-				return sl_node_chain<Tp>(start, back); \
+				return sl_node_chain<T>(start, back); \
 			}
 #	endif // KERBAL_HAS_EXCEPTIONS_SUPPORT
 
@@ -1552,14 +1552,14 @@ namespace kerbal
 #	endif
 
 
-			template <typename Tp>
+			template <typename T>
 			template <typename NodeAllocator, typename InputIterator>
 			KERBAL_CONSTEXPR20
 			typename kerbal::type_traits::enable_if<
 					kerbal::iterator::is_input_compatible_iterator<InputIterator>::value,
-					sl_node_chain<Tp>
+					sl_node_chain<T>
 			>::type
-			fl_type_only<Tp>::k_build_new_nodes_range_unguarded(NodeAllocator & alloc, InputIterator first, InputIterator last)
+			fl_type_only<T>::k_build_new_nodes_range_unguarded(NodeAllocator & alloc, InputIterator first, InputIterator last)
 			{
 				node * const start = k_build_new_node(alloc, *first);
 				node * back = start;
@@ -1573,7 +1573,7 @@ namespace kerbal
 						back = new_node;
 						++first;
 					}
-					return sl_node_chain<Tp>(start, back);
+					return sl_node_chain<T>(start, back);
 #			if KERBAL_HAS_EXCEPTIONS_SUPPORT
 				} catch (...) {
 					k_consecutive_destroy_node(alloc, start, NULL);
@@ -1583,10 +1583,10 @@ namespace kerbal
 			}
 
 
-			template <typename Tp>
+			template <typename T>
 			template <typename NodeAllocator>
 			KERBAL_CONSTEXPR20
-			void fl_type_only<Tp>::k_destroy_node(NodeAllocator & alloc, node_base * p_node_base) KERBAL_NOEXCEPT
+			void fl_type_only<T>::k_destroy_node(NodeAllocator & alloc, node_base * p_node_base) KERBAL_NOEXCEPT
 			{
 				typedef kerbal::memory::allocator_traits<NodeAllocator> node_allocator_traits;
 				typedef typename node_allocator_traits::pointer allocator_pointer_type;
@@ -1597,10 +1597,10 @@ namespace kerbal
 				node_allocator_traits::deallocate_one(alloc, p_node_act);
 			}
 
-			template <typename Tp>
+			template <typename T>
 			template <typename NodeAllocator>
 			KERBAL_CONSTEXPR20
-			void fl_type_only<Tp>::k_consecutive_destroy_node_impl(NodeAllocator & alloc, node_base * first, node_base * last, CNSCTV_DES_VER_DEFAULT) KERBAL_NOEXCEPT
+			void fl_type_only<T>::k_consecutive_destroy_node_impl(NodeAllocator & alloc, node_base * first, node_base * last, CNSCTV_DES_VER_DEFAULT) KERBAL_NOEXCEPT
 			{
 				while (first != last) {
 					node_base * next = first->next;
@@ -1609,10 +1609,10 @@ namespace kerbal
 				}
 			}
 
-			template <typename Tp>
+			template <typename T>
 			template <typename NodeAllocator>
 			KERBAL_CONSTEXPR20
-			void fl_type_only<Tp>::k_consecutive_destroy_node_impl(NodeAllocator & alloc, node_base * first, node_base * last, CNSCTV_DES_VER_DESTROY_BUT_NO_DEALLOCATE) KERBAL_NOEXCEPT
+			void fl_type_only<T>::k_consecutive_destroy_node_impl(NodeAllocator & alloc, node_base * first, node_base * last, CNSCTV_DES_VER_DESTROY_BUT_NO_DEALLOCATE) KERBAL_NOEXCEPT
 			{
 				typedef kerbal::memory::allocator_traits<NodeAllocator> node_allocator_traits;
 				typedef typename node_allocator_traits::pointer allocator_pointer_type;
@@ -1626,28 +1626,28 @@ namespace kerbal
 				}
 			}
 
-			template <typename Tp>
+			template <typename T>
 			template <typename NodeAllocator>
 			KERBAL_CONSTEXPR20
-			void fl_type_only<Tp>::k_consecutive_destroy_node_impl(NodeAllocator & /*alloc*/, node_base * /*first*/, node_base * /*last*/, CNSCTV_DES_VER_NO_DESTROY) KERBAL_NOEXCEPT
+			void fl_type_only<T>::k_consecutive_destroy_node_impl(NodeAllocator & /*alloc*/, node_base * /*first*/, node_base * /*last*/, CNSCTV_DES_VER_NO_DESTROY) KERBAL_NOEXCEPT
 			{
 			}
 
-			template <typename Tp>
+			template <typename T>
 			template <typename NodeAllocator>
 			KERBAL_CONSTEXPR20
-			void fl_type_only<Tp>::k_consecutive_destroy_node(NodeAllocator & alloc, node_base * first, node_base * last) KERBAL_NOEXCEPT
+			void fl_type_only<T>::k_consecutive_destroy_node(NodeAllocator & alloc, node_base * first, node_base * last) KERBAL_NOEXCEPT
 			{
 				k_consecutive_destroy_node_impl(alloc, first, last, CNSCTV_DES_VER_DEFAULT());
 			}
 
-			template <typename Tp>
-			template <typename T, typename UpstreamAllocator>
+			template <typename T>
+			template <typename U, typename UpstreamAllocator>
 			KERBAL_CONSTEXPR20
-			void fl_type_only<Tp>::k_consecutive_destroy_node(kerbal::memory::monotonic_allocator<T, UpstreamAllocator> & alloc, node_base * first, node_base * last) KERBAL_NOEXCEPT
+			void fl_type_only<T>::k_consecutive_destroy_node(kerbal::memory::monotonic_allocator<U, UpstreamAllocator> & alloc, node_base * first, node_base * last) KERBAL_NOEXCEPT
 			{
 				typedef typename kerbal::type_traits::conditional<
-					kerbal::type_traits::try_test_is_trivially_destructible<Tp>::IS_TRUE::value,
+					kerbal::type_traits::try_test_is_trivially_destructible<T>::IS_TRUE::value,
 					CNSCTV_DES_VER_NO_DESTROY,
 					CNSCTV_DES_VER_DESTROY_BUT_NO_DEALLOCATE
 				>::type VER;
@@ -1657,10 +1657,10 @@ namespace kerbal
 #		if __cplusplus >= 201703L
 #			if __has_include(<memory_resource>)
 
-			template <typename Tp>
+			template <typename T>
 			template <typename Node>
 			KERBAL_CONSTEXPR20
-			void fl_type_only<Tp>::k_consecutive_destroy_node(std::pmr::polymorphic_allocator<Node> & alloc, node_base * first, node_base * last) KERBAL_NOEXCEPT
+			void fl_type_only<T>::k_consecutive_destroy_node(std::pmr::polymorphic_allocator<Node> & alloc, node_base * first, node_base * last) KERBAL_NOEXCEPT
 			{
 				typedef kerbal::memory::allocator_traits<std::pmr::polymorphic_allocator<Node> > node_allocator_traits;
 				typedef typename node_allocator_traits::value_type real_value_type;

@@ -72,10 +72,10 @@ namespace kerbal
 #	define ARGS_DECL(i) const KERBAL_MACRO_CONCAT(Arg, i) & KERBAL_MACRO_CONCAT(arg, i)
 #	define ARGS_USE(i) KERBAL_MACRO_CONCAT(arg, i)
 #	define FBODY(i) \
-		template <typename Tp KERBAL_OPT_PPEXPAND_WITH_COMMA_N(LEFT_JOIN_COMMA, EMPTY, TARGS_DECL, i)> \
-		Tp * construct_at(Tp * p KERBAL_OPT_PPEXPAND_WITH_COMMA_N(LEFT_JOIN_COMMA, EMPTY, ARGS_DECL, i)) \
+		template <typename T KERBAL_OPT_PPEXPAND_WITH_COMMA_N(LEFT_JOIN_COMMA, EMPTY, TARGS_DECL, i)> \
+		T * construct_at(T * p KERBAL_OPT_PPEXPAND_WITH_COMMA_N(LEFT_JOIN_COMMA, EMPTY, ARGS_DECL, i)) \
 		{ \
-			::new (const_cast<void*>(static_cast<const volatile void*>(p))) Tp (KERBAL_OPT_PPEXPAND_WITH_COMMA_N(REMAINF, EMPTY, ARGS_USE, i)); \
+			::new (const_cast<void*>(static_cast<const volatile void*>(p))) T (KERBAL_OPT_PPEXPAND_WITH_COMMA_N(REMAINF, EMPTY, ARGS_USE, i)); \
 			return p; \
 		}
 
@@ -91,15 +91,15 @@ namespace kerbal
 #	undef FBODY
 
 
-		template <typename Tp, std::size_t N>
-		Tp (* construct_at(Tp (*p) [N])) [N]
+		template <typename T, std::size_t N>
+		T (* construct_at(T (*p) [N])) [N]
 		{
 			kerbal::memory::uninitialized_value_construct(*p, *p + N);
 			return p;
 		}
 
-		template <typename Tp, typename Up, std::size_t N>
-		Tp (* construct_at(Tp (*p) [N], Up (&val) [N])) [N]
+		template <typename T, typename U, std::size_t N>
+		T (* construct_at(T (*p) [N], U (&val) [N])) [N]
 		{
 			kerbal::memory::uninitialized_copy(val + 0, val + N, *p + 0);
 			return p;
@@ -116,57 +116,57 @@ namespace kerbal
 			typedef kerbal::type_traits::integral_constant<int, 0> CONSTRUCT_AT_VER_DEFAULT;
 			typedef kerbal::type_traits::integral_constant<int, 1> CONSTRUCT_AT_VER_TRIVIAL;
 
-			template <typename Tp, typename ... Args>
-			Tp * k_construct_at_impl(CONSTRUCT_AT_VER_DEFAULT, Tp * p, Args&& ... args)
+			template <typename T, typename ... Args>
+			T * k_construct_at_impl(CONSTRUCT_AT_VER_DEFAULT, T * p, Args&& ... args)
 					KERBAL_CONDITIONAL_NOEXCEPT(
 						noexcept(::new (const_cast<void*>(static_cast<const volatile void*>(p)))
-							Tp (kerbal::utility::forward<Args>(args)...))
+							T (kerbal::utility::forward<Args>(args)...))
 					)
 			{
 				return ::new (const_cast<void*>(static_cast<const volatile void*>(p)))
-						Tp (kerbal::utility::forward<Args>(args)...);
+						T (kerbal::utility::forward<Args>(args)...);
 			}
 
-			template <typename Tp, typename ... Args>
+			template <typename T, typename ... Args>
 			KERBAL_CONSTEXPR14
-			Tp * k_construct_at_impl(CONSTRUCT_AT_VER_TRIVIAL, Tp * p, Args&& ... args) KERBAL_NOEXCEPT
+			T * k_construct_at_impl(CONSTRUCT_AT_VER_TRIVIAL, T * p, Args&& ... args) KERBAL_NOEXCEPT
 			{
-				*p = Tp(kerbal::utility::forward<Args>(args)...);
+				*p = T(kerbal::utility::forward<Args>(args)...);
 				return p;
 			}
 
-			template <typename Tp, typename ... Args>
+			template <typename T, typename ... Args>
 			struct construct_at_impl_overload_ver
 			{
 					typedef typename kerbal::type_traits::conditional<
 						kerbal::type_traits::tribool_conjunction<
-							kerbal::type_traits::try_test_is_trivially_constructible<Tp, Args...>,
-							kerbal::type_traits::try_test_is_trivially_move_assignable<Tp>,
-							kerbal::type_traits::try_test_is_trivially_destructible<Tp>
+							kerbal::type_traits::try_test_is_trivially_constructible<T, Args...>,
+							kerbal::type_traits::try_test_is_trivially_move_assignable<T>,
+							kerbal::type_traits::try_test_is_trivially_destructible<T>
 						>::result::IS_TRUE::value,
 						CONSTRUCT_AT_VER_TRIVIAL,
 						CONSTRUCT_AT_VER_DEFAULT
 					>::type type;
 			};
 
-			template <typename Tp, typename ... Args>
+			template <typename T, typename ... Args>
 			KERBAL_CONSTEXPR14
-			Tp * k_construct_at(Tp * p, Args&& ... args)
+			T * k_construct_at(T * p, Args&& ... args)
 					KERBAL_CONDITIONAL_NOEXCEPT(
 						noexcept(k_construct_at_impl(
-							typename construct_at_impl_overload_ver<Tp, Args&&...>::type(),
+							typename construct_at_impl_overload_ver<T, Args&&...>::type(),
 							p, kerbal::utility::forward<Args>(args)...))
 					)
 			{
-				typedef typename construct_at_impl_overload_ver<Tp, Args&&...>::type VER;
+				typedef typename construct_at_impl_overload_ver<T, Args&&...>::type VER;
 				return k_construct_at_impl(VER(), p, kerbal::utility::forward<Args>(args)...);
 			}
 
 #	else
 
-			template <typename Tp, typename ... Args>
+			template <typename T, typename ... Args>
 			KERBAL_CONSTEXPR20
-			Tp * k_construct_at(Tp * p, Args&& ... args)
+			T * k_construct_at(T * p, Args&& ... args)
 					KERBAL_CONDITIONAL_NOEXCEPT(
 						noexcept(std::construct_at(p, kerbal::utility::forward<Args>(args)...))
 					)
@@ -177,27 +177,27 @@ namespace kerbal
 #	endif // C++20
 
 
-			template <typename Tp, std::size_t N>
+			template <typename T, std::size_t N>
 			KERBAL_CONSTEXPR14
-			Tp (* k_construct_at(Tp (*p) [N])) [N]
+			T (* k_construct_at(T (*p) [N])) [N]
 			{
 				kerbal::memory::uninitialized_value_construct(*p, *p + N);
 				return p;
 			}
 
 
-			template <typename Tp, typename Up, std::size_t N>
+			template <typename T, typename U, std::size_t N>
 			KERBAL_CONSTEXPR14
-			Tp (* k_construct_at(Tp (*p) [N], Up (&&val) [N])) [N]
+			T (* k_construct_at(T (*p) [N], U (&&val) [N])) [N]
 			{
 				kerbal::memory::uninitialized_move(val + 0, val + N, *p + 0);
 				return p;
 			}
 
 
-			template <typename Tp, typename Up, std::size_t N>
+			template <typename T, typename U, std::size_t N>
 			KERBAL_CONSTEXPR14
-			Tp (* k_construct_at(Tp (*p) [N], Up (&val) [N])) [N]
+			T (* k_construct_at(T (*p) [N], U (&val) [N])) [N]
 			{
 				kerbal::memory::uninitialized_copy(val + 0, val + N, *p + 0);
 				return p;
@@ -207,9 +207,9 @@ namespace kerbal
 		} // namespace detail
 
 
-		template <typename Tp, typename ... Args>
+		template <typename T, typename ... Args>
 		KERBAL_CONSTEXPR14
-		Tp * construct_at(Tp * p, Args&& ... args)
+		T * construct_at(T * p, Args&& ... args)
 				KERBAL_CONDITIONAL_NOEXCEPT(
 						noexcept(detail::k_construct_at(p, kerbal::utility::forward<Args>(args)...))
 				)
@@ -243,7 +243,7 @@ namespace kerbal
 				try {
 					while (current != last) {
 						iterator remain(current);
-						kerbal::memory::construct_at(&*current); // new (&*current) Tp();
+						kerbal::memory::construct_at(&*current); // new (&*current) T();
 						try {
 							++current;
 						} catch (...) {
@@ -269,7 +269,7 @@ namespace kerbal
 				iterator current(first);
 				try {
 					while (current != last) {
-						kerbal::memory::construct_at(&*current); // new (&*current) Tp ();
+						kerbal::memory::construct_at(&*current); // new (&*current) T ();
 						++current;
 					}
 				} catch (...) {
@@ -285,7 +285,7 @@ namespace kerbal
 			void k_uninitialized_value_construct(ForwardIterator first, ForwardIterator last, UI_VAL_CONSTRUCT_VER_NO_CATCH)
 			{
 				while (first != last) {
-					kerbal::memory::construct_at(&*first); // new (&*first) Tp ();
+					kerbal::memory::construct_at(&*first); // new (&*first) T ();
 					++first;
 				}
 			}
@@ -346,7 +346,7 @@ namespace kerbal
 					while (n > 0) {
 						--n;
 						iterator remain(current);
-						kerbal::memory::construct_at(&*current); // new (&*current) Tp();
+						kerbal::memory::construct_at(&*current); // new (&*current) T();
 						try {
 							++current;
 						} catch (...) {
@@ -374,7 +374,7 @@ namespace kerbal
 				try {
 					while (n > 0) {
 						--n;
-						kerbal::memory::construct_at(&*current); // new (&*current) Tp();
+						kerbal::memory::construct_at(&*current); // new (&*current) T();
 						++current;
 					}
 					return current;
@@ -392,7 +392,7 @@ namespace kerbal
 			{
 				while (n > 0) {
 					--n;
-					kerbal::memory::construct_at(&*first); // new (&*first) Tp ();
+					kerbal::memory::construct_at(&*first); // new (&*first) T ();
 					++first;
 				}
 				return first;
@@ -453,7 +453,7 @@ namespace kerbal
 				try {
 					while (first != last) {
 						iterator remain(current);
-						kerbal::memory::construct_at(&*current, *first); // new (&*current) Tp (*first);
+						kerbal::memory::construct_at(&*current, *first); // new (&*current) T (*first);
 						try {
 							++current;
 						} catch (...) {
@@ -481,7 +481,7 @@ namespace kerbal
 				iterator current(to);
 				try {
 					while (first != last) {
-						kerbal::memory::construct_at(&*current, *first); // new (&*current) Tp (*first);
+						kerbal::memory::construct_at(&*current, *first); // new (&*current) T (*first);
 						++current;
 						++first;
 					}
@@ -499,7 +499,7 @@ namespace kerbal
 			ForwardIterator k_uninitialized_copy(InputIterator first, InputIterator last, ForwardIterator to, UI_CPY_VER_NO_CATCH)
 			{
 				while (first != last) {
-					kerbal::memory::construct_at(&*to, *first); // new (&*to) Tp (*first);
+					kerbal::memory::construct_at(&*to, *first); // new (&*to) T (*first);
 					++to;
 					++first;
 				}
@@ -562,7 +562,7 @@ namespace kerbal
 					while (n > 0) {
 						--n;
 						iterator remain(current);
-						kerbal::memory::construct_at(&*current, *first); // new (&*current) Tp(*first);
+						kerbal::memory::construct_at(&*current, *first); // new (&*current) T(*first);
 						try {
 							++current;
 						} catch (...) {
@@ -591,7 +591,7 @@ namespace kerbal
 				try {
 					while (n > 0) {
 						--n;
-						kerbal::memory::construct_at(&*current, *first); // new (&*current) Tp(*first);
+						kerbal::memory::construct_at(&*current, *first); // new (&*current) T(*first);
 						++current;
 						++first;
 					}
@@ -610,7 +610,7 @@ namespace kerbal
 			{
 				while (n > 0) {
 					--n;
-					kerbal::memory::construct_at(&*to, *first); // new (&*to) Tp (*first);
+					kerbal::memory::construct_at(&*to, *first); // new (&*to) T (*first);
 					++to;
 					++first;
 				}
@@ -672,7 +672,7 @@ namespace kerbal
 				try {
 					while (first != last) {
 						iterator remain(current);
-						kerbal::memory::construct_at(&*current, kerbal::compatibility::to_xvalue(*first)); // new (&*current) Tp (kerbal::compatibility::to_xvalue(*first));
+						kerbal::memory::construct_at(&*current, kerbal::compatibility::to_xvalue(*first)); // new (&*current) T (kerbal::compatibility::to_xvalue(*first));
 						try {
 							++current;
 						} catch (...) {
@@ -700,7 +700,7 @@ namespace kerbal
 				iterator current(to);
 				try {
 					while (first != last) {
-						kerbal::memory::construct_at(&*current, kerbal::compatibility::to_xvalue(*first)); // new (&*current) Tp (kerbal::compatibility::to_xvalue(*first));
+						kerbal::memory::construct_at(&*current, kerbal::compatibility::to_xvalue(*first)); // new (&*current) T (kerbal::compatibility::to_xvalue(*first));
 						++current;
 						++first;
 					}
@@ -718,7 +718,7 @@ namespace kerbal
 			ForwardIterator k_uninitialized_move(InputIterator first, InputIterator last, ForwardIterator to, UI_MOV_VER_NO_CATCH)
 			{
 				while (first != last) {
-					kerbal::memory::construct_at(&*to, kerbal::compatibility::to_xvalue(*first)); // new (&*to) Tp (kerbal::compatibility::to_xvalue(*first));
+					kerbal::memory::construct_at(&*to, kerbal::compatibility::to_xvalue(*first)); // new (&*to) T (kerbal::compatibility::to_xvalue(*first));
 					++to;
 					++first;
 				}
@@ -781,7 +781,7 @@ namespace kerbal
 					while (n > 0) {
 						--n;
 						iterator remain(current);
-						kerbal::memory::construct_at(&*current, kerbal::compatibility::to_xvalue(*first)); // new (&*current) Tp(kerbal::compatibility::to_xvalue(*first));
+						kerbal::memory::construct_at(&*current, kerbal::compatibility::to_xvalue(*first)); // new (&*current) T(kerbal::compatibility::to_xvalue(*first));
 						try {
 							++current;
 						} catch (...) {
@@ -810,7 +810,7 @@ namespace kerbal
 				try {
 					while (n > 0) {
 						--n;
-						kerbal::memory::construct_at(&*current, kerbal::compatibility::to_xvalue(*first)); // new (&*current) Tp(kerbal::compatibility::to_xvalue(*first));
+						kerbal::memory::construct_at(&*current, kerbal::compatibility::to_xvalue(*first)); // new (&*current) T(kerbal::compatibility::to_xvalue(*first));
 						++current;
 						++first;
 					}
@@ -829,7 +829,7 @@ namespace kerbal
 			{
 				while (n > 0) {
 					--n;
-					kerbal::memory::construct_at(&*to, kerbal::compatibility::to_xvalue(*first)); // new (&*to) Tp (kerbal::compatibility::to_xvalue(*first));
+					kerbal::memory::construct_at(&*to, kerbal::compatibility::to_xvalue(*first)); // new (&*to) T (kerbal::compatibility::to_xvalue(*first));
 					++to;
 					++first;
 				}
@@ -891,7 +891,7 @@ namespace kerbal
 				try {
 					while (current != last) {
 						iterator remain(current);
-						kerbal::memory::construct_at(&*current, value); // new (&*current) Tp (value);
+						kerbal::memory::construct_at(&*current, value); // new (&*current) T (value);
 						try {
 							++current;
 						} catch (...) {
@@ -917,7 +917,7 @@ namespace kerbal
 				iterator current(first);
 				try {
 					while (current != last) {
-						kerbal::memory::construct_at(&*current, value); // new (&*current) Tp (value);
+						kerbal::memory::construct_at(&*current, value); // new (&*current) T (value);
 						++current;
 					}
 				} catch (...) {
@@ -933,7 +933,7 @@ namespace kerbal
 			void uninitialized_fill(ForwardIterator first, ForwardIterator last, const T & value, UI_FILL_VER_NO_CATCH)
 			{
 				while (first != last) {
-					kerbal::memory::construct_at(&*first, value); // new (&*first) Tp (value);
+					kerbal::memory::construct_at(&*first, value); // new (&*first) T (value);
 					++first;
 				}
 			}
@@ -994,7 +994,7 @@ namespace kerbal
 					while (n > 0) {
 						--n;
 						iterator remain(current);
-						kerbal::memory::construct_at(&*current, value); // new (&*current) Tp(value);
+						kerbal::memory::construct_at(&*current, value); // new (&*current) T(value);
 						try {
 							++current;
 						} catch (...) {
@@ -1022,7 +1022,7 @@ namespace kerbal
 				try {
 					while (n > 0) {
 						--n;
-						kerbal::memory::construct_at(&*current, value); // new (&*current) Tp(value);
+						kerbal::memory::construct_at(&*current, value); // new (&*current) T(value);
 						++current;
 					}
 					return current;
@@ -1040,7 +1040,7 @@ namespace kerbal
 			{
 				while (n > 0) {
 					--n;
-					kerbal::memory::construct_at(&*first, value); // new (&*first) Tp (value);
+					kerbal::memory::construct_at(&*first, value); // new (&*first) T (value);
 					++first;
 				}
 				return first;

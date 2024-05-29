@@ -27,21 +27,21 @@ namespace kerbal
 	namespace assign
 	{
 
-		template <typename Tp>
+		template <typename T>
 		class assign_list :
-				private kerbal::utility::member_compress_helper<std::allocator<Tp> >
+				private kerbal::utility::member_compress_helper<std::allocator<T> >
 		{
 			private:
-				typedef kerbal::utility::member_compress_helper<std::allocator<Tp> > super;
-				typedef kerbal::container::detail::vector_type_only<Tp> c;
+				typedef kerbal::utility::member_compress_helper<std::allocator<T> > super;
+				typedef kerbal::container::detail::vector_type_only<T> c;
 
 			public:
-				typedef Tp									value_type;
-				typedef Tp&									reference;
-				typedef const Tp&							const_reference;
+				typedef T									value_type;
+				typedef T&									reference;
+				typedef const T&							const_reference;
 				typedef typename c::iterator				iterator;
 				typedef typename c::const_iterator			const_iterator;
-				typedef std::allocator<Tp>					allocator_type;
+				typedef std::allocator<T>					allocator_type;
 
 			private:
 				c v;
@@ -104,10 +104,10 @@ namespace kerbal
 		{
 			public:
 
-				template <typename Tp>
-				assign_list<Tp> operator,(const Tp & val)
+				template <typename T>
+				assign_list<T> operator,(const T & val)
 				{
-					assign_list<Tp> list;
+					assign_list<T> list;
 					list, val;
 					return list;
 				}

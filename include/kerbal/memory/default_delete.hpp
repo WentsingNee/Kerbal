@@ -26,7 +26,7 @@ namespace kerbal
 	namespace memory
 	{
 
-		template <typename Tp>
+		template <typename T>
 		struct default_delete
 		{
 
@@ -42,16 +42,16 @@ namespace kerbal
 
 #	endif
 
-				template <typename Up>
+				template <typename U>
 				KERBAL_CONSTEXPR
-				default_delete(const default_delete<Up> &) KERBAL_NOEXCEPT
+				default_delete(const default_delete<U> &) KERBAL_NOEXCEPT
 				{
 				}
 
 				KERBAL_CONSTEXPR20
-				void operator()(Tp* ptr) const
+				void operator()(T* ptr) const
 						KERBAL_CONDITIONAL_NOEXCEPT(
-							kerbal::type_traits::try_test_is_nothrow_destructible<Tp>::IS_TRUE::value
+							kerbal::type_traits::try_test_is_nothrow_destructible<T>::IS_TRUE::value
 						)
 				{
 					delete ptr;
@@ -59,8 +59,8 @@ namespace kerbal
 
 		};
 
-		template <typename Tp>
-		struct default_delete<Tp[]>
+		template <typename T>
+		struct default_delete<T[]>
 		{
 
 #	if __cplusplus >= 201103L
@@ -75,16 +75,16 @@ namespace kerbal
 
 #	endif
 
-				template <typename Up>
+				template <typename U>
 				KERBAL_CONSTEXPR
-				default_delete(const default_delete<Up[]> &) KERBAL_NOEXCEPT
+				default_delete(const default_delete<U[]> &) KERBAL_NOEXCEPT
 				{
 				}
 
 				KERBAL_CONSTEXPR20
-				void operator()(Tp* ptr) const
+				void operator()(T* ptr) const
 						KERBAL_CONDITIONAL_NOEXCEPT(
-							kerbal::type_traits::try_test_is_nothrow_destructible<Tp>::IS_TRUE::value
+							kerbal::type_traits::try_test_is_nothrow_destructible<T>::IS_TRUE::value
 						)
 				{
 					delete[] ptr;

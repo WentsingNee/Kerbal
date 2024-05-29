@@ -44,14 +44,14 @@ namespace kerbal
 	namespace container
 	{
 
-		template <typename Tp, std::size_t N, typename KeyCompare = kerbal::compare::less<Tp> >
+		template <typename T, std::size_t N, typename KeyCompare = kerbal::compare::less<T> >
 		class static_priority_queue
 		{
 			public:
-				typedef kerbal::container::static_vector<Tp, N>		container_type;
+				typedef kerbal::container::static_vector<T, N>		container_type;
 				typedef KeyCompare									value_compare;
 
-				typedef Tp							value_type;
+				typedef T							value_type;
 				typedef const value_type			const_type;
 				typedef value_type&					reference;
 				typedef const value_type&			const_reference;
@@ -299,7 +299,7 @@ namespace kerbal
 
 				template <std::size_t M>
 				KERBAL_CONSTEXPR14
-				void swap(static_priority_queue<Tp, M> & with)
+				void swap(static_priority_queue<T, M> & with)
 				{
 					c.swap(with);
 					kerbal::algorithm::swap(this->vc, with.vc);
@@ -361,10 +361,10 @@ namespace kerbal
 	namespace algorithm
 	{
 
-		template <typename Tp, std::size_t N, typename KeyCompare>
+		template <typename T, std::size_t N, typename KeyCompare>
 		KERBAL_CONSTEXPR14
-		void swap(kerbal::container::static_priority_queue<Tp, N, KeyCompare> & a,
-				  kerbal::container::static_priority_queue<Tp, N, KeyCompare> & b)
+		void swap(kerbal::container::static_priority_queue<T, N, KeyCompare> & a,
+				  kerbal::container::static_priority_queue<T, N, KeyCompare> & b)
 				KERBAL_CONDITIONAL_NOEXCEPT(noexcept(a.swap(b)))
 		{
 			a.swap(b);
@@ -377,10 +377,10 @@ namespace kerbal
 
 KERBAL_NAMESPACE_STD_BEGIN
 
-	template <typename Tp, std::size_t N, typename KeyCompare>
+	template <typename T, std::size_t N, typename KeyCompare>
 	KERBAL_CONSTEXPR14
-	void swap(kerbal::container::static_priority_queue<Tp, N, KeyCompare> & a,
-			  kerbal::container::static_priority_queue<Tp, N, KeyCompare> & b)
+	void swap(kerbal::container::static_priority_queue<T, N, KeyCompare> & a,
+			  kerbal::container::static_priority_queue<T, N, KeyCompare> & b)
 			KERBAL_CONDITIONAL_NOEXCEPT(noexcept(a.swap(b)))
 	{
 		a.swap(b);

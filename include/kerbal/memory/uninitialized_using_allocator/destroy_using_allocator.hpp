@@ -33,13 +33,13 @@ namespace kerbal
 	//==================
 	// forward declare
 
-		template <typename Allocator, typename Tp>
+		template <typename Allocator, typename T>
 		KERBAL_CONSTEXPR14
-		void destroy_on_using_allocator(Allocator & alloc, Tp & plc);
+		void destroy_on_using_allocator(Allocator & alloc, T & plc);
 
-		template <typename Allocator, typename Tp>
+		template <typename Allocator, typename T>
 		KERBAL_CONSTEXPR14
-		void destroy_at_using_allocator(Allocator & alloc, Tp * p);
+		void destroy_at_using_allocator(Allocator & alloc, T * p);
 
 		template <typename Allocator, typename ForwardIterator>
 		KERBAL_CONSTEXPR14
@@ -65,9 +65,9 @@ namespace kerbal
 		namespace detail
 		{
 
-			template <typename Allocator, typename Tp>
+			template <typename Allocator, typename T>
 			KERBAL_CONSTEXPR14
-			void k_destroy_on_using_allocator(Allocator & alloc, Tp & plc, kerbal::type_traits::true_type)
+			void k_destroy_on_using_allocator(Allocator & alloc, T & plc, kerbal::type_traits::true_type)
 					KERBAL_CONDITIONAL_NOEXCEPT(
 							noexcept(kerbal::memory::allocator_traits<Allocator>::destroy(alloc, &plc))
 					)
@@ -75,9 +75,9 @@ namespace kerbal
 				kerbal::memory::allocator_traits<Allocator>::destroy(alloc, &plc);
 			}
 
-			template <typename Allocator, typename Tp>
+			template <typename Allocator, typename T>
 			KERBAL_CONSTEXPR14
-			void k_destroy_on_using_allocator(Allocator & /*alloc*/, Tp & plc, kerbal::type_traits::false_type)
+			void k_destroy_on_using_allocator(Allocator & /*alloc*/, T & plc, kerbal::type_traits::false_type)
 					KERBAL_CONDITIONAL_NOEXCEPT(
 							noexcept(kerbal::memory::destroy_on(plc))
 					)
@@ -87,16 +87,16 @@ namespace kerbal
 
 		} // namespace detail
 
-		template <typename Allocator, typename Tp>
+		template <typename Allocator, typename T>
 		KERBAL_CONSTEXPR14
-		void destroy_on_using_allocator(Allocator & alloc, Tp & plc)
+		void destroy_on_using_allocator(Allocator & alloc, T & plc)
 		{
-			detail::k_destroy_on_using_allocator(alloc, plc, kerbal::memory::allocator_could_use_destroy<Allocator, Tp>());
+			detail::k_destroy_on_using_allocator(alloc, plc, kerbal::memory::allocator_could_use_destroy<Allocator, T>());
 		}
 
-		template <typename Allocator, typename Tp>
+		template <typename Allocator, typename T>
 		KERBAL_CONSTEXPR14
-		void destroy_at_using_allocator(Allocator & alloc, Tp * p)
+		void destroy_at_using_allocator(Allocator & alloc, T * p)
 		{
 			kerbal::memory::destroy_on_using_allocator(alloc, *p);
 		}

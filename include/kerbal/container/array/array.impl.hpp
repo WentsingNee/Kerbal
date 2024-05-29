@@ -34,33 +34,33 @@ namespace kerbal
 
 #	if __cplusplus < 201103L
 
-		template <typename Tp, std::size_t N>
-		array<Tp, N>::array()
+		template <typename T, std::size_t N>
+		array<T, N>::array()
 		{
 		}
 
-		template <typename Tp, std::size_t N>
-		array<Tp, N>::array(const kerbal::assign::assign_list<void> & ilist)
+		template <typename T, std::size_t N>
+		array<T, N>::array(const kerbal::assign::assign_list<void> & ilist)
 		{
 		}
 
-		template <typename Tp, std::size_t N>
-		template <typename Up>
-		array<Tp, N>::array(const kerbal::assign::assign_list<Up> & ilist)
+		template <typename T, std::size_t N>
+		template <typename U>
+		array<T, N>::array(const kerbal::assign::assign_list<U> & ilist)
 		{
 			this->assign(ilist.cbegin(), ilist.cend());
 		}
 
-		template <typename Tp, std::size_t N>
-		array<Tp, N>& array<Tp, N>::operator=(const kerbal::assign::assign_list<void> & ilist)
+		template <typename T, std::size_t N>
+		array<T, N>& array<T, N>::operator=(const kerbal::assign::assign_list<void> & ilist)
 		{
 			this->assign(ilist);
 			return *this;
 		}
 
-		template <typename Tp, std::size_t N>
-		template <typename Up>
-		array<Tp, N>& array<Tp, N>::operator=(const kerbal::assign::assign_list<Up> & ilist)
+		template <typename T, std::size_t N>
+		template <typename U>
+		array<T, N>& array<T, N>::operator=(const kerbal::assign::assign_list<U> & ilist)
 		{
 			this->assign(ilist);
 			return *this;
@@ -69,9 +69,9 @@ namespace kerbal
 #	endif
 
 
-		template <typename Tp, std::size_t N>
+		template <typename T, std::size_t N>
 		KERBAL_CONSTEXPR14
-		void array<Tp, N>::assign(size_type new_size, const_reference val)
+		void array<T, N>::assign(size_type new_size, const_reference val)
 		{
 			if (new_size > N) {
 				new_size = N;
@@ -80,13 +80,13 @@ namespace kerbal
 			kerbal::algorithm::fill(this->begin(), this->nth(new_size), val);
 		}
 
-		template <typename Tp, std::size_t N>
+		template <typename T, std::size_t N>
 		template <typename InputIterator>
 		KERBAL_CONSTEXPR14
 		typename kerbal::type_traits::enable_if<
 				kerbal::iterator::is_input_compatible_iterator<InputIterator>::value
 		>::type
-		array<Tp, N>::assign(InputIterator first, InputIterator last)
+		array<T, N>::assign(InputIterator first, InputIterator last)
 		{
 			iterator assign_it = this->begin();
 			while (assign_it != this->end() && static_cast<bool>(first != last)) {
@@ -98,191 +98,191 @@ namespace kerbal
 
 #	if __cplusplus >= 201103L
 
-		template <typename Tp, std::size_t N>
+		template <typename T, std::size_t N>
 		KERBAL_CONSTEXPR14
-		void array<Tp, N>::assign(std::initializer_list<value_type> ilist)
+		void array<T, N>::assign(std::initializer_list<value_type> ilist)
 		{
 			this->assign(ilist.begin(), ilist.end());
 		}
 
 #	else
 
-		template <typename Tp, std::size_t N>
-		void array<Tp, N>::assign(const kerbal::assign::assign_list<void> & ilist)
+		template <typename T, std::size_t N>
+		void array<T, N>::assign(const kerbal::assign::assign_list<void> & ilist)
 		{
 		}
 
-		template <typename Tp, std::size_t N>
-		template <typename Up>
-		void array<Tp, N>::assign(const kerbal::assign::assign_list<Up> & ilist)
+		template <typename T, std::size_t N>
+		template <typename U>
+		void array<T, N>::assign(const kerbal::assign::assign_list<U> & ilist)
 		{
 			this->assign(ilist.begin(), ilist.end());
 		}
 
 #	endif
 
-		template <typename Tp, std::size_t N>
+		template <typename T, std::size_t N>
 		KERBAL_CONSTEXPR14
-		typename array<Tp, N>::iterator
-		array<Tp, N>::begin() KERBAL_NOEXCEPT
+		typename array<T, N>::iterator
+		array<T, N>::begin() KERBAL_NOEXCEPT
 		{
 			return iterator(this->k_data + 0);
 		}
 
-		template <typename Tp, std::size_t N>
+		template <typename T, std::size_t N>
 		KERBAL_CONSTEXPR14
-		typename array<Tp, N>::const_iterator
-		array<Tp, N>::begin() const KERBAL_NOEXCEPT
+		typename array<T, N>::const_iterator
+		array<T, N>::begin() const KERBAL_NOEXCEPT
 		{
 			return const_iterator(this->k_data + 0);
 		}
 
-		template <typename Tp, std::size_t N>
+		template <typename T, std::size_t N>
 		KERBAL_CONSTEXPR
-		typename array<Tp, N>::const_iterator
-		array<Tp, N>::cbegin() const KERBAL_NOEXCEPT
+		typename array<T, N>::const_iterator
+		array<T, N>::cbegin() const KERBAL_NOEXCEPT
 		{
 			return this->begin();
 		}
 
-		template <typename Tp, std::size_t N>
+		template <typename T, std::size_t N>
 		KERBAL_CONSTEXPR14
-		typename array<Tp, N>::iterator
-		array<Tp, N>::end() KERBAL_NOEXCEPT
+		typename array<T, N>::iterator
+		array<T, N>::end() KERBAL_NOEXCEPT
 		{
 			return iterator(this->k_data + N);
 		}
 
-		template <typename Tp, std::size_t N>
+		template <typename T, std::size_t N>
 		KERBAL_CONSTEXPR14
-		typename array<Tp, N>::const_iterator
-		array<Tp, N>::end() const KERBAL_NOEXCEPT
+		typename array<T, N>::const_iterator
+		array<T, N>::end() const KERBAL_NOEXCEPT
 		{
 			return const_iterator(this->k_data + N);
 		}
 
-		template <typename Tp, std::size_t N>
+		template <typename T, std::size_t N>
 		KERBAL_CONSTEXPR
-		typename array<Tp, N>::const_iterator
-		array<Tp, N>::cend() const KERBAL_NOEXCEPT
+		typename array<T, N>::const_iterator
+		array<T, N>::cend() const KERBAL_NOEXCEPT
 		{
 			return this->end();
 		}
 
-		template <typename Tp, std::size_t N>
+		template <typename T, std::size_t N>
 		KERBAL_CONSTEXPR14
-		typename array<Tp, N>::reverse_iterator
-		array<Tp, N>::rbegin() KERBAL_NOEXCEPT
+		typename array<T, N>::reverse_iterator
+		array<T, N>::rbegin() KERBAL_NOEXCEPT
 		{
 			return reverse_iterator(this->end());
 		}
 
-		template <typename Tp, std::size_t N>
+		template <typename T, std::size_t N>
 		KERBAL_CONSTEXPR14
-		typename array<Tp, N>::const_reverse_iterator
-		array<Tp, N>::rbegin() const KERBAL_NOEXCEPT
+		typename array<T, N>::const_reverse_iterator
+		array<T, N>::rbegin() const KERBAL_NOEXCEPT
 		{
 			return const_reverse_iterator(this->end());
 		}
 
-		template <typename Tp, std::size_t N>
+		template <typename T, std::size_t N>
 		KERBAL_CONSTEXPR
-		typename array<Tp, N>::const_reverse_iterator
-		array<Tp, N>::crbegin() const KERBAL_NOEXCEPT
+		typename array<T, N>::const_reverse_iterator
+		array<T, N>::crbegin() const KERBAL_NOEXCEPT
 		{
 			return this->rbegin();
 		}
 
-		template <typename Tp, std::size_t N>
+		template <typename T, std::size_t N>
 		KERBAL_CONSTEXPR14
-		typename array<Tp, N>::reverse_iterator
-		array<Tp, N>::rend() KERBAL_NOEXCEPT
+		typename array<T, N>::reverse_iterator
+		array<T, N>::rend() KERBAL_NOEXCEPT
 		{
 			return reverse_iterator(this->begin());
 		}
 
-		template <typename Tp, std::size_t N>
+		template <typename T, std::size_t N>
 		KERBAL_CONSTEXPR14
-		typename array<Tp, N>::const_reverse_iterator
-		array<Tp, N>::rend() const KERBAL_NOEXCEPT
+		typename array<T, N>::const_reverse_iterator
+		array<T, N>::rend() const KERBAL_NOEXCEPT
 		{
 			return const_reverse_iterator(this->begin());
 		}
 
-		template <typename Tp, std::size_t N>
+		template <typename T, std::size_t N>
 		KERBAL_CONSTEXPR
-		typename array<Tp, N>::const_reverse_iterator
-		array<Tp, N>::crend() const KERBAL_NOEXCEPT
+		typename array<T, N>::const_reverse_iterator
+		array<T, N>::crend() const KERBAL_NOEXCEPT
 		{
 			return this->rend();
 		}
 
-		template <typename Tp, std::size_t N>
+		template <typename T, std::size_t N>
 		KERBAL_CONSTEXPR14
-		typename array<Tp, N>::iterator
-		array<Tp, N>::nth(size_type index) KERBAL_NOEXCEPT
+		typename array<T, N>::iterator
+		array<T, N>::nth(size_type index) KERBAL_NOEXCEPT
 		{
 			return this->begin() + index;
 		}
 
-		template <typename Tp, std::size_t N>
+		template <typename T, std::size_t N>
 		KERBAL_CONSTEXPR14
-		typename array<Tp, N>::const_iterator
-		array<Tp, N>::nth(size_type index) const KERBAL_NOEXCEPT
+		typename array<T, N>::const_iterator
+		array<T, N>::nth(size_type index) const KERBAL_NOEXCEPT
 		{
 			return this->cbegin() + index;
 		}
 
-		template <typename Tp, std::size_t N>
+		template <typename T, std::size_t N>
 		KERBAL_CONSTEXPR14
-		typename array<Tp, N>::size_type
-		array<Tp, N>::index_of(iterator it) KERBAL_NOEXCEPT
+		typename array<T, N>::size_type
+		array<T, N>::index_of(iterator it) KERBAL_NOEXCEPT
 		{
 			return it - this->begin();
 		}
 
-		template <typename Tp, std::size_t N>
+		template <typename T, std::size_t N>
 		KERBAL_CONSTEXPR
-		typename array<Tp, N>::size_type
-		array<Tp, N>::index_of(const_iterator it) const KERBAL_NOEXCEPT
+		typename array<T, N>::size_type
+		array<T, N>::index_of(const_iterator it) const KERBAL_NOEXCEPT
 		{
 			return it - this->cbegin();
 		}
 
-		template <typename Tp, std::size_t N>
+		template <typename T, std::size_t N>
 		KERBAL_CONSTEXPR
-		typename array<Tp, N>::size_type
-		array<Tp, N>::size() const KERBAL_NOEXCEPT
+		typename array<T, N>::size_type
+		array<T, N>::size() const KERBAL_NOEXCEPT
 		{
 			return N;
 		}
 
-		template <typename Tp, std::size_t N>
+		template <typename T, std::size_t N>
 		KERBAL_CONSTEXPR
-		bool array<Tp, N>::empty() const KERBAL_NOEXCEPT
+		bool array<T, N>::empty() const KERBAL_NOEXCEPT
 		{
 			return this->size() == 0;
 		}
 
-		template <typename Tp, std::size_t N>
+		template <typename T, std::size_t N>
 		KERBAL_CONSTEXPR14
-		typename array<Tp, N>::reference
-		array<Tp, N>::operator[](size_type index) KERBAL_NOEXCEPT
+		typename array<T, N>::reference
+		array<T, N>::operator[](size_type index) KERBAL_NOEXCEPT
 		{
 			return this->k_data[index];
 		}
 
-		template <typename Tp, std::size_t N>
+		template <typename T, std::size_t N>
 		KERBAL_CONSTEXPR14
-		typename array<Tp, N>::const_reference
-		array<Tp, N>::operator[](size_type index) const KERBAL_NOEXCEPT
+		typename array<T, N>::const_reference
+		array<T, N>::operator[](size_type index) const KERBAL_NOEXCEPT
 		{
 			return this->k_data[index];
 		}
 
-		template <typename Tp, std::size_t N>
-		typename array<Tp, N>::reference
-		array<Tp, N>::at(size_type index)
+		template <typename T, std::size_t N>
+		typename array<T, N>::reference
+		array<T, N>::at(size_type index)
 		{
 			if (index >= this->size()) {
 				kerbal::utility::throw_this_exception_helper<std::out_of_range>::throw_this_exception((const char*)"range check fail in static_array");
@@ -290,9 +290,9 @@ namespace kerbal
 			return (*this)[index];
 		}
 
-		template <typename Tp, std::size_t N>
-		typename array<Tp, N>::const_reference
-		array<Tp, N>::at(size_type index) const
+		template <typename T, std::size_t N>
+		typename array<T, N>::const_reference
+		array<T, N>::at(size_type index) const
 		{
 			if (index >= this->size()) {
 				kerbal::utility::throw_this_exception_helper<std::out_of_range>::throw_this_exception((const char*)"range check fail in static_array");
@@ -300,80 +300,80 @@ namespace kerbal
 			return (*this)[index];
 		}
 
-		template <typename Tp, std::size_t N>
+		template <typename T, std::size_t N>
 		KERBAL_CONSTEXPR14
-		typename array<Tp, N>::reference
-		array<Tp, N>::front()
+		typename array<T, N>::reference
+		array<T, N>::front()
 		{
 			return this->k_data[0];
 		}
 
-		template <typename Tp, std::size_t N>
+		template <typename T, std::size_t N>
 		KERBAL_CONSTEXPR14
-		typename array<Tp, N>::const_reference
-		array<Tp, N>::front() const
+		typename array<T, N>::const_reference
+		array<T, N>::front() const
 		{
 			return this->k_data[0];
 		}
 
-		template <typename Tp, std::size_t N>
+		template <typename T, std::size_t N>
 		KERBAL_CONSTEXPR14
-		typename array<Tp, N>::reference
-		array<Tp, N>::back()
+		typename array<T, N>::reference
+		array<T, N>::back()
 		{
 			return this->k_data[N - 1];
 		}
 
-		template <typename Tp, std::size_t N>
+		template <typename T, std::size_t N>
 		KERBAL_CONSTEXPR14
-		typename array<Tp, N>::const_reference
-		array<Tp, N>::back() const
+		typename array<T, N>::const_reference
+		array<T, N>::back() const
 		{
 			return this->k_data[N - 1];
 		}
 
-		template <typename Tp, std::size_t N>
+		template <typename T, std::size_t N>
 		KERBAL_CONSTEXPR14
-		typename array<Tp, N>::equal_c_array_reference
-		array<Tp, N>::c_arr() KERBAL_NOEXCEPT
+		typename array<T, N>::equal_c_array_reference
+		array<T, N>::c_arr() KERBAL_NOEXCEPT
 		{
 			return this->k_data;
 		}
 
-		template <typename Tp, std::size_t N>
+		template <typename T, std::size_t N>
 		KERBAL_CONSTEXPR14
-		typename array<Tp, N>::const_equal_c_array_reference
-		array<Tp, N>::c_arr() const KERBAL_NOEXCEPT
+		typename array<T, N>::const_equal_c_array_reference
+		array<T, N>::c_arr() const KERBAL_NOEXCEPT
 		{
 			return this->k_data;
 		}
 
-		template <typename Tp, std::size_t N>
+		template <typename T, std::size_t N>
 		KERBAL_CONSTEXPR
-		typename array<Tp, N>::const_equal_c_array_reference
-		array<Tp, N>::const_c_arr() const KERBAL_NOEXCEPT
+		typename array<T, N>::const_equal_c_array_reference
+		array<T, N>::const_c_arr() const KERBAL_NOEXCEPT
 		{
 			return this->k_data;
 		}
 
-		template <typename Tp, std::size_t N>
+		template <typename T, std::size_t N>
 		KERBAL_CONSTEXPR
-		typename array<Tp, N>::const_pointer
-		array<Tp, N>::data() const KERBAL_NOEXCEPT
+		typename array<T, N>::const_pointer
+		array<T, N>::data() const KERBAL_NOEXCEPT
 		{
 			return this->k_data + 0;
 		}
 
-		template <typename Tp, std::size_t N>
+		template <typename T, std::size_t N>
 		KERBAL_CONSTEXPR14
-		void array<Tp, N>::swap(array & with)
+		void array<T, N>::swap(array & with)
 		{
 			kerbal::algorithm::swap(this->k_data, with.k_data);
 		}
 
-		template <typename Tp, std::size_t N>
+		template <typename T, std::size_t N>
 		KERBAL_CONSTEXPR14
-		void array<Tp, N>::fill(const_reference val)
+		void array<T, N>::fill(const_reference val)
 		{
 			kerbal::algorithm::fill(this->begin(), this->end(), val);
 		}

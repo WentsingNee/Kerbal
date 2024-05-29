@@ -22,18 +22,18 @@ namespace kerbal
 	namespace operators
 	{
 
-		template <typename Tp, typename Ptr>
+		template <typename T, typename Ptr>
 		struct dereferenceable
 		{
 				KERBAL_CONSTEXPR14
 				Ptr operator->() const
 						KERBAL_CONDITIONAL_NOEXCEPT(
-								noexcept(&(*static_cast<const Tp&>(*
+								noexcept(&(*static_cast<const T&>(*
 									kerbal::utility::declthis<const dereferenceable>()
 								)))
 						)
 				{
-					return &(*static_cast<const Tp&>(*this));
+					return &(*static_cast<const T&>(*this));
 				}
 		};
 

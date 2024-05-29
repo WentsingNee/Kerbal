@@ -21,49 +21,49 @@ namespace kerbal
 	namespace utility
 	{
 
-		template <typename Tp>
+		template <typename T>
 		class reference_wrapper
 		{
 			public:
-				typedef Tp type;
+				typedef T type;
 
 			private:
-				Tp * ptr;
+				T * ptr;
 
 			public:
 				KERBAL_CONSTEXPR
-				reference_wrapper(Tp & val) KERBAL_NOEXCEPT :
+				reference_wrapper(T & val) KERBAL_NOEXCEPT :
 									ptr(&val)
 				{
 				}
 
 				KERBAL_CONSTEXPR
-				operator Tp&() const KERBAL_NOEXCEPT
+				operator T&() const KERBAL_NOEXCEPT
 				{
 					return *this->ptr;
 				}
 
 				KERBAL_CONSTEXPR
-				Tp& get() const KERBAL_NOEXCEPT
+				T& get() const KERBAL_NOEXCEPT
 				{
 					return *this->ptr;
 				}
 		};
 
-		template <typename Tp>
+		template <typename T>
 		KERBAL_CONSTEXPR
-		reference_wrapper<Tp>
-		ref(Tp & val) KERBAL_NOEXCEPT
+		reference_wrapper<T>
+		ref(T & val) KERBAL_NOEXCEPT
 		{
-			return reference_wrapper<Tp>(val);
+			return reference_wrapper<T>(val);
 		}
 
-		template <typename Tp>
+		template <typename T>
 		KERBAL_CONSTEXPR
-		reference_wrapper<const Tp>
-		cref(const Tp & val) KERBAL_NOEXCEPT
+		reference_wrapper<const T>
+		cref(const T & val) KERBAL_NOEXCEPT
 		{
-			return reference_wrapper<const Tp>(val);
+			return reference_wrapper<const T>(val);
 		}
 
 	} // namespace utility

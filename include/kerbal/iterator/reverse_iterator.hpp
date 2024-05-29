@@ -45,8 +45,8 @@ namespace kerbal
 			{
 			};
 
-			template <typename Tp>
-			struct reverse_iterator_base_is_inplace<Tp *> : kerbal::type_traits::true_type
+			template <typename T>
+			struct reverse_iterator_base_is_inplace<T *> : kerbal::type_traits::true_type
 			{
 			};
 
@@ -417,12 +417,12 @@ namespace kerbal
 			return reverse_iterator<Iter>(iter);
 		}
 
-		template <typename Tp, std::size_t N>
+		template <typename T, std::size_t N>
 		KERBAL_CONSTEXPR
-		reverse_iterator<Tp*, false>
-		make_reverse_iterator(Tp (&arr) [N])
+		reverse_iterator<T*, false>
+		make_reverse_iterator(T (&arr) [N])
 		{
-			return reverse_iterator<Tp*, false>(arr);
+			return reverse_iterator<T*, false>(arr);
 		}
 
 	} // namespace iterator

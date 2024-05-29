@@ -54,16 +54,16 @@ namespace kerbal
 				private:
 					friend class kerbal::container::detail::list_type_unrelated;
 
-					template <typename Tp>
+					template <typename T>
 					friend class kerbal::container::detail::list_type_only;
 
-					template <typename Tp, typename SemiAllocator>
+					template <typename T, typename SemiAllocator>
 					friend class kerbal::autonm::list;
 
-					template <typename Tp>
+					template <typename T>
 					friend class list_iter;
 
-					template <typename Tp>
+					template <typename T>
 					friend class list_kiter;
 
 				public:
@@ -85,13 +85,13 @@ namespace kerbal
 
 			};
 
-			template <typename Tp>
+			template <typename T>
 			class list_node:
 					public list_node_base,
-					private kerbal::utility::member_compress_helper<Tp>
+					private kerbal::utility::member_compress_helper<T>
 			{
 				private:
-					typedef kerbal::utility::member_compress_helper<Tp> member_compress_helper;
+					typedef kerbal::utility::member_compress_helper<T> member_compress_helper;
 
 				public:
 
@@ -171,14 +171,14 @@ namespace kerbal
 
 			};
 
-			template <typename Tp>
+			template <typename T>
 			struct list_node_chain
 			{
-					list_node<Tp> * start;
-					list_node<Tp> * back;
+					list_node<T> * start;
+					list_node<T> * back;
 
 					KERBAL_CONSTEXPR
-					list_node_chain(list_node<Tp> * start, list_node<Tp> * back) KERBAL_NOEXCEPT :
+					list_node_chain(list_node<T> * start, list_node<T> * back) KERBAL_NOEXCEPT :
 							start(start), back(back)
 					{
 					}

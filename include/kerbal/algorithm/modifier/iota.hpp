@@ -25,9 +25,9 @@ namespace kerbal
 		namespace detail
 		{
 
-			template <typename ForwardIterator, typename Tp>
+			template <typename ForwardIterator, typename T>
 			KERBAL_CONSTEXPR14
-			void k_iota(ForwardIterator first, ForwardIterator last, Tp value, std::forward_iterator_tag)
+			void k_iota(ForwardIterator first, ForwardIterator last, T value, std::forward_iterator_tag)
 			{
 				while (first != last) {
 					*first = value;
@@ -38,9 +38,9 @@ namespace kerbal
 
 		} // namespace detail
 
-		template <typename ForwardIterator, typename Tp>
+		template <typename ForwardIterator, typename T>
 		KERBAL_CONSTEXPR14
-		void iota(ForwardIterator first, ForwardIterator last, const Tp & value)
+		void iota(ForwardIterator first, ForwardIterator last, const T & value)
 		{
 			kerbal::algorithm::detail::k_iota(first, last, value, kerbal::iterator::iterator_category(first));
 		}

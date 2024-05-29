@@ -39,12 +39,12 @@ namespace kerbal
 		namespace detail
 		{
 
-			template <typename Tp>
+			template <typename T>
 			class autonm_sl_node :
-					public kerbal::container::detail::sl_node<Tp>
+					public kerbal::container::detail::sl_node<T>
 			{
 				private:
-					typedef kerbal::container::detail::sl_node<Tp> super;
+					typedef kerbal::container::detail::sl_node<T> super;
 
 				public:
 					KERBAL_CONSTEXPR
@@ -93,10 +93,10 @@ namespace kerbal
 
 			};
 
-			template <typename Tp, typename SemiAllocator>
+			template <typename T, typename SemiAllocator>
 			struct fl_typedef_helper
 			{
-					typedef kerbal::autonm::detail::autonm_sl_node<Tp>										auto_node;
+					typedef kerbal::autonm::detail::autonm_sl_node<T>										auto_node;
 					typedef SemiAllocator																	semi_allocator_type;
 					typedef kerbal::container::detail::container_rebind_allocator_overload<
 						semi_allocator_type, auto_node
@@ -105,23 +105,23 @@ namespace kerbal
 
 		} // namespace detail
 
-		template <typename Tp, typename SemiAllocator>
+		template <typename T, typename SemiAllocator>
 		class forward_list :
-				protected kerbal::autonm::detail::fl_typedef_helper<Tp, SemiAllocator>::fl_semi_allocator_overload,
-				protected kerbal::container::detail::fl_type_only<Tp>,
+				protected kerbal::autonm::detail::fl_typedef_helper<T, SemiAllocator>::fl_semi_allocator_overload,
+				protected kerbal::container::detail::fl_type_only<T>,
 				private kerbal::utility::noncopyable
 		{
 			private:
-				typedef kerbal::autonm::detail::fl_typedef_helper<Tp, SemiAllocator>	fl_typedef_helper;
+				typedef kerbal::autonm::detail::fl_typedef_helper<T, SemiAllocator>	fl_typedef_helper;
 				typedef kerbal::container::detail::fl_type_unrelated					fl_type_unrelated;
 				typedef typename fl_typedef_helper::fl_semi_allocator_overload			fl_semi_allocator_overload;
-				typedef kerbal::container::detail::fl_type_only<Tp>			fl_type_only;
+				typedef kerbal::container::detail::fl_type_only<T>			fl_type_only;
 
 			public:
 				typedef typename fl_typedef_helper::auto_node				auto_node;
 
 			public:
-				typedef Tp							value_type;
+				typedef T							value_type;
 				typedef const value_type			const_type;
 				typedef value_type&					reference;
 				typedef const value_type&			const_reference;
@@ -296,7 +296,7 @@ namespace kerbal
 				KERBAL_CONSTEXPR20
 				typename kerbal::type_traits::enable_if<
 						kerbal::iterator::is_forward_compatible_iterator<ForwardIterator>::value,
-						typename forward_list<Tp, SemiAllocator>::iterator
+						typename forward_list<T, SemiAllocator>::iterator
 				>::type
 				insert_after(const_iterator pos, ForwardIterator first, ForwardIterator last)
 				{
@@ -508,44 +508,44 @@ namespace kerbal
 
 		};
 
-		template <typename Tp, typename SemiAllocator>
+		template <typename T, typename SemiAllocator>
 		KERBAL_CONSTEXPR20
-		bool operator==(const forward_list<Tp, SemiAllocator> & lhs, const forward_list<Tp, SemiAllocator> & rhs)
+		bool operator==(const forward_list<T, SemiAllocator> & lhs, const forward_list<T, SemiAllocator> & rhs)
 		{
 			return kerbal::compare::sequence_equal_to(lhs.cbegin(), lhs.cend(), rhs.cbegin(), rhs.cend());
 		}
 
-		template <typename Tp, typename SemiAllocator>
+		template <typename T, typename SemiAllocator>
 		KERBAL_CONSTEXPR20
-		bool operator!=(const forward_list<Tp, SemiAllocator> & lhs, const forward_list<Tp, SemiAllocator> & rhs)
+		bool operator!=(const forward_list<T, SemiAllocator> & lhs, const forward_list<T, SemiAllocator> & rhs)
 		{
 			return kerbal::compare::sequence_not_equal_to(lhs.cbegin(), lhs.cend(), rhs.cbegin(), rhs.cend());
 		}
 
-		template <typename Tp, typename SemiAllocator>
+		template <typename T, typename SemiAllocator>
 		KERBAL_CONSTEXPR20
-		bool operator<(const forward_list<Tp, SemiAllocator> & lhs, const forward_list<Tp, SemiAllocator> & rhs)
+		bool operator<(const forward_list<T, SemiAllocator> & lhs, const forward_list<T, SemiAllocator> & rhs)
 		{
 			return kerbal::compare::sequence_less(lhs.cbegin(), lhs.cend(), rhs.cbegin(), rhs.cend());
 		}
 
-		template <typename Tp, typename SemiAllocator>
+		template <typename T, typename SemiAllocator>
 		KERBAL_CONSTEXPR20
-		bool operator>(const forward_list<Tp, SemiAllocator> & lhs, const forward_list<Tp, SemiAllocator> & rhs)
+		bool operator>(const forward_list<T, SemiAllocator> & lhs, const forward_list<T, SemiAllocator> & rhs)
 		{
 			return kerbal::compare::sequence_greater(lhs.cbegin(), lhs.cend(), rhs.cbegin(), rhs.cend());
 		}
 
-		template <typename Tp, typename SemiAllocator>
+		template <typename T, typename SemiAllocator>
 		KERBAL_CONSTEXPR20
-		bool operator<=(const forward_list<Tp, SemiAllocator> & lhs, const forward_list<Tp, SemiAllocator> & rhs)
+		bool operator<=(const forward_list<T, SemiAllocator> & lhs, const forward_list<T, SemiAllocator> & rhs)
 		{
 			return kerbal::compare::sequence_less_equal(lhs.cbegin(), lhs.cend(), rhs.cbegin(), rhs.cend());
 		}
 
-		template <typename Tp, typename SemiAllocator>
+		template <typename T, typename SemiAllocator>
 		KERBAL_CONSTEXPR20
-		bool operator>=(const forward_list<Tp, SemiAllocator> & lhs, const forward_list<Tp, SemiAllocator> & rhs)
+		bool operator>=(const forward_list<T, SemiAllocator> & lhs, const forward_list<T, SemiAllocator> & rhs)
 		{
 			return kerbal::compare::sequence_greater_equal(lhs.cbegin(), lhs.cend(), rhs.cbegin(), rhs.cend());
 		}
@@ -555,9 +555,9 @@ namespace kerbal
 	namespace algorithm
 	{
 
-		template <typename Tp, typename SemiAllocator>
+		template <typename T, typename SemiAllocator>
 		KERBAL_CONSTEXPR20
-		void swap(kerbal::autonm::forward_list<Tp, SemiAllocator> & a, kerbal::autonm::forward_list<Tp, SemiAllocator> & b)
+		void swap(kerbal::autonm::forward_list<T, SemiAllocator> & a, kerbal::autonm::forward_list<T, SemiAllocator> & b)
 				KERBAL_CONDITIONAL_NOEXCEPT(noexcept(a.swap(b)))
 		{
 			a.swap(b);
@@ -570,9 +570,9 @@ namespace kerbal
 
 KERBAL_NAMESPACE_STD_BEGIN
 
-	template <typename Tp, typename SemiAllocator>
+	template <typename T, typename SemiAllocator>
 	KERBAL_CONSTEXPR20
-	void swap(kerbal::autonm::forward_list<Tp, SemiAllocator> & a, kerbal::autonm::forward_list<Tp, SemiAllocator> & b)
+	void swap(kerbal::autonm::forward_list<T, SemiAllocator> & a, kerbal::autonm::forward_list<T, SemiAllocator> & b)
 			KERBAL_CONDITIONAL_NOEXCEPT(noexcept(a.swap(b)))
 	{
 		a.swap(b);

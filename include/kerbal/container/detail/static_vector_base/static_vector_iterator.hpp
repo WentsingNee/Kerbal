@@ -154,7 +154,7 @@ namespace kerbal
 											>
 			{
 				private:
-					template <typename Tp, std::size_t N>
+					template <typename T, std::size_t N>
 					friend class kerbal::container::static_vector;
 
 					friend class sv_kiter<ValueType>;
@@ -179,7 +179,7 @@ namespace kerbal
 											>
 			{
 				private:
-					template <typename Tp, std::size_t N>
+					template <typename T, std::size_t N>
 					friend class kerbal::container::static_vector;
 
 					typedef kerbal::memory::raw_storage<ValueType> storage_type;

@@ -26,9 +26,9 @@ namespace kerbal
 		namespace detail
 		{
 
-			template <typename ForwardIterator, typename Tp>
+			template <typename ForwardIterator, typename T>
 			KERBAL_CONSTEXPR14
-			void k_fill(ForwardIterator first, ForwardIterator last, const Tp & val, std::forward_iterator_tag)
+			void k_fill(ForwardIterator first, ForwardIterator last, const T & val, std::forward_iterator_tag)
 			{
 				while (first != last) {
 					kerbal::assign::generic_assign(*first, val); // *first = val;
@@ -38,9 +38,9 @@ namespace kerbal
 
 		} // namespace detail
 
-		template <typename ForwardIterator, typename Tp>
+		template <typename ForwardIterator, typename T>
 		KERBAL_CONSTEXPR14
-		void fill(ForwardIterator first, ForwardIterator last, const Tp & val)
+		void fill(ForwardIterator first, ForwardIterator last, const T & val)
 		{
 			kerbal::algorithm::detail::k_fill(first, last, val, kerbal::iterator::iterator_category(first));
 		}

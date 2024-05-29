@@ -25,20 +25,20 @@ namespace kerbal
 
 		/**
 		 *
-		 * @param comparator requires: comparator(value_type, Tp) && comparator(Tp, value_type)
+		 * @param comparator requires: comparator(value_type, T) && comparator(T, value_type)
 		 */
-		template <typename ForwardIterator, typename Tp, typename Comparator>
+		template <typename ForwardIterator, typename T, typename Comparator>
 		KERBAL_CONSTEXPR14
-		bool binary_search(ForwardIterator first, ForwardIterator last, const Tp& value, Comparator comparator)
+		bool binary_search(ForwardIterator first, ForwardIterator last, const T& value, Comparator comparator)
 		{
 			typedef ForwardIterator iterator;
 			iterator lb(kerbal::algorithm::lower_bound(first, last, value, comparator));
 			return static_cast<bool>(lb != last) && !static_cast<bool>(comparator(value, *lb));
 		}
 
-		template <typename ForwardIterator, typename Tp>
+		template <typename ForwardIterator, typename T>
 		KERBAL_CONSTEXPR14
-		bool binary_search(ForwardIterator first, ForwardIterator last, const Tp & value)
+		bool binary_search(ForwardIterator first, ForwardIterator last, const T & value)
 		{
 			return kerbal::algorithm::binary_search(first, last, value, kerbal::compare::binary_type_less<void, void>());
 		}

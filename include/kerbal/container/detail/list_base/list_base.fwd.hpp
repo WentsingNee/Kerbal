@@ -24,22 +24,22 @@ namespace kerbal
 
 			class list_type_unrelated;
 
-			template <typename Tp>
+			template <typename T>
 			class list_type_only;
 
 			class list_node_base;
 
-			template <typename Tp>
+			template <typename T>
 			class list_node;
 
 			class list_iter_type_unrelated;
 
 			class list_kiter_type_unrelated;
 
-			template <typename Tp>
+			template <typename T>
 			class list_iter;
 
-			template <typename Tp>
+			template <typename T>
 			class list_kiter;
 
 		} // namespace detail

@@ -33,7 +33,7 @@ namespace kerbal
 
 			class avl_node_base;
 
-			template <typename Tp>
+			template <typename T>
 			class avl_node;
 
 			template <int = 0>
@@ -47,10 +47,10 @@ namespace kerbal
 
 			class avl_kiter_type_unrelated;
 
-			template <typename Tp>
+			template <typename T>
 			class avl_iter;
 
-			template <typename Tp>
+			template <typename T>
 			class avl_kiter;
 
 			class avl_type_unrelated;

@@ -309,11 +309,11 @@ namespace kerbal
 		/**
 		 * Counts the number of 1 bits in the value of x.
 		 */
-		template <typename Tp>
+		template <typename T>
 		KERBAL_CONSTEXPR
-		int popcount(Tp x) KERBAL_NOEXCEPT
+		int popcount(T x) KERBAL_NOEXCEPT
 		{
-			return kerbal::numeric::detail::k_popcount_sign_aspect(x, kerbal::type_traits::is_signed<Tp>());
+			return kerbal::numeric::detail::k_popcount_sign_aspect(x, kerbal::type_traits::is_signed<T>());
 		}
 
 	} // namespace numeric

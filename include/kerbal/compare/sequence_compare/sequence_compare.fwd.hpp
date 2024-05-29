@@ -44,22 +44,22 @@ namespace kerbal
 		KERBAL_CONSTEXPR14
 		bool sequence_equal_to(const Container1 & container1, const Container2 & container2);
 
-		template <typename Tp, typename Up, std::size_t N, typename BinaryTypeEqualToPredicate>
+		template <typename T, typename U, std::size_t N, typename BinaryTypeEqualToPredicate>
 		KERBAL_CONSTEXPR14
-		bool sequence_equal_to(const Tp (& a)[N], const Up (& b)[N],
+		bool sequence_equal_to(const T (& a)[N], const U (& b)[N],
 							   BinaryTypeEqualToPredicate equal_to);
 
-		template <typename Tp, typename Up, std::size_t N>
+		template <typename T, typename U, std::size_t N>
 		KERBAL_CONSTEXPR14
-		bool sequence_equal_to(const Tp (& a)[N], const Up (& b)[N]);
+		bool sequence_equal_to(const T (& a)[N], const U (& b)[N]);
 
-		template <typename Tp, typename Up, std::size_t M, std::size_t N, typename BinaryTypeEqualToPredicate>
+		template <typename T, typename U, std::size_t M, std::size_t N, typename BinaryTypeEqualToPredicate>
 		KERBAL_CONSTEXPR
-		bool sequence_equal_to(const Tp (&)[M], const Up (&)[N], BinaryTypeEqualToPredicate) KERBAL_NOEXCEPT;
+		bool sequence_equal_to(const T (&)[M], const U (&)[N], BinaryTypeEqualToPredicate) KERBAL_NOEXCEPT;
 
-		template <typename Tp, typename Up, std::size_t M, std::size_t N>
+		template <typename T, typename U, std::size_t M, std::size_t N>
 		KERBAL_CONSTEXPR
-		bool sequence_equal_to(const Tp (&)[N], const Up (&)[N]) KERBAL_NOEXCEPT;
+		bool sequence_equal_to(const T (&)[N], const U (&)[N]) KERBAL_NOEXCEPT;
 
 
 		template <typename InputIterator1, typename InputIterator2, typename BinaryTypeNotEqualToPredicate>
@@ -82,22 +82,22 @@ namespace kerbal
 		KERBAL_CONSTEXPR14
 		bool sequence_not_equal_to(const Container1 & container1, const Container2 & container2);
 
-		template <typename Tp, typename Up, std::size_t N, typename BinaryTypeNotEqualToPredicate>
+		template <typename T, typename U, std::size_t N, typename BinaryTypeNotEqualToPredicate>
 		KERBAL_CONSTEXPR14
-		bool sequence_not_equal_to(const Tp (& a)[N], const Up (& b)[N],
+		bool sequence_not_equal_to(const T (& a)[N], const U (& b)[N],
 								   BinaryTypeNotEqualToPredicate not_equal_to);
 
-		template <typename Tp, typename Up, std::size_t N>
+		template <typename T, typename U, std::size_t N>
 		KERBAL_CONSTEXPR14
-		bool sequence_not_equal_to(const Tp (& a)[N], const Up (& b)[N]);
+		bool sequence_not_equal_to(const T (& a)[N], const U (& b)[N]);
 
-		template <typename Tp, typename Up, std::size_t M, std::size_t N, typename BinaryTypeNotEqualToPredicate>
+		template <typename T, typename U, std::size_t M, std::size_t N, typename BinaryTypeNotEqualToPredicate>
 		KERBAL_CONSTEXPR
-		bool sequence_not_equal_to(const Tp (&)[M], const Up (&)[N], BinaryTypeNotEqualToPredicate) KERBAL_NOEXCEPT;
+		bool sequence_not_equal_to(const T (&)[M], const U (&)[N], BinaryTypeNotEqualToPredicate) KERBAL_NOEXCEPT;
 
-		template <typename Tp, typename Up, std::size_t M, std::size_t N>
+		template <typename T, typename U, std::size_t M, std::size_t N>
 		KERBAL_CONSTEXPR
-		bool sequence_not_equal_to(const Tp (&)[N], const Up (&)[N]) KERBAL_NOEXCEPT;
+		bool sequence_not_equal_to(const T (&)[N], const U (&)[N]) KERBAL_NOEXCEPT;
 
 
 		template <typename InputIterator1, typename InputIterator2, typename LessPredicate>

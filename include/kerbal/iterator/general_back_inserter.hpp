@@ -30,16 +30,16 @@ namespace kerbal
 				typedef std::back_insert_iterator<Container> type;
 		};
 
-		template <typename Tp>
-		struct general_back_insert_iterator<Tp[]>
+		template <typename T>
+		struct general_back_insert_iterator<T[]>
 		{
-				typedef Tp* type;
+				typedef T* type;
 		};
 
-		template <typename Tp, std::size_t N>
-		struct general_back_insert_iterator<Tp[N]>
+		template <typename T, std::size_t N>
+		struct general_back_insert_iterator<T[N]>
 		{
-				typedef Tp* type;
+				typedef T* type;
 		};
 
 		template <typename Container>

@@ -59,49 +59,49 @@ namespace kerbal
 	namespace container
 	{
 
-		template <typename Tp, std::size_t N>
+		template <typename T, std::size_t N>
 		KERBAL_CONSTEXPR
-		static_vector<Tp, N>::static_vector() KERBAL_NOEXCEPT :
+		static_vector<T, N>::static_vector() KERBAL_NOEXCEPT :
 				super()
 		{
 		}
 
-		template <typename Tp, std::size_t N>
+		template <typename T, std::size_t N>
 		KERBAL_CONSTEXPR14
-		static_vector<Tp, N>::static_vector(const static_vector & src) :
+		static_vector<T, N>::static_vector(const static_vector & src) :
 				super(static_cast<const super&>(src))
 		{
 		}
 
 #	if __cplusplus >= 201103L
 
-		template <typename Tp, std::size_t N>
+		template <typename T, std::size_t N>
 		KERBAL_CONSTEXPR14
-		static_vector<Tp, N>::static_vector(static_vector && src) :
+		static_vector<T, N>::static_vector(static_vector && src) :
 				super(static_cast<super&&>(src))
 		{
 		}
 
 #	endif
 
-		template <typename Tp, std::size_t N>
+		template <typename T, std::size_t N>
 		KERBAL_CONSTEXPR14
-		static_vector<Tp, N>::static_vector(size_type n) :
+		static_vector<T, N>::static_vector(size_type n) :
 				super(n)
 		{
 		}
 
-		template <typename Tp, std::size_t N>
+		template <typename T, std::size_t N>
 		KERBAL_CONSTEXPR14
-		static_vector<Tp, N>::static_vector(size_type n, const_reference val) :
+		static_vector<T, N>::static_vector(size_type n, const_reference val) :
 				super(n, val)
 		{
 		}
 
-		template <typename Tp, std::size_t N>
+		template <typename T, std::size_t N>
 		template <typename InputIterator>
 		KERBAL_CONSTEXPR14
-		static_vector<Tp, N>::static_vector(InputIterator first, InputIterator last,
+		static_vector<T, N>::static_vector(InputIterator first, InputIterator last,
 				typename kerbal::type_traits::enable_if<
 						kerbal::iterator::is_input_compatible_iterator<InputIterator>::value
 						, int
@@ -114,33 +114,33 @@ namespace kerbal
 
 #	if __cplusplus >= 201103L
 
-		template <typename Tp, std::size_t N>
+		template <typename T, std::size_t N>
 		KERBAL_CONSTEXPR14
-		static_vector<Tp, N>::static_vector(std::initializer_list<value_type> ilist) :
+		static_vector<T, N>::static_vector(std::initializer_list<value_type> ilist) :
 				static_vector(ilist.begin(), ilist.end())
 		{
 		}
 
 #	else
 
-		template <typename Tp, std::size_t N>
-		static_vector<Tp, N>::static_vector(const kerbal::assign::assign_list<void> & ilist) :
+		template <typename T, std::size_t N>
+		static_vector<T, N>::static_vector(const kerbal::assign::assign_list<void> & ilist) :
 				super()
 		{
 		}
 
-		template <typename Tp, std::size_t N>
-		template <typename Up>
-		static_vector<Tp, N>::static_vector(const kerbal::assign::assign_list<Up> & ilist) :
+		template <typename T, std::size_t N>
+		template <typename U>
+		static_vector<T, N>::static_vector(const kerbal::assign::assign_list<U> & ilist) :
 				super(ilist.cbegin(), ilist.cend())
 		{
 		}
 
 #	endif
 
-		template <typename Tp, std::size_t N>
+		template <typename T, std::size_t N>
 		KERBAL_CONSTEXPR14
-		static_vector<Tp, N>& static_vector<Tp, N>::operator=(const static_vector & src)
+		static_vector<T, N>& static_vector<T, N>::operator=(const static_vector & src)
 		{
 			this->assign_unsafe(src.cbegin(), src.cend());
 			return *this;
@@ -148,9 +148,9 @@ namespace kerbal
 
 #	if __cplusplus >= 201103L
 
-		template <typename Tp, std::size_t N>
+		template <typename T, std::size_t N>
 		KERBAL_CONSTEXPR14
-		static_vector<Tp, N>& static_vector<Tp, N>::operator=(static_vector && src)
+		static_vector<T, N>& static_vector<T, N>::operator=(static_vector && src)
 		{
 			this->assign_unsafe(
 					kerbal::iterator::make_move_iterator(src.begin()),
@@ -163,9 +163,9 @@ namespace kerbal
 
 #	if __cplusplus >= 201103L
 
-		template <typename Tp, std::size_t N>
+		template <typename T, std::size_t N>
 		KERBAL_CONSTEXPR14
-		static_vector<Tp, N>& static_vector<Tp, N>::operator=(std::initializer_list<value_type> ilist)
+		static_vector<T, N>& static_vector<T, N>::operator=(std::initializer_list<value_type> ilist)
 		{
 			this->assign_unsafe(ilist.begin(), ilist.end());
 			return *this;
@@ -173,16 +173,16 @@ namespace kerbal
 
 #	else
 
-		template <typename Tp, std::size_t N>
-		static_vector<Tp, N>& static_vector<Tp, N>::operator=(const kerbal::assign::assign_list<void> & ilist)
+		template <typename T, std::size_t N>
+		static_vector<T, N>& static_vector<T, N>::operator=(const kerbal::assign::assign_list<void> & ilist)
 		{
 			this->assign_unsafe(ilist);
 			return *this;
 		}
 
-		template <typename Tp, std::size_t N>
-		template <typename Up>
-		static_vector<Tp, N>& static_vector<Tp, N>::operator=(const kerbal::assign::assign_list<Up> & ilist)
+		template <typename T, std::size_t N>
+		template <typename U>
+		static_vector<T, N>& static_vector<T, N>::operator=(const kerbal::assign::assign_list<U> & ilist)
 		{
 			this->assign_unsafe(ilist);
 			return *this;
@@ -190,9 +190,9 @@ namespace kerbal
 
 #	endif
 
-		template <typename Tp, std::size_t N>
+		template <typename T, std::size_t N>
 		KERBAL_CONSTEXPR14
-		void static_vector<Tp, N>::k_assign_unsafe_n_val(size_type new_size, const_reference val, kerbal::type_traits::false_type)
+		void static_vector<T, N>::k_assign_unsafe_n_val(size_type new_size, const_reference val, kerbal::type_traits::false_type)
 		{
 			size_type previous_size = this->size();
 
@@ -215,17 +215,17 @@ namespace kerbal
 			}
 		}
 
-		template <typename Tp, std::size_t N>
+		template <typename T, std::size_t N>
 		KERBAL_CONSTEXPR14
-		void static_vector<Tp, N>::k_assign_unsafe_n_val(size_type new_size, const_reference val, kerbal::type_traits::true_type)
+		void static_vector<T, N>::k_assign_unsafe_n_val(size_type new_size, const_reference val, kerbal::type_traits::true_type)
 		{
 			kerbal::algorithm::fill(this->begin(), this->nth(new_size), val);
 			this->len = static_cast<size_compressed_type>(new_size);
 		}
 
-		template <typename Tp, std::size_t N>
+		template <typename T, std::size_t N>
 		KERBAL_CONSTEXPR14
-		void static_vector<Tp, N>::assign_unsafe(size_type new_size, const_reference val)
+		void static_vector<T, N>::assign_unsafe(size_type new_size, const_reference val)
 		{
 			struct enable_optimization:
 					kerbal::type_traits::tribool_conjunction<
@@ -239,9 +239,9 @@ namespace kerbal
 			this->k_assign_unsafe_n_val(new_size, val, enable_optimization());
 		}
 
-		template <typename Tp, std::size_t N>
+		template <typename T, std::size_t N>
 		KERBAL_CONSTEXPR20
-		void static_vector<Tp, N>::assign(size_type new_size, const_reference val)
+		void static_vector<T, N>::assign(size_type new_size, const_reference val)
 		{
 			if (new_size > N) {
 				kerbal::utility::throw_this_exception_helper<std::logic_error>::throw_this_exception(
@@ -251,10 +251,10 @@ namespace kerbal
 			this->assign_unsafe(new_size, val);
 		}
 
-		template <typename Tp, std::size_t N>
+		template <typename T, std::size_t N>
 		template <typename InputIterator>
 		KERBAL_CONSTEXPR14
-		void static_vector<Tp, N>::k_assign_unsafe_range(InputIterator first, InputIterator last, std::input_iterator_tag)
+		void static_vector<T, N>::k_assign_unsafe_range(InputIterator first, InputIterator last, std::input_iterator_tag)
 		{
 			iterator it(this->begin());
 			iterator end(this->end());
@@ -279,10 +279,10 @@ namespace kerbal
 			}
 		}
 
-		template <typename Tp, std::size_t N>
+		template <typename T, std::size_t N>
 		template <typename ForwardIterator>
 		KERBAL_CONSTEXPR14
-		void static_vector<Tp, N>::k_assign_unsafe_range(ForwardIterator first, ForwardIterator last, std::forward_iterator_tag)
+		void static_vector<T, N>::k_assign_unsafe_range(ForwardIterator first, ForwardIterator last, std::forward_iterator_tag)
 		{
 			size_type ori_size = static_cast<size_type>(this->len);
 			size_type new_size = static_cast<size_type>(kerbal::iterator::distance(first, last));
@@ -306,21 +306,21 @@ namespace kerbal
 			}
 		}
 
-		template <typename Tp, std::size_t N>
+		template <typename T, std::size_t N>
 		template <typename InputIterator>
 		KERBAL_CONSTEXPR14
 		typename kerbal::type_traits::enable_if<
 				kerbal::iterator::is_input_compatible_iterator<InputIterator>::value
 		>::type
-		static_vector<Tp, N>::assign_unsafe(InputIterator first, InputIterator last)
+		static_vector<T, N>::assign_unsafe(InputIterator first, InputIterator last)
 		{
 			this->k_assign_unsafe_range(first, last, kerbal::iterator::iterator_category(first));
 		}
 
-		template <typename Tp, std::size_t N>
+		template <typename T, std::size_t N>
 		template <typename InputIterator>
 		KERBAL_CONSTEXPR20
-		void static_vector<Tp, N>::k_assign_range(InputIterator first, InputIterator last, std::input_iterator_tag)
+		void static_vector<T, N>::k_assign_range(InputIterator first, InputIterator last, std::input_iterator_tag)
 		{
 			iterator it(this->begin());
 			iterator end(this->end());
@@ -352,10 +352,10 @@ namespace kerbal
 			}
 		}
 
-		template <typename Tp, std::size_t N>
+		template <typename T, std::size_t N>
 		template <typename ForwardIterator>
 		KERBAL_CONSTEXPR20
-		void static_vector<Tp, N>::k_assign_range(ForwardIterator first, ForwardIterator last, std::forward_iterator_tag)
+		void static_vector<T, N>::k_assign_range(ForwardIterator first, ForwardIterator last, std::forward_iterator_tag)
 		{
 			size_type ori_size = static_cast<size_type>(this->len);
 			size_type new_size = static_cast<size_type>(kerbal::iterator::distance(first, last));
@@ -385,201 +385,201 @@ namespace kerbal
 			}
 		}
 
-		template <typename Tp, std::size_t N>
+		template <typename T, std::size_t N>
 		template <typename InputIterator>
 		KERBAL_CONSTEXPR20
 		typename kerbal::type_traits::enable_if<
 				kerbal::iterator::is_input_compatible_iterator<InputIterator>::value
 		>::type
-		static_vector<Tp, N>::assign(InputIterator first, InputIterator last)
+		static_vector<T, N>::assign(InputIterator first, InputIterator last)
 		{
 			this->k_assign_range(first, last, kerbal::iterator::iterator_category(first));
 		}
 
 #	if __cplusplus >= 201103L
 
-		template <typename Tp, std::size_t N>
+		template <typename T, std::size_t N>
 		KERBAL_CONSTEXPR14
-		void static_vector<Tp, N>::assign_unsafe(std::initializer_list<value_type> ilist)
+		void static_vector<T, N>::assign_unsafe(std::initializer_list<value_type> ilist)
 		{
 			this->assign_unsafe(ilist.begin(), ilist.end());
 		}
 
-		template <typename Tp, std::size_t N>
+		template <typename T, std::size_t N>
 		KERBAL_CONSTEXPR20
-		void static_vector<Tp, N>::assign(std::initializer_list<value_type> ilist)
+		void static_vector<T, N>::assign(std::initializer_list<value_type> ilist)
 		{
 			this->assign(ilist.begin(), ilist.end());
 		}
 
 #	else
 
-		template <typename Tp, std::size_t N>
-		void static_vector<Tp, N>::assign_unsafe(const kerbal::assign::assign_list<void> & ilist)
+		template <typename T, std::size_t N>
+		void static_vector<T, N>::assign_unsafe(const kerbal::assign::assign_list<void> & ilist)
 		{
 			this->clear();
 		}
 
-		template <typename Tp, std::size_t N>
-		template <typename Up>
-		void static_vector<Tp, N>::assign_unsafe(const kerbal::assign::assign_list<Up> & ilist)
+		template <typename T, std::size_t N>
+		template <typename U>
+		void static_vector<T, N>::assign_unsafe(const kerbal::assign::assign_list<U> & ilist)
 		{
 			this->assign_unsafe(ilist.cbegin(), ilist.cend());
 		}
 
-		template <typename Tp, std::size_t N>
-		void static_vector<Tp, N>::assign(const kerbal::assign::assign_list<void> & ilist)
+		template <typename T, std::size_t N>
+		void static_vector<T, N>::assign(const kerbal::assign::assign_list<void> & ilist)
 		{
 			this->clear();
 		}
 
-		template <typename Tp, std::size_t N>
-		template <typename Up>
-		void static_vector<Tp, N>::assign(const kerbal::assign::assign_list<Up> & ilist)
+		template <typename T, std::size_t N>
+		template <typename U>
+		void static_vector<T, N>::assign(const kerbal::assign::assign_list<U> & ilist)
 		{
 			this->assign(ilist.cbegin(), ilist.cend());
 		}
 
 #	endif
 
-		template <typename Tp, std::size_t N>
+		template <typename T, std::size_t N>
 		KERBAL_CONSTEXPR14
-		typename static_vector<Tp, N>::iterator
-		static_vector<Tp, N>::begin() KERBAL_NOEXCEPT
+		typename static_vector<T, N>::iterator
+		static_vector<T, N>::begin() KERBAL_NOEXCEPT
 		{
 			return super::begin();
 		}
 
-		template <typename Tp, std::size_t N>
+		template <typename T, std::size_t N>
 		KERBAL_CONSTEXPR
-		typename static_vector<Tp, N>::const_iterator
-		static_vector<Tp, N>::begin() const KERBAL_NOEXCEPT
+		typename static_vector<T, N>::const_iterator
+		static_vector<T, N>::begin() const KERBAL_NOEXCEPT
 		{
 			return super::begin();
 		}
 
-		template <typename Tp, std::size_t N>
+		template <typename T, std::size_t N>
 		KERBAL_CONSTEXPR
-		typename static_vector<Tp, N>::const_iterator
-		static_vector<Tp, N>::cbegin() const KERBAL_NOEXCEPT
+		typename static_vector<T, N>::const_iterator
+		static_vector<T, N>::cbegin() const KERBAL_NOEXCEPT
 		{
 			return super::cbegin();
 		}
 
-		template <typename Tp, std::size_t N>
+		template <typename T, std::size_t N>
 		KERBAL_CONSTEXPR14
-		typename static_vector<Tp, N>::iterator
-		static_vector<Tp, N>::end() KERBAL_NOEXCEPT
+		typename static_vector<T, N>::iterator
+		static_vector<T, N>::end() KERBAL_NOEXCEPT
 		{
 			return super::end();
 		}
 
-		template <typename Tp, std::size_t N>
+		template <typename T, std::size_t N>
 		KERBAL_CONSTEXPR
-		typename static_vector<Tp, N>::const_iterator
-		static_vector<Tp, N>::end() const KERBAL_NOEXCEPT
+		typename static_vector<T, N>::const_iterator
+		static_vector<T, N>::end() const KERBAL_NOEXCEPT
 		{
 			return super::end();
 		}
 
-		template <typename Tp, std::size_t N>
+		template <typename T, std::size_t N>
 		KERBAL_CONSTEXPR
-		typename static_vector<Tp, N>::const_iterator
-		static_vector<Tp, N>::cend() const KERBAL_NOEXCEPT
+		typename static_vector<T, N>::const_iterator
+		static_vector<T, N>::cend() const KERBAL_NOEXCEPT
 		{
 			return super::cend();
 		}
 
-		template <typename Tp, std::size_t N>
+		template <typename T, std::size_t N>
 		KERBAL_CONSTEXPR14
-		typename static_vector<Tp, N>::reverse_iterator
-		static_vector<Tp, N>::rbegin() KERBAL_NOEXCEPT
+		typename static_vector<T, N>::reverse_iterator
+		static_vector<T, N>::rbegin() KERBAL_NOEXCEPT
 		{
 			return reverse_iterator(this->end());
 		}
 
-		template <typename Tp, std::size_t N>
+		template <typename T, std::size_t N>
 		KERBAL_CONSTEXPR
-		typename static_vector<Tp, N>::const_reverse_iterator
-		static_vector<Tp, N>::rbegin() const KERBAL_NOEXCEPT
+		typename static_vector<T, N>::const_reverse_iterator
+		static_vector<T, N>::rbegin() const KERBAL_NOEXCEPT
 		{
 			return const_reverse_iterator(this->end());
 		}
 
-		template <typename Tp, std::size_t N>
+		template <typename T, std::size_t N>
 		KERBAL_CONSTEXPR
-		typename static_vector<Tp, N>::const_reverse_iterator
-		static_vector<Tp, N>::crbegin() const KERBAL_NOEXCEPT
+		typename static_vector<T, N>::const_reverse_iterator
+		static_vector<T, N>::crbegin() const KERBAL_NOEXCEPT
 		{
 			return this->rbegin();
 		}
 
-		template <typename Tp, std::size_t N>
+		template <typename T, std::size_t N>
 		KERBAL_CONSTEXPR14
-		typename static_vector<Tp, N>::reverse_iterator
-		static_vector<Tp, N>::rend() KERBAL_NOEXCEPT
+		typename static_vector<T, N>::reverse_iterator
+		static_vector<T, N>::rend() KERBAL_NOEXCEPT
 		{
 			return reverse_iterator(this->begin());
 		}
 
-		template <typename Tp, std::size_t N>
+		template <typename T, std::size_t N>
 		KERBAL_CONSTEXPR
-		typename static_vector<Tp, N>::const_reverse_iterator
-		static_vector<Tp, N>::rend() const KERBAL_NOEXCEPT
+		typename static_vector<T, N>::const_reverse_iterator
+		static_vector<T, N>::rend() const KERBAL_NOEXCEPT
 		{
 			return const_reverse_iterator(this->begin());
 		}
 
-		template <typename Tp, std::size_t N>
+		template <typename T, std::size_t N>
 		KERBAL_CONSTEXPR
-		typename static_vector<Tp, N>::const_reverse_iterator
-		static_vector<Tp, N>::crend() const KERBAL_NOEXCEPT
+		typename static_vector<T, N>::const_reverse_iterator
+		static_vector<T, N>::crend() const KERBAL_NOEXCEPT
 		{
 			return this->rend();
 		}
 
-		template <typename Tp, std::size_t N>
+		template <typename T, std::size_t N>
 		KERBAL_CONSTEXPR
-		typename static_vector<Tp, N>::size_type
-		static_vector<Tp, N>::size() const KERBAL_NOEXCEPT
+		typename static_vector<T, N>::size_type
+		static_vector<T, N>::size() const KERBAL_NOEXCEPT
 		{
 			return static_cast<size_type>(this->len);
 		}
 
-		template <typename Tp, std::size_t N>
+		template <typename T, std::size_t N>
 		KERBAL_CONSTEXPR
-		bool static_vector<Tp, N>::empty() const KERBAL_NOEXCEPT
+		bool static_vector<T, N>::empty() const KERBAL_NOEXCEPT
 		{
 			return this->size() == 0;
 		}
 
-		template <typename Tp, std::size_t N>
+		template <typename T, std::size_t N>
 		KERBAL_CONSTEXPR
-		bool static_vector<Tp, N>::full() const KERBAL_NOEXCEPT
+		bool static_vector<T, N>::full() const KERBAL_NOEXCEPT
 		{
 			return this->size() == N;
 		}
 
-		template <typename Tp, std::size_t N>
+		template <typename T, std::size_t N>
 		KERBAL_CONSTEXPR14
-		typename static_vector<Tp, N>::reference
-		static_vector<Tp, N>::operator[](size_type index) KERBAL_NOEXCEPT
+		typename static_vector<T, N>::reference
+		static_vector<T, N>::operator[](size_type index) KERBAL_NOEXCEPT
 		{
 			return this->storage[index].raw_value();
 		}
 
-		template <typename Tp, std::size_t N>
+		template <typename T, std::size_t N>
 		KERBAL_CONSTEXPR14
-		typename static_vector<Tp, N>::const_reference
-		static_vector<Tp, N>::operator[](size_type index) const KERBAL_NOEXCEPT
+		typename static_vector<T, N>::const_reference
+		static_vector<T, N>::operator[](size_type index) const KERBAL_NOEXCEPT
 		{
 			return this->storage[index].raw_value();
 		}
 
-		template <typename Tp, std::size_t N>
+		template <typename T, std::size_t N>
 		KERBAL_CONSTEXPR20
-		typename static_vector<Tp, N>::reference
-		static_vector<Tp, N>::at(size_type index)
+		typename static_vector<T, N>::reference
+		static_vector<T, N>::at(size_type index)
 		{
 			if (index >= size()) {
 				kerbal::utility::throw_this_exception_helper<std::out_of_range>::throw_this_exception(
@@ -589,10 +589,10 @@ namespace kerbal
 			return (*this)[index];
 		}
 
-		template <typename Tp, std::size_t N>
+		template <typename T, std::size_t N>
 		KERBAL_CONSTEXPR20
-		typename static_vector<Tp, N>::const_reference
-		static_vector<Tp, N>::at(size_type index) const
+		typename static_vector<T, N>::const_reference
+		static_vector<T, N>::at(size_type index) const
 		{
 			if (index >= size()) {
 				kerbal::utility::throw_this_exception_helper<std::out_of_range>::throw_this_exception(
@@ -602,41 +602,41 @@ namespace kerbal
 			return (*this)[index];
 		}
 
-		template <typename Tp, std::size_t N>
+		template <typename T, std::size_t N>
 		KERBAL_CONSTEXPR14
-		typename static_vector<Tp, N>::reference
-		static_vector<Tp, N>::front()
+		typename static_vector<T, N>::reference
+		static_vector<T, N>::front()
 		{
 			return *this->begin();
 		}
 
-		template <typename Tp, std::size_t N>
+		template <typename T, std::size_t N>
 		KERBAL_CONSTEXPR14
-		typename static_vector<Tp, N>::const_reference
-		static_vector<Tp, N>::front() const
+		typename static_vector<T, N>::const_reference
+		static_vector<T, N>::front() const
 		{
 			return *this->cbegin();
 		}
 
-		template <typename Tp, std::size_t N>
+		template <typename T, std::size_t N>
 		KERBAL_CONSTEXPR14
-		typename static_vector<Tp, N>::reference
-		static_vector<Tp, N>::back()
+		typename static_vector<T, N>::reference
+		static_vector<T, N>::back()
 		{
 			return *this->rbegin();
 		}
 
-		template <typename Tp, std::size_t N>
+		template <typename T, std::size_t N>
 		KERBAL_CONSTEXPR14
-		typename static_vector<Tp, N>::const_reference
-		static_vector<Tp, N>::back() const
+		typename static_vector<T, N>::const_reference
+		static_vector<T, N>::back() const
 		{
 			return *this->crbegin();
 		}
 
-		template <typename Tp, std::size_t N>
-		typename static_vector<Tp, N>::equal_c_array_reference
-		static_vector<Tp, N>::c_arr()
+		template <typename T, std::size_t N>
+		typename static_vector<T, N>::equal_c_array_reference
+		static_vector<T, N>::c_arr()
 		{
 			if (!full()) {
 				kerbal::utility::throw_this_exception_helper<std::logic_error>::throw_this_exception(
@@ -646,9 +646,9 @@ namespace kerbal
 			return reinterpret_cast<equal_c_array_reference>(this->storage);
 		}
 
-		template <typename Tp, std::size_t N>
-		typename static_vector<Tp, N>::const_equal_c_array_reference
-		static_vector<Tp, N>::c_arr() const
+		template <typename T, std::size_t N>
+		typename static_vector<T, N>::const_equal_c_array_reference
+		static_vector<T, N>::c_arr() const
 		{
 			if (!full()) {
 				kerbal::utility::throw_this_exception_helper<std::logic_error>::throw_this_exception(
@@ -658,9 +658,9 @@ namespace kerbal
 			return reinterpret_cast<const_equal_c_array_reference>(this->storage);
 		}
 
-		template <typename Tp, std::size_t N>
-		typename static_vector<Tp, N>::const_equal_c_array_reference
-		static_vector<Tp, N>::const_c_arr() const
+		template <typename T, std::size_t N>
+		typename static_vector<T, N>::const_equal_c_array_reference
+		static_vector<T, N>::const_c_arr() const
 		{
 			if (!full()) {
 				kerbal::utility::throw_this_exception_helper<std::logic_error>::throw_this_exception(
@@ -670,39 +670,39 @@ namespace kerbal
 			return reinterpret_cast<equal_const_c_array_reference>(this->storage);
 		}
 
-		template <typename Tp, std::size_t N>
-		typename static_vector<Tp, N>::const_pointer
-		static_vector<Tp, N>::data() const KERBAL_NOEXCEPT
+		template <typename T, std::size_t N>
+		typename static_vector<T, N>::const_pointer
+		static_vector<T, N>::data() const KERBAL_NOEXCEPT
 		{
 			return reinterpret_cast<const_pointer>(&(this->storage[0]));
 		}
 
-		template <typename Tp, std::size_t N>
+		template <typename T, std::size_t N>
 		KERBAL_CONSTEXPR14
-		void static_vector<Tp, N>::push_back_unsafe(const_reference src)
+		void static_vector<T, N>::push_back_unsafe(const_reference src)
 		{
 			this->emplace_back_unsafe(src);
 		}
 
-		template <typename Tp, std::size_t N>
+		template <typename T, std::size_t N>
 		KERBAL_CONSTEXPR20
-		void static_vector<Tp, N>::push_back(const_reference src)
+		void static_vector<T, N>::push_back(const_reference src)
 		{
 			this->emplace_back(src);
 		}
 
 #	if __cplusplus >= 201103L
 
-		template <typename Tp, std::size_t N>
+		template <typename T, std::size_t N>
 		KERBAL_CONSTEXPR14
-		void static_vector<Tp, N>::push_back_unsafe(rvalue_reference src)
+		void static_vector<T, N>::push_back_unsafe(rvalue_reference src)
 		{
 			this->emplace_back_unsafe(kerbal::compatibility::move(src));
 		}
 
-		template <typename Tp, std::size_t N>
+		template <typename T, std::size_t N>
 		KERBAL_CONSTEXPR20
-		void static_vector<Tp, N>::push_back(rvalue_reference src)
+		void static_vector<T, N>::push_back(rvalue_reference src)
 		{
 			this->emplace_back(kerbal::compatibility::move(src));
 		}
@@ -711,22 +711,22 @@ namespace kerbal
 
 #	if __cplusplus >= 201103L
 
-		template <typename Tp, std::size_t N>
+		template <typename T, std::size_t N>
 		template <typename ... Args>
 		KERBAL_CONSTEXPR14
-		typename static_vector<Tp, N>::reference
-		static_vector<Tp, N>::emplace_back_unsafe(Args&& ... args)
+		typename static_vector<T, N>::reference
+		static_vector<T, N>::emplace_back_unsafe(Args&& ... args)
 		{
 			this->storage[this->len].construct(kerbal::utility::forward<Args>(args)...);
 			++this->len;
 			return this->back();
 		}
 
-		template <typename Tp, std::size_t N>
+		template <typename T, std::size_t N>
 		template <typename ... Args>
 		KERBAL_CONSTEXPR20
-		typename static_vector<Tp, N>::reference
-		static_vector<Tp, N>::emplace_back(Args&& ... args)
+		typename static_vector<T, N>::reference
+		static_vector<T, N>::emplace_back(Args&& ... args)
 		{
 			if (static_cast<size_type>(this->len) + 1u > N) {
 				kerbal::utility::throw_this_exception_helper<std::logic_error>::throw_this_exception(
@@ -745,20 +745,20 @@ namespace kerbal
 #	define ARGS_DECL(i) const KERBAL_MACRO_CONCAT(Arg, i) & KERBAL_MACRO_CONCAT(arg, i)
 #	define ARGS_USE(i) KERBAL_MACRO_CONCAT(arg, i)
 #	define FBODY(i) \
-		template <typename Tp, std::size_t N> \
+		template <typename T, std::size_t N> \
 		KERBAL_OPT_PPEXPAND_WITH_COMMA_N(THEAD_NOT_EMPTY, EMPTY, TARGS_DECL, i) \
-		typename static_vector<Tp, N>::reference \
-		static_vector<Tp, N>::emplace_back_unsafe(KERBAL_OPT_PPEXPAND_WITH_COMMA_N(REMAINF, EMPTY, ARGS_DECL, i)) \
+		typename static_vector<T, N>::reference \
+		static_vector<T, N>::emplace_back_unsafe(KERBAL_OPT_PPEXPAND_WITH_COMMA_N(REMAINF, EMPTY, ARGS_DECL, i)) \
 		{ \
 			this->storage[this->len].construct(KERBAL_OPT_PPEXPAND_WITH_COMMA_N(REMAINF, EMPTY, ARGS_USE, i)); \
 			++this->len; \
 			return this->back(); \
 		} \
  \
-		template <typename Tp, std::size_t N> \
+		template <typename T, std::size_t N> \
 		KERBAL_OPT_PPEXPAND_WITH_COMMA_N(THEAD_NOT_EMPTY, EMPTY, TARGS_DECL, i) \
-		typename static_vector<Tp, N>::reference \
-		static_vector<Tp, N>::emplace_back(KERBAL_OPT_PPEXPAND_WITH_COMMA_N(REMAINF, EMPTY, ARGS_DECL, i)) \
+		typename static_vector<T, N>::reference \
+		static_vector<T, N>::emplace_back(KERBAL_OPT_PPEXPAND_WITH_COMMA_N(REMAINF, EMPTY, ARGS_DECL, i)) \
 		{ \
 			if (static_cast<size_type>(this->len) + 1u > N) { \
 				kerbal::utility::throw_this_exception_helper<std::logic_error>::throw_this_exception( \
@@ -781,17 +781,17 @@ namespace kerbal
 
 #	endif
 
-		template <typename Tp, std::size_t N>
+		template <typename T, std::size_t N>
 		KERBAL_CONSTEXPR14
-		void static_vector<Tp, N>::pop_back_unsafe()
+		void static_vector<T, N>::pop_back_unsafe()
 		{
 			this->storage[this->len - 1].destroy();
 			--this->len;
 		}
 
-		template <typename Tp, std::size_t N>
+		template <typename T, std::size_t N>
 		KERBAL_CONSTEXPR20
-		void static_vector<Tp, N>::pop_back()
+		void static_vector<T, N>::pop_back()
 		{
 			if (this->len == 0) {
 				kerbal::utility::throw_this_exception_helper<std::logic_error>::throw_this_exception(
@@ -801,56 +801,56 @@ namespace kerbal
 			this->pop_back_unsafe();
 		}
 
-		template <typename Tp, std::size_t N>
+		template <typename T, std::size_t N>
 		KERBAL_CONSTEXPR14
-		void static_vector<Tp, N>::shrink_back_to(const_iterator to)
+		void static_vector<T, N>::shrink_back_to(const_iterator to)
 		{
 			size_type new_size = this->index_of(to);
 			kerbal::memory::raw_storage_reverse_destroy(this->storage + new_size, this->storage + static_cast<size_type>(this->len));
 			this->len = static_cast<size_compressed_type>(new_size);
 		}
 
-		template <typename Tp, std::size_t N>
+		template <typename T, std::size_t N>
 		KERBAL_CONSTEXPR14
-		typename static_vector<Tp, N>::iterator
-		static_vector<Tp, N>::insert_unsafe(const_iterator pos, const_reference val)
+		typename static_vector<T, N>::iterator
+		static_vector<T, N>::insert_unsafe(const_iterator pos, const_reference val)
 		{
 			return this->emplace_unsafe(pos, val);
 		}
 
-		template <typename Tp, std::size_t N>
+		template <typename T, std::size_t N>
 		KERBAL_CONSTEXPR20
-		typename static_vector<Tp, N>::iterator
-		static_vector<Tp, N>::insert(const_iterator pos, const_reference val)
+		typename static_vector<T, N>::iterator
+		static_vector<T, N>::insert(const_iterator pos, const_reference val)
 		{
 			return this->emplace(pos, val);
 		}
 
 #	if __cplusplus >= 201103L
 
-		template <typename Tp, std::size_t N>
+		template <typename T, std::size_t N>
 		KERBAL_CONSTEXPR14
-		typename static_vector<Tp, N>::iterator
-		static_vector<Tp, N>::insert_unsafe(const_iterator pos, rvalue_reference val)
+		typename static_vector<T, N>::iterator
+		static_vector<T, N>::insert_unsafe(const_iterator pos, rvalue_reference val)
 		{
 			return this->emplace_unsafe(pos, kerbal::compatibility::move(val));
 		}
 
-		template <typename Tp, std::size_t N>
+		template <typename T, std::size_t N>
 		KERBAL_CONSTEXPR20
-		typename static_vector<Tp, N>::iterator
-		static_vector<Tp, N>::insert(const_iterator pos, rvalue_reference val)
+		typename static_vector<T, N>::iterator
+		static_vector<T, N>::insert(const_iterator pos, rvalue_reference val)
 		{
 			return this->emplace(pos, kerbal::compatibility::move(val));
 		}
 
 #	endif
 
-		template <typename Tp, std::size_t N>
+		template <typename T, std::size_t N>
 		template <typename ForwardIterator>
 		KERBAL_CONSTEXPR20
-		typename static_vector<Tp, N>::iterator
-		static_vector<Tp, N>::k_range_insert(const_iterator pos, ForwardIterator first, ForwardIterator last, std::forward_iterator_tag)
+		typename static_vector<T, N>::iterator
+		static_vector<T, N>::k_range_insert(const_iterator pos, ForwardIterator first, ForwardIterator last, std::forward_iterator_tag)
 		{
 			size_type insert_pos_index = this->index_of(pos);
 			size_type n = static_cast<size_type>(kerbal::iterator::distance(first, last));
@@ -913,41 +913,41 @@ namespace kerbal
 			return this->nth(insert_pos_index);
 		}
 
-		template <typename Tp, std::size_t N>
+		template <typename T, std::size_t N>
 		template <typename InputIterator>
 		KERBAL_CONSTEXPR20
 		typename kerbal::type_traits::enable_if<
 				kerbal::iterator::is_input_compatible_iterator<InputIterator>::value,
-				typename static_vector<Tp, N>::iterator
+				typename static_vector<T, N>::iterator
 		>::type
-		static_vector<Tp, N>::insert(const_iterator pos, InputIterator first, InputIterator last)
+		static_vector<T, N>::insert(const_iterator pos, InputIterator first, InputIterator last)
 		{
 			return this->k_range_insert(pos, first, last, kerbal::iterator::iterator_category(first));
 		}
 
 #	if __cplusplus >= 201103L
 
-		template <typename Tp, std::size_t N>
+		template <typename T, std::size_t N>
 		KERBAL_CONSTEXPR20
-		typename static_vector<Tp, N>::iterator
-		static_vector<Tp, N>::insert(const_iterator pos, std::initializer_list<Tp> ilist)
+		typename static_vector<T, N>::iterator
+		static_vector<T, N>::insert(const_iterator pos, std::initializer_list<T> ilist)
 		{
 			return this->insert(pos, ilist.begin(), ilist.end());
 		}
 
 #	else
 
-		template <typename Tp, std::size_t N>
-		typename static_vector<Tp, N>::iterator
-		static_vector<Tp, N>::insert(const_iterator pos, const kerbal::assign::assign_list<void> & ilist)
+		template <typename T, std::size_t N>
+		typename static_vector<T, N>::iterator
+		static_vector<T, N>::insert(const_iterator pos, const kerbal::assign::assign_list<void> & ilist)
 		{
 			return pos.cast_to_mutable();
 		}
 
-		template <typename Tp, std::size_t N>
-		template <typename Up>
-		typename static_vector<Tp, N>::iterator
-		static_vector<Tp, N>::insert(const_iterator pos, const kerbal::assign::assign_list<Up> & ilist)
+		template <typename T, std::size_t N>
+		template <typename U>
+		typename static_vector<T, N>::iterator
+		static_vector<T, N>::insert(const_iterator pos, const kerbal::assign::assign_list<U> & ilist)
 		{
 			return this->insert(pos, ilist.cbegin(), ilist.cend());
 		}
@@ -955,16 +955,16 @@ namespace kerbal
 #	endif
 
 
-		template <typename Tp, bool =
-			kerbal::type_traits::try_test_is_trivially_destructible<Tp>::IS_TRUE::value
+		template <typename T, bool =
+			kerbal::type_traits::try_test_is_trivially_destructible<T>::IS_TRUE::value
 		>
 		struct static_vector_emplace_helper;
 
-		template <typename Tp>
-		struct static_vector_emplace_helper<Tp, false>
+		template <typename T>
+		struct static_vector_emplace_helper<T, false>
 		{
-				typedef Tp value_type;
-				typedef Tp* pointer;
+				typedef T value_type;
+				typedef T* pointer;
 
 				kerbal::memory::raw_storage<value_type> storage;
 
@@ -1013,11 +1013,11 @@ namespace kerbal
 
 		};
 
-		template <typename Tp>
-		struct static_vector_emplace_helper<Tp, true>
+		template <typename T>
+		struct static_vector_emplace_helper<T, true>
 		{
-				typedef Tp value_type;
-				typedef Tp* pointer;
+				typedef T value_type;
+				typedef T* pointer;
 
 				kerbal::memory::raw_storage<value_type> storage;
 
@@ -1062,11 +1062,11 @@ namespace kerbal
 
 #	if __cplusplus >= 201103L
 
-		template <typename Tp, std::size_t N>
+		template <typename T, std::size_t N>
 		template <typename ... Args>
 		KERBAL_CONSTEXPR14
-		typename static_vector<Tp, N>::iterator
-		static_vector<Tp, N>::emplace_unsafe(const_iterator pos, Args&& ... args)
+		typename static_vector<T, N>::iterator
+		static_vector<T, N>::emplace_unsafe(const_iterator pos, Args&& ... args)
 		{
 			iterator pos_mut(pos.cast_to_mutable());
 			if (pos == this->cend()) {
@@ -1077,7 +1077,7 @@ namespace kerbal
 				this->emplace_back_unsafe(kerbal::utility::forward<Args>(args)...); // construct by args
 			} else {
 
-				static_vector_emplace_helper<Tp> helper((kerbal::utility::in_place_t()), kerbal::utility::forward<Args>(args)...);
+				static_vector_emplace_helper<T> helper((kerbal::utility::in_place_t()), kerbal::utility::forward<Args>(args)...);
 
 				// *this couldn't be empty otherwise the argument pos is invalid
 
@@ -1098,11 +1098,11 @@ namespace kerbal
 			return pos_mut;
 		}
 
-		template <typename Tp, std::size_t N>
+		template <typename T, std::size_t N>
 		template <typename ... Args>
 		KERBAL_CONSTEXPR20
-		typename static_vector<Tp, N>::iterator
-		static_vector<Tp, N>::emplace(const_iterator pos, Args&& ... args)
+		typename static_vector<T, N>::iterator
+		static_vector<T, N>::emplace(const_iterator pos, Args&& ... args)
 		{
 			if (static_cast<size_type>(this->len) + 1u > N) {
 				kerbal::utility::throw_this_exception_helper<std::logic_error>::throw_this_exception(
@@ -1122,16 +1122,16 @@ namespace kerbal
 #	define ARGS_DECL(i) const KERBAL_MACRO_CONCAT(Arg, i) & KERBAL_MACRO_CONCAT(arg, i)
 #	define ARGS_USE(i) KERBAL_MACRO_CONCAT(arg, i)
 #	define FBODY(i) \
-		template <typename Tp, std::size_t N> \
+		template <typename T, std::size_t N> \
 		KERBAL_OPT_PPEXPAND_WITH_COMMA_N(THEAD_NOT_EMPTY, EMPTY, TARGS_DECL, i) \
-		typename static_vector<Tp, N>::iterator \
-		static_vector<Tp, N>::emplace_unsafe(const_iterator pos KERBAL_OPT_PPEXPAND_WITH_COMMA_N(LEFT_JOIN_COMMA, EMPTY, ARGS_DECL, i)) \
+		typename static_vector<T, N>::iterator \
+		static_vector<T, N>::emplace_unsafe(const_iterator pos KERBAL_OPT_PPEXPAND_WITH_COMMA_N(LEFT_JOIN_COMMA, EMPTY, ARGS_DECL, i)) \
 		{ \
 			iterator mutable_pos(pos.cast_to_mutable()); \
 			if (pos == this->cend()) { \
 				this->emplace_back_unsafe(KERBAL_OPT_PPEXPAND_WITH_COMMA_N(REMAINF, EMPTY, ARGS_USE, i)); \
 			} else { \
-				static_vector_emplace_helper<Tp> helper((kerbal::utility::in_place_t()) KERBAL_OPT_PPEXPAND_WITH_COMMA_N(LEFT_JOIN_COMMA, EMPTY, ARGS_USE, i)); \
+				static_vector_emplace_helper<T> helper((kerbal::utility::in_place_t()) KERBAL_OPT_PPEXPAND_WITH_COMMA_N(LEFT_JOIN_COMMA, EMPTY, ARGS_USE, i)); \
 				this->push_back_unsafe(kerbal::compatibility::to_xvalue(this->back())); \
 				kerbal::algorithm::move_backward(mutable_pos, this->end() - 2, this->end() - 1); \
 				kerbal::assign::generic_assign(*mutable_pos, kerbal::compatibility::to_xvalue(helper.storage.raw_value())); \
@@ -1139,10 +1139,10 @@ namespace kerbal
 			return mutable_pos; \
 		} \
  \
-		template <typename Tp, std::size_t N> \
+		template <typename T, std::size_t N> \
 		KERBAL_OPT_PPEXPAND_WITH_COMMA_N(THEAD_NOT_EMPTY, EMPTY, TARGS_DECL, i) \
-		typename static_vector<Tp, N>::iterator \
-		static_vector<Tp, N>::emplace(const_iterator pos KERBAL_OPT_PPEXPAND_WITH_COMMA_N(LEFT_JOIN_COMMA, EMPTY, ARGS_DECL, i)) \
+		typename static_vector<T, N>::iterator \
+		static_vector<T, N>::emplace(const_iterator pos KERBAL_OPT_PPEXPAND_WITH_COMMA_N(LEFT_JOIN_COMMA, EMPTY, ARGS_DECL, i)) \
 		{ \
 			if (static_cast<size_type>(this->len) + 1u > N) { \
 				kerbal::utility::throw_this_exception_helper<std::logic_error>::throw_this_exception( \
@@ -1166,10 +1166,10 @@ namespace kerbal
 
 #	endif
 
-		template <typename Tp, std::size_t N>
+		template <typename T, std::size_t N>
 		KERBAL_CONSTEXPR14
-		typename static_vector<Tp, N>::iterator
-		static_vector<Tp, N>::erase(const_iterator pos)
+		typename static_vector<T, N>::iterator
+		static_vector<T, N>::erase(const_iterator pos)
 		{
 			iterator pos_mut(pos.cast_to_mutable());
 
@@ -1183,10 +1183,10 @@ namespace kerbal
 			return pos_mut;
 		}
 
-		template <typename Tp, std::size_t N>
+		template <typename T, std::size_t N>
 		KERBAL_CONSTEXPR14
-		typename static_vector<Tp, N>::iterator
-		static_vector<Tp, N>::erase(const_iterator first, const_iterator last)
+		typename static_vector<T, N>::iterator
+		static_vector<T, N>::erase(const_iterator first, const_iterator last)
 		{
 			iterator first_mut(first.cast_to_mutable());
 			if (first == last) {
@@ -1199,9 +1199,9 @@ namespace kerbal
 			return first_mut;
 		}
 
-		template <typename Tp, std::size_t N>
+		template <typename T, std::size_t N>
 		KERBAL_CONSTEXPR14
-		void static_vector<Tp, N>::k_swap_helper(static_vector & with)
+		void static_vector<T, N>::k_swap_helper(static_vector & with)
 		{
 			static_vector & s_arr = *this;
 			static_vector & l_arr = with;
@@ -1223,9 +1223,9 @@ namespace kerbal
 			kerbal::algorithm::range_swap(s_arr.begin(), s_arr.nth(s_len), l_arr.begin());
 		}
 
-		template <typename Tp, std::size_t N>
+		template <typename T, std::size_t N>
 		KERBAL_CONSTEXPR14
-		void static_vector<Tp, N>::swap(static_vector & with)
+		void static_vector<T, N>::swap(static_vector & with)
 		{
 			if (this->size() > with.size()) {
 				with.k_swap_helper(*this);
@@ -1234,35 +1234,35 @@ namespace kerbal
 			}
 		}
 
-		template <typename Tp, std::size_t N>
+		template <typename T, std::size_t N>
 		KERBAL_CONSTEXPR14
-		void static_vector<Tp, N>::clear()
+		void static_vector<T, N>::clear()
 		{
 			this->shrink_back_to(this->cbegin());
 		}
 
-		template <typename Tp, std::size_t N>
+		template <typename T, std::size_t N>
 		KERBAL_CONSTEXPR14
-		void static_vector<Tp, N>::fill()
+		void static_vector<T, N>::fill()
 		{
 			kerbal::memory::raw_storage_uninitialized_value_construct(this->storage + this->len, this->storage + N);
 			this->len = static_cast<size_compressed_type>(N);
 		}
 
-		template <typename Tp, std::size_t N>
+		template <typename T, std::size_t N>
 		KERBAL_CONSTEXPR14
-		void static_vector<Tp, N>::fill(const_reference val)
+		void static_vector<T, N>::fill(const_reference val)
 		{
 			kerbal::memory::raw_storage_uninitialized_fill(this->storage + this->len, this->storage + N, val);
 			this->len = static_cast<size_compressed_type>(N);
 		}
 
-		template <typename Tp, std::size_t N1, std::size_t N2>
+		template <typename T, std::size_t N1, std::size_t N2>
 		KERBAL_CONSTEXPR14
-		static_vector<Tp, N1 + N2>
-		operator+(const static_vector<Tp, N1> & lhs, const static_vector<Tp, N2> & rhs)
+		static_vector<T, N1 + N2>
+		operator+(const static_vector<T, N1> & lhs, const static_vector<T, N2> & rhs)
 		{
-			static_vector<Tp, N1 + N2> r(lhs.cbegin(), lhs.cend());
+			static_vector<T, N1 + N2> r(lhs.cbegin(), lhs.cend());
 			kerbal::memory::raw_storage_uninitialized_copy(rhs.cbegin(), rhs.cend(), r.storage + r.len);
 			r.len += rhs.size();
 			return r;
@@ -1270,23 +1270,23 @@ namespace kerbal
 
 #	if __cplusplus >= 201103L
 
-		template <typename Tp, std::size_t N1, std::size_t N2>
+		template <typename T, std::size_t N1, std::size_t N2>
 		KERBAL_CONSTEXPR14
-		static_vector<Tp, N1 + N2>
-		operator+(const static_vector<Tp, N1> & lhs, const static_vector<Tp, N2> && rhs)
+		static_vector<T, N1 + N2>
+		operator+(const static_vector<T, N1> & lhs, const static_vector<T, N2> && rhs)
 		{
-			static_vector<Tp, N1 + N2> r(lhs.cbegin(), lhs.cend());
+			static_vector<T, N1 + N2> r(lhs.cbegin(), lhs.cend());
 			kerbal::memory::raw_storage_uninitialized_move(rhs.cbegin(), rhs.cend(), r.storage + r.len);
 			r.len += rhs.size();
 			return r;
 		}
 
-		template <typename Tp, std::size_t N1, std::size_t N2>
+		template <typename T, std::size_t N1, std::size_t N2>
 		KERBAL_CONSTEXPR14
-		static_vector<Tp, N1 + N2>
-		operator+(const static_vector<Tp, N1> && lhs, const static_vector<Tp, N2> & rhs)
+		static_vector<T, N1 + N2>
+		operator+(const static_vector<T, N1> && lhs, const static_vector<T, N2> & rhs)
 		{
-			static_vector<Tp, N1 + N2> r(
+			static_vector<T, N1 + N2> r(
 				kerbal::iterator::make_move_iterator(lhs.cbegin()),
 				kerbal::iterator::make_move_iterator(lhs.cend())
 			);
@@ -1295,12 +1295,12 @@ namespace kerbal
 			return r;
 		}
 
-		template <typename Tp, std::size_t N1, std::size_t N2>
+		template <typename T, std::size_t N1, std::size_t N2>
 		KERBAL_CONSTEXPR14
-		static_vector<Tp, N1 + N2>
-		operator+(const static_vector<Tp, N1> && lhs, const static_vector<Tp, N2> && rhs)
+		static_vector<T, N1 + N2>
+		operator+(const static_vector<T, N1> && lhs, const static_vector<T, N2> && rhs)
 		{
-			static_vector<Tp, N1 + N2> r(
+			static_vector<T, N1 + N2> r(
 				kerbal::iterator::make_move_iterator(lhs.cbegin()),
 				kerbal::iterator::make_move_iterator(lhs.cend())
 			);
@@ -1311,15 +1311,15 @@ namespace kerbal
 
 #	endif
 
-		template <typename Tp, std::size_t N>
+		template <typename T, std::size_t N>
 		template <std::size_t M>
 		KERBAL_CONSTEXPR14
-		static_vector<Tp, N>
-		static_vector<Tp, N>::operator*(const static_vector<Tp, M> & rhs) const
+		static_vector<T, N>
+		static_vector<T, N>::operator*(const static_vector<T, M> & rhs) const
 		{
-			static_vector<Tp, N> r(*this);
-			typename static_vector<Tp, M>::const_iterator it(rhs.cbegin());
-			typename static_vector<Tp, M>::const_iterator end(rhs.cend());
+			static_vector<T, N> r(*this);
+			typename static_vector<T, M>::const_iterator it(rhs.cbegin());
+			typename static_vector<T, M>::const_iterator end(rhs.cend());
 			while (!r.full() && it != end) {
 				r.push_back_unsafe(*it);
 				++it;

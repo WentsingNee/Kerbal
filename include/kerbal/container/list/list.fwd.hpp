@@ -27,7 +27,7 @@ namespace kerbal
 	namespace container
 	{
 
-		template <typename Tp, typename Allocator = std::allocator<Tp> >
+		template <typename T, typename Allocator = std::allocator<T> >
 		class list;
 
 #if __cplusplus >= 201703L
@@ -35,14 +35,14 @@ namespace kerbal
 
 		namespace pmr
 		{
-			template <typename Tp>
-			using list = kerbal::container::list<Tp, std::pmr::polymorphic_allocator<Tp> >;
+			template <typename T>
+			using list = kerbal::container::list<T, std::pmr::polymorphic_allocator<T> >;
 		}
 
 #	endif
 #endif
 
-		template <typename Tp, typename Allocator = std::allocator<Tp> >
+		template <typename T, typename Allocator = std::allocator<T> >
 		struct list_node_size;
 
 	} // namespace container

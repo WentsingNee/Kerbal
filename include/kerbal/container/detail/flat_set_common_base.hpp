@@ -26,7 +26,7 @@ namespace kerbal
 		namespace detail
 		{
 
-			template <typename Tp, typename Ordered>
+			template <typename T, typename Ordered>
 			class flat_set_common_base
 			{
 				public:

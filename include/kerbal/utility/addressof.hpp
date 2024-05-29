@@ -62,26 +62,26 @@ namespace kerbal
 
 #	if KERBAL_HAS_BUILTIN_ADDRESSOF_SUPPORT
 
-		template <typename Tp>
+		template <typename T>
 		KERBAL_CONSTEXPR
-		Tp * addressof(Tp & arg) KERBAL_NOEXCEPT
+		T * addressof(T & arg) KERBAL_NOEXCEPT
 		{
 			return KERBAL_BUILTIN_ADDRESSOF(arg);
 		}
 
 #	else
 
-		template <typename Tp>
+		template <typename T>
 #	if __cpp_lib_addressof_constexpr >= 201603L
 		KERBAL_CONSTEXPR17
 #	endif
-		Tp * addressof(Tp & arg) KERBAL_NOEXCEPT
+		T * addressof(T & arg) KERBAL_NOEXCEPT
 		{
 
 #		if __cplusplus >= 201103L
 			return std::addressof(arg);
 #		else
-			return static_cast<Tp*>(
+			return static_cast<T*>(
 						static_cast<void*>(
 							&const_cast<char&>(
 								(const volatile char&)(arg))));
@@ -94,8 +94,8 @@ namespace kerbal
 
 #	if __cplusplus >= 201103L
 
-		template <typename Tp>
-		const Tp * addressof(const Tp &&) = delete;
+		template <typename T>
+		const T * addressof(const T &&) = delete;
 
 #	endif
 

@@ -21,11 +21,11 @@ namespace kerbal
 	namespace operators
 	{
 
-		template <typename Tp, typename Up = Tp>
+		template <typename T, typename U = T>
 		struct addable
 		{
 				KERBAL_CONSTEXPR14
-				friend Tp operator+(Tp lhs, const Up& rhs)
+				friend T operator+(T lhs, const U& rhs)
 #	if KERBAL_COMPILER_ID != KERBAL_COMPILER_ID_ICC
 						KERBAL_CONDITIONAL_NOEXCEPT(noexcept(lhs += rhs))
 #	endif
@@ -35,11 +35,11 @@ namespace kerbal
 				}
 		};
 
-		template <typename Tp, typename Up>
+		template <typename T, typename U>
 		struct addable_left
 		{
 				KERBAL_CONSTEXPR14
-				friend Tp operator+(const Up & lhs, const Tp & rhs)
+				friend T operator+(const U & lhs, const T & rhs)
 #	if KERBAL_COMPILER_ID != KERBAL_COMPILER_ID_ICC
 						KERBAL_CONDITIONAL_NOEXCEPT(noexcept(rhs + lhs))
 #	endif

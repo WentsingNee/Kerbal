@@ -49,7 +49,7 @@ namespace kerbal
 		 * @brief Array with flexible length that stored on automatic storage duration
 		 * @details The class is an encapsulation class of array that could be stored on
 		 *          automatic storage duration. It is more effective than std::vector
-		 *          (especially when type parameter Tp is trivial type) because std::vector
+		 *          (especially when type parameter T is trivial type) because std::vector
 		 *          store elements on heap storage duration (that's required memory allocation
 		 *          and deallocation). Meanwhile the static_vector has more flexibility
 		 *          than std::array for the reason that std::array has fixed length and
@@ -57,15 +57,15 @@ namespace kerbal
 		 *          std::array and c-style array must call default constructor for initialization
 		 *          when it was declared. However, as we all know, sometimes the default construct
 		 *          operations are unnecessary.
-		 * @tparam Tp Type of the elements.
+		 * @tparam T Type of the elements.
 		 * @tparam N The maximum number of elements that the array can hold.
 		 */
-		template <typename Tp, std::size_t N>
+		template <typename T, std::size_t N>
 		class static_vector :
-				protected kerbal::container::detail::sv_trivially_des_overload<Tp, N>
+				protected kerbal::container::detail::sv_trivially_des_overload<T, N>
 		{
 			private:
-				typedef kerbal::container::detail::sv_trivially_des_overload<Tp, N> super;
+				typedef kerbal::container::detail::sv_trivially_des_overload<T, N> super;
 
 			public:
 				typedef typename super::value_type			value_type;
@@ -160,8 +160,8 @@ namespace kerbal
 
 				static_vector(const kerbal::assign::assign_list<void> & ilist);
 
-				template <typename Up>
-				static_vector(const kerbal::assign::assign_list<Up> & ilist);
+				template <typename U>
+				static_vector(const kerbal::assign::assign_list<U> & ilist);
 
 #		endif
 
@@ -189,8 +189,8 @@ namespace kerbal
 
 				static_vector& operator=(const kerbal::assign::assign_list<void> & ilist);
 
-				template <typename Up>
-				static_vector& operator=(const kerbal::assign::assign_list<Up> & ilist);
+				template <typename U>
+				static_vector& operator=(const kerbal::assign::assign_list<U> & ilist);
 
 #		endif
 
@@ -276,13 +276,13 @@ namespace kerbal
 
 				void assign_unsafe(const kerbal::assign::assign_list<void> & ilist);
 
-				template <typename Up>
-				void assign_unsafe(const kerbal::assign::assign_list<Up> & ilist);
+				template <typename U>
+				void assign_unsafe(const kerbal::assign::assign_list<U> & ilist);
 
 				void assign(const kerbal::assign::assign_list<void> & ilist);
 
-				template <typename Up>
-				void assign(const kerbal::assign::assign_list<Up> & ilist);
+				template <typename U>
+				void assign(const kerbal::assign::assign_list<U> & ilist);
 
 #		endif
 
@@ -535,14 +535,14 @@ namespace kerbal
 #		if __cplusplus >= 201103L
 
 				KERBAL_CONSTEXPR20
-				iterator insert(const_iterator pos, std::initializer_list<Tp> ilist);
+				iterator insert(const_iterator pos, std::initializer_list<T> ilist);
 
 #		else
 
 				iterator insert(const_iterator pos, const kerbal::assign::assign_list<void> & ilist);
 
-				template <typename Up>
-				iterator insert(const_iterator pos, const kerbal::assign::assign_list<Up> & ilist);
+				template <typename U>
+				iterator insert(const_iterator pos, const kerbal::assign::assign_list<U> & ilist);
 
 #		endif
 
@@ -619,79 +619,79 @@ namespace kerbal
 				KERBAL_CONSTEXPR14
 				void fill(const_reference val);
 
-				template <typename Up, std::size_t N1, std::size_t N2>
+				template <typename U, std::size_t N1, std::size_t N2>
 				KERBAL_CONSTEXPR14
 				friend
-				static_vector<Up, N1 + N2>
-				operator+(const static_vector<Up, N1> & lhs, const static_vector<Up, N2> & rhs);
+				static_vector<U, N1 + N2>
+				operator+(const static_vector<U, N1> & lhs, const static_vector<U, N2> & rhs);
 
 #		if __cplusplus >= 201103L
 
-				template <typename Up, std::size_t N1, std::size_t N2>
+				template <typename U, std::size_t N1, std::size_t N2>
 				KERBAL_CONSTEXPR14
 				friend
-				static_vector<Up, N1 + N2>
-				operator+(const static_vector<Up, N1> & lhs, const static_vector<Up, N2> && rhs);
+				static_vector<U, N1 + N2>
+				operator+(const static_vector<U, N1> & lhs, const static_vector<U, N2> && rhs);
 
-				template <typename Up, std::size_t N1, std::size_t N2>
+				template <typename U, std::size_t N1, std::size_t N2>
 				KERBAL_CONSTEXPR14
 				friend
-				static_vector<Up, N1 + N2>
-				operator+(const static_vector<Up, N1> && lhs, const static_vector<Up, N2> & rhs);
+				static_vector<U, N1 + N2>
+				operator+(const static_vector<U, N1> && lhs, const static_vector<U, N2> & rhs);
 
-				template <typename Up, std::size_t N1, std::size_t N2>
+				template <typename U, std::size_t N1, std::size_t N2>
 				KERBAL_CONSTEXPR14
 				friend
-				static_vector<Up, N1 + N2>
-				operator+(const static_vector<Up, N1> && lhs, const static_vector<Up, N2> && rhs);
+				static_vector<U, N1 + N2>
+				operator+(const static_vector<U, N1> && lhs, const static_vector<U, N2> && rhs);
 
 #		endif
 
 				template <std::size_t M>
 				KERBAL_CONSTEXPR14
-				static_vector<Tp, N>
-				operator*(const static_vector<Tp, M> & rhs) const;
+				static_vector<T, N>
+				operator*(const static_vector<T, M> & rhs) const;
 
 		};
 
-		template <typename Tp, std::size_t M, std::size_t N>
+		template <typename T, std::size_t M, std::size_t N>
 		KERBAL_CONSTEXPR14
-		bool operator==(const static_vector<Tp, M> & lhs, const static_vector<Tp, N> & rhs)
+		bool operator==(const static_vector<T, M> & lhs, const static_vector<T, N> & rhs)
 		{
 			return kerbal::compare::sequence_equal_to(lhs.cbegin(), lhs.cend(), rhs.cbegin(), rhs.cend());
 		}
 
-		template <typename Tp, std::size_t M, std::size_t N>
+		template <typename T, std::size_t M, std::size_t N>
 		KERBAL_CONSTEXPR14
-		bool operator!=(const static_vector<Tp, M> & lhs, const static_vector<Tp, N> & rhs)
+		bool operator!=(const static_vector<T, M> & lhs, const static_vector<T, N> & rhs)
 		{
 			return kerbal::compare::sequence_not_equal_to(lhs.cbegin(), lhs.cend(), rhs.cbegin(), rhs.cend());
 		}
 
-		template <typename Tp, std::size_t M, std::size_t N>
+		template <typename T, std::size_t M, std::size_t N>
 		KERBAL_CONSTEXPR14
-		bool operator<(const static_vector<Tp, M> & lhs, const static_vector<Tp, N> & rhs)
+		bool operator<(const static_vector<T, M> & lhs, const static_vector<T, N> & rhs)
 		{
 			return kerbal::compare::sequence_less(lhs.cbegin(), lhs.cend(), rhs.cbegin(), rhs.cend());
 		}
 
-		template <typename Tp, std::size_t M, std::size_t N>
+		template <typename T, std::size_t M, std::size_t N>
 		KERBAL_CONSTEXPR14
-		bool operator<=(const static_vector<Tp, M> & lhs, const static_vector<Tp, N> & rhs)
+		bool operator<=(const static_vector<T, M> & lhs, const static_vector<T, N> & rhs)
 		{
 			return kerbal::compare::sequence_less_equal(lhs.cbegin(), lhs.cend(), rhs.cbegin(), rhs.cend());
 		}
 
-		template <typename Tp, std::size_t M, std::size_t N>
+		template <typename T, std::size_t M, std::size_t N>
 		KERBAL_CONSTEXPR14
-		bool operator>(const static_vector<Tp, M> & lhs, const static_vector<Tp, N> & rhs)
+		bool operator>(const static_vector<T, M> & lhs, const static_vector<T, N> & rhs)
 		{
 			return kerbal::compare::sequence_greater(lhs.cbegin(), lhs.cend(), rhs.cbegin(), rhs.cend());
 		}
 
-		template <typename Tp, std::size_t M, std::size_t N>
+		template <typename T, std::size_t M, std::size_t N>
 		KERBAL_CONSTEXPR14
-		bool operator>=(const static_vector<Tp, M> & lhs, const static_vector<Tp, N> & rhs)
+		bool operator>=(const static_vector<T, M> & lhs, const static_vector<T, N> & rhs)
 		{
 			return kerbal::compare::sequence_greater_equal(lhs.cbegin(), lhs.cend(), rhs.cbegin(), rhs.cend());
 		}
@@ -702,9 +702,9 @@ namespace kerbal
 	namespace algorithm
 	{
 
-		template <typename Tp, std::size_t N>
+		template <typename T, std::size_t N>
 		KERBAL_CONSTEXPR14
-		void swap(kerbal::container::static_vector<Tp, N> & a, kerbal::container::static_vector<Tp, N> & b)
+		void swap(kerbal::container::static_vector<T, N> & a, kerbal::container::static_vector<T, N> & b)
 				KERBAL_CONDITIONAL_NOEXCEPT(noexcept(a.swap(b)))
 		{
 			a.swap(b);
@@ -717,9 +717,9 @@ namespace kerbal
 
 KERBAL_NAMESPACE_STD_BEGIN
 
-	template <typename Tp, std::size_t N>
+	template <typename T, std::size_t N>
 	KERBAL_CONSTEXPR14
-	void swap(kerbal::container::static_vector<Tp, N> & a, kerbal::container::static_vector<Tp, N> & b)
+	void swap(kerbal::container::static_vector<T, N> & a, kerbal::container::static_vector<T, N> & b)
 			KERBAL_CONDITIONAL_NOEXCEPT(noexcept(a.swap(b)))
 	{
 		a.swap(b);

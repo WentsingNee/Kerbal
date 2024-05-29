@@ -26,31 +26,31 @@ namespace kerbal
 		namespace detail
 		{
 
-			template <typename Tp>
+			template <typename T>
 			struct pointer_element_type_traits_impl;
 
 #		if __cplusplus >= 201103L
 
-			template <typename Tp, typename ... Args, template <typename, typename ...> class PtrTem>
-			struct pointer_element_type_traits_impl<PtrTem<Tp, Args...> >
+			template <typename T, typename ... Args, template <typename, typename ...> class PtrTem>
+			struct pointer_element_type_traits_impl<PtrTem<T, Args...> >
 			{
-					typedef Tp type;
+					typedef T type;
 			};
 
 #		else
 
-			template <typename Tp, template <typename> class PtrTem>
-			struct pointer_element_type_traits_impl<PtrTem<Tp> >
+			template <typename T, template <typename> class PtrTem>
+			struct pointer_element_type_traits_impl<PtrTem<T> >
 			{
-					typedef Tp type;
+					typedef T type;
 			};
 
 #		endif
 
-			template <typename Tp>
-			struct pointer_element_type_traits_impl<Tp*>
+			template <typename T>
+			struct pointer_element_type_traits_impl<T*>
 			{
-					typedef Tp type;
+					typedef T type;
 			};
 
 
@@ -77,31 +77,31 @@ namespace kerbal
 					typedef typename Ptr::difference_type type;
 			};
 
-			template <typename Tp, typename Up>
+			template <typename T, typename U>
 			struct pointer_traits_rebind_helper;
 
 #		if __cplusplus >= 201103L
 
-			template <typename Tp, typename ... Args, typename Up, template <typename, typename ...> class PtrTem>
-			struct pointer_traits_rebind_helper<PtrTem<Tp, Args...>, Up>
+			template <typename T, typename ... Args, typename U, template <typename, typename ...> class PtrTem>
+			struct pointer_traits_rebind_helper<PtrTem<T, Args...>, U>
 			{
-					typedef PtrTem<Up, Args...> type;
+					typedef PtrTem<U, Args...> type;
 			};
 
 #		else
 
-			template <typename Tp, typename Up, template <typename> class PtrTem>
-			struct pointer_traits_rebind_helper<PtrTem<Tp>, Up>
+			template <typename T, typename U, template <typename> class PtrTem>
+			struct pointer_traits_rebind_helper<PtrTem<T>, U>
 			{
-					typedef PtrTem<Up> type;
+					typedef PtrTem<U> type;
 			};
 
 #		endif
 
-			template <typename Tp, typename Up>
-			struct pointer_traits_rebind_helper<Tp*, Up>
+			template <typename T, typename U>
+			struct pointer_traits_rebind_helper<T*, U>
 			{
-					typedef Up* type;
+					typedef U* type;
 			};
 
 		} // namespace detail
@@ -115,10 +115,10 @@ namespace kerbal
 
 				typedef typename detail::pointer_difference_type_traits_helper<Ptr>::type difference_type;
 
-				template <typename Up>
+				template <typename U>
 				struct rebind
 				{
-						typedef typename kerbal::memory::detail::pointer_traits_rebind_helper<Ptr, Up>::type other;
+						typedef typename kerbal::memory::detail::pointer_traits_rebind_helper<Ptr, U>::type other;
 				};
 		};
 
@@ -131,10 +131,10 @@ namespace kerbal
 
 				typedef std::ptrdiff_t difference_type;
 
-				template <typename Up>
+				template <typename U>
 				struct rebind
 				{
-						typedef typename kerbal::memory::detail::pointer_traits_rebind_helper<T*, Up>::type other;
+						typedef typename kerbal::memory::detail::pointer_traits_rebind_helper<T*, U>::type other;
 				};
 
 		};

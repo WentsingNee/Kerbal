@@ -31,16 +31,16 @@ namespace kerbal
 	namespace container
 	{
 
-		template <typename Tp, std::size_t N, typename KeyCompare = kerbal::compare::less<Tp> >
+		template <typename T, std::size_t N, typename KeyCompare = kerbal::compare::less<T> >
 		class static_flat_multiset :
 				public kerbal::container::detail::flat_multiset_base<
-					Tp,
-					kerbal::container::static_ordered<Tp, N, kerbal::container::identity_extractor<Tp>, KeyCompare>
+					T,
+					kerbal::container::static_ordered<T, N, kerbal::container::identity_extractor<T>, KeyCompare>
 				>
 		{
 			private:
-				typedef kerbal::container::static_ordered<Tp, N, kerbal::container::identity_extractor<Tp>, KeyCompare> Ordered;
-				typedef kerbal::container::detail::flat_multiset_base<Tp, Ordered> super;
+				typedef kerbal::container::static_ordered<T, N, kerbal::container::identity_extractor<T>, KeyCompare> Ordered;
+				typedef kerbal::container::detail::flat_multiset_base<T, Ordered> super;
 
 			public:
 				typedef typename super::key_compare			key_compare;
@@ -153,48 +153,48 @@ namespace kerbal
 
 				template <std::size_t M>
 				KERBAL_CONSTEXPR14
-				friend bool operator==(const static_flat_multiset<Tp, M, KeyCompare> & lhs,
-										const static_flat_multiset<Tp, N, KeyCompare> & rhs)
+				friend bool operator==(const static_flat_multiset<T, M, KeyCompare> & lhs,
+										const static_flat_multiset<T, N, KeyCompare> & rhs)
 				{
 					return lhs.ordered == rhs.ordered;
 				}
 
 				template <std::size_t M>
 				KERBAL_CONSTEXPR14
-				friend bool operator!=(const static_flat_multiset<Tp, M, KeyCompare> & lhs,
-										const static_flat_multiset<Tp, N, KeyCompare> & rhs)
+				friend bool operator!=(const static_flat_multiset<T, M, KeyCompare> & lhs,
+										const static_flat_multiset<T, N, KeyCompare> & rhs)
 				{
 					return lhs.ordered != rhs.ordered;
 				}
 
 				template <std::size_t M>
 				KERBAL_CONSTEXPR14
-				friend bool operator<(const static_flat_multiset<Tp, M, KeyCompare> & lhs,
-										const static_flat_multiset<Tp, N, KeyCompare> & rhs)
+				friend bool operator<(const static_flat_multiset<T, M, KeyCompare> & lhs,
+										const static_flat_multiset<T, N, KeyCompare> & rhs)
 				{
 					return lhs.ordered < rhs.ordered;
 				}
 
 				template <std::size_t M>
 				KERBAL_CONSTEXPR14
-				friend bool operator<=(const static_flat_multiset<Tp, M, KeyCompare> & lhs,
-										const static_flat_multiset<Tp, N, KeyCompare> & rhs)
+				friend bool operator<=(const static_flat_multiset<T, M, KeyCompare> & lhs,
+										const static_flat_multiset<T, N, KeyCompare> & rhs)
 				{
 					return lhs.ordered <= rhs.ordered;
 				}
 
 				template <std::size_t M>
 				KERBAL_CONSTEXPR14
-				friend bool operator>(const static_flat_multiset<Tp, M, KeyCompare> & lhs,
-										const static_flat_multiset<Tp, N, KeyCompare> & rhs)
+				friend bool operator>(const static_flat_multiset<T, M, KeyCompare> & lhs,
+										const static_flat_multiset<T, N, KeyCompare> & rhs)
 				{
 					return lhs.ordered > rhs.ordered;
 				}
 
 				template <std::size_t M>
 				KERBAL_CONSTEXPR14
-				friend bool operator>=(const static_flat_multiset<Tp, M, KeyCompare> & lhs,
-										const static_flat_multiset<Tp, N, KeyCompare> & rhs)
+				friend bool operator>=(const static_flat_multiset<T, M, KeyCompare> & lhs,
+										const static_flat_multiset<T, N, KeyCompare> & rhs)
 				{
 					return lhs.ordered >= rhs.ordered;
 				}
@@ -207,10 +207,10 @@ namespace kerbal
 	namespace algorithm
 	{
 
-		template <typename Tp, std::size_t N, typename KeyCompare>
+		template <typename T, std::size_t N, typename KeyCompare>
 		KERBAL_CONSTEXPR14
-		void swap(kerbal::container::static_flat_multiset<Tp, N, KeyCompare> & a,
-				  kerbal::container::static_flat_multiset<Tp, N, KeyCompare> & b)
+		void swap(kerbal::container::static_flat_multiset<T, N, KeyCompare> & a,
+				  kerbal::container::static_flat_multiset<T, N, KeyCompare> & b)
 				KERBAL_CONDITIONAL_NOEXCEPT(noexcept(a.swap(b)))
 		{
 			a.swap(b);
@@ -223,10 +223,10 @@ namespace kerbal
 
 KERBAL_NAMESPACE_STD_BEGIN
 
-	template <typename Tp, std::size_t N, typename KeyCompare>
+	template <typename T, std::size_t N, typename KeyCompare>
 	KERBAL_CONSTEXPR14
-	void swap(kerbal::container::static_flat_multiset<Tp, N, KeyCompare> & a,
-			  kerbal::container::static_flat_multiset<Tp, N, KeyCompare> & b)
+	void swap(kerbal::container::static_flat_multiset<T, N, KeyCompare> & a,
+			  kerbal::container::static_flat_multiset<T, N, KeyCompare> & b)
 			KERBAL_CONDITIONAL_NOEXCEPT(noexcept(a.swap(b)))
 	{
 		a.swap(b);

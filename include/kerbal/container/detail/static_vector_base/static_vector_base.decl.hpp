@@ -35,12 +35,12 @@ namespace kerbal
 		namespace detail
 		{
 
-			template <typename Tp, std::size_t N>
+			template <typename T, std::size_t N>
 			class static_vector_base
 			{
 				public:
-					typedef Tp						value_type;
-					typedef const Tp				const_type;
+					typedef T						value_type;
+					typedef const T					const_type;
 					typedef value_type &			reference;
 					typedef const value_type &		const_reference;
 					typedef value_type*				pointer;
@@ -127,17 +127,17 @@ namespace kerbal
 
 			};
 
-			template <typename Tp, std::size_t N, bool is_trivially_destructible =
-					kerbal::type_traits::try_test_is_trivially_destructible<Tp>::IS_TRUE::value
+			template <typename T, std::size_t N, bool is_trivially_destructible =
+					kerbal::type_traits::try_test_is_trivially_destructible<T>::IS_TRUE::value
 			>
 			class sv_trivially_des_overload;
 
-			template <typename Tp, std::size_t N>
-			class sv_trivially_des_overload<Tp, N, false> :
-					protected kerbal::container::detail::static_vector_base<Tp, N>
+			template <typename T, std::size_t N>
+			class sv_trivially_des_overload<T, N, false> :
+					protected kerbal::container::detail::static_vector_base<T, N>
 			{
 				private:
-					typedef kerbal::container::detail::static_vector_base<Tp, N> super;
+					typedef kerbal::container::detail::static_vector_base<T, N> super;
 
 				public:
 					typedef typename super::value_type			value_type;
@@ -213,12 +213,12 @@ namespace kerbal
 
 			};
 
-			template <typename Tp, std::size_t N>
-			class sv_trivially_des_overload<Tp, N, true> :
-					protected kerbal::container::detail::static_vector_base<Tp, N>
+			template <typename T, std::size_t N>
+			class sv_trivially_des_overload<T, N, true> :
+					protected kerbal::container::detail::static_vector_base<T, N>
 			{
 				private:
-					typedef kerbal::container::detail::static_vector_base<Tp, N> super;
+					typedef kerbal::container::detail::static_vector_base<T, N> super;
 
 				public:
 					typedef typename super::value_type			value_type;

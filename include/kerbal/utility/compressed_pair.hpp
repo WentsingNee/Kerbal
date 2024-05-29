@@ -45,14 +45,14 @@ namespace kerbal
 		{
 		};
 
-		template <typename Tp, typename Up>
+		template <typename T, typename U>
 		class compressed_pair:
-				public kerbal::utility::member_compress_helper<Tp, 0>,
-				public kerbal::utility::member_compress_helper<Up, kerbal::type_traits::is_same<Tp, Up>::value ? 1 : 0>
+				public kerbal::utility::member_compress_helper<T, 0>,
+				public kerbal::utility::member_compress_helper<U, kerbal::type_traits::is_same<T, U>::value ? 1 : 0>
 		{
 			private:
-				typedef kerbal::utility::member_compress_helper<Tp, 0> super0;
-				typedef kerbal::utility::member_compress_helper<Up, kerbal::type_traits::is_same<Tp, Up>::value ? 1 : 0> super1;
+				typedef kerbal::utility::member_compress_helper<T, 0> super0;
+				typedef kerbal::utility::member_compress_helper<U, kerbal::type_traits::is_same<T, U>::value ? 1 : 0> super1;
 
 				template <std::size_t I>
 				struct super
@@ -66,8 +66,8 @@ namespace kerbal
 				};
 
 			public:
-				typedef Tp first_type;
-				typedef Up second_type;
+				typedef T first_type;
+				typedef U second_type;
 
 				typedef typename super0::IS_COMPRESSED		is_first_compressed;
 				typedef typename super1::IS_COMPRESSED		is_second_compressed;
@@ -90,7 +90,7 @@ namespace kerbal
 				{
 					private:
 						KERBAL_STATIC_ASSERT(I < 2, "Index out of range");
-						typedef kerbal::tmp::type_vector<Tp, Up> vec;
+						typedef kerbal::tmp::type_vector<T, U> vec;
 
 					public:
 						typedef typename kerbal::tmp::type_vector_at<vec, I>::result type;
@@ -178,25 +178,25 @@ namespace kerbal
 				{
 				}
 
-				template <typename Tp2, typename Up2>
+				template <typename T2, typename U2>
 				KERBAL_CONSTEXPR
-				compressed_pair(const Tp2 & first, const Up2 & second) :
+				compressed_pair(const T2 & first, const U2 & second) :
 						super0(kerbal::utility::in_place_t(), first),
 						super1(kerbal::utility::in_place_t(), second)
 				{
 				}
 
-				template <typename Up2>
+				template <typename U2>
 				KERBAL_CONSTEXPR
-				compressed_pair(compressed_pair_default_construct_tag, const Up2 & second) :
+				compressed_pair(compressed_pair_default_construct_tag, const U2 & second) :
 						super0(kerbal::utility::in_place_t()),
 						super1(kerbal::utility::in_place_t(), second)
 				{
 				}
 
-				template <typename Tp2>
+				template <typename T2>
 				KERBAL_CONSTEXPR
-				compressed_pair(const Tp2 & first, compressed_pair_default_construct_tag) :
+				compressed_pair(const T2 & first, compressed_pair_default_construct_tag) :
 						super0(kerbal::utility::in_place_t(), first),
 						super1(kerbal::utility::in_place_t())
 				{
@@ -204,65 +204,65 @@ namespace kerbal
 
 #		else
 
-				template <typename Tp2, typename Up2>
+				template <typename T2, typename U2>
 				KERBAL_CONSTEXPR
-				compressed_pair(Tp2&& first, Up2&& second)
+				compressed_pair(T2&& first, U2&& second)
 						KERBAL_CONDITIONAL_NOEXCEPT((
 							kerbal::type_traits::tribool_conjunction<
-								kerbal::type_traits::try_test_is_nothrow_constructible<super0, kerbal::utility::in_place_t, Tp2&&>,
-								kerbal::type_traits::try_test_is_nothrow_constructible<super1, kerbal::utility::in_place_t, Up2&&>
+								kerbal::type_traits::try_test_is_nothrow_constructible<super0, kerbal::utility::in_place_t, T2&&>,
+								kerbal::type_traits::try_test_is_nothrow_constructible<super1, kerbal::utility::in_place_t, U2&&>
 							>::result::IS_TRUE::value
 						)) :
-						super0(kerbal::utility::in_place_t(), kerbal::utility::forward<Tp2>(first)),
-						super1(kerbal::utility::in_place_t(), kerbal::utility::forward<Up2>(second))
+						super0(kerbal::utility::in_place_t(), kerbal::utility::forward<T2>(first)),
+						super1(kerbal::utility::in_place_t(), kerbal::utility::forward<U2>(second))
 				{
 				}
 
-				template <typename Up2>
+				template <typename U2>
 				KERBAL_CONSTEXPR
-				compressed_pair(compressed_pair_default_construct_tag, Up2&& second)
+				compressed_pair(compressed_pair_default_construct_tag, U2&& second)
 						KERBAL_CONDITIONAL_NOEXCEPT((
 							kerbal::type_traits::tribool_conjunction<
 								kerbal::type_traits::try_test_is_nothrow_constructible<super0, kerbal::utility::in_place_t>,
-								kerbal::type_traits::try_test_is_nothrow_constructible<super1, kerbal::utility::in_place_t, Up2&&>
+								kerbal::type_traits::try_test_is_nothrow_constructible<super1, kerbal::utility::in_place_t, U2&&>
 							>::result::IS_TRUE::value
 						)) :
 						super0(kerbal::utility::in_place_t()),
-						super1(kerbal::utility::in_place_t(), kerbal::utility::forward<Up2>(second))
+						super1(kerbal::utility::in_place_t(), kerbal::utility::forward<U2>(second))
 				{
 				}
 
-				template <typename Tp2>
+				template <typename T2>
 				KERBAL_CONSTEXPR
-				compressed_pair(Tp2&& first, compressed_pair_default_construct_tag)
+				compressed_pair(T2&& first, compressed_pair_default_construct_tag)
 						KERBAL_CONDITIONAL_NOEXCEPT((
 							kerbal::type_traits::tribool_conjunction<
-								kerbal::type_traits::try_test_is_nothrow_constructible<super0, kerbal::utility::in_place_t, Tp2&&>,
+								kerbal::type_traits::try_test_is_nothrow_constructible<super0, kerbal::utility::in_place_t, T2&&>,
 								kerbal::type_traits::try_test_is_nothrow_constructible<super1, kerbal::utility::in_place_t>
 							>::result::IS_TRUE::value
 						)) :
-						super0(kerbal::utility::in_place_t(), kerbal::utility::forward<Tp2>(first)),
+						super0(kerbal::utility::in_place_t(), kerbal::utility::forward<T2>(first)),
 						super1(kerbal::utility::in_place_t())
 				{
 				}
 
 #		endif
 
-				template <typename Tp2, typename Up2>
+				template <typename T2, typename U2>
 				KERBAL_CONSTEXPR
 				explicit
-				compressed_pair(const kerbal::utility::compressed_pair<Tp2, Up2> & p)
+				compressed_pair(const kerbal::utility::compressed_pair<T2, U2> & p)
 						KERBAL_CONDITIONAL_NOEXCEPT((
 							kerbal::type_traits::tribool_conjunction<
 								kerbal::type_traits::try_test_is_nothrow_constructible<
 									super0,
 									kerbal::utility::in_place_t,
-									decltype(kerbal::utility::declval<const kerbal::utility::compressed_pair<Tp2, Up2> &>().first())
+									decltype(kerbal::utility::declval<const kerbal::utility::compressed_pair<T2, U2> &>().first())
 								>,
 								kerbal::type_traits::try_test_is_nothrow_constructible<
 									super1,
 									kerbal::utility::in_place_t,
-									decltype(kerbal::utility::declval<const kerbal::utility::compressed_pair<Tp2, Up2> &>().second())
+									decltype(kerbal::utility::declval<const kerbal::utility::compressed_pair<T2, U2> &>().second())
 								>
 							>::result::IS_TRUE::value
 						)) :
@@ -271,21 +271,21 @@ namespace kerbal
 				{
 				}
 
-				template <typename Tp2, typename Up2>
+				template <typename T2, typename U2>
 				KERBAL_CONSTEXPR
 				explicit
-				compressed_pair(const std::pair<Tp2, Up2> & p)
+				compressed_pair(const std::pair<T2, U2> & p)
 						KERBAL_CONDITIONAL_NOEXCEPT((
 							kerbal::type_traits::tribool_conjunction<
 								kerbal::type_traits::try_test_is_nothrow_constructible<
 									super0,
 									kerbal::utility::in_place_t,
-									decltype(kerbal::utility::declval<const std::pair<Tp2, Up2> &>().first)
+									decltype(kerbal::utility::declval<const std::pair<T2, U2> &>().first)
 								>,
 								kerbal::type_traits::try_test_is_nothrow_constructible<
 									super1,
 									kerbal::utility::in_place_t,
-									decltype(kerbal::utility::declval<const std::pair<Tp2, Up2> &>().second)
+									decltype(kerbal::utility::declval<const std::pair<T2, U2> &>().second)
 								>
 							>::result::IS_TRUE::value
 						)) :
@@ -297,10 +297,10 @@ namespace kerbal
 
 #		if __cplusplus >= 201103L
 
-				template <typename Tp2, typename Up2>
+				template <typename T2, typename U2>
 				KERBAL_CONSTEXPR14
 				explicit
-				compressed_pair(kerbal::utility::compressed_pair<Tp2, Up2> && p)
+				compressed_pair(kerbal::utility::compressed_pair<T2, U2> && p)
 						KERBAL_CONDITIONAL_NOEXCEPT((
 							kerbal::type_traits::tribool_conjunction<
 								kerbal::type_traits::try_test_is_nothrow_constructible<
@@ -320,10 +320,10 @@ namespace kerbal
 				{
 				}
 
-				template <typename Tp2, typename Up2>
+				template <typename T2, typename U2>
 				KERBAL_CONSTEXPR14
 				explicit
-				compressed_pair(std::pair<Tp2, Up2> && p)
+				compressed_pair(std::pair<T2, U2> && p)
 						KERBAL_CONDITIONAL_NOEXCEPT((
 							kerbal::type_traits::tribool_conjunction<
 								kerbal::type_traits::try_test_is_nothrow_constructible<
@@ -359,9 +359,9 @@ namespace kerbal
 #		endif
 
 
-				template <typename Tp2, typename Up2>
+				template <typename T2, typename U2>
 				KERBAL_CONSTEXPR14
-				compressed_pair& operator=(const kerbal::utility::compressed_pair<Tp2, Up2> & p)
+				compressed_pair& operator=(const kerbal::utility::compressed_pair<T2, U2> & p)
 				{
 					kerbal::assign::generic_assign(this->first(), p.first());
 					kerbal::assign::generic_assign(this->second(), p.second());
@@ -370,9 +370,9 @@ namespace kerbal
 
 #		if __cplusplus >= 201103L
 
-				template <typename Tp2, typename Up2>
+				template <typename T2, typename U2>
 				KERBAL_CONSTEXPR14
-				compressed_pair& operator=(kerbal::utility::compressed_pair<Tp2, Up2> && p)
+				compressed_pair& operator=(kerbal::utility::compressed_pair<T2, U2> && p)
 				{
 					kerbal::assign::generic_assign(this->first(), kerbal::compatibility::move(p).first());
 					kerbal::assign::generic_assign(this->second(), kerbal::compatibility::move(p).second());
@@ -484,9 +484,9 @@ namespace kerbal
 
 		};
 
-		template <typename Tp, typename Up>
+		template <typename T, typename U>
 		KERBAL_CONSTEXPR
-		bool operator==(const kerbal::utility::compressed_pair<Tp, Up>& lhs, const kerbal::utility::compressed_pair<Tp, Up>& rhs)
+		bool operator==(const kerbal::utility::compressed_pair<T, U>& lhs, const kerbal::utility::compressed_pair<T, U>& rhs)
 				KERBAL_CONDITIONAL_NOEXCEPT(
 						noexcept(static_cast<bool>(lhs.first() == rhs.first())) &&
 						noexcept(static_cast<bool>(lhs.second() == rhs.second()))
@@ -495,9 +495,9 @@ namespace kerbal
 			return static_cast<bool>(lhs.first() == rhs.first()) && static_cast<bool>(lhs.second() == rhs.second());
 		}
 
-		template <typename Tp, typename Up>
+		template <typename T, typename U>
 		KERBAL_CONSTEXPR
-		bool operator!=(const kerbal::utility::compressed_pair<Tp, Up>& lhs, const kerbal::utility::compressed_pair<Tp, Up>& rhs)
+		bool operator!=(const kerbal::utility::compressed_pair<T, U>& lhs, const kerbal::utility::compressed_pair<T, U>& rhs)
 				KERBAL_CONDITIONAL_NOEXCEPT(
 						noexcept(static_cast<bool>(lhs.first() != rhs.first())) &&
 						noexcept(static_cast<bool>(lhs.second() != rhs.second()))
@@ -506,9 +506,9 @@ namespace kerbal
 			return static_cast<bool>(lhs.first() != rhs.first()) || static_cast<bool>(lhs.second() != rhs.second());
 		}
 
-		template <typename Tp, typename Up>
+		template <typename T, typename U>
 		KERBAL_CONSTEXPR
-		bool operator<(const kerbal::utility::compressed_pair<Tp, Up>& lhs, const kerbal::utility::compressed_pair<Tp, Up>& rhs)
+		bool operator<(const kerbal::utility::compressed_pair<T, U>& lhs, const kerbal::utility::compressed_pair<T, U>& rhs)
 				KERBAL_CONDITIONAL_NOEXCEPT(
 						noexcept(static_cast<bool>(lhs.first() < rhs.first())) &&
 						noexcept(!static_cast<bool>(rhs.first() < lhs.first())) &&
@@ -519,47 +519,47 @@ namespace kerbal
 				|| (!static_cast<bool>(rhs.first() < lhs.first()) && static_cast<bool>(lhs.second() < rhs.second()));
 		}
 
-		template <typename Tp, typename Up>
+		template <typename T, typename U>
 		KERBAL_CONSTEXPR
-		bool operator>(const kerbal::utility::compressed_pair<Tp, Up>& lhs, const kerbal::utility::compressed_pair<Tp, Up>& rhs)
+		bool operator>(const kerbal::utility::compressed_pair<T, U>& lhs, const kerbal::utility::compressed_pair<T, U>& rhs)
 		{
 			return static_cast<bool>(lhs.first() > rhs.first())
 				|| (!static_cast<bool>(rhs.first() > lhs.first()) && static_cast<bool>(lhs.second() > rhs.second()));
 		}
 
-		template <typename Tp, typename Up>
+		template <typename T, typename U>
 		KERBAL_CONSTEXPR
-		bool operator<=(const kerbal::utility::compressed_pair<Tp, Up>& lhs, const kerbal::utility::compressed_pair<Tp, Up>& rhs)
+		bool operator<=(const kerbal::utility::compressed_pair<T, U>& lhs, const kerbal::utility::compressed_pair<T, U>& rhs)
 		{
 			return static_cast<bool>(lhs.first() <= rhs.first()) && (
 					!static_cast<bool>(rhs.first() <= lhs.first()) || static_cast<bool>(lhs.second() <= rhs.second()));
 		}
 
-		template <typename Tp, typename Up>
+		template <typename T, typename U>
 		KERBAL_CONSTEXPR
-		bool operator>=(const kerbal::utility::compressed_pair<Tp, Up>& lhs, const kerbal::utility::compressed_pair<Tp, Up>& rhs)
+		bool operator>=(const kerbal::utility::compressed_pair<T, U>& lhs, const kerbal::utility::compressed_pair<T, U>& rhs)
 		{
 			return static_cast<bool>(lhs.first() >= rhs.first()) && (
 					!static_cast<bool>(rhs.first() >= lhs.first()) || static_cast<bool>(lhs.second() >= rhs.second()));
 		}
 
-		template <typename Tp, typename Up>
+		template <typename T, typename U>
 		KERBAL_CONSTEXPR
-		kerbal::utility::compressed_pair<Tp, Up>
-		make_compressed_pair(const Tp & first, const Up & second)
+		kerbal::utility::compressed_pair<T, U>
+		make_compressed_pair(const T & first, const U & second)
 				KERBAL_CONDITIONAL_NOEXCEPT((
 					kerbal::type_traits::try_test_is_nothrow_constructible<
-						kerbal::utility::compressed_pair<Tp, Up>, const Tp &, const Up &
+						kerbal::utility::compressed_pair<T, U>, const T &, const U &
 					>::IS_TRUE::value
 				))
 		{
-			return kerbal::utility::compressed_pair<Tp, Up>(first, second);
+			return kerbal::utility::compressed_pair<T, U>(first, second);
 		}
 
 #	if __cplusplus >= 201703L
 
-		template <typename Tp, typename Up>
-		compressed_pair(const Tp &, const Up &) -> compressed_pair<Tp, Up>;
+		template <typename T, typename U>
+		compressed_pair(const T &, const U &) -> compressed_pair<T, U>;
 
 #	endif
 
@@ -574,9 +574,9 @@ namespace kerbal
 	namespace algorithm
 	{
 
-		template <typename Tp, typename Up>
+		template <typename T, typename U>
 		KERBAL_CONSTEXPR20
-		void swap(kerbal::utility::compressed_pair<Tp, Up> & a, kerbal::utility::compressed_pair<Tp, Up> & b)
+		void swap(kerbal::utility::compressed_pair<T, U> & a, kerbal::utility::compressed_pair<T, U> & b)
 				KERBAL_CONDITIONAL_NOEXCEPT(noexcept(a.swap(b)))
 		{
 			a.swap(b);
@@ -589,9 +589,9 @@ namespace kerbal
 
 KERBAL_NAMESPACE_STD_BEGIN
 
-	template <typename Tp, typename Up>
+	template <typename T, typename U>
 	KERBAL_CONSTEXPR20
-	void swap(kerbal::utility::compressed_pair<Tp, Up> & a, kerbal::utility::compressed_pair<Tp, Up> & b)
+	void swap(kerbal::utility::compressed_pair<T, U> & a, kerbal::utility::compressed_pair<T, U> & b)
 			KERBAL_CONDITIONAL_NOEXCEPT(noexcept(a.swap(b)))
 	{
 		a.swap(b);
@@ -609,46 +609,46 @@ KERBAL_NAMESPACE_STD_END
 
 KERBAL_NAMESPACE_STD_BEGIN
 
-	template <typename Tp, typename Up>
-	struct tuple_size<kerbal::utility::compressed_pair<Tp, Up> > :
+	template <typename T, typename U>
+	struct tuple_size<kerbal::utility::compressed_pair<T, U> > :
 			std::integral_constant<std::size_t, 2>
 	{
 	};
 
-	template <std::size_t I, typename Tp, typename Up>
-	struct tuple_element<I, kerbal::utility::compressed_pair<Tp, Up> > :
-			kerbal::utility::compressed_pair<Tp, Up>::template value_type<I>
+	template <std::size_t I, typename T, typename U>
+	struct tuple_element<I, kerbal::utility::compressed_pair<T, U> > :
+			kerbal::utility::compressed_pair<T, U>::template value_type<I>
 	{
 	};
 
-	template <std::size_t I, typename Tp, typename Up>
+	template <std::size_t I, typename T, typename U>
 	KERBAL_CONSTEXPR14
-	typename kerbal::utility::compressed_pair<Tp, Up>::template reference<I>::type
-	get(kerbal::utility::compressed_pair<Tp, Up> & pair) KERBAL_NOEXCEPT
+	typename kerbal::utility::compressed_pair<T, U>::template reference<I>::type
+	get(kerbal::utility::compressed_pair<T, U> & pair) KERBAL_NOEXCEPT
 	{
 		return pair.template get<I>();
 	}
 
-	template <std::size_t I, typename Tp, typename Up>
+	template <std::size_t I, typename T, typename U>
 	KERBAL_CONSTEXPR
-	typename kerbal::utility::compressed_pair<Tp, Up>::template const_reference<I>::type
-	get(const kerbal::utility::compressed_pair<Tp, Up> & pair) KERBAL_NOEXCEPT
+	typename kerbal::utility::compressed_pair<T, U>::template const_reference<I>::type
+	get(const kerbal::utility::compressed_pair<T, U> & pair) KERBAL_NOEXCEPT
 	{
 		return pair.template get<I>();
 	}
 
-	template <std::size_t I, typename Tp, typename Up>
+	template <std::size_t I, typename T, typename U>
 	KERBAL_CONSTEXPR14
-	typename kerbal::utility::compressed_pair<Tp, Up>::template rvalue_reference<I>::type
-	get(kerbal::utility::compressed_pair<Tp, Up> && pair) KERBAL_NOEXCEPT
+	typename kerbal::utility::compressed_pair<T, U>::template rvalue_reference<I>::type
+	get(kerbal::utility::compressed_pair<T, U> && pair) KERBAL_NOEXCEPT
 	{
 		return kerbal::compatibility::move(pair).template get<I>();
 	}
 
-	template <std::size_t I, typename Tp, typename Up>
+	template <std::size_t I, typename T, typename U>
 	KERBAL_CONSTEXPR
-	typename kerbal::utility::compressed_pair<Tp, Up>::template const_rvalue_reference<I>::type
-	get(const kerbal::utility::compressed_pair<Tp, Up> && pair) KERBAL_NOEXCEPT
+	typename kerbal::utility::compressed_pair<T, U>::template const_rvalue_reference<I>::type
+	get(const kerbal::utility::compressed_pair<T, U> && pair) KERBAL_NOEXCEPT
 	{
 		return kerbal::compatibility::move(pair).template get<I>();
 	}

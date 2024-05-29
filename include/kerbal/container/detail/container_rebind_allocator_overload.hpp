@@ -35,29 +35,29 @@ namespace kerbal
 		namespace detail
 		{
 
-			template <typename Allocator, typename Up>
+			template <typename Allocator, typename U>
 			struct container_rebind_allocator_overload_helper
 			{
 				public:
 					typedef kerbal::memory::allocator_traits<Allocator>								original_allocator_traits;
-					typedef typename original_allocator_traits::template rebind_alloc<Up>::other	rebind_allocator_type;
-					typedef typename original_allocator_traits::template rebind_traits<Up>::other	rebind_allocator_traits;
+					typedef typename original_allocator_traits::template rebind_alloc<U>::other	rebind_allocator_type;
+					typedef typename original_allocator_traits::template rebind_traits<U>::other	rebind_allocator_traits;
 			};
 
 
-			template <typename Allocator, typename Up>
+			template <typename Allocator, typename U>
 			class container_rebind_allocator_overload:
 					private kerbal::utility::member_compress_helper<
-							typename container_rebind_allocator_overload_helper<Allocator, Up>::rebind_allocator_type
+							typename container_rebind_allocator_overload_helper<Allocator, U>::rebind_allocator_type
 					>
 			{
 				private:
 					typedef kerbal::utility::member_compress_helper<
-							typename container_rebind_allocator_overload_helper<Allocator, Up>::rebind_allocator_type
+							typename container_rebind_allocator_overload_helper<Allocator, U>::rebind_allocator_type
 					> super;
 
 				private:
-					typedef container_rebind_allocator_overload_helper<Allocator, Up>	helper;
+					typedef container_rebind_allocator_overload_helper<Allocator, U>	helper;
 
 				protected:
 					typedef typename helper::original_allocator_traits	original_allocator_traits;

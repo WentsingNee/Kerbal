@@ -21,10 +21,10 @@ namespace kerbal
 	{
 
 		KERBAL_MODULE_EXPORT
-		template <typename Tp>
+		template <typename T>
 		struct type_identity
 		{
-				typedef Tp type;
+				typedef T type;
 		};
 
 	} // namespace type_traits

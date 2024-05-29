@@ -24,7 +24,7 @@ namespace kerbal
 		namespace detail
 		{
 
-			template <typename Tp, std::size_t N>
+			template <typename T, std::size_t N>
 			class static_vector_base;
 
 			template <typename T>

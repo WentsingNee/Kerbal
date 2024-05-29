@@ -54,11 +54,11 @@ namespace kerbal
 		namespace detail
 		{
 
-			template <typename Tp>
+			template <typename T>
 			struct is_list_radix_sort_acceptable_type :
 					kerbal::type_traits::bool_constant<
-						kerbal::type_traits::is_integral<Tp>::value &&
-						sizeof(Tp) <= 4
+						kerbal::type_traits::is_integral<T>::value &&
+						sizeof(T) <= 4
 					>
 			{
 			};
@@ -216,7 +216,7 @@ namespace kerbal
 
 			};
 
-			template <typename Tp>
+			template <typename T>
 			class list_type_only:
 					protected list_type_unrelated
 			{
@@ -224,14 +224,14 @@ namespace kerbal
 					typedef list_type_unrelated super;
 					typedef list_type_unrelated list_type_unrelated;
 
-					template <typename Up, typename Allocator>
+					template <typename U, typename Allocator>
 					friend struct list_typedef_helper;
 
-					template <typename Up, typename Allocator>
+					template <typename U, typename Allocator>
 					friend class kerbal::container::list;
 
 				protected:
-					typedef Tp							value_type;
+					typedef T							value_type;
 					typedef const value_type			const_type;
 					typedef value_type&					reference;
 					typedef const value_type&			const_reference;
@@ -246,8 +246,8 @@ namespace kerbal
 					typedef list_type_unrelated::size_type						size_type;
 					typedef list_type_unrelated::difference_type				difference_type;
 
-					typedef kerbal::container::detail::list_iter<Tp>			iterator;
-					typedef kerbal::container::detail::list_kiter<Tp>			const_iterator;
+					typedef kerbal::container::detail::list_iter<T>				iterator;
+					typedef kerbal::container::detail::list_kiter<T>			const_iterator;
 					typedef kerbal::iterator::reverse_iterator<iterator>		reverse_iterator;
 					typedef kerbal::iterator::reverse_iterator<const_iterator>	const_reverse_iterator;
 
@@ -1024,7 +1024,7 @@ namespace kerbal
 					template <typename NodeAllocator, typename ... Args>
 					KERBAL_CONSTEXPR20
 					static
-					list_node_chain<Tp> k_build_n_new_nodes_unguarded(NodeAllocator & alloc, size_type n, Args&& ...args);
+					list_node_chain<T> k_build_n_new_nodes_unguarded(NodeAllocator & alloc, size_type n, Args&& ...args);
 
 #			else
 
@@ -1035,7 +1035,7 @@ namespace kerbal
 #				define FBODY(i) \
 					template <typename NodeAllocator KERBAL_OPT_PPEXPAND_WITH_COMMA_N(LEFT_JOIN_COMMA, EMPTY, TARGS_DECL, i)> \
 					static \
-					list_node_chain<Tp> k_build_n_new_nodes_unguarded(NodeAllocator & alloc, size_type n KERBAL_OPT_PPEXPAND_WITH_COMMA_N(LEFT_JOIN_COMMA, EMPTY, ARGS_DECL, i));
+					list_node_chain<T> k_build_n_new_nodes_unguarded(NodeAllocator & alloc, size_type n KERBAL_OPT_PPEXPAND_WITH_COMMA_N(LEFT_JOIN_COMMA, EMPTY, ARGS_DECL, i));
 
 					KERBAL_PPEXPAND_N(FBODY, KERBAL_PPEXPAND_EMPTY_SEPARATOR, 0)
 					KERBAL_PPEXPAND_N(FBODY, KERBAL_PPEXPAND_EMPTY_SEPARATOR, 20)
@@ -1056,7 +1056,7 @@ namespace kerbal
 					static
 					typename kerbal::type_traits::enable_if<
 							kerbal::iterator::is_input_compatible_iterator<InputIterator>::value,
-							list_node_chain<Tp>
+							list_node_chain<T>
 					>::type
 					k_build_new_nodes_range_unguarded(NodeAllocator & alloc, InputIterator first, InputIterator last);
 
@@ -1117,9 +1117,9 @@ namespace kerbal
 							)
 					;
 
-					template <typename T, typename UpstreamAllocator>
+					template <typename U, typename UpstreamAllocator>
 					KERBAL_CONSTEXPR20
-					static void k_consecutive_destroy_node(kerbal::memory::monotonic_allocator<T, UpstreamAllocator> & alloc, node_base * start);
+					static void k_consecutive_destroy_node(kerbal::memory::monotonic_allocator<U, UpstreamAllocator> & alloc, node_base * start);
 
 #			if __cplusplus >= 201703L
 #				if __has_include(<memory_resource>)
@@ -1129,7 +1129,7 @@ namespace kerbal
 					static void k_consecutive_destroy_node(std::pmr::polymorphic_allocator<Node> & alloc, node_base * start)
 							KERBAL_CONDITIONAL_NOEXCEPT(
 								(
-									!kerbal::type_traits::try_test_is_trivially_destructible<Tp>::IS_TRUE::value ?
+									!kerbal::type_traits::try_test_is_trivially_destructible<T>::IS_TRUE::value ?
 									noexcept(k_consecutive_destroy_node_impl(alloc, start, CNSCTV_DES_VER_DESTROY_BUT_NO_DEALLOCATE())) :
 									true
 								) &&

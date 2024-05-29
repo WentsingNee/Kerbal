@@ -140,27 +140,27 @@ namespace kerbal
 
 			};
 
-			template <typename Tp>
+			template <typename T>
 			class sl_iter:
 					protected sl_iter_type_unrelated,
 					//forward iterator interface
-					public kerbal::operators::dereferenceable<sl_iter<Tp>, Tp*>, // it->
-					public kerbal::operators::equality_comparable<sl_iter<Tp> >, // it != jt
-					public kerbal::operators::incrementable<sl_iter<Tp> > // it++
+					public kerbal::operators::dereferenceable<sl_iter<T>, T*>, // it->
+					public kerbal::operators::equality_comparable<sl_iter<T> >, // it != jt
+					public kerbal::operators::incrementable<sl_iter<T> > // it++
 			{
 				private:
 					typedef sl_iter_type_unrelated super;
 
-					friend class kerbal::container::detail::sl_type_only<Tp>;
+					friend class kerbal::container::detail::sl_type_only<T>;
 
-					template <typename Up, typename Allocator>
+					template <typename U, typename Allocator>
 					friend class kerbal::container::single_list;
 
-					typedef kerbal::container::detail::sl_node<Tp>			node;
-					friend class sl_kiter<Tp>;
+					typedef kerbal::container::detail::sl_node<T>			node;
+					friend class sl_kiter<T>;
 
 				private:
-					typedef kerbal::iterator::iterator_traits<Tp*>			iterator_traits;
+					typedef kerbal::iterator::iterator_traits<T*>			iterator_traits;
 
 				public:
 					typedef std::forward_iterator_tag						iterator_category;
@@ -208,27 +208,27 @@ namespace kerbal
 
 			};
 
-			template <typename Tp>
+			template <typename T>
 			class sl_kiter:
 					protected sl_kiter_type_unrelated,
 					//forward iterator interface
-					public kerbal::operators::dereferenceable<sl_kiter<Tp>, const Tp*>, // it->
-					public kerbal::operators::equality_comparable<sl_kiter<Tp> >, // it != jt
-					public kerbal::operators::incrementable<sl_kiter<Tp> > // it++
+					public kerbal::operators::dereferenceable<sl_kiter<T>, const T*>, // it->
+					public kerbal::operators::equality_comparable<sl_kiter<T> >, // it != jt
+					public kerbal::operators::incrementable<sl_kiter<T> > // it++
 			{
 				private:
 					typedef sl_kiter_type_unrelated super;
 
-					friend class kerbal::container::detail::sl_type_only<Tp>;
+					friend class kerbal::container::detail::sl_type_only<T>;
 
-					template <typename Up, typename Allocator>
+					template <typename U, typename Allocator>
 					friend class kerbal::container::single_list;
 
-					typedef kerbal::container::detail::sl_node<Tp>			node;
-					typedef sl_iter<Tp> iterator;
+					typedef kerbal::container::detail::sl_node<T>			node;
+					typedef sl_iter<T> iterator;
 
 				private:
-					typedef kerbal::iterator::iterator_traits<const Tp*>	iterator_traits;
+					typedef kerbal::iterator::iterator_traits<const T*>		iterator_traits;
 
 				public:
 					typedef std::forward_iterator_tag						iterator_category;

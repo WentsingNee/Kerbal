@@ -95,9 +95,9 @@ namespace kerbal
 				NextContainer & next_container)
 		{
 			typedef ForwardIterator pattern_iterator;
-			typedef typename kerbal::iterator::iterator_traits<pattern_iterator>::value_type Tp;
+			typedef typename kerbal::iterator::iterator_traits<pattern_iterator>::value_type T;
 			return kerbal::algorithm::longest_matched_suffix_prefix
-					(pattern_first, pattern_last, next_container, kerbal::compare::equal_to<Tp>());
+					(pattern_first, pattern_last, next_container, kerbal::compare::equal_to<T>());
 		}
 
 

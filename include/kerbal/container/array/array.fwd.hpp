@@ -21,16 +21,16 @@ namespace kerbal
 	namespace container
 	{
 
-		template <typename Tp, std::size_t N>
+		template <typename T, std::size_t N>
 		class array;
 
 		namespace detail
 		{
 
-			template <typename Tp>
+			template <typename T>
 			class arr_iter;
 
-			template <typename Tp>
+			template <typename T>
 			class arr_kiter;
 
 		} // namespace detail

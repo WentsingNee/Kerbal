@@ -33,11 +33,11 @@ namespace kerbal
 	namespace memory
 	{
 
-		template <typename Tp, typename Deleter = kerbal::memory::default_delete<Tp> >
+		template <typename T, typename Deleter = kerbal::memory::default_delete<T> >
 		class guard;
 
 
-		template <typename Tp, typename Deleter>
+		template <typename T, typename Deleter>
 		class guard :
 				private kerbal::utility::noncopyable,
 				protected kerbal::utility::member_compress_helper<Deleter>
@@ -46,8 +46,8 @@ namespace kerbal
 				typedef kerbal::utility::member_compress_helper<Deleter> deleter_compress_helper;
 
 			public:
-				typedef Tp element_type;
-				typedef Tp* pointer;
+				typedef T element_type;
+				typedef T* pointer;
 				typedef Deleter deleter_type;
 
 			protected:
@@ -144,8 +144,8 @@ namespace kerbal
 
 		};
 
-		template <typename Tp, typename Deleter>
-		class guard<Tp[], Deleter> :
+		template <typename T, typename Deleter>
+		class guard<T[], Deleter> :
 				private kerbal::utility::noncopyable,
 				protected kerbal::utility::member_compress_helper<Deleter>
 		{
@@ -153,8 +153,8 @@ namespace kerbal
 				typedef kerbal::utility::member_compress_helper<Deleter> deleter_compress_helper;
 
 			public:
-				typedef Tp element_type [];
-				typedef Tp* pointer;
+				typedef T element_type [];
+				typedef T* pointer;
 				typedef Deleter deleter_type;
 
 			protected:

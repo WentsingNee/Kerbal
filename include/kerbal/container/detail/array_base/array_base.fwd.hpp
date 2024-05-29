@@ -21,10 +21,10 @@ namespace kerbal
 		namespace detail
 		{
 
-			template <typename Tp>
+			template <typename T>
 			class arr_iter;
 
-			template <typename Tp>
+			template <typename T>
 			class arr_kiter;
 
 		} // namespace detail

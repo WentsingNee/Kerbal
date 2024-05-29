@@ -35,41 +35,41 @@ namespace kerbal
 	namespace algorithm
 	{
 
-		template <typename Tp>
+		template <typename T>
 		struct try_test_is_nothrow_swappable :
 				kerbal::type_traits::tribool_conjunction<
 #	if __cplusplus >= 201103L
-					kerbal::type_traits::try_test_is_nothrow_move_constructible<Tp>,
-					kerbal::type_traits::try_test_is_nothrow_move_assignable<Tp>
+					kerbal::type_traits::try_test_is_nothrow_move_constructible<T>,
+					kerbal::type_traits::try_test_is_nothrow_move_assignable<T>
 #	else
-					kerbal::type_traits::try_test_is_nothrow_copy_constructible<Tp>,
-					kerbal::type_traits::try_test_is_nothrow_copy_assignable<Tp>
+					kerbal::type_traits::try_test_is_nothrow_copy_constructible<T>,
+					kerbal::type_traits::try_test_is_nothrow_copy_assignable<T>
 #	endif
 				>::result
 		{
 		};
 
-		template <typename Tp>
+		template <typename T>
 		KERBAL_CONSTEXPR14
-		void swap(Tp & lhs, Tp & rhs)
+		void swap(T & lhs, T & rhs)
 				KERBAL_CONDITIONAL_NOEXCEPT(
-					try_test_is_nothrow_swappable<Tp>::IS_TRUE::value
+					try_test_is_nothrow_swappable<T>::IS_TRUE::value
 				)
 		;
 
-		template <typename Tp, std::size_t N>
+		template <typename T, std::size_t N>
 		KERBAL_CONSTEXPR14
-		void swap(Tp (&lhs)[N], Tp (&rhs)[N]);
+		void swap(T (&lhs)[N], T (&rhs)[N]);
 
 
-		template <typename Tp>
+		template <typename T>
 		KERBAL_CONSTEXPR14
-		void swap(Tp & lhs, Tp & rhs)
+		void swap(T & lhs, T & rhs)
 				KERBAL_CONDITIONAL_NOEXCEPT(
-					try_test_is_nothrow_swappable<Tp>::IS_TRUE::value
+					try_test_is_nothrow_swappable<T>::IS_TRUE::value
 				)
 		{
-			Tp t(kerbal::compatibility::to_xvalue(lhs));
+			T t(kerbal::compatibility::to_xvalue(lhs));
 			lhs = kerbal::compatibility::to_xvalue(rhs);
 			rhs = kerbal::compatibility::to_xvalue(t);
 		}
@@ -156,9 +156,9 @@ namespace kerbal
 									kerbal::iterator::iterator_category(a_first));
 		}
 
-		template <typename Tp, std::size_t N>
+		template <typename T, std::size_t N>
 		KERBAL_CONSTEXPR14
-		void swap(Tp (&lhs)[N], Tp (&rhs)[N])
+		void swap(T (&lhs)[N], T (&rhs)[N])
 		{
 			kerbal::algorithm::range_swap(lhs + 0, lhs + N, rhs + 0);
 		}

@@ -26,37 +26,37 @@ namespace kerbal
 	namespace operators
 	{
 
-		template <typename Tp>
+		template <typename T>
 		struct incrementable
 		{
 				KERBAL_CONSTEXPR14
-				friend Tp operator++(Tp& x, int)
+				friend T operator++(T& x, int)
 #	if KERBAL_COMPILER_ID != KERBAL_COMPILER_ID_ICC
 						KERBAL_CONDITIONAL_NOEXCEPT(
-							kerbal::type_traits::try_test_is_nothrow_copy_constructible<Tp>::IS_TRUE::value &&
+							kerbal::type_traits::try_test_is_nothrow_copy_constructible<T>::IS_TRUE::value &&
 							noexcept(++x)
 						)
 #	endif
 				{
-					Tp tmp(x);
+					T tmp(x);
 					++x;
 					return tmp;
 				}
 		};
 
-		template <class Tp>
+		template <class T>
 		struct decrementable
 		{
 				KERBAL_CONSTEXPR14
-				friend Tp operator--(Tp& x, int)
+				friend T operator--(T& x, int)
 #	if KERBAL_COMPILER_ID != KERBAL_COMPILER_ID_ICC
 						KERBAL_CONDITIONAL_NOEXCEPT(
-							kerbal::type_traits::try_test_is_nothrow_copy_constructible<Tp>::IS_TRUE::value &&
+							kerbal::type_traits::try_test_is_nothrow_copy_constructible<T>::IS_TRUE::value &&
 							noexcept(--x)
 						)
 #	endif
 				{
-					Tp tmp(x);
+					T tmp(x);
 					--x;
 					return tmp;
 				}

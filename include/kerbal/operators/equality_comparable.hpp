@@ -21,11 +21,11 @@ namespace kerbal
 	namespace operators
 	{
 
-		template <typename Tp>
+		template <typename T>
 		struct equality_comparable
 		{
 				KERBAL_CONSTEXPR
-				friend bool operator!=(const Tp & lhs, const Tp & rhs)
+				friend bool operator!=(const T & lhs, const T & rhs)
 #	if KERBAL_COMPILER_ID != KERBAL_COMPILER_ID_ICC
 						KERBAL_CONDITIONAL_NOEXCEPT(noexcept(static_cast<bool>(lhs == rhs)))
 #	endif

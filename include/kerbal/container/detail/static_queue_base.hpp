@@ -49,16 +49,16 @@ namespace kerbal
 					}
 			};
 
-			template <typename Tp, std::size_t N, bool is_trivially_destructible =
-					kerbal::type_traits::try_test_is_trivially_destructible<Tp>::IS_TRUE::value
+			template <typename T, std::size_t N, bool is_trivially_destructible =
+					kerbal::type_traits::try_test_is_trivially_destructible<T>::IS_TRUE::value
 			>
 			class static_queue_base;
 
-			template <typename Tp, std::size_t N>
-			class static_queue_base<Tp, N, false>: protected static_queue_ring_helper<N>
+			template <typename T, std::size_t N>
+			class static_queue_base<T, N, false>: protected static_queue_ring_helper<N>
 			{
 				public:
-					typedef Tp			value_type;
+					typedef T				value_type;
 					typedef std::size_t		size_type;
 
 				protected:
@@ -97,11 +97,11 @@ namespace kerbal
 
 			};
 
-			template <typename Tp, std::size_t N>
-			class static_queue_base<Tp, N, true>: protected static_queue_ring_helper<N>
+			template <typename T, std::size_t N>
+			class static_queue_base<T, N, true>: protected static_queue_ring_helper<N>
 			{
 				public:
-					typedef Tp			value_type;
+					typedef T				value_type;
 					typedef std::size_t		size_type;
 
 				protected:

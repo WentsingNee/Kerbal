@@ -24,10 +24,10 @@ namespace kerbal
 		{
 		};
 
-		template <typename Tp>
+		template <typename T>
 		struct in_place_type_t
 		{
-				typedef Tp type;
+				typedef T type;
 		};
 
 		template <std::size_t I>

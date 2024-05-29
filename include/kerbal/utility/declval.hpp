@@ -29,20 +29,20 @@ namespace kerbal
 
 #	if __cplusplus >= 201103L
 
-		template <typename Tp>
-		typename kerbal::type_traits::add_rvalue_reference<Tp>::type
+		template <typename T>
+		typename kerbal::type_traits::add_rvalue_reference<T>::type
 		declval() KERBAL_NOEXCEPT;
 
 #	else
 
-		template <typename Tp>
-		typename kerbal::type_traits::add_lvalue_reference<Tp>::type
+		template <typename T>
+		typename kerbal::type_traits::add_lvalue_reference<T>::type
 		declval() KERBAL_NOEXCEPT;
 
 #	endif
 
-		template <typename Tp>
-		Tp*
+		template <typename T>
+		T*
 		declthis() KERBAL_NOEXCEPT;
 
 	} // namespace utility

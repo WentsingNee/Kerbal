@@ -21,12 +21,12 @@ namespace kerbal
 		namespace detail
 		{
 
-			template <typename Tp>
+			template <typename T>
 			class autonm_list_node;
 
 		} // namespace detail
 
-		template <typename Tp, typename SemiAllocator>
+		template <typename T, typename SemiAllocator>
 		class list;
 
 	} // namespace autonm

@@ -29,20 +29,20 @@ namespace kerbal
 	namespace utility
 	{
 
-		template <typename Tp>
+		template <typename T>
 		KERBAL_CONSTEXPR
-		Tp&& forward(typename kerbal::type_traits::remove_reference<Tp>::type & val) KERBAL_NOEXCEPT
+		T&& forward(typename kerbal::type_traits::remove_reference<T>::type & val) KERBAL_NOEXCEPT
 		{
-			return static_cast<Tp&&>(val);
+			return static_cast<T&&>(val);
 		}
 
-		template <typename Tp>
+		template <typename T>
 		KERBAL_CONSTEXPR
-		Tp&& forward(typename kerbal::type_traits::remove_reference<Tp>::type && val) KERBAL_NOEXCEPT
+		T&& forward(typename kerbal::type_traits::remove_reference<T>::type && val) KERBAL_NOEXCEPT
 		{
-			static_assert(kerbal::type_traits::is_lvalue_reference<Tp>::value == 0,
-						  "template argument substituting Tp is an lvalue reference type");
-			return static_cast<Tp&&>(val);
+			static_assert(kerbal::type_traits::is_lvalue_reference<T>::value == 0,
+						  "template argument substituting T is an lvalue reference type");
+			return static_cast<T&&>(val);
 		}
 
 	} // namespace utility

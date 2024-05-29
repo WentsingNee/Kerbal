@@ -131,31 +131,31 @@ namespace kerbal
 
 			};
 
-			template <typename Tp>
+			template <typename T>
 			class fl_iter:
 					protected fl_iter_type_unrelated,
 					//forward iterator interface
-					public kerbal::operators::dereferenceable<fl_iter<Tp>, Tp*>, // it->
-					public kerbal::operators::equality_comparable<fl_iter<Tp> >, // it != jt
-					public kerbal::operators::incrementable<fl_iter<Tp> > // it++
+					public kerbal::operators::dereferenceable<fl_iter<T>, T*>, // it->
+					public kerbal::operators::equality_comparable<fl_iter<T> >, // it != jt
+					public kerbal::operators::incrementable<fl_iter<T> > // it++
 			{
 				private:
 					typedef fl_iter_type_unrelated super;
 
 					/// forward_list
-					friend class kerbal::container::detail::fl_type_only<Tp>;
+					friend class kerbal::container::detail::fl_type_only<T>;
 
-					template <typename Up, typename Allocator>
+					template <typename U, typename Allocator>
 					friend class kerbal::container::forward_list;
 
-					template <typename Up, typename SemiAllocator>
+					template <typename U, typename SemiAllocator>
 					friend class kerbal::autonm::forward_list;
 
-					typedef kerbal::container::detail::sl_node<Tp>			node;
-					friend class fl_kiter<Tp>;
+					typedef kerbal::container::detail::sl_node<T>			node;
+					friend class fl_kiter<T>;
 
 				private:
-					typedef kerbal::iterator::iterator_traits<Tp*>			iterator_traits;
+					typedef kerbal::iterator::iterator_traits<T*>			iterator_traits;
 
 				public:
 					typedef std::forward_iterator_tag						iterator_category;
@@ -203,31 +203,31 @@ namespace kerbal
 
 			};
 
-			template <typename Tp>
+			template <typename T>
 			class fl_kiter:
 					protected fl_kiter_type_unrelated,
 					//forward iterator interface
-					public kerbal::operators::dereferenceable<fl_kiter<Tp>, const Tp*>, // it->
-					public kerbal::operators::equality_comparable<fl_kiter<Tp> >, // it != jt
-					public kerbal::operators::incrementable<fl_kiter<Tp> > // it++
+					public kerbal::operators::dereferenceable<fl_kiter<T>, const T*>, // it->
+					public kerbal::operators::equality_comparable<fl_kiter<T> >, // it != jt
+					public kerbal::operators::incrementable<fl_kiter<T> > // it++
 			{
 				private:
 					typedef fl_kiter_type_unrelated super;
 
 					/// forward_list
-					friend class kerbal::container::detail::fl_type_only<Tp>;
+					friend class kerbal::container::detail::fl_type_only<T>;
 
-					template <typename Up, typename Allocator>
+					template <typename U, typename Allocator>
 					friend class kerbal::container::forward_list;
 
-					template <typename Up, typename SemiAllocator>
+					template <typename U, typename SemiAllocator>
 					friend class kerbal::autonm::forward_list;
 
-					typedef kerbal::container::detail::sl_node<Tp>			node;
-					typedef fl_iter<Tp> iterator;
+					typedef kerbal::container::detail::sl_node<T>			node;
+					typedef fl_iter<T> iterator;
 
 				private:
-					typedef kerbal::iterator::iterator_traits<const Tp*>	iterator_traits;
+					typedef kerbal::iterator::iterator_traits<const T*>		iterator_traits;
 
 				public:
 					typedef std::forward_iterator_tag						iterator_category;

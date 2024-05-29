@@ -57,21 +57,21 @@ namespace kerbal
 
 #	if __cplusplus <= 201703L
 
-			template <typename Tp>
-			Tp * k_default_construct_at(Tp * p, DFT_CNSTRCT_AT_VER_DEFAULT)
+			template <typename T>
+			T * k_default_construct_at(T * p, DFT_CNSTRCT_AT_VER_DEFAULT)
 					KERBAL_CONDITIONAL_NOEXCEPT(
-							noexcept(::new (const_cast<void*>(static_cast<const volatile void*>(p))) Tp)
+							noexcept(::new (const_cast<void*>(static_cast<const volatile void*>(p))) T)
 					)
 			{
-				::new (const_cast<void*>(static_cast<const volatile void*>(p))) Tp;
+				::new (const_cast<void*>(static_cast<const volatile void*>(p))) T;
 				return p;
 			}
 
 #	else
 
-			template <typename Tp>
+			template <typename T>
 			KERBAL_CONSTEXPR20
-			Tp * k_default_construct_at(Tp * p, DFT_CNSTRCT_AT_VER_DEFAULT)
+			T * k_default_construct_at(T * p, DFT_CNSTRCT_AT_VER_DEFAULT)
 					KERBAL_CONDITIONAL_NOEXCEPT(
 							noexcept(std::construct_at(p))
 					)
@@ -82,41 +82,41 @@ namespace kerbal
 
 #	endif
 
-			template <typename Tp, std::size_t N>
+			template <typename T, std::size_t N>
 			KERBAL_CONSTEXPR20
-			Tp (* k_default_construct_at(Tp (*p) [N], DFT_CNSTRCT_AT_VER_DEFAULT)) [N]
+			T (* k_default_construct_at(T (*p) [N], DFT_CNSTRCT_AT_VER_DEFAULT)) [N]
 			{
 				kerbal::memory::uninitialized_default_construct(*p + 0, *p + N);
 				return p;
 			}
 
-			template <typename Tp>
+			template <typename T>
 			KERBAL_CONSTEXPR14
-			Tp * k_default_construct_at(Tp * p, DFT_CNSTRCT_AT_VER_TRIVIALLY) KERBAL_NOEXCEPT
+			T * k_default_construct_at(T * p, DFT_CNSTRCT_AT_VER_TRIVIALLY) KERBAL_NOEXCEPT
 			{
 				return p;
 			}
 
 		} // namespace detail
 
-		template <typename Tp>
+		template <typename T>
 		struct default_construct_at_overload_version :
 				kerbal::type_traits::conditional<
-					kerbal::type_traits::try_test_is_trivially_default_constructible<Tp>::IS_TRUE::value,
+					kerbal::type_traits::try_test_is_trivially_default_constructible<T>::IS_TRUE::value,
 					detail::DFT_CNSTRCT_AT_VER_TRIVIALLY,
 					detail::DFT_CNSTRCT_AT_VER_DEFAULT
 				>::type
 		{
 		};
 
-		template <typename Tp>
+		template <typename T>
 		KERBAL_CONSTEXPR14
-		Tp * default_construct_at(Tp * p)
+		T * default_construct_at(T * p)
 				KERBAL_CONDITIONAL_NOEXCEPT(
-					noexcept(detail::k_default_construct_at(p, default_construct_at_overload_version<Tp>()))
+					noexcept(detail::k_default_construct_at(p, default_construct_at_overload_version<T>()))
 				)
 		{
-			return detail::k_default_construct_at(p, default_construct_at_overload_version<Tp>());
+			return detail::k_default_construct_at(p, default_construct_at_overload_version<T>());
 		}
 
 
@@ -144,7 +144,7 @@ namespace kerbal
 				try {
 					while (current != last) {
 						iterator remain(current);
-						kerbal::memory::default_construct_at(&*current); // new (&*current) Tp;
+						kerbal::memory::default_construct_at(&*current); // new (&*current) T;
 						try {
 							++current;
 						} catch (...) {
@@ -170,7 +170,7 @@ namespace kerbal
 				iterator current(first);
 				try {
 					while (current != last) {
-						kerbal::memory::default_construct_at(&*current); // new (&*current) Tp;
+						kerbal::memory::default_construct_at(&*current); // new (&*current) T;
 						++current;
 					}
 				} catch (...) {
@@ -186,7 +186,7 @@ namespace kerbal
 			void k_uninitialized_default_construct(ForwardIterator first, ForwardIterator last, UI_DFT_CONSTRUCT_VER_NO_CATCH)
 			{
 				while (first != last) {
-					kerbal::memory::default_construct_at(&*first); // new (&*first) Tp;
+					kerbal::memory::default_construct_at(&*first); // new (&*first) T;
 					++first;
 				}
 			}
@@ -261,7 +261,7 @@ namespace kerbal
 					while (n > 0) {
 						--n;
 						iterator remain(current);
-						kerbal::memory::default_construct_at(&*current); // new (&*current) Tp;
+						kerbal::memory::default_construct_at(&*current); // new (&*current) T;
 						try {
 							++current;
 						} catch (...) {
@@ -289,7 +289,7 @@ namespace kerbal
 				try {
 					while (n > 0) {
 						--n;
-						kerbal::memory::default_construct_at(&*current); // new (&*current) Tp;
+						kerbal::memory::default_construct_at(&*current); // new (&*current) T;
 						++current;
 					}
 					return current;
@@ -307,7 +307,7 @@ namespace kerbal
 			{
 				while (n > 0) {
 					--n;
-					kerbal::memory::default_construct_at(&*first); // new (&*first) Tp;
+					kerbal::memory::default_construct_at(&*first); // new (&*first) T;
 					++first;
 				}
 				return first;

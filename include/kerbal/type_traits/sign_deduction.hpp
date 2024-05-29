@@ -30,31 +30,31 @@ namespace kerbal
 		namespace detail
 		{
 
-			template <typename Tp, bool = kerbal::type_traits::is_arithmetic<Tp>::value>
+			template <typename T, bool = kerbal::type_traits::is_arithmetic<T>::value>
 			struct is_signed_helper: kerbal::type_traits::false_type
 			{
 			};
 
-			template <typename Tp>
-			struct is_signed_helper<Tp, true>: kerbal::type_traits::bool_constant<Tp(-1) < Tp(0)>
+			template <typename T>
+			struct is_signed_helper<T, true>: kerbal::type_traits::bool_constant<T(-1) < T(0)>
 			{
 			};
 
 		} // namespace detail
 
 		KERBAL_MODULE_EXPORT
-		template <typename Tp>
-		struct is_signed: kerbal::type_traits::detail::is_signed_helper<Tp>
+		template <typename T>
+		struct is_signed: kerbal::type_traits::detail::is_signed_helper<T>
 		{
 		};
 
 		KERBAL_MODULE_EXPORT
-		template <typename Tp>
+		template <typename T>
 		struct is_unsigned :
 				kerbal::type_traits::conjunction<
-					kerbal::type_traits::is_arithmetic<Tp>,
+					kerbal::type_traits::is_arithmetic<T>,
 					kerbal::type_traits::negation<
-						kerbal::type_traits::is_signed<Tp>
+						kerbal::type_traits::is_signed<T>
 					>
 				>
 		{
@@ -64,8 +64,8 @@ namespace kerbal
 		namespace detail
 		{
 
-			template <typename Tp>
-			struct make_unsigned_helper: kerbal::type_traits::type_identity<Tp>
+			template <typename T>
+			struct make_unsigned_helper: kerbal::type_traits::type_identity<T>
 			{
 			};
 
@@ -107,12 +107,12 @@ namespace kerbal
 		} // namespace detail
 
 		KERBAL_MODULE_EXPORT
-		template <typename Tp>
+		template <typename T>
 		struct make_unsigned:
 				kerbal::type_traits::copy_cv<
-					Tp,
+					T,
 					typename kerbal::type_traits::detail::make_unsigned_helper<
-						typename kerbal::type_traits::remove_cv<Tp>::type
+						typename kerbal::type_traits::remove_cv<T>::type
 					>::type
 				>
 		{
@@ -123,8 +123,8 @@ namespace kerbal
 		namespace detail
 		{
 
-			template <typename Tp>
-			struct make_signed_helper: kerbal::type_traits::type_identity<Tp>
+			template <typename T>
+			struct make_signed_helper: kerbal::type_traits::type_identity<T>
 			{
 			};
 
@@ -161,12 +161,12 @@ namespace kerbal
 		} // namespace detail
 
 		KERBAL_MODULE_EXPORT
-		template <typename Tp>
+		template <typename T>
 		struct make_signed:
 				kerbal::type_traits::copy_cv<
-					Tp,
+					T,
 					typename kerbal::type_traits::detail::make_signed_helper<
-						typename kerbal::type_traits::remove_cv<Tp>::type
+						typename kerbal::type_traits::remove_cv<T>::type
 					>::type
 				>
 		{

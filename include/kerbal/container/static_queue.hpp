@@ -39,17 +39,17 @@ namespace kerbal
 	namespace container
 	{
 
-		template <typename Tp, std::size_t N>
-		class static_queue: protected kerbal::container::detail::static_queue_base<Tp, N>
+		template <typename T, std::size_t N>
+		class static_queue: protected kerbal::container::detail::static_queue_base<T, N>
 		{
 			private:
-				typedef kerbal::container::detail::static_queue_base<Tp, N> super;
+				typedef kerbal::container::detail::static_queue_base<T, N> super;
 
 			public:
-				typedef Tp						value_type;
-				typedef const Tp				const_type;
-				typedef Tp&						reference;
-				typedef const Tp&				const_reference;
+				typedef T						value_type;
+				typedef const T					const_type;
+				typedef T&						reference;
+				typedef const T&				const_reference;
 
 #		if __cplusplus >= 201103L
 				typedef value_type&&			rvalue_reference;

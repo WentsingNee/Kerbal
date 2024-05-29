@@ -79,16 +79,16 @@ namespace kerbal
 
 				typedef kerbal::memory::detail::allocator_is_always_equal_traits_helper<allocator_type> is_always_equal;
 
-				template <typename Up>
+				template <typename U>
 				struct rebind_alloc
 				{
-						typedef typename kerbal::memory::detail::allocator_traits_rebind_alloc_helper<Alloc, Up>::type other;
+						typedef typename kerbal::memory::detail::allocator_traits_rebind_alloc_helper<Alloc, U>::type other;
 				};
 
-				template <typename Up>
+				template <typename U>
 				struct rebind_traits
 				{
-						typedef kerbal::memory::allocator_traits<typename rebind_alloc<Up>::other> other;
+						typedef kerbal::memory::allocator_traits<typename rebind_alloc<U>::other> other;
 				};
 
 				typedef kerbal::memory::allocator_has_reallocate<Alloc, value_type> has_reallocate;

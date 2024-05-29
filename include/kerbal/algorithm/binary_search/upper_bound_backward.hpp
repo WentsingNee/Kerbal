@@ -23,10 +23,10 @@ namespace kerbal
 	namespace algorithm
 	{
 
-		template <typename BidirectionalIterator, typename Tp, typename Comparator>
+		template <typename BidirectionalIterator, typename T, typename Comparator>
 		KERBAL_CONSTEXPR14
 		BidirectionalIterator
-		upper_bound_backward(BidirectionalIterator first, BidirectionalIterator last, const Tp & value, Comparator comparator)
+		upper_bound_backward(BidirectionalIterator first, BidirectionalIterator last, const T & value, Comparator comparator)
 		{
 			while (last != first) {
 				--last;
@@ -38,14 +38,14 @@ namespace kerbal
 			return last;
 		}
 
-		template <typename BidirectionalIterator, typename Tp>
+		template <typename BidirectionalIterator, typename T>
 		KERBAL_CONSTEXPR14
 		BidirectionalIterator
-		upper_bound_backward(BidirectionalIterator first, BidirectionalIterator last, const Tp & value)
+		upper_bound_backward(BidirectionalIterator first, BidirectionalIterator last, const T & value)
 		{
 			typedef BidirectionalIterator iterator;
 			typedef typename kerbal::iterator::iterator_traits<iterator>::value_type type;
-			return kerbal::algorithm::upper_bound_backward(first, last, value, kerbal::compare::binary_type_less<type, Tp>());
+			return kerbal::algorithm::upper_bound_backward(first, last, value, kerbal::compare::binary_type_less<type, T>());
 		}
 
 	} // namespace algorithm

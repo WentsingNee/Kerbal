@@ -23,18 +23,18 @@ namespace kerbal
 	namespace utility
 	{
 
-		template <typename Tp>
+		template <typename T>
 		KERBAL_CONSTEXPR
-		typename kerbal::type_traits::add_const<Tp>::type &
-		as_const(Tp& ref) KERBAL_NOEXCEPT
+		typename kerbal::type_traits::add_const<T>::type &
+		as_const(T& ref) KERBAL_NOEXCEPT
 		{
 			return ref;
 		}
 
 #	if __cplusplus >= 201103L
 
-		template <typename Tp>
-		void as_const(const Tp&&) = delete;
+		template <typename T>
+		void as_const(const T&&) = delete;
 
 #	endif
 

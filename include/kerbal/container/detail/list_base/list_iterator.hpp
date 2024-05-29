@@ -150,32 +150,32 @@ namespace kerbal
 
 			};
 
-			template <typename Tp>
+			template <typename T>
 			class list_iter:
 					protected list_iter_type_unrelated,
 					//forward iterator interface
-					public kerbal::operators::dereferenceable<list_iter<Tp>, Tp*>, // it->
-					public kerbal::operators::equality_comparable<list_iter<Tp> >, // it != jt
-					public kerbal::operators::incrementable<list_iter<Tp> >, // it++
+					public kerbal::operators::dereferenceable<list_iter<T>, T*>, // it->
+					public kerbal::operators::equality_comparable<list_iter<T> >, // it != jt
+					public kerbal::operators::incrementable<list_iter<T> >, // it++
 					//bidirectional iterator interface
-					public kerbal::operators::decrementable<list_iter<Tp> > // it--
+					public kerbal::operators::decrementable<list_iter<T> > // it--
 			{
 				private:
 					typedef list_iter_type_unrelated super;
 
-					friend class kerbal::container::detail::list_type_only<Tp>;
+					friend class kerbal::container::detail::list_type_only<T>;
 
-					template <typename Up, typename Allocator>
+					template <typename U, typename Allocator>
 					friend class kerbal::container::list;
 
-					template <typename Up, typename SemiAllocator>
+					template <typename U, typename SemiAllocator>
 					friend class kerbal::autonm::list;
 
-					typedef kerbal::container::detail::list_node<Tp>		node;
-					friend class list_kiter<Tp>;
+					typedef kerbal::container::detail::list_node<T>			node;
+					friend class list_kiter<T>;
 
 				private:
-					typedef kerbal::iterator::iterator_traits<Tp*>			iterator_traits;
+					typedef kerbal::iterator::iterator_traits<T*>			iterator_traits;
 
 				public:
 					typedef std::bidirectional_iterator_tag					iterator_category;
@@ -233,32 +233,32 @@ namespace kerbal
 
 			};
 
-			template <typename Tp>
+			template <typename T>
 			class list_kiter:
 					protected list_kiter_type_unrelated,
 					//forward iterator interface
-					public kerbal::operators::dereferenceable<list_kiter<Tp>, const Tp*>, // it->
-					public kerbal::operators::equality_comparable<list_kiter<Tp> >, // it != jt
-					public kerbal::operators::incrementable<list_kiter<Tp> >, // it++
+					public kerbal::operators::dereferenceable<list_kiter<T>, const T*>, // it->
+					public kerbal::operators::equality_comparable<list_kiter<T> >, // it != jt
+					public kerbal::operators::incrementable<list_kiter<T> >, // it++
 					//bidirectional iterator interface
-					public kerbal::operators::decrementable<list_kiter<Tp> > // it--
+					public kerbal::operators::decrementable<list_kiter<T> > // it--
 			{
 				private:
 					typedef list_kiter_type_unrelated super;
 
-					friend class kerbal::container::detail::list_type_only<Tp>;
+					friend class kerbal::container::detail::list_type_only<T>;
 
-					template <typename Up, typename Allocator>
+					template <typename U, typename Allocator>
 					friend class kerbal::container::list;
 
-					template <typename Up, typename SemiAllocator>
+					template <typename U, typename SemiAllocator>
 					friend class kerbal::autonm::list;
 
-					typedef kerbal::container::detail::list_node<Tp>		node;
-					typedef list_iter<Tp> iterator;
+					typedef kerbal::container::detail::list_node<T>			node;
+					typedef list_iter<T> iterator;
 
 				private:
-					typedef kerbal::iterator::iterator_traits<const Tp*>	iterator_traits;
+					typedef kerbal::iterator::iterator_traits<const T*>		iterator_traits;
 
 				public:
 					typedef std::bidirectional_iterator_tag					iterator_category;
@@ -352,14 +352,14 @@ namespace kerbal
 			{
 			};
 
-			template <typename Tp>
-			struct reverse_iterator_base_is_inplace<kerbal::container::detail::list_iter<Tp> >:
+			template <typename T>
+			struct reverse_iterator_base_is_inplace<kerbal::container::detail::list_iter<T> >:
 					kerbal::type_traits::true_type
 			{
 			};
 
-			template <typename Tp>
-			struct reverse_iterator_base_is_inplace<kerbal::container::detail::list_kiter<Tp> >:
+			template <typename T>
+			struct reverse_iterator_base_is_inplace<kerbal::container::detail::list_kiter<T> >:
 					kerbal::type_traits::true_type
 			{
 			};

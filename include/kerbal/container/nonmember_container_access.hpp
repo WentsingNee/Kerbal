@@ -28,9 +28,9 @@ namespace kerbal
 
 		// begin
 
-		template <typename Tp, std::size_t N>
+		template <typename T, std::size_t N>
 		KERBAL_CONSTEXPR
-		Tp* begin(Tp (&arr)[N]) KERBAL_NOEXCEPT
+		T* begin(T (&arr)[N]) KERBAL_NOEXCEPT
 		{
 			return arr;
 		}
@@ -90,8 +90,8 @@ namespace kerbal
 
 #	else
 
-		template <typename Tp, std::size_t N>
-		const Tp* cbegin(Tp (&arr)[N]) KERBAL_NOEXCEPT
+		template <typename T, std::size_t N>
+		const T* cbegin(T (&arr)[N]) KERBAL_NOEXCEPT
 		{
 			return arr;
 		}
@@ -109,9 +109,9 @@ namespace kerbal
 
 		// end
 
-		template <typename Tp, std::size_t N>
+		template <typename T, std::size_t N>
 		KERBAL_CONSTEXPR
-		Tp* end(Tp (&arr)[N]) KERBAL_NOEXCEPT
+		T* end(T (&arr)[N]) KERBAL_NOEXCEPT
 		{
 			return arr + N;
 		}
@@ -171,8 +171,8 @@ namespace kerbal
 
 #	else
 
-		template <typename Tp, std::size_t N>
-		const Tp* cend(Tp (&arr)[N]) KERBAL_NOEXCEPT
+		template <typename T, std::size_t N>
+		const T* cend(T (&arr)[N]) KERBAL_NOEXCEPT
 		{
 			return arr + N;
 		}
@@ -190,12 +190,12 @@ namespace kerbal
 
 		// rbegin
 
-		template <typename Tp, std::size_t N>
+		template <typename T, std::size_t N>
 		KERBAL_CONSTEXPR
-		kerbal::iterator::reverse_iterator<Tp*, false>
-		rbegin(Tp (&arr)[N]) KERBAL_NOEXCEPT
+		kerbal::iterator::reverse_iterator<T*, false>
+		rbegin(T (&arr)[N]) KERBAL_NOEXCEPT
 		{
-			return kerbal::iterator::reverse_iterator<Tp*, false>(arr + N);
+			return kerbal::iterator::reverse_iterator<T*, false>(arr + N);
 		}
 
 #	if __cplusplus >= 201103L
@@ -253,11 +253,11 @@ namespace kerbal
 
 #	else
 
-		template <typename Tp, std::size_t N>
-		kerbal::iterator::reverse_iterator<const Tp*, false>
-		crbegin(Tp (&arr)[N]) KERBAL_NOEXCEPT
+		template <typename T, std::size_t N>
+		kerbal::iterator::reverse_iterator<const T*, false>
+		crbegin(T (&arr)[N]) KERBAL_NOEXCEPT
 		{
-			return kerbal::iterator::reverse_iterator<const Tp*, false>(arr + N);
+			return kerbal::iterator::reverse_iterator<const T*, false>(arr + N);
 		}
 
 		template <typename Container>
@@ -273,12 +273,12 @@ namespace kerbal
 
 		// rend
 
-		template <typename Tp, std::size_t N>
+		template <typename T, std::size_t N>
 		KERBAL_CONSTEXPR
-		kerbal::iterator::reverse_iterator<Tp*, false>
-		rend(Tp (&arr)[N]) KERBAL_NOEXCEPT
+		kerbal::iterator::reverse_iterator<T*, false>
+		rend(T (&arr)[N]) KERBAL_NOEXCEPT
 		{
-			return kerbal::iterator::reverse_iterator<Tp*, false>(arr);
+			return kerbal::iterator::reverse_iterator<T*, false>(arr);
 		}
 
 #	if __cplusplus >= 201103L
@@ -336,11 +336,11 @@ namespace kerbal
 
 #	else
 
-		template <typename Tp, std::size_t N>
-		kerbal::iterator::reverse_iterator<const Tp*, false>
-		crend(Tp (&arr)[N]) KERBAL_NOEXCEPT
+		template <typename T, std::size_t N>
+		kerbal::iterator::reverse_iterator<const T*, false>
+		crend(T (&arr)[N]) KERBAL_NOEXCEPT
 		{
-			return kerbal::iterator::reverse_iterator<const Tp*, false>(arr);
+			return kerbal::iterator::reverse_iterator<const T*, false>(arr);
 		}
 
 		template <typename Container>
@@ -356,9 +356,9 @@ namespace kerbal
 
 		// size
 
-		template <typename Tp, std::size_t N>
+		template <typename T, std::size_t N>
 		KERBAL_CONSTEXPR
-		std::size_t size(const Tp (&)[N]) KERBAL_NOEXCEPT
+		std::size_t size(const T (&)[N]) KERBAL_NOEXCEPT
 		{
 			return N;
 		}
@@ -389,9 +389,9 @@ namespace kerbal
 
 		// empty
 
-		template <typename Tp, std::size_t N>
+		template <typename T, std::size_t N>
 		KERBAL_CONSTEXPR
-		bool empty(const Tp (&)[N]) KERBAL_NOEXCEPT
+		bool empty(const T (&)[N]) KERBAL_NOEXCEPT
 		{
 			return false;
 		}
@@ -421,9 +421,9 @@ namespace kerbal
 
 		// nth
 
-		template <typename Tp, std::size_t N>
+		template <typename T, std::size_t N>
 		KERBAL_CONSTEXPR14
-		Tp* nth(Tp (&arr)[N], std::size_t index) KERBAL_NOEXCEPT
+		T* nth(T (&arr)[N], std::size_t index) KERBAL_NOEXCEPT
 		{
 			return arr + index;
 		}
@@ -470,16 +470,16 @@ namespace kerbal
 
 		// index_of
 
-		template <typename Tp, std::size_t N>
+		template <typename T, std::size_t N>
 		KERBAL_CONSTEXPR14
-		std::size_t index_of(Tp (&arr)[N], Tp * it) KERBAL_NOEXCEPT
+		std::size_t index_of(T (&arr)[N], T * it) KERBAL_NOEXCEPT
 		{
 			return it - arr;
 		}
 
-		template <typename Tp, std::size_t N>
+		template <typename T, std::size_t N>
 		KERBAL_CONSTEXPR14
-		std::size_t index_of(const Tp (&arr)[N], const Tp * it) KERBAL_NOEXCEPT
+		std::size_t index_of(const T (&arr)[N], const T * it) KERBAL_NOEXCEPT
 		{
 			return it - arr;
 		}

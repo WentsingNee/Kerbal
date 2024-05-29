@@ -70,8 +70,8 @@ namespace kerbal
 #	define ARGS_DECL(i) const KERBAL_MACRO_CONCAT(Arg, i) & KERBAL_MACRO_CONCAT(arg, i)
 #	define ARGS_USE(i) KERBAL_MACRO_CONCAT(arg, i)
 #	define FBODY(i) \
-		template <typename Allocator, typename Tp KERBAL_OPT_PPEXPAND_WITH_COMMA_N(LEFT_JOIN_COMMA, EMPTY, TARGS_DECL, i)> \
-		Tp * construct_at_using_allocator(Allocator & alloc, Tp * p KERBAL_OPT_PPEXPAND_WITH_COMMA_N(LEFT_JOIN_COMMA, EMPTY, ARGS_DECL, i)) \
+		template <typename Allocator, typename T KERBAL_OPT_PPEXPAND_WITH_COMMA_N(LEFT_JOIN_COMMA, EMPTY, TARGS_DECL, i)> \
+		T * construct_at_using_allocator(Allocator & alloc, T * p KERBAL_OPT_PPEXPAND_WITH_COMMA_N(LEFT_JOIN_COMMA, EMPTY, ARGS_DECL, i)) \
 		{ \
 			typedef kerbal::memory::allocator_traits<Allocator> allocator_traits; \
 			allocator_traits::construct(alloc, p KERBAL_OPT_PPEXPAND_WITH_COMMA_N(LEFT_JOIN_COMMA, EMPTY, ARGS_USE, i)); \
@@ -90,9 +90,9 @@ namespace kerbal
 
 #	else
 
-		template <typename Allocator, typename Tp, typename ... Args>
+		template <typename Allocator, typename T, typename ... Args>
 		KERBAL_CONSTEXPR14
-		Tp * construct_at_using_allocator(Allocator & alloc, Tp * p, Args&& ... args)
+		T * construct_at_using_allocator(Allocator & alloc, T * p, Args&& ... args)
 				KERBAL_CONDITIONAL_NOEXCEPT(
 					noexcept(kerbal::memory::allocator_traits<Allocator>::construct(alloc, p, kerbal::utility::forward<Args>(args)...))
 				)
@@ -129,7 +129,7 @@ namespace kerbal
 				try {
 					while (current != last) {
 						iterator remain(current);
-						kerbal::memory::construct_at_using_allocator(alloc, &*current); // new (&*current) Tp();
+						kerbal::memory::construct_at_using_allocator(alloc, &*current); // new (&*current) T();
 						try {
 							++current;
 						} catch (...) {
@@ -155,7 +155,7 @@ namespace kerbal
 				iterator current(first);
 				try {
 					while (current != last) {
-						kerbal::memory::construct_at_using_allocator(alloc, &*current); // new (&*current) Tp();
+						kerbal::memory::construct_at_using_allocator(alloc, &*current); // new (&*current) T();
 						++current;
 					}
 				} catch (...) {
@@ -171,7 +171,7 @@ namespace kerbal
 			void k_uninitialized_value_construct_using_allocator(Allocator & alloc, ForwardIterator first, ForwardIterator last, UI_VAL_CONSTRUCT_UA_VER_NO_CATCH)
 			{
 				while (first != last) {
-					kerbal::memory::construct_at_using_allocator(alloc, &*first); // new (&*first) Tp ();
+					kerbal::memory::construct_at_using_allocator(alloc, &*first); // new (&*first) T ();
 					++first;
 				}
 			}
@@ -243,7 +243,7 @@ namespace kerbal
 					while (n > 0) {
 						--n;
 						iterator remain(current);
-						kerbal::memory::construct_at_using_allocator(alloc, &*current); // new (&*current) Tp();
+						kerbal::memory::construct_at_using_allocator(alloc, &*current); // new (&*current) T();
 						try {
 							++current;
 						} catch (...) {
@@ -271,7 +271,7 @@ namespace kerbal
 				try {
 					while (n > 0) {
 						--n;
-						kerbal::memory::construct_at_using_allocator(alloc, &*current); // new (&*current) Tp();
+						kerbal::memory::construct_at_using_allocator(alloc, &*current); // new (&*current) T();
 						++current;
 					}
 					return current;
@@ -289,7 +289,7 @@ namespace kerbal
 			{
 				while (n > 0) {
 					--n;
-					kerbal::memory::construct_at_using_allocator(alloc, &*first); // new (&*first) Tp ();
+					kerbal::memory::construct_at_using_allocator(alloc, &*first); // new (&*first) T ();
 					++first;
 				}
 				return first;
@@ -361,7 +361,7 @@ namespace kerbal
 				try {
 					while (first != last) {
 						iterator remain(current);
-						kerbal::memory::construct_at_using_allocator(alloc, &*current, *first); // new (&*current) Tp (*first);
+						kerbal::memory::construct_at_using_allocator(alloc, &*current, *first); // new (&*current) T (*first);
 						try {
 							++current;
 						} catch (...) {
@@ -389,7 +389,7 @@ namespace kerbal
 				iterator current(to);
 				try {
 					while (first != last) {
-						kerbal::memory::construct_at_using_allocator(alloc, &*current, *first); // new (&*current) Tp (*first);
+						kerbal::memory::construct_at_using_allocator(alloc, &*current, *first); // new (&*current) T (*first);
 						++current;
 						++first;
 					}
@@ -407,7 +407,7 @@ namespace kerbal
 			ForwardIterator k_uninitialized_copy_using_allocator(Allocator & alloc, InputIterator first, InputIterator last, ForwardIterator to, UI_CPY_UA_VER_NO_CATCH)
 			{
 				while (first != last) {
-					kerbal::memory::construct_at_using_allocator(alloc, &*to, *first); // new (&*to) Tp (*first);
+					kerbal::memory::construct_at_using_allocator(alloc, &*to, *first); // new (&*to) T (*first);
 					++to;
 					++first;
 				}
@@ -484,7 +484,7 @@ namespace kerbal
 					while (n > 0) {
 						--n;
 						iterator remain(current);
-						kerbal::memory::construct_at_using_allocator(alloc, &*current, *first); // new (&*current) Tp(*first);
+						kerbal::memory::construct_at_using_allocator(alloc, &*current, *first); // new (&*current) T(*first);
 						try {
 							++current;
 						} catch (...) {
@@ -513,7 +513,7 @@ namespace kerbal
 				try {
 					while (n > 0) {
 						--n;
-						kerbal::memory::construct_at_using_allocator(alloc, &*current, *first); // new (&*current) Tp(*first);
+						kerbal::memory::construct_at_using_allocator(alloc, &*current, *first); // new (&*current) T(*first);
 						++current;
 						++first;
 					}
@@ -532,7 +532,7 @@ namespace kerbal
 			{
 				while (n > 0) {
 					--n;
-					kerbal::memory::construct_at_using_allocator(alloc, &*to, *first); // new (&*to) Tp (*first);
+					kerbal::memory::construct_at_using_allocator(alloc, &*to, *first); // new (&*to) T (*first);
 					++to;
 					++first;
 				}
@@ -608,7 +608,7 @@ namespace kerbal
 				try {
 					while (first != last) {
 						iterator remain(current);
-						kerbal::memory::construct_at_using_allocator(alloc, &*current, kerbal::compatibility::to_xvalue(*first)); // new (&*current) Tp (kerbal::compatibility::to_xvalue(*first));
+						kerbal::memory::construct_at_using_allocator(alloc, &*current, kerbal::compatibility::to_xvalue(*first)); // new (&*current) T (kerbal::compatibility::to_xvalue(*first));
 						try {
 							++current;
 						} catch (...) {
@@ -636,7 +636,7 @@ namespace kerbal
 				iterator current(to);
 				try {
 					while (first != last) {
-						kerbal::memory::construct_at_using_allocator(alloc, &*current, kerbal::compatibility::to_xvalue(*first)); // new (&*current) Tp (kerbal::compatibility::to_xvalue(*first));
+						kerbal::memory::construct_at_using_allocator(alloc, &*current, kerbal::compatibility::to_xvalue(*first)); // new (&*current) T (kerbal::compatibility::to_xvalue(*first));
 						++current;
 						++first;
 					}
@@ -654,7 +654,7 @@ namespace kerbal
 			ForwardIterator k_uninitialized_move_using_allocator(Allocator & alloc, InputIterator first, InputIterator last, ForwardIterator to, UI_MOV_UA_VER_NO_CATCH)
 			{
 				while (first != last) {
-					kerbal::memory::construct_at_using_allocator(alloc, &*to, kerbal::compatibility::to_xvalue(*first)); // new (&*to) Tp (kerbal::compatibility::to_xvalue(*first));
+					kerbal::memory::construct_at_using_allocator(alloc, &*to, kerbal::compatibility::to_xvalue(*first)); // new (&*to) T (kerbal::compatibility::to_xvalue(*first));
 					++to;
 					++first;
 				}
@@ -738,7 +738,7 @@ namespace kerbal
 					while (n > 0) {
 						--n;
 						iterator remain(current);
-						kerbal::memory::construct_at_using_allocator(alloc, &*current, kerbal::compatibility::to_xvalue(*first)); // new (&*current) Tp(kerbal::compatibility::to_xvalue(*first));
+						kerbal::memory::construct_at_using_allocator(alloc, &*current, kerbal::compatibility::to_xvalue(*first)); // new (&*current) T(kerbal::compatibility::to_xvalue(*first));
 						try {
 							++current;
 						} catch (...) {
@@ -767,7 +767,7 @@ namespace kerbal
 				try {
 					while (n > 0) {
 						--n;
-						kerbal::memory::construct_at_using_allocator(alloc, &*current, kerbal::compatibility::to_xvalue(*first)); // new (&*current) Tp(kerbal::compatibility::to_xvalue(*first));
+						kerbal::memory::construct_at_using_allocator(alloc, &*current, kerbal::compatibility::to_xvalue(*first)); // new (&*current) T(kerbal::compatibility::to_xvalue(*first));
 						++current;
 						++first;
 					}
@@ -786,7 +786,7 @@ namespace kerbal
 			{
 				while (n > 0) {
 					--n;
-					kerbal::memory::construct_at_using_allocator(alloc, &*to, kerbal::compatibility::to_xvalue(*first)); // new (&*to) Tp (kerbal::compatibility::to_xvalue(*first));
+					kerbal::memory::construct_at_using_allocator(alloc, &*to, kerbal::compatibility::to_xvalue(*first)); // new (&*to) T (kerbal::compatibility::to_xvalue(*first));
 					++to;
 					++first;
 				}
@@ -869,7 +869,7 @@ namespace kerbal
 				try {
 					while (current != last) {
 						iterator remain(current);
-						kerbal::memory::construct_at_using_allocator(alloc, &*current, value); // new (&*current) Tp (value);
+						kerbal::memory::construct_at_using_allocator(alloc, &*current, value); // new (&*current) T (value);
 						try {
 							++current;
 						} catch (...) {
@@ -895,7 +895,7 @@ namespace kerbal
 				iterator current(first);
 				try {
 					while (current != last) {
-						kerbal::memory::construct_at_using_allocator(alloc, &*current, value); // new (&*current) Tp (value);
+						kerbal::memory::construct_at_using_allocator(alloc, &*current, value); // new (&*current) T (value);
 						++current;
 					}
 				} catch (...) {
@@ -911,7 +911,7 @@ namespace kerbal
 			void uninitialized_fill_using_allocator(Allocator & alloc, ForwardIterator first, ForwardIterator last, const T & value, UI_FILL_UA_VER_NO_CATCH)
 			{
 				while (first != last) {
-					kerbal::memory::construct_at_using_allocator(alloc, &*first, value); // new (&*first) Tp (value);
+					kerbal::memory::construct_at_using_allocator(alloc, &*first, value); // new (&*first) T (value);
 					++first;
 				}
 			}
@@ -983,7 +983,7 @@ namespace kerbal
 					while (n > 0) {
 						--n;
 						iterator remain(current);
-						kerbal::memory::construct_at_using_allocator(alloc, &*current, value); // new (&*current) Tp(value);
+						kerbal::memory::construct_at_using_allocator(alloc, &*current, value); // new (&*current) T(value);
 						try {
 							++current;
 						} catch (...) {
@@ -1011,7 +1011,7 @@ namespace kerbal
 				try {
 					while (n > 0) {
 						--n;
-						kerbal::memory::construct_at_using_allocator(alloc, &*current, value); // new (&*current) Tp(value);
+						kerbal::memory::construct_at_using_allocator(alloc, &*current, value); // new (&*current) T(value);
 						++current;
 					}
 					return current;
@@ -1029,7 +1029,7 @@ namespace kerbal
 			{
 				while (n > 0) {
 					--n;
-					kerbal::memory::construct_at_using_allocator(alloc, &*first, value); // new (&*first) Tp (value);
+					kerbal::memory::construct_at_using_allocator(alloc, &*first, value); // new (&*first) T (value);
 					++first;
 				}
 				return first;
@@ -1103,7 +1103,7 @@ namespace kerbal
 			void k_ui_move_if_noexcept_ow_copy_phase1(Allocator & alloc, ForwardIterator first, ForwardIterator last, OutputIterator to, UI_MOV_IF_NOEXCEPT_OW_CPY_VER_MOVE) KERBAL_NOEXCEPT
 			{
 				while (first != last) {
-					kerbal::memory::construct_at_using_allocator(alloc, &*to, kerbal::compatibility::move(*first)); // new (&*to) Tp (kerbal::compatibility::move(*first));
+					kerbal::memory::construct_at_using_allocator(alloc, &*to, kerbal::compatibility::move(*first)); // new (&*to) T (kerbal::compatibility::move(*first));
 					kerbal::memory::destroy_on_using_allocator(alloc, *first);
 					++to;
 					++first;

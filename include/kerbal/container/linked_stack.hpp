@@ -32,11 +32,11 @@ namespace kerbal
 	namespace container
 	{
 
-		template <typename Tp, typename Sequence = kerbal::container::forward_list<Tp> >
+		template <typename T, typename Sequence = kerbal::container::forward_list<T> >
 		class linked_stack
 		{
 			public:
-				typedef Tp						value_type;
+				typedef T						value_type;
 				typedef const value_type		const_type;
 				typedef value_type&				reference;
 				typedef const value_type&		const_reference;
@@ -176,37 +176,37 @@ namespace kerbal
 				 * @param rhs another stack
 				 */
 				KERBAL_CONSTEXPR20
-				friend bool operator==(const linked_stack<Tp, Sequence> & lhs, const linked_stack<Tp, Sequence> & rhs)
+				friend bool operator==(const linked_stack<T, Sequence> & lhs, const linked_stack<T, Sequence> & rhs)
 				{
 					return lhs.c == rhs.c;
 				}
 
 				KERBAL_CONSTEXPR20
-				friend bool operator!=(const linked_stack<Tp, Sequence> & lhs, const linked_stack<Tp, Sequence> & rhs)
+				friend bool operator!=(const linked_stack<T, Sequence> & lhs, const linked_stack<T, Sequence> & rhs)
 				{
 					return lhs.c != rhs.c;
 				}
 
 				KERBAL_CONSTEXPR20
-				friend bool operator<(const linked_stack<Tp, Sequence> & lhs, const linked_stack<Tp, Sequence> & rhs)
+				friend bool operator<(const linked_stack<T, Sequence> & lhs, const linked_stack<T, Sequence> & rhs)
 				{
 					return lhs.c < rhs.c;
 				}
 
 				KERBAL_CONSTEXPR20
-				friend bool operator<=(const linked_stack<Tp, Sequence> & lhs, const linked_stack<Tp, Sequence> & rhs)
+				friend bool operator<=(const linked_stack<T, Sequence> & lhs, const linked_stack<T, Sequence> & rhs)
 				{
 					return lhs.c <= rhs.c;
 				}
 
 				KERBAL_CONSTEXPR20
-				friend bool operator>(const linked_stack<Tp, Sequence> & lhs, const linked_stack<Tp, Sequence> & rhs)
+				friend bool operator>(const linked_stack<T, Sequence> & lhs, const linked_stack<T, Sequence> & rhs)
 				{
 					return lhs.c > rhs.c;
 				}
 
 				KERBAL_CONSTEXPR20
-				friend bool operator>=(const linked_stack<Tp, Sequence> & lhs, const linked_stack<Tp, Sequence> & rhs)
+				friend bool operator>=(const linked_stack<T, Sequence> & lhs, const linked_stack<T, Sequence> & rhs)
 				{
 					return lhs.c >= rhs.c;
 				}
@@ -219,8 +219,8 @@ namespace kerbal
 
 		namespace pmr
 		{
-			template <typename Tp>
-			using linked_stack = kerbal::container::linked_stack<Tp, kerbal::container::pmr::forward_list<Tp> >;
+			template <typename T>
+			using linked_stack = kerbal::container::linked_stack<T, kerbal::container::pmr::forward_list<T> >;
 		}
 
 #	endif
@@ -233,9 +233,9 @@ namespace kerbal
 	namespace algorithm
 	{
 
-		template <typename Tp, typename Sequence>
+		template <typename T, typename Sequence>
 		KERBAL_CONSTEXPR20
-		void swap(kerbal::container::linked_stack<Tp, Sequence> & a, kerbal::container::linked_stack<Tp, Sequence> & b)
+		void swap(kerbal::container::linked_stack<T, Sequence> & a, kerbal::container::linked_stack<T, Sequence> & b)
 				KERBAL_CONDITIONAL_NOEXCEPT(noexcept(a.swap(b)))
 		{
 			a.swap(b);
@@ -248,9 +248,9 @@ namespace kerbal
 
 KERBAL_NAMESPACE_STD_BEGIN
 
-	template <typename Tp, typename Sequence>
+	template <typename T, typename Sequence>
 	KERBAL_CONSTEXPR14
-	void swap(kerbal::container::linked_stack<Tp, Sequence> & a, kerbal::container::linked_stack<Tp, Sequence> & b)
+	void swap(kerbal::container::linked_stack<T, Sequence> & a, kerbal::container::linked_stack<T, Sequence> & b)
 			KERBAL_CONDITIONAL_NOEXCEPT(noexcept(a.swap(b)))
 	{
 		a.swap(b);

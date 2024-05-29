@@ -42,9 +42,9 @@ namespace kerbal
 	//===================
 	// construct/copy/destroy
 
-		template <typename Tp, typename Allocator>
+		template <typename T, typename Allocator>
 		KERBAL_CONSTEXPR20
-		list<Tp, Allocator>::list()
+		list<T, Allocator>::list()
 				KERBAL_CONDITIONAL_NOEXCEPT(
 						list_allocator_overload::try_test_is_nothrow_default_constructible::IS_TRUE::value &&
 						list_type_only::is_nothrow_init_to_self_constructible::value
@@ -54,9 +54,9 @@ namespace kerbal
 		{
 		}
 
-		template <typename Tp, typename Allocator>
+		template <typename T, typename Allocator>
 		KERBAL_CONSTEXPR20
-		list<Tp, Allocator>::list(const Allocator& alloc)
+		list<T, Allocator>::list(const Allocator& alloc)
 				KERBAL_CONDITIONAL_NOEXCEPT(
 						list_allocator_overload::template try_test_is_nothrow_constructible_from_allocator<const Allocator &>::IS_TRUE::value &&
 						list_type_only::is_nothrow_init_to_self_constructible::value
@@ -66,58 +66,58 @@ namespace kerbal
 		{
 		}
 
-		template <typename Tp, typename Allocator>
+		template <typename T, typename Allocator>
 		KERBAL_CONSTEXPR20
-		list<Tp, Allocator>::list(const list& src) :
+		list<T, Allocator>::list(const list& src) :
 				list_allocator_overload(),
 				list_type_only(this->alloc(), src.cbegin(), src.cend())
 		{
 		}
 
-		template <typename Tp, typename Allocator>
+		template <typename T, typename Allocator>
 		KERBAL_CONSTEXPR20
-		list<Tp, Allocator>::list(const list& src, const Allocator& alloc) :
+		list<T, Allocator>::list(const list& src, const Allocator& alloc) :
 				list_allocator_overload(alloc),
 				list_type_only(this->alloc(), src.cbegin(), src.cend())
 		{
 		}
 
-		template <typename Tp, typename Allocator>
+		template <typename T, typename Allocator>
 		KERBAL_CONSTEXPR20
-		list<Tp, Allocator>::list(size_type n) :
+		list<T, Allocator>::list(size_type n) :
 				list_allocator_overload(),
 				list_type_only(this->alloc(), n)
 		{
 		}
 
-		template <typename Tp, typename Allocator>
+		template <typename T, typename Allocator>
 		KERBAL_CONSTEXPR20
-		list<Tp, Allocator>::list(size_type n, const Allocator& alloc) :
+		list<T, Allocator>::list(size_type n, const Allocator& alloc) :
 				list_allocator_overload(alloc),
 				list_type_only(this->alloc(), n)
 		{
 		}
 
-		template <typename Tp, typename Allocator>
+		template <typename T, typename Allocator>
 		KERBAL_CONSTEXPR20
-		list<Tp, Allocator>::list(size_type n, const_reference val) :
+		list<T, Allocator>::list(size_type n, const_reference val) :
 				list_allocator_overload(),
 				list_type_only(this->alloc(), n, val)
 		{
 		}
 
-		template <typename Tp, typename Allocator>
+		template <typename T, typename Allocator>
 		KERBAL_CONSTEXPR20
-		list<Tp, Allocator>::list(size_type n, const_reference val, const Allocator& alloc) :
+		list<T, Allocator>::list(size_type n, const_reference val, const Allocator& alloc) :
 				list_allocator_overload(alloc),
 				list_type_only(this->alloc(), n, val)
 		{
 		}
 
-		template <typename Tp, typename Allocator>
+		template <typename T, typename Allocator>
 		template <typename InputIterator>
 		KERBAL_CONSTEXPR20
-		list<Tp, Allocator>::list(InputIterator first, InputIterator last,
+		list<T, Allocator>::list(InputIterator first, InputIterator last,
 				typename kerbal::type_traits::enable_if<
 						kerbal::iterator::is_input_compatible_iterator<InputIterator>::value, int
 				>::type) :
@@ -126,10 +126,10 @@ namespace kerbal
 		{
 		}
 
-		template <typename Tp, typename Allocator>
+		template <typename T, typename Allocator>
 		template <typename InputIterator>
 		KERBAL_CONSTEXPR20
-		list<Tp, Allocator>::list(InputIterator first, InputIterator last, const Allocator& alloc,
+		list<T, Allocator>::list(InputIterator first, InputIterator last, const Allocator& alloc,
 				typename kerbal::type_traits::enable_if<
 						kerbal::iterator::is_input_compatible_iterator<InputIterator>::value, int
 				>::type) :
@@ -140,9 +140,9 @@ namespace kerbal
 
 #	if __cplusplus >= 201103L
 
-		template <typename Tp, typename Allocator>
+		template <typename T, typename Allocator>
 		KERBAL_CONSTEXPR20
-		list<Tp, Allocator>::list(list&& src)
+		list<T, Allocator>::list(list&& src)
 				KERBAL_CONDITIONAL_NOEXCEPT(
 						list_allocator_overload::template try_test_is_nothrow_constructible_from_allocator<Allocator &&>::IS_TRUE::value &&
 						list_type_only::is_nothrow_move_constructible::value
@@ -152,9 +152,9 @@ namespace kerbal
 		{
 		}
 
-		template <typename Tp, typename Allocator>
+		template <typename T, typename Allocator>
 		KERBAL_CONSTEXPR20
-		list<Tp, Allocator>::list(list&& src, const Allocator& alloc)
+		list<T, Allocator>::list(list&& src, const Allocator& alloc)
 				KERBAL_CONDITIONAL_NOEXCEPT(
 						list_allocator_overload::template try_test_is_nothrow_constructible_from_allocator<const Allocator &>::IS_TRUE::value &&
 						list_type_only::template is_nothrow_move_constructible_using_allocator<node_allocator_type>::value
@@ -170,47 +170,47 @@ namespace kerbal
 
 #	if __cplusplus >= 201103L
 
-		template <typename Tp, typename Allocator>
+		template <typename T, typename Allocator>
 		KERBAL_CONSTEXPR20
-		list<Tp, Allocator>::list(std::initializer_list<value_type> ilist) :
+		list<T, Allocator>::list(std::initializer_list<value_type> ilist) :
 				list(ilist.begin(), ilist.end())
 		{
 		}
 
-		template <typename Tp, typename Allocator>
+		template <typename T, typename Allocator>
 		KERBAL_CONSTEXPR20
-		list<Tp, Allocator>::list(std::initializer_list<value_type> ilist, const Allocator& alloc) :
+		list<T, Allocator>::list(std::initializer_list<value_type> ilist, const Allocator& alloc) :
 				list(ilist.begin(), ilist.end(), alloc)
 		{
 		}
 
 #	else
 
-		template <typename Tp, typename Allocator>
-		list<Tp, Allocator>::list(const kerbal::assign::assign_list<void> & ilist) :
+		template <typename T, typename Allocator>
+		list<T, Allocator>::list(const kerbal::assign::assign_list<void> & ilist) :
 				list_allocator_overload(),
 				list_type_only()
 		{
 		}
 
-		template <typename Tp, typename Allocator>
-		template <typename Up>
-		list<Tp, Allocator>::list(const kerbal::assign::assign_list<Up> & ilist) :
+		template <typename T, typename Allocator>
+		template <typename U>
+		list<T, Allocator>::list(const kerbal::assign::assign_list<U> & ilist) :
 				list_allocator_overload(),
 				list_type_only(this->alloc(), ilist.cbegin(), ilist.cend())
 		{
 		}
 
-		template <typename Tp, typename Allocator>
-		list<Tp, Allocator>::list(const kerbal::assign::assign_list<void> & ilist, const Allocator& alloc) :
+		template <typename T, typename Allocator>
+		list<T, Allocator>::list(const kerbal::assign::assign_list<void> & ilist, const Allocator& alloc) :
 				list_allocator_overload(alloc),
 				list_type_only()
 		{
 		}
 
-		template <typename Tp, typename Allocator>
-		template <typename Up>
-		list<Tp, Allocator>::list(const kerbal::assign::assign_list<Up> & ilist, const Allocator& alloc) :
+		template <typename T, typename Allocator>
+		template <typename U>
+		list<T, Allocator>::list(const kerbal::assign::assign_list<U> & ilist, const Allocator& alloc) :
 				list_allocator_overload(alloc),
 				list_type_only(this->alloc(), ilist.cbegin(), ilist.cend())
 		{
@@ -218,9 +218,9 @@ namespace kerbal
 
 #	endif
 
-		template <typename Tp, typename Allocator>
+		template <typename T, typename Allocator>
 		KERBAL_CONSTEXPR20
-		list<Tp, Allocator>::~list()
+		list<T, Allocator>::~list()
 		{
 			this->list_type_only::k_destroy_using_allocator(this->alloc());
 		}
@@ -229,10 +229,10 @@ namespace kerbal
 	//===================
 	// assign
 
-		template <typename Tp, typename Allocator>
+		template <typename T, typename Allocator>
 		KERBAL_CONSTEXPR20
-		list<Tp, Allocator>&
-		list<Tp, Allocator>::operator=(const list& src)
+		list<T, Allocator>&
+		list<T, Allocator>::operator=(const list& src)
 		{
 			this->assign(src);
 			return *this;
@@ -240,10 +240,10 @@ namespace kerbal
 
 #	if __cplusplus >= 201103L
 
-		template <typename Tp, typename Allocator>
+		template <typename T, typename Allocator>
 		KERBAL_CONSTEXPR20
-		list<Tp, Allocator>&
-		list<Tp, Allocator>::operator=(list&& src)
+		list<T, Allocator>&
+		list<T, Allocator>::operator=(list&& src)
 				KERBAL_CONDITIONAL_NOEXCEPT(
 						noexcept(kerbal::utility::declthis<list>()->assign(kerbal::compatibility::move(src)))
 				)
@@ -256,10 +256,10 @@ namespace kerbal
 
 #	if __cplusplus >= 201103L
 
-		template <typename Tp, typename Allocator>
+		template <typename T, typename Allocator>
 		KERBAL_CONSTEXPR20
-		list<Tp, Allocator>&
-		list<Tp, Allocator>::operator=(std::initializer_list<value_type> ilist)
+		list<T, Allocator>&
+		list<T, Allocator>::operator=(std::initializer_list<value_type> ilist)
 		{
 			this->assign(ilist);
 			return *this;
@@ -267,18 +267,18 @@ namespace kerbal
 
 #	else
 
-		template <typename Tp, typename Allocator>
-		list<Tp, Allocator>&
-		list<Tp, Allocator>::operator=(const kerbal::assign::assign_list<void> & ilist)
+		template <typename T, typename Allocator>
+		list<T, Allocator>&
+		list<T, Allocator>::operator=(const kerbal::assign::assign_list<void> & ilist)
 		{
 			this->assign(ilist);
 			return *this;
 		}
 
-		template <typename Tp, typename Allocator>
-		template <typename Up>
-		list<Tp, Allocator>&
-		list<Tp, Allocator>::operator=(const kerbal::assign::assign_list<Up> & ilist)
+		template <typename T, typename Allocator>
+		template <typename U>
+		list<T, Allocator>&
+		list<T, Allocator>::operator=(const kerbal::assign::assign_list<U> & ilist)
 		{
 			this->assign(ilist);
 			return *this;
@@ -286,9 +286,9 @@ namespace kerbal
 
 #	endif
 
-		template <typename Tp, typename Allocator>
+		template <typename T, typename Allocator>
 		KERBAL_CONSTEXPR20
-		void list<Tp, Allocator>::assign(const list& src)
+		void list<T, Allocator>::assign(const list& src)
 		{
 			list_type_only::k_assign_using_allocator(
 					this->alloc(),
@@ -296,20 +296,20 @@ namespace kerbal
 					static_cast<const list_type_only &>(src));
 		}
 
-		template <typename Tp, typename Allocator>
+		template <typename T, typename Allocator>
 		KERBAL_CONSTEXPR20
-		void list<Tp, Allocator>::assign(size_type count, const_reference val)
+		void list<T, Allocator>::assign(size_type count, const_reference val)
 		{
 			list_type_only::k_assign_using_allocator(this->alloc(), count, val);
 		}
 
-		template <typename Tp, typename Allocator>
+		template <typename T, typename Allocator>
 		template <typename InputIterator>
 		KERBAL_CONSTEXPR20
 		typename kerbal::type_traits::enable_if<
 				kerbal::iterator::is_input_compatible_iterator<InputIterator>::value
 		>::type
-		list<Tp, Allocator>::assign(InputIterator first, InputIterator last)
+		list<T, Allocator>::assign(InputIterator first, InputIterator last)
 		{
 			list_type_only::k_assign_using_allocator(this->alloc(), first, last);
 		}
@@ -317,9 +317,9 @@ namespace kerbal
 
 #	if __cplusplus >= 201103L
 
-		template <typename Tp, typename Allocator>
+		template <typename T, typename Allocator>
 		KERBAL_CONSTEXPR20
-		void list<Tp, Allocator>::assign(list&& src)
+		void list<T, Allocator>::assign(list&& src)
 				KERBAL_CONDITIONAL_NOEXCEPT(
 						list_type_only::template is_nothrow_move_assign_using_allocator<node_allocator_type>::value
 				)
@@ -334,24 +334,24 @@ namespace kerbal
 
 #	if __cplusplus >= 201103L
 
-		template <typename Tp, typename Allocator>
+		template <typename T, typename Allocator>
 		KERBAL_CONSTEXPR20
-		void list<Tp, Allocator>::assign(std::initializer_list<value_type> ilist)
+		void list<T, Allocator>::assign(std::initializer_list<value_type> ilist)
 		{
 			this->assign(ilist.begin(), ilist.end());
 		}
 
 #	else
 
-		template <typename Tp, typename Allocator>
-		void list<Tp, Allocator>::assign(const kerbal::assign::assign_list<void> & ilist)
+		template <typename T, typename Allocator>
+		void list<T, Allocator>::assign(const kerbal::assign::assign_list<void> & ilist)
 		{
 			this->clear();
 		}
 
-		template <typename Tp, typename Allocator>
-		template <typename Up>
-		void list<Tp, Allocator>::assign(const kerbal::assign::assign_list<Up> & ilist)
+		template <typename T, typename Allocator>
+		template <typename U>
+		void list<T, Allocator>::assign(const kerbal::assign::assign_list<U> & ilist)
 		{
 			this->assign(ilist.cbegin(), ilist.cend());
 		}
@@ -362,18 +362,18 @@ namespace kerbal
 	//===================
 	// insert
 
-		template <typename Tp, typename Allocator>
+		template <typename T, typename Allocator>
 		KERBAL_CONSTEXPR20
-		void list<Tp, Allocator>::push_front(const_reference val)
+		void list<T, Allocator>::push_front(const_reference val)
 		{
 			this->list_type_only::k_push_front_using_allocator(this->alloc(), val);
 		}
 
 #	if __cplusplus >= 201103L
 
-		template <typename Tp, typename Allocator>
+		template <typename T, typename Allocator>
 		KERBAL_CONSTEXPR20
-		void list<Tp, Allocator>::push_front(rvalue_reference val)
+		void list<T, Allocator>::push_front(rvalue_reference val)
 		{
 			this->list_type_only::k_push_front_using_allocator(this->alloc(), kerbal::compatibility::move(val));
 		}
@@ -382,11 +382,11 @@ namespace kerbal
 
 #	if __cplusplus >= 201103L
 
-		template <typename Tp, typename Allocator>
+		template <typename T, typename Allocator>
 		template <typename ... Args>
 		KERBAL_CONSTEXPR20
-		typename list<Tp, Allocator>::reference
-		list<Tp, Allocator>::emplace_front(Args&& ... args)
+		typename list<T, Allocator>::reference
+		list<T, Allocator>::emplace_front(Args&& ... args)
 		{
 			return this->list_type_only::k_emplace_front_using_allocator(this->alloc(), kerbal::utility::forward<Args>(args)...);
 		}
@@ -401,10 +401,10 @@ namespace kerbal
 #	define ARGS_DECL(i) const KERBAL_MACRO_CONCAT(Arg, i) & KERBAL_MACRO_CONCAT(arg, i)
 #	define ARGS_USE(i) KERBAL_MACRO_CONCAT(arg, i)
 #	define FBODY(i) \
-		template <typename Tp, typename Allocator> \
+		template <typename T, typename Allocator> \
 		KERBAL_OPT_PPEXPAND_WITH_COMMA_N(THEAD_NOT_EMPTY, EMPTY, TARGS_DECL, i) \
-		typename list<Tp, Allocator>::reference \
-		list<Tp, Allocator>::emplace_front(KERBAL_OPT_PPEXPAND_WITH_COMMA_N(REMAINF, EMPTY, ARGS_DECL, i)) \
+		typename list<T, Allocator>::reference \
+		list<T, Allocator>::emplace_front(KERBAL_OPT_PPEXPAND_WITH_COMMA_N(REMAINF, EMPTY, ARGS_DECL, i)) \
 		{ \
 			return this->list_type_only::k_emplace_front_using_allocator(this->alloc() KERBAL_OPT_PPEXPAND_WITH_COMMA_N(LEFT_JOIN_COMMA, EMPTY, ARGS_USE, i)); \
 		}
@@ -423,18 +423,18 @@ namespace kerbal
 
 #	endif
 
-		template <typename Tp, typename Allocator>
+		template <typename T, typename Allocator>
 		KERBAL_CONSTEXPR20
-		void list<Tp, Allocator>::push_back(const_reference val)
+		void list<T, Allocator>::push_back(const_reference val)
 		{
 			this->list_type_only::k_emplace_back_using_allocator(this->alloc(), val);
 		}
 
 #	if __cplusplus >= 201103L
 
-		template <typename Tp, typename Allocator>
+		template <typename T, typename Allocator>
 		KERBAL_CONSTEXPR20
-		void list<Tp, Allocator>::push_back(rvalue_reference val)
+		void list<T, Allocator>::push_back(rvalue_reference val)
 		{
 			this->list_type_only::k_emplace_back_using_allocator(this->alloc(), kerbal::compatibility::move(val));
 		}
@@ -443,11 +443,11 @@ namespace kerbal
 
 #	if __cplusplus >= 201103L
 
-		template <typename Tp, typename Allocator>
+		template <typename T, typename Allocator>
 		template <typename ... Args>
 		KERBAL_CONSTEXPR20
-		typename list<Tp, Allocator>::reference
-		list<Tp, Allocator>::emplace_back(Args&& ... args)
+		typename list<T, Allocator>::reference
+		list<T, Allocator>::emplace_back(Args&& ... args)
 		{
 			return this->list_type_only::k_emplace_back_using_allocator(this->alloc(), kerbal::utility::forward<Args>(args)...);
 		}
@@ -462,10 +462,10 @@ namespace kerbal
 #	define ARGS_DECL(i) const KERBAL_MACRO_CONCAT(Arg, i) & KERBAL_MACRO_CONCAT(arg, i)
 #	define ARGS_USE(i) KERBAL_MACRO_CONCAT(arg, i)
 #	define FBODY(i) \
-		template <typename Tp, typename Allocator> \
+		template <typename T, typename Allocator> \
 		KERBAL_OPT_PPEXPAND_WITH_COMMA_N(THEAD_NOT_EMPTY, EMPTY, TARGS_DECL, i) \
-		typename list<Tp, Allocator>::reference \
-		list<Tp, Allocator>::emplace_back(KERBAL_OPT_PPEXPAND_WITH_COMMA_N(REMAINF, EMPTY, ARGS_DECL, i)) \
+		typename list<T, Allocator>::reference \
+		list<T, Allocator>::emplace_back(KERBAL_OPT_PPEXPAND_WITH_COMMA_N(REMAINF, EMPTY, ARGS_DECL, i)) \
 		{ \
 			return this->list_type_only::k_emplace_back_using_allocator(this->alloc() KERBAL_OPT_PPEXPAND_WITH_COMMA_N(LEFT_JOIN_COMMA, EMPTY, ARGS_USE, i)); \
 		}
@@ -484,40 +484,40 @@ namespace kerbal
 
 #	endif
 
-		template <typename Tp, typename Allocator>
+		template <typename T, typename Allocator>
 		KERBAL_CONSTEXPR20
-		typename list<Tp, Allocator>::iterator
-		list<Tp, Allocator>::insert(const_iterator pos, const_reference val)
+		typename list<T, Allocator>::iterator
+		list<T, Allocator>::insert(const_iterator pos, const_reference val)
 		{
 			return list_type_only::k_insert_using_allocator(this->alloc(), pos, val);
 		}
 
-		template <typename Tp, typename Allocator>
+		template <typename T, typename Allocator>
 		KERBAL_CONSTEXPR20
-		typename list<Tp, Allocator>::iterator
-		list<Tp, Allocator>::insert(const_iterator pos, size_type n, const_reference val)
+		typename list<T, Allocator>::iterator
+		list<T, Allocator>::insert(const_iterator pos, size_type n, const_reference val)
 		{
 			return list_type_only::k_insert_using_allocator(this->alloc(), pos, n, val);
 		}
 
-		template <typename Tp, typename Allocator>
+		template <typename T, typename Allocator>
 		template <typename InputIterator>
 		KERBAL_CONSTEXPR20
 		typename kerbal::type_traits::enable_if<
 				kerbal::iterator::is_input_compatible_iterator<InputIterator>::value,
-				typename list<Tp, Allocator>::iterator
+				typename list<T, Allocator>::iterator
 		>::type
-		list<Tp, Allocator>::insert(const_iterator pos, InputIterator first, InputIterator last)
+		list<T, Allocator>::insert(const_iterator pos, InputIterator first, InputIterator last)
 		{
 			return list_type_only::k_insert_using_allocator(this->alloc(), pos, first, last);
 		}
 
 #	if __cplusplus >= 201103L
 
-		template <typename Tp, typename Allocator>
+		template <typename T, typename Allocator>
 		KERBAL_CONSTEXPR20
-		typename list<Tp, Allocator>::iterator
-		list<Tp, Allocator>::insert(const_iterator pos, rvalue_reference val)
+		typename list<T, Allocator>::iterator
+		list<T, Allocator>::insert(const_iterator pos, rvalue_reference val)
 		{
 			return list_type_only::k_insert_using_allocator(this->alloc(), pos, kerbal::compatibility::move(val));
 		}
@@ -526,27 +526,27 @@ namespace kerbal
 
 #	if __cplusplus >= 201103L
 
-		template <typename Tp, typename Allocator>
+		template <typename T, typename Allocator>
 		KERBAL_CONSTEXPR20
-		typename list<Tp, Allocator>::iterator
-		list<Tp, Allocator>::insert(const_iterator pos, std::initializer_list<value_type> ilist)
+		typename list<T, Allocator>::iterator
+		list<T, Allocator>::insert(const_iterator pos, std::initializer_list<value_type> ilist)
 		{
 			return this->insert(pos, ilist.begin(), ilist.end());
 		}
 
 #	else
 
-		template <typename Tp, typename Allocator>
-		typename list<Tp, Allocator>::iterator
-		list<Tp, Allocator>::insert(const_iterator pos, const kerbal::assign::assign_list<void> & ilist)
+		template <typename T, typename Allocator>
+		typename list<T, Allocator>::iterator
+		list<T, Allocator>::insert(const_iterator pos, const kerbal::assign::assign_list<void> & ilist)
 		{
 			return pos.cast_to_mutable();
 		}
 
-		template <typename Tp, typename Allocator>
-		template <typename Up>
-		typename list<Tp, Allocator>::iterator
-		list<Tp, Allocator>::insert(const_iterator pos, const kerbal::assign::assign_list<Up> & ilist)
+		template <typename T, typename Allocator>
+		template <typename U>
+		typename list<T, Allocator>::iterator
+		list<T, Allocator>::insert(const_iterator pos, const kerbal::assign::assign_list<U> & ilist)
 		{
 			return this->insert(pos, ilist.begin(), ilist.end());
 		}
@@ -555,11 +555,11 @@ namespace kerbal
 
 #	if __cplusplus >= 201103L
 
-		template <typename Tp, typename Allocator>
+		template <typename T, typename Allocator>
 		template <typename ... Args>
 		KERBAL_CONSTEXPR20
-		typename list<Tp, Allocator>::iterator
-		list<Tp, Allocator>::emplace(const_iterator pos, Args&& ... args)
+		typename list<T, Allocator>::iterator
+		list<T, Allocator>::emplace(const_iterator pos, Args&& ... args)
 		{
 			return list_type_only::k_emplace_using_allocator(this->alloc(), pos, kerbal::utility::forward<Args>(args)...);
 		}
@@ -573,10 +573,10 @@ namespace kerbal
 #	define ARGS_DECL(i) const KERBAL_MACRO_CONCAT(Arg, i) & KERBAL_MACRO_CONCAT(arg, i)
 #	define ARGS_USE(i) KERBAL_MACRO_CONCAT(arg, i)
 #	define FBODY(i) \
-		template <typename Tp, typename Allocator> \
+		template <typename T, typename Allocator> \
 		KERBAL_OPT_PPEXPAND_WITH_COMMA_N(THEAD_NOT_EMPTY, EMPTY, TARGS_DECL, i) \
-		typename list<Tp, Allocator>::iterator \
-		list<Tp, Allocator>::emplace(const_iterator pos KERBAL_OPT_PPEXPAND_WITH_COMMA_N(LEFT_JOIN_COMMA, EMPTY, ARGS_DECL, i)) \
+		typename list<T, Allocator>::iterator \
+		list<T, Allocator>::emplace(const_iterator pos KERBAL_OPT_PPEXPAND_WITH_COMMA_N(LEFT_JOIN_COMMA, EMPTY, ARGS_DECL, i)) \
 		{ \
 			return list_type_only::k_emplace_using_allocator(this->alloc(), pos KERBAL_OPT_PPEXPAND_WITH_COMMA_N(LEFT_JOIN_COMMA, EMPTY, ARGS_USE, i)); \
 		}
@@ -597,39 +597,39 @@ namespace kerbal
 	//===================
 	// erase
 
-		template <typename Tp, typename Allocator>
+		template <typename T, typename Allocator>
 		KERBAL_CONSTEXPR20
-		void list<Tp, Allocator>::pop_front()
+		void list<T, Allocator>::pop_front()
 		{
 			this->list_type_only::k_pop_front_using_allocator(this->alloc());
 		}
 
-		template <typename Tp, typename Allocator>
+		template <typename T, typename Allocator>
 		KERBAL_CONSTEXPR20
-		void list<Tp, Allocator>::pop_back()
+		void list<T, Allocator>::pop_back()
 		{
 			this->list_type_only::k_pop_back_using_allocator(this->alloc());
 		}
 
-		template <typename Tp, typename Allocator>
+		template <typename T, typename Allocator>
 		KERBAL_CONSTEXPR20
-		typename list<Tp, Allocator>::iterator
-		list<Tp, Allocator>::erase(const_iterator pos)
+		typename list<T, Allocator>::iterator
+		list<T, Allocator>::erase(const_iterator pos)
 		{
 			return list_type_only::k_erase_using_allocator(this->alloc(), pos);
 		}
 
-		template <typename Tp, typename Allocator>
+		template <typename T, typename Allocator>
 		KERBAL_CONSTEXPR20
-		typename list<Tp, Allocator>::iterator
-		list<Tp, Allocator>::erase(const_iterator first, const_iterator last)
+		typename list<T, Allocator>::iterator
+		list<T, Allocator>::erase(const_iterator first, const_iterator last)
 		{
 			return list_type_only::k_erase_using_allocator(this->alloc(), first, last);
 		}
 
-		template <typename Tp, typename Allocator>
+		template <typename T, typename Allocator>
 		KERBAL_CONSTEXPR20
-		void list<Tp, Allocator>::clear()
+		void list<T, Allocator>::clear()
 				KERBAL_CONDITIONAL_NOEXCEPT(
 						noexcept(kerbal::utility::declthis<list_type_only>()->k_clear_using_allocator(
 								kerbal::utility::declthis<list>()->alloc()
@@ -643,23 +643,23 @@ namespace kerbal
 	//===================
 	// operation
 
-		template <typename Tp, typename Allocator>
+		template <typename T, typename Allocator>
 		KERBAL_CONSTEXPR20
-		void list<Tp, Allocator>::resize(size_type count)
+		void list<T, Allocator>::resize(size_type count)
 		{
 			list_type_only::k_resize_using_allocator(this->alloc(), count);
 		}
 
-		template <typename Tp, typename Allocator>
+		template <typename T, typename Allocator>
 		KERBAL_CONSTEXPR20
-		void list<Tp, Allocator>::resize(size_type count, const_reference value)
+		void list<T, Allocator>::resize(size_type count, const_reference value)
 		{
 			list_type_only::k_resize_using_allocator(this->alloc(), count, value);
 		}
 
-		template <typename Tp, typename Allocator>
+		template <typename T, typename Allocator>
 		KERBAL_CONSTEXPR20
-		void list<Tp, Allocator>::swap(list& with)
+		void list<T, Allocator>::swap(list& with)
 				KERBAL_CONDITIONAL_NOEXCEPT(
 						noexcept(list_allocator_overload::k_swap_allocator_if_propagate(
 								kerbal::utility::declval<list_allocator_overload&>(), kerbal::utility::declval<list_allocator_overload&>()
@@ -677,235 +677,235 @@ namespace kerbal
 					static_cast<list_type_unrelated&>(with));
 		}
 
-		template <typename Tp, typename Allocator>
+		template <typename T, typename Allocator>
 		KERBAL_CONSTEXPR20
-		void list<Tp, Allocator>::iter_swap(const_iterator a, const_iterator b) KERBAL_NOEXCEPT
+		void list<T, Allocator>::iter_swap(const_iterator a, const_iterator b) KERBAL_NOEXCEPT
 		{
 			list_type_only::k_iter_swap(a, b);
 		}
 
-		template <typename Tp, typename Allocator>
+		template <typename T, typename Allocator>
 		KERBAL_CONSTEXPR20
-		void list<Tp, Allocator>::reverse(const_iterator a, const_iterator b) KERBAL_NOEXCEPT
+		void list<T, Allocator>::reverse(const_iterator a, const_iterator b) KERBAL_NOEXCEPT
 		{
 			list_type_only::k_reverse(a, b);
 		}
 
-		template <typename Tp, typename Allocator>
+		template <typename T, typename Allocator>
 		template <typename BinaryPredict>
 		KERBAL_CONSTEXPR20
-		void list<Tp, Allocator>::merge(list & other, BinaryPredict cmp)
+		void list<T, Allocator>::merge(list & other, BinaryPredict cmp)
 		{
 			list_type_only::k_merge(static_cast<list_type_only&>(other), cmp);
 		}
 
-		template <typename Tp, typename Allocator>
+		template <typename T, typename Allocator>
 		KERBAL_CONSTEXPR20
-		void list<Tp, Allocator>::merge(list & other)
+		void list<T, Allocator>::merge(list & other)
 		{
 			list_type_only::k_merge(static_cast<list_type_only&>(other));
 		}
 
-		template <typename Tp, typename Allocator>
+		template <typename T, typename Allocator>
 		template <typename BinaryPredict>
 		KERBAL_CONSTEXPR20
-		void list<Tp, Allocator>::sort(const_iterator first, const_iterator last, BinaryPredict cmp)
+		void list<T, Allocator>::sort(const_iterator first, const_iterator last, BinaryPredict cmp)
 		{
 			list_type_only::k_sort(first, last, cmp);
 		}
 
-		template <typename Tp, typename Allocator>
+		template <typename T, typename Allocator>
 		KERBAL_CONSTEXPR20
-		void list<Tp, Allocator>::sort(const_iterator first, const_iterator last)
+		void list<T, Allocator>::sort(const_iterator first, const_iterator last)
 		{
 			list_type_only::k_sort(first, last);
 		}
 
-		template <typename Tp, typename Allocator>
+		template <typename T, typename Allocator>
 		KERBAL_CONSTEXPR20
-		typename list<Tp, Allocator>::size_type
-		list<Tp, Allocator>::remove(const_reference val)
+		typename list<T, Allocator>::size_type
+		list<T, Allocator>::remove(const_reference val)
 		{
 			return list_type_only::k_remove_using_allocator(this->alloc(), val);
 		}
 
-		template <typename Tp, typename Allocator>
+		template <typename T, typename Allocator>
 		KERBAL_CONSTEXPR20
-		typename list<Tp, Allocator>::size_type
-		list<Tp, Allocator>::remove(const_iterator first, const_iterator last, const_reference val)
+		typename list<T, Allocator>::size_type
+		list<T, Allocator>::remove(const_iterator first, const_iterator last, const_reference val)
 		{
 			return list_type_only::k_remove_using_allocator(this->alloc(), first, last, val);
 		}
 
-		template <typename Tp, typename Allocator>
+		template <typename T, typename Allocator>
 		template <typename UnaryPredicate>
 		KERBAL_CONSTEXPR20
-		typename list<Tp, Allocator>::size_type
-		list<Tp, Allocator>::remove_if(UnaryPredicate predicate)
+		typename list<T, Allocator>::size_type
+		list<T, Allocator>::remove_if(UnaryPredicate predicate)
 		{
 			return list_type_only::k_remove_if_using_allocator(this->alloc(), predicate);
 		}
 
-		template <typename Tp, typename Allocator>
+		template <typename T, typename Allocator>
 		template <typename UnaryPredicate>
 		KERBAL_CONSTEXPR20
-		typename list<Tp, Allocator>::size_type
-		list<Tp, Allocator>::remove_if(const_iterator first, const_iterator last, UnaryPredicate predicate)
+		typename list<T, Allocator>::size_type
+		list<T, Allocator>::remove_if(const_iterator first, const_iterator last, UnaryPredicate predicate)
 		{
 			return list_type_only::k_remove_if_using_allocator(this->alloc(), first, last, predicate);
 		}
 
-		template <typename Tp, typename Allocator>
+		template <typename T, typename Allocator>
 		KERBAL_CONSTEXPR20
-		typename list<Tp, Allocator>::size_type
-		list<Tp, Allocator>::unique()
+		typename list<T, Allocator>::size_type
+		list<T, Allocator>::unique()
 		{
 			return list_type_only::k_unique_using_allocator(this->alloc());
 		}
 
-		template <typename Tp, typename Allocator>
+		template <typename T, typename Allocator>
 		template <typename BinaryPredicate>
 		KERBAL_CONSTEXPR20
-		typename list<Tp, Allocator>::size_type
-		list<Tp, Allocator>::unique(BinaryPredicate pred)
+		typename list<T, Allocator>::size_type
+		list<T, Allocator>::unique(BinaryPredicate pred)
 		{
 			return list_type_only::k_unique_using_allocator(this->alloc(), pred);
 		}
 
-		template <typename Tp, typename Allocator>
+		template <typename T, typename Allocator>
 		KERBAL_CONSTEXPR20
-		typename list<Tp, Allocator>::size_type
-		list<Tp, Allocator>::unique(const_iterator first, const_iterator last)
+		typename list<T, Allocator>::size_type
+		list<T, Allocator>::unique(const_iterator first, const_iterator last)
 		{
 			return list_type_only::k_unique_using_allocator(this->alloc(), first, last);
 		}
 
-		template <typename Tp, typename Allocator>
+		template <typename T, typename Allocator>
 		template <typename BinaryPredicate>
 		KERBAL_CONSTEXPR20
-		typename list<Tp, Allocator>::size_type
-		list<Tp, Allocator>::unique(const_iterator first, const_iterator last, BinaryPredicate pred)
+		typename list<T, Allocator>::size_type
+		list<T, Allocator>::unique(const_iterator first, const_iterator last, BinaryPredicate pred)
 		{
 			return list_type_only::k_unique_using_allocator(this->alloc(), first, last, pred);
 		}
 
-		template <typename Tp, typename Allocator>
+		template <typename T, typename Allocator>
 		KERBAL_CONSTEXPR20
-		void list<Tp, Allocator>::splice(const_iterator pos, list & other) KERBAL_NOEXCEPT
+		void list<T, Allocator>::splice(const_iterator pos, list & other) KERBAL_NOEXCEPT
 		{
 			list_type_unrelated::k_splice(pos, other);
 		}
 
-		template <typename Tp, typename Allocator>
+		template <typename T, typename Allocator>
 		KERBAL_CONSTEXPR20
-		void list<Tp, Allocator>::splice(const_iterator pos, list & /*other*/, const_iterator opos) KERBAL_NOEXCEPT
+		void list<T, Allocator>::splice(const_iterator pos, list & /*other*/, const_iterator opos) KERBAL_NOEXCEPT
 		{
 			list_type_unrelated::k_splice(pos, opos);
 		}
 
-		template <typename Tp, typename Allocator>
+		template <typename T, typename Allocator>
 		KERBAL_CONSTEXPR20
-		void list<Tp, Allocator>::splice(const_iterator pos, list & /*other*/, const_iterator first, const_iterator last) KERBAL_NOEXCEPT
+		void list<T, Allocator>::splice(const_iterator pos, list & /*other*/, const_iterator first, const_iterator last) KERBAL_NOEXCEPT
 		{
 			list_type_unrelated::k_splice(pos, first, last);
 		}
 
 #	if __cplusplus >= 201103L
 
-		template <typename Tp, typename Allocator>
+		template <typename T, typename Allocator>
 		KERBAL_CONSTEXPR20
-		void list<Tp, Allocator>::splice(const_iterator pos, list && other) KERBAL_NOEXCEPT
+		void list<T, Allocator>::splice(const_iterator pos, list && other) KERBAL_NOEXCEPT
 		{
 			list_type_unrelated::k_splice(pos, kerbal::compatibility::move(other));
 		}
 
-		template <typename Tp, typename Allocator>
+		template <typename T, typename Allocator>
 		KERBAL_CONSTEXPR20
-		void list<Tp, Allocator>::splice(const_iterator pos, list && /*other*/, const_iterator opos) KERBAL_NOEXCEPT
+		void list<T, Allocator>::splice(const_iterator pos, list && /*other*/, const_iterator opos) KERBAL_NOEXCEPT
 		{
 			list_type_unrelated::k_splice(pos, opos);
 		}
 
-		template <typename Tp, typename Allocator>
+		template <typename T, typename Allocator>
 		KERBAL_CONSTEXPR20
-		void list<Tp, Allocator>::splice(const_iterator pos, list && /*other*/, const_iterator first, const_iterator last) KERBAL_NOEXCEPT
+		void list<T, Allocator>::splice(const_iterator pos, list && /*other*/, const_iterator first, const_iterator last) KERBAL_NOEXCEPT
 		{
 			list_type_unrelated::k_splice(pos, first, last);
 		}
 
 #	endif
 
-		template <typename Tp, typename Allocator>
+		template <typename T, typename Allocator>
 		template <typename BinaryPredict>
 		KERBAL_CONSTEXPR20
-		void list<Tp, Allocator>::set_difference(list & l1, const list & l2, list & lto, BinaryPredict cmp)
+		void list<T, Allocator>::set_difference(list & l1, const list & l2, list & lto, BinaryPredict cmp)
 		{
 			list_type_only::k_set_difference(static_cast<list_type_only &>(l1), static_cast<const list_type_only &>(l2),
 														static_cast<list_type_only &>(lto), cmp);
 		}
 
-		template <typename Tp, typename Allocator>
+		template <typename T, typename Allocator>
 		KERBAL_CONSTEXPR20
-		void list<Tp, Allocator>::set_difference(list & l1, const list & l2, list & lto)
+		void list<T, Allocator>::set_difference(list & l1, const list & l2, list & lto)
 		{
 			list_type_only::k_set_difference(static_cast<list_type_only &>(l1), static_cast<const list_type_only &>(l2),
 														static_cast<list_type_only &>(lto));
 		}
 
-		template <typename Tp, typename Allocator>
+		template <typename T, typename Allocator>
 		template <typename BinaryPredict>
 		KERBAL_CONSTEXPR20
-		void list<Tp, Allocator>::set_intersection(list & l1, list & l2, list & lto, BinaryPredict cmp)
+		void list<T, Allocator>::set_intersection(list & l1, list & l2, list & lto, BinaryPredict cmp)
 		{
 			list_type_only::k_set_intersection(static_cast<list_type_only &>(l1), static_cast<list_type_only &>(l2),
 														  static_cast<list_type_only &>(lto), cmp);
 		}
 
-		template <typename Tp, typename Allocator>
+		template <typename T, typename Allocator>
 		KERBAL_CONSTEXPR20
-		void list<Tp, Allocator>::set_intersection(list & l1, list & l2, list & lto)
+		void list<T, Allocator>::set_intersection(list & l1, list & l2, list & lto)
 		{
 			list_type_only::k_set_intersection(static_cast<list_type_only &>(l1), static_cast<list_type_only &>(l2),
 														  static_cast<list_type_only &>(lto));
 		}
 
-		template <typename Tp, typename Allocator>
+		template <typename T, typename Allocator>
 		template <typename BinaryPredict>
 		KERBAL_CONSTEXPR20
-		void list<Tp, Allocator>::set_symmetric_difference(list & l1, list & l2, list & lto, BinaryPredict cmp)
+		void list<T, Allocator>::set_symmetric_difference(list & l1, list & l2, list & lto, BinaryPredict cmp)
 		{
 			list_type_only::k_set_symmetric_difference(static_cast<list_type_only &>(l1), static_cast<list_type_only &>(l2),
 																  static_cast<list_type_only &>(lto), cmp);
 		}
 
-		template <typename Tp, typename Allocator>
+		template <typename T, typename Allocator>
 		KERBAL_CONSTEXPR20
-		void list<Tp, Allocator>::set_symmetric_difference(list & l1, list & l2, list & lto)
+		void list<T, Allocator>::set_symmetric_difference(list & l1, list & l2, list & lto)
 		{
 			list_type_only::k_set_symmetric_difference(static_cast<list_type_only &>(l1), static_cast<list_type_only &>(l2),
 																  static_cast<list_type_only &>(lto));
 		}
 
-		template <typename Tp, typename Allocator>
+		template <typename T, typename Allocator>
 		template <typename BinaryPredict>
 		KERBAL_CONSTEXPR20
-		void list<Tp, Allocator>::set_union(list & l1, list & l2, list & lto, BinaryPredict cmp)
+		void list<T, Allocator>::set_union(list & l1, list & l2, list & lto, BinaryPredict cmp)
 		{
 			list_type_only::k_set_union(static_cast<list_type_only &>(l1), static_cast<list_type_only &>(l2),
 												   static_cast<list_type_only &>(lto), cmp);
 		}
 
-		template <typename Tp, typename Allocator>
+		template <typename T, typename Allocator>
 		KERBAL_CONSTEXPR20
-		void list<Tp, Allocator>::set_union(list & l1, list & l2, list & lto)
+		void list<T, Allocator>::set_union(list & l1, list & l2, list & lto)
 		{
 			list_type_only::k_set_union(static_cast<list_type_only &>(l1), static_cast<list_type_only &>(l2),
 												   static_cast<list_type_only &>(lto));
 		}
 
-		template <typename Tp, typename Allocator>
+		template <typename T, typename Allocator>
 		KERBAL_CONSTEXPR20
-		list<Tp, Allocator>& list<Tp, Allocator>::operator+=(const list & with)
+		list<T, Allocator>& list<T, Allocator>::operator+=(const list & with)
 		{
 			this->insert(this->cend(), with.cbegin(), with.cend());
 			return *this;
@@ -913,9 +913,9 @@ namespace kerbal
 
 #	if __cplusplus >= 201103L
 
-		template <typename Tp, typename Allocator>
+		template <typename T, typename Allocator>
 		KERBAL_CONSTEXPR20
-		list<Tp, Allocator>& list<Tp, Allocator>::operator+=(list && with)
+		list<T, Allocator>& list<T, Allocator>::operator+=(list && with)
 		{
 			this->splice(this->cend(), kerbal::compatibility::move(with));
 			return *this;
@@ -925,9 +925,9 @@ namespace kerbal
 
 #	if __cplusplus >= 201103L
 
-		template <typename Tp, typename Allocator>
+		template <typename T, typename Allocator>
 		KERBAL_CONSTEXPR20
-		list<Tp, Allocator>& list<Tp, Allocator>::operator+=(std::initializer_list<value_type> with)
+		list<T, Allocator>& list<T, Allocator>::operator+=(std::initializer_list<value_type> with)
 		{
 			this->insert(this->cend(), with.begin(), with.end());
 			return *this;
@@ -935,15 +935,15 @@ namespace kerbal
 
 #	else
 
-		template <typename Tp, typename Allocator>
-		list<Tp, Allocator>& list<Tp, Allocator>::operator+=(const kerbal::assign::assign_list<void> & with)
+		template <typename T, typename Allocator>
+		list<T, Allocator>& list<T, Allocator>::operator+=(const kerbal::assign::assign_list<void> & with)
 		{
 			return *this;
 		}
 
-		template <typename Tp, typename Allocator>
+		template <typename T, typename Allocator>
 		template <typename U>
-		list<Tp, Allocator>& list<Tp, Allocator>::operator+=(const kerbal::assign::assign_list<U> & with)
+		list<T, Allocator>& list<T, Allocator>::operator+=(const kerbal::assign::assign_list<U> & with)
 		{
 			this->insert(this->cend(), with.cbegin(), with.cend());
 			return *this;
@@ -951,40 +951,40 @@ namespace kerbal
 
 #	endif
 
-		template <typename Tp, typename Allocator>
+		template <typename T, typename Allocator>
 		KERBAL_CONSTEXPR20
-		list<Tp, Allocator> operator+(const list<Tp, Allocator> & lhs, const list<Tp, Allocator> & rhs)
+		list<T, Allocator> operator+(const list<T, Allocator> & lhs, const list<T, Allocator> & rhs)
 		{
-			list<Tp, Allocator> r(lhs);
+			list<T, Allocator> r(lhs);
 			r.insert(r.cend(), rhs.cbegin(), rhs.cend());
 			return r;
 		}
 
 #	if __cplusplus >= 201103L
 
-		template <typename Tp, typename Allocator>
+		template <typename T, typename Allocator>
 		KERBAL_CONSTEXPR20
-		list<Tp, Allocator> operator+(const list<Tp, Allocator> & lhs, list<Tp, Allocator> && rhs)
+		list<T, Allocator> operator+(const list<T, Allocator> & lhs, list<T, Allocator> && rhs)
 		{
-			list<Tp, Allocator> r(lhs);
+			list<T, Allocator> r(lhs);
 			r += kerbal::compatibility::move(rhs);
 			return r;
 		}
 
-		template <typename Tp, typename Allocator>
+		template <typename T, typename Allocator>
 		KERBAL_CONSTEXPR20
-		list<Tp, Allocator> operator+(list<Tp, Allocator> && lhs, const list<Tp, Allocator> & rhs)
+		list<T, Allocator> operator+(list<T, Allocator> && lhs, const list<T, Allocator> & rhs)
 		{
-			list<Tp, Allocator> r(kerbal::compatibility::move(lhs));
+			list<T, Allocator> r(kerbal::compatibility::move(lhs));
 			r += rhs;
 			return r;
 		}
 
-		template <typename Tp, typename Allocator>
+		template <typename T, typename Allocator>
 		KERBAL_CONSTEXPR20
-		list<Tp, Allocator> operator+(list<Tp, Allocator> && lhs, list<Tp, Allocator> && rhs)
+		list<T, Allocator> operator+(list<T, Allocator> && lhs, list<T, Allocator> && rhs)
 		{
-			list<Tp, Allocator> r(kerbal::compatibility::move(lhs));
+			list<T, Allocator> r(kerbal::compatibility::move(lhs));
 			r += kerbal::compatibility::move(rhs);
 			return r;
 		}

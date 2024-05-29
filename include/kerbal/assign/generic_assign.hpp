@@ -35,9 +35,9 @@ namespace kerbal
 	namespace assign
 	{
 
-		template <typename Tp, typename Up>
+		template <typename T, typename U>
 		KERBAL_CONSTEXPR14
-		Tp& generic_assign(Tp & lhs, const Up & rhs)
+		T& generic_assign(T & lhs, const U & rhs)
 				KERBAL_CONDITIONAL_NOEXCEPT(
 					noexcept(lhs = rhs)
 				)
@@ -46,9 +46,9 @@ namespace kerbal
 			return lhs;
 		}
 
-		template <typename Tp, typename Up, std::size_t N>
+		template <typename T, typename U, std::size_t N>
 		KERBAL_CONSTEXPR14
-		Tp (& generic_assign(Tp (& lhs)[N], const Up (& rhs)[N])
+		T (& generic_assign(T (& lhs)[N], const U (& rhs)[N])
 			)[N]
 		{
 			for (std::size_t i = 0; i < N; ++i) {
@@ -62,30 +62,30 @@ namespace kerbal
 		namespace detail
 		{
 
-			template <typename Tp, typename Up>
+			template <typename T, typename U>
 			KERBAL_CONSTEXPR14
-			void k_generic_assign(Tp& lhs, Up&& rhs, kerbal::type_traits::false_type)
+			void k_generic_assign(T& lhs, U&& rhs, kerbal::type_traits::false_type)
 					KERBAL_CONDITIONAL_NOEXCEPT(
-						noexcept(lhs = kerbal::utility::forward<Up>(rhs))
+						noexcept(lhs = kerbal::utility::forward<U>(rhs))
 					)
 			{
-				lhs = kerbal::utility::forward<Up>(rhs);
+				lhs = kerbal::utility::forward<U>(rhs);
 			}
 
-			template <typename Tp, typename Up>
+			template <typename T, typename U>
 			KERBAL_CONSTEXPR14
-			void k_generic_assign(Tp& lhs, Up&& rhs, kerbal::type_traits::true_type)
+			void k_generic_assign(T& lhs, U&& rhs, kerbal::type_traits::true_type)
 					KERBAL_CONDITIONAL_NOEXCEPT(
 						noexcept(
 							kerbal::assign::generic_assign(lhs[0], kerbal::utility::forward<decltype(rhs[0])>(rhs[0]))
 						)
 					)
 			{
-				typedef kerbal::type_traits::extent<Tp, 0> TP_EXTENT;
+				typedef kerbal::type_traits::extent<T, 0> TP_EXTENT;
 				typedef kerbal::type_traits::extent<
-						typename kerbal::type_traits::remove_reference<Up>::type
+						typename kerbal::type_traits::remove_reference<U>::type
 				, 0> UP_EXTENT;
-				KERBAL_STATIC_ASSERT(TP_EXTENT::value == UP_EXTENT::value, "Tp and Up must have same length");
+				KERBAL_STATIC_ASSERT(TP_EXTENT::value == UP_EXTENT::value, "T and U must have same length");
 				for (std::size_t i = 0; i < TP_EXTENT::value; ++i) {
 					kerbal::assign::generic_assign(lhs[i], kerbal::utility::forward<decltype(rhs[i])>(rhs[i]));
 				}
@@ -93,18 +93,18 @@ namespace kerbal
 
 		} // namespace detail
 
-		template <typename Tp, typename Up>
+		template <typename T, typename U>
 		KERBAL_CONSTEXPR14
-		Tp& generic_assign(Tp & lhs, Up && rhs)
+		T& generic_assign(T & lhs, U && rhs)
 				KERBAL_CONDITIONAL_NOEXCEPT(
 					noexcept(
 						kerbal::assign::detail::k_generic_assign(
-							lhs, kerbal::utility::forward<Up>(rhs), kerbal::type_traits::is_array<Tp>()
+							lhs, kerbal::utility::forward<U>(rhs), kerbal::type_traits::is_array<T>()
 						)
 					)
 				)
 		{
-			kerbal::assign::detail::k_generic_assign(lhs, kerbal::utility::forward<Up>(rhs), kerbal::type_traits::is_array<Tp>());
+			kerbal::assign::detail::k_generic_assign(lhs, kerbal::utility::forward<U>(rhs), kerbal::type_traits::is_array<T>());
 			return lhs;
 		}
 

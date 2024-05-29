@@ -21,11 +21,11 @@ namespace kerbal
 	namespace operators
 	{
 
-		template <typename Tp, typename Up>
+		template <typename T, typename U>
 		struct subtractable
 		{
 				KERBAL_CONSTEXPR14
-				friend Tp operator-(Tp lhs, const Up& rhs)
+				friend T operator-(T lhs, const U& rhs)
 #	if KERBAL_COMPILER_ID != KERBAL_COMPILER_ID_ICC
 						KERBAL_CONDITIONAL_NOEXCEPT(noexcept(lhs -= rhs))
 #	endif
