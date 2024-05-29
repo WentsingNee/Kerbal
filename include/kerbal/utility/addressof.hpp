@@ -19,26 +19,26 @@
 #include <kerbal/compatibility/noexcept.hpp>
 
 
-#ifndef KERBAL_HAS_BUILTIN_ADDRESSOF_SUPPORT
+#ifndef KERBAL_PRIVATE_HAS_BUILTIN_ADDRESSOF
 
 #	if KERBAL_COMPILER_ID == KERBAL_COMPILER_ID_GNU
 
 #		if KERBAL_GNU_PRIVATE_HAS_BUILTIN(__builtin_addressof)
-#			define KERBAL_HAS_BUILTIN_ADDRESSOF_SUPPORT 1
+#			define KERBAL_PRIVATE_HAS_BUILTIN_ADDRESSOF 1
 #			define KERBAL_BUILTIN_ADDRESSOF(x) __builtin_addressof(x)
 #		endif
 
 #	elif KERBAL_COMPILER_ID == KERBAL_COMPILER_ID_CLANG
 
 #		if KERBAL_CLANG_PRIVATE_HAS_BUILTIN(__builtin_addressof)
-#			define KERBAL_HAS_BUILTIN_ADDRESSOF_SUPPORT 1
+#			define KERBAL_PRIVATE_HAS_BUILTIN_ADDRESSOF 1
 #			define KERBAL_BUILTIN_ADDRESSOF(x) __builtin_addressof(x)
 #		endif
 
 #	elif KERBAL_COMPILER_ID == KERBAL_COMPILER_ID_ICC
 
 #		if KERBAL_ICC_PRIVATE_HAS_BUILTIN(__builtin_addressof)
-#			define KERBAL_HAS_BUILTIN_ADDRESSOF_SUPPORT 1
+#			define KERBAL_PRIVATE_HAS_BUILTIN_ADDRESSOF 1
 #			define KERBAL_BUILTIN_ADDRESSOF(x) __builtin_addressof(x)
 #		endif
 
@@ -47,7 +47,7 @@
 #endif
 
 
-#if !KERBAL_HAS_BUILTIN_ADDRESSOF_SUPPORT
+#if !KERBAL_PRIVATE_HAS_BUILTIN_ADDRESSOF
 #	if __cplusplus >= 201103L
 #		include <memory>
 #	endif
@@ -60,7 +60,7 @@ namespace kerbal
 	namespace utility
 	{
 
-#	if KERBAL_HAS_BUILTIN_ADDRESSOF_SUPPORT
+#	if KERBAL_PRIVATE_HAS_BUILTIN_ADDRESSOF
 
 		template <typename T>
 		KERBAL_CONSTEXPR
