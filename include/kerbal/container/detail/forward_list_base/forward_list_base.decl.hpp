@@ -104,7 +104,7 @@ namespace kerbal
 					KERBAL_CONSTEXPR14
 					basic_const_iterator basic_cbefore_begin() const KERBAL_NOEXCEPT
 					{
-						return basic_const_iterator(&this->k_head);
+						return this->basic_before_begin();
 					}
 
 					KERBAL_CONSTEXPR14
@@ -122,7 +122,7 @@ namespace kerbal
 					KERBAL_CONSTEXPR14
 					basic_const_iterator basic_cbegin() const KERBAL_NOEXCEPT
 					{
-						return basic_const_iterator(this->k_head.next);
+						return this->basic_begin();
 					}
 
 					KERBAL_CONSTEXPR14
@@ -140,7 +140,7 @@ namespace kerbal
 					KERBAL_CONSTEXPR14
 					basic_const_iterator basic_cend() const KERBAL_NOEXCEPT
 					{
-						return basic_const_iterator(NULL);
+						return this->basic_end();
 					}
 
 				//===================

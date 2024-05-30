@@ -311,9 +311,9 @@ namespace kerbal
 			// iterator
 
 				using sl_type_only::begin;
-				using sl_type_only::end;
-
 				using sl_type_only::cbegin;
+
+				using sl_type_only::end;
 				using sl_type_only::cend;
 
 				using sl_type_only::nth;

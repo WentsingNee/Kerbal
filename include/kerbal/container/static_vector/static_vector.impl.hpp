@@ -451,14 +451,6 @@ namespace kerbal
 		}
 
 		template <typename Tp, std::size_t N>
-		KERBAL_CONSTEXPR14
-		typename static_vector<Tp, N>::iterator
-		static_vector<Tp, N>::end() KERBAL_NOEXCEPT
-		{
-			return super::end();
-		}
-
-		template <typename Tp, std::size_t N>
 		KERBAL_CONSTEXPR
 		typename static_vector<Tp, N>::const_iterator
 		static_vector<Tp, N>::begin() const KERBAL_NOEXCEPT
@@ -469,7 +461,15 @@ namespace kerbal
 		template <typename Tp, std::size_t N>
 		KERBAL_CONSTEXPR
 		typename static_vector<Tp, N>::const_iterator
-		static_vector<Tp, N>::end() const KERBAL_NOEXCEPT
+		static_vector<Tp, N>::cbegin() const KERBAL_NOEXCEPT
+		{
+			return super::cbegin();
+		}
+
+		template <typename Tp, std::size_t N>
+		KERBAL_CONSTEXPR14
+		typename static_vector<Tp, N>::iterator
+		static_vector<Tp, N>::end() KERBAL_NOEXCEPT
 		{
 			return super::end();
 		}
@@ -477,9 +477,9 @@ namespace kerbal
 		template <typename Tp, std::size_t N>
 		KERBAL_CONSTEXPR
 		typename static_vector<Tp, N>::const_iterator
-		static_vector<Tp, N>::cbegin() const KERBAL_NOEXCEPT
+		static_vector<Tp, N>::end() const KERBAL_NOEXCEPT
 		{
-			return super::cbegin();
+			return super::end();
 		}
 
 		template <typename Tp, std::size_t N>
@@ -499,6 +499,22 @@ namespace kerbal
 		}
 
 		template <typename Tp, std::size_t N>
+		KERBAL_CONSTEXPR
+		typename static_vector<Tp, N>::const_reverse_iterator
+		static_vector<Tp, N>::rbegin() const KERBAL_NOEXCEPT
+		{
+			return const_reverse_iterator(this->end());
+		}
+
+		template <typename Tp, std::size_t N>
+		KERBAL_CONSTEXPR
+		typename static_vector<Tp, N>::const_reverse_iterator
+		static_vector<Tp, N>::crbegin() const KERBAL_NOEXCEPT
+		{
+			return this->rbegin();
+		}
+
+		template <typename Tp, std::size_t N>
 		KERBAL_CONSTEXPR14
 		typename static_vector<Tp, N>::reverse_iterator
 		static_vector<Tp, N>::rend() KERBAL_NOEXCEPT
@@ -509,24 +525,9 @@ namespace kerbal
 		template <typename Tp, std::size_t N>
 		KERBAL_CONSTEXPR
 		typename static_vector<Tp, N>::const_reverse_iterator
-		static_vector<Tp, N>::rbegin() const KERBAL_NOEXCEPT
-		{
-			return this->crbegin();
-		}
-		template <typename Tp, std::size_t N>
-		KERBAL_CONSTEXPR
-		typename static_vector<Tp, N>::const_reverse_iterator
 		static_vector<Tp, N>::rend() const KERBAL_NOEXCEPT
 		{
-			return this->crend();
-		}
-
-		template <typename Tp, std::size_t N>
-		KERBAL_CONSTEXPR
-		typename static_vector<Tp, N>::const_reverse_iterator
-		static_vector<Tp, N>::crbegin() const KERBAL_NOEXCEPT
-		{
-			return const_reverse_iterator(this->end());
+			return const_reverse_iterator(this->begin());
 		}
 
 		template <typename Tp, std::size_t N>
@@ -534,7 +535,7 @@ namespace kerbal
 		typename static_vector<Tp, N>::const_reverse_iterator
 		static_vector<Tp, N>::crend() const KERBAL_NOEXCEPT
 		{
-			return const_reverse_iterator(this->cbegin());
+			return this->rend();
 		}
 
 		template <typename Tp, std::size_t N>

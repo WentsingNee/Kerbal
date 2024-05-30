@@ -681,18 +681,26 @@ namespace kerbal
 
 			template <typename Tp>
 			KERBAL_CONSTEXPR20
-			typename list_type_only<Tp>::iterator
-			list_type_only<Tp>::end() KERBAL_NOEXCEPT
+			typename list_type_only<Tp>::const_iterator
+			list_type_only<Tp>::begin() const KERBAL_NOEXCEPT
 			{
-				return iterator(&this->k_head);
+				return const_iterator(this->k_head.next);
 			}
 
 			template <typename Tp>
 			KERBAL_CONSTEXPR20
 			typename list_type_only<Tp>::const_iterator
-			list_type_only<Tp>::begin() const KERBAL_NOEXCEPT
+			list_type_only<Tp>::cbegin() const KERBAL_NOEXCEPT
 			{
-				return const_iterator(this->k_head.next);
+				return this->begin();
+			}
+
+			template <typename Tp>
+			KERBAL_CONSTEXPR20
+			typename list_type_only<Tp>::iterator
+			list_type_only<Tp>::end() KERBAL_NOEXCEPT
+			{
+				return iterator(&this->k_head);
 			}
 
 			template <typename Tp>
@@ -706,17 +714,9 @@ namespace kerbal
 			template <typename Tp>
 			KERBAL_CONSTEXPR20
 			typename list_type_only<Tp>::const_iterator
-			list_type_only<Tp>::cbegin() const KERBAL_NOEXCEPT
-			{
-				return const_iterator(this->k_head.next);
-			}
-
-			template <typename Tp>
-			KERBAL_CONSTEXPR20
-			typename list_type_only<Tp>::const_iterator
 			list_type_only<Tp>::cend() const KERBAL_NOEXCEPT
 			{
-				return const_iterator(&this->k_head);
+				return this->end();
 			}
 
 			template <typename Tp>
@@ -725,14 +725,6 @@ namespace kerbal
 			list_type_only<Tp>::rbegin() KERBAL_NOEXCEPT
 			{
 				return reverse_iterator(this->end());
-			}
-
-			template <typename Tp>
-			KERBAL_CONSTEXPR20
-			typename list_type_only<Tp>::reverse_iterator
-			list_type_only<Tp>::rend() KERBAL_NOEXCEPT
-			{
-				return reverse_iterator(this->begin());
 			}
 
 			template <typename Tp>
@@ -746,6 +738,22 @@ namespace kerbal
 			template <typename Tp>
 			KERBAL_CONSTEXPR20
 			typename list_type_only<Tp>::const_reverse_iterator
+			list_type_only<Tp>::crbegin() const KERBAL_NOEXCEPT
+			{
+				return this->rbegin();
+			}
+
+			template <typename Tp>
+			KERBAL_CONSTEXPR20
+			typename list_type_only<Tp>::reverse_iterator
+			list_type_only<Tp>::rend() KERBAL_NOEXCEPT
+			{
+				return reverse_iterator(this->begin());
+			}
+
+			template <typename Tp>
+			KERBAL_CONSTEXPR20
+			typename list_type_only<Tp>::const_reverse_iterator
 			list_type_only<Tp>::rend() const KERBAL_NOEXCEPT
 			{
 				return const_reverse_iterator(this->begin());
@@ -754,17 +762,9 @@ namespace kerbal
 			template <typename Tp>
 			KERBAL_CONSTEXPR20
 			typename list_type_only<Tp>::const_reverse_iterator
-			list_type_only<Tp>::crbegin() const KERBAL_NOEXCEPT
-			{
-				return const_reverse_iterator(this->cend());
-			}
-
-			template <typename Tp>
-			KERBAL_CONSTEXPR20
-			typename list_type_only<Tp>::const_reverse_iterator
 			list_type_only<Tp>::crend() const KERBAL_NOEXCEPT
 			{
-				return const_reverse_iterator(this->cbegin());
+				return this->rend();
 			}
 
 			template <typename Tp>

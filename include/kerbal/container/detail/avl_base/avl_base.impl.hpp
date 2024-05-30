@@ -1042,18 +1042,26 @@ namespace kerbal
 
 			template <typename Entity>
 			KERBAL_CONSTEXPR14
-			typename avl_type_only<Entity>::iterator
-			avl_type_only<Entity>::end() KERBAL_NOEXCEPT
+			typename avl_type_only<Entity>::const_iterator
+			avl_type_only<Entity>::begin() const KERBAL_NOEXCEPT
 			{
-				return iterator(&this->k_head);
+				return const_iterator(this->k_head.leftest_offspring());
 			}
 
 			template <typename Entity>
 			KERBAL_CONSTEXPR14
 			typename avl_type_only<Entity>::const_iterator
-			avl_type_only<Entity>::begin() const KERBAL_NOEXCEPT
+			avl_type_only<Entity>::cbegin() const KERBAL_NOEXCEPT
 			{
-				return this->cbegin();
+				return this->begin();
+			}
+
+			template <typename Entity>
+			KERBAL_CONSTEXPR14
+			typename avl_type_only<Entity>::iterator
+			avl_type_only<Entity>::end() KERBAL_NOEXCEPT
+			{
+				return iterator(&this->k_head);
 			}
 
 			template <typename Entity>
@@ -1067,17 +1075,9 @@ namespace kerbal
 			template <typename Entity>
 			KERBAL_CONSTEXPR14
 			typename avl_type_only<Entity>::const_iterator
-			avl_type_only<Entity>::cbegin() const KERBAL_NOEXCEPT
-			{
-				return const_iterator(this->k_head.leftest_offspring());
-			}
-
-			template <typename Entity>
-			KERBAL_CONSTEXPR14
-			typename avl_type_only<Entity>::const_iterator
 			avl_type_only<Entity>::cend() const KERBAL_NOEXCEPT
 			{
-				return const_iterator(&this->k_head);
+				return this->end();
 			}
 
 			template <typename Entity>
@@ -1086,14 +1086,6 @@ namespace kerbal
 			avl_type_only<Entity>::rbegin() KERBAL_NOEXCEPT
 			{
 				return reverse_iterator(this->end());
-			}
-
-			template <typename Entity>
-			KERBAL_CONSTEXPR14
-			typename avl_type_only<Entity>::reverse_iterator
-			avl_type_only<Entity>::rend() KERBAL_NOEXCEPT
-			{
-				return reverse_iterator(this->begin());
 			}
 
 			template <typename Entity>
@@ -1107,6 +1099,22 @@ namespace kerbal
 			template <typename Entity>
 			KERBAL_CONSTEXPR14
 			typename avl_type_only<Entity>::const_reverse_iterator
+			avl_type_only<Entity>::crbegin() const KERBAL_NOEXCEPT
+			{
+				return this->rbegin();
+			}
+
+			template <typename Entity>
+			KERBAL_CONSTEXPR14
+			typename avl_type_only<Entity>::reverse_iterator
+			avl_type_only<Entity>::rend() KERBAL_NOEXCEPT
+			{
+				return reverse_iterator(this->begin());
+			}
+
+			template <typename Entity>
+			KERBAL_CONSTEXPR14
+			typename avl_type_only<Entity>::const_reverse_iterator
 			avl_type_only<Entity>::rend() const KERBAL_NOEXCEPT
 			{
 				return const_reverse_iterator(this->begin());
@@ -1115,17 +1123,9 @@ namespace kerbal
 			template <typename Entity>
 			KERBAL_CONSTEXPR14
 			typename avl_type_only<Entity>::const_reverse_iterator
-			avl_type_only<Entity>::crbegin() const KERBAL_NOEXCEPT
-			{
-				return const_reverse_iterator(this->cend());
-			}
-
-			template <typename Entity>
-			KERBAL_CONSTEXPR14
-			typename avl_type_only<Entity>::const_reverse_iterator
 			avl_type_only<Entity>::crend() const KERBAL_NOEXCEPT
 			{
-				return const_reverse_iterator(this->cbegin());
+				return this->rend();
 			}
 
 

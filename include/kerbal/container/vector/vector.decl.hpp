@@ -268,15 +268,15 @@ namespace kerbal
 			// iterator
 
 				using vector_type_only::begin;
-				using vector_type_only::end;
-
 				using vector_type_only::cbegin;
+
+				using vector_type_only::end;
 				using vector_type_only::cend;
 
 				using vector_type_only::rbegin;
-				using vector_type_only::rend;
-
 				using vector_type_only::crbegin;
+
+				using vector_type_only::rend;
 				using vector_type_only::crend;
 
 				using vector_type_only::nth;

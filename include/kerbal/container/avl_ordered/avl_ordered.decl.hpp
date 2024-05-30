@@ -483,15 +483,15 @@ namespace kerbal
 			public:
 
 				using avl_type_only::begin;
-				using avl_type_only::end;
-
 				using avl_type_only::cbegin;
+
+				using avl_type_only::end;
 				using avl_type_only::cend;
 
 				using avl_type_only::rbegin;
-				using avl_type_only::rend;
-
 				using avl_type_only::crbegin;
+
+				using avl_type_only::rend;
 				using avl_type_only::crend;
 
 				//using avl_type_only::nth;

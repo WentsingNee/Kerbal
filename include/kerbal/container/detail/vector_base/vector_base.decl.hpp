@@ -297,17 +297,17 @@ namespace kerbal
 					KERBAL_CONSTEXPR14
 					iterator begin() KERBAL_NOEXCEPT;
 
-					KERBAL_CONSTEXPR14
-					iterator end() KERBAL_NOEXCEPT;
-
 					KERBAL_CONSTEXPR
 					const_iterator begin() const KERBAL_NOEXCEPT;
 
 					KERBAL_CONSTEXPR
-					const_iterator end() const KERBAL_NOEXCEPT;
+					const_iterator cbegin() const KERBAL_NOEXCEPT;
+
+					KERBAL_CONSTEXPR14
+					iterator end() KERBAL_NOEXCEPT;
 
 					KERBAL_CONSTEXPR
-					const_iterator cbegin() const KERBAL_NOEXCEPT;
+					const_iterator end() const KERBAL_NOEXCEPT;
 
 					KERBAL_CONSTEXPR
 					const_iterator cend() const KERBAL_NOEXCEPT;
@@ -316,16 +316,16 @@ namespace kerbal
 					reverse_iterator rbegin() KERBAL_NOEXCEPT;
 
 					KERBAL_CONSTEXPR14
-					reverse_iterator rend() KERBAL_NOEXCEPT;
-
-					KERBAL_CONSTEXPR14
 					const_reverse_iterator rbegin() const KERBAL_NOEXCEPT;
 
 					KERBAL_CONSTEXPR14
-					const_reverse_iterator rend() const KERBAL_NOEXCEPT;
+					const_reverse_iterator crbegin() const KERBAL_NOEXCEPT;
 
 					KERBAL_CONSTEXPR14
-					const_reverse_iterator crbegin() const KERBAL_NOEXCEPT;
+					reverse_iterator rend() KERBAL_NOEXCEPT;
+
+					KERBAL_CONSTEXPR14
+					const_reverse_iterator rend() const KERBAL_NOEXCEPT;
 
 					KERBAL_CONSTEXPR14
 					const_reverse_iterator crend() const KERBAL_NOEXCEPT;

@@ -110,17 +110,17 @@ namespace kerbal
 					KERBAL_CONSTEXPR14
 					iterator begin() KERBAL_NOEXCEPT;
 
-					KERBAL_CONSTEXPR14
-					iterator end() KERBAL_NOEXCEPT;
-
 					KERBAL_CONSTEXPR
 					const_iterator begin() const KERBAL_NOEXCEPT;
 
 					KERBAL_CONSTEXPR
-					const_iterator end() const KERBAL_NOEXCEPT;
+					const_iterator cbegin() const KERBAL_NOEXCEPT;
+
+					KERBAL_CONSTEXPR14
+					iterator end() KERBAL_NOEXCEPT;
 
 					KERBAL_CONSTEXPR
-					const_iterator cbegin() const KERBAL_NOEXCEPT;
+					const_iterator end() const KERBAL_NOEXCEPT;
 
 					KERBAL_CONSTEXPR
 					const_iterator cend() const KERBAL_NOEXCEPT;

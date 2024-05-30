@@ -131,6 +131,22 @@ namespace kerbal
 
 		template <typename Tp, std::size_t N>
 		KERBAL_CONSTEXPR14
+		typename array<Tp, N>::const_iterator
+		array<Tp, N>::begin() const KERBAL_NOEXCEPT
+		{
+			return const_iterator(this->k_data + 0);
+		}
+
+		template <typename Tp, std::size_t N>
+		KERBAL_CONSTEXPR
+		typename array<Tp, N>::const_iterator
+		array<Tp, N>::cbegin() const KERBAL_NOEXCEPT
+		{
+			return this->begin();
+		}
+
+		template <typename Tp, std::size_t N>
+		KERBAL_CONSTEXPR14
 		typename array<Tp, N>::iterator
 		array<Tp, N>::end() KERBAL_NOEXCEPT
 		{
@@ -140,25 +156,9 @@ namespace kerbal
 		template <typename Tp, std::size_t N>
 		KERBAL_CONSTEXPR14
 		typename array<Tp, N>::const_iterator
-		array<Tp, N>::begin() const KERBAL_NOEXCEPT
-		{
-			return this->cbegin();
-		}
-
-		template <typename Tp, std::size_t N>
-		KERBAL_CONSTEXPR14
-		typename array<Tp, N>::const_iterator
 		array<Tp, N>::end() const KERBAL_NOEXCEPT
 		{
-			return this->cend();
-		}
-
-		template <typename Tp, std::size_t N>
-		KERBAL_CONSTEXPR
-		typename array<Tp, N>::const_iterator
-		array<Tp, N>::cbegin() const KERBAL_NOEXCEPT
-		{
-			return const_iterator(this->k_data + 0);
+			return const_iterator(this->k_data + N);
 		}
 
 		template <typename Tp, std::size_t N>
@@ -166,7 +166,7 @@ namespace kerbal
 		typename array<Tp, N>::const_iterator
 		array<Tp, N>::cend() const KERBAL_NOEXCEPT
 		{
-			return const_iterator(this->k_data + N);
+			return this->end();
 		}
 
 		template <typename Tp, std::size_t N>
@@ -174,7 +174,23 @@ namespace kerbal
 		typename array<Tp, N>::reverse_iterator
 		array<Tp, N>::rbegin() KERBAL_NOEXCEPT
 		{
-			return reverse_iterator(this->begin() + this->size());
+			return reverse_iterator(this->end());
+		}
+
+		template <typename Tp, std::size_t N>
+		KERBAL_CONSTEXPR14
+		typename array<Tp, N>::const_reverse_iterator
+		array<Tp, N>::rbegin() const KERBAL_NOEXCEPT
+		{
+			return const_reverse_iterator(this->end());
+		}
+
+		template <typename Tp, std::size_t N>
+		KERBAL_CONSTEXPR
+		typename array<Tp, N>::const_reverse_iterator
+		array<Tp, N>::crbegin() const KERBAL_NOEXCEPT
+		{
+			return this->rbegin();
 		}
 
 		template <typename Tp, std::size_t N>
@@ -188,25 +204,9 @@ namespace kerbal
 		template <typename Tp, std::size_t N>
 		KERBAL_CONSTEXPR14
 		typename array<Tp, N>::const_reverse_iterator
-		array<Tp, N>::rbegin() const KERBAL_NOEXCEPT
-		{
-			return this->crbegin();
-		}
-
-		template <typename Tp, std::size_t N>
-		KERBAL_CONSTEXPR14
-		typename array<Tp, N>::const_reverse_iterator
 		array<Tp, N>::rend() const KERBAL_NOEXCEPT
 		{
-			return this->crend();
-		}
-
-		template <typename Tp, std::size_t N>
-		KERBAL_CONSTEXPR
-		typename array<Tp, N>::const_reverse_iterator
-		array<Tp, N>::crbegin() const KERBAL_NOEXCEPT
-		{
-			return const_reverse_iterator(this->end());
+			return const_reverse_iterator(this->begin());
 		}
 
 		template <typename Tp, std::size_t N>
@@ -214,7 +214,7 @@ namespace kerbal
 		typename array<Tp, N>::const_reverse_iterator
 		array<Tp, N>::crend() const KERBAL_NOEXCEPT
 		{
-			return const_reverse_iterator(this->cbegin());
+			return this->rend();
 		}
 
 		template <typename Tp, std::size_t N>

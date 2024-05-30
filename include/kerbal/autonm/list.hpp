@@ -235,15 +235,15 @@ namespace kerbal
 			// iterator
 
 				using list_type_only::begin;
-				using list_type_only::end;
-
 				using list_type_only::cbegin;
+
+				using list_type_only::end;
 				using list_type_only::cend;
 
 				using list_type_only::rbegin;
-				using list_type_only::rend;
-
 				using list_type_only::crbegin;
+
+				using list_type_only::rend;
 				using list_type_only::crend;
 
 				using list_type_only::nth;

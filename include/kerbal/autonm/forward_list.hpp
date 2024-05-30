@@ -235,9 +235,9 @@ namespace kerbal
 				using fl_type_only::cbefore_begin;
 
 				using fl_type_only::begin;
-				using fl_type_only::end;
-
 				using fl_type_only::cbegin;
+
+				using fl_type_only::end;
 				using fl_type_only::cend;
 
 				using fl_type_only::nth;

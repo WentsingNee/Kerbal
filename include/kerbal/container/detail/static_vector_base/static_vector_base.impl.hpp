@@ -151,6 +151,22 @@ namespace kerbal
 			}
 
 			template <typename Tp, std::size_t N>
+			KERBAL_CONSTEXPR
+			typename static_vector_base<Tp, N>::const_iterator
+			static_vector_base<Tp, N>::begin() const KERBAL_NOEXCEPT
+			{
+				return const_iterator(this->storage + 0);
+			}
+
+			template <typename Tp, std::size_t N>
+			KERBAL_CONSTEXPR
+			typename static_vector_base<Tp, N>::const_iterator
+			static_vector_base<Tp, N>::cbegin() const KERBAL_NOEXCEPT
+			{
+				return this->begin();
+			}
+
+			template <typename Tp, std::size_t N>
 			KERBAL_CONSTEXPR14
 			typename static_vector_base<Tp, N>::iterator
 			static_vector_base<Tp, N>::end() KERBAL_NOEXCEPT
@@ -161,25 +177,9 @@ namespace kerbal
 			template <typename Tp, std::size_t N>
 			KERBAL_CONSTEXPR
 			typename static_vector_base<Tp, N>::const_iterator
-			static_vector_base<Tp, N>::begin() const KERBAL_NOEXCEPT
-			{
-				return this->cbegin();
-			}
-
-			template <typename Tp, std::size_t N>
-			KERBAL_CONSTEXPR
-			typename static_vector_base<Tp, N>::const_iterator
 			static_vector_base<Tp, N>::end() const KERBAL_NOEXCEPT
 			{
-				return this->cend();
-			}
-
-			template <typename Tp, std::size_t N>
-			KERBAL_CONSTEXPR
-			typename static_vector_base<Tp, N>::const_iterator
-			static_vector_base<Tp, N>::cbegin() const KERBAL_NOEXCEPT
-			{
-				return const_iterator(this->storage + 0);
+				return const_iterator(this->storage + this->len);
 			}
 
 			template <typename Tp, std::size_t N>
@@ -187,7 +187,7 @@ namespace kerbal
 			typename static_vector_base<Tp, N>::const_iterator
 			static_vector_base<Tp, N>::cend() const KERBAL_NOEXCEPT
 			{
-				return const_iterator(this->storage + this->len);
+				return this->end();
 			}
 
 		} // namespace detail

@@ -734,6 +734,22 @@ namespace kerbal
 			}
 
 			template <typename Tp>
+			KERBAL_CONSTEXPR
+			typename vector_type_only<Tp>::const_iterator
+			vector_type_only<Tp>::begin() const KERBAL_NOEXCEPT
+			{
+				return const_iterator(this->k_buffer + 0);
+			}
+
+			template <typename Tp>
+			KERBAL_CONSTEXPR
+			typename vector_type_only<Tp>::const_iterator
+			vector_type_only<Tp>::cbegin() const KERBAL_NOEXCEPT
+			{
+				return this->begin();
+			}
+
+			template <typename Tp>
 			KERBAL_CONSTEXPR14
 			typename vector_type_only<Tp>::iterator
 			vector_type_only<Tp>::end() KERBAL_NOEXCEPT
@@ -744,25 +760,9 @@ namespace kerbal
 			template <typename Tp>
 			KERBAL_CONSTEXPR
 			typename vector_type_only<Tp>::const_iterator
-			vector_type_only<Tp>::begin() const KERBAL_NOEXCEPT
-			{
-				return this->cbegin();
-			}
-
-			template <typename Tp>
-			KERBAL_CONSTEXPR
-			typename vector_type_only<Tp>::const_iterator
 			vector_type_only<Tp>::end() const KERBAL_NOEXCEPT
 			{
-				return this->cend();
-			}
-
-			template <typename Tp>
-			KERBAL_CONSTEXPR
-			typename vector_type_only<Tp>::const_iterator
-			vector_type_only<Tp>::cbegin() const KERBAL_NOEXCEPT
-			{
-				return const_iterator(this->k_buffer + 0);
+				return const_iterator(this->k_buffer + this->k_size);
 			}
 
 			template <typename Tp>
@@ -770,7 +770,7 @@ namespace kerbal
 			typename vector_type_only<Tp>::const_iterator
 			vector_type_only<Tp>::cend() const KERBAL_NOEXCEPT
 			{
-				return const_iterator(this->k_buffer + this->k_size);
+				return this->end();
 			}
 
 			template <typename Tp>
@@ -779,6 +779,22 @@ namespace kerbal
 			vector_type_only<Tp>::rbegin() KERBAL_NOEXCEPT
 			{
 				return reverse_iterator(this->end());
+			}
+
+			template <typename Tp>
+			KERBAL_CONSTEXPR14
+			typename vector_type_only<Tp>::const_reverse_iterator
+			vector_type_only<Tp>::rbegin() const KERBAL_NOEXCEPT
+			{
+				return const_reverse_iterator(this->end());
+			}
+
+			template <typename Tp>
+			KERBAL_CONSTEXPR14
+			typename vector_type_only<Tp>::const_reverse_iterator
+			vector_type_only<Tp>::crbegin() const KERBAL_NOEXCEPT
+			{
+				return this->rbegin();
 			}
 
 			template <typename Tp>
@@ -792,24 +808,9 @@ namespace kerbal
 			template <typename Tp>
 			KERBAL_CONSTEXPR14
 			typename vector_type_only<Tp>::const_reverse_iterator
-			vector_type_only<Tp>::rbegin() const KERBAL_NOEXCEPT
-			{
-				return this->crbegin();
-			}
-			template <typename Tp>
-			KERBAL_CONSTEXPR14
-			typename vector_type_only<Tp>::const_reverse_iterator
 			vector_type_only<Tp>::rend() const KERBAL_NOEXCEPT
 			{
-				return this->crend();
-			}
-
-			template <typename Tp>
-			KERBAL_CONSTEXPR14
-			typename vector_type_only<Tp>::const_reverse_iterator
-			vector_type_only<Tp>::crbegin() const KERBAL_NOEXCEPT
-			{
-				return const_reverse_iterator(this->end());
+				return const_reverse_iterator(this->begin());
 			}
 
 			template <typename Tp>
@@ -817,7 +818,7 @@ namespace kerbal
 			typename vector_type_only<Tp>::const_reverse_iterator
 			vector_type_only<Tp>::crend() const KERBAL_NOEXCEPT
 			{
-				return const_reverse_iterator(this->cbegin());
+				return this->rend();
 			}
 
 			template <typename Tp>

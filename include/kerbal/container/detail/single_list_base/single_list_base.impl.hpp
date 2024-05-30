@@ -726,18 +726,26 @@ namespace kerbal
 
 			template <typename Tp>
 			KERBAL_CONSTEXPR20
-			typename sl_type_only<Tp>::iterator
-			sl_type_only<Tp>::end() KERBAL_NOEXCEPT
+			typename sl_type_only<Tp>::const_iterator
+			sl_type_only<Tp>::begin() const KERBAL_NOEXCEPT
 			{
-				return iterator(this->k_last);
+				return const_iterator(&this->k_head);
 			}
 
 			template <typename Tp>
 			KERBAL_CONSTEXPR20
 			typename sl_type_only<Tp>::const_iterator
-			sl_type_only<Tp>::begin() const KERBAL_NOEXCEPT
+			sl_type_only<Tp>::cbegin() const KERBAL_NOEXCEPT
 			{
-				return const_iterator(&this->k_head);
+				return this->begin();
+			}
+
+			template <typename Tp>
+			KERBAL_CONSTEXPR20
+			typename sl_type_only<Tp>::iterator
+			sl_type_only<Tp>::end() KERBAL_NOEXCEPT
+			{
+				return iterator(this->k_last);
 			}
 
 			template <typename Tp>
@@ -751,17 +759,9 @@ namespace kerbal
 			template <typename Tp>
 			KERBAL_CONSTEXPR20
 			typename sl_type_only<Tp>::const_iterator
-			sl_type_only<Tp>::cbegin() const KERBAL_NOEXCEPT
-			{
-				return const_iterator(&this->k_head);
-			}
-
-			template <typename Tp>
-			KERBAL_CONSTEXPR20
-			typename sl_type_only<Tp>::const_iterator
 			sl_type_only<Tp>::cend() const KERBAL_NOEXCEPT
 			{
-				return const_iterator(this->k_last);
+				return this->end();
 			}
 
 			template <typename Tp>

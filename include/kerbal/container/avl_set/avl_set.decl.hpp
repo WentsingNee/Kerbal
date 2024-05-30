@@ -232,9 +232,6 @@ namespace kerbal
 					return this->avl_ordered::cend();
 				}
 
-				using avl_ordered::cbegin;
-				using avl_ordered::cend;
-
 				const_reverse_iterator rbegin() const
 				{
 					return this->avl_ordered::crbegin();
@@ -245,6 +242,8 @@ namespace kerbal
 					return this->avl_ordered::crend();
 				}
 
+				using avl_ordered::cbegin;
+				using avl_ordered::cend;
 				using avl_ordered::crbegin;
 				using avl_ordered::crend;
 

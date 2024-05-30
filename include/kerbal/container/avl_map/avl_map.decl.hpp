@@ -237,15 +237,15 @@ namespace kerbal
 			// iterator
 
 				using avl_ordered::begin;
-				using avl_ordered::end;
-
 				using avl_ordered::cbegin;
+
+				using avl_ordered::end;
 				using avl_ordered::cend;
 
 				using avl_ordered::rbegin;
-				using avl_ordered::rend;
-
 				using avl_ordered::crbegin;
+
+				using avl_ordered::rend;
 				using avl_ordered::crend;
 
 			//===================
