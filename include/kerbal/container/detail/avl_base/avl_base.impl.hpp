@@ -2819,18 +2819,13 @@ namespace kerbal
 					return AVL_NORMAL_RESULT_CORRECT;
 				}
 
+				// Sub Trees Check
 				const value_type * lmini = NULL;
 				const value_type * lmaxi = NULL;
 				node_base::height_t lheight = 0;
 				avl_normal_result_t lresult = avl_normal_impl(p->left, lmini, lmaxi, lheight, e, kc);
 				if (lresult != AVL_NORMAL_RESULT_CORRECT) {
 					return lresult;
-				}
-
-				if (p->right != get_avl_vnull_node()) {
-					if (p->right->parent != p) {
-						return AVL_NORMAL_RESULT_BAD_PARENT;
-					}
 				}
 
 				const value_type * rmini = NULL;
@@ -2841,12 +2836,20 @@ namespace kerbal
 					return rresult;
 				}
 
+				// Parent Check
 				if (p->left != get_avl_vnull_node()) {
 					if (p->left->parent != p) {
 						return AVL_NORMAL_RESULT_BAD_PARENT;
 					}
 				}
 
+				if (p->right != get_avl_vnull_node()) {
+					if (p->right->parent != p) {
+						return AVL_NORMAL_RESULT_BAD_PARENT;
+					}
+				}
+
+				// BST Requirement Check
 				const value_type & mid_value = node::reinterpret_as(p)->member();
 				if (lmaxi != NULL) {
 					if (!kc(e(*lmaxi), e(mid_value))) {
@@ -2871,7 +2874,7 @@ namespace kerbal
 					maxi = &mid_value;
 				}
 
-
+				// AVL Balance Requirement Check
 				if (lheight > 1 + rheight) {
 					return AVL_NORMAL_RESULT_NOT_BALANCED;
 				} else if (rheight > 1 + lheight) {
