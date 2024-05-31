@@ -1345,7 +1345,8 @@ namespace kerbal
 				typedef typename kerbal::type_traits::conditional<
 						noexcept(cmp(
 								kerbal::utility::declval<const_reference>(),
-								kerbal::utility::declval<const_reference>())),
+								kerbal::utility::declval<const_reference>())
+						),
 						MSM_VER_NOTHROW,
 						MSM_VER_MAY_THROW
 				>::type MSM_VERSION;
@@ -1541,7 +1542,9 @@ namespace kerbal
 			template <typename T>
 			template <bool is_radix_sort_acceptable_type>
 			KERBAL_CONSTEXPR20
-			typename kerbal::type_traits::enable_if<is_radix_sort_acceptable_type>::type
+			typename kerbal::type_traits::enable_if<
+					is_radix_sort_acceptable_type
+			>::type
 			list_type_only<T>::k_radix_sort(const_iterator first, const_iterator last) KERBAL_NOEXCEPT
 			{
 				k_radix_sort(first, last, kerbal::type_traits::false_type());
@@ -1550,7 +1553,9 @@ namespace kerbal
 			template <typename T>
 			template <bool is_radix_sort_acceptable_type, typename BinaryPredict>
 			KERBAL_CONSTEXPR20
-			typename kerbal::type_traits::enable_if<is_radix_sort_acceptable_type>::type
+			typename kerbal::type_traits::enable_if<
+					is_radix_sort_acceptable_type
+			>::type
 			list_type_only<T>::k_sort_method_overload(const_iterator first, const_iterator last, BinaryPredict cmp)
 			{
 				k_merge_sort(first, last, cmp);
@@ -1559,7 +1564,9 @@ namespace kerbal
 			template <typename T>
 			template <bool is_radix_sort_acceptable_type>
 			KERBAL_CONSTEXPR20
-			typename kerbal::type_traits::enable_if<is_radix_sort_acceptable_type>::type
+			typename kerbal::type_traits::enable_if<
+					is_radix_sort_acceptable_type
+			>::type
 			list_type_only<T>::k_sort_method_overload(const_iterator first, const_iterator last, kerbal::compare::less<value_type> /*cmp*/)
 			{
 				k_radix_sort(first, last, kerbal::type_traits::false_type());
@@ -1568,7 +1575,9 @@ namespace kerbal
 			template <typename T>
 			template <bool is_radix_sort_acceptable_type>
 			KERBAL_CONSTEXPR20
-			typename kerbal::type_traits::enable_if<is_radix_sort_acceptable_type>::type
+			typename kerbal::type_traits::enable_if<
+					is_radix_sort_acceptable_type
+			>::type
 			list_type_only<T>::k_sort_method_overload(const_iterator first, const_iterator last, kerbal::compare::greater<value_type> /*cmp*/)
 			{
 				k_radix_sort(first, last, kerbal::type_traits::true_type());
@@ -1577,7 +1586,9 @@ namespace kerbal
 			template <typename T>
 			template <bool is_radix_sort_acceptable_type>
 			KERBAL_CONSTEXPR20
-			typename kerbal::type_traits::enable_if<is_radix_sort_acceptable_type>::type
+			typename kerbal::type_traits::enable_if<
+					is_radix_sort_acceptable_type
+			>::type
 			list_type_only<T>::k_sort_method_overload(const_iterator first, const_iterator last, kerbal::compare::less<void> /*cmp*/)
 			{
 				k_radix_sort(first, last, kerbal::type_traits::false_type());
@@ -1586,7 +1597,9 @@ namespace kerbal
 			template <typename T>
 			template <bool is_radix_sort_acceptable_type>
 			KERBAL_CONSTEXPR20
-			typename kerbal::type_traits::enable_if<is_radix_sort_acceptable_type>::type
+			typename kerbal::type_traits::enable_if<
+					is_radix_sort_acceptable_type
+			>::type
 			list_type_only<T>::k_sort_method_overload(const_iterator first, const_iterator last, kerbal::compare::greater<void> /*cmp*/)
 			{
 				k_radix_sort(first, last, kerbal::type_traits::true_type());
@@ -1595,7 +1608,9 @@ namespace kerbal
 			template <typename T>
 			template <bool is_radix_sort_acceptable_type>
 			KERBAL_CONSTEXPR20
-			typename kerbal::type_traits::enable_if<is_radix_sort_acceptable_type>::type
+			typename kerbal::type_traits::enable_if<
+					is_radix_sort_acceptable_type
+			>::type
 			list_type_only<T>::k_sort_method_overload(const_iterator first, const_iterator last, std::less<value_type> /*cmp*/)
 			{
 				k_radix_sort(first, last, kerbal::type_traits::false_type());
@@ -1604,7 +1619,9 @@ namespace kerbal
 			template <typename T>
 			template <bool is_radix_sort_acceptable_type>
 			KERBAL_CONSTEXPR20
-			typename kerbal::type_traits::enable_if<is_radix_sort_acceptable_type>::type
+			typename kerbal::type_traits::enable_if<
+					is_radix_sort_acceptable_type
+			>::type
 			list_type_only<T>::k_sort_method_overload(const_iterator first, const_iterator last, std::greater<value_type> /*cmp*/)
 			{
 				k_radix_sort(first, last, kerbal::type_traits::true_type());
@@ -1615,7 +1632,9 @@ namespace kerbal
 			template <typename T>
 			template <bool is_radix_sort_acceptable_type>
 			KERBAL_CONSTEXPR20
-			typename kerbal::type_traits::enable_if<is_radix_sort_acceptable_type>::type
+			typename kerbal::type_traits::enable_if<
+					is_radix_sort_acceptable_type
+			>::type
 			list_type_only<T>::k_sort_method_overload(const_iterator first, const_iterator last, std::less<void> /*cmp*/)
 			{
 				k_radix_sort(first, last, kerbal::type_traits::false_type());
@@ -1624,7 +1643,9 @@ namespace kerbal
 			template <typename T>
 			template <bool is_radix_sort_acceptable_type>
 			KERBAL_CONSTEXPR20
-			typename kerbal::type_traits::enable_if<is_radix_sort_acceptable_type>::type
+			typename kerbal::type_traits::enable_if<
+					is_radix_sort_acceptable_type
+			>::type
 			list_type_only<T>::k_sort_method_overload(const_iterator first, const_iterator last, std::greater<void> /*cmp*/)
 			{
 				k_radix_sort(first, last, kerbal::type_traits::true_type());
@@ -1635,7 +1656,9 @@ namespace kerbal
 			template <typename T>
 			template <bool is_radix_sort_acceptable_type, typename BinaryPredict>
 			KERBAL_CONSTEXPR20
-			typename kerbal::type_traits::enable_if<!is_radix_sort_acceptable_type>::type
+			typename kerbal::type_traits::enable_if<
+					!is_radix_sort_acceptable_type
+			>::type
 			list_type_only<T>::k_sort_method_overload(const_iterator first, const_iterator last, BinaryPredict cmp)
 			{
 				k_merge_sort(first, last, cmp);

@@ -806,7 +806,9 @@ namespace kerbal
 					template <bool is_radix_sort_acceptable_type>
 					KERBAL_CONSTEXPR20
 					static
-					typename kerbal::type_traits::enable_if<is_radix_sort_acceptable_type>::type
+					typename kerbal::type_traits::enable_if<
+							is_radix_sort_acceptable_type
+					>::type
 					k_radix_sort(const_iterator first, const_iterator last) KERBAL_NOEXCEPT;
 
 
@@ -815,43 +817,57 @@ namespace kerbal
 					template <bool is_radix_sort_acceptable_type, typename BinaryPredict>
 					KERBAL_CONSTEXPR20
 					static
-					typename kerbal::type_traits::enable_if<is_radix_sort_acceptable_type>::type
+					typename kerbal::type_traits::enable_if<
+							is_radix_sort_acceptable_type
+					>::type
 					k_sort_method_overload(const_iterator first, const_iterator last, BinaryPredict cmp);
 
 					template <bool is_radix_sort_acceptable_type>
 					KERBAL_CONSTEXPR20
 					static
-					typename kerbal::type_traits::enable_if<is_radix_sort_acceptable_type>::type
+					typename kerbal::type_traits::enable_if<
+							is_radix_sort_acceptable_type
+					>::type
 					k_sort_method_overload(const_iterator first, const_iterator last, kerbal::compare::less<value_type> cmp);
 
 					template <bool is_radix_sort_acceptable_type>
 					KERBAL_CONSTEXPR20
 					static
-					typename kerbal::type_traits::enable_if<is_radix_sort_acceptable_type>::type
+					typename kerbal::type_traits::enable_if<
+							is_radix_sort_acceptable_type
+					>::type
 					k_sort_method_overload(const_iterator first, const_iterator last, kerbal::compare::greater<value_type> cmp);
 
 					template <bool is_radix_sort_acceptable_type>
 					KERBAL_CONSTEXPR20
 					static
-					typename kerbal::type_traits::enable_if<is_radix_sort_acceptable_type>::type
+					typename kerbal::type_traits::enable_if<
+							is_radix_sort_acceptable_type
+					>::type
 					k_sort_method_overload(const_iterator first, const_iterator last, kerbal::compare::less<void> cmp);
 
 					template <bool is_radix_sort_acceptable_type>
 					KERBAL_CONSTEXPR20
 					static
-					typename kerbal::type_traits::enable_if<is_radix_sort_acceptable_type>::type
+					typename kerbal::type_traits::enable_if<
+							is_radix_sort_acceptable_type
+					>::type
 					k_sort_method_overload(const_iterator first, const_iterator last, kerbal::compare::greater<void> cmp);
 
 					template <bool is_radix_sort_acceptable_type>
 					KERBAL_CONSTEXPR20
 					static
-					typename kerbal::type_traits::enable_if<is_radix_sort_acceptable_type>::type
+					typename kerbal::type_traits::enable_if<
+							is_radix_sort_acceptable_type
+					>::type
 					k_sort_method_overload(const_iterator first, const_iterator last, std::less<value_type> cmp);
 
 					template <bool is_radix_sort_acceptable_type>
 					KERBAL_CONSTEXPR20
 					static
-					typename kerbal::type_traits::enable_if<is_radix_sort_acceptable_type>::type
+					typename kerbal::type_traits::enable_if<
+							is_radix_sort_acceptable_type
+					>::type
 					k_sort_method_overload(const_iterator first, const_iterator last, std::greater<value_type> cmp);
 
 #			if __cplusplus >= 201402L
@@ -859,13 +875,17 @@ namespace kerbal
 					template <bool is_radix_sort_acceptable_type>
 					KERBAL_CONSTEXPR20
 					static
-					typename kerbal::type_traits::enable_if<is_radix_sort_acceptable_type>::type
+					typename kerbal::type_traits::enable_if<
+							is_radix_sort_acceptable_type
+					>::type
 					k_sort_method_overload(const_iterator first, const_iterator last, std::less<void> cmp);
 
 					template <bool is_radix_sort_acceptable_type>
 					KERBAL_CONSTEXPR20
 					static
-					typename kerbal::type_traits::enable_if<is_radix_sort_acceptable_type>::type
+					typename kerbal::type_traits::enable_if<
+							is_radix_sort_acceptable_type
+					>::type
 					k_sort_method_overload(const_iterator first, const_iterator last, std::greater<void> cmp);
 
 #			endif
@@ -873,7 +893,9 @@ namespace kerbal
 					template <bool is_radix_sort_acceptable_type, typename BinaryPredict>
 					KERBAL_CONSTEXPR20
 					static
-					typename kerbal::type_traits::enable_if<!is_radix_sort_acceptable_type>::type
+					typename kerbal::type_traits::enable_if<
+							!is_radix_sort_acceptable_type
+					>::type
 					k_sort_method_overload(const_iterator first, const_iterator last, BinaryPredict cmp);
 
 
