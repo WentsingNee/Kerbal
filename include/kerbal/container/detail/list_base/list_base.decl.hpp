@@ -25,6 +25,8 @@
 #include <kerbal/type_traits/enable_if.hpp>
 #include <kerbal/type_traits/integral_constant.hpp>
 #include <kerbal/type_traits/is_integral.hpp>
+#include <kerbal/type_traits/remove_const.hpp>
+#include <kerbal/type_traits/remove_reference.hpp>
 #include <kerbal/utility/declval.hpp>
 
 #if __cplusplus < 201103L
@@ -57,7 +59,11 @@ namespace kerbal
 			template <typename T>
 			struct is_list_radix_sort_acceptable_type :
 				kerbal::type_traits::bool_constant<
-					kerbal::type_traits::is_integral<T>::value &&
+					kerbal::type_traits::is_integral<
+						typename kerbal::type_traits::remove_const<
+							typename kerbal::type_traits::remove_reference<T>::type
+						>::type
+					>::value &&
 					sizeof(T) <= 4
 				>
 			{
