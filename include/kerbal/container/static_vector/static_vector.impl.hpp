@@ -271,28 +271,13 @@ namespace kerbal
 		)
 		{
 
-#		if __cplusplus < 201103L
-
 			struct enable_optimization :
-				kerbal::type_traits::bool_constant<
-					kerbal::type_traits::is_fundamental<remove_all_extents_t>::value ||
-					kerbal::type_traits::is_member_pointer<remove_all_extents_t>::value ||
-					kerbal::type_traits::is_pointer<remove_all_extents_t>::value
-				>
+				kerbal::type_traits::tribool_conjunction<
+					kerbal::type_traits::try_test_is_trivially_copy_constructible<remove_all_extents_t>,
+					kerbal::type_traits::try_test_is_trivially_copy_assignable<remove_all_extents_t>
+				>::result::IS_TRUE
 			{
 			};
-
-#		else
-
-			struct enable_optimization :
-				kerbal::type_traits::bool_constant<
-					std::is_trivially_copy_constructible<remove_all_extents_t>::value &&
-					std::is_trivially_copy_assignable<remove_all_extents_t>::value
-				>
-			{
-			};
-
-#		endif
 
 			this->k_assign_unsafe_n_val_larger_size(new_size, val, enable_optimization());
 		}
@@ -335,28 +320,13 @@ namespace kerbal
 		)
 		{
 
-#		if __cplusplus < 201103L
-
 			struct enable_optimization :
-				kerbal::type_traits::bool_constant<
-					kerbal::type_traits::is_fundamental<remove_all_extents_t>::value ||
-					kerbal::type_traits::is_member_pointer<remove_all_extents_t>::value ||
-					kerbal::type_traits::is_pointer<remove_all_extents_t>::value
-				>
+				kerbal::type_traits::tribool_conjunction<
+					kerbal::type_traits::try_test_is_trivially_destructible<remove_all_extents_t>,
+					kerbal::type_traits::try_test_is_trivially_copy_assignable<remove_all_extents_t>
+				>::result::IS_TRUE
 			{
 			};
-
-#		else
-
-			struct enable_optimization :
-				kerbal::type_traits::bool_constant<
-					std::is_trivially_destructible<remove_all_extents_t>::value &&
-					std::is_trivially_copy_assignable<remove_all_extents_t>::value
-				>
-			{
-			};
-
-#		endif
 
 			this->k_assign_unsafe_n_val_smaller_size(new_size, val, enable_optimization());
 		}
