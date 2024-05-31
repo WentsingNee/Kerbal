@@ -142,13 +142,13 @@ namespace kerbal
 				KERBAL_CONSTEXPR14
 				void seed() KERBAL_NOEXCEPT
 				{
-					this->engine.seed();
+					this->k_base_eg.seed();
 				}
 
 				KERBAL_CONSTEXPR14
 				void seed(const result_type & seed) KERBAL_NOEXCEPT
 				{
-					this->engine.seed(seed);
+					this->k_base_eg.seed(seed);
 				}
 
 				KERBAL_CONSTEXPR14
