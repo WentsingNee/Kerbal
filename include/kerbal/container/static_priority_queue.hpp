@@ -236,7 +236,7 @@ namespace kerbal
 							(const char*)"Out of storage space"
 						);
 					}
-					this->emplace_back_unsafe(kerbal::utility::forward<Args>(args)...);
+					this->emplace_unsafe(kerbal::utility::forward<Args>(args)...);
 				}
 
 #		else
