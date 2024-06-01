@@ -128,6 +128,7 @@ namespace kerbal
 #		undef TARGS_USE
 #		undef ARGS_DECL
 #		undef ARGS_USE
+#		undef FBODY
 
 	} // namespace function
 
