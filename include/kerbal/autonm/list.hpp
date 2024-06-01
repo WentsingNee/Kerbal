@@ -556,6 +556,25 @@ namespace kerbal
 					);
 				}
 
+				KERBAL_CONSTEXPR20
+				void splice(
+					const_iterator pos, list && /*other*/,
+					const_iterator opos
+				) KERBAL_NOEXCEPT
+				{
+					list_type_unrelated::k_splice(pos, opos);
+				}
+
+				KERBAL_CONSTEXPR20
+				void splice(
+					const_iterator pos,
+					list && /*other*/,
+					const_iterator first, const_iterator last
+				) KERBAL_NOEXCEPT
+				{
+					list_type_unrelated::k_splice(pos, first, last);
+				}
+
 #		endif
 
 				KERBAL_CONSTEXPR20
