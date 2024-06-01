@@ -565,7 +565,7 @@ namespace kerbal
 			typename fl_type_only<T>::const_iterator
 			fl_type_only<T>::cbefore_begin() const KERBAL_NOEXCEPT
 			{
-				return const_iterator(&this->k_head);
+				return this->before_begin();
 			}
 
 			template <typename T>
@@ -589,7 +589,7 @@ namespace kerbal
 			typename fl_type_only<T>::const_iterator
 			fl_type_only<T>::cbegin() const KERBAL_NOEXCEPT
 			{
-				return const_iterator(this->k_head.next);
+				return this->begin();
 			}
 
 			template <typename T>
@@ -613,7 +613,7 @@ namespace kerbal
 			typename fl_type_only<T>::const_iterator
 			fl_type_only<T>::cend() const KERBAL_NOEXCEPT
 			{
-				return const_iterator(NULL);
+				return this->end();
 			}
 
 			template <typename T>
