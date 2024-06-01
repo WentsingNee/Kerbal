@@ -188,6 +188,22 @@ namespace kerbal
 				}
 			}
 
+#	if __cplusplus >= 201103L
+
+			KERBAL_CONSTEXPR14
+			inline
+			void
+			fl_type_unrelated::
+			k_splice_after(
+				basic_const_iterator before_pos,
+				fl_type_unrelated && other
+			) KERBAL_NOEXCEPT
+			{
+				k_splice_after(before_pos, other.basic_cbefore_begin(), other.basic_cend());
+			}
+
+#	endif
+
 			KERBAL_CONSTEXPR14
 			inline
 			void

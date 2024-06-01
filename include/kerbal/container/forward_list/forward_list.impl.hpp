@@ -848,6 +848,38 @@ namespace kerbal
 			fl_type_unrelated::k_splice_after(before_pos, before_first, last);
 		}
 
+#	if __cplusplus >= 201103L
+
+		template <typename T, typename Allocator>
+		KERBAL_CONSTEXPR20
+		void forward_list<T, Allocator>::splice_after(
+			const_iterator before_pos, forward_list && other
+		) KERBAL_NOEXCEPT
+		{
+			fl_type_unrelated::k_splice_after(before_pos, other);
+		}
+
+		template <typename T, typename Allocator>
+		KERBAL_CONSTEXPR20
+		void forward_list<T, Allocator>::splice_after(
+			const_iterator before_pos, forward_list && /*other*/,
+			const_iterator opos
+		) KERBAL_NOEXCEPT
+		{
+			fl_type_unrelated::k_splice_after(before_pos, opos);
+		}
+
+		template <typename T, typename Allocator>
+		KERBAL_CONSTEXPR20
+		void forward_list<T, Allocator>::splice_after(
+			const_iterator before_pos, forward_list && /*other*/,
+			const_iterator before_first, const_iterator last
+		) KERBAL_NOEXCEPT
+		{
+			fl_type_unrelated::k_splice_after(before_pos, before_first, last);
+		}
+
+#	endif
 
 	} // namespace container
 

@@ -216,6 +216,17 @@ namespace kerbal
 						basic_const_iterator before_first, basic_const_iterator last
 					) KERBAL_NOEXCEPT;
 
+#			if __cplusplus >= 201103L
+
+					KERBAL_CONSTEXPR14
+					static
+					void k_splice_after(
+						basic_const_iterator before_pos,
+						fl_type_unrelated && other
+					) KERBAL_NOEXCEPT;
+
+#			endif
+
 					KERBAL_CONSTEXPR14
 					static
 					void
