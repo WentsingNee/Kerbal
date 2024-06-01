@@ -65,6 +65,10 @@ namespace kerbal
 
 			class list_type_unrelated
 			{
+				private:
+					template <typename T>
+					friend class list_type_only;
+
 				protected:
 					typedef std::size_t					size_type;
 					typedef std::ptrdiff_t				difference_type;
@@ -180,6 +184,24 @@ namespace kerbal
 
 					KERBAL_CONSTEXPR14
 					static void k_splice(basic_const_iterator pos, basic_const_iterator first, basic_const_iterator last) KERBAL_NOEXCEPT;
+
+					KERBAL_CONSTEXPR14
+					static
+					void
+					k_radix_sort_back_fill(
+						kerbal::type_traits::false_type /*unsigned*/,
+						basic_const_iterator insert_pos,
+						list_type_unrelated buckets[], std::size_t BUCKETS_NUM
+					) KERBAL_NOEXCEPT;
+
+					KERBAL_CONSTEXPR14
+					static
+					void
+					k_radix_sort_back_fill(
+						kerbal::type_traits::true_type /*signed*/,
+						basic_const_iterator insert_pos,
+						list_type_unrelated buckets[], std::size_t BUCKETS_NUM
+					) KERBAL_NOEXCEPT;
 
 				//===================
 				// private
@@ -764,18 +786,6 @@ namespace kerbal
 
 
 				private:
-
-					template <bool is_radix_sort_acceptable_type>
-					KERBAL_CONSTEXPR20
-					typename kerbal::type_traits::enable_if<is_radix_sort_acceptable_type>::type
-					static k_radix_sort_back_fill(const_iterator insert_pos, kerbal::type_traits::false_type /*unsigned*/,
-												list_type_only buckets[], std::size_t BUCKETS_NUM) KERBAL_NOEXCEPT;
-
-					template <bool is_radix_sort_acceptable_type>
-					KERBAL_CONSTEXPR20
-					typename kerbal::type_traits::enable_if<is_radix_sort_acceptable_type>::type
-					static k_radix_sort_back_fill(const_iterator insert_pos, kerbal::type_traits::true_type /*signed*/,
-												list_type_only buckets[], std::size_t BUCKETS_NUM) KERBAL_NOEXCEPT;
 
 					template <std::size_t RADIX_BIT_WIDTH>
 					KERBAL_CONSTEXPR20

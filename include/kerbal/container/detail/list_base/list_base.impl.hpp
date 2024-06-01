@@ -194,6 +194,39 @@ namespace kerbal
 				list_type_unrelated::k_hook_node(pos, chain.start, chain.back);
 			}
 
+			KERBAL_CONSTEXPR14
+			inline
+			void
+			list_type_unrelated::
+			k_radix_sort_back_fill(
+				kerbal::type_traits::false_type /*unsigned*/,
+				basic_const_iterator insert_pos,
+				list_type_unrelated buckets[], std::size_t BUCKETS_NUM
+			) KERBAL_NOEXCEPT
+			{
+				for (std::size_t i = 0; i < BUCKETS_NUM; ++i) {
+					k_splice(insert_pos, buckets[i]);
+				}
+			}
+
+			KERBAL_CONSTEXPR14
+			inline
+			void
+			list_type_unrelated::
+			k_radix_sort_back_fill(
+				kerbal::type_traits::true_type /*signed*/,
+				basic_const_iterator insert_pos,
+				list_type_unrelated buckets[], std::size_t BUCKETS_NUM
+			) KERBAL_NOEXCEPT
+			{
+				for (std::size_t i = BUCKETS_NUM / 2; i < BUCKETS_NUM; ++i) {
+					k_splice(insert_pos, buckets[i]);
+				}
+				for (std::size_t i = 0; i < BUCKETS_NUM / 2; ++i) {
+					k_splice(insert_pos, buckets[i]);
+				}
+			}
+
 
 		//===================
 		// private
@@ -1372,35 +1405,6 @@ namespace kerbal
 			}
 
 			template <typename T>
-			template <bool is_radix_sort_acceptable_type>
-			KERBAL_CONSTEXPR20
-			typename kerbal::type_traits::enable_if<is_radix_sort_acceptable_type>::type
-			list_type_only<T>::k_radix_sort_back_fill(
-					const_iterator insert_pos, kerbal::type_traits::false_type /*unsigned*/,
-					list_type_only buckets[], std::size_t BUCKETS_NUM) KERBAL_NOEXCEPT
-			{
-				for (std::size_t i = 0; i < BUCKETS_NUM; ++i) {
-					k_splice(insert_pos, buckets[i]);
-				}
-			}
-
-			template <typename T>
-			template <bool is_radix_sort_acceptable_type>
-			KERBAL_CONSTEXPR20
-			typename kerbal::type_traits::enable_if<is_radix_sort_acceptable_type>::type
-			list_type_only<T>::k_radix_sort_back_fill(
-					const_iterator insert_pos, kerbal::type_traits::true_type /*signed*/,
-					list_type_only buckets[], std::size_t BUCKETS_NUM) KERBAL_NOEXCEPT
-			{
-				for (std::size_t i = BUCKETS_NUM / 2; i < BUCKETS_NUM; ++i) {
-					k_splice(insert_pos, buckets[i]);
-				}
-				for (std::size_t i = 0; i < BUCKETS_NUM / 2; ++i) {
-					k_splice(insert_pos, buckets[i]);
-				}
-			}
-
-			template <typename T>
 			template <std::size_t RADIX_BIT_WIDTH>
 			KERBAL_CONSTEXPR20
 			void list_type_only<T>::k_radix_sort(
@@ -1408,7 +1412,7 @@ namespace kerbal
 					kerbal::type_traits::integral_constant<std::size_t, RADIX_BIT_WIDTH>) KERBAL_NOEXCEPT
 			{
 				typedef kerbal::type_traits::integral_constant<std::size_t, 1 << RADIX_BIT_WIDTH> BUCKETS_NUM;
-				list_type_only buckets[2][BUCKETS_NUM::value];
+				list_type_unrelated buckets[2][BUCKETS_NUM::value];
 
 				for (int i = 0; i < 2; ++i) {
 					for (std::size_t j = 0; j < BUCKETS_NUM::value; ++j) {
@@ -1422,29 +1426,31 @@ namespace kerbal
 				// first round
 				for (const_iterator it(first); it != last; ) {
 					int bucket_id = *it % BUCKETS_NUM::value;
-					list_type_only & bucket_in = buckets[0][bucket_id];
-					bucket_in.k_splice(bucket_in.cend(), it++);
+					list_type_unrelated & bucket_in = buckets[0][bucket_id];
+					bucket_in.k_splice(bucket_in.basic_cend(), it++);
 				}
 
 				for (std::size_t round = 1; round < ROUNDS::value; ++round) {
-					list_type_only (& buckets_from)[BUCKETS_NUM::value] = buckets[(round + 1) % 2];
-					list_type_only (& buckets_to)[BUCKETS_NUM::value] = buckets[round % 2];
+					list_type_unrelated (& buckets_from)[BUCKETS_NUM::value] = buckets[(round + 1) % 2];
+					list_type_unrelated (& buckets_to)[BUCKETS_NUM::value] = buckets[round % 2];
 
 					for (std::size_t i = 0; i < BUCKETS_NUM::value; ++i) {
-						list_type_only & bucket_out = buckets_from[i];
-						const_iterator it(bucket_out.begin());
-						const_iterator const cend(bucket_out.end());
+						list_type_unrelated & bucket_out = buckets_from[i];
+						const_iterator it(bucket_out.basic_begin());
+						const_iterator const cend(bucket_out.basic_end());
 						while (it != cend) {
 							int bucket_id = (*it >> (RADIX_BIT_WIDTH * round)) % BUCKETS_NUM::value;
-							list_type_only & bucket_in = buckets_to[bucket_id];
-							bucket_in.k_splice(bucket_in.cend(), it++);
+							list_type_unrelated & bucket_in = buckets_to[bucket_id];
+							bucket_in.k_splice(bucket_in.basic_cend(), it++);
 						}
 					}
 				}
 
-				k_radix_sort_back_fill<true>(
-						last, kerbal::type_traits::is_signed<value_type>(),
-						buckets[(ROUNDS::value + 1) % 2], BUCKETS_NUM::value);
+				k_radix_sort_back_fill(
+					kerbal::type_traits::is_signed<value_type>(),
+					last,
+					buckets[(ROUNDS::value + 1) % 2], BUCKETS_NUM::value
+				);
 			}
 
 			template <typename T>
@@ -1455,7 +1461,7 @@ namespace kerbal
 					kerbal::type_traits::integral_constant<std::size_t, RADIX_BIT_WIDTH>) KERBAL_NOEXCEPT
 			{
 				typedef kerbal::type_traits::integral_constant<std::size_t, 1 << RADIX_BIT_WIDTH> BUCKETS_NUM;
-				list_type_only buckets[2][BUCKETS_NUM::value];
+				list_type_unrelated buckets[2][BUCKETS_NUM::value];
 
 				for (int i = 0; i < 2; ++i) {
 					for (std::size_t j = 0; j < BUCKETS_NUM::value; ++j) {
@@ -1469,29 +1475,31 @@ namespace kerbal
 				// first round
 				for (const_iterator it(first); it != last; ) {
 					int bucket_id = BUCKETS_NUM::value - 1 - *it % BUCKETS_NUM::value;
-					list_type_only & bucket_in = buckets[0][bucket_id];
-					bucket_in.k_splice(bucket_in.cend(), it++);
+					list_type_unrelated & bucket_in = buckets[0][bucket_id];
+					bucket_in.k_splice(bucket_in.basic_cend(), it++);
 				}
 
 				for (std::size_t round = 1; round < ROUNDS::value; ++round) {
-					list_type_only (& buckets_from)[BUCKETS_NUM::value] = buckets[(round + 1) % 2];
-					list_type_only (& buckets_to)[BUCKETS_NUM::value] = buckets[round % 2];
+					list_type_unrelated (& buckets_from)[BUCKETS_NUM::value] = buckets[(round + 1) % 2];
+					list_type_unrelated (& buckets_to)[BUCKETS_NUM::value] = buckets[round % 2];
 
 					for (std::size_t i = 0; i < BUCKETS_NUM::value; ++i) {
-						list_type_only & bucket_out = buckets_from[i];
-						const_iterator it(bucket_out.begin());
-						const_iterator const cend(bucket_out.end());
+						list_type_unrelated & bucket_out = buckets_from[i];
+						const_iterator it(bucket_out.basic_begin());
+						const_iterator const cend(bucket_out.basic_end());
 						while (it != cend) {
 							int bucket_id = BUCKETS_NUM::value - 1 - (*it >> (RADIX_BIT_WIDTH * round)) % BUCKETS_NUM::value;
-							list_type_only & bucket_in = buckets_to[bucket_id];
-							bucket_in.k_splice(bucket_in.cend(), it++);
+							list_type_unrelated & bucket_in = buckets_to[bucket_id];
+							bucket_in.k_splice(bucket_in.basic_cend(), it++);
 						}
 					}
 				}
 
-				k_radix_sort_back_fill<true>(
-						last, kerbal::type_traits::is_signed<value_type>(),
-						buckets[(ROUNDS::value + 1) % 2], BUCKETS_NUM::value);
+				k_radix_sort_back_fill(
+					kerbal::type_traits::is_signed<value_type>(),
+					last,
+					buckets[(ROUNDS::value + 1) % 2], BUCKETS_NUM::value
+				);
 			}
 
 			template <typename T>
