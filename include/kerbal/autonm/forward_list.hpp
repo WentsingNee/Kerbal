@@ -526,8 +526,28 @@ namespace kerbal
 				{
 					fl_type_unrelated::k_splice_after(
 						before_pos,
-						static_cast<fl_type_unrelated &>(other)
+						static_cast<fl_type_unrelated &&>(other)
 					);
+				}
+
+				KERBAL_CONSTEXPR20
+				void splice_after(
+					const_iterator before_pos,
+					forward_list && /*other*/,
+					const_iterator before_opos
+				) KERBAL_NOEXCEPT
+				{
+					fl_type_unrelated::k_splice_after(before_pos, before_opos);
+				}
+
+				KERBAL_CONSTEXPR20
+				void splice_after(
+					const_iterator before_pos,
+					forward_list && /*other*/,
+					const_iterator before_first, const_iterator last
+				) KERBAL_NOEXCEPT
+				{
+					fl_type_unrelated::k_splice_after(before_pos, before_first, last);
 				}
 
 #		endif
