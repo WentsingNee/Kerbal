@@ -705,17 +705,17 @@ namespace kerbal
 		template <typename BinaryPredict>
 		KERBAL_CONSTEXPR20
 		typename forward_list<T, Allocator>::size_type
-		forward_list<T, Allocator>::unique(const_iterator before_first, const_iterator last, BinaryPredict equal_to)
+		forward_list<T, Allocator>::unique_after(const_iterator before_first, const_iterator last, BinaryPredict equal_to)
 		{
-			return fl_type_only::k_unique_using_allocator(this->alloc(), before_first, last, equal_to);
+			return fl_type_only::k_unique_after_using_allocator(this->alloc(), before_first, last, equal_to);
 		}
 
 		template <typename T, typename Allocator>
 		KERBAL_CONSTEXPR20
 		typename forward_list<T, Allocator>::size_type
-		forward_list<T, Allocator>::unique(const_iterator before_first, const_iterator last)
+		forward_list<T, Allocator>::unique_after(const_iterator before_first, const_iterator last)
 		{
-			return fl_type_only::k_unique_using_allocator(this->alloc(), before_first, last);
+			return fl_type_only::k_unique_after_using_allocator(this->alloc(), before_first, last);
 		}
 
 		template <typename T, typename Allocator>

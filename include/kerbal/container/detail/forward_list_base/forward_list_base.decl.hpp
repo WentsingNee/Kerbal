@@ -755,11 +755,11 @@ namespace kerbal
 
 					template <typename NodeAllocator, typename BinaryPredict>
 					KERBAL_CONSTEXPR20
-					static size_type k_unique_using_allocator(NodeAllocator & alloc, const_iterator before_first, const_iterator last, BinaryPredict equal_to);
+					static size_type k_unique_after_using_allocator(NodeAllocator & alloc, const_iterator before_first, const_iterator last, BinaryPredict equal_to);
 
 					template <typename NodeAllocator>
 					KERBAL_CONSTEXPR20
-					static size_type k_unique_using_allocator(NodeAllocator & alloc, const_iterator before_first, const_iterator last);
+					static size_type k_unique_after_using_allocator(NodeAllocator & alloc, const_iterator before_first, const_iterator last);
 
 					template <typename NodeAllocator, typename BinaryPredict>
 					KERBAL_CONSTEXPR20

@@ -447,15 +447,15 @@ namespace kerbal
 
 				template <typename BinaryPredict>
 				KERBAL_CONSTEXPR20
-				size_type unique(const_iterator before_first, const_iterator last, BinaryPredict equal_to)
+				size_type unique_after(const_iterator before_first, const_iterator last, BinaryPredict equal_to)
 				{
-					return fl_type_only::k_unique_using_allocator(this->semi_alloc(), before_first, last, equal_to);
+					return fl_type_only::k_unique_after_using_allocator(this->semi_alloc(), before_first, last, equal_to);
 				}
 
 				KERBAL_CONSTEXPR20
-				size_type unique(const_iterator before_first, const_iterator last)
+				size_type unique_after(const_iterator before_first, const_iterator last)
 				{
-					return fl_type_only::k_unique_using_allocator(this->semi_alloc(), before_first, last);
+					return fl_type_only::k_unique_after_using_allocator(this->semi_alloc(), before_first, last);
 				}
 
 				template <typename BinaryPredict>

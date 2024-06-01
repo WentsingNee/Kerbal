@@ -528,10 +528,10 @@ namespace kerbal
 
 				template <typename BinaryPredict>
 				KERBAL_CONSTEXPR20
-				size_type unique(const_iterator before_first, const_iterator last, BinaryPredict equal_to);
+				size_type unique_after(const_iterator before_first, const_iterator last, BinaryPredict equal_to);
 
 				KERBAL_CONSTEXPR20
-				size_type unique(const_iterator before_first, const_iterator last);
+				size_type unique_after(const_iterator before_first, const_iterator last);
 
 				template <typename BinaryPredict>
 				KERBAL_CONSTEXPR20
