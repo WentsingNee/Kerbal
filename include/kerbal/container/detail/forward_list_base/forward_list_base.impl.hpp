@@ -1379,18 +1379,18 @@ namespace kerbal
 			template <typename NodeAllocator, typename BinaryPredict>
 			KERBAL_CONSTEXPR20
 			typename fl_type_only<T>::size_type
-			fl_type_only<T>::k_unique_using_allocator(NodeAllocator & alloc, const_iterator first, const_iterator last, BinaryPredict equal_to)
+			fl_type_only<T>::k_unique_using_allocator(NodeAllocator & alloc, const_iterator before_first, const_iterator last, BinaryPredict equal_to)
 			{
 				size_type cnt = 0;
-				if (first != last) {
-					const_iterator forward(first); ++forward;
+				if (before_first != last) {
+					const_iterator forward(before_first); ++forward;
 					while (forward != last) {
-						if (equal_to(*first, *forward)) {
+						if (equal_to(*before_first, *forward)) {
 							++forward;
-							k_destroy_node(alloc, fl_type_unrelated::k_unhook_node_after(first));
+							k_destroy_node(alloc, fl_type_unrelated::k_unhook_node_after(before_first));
 							++cnt;
 						} else {
-							first = forward;
+							before_first = forward;
 							++forward;
 						}
 					}
@@ -1402,9 +1402,9 @@ namespace kerbal
 			template <typename NodeAllocator>
 			KERBAL_CONSTEXPR20
 			typename fl_type_only<T>::size_type
-			fl_type_only<T>::k_unique_using_allocator(NodeAllocator & alloc, const_iterator first, const_iterator last)
+			fl_type_only<T>::k_unique_using_allocator(NodeAllocator & alloc, const_iterator before_first, const_iterator last)
 			{
-				return k_unique_using_allocator(alloc, first, last, kerbal::compare::equal_to<value_type>());
+				return k_unique_using_allocator(alloc, before_first, last, kerbal::compare::equal_to<value_type>());
 			}
 
 			template <typename T>
