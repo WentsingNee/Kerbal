@@ -425,17 +425,17 @@ namespace kerbal
 		template <typename T, typename Allocator>
 		KERBAL_CONSTEXPR20
 		typename forward_list<T, Allocator>::iterator
-		forward_list<T, Allocator>::insert_after(const_iterator pos, const_reference val)
+		forward_list<T, Allocator>::insert_after(const_iterator before_pos, const_reference val)
 		{
-			return fl_type_only::k_insert_after_using_allocator(this->alloc(), pos, val);
+			return fl_type_only::k_insert_after_using_allocator(this->alloc(), before_pos, val);
 		}
 
 		template <typename T, typename Allocator>
 		KERBAL_CONSTEXPR20
 		typename forward_list<T, Allocator>::iterator
-		forward_list<T, Allocator>::insert_after(const_iterator pos, size_type n, const_reference val)
+		forward_list<T, Allocator>::insert_after(const_iterator before_pos, size_type n, const_reference val)
 		{
-			return fl_type_only::k_insert_after_using_allocator(this->alloc(), pos, n, val);
+			return fl_type_only::k_insert_after_using_allocator(this->alloc(), before_pos, n, val);
 		}
 
 		template <typename T, typename Allocator>
@@ -445,9 +445,9 @@ namespace kerbal
 				kerbal::iterator::is_input_compatible_iterator<InputIterator>::value,
 				typename forward_list<T, Allocator>::iterator
 		>::type
-		forward_list<T, Allocator>::insert_after(const_iterator pos, InputIterator first, InputIterator last)
+		forward_list<T, Allocator>::insert_after(const_iterator before_pos, InputIterator first, InputIterator last)
 		{
-			return fl_type_only::k_insert_after_using_allocator(this->alloc(), pos, first, last);
+			return fl_type_only::k_insert_after_using_allocator(this->alloc(), before_pos, first, last);
 		}
 
 #	if __cplusplus >= 201103L
@@ -455,9 +455,9 @@ namespace kerbal
 		template <typename T, typename Allocator>
 		KERBAL_CONSTEXPR20
 		typename forward_list<T, Allocator>::iterator
-		forward_list<T, Allocator>::insert_after(const_iterator pos, rvalue_reference val)
+		forward_list<T, Allocator>::insert_after(const_iterator before_pos, rvalue_reference val)
 		{
-			return fl_type_only::k_insert_after_using_allocator(this->alloc(), pos, kerbal::compatibility::move(val));
+			return fl_type_only::k_insert_after_using_allocator(this->alloc(), before_pos, kerbal::compatibility::move(val));
 		}
 
 #	endif
@@ -467,26 +467,26 @@ namespace kerbal
 		template <typename T, typename Allocator>
 		KERBAL_CONSTEXPR20
 		typename forward_list<T, Allocator>::iterator
-		forward_list<T, Allocator>::insert_after(const_iterator pos, std::initializer_list<value_type> ilist)
+		forward_list<T, Allocator>::insert_after(const_iterator before_pos, std::initializer_list<value_type> ilist)
 		{
-			return this->insert_after(pos, ilist.begin(), ilist.end());
+			return this->insert_after(before_pos, ilist.begin(), ilist.end());
 		}
 
 #	else
 
 		template <typename T, typename Allocator>
 		typename forward_list<T, Allocator>::iterator
-		forward_list<T, Allocator>::insert_after(const_iterator pos, const kerbal::assign::assign_list<void> & ilist)
+		forward_list<T, Allocator>::insert_after(const_iterator before_pos, const kerbal::assign::assign_list<void> & ilist)
 		{
-			return pos.cast_to_mutable();
+			return before_pos.cast_to_mutable();
 		}
 
 		template <typename T, typename Allocator>
 		template <typename U>
 		typename forward_list<T, Allocator>::iterator
-		forward_list<T, Allocator>::insert_after(const_iterator pos, const kerbal::assign::assign_list<U> & ilist)
+		forward_list<T, Allocator>::insert_after(const_iterator before_pos, const kerbal::assign::assign_list<U> & ilist)
 		{
-			return this->insert_after(pos, ilist.cbegin(), ilist.cend());
+			return this->insert_after(before_pos, ilist.cbegin(), ilist.cend());
 		}
 
 #	endif
@@ -497,9 +497,9 @@ namespace kerbal
 		template <typename ... Args>
 		KERBAL_CONSTEXPR20
 		typename forward_list<T, Allocator>::iterator
-		forward_list<T, Allocator>::emplace_after(const_iterator pos, Args&& ... args)
+		forward_list<T, Allocator>::emplace_after(const_iterator before_pos, Args&& ... args)
 		{
-			return fl_type_only::k_emplace_after_using_allocator(this->alloc(), pos, kerbal::utility::forward<Args>(args)...);
+			return fl_type_only::k_emplace_after_using_allocator(this->alloc(), before_pos, kerbal::utility::forward<Args>(args)...);
 		}
 
 #	else
@@ -514,9 +514,9 @@ namespace kerbal
 		template <typename T, typename Allocator> \
 		KERBAL_OPT_PPEXPAND_WITH_COMMA_N(THEAD_NOT_EMPTY, EMPTY, TARGS_DECL, i) \
 		typename forward_list<T, Allocator>::iterator \
-		forward_list<T, Allocator>::emplace_after(const_iterator pos KERBAL_OPT_PPEXPAND_WITH_COMMA_N(LEFT_JOIN_COMMA, EMPTY, ARGS_DECL, i)) \
+		forward_list<T, Allocator>::emplace_after(const_iterator before_pos KERBAL_OPT_PPEXPAND_WITH_COMMA_N(LEFT_JOIN_COMMA, EMPTY, ARGS_DECL, i)) \
 		{ \
-			return fl_type_only::k_emplace_after_using_allocator(this->alloc(), pos KERBAL_OPT_PPEXPAND_WITH_COMMA_N(LEFT_JOIN_COMMA, EMPTY, ARGS_USE, i)); \
+			return fl_type_only::k_emplace_after_using_allocator(this->alloc(), before_pos KERBAL_OPT_PPEXPAND_WITH_COMMA_N(LEFT_JOIN_COMMA, EMPTY, ARGS_USE, i)); \
 		}
 
 		KERBAL_PPEXPAND_N(FBODY, KERBAL_PPEXPAND_EMPTY_SEPARATOR, 0)
@@ -545,17 +545,17 @@ namespace kerbal
 		template <typename T, typename Allocator>
 		KERBAL_CONSTEXPR20
 		typename forward_list<T, Allocator>::iterator
-		forward_list<T, Allocator>::erase_after(const_iterator pos)
+		forward_list<T, Allocator>::erase_after(const_iterator before_pos)
 		{
-			return fl_type_only::k_erase_after_using_allocator(this->alloc(), pos);
+			return fl_type_only::k_erase_after_using_allocator(this->alloc(), before_pos);
 		}
 
 		template <typename T, typename Allocator>
 		KERBAL_CONSTEXPR20
 		typename forward_list<T, Allocator>::iterator
-		forward_list<T, Allocator>::erase_after(const_iterator first, const_iterator last)
+		forward_list<T, Allocator>::erase_after(const_iterator before_first, const_iterator last)
 		{
-			return fl_type_only::k_erase_after_using_allocator(this->alloc(), first, last);
+			return fl_type_only::k_erase_after_using_allocator(this->alloc(), before_first, last);
 		}
 
 		template <typename T, typename Allocator>
@@ -610,16 +610,16 @@ namespace kerbal
 
 		template <typename T, typename Allocator>
 		KERBAL_CONSTEXPR20
-		void forward_list<T, Allocator>::iter_swap_after(const_iterator a, const_iterator b) KERBAL_NOEXCEPT
+		void forward_list<T, Allocator>::iter_swap_after(const_iterator before_a, const_iterator before_b) KERBAL_NOEXCEPT
 		{
-			fl_type_only::k_iter_swap_after(a, b);
+			fl_type_only::k_iter_swap_after(before_a, before_b);
 		}
 
 		template <typename T, typename Allocator>
 		KERBAL_CONSTEXPR20
-		void forward_list<T, Allocator>::reverse_after(const_iterator first, const_iterator last) KERBAL_NOEXCEPT
+		void forward_list<T, Allocator>::reverse_after(const_iterator before_first, const_iterator last) KERBAL_NOEXCEPT
 		{
-			fl_type_only::k_reverse_after(first, last);
+			fl_type_only::k_reverse_after(before_first, last);
 		}
 
 		template <typename T, typename Allocator>
@@ -640,16 +640,16 @@ namespace kerbal
 		template <typename T, typename Allocator>
 		template <typename BinaryPredict>
 		KERBAL_CONSTEXPR20
-		void forward_list<T, Allocator>::sort_after(const_iterator first, const_iterator last, BinaryPredict cmp)
+		void forward_list<T, Allocator>::sort_after(const_iterator before_first, const_iterator last, BinaryPredict cmp)
 		{
-			fl_type_only::k_sort_after(first, last, cmp);
+			fl_type_only::k_sort_after(before_first, last, cmp);
 		}
 
 		template <typename T, typename Allocator>
 		KERBAL_CONSTEXPR20
-		void forward_list<T, Allocator>::sort_after(const_iterator first, const_iterator last)
+		void forward_list<T, Allocator>::sort_after(const_iterator before_first, const_iterator last)
 		{
-			fl_type_only::k_sort_after(first, last);
+			fl_type_only::k_sort_after(before_first, last);
 		}
 
 		template <typename T, typename Allocator>
@@ -671,9 +671,9 @@ namespace kerbal
 		template <typename UnaryPredicate>
 		KERBAL_CONSTEXPR20
 		typename forward_list<T, Allocator>::size_type
-		forward_list<T, Allocator>::remove_after_if(const_iterator first, const_iterator last, UnaryPredicate predicate)
+		forward_list<T, Allocator>::remove_after_if(const_iterator before_first, const_iterator last, UnaryPredicate predicate)
 		{
-			return fl_type_only::k_remove_after_if_using_allocator(this->alloc(), first, last, predicate);
+			return fl_type_only::k_remove_after_if_using_allocator(this->alloc(), before_first, last, predicate);
 		}
 
 		template <typename T, typename Allocator>
@@ -688,9 +688,9 @@ namespace kerbal
 		template <typename T, typename Allocator>
 		KERBAL_CONSTEXPR20
 		typename forward_list<T, Allocator>::size_type
-		forward_list<T, Allocator>::remove_after(const_iterator first, const_iterator last, const_reference val)
+		forward_list<T, Allocator>::remove_after(const_iterator before_first, const_iterator last, const_reference val)
 		{
-			return fl_type_only::k_remove_after_using_allocator(this->alloc(), first, last, val);
+			return fl_type_only::k_remove_after_using_allocator(this->alloc(), before_first, last, val);
 		}
 
 		template <typename T, typename Allocator>
@@ -737,23 +737,23 @@ namespace kerbal
 
 		template <typename T, typename Allocator>
 		KERBAL_CONSTEXPR20
-		void forward_list<T, Allocator>::splice_after(const_iterator pos, forward_list & other) KERBAL_NOEXCEPT
+		void forward_list<T, Allocator>::splice_after(const_iterator before_pos, forward_list & other) KERBAL_NOEXCEPT
 		{
-			fl_type_unrelated::k_splice_after(pos, other);
+			fl_type_unrelated::k_splice_after(before_pos, other);
 		}
 
 		template <typename T, typename Allocator>
 		KERBAL_CONSTEXPR20
-		void forward_list<T, Allocator>::splice_after(const_iterator pos, forward_list &, const_iterator opos) KERBAL_NOEXCEPT
+		void forward_list<T, Allocator>::splice_after(const_iterator before_pos, forward_list &, const_iterator opos) KERBAL_NOEXCEPT
 		{
-			fl_type_unrelated::k_splice_after(pos, opos);
+			fl_type_unrelated::k_splice_after(before_pos, opos);
 		}
 
 		template <typename T, typename Allocator>
 		KERBAL_CONSTEXPR20
-		void forward_list<T, Allocator>::splice_after(const_iterator pos, forward_list &, const_iterator first, const_iterator last) KERBAL_NOEXCEPT
+		void forward_list<T, Allocator>::splice_after(const_iterator before_pos, forward_list &, const_iterator before_first, const_iterator last) KERBAL_NOEXCEPT
 		{
-			fl_type_unrelated::k_splice_after(pos, first, last);
+			fl_type_unrelated::k_splice_after(before_pos, before_first, last);
 		}
 
 

@@ -265,10 +265,10 @@ namespace kerbal
 				}
 
 				KERBAL_CONSTEXPR20
-				iterator insert_after(const_iterator pos, auto_node & node) KERBAL_NOEXCEPT
+				iterator insert_after(const_iterator before_pos, auto_node & node) KERBAL_NOEXCEPT
 				{
-					fl_type_unrelated::k_hook_node_after(pos, &node);
-					return (++pos).cast_to_mutable();
+					fl_type_unrelated::k_hook_node_after(before_pos, &node);
+					return (++before_pos).cast_to_mutable();
 				}
 
 				template <typename ForwardIterator>
@@ -277,10 +277,10 @@ namespace kerbal
 						kerbal::iterator::is_forward_compatible_iterator<ForwardIterator>::value,
 						iterator
 				>::type
-				insert_after(const_iterator pos, ForwardIterator first, ForwardIterator last)
+				insert_after(const_iterator before_pos, ForwardIterator first, ForwardIterator last)
 				{
 					if (first == last) {
-						return pos.cast_to_mutable();
+						return before_pos.cast_to_mutable();
 					}
 
 					ForwardIterator it(first);
@@ -292,7 +292,7 @@ namespace kerbal
 						++next;
 					}
 
-					fl_type_unrelated::k_hook_node_after(pos, &*first, &*it);
+					fl_type_unrelated::k_hook_node_after(before_pos, &*first, &*it);
 					return iterator(&*it);
 				}
 
@@ -304,17 +304,17 @@ namespace kerbal
 						kerbal::iterator::is_forward_compatible_iterator<ForwardIterator>::value,
 						typename forward_list<T, SemiAllocator>::iterator
 				>::type
-				insert_after(const_iterator pos, ForwardIterator first, ForwardIterator last)
+				insert_after(const_iterator before_pos, ForwardIterator first, ForwardIterator last)
 				{
 					if (first == last) {
-						return pos.cast_to_mutable();
+						return before_pos.cast_to_mutable();
 					}
 					do {
-						fl_type_unrelated::k_hook_node_after(pos, &*first);
+						fl_type_unrelated::k_hook_node_after(before_pos, &*first);
 						++first;
-						++pos;
+						++before_pos;
 					} while (first != last);
-					return pos.cast_to_mutable();
+					return before_pos.cast_to_mutable();
 				}
 */
 
@@ -328,15 +328,15 @@ namespace kerbal
 				}
 
 				KERBAL_CONSTEXPR20
-				iterator erase_after(const_iterator pos)
+				iterator erase_after(const_iterator before_pos)
 				{
-					return fl_type_only::k_erase_after_using_allocator(this->semi_alloc(), pos);
+					return fl_type_only::k_erase_after_using_allocator(this->semi_alloc(), before_pos);
 				}
 
 				KERBAL_CONSTEXPR20
-				iterator erase_after(const_iterator first, const_iterator last)
+				iterator erase_after(const_iterator before_first, const_iterator last)
 				{
-					return fl_type_only::k_erase_after_using_allocator(this->semi_alloc(), first, last);
+					return fl_type_only::k_erase_after_using_allocator(this->semi_alloc(), before_first, last);
 				}
 
 				KERBAL_CONSTEXPR20
@@ -349,9 +349,9 @@ namespace kerbal
 			// operation
 
 				KERBAL_CONSTEXPR20
-				void reverse_after(const_iterator first, const_iterator last) KERBAL_NOEXCEPT
+				void reverse_after(const_iterator before_first, const_iterator last) KERBAL_NOEXCEPT
 				{
-					fl_type_unrelated::k_reverse_after(first, last);
+					fl_type_unrelated::k_reverse_after(before_first, last);
 				}
 
 				KERBAL_CONSTEXPR20
@@ -385,15 +385,15 @@ namespace kerbal
 
 				template <typename BinaryPredict>
 				KERBAL_CONSTEXPR20
-				void sort_after(const_iterator first, const_iterator last, BinaryPredict cmp)
+				void sort_after(const_iterator before_first, const_iterator last, BinaryPredict cmp)
 				{
-					fl_type_only::k_sort_after(first, last, cmp);
+					fl_type_only::k_sort_after(before_first, last, cmp);
 				}
 
 				KERBAL_CONSTEXPR20
-				void sort_after(const_iterator first, const_iterator last)
+				void sort_after(const_iterator before_first, const_iterator last)
 				{
-					fl_type_only::k_sort_after(first, last);
+					fl_type_only::k_sort_after(before_first, last);
 				}
 
 				template <typename BinaryPredict>
@@ -421,9 +421,9 @@ namespace kerbal
 
 				template <typename UnaryPredicate>
 				KERBAL_CONSTEXPR20
-				size_type remove_after_if(const_iterator first, const_iterator last, UnaryPredicate predicate)
+				size_type remove_after_if(const_iterator before_first, const_iterator last, UnaryPredicate predicate)
 				{
-					return fl_type_only::k_remove_after_if_using_allocator(this->semi_alloc(), first, last, predicate);
+					return fl_type_only::k_remove_after_if_using_allocator(this->semi_alloc(), before_first, last, predicate);
 				}
 
 				template <typename UnaryPredicate>
@@ -434,9 +434,9 @@ namespace kerbal
 				}
 
 				KERBAL_CONSTEXPR20
-				size_type remove_after(const_iterator first, const_iterator last, const_reference val)
+				size_type remove_after(const_iterator before_first, const_iterator last, const_reference val)
 				{
-					return fl_type_only::k_remove_after_using_allocator(this->semi_alloc(), first, last, val);
+					return fl_type_only::k_remove_after_using_allocator(this->semi_alloc(), before_first, last, val);
 				}
 
 				KERBAL_CONSTEXPR20
@@ -472,29 +472,29 @@ namespace kerbal
 				}
 
 				KERBAL_CONSTEXPR20
-				void splice_after(const_iterator pos, forward_list & other) KERBAL_NOEXCEPT
+				void splice_after(const_iterator before_pos, forward_list & other) KERBAL_NOEXCEPT
 				{
-					fl_type_unrelated::k_splice_after(pos, other);
+					fl_type_unrelated::k_splice_after(before_pos, other);
 				}
 
 				KERBAL_CONSTEXPR20
-				void splice_after(const_iterator pos, forward_list & /*other*/, const_iterator opos) KERBAL_NOEXCEPT
+				void splice_after(const_iterator before_pos, forward_list & /*other*/, const_iterator before_opos) KERBAL_NOEXCEPT
 				{
-					fl_type_unrelated::k_splice_after(pos, opos);
+					fl_type_unrelated::k_splice_after(before_pos, before_opos);
 				}
 
 				KERBAL_CONSTEXPR20
-				void splice_after(const_iterator pos, forward_list & /*other*/, const_iterator first, const_iterator last) KERBAL_NOEXCEPT
+				void splice_after(const_iterator before_pos, forward_list & /*other*/, const_iterator before_first, const_iterator last) KERBAL_NOEXCEPT
 				{
-					fl_type_unrelated::k_splice_after(pos, first, last);
+					fl_type_unrelated::k_splice_after(before_pos, before_first, last);
 				}
 
 #		if __cplusplus >= 201103L
 
 				KERBAL_CONSTEXPR20
-				void splice_after(const_iterator pos, forward_list && other) KERBAL_NOEXCEPT
+				void splice_after(const_iterator before_pos, forward_list && other) KERBAL_NOEXCEPT
 				{
-					fl_type_unrelated::k_splice_after(pos, other);
+					fl_type_unrelated::k_splice_after(before_pos, other);
 				}
 
 #		endif

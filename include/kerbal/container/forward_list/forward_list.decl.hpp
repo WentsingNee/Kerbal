@@ -382,10 +382,10 @@ namespace kerbal
 #		endif
 
 				KERBAL_CONSTEXPR20
-				iterator insert_after(const_iterator pos, const_reference val);
+				iterator insert_after(const_iterator before_pos, const_reference val);
 
 				KERBAL_CONSTEXPR20
-				iterator insert_after(const_iterator pos, size_type n, const_reference val);
+				iterator insert_after(const_iterator before_pos, size_type n, const_reference val);
 
 				template <typename InputIterator>
 				KERBAL_CONSTEXPR20
@@ -393,26 +393,26 @@ namespace kerbal
 						kerbal::iterator::is_input_compatible_iterator<InputIterator>::value,
 						iterator
 				>::type
-				insert_after(const_iterator pos, InputIterator first, InputIterator last);
+				insert_after(const_iterator before_pos, InputIterator first, InputIterator last);
 
 #		if __cplusplus >= 201103L
 
 				KERBAL_CONSTEXPR20
-				iterator insert_after(const_iterator pos, rvalue_reference val);
+				iterator insert_after(const_iterator before_pos, rvalue_reference val);
 
 #		endif
 
 #		if __cplusplus >= 201103L
 
 				KERBAL_CONSTEXPR20
-				iterator insert_after(const_iterator pos, std::initializer_list<value_type> ilist);
+				iterator insert_after(const_iterator before_pos, std::initializer_list<value_type> ilist);
 
 #		else
 
-				iterator insert_after(const_iterator pos, const kerbal::assign::assign_list<void> & ilist);
+				iterator insert_after(const_iterator before_pos, const kerbal::assign::assign_list<void> & ilist);
 
 				template <typename U>
-				iterator insert_after(const_iterator pos, const kerbal::assign::assign_list<U> & ilist);
+				iterator insert_after(const_iterator before_pos, const kerbal::assign::assign_list<U> & ilist);
 
 #		endif
 
@@ -420,7 +420,7 @@ namespace kerbal
 
 				template <typename ... Args>
 				KERBAL_CONSTEXPR20
-				iterator emplace_after(const_iterator pos, Args&& ... args);
+				iterator emplace_after(const_iterator before_pos, Args&& ... args);
 
 #		else
 
@@ -431,7 +431,7 @@ namespace kerbal
 #			define ARGS_DECL(i) const KERBAL_MACRO_CONCAT(Arg, i) & KERBAL_MACRO_CONCAT(arg, i)
 #			define FBODY(i) \
 				KERBAL_OPT_PPEXPAND_WITH_COMMA_N(THEAD_NOT_EMPTY, EMPTY, TARGS_DECL, i) \
-				iterator emplace_after(const_iterator pos KERBAL_OPT_PPEXPAND_WITH_COMMA_N(LEFT_JOIN_COMMA, EMPTY, ARGS_DECL, i));
+				iterator emplace_after(const_iterator before_pos KERBAL_OPT_PPEXPAND_WITH_COMMA_N(LEFT_JOIN_COMMA, EMPTY, ARGS_DECL, i));
 
 				KERBAL_PPEXPAND_N(FBODY, KERBAL_PPEXPAND_EMPTY_SEPARATOR, 0)
 				KERBAL_PPEXPAND_N(FBODY, KERBAL_PPEXPAND_EMPTY_SEPARATOR, 20)
@@ -452,10 +452,10 @@ namespace kerbal
 				void pop_front();
 
 				KERBAL_CONSTEXPR20
-				iterator erase_after(const_iterator pos);
+				iterator erase_after(const_iterator before_pos);
 
 				KERBAL_CONSTEXPR20
-				iterator erase_after(const_iterator first, const_iterator last);
+				iterator erase_after(const_iterator before_first, const_iterator last);
 
 				KERBAL_CONSTEXPR20
 				void clear() KERBAL_CONDITIONAL_NOEXCEPT(
@@ -484,10 +484,10 @@ namespace kerbal
 				);
 
 				KERBAL_CONSTEXPR20
-				void iter_swap_after(const_iterator a, const_iterator b) KERBAL_NOEXCEPT;
+				void iter_swap_after(const_iterator before_a, const_iterator before_b) KERBAL_NOEXCEPT;
 
 				KERBAL_CONSTEXPR20
-				void reverse_after(const_iterator first, const_iterator last) KERBAL_NOEXCEPT;
+				void reverse_after(const_iterator before_first, const_iterator last) KERBAL_NOEXCEPT;
 
 				using fl_type_unrelated::reverse;
 
@@ -500,10 +500,10 @@ namespace kerbal
 
 				template <typename BinaryPredict>
 				KERBAL_CONSTEXPR20
-				void sort_after(const_iterator first, const_iterator last, BinaryPredict cmp);
+				void sort_after(const_iterator before_first, const_iterator last, BinaryPredict cmp);
 
 				KERBAL_CONSTEXPR20
-				void sort_after(const_iterator first, const_iterator last);
+				void sort_after(const_iterator before_first, const_iterator last);
 
 				template <typename BinaryPredict>
 				KERBAL_CONSTEXPR20
@@ -514,14 +514,14 @@ namespace kerbal
 
 				template <typename UnaryPredicate>
 				KERBAL_CONSTEXPR20
-				size_type remove_after_if(const_iterator first, const_iterator last, UnaryPredicate predicate);
+				size_type remove_after_if(const_iterator before_first, const_iterator last, UnaryPredicate predicate);
 
 				template <typename UnaryPredicate>
 				KERBAL_CONSTEXPR20
 				size_type remove_if(UnaryPredicate predicate);
 
 				KERBAL_CONSTEXPR20
-				size_type remove_after(const_iterator first, const_iterator last, const_reference val);
+				size_type remove_after(const_iterator before_first, const_iterator last, const_reference val);
 
 				KERBAL_CONSTEXPR20
 				size_type remove(const_reference val);
@@ -541,13 +541,13 @@ namespace kerbal
 				size_type unique();
 
 				KERBAL_CONSTEXPR20
-				void splice_after(const_iterator pos, forward_list & other) KERBAL_NOEXCEPT;
+				void splice_after(const_iterator before_pos, forward_list & other) KERBAL_NOEXCEPT;
 
 				KERBAL_CONSTEXPR20
-				void splice_after(const_iterator pos, forward_list & other, const_iterator opos) KERBAL_NOEXCEPT;
+				void splice_after(const_iterator before_pos, forward_list & other, const_iterator opos) KERBAL_NOEXCEPT;
 
 				KERBAL_CONSTEXPR20
-				void splice_after(const_iterator pos, forward_list & other, const_iterator first, const_iterator last) KERBAL_NOEXCEPT;
+				void splice_after(const_iterator before_pos, forward_list & other, const_iterator before_first, const_iterator last) KERBAL_NOEXCEPT;
 
 		};
 
