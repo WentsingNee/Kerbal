@@ -229,9 +229,6 @@ namespace kerbal
 
 #		if __cplusplus >= 201103L
 					KERBAL_CONSTEXPR
-#			if __cplusplus >= 201703L
-					inline
-#			endif
 					static const manager_table mtable = manager_table(destroy, clone, xfer, swap_out, swap TYPE_INFO_ENTRY);
 #		else
 					static const manager_table mtable;
@@ -242,14 +239,12 @@ namespace kerbal
 
 #	if __cplusplus >= 201103L
 
-#		if __cplusplus < 201703L
 			template <
 				std::size_t Size, std::size_t Align, typename Allocator
 			>
 			KERBAL_CONSTEXPR
 			const typename any_manager_collection<void, Size, Align, Allocator>::manager_table
 			any_manager_collection<void, Size, Align, Allocator>::mtable;
-#		endif
 
 #	else
 
@@ -372,9 +367,6 @@ namespace kerbal
 
 #		if __cplusplus >= 201103L
 					KERBAL_CONSTEXPR
-#			if __cplusplus >= 201703L
-					inline
-#			endif
 					static const manager_table mtable = manager_table(destroy, clone, xfer, swap_out, swap TYPE_INFO_ENTRY);
 #		else
 					static const manager_table mtable;
@@ -385,14 +377,12 @@ namespace kerbal
 
 #	if __cplusplus >= 201103L
 
-#		if __cplusplus < 201703L
 			template <
 				typename T, std::size_t Size, std::size_t Align, typename Allocator
 			>
 			KERBAL_CONSTEXPR
 			const typename any_manager_collection<T, Size, Align, Allocator>::manager_table
 			any_manager_collection<T, Size, Align, Allocator>::mtable;
-#		endif
 
 #	else
 
