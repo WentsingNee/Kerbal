@@ -223,7 +223,7 @@ namespace kerbal
 				protected:
 					template <typename UnaryOperation, typename NodeAllocator>
 					KERBAL_CONSTEXPR14
-					void k_trans_clone(NodeAllocator & this_alloc, head_node * parent, const node * src_node, bool which);
+					void k_trans_clone(NodeAllocator & this_alloc, head_node * parent, node * src_node, bool which);
 
 					struct identity
 					{
@@ -236,7 +236,7 @@ namespace kerbal
 
 					template <typename NodeAllocator>
 					KERBAL_CONSTEXPR14
-					void k_clone(NodeAllocator & this_alloc, head_node * parent, const node * src_node);
+					void k_clone(NodeAllocator & this_alloc, head_node * parent, node * src_node);
 
 #			if __cplusplus >= 201103L
 
@@ -251,7 +251,7 @@ namespace kerbal
 
 					template <typename NodeAllocator>
 					KERBAL_CONSTEXPR14
-					void k_move_clone(NodeAllocator & this_alloc, head_node * parent, const node * src_node);
+					void k_move_clone(NodeAllocator & this_alloc, head_node * parent, node * src_node);
 
 #			endif
 

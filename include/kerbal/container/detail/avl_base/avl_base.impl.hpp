@@ -482,7 +482,7 @@ namespace kerbal
 			template <typename Entity>
 			template <typename UnaryOperation, typename NodeAllocator>
 			KERBAL_CONSTEXPR14
-			void avl_type_only<Entity>::k_trans_clone(NodeAllocator & this_alloc, head_node * parent, const node * src_node, bool which)
+			void avl_type_only<Entity>::k_trans_clone(NodeAllocator & this_alloc, head_node * parent, node * src_node, bool which)
 			{
 				while (src_node != get_avl_vnull_node()) {
 					node * pnew = k_build_new_node(this_alloc, UnaryOperation::f(src_node->member()));
@@ -504,7 +504,7 @@ namespace kerbal
 			template <typename Entity>
 			template <typename NodeAllocator>
 			KERBAL_CONSTEXPR14
-			void avl_type_only<Entity>::k_clone(NodeAllocator & this_alloc, head_node * parent, const node * src_node)
+			void avl_type_only<Entity>::k_clone(NodeAllocator & this_alloc, head_node * parent, node * src_node)
 			{
 				this->k_trans_clone<identity>(this_alloc, parent, src_node, false);
 			}
@@ -514,7 +514,7 @@ namespace kerbal
 			template <typename Entity>
 			template <typename NodeAllocator>
 			KERBAL_CONSTEXPR14
-			void avl_type_only<Entity>::k_move_clone(NodeAllocator & this_alloc, head_node * parent, const node * src_node)
+			void avl_type_only<Entity>::k_move_clone(NodeAllocator & this_alloc, head_node * parent, node * src_node)
 			{
 				this->k_trans_clone<cast_to_rvalue>(this_alloc, parent, src_node, false);
 			}
