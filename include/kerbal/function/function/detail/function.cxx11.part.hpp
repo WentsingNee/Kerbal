@@ -226,9 +226,6 @@ namespace kerbal
 
 #		if __cplusplus >= 201103L
 					KERBAL_CONSTEXPR
-#			if __cplusplus >= 201703L
-					inline
-#			endif
 					static const manager_table mtable = manager_table(NULL, destroy, clone, xfer, swap_out, swap TYPE_INFO_ENTRY);
 #		else
 					static const manager_table mtable;
@@ -239,7 +236,6 @@ namespace kerbal
 
 #	if __cplusplus >= 201103L
 
-#		if __cplusplus < 201703L
 			template <
 				std::size_t Size, std::size_t Align, typename Allocator,
 				typename Ret, typename ... TArgs
@@ -247,7 +243,6 @@ namespace kerbal
 			KERBAL_CONSTEXPR
 			const typename function_manager_collection<void, Size, Align, Allocator, Ret, TArgs...>::manager_table
 			function_manager_collection<void, Size, Align, Allocator, Ret, TArgs...>::mtable;
-#		endif
 
 #	else
 
@@ -381,9 +376,6 @@ namespace kerbal
 
 #		if __cplusplus >= 201103L
 					KERBAL_CONSTEXPR
-#			if __cplusplus >= 201703L
-					inline
-#			endif
 					static const manager_table mtable = manager_table(invoke, destroy, clone, xfer, swap_out, swap TYPE_INFO_ENTRY);
 #		else
 					static const manager_table mtable;
@@ -394,7 +386,6 @@ namespace kerbal
 
 #	if __cplusplus >= 201103L
 
-#		if __cplusplus < 201703L
 			template <
 				typename T, std::size_t Size, std::size_t Align, typename Allocator,
 				typename Ret, typename ... TArgs
@@ -402,7 +393,6 @@ namespace kerbal
 			KERBAL_CONSTEXPR
 			const typename function_manager_collection<T, Size, Align, Allocator, Ret, TArgs...>::manager_table
 			function_manager_collection<T, Size, Align, Allocator, Ret, TArgs...>::mtable;
-#		endif
 
 #	else
 
