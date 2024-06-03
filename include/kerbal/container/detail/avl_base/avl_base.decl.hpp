@@ -51,6 +51,7 @@
 
 #if __cplusplus >= 201703L
 #	if __has_include(<memory_resource>)
+#		include <kerbal/type_traits/is_trivially_destructible.hpp>
 #		include <memory_resource>
 #	endif
 #endif
@@ -1099,7 +1100,7 @@ namespace kerbal
 					static void k_destroy_node_and_offsprings(std::pmr::polymorphic_allocator<Node> & alloc, node_base * start)
 							KERBAL_CONDITIONAL_NOEXCEPT(
 								(
-									!std::is_trivially_destructible<Entity>::value ?
+									!kerbal::type_traits::try_test_is_trivially_destructible<Entity>::IS_TRUE::value ?
 									noexcept(k_destroy_node_and_offsprings_impl(alloc, start, DES_OFF_VER_DESTROY_BUT_NO_DEALLOCATE())) :
 									true
 								) &&
