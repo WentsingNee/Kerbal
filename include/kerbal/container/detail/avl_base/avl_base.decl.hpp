@@ -278,16 +278,16 @@ namespace kerbal
 
 					template <typename NodeAllocator, typename Extract, typename KeyCompare>
 					KERBAL_CONSTEXPR20
-					void k_copy_cnstrct_impl(NodeAllocator & this_alloc, const avl_type_only & src, Extract & this_e, KeyCompare & this_kc, COPY_CNSTRCT_VER_CLONE);
+					void k_copy_cnstrct_impl(NodeAllocator & this_alloc, Extract & this_e, KeyCompare & this_kc, const avl_type_only & src, COPY_CNSTRCT_VER_CLONE);
 
 					template <typename NodeAllocator, typename Extract, typename KeyCompare>
 					KERBAL_CONSTEXPR20
-					void k_copy_cnstrct_impl(NodeAllocator & this_alloc, const avl_type_only & src, Extract & this_e, KeyCompare & this_kc, COPY_CNSTRCT_VER_INSERT);
+					void k_copy_cnstrct_impl(NodeAllocator & this_alloc, Extract & this_e, KeyCompare & this_kc, const avl_type_only & src, COPY_CNSTRCT_VER_INSERT);
 
 				public:
 					template <typename NodeAllocator, typename Extract, typename KeyCompare>
 					KERBAL_CONSTEXPR20
-					avl_type_only(NodeAllocator & this_alloc, const avl_type_only & src, Extract & this_e, KeyCompare & this_kc);
+					avl_type_only(NodeAllocator & this_alloc, Extract & this_e, KeyCompare & this_kc, const avl_type_only & src);
 
 #			if __cplusplus >= 201103L
 
@@ -302,41 +302,41 @@ namespace kerbal
 
 					template <typename NodeAllocator, typename Extract, typename KeyCompare>
 					KERBAL_CONSTEXPR20
-					void k_move_cnstrct_impl(NodeAllocator & this_alloc, avl_type_only && src, Extract & this_e, KeyCompare & this_kc, MOVE_CNSTRCT_VER_XFER) KERBAL_NOEXCEPT;
+					void k_move_cnstrct_impl(NodeAllocator & this_alloc, Extract & this_e, KeyCompare & this_kc, avl_type_only && src, MOVE_CNSTRCT_VER_XFER) KERBAL_NOEXCEPT;
 
 					template <typename NodeAllocator, typename Extract, typename KeyCompare>
 					KERBAL_CONSTEXPR20
-					void k_move_cnstrct_impl(NodeAllocator & this_alloc, avl_type_only && src, Extract & this_e, KeyCompare & this_kc, MOVE_CNSTRCT_VER_MOVE_CLONE);
+					void k_move_cnstrct_impl(NodeAllocator & this_alloc, Extract & this_e, KeyCompare & this_kc, avl_type_only && src, MOVE_CNSTRCT_VER_MOVE_CLONE);
 
 					template <typename NodeAllocator, typename Extract, typename KeyCompare>
 					KERBAL_CONSTEXPR20
-					void k_move_cnstrct_impl(NodeAllocator & this_alloc, avl_type_only && src, Extract & this_e, KeyCompare & this_kc, MOVE_CNSTRCT_VER_MOVE_INSERT);
+					void k_move_cnstrct_impl(NodeAllocator & this_alloc, Extract & this_e, KeyCompare & this_kc, avl_type_only && src, MOVE_CNSTRCT_VER_MOVE_INSERT);
 
 					// move construct using allocator, allocator is equal
 					template <typename NodeAllocator, typename Extract, typename KeyCompare>
 					KERBAL_CONSTEXPR14
-					void k_move_cnstrct_ua_ae(NodeAllocator & this_alloc, avl_type_only && src, Extract & this_e, KeyCompare & this_kc) KERBAL_NOEXCEPT;
+					void k_move_cnstrct_ua_ae(NodeAllocator & this_alloc, Extract & this_e, KeyCompare & this_kc, avl_type_only && src) KERBAL_NOEXCEPT;
 
 					// move construct using allocator, allocator is not equal
 					template <typename NodeAllocator, typename Extract, typename KeyCompare>
 					KERBAL_CONSTEXPR20
-					void k_move_cnstrct_ua_ane(NodeAllocator & this_alloc, avl_type_only && src, Extract & this_e, KeyCompare & this_kc);
+					void k_move_cnstrct_ua_ane(NodeAllocator & this_alloc, Extract & this_e, KeyCompare & this_kc, avl_type_only && src);
 
 					template <typename NodeAllocator, typename Extract, typename KeyCompare>
 					KERBAL_CONSTEXPR20
-					void k_move_cnstrct_ua_helper(NodeAllocator & this_alloc, NodeAllocator && src_alloc, avl_type_only && src, Extract & this_e, KeyCompare & this_kc,
+					void k_move_cnstrct_ua_helper(NodeAllocator & this_alloc, Extract & this_e, KeyCompare & this_kc, NodeAllocator && src_alloc, avl_type_only && src,
 												   kerbal::type_traits::false_type /*is_always_equal*/);
 
 					template <typename NodeAllocator, typename Extract, typename KeyCompare>
 					KERBAL_CONSTEXPR14
-					void k_move_cnstrct_ua_helper(NodeAllocator & /*this_alloc*/, NodeAllocator && /*src_alloc*/, avl_type_only && src, Extract & /*this_e*/, KeyCompare & /*this_kc*/,
+					void k_move_cnstrct_ua_helper(NodeAllocator & /*this_alloc*/, Extract & /*this_e*/, KeyCompare & /*this_kc*/, NodeAllocator && /*src_alloc*/, avl_type_only && src,
 												  kerbal::type_traits::true_type /*is_always_equal*/) KERBAL_NOEXCEPT;
 
 				public:
 
 					template <typename NodeAllocator, typename Extract, typename KeyCompare>
 					KERBAL_CONSTEXPR20
-					avl_type_only(NodeAllocator & this_alloc, NodeAllocator && src_alloc, avl_type_only && src, Extract & this_e, KeyCompare & this_kc);
+					avl_type_only(NodeAllocator & this_alloc, Extract & this_e, KeyCompare & this_kc, NodeAllocator && src_alloc, avl_type_only && src);
 
 #			endif
 

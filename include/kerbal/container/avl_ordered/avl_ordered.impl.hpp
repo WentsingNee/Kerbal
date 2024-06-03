@@ -566,7 +566,7 @@ namespace kerbal
 				extract_compress_helper(static_cast<const extract_compress_helper &>(src)),
 				key_compare_compress_helper(static_cast<const key_compare_compress_helper &>(src)),
 				avl_allocator_overload(src.alloc()),
-				avl_type_only(this->alloc(), static_cast<const avl_type_only &>(src), this->extract(), this->key_comp())
+				avl_type_only(this->alloc(), this->extract(), this->key_comp(), static_cast<const avl_type_only &>(src))
 		{
 		}
 
@@ -576,7 +576,7 @@ namespace kerbal
 				extract_compress_helper(static_cast<const extract_compress_helper &>(src)),
 				key_compare_compress_helper(static_cast<const key_compare_compress_helper &>(src)),
 				avl_allocator_overload(alloc),
-				avl_type_only(this->alloc(), static_cast<const avl_type_only &>(src), this->extract(), this->key_comp())
+				avl_type_only(this->alloc(), this->extract(), this->key_comp(), static_cast<const avl_type_only &>(src))
 		{
 		}
 
@@ -601,7 +601,7 @@ namespace kerbal
 				extract_compress_helper(static_cast<const extract_compress_helper &>(src)),
 				key_compare_compress_helper(static_cast<const key_compare_compress_helper &>(src)),
 				avl_allocator_overload(alloc),
-				avl_type_only(this->alloc(), kerbal::compatibility::move(src.alloc()), static_cast<avl_type_only &&>(src), this->extract(), this->key_comp())
+				avl_type_only(this->alloc(), this->extract(), this->key_comp(), kerbal::compatibility::move(src.alloc()), static_cast<avl_type_only &&>(src))
 		{
 		}
 
