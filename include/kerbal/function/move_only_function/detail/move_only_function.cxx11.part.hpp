@@ -201,19 +201,14 @@ namespace kerbal
 #	endif
 
 					KERBAL_CONSTEXPR
-#			if __cplusplus >= 201703L
-					inline
-#			endif
 					static const manager_table mtable = manager_table(NULL, destroy, xfer, swap_out, swap TYPE_INFO_ENTRY);
 
 			};
 
-#		if __cplusplus < 201703L
 			template <std::size_t Size, std::size_t Align, typename Allocator, typename Ret, typename ... TArgs>
 			KERBAL_CONSTEXPR
 			const typename move_only_function_manager_collection<void, Size, Align, Allocator, Ret, TArgs...>::manager_table
 			move_only_function_manager_collection<void, Size, Align, Allocator, Ret, TArgs...>::mtable;
-#		endif
 
 #	undef TYPE_INFO_ENTRY
 
@@ -294,21 +289,15 @@ namespace kerbal
 #	endif
 
 					KERBAL_CONSTEXPR
-#			if __cplusplus >= 201703L
-					inline
-#			endif
 					static const manager_table mtable = manager_table(invoke, destroy, xfer, swap_out, swap TYPE_INFO_ENTRY);
 
 			};
 
 
-
-#		if __cplusplus < 201703L
 			template <typename T, std::size_t Size, std::size_t Align, typename Allocator, typename Ret, typename ... TArgs>
 			KERBAL_CONSTEXPR
 			const typename move_only_function_manager_collection<T, Size, Align, Allocator, Ret, TArgs...>::manager_table
 			move_only_function_manager_collection<T, Size, Align, Allocator, Ret, TArgs...>::mtable;
-#		endif
 
 #	undef TYPE_INFO_ENTRY
 
