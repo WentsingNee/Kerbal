@@ -16,6 +16,7 @@
 #include <kerbal/compatibility/constexpr.hpp>
 #include <kerbal/compatibility/noexcept.hpp>
 
+
 namespace kerbal
 {
 
@@ -23,17 +24,15 @@ namespace kerbal
 	{
 
 		KERBAL_MODULE_EXPORT
-		template <typename Type, Type val>
+		template <typename T, T val>
 		struct integral_constant
 		{
-#			if __cplusplus >= 201103L
-				static constexpr Type value = val;
-#			else
-				static const Type value = val;
-#			endif
+				static
+				KERBAL_CONSTEXPR
+				T const value = val;
 
-				typedef Type value_type;
-				typedef integral_constant<Type, val> type;
+				typedef T value_type;
+				typedef integral_constant<T, val> type;
 
 				KERBAL_CONSTEXPR
 				operator value_type() const KERBAL_NOEXCEPT
@@ -42,13 +41,10 @@ namespace kerbal
 				}
 		};
 
-#	if __cplusplus >= 201103L
-		template <typename Type, Type val>
-		constexpr Type integral_constant<Type, val>::value;
-#	else
-		template <typename Type, Type val>
-		const Type integral_constant<Type, val>::value;
-#	endif
+		template <typename T, T val>
+		KERBAL_CONSTEXPR
+		T const
+		integral_constant<T, val>::value;
 
 
 		KERBAL_MODULE_EXPORT
