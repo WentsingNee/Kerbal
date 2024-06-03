@@ -86,6 +86,22 @@ namespace kerbal
 					{
 					}
 
+#			if __cplusplus >= 201103L
+
+					KERBAL_CONSTEXPR14
+					avl_type_unrelated(avl_type_unrelated && src) KERBAL_NOEXCEPT :
+							k_head(0),
+							k_size(src.k_size)
+					{
+						this->k_head.left = src.k_head.left;
+						set_parent_ignore_null(this->k_head.left, &this->k_head);
+
+						src.k_head.left = get_avl_vnull_node();
+						src.k_size = 0;
+					}
+
+#			endif
+
 				public:
 					KERBAL_CONSTEXPR14
 					bool empty() const KERBAL_NOEXCEPT
@@ -273,6 +289,10 @@ namespace kerbal
 					avl_type_only(NodeAllocator & this_alloc, const avl_type_only & src, Extract & this_e, KeyCompare & this_kc);
 
 #			if __cplusplus >= 201103L
+
+				public:
+					KERBAL_CONSTEXPR20
+					avl_type_only(avl_type_only && src) KERBAL_NOEXCEPT;
 
 				private:
 					typedef kerbal::type_traits::integral_constant<int, 0> MOVE_CNSTRCT_VER_XFER;

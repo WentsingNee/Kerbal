@@ -579,6 +579,13 @@ namespace kerbal
 #		if __cplusplus >= 201103L
 
 			template <typename Entity>
+			KERBAL_CONSTEXPR20
+			avl_type_only<Entity>::avl_type_only(avl_type_only && src) KERBAL_NOEXCEPT :
+					avl_type_unrelated(static_cast<avl_type_unrelated &&>(src))
+			{
+			}
+
+			template <typename Entity>
 			template <typename NodeAllocator, typename Extract, typename KeyCompare>
 			KERBAL_CONSTEXPR20
 			void avl_type_only<Entity>::k_move_cnstrct_impl(NodeAllocator & /*this_alloc*/, avl_type_only && src, Extract & /*this_e*/, KeyCompare & /*this_kc*/, MOVE_CNSTRCT_VER_XFER) KERBAL_NOEXCEPT
