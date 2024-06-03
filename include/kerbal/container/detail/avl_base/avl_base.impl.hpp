@@ -576,10 +576,10 @@ namespace kerbal
 //						COPY_CNSTRCT_VER_CLONE,
 //						COPY_CNSTRCT_VER_INSERT
 //				>::type VER;
-//
-//				this->k_copy_cnstrct_impl(this_alloc, src, this_e, this_kc, VER());
 
-				this->k_copy_cnstrct_impl(this_alloc, src, this_e, this_kc, COPY_CNSTRCT_VER_CLONE());
+				typedef COPY_CNSTRCT_VER_CLONE VER;
+
+				this->k_copy_cnstrct_impl(this_alloc, src, this_e, this_kc, VER());
 			}
 
 
@@ -655,10 +655,10 @@ namespace kerbal
 //						MOVE_CNSTRCT_VER_XFER,
 //						MOVE_CNSTRCT_VER_MOVE_INSERT
 //				>::type VER;
-//
-//				this->k_move_cnstrct_impl(this_alloc, kerbal::compatibility::move(src), this_e, this_kc, VER());
 
-				this->k_move_cnstrct_impl(this_alloc, kerbal::compatibility::move(src), this_e, this_kc, MOVE_CNSTRCT_VER_XFER());
+				typedef MOVE_CNSTRCT_VER_XFER VER;
+
+				this->k_move_cnstrct_impl(this_alloc, kerbal::compatibility::move(src), this_e, this_kc, VER());
 			}
 
 			// move construct using allocator, allocator is not equal
@@ -672,10 +672,10 @@ namespace kerbal
 //						MOVE_CNSTRCT_VER_MOVE_CLONE,
 //						MOVE_CNSTRCT_VER_MOVE_INSERT
 //				>::type VER;
-//
-//				this->k_move_cnstrct_impl(this_alloc, kerbal::compatibility::move(src), this_e, this_kc, VER());
 
-				this->k_move_cnstrct_impl(this_alloc, kerbal::compatibility::move(src), this_e, this_kc, MOVE_CNSTRCT_VER_MOVE_CLONE());
+				typedef MOVE_CNSTRCT_VER_MOVE_CLONE VER;
+
+				this->k_move_cnstrct_impl(this_alloc, kerbal::compatibility::move(src), this_e, this_kc, VER());
 			}
 
 			template <typename Entity>
