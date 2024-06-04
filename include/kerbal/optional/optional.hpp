@@ -968,7 +968,7 @@ namespace kerbal
 		};
 
 
-		KERBAL_MODULE_EXPORT
+		/*KERBAL_MODULE_EXPORT*/
 		template <typename T>
 		class optional<T &>
 		{
@@ -1223,7 +1223,7 @@ namespace kerbal
 	namespace hash
 	{
 
-		KERBAL_MODULE_EXPORT
+		/*KERBAL_MODULE_EXPORT*/
 		template <typename T>
 		struct hash<kerbal::optional::optional<T> > :
 			public kerbal::optional::optional_hash_template<

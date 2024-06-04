@@ -30,7 +30,7 @@ namespace kerbal
 		{
 		};
 
-		KERBAL_MODULE_EXPORT
+		/*KERBAL_MODULE_EXPORT*/
 		template <typename KeyCompare>
 		struct key_compare_is_transparent<
 			KeyCompare,

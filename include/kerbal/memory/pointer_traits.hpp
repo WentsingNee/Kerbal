@@ -127,7 +127,7 @@ namespace kerbal
 		};
 
 
-		KERBAL_MODULE_EXPORT
+		/*KERBAL_MODULE_EXPORT*/
 		template <typename T>
 		struct pointer_traits<T *>
 		{

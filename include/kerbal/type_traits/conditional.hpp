@@ -28,7 +28,7 @@ namespace kerbal
 				typedef TrueType type;
 		};
 
-		KERBAL_MODULE_EXPORT
+		/*KERBAL_MODULE_EXPORT*/
 		template <typename TrueType, typename FalseType>
 		struct conditional<false, TrueType, FalseType>
 		{

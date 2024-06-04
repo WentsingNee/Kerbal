@@ -55,7 +55,7 @@ namespace kerbal
 		{
 		};
 
-		KERBAL_MODULE_EXPORT
+		/*KERBAL_MODULE_EXPORT*/
 		template <typename T, typename U>
 		struct is_same<T, U> : kerbal::type_traits::false_type
 		{
@@ -63,7 +63,7 @@ namespace kerbal
 
 #endif
 
-		KERBAL_MODULE_EXPORT
+		/*KERBAL_MODULE_EXPORT*/
 		template <typename T>
 		struct is_same<T, T> : kerbal::type_traits::true_type
 		{

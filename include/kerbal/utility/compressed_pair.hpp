@@ -686,14 +686,14 @@ KERBAL_NAMESPACE_STD_END
 
 KERBAL_NAMESPACE_STD_BEGIN
 
-	KERBAL_MODULE_EXPORT
+	/*KERBAL_MODULE_EXPORT*/
 	template <typename T, typename U>
 	struct tuple_size<kerbal::utility::compressed_pair<T, U> > :
 		std::integral_constant<std::size_t, 2>
 	{
 	};
 
-	KERBAL_MODULE_EXPORT
+	/*KERBAL_MODULE_EXPORT*/
 	template <std::size_t I, typename T, typename U>
 	struct tuple_element<I, kerbal::utility::compressed_pair<T, U> > :
 		kerbal::utility::compressed_pair<T, U>::template value_type<I>

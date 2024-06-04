@@ -33,7 +33,7 @@ namespace kerbal
 		{
 		};
 
-		KERBAL_MODULE_EXPORT
+		/*KERBAL_MODULE_EXPORT*/
 		template <typename Alloc>
 		struct allocator_has_def_difference_type<
 			Alloc,

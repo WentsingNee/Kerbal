@@ -130,7 +130,7 @@ namespace kerbal
 				}
 		};
 
-		KERBAL_MODULE_EXPORT
+		/*KERBAL_MODULE_EXPORT*/
 		template <typename Tuple, typename Key>
 		struct tuple_first_extractor<const Tuple, Key>
 		{

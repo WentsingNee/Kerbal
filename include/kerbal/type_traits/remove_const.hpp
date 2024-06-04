@@ -35,7 +35,7 @@ namespace kerbal
 				typedef T type;
 		};
 
-		KERBAL_MODULE_EXPORT
+		/*KERBAL_MODULE_EXPORT*/
 		template <typename T>
 		struct remove_const<const T>
 		{
