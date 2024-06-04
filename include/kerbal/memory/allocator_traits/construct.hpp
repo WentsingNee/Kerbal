@@ -209,7 +209,7 @@ namespace kerbal
 
 #	if __cplusplus >= 201703L
 
-		KERBAL_MODULE_EXPORT
+		/*KERBAL_MODULE_EXPORT*/
 		template <typename T, typename ... Args>
 		struct allocator_could_use_construct<std::allocator<T>, T, Args...> :
 			kerbal::type_traits::false_type

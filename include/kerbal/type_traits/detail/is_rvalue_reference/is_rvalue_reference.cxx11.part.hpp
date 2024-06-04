@@ -34,7 +34,7 @@ namespace kerbal
 		{
 		};
 
-		KERBAL_MODULE_EXPORT
+		/*KERBAL_MODULE_EXPORT*/
 		template <typename T>
 		struct is_rvalue_reference<T &&> : kerbal::type_traits::true_type
 		{

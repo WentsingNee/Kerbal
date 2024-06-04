@@ -35,7 +35,7 @@ namespace kerbal
 		{
 		};
 
-		KERBAL_MODULE_EXPORT
+		/*KERBAL_MODULE_EXPORT*/
 		template <typename T>
 		struct is_const<const T> : kerbal::type_traits::true_type
 		{

@@ -1583,21 +1583,21 @@ KERBAL_NAMESPACE_STD_END
 
 KERBAL_NAMESPACE_STD_BEGIN
 
-	KERBAL_MODULE_EXPORT
+	/*KERBAL_MODULE_EXPORT*/
 	template <typename ... Args>
 	struct tuple_size<kerbal::utility::tuple<Args...> > :
 		std::integral_constant<std::size_t, kerbal::utility::tuple<Args...>::TUPLE_SIZE::value>
 	{
 	};
 
-	KERBAL_MODULE_EXPORT
+	/*KERBAL_MODULE_EXPORT*/
 	template <std::size_t I, typename ... Args>
 	struct tuple_element<I, kerbal::utility::tuple<Args...> > :
 		kerbal::utility::tuple<Args...>::template value_type<I>
 	{
 	};
 
-	KERBAL_MODULE_EXPORT
+	/*KERBAL_MODULE_EXPORT*/
 	template <std::size_t I, typename ... Args>
 	KERBAL_CONSTEXPR14
 	typename kerbal::utility::tuple<Args...>::template reference<I>::type
@@ -1606,7 +1606,7 @@ KERBAL_NAMESPACE_STD_BEGIN
 		return t.template get<I>();
 	}
 
-	KERBAL_MODULE_EXPORT
+	/*KERBAL_MODULE_EXPORT*/
 	template <std::size_t I, typename ... Args>
 	KERBAL_CONSTEXPR
 	typename kerbal::utility::tuple<Args...>::template const_reference<I>::type
@@ -1615,7 +1615,7 @@ KERBAL_NAMESPACE_STD_BEGIN
 		return t.template get<I>();
 	}
 
-	KERBAL_MODULE_EXPORT
+	/*KERBAL_MODULE_EXPORT*/
 	template <std::size_t I, typename ... Args>
 	KERBAL_CONSTEXPR14
 	typename kerbal::utility::tuple<Args...>::template rvalue_reference<I>::type
@@ -1624,7 +1624,7 @@ KERBAL_NAMESPACE_STD_BEGIN
 		return kerbal::compatibility::move(t).template get<I>();
 	}
 
-	KERBAL_MODULE_EXPORT
+	/*KERBAL_MODULE_EXPORT*/
 	template <std::size_t I, typename ... Args>
 	KERBAL_CONSTEXPR
 	typename kerbal::utility::tuple<Args...>::template const_rvalue_reference<I>::type

@@ -12,7 +12,7 @@
 #ifndef KERBAL_UTILITY_MEMBER_COMPRESS_HELPER_DETAIL_MEMBER_COMPRESS_HELPER_MEMBER_COMPRESS_HELPER_ARRAY_PART_HPP
 #define KERBAL_UTILITY_MEMBER_COMPRESS_HELPER_DETAIL_MEMBER_COMPRESS_HELPER_MEMBER_COMPRESS_HELPER_ARRAY_PART_HPP
 
-#include <kerbal/ts/modules_ts/modules_ts.hpp>
+//#include <kerbal/ts/modules_ts/modules_ts.hpp>
 
 #include <kerbal/utility/member_compress_helper/member_compress_helper.fwd.hpp>
 
@@ -90,7 +90,7 @@ namespace kerbal
 #		endif
 
 
-		KERBAL_MODULE_EXPORT
+		/*KERBAL_MODULE_EXPORT*/
 		template <typename T, std::size_t I, std::size_t N>
 		class member_compress_helper<T[N], I>
 		{

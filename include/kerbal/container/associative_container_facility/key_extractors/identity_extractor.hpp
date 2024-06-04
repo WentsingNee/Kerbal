@@ -50,7 +50,7 @@ namespace kerbal
 			}
 		};
 
-		KERBAL_MODULE_EXPORT
+		/*KERBAL_MODULE_EXPORT*/
 		template <typename Key>
 		struct identity_extractor<const Key>
 		{

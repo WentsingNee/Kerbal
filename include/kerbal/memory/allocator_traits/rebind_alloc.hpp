@@ -40,7 +40,7 @@ namespace kerbal
 		{
 		};
 
-		KERBAL_MODULE_EXPORT
+		/*KERBAL_MODULE_EXPORT*/
 		template <typename Alloc, typename U>
 		struct allocator_has_def_rebind_alloc<
 			Alloc,
@@ -60,7 +60,7 @@ namespace kerbal
 
 #	if __cplusplus >= 201703L
 
-		KERBAL_MODULE_EXPORT
+		/*KERBAL_MODULE_EXPORT*/
 		template <typename T, typename U>
 		struct allocator_could_use_rebind_alloc<std::allocator<T>, U> :
 			kerbal::type_traits::false_type
