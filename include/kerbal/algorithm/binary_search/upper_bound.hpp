@@ -30,7 +30,7 @@ namespace kerbal
 			template <typename ForwardIterator, typename T, typename Comparator>
 			KERBAL_CONSTEXPR14
 			ForwardIterator
-			upper_bound_helper(
+			k_upper_bound(
 				ForwardIterator first, ForwardIterator last, const T & value, Comparator comparator,
 				std::forward_iterator_tag
 			)
@@ -47,7 +47,7 @@ namespace kerbal
 			template <typename RandomAccessIterator, typename T, typename Comparator>
 			KERBAL_CONSTEXPR14
 			RandomAccessIterator
-			upper_bound_helper(
+			k_upper_bound(
 				RandomAccessIterator first, RandomAccessIterator last, const T & value, Comparator comparator,
 				std::random_access_iterator_tag
 			)
@@ -80,7 +80,7 @@ namespace kerbal
 		ForwardIterator
 		upper_bound(ForwardIterator first, ForwardIterator last, const T & value, Comparator comparator)
 		{
-			return kerbal::algorithm::detail::upper_bound_helper(
+			return kerbal::algorithm::detail::k_upper_bound(
 				first, last, value, comparator,
 				kerbal::iterator::iterator_category(first)
 			);

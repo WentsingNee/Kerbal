@@ -33,7 +33,7 @@ namespace kerbal
 			template <typename ForwardIterator, typename T, typename Comparator>
 			KERBAL_CONSTEXPR14
 			kerbal::utility::compressed_pair<ForwardIterator, ForwardIterator>
-			equal_range_helper(
+			k_equal_range(
 				ForwardIterator first, ForwardIterator last, const T & value, Comparator comparator,
 				std::forward_iterator_tag
 			)
@@ -48,7 +48,7 @@ namespace kerbal
 			template <typename RandomAccessIterator, typename T, typename Comparator>
 			KERBAL_CONSTEXPR14
 			kerbal::utility::compressed_pair<RandomAccessIterator, RandomAccessIterator>
-			equal_range_helper(
+			k_equal_range(
 				RandomAccessIterator first, RandomAccessIterator last, const T & value, Comparator comparator,
 				std::random_access_iterator_tag
 			)
@@ -91,7 +91,7 @@ namespace kerbal
 		kerbal::utility::compressed_pair<ForwardIterator, ForwardIterator>
 		equal_range(ForwardIterator first, ForwardIterator last, const T & value, Comparator comparator)
 		{
-			return kerbal::algorithm::detail::equal_range_helper(
+			return kerbal::algorithm::detail::k_equal_range(
 				first, last, value, comparator,
 				kerbal::iterator::iterator_category(first)
 			);

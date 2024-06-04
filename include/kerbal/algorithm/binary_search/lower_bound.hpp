@@ -30,7 +30,7 @@ namespace kerbal
 			template <typename ForwardIterator, typename T, typename Comparator>
 			KERBAL_CONSTEXPR14
 			ForwardIterator
-			lower_bound_helper(
+			k_lower_bound(
 				ForwardIterator first, ForwardIterator last, const T & value, Comparator comparator,
 				std::forward_iterator_tag
 			)
@@ -60,7 +60,7 @@ namespace kerbal
 			template <typename RandomAccessIterator, typename T, typename Comparator>
 			KERBAL_CONSTEXPR14
 			RandomAccessIterator
-			lower_bound_helper(
+			k_lower_bound(
 				RandomAccessIterator first, RandomAccessIterator last, const T & value, Comparator comparator,
 				std::random_access_iterator_tag
 			)
@@ -93,7 +93,7 @@ namespace kerbal
 		ForwardIterator
 		lower_bound(ForwardIterator first, ForwardIterator last, const T & value, Comparator comparator)
 		{
-			return kerbal::algorithm::detail::lower_bound_helper(
+			return kerbal::algorithm::detail::k_lower_bound(
 				first, last, value, comparator,
 				kerbal::iterator::iterator_category(first)
 			);
