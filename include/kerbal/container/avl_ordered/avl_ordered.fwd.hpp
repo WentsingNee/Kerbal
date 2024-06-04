@@ -25,6 +25,15 @@ namespace kerbal
 	namespace container
 	{
 
+		namespace detail
+		{
+
+			KERBAL_MODULE_EXPORT
+			template <typename Entity2, typename Extract, typename KeyCompare, typename Allocator>
+			struct avl_ordered_typedef_helper;
+
+		} // namespace detail
+
 		KERBAL_MODULE_EXPORT
 		template <
 			typename Entity,

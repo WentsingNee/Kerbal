@@ -13,6 +13,7 @@
 #define KERBAL_CONTAINER_DETAIL_LIST_BASE_LIST_BASE_DECL_HPP
 
 #include <kerbal/container/list/list.fwd.hpp>
+#include <kerbal/container/detail/list_base/list_base.fwd.hpp>
 #include <kerbal/memory/allocator/monotonic_allocator/monotonic_allocator.fwd.hpp>
 
 #include <kerbal/compare/basic_compare.hpp>
@@ -281,7 +282,7 @@ namespace kerbal
 					typedef list_type_unrelated			list_type_unrelated;
 
 					template <typename U, typename Allocator>
-					friend struct list_typedef_helper;
+					friend struct kerbal::container::detail::list_typedef_helper;
 
 					template <typename U, typename Allocator>
 					friend class kerbal::container::list;
