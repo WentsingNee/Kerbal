@@ -59,12 +59,18 @@ function(__kerbal_absolute_to_relative _Out_list_name list)
 endfunction()
 
 foreach (
-    sublib IN ITEMS
-    kerbal
-    kerbal-coroutine
-    kerbal-omp
-    kerbal-parallel
+    e IN ITEMS
+    core
+    coroutine
+    omp
+    parallel
 )
+    if (sublib STREQUAL "core")
+        set(sublib "kerbal")
+    else ()
+        set(sublib "kerbal-${e}")
+    endif ()
+
     if (NOT TARGET @PROJECT_NAME@::${sublib})
         continue()
     endif ()
@@ -83,6 +89,29 @@ foreach (
                 ".*part\.hpp$"
                 "detail/"
     )
+
+    #cppm
+    unset(cppm)
+    string(
+            APPEND cppm
+            "module;\n"
+            "#include <bits/stdc++.h>\n"
+            "#include <kerbal/utility/std_pair/std_pair.fwd.hpp>\n"
+            "#include <kerbal/utility/std_tuple/std_tuple.fwd.hpp>\n"
+            "#	include <kerbal/memory/allocator/std_allocator/std_allocator.fwd.hpp>\n"
+            "#	include <kerbal/memory/allocator/std_pmr_allocator/std_pmr_allocator.fwd.hpp>\n"
+            "#include <kerbal/compare/std_compare/std_compare.fwd.hpp>\n"
+            "#include <emmintrin.h>\n"
+            "export module kerbal.${e};\n"
+    )
+    foreach (source_file_name IN LISTS @PROJECT_NAME@_PUBLIC_HEADERS_${sublib})
+        string(APPEND cppm
+                "#include \"${source_file_name}\"\n"
+        )
+    endforeach ()
+
+    file(WRITE "${CMAKE_BINARY_DIR}/kerbal/cppm/${sublib}.cppm" "${cppm}")
+
     unset(@PROJECT_NAME@_HEADERS_${sublib})
     unset(@PROJECT_NAME@_HEADERS_RELATIVE_${sublib})
 endforeach()
