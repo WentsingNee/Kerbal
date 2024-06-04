@@ -105,13 +105,13 @@ namespace kerbal
 		template <typename ... Args>
 		struct conjunction;
 
-		KERBAL_MODULE_EXPORT
+		/*KERBAL_MODULE_EXPORT*/
 		template <>
 		struct conjunction<> : kerbal::type_traits::true_type
 		{
 		};
 
-		KERBAL_MODULE_EXPORT
+		/*KERBAL_MODULE_EXPORT*/
 		template <typename T, typename ... Args>
 		struct conjunction<T, Args...> :
 			kerbal::type_traits::conditional<
@@ -126,19 +126,19 @@ namespace kerbal
 		template <typename ... Args>
 		struct disjunction;
 
-		KERBAL_MODULE_EXPORT
+		/*KERBAL_MODULE_EXPORT*/
 		template <>
 		struct disjunction<> : kerbal::type_traits::true_type
 		{
 		};
 
-		KERBAL_MODULE_EXPORT
+		/*KERBAL_MODULE_EXPORT*/
 		template <typename T>
 		struct disjunction<T> : kerbal::type_traits::bool_constant<T::value>
 		{
 		};
 
-		KERBAL_MODULE_EXPORT
+		/*KERBAL_MODULE_EXPORT*/
 		template <typename T, typename ... Args>
 		struct disjunction<T, Args...> :
 			kerbal::type_traits::conditional<

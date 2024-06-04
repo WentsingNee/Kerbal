@@ -31,14 +31,14 @@ namespace kerbal
 		{
 		};
 
-		KERBAL_MODULE_EXPORT
+		/*KERBAL_MODULE_EXPORT*/
 		template <typename T, std::size_t N>
 		struct rank<T[N]> :
 			kerbal::type_traits::integral_constant<std::size_t, 1 + rank<T>::value>
 		{
 		};
 
-		KERBAL_MODULE_EXPORT
+		/*KERBAL_MODULE_EXPORT*/
 		template <typename T>
 		struct rank<T[]> :
 			kerbal::type_traits::integral_constant<std::size_t, 1 + rank<T>::value>

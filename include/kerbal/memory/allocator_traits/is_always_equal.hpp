@@ -36,7 +36,7 @@ namespace kerbal
 		{
 		};
 
-		KERBAL_MODULE_EXPORT
+		/*KERBAL_MODULE_EXPORT*/
 		template <typename Alloc>
 		struct allocator_has_def_is_always_equal<
 			Alloc,
@@ -55,7 +55,7 @@ namespace kerbal
 
 #	if __cplusplus >= 201703L
 
-		KERBAL_MODULE_EXPORT
+		/*KERBAL_MODULE_EXPORT*/
 		template <typename T>
 		struct allocator_could_use_is_always_equal<std::allocator<T> > :
 			kerbal::type_traits::false_type

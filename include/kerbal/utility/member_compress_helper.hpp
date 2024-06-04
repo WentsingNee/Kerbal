@@ -698,7 +698,7 @@ namespace kerbal
 #		endif
 
 
-		KERBAL_MODULE_EXPORT
+		/*KERBAL_MODULE_EXPORT*/
 		template <typename T, std::size_t I, std::size_t N>
 		class member_compress_helper<T[N], I>
 		{
@@ -962,7 +962,7 @@ namespace kerbal
 		};
 
 
-		KERBAL_MODULE_EXPORT
+		/*KERBAL_MODULE_EXPORT*/
 		template <typename T, std::size_t I>
 		class member_compress_helper<T &, I>
 		{

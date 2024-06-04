@@ -38,7 +38,7 @@ namespace kerbal
 		{
 		};
 
-		KERBAL_MODULE_EXPORT
+		/*KERBAL_MODULE_EXPORT*/
 		template <typename Alloc, typename Pointer>
 		struct allocator_has_deallocate_one<
 			Alloc, Pointer,

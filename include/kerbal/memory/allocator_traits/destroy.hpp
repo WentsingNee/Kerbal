@@ -76,7 +76,7 @@ namespace kerbal
 		{
 		};
 
-		KERBAL_MODULE_EXPORT
+		/*KERBAL_MODULE_EXPORT*/
 		template <typename Alloc, typename T>
 		struct allocator_has_destroy<
 			Alloc, T,
@@ -114,7 +114,7 @@ namespace kerbal
 
 #	if KERBAL_STD_ALLOCATOR_DESTROY_DEPRECATED
 
-		KERBAL_MODULE_EXPORT
+		/*KERBAL_MODULE_EXPORT*/
 		template <typename T, typename U>
 		struct allocator_could_use_destroy<std::allocator<T>, U> :
 			kerbal::type_traits::false_type
@@ -126,7 +126,7 @@ namespace kerbal
 
 #	if KERBAL_STD_POLYMORPHIC_ALLOCATOR_DESTROY_DEPRECATED
 
-		KERBAL_MODULE_EXPORT
+		/*KERBAL_MODULE_EXPORT*/
 		template <typename T, typename U>
 		struct allocator_could_use_destroy<std::pmr::polymorphic_allocator<T>, U> :
 			kerbal::type_traits::false_type

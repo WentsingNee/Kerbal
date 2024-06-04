@@ -67,7 +67,7 @@ namespace kerbal
 		{
 		};
 
-		KERBAL_MODULE_EXPORT
+		/*KERBAL_MODULE_EXPORT*/
 		/// Partial specialization for pointer types.
 		template <typename T>
 		struct iterator_traits<T *>
@@ -79,7 +79,7 @@ namespace kerbal
 				typedef T &									reference;
 		};
 
-		KERBAL_MODULE_EXPORT
+		/*KERBAL_MODULE_EXPORT*/
 		/// Partial specialization for const pointer types.
 		template <typename T>
 		struct iterator_traits<const T *>
