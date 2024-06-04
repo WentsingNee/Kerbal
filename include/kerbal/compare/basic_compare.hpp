@@ -70,7 +70,7 @@ namespace kerbal
 #	if __cplusplus < 201103L
 
 #define DEF_VOID(NAME, OP) \
-		KERBAL_MODULE_EXPORT \
+		/*KERBAL_MODULE_EXPORT*/ \
 		template <> \
 		struct NAME<void> \
 		{ \
@@ -88,7 +88,7 @@ namespace kerbal
 #	else
 
 #define DEF_VOID(NAME, OP) \
-		KERBAL_MODULE_EXPORT \
+		/*KERBAL_MODULE_EXPORT*/ \
 		template <> \
 		struct NAME<void> \
 		{ \
@@ -132,7 +132,7 @@ namespace kerbal
 #	undef DEF
 
 
-		KERBAL_MODULE_EXPORT
+		/*KERBAL_MODULE_EXPORT*/
 		template <typename T, std::size_t N>
 		struct equal_to<T[N]>
 		{
@@ -171,7 +171,7 @@ namespace kerbal
 		};
 
 
-		KERBAL_MODULE_EXPORT
+		/*KERBAL_MODULE_EXPORT*/
 		template <typename T, std::size_t N>
 		struct not_equal_to<T[N]>
 		{
@@ -210,7 +210,7 @@ namespace kerbal
 		};
 
 
-		KERBAL_MODULE_EXPORT
+		/*KERBAL_MODULE_EXPORT*/
 		template <typename T, std::size_t N>
 		struct less<T[N]>
 		{
@@ -251,7 +251,7 @@ namespace kerbal
 		};
 
 
-		KERBAL_MODULE_EXPORT
+		/*KERBAL_MODULE_EXPORT*/
 		template <typename T, std::size_t N>
 		struct greater<T[N]>
 		{
@@ -292,7 +292,7 @@ namespace kerbal
 		};
 
 
-		KERBAL_MODULE_EXPORT
+		/*KERBAL_MODULE_EXPORT*/
 		template <typename T, std::size_t N>
 		struct less_equal<T[N]>
 		{
@@ -336,7 +336,7 @@ namespace kerbal
 		};
 
 
-		KERBAL_MODULE_EXPORT
+		/*KERBAL_MODULE_EXPORT*/
 		template <typename T, std::size_t N>
 		struct greater_equal<T[N]>
 		{

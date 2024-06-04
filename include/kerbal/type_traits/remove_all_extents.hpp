@@ -31,14 +31,14 @@ namespace kerbal
 				typedef T type;
 		};
 
-		KERBAL_MODULE_EXPORT
+		/*KERBAL_MODULE_EXPORT*/
 		template <typename T, std::size_t N>
 		struct remove_all_extents<T[N]> :
 			kerbal::type_traits::remove_all_extents<T>
 		{
 		};
 
-		KERBAL_MODULE_EXPORT
+		/*KERBAL_MODULE_EXPORT*/
 		template <typename T>
 		struct remove_all_extents<T[]> :
 			kerbal::type_traits::remove_all_extents<T>

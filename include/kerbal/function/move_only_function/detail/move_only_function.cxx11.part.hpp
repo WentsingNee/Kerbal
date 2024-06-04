@@ -352,7 +352,7 @@ namespace kerbal
 		} // namespace detail
 
 
-		KERBAL_MODULE_EXPORT
+		/*KERBAL_MODULE_EXPORT*/
 		template <
 			std::size_t Size, std::size_t Align, typename Allocator,
 			typename Ret, typename ... TArgs

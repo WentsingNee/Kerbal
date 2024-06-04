@@ -410,7 +410,7 @@ namespace kerbal
 		};
 
 
-		KERBAL_MODULE_EXPORT
+		/*KERBAL_MODULE_EXPORT*/
 		template <typename T, typename Deleter>
 		class unique_ptr<T[], Deleter> :
 			private kerbal::utility::noncopyable,
