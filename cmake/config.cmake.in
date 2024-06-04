@@ -49,6 +49,7 @@ foreach (
     sublib IN ITEMS
     kerbal
     kerbal-omp
+    kerbal-parallel
 )
     if (NOT TARGET @PROJECT_NAME@::${sublib})
         continue()
