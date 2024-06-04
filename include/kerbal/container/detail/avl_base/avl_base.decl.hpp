@@ -12,6 +12,7 @@
 #ifndef KERBAL_CONTAINER_DETAIL_AVL_BASE_AVL_BASE_DECL_HPP
 #define KERBAL_CONTAINER_DETAIL_AVL_BASE_AVL_BASE_DECL_HPP
 
+#include <kerbal/container/avl_ordered/avl_ordered.fwd.hpp>
 #include <kerbal/container/detail/avl_base/avl_base.fwd.hpp>
 #include <kerbal/memory/allocator/monotonic_allocator/monotonic_allocator.fwd.hpp>
 
@@ -162,7 +163,7 @@ namespace kerbal
 					typedef avl_type_unrelated super;
 
 					template <typename Entity2, typename Extract, typename KeyCompare, typename Allocator>
-					friend struct avl_ordered_typedef_helper;
+					friend struct kerbal::container::detail::avl_ordered_typedef_helper;
 
 				public:
 					typedef Entity						value_type;
