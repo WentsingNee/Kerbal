@@ -32,7 +32,7 @@ namespace kerbal
 			template <typename ForwardIterator, typename T, typename Comparator>
 			KERBAL_CONSTEXPR14
 			ForwardIterator
-			upper_bound_hint(
+			k_upper_bound_hint(
 				ForwardIterator first, ForwardIterator last, const T & value,
 				ForwardIterator hint, Comparator comparator, std::forward_iterator_tag
 			)
@@ -43,7 +43,7 @@ namespace kerbal
 				} else { // *hint <= value
 					first = kerbal::iterator::next(hint);
 				}
-				return kerbal::algorithm::detail::upper_bound_helper(
+				return kerbal::algorithm::detail::k_upper_bound(
 					first, last, value, comparator,
 					kerbal::iterator::iterator_category(first)
 				);
@@ -52,7 +52,7 @@ namespace kerbal
 			template <typename BidirectionalIterator, typename T, typename Comparator>
 			KERBAL_CONSTEXPR14
 			BidirectionalIterator
-			upper_bound_hint(
+			k_upper_bound_hint(
 				BidirectionalIterator first, BidirectionalIterator last, const T & value,
 				BidirectionalIterator hint, Comparator comparator, std::bidirectional_iterator_tag
 			)
@@ -61,7 +61,7 @@ namespace kerbal
 				} else if (comparator(value, *hint)) { // *hint > value
 				} else { // *hint <= value
 					++hint;
-					return kerbal::algorithm::detail::upper_bound_helper(
+					return kerbal::algorithm::detail::k_upper_bound(
 						hint, last, value, comparator,
 						kerbal::iterator::iterator_category(first)
 					);
@@ -72,7 +72,7 @@ namespace kerbal
 			template <typename RandomAccessIterator, typename T, typename Comparator>
 			KERBAL_CONSTEXPR14
 			RandomAccessIterator
-			upper_bound_hint(
+			k_upper_bound_hint(
 				RandomAccessIterator first, RandomAccessIterator last, const T & value,
 				RandomAccessIterator hint, Comparator comparator, std::random_access_iterator_tag
 			)
@@ -88,13 +88,13 @@ namespace kerbal
 						if (comparator(value, *hint_4)) { // value < hint[4]
 							last = hint_4;
 						} else {
-							return kerbal::algorithm::detail::upper_bound_helper(
+							return kerbal::algorithm::detail::k_upper_bound(
 								kerbal::iterator::next(hint_4), last, value, comparator,
 								std::random_access_iterator_tag()
 							);
 						}
 					}
-					return kerbal::algorithm::detail::upper_bound_helper(
+					return kerbal::algorithm::detail::k_upper_bound(
 						hint, last, value, comparator,
 						std::forward_iterator_tag()
 					);
@@ -102,7 +102,7 @@ namespace kerbal
 				if (kerbal::iterator::distance(first, hint) > 4) {
 					iterator hint_4(hint - 4);
 					if (comparator(value, *hint_4)) { // value < hint[-4]
-						return kerbal::algorithm::detail::upper_bound_helper(
+						return kerbal::algorithm::detail::k_upper_bound(
 							first, hint_4, value, comparator,
 							std::random_access_iterator_tag()
 						);
@@ -123,7 +123,7 @@ namespace kerbal
 			Comparator comparator
 		)
 		{
-			return kerbal::algorithm::detail::upper_bound_hint(
+			return kerbal::algorithm::detail::k_upper_bound_hint(
 				first, last, value, hint, comparator,
 				kerbal::iterator::iterator_category(first)
 			);
