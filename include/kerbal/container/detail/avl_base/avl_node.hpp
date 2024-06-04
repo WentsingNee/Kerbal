@@ -506,28 +506,27 @@ namespace kerbal
 
 					friend inline
 					KERBAL_CONSTEXPR
-					avl_node_base * get_avl_vnull_node() KERBAL_NOEXCEPT;
+					avl_node_base * get_avl_vnull_node() KERBAL_NOEXCEPT
+					{
+						return &avl_vnull_node_helper<>::vnull_node;
+					}
 
 			};
 
 			template <int I>
 			avl_node_base avl_vnull_node_helper<I>::vnull_node(0);
 
-#	endif
-
-
+#	else
 
 			inline
 			KERBAL_CONSTEXPR
 			avl_node_base *
 			get_avl_vnull_node() KERBAL_NOEXCEPT
 			{
-#	if KERBAL_AVL_ENABLE_VNULL
-				return &avl_vnull_node_helper<>::vnull_node;
-#	else
 				return NULL;
-#	endif
 			}
+
+#	endif
 
 		} // namespace detail
 
