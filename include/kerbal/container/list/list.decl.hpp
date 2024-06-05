@@ -230,12 +230,8 @@ namespace kerbal
 
 #		else
 
-				list(const kerbal::assign::assign_list<void> & ilist);
-
 				template <typename U>
 				list(const kerbal::assign::assign_list<U> & ilist);
-
-				list(const kerbal::assign::assign_list<void> & ilist, const Allocator & alloc);
 
 				template <typename U>
 				list(const kerbal::assign::assign_list<U> & ilist, const Allocator & alloc);
@@ -270,8 +266,6 @@ namespace kerbal
 				list & operator=(std::initializer_list<value_type> ilist);
 
 #		else
-
-				list & operator=(const kerbal::assign::assign_list<void> & ilist);
 
 				template <typename U>
 				list & operator=(const kerbal::assign::assign_list<U> & ilist);
@@ -308,8 +302,6 @@ namespace kerbal
 				void assign(std::initializer_list<value_type> ilist);
 
 #		else
-
-				void assign(const kerbal::assign::assign_list<void> & ilist);
 
 				template <typename U>
 				void assign(const kerbal::assign::assign_list<U> & ilist);
@@ -411,8 +403,6 @@ namespace kerbal
 				iterator insert(const_iterator pos, std::initializer_list<value_type> ilist);
 
 #		else
-
-				iterator insert(const_iterator pos, const kerbal::assign::assign_list<void> & ilist);
 
 				template <typename U>
 				iterator insert(const_iterator pos, const kerbal::assign::assign_list<U> & ilist);
