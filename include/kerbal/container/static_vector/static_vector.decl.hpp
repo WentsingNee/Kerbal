@@ -197,8 +197,6 @@ namespace kerbal
 
 #		else
 
-				static_vector & operator=(const kerbal::assign::assign_list<void> & ilist);
-
 				template <typename U>
 				static_vector & operator=(const kerbal::assign::assign_list<U> & ilist);
 

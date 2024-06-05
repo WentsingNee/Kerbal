@@ -200,13 +200,6 @@ namespace kerbal
 #	else
 
 		template <typename T, std::size_t N>
-		static_vector<T, N> & static_vector<T, N>::operator=(const kerbal::assign::assign_list<void> & ilist)
-		{
-			this->assign_unsafe(ilist);
-			return *this;
-		}
-
-		template <typename T, std::size_t N>
 		template <typename U>
 		static_vector<T, N> &
 		static_vector<T, N>::

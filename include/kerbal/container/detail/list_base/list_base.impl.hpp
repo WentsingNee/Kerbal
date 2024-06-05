@@ -13,6 +13,7 @@
 #define KERBAL_CONTAINER_DETAIL_LIST_BASE_LIST_BASE_IMPL_HPP
 
 #include <kerbal/algorithm/swap.hpp>
+#include <kerbal/assign/assign_list.hpp>
 #include <kerbal/assign/generic_assign.hpp>
 #include <kerbal/compare/basic_compare.hpp>
 #include <kerbal/compatibility/constexpr.hpp>
@@ -47,6 +48,10 @@
 
 #include <functional>
 #include <typeinfo>
+
+#if __cplusplus >= 201103L
+#	include <initializer_list>
+#endif
 
 #if __cplusplus >= 201703L
 #	if __has_include(<memory_resource>)
@@ -543,6 +548,47 @@ namespace kerbal
 				k_insert_using_allocator(alloc, this->cend(), first, last);
 			}
 
+#	if __cplusplus >= 201103L
+
+			template <typename T>
+			template <typename NodeAllocator>
+			KERBAL_CONSTEXPR20
+			list_type_only<T>::
+			list_type_only(
+				NodeAllocator & alloc,
+				std::initializer_list<value_type> ilist
+			) :
+				list_type_only(alloc, ilist.begin(), ilist.end())
+			{
+			}
+
+#	else
+
+			template <typename T>
+			template <typename NodeAllocator>
+			list_type_only<T>::
+			list_type_only(
+				NodeAllocator & alloc,
+				const kerbal::assign::assign_list<void> & ilist
+			) :
+				super(init_list_node_ptr_to_self_tag())
+			{
+			}
+
+			template <typename T>
+			template <typename NodeAllocator, typename U>
+			list_type_only<T>::
+			list_type_only(
+				NodeAllocator & alloc,
+				const kerbal::assign::assign_list<U> & ilist
+			) :
+				super(init_list_node_ptr_to_self_tag())
+			{
+				k_insert_using_allocator(alloc, this->cend(), ilist.cbegin(), ilist.cend());
+			}
+
+#	endif
+
 			template <typename T>
 			template <typename NodeAllocator>
 			KERBAL_CONSTEXPR20
@@ -825,6 +871,49 @@ namespace kerbal
 				}
 				k_erase_using_allocator(alloc, it, end);
 			}
+
+#	if __cplusplus >= 201103L
+
+			template <typename T>
+			template <typename NodeAllocator>
+			KERBAL_CONSTEXPR20
+			void
+			list_type_only<T>::
+			k_assign_using_allocator(
+				NodeAllocator & alloc,
+				std::initializer_list<value_type> ilist
+			)
+			{
+				this->k_assign_using_allocator(alloc, ilist.begin(), ilist.end());
+			}
+
+#	else
+
+			template <typename T>
+			template <typename NodeAllocator>
+			void
+			list_type_only<T>::
+			k_assign_using_allocator(
+				NodeAllocator & alloc,
+				const kerbal::assign::assign_list<void> & ilist
+			)
+			{
+				this->k_clear_using_allocator(alloc);
+			}
+
+			template <typename T>
+			template <typename NodeAllocator, typename U>
+			void
+			list_type_only<T>::
+			k_assign_using_allocator(
+				NodeAllocator & alloc,
+				const kerbal::assign::assign_list<U> & ilist
+			)
+			{
+				this->k_assign_using_allocator(alloc, ilist.cbegin(), ilist.cend());
+			}
+
+#	endif
 
 
 		//===================
@@ -1174,6 +1263,55 @@ namespace kerbal
 				list_type_unrelated::k_hook_node(pos, chain.start, chain.back);
 				return iterator(chain.start);
 			}
+
+#	if __cplusplus >= 201103L
+
+			template <typename T>
+			template <typename NodeAllocator>
+			KERBAL_CONSTEXPR20
+			typename
+			list_type_only<T>::iterator
+			list_type_only<T>::
+			k_insert_using_allocator(
+				NodeAllocator & alloc,
+				const_iterator pos,
+				std::initializer_list<value_type> ilist
+			)
+			{
+				return k_insert_using_allocator(alloc, pos, ilist.begin(), ilist.end());
+			}
+
+#	else
+
+			template <typename T>
+			template <typename NodeAllocator>
+			typename
+			list_type_only<T>::iterator
+			list_type_only<T>::
+			k_insert_using_allocator(
+				NodeAllocator & alloc,
+				const_iterator pos,
+				const kerbal::assign::assign_list<void> & ilist
+			)
+			{
+				return pos.cast_to_mutable();
+			}
+
+			template <typename T>
+			template <typename NodeAllocator, typename U>
+			typename
+			list_type_only<T>::iterator
+			list_type_only<T>::
+			k_insert_using_allocator(
+				NodeAllocator & alloc,
+				const_iterator pos,
+				const kerbal::assign::assign_list<U> & ilist
+			)
+			{
+				return k_insert_using_allocator(alloc, pos, ilist.cbegin(), ilist.cend());
+			}
+
+#	endif
 
 #		if __cplusplus >= 201103L
 

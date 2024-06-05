@@ -13,6 +13,7 @@
 #define KERBAL_CONTAINER_DETAIL_FORWARD_LIST_BASE_FORWARD_LIST_BASE_IMPL_HPP
 
 #include <kerbal/algorithm/swap.hpp>
+#include <kerbal/assign/assign_list.hpp>
 #include <kerbal/assign/generic_assign.hpp>
 #include <kerbal/compare/basic_compare.hpp>
 #include <kerbal/compatibility/constexpr.hpp>
@@ -40,6 +41,10 @@
 #if !KERBAL_HAS_EXCEPTIONS_SUPPORT
 #	include <kerbal/memory/bad_alloc.hpp>
 #	include <kerbal/utility/throw_this_exception.hpp>
+#endif
+
+#if __cplusplus >= 201103L
+#	include <initializer_list>
 #endif
 
 #include <climits> // CHAR_BIT
@@ -551,6 +556,48 @@ namespace kerbal
 				k_insert_after_using_allocator(alloc, this->cbefore_begin(), first, last);
 			}
 
+
+#	if __cplusplus >= 201103L
+
+			template <typename T>
+			template <typename NodeAllocator>
+			KERBAL_CONSTEXPR20
+			fl_type_only<T>::
+			fl_type_only(
+				NodeAllocator & alloc,
+				std::initializer_list<value_type> ilist
+			) :
+				fl_type_only(alloc, ilist.begin(), ilist.end())
+			{
+			}
+
+#	else
+
+			template <typename T>
+			template <typename NodeAllocator>
+			fl_type_only<T>::
+			fl_type_only(
+				NodeAllocator & alloc,
+				const kerbal::assign::assign_list<void> & ilist
+			) :
+				fl_type_unrelated()
+			{
+			}
+
+			template <typename T>
+			template <typename NodeAllocator, typename U>
+			fl_type_only<T>::
+			fl_type_only(
+				NodeAllocator & alloc,
+				const kerbal::assign::assign_list<U> & ilist
+			) :
+				fl_type_unrelated()
+			{
+				k_insert_after_using_allocator(alloc, this->cbefore_begin(), ilist.cbegin(), ilist.cend());
+			}
+
+#	endif
+
 			template <typename T>
 			template <typename NodeAllocator>
 			KERBAL_CONSTEXPR20
@@ -829,6 +876,49 @@ namespace kerbal
 				}
 				k_erase_after_using_allocator(alloc, before_it, cend);
 			}
+
+#	if __cplusplus >= 201103L
+
+			template <typename T>
+			template <typename NodeAllocator>
+			KERBAL_CONSTEXPR20
+			void
+			fl_type_only<T>::
+			k_assign_using_allocator(
+				NodeAllocator & alloc,
+				std::initializer_list<value_type> ilist
+			)
+			{
+				this->k_assign_using_allocator(alloc, ilist.begin(), ilist.end());
+			}
+
+#	else
+
+			template <typename T>
+			template <typename NodeAllocator>
+			void
+			fl_type_only<T>::
+			k_assign_using_allocator(
+				NodeAllocator & alloc,
+				const kerbal::assign::assign_list<void> & ilist
+			)
+			{
+				this->k_clear_using_allocator(alloc);
+			}
+
+			template <typename T>
+			template <typename NodeAllocator, typename U>
+			void
+			fl_type_only<T>::
+			k_assign_using_allocator(
+				NodeAllocator & alloc,
+				const kerbal::assign::assign_list<U> & ilist
+			)
+			{
+				this->k_assign_using_allocator(alloc, ilist.cbegin(), ilist.cend());
+			}
+
+#	endif
 
 
 		//===================
@@ -1271,6 +1361,55 @@ namespace kerbal
 				fl_type_unrelated::k_hook_node_after(before_pos, chain.start, chain.back);
 				return iterator(chain.back);
 			}
+
+#	if __cplusplus >= 201103L
+
+			template <typename T>
+			template <typename NodeAllocator>
+			KERBAL_CONSTEXPR20
+			typename
+			fl_type_only<T>::iterator
+			fl_type_only<T>::
+			k_insert_after_using_allocator(
+				NodeAllocator & alloc,
+				const_iterator before_pos,
+				std::initializer_list<value_type> ilist
+			)
+			{
+				return k_insert_after_using_allocator(alloc, before_pos, ilist.begin(), ilist.end());
+			}
+
+#	else
+
+			template <typename T>
+			template <typename NodeAllocator>
+			typename
+			fl_type_only<T>::iterator
+			fl_type_only<T>::
+			k_insert_after_using_allocator(
+				NodeAllocator & alloc,
+				const_iterator before_pos,
+				const kerbal::assign::assign_list<void> & ilist
+			)
+			{
+				return before_pos.cast_to_mutable();
+			}
+
+			template <typename T>
+			template <typename NodeAllocator, typename U>
+			typename
+			fl_type_only<T>::iterator
+			fl_type_only<T>::
+			k_insert_after_using_allocator(
+				NodeAllocator & alloc,
+				const_iterator before_pos,
+				const kerbal::assign::assign_list<U> & ilist
+			)
+			{
+				return k_insert_after_using_allocator(alloc, before_pos, ilist.cbegin(), ilist.cend());
+			}
+
+#	endif
 
 #		if __cplusplus >= 201103L
 
