@@ -307,6 +307,34 @@ namespace kerbal
 				KERBAL_CONSTEXPR20
 				hash_table(hash_table const & src, kerbal::container::unique_tag_t);
 
+#		if __cplusplus >=  201103L
+
+				KERBAL_CONSTEXPR20
+				hash_table(
+					std::initializer_list<value_type> ilist
+				);
+
+				KERBAL_CONSTEXPR20
+				hash_table(
+					kerbal::container::unique_tag_t,
+					std::initializer_list<value_type> ilist
+				);
+
+#		else
+
+				template <typename U>
+				hash_table(
+					kerbal::assign::assign_list<U> const & ilist
+				);
+
+				template <typename U>
+				hash_table(
+					kerbal::container::unique_tag_t,
+					kerbal::assign::assign_list<U> const & ilist
+				);
+
+#		endif
+
 				KERBAL_CONSTEXPR20
 				~hash_table();
 
@@ -350,21 +378,45 @@ namespace kerbal
 				>::type
 				assign(InputIterator first, InputIterator last);
 
+				template <typename InputIterator>
+				KERBAL_CONSTEXPR20
+				typename kerbal::type_traits::enable_if<
+					kerbal::iterator::is_input_compatible_iterator<InputIterator>::value
+				>::type
+				assign_unique(InputIterator first, InputIterator last);
+
 				KERBAL_CONSTEXPR20
 				void assign(hash_table const & src);
 
+				KERBAL_CONSTEXPR20
+				void assign_unique(hash_table const & src);
+
 #		if __cplusplus >= 201103L
+
 				KERBAL_CONSTEXPR20
 				void assign(hash_table && src);
+
+				KERBAL_CONSTEXPR20
+				void assign_unique(hash_table && src);
+
 #		endif
 
 #		if __cplusplus >= 201103L
+
 				KERBAL_CONSTEXPR20
 				void assign(std::initializer_list<value_type> ilist);
-#		else
-				template <typename U>
+
 				KERBAL_CONSTEXPR20
+				void assign_unique(std::initializer_list<value_type> ilist);
+
+#		else
+
+				template <typename U>
 				void assign(kerbal::assign::assign_list<U> const & ilist);
+
+				template <typename U>
+				void assign_unique(kerbal::assign::assign_list<U> const & ilist);
+
 #		endif
 
 			//===================
@@ -449,10 +501,24 @@ namespace kerbal
 			public:
 
 				KERBAL_CONSTEXPR20
+				bool contains(key_type const & key) const;
+
+				KERBAL_CONSTEXPR20
 				iterator find(key_type const & key);
 
 				KERBAL_CONSTEXPR20
 				const_iterator find(key_type const & key) const;
+
+				KERBAL_CONSTEXPR20
+				kerbal::utility::compressed_pair<iterator, iterator>
+				equal_range(key_type const & key);
+
+				KERBAL_CONSTEXPR20
+				kerbal::utility::compressed_pair<const_iterator, const_iterator>
+				equal_range(key_type const & key) const;
+
+				KERBAL_CONSTEXPR20
+				size_type count(key_type const & key) const;
 
 			//===================
 			// Insert
@@ -470,6 +536,7 @@ namespace kerbal
 				unique_insert_r
 				emplace_unique(Args && ... args);
 
+/*
 				template <typename ... Args >
 				KERBAL_CONSTEXPR20
 				iterator emplace_hint(const_iterator hint, Args && ... args);
@@ -478,6 +545,7 @@ namespace kerbal
 				KERBAL_CONSTEXPR20
 				unique_insert_r
 				emplace_unique_hint(const_iterator hint, Args && ... args);
+*/
 
 #		else
 
@@ -520,16 +588,22 @@ namespace kerbal
 				KERBAL_CONSTEXPR20
 				iterator insert(const_reference src);
 
+/*
 				KERBAL_CONSTEXPR20
 				iterator insert(const_iterator hint, const_reference src);
+*/
 
 
 #		if __cplusplus >= 201103L
+
 				KERBAL_CONSTEXPR20
 				iterator insert(rvalue_reference src);
 
+/*
 				KERBAL_CONSTEXPR20
 				iterator insert(const_iterator hint, rvalue_reference src);
+*/
+
 #		endif
 
 				template <typename InputIterator>
@@ -544,7 +618,7 @@ namespace kerbal
 				void insert(std::initializer_list<value_type> ilist);
 #		else
 				template <typename U>
-				void insert(const kerbal::assign::assign_list<U> & ilist);
+				void insert(kerbal::assign::assign_list<U> const & ilist);
 #		endif
 
 
@@ -573,8 +647,8 @@ namespace kerbal
 				KERBAL_CONSTEXPR20
 				void insert_unique(std::initializer_list<value_type> ilist);
 #		else
-				template <typename Up>
-				void insert_unique(const kerbal::assign::assign_list<Up> & ilist);
+				template <typename U>
+				void insert_unique(const kerbal::assign::assign_list<U> & ilist);
 #		endif
 
 
@@ -615,24 +689,10 @@ namespace kerbal
 				using hash_table_base::max_load_factor;
 
 				KERBAL_CONSTEXPR20
-				void reserve(size_type new_size)
-				{
-					this->hash_table_base::reserve_using_allocator(
-						this->extract(), this->hash(),
-						this->bucket_alloc(),
-						new_size
-					);
-				}
+				void reserve(size_type new_size);
 
 				KERBAL_CONSTEXPR20
-				void rehash(size_type new_bucket_count)
-				{
-					this->hash_table_base::rehash(
-						this->extract(), this->hash(),
-						this->bucket_alloc(),
-						new_bucket_count
-					);
-				}
+				void rehash(size_type new_bucket_count);
 
 		};
 

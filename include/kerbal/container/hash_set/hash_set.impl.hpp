@@ -15,7 +15,7 @@
 #include <kerbal/assign/assign_list.hpp>
 #include <kerbal/compatibility/constexpr.hpp>
 #include <kerbal/compatibility/move.hpp>
-#include <kerbal/container/hash_set/hash_set.decl.hpp>
+#include <kerbal/container/associative_container_facility/unique_tag_t.hpp>
 #include <kerbal/iterator/iterator_traits.hpp>
 #include <kerbal/type_traits/enable_if.hpp>
 #include <kerbal/utility/compressed_pair.hpp>
@@ -26,6 +26,7 @@
 #	include <kerbal/macro/ppexpand.hpp>
 #endif
 
+#include <kerbal/container/hash_set/hash_set.decl.hpp>
 #include <kerbal/container/hash_table/hash_table.impl.hpp>
 
 #if __cplusplus >= 201103L
@@ -59,11 +60,124 @@ namespace kerbal
 			typename NodeAllocator, typename BucketAllocator
 		>
 		KERBAL_CONSTEXPR20
+		hash_set<T, Hash, KeyEqual, NodeAllocator, BucketAllocator>::
+		hash_set(
+			NodeAllocator const & node_alloc, BucketAllocator const & bucket_alloc
+		) :
+			hash_table(
+				node_alloc, bucket_alloc
+			)
+		{
+		}
+
+		template <
+			typename T,
+			typename Hash, typename KeyEqual,
+			typename NodeAllocator, typename BucketAllocator
+		>
+		KERBAL_CONSTEXPR20
+		hash_set<T, Hash, KeyEqual, NodeAllocator, BucketAllocator>::
+		hash_set(
+			KeyEqual const & ke
+		) :
+			hash_table(
+				ke
+			)
+		{
+		}
+
+		template <
+			typename T,
+			typename Hash, typename KeyEqual,
+			typename NodeAllocator, typename BucketAllocator
+		>
+		KERBAL_CONSTEXPR20
+		hash_set<T, Hash, KeyEqual, NodeAllocator, BucketAllocator>::
+		hash_set(
+			KeyEqual const & ke,
+			NodeAllocator const & node_alloc, BucketAllocator const & bucket_alloc
+		) :
+			hash_table(
+				ke,
+				node_alloc, bucket_alloc
+			)
+		{
+		}
+
+		template <
+			typename T,
+			typename Hash, typename KeyEqual,
+			typename NodeAllocator, typename BucketAllocator
+		>
+		template <typename InputIterator>
+		KERBAL_CONSTEXPR20
+		hash_set<T, Hash, KeyEqual, NodeAllocator, BucketAllocator>::
+		hash_set(
+			InputIterator first, InputIterator last,
+			typename kerbal::type_traits::enable_if<
+				kerbal::iterator::is_input_compatible_iterator<InputIterator>::value,
+				int
+			>::type
+		) :
+			hash_table(
+				kerbal::container::unique_tag_t(),
+				first, last
+			)
+		{
+		}
+
+#	if __cplusplus >= 201103L
+
+		template <
+			typename T,
+			typename Hash, typename KeyEqual,
+			typename NodeAllocator, typename BucketAllocator
+		>
+		KERBAL_CONSTEXPR20
+		hash_set<T, Hash, KeyEqual, NodeAllocator, BucketAllocator>::
+		hash_set(
+			std::initializer_list<value_type> ilist
+		) :
+			hash_table(
+				kerbal::container::unique_tag_t(),
+				ilist
+			)
+		{
+		}
+
+#	else
+
+		template <
+			typename T,
+			typename Hash, typename KeyEqual,
+			typename NodeAllocator, typename BucketAllocator
+		>
+		template <typename U>
+		KERBAL_CONSTEXPR20
+		hash_set<T, Hash, KeyEqual, NodeAllocator, BucketAllocator>::
+		hash_set(
+			kerbal::assign::assign_list<U> const & ilist
+		) :
+			hash_table(
+				kerbal::container::unique_tag_t(),
+				ilist
+			)
+		{
+		}
+
+#	endif
+
+		template <
+			typename T,
+			typename Hash, typename KeyEqual,
+			typename NodeAllocator, typename BucketAllocator
+		>
+		KERBAL_CONSTEXPR20
 		hash_set<T, Hash, KeyEqual, NodeAllocator, BucketAllocator> &
 		hash_set<T, Hash, KeyEqual, NodeAllocator, BucketAllocator>::
 		operator=(hash_set const & src)
 		{
-			this->assign(src);
+			this->assign_unique(src);
 			return *this;
 		}
 
@@ -79,7 +193,7 @@ namespace kerbal
 		hash_set<T, Hash, KeyEqual, NodeAllocator, BucketAllocator>::
 		operator=(hash_set && src)
 		{
-			this->assign(kerbal::compatibility::move(src));
+			this->assign_unique(kerbal::compatibility::move(src));
 			return *this;
 		}
 
@@ -97,7 +211,7 @@ namespace kerbal
 		hash_set<T, Hash, KeyEqual, NodeAllocator, BucketAllocator>::
 		operator=(std::initializer_list<value_type> ilist)
 		{
-			this->assign(ilist);
+			this->assign_unique(ilist);
 			return *this;
 		}
 
@@ -113,7 +227,7 @@ namespace kerbal
 		hash_set<T, Hash, KeyEqual, NodeAllocator, BucketAllocator>::
 		operator=(kerbal::assign::assign_list<U> const & ilist)
 		{
-			this->assign(ilist);
+			this->assign_unique(ilist);
 			return *this;
 		}
 
