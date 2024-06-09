@@ -119,6 +119,25 @@ namespace kerbal
 					size_type				k_size;
 					float					k_max_load_factor;
 
+				private:
+
+					template <typename Hash>
+					KERBAL_CONSTEXPR
+					static
+					int k_hash_check(Hash & hash) KERBAL_NOEXCEPT
+					{
+						KERBAL_STATIC_ASSERT(
+							(
+								kerbal::type_traits::is_same<
+									typename Hash::result_type,
+									hash_result_type
+								>::value
+							),
+							"should same"
+						);
+						return 0;
+					}
+
 			//===================
 			// Constructor/Destructor
 
@@ -131,6 +150,35 @@ namespace kerbal
 					template <typename BucketAlloc>
 					KERBAL_CONSTEXPR14
 					hash_table_base(BucketAlloc & bucket_alloc, size_type bucket_count);
+
+
+				private:
+
+					template <
+						typename Extract, typename Hash, typename KeyEqual,
+						typename NodeAlloc, typename BucketAlloc,
+						typename InputIterator
+					>
+					KERBAL_CONSTEXPR14
+					void k_cnstrct_by_range(
+						Extract & extract, Hash & hash, KeyEqual & key_equal,
+						NodeAlloc & node_alloc, BucketAlloc & bucket_alloc,
+						InputIterator first, InputIterator last
+					);
+
+					template <
+						typename Extract, typename Hash, typename KeyEqual,
+						typename NodeAlloc, typename BucketAlloc,
+						typename InputIterator
+					>
+					KERBAL_CONSTEXPR14
+					void k_cnstrct_unique_by_range(
+						Extract & extract, Hash & hash, KeyEqual & key_equal,
+						NodeAlloc & node_alloc, BucketAlloc & bucket_alloc,
+						InputIterator first, InputIterator last
+					);
+
+				protected:
 
 					template <
 						typename Extract, typename Hash, typename KeyEqual,
@@ -156,6 +204,81 @@ namespace kerbal
 						NodeAlloc & node_alloc, BucketAlloc & bucket_alloc,
 						InputIterator first, InputIterator last
 					);
+
+
+#			if __cplusplus >=  201103L
+
+					template <
+						typename Extract, typename Hash, typename KeyEqual,
+						typename NodeAlloc, typename BucketAlloc
+					>
+					KERBAL_CONSTEXPR14
+					hash_table_base(
+						Extract & extract, Hash & hash, KeyEqual & key_equal,
+						NodeAlloc & node_alloc, BucketAlloc & bucket_alloc,
+						std::initializer_list<value_type> ilist
+					);
+
+					template <
+						typename Extract, typename Hash, typename KeyEqual,
+						typename NodeAlloc, typename BucketAlloc
+					>
+					KERBAL_CONSTEXPR14
+					hash_table_base(
+						kerbal::container::unique_tag_t,
+						Extract & extract, Hash & hash, KeyEqual & key_equal,
+						NodeAlloc & node_alloc, BucketAlloc & bucket_alloc,
+						std::initializer_list<value_type> ilist
+					);
+
+#			else
+
+					template <
+						typename Extract, typename Hash, typename KeyEqual,
+						typename NodeAlloc, typename BucketAlloc
+					>
+					hash_table_base(
+						Extract & extract, Hash & hash, KeyEqual & key_equal,
+						NodeAlloc & node_alloc, BucketAlloc & bucket_alloc,
+						kerbal::assign::assign_list<void> const & ilist
+					);
+
+					template <
+						typename Extract, typename Hash, typename KeyEqual,
+						typename NodeAlloc, typename BucketAlloc,
+						typename U
+					>
+					hash_table_base(
+						Extract & extract, Hash & hash, KeyEqual & key_equal,
+						NodeAlloc & node_alloc, BucketAlloc & bucket_alloc,
+						kerbal::assign::assign_list<U> const & ilist
+					);
+
+					template <
+						typename Extract, typename Hash, typename KeyEqual,
+						typename NodeAlloc, typename BucketAlloc
+					>
+					hash_table_base(
+						kerbal::container::unique_tag_t,
+						Extract & extract, Hash & hash, KeyEqual & key_equal,
+						NodeAlloc & node_alloc, BucketAlloc & bucket_alloc,
+						kerbal::assign::assign_list<void> const & ilist
+					);
+
+					template <
+						typename Extract, typename Hash, typename KeyEqual,
+						typename NodeAlloc, typename BucketAlloc,
+						typename U
+					>
+					hash_table_base(
+						kerbal::container::unique_tag_t,
+						Extract & extract, Hash & hash, KeyEqual & key_equal,
+						NodeAlloc & node_alloc, BucketAlloc & bucket_alloc,
+						kerbal::assign::assign_list<U> const & ilist
+					);
+
+#			endif
+
 
 					template <typename NodeAlloc, typename BucketAlloc>
 					KERBAL_CONSTEXPR14
@@ -300,13 +423,6 @@ namespace kerbal
 
 					template <typename Extract, typename Hash, typename KeyEqual>
 					KERBAL_CONSTEXPR14
-					size_type count(
-						Extract & extract, Hash & hash, KeyEqual & key_equal,
-						typename Extract::key_type const & key
-					) const;
-
-					template <typename Extract, typename Hash, typename KeyEqual>
-					KERBAL_CONSTEXPR14
 					kerbal::utility::compressed_pair<iterator, iterator>
 					equal_range(
 						Extract & extract, Hash & hash, KeyEqual & key_equal,
@@ -317,6 +433,13 @@ namespace kerbal
 					KERBAL_CONSTEXPR14
 					kerbal::utility::compressed_pair<const_iterator, const_iterator>
 					equal_range(
+						Extract & extract, Hash & hash, KeyEqual & key_equal,
+						typename Extract::key_type const & key
+					) const;
+
+					template <typename Extract, typename Hash, typename KeyEqual>
+					KERBAL_CONSTEXPR14
+					size_type count(
 						Extract & extract, Hash & hash, KeyEqual & key_equal,
 						typename Extract::key_type const & key
 					) const;

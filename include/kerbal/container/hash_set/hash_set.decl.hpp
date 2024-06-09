@@ -125,21 +125,22 @@ namespace kerbal
 				template <typename InputIterator>
 				KERBAL_CONSTEXPR20
 				hash_set(
-					InputIterator first, InputIterator last
+					InputIterator first, InputIterator last,
+					typename kerbal::type_traits::enable_if<
+						kerbal::iterator::is_input_compatible_iterator<InputIterator>::value,
+						int
+					>::type = 0
 				);
 
 				template <typename InputIterator>
 				KERBAL_CONSTEXPR20
 				hash_set(
 					InputIterator first, InputIterator last,
-					NodeAllocator const & node_alloc, BucketAllocator const & bucket_alloc
-				);
-
-				template <typename InputIterator>
-				KERBAL_CONSTEXPR20
-				hash_set(
-					InputIterator first, InputIterator last,
-					KeyEqual const & ke
+					NodeAllocator const & node_alloc, BucketAllocator const & bucket_alloc,
+					typename kerbal::type_traits::enable_if<
+						kerbal::iterator::is_input_compatible_iterator<InputIterator>::value,
+						int
+					>::type = 0
 				);
 
 				template <typename InputIterator>
@@ -147,7 +148,22 @@ namespace kerbal
 				hash_set(
 					InputIterator first, InputIterator last,
 					KeyEqual const & ke,
-					NodeAllocator const & node_alloc, BucketAllocator const & bucket_alloc
+					typename kerbal::type_traits::enable_if<
+						kerbal::iterator::is_input_compatible_iterator<InputIterator>::value,
+						int
+					>::type = 0
+				);
+
+				template <typename InputIterator>
+				KERBAL_CONSTEXPR20
+				hash_set(
+					InputIterator first, InputIterator last,
+					KeyEqual const & ke,
+					NodeAllocator const & node_alloc, BucketAllocator const & bucket_alloc,
+					typename kerbal::type_traits::enable_if<
+						kerbal::iterator::is_input_compatible_iterator<InputIterator>::value,
+						int
+					>::type = 0
 				);
 
 
@@ -352,6 +368,8 @@ namespace kerbal
 				>::type
 				equal_range(const Key & key) const;
 */
+
+				using hash_table::count;
 
 			//===================
 			// insert
