@@ -46,9 +46,9 @@ namespace kerbal
 
 				public:
 					typedef typename kerbal::type_traits::conditional<
-							cache_hash_result::value,
-							hash_result_type,
-							not_cache_hash_result_wrapper<hash_result_type>
+						cache_hash_result::value,
+						hash_result_type,
+						not_cache_hash_result_wrapper<hash_result_type>
 					>::type hash_result_cache_policy;
 
 					typedef hash_table_node<Entity, hash_result_cache_policy> node_type;
@@ -73,8 +73,8 @@ namespace kerbal
 
 				public:
 					KERBAL_CONSTEXPR
-					hash_table_node_type_unrelated() KERBAL_NOEXCEPT
-							: k_next(NULL)
+					hash_table_node_type_unrelated() KERBAL_NOEXCEPT :
+						k_next(NULL)
 					{
 					}
 			};
@@ -83,8 +83,8 @@ namespace kerbal
 
 			template <typename Entity>
 			class hash_table_node_type_only:
-					protected hash_table_node_type_unrelated,
-					protected kerbal::utility::member_compress_helper<Entity>
+				protected hash_table_node_type_unrelated,
+				protected kerbal::utility::member_compress_helper<Entity>
 			{
 				private:
 					typedef hash_table_node_type_unrelated super;
@@ -103,8 +103,9 @@ namespace kerbal
 #		if __cplusplus >= 201103L
 					template <typename ... Args>
 					KERBAL_CONSTEXPR
-					explicit hash_table_node_type_only(kerbal::utility::in_place_t in_place, Args && ... args)
-							: data(in_place, kerbal::utility::forward<Args>(args)...)
+					explicit
+					hash_table_node_type_only(kerbal::utility::in_place_t in_place, Args && ... args):
+						data(in_place, kerbal::utility::forward<Args>(args)...)
 					{
 					}
 #		else
@@ -117,10 +118,14 @@ namespace kerbal
 #				define ARGS_USE(i) KERBAL_MACRO_CONCAT(arg, i)
 #				define FBODY(i) \
 					KERBAL_OPT_PPEXPAND_WITH_COMMA_N(THEAD_NOT_EMPTY, EMPTY, TARGS_DECL, i) \
-					explicit hash_table_node_type_only(kerbal::utility::in_place_t in_place KERBAL_OPT_PPEXPAND_WITH_COMMA_N(LEFT_JOIN_COMMA, EMPTY, ARGS_DECL, i)) \
-							: data(in_place KERBAL_OPT_PPEXPAND_WITH_COMMA_N(LEFT_JOIN_COMMA, EMPTY, ARGS_USE, i)) \
+					explicit \
+					hash_table_node_type_only( \
+						kerbal::utility::in_place_t in_place \
+						KERBAL_OPT_PPEXPAND_WITH_COMMA_N(LEFT_JOIN_COMMA, EMPTY, ARGS_DECL, i) \
+					) : \
+						data(in_place KERBAL_OPT_PPEXPAND_WITH_COMMA_N(LEFT_JOIN_COMMA, EMPTY, ARGS_USE, i)) \
 					{ \
-					}
+					} \
 
 					KERBAL_PPEXPAND_N(FBODY, KERBAL_PPEXPAND_EMPTY_SEPARATOR, 0)
 					KERBAL_PPEXPAND_N(FBODY, KERBAL_PPEXPAND_EMPTY_SEPARATOR, 20)
@@ -139,15 +144,12 @@ namespace kerbal
 
 			template <typename Entity, typename HashCachePolicy>
 			class hash_table_node:
-					protected hash_table_node_type_only<Entity>
+				protected hash_table_node_type_only<Entity>
 			{
 				private:
 					typedef hash_table_node_type_only<Entity> super;
 
-					template <typename Entity2,
-							typename Extract,
-							typename HashCachePolicy2
-					>
+					template <typename Entity2, typename Extract, typename HashCachePolicy2>
 					friend class kerbal::container::detail::hash_table_base;
 
 				protected:
@@ -170,10 +172,14 @@ namespace kerbal
 #				define ARGS_USE(i) KERBAL_MACRO_CONCAT(arg, i)
 #				define FBODY(i) \
 					KERBAL_OPT_PPEXPAND_WITH_COMMA_N(THEAD_NOT_EMPTY, EMPTY, TARGS_DECL, i) \
-					explicit hash_table_node(kerbal::utility::in_place_t in_place KERBAL_OPT_PPEXPAND_WITH_COMMA_N(LEFT_JOIN_COMMA, EMPTY, ARGS_DECL, i)) \
-							: super(in_place KERBAL_OPT_PPEXPAND_WITH_COMMA_N(LEFT_JOIN_COMMA, EMPTY, ARGS_USE, i)) \
+					explicit \
+					hash_table_node( \
+						kerbal::utility::in_place_t in_place \
+						KERBAL_OPT_PPEXPAND_WITH_COMMA_N(LEFT_JOIN_COMMA, EMPTY, ARGS_DECL, i) \
+					) : \
+						super(in_place KERBAL_OPT_PPEXPAND_WITH_COMMA_N(LEFT_JOIN_COMMA, EMPTY, ARGS_USE, i)) \
 					{ \
-					}
+					} \
 
 					KERBAL_PPEXPAND_N(FBODY, KERBAL_PPEXPAND_EMPTY_SEPARATOR, 0)
 					KERBAL_PPEXPAND_N(FBODY, KERBAL_PPEXPAND_EMPTY_SEPARATOR, 20)
@@ -198,7 +204,7 @@ namespace kerbal
 
 					KERBAL_CONSTEXPR14
 					static
-					const hash_table_node *
+					hash_table_node const *
 					reinterpret_as(const hash_table_node_type_unrelated * self) KERBAL_NOEXCEPT
 					{
 						return static_cast<const hash_table_node *>(self);
@@ -212,16 +218,25 @@ namespace kerbal
 
 					template <typename Extract, typename Hash>
 					KERBAL_CONSTEXPR
-					hash_result_type get_cached_hash_code(Extract & /*extract*/, const Hash & /*hash*/) const KERBAL_NOEXCEPT
+					hash_result_type
+					get_cached_hash_code(Extract & /*extract*/, const Hash & /*hash*/) const KERBAL_NOEXCEPT
 					{
-						KERBAL_STATIC_ASSERT((kerbal::type_traits::is_same<typename Hash::result_type, hash_result_type>::value), "hash result type not matched!");
+						KERBAL_STATIC_ASSERT(
+							(
+								kerbal::type_traits::is_same<
+									typename Hash::result_type,
+									hash_result_type
+								>::value
+							),
+							"hash result type not matched!"
+						);
 						return this->k_hash_code;
 					}
 			};
 
 			template <typename Entity, typename HashResult>
 			class hash_table_node<Entity, not_cache_hash_result_wrapper<HashResult> >:
-					protected hash_table_node_type_only<Entity>
+				protected hash_table_node_type_only<Entity>
 			{
 				private:
 					typedef hash_table_node_type_only<Entity> super;
@@ -247,10 +262,14 @@ namespace kerbal
 #				define ARGS_USE(i) KERBAL_MACRO_CONCAT(arg, i)
 #				define FBODY(i) \
 					KERBAL_OPT_PPEXPAND_WITH_COMMA_N(THEAD_NOT_EMPTY, EMPTY, TARGS_DECL, i) \
-					explicit hash_table_node(kerbal::utility::in_place_t in_place KERBAL_OPT_PPEXPAND_WITH_COMMA_N(LEFT_JOIN_COMMA, EMPTY, ARGS_DECL, i)) \
-							: super(in_place KERBAL_OPT_PPEXPAND_WITH_COMMA_N(LEFT_JOIN_COMMA, EMPTY, ARGS_USE, i)) \
+					explicit \
+					hash_table_node( \
+						kerbal::utility::in_place_t in_place \
+						KERBAL_OPT_PPEXPAND_WITH_COMMA_N(LEFT_JOIN_COMMA, EMPTY, ARGS_DECL, i) \
+					) : \
+						super(in_place KERBAL_OPT_PPEXPAND_WITH_COMMA_N(LEFT_JOIN_COMMA, EMPTY, ARGS_USE, i)) \
 					{ \
-					}
+					} \
 
 					KERBAL_PPEXPAND_N(FBODY, KERBAL_PPEXPAND_EMPTY_SEPARATOR, 0)
 					KERBAL_PPEXPAND_N(FBODY, KERBAL_PPEXPAND_EMPTY_SEPARATOR, 20)
@@ -275,7 +294,7 @@ namespace kerbal
 
 					KERBAL_CONSTEXPR14
 					static
-					const hash_table_node *
+					hash_table_node const *
 					reinterpret_as(const hash_table_node_type_unrelated * self) KERBAL_NOEXCEPT
 					{
 						return static_cast<const hash_table_node *>(self);
@@ -288,9 +307,18 @@ namespace kerbal
 
 					template <typename Extract, typename Hash>
 					KERBAL_CONSTEXPR
-					hash_result_type get_cached_hash_code(Extract & extract, Hash & hash) const
+					hash_result_type
+					get_cached_hash_code(Extract & extract, Hash & hash) const
 					{
-						KERBAL_STATIC_ASSERT((kerbal::type_traits::is_same<typename Hash::result_type, hash_result_type>::value), "hash result type not matched!");
+						KERBAL_STATIC_ASSERT(
+							(
+								kerbal::type_traits::is_same<
+									typename Hash::result_type,
+									hash_result_type
+								>::value
+							),
+							"hash result type not matched!"
+						);
 						return hash(extract(this->member()));
 					}
 			};
