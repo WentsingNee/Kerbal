@@ -40,7 +40,11 @@ namespace kerbal
 	namespace container
 	{
 
-		template <typename T, typename Hash, typename KeyEqual, typename NodeAllocator, typename BucketAllocator>
+		template <
+			typename T,
+			typename Hash, typename KeyEqual,
+			typename NodeAllocator, typename BucketAllocator
+		>
 		class hash_set :
 			protected kerbal::container::hash_table<
 				T, kerbal::container::identity_extractor<T>, Hash, KeyEqual,
@@ -49,7 +53,8 @@ namespace kerbal
 		{
 			private:
 				typedef kerbal::container::hash_table<
-					T, kerbal::container::identity_extractor<T>, Hash, KeyEqual,
+					T,
+					kerbal::container::identity_extractor<T>, Hash, KeyEqual,
 					NodeAllocator, BucketAllocator
 				>															hash_table;
 
@@ -100,76 +105,129 @@ namespace kerbal
 
 				KERBAL_CONSTEXPR20
 				explicit
-				hash_set(NodeAllocator const & node_alloc, BucketAllocator const & bucket_alloc);
+				hash_set(
+					NodeAllocator const & node_alloc, BucketAllocator const & bucket_alloc
+				);
 
 				KERBAL_CONSTEXPR20
 				explicit
-				hash_set(KeyEqual const & ke);
+				hash_set(
+					KeyEqual const & ke
+				);
 
 				KERBAL_CONSTEXPR20
-				hash_set(KeyEqual const & ke, NodeAllocator const & node_alloc, BucketAllocator const & bucket_alloc);
+				hash_set(
+					KeyEqual const & ke,
+					NodeAllocator const & node_alloc, BucketAllocator const & bucket_alloc
+				);
 
 
 				template <typename InputIterator>
 				KERBAL_CONSTEXPR20
-				hash_set(InputIterator first, InputIterator last);
+				hash_set(
+					InputIterator first, InputIterator last
+				);
 
 				template <typename InputIterator>
 				KERBAL_CONSTEXPR20
-				hash_set(InputIterator first, InputIterator last, NodeAllocator const & node_alloc, BucketAllocator const & bucket_alloc);
+				hash_set(
+					InputIterator first, InputIterator last,
+					NodeAllocator const & node_alloc, BucketAllocator const & bucket_alloc
+				);
 
 				template <typename InputIterator>
 				KERBAL_CONSTEXPR20
-				hash_set(InputIterator first, InputIterator last, KeyEqual const & ke);
+				hash_set(
+					InputIterator first, InputIterator last,
+					KeyEqual const & ke
+				);
 
 				template <typename InputIterator>
 				KERBAL_CONSTEXPR20
-				hash_set(InputIterator first, InputIterator last, KeyEqual const & ke, NodeAllocator const & node_alloc, BucketAllocator const & bucket_alloc);
+				hash_set(
+					InputIterator first, InputIterator last,
+					KeyEqual const & ke,
+					NodeAllocator const & node_alloc, BucketAllocator const & bucket_alloc
+				);
 
 
 #		if __cplusplus >= 201103L
 
 				KERBAL_CONSTEXPR20
-				hash_set(std::initializer_list<value_type> ilist);
+				hash_set(
+					std::initializer_list<value_type> ilist
+				);
 
 				KERBAL_CONSTEXPR20
-				hash_set(std::initializer_list<value_type> ilist, NodeAllocator const & node_alloc, BucketAllocator const & bucket_alloc);
+				hash_set(
+					std::initializer_list<value_type> ilist,
+					NodeAllocator const & node_alloc, BucketAllocator const & bucket_alloc
+				);
 
 				KERBAL_CONSTEXPR20
-				hash_set(std::initializer_list<value_type> ilist, KeyEqual const & ke);
+				hash_set(
+					std::initializer_list<value_type> ilist,
+					KeyEqual const & ke
+				);
 
 				KERBAL_CONSTEXPR20
-				hash_set(std::initializer_list<value_type> ilist, KeyEqual const & ke, NodeAllocator const & node_alloc, BucketAllocator const & bucket_alloc);
+				hash_set(
+					std::initializer_list<value_type> ilist,
+					KeyEqual const & ke,
+					NodeAllocator const & node_alloc, BucketAllocator const & bucket_alloc
+				);
 
 #		else
 
 				template <typename U>
-				hash_set(kerbal::assign::assign_list<U> const & ilist);
+				hash_set(
+					kerbal::assign::assign_list<U> const & ilist
+				);
 
 				template <typename U>
-				hash_set(kerbal::assign::assign_list<U> const & ilist, NodeAllocator const & node_alloc, BucketAllocator const & bucket_alloc);
+				hash_set(
+					kerbal::assign::assign_list<U> const & ilist,
+					NodeAllocator const & node_alloc, BucketAllocator const & bucket_alloc
+				);
 
 				template <typename U>
-				hash_set(kerbal::assign::assign_list<U> const & ilist, KeyEqual const & ke);
+				hash_set(
+					kerbal::assign::assign_list<U> const & ilist,
+					KeyEqual const & ke
+				);
 
 				template <typename U>
-				hash_set(kerbal::assign::assign_list<U> const & ilist, KeyEqual const & ke, NodeAllocator const & node_alloc, BucketAllocator const & bucket_alloc);
+				hash_set(
+					kerbal::assign::assign_list<U> const & ilist,
+					KeyEqual const & ke,
+					NodeAllocator const & node_alloc, BucketAllocator const & bucket_alloc
+				);
 
 #		endif
 
 				KERBAL_CONSTEXPR20
-				hash_set(hash_set const & src);
+				hash_set(
+					hash_set const & src
+				);
 
 				KERBAL_CONSTEXPR20
-				hash_set(hash_set const & src, NodeAllocator const & node_alloc, BucketAllocator const & bucket_alloc);
+				hash_set(
+					hash_set const & src,
+					NodeAllocator const & node_alloc, BucketAllocator const & bucket_alloc
+				);
 
 #		if __cplusplus >= 201103L
 
 				KERBAL_CONSTEXPR20
-				hash_set(hash_set && src);
+				hash_set(
+					hash_set && src
+				);
 
 				KERBAL_CONSTEXPR20
-				hash_set(hash_set && src, NodeAllocator const & node_alloc, BucketAllocator const & bucket_alloc);
+				hash_set(
+					hash_set && src,
+					NodeAllocator const & node_alloc, BucketAllocator const & bucket_alloc
+				);
 
 #		endif
 
@@ -180,13 +238,29 @@ namespace kerbal
 				KERBAL_CONSTEXPR20
 				hash_set & operator=(hash_set const & src);
 
-				KERBAL_CONSTEXPR20
-				void assign(hash_set const & src);
-
 #		if __cplusplus >= 201103L
 
 				KERBAL_CONSTEXPR20
 				hash_set & operator=(hash_set && src);
+
+#		endif
+
+#		if __cplusplus >= 201103L
+
+				KERBAL_CONSTEXPR20
+				hash_set & operator=(std::initializer_list<value_type> ilist);
+
+#		else
+
+				template <typename U>
+				hash_set & operator=(kerbal::assign::assign_list<U> const & ilist);
+
+#		endif
+
+				KERBAL_CONSTEXPR20
+				void assign(hash_set const & src);
+
+#		if __cplusplus >= 201103L
 
 				KERBAL_CONSTEXPR20
 				void assign(hash_set && src);
@@ -203,15 +277,9 @@ namespace kerbal
 #		if __cplusplus >= 201103L
 
 				KERBAL_CONSTEXPR20
-				hash_set & operator=(std::initializer_list<value_type> ilist);
-
-				KERBAL_CONSTEXPR20
 				void assign(std::initializer_list<value_type> ilist);
 
 #		else
-
-				template <typename U>
-				hash_set & operator=(kerbal::assign::assign_list<U> const & ilist);
 
 				template <typename U>
 				void assign(kerbal::assign::assign_list<U> const & ilist);
@@ -292,7 +360,7 @@ namespace kerbal
 
 				template <typename ... Args>
 				KERBAL_CONSTEXPR20
-				unique_insert_r emplace(Args&& ... args);
+				unique_insert_r emplace(Args && ... args);
 
 #		else
 
@@ -303,7 +371,7 @@ namespace kerbal
 #			define ARGS_DECL(i) const KERBAL_MACRO_CONCAT(Arg, i) & KERBAL_MACRO_CONCAT(arg, i)
 #			define FBODY(i) \
 				KERBAL_OPT_PPEXPAND_WITH_COMMA_N(THEAD_NOT_EMPTY, EMPTY, TARGS_DECL, i) \
-				unique_insert_r emplace(KERBAL_OPT_PPEXPAND_WITH_COMMA_N(REMAINF, EMPTY, ARGS_DECL, i));
+				unique_insert_r emplace(KERBAL_OPT_PPEXPAND_WITH_COMMA_N(REMAINF, EMPTY, ARGS_DECL, i)); \
 
 				KERBAL_PPEXPAND_N(FBODY, KERBAL_PPEXPAND_EMPTY_SEPARATOR, 0)
 				KERBAL_PPEXPAND_N(FBODY, KERBAL_PPEXPAND_EMPTY_SEPARATOR, 20)
@@ -380,7 +448,7 @@ namespace kerbal
 
 				template <typename ... Args>
 				KERBAL_CONSTEXPR20
-				unique_insert_r replace_emplace(const_iterator replace, Args&& ... args);
+				unique_insert_r replace_emplace(const_iterator replace, Args && ... args);
 
 #		else
 
@@ -391,7 +459,11 @@ namespace kerbal
 #			define ARGS_DECL(i) KERBAL_MACRO_CONCAT(Arg, i) const & KERBAL_MACRO_CONCAT(arg, i)
 #			define FBODY(i) \
 				KERBAL_OPT_PPEXPAND_WITH_COMMA_N(THEAD_NOT_EMPTY, EMPTY, TARGS_DECL, i) \
-				unique_insert_r replace_emplace(const_iterator replace KERBAL_OPT_PPEXPAND_WITH_COMMA_N(LEFT_JOIN_COMMA, EMPTY, ARGS_DECL, i));
+				unique_insert_r \
+				replace_emplace( \
+					const_iterator replace \
+					KERBAL_OPT_PPEXPAND_WITH_COMMA_N(LEFT_JOIN_COMMA, EMPTY, ARGS_DECL, i) \
+				); \
 
 				KERBAL_PPEXPAND_N(FBODY, KERBAL_PPEXPAND_EMPTY_SEPARATOR, 0)
 				KERBAL_PPEXPAND_N(FBODY, KERBAL_PPEXPAND_EMPTY_SEPARATOR, 20)
@@ -429,6 +501,48 @@ namespace kerbal
 
 	} // namespace container
 
+
+	namespace algorithm
+	{
+
+		template <
+			typename T,
+			typename Hash, typename KeyEqual,
+			typename NodeAllocator, typename BucketAllocator
+		>
+		KERBAL_CONSTEXPR20
+		void swap(
+			kerbal::container::hash_set<T, Hash, KeyEqual, NodeAllocator, BucketAllocator> & a,
+			kerbal::container::hash_set<T, Hash, KeyEqual, NodeAllocator, BucketAllocator> & b
+		)
+			KERBAL_CONDITIONAL_NOEXCEPT(noexcept(a.swap(b)))
+		{
+			a.swap(b);
+		}
+
+	} // namespace algorithm
+
 } // namespace kerbal
+
+
+KERBAL_NAMESPACE_STD_BEGIN
+
+	template <
+		typename T,
+		typename Hash, typename KeyEqual,
+		typename NodeAllocator, typename BucketAllocator
+	>
+	KERBAL_CONSTEXPR20
+	void swap(
+		kerbal::container::hash_set<T, Hash, KeyEqual, NodeAllocator, BucketAllocator> & a,
+		kerbal::container::hash_set<T, Hash, KeyEqual, NodeAllocator, BucketAllocator>& b
+	)
+		KERBAL_CONDITIONAL_NOEXCEPT(noexcept(a.swap(b)))
+	{
+		a.swap(b);
+	}
+
+KERBAL_NAMESPACE_STD_END
+
 
 #endif // KERBAL_CONTAINER_HASH_SET_HASH_SET_DECL_HPP

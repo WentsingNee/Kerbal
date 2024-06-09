@@ -24,9 +24,9 @@ namespace kerbal
 
 		template <typename Entity, typename Hash>
 		struct cache_hash_result:
-				kerbal::type_traits::bool_constant<
-						kerbal::type_traits::is_floating_point<Entity>::value
-				>
+			kerbal::type_traits::bool_constant<
+				kerbal::type_traits::is_floating_point<Entity>::value
+			>
 		{
 		};
 

@@ -13,16 +13,25 @@
 #define KERBAL_CONTAINER_DETAIL_HASH_TABLE_BASE_HASH_TABLE_BASE_IMPL_HPP
 
 #include <kerbal/algorithm/modifier/fill.hpp>
+#include <kerbal/assign/assign_list.hpp>
 #include <kerbal/compare/minmax.hpp>
 #include <kerbal/compatibility/constexpr.hpp>
+#include <kerbal/compatibility/move.hpp>
 #include <kerbal/compatibility/noexcept.hpp>
 #include <kerbal/compatibility/static_assert.hpp>
 #include <kerbal/config/exceptions.hpp>
 #include <kerbal/container/associative_container_facility/unique_tag_t.hpp>
+#include <kerbal/iterator/iterator_traits.hpp>
 #include <kerbal/memory/allocator_traits.hpp>
 #include <kerbal/memory/uninitialized/construct.hpp>
+#include <kerbal/type_traits/enable_if.hpp>
 #include <kerbal/type_traits/is_same.hpp>
 #include <kerbal/utility/as_const.hpp>
+#include <kerbal/utility/forward.hpp>
+
+#if __cplusplus >= 201103L
+#	include <initializer_list>
+#endif
 
 #include <kerbal/container/detail/hash_table_base/hash_table_base.decl.hpp>
 
@@ -63,7 +72,11 @@ namespace kerbal
 			}
 
 			template <typename Entity, typename HashCachePolicy>
-			template <typename Extract, typename Hash, typename KeyEqual, typename NodeAlloc, typename BucketAlloc, typename InputIterator>
+			template <
+				typename Extract, typename Hash, typename KeyEqual,
+				typename NodeAlloc, typename BucketAlloc,
+				typename InputIterator
+			>
 			KERBAL_CONSTEXPR14
 			hash_table_base<Entity, HashCachePolicy>::
 			hash_table_base(
@@ -76,26 +89,39 @@ namespace kerbal
 			{
 				this->k_init_buckets(bucket_alloc, 7);
 				while (first != last) {
-					this->emplace_using_allocator(extract, hash, key_equal, node_alloc, bucket_alloc, *first);
+					this->emplace_using_allocator(
+						extract, hash, key_equal,
+						node_alloc, bucket_alloc,
+						*first
+					);
 					++first;
 				}
 			}
 
 			template <typename Entity, typename HashCachePolicy>
-			template <typename Extract, typename Hash, typename KeyEqual, typename NodeAlloc, typename BucketAlloc, typename InputIterator>
+			template <
+				typename Extract, typename Hash, typename KeyEqual,
+				typename NodeAlloc, typename BucketAlloc,
+				typename InputIterator
+			>
 			KERBAL_CONSTEXPR14
 			hash_table_base<Entity, HashCachePolicy>::
 			hash_table_base(
+				kerbal::container::unique_tag_t,
 				Extract & extract, Hash & hash, KeyEqual & key_equal,
 				NodeAlloc & node_alloc, BucketAlloc & bucket_alloc,
-				kerbal::container::unique_tag_t, InputIterator first, InputIterator last
+				InputIterator first, InputIterator last
 			) :
 				k_size(0),
 				k_max_load_factor(1)
 			{
 				this->k_init_buckets(bucket_alloc, 7);
 				while (first != last) {
-					this->emplace_unique_using_allocator(extract, hash, key_equal, node_alloc, bucket_alloc, *first);
+					this->emplace_unique_using_allocator(
+						extract, hash, key_equal,
+						node_alloc, bucket_alloc,
+						*first
+					);
 					++first;
 				}
 			}
@@ -217,7 +243,10 @@ namespace kerbal
 			KERBAL_CONSTEXPR14
 			bool
 			hash_table_base<Entity, HashCachePolicy>::
-			contains(Extract & extract, Hash & hash, KeyEqual & key_equal, typename Extract::key_type const & key) const
+			contains(
+				Extract & extract, Hash & hash, KeyEqual & key_equal,
+				typename Extract::key_type const & key
+			) const
 			{
 				return this->find(extract, hash, key_equal, key) != this->cend();
 			}
@@ -228,7 +257,10 @@ namespace kerbal
 			typename
 			hash_table_base<Entity, HashCachePolicy>::iterator
 			hash_table_base<Entity, HashCachePolicy>::
-			find(Extract & extract, Hash & hash, KeyEqual & key_equal, typename Extract::key_type const & key)
+			find(
+				Extract & extract, Hash & hash, KeyEqual & key_equal,
+				typename Extract::key_type const & key
+			)
 			{
 				return kerbal::utility::as_const(*this).find(extract, hash, key_equal, key).cast_to_mutable();
 			}
@@ -239,7 +271,10 @@ namespace kerbal
 			typename
 			hash_table_base<Entity, HashCachePolicy>::const_iterator
 			hash_table_base<Entity, HashCachePolicy>::
-			find(Extract & extract, Hash & hash, KeyEqual & key_equal, typename Extract::key_type const & key) const
+			find(
+				Extract & extract, Hash & hash, KeyEqual & key_equal,
+				typename Extract::key_type const & key
+			) const
 			{
 				hash_result_type hash_code = hash(key);
 				size_type bucket_id_in = this->k_hash_result_to_bucket_id(hash_code);
@@ -269,7 +304,10 @@ namespace kerbal
 				typename hash_table_base<Entity, HashCachePolicy>::iterator
 			>
 			hash_table_base<Entity, HashCachePolicy>::
-			equal_range(Extract & extract, Hash & hash, KeyEqual & key_equal, const typename Extract::key_type & key)
+			equal_range(
+				Extract & extract, Hash & hash, KeyEqual & key_equal,
+				typename Extract::key_type const & key
+			)
 			{
 				kerbal::utility::compressed_pair<const_iterator, const_iterator> eqr(
 					kerbal::utility::as_const(*this).equal_range(
@@ -291,7 +329,10 @@ namespace kerbal
 				typename hash_table_base<Entity, HashCachePolicy>::const_iterator
 			>
 			hash_table_base<Entity, HashCachePolicy>::
-			equal_range(Extract & extract, Hash & hash, KeyEqual & key_equal, const typename Extract::key_type & key) const
+			equal_range(
+				Extract & extract, Hash & hash, KeyEqual & key_equal,
+				typename Extract::key_type const & key
+			) const
 			{
 
 			}
@@ -307,7 +348,10 @@ namespace kerbal
 			typename
 			hash_table_base<Entity, HashCachePolicy>::iterator
 			hash_table_base<Entity, HashCachePolicy>::
-			k_emplace_hook_node(Extract & extract, Hash & hash, KeyEqual & key_equal, node * p)
+			k_emplace_hook_node(
+				Extract & extract, Hash & hash, KeyEqual & key_equal,
+				node * p
+			)
 			{
 				typedef typename Extract::key_type key_type;
 
@@ -351,7 +395,10 @@ namespace kerbal
 			typename
 			hash_table_base<Entity, HashCachePolicy>::unique_insert_r
 			hash_table_base<Entity, HashCachePolicy>::
-			k_emplace_hook_node_unique(Extract & extract, Hash & hash, KeyEqual & key_equal, node * p)
+			k_emplace_hook_node_unique(
+				Extract & extract, Hash & hash, KeyEqual & key_equal,
+				node * p
+			)
 			{
 				typedef typename Extract::key_type key_type;
 
@@ -394,7 +441,10 @@ namespace kerbal
 			KERBAL_CONSTEXPR14
 			void
 			hash_table_base<Entity, HashCachePolicy>::
-			k_rehash_hook_node(Extract & extract, Hash & hash, node * p)
+			k_rehash_hook_node(
+				Extract & extract, Hash & hash,
+				node * p
+			)
 			{
 				hash_result_type hash_code = p->get_cached_hash_code(extract, hash);
 				size_type bucket_id_in = this->k_hash_result_to_bucket_id(hash_code);
@@ -497,14 +547,30 @@ namespace kerbal
 #	if __cplusplus >= 201103L
 
 			template <typename Entity, typename HashCachePolicy>
-			template <typename Extract, typename Hash, typename KeyEqual, typename NodeAlloc, typename BucketAlloc, typename ... Args>
+			template <
+				typename Extract, typename Hash, typename KeyEqual,
+				typename NodeAlloc, typename BucketAlloc,
+				typename ... Args
+			>
 			KERBAL_CONSTEXPR20
 			typename
 			hash_table_base<Entity, HashCachePolicy>::iterator
 			hash_table_base<Entity, HashCachePolicy>::
-			emplace_using_allocator(Extract & extract, Hash & hash, KeyEqual & key_equal, NodeAlloc & node_alloc, BucketAlloc & bucket_alloc, Args&& ... args)
+			emplace_using_allocator(
+				Extract & extract, Hash & hash, KeyEqual & key_equal,
+				NodeAlloc & node_alloc, BucketAlloc & bucket_alloc,
+				Args && ... args
+			)
 			{
-				KERBAL_STATIC_ASSERT((kerbal::type_traits::is_same<typename Hash::result_type, hash_result_type>::value), "should same");
+				KERBAL_STATIC_ASSERT(
+					(
+						kerbal::type_traits::is_same<
+							typename Hash::result_type,
+							hash_result_type
+						>::value
+					),
+					"should same"
+				);
 
 				if (this->size() + 1 > this->bucket_count() * this->max_load_factor()) {
 					this->reserve_using_allocator(extract, hash, bucket_alloc, 2 * this->size());
@@ -524,14 +590,30 @@ namespace kerbal
 			}
 
 			template <typename Entity, typename HashCachePolicy>
-			template <typename Extract, typename Hash, typename KeyEqual, typename NodeAlloc, typename BucketAlloc, typename ... Args>
+			template <
+				typename Extract, typename Hash, typename KeyEqual,
+				typename NodeAlloc, typename BucketAlloc,
+				typename ... Args
+			>
 			KERBAL_CONSTEXPR20
 			typename
 			hash_table_base<Entity, HashCachePolicy>::unique_insert_r
 			hash_table_base<Entity, HashCachePolicy>::
-			emplace_unique_using_allocator(Extract & extract, Hash & hash, KeyEqual & key_equal, NodeAlloc & node_alloc, BucketAlloc & bucket_alloc, Args&& ... args)
+			emplace_unique_using_allocator(
+				Extract & extract, Hash & hash, KeyEqual & key_equal,
+				NodeAlloc & node_alloc, BucketAlloc & bucket_alloc,
+				Args && ... args
+			)
 			{
-				KERBAL_STATIC_ASSERT((kerbal::type_traits::is_same<typename Hash::result_type, hash_result_type>::value), "should same");
+				KERBAL_STATIC_ASSERT(
+					(
+						kerbal::type_traits::is_same<
+							typename Hash::result_type,
+							hash_result_type
+						>::value
+					),
+					"should same"
+				);
 
 				if (this->size() + 1 > this->bucket_count() * this->max_load_factor()) {
 					this->reserve_using_allocator(extract, hash, bucket_alloc, 2 * this->size());
@@ -566,13 +648,29 @@ namespace kerbal
 
 #		define FBODY(i) \
 			template <typename Entity, typename HashCachePolicy> \
-			template <typename Extract, typename Hash, typename KeyEqual, typename NodeAlloc, typename BucketAlloc KERBAL_OPT_PPEXPAND_WITH_COMMA_N(LEFT_JOIN_COMMA, EMPTY, TARGS_DECL, i)> \
+			template < \
+				typename Extract, typename Hash, typename KeyEqual, \
+				typename NodeAlloc, typename BucketAlloc \
+				KERBAL_OPT_PPEXPAND_WITH_COMMA_N(LEFT_JOIN_COMMA, EMPTY, TARGS_DECL, i) \
+			> \
 			typename \
 			hash_table_base<Entity, HashCachePolicy>::iterator \
 			hash_table_base<Entity, HashCachePolicy>:: \
-			emplace_using_allocator(Extract & extract, Hash & hash, KeyEqual & key_equal, NodeAlloc & node_alloc, BucketAlloc & bucket_alloc KERBAL_OPT_PPEXPAND_WITH_COMMA_N(LEFT_JOIN_COMMA, EMPTY, ARGS_DECL, i)) \
+			emplace_using_allocator( \
+				Extract & extract, Hash & hash, KeyEqual & key_equal, \
+				NodeAlloc & node_alloc, BucketAlloc & bucket_alloc \
+				KERBAL_OPT_PPEXPAND_WITH_COMMA_N(LEFT_JOIN_COMMA, EMPTY, ARGS_DECL, i) \
+			) \
 			{ \
-				KERBAL_STATIC_ASSERT((kerbal::type_traits::is_same<typename Hash::result_type, hash_result_type>::value), "should same"); \
+				KERBAL_STATIC_ASSERT( \
+					( \
+						kerbal::type_traits::is_same< \
+							typename Hash::result_type, \
+							hash_result_type \
+						>::value \
+					), \
+					"should same" \
+				); \
  \
 				if (this->size() + 1 > this->bucket_count() * this->max_load_factor()) { \
 					this->reserve_using_allocator(extract, hash, bucket_alloc, 2 * this->size()); \
@@ -589,13 +687,29 @@ namespace kerbal
 			} \
  \
 			template <typename Entity, typename HashCachePolicy> \
-			template <typename Extract, typename Hash, typename KeyEqual, typename NodeAlloc, typename BucketAlloc KERBAL_OPT_PPEXPAND_WITH_COMMA_N(LEFT_JOIN_COMMA, EMPTY, TARGS_DECL, i)> \
+			template < \
+				typename Extract, typename Hash, typename KeyEqual, \
+				typename NodeAlloc, typename BucketAlloc \
+				KERBAL_OPT_PPEXPAND_WITH_COMMA_N(LEFT_JOIN_COMMA, EMPTY, TARGS_DECL, i) \
+			> \
 			typename \
 			hash_table_base<Entity, HashCachePolicy>::unique_insert_r \
 			hash_table_base<Entity, HashCachePolicy>:: \
-			emplace_unique_using_allocator(Extract & extract, Hash & hash, KeyEqual & key_equal, NodeAlloc & node_alloc, BucketAlloc & bucket_alloc KERBAL_OPT_PPEXPAND_WITH_COMMA_N(LEFT_JOIN_COMMA, EMPTY, ARGS_DECL, i)) \
+			emplace_unique_using_allocator( \
+				Extract & extract, Hash & hash, KeyEqual & key_equal, \
+				NodeAlloc & node_alloc, BucketAlloc & bucket_alloc \
+				KERBAL_OPT_PPEXPAND_WITH_COMMA_N(LEFT_JOIN_COMMA, EMPTY, ARGS_DECL, i) \
+			) \
 			{ \
-				KERBAL_STATIC_ASSERT((kerbal::type_traits::is_same<typename Hash::result_type, hash_result_type>::value), "should same"); \
+				KERBAL_STATIC_ASSERT( \
+					( \
+						kerbal::type_traits::is_same< \
+							typename Hash::result_type, \
+							hash_result_type \
+						>::value \
+					), \
+					"should same" \
+				); \
  \
 				if (this->size() + 1 > this->bucket_count() * this->max_load_factor()) { \
 					this->reserve_using_allocator(extract, hash, bucket_alloc, 2 * this->size()); \
@@ -619,13 +733,29 @@ namespace kerbal
 
 #		define FBODY(i) \
 			template <typename Entity, typename HashCachePolicy> \
-			template <typename Extract, typename Hash, typename KeyEqual, typename NodeAlloc, typename BucketAlloc KERBAL_OPT_PPEXPAND_WITH_COMMA_N(LEFT_JOIN_COMMA, EMPTY, TARGS_DECL, i)> \
+			template < \
+				typename Extract, typename Hash, typename KeyEqual, \
+				typename NodeAlloc, typename BucketAlloc \
+				KERBAL_OPT_PPEXPAND_WITH_COMMA_N(LEFT_JOIN_COMMA, EMPTY, TARGS_DECL, i) \
+			> \
 			typename \
 			hash_table_base<Entity, HashCachePolicy>::iterator \
 			hash_table_base<Entity, HashCachePolicy>:: \
-			emplace_using_allocator(Extract & extract, Hash & hash, KeyEqual & key_equal, NodeAlloc & node_alloc, BucketAlloc & bucket_alloc KERBAL_OPT_PPEXPAND_WITH_COMMA_N(LEFT_JOIN_COMMA, EMPTY, ARGS_DECL, i)) \
+			emplace_using_allocator( \
+				Extract & extract, Hash & hash, KeyEqual & key_equal, \
+				NodeAlloc & node_alloc, BucketAlloc & bucket_alloc \
+				KERBAL_OPT_PPEXPAND_WITH_COMMA_N(LEFT_JOIN_COMMA, EMPTY, ARGS_DECL, i) \
+			) \
 			{ \
-				KERBAL_STATIC_ASSERT((kerbal::type_traits::is_same<typename Hash::result_type, hash_result_type>::value), "should same"); \
+				KERBAL_STATIC_ASSERT( \
+					( \
+						kerbal::type_traits::is_same< \
+							typename Hash::result_type, \
+							hash_result_type \
+						>::value \
+					), \
+					"should same" \
+				); \
  \
 				if (this->size() + 1 > this->bucket_count() * this->max_load_factor()) { \
 					this->reserve_using_allocator(extract, hash, bucket_alloc, 2 * this->size()); \
@@ -637,13 +767,29 @@ namespace kerbal
 			} \
  \
 			template <typename Entity, typename HashCachePolicy> \
-			template <typename Extract, typename Hash, typename KeyEqual, typename NodeAlloc, typename BucketAlloc KERBAL_OPT_PPEXPAND_WITH_COMMA_N(LEFT_JOIN_COMMA, EMPTY, TARGS_DECL, i)> \
+			template < \
+				typename Extract, typename Hash, typename KeyEqual, \
+				typename NodeAlloc, typename BucketAlloc \
+				KERBAL_OPT_PPEXPAND_WITH_COMMA_N(LEFT_JOIN_COMMA, EMPTY, TARGS_DECL, i) \
+			> \
 			typename \
 			hash_table_base<Entity, HashCachePolicy>::unique_insert_r \
 			hash_table_base<Entity, HashCachePolicy>:: \
-			emplace_unique_using_allocator(Extract & extract, Hash & hash, KeyEqual & key_equal, NodeAlloc & node_alloc, BucketAlloc & bucket_alloc KERBAL_OPT_PPEXPAND_WITH_COMMA_N(LEFT_JOIN_COMMA, EMPTY, ARGS_DECL, i)) \
+			emplace_unique_using_allocator( \
+				Extract & extract, Hash & hash, KeyEqual & key_equal, \
+				NodeAlloc & node_alloc, BucketAlloc & bucket_alloc \
+				KERBAL_OPT_PPEXPAND_WITH_COMMA_N(LEFT_JOIN_COMMA, EMPTY, ARGS_DECL, i) \
+			) \
 			{ \
-				KERBAL_STATIC_ASSERT((kerbal::type_traits::is_same<typename Hash::result_type, hash_result_type>::value), "should same"); \
+				KERBAL_STATIC_ASSERT( \
+					( \
+						kerbal::type_traits::is_same< \
+							typename Hash::result_type, \
+							hash_result_type \
+						>::value \
+					), \
+					"should same" \
+				); \
  \
 				if (this->size() + 1 > this->bucket_count() * this->max_load_factor()) { \
 					this->reserve_using_allocator(extract, hash, bucket_alloc, 2 * this->size()); \
@@ -673,26 +819,272 @@ namespace kerbal
 #	endif
 
 			template <typename Entity, typename HashCachePolicy>
-			template <typename Extract, typename Hash, typename KeyEqual, typename NodeAlloc, typename BucketAlloc>
+			template <
+				typename Extract, typename Hash, typename KeyEqual,
+				typename NodeAlloc, typename BucketAlloc
+			>
 			KERBAL_CONSTEXPR20
 			typename
 			hash_table_base<Entity, HashCachePolicy>::iterator
 			hash_table_base<Entity, HashCachePolicy>::
-			insert_using_allocator(Extract & extract, Hash & hash, KeyEqual & key_equal, NodeAlloc & node_alloc, BucketAlloc & bucket_alloc, const_reference src)
+			insert_using_allocator(
+				Extract & extract, Hash & hash, KeyEqual & key_equal,
+				NodeAlloc & node_alloc, BucketAlloc & bucket_alloc,
+				const_reference src
+			)
 			{
 				return this->emplace_using_allocator(extract, hash, key_equal, node_alloc, bucket_alloc, src);
 			}
 
 			template <typename Entity, typename HashCachePolicy>
-			template <typename Extract, typename Hash, typename KeyEqual, typename NodeAlloc, typename BucketAlloc>
+			template <
+				typename Extract, typename Hash, typename KeyEqual,
+				typename NodeAlloc, typename BucketAlloc
+			>
 			KERBAL_CONSTEXPR20
 			typename
 			hash_table_base<Entity, HashCachePolicy>::unique_insert_r
 			hash_table_base<Entity, HashCachePolicy>::
-			insert_unique_using_allocator(Extract & extract, Hash & hash, KeyEqual & key_equal, NodeAlloc & node_alloc, BucketAlloc & bucket_alloc, const_reference src)
+			insert_unique_using_allocator(
+				Extract & extract, Hash & hash, KeyEqual & key_equal,
+				NodeAlloc & node_alloc, BucketAlloc & bucket_alloc,
+				const_reference src
+			)
 			{
-				return this->emplace_unique_using_allocator(extract, hash, key_equal, node_alloc, bucket_alloc, src);
+				return this->emplace_unique_using_allocator(
+					extract, hash, key_equal,
+					node_alloc, bucket_alloc,
+					src
+				);
 			}
+
+
+#	if __cplusplus >= 201103L
+
+			template <typename Entity, typename HashCachePolicy>
+			template <
+				typename Extract, typename Hash, typename KeyEqual,
+				typename NodeAlloc, typename BucketAlloc
+			>
+			KERBAL_CONSTEXPR20
+			typename
+			hash_table_base<Entity, HashCachePolicy>::iterator
+			hash_table_base<Entity, HashCachePolicy>::
+			insert_using_allocator(
+				Extract & extract, Hash & hash, KeyEqual & key_equal,
+				NodeAlloc & node_alloc, BucketAlloc & bucket_alloc,
+				rvalue_reference src
+			)
+			{
+				return this->emplace_using_allocator(
+					extract, hash, key_equal,
+					node_alloc, bucket_alloc,
+					kerbal::compatibility::move(src)
+				);
+			}
+
+			template <typename Entity, typename HashCachePolicy>
+			template <
+				typename Extract, typename Hash, typename KeyEqual,
+				typename NodeAlloc, typename BucketAlloc
+			>
+			KERBAL_CONSTEXPR20
+			typename
+			hash_table_base<Entity, HashCachePolicy>::unique_insert_r
+			hash_table_base<Entity, HashCachePolicy>::
+			insert_unique_using_allocator(
+				Extract & extract, Hash & hash, KeyEqual & key_equal,
+				NodeAlloc & node_alloc, BucketAlloc & bucket_alloc,
+				rvalue_reference src
+			)
+			{
+				return this->emplace_unique_using_allocator(
+					extract, hash, key_equal,
+					node_alloc, bucket_alloc,
+					kerbal::compatibility::move(src)
+				);
+			}
+
+#	endif // if __cplusplus >= 201103L
+
+			template <typename Entity, typename HashCachePolicy>
+			template <
+				typename Extract, typename Hash, typename KeyEqual,
+				typename NodeAlloc, typename BucketAlloc,
+				typename InputIterator
+			>
+			KERBAL_CONSTEXPR20
+			typename kerbal::type_traits::enable_if<
+				kerbal::iterator::is_input_compatible_iterator<InputIterator>::value
+			>::type
+			hash_table_base<Entity, HashCachePolicy>::
+			insert_using_allocator(
+				Extract & extract, Hash & hash, KeyEqual & key_equal,
+				NodeAlloc & node_alloc, BucketAlloc & bucket_alloc,
+				InputIterator first, InputIterator last
+			)
+			{
+				while (first != last) {
+					this->emplace_using_allocator(
+						extract, hash, key_equal,
+						node_alloc, bucket_alloc,
+						*first
+					);
+					++first;
+				}
+			}
+
+			template <typename Entity, typename HashCachePolicy>
+			template <
+				typename Extract, typename Hash, typename KeyEqual,
+				typename NodeAlloc, typename BucketAlloc,
+				typename InputIterator
+			>
+			KERBAL_CONSTEXPR20
+			typename kerbal::type_traits::enable_if<
+				kerbal::iterator::is_input_compatible_iterator<InputIterator>::value
+			>::type
+			hash_table_base<Entity, HashCachePolicy>::
+			insert_unique_using_allocator(
+				Extract & extract, Hash & hash, KeyEqual & key_equal,
+				NodeAlloc & node_alloc, BucketAlloc & bucket_alloc,
+				InputIterator first, InputIterator last
+			)
+			{
+				while (first != last) {
+					this->emplace_unique_using_allocator(
+						extract, hash, key_equal,
+						node_alloc, bucket_alloc,
+						*first
+					);
+					++first;
+				}
+			}
+
+#	if __cplusplus >= 201103L
+
+			template <typename Entity, typename HashCachePolicy>
+			template <
+				typename Extract, typename Hash, typename KeyEqual,
+				typename NodeAlloc, typename BucketAlloc
+			>
+			KERBAL_CONSTEXPR20
+			void
+			hash_table_base<Entity, HashCachePolicy>::
+			insert_using_allocator(
+				Extract & extract, Hash & hash, KeyEqual & key_equal,
+				NodeAlloc & node_alloc, BucketAlloc & bucket_alloc,
+				std::initializer_list<value_type> ilist
+			)
+			{
+				this->insert_using_allocator(
+					extract, hash, key_equal,
+					node_alloc, bucket_alloc,
+					ilist.begin(), ilist.end()
+				);
+			}
+
+			template <typename Entity, typename HashCachePolicy>
+			template <
+				typename Extract, typename Hash, typename KeyEqual,
+				typename NodeAlloc, typename BucketAlloc
+			>
+			KERBAL_CONSTEXPR20
+			void
+			hash_table_base<Entity, HashCachePolicy>::
+			insert_unique_using_allocator(
+				Extract & extract, Hash & hash, KeyEqual & key_equal,
+				NodeAlloc & node_alloc, BucketAlloc & bucket_alloc,
+				std::initializer_list<value_type> ilist
+			)
+			{
+				this->insert_unique_using_allocator(
+					extract, hash, key_equal,
+					node_alloc, bucket_alloc,
+					ilist.begin(), ilist.end()
+				);
+			}
+
+#	else // if __cplusplus >= 201103L
+
+			template <typename Entity, typename HashCachePolicy>
+			template <
+				typename Extract, typename Hash, typename KeyEqual,
+				typename NodeAlloc, typename BucketAlloc
+			>
+			KERBAL_CONSTEXPR20
+			void
+			hash_table_base<Entity, HashCachePolicy>::
+			insert_using_allocator(
+				Extract & extract, Hash & hash, KeyEqual & key_equal,
+				NodeAlloc & node_alloc, BucketAlloc & bucket_alloc,
+				kerbal::assign::assign_list<void> const & ilist
+			)
+			{
+			}
+
+			template <typename Entity, typename HashCachePolicy>
+			template <
+				typename Extract, typename Hash, typename KeyEqual,
+				typename NodeAlloc, typename BucketAlloc,
+				typename U
+			>
+			KERBAL_CONSTEXPR20
+			void
+			hash_table_base<Entity, HashCachePolicy>::
+			insert_using_allocator(
+				Extract & extract, Hash & hash, KeyEqual & key_equal,
+				NodeAlloc & node_alloc, BucketAlloc & bucket_alloc,
+				kerbal::assign::assign_list<U> const & ilist
+			)
+			{
+				this->insert_using_allocator(
+					extract, hash, key_equal,
+					node_alloc, bucket_alloc,
+					ilist.cbegin(), ilist.cend()
+				);
+			}
+
+			template <typename Entity, typename HashCachePolicy>
+			template <
+				typename Extract, typename Hash, typename KeyEqual,
+				typename NodeAlloc, typename BucketAlloc
+			>
+			KERBAL_CONSTEXPR20
+			void
+			hash_table_base<Entity, HashCachePolicy>::
+			insert_unique_using_allocator(
+				Extract & extract, Hash & hash, KeyEqual & key_equal,
+				NodeAlloc & node_alloc, BucketAlloc & bucket_alloc,
+				kerbal::assign::assign_list<U> const & ilist
+			)
+			{
+			}
+
+			template <typename Entity, typename HashCachePolicy>
+			template <
+				typename Extract, typename Hash, typename KeyEqual,
+				typename NodeAlloc, typename BucketAlloc,
+				typename U
+			>
+			KERBAL_CONSTEXPR20
+			void
+			hash_table_base<Entity, HashCachePolicy>::
+			insert_unique_using_allocator(
+				Extract & extract, Hash & hash, KeyEqual & key_equal,
+				NodeAlloc & node_alloc, BucketAlloc & bucket_alloc,
+				kerbal::assign::assign_list<U> const & ilist
+			)
+			{
+				this->insert_unique_using_allocator(
+					extract, hash, key_equal,
+					node_alloc, bucket_alloc,
+					ilist.cbegin(), ilist.cend()
+				);
+			}
+
+#	endif // if __cplusplus >= 201103L
+
 
 
 		//===================
@@ -708,7 +1100,11 @@ namespace kerbal
 				k_destroy_node_chain(node_alloc, node::reinterpret_as(this->k_head.k_next), NULL);
 				this->k_head.k_next = NULL;
 				this->k_size = 0;
-				kerbal::algorithm::fill(this->k_buckets, this->k_buckets + this->k_bucket_count, static_cast<bucket_type>(&this->k_head));
+				kerbal::algorithm::fill(
+					this->k_buckets,
+					this->k_buckets + this->k_bucket_count,
+					static_cast<bucket_type>(&this->k_head)
+				);
 			}
 
 			template <typename Entity, typename HashCachePolicy>
@@ -717,7 +1113,10 @@ namespace kerbal
 			typename
 			hash_table_base<Entity, HashCachePolicy>::iterator
 			hash_table_base<Entity, HashCachePolicy>::
-			erase_using_allocator(Extract & extract, Hash & hash, NodeAlloc & node_alloc, const_iterator pos) KERBAL_NOEXCEPT
+			erase_using_allocator(
+				Extract & extract, Hash & hash, NodeAlloc & node_alloc,
+				const_iterator pos
+			) KERBAL_NOEXCEPT
 			{
 				if (pos.k_current == NULL) {
 					return pos.cast_to_mutable();
@@ -734,7 +1133,10 @@ namespace kerbal
 			typename
 			hash_table_base<Entity, HashCachePolicy>::size_type
 			hash_table_base<Entity, HashCachePolicy>::
-			erase_using_allocator(Extract & extract, Hash & hash, NodeAlloc & node_alloc, const_iterator first, const_iterator last) KERBAL_NOEXCEPT
+			erase_using_allocator(
+				Extract & extract, Hash & hash, NodeAlloc & node_alloc,
+				const_iterator first, const_iterator last
+			) KERBAL_NOEXCEPT
 			{
 				size_type cnt = 0;
 				while (first != last) {
@@ -752,7 +1154,10 @@ namespace kerbal
 			typename
 			hash_table_base<Entity, HashCachePolicy>::size_type
 			hash_table_base<Entity, HashCachePolicy>::
-			erase_using_allocator(Extract & extract, Hash & hash, KeyEqual & key_equal, NodeAlloc & node_alloc, typename Extract::key_type const & key) KERBAL_NOEXCEPT
+			erase_using_allocator(
+				Extract & extract, Hash & hash, KeyEqual & key_equal,
+				NodeAlloc & node_alloc, typename Extract::key_type const & key
+			) KERBAL_NOEXCEPT
 			{
 				throw 0;
 				return 0;
@@ -767,7 +1172,11 @@ namespace kerbal
 			KERBAL_CONSTEXPR20
 			void
 			hash_table_base<Entity, HashCachePolicy>::
-			reserve_using_allocator(Extract & extract, Hash & hash, BucketAlloc & bucket_alloc, size_type new_size)
+			reserve_using_allocator(
+				Extract & extract, Hash & hash,
+				BucketAlloc & bucket_alloc,
+				size_type new_size
+			)
 			{
 				size_type new_bucket_count = k_first_prime_greater_equal_than(new_size / this->max_load_factor());
 				this->k_rehash_unchecked(extract, hash, bucket_alloc, new_bucket_count);
@@ -778,7 +1187,11 @@ namespace kerbal
 			KERBAL_CONSTEXPR20
 			void
 			hash_table_base<Entity, HashCachePolicy>::
-			k_rehash_unchecked(Extract & extract, Hash & hash, BucketAlloc & bucket_alloc, size_type new_bucket_count) KERBAL_NOEXCEPT
+			k_rehash_unchecked(
+				Extract & extract, Hash & hash,
+				BucketAlloc & bucket_alloc,
+				size_type new_bucket_count
+			) KERBAL_NOEXCEPT
 			{
 				if (0 == new_bucket_count) {
 					new_bucket_count = 1;
@@ -802,10 +1215,18 @@ namespace kerbal
 			KERBAL_CONSTEXPR20
 			void
 			hash_table_base<Entity, HashCachePolicy>::
-			rehash(Extract & extract, Hash & hash, BucketAlloc & bucket_alloc, size_type new_bucket_count)
+			rehash(
+				Extract & extract, Hash & hash,
+				BucketAlloc & bucket_alloc,
+				size_type new_bucket_count
+			)
 			{
 				size_type minimum_bucket_count = this->size() / this->max_load_factor();
-				this->k_rehash_unchecked(extract, hash, bucket_alloc, kerbal::compare::max(new_bucket_count, minimum_bucket_count));
+				this->k_rehash_unchecked(
+					extract, hash,
+					bucket_alloc,
+					kerbal::compare::max(new_bucket_count, minimum_bucket_count)
+				);
 			}
 
 
@@ -846,8 +1267,16 @@ namespace kerbal
 				typedef kerbal::memory::allocator_traits<BucketAlloc> bucket_allocator_traits;
 
 				bucket_type * new_buckets = bucket_allocator_traits::allocate(bucket_alloc, new_bucket_count);
-				// kerbal::algorithm::fill(new_buckets, new_buckets + new_bucket_count, static_cast<bucket_type>(&this->k_head));
-				kerbal::memory::uninitialized_fill(new_buckets, new_buckets + new_bucket_count, static_cast<bucket_type>(&this->k_head));
+//				kerbal::algorithm::fill(
+//					new_buckets,
+//					new_buckets + new_bucket_count,
+//					static_cast<bucket_type>(&this->k_head)
+//				);
+				kerbal::memory::uninitialized_fill(
+					new_buckets,
+					new_buckets + new_bucket_count,
+					static_cast<bucket_type>(&this->k_head)
+				);
 				return new_buckets;
 			}
 
@@ -886,7 +1315,11 @@ namespace kerbal
 #		if KERBAL_HAS_EXCEPTIONS_SUPPORT
 				try {
 #		endif
-					ht_node_allocator_traits::construct(node_alloc, p, kerbal::utility::in_place_t(), kerbal::utility::forward<Args>(args)...);
+					ht_node_allocator_traits::construct(
+						node_alloc, p,
+						kerbal::utility::in_place_t(),
+						kerbal::utility::forward<Args>(args)...
+					);
 #		if KERBAL_HAS_EXCEPTIONS_SUPPORT
 				} catch (...) {
 					ht_node_allocator_traits::deallocate_one(node_alloc, p);
@@ -918,7 +1351,11 @@ namespace kerbal
 				node * p = ht_node_allocator_traits::allocate_one(node_alloc); \
  \
 				try { \
-					ht_node_allocator_traits::construct(node_alloc, p, kerbal::utility::in_place_t() KERBAL_OPT_PPEXPAND_WITH_COMMA_N(LEFT_JOIN_COMMA, EMPTY, ARGS_USE, i)); \
+					ht_node_allocator_traits::construct( \
+						node_alloc, p, \
+						kerbal::utility::in_place_t() \
+						KERBAL_OPT_PPEXPAND_WITH_COMMA_N(LEFT_JOIN_COMMA, EMPTY, ARGS_USE, i) \
+					); \
 				} catch (...) { \
 					ht_node_allocator_traits::deallocate_one(node_alloc, p); \
 					throw; \
@@ -943,7 +1380,11 @@ namespace kerbal
 					kerbal::utility::throw_this_exception_helper<kerbal::memory::bad_alloc>::throw_this_exception(); \
 				} \
  \
-				ht_node_allocator_traits::construct(node_alloc, p, kerbal::utility::in_place_t() KERBAL_OPT_PPEXPAND_WITH_COMMA_N(LEFT_JOIN_COMMA, EMPTY, ARGS_USE, i)); \
+				ht_node_allocator_traits::construct( \
+					node_alloc, p, \
+					kerbal::utility::in_place_t() \
+					KERBAL_OPT_PPEXPAND_WITH_COMMA_N(LEFT_JOIN_COMMA, EMPTY, ARGS_USE, i) \
+				); \
 				return p; \
 			} \
 
