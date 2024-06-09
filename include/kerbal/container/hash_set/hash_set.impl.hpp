@@ -41,7 +41,11 @@ namespace kerbal
 
 #	if __cplusplus < 201103L
 
-		template <typename T, typename Hash, typename KeyEqual, typename NodeAllocator, typename BucketAllocator>
+		template <
+			typename T,
+			typename Hash, typename KeyEqual,
+			typename NodeAllocator, typename BucketAllocator
+		>
 		hash_set<T, Hash, KeyEqual, NodeAllocator, BucketAllocator>::
 		hash_set()
 		{
@@ -49,7 +53,11 @@ namespace kerbal
 
 #	endif
 
-		template <typename T, typename Hash, typename KeyEqual, typename NodeAllocator, typename BucketAllocator>
+		template <
+			typename T,
+			typename Hash, typename KeyEqual,
+			typename NodeAllocator, typename BucketAllocator
+		>
 		KERBAL_CONSTEXPR20
 		hash_set<T, Hash, KeyEqual, NodeAllocator, BucketAllocator> &
 		hash_set<T, Hash, KeyEqual, NodeAllocator, BucketAllocator>::
@@ -59,18 +67,13 @@ namespace kerbal
 			return *this;
 		}
 
-		template <typename T, typename Hash, typename KeyEqual, typename NodeAllocator, typename BucketAllocator>
-		KERBAL_CONSTEXPR20
-		void
-		hash_set<T, Hash, KeyEqual, NodeAllocator, BucketAllocator>::
-		assign(hash_set const & src)
-		{
-			this->hash_table::assign_unique(src);
-		}
-
 #	if __cplusplus >= 201103L
 
-		template <typename T, typename Hash, typename KeyEqual, typename NodeAllocator, typename BucketAllocator>
+		template <
+			typename T,
+			typename Hash, typename KeyEqual,
+			typename NodeAllocator, typename BucketAllocator
+		>
 		KERBAL_CONSTEXPR20
 		hash_set<T, Hash, KeyEqual, NodeAllocator, BucketAllocator> &
 		hash_set<T, Hash, KeyEqual, NodeAllocator, BucketAllocator>::
@@ -80,18 +83,77 @@ namespace kerbal
 			return *this;
 		}
 
-		template <typename T, typename Hash, typename KeyEqual, typename NodeAllocator, typename BucketAllocator>
+#	endif
+
+#	if __cplusplus >= 201103L
+
+		template <
+			typename T,
+			typename Hash, typename KeyEqual,
+			typename NodeAllocator, typename BucketAllocator
+		>
+		KERBAL_CONSTEXPR20
+		hash_set<T, Hash, KeyEqual, NodeAllocator, BucketAllocator> &
+		hash_set<T, Hash, KeyEqual, NodeAllocator, BucketAllocator>::
+		operator=(std::initializer_list<value_type> ilist)
+		{
+			this->assign(ilist);
+			return *this;
+		}
+
+#	else
+
+		template <
+			typename T,
+			typename Hash, typename KeyEqual,
+			typename NodeAllocator, typename BucketAllocator
+		>
+		template <typename U>
+		hash_set<T, Hash, KeyEqual, NodeAllocator, BucketAllocator> &
+		hash_set<T, Hash, KeyEqual, NodeAllocator, BucketAllocator>::
+		operator=(kerbal::assign::assign_list<U> const & ilist)
+		{
+			this->assign(ilist);
+			return *this;
+		}
+
+#	endif
+
+		template <
+			typename T,
+			typename Hash, typename KeyEqual,
+			typename NodeAllocator, typename BucketAllocator
+		>
+		KERBAL_CONSTEXPR20
+		void
+		hash_set<T, Hash, KeyEqual, NodeAllocator, BucketAllocator>::
+		assign(hash_set const & src)
+		{
+			this->hash_table::assign_unique(static_cast<hash_table const &>(src));
+		}
+
+#	if __cplusplus >= 201103L
+
+		template <
+			typename T,
+			typename Hash, typename KeyEqual,
+			typename NodeAllocator, typename BucketAllocator
+		>
 		KERBAL_CONSTEXPR20
 		void
 		hash_set<T, Hash, KeyEqual, NodeAllocator, BucketAllocator>::
 		assign(hash_set && src)
 		{
-			this->hash_table::assign_unique(kerbal::compatibility::move(src));
+			this->hash_table::assign_unique(static_cast<hash_table &&>(src));
 		}
 
 #	endif
 
-		template <typename T, typename Hash, typename KeyEqual, typename NodeAllocator, typename BucketAllocator>
+		template <
+			typename T,
+			typename Hash, typename KeyEqual,
+			typename NodeAllocator, typename BucketAllocator
+		>
 		template <typename InputIterator>
 		KERBAL_CONSTEXPR20
 		typename kerbal::type_traits::enable_if<
@@ -105,17 +167,11 @@ namespace kerbal
 
 #	if __cplusplus >= 201103L
 
-		template <typename T, typename Hash, typename KeyEqual, typename NodeAllocator, typename BucketAllocator>
-		KERBAL_CONSTEXPR20
-		hash_set<T, Hash, KeyEqual, NodeAllocator, BucketAllocator> &
-		hash_set<T, Hash, KeyEqual, NodeAllocator, BucketAllocator>::
-		operator=(std::initializer_list<value_type> ilist)
-		{
-			this->assign(ilist);
-			return *this;
-		}
-
-		template <typename T, typename Hash, typename KeyEqual, typename NodeAllocator, typename BucketAllocator>
+		template <
+			typename T,
+			typename Hash, typename KeyEqual,
+			typename NodeAllocator, typename BucketAllocator
+		>
 		KERBAL_CONSTEXPR20
 		void
 		hash_set<T, Hash, KeyEqual, NodeAllocator, BucketAllocator>::
@@ -126,17 +182,11 @@ namespace kerbal
 
 #	else
 
-		template <typename T, typename Hash, typename KeyEqual, typename NodeAllocator, typename BucketAllocator>
-		template <typename U>
-		hash_set<T, Hash, KeyEqual, NodeAllocator, BucketAllocator> &
-		hash_set<T, Hash, KeyEqual, NodeAllocator, BucketAllocator>::
-		operator=(kerbal::assign::assign_list<U> const & ilist)
-		{
-			this->assign(ilist);
-			return *this;
-		}
-
-		template <typename T, typename Hash, typename KeyEqual, typename NodeAllocator, typename BucketAllocator>
+		template <
+			typename T,
+			typename Hash, typename KeyEqual,
+			typename NodeAllocator, typename BucketAllocator
+		>
 		template <typename U>
 		void
 		hash_set<T, Hash, KeyEqual, NodeAllocator, BucketAllocator>::
@@ -147,10 +197,14 @@ namespace kerbal
 
 #	endif
 
-	//===================
-	// lookup
+		//===================
+		// lookup
 
-		template <typename T, typename Hash, typename KeyEqual, typename NodeAllocator, typename BucketAllocator>
+		template <
+			typename T,
+			typename Hash, typename KeyEqual,
+			typename NodeAllocator, typename BucketAllocator
+		>
 		KERBAL_CONSTEXPR20
 		typename
 		hash_set<T, Hash, KeyEqual, NodeAllocator, BucketAllocator>::const_iterator
@@ -160,7 +214,11 @@ namespace kerbal
 			return this->hash_table::find(key);
 		}
 
-		template <typename T, typename Hash, typename KeyEqual, typename NodeAllocator, typename BucketAllocator>
+		template <
+			typename T,
+			typename Hash, typename KeyEqual,
+			typename NodeAllocator, typename BucketAllocator
+		>
 		KERBAL_CONSTEXPR20
 		typename
 		kerbal::utility::compressed_pair<
@@ -173,18 +231,22 @@ namespace kerbal
 			return this->hash_table::equal_range(key);
 		}
 
-	//===================
-	// insert
+		//===================
+		// insert
 
 #	if __cplusplus >= 201103L
 
-		template <typename T, typename Hash, typename KeyEqual, typename NodeAllocator, typename BucketAllocator>
+		template <
+			typename T,
+			typename Hash, typename KeyEqual,
+			typename NodeAllocator, typename BucketAllocator
+		>
 		template <typename ... Args>
 		KERBAL_CONSTEXPR20
 		typename
 		hash_set<T, Hash, KeyEqual, NodeAllocator, BucketAllocator>::unique_insert_r
 		hash_set<T, Hash, KeyEqual, NodeAllocator, BucketAllocator>::
-		emplace(Args&& ... args)
+		emplace(Args && ... args)
 		{
 			return this->hash_table::emplace_unique(kerbal::utility::forward<Args>(args)...);
 		}
@@ -198,7 +260,11 @@ namespace kerbal
 #	define ARGS_DECL(i) KERBAL_MACRO_CONCAT(Arg, i) const & KERBAL_MACRO_CONCAT(arg, i)
 #	define ARGS_USE(i) KERBAL_MACRO_CONCAT(arg, i)
 #	define FBODY(i) \
-		template <typename T, typename Hash, typename KeyEqual, typename NodeAllocator, typename BucketAllocator> \
+		template < \
+			typename T, \
+			typename Hash, typename KeyEqual, \
+			typename NodeAllocator, typename BucketAllocator \
+		> \
 		KERBAL_OPT_PPEXPAND_WITH_COMMA_N(THEAD_NOT_EMPTY, EMPTY, TARGS_DECL, i) \
 		typename \
 		hash_set<T, Hash, KeyEqual, NodeAllocator, BucketAllocator>::unique_insert_r \
@@ -221,7 +287,11 @@ namespace kerbal
 
 #	endif
 
-		template <typename T, typename Hash, typename KeyEqual, typename NodeAllocator, typename BucketAllocator>
+		template <
+			typename T,
+			typename Hash, typename KeyEqual,
+			typename NodeAllocator, typename BucketAllocator
+		>
 		KERBAL_CONSTEXPR20
 		typename
 		hash_set<T, Hash, KeyEqual, NodeAllocator, BucketAllocator>::unique_insert_r
@@ -233,7 +303,11 @@ namespace kerbal
 
 #	if __cplusplus >= 201103L
 
-		template <typename T, typename Hash, typename KeyEqual, typename NodeAllocator, typename BucketAllocator>
+		template <
+			typename T,
+			typename Hash, typename KeyEqual,
+			typename NodeAllocator, typename BucketAllocator
+		>
 		KERBAL_CONSTEXPR20
 		typename
 		hash_set<T, Hash, KeyEqual, NodeAllocator, BucketAllocator>::unique_insert_r
@@ -245,7 +319,11 @@ namespace kerbal
 
 #	endif
 
-		template <typename T, typename Hash, typename KeyEqual, typename NodeAllocator, typename BucketAllocator>
+		template <
+			typename T,
+			typename Hash, typename KeyEqual,
+			typename NodeAllocator, typename BucketAllocator
+		>
 		template <typename InputIterator>
 		KERBAL_CONSTEXPR20
 		typename kerbal::type_traits::enable_if<
@@ -259,7 +337,11 @@ namespace kerbal
 
 #	if __cplusplus >= 201103L
 
-		template <typename T, typename Hash, typename KeyEqual, typename NodeAllocator, typename BucketAllocator>
+		template <
+			typename T,
+			typename Hash, typename KeyEqual,
+			typename NodeAllocator, typename BucketAllocator
+		>
 		KERBAL_CONSTEXPR20
 		void
 		hash_set<T, Hash, KeyEqual, NodeAllocator, BucketAllocator>::
@@ -270,7 +352,11 @@ namespace kerbal
 
 #	else
 
-		template <typename T, typename Hash, typename KeyEqual, typename NodeAllocator, typename BucketAllocator>
+		template <
+			typename T,
+			typename Hash, typename KeyEqual,
+			typename NodeAllocator, typename BucketAllocator
+		>
 		template <typename U>
 		KERBAL_CONSTEXPR20
 		void
@@ -285,7 +371,11 @@ namespace kerbal
 	//===================
 	// erase
 
-		template <typename T, typename Hash, typename KeyEqual, typename NodeAllocator, typename BucketAllocator>
+		template <
+			typename T,
+			typename Hash, typename KeyEqual,
+			typename NodeAllocator, typename BucketAllocator
+		>
 		KERBAL_CONSTEXPR20
 		typename
 		hash_set<T, Hash, KeyEqual, NodeAllocator, BucketAllocator>::iterator
@@ -295,7 +385,11 @@ namespace kerbal
 			return this->hash_table::erase_not_end_unsafe(pos);
 		}
 
-		template <typename T, typename Hash, typename KeyEqual, typename NodeAllocator, typename BucketAllocator>
+		template <
+			typename T,
+			typename Hash, typename KeyEqual,
+			typename NodeAllocator, typename BucketAllocator
+		>
 		KERBAL_CONSTEXPR20
 		typename
 		hash_set<T, Hash, KeyEqual, NodeAllocator, BucketAllocator>::iterator
@@ -305,7 +399,11 @@ namespace kerbal
 			return this->hash_table::erase(pos);
 		}
 
-		template <typename T, typename Hash, typename KeyEqual, typename NodeAllocator, typename BucketAllocator>
+		template <
+			typename T,
+			typename Hash, typename KeyEqual,
+			typename NodeAllocator, typename BucketAllocator
+		>
 		KERBAL_CONSTEXPR20
 		typename
 		hash_set<T, Hash, KeyEqual, NodeAllocator, BucketAllocator>::iterator
@@ -315,7 +413,11 @@ namespace kerbal
 			return this->hash_table::erase(first, last);
 		}
 
-		template <typename T, typename Hash, typename KeyEqual, typename NodeAllocator, typename BucketAllocator>
+		template <
+			typename T,
+			typename Hash, typename KeyEqual,
+			typename NodeAllocator, typename BucketAllocator
+		>
 		KERBAL_CONSTEXPR20
 		typename
 		hash_set<T, Hash, KeyEqual, NodeAllocator, BucketAllocator>::size_type
@@ -325,7 +427,11 @@ namespace kerbal
 			return this->hash_table::erase_unique(key);
 		}
 
-		template <typename T, typename Hash, typename KeyEqual, typename NodeAllocator, typename BucketAllocator>
+		template <
+			typename T,
+			typename Hash, typename KeyEqual,
+			typename NodeAllocator, typename BucketAllocator
+		>
 		KERBAL_CONSTEXPR20
 		void
 		hash_set<T, Hash, KeyEqual, NodeAllocator, BucketAllocator>::
