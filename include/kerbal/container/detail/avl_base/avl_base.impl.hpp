@@ -2309,8 +2309,8 @@ namespace kerbal
 			void avl_type_only<Entity>::pre_order_impl(const node_base * p_base, F f)
 			{
 				while (p_base != get_avl_vnull_node()) {
-					node * p = node::reinterpret_as(p_base);
-					f(p->value);
+					const node * p = node::reinterpret_as(p_base);
+					f(p->member());
 					pre_order_impl(p->left, f);
 					p_base = p->right;
 				}
