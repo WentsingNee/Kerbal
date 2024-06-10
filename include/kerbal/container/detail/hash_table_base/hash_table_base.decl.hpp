@@ -74,32 +74,32 @@ namespace kerbal
 			{
 				private:
 					typedef kerbal::container::detail::hash_table_base_typedef_helper<Entity, HashCachePolicy>
-																								hash_table_base_typedef_helper;
+																							hash_table_base_typedef_helper;
 
 					template <typename Entity2, typename Extract2, typename Hash, typename NodeAllocatorBR, typename BucketAllocatorBR>
 					friend struct hash_table_typedef_helper;
 
 				protected:
-					typedef typename hash_table_base_typedef_helper::node_type_unrelated		node_type_unrelated;
-					typedef typename hash_table_base_typedef_helper::node_type_only				node_type_only;
-					typedef typename hash_table_base_typedef_helper::node						node;
-					typedef typename hash_table_base_typedef_helper::bucket_type				bucket_type;
+					typedef typename hash_table_base_typedef_helper::node_type_unrelated	node_type_unrelated;
+					typedef typename hash_table_base_typedef_helper::node_type_only			node_type_only;
+					typedef typename hash_table_base_typedef_helper::node					node;
+					typedef typename hash_table_base_typedef_helper::bucket_type			bucket_type;
 
 				public:
-					typedef Entity								value_type;
-					typedef const value_type					const_type;
-					typedef value_type &						reference;
-					typedef const value_type &					const_reference;
-					typedef value_type *						pointer;
-					typedef const value_type *					const_pointer;
+					typedef Entity					value_type;
+					typedef const value_type		const_type;
+					typedef value_type &			reference;
+					typedef const value_type &		const_reference;
+					typedef value_type *			pointer;
+					typedef const value_type *		const_pointer;
 
 #			if __cplusplus >= 201103L
-					typedef value_type &&						rvalue_reference;
-					typedef const value_type &&					const_rvalue_reference;
+					typedef value_type &&			rvalue_reference;
+					typedef const value_type &&		const_rvalue_reference;
 #			endif
 
-					typedef std::size_t							size_type;
-					typedef std::ptrdiff_t						difference_type;
+					typedef std::size_t				size_type;
+					typedef std::ptrdiff_t			difference_type;
 
 					typedef kerbal::container::detail::hash_table_iter<value_type>					local_iterator;
 					typedef kerbal::container::detail::hash_table_kiter<value_type>					const_local_iterator;
@@ -486,34 +486,33 @@ namespace kerbal
 				//===================
 				// Insert
 
-				public:
+				private:
 
-					template <typename Extract, typename Hash, typename KeyEqual>
-					KERBAL_CONSTEXPR14
+					template <
+						typename Extract, typename Hash, typename KeyEqual,
+						typename NodeAlloc, typename BucketAlloc
+					>
+					KERBAL_CONSTEXPR20
 					iterator
 					k_emplace_aux(
 						Extract & extract, Hash & hash, KeyEqual & key_equal,
+						NodeAlloc & node_alloc, BucketAlloc & bucket_alloc,
 						node * p
-					)
-					{
+					);
 
-#			if KERBAL_HAS_EXCEPTIONS_SUPPORT
-				try {
-#			endif
-					this->k_emplace_hook_node(extract, hash, key_equal, p);
-#			if KERBAL_HAS_EXCEPTIONS_SUPPORT
-				} catch (...) {
-					k_destroy_node(node_alloc, p);
-					throw;
-				}
-#			endif
+					template <
+						typename Extract, typename Hash, typename KeyEqual,
+						typename NodeAlloc, typename BucketAlloc
+					>
+					KERBAL_CONSTEXPR20
+					unique_insert_r
+					k_emplace_unique_aux(
+						Extract & extract, Hash & hash, KeyEqual & key_equal,
+						NodeAlloc & node_alloc, BucketAlloc & bucket_alloc,
+						node * p
+					);
 
-						if (this->size() > this->bucket_count() * this->max_load_factor()) {
-							this->reserve_using_allocator(extract, hash, bucket_alloc, 2 * this->size());
-						}
-
-					}
-
+				public:
 
 #		if __cplusplus >= 201103L
 
@@ -523,7 +522,8 @@ namespace kerbal
 						typename ... Args
 					>
 					KERBAL_CONSTEXPR20
-					iterator emplace_using_allocator(
+					iterator
+					emplace_using_allocator(
 						Extract & extract, Hash & hash, KeyEqual & key_equal,
 						NodeAlloc & node_alloc, BucketAlloc & bucket_alloc,
 						Args && ... args
@@ -835,7 +835,7 @@ namespace kerbal
 						Extract & extract, Hash & hash,
 						BucketAlloc & bucket_alloc,
 						size_type new_bucket_count
-					) KERBAL_NOEXCEPT;
+					);
 
 				public:
 
