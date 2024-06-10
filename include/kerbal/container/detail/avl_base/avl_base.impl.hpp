@@ -1201,7 +1201,7 @@ namespace kerbal
 				while (cur_base != get_avl_vnull_node()) {
 					if (kc(e(node::reinterpret_as(cur_base)->member()), key)) { // cur_key < key
 						cur_base = cur_base->right;
-					} else { // key >= cur_key
+					} else { // cur_key >= key
 						lbound = cur_base;
 						cur_base = cur_base->left;
 					}
@@ -1284,7 +1284,7 @@ namespace kerbal
 			avl_type_only<Entity>::k_upper_bound_impl(const Key & key, Extract & e, KeyCompare & kc) const
 			{
 				const node_base * ubound = this->k_head.as_node_base();
-				ubound = k_lower_bound_helper(this->k_head.left, ubound, key, e, kc);
+				ubound = k_upper_bound_helper(this->k_head.left, ubound, key, e, kc);
 				return const_iterator(ubound);
 			}
 
@@ -1350,7 +1350,7 @@ namespace kerbal
 						cur_base = cur_base->right;
 					} else { // key == cur_key
 						lbound = cur_base;
-						lbound = k_upper_bound_helper(cur_base->left, lbound, key, e, kc);
+						lbound = k_lower_bound_helper(cur_base->left, lbound, key, e, kc);
 						ubound = k_upper_bound_helper(cur_base->right, ubound, key, e, kc);
 						break;
 					}
