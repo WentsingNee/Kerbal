@@ -845,10 +845,6 @@ namespace kerbal
 			{
 				k_hash_check(hash);
 
-				if (this->size() + 1 > this->bucket_count() * this->max_load_factor()) {
-					this->reserve_using_allocator(extract, hash, bucket_alloc, 2 * this->size());
-				}
-
 				node * p = k_build_new_node(node_alloc, kerbal::utility::forward<Args>(args)...);
 #			if KERBAL_HAS_EXCEPTIONS_SUPPORT
 				try {
@@ -879,10 +875,6 @@ namespace kerbal
 			)
 			{
 				k_hash_check(hash);
-
-				if (this->size() + 1 > this->bucket_count() * this->max_load_factor()) {
-					this->reserve_using_allocator(extract, hash, bucket_alloc, 2 * this->size());
-				}
 
 				node * p = k_build_new_node(node_alloc, kerbal::utility::forward<Args>(args)...);
 #			if KERBAL_HAS_EXCEPTIONS_SUPPORT
@@ -929,10 +921,6 @@ namespace kerbal
 			{ \
 				k_hash_check(hash); \
  \
-				if (this->size() + 1 > this->bucket_count() * this->max_load_factor()) { \
-					this->reserve_using_allocator(extract, hash, bucket_alloc, 2 * this->size()); \
-				} \
- \
 				node * p = k_build_new_node(node_alloc KERBAL_OPT_PPEXPAND_WITH_COMMA_N(LEFT_JOIN_COMMA, EMPTY, ARGS_USE, i)); \
  \
 				try { \
@@ -959,10 +947,6 @@ namespace kerbal
 			) \
 			{ \
 				k_hash_check(hash); \
- \
-				if (this->size() + 1 > this->bucket_count() * this->max_load_factor()) { \
-					this->reserve_using_allocator(extract, hash, bucket_alloc, 2 * this->size()); \
-				} \
  \
 				node * p = k_build_new_node(node_alloc KERBAL_OPT_PPEXPAND_WITH_COMMA_N(LEFT_JOIN_COMMA, EMPTY, ARGS_USE, i)); \
  \
@@ -998,10 +982,6 @@ namespace kerbal
 			{ \
 				k_hash_check(hash); \
  \
-				if (this->size() + 1 > this->bucket_count() * this->max_load_factor()) { \
-					this->reserve_using_allocator(extract, hash, bucket_alloc, 2 * this->size()); \
-				} \
- \
 				node * p = k_build_new_node(node_alloc KERBAL_OPT_PPEXPAND_WITH_COMMA_N(LEFT_JOIN_COMMA, EMPTY, ARGS_USE, i)); \
  \
 				return this->k_emplace_hook_node(extract, hash, key_equal, p); \
@@ -1023,10 +1003,6 @@ namespace kerbal
 			) \
 			{ \
 				k_hash_check(hash); \
- \
-				if (this->size() + 1 > this->bucket_count() * this->max_load_factor()) { \
-					this->reserve_using_allocator(extract, hash, bucket_alloc, 2 * this->size()); \
-				} \
  \
 				node * p = k_build_new_node(node_alloc KERBAL_OPT_PPEXPAND_WITH_COMMA_N(LEFT_JOIN_COMMA, EMPTY, ARGS_USE, i)); \
  \

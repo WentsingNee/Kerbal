@@ -488,6 +488,33 @@ namespace kerbal
 
 				public:
 
+					template <typename Extract, typename Hash, typename KeyEqual>
+					KERBAL_CONSTEXPR14
+					iterator
+					k_emplace_aux(
+						Extract & extract, Hash & hash, KeyEqual & key_equal,
+						node * p
+					)
+					{
+
+#			if KERBAL_HAS_EXCEPTIONS_SUPPORT
+				try {
+#			endif
+					this->k_emplace_hook_node(extract, hash, key_equal, p);
+#			if KERBAL_HAS_EXCEPTIONS_SUPPORT
+				} catch (...) {
+					k_destroy_node(node_alloc, p);
+					throw;
+				}
+#			endif
+
+						if (this->size() > this->bucket_count() * this->max_load_factor()) {
+							this->reserve_using_allocator(extract, hash, bucket_alloc, 2 * this->size());
+						}
+
+					}
+
+
 #		if __cplusplus >= 201103L
 
 					template <
