@@ -476,19 +476,17 @@ namespace kerbal
 				hash_result_type hash_code = hash(key);
 				size_type bucket_id_in = this->k_hash_result_to_bucket_id(hash_code);
 				bucket_type const & bucket_in = this->k_buckets[bucket_id_in];
-				if (NULL != bucket_in) {
-					node * cur = node::reinterpret_as(bucket_in->k_next);
-					while (NULL != cur) {
-						hash_result_type hash_code_cur = cur->get_cached_hash_code(extract, hash);
-						if (hash_code_cur == hash_code) {
-							if (key_equal(extract(cur->member()), key)) {
-								return const_iterator(cur);
-							}
-						} else if (this->k_hash_result_to_bucket_id(hash_code_cur) != bucket_id_in) {
-							break;
+				node * cur = node::reinterpret_as(bucket_in->k_next);
+				while (NULL != cur) {
+					hash_result_type hash_code_cur = cur->get_cached_hash_code(extract, hash);
+					if (hash_code_cur == hash_code) {
+						if (key_equal(extract(cur->member()), key)) {
+							return const_iterator(cur);
 						}
-						cur = node::reinterpret_as(cur->k_next);
+					} else if (this->k_hash_result_to_bucket_id(hash_code_cur) != bucket_id_in) {
+						break;
 					}
+					cur = node::reinterpret_as(cur->k_next);
 				}
 				return this->end();
 			}
@@ -537,30 +535,28 @@ namespace kerbal
 				hash_result_type hash_code = hash(key);
 				size_type bucket_id_in = this->k_hash_result_to_bucket_id(hash_code);
 				bucket_type const & bucket_in = this->k_buckets[bucket_id_in];
-				if (NULL != bucket_in) {
-					node * cur = node::reinterpret_as(bucket_in->k_next);
-					while (NULL != cur) {
-						hash_result_type hash_code_cur = cur->get_cached_hash_code(extract, hash);
-						if (hash_code_cur == hash_code) {
-							if (key_equal(extract(cur->member()), key)) {
-								const_iterator first(cur);
-								cur = node::reinterpret_as(cur->k_next);
-								while (NULL != cur) {
-									if (!static_cast<bool>(key_equal(extract(cur->member()), key))) {
-										break;
-									}
-									cur = node::reinterpret_as(cur->k_next);
+				node * cur = node::reinterpret_as(bucket_in->k_next);
+				while (NULL != cur) {
+					hash_result_type hash_code_cur = cur->get_cached_hash_code(extract, hash);
+					if (hash_code_cur == hash_code) {
+						if (key_equal(extract(cur->member()), key)) {
+							const_iterator first(cur);
+							cur = node::reinterpret_as(cur->k_next);
+							while (NULL != cur) {
+								if (!static_cast<bool>(key_equal(extract(cur->member()), key))) {
+									break;
 								}
-								const_iterator last(cur);
-								return kerbal::utility::make_compressed_pair(
-									first, last
-								);
+								cur = node::reinterpret_as(cur->k_next);
 							}
-						} else if (this->k_hash_result_to_bucket_id(hash_code_cur) != bucket_id_in) {
-							break;
+							const_iterator last(cur);
+							return kerbal::utility::make_compressed_pair(
+								first, last
+							);
 						}
-						cur = node::reinterpret_as(cur->k_next);
+					} else if (this->k_hash_result_to_bucket_id(hash_code_cur) != bucket_id_in) {
+						break;
 					}
+					cur = node::reinterpret_as(cur->k_next);
 				}
 				return kerbal::utility::make_compressed_pair(
 					this->cend(),
@@ -584,28 +580,26 @@ namespace kerbal
 				hash_result_type hash_code = hash(key);
 				size_type bucket_id_in = this->k_hash_result_to_bucket_id(hash_code);
 				bucket_type const & bucket_in = this->k_buckets[bucket_id_in];
-				if (NULL != bucket_in) {
-					node * cur = node::reinterpret_as(bucket_in->k_next);
-					while (NULL != cur) {
-						hash_result_type hash_code_cur = cur->get_cached_hash_code(extract, hash);
-						if (hash_code_cur == hash_code) {
-							if (key_equal(extract(cur->member()), key)) {
-								size_type cnt = 1;
-								cur = node::reinterpret_as(cur->k_next);
-								while (NULL != cur) {
-									if (!static_cast<bool>(key_equal(extract(cur->member()), key))) {
-										break;
-									}
-									++cnt;
-									cur = node::reinterpret_as(cur->k_next);
+				node * cur = node::reinterpret_as(bucket_in->k_next);
+				while (NULL != cur) {
+					hash_result_type hash_code_cur = cur->get_cached_hash_code(extract, hash);
+					if (hash_code_cur == hash_code) {
+						if (key_equal(extract(cur->member()), key)) {
+							size_type cnt = 1;
+							cur = node::reinterpret_as(cur->k_next);
+							while (NULL != cur) {
+								if (!static_cast<bool>(key_equal(extract(cur->member()), key))) {
+									break;
 								}
-								return cnt;
+								++cnt;
+								cur = node::reinterpret_as(cur->k_next);
 							}
-						} else if (this->k_hash_result_to_bucket_id(hash_code_cur) != bucket_id_in) {
-							break;
+							return cnt;
 						}
-						cur = node::reinterpret_as(cur->k_next);
+					} else if (this->k_hash_result_to_bucket_id(hash_code_cur) != bucket_id_in) {
+						break;
 					}
+					cur = node::reinterpret_as(cur->k_next);
 				}
 				return 0;
 			}
@@ -636,7 +630,7 @@ namespace kerbal
 
 				node_type_unrelated * prev = bucket_in;
 				node * cur = node::reinterpret_as(prev->k_next);
-				while (cur != NULL) {
+				while (NULL != cur) {
 					hash_result_type hash_code_cur = cur->get_cached_hash_code(extract, hash);
 
 					if (hash_code_cur == hash_code) { // same hash
@@ -685,7 +679,7 @@ namespace kerbal
 
 				node_type_unrelated * prev = bucket_in;
 				node * cur = node::reinterpret_as(prev->k_next);
-				while (cur != NULL) {
+				while (NULL != cur) {
 					hash_result_type hash_code_cur = cur->get_cached_hash_code(extract, hash);
 
 					if (hash_code_cur == hash_code) { // same hash
@@ -735,7 +729,7 @@ namespace kerbal
 				p->k_next = cur;
 				prev->k_next = p;
 
-				if (cur == NULL) {
+				if (NULL == cur) {
 					return;
 				}
 				hash_result_type hash_code_next = cur->get_cached_hash_code(extract, hash);
@@ -756,7 +750,7 @@ namespace kerbal
 //			next_is_diff_bucket(Extract & extract, Hash & hash, node * prev, node * next)
 //			{
 //				k_hash_check(hash);
-//				if (next == NULL) {
+//				if (NULL == next) {
 //					return true;
 //				}
 //
@@ -811,10 +805,10 @@ namespace kerbal
 						hash_result_type prev_hash_code = prev_node->get_cached_hash_code(extract, hash);
 						size_type bucket_id_prev = this->k_hash_result_to_bucket_id(prev_hash_code);
 						if (bucket_id_in != bucket_id_prev) {
-							bucket_in = NULL;
+							bucket_in = &this->k_head;
 						}
 					} else {
-						bucket_in = NULL;
+						bucket_in = &this->k_head;
 					}
 				}
 				--this->k_size;
@@ -824,6 +818,79 @@ namespace kerbal
 
 		//===================
 		// Insert
+
+			template <typename Entity, typename HashCachePolicy>
+			template <
+				typename Extract, typename Hash, typename KeyEqual,
+				typename NodeAlloc, typename BucketAlloc
+			>
+			KERBAL_CONSTEXPR20
+			typename
+			hash_table_base<Entity, HashCachePolicy>::iterator
+			hash_table_base<Entity, HashCachePolicy>::
+			k_emplace_aux(
+				Extract & extract, Hash & hash, KeyEqual & key_equal,
+				NodeAlloc & node_alloc, BucketAlloc & bucket_alloc,
+				node * p
+			)
+			{
+
+#			if KERBAL_HAS_EXCEPTIONS_SUPPORT
+				try {
+#			endif
+					this->k_emplace_hook_node(extract, hash, key_equal, p);
+#			if KERBAL_HAS_EXCEPTIONS_SUPPORT
+				} catch (...) {
+					k_destroy_node(node_alloc, p);
+					throw;
+				}
+#			endif
+
+				if (this->size() > this->bucket_count() * this->max_load_factor()) {
+					this->reserve_using_allocator(extract, hash, bucket_alloc, 2 * this->size());
+				}
+
+				return iterator(p);
+			}
+
+			template <typename Entity, typename HashCachePolicy>
+			template <
+				typename Extract, typename Hash, typename KeyEqual,
+				typename NodeAlloc, typename BucketAlloc
+			>
+			KERBAL_CONSTEXPR20
+			typename
+			hash_table_base<Entity, HashCachePolicy>::unique_insert_r
+			hash_table_base<Entity, HashCachePolicy>::
+			k_emplace_unique_aux(
+				Extract & extract, Hash & hash, KeyEqual & key_equal,
+				NodeAlloc & node_alloc, BucketAlloc & bucket_alloc,
+				node * p
+			)
+			{
+				bool insert_happen = false;
+
+#			if KERBAL_HAS_EXCEPTIONS_SUPPORT
+				try {
+#			endif
+					unique_insert_r uir(this->k_emplace_hook_node_unique(extract, hash, key_equal, p));
+					insert_happen = uir.insert_happen();
+#			if KERBAL_HAS_EXCEPTIONS_SUPPORT
+				} catch (...) {
+					k_destroy_node(node_alloc, p);
+					throw;
+				}
+#			endif
+
+				if (insert_happen) {
+					if (this->size() > this->bucket_count() * this->max_load_factor()) {
+						this->reserve_using_allocator(extract, hash, bucket_alloc, 2 * this->size());
+					}
+				} else {
+					k_destroy_node(node_alloc, p);
+				}
+				return unique_insert_r(iterator(p), insert_happen);
+			}
 
 #	if __cplusplus >= 201103L
 
@@ -846,16 +913,11 @@ namespace kerbal
 				k_hash_check(hash);
 
 				node * p = k_build_new_node(node_alloc, kerbal::utility::forward<Args>(args)...);
-#			if KERBAL_HAS_EXCEPTIONS_SUPPORT
-				try {
-#			endif
-					return this->k_emplace_hook_node(extract, hash, key_equal, p);
-#			if KERBAL_HAS_EXCEPTIONS_SUPPORT
-				} catch (...) {
-					k_destroy_node(node_alloc, p);
-					throw;
-				}
-#			endif
+				return this->k_emplace_aux(
+					extract, hash, key_equal,
+					node_alloc, bucket_alloc,
+					p
+				);
 			}
 
 			template <typename Entity, typename HashCachePolicy>
@@ -877,20 +939,11 @@ namespace kerbal
 				k_hash_check(hash);
 
 				node * p = k_build_new_node(node_alloc, kerbal::utility::forward<Args>(args)...);
-#			if KERBAL_HAS_EXCEPTIONS_SUPPORT
-				try {
-#			endif
-					unique_insert_r uir(this->k_emplace_hook_node_unique(extract, hash, key_equal, p));
-					if (!uir.insert_happen()) {
-						k_destroy_node(node_alloc, p);
-					}
-					return uir;
-#			if KERBAL_HAS_EXCEPTIONS_SUPPORT
-				} catch (...) {
-					k_destroy_node(node_alloc, p);
-					throw;
-				}
-#			endif
+				return this->k_emplace_unique_aux(
+					extract, hash, key_equal,
+					node_alloc, bucket_alloc,
+					p
+				);
 			}
 
 #	else
@@ -900,9 +953,6 @@ namespace kerbal
 #		define TARGS_DECL(i) typename KERBAL_MACRO_CONCAT(Arg, i)
 #		define ARGS_DECL(i) KERBAL_MACRO_CONCAT(Arg, i) const & KERBAL_MACRO_CONCAT(arg, i)
 #		define ARGS_USE(i) KERBAL_MACRO_CONCAT(arg, i)
-
-#	if KERBAL_HAS_EXCEPTIONS_SUPPORT
-
 #		define FBODY(i) \
 			template <typename Entity, typename HashCachePolicy> \
 			template < \
@@ -921,14 +971,15 @@ namespace kerbal
 			{ \
 				k_hash_check(hash); \
  \
-				node * p = k_build_new_node(node_alloc KERBAL_OPT_PPEXPAND_WITH_COMMA_N(LEFT_JOIN_COMMA, EMPTY, ARGS_USE, i)); \
- \
-				try { \
-					return this->k_emplace_hook_node(extract, hash, key_equal, p); \
-				} catch (...) { \
-					k_destroy_node(node_alloc, p); \
-					throw; \
-				} \
+				node * p = k_build_new_node( \
+					node_alloc \
+					KERBAL_OPT_PPEXPAND_WITH_COMMA_N(LEFT_JOIN_COMMA, EMPTY, ARGS_USE, i) \
+				); \
+				return this->k_emplace_aux( \
+					extract, hash, key_equal, \
+					node_alloc, bucket_alloc, \
+					p \
+				); \
 			} \
  \
 			template <typename Entity, typename HashCachePolicy> \
@@ -948,72 +999,16 @@ namespace kerbal
 			{ \
 				k_hash_check(hash); \
  \
-				node * p = k_build_new_node(node_alloc KERBAL_OPT_PPEXPAND_WITH_COMMA_N(LEFT_JOIN_COMMA, EMPTY, ARGS_USE, i)); \
- \
-				try { \
-					unique_insert_r uir(this->k_emplace_hook_node_unique(extract, hash, key_equal, p)); \
-					if (!uir.insert_happen()) { \
-						k_destroy_node(node_alloc, p); \
-					} \
-					return uir; \
-				} catch (...) { \
-					k_destroy_node(node_alloc, p); \
-					throw; \
-				} \
+				node * p = k_build_new_node( \
+					node_alloc \
+					KERBAL_OPT_PPEXPAND_WITH_COMMA_N(LEFT_JOIN_COMMA, EMPTY, ARGS_USE, i) \
+				); \
+				return this->k_emplace_unique_aux( \
+					extract, hash, key_equal, \
+					node_alloc, bucket_alloc, \
+					p \
+				); \
 			} \
-
-#	else
-
-#		define FBODY(i) \
-			template <typename Entity, typename HashCachePolicy> \
-			template < \
-				typename Extract, typename Hash, typename KeyEqual, \
-				typename NodeAlloc, typename BucketAlloc \
-				KERBAL_OPT_PPEXPAND_WITH_COMMA_N(LEFT_JOIN_COMMA, EMPTY, TARGS_DECL, i) \
-			> \
-			typename \
-			hash_table_base<Entity, HashCachePolicy>::iterator \
-			hash_table_base<Entity, HashCachePolicy>:: \
-			emplace_using_allocator( \
-				Extract & extract, Hash & hash, KeyEqual & key_equal, \
-				NodeAlloc & node_alloc, BucketAlloc & bucket_alloc \
-				KERBAL_OPT_PPEXPAND_WITH_COMMA_N(LEFT_JOIN_COMMA, EMPTY, ARGS_DECL, i) \
-			) \
-			{ \
-				k_hash_check(hash); \
- \
-				node * p = k_build_new_node(node_alloc KERBAL_OPT_PPEXPAND_WITH_COMMA_N(LEFT_JOIN_COMMA, EMPTY, ARGS_USE, i)); \
- \
-				return this->k_emplace_hook_node(extract, hash, key_equal, p); \
-			} \
- \
-			template <typename Entity, typename HashCachePolicy> \
-			template < \
-				typename Extract, typename Hash, typename KeyEqual, \
-				typename NodeAlloc, typename BucketAlloc \
-				KERBAL_OPT_PPEXPAND_WITH_COMMA_N(LEFT_JOIN_COMMA, EMPTY, TARGS_DECL, i) \
-			> \
-			typename \
-			hash_table_base<Entity, HashCachePolicy>::unique_insert_r \
-			hash_table_base<Entity, HashCachePolicy>:: \
-			emplace_unique_using_allocator( \
-				Extract & extract, Hash & hash, KeyEqual & key_equal, \
-				NodeAlloc & node_alloc, BucketAlloc & bucket_alloc \
-				KERBAL_OPT_PPEXPAND_WITH_COMMA_N(LEFT_JOIN_COMMA, EMPTY, ARGS_DECL, i) \
-			) \
-			{ \
-				k_hash_check(hash); \
- \
-				node * p = k_build_new_node(node_alloc KERBAL_OPT_PPEXPAND_WITH_COMMA_N(LEFT_JOIN_COMMA, EMPTY, ARGS_USE, i)); \
- \
-				unique_insert_r uir(this->k_emplace_hook_node_unique(extract, hash, key_equal, p)); \
-				if (!uir.insert_happen()) { \
-					k_destroy_node(node_alloc, p); \
-				} \
-				return uir; \
-			} \
-
-#	endif
 
 			KERBAL_PPEXPAND_N(FBODY, KERBAL_PPEXPAND_EMPTY_SEPARATOR, 0)
 			KERBAL_PPEXPAND_N(FBODY, KERBAL_PPEXPAND_EMPTY_SEPARATOR, 20)
@@ -1043,7 +1038,11 @@ namespace kerbal
 			)
 			{
 				k_hash_check(hash);
-				return this->emplace_using_allocator(extract, hash, key_equal, node_alloc, bucket_alloc, src);
+				return this->emplace_using_allocator(
+					extract, hash, key_equal,
+					node_alloc, bucket_alloc,
+					src
+				);
 			}
 
 			template <typename Entity, typename HashCachePolicy>
@@ -1341,7 +1340,7 @@ namespace kerbal
 			) KERBAL_NOEXCEPT
 			{
 				k_hash_check(hash);
-				if (pos.k_current == NULL) {
+				if (NULL == pos.k_current) {
 					return pos.cast_to_mutable();
 				}
 				node * p = node::reinterpret_as(pos.cast_to_mutable().k_current);
@@ -1426,20 +1425,23 @@ namespace kerbal
 				Extract & extract, Hash & hash,
 				BucketAlloc & bucket_alloc,
 				size_type new_bucket_count
-			) KERBAL_NOEXCEPT
+			)
 			{
 				k_hash_check(hash);
 				if (0 == new_bucket_count) {
 					new_bucket_count = 1;
 				}
-				k_destroy_buckets(bucket_alloc, this->k_buckets, this->k_bucket_count);
+
+				bucket_type * old_buckets = this->k_buckets;
+				size_type old_bucket_count = this->k_bucket_count;
 				this->k_buckets = this->k_create_buckets(bucket_alloc, new_bucket_count);
 				this->k_bucket_count = new_bucket_count;
+				k_destroy_buckets(bucket_alloc, old_buckets, old_bucket_count);
 
 				node * cur = node::reinterpret_as(this->k_head.k_next);
 				this->k_head.k_next = NULL;
 
-				while (cur != NULL) {
+				while (NULL != cur) {
 					node * next = node::reinterpret_as(cur->k_next);
 					this->k_rehash_hook_node(extract, hash, cur);
 					cur = next;
@@ -1544,7 +1546,7 @@ namespace kerbal
 
 				node * p = ht_node_allocator_traits::allocate_one(node_alloc);
 #		if !KERBAL_HAS_EXCEPTIONS_SUPPORT
-				if (p == NULL) {
+				if (NULL == p) {
 					kerbal::utility::throw_this_exception_helper<kerbal::memory::bad_alloc>::throw_this_exception();
 				}
 #		endif
@@ -1577,11 +1579,17 @@ namespace kerbal
 
 #		define FBODY(i) \
 			template <typename Entity, typename HashCachePolicy> \
-			template <typename NodeAlloc KERBAL_OPT_PPEXPAND_WITH_COMMA_N(LEFT_JOIN_COMMA, EMPTY, TARGS_DECL, i)> \
+			template < \
+				typename NodeAlloc \
+				KERBAL_OPT_PPEXPAND_WITH_COMMA_N(LEFT_JOIN_COMMA, EMPTY, TARGS_DECL, i) \
+			> \
 			typename \
 			hash_table_base<Entity, HashCachePolicy>::node * \
 			hash_table_base<Entity, HashCachePolicy>:: \
-			k_build_new_node(NodeAlloc & node_alloc KERBAL_OPT_PPEXPAND_WITH_COMMA_N(LEFT_JOIN_COMMA, EMPTY, ARGS_DECL, i)) \
+			k_build_new_node( \
+				NodeAlloc & node_alloc \
+				KERBAL_OPT_PPEXPAND_WITH_COMMA_N(LEFT_JOIN_COMMA, EMPTY, ARGS_DECL, i) \
+			) \
 			{ \
 				typedef kerbal::memory::allocator_traits<NodeAlloc> ht_node_allocator_traits; \
  \
@@ -1604,16 +1612,22 @@ namespace kerbal
 
 #			define FBODY(i) \
 			template <typename Entity, typename HashCachePolicy> \
-			template <typename NodeAlloc KERBAL_OPT_PPEXPAND_WITH_COMMA_N(LEFT_JOIN_COMMA, EMPTY, TARGS_DECL, i)> \
+			template < \
+				typename NodeAlloc \
+				KERBAL_OPT_PPEXPAND_WITH_COMMA_N(LEFT_JOIN_COMMA, EMPTY, TARGS_DECL, i) \
+			> \
 			typename \
 			hash_table_base<Entity, HashCachePolicy>::node * \
 			hash_table_base<Entity, HashCachePolicy>:: \
-			k_build_new_node(NodeAlloc & node_alloc KERBAL_OPT_PPEXPAND_WITH_COMMA_N(LEFT_JOIN_COMMA, EMPTY, ARGS_DECL, i)) \
+			k_build_new_node( \
+				NodeAlloc & node_alloc \
+				KERBAL_OPT_PPEXPAND_WITH_COMMA_N(LEFT_JOIN_COMMA, EMPTY, ARGS_DECL, i) \
+			) \
 			{ \
 				typedef kerbal::memory::allocator_traits<NodeAlloc> ht_node_allocator_traits; \
  \
 				node * p = ht_node_allocator_traits::allocate_one(node_alloc); \
-				if (p == NULL) { \
+				if (NULL == p) { \
 					kerbal::utility::throw_this_exception_helper<kerbal::memory::bad_alloc>::throw_this_exception(); \
 				} \
  \
