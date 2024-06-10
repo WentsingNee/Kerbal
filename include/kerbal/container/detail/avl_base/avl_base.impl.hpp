@@ -1600,17 +1600,7 @@ namespace kerbal
 			avl_type_only<Entity>::k_emplace_using_allocator(NodeAllocator & alloc, Extract & e, KeyCompare & kc, Args && ... args)
 			{
 				node * p = k_build_new_node(alloc, kerbal::utility::forward<Args>(args)...);
-
-#			if KERBAL_HAS_EXCEPTIONS_SUPPORT
-				try {
-#			endif
-					return this->k_emplace_hook_node(e, kc, p);
-#			if KERBAL_HAS_EXCEPTIONS_SUPPORT
-				} catch (...) {
-					k_destroy_node(alloc, p);
-					throw;
-				}
-#			endif
+				return this->k_emplace_ua_aux(alloc, e, kc, p);
 			}
 
 			template <typename Entity>
@@ -1620,21 +1610,7 @@ namespace kerbal
 			avl_type_only<Entity>::k_emplace_unique_using_allocator(NodeAllocator & alloc, Extract & e, KeyCompare & kc, Args && ... args)
 			{
 				node * p = k_build_new_node(alloc, kerbal::utility::forward<Args>(args)...);
-
-#			if KERBAL_HAS_EXCEPTIONS_SUPPORT
-				try {
-#			endif
-					unique_insert_r ret(this->k_emplace_hook_node_unique(e, kc, p));
-					if (!ret.insert_happen()) {
-						k_destroy_node(alloc, p);
-					}
-					return ret;
-#			if KERBAL_HAS_EXCEPTIONS_SUPPORT
-				} catch (...) {
-					k_destroy_node(alloc, p);
-					throw;
-				}
-#			endif
+				return this->k_emplace_unique_ua_aux(alloc, e, kc, p);
 			}
 
 #	else
@@ -1644,8 +1620,6 @@ namespace kerbal
 #		define TARGS_DECL(i) typename KERBAL_MACRO_CONCAT(Arg, i)
 #		define ARGS_DECL(i) const KERBAL_MACRO_CONCAT(Arg, i) & KERBAL_MACRO_CONCAT(arg, i)
 #		define ARGS_USE(i) KERBAL_MACRO_CONCAT(arg, i)
-
-#	if KERBAL_HAS_EXCEPTIONS_SUPPORT
 #		define FBODY(i) \
 			template <typename Entity> \
 			template <typename NodeAllocator, typename Extract, typename KeyCompare KERBAL_OPT_PPEXPAND_WITH_COMMA_N(LEFT_JOIN_COMMA, EMPTY, TARGS_DECL, i)> \
@@ -1653,13 +1627,7 @@ namespace kerbal
 			avl_type_only<Entity>::k_emplace_using_allocator(NodeAllocator & alloc, Extract & e, KeyCompare & kc KERBAL_OPT_PPEXPAND_WITH_COMMA_N(LEFT_JOIN_COMMA, EMPTY, ARGS_DECL, i)) \
 			{ \
 				node * p = k_build_new_node(alloc KERBAL_OPT_PPEXPAND_WITH_COMMA_N(LEFT_JOIN_COMMA, EMPTY, ARGS_USE, i)); \
- \
-				try { \
-					return this->k_emplace_hook_node(e, kc, p); \
-				} catch (...) { \
-					k_destroy_node(alloc, p); \
-					throw; \
-				} \
+				return this->k_emplace_ua_aux(alloc, e, kc, p); \
 			} \
 			template <typename Entity> \
 			template <typename NodeAllocator, typename Extract, typename KeyCompare KERBAL_OPT_PPEXPAND_WITH_COMMA_N(LEFT_JOIN_COMMA, EMPTY, TARGS_DECL, i)> \
@@ -1667,41 +1635,8 @@ namespace kerbal
 			avl_type_only<Entity>::k_emplace_unique_using_allocator(NodeAllocator & alloc, Extract & e, KeyCompare & kc KERBAL_OPT_PPEXPAND_WITH_COMMA_N(LEFT_JOIN_COMMA, EMPTY, ARGS_DECL, i)) \
 			{ \
 				node * p = k_build_new_node(alloc KERBAL_OPT_PPEXPAND_WITH_COMMA_N(LEFT_JOIN_COMMA, EMPTY, ARGS_USE, i)); \
- \
-				try { \
-					unique_insert_r ret(this->k_emplace_hook_node_unique(e, kc, p)); \
-					if (!ret.insert_happen()) { \
-						k_destroy_node(alloc, p); \
-					} \
-					return ret; \
-				} catch (...) { \
-					k_destroy_node(alloc, p); \
-					throw; \
-				} \
-			}
-#	else
-#		define FBODY(i) \
-			template <typename Entity> \
-			template <typename NodeAllocator, typename Extract, typename KeyCompare KERBAL_OPT_PPEXPAND_WITH_COMMA_N(LEFT_JOIN_COMMA, EMPTY, TARGS_DECL, i)> \
-			typename avl_type_only<Entity>::iterator \
-			avl_type_only<Entity>::k_emplace_using_allocator(NodeAllocator & alloc, Extract & e, KeyCompare & kc KERBAL_OPT_PPEXPAND_WITH_COMMA_N(LEFT_JOIN_COMMA, EMPTY, ARGS_DECL, i)) \
-			{ \
-				node * p = k_build_new_node(alloc KERBAL_OPT_PPEXPAND_WITH_COMMA_N(LEFT_JOIN_COMMA, EMPTY, ARGS_USE, i)); \
-				return this->k_emplace_hook_node(e, kc, p); \
+				return this->k_emplace_unique_ua_aux(alloc, e, kc, p); \
 			} \
-			template <typename Entity> \
-			template <typename NodeAllocator, typename Extract, typename KeyCompare KERBAL_OPT_PPEXPAND_WITH_COMMA_N(LEFT_JOIN_COMMA, EMPTY, TARGS_DECL, i)> \
-			typename avl_type_only<Entity>::unique_insert_r \
-			avl_type_only<Entity>::k_emplace_unique_using_allocator(NodeAllocator & alloc, Extract & e, KeyCompare & kc KERBAL_OPT_PPEXPAND_WITH_COMMA_N(LEFT_JOIN_COMMA, EMPTY, ARGS_DECL, i)) \
-			{ \
-				node * p = k_build_new_node(alloc KERBAL_OPT_PPEXPAND_WITH_COMMA_N(LEFT_JOIN_COMMA, EMPTY, ARGS_USE, i)); \
-				unique_insert_r ret(this->k_emplace_hook_node_unique(e, kc, p)); \
-				if (!ret.insert_happen()) { \
-					k_destroy_node(alloc, p); \
-				} \
-				return ret; \
-			}
-#	endif
 
 			KERBAL_PPEXPAND_N(FBODY, KERBAL_PPEXPAND_EMPTY_SEPARATOR, 0)
 			KERBAL_PPEXPAND_N(FBODY, KERBAL_PPEXPAND_EMPTY_SEPARATOR, 20)
@@ -2023,18 +1958,7 @@ namespace kerbal
 				}
 
 				k_try_construct_node(alloc, p, kerbal::utility::forward<Args>(args)...);
-
-#			if KERBAL_HAS_EXCEPTIONS_SUPPORT
-				try {
-#			endif
-					return this->k_emplace_hook_node(e, kc, p);
-#			if KERBAL_HAS_EXCEPTIONS_SUPPORT
-				} catch (...) {
-					k_destroy_node(alloc, p);
-					throw;
-				}
-#			endif
-
+				return this->k_emplace_ua_aux(alloc, e, kc, p);
 			}
 
 			template <typename Entity>
@@ -2062,21 +1986,7 @@ namespace kerbal
 				}
 
 				k_try_construct_node(alloc, p, kerbal::utility::forward<Args>(args)...);
-
-#			if KERBAL_HAS_EXCEPTIONS_SUPPORT
-				try {
-#			endif
-					unique_insert_r ret(this->k_emplace_hook_node_unique(e, kc, p));
-					if (!ret.insert_happen()) {
-						k_destroy_node(alloc, p);
-					}
-					return ret;
-#			if KERBAL_HAS_EXCEPTIONS_SUPPORT
-				} catch (...) {
-					k_destroy_node(alloc, p);
-					throw;
-				}
-#			endif
+				return this->k_emplace_unique_ua_aux(alloc, e, kc, p);
 			}
 
 #	else
@@ -2106,13 +2016,7 @@ namespace kerbal
 				} \
  \
 				k_try_construct_node(alloc, p KERBAL_OPT_PPEXPAND_WITH_COMMA_N(LEFT_JOIN_COMMA, EMPTY, ARGS_USE, i)); \
- \
-				try { \
-					return this->k_emplace_hook_node(e, kc, p); \
-				} catch (...) { \
-					k_destroy_node(alloc, p); \
-					throw; \
-				} \
+				return this->k_emplace_ua_aux(alloc, e, kc, p); \
 			} \
  \
 			template <typename Entity> \
@@ -2132,17 +2036,7 @@ namespace kerbal
 				} \
  \
 				k_try_construct_node(alloc, p KERBAL_OPT_PPEXPAND_WITH_COMMA_N(LEFT_JOIN_COMMA, EMPTY, ARGS_USE, i)); \
- \
-				try { \
-					unique_insert_r ret(this->k_emplace_hook_node_unique(e, kc, p)); \
-					if (!ret.insert_happen()) { \
-						k_destroy_node(alloc, p); \
-					} \
-					return ret; \
-				} catch (...) { \
-					k_destroy_node(alloc, p); \
-					throw; \
-				} \
+				return this->k_emplace_unique_ua_aux(alloc, e, kc, p); \
 			}
 #	else
 #		define FBODY(i) \
@@ -2168,7 +2062,7 @@ namespace kerbal
 				} \
  \
 				k_try_construct_node(alloc, p KERBAL_OPT_PPEXPAND_WITH_COMMA_N(LEFT_JOIN_COMMA, EMPTY, ARGS_USE, i)); \
-				return this->k_emplace_hook_node(e, kc, p); \
+				return this->k_emplace_ua_aux(alloc, e, kc, p); \
 			} \
  \
 			template <typename Entity> \
@@ -2193,11 +2087,7 @@ namespace kerbal
 				} \
  \
 				k_try_construct_node(alloc, p KERBAL_OPT_PPEXPAND_WITH_COMMA_N(LEFT_JOIN_COMMA, EMPTY, ARGS_USE, i)); \
-				unique_insert_r ret(this->k_emplace_hook_node_unique(e, kc, p)); \
-				if (!ret.insert_happen()) { \
-					k_destroy_node(alloc, p); \
-				} \
-				return ret; \
+				return this->k_emplace_unique_ua_aux(alloc, e, kc, p); \
 			}
 #	endif
 
