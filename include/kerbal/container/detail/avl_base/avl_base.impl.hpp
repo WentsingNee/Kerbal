@@ -1549,6 +1549,47 @@ namespace kerbal
 				return unique_insert_r(iterator(p), true);
 			}
 
+			template <typename Entity>
+			template <typename NodeAllocator, typename Extract, typename KeyCompare>
+			KERBAL_CONSTEXPR20
+			typename
+			avl_type_only<Entity>::iterator
+			avl_type_only<Entity>::k_emplace_ua_aux(NodeAllocator & alloc, Extract & e, KeyCompare & kc, node * p)
+			{
+#			if KERBAL_HAS_EXCEPTIONS_SUPPORT
+				try {
+#			endif
+					return this->k_emplace_hook_node(e, kc, p);
+#			if KERBAL_HAS_EXCEPTIONS_SUPPORT
+				} catch (...) {
+					k_destroy_node(alloc, p);
+					throw;
+				}
+#			endif
+			}
+
+			template <typename Entity>
+			template <typename NodeAllocator, typename Extract, typename KeyCompare>
+			KERBAL_CONSTEXPR20
+			typename
+			avl_type_only<Entity>::unique_insert_r
+			avl_type_only<Entity>::k_emplace_unique_ua_aux(NodeAllocator & alloc, Extract & e, KeyCompare & kc, node * p)
+			{
+#			if KERBAL_HAS_EXCEPTIONS_SUPPORT
+				try {
+#			endif
+					unique_insert_r ret(this->k_emplace_hook_node_unique(e, kc, p));
+					if (!ret.insert_happen()) {
+						k_destroy_node(alloc, p);
+					}
+					return ret;
+#			if KERBAL_HAS_EXCEPTIONS_SUPPORT
+				} catch (...) {
+					k_destroy_node(alloc, p);
+					throw;
+				}
+#			endif
+			}
 
 #	if __cplusplus >= 201103L
 

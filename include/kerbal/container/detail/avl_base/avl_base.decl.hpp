@@ -711,6 +711,14 @@ namespace kerbal
 					KERBAL_CONSTEXPR14
 					unique_insert_r k_emplace_hook_node_unique(Extract & e, KeyCompare & kc, node * p);
 
+					template <typename NodeAllocator, typename Extract, typename KeyCompare>
+					KERBAL_CONSTEXPR20
+					iterator k_emplace_ua_aux(NodeAllocator & alloc, Extract & e, KeyCompare & kc, node * p);
+
+					template <typename NodeAllocator, typename Extract, typename KeyCompare>
+					KERBAL_CONSTEXPR20
+					unique_insert_r k_emplace_unique_ua_aux(NodeAllocator & alloc, Extract & e, KeyCompare & kc, node * p);
+
 				public:
 
 #			if __cplusplus >= 201103L
