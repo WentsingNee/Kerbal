@@ -40,6 +40,22 @@ namespace kerbal
 		KERBAL_CONSTEXPR20
 		const T* any_cast(const basic_any<Size, Align, Allocator> * operand) KERBAL_NOEXCEPT;
 
+		template <typename T, std::size_t Size, std::size_t Align, typename Allocator>
+		KERBAL_CONSTEXPR20
+		T any_cast(basic_any<Size, Align, Allocator> & operand);
+
+		template <typename T, std::size_t Size, std::size_t Align, typename Allocator>
+		KERBAL_CONSTEXPR20
+		const T any_cast(const basic_any<Size, Align, Allocator> & operand);
+
+#	if __cplusplus >= 201103L
+
+		template <typename T, std::size_t Size, std::size_t Align, typename Allocator>
+		KERBAL_CONSTEXPR20
+		T any_cast(basic_any<Size, Align, Allocator> && operand);
+
+#	endif
+
 	} // namespace any
 
 } // namespace kerbal

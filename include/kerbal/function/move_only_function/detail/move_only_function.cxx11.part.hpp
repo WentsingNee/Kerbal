@@ -762,35 +762,35 @@ namespace kerbal
 
 		};
 
-		template <typename T, typename Fun, typename Allocator, std::size_t Size, std::size_t Align>
+		template <typename T, typename Fun, std::size_t Size, std::size_t Align, typename Allocator>
 		KERBAL_CONSTEXPR20
 		T* function_cast(basic_move_only_function<Fun, Size, Align, Allocator> * operand) KERBAL_NOEXCEPT
 		{
 			return operand->template get_pointer<T>();
 		}
 
-		template <typename T, typename Fun, typename Allocator, std::size_t Size, std::size_t Align>
+		template <typename T, typename Fun, std::size_t Size, std::size_t Align, typename Allocator>
 		KERBAL_CONSTEXPR20
 		const T* function_cast(const basic_move_only_function<Fun, Size, Align, Allocator> * operand) KERBAL_NOEXCEPT
 		{
 			return operand->template get_pointer<T>();
 		}
 
-		template <typename T, typename Fun, typename Allocator, std::size_t Size, std::size_t Align>
+		template <typename T, typename Fun, std::size_t Size, std::size_t Align, typename Allocator>
 		KERBAL_CONSTEXPR20
 		T function_cast(basic_move_only_function<Fun, Size, Align, Allocator> & operand)
 		{
 			return operand.template get<T>();
 		}
 
-		template <typename T, typename Fun, typename Allocator, std::size_t Size, std::size_t Align>
+		template <typename T, typename Fun, std::size_t Size, std::size_t Align, typename Allocator>
 		KERBAL_CONSTEXPR20
 		const T function_cast(const basic_move_only_function<Fun, Size, Align, Allocator> & operand)
 		{
 			return operand.template get<T>();
 		}
 
-		template <typename T, typename Fun, typename Allocator, std::size_t Size, std::size_t Align>
+		template <typename T, typename Fun, std::size_t Size, std::size_t Align, typename Allocator>
 		KERBAL_CONSTEXPR20
 		T function_cast(basic_move_only_function<Fun, Size, Align, Allocator> && operand)
 		{

@@ -35,13 +35,29 @@ namespace kerbal
 		using move_only_function = basic_move_only_function<Fun, sizeof(void*), KERBAL_ALIGNOF(void*), std::allocator<char> >;
 #	endif
 
-		template <typename Fun, typename T, std::size_t Size, std::size_t Align, typename Allocator>
+		template <typename T, typename Fun, std::size_t Size, std::size_t Align, typename Allocator>
 		KERBAL_CONSTEXPR20
 		T* function_cast(basic_move_only_function<Fun, Size, Align, Allocator> * operand) KERBAL_NOEXCEPT;
 
-		template <typename Fun, typename T, std::size_t Size, std::size_t Align, typename Allocator>
+		template <typename T, typename Fun, std::size_t Size, std::size_t Align, typename Allocator>
 		KERBAL_CONSTEXPR20
 		const T* function_cast(const basic_move_only_function<Fun, Size, Align, Allocator> * operand) KERBAL_NOEXCEPT;
+
+		template <typename T, typename Fun, std::size_t Size, std::size_t Align, typename Allocator>
+		KERBAL_CONSTEXPR20
+		T function_cast(basic_move_only_function<Fun, Size, Align, Allocator> & operand);
+
+		template <typename T, typename Fun, std::size_t Size, std::size_t Align, typename Allocator>
+		KERBAL_CONSTEXPR20
+		const T function_cast(const basic_move_only_function<Fun, Size, Align, Allocator> & operand);
+
+#	if __cplusplus >= 201103L
+
+		template <typename T, typename Fun, std::size_t Size, std::size_t Align, typename Allocator>
+		KERBAL_CONSTEXPR20
+		T function_cast(basic_move_only_function<Fun, Size, Align, Allocator> && operand);
+
+#	endif
 
 	} // namespace function
 
