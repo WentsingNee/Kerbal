@@ -134,7 +134,7 @@ namespace kerbal
 
 				void assign(const flat_ordered & src)
 				{
-					this->assign(src.cbegin(), src.cend(), src.key_comp_obj());
+					this->assign(src.cbegin(), src.cend(), src.key_comp());
 				}
 
 				flat_ordered & operator=(const flat_ordered & src)
@@ -161,7 +161,7 @@ namespace kerbal
 				void swap(flat_ordered & ano)
 				{
 					this->sequence.swap(ano.sequence);
-					kerbal::algorithm::swap(this->key_comp_obj(), ano.key_comp_obj());
+					kerbal::algorithm::swap(this->key_comp(), ano.key_comp());
 				}
 
 				template <typename Allocator2>
