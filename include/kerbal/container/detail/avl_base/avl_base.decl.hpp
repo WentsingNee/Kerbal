@@ -872,6 +872,14 @@ namespace kerbal
 				//===================
 				// replace
 
+				private:
+
+					template <typename NodeAllocator>
+					KERBAL_CONSTEXPR20
+					node * k_replace_reuse_node(NodeAllocator & alloc, const_iterator replace);
+
+				public:
+
 #			if __cplusplus >= 201103L
 
 					template <typename NodeAllocator, typename Extract, typename KeyCompare, typename ... Args>

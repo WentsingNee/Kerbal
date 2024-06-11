@@ -1931,6 +1931,32 @@ namespace kerbal
 		//===================
 		// replace
 
+			template <typename Entity>
+			template <typename NodeAllocator>
+			KERBAL_CONSTEXPR20
+			typename avl_type_only<Entity>::node *
+			avl_type_only<Entity>::k_replace_reuse_node(NodeAllocator & alloc, const_iterator replace)
+			{
+				typedef kerbal::memory::allocator_traits<NodeAllocator> node_allocator_traits;
+
+				node * p = NULL;
+				if (replace == this->cend()) {
+					p = node_allocator_traits::allocate_one(alloc);
+
+#		if !KERBAL_HAS_EXCEPTIONS_SUPPORT
+					if (p == NULL) {
+						kerbal::utility::throw_this_exception_helper<kerbal::memory::bad_alloc>::throw_this_exception();
+					}
+#		endif // KERBAL_HAS_EXCEPTIONS_SUPPORT
+
+				} else {
+					p = node::reinterpret_as(replace.cast_to_mutable().current);
+					this->k_unhook_node(p);
+					node_allocator_traits::destroy(alloc, p);
+				}
+				return p;
+			}
+
 #	if __cplusplus >= 201103L
 
 			template <typename Entity>
