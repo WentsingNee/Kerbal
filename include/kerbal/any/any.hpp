@@ -384,16 +384,6 @@ namespace kerbal
 				template <typename T, std::size_t Size2, std::size_t Align2, typename Allocator2>
 				friend struct kerbal::any::detail::any_manager_collection;
 
-				template <typename T, std::size_t Size2, std::size_t Align2, typename Allocator2>
-				KERBAL_CONSTEXPR20
-				friend
-				T* any_cast(basic_any<Size2, Align2, Allocator2> * operand) KERBAL_NOEXCEPT;
-
-				template <typename T, std::size_t Size2, std::size_t Align2, typename Allocator2>
-				KERBAL_CONSTEXPR20
-				friend
-				const T* any_cast(const basic_any<Size2, Align2, Allocator2> * operand) KERBAL_NOEXCEPT;
-
 				template <typename T>
 				struct is_embedded_stored_type :
 						is_any_embedded_stored_type<T, Size, Align>

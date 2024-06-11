@@ -391,16 +391,6 @@ namespace kerbal
 				template <typename T, std::size_t Size2, std::size_t Align2, typename Allocator2, typename Ret2, typename ... TArgs2>
 				friend struct kerbal::function::detail::function_manager_collection;
 
-				template <typename T, std::size_t Size2, std::size_t Align2, typename Allocator2, typename Ret2, typename ... TArgs2>
-				KERBAL_CONSTEXPR20
-				friend
-				T* function_cast(basic_function<Ret2(TArgs2...), Size2, Align2, Allocator2> * operand) KERBAL_NOEXCEPT;
-
-				template <typename T, std::size_t Size2, std::size_t Align2, typename Allocator2, typename Ret2, typename ... TArgs2>
-				KERBAL_CONSTEXPR20
-				friend
-				const T* function_cast(const basic_function<Ret2(TArgs2...), Size2, Align2, Allocator2> * operand) KERBAL_NOEXCEPT;
-
 				template <typename T>
 				struct is_embedded_stored_type :
 						is_function_embedded_stored_type<T, Size, Align>
