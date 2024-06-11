@@ -1,7 +1,7 @@
 /**
- * @file       flat_multiset.hpp
+ * @file       flat_multiset.decl.hpp
  * @brief
- * @date       2024-04-07
+ * @date       2023-09-08
  * @author     Peter
  * @remark     split from kerbal/container/flat_set.hpp
  * @copyright
@@ -10,19 +10,16 @@
  *   all rights reserved
  */
 
-#ifndef KERBAL_CONTAINER_FLAT_MULTISET_HPP
-#define KERBAL_CONTAINER_FLAT_MULTISET_HPP
+#ifndef KERBAL_CONTAINER_FLAT_MULTISET_FLAT_MULTISET_DECL_HPP
+#define KERBAL_CONTAINER_FLAT_MULTISET_FLAT_MULTISET_DECL_HPP
 
-#include <kerbal/compare/basic_compare.hpp>
+#include <kerbal/compare/binary_type_compare.hpp>
 #include <kerbal/compatibility/constexpr.hpp>
 #include <kerbal/compatibility/namespace_std_scope.hpp>
 #include <kerbal/compatibility/noexcept.hpp>
 #include <kerbal/container/associative_container_facility/key_extractors/identity_extractor.hpp>
+#include <kerbal/container/detail/flat_set_base.hpp>
 #include <kerbal/container/flat_ordered.hpp>
-
-#include <kerbal/container/detail/flat_multiset_base.hpp>
-
-#include <memory>
 
 #if __cplusplus >= 201103L
 #	include <initializer_list>
@@ -35,18 +32,17 @@ namespace kerbal
 	namespace container
 	{
 
-		template <typename T, typename KeyCompare = kerbal::compare::less<T>, typename Allocator = std::allocator<T> >
-		class flat_multiset :
-				public kerbal::container::detail::flat_multiset_base<
-					T,
-					kerbal::container::flat_ordered<T, kerbal::container::identity_extractor<T>, KeyCompare, Allocator>
-				>
+		template <typename T, typename KeyCompare = kerbal::compare::binary_type_less<void, void>, typename Allocator = std::allocator<T> >
+		class flat_multiset
+				: public kerbal::container::detail::flat_multiset_base<T, kerbal::container::flat_ordered<T, kerbal::container::identity_extractor<T>, KeyCompare, Allocator> >
 		{
 			private:
 				typedef kerbal::container::flat_ordered<T, kerbal::container::identity_extractor<T>, KeyCompare, Allocator> Ordered;
 				typedef kerbal::container::detail::flat_multiset_base<T, Ordered> super;
 
 			public:
+				typedef typename super::key_compare			key_compare;
+				typedef typename super::key_type			key_type;
 				typedef typename super::value_type			value_type;
 				typedef typename super::const_type			const_type;
 				typedef typename super::reference			reference;
@@ -59,14 +55,13 @@ namespace kerbal
 				typedef typename super::const_rvalue_reference		const_rvalue_reference;
 #		endif
 
+				typedef Allocator					allocator_type;
+
 				typedef typename super::size_type					size_type;
 				typedef typename super::difference_type				difference_type;
 
 				typedef typename super::const_iterator				const_iterator;
 				typedef typename super::const_reverse_iterator		const_reverse_iterator;
-
-				typedef typename super::key_type			key_type;
-				typedef typename super::key_compare			key_compare;
 
 			public:
 
@@ -222,5 +217,4 @@ KERBAL_NAMESPACE_STD_BEGIN
 
 KERBAL_NAMESPACE_STD_END
 
-
-#endif // KERBAL_CONTAINER_FLAT_MULTISET_HPP
+#endif // KERBAL_CONTAINER_FLAT_MULTISET_FLAT_MULTISET_DECL_HPP
