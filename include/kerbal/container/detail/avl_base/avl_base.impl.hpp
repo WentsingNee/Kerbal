@@ -1965,24 +1965,7 @@ namespace kerbal
 			typename avl_type_only<Entity>::iterator
 			avl_type_only<Entity>::k_replace_emplace_using_allocator(NodeAllocator & alloc, Extract & e, KeyCompare & kc, const_iterator replace, Args && ... args)
 			{
-				typedef kerbal::memory::allocator_traits<NodeAllocator> node_allocator_traits;
-
-				node * p = NULL;
-				if (replace == this->cend()) {
-					p = node_allocator_traits::allocate_one(alloc);
-
-#		if !KERBAL_HAS_EXCEPTIONS_SUPPORT
-					if (p == NULL) {
-						kerbal::utility::throw_this_exception_helper<kerbal::memory::bad_alloc>::throw_this_exception();
-					}
-#		endif // KERBAL_HAS_EXCEPTIONS_SUPPORT
-
- 				} else {
-					p = node::reinterpret_as(replace.cast_to_mutable().current);
-					this->k_unhook_node(p);
-					node_allocator_traits::destroy(alloc, p);
-				}
-
+				node * p = this->k_replace_reuse_node(alloc, replace);
 				k_try_construct_node(alloc, p, kerbal::utility::forward<Args>(args)...);
 				return this->k_emplace_ua_aux(alloc, e, kc, p);
 			}
@@ -1993,24 +1976,7 @@ namespace kerbal
 			typename avl_type_only<Entity>::unique_insert_r
 			avl_type_only<Entity>::k_replace_emplace_unique_using_allocator(NodeAllocator & alloc, Extract & e, KeyCompare & kc, const_iterator replace, Args && ... args)
 			{
-				typedef kerbal::memory::allocator_traits<NodeAllocator> node_allocator_traits;
-
-				node * p = NULL;
-				if (replace == this->cend()) {
-					p = node_allocator_traits::allocate_one(alloc);
-
-#		if !KERBAL_HAS_EXCEPTIONS_SUPPORT
-					if (p == NULL) {
-						kerbal::utility::throw_this_exception_helper<kerbal::memory::bad_alloc>::throw_this_exception();
-					}
-#		endif // KERBAL_HAS_EXCEPTIONS_SUPPORT
-
- 				} else {
-					p = node::reinterpret_as(replace.cast_to_mutable().current);
-					this->k_unhook_node(p);
-					node_allocator_traits::destroy(alloc, p);
-				}
-
+				node * p = this->k_replace_reuse_node(alloc, replace);
 				k_try_construct_node(alloc, p, kerbal::utility::forward<Args>(args)...);
 				return this->k_emplace_unique_ua_aux(alloc, e, kc, p);
 			}
@@ -2022,25 +1988,13 @@ namespace kerbal
 #		define TARGS_DECL(i) typename KERBAL_MACRO_CONCAT(Arg, i)
 #		define ARGS_DECL(i) const KERBAL_MACRO_CONCAT(Arg, i) & KERBAL_MACRO_CONCAT(arg, i)
 #		define ARGS_USE(i) KERBAL_MACRO_CONCAT(arg, i)
-
-#	if KERBAL_HAS_EXCEPTIONS_SUPPORT
 #		define FBODY(i) \
 			template <typename Entity> \
 			template <typename NodeAllocator, typename Extract, typename KeyCompare KERBAL_OPT_PPEXPAND_WITH_COMMA_N(LEFT_JOIN_COMMA, EMPTY, TARGS_DECL, i)> \
 			typename avl_type_only<Entity>::iterator \
 			avl_type_only<Entity>::k_replace_emplace_using_allocator(NodeAllocator & alloc, Extract & e, KeyCompare & kc, const_iterator replace KERBAL_OPT_PPEXPAND_WITH_COMMA_N(LEFT_JOIN_COMMA, EMPTY, ARGS_DECL, i)) \
 			{ \
-				typedef kerbal::memory::allocator_traits<NodeAllocator> node_allocator_traits; \
- \
-				node * p = NULL; \
-				if (replace == this->cend()) { \
-					p = node_allocator_traits::allocate_one(alloc); \
- 				} else { \
-					p = node::reinterpret_as(replace.cast_to_mutable().current); \
-					this->k_unhook_node(p); \
-					node_allocator_traits::destroy(alloc, p); \
-				} \
- \
+				node * p = this->k_replace_reuse_node(alloc, replace); \
 				k_try_construct_node(alloc, p KERBAL_OPT_PPEXPAND_WITH_COMMA_N(LEFT_JOIN_COMMA, EMPTY, ARGS_USE, i)); \
 				return this->k_emplace_ua_aux(alloc, e, kc, p); \
 			} \
@@ -2050,72 +2004,10 @@ namespace kerbal
 			typename avl_type_only<Entity>::unique_insert_r \
 			avl_type_only<Entity>::k_replace_emplace_unique_using_allocator(NodeAllocator & alloc, Extract & e, KeyCompare & kc, const_iterator replace KERBAL_OPT_PPEXPAND_WITH_COMMA_N(LEFT_JOIN_COMMA, EMPTY, ARGS_DECL, i)) \
 			{ \
-				typedef kerbal::memory::allocator_traits<NodeAllocator> node_allocator_traits; \
- \
-				node * p = NULL; \
-				if (replace == this->cend()) { \
-					p = node_allocator_traits::allocate_one(alloc); \
- 				} else { \
-					p = node::reinterpret_as(replace.cast_to_mutable().current); \
-					this->k_unhook_node(p); \
-					node_allocator_traits::destroy(alloc, p); \
-				} \
- \
+				node * p = this->k_replace_reuse_node(alloc, replace); \
 				k_try_construct_node(alloc, p KERBAL_OPT_PPEXPAND_WITH_COMMA_N(LEFT_JOIN_COMMA, EMPTY, ARGS_USE, i)); \
 				return this->k_emplace_unique_ua_aux(alloc, e, kc, p); \
-			}
-#	else
-#		define FBODY(i) \
-			template <typename Entity> \
-			template <typename NodeAllocator, typename Extract, typename KeyCompare KERBAL_OPT_PPEXPAND_WITH_COMMA_N(LEFT_JOIN_COMMA, EMPTY, TARGS_DECL, i)> \
-			typename avl_type_only<Entity>::iterator \
-			avl_type_only<Entity>::k_replace_emplace_using_allocator(NodeAllocator & alloc, Extract & e, KeyCompare & kc, const_iterator replace KERBAL_OPT_PPEXPAND_WITH_COMMA_N(LEFT_JOIN_COMMA, EMPTY, ARGS_DECL, i)) \
-			{ \
-				typedef kerbal::memory::allocator_traits<NodeAllocator> node_allocator_traits; \
- \
-				node * p = NULL; \
-				if (replace == this->cend()) { \
-					p = node_allocator_traits::allocate_one(alloc); \
- \
-					if (p == NULL) { \
-						kerbal::utility::throw_this_exception_helper<kerbal::memory::bad_alloc>::throw_this_exception(); \
-					} \
- \
- 				} else { \
-					p = node::reinterpret_as(replace.cast_to_mutable().current); \
-					this->k_unhook_node(p); \
-					node_allocator_traits::destroy(alloc, p); \
-				} \
- \
-				k_try_construct_node(alloc, p KERBAL_OPT_PPEXPAND_WITH_COMMA_N(LEFT_JOIN_COMMA, EMPTY, ARGS_USE, i)); \
-				return this->k_emplace_ua_aux(alloc, e, kc, p); \
 			} \
- \
-			template <typename Entity> \
-			template <typename NodeAllocator, typename Extract, typename KeyCompare KERBAL_OPT_PPEXPAND_WITH_COMMA_N(LEFT_JOIN_COMMA, EMPTY, TARGS_DECL, i)> \
-			typename avl_type_only<Entity>::unique_insert_r \
-			avl_type_only<Entity>::k_replace_emplace_unique_using_allocator(NodeAllocator & alloc, Extract & e, KeyCompare & kc, const_iterator replace KERBAL_OPT_PPEXPAND_WITH_COMMA_N(LEFT_JOIN_COMMA, EMPTY, ARGS_DECL, i)) \
-			{ \
-				typedef kerbal::memory::allocator_traits<NodeAllocator> node_allocator_traits; \
- \
-				node * p = NULL; \
-				if (replace == this->cend()) { \
-					p = node_allocator_traits::allocate_one(alloc); \
- \
-					if (p == NULL) { \
-						kerbal::utility::throw_this_exception_helper<kerbal::memory::bad_alloc>::throw_this_exception(); \
-					} \
- \
- 				} else { \
-					p = node::reinterpret_as(replace.cast_to_mutable().current); \
-					this->k_unhook_node(p); \
-					node_allocator_traits::destroy(alloc, p); \
-				} \
- \
-				k_try_construct_node(alloc, p KERBAL_OPT_PPEXPAND_WITH_COMMA_N(LEFT_JOIN_COMMA, EMPTY, ARGS_USE, i)); \
-				return this->k_emplace_unique_ua_aux(alloc, e, kc, p); \
-			}
-#	endif
 
 			KERBAL_PPEXPAND_N(FBODY, KERBAL_PPEXPAND_EMPTY_SEPARATOR, 0)
 			KERBAL_PPEXPAND_N(FBODY, KERBAL_PPEXPAND_EMPTY_SEPARATOR, 20)
