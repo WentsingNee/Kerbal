@@ -155,7 +155,7 @@ namespace kerbal
 					assign(InputIterator first, InputIterator last, key_compare kc)
 					{
 						this->clear();
-						this->key_comp_obj() = kc;
+						this->key_comp() = kc;
 						this->insert(first, last);
 					}
 
