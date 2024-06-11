@@ -55,22 +55,16 @@ namespace kerbal
 
 					Ordered ordered;
 
-					KERBAL_CONSTEXPR14
-					key_compare & key_comp_obj()
-					{
-						return ordered.key_comp_obj();
-					}
-
-					KERBAL_CONSTEXPR14
-					const key_compare & key_comp_obj() const
-					{
-						return ordered.key_comp_obj();
-					}
-
 				public:
 
 					KERBAL_CONSTEXPR14
-					const key_compare & key_comp() const
+					key_compare & key_comp() KERBAL_NOEXCEPT
+					{
+						return ordered.key_comp();
+					}
+
+					KERBAL_CONSTEXPR14
+					const key_compare & key_comp() const KERBAL_NOEXCEPT
 					{
 						return ordered.key_comp();
 					}
