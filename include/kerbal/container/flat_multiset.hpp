@@ -1,8 +1,9 @@
 /**
  * @file       flat_multiset.hpp
  * @brief
- * @date       2024-12-08
+ * @date       2023-09-10
  * @author     Peter
+ * @remark     split from kerbal/container/flat_set.hpp
  * @copyright
  *      Peter of [ThinkSpirit Laboratory](http://thinkspirit.org/)
  *   of [Nanjing University of Information Science & Technology](http://www.nuist.edu.cn/)

@@ -1,7 +1,7 @@
 /**
  * @file       flat_multiset.decl.hpp
  * @brief
- * @date       2024-04-07
+ * @date       2023-09-08
  * @author     Peter
  * @remark     split from kerbal/container/flat_set.hpp
  * @copyright
