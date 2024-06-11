@@ -136,7 +136,7 @@ namespace kerbal
 				KERBAL_CONSTEXPR14
 				void assign(const static_ordered & src)
 				{
-					this->assign(src.cbegin(), src.cend(), src.key_comp_obj());
+					this->assign(src.cbegin(), src.cend(), src.key_comp());
 				}
 
 				KERBAL_CONSTEXPR14
@@ -167,7 +167,7 @@ namespace kerbal
 				void swap(static_ordered & ano)
 				{
 					this->sequence.swap(ano.sequence);
-					kerbal::algorithm::swap(this->key_comp_obj(), ano.key_comp_obj());
+					kerbal::algorithm::swap(this->key_comp(), ano.key_comp());
 				}
 
 				template <std::size_t M>

@@ -29,12 +29,8 @@
 #include <kerbal/type_traits/enable_if.hpp>
 #include <kerbal/type_traits/is_same.hpp>
 #include <kerbal/utility/compressed_pair.hpp>
+#include <kerbal/utility/in_place.hpp>
 #include <kerbal/utility/member_compress_helper.hpp>
-
-#if __cplusplus >= 201103L
-#	include <kerbal/type_traits/is_nothrow_copy_constructible.hpp>
-#	include <kerbal/type_traits/is_nothrow_default_constructible.hpp>
-#endif
 
 #if __cplusplus >= 201103L
 #	include <initializer_list>
@@ -50,57 +46,12 @@ namespace kerbal
 		namespace detail
 		{
 
-			template <typename KeyCompare>
-			class flat_ordered_key_compare_overload :
+			template <typename Entity, typename Extract, typename KeyCompare, typename Sequence>
+			class flat_ordered_base :
 				private kerbal::utility::member_compress_helper<KeyCompare>
 			{
 				private:
-					typedef kerbal::utility::member_compress_helper<KeyCompare> super;
-
-				protected:
-					typedef KeyCompare				key_compare;
-
-				protected:
-					KERBAL_CONSTEXPR
-					flat_ordered_key_compare_overload()
-						KERBAL_CONDITIONAL_NOEXCEPT(
-							kerbal::type_traits::try_test_is_nothrow_default_constructible<super>::IS_TRUE::value
-						) :
-						super(kerbal::utility::in_place_t())
-					{
-					}
-
-					KERBAL_CONSTEXPR
-					explicit
-					flat_ordered_key_compare_overload(const key_compare & kc)
-						KERBAL_CONDITIONAL_NOEXCEPT(
-							kerbal::type_traits::try_test_is_nothrow_copy_constructible<super>::IS_TRUE::value
-						) :
-						super(kerbal::utility::in_place_t(), kc)
-					{
-					}
-
-					KERBAL_CONSTEXPR14
-					key_compare & key_comp_obj() KERBAL_NOEXCEPT
-					{
-						return super::member();
-					}
-
-					KERBAL_CONSTEXPR14
-					const key_compare & key_comp_obj() const KERBAL_NOEXCEPT
-					{
-						return super::member();
-					}
-
-			};
-
-
-			template <typename Entity, typename Extract, typename KeyCompare, typename Sequence>
-			class flat_ordered_base :
-				private flat_ordered_key_compare_overload<KeyCompare>
-			{
-				private:
-					typedef flat_ordered_key_compare_overload<KeyCompare> key_compare_overload;
+					typedef kerbal::utility::member_compress_helper<KeyCompare> key_compare_compress_helper;
 
 				public:
 					typedef Entity					value_type;
@@ -131,8 +82,6 @@ namespace kerbal
 				protected:
 					Sequence sequence;
 
-					using key_compare_overload::key_comp_obj;
-
 					KERBAL_CONSTEXPR14
 					void k_sort()
 					{
@@ -145,7 +94,7 @@ namespace kerbal
 //					auto lower_bound_adapter() const
 //					{
 //						return [this](const_reference item, const key_type & key) -> bool {
-//							return this->key_comp_obj()(Extract()(item), Extract()(key));
+//							return this->key_comp()(Extract()(item), Extract()(key));
 //						};
 //					}
 //
@@ -168,7 +117,7 @@ namespace kerbal
 							KERBAL_CONSTEXPR14
 							bool operator()(const_reference item, const key_type & key) const
 							{
-								return self->key_comp_obj()(Extract()(item), key);
+								return self->key_comp()(Extract()(item), key);
 							}
 					};
 
@@ -181,7 +130,7 @@ namespace kerbal
 //					auto upper_bound_adapter() const
 //					{
 //						return [this](const key_type & key, const_reference item) -> bool {
-//							return this->key_comp_obj()(key, Extract()(item));
+//							return this->key_comp()(key, Extract()(item));
 //						};
 //					}
 //
@@ -204,7 +153,7 @@ namespace kerbal
 							KERBAL_CONSTEXPR14
 							bool operator()(const key_type & key, const_reference item) const
 							{
-								return self->key_comp_obj()(key, Extract()(item));
+								return self->key_comp()(key, Extract()(item));
 							}
 					};
 
@@ -230,12 +179,12 @@ namespace kerbal
 						public:
 							bool operator()(const_reference item, const key_type & key) const
 							{
-								return self->key_comp_obj()(Extract()(item), key);
+								return self->key_comp()(Extract()(item), key);
 							}
 
 							bool operator()(const key_type & key, const_reference item) const
 							{
-								return self->key_comp_obj()(key, Extract()(item));
+								return self->key_comp()(key, Extract()(item));
 							}
 					};
 
@@ -254,7 +203,7 @@ namespace kerbal
 						public:
 							bool operator()(const_reference item, const key_type & key) const
 							{
-								return self->key_comp_obj()(Extract()(item), key);
+								return self->key_comp()(Extract()(item), key);
 							}
 					};
 
@@ -291,13 +240,19 @@ namespace kerbal
 
 				public:
 
+					KERBAL_CONSTEXPR14
+					key_compare & key_comp() KERBAL_NOEXCEPT
+					{
+						return key_compare_compress_helper::member();
+					}
+
 					/**
 					 * @brief Returns the comparison object with which the %set was constructed.
 					 */
 					KERBAL_CONSTEXPR14
-					const key_compare & key_comp() const
+					const key_compare & key_comp() const KERBAL_NOEXCEPT
 					{
-						return this->key_comp_obj();
+						return key_compare_compress_helper::member();
 					}
 
 #			if __cplusplus >= 201402L
@@ -306,7 +261,7 @@ namespace kerbal
 					auto value_comp() const
 					{
 						return [this](const_reference lhs, const_reference rhs) -> bool {
-							return this->key_comp_obj()(Extract()(lhs), Extract()(rhs));
+							return this->key_comp()(Extract()(lhs), Extract()(rhs));
 						};
 					}
 
@@ -327,7 +282,7 @@ namespace kerbal
 						public:
 							bool operator()(const_reference lhs, const_reference rhs) const
 							{
-								return self->key_comp_obj()(Extract()(lhs), Extract()(rhs));
+								return self->key_comp()(Extract()(lhs), Extract()(rhs));
 							}
 					};
 
@@ -342,13 +297,13 @@ namespace kerbal
 
 					KERBAL_CONSTEXPR
 					flat_ordered_base() :
-						key_compare_overload(), sequence()
+						key_compare_compress_helper(), sequence()
 					{
 					}
 
 					KERBAL_CONSTEXPR
 					explicit flat_ordered_base(key_compare kc) :
-						key_compare_overload(kc), sequence()
+						key_compare_compress_helper(kerbal::utility::in_place_t(), kc), sequence()
 					{
 					}
 
@@ -361,7 +316,7 @@ namespace kerbal
 							int
 						>::type = 0
 					) :
-						key_compare_overload(), sequence(first, last)
+						key_compare_compress_helper(), sequence(first, last)
 					{
 						this->k_sort();
 					}
@@ -375,7 +330,7 @@ namespace kerbal
 							int
 						>::type = 0
 					) :
-						key_compare_overload(kc), sequence(first, last)
+						key_compare_compress_helper(kerbal::utility::in_place_t(), kc), sequence(first, last)
 					{
 						this->k_sort();
 					}
@@ -416,7 +371,7 @@ namespace kerbal
 					>::type
 					assign(InputIterator first, InputIterator last, key_compare kc)
 					{
-						this->key_comp_obj() = kc;
+						this->key_comp() = kc;
 						this->assign(first, last);
 					}
 
@@ -670,7 +625,7 @@ namespace kerbal
 					const_iterator k_find_impl(const_iterator lower_bound_pos, const key_type & key) const
 					{
 						const_iterator end_it(this->cend());
-						if (lower_bound_pos != end_it && this->key_comp_obj()(key, Extract()(*lower_bound_pos))) {
+						if (lower_bound_pos != end_it && this->key_comp()(key, Extract()(*lower_bound_pos))) {
 							// key < *lower_bound_pos
 							/*
 							* 1 1 1 3 3 3
@@ -729,7 +684,7 @@ namespace kerbal
 						Extract extract;
 						bool inserted = false;
 						if (static_cast<bool>(ub == this->cbegin()) ||
-							static_cast<bool>(this->key_comp_obj()(extract(*kerbal::iterator::prev(ub)), extract(src)))) {
+							static_cast<bool>(this->key_comp()(extract(*kerbal::iterator::prev(ub)), extract(src)))) {
 							// ub[-1] < src
 							ub = sequence.insert(ub, src);
 							inserted = true;
@@ -762,7 +717,7 @@ namespace kerbal
 						Extract extract;
 						bool inserted = false;
 						if (static_cast<bool>(ub == this->cbegin()) ||
-							static_cast<bool>(this->key_comp_obj()(extract(*kerbal::iterator::prev(ub)), extract(src)))) {
+							static_cast<bool>(this->key_comp()(extract(*kerbal::iterator::prev(ub)), extract(src)))) {
 							// ub[-1] < src
 							ub = sequence.insert(ub, kerbal::compatibility::move(src));
 							inserted = true;
@@ -804,8 +759,8 @@ namespace kerbal
 							{
 								Extract e;
 								return
-									!static_cast<bool>(self->key_comp_obj()(e(lhs), e(rhs))) &&
-									!static_cast<bool>(self->key_comp_obj()(e(rhs), e(lhs)))
+									!static_cast<bool>(self->key_comp()(e(lhs), e(rhs))) &&
+									!static_cast<bool>(self->key_comp()(e(rhs), e(lhs)))
 								;
 							}
 					};
