@@ -17,6 +17,7 @@
 #include <kerbal/compare/basic_compare.hpp>
 #include <kerbal/compare/std_compare/std_compare.fwd.hpp>
 #include <kerbal/config/exceptions.hpp>
+#include <kerbal/function/invoke.hpp>
 #include <kerbal/function/identity.hpp>
 #include <kerbal/iterator/iterator.hpp>
 #include <kerbal/type_traits/conditional.hpp>
@@ -1760,7 +1761,10 @@ namespace kerbal
 					const_iterator forward(first); ++forward;
 
 					while (forward != last) {
-						if (pred(proj(*first), proj(*forward))) {
+						if (pred(
+								kerbal::function::invoke(proj, *first),
+								kerbal::function::invoke(proj, *forward)
+							)) {
 							node_base * p = list_type_unrelated::k_unhook_node(forward++.cast_to_mutable());
 							k_destroy_node(alloc, p);
 							// <=> k_erase_using_allocator(alloc, forward++);
