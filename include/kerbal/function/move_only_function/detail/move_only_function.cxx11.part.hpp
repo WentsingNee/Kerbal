@@ -315,7 +315,7 @@ namespace kerbal
 		} // namespace detail
 
 
-		template <typename Ret, std::size_t Size, std::size_t Align, typename Allocator, typename ... TArgs>
+		template <std::size_t Size, std::size_t Align, typename Allocator, typename Ret, typename ... TArgs>
 		class basic_move_only_function<Ret(TArgs...), Size, Align, Allocator> :
 				private kerbal::utility::member_compress_helper<Allocator>
 		{
