@@ -739,8 +739,7 @@ namespace kerbal
 		typename avl_ordered<Entity, Extract, KeyCompare, Allocator>::const_iterator
 		avl_ordered<Entity, Extract, KeyCompare, Allocator>::find(const key_type & key) const
 		{
-			const Extract & e = this->extract();
-			return this->avl_type_only::k_find(key, e, this->key_comp());
+			return this->avl_type_only::k_find(key, this->extract(), this->key_comp());
 		}
 
 		template <typename Entity, typename Extract, typename KeyCompare, typename Allocator>
@@ -748,8 +747,7 @@ namespace kerbal
 		typename avl_ordered<Entity, Extract, KeyCompare, Allocator>::iterator
 		avl_ordered<Entity, Extract, KeyCompare, Allocator>::find(const key_type & key)
 		{
-			const Extract & e = this->extract();
-			return this->avl_type_only::k_find(key, e, this->key_comp());
+			return this->avl_type_only::k_find(key, this->extract(), this->key_comp());
 		}
 
 		template <typename Entity, typename Extract, typename KeyCompare, typename Allocator>
@@ -761,8 +759,7 @@ namespace kerbal
 		>::type
 		avl_ordered<Entity, Extract, KeyCompare, Allocator>::find(const Key & key) const
 		{
-			const Extract & e = this->extract();
-			return this->avl_type_only::k_find(key, e, this->key_comp());
+			return this->avl_type_only::k_find(key, this->extract(), this->key_comp());
 		}
 
 		template <typename Entity, typename Extract, typename KeyCompare, typename Allocator>
@@ -774,8 +771,7 @@ namespace kerbal
 		>::type
 		avl_ordered<Entity, Extract, KeyCompare, Allocator>::find(const Key & key)
 		{
-			const Extract & e = this->extract();
-			return this->avl_type_only::k_find(key, e, this->key_comp());
+			return this->avl_type_only::k_find(key, this->extract(), this->key_comp());
 		}
 
 		template <typename Entity, typename Extract, typename KeyCompare, typename Allocator>
@@ -783,8 +779,7 @@ namespace kerbal
 		typename avl_ordered<Entity, Extract, KeyCompare, Allocator>::const_iterator
 		avl_ordered<Entity, Extract, KeyCompare, Allocator>::lower_bound(const key_type & key) const
 		{
-			const Extract & e = this->extract();
-			return this->avl_type_only::k_lower_bound(key, e, this->key_comp());
+			return this->avl_type_only::k_lower_bound(key, this->extract(), this->key_comp());
 		}
 
 		template <typename Entity, typename Extract, typename KeyCompare, typename Allocator>
@@ -792,8 +787,7 @@ namespace kerbal
 		typename avl_ordered<Entity, Extract, KeyCompare, Allocator>::iterator
 		avl_ordered<Entity, Extract, KeyCompare, Allocator>::lower_bound(const key_type & key)
 		{
-			const Extract & e = this->extract();
-			return this->avl_type_only::k_lower_bound(key, e, this->key_comp());
+			return this->avl_type_only::k_lower_bound(key, this->extract(), this->key_comp());
 		}
 
 		template <typename Entity, typename Extract, typename KeyCompare, typename Allocator>
@@ -805,8 +799,7 @@ namespace kerbal
 		>::type
 		avl_ordered<Entity, Extract, KeyCompare, Allocator>::lower_bound(const Key & key) const
 		{
-			const Extract & e = this->extract();
-			return this->avl_type_only::k_lower_bound(key, e, this->key_comp());
+			return this->avl_type_only::k_lower_bound(key, this->extract(), this->key_comp());
 		}
 
 		template <typename Entity, typename Extract, typename KeyCompare, typename Allocator>
@@ -818,8 +811,7 @@ namespace kerbal
 		>::type
 		avl_ordered<Entity, Extract, KeyCompare, Allocator>::lower_bound(const Key & key)
 		{
-			const Extract & e = this->extract();
-			return this->avl_type_only::k_lower_bound(key, e, this->key_comp());
+			return this->avl_type_only::k_lower_bound(key, this->extract(), this->key_comp());
 		}
 
 		template <typename Entity, typename Extract, typename KeyCompare, typename Allocator>
@@ -827,8 +819,7 @@ namespace kerbal
 		typename avl_ordered<Entity, Extract, KeyCompare, Allocator>::const_iterator
 		avl_ordered<Entity, Extract, KeyCompare, Allocator>::upper_bound(const key_type & key) const
 		{
-			const Extract & e = this->extract();
-			return this->avl_type_only::k_upper_bound(key, e, this->key_comp());
+			return this->avl_type_only::k_upper_bound(key, this->extract(), this->key_comp());
 		}
 
 		template <typename Entity, typename Extract, typename KeyCompare, typename Allocator>
@@ -836,8 +827,7 @@ namespace kerbal
 		typename avl_ordered<Entity, Extract, KeyCompare, Allocator>::iterator
 		avl_ordered<Entity, Extract, KeyCompare, Allocator>::upper_bound(const key_type & key)
 		{
-			const Extract & e = this->extract();
-			return this->avl_type_only::k_upper_bound(key, e, this->key_comp());
+			return this->avl_type_only::k_upper_bound(key, this->extract(), this->key_comp());
 		}
 
 		template <typename Entity, typename Extract, typename KeyCompare, typename Allocator>
@@ -849,8 +839,7 @@ namespace kerbal
 		>::type
 		avl_ordered<Entity, Extract, KeyCompare, Allocator>::upper_bound(const Key & key) const
 		{
-			const Extract & e = this->extract();
-			return this->avl_type_only::k_upper_bound(key, e, this->key_comp());
+			return this->avl_type_only::k_upper_bound(key, this->extract(), this->key_comp());
 		}
 
 		template <typename Entity, typename Extract, typename KeyCompare, typename Allocator>
@@ -862,8 +851,7 @@ namespace kerbal
 		>::type
 		avl_ordered<Entity, Extract, KeyCompare, Allocator>::upper_bound(const Key & key)
 		{
-			const Extract & e = this->extract();
-			return this->avl_type_only::k_upper_bound(key, e, this->key_comp());
+			return this->avl_type_only::k_upper_bound(key, this->extract(), this->key_comp());
 		}
 
 		template <typename Entity, typename Extract, typename KeyCompare, typename Allocator>
@@ -874,8 +862,7 @@ namespace kerbal
 		>
 		avl_ordered<Entity, Extract, KeyCompare, Allocator>::equal_range(const key_type & key) const
 		{
-			const Extract & e = this->extract();
-			return this->avl_type_only::k_equal_range(key, e, this->key_comp());
+			return this->avl_type_only::k_equal_range(key, this->extract(), this->key_comp());
 		}
 
 		template <typename Entity, typename Extract, typename KeyCompare, typename Allocator>
@@ -886,8 +873,7 @@ namespace kerbal
 		>
 		avl_ordered<Entity, Extract, KeyCompare, Allocator>::equal_range(const key_type & key)
 		{
-			const Extract & e = this->extract();
-			return this->avl_type_only::k_equal_range(key, e, this->key_comp());
+			return this->avl_type_only::k_equal_range(key, this->extract(), this->key_comp());
 		}
 
 		template <typename Entity, typename Extract, typename KeyCompare, typename Allocator>
@@ -902,8 +888,7 @@ namespace kerbal
 		>::type
 		avl_ordered<Entity, Extract, KeyCompare, Allocator>::equal_range(const Key & key) const
 		{
-			const Extract & e = this->extract();
-			return this->avl_type_only::k_equal_range(key, e, this->key_comp());
+			return this->avl_type_only::k_equal_range(key, this->extract(), this->key_comp());
 		}
 
 		template <typename Entity, typename Extract, typename KeyCompare, typename Allocator>
@@ -918,16 +903,14 @@ namespace kerbal
 		>::type
 		avl_ordered<Entity, Extract, KeyCompare, Allocator>::equal_range(const Key & key)
 		{
-			const Extract & e = this->extract();
-			return this->avl_type_only::k_equal_range(key, e, this->key_comp());
+			return this->avl_type_only::k_equal_range(key, this->extract(), this->key_comp());
 		}
 
 		template <typename Entity, typename Extract, typename KeyCompare, typename Allocator>
 		KERBAL_CONSTEXPR20
 		bool avl_ordered<Entity, Extract, KeyCompare, Allocator>::contains(const key_type & key) const
 		{
-			const Extract & e = this->extract();
-			return this->avl_type_only::k_contains(key, e, this->key_comp());
+			return this->avl_type_only::k_contains(key, this->extract(), this->key_comp());
 		}
 
 		template <typename Entity, typename Extract, typename KeyCompare, typename Allocator>
@@ -939,8 +922,7 @@ namespace kerbal
 		>::type
 		avl_ordered<Entity, Extract, KeyCompare, Allocator>::contains(const Key & key) const
 		{
-			const Extract & e = this->extract();
-			return this->avl_type_only::k_contains(key, e, this->key_comp());
+			return this->avl_type_only::k_contains(key, this->extract(), this->key_comp());
 		}
 
 		//===================
