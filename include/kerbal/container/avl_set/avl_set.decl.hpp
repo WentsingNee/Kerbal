@@ -272,7 +272,7 @@ namespace kerbal
 			public:
 
 				KERBAL_CONSTEXPR20
-				const_iterator find(const_reference key) const;
+				const_iterator find(const key_type & key) const;
 
 				template <typename Key>
 				KERBAL_CONSTEXPR20
@@ -280,7 +280,7 @@ namespace kerbal
 				find(const Key & key) const;
 
 				KERBAL_CONSTEXPR20
-				const_iterator lower_bound(const_reference key) const;
+				const_iterator lower_bound(const key_type & key) const;
 
 				template <typename Key>
 				KERBAL_CONSTEXPR20
@@ -288,7 +288,7 @@ namespace kerbal
 				lower_bound(const Key & key) const;
 
 				KERBAL_CONSTEXPR20
-				const_iterator upper_bound(const_reference key) const;
+				const_iterator upper_bound(const key_type & key) const;
 
 				template <typename Key>
 				KERBAL_CONSTEXPR20
@@ -297,7 +297,7 @@ namespace kerbal
 
 				KERBAL_CONSTEXPR20
 				kerbal::utility::compressed_pair<const_iterator, const_iterator>
-				equal_range(const_reference key) const;
+				equal_range(const key_type & key) const;
 
 				template <typename Key>
 				KERBAL_CONSTEXPR20
@@ -308,7 +308,7 @@ namespace kerbal
 				equal_range(const Key & key) const;
 
 				KERBAL_CONSTEXPR20
-				bool contains(const_reference key) const;
+				bool contains(const key_type & key) const;
 
 				template <typename Key>
 				KERBAL_CONSTEXPR20

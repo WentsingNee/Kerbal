@@ -289,7 +289,7 @@ namespace kerbal
 		template <typename T, typename KeyCompare, typename Allocator>
 		KERBAL_CONSTEXPR20
 		typename avl_set<T, KeyCompare, Allocator>::const_iterator
-		avl_set<T, KeyCompare, Allocator>::find(const_reference key) const
+		avl_set<T, KeyCompare, Allocator>::find(const key_type & key) const
 		{
 			return this->avl_ordered::find(key);
 		}
@@ -309,7 +309,7 @@ namespace kerbal
 		template <typename T, typename KeyCompare, typename Allocator>
 		KERBAL_CONSTEXPR20
 		typename avl_set<T, KeyCompare, Allocator>::const_iterator
-		avl_set<T, KeyCompare, Allocator>::lower_bound(const_reference key) const
+		avl_set<T, KeyCompare, Allocator>::lower_bound(const key_type & key) const
 		{
 			return this->avl_ordered::lower_bound(key);
 		}
@@ -329,7 +329,7 @@ namespace kerbal
 		template <typename T, typename KeyCompare, typename Allocator>
 		KERBAL_CONSTEXPR20
 		typename avl_set<T, KeyCompare, Allocator>::const_iterator
-		avl_set<T, KeyCompare, Allocator>::upper_bound(const_reference key) const
+		avl_set<T, KeyCompare, Allocator>::upper_bound(const key_type & key) const
 		{
 			return this->avl_ordered::upper_bound(key);
 		}
@@ -352,7 +352,7 @@ namespace kerbal
 			typename avl_set<T, KeyCompare, Allocator>::const_iterator,
 			typename avl_set<T, KeyCompare, Allocator>::const_iterator
 		>
-		avl_set<T, KeyCompare, Allocator>::equal_range(const_reference key) const
+		avl_set<T, KeyCompare, Allocator>::equal_range(const key_type & key) const
 		{
 			return this->avl_ordered::equal_range(key);
 		}
@@ -374,7 +374,7 @@ namespace kerbal
 
 		template <typename T, typename KeyCompare, typename Allocator>
 		KERBAL_CONSTEXPR20
-		bool avl_set<T, KeyCompare, Allocator>::contains(const_reference key) const
+		bool avl_set<T, KeyCompare, Allocator>::contains(const key_type & key) const
 		{
 			return this->avl_ordered::contains(key);
 		}
