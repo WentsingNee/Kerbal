@@ -115,4 +115,29 @@
 
 #define KERBAL_OPT_PPEXPAND_WITH_COMMA_N(Opt, ExpandEmpty, ExpandFun, N) KERBAL_MACRO_CONCAT(KERBAL_OPT_PPEXPAND_WITH_COMMA_, N)(Opt, ExpandEmpty, ExpandFun)
 
+
+#define KERBAL_OPT_EXPAND_0(Opt, ExpandEmpty, ExpandFun) ExpandEmpty
+#define KERBAL_OPT_EXPAND_1(Opt, ExpandEmpty, ExpandFun) Opt(ExpandFun(1))
+#define KERBAL_OPT_EXPAND_2(Opt, ExpandEmpty, ExpandFun) Opt(ExpandFun(2))
+#define KERBAL_OPT_EXPAND_3(Opt, ExpandEmpty, ExpandFun) Opt(ExpandFun(3))
+#define KERBAL_OPT_EXPAND_4(Opt, ExpandEmpty, ExpandFun) Opt(ExpandFun(4))
+#define KERBAL_OPT_EXPAND_5(Opt, ExpandEmpty, ExpandFun) Opt(ExpandFun(5))
+#define KERBAL_OPT_EXPAND_6(Opt, ExpandEmpty, ExpandFun) Opt(ExpandFun(6))
+#define KERBAL_OPT_EXPAND_7(Opt, ExpandEmpty, ExpandFun) Opt(ExpandFun(7))
+#define KERBAL_OPT_EXPAND_8(Opt, ExpandEmpty, ExpandFun) Opt(ExpandFun(8))
+#define KERBAL_OPT_EXPAND_9(Opt, ExpandEmpty, ExpandFun) Opt(ExpandFun(9))
+#define KERBAL_OPT_EXPAND_10(Opt, ExpandEmpty, ExpandFun) Opt(ExpandFun(10))
+#define KERBAL_OPT_EXPAND_11(Opt, ExpandEmpty, ExpandFun) Opt(ExpandFun(11))
+#define KERBAL_OPT_EXPAND_12(Opt, ExpandEmpty, ExpandFun) Opt(ExpandFun(12))
+#define KERBAL_OPT_EXPAND_13(Opt, ExpandEmpty, ExpandFun) Opt(ExpandFun(13))
+#define KERBAL_OPT_EXPAND_14(Opt, ExpandEmpty, ExpandFun) Opt(ExpandFun(14))
+#define KERBAL_OPT_EXPAND_15(Opt, ExpandEmpty, ExpandFun) Opt(ExpandFun(15))
+#define KERBAL_OPT_EXPAND_16(Opt, ExpandEmpty, ExpandFun) Opt(ExpandFun(16))
+#define KERBAL_OPT_EXPAND_17(Opt, ExpandEmpty, ExpandFun) Opt(ExpandFun(17))
+#define KERBAL_OPT_EXPAND_18(Opt, ExpandEmpty, ExpandFun) Opt(ExpandFun(18))
+#define KERBAL_OPT_EXPAND_19(Opt, ExpandEmpty, ExpandFun) Opt(ExpandFun(19))
+#define KERBAL_OPT_EXPAND_20(Opt, ExpandEmpty, ExpandFun) Opt(ExpandFun(20))
+
+#define KERBAL_OPT_EXPAND_N(Opt, ExpandEmpty, ExpandFun, N) KERBAL_MACRO_CONCAT(KERBAL_OPT_EXPAND_, N)(Opt, ExpandEmpty, ExpandFun)
+
 #endif // KERBAL_MACRO_PPEXPAND_HPP

@@ -26,10 +26,8 @@
 #include <kerbal/utility/compressed_pair.hpp>
 #include <kerbal/utility/member_compress_helper.hpp>
 
-#if __cplusplus < 201103L
-#	include <kerbal/macro/macro_concat.hpp>
-#	include <kerbal/macro/ppexpand.hpp>
-#endif
+#include <kerbal/macro/macro_concat.hpp>
+#include <kerbal/macro/ppexpand.hpp>
 
 #if __cplusplus >= 201703L
 #	include <kerbal/memory/allocator/is_allocator.hpp>
@@ -158,6 +156,31 @@ namespace kerbal
 			//===================
 			// construct/copy/destroy
 
+
+#			define REMAINF(exp) exp
+#			define LEFT_JOIN_COMMA(exp) , exp
+#			define EMPTY
+
+#			define EXPLICIT_0
+#			define EXPLICIT_1 explicit
+#			define EXPLICIT_2 explicit
+#			define EXPLICIT_3
+#			define EXPLICIT_4 explicit
+#			define EXPLICIT_5
+#			define EXPLICIT_6
+#			define EXPLICIT_7
+#			define EXPLICIT(i) KERBAL_MACRO_CONCAT(EXPLICIT_, i)
+
+#			define ARG_DECL_1 const Allocator & alloc
+#			define ARG_DECL_2 const KeyCompare & key_comp
+#			define ARG_DECL_3 const KeyCompare & key_comp, const Allocator & alloc
+#			define ARG_DECL_4 const Extract & e
+#			define ARG_DECL_5 const Extract & e, const Allocator & alloc
+#			define ARG_DECL_6 const Extract & e, const KeyCompare & key_comp
+#			define ARG_DECL_7 const Extract & e, const KeyCompare & key_comp, const Allocator & alloc
+#			define ARG_DECL(i) KERBAL_MACRO_CONCAT(ARG_DECL_, i)
+
+
 			//===================
 			// construct with empty
 
@@ -166,40 +189,22 @@ namespace kerbal
 				KERBAL_CONSTEXPR20
 				avl_ordered() = default;
 
-#		else
-
-				avl_ordered();
-
 #		endif
 
-				KERBAL_CONSTEXPR20
-				explicit
-				avl_ordered(const Allocator & alloc)
-					/*KERBAL_CONDITIONAL_NOEXCEPT(
-						avl_allocator_overload::is_nothrow_constructible_from_allocator_const_reference::value &&
-						avl_type_only::is_nothrow_init_to_self_constrctible::value
-					)*/
-				;
 
-				KERBAL_CONSTEXPR20
-				explicit
-				avl_ordered(const KeyCompare & key_comp);
+#			define FBODY(i) \
+				KERBAL_CONSTEXPR20 \
+				EXPLICIT(i) \
+				avl_ordered( \
+					KERBAL_OPT_EXPAND_N(REMAINF, EMPTY, ARG_DECL, i) \
+				); \
 
-				KERBAL_CONSTEXPR20
-				avl_ordered(const KeyCompare & key_comp, const Allocator & alloc);
+#		if __cplusplus < 201103L
+				KERBAL_PPEXPAND_N(FBODY, KERBAL_PPEXPAND_EMPTY_SEPARATOR, 0)
+#		endif
+				KERBAL_PPEXPAND_N(FBODY, KERBAL_PPEXPAND_EMPTY_SEPARATOR, 7)
 
-				KERBAL_CONSTEXPR20
-				explicit
-				avl_ordered(const Extract & e);
-
-				KERBAL_CONSTEXPR20
-				avl_ordered(const Extract & e, const Allocator & alloc);
-
-				KERBAL_CONSTEXPR20
-				avl_ordered(const Extract & e, const KeyCompare & key_comp);
-
-				KERBAL_CONSTEXPR20
-				avl_ordered(const Extract & e, const KeyCompare & key_comp, const Allocator & alloc);
+#			undef FBODY
 
 
 			//===================
@@ -248,127 +253,26 @@ namespace kerbal
 			//===================
 			// construct with iterators range
 
-				template <typename InputIterator>
-				KERBAL_CONSTEXPR20
-				avl_ordered(
-					InputIterator first, InputIterator last
-				);
+#			define FBODY(i) \
+				template <typename InputIterator> \
+				KERBAL_CONSTEXPR20 \
+				avl_ordered( \
+					InputIterator first, InputIterator last \
+					KERBAL_OPT_EXPAND_N(LEFT_JOIN_COMMA, EMPTY, ARG_DECL, i) \
+				); \
+ \
+				template <typename InputIterator> \
+				KERBAL_CONSTEXPR20 \
+				avl_ordered( \
+					kerbal::container::unique_tag_t unique_tag, \
+					InputIterator first, InputIterator last \
+					KERBAL_OPT_EXPAND_N(LEFT_JOIN_COMMA, EMPTY, ARG_DECL, i) \
+				); \
 
-				template <typename InputIterator>
-				KERBAL_CONSTEXPR20
-				avl_ordered(
-					InputIterator first, InputIterator last,
-					const Allocator & alloc
-				);
+				KERBAL_PPEXPAND_N(FBODY, KERBAL_PPEXPAND_EMPTY_SEPARATOR, 0)
+				KERBAL_PPEXPAND_N(FBODY, KERBAL_PPEXPAND_EMPTY_SEPARATOR, 7)
 
-				template <typename InputIterator>
-				KERBAL_CONSTEXPR20
-				avl_ordered(
-					InputIterator first, InputIterator last,
-					const KeyCompare & key_comp
-				);
-
-				template <typename InputIterator>
-				KERBAL_CONSTEXPR20
-				avl_ordered(
-					InputIterator first, InputIterator last,
-					const KeyCompare & key_comp, const Allocator & alloc
-				);
-
-				template <typename InputIterator>
-				KERBAL_CONSTEXPR20
-				avl_ordered(
-					InputIterator first, InputIterator last,
-					const Extract & e
-				);
-
-				template <typename InputIterator>
-				KERBAL_CONSTEXPR20
-				avl_ordered(
-					InputIterator first, InputIterator last,
-					const Extract & e, const Allocator & alloc
-				);
-
-				template <typename InputIterator>
-				KERBAL_CONSTEXPR20
-				avl_ordered(
-					InputIterator first, InputIterator last,
-					const Extract & e, const KeyCompare & key_comp
-				);
-
-				template <typename InputIterator>
-				KERBAL_CONSTEXPR20
-				avl_ordered(
-					InputIterator first, InputIterator last,
-					const Extract & e, const KeyCompare & key_comp, const Allocator & alloc
-				);
-
-
-			//===================
-			// construct with iterators range (unique)
-
-				template <typename InputIterator>
-				KERBAL_CONSTEXPR20
-				avl_ordered(
-					kerbal::container::unique_tag_t unique_tag,
-					InputIterator first, InputIterator last
-				);
-
-				template <typename InputIterator>
-				KERBAL_CONSTEXPR20
-				avl_ordered(
-					kerbal::container::unique_tag_t unique_tag,
-					InputIterator first, InputIterator last,
-					const Allocator & alloc
-				);
-
-				template <typename InputIterator>
-				KERBAL_CONSTEXPR20
-				avl_ordered(
-					kerbal::container::unique_tag_t unique_tag,
-					InputIterator first, InputIterator last,
-					const KeyCompare & key_comp
-				);
-
-				template <typename InputIterator>
-				KERBAL_CONSTEXPR20
-				avl_ordered(
-					kerbal::container::unique_tag_t unique_tag,
-					InputIterator first, InputIterator last,
-					const KeyCompare & key_comp, const Allocator & alloc
-				);
-
-				template <typename InputIterator>
-				KERBAL_CONSTEXPR20
-				avl_ordered(
-					kerbal::container::unique_tag_t unique_tag,
-					InputIterator first, InputIterator last,
-					const Extract & e
-				);
-
-				template <typename InputIterator>
-				KERBAL_CONSTEXPR20
-				avl_ordered(
-					kerbal::container::unique_tag_t unique_tag,
-					InputIterator first, InputIterator last,
-					const Extract & e, const Allocator & alloc
-				);
-
-				template <typename InputIterator>
-				KERBAL_CONSTEXPR20
-				avl_ordered(
-					kerbal::container::unique_tag_t unique_tag,
-					InputIterator first, InputIterator last,
-					const Extract & e, const KeyCompare & key_comp
-				);
-
-				template <typename InputIterator>
-				KERBAL_CONSTEXPR20
-				avl_ordered(
-					kerbal::container::unique_tag_t unique_tag,
-					InputIterator first, InputIterator last,
-					const Extract & e, const KeyCompare & key_comp, const Allocator & alloc
-				);
+#			undef FBODY
 
 
 #		if __cplusplus >= 201103L
@@ -376,222 +280,69 @@ namespace kerbal
 			//===================
 			// construct with initializer_list
 
-				KERBAL_CONSTEXPR20
-				avl_ordered(
-					std::initializer_list<value_type> ilist
-				);
-
-				KERBAL_CONSTEXPR20
-				avl_ordered(
-					std::initializer_list<value_type> ilist,
-					const Allocator & alloc
-				);
-
-				KERBAL_CONSTEXPR20
-				avl_ordered(
-					std::initializer_list<value_type> ilist,
-					const KeyCompare & key_comp
-				);
-
-				KERBAL_CONSTEXPR20
-				avl_ordered(
-					std::initializer_list<value_type> ilist,
-					const KeyCompare & key_comp, const Allocator & alloc
-				);
-
-				KERBAL_CONSTEXPR20
-				avl_ordered(
-					std::initializer_list<value_type> ilist,
-					const Extract & e
-				);
-
-				KERBAL_CONSTEXPR20
-				avl_ordered(
-					std::initializer_list<value_type> ilist,
-					const Extract & e, const Allocator & alloc
-				);
-
-				KERBAL_CONSTEXPR20
-				avl_ordered(
-					std::initializer_list<value_type> ilist,
-					const Extract & e, const KeyCompare & key_comp
-				);
-
-				KERBAL_CONSTEXPR20
-				avl_ordered(
-					std::initializer_list<value_type> ilist,
-					const Extract & e, const KeyCompare & key_comp, const Allocator & alloc
-				);
-
-
-			//===================
-			// construct with initializer_list (unique)
-
-				KERBAL_CONSTEXPR20
-				avl_ordered(
-					kerbal::container::unique_tag_t unique_tag,
-					std::initializer_list<value_type> ilist
-				);
-
-				KERBAL_CONSTEXPR20
-				avl_ordered(
-					kerbal::container::unique_tag_t unique_tag,
-					std::initializer_list<value_type> ilist,
-					const Allocator & alloc
-				);
-
-				KERBAL_CONSTEXPR20
-				avl_ordered(
-					kerbal::container::unique_tag_t unique_tag,
-					std::initializer_list<value_type> ilist,
-					const KeyCompare & key_comp
-				);
-
-				KERBAL_CONSTEXPR20
-				avl_ordered(
-					kerbal::container::unique_tag_t unique_tag,
-					std::initializer_list<value_type> ilist,
-					const KeyCompare & key_comp, const Allocator & alloc
-				);
-
-				KERBAL_CONSTEXPR20
-				avl_ordered(
-					kerbal::container::unique_tag_t unique_tag,
-					std::initializer_list<value_type> ilist,
-					const Extract & e
-				);
-
-				KERBAL_CONSTEXPR20
-				avl_ordered(
-					kerbal::container::unique_tag_t unique_tag,
-					std::initializer_list<value_type> ilist,
-					const Extract & e, const Allocator & alloc
-				);
-
-				KERBAL_CONSTEXPR20
-				avl_ordered(
-					kerbal::container::unique_tag_t unique_tag,
-					std::initializer_list<value_type> ilist,
-					const Extract & e, const KeyCompare & key_comp
-				);
-
-				KERBAL_CONSTEXPR20
-				avl_ordered(
-					kerbal::container::unique_tag_t unique_tag,
-					std::initializer_list<value_type> ilist,
-					const Extract & e, const KeyCompare & key_comp, const Allocator & alloc
-				);
+#			define FBODY(i) \
+				KERBAL_CONSTEXPR20 \
+				avl_ordered( \
+					std::initializer_list<value_type> ilist \
+					KERBAL_OPT_EXPAND_N(LEFT_JOIN_COMMA, EMPTY, ARG_DECL, i) \
+				); \
+ \
+				KERBAL_CONSTEXPR20 \
+				avl_ordered( \
+					kerbal::container::unique_tag_t unique_tag, \
+					std::initializer_list<value_type> ilist \
+					KERBAL_OPT_EXPAND_N(LEFT_JOIN_COMMA, EMPTY, ARG_DECL, i) \
+				); \
 
 #		else
 
 			//===================
 			// construct with assign_list
 
-				template <typename U>
-				avl_ordered(
-					const kerbal::assign::assign_list<U> & ilist
-				);
-
-				template <typename U>
-				avl_ordered(
-					const kerbal::assign::assign_list<U> & ilist,
-					const Allocator & alloc
-				);
-
-				template <typename U>
-				avl_ordered(
-					const kerbal::assign::assign_list<U> & ilist,
-					const KeyCompare & key_comp
-				);
-
-				template <typename U>
-				avl_ordered(
-					const kerbal::assign::assign_list<U> & ilist,
-					const KeyCompare & key_comp, const Allocator & alloc
-				);
-
-				template <typename U>
-				avl_ordered(
-					const kerbal::assign::assign_list<U> & ilist,
-					const Extract & e
-				);
-
-				template <typename U>
-				avl_ordered(
-					const kerbal::assign::assign_list<U> & ilist,
-					const Extract & e, const Allocator & alloc
-				);
-
-				template <typename U>
-				avl_ordered(
-					const kerbal::assign::assign_list<U> & ilist,
-					const Extract & e, const KeyCompare & key_comp
-				);
-
-				template <typename U>
-				avl_ordered(
-					const kerbal::assign::assign_list<U> & ilist,
-					const Extract & e, const KeyCompare & key_comp, const Allocator & alloc
-				);
-
-
-			//===================
-			// construct with assign_list (unique)
-
-				template <typename U>
-				avl_ordered(
-					kerbal::container::unique_tag_t unique_tag,
-					const kerbal::assign::assign_list<U> & ilist
-				);
-
-				template <typename U>
-				avl_ordered(
-					kerbal::container::unique_tag_t unique_tag,
-					const kerbal::assign::assign_list<U> & ilist,
-					const Allocator & alloc
-				);
-
-				template <typename U>
-				avl_ordered(
-					kerbal::container::unique_tag_t unique_tag,
-					const kerbal::assign::assign_list<U> & ilist,
-					const KeyCompare & key_comp
-				);
-
-				template <typename U>
-				avl_ordered(
-					kerbal::container::unique_tag_t unique_tag,
-					const kerbal::assign::assign_list<U> & ilist,
-					const KeyCompare & key_comp, const Allocator & alloc
-				);
-
-				template <typename U>
-				avl_ordered(
-					kerbal::container::unique_tag_t unique_tag,
-					const kerbal::assign::assign_list<U> & ilist,
-					const Extract & e
-				);
-
-				template <typename U>
-				avl_ordered(
-					kerbal::container::unique_tag_t unique_tag,
-					const kerbal::assign::assign_list<U> & ilist,
-					const Extract & e, const Allocator & alloc);
-
-				template <typename U>
-				avl_ordered(
-					kerbal::container::unique_tag_t unique_tag,
-					const kerbal::assign::assign_list<U> & ilist,
-					const Extract & e, const KeyCompare & key_comp);
-
-				template <typename U>
-				avl_ordered(
-					kerbal::container::unique_tag_t unique_tag,
-					const kerbal::assign::assign_list<U> & ilist,
-					const Extract & e, const KeyCompare & key_comp, const Allocator & alloc
-				);
+#			define FBODY(i) \
+				template <typename U> \
+				avl_ordered( \
+					const kerbal::assign::assign_list<U> & ilist \
+					KERBAL_OPT_EXPAND_N(LEFT_JOIN_COMMA, EMPTY, ARG_DECL, i) \
+				); \
+ \
+				template <typename U> \
+				avl_ordered( \
+					kerbal::container::unique_tag_t unique_tag, \
+					const kerbal::assign::assign_list<U> & ilist \
+					KERBAL_OPT_EXPAND_N(LEFT_JOIN_COMMA, EMPTY, ARG_DECL, i) \
+				); \
 
 #		endif
+
+				KERBAL_PPEXPAND_N(FBODY, KERBAL_PPEXPAND_EMPTY_SEPARATOR, 0)
+				KERBAL_PPEXPAND_N(FBODY, KERBAL_PPEXPAND_EMPTY_SEPARATOR, 7)
+
+#			undef FBODY
+
+
+#			undef ARG_DECL_1
+#			undef ARG_DECL_2
+#			undef ARG_DECL_3
+#			undef ARG_DECL_4
+#			undef ARG_DECL_5
+#			undef ARG_DECL_6
+#			undef ARG_DECL_7
+
+#			undef EXPLICIT_0
+#			undef EXPLICIT_1
+#			undef EXPLICIT_2
+#			undef EXPLICIT_3
+#			undef EXPLICIT_4
+#			undef EXPLICIT_5
+#			undef EXPLICIT_6
+#			undef EXPLICIT_7
+#			undef EXPLICIT
+
+#			undef REMAINF
+#			undef LEFT_JOIN_COMMA
+#			undef EMPTY
+
 
 				KERBAL_CONSTEXPR20
 				~avl_ordered();

@@ -22,10 +22,8 @@
 #include <kerbal/container/associative_container_facility/unique_tag_t.hpp>
 #include <kerbal/utility/compressed_pair.hpp>
 
-#if __cplusplus < 201103L
-#	include <kerbal/macro/macro_concat.hpp>
-#	include <kerbal/macro/ppexpand.hpp>
-#endif
+#include <kerbal/macro/macro_concat.hpp>
+#include <kerbal/macro/ppexpand.hpp>
 
 #if __cplusplus >= 201103L
 #	include <kerbal/compatibility/move.hpp>
@@ -43,79 +41,70 @@ namespace kerbal
 	namespace container
 	{
 
+#	define REMAINF(exp) exp
+#	define LEFT_JOIN_CONNO(exp) : exp
+#	define LEFT_JOIN_COMMA(exp) , exp
+#	define EMPTY
+
+#	define ARG_DECL_1 const Allocator & alloc
+#	define ARG_DECL_2 const KeyCompare & key_comp
+#	define ARG_DECL_3 const KeyCompare & key_comp, const Allocator & alloc
+#	define ARG_DECL_4 const Extract & e
+#	define ARG_DECL_5 const Extract & e, const Allocator & alloc
+#	define ARG_DECL_6 const Extract & e, const KeyCompare & key_comp
+#	define ARG_DECL_7 const Extract & e, const KeyCompare & key_comp, const Allocator & alloc
+#	define ARG_DECL(i) KERBAL_MACRO_CONCAT(ARG_DECL_, i)
+
+#	define ARG_USE_1 \
+			avl_allocator_overload(alloc), \
+
+#	define ARG_USE_2 \
+			key_compare_compress_helper(kerbal::utility::in_place_t(), key_comp), \
+
+#	define ARG_USE_3 \
+			key_compare_compress_helper(kerbal::utility::in_place_t(), key_comp), \
+			avl_allocator_overload(alloc), \
+
+#	define ARG_USE_4 \
+			extract_compress_helper(kerbal::utility::in_place_t(), e), \
+
+#	define ARG_USE_5 \
+			extract_compress_helper(kerbal::utility::in_place_t(), e), \
+			avl_allocator_overload(alloc), \
+
+#	define ARG_USE_6 \
+			extract_compress_helper(kerbal::utility::in_place_t(), e), \
+			key_compare_compress_helper(kerbal::utility::in_place_t(), key_comp), \
+
+#	define ARG_USE_7 \
+			extract_compress_helper(kerbal::utility::in_place_t(), e), \
+			key_compare_compress_helper(kerbal::utility::in_place_t(), key_comp), \
+			avl_allocator_overload(alloc), \
+
+#	define ARG_USE(i) KERBAL_MACRO_CONCAT(ARG_USE_, i)
+
+
 		//===================
 		// construct with empty
 
+#	define FBODY(i) \
+		template <typename Entity, typename Extract, typename KeyCompare, typename Allocator> \
+		KERBAL_CONSTEXPR20 \
+		avl_ordered<Entity, Extract, KeyCompare, Allocator>:: \
+		avl_ordered( \
+			KERBAL_OPT_EXPAND_N(REMAINF, EMPTY, ARG_DECL, i) \
+		) : \
+			KERBAL_OPT_EXPAND_N(REMAINF, EMPTY, ARG_USE, i) \
+			avl_type_only() \
+		{ \
+		} \
+
 #	if __cplusplus < 201103L
-
-		template <typename Entity, typename Extract, typename KeyCompare, typename Allocator>
-		avl_ordered<Entity, Extract, KeyCompare, Allocator>::
-		avl_ordered()
-		{
-		}
-
+		KERBAL_PPEXPAND_N(FBODY, KERBAL_PPEXPAND_EMPTY_SEPARATOR, 0)
 #	endif
+		KERBAL_PPEXPAND_N(FBODY, KERBAL_PPEXPAND_EMPTY_SEPARATOR, 7)
 
-		template <typename Entity, typename Extract, typename KeyCompare, typename Allocator>
-		KERBAL_CONSTEXPR20
-		avl_ordered<Entity, Extract, KeyCompare, Allocator>::
-		avl_ordered(const Allocator & alloc) :
-			avl_allocator_overload(alloc)
-		{
-		}
-
-		template <typename Entity, typename Extract, typename KeyCompare, typename Allocator>
-		KERBAL_CONSTEXPR20
-		avl_ordered<Entity, Extract, KeyCompare, Allocator>::
-		avl_ordered(const KeyCompare & key_comp) :
-			key_compare_compress_helper(kerbal::utility::in_place_t(), key_comp)
-		{
-		}
-
-		template <typename Entity, typename Extract, typename KeyCompare, typename Allocator>
-		KERBAL_CONSTEXPR20
-		avl_ordered<Entity, Extract, KeyCompare, Allocator>::
-		avl_ordered(const KeyCompare & key_comp, const Allocator & alloc) :
-			key_compare_compress_helper(kerbal::utility::in_place_t(), key_comp),
-			avl_allocator_overload(alloc)
-		{
-		}
-
-		template <typename Entity, typename Extract, typename KeyCompare, typename Allocator>
-		KERBAL_CONSTEXPR20
-		avl_ordered<Entity, Extract, KeyCompare, Allocator>::
-		avl_ordered(const Extract & e) :
-			extract_compress_helper(kerbal::utility::in_place_t(), e)
-		{
-		}
-
-		template <typename Entity, typename Extract, typename KeyCompare, typename Allocator>
-		KERBAL_CONSTEXPR20
-		avl_ordered<Entity, Extract, KeyCompare, Allocator>::
-		avl_ordered(const Extract & e, const Allocator & alloc) :
-			extract_compress_helper(kerbal::utility::in_place_t(), e),
-			avl_allocator_overload(alloc)
-		{
-		}
-
-		template <typename Entity, typename Extract, typename KeyCompare, typename Allocator>
-		KERBAL_CONSTEXPR20
-		avl_ordered<Entity, Extract, KeyCompare, Allocator>::
-		avl_ordered(const Extract & e, const KeyCompare & key_comp) :
-			extract_compress_helper(kerbal::utility::in_place_t(), e),
-			key_compare_compress_helper(kerbal::utility::in_place_t(), key_comp)
-		{
-		}
-
-		template <typename Entity, typename Extract, typename KeyCompare, typename Allocator>
-		KERBAL_CONSTEXPR20
-		avl_ordered<Entity, Extract, KeyCompare, Allocator>::
-		avl_ordered(const Extract & e, const KeyCompare & key_comp, const Allocator & alloc)  :
-			extract_compress_helper(kerbal::utility::in_place_t(), e),
-			key_compare_compress_helper(kerbal::utility::in_place_t(), key_comp),
-			avl_allocator_overload(alloc)
-		{
-		}
+#	undef FBODY
 
 
 		//===================
@@ -185,664 +174,130 @@ namespace kerbal
 		//===================
 		// construct with iterators range
 
-		template <typename Entity, typename Extract, typename KeyCompare, typename Allocator>
-		template <typename InputIterator>
-		KERBAL_CONSTEXPR20
-		avl_ordered<Entity, Extract, KeyCompare, Allocator>::
-		avl_ordered(
-			InputIterator first, InputIterator last
-		) :
-			avl_type_only(this->alloc(), this->extract(), this->key_comp(), first, last)
-		{
-		}
+#	define FBODY(i) \
+		template <typename Entity, typename Extract, typename KeyCompare, typename Allocator> \
+		template <typename InputIterator> \
+		KERBAL_CONSTEXPR20 \
+		avl_ordered<Entity, Extract, KeyCompare, Allocator>:: \
+		avl_ordered( \
+			InputIterator first, InputIterator last \
+			KERBAL_OPT_EXPAND_N(LEFT_JOIN_COMMA, EMPTY, ARG_DECL, i) \
+		) : \
+			KERBAL_OPT_EXPAND_N(REMAINF, EMPTY, ARG_USE, i) \
+			avl_type_only(this->alloc(), this->extract(), this->key_comp(), first, last) \
+		{ \
+		} \
+ \
+		template <typename Entity, typename Extract, typename KeyCompare, typename Allocator> \
+		template <typename InputIterator> \
+		KERBAL_CONSTEXPR20 \
+		avl_ordered<Entity, Extract, KeyCompare, Allocator>:: \
+		avl_ordered( \
+			kerbal::container::unique_tag_t unique_tag, \
+			InputIterator first, InputIterator last \
+			KERBAL_OPT_EXPAND_N(LEFT_JOIN_COMMA, EMPTY, ARG_DECL, i) \
+		) : \
+			KERBAL_OPT_EXPAND_N(REMAINF, EMPTY, ARG_USE, i) \
+			avl_type_only(this->alloc(), this->extract(), this->key_comp(), first, last) \
+		{ \
+		} \
 
-		template <typename Entity, typename Extract, typename KeyCompare, typename Allocator>
-		template <typename InputIterator>
-		KERBAL_CONSTEXPR20
-		avl_ordered<Entity, Extract, KeyCompare, Allocator>::
-		avl_ordered(
-			InputIterator first, InputIterator last,
-			const Allocator & alloc
-		) :
-			avl_allocator_overload(alloc),
-			avl_type_only(this->alloc(), this->extract(), this->key_comp(), first, last)
-		{
-		}
+		KERBAL_PPEXPAND_N(FBODY, KERBAL_PPEXPAND_EMPTY_SEPARATOR, 0)
+		KERBAL_PPEXPAND_N(FBODY, KERBAL_PPEXPAND_EMPTY_SEPARATOR, 7)
 
-		template <typename Entity, typename Extract, typename KeyCompare, typename Allocator>
-		template <typename InputIterator>
-		KERBAL_CONSTEXPR20
-		avl_ordered<Entity, Extract, KeyCompare, Allocator>::
-		avl_ordered(
-			InputIterator first, InputIterator last,
-			const KeyCompare & key_comp
-		) :
-			key_compare_compress_helper(kerbal::utility::in_place_t(), key_comp),
-			avl_type_only(this->alloc(), this->extract(), this->key_comp(), first, last)
-		{
-		}
+#	undef FBODY
 
-		template <typename Entity, typename Extract, typename KeyCompare, typename Allocator>
-		template <typename InputIterator>
-		KERBAL_CONSTEXPR20
-		avl_ordered<Entity, Extract, KeyCompare, Allocator>::
-		avl_ordered(
-			InputIterator first, InputIterator last,
-			const KeyCompare & key_comp, const Allocator & alloc
-		) :
-			key_compare_compress_helper(kerbal::utility::in_place_t(), key_comp),
-			avl_allocator_overload(alloc),
-			avl_type_only(this->alloc(), this->extract(), this->key_comp(), first, last)
-		{
-		}
-
-		template <typename Entity, typename Extract, typename KeyCompare, typename Allocator>
-		template <typename InputIterator>
-		KERBAL_CONSTEXPR20
-		avl_ordered<Entity, Extract, KeyCompare, Allocator>::
-		avl_ordered(
-			InputIterator first, InputIterator last,
-			const Extract & e
-		) :
-			extract_compress_helper(kerbal::utility::in_place_t(), e),
-			avl_type_only(this->alloc(), this->extract(), this->key_comp(), first, last)
-		{
-		}
-
-		template <typename Entity, typename Extract, typename KeyCompare, typename Allocator>
-		template <typename InputIterator>
-		KERBAL_CONSTEXPR20
-		avl_ordered<Entity, Extract, KeyCompare, Allocator>::
-		avl_ordered(
-			InputIterator first, InputIterator last,
-			const Extract & e, const Allocator & alloc
-		) :
-			extract_compress_helper(kerbal::utility::in_place_t(), e),
-			avl_allocator_overload(alloc),
-			avl_type_only(this->alloc(), this->extract(), this->key_comp(), first, last)
-		{
-		}
-
-		template <typename Entity, typename Extract, typename KeyCompare, typename Allocator>
-		template <typename InputIterator>
-		KERBAL_CONSTEXPR20
-		avl_ordered<Entity, Extract, KeyCompare, Allocator>::
-		avl_ordered(
-			InputIterator first, InputIterator last,
-			const Extract & e, const KeyCompare & key_comp
-		) :
-			extract_compress_helper(kerbal::utility::in_place_t(), e),
-			key_compare_compress_helper(kerbal::utility::in_place_t(), key_comp),
-			avl_type_only(this->alloc(), this->extract(), this->key_comp(), first, last)
-		{
-		}
-
-		template <typename Entity, typename Extract, typename KeyCompare, typename Allocator>
-		template <typename InputIterator>
-		KERBAL_CONSTEXPR20
-		avl_ordered<Entity, Extract, KeyCompare, Allocator>::
-		avl_ordered(
-			InputIterator first, InputIterator last,
-			const Extract & e, const KeyCompare & key_comp, const Allocator & alloc
-		) :
-			extract_compress_helper(kerbal::utility::in_place_t(), e),
-			key_compare_compress_helper(kerbal::utility::in_place_t(), key_comp),
-			avl_allocator_overload(alloc),
-			avl_type_only(this->alloc(), this->extract(), this->key_comp(), first, last)
-		{
-		}
-
-
-		//===================
-		// construct with iterators range (unique)
-
-		template <typename Entity, typename Extract, typename KeyCompare, typename Allocator>
-		template <typename InputIterator>
-		KERBAL_CONSTEXPR20
-		avl_ordered<Entity, Extract, KeyCompare, Allocator>::
-		avl_ordered(
-			kerbal::container::unique_tag_t unique_tag,
-			InputIterator first, InputIterator last
-		) :
-			avl_type_only(unique_tag, this->alloc(), this->extract(), this->key_comp(), first, last)
-		{
-		}
-
-		template <typename Entity, typename Extract, typename KeyCompare, typename Allocator>
-		template <typename InputIterator>
-		KERBAL_CONSTEXPR20
-		avl_ordered<Entity, Extract, KeyCompare, Allocator>::
-		avl_ordered(
-			kerbal::container::unique_tag_t unique_tag,
-			InputIterator first, InputIterator last,
-			const Allocator & alloc
-		) :
-			avl_allocator_overload(alloc),
-			avl_type_only(unique_tag, this->alloc(), this->extract(), this->key_comp(), first, last)
-		{
-		}
-
-		template <typename Entity, typename Extract, typename KeyCompare, typename Allocator>
-		template <typename InputIterator>
-		KERBAL_CONSTEXPR20
-		avl_ordered<Entity, Extract, KeyCompare, Allocator>::
-		avl_ordered(
-			kerbal::container::unique_tag_t unique_tag,
-			InputIterator first, InputIterator last,
-			const KeyCompare & key_comp
-		) :
-			key_compare_compress_helper(kerbal::utility::in_place_t(), key_comp),
-			avl_type_only(unique_tag, this->alloc(), this->extract(), this->key_comp(), first, last)
-		{
-		}
-
-		template <typename Entity, typename Extract, typename KeyCompare, typename Allocator>
-		template <typename InputIterator>
-		KERBAL_CONSTEXPR20
-		avl_ordered<Entity, Extract, KeyCompare, Allocator>::
-		avl_ordered(
-			kerbal::container::unique_tag_t unique_tag,
-			InputIterator first, InputIterator last,
-			const KeyCompare & key_comp, const Allocator & alloc
-		) :
-			key_compare_compress_helper(kerbal::utility::in_place_t(), key_comp),
-			avl_allocator_overload(alloc),
-			avl_type_only(unique_tag, this->alloc(), this->extract(), this->key_comp(), first, last)
-		{
-		}
-
-		template <typename Entity, typename Extract, typename KeyCompare, typename Allocator>
-		template <typename InputIterator>
-		KERBAL_CONSTEXPR20
-		avl_ordered<Entity, Extract, KeyCompare, Allocator>::
-		avl_ordered(
-			kerbal::container::unique_tag_t unique_tag,
-			InputIterator first, InputIterator last,
-			const Extract & e
-		) :
-			extract_compress_helper(kerbal::utility::in_place_t(), e),
-			avl_type_only(unique_tag, this->alloc(), this->extract(), this->key_comp(), first, last)
-		{
-		}
-
-		template <typename Entity, typename Extract, typename KeyCompare, typename Allocator>
-		template <typename InputIterator>
-		KERBAL_CONSTEXPR20
-		avl_ordered<Entity, Extract, KeyCompare, Allocator>::
-		avl_ordered(
-			kerbal::container::unique_tag_t unique_tag,
-			InputIterator first, InputIterator last,
-			const Extract & e, const Allocator & alloc
-		) :
-			extract_compress_helper(kerbal::utility::in_place_t(), e),
-			avl_allocator_overload(alloc),
-			avl_type_only(unique_tag, this->alloc(), this->extract(), this->key_comp(), first, last)
-		{
-		}
-
-		template <typename Entity, typename Extract, typename KeyCompare, typename Allocator>
-		template <typename InputIterator>
-		KERBAL_CONSTEXPR20
-		avl_ordered<Entity, Extract, KeyCompare, Allocator>::
-		avl_ordered(
-			kerbal::container::unique_tag_t unique_tag,
-			InputIterator first, InputIterator last,
-			const Extract & e, const KeyCompare & key_comp
-		) :
-			extract_compress_helper(kerbal::utility::in_place_t(), e),
-			key_compare_compress_helper(kerbal::utility::in_place_t(), key_comp),
-			avl_type_only(unique_tag, this->alloc(), this->extract(), this->key_comp(), first, last)
-		{
-		}
-
-		template <typename Entity, typename Extract, typename KeyCompare, typename Allocator>
-		template <typename InputIterator>
-		KERBAL_CONSTEXPR20
-		avl_ordered<Entity, Extract, KeyCompare, Allocator>::
-		avl_ordered(
-			kerbal::container::unique_tag_t unique_tag,
-			InputIterator first, InputIterator last,
-			const Extract & e, const KeyCompare & key_comp, const Allocator & alloc
-		) :
-			extract_compress_helper(kerbal::utility::in_place_t(), e),
-			key_compare_compress_helper(kerbal::utility::in_place_t(), key_comp),
-			avl_allocator_overload(alloc),
-			avl_type_only(unique_tag, this->alloc(), this->extract(), this->key_comp(), first, last)
-		{
-		}
-
-
-#	if __cplusplus >= 201103L
 
 		//===================
 		// construct with initializer_list
 
-		template <typename Entity, typename Extract, typename KeyCompare, typename Allocator>
-		KERBAL_CONSTEXPR20
-		avl_ordered<Entity, Extract, KeyCompare, Allocator>::
-		avl_ordered(
-			std::initializer_list<value_type> ilist
-		) :
-			avl_type_only(this->alloc(), this->extract(), this->key_comp(), ilist)
-		{
-		}
+#	if __cplusplus >= 201103L
 
-		template <typename Entity, typename Extract, typename KeyCompare, typename Allocator>
-		KERBAL_CONSTEXPR20
-		avl_ordered<Entity, Extract, KeyCompare, Allocator>::
-		avl_ordered(
-			std::initializer_list<value_type> ilist,
-			const Allocator & alloc
-		) :
-			avl_allocator_overload(alloc),
-			avl_type_only(this->alloc(), this->extract(), this->key_comp(), ilist)
-		{
-		}
-
-		template <typename Entity, typename Extract, typename KeyCompare, typename Allocator>
-		KERBAL_CONSTEXPR20
-		avl_ordered<Entity, Extract, KeyCompare, Allocator>::
-		avl_ordered(
-			std::initializer_list<value_type> ilist,
-			const KeyCompare & key_comp
-		) :
-			key_compare_compress_helper(kerbal::utility::in_place_t(), key_comp),
-			avl_type_only(this->alloc(), this->extract(), this->key_comp(), ilist)
-		{
-		}
-
-		template <typename Entity, typename Extract, typename KeyCompare, typename Allocator>
-		KERBAL_CONSTEXPR20
-		avl_ordered<Entity, Extract, KeyCompare, Allocator>::
-		avl_ordered(
-			std::initializer_list<value_type> ilist,
-			const KeyCompare & key_comp, const Allocator & alloc
-		) :
-			key_compare_compress_helper(kerbal::utility::in_place_t(), key_comp),
-			avl_allocator_overload(alloc),
-			avl_type_only(this->alloc(), this->extract(), this->key_comp(), ilist)
-		{
-		}
-
-		template <typename Entity, typename Extract, typename KeyCompare, typename Allocator>
-		KERBAL_CONSTEXPR20
-		avl_ordered<Entity, Extract, KeyCompare, Allocator>::
-		avl_ordered(
-			std::initializer_list<value_type> ilist,
-			const Extract & e
-		) :
-			extract_compress_helper(kerbal::utility::in_place_t(), e),
-			avl_type_only(this->alloc(), this->extract(), this->key_comp(), ilist)
-		{
-		}
-
-		template <typename Entity, typename Extract, typename KeyCompare, typename Allocator>
-		KERBAL_CONSTEXPR20
-		avl_ordered<Entity, Extract, KeyCompare, Allocator>::
-		avl_ordered(
-			std::initializer_list<value_type> ilist,
-			const Extract & e, const Allocator & alloc
-		) :
-			extract_compress_helper(kerbal::utility::in_place_t(), e),
-			avl_allocator_overload(alloc),
-			avl_type_only(this->alloc(), this->extract(), this->key_comp(), ilist)
-		{
-		}
-
-		template <typename Entity, typename Extract, typename KeyCompare, typename Allocator>
-		KERBAL_CONSTEXPR20
-		avl_ordered<Entity, Extract, KeyCompare, Allocator>::
-		avl_ordered(
-			std::initializer_list<value_type> ilist,
-			const Extract & e, const KeyCompare & key_comp
-		) :
-			extract_compress_helper(kerbal::utility::in_place_t(), e),
-			key_compare_compress_helper(kerbal::utility::in_place_t(), key_comp),
-			avl_type_only(this->alloc(), this->extract(), this->key_comp(), ilist)
-		{
-		}
-
-		template <typename Entity, typename Extract, typename KeyCompare, typename Allocator>
-		KERBAL_CONSTEXPR20
-		avl_ordered<Entity, Extract, KeyCompare, Allocator>::
-		avl_ordered(
-			std::initializer_list<value_type> ilist,
-			const Extract & e, const KeyCompare & key_comp, const Allocator & alloc
-		) :
-			extract_compress_helper(kerbal::utility::in_place_t(), e),
-			key_compare_compress_helper(kerbal::utility::in_place_t(), key_comp),
-			avl_allocator_overload(alloc),
-			avl_type_only(this->alloc(), this->extract(), this->key_comp(), ilist)
-		{
-		}
-
-
-		//===================
-		// construct with initializer_list (unique)
-
-		template <typename Entity, typename Extract, typename KeyCompare, typename Allocator>
-		KERBAL_CONSTEXPR20
-		avl_ordered<Entity, Extract, KeyCompare, Allocator>::
-		avl_ordered(
-			kerbal::container::unique_tag_t unique_tag,
-			std::initializer_list<value_type> ilist
-		) :
-			avl_type_only(unique_tag, this->alloc(), this->extract(), this->key_comp(), ilist)
-		{
-		}
-
-		template <typename Entity, typename Extract, typename KeyCompare, typename Allocator>
-		KERBAL_CONSTEXPR20
-		avl_ordered<Entity, Extract, KeyCompare, Allocator>::
-		avl_ordered(
-			kerbal::container::unique_tag_t unique_tag,
-			std::initializer_list<value_type> ilist,
-			const Allocator & alloc
-		) :
-			avl_allocator_overload(alloc),
-			avl_type_only(unique_tag, this->alloc(), this->extract(), this->key_comp(), ilist)
-		{
-		}
-
-		template <typename Entity, typename Extract, typename KeyCompare, typename Allocator>
-		KERBAL_CONSTEXPR20
-		avl_ordered<Entity, Extract, KeyCompare, Allocator>::
-		avl_ordered(
-			kerbal::container::unique_tag_t unique_tag,
-			std::initializer_list<value_type> ilist,
-			const KeyCompare & key_comp
-		) :
-			key_compare_compress_helper(kerbal::utility::in_place_t(), key_comp),
-			avl_type_only(unique_tag, this->alloc(), this->extract(), this->key_comp(), ilist)
-		{
-		}
-
-		template <typename Entity, typename Extract, typename KeyCompare, typename Allocator>
-		KERBAL_CONSTEXPR20
-		avl_ordered<Entity, Extract, KeyCompare, Allocator>::
-		avl_ordered(
-			kerbal::container::unique_tag_t unique_tag,
-			std::initializer_list<value_type> ilist,
-			const KeyCompare & key_comp, const Allocator & alloc
-		) :
-			key_compare_compress_helper(kerbal::utility::in_place_t(), key_comp),
-			avl_allocator_overload(alloc),
-			avl_type_only(unique_tag, this->alloc(), this->extract(), this->key_comp(), ilist)
-		{
-		}
-
-		template <typename Entity, typename Extract, typename KeyCompare, typename Allocator>
-		KERBAL_CONSTEXPR20
-		avl_ordered<Entity, Extract, KeyCompare, Allocator>::
-		avl_ordered(
-			kerbal::container::unique_tag_t unique_tag,
-			std::initializer_list<value_type> ilist,
-			const Extract & e
-		) :
-			extract_compress_helper(kerbal::utility::in_place_t(), e),
-			avl_type_only(unique_tag, this->alloc(), this->extract(), this->key_comp(), ilist)
-		{
-		}
-
-		template <typename Entity, typename Extract, typename KeyCompare, typename Allocator>
-		KERBAL_CONSTEXPR20
-		avl_ordered<Entity, Extract, KeyCompare, Allocator>::
-		avl_ordered(
-			kerbal::container::unique_tag_t unique_tag,
-			std::initializer_list<value_type> ilist,
-			const Extract & e, const Allocator & alloc
-		) :
-			extract_compress_helper(kerbal::utility::in_place_t(), e),
-			avl_allocator_overload(alloc),
-			avl_type_only(unique_tag, this->alloc(), this->extract(), this->key_comp(), ilist)
-		{
-		}
-
-		template <typename Entity, typename Extract, typename KeyCompare, typename Allocator>
-		KERBAL_CONSTEXPR20
-		avl_ordered<Entity, Extract, KeyCompare, Allocator>::
-		avl_ordered(
-			kerbal::container::unique_tag_t unique_tag,
-			std::initializer_list<value_type> ilist,
-			const Extract & e, const KeyCompare & key_comp
-		) :
-			extract_compress_helper(kerbal::utility::in_place_t(), e),
-			key_compare_compress_helper(kerbal::utility::in_place_t(), key_comp),
-			avl_type_only(unique_tag, this->alloc(), this->extract(), this->key_comp(), ilist)
-		{
-		}
-
-		template <typename Entity, typename Extract, typename KeyCompare, typename Allocator>
-		KERBAL_CONSTEXPR20
-		avl_ordered<Entity, Extract, KeyCompare, Allocator>::
-		avl_ordered(
-			kerbal::container::unique_tag_t unique_tag,
-			std::initializer_list<value_type> ilist,
-			const Extract & e, const KeyCompare & key_comp, const Allocator & alloc
-		) :
-			extract_compress_helper(kerbal::utility::in_place_t(), e),
-			key_compare_compress_helper(kerbal::utility::in_place_t(), key_comp),
-			avl_allocator_overload(alloc),
-			avl_type_only(unique_tag, this->alloc(), this->extract(), this->key_comp(), ilist)
-		{
-		}
+#	define FBODY(i) \
+		template <typename Entity, typename Extract, typename KeyCompare, typename Allocator> \
+		KERBAL_CONSTEXPR20 \
+		avl_ordered<Entity, Extract, KeyCompare, Allocator>:: \
+		avl_ordered( \
+			std::initializer_list<value_type> ilist \
+			KERBAL_OPT_EXPAND_N(LEFT_JOIN_COMMA, EMPTY, ARG_DECL, i) \
+		) : \
+			KERBAL_OPT_EXPAND_N(REMAINF, EMPTY, ARG_USE, i) \
+			avl_type_only(this->alloc(), this->extract(), this->key_comp(), ilist) \
+		{ \
+		} \
+ \
+		template <typename Entity, typename Extract, typename KeyCompare, typename Allocator> \
+		KERBAL_CONSTEXPR20 \
+		avl_ordered<Entity, Extract, KeyCompare, Allocator>:: \
+		avl_ordered( \
+			kerbal::container::unique_tag_t unique_tag, \
+			std::initializer_list<value_type> ilist \
+			KERBAL_OPT_EXPAND_N(LEFT_JOIN_COMMA, EMPTY, ARG_DECL, i) \
+		) : \
+			KERBAL_OPT_EXPAND_N(REMAINF, EMPTY, ARG_USE, i) \
+			avl_type_only(this->alloc(), this->extract(), this->key_comp(), ilist) \
+		{ \
+		} \
 
 #	else
 
-		//===================
-		// construct with assign_list
-
-		template <typename Entity, typename Extract, typename KeyCompare, typename Allocator>
-		template <typename U>
-		avl_ordered<Entity, Extract, KeyCompare, Allocator>::
-		avl_ordered(
-			const kerbal::assign::assign_list<U> & ilist
-		) :
-			avl_type_only(this->alloc(), this->extract(), this->key_comp(), ilist)
-		{
-		}
-
-		template <typename Entity, typename Extract, typename KeyCompare, typename Allocator>
-		template <typename U>
-		avl_ordered<Entity, Extract, KeyCompare, Allocator>::
-		avl_ordered(
-			const kerbal::assign::assign_list<U> & ilist,
-			const Allocator & alloc
-		) :
-			avl_allocator_overload(alloc),
-			avl_type_only(this->alloc(), this->extract(), this->key_comp(), ilist)
-		{
-		}
-
-		template <typename Entity, typename Extract, typename KeyCompare, typename Allocator>
-		template <typename U>
-		avl_ordered<Entity, Extract, KeyCompare, Allocator>::
-		avl_ordered(
-			const kerbal::assign::assign_list<U> & ilist,
-			const KeyCompare & key_comp
-		) :
-			key_compare_compress_helper(kerbal::utility::in_place_t(), key_comp),
-			avl_type_only(this->alloc(), this->extract(), this->key_comp(), ilist)
-		{
-		}
-
-		template <typename Entity, typename Extract, typename KeyCompare, typename Allocator>
-		template <typename U>
-		avl_ordered<Entity, Extract, KeyCompare, Allocator>::
-		avl_ordered(
-			const kerbal::assign::assign_list<U> & ilist,
-			const KeyCompare & key_comp, const Allocator & alloc
-		) :
-			key_compare_compress_helper(kerbal::utility::in_place_t(), key_comp),
-			avl_allocator_overload(alloc),
-			avl_type_only(this->alloc(), this->extract(), this->key_comp(), ilist)
-		{
-		}
-
-		template <typename Entity, typename Extract, typename KeyCompare, typename Allocator>
-		template <typename U>
-		avl_ordered<Entity, Extract, KeyCompare, Allocator>::
-		avl_ordered(
-			const kerbal::assign::assign_list<U> & ilist,
-			const Extract & e
-		) :
-			extract_compress_helper(kerbal::utility::in_place_t(), e),
-			avl_type_only(this->alloc(), this->extract(), this->key_comp(), ilist)
-		{
-		}
-
-		template <typename Entity, typename Extract, typename KeyCompare, typename Allocator>
-		template <typename U>
-		avl_ordered<Entity, Extract, KeyCompare, Allocator>::
-		avl_ordered(
-			const kerbal::assign::assign_list<U> & ilist,
-			const Extract & e, const Allocator & alloc
-		) :
-			extract_compress_helper(kerbal::utility::in_place_t(), e),
-			avl_allocator_overload(alloc),
-			avl_type_only(this->alloc(), this->extract(), this->key_comp(), ilist)
-		{
-		}
-
-		template <typename Entity, typename Extract, typename KeyCompare, typename Allocator>
-		template <typename U>
-		avl_ordered<Entity, Extract, KeyCompare, Allocator>::
-		avl_ordered(
-			const kerbal::assign::assign_list<U> & ilist,
-			const Extract & e, const KeyCompare & key_comp
-		) :
-			extract_compress_helper(kerbal::utility::in_place_t(), e),
-			key_compare_compress_helper(kerbal::utility::in_place_t(), key_comp),
-			avl_type_only(this->alloc(), this->extract(), this->key_comp(), ilist)
-		{
-		}
-
-		template <typename Entity, typename Extract, typename KeyCompare, typename Allocator>
-		template <typename U>
-		avl_ordered<Entity, Extract, KeyCompare, Allocator>::
-		avl_ordered(
-			const kerbal::assign::assign_list<U> & ilist,
-			const Extract & e, const KeyCompare & key_comp, const Allocator & alloc
-		) :
-			extract_compress_helper(kerbal::utility::in_place_t(), e),
-			key_compare_compress_helper(kerbal::utility::in_place_t(), key_comp),
-			avl_allocator_overload(alloc),
-			avl_type_only(this->alloc(), this->extract(), this->key_comp(), ilist)
-		{
-		}
-
-
-		//===================
-		// construct with assign_list (unique)
-
-		template <typename Entity, typename Extract, typename KeyCompare, typename Allocator>
-		template <typename U>
-		avl_ordered<Entity, Extract, KeyCompare, Allocator>::
-		avl_ordered(
-			kerbal::container::unique_tag_t unique_tag,
-			const kerbal::assign::assign_list<U> & ilist
-		) :
-			avl_type_only(unique_tag, this->alloc(), this->extract(), this->key_comp(), ilist)
-		{
-		}
-
-		template <typename Entity, typename Extract, typename KeyCompare, typename Allocator>
-		template <typename U>
-		avl_ordered<Entity, Extract, KeyCompare, Allocator>::
-		avl_ordered(
-			kerbal::container::unique_tag_t unique_tag,
-			const kerbal::assign::assign_list<U> & ilist,
-			const Allocator & alloc
-		) :
-			avl_allocator_overload(alloc),
-			avl_type_only(unique_tag, this->alloc(), this->extract(), this->key_comp(), ilist)
-		{
-		}
-
-		template <typename Entity, typename Extract, typename KeyCompare, typename Allocator>
-		template <typename U>
-		avl_ordered<Entity, Extract, KeyCompare, Allocator>::
-		avl_ordered(
-			kerbal::container::unique_tag_t unique_tag,
-			const kerbal::assign::assign_list<U> & ilist,
-			const KeyCompare & key_comp
-		) :
-			key_compare_compress_helper(kerbal::utility::in_place_t(), key_comp),
-			avl_type_only(unique_tag, this->alloc(), this->extract(), this->key_comp(), ilist)
-		{
-		}
-
-		template <typename Entity, typename Extract, typename KeyCompare, typename Allocator>
-		template <typename U>
-		avl_ordered<Entity, Extract, KeyCompare, Allocator>::
-		avl_ordered(
-			kerbal::container::unique_tag_t unique_tag,
-			const kerbal::assign::assign_list<U> & ilist,
-			const KeyCompare & key_comp, const Allocator & alloc
-		) :
-			key_compare_compress_helper(kerbal::utility::in_place_t(), key_comp),
-			avl_allocator_overload(alloc),
-			avl_type_only(unique_tag, this->alloc(), this->extract(), this->key_comp(), ilist)
-		{
-		}
-
-		template <typename Entity, typename Extract, typename KeyCompare, typename Allocator>
-		template <typename U>
-		avl_ordered<Entity, Extract, KeyCompare, Allocator>::
-		avl_ordered(
-			kerbal::container::unique_tag_t unique_tag,
-			const kerbal::assign::assign_list<U> & ilist,
-			const Extract & e
-		) :
-			extract_compress_helper(kerbal::utility::in_place_t(), e),
-			avl_type_only(unique_tag, this->alloc(), this->extract(), this->key_comp(), ilist)
-		{
-		}
-
-		template <typename Entity, typename Extract, typename KeyCompare, typename Allocator>
-		template <typename U>
-		avl_ordered<Entity, Extract, KeyCompare, Allocator>::
-		avl_ordered(
-			kerbal::container::unique_tag_t unique_tag,
-			const kerbal::assign::assign_list<U> & ilist,
-			const Extract & e, const Allocator & alloc
-		) :
-			extract_compress_helper(kerbal::utility::in_place_t(), e),
-			avl_allocator_overload(alloc),
-			avl_type_only(unique_tag, this->alloc(), this->extract(), this->key_comp(), ilist)
-		{
-		}
-
-		template <typename Entity, typename Extract, typename KeyCompare, typename Allocator>
-		template <typename U>
-		avl_ordered<Entity, Extract, KeyCompare, Allocator>::
-		avl_ordered(
-			kerbal::container::unique_tag_t unique_tag,
-			const kerbal::assign::assign_list<U> & ilist,
-			const Extract & e, const KeyCompare & key_comp
-		) :
-			extract_compress_helper(kerbal::utility::in_place_t(), e),
-			key_compare_compress_helper(kerbal::utility::in_place_t(), key_comp),
-			avl_type_only(unique_tag, this->alloc(), this->extract(), this->key_comp(), ilist)
-		{
-		}
-
-		template <typename Entity, typename Extract, typename KeyCompare, typename Allocator>
-		template <typename U>
-		avl_ordered<Entity, Extract, KeyCompare, Allocator>::
-		avl_ordered(
-			kerbal::container::unique_tag_t unique_tag,
-			const kerbal::assign::assign_list<U> & ilist,
-			const Extract & e, const KeyCompare & key_comp, const Allocator & alloc
-		) :
-			extract_compress_helper(kerbal::utility::in_place_t(), e),
-			key_compare_compress_helper(kerbal::utility::in_place_t(), key_comp),
-			avl_allocator_overload(alloc),
-			avl_type_only(unique_tag, this->alloc(), this->extract(), this->key_comp(), ilist)
-		{
-		}
+#	define FBODY(i) \
+		template <typename Entity, typename Extract, typename KeyCompare, typename Allocator> \
+		template <typename U> \
+		avl_ordered<Entity, Extract, KeyCompare, Allocator>:: \
+		avl_ordered( \
+			const kerbal::assign::assign_list<U> & ilist \
+			KERBAL_OPT_EXPAND_N(LEFT_JOIN_COMMA, EMPTY, ARG_DECL, i) \
+		) : \
+			KERBAL_OPT_EXPAND_N(REMAINF, EMPTY, ARG_USE, i) \
+			avl_type_only(this->alloc(), this->extract(), this->key_comp(), ilist) \
+		{ \
+		} \
+ \
+		template <typename Entity, typename Extract, typename KeyCompare, typename Allocator> \
+		template <typename U> \
+		avl_ordered<Entity, Extract, KeyCompare, Allocator>:: \
+		avl_ordered( \
+			kerbal::container::unique_tag_t unique_tag, \
+			const kerbal::assign::assign_list<U> & ilist \
+			KERBAL_OPT_EXPAND_N(LEFT_JOIN_COMMA, EMPTY, ARG_DECL, i) \
+		) : \
+			KERBAL_OPT_EXPAND_N(REMAINF, EMPTY, ARG_USE, i) \
+			avl_type_only(this->alloc(), this->extract(), this->key_comp(), ilist) \
+		{ \
+		} \
 
 #	endif
+
+		KERBAL_PPEXPAND_N(FBODY, KERBAL_PPEXPAND_EMPTY_SEPARATOR, 0)
+		KERBAL_PPEXPAND_N(FBODY, KERBAL_PPEXPAND_EMPTY_SEPARATOR, 7)
+
+#	undef FBODY
+
+
+#	undef ARG_DECL_1
+#	undef ARG_DECL_2
+#	undef ARG_DECL_3
+#	undef ARG_DECL_4
+#	undef ARG_DECL_5
+#	undef ARG_DECL_6
+#	undef ARG_DECL_7
+#	undef ARG_DECL
+
+#	undef ARG_USE_1
+#	undef ARG_USE_2
+#	undef ARG_USE_3
+#	undef ARG_USE_4
+#	undef ARG_USE_5
+#	undef ARG_USE_6
+#	undef ARG_USE_7
+#	undef ARG_USE
+
+
+#	undef REMAINF
+#	undef LEFT_JOIN_CONNO
+#	undef LEFT_JOIN_COMMA
+#	undef EMPTY
 
 
 		template <typename Entity, typename Extract, typename KeyCompare, typename Allocator>
