@@ -552,7 +552,7 @@ namespace kerbal
 		void
 		avl_map<K, M, KeyCompare, Allocator>::insert(InputIterator first, InputIterator last)
 		{
-			return this->avl_ordered::insert_unique(first, last);
+			this->avl_ordered::insert_unique(first, last);
 		}
 
 #	if __cplusplus >= 201103L
@@ -561,7 +561,7 @@ namespace kerbal
 		KERBAL_CONSTEXPR20
 		void avl_map<K, M, KeyCompare, Allocator>::insert(std::initializer_list<value_type> ilist)
 		{
-			return this->avl_ordered::insert_unique(ilist);
+			this->avl_ordered::insert_unique(ilist);
 		}
 
 #	else
@@ -570,7 +570,7 @@ namespace kerbal
 		template <typename U>
 		void avl_map<K, M, KeyCompare, Allocator>::insert(const kerbal::assign::assign_list<U> & ilist)
 		{
-			return this->avl_ordered::insert_unique(ilist);
+			this->avl_ordered::insert_unique(ilist);
 		}
 
 #	endif
@@ -663,7 +663,7 @@ namespace kerbal
 		KERBAL_CONSTEXPR20
 		void avl_map<K, M, KeyCompare, Allocator>::clear() KERBAL_NOEXCEPT
 		{
-			return this->avl_ordered::clear();
+			this->avl_ordered::clear();
 		}
 
 		//===================

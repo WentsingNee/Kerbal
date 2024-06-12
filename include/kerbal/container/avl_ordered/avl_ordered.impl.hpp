@@ -1029,7 +1029,7 @@ namespace kerbal
 		KERBAL_CONSTEXPR20
 		void avl_ordered<Entity, Extract, KeyCompare, Allocator>::insert(InputIterator first, InputIterator last)
 		{
-			return this->avl_type_only::k_insert_using_allocator(this->alloc(), this->extract(), this->key_comp(), first, last);
+			this->avl_type_only::k_insert_using_allocator(this->alloc(), this->extract(), this->key_comp(), first, last);
 		}
 
 		template <typename Entity, typename Extract, typename KeyCompare, typename Allocator>
@@ -1037,7 +1037,7 @@ namespace kerbal
 		KERBAL_CONSTEXPR20
 		void avl_ordered<Entity, Extract, KeyCompare, Allocator>::insert_unique(InputIterator first, InputIterator last)
 		{
-			return this->avl_type_only::k_insert_unique_using_allocator(this->alloc(), this->extract(), this->key_comp(), first, last);
+			this->avl_type_only::k_insert_unique_using_allocator(this->alloc(), this->extract(), this->key_comp(), first, last);
 		}
 
 #	if __cplusplus >= 201103L
@@ -1125,7 +1125,7 @@ namespace kerbal
 		KERBAL_CONSTEXPR20
 		void avl_ordered<Entity, Extract, KeyCompare, Allocator>::clear() KERBAL_NOEXCEPT
 		{
-			return this->avl_type_only::k_clear_using_allocator(this->alloc());
+			this->avl_type_only::k_clear_using_allocator(this->alloc());
 		}
 
 

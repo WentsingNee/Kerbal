@@ -535,7 +535,7 @@ namespace kerbal
 		KERBAL_CONSTEXPR20
 		void avl_set<T, KeyCompare, Allocator>::clear() KERBAL_NOEXCEPT
 		{
-			return this->avl_ordered::clear();
+			this->avl_ordered::clear();
 		}
 
 
