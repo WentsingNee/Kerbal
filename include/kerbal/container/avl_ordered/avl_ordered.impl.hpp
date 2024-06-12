@@ -1106,7 +1106,7 @@ namespace kerbal
 		typename avl_ordered<Entity, Extract, KeyCompare, Allocator>::size_type
 		avl_ordered<Entity, Extract, KeyCompare, Allocator>::erase(const key_type & key) KERBAL_NOEXCEPT
 		{
-			return this->avl_type_only::k_erase_using_allocator(this->alloc(), key, this->extract(), this->key_comp());
+			return this->avl_type_only::k_erase_using_allocator(this->alloc(), this->extract(), this->key_comp(), key);
 		}
 
 		template <typename Entity, typename Extract, typename KeyCompare, typename Allocator>
@@ -1118,7 +1118,7 @@ namespace kerbal
 		>::type
 		avl_ordered<Entity, Extract, KeyCompare, Allocator>::erase(const Key & key) KERBAL_NOEXCEPT
 		{
-			return this->avl_type_only::k_erase_using_allocator(this->alloc(), key, this->extract(), this->key_comp());
+			return this->avl_type_only::k_erase_using_allocator(this->alloc(), this->extract(), this->key_comp(), key);
 		}
 
 		template <typename Entity, typename Extract, typename KeyCompare, typename Allocator>

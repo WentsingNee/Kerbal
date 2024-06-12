@@ -1913,7 +1913,7 @@ namespace kerbal
 			template <typename NodeAllocator, typename Extract, typename KeyCompare>
 			KERBAL_CONSTEXPR20
 			typename avl_type_only<Entity>::size_type
-			avl_type_only<Entity>::k_erase_using_allocator(NodeAllocator & alloc, const typename Extract::key_type & key, Extract & e, KeyCompare & kc) KERBAL_NOEXCEPT
+			avl_type_only<Entity>::k_erase_using_allocator(NodeAllocator & alloc, Extract & e, KeyCompare & kc, const typename Extract::key_type & key) KERBAL_NOEXCEPT
 			{
 				kerbal::utility::compressed_pair<const_iterator, const_iterator> equ_range(this->k_equal_range(key, e, kc));
 				size_type cnt = 0;
@@ -1925,12 +1925,12 @@ namespace kerbal
 			}
 
 			template <typename Entity>
-			template <typename NodeAllocator, typename Key, typename Extract, typename KeyCompare>
+			template <typename NodeAllocator, typename Extract, typename KeyCompare, typename Key>
 			KERBAL_CONSTEXPR20
 			typename avl_type_only<Entity>::template enable_if_transparent_lookup<Key, Extract, KeyCompare,
 					typename avl_type_only<Entity>::size_type
 			>::type
-			avl_type_only<Entity>::k_erase_using_allocator(NodeAllocator & alloc, const Key & key, Extract & e, KeyCompare & kc) KERBAL_NOEXCEPT
+			avl_type_only<Entity>::k_erase_using_allocator(NodeAllocator & alloc, Extract & e, KeyCompare & kc, const Key & key) KERBAL_NOEXCEPT
 			{
 				kerbal::utility::compressed_pair<const_iterator, const_iterator> equ_range(this->k_equal_range(key, e, kc));
 				size_type cnt = 0;

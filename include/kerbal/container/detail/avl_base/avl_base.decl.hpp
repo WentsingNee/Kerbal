@@ -849,12 +849,12 @@ namespace kerbal
 
 					template <typename NodeAllocator, typename Extract, typename KeyCompare>
 					KERBAL_CONSTEXPR20
-					size_type k_erase_using_allocator(NodeAllocator & alloc, const typename Extract::key_type & key, Extract & e, KeyCompare & kc) KERBAL_NOEXCEPT;
+					size_type k_erase_using_allocator(NodeAllocator & alloc, Extract & e, KeyCompare & kc, const typename Extract::key_type & key) KERBAL_NOEXCEPT;
 
-					template <typename NodeAllocator, typename Key, typename Extract, typename KeyCompare>
+					template <typename NodeAllocator, typename Extract, typename KeyCompare, typename Key>
 					KERBAL_CONSTEXPR20
 					typename enable_if_transparent_lookup<Key, Extract, KeyCompare, size_type>::type
-					k_erase_using_allocator(NodeAllocator & alloc, const Key & key, Extract & e, KeyCompare & kc) KERBAL_NOEXCEPT;
+					k_erase_using_allocator(NodeAllocator & alloc, Extract & e, KeyCompare & kc, const Key & key) KERBAL_NOEXCEPT;
 
 					template <typename NodeAllocator>
 					KERBAL_CONSTEXPR20
