@@ -24,10 +24,8 @@
 #include <kerbal/container/associative_container_facility/key_extractors/identity_extractor.hpp>
 #include <kerbal/utility/compressed_pair.hpp>
 
-#if __cplusplus < 201103L
-#	include <kerbal/macro/macro_concat.hpp>
-#	include <kerbal/macro/ppexpand.hpp>
-#endif
+#include <kerbal/macro/macro_concat.hpp>
+#include <kerbal/macro/ppexpand.hpp>
 
 #if __cplusplus >= 201703L
 #	include <kerbal/memory/allocator/is_allocator.hpp>
@@ -113,52 +111,48 @@ namespace kerbal
 				avl_set(const KeyCompare & kc, const Allocator & alloc);
 
 
-				template <typename InputIterator>
-				KERBAL_CONSTEXPR20
-				avl_set(InputIterator first, InputIterator last);
+#			define OTHER_ARG_DECL_0
+#			define OTHER_ARG_DECL_1 , const Allocator & alloc
+#			define OTHER_ARG_DECL_2 , const KeyCompare & key_comp
+#			define OTHER_ARG_DECL_3 , const KeyCompare & key_comp, const Allocator & alloc
 
-				template <typename InputIterator>
-				KERBAL_CONSTEXPR20
-				avl_set(InputIterator first, InputIterator last, const Allocator & alloc);
+#			define FBODY(i) \
+				template <typename InputIterator> \
+				KERBAL_CONSTEXPR20 \
+				avl_set(InputIterator first, InputIterator last KERBAL_MACRO_CONCAT(OTHER_ARG_DECL_, i)); \
 
-				template <typename InputIterator>
-				KERBAL_CONSTEXPR20
-				avl_set(InputIterator first, InputIterator last, const KeyCompare & kc);
+				KERBAL_PPEXPAND_N(FBODY, KERBAL_PPEXPAND_EMPTY_SEPARATOR, 0)
+				KERBAL_PPEXPAND_N(FBODY, KERBAL_PPEXPAND_EMPTY_SEPARATOR, 3)
 
-				template <typename InputIterator>
-				KERBAL_CONSTEXPR20
-				avl_set(InputIterator first, InputIterator last, const KeyCompare & kc, const Allocator & alloc);
+#			undef FBODY
+
 
 
 #		if __cplusplus >= 201103L
 
-				KERBAL_CONSTEXPR20
-				avl_set(std::initializer_list<value_type> ilist);
-
-				KERBAL_CONSTEXPR20
-				avl_set(std::initializer_list<value_type> ilist, const Allocator & alloc);
-
-				KERBAL_CONSTEXPR20
-				avl_set(std::initializer_list<value_type> ilist, const KeyCompare & kc);
-
-				KERBAL_CONSTEXPR20
-				avl_set(std::initializer_list<value_type> ilist, const KeyCompare & kc, const Allocator & alloc);
+#			define FBODY(i) \
+				KERBAL_CONSTEXPR20 \
+				avl_set(std::initializer_list<value_type> ilist KERBAL_MACRO_CONCAT(OTHER_ARG_DECL_, i)); \
 
 #		else
 
-				template <typename U>
-				avl_set(const kerbal::assign::assign_list<U> & ilist);
-
-				template <typename U>
-				avl_set(const kerbal::assign::assign_list<U> & ilist, const Allocator & alloc);
-
-				template <typename U>
-				avl_set(const kerbal::assign::assign_list<U> & ilist, const KeyCompare & kc);
-
-				template <typename U>
-				avl_set(const kerbal::assign::assign_list<U> & ilist, const KeyCompare & kc, const Allocator & alloc);
+#			define FBODY(i) \
+				template <typename U> \
+				avl_set(const kerbal::assign::assign_list<U> & ilist KERBAL_MACRO_CONCAT(OTHER_ARG_DECL_, i)); \
 
 #		endif
+
+				KERBAL_PPEXPAND_N(FBODY, KERBAL_PPEXPAND_EMPTY_SEPARATOR, 0)
+				KERBAL_PPEXPAND_N(FBODY, KERBAL_PPEXPAND_EMPTY_SEPARATOR, 3)
+
+#			undef FBODY
+
+
+#			undef OTHER_ARG_DECL_0
+#			undef OTHER_ARG_DECL_1
+#			undef OTHER_ARG_DECL_2
+#			undef OTHER_ARG_DECL_3
+
 
 				KERBAL_CONSTEXPR20
 				avl_set(const avl_set & src);

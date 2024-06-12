@@ -20,6 +20,9 @@
 #include <kerbal/container/associative_container_facility/unique_tag_t.hpp>
 #include <kerbal/utility/compressed_pair.hpp>
 
+#include <kerbal/macro/macro_concat.hpp>
+#include <kerbal/macro/ppexpand.hpp>
+
 #if __cplusplus >= 201103L
 #	include <kerbal/compatibility/move.hpp>
 #	include <kerbal/utility/forward.hpp>
@@ -45,120 +48,102 @@ namespace kerbal
 
 #	endif
 
-		template <typename T, typename KeyCompare, typename Allocator>
-		KERBAL_CONSTEXPR20
-		avl_set<T, KeyCompare, Allocator>::avl_set(const Allocator & alloc) :
-				avl_ordered(alloc)
-		{
-		}
+#	define OTHER_ARG_DECL_1 const Allocator & alloc
+#	define OTHER_ARG_DECL_2 const KeyCompare & key_comp
+#	define OTHER_ARG_DECL_3 const KeyCompare & key_comp, const Allocator & alloc
 
-		template <typename T, typename KeyCompare, typename Allocator>
-		KERBAL_CONSTEXPR20
-		avl_set<T, KeyCompare, Allocator>::avl_set(const KeyCompare & kc) :
-				avl_ordered(kc)
-		{
-		}
+#	define OTHER_ARG_USE_1 alloc
+#	define OTHER_ARG_USE_2 key_comp
+#	define OTHER_ARG_USE_3 key_comp, alloc
 
-		template <typename T, typename KeyCompare, typename Allocator>
-		KERBAL_CONSTEXPR20
-		avl_set<T, KeyCompare, Allocator>::avl_set(const KeyCompare & kc, const Allocator & alloc) :
-				avl_ordered(kc, alloc)
-		{
-		}
+#	define FBODY(i) \
+		template <typename T, typename KeyCompare, typename Allocator> \
+		KERBAL_CONSTEXPR20 \
+		avl_set<T, KeyCompare, Allocator>::avl_set(KERBAL_MACRO_CONCAT(OTHER_ARG_DECL_, i)) : \
+				avl_ordered(KERBAL_MACRO_CONCAT(OTHER_ARG_USE_, i)) \
+		{ \
+		} \
 
-		template <typename T, typename KeyCompare, typename Allocator>
-		template <typename InputIterator>
-		KERBAL_CONSTEXPR20
-		avl_set<T, KeyCompare, Allocator>::avl_set(InputIterator first, InputIterator last) :
-				avl_ordered(kerbal::container::unique_tag_t(), first, last)
-		{
-		}
+		KERBAL_PPEXPAND_N(FBODY, KERBAL_PPEXPAND_EMPTY_SEPARATOR, 3)
 
-		template <typename T, typename KeyCompare, typename Allocator>
-		template <typename InputIterator>
-		KERBAL_CONSTEXPR20
-		avl_set<T, KeyCompare, Allocator>::avl_set(InputIterator first, InputIterator last, const Allocator & alloc) :
-				avl_ordered(kerbal::container::unique_tag_t(), first, last, alloc)
-		{
-		}
+#	undef FBODY
 
-		template <typename T, typename KeyCompare, typename Allocator>
-		template <typename InputIterator>
-		KERBAL_CONSTEXPR20
-		avl_set<T, KeyCompare, Allocator>::avl_set(InputIterator first, InputIterator last, const KeyCompare & kc) :
-				avl_ordered(kerbal::container::unique_tag_t(), first, last, kc)
-		{
-		}
+#	undef OTHER_ARG_DECL_1
+#	undef OTHER_ARG_DECL_2
+#	undef OTHER_ARG_DECL_3
 
-		template <typename T, typename KeyCompare, typename Allocator>
-		template <typename InputIterator>
-		KERBAL_CONSTEXPR20
-		avl_set<T, KeyCompare, Allocator>::avl_set(InputIterator first, InputIterator last, const KeyCompare & kc, const Allocator & alloc) :
-				avl_ordered(kerbal::container::unique_tag_t(), first, last, kc, alloc)
-		{
-		}
+#	undef OTHER_ARG_USE_1
+#	undef OTHER_ARG_USE_2
+#	undef OTHER_ARG_USE_3
+
+
+
+#	define OTHER_ARG_DECL_0
+#	define OTHER_ARG_DECL_1 , const Allocator & alloc
+#	define OTHER_ARG_DECL_2 , const KeyCompare & key_comp
+#	define OTHER_ARG_DECL_3 , const KeyCompare & key_comp, const Allocator & alloc
+
+#	define OTHER_ARG_USE_0
+#	define OTHER_ARG_USE_1 , alloc
+#	define OTHER_ARG_USE_2 , key_comp
+#	define OTHER_ARG_USE_3 , key_comp, alloc
+
+#	define FBODY(i) \
+		template <typename T, typename KeyCompare, typename Allocator> \
+		template <typename InputIterator> \
+		KERBAL_CONSTEXPR20 \
+		avl_set<T, KeyCompare, Allocator>::avl_set(InputIterator first, InputIterator last KERBAL_MACRO_CONCAT(OTHER_ARG_DECL_, i)) : \
+				avl_ordered(kerbal::container::unique_tag_t(), first, last KERBAL_MACRO_CONCAT(OTHER_ARG_USE_, i)) \
+		{ \
+		} \
+
+		KERBAL_PPEXPAND_N(FBODY, KERBAL_PPEXPAND_EMPTY_SEPARATOR, 0)
+		KERBAL_PPEXPAND_N(FBODY, KERBAL_PPEXPAND_EMPTY_SEPARATOR, 3)
+
+#	undef FBODY
+
 
 #	if __cplusplus >= 201103L
 
-		template <typename T, typename KeyCompare, typename Allocator>
-		KERBAL_CONSTEXPR20
-		avl_set<T, KeyCompare, Allocator>::avl_set(std::initializer_list<value_type> ilist) :
-				avl_ordered(kerbal::container::unique_tag_t(), ilist)
-		{
-		}
-
-		template <typename T, typename KeyCompare, typename Allocator>
-		KERBAL_CONSTEXPR20
-		avl_set<T, KeyCompare, Allocator>::avl_set(std::initializer_list<value_type> ilist, const Allocator & alloc) :
-				avl_ordered(kerbal::container::unique_tag_t(), ilist, alloc)
-		{
-		}
-
-		template <typename T, typename KeyCompare, typename Allocator>
-		KERBAL_CONSTEXPR20
-		avl_set<T, KeyCompare, Allocator>::avl_set(std::initializer_list<value_type> ilist, const KeyCompare & kc) :
-				avl_ordered(kerbal::container::unique_tag_t(), ilist, kc)
-		{
-		}
-
-		template <typename T, typename KeyCompare, typename Allocator>
-		KERBAL_CONSTEXPR20
-		avl_set<T, KeyCompare, Allocator>::avl_set(std::initializer_list<value_type> ilist, const KeyCompare & kc, const Allocator & alloc) :
-				avl_ordered(kerbal::container::unique_tag_t(), ilist, kc, alloc)
-		{
-		}
+#	define FBODY(i) \
+		template <typename T, typename KeyCompare, typename Allocator> \
+		KERBAL_CONSTEXPR20 \
+		avl_set<T, KeyCompare, Allocator>::avl_set(std::initializer_list<value_type> ilist KERBAL_MACRO_CONCAT(OTHER_ARG_DECL_, i)) : \
+				avl_ordered(kerbal::container::unique_tag_t(), ilist KERBAL_MACRO_CONCAT(OTHER_ARG_USE_, i)) \
+		{ \
+		} \
 
 #	else
 
-		template <typename T, typename KeyCompare, typename Allocator>
-		template <typename U>
-		avl_set<T, KeyCompare, Allocator>::avl_set(const kerbal::assign::assign_list<U> & ilist) :
-				avl_ordered(kerbal::container::unique_tag_t(), ilist)
-		{
-		}
 
-		template <typename T, typename KeyCompare, typename Allocator>
-		template <typename U>
-		avl_set<T, KeyCompare, Allocator>::avl_set(const kerbal::assign::assign_list<U> & ilist, const Allocator & alloc) :
-				avl_ordered(kerbal::container::unique_tag_t(), ilist, alloc)
-		{
-		}
-
-		template <typename T, typename KeyCompare, typename Allocator>
-		template <typename U>
-		avl_set<T, KeyCompare, Allocator>::avl_set(const kerbal::assign::assign_list<U> & ilist, const KeyCompare & kc) :
-				avl_ordered(kerbal::container::unique_tag_t(), ilist, kc)
-		{
-		}
-
-		template <typename T, typename KeyCompare, typename Allocator>
-		template <typename U>
-		avl_set<T, KeyCompare, Allocator>::avl_set(const kerbal::assign::assign_list<U> & ilist, const KeyCompare & kc, const Allocator & alloc) :
-				avl_ordered(kerbal::container::unique_tag_t(), ilist, kc, alloc)
-		{
-		}
+#	define FBODY(i) \
+		template <typename T, typename KeyCompare, typename Allocator> \
+		KERBAL_CONSTEXPR20 \
+		template <typename U> \
+		avl_set<T, KeyCompare, Allocator>::avl_set(const kerbal::assign::assign_list<U> & ilist KERBAL_MACRO_CONCAT(OTHER_ARG_DECL_, i)) : \
+				avl_ordered(kerbal::container::unique_tag_t(), ilist KERBAL_MACRO_CONCAT(OTHER_ARG_USE_, i)) \
+		{ \
+		} \
 
 #	endif
+
+		KERBAL_PPEXPAND_N(FBODY, KERBAL_PPEXPAND_EMPTY_SEPARATOR, 0)
+		KERBAL_PPEXPAND_N(FBODY, KERBAL_PPEXPAND_EMPTY_SEPARATOR, 3)
+
+#	undef FBODY
+
+
+#	undef OTHER_ARG_DECL_0
+#	undef OTHER_ARG_DECL_1
+#	undef OTHER_ARG_DECL_2
+#	undef OTHER_ARG_DECL_3
+
+#	undef OTHER_ARG_USE_0
+#	undef OTHER_ARG_USE_1
+#	undef OTHER_ARG_USE_2
+#	undef OTHER_ARG_USE_3
+
+
 
 		template <typename T, typename KeyCompare, typename Allocator>
 		KERBAL_CONSTEXPR20
