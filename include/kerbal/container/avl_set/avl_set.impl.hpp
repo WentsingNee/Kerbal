@@ -39,61 +39,45 @@ namespace kerbal
 	namespace container
 	{
 
-#	if __cplusplus < 201103L
 
-		template <typename T, typename KeyCompare, typename Allocator>
-		avl_set<T, KeyCompare, Allocator>::avl_set()
-		{
-		}
+#	define REMAINF(exp) exp
+#	define LEFT_JOIN_COMMA(exp) , exp
+#	define EMPTY
 
-#	endif
 
-#	define OTHER_ARG_DECL_1 const Allocator & alloc
-#	define OTHER_ARG_DECL_2 const KeyCompare & key_comp
-#	define OTHER_ARG_DECL_3 const KeyCompare & key_comp, const Allocator & alloc
+#	define ARG_DECL_1 const Allocator & alloc
+#	define ARG_DECL_2 const KeyCompare & key_comp
+#	define ARG_DECL_3 const KeyCompare & key_comp, const Allocator & alloc
+#	define ARG_DECL(i) KERBAL_MACRO_CONCAT(ARG_DECL_, i)
 
-#	define OTHER_ARG_USE_1 alloc
-#	define OTHER_ARG_USE_2 key_comp
-#	define OTHER_ARG_USE_3 key_comp, alloc
+#	define ARG_USE_1 alloc
+#	define ARG_USE_2 key_comp
+#	define ARG_USE_3 key_comp, alloc
+#	define ARG_USE(i) KERBAL_MACRO_CONCAT(ARG_USE_, i)
+
 
 #	define FBODY(i) \
 		template <typename T, typename KeyCompare, typename Allocator> \
 		KERBAL_CONSTEXPR20 \
-		avl_set<T, KeyCompare, Allocator>::avl_set(KERBAL_MACRO_CONCAT(OTHER_ARG_DECL_, i)) : \
-				avl_ordered(KERBAL_MACRO_CONCAT(OTHER_ARG_USE_, i)) \
+		avl_set<T, KeyCompare, Allocator>::avl_set(KERBAL_OPT_EXPAND_N(REMAINF, EMPTY, ARG_DECL, i)) : \
+				avl_ordered(KERBAL_OPT_EXPAND_N(REMAINF, EMPTY, ARG_USE, i)) \
 		{ \
 		} \
 
+#	if __cplusplus < 201103L
+		KERBAL_PPEXPAND_N(FBODY, KERBAL_PPEXPAND_EMPTY_SEPARATOR, 0)
+#	endif
 		KERBAL_PPEXPAND_N(FBODY, KERBAL_PPEXPAND_EMPTY_SEPARATOR, 3)
 
 #	undef FBODY
 
-#	undef OTHER_ARG_DECL_1
-#	undef OTHER_ARG_DECL_2
-#	undef OTHER_ARG_DECL_3
-
-#	undef OTHER_ARG_USE_1
-#	undef OTHER_ARG_USE_2
-#	undef OTHER_ARG_USE_3
-
-
-
-#	define OTHER_ARG_DECL_0
-#	define OTHER_ARG_DECL_1 , const Allocator & alloc
-#	define OTHER_ARG_DECL_2 , const KeyCompare & key_comp
-#	define OTHER_ARG_DECL_3 , const KeyCompare & key_comp, const Allocator & alloc
-
-#	define OTHER_ARG_USE_0
-#	define OTHER_ARG_USE_1 , alloc
-#	define OTHER_ARG_USE_2 , key_comp
-#	define OTHER_ARG_USE_3 , key_comp, alloc
 
 #	define FBODY(i) \
 		template <typename T, typename KeyCompare, typename Allocator> \
 		template <typename InputIterator> \
 		KERBAL_CONSTEXPR20 \
-		avl_set<T, KeyCompare, Allocator>::avl_set(InputIterator first, InputIterator last KERBAL_MACRO_CONCAT(OTHER_ARG_DECL_, i)) : \
-				avl_ordered(kerbal::container::unique_tag_t(), first, last KERBAL_MACRO_CONCAT(OTHER_ARG_USE_, i)) \
+		avl_set<T, KeyCompare, Allocator>::avl_set(InputIterator first, InputIterator last KERBAL_OPT_EXPAND_N(LEFT_JOIN_COMMA, EMPTY, ARG_DECL, i)) : \
+				avl_ordered(kerbal::container::unique_tag_t(), first, last KERBAL_OPT_EXPAND_N(LEFT_JOIN_COMMA, EMPTY, ARG_USE, i)) \
 		{ \
 		} \
 
@@ -108,8 +92,8 @@ namespace kerbal
 #	define FBODY(i) \
 		template <typename T, typename KeyCompare, typename Allocator> \
 		KERBAL_CONSTEXPR20 \
-		avl_set<T, KeyCompare, Allocator>::avl_set(std::initializer_list<value_type> ilist KERBAL_MACRO_CONCAT(OTHER_ARG_DECL_, i)) : \
-				avl_ordered(kerbal::container::unique_tag_t(), ilist KERBAL_MACRO_CONCAT(OTHER_ARG_USE_, i)) \
+		avl_set<T, KeyCompare, Allocator>::avl_set(std::initializer_list<value_type> ilist KERBAL_OPT_EXPAND_N(LEFT_JOIN_COMMA, EMPTY, ARG_DECL, i)) : \
+				avl_ordered(kerbal::container::unique_tag_t(), ilist KERBAL_OPT_EXPAND_N(LEFT_JOIN_COMMA, EMPTY, ARG_USE, i)) \
 		{ \
 		} \
 
@@ -118,10 +102,9 @@ namespace kerbal
 
 #	define FBODY(i) \
 		template <typename T, typename KeyCompare, typename Allocator> \
-		KERBAL_CONSTEXPR20 \
 		template <typename U> \
-		avl_set<T, KeyCompare, Allocator>::avl_set(const kerbal::assign::assign_list<U> & ilist KERBAL_MACRO_CONCAT(OTHER_ARG_DECL_, i)) : \
-				avl_ordered(kerbal::container::unique_tag_t(), ilist KERBAL_MACRO_CONCAT(OTHER_ARG_USE_, i)) \
+		avl_set<T, KeyCompare, Allocator>::avl_set(const kerbal::assign::assign_list<U> & ilist KERBAL_OPT_EXPAND_N(LEFT_JOIN_COMMA, EMPTY, ARG_DECL, i)) : \
+				avl_ordered(kerbal::container::unique_tag_t(), ilist KERBAL_OPT_EXPAND_N(LEFT_JOIN_COMMA, EMPTY, ARG_USE, i)) \
 		{ \
 		} \
 
@@ -133,16 +116,20 @@ namespace kerbal
 #	undef FBODY
 
 
-#	undef OTHER_ARG_DECL_0
-#	undef OTHER_ARG_DECL_1
-#	undef OTHER_ARG_DECL_2
-#	undef OTHER_ARG_DECL_3
+#	undef ARG_DECL_1
+#	undef ARG_DECL_2
+#	undef ARG_DECL_3
+#	undef ARG_DECL
 
-#	undef OTHER_ARG_USE_0
-#	undef OTHER_ARG_USE_1
-#	undef OTHER_ARG_USE_2
-#	undef OTHER_ARG_USE_3
+#	undef ARG_USE_1
+#	undef ARG_USE_2
+#	undef ARG_USE_3
+#	undef ARG_USE
 
+
+#	undef REMAINF
+#	undef LEFT_JOIN_COMMA
+#	undef EMPTY
 
 
 		template <typename T, typename KeyCompare, typename Allocator>

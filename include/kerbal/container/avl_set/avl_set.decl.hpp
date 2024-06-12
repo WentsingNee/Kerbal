@@ -93,33 +93,43 @@ namespace kerbal
 				KERBAL_CONSTEXPR20
 				avl_set() = default;
 
-#		else
-
-				avl_set();
-
 #		endif
 
-				KERBAL_CONSTEXPR20
-				explicit
-				avl_set(const Allocator & alloc);
 
-				KERBAL_CONSTEXPR20
-				explicit
-				avl_set(const KeyCompare & kc);
+#			define REMAINF(exp) exp
+#			define LEFT_JOIN_COMMA(exp) , exp
+#			define EMPTY
 
-				KERBAL_CONSTEXPR20
-				avl_set(const KeyCompare & kc, const Allocator & alloc);
+#			define EXPLICIT_0
+#			define EXPLICIT_1 explicit
+#			define EXPLICIT_2 explicit
+#			define EXPLICIT_3
+#			define EXPLICIT(i) KERBAL_MACRO_CONCAT(EXPLICIT_, i)
+
+#			define ARG_DECL_1 const Allocator & alloc
+#			define ARG_DECL_2 const KeyCompare & key_comp
+#			define ARG_DECL_3 const KeyCompare & key_comp, const Allocator & alloc
+#			define ARG_DECL(i) KERBAL_MACRO_CONCAT(ARG_DECL_, i)
 
 
-#			define OTHER_ARG_DECL_0
-#			define OTHER_ARG_DECL_1 , const Allocator & alloc
-#			define OTHER_ARG_DECL_2 , const KeyCompare & key_comp
-#			define OTHER_ARG_DECL_3 , const KeyCompare & key_comp, const Allocator & alloc
+#			define FBODY(i) \
+				KERBAL_CONSTEXPR20 \
+				EXPLICIT(i) \
+				avl_set(KERBAL_OPT_EXPAND_N(REMAINF, EMPTY, ARG_DECL, i)); \
+
+#		if __cplusplus < 201103L
+				KERBAL_PPEXPAND_N(FBODY, KERBAL_PPEXPAND_EMPTY_SEPARATOR, 0)
+#		endif
+				KERBAL_PPEXPAND_N(FBODY, KERBAL_PPEXPAND_EMPTY_SEPARATOR, 3)
+
+#			undef FBODY
+
+
 
 #			define FBODY(i) \
 				template <typename InputIterator> \
 				KERBAL_CONSTEXPR20 \
-				avl_set(InputIterator first, InputIterator last KERBAL_MACRO_CONCAT(OTHER_ARG_DECL_, i)); \
+				avl_set(InputIterator first, InputIterator last KERBAL_OPT_EXPAND_N(LEFT_JOIN_COMMA, EMPTY, ARG_DECL, i)); \
 
 				KERBAL_PPEXPAND_N(FBODY, KERBAL_PPEXPAND_EMPTY_SEPARATOR, 0)
 				KERBAL_PPEXPAND_N(FBODY, KERBAL_PPEXPAND_EMPTY_SEPARATOR, 3)
@@ -132,13 +142,13 @@ namespace kerbal
 
 #			define FBODY(i) \
 				KERBAL_CONSTEXPR20 \
-				avl_set(std::initializer_list<value_type> ilist KERBAL_MACRO_CONCAT(OTHER_ARG_DECL_, i)); \
+				avl_set(std::initializer_list<value_type> ilist KERBAL_OPT_EXPAND_N(LEFT_JOIN_COMMA, EMPTY, ARG_DECL, i)); \
 
 #		else
 
 #			define FBODY(i) \
 				template <typename U> \
-				avl_set(const kerbal::assign::assign_list<U> & ilist KERBAL_MACRO_CONCAT(OTHER_ARG_DECL_, i)); \
+				avl_set(const kerbal::assign::assign_list<U> & ilist KERBAL_OPT_EXPAND_N(LEFT_JOIN_COMMA, EMPTY, ARG_DECL, i)); \
 
 #		endif
 
@@ -148,10 +158,20 @@ namespace kerbal
 #			undef FBODY
 
 
-#			undef OTHER_ARG_DECL_0
-#			undef OTHER_ARG_DECL_1
-#			undef OTHER_ARG_DECL_2
-#			undef OTHER_ARG_DECL_3
+#			undef EXPLICIT_0
+#			undef EXPLICIT_1
+#			undef EXPLICIT_2
+#			undef EXPLICIT_3
+#			undef EXPLICIT
+
+#			undef ARG_DECL_1
+#			undef ARG_DECL_2
+#			undef ARG_DECL_3
+#			undef ARG_DECL
+
+#			undef REMAINF
+#			undef LEFT_JOIN_COMMA
+#			undef EMPTY
 
 
 				KERBAL_CONSTEXPR20

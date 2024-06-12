@@ -39,129 +39,98 @@ namespace kerbal
 	namespace container
 	{
 
+
+#	define REMAINF(exp) exp
+#	define LEFT_JOIN_COMMA(exp) , exp
+#	define EMPTY
+
+
+#	define ARG_DECL_1 const Allocator & alloc
+#	define ARG_DECL_2 const KeyCompare & key_comp
+#	define ARG_DECL_3 const KeyCompare & key_comp, const Allocator & alloc
+#	define ARG_DECL(i) KERBAL_MACRO_CONCAT(ARG_DECL_, i)
+
+#	define ARG_USE_1 alloc
+#	define ARG_USE_2 key_comp
+#	define ARG_USE_3 key_comp, alloc
+#	define ARG_USE(i) KERBAL_MACRO_CONCAT(ARG_USE_, i)
+
+
+#	define FBODY(i) \
+		template <typename K, typename M, typename KeyCompare, typename Allocator> \
+		KERBAL_CONSTEXPR20 \
+		avl_map<K, M, KeyCompare, Allocator>::avl_map(KERBAL_OPT_EXPAND_N(REMAINF, EMPTY, ARG_DECL, i)) : \
+				avl_ordered(KERBAL_OPT_EXPAND_N(REMAINF, EMPTY, ARG_USE, i)) \
+		{ \
+		} \
+
 #	if __cplusplus < 201103L
-
-		template <typename K, typename M, typename KeyCompare, typename Allocator>
-		avl_map<K, M, KeyCompare, Allocator>::avl_map()
-		{
-		}
-
+		KERBAL_PPEXPAND_N(FBODY, KERBAL_PPEXPAND_EMPTY_SEPARATOR, 0)
 #	endif
+		KERBAL_PPEXPAND_N(FBODY, KERBAL_PPEXPAND_EMPTY_SEPARATOR, 3)
 
-		template <typename K, typename M, typename KeyCompare, typename Allocator>
-		KERBAL_CONSTEXPR20
-		avl_map<K, M, KeyCompare, Allocator>::avl_map(const Allocator & alloc) :
-				avl_ordered(alloc)
-		{
-		}
+#	undef FBODY
 
-		template <typename K, typename M, typename KeyCompare, typename Allocator>
-		KERBAL_CONSTEXPR20
-		avl_map<K, M, KeyCompare, Allocator>::avl_map(const KeyCompare & kc) :
-				avl_ordered(kc)
-		{
-		}
 
-		template <typename K, typename M, typename KeyCompare, typename Allocator>
-		KERBAL_CONSTEXPR20
-		avl_map<K, M, KeyCompare, Allocator>::avl_map(const KeyCompare & kc, const Allocator & alloc) :
-				avl_ordered(kc, alloc)
-		{
-		}
+#	define FBODY(i) \
+		template <typename K, typename M, typename KeyCompare, typename Allocator> \
+		template <typename InputIterator> \
+		KERBAL_CONSTEXPR20 \
+		avl_map<K, M, KeyCompare, Allocator>::avl_map(InputIterator first, InputIterator last KERBAL_OPT_EXPAND_N(LEFT_JOIN_COMMA, EMPTY, ARG_DECL, i)) : \
+				avl_ordered(kerbal::container::unique_tag_t(), first, last KERBAL_OPT_EXPAND_N(LEFT_JOIN_COMMA, EMPTY, ARG_USE, i)) \
+		{ \
+		} \
 
-		template <typename K, typename M, typename KeyCompare, typename Allocator>
-		template <typename InputIterator>
-		KERBAL_CONSTEXPR20
-		avl_map<K, M, KeyCompare, Allocator>::avl_map(InputIterator first, InputIterator last) :
-				avl_ordered(kerbal::container::unique_tag_t(), first, last)
-		{
-		}
+		KERBAL_PPEXPAND_N(FBODY, KERBAL_PPEXPAND_EMPTY_SEPARATOR, 0)
+		KERBAL_PPEXPAND_N(FBODY, KERBAL_PPEXPAND_EMPTY_SEPARATOR, 3)
 
-		template <typename K, typename M, typename KeyCompare, typename Allocator>
-		template <typename InputIterator>
-		KERBAL_CONSTEXPR20
-		avl_map<K, M, KeyCompare, Allocator>::avl_map(InputIterator first, InputIterator last, const Allocator & alloc) :
-				avl_ordered(kerbal::container::unique_tag_t(), first, last, alloc)
-		{
-		}
+#	undef FBODY
 
-		template <typename K, typename M, typename KeyCompare, typename Allocator>
-		template <typename InputIterator>
-		KERBAL_CONSTEXPR20
-		avl_map<K, M, KeyCompare, Allocator>::avl_map(InputIterator first, InputIterator last, const KeyCompare & kc) :
-				avl_ordered(kerbal::container::unique_tag_t(), first, last, kc)
-		{
-		}
-
-		template <typename K, typename M, typename KeyCompare, typename Allocator>
-		template <typename InputIterator>
-		KERBAL_CONSTEXPR20
-		avl_map<K, M, KeyCompare, Allocator>::avl_map(InputIterator first, InputIterator last, const KeyCompare & kc, const Allocator & alloc) :
-				avl_ordered(kerbal::container::unique_tag_t(), first, last, kc, alloc)
-		{
-		}
 
 #	if __cplusplus >= 201103L
 
-		template <typename K, typename M, typename KeyCompare, typename Allocator>
-		KERBAL_CONSTEXPR20
-		avl_map<K, M, KeyCompare, Allocator>::avl_map(std::initializer_list<value_type> ilist) :
-				avl_ordered(kerbal::container::unique_tag_t(), ilist)
-		{
-		}
-
-		template <typename K, typename M, typename KeyCompare, typename Allocator>
-		KERBAL_CONSTEXPR20
-		avl_map<K, M, KeyCompare, Allocator>::avl_map(std::initializer_list<value_type> ilist, const Allocator & alloc) :
-				avl_ordered(kerbal::container::unique_tag_t(), ilist, alloc)
-		{
-		}
-
-		template <typename K, typename M, typename KeyCompare, typename Allocator>
-		KERBAL_CONSTEXPR20
-		avl_map<K, M, KeyCompare, Allocator>::avl_map(std::initializer_list<value_type> ilist, const KeyCompare & kc) :
-				avl_ordered(kerbal::container::unique_tag_t(), ilist, kc)
-		{
-		}
-
-		template <typename K, typename M, typename KeyCompare, typename Allocator>
-		KERBAL_CONSTEXPR20
-		avl_map<K, M, KeyCompare, Allocator>::avl_map(std::initializer_list<value_type> ilist, const KeyCompare & kc, const Allocator & alloc) :
-				avl_ordered(kerbal::container::unique_tag_t(), ilist, kc, alloc)
-		{
-		}
+#	define FBODY(i) \
+		template <typename K, typename M, typename KeyCompare, typename Allocator> \
+		KERBAL_CONSTEXPR20 \
+		avl_map<K, M, KeyCompare, Allocator>::avl_map(std::initializer_list<value_type> ilist KERBAL_OPT_EXPAND_N(LEFT_JOIN_COMMA, EMPTY, ARG_DECL, i)) : \
+				avl_ordered(kerbal::container::unique_tag_t(), ilist KERBAL_OPT_EXPAND_N(LEFT_JOIN_COMMA, EMPTY, ARG_USE, i)) \
+		{ \
+		} \
 
 #	else
 
-		template <typename K, typename M, typename KeyCompare, typename Allocator>
-		template <typename U>
-		avl_map<K, M, KeyCompare, Allocator>::avl_map(const kerbal::assign::assign_list<U> & ilist) :
-				avl_ordered(kerbal::container::unique_tag_t(), ilist)
-		{
-		}
 
-		template <typename K, typename M, typename KeyCompare, typename Allocator>
-		template <typename U>
-		avl_map<K, M, KeyCompare, Allocator>::avl_map(const kerbal::assign::assign_list<U> & ilist, const Allocator & alloc) :
-				avl_ordered(kerbal::container::unique_tag_t(), ilist, alloc)
-		{
-		}
-
-		template <typename K, typename M, typename KeyCompare, typename Allocator>
-		template <typename U>
-		avl_map<K, M, KeyCompare, Allocator>::avl_map(const kerbal::assign::assign_list<U> & ilist, const KeyCompare & kc) :
-				avl_ordered(kerbal::container::unique_tag_t(), ilist, kc)
-		{
-		}
-
-		template <typename K, typename M, typename KeyCompare, typename Allocator>
-		template <typename U>
-		avl_map<K, M, KeyCompare, Allocator>::avl_map(const kerbal::assign::assign_list<U> & ilist, const KeyCompare & kc, const Allocator & alloc) :
-				avl_ordered(kerbal::container::unique_tag_t(), ilist, kc, alloc)
-		{
-		}
+#	define FBODY(i) \
+		template <typename K, typename M, typename KeyCompare, typename Allocator> \
+		template <typename U> \
+		avl_map<K, M, KeyCompare, Allocator>::avl_map(const kerbal::assign::assign_list<U> & ilist KERBAL_OPT_EXPAND_N(LEFT_JOIN_COMMA, EMPTY, ARG_DECL, i)) : \
+				avl_ordered(kerbal::container::unique_tag_t(), ilist KERBAL_OPT_EXPAND_N(LEFT_JOIN_COMMA, EMPTY, ARG_USE, i)) \
+		{ \
+		} \
 
 #	endif
+
+		KERBAL_PPEXPAND_N(FBODY, KERBAL_PPEXPAND_EMPTY_SEPARATOR, 0)
+		KERBAL_PPEXPAND_N(FBODY, KERBAL_PPEXPAND_EMPTY_SEPARATOR, 3)
+
+#	undef FBODY
+
+
+#	undef ARG_DECL_1
+#	undef ARG_DECL_2
+#	undef ARG_DECL_3
+#	undef ARG_DECL
+
+#	undef ARG_USE_1
+#	undef ARG_USE_2
+#	undef ARG_USE_3
+#	undef ARG_USE
+
+
+#	undef REMAINF
+#	undef LEFT_JOIN_COMMA
+#	undef EMPTY
+
 
 		template <typename K, typename M, typename KeyCompare, typename Allocator>
 		KERBAL_CONSTEXPR20
