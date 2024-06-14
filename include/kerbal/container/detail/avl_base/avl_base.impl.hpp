@@ -2151,7 +2151,7 @@ namespace kerbal
 			avl_type_only<Entity>::
 			k_emplace_unique_using_allocator(
 				NodeAllocator & alloc,
-				kerbal::container::identity_extractor<Entity> & e,
+				kerbal::container::identity_extractor<Entity const> & e,
 				KeyCompare & kc,
 				const_reference src_key
 			)
@@ -2167,7 +2167,7 @@ namespace kerbal
 			avl_type_only<Entity>::
 			k_emplace_unique_using_allocator(
 				NodeAllocator & alloc,
-				kerbal::container::identity_extractor<Entity> & e,
+				kerbal::container::identity_extractor<Entity const> & e,
 				KeyCompare & kc,
 				reference src_key
 			)
@@ -2185,7 +2185,7 @@ namespace kerbal
 			avl_type_only<Entity>::
 			k_emplace_unique_using_allocator(
 				NodeAllocator & alloc,
-				kerbal::container::identity_extractor<Entity> & e,
+				kerbal::container::identity_extractor<Entity const> & e,
 				KeyCompare & kc,
 				rvalue_reference src_key
 			)

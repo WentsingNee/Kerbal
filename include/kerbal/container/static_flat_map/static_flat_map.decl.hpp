@@ -49,7 +49,7 @@ namespace kerbal
 			public kerbal::container::detail::flat_map_base<
 				kerbal::container::static_ordered<
 					kerbal::container::map_data<K, M>, N,
-					kerbal::container::tuple_first_extractor<kerbal::container::map_data<K, M>, K>,
+					kerbal::container::tuple_first_extractor<kerbal::container::map_data<K, M>, K const>,
 					KeyCompare
 				>
 			>
@@ -57,7 +57,7 @@ namespace kerbal
 			private:
 				typedef kerbal::container::static_ordered<
 					kerbal::container::map_data<K, M>, N,
-					kerbal::container::tuple_first_extractor<kerbal::container::map_data<K, M>, K>,
+					kerbal::container::tuple_first_extractor<kerbal::container::map_data<K, M>, K const>,
 					KeyCompare
 				> Ordered;
 				typedef kerbal::container::detail::flat_map_base<Ordered> super;

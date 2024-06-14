@@ -27,7 +27,7 @@ namespace kerbal
 		template <
 			typename Entity,
 			std::size_t N,
-			typename Extract = kerbal::container::identity_extractor<Entity>,
+			typename Extract = kerbal::container::identity_extractor<Entity const>,
 			typename KeyCompare = kerbal::compare::binary_type_less<void, void>
 		>
 		class static_ordered;

@@ -48,7 +48,7 @@ namespace kerbal
 			public kerbal::container::detail::flat_set_base<
 				kerbal::container::static_ordered<
 					T, N,
-					kerbal::container::identity_extractor<T>,
+					kerbal::container::identity_extractor<T const>,
 					KeyCompare
 				>
 			>
@@ -56,7 +56,7 @@ namespace kerbal
 			private:
 				typedef kerbal::container::static_ordered<
 					T, N,
-					kerbal::container::identity_extractor<T>,
+					kerbal::container::identity_extractor<T const>,
 					KeyCompare
 				> Ordered;
 				typedef kerbal::container::detail::flat_set_base<Ordered> super;

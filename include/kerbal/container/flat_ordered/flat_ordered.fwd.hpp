@@ -26,7 +26,7 @@ namespace kerbal
 
 		template <
 			typename Entity,
-			typename Extract = kerbal::container::identity_extractor<Entity>,
+			typename Extract = kerbal::container::identity_extractor<Entity const>,
 			typename KeyCompare = kerbal::compare::binary_type_less<void, void>,
 			typename Allocator = std::allocator<Entity>
 		>

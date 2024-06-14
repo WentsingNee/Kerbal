@@ -47,7 +47,7 @@ namespace kerbal
 			public kerbal::container::detail::flat_multiset_base<
 				kerbal::container::flat_ordered<
 					T,
-					kerbal::container::identity_extractor<T>,
+					kerbal::container::identity_extractor<T const>,
 					KeyCompare,
 					Allocator
 				>
@@ -56,7 +56,7 @@ namespace kerbal
 			private:
 				typedef kerbal::container::flat_ordered<
 					T,
-					kerbal::container::identity_extractor<T>,
+					kerbal::container::identity_extractor<T const>,
 					KeyCompare,
 					Allocator
 				> Ordered;

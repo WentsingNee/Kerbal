@@ -50,7 +50,7 @@ namespace kerbal
 		class avl_multiset :
 			protected kerbal::container::avl_ordered<
 				T,
-				kerbal::container::identity_extractor<T>,
+				kerbal::container::identity_extractor<T const>,
 				KeyCompare,
 				Allocator
 			>
@@ -58,7 +58,7 @@ namespace kerbal
 			private:
 				typedef kerbal::container::avl_ordered<
 					T,
-					kerbal::container::identity_extractor<T>,
+					kerbal::container::identity_extractor<T const>,
 					KeyCompare,
 					Allocator
 				> avl_ordered;
