@@ -13,9 +13,13 @@
 #define KERBAL_CONTAINER_ASSOCIATIVE_CONTAINER_FACILITY_MAP_DATA_HPP
 
 #include <kerbal/compatibility/constexpr.hpp>
+#include <kerbal/compatibility/cv_qualified_function.hpp>
 #include <kerbal/compatibility/namespace_std_scope.hpp>
 #include <kerbal/compatibility/noexcept.hpp>
+#include <kerbal/type_traits/add_const.hpp>
+#include <kerbal/type_traits/conditional.hpp>
 #include <kerbal/utility/compressed_pair.hpp>
+#include <kerbal/utility/noncopyable.hpp>
 
 #if __cplusplus >= 201703L
 #	include <kerbal/type_traits/remove_reference.hpp>
@@ -36,23 +40,23 @@ namespace kerbal
 
 		template <typename K, typename M>
 		class map_data :
-				public kerbal::utility::compressed_pair<K, M>
+				protected kerbal::utility::compressed_pair<K, M>
 		{
 			private:
 				typedef kerbal::utility::compressed_pair<K, M> super;
 
 			public:
-				typedef typename super::first_type key_type;
+				typedef typename kerbal::type_traits::add_const<typename super::first_type>::type key_type;
 				typedef typename super::second_type mapped_type;
 
 				template <std::size_t I>
-				struct value_type : super::template value_type<I>
+				struct value_type
 				{
-				};
-
-				template <std::size_t I>
-				struct reference : super::template reference<I>
-				{
+						typedef typename kerbal::type_traits::conditional<
+							I == 0,
+							key_type,
+							typename super::template value_type<I>::type
+						>::type type;
 				};
 
 				template <std::size_t I>
@@ -60,16 +64,31 @@ namespace kerbal
 				{
 				};
 
-#		if __cplusplus >= 201103L
-
 				template <std::size_t I>
-				struct rvalue_reference : super::template rvalue_reference<I>
+				struct reference
 				{
+						typedef typename kerbal::type_traits::conditional<
+							I == 0,
+							typename const_reference<I>::type,
+							typename super::template reference<I>::type
+						>::type type;
 				};
+
+#		if __cplusplus >= 201103L
 
 				template <std::size_t I>
 				struct const_rvalue_reference : super::template const_rvalue_reference<I>
 				{
+				};
+
+				template <std::size_t I>
+				struct rvalue_reference
+				{
+						typedef typename kerbal::type_traits::conditional<
+							I == 0,
+							typename const_rvalue_reference<I>::type,
+							typename super::template rvalue_reference<I>::type
+						>::type type;
 				};
 
 #		endif
@@ -151,12 +170,6 @@ namespace kerbal
 
 
 				KERBAL_CONSTEXPR14
-				key_type & key() KERBAL_NOEXCEPT
-				{
-					return super::first();
-				}
-
-				KERBAL_CONSTEXPR14
 				const key_type & key() const KERBAL_NOEXCEPT
 				{
 					return super::first();
@@ -173,6 +186,43 @@ namespace kerbal
 				{
 					return super::second();
 				}
+
+
+				template <std::size_t I>
+				KERBAL_CONSTEXPR14
+				typename reference<I>::type
+				get() KERBAL_REFERENCE_OVERLOAD_TAG KERBAL_NOEXCEPT
+				{
+					return super::template get<I>();
+				}
+
+				template <std::size_t I>
+				KERBAL_CONSTEXPR
+				typename const_reference<I>::type
+				get() KERBAL_CONST_REFERENCE_OVERLOAD_TAG KERBAL_NOEXCEPT
+				{
+					return super::template get<I>();
+				}
+
+#		if __cplusplus >= 201103L
+
+				template <std::size_t I>
+				KERBAL_CONSTEXPR14
+				typename rvalue_reference<I>::type
+				get() && noexcept
+				{
+					return kerbal::compatibility::move(*this).super::template get<I>();
+				}
+
+				template <std::size_t I>
+				KERBAL_CONSTEXPR
+				typename const_rvalue_reference<I>::type
+				get() const && noexcept
+				{
+					return kerbal::compatibility::move(*this).super::template get<I>();
+				}
+
+#		endif
 
 		};
 
