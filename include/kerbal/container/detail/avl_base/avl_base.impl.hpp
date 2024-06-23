@@ -668,7 +668,7 @@ namespace kerbal
 //
 //				this->k_move_cnstrct_impl(this_alloc, kerbal::compatibility::move(src), this_e, this_kc, VER());
 
-				this->k_move_cnstrct_impl(this_alloc, kerbal::compatibility::move(src), this_e, this_kc, MOVE_CNSTRCT_VER_XFER());
+				this->k_move_cnstrct_impl(this_alloc, kerbal::compatibility::move(src), this_e, this_kc, MOVE_CNSTRCT_VER_MOVE_CLONE());
 			}
 
 			template <typename Entity>
