@@ -518,7 +518,7 @@ namespace kerbal
 
 				template <typename Key, typename Result>
 				struct enable_if_transparent_lookup :
-						avl_type_only::template enable_if_transparent_lookup<Key, Extract, KeyCompare, Result>
+						avl_type_only::template enable_if_transparent_lookup<Extract, KeyCompare, Key, Result>
 				{
 				};
 

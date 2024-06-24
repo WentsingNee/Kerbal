@@ -1147,10 +1147,10 @@ namespace kerbal
 		// lookup
 
 			template <typename Entity>
-			template <typename Key, typename Extract, typename KeyCompare>
+			template <typename Extract, typename KeyCompare, typename Key>
 			KERBAL_CONSTEXPR14
 			typename avl_type_only<Entity>::const_iterator
-			avl_type_only<Entity>::k_find_impl(const Key & key, Extract & e, KeyCompare & kc) const
+			avl_type_only<Entity>::k_find_impl(Extract & e, KeyCompare & kc, const Key & key) const
 			{
 				const node_base * cur_base = this->k_head.left;
 				while (cur_base != get_avl_vnull_node()) {
@@ -1170,47 +1170,47 @@ namespace kerbal
 			template <typename Extract, typename KeyCompare>
 			KERBAL_CONSTEXPR14
 			typename avl_type_only<Entity>::const_iterator
-			avl_type_only<Entity>::k_find(const typename Extract::key_type & key, Extract & e, KeyCompare & kc) const
+			avl_type_only<Entity>::k_find(Extract & e, KeyCompare & kc, const typename Extract::key_type & key) const
 			{
-				return this->k_find_impl(key, e, kc);
+				return this->k_find_impl(e, kc, key);
 			}
 
 			template <typename Entity>
 			template <typename Extract, typename KeyCompare>
 			KERBAL_CONSTEXPR14
 			typename avl_type_only<Entity>::iterator
-			avl_type_only<Entity>::k_find(const typename Extract::key_type & key, Extract & e, KeyCompare & kc)
+			avl_type_only<Entity>::k_find(Extract & e, KeyCompare & kc, const typename Extract::key_type & key)
 			{
-				return this->k_find_impl(key, e, kc).cast_to_mutable();
+				return this->k_find_impl(e, kc, key).cast_to_mutable();
 			}
 
 			template <typename Entity>
-			template <typename Key, typename Extract, typename KeyCompare>
+			template <typename Extract, typename KeyCompare, typename Key>
 			KERBAL_CONSTEXPR14
 			typename avl_type_only<Entity>::template enable_if_transparent_lookup<
-					Key, Extract, KeyCompare, typename avl_type_only<Entity>::const_iterator
+					Extract, KeyCompare, Key, typename avl_type_only<Entity>::const_iterator
 			>::type
-			avl_type_only<Entity>::k_find(const Key & key, Extract & e, KeyCompare & kc) const
+			avl_type_only<Entity>::k_find(Extract & e, KeyCompare & kc, const Key & key) const
 			{
-				return this->k_find_impl(key, e, kc);
+				return this->k_find_impl(e, kc, key);
 			}
 
 			template <typename Entity>
-			template <typename Key, typename Extract, typename KeyCompare>
+			template <typename Extract, typename KeyCompare, typename Key>
 			KERBAL_CONSTEXPR14
 			typename avl_type_only<Entity>::template enable_if_transparent_lookup<
-					Key, Extract, KeyCompare, typename avl_type_only<Entity>::iterator
+					Extract, KeyCompare, Key, typename avl_type_only<Entity>::iterator
 			>::type
-			avl_type_only<Entity>::k_find(const Key & key, Extract & e, KeyCompare & kc)
+			avl_type_only<Entity>::k_find(Extract & e, KeyCompare & kc, const Key & key)
 			{
-				return this->k_find_impl(key, e, kc).cast_to_mutable();
+				return this->k_find_impl(e, kc, key).cast_to_mutable();
 			}
 
 			template <typename Entity>
-			template <typename Key, typename Extract, typename KeyCompare>
+			template <typename Extract, typename KeyCompare, typename Key>
 			KERBAL_CONSTEXPR14
 			const typename avl_type_only<Entity>::node_base *
-			avl_type_only<Entity>::k_lower_bound_helper(const node_base * cur_base, const node_base * lbound, const Key & key, Extract & e, KeyCompare & kc)
+			avl_type_only<Entity>::k_lower_bound_helper(Extract & e, KeyCompare & kc, const Key & key, const node_base * cur_base, const node_base * lbound)
 			{
 				while (cur_base != get_avl_vnull_node()) {
 					if (kc(e(node::reinterpret_as(cur_base)->member()), key)) { // cur_key < key
@@ -1224,10 +1224,10 @@ namespace kerbal
 			}
 
 			template <typename Entity>
-			template <typename Key, typename Extract, typename KeyCompare>
+			template <typename Extract, typename KeyCompare, typename Key>
 			KERBAL_CONSTEXPR14
 			const typename avl_type_only<Entity>::node_base *
-			avl_type_only<Entity>::k_upper_bound_helper(const node_base * cur_base, const node_base * ubound, const Key & key, Extract & e, KeyCompare & kc)
+			avl_type_only<Entity>::k_upper_bound_helper(Extract & e, KeyCompare & kc, const Key & key, const node_base * cur_base, const node_base * ubound)
 			{
 				while (cur_base != get_avl_vnull_node()) {
 					if (kc(key, e(node::reinterpret_as(cur_base)->member()))) { // key < cur_key
@@ -1241,13 +1241,13 @@ namespace kerbal
 			}
 
 			template <typename Entity>
-			template <typename Key, typename Extract, typename KeyCompare>
+			template <typename Extract, typename KeyCompare, typename Key>
 			KERBAL_CONSTEXPR14
 			typename avl_type_only<Entity>::const_iterator
-			avl_type_only<Entity>::k_lower_bound_impl(const Key & key, Extract & e, KeyCompare & kc) const
+			avl_type_only<Entity>::k_lower_bound_impl(Extract & e, KeyCompare & kc, const Key & key) const
 			{
 				const node_base * lbound = this->k_head.as_node_base();
-				lbound = k_lower_bound_helper(this->k_head.left, lbound, key, e, kc);
+				lbound = k_lower_bound_helper(e, kc, key, this->k_head.left, lbound);
 				return const_iterator(lbound);
 			}
 
@@ -1255,50 +1255,50 @@ namespace kerbal
 			template <typename Extract, typename KeyCompare>
 			KERBAL_CONSTEXPR14
 			typename avl_type_only<Entity>::const_iterator
-			avl_type_only<Entity>::k_lower_bound(const typename Extract::key_type & key, Extract & e, KeyCompare & kc) const
+			avl_type_only<Entity>::k_lower_bound(Extract & e, KeyCompare & kc, const typename Extract::key_type & key) const
 			{
-				return this->k_lower_bound_impl(key, e, kc);
+				return this->k_lower_bound_impl(e, kc, key);
 			}
 
 			template <typename Entity>
 			template <typename Extract, typename KeyCompare>
 			KERBAL_CONSTEXPR14
 			typename avl_type_only<Entity>::iterator
-			avl_type_only<Entity>::k_lower_bound(const typename Extract::key_type & key, Extract & e, KeyCompare & kc)
+			avl_type_only<Entity>::k_lower_bound(Extract & e, KeyCompare & kc, const typename Extract::key_type & key)
 			{
-				return this->k_lower_bound_impl(key, e, kc).cast_to_mutable();
+				return this->k_lower_bound_impl(e, kc, key).cast_to_mutable();
 			}
 
 			template <typename Entity>
-			template <typename Key, typename Extract, typename KeyCompare>
+			template <typename Extract, typename KeyCompare, typename Key>
 			KERBAL_CONSTEXPR14
 			typename avl_type_only<Entity>::template enable_if_transparent_lookup<
-					Key, Extract, KeyCompare, typename avl_type_only<Entity>::const_iterator
+					Extract, KeyCompare, Key, typename avl_type_only<Entity>::const_iterator
 			>::type
-			avl_type_only<Entity>::k_lower_bound(const Key & key, Extract & e, KeyCompare & kc) const
+			avl_type_only<Entity>::k_lower_bound(Extract & e, KeyCompare & kc, const Key & key) const
 			{
-				return this->k_lower_bound_impl(key, e, kc);
+				return this->k_lower_bound_impl(e, kc, key);
 			}
 
 			template <typename Entity>
-			template <typename Key, typename Extract, typename KeyCompare>
+			template <typename Extract, typename KeyCompare, typename Key>
 			KERBAL_CONSTEXPR14
 			typename avl_type_only<Entity>::template enable_if_transparent_lookup<
-					Key, Extract, KeyCompare, typename avl_type_only<Entity>::iterator
+					Extract, KeyCompare, Key, typename avl_type_only<Entity>::iterator
 			>::type
-			avl_type_only<Entity>::k_lower_bound(const Key & key, Extract & e, KeyCompare & kc)
+			avl_type_only<Entity>::k_lower_bound(Extract & e, KeyCompare & kc, const Key & key)
 			{
-				return this->k_lower_bound_impl(key, e, kc).cast_to_mutable();
+				return this->k_lower_bound_impl(e, kc, key).cast_to_mutable();
 			}
 
 			template <typename Entity>
-			template <typename Key, typename Extract, typename KeyCompare>
+			template <typename Extract, typename KeyCompare, typename Key>
 			KERBAL_CONSTEXPR14
 			typename avl_type_only<Entity>::const_iterator
-			avl_type_only<Entity>::k_upper_bound_impl(const Key & key, Extract & e, KeyCompare & kc) const
+			avl_type_only<Entity>::k_upper_bound_impl(Extract & e, KeyCompare & kc, const Key & key) const
 			{
 				const node_base * ubound = this->k_head.as_node_base();
-				ubound = k_upper_bound_helper(this->k_head.left, ubound, key, e, kc);
+				ubound = k_upper_bound_helper(e, kc, key, this->k_head.left, ubound);
 				return const_iterator(ubound);
 			}
 
@@ -1306,50 +1306,50 @@ namespace kerbal
 			template <typename Extract, typename KeyCompare>
 			KERBAL_CONSTEXPR14
 			typename avl_type_only<Entity>::const_iterator
-			avl_type_only<Entity>::k_upper_bound(const typename Extract::key_type & key, Extract & e, KeyCompare & kc) const
+			avl_type_only<Entity>::k_upper_bound(Extract & e, KeyCompare & kc, const typename Extract::key_type & key) const
 			{
-				return this->k_upper_bound_impl(key, e, kc);
+				return this->k_upper_bound_impl(e, kc, key);
 			}
 
 			template <typename Entity>
 			template <typename Extract, typename KeyCompare>
 			KERBAL_CONSTEXPR14
 			typename avl_type_only<Entity>::iterator
-			avl_type_only<Entity>::k_upper_bound(const typename Extract::key_type & key, Extract & e, KeyCompare & kc)
+			avl_type_only<Entity>::k_upper_bound(Extract & e, KeyCompare & kc, const typename Extract::key_type & key)
 			{
-				return this->k_upper_bound_impl(key, e, kc).cast_to_mutable();
+				return this->k_upper_bound_impl(e, kc, key).cast_to_mutable();
 			}
 
 			template <typename Entity>
-			template <typename Key, typename Extract, typename KeyCompare>
+			template <typename Extract, typename KeyCompare, typename Key>
 			KERBAL_CONSTEXPR14
 			typename avl_type_only<Entity>::template enable_if_transparent_lookup<
-					Key, Extract, KeyCompare, typename avl_type_only<Entity>::const_iterator
+					Extract, KeyCompare, Key, typename avl_type_only<Entity>::const_iterator
 			>::type
-			avl_type_only<Entity>::k_upper_bound(const Key & key, Extract & e, KeyCompare & kc) const
+			avl_type_only<Entity>::k_upper_bound(Extract & e, KeyCompare & kc, const Key & key) const
 			{
-				return this->k_upper_bound_impl(key, e, kc);
+				return this->k_upper_bound_impl(e, kc, key);
 			}
 
 			template <typename Entity>
-			template <typename Key, typename Extract, typename KeyCompare>
+			template <typename Extract, typename KeyCompare, typename Key>
 			KERBAL_CONSTEXPR14
 			typename avl_type_only<Entity>::template enable_if_transparent_lookup<
-					Key, Extract, KeyCompare, typename avl_type_only<Entity>::iterator
+					Extract, KeyCompare, Key, typename avl_type_only<Entity>::iterator
 			>::type
-			avl_type_only<Entity>::k_upper_bound(const Key & key, Extract & e, KeyCompare & kc)
+			avl_type_only<Entity>::k_upper_bound(Extract & e, KeyCompare & kc, const Key & key)
 			{
-				return this->k_upper_bound_impl(key, e, kc).cast_to_mutable();
+				return this->k_upper_bound_impl(e, kc, key).cast_to_mutable();
 			}
 
 			template <typename Entity>
-			template <typename Key, typename Extract, typename KeyCompare>
+			template <typename Extract, typename KeyCompare, typename Key>
 			KERBAL_CONSTEXPR14
 			kerbal::utility::compressed_pair<
 					typename avl_type_only<Entity>::const_iterator,
 					typename avl_type_only<Entity>::const_iterator
 			>
-			avl_type_only<Entity>::k_equal_range_impl(const Key & key, Extract & e, KeyCompare & kc) const
+			avl_type_only<Entity>::k_equal_range_impl(Extract & e, KeyCompare & kc, const Key & key) const
 			{
 				const node_base * lbound = this->k_head.as_node_base();
 				const node_base * ubound = lbound;
@@ -1364,8 +1364,8 @@ namespace kerbal
 						cur_base = cur_base->right;
 					} else { // key == cur_key
 						lbound = cur_base;
-						lbound = k_lower_bound_helper(cur_base->left, lbound, key, e, kc);
-						ubound = k_upper_bound_helper(cur_base->right, ubound, key, e, kc);
+						lbound = k_lower_bound_helper(e, kc, key, cur_base->left, lbound);
+						ubound = k_upper_bound_helper(e, kc, key, cur_base->right, ubound);
 						break;
 					}
 				}
@@ -1381,9 +1381,9 @@ namespace kerbal
 					typename avl_type_only<Entity>::const_iterator,
 					typename avl_type_only<Entity>::const_iterator
 			>
-			avl_type_only<Entity>::k_equal_range(const typename Extract::key_type & key, Extract & e, KeyCompare & kc) const
+			avl_type_only<Entity>::k_equal_range(Extract & e, KeyCompare & kc, const typename Extract::key_type & key) const
 			{
-				return this->k_equal_range_impl(key, e, kc);
+				return this->k_equal_range_impl(e, kc, key);
 			}
 
 			template <typename Entity>
@@ -1393,47 +1393,47 @@ namespace kerbal
 					typename avl_type_only<Entity>::iterator,
 					typename avl_type_only<Entity>::iterator
 			>
-			avl_type_only<Entity>::k_equal_range(const typename Extract::key_type & key, Extract & e, KeyCompare & kc)
+			avl_type_only<Entity>::k_equal_range(Extract & e, KeyCompare & kc, const typename Extract::key_type & key)
 			{
-				kerbal::utility::compressed_pair<const_iterator, const_iterator> range(this->k_equal_range_impl(key, e, kc));
+				kerbal::utility::compressed_pair<const_iterator, const_iterator> range(this->k_equal_range_impl(e, kc, key));
 				return kerbal::utility::make_compressed_pair(range.first().cast_to_mutable(), range.second().cast_to_mutable());
 			}
 
 			template <typename Entity>
-			template <typename Key, typename Extract, typename KeyCompare>
+			template <typename Extract, typename KeyCompare, typename Key>
 			KERBAL_CONSTEXPR14
 			typename avl_type_only<Entity>::template enable_if_transparent_lookup<
-					Key, Extract, KeyCompare,
+					Extract, KeyCompare, Key,
 					kerbal::utility::compressed_pair<
 							typename avl_type_only<Entity>::const_iterator,
 							typename avl_type_only<Entity>::const_iterator
 					>
 			>::type
-			avl_type_only<Entity>::k_equal_range(const Key & key, Extract & e, KeyCompare & kc) const
+			avl_type_only<Entity>::k_equal_range(Extract & e, KeyCompare & kc, const Key & key) const
 			{
-				return this->k_equal_range_impl(key, e, kc);
+				return this->k_equal_range_impl(e, kc, key);
 			}
 
 			template <typename Entity>
-			template <typename Key, typename Extract, typename KeyCompare>
+			template <typename Extract, typename KeyCompare, typename Key>
 			KERBAL_CONSTEXPR14
 			typename avl_type_only<Entity>::template enable_if_transparent_lookup<
-					Key, Extract, KeyCompare,
+					Extract, KeyCompare, Key,
 					kerbal::utility::compressed_pair<
 							typename avl_type_only<Entity>::iterator,
 							typename avl_type_only<Entity>::iterator
 					>
 			>::type
-			avl_type_only<Entity>::k_equal_range(const Key & key, Extract & e, KeyCompare & kc)
+			avl_type_only<Entity>::k_equal_range(Extract & e, KeyCompare & kc, const Key & key)
 			{
-				kerbal::utility::compressed_pair<const_iterator, const_iterator> range(this->k_equal_range_impl(key, e, kc));
+				kerbal::utility::compressed_pair<const_iterator, const_iterator> range(this->k_equal_range_impl(e, kc, key));
 				return kerbal::utility::make_compressed_pair(range.first().cast_to_mutable(), range.second().cast_to_mutable());
 			}
 
 			template <typename Entity>
-			template <typename Key, typename Extract, typename KeyCompare>
+			template <typename Extract, typename KeyCompare, typename Key>
 			KERBAL_CONSTEXPR14
-			bool avl_type_only<Entity>::k_contains_impl(const Key & key, Extract & e, KeyCompare & kc) const
+			bool avl_type_only<Entity>::k_contains_impl(Extract & e, KeyCompare & kc, const Key & key) const
 			{
 				const node_base * cur_base = this->k_head.left;
 				while (cur_base != get_avl_vnull_node()) {
@@ -1452,20 +1452,20 @@ namespace kerbal
 			template <typename Entity>
 			template <typename Extract, typename KeyCompare>
 			KERBAL_CONSTEXPR14
-			bool avl_type_only<Entity>::k_contains(const typename Extract::key_type & key, Extract & e, KeyCompare & kc) const
+			bool avl_type_only<Entity>::k_contains(Extract & e, KeyCompare & kc, const typename Extract::key_type & key) const
 			{
-				return this->k_contains_impl(key, e, kc);
+				return this->k_contains_impl(e, kc, key);
 			}
 
 			template <typename Entity>
-			template <typename Key, typename Extract, typename KeyCompare>
+			template <typename Extract, typename KeyCompare, typename Key>
 			KERBAL_CONSTEXPR14
 			typename avl_type_only<Entity>::template enable_if_transparent_lookup<
-					Key, Extract, KeyCompare, bool
+					Extract, KeyCompare, Key, bool
 			>::type
-			avl_type_only<Entity>::k_contains(const Key & key, Extract & e, KeyCompare & kc) const
+			avl_type_only<Entity>::k_contains(Extract & e, KeyCompare & kc, const Key & key) const
 			{
-				return this->k_contains_impl(key, e, kc);
+				return this->k_contains_impl(e, kc, key);
 			}
 
 
@@ -1915,7 +1915,7 @@ namespace kerbal
 			typename avl_type_only<Entity>::size_type
 			avl_type_only<Entity>::k_erase_using_allocator(NodeAllocator & alloc, Extract & e, KeyCompare & kc, const typename Extract::key_type & key) KERBAL_NOEXCEPT
 			{
-				kerbal::utility::compressed_pair<const_iterator, const_iterator> equ_range(this->k_equal_range(key, e, kc));
+				kerbal::utility::compressed_pair<const_iterator, const_iterator> equ_range(this->k_equal_range(e, kc, key));
 				size_type cnt = 0;
 				while (equ_range.first() != equ_range.second()) {
 					equ_range.first() = this->k_erase_not_end_using_allocator_unsafe(alloc, equ_range.first());
@@ -1927,12 +1927,12 @@ namespace kerbal
 			template <typename Entity>
 			template <typename NodeAllocator, typename Extract, typename KeyCompare, typename Key>
 			KERBAL_CONSTEXPR20
-			typename avl_type_only<Entity>::template enable_if_transparent_lookup<Key, Extract, KeyCompare,
+			typename avl_type_only<Entity>::template enable_if_transparent_lookup<Extract, KeyCompare, Key,
 					typename avl_type_only<Entity>::size_type
 			>::type
 			avl_type_only<Entity>::k_erase_using_allocator(NodeAllocator & alloc, Extract & e, KeyCompare & kc, const Key & key) KERBAL_NOEXCEPT
 			{
-				kerbal::utility::compressed_pair<const_iterator, const_iterator> equ_range(this->k_equal_range(key, e, kc));
+				kerbal::utility::compressed_pair<const_iterator, const_iterator> equ_range(this->k_equal_range(e, kc, key));
 				size_type cnt = 0;
 				while (equ_range.first() != equ_range.second()) {
 					equ_range.first() = this->k_erase_not_end_using_allocator_unsafe(alloc, equ_range.first());

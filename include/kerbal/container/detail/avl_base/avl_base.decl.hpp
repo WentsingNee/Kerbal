@@ -538,7 +538,7 @@ namespace kerbal
 
 				protected:
 
-					template <typename Key, typename Extract, typename KeyCompare, typename Result>
+					template <typename Extract, typename KeyCompare, typename Key, typename Result>
 					struct enable_if_transparent_lookup :
 							kerbal::type_traits::enable_if<
 								(
@@ -553,96 +553,96 @@ namespace kerbal
 					};
 
 				private:
-					template <typename Key, typename Extract, typename KeyCompare>
+					template <typename Extract, typename KeyCompare, typename Key>
 					KERBAL_CONSTEXPR14
-					const_iterator k_find_impl(const Key & key, Extract & e, KeyCompare & kc) const;
+					const_iterator k_find_impl(Extract & e, KeyCompare & kc, const Key & key) const;
 
 				public:
 					template <typename Extract, typename KeyCompare>
 					KERBAL_CONSTEXPR14
-					const_iterator k_find(const typename Extract::key_type & key, Extract & e, KeyCompare & kc) const;
+					const_iterator k_find(Extract & e, KeyCompare & kc, const typename Extract::key_type & key) const;
 
 					template <typename Extract, typename KeyCompare>
 					KERBAL_CONSTEXPR14
-					iterator k_find(const typename Extract::key_type & key, Extract & e, KeyCompare & kc);
+					iterator k_find(Extract & e, KeyCompare & kc, const typename Extract::key_type & key);
 
-					template <typename Key, typename Extract, typename KeyCompare>
+					template <typename Extract, typename KeyCompare, typename Key>
 					KERBAL_CONSTEXPR14
-					typename enable_if_transparent_lookup<Key, Extract, KeyCompare, const_iterator>::type
-					k_find(const Key & key, Extract & e, KeyCompare & kc) const;
+					typename enable_if_transparent_lookup<Extract, KeyCompare, Key, const_iterator>::type
+					k_find(Extract & e, KeyCompare & kc, const Key & key) const;
 
-					template <typename Key, typename Extract, typename KeyCompare>
+					template <typename Extract, typename KeyCompare, typename Key>
 					KERBAL_CONSTEXPR14
-					typename enable_if_transparent_lookup<Key, Extract, KeyCompare, iterator>::type
-					k_find(const Key & key, Extract & e, KeyCompare & kc);
+					typename enable_if_transparent_lookup<Extract, KeyCompare, Key, iterator>::type
+					k_find(Extract & e, KeyCompare & kc, const Key & key);
 
 				private:
-					template <typename Key, typename Extract, typename KeyCompare>
+					template <typename Extract, typename KeyCompare, typename Key>
 					KERBAL_CONSTEXPR14
 					static const node_base *
-					k_lower_bound_helper(const node_base * p_base, const node_base * lbound, const Key & key, Extract & e, KeyCompare & kc);
+					k_lower_bound_helper(Extract & e, KeyCompare & kc, const Key & key, const node_base * p_base, const node_base * lbound);
 
-					template <typename Key, typename Extract, typename KeyCompare>
+					template <typename Extract, typename KeyCompare, typename Key>
 					KERBAL_CONSTEXPR14
 					static const node_base *
-					k_upper_bound_helper(const node_base * p_base, const node_base * ubound, const Key & key, Extract & e, KeyCompare & kc);
+					k_upper_bound_helper(Extract & e, KeyCompare & kc, const Key & key, const node_base * p_base, const node_base * ubound);
 
 				private:
-					template <typename Key, typename Extract, typename KeyCompare>
+					template <typename Extract, typename KeyCompare, typename Key>
 					KERBAL_CONSTEXPR14
-					const_iterator k_lower_bound_impl(const Key & key, Extract & e, KeyCompare & kc) const;
+					const_iterator k_lower_bound_impl(Extract & e, KeyCompare & kc, const Key & key) const;
 
 				public:
 					template <typename Extract, typename KeyCompare>
 					KERBAL_CONSTEXPR14
-					const_iterator k_lower_bound(const typename Extract::key_type & key, Extract & e, KeyCompare & kc) const;
+					const_iterator k_lower_bound(Extract & e, KeyCompare & kc, const typename Extract::key_type & key) const;
 
 					template <typename Extract, typename KeyCompare>
 					KERBAL_CONSTEXPR14
-					iterator k_lower_bound(const typename Extract::key_type & key, Extract & e, KeyCompare & kc);
+					iterator k_lower_bound(Extract & e, KeyCompare & kc, const typename Extract::key_type & key);
 
-					template <typename Key, typename Extract, typename KeyCompare>
+					template <typename Extract, typename KeyCompare, typename Key>
 					KERBAL_CONSTEXPR14
-					typename enable_if_transparent_lookup<Key, Extract, KeyCompare, const_iterator>::type
-					k_lower_bound(const Key & key, Extract & e, KeyCompare & kc) const;
+					typename enable_if_transparent_lookup<Extract, KeyCompare, Key, const_iterator>::type
+					k_lower_bound(Extract & e, KeyCompare & kc, const Key & key) const;
 
-					template <typename Key, typename Extract, typename KeyCompare>
+					template <typename Extract, typename KeyCompare, typename Key>
 					KERBAL_CONSTEXPR14
-					typename enable_if_transparent_lookup<Key, Extract, KeyCompare, iterator>::type
-					k_lower_bound(const Key & key, Extract & e, KeyCompare & kc);
+					typename enable_if_transparent_lookup<Extract, KeyCompare, Key, iterator>::type
+					k_lower_bound(Extract & e, KeyCompare & kc, const Key & key);
 
 				private:
-					template <typename Key, typename Extract, typename KeyCompare>
+					template <typename Extract, typename KeyCompare, typename Key>
 					KERBAL_CONSTEXPR14
-					const_iterator k_upper_bound_impl(const Key & key, Extract & e, KeyCompare & kc) const;
+					const_iterator k_upper_bound_impl(Extract & e, KeyCompare & kc, const Key & key) const;
 
 				public:
 					template <typename Extract, typename KeyCompare>
 					KERBAL_CONSTEXPR14
-					const_iterator k_upper_bound(const typename Extract::key_type & key, Extract & e, KeyCompare & kc) const;
+					const_iterator k_upper_bound(Extract & e, KeyCompare & kc, const typename Extract::key_type & key) const;
 
 					template <typename Extract, typename KeyCompare>
 					KERBAL_CONSTEXPR14
-					iterator k_upper_bound(const typename Extract::key_type & key, Extract & e, KeyCompare & kc);
+					iterator k_upper_bound(Extract & e, KeyCompare & kc, const typename Extract::key_type & key);
 
-					template <typename Key, typename Extract, typename KeyCompare>
+					template <typename Extract, typename KeyCompare, typename Key>
 					KERBAL_CONSTEXPR14
-					typename enable_if_transparent_lookup<Key, Extract, KeyCompare, const_iterator>::type
-					k_upper_bound(const Key & key, Extract & e, KeyCompare & kc) const;
+					typename enable_if_transparent_lookup<Extract, KeyCompare, Key, const_iterator>::type
+					k_upper_bound(Extract & e, KeyCompare & kc, const Key & key) const;
 
-					template <typename Key, typename Extract, typename KeyCompare>
+					template <typename Extract, typename KeyCompare, typename Key>
 					KERBAL_CONSTEXPR14
-					typename enable_if_transparent_lookup<Key, Extract, KeyCompare, iterator>::type
-					k_upper_bound(const Key & key, Extract & e, KeyCompare & kc);
+					typename enable_if_transparent_lookup<Extract, KeyCompare, Key, iterator>::type
+					k_upper_bound(Extract & e, KeyCompare & kc, const Key & key);
 
 				private:
-					template <typename Key, typename Extract, typename KeyCompare>
+					template <typename Extract, typename KeyCompare, typename Key>
 					KERBAL_CONSTEXPR14
 					kerbal::utility::compressed_pair<
 						const_iterator,
 						const_iterator
 					>
-					k_equal_range_impl(const Key & key, Extract & e, KeyCompare & kc) const;
+					k_equal_range_impl(Extract & e, KeyCompare & kc, const Key & key) const;
 
 				public:
 					template <typename Extract, typename KeyCompare>
@@ -651,7 +651,7 @@ namespace kerbal
 						const_iterator,
 						const_iterator
 					>
-					k_equal_range(const typename Extract::key_type & key, Extract & e, KeyCompare & kc) const;
+					k_equal_range(Extract & e, KeyCompare & kc, const typename Extract::key_type & key) const;
 
 					template <typename Extract, typename KeyCompare>
 					KERBAL_CONSTEXPR14
@@ -659,44 +659,44 @@ namespace kerbal
 						iterator,
 						iterator
 					>
-					k_equal_range(const typename Extract::key_type & key, Extract & e, KeyCompare & kc);
+					k_equal_range(Extract & e, KeyCompare & kc, const typename Extract::key_type & key);
 
-					template <typename Key, typename Extract, typename KeyCompare>
+					template <typename Extract, typename KeyCompare, typename Key>
 					KERBAL_CONSTEXPR14
 					typename enable_if_transparent_lookup<
-							Key, Extract, KeyCompare,
+							Extract, KeyCompare, Key,
 							kerbal::utility::compressed_pair<
 								const_iterator,
 								const_iterator
 							>
 					>::type
-					k_equal_range(const Key & key, Extract & e, KeyCompare & kc) const;
+					k_equal_range(Extract & e, KeyCompare & kc, const Key & key) const;
 
-					template <typename Key, typename Extract, typename KeyCompare>
+					template <typename Extract, typename KeyCompare, typename Key>
 					KERBAL_CONSTEXPR14
 					typename enable_if_transparent_lookup<
-							Key, Extract, KeyCompare,
+							Extract, KeyCompare, Key,
 							kerbal::utility::compressed_pair<
 								iterator,
 								iterator
 							>
 					>::type
-					k_equal_range(const Key & key, Extract & e, KeyCompare & kc);
+					k_equal_range(Extract & e, KeyCompare & kc, const Key & key);
 
 				private:
-					template <typename Key, typename Extract, typename KeyCompare>
+					template <typename Extract, typename KeyCompare, typename Key>
 					KERBAL_CONSTEXPR14
-					bool k_contains_impl(const Key & key, Extract & e, KeyCompare & kc) const;
+					bool k_contains_impl(Extract & e, KeyCompare & kc, const Key & key) const;
 
 				public:
 					template <typename Extract, typename KeyCompare>
 					KERBAL_CONSTEXPR14
-					bool k_contains(const typename Extract::key_type & key, Extract & e, KeyCompare & kc) const;
+					bool k_contains(Extract & e, KeyCompare & kc, const typename Extract::key_type & key) const;
 
-					template <typename Key, typename Extract, typename KeyCompare>
+					template <typename Extract, typename KeyCompare, typename Key>
 					KERBAL_CONSTEXPR14
-					typename enable_if_transparent_lookup<Key, Extract, KeyCompare, bool>::type
-					k_contains(const Key & key, Extract & e, KeyCompare & kc) const;
+					typename enable_if_transparent_lookup<Extract, KeyCompare, Key, bool>::type
+					k_contains(Extract & e, KeyCompare & kc, const Key & key) const;
 
 
 				//===================
@@ -853,7 +853,7 @@ namespace kerbal
 
 					template <typename NodeAllocator, typename Extract, typename KeyCompare, typename Key>
 					KERBAL_CONSTEXPR20
-					typename enable_if_transparent_lookup<Key, Extract, KeyCompare, size_type>::type
+					typename enable_if_transparent_lookup<Extract, KeyCompare, Key, size_type>::type
 					k_erase_using_allocator(NodeAllocator & alloc, Extract & e, KeyCompare & kc, const Key & key) KERBAL_NOEXCEPT;
 
 					template <typename NodeAllocator>
