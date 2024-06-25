@@ -562,8 +562,11 @@ namespace kerbal
 					KERBAL_CONSTEXPR14
 					iterator lower_bound(const key_type & key, const_iterator hint)
 					{
-						return kerbal::algorithm::lower_bound_hint(this->begin(), this->end(), key, hint.cast_to_mutable(),
-																	 lower_bound_kc_adapter(this));
+						return kerbal::algorithm::lower_bound_hint(
+							this->begin(), this->end(), key,
+							kerbal::container::nth(*this, kerbal::container::index_of(*this, hint)),
+							lower_bound_kc_adapter(this)
+						);
 					}
 
 					KERBAL_CONSTEXPR14
@@ -591,8 +594,11 @@ namespace kerbal
 					KERBAL_CONSTEXPR14
 					iterator upper_bound(const key_type & key, const_iterator hint)
 					{
-						return kerbal::algorithm::upper_bound_hint(this->begin(), this->end(), key, hint,
-															  upper_bound_kc_adapter(this));
+						return kerbal::algorithm::upper_bound_hint(
+							this->begin(), this->end(), key,
+							kerbal::container::nth(*this, kerbal::container::index_of(*this, hint)),
+							upper_bound_kc_adapter(this)
+						);
 					}
 
 					KERBAL_CONSTEXPR14
