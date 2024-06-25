@@ -674,14 +674,14 @@ namespace kerbal
 					size_type count(const key_type & key) const
 					{
 						kerbal::utility::compressed_pair<const_iterator, const_iterator> p(this->equal_range(key));
-						return kerbal::iterator::distance(p.first, p.second);
+						return kerbal::iterator::distance(p.first(), p.second());
 					}
 
 					KERBAL_CONSTEXPR14
 					size_type count(const key_type & key, const_iterator hint) const
 					{
 						kerbal::utility::compressed_pair<const_iterator, const_iterator> p(this->equal_range(key, hint));
-						return kerbal::iterator::distance(p.first, p.second);
+						return kerbal::iterator::distance(p.first(), p.second());
 					}
 
 					KERBAL_CONSTEXPR14
