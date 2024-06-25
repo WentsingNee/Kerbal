@@ -48,6 +48,103 @@ namespace kerbal
 		{
 
 			template <typename Entity, typename Extract, typename KeyCompare, typename Sequence>
+			class flat_ordered_base;
+
+			template <typename Entity, typename Extract, typename KeyCompare, typename Sequence>
+			struct equal_range_kc_adapter_not_same
+			{
+				private:
+					typedef kerbal::container::detail::flat_ordered_base<Entity, Extract, KeyCompare, Sequence>
+																				flat_ordered_base;
+					typedef typename flat_ordered_base::key_type				key_type;
+					typedef typename flat_ordered_base::const_reference			const_reference;
+
+					const flat_ordered_base * self;
+
+				protected:
+					KERBAL_CONSTEXPR
+					explicit equal_range_kc_adapter_not_same(const flat_ordered_base * self) KERBAL_NOEXCEPT :
+						self(self)
+					{
+					}
+
+				public:
+					bool operator()(const_reference item, const key_type & key) const
+					{
+						return self->key_comp()(self->extract()(item), key);
+					}
+
+					bool operator()(const key_type & key, const_reference item) const
+					{
+						return self->key_comp()(key, self->extract()(item));
+					}
+			};
+
+			template <typename Entity, typename Extract, typename KeyCompare, typename Sequence>
+			struct equal_range_kc_adapter_same
+			{
+				private:
+					typedef kerbal::container::detail::flat_ordered_base<Entity, Extract, KeyCompare, Sequence>
+																				flat_ordered_base;
+					typedef typename flat_ordered_base::key_type				key_type;
+					typedef typename flat_ordered_base::const_reference			const_reference;
+
+					const flat_ordered_base * self;
+
+				protected:
+					KERBAL_CONSTEXPR
+					explicit equal_range_kc_adapter_same(const flat_ordered_base * self) KERBAL_NOEXCEPT :
+						self(self)
+					{
+					}
+
+				public:
+					bool operator()(const_reference item, const key_type & key) const
+					{
+						return self->key_comp()(self->extract()(item), key);
+					}
+			};
+
+			template <typename Entity, typename Extract, typename KeyCompare, typename Sequence>
+			struct flat_ordered_base_equal_range_kc_adapter :
+				kerbal::type_traits::conditional<
+					kerbal::type_traits::is_same<
+						const key_type &,
+						const_reference
+					>::value,
+					equal_range_kc_adapter_same,
+					equal_range_kc_adapter_not_same
+				>::type
+			{
+				private:
+					typedef typename
+					kerbal::type_traits::conditional<
+						kerbal::type_traits::is_same<
+							const key_type &,
+							const_reference
+						>::value,
+						equal_range_kc_adapter_same,
+						equal_range_kc_adapter_not_same
+					>::type super;
+
+				private:
+					typedef kerbal::container::detail::flat_ordered_base<Entity, Extract, KeyCompare, Sequence>
+																				flat_ordered_base;
+					typedef typename flat_ordered_base::key_type				key_type;
+					typedef typename flat_ordered_base::const_reference			const_reference;
+
+					const flat_ordered_base * self;
+
+				public:
+					KERBAL_CONSTEXPR
+					explicit flat_ordered_base_equal_range_kc_adapter(const flat_ordered_base * self) KERBAL_NOEXCEPT :
+						super(self)
+					{
+					}
+			};
+
+
+			template <typename Entity, typename Extract, typename KeyCompare, typename Sequence>
 			class flat_ordered_base :
 				private kerbal::utility::member_compress_helper<Extract>,
 				private kerbal::utility::member_compress_helper<KeyCompare>
@@ -164,82 +261,11 @@ namespace kerbal
 //#			endif
 
 
-					friend struct equal_range_kc_adapter;
-
-				private:
-					struct equal_range_kc_adapter_not_same
-					{
-						private:
-							const flat_ordered_base * self;
-
-						protected:
-							KERBAL_CONSTEXPR
-							explicit equal_range_kc_adapter_not_same(const flat_ordered_base * self) KERBAL_NOEXCEPT :
-								self(self)
-							{
-							}
-
-						public:
-							bool operator()(const_reference item, const key_type & key) const
-							{
-								return self->key_comp()(self->extract()(item), key);
-							}
-
-							bool operator()(const key_type & key, const_reference item) const
-							{
-								return self->key_comp()(key, self->extract()(item));
-							}
-					};
-
-					struct equal_range_kc_adapter_same
-					{
-						private:
-							const flat_ordered_base * self;
-
-						protected:
-							KERBAL_CONSTEXPR
-							explicit equal_range_kc_adapter_same(const flat_ordered_base * self) KERBAL_NOEXCEPT :
-								self(self)
-							{
-							}
-
-						public:
-							bool operator()(const_reference item, const key_type & key) const
-							{
-								return self->key_comp()(self->extract()(item), key);
-							}
-					};
+					friend struct flat_ordered_base_equal_range_kc_adapter<Entity, Extract, KeyCompare, Sequence>;
+					typedef flat_ordered_base_equal_range_kc_adapter<Entity, Extract, KeyCompare, Sequence>
+																equal_range_kc_adapter;
 
 				protected:
-					struct equal_range_kc_adapter :
-						kerbal::type_traits::conditional<
-							kerbal::type_traits::is_same<
-								const key_type &,
-								const_reference
-							>::value,
-							equal_range_kc_adapter_same,
-							equal_range_kc_adapter_not_same
-						>::type
-					{
-						private:
-							typedef typename
-							kerbal::type_traits::conditional<
-								kerbal::type_traits::is_same<
-									const key_type &,
-									const_reference
-								>::value,
-								equal_range_kc_adapter_same,
-								equal_range_kc_adapter_not_same
-							>::type super;
-
-						public:
-							KERBAL_CONSTEXPR
-							explicit equal_range_kc_adapter(const flat_ordered_base * self) KERBAL_NOEXCEPT :
-								super(self)
-							{
-							}
-					};
-
 
 				public:
 
