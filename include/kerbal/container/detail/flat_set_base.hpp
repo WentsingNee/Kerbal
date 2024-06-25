@@ -210,6 +210,8 @@ namespace kerbal
 						this->ordered.unique_insert(first, last);
 					}
 
+					using super::erase;
+
 					KERBAL_CONSTEXPR14
 					const_iterator erase(const key_type & key)
 					{
