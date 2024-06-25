@@ -220,7 +220,7 @@ namespace kerbal
 					KERBAL_CONSTEXPR14
 					const_iterator erase(const_iterator hint, const key_type & key)
 					{
-						return this->erase(this->find(key, hint));
+						return this->super::erase(this->find(key, hint));
 					}
 
 			};
