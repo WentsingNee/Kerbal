@@ -649,7 +649,9 @@ namespace kerbal
 			vector_type_only<T>::at(size_type index)
 			{
 				if (index >= this->k_size) {
-					kerbal::utility::throw_this_exception_helper<std::out_of_range>::throw_this_exception((const char*)"range check fail in vector");
+					kerbal::utility::throw_this_exception_helper<std::out_of_range>::throw_this_exception(
+						+"range check fail in vector"
+					);
 				}
 				return (*this)[index];
 			}
@@ -660,7 +662,9 @@ namespace kerbal
 			vector_type_only<T>::at(size_type index) const
 			{
 				if (index >= this->k_size) {
-					kerbal::utility::throw_this_exception_helper<std::out_of_range>::throw_this_exception((const char*)"range check fail in vector");
+					kerbal::utility::throw_this_exception_helper<std::out_of_range>::throw_this_exception(
+						+"range check fail in vector"
+					);
 				}
 				return (*this)[index];
 			}

@@ -245,7 +245,7 @@ namespace kerbal
 		{
 			if (new_size > N) {
 				kerbal::utility::throw_this_exception_helper<std::logic_error>::throw_this_exception(
-					(const char*)"New size is larger than static_vector's max size"
+					+"New size is larger than static_vector's max size"
 				);
 			}
 			this->assign_unsafe(new_size, val);
@@ -343,7 +343,7 @@ namespace kerbal
 				if (this->full()) {
 					// this is full
 					kerbal::utility::throw_this_exception_helper<std::logic_error>::throw_this_exception(
-						(const char *)"Out of storage space"
+						+"Out of storage space"
 					);
 				}
 				this->push_back_unsafe(*first);
@@ -361,7 +361,7 @@ namespace kerbal
 
 			if (new_size > N) {
 				kerbal::utility::throw_this_exception_helper<std::logic_error>::throw_this_exception(
-					(const char *)"Out of storage space"
+					+"Out of storage space"
 				);
 			}
 
@@ -581,7 +581,7 @@ namespace kerbal
 		{
 			if (index >= size()) {
 				kerbal::utility::throw_this_exception_helper<std::out_of_range>::throw_this_exception(
-					(const char*)"Index out of bound"
+					+"Index out of bound"
 				);
 			}
 			return (*this)[index];
@@ -594,7 +594,7 @@ namespace kerbal
 		{
 			if (index >= size()) {
 				kerbal::utility::throw_this_exception_helper<std::out_of_range>::throw_this_exception(
-					(const char*)"Index out of bound"
+					+"Index out of bound"
 				);
 			}
 			return (*this)[index];
@@ -638,7 +638,7 @@ namespace kerbal
 		{
 			if (!full()) {
 				kerbal::utility::throw_this_exception_helper<std::logic_error>::throw_this_exception(
-					(const char*)"Static vector is not full"
+					+"Static vector is not full"
 				);
 			}
 			return reinterpret_cast<equal_c_array_reference>(this->storage);
@@ -650,7 +650,7 @@ namespace kerbal
 		{
 			if (!full()) {
 				kerbal::utility::throw_this_exception_helper<std::logic_error>::throw_this_exception(
-					(const char*)"Static vector is not full"
+					+"Static vector is not full"
 				);
 			}
 			return reinterpret_cast<const_equal_c_array_reference>(this->storage);
@@ -662,7 +662,7 @@ namespace kerbal
 		{
 			if (!full()) {
 				kerbal::utility::throw_this_exception_helper<std::logic_error>::throw_this_exception(
-					(const char*)"Static vector is not full"
+					+"Static vector is not full"
 				);
 			}
 			return reinterpret_cast<equal_const_c_array_reference>(this->storage);
@@ -728,7 +728,7 @@ namespace kerbal
 		{
 			if (static_cast<size_type>(this->len) + 1u > N) {
 				kerbal::utility::throw_this_exception_helper<std::logic_error>::throw_this_exception(
-					(const char*)"Out of storage space"
+					+"Out of storage space"
 				);
 			}
 			return this->emplace_back_unsafe(kerbal::utility::forward<Args>(args)...);
@@ -760,7 +760,7 @@ namespace kerbal
 		{ \
 			if (static_cast<size_type>(this->len) + 1u > N) { \
 				kerbal::utility::throw_this_exception_helper<std::logic_error>::throw_this_exception( \
-					(const char*)"Out of storage space" \
+					+"Out of storage space" \
 				); \
 			} \
 			return this->emplace_back_unsafe(KERBAL_OPT_PPEXPAND_WITH_COMMA_N(REMAINF, EMPTY, ARGS_USE, i)); \
@@ -793,7 +793,7 @@ namespace kerbal
 		{
 			if (this->len == 0) {
 				kerbal::utility::throw_this_exception_helper<std::logic_error>::throw_this_exception(
-					(const char*)"Static vector is empty"
+					+"Static vector is empty"
 				);
 			}
 			this->pop_back_unsafe();
@@ -856,7 +856,7 @@ namespace kerbal
 
 			if (n > N - ori_size) {
 				kerbal::utility::throw_this_exception_helper<std::logic_error>::throw_this_exception(
-					(const char *) "Out of storage space"
+					+ "Out of storage space"
 				);
 			}
 
@@ -1104,7 +1104,7 @@ namespace kerbal
 		{
 			if (static_cast<size_type>(this->len) + 1u > N) {
 				kerbal::utility::throw_this_exception_helper<std::logic_error>::throw_this_exception(
-					(const char *)"Out of storage space"
+					+"Out of storage space"
 				);
 			}
 			return this->emplace_unsafe(pos, kerbal::utility::forward<Args>(args)...);
@@ -1144,7 +1144,7 @@ namespace kerbal
 		{ \
 			if (static_cast<size_type>(this->len) + 1u > N) { \
 				kerbal::utility::throw_this_exception_helper<std::logic_error>::throw_this_exception( \
-					(const char *)"Out of storage space" \
+					+"Out of storage space" \
 				); \
 			} \
 			return this->emplace_unsafe(pos KERBAL_OPT_PPEXPAND_WITH_COMMA_N(LEFT_JOIN_COMMA, EMPTY, ARGS_USE, i)); \

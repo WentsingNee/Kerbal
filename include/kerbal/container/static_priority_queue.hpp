@@ -169,7 +169,7 @@ namespace kerbal
 				{
 					if (this->full()) {
 						kerbal::utility::throw_this_exception_helper<std::logic_error>::throw_this_exception(
-							(const char*)"Out of storage space"
+							+"Out of storage space"
 						);
 					}
 					this->push_unsafe(val);
@@ -209,7 +209,7 @@ namespace kerbal
 				{
 					if (this->full()) {
 						kerbal::utility::throw_this_exception_helper<std::logic_error>::throw_this_exception(
-							(const char*)"Out of storage space"
+							+"Out of storage space"
 						);
 					}
 					this->push_unsafe(kerbal::compatibility::move(val));
@@ -233,7 +233,7 @@ namespace kerbal
 				{
 					if (this->full()) {
 						kerbal::utility::throw_this_exception_helper<std::logic_error>::throw_this_exception(
-							(const char*)"Out of storage space"
+							+"Out of storage space"
 						);
 					}
 					this->emplace_unsafe(kerbal::utility::forward<Args>(args)...);
@@ -260,7 +260,7 @@ namespace kerbal
 				{ \
 					if (this->full()) { \
 						kerbal::utility::throw_this_exception_helper<std::logic_error>::throw_this_exception( \
-							(const char*)"Out of storage space" \
+							+"Out of storage space" \
 						); \
 					} \
 					this->emplace_unsafe(KERBAL_OPT_PPEXPAND_WITH_COMMA_N(REMAINF, EMPTY, ARGS_USE, i)); \
@@ -291,7 +291,7 @@ namespace kerbal
 				{
 					if (c.empty()) {
 						kerbal::utility::throw_this_exception_helper<std::logic_error>::throw_this_exception(
-							(const char*)"Static priority queue is empty"
+							+"Static priority queue is empty"
 						);
 					}
 					this->pop_unsafe();
