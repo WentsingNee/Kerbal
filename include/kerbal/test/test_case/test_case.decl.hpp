@@ -138,7 +138,7 @@ namespace kerbal
 
 
 #define KERBAL_TEST_CHECK_EQUAL(lhs, rhs) do { \
-	record.items.emplace_back((const char *)__FILE__, __LINE__, (const char *)(#lhs " == " #rhs)); \
+	record.items.emplace_back(+__FILE__, __LINE__, +(#lhs " == " #rhs)); \
 	if (kerbal::test::compare_and_out((lhs), (rhs))) { \
 		puts( \
 			"CHECK EQUAL FAILED!\n" \
@@ -152,7 +152,7 @@ namespace kerbal
 } while (false)
 
 #define KERBAL_TEST_CHECK(statement) do { \
-	record.items.emplace_back((const char *)__FILE__, __LINE__, (const char *)(#statement " == true")); \
+	record.items.emplace_back(+__FILE__, __LINE__, +(#statement " == true")); \
 	if (!static_cast<bool>((statement))) { \
 		puts( \
 			"CHECK FAILED!\n" \

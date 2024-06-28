@@ -776,7 +776,7 @@ namespace kerbal
 			{
 				if (index >= this->k_size) {
 					kerbal::utility::throw_this_exception_helper<std::out_of_range>::throw_this_exception(
-						(const char *) "range check fail in vector"
+						+"range check fail in vector"
 					);
 				}
 				return (*this)[index];
@@ -791,7 +791,7 @@ namespace kerbal
 			{
 				if (index >= this->k_size) {
 					kerbal::utility::throw_this_exception_helper<std::out_of_range>::throw_this_exception(
-						(const char *) "range check fail in vector"
+						+"range check fail in vector"
 					);
 				}
 				return (*this)[index];
