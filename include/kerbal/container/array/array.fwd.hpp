@@ -24,17 +24,6 @@ namespace kerbal
 		template <typename T, std::size_t N>
 		class array;
 
-		namespace detail
-		{
-
-			template <typename T>
-			class arr_iter;
-
-			template <typename T>
-			class arr_kiter;
-
-		} // namespace detail
-
 	} // namespace container
 
 } // namespace kerbal
