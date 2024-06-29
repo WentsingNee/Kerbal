@@ -14,6 +14,7 @@
 
 #include <kerbal/container/vector/vector.fwd.hpp>
 
+//#include <kerbal/assign/assign_list.hpp>
 #include <kerbal/compatibility/constexpr.hpp>
 #include <kerbal/compatibility/noexcept.hpp>
 #include <kerbal/iterator/iterator_traits.hpp>
@@ -31,6 +32,10 @@
 #endif
 
 #include <limits>
+
+#if __cplusplus >= 201103L
+#	include <initializer_list>
+#endif
 
 #include <kerbal/container/detail/vector_base/vector_iterator.hpp>
 
@@ -194,6 +199,31 @@ namespace kerbal
 						InputIterator first, InputIterator last
 					);
 
+#			if __cplusplus >= 201103L
+
+					template <typename NodeAllocator>
+					KERBAL_CONSTEXPR20
+					vector_type_only(
+						NodeAllocator & alloc,
+						std::initializer_list<value_type> ilist
+					);
+
+#			else
+
+					template <typename NodeAllocator>
+					vector_type_only(
+						NodeAllocator & alloc,
+						const kerbal::assign::assign_list<void> & ilist
+					);
+
+					template <typename NodeAllocator, typename U>
+					vector_type_only(
+						NodeAllocator & alloc,
+						const kerbal::assign::assign_list<U> & ilist
+					);
+
+#			endif
+
 					template <typename Allocator>
 					KERBAL_CONSTEXPR20
 					void k_destroy_using_allocator(Allocator & alloc) KERBAL_NOEXCEPT;
@@ -343,6 +373,31 @@ namespace kerbal
 						Allocator & alloc,
 						InputIterator first, InputIterator last
 					);
+
+#			if __cplusplus >= 201103L
+
+					template <typename NodeAllocator>
+					KERBAL_CONSTEXPR20
+					void k_assign_using_allocator(
+						NodeAllocator & alloc,
+						std::initializer_list<value_type> ilist
+					);
+
+#			else
+
+					template <typename NodeAllocator>
+					void k_assign_using_allocator(
+						NodeAllocator & alloc,
+						const kerbal::assign::assign_list<void> & ilist
+					);
+
+					template <typename NodeAllocator, typename U>
+					void k_assign_using_allocator(
+						NodeAllocator & alloc,
+						const kerbal::assign::assign_list<U> & ilist
+					);
+
+#			endif
 
 
 				//===================
@@ -615,6 +670,37 @@ namespace kerbal
 						const_iterator pos,
 						InputIterator first, InputIterator last
 					);
+
+#			if __cplusplus >= 201103L
+
+					template <typename NodeAllocator>
+					KERBAL_CONSTEXPR20
+					iterator
+					k_insert_using_allocator(
+						NodeAllocator & alloc,
+						const_iterator pos,
+						std::initializer_list<value_type> ilist
+					);
+
+#			else
+
+					template <typename NodeAllocator>
+					iterator
+					k_insert_using_allocator(
+						NodeAllocator & alloc,
+						const_iterator pos,
+						const kerbal::assign::assign_list<void> & ilist
+					);
+
+					template <typename NodeAllocator, typename U>
+					iterator
+					k_insert_using_allocator(
+						NodeAllocator & alloc,
+						const_iterator pos,
+						const kerbal::assign::assign_list<U> & ilist
+					);
+
+#			endif
 
 				private:
 					template <typename Allocator>
