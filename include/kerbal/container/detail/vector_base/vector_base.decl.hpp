@@ -55,10 +55,10 @@ namespace kerbal
 					typedef value_type *				pointer;
 					typedef const value_type *			const_pointer;
 
-#		if __cplusplus >= 201103L
+#			if __cplusplus >= 201103L
 					typedef value_type &&				rvalue_reference;
 					typedef const value_type &&			const_rvalue_reference;
-#		endif
+#			endif
 
 					typedef std::size_t					size_type;
 					typedef std::ptrdiff_t				difference_type;
@@ -91,47 +91,6 @@ namespace kerbal
 
 					KERBAL_CONSTEXPR
 					vector_type_only() KERBAL_NOEXCEPT;
-
-					template <typename Allocator>
-					KERBAL_CONSTEXPR20
-					vector_type_only(
-						Allocator & alloc,
-						size_type count
-					);
-
-					template <typename Allocator>
-					KERBAL_CONSTEXPR20
-					vector_type_only(
-						Allocator & alloc,
-						size_type count, const_reference value
-					);
-
-				private:
-
-					template <typename Allocator, typename InputIterator>
-					KERBAL_CONSTEXPR20
-					void k_range_copy_cnstrct_impl(
-						Allocator & alloc,
-						InputIterator first, InputIterator last,
-						std::input_iterator_tag
-					);
-
-					template <typename Allocator, typename ForwardIterator>
-					KERBAL_CONSTEXPR20
-					void k_range_copy_cnstrct_impl(
-						Allocator & alloc,
-						ForwardIterator first, ForwardIterator last,
-						std::forward_iterator_tag
-					);
-
-				public:
-
-					template <typename Allocator, typename InputIterator>
-					KERBAL_CONSTEXPR20
-					vector_type_only(
-						Allocator & alloc,
-						InputIterator first, InputIterator last
-					);
 
 #			if __cplusplus >= 201103L
 
@@ -196,24 +155,23 @@ namespace kerbal
 
 					template <typename Allocator>
 					KERBAL_CONSTEXPR20
-					void k_destroy_using_allocator(Allocator & alloc) KERBAL_NOEXCEPT;
-
-
-				//===================
-				// assign
+					vector_type_only(
+						Allocator & alloc,
+						size_type count
+					);
 
 					template <typename Allocator>
 					KERBAL_CONSTEXPR20
-					void k_assign_using_allocator(
+					vector_type_only(
 						Allocator & alloc,
-						size_type new_size, const_reference value
+						size_type count, const_reference value
 					);
 
 				private:
 
 					template <typename Allocator, typename InputIterator>
 					KERBAL_CONSTEXPR20
-					void k_range_assign_using_allocator_impl(
+					void k_range_copy_cnstrct_impl(
 						Allocator & alloc,
 						InputIterator first, InputIterator last,
 						std::input_iterator_tag
@@ -221,7 +179,7 @@ namespace kerbal
 
 					template <typename Allocator, typename ForwardIterator>
 					KERBAL_CONSTEXPR20
-					void k_range_assign_using_allocator_impl(
+					void k_range_copy_cnstrct_impl(
 						Allocator & alloc,
 						ForwardIterator first, ForwardIterator last,
 						std::forward_iterator_tag
@@ -231,13 +189,18 @@ namespace kerbal
 
 					template <typename Allocator, typename InputIterator>
 					KERBAL_CONSTEXPR20
-					typename kerbal::type_traits::enable_if<
-						kerbal::iterator::is_input_compatible_iterator<InputIterator>::value
-					>::type
-					k_assign_using_allocator(
+					vector_type_only(
 						Allocator & alloc,
 						InputIterator first, InputIterator last
 					);
+
+					template <typename Allocator>
+					KERBAL_CONSTEXPR20
+					void k_destroy_using_allocator(Allocator & alloc) KERBAL_NOEXCEPT;
+
+
+				//===================
+				// assign
 
 				private:
 
@@ -343,6 +306,43 @@ namespace kerbal
 					;
 
 #			endif
+
+					template <typename Allocator>
+					KERBAL_CONSTEXPR20
+					void k_assign_using_allocator(
+						Allocator & alloc,
+						size_type new_size, const_reference value
+					);
+
+				private:
+
+					template <typename Allocator, typename InputIterator>
+					KERBAL_CONSTEXPR20
+					void k_range_assign_using_allocator_impl(
+						Allocator & alloc,
+						InputIterator first, InputIterator last,
+						std::input_iterator_tag
+					);
+
+					template <typename Allocator, typename ForwardIterator>
+					KERBAL_CONSTEXPR20
+					void k_range_assign_using_allocator_impl(
+						Allocator & alloc,
+						ForwardIterator first, ForwardIterator last,
+						std::forward_iterator_tag
+					);
+
+				public:
+
+					template <typename Allocator, typename InputIterator>
+					KERBAL_CONSTEXPR20
+					typename kerbal::type_traits::enable_if<
+						kerbal::iterator::is_input_compatible_iterator<InputIterator>::value
+					>::type
+					k_assign_using_allocator(
+						Allocator & alloc,
+						InputIterator first, InputIterator last
+					);
 
 
 				//===================
