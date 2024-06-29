@@ -165,26 +165,16 @@ namespace kerbal
 
 #		else
 
-				priority_queue(const kerbal::assign::assign_list<void> & ilist) :
-					kc_compress_helper(kerbal::utility::in_place_t()), c()
-				{
-				}
-
 				template <typename U>
 				priority_queue(const kerbal::assign::assign_list<U> & ilist) :
-					kc_compress_helper(kerbal::utility::in_place_t()), c(ilist.cbegin(), ilist.cend())
+					kc_compress_helper(kerbal::utility::in_place_t()), c(ilist)
 				{
 					kerbal::algorithm::make_heap(c.begin(), c.end(), this->vc());
 				}
 
-				priority_queue(const kerbal::assign::assign_list<void> & ilist, const value_compare & vc) :
-					kc_compress_helper(kerbal::utility::in_place_t(), vc), c()
-				{
-				}
-
 				template <typename U>
 				priority_queue(const kerbal::assign::assign_list<U> & ilist, const value_compare & vc) :
-					kc_compress_helper(kerbal::utility::in_place_t(), vc), c(ilist.cbegin(), ilist.cend())
+					kc_compress_helper(kerbal::utility::in_place_t(), vc), c(ilist)
 				{
 					kerbal::algorithm::make_heap(c.begin(), c.end(), this->vc());
 				}
