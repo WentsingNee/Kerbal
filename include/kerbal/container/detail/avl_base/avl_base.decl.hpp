@@ -202,68 +202,6 @@ namespace kerbal
 					avl_type_only() KERBAL_NOEXCEPT;
 #			endif
 
-					template <typename NodeAllocator, typename Extract, typename KeyCompare, typename InputIterator>
-					KERBAL_CONSTEXPR20
-					avl_type_only(
-						NodeAllocator & alloc, Extract & e, KeyCompare & kc,
-						InputIterator first, InputIterator last
-					);
-
-					template <typename NodeAllocator, typename Extract, typename KeyCompare, typename InputIterator>
-					KERBAL_CONSTEXPR20
-					avl_type_only(
-						kerbal::container::unique_tag_t,
-						NodeAllocator & alloc, Extract & e, KeyCompare & kc,
-						InputIterator first, InputIterator last
-					);
-
-#			if __cplusplus >= 201103L
-
-					template <typename NodeAllocator, typename Extract, typename KeyCompare>
-					KERBAL_CONSTEXPR20
-					avl_type_only(
-						NodeAllocator & alloc, Extract & e, KeyCompare & kc,
-						std::initializer_list<value_type> ilist
-					);
-
-					template <typename NodeAllocator, typename Extract, typename KeyCompare>
-					KERBAL_CONSTEXPR20
-					avl_type_only(
-						kerbal::container::unique_tag_t unique_tag,
-						NodeAllocator & alloc, Extract & e, KeyCompare & kc,
-						std::initializer_list<value_type> ilist
-					);
-
-#			else
-
-					template <typename NodeAllocator, typename Extract, typename KeyCompare>
-					avl_type_only(
-						NodeAllocator & alloc, Extract & e, KeyCompare & kc,
-						const kerbal::assign::assign_list<void> & ilist
-					);
-
-					template <typename NodeAllocator, typename Extract, typename KeyCompare, typename U>
-					avl_type_only(
-						NodeAllocator & alloc, Extract & e, KeyCompare & kc,
-						const kerbal::assign::assign_list<U> & ilist
-					);
-
-					template <typename NodeAllocator, typename Extract, typename KeyCompare>
-					avl_type_only(
-						kerbal::container::unique_tag_t unique_tag,
-						NodeAllocator & alloc, Extract & e, KeyCompare & kc,
-						const kerbal::assign::assign_list<void> & ilist
-					);
-
-					template <typename NodeAllocator, typename Extract, typename KeyCompare, typename U>
-					avl_type_only(
-						kerbal::container::unique_tag_t unique_tag,
-						NodeAllocator & alloc, Extract & e, KeyCompare & kc,
-						const kerbal::assign::assign_list<U> & ilist
-					);
-
-#			endif
-
 
 				protected:
 					template <typename UnaryOperation, typename NodeAllocator>
@@ -406,6 +344,70 @@ namespace kerbal
 
 #			endif
 
+
+					template <typename NodeAllocator, typename Extract, typename KeyCompare, typename InputIterator>
+					KERBAL_CONSTEXPR20
+					avl_type_only(
+						NodeAllocator & alloc, Extract & e, KeyCompare & kc,
+						InputIterator first, InputIterator last
+					);
+
+					template <typename NodeAllocator, typename Extract, typename KeyCompare, typename InputIterator>
+					KERBAL_CONSTEXPR20
+					avl_type_only(
+						kerbal::container::unique_tag_t,
+						NodeAllocator & alloc, Extract & e, KeyCompare & kc,
+						InputIterator first, InputIterator last
+					);
+
+#			if __cplusplus >= 201103L
+
+					template <typename NodeAllocator, typename Extract, typename KeyCompare>
+					KERBAL_CONSTEXPR20
+					avl_type_only(
+						NodeAllocator & alloc, Extract & e, KeyCompare & kc,
+						std::initializer_list<value_type> ilist
+					);
+
+					template <typename NodeAllocator, typename Extract, typename KeyCompare>
+					KERBAL_CONSTEXPR20
+					avl_type_only(
+						kerbal::container::unique_tag_t unique_tag,
+						NodeAllocator & alloc, Extract & e, KeyCompare & kc,
+						std::initializer_list<value_type> ilist
+					);
+
+#			else
+
+					template <typename NodeAllocator, typename Extract, typename KeyCompare>
+					avl_type_only(
+						NodeAllocator & alloc, Extract & e, KeyCompare & kc,
+						const kerbal::assign::assign_list<void> & ilist
+					);
+
+					template <typename NodeAllocator, typename Extract, typename KeyCompare, typename U>
+					avl_type_only(
+						NodeAllocator & alloc, Extract & e, KeyCompare & kc,
+						const kerbal::assign::assign_list<U> & ilist
+					);
+
+					template <typename NodeAllocator, typename Extract, typename KeyCompare>
+					avl_type_only(
+						kerbal::container::unique_tag_t unique_tag,
+						NodeAllocator & alloc, Extract & e, KeyCompare & kc,
+						const kerbal::assign::assign_list<void> & ilist
+					);
+
+					template <typename NodeAllocator, typename Extract, typename KeyCompare, typename U>
+					avl_type_only(
+						kerbal::container::unique_tag_t unique_tag,
+						NodeAllocator & alloc, Extract & e, KeyCompare & kc,
+						const kerbal::assign::assign_list<U> & ilist
+					);
+
+#			endif
+
+
 					template <typename NodeAllocator>
 					KERBAL_CONSTEXPR14
 					void k_destroy_using_allocator(NodeAllocator & alloc) KERBAL_NOEXCEPT;
@@ -413,97 +415,6 @@ namespace kerbal
 
 				//===================
 				// assign
-
-				private:
-
-					template <typename NodeAllocator>
-					KERBAL_CONSTEXPR20
-					static void k_assign_destroy_n(NodeAllocator & alloc, node_base * start, size_type size, head_node * head);
-
-				public:
-
-					template <typename NodeAllocator, typename Extract, typename KeyCompare, typename InputIterator>
-					KERBAL_CONSTEXPR20
-					void k_assign_using_allocator(
-						NodeAllocator & alloc, Extract & e, KeyCompare & kc,
-						InputIterator first, InputIterator last
-					);
-
-					template <typename NodeAllocator, typename Extract, typename KeyCompare, typename InputIterator>
-					KERBAL_CONSTEXPR20
-					void k_assign_unique_using_allocator(
-						NodeAllocator & alloc, Extract & e, KeyCompare & kc,
-						InputIterator first, InputIterator last
-					);
-
-#		if __cplusplus >= 201103L
-
-					template <typename NodeAllocator, typename Extract, typename KeyCompare>
-					KERBAL_CONSTEXPR20
-					void k_assign_using_allocator(
-						NodeAllocator & alloc, Extract & e, KeyCompare & kc,
-						std::initializer_list<value_type> ilist
-					)
-					{
-						this->k_assign_using_allocator(alloc, e, kc, ilist.begin(), ilist.end());
-					}
-
-					template <typename NodeAllocator, typename Extract, typename KeyCompare>
-					KERBAL_CONSTEXPR20
-					void k_assign_unique_using_allocator(
-						NodeAllocator & alloc, Extract & e, KeyCompare & kc,
-						std::initializer_list<value_type> ilist
-					)
-					{
-						this->k_assign_unique_using_allocator(alloc, e, kc, ilist.begin(), ilist.end());
-					}
-
-#		else
-
-					template <typename NodeAllocator, typename Extract, typename KeyCompare>
-					void k_assign_using_allocator(
-						NodeAllocator & alloc, Extract & e, KeyCompare & kc,
-						const kerbal::assign::assign_list<void> & ilist
-					)
-					{
-						this->k_clear_using_allocator(alloc);
-					}
-
-					template <typename NodeAllocator, typename Extract, typename KeyCompare, typename U>
-					void k_assign_using_allocator(
-						NodeAllocator & alloc, Extract & e, KeyCompare & kc,
-						const kerbal::assign::assign_list<U> & ilist
-					)
-					{
-						this->k_assign_using_allocator(alloc, e, kc, ilist.cbegin(), ilist.cend());
-					}
-
-					template <typename NodeAllocator, typename Extract, typename KeyCompare>
-					void k_assign_unique_using_allocator(
-						NodeAllocator & alloc, Extract & e, KeyCompare & kc,
-						const kerbal::assign::assign_list<void> & ilist
-					)
-					{
-						this->k_clear_using_allocator(alloc);
-					}
-
-					template <typename NodeAllocator, typename Extract, typename KeyCompare, typename U>
-					void k_assign_unique_using_allocator(
-						NodeAllocator & alloc, Extract & e, KeyCompare & kc,
-						const kerbal::assign::assign_list<U> & ilist
-					)
-					{
-						this->k_assign_unique_using_allocator(alloc, e, kc, ilist.cbegin(), ilist.cend());
-					}
-
-#		endif
-
-					template <typename NodeAllocator, typename Extract, typename KeyCompare, typename InputIterator>
-					KERBAL_CONSTEXPR20
-					void k_assign_sorted_using_allocator(
-						NodeAllocator & alloc, Extract & e, KeyCompare & kc,
-						InputIterator first, InputIterator last
-					);
 
 				private:
 
@@ -610,6 +521,97 @@ namespace kerbal
 					;
 
 #			endif
+
+				private:
+
+					template <typename NodeAllocator>
+					KERBAL_CONSTEXPR20
+					static void k_assign_destroy_n(NodeAllocator & alloc, node_base * start, size_type size, head_node * head);
+
+				public:
+
+					template <typename NodeAllocator, typename Extract, typename KeyCompare, typename InputIterator>
+					KERBAL_CONSTEXPR20
+					void k_assign_using_allocator(
+						NodeAllocator & alloc, Extract & e, KeyCompare & kc,
+						InputIterator first, InputIterator last
+					);
+
+					template <typename NodeAllocator, typename Extract, typename KeyCompare, typename InputIterator>
+					KERBAL_CONSTEXPR20
+					void k_assign_unique_using_allocator(
+						NodeAllocator & alloc, Extract & e, KeyCompare & kc,
+						InputIterator first, InputIterator last
+					);
+
+#			if __cplusplus >= 201103L
+
+					template <typename NodeAllocator, typename Extract, typename KeyCompare>
+					KERBAL_CONSTEXPR20
+					void k_assign_using_allocator(
+						NodeAllocator & alloc, Extract & e, KeyCompare & kc,
+						std::initializer_list<value_type> ilist
+					)
+					{
+						this->k_assign_using_allocator(alloc, e, kc, ilist.begin(), ilist.end());
+					}
+
+					template <typename NodeAllocator, typename Extract, typename KeyCompare>
+					KERBAL_CONSTEXPR20
+					void k_assign_unique_using_allocator(
+						NodeAllocator & alloc, Extract & e, KeyCompare & kc,
+						std::initializer_list<value_type> ilist
+					)
+					{
+						this->k_assign_unique_using_allocator(alloc, e, kc, ilist.begin(), ilist.end());
+					}
+
+#			else
+
+					template <typename NodeAllocator, typename Extract, typename KeyCompare>
+					void k_assign_using_allocator(
+						NodeAllocator & alloc, Extract & e, KeyCompare & kc,
+						const kerbal::assign::assign_list<void> & ilist
+					)
+					{
+						this->k_clear_using_allocator(alloc);
+					}
+
+					template <typename NodeAllocator, typename Extract, typename KeyCompare, typename U>
+					void k_assign_using_allocator(
+						NodeAllocator & alloc, Extract & e, KeyCompare & kc,
+						const kerbal::assign::assign_list<U> & ilist
+					)
+					{
+						this->k_assign_using_allocator(alloc, e, kc, ilist.cbegin(), ilist.cend());
+					}
+
+					template <typename NodeAllocator, typename Extract, typename KeyCompare>
+					void k_assign_unique_using_allocator(
+						NodeAllocator & alloc, Extract & e, KeyCompare & kc,
+						const kerbal::assign::assign_list<void> & ilist
+					)
+					{
+						this->k_clear_using_allocator(alloc);
+					}
+
+					template <typename NodeAllocator, typename Extract, typename KeyCompare, typename U>
+					void k_assign_unique_using_allocator(
+						NodeAllocator & alloc, Extract & e, KeyCompare & kc,
+						const kerbal::assign::assign_list<U> & ilist
+					)
+					{
+						this->k_assign_unique_using_allocator(alloc, e, kc, ilist.cbegin(), ilist.cend());
+					}
+
+#			endif
+
+					template <typename NodeAllocator, typename Extract, typename KeyCompare, typename InputIterator>
+					KERBAL_CONSTEXPR20
+					void k_assign_sorted_using_allocator(
+						NodeAllocator & alloc, Extract & e, KeyCompare & kc,
+						InputIterator first, InputIterator last
+					);
 
 
 				//===================

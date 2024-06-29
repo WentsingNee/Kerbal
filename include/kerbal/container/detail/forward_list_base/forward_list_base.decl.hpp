@@ -67,15 +67,19 @@ namespace kerbal
 				//===================
 				// construct/copy/destroy
 
-#			if __cplusplus < 201103L
+#			if __cplusplus >= 201103L
+
+					fl_type_unrelated() = default;
+
+#			else
 
 					fl_type_unrelated() KERBAL_NOEXCEPT
 					{
 					}
 
-#			else
+#			endif
 
-					fl_type_unrelated() = default;
+#			if __cplusplus >= 201103L
 
 					// pre-cond: fl_type_unrelated manage same type
 					KERBAL_CONSTEXPR14
@@ -383,23 +387,6 @@ namespace kerbal
 				//===================
 				// assign
 
-					template <typename NodeAllocator>
-					KERBAL_CONSTEXPR20
-					void k_assign_using_allocator(
-						NodeAllocator & alloc,
-						size_type count, const_reference val
-					);
-
-					template <typename NodeAllocator, typename InputIterator>
-					KERBAL_CONSTEXPR20
-					typename kerbal::type_traits::enable_if<
-						kerbal::iterator::is_input_compatible_iterator<InputIterator>::value
-					>::type
-					k_assign_using_allocator(
-						NodeAllocator & alloc,
-						InputIterator first, InputIterator last
-					);
-
 				private:
 
 					typedef kerbal::type_traits::integral_constant<int, 0> CPYASS_VER_NOT_PROPAGATE;
@@ -508,6 +495,32 @@ namespace kerbal
 
 #			endif
 
+					template <typename NodeAllocator>
+					KERBAL_CONSTEXPR20
+					void k_assign_using_allocator(
+						NodeAllocator & alloc,
+						size_type count, const_reference val
+					);
+
+					template <typename NodeAllocator, typename InputIterator>
+					KERBAL_CONSTEXPR20
+					typename kerbal::type_traits::enable_if<
+						kerbal::iterator::is_input_compatible_iterator<InputIterator>::value
+					>::type
+					k_assign_using_allocator(
+						NodeAllocator & alloc,
+						InputIterator first, InputIterator last
+					);
+
+
+				//===================
+				// element access
+
+					KERBAL_CONSTEXPR14
+					reference front() KERBAL_NOEXCEPT;
+
+					KERBAL_CONSTEXPR14
+					const_reference front() const KERBAL_NOEXCEPT;
 
 				//===================
 				// iterator
@@ -558,23 +571,7 @@ namespace kerbal
 					using fl_type_unrelated::size;
 
 				//===================
-				// element access
-
-					KERBAL_CONSTEXPR14
-					reference front() KERBAL_NOEXCEPT;
-
-					KERBAL_CONSTEXPR14
-					const_reference front() const KERBAL_NOEXCEPT;
-
-				//===================
 				// lookup
-
-					KERBAL_CONSTEXPR14
-					static
-					const_iterator k_find_before_impl(
-						const_iterator before_since, const_iterator end,
-						const_reference target
-					);
 
 					template <typename UnaryPredict>
 					KERBAL_CONSTEXPR14
@@ -585,16 +582,11 @@ namespace kerbal
 					);
 
 					KERBAL_CONSTEXPR14
-					iterator find_before(
-						const_reference target,
-						const_iterator before_since
+					static
+					const_iterator k_find_before_impl(
+						const_iterator before_since, const_iterator end,
+						const_reference target
 					);
-
-					KERBAL_CONSTEXPR14
-					const_iterator find_before(
-						const_reference target,
-						const_iterator before_since
-					) const;
 
 					template <typename UnaryPredict>
 					KERBAL_CONSTEXPR14
@@ -610,12 +602,6 @@ namespace kerbal
 						const_iterator before_since
 					) const;
 
-					KERBAL_CONSTEXPR14
-					iterator find_before(const_reference target);
-
-					KERBAL_CONSTEXPR14
-					const_iterator find_before(const_reference target) const;
-
 					template <typename UnaryPredict>
 					KERBAL_CONSTEXPR14
 					iterator find_before_if(UnaryPredict predict);
@@ -624,101 +610,26 @@ namespace kerbal
 					KERBAL_CONSTEXPR14
 					const_iterator find_before_if(UnaryPredict predict) const;
 
+					KERBAL_CONSTEXPR14
+					iterator find_before(
+						const_reference target,
+						const_iterator before_since
+					);
+
+					KERBAL_CONSTEXPR14
+					const_iterator find_before(
+						const_reference target,
+						const_iterator before_since
+					) const;
+
+					KERBAL_CONSTEXPR14
+					iterator find_before(const_reference target);
+
+					KERBAL_CONSTEXPR14
+					const_iterator find_before(const_reference target) const;
+
 				//===================
 				// insert
-
-					template <typename NodeAllocator>
-					KERBAL_CONSTEXPR20
-					void k_push_front_using_allocator(NodeAllocator & alloc, const_reference val);
-
-#			if __cplusplus >= 201103L
-
-					template <typename NodeAllocator>
-					KERBAL_CONSTEXPR20
-					void k_push_front_using_allocator(NodeAllocator & alloc, rvalue_reference val);
-
-#			endif
-
-#			if __cplusplus >= 201103L
-
-					template <typename NodeAllocator, typename ... Args>
-					KERBAL_CONSTEXPR20
-					reference k_emplace_front_using_allocator(NodeAllocator & alloc, Args && ... args);
-
-#			else
-
-#				define EMPTY
-#				define LEFT_JOIN_COMMA(exp) , exp
-#				define TARGS_DECL(i) typename KERBAL_MACRO_CONCAT(Arg, i)
-#				define ARGS_DECL(i) const KERBAL_MACRO_CONCAT(Arg, i) & KERBAL_MACRO_CONCAT(arg, i)
-#				define FBODY(i) \
-					template < \
-						typename NodeAllocator \
-						KERBAL_OPT_PPEXPAND_WITH_COMMA_N(LEFT_JOIN_COMMA, EMPTY, TARGS_DECL, i) \
-					> \
-					reference \
-					k_emplace_front_using_allocator( \
-						NodeAllocator & alloc \
-						KERBAL_OPT_PPEXPAND_WITH_COMMA_N(LEFT_JOIN_COMMA, EMPTY, ARGS_DECL, i) \
-					); \
-
-					KERBAL_PPEXPAND_N(FBODY, KERBAL_PPEXPAND_EMPTY_SEPARATOR, 0)
-					KERBAL_PPEXPAND_N(FBODY, KERBAL_PPEXPAND_EMPTY_SEPARATOR, 20)
-
-#				undef EMPTY
-#				undef LEFT_JOIN_COMMA
-#				undef TARGS_DECL
-#				undef ARGS_DECL
-#				undef FBODY
-
-#			endif
-
-					template <typename NodeAllocator>
-					KERBAL_CONSTEXPR20
-					static
-					iterator
-					k_insert_after_using_allocator(
-						NodeAllocator & alloc,
-						const_iterator before_pos,
-						const_reference val
-					);
-
-					template <typename NodeAllocator>
-					KERBAL_CONSTEXPR20
-					static
-					iterator
-					k_insert_after_using_allocator(
-						NodeAllocator & alloc,
-						const_iterator before_pos,
-						size_type n, const_reference val
-					);
-
-					template <typename NodeAllocator, typename InputIterator>
-					KERBAL_CONSTEXPR20
-					static
-					typename kerbal::type_traits::enable_if<
-						kerbal::iterator::is_input_compatible_iterator<InputIterator>::value,
-						iterator
-					>::type
-					k_insert_after_using_allocator(
-						NodeAllocator & alloc,
-						const_iterator before_pos,
-						InputIterator first, InputIterator last
-					);
-
-#			if __cplusplus >= 201103L
-
-					template <typename NodeAllocator>
-					KERBAL_CONSTEXPR20
-					static
-					iterator
-					k_insert_after_using_allocator(
-						NodeAllocator & alloc,
-						const_iterator before_pos,
-						rvalue_reference val
-					);
-
-#			endif
 
 #			if __cplusplus >= 201103L
 
@@ -762,12 +673,101 @@ namespace kerbal
 
 #			endif
 
-				//===================
-				// erase
+					template <typename NodeAllocator>
+					KERBAL_CONSTEXPR20
+					static
+					iterator
+					k_insert_after_using_allocator(
+						NodeAllocator & alloc,
+						const_iterator before_pos,
+						const_reference val
+					);
+
+#			if __cplusplus >= 201103L
 
 					template <typename NodeAllocator>
 					KERBAL_CONSTEXPR20
-					void k_pop_front_using_allocator(NodeAllocator & alloc);
+					static
+					iterator
+					k_insert_after_using_allocator(
+						NodeAllocator & alloc,
+						const_iterator before_pos,
+						rvalue_reference val
+					);
+
+#			endif
+
+					template <typename NodeAllocator>
+					KERBAL_CONSTEXPR20
+					static
+					iterator
+					k_insert_after_using_allocator(
+						NodeAllocator & alloc,
+						const_iterator before_pos,
+						size_type n, const_reference val
+					);
+
+					template <typename NodeAllocator, typename InputIterator>
+					KERBAL_CONSTEXPR20
+					static
+					typename kerbal::type_traits::enable_if<
+						kerbal::iterator::is_input_compatible_iterator<InputIterator>::value,
+						iterator
+					>::type
+					k_insert_after_using_allocator(
+						NodeAllocator & alloc,
+						const_iterator before_pos,
+						InputIterator first, InputIterator last
+					);
+
+#			if __cplusplus >= 201103L
+
+					template <typename NodeAllocator, typename ... Args>
+					KERBAL_CONSTEXPR20
+					reference k_emplace_front_using_allocator(NodeAllocator & alloc, Args && ... args);
+
+#			else
+
+#				define EMPTY
+#				define LEFT_JOIN_COMMA(exp) , exp
+#				define TARGS_DECL(i) typename KERBAL_MACRO_CONCAT(Arg, i)
+#				define ARGS_DECL(i) const KERBAL_MACRO_CONCAT(Arg, i) & KERBAL_MACRO_CONCAT(arg, i)
+#				define FBODY(i) \
+					template < \
+						typename NodeAllocator \
+						KERBAL_OPT_PPEXPAND_WITH_COMMA_N(LEFT_JOIN_COMMA, EMPTY, TARGS_DECL, i) \
+					> \
+					reference \
+					k_emplace_front_using_allocator( \
+						NodeAllocator & alloc \
+						KERBAL_OPT_PPEXPAND_WITH_COMMA_N(LEFT_JOIN_COMMA, EMPTY, ARGS_DECL, i) \
+					); \
+
+					KERBAL_PPEXPAND_N(FBODY, KERBAL_PPEXPAND_EMPTY_SEPARATOR, 0)
+					KERBAL_PPEXPAND_N(FBODY, KERBAL_PPEXPAND_EMPTY_SEPARATOR, 20)
+
+#				undef EMPTY
+#				undef LEFT_JOIN_COMMA
+#				undef TARGS_DECL
+#				undef ARGS_DECL
+#				undef FBODY
+
+#			endif
+
+					template <typename NodeAllocator>
+					KERBAL_CONSTEXPR20
+					void k_push_front_using_allocator(NodeAllocator & alloc, const_reference val);
+
+#			if __cplusplus >= 201103L
+
+					template <typename NodeAllocator>
+					KERBAL_CONSTEXPR20
+					void k_push_front_using_allocator(NodeAllocator & alloc, rvalue_reference val);
+
+#			endif
+
+				//===================
+				// erase
 
 					template <typename NodeAllocator>
 					KERBAL_CONSTEXPR20
@@ -786,6 +786,10 @@ namespace kerbal
 						NodeAllocator & alloc,
 						const_iterator before_first, const_iterator last
 					);
+
+					template <typename NodeAllocator>
+					KERBAL_CONSTEXPR20
+					void k_pop_front_using_allocator(NodeAllocator & alloc);
 
 					template <typename NodeAllocator>
 					KERBAL_CONSTEXPR20
@@ -986,6 +990,14 @@ namespace kerbal
 						BinaryPredict equal_to
 					);
 
+					template <typename NodeAllocator, typename BinaryPredict>
+					KERBAL_CONSTEXPR20
+					size_type
+					k_unique_using_allocator(
+						NodeAllocator & alloc,
+						BinaryPredict equal_to
+					);
+
 					template <typename NodeAllocator>
 					KERBAL_CONSTEXPR20
 					static
@@ -993,14 +1005,6 @@ namespace kerbal
 					k_unique_using_allocator(
 						NodeAllocator & alloc,
 						const_iterator first, const_iterator last
-					);
-
-					template <typename NodeAllocator, typename BinaryPredict>
-					KERBAL_CONSTEXPR20
-					size_type
-					k_unique_using_allocator(
-						NodeAllocator & alloc,
-						BinaryPredict equal_to
 					);
 
 					template <typename NodeAllocator>

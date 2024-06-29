@@ -104,6 +104,9 @@ namespace kerbal
 
 			public:
 
+			//===================
+			// construct/copy/destroy
+
 #		if __cplusplus >= 201103L
 
 				KERBAL_CONSTEXPR20
@@ -125,6 +128,23 @@ namespace kerbal
 
 				KERBAL_CONSTEXPR20
 				avl_map(const KeyCompare & kc, const Allocator & alloc);
+
+
+				KERBAL_CONSTEXPR20
+				avl_map(const avl_map & src);
+
+				KERBAL_CONSTEXPR20
+				avl_map(const avl_map & src, const Allocator & alloc);
+
+#		if __cplusplus >= 201103L
+
+				KERBAL_CONSTEXPR20
+				avl_map(avl_map && src);
+
+				KERBAL_CONSTEXPR20
+				avl_map(avl_map && src, const Allocator & alloc);
+
+#		endif
 
 
 				template <typename InputIterator>
@@ -207,22 +227,6 @@ namespace kerbal
 
 #		endif
 
-				KERBAL_CONSTEXPR20
-				avl_map(const avl_map & src);
-
-				KERBAL_CONSTEXPR20
-				avl_map(const avl_map & src, const Allocator & alloc);
-
-#		if __cplusplus >= 201103L
-
-				KERBAL_CONSTEXPR20
-				avl_map(avl_map && src);
-
-				KERBAL_CONSTEXPR20
-				avl_map(avl_map && src, const Allocator & alloc);
-
-#		endif
-
 
 			//===================
 			// assign
@@ -230,13 +234,30 @@ namespace kerbal
 				KERBAL_CONSTEXPR20
 				avl_map & operator=(const avl_map & src);
 
-				KERBAL_CONSTEXPR20
-				void assign(const avl_map & src);
-
 #		if __cplusplus >= 201103L
 
 				KERBAL_CONSTEXPR20
 				avl_map & operator=(avl_map && src);
+
+#		endif
+
+#		if __cplusplus >= 201103L
+
+				KERBAL_CONSTEXPR20
+				avl_map & operator=(std::initializer_list<value_type> ilist);
+
+#		else
+
+				template <typename U>
+				avl_map & operator=(const kerbal::assign::assign_list<U> & ilist);
+
+#		endif
+
+
+				KERBAL_CONSTEXPR20
+				void assign(const avl_map & src);
+
+#		if __cplusplus >= 201103L
 
 				KERBAL_CONSTEXPR20
 				void assign(avl_map && src);
@@ -250,20 +271,27 @@ namespace kerbal
 #		if __cplusplus >= 201103L
 
 				KERBAL_CONSTEXPR20
-				avl_map & operator=(std::initializer_list<value_type> ilist);
-
-				KERBAL_CONSTEXPR20
 				void assign(std::initializer_list<value_type> ilist);
 
 #		else
 
 				template <typename U>
-				avl_map & operator=(const kerbal::assign::assign_list<U> & ilist);
-
-				template <typename U>
 				void assign(const kerbal::assign::assign_list<U> & ilist);
 
 #		endif
+
+
+			//===================
+			// element access
+
+				KERBAL_CONSTEXPR20
+				mapped_type & at(const key_type & key);
+
+				KERBAL_CONSTEXPR20
+				const mapped_type & at(const key_type & key) const;
+
+				KERBAL_CONSTEXPR20
+				mapped_type & operator[](const key_type & key);
 
 
 			//===================
@@ -439,17 +467,6 @@ namespace kerbal
 
 #		endif
 
-			//===================
-			// element access
-
-				KERBAL_CONSTEXPR20
-				mapped_type & at(const key_type & key);
-
-				KERBAL_CONSTEXPR20
-				const mapped_type & at(const key_type & key) const;
-
-				KERBAL_CONSTEXPR20
-				mapped_type & operator[](const key_type & key);
 
 			//===================
 			// erase

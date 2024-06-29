@@ -75,6 +75,44 @@ namespace kerbal
 		{
 		}
 
+
+		template <typename T, typename KeyCompare, typename Allocator>
+		KERBAL_CONSTEXPR20
+		avl_set<T, KeyCompare, Allocator>::
+		avl_set(const avl_set & src) :
+			avl_ordered(static_cast<const avl_ordered &>(src))
+		{
+		}
+
+		template <typename T, typename KeyCompare, typename Allocator>
+		KERBAL_CONSTEXPR20
+		avl_set<T, KeyCompare, Allocator>::
+		avl_set(const avl_set & src, const Allocator & alloc) :
+			avl_ordered(static_cast<const avl_ordered &>(src), alloc)
+		{
+		}
+
+#	if __cplusplus >= 201103L
+
+		template <typename T, typename KeyCompare, typename Allocator>
+		KERBAL_CONSTEXPR20
+		avl_set<T, KeyCompare, Allocator>::
+		avl_set(avl_set && src) :
+			avl_ordered(static_cast<avl_ordered &&>(src))
+		{
+		}
+
+		template <typename T, typename KeyCompare, typename Allocator>
+		KERBAL_CONSTEXPR20
+		avl_set<T, KeyCompare, Allocator>::
+		avl_set(avl_set && src, const Allocator & alloc) :
+			avl_ordered(static_cast<avl_ordered &&>(src), alloc)
+		{
+		}
+
+#	endif
+
+
 		template <typename T, typename KeyCompare, typename Allocator>
 		template <typename InputIterator>
 		KERBAL_CONSTEXPR20
@@ -214,44 +252,6 @@ namespace kerbal
 
 #	endif
 
-		template <typename T, typename KeyCompare, typename Allocator>
-		KERBAL_CONSTEXPR20
-		avl_set<T, KeyCompare, Allocator>::
-		avl_set(const avl_set & src) :
-			avl_ordered(static_cast<const avl_ordered &>(src))
-		{
-		}
-
-		template <typename T, typename KeyCompare, typename Allocator>
-		KERBAL_CONSTEXPR20
-		avl_set<T, KeyCompare, Allocator>::
-		avl_set(const avl_set & src, const Allocator & alloc) :
-			avl_ordered(static_cast<const avl_ordered &>(src), alloc)
-		{
-		}
-
-#	if __cplusplus >= 201103L
-
-		template <typename T, typename KeyCompare, typename Allocator>
-		KERBAL_CONSTEXPR20
-		avl_set<T, KeyCompare, Allocator>::
-		avl_set(avl_set && src) :
-			avl_ordered(static_cast<avl_ordered &&>(src))
-		{
-		}
-
-		template <typename T, typename KeyCompare, typename Allocator>
-		KERBAL_CONSTEXPR20
-		avl_set<T, KeyCompare, Allocator>::
-		avl_set(avl_set && src, const Allocator & alloc) :
-			avl_ordered(static_cast<avl_ordered &&>(src), alloc)
-		{
-		}
-
-
-#	endif
-
-
 
 		//===================
 		// assign
@@ -266,15 +266,6 @@ namespace kerbal
 			return *this;
 		}
 
-		template <typename T, typename KeyCompare, typename Allocator>
-		KERBAL_CONSTEXPR20
-		void
-		avl_set<T, KeyCompare, Allocator>::
-		assign(const avl_set & src)
-		{
-			this->avl_ordered::assign(static_cast<const avl_ordered &>(src));
-		}
-
 #	if __cplusplus >= 201103L
 
 		template <typename T, typename KeyCompare, typename Allocator>
@@ -286,6 +277,46 @@ namespace kerbal
 			this->assign(kerbal::compatibility::move(src));
 			return *this;
 		}
+
+#	endif
+
+#	if __cplusplus >= 201103L
+
+		template <typename T, typename KeyCompare, typename Allocator>
+		KERBAL_CONSTEXPR20
+		avl_set<T, KeyCompare, Allocator> &
+		avl_set<T, KeyCompare, Allocator>::
+		operator=(std::initializer_list<value_type> ilist)
+		{
+			this->assign(ilist);
+			return *this;
+		}
+
+#	else
+
+		template <typename T, typename KeyCompare, typename Allocator>
+		template <typename U>
+		avl_set<T, KeyCompare, Allocator> &
+		avl_set<T, KeyCompare, Allocator>::
+		operator=(const kerbal::assign::assign_list<U> & ilist)
+		{
+			this->assign(ilist);
+			return *this;
+		}
+
+#	endif
+
+
+		template <typename T, typename KeyCompare, typename Allocator>
+		KERBAL_CONSTEXPR20
+		void
+		avl_set<T, KeyCompare, Allocator>::
+		assign(const avl_set & src)
+		{
+			this->avl_ordered::assign(static_cast<const avl_ordered &>(src));
+		}
+
+#	if __cplusplus >= 201103L
 
 		template <typename T, typename KeyCompare, typename Allocator>
 		KERBAL_CONSTEXPR20
@@ -308,18 +339,7 @@ namespace kerbal
 			this->avl_ordered::assign_unique(first, last);
 		}
 
-
 #	if __cplusplus >= 201103L
-
-		template <typename T, typename KeyCompare, typename Allocator>
-		KERBAL_CONSTEXPR20
-		avl_set<T, KeyCompare, Allocator> &
-		avl_set<T, KeyCompare, Allocator>::
-		operator=(std::initializer_list<value_type> ilist)
-		{
-			this->assign(ilist);
-			return *this;
-		}
 
 		template <typename T, typename KeyCompare, typename Allocator>
 		KERBAL_CONSTEXPR20
@@ -334,16 +354,6 @@ namespace kerbal
 
 		template <typename T, typename KeyCompare, typename Allocator>
 		template <typename U>
-		avl_set<T, KeyCompare, Allocator> &
-		avl_set<T, KeyCompare, Allocator>::
-		operator=(const kerbal::assign::assign_list<U> & ilist)
-		{
-			this->assign(ilist);
-			return *this;
-		}
-
-		template <typename T, typename KeyCompare, typename Allocator>
-		template <typename U>
 		void
 		avl_set<T, KeyCompare, Allocator>::
 		assign(const kerbal::assign::assign_list<U> & ilist)
@@ -352,7 +362,6 @@ namespace kerbal
 		}
 
 #	endif
-
 
 
 		//===================

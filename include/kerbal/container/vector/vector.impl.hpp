@@ -71,70 +71,6 @@ namespace kerbal
 
 		template <typename T, typename Allocator>
 		KERBAL_CONSTEXPR20
-		vector<T, Allocator>::vector(size_type count) :
-			vector_allocator_overload(),
-			vector_type_only(this->alloc(), count)
-		{
-		}
-
-		template <typename T, typename Allocator>
-		KERBAL_CONSTEXPR20
-		vector<T, Allocator>::vector(size_type count, const Allocator & allocator) :
-			vector_allocator_overload(allocator),
-			vector_type_only(this->alloc(), count)
-		{
-		}
-
-		template <typename T, typename Allocator>
-		KERBAL_CONSTEXPR20
-		vector<T, Allocator>::vector(size_type count, const_reference value) :
-			vector_allocator_overload(),
-			vector_type_only(this->alloc(), count, value)
-		{
-		}
-
-		template <typename T, typename Allocator>
-		KERBAL_CONSTEXPR20
-		vector<T, Allocator>::vector(size_type count, const_reference value, const Allocator & allocator) :
-			vector_allocator_overload(allocator),
-			vector_type_only(this->alloc(), count, value)
-		{
-		}
-
-
-		template <typename T, typename Allocator>
-		template <typename InputIterator>
-		KERBAL_CONSTEXPR20
-		vector<T, Allocator>::vector(
-			InputIterator first, InputIterator last,
-			typename kerbal::type_traits::enable_if<
-				kerbal::iterator::is_input_compatible_iterator<InputIterator>::value,
-				int
-			>::type
-		) :
-			vector_allocator_overload(),
-			vector_type_only(this->alloc(), first, last)
-		{
-		}
-
-		template <typename T, typename Allocator>
-		template <typename InputIterator>
-		KERBAL_CONSTEXPR20
-		vector<T, Allocator>::vector(
-			InputIterator first, InputIterator last,
-			const Allocator & allocator,
-			typename kerbal::type_traits::enable_if<
-				kerbal::iterator::is_input_compatible_iterator<InputIterator>::value,
-				int
-			>::type
-		) :
-			vector_allocator_overload(allocator),
-			vector_type_only(this->alloc(), first, last)
-		{
-		}
-
-		template <typename T, typename Allocator>
-		KERBAL_CONSTEXPR20
 		vector<T, Allocator>::vector(const vector & src) :
 			vector_allocator_overload(src.alloc()),
 			vector_type_only(this->alloc(), src.cbegin().current, src.cend().current)
@@ -148,7 +84,6 @@ namespace kerbal
 			vector_type_only(this->alloc(), src.cbegin().current, src.cend().current)
 		{
 		}
-
 
 #	if __cplusplus >= 201103L
 
@@ -182,6 +117,68 @@ namespace kerbal
 
 #	endif
 
+		template <typename T, typename Allocator>
+		KERBAL_CONSTEXPR20
+		vector<T, Allocator>::vector(size_type count) :
+			vector_allocator_overload(),
+			vector_type_only(this->alloc(), count)
+		{
+		}
+
+		template <typename T, typename Allocator>
+		KERBAL_CONSTEXPR20
+		vector<T, Allocator>::vector(size_type count, const Allocator & allocator) :
+			vector_allocator_overload(allocator),
+			vector_type_only(this->alloc(), count)
+		{
+		}
+
+		template <typename T, typename Allocator>
+		KERBAL_CONSTEXPR20
+		vector<T, Allocator>::vector(size_type count, const_reference value) :
+			vector_allocator_overload(),
+			vector_type_only(this->alloc(), count, value)
+		{
+		}
+
+		template <typename T, typename Allocator>
+		KERBAL_CONSTEXPR20
+		vector<T, Allocator>::vector(size_type count, const_reference value, const Allocator & allocator) :
+			vector_allocator_overload(allocator),
+			vector_type_only(this->alloc(), count, value)
+		{
+		}
+
+		template <typename T, typename Allocator>
+		template <typename InputIterator>
+		KERBAL_CONSTEXPR20
+		vector<T, Allocator>::vector(
+			InputIterator first, InputIterator last,
+			typename kerbal::type_traits::enable_if<
+				kerbal::iterator::is_input_compatible_iterator<InputIterator>::value,
+				int
+			>::type
+		) :
+			vector_allocator_overload(),
+			vector_type_only(this->alloc(), first, last)
+		{
+		}
+
+		template <typename T, typename Allocator>
+		template <typename InputIterator>
+		KERBAL_CONSTEXPR20
+		vector<T, Allocator>::vector(
+			InputIterator first, InputIterator last,
+			const Allocator & allocator,
+			typename kerbal::type_traits::enable_if<
+				kerbal::iterator::is_input_compatible_iterator<InputIterator>::value,
+				int
+			>::type
+		) :
+			vector_allocator_overload(allocator),
+			vector_type_only(this->alloc(), first, last)
+		{
+		}
 
 #	if __cplusplus >= 201103L
 
@@ -233,15 +230,12 @@ namespace kerbal
 
 #	endif
 
-
-
 		template <typename T, typename Allocator>
 		KERBAL_CONSTEXPR20
 		vector<T, Allocator>::~vector()
 		{
 			vector_type_only::k_destroy_using_allocator(this->alloc());
 		}
-
 
 
 	//===================
@@ -256,7 +250,7 @@ namespace kerbal
 			return *this;
 		}
 
-#		if __cplusplus >= 201103L
+#	if __cplusplus >= 201103L
 
 		template <typename T, typename Allocator>
 		KERBAL_CONSTEXPR20
@@ -270,9 +264,9 @@ namespace kerbal
 			return *this;
 		}
 
-#		endif
+#	endif
 
-#		if __cplusplus >= 201103L
+#	if __cplusplus >= 201103L
 
 		template <typename T, typename Allocator>
 		KERBAL_CONSTEXPR20
@@ -283,7 +277,7 @@ namespace kerbal
 			return *this;
 		}
 
-#		else
+#	else
 
 		template <typename T, typename Allocator>
 		vector<T, Allocator> &
@@ -303,24 +297,6 @@ namespace kerbal
 		}
 
 #	endif
-
-		template <typename T, typename Allocator>
-		KERBAL_CONSTEXPR20
-		void vector<T, Allocator>::assign(size_type new_size, const_reference value)
-		{
-			vector_type_only::k_assign_using_allocator(this->alloc(), new_size, value);
-		}
-
-		template <typename T, typename Allocator>
-		template <typename InputIterator>
-		KERBAL_CONSTEXPR20
-		typename kerbal::type_traits::enable_if<
-			kerbal::iterator::is_input_compatible_iterator<InputIterator>::value
-		>::type
-		vector<T, Allocator>::assign(InputIterator first, InputIterator last)
-		{
-			vector_type_only::k_assign_using_allocator(this->alloc(), first, last);
-		}
 
 		template <typename T, typename Allocator>
 		KERBAL_CONSTEXPR20
@@ -351,6 +327,24 @@ namespace kerbal
 
 #	endif
 
+		template <typename T, typename Allocator>
+		KERBAL_CONSTEXPR20
+		void vector<T, Allocator>::assign(size_type new_size, const_reference value)
+		{
+			vector_type_only::k_assign_using_allocator(this->alloc(), new_size, value);
+		}
+
+		template <typename T, typename Allocator>
+		template <typename InputIterator>
+		KERBAL_CONSTEXPR20
+		typename kerbal::type_traits::enable_if<
+			kerbal::iterator::is_input_compatible_iterator<InputIterator>::value
+		>::type
+		vector<T, Allocator>::assign(InputIterator first, InputIterator last)
+		{
+			vector_type_only::k_assign_using_allocator(this->alloc(), first, last);
+		}
+
 #	if __cplusplus >= 201103L
 
 		template <typename T, typename Allocator>
@@ -376,7 +370,6 @@ namespace kerbal
 		}
 
 #	endif
-
 
 
 	//===================
@@ -544,8 +537,6 @@ namespace kerbal
 		}
 
 #	endif
-
-
 
 #	if __cplusplus >= 201103L
 

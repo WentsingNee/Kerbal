@@ -315,6 +315,48 @@ namespace kerbal
 			//===================
 			// modifiers
 
+#		if __cplusplus >= 201103L
+
+				template <typename ... Args>
+				KERBAL_CONSTEXPR20
+				void emplace(Args && ... args)
+				{
+					c.emplace_back(kerbal::utility::forward<Args>(args)...);
+					kerbal::algorithm::push_heap(c.begin(), c.end(), this->vc());
+				}
+
+#		else
+
+#			define EMPTY
+#			define REMAINF(exp) exp
+#			define LEFT_JOIN_COMMA(exp) , exp
+#			define THEAD_NOT_EMPTY(exp) template <exp>
+#			define TARGS_DECL(i) typename KERBAL_MACRO_CONCAT(Arg, i)
+#			define ARGS_DECL(i) const KERBAL_MACRO_CONCAT(Arg, i) & KERBAL_MACRO_CONCAT(arg, i)
+#			define ARGS_USE(i) KERBAL_MACRO_CONCAT(arg, i)
+#			define FBODY(i) \
+				KERBAL_OPT_PPEXPAND_WITH_COMMA_N(THEAD_NOT_EMPTY, EMPTY, TARGS_DECL, i) \
+				void emplace(KERBAL_OPT_PPEXPAND_WITH_COMMA_N(REMAINF, EMPTY, ARGS_DECL, i)) \
+				{ \
+					c.emplace_back(KERBAL_OPT_PPEXPAND_WITH_COMMA_N(REMAINF, EMPTY, ARGS_USE, i)); \
+					kerbal::algorithm::push_heap(c.begin(), c.end(), this->vc()); \
+				} \
+
+				KERBAL_PPEXPAND_N(FBODY, KERBAL_PPEXPAND_EMPTY_SEPARATOR, 0)
+				KERBAL_PPEXPAND_N(FBODY, KERBAL_PPEXPAND_EMPTY_SEPARATOR, 20)
+
+#			undef EMPTY
+#			undef REMAINF
+#			undef LEFT_JOIN_COMMA
+#			undef THEAD_NOT_EMPTY
+#			undef TARGS_DECL
+#			undef ARGS_DECL
+#			undef ARGS_USE
+#			undef FBODY
+
+#		endif
+
+
 				KERBAL_CONSTEXPR20
 				void push(const_reference val)
 				{
@@ -365,48 +407,6 @@ namespace kerbal
 				{
 					this->push(ilist.cbegin(), ilist.cend());
 				}
-
-#		endif
-
-
-#		if __cplusplus >= 201103L
-
-				template <typename ... Args>
-				KERBAL_CONSTEXPR20
-				void emplace(Args && ... args)
-				{
-					c.emplace_back(kerbal::utility::forward<Args>(args)...);
-					kerbal::algorithm::push_heap(c.begin(), c.end(), this->vc());
-				}
-
-#		else
-
-#			define EMPTY
-#			define REMAINF(exp) exp
-#			define LEFT_JOIN_COMMA(exp) , exp
-#			define THEAD_NOT_EMPTY(exp) template <exp>
-#			define TARGS_DECL(i) typename KERBAL_MACRO_CONCAT(Arg, i)
-#			define ARGS_DECL(i) const KERBAL_MACRO_CONCAT(Arg, i) & KERBAL_MACRO_CONCAT(arg, i)
-#			define ARGS_USE(i) KERBAL_MACRO_CONCAT(arg, i)
-#			define FBODY(i) \
-				KERBAL_OPT_PPEXPAND_WITH_COMMA_N(THEAD_NOT_EMPTY, EMPTY, TARGS_DECL, i) \
-				void emplace(KERBAL_OPT_PPEXPAND_WITH_COMMA_N(REMAINF, EMPTY, ARGS_DECL, i)) \
-				{ \
-					c.emplace_back(KERBAL_OPT_PPEXPAND_WITH_COMMA_N(REMAINF, EMPTY, ARGS_USE, i)); \
-					kerbal::algorithm::push_heap(c.begin(), c.end(), this->vc()); \
-				} \
-
-				KERBAL_PPEXPAND_N(FBODY, KERBAL_PPEXPAND_EMPTY_SEPARATOR, 0)
-				KERBAL_PPEXPAND_N(FBODY, KERBAL_PPEXPAND_EMPTY_SEPARATOR, 20)
-
-#			undef EMPTY
-#			undef REMAINF
-#			undef LEFT_JOIN_COMMA
-#			undef THEAD_NOT_EMPTY
-#			undef TARGS_DECL
-#			undef ARGS_DECL
-#			undef ARGS_USE
-#			undef FBODY
 
 #		endif
 

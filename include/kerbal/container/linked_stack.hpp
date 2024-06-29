@@ -59,6 +59,10 @@ namespace kerbal
 				Sequence c;
 
 			public:
+
+			//===================
+			// construct/copy/destroy
+
 				KERBAL_CONSTEXPR20
 				linked_stack() :
 					c()
@@ -71,6 +75,26 @@ namespace kerbal
 					c(alloc)
 				{
 				}
+
+
+			//===================
+			// element access
+
+				KERBAL_CONSTEXPR20
+				reference top()
+				{
+					return c.front();
+				}
+
+				KERBAL_CONSTEXPR20
+				const_reference top() const
+				{
+					return c.front();
+				}
+
+
+			//===================
+			// capacity
 
 				KERBAL_CONSTEXPR20
 				bool empty() const
@@ -90,33 +114,9 @@ namespace kerbal
 					return c.max_size();
 				}
 
-				KERBAL_CONSTEXPR20
-				reference top()
-				{
-					return c.front();
-				}
 
-				KERBAL_CONSTEXPR20
-				const_reference top() const
-				{
-					return c.front();
-				}
-
-				KERBAL_CONSTEXPR20
-				void push(const_reference val)
-				{
-					c.push_front(val);
-				}
-
-#		if __cplusplus >= 201103L
-
-				KERBAL_CONSTEXPR20
-				void push(rvalue_reference val)
-				{
-					c.push_front(kerbal::compatibility::move(val));
-				}
-
-#		endif
+			//===================
+			// insert
 
 #		if __cplusplus >= 201103L
 
@@ -156,6 +156,26 @@ namespace kerbal
 #		endif
 
 				KERBAL_CONSTEXPR20
+				void push(const_reference val)
+				{
+					c.push_front(val);
+				}
+
+#		if __cplusplus >= 201103L
+
+				KERBAL_CONSTEXPR20
+				void push(rvalue_reference val)
+				{
+					c.push_front(kerbal::compatibility::move(val));
+				}
+
+#		endif
+
+
+			//===================
+			// erase
+
+				KERBAL_CONSTEXPR20
 				void pop()
 				{
 					c.pop_front();
@@ -166,6 +186,10 @@ namespace kerbal
 				{
 					c.clear();
 				}
+
+
+			//===================
+			// operation
 
 				KERBAL_CONSTEXPR20
 				void swap(linked_stack & with)

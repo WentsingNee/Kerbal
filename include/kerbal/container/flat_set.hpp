@@ -123,10 +123,9 @@ namespace kerbal
 
 #		endif
 
-				void assign(const flat_set & src)
-				{
-					this->ordered.assign(src.ordered);
-				}
+
+			//===================
+			// assign
 
 				flat_set & operator=(const flat_set & src)
 				{
@@ -143,6 +142,11 @@ namespace kerbal
 				}
 
 #		endif
+
+				void assign(const flat_set & src)
+				{
+					this->ordered.assign(src.ordered);
+				}
 
 				void reserve(size_type new_cap)
 				{

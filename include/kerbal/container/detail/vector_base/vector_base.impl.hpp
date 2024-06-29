@@ -72,6 +72,129 @@ namespace kerbal
 			{
 			}
 
+#		if __cplusplus >= 201103L
+
+			template <typename T>
+			KERBAL_CONSTEXPR14
+			vector_type_only<T>::
+			vector_type_only(vector_type_only && src) KERBAL_NOEXCEPT :
+				k_buffer(src.k_buffer), k_capacity(src.k_capacity), k_size(src.k_size)
+			{
+				src.k_buffer = NULL;
+				src.k_size = 0;
+				src.k_capacity = 0;
+			}
+
+			// move construct using allocator, allocator is equal
+			template <typename T>
+			KERBAL_CONSTEXPR14
+			void
+			vector_type_only<T>::
+			k_move_cnstrct_ua_ae(vector_type_only && src) KERBAL_NOEXCEPT
+			{
+				this->k_buffer = src.k_buffer;
+				this->k_size = src.k_size;
+				this->k_capacity = src.k_capacity;
+				src.k_buffer = NULL;
+				src.k_size = 0;
+				src.k_capacity = 0;
+			}
+
+			// move construct using allocator, allocator is not equal
+			template <typename T>
+			template <typename Allocator>
+			KERBAL_CONSTEXPR20
+			void
+			vector_type_only<T>::
+			k_move_cnstrct_ua_ane(
+				Allocator & this_alloc,
+				vector_type_only && src
+			)
+			{
+				if (src.k_buffer != NULL) {
+					typedef kerbal::memory::allocator_traits<Allocator> allocator_traits;
+
+					this->k_capacity = src.k_size;
+					this->k_buffer = allocator_traits::allocate(this_alloc, this->k_capacity);
+#		if !KERBAL_HAS_EXCEPTIONS_SUPPORT
+					if (this->k_buffer == NULL) {
+						kerbal::utility::throw_this_exception_helper<kerbal::memory::bad_alloc>::throw_this_exception();
+					}
+#		endif
+
+#		if KERBAL_HAS_EXCEPTIONS_SUPPORT
+					try {
+#		endif
+						kerbal::memory::uninitialized_move_using_allocator(this_alloc, src.begin().current, src.end().current, this->k_buffer);
+#		if KERBAL_HAS_EXCEPTIONS_SUPPORT
+					} catch (...) {
+						allocator_traits::deallocate(this_alloc, this->k_buffer, this->k_capacity);
+						throw;
+					}
+#		endif
+					this->k_size = src.k_size;
+				} else {
+					this->k_buffer = NULL;
+					this->k_size = 0;
+					this->k_capacity = 0;
+				}
+			}
+
+			template <typename T>
+			template <typename Allocator>
+			KERBAL_CONSTEXPR20
+			void
+			vector_type_only<T>::
+			k_move_cnstrct_ua_helper(
+				Allocator & this_alloc,
+				Allocator && src_alloc, vector_type_only && src,
+				kerbal::type_traits::false_type /*is_always_equal*/
+			)
+			{
+				if (this_alloc != src_alloc) {
+					this->k_move_cnstrct_ua_ane(this_alloc, kerbal::compatibility::move(src));
+				} else {
+					this->k_move_cnstrct_ua_ae(kerbal::compatibility::move(src));
+				}
+			}
+
+			template <typename T>
+			template <typename Allocator>
+			KERBAL_CONSTEXPR14
+			void
+			vector_type_only<T>::
+			k_move_cnstrct_ua_helper(
+				Allocator & /*this_alloc*/,
+				Allocator && /*src_alloc*/, vector_type_only && src,
+				kerbal::type_traits::true_type /*is_always_equal*/
+			) KERBAL_NOEXCEPT
+			{
+				this->k_move_cnstrct_ua_ae(kerbal::compatibility::move(src));
+			}
+
+			template <typename T>
+			template <typename Allocator>
+			KERBAL_CONSTEXPR14
+			vector_type_only<T>::
+			vector_type_only(
+				Allocator & this_alloc,
+				Allocator && src_alloc, vector_type_only && src
+			)
+				KERBAL_CONDITIONAL_NOEXCEPT(is_nothrow_move_constructible_using_allocator<Allocator>::value)
+			{
+				typedef kerbal::memory::allocator_traits<Allocator> allocator_traits;
+				typedef typename allocator_traits::is_always_equal is_always_equal;
+
+				this->k_move_cnstrct_ua_helper(
+					this_alloc,
+					kerbal::compatibility::move(src_alloc),
+					kerbal::compatibility::move(src),
+					is_always_equal()
+				);
+			}
+
+#		endif
+
 			template <typename T>
 			template <typename Allocator>
 			KERBAL_CONSTEXPR20
@@ -238,129 +361,6 @@ namespace kerbal
 				this->k_range_copy_cnstrct_impl(alloc, first, last, kerbal::iterator::iterator_category(first));
 			}
 
-#		if __cplusplus >= 201103L
-
-			template <typename T>
-			KERBAL_CONSTEXPR14
-			vector_type_only<T>::
-			vector_type_only(vector_type_only && src) KERBAL_NOEXCEPT :
-				k_buffer(src.k_buffer), k_capacity(src.k_capacity), k_size(src.k_size)
-			{
-				src.k_buffer = NULL;
-				src.k_size = 0;
-				src.k_capacity = 0;
-			}
-
-			// move construct using allocator, allocator is equal
-			template <typename T>
-			KERBAL_CONSTEXPR14
-			void
-			vector_type_only<T>::
-			k_move_cnstrct_ua_ae(vector_type_only && src) KERBAL_NOEXCEPT
-			{
-				this->k_buffer = src.k_buffer;
-				this->k_size = src.k_size;
-				this->k_capacity = src.k_capacity;
-				src.k_buffer = NULL;
-				src.k_size = 0;
-				src.k_capacity = 0;
-			}
-
-			// move construct using allocator, allocator is not equal
-			template <typename T>
-			template <typename Allocator>
-			KERBAL_CONSTEXPR20
-			void
-			vector_type_only<T>::
-			k_move_cnstrct_ua_ane(
-				Allocator & this_alloc,
-				vector_type_only && src
-			)
-			{
-				if (src.k_buffer != NULL) {
-					typedef kerbal::memory::allocator_traits<Allocator> allocator_traits;
-
-					this->k_capacity = src.k_size;
-					this->k_buffer = allocator_traits::allocate(this_alloc, this->k_capacity);
-#		if !KERBAL_HAS_EXCEPTIONS_SUPPORT
-					if (this->k_buffer == NULL) {
-						kerbal::utility::throw_this_exception_helper<kerbal::memory::bad_alloc>::throw_this_exception();
-					}
-#		endif
-
-#		if KERBAL_HAS_EXCEPTIONS_SUPPORT
-					try {
-#		endif
-						kerbal::memory::uninitialized_move_using_allocator(this_alloc, src.begin().current, src.end().current, this->k_buffer);
-#		if KERBAL_HAS_EXCEPTIONS_SUPPORT
-					} catch (...) {
-						allocator_traits::deallocate(this_alloc, this->k_buffer, this->k_capacity);
-						throw;
-					}
-#		endif
-					this->k_size = src.k_size;
-				} else {
-					this->k_buffer = NULL;
-					this->k_size = 0;
-					this->k_capacity = 0;
-				}
-			}
-
-			template <typename T>
-			template <typename Allocator>
-			KERBAL_CONSTEXPR20
-			void
-			vector_type_only<T>::
-			k_move_cnstrct_ua_helper(
-				Allocator & this_alloc,
-				Allocator && src_alloc, vector_type_only && src,
-				kerbal::type_traits::false_type /*is_always_equal*/
-			)
-			{
-				if (this_alloc != src_alloc) {
-					this->k_move_cnstrct_ua_ane(this_alloc, kerbal::compatibility::move(src));
-				} else {
-					this->k_move_cnstrct_ua_ae(kerbal::compatibility::move(src));
-				}
-			}
-
-			template <typename T>
-			template <typename Allocator>
-			KERBAL_CONSTEXPR14
-			void
-			vector_type_only<T>::
-			k_move_cnstrct_ua_helper(
-				Allocator & /*this_alloc*/,
-				Allocator && /*src_alloc*/, vector_type_only && src,
-				kerbal::type_traits::true_type /*is_always_equal*/
-			) KERBAL_NOEXCEPT
-			{
-				this->k_move_cnstrct_ua_ae(kerbal::compatibility::move(src));
-			}
-
-			template <typename T>
-			template <typename Allocator>
-			KERBAL_CONSTEXPR14
-			vector_type_only<T>::
-			vector_type_only(
-				Allocator & this_alloc,
-				Allocator && src_alloc, vector_type_only && src
-			)
-				KERBAL_CONDITIONAL_NOEXCEPT(is_nothrow_move_constructible_using_allocator<Allocator>::value)
-			{
-				typedef kerbal::memory::allocator_traits<Allocator> allocator_traits;
-				typedef typename allocator_traits::is_always_equal is_always_equal;
-
-				this->k_move_cnstrct_ua_helper(
-					this_alloc,
-					kerbal::compatibility::move(src_alloc),
-					kerbal::compatibility::move(src),
-					is_always_equal()
-				);
-			}
-
-#		endif
-
 			template <typename T>
 			template <typename Allocator>
 			KERBAL_CONSTEXPR20
@@ -377,182 +377,8 @@ namespace kerbal
 			}
 
 
-
 		//===================
 		// assign
-
-			template <typename T>
-			template <typename Allocator>
-			KERBAL_CONSTEXPR20
-			void
-			vector_type_only<T>::
-			k_assign_using_allocator(
-				Allocator & alloc,
-				size_type new_size, const_reference value
-			)
-			{
-				typedef kerbal::memory::allocator_traits<Allocator> allocator_traits;
-
-				size_type ori_size = this->k_size;
-				if (new_size <= ori_size) { // also suitable for new_size == 0
-					/*
-					 * a a a a a a x x
-					 * b b b x x x x x
-					 */
-					kerbal::algorithm::fill(this->begin().current, this->nth(new_size).current, value);
-					kerbal::memory::reverse_destroy_using_allocator(alloc, this->nth(new_size).current, this->end().current);
-					this->k_size = new_size;
-				} else { // new_size > ori_size
-					/*
-					 * a a a x x x x x
-					 * b b b b b b x x
-					 */
-					if (new_size <= this->k_capacity) {
-						pointer ori_end(this->end().current);
-						kerbal::algorithm::fill(this->begin().current, ori_end, value);
-						kerbal::memory::uninitialized_fill_using_allocator(alloc, ori_end, this->nth(new_size).current, value);
-						this->k_size = new_size;
-					} else { // new_size > this->capacity
-						size_type new_capacity = new_size;
-						pointer new_buffer = allocator_traits::allocate(alloc, new_capacity);
-#		if !KERBAL_HAS_EXCEPTIONS_SUPPORT
-						if (new_buffer == NULL) {
-							kerbal::utility::throw_this_exception_helper<kerbal::memory::bad_alloc>::throw_this_exception();
-						}
-#		endif
-
-#		if KERBAL_HAS_EXCEPTIONS_SUPPORT
-						try {
-#		endif
-							kerbal::memory::uninitialized_fill_using_allocator(alloc, new_buffer, new_buffer + new_size, value);
-#		if KERBAL_HAS_EXCEPTIONS_SUPPORT
-						} catch (...) {
-							allocator_traits::deallocate(alloc, new_buffer, new_capacity);
-							throw;
-						}
-#		endif
-
-						if (allocator_traits::allow_deallocate_null::value || this->k_buffer != NULL) {
-							kerbal::memory::reverse_destroy_using_allocator(alloc, this->begin().current, this->end().current);
-							allocator_traits::deallocate(alloc, this->k_buffer, this->k_capacity);
-						}
-						this->k_buffer = new_buffer;
-						this->k_capacity = new_capacity;
-						this->k_size = new_size;
-					}
-				}
-			}
-
-			template <typename T>
-			template <typename Allocator, typename InputIterator>
-			KERBAL_CONSTEXPR20
-			void
-			vector_type_only<T>::
-			k_range_assign_using_allocator_impl(
-				Allocator & alloc,
-				InputIterator first, InputIterator last,
-				std::input_iterator_tag
-			)
-			{
-				iterator it(this->begin());
-				iterator end(this->end());
-				while (it != end) {
-					if (first != last) {
-						kerbal::assign::generic_assign(*it, *first);
-						++first;
-						++it;
-					} else {
-						this->k_erase_using_allocator(alloc, it, end);
-						return;
-					}
-				}
-				while (first != last) {
-					this->k_emplace_back_using_allocator(alloc, *first);
-					++first;
-				}
-			}
-
-			template <typename T>
-			template <typename Allocator, typename ForwardIterator>
-			KERBAL_CONSTEXPR20
-			void
-			vector_type_only<T>::
-			k_range_assign_using_allocator_impl(
-				Allocator & alloc,
-				ForwardIterator first, ForwardIterator last,
-				std::forward_iterator_tag
-			)
-			{
-				typedef kerbal::memory::allocator_traits<Allocator> allocator_traits;
-
-				size_type ori_size = this->k_size;
-				size_type new_size = static_cast<size_type>(kerbal::iterator::distance(first, last));
-
-				if (new_size <= ori_size) { // also suitable for new_size == 0
-					/*
-					 * a a a a a a x x
-					 * b b b x x x x x
-					 */
-					pointer new_end(kerbal::algorithm::copy(first, last, this->begin().current));
-					kerbal::memory::reverse_destroy_using_allocator(alloc, new_end, this->end().current);
-					this->k_size = new_size;
-				} else { // new_size > ori_size
-					/*
-					 * a a a x x x x x
-					 * b b b b b b x x
-					 */
-					if (new_size <= this->k_capacity) {
-						kerbal::algorithm::detail::basic_copy_n_ret<ForwardIterator, pointer> copy_n_r(
-							kerbal::algorithm::detail::basic_copy_n(first, ori_size, this->k_buffer)
-						);
-						kerbal::memory::uninitialized_copy_using_allocator(alloc, copy_n_r.first, last, copy_n_r.second);
-						this->k_size = new_size;
-					} else { // new_size > this->capacity
-						size_type new_capacity = new_size;
-						pointer new_buffer = allocator_traits::allocate(alloc, new_capacity);
-#		if !KERBAL_HAS_EXCEPTIONS_SUPPORT
-						if (new_buffer == NULL) {
-							kerbal::utility::throw_this_exception_helper<kerbal::memory::bad_alloc>::throw_this_exception();
-						}
-#		endif
-
-#		if KERBAL_HAS_EXCEPTIONS_SUPPORT
-						try {
-#		endif
-							kerbal::memory::uninitialized_copy_using_allocator(alloc, first, last, new_buffer);
-#		if KERBAL_HAS_EXCEPTIONS_SUPPORT
-						} catch (...) {
-							allocator_traits::deallocate(alloc, new_buffer, new_capacity);
-							throw;
-						}
-#		endif
-
-						if (allocator_traits::allow_deallocate_null::value || this->k_buffer != NULL) {
-							kerbal::memory::reverse_destroy_using_allocator(alloc, this->begin().current, this->end().current);
-							allocator_traits::deallocate(alloc, this->k_buffer, this->k_capacity);
-						}
-						this->k_buffer = new_buffer;
-						this->k_capacity = new_capacity;
-						this->k_size = new_size;
-					}
-				}
-			}
-
-			template <typename T>
-			template <typename Allocator, typename InputIterator>
-			KERBAL_CONSTEXPR20
-			typename kerbal::type_traits::enable_if<
-				kerbal::iterator::is_input_compatible_iterator<InputIterator>::value
-			>::type
-			vector_type_only<T>::
-			k_assign_using_allocator(
-				Allocator & alloc,
-				InputIterator first, InputIterator last
-			)
-			{
-				this->k_range_assign_using_allocator_impl(alloc, first, last, kerbal::iterator::iterator_category(first));
-			}
-
 
 			template <typename T>
 			template <typename Allocator>
@@ -764,6 +590,178 @@ namespace kerbal
 			}
 
 #		endif
+
+			template <typename T>
+			template <typename Allocator>
+			KERBAL_CONSTEXPR20
+			void
+			vector_type_only<T>::
+			k_assign_using_allocator(
+				Allocator & alloc,
+				size_type new_size, const_reference value
+			)
+			{
+				typedef kerbal::memory::allocator_traits<Allocator> allocator_traits;
+
+				size_type ori_size = this->k_size;
+				if (new_size <= ori_size) { // also suitable for new_size == 0
+					/*
+					 * a a a a a a x x
+					 * b b b x x x x x
+					 */
+					kerbal::algorithm::fill(this->begin().current, this->nth(new_size).current, value);
+					kerbal::memory::reverse_destroy_using_allocator(alloc, this->nth(new_size).current, this->end().current);
+					this->k_size = new_size;
+				} else { // new_size > ori_size
+					/*
+					 * a a a x x x x x
+					 * b b b b b b x x
+					 */
+					if (new_size <= this->k_capacity) {
+						pointer ori_end(this->end().current);
+						kerbal::algorithm::fill(this->begin().current, ori_end, value);
+						kerbal::memory::uninitialized_fill_using_allocator(alloc, ori_end, this->nth(new_size).current, value);
+						this->k_size = new_size;
+					} else { // new_size > this->capacity
+						size_type new_capacity = new_size;
+						pointer new_buffer = allocator_traits::allocate(alloc, new_capacity);
+#		if !KERBAL_HAS_EXCEPTIONS_SUPPORT
+						if (new_buffer == NULL) {
+							kerbal::utility::throw_this_exception_helper<kerbal::memory::bad_alloc>::throw_this_exception();
+						}
+#		endif
+
+#		if KERBAL_HAS_EXCEPTIONS_SUPPORT
+						try {
+#		endif
+							kerbal::memory::uninitialized_fill_using_allocator(alloc, new_buffer, new_buffer + new_size, value);
+#		if KERBAL_HAS_EXCEPTIONS_SUPPORT
+						} catch (...) {
+							allocator_traits::deallocate(alloc, new_buffer, new_capacity);
+							throw;
+						}
+#		endif
+
+						if (allocator_traits::allow_deallocate_null::value || this->k_buffer != NULL) {
+							kerbal::memory::reverse_destroy_using_allocator(alloc, this->begin().current, this->end().current);
+							allocator_traits::deallocate(alloc, this->k_buffer, this->k_capacity);
+						}
+						this->k_buffer = new_buffer;
+						this->k_capacity = new_capacity;
+						this->k_size = new_size;
+					}
+				}
+			}
+
+			template <typename T>
+			template <typename Allocator, typename InputIterator>
+			KERBAL_CONSTEXPR20
+			void
+			vector_type_only<T>::
+			k_range_assign_using_allocator_impl(
+				Allocator & alloc,
+				InputIterator first, InputIterator last,
+				std::input_iterator_tag
+			)
+			{
+				iterator it(this->begin());
+				iterator end(this->end());
+				while (it != end) {
+					if (first != last) {
+						kerbal::assign::generic_assign(*it, *first);
+						++first;
+						++it;
+					} else {
+						this->k_erase_using_allocator(alloc, it, end);
+						return;
+					}
+				}
+				while (first != last) {
+					this->k_emplace_back_using_allocator(alloc, *first);
+					++first;
+				}
+			}
+
+			template <typename T>
+			template <typename Allocator, typename ForwardIterator>
+			KERBAL_CONSTEXPR20
+			void
+			vector_type_only<T>::
+			k_range_assign_using_allocator_impl(
+				Allocator & alloc,
+				ForwardIterator first, ForwardIterator last,
+				std::forward_iterator_tag
+			)
+			{
+				typedef kerbal::memory::allocator_traits<Allocator> allocator_traits;
+
+				size_type ori_size = this->k_size;
+				size_type new_size = static_cast<size_type>(kerbal::iterator::distance(first, last));
+
+				if (new_size <= ori_size) { // also suitable for new_size == 0
+					/*
+					 * a a a a a a x x
+					 * b b b x x x x x
+					 */
+					pointer new_end(kerbal::algorithm::copy(first, last, this->begin().current));
+					kerbal::memory::reverse_destroy_using_allocator(alloc, new_end, this->end().current);
+					this->k_size = new_size;
+				} else { // new_size > ori_size
+					/*
+					 * a a a x x x x x
+					 * b b b b b b x x
+					 */
+					if (new_size <= this->k_capacity) {
+						kerbal::algorithm::detail::basic_copy_n_ret<ForwardIterator, pointer> copy_n_r(
+							kerbal::algorithm::detail::basic_copy_n(first, ori_size, this->k_buffer)
+						);
+						kerbal::memory::uninitialized_copy_using_allocator(alloc, copy_n_r.first, last, copy_n_r.second);
+						this->k_size = new_size;
+					} else { // new_size > this->capacity
+						size_type new_capacity = new_size;
+						pointer new_buffer = allocator_traits::allocate(alloc, new_capacity);
+#		if !KERBAL_HAS_EXCEPTIONS_SUPPORT
+						if (new_buffer == NULL) {
+							kerbal::utility::throw_this_exception_helper<kerbal::memory::bad_alloc>::throw_this_exception();
+						}
+#		endif
+
+#		if KERBAL_HAS_EXCEPTIONS_SUPPORT
+						try {
+#		endif
+							kerbal::memory::uninitialized_copy_using_allocator(alloc, first, last, new_buffer);
+#		if KERBAL_HAS_EXCEPTIONS_SUPPORT
+						} catch (...) {
+							allocator_traits::deallocate(alloc, new_buffer, new_capacity);
+							throw;
+						}
+#		endif
+
+						if (allocator_traits::allow_deallocate_null::value || this->k_buffer != NULL) {
+							kerbal::memory::reverse_destroy_using_allocator(alloc, this->begin().current, this->end().current);
+							allocator_traits::deallocate(alloc, this->k_buffer, this->k_capacity);
+						}
+						this->k_buffer = new_buffer;
+						this->k_capacity = new_capacity;
+						this->k_size = new_size;
+					}
+				}
+			}
+
+			template <typename T>
+			template <typename Allocator, typename InputIterator>
+			KERBAL_CONSTEXPR20
+			typename kerbal::type_traits::enable_if<
+				kerbal::iterator::is_input_compatible_iterator<InputIterator>::value
+			>::type
+			vector_type_only<T>::
+			k_assign_using_allocator(
+				Allocator & alloc,
+				InputIterator first, InputIterator last
+			)
+			{
+				this->k_range_assign_using_allocator_impl(alloc, first, last, kerbal::iterator::iterator_category(first));
+			}
 
 
 		//===================

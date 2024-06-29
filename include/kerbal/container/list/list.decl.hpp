@@ -166,6 +166,26 @@ namespace kerbal
 				KERBAL_CONSTEXPR20
 				list(const list & src, const Allocator & alloc);
 
+#		if __cplusplus >= 201103L
+
+				KERBAL_CONSTEXPR20
+				list(list && src)
+					KERBAL_CONDITIONAL_NOEXCEPT(
+						list_allocator_overload::template try_test_is_nothrow_constructible_from_allocator<Allocator &&>::IS_TRUE::value &&
+						list_type_only::is_nothrow_move_constructible::value
+					)
+				;
+
+				KERBAL_CONSTEXPR20
+				list(list && src, const Allocator & alloc)
+					KERBAL_CONDITIONAL_NOEXCEPT(
+						list_allocator_overload::template try_test_is_nothrow_constructible_from_allocator<const Allocator &>::IS_TRUE::value &&
+						list_type_only::template is_nothrow_move_constructible_using_allocator<node_allocator_type>::value
+					)
+				;
+
+#		endif
+
 				KERBAL_CONSTEXPR20
 				explicit
 				list(size_type n);
@@ -199,26 +219,6 @@ namespace kerbal
 						int
 					>::type = 0
 				);
-
-#		if __cplusplus >= 201103L
-
-				KERBAL_CONSTEXPR20
-				list(list && src)
-					KERBAL_CONDITIONAL_NOEXCEPT(
-						list_allocator_overload::template try_test_is_nothrow_constructible_from_allocator<Allocator &&>::IS_TRUE::value &&
-						list_type_only::is_nothrow_move_constructible::value
-					)
-				;
-
-				KERBAL_CONSTEXPR20
-				list(list && src, const Allocator & alloc)
-					KERBAL_CONDITIONAL_NOEXCEPT(
-						list_allocator_overload::template try_test_is_nothrow_constructible_from_allocator<const Allocator &>::IS_TRUE::value &&
-						list_type_only::template is_nothrow_move_constructible_using_allocator<node_allocator_type>::value
-					)
-				;
-
-#		endif
 
 #		if __cplusplus >= 201103L
 
@@ -281,16 +281,6 @@ namespace kerbal
 				KERBAL_CONSTEXPR20
 				void assign(const list & src);
 
-				KERBAL_CONSTEXPR20
-				void assign(size_type count, const_reference val);
-
-				template <typename InputIterator>
-				KERBAL_CONSTEXPR20
-				typename kerbal::type_traits::enable_if<
-					kerbal::iterator::is_input_compatible_iterator<InputIterator>::value
-				>::type
-				assign(InputIterator first, InputIterator last);
-
 #		if __cplusplus >= 201103L
 
 				KERBAL_CONSTEXPR20
@@ -301,6 +291,16 @@ namespace kerbal
 				;
 
 #		endif
+
+				KERBAL_CONSTEXPR20
+				void assign(size_type count, const_reference val);
+
+				template <typename InputIterator>
+				KERBAL_CONSTEXPR20
+				typename kerbal::type_traits::enable_if<
+					kerbal::iterator::is_input_compatible_iterator<InputIterator>::value
+				>::type
+				assign(InputIterator first, InputIterator last);
 
 #		if __cplusplus >= 201103L
 
@@ -355,13 +355,67 @@ namespace kerbal
 			//===================
 			// insert
 
+#		if __cplusplus >= 201103L
+
+				template <typename ... Args>
 				KERBAL_CONSTEXPR20
-				void push_front(const_reference val);
+				iterator emplace(const_iterator pos, Args && ... args);
+
+#		else
+
+#			define EMPTY
+#			define LEFT_JOIN_COMMA(exp) , exp
+#			define THEAD_NOT_EMPTY(exp) template <exp>
+#			define TARGS_DECL(i) typename KERBAL_MACRO_CONCAT(Arg, i)
+#			define ARGS_DECL(i) const KERBAL_MACRO_CONCAT(Arg, i) & KERBAL_MACRO_CONCAT(arg, i)
+#			define FBODY(i) \
+				KERBAL_OPT_PPEXPAND_WITH_COMMA_N(THEAD_NOT_EMPTY, EMPTY, TARGS_DECL, i) \
+				iterator emplace(const_iterator pos KERBAL_OPT_PPEXPAND_WITH_COMMA_N(LEFT_JOIN_COMMA, EMPTY, ARGS_DECL, i)); \
+
+				KERBAL_PPEXPAND_N(FBODY, KERBAL_PPEXPAND_EMPTY_SEPARATOR, 0)
+				KERBAL_PPEXPAND_N(FBODY, KERBAL_PPEXPAND_EMPTY_SEPARATOR, 20)
+
+#			undef EMPTY
+#			undef LEFT_JOIN_COMMA
+#			undef THEAD_NOT_EMPTY
+#			undef TARGS_DECL
+#			undef ARGS_DECL
+#			undef FBODY
+
+#		endif
+
+				KERBAL_CONSTEXPR20
+				iterator insert(const_iterator pos, const_reference val);
 
 #		if __cplusplus >= 201103L
 
 				KERBAL_CONSTEXPR20
-				void push_front(rvalue_reference val);
+				iterator insert(const_iterator pos, rvalue_reference val);
+
+#		endif
+
+				KERBAL_CONSTEXPR20
+				iterator insert(const_iterator pos, size_type n, const_reference val);
+
+				template <typename InputIterator>
+				KERBAL_CONSTEXPR20
+				typename kerbal::type_traits::enable_if<
+					kerbal::iterator::is_input_compatible_iterator<InputIterator>::value,
+					iterator
+				>::type
+				insert(const_iterator pos, InputIterator first, InputIterator last);
+
+#		if __cplusplus >= 201103L
+
+				KERBAL_CONSTEXPR20
+				iterator insert(const_iterator pos, std::initializer_list<value_type> ilist);
+
+#		else
+
+				iterator insert(const_iterator pos, const kerbal::assign::assign_list<void> & ilist);
+
+				template <typename U>
+				iterator insert(const_iterator pos, const kerbal::assign::assign_list<U> & ilist);
 
 #		endif
 
@@ -395,12 +449,12 @@ namespace kerbal
 #		endif
 
 				KERBAL_CONSTEXPR20
-				void push_back(const_reference val);
+				void push_front(const_reference val);
 
 #		if __cplusplus >= 201103L
 
 				KERBAL_CONSTEXPR20
-				void push_back(rvalue_reference val);
+				void push_front(rvalue_reference val);
 
 #		endif
 
@@ -434,66 +488,12 @@ namespace kerbal
 #		endif
 
 				KERBAL_CONSTEXPR20
-				iterator insert(const_iterator pos, const_reference val);
-
-				KERBAL_CONSTEXPR20
-				iterator insert(const_iterator pos, size_type n, const_reference val);
-
-				template <typename InputIterator>
-				KERBAL_CONSTEXPR20
-				typename kerbal::type_traits::enable_if<
-					kerbal::iterator::is_input_compatible_iterator<InputIterator>::value,
-					iterator
-				>::type
-				insert(const_iterator pos, InputIterator first, InputIterator last);
+				void push_back(const_reference val);
 
 #		if __cplusplus >= 201103L
 
 				KERBAL_CONSTEXPR20
-				iterator insert(const_iterator pos, rvalue_reference val);
-
-#		endif
-
-#		if __cplusplus >= 201103L
-
-				KERBAL_CONSTEXPR20
-				iterator insert(const_iterator pos, std::initializer_list<value_type> ilist);
-
-#		else
-
-				iterator insert(const_iterator pos, const kerbal::assign::assign_list<void> & ilist);
-
-				template <typename U>
-				iterator insert(const_iterator pos, const kerbal::assign::assign_list<U> & ilist);
-
-#		endif
-
-#		if __cplusplus >= 201103L
-
-				template <typename ... Args>
-				KERBAL_CONSTEXPR20
-				iterator emplace(const_iterator pos, Args && ... args);
-
-#		else
-
-#			define EMPTY
-#			define LEFT_JOIN_COMMA(exp) , exp
-#			define THEAD_NOT_EMPTY(exp) template <exp>
-#			define TARGS_DECL(i) typename KERBAL_MACRO_CONCAT(Arg, i)
-#			define ARGS_DECL(i) const KERBAL_MACRO_CONCAT(Arg, i) & KERBAL_MACRO_CONCAT(arg, i)
-#			define FBODY(i) \
-				KERBAL_OPT_PPEXPAND_WITH_COMMA_N(THEAD_NOT_EMPTY, EMPTY, TARGS_DECL, i) \
-				iterator emplace(const_iterator pos KERBAL_OPT_PPEXPAND_WITH_COMMA_N(LEFT_JOIN_COMMA, EMPTY, ARGS_DECL, i)); \
-
-				KERBAL_PPEXPAND_N(FBODY, KERBAL_PPEXPAND_EMPTY_SEPARATOR, 0)
-				KERBAL_PPEXPAND_N(FBODY, KERBAL_PPEXPAND_EMPTY_SEPARATOR, 20)
-
-#			undef EMPTY
-#			undef LEFT_JOIN_COMMA
-#			undef THEAD_NOT_EMPTY
-#			undef TARGS_DECL
-#			undef ARGS_DECL
-#			undef FBODY
+				void push_back(rvalue_reference val);
 
 #		endif
 
@@ -501,16 +501,16 @@ namespace kerbal
 			// erase
 
 				KERBAL_CONSTEXPR20
-				void pop_front();
-
-				KERBAL_CONSTEXPR20
-				void pop_back();
-
-				KERBAL_CONSTEXPR20
 				iterator erase(const_iterator pos);
 
 				KERBAL_CONSTEXPR20
 				iterator erase(const_iterator first, const_iterator last);
+
+				KERBAL_CONSTEXPR20
+				void pop_front();
+
+				KERBAL_CONSTEXPR20
+				void pop_back();
 
 				KERBAL_CONSTEXPR20
 				void clear()
@@ -576,22 +576,23 @@ namespace kerbal
 
 				using list_type_only::sort;
 
+				template <typename UnaryPredicate>
 				KERBAL_CONSTEXPR20
-				size_type remove(const_reference val);
-
-				KERBAL_CONSTEXPR20
-				size_type remove(const_iterator first, const_iterator last, const_reference val);
+				size_type remove_if(const_iterator first, const_iterator last, UnaryPredicate predicate);
 
 				template <typename UnaryPredicate>
 				KERBAL_CONSTEXPR20
 				size_type remove_if(UnaryPredicate predicate);
 
-				template <typename UnaryPredicate>
 				KERBAL_CONSTEXPR20
-				size_type remove_if(const_iterator first, const_iterator last, UnaryPredicate predicate);
+				size_type remove(const_iterator first, const_iterator last, const_reference val);
 
 				KERBAL_CONSTEXPR20
-				size_type unique();
+				size_type remove(const_reference val);
+
+				template <typename BinaryPredicate>
+				KERBAL_CONSTEXPR20
+				size_type unique(const_iterator first, const_iterator last, BinaryPredicate pred);
 
 				template <typename BinaryPredicate>
 				KERBAL_CONSTEXPR20
@@ -600,9 +601,8 @@ namespace kerbal
 				KERBAL_CONSTEXPR20
 				size_type unique(const_iterator first, const_iterator last);
 
-				template <typename BinaryPredicate>
 				KERBAL_CONSTEXPR20
-				size_type unique(const_iterator first, const_iterator last, BinaryPredicate pred);
+				size_type unique();
 
 				KERBAL_CONSTEXPR20
 				void splice(

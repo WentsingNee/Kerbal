@@ -107,6 +107,10 @@ namespace kerbal
 				typedef kerbal::iterator::reverse_iterator<const_iterator>	const_reverse_iterator;
 
 			public:
+
+			//===================
+			// construct/copy/destroy
+
 				KERBAL_CONSTEXPR
 				/** @brief Empty container constructor (Default constructor) */
 				static_vector() KERBAL_NOEXCEPT;
@@ -166,6 +170,10 @@ namespace kerbal
 				static_vector(const kerbal::assign::assign_list<U> & ilist);
 
 #		endif
+
+
+			//===================
+			// assign
 
 				KERBAL_CONSTEXPR14
 				static_vector & operator=(const static_vector & src);
@@ -306,6 +314,60 @@ namespace kerbal
 
 #		endif
 
+
+			//===================
+			// element access
+
+				KERBAL_CONSTEXPR14
+				reference operator[](size_type index) KERBAL_NOEXCEPT;
+
+				KERBAL_CONSTEXPR14
+				const_reference operator[](size_type index) const KERBAL_NOEXCEPT;
+
+				KERBAL_CONSTEXPR20
+				reference at(size_type index);
+
+				KERBAL_CONSTEXPR20
+				const_reference at(size_type index) const;
+
+				/**
+				 * @brief Get the reference of the element at the beginning of the array.
+				 * @return the reference of the element at the beginning of the array.
+				 */
+				KERBAL_CONSTEXPR14
+				reference front();
+
+				/**
+				 * @brief Get the const_reference of the element at the beginning of the array.
+				 * @return the const_reference of the element at the beginning of the array.
+				 */
+				KERBAL_CONSTEXPR14
+				const_reference front() const;
+
+				/**
+				 * @brief Get the reference of the element at the end of the array.
+				 * @return the reference of the element at the end of the array.
+				 */
+				KERBAL_CONSTEXPR14
+				reference back();
+
+				/**
+				 * @brief Get the const_reference of the element at the end of the array.
+				 * @return the const_reference of the element at the end of the array.
+				 */
+				KERBAL_CONSTEXPR14
+				const_reference back() const;
+
+				equal_c_array_reference c_arr();
+				const_equal_c_array_reference c_arr() const;
+				const_equal_c_array_reference const_c_arr() const;
+
+				const_pointer data() const KERBAL_NOEXCEPT;
+
+
+			//===================
+			// iterator
+
 				KERBAL_CONSTEXPR14
 				iterator begin() KERBAL_NOEXCEPT;
 
@@ -366,6 +428,10 @@ namespace kerbal
 					return it - this->cbegin();
 				}
 
+
+			//===================
+			// capacity
+
 				/**
 				 * @brief Count the number of the elements that the array has contained.
 				 * @return the number of the elements that the array has contained
@@ -412,113 +478,45 @@ namespace kerbal
 					}
 				}
 
-				KERBAL_CONSTEXPR14
-				reference operator[](size_type index) KERBAL_NOEXCEPT;
 
-				KERBAL_CONSTEXPR14
-				const_reference operator[](size_type index) const KERBAL_NOEXCEPT;
-
-				KERBAL_CONSTEXPR20
-				reference at(size_type index);
-
-				KERBAL_CONSTEXPR20
-				const_reference at(size_type index) const;
-
-				/**
-				 * @brief Get the reference of the element at the beginning of the array.
-				 * @return the reference of the element at the beginning of the array.
-				 */
-				KERBAL_CONSTEXPR14
-				reference front();
-
-				/**
-				 * @brief Get the const_reference of the element at the beginning of the array.
-				 * @return the const_reference of the element at the beginning of the array.
-				 */
-				KERBAL_CONSTEXPR14
-				const_reference front() const;
-
-				/**
-				 * @brief Get the reference of the element at the end of the array.
-				 * @return the reference of the element at the end of the array.
-				 */
-				KERBAL_CONSTEXPR14
-				reference back();
-
-				/**
-				 * @brief Get the const_reference of the element at the end of the array.
-				 * @return the const_reference of the element at the end of the array.
-				 */
-				KERBAL_CONSTEXPR14
-				const_reference back() const;
-
-				equal_c_array_reference c_arr();
-				const_equal_c_array_reference c_arr() const;
-				const_equal_c_array_reference const_c_arr() const;
-
-				const_pointer data() const KERBAL_NOEXCEPT;
-
-				KERBAL_CONSTEXPR14
-				void push_back_unsafe(const_reference src);
-
-				KERBAL_CONSTEXPR20
-				void push_back(const_reference src);
-
-#		if __cplusplus >= 201103L
-
-				KERBAL_CONSTEXPR14
-				void push_back_unsafe(rvalue_reference src);
-
-				KERBAL_CONSTEXPR20
-				void push_back(rvalue_reference src);
-
-#		endif
+			//===================
+			// insert
 
 #		if __cplusplus >= 201103L
 
 				template <typename ... Args>
 				KERBAL_CONSTEXPR14
-				reference emplace_back_unsafe(Args && ... args);
+				iterator emplace_unsafe(const_iterator pos, Args && ... args);
 
 				template <typename ... Args>
 				KERBAL_CONSTEXPR20
-				reference emplace_back(Args && ... args);
+				iterator emplace(const_iterator pos, Args && ... args);
 
 #		else
 
 #			define EMPTY
-#			define REMAINF(exp) exp
+#			define LEFT_JOIN_COMMA(exp) , exp
 #			define THEAD_NOT_EMPTY(exp) template <exp>
 #			define TARGS_DECL(i) typename KERBAL_MACRO_CONCAT(Arg, i)
 #			define ARGS_DECL(i) const KERBAL_MACRO_CONCAT(Arg, i) & KERBAL_MACRO_CONCAT(arg, i)
 #			define FBODY(i) \
 				KERBAL_OPT_PPEXPAND_WITH_COMMA_N(THEAD_NOT_EMPTY, EMPTY, TARGS_DECL, i) \
-				reference emplace_back_unsafe(KERBAL_OPT_PPEXPAND_WITH_COMMA_N(REMAINF, EMPTY, ARGS_DECL, i)); \
+				iterator emplace_unsafe(const_iterator pos KERBAL_OPT_PPEXPAND_WITH_COMMA_N(LEFT_JOIN_COMMA, EMPTY, ARGS_DECL, i)); \
  \
 				KERBAL_OPT_PPEXPAND_WITH_COMMA_N(THEAD_NOT_EMPTY, EMPTY, TARGS_DECL, i) \
-				reference emplace_back(KERBAL_OPT_PPEXPAND_WITH_COMMA_N(REMAINF, EMPTY, ARGS_DECL, i)); \
+				iterator emplace(const_iterator pos KERBAL_OPT_PPEXPAND_WITH_COMMA_N(LEFT_JOIN_COMMA, EMPTY, ARGS_DECL, i)); \
 
 				KERBAL_PPEXPAND_N(FBODY, KERBAL_PPEXPAND_EMPTY_SEPARATOR, 0)
 				KERBAL_PPEXPAND_N(FBODY, KERBAL_PPEXPAND_EMPTY_SEPARATOR, 20)
 
 #			undef EMPTY
-#			undef REMAINF
+#			undef LEFT_JOIN_COMMA
 #			undef THEAD_NOT_EMPTY
 #			undef TARGS_DECL
 #			undef ARGS_DECL
 #			undef FBODY
 
 #		endif
-
-				KERBAL_CONSTEXPR14
-				void pop_back_unsafe();
-
-				KERBAL_CONSTEXPR20
-				void pop_back();
-
-				KERBAL_CONSTEXPR14
-				void shrink_back_to(const_iterator to);
-
 
 				KERBAL_CONSTEXPR14
 				iterator insert_unsafe(const_iterator pos, const_reference val);
@@ -590,31 +588,31 @@ namespace kerbal
 
 				template <typename ... Args>
 				KERBAL_CONSTEXPR14
-				iterator emplace_unsafe(const_iterator pos, Args && ... args);
+				reference emplace_back_unsafe(Args && ... args);
 
 				template <typename ... Args>
 				KERBAL_CONSTEXPR20
-				iterator emplace(const_iterator pos, Args && ... args);
+				reference emplace_back(Args && ... args);
 
 #		else
 
 #			define EMPTY
-#			define LEFT_JOIN_COMMA(exp) , exp
+#			define REMAINF(exp) exp
 #			define THEAD_NOT_EMPTY(exp) template <exp>
 #			define TARGS_DECL(i) typename KERBAL_MACRO_CONCAT(Arg, i)
 #			define ARGS_DECL(i) const KERBAL_MACRO_CONCAT(Arg, i) & KERBAL_MACRO_CONCAT(arg, i)
 #			define FBODY(i) \
 				KERBAL_OPT_PPEXPAND_WITH_COMMA_N(THEAD_NOT_EMPTY, EMPTY, TARGS_DECL, i) \
-				iterator emplace_unsafe(const_iterator pos KERBAL_OPT_PPEXPAND_WITH_COMMA_N(LEFT_JOIN_COMMA, EMPTY, ARGS_DECL, i)); \
+				reference emplace_back_unsafe(KERBAL_OPT_PPEXPAND_WITH_COMMA_N(REMAINF, EMPTY, ARGS_DECL, i)); \
  \
 				KERBAL_OPT_PPEXPAND_WITH_COMMA_N(THEAD_NOT_EMPTY, EMPTY, TARGS_DECL, i) \
-				iterator emplace(const_iterator pos KERBAL_OPT_PPEXPAND_WITH_COMMA_N(LEFT_JOIN_COMMA, EMPTY, ARGS_DECL, i)); \
+				reference emplace_back(KERBAL_OPT_PPEXPAND_WITH_COMMA_N(REMAINF, EMPTY, ARGS_DECL, i)); \
 
 				KERBAL_PPEXPAND_N(FBODY, KERBAL_PPEXPAND_EMPTY_SEPARATOR, 0)
 				KERBAL_PPEXPAND_N(FBODY, KERBAL_PPEXPAND_EMPTY_SEPARATOR, 20)
 
 #			undef EMPTY
-#			undef LEFT_JOIN_COMMA
+#			undef REMAINF
 #			undef THEAD_NOT_EMPTY
 #			undef TARGS_DECL
 #			undef ARGS_DECL
@@ -623,28 +621,20 @@ namespace kerbal
 #		endif
 
 				KERBAL_CONSTEXPR14
-				iterator erase(const_iterator pos);
+				void push_back_unsafe(const_reference src);
+
+				KERBAL_CONSTEXPR20
+				void push_back(const_reference src);
+
+#		if __cplusplus >= 201103L
 
 				KERBAL_CONSTEXPR14
-				iterator erase(const_iterator begin, const_iterator end);
+				void push_back_unsafe(rvalue_reference src);
 
-			private:
-				KERBAL_CONSTEXPR14
-				void k_swap_helper(static_vector & with);
+				KERBAL_CONSTEXPR20
+				void push_back(rvalue_reference src);
 
-			public:
-				/**
-				 * @brief Swap the array with another one.
-				 * @param with another array to be swaped with
-				 */
-				KERBAL_CONSTEXPR14
-				void swap(static_vector & with);
-
-				/**
-				 * @brief Clear all the elements in the array.
-				 */
-				KERBAL_CONSTEXPR14
-				void clear();
+#		endif
 
 				/**
 				 * @brief Fill all the blank positions at the end of array by using default constructor of the element type.
@@ -658,6 +648,47 @@ namespace kerbal
 				 */
 				KERBAL_CONSTEXPR14
 				void fill(const_reference val);
+
+
+			//===================
+			// erase
+
+				KERBAL_CONSTEXPR14
+				iterator erase(const_iterator pos);
+
+				KERBAL_CONSTEXPR14
+				iterator erase(const_iterator begin, const_iterator end);
+
+				KERBAL_CONSTEXPR14
+				void pop_back_unsafe();
+
+				KERBAL_CONSTEXPR20
+				void pop_back();
+
+				KERBAL_CONSTEXPR14
+				void shrink_back_to(const_iterator to);
+
+				/**
+				 * @brief Clear all the elements in the array.
+				 */
+				KERBAL_CONSTEXPR14
+				void clear();
+
+
+			//===================
+			// operation
+
+			private:
+				KERBAL_CONSTEXPR14
+				void k_swap_helper(static_vector & with);
+
+			public:
+				/**
+				 * @brief Swap the array with another one.
+				 * @param with another array to be swaped with
+				 */
+				KERBAL_CONSTEXPR14
+				void swap(static_vector & with);
 
 				template <typename U, std::size_t N1, std::size_t N2>
 				KERBAL_CONSTEXPR14

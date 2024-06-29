@@ -63,6 +63,10 @@ namespace kerbal
 				Sequence c;
 
 			public:
+
+			//===================
+			// construct/copy/destroy
+
 				KERBAL_CONSTEXPR20
 				linked_queue() :
 					c()
@@ -99,23 +103,8 @@ namespace kerbal
 
 #		endif
 
-				KERBAL_CONSTEXPR20
-				bool empty() const
-				{
-					return c.empty();
-				}
-
-				KERBAL_CONSTEXPR20
-				size_type size() const
-				{
-					return c.size();
-				}
-
-				KERBAL_CONSTEXPR
-				size_type max_size() const
-				{
-					return c.max_size();
-				}
+			//===================
+			// element access
 
 				KERBAL_CONSTEXPR20
 				reference front()
@@ -141,21 +130,31 @@ namespace kerbal
 					return c.back();
 				}
 
-				KERBAL_CONSTEXPR20
-				void push(const_reference val)
-				{
-					c.push_back(val);
-				}
 
-#		if __cplusplus >= 201103L
+			//===================
+			// capacity
 
 				KERBAL_CONSTEXPR20
-				void push(rvalue_reference val)
+				bool empty() const
 				{
-					c.push_back(kerbal::compatibility::move(val));
+					return c.empty();
 				}
 
-#		endif
+				KERBAL_CONSTEXPR20
+				size_type size() const
+				{
+					return c.size();
+				}
+
+				KERBAL_CONSTEXPR
+				size_type max_size() const
+				{
+					return c.max_size();
+				}
+
+
+			//===================
+			// insert
 
 #		if __cplusplus >= 201103L
 
@@ -195,6 +194,26 @@ namespace kerbal
 #		endif
 
 				KERBAL_CONSTEXPR20
+				void push(const_reference val)
+				{
+					c.push_back(val);
+				}
+
+#		if __cplusplus >= 201103L
+
+				KERBAL_CONSTEXPR20
+				void push(rvalue_reference val)
+				{
+					c.push_back(kerbal::compatibility::move(val));
+				}
+
+#		endif
+
+
+			//===================
+			// erase
+
+				KERBAL_CONSTEXPR20
 				void pop()
 				{
 					c.pop_front();
@@ -205,6 +224,10 @@ namespace kerbal
 				{
 					c.clear();
 				}
+
+
+			//===================
+			// operation
 
 				KERBAL_CONSTEXPR20
 				void swap(linked_queue & with)

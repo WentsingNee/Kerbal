@@ -101,6 +101,9 @@ namespace kerbal
 
 			public:
 
+			//===================
+			// construct/copy/destroy
+
 #		if __cplusplus >= 201103L
 
 				KERBAL_CONSTEXPR20
@@ -122,6 +125,23 @@ namespace kerbal
 
 				KERBAL_CONSTEXPR20
 				avl_set(const KeyCompare & kc, const Allocator & alloc);
+
+
+				KERBAL_CONSTEXPR20
+				avl_set(const avl_set & src);
+
+				KERBAL_CONSTEXPR20
+				avl_set(const avl_set & src, const Allocator & alloc);
+
+#		if __cplusplus >= 201103L
+
+				KERBAL_CONSTEXPR20
+				avl_set(avl_set && src);
+
+				KERBAL_CONSTEXPR20
+				avl_set(avl_set && src, const Allocator & alloc);
+
+#		endif
 
 
 				template <typename InputIterator>
@@ -204,22 +224,6 @@ namespace kerbal
 
 #		endif
 
-				KERBAL_CONSTEXPR20
-				avl_set(const avl_set & src);
-
-				KERBAL_CONSTEXPR20
-				avl_set(const avl_set & src, const Allocator & alloc);
-
-#		if __cplusplus >= 201103L
-
-				KERBAL_CONSTEXPR20
-				avl_set(avl_set && src);
-
-				KERBAL_CONSTEXPR20
-				avl_set(avl_set && src, const Allocator & alloc);
-
-#		endif
-
 
 			//===================
 			// assign
@@ -227,13 +231,30 @@ namespace kerbal
 				KERBAL_CONSTEXPR20
 				avl_set & operator=(const avl_set & src);
 
-				KERBAL_CONSTEXPR20
-				void assign(const avl_set & src);
-
 #		if __cplusplus >= 201103L
 
 				KERBAL_CONSTEXPR20
 				avl_set & operator=(avl_set && src);
+
+#		endif
+
+#		if __cplusplus >= 201103L
+
+				KERBAL_CONSTEXPR20
+				avl_set & operator=(std::initializer_list<value_type> ilist);
+
+#		else
+
+				template <typename U>
+				avl_set & operator=(const kerbal::assign::assign_list<U> & ilist);
+
+#		endif
+
+
+				KERBAL_CONSTEXPR20
+				void assign(const avl_set & src);
+
+#		if __cplusplus >= 201103L
 
 				KERBAL_CONSTEXPR20
 				void assign(avl_set && src);
@@ -247,15 +268,9 @@ namespace kerbal
 #		if __cplusplus >= 201103L
 
 				KERBAL_CONSTEXPR20
-				avl_set & operator=(std::initializer_list<value_type> ilist);
-
-				KERBAL_CONSTEXPR20
 				void assign(std::initializer_list<value_type> ilist);
 
 #		else
-
-				template <typename U>
-				avl_set & operator=(const kerbal::assign::assign_list<U> & ilist);
 
 				template <typename U>
 				void assign(const kerbal::assign::assign_list<U> & ilist);

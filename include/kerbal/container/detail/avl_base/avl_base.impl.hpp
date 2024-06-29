@@ -405,142 +405,6 @@ namespace kerbal
 
 #	endif
 
-			template <typename Entity>
-			template <typename NodeAllocator, typename Extract, typename KeyCompare, typename InputIterator>
-			KERBAL_CONSTEXPR20
-			avl_type_only<Entity>::
-			avl_type_only(
-				NodeAllocator & alloc, Extract & e, KeyCompare & kc,
-				InputIterator first, InputIterator last
-			)
-			{
-#	if KERBAL_HAS_EXCEPTIONS_SUPPORT
-				try {
-#	endif
-					this->k_insert_using_allocator(alloc, e, kc, first, last);
-#	if KERBAL_HAS_EXCEPTIONS_SUPPORT
-				} catch (...) {
-					this->k_destroy_using_allocator(alloc);
-					throw;
-				}
-#	endif
-			}
-
-			template <typename Entity>
-			template <typename NodeAllocator, typename Extract, typename KeyCompare, typename InputIterator>
-			KERBAL_CONSTEXPR20
-			avl_type_only<Entity>::
-			avl_type_only(
-				kerbal::container::unique_tag_t,
-				NodeAllocator & alloc, Extract & e, KeyCompare & kc,
-				InputIterator first, InputIterator last
-			)
-			{
-#	if KERBAL_HAS_EXCEPTIONS_SUPPORT
-				try {
-#	endif
-					this->k_insert_unique_using_allocator(alloc, e, kc, first, last);
-#	if KERBAL_HAS_EXCEPTIONS_SUPPORT
-				} catch (...) {
-					this->k_destroy_using_allocator(alloc);
-					throw;
-				}
-#	endif
-			}
-
-#	if __cplusplus >= 201103L
-
-			template <typename Entity>
-			template <typename NodeAllocator, typename Extract, typename KeyCompare>
-			KERBAL_CONSTEXPR20
-			avl_type_only<Entity>::
-			avl_type_only(
-				NodeAllocator & alloc, Extract & e, KeyCompare & kc,
-				std::initializer_list<value_type> ilist
-			) :
-				avl_type_only(alloc, e, kc, ilist.begin(), ilist.end())
-			{
-			}
-
-			template <typename Entity>
-			template <typename NodeAllocator, typename Extract, typename KeyCompare>
-			KERBAL_CONSTEXPR20
-			avl_type_only<Entity>::
-			avl_type_only(
-				kerbal::container::unique_tag_t unique_tag,
-				NodeAllocator & alloc, Extract & e, KeyCompare & kc,
-				std::initializer_list<value_type> ilist
-			) :
-				avl_type_only(unique_tag, alloc, e, kc, ilist.begin(), ilist.end())
-			{
-			}
-
-#	else
-
-			template <typename Entity>
-			template <typename NodeAllocator, typename Extract, typename KeyCompare>
-			avl_type_only<Entity>::
-			avl_type_only(
-				NodeAllocator & alloc, Extract & e, KeyCompare & kc,
-				const kerbal::assign::assign_list<void> & ilist
-			)
-			{
-			}
-
-			template <typename Entity>
-			template <typename NodeAllocator, typename Extract, typename KeyCompare, typename U>
-			avl_type_only<Entity>::
-			avl_type_only(
-				NodeAllocator & alloc, Extract & e, KeyCompare & kc,
-				const kerbal::assign::assign_list<U> & ilist
-			)
-			{
-#	if KERBAL_HAS_EXCEPTIONS_SUPPORT
-				try {
-#	endif
-					this->k_insert_using_allocator(alloc, e, kc, ilist.cbegin(), ilist.cend());
-#	if KERBAL_HAS_EXCEPTIONS_SUPPORT
-				} catch (...) {
-					this->k_destroy_using_allocator(alloc);
-					throw;
-				}
-#	endif
-			}
-
-			template <typename Entity>
-			template <typename NodeAllocator, typename Extract, typename KeyCompare>
-			avl_type_only<Entity>::
-			avl_type_only(
-				kerbal::container::unique_tag_t /*unique_tag*/,
-				NodeAllocator & alloc, Extract & e, KeyCompare & kc,
-				const kerbal::assign::assign_list<void> & ilist
-			)
-			{
-			}
-
-			template <typename Entity>
-			template <typename NodeAllocator, typename Extract, typename KeyCompare, typename U>
-			avl_type_only<Entity>::
-			avl_type_only(
-				kerbal::container::unique_tag_t /*unique_tag*/,
-				NodeAllocator & alloc, Extract & e, KeyCompare & kc,
-				const kerbal::assign::assign_list<U> & ilist
-			)
-			{
-#	if KERBAL_HAS_EXCEPTIONS_SUPPORT
-				try {
-#	endif
-					this->k_insert_unique_using_allocator(alloc, e, kc, ilist.cbegin(), ilist.cend());
-#	if KERBAL_HAS_EXCEPTIONS_SUPPORT
-				} catch (...) {
-					this->k_destroy_using_allocator(alloc);
-					throw;
-				}
-#	endif
-			}
-
-#	endif
-
 
 			template <typename Entity>
 			template <typename UnaryOperation, typename NodeAllocator>
@@ -860,6 +724,143 @@ namespace kerbal
 
 
 			template <typename Entity>
+			template <typename NodeAllocator, typename Extract, typename KeyCompare, typename InputIterator>
+			KERBAL_CONSTEXPR20
+			avl_type_only<Entity>::
+			avl_type_only(
+				NodeAllocator & alloc, Extract & e, KeyCompare & kc,
+				InputIterator first, InputIterator last
+			)
+			{
+#	if KERBAL_HAS_EXCEPTIONS_SUPPORT
+				try {
+#	endif
+					this->k_insert_using_allocator(alloc, e, kc, first, last);
+#	if KERBAL_HAS_EXCEPTIONS_SUPPORT
+				} catch (...) {
+					this->k_destroy_using_allocator(alloc);
+					throw;
+				}
+#	endif
+			}
+
+			template <typename Entity>
+			template <typename NodeAllocator, typename Extract, typename KeyCompare, typename InputIterator>
+			KERBAL_CONSTEXPR20
+			avl_type_only<Entity>::
+			avl_type_only(
+				kerbal::container::unique_tag_t,
+				NodeAllocator & alloc, Extract & e, KeyCompare & kc,
+				InputIterator first, InputIterator last
+			)
+			{
+#	if KERBAL_HAS_EXCEPTIONS_SUPPORT
+				try {
+#	endif
+					this->k_insert_unique_using_allocator(alloc, e, kc, first, last);
+#	if KERBAL_HAS_EXCEPTIONS_SUPPORT
+				} catch (...) {
+					this->k_destroy_using_allocator(alloc);
+					throw;
+				}
+#	endif
+			}
+
+#	if __cplusplus >= 201103L
+
+			template <typename Entity>
+			template <typename NodeAllocator, typename Extract, typename KeyCompare>
+			KERBAL_CONSTEXPR20
+			avl_type_only<Entity>::
+			avl_type_only(
+				NodeAllocator & alloc, Extract & e, KeyCompare & kc,
+				std::initializer_list<value_type> ilist
+			) :
+				avl_type_only(alloc, e, kc, ilist.begin(), ilist.end())
+			{
+			}
+
+			template <typename Entity>
+			template <typename NodeAllocator, typename Extract, typename KeyCompare>
+			KERBAL_CONSTEXPR20
+			avl_type_only<Entity>::
+			avl_type_only(
+				kerbal::container::unique_tag_t unique_tag,
+				NodeAllocator & alloc, Extract & e, KeyCompare & kc,
+				std::initializer_list<value_type> ilist
+			) :
+				avl_type_only(unique_tag, alloc, e, kc, ilist.begin(), ilist.end())
+			{
+			}
+
+#	else
+
+			template <typename Entity>
+			template <typename NodeAllocator, typename Extract, typename KeyCompare>
+			avl_type_only<Entity>::
+			avl_type_only(
+				NodeAllocator & alloc, Extract & e, KeyCompare & kc,
+				const kerbal::assign::assign_list<void> & ilist
+			)
+			{
+			}
+
+			template <typename Entity>
+			template <typename NodeAllocator, typename Extract, typename KeyCompare, typename U>
+			avl_type_only<Entity>::
+			avl_type_only(
+				NodeAllocator & alloc, Extract & e, KeyCompare & kc,
+				const kerbal::assign::assign_list<U> & ilist
+			)
+			{
+#	if KERBAL_HAS_EXCEPTIONS_SUPPORT
+				try {
+#	endif
+					this->k_insert_using_allocator(alloc, e, kc, ilist.cbegin(), ilist.cend());
+#	if KERBAL_HAS_EXCEPTIONS_SUPPORT
+				} catch (...) {
+					this->k_destroy_using_allocator(alloc);
+					throw;
+				}
+#	endif
+			}
+
+			template <typename Entity>
+			template <typename NodeAllocator, typename Extract, typename KeyCompare>
+			avl_type_only<Entity>::
+			avl_type_only(
+				kerbal::container::unique_tag_t /*unique_tag*/,
+				NodeAllocator & alloc, Extract & e, KeyCompare & kc,
+				const kerbal::assign::assign_list<void> & ilist
+			)
+			{
+			}
+
+			template <typename Entity>
+			template <typename NodeAllocator, typename Extract, typename KeyCompare, typename U>
+			avl_type_only<Entity>::
+			avl_type_only(
+				kerbal::container::unique_tag_t /*unique_tag*/,
+				NodeAllocator & alloc, Extract & e, KeyCompare & kc,
+				const kerbal::assign::assign_list<U> & ilist
+			)
+			{
+#	if KERBAL_HAS_EXCEPTIONS_SUPPORT
+				try {
+#	endif
+					this->k_insert_unique_using_allocator(alloc, e, kc, ilist.cbegin(), ilist.cend());
+#	if KERBAL_HAS_EXCEPTIONS_SUPPORT
+				} catch (...) {
+					this->k_destroy_using_allocator(alloc);
+					throw;
+				}
+#	endif
+			}
+
+#	endif
+
+
+			template <typename Entity>
 			template <typename NodeAllocator>
 			KERBAL_CONSTEXPR14
 			void
@@ -872,158 +873,6 @@ namespace kerbal
 
 		//===================
 		// assign
-
-			template <typename Entity>
-			template <typename NodeAllocator>
-			KERBAL_CONSTEXPR20
-			void
-			avl_type_only<Entity>::
-			k_assign_destroy_n(NodeAllocator & alloc, node_base * start, size_type size, head_node * head)
-			{
-				for (size_type i = 0; i < size; ++i) {
-					head_node * next = start->postorder_next(head);
-					k_destroy_node(alloc, start);
-					start = next->as_node_base();
-				}
-			}
-
-			template <typename Entity>
-			template <typename NodeAllocator, typename Extract, typename KeyCompare, typename InputIterator>
-			KERBAL_CONSTEXPR20
-			void
-			avl_type_only<Entity>::
-			k_assign_using_allocator(
-				NodeAllocator & alloc, Extract & e, KeyCompare & kc,
-				InputIterator first, InputIterator last
-			)
-			{
-				if (this->k_head.left == get_avl_vnull_node()) {
-					this->k_insert_using_allocator(alloc, e, kc, first, last);
-					return;
-				}
-
-				// move current tree to tmp
-				head_node tmp_head;
-				tmp_head.left = this->k_head.left;
-				tmp_head.left->parent = &tmp_head;
-				this->k_head.left = get_avl_vnull_node();
-				size_type tmp_size = this->k_size;
-				this->k_size = 0;
-
-				node_base * tmp_it = tmp_head.leftest_offspring();
-				if (tmp_it->right != get_avl_vnull_node()) { // only correct under avl
-					tmp_it = tmp_it->right;
-				}
-
-				// tmp_it advances in post-order
-
-				size_type i = 0;
-
-#			if KERBAL_HAS_EXCEPTIONS_SUPPORT
-				try {
-#			endif // if KERBAL_HAS_EXCEPTIONS_SUPPORT
-					while (i < tmp_size && first != last) { // may throw here
-						node * p = node::reinterpret_as(tmp_it);
-						++i;
-						tmp_it = tmp_it->postorder_next(&tmp_head)->as_node_base();
-						k_reuse_node(alloc, p, *first); // may throw here
-						this->k_emplace_hook_node(e, kc, p);
-						++first; // may throw here
-					}
-#			if KERBAL_HAS_EXCEPTIONS_SUPPORT
-				} catch (...) {
-					k_assign_destroy_n(alloc, tmp_it, tmp_size - i, &tmp_head);
-					throw;
-				}
-#			endif // if KERBAL_HAS_EXCEPTIONS_SUPPORT
-
-				k_assign_destroy_n(alloc, tmp_it, tmp_size - i, &tmp_head);
-				this->k_insert_using_allocator(alloc, e, kc, first, last);
-			}
-
-			template <typename Entity>
-			template <typename NodeAllocator, typename Extract, typename KeyCompare, typename InputIterator>
-			KERBAL_CONSTEXPR20
-			void
-			avl_type_only<Entity>::
-			k_assign_unique_using_allocator(
-				NodeAllocator & alloc, Extract & e, KeyCompare & kc,
-				InputIterator first, InputIterator last
-			)
-			{
-				if (this->k_head.left == get_avl_vnull_node()) {
-					this->k_insert_unique_using_allocator(alloc, e, kc, first, last);
-					return;
-				}
-
-				// move current tree to tmp
-				head_node tmp_head;
-				tmp_head.left = this->k_head.left;
-				tmp_head.left->parent = &tmp_head;
-				this->k_head.left = get_avl_vnull_node();
-				size_type tmp_size = this->k_size;
-				this->k_size = 0;
-
-				node_base * tmp_it = tmp_head.leftest_offspring();
-				if (tmp_it->right != get_avl_vnull_node()) { // only correct under avl
-					tmp_it = tmp_it->right;
-				}
-
-
-				size_type i = 0;
-
-#			if KERBAL_HAS_EXCEPTIONS_SUPPORT
-				try {
-#			endif // if KERBAL_HAS_EXCEPTIONS_SUPPORT
-					while (i < tmp_size && first != last) { // may throw here
-						node * p = node::reinterpret_as(tmp_it);
-						++i;
-						tmp_it = tmp_it->postorder_next(&tmp_head)->as_node_base();
-						head_node * parent_backup = p->parent;
-						k_reuse_node(alloc, p, *first); // may throw here
-						if (!this->k_emplace_hook_node_unique(e, kc, p).insert_happen()) { // rollback
-							--i;
-							tmp_it = p;
-							p->parent = parent_backup;
-						}
-						++first; // may throw here
-					}
-#			if KERBAL_HAS_EXCEPTIONS_SUPPORT
-				} catch (...) {
-					k_assign_destroy_n(alloc, tmp_it, tmp_size - i, &tmp_head);
-					throw;
-				}
-#			endif // if KERBAL_HAS_EXCEPTIONS_SUPPORT
-
-				k_assign_destroy_n(alloc, tmp_it, tmp_size - i, &tmp_head);
-				this->k_insert_unique_using_allocator(alloc, e, kc, first, last);
-			}
-
-			template <typename Entity>
-			template <typename NodeAllocator, typename Extract, typename KeyCompare, typename InputIterator>
-			KERBAL_CONSTEXPR20
-			void
-			avl_type_only<Entity>::
-			k_assign_sorted_using_allocator(
-				NodeAllocator & alloc, Extract & e, KeyCompare & kc,
-				InputIterator first, InputIterator last
-			)
-			{
-				iterator it = this->begin();
-				iterator end = this->end();
-
-				while (it != end && first != last) {
-					*it = first;
-					++it;
-					++first;
-				}
-
-				if (it != end) {
-					this->k_erase_using_allocator(alloc, it, end);
-				} else {
-					this->k_insert_using_allocator(alloc, e, kc, first, last);
-				}
-			}
 
 			template <typename Entity>
 			template <typename NodeAllocator, typename Extract, typename KeyCompare>
@@ -1256,6 +1105,159 @@ namespace kerbal
 			}
 
 #		endif
+
+
+			template <typename Entity>
+			template <typename NodeAllocator>
+			KERBAL_CONSTEXPR20
+			void
+			avl_type_only<Entity>::
+			k_assign_destroy_n(NodeAllocator & alloc, node_base * start, size_type size, head_node * head)
+			{
+				for (size_type i = 0; i < size; ++i) {
+					head_node * next = start->postorder_next(head);
+					k_destroy_node(alloc, start);
+					start = next->as_node_base();
+				}
+			}
+
+			template <typename Entity>
+			template <typename NodeAllocator, typename Extract, typename KeyCompare, typename InputIterator>
+			KERBAL_CONSTEXPR20
+			void
+			avl_type_only<Entity>::
+			k_assign_using_allocator(
+				NodeAllocator & alloc, Extract & e, KeyCompare & kc,
+				InputIterator first, InputIterator last
+			)
+			{
+				if (this->k_head.left == get_avl_vnull_node()) {
+					this->k_insert_using_allocator(alloc, e, kc, first, last);
+					return;
+				}
+
+				// move current tree to tmp
+				head_node tmp_head;
+				tmp_head.left = this->k_head.left;
+				tmp_head.left->parent = &tmp_head;
+				this->k_head.left = get_avl_vnull_node();
+				size_type tmp_size = this->k_size;
+				this->k_size = 0;
+
+				node_base * tmp_it = tmp_head.leftest_offspring();
+				if (tmp_it->right != get_avl_vnull_node()) { // only correct under avl
+					tmp_it = tmp_it->right;
+				}
+
+				// tmp_it advances in post-order
+
+				size_type i = 0;
+
+#			if KERBAL_HAS_EXCEPTIONS_SUPPORT
+				try {
+#			endif // if KERBAL_HAS_EXCEPTIONS_SUPPORT
+					while (i < tmp_size && first != last) { // may throw here
+						node * p = node::reinterpret_as(tmp_it);
+						++i;
+						tmp_it = tmp_it->postorder_next(&tmp_head)->as_node_base();
+						k_reuse_node(alloc, p, *first); // may throw here
+						this->k_emplace_hook_node(e, kc, p);
+						++first; // may throw here
+					}
+#			if KERBAL_HAS_EXCEPTIONS_SUPPORT
+				} catch (...) {
+					k_assign_destroy_n(alloc, tmp_it, tmp_size - i, &tmp_head);
+					throw;
+				}
+#			endif // if KERBAL_HAS_EXCEPTIONS_SUPPORT
+
+				k_assign_destroy_n(alloc, tmp_it, tmp_size - i, &tmp_head);
+				this->k_insert_using_allocator(alloc, e, kc, first, last);
+			}
+
+			template <typename Entity>
+			template <typename NodeAllocator, typename Extract, typename KeyCompare, typename InputIterator>
+			KERBAL_CONSTEXPR20
+			void
+			avl_type_only<Entity>::
+			k_assign_unique_using_allocator(
+				NodeAllocator & alloc, Extract & e, KeyCompare & kc,
+				InputIterator first, InputIterator last
+			)
+			{
+				if (this->k_head.left == get_avl_vnull_node()) {
+					this->k_insert_unique_using_allocator(alloc, e, kc, first, last);
+					return;
+				}
+
+				// move current tree to tmp
+				head_node tmp_head;
+				tmp_head.left = this->k_head.left;
+				tmp_head.left->parent = &tmp_head;
+				this->k_head.left = get_avl_vnull_node();
+				size_type tmp_size = this->k_size;
+				this->k_size = 0;
+
+				node_base * tmp_it = tmp_head.leftest_offspring();
+				if (tmp_it->right != get_avl_vnull_node()) { // only correct under avl
+					tmp_it = tmp_it->right;
+				}
+
+
+				size_type i = 0;
+
+#			if KERBAL_HAS_EXCEPTIONS_SUPPORT
+				try {
+#			endif // if KERBAL_HAS_EXCEPTIONS_SUPPORT
+					while (i < tmp_size && first != last) { // may throw here
+						node * p = node::reinterpret_as(tmp_it);
+						++i;
+						tmp_it = tmp_it->postorder_next(&tmp_head)->as_node_base();
+						head_node * parent_backup = p->parent;
+						k_reuse_node(alloc, p, *first); // may throw here
+						if (!this->k_emplace_hook_node_unique(e, kc, p).insert_happen()) { // rollback
+							--i;
+							tmp_it = p;
+							p->parent = parent_backup;
+						}
+						++first; // may throw here
+					}
+#			if KERBAL_HAS_EXCEPTIONS_SUPPORT
+				} catch (...) {
+					k_assign_destroy_n(alloc, tmp_it, tmp_size - i, &tmp_head);
+					throw;
+				}
+#			endif // if KERBAL_HAS_EXCEPTIONS_SUPPORT
+
+				k_assign_destroy_n(alloc, tmp_it, tmp_size - i, &tmp_head);
+				this->k_insert_unique_using_allocator(alloc, e, kc, first, last);
+			}
+
+			template <typename Entity>
+			template <typename NodeAllocator, typename Extract, typename KeyCompare, typename InputIterator>
+			KERBAL_CONSTEXPR20
+			void
+			avl_type_only<Entity>::
+			k_assign_sorted_using_allocator(
+				NodeAllocator & alloc, Extract & e, KeyCompare & kc,
+				InputIterator first, InputIterator last
+			)
+			{
+				iterator it = this->begin();
+				iterator end = this->end();
+
+				while (it != end && first != last) {
+					*it = first;
+					++it;
+					++first;
+				}
+
+				if (it != end) {
+					this->k_erase_using_allocator(alloc, it, end);
+				} else {
+					this->k_insert_using_allocator(alloc, e, kc, first, last);
+				}
+			}
 
 
 		//===================

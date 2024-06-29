@@ -202,6 +202,49 @@ namespace kerbal
 
 
 			//===================
+			// copy constructor
+
+				KERBAL_CONSTEXPR20
+				avl_ordered(const avl_ordered & src);
+
+				KERBAL_CONSTEXPR20
+				avl_ordered(const avl_ordered & src, const Allocator & alloc);
+
+#		if __cplusplus >= 201103L
+
+			//===================
+			// move constructor
+
+				KERBAL_CONSTEXPR20
+				avl_ordered(avl_ordered && src);
+
+				KERBAL_CONSTEXPR20
+				avl_ordered(avl_ordered && src, const Allocator & alloc);
+
+/*
+				KERBAL_CONSTEXPR20
+				avl_ordered(avl_ordered && src, const KeyCompare & key_comp);
+
+				KERBAL_CONSTEXPR20
+				avl_ordered(avl_ordered && src, const KeyCompare & key_comp, const Allocator & alloc);
+
+				KERBAL_CONSTEXPR20
+				avl_ordered(avl_ordered && src, const Extract & e);
+
+				KERBAL_CONSTEXPR20
+				avl_ordered(avl_ordered && src, const Extract & e, const Allocator & alloc);
+
+				KERBAL_CONSTEXPR20
+				avl_ordered(avl_ordered && src, const Extract & e, const KeyCompare & key_comp);
+
+				KERBAL_CONSTEXPR20
+				avl_ordered(avl_ordered && src, const Extract & e, const KeyCompare & key_comp, const Allocator & alloc);
+*/
+
+#		endif
+
+
+			//===================
 			// construct with iterators range
 
 				template <typename InputIterator>
@@ -549,50 +592,9 @@ namespace kerbal
 
 #		endif
 
-			//===================
-			// copy constructor
-
-				KERBAL_CONSTEXPR20
-				avl_ordered(const avl_ordered & src);
-
-				KERBAL_CONSTEXPR20
-				avl_ordered(const avl_ordered & src, const Allocator & alloc);
-
-#		if __cplusplus >= 201103L
-
-			//===================
-			// move constructor
-
-				KERBAL_CONSTEXPR20
-				avl_ordered(avl_ordered && src);
-
-				KERBAL_CONSTEXPR20
-				avl_ordered(avl_ordered && src, const Allocator & alloc);
-
-/*
-				KERBAL_CONSTEXPR20
-				avl_ordered(avl_ordered && src, const KeyCompare & key_comp);
-
-				KERBAL_CONSTEXPR20
-				avl_ordered(avl_ordered && src, const KeyCompare & key_comp, const Allocator & alloc);
-
-				KERBAL_CONSTEXPR20
-				avl_ordered(avl_ordered && src, const Extract & e);
-
-				KERBAL_CONSTEXPR20
-				avl_ordered(avl_ordered && src, const Extract & e, const Allocator & alloc);
-
-				KERBAL_CONSTEXPR20
-				avl_ordered(avl_ordered && src, const Extract & e, const KeyCompare & key_comp);
-
-				KERBAL_CONSTEXPR20
-				avl_ordered(avl_ordered && src, const Extract & e, const KeyCompare & key_comp, const Allocator & alloc);
-*/
-
-#		endif
-
 				KERBAL_CONSTEXPR20
 				~avl_ordered();
+
 
 			//===================
 			// assign
@@ -600,13 +602,30 @@ namespace kerbal
 				KERBAL_CONSTEXPR20
 				avl_ordered & operator=(const avl_ordered & src);
 
-				KERBAL_CONSTEXPR20
-				void assign(const avl_ordered & src);
-
 #		if __cplusplus >= 201103L
 
 				KERBAL_CONSTEXPR20
 				avl_ordered & operator=(avl_ordered && src);
+
+#		endif
+
+#		if __cplusplus >= 201103L
+
+				KERBAL_CONSTEXPR20
+				avl_ordered & operator=(std::initializer_list<value_type> ilist);
+
+#		else
+
+				template <typename U>
+				avl_ordered & operator=(const kerbal::assign::assign_list<U> & ilist);
+
+#		endif
+
+
+				KERBAL_CONSTEXPR20
+				void assign(const avl_ordered & src);
+
+#		if __cplusplus >= 201103L
 
 				KERBAL_CONSTEXPR20
 				void assign(avl_ordered && src);
@@ -624,18 +643,12 @@ namespace kerbal
 #		if __cplusplus >= 201103L
 
 				KERBAL_CONSTEXPR20
-				avl_ordered & operator=(std::initializer_list<value_type> ilist);
-
-				KERBAL_CONSTEXPR20
 				void assign(std::initializer_list<value_type> ilist);
 
 				KERBAL_CONSTEXPR20
 				void assign_unique(std::initializer_list<value_type> ilist);
 
 #		else
-
-				template <typename U>
-				avl_ordered & operator=(const kerbal::assign::assign_list<U> & ilist);
 
 				template <typename U>
 				void assign(const kerbal::assign::assign_list<U> & ilist);

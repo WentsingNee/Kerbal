@@ -118,6 +118,70 @@ namespace kerbal
 
 
 		//===================
+		// copy constructor
+
+		template <typename Entity, typename Extract, typename KeyCompare, typename Allocator>
+		KERBAL_CONSTEXPR20
+		avl_ordered<Entity, Extract, KeyCompare, Allocator>::
+		avl_ordered(const avl_ordered & src) :
+			extract_compress_helper(static_cast<const extract_compress_helper &>(src)),
+			key_compare_compress_helper(static_cast<const key_compare_compress_helper &>(src)),
+			avl_allocator_overload(src.alloc()),
+			avl_type_only(
+				this->alloc(), this->extract(), this->key_comp(),
+				static_cast<const avl_type_only &>(src)
+			)
+		{
+		}
+
+		template <typename Entity, typename Extract, typename KeyCompare, typename Allocator>
+		KERBAL_CONSTEXPR20
+		avl_ordered<Entity, Extract, KeyCompare, Allocator>::
+		avl_ordered(const avl_ordered & src, const Allocator & alloc) :
+			extract_compress_helper(static_cast<const extract_compress_helper &>(src)),
+			key_compare_compress_helper(static_cast<const key_compare_compress_helper &>(src)),
+			avl_allocator_overload(alloc),
+			avl_type_only(
+				this->alloc(), this->extract(), this->key_comp(),
+				static_cast<const avl_type_only &>(src)
+			)
+		{
+		}
+
+#	if __cplusplus >= 201103L
+
+		//===================
+		// move constructor
+
+		template <typename Entity, typename Extract, typename KeyCompare, typename Allocator>
+		KERBAL_CONSTEXPR20
+		avl_ordered<Entity, Extract, KeyCompare, Allocator>::
+		avl_ordered(avl_ordered && src) :
+			extract_compress_helper(static_cast<const extract_compress_helper &>(src)),
+			key_compare_compress_helper(static_cast<const key_compare_compress_helper &>(src)),
+			avl_allocator_overload(kerbal::compatibility::move(src.alloc())),
+			avl_type_only(static_cast<avl_type_only &&>(src))
+		{
+		}
+
+		template <typename Entity, typename Extract, typename KeyCompare, typename Allocator>
+		KERBAL_CONSTEXPR20
+		avl_ordered<Entity, Extract, KeyCompare, Allocator>::
+		avl_ordered(avl_ordered && src, const Allocator & alloc) :
+			extract_compress_helper(static_cast<const extract_compress_helper &>(src)),
+			key_compare_compress_helper(static_cast<const key_compare_compress_helper &>(src)),
+			avl_allocator_overload(alloc),
+			avl_type_only(
+				this->alloc(), this->extract(), this->key_comp(),
+				kerbal::compatibility::move(src.alloc()), static_cast<avl_type_only &&>(src)
+			)
+		{
+		}
+
+#	endif
+
+
+		//===================
 		// construct with iterators range
 
 		template <typename Entity, typename Extract, typename KeyCompare, typename Allocator>
@@ -780,69 +844,6 @@ namespace kerbal
 #	endif
 
 
-		//===================
-		// copy constructor
-
-		template <typename Entity, typename Extract, typename KeyCompare, typename Allocator>
-		KERBAL_CONSTEXPR20
-		avl_ordered<Entity, Extract, KeyCompare, Allocator>::
-		avl_ordered(const avl_ordered & src) :
-			extract_compress_helper(static_cast<const extract_compress_helper &>(src)),
-			key_compare_compress_helper(static_cast<const key_compare_compress_helper &>(src)),
-			avl_allocator_overload(src.alloc()),
-			avl_type_only(
-				this->alloc(), this->extract(), this->key_comp(),
-				static_cast<const avl_type_only &>(src)
-			)
-		{
-		}
-
-		template <typename Entity, typename Extract, typename KeyCompare, typename Allocator>
-		KERBAL_CONSTEXPR20
-		avl_ordered<Entity, Extract, KeyCompare, Allocator>::
-		avl_ordered(const avl_ordered & src, const Allocator & alloc) :
-			extract_compress_helper(static_cast<const extract_compress_helper &>(src)),
-			key_compare_compress_helper(static_cast<const key_compare_compress_helper &>(src)),
-			avl_allocator_overload(alloc),
-			avl_type_only(
-				this->alloc(), this->extract(), this->key_comp(),
-				static_cast<const avl_type_only &>(src)
-			)
-		{
-		}
-
-#	if __cplusplus >= 201103L
-
-		//===================
-		// move constructor
-
-		template <typename Entity, typename Extract, typename KeyCompare, typename Allocator>
-		KERBAL_CONSTEXPR20
-		avl_ordered<Entity, Extract, KeyCompare, Allocator>::
-		avl_ordered(avl_ordered && src) :
-			extract_compress_helper(static_cast<const extract_compress_helper &>(src)),
-			key_compare_compress_helper(static_cast<const key_compare_compress_helper &>(src)),
-			avl_allocator_overload(kerbal::compatibility::move(src.alloc())),
-			avl_type_only(static_cast<avl_type_only &&>(src))
-		{
-		}
-
-		template <typename Entity, typename Extract, typename KeyCompare, typename Allocator>
-		KERBAL_CONSTEXPR20
-		avl_ordered<Entity, Extract, KeyCompare, Allocator>::
-		avl_ordered(avl_ordered && src, const Allocator & alloc) :
-			extract_compress_helper(static_cast<const extract_compress_helper &>(src)),
-			key_compare_compress_helper(static_cast<const key_compare_compress_helper &>(src)),
-			avl_allocator_overload(alloc),
-			avl_type_only(
-				this->alloc(), this->extract(), this->key_comp(),
-				kerbal::compatibility::move(src.alloc()), static_cast<avl_type_only &&>(src)
-			)
-		{
-		}
-
-#	endif
-
 		template <typename Entity, typename Extract, typename KeyCompare, typename Allocator>
 		KERBAL_CONSTEXPR20
 		avl_ordered<Entity, Extract, KeyCompare, Allocator>::
@@ -850,6 +851,7 @@ namespace kerbal
 		{
 			this->avl_type_only::k_destroy_using_allocator(this->alloc());
 		}
+
 
 		//===================
 		// assign
@@ -863,6 +865,46 @@ namespace kerbal
 			this->assign(src);
 			return *this;
 		}
+
+#	if __cplusplus >= 201103L
+
+		template <typename Entity, typename Extract, typename KeyCompare, typename Allocator>
+		KERBAL_CONSTEXPR20
+		avl_ordered<Entity, Extract, KeyCompare, Allocator> &
+		avl_ordered<Entity, Extract, KeyCompare, Allocator>::
+		operator=(avl_ordered && src)
+		{
+			this->assign(kerbal::compatibility::move(src));
+			return *this;
+		}
+
+#	endif
+
+#	if __cplusplus >= 201103L
+
+		template <typename Entity, typename Extract, typename KeyCompare, typename Allocator>
+		KERBAL_CONSTEXPR20
+		avl_ordered<Entity, Extract, KeyCompare, Allocator> &
+		avl_ordered<Entity, Extract, KeyCompare, Allocator>::
+		operator=(std::initializer_list<value_type> ilist)
+		{
+			this->assign(ilist);
+			return *this;
+		}
+
+#	else
+
+		template <typename Entity, typename Extract, typename KeyCompare, typename Allocator>
+		template <typename U>
+		avl_ordered<Entity, Extract, KeyCompare, Allocator> &
+		avl_ordered<Entity, Extract, KeyCompare, Allocator>::
+		operator=(const kerbal::assign::assign_list<U> & ilist)
+		{
+			this->assign(ilist);
+			return *this;
+		}
+
+#	endif
 
 		template <typename Entity, typename Extract, typename KeyCompare, typename Allocator>
 		KERBAL_CONSTEXPR20
@@ -879,16 +921,6 @@ namespace kerbal
 		}
 
 #	if __cplusplus >= 201103L
-
-		template <typename Entity, typename Extract, typename KeyCompare, typename Allocator>
-		KERBAL_CONSTEXPR20
-		avl_ordered<Entity, Extract, KeyCompare, Allocator> &
-		avl_ordered<Entity, Extract, KeyCompare, Allocator>::
-		operator=(avl_ordered && src)
-		{
-			this->assign(kerbal::compatibility::move(src));
-			return *this;
-		}
 
 		template <typename Entity, typename Extract, typename KeyCompare, typename Allocator>
 		KERBAL_CONSTEXPR20
@@ -936,16 +968,6 @@ namespace kerbal
 
 		template <typename Entity, typename Extract, typename KeyCompare, typename Allocator>
 		KERBAL_CONSTEXPR20
-		avl_ordered<Entity, Extract, KeyCompare, Allocator> &
-		avl_ordered<Entity, Extract, KeyCompare, Allocator>::
-		operator=(std::initializer_list<value_type> ilist)
-		{
-			this->assign(ilist);
-			return *this;
-		}
-
-		template <typename Entity, typename Extract, typename KeyCompare, typename Allocator>
-		KERBAL_CONSTEXPR20
 		void
 		avl_ordered<Entity, Extract, KeyCompare, Allocator>::
 		assign(std::initializer_list<value_type> ilist)
@@ -972,16 +994,6 @@ namespace kerbal
 
 		template <typename Entity, typename Extract, typename KeyCompare, typename Allocator>
 		template <typename U>
-		avl_ordered<Entity, Extract, KeyCompare, Allocator> &
-		avl_ordered<Entity, Extract, KeyCompare, Allocator>::
-		operator=(const kerbal::assign::assign_list<U> & ilist)
-		{
-			this->assign(ilist);
-			return *this;
-		}
-
-		template <typename Entity, typename Extract, typename KeyCompare, typename Allocator>
-		template <typename U>
 		void
 		avl_ordered<Entity, Extract, KeyCompare, Allocator>::
 		assign(const kerbal::assign::assign_list<U> & ilist)
@@ -1005,6 +1017,7 @@ namespace kerbal
 		}
 
 #	endif
+
 
 		//===================
 		// lookup
