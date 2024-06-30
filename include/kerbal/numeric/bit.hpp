@@ -21,6 +21,7 @@
 #include <climits>
 #include <cstddef>
 
+#include <kerbal/numeric/bit/bitarray.hpp>
 #include <kerbal/numeric/bit/countr_zero.hpp>
 #include <kerbal/numeric/bit/popcount.hpp>
 #include <kerbal/numeric/bit/single_bit_bsearch.hpp>
@@ -31,36 +32,6 @@ namespace kerbal
 
 	namespace numeric
 	{
-
-		template <typename T>
-		struct bitarray_result_len :
-			kerbal::type_traits::integral_constant<std::size_t, sizeof(T) * CHAR_BIT>
-		{
-		};
-
-		template <typename T>
-		struct bitarray_result
-		{
-				typedef kerbal::container::array<bool, bitarray_result_len<T>::value> type;
-		};
-
-		template <typename T>
-		KERBAL_CONSTEXPR14
-		typename kerbal::numeric::bitarray_result<T>::type
-		bitarray(T x) KERBAL_NOEXCEPT
-		{
-			typedef kerbal::numeric::bitarray_result_len<T> BIT_ARRAY_LEN;
-			typename kerbal::numeric::bitarray_result<T>::type r
-#		if __cplusplus >= 201402L
-				= {}
-#		endif
-			;
-
-			for (typename BIT_ARRAY_LEN::value_type i = 0; i < BIT_ARRAY_LEN::value; ++i) {
-				r[BIT_ARRAY_LEN::value - 1 - i] = ((x >> i) & 1);
-			}
-			return r;
-		}
 
 		template <typename T>
 		struct octarray_result_len :
