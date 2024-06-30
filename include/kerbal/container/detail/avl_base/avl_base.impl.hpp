@@ -1867,11 +1867,13 @@ namespace kerbal
 					p->parent = &this->k_head;
 					++this->k_size;
 				} else {
+					const typename Extract::key_type & src_key = e(p->member());
+
 					node_base * cur_base = this->k_head.left;
 					while (true) {
 						if (
 							kc(
-								e(p->member()),
+								src_key,
 								e(node::reinterpret_as(cur_base)->member())
 							)
 						) { // src < p->member(), ** may throw here **
@@ -2620,11 +2622,13 @@ namespace kerbal
 					p->height = 1;
 					p->parent = &this->k_head;
 				} else {
+					const typename ThisExtract::key_type & other_key = this_e(p->member());
+
 					node_base * cur_base = this->k_head.left;
 					while (true) {
 						if (
 							this_kc(
-								this_e(p->member()),
+								other_key,
 								this_e(node::reinterpret_as(cur_base)->member())
 							)
 						) { // other < p->member(), ** may throw here **
@@ -2677,9 +2681,10 @@ namespace kerbal
 					p->height = 1;
 					p->parent = &this->k_head;
 				} else {
+					const typename ThisExtract::key_type & other_key = this_e(p->member());
+
 					node_base * cur_base = this->k_head.left;
 					while (true) {
-						const typename ThisExtract::key_type & other_key = this_e(p->member());
 						const typename ThisExtract::key_type & cur_key = this_e(node::reinterpret_as(cur_base)->member());
 						if (this_kc(other_key, cur_key)) { // other < p->member(), ** may throw here **
 							if (cur_base->left == get_avl_vnull_node()) {
