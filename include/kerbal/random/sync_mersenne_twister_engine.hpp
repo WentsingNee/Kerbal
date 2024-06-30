@@ -12,7 +12,7 @@
 #ifndef KERBAL_RANDOM_SYNC_MERSENNE_TWISTER_ENGINE_HPP
 #define KERBAL_RANDOM_SYNC_MERSENNE_TWISTER_ENGINE_HPP
 
-#include <kerbal/algorithm/sequence_compare.hpp>
+#include <kerbal/compare/sequence_compare.hpp>
 #include <kerbal/compatibility/constexpr.hpp>
 #include <kerbal/compatibility/fixed_width_integer.hpp>
 #include <kerbal/compatibility/noexcept.hpp>
@@ -24,7 +24,7 @@
 #include <cstddef>
 #include <atomic>
 
-#include <kerbal/random/detail/mt_engine_base.hpp>
+#include <kerbal/random/detail/mt_twist_helper.hpp>
 
 
 namespace kerbal
@@ -41,10 +41,10 @@ namespace kerbal
 				UIntType C, std::size_t L, UIntType F
 		>
 		class sync_mersenne_twister_engine :
-				detail::mt_engine_twist_helper<UIntType, N, M, R, A>
+				detail::mt_twist_helper<UIntType, N, M, R, A>
 		{
 			private:
-				typedef detail::mt_engine_twist_helper<UIntType, N, M, R, A> mt_engine_twist_helper;
+				typedef detail::mt_twist_helper<UIntType, N, M, R, A> mt_twist_helper;
 
 			private:
 				KERBAL_STATIC_ASSERT(0 < M,     "the following relations shall hold: 0 < M");
@@ -104,7 +104,7 @@ namespace kerbal
 				KERBAL_CONSTEXPR14
 				void twist() KERBAL_NOEXCEPT
 				{
-					mt_engine_twist_helper::twist(mt);
+					mt_twist_helper::twist(mt);
 				}
 
 
@@ -274,12 +274,16 @@ namespace kerbal
 //		>
 //		class sync_mersenne_twister_engine;
 
-		typedef kerbal::random::sync_mersenne_twister_engine<kerbal::compatibility::uint32_t, 32, 624, 397, 31,
+		typedef kerbal::random::sync_mersenne_twister_engine<
+				kerbal::compatibility::uint32_t,
+				32, 624, 397, 31,
 				0x9908b0dfUL, 11, 0xffffffffUL, 7,
 				0x9d2c5680UL, 15,
 				0xefc60000UL, 18, 1812433253UL> sync_mt19937;
 
-		typedef kerbal::random::sync_mersenne_twister_engine<kerbal::compatibility::uint64_t, 64, 312, 156, 31,
+		typedef kerbal::random::sync_mersenne_twister_engine<
+				kerbal::compatibility::uint64_t,
+				64, 312, 156, 31,
 				0xb5026f5aa96619e9ULL, 29, 0x5555555555555555ULL, 17,
 				0x71d67fffeda60000ULL, 37,
 				0xfff7eee000000000ULL, 43, 6364136223846793005ULL> sync_mt19937_64;
