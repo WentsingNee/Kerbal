@@ -1483,9 +1483,11 @@ namespace kerbal
 					p->parent = &this->k_head;
 					++this->k_size;
 				} else {
+					const typename Extract::key_type & src_key = e(p->member());
+
 					node_base * cur_base = this->k_head.left;
 					while (true) {
-						if (kc(e(p->member()), e(node::reinterpret_as(cur_base)->member()))) { // src < p->member(), ** may throw here **
+						if (kc(src_key, e(node::reinterpret_as(cur_base)->member()))) { // src < p->member(), ** may throw here **
 							if (cur_base->left == get_avl_vnull_node()) {
 								cur_base->left = p;
 								break;
