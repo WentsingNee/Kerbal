@@ -12,19 +12,19 @@
 #ifndef KERBAL_RANDOM_ENGINE_SYNC_MERSENNE_TWISTER_ENGINE_HPP
 #define KERBAL_RANDOM_ENGINE_SYNC_MERSENNE_TWISTER_ENGINE_HPP
 
-#include <kerbal/algorithm/sequence_compare.hpp>
+#include <kerbal/compare/sequence_compare.hpp>
 #include <kerbal/compatibility/constexpr.hpp>
 #include <kerbal/compatibility/fixed_width_integer.hpp>
 #include <kerbal/compatibility/noexcept.hpp>
 #include <kerbal/compatibility/static_assert.hpp>
-#include <kerbal/container/nonmember_container_access.hpp>
 #include <kerbal/numeric/numeric_limits.hpp>
+#include <kerbal/smath/two_pow_sn_minus_one.hpp>
 #include <kerbal/type_traits/integral_constant.hpp>
 
 #include <cstddef>
 #include <atomic>
 
-#include <kerbal/random/detail/mt_engine_base.hpp>
+#include <kerbal/random/detail/mt_twist_helper.hpp>
 
 
 namespace kerbal
@@ -34,17 +34,18 @@ namespace kerbal
 	{
 
 		template <
-				typename UIntType,
-				std::size_t W, std::size_t N, std::size_t M, std::size_t R,
-				UIntType A, std::size_t U, UIntType D, std::size_t S,
-				UIntType B, std::size_t T,
-				UIntType C, std::size_t L, UIntType F
+			typename UIntType, std::size_t W,
+			std::size_t N, std::size_t M, std::size_t R, UIntType A,
+			std::size_t U, UIntType D,
+			std::size_t S, UIntType B,
+			std::size_t T, UIntType C,
+			std::size_t L, UIntType F
 		>
 		class sync_mersenne_twister_engine :
-				detail::mt_engine_twist_helper<UIntType, N, M, R, A>
+			detail::mt_twist_helper<UIntType, N, M, R, A>
 		{
 			private:
-				typedef detail::mt_engine_twist_helper<UIntType, N, M, R, A> mt_engine_twist_helper;
+				typedef detail::mt_twist_helper<UIntType, N, M, R, A> mt_twist_helper;
 
 			private:
 				KERBAL_STATIC_ASSERT(0 < M,     "the following relations shall hold: 0 < M");
@@ -55,25 +56,19 @@ namespace kerbal
 				KERBAL_STATIC_ASSERT(S <= W,    "the following relations shall hold: S <= W");
 				KERBAL_STATIC_ASSERT(T <= W,    "the following relations shall hold: T <= W");
 				KERBAL_STATIC_ASSERT(L <= W,    "the following relations shall hold: L <= W");
-				KERBAL_STATIC_ASSERT(W <= kerbal::numeric::numeric_limits<UIntType>::DIGITS::value,
-						"the following relations shall hold: w <= numeric_limits<UIntType>::digits");
+				KERBAL_STATIC_ASSERT(
+					W <= kerbal::numeric::numeric_limits<UIntType>::DIGITS::value,
+					"the following relations shall hold: W <= numeric_limits<UIntType>::digits"
+				);
 
-				// (1 << W) - 1u
-				struct _1_shift_W_minus_1 :
-						public kerbal::type_traits::integral_constant<
-							UIntType,
-							W == kerbal::numeric::numeric_limits<UIntType>::DIGITS::value ?
-								~static_cast<UIntType>(0u) :
-								((static_cast<UIntType>(1u) << W) - 1u)
-						>
-				{
-				};
+				// (2 ** W) - 1u
+				typedef kerbal::smath::two_pow_sn_minus_one<UIntType, W> two_pow_sn_minus_one;
 
-				KERBAL_STATIC_ASSERT(A <= _1_shift_W_minus_1::value, "the following relations shall hold: A <= (1u << W) - 1u");
-				KERBAL_STATIC_ASSERT(B <= _1_shift_W_minus_1::value, "the following relations shall hold: B <= (1u << W) - 1u");
-				KERBAL_STATIC_ASSERT(C <= _1_shift_W_minus_1::value, "the following relations shall hold: C <= (1u << W) - 1u");
-				KERBAL_STATIC_ASSERT(D <= _1_shift_W_minus_1::value, "the following relations shall hold: D <= (1u << W) - 1u");
-				KERBAL_STATIC_ASSERT(F <= _1_shift_W_minus_1::value, "the following relations shall hold: F <= (1u << W) - 1u");
+				KERBAL_STATIC_ASSERT(A <= two_pow_sn_minus_one::value, "the following relations shall hold: A <= (2 ** W) - 1u");
+				KERBAL_STATIC_ASSERT(B <= two_pow_sn_minus_one::value, "the following relations shall hold: B <= (2 ** W) - 1u");
+				KERBAL_STATIC_ASSERT(C <= two_pow_sn_minus_one::value, "the following relations shall hold: C <= (2 ** W) - 1u");
+				KERBAL_STATIC_ASSERT(D <= two_pow_sn_minus_one::value, "the following relations shall hold: D <= (2 ** W) - 1u");
+				KERBAL_STATIC_ASSERT(F <= two_pow_sn_minus_one::value, "the following relations shall hold: F <= (2 ** W) - 1u");
 
 			public:
 				typedef UIntType result_type;
@@ -104,7 +99,7 @@ namespace kerbal
 				KERBAL_CONSTEXPR14
 				void twist() KERBAL_NOEXCEPT
 				{
-					mt_engine_twist_helper::twist(mt);
+					mt_twist_helper::twist(mt);
 				}
 
 
@@ -125,16 +120,16 @@ namespace kerbal
 
 #		if __cplusplus >= 201103L
 
-				explicit sync_mersenne_twister_engine(result_type seed = DEFAULT_SEED::value) KERBAL_NOEXCEPT
-						: mt{seed}, mti(N)
+				explicit sync_mersenne_twister_engine(result_type seed = DEFAULT_SEED::value) KERBAL_NOEXCEPT :
+					mt{seed}, mti(N)
 				{
 					this->init_mt();
 				}
 
 #		else
 
-				explicit sync_mersenne_twister_engine(result_type seed = DEFAULT_SEED::value) KERBAL_NOEXCEPT
-						: mti(N)
+				explicit sync_mersenne_twister_engine(result_type seed = DEFAULT_SEED::value) KERBAL_NOEXCEPT :
+					mti(N)
 				{
 					this->mt[0] = seed;
 					this->init_mt();
@@ -259,30 +254,41 @@ namespace kerbal
 				KERBAL_CONSTEXPR
 				static result_type max() KERBAL_NOEXCEPT
 				{
-					return _1_shift_W_minus_1::value;
+					return two_pow_sn_minus_one::value;
 				}
 
 		};
 
 
 //		template <
-//				typename UIntType,
-//				std::size_t W, std::size_t N, std::size_t M, std::size_t R,
-//				UIntType A, std::size_t U, UIntType D, std::size_t S,
-//				UIntType B, std::size_t T,
-//				UIntType C, std::size_t L, UIntType F
+//			typename UIntType, std::size_t W,
+//			std::size_t N, std::size_t M, std::size_t R, UIntType A,
+//			std::size_t U, UIntType D,
+//			std::size_t S, UIntType B,
+//			std::size_t T, UIntType C,
+//			std::size_t L, UIntType F
 //		>
 //		class sync_mersenne_twister_engine;
 
-		typedef kerbal::random::sync_mersenne_twister_engine<kerbal::compatibility::uint32_t, 32, 624, 397, 31,
-				0x9908b0dfUL, 11, 0xffffffffUL, 7,
-				0x9d2c5680UL, 15,
-				0xefc60000UL, 18, 1812433253UL> sync_mt19937;
+		typedef
+		kerbal::random::sync_mersenne_twister_engine<
+			kerbal::compatibility::uint32_t, 32,
+			624, 397, 31, 0x9908b0dfUL,
+			11, 0xffffffffUL,
+			7, 0x9d2c5680UL,
+			15, 0xefc60000UL,
+			18, 1812433253UL
+		> sync_mt19937;
 
-		typedef kerbal::random::sync_mersenne_twister_engine<kerbal::compatibility::uint64_t, 64, 312, 156, 31,
-				0xb5026f5aa96619e9ULL, 29, 0x5555555555555555ULL, 17,
-				0x71d67fffeda60000ULL, 37,
-				0xfff7eee000000000ULL, 43, 6364136223846793005ULL> sync_mt19937_64;
+		typedef
+		kerbal::random::sync_mersenne_twister_engine<
+			kerbal::compatibility::uint64_t, 64,
+			312, 156, 31, 0xb5026f5aa96619e9ULL,
+			29, 0x5555555555555555ULL,
+			17, 0x71d67fffeda60000ULL,
+			37, 0xfff7eee000000000ULL,
+			43, 6364136223846793005ULL
+		> sync_mt19937_64;
 
 
 	} // namespace random
