@@ -1635,14 +1635,14 @@ namespace kerbal
 			KERBAL_CONSTEXPR20
 			void list_type_only<T>::sort(BinaryPredict cmp)
 			{
-				k_sort(this->begin(), this->end(), cmp);
+				k_sort(this->cbegin(), this->cend(), cmp);
 			}
 
 			template <typename T>
 			KERBAL_CONSTEXPR20
 			void list_type_only<T>::sort()
 			{
-				k_sort(this->begin(), this->end());
+				k_sort(this->cbegin(), this->cend());
 			}
 
 			template <typename T>
