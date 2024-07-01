@@ -38,8 +38,10 @@ namespace kerbal
 
 		namespace pmr
 		{
+
 			template <typename T>
 			using vector = kerbal::container::vector<T, std::pmr::polymorphic_allocator<T> >;
+
 		}
 
 #	endif

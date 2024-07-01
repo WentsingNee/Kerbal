@@ -13,6 +13,7 @@
 #define KERBAL_FUNCTION_FUNCTION_TRAITS_HPP
 
 #include <kerbal/ts/modules_ts/modules_ts.hpp>
+
 #include <kerbal/compatibility/cv_qualified_function.hpp>
 #include <kerbal/tmp/type_vector.hpp>
 #include <kerbal/type_traits/integral_constant.hpp>

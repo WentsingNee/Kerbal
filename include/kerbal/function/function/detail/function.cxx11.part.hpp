@@ -1023,6 +1023,7 @@ namespace kerbal
 
 		};
 
+
 		template <typename T, typename Fun, std::size_t Size, std::size_t Align, typename Allocator>
 		KERBAL_CONSTEXPR20
 		T * function_cast(basic_function<Fun, Size, Align, Allocator> * operand) KERBAL_NOEXCEPT
