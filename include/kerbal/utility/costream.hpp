@@ -82,6 +82,7 @@ namespace kerbal
 			;
 #endif
 
+
 			template <std::ostream & bind_ostream>
 			class costream
 			{

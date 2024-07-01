@@ -55,6 +55,7 @@ namespace kerbal
 
 		} // namespace detail
 
+
 		template <
 			typename Iter,
 			bool IsInplace = kerbal::iterator::detail::reverse_iterator_base_is_inplace<
@@ -398,6 +399,7 @@ namespace kerbal
 
 		} // namespace detail
 
+
 		template <typename Iter, bool IsInplace>
 		class reverse_iterator :
 			public kerbal::iterator::detail::reverse_iterator_impl<
@@ -445,6 +447,7 @@ namespace kerbal
 		reverse_iterator<BidirectionalIterator>;
 
 #	endif
+
 
 		template <typename Iter>
 		KERBAL_CONSTEXPR

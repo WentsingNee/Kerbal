@@ -28,6 +28,7 @@
 #	include <cstdlib> // std::abort
 #endif
 
+
 namespace kerbal
 {
 

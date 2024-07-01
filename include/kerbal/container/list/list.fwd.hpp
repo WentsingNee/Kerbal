@@ -35,8 +35,10 @@ namespace kerbal
 
 		namespace pmr
 		{
+
 			template <typename T>
 			using list = kerbal::container::list<T, std::pmr::polymorphic_allocator<T> >;
+
 		}
 
 #	endif

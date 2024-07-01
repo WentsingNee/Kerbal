@@ -418,6 +418,7 @@ namespace kerbal
 
 		} // namespace detail
 
+
 		template <typename ... Args>
 		struct tuple : detail::tuple_impl<kerbal::utility::make_index_sequence<sizeof...(Args)>, Args...>
 		{
@@ -1809,6 +1810,7 @@ namespace kerbal
 			};
 
 		} // namespace detail
+
 
 		template <typename ... Tuples>
 		KERBAL_CONSTEXPR

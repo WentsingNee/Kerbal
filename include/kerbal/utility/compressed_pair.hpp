@@ -501,6 +501,7 @@ namespace kerbal
 
 		};
 
+
 		template <typename T, typename U>
 		KERBAL_CONSTEXPR
 		bool operator==(
