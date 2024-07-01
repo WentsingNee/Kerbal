@@ -25,6 +25,7 @@
 #include <kerbal/operators/incr_decr.hpp>
 #include <kerbal/operators/less_than_comparable.hpp>
 #include <kerbal/operators/subtractable.hpp>
+#include <kerbal/type_traits/integral_constant.hpp>
 
 #include <cstddef>
 

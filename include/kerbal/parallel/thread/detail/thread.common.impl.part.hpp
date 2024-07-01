@@ -12,10 +12,20 @@
 #ifndef KERBAL_PARALLEL_THREAD_DETAIL_THREAD_COMMON_IMPL_PART_HPP
 #define KERBAL_PARALLEL_THREAD_DETAIL_THREAD_COMMON_IMPL_PART_HPP
 
+#include <kerbal/compatibility/noexcept.hpp>
 #include <kerbal/compatibility/static_assert.hpp>
 #include <kerbal/config/system.hpp>
 #include <kerbal/type_traits/is_same.hpp>
 #include <kerbal/type_traits/remove_const.hpp>
+
+#if __cplusplus < 201103L
+#	include <kerbal/macro/macro_concat.hpp>
+#	include <kerbal/macro/ppexpand.hpp>
+#endif
+
+#if __cplusplus >= 201103L
+#	include <kerbal/utility/forward.hpp>
+#endif
 
 #include <kerbal/parallel/thread/thread.decl.hpp>
 

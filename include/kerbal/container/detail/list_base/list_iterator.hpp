@@ -17,11 +17,14 @@
 #include <kerbal/container/list/list.fwd.hpp>
 #include <kerbal/container/detail/list_base/list_node.hpp>
 
+#include <kerbal/compatibility/constexpr.hpp>
+#include <kerbal/compatibility/noexcept.hpp>
 #include <kerbal/operators/dereferenceable.hpp>
 #include <kerbal/operators/equality_comparable.hpp>
 #include <kerbal/operators/incr_decr.hpp>
 #include <kerbal/iterator/iterator_traits.hpp>
 #include <kerbal/iterator/reverse_iterator.hpp>
+#include <kerbal/type_traits/integral_constant.hpp>
 
 
 namespace kerbal

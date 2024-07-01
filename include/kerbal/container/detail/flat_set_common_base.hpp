@@ -14,6 +14,7 @@
 #define KERBAL_CONTAINER_DETAIL_FLAT_SET_COMMON_BASE_HPP
 
 #include <kerbal/compatibility/constexpr.hpp>
+#include <kerbal/compatibility/noexcept.hpp>
 #include <kerbal/utility/compressed_pair.hpp>
 
 

@@ -13,6 +13,8 @@
 #define KERBAL_HASH_SHA1_SHA1_IMPL_HPP
 
 #include <kerbal/algorithm/modifier/copy.hpp>
+#include <kerbal/compatibility/constexpr.hpp>
+#include <kerbal/compatibility/noexcept.hpp>
 #include <kerbal/compatibility/static_assert.hpp>
 #include <kerbal/iterator/iterator.hpp>
 #include <kerbal/numeric/bit.hpp>

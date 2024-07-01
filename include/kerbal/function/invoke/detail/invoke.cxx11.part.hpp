@@ -20,7 +20,6 @@
 #include <kerbal/compatibility/constexpr.hpp>
 #include <kerbal/compatibility/noexcept.hpp>
 #include <kerbal/compatibility/static_assert.hpp>
-#include <kerbal/utility/declval.hpp>
 #include <kerbal/utility/forward.hpp>
 #include <kerbal/utility/reference_wrapper.hpp>
 

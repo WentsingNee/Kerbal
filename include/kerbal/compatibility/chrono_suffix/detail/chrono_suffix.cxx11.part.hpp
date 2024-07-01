@@ -20,6 +20,7 @@
 #include <kerbal/compatibility/constexpr.hpp>
 
 #include <chrono>
+#include <ratio>
 
 
 namespace kerbal

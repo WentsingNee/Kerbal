@@ -17,6 +17,8 @@
 #include <kerbal/container/forward_list/forward_list.fwd.hpp>
 #include <kerbal/container/detail/single_list_base/single_list_node.hpp>
 
+#include <kerbal/compatibility/constexpr.hpp>
+#include <kerbal/compatibility/noexcept.hpp>
 #include <kerbal/operators/dereferenceable.hpp>
 #include <kerbal/operators/equality_comparable.hpp>
 #include <kerbal/operators/incr_decr.hpp>

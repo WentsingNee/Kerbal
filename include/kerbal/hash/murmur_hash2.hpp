@@ -12,6 +12,7 @@
 #ifndef KERBAL_HASH_MURMUR_HASH2_HPP
 #define KERBAL_HASH_MURMUR_HASH2_HPP
 
+#include <kerbal/compatibility/constexpr.hpp>
 #include <kerbal/compatibility/fixed_width_integer.hpp>
 #include <kerbal/compatibility/noexcept.hpp>
 #include <kerbal/compatibility/static_assert.hpp>

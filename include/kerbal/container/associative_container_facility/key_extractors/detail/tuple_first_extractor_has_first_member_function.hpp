@@ -13,6 +13,7 @@
 #define KERBAL_CONTAINER_ASSOCIATIVE_CONTAINER_FACILITY_KEY_EXTRACTORS_DETAIL_TUPLE_FIRST_EXTRACTOR_HAS_FIRST_MEMBER_FUNCTION_HPP
 
 #include <kerbal/config/compiler_id.hpp>
+#include <kerbal/type_traits/integral_constant.hpp>
 #include <kerbal/type_traits/yes_no_type.hpp>
 #include <kerbal/utility/declval.hpp>
 

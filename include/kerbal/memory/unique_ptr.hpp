@@ -20,6 +20,7 @@
 #if __cplusplus >= 201103L
 #	include <kerbal/compatibility/move.hpp>
 #	include <kerbal/type_traits/enable_if.hpp>
+#	include <kerbal/type_traits/integral_constant.hpp>
 #	include <kerbal/type_traits/is_array.hpp>
 #	include <kerbal/utility/declval.hpp>
 #	include <kerbal/utility/forward.hpp>

@@ -19,6 +19,7 @@
 #include <kerbal/compatibility/static_assert.hpp>
 #include <kerbal/numeric/bit/single_bit_bsearch.hpp>
 #include <kerbal/smath/has_single_bit.hpp>
+#include <kerbal/type_traits/integral_constant.hpp>
 #include <kerbal/type_traits/sign_deduction.hpp>
 
 #include <climits>

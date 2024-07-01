@@ -25,6 +25,7 @@
 #include <kerbal/memory/allocator_traits.hpp>
 #include <kerbal/type_traits/conditional.hpp>
 #include <kerbal/type_traits/enable_if.hpp>
+#include <kerbal/type_traits/integral_constant.hpp>
 #include <kerbal/type_traits/is_function.hpp>
 #include <kerbal/type_traits/tribool_constant.hpp>
 #include <kerbal/utility/compressed_pair.hpp>
@@ -45,6 +46,8 @@
 #	include <kerbal/memory/bad_alloc.hpp>
 #	include <kerbal/utility/throw_this_exception.hpp>
 #endif
+
+#include <typeinfo>
 
 #if __cplusplus >= 201103L
 #	include <initializer_list>

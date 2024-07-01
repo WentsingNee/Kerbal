@@ -13,6 +13,7 @@
 #define KERBAL_CONTAINER_DETAIL_STATIC_QUEUE_BASE_HPP
 
 #include <kerbal/compatibility/constexpr.hpp>
+#include <kerbal/compatibility/noexcept.hpp>
 #include <kerbal/memory/raw_storage.hpp>
 #include <kerbal/type_traits/is_trivially_destructible.hpp>
 

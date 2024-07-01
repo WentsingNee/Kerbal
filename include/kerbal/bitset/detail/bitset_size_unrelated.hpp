@@ -14,6 +14,8 @@
 
 #include <kerbal/algorithm/modifier/fill.hpp>
 #include <kerbal/compare/sequence_compare.hpp>
+#include <kerbal/compatibility/constexpr.hpp>
+#include <kerbal/compatibility/noexcept.hpp>
 #include <kerbal/numeric/bit.hpp>
 #include <kerbal/type_traits/integral_constant.hpp>
 

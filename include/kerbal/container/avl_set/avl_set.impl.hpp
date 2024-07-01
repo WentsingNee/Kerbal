@@ -20,6 +20,11 @@
 #include <kerbal/container/associative_container_facility/unique_tag_t.hpp>
 #include <kerbal/utility/compressed_pair.hpp>
 
+#if __cplusplus < 201103L
+#	include <kerbal/macro/macro_concat.hpp>
+#	include <kerbal/macro/ppexpand.hpp>
+#endif
+
 #if __cplusplus >= 201103L
 #	include <kerbal/compatibility/move.hpp>
 #	include <kerbal/utility/forward.hpp>

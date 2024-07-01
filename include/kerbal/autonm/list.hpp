@@ -25,6 +25,11 @@
 #include <kerbal/utility/declval.hpp>
 #include <kerbal/utility/noncopyable.hpp>
 
+#if __cplusplus < 201103L
+#	include <kerbal/macro/macro_concat.hpp>
+#	include <kerbal/macro/ppexpand.hpp>
+#endif
+
 #if __cplusplus >= 201103L
 #	include <kerbal/utility/forward.hpp>
 #endif

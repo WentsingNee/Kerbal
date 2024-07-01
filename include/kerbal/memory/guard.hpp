@@ -12,6 +12,7 @@
 #ifndef KERBAL_MEMORY_GUARD_HPP
 #define KERBAL_MEMORY_GUARD_HPP
 
+#include <kerbal/compatibility/constexpr.hpp>
 #include <kerbal/compatibility/noexcept.hpp>
 #include <kerbal/memory/default_delete.hpp>
 #include <kerbal/utility/declval.hpp>

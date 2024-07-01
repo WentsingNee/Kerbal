@@ -12,7 +12,9 @@
 #ifndef KERBAL_CONTAINER_FORWARD_LIST_FORWARD_LIST_IMPL_HPP
 #define KERBAL_CONTAINER_FORWARD_LIST_FORWARD_LIST_IMPL_HPP
 
+#include <kerbal/compatibility/constexpr.hpp>
 #include <kerbal/compatibility/move.hpp>
+#include <kerbal/compatibility/noexcept.hpp>
 #include <kerbal/iterator/iterator_traits.hpp>
 #include <kerbal/utility/declval.hpp>
 

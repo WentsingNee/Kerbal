@@ -14,6 +14,8 @@
 
 #include <kerbal/algorithm/swap.hpp>
 #include <kerbal/assign/generic_assign.hpp>
+#include <kerbal/compatibility/constexpr.hpp>
+#include <kerbal/compatibility/noexcept.hpp>
 #include <kerbal/config/exceptions.hpp>
 #include <kerbal/iterator/iterator.hpp>
 #include <kerbal/type_traits/conditional.hpp>
@@ -39,6 +41,8 @@
 #endif
 
 #include <cstddef>
+
+#include <typeinfo>
 
 #if __cplusplus >= 201703L
 #	if __has_include(<memory_resource>)

@@ -13,7 +13,9 @@
 #define KERBAL_CONTAINER_STATIC_FLAT_MULTISET_HPP
 
 #include <kerbal/compare/basic_compare.hpp>
+#include <kerbal/compatibility/constexpr.hpp>
 #include <kerbal/compatibility/namespace_std_scope.hpp>
+#include <kerbal/compatibility/noexcept.hpp>
 #include <kerbal/container/static_ordered.hpp>
 
 #include <kerbal/container/detail/flat_multiset_base.hpp>

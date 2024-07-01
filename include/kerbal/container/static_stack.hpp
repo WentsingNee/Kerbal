@@ -12,7 +12,9 @@
 #ifndef KERBAL_CONTAINER_STATIC_STACK_HPP
 #define KERBAL_CONTAINER_STATIC_STACK_HPP
 
+#include <kerbal/compatibility/constexpr.hpp>
 #include <kerbal/compatibility/namespace_std_scope.hpp>
+#include <kerbal/compatibility/noexcept.hpp>
 #include <kerbal/container/static_vector.hpp>
 
 #if __cplusplus < 201103L

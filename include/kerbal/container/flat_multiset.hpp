@@ -14,7 +14,9 @@
 #define KERBAL_CONTAINER_FLAT_MULTISET_HPP
 
 #include <kerbal/compare/basic_compare.hpp>
+#include <kerbal/compatibility/constexpr.hpp>
 #include <kerbal/compatibility/namespace_std_scope.hpp>
+#include <kerbal/compatibility/noexcept.hpp>
 #include <kerbal/container/associative_container_facility/key_extractors/identity_extractor.hpp>
 #include <kerbal/container/flat_ordered.hpp>
 

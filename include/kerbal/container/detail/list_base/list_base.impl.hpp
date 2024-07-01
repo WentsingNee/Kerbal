@@ -16,6 +16,8 @@
 #include <kerbal/assign/generic_assign.hpp>
 #include <kerbal/compare/basic_compare.hpp>
 #include <kerbal/compare/std_compare/std_compare.fwd.hpp>
+#include <kerbal/compatibility/constexpr.hpp>
+#include <kerbal/compatibility/noexcept.hpp>
 #include <kerbal/config/exceptions.hpp>
 #include <kerbal/iterator/iterator.hpp>
 #include <kerbal/type_traits/conditional.hpp>
@@ -42,6 +44,9 @@
 
 #include <climits> // CHAR_BIT
 #include <cstddef> // std::size_t
+
+#include <functional>
+#include <typeinfo>
 
 #if __cplusplus >= 201703L
 #	if __has_include(<memory_resource>)

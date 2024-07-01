@@ -17,6 +17,7 @@
 #include <kerbal/algorithm/sort/radix_sort.hpp>
 #include <kerbal/algorithm/sort/stable_sort.hpp>
 #include <kerbal/compare/basic_compare.hpp>
+#include <kerbal/compatibility/constexpr.hpp>
 #include <kerbal/compare/std_compare/std_compare.fwd.hpp>
 #include <kerbal/iterator/iterator_traits.hpp>
 #include <kerbal/type_traits/conditional.hpp>

@@ -26,6 +26,7 @@
 #include <kerbal/compatibility/move.hpp>
 #include <kerbal/compatibility/namespace_std_scope.hpp>
 #include <kerbal/compatibility/noexcept.hpp>
+#include <kerbal/hash/hash.hpp>
 #include <kerbal/memory/raw_storage.hpp>
 #include <kerbal/type_traits/decay.hpp>
 #include <kerbal/type_traits/enable_if.hpp>

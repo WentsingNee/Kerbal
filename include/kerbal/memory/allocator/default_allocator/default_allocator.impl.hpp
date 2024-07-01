@@ -16,6 +16,7 @@
 
 #include <kerbal/compatibility/alignof.hpp>
 #include <kerbal/compatibility/constexpr.hpp>
+#include <kerbal/compatibility/noexcept.hpp>
 #include <kerbal/memory/allocator/malloc_allocator.hpp>
 #include <kerbal/memory/allocator/over_aligned_allocator.hpp>
 #include <kerbal/memory/pointer_alignment.hpp>

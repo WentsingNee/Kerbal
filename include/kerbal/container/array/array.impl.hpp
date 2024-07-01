@@ -15,6 +15,8 @@
 #include <kerbal/algorithm/modifier/fill.hpp>
 #include <kerbal/algorithm/swap.hpp>
 #include <kerbal/assign/generic_assign.hpp>
+#include <kerbal/compatibility/constexpr.hpp>
+#include <kerbal/compatibility/noexcept.hpp>
 #include <kerbal/utility/throw_this_exception.hpp>
 
 #include <cstddef>

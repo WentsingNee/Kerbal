@@ -12,7 +12,9 @@
 #ifndef KERBAL_CONTAINER_VECTOR_VECTOR_IMPL_HPP
 #define KERBAL_CONTAINER_VECTOR_VECTOR_IMPL_HPP
 
+#include <kerbal/compatibility/constexpr.hpp>
 #include <kerbal/compatibility/move.hpp>
+#include <kerbal/compatibility/noexcept.hpp>
 #include <kerbal/iterator/iterator.hpp>
 #include <kerbal/type_traits/enable_if.hpp>
 
@@ -22,6 +24,7 @@
 #endif
 
 #if __cplusplus >= 201103L
+#	include <kerbal/utility/declval.hpp>
 #	include <kerbal/utility/forward.hpp>
 #endif
 

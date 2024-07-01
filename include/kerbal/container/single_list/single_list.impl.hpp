@@ -12,7 +12,9 @@
 #ifndef KERBAL_CONTAINER_SINGLE_LIST_SINGLE_LIST_IMPL_HPP
 #define KERBAL_CONTAINER_SINGLE_LIST_SINGLE_LIST_IMPL_HPP
 
+#include <kerbal/compatibility/constexpr.hpp>
 #include <kerbal/compatibility/move.hpp>
+#include <kerbal/compatibility/noexcept.hpp>
 #include <kerbal/iterator/iterator.hpp>
 #include <kerbal/utility/declval.hpp>
 

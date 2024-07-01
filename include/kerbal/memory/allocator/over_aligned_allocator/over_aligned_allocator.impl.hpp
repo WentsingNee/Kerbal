@@ -25,6 +25,7 @@
 #include <kerbal/memory/bad_array_new_length.hpp>
 #include <kerbal/memory/nothrow_t.hpp>
 #include <kerbal/memory/pointer_alignment.hpp>
+#include <kerbal/type_traits/integral_constant.hpp>
 #include <kerbal/utility/throw_this_exception.hpp>
 
 #include <cstddef>

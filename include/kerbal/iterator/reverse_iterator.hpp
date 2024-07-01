@@ -22,6 +22,7 @@
 #include <kerbal/operators/subtractable.hpp>
 #include <kerbal/type_traits/integral_constant.hpp>
 #include <kerbal/type_traits/remove_cv.hpp>
+#include <kerbal/utility/declval.hpp>
 
 #include <cstddef>
 

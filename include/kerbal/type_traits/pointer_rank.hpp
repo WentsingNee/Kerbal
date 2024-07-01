@@ -15,6 +15,7 @@
 
 #include <kerbal/ts/modules_ts/modules_ts.hpp>
 
+#include <kerbal/type_traits/integral_constant.hpp>
 #include <kerbal/type_traits/is_pointer.hpp>
 #include <kerbal/type_traits/remove_pointer.hpp>
 

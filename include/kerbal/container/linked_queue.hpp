@@ -12,7 +12,9 @@
 #ifndef KERBAL_CONTAINER_LINKED_QUEUE_HPP
 #define KERBAL_CONTAINER_LINKED_QUEUE_HPP
 
+#include <kerbal/compatibility/constexpr.hpp>
 #include <kerbal/compatibility/namespace_std_scope.hpp>
+#include <kerbal/compatibility/noexcept.hpp>
 #include <kerbal/container/single_list.hpp>
 
 #if __cplusplus < 201103L

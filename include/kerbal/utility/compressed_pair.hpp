@@ -31,6 +31,7 @@
 #if __cplusplus >= 201103L
 #	include <kerbal/type_traits/is_nothrow_constructible.hpp>
 #	include <kerbal/type_traits/tribool_constant.hpp>
+#	include <kerbal/utility/declval.hpp>
 #   include <kerbal/utility/forward.hpp>
 #endif
 

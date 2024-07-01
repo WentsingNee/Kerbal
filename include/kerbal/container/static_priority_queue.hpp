@@ -14,8 +14,10 @@
 
 #include <kerbal/algorithm/heap.hpp>
 #include <kerbal/compare/basic_compare.hpp>
+#include <kerbal/compatibility/constexpr.hpp>
 #include <kerbal/compatibility/move.hpp>
 #include <kerbal/compatibility/namespace_std_scope.hpp>
+#include <kerbal/compatibility/noexcept.hpp>
 #include <kerbal/container/static_vector.hpp>
 #include <kerbal/iterator/iterator_traits.hpp>
 #include <kerbal/type_traits/enable_if.hpp>
