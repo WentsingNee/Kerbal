@@ -12,25 +12,6 @@
 #ifndef KERBAL_UTILITY_STD_TUPLE_STD_TUPLE_FWD_HPP
 #define KERBAL_UTILITY_STD_TUPLE_STD_TUPLE_FWD_HPP
 
-#if __cplusplus >= 201103L
-
-#include <kerbal/compatibility/namespace_std_scope.hpp>
-
-#include <cstddef>
-
-
-KERBAL_NAMESPACE_STD_BEGIN
-
-	template <typename T>
-	struct tuple_size;
-
-
-	template <std::size_t I, typename T>
-	struct tuple_element;
-
-KERBAL_NAMESPACE_STD_END
-
-#endif
-
+#include <utility>
 
 #endif // KERBAL_UTILITY_STD_TUPLE_STD_TUPLE_FWD_HPP
