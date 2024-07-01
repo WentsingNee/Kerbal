@@ -12,19 +12,6 @@
 #ifndef KERBAL_UTILITY_STD_PAIR_STD_PAIR_FWD_HPP
 #define KERBAL_UTILITY_STD_PAIR_STD_PAIR_FWD_HPP
 
-#include <kerbal/config/compiler_id.hpp>
-#include <kerbal/compatibility/namespace_std_scope.hpp>
-
-
-KERBAL_NAMESPACE_STD_BEGIN
-
-	template <typename T, typename U>
-# if KERBAL_COMPILER_ID == KERBAL_COMPILER_ID_MSVC
-	struct pair;
-# else
-	class pair;
-# endif
-
-KERBAL_NAMESPACE_STD_END
+#include <utility>
 
 #endif // KERBAL_UTILITY_STD_PAIR_STD_PAIR_FWD_HPP
