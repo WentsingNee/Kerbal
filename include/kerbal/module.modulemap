@@ -1,7 +1,16 @@
 
 module kerbal {
+	use std
 	module algorithm {
 		umbrella "algorithm"
+		export *
+	}
+	module any {
+		umbrella "any"
+		export *
+	}
+	module autonm {
+		umbrella "autonm"
 		export *
 	}
 	module bitset {
@@ -10,6 +19,10 @@ module kerbal {
 	}
 	module compatibility {
 		umbrella "compatibility"
+		export *
+	}
+	module compare {
+		umbrella "compare"
 		export *
 	}
 	module container {
@@ -52,10 +65,18 @@ module kerbal {
 		export *
 		exclude header "random/tiny_mt_engine.hpp"
 	}
+	module smath {
+		umbrella "smath"
+		export *
+	}
 	module test {
 		umbrella "test"
 		export *
 		exclude header "test/impl/test_case.impl.hpp"
+	}
+	module tmp {
+		umbrella "tmp"
+		export *
 	}
 	module type_traits {
 		umbrella "type_traits"
