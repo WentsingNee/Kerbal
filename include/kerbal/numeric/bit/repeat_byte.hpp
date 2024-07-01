@@ -46,6 +46,7 @@ namespace kerbal
 
 		} // namespace detail
 
+
 		template <typename T, unsigned char B>
 		struct repeat_byte :
 			detail::repeat_byte_loop<T, B, sizeof(T)>

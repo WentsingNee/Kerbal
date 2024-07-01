@@ -350,6 +350,7 @@ namespace kerbal
 
 		} // namespace detail
 
+
 		template <typename Iter>
 		class move_iterator :
 			public kerbal::iterator::detail::move_iterator_impl<
@@ -394,6 +395,7 @@ namespace kerbal
 		move_iterator(const InputIterator &) -> move_iterator<InputIterator>;
 
 #	endif
+
 
 		template <typename Iter>
 		KERBAL_CONSTEXPR

@@ -106,6 +106,7 @@ namespace kerbal
 
 		} // namespace detail
 
+
 		template <typename Ptr>
 		struct pointer_traits
 		{
@@ -121,6 +122,7 @@ namespace kerbal
 						typedef typename kerbal::memory::detail::pointer_traits_rebind_helper<Ptr, U>::type other;
 				};
 		};
+
 
 		template <typename T>
 		struct pointer_traits<T *>

@@ -82,6 +82,7 @@ namespace kerbal
 
 		} // namespace detail
 
+
 		template <typename T, typename Allocator>
 		struct forward_list_node_size :
 			kerbal::container::detail::forward_list_node_size_helper<T, Allocator>::type
