@@ -919,6 +919,17 @@ namespace kerbal
 					KERBAL_CONSTEXPR14
 					void k_merge(fl_type_only & other);
 
+#			if __cplusplus >= 201103L
+
+					template <typename BinaryPredict>
+					KERBAL_CONSTEXPR14
+					void k_merge(fl_type_only && other, BinaryPredict cmp);
+
+					KERBAL_CONSTEXPR14
+					void k_merge(fl_type_only && other);
+
+#			endif
+
 				private:
 
 					typedef kerbal::type_traits::integral_constant<int, 0> MSM_VER_NOTHROW;

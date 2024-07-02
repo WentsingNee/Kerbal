@@ -1670,6 +1670,36 @@ namespace kerbal
 			);
 		}
 
+#	if __cplusplus >= 201103L
+
+		template <typename Entity, typename Extract, typename KeyCompare, typename Allocator>
+		template <typename OtherExtract, typename OtherKeyCompare>
+		KERBAL_CONSTEXPR20
+		void
+		avl_ordered<Entity, Extract, KeyCompare, Allocator>::
+		merge(avl_ordered<Entity, OtherExtract, OtherKeyCompare, Allocator> && other)
+		{
+			this->avl_type_only::k_merge(
+				this->extract(), this->key_comp(),
+				static_cast<avl_type_only &&>(other)
+			);
+		}
+
+		template <typename Entity, typename Extract, typename KeyCompare, typename Allocator>
+		template <typename OtherExtract, typename OtherKeyCompare>
+		KERBAL_CONSTEXPR20
+		void
+		avl_ordered<Entity, Extract, KeyCompare, Allocator>::
+		merge_unique(avl_ordered<Entity, OtherExtract, OtherKeyCompare, Allocator> && other)
+		{
+			this->avl_type_only::k_merge_unique(
+				this->extract(), this->key_comp(),
+				static_cast<avl_type_only &&>(other)
+			);
+		}
+
+#	endif
+
 		template <typename Entity, typename Extract, typename KeyCompare, typename Allocator>
 		KERBAL_CONSTEXPR20
 		void

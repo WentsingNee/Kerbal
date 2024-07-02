@@ -948,6 +948,18 @@ namespace kerbal
 				KERBAL_CONSTEXPR20
 				void merge_unique(avl_ordered<Entity, OtherExtract, OtherKeyCompare, Allocator> & other);
 
+#		if __cplusplus >= 201103L
+
+				template <typename OtherExtract, typename OtherKeyCompare>
+				KERBAL_CONSTEXPR20
+				void merge(avl_ordered<Entity, OtherExtract, OtherKeyCompare, Allocator> && other);
+
+				template <typename OtherExtract, typename OtherKeyCompare>
+				KERBAL_CONSTEXPR20
+				void merge_unique(avl_ordered<Entity, OtherExtract, OtherKeyCompare, Allocator> && other);
+
+#		endif
+
 				KERBAL_CONSTEXPR20
 				void swap(avl_ordered & other);
 

@@ -710,6 +710,25 @@ namespace kerbal
 			this->fl_type_only::k_merge(static_cast<fl_type_only &>(other));
 		}
 
+#	if __cplusplus >= 201103L
+
+		template <typename T, typename Allocator>
+		template <typename BinaryPredict>
+		KERBAL_CONSTEXPR20
+		void forward_list<T, Allocator>::merge(forward_list && other, BinaryPredict cmp)
+		{
+			this->fl_type_only::k_merge(static_cast<fl_type_only &&>(other), cmp);
+		}
+
+		template <typename T, typename Allocator>
+		KERBAL_CONSTEXPR20
+		void forward_list<T, Allocator>::merge(forward_list && other)
+		{
+			this->fl_type_only::k_merge(static_cast<fl_type_only &&>(other));
+		}
+
+#	endif
+
 		template <typename T, typename Allocator>
 		template <typename BinaryPredict>
 		KERBAL_CONSTEXPR20

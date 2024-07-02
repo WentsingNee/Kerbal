@@ -16,6 +16,7 @@
 #include <kerbal/assign/generic_assign.hpp>
 #include <kerbal/compare/basic_compare.hpp>
 #include <kerbal/compatibility/constexpr.hpp>
+#include <kerbal/compatibility/move.hpp>
 #include <kerbal/compatibility/noexcept.hpp>
 #include <kerbal/config/exceptions.hpp>
 #include <kerbal/iterator/iterator.hpp>
@@ -1607,6 +1608,32 @@ namespace kerbal
 			{
 				this->k_merge(other, kerbal::compare::less<value_type>());
 			}
+
+#		if __cplusplus >= 201103L
+
+			template <typename T>
+			template <typename BinaryPredict>
+			KERBAL_CONSTEXPR14
+			void
+			fl_type_only<T>::
+			k_merge(fl_type_only && other, BinaryPredict cmp)
+			{
+				this->k_merge(other, cmp);
+			}
+
+			template <typename T>
+			KERBAL_CONSTEXPR14
+			void
+			fl_type_only<T>::
+			k_merge(fl_type_only && other)
+			{
+				this->k_merge(
+					kerbal::compatibility::move(other),
+					kerbal::compare::less<value_type>()
+				);
+			}
+
+#		endif
 
 			template <typename T>
 			template <typename BinaryPredict>
