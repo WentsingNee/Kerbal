@@ -497,6 +497,14 @@ namespace kerbal
 				KERBAL_CONSTEXPR20
 				void merge(avl_set<T, OtherKeyCompare, Allocator> & other);
 
+#		if __cplusplus >= 201103L
+
+				template <typename OtherKeyCompare>
+				KERBAL_CONSTEXPR20
+				void merge(avl_set<T, OtherKeyCompare, Allocator> && other);
+
+#		endif
+
 				KERBAL_CONSTEXPR20
 				void swap(avl_set & other);
 

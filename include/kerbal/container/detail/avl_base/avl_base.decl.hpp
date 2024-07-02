@@ -1347,6 +1347,24 @@ namespace kerbal
 						avl_type_only & other
 					);
 
+#			if __cplusplus >= 201103L
+
+					template <typename ThisExtract, typename ThisKeyCompare>
+					KERBAL_CONSTEXPR20
+					void k_merge(
+						ThisExtract & this_e, ThisKeyCompare & this_kc,
+						avl_type_only && other
+					);
+
+					template <typename ThisExtract, typename ThisKeyCompare>
+					KERBAL_CONSTEXPR20
+					void k_merge_unique(
+						ThisExtract & this_e, ThisKeyCompare & this_kc,
+						avl_type_only && other
+					);
+
+#			endif
+
 
 					template <typename F>
 					KERBAL_CONSTEXPR20
