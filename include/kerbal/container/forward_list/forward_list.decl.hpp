@@ -531,9 +531,10 @@ namespace kerbal
 				KERBAL_CONSTEXPR20
 				void resize(size_type count, const_reference value);
 
-				KERBAL_CONSTEXPR20
-				void swap(forward_list & with)
-					KERBAL_CONDITIONAL_NOEXCEPT(
+#		if __cplusplus >= 201103L
+
+				struct is_nothrow_swappable :
+					kerbal::type_traits::bool_constant<
 						noexcept(
 							fl_allocator_overload::k_swap_allocator_if_propagate(
 								kerbal::utility::declval<fl_allocator_overload &>(),
@@ -546,8 +547,16 @@ namespace kerbal
 								kerbal::utility::declval<fl_type_unrelated &>()
 							)
 						)
-					)
-				;
+					>
+				{
+				};
+
+#		endif
+
+				KERBAL_CONSTEXPR20
+				void swap(forward_list & with) KERBAL_CONDITIONAL_NOEXCEPT(
+					is_nothrow_swappable::value
+				);
 
 				KERBAL_CONSTEXPR20
 				void iter_swap_after(const_iterator before_a, const_iterator before_b) KERBAL_NOEXCEPT;
