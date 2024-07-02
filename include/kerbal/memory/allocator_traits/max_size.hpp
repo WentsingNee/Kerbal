@@ -27,7 +27,6 @@
 #include <cstddef>
 
 
-
 namespace kerbal
 {
 

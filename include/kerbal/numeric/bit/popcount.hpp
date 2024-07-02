@@ -152,7 +152,7 @@ namespace kerbal
 				return cnt;
 			}
 
-# if CHAR_BIT != 8
+#	if CHAR_BIT != 8
 
 			template <typename Unsigned>
 			KERBAL_CONSTEXPR14
@@ -161,7 +161,7 @@ namespace kerbal
 				return k_popcount_plain(x);
 			}
 
-# else
+#	else
 
 			// optimized-swar algorithm
 			template <typename Unsigned>
@@ -185,7 +185,7 @@ namespace kerbal
 				return static_cast<int>(x);
 			}
 
-#endif
+#	endif
 
 
 

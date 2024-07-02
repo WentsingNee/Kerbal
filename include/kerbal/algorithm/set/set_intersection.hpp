@@ -12,8 +12,8 @@
 #ifndef KERBAL_ALGORITHM_SET_SET_INTERSECTION_HPP
 #define KERBAL_ALGORITHM_SET_SET_INTERSECTION_HPP
 
-#include <kerbal/compare/binary_type_compare.hpp>
 #include <kerbal/assign/generic_assign.hpp>
+#include <kerbal/compare/binary_type_compare.hpp>
 #include <kerbal/compatibility/constexpr.hpp>
 
 

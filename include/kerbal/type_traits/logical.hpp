@@ -16,6 +16,7 @@
 #include <kerbal/type_traits/conditional.hpp>
 #include <kerbal/type_traits/integral_constant.hpp>
 
+
 namespace kerbal
 {
 
