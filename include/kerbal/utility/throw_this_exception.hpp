@@ -12,7 +12,6 @@
 #ifndef KERBAL_UTILITY_THROW_THIS_EXCEPTION_HPP
 #define KERBAL_UTILITY_THROW_THIS_EXCEPTION_HPP
 
-#include <kerbal/compatibility/constexpr.hpp>
 #include <kerbal/compatibility/noexcept.hpp>
 #include <kerbal/config/exceptions.hpp>
 

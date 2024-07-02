@@ -24,7 +24,6 @@
 
 #if KERBAL_HAS_IS_TRIVIALLY_DEFAULT_CONSTRUCTIBLE_SUPPORT
 
-#include <kerbal/type_traits/integral_constant.hpp>
 #include <kerbal/type_traits/is_unbounded_array.hpp>
 #include <kerbal/type_traits/logical.hpp>
 #include <kerbal/type_traits/remove_all_extents.hpp>

@@ -12,7 +12,6 @@
 #ifndef KERBAL_MEMORY_POINTER_TRAITS_HPP
 #define KERBAL_MEMORY_POINTER_TRAITS_HPP
 
-#include <kerbal/type_traits/integral_constant.hpp>
 #include <kerbal/type_traits/void_type.hpp>
 
 #include <cstddef>

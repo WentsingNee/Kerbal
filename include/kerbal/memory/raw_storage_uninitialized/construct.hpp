@@ -14,7 +14,6 @@
 
 #include <kerbal/compatibility/constexpr.hpp>
 #include <kerbal/compatibility/move.hpp>
-#include <kerbal/compatibility/noexcept.hpp>
 #include <kerbal/config/exceptions.hpp>
 #include <kerbal/iterator/iterator_traits.hpp>
 #include <kerbal/memory/raw_storage_uninitialized/destroy.hpp>

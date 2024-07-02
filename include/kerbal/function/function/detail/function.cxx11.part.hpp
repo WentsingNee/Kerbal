@@ -46,11 +46,6 @@
 #	include <kerbal/utility/forward.hpp>
 #endif
 
-#if __cplusplus < 201103L
-#	include <kerbal/macro/macro_concat.hpp>
-#	include <kerbal/macro/ppexpand.hpp>
-#endif
-
 #include <cstddef>
 
 

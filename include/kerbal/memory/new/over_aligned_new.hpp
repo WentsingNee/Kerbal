@@ -12,7 +12,6 @@
 #ifndef KERBAL_MEMORY_NEW_OVER_ALIGNED_NEW_HPP
 #define KERBAL_MEMORY_NEW_OVER_ALIGNED_NEW_HPP
 
-#include <kerbal/compatibility/constexpr.hpp>
 #include <kerbal/compatibility/noexcept.hpp>
 #include <kerbal/memory/allocator/over_aligned_allocator.hpp>
 #include <kerbal/memory/nothrow_t.hpp>

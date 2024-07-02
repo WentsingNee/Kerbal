@@ -15,7 +15,6 @@
 #include <kerbal/compatibility/fixed_width_integer.hpp>
 #include <kerbal/compatibility/noexcept.hpp>
 #include <kerbal/type_traits/conditional.hpp>
-#include <kerbal/type_traits/integral_constant.hpp>
 
 #include <cstddef>
 

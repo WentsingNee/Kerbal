@@ -19,7 +19,6 @@
 #include <kerbal/function/move_only_function.hpp>
 #include <kerbal/memory/unique_ptr.hpp>
 #include <kerbal/parallel/thread.hpp>
-#include <kerbal/utility/forward.hpp>
 #include <kerbal/utility/integer_sequence.hpp>
 #include <kerbal/utility/tuple.hpp>
 #include <kerbal/type_traits/remove_reference.hpp>

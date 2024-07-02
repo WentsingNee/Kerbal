@@ -14,7 +14,6 @@
 #define KERBAL_TYPE_TRAITS_REMOVE_ALL_EXTENTS_HPP
 
 #include <kerbal/ts/modules_ts/modules_ts.hpp>
-#include <kerbal/type_traits/integral_constant.hpp>
 
 #include <cstddef>
 

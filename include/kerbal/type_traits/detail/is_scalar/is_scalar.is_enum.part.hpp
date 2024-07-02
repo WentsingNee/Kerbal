@@ -24,7 +24,6 @@
 
 #if KERBAL_HAS_IS_SCALAR_SUPPORT
 
-#include <kerbal/type_traits/integral_constant.hpp>
 #include <kerbal/type_traits/is_arithmetic.hpp>
 #include <kerbal/type_traits/is_enum.hpp>
 #include <kerbal/type_traits/is_member_pointer.hpp>

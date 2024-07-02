@@ -17,7 +17,6 @@
 #include <kerbal/algorithm/sort/insertion_sort.hpp>
 #include <kerbal/compare/basic_compare.hpp>
 #include <kerbal/compatibility/constexpr.hpp>
-#include <kerbal/compatibility/noexcept.hpp>
 #include <kerbal/iterator/iterator.hpp>
 
 #include <stack>
