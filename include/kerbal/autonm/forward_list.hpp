@@ -396,6 +396,38 @@ namespace kerbal
 					this->fl_type_only::k_merge(static_cast<fl_type_only &>(other));
 				}
 
+#		if __cplusplus >= 201103L
+
+				template <typename BinaryPredict>
+				KERBAL_CONSTEXPR20
+				void merge(forward_list && other, BinaryPredict cmp)
+					KERBAL_CONDITIONAL_NOEXCEPT(
+						noexcept(
+							kerbal::utility::declthis<forward_list>()->fl_type_only::k_merge(
+								static_cast<fl_type_only &&>(other),
+								cmp
+							)
+						)
+					)
+				{
+					fl_type_only::k_merge(static_cast<fl_type_only &&>(other), cmp);
+				}
+
+				KERBAL_CONSTEXPR20
+				void merge(forward_list && other)
+					KERBAL_CONDITIONAL_NOEXCEPT(
+						noexcept(
+							kerbal::utility::declthis<forward_list>()->fl_type_only::k_merge(
+								static_cast<fl_type_only &&>(other)
+							)
+						)
+					)
+				{
+					this->fl_type_only::k_merge(static_cast<fl_type_only &&>(other));
+				}
+
+#		endif
+
 				template <typename BinaryPredict>
 				KERBAL_CONSTEXPR20
 				void sort_after(const_iterator before_first, const_iterator last, BinaryPredict cmp)

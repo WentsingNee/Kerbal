@@ -2773,6 +2773,36 @@ namespace kerbal
 				this->k_merge_unique(this_e, this_kc, other, other.cbegin(), other.cend());
 			}
 
+#		if __cplusplus >= 201103L
+
+			template <typename Entity>
+			template <typename ThisExtract, typename ThisKeyCompare>
+			KERBAL_CONSTEXPR20
+			void
+			avl_type_only<Entity>::
+			k_merge(
+				ThisExtract & this_e, ThisKeyCompare & this_kc,
+				avl_type_only && other
+			)
+			{
+				this->k_merge(this_e, this_kc, other, other.cbegin(), other.cend());
+			}
+
+			template <typename Entity>
+			template <typename ThisExtract, typename ThisKeyCompare>
+			KERBAL_CONSTEXPR20
+			void
+			avl_type_only<Entity>::
+			k_merge_unique(
+				ThisExtract & this_e, ThisKeyCompare & this_kc,
+				avl_type_only && other
+			)
+			{
+				this->k_merge_unique(this_e, this_kc, other, other.cbegin(), other.cend());
+			}
+
+#		endif
+
 
 			template <typename Entity>
 			template <typename F>

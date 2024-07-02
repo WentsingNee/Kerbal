@@ -743,6 +743,20 @@ namespace kerbal
 			this->avl_ordered::merge_unique(static_cast<avl_ordered &>(other));
 		}
 
+#	if __cplusplus >= 201103L
+
+		template <typename T, typename KeyCompare, typename Allocator>
+		template <typename OtherKeyCompare>
+		KERBAL_CONSTEXPR20
+		void
+		avl_set<T, KeyCompare, Allocator>::
+		merge(avl_set<T, OtherKeyCompare, Allocator> && other)
+		{
+			this->avl_ordered::merge_unique(static_cast<avl_ordered &&>(other));
+		}
+
+#	endif
+
 		template <typename T, typename KeyCompare, typename Allocator>
 		KERBAL_CONSTEXPR20
 		void
