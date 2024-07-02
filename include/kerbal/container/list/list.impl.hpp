@@ -708,11 +708,7 @@ namespace kerbal
 		KERBAL_CONSTEXPR20
 		void list<T, Allocator>::clear()
 			KERBAL_CONDITIONAL_NOEXCEPT(
-				noexcept(
-					kerbal::utility::declthis<list_type_only>()->k_clear_using_allocator(
-						kerbal::utility::declthis<list>()->alloc()
-					)
-				)
+				is_nothrow_clearable::value
 			)
 		{
 			this->list_type_only::k_clear_using_allocator(this->alloc());
@@ -740,18 +736,7 @@ namespace kerbal
 		KERBAL_CONSTEXPR20
 		void list<T, Allocator>::swap(list & with)
 			KERBAL_CONDITIONAL_NOEXCEPT(
-				noexcept(
-					list_allocator_overload::k_swap_allocator_if_propagate(
-						kerbal::utility::declval<list_allocator_overload &>(),
-						kerbal::utility::declval<list_allocator_overload &>()
-					)
-				) &&
-				noexcept(
-					list_type_unrelated::k_swap_type_unrelated(
-						kerbal::utility::declval<list_type_unrelated &>(),
-						kerbal::utility::declval<list_type_unrelated &>()
-					)
-				)
+				is_nothrow_swappable::value
 			)
 		{
 			list_allocator_overload::k_swap_allocator_if_propagate(

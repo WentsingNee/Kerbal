@@ -512,16 +512,25 @@ namespace kerbal
 				KERBAL_CONSTEXPR20
 				void pop_back();
 
-				KERBAL_CONSTEXPR20
-				void clear()
-					KERBAL_CONDITIONAL_NOEXCEPT(
+#		if __cplusplus >= 201103L
+
+				struct is_nothrow_clearable :
+					kerbal::type_traits::bool_constant<
 						noexcept(
 							kerbal::utility::declthis<list_type_only>()->k_clear_using_allocator(
 								kerbal::utility::declthis<list>()->alloc()
 							)
 						)
-					)
-				;
+					>
+				{
+				};
+
+#		endif
+
+				KERBAL_CONSTEXPR20
+				void clear() KERBAL_CONDITIONAL_NOEXCEPT(
+					is_nothrow_clearable::value
+				);
 
 			//===================
 			// operation
@@ -532,9 +541,10 @@ namespace kerbal
 				KERBAL_CONSTEXPR20
 				void resize(size_type count, const_reference value);
 
-				KERBAL_CONSTEXPR20
-				void swap(list & with)
-					KERBAL_CONDITIONAL_NOEXCEPT(
+#		if __cplusplus >= 201103L
+
+				struct is_nothrow_swappable :
+					kerbal::type_traits::bool_constant<
 						noexcept(
 							list_allocator_overload::k_swap_allocator_if_propagate(
 								kerbal::utility::declval<list_allocator_overload &>(),
@@ -547,8 +557,16 @@ namespace kerbal
 								kerbal::utility::declval<list_type_unrelated &>()
 							)
 						)
-					)
-				;
+					>
+				{
+				};
+
+#		endif
+
+				KERBAL_CONSTEXPR20
+				void swap(list & with) KERBAL_CONDITIONAL_NOEXCEPT(
+					is_nothrow_swappable::value
+				);
 
 				KERBAL_CONSTEXPR20
 				void iter_swap(const_iterator a, const_iterator b) KERBAL_NOEXCEPT;
