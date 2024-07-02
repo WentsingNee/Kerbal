@@ -525,6 +525,17 @@ namespace kerbal
 				KERBAL_CONSTEXPR20
 				void merge(forward_list & other);
 
+#		if __cplusplus >= 201103L
+
+				template <typename BinaryPredict>
+				KERBAL_CONSTEXPR20
+				void merge(forward_list && other, BinaryPredict cmp);
+
+				KERBAL_CONSTEXPR20
+				void merge(forward_list && other);
+
+#		endif
+
 				template <typename BinaryPredict>
 				KERBAL_CONSTEXPR20
 				void sort_after(const_iterator before_first, const_iterator last, BinaryPredict cmp);
