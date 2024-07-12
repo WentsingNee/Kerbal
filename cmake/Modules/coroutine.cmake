@@ -29,50 +29,111 @@ function(kerbal_check_supports_coroutine_flags _Out_support)
 endfunction()
 
 
-function(__kerbal_cache_result_of_supports_coroutine support)
+function(__kerbal_cache_result_of_supports_coroutine_flags support)
     set(flags ${ARGN})
-    set(KERBAL_SUPPORT_${ie} ${support} CACHE BOOL "Whether compiler support coroutine")
+    set(KERBAL_SUPPORT_COROUTINE ${support} CACHE BOOL "Whether compiler support coroutine")
     message(STATUS "set KERBAL_SUPPORT_COROUTINE = ${support}")
     if (support)
-        set(KERBAL_FLAGS_${ie} ${flags} CACHE STRING "Compile flags for compiler to support coroutine")
+        set(KERBAL_FLAGS_COROUTINE ${flags} CACHE STRING "Compile flags for compiler to support coroutine")
         message(STATUS "set KERBAL_FLAGS_COROUTINE = ${flags}")
     endif ()
     message("")
 endfunction()
 
 
-## TODO in next
+function(__kerbal_check_supports_coroutine_flags_and_cache)
+    set(flags ${ARGN})
 
-macro(check_compiler_support_coroutine_flag)
-    message(STATUS "Checking compiler support coroutine flag: ${flag}")
-    CHECK_CXX_COMPILER_FLAG("${flag}" KTEST_SUPPORT_COROUTINE)
-    message(STATUS "Checking compiler support coroutine flag: ${flag} - Done")
-    message(STATUS "set KTEST_SUPPORT_COROUTINE = ${KTEST_SUPPORT_COROUTINE}")
-    if (KTEST_SUPPORT_COROUTINE)
-        set(KTEST_FLAG_COROUTINE ${flag} PARENT_SCOPE)
-        message(STATUS "set KERBAL_TEST_COROUTINE_FLAGS = ${flag}")
-    endif ()
-    message("")
-endmacro()
-
-
-function(try_test_compiler_coroutine_support)
-    check_compiler_support_coroutine_flag(-fcoroutines)
-    if (KTEST_SUPPORT_COROUTINE)
-        return()
-    endif ()
-
-    message(STATUS "-fcoroutines doesn't support, try: -fcoroutines-ts")
-    unset(KTEST_SUPPORT_COROUTINE CACHE)
-    check_compiler_support_coroutine_flag(-fcoroutines-ts)
-    message("\n")
-
+    kerbal_check_supports_coroutine_flags(support ${flags})
+    __kerbal_cache_result_of_supports_coroutine_flags(${support} ${flags})
 endfunction()
 
 
-message("\n")
-message(STATUS "Checking compiler's support for coroutine")
-message("")
-try_test_compiler_coroutine_support()
+function(__kerbal_multi_check_supports_coroutine_flags_and_cache)
+    set(try_flags_list ${ARGN})
+    foreach (e IN LISTS try_flags_list)
+        set(prev_try_flags ${flags})
+        if (prev_try_flags)
+            message(STATUS "`${prev_try_flags}` doesn't support, re-trying: `${flags}`")
+        endif ()
+        get_property(flags GLOBAL PROPERTY ${e})
+        kerbal_check_supports_coroutine_flags(support ${flags})
+        if (support)
+            __kerbal_cache_result_of_supports_coroutine_flags(True ${flags})
+            return()
+        endif ()
+    endforeach ()
+
+    __kerbal_cache_result_of_supports_coroutine_flags(False)
+endfunction()
 
 
+function(try_test_compiler_coroutine_support)
+    set_property(GLOBAL PROPERTY KERBAL_COROUTINE -fcoroutines)
+    set_property(GLOBAL PROPERTY KERBAL_COROUTINE_TS -fcoroutines-ts)
+    __kerbal_multi_check_supports_coroutine_flags_and_cache(
+            KERBAL_COROUTINE
+            KERBAL_COROUTINE_TS
+    )
+endfunction()
+
+
+function(kerbal_coroutine_required)
+    message("\n")
+    message(STATUS "Checking compiler's support for coroutine\n")
+    try_test_compiler_coroutine_support()
+    message("\n")
+endfunction()
+
+
+##
+# TARGET one string
+# SCOPE one string, must be in: {PUBLIC PRIVATE INTERFACE}
+# MODE optional string, default is REQUIRED, must be in: {REQUIRED, WARNING, SILENCE}
+#
+function(kerbal_target_with_coroutine)
+    cmake_parse_arguments(
+            ""
+            ""
+            "SCOPE;MODE;TARGET"
+            ""
+            ${ARGV}
+    )
+
+    if (NOT _TARGET)
+        message(FATAL_ERROR "TARGET is not specified")
+    endif ()
+    set(target "${_TARGET}")
+
+    if (NOT _SCOPE MATCHES "^((PUBLIC)|(PRIVATE)|(INTERFACE))$")
+        message(FATAL_ERROR "SCOPE must be one of: PUBLIC PRIVATE INTERFACE, but is: ${_SCOPE}")
+    endif ()
+    set(scope "${_SCOPE}")
+
+    if (NOT _MODE)
+        set(_MODE "REQUIRED")
+    endif ()
+    if (NOT _MODE MATCHES "^((REQUIRED)|(WARNING)|(SILENCE))$")
+        message(FATAL_ERROR "MODE must be one of: REQUIRED WARNING SILENCE, but is: ${_MODE}")
+    endif ()
+    set(mode "${_MODE}")
+
+    if (NOT TARGET ${target})
+        message(FATAL_ERROR "Target is not exist. target: ${target}")
+    endif ()
+
+    if (NOT DEFINED KERBAL_SUPPORT_COROUTINE)
+        kerbal_coroutine_required()
+    endif ()
+
+    if (NOT KERBAL_SUPPORT_COROUTINE)
+        if (mode STREQUAL "REQUIRED")
+            message(FATAL_ERROR "Compiler doesn't support ${ie}")
+        elseif (mode STREQUAL "WARNING")
+            message(WARNING "Compiler doesn't support ${ie}")
+        endif ()
+    endif ()
+
+    target_compile_options(${target} ${scope} ${KERBAL_FLAGS_COROUTINE})
+
+endfunction()
