@@ -12,20 +12,7 @@
 #ifndef KERBAL_COROUTINE_DETAIL_CONFIG_HPP
 #define KERBAL_COROUTINE_DETAIL_CONFIG_HPP
 
-#define KERBAL_COROUTINE_STD_LIB_ID_STD			0
-#define KERBAL_COROUTINE_STD_LIB_ID_STD_EXP		1
-
-#if __has_include(<coroutine>)
-
-#	include <coroutine>
-#	define KERBAL_COROUTINE_STD_LIB_ID		KERBAL_COROUTINE_STD_LIB_ID_STD
-
-#elif __has_include(<experimental/coroutine>)
-
-#	include <experimental/coroutine>
-#	define KERBAL_COROUTINE_STD_LIB_ID		KERBAL_COROUTINE_STD_LIB_ID_STD_EXP
-
-#endif
+#include <kerbal/coroutine/config.hpp>
 
 
 namespace kerbal
