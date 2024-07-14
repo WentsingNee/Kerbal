@@ -76,6 +76,10 @@ endfunction()
 
 function(try_test_compiler_coroutine_support)
     if (CMAKE_CXX_COMPILER_ID MATCHES "GNU")
+        if ((CMAKE_CXX_STANDARD EQUAL 98) OR (CMAKE_CXX_STANDARD LESS 14))
+            __kerbal_cache_not_supports_coroutine()
+            return()
+        endif ()
         set_property(GLOBAL PROPERTY KERBAL_FLAGS_TEST_COROUTINE -fcoroutines)
         __kerbal_multi_check_supports_coroutine_flags_and_cache(
                 KERBAL_FLAGS_TEST_COROUTINE
@@ -94,7 +98,7 @@ function(try_test_compiler_coroutine_support)
     elseif (CMAKE_CXX_COMPILER_ID MATCHES "MSVC")
         set_property(GLOBAL PROPERTY KERBAL_FLAGS_TEST_COROUTINE_MSVC /await:strict)
         __kerbal_multi_check_supports_coroutine_flags_and_cache(
-                KERBAL_FLAGS_TEST_COROUTINE
+                KERBAL_FLAGS_TEST_COROUTINE_MSVC
         )
     else ()
         __kerbal_cache_not_supports_coroutine()
