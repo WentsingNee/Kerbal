@@ -13,6 +13,19 @@ get_target_property(@PROJECT_NAME@_INCLUDE_DIRS @PROJECT_NAME@::kerbal INTERFACE
 get_property(__enabled_lang GLOBAL PROPERTY ENABLED_LANGUAGES)
 if ("CXX" IN_LIST __enabled_lang)
 
+    ## kerbal-coroutine
+
+    include(Kerbal/coroutine)
+    kerbal_coroutine_required()
+    if (KERBAL_SUPPORT_COROUTINE)
+        include("${CMAKE_CURRENT_LIST_DIR}/@PROJECT_NAME@Targets-kerbal-coroutine.cmake")
+        kerbal_target_with_coroutine(
+                TARGET Kerbal::kerbal-coroutine
+                SCOPE INTERFACE
+                MODE REQUIRED
+        )
+    endif ()
+
     ## kerbal-omp
 
     find_package(OpenMP)
@@ -48,6 +61,7 @@ endfunction()
 foreach (
     sublib IN ITEMS
     kerbal
+    kerbal-coroutine
     kerbal-omp
     kerbal-parallel
 )

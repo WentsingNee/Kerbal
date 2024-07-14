@@ -12,7 +12,10 @@
 #ifndef KERBAL_COROUTINE_GENERATOR_GENERATOR_IMPL_HPP
 #define KERBAL_COROUTINE_GENERATOR_GENERATOR_IMPL_HPP
 
-#include <kerbal/coroutine/detail/config.hpp>
+#include <kerbal/coroutine/config.hpp>
+
+#if KERBAL_SUPPORT_COROUTINE
+
 #include <kerbal/coroutine/generator/generator.decl.hpp>
 #include <kerbal/coroutine/generator/detail/generator_iterator.impl.hpp>
 
@@ -121,5 +124,7 @@ namespace kerbal
 	} // namespace coroutine
 
 } // namespace kerbal
+
+#endif
 
 #endif // KERBAL_COROUTINE_GENERATOR_GENERATOR_IMPL_HPP

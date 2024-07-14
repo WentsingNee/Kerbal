@@ -1,5 +1,5 @@
 /**
- * @file       config.hpp
+ * @file       exp_compat.hpp
  * @brief
  * @date       2021-03-21
  * @author     Peter
@@ -9,8 +9,8 @@
  *   all rights reserved
  */
 
-#ifndef KERBAL_COROUTINE_DETAIL_CONFIG_HPP
-#define KERBAL_COROUTINE_DETAIL_CONFIG_HPP
+#ifndef KERBAL_COROUTINE_DETAIL_EXP_COMPAT_HPP
+#define KERBAL_COROUTINE_DETAIL_EXP_COMPAT_HPP
 
 #include <kerbal/coroutine/config.hpp>
 
@@ -49,4 +49,4 @@ namespace kerbal
 
 } // namespace kerbal
 
-#endif // KERBAL_COROUTINE_DETAIL_CONFIG_HPP
+#endif // KERBAL_COROUTINE_DETAIL_EXP_COMPAT_HPP

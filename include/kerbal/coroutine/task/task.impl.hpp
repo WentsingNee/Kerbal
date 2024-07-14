@@ -12,6 +12,10 @@
 #ifndef KERBAL_COROUTINE_TASK_TASK_IMPL_HPP
 #define KERBAL_COROUTINE_TASK_TASK_IMPL_HPP
 
+#include <kerbal/coroutine/config.hpp>
+
+#if KERBAL_SUPPORT_COROUTINE
+
 #include <kerbal/coroutine/task/task.decl.hpp>
 
 #include <kerbal/coroutine/done_coroutine.hpp>
@@ -291,5 +295,7 @@ namespace kerbal
 	} // namespace coroutine
 
 } // namespace kerbal
+
+#endif
 
 #endif // KERBAL_COROUTINE_TASK_TASK_IMPL_HPP

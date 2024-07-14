@@ -29,6 +29,12 @@ function(kerbal_check_supports_coroutine_flags _Out_support)
 endfunction()
 
 
+function(__kerbal_cache_not_supports_coroutine)
+    set(KERBAL_SUPPORT_COROUTINE False CACHE BOOL "Whether compiler support coroutine")
+    message(STATUS "set KERBAL_SUPPORT_COROUTINE = False")
+endfunction()
+
+
 function(__kerbal_cache_result_of_supports_coroutine_flags support)
     set(flags ${ARGN})
     set(KERBAL_SUPPORT_COROUTINE ${support} CACHE BOOL "Whether compiler support coroutine")
@@ -69,12 +75,30 @@ endfunction()
 
 
 function(try_test_compiler_coroutine_support)
-    set_property(GLOBAL PROPERTY KERBAL_COROUTINE -fcoroutines)
-    set_property(GLOBAL PROPERTY KERBAL_COROUTINE_TS -fcoroutines-ts)
-    __kerbal_multi_check_supports_coroutine_flags_and_cache(
-            KERBAL_COROUTINE
-            KERBAL_COROUTINE_TS
-    )
+    if (CMAKE_CXX_COMPILER_ID MATCHES "GNU")
+        set_property(GLOBAL PROPERTY KERBAL_FLAGS_TEST_COROUTINE -fcoroutines)
+        __kerbal_multi_check_supports_coroutine_flags_and_cache(
+                KERBAL_FLAGS_TEST_COROUTINE
+        )
+    elseif (CMAKE_CXX_COMPILER_ID MATCHES "Clang")
+        if ((CMAKE_CXX_STANDARD EQUAL 98) OR (CMAKE_CXX_STANDARD LESS 20))
+            __kerbal_cache_not_supports_coroutine()
+            return()
+        endif ()
+        set_property(GLOBAL PROPERTY KERBAL_FLAGS_TEST_COROUTINE -fcoroutines)
+        set_property(GLOBAL PROPERTY KERBAL_FLAGS_TEST_COROUTINE_TS -fcoroutines-ts)
+        __kerbal_multi_check_supports_coroutine_flags_and_cache(
+                KERBAL_FLAGS_TEST_COROUTINE
+                KERBAL_FLAGS_TEST_COROUTINE_TS
+        )
+    elseif (CMAKE_CXX_COMPILER_ID MATCHES "MSVC")
+        set_property(GLOBAL PROPERTY KERBAL_FLAGS_TEST_COROUTINE_MSVC /await:strict)
+        __kerbal_multi_check_supports_coroutine_flags_and_cache(
+                KERBAL_FLAGS_TEST_COROUTINE
+        )
+    else ()
+        __kerbal_cache_not_supports_coroutine()
+    endif ()
 endfunction()
 
 

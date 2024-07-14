@@ -12,6 +12,10 @@
 #ifndef KERBAL_COROUTINE_TASK_TASK_FWD_HPP
 #define KERBAL_COROUTINE_TASK_TASK_FWD_HPP
 
+#include <kerbal/coroutine/config.hpp>
+
+#if KERBAL_SUPPORT_COROUTINE
+
 
 namespace kerbal
 {
@@ -30,5 +34,7 @@ namespace kerbal
 	} // namespace coroutine
 
 } // namespace kerbal
+
+#endif
 
 #endif // KERBAL_COROUTINE_TASK_TASK_FWD_HPP
