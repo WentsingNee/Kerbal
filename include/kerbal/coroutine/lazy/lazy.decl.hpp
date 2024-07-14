@@ -12,7 +12,11 @@
 #ifndef KERBAL_COROUTINE_LAZY_LAZY_DECL_HPP
 #define KERBAL_COROUTINE_LAZY_LAZY_DECL_HPP
 
-#include <kerbal/coroutine/detail/config.hpp>
+#include <kerbal/coroutine/config.hpp>
+
+#if KERBAL_SUPPORT_COROUTINE
+
+#include <kerbal/coroutine/detail/exp_compat.hpp>
 #include <kerbal/coroutine/lazy/lazy.fwd.hpp>
 #include <kerbal/coroutine/lazy/detail/lazy_promise_type.decl.hpp>
 
@@ -70,5 +74,7 @@ namespace kerbal
 	} // namespace coroutine
 
 } // namespace kerbal
+
+#endif
 
 #endif // KERBAL_COROUTINE_LAZY_LAZY_DECL_HPP

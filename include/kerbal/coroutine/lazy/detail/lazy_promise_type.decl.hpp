@@ -12,7 +12,7 @@
 #ifndef KERBAL_COROUTINE_LAZY_DETAIL_LAZY_PROMISE_TYPE_DECL_HPP
 #define KERBAL_COROUTINE_LAZY_DETAIL_LAZY_PROMISE_TYPE_DECL_HPP
 
-#include <kerbal/coroutine/detail/config.hpp>
+#include <kerbal/coroutine/detail/exp_compat.hpp>
 
 #include <kerbal/compatibility/noexcept.hpp>
 #include <kerbal/optional/optional.hpp>

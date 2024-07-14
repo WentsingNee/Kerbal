@@ -12,7 +12,7 @@
 #ifndef KERBAL_COROUTINE_GENERATOR_DETAIL_GENERATOR_PROMISE_BASE_HPP
 #define KERBAL_COROUTINE_GENERATOR_DETAIL_GENERATOR_PROMISE_BASE_HPP
 
-#include <kerbal/coroutine/detail/config.hpp>
+#include <kerbal/coroutine/detail/exp_compat.hpp>
 
 #include <kerbal/compatibility/noexcept.hpp>
 

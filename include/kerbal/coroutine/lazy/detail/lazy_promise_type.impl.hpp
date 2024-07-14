@@ -12,8 +12,6 @@
 #ifndef KERBAL_COROUTINE_LAZY_DETAIL_LAZY_PROMISE_TYPE_IMPL_HPP
 #define KERBAL_COROUTINE_LAZY_DETAIL_LAZY_PROMISE_TYPE_IMPL_HPP
 
-#include <kerbal/coroutine/detail/config.hpp>
-
 #include <kerbal/compatibility/noexcept.hpp>
 #include <kerbal/optional/optional.hpp>
 #include <kerbal/utility/forward.hpp>

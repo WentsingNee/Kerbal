@@ -12,7 +12,11 @@
 #ifndef KERBAL_COROUTINE_GENERATOR_GENERATOR_DECL_HPP
 #define KERBAL_COROUTINE_GENERATOR_GENERATOR_DECL_HPP
 
-#include <kerbal/coroutine/detail/config.hpp>
+#include <kerbal/coroutine/config.hpp>
+
+#if KERBAL_SUPPORT_COROUTINE
+
+#include <kerbal/coroutine/detail/exp_compat.hpp>
 #include <kerbal/coroutine/generator/generator.fwd.hpp>
 #include <kerbal/coroutine/generator/detail/generator_iterator.decl.hpp>
 #include <kerbal/coroutine/generator/detail/generator_promise_base.hpp>
@@ -106,5 +110,7 @@ namespace kerbal
 	} // namespace coroutine
 
 } // namespace kerbal
+
+#endif
 
 #endif // KERBAL_COROUTINE_GENERATOR_GENERATOR_DECL_HPP
