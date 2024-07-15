@@ -29,6 +29,7 @@
 #endif
 
 #if __cplusplus >= 201103L
+#	include <kerbal/compatibility/move.hpp>
 #	include <kerbal/utility/integer_sequence.hpp>
 #endif
 
@@ -323,7 +324,10 @@ namespace kerbal
 				static void apply(kerbal::utility::tuple<Callable, Args...> & pack,
 									kerbal::utility::integer_sequence<std::size_t, I...>)
 				{
-					kerbal::function::invoke_r<void>(pack.template get<0>(), pack.template get<I + 1>()...);
+					kerbal::function::invoke_r<void>(
+						pack.template get<0>(),
+						kerbal::compatibility::move(pack.template get<I + 1>()...)
+					);
 				}
 
 			public:
