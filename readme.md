@@ -159,6 +159,26 @@ target_link_libraries(
 * Doxygen generated document: click [this](https://wentsingnee.github.io/KerbalDoxygenDoc/)
 
 
+```mermaid
+gitGraph:
+options
+{
+    "nodeSpacing": 150,
+    "nodeRadius": 10
+}
+end
+commit
+branch A
+checkout A
+commit
+commit
+commit
+checkout main
+commit
+commit
+merge A
+```
+
 
 ### Thanks ###
 
