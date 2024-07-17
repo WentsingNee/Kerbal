@@ -16,6 +16,21 @@
 
 #if __RDRND__
 #	define KERBAL_HAS_SUPPORT_OF_RANDOM_HARDWARE_ENGINE_UINT64_T 1
+#else
+
+#	include <kerbal/config/compiler_id.hpp>
+#	if KERBAL_COMPILER_ID == KERBAL_COMPILER_ID_MSVC
+
+#		include <kerbal/config/compiler_private.hpp>
+#		if KERBAL_MSVC_VERSION_MEETS(19, 0, 0) // msvc2015
+
+#			include <kerbal/config/architecture.hpp>
+#			if KERBAL_ARCHITECTURE == KERBAL_ARCHITECTURE_AMD64
+#				define KERBAL_HAS_SUPPORT_OF_RANDOM_HARDWARE_ENGINE_UINT64_T 1
+#			endif
+#		endif
+#	endif
+
 #endif
 
 
