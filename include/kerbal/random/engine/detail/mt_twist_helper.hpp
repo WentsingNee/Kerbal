@@ -25,6 +25,23 @@
 #include <kerbal/random/engine/detail/mt_twist/mt_twist.plain.part.hpp>
 
 
+#ifndef __ARM_NEON
+
+#	include <kerbal/config/compiler_id.hpp>
+#	if KERBAL_COMPILER_ID == KERBAL_COMPILER_ID_MSVC
+
+#		include <kerbal/config/compiler_private.hpp>
+#		if KERBAL_MSVC_VERSION_MEETS(19, 0, 0) // msvc2015
+
+#			include <kerbal/config/architecture.hpp>
+#			if KERBAL_ARCHITECTURE == KERBAL_ARCHITECTURE_ARM
+#				define __ARM_NEON 1
+#			endif
+#		endif
+#	endif
+#endif
+
+
 #ifndef KERBAL_RANDOM_ENABLE_MT_TWIST_IE_OPTIMISE
 
 #	if __AVX512F__ || __AVX2__ || __SSE4_1__ || __SSE2__ || __ARM_FEATURE_SVE || __ARM_NEON
