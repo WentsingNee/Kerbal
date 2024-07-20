@@ -17,6 +17,7 @@
 #include <kerbal/compatibility/static_assert.hpp>
 #include <kerbal/type_traits/sign_deduction.hpp>
 
+#include <kerbal/numeric/bit/countl_zero.hpp>
 #include <kerbal/smath/add_mod_sm.hpp>
 #include <kerbal/smath/multiply_mod_a_b_sm.hpp>
 #include <kerbal/smath/multiply_mod_sa_b_sm.hpp>
@@ -87,13 +88,8 @@ namespace kerbal
 						 *                1  r = r * a + 1
 						 */
 
-						int lead = CHAR_BIT * sizeof(n) - 1;
-						{
-							// to opt: lead = CHAR_BIT * sizeof(n) - 1 - __builtin_clzll(n);
-							while (((n >> lead) & 1) == 0) {
-								lead--;
-							}
-						}
+						int lead = CHAR_BIT * sizeof(n) - 1 - kerbal::numeric::countl_zero(n);
+
 						ResultType r = 1;
 						bool b = true;
 						ResultType poa = 1;
