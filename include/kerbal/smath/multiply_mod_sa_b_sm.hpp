@@ -72,8 +72,15 @@ namespace kerbal
 					static
 					ResultType f_impl(ResultType b, kerbal::type_traits::type_identity<void>) KERBAL_NOEXCEPT
 					{
-						if (b <= kerbal::numeric::numeric_limits<ResultType>::MAX::value / a) {
-							return a * b % m;
+						typedef kerbal::type_traits::integral_constant<
+							ResultType,
+							kerbal::numeric::numeric_limits<ResultType>::MAX::value / a
+						> NEVER_OVERFLOW_MAXIMUM;
+
+						if (m / 2 <= NEVER_OVERFLOW_MAXIMUM::value) {
+							if (b <= NEVER_OVERFLOW_MAXIMUM::value) {
+								return a * b % m;
+							}
 						}
 
 						/*  Schrage's algorithm
