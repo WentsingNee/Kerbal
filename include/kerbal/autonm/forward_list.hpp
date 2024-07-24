@@ -522,7 +522,7 @@ namespace kerbal
 					forward_list & other
 				) KERBAL_NOEXCEPT
 				{
-					fl_type_unrelated::k_splice_after(before_pos, other);
+					fl_type_unrelated::k_splice_after(before_pos, static_cast<fl_type_unrelated &>(other));
 				}
 
 				KERBAL_CONSTEXPR20
@@ -553,7 +553,7 @@ namespace kerbal
 					forward_list && other
 				) KERBAL_NOEXCEPT
 				{
-					fl_type_unrelated::k_splice_after(before_pos, other);
+					fl_type_unrelated::k_splice_after(before_pos, static_cast<fl_type_unrelated &&>(other));
 				}
 
 #		endif
