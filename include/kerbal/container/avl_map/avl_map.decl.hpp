@@ -495,6 +495,10 @@ namespace kerbal
 			//===================
 			// operation
 
+				template <typename OtherKeyCompare>
+				KERBAL_CONSTEXPR20
+				void merge(avl_map<K, M, OtherKeyCompare, Allocator> & other);
+
 				KERBAL_CONSTEXPR20
 				void swap(avl_map & other);
 
