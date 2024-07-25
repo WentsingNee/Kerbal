@@ -317,7 +317,7 @@ namespace kerbal
 					{
 							friend class flat_ordered_base;
 
-							const flat_ordered_base *self;
+							const flat_ordered_base * self;
 
 							KERBAL_CONSTEXPR
 							explicit value_compare(const flat_ordered_base * self) KERBAL_NOEXCEPT :
@@ -826,8 +826,9 @@ namespace kerbal
 						this->k_sort();
 						iterator unique_last(
 							kerbal::algorithm::unique(
-								sequence.begin(), sequence.end(), equal_adapter(this))
-							);
+								sequence.begin(), sequence.end(), equal_adapter(this)
+							)
+						);
 						sequence.erase(unique_last, sequence.end());
 
 						while (first != last && this->size() != this->max_size()) {

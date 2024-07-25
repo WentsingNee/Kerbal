@@ -41,10 +41,10 @@ namespace kerbal
 			// mask<u32, 16> ->  00000000000000001111111111111111
 			template <typename Unsigned, unsigned int I>
 			struct single_bit_bsearch_mask :
-					kerbal::type_traits::integral_constant<
-						Unsigned,
-						static_cast<Unsigned>(-1) / (kerbal::smath::two_pow_sn<Unsigned, I>::value + 1)
-					>
+				kerbal::type_traits::integral_constant<
+					Unsigned,
+					static_cast<Unsigned>(-1) / (kerbal::smath::two_pow_sn<Unsigned, I>::value + 1)
+				>
 			{
 				private:
 					KERBAL_STATIC_ASSERT(kerbal::type_traits::is_unsigned<Unsigned>::value, "type should be unsigned");
@@ -63,7 +63,8 @@ namespace kerbal
 
 				public:
 					KERBAL_CONSTEXPR
-					static int f(Unsigned /*x*/) KERBAL_NOEXCEPT
+					static
+					int f(Unsigned /*x*/) KERBAL_NOEXCEPT
 					{
 						return 0;
 					}
@@ -77,7 +78,8 @@ namespace kerbal
 
 				public:
 					KERBAL_CONSTEXPR
-					static int f(Unsigned x) KERBAL_NOEXCEPT
+					static
+					int f(Unsigned x) KERBAL_NOEXCEPT
 					{
 						typedef kerbal::smath::two_pow_sn<Unsigned, I - 1> GRAININESS;
 						typedef single_bit_bsearch_mask<Unsigned, GRAININESS::value> MASK;

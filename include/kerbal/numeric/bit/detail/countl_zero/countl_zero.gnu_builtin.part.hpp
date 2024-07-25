@@ -129,9 +129,11 @@ namespace kerbal
 				inline
 				int countl_zero(unsigned int x) KERBAL_NOEXCEPT
 				{
-					return x == 0 ?
-							sizeof(unsigned int) * CHAR_BIT :
-							KERBAL_BUILTIN_COUNTL_ZERO(x);
+					return
+						x == 0 ?
+						sizeof(unsigned int) * CHAR_BIT :
+						KERBAL_BUILTIN_COUNTL_ZERO(x)
+					;
 				}
 
 				KERBAL_CONSTEXPR
@@ -142,15 +144,16 @@ namespace kerbal
 					typedef kerbal::type_traits::integral_constant<std::size_t, CHAR_BIT * sizeof(unsigned int)> I;
 					typedef kerbal::type_traits::integral_constant<std::size_t, I::value - S::value> SHIFT;
 					KERBAL_STATIC_ASSERT(S::value <= I::value, "digits of unsigned short type is greater than that of unsigned int type");
-					return S::value == I::value ?
-							KERBAL_BUILTIN_COUNTL_ZERO(x) :
-							KERBAL_BUILTIN_COUNTL_ZERO(
-								(
-									(static_cast<unsigned int>(1u) << SHIFT::value) - 1
-								) | (
-									static_cast<unsigned int>(x) << SHIFT::value
-								)
+					return
+						S::value == I::value ?
+						KERBAL_BUILTIN_COUNTL_ZERO(x) :
+						KERBAL_BUILTIN_COUNTL_ZERO(
+							(
+								(static_cast<unsigned int>(1u) << SHIFT::value) - 1
+							) | (
+								static_cast<unsigned int>(x) << SHIFT::value
 							)
+						)
 					;
 				}
 
@@ -162,15 +165,16 @@ namespace kerbal
 					typedef kerbal::type_traits::integral_constant<std::size_t, CHAR_BIT * sizeof(unsigned int)> I;
 					typedef kerbal::type_traits::integral_constant<std::size_t, I::value - C::value> SHIFT;
 					KERBAL_STATIC_ASSERT(C::value <= I::value, "digits of unsigned char type is greater than that of unsigned int type");
-					return C::value == I::value ?
-							KERBAL_BUILTIN_COUNTL_ZERO(x) :
-							KERBAL_BUILTIN_COUNTL_ZERO(
-								(
-									(static_cast<unsigned int>(1u) << SHIFT::value) - 1
-								) | (
-									static_cast<unsigned int>(x) << SHIFT::value
-								)
+					return
+						C::value == I::value ?
+						KERBAL_BUILTIN_COUNTL_ZERO(x) :
+						KERBAL_BUILTIN_COUNTL_ZERO(
+							(
+								(static_cast<unsigned int>(1u) << SHIFT::value) - 1
+							) | (
+								static_cast<unsigned int>(x) << SHIFT::value
 							)
+						)
 					;
 				}
 
@@ -182,9 +186,11 @@ namespace kerbal
 				inline
 				int countl_zero(unsigned long x) KERBAL_NOEXCEPT
 				{
-					return x == 0 ?
-							sizeof(unsigned long) * CHAR_BIT :
-							KERBAL_BUILTIN_COUNTL_ZEROL(x);
+					return
+						x == 0 ?
+						sizeof(unsigned long) * CHAR_BIT :
+						KERBAL_BUILTIN_COUNTL_ZEROL(x)
+					;
 				}
 
 #	endif
@@ -195,9 +201,11 @@ namespace kerbal
 				inline
 				int countl_zero(unsigned long long x) KERBAL_NOEXCEPT
 				{
-					return x == 0 ?
-							sizeof(unsigned long long) * CHAR_BIT :
-							KERBAL_BUILTIN_COUNTL_ZEROLL(x);
+					return
+						x == 0 ?
+						sizeof(unsigned long long) * CHAR_BIT :
+						KERBAL_BUILTIN_COUNTL_ZEROLL(x)
+					;
 				}
 
 #	endif

@@ -29,13 +29,13 @@ namespace kerbal
 
 			template <typename T>
 			struct k_is_optional_helper:
-					kerbal::type_traits::false_type
+				kerbal::type_traits::false_type
 			{
 			};
 
 			template <typename T>
 			struct k_is_optional_helper<kerbal::optional::optional<T> > :
-					kerbal::type_traits::true_type
+				kerbal::type_traits::true_type
 			{
 			};
 
@@ -43,9 +43,9 @@ namespace kerbal
 
 		template <typename T>
 		struct is_optional:
-				kerbal::optional::detail::k_is_optional_helper<
-						typename kerbal::type_traits::remove_cv<T>::type
-				>
+			kerbal::optional::detail::k_is_optional_helper<
+				typename kerbal::type_traits::remove_cv<T>::type
+			>
 		{
 		};
 

@@ -33,8 +33,8 @@ namespace kerbal
 	{
 
 		template <typename T>
-		struct bitarray_result_len:
-				kerbal::type_traits::integral_constant<std::size_t, sizeof(T) * CHAR_BIT>
+		struct bitarray_result_len :
+			kerbal::type_traits::integral_constant<std::size_t, sizeof(T) * CHAR_BIT>
 		{
 		};
 
@@ -63,8 +63,8 @@ namespace kerbal
 		}
 
 		template <typename T>
-		struct octarray_result_len:
-				kerbal::type_traits::integral_constant<std::size_t, sizeof(T) * CHAR_BIT / 3 + (sizeof(T) * CHAR_BIT % 3 != 0)>
+		struct octarray_result_len :
+			kerbal::type_traits::integral_constant<std::size_t, sizeof(T) * CHAR_BIT / 3 + (sizeof(T) * CHAR_BIT % 3 != 0)>
 		{
 		};
 
@@ -95,8 +95,8 @@ namespace kerbal
 		}
 
 		template <typename T>
-		struct hexarray_result_len:
-				kerbal::type_traits::integral_constant<std::size_t, sizeof(T) * CHAR_BIT / 4 + (sizeof(T) * CHAR_BIT % 4 != 0)>
+		struct hexarray_result_len :
+			kerbal::type_traits::integral_constant<std::size_t, sizeof(T) * CHAR_BIT / 4 + (sizeof(T) * CHAR_BIT % 4 != 0)>
 		{
 		};
 
@@ -200,9 +200,11 @@ namespace kerbal
 		T mask(std::size_t n) KERBAL_NOEXCEPT
 		{
 			typedef typename kerbal::type_traits::make_unsigned<T>::type unsigned_t;
-			return n == sizeof(unsigned_t) * CHAR_BIT ?
-					~static_cast<unsigned_t>(0) :
-					~(static_cast<unsigned_t>(~static_cast<unsigned_t>(0)) << n);
+			return
+				n == sizeof(unsigned_t) * CHAR_BIT ?
+				~static_cast<unsigned_t>(0) :
+				~(static_cast<unsigned_t>(~static_cast<unsigned_t>(0)) << n)
+			;
 		}
 
 		template <typename T>
@@ -296,11 +298,15 @@ namespace kerbal
 				typedef typename kerbal::type_traits::make_unsigned<Signed>::type unsigned_t;
 				typedef kerbal::type_traits::integral_constant<std::size_t, sizeof(Signed) * CHAR_BIT> BIT_WIDTH;
 #		define ux static_cast<unsigned_t>(x)
-				return s == 0 ?
-						x :
+				return
+					s == 0 ?
+					x :
+					(
 						s > 0 ?
 						(ux << s | (ux >> (BIT_WIDTH::value - s))) :
-						(ux >> -s | (ux << (BIT_WIDTH::value - (-s)))); // rotr(x, -s);
+						(ux >> -s | (ux << (BIT_WIDTH::value - (-s)))) // rotr(x, -s)
+					)
+				;
 #		undef ux
 			}
 
@@ -309,9 +315,11 @@ namespace kerbal
 			Unsigned rotl_helper(Unsigned x, int s, kerbal::type_traits::false_type) KERBAL_NOEXCEPT
 			{
 				typedef kerbal::type_traits::integral_constant<std::size_t, sizeof(Unsigned) * CHAR_BIT> BIT_WIDTH;
-				return s == 0 ?
-						 x :
-						 (x << s | (x >> (BIT_WIDTH::value - s)));
+				return
+					s == 0 ?
+					x :
+					(x << s | (x >> (BIT_WIDTH::value - s)))
+				;
 			}
 
 		} // namespace detail
@@ -332,11 +340,15 @@ namespace kerbal
 			{
 				typedef typename kerbal::type_traits::make_unsigned<Signed>::type unsigned_t;
 #		define ux static_cast<unsigned_t>(x)
-				return s == 0 ?
-						x :
+				return
+					s == 0 ?
+					x :
+					(
 						s > 0 ?
 						(ux >> s | (ux << ((sizeof(Signed) * CHAR_BIT) - s))) :
-						(ux << -s | (ux >> ((sizeof(Signed) * CHAR_BIT) - (-s)))); // rotl(x, -s);
+						(ux << -s | (ux >> ((sizeof(Signed) * CHAR_BIT) - (-s)))) // rotl(x, -s)
+					)
+				;
 #		undef ux
 			}
 
@@ -344,9 +356,11 @@ namespace kerbal
 			KERBAL_CONSTEXPR
 			Unsigned rotr_helper(Unsigned x, int s, kerbal::type_traits::false_type) KERBAL_NOEXCEPT
 			{
-				return s == 0 ?
-						 x :
-						 (x >> s | (x << ((sizeof(Unsigned) * CHAR_BIT) - s)));
+				return
+					s == 0 ?
+					x :
+					(x >> s | (x << ((sizeof(Unsigned) * CHAR_BIT) - s)))
+				;
 			}
 
 		} // namespace detail
@@ -355,7 +369,11 @@ namespace kerbal
 		KERBAL_CONSTEXPR
 		T rotr(T x, int s) KERBAL_NOEXCEPT
 		{
-			return kerbal::numeric::detail::rotr_helper(x, s % (sizeof(T) * CHAR_BIT), kerbal::type_traits::is_signed<T>());
+			return kerbal::numeric::detail::rotr_helper(
+				x,
+				s % (sizeof(T) * CHAR_BIT),
+				kerbal::type_traits::is_signed<T>()
+			);
 		}
 
 	} // namespace numeric

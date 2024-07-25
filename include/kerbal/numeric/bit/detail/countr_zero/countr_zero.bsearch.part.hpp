@@ -52,9 +52,9 @@ namespace kerbal
 				{
 					KERBAL_STATIC_ASSERT(kerbal::type_traits::is_unsigned<Unsigned>::value, "x should be unsigned");
 					return kerbal::numeric::single_bit_bsearch(
-							static_cast<Unsigned>(
-									(x & (-x)) + (x == 0 ? 1 : 0)
-							)
+						static_cast<Unsigned>(
+							(x & (-x)) + (x == 0 ? 1 : 0)
+						)
 					);
 				}
 

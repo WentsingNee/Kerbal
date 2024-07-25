@@ -53,8 +53,8 @@ namespace kerbal
 
 		template <typename T, typename Deleter>
 		class unique_ptr :
-				private kerbal::utility::noncopyable,
-				protected kerbal::utility::member_compress_helper<Deleter>
+			private kerbal::utility::noncopyable,
+			protected kerbal::utility::member_compress_helper<Deleter>
 		{
 			private:
 				typedef kerbal::utility::member_compress_helper<Deleter> deleter_compress_helper;
@@ -99,10 +99,10 @@ namespace kerbal
 
 				KERBAL_CONSTEXPR20
 				unique_ptr()
-						KERBAL_CONDITIONAL_NOEXCEPT(
-							try_test_is_nothrow_default_constructible::IS_TRUE::value
-						) :
-						k_ptr(NULL)
+					KERBAL_CONDITIONAL_NOEXCEPT(
+						try_test_is_nothrow_default_constructible::IS_TRUE::value
+					) :
+					k_ptr(NULL)
 				{
 				}
 
@@ -119,10 +119,10 @@ namespace kerbal
 
 				KERBAL_CONSTEXPR20
 				unique_ptr(std::nullptr_t)
-						KERBAL_CONDITIONAL_NOEXCEPT(
-							try_test_is_nothrow_constructible_from_nullptr::IS_TRUE::value
-						) :
-						k_ptr(NULL)
+					KERBAL_CONDITIONAL_NOEXCEPT(
+						try_test_is_nothrow_constructible_from_nullptr::IS_TRUE::value
+					) :
+					k_ptr(NULL)
 				{
 				}
 
@@ -140,10 +140,10 @@ namespace kerbal
 
 				KERBAL_CONSTEXPR20
 				explicit unique_ptr(pointer ptr)
-						KERBAL_CONDITIONAL_NOEXCEPT(
-							try_test_is_nothrow_constructible_from_ptr::IS_TRUE::value
-						) :
-						k_ptr(ptr)
+					KERBAL_CONDITIONAL_NOEXCEPT(
+						try_test_is_nothrow_constructible_from_ptr::IS_TRUE::value
+					) :
+					k_ptr(ptr)
 				{
 				}
 
@@ -162,11 +162,11 @@ namespace kerbal
 
 				KERBAL_CONSTEXPR20
 				unique_ptr(pointer ptr, const deleter_type & deleter)
-						KERBAL_CONDITIONAL_NOEXCEPT(
-							try_test_is_nothrow_constructible_from_ptr_and_copy_from_deleter::IS_TRUE::value
-						) :
-						deleter_compress_helper(kerbal::utility::in_place_t(), deleter),
-						k_ptr(ptr)
+					KERBAL_CONDITIONAL_NOEXCEPT(
+						try_test_is_nothrow_constructible_from_ptr_and_copy_from_deleter::IS_TRUE::value
+					) :
+					deleter_compress_helper(kerbal::utility::in_place_t(), deleter),
+					k_ptr(ptr)
 				{
 				}
 
@@ -187,11 +187,11 @@ namespace kerbal
 
 				KERBAL_CONSTEXPR20
 				unique_ptr(pointer ptr, deleter_type && deleter)
-						KERBAL_CONDITIONAL_NOEXCEPT(
-							try_test_is_nothrow_constructible_from_ptr_and_move_from_deleter::IS_TRUE::value
-						) :
-						deleter_compress_helper(kerbal::utility::in_place_t(), kerbal::compatibility::move(deleter)),
-						k_ptr(ptr)
+					KERBAL_CONDITIONAL_NOEXCEPT(
+						try_test_is_nothrow_constructible_from_ptr_and_move_from_deleter::IS_TRUE::value
+					) :
+					deleter_compress_helper(kerbal::utility::in_place_t(), kerbal::compatibility::move(deleter)),
+					k_ptr(ptr)
 				{
 				}
 
@@ -210,11 +210,11 @@ namespace kerbal
 
 				KERBAL_CONSTEXPR20
 				unique_ptr(unique_ptr && src)
-						KERBAL_CONDITIONAL_NOEXCEPT(
-							try_test_is_nothrow_move_constructible::IS_TRUE::value
-						) :
-						deleter_compress_helper(kerbal::utility::in_place_t(), kerbal::compatibility::move(src.get_deleter())),
-						k_ptr(src.k_ptr)
+					KERBAL_CONDITIONAL_NOEXCEPT(
+						try_test_is_nothrow_move_constructible::IS_TRUE::value
+					) :
+					deleter_compress_helper(kerbal::utility::in_place_t(), kerbal::compatibility::move(src.get_deleter())),
+					k_ptr(src.k_ptr)
 				{
 					src.k_ptr = nullptr;
 				}
@@ -236,14 +236,17 @@ namespace kerbal
 				template <typename U, typename UDeleter>
 				KERBAL_CONSTEXPR20
 				unique_ptr(
-						unique_ptr<U, UDeleter> && src,
-						typename kerbal::type_traits::enable_if<!kerbal::type_traits::is_array<U>::value, int>::type = 0
+					unique_ptr<U, UDeleter> && src,
+					typename kerbal::type_traits::enable_if<!kerbal::type_traits::is_array<U>::value, int>::type = 0
 				)
-						KERBAL_CONDITIONAL_NOEXCEPT((
-							try_test_is_nothrow_covariant_move_constructible<U, UDeleter>::IS_TRUE::value
-						)) :
-						deleter_compress_helper(kerbal::utility::in_place_t(), kerbal::compatibility::move(src.get_deleter())),
-						k_ptr(src.k_ptr)
+					KERBAL_CONDITIONAL_NOEXCEPT((
+						try_test_is_nothrow_covariant_move_constructible<U, UDeleter>::IS_TRUE::value
+					)) :
+					deleter_compress_helper(
+						kerbal::utility::in_place_t(),
+						kerbal::compatibility::move(src.get_deleter())
+					),
+					k_ptr(src.k_ptr)
 				{
 					src.k_ptr = nullptr;
 				}
@@ -274,9 +277,9 @@ namespace kerbal
 
 				KERBAL_CONSTEXPR20
 				unique_ptr & operator=(unique_ptr && src)
-						KERBAL_CONDITIONAL_NOEXCEPT(
-							try_test_is_nothrow_move_assignable::IS_TRUE::value
-						)
+					KERBAL_CONDITIONAL_NOEXCEPT(
+						try_test_is_nothrow_move_assignable::IS_TRUE::value
+					)
 				{
 					this->reset();
 					this->get_deleter() = kerbal::compatibility::move(src.get_deleter());
@@ -287,9 +290,9 @@ namespace kerbal
 
 				KERBAL_CONSTEXPR20
 				unique_ptr & operator=(std::nullptr_t)
-						KERBAL_CONDITIONAL_NOEXCEPT((
-							is_nothrow_reset::value
-						))
+					KERBAL_CONDITIONAL_NOEXCEPT(
+						is_nothrow_reset::value
+					)
 				{
 					this->reset();
 					return *this;
@@ -299,18 +302,18 @@ namespace kerbal
 
 				KERBAL_CONSTEXPR20
 				void reset()
-						KERBAL_CONDITIONAL_NOEXCEPT((
-							is_nothrow_reset::value
-						))
+					KERBAL_CONDITIONAL_NOEXCEPT(
+						is_nothrow_reset::value
+					)
 				{
 					this->reset(NULL);
 				}
 
 				KERBAL_CONSTEXPR20
 				void reset(pointer p)
-						KERBAL_CONDITIONAL_NOEXCEPT((
-							is_nothrow_reset::value
-						))
+					KERBAL_CONDITIONAL_NOEXCEPT(
+						is_nothrow_reset::value
+					)
 				{
 					if (this->k_ptr != NULL) {
 						this->get_deleter()(this->k_ptr);
@@ -367,20 +370,20 @@ namespace kerbal
 
 				KERBAL_CONSTEXPR20
 				void swap(unique_ptr & with)
-						KERBAL_CONDITIONAL_NOEXCEPT(
-							noexcept(
-								kerbal::algorithm::swap(
-									kerbal::utility::declval<deleter_type &>(),
-									kerbal::utility::declval<deleter_type &>()
-								)
-							) &&
-							noexcept(
-								kerbal::algorithm::swap(
-									kerbal::utility::declval<deleter_type &>(),
-									kerbal::utility::declval<deleter_type &>()
-								)
+					KERBAL_CONDITIONAL_NOEXCEPT(
+						noexcept(
+							kerbal::algorithm::swap(
+								kerbal::utility::declval<deleter_type &>(),
+								kerbal::utility::declval<deleter_type &>()
+							)
+						) &&
+						noexcept(
+							kerbal::algorithm::swap(
+								kerbal::utility::declval<deleter_type &>(),
+								kerbal::utility::declval<deleter_type &>()
 							)
 						)
+					)
 				{
 					kerbal::algorithm::swap(this->get_deleter(), with.get_deleter());
 					kerbal::algorithm::swap(this->k_ptr, with.k_ptr);
@@ -391,8 +394,8 @@ namespace kerbal
 
 		template <typename T, typename Deleter>
 		class unique_ptr<T[], Deleter> :
-				private kerbal::utility::noncopyable,
-				protected kerbal::utility::member_compress_helper<Deleter>
+			private kerbal::utility::noncopyable,
+			protected kerbal::utility::member_compress_helper<Deleter>
 		{
 			private:
 				typedef kerbal::utility::member_compress_helper<Deleter> deleter_compress_helper;
@@ -432,10 +435,10 @@ namespace kerbal
 #		endif
 
 				unique_ptr()
-						KERBAL_CONDITIONAL_NOEXCEPT(
-							try_test_is_nothrow_default_constructible::IS_TRUE::value
-						) :
-						k_ptr(NULL)
+					KERBAL_CONDITIONAL_NOEXCEPT(
+						try_test_is_nothrow_default_constructible::IS_TRUE::value
+					) :
+					k_ptr(NULL)
 				{
 				}
 
@@ -452,10 +455,10 @@ namespace kerbal
 
 				KERBAL_CONSTEXPR20
 				unique_ptr(std::nullptr_t)
-						KERBAL_CONDITIONAL_NOEXCEPT(
-							try_test_is_nothrow_constructible_from_nullptr::IS_TRUE::value
-						) :
-						k_ptr(NULL)
+					KERBAL_CONDITIONAL_NOEXCEPT(
+						try_test_is_nothrow_constructible_from_nullptr::IS_TRUE::value
+					) :
+					k_ptr(NULL)
 				{
 				}
 
@@ -473,10 +476,10 @@ namespace kerbal
 
 				KERBAL_CONSTEXPR20
 				explicit unique_ptr(pointer ptr)
-						KERBAL_CONDITIONAL_NOEXCEPT(
-							try_test_is_nothrow_constructible_from_ptr::IS_TRUE::value
-						) :
-						k_ptr(ptr)
+					KERBAL_CONDITIONAL_NOEXCEPT(
+						try_test_is_nothrow_constructible_from_ptr::IS_TRUE::value
+					) :
+					k_ptr(ptr)
 				{
 				}
 
@@ -495,10 +498,11 @@ namespace kerbal
 
 				KERBAL_CONSTEXPR20
 				unique_ptr(pointer ptr, const deleter_type & deleter)
-						KERBAL_CONDITIONAL_NOEXCEPT(
-							try_test_is_nothrow_constructible_from_ptr_and_copy_from_deleter::IS_TRUE::value
-						) :
-						deleter_compress_helper(kerbal::utility::in_place_t(), deleter), k_ptr(ptr)
+					KERBAL_CONDITIONAL_NOEXCEPT(
+						try_test_is_nothrow_constructible_from_ptr_and_copy_from_deleter::IS_TRUE::value
+					) :
+					deleter_compress_helper(kerbal::utility::in_place_t(), deleter),
+					k_ptr(ptr)
 				{
 				}
 
@@ -519,10 +523,14 @@ namespace kerbal
 
 				KERBAL_CONSTEXPR20
 				unique_ptr(pointer ptr, deleter_type && deleter)
-						KERBAL_CONDITIONAL_NOEXCEPT(
-							try_test_is_nothrow_constructible_from_ptr_and_move_from_deleter::IS_TRUE::value
-						) :
-						deleter_compress_helper(kerbal::utility::in_place_t(), kerbal::compatibility::move(deleter)), k_ptr(ptr)
+					KERBAL_CONDITIONAL_NOEXCEPT(
+						try_test_is_nothrow_constructible_from_ptr_and_move_from_deleter::IS_TRUE::value
+					) :
+					deleter_compress_helper(
+						kerbal::utility::in_place_t(),
+						kerbal::compatibility::move(deleter)
+					),
+					k_ptr(ptr)
 				{
 				}
 
@@ -541,11 +549,14 @@ namespace kerbal
 
 				KERBAL_CONSTEXPR20
 				unique_ptr(unique_ptr && src)
-						KERBAL_CONDITIONAL_NOEXCEPT(
-							try_test_is_nothrow_move_constructible::IS_TRUE::value
-						) :
-						deleter_compress_helper(kerbal::utility::in_place_t(), kerbal::compatibility::move(src.get_deleter())),
-						k_ptr(src.k_ptr)
+					KERBAL_CONDITIONAL_NOEXCEPT(
+						try_test_is_nothrow_move_constructible::IS_TRUE::value
+					) :
+					deleter_compress_helper(
+						kerbal::utility::in_place_t(),
+						kerbal::compatibility::move(src.get_deleter())
+					),
+					k_ptr(src.k_ptr)
 				{
 					src.k_ptr = nullptr;
 				}
@@ -576,9 +587,9 @@ namespace kerbal
 
 				KERBAL_CONSTEXPR20
 				unique_ptr & operator=(unique_ptr && src)
-						KERBAL_CONDITIONAL_NOEXCEPT(
-							try_test_is_nothrow_move_assignable::IS_TRUE::value
-						)
+					KERBAL_CONDITIONAL_NOEXCEPT(
+						try_test_is_nothrow_move_assignable::IS_TRUE::value
+					)
 				{
 					this->reset();
 					this->get_deleter() = kerbal::compatibility::move(src.get_deleter());
@@ -589,9 +600,9 @@ namespace kerbal
 
 				KERBAL_CONSTEXPR20
 				unique_ptr & operator=(std::nullptr_t)
-						KERBAL_CONDITIONAL_NOEXCEPT((
-							is_nothrow_reset::value
-						))
+					KERBAL_CONDITIONAL_NOEXCEPT(
+						is_nothrow_reset::value
+					)
 				{
 					this->reset();
 					return *this;
@@ -601,18 +612,18 @@ namespace kerbal
 
 				KERBAL_CONSTEXPR20
 				void reset()
-						KERBAL_CONDITIONAL_NOEXCEPT((
-							is_nothrow_reset::value
-						))
+					KERBAL_CONDITIONAL_NOEXCEPT(
+						is_nothrow_reset::value
+					)
 				{
 					this->reset(NULL);
 				}
 
 				KERBAL_CONSTEXPR20
 				void reset(pointer p)
-						KERBAL_CONDITIONAL_NOEXCEPT((
-							is_nothrow_reset::value
-						))
+					KERBAL_CONDITIONAL_NOEXCEPT(
+						is_nothrow_reset::value
+					)
 				{
 					if (this->k_ptr != NULL) {
 						this->get_deleter()(this->k_ptr);
@@ -663,20 +674,20 @@ namespace kerbal
 
 				KERBAL_CONSTEXPR20
 				void swap(unique_ptr & with)
-						KERBAL_CONDITIONAL_NOEXCEPT(
-							noexcept(
-								kerbal::algorithm::swap(
-									kerbal::utility::declval<deleter_type &>(),
-									kerbal::utility::declval<deleter_type &>()
-								)
-							) &&
-							noexcept(
-								kerbal::algorithm::swap(
-									kerbal::utility::declval<deleter_type &>(),
-									kerbal::utility::declval<deleter_type &>()
-								)
+					KERBAL_CONDITIONAL_NOEXCEPT(
+						noexcept(
+							kerbal::algorithm::swap(
+								kerbal::utility::declval<deleter_type &>(),
+								kerbal::utility::declval<deleter_type &>()
+							)
+						) &&
+						noexcept(
+							kerbal::algorithm::swap(
+								kerbal::utility::declval<deleter_type &>(),
+								kerbal::utility::declval<deleter_type &>()
 							)
 						)
+					)
 				{
 					kerbal::algorithm::swap(this->get_deleter(), with.get_deleter());
 					kerbal::algorithm::swap(this->k_ptr, with.k_ptr);
@@ -728,44 +739,80 @@ namespace kerbal
 
 
 
-		template <typename T1, typename Deleter1, typename T2, typename Deleter2>
+		template <
+			typename T1, typename Deleter1,
+			typename T2, typename Deleter2
+		>
 		KERBAL_CONSTEXPR20
-		bool operator==(const unique_ptr<T1, Deleter1> & x, const unique_ptr<T2, Deleter2> & y) KERBAL_NOEXCEPT
+		bool operator==(
+			const unique_ptr<T1, Deleter1> & x,
+			const unique_ptr<T2, Deleter2> & y
+		) KERBAL_NOEXCEPT
 		{
 			return x.get() == y.get();
 		}
 
-		template <typename T1, typename Deleter1, typename T2, typename Deleter2>
+		template <
+			typename T1, typename Deleter1,
+			typename T2, typename Deleter2
+		>
 		KERBAL_CONSTEXPR20
-		bool operator!=(const unique_ptr<T1, Deleter1> & x, const unique_ptr<T2, Deleter2> & y) KERBAL_NOEXCEPT
+		bool operator!=(
+			const unique_ptr<T1, Deleter1> & x,
+			const unique_ptr<T2, Deleter2> & y
+		) KERBAL_NOEXCEPT
 		{
 			return x.get() != y.get();
 		}
 
-		template <typename T1, typename Deleter1, typename T2, typename Deleter2>
+		template <
+			typename T1, typename Deleter1,
+			typename T2, typename Deleter2
+		>
 		KERBAL_CONSTEXPR20
-		bool operator<(const unique_ptr<T1, Deleter1> & x, const unique_ptr<T2, Deleter2> & y) KERBAL_NOEXCEPT
+		bool operator<(
+			const unique_ptr<T1, Deleter1> & x,
+			const unique_ptr<T2, Deleter2> & y
+		) KERBAL_NOEXCEPT
 		{
 			return x.get() < y.get();
 		}
 
-		template <typename T1, typename Deleter1, typename T2, typename Deleter2>
+		template <
+			typename T1, typename Deleter1,
+			typename T2, typename Deleter2
+		>
 		KERBAL_CONSTEXPR20
-		bool operator>(const unique_ptr<T1, Deleter1> & x, const unique_ptr<T2, Deleter2> & y) KERBAL_NOEXCEPT
+		bool operator>(
+			const unique_ptr<T1, Deleter1> & x,
+			const unique_ptr<T2, Deleter2> & y
+		) KERBAL_NOEXCEPT
 		{
 			return x.get() > y.get();
 		}
 
-		template <typename T1, typename Deleter1, typename T2, typename Deleter2>
+		template <
+			typename T1, typename Deleter1,
+			typename T2, typename Deleter2
+		>
 		KERBAL_CONSTEXPR20
-		bool operator<=(const unique_ptr<T1, Deleter1> & x, const unique_ptr<T2, Deleter2> & y) KERBAL_NOEXCEPT
+		bool operator<=(
+			const unique_ptr<T1, Deleter1> & x,
+			const unique_ptr<T2, Deleter2> & y
+		) KERBAL_NOEXCEPT
 		{
 			return x.get() <= y.get();
 		}
 
-		template <typename T1, typename Deleter1, typename T2, typename Deleter2>
+		template <
+			typename T1, typename Deleter1,
+			typename T2, typename Deleter2
+		>
 		KERBAL_CONSTEXPR20
-		bool operator>=(const unique_ptr<T1, Deleter1> & x, const unique_ptr<T2, Deleter2> & y) KERBAL_NOEXCEPT
+		bool operator>=(
+			const unique_ptr<T1, Deleter1> & x,
+			const unique_ptr<T2, Deleter2> & y
+		) KERBAL_NOEXCEPT
 		{
 			return x.get() >= y.get();
 		}
@@ -778,8 +825,11 @@ namespace kerbal
 
 		template <typename T, typename Deleter>
 		KERBAL_CONSTEXPR20
-		void swap(kerbal::memory::unique_ptr<T, Deleter> & lhs, kerbal::memory::unique_ptr<T, Deleter> & rhs)
-				KERBAL_CONDITIONAL_NOEXCEPT(noexcept(lhs.swap(rhs)))
+		void swap(
+			kerbal::memory::unique_ptr<T, Deleter> & lhs,
+			kerbal::memory::unique_ptr<T, Deleter> & rhs
+		)
+			KERBAL_CONDITIONAL_NOEXCEPT(noexcept(lhs.swap(rhs)))
 		{
 			lhs.swap(rhs);
 		}
@@ -793,8 +843,11 @@ KERBAL_NAMESPACE_STD_BEGIN
 
 	template <typename T, typename Deleter>
 	KERBAL_CONSTEXPR20
-	void swap(kerbal::memory::unique_ptr<T, Deleter> & lhs, kerbal::memory::unique_ptr<T, Deleter> & rhs)
-			KERBAL_CONDITIONAL_NOEXCEPT(noexcept(lhs.swap(rhs)))
+	void swap(
+		kerbal::memory::unique_ptr<T, Deleter> & lhs,
+		kerbal::memory::unique_ptr<T, Deleter> & rhs
+	)
+		KERBAL_CONDITIONAL_NOEXCEPT(noexcept(lhs.swap(rhs)))
 	{
 		lhs.swap(rhs);
 	}

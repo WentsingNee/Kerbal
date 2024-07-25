@@ -830,10 +830,13 @@ namespace kerbal
 							std::initializer_list<int>{
 								(
 									f(
-										kerbal::type_traits::integral_constant<std::size_t,
-											TUPLE_SIZE::value - 1 - Index>(),
+										kerbal::type_traits::integral_constant<
+											std::size_t,
+											TUPLE_SIZE::value - 1 - Index
+										>(),
 										kerbal::utility::forward<Self>(self).template get<
-											TUPLE_SIZE::value - 1 - Index>()
+											TUPLE_SIZE::value - 1 - Index
+										>()
 									),
 									0
 								)...

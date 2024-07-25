@@ -129,9 +129,11 @@ namespace kerbal
 				inline
 				int countr_zero(unsigned int x) KERBAL_NOEXCEPT
 				{
-					return x == 0 ?
-							sizeof(unsigned int) * CHAR_BIT :
-							KERBAL_BUILTIN_COUNTR_ZERO(x);
+					return
+						x == 0 ?
+						sizeof(unsigned int) * CHAR_BIT :
+						KERBAL_BUILTIN_COUNTR_ZERO(x)
+					;
 				}
 
 				KERBAL_CONSTEXPR
@@ -141,11 +143,12 @@ namespace kerbal
 					typedef kerbal::type_traits::integral_constant<std::size_t, CHAR_BIT * sizeof(unsigned short)> S;
 					typedef kerbal::type_traits::integral_constant<std::size_t, CHAR_BIT * sizeof(unsigned int)> I;
 					KERBAL_STATIC_ASSERT(S::value <= I::value, "digits of unsigned short type is greater than that of unsigned int type");
-					return S::value == I::value ?
-							KERBAL_BUILTIN_COUNTR_ZERO(x) :
-							KERBAL_BUILTIN_COUNTR_ZERO(
-								(static_cast<unsigned int>(1u) << S::value) | static_cast<unsigned int>(x)
-							)
+					return
+						S::value == I::value ?
+						KERBAL_BUILTIN_COUNTR_ZERO(x) :
+						KERBAL_BUILTIN_COUNTR_ZERO(
+							(static_cast<unsigned int>(1u) << S::value) | static_cast<unsigned int>(x)
+						)
 					;
 				}
 
@@ -156,11 +159,12 @@ namespace kerbal
 					typedef kerbal::type_traits::integral_constant<std::size_t, CHAR_BIT * sizeof(unsigned char)> C;
 					typedef kerbal::type_traits::integral_constant<std::size_t, CHAR_BIT * sizeof(unsigned int)> I;
 					KERBAL_STATIC_ASSERT(C::value <= I::value, "digits of unsigned char type is greater than that of unsigned int type");
-					return C::value == I::value ?
-							KERBAL_BUILTIN_COUNTR_ZERO(x) :
-							KERBAL_BUILTIN_COUNTR_ZERO(
-								(static_cast<unsigned int>(1u) << C::value) | static_cast<unsigned int>(x)
-							)
+					return
+						C::value == I::value ?
+						KERBAL_BUILTIN_COUNTR_ZERO(x) :
+						KERBAL_BUILTIN_COUNTR_ZERO(
+							(static_cast<unsigned int>(1u) << C::value) | static_cast<unsigned int>(x)
+						)
 					;
 				}
 
@@ -172,9 +176,11 @@ namespace kerbal
 				inline
 				int countr_zero(unsigned long x) KERBAL_NOEXCEPT
 				{
-					return x == 0 ?
-							sizeof(unsigned long) * CHAR_BIT :
-							KERBAL_BUILTIN_COUNTR_ZEROL(x);
+					return
+						x == 0 ?
+						sizeof(unsigned long) * CHAR_BIT :
+						KERBAL_BUILTIN_COUNTR_ZEROL(x)
+					;
 				}
 
 #	endif
@@ -185,9 +191,11 @@ namespace kerbal
 				inline
 				int countr_zero(unsigned long long x) KERBAL_NOEXCEPT
 				{
-					return x == 0 ?
-							sizeof(unsigned long long) * CHAR_BIT :
-							KERBAL_BUILTIN_COUNTR_ZEROLL(x);
+					return
+						x == 0 ?
+						sizeof(unsigned long long) * CHAR_BIT :
+						KERBAL_BUILTIN_COUNTR_ZEROLL(x)
+					;
 				}
 
 #	endif

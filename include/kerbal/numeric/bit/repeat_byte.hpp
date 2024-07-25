@@ -31,16 +31,16 @@ namespace kerbal
 
 			template <typename T, unsigned char B>
 			struct repeat_byte_loop<T, B, 1> :
-					kerbal::type_traits::integral_constant<T, B>
+				kerbal::type_traits::integral_constant<T, B>
 			{
 			};
 
 			template <typename T, unsigned char B, int i>
 			struct repeat_byte_loop :
-					kerbal::type_traits::integral_constant<
-						T,
-						(repeat_byte_loop<T, B, i - 1>::value << CHAR_BIT) + B
-					>
+				kerbal::type_traits::integral_constant<
+					T,
+					(repeat_byte_loop<T, B, i - 1>::value << CHAR_BIT) + B
+				>
 			{
 			};
 
@@ -48,7 +48,7 @@ namespace kerbal
 
 		template <typename T, unsigned char B>
 		struct repeat_byte :
-				detail::repeat_byte_loop<T, B, sizeof(T)>
+			detail::repeat_byte_loop<T, B, sizeof(T)>
 		{
 		};
 
