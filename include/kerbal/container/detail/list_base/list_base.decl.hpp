@@ -15,6 +15,7 @@
 #include <kerbal/container/list/list.fwd.hpp>
 #include <kerbal/memory/allocator/monotonic_allocator/monotonic_allocator.fwd.hpp>
 
+#include <kerbal/algorithm/sort.hpp>
 #include <kerbal/compare/basic_compare.hpp>
 #include <kerbal/compare/std_compare/std_compare.fwd.hpp>
 #include <kerbal/compatibility/constexpr.hpp>
@@ -1112,6 +1113,40 @@ namespace kerbal
 
 					KERBAL_CONSTEXPR20
 					void sort();
+
+
+				protected:
+
+					template <typename ValueTypeAllocator, typename BinaryPredict>
+					KERBAL_CONSTEXPR20
+					static
+					void k_sort_afford_allocator(
+						ValueTypeAllocator & alloc,
+						const_iterator first, const_iterator last,
+						BinaryPredict cmp
+					);
+
+					template <typename ValueTypeAllocator>
+					KERBAL_CONSTEXPR20
+					static
+					void k_sort_afford_allocator(
+						ValueTypeAllocator & alloc,
+						const_iterator first, const_iterator last
+					);
+
+					template <typename ValueTypeAllocator, typename BinaryPredict>
+					KERBAL_CONSTEXPR20
+					void sort_afford_allocator(
+						ValueTypeAllocator & alloc,
+						BinaryPredict cmp
+					);
+
+					template <typename ValueTypeAllocator>
+					KERBAL_CONSTEXPR20
+					void sort_afford_allocator(
+						ValueTypeAllocator & alloc
+					);
+
 
 				private:
 

@@ -2043,6 +2043,134 @@ namespace kerbal
 			}
 
 			template <typename T>
+			template <typename ValueTypeAllocator, typename BinaryPredict>
+			KERBAL_CONSTEXPR20
+			void
+			list_type_only<T>::
+			k_sort_afford_allocator(
+				ValueTypeAllocator & alloc,
+				const_iterator first, const_iterator last,
+				BinaryPredict cmp
+			)
+			{
+				if (first == last) {
+					return;
+				}
+
+				typedef kerbal::memory::allocator_traits<ValueTypeAllocator> allocator_traits;
+				typedef typename allocator_traits::template rebind_alloc<node_base*>::other ptr_allocator;
+				typedef kerbal::memory::allocator_traits<ptr_allocator> ptr_allocator_traits;
+
+				ptr_allocator ptr_alloc(alloc);
+				size_type n(kerbal::iterator::distance(first, last));
+
+				node_base ** buffer = ptr_allocator_traits::allocate(ptr_alloc, n + 2);
+
+				{
+					iterator it = first.cast_to_mutable();
+					buffer[0] = it.current->prev;
+					size_type i = 1;
+					while (it != last) {
+						buffer[i] = it.current;
+						++it;
+						++i;
+					}
+					buffer[i] = it.current;
+				}
+
+				struct cmp_by_ptr_points_to
+				{
+						BinaryPredict & cmp;
+
+						KERBAL_CONSTEXPR20
+						cmp_by_ptr_points_to(BinaryPredict & cmp) KERBAL_NOEXCEPT :
+							cmp(cmp)
+						{
+						}
+
+						KERBAL_CONSTEXPR20
+						bool operator()(node_base const * const & lhs, node_base const * const & rhs) const
+						{
+							node const * a = node::reinterpret_as(lhs);
+							node const * b = node::reinterpret_as(rhs);
+							return cmp(a->member(), b->member());
+						}
+				};
+
+#		if KERBAL_HAS_EXCEPTIONS_SUPPORT
+				try {
+#		endif
+					kerbal::algorithm::sort(buffer + 1, buffer + 1 + n, cmp_by_ptr_points_to(cmp));
+#		if KERBAL_HAS_EXCEPTIONS_SUPPORT
+				} catch (...) {
+					ptr_allocator_traits::deallocate(ptr_alloc, buffer, n + 2);
+					throw;
+				}
+#		endif
+
+				{
+					buffer[0]->next = buffer[1];
+					for (size_type i = 1; i < n + 1; ++i) {
+						buffer[i]->prev = buffer[i - 1];
+						buffer[i]->next = buffer[i + 1];
+					}
+					buffer[n + 1]->prev = buffer[n];
+				}
+
+				ptr_allocator_traits::deallocate(ptr_alloc, buffer, n + 2);
+
+			}
+
+			template <typename T>
+			template <typename ValueTypeAllocator>
+			KERBAL_CONSTEXPR20
+			void
+			list_type_only<T>::
+			k_sort_afford_allocator(
+				ValueTypeAllocator & alloc,
+				const_iterator first, const_iterator last
+			)
+			{
+				k_sort_afford_allocator(
+					alloc,
+					first, last,
+					kerbal::compare::less<value_type>()
+				);
+			}
+
+			template <typename T>
+			template <typename ValueTypeAllocator, typename BinaryPredict>
+			KERBAL_CONSTEXPR20
+			void
+			list_type_only<T>::
+			sort_afford_allocator(
+				ValueTypeAllocator & alloc,
+				BinaryPredict cmp
+			)
+			{
+				k_sort_afford_allocator(
+					alloc,
+					this->cbegin(), this->cend(),
+					cmp
+				);
+			}
+
+			template <typename T>
+			template <typename ValueTypeAllocator>
+			KERBAL_CONSTEXPR20
+			void
+			list_type_only<T>::
+			sort_afford_allocator(
+				ValueTypeAllocator & alloc
+			)
+			{
+				k_sort_afford_allocator(
+					alloc,
+					this->cbegin(), this->cend()
+				);
+			}
+
+			template <typename T>
 			template <typename NodeAllocator, typename UnaryPredicate>
 			KERBAL_CONSTEXPR20
 			typename

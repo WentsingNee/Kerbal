@@ -587,6 +587,23 @@ namespace kerbal
 
 				using list_type_only::sort;
 
+				template <typename ValueTypeAllocator, typename BinaryPredict>
+				KERBAL_CONSTEXPR20
+				void sort_afford_allocator(
+					ValueTypeAllocator & alloc,
+					const_iterator first, const_iterator last,
+					BinaryPredict cmp
+				);
+
+				template <typename ValueTypeAllocator>
+				KERBAL_CONSTEXPR20
+				void sort_afford_allocator(
+					ValueTypeAllocator & alloc,
+					const_iterator first, const_iterator last
+				);
+
+				using list_type_only::sort_afford_allocator;
+
 				template <typename UnaryPredicate>
 				KERBAL_CONSTEXPR20
 				size_type remove_if(const_iterator first, const_iterator last, UnaryPredicate predicate);
