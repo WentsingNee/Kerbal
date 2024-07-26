@@ -1567,62 +1567,7 @@ KERBAL_NAMESPACE_STD_BEGIN
 KERBAL_NAMESPACE_STD_END
 
 
-#if __cplusplus >= 201103L
-
-#include <kerbal/utility/std_tuple/std_tuple.fwd.hpp>
-
-#include <type_traits> // std::integral_constant
-
-
-KERBAL_NAMESPACE_STD_BEGIN
-
-	template <typename ... Args>
-	struct tuple_size<kerbal::utility::tuple<Args...> > :
-		std::integral_constant<std::size_t, kerbal::utility::tuple<Args...>::TUPLE_SIZE::value>
-	{
-	};
-
-	template <std::size_t I, typename ... Args>
-	struct tuple_element<I, kerbal::utility::tuple<Args...> > :
-		kerbal::utility::tuple<Args...>::template value_type<I>
-	{
-	};
-
-	template <std::size_t I, typename ... Args>
-	KERBAL_CONSTEXPR14
-	typename kerbal::utility::tuple<Args...>::template reference<I>::type
-	get(kerbal::utility::tuple<Args...> & t) KERBAL_NOEXCEPT
-	{
-		return t.template get<I>();
-	}
-
-	template <std::size_t I, typename ... Args>
-	KERBAL_CONSTEXPR
-	typename kerbal::utility::tuple<Args...>::template const_reference<I>::type
-	get(const kerbal::utility::tuple<Args...> & t) KERBAL_NOEXCEPT
-	{
-		return t.template get<I>();
-	}
-
-	template <std::size_t I, typename ... Args>
-	KERBAL_CONSTEXPR14
-	typename kerbal::utility::tuple<Args...>::template rvalue_reference<I>::type
-	get(kerbal::utility::tuple<Args...> && t) KERBAL_NOEXCEPT
-	{
-		return kerbal::compatibility::move(t).template get<I>();
-	}
-
-	template <std::size_t I, typename ... Args>
-	KERBAL_CONSTEXPR
-	typename kerbal::utility::tuple<Args...>::template const_rvalue_reference<I>::type
-	get(const kerbal::utility::tuple<Args...> && t) KERBAL_NOEXCEPT
-	{
-		return kerbal::compatibility::move(t).template get<I>();
-	}
-
-KERBAL_NAMESPACE_STD_END
-
-#endif
+#include <kerbal/utility/tuple/detail/tuple.tuple_interface.part.hpp>
 
 
 namespace kerbal
