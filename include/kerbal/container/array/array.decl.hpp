@@ -18,10 +18,12 @@
 #include <kerbal/compare/sequence_compare.hpp>
 #include <kerbal/compatibility/constexpr.hpp>
 #include <kerbal/compatibility/namespace_std_scope.hpp>
+#include <kerbal/compatibility/move.hpp>
 #include <kerbal/compatibility/noexcept.hpp>
 #include <kerbal/iterator/iterator_traits.hpp>
 #include <kerbal/iterator/reverse_iterator.hpp>
 #include <kerbal/type_traits/enable_if.hpp>
+#include <kerbal/type_traits/integral_constant.hpp>
 
 #include <cstddef>
 #include <stdexcept>
@@ -78,6 +80,9 @@ namespace kerbal
 				typedef kerbal::iterator::reverse_iterator<iterator>		reverse_iterator;
 				/// @brief Constant reverse iterator to array.
 				typedef kerbal::iterator::reverse_iterator<const_iterator>	const_reverse_iterator;
+
+				typedef kerbal::type_traits::integral_constant<size_type, N>
+																			SIZE;
 
 				/// @brief 与该 array 所等价的 C 风格数组的类型, 即 value_type[N]
 				typedef value_type											equal_c_array[N];
@@ -230,6 +235,66 @@ namespace kerbal
 
 				const_reference at(size_type index) const;
 
+			public:
+
+				template <size_type I>
+				KERBAL_CONSTEXPR14
+				reference
+				get() & KERBAL_NOEXCEPT
+				{
+					KERBAL_STATIC_ASSERT(I < SIZE::value, "Index out of range");
+					return this->k_data[I];
+				}
+
+				template <size_type I>
+				KERBAL_CONSTEXPR
+				const_reference
+				get() const & KERBAL_NOEXCEPT
+				{
+					KERBAL_STATIC_ASSERT(I < SIZE::value, "Index out of range");
+					return this->k_data[I];
+				}
+
+				template <size_type I>
+				KERBAL_CONSTEXPR
+				const_reference
+				cget() const & KERBAL_NOEXCEPT
+				{
+					KERBAL_STATIC_ASSERT(I < SIZE::value, "Index out of range");
+					return this->k_data[I];
+				}
+
+#		if __cplusplus >= 201103L
+
+				template <size_type I>
+				KERBAL_CONSTEXPR14
+				rvalue_reference
+				get() && KERBAL_NOEXCEPT
+				{
+					KERBAL_STATIC_ASSERT(I < SIZE::value, "Index out of range");
+					return kerbal::compatibility::move(*this).k_data[I];
+				}
+
+				template <size_type I>
+				KERBAL_CONSTEXPR
+				const_rvalue_reference
+				get() const && KERBAL_NOEXCEPT
+				{
+					KERBAL_STATIC_ASSERT(I < SIZE::value, "Index out of range");
+					return kerbal::compatibility::move(*this).k_data[I];
+				}
+
+				template <size_type I>
+				KERBAL_CONSTEXPR
+				const_rvalue_reference
+				cget() const && KERBAL_NOEXCEPT
+				{
+					KERBAL_STATIC_ASSERT(I < SIZE::value, "Index out of range");
+					return kerbal::compatibility::move(*this).k_data[I];
+				}
+
+#		endif
+
 				/**
 				 * @brief Get the reference of the element at the beginning of the array.
 				 * @return the reference of the element at the beginning of the array.
@@ -376,6 +441,65 @@ KERBAL_NAMESPACE_STD_BEGIN
 	}
 
 KERBAL_NAMESPACE_STD_END
+
+
+
+#if __cplusplus >= 201103L
+
+#include <kerbal/utility/std_tuple/std_tuple.fwd.hpp>
+
+#include <type_traits> // std::integral_constant
+
+
+KERBAL_NAMESPACE_STD_BEGIN
+
+	template <typename T, std::size_t N>
+	struct tuple_size<kerbal::container::array<T, N> > :
+		std::integral_constant<std::size_t, kerbal::container::array<T, N>::SIZE::value>
+	{
+	};
+
+	template <std::size_t I, typename T, std::size_t N>
+	struct tuple_element<I, kerbal::container::array<T, N> >
+	{
+			typedef typename kerbal::container::array<T, N>::value_type type;
+	};
+
+	template <std::size_t I, typename T, std::size_t N>
+	KERBAL_CONSTEXPR14
+	typename kerbal::container::array<T, N>::reference
+	get(kerbal::container::array<T, N> & t) KERBAL_NOEXCEPT
+	{
+		return t.template get<I>();
+	}
+
+	template <std::size_t I, typename T, std::size_t N>
+	KERBAL_CONSTEXPR
+	typename kerbal::container::array<T, N>::const_reference
+	get(const kerbal::container::array<T, N> & t) KERBAL_NOEXCEPT
+	{
+		return t.template get<I>();
+	}
+
+	template <std::size_t I, typename T, std::size_t N>
+	KERBAL_CONSTEXPR14
+	typename kerbal::container::array<T, N>::rvalue_reference
+	get(kerbal::container::array<T, N> && t) KERBAL_NOEXCEPT
+	{
+		return kerbal::compatibility::move(t).template get<I>();
+	}
+
+	template <std::size_t I, typename T, std::size_t N>
+	KERBAL_CONSTEXPR
+	typename kerbal::container::array<T, N>::const_rvalue_reference
+	get(const kerbal::container::array<T, N> && t) KERBAL_NOEXCEPT
+	{
+		return kerbal::compatibility::move(t).template get<I>();
+	}
+
+KERBAL_NAMESPACE_STD_END
+
+#endif
 
 
 #endif // KERBAL_CONTAINER_ARRAY_ARRAY_DECL_HPP
