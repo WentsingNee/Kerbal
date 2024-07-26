@@ -12,6 +12,8 @@
 #ifndef KERBAL_ALGORITHM_BINARY_SEARCH_UPPER_BOUND_BACKWARD_HPP
 #define KERBAL_ALGORITHM_BINARY_SEARCH_UPPER_BOUND_BACKWARD_HPP
 
+#include <kerbal/ts/modules_ts/modules_ts.hpp>
+
 #include <kerbal/compare/binary_type_compare.hpp>
 #include <kerbal/compatibility/constexpr.hpp>
 #include <kerbal/iterator/iterator_traits.hpp>
@@ -23,6 +25,7 @@ namespace kerbal
 	namespace algorithm
 	{
 
+		KERBAL_MODULE_EXPORT
 		template <typename BidirectionalIterator, typename T, typename Comparator>
 		KERBAL_CONSTEXPR14
 		BidirectionalIterator
@@ -38,6 +41,7 @@ namespace kerbal
 			return last;
 		}
 
+		KERBAL_MODULE_EXPORT
 		template <typename BidirectionalIterator, typename T>
 		KERBAL_CONSTEXPR14
 		BidirectionalIterator

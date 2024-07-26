@@ -12,6 +12,8 @@
 #ifndef KERBAL_UTILITY_TUPLE_TUPLE_FWD_HPP
 #define KERBAL_UTILITY_TUPLE_TUPLE_FWD_HPP
 
+#include <kerbal/ts/modules_ts/modules_ts.hpp>
+
 #include <kerbal/compatibility/constexpr.hpp>
 #include <kerbal/compatibility/noexcept.hpp>
 #include <kerbal/type_traits/remove_cvref.hpp>
@@ -29,6 +31,7 @@ namespace kerbal
 	namespace utility
 	{
 
+		KERBAL_MODULE_EXPORT
 		struct tuple_partially_init_t {};
 
 #if __cplusplus < 201103L
@@ -36,6 +39,7 @@ namespace kerbal
 
 #	define TARGS_DECL(i) typename KERBAL_MACRO_CONCAT(Arg, i) = kerbal::tmp::tppter
 
+		KERBAL_MODULE_EXPORT
 		template <KERBAL_PPEXPAND_WITH_COMMA_N(TARGS_DECL, 20)> \
 		struct tuple;
 
@@ -91,19 +95,23 @@ namespace kerbal
 
 #else
 
+		KERBAL_MODULE_EXPORT
 		template <typename ... Args>
 		struct tuple;
 
+		KERBAL_MODULE_EXPORT
 		template <typename ... Args>
 		KERBAL_CONSTEXPR
 		kerbal::utility::tuple<typename kerbal::type_traits::remove_cvref<Args>::type...>
 		make_tuple(Args && ... args);
 
+		KERBAL_MODULE_EXPORT
 		template <typename ... Args>
 		KERBAL_CONSTEXPR
 		kerbal::utility::tuple<Args & ...>
 		tie(Args & ... args) KERBAL_NOEXCEPT;
 
+		KERBAL_MODULE_EXPORT
 		template <typename ... Args>
 		KERBAL_CONSTEXPR
 		kerbal::utility::tuple<Args && ...>

@@ -12,6 +12,8 @@
 #ifndef KERBAL_MEMORY_ALLOCATOR_TRAITS_DESTROY_HPP
 #define KERBAL_MEMORY_ALLOCATOR_TRAITS_DESTROY_HPP
 
+#include <kerbal/ts/modules_ts/modules_ts.hpp>
+
 #if __cplusplus >= 201703L
 
 #	include <kerbal/config/cxx_stdlib.hpp>
@@ -67,12 +69,14 @@ namespace kerbal
 	namespace memory
 	{
 
+		KERBAL_MODULE_EXPORT
 		template <typename Alloc, typename T, typename = kerbal::type_traits::void_type<>::type>
 		struct allocator_has_destroy :
 			kerbal::type_traits::false_type
 		{
 		};
 
+		KERBAL_MODULE_EXPORT
 		template <typename Alloc, typename T>
 		struct allocator_has_destroy<
 			Alloc, T,
@@ -100,6 +104,7 @@ namespace kerbal
 		{
 		};
 
+		KERBAL_MODULE_EXPORT
 		template <typename Alloc, typename T>
 		struct allocator_could_use_destroy :
 			kerbal::memory::allocator_has_destroy<Alloc, T>
@@ -109,6 +114,7 @@ namespace kerbal
 
 #	if KERBAL_STD_ALLOCATOR_DESTROY_DEPRECATED
 
+		KERBAL_MODULE_EXPORT
 		template <typename T, typename U>
 		struct allocator_could_use_destroy<std::allocator<T>, U> :
 			kerbal::type_traits::false_type
@@ -120,6 +126,7 @@ namespace kerbal
 
 #	if KERBAL_STD_POLYMORPHIC_ALLOCATOR_DESTROY_DEPRECATED
 
+		KERBAL_MODULE_EXPORT
 		template <typename T, typename U>
 		struct allocator_could_use_destroy<std::pmr::polymorphic_allocator<T>, U> :
 			kerbal::type_traits::false_type

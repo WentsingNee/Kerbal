@@ -13,6 +13,8 @@
 #ifndef KERBAL_UTILITY_INTEGER_SEQUENCE_DETAIL_CXX11_MAKE_INDEX_SEQUENCE_PART_HPP
 #define KERBAL_UTILITY_INTEGER_SEQUENCE_DETAIL_CXX11_MAKE_INDEX_SEQUENCE_PART_HPP
 
+#include <kerbal/ts/modules_ts/modules_ts.hpp>
+
 #include <kerbal/utility/integer_sequence/detail/cxx11/make_integer_sequence.part.hpp>
 
 #include <cstddef>
@@ -24,6 +26,7 @@ namespace kerbal
 	namespace utility
 	{
 
+		KERBAL_MODULE_EXPORT
 		template <std::size_t N>
 		using make_index_sequence = kerbal::utility::make_integer_sequence<std::size_t, N>;
 

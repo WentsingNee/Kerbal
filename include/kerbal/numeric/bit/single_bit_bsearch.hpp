@@ -12,6 +12,8 @@
 #ifndef KERBAL_NUMERIC_BIT_SINGLE_BIT_BSEARCH_HPP
 #define KERBAL_NUMERIC_BIT_SINGLE_BIT_BSEARCH_HPP
 
+#include <kerbal/ts/modules_ts/modules_ts.hpp>
+
 #include <kerbal/compatibility/constexpr.hpp>
 #include <kerbal/compatibility/noexcept.hpp>
 #include <kerbal/compatibility/static_assert.hpp>
@@ -97,6 +99,7 @@ namespace kerbal
 		// + (x & 00001111000011110000111100001111 ? 0 : 4)
 		// + (x & 00000000111111110000000011111111 ? 0 : 8)
 		// + (x & 00000000000000001111111111111111 ? 0 : 16)
+		KERBAL_MODULE_EXPORT
 		template <typename Unsigned>
 		KERBAL_CONSTEXPR
 		int single_bit_bsearch(Unsigned x) KERBAL_NOEXCEPT

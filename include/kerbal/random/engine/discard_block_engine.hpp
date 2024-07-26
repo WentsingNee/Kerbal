@@ -12,6 +12,8 @@
 #ifndef KERBAL_RANDOM_ENGINE_DISCARD_BLOCK_ENGINE_HPP
 #define KERBAL_RANDOM_ENGINE_DISCARD_BLOCK_ENGINE_HPP
 
+#include <kerbal/ts/modules_ts/modules_ts.hpp>
+
 #include <kerbal/compatibility/constexpr.hpp>
 #include <kerbal/compatibility/move.hpp>
 #include <kerbal/compatibility/noexcept.hpp>
@@ -36,6 +38,7 @@ namespace kerbal
 	namespace random
 	{
 
+		KERBAL_MODULE_EXPORT
 		template <typename Engine, std::size_t P, std::size_t R>
 		class discard_block_engine
 		{

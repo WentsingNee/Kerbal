@@ -12,6 +12,8 @@
 #ifndef KERBAL_TEST_OBJECT_COUNT_HPP
 #define KERBAL_TEST_OBJECT_COUNT_HPP
 
+#include <kerbal/ts/modules_ts/modules_ts.hpp>
+
 #include <cstddef>
 
 
@@ -21,6 +23,7 @@ namespace kerbal
 	namespace test
 	{
 
+		KERBAL_MODULE_EXPORT
 		template <typename ObjectType, typename CountingType = std::ptrdiff_t>
 		class object_count
 		{

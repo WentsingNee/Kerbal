@@ -12,6 +12,8 @@
 #ifndef KERBAL_RANDOM_ENGINE_MERSENNE_TWISTER_ENGINE_HPP
 #define KERBAL_RANDOM_ENGINE_MERSENNE_TWISTER_ENGINE_HPP
 
+#include <kerbal/ts/modules_ts/modules_ts.hpp>
+
 #include <kerbal/compare/sequence_compare.hpp>
 #include <kerbal/compatibility/constexpr.hpp>
 #include <kerbal/compatibility/fixed_width_integer.hpp>
@@ -35,6 +37,7 @@ namespace kerbal
 	namespace random
 	{
 
+		KERBAL_MODULE_EXPORT
 		template <
 			typename UIntType, std::size_t W,
 			std::size_t N, std::size_t M, std::size_t R, UIntType A,
@@ -297,6 +300,7 @@ namespace kerbal
 //		>
 //		class mersenne_twister_engine;
 
+		KERBAL_MODULE_EXPORT
 		typedef
 		kerbal::random::mersenne_twister_engine<
 			kerbal::compatibility::uint32_t, 32,
@@ -307,6 +311,7 @@ namespace kerbal
 			18, 1812433253UL
 		> mt19937;
 
+		KERBAL_MODULE_EXPORT
 		typedef
 		kerbal::random::mersenne_twister_engine<
 			kerbal::compatibility::uint64_t, 64,

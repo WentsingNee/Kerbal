@@ -12,6 +12,8 @@
 #ifndef KERBAL_TYPE_TRAITS_ALIGNED_STORAGE_HPP
 #define KERBAL_TYPE_TRAITS_ALIGNED_STORAGE_HPP
 
+#include <kerbal/ts/modules_ts/modules_ts.hpp>
+
 #include <kerbal/compatibility/alignas.hpp>
 
 #include <cstddef>
@@ -23,6 +25,7 @@ namespace kerbal
 	namespace type_traits
 	{
 
+		KERBAL_MODULE_EXPORT
 		template <std::size_t Len, std::size_t Alignment>
 		struct aligned_storage
 		{

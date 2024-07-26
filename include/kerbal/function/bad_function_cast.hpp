@@ -12,6 +12,8 @@
 #ifndef KERBAL_FUNCTION_BAD_FUNCTION_CAST_HPP
 #define KERBAL_FUNCTION_BAD_FUNCTION_CAST_HPP
 
+#include <kerbal/ts/modules_ts/modules_ts.hpp>
+
 #include <stdexcept>
 #include <typeinfo>
 
@@ -22,6 +24,7 @@ namespace kerbal
 	namespace function
 	{
 
+		KERBAL_MODULE_EXPORT
 		class bad_function_cast :
 			public std::runtime_error
 		{

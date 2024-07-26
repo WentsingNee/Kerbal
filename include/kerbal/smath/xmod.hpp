@@ -12,6 +12,8 @@
 #ifndef KERBAL_SMATH_XMOD_HPP
 #define KERBAL_SMATH_XMOD_HPP
 
+#include <kerbal/ts/modules_ts/modules_ts.hpp>
+
 #include <kerbal/compatibility/constexpr.hpp>
 #include <kerbal/compatibility/noexcept.hpp>
 
@@ -53,6 +55,7 @@ namespace kerbal
 		} // namespace detail
 
 
+		KERBAL_MODULE_EXPORT
 		template <typename ResultType, ResultType Mod>
 		struct xmod :
 			kerbal::smath::detail::xmod_helper<

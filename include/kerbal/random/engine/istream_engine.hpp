@@ -12,6 +12,8 @@
 #ifndef KERBAL_RANDOM_ENGINE_ISTREAM_ENGINE_HPP
 #define KERBAL_RANDOM_ENGINE_ISTREAM_ENGINE_HPP
 
+#include <kerbal/ts/modules_ts/modules_ts.hpp>
+
 #include <kerbal/compatibility/constexpr.hpp>
 #include <kerbal/compatibility/noexcept.hpp>
 #include <kerbal/utility/reference_wrapper.hpp>
@@ -26,6 +28,7 @@ namespace kerbal
 	namespace random
 	{
 
+		KERBAL_MODULE_EXPORT
 		template <typename ResultType>
 		class istream_engine
 		{

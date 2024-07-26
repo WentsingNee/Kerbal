@@ -12,6 +12,8 @@
 #ifndef KERBAL_MEMORY_NEW_OVER_ALIGNED_NEW_HPP
 #define KERBAL_MEMORY_NEW_OVER_ALIGNED_NEW_HPP
 
+#include <kerbal/ts/modules_ts/modules_ts.hpp>
+
 #include <kerbal/compatibility/noexcept.hpp>
 #include <kerbal/memory/allocator/over_aligned_allocator.hpp>
 #include <kerbal/memory/nothrow_t.hpp>
@@ -20,6 +22,7 @@
 #include <cstddef>
 
 
+KERBAL_MODULE_EXPORT
 inline
 void * operator new(std::size_t size, kerbal::memory::align_val_t align, kerbal::memory::nothrow_t nothrow) KERBAL_NOEXCEPT
 {
@@ -27,6 +30,7 @@ void * operator new(std::size_t size, kerbal::memory::align_val_t align, kerbal:
 	return alloc.allocate(size, align, nothrow);
 }
 
+KERBAL_MODULE_EXPORT
 inline
 void operator delete(void * p, std::size_t size, kerbal::memory::align_val_t align, kerbal::memory::nothrow_t nothrow) KERBAL_NOEXCEPT
 {
@@ -34,12 +38,14 @@ void operator delete(void * p, std::size_t size, kerbal::memory::align_val_t ali
 	alloc.deallocate(p, size, align, nothrow);
 }
 
+KERBAL_MODULE_EXPORT
 inline
 void * operator new[](std::size_t size, kerbal::memory::align_val_t align, kerbal::memory::nothrow_t nothrow) KERBAL_NOEXCEPT
 {
 	return ::operator new(size, align, nothrow);
 }
 
+KERBAL_MODULE_EXPORT
 inline
 void operator delete[](void * p, std::size_t size, kerbal::memory::align_val_t align, kerbal::memory::nothrow_t nothrow) KERBAL_NOEXCEPT
 {
@@ -48,6 +54,7 @@ void operator delete[](void * p, std::size_t size, kerbal::memory::align_val_t a
 
 
 
+KERBAL_MODULE_EXPORT
 inline
 void * operator new(std::size_t size, kerbal::memory::align_val_t align)
 {
@@ -55,6 +62,7 @@ void * operator new(std::size_t size, kerbal::memory::align_val_t align)
 	return alloc.allocate(size, align);
 }
 
+KERBAL_MODULE_EXPORT
 inline
 void operator delete(void * p, std::size_t size, kerbal::memory::align_val_t align) KERBAL_NOEXCEPT
 {
@@ -62,12 +70,14 @@ void operator delete(void * p, std::size_t size, kerbal::memory::align_val_t ali
 	alloc.deallocate(p, size, align);
 }
 
+KERBAL_MODULE_EXPORT
 inline
 void * operator new[](std::size_t size, kerbal::memory::align_val_t align)
 {
 	return ::operator new(size, align);
 }
 
+KERBAL_MODULE_EXPORT
 inline
 void operator delete[](void * p, std::size_t size, kerbal::memory::align_val_t align) KERBAL_NOEXCEPT
 {

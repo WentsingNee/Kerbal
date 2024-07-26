@@ -12,6 +12,8 @@
 #ifndef KERBAL_SMATH_MULTIPLY_MOD_A_B_SM_HPP
 #define KERBAL_SMATH_MULTIPLY_MOD_A_B_SM_HPP
 
+#include <kerbal/ts/modules_ts/modules_ts.hpp>
+
 #include <kerbal/compatibility/constexpr.hpp>
 #include <kerbal/compatibility/noexcept.hpp>
 #include <kerbal/compatibility/static_assert.hpp>
@@ -109,6 +111,7 @@ namespace kerbal
 
 		} // namespace detail
 
+		KERBAL_MODULE_EXPORT
 		template <typename ResultType, ResultType m>
 		struct multiply_mod_a_b_sm
 		{

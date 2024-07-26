@@ -12,6 +12,8 @@
 #ifndef KERBAL_OPTIONAL_IS_OPTIONAL_HPP
 #define KERBAL_OPTIONAL_IS_OPTIONAL_HPP
 
+#include <kerbal/ts/modules_ts/modules_ts.hpp>
+
 #include <kerbal/optional/optional/optional.fwd.hpp>
 
 #include <kerbal/type_traits/integral_constant.hpp>
@@ -41,6 +43,7 @@ namespace kerbal
 
 		} // namespace detail
 
+		KERBAL_MODULE_EXPORT
 		template <typename T>
 		struct is_optional:
 			kerbal::optional::detail::k_is_optional_helper<

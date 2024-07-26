@@ -12,6 +12,8 @@
 #ifndef KERBAL_RANDOM_DISTRIBUTION_BERNOULLI_DISTRIBUTION_HPP
 #define KERBAL_RANDOM_DISTRIBUTION_BERNOULLI_DISTRIBUTION_HPP
 
+#include <kerbal/ts/modules_ts/modules_ts.hpp>
+
 #include <kerbal/compatibility/constexpr.hpp>
 #include <kerbal/compatibility/noexcept.hpp>
 
@@ -22,6 +24,7 @@ namespace kerbal
 	namespace random
 	{
 
+		KERBAL_MODULE_EXPORT
 		class bernoulli_distribution
 		{
 			public:

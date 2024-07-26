@@ -12,6 +12,8 @@
 #ifndef KERBAL_ALGORITHM_MODIFIER_REPLACE_HPP
 #define KERBAL_ALGORITHM_MODIFIER_REPLACE_HPP
 
+#include <kerbal/ts/modules_ts/modules_ts.hpp>
+
 #include <kerbal/assign/generic_assign.hpp>
 #include <kerbal/compatibility/constexpr.hpp>
 
@@ -22,6 +24,7 @@ namespace kerbal
 	namespace algorithm
 	{
 
+		KERBAL_MODULE_EXPORT
 		template <typename ForwardIterator, typename T>
 		KERBAL_CONSTEXPR14
 		void replace(ForwardIterator first, ForwardIterator last, const T & old_val, const T & new_val)

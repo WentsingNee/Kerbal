@@ -12,6 +12,8 @@
 #ifndef KERBAL_CONTAINER_VECTOR_VECTOR_DECL_HPP
 #define KERBAL_CONTAINER_VECTOR_VECTOR_DECL_HPP
 
+#include <kerbal/ts/modules_ts/modules_ts.hpp>
+
 #include <kerbal/algorithm/swap.hpp>
 #include <kerbal/assign/ilist.hpp>
 #include <kerbal/compare/sequence_compare.hpp>
@@ -51,6 +53,7 @@ namespace kerbal
 	namespace container
 	{
 
+		KERBAL_MODULE_EXPORT
 		template <typename T, typename Allocator>
 		class vector :
 			protected kerbal::container::detail::container_allocator_overload<Allocator>,
@@ -472,6 +475,7 @@ namespace kerbal
 
 #	if __cplusplus >= 201703L
 
+		KERBAL_MODULE_EXPORT
 		template <
 			typename InputIterator,
 			typename Alloc =
@@ -483,6 +487,7 @@ namespace kerbal
 #	endif
 
 
+		KERBAL_MODULE_EXPORT
 		template <typename T, typename Allocator, typename Allocator2>
 		KERBAL_CONSTEXPR20
 		bool operator==(
@@ -496,6 +501,7 @@ namespace kerbal
 			);
 		}
 
+		KERBAL_MODULE_EXPORT
 		template <typename T, typename Allocator, typename Allocator2>
 		KERBAL_CONSTEXPR20
 		bool operator!=(
@@ -509,6 +515,7 @@ namespace kerbal
 			);
 		}
 
+		KERBAL_MODULE_EXPORT
 		template <typename T, typename Allocator, typename Allocator2>
 		KERBAL_CONSTEXPR20
 		bool operator<(
@@ -522,6 +529,7 @@ namespace kerbal
 			);
 		}
 
+		KERBAL_MODULE_EXPORT
 		template <typename T, typename Allocator, typename Allocator2>
 		KERBAL_CONSTEXPR20
 		bool operator>(
@@ -535,6 +543,7 @@ namespace kerbal
 			);
 		}
 
+		KERBAL_MODULE_EXPORT
 		template <typename T, typename Allocator, typename Allocator2>
 		KERBAL_CONSTEXPR20
 		bool operator<=(
@@ -548,6 +557,7 @@ namespace kerbal
 			);
 		}
 
+		KERBAL_MODULE_EXPORT
 		template <typename T, typename Allocator, typename Allocator2>
 		KERBAL_CONSTEXPR20
 		bool operator>=(
@@ -566,6 +576,7 @@ namespace kerbal
 	namespace algorithm
 	{
 
+		KERBAL_MODULE_EXPORT
 		template <typename T, typename Allocator>
 		KERBAL_CONSTEXPR20
 		void swap(
@@ -584,6 +595,7 @@ namespace kerbal
 
 KERBAL_NAMESPACE_STD_BEGIN
 
+	KERBAL_MODULE_EXPORT
 	template <typename T, typename Allocator>
 	KERBAL_CONSTEXPR20
 	void swap(

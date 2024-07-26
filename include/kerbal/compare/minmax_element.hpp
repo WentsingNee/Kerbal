@@ -12,6 +12,8 @@
 #ifndef KERBAL_COMPARE_MINMAX_ELEMENT_HPP
 #define KERBAL_COMPARE_MINMAX_ELEMENT_HPP
 
+#include <kerbal/ts/modules_ts/modules_ts.hpp>
+
 #include <kerbal/compare/basic_compare.hpp>
 #include <kerbal/compatibility/constexpr.hpp>
 #include <kerbal/iterator/iterator.hpp>
@@ -99,6 +101,7 @@ namespace kerbal
 		} // namespace detail
 
 
+		KERBAL_MODULE_EXPORT
 		template <typename ForwardIterator, typename BinaryPredicate>
 		KERBAL_CONSTEXPR14
 		ForwardIterator min_element(ForwardIterator first, ForwardIterator last, BinaryPredicate pred)
@@ -109,6 +112,7 @@ namespace kerbal
 			);
 		}
 
+		KERBAL_MODULE_EXPORT
 		template <typename ForwardIterator>
 		KERBAL_CONSTEXPR14
 		ForwardIterator min_element(ForwardIterator first, ForwardIterator last)
@@ -119,6 +123,7 @@ namespace kerbal
 			return kerbal::compare::min_element(first, last, kerbal::compare::less<value_type>());
 		}
 
+		KERBAL_MODULE_EXPORT
 		template <typename ForwardIterator, typename BinaryPredicate>
 		KERBAL_CONSTEXPR14
 		ForwardIterator max_element(ForwardIterator first, ForwardIterator last, BinaryPredicate pred)
@@ -129,6 +134,7 @@ namespace kerbal
 			);
 		}
 
+		KERBAL_MODULE_EXPORT
 		template <typename ForwardIterator>
 		KERBAL_CONSTEXPR14
 		ForwardIterator max_element(ForwardIterator first, ForwardIterator last)
@@ -221,6 +227,7 @@ namespace kerbal
 		} // namespace detail
 
 
+		KERBAL_MODULE_EXPORT
 		template <typename ForwardIterator, typename BinaryPredicate>
 		KERBAL_CONSTEXPR14
 		kerbal::utility::compressed_pair<ForwardIterator, ForwardIterator>
@@ -232,6 +239,7 @@ namespace kerbal
 			);
 		}
 
+		KERBAL_MODULE_EXPORT
 		template <typename ForwardIterator>
 		KERBAL_CONSTEXPR14
 		kerbal::utility::compressed_pair<ForwardIterator, ForwardIterator>

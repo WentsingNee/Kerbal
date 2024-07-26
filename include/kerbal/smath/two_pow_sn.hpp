@@ -12,6 +12,8 @@
 #ifndef KERBAL_SMATH_TWO_POW_SN_HPP
 #define KERBAL_SMATH_TWO_POW_SN_HPP
 
+#include <kerbal/ts/modules_ts/modules_ts.hpp>
+
 #include <kerbal/compatibility/static_assert.hpp>
 #include <kerbal/numeric/numeric_limits.hpp>
 #include <kerbal/type_traits/integral_constant.hpp>
@@ -56,6 +58,7 @@ namespace kerbal
 		/**
 		 * 0 if n == digits of ResultType else is 2 ** n
 		 */
+		KERBAL_MODULE_EXPORT
 		template <typename ResultType, std::size_t N>
 		struct two_pow_sn :
 			kerbal::smath::detail::two_pow_sn_helper<

@@ -12,6 +12,8 @@
 #ifndef KERBAL_RANDOM_ENGINE_HARDWARE_ENGINE_HARDWARE_ENGINE_FAILURE_HPP
 #define KERBAL_RANDOM_ENGINE_HARDWARE_ENGINE_HARDWARE_ENGINE_FAILURE_HPP
 
+#include <kerbal/ts/modules_ts/modules_ts.hpp>
+
 #include <stdexcept>
 
 
@@ -21,6 +23,7 @@ namespace kerbal
 	namespace random
 	{
 
+		KERBAL_MODULE_EXPORT
 		class hardware_engine_failure :
 			public std::runtime_error
 		{

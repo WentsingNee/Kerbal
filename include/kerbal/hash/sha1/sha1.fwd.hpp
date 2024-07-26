@@ -12,6 +12,9 @@
 #ifndef KERBAL_HASH_SHA1_SHA1_FWD_HPP
 #define KERBAL_HASH_SHA1_SHA1_FWD_HPP
 
+#include <kerbal/ts/modules_ts/modules_ts.hpp>
+
+
 namespace kerbal
 {
 
@@ -28,14 +31,17 @@ namespace kerbal
 
 		} // namespace detail
 
+		KERBAL_MODULE_EXPORT
 		class SHA1_result;
 
+		KERBAL_MODULE_EXPORT
 		struct SHA1_policy
 		{
 			struct fast {};
 			struct size {};
 		};
 
+		KERBAL_MODULE_EXPORT
 		template <typename Policy>
 		class SHA1_context;
 

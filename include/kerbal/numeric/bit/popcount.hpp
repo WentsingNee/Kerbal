@@ -12,6 +12,8 @@
 #ifndef KERBAL_NUMERIC_BIT_POPCOUNT_HPP
 #define KERBAL_NUMERIC_BIT_POPCOUNT_HPP
 
+#include <kerbal/ts/modules_ts/modules_ts.hpp>
+
 #include <kerbal/config/architecture.hpp>
 #include <kerbal/config/compiler_id.hpp>
 #include <kerbal/config/compiler_private.hpp>
@@ -309,6 +311,7 @@ namespace kerbal
 		/**
 		 * Counts the number of 1 bits in the value of x.
 		 */
+		KERBAL_MODULE_EXPORT
 		template <typename T>
 		KERBAL_CONSTEXPR
 		int popcount(T x) KERBAL_NOEXCEPT

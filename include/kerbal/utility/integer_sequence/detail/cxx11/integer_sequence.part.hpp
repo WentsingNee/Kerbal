@@ -12,6 +12,8 @@
 #ifndef KERBAL_UTILITY_INTEGER_SEQUENCE_DETAIL_CXX11_INTEGER_SEQUENCE_PART_HPP
 #define KERBAL_UTILITY_INTEGER_SEQUENCE_DETAIL_CXX11_INTEGER_SEQUENCE_PART_HPP
 
+#include <kerbal/ts/modules_ts/modules_ts.hpp>
+
 #include <cstddef>
 
 
@@ -21,6 +23,7 @@ namespace kerbal
 	namespace utility
 	{
 
+		KERBAL_MODULE_EXPORT
 		template <typename T, T ... Ints>
 		struct integer_sequence
 		{

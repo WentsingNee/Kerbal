@@ -12,6 +12,8 @@
 #ifndef KERBAL_MEMORY_ALLOCATOR_REALLOCABLE_ALLOCATOR_HPP
 #define KERBAL_MEMORY_ALLOCATOR_REALLOCABLE_ALLOCATOR_HPP
 
+#include <kerbal/ts/modules_ts/modules_ts.hpp>
+
 #include <kerbal/compatibility/noexcept.hpp>
 #include <kerbal/memory/bad_alloc.hpp>
 #include <kerbal/memory/bad_array_new_length.hpp>
@@ -30,6 +32,7 @@ namespace kerbal
 	namespace memory
 	{
 
+		KERBAL_MODULE_EXPORT
 		template <typename T>
 		struct is_trivially_reallocate_type :
 			kerbal::type_traits::try_test_is_trivially_copyable<T>::IS_TRUE
@@ -74,6 +77,7 @@ namespace kerbal
 
 		} // namespace detail
 
+		KERBAL_MODULE_EXPORT
 		template <typename T>
 		class reallocable_allocator :
 			public detail::reallocable_allocator_realloc_overload_helper<T>

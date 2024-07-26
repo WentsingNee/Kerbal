@@ -12,6 +12,8 @@
 #ifndef KERBAL_FUNCTION_INVOKE_DETAIL_INVOKE_R_CXX98_PART_HPP
 #define KERBAL_FUNCTION_INVOKE_DETAIL_INVOKE_R_CXX98_PART_HPP
 
+#include <kerbal/ts/modules_ts/modules_ts.hpp>
+
 #include <kerbal/function/invoke/invoke_overload_ver_selector.hpp>
 
 #include <kerbal/compatibility/static_assert.hpp>
@@ -181,6 +183,7 @@ namespace kerbal
  \
 		} /* namespace detail */ \
  \
+		KERBAL_MODULE_EXPORT \
 		template < \
 			typename R, \
 			typename Fun \

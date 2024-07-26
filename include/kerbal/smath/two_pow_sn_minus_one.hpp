@@ -12,6 +12,8 @@
 #ifndef KERBAL_SMATH_TWO_POW_SN_MINUS_ONE_HPP
 #define KERBAL_SMATH_TWO_POW_SN_MINUS_ONE_HPP
 
+#include <kerbal/ts/modules_ts/modules_ts.hpp>
+
 #include <kerbal/compatibility/static_assert.hpp>
 #include <kerbal/numeric/numeric_limits.hpp>
 #include <kerbal/type_traits/integral_constant.hpp>
@@ -53,6 +55,7 @@ namespace kerbal
 		} // namespace detail
 
 
+		KERBAL_MODULE_EXPORT
 		template <typename ResultType, std::size_t N>
 		struct two_pow_sn_minus_one :
 			kerbal::smath::detail::two_pow_sn_minus_one_helper<

@@ -12,6 +12,8 @@
 #ifndef KERBAL_CONTAINER_ASSOCIATIVE_CONTAINER_FACILITY_MAP_DATA_HPP
 #define KERBAL_CONTAINER_ASSOCIATIVE_CONTAINER_FACILITY_MAP_DATA_HPP
 
+#include <kerbal/ts/modules_ts/modules_ts.hpp>
+
 #include <kerbal/compatibility/constexpr.hpp>
 #include <kerbal/compatibility/namespace_std_scope.hpp>
 #include <kerbal/compatibility/noexcept.hpp>
@@ -34,6 +36,7 @@ namespace kerbal
 	namespace container
 	{
 
+		KERBAL_MODULE_EXPORT
 		template <typename K, typename M>
 		class map_data :
 			public kerbal::utility::compressed_pair<K, M>
@@ -183,6 +186,7 @@ namespace kerbal
 
 #	if __cplusplus >= 201703L
 
+		KERBAL_MODULE_EXPORT
 		template <typename K, typename M>
 		map_data(K && k, M && m) ->
 		map_data<

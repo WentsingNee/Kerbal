@@ -12,6 +12,8 @@
 #ifndef KERBAL_COROUTINE_GENERATOR_GENERATOR_FWD_HPP
 #define KERBAL_COROUTINE_GENERATOR_GENERATOR_FWD_HPP
 
+#include <kerbal/ts/modules_ts/modules_ts.hpp>
+
 #include <kerbal/coroutine/config.hpp>
 
 #if KERBAL_SUPPORT_COROUTINE
@@ -25,9 +27,11 @@ namespace kerbal
 	namespace coroutine
 	{
 
+		KERBAL_MODULE_EXPORT
 		template <typename T, typename Allocator = std::allocator<char> >
 		class generator;
 
+		KERBAL_MODULE_EXPORT
 		class bad_generator;
 
 	} // namespace coroutine

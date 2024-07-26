@@ -12,6 +12,8 @@
 #ifndef KERBAL_SMATH_MULTIPLY_MOD_SA_SB_SM_HPP
 #define KERBAL_SMATH_MULTIPLY_MOD_SA_SB_SM_HPP
 
+#include <kerbal/ts/modules_ts/modules_ts.hpp>
+
 #include <kerbal/compatibility/static_assert.hpp>
 #include <kerbal/numeric/numeric_limits.hpp>
 #include <kerbal/type_traits/integral_constant.hpp>
@@ -145,6 +147,7 @@ namespace kerbal
 		} // namespace detail
 
 
+		KERBAL_MODULE_EXPORT
 		template <typename ResultType, ResultType a, ResultType b, ResultType m>
 		struct multiply_mod_sa_sb_sm :
 			detail::multiply_mod_sa_sb_sm_impl_dispatch<

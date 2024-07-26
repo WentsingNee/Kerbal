@@ -12,6 +12,8 @@
 #ifndef KERBAL_UTILITY_MEMBER_COMPRESS_HELPER_DETAIL_MEMBER_COMPRESS_HELPER_MEMBER_COMPRESS_HELPER_DEFAULT_PART_HPP
 #define KERBAL_UTILITY_MEMBER_COMPRESS_HELPER_DETAIL_MEMBER_COMPRESS_HELPER_MEMBER_COMPRESS_HELPER_DEFAULT_PART_HPP
 
+#include <kerbal/ts/modules_ts/modules_ts.hpp>
+
 #include <kerbal/utility/member_compress_helper/member_compress_helper.fwd.hpp>
 
 #include <kerbal/assign/generic_assign.hpp>
@@ -45,6 +47,7 @@ namespace kerbal
 	namespace utility
 	{
 
+		KERBAL_MODULE_EXPORT
 		template <typename T, std::size_t I>
 		class member_compress_helper :
 			public kerbal::utility::detail::member_compress_helper_impl<T>

@@ -12,6 +12,8 @@
 #ifndef KERBAL_ALGORITHM_SORT_HEAP_SORT_HPP
 #define KERBAL_ALGORITHM_SORT_HEAP_SORT_HPP
 
+#include <kerbal/ts/modules_ts/modules_ts.hpp>
+
 #include <kerbal/algorithm/heap.hpp>
 #include <kerbal/compare/basic_compare.hpp>
 #include <kerbal/compatibility/constexpr.hpp>
@@ -24,6 +26,7 @@ namespace kerbal
 	namespace algorithm
 	{
 
+		KERBAL_MODULE_EXPORT
 		template <typename BidirectionalIterator, typename Compare>
 		KERBAL_CONSTEXPR14
 		void heap_sort(BidirectionalIterator first, BidirectionalIterator last, Compare compare)
@@ -32,6 +35,7 @@ namespace kerbal
 			kerbal::algorithm::sort_heap(first, last, compare);
 		}
 
+		KERBAL_MODULE_EXPORT
 		template <typename BidirectionalIterator>
 		KERBAL_CONSTEXPR14
 		void heap_sort(BidirectionalIterator first, BidirectionalIterator last)

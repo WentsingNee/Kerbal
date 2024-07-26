@@ -12,6 +12,8 @@
 #ifndef KERBAL_SMATH_MAX_SA_SB_HPP
 #define KERBAL_SMATH_MAX_SA_SB_HPP
 
+#include <kerbal/ts/modules_ts/modules_ts.hpp>
+
 #include <kerbal/type_traits/integral_constant.hpp>
 
 
@@ -21,6 +23,7 @@ namespace kerbal
 	namespace smath
 	{
 
+		KERBAL_MODULE_EXPORT
 		template <typename ResultType, ResultType a, ResultType b>
 		struct max_sa_sb :
 			kerbal::type_traits::integral_constant<ResultType, (a > b ? a : b)>

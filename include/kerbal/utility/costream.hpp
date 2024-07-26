@@ -12,6 +12,8 @@
 #ifndef KERBAL_UTILITY_COSTREAM_HPP
 #define KERBAL_UTILITY_COSTREAM_HPP
 
+#include <kerbal/ts/modules_ts/modules_ts.hpp>
+
 #include <kerbal/config/compiler_id.hpp>
 #include <kerbal/config/system.hpp>
 
@@ -36,6 +38,7 @@ namespace kerbal
 		namespace costream
 		{
 
+			KERBAL_MODULE_EXPORT
 			class Color_t
 			{
 				public:
@@ -83,6 +86,7 @@ namespace kerbal
 #endif
 
 
+			KERBAL_MODULE_EXPORT
 			template <std::ostream & bind_ostream>
 			class costream
 			{
@@ -175,10 +179,12 @@ namespace kerbal
 			};
 
 #if KERBAL_SYSTEM == KERBAL_SYSTEM_WINDOWS
+			KERBAL_MODULE_EXPORT
 			template <std::ostream & bind_ostream>
 			const typename costream<bind_ostream>::Init_bakup costream<bind_ostream>::bakup(
 			STD_OUTPUT_HANDLE);
 
+			KERBAL_MODULE_EXPORT
 			template <>
 			const typename costream<std::cerr>::Init_bakup costream<std::cerr>::bakup(
 			STD_ERROR_HANDLE);

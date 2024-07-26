@@ -12,6 +12,8 @@
 #ifndef KERBAL_CONTAINER_STATIC_STACK_HPP
 #define KERBAL_CONTAINER_STATIC_STACK_HPP
 
+#include <kerbal/ts/modules_ts/modules_ts.hpp>
+
 #include <kerbal/compatibility/constexpr.hpp>
 #include <kerbal/compatibility/namespace_std_scope.hpp>
 #include <kerbal/compatibility/noexcept.hpp>
@@ -49,6 +51,7 @@ namespace kerbal
 		 * @tparam T Type of the elements.
 		 * @tparam N The maximum number of elements that the stack can hold.
 		 */
+		KERBAL_MODULE_EXPORT
 		template <typename T, std::size_t N>
 		class static_stack
 		{
@@ -299,6 +302,7 @@ namespace kerbal
 		 * Judge whether the stack is equal to the other one.
 		 * @param rhs another stack
 		 */
+		KERBAL_MODULE_EXPORT
 		template <typename T, std::size_t M, std::size_t N>
 		KERBAL_CONSTEXPR14
 		bool operator==(
@@ -309,6 +313,7 @@ namespace kerbal
 			return lhs.c == rhs.c;
 		}
 
+		KERBAL_MODULE_EXPORT
 		template <typename T, std::size_t M, std::size_t N>
 		KERBAL_CONSTEXPR14
 		bool operator!=(
@@ -319,6 +324,7 @@ namespace kerbal
 			return lhs.c != rhs.c;
 		}
 
+		KERBAL_MODULE_EXPORT
 		template <typename T, std::size_t M, std::size_t N>
 		KERBAL_CONSTEXPR14
 		bool operator<(
@@ -329,6 +335,7 @@ namespace kerbal
 			return lhs.c < rhs.c;
 		}
 
+		KERBAL_MODULE_EXPORT
 		template <typename T, std::size_t M, std::size_t N>
 		KERBAL_CONSTEXPR14
 		bool operator<=(
@@ -339,6 +346,7 @@ namespace kerbal
 			return lhs.c <= rhs.c;
 		}
 
+		KERBAL_MODULE_EXPORT
 		template <typename T, std::size_t M, std::size_t N>
 		KERBAL_CONSTEXPR14
 		bool operator>(
@@ -349,6 +357,7 @@ namespace kerbal
 			return lhs.c > rhs.c;
 		}
 
+		KERBAL_MODULE_EXPORT
 		template <typename T, std::size_t M, std::size_t N>
 		KERBAL_CONSTEXPR14
 		bool operator>=(
@@ -365,6 +374,7 @@ namespace kerbal
 	namespace algorithm
 	{
 
+		KERBAL_MODULE_EXPORT
 		template <typename T, std::size_t N>
 		KERBAL_CONSTEXPR14
 		void swap(
@@ -383,6 +393,7 @@ namespace kerbal
 
 KERBAL_NAMESPACE_STD_BEGIN
 
+	KERBAL_MODULE_EXPORT
 	template <typename T, std::size_t N>
 	KERBAL_CONSTEXPR14
 	void swap(

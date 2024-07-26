@@ -12,6 +12,8 @@
 #ifndef KERBAL_MEMORY_POINTER_TRAITS_HPP
 #define KERBAL_MEMORY_POINTER_TRAITS_HPP
 
+#include <kerbal/ts/modules_ts/modules_ts.hpp>
+
 #include <kerbal/type_traits/void_type.hpp>
 
 #include <cstddef>
@@ -107,6 +109,7 @@ namespace kerbal
 		} // namespace detail
 
 
+		KERBAL_MODULE_EXPORT
 		template <typename Ptr>
 		struct pointer_traits
 		{
@@ -124,6 +127,7 @@ namespace kerbal
 		};
 
 
+		KERBAL_MODULE_EXPORT
 		template <typename T>
 		struct pointer_traits<T *>
 		{

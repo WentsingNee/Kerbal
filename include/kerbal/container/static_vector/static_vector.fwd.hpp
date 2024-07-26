@@ -12,6 +12,8 @@
 #ifndef KERBAL_CONTAINER_STATIC_VECTOR_STATIC_VECTOR_FWD_HPP
 #define KERBAL_CONTAINER_STATIC_VECTOR_STATIC_VECTOR_FWD_HPP
 
+#include <kerbal/ts/modules_ts/modules_ts.hpp>
+
 #include <cstddef>
 
 
@@ -21,6 +23,7 @@ namespace kerbal
 	namespace container
 	{
 
+		KERBAL_MODULE_EXPORT
 		template <typename T, std::size_t N>
 		class static_vector;
 

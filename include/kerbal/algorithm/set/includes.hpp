@@ -12,6 +12,8 @@
 #ifndef KERBAL_ALGORITHM_SET_INCLUDES_HPP
 #define KERBAL_ALGORITHM_SET_INCLUDES_HPP
 
+#include <kerbal/ts/modules_ts/modules_ts.hpp>
+
 #include <kerbal/compare/binary_type_compare.hpp>
 #include <kerbal/compatibility/constexpr.hpp>
 
@@ -22,6 +24,7 @@ namespace kerbal
 	namespace algorithm
 	{
 
+		KERBAL_MODULE_EXPORT
 		template <typename InputIterator1, typename InputIterator2, typename BinaryPredict>
 		KERBAL_CONSTEXPR14
 		bool includes(
@@ -46,6 +49,7 @@ namespace kerbal
 			return true;
 		}
 
+		KERBAL_MODULE_EXPORT
 		template <typename InputIterator1, typename InputIterator2>
 		KERBAL_CONSTEXPR14
 		bool includes(

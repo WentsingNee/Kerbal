@@ -12,6 +12,8 @@
 #ifndef KERBAL_ALGORITHM_QUERIER_FIND_HPP
 #define KERBAL_ALGORITHM_QUERIER_FIND_HPP
 
+#include <kerbal/ts/modules_ts/modules_ts.hpp>
+
 #include <kerbal/compatibility/constexpr.hpp>
 #include <kerbal/iterator/iterator.hpp>
 #include <kerbal/iterator/iterator_traits.hpp>
@@ -80,6 +82,7 @@ namespace kerbal
 
 		} // namespace detail
 
+		KERBAL_MODULE_EXPORT
 		template <typename InputIterator, typename Type>
 		KERBAL_CONSTEXPR14
 		InputIterator

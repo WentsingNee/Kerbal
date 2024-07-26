@@ -12,6 +12,8 @@
 #ifndef KERBAL_NUMERIC_NUMERIC_LIMITS_HPP
 #define KERBAL_NUMERIC_NUMERIC_LIMITS_HPP
 
+#include <kerbal/ts/modules_ts/modules_ts.hpp>
+
 #include <kerbal/type_traits/integral_constant.hpp>
 #include <kerbal/type_traits/is_integral.hpp>
 #include <kerbal/type_traits/sign_deduction.hpp>
@@ -30,6 +32,7 @@ namespace kerbal
 	namespace numeric
 	{
 
+		KERBAL_MODULE_EXPORT
 		template <typename T>
 		class numeric_limits;
 
@@ -96,6 +99,7 @@ namespace kerbal
 
 		}
 
+		KERBAL_MODULE_EXPORT
 		template<>
 		class numeric_limits<bool> :
 			  public detail::k_is_specialized<true>
@@ -107,6 +111,7 @@ namespace kerbal
 		{
 		};
 
+		KERBAL_MODULE_EXPORT
 		template<>
 		class numeric_limits<char> :
 			  public detail::k_is_specialized<true>
@@ -118,6 +123,7 @@ namespace kerbal
 		{
 		};
 
+		KERBAL_MODULE_EXPORT
 		template<>
 		class numeric_limits<signed char> :
 			  public detail::k_is_specialized<true>
@@ -129,6 +135,7 @@ namespace kerbal
 		{
 		};
 
+		KERBAL_MODULE_EXPORT
 		template<>
 		class numeric_limits<unsigned char> :
 			  public detail::k_is_specialized<true>
@@ -140,6 +147,7 @@ namespace kerbal
 		{
 		};
 
+		KERBAL_MODULE_EXPORT
 		template<>
 		class numeric_limits<wchar_t> :
 			  public detail::k_is_specialized<true>
@@ -161,6 +169,7 @@ namespace kerbal
 
 #	if __cpp_char8_t >= 201811L
 
+		KERBAL_MODULE_EXPORT
 		template<>
 		class numeric_limits<char8_t> :
 			  public detail::k_is_specialized<true>
@@ -176,6 +185,7 @@ namespace kerbal
 
 #	if __cplusplus >= 201103L
 
+		KERBAL_MODULE_EXPORT
 		template<>
 		class numeric_limits<char16_t> :
 			  public detail::k_is_specialized<true>
@@ -187,6 +197,7 @@ namespace kerbal
 		{
 		};
 
+		KERBAL_MODULE_EXPORT
 		template<>
 		class numeric_limits<char32_t> :
 			  public detail::k_is_specialized<true>
@@ -200,6 +211,7 @@ namespace kerbal
 
 #	endif
 
+		KERBAL_MODULE_EXPORT
 		template<>
 		class numeric_limits<short> :
 			  public detail::k_is_specialized<true>
@@ -211,6 +223,7 @@ namespace kerbal
 		{
 		};
 
+		KERBAL_MODULE_EXPORT
 		template<>
 		class numeric_limits<unsigned short> :
 			  public detail::k_is_specialized<true>
@@ -222,6 +235,7 @@ namespace kerbal
 		{
 		};
 
+		KERBAL_MODULE_EXPORT
 		template<>
 		class numeric_limits<int> :
 			  public detail::k_is_specialized<true>
@@ -233,6 +247,7 @@ namespace kerbal
 		{
 		};
 
+		KERBAL_MODULE_EXPORT
 		template<>
 		class numeric_limits<unsigned int> :
 			  public detail::k_is_specialized<true>
@@ -244,6 +259,7 @@ namespace kerbal
 		{
 		};
 
+		KERBAL_MODULE_EXPORT
 		template<>
 		class numeric_limits<long> :
 			  public detail::k_is_specialized<true>
@@ -255,6 +271,7 @@ namespace kerbal
 		{
 		};
 
+		KERBAL_MODULE_EXPORT
 		template<>
 		class numeric_limits<unsigned long> :
 			  public detail::k_is_specialized<true>
@@ -266,6 +283,7 @@ namespace kerbal
 		{
 		};
 
+		KERBAL_MODULE_EXPORT
 		template<>
 		class numeric_limits<long long> :
 			  public detail::k_is_specialized<true>
@@ -277,6 +295,7 @@ namespace kerbal
 		{
 		};
 
+		KERBAL_MODULE_EXPORT
 		template<>
 		class numeric_limits<unsigned long long> :
 			  public detail::k_is_specialized<true>
@@ -288,6 +307,7 @@ namespace kerbal
 		{
 		};
 
+		KERBAL_MODULE_EXPORT
 		template<>
 		class numeric_limits<float> :
 			  public detail::k_is_specialized<true>
@@ -297,6 +317,7 @@ namespace kerbal
 		{
 		};
 
+		KERBAL_MODULE_EXPORT
 		template<>
 		class numeric_limits<double> :
 			  public detail::k_is_specialized<true>
@@ -306,6 +327,7 @@ namespace kerbal
 		{
 		};
 
+		KERBAL_MODULE_EXPORT
 		template<>
 		class numeric_limits<long double> :
 			  public detail::k_is_specialized<true>

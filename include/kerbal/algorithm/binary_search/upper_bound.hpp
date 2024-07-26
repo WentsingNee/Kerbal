@@ -12,6 +12,8 @@
 #ifndef KERBAL_ALGORITHM_BINARY_SEARCH_UPPER_BOUND_HPP
 #define KERBAL_ALGORITHM_BINARY_SEARCH_UPPER_BOUND_HPP
 
+#include <kerbal/ts/modules_ts/modules_ts.hpp>
+
 #include <kerbal/compare/binary_type_compare.hpp>
 #include <kerbal/compatibility/constexpr.hpp>
 #include <kerbal/iterator/iterator.hpp>
@@ -75,6 +77,7 @@ namespace kerbal
 		/**
 		 * @param comparator requires: comparator(T, value_type)
 		 */
+		KERBAL_MODULE_EXPORT
 		template <typename ForwardIterator, typename T, typename Comparator>
 		KERBAL_CONSTEXPR14
 		ForwardIterator
@@ -86,6 +89,7 @@ namespace kerbal
 			);
 		}
 
+		KERBAL_MODULE_EXPORT
 		template <typename ForwardIterator, typename T>
 		KERBAL_CONSTEXPR14
 		ForwardIterator

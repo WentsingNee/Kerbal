@@ -12,6 +12,8 @@
 #ifndef KERBAL_CONTAINER_FLAT_ORDERED_HPP
 #define KERBAL_CONTAINER_FLAT_ORDERED_HPP
 
+#include <kerbal/ts/modules_ts/modules_ts.hpp>
+
 #include <kerbal/container/detail/flat_ordered_base.hpp>
 
 #include <kerbal/algorithm/swap.hpp>
@@ -38,6 +40,7 @@ namespace kerbal
 	namespace container
 	{
 
+		KERBAL_MODULE_EXPORT
 		template <
 			typename Entity,
 			typename Extract = kerbal::container::identity_extractor<Entity>,
@@ -256,6 +259,7 @@ namespace kerbal
 	namespace algorithm
 	{
 
+		KERBAL_MODULE_EXPORT
 		template <typename Entity, typename Extract, typename KeyCompare, typename Allocator>
 		KERBAL_CONSTEXPR14
 		void swap(
@@ -274,6 +278,7 @@ namespace kerbal
 
 KERBAL_NAMESPACE_STD_BEGIN
 
+	KERBAL_MODULE_EXPORT
 	template <typename Entity, typename Extract, typename KeyCompare, typename Allocator>
 	KERBAL_CONSTEXPR14
 	void swap(

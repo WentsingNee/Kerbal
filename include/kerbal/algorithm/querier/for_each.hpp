@@ -12,6 +12,8 @@
 #ifndef KERBAL_ALGORITHM_QUERIER_FOR_EACH_HPP
 #define KERBAL_ALGORITHM_QUERIER_FOR_EACH_HPP
 
+#include <kerbal/ts/modules_ts/modules_ts.hpp>
+
 #include <kerbal/compatibility/constexpr.hpp>
 #include <kerbal/compatibility/move.hpp>
 
@@ -22,6 +24,7 @@ namespace kerbal
 	namespace algorithm
 	{
 
+		KERBAL_MODULE_EXPORT
 		template <typename InputIterator, typename UnaryFunction>
 		KERBAL_CONSTEXPR14
 		UnaryFunction

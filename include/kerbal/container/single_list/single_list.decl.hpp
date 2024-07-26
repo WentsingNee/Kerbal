@@ -12,6 +12,8 @@
 #ifndef KERBAL_CONTAINER_SINGLE_LIST_SINGLE_LIST_DECL_HPP
 #define KERBAL_CONTAINER_SINGLE_LIST_SINGLE_LIST_DECL_HPP
 
+#include <kerbal/ts/modules_ts/modules_ts.hpp>
+
 #include <kerbal/algorithm/swap.hpp>
 #include <kerbal/assign/ilist.hpp>
 #include <kerbal/compare/sequence_compare.hpp>
@@ -83,6 +85,7 @@ namespace kerbal
 		} // namespace detail
 
 
+		KERBAL_MODULE_EXPORT
 		template <typename T, typename Allocator>
 		struct single_list_node_size :
 			kerbal::container::detail::single_list_node_size_helper<T, Allocator>::type
@@ -90,6 +93,7 @@ namespace kerbal
 		};
 
 
+		KERBAL_MODULE_EXPORT
 		template <typename T, typename Allocator>
 		class single_list :
 			protected detail::sl_typedef_helper<T, Allocator>::sl_allocator_overload,
@@ -626,6 +630,7 @@ namespace kerbal
 
 #	if __cplusplus >= 201703L
 
+		KERBAL_MODULE_EXPORT
 		template <
 			typename InputIterator,
 			typename Alloc =
@@ -634,6 +639,7 @@ namespace kerbal
 		single_list(InputIterator, InputIterator, Alloc = Alloc()) ->
 		single_list<typename kerbal::iterator::iterator_traits<InputIterator>::value_type, Alloc>;
 
+		KERBAL_MODULE_EXPORT
 		template <typename T, typename Alloc = std::allocator<T> >
 		single_list(std::initializer_list<T>, Alloc = Alloc()) ->
 		single_list<T, Alloc>;
@@ -641,20 +647,24 @@ namespace kerbal
 #	endif
 
 
+		KERBAL_MODULE_EXPORT
 		template <typename T, typename Allocator>
 		KERBAL_CONSTEXPR20
 		single_list<T, Allocator> operator+(const single_list<T, Allocator> & lhs, const single_list<T, Allocator> & rhs);
 
 #	if __cplusplus >= 201103L
 
+		KERBAL_MODULE_EXPORT
 		template <typename T, typename Allocator>
 		KERBAL_CONSTEXPR20
 		single_list<T, Allocator> operator+(const single_list<T, Allocator> & lhs, single_list<T, Allocator> && rhs);
 
+		KERBAL_MODULE_EXPORT
 		template <typename T, typename Allocator>
 		KERBAL_CONSTEXPR20
 		single_list<T, Allocator> operator+(single_list<T, Allocator> && lhs, const single_list<T, Allocator> & rhs);
 
+		KERBAL_MODULE_EXPORT
 		template <typename T, typename Allocator>
 		KERBAL_CONSTEXPR20
 		single_list<T, Allocator> operator+(single_list<T, Allocator> && lhs, single_list<T, Allocator> && rhs);
@@ -662,6 +672,7 @@ namespace kerbal
 #	endif
 
 
+		KERBAL_MODULE_EXPORT
 		template <typename T, typename Allocator>
 		KERBAL_CONSTEXPR20
 		bool operator==(
@@ -675,6 +686,7 @@ namespace kerbal
 			);
 		}
 
+		KERBAL_MODULE_EXPORT
 		template <typename T, typename Allocator>
 		KERBAL_CONSTEXPR20
 		bool operator!=(
@@ -688,6 +700,7 @@ namespace kerbal
 			);
 		}
 
+		KERBAL_MODULE_EXPORT
 		template <typename T, typename Allocator>
 		KERBAL_CONSTEXPR20
 		bool operator<(
@@ -701,6 +714,7 @@ namespace kerbal
 			);
 		}
 
+		KERBAL_MODULE_EXPORT
 		template <typename T, typename Allocator>
 		KERBAL_CONSTEXPR20
 		bool operator>(
@@ -714,6 +728,7 @@ namespace kerbal
 			);
 		}
 
+		KERBAL_MODULE_EXPORT
 		template <typename T, typename Allocator>
 		KERBAL_CONSTEXPR20
 		bool operator<=(
@@ -727,6 +742,7 @@ namespace kerbal
 			);
 		}
 
+		KERBAL_MODULE_EXPORT
 		template <typename T, typename Allocator>
 		KERBAL_CONSTEXPR20
 		bool operator>=(
@@ -745,6 +761,7 @@ namespace kerbal
 	namespace algorithm
 	{
 
+		KERBAL_MODULE_EXPORT
 		template <typename T, typename Allocator>
 		KERBAL_CONSTEXPR20
 		void swap(
@@ -763,6 +780,7 @@ namespace kerbal
 
 KERBAL_NAMESPACE_STD_BEGIN
 
+	KERBAL_MODULE_EXPORT
 	template <typename T, typename Allocator>
 	KERBAL_CONSTEXPR20
 	void swap(

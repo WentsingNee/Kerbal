@@ -12,6 +12,8 @@
 #ifndef KERBAL_ANY_BAD_ANY_CAST_HPP
 #define KERBAL_ANY_BAD_ANY_CAST_HPP
 
+#include <kerbal/ts/modules_ts/modules_ts.hpp>
+
 #include <kerbal/compatibility/noexcept.hpp>
 
 #include <stdexcept>
@@ -23,6 +25,7 @@ namespace kerbal
 	namespace any
 	{
 
+		KERBAL_MODULE_EXPORT
 		class bad_any_cast :
 			public std::logic_error
 		{

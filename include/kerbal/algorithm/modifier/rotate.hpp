@@ -12,6 +12,8 @@
 #ifndef KERBAL_ALGORITHM_MODIFIER_ROTATE_HPP
 #define KERBAL_ALGORITHM_MODIFIER_ROTATE_HPP
 
+#include <kerbal/ts/modules_ts/modules_ts.hpp>
+
 #include <kerbal/algorithm/modifier/move.hpp>
 #include <kerbal/algorithm/modifier/move_backward.hpp>
 #include <kerbal/algorithm/swap.hpp>
@@ -143,6 +145,7 @@ namespace kerbal
 
 		} // namespace detail
 
+		KERBAL_MODULE_EXPORT
 		template <typename ForwardIterator>
 		KERBAL_CONSTEXPR14
 		ForwardIterator

@@ -12,6 +12,8 @@
 #ifndef KERBAL_MEMORY_ALLOCATOR_TRAITS_DEALLOCATE_ONE_HPP
 #define KERBAL_MEMORY_ALLOCATOR_TRAITS_DEALLOCATE_ONE_HPP
 
+#include <kerbal/ts/modules_ts/modules_ts.hpp>
+
 #include <kerbal/compatibility/constexpr.hpp>
 #include <kerbal/compatibility/noexcept.hpp>
 #include <kerbal/type_traits/integral_constant.hpp>
@@ -29,12 +31,14 @@ namespace kerbal
 	namespace memory
 	{
 
+		KERBAL_MODULE_EXPORT
 		template <typename Alloc, typename Pointer, typename = kerbal::type_traits::void_type<>::type >
 		struct allocator_has_deallocate_one :
 			kerbal::type_traits::false_type
 		{
 		};
 
+		KERBAL_MODULE_EXPORT
 		template <typename Alloc, typename Pointer>
 		struct allocator_has_deallocate_one<
 			Alloc, Pointer,

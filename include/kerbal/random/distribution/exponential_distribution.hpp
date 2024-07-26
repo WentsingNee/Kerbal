@@ -12,6 +12,8 @@
 #ifndef KERBAL_RANDOM_DISTRIBUTION_EXPONENTIAL_DISTRIBUTION_HPP
 #define KERBAL_RANDOM_DISTRIBUTION_EXPONENTIAL_DISTRIBUTION_HPP
 
+#include <kerbal/ts/modules_ts/modules_ts.hpp>
+
 #include <kerbal/compatibility/constexpr.hpp>
 #include <kerbal/compatibility/noexcept.hpp>
 #include <kerbal/random/distribution/uniform_real_distribution.hpp>
@@ -26,6 +28,7 @@ namespace kerbal
 	namespace random
 	{
 
+		KERBAL_MODULE_EXPORT
 		template <typename RealType = double>
 		class exponential_distribution
 		{

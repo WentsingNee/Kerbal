@@ -12,6 +12,8 @@
 #ifndef KERBAL_SMATH_POW_MOD_SA_N_SM_HPP
 #define KERBAL_SMATH_POW_MOD_SA_N_SM_HPP
 
+#include <kerbal/ts/modules_ts/modules_ts.hpp>
+
 #include <kerbal/compatibility/constexpr.hpp>
 #include <kerbal/compatibility/noexcept.hpp>
 #include <kerbal/compatibility/static_assert.hpp>
@@ -78,6 +80,7 @@ namespace kerbal
 		/*
 		 * a ** n % m
 		 */
+		KERBAL_MODULE_EXPORT
 		template <typename ResultType, ResultType Base, ResultType Mod>
 		struct pow_mod_sa_n_sm :
 			detail::pow_mod_sa_n_sm_reduce_base<ResultType, Base, Mod>

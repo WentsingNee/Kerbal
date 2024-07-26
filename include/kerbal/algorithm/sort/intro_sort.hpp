@@ -12,6 +12,8 @@
 #ifndef KERBAL_ALGORITHM_SORT_INTRO_SORT_HPP
 #define KERBAL_ALGORITHM_SORT_INTRO_SORT_HPP
 
+#include <kerbal/ts/modules_ts/modules_ts.hpp>
+
 #include <kerbal/algorithm/swap.hpp>
 #include <kerbal/algorithm/sort/detail/quick_sort_pivot.hpp>
 #include <kerbal/algorithm/sort/heap_sort.hpp>
@@ -74,6 +76,7 @@ namespace kerbal
 
 		} // namespace detail
 
+		KERBAL_MODULE_EXPORT
 		template <typename BidirectionalIterator, typename Compare>
 		KERBAL_CONSTEXPR14
 		void intro_sort(BidirectionalIterator first, BidirectionalIterator last, Compare cmp)
@@ -81,6 +84,7 @@ namespace kerbal
 			detail::intro_sort(first, last, cmp, 2 * detail::lg(kerbal::iterator::distance(first, last)));
 		}
 
+		KERBAL_MODULE_EXPORT
 		template <typename BidirectionalIterator>
 		KERBAL_CONSTEXPR14
 		void intro_sort(BidirectionalIterator first, BidirectionalIterator last)
@@ -113,6 +117,7 @@ namespace kerbal
 		} // namespace detail
 
 
+		KERBAL_MODULE_EXPORT
 		template <typename BidirectionalIterator, typename Compare>
 		KERBAL_CONSTEXPR14
 		void nonrecursive_intro_sort(BidirectionalIterator first, BidirectionalIterator last, Compare cmp)
@@ -157,6 +162,7 @@ namespace kerbal
 			}
 		}
 
+		KERBAL_MODULE_EXPORT
 		template <typename BidirectionalIterator>
 		KERBAL_CONSTEXPR14
 		void nonrecursive_intro_sort(BidirectionalIterator first, BidirectionalIterator last)

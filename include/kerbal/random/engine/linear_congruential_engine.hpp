@@ -12,6 +12,8 @@
 #ifndef KERBAL_RANDOM_ENGINE_LINEAR_CONGRUENTIAL_ENGINE_HPP
 #define KERBAL_RANDOM_ENGINE_LINEAR_CONGRUENTIAL_ENGINE_HPP
 
+#include <kerbal/ts/modules_ts/modules_ts.hpp>
+
 #include <kerbal/compatibility/constexpr.hpp>
 #include <kerbal/compatibility/fixed_width_integer.hpp>
 #include <kerbal/compatibility/static_assert.hpp>
@@ -36,6 +38,7 @@ namespace kerbal
 	namespace random
 	{
 
+		KERBAL_MODULE_EXPORT
 		template <typename ResultType, ResultType a, ResultType c, ResultType m>
 		class linear_congruential_engine
 		{
@@ -149,12 +152,14 @@ namespace kerbal
 
 		};
 
+		KERBAL_MODULE_EXPORT
 		typedef
 		kerbal::random::linear_congruential_engine<
 			kerbal::compatibility::uint32_t,
 			16807, 0, 2147483647
 		> minstd_rand0;
 
+		KERBAL_MODULE_EXPORT
 		typedef
 		kerbal::random::linear_congruential_engine<
 			kerbal::compatibility::uint32_t,

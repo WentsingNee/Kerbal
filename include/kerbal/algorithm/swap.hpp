@@ -12,6 +12,8 @@
 #ifndef KERBAL_ALGORITHM_SWAP_HPP
 #define KERBAL_ALGORITHM_SWAP_HPP
 
+#include <kerbal/ts/modules_ts/modules_ts.hpp>
+
 #include <kerbal/compatibility/constexpr.hpp>
 #include <kerbal/compatibility/move.hpp>
 #include <kerbal/compatibility/noexcept.hpp>
@@ -35,6 +37,7 @@ namespace kerbal
 	namespace algorithm
 	{
 
+		KERBAL_MODULE_EXPORT
 		template <typename T>
 		struct try_test_is_nothrow_swappable :
 			kerbal::type_traits::tribool_conjunction<
@@ -49,6 +52,7 @@ namespace kerbal
 		{
 		};
 
+		KERBAL_MODULE_EXPORT
 		template <typename T>
 		KERBAL_CONSTEXPR14
 		void swap(T & lhs, T & rhs)
@@ -57,11 +61,13 @@ namespace kerbal
 			)
 		;
 
+		KERBAL_MODULE_EXPORT
 		template <typename T, std::size_t N>
 		KERBAL_CONSTEXPR14
 		void swap(T (&lhs)[N], T (&rhs)[N]);
 
 
+		KERBAL_MODULE_EXPORT
 		template <typename T>
 		KERBAL_CONSTEXPR14
 		void swap(T & lhs, T & rhs)
@@ -74,6 +80,7 @@ namespace kerbal
 			rhs = kerbal::compatibility::to_xvalue(t);
 		}
 
+		KERBAL_MODULE_EXPORT
 		template <typename ForwardIterator1, typename ForwardIterator2>
 		KERBAL_CONSTEXPR14
 		void iter_swap(ForwardIterator1 lhs, ForwardIterator2 rhs)
@@ -151,6 +158,7 @@ namespace kerbal
 
 		} // namespace detail
 
+		KERBAL_MODULE_EXPORT
 		template <typename ForwardIterator1, typename ForwardIterator2>
 		KERBAL_CONSTEXPR14
 		ForwardIterator2
@@ -162,6 +170,7 @@ namespace kerbal
 			);
 		}
 
+		KERBAL_MODULE_EXPORT
 		template <typename T, std::size_t N>
 		KERBAL_CONSTEXPR14
 		void swap(T (&lhs)[N], T (&rhs)[N])

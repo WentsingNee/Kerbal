@@ -20,6 +20,8 @@
 
 #define KERBAL_HAS_TICK_COUNT_SUPPORT 1
 
+#include <kerbal/ts/modules_ts/modules_ts.hpp>
+
 #include <kerbal/compatibility/noexcept.hpp>
 
 #ifndef NOMINMAX
@@ -35,6 +37,7 @@ namespace kerbal
 	namespace compatibility
 	{
 
+		KERBAL_MODULE_EXPORT
 		inline
 		unsigned long get_tick_count() KERBAL_NOEXCEPT
 		{

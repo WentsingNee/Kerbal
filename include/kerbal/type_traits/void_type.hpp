@@ -28,6 +28,7 @@ namespace kerbal
 
 #	define TARGS_DECL(i) typename = T0
 
+		KERBAL_MODULE_EXPORT
 		template <typename T0 = void, KERBAL_PPEXPAND_WITH_COMMA_N(TARGS_DECL, 20)>
 		struct void_type
 		{

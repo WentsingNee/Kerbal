@@ -22,6 +22,7 @@ namespace kerbal
 	namespace smath
 	{
 
+		KERBAL_MODULE_EXPORT
 		template <typename ResultType, ResultType m>
 		struct add_mod_sm
 		{

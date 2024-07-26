@@ -12,6 +12,8 @@
 #ifndef KERBAL_UTILITY_REFERENCE_WRAPPER_HPP
 #define KERBAL_UTILITY_REFERENCE_WRAPPER_HPP
 
+#include <kerbal/ts/modules_ts/modules_ts.hpp>
+
 #include <kerbal/compatibility/constexpr.hpp>
 #include <kerbal/compatibility/noexcept.hpp>
 
@@ -22,6 +24,7 @@ namespace kerbal
 	namespace utility
 	{
 
+		KERBAL_MODULE_EXPORT
 		template <typename T>
 		class reference_wrapper
 		{
@@ -51,6 +54,7 @@ namespace kerbal
 				}
 		};
 
+		KERBAL_MODULE_EXPORT
 		template <typename T>
 		KERBAL_CONSTEXPR
 		reference_wrapper<T>
@@ -59,6 +63,7 @@ namespace kerbal
 			return reference_wrapper<T>(val);
 		}
 
+		KERBAL_MODULE_EXPORT
 		template <typename T>
 		KERBAL_CONSTEXPR
 		reference_wrapper<const T>

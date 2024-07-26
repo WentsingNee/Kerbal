@@ -12,6 +12,8 @@
 #ifndef KERBAL_ALGORITHM_BINARY_SEARCH_UPPER_BOUND_HINT_HPP
 #define KERBAL_ALGORITHM_BINARY_SEARCH_UPPER_BOUND_HINT_HPP
 
+#include <kerbal/ts/modules_ts/modules_ts.hpp>
+
 #include <kerbal/algorithm/binary_search/upper_bound.hpp>
 #include <kerbal/algorithm/binary_search/upper_bound_backward.hpp>
 #include <kerbal/compare/binary_type_compare.hpp>
@@ -115,6 +117,7 @@ namespace kerbal
 
 		} // namespace detail
 
+		KERBAL_MODULE_EXPORT
 		template <typename ForwardIterator, typename T, typename Comparator>
 		KERBAL_CONSTEXPR14
 		ForwardIterator
@@ -129,6 +132,7 @@ namespace kerbal
 			);
 		}
 
+		KERBAL_MODULE_EXPORT
 		template <typename ForwardIterator, typename T>
 		KERBAL_CONSTEXPR14
 		ForwardIterator

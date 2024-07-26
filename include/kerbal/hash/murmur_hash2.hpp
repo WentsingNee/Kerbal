@@ -12,6 +12,8 @@
 #ifndef KERBAL_HASH_MURMUR_HASH2_HPP
 #define KERBAL_HASH_MURMUR_HASH2_HPP
 
+#include <kerbal/ts/modules_ts/modules_ts.hpp>
+
 #include <kerbal/compatibility/constexpr.hpp>
 #include <kerbal/compatibility/fixed_width_integer.hpp>
 #include <kerbal/compatibility/noexcept.hpp>
@@ -31,6 +33,7 @@ namespace kerbal
 	namespace hash
 	{
 
+		KERBAL_MODULE_EXPORT
 		class murmur_hash2_context
 		{
 			public:

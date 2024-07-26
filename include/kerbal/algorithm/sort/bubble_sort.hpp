@@ -12,6 +12,8 @@
 #ifndef KERBAL_ALGORITHM_SORT_BUBBLE_SORT_HPP
 #define KERBAL_ALGORITHM_SORT_BUBBLE_SORT_HPP
 
+#include <kerbal/ts/modules_ts/modules_ts.hpp>
+
 #include <kerbal/algorithm/swap.hpp>
 #include <kerbal/compare/basic_compare.hpp>
 #include <kerbal/compatibility/constexpr.hpp>
@@ -24,6 +26,7 @@ namespace kerbal
 	namespace algorithm
 	{
 
+		KERBAL_MODULE_EXPORT
 		template <typename ForwardIterator, typename Compare>
 		KERBAL_CONSTEXPR14
 		void bubble_sort(ForwardIterator first, ForwardIterator last, Compare cmp)
@@ -44,6 +47,7 @@ namespace kerbal
 			}
 		}
 
+		KERBAL_MODULE_EXPORT
 		template <typename ForwardIterator>
 		KERBAL_CONSTEXPR14
 		void bubble_sort(ForwardIterator first, ForwardIterator last)
@@ -55,6 +59,7 @@ namespace kerbal
 		}
 
 
+		KERBAL_MODULE_EXPORT
 		template <typename ForwardIterator, typename Compare>
 		KERBAL_CONSTEXPR14
 		void flag_bubble_sort(ForwardIterator first, ForwardIterator last, Compare cmp)
@@ -80,6 +85,7 @@ namespace kerbal
 
 		}
 
+		KERBAL_MODULE_EXPORT
 		template <typename ForwardIterator>
 		KERBAL_CONSTEXPR14
 		void flag_bubble_sort(ForwardIterator first, ForwardIterator last)

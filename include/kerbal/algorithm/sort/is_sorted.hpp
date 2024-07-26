@@ -12,6 +12,8 @@
 #ifndef KERBAL_ALGORITHM_SORT_IS_SORTED_HPP
 #define KERBAL_ALGORITHM_SORT_IS_SORTED_HPP
 
+#include <kerbal/ts/modules_ts/modules_ts.hpp>
+
 #include <kerbal/compare/basic_compare.hpp>
 #include <kerbal/compatibility/constexpr.hpp>
 #include <kerbal/iterator/iterator.hpp>
@@ -23,6 +25,7 @@ namespace kerbal
 	namespace algorithm
 	{
 
+		KERBAL_MODULE_EXPORT
 		template <typename ForwardIterator, typename Compare>
 		KERBAL_CONSTEXPR14
 		ForwardIterator is_sorted_until(ForwardIterator first, ForwardIterator last, Compare cmp)
@@ -40,6 +43,7 @@ namespace kerbal
 			return last;
 		}
 
+		KERBAL_MODULE_EXPORT
 		template <typename ForwardIterator>
 		KERBAL_CONSTEXPR14
 		ForwardIterator is_sorted_until(ForwardIterator first, ForwardIterator last)
@@ -49,6 +53,7 @@ namespace kerbal
 			return kerbal::algorithm::is_sorted_until(first, last, kerbal::compare::less<value_type>());
 		}
 
+		KERBAL_MODULE_EXPORT
 		template <typename ForwardIterator, typename Compare>
 		KERBAL_CONSTEXPR14
 		bool is_sorted(ForwardIterator first, ForwardIterator last, Compare cmp)
@@ -56,6 +61,7 @@ namespace kerbal
 			return static_cast<bool>(kerbal::algorithm::is_sorted_until(first, last, cmp) == last);
 		}
 
+		KERBAL_MODULE_EXPORT
 		template <typename ForwardIterator>
 		KERBAL_CONSTEXPR14
 		bool is_sorted(ForwardIterator first, ForwardIterator last)

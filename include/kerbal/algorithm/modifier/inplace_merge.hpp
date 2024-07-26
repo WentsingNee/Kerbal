@@ -12,6 +12,8 @@
 #ifndef KERBAL_ALGORITHM_MODIFIER_INPLACE_MERGE_HPP
 #define KERBAL_ALGORITHM_MODIFIER_INPLACE_MERGE_HPP
 
+#include <kerbal/ts/modules_ts/modules_ts.hpp>
+
 #include <kerbal/algorithm/binary_search/lower_bound.hpp>
 #include <kerbal/algorithm/binary_search/upper_bound.hpp>
 #include <kerbal/algorithm/modifier/rotate.hpp>
@@ -118,6 +120,7 @@ namespace kerbal
 
 		} // namespace detail
 
+		KERBAL_MODULE_EXPORT
 		template <typename ForwardIterator, typename BinaryPredict>
 		KERBAL_CONSTEXPR14
 		void inplace_merge(ForwardIterator first, ForwardIterator mid, ForwardIterator last, BinaryPredict cmp)
@@ -125,6 +128,7 @@ namespace kerbal
 			kerbal::algorithm::detail::k_inplace_merge(first, mid, last, cmp, kerbal::iterator::iterator_category(first));
 		}
 
+		KERBAL_MODULE_EXPORT
 		template <typename ForwardIterator>
 		KERBAL_CONSTEXPR14
 		void inplace_merge(ForwardIterator first, ForwardIterator mid, ForwardIterator last)

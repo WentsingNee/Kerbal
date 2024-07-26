@@ -12,6 +12,8 @@
 #ifndef KERBAL_SMATH_SIGMA_POW_MOD_SA_N_SM_HPP
 #define KERBAL_SMATH_SIGMA_POW_MOD_SA_N_SM_HPP
 
+#include <kerbal/ts/modules_ts/modules_ts.hpp>
+
 #include <kerbal/compatibility/constexpr.hpp>
 #include <kerbal/compatibility/noexcept.hpp>
 #include <kerbal/compatibility/static_assert.hpp>
@@ -122,6 +124,7 @@ namespace kerbal
 
 
 		// a ** (n - 1) + ... + a ** 3 + a ** 2 + a ** 1 + 1
+		KERBAL_MODULE_EXPORT
 		template <typename ResultType, ResultType Base, ResultType Mod>
 		struct sigma_pow_mod_sa_n_sm :
 			detail::sigma_pow_mod_sa_n_sm_impl<ResultType, Base, Mod>

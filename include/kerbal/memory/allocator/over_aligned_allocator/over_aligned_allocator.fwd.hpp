@@ -12,6 +12,8 @@
 #ifndef KERBAL_MEMORY_ALLOCATOR_OVER_ALIGNED_ALLOCATOR_OVER_ALIGNED_ALLOCATOR_FWD_HPP
 #define KERBAL_MEMORY_ALLOCATOR_OVER_ALIGNED_ALLOCATOR_OVER_ALIGNED_ALLOCATOR_FWD_HPP
 
+#include <kerbal/ts/modules_ts/modules_ts.hpp>
+
 #include <kerbal/compatibility/constexpr.hpp>
 #include <kerbal/compatibility/namespace_std_scope.hpp>
 #include <kerbal/compatibility/noexcept.hpp>
@@ -25,6 +27,7 @@ namespace kerbal
 	namespace memory
 	{
 
+		KERBAL_MODULE_EXPORT
 		template <typename T = void, typename UpstreamAllocator = kerbal::memory::malloc_allocator<void> >
 		class over_aligned_allocator;
 
@@ -33,6 +36,7 @@ namespace kerbal
 	namespace algorithm
 	{
 
+		KERBAL_MODULE_EXPORT
 		template <typename T, typename UpstreamAllocator>
 		KERBAL_CONSTEXPR14
 		void swap(
@@ -55,6 +59,7 @@ namespace kerbal
 
 KERBAL_NAMESPACE_STD_BEGIN
 
+	KERBAL_MODULE_EXPORT
 	template <typename T, typename UpstreamAllocator>
 	KERBAL_CONSTEXPR14
 	void swap(

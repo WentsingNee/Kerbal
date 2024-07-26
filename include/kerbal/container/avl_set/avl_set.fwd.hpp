@@ -12,6 +12,8 @@
 #ifndef KERBAL_CONTAINER_AVL_SET_AVL_SET_FWD_HPP
 #define KERBAL_CONTAINER_AVL_SET_AVL_SET_FWD_HPP
 
+#include <kerbal/ts/modules_ts/modules_ts.hpp>
+
 #include <kerbal/compare/binary_type_compare.hpp>
 
 #include <memory>
@@ -23,6 +25,7 @@ namespace kerbal
 	namespace container
 	{
 
+		KERBAL_MODULE_EXPORT
 		template <
 			typename T,
 			typename KeyCompare = kerbal::compare::binary_type_less<void, void>,

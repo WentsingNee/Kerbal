@@ -12,6 +12,8 @@
 #ifndef KERBAL_CONTAINER_STATIC_PRIORITY_QUEUE_HPP
 #define KERBAL_CONTAINER_STATIC_PRIORITY_QUEUE_HPP
 
+#include <kerbal/ts/modules_ts/modules_ts.hpp>
+
 #include <kerbal/algorithm/heap.hpp>
 #include <kerbal/compare/basic_compare.hpp>
 #include <kerbal/compatibility/constexpr.hpp>
@@ -46,6 +48,7 @@ namespace kerbal
 	namespace container
 	{
 
+		KERBAL_MODULE_EXPORT
 		template <typename T, std::size_t N, typename KeyCompare = kerbal::compare::less<T> >
 		class static_priority_queue
 		{
@@ -385,6 +388,7 @@ namespace kerbal
 
 KERBAL_NAMESPACE_STD_BEGIN
 
+	KERBAL_MODULE_EXPORT
 	template <typename T, std::size_t N, typename KeyCompare>
 	KERBAL_CONSTEXPR14
 	void swap(

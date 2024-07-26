@@ -12,6 +12,8 @@
 #ifndef KERBAL_RANDOM_NOISE_PERLIN_NOISE_HPP
 #define KERBAL_RANDOM_NOISE_PERLIN_NOISE_HPP
 
+#include <kerbal/ts/modules_ts/modules_ts.hpp>
+
 #include <kerbal/compatibility/constexpr.hpp>
 #include <kerbal/compatibility/noexcept.hpp>
 #include <kerbal/container/nonmember_container_access.hpp>
@@ -27,6 +29,7 @@ namespace kerbal
 	namespace random
 	{
 
+		KERBAL_MODULE_EXPORT
 		template <typename ResultType = double, std::size_t PERLIN_SIZE = 4096>
 		class perlin_noise
 		{

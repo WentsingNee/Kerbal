@@ -12,6 +12,8 @@
 #ifndef KERBAL_CONTAINER_ASSOCIATIVE_CONTAINER_FACILITY_KEY_COMPARE_IS_TRANSPARENT_HPP
 #define KERBAL_CONTAINER_ASSOCIATIVE_CONTAINER_FACILITY_KEY_COMPARE_IS_TRANSPARENT_HPP
 
+#include <kerbal/ts/modules_ts/modules_ts.hpp>
+
 #include <kerbal/type_traits/integral_constant.hpp>
 #include <kerbal/type_traits/void_type.hpp>
 
@@ -22,11 +24,13 @@ namespace kerbal
 	namespace container
 	{
 
+		KERBAL_MODULE_EXPORT
 		template <typename KeyCompare, typename = kerbal::type_traits::void_type<>::type>
 		struct key_compare_is_transparent : kerbal::type_traits::false_type
 		{
 		};
 
+		KERBAL_MODULE_EXPORT
 		template <typename KeyCompare>
 		struct key_compare_is_transparent<
 			KeyCompare,

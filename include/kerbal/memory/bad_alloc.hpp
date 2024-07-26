@@ -12,6 +12,8 @@
 #ifndef KERBAL_MEMORY_BAD_ALLOC_HPP
 #define KERBAL_MEMORY_BAD_ALLOC_HPP
 
+#include <kerbal/ts/modules_ts/modules_ts.hpp>
+
 #include <kerbal/compatibility/noexcept.hpp>
 
 #include <exception>
@@ -23,6 +25,7 @@ namespace kerbal
 	namespace memory
 	{
 
+		KERBAL_MODULE_EXPORT
 		class bad_alloc :
 			public std::exception
 		{

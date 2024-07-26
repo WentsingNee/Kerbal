@@ -12,6 +12,8 @@
 #ifndef KERBAL_NUMERIC_BIT_REPEAT_BYTE_HPP
 #define KERBAL_NUMERIC_BIT_REPEAT_BYTE_HPP
 
+#include <kerbal/ts/modules_ts/modules_ts.hpp>
+
 #include <kerbal/type_traits/integral_constant.hpp>
 
 #include <climits>
@@ -47,6 +49,7 @@ namespace kerbal
 		} // namespace detail
 
 
+		KERBAL_MODULE_EXPORT
 		template <typename T, unsigned char B>
 		struct repeat_byte :
 			detail::repeat_byte_loop<T, B, sizeof(T)>

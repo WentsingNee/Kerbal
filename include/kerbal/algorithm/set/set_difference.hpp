@@ -12,6 +12,8 @@
 #ifndef KERBAL_ALGORITHM_SET_SET_DIFFERENCE_HPP
 #define KERBAL_ALGORITHM_SET_SET_DIFFERENCE_HPP
 
+#include <kerbal/ts/modules_ts/modules_ts.hpp>
+
 #include <kerbal/algorithm/modifier/copy.hpp>
 #include <kerbal/assign/generic_assign.hpp>
 #include <kerbal/compare/binary_type_compare.hpp>
@@ -24,6 +26,7 @@ namespace kerbal
 	namespace algorithm
 	{
 
+		KERBAL_MODULE_EXPORT
 		template <typename InputIterator1, typename InputIterator2, typename OutputIterator, typename BinaryPredict>
 		KERBAL_CONSTEXPR14
 		OutputIterator set_difference(
@@ -51,6 +54,7 @@ namespace kerbal
 			return d_first;
 		}
 
+		KERBAL_MODULE_EXPORT
 		template <typename InputIterator1, typename InputIterator2, typename OutputIterator>
 		KERBAL_CONSTEXPR14
 		OutputIterator set_difference(

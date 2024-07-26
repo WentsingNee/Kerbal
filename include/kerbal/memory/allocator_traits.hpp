@@ -12,6 +12,8 @@
 #ifndef KERBAL_MEMORY_ALLOCATOR_TRAITS_HPP
 #define KERBAL_MEMORY_ALLOCATOR_TRAITS_HPP
 
+#include <kerbal/ts/modules_ts/modules_ts.hpp>
+
 #include <kerbal/compatibility/constexpr.hpp>
 #include <kerbal/compatibility/noexcept.hpp>
 
@@ -51,6 +53,7 @@ namespace kerbal
 	namespace memory
 	{
 
+		KERBAL_MODULE_EXPORT
 		template <typename Alloc>
 		struct allocator_traits :
 				public kerbal::memory::detail::allocator_traits_reallocate_helper<Alloc>

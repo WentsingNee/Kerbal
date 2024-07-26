@@ -12,6 +12,8 @@
 #ifndef KERBAL_SMATH_HAS_SINGLE_BIT_HPP
 #define KERBAL_SMATH_HAS_SINGLE_BIT_HPP
 
+#include <kerbal/ts/modules_ts/modules_ts.hpp>
+
 #include <kerbal/compatibility/static_assert.hpp>
 #include <kerbal/type_traits/integral_constant.hpp>
 #include <kerbal/type_traits/sign_deduction.hpp>
@@ -23,6 +25,7 @@ namespace kerbal
 	namespace smath
 	{
 
+		KERBAL_MODULE_EXPORT
 		template <typename Unsigned, Unsigned x>
 		struct has_single_bit :
 			kerbal::type_traits::bool_constant<

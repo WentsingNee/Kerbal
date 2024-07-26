@@ -12,6 +12,8 @@
 #ifndef KERBAL_RANDOM_ENGINE_KNUTH_B_ENGINE_HPP
 #define KERBAL_RANDOM_ENGINE_KNUTH_B_ENGINE_HPP
 
+#include <kerbal/ts/modules_ts/modules_ts.hpp>
+
 #include <kerbal/random/engine/linear_congruential_engine.hpp>
 #include <kerbal/random/engine/shuffle_order_engine.hpp>
 
@@ -21,6 +23,7 @@ namespace kerbal
 	namespace random
 	{
 
+		KERBAL_MODULE_EXPORT
 		typedef kerbal::random::shuffle_order_engine<kerbal::random::minstd_rand0, 256> knuth_b;
 
 	} // namespace random

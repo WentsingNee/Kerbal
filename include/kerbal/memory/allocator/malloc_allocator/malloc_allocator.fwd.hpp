@@ -12,6 +12,8 @@
 #ifndef KERBAL_MEMORY_ALLOCATOR_MALLOC_ALLOCATOR_MALLOC_ALLOCATOR_FWD_HPP
 #define KERBAL_MEMORY_ALLOCATOR_MALLOC_ALLOCATOR_MALLOC_ALLOCATOR_FWD_HPP
 
+#include <kerbal/ts/modules_ts/modules_ts.hpp>
+
 
 namespace kerbal
 {
@@ -19,6 +21,7 @@ namespace kerbal
 	namespace memory
 	{
 
+		KERBAL_MODULE_EXPORT
 		template <typename T = void>
 		class malloc_allocator;
 

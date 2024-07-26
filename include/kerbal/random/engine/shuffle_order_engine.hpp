@@ -12,6 +12,8 @@
 #ifndef KERBAL_RANDOM_ENGINE_SHUFFLE_ORDER_ENGINE_HPP
 #define KERBAL_RANDOM_ENGINE_SHUFFLE_ORDER_ENGINE_HPP
 
+#include <kerbal/ts/modules_ts/modules_ts.hpp>
+
 #include <kerbal/compatibility/constexpr.hpp>
 #include <kerbal/compatibility/move.hpp>
 #include <kerbal/compatibility/noexcept.hpp>
@@ -65,6 +67,7 @@ namespace kerbal
 
 		} // namespace detail
 
+		KERBAL_MODULE_EXPORT
 		template <typename Engine, std::size_t K>
 		class shuffle_order_engine
 		{

@@ -12,6 +12,8 @@
 #ifndef KERBAL_RANDOM_ENGINE_SUBTRACT_WITH_CARRY_ENGINE_HPP
 #define KERBAL_RANDOM_ENGINE_SUBTRACT_WITH_CARRY_ENGINE_HPP
 
+#include <kerbal/ts/modules_ts/modules_ts.hpp>
+
 #include <kerbal/algorithm/modifier/copy.hpp>
 #include <kerbal/compatibility/constexpr.hpp>
 #include <kerbal/compatibility/fixed_width_integer.hpp>
@@ -43,6 +45,7 @@ namespace kerbal
 	namespace random
 	{
 
+		KERBAL_MODULE_EXPORT
 		template <typename UIntType, std::size_t W, std::size_t S, std::size_t R>
 		class subtract_with_carry_engine
 		{
@@ -314,17 +317,22 @@ namespace kerbal
 		};
 
 
+		KERBAL_MODULE_EXPORT
 		typedef kerbal::random::subtract_with_carry_engine<
 			kerbal::compatibility::uint32_t,
 			24, 10, 24
 		> ranlux24_base;
 
+		KERBAL_MODULE_EXPORT
 		typedef kerbal::random::subtract_with_carry_engine<
 			kerbal::compatibility::uint64_t,
 			48, 5, 12
 		> ranlux48_base;
 
+		KERBAL_MODULE_EXPORT
 		typedef kerbal::random::discard_block_engine<kerbal::random::ranlux24_base, 223, 23> ranlux24;
+
+		KERBAL_MODULE_EXPORT
 		typedef kerbal::random::discard_block_engine<kerbal::random::ranlux48_base, 389, 11> ranlux48;
 
 	} // namespace random

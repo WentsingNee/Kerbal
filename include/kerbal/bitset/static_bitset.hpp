@@ -12,6 +12,8 @@
 #ifndef KERBAL_BITSET_STATIC_BITSET_HPP
 #define KERBAL_BITSET_STATIC_BITSET_HPP
 
+#include <kerbal/ts/modules_ts/modules_ts.hpp>
+
 #include <kerbal/bitset/static_bitset/static_bitset.fwd.hpp>
 
 #include <kerbal/algorithm/modifier/copy.hpp>
@@ -66,6 +68,7 @@ namespace kerbal
 		/*
 		 *  [63 ... 0] [127 ... 64] [191 ... 128] [255 ... 192]
 		 */
+		KERBAL_MODULE_EXPORT
 		template <std::size_t N, typename Block>
 		class static_bitset :
 			protected detail::bitset_size_unrelated<Block>

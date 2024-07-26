@@ -12,6 +12,8 @@
 #ifndef KERBAL_AUTONM_SEMI_ALLOCATOR_SEMI_ALLOCATOR_BASE_HPP
 #define KERBAL_AUTONM_SEMI_ALLOCATOR_SEMI_ALLOCATOR_BASE_HPP
 
+#include <kerbal/ts/modules_ts/modules_ts.hpp>
+
 #include <kerbal/compatibility/constexpr.hpp>
 #include <kerbal/compatibility/noexcept.hpp>
 
@@ -24,6 +26,7 @@ namespace kerbal
 	namespace autonm
 	{
 
+		KERBAL_MODULE_EXPORT
 		template <typename T>
 		class semi_allocator_base
 		{

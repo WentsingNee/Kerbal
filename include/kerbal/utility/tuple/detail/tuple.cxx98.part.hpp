@@ -12,6 +12,8 @@
 #ifndef KERBAL_UTILITY_TUPLE_DETAIL_TUPLE_CXX98_PART_HPP
 #define KERBAL_UTILITY_TUPLE_DETAIL_TUPLE_CXX98_PART_HPP
 
+#include <kerbal/ts/modules_ts/modules_ts.hpp>
+
 #include <kerbal/utility/tuple/tuple.fwd.hpp>
 
 #include <kerbal/algorithm/swap.hpp>
@@ -37,6 +39,7 @@ namespace kerbal
 	namespace utility
 	{
 
+		KERBAL_MODULE_EXPORT
 		template <>
 		struct tuple<>
 		{
@@ -168,6 +171,7 @@ namespace kerbal
 #	define SWAP_EACH_SWAP(i) (kerbal::algorithm::swap(this->template get<(i) - 1>(), ano.template get<(i) - 1>()))
 
 #	define DBODY(i) \
+		KERBAL_MODULE_EXPORT \
 		template <KERBAL_OPT_PPEXPAND_WITH_COMMA_N(REMAINF, EMPTY, TARGS_DECL, i)> \
 		struct tuple<KERBAL_OPT_PPEXPAND_WITH_COMMA_N(REMAINF, EMPTY, TARGS_USE, i)> \
 			KERBAL_OPT_PPEXPAND_WITH_COMMA_N(LEFT_JOIN_COLON, EMPTY, SUPER_TYPE, i) \
@@ -662,6 +666,7 @@ namespace kerbal
 #	define TARGS_DECL(i) typename KERBAL_MACRO_CONCAT(Arg, i)
 #	define TARGS_USE(i) KERBAL_MACRO_CONCAT(Arg, i)
 #	define FBODY(i) \
+		KERBAL_MODULE_EXPORT \
 		KERBAL_OPT_PPEXPAND_WITH_COMMA_N(THEAD_NOT_EMPTY, EMPTY, TARGS_DECL, i) \
 		inline \
 		void swap( \
@@ -696,6 +701,7 @@ KERBAL_NAMESPACE_STD_BEGIN
 #	define TARGS_DECL(i) typename KERBAL_MACRO_CONCAT(Arg, i)
 #	define TARGS_USE(i) KERBAL_MACRO_CONCAT(Arg, i)
 #	define FBODY(i) \
+	KERBAL_MODULE_EXPORT \
 	KERBAL_OPT_PPEXPAND_WITH_COMMA_N(THEAD_NOT_EMPTY, EMPTY, TARGS_DECL, i) \
 	inline \
 	void swap( \

@@ -12,6 +12,8 @@
 #ifndef KERBAL_OPERATORS_DEREFERENCEABLE_HPP
 #define KERBAL_OPERATORS_DEREFERENCEABLE_HPP
 
+#include <kerbal/ts/modules_ts/modules_ts.hpp>
+
 #include <kerbal/compatibility/constexpr.hpp>
 #include <kerbal/compatibility/noexcept.hpp>
 #include <kerbal/utility/declval.hpp>
@@ -23,6 +25,7 @@ namespace kerbal
 	namespace operators
 	{
 
+		KERBAL_MODULE_EXPORT
 		template <typename T, typename Ptr>
 		struct dereferenceable
 		{

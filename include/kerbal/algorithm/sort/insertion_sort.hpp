@@ -12,6 +12,8 @@
 #ifndef KERBAL_ALGORITHM_SORT_INSERTION_SORT_HPP
 #define KERBAL_ALGORITHM_SORT_INSERTION_SORT_HPP
 
+#include <kerbal/ts/modules_ts/modules_ts.hpp>
+
 #include <kerbal/algorithm/binary_search/upper_bound.hpp>
 #include <kerbal/algorithm/binary_search/upper_bound_backward.hpp>
 #include <kerbal/algorithm/modifier/move_backward.hpp>
@@ -28,6 +30,7 @@ namespace kerbal
 	namespace algorithm
 	{
 
+		KERBAL_MODULE_EXPORT
 		template <typename BidirectionalIterator, typename Compare>
 		KERBAL_CONSTEXPR14
 		void directly_insertion_sort(BidirectionalIterator first, BidirectionalIterator last, Compare cmp)
@@ -45,6 +48,7 @@ namespace kerbal
 			}
 		}
 
+		KERBAL_MODULE_EXPORT
 		template <typename BidirectionalIterator>
 		KERBAL_CONSTEXPR14
 		void directly_insertion_sort(BidirectionalIterator first, BidirectionalIterator last)
@@ -56,6 +60,7 @@ namespace kerbal
 		}
 
 
+		KERBAL_MODULE_EXPORT
 		template <typename BidirectionalIterator, typename Compare>
 		KERBAL_CONSTEXPR14
 		void insertion_sort(BidirectionalIterator first, BidirectionalIterator last, Compare cmp)
@@ -73,6 +78,7 @@ namespace kerbal
 			}
 		}
 
+		KERBAL_MODULE_EXPORT
 		template <typename BidirectionalIterator>
 		KERBAL_CONSTEXPR14
 		void insertion_sort(BidirectionalIterator first, BidirectionalIterator last)

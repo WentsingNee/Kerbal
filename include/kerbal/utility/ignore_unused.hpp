@@ -12,6 +12,8 @@
 #ifndef KERBAL_UTILITY_IGNORE_UNUSED_HPP
 #define KERBAL_UTILITY_IGNORE_UNUSED_HPP
 
+#include <kerbal/ts/modules_ts/modules_ts.hpp>
+
 #include <kerbal/compatibility/constexpr.hpp>
 #include <kerbal/compatibility/noexcept.hpp>
 
@@ -29,6 +31,7 @@ namespace kerbal
 
 #	if __cplusplus >= 201402L
 
+		KERBAL_MODULE_EXPORT
 		template <typename ... Args>
 		KERBAL_CONSTEXPR14
 		void ignore_unused(Args && ...) KERBAL_NOEXCEPT
@@ -37,6 +40,7 @@ namespace kerbal
 
 #	elif __cplusplus >= 201103L
 
+		KERBAL_MODULE_EXPORT
 		template <typename ... Args>
 		KERBAL_CONSTEXPR
 		int ignore_unused(Args && ...) KERBAL_NOEXCEPT
@@ -49,6 +53,7 @@ namespace kerbal
 #	define TARGS_DECL(i) typename KERBAL_MACRO_CONCAT(Arg, i)
 #	define ARGS_DECL(i) const KERBAL_MACRO_CONCAT(Arg, i) &
 #	define FBODY(i) \
+		KERBAL_MODULE_EXPORT \
 		template <KERBAL_PPEXPAND_WITH_COMMA_N(TARGS_DECL, i)> \
 		void ignore_unused(KERBAL_PPEXPAND_WITH_COMMA_N(ARGS_DECL, i)) KERBAL_NOEXCEPT \
 		{ \

@@ -12,6 +12,8 @@
 #ifndef KERBAL_CONTAINER_ASSOCIATIVE_CONTAINER_FACILITY_ASSOCIATIVE_UNIQUE_INSERT_R_HPP
 #define KERBAL_CONTAINER_ASSOCIATIVE_CONTAINER_FACILITY_ASSOCIATIVE_UNIQUE_INSERT_R_HPP
 
+#include <kerbal/ts/modules_ts/modules_ts.hpp>
+
 #include <kerbal/compatibility/constexpr.hpp>
 #include <kerbal/compatibility/noexcept.hpp>
 #include <kerbal/utility/compressed_pair.hpp>
@@ -23,6 +25,7 @@ namespace kerbal
 	namespace container
 	{
 
+		KERBAL_MODULE_EXPORT
 		template <typename Iterator>
 		class associative_unique_insert_r :
 			public kerbal::utility::compressed_pair<Iterator, bool>

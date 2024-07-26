@@ -12,6 +12,8 @@
 #ifndef KERBAL_UTILITY_ADDRESSOF_HPP
 #define KERBAL_UTILITY_ADDRESSOF_HPP
 
+#include <kerbal/ts/modules_ts/modules_ts.hpp>
+
 #include <kerbal/config/compiler_id.hpp>
 #include <kerbal/config/compiler_private.hpp>
 
@@ -62,6 +64,7 @@ namespace kerbal
 
 #	if KERBAL_HAS_BUILTIN_ADDRESSOF_SUPPORT
 
+		KERBAL_MODULE_EXPORT
 		template <typename T>
 		KERBAL_CONSTEXPR
 		T * addressof(T & arg) KERBAL_NOEXCEPT
@@ -71,6 +74,7 @@ namespace kerbal
 
 #	else
 
+		KERBAL_MODULE_EXPORT
 		template <typename T>
 #	if __cpp_lib_addressof_constexpr >= 201603L
 		KERBAL_CONSTEXPR17
@@ -98,6 +102,7 @@ namespace kerbal
 
 #	if __cplusplus >= 201103L
 
+		KERBAL_MODULE_EXPORT
 		template <typename T>
 		const T * addressof(const T &&) = delete;
 

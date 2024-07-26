@@ -12,6 +12,8 @@
 #ifndef KERBAL_CONTAINER_STATIC_CONTAINER_EXCEPTION_HPP
 #define KERBAL_CONTAINER_STATIC_CONTAINER_EXCEPTION_HPP
 
+#include <kerbal/ts/modules_ts/modules_ts.hpp>
+
 #include <stdexcept>
 
 
@@ -21,6 +23,7 @@ namespace kerbal
 	namespace container
 	{
 
+		KERBAL_MODULE_EXPORT
 		class static_container_empty_exception:
 			public std::logic_error
 		{

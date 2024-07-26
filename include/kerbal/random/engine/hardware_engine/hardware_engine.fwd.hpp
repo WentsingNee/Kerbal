@@ -12,6 +12,8 @@
 #ifndef KERBAL_RANDOM_ENGINE_HARDWARE_ENGINE_HARDWARE_ENGINE_FWD_HPP
 #define KERBAL_RANDOM_ENGINE_HARDWARE_ENGINE_HARDWARE_ENGINE_FWD_HPP
 
+#include <kerbal/ts/modules_ts/modules_ts.hpp>
+
 #include <kerbal/compatibility/fixed_width_integer.hpp> // explicit import
 
 
@@ -21,6 +23,7 @@ namespace kerbal
 	namespace random
 	{
 
+		KERBAL_MODULE_EXPORT
 		template <typename ResultType>
 		class hardware_engine;
 

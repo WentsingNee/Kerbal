@@ -12,6 +12,8 @@
 #ifndef KERBAL_ALGORITHM_MODIFIER_REVERSE_HPP
 #define KERBAL_ALGORITHM_MODIFIER_REVERSE_HPP
 
+#include <kerbal/ts/modules_ts/modules_ts.hpp>
+
 #include <kerbal/algorithm/swap.hpp>
 #include <kerbal/compatibility/constexpr.hpp>
 #include <kerbal/iterator/iterator.hpp>
@@ -59,6 +61,7 @@ namespace kerbal
 
 		} // namespace detail
 
+		KERBAL_MODULE_EXPORT
 		template <typename BidirectionalIterator>
 		KERBAL_CONSTEXPR14
 		void reverse(BidirectionalIterator first, BidirectionalIterator last)

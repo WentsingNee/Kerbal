@@ -12,6 +12,8 @@
 #ifndef KERBAL_COROUTINE_DONE_COROUTINE_HPP
 #define KERBAL_COROUTINE_DONE_COROUTINE_HPP
 
+#include <kerbal/ts/modules_ts/modules_ts.hpp>
+
 #include <kerbal/utility/throw_this_exception.hpp>
 
 #include <stdexcept>
@@ -23,6 +25,7 @@ namespace kerbal
 	namespace coroutine
 	{
 
+		KERBAL_MODULE_EXPORT
 		class done_coroutine :
 			public std::runtime_error
 		{

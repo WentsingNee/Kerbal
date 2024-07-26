@@ -12,6 +12,8 @@
 #ifndef KERBAL_MEMORY_POINTER_ALIGNMENT_HPP
 #define KERBAL_MEMORY_POINTER_ALIGNMENT_HPP
 
+#include <kerbal/ts/modules_ts/modules_ts.hpp>
+
 #include <kerbal/compatibility/alignof.hpp>
 #include <kerbal/compatibility/constexpr.hpp>
 #include <kerbal/compatibility/noexcept.hpp>
@@ -26,6 +28,7 @@ namespace kerbal
 	namespace memory
 	{
 
+		KERBAL_MODULE_EXPORT
 #ifdef __STDCPP_DEFAULT_NEW_ALIGNMENT__
 		typedef kerbal::type_traits::integral_constant<std::size_t, __STDCPP_DEFAULT_NEW_ALIGNMENT__> DEFAULT_ALIGNMENT;
 #else
@@ -33,6 +36,7 @@ namespace kerbal
 #endif
 
 
+		KERBAL_MODULE_EXPORT
 		struct align_val_t
 		{
 				std::size_t val;
@@ -51,6 +55,7 @@ namespace kerbal
 		};
 
 
+		KERBAL_MODULE_EXPORT
 		KERBAL_CONSTEXPR
 		inline
 		std::size_t align_ceil(std::size_t p, std::size_t align) KERBAL_NOEXCEPT
@@ -58,6 +63,7 @@ namespace kerbal
 			return (p + (align - 1)) & ~(align - 1);
 		}
 
+		KERBAL_MODULE_EXPORT
 		KERBAL_CONSTEXPR
 		inline
 		std::size_t align_floor(std::size_t p, std::size_t align) KERBAL_NOEXCEPT
@@ -65,6 +71,7 @@ namespace kerbal
 			return p & ~(align - 1);
 		}
 
+		KERBAL_MODULE_EXPORT
 		template <typename T>
 		inline
 		T * align_ceil(T * p, std::size_t align) KERBAL_NOEXCEPT
@@ -72,6 +79,7 @@ namespace kerbal
 			return reinterpret_cast<T *>(align_ceil(reinterpret_cast<std::size_t>(p), align));
 		}
 
+		KERBAL_MODULE_EXPORT
 		template <typename T>
 		inline
 		T * align_floor(T * p, std::size_t align) KERBAL_NOEXCEPT
@@ -124,6 +132,7 @@ namespace kerbal
 
 		} // namespace detail
 
+		KERBAL_MODULE_EXPORT
 		inline
 		KERBAL_CONSTEXPR
 		std::size_t alignment_maximum_offset(std::size_t align, std::size_t basic_align) KERBAL_NOEXCEPT
@@ -131,6 +140,7 @@ namespace kerbal
 			return kerbal::memory::detail::alignment_maximum_offset_helper<>::alignment_maximum_offset(align, basic_align);
 		}
 
+		KERBAL_MODULE_EXPORT
 		template <typename T>
 		KERBAL_CONSTEXPR
 		inline

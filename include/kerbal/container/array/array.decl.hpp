@@ -12,6 +12,8 @@
 #ifndef KERBAL_CONTAINER_ARRAY_ARRAY_DECL_HPP
 #define KERBAL_CONTAINER_ARRAY_ARRAY_DECL_HPP
 
+#include <kerbal/ts/modules_ts/modules_ts.hpp>
+
 #include <kerbal/container/array/array.fwd.hpp>
 
 #include <kerbal/assign/ilist.hpp>
@@ -39,6 +41,7 @@ namespace kerbal
 	namespace container
 	{
 
+		KERBAL_MODULE_EXPORT
 		template <typename T, std::size_t N>
 		class array
 		{

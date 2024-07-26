@@ -12,6 +12,8 @@
 #ifndef KERBAL_FUNCTION_INVOKE_DETAIL_INVOKE_R_CXX11_PART_HPP
 #define KERBAL_FUNCTION_INVOKE_DETAIL_INVOKE_R_CXX11_PART_HPP
 
+#include <kerbal/ts/modules_ts/modules_ts.hpp>
+
 #include <kerbal/function/invoke/invoke_overload_ver_selector.hpp>
 
 #if __cplusplus >= 201103L
@@ -133,6 +135,7 @@ namespace kerbal
 		} // namespace detail
 
 
+		KERBAL_MODULE_EXPORT
 		template <typename R, typename Fun, typename ... Args>
 		KERBAL_CONSTEXPR
 		R invoke_r(Fun && f, Args && ... args)

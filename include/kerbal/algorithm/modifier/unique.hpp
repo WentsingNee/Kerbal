@@ -12,6 +12,8 @@
 #ifndef KERBAL_ALGORITHM_MODIFIER_UNIQUE_HPP
 #define KERBAL_ALGORITHM_MODIFIER_UNIQUE_HPP
 
+#include <kerbal/ts/modules_ts/modules_ts.hpp>
+
 #include <kerbal/assign/generic_assign.hpp>
 #include <kerbal/compare/basic_compare.hpp>
 #include <kerbal/compatibility/constexpr.hpp>
@@ -24,6 +26,7 @@ namespace kerbal
 	namespace algorithm
 	{
 
+		KERBAL_MODULE_EXPORT
 		template <typename ForwardIterator, typename BinaryPredict>
 		KERBAL_CONSTEXPR14
 		ForwardIterator
@@ -50,6 +53,7 @@ namespace kerbal
 			return result;
 		}
 
+		KERBAL_MODULE_EXPORT
 		template <typename ForwardIterator>
 		KERBAL_CONSTEXPR14
 		ForwardIterator
