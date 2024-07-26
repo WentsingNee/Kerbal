@@ -22,7 +22,7 @@ namespace kerbal
 	{
 
 		class static_container_empty_exception:
-				public std::logic_error
+			public std::logic_error
 		{
 			public:
 				static_container_empty_exception() :
