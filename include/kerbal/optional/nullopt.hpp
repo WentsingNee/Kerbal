@@ -12,6 +12,8 @@
 #ifndef KERBAL_OPTIONAL_NULLOPT_HPP
 #define KERBAL_OPTIONAL_NULLOPT_HPP
 
+#include <kerbal/ts/modules_ts/modules_ts.hpp>
+
 #include <kerbal/compatibility/constexpr.hpp>
 #include <kerbal/compatibility/noexcept.hpp>
 #include <kerbal/operators/equality_comparable.hpp>
@@ -24,6 +26,7 @@ namespace kerbal
 	namespace optional
 	{
 
+		KERBAL_MODULE_EXPORT
 		struct nullopt_t :
 			public kerbal::operators::equality_comparable<nullopt_t>,
 			public kerbal::operators::less_than_comparable<nullopt_t>
@@ -42,10 +45,13 @@ namespace kerbal
 		};
 
 #	if __cplusplus >= 201703L
+		KERBAL_MODULE_EXPORT
 		inline constexpr const nullopt_t nullopt{};
 #	elif __cplusplus >= 201103L
+		KERBAL_MODULE_EXPORT
 		constexpr const nullopt_t nullopt{};
 #	else
+		KERBAL_MODULE_EXPORT
 		static const nullopt_t nullopt;
 #	endif
 

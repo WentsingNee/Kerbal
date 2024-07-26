@@ -12,6 +12,8 @@
 #ifndef KERBAL_CONTAINER_STATIC_QUEUE_HPP
 #define KERBAL_CONTAINER_STATIC_QUEUE_HPP
 
+#include <kerbal/ts/modules_ts/modules_ts.hpp>
+
 #include <kerbal/compatibility/constexpr.hpp>
 #include <kerbal/compatibility/move.hpp>
 #include <kerbal/compatibility/noexcept.hpp>
@@ -39,6 +41,7 @@ namespace kerbal
 	namespace container
 	{
 
+		KERBAL_MODULE_EXPORT
 		template <typename T, std::size_t N>
 		class static_queue : protected kerbal::container::detail::static_queue_base<T, N>
 		{

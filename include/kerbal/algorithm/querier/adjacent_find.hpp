@@ -12,6 +12,8 @@
 #ifndef KERBAL_ALGORITHM_QUERIER_ADJACENT_FIND_HPP
 #define KERBAL_ALGORITHM_QUERIER_ADJACENT_FIND_HPP
 
+#include <kerbal/ts/modules_ts/modules_ts.hpp>
+
 #include <kerbal/compare/basic_compare.hpp>
 #include <kerbal/compatibility/constexpr.hpp>
 #include <kerbal/iterator/iterator.hpp>
@@ -24,6 +26,7 @@ namespace kerbal
 	namespace algorithm
 	{
 
+		KERBAL_MODULE_EXPORT
 		template <typename ForwardIterator, typename BinaryPredicate>
 		KERBAL_CONSTEXPR14
 		ForwardIterator
@@ -42,6 +45,7 @@ namespace kerbal
 			return first;
 		}
 
+		KERBAL_MODULE_EXPORT
 		template <typename ForwardIterator>
 		KERBAL_CONSTEXPR14
 		ForwardIterator

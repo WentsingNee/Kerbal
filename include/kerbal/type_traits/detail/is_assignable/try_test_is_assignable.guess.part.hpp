@@ -23,6 +23,8 @@
 #endif
 
 
+#include <kerbal/ts/modules_ts/modules_ts.hpp>
+
 #include <kerbal/type_traits/tribool_constant.hpp>
 
 
@@ -32,6 +34,7 @@ namespace kerbal
 	namespace type_traits
 	{
 
+		KERBAL_MODULE_EXPORT
 		template <typename T, typename U>
 		struct try_test_is_assignable :
 			kerbal::type_traits::tribool_unspecified

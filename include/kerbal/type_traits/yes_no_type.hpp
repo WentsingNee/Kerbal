@@ -12,17 +12,22 @@
 #ifndef KERBAL_TYPE_TRAITS_YES_NO_TYPE_HPP
 #define KERBAL_TYPE_TRAITS_YES_NO_TYPE_HPP
 
+#include <kerbal/ts/modules_ts/modules_ts.hpp>
+
+
 namespace kerbal
 {
 
 	namespace type_traits
 	{
 
+		KERBAL_MODULE_EXPORT
 		struct no_type
 		{
 			char c[1];
 		};
 
+		KERBAL_MODULE_EXPORT
 		struct yes_type
 		{
 			char c[2];

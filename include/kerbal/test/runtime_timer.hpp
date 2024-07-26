@@ -13,6 +13,8 @@
 #ifndef KERBAL_TEST_RUNTIME_TIMER_HPP
 #define KERBAL_TEST_RUNTIME_TIMER_HPP
 
+#include <kerbal/ts/modules_ts/modules_ts.hpp>
+
 #include <kerbal/compatibility/tick_count.hpp>
 
 #ifndef KERBAL_HAS_RUNTIME_TIMER_SUPPORT
@@ -31,6 +33,7 @@ namespace kerbal
 	namespace test
 	{
 
+		KERBAL_MODULE_EXPORT
 		class runtime_timer : kerbal::utility::noncopyable
 		{
 			protected:

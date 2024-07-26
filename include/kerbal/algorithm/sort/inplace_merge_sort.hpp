@@ -12,6 +12,8 @@
 #ifndef KERBAL_ALGORITHM_SORT_INPLACE_MERGE_SORT_HPP
 #define KERBAL_ALGORITHM_SORT_INPLACE_MERGE_SORT_HPP
 
+#include <kerbal/ts/modules_ts/modules_ts.hpp>
+
 #include <kerbal/algorithm/modifier/inplace_merge.hpp>
 #include <kerbal/compare/basic_compare.hpp>
 #include <kerbal/iterator/iterator.hpp>
@@ -24,6 +26,7 @@ namespace kerbal
 	namespace algorithm
 	{
 
+		KERBAL_MODULE_EXPORT
 		template <typename ForwardIterator, typename BinaryPredict>
 		void inplace_merge_sort(ForwardIterator first, ForwardIterator last, BinaryPredict cmp)
 		{
@@ -43,6 +46,7 @@ namespace kerbal
 			kerbal::algorithm::inplace_merge(first, mid, last, cmp);
 		}
 
+		KERBAL_MODULE_EXPORT
 		template <typename ForwardIterator>
 		void inplace_merge_sort(ForwardIterator first, ForwardIterator last)
 		{

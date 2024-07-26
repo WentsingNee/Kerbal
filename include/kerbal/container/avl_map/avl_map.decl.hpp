@@ -12,6 +12,8 @@
 #ifndef KERBAL_CONTAINER_AVL_MAP_AVL_MAP_DECL_HPP
 #define KERBAL_CONTAINER_AVL_MAP_AVL_MAP_DECL_HPP
 
+#include <kerbal/ts/modules_ts/modules_ts.hpp>
+
 #include <kerbal/container/avl_map/avl_map.fwd.hpp>
 #include <kerbal/container/avl_ordered/avl_ordered.decl.hpp>
 
@@ -48,6 +50,7 @@ namespace kerbal
 	namespace container
 	{
 
+		KERBAL_MODULE_EXPORT
 		template <typename K, typename M, typename KeyCompare, typename Allocator>
 		class avl_map :
 			protected kerbal::container::avl_ordered<
@@ -540,6 +543,7 @@ namespace kerbal
 		};
 
 
+		KERBAL_MODULE_EXPORT
 		template <typename InputIterator>
 		avl_map(
 			InputIterator, InputIterator
@@ -549,6 +553,7 @@ namespace kerbal
 			typename avl_map_iter_map<InputIterator>::type
 		>;
 
+		KERBAL_MODULE_EXPORT
 		template <
 			typename InputIterator,
 			typename KeyCompare,
@@ -567,6 +572,7 @@ namespace kerbal
 			KeyCompare
 		>;
 
+		KERBAL_MODULE_EXPORT
 		template <
 			typename InputIterator,
 			typename Allocator,
@@ -586,6 +592,7 @@ namespace kerbal
 			Allocator
 		>;
 
+		KERBAL_MODULE_EXPORT
 		template <
 			typename InputIterator,
 			typename KeyCompare,
@@ -607,12 +614,14 @@ namespace kerbal
 		>;
 
 
+		KERBAL_MODULE_EXPORT
 		template <typename K, typename M>
 		avl_map(
 			std::initializer_list<kerbal::container::map_data<K, M> >
 		) ->
 		avl_map<K, M>;
 
+		KERBAL_MODULE_EXPORT
 		template <
 			typename K, typename M, typename KeyCompare,
 			typename =
@@ -626,6 +635,7 @@ namespace kerbal
 		) ->
 		avl_map<K, M, KeyCompare>;
 
+		KERBAL_MODULE_EXPORT
 		template <
 			typename K, typename M, typename Allocator,
 			typename =
@@ -643,6 +653,7 @@ namespace kerbal
 			Allocator
 		>;
 
+		KERBAL_MODULE_EXPORT
 		template <
 			typename K, typename M, typename KeyCompare, typename Allocator,
 			typename =
@@ -659,6 +670,7 @@ namespace kerbal
 #	endif // if __cplusplus >= 201703L
 
 
+		KERBAL_MODULE_EXPORT
 		template <typename K, typename M, typename KeyCompare, typename Allocator, typename Allocator2>
 		KERBAL_CONSTEXPR20
 		bool operator==(
@@ -675,6 +687,7 @@ namespace kerbal
 			);
 		}
 
+		KERBAL_MODULE_EXPORT
 		template <typename K, typename M, typename KeyCompare, typename Allocator, typename Allocator2>
 		KERBAL_CONSTEXPR20
 		bool operator!=(
@@ -691,6 +704,7 @@ namespace kerbal
 			);
 		}
 
+		KERBAL_MODULE_EXPORT
 		template <typename K, typename M, typename KeyCompare, typename Allocator, typename Allocator2>
 		KERBAL_CONSTEXPR20
 		bool operator<(
@@ -704,6 +718,7 @@ namespace kerbal
 			);
 		}
 
+		KERBAL_MODULE_EXPORT
 		template <typename K, typename M, typename KeyCompare, typename Allocator, typename Allocator2>
 		KERBAL_CONSTEXPR20
 		bool operator<=(
@@ -717,6 +732,7 @@ namespace kerbal
 			);
 		}
 
+		KERBAL_MODULE_EXPORT
 		template <typename K, typename M, typename KeyCompare, typename Allocator, typename Allocator2>
 		KERBAL_CONSTEXPR20
 		bool operator>(
@@ -730,6 +746,7 @@ namespace kerbal
 			);
 		}
 
+		KERBAL_MODULE_EXPORT
 		template <typename K, typename M, typename KeyCompare, typename Allocator, typename Allocator2>
 		KERBAL_CONSTEXPR20
 		bool operator>=(
@@ -748,6 +765,7 @@ namespace kerbal
 	namespace algorithm
 	{
 
+		KERBAL_MODULE_EXPORT
 		template <typename K, typename M, typename KeyCompare, typename Allocator>
 		KERBAL_CONSTEXPR20
 		void swap(
@@ -766,6 +784,7 @@ namespace kerbal
 
 KERBAL_NAMESPACE_STD_BEGIN
 
+	KERBAL_MODULE_EXPORT
 	template <typename K, typename M, typename KeyCompare, typename Allocator>
 	KERBAL_CONSTEXPR20
 	void swap(

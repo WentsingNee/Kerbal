@@ -17,6 +17,8 @@
 #	error This file requires compiler and library support for the ISO C++ 2011 standard.
 #endif
 
+#include <kerbal/ts/modules_ts/modules_ts.hpp>
+
 #include <kerbal/compatibility/constexpr.hpp>
 #include <kerbal/compatibility/noexcept.hpp>
 #include <kerbal/config/compiler_id.hpp>
@@ -38,6 +40,7 @@ namespace kerbal
 	namespace iterator
 	{
 
+		KERBAL_MODULE_EXPORT
 		template <typename Iter>
 		class move_iterator;
 
@@ -351,6 +354,7 @@ namespace kerbal
 		} // namespace detail
 
 
+		KERBAL_MODULE_EXPORT
 		template <typename Iter>
 		class move_iterator :
 			public kerbal::iterator::detail::move_iterator_impl<
@@ -397,6 +401,7 @@ namespace kerbal
 #	endif
 
 
+		KERBAL_MODULE_EXPORT
 		template <typename Iter>
 		KERBAL_CONSTEXPR
 		move_iterator<Iter>
@@ -405,6 +410,7 @@ namespace kerbal
 			return move_iterator<Iter>(iter);
 		}
 
+		KERBAL_MODULE_EXPORT
 		template <typename T, std::size_t N>
 		KERBAL_CONSTEXPR
 		move_iterator<T *>

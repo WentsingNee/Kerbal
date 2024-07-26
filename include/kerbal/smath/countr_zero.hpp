@@ -12,6 +12,8 @@
 #ifndef KERBAL_SMATH_COUNTR_ZERO_HPP
 #define KERBAL_SMATH_COUNTR_ZERO_HPP
 
+#include <kerbal/ts/modules_ts/modules_ts.hpp>
+
 #include <kerbal/compatibility/static_assert.hpp>
 #include <kerbal/type_traits/sign_deduction.hpp>
 #include <kerbal/type_traits/integral_constant.hpp>
@@ -73,6 +75,7 @@ namespace kerbal
 
 		} // namespace detail
 
+		KERBAL_MODULE_EXPORT
 		template <typename Unsigned, Unsigned x>
 		struct countr_zero :
 			kerbal::smath::detail::countr_zero_is_zero_handler<Unsigned, x>

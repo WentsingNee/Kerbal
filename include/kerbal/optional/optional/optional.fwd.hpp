@@ -12,12 +12,15 @@
 #ifndef KERBAL_OPTIONAL_OPTIONAL_OPTIONAL_FWD_HPP
 #define KERBAL_OPTIONAL_OPTIONAL_OPTIONAL_FWD_HPP
 
+#include <kerbal/ts/modules_ts/modules_ts.hpp>
+
 namespace kerbal
 {
 
 	namespace optional
 	{
 
+		KERBAL_MODULE_EXPORT
 		template <typename T>
 		class optional;
 

@@ -23,6 +23,8 @@
 #endif
 
 
+#include <kerbal/ts/modules_ts/modules_ts.hpp>
+
 #include <kerbal/type_traits/detail/is_enum/is_enum.part.hpp>
 #include <kerbal/type_traits/detail/is_union/is_union.part.hpp>
 
@@ -38,6 +40,7 @@ namespace kerbal
 	namespace type_traits
 	{
 
+		KERBAL_MODULE_EXPORT
 		template <typename T>
 		struct try_test_is_abstract :
 			kerbal::type_traits::conditional<

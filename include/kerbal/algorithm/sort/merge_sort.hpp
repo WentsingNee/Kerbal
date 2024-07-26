@@ -12,6 +12,8 @@
 #ifndef KERBAL_ALGORITHM_SORT_MERGE_SORT_HPP
 #define KERBAL_ALGORITHM_SORT_MERGE_SORT_HPP
 
+#include <kerbal/ts/modules_ts/modules_ts.hpp>
+
 #include <kerbal/algorithm/modifier/copy.hpp>
 #include <kerbal/algorithm/swap.hpp>
 #include <kerbal/compare/basic_compare.hpp>
@@ -36,6 +38,7 @@ namespace kerbal
 		/*
 		 * return first + len
 		 */
+		KERBAL_MODULE_EXPORT
 		template <typename ForwardIterator, typename ForwardIterator2, typename Compare>
 		KERBAL_CONSTEXPR14
 		ForwardIterator
@@ -77,6 +80,7 @@ namespace kerbal
 			return last;
 		}
 
+		KERBAL_MODULE_EXPORT
 		template <typename ForwardIterator, typename ForwardIterator2>
 		KERBAL_CONSTEXPR14
 		ForwardIterator
@@ -90,6 +94,7 @@ namespace kerbal
 			return kerbal::algorithm::merge_sort_n_afford_buffer(first, len, buffer, kerbal::compare::less<value_type>());
 		}
 
+		KERBAL_MODULE_EXPORT
 		template <typename ForwardIterator, typename ForwardIterator2, typename Compare>
 		KERBAL_CONSTEXPR14
 		void merge_sort_afford_buffer(ForwardIterator first, ForwardIterator last, ForwardIterator2 buffer, Compare cmp)
@@ -101,6 +106,7 @@ namespace kerbal
 			kerbal::algorithm::merge_sort_n_afford_buffer(first, len, buffer, cmp);
 		}
 
+		KERBAL_MODULE_EXPORT
 		template <typename ForwardIterator, typename ForwardIterator2>
 		KERBAL_CONSTEXPR14
 		void merge_sort_afford_buffer(ForwardIterator first, ForwardIterator last, ForwardIterator2 buffer)
@@ -110,6 +116,7 @@ namespace kerbal
 			kerbal::algorithm::merge_sort_afford_buffer(first, last, buffer, kerbal::compare::less<value_type>());
 		}
 
+		KERBAL_MODULE_EXPORT
 		template <typename ForwardIterator, typename Allocator, typename Compare>
 		KERBAL_CONSTEXPR20
 		ForwardIterator
@@ -179,6 +186,7 @@ namespace kerbal
 			return kerbal::algorithm::merge_sort_n_afford_buffer(first, len, buffer, cmp);
 		}
 
+		KERBAL_MODULE_EXPORT
 		template <typename ForwardIterator, typename Allocator>
 		KERBAL_CONSTEXPR20
 		ForwardIterator
@@ -194,6 +202,7 @@ namespace kerbal
 			);
 		}
 
+		KERBAL_MODULE_EXPORT
 		template <typename ForwardIterator, typename Allocator, typename Compare>
 		KERBAL_CONSTEXPR20
 		void merge_sort_afford_allocator(ForwardIterator first, ForwardIterator last, Allocator & allocator, Compare cmp)
@@ -204,6 +213,7 @@ namespace kerbal
 			kerbal::algorithm::merge_sort_n_afford_allocator(first, len, allocator, cmp);
 		}
 
+		KERBAL_MODULE_EXPORT
 		template <typename ForwardIterator, typename Allocator>
 		KERBAL_CONSTEXPR20
 		void merge_sort_afford_allocator(ForwardIterator first, ForwardIterator last, Allocator & allocator)
@@ -213,6 +223,7 @@ namespace kerbal
 			kerbal::algorithm::merge_sort_afford_allocator(first, last, allocator, kerbal::compare::less<value_type>());
 		}
 
+		KERBAL_MODULE_EXPORT
 		template <typename ForwardIterator, typename Compare>
 		KERBAL_CONSTEXPR20
 		void merge_sort(ForwardIterator first, ForwardIterator last, Compare cmp)
@@ -223,6 +234,7 @@ namespace kerbal
 			kerbal::algorithm::merge_sort_afford_allocator(first, last, allocator, cmp);
 		}
 
+		KERBAL_MODULE_EXPORT
 		template <typename ForwardIterator>
 		KERBAL_CONSTEXPR20
 		void merge_sort(ForwardIterator first, ForwardIterator last)

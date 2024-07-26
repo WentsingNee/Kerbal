@@ -12,6 +12,8 @@
 #ifndef KERBAL_ANY_ANY_HPP
 #define KERBAL_ANY_ANY_HPP
 
+#include <kerbal/ts/modules_ts/modules_ts.hpp>
+
 #include <kerbal/any/any/any.fwd.hpp>
 
 #include <kerbal/algorithm/swap.hpp>
@@ -85,6 +87,7 @@ namespace kerbal
 	namespace any
 	{
 
+		KERBAL_MODULE_EXPORT
 		template <typename T, std::size_t Size, std::size_t Align>
 		struct is_any_embedded_stored_type :
 			kerbal::type_traits::bool_constant<
@@ -409,6 +412,7 @@ namespace kerbal
 		} // namespace detail
 
 
+		KERBAL_MODULE_EXPORT
 		template <
 			std::size_t Size, std::size_t Align, typename Allocator
 		>
@@ -989,6 +993,7 @@ namespace kerbal
 
 		};
 
+		KERBAL_MODULE_EXPORT
 		template <typename T, std::size_t Size, std::size_t Align, typename Allocator>
 		KERBAL_CONSTEXPR20
 		T * any_cast(basic_any<Size, Align, Allocator> * operand) KERBAL_NOEXCEPT
@@ -996,6 +1001,7 @@ namespace kerbal
 			return operand->template get_pointer<T>();
 		}
 
+		KERBAL_MODULE_EXPORT
 		template <typename T, std::size_t Size, std::size_t Align, typename Allocator>
 		KERBAL_CONSTEXPR20
 		const T * any_cast(const basic_any<Size, Align, Allocator> * operand) KERBAL_NOEXCEPT
@@ -1003,6 +1009,7 @@ namespace kerbal
 			return operand->template get_pointer<T>();
 		}
 
+		KERBAL_MODULE_EXPORT
 		template <typename T, std::size_t Size, std::size_t Align, typename Allocator>
 		KERBAL_CONSTEXPR20
 		T any_cast(basic_any<Size, Align, Allocator> & operand)
@@ -1010,6 +1017,7 @@ namespace kerbal
 			return operand.template get<T>();
 		}
 
+		KERBAL_MODULE_EXPORT
 		template <typename T, std::size_t Size, std::size_t Align, typename Allocator>
 		KERBAL_CONSTEXPR20
 		const T any_cast(const basic_any<Size, Align, Allocator> & operand)
@@ -1019,6 +1027,7 @@ namespace kerbal
 
 #	if __cplusplus >= 201103L
 
+		KERBAL_MODULE_EXPORT
 		template <typename T, std::size_t Size, std::size_t Align, typename Allocator>
 		KERBAL_CONSTEXPR20
 		T any_cast(basic_any<Size, Align, Allocator> && operand)
@@ -1033,6 +1042,7 @@ namespace kerbal
 	namespace algorithm
 	{
 
+		KERBAL_MODULE_EXPORT
 		template <std::size_t Size, std::size_t Align, typename Allocator>
 		KERBAL_CONSTEXPR20
 		void swap(
@@ -1051,6 +1061,7 @@ namespace kerbal
 
 KERBAL_NAMESPACE_STD_BEGIN
 
+	KERBAL_MODULE_EXPORT
 	template <std::size_t Size, std::size_t Align, typename Allocator>
 	KERBAL_CONSTEXPR20
 	void swap(

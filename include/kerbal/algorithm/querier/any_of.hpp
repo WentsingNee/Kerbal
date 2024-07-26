@@ -12,6 +12,8 @@
 #ifndef KERBAL_ALGORITHM_QUERIER_ANY_OF_HPP
 #define KERBAL_ALGORITHM_QUERIER_ANY_OF_HPP
 
+#include <kerbal/ts/modules_ts/modules_ts.hpp>
+
 #include <kerbal/algorithm/querier/find_if.hpp>
 #include <kerbal/compatibility/constexpr.hpp>
 
@@ -22,6 +24,7 @@ namespace kerbal
 	namespace algorithm
 	{
 
+		KERBAL_MODULE_EXPORT
 		template <typename InputIterator, typename UnaryPredicate>
 		KERBAL_CONSTEXPR14
 		bool any_of(InputIterator first, InputIterator last, UnaryPredicate pred)

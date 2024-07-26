@@ -12,6 +12,8 @@
 #ifndef KERBAL_MEMORY_ALLOCATOR_TRAITS_IS_ALWAYS_EQUAL_HPP
 #define KERBAL_MEMORY_ALLOCATOR_TRAITS_IS_ALWAYS_EQUAL_HPP
 
+#include <kerbal/ts/modules_ts/modules_ts.hpp>
+
 #if __cplusplus < 201103L || __cplusplus >= 201703L
 #	include <kerbal/memory/allocator/std_allocator/std_allocator.fwd.hpp>
 #endif
@@ -27,12 +29,14 @@ namespace kerbal
 	namespace memory
 	{
 
+		KERBAL_MODULE_EXPORT
 		template <typename Alloc, typename = kerbal::type_traits::void_type<>::type>
 		struct allocator_has_def_is_always_equal :
 			kerbal::type_traits::false_type
 		{
 		};
 
+		KERBAL_MODULE_EXPORT
 		template <typename Alloc>
 		struct allocator_has_def_is_always_equal<
 			Alloc,
@@ -42,6 +46,7 @@ namespace kerbal
 		{
 		};
 
+		KERBAL_MODULE_EXPORT
 		template <typename Alloc>
 		struct allocator_could_use_is_always_equal :
 			kerbal::memory::allocator_has_def_is_always_equal<Alloc>
@@ -50,6 +55,7 @@ namespace kerbal
 
 #	if __cplusplus >= 201703L
 
+		KERBAL_MODULE_EXPORT
 		template <typename T>
 		struct allocator_could_use_is_always_equal<std::allocator<T> > :
 			kerbal::type_traits::false_type

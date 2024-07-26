@@ -12,6 +12,8 @@
 #ifndef KERBAL_UTILITY_THROW_THIS_EXCEPTION_HPP
 #define KERBAL_UTILITY_THROW_THIS_EXCEPTION_HPP
 
+#include <kerbal/ts/modules_ts/modules_ts.hpp>
+
 #include <kerbal/compatibility/noexcept.hpp>
 #include <kerbal/config/exceptions.hpp>
 
@@ -35,6 +37,7 @@ namespace kerbal
 	namespace utility
 	{
 
+		KERBAL_MODULE_EXPORT
 		template <typename Exception>
 		class throw_this_exception_helper
 		{

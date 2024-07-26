@@ -12,6 +12,8 @@
 #ifndef KERBAL_OPTIONAL_OPTIONAL_HPP
 #define KERBAL_OPTIONAL_OPTIONAL_HPP
 
+#include <kerbal/ts/modules_ts/modules_ts.hpp>
+
 #include <kerbal/optional/optional/optional.fwd.hpp>
 #include <kerbal/optional/optional/detail/optional_hash_template.part.hpp>
 
@@ -207,6 +209,7 @@ namespace kerbal
 
 		} // namespace detail
 
+		KERBAL_MODULE_EXPORT
 		template <typename T>
 		class optional :
 			protected kerbal::optional::detail::optional_base<T>
@@ -965,6 +968,7 @@ namespace kerbal
 		};
 
 
+		KERBAL_MODULE_EXPORT
 		template <typename T>
 		class optional<T &>
 		{
@@ -1099,6 +1103,7 @@ namespace kerbal
 
 #	if __cplusplus >= 201103L
 
+		KERBAL_MODULE_EXPORT
 		template <typename T>
 		KERBAL_CONSTEXPR
 		kerbal::optional::optional<
@@ -1117,6 +1122,7 @@ namespace kerbal
 
 #	else
 
+		KERBAL_MODULE_EXPORT
 		template <typename T>
 		KERBAL_CONSTEXPR
 		kerbal::optional::optional<T>
@@ -1130,6 +1136,7 @@ namespace kerbal
 
 #	if __cplusplus >= 201103L
 
+		KERBAL_MODULE_EXPORT
 		template <typename T, typename ... Args>
 		KERBAL_CONSTEXPR
 		kerbal::optional::optional<T>
@@ -1140,6 +1147,7 @@ namespace kerbal
 
 #	else
 
+		KERBAL_MODULE_EXPORT
 		template <typename T>
 		kerbal::optional::optional<T>
 		make_optional()
@@ -1147,6 +1155,7 @@ namespace kerbal
 			return kerbal::optional::optional<T>(kerbal::utility::in_place_t());
 		}
 
+		KERBAL_MODULE_EXPORT
 		template <typename T, typename Arg0>
 		typename kerbal::type_traits::enable_if<
 			!kerbal::type_traits::is_same<T, Arg0>::value,
@@ -1163,6 +1172,7 @@ namespace kerbal
 #	define ARGS_DECL(i) const KERBAL_MACRO_CONCAT(Arg, i) & KERBAL_MACRO_CONCAT(arg, i)
 #	define ARGS_USE(i) KERBAL_MACRO_CONCAT(arg, i)
 #	define FBODY(i) \
+		KERBAL_MODULE_EXPORT \
 		template <typename T, typename Arg0, KERBAL_OPT_PPEXPAND_WITH_COMMA_N(REMAINF, EMPTY, TARGS_DECL, i)> \
 		kerbal::optional::optional<T> \
 		make_optional(const Arg0 & arg0, KERBAL_OPT_PPEXPAND_WITH_COMMA_N(REMAINF, EMPTY, ARGS_DECL, i)) \
@@ -1195,6 +1205,7 @@ namespace kerbal
 	namespace algorithm
 	{
 
+		KERBAL_MODULE_EXPORT
 		template <typename T>
 		KERBAL_CONSTEXPR14
 		void swap(
@@ -1212,6 +1223,7 @@ namespace kerbal
 	namespace hash
 	{
 
+		KERBAL_MODULE_EXPORT
 		template <typename T>
 		struct hash<kerbal::optional::optional<T> > :
 			public kerbal::optional::optional_hash_template<
@@ -1229,6 +1241,7 @@ namespace kerbal
 
 KERBAL_NAMESPACE_STD_BEGIN
 
+	KERBAL_MODULE_EXPORT
 	template <typename T>
 	KERBAL_CONSTEXPR14
 	void swap(

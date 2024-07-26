@@ -12,6 +12,8 @@
 #ifndef KERBAL_ALGORITHM_MODIFIER_COPY_HPP
 #define KERBAL_ALGORITHM_MODIFIER_COPY_HPP
 
+#include <kerbal/ts/modules_ts/modules_ts.hpp>
+
 #include <kerbal/assign/generic_assign.hpp>
 #include <kerbal/compatibility/constexpr.hpp>
 #include <kerbal/compatibility/noexcept.hpp>
@@ -48,6 +50,7 @@ namespace kerbal
 
 		} // namespace detail
 
+		KERBAL_MODULE_EXPORT
 		template <typename InputIterator, typename OutputIterator>
 		KERBAL_CONSTEXPR14
 		OutputIterator

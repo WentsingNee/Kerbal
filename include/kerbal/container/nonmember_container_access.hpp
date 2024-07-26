@@ -12,6 +12,8 @@
 #ifndef KERBAL_CONTAINER_NONMEMBER_CONTAINER_ACCESS_HPP
 #define KERBAL_CONTAINER_NONMEMBER_CONTAINER_ACCESS_HPP
 
+#include <kerbal/ts/modules_ts/modules_ts.hpp>
+
 #include <kerbal/compatibility/constexpr.hpp>
 #include <kerbal/compatibility/noexcept.hpp>
 #include <kerbal/iterator/iterator.hpp>
@@ -28,6 +30,7 @@ namespace kerbal
 
 		// begin
 
+		KERBAL_MODULE_EXPORT
 		template <typename T, std::size_t N>
 		KERBAL_CONSTEXPR
 		T * begin(T (&arr)[N]) KERBAL_NOEXCEPT
@@ -37,6 +40,7 @@ namespace kerbal
 
 #	if __cplusplus >= 201103L
 
+		KERBAL_MODULE_EXPORT
 		template <typename Container>
 		KERBAL_CONSTEXPR
 		auto begin(Container & container)
@@ -46,6 +50,7 @@ namespace kerbal
 			return container.begin();
 		}
 
+		KERBAL_MODULE_EXPORT
 		template <typename Container>
 		KERBAL_CONSTEXPR
 		auto begin(const Container & container)
@@ -79,6 +84,7 @@ namespace kerbal
 
 #	if __cplusplus >= 201103L
 
+		KERBAL_MODULE_EXPORT
 		template <typename Container>
 		KERBAL_CONSTEXPR
 		auto cbegin(const Container & container)
@@ -109,6 +115,7 @@ namespace kerbal
 
 		// end
 
+		KERBAL_MODULE_EXPORT
 		template <typename T, std::size_t N>
 		KERBAL_CONSTEXPR
 		T * end(T (&arr)[N]) KERBAL_NOEXCEPT
@@ -118,6 +125,7 @@ namespace kerbal
 
 #	if __cplusplus >= 201103L
 
+		KERBAL_MODULE_EXPORT
 		template <typename Container>
 		KERBAL_CONSTEXPR
 		auto end(Container & container)
@@ -160,6 +168,7 @@ namespace kerbal
 
 #	if __cplusplus >= 201103L
 
+		KERBAL_MODULE_EXPORT
 		template <typename Container>
 		KERBAL_CONSTEXPR
 		auto cend(const Container & container)
@@ -190,6 +199,7 @@ namespace kerbal
 
 		// rbegin
 
+		KERBAL_MODULE_EXPORT
 		template <typename T, std::size_t N>
 		KERBAL_CONSTEXPR
 		kerbal::iterator::reverse_iterator<T *, false>
@@ -200,6 +210,7 @@ namespace kerbal
 
 #	if __cplusplus >= 201103L
 
+		KERBAL_MODULE_EXPORT
 		template <typename Container>
 		KERBAL_CONSTEXPR
 		auto rbegin(Container & container)
@@ -242,6 +253,7 @@ namespace kerbal
 
 #	if __cplusplus >= 201103L
 
+		KERBAL_MODULE_EXPORT
 		template <typename Container>
 		KERBAL_CONSTEXPR
 		auto crbegin(const Container & container)
@@ -273,6 +285,7 @@ namespace kerbal
 
 		// rend
 
+		KERBAL_MODULE_EXPORT
 		template <typename T, std::size_t N>
 		KERBAL_CONSTEXPR
 		kerbal::iterator::reverse_iterator<T *, false>
@@ -283,6 +296,7 @@ namespace kerbal
 
 #	if __cplusplus >= 201103L
 
+		KERBAL_MODULE_EXPORT
 		template <typename Container>
 		KERBAL_CONSTEXPR
 		auto rend(Container & container)
@@ -325,6 +339,7 @@ namespace kerbal
 
 #	if __cplusplus >= 201103L
 
+		KERBAL_MODULE_EXPORT
 		template <typename Container>
 		KERBAL_CONSTEXPR
 		auto crend(const Container & container)
@@ -356,6 +371,7 @@ namespace kerbal
 
 		// size
 
+		KERBAL_MODULE_EXPORT
 		template <typename T, std::size_t N>
 		KERBAL_CONSTEXPR
 		std::size_t size(const T (&)[N]) KERBAL_NOEXCEPT
@@ -365,6 +381,7 @@ namespace kerbal
 
 #	if __cplusplus >= 201103L
 
+		KERBAL_MODULE_EXPORT
 		template <typename Container>
 		KERBAL_CONSTEXPR
 		auto size(const Container & container)
@@ -389,6 +406,7 @@ namespace kerbal
 
 		// empty
 
+		KERBAL_MODULE_EXPORT
 		template <typename T, std::size_t N>
 		KERBAL_CONSTEXPR
 		bool empty(const T (&)[N]) KERBAL_NOEXCEPT
@@ -398,6 +416,7 @@ namespace kerbal
 
 #	if __cplusplus >= 201103L
 
+		KERBAL_MODULE_EXPORT
 		template <typename Container>
 		KERBAL_CONSTEXPR
 		auto empty(const Container & container)
@@ -421,6 +440,7 @@ namespace kerbal
 
 		// nth
 
+		KERBAL_MODULE_EXPORT
 		template <typename T, std::size_t N>
 		KERBAL_CONSTEXPR14
 		T * nth(T (& arr)[N], std::size_t index) KERBAL_NOEXCEPT
@@ -430,6 +450,7 @@ namespace kerbal
 
 #	if __cplusplus >= 201103L
 
+		KERBAL_MODULE_EXPORT
 		template <typename Container>
 		KERBAL_CONSTEXPR14
 		auto nth(Container & container, typename Container::size_type index)
@@ -439,6 +460,7 @@ namespace kerbal
 			return kerbal::iterator::next(kerbal::container::begin(container), index);
 		}
 
+		KERBAL_MODULE_EXPORT
 		template <typename Container>
 		KERBAL_CONSTEXPR14
 		auto nth(const Container & container, typename Container::size_type index)
@@ -470,6 +492,7 @@ namespace kerbal
 
 		// index_of
 
+		KERBAL_MODULE_EXPORT
 		template <typename T, std::size_t N>
 		KERBAL_CONSTEXPR14
 		std::size_t index_of(T (&arr)[N], T * it) KERBAL_NOEXCEPT
@@ -477,6 +500,7 @@ namespace kerbal
 			return it - arr;
 		}
 
+		KERBAL_MODULE_EXPORT
 		template <typename T, std::size_t N>
 		KERBAL_CONSTEXPR14
 		std::size_t index_of(const T (&arr)[N], const T * it) KERBAL_NOEXCEPT
@@ -486,6 +510,7 @@ namespace kerbal
 
 #	if __cplusplus >= 201103L
 
+		KERBAL_MODULE_EXPORT
 		template <typename Container>
 		KERBAL_CONSTEXPR14
 		auto index_of(Container & container, typename Container::iterator it)
@@ -495,6 +520,7 @@ namespace kerbal
 			return kerbal::iterator::distance(kerbal::container::begin(container), it);
 		}
 
+		KERBAL_MODULE_EXPORT
 		template <typename Container>
 		KERBAL_CONSTEXPR14
 		auto index_of(const Container & container, typename Container::const_iterator it)

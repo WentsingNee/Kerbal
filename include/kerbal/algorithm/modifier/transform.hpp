@@ -12,6 +12,8 @@
 #ifndef KERBAL_ALGORITHM_MODIFIER_TRANSFORM_HPP
 #define KERBAL_ALGORITHM_MODIFIER_TRANSFORM_HPP
 
+#include <kerbal/ts/modules_ts/modules_ts.hpp>
+
 #include <kerbal/assign/generic_assign.hpp>
 #include <kerbal/compatibility/constexpr.hpp>
 #include <kerbal/iterator/iterator_traits.hpp>
@@ -44,6 +46,7 @@ namespace kerbal
 
 		} // namespace detail
 
+		KERBAL_MODULE_EXPORT
 		template <typename InputIterator, typename OutputIterator, typename UnaryOperation>
 		KERBAL_CONSTEXPR14
 		OutputIterator
@@ -55,6 +58,7 @@ namespace kerbal
 			);
 		}
 
+		KERBAL_MODULE_EXPORT
 		template <typename InputIterator1, typename InputIterator2, typename OutputIterator, typename BinaryOperation>
 		KERBAL_CONSTEXPR14
 		OutputIterator

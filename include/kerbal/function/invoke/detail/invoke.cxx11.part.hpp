@@ -13,6 +13,8 @@
 #ifndef KERBAL_FUNCTION_INVOKE_DETAIL_INVOKE_CXX11_PART_HPP
 #define KERBAL_FUNCTION_INVOKE_DETAIL_INVOKE_CXX11_PART_HPP
 
+#include <kerbal/ts/modules_ts/modules_ts.hpp>
+
 #include <kerbal/function/invoke/invoke_overload_ver_selector.hpp>
 #include <kerbal/function/invoke/invoke_is_nothrow.hpp>
 #include <kerbal/function/invoke/invoke_result.hpp>
@@ -123,6 +125,7 @@ namespace kerbal
 		} // namespace detail
 
 
+		KERBAL_MODULE_EXPORT
 		template <typename Fun, typename ... Args>
 		KERBAL_CONSTEXPR
 		typename invoke_result<Fun &&, Args && ...>::type

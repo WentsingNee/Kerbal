@@ -12,6 +12,9 @@
 #ifndef KERBAL_TMP_TPPTER_HPP
 #define KERBAL_TMP_TPPTER_HPP
 
+#include <kerbal/ts/modules_ts/modules_ts.hpp>
+
+
 namespace kerbal
 {
 
@@ -21,6 +24,7 @@ namespace kerbal
 		/**
 		 * type parameter pack terminator
 		 */
+		KERBAL_MODULE_EXPORT
 		struct tppter
 		{
 		};

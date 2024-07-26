@@ -12,6 +12,8 @@
 #ifndef KERBAL_ALGORITHM_MODIFIER_ROTATE_COPY_HPP
 #define KERBAL_ALGORITHM_MODIFIER_ROTATE_COPY_HPP
 
+#include <kerbal/ts/modules_ts/modules_ts.hpp>
+
 #include <kerbal/algorithm/modifier/copy.hpp>
 #include <kerbal/compatibility/constexpr.hpp>
 
@@ -22,6 +24,7 @@ namespace kerbal
 	namespace algorithm
 	{
 
+		KERBAL_MODULE_EXPORT
 		template <typename ForwardIterator, typename OutputIterator>
 		KERBAL_CONSTEXPR14
 		ForwardIterator

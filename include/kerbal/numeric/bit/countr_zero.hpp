@@ -12,6 +12,8 @@
 #ifndef KERBAL_NUMERIC_BIT_COUNTR_ZERO_HPP
 #define KERBAL_NUMERIC_BIT_COUNTR_ZERO_HPP
 
+#include <kerbal/ts/modules_ts/modules_ts.hpp>
+
 #include <kerbal/numeric/bit/detail/countr_zero/countr_zero.gnu_builtin.part.hpp>
 
 #include <kerbal/compatibility/constexpr.hpp>
@@ -57,6 +59,7 @@ namespace kerbal
 		} // namespace detail
 
 
+		KERBAL_MODULE_EXPORT
 		template <typename T>
 		KERBAL_CONSTEXPR
 		int countr_zero(T x) KERBAL_NOEXCEPT

@@ -12,6 +12,8 @@
 #ifndef KERBAL_MEMORY_ALLOCATOR_TRAITS_SIZE_TYPE_HPP
 #define KERBAL_MEMORY_ALLOCATOR_TRAITS_SIZE_TYPE_HPP
 
+#include <kerbal/ts/modules_ts/modules_ts.hpp>
+
 #include <kerbal/memory/allocator_traits/pointer_type.hpp>
 #include <kerbal/memory/pointer_traits.hpp>
 #include <kerbal/type_traits/integral_constant.hpp>
@@ -25,12 +27,14 @@ namespace kerbal
 	namespace memory
 	{
 
+		KERBAL_MODULE_EXPORT
 		template <typename Alloc, typename = kerbal::type_traits::void_type<>::type>
 		struct allocator_has_def_size_type :
 			kerbal::type_traits::false_type
 		{
 		};
 
+		KERBAL_MODULE_EXPORT
 		template <typename Alloc>
 		struct allocator_has_def_size_type<
 			Alloc,

@@ -12,6 +12,8 @@
 #ifndef KERBAL_ALGORITHM_QUERIER_FIND_FIRST_OF_HPP
 #define KERBAL_ALGORITHM_QUERIER_FIND_FIRST_OF_HPP
 
+#include <kerbal/ts/modules_ts/modules_ts.hpp>
+
 #include <kerbal/compare/binary_type_compare.hpp>
 #include <kerbal/compatibility/constexpr.hpp>
 #include <kerbal/iterator/iterator_traits.hpp>
@@ -23,6 +25,7 @@ namespace kerbal
 	namespace algorithm
 	{
 
+		KERBAL_MODULE_EXPORT
 		template <typename InputIterator, typename ForwardIterator, typename BinaryPredicate>
 		KERBAL_CONSTEXPR14
 		InputIterator
@@ -43,6 +46,7 @@ namespace kerbal
 			return first;
 		}
 
+		KERBAL_MODULE_EXPORT
 		template <typename InputIterator, typename ForwardIterator>
 		KERBAL_CONSTEXPR14
 		InputIterator

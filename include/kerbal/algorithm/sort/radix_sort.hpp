@@ -12,6 +12,8 @@
 #ifndef KERBAL_ALGORITHM_SORT_RADIX_SORT_HPP
 #define KERBAL_ALGORITHM_SORT_RADIX_SORT_HPP
 
+#include <kerbal/ts/modules_ts/modules_ts.hpp>
+
 #include <kerbal/algorithm/modifier/copy.hpp>
 #include <kerbal/algorithm/modifier/reverse_copy.hpp>
 #include <kerbal/compatibility/static_assert.hpp>
@@ -112,12 +114,14 @@ namespace kerbal
 
 		} // namespace detail
 
+		KERBAL_MODULE_EXPORT
 		template <typename ValueType>
 		struct is_radix_sort_acceptable_type :
 			kerbal::type_traits::is_integral<ValueType>
 		{
 		};
 
+		KERBAL_MODULE_EXPORT
 		template <typename ForwardIterator, typename Order, std::size_t RADIX_BIT_WIDTH>
 		KERBAL_CONSTEXPR20
 		void radix_sort(
@@ -175,6 +179,7 @@ namespace kerbal
 			);
 		}
 
+		KERBAL_MODULE_EXPORT
 		template <typename ForwardIterator, typename Order>
 		KERBAL_CONSTEXPR20
 		void radix_sort(ForwardIterator first, ForwardIterator last, Order /*order*/)
@@ -185,6 +190,7 @@ namespace kerbal
 			);
 		}
 
+		KERBAL_MODULE_EXPORT
 		template <typename ForwardIterator>
 		KERBAL_CONSTEXPR20
 		void radix_sort(ForwardIterator first, ForwardIterator last)
