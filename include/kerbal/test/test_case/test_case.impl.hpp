@@ -12,6 +12,8 @@
 #ifndef KERBAL_TEST_TEST_CASE_TEST_CASE_IMPL_HPP
 #define KERBAL_TEST_TEST_CASE_TEST_CASE_IMPL_HPP
 
+#include <kerbal/ts/modules_ts/modules_ts.hpp>
+
 #include <kerbal/compatibility/noexcept.hpp>
 #include <kerbal/config/exceptions.hpp>
 #include <kerbal/container/vector.hpp>
@@ -52,6 +54,7 @@ namespace kerbal
 
 		} // namespace detail
 
+		KERBAL_MODULE_EXPORT
 		inline
 		int run_test_case(std::size_t case_id, int, char * [])
 		{
@@ -145,6 +148,7 @@ namespace kerbal
 			}
 		}
 
+		KERBAL_MODULE_EXPORT
 		inline
 		int select_test_case(int argc, char * argv[])
 		{
@@ -165,6 +169,7 @@ namespace kerbal
 			return run_test_case(i, argc, argv);
 		}
 
+		KERBAL_MODULE_EXPORT
 		inline
 		int run_all_test_case(int argc, char * argv[])
 		{
