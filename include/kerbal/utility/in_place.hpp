@@ -12,6 +12,8 @@
 #ifndef KERBAL_UTILITY_IN_PLACE_HPP
 #define KERBAL_UTILITY_IN_PLACE_HPP
 
+#include <kerbal/ts/modules_ts/modules_ts.hpp>
+
 #include <cstddef>
 
 
@@ -21,16 +23,19 @@ namespace kerbal
 	namespace utility
 	{
 
+		KERBAL_MODULE_EXPORT
 		struct in_place_t
 		{
 		};
 
+		KERBAL_MODULE_EXPORT
 		template <typename T>
 		struct in_place_type_t
 		{
 				typedef T type;
 		};
 
+		KERBAL_MODULE_EXPORT
 		template <std::size_t I>
 		struct in_place_index_t
 		{

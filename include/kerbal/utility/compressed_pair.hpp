@@ -12,6 +12,8 @@
 #ifndef KERBAL_UTILITY_COMPRESSED_PAIR_HPP
 #define KERBAL_UTILITY_COMPRESSED_PAIR_HPP
 
+#include <kerbal/ts/modules_ts/modules_ts.hpp>
+
 #include <kerbal/config/compiler_id.hpp>
 
 #include <kerbal/utility/compressed_pair/compressed_pair.fwd.hpp>
@@ -42,10 +44,12 @@ namespace kerbal
 	namespace utility
 	{
 
+		KERBAL_MODULE_EXPORT
 		struct compressed_pair_default_construct_tag
 		{
 		};
 
+		KERBAL_MODULE_EXPORT
 		template <typename T, typename U>
 		class compressed_pair :
 			public kerbal::utility::member_compress_helper<T, 0>,
@@ -502,6 +506,7 @@ namespace kerbal
 		};
 
 
+		KERBAL_MODULE_EXPORT
 		template <typename T, typename U>
 		KERBAL_CONSTEXPR
 		bool operator==(
@@ -518,6 +523,7 @@ namespace kerbal
 				static_cast<bool>(lhs.second() == rhs.second());
 		}
 
+		KERBAL_MODULE_EXPORT
 		template <typename T, typename U>
 		KERBAL_CONSTEXPR
 		bool operator!=(
@@ -534,6 +540,7 @@ namespace kerbal
 				static_cast<bool>(lhs.second() != rhs.second());
 		}
 
+		KERBAL_MODULE_EXPORT
 		template <typename T, typename U>
 		KERBAL_CONSTEXPR
 		bool operator<(
@@ -554,6 +561,7 @@ namespace kerbal
 				);
 		}
 
+		KERBAL_MODULE_EXPORT
 		template <typename T, typename U>
 		KERBAL_CONSTEXPR
 		bool operator>(
@@ -569,6 +577,7 @@ namespace kerbal
 				);
 		}
 
+		KERBAL_MODULE_EXPORT
 		template <typename T, typename U>
 		KERBAL_CONSTEXPR
 		bool operator<=(
@@ -584,6 +593,7 @@ namespace kerbal
 				);
 		}
 
+		KERBAL_MODULE_EXPORT
 		template <typename T, typename U>
 		KERBAL_CONSTEXPR
 		bool operator>=(
@@ -599,6 +609,7 @@ namespace kerbal
 				);
 		}
 
+		KERBAL_MODULE_EXPORT
 		template <typename T, typename U>
 		KERBAL_CONSTEXPR
 		kerbal::utility::compressed_pair<T, U>
@@ -614,6 +625,7 @@ namespace kerbal
 
 #	if __cplusplus >= 201703L
 
+		KERBAL_MODULE_EXPORT
 		template <typename T, typename U>
 		compressed_pair(const T &, const U &) ->
 		compressed_pair<T, U>;
@@ -631,6 +643,7 @@ namespace kerbal
 	namespace algorithm
 	{
 
+		KERBAL_MODULE_EXPORT
 		template <typename T, typename U>
 		KERBAL_CONSTEXPR20
 		void swap(
@@ -649,6 +662,7 @@ namespace kerbal
 
 KERBAL_NAMESPACE_STD_BEGIN
 
+	KERBAL_MODULE_EXPORT
 	template <typename T, typename U>
 	KERBAL_CONSTEXPR20
 	void swap(
@@ -672,18 +686,21 @@ KERBAL_NAMESPACE_STD_END
 
 KERBAL_NAMESPACE_STD_BEGIN
 
+	KERBAL_MODULE_EXPORT
 	template <typename T, typename U>
 	struct tuple_size<kerbal::utility::compressed_pair<T, U> > :
 		std::integral_constant<std::size_t, 2>
 	{
 	};
 
+	KERBAL_MODULE_EXPORT
 	template <std::size_t I, typename T, typename U>
 	struct tuple_element<I, kerbal::utility::compressed_pair<T, U> > :
 		kerbal::utility::compressed_pair<T, U>::template value_type<I>
 	{
 	};
 
+	KERBAL_MODULE_EXPORT
 	template <std::size_t I, typename T, typename U>
 	KERBAL_CONSTEXPR14
 	typename kerbal::utility::compressed_pair<T, U>::template reference<I>::type
@@ -692,6 +709,7 @@ KERBAL_NAMESPACE_STD_BEGIN
 		return pair.template get<I>();
 	}
 
+	KERBAL_MODULE_EXPORT
 	template <std::size_t I, typename T, typename U>
 	KERBAL_CONSTEXPR
 	typename kerbal::utility::compressed_pair<T, U>::template const_reference<I>::type
@@ -700,6 +718,7 @@ KERBAL_NAMESPACE_STD_BEGIN
 		return pair.template get<I>();
 	}
 
+	KERBAL_MODULE_EXPORT
 	template <std::size_t I, typename T, typename U>
 	KERBAL_CONSTEXPR14
 	typename kerbal::utility::compressed_pair<T, U>::template rvalue_reference<I>::type
@@ -708,6 +727,7 @@ KERBAL_NAMESPACE_STD_BEGIN
 		return kerbal::compatibility::move(pair).template get<I>();
 	}
 
+	KERBAL_MODULE_EXPORT
 	template <std::size_t I, typename T, typename U>
 	KERBAL_CONSTEXPR
 	typename kerbal::utility::compressed_pair<T, U>::template const_rvalue_reference<I>::type

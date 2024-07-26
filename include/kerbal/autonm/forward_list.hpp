@@ -12,6 +12,8 @@
 #ifndef KERBAL_AUTONM_FORWARD_LIST_HPP
 #define KERBAL_AUTONM_FORWARD_LIST_HPP
 
+#include <kerbal/ts/modules_ts/modules_ts.hpp>
+
 #include <kerbal/container/detail/container_rebind_allocator_overload.hpp>
 #include <kerbal/container/detail/single_list_base/single_list_node.hpp>
 #include <kerbal/container/detail/forward_list_base/forward_list_iterator.hpp>
@@ -113,6 +115,7 @@ namespace kerbal
 
 		} // namespace detail
 
+		KERBAL_MODULE_EXPORT
 		template <typename T, typename SemiAllocator>
 		class forward_list :
 			protected kerbal::autonm::detail::fl_typedef_helper<T, SemiAllocator>::fl_semi_allocator_overload,
@@ -541,6 +544,7 @@ namespace kerbal
 
 		};
 
+		KERBAL_MODULE_EXPORT
 		template <typename T, typename SemiAllocator>
 		KERBAL_CONSTEXPR20
 		bool operator==(
@@ -554,6 +558,7 @@ namespace kerbal
 			);
 		}
 
+		KERBAL_MODULE_EXPORT
 		template <typename T, typename SemiAllocator>
 		KERBAL_CONSTEXPR20
 		bool operator!=(
@@ -567,6 +572,7 @@ namespace kerbal
 			);
 		}
 
+		KERBAL_MODULE_EXPORT
 		template <typename T, typename SemiAllocator>
 		KERBAL_CONSTEXPR20
 		bool operator<(
@@ -580,6 +586,7 @@ namespace kerbal
 			);
 		}
 
+		KERBAL_MODULE_EXPORT
 		template <typename T, typename SemiAllocator>
 		KERBAL_CONSTEXPR20
 		bool operator>(
@@ -593,6 +600,7 @@ namespace kerbal
 			);
 		}
 
+		KERBAL_MODULE_EXPORT
 		template <typename T, typename SemiAllocator>
 		KERBAL_CONSTEXPR20
 		bool operator<=(
@@ -606,6 +614,7 @@ namespace kerbal
 			);
 		}
 
+		KERBAL_MODULE_EXPORT
 		template <typename T, typename SemiAllocator>
 		KERBAL_CONSTEXPR20
 		bool operator>=(
@@ -624,6 +633,7 @@ namespace kerbal
 	namespace algorithm
 	{
 
+		KERBAL_MODULE_EXPORT
 		template <typename T, typename SemiAllocator>
 		KERBAL_CONSTEXPR20
 		void swap(
@@ -642,6 +652,7 @@ namespace kerbal
 
 KERBAL_NAMESPACE_STD_BEGIN
 
+	KERBAL_MODULE_EXPORT
 	template <typename T, typename SemiAllocator>
 	KERBAL_CONSTEXPR20
 	void swap(

@@ -12,6 +12,8 @@
 #ifndef KERBAL_PARALLEL_THREAD_DETAIL_THREAD_COMMON_DECL_PART_HPP
 #define KERBAL_PARALLEL_THREAD_DETAIL_THREAD_COMMON_DECL_PART_HPP
 
+#include <kerbal/ts/modules_ts/modules_ts.hpp>
+
 #include <kerbal/parallel/thread/thread.fwd.hpp>
 
 #include <kerbal/algorithm/swap.hpp>
@@ -244,6 +246,7 @@ namespace kerbal
 
 
 
+		KERBAL_MODULE_EXPORT
 		template <typename Allocator>
 		class basic_thread : private kerbal::parallel::detail::basic_thread_allocator_unrelated
 		{

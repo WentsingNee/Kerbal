@@ -18,6 +18,8 @@
 #endif
 
 
+#include <kerbal/ts/modules_ts/modules_ts.hpp>
+
 #include <kerbal/compatibility/constexpr.hpp>
 #include <kerbal/compatibility/noexcept.hpp>
 #include <kerbal/type_traits/is_lvalue_reference.hpp>
@@ -30,6 +32,7 @@ namespace kerbal
 	namespace utility
 	{
 
+		KERBAL_MODULE_EXPORT
 		template <typename T>
 		KERBAL_CONSTEXPR
 		T && forward(typename kerbal::type_traits::remove_reference<T>::type & val) KERBAL_NOEXCEPT
@@ -37,6 +40,7 @@ namespace kerbal
 			return static_cast<T &&>(val);
 		}
 
+		KERBAL_MODULE_EXPORT
 		template <typename T>
 		KERBAL_CONSTEXPR
 		T && forward(typename kerbal::type_traits::remove_reference<T>::type && val) KERBAL_NOEXCEPT

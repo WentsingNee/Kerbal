@@ -12,6 +12,8 @@
 #ifndef KERBAL_ALGORITHM_MODIFIER_MERGE_HPP
 #define KERBAL_ALGORITHM_MODIFIER_MERGE_HPP
 
+#include <kerbal/ts/modules_ts/modules_ts.hpp>
+
 #include <kerbal/algorithm/modifier/copy.hpp>
 #include <kerbal/assign/generic_assign.hpp>
 #include <kerbal/compatibility/constexpr.hpp>
@@ -25,6 +27,7 @@ namespace kerbal
 	namespace algorithm
 	{
 
+		KERBAL_MODULE_EXPORT
 		template <typename InputIterator1, typename InputIterator2, typename OutputIterator, typename CompareFuntion>
 		KERBAL_CONSTEXPR14
 		OutputIterator
@@ -53,6 +56,7 @@ namespace kerbal
 			return kerbal::algorithm::copy(b_first, b_last, to);
 		}
 
+		KERBAL_MODULE_EXPORT
 		template <typename InputIterator1, typename InputIterator2, typename OutputIterator>
 		KERBAL_CONSTEXPR14
 		OutputIterator

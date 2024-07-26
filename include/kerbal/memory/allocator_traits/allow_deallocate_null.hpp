@@ -12,6 +12,8 @@
 #ifndef KERBAL_MEMORY_ALLOCATOR_TRAITS_ALLOW_DEALLOCATE_NULL_HPP
 #define KERBAL_MEMORY_ALLOCATOR_TRAITS_ALLOW_DEALLOCATE_NULL_HPP
 
+#include <kerbal/ts/modules_ts/modules_ts.hpp>
+
 #include <kerbal/type_traits/integral_constant.hpp>
 #include <kerbal/type_traits/void_type.hpp>
 
@@ -22,12 +24,14 @@ namespace kerbal
 	namespace memory
 	{
 
+		KERBAL_MODULE_EXPORT
 		template <typename Alloc, typename = kerbal::type_traits::void_type<>::type>
 		struct allocator_has_def_allow_deallocate_null :
 			kerbal::type_traits::false_type
 		{
 		};
 
+		KERBAL_MODULE_EXPORT
 		template <typename Alloc>
 		struct allocator_has_def_allow_deallocate_null<
 			Alloc,

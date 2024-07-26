@@ -12,6 +12,8 @@
 #ifndef KERBAL_ALGORITHM_SORT_PIGEONHOLE_SORT_HPP
 #define KERBAL_ALGORITHM_SORT_PIGEONHOLE_SORT_HPP
 
+#include <kerbal/ts/modules_ts/modules_ts.hpp>
+
 #include <kerbal/algorithm/sort/detail/actual_bit_width.hpp>
 #include <kerbal/compatibility/constexpr.hpp>
 #include <kerbal/compatibility/noexcept.hpp>
@@ -246,12 +248,14 @@ namespace kerbal
 
 		} // namespace detail
 
+		KERBAL_MODULE_EXPORT
 		template <typename ValueType>
 		struct is_pigeonhole_sort_acceptable_type :
 			detail::is_pigeonhole_sort_acceptable_type_helper<ValueType>
 		{
 		};
 
+		KERBAL_MODULE_EXPORT
 		template <typename ForwardIterator, typename Order>
 		KERBAL_CONSTEXPR14
 		void pigeonhole_sort(ForwardIterator first, ForwardIterator last, Order order)
@@ -269,6 +273,7 @@ namespace kerbal
 			detail::pigeonhole_sort_back_fill(first, cnt, order, kerbal::type_traits::is_signed<value_type>());
 		}
 
+		KERBAL_MODULE_EXPORT
 		template <typename ForwardIterator>
 		KERBAL_CONSTEXPR14
 		void pigeonhole_sort(ForwardIterator first, ForwardIterator last) // default: asc

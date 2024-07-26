@@ -12,6 +12,8 @@
 #ifndef KERBAL_FUNCTION_BAD_FUNCTION_CALL_HPP
 #define KERBAL_FUNCTION_BAD_FUNCTION_CALL_HPP
 
+#include <kerbal/ts/modules_ts/modules_ts.hpp>
+
 #include <kerbal/compatibility/noexcept.hpp>
 
 #include <stdexcept>
@@ -23,6 +25,7 @@ namespace kerbal
 	namespace function
 	{
 
+		KERBAL_MODULE_EXPORT
 		class bad_function_call :
 			public std::exception
 		{

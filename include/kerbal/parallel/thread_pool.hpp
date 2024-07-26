@@ -12,6 +12,8 @@
 #ifndef KERBAL_PARALLEL_THREAD_POOL_HPP
 #define KERBAL_PARALLEL_THREAD_POOL_HPP
 
+#include <kerbal/ts/modules_ts/modules_ts.hpp>
+
 #include <kerbal/compatibility/move.hpp>
 #include <kerbal/compatibility/noexcept.hpp>
 #include <kerbal/container/vector.hpp>
@@ -42,6 +44,7 @@ namespace kerbal
 	namespace parallel
 	{
 
+		KERBAL_MODULE_EXPORT
 		class thread_pool;
 
 		namespace detail

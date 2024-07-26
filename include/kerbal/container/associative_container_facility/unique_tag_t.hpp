@@ -12,6 +12,8 @@
 #ifndef KERBAL_CONTAINER_ASSOCIATIVE_CONTAINER_FACILITY_UNIQUE_TAG_T_HPP
 #define KERBAL_CONTAINER_ASSOCIATIVE_CONTAINER_FACILITY_UNIQUE_TAG_T_HPP
 
+#include <kerbal/ts/modules_ts/modules_ts.hpp>
+
 
 namespace kerbal
 {
@@ -19,6 +21,7 @@ namespace kerbal
 	namespace container
 	{
 
+		KERBAL_MODULE_EXPORT
 		class unique_tag_t
 		{
 		};

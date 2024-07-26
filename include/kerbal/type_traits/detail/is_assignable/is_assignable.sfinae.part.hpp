@@ -27,6 +27,8 @@
 
 #if KERBAL_HAS_IS_ASSIGNABLE_SUPPORT
 
+#include <kerbal/ts/modules_ts/modules_ts.hpp>
+
 #include <kerbal/type_traits/integral_constant.hpp>
 #include <kerbal/type_traits/yes_no_type.hpp>
 
@@ -128,6 +130,7 @@ namespace kerbal
 
 		} // namespace detail
 
+		KERBAL_MODULE_EXPORT
 		template <typename T, typename U>
 		struct is_assignable :
 			kerbal::type_traits::detail::is_assignable_helper<T, U>::type

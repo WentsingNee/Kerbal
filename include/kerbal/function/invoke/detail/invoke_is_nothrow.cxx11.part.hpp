@@ -12,6 +12,8 @@
 #ifndef KERBAL_FUNCTION_INVOKE_DETAIL_INVOKE_IS_NOTHROW_CXX11_PART_HPP
 #define KERBAL_FUNCTION_INVOKE_DETAIL_INVOKE_IS_NOTHROW_CXX11_PART_HPP
 
+#include <kerbal/ts/modules_ts/modules_ts.hpp>
+
 #include <kerbal/function/invoke/invoke_overload_ver_selector.hpp>
 
 #include <kerbal/type_traits/integral_constant.hpp>
@@ -111,6 +113,7 @@ namespace kerbal
 		} // namespace detail
 
 
+		KERBAL_MODULE_EXPORT
 		template <typename Fun, typename ... Args>
 		struct invoke_is_nothrow :
 			kerbal::function::detail::invoke_is_nothrow_helper<

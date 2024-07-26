@@ -12,6 +12,9 @@
 #ifndef KERBAL_AUTONM_FORWARD_LIST_FORWARD_LIST_FWD_HPP
 #define KERBAL_AUTONM_FORWARD_LIST_FORWARD_LIST_FWD_HPP
 
+#include <kerbal/ts/modules_ts/modules_ts.hpp>
+
+
 namespace kerbal
 {
 
@@ -26,6 +29,7 @@ namespace kerbal
 
 		} // namespace detail
 
+		KERBAL_MODULE_EXPORT
 		template <typename T, typename SemiAllocator>
 		class forward_list;
 

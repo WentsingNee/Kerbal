@@ -12,6 +12,8 @@
 #ifndef KERBAL_ALGORITHM_SORT_QUICK_SORT_HPP
 #define KERBAL_ALGORITHM_SORT_QUICK_SORT_HPP
 
+#include <kerbal/ts/modules_ts/modules_ts.hpp>
+
 #include <kerbal/algorithm/swap.hpp>
 #include <kerbal/algorithm/sort/detail/quick_sort_pivot.hpp>
 #include <kerbal/algorithm/sort/insertion_sort.hpp>
@@ -38,6 +40,7 @@ namespace kerbal
 	namespace algorithm
 	{
 
+		KERBAL_MODULE_EXPORT
 		template <typename BidirectionalIterator, typename Compare>
 		KERBAL_CONSTEXPR14
 		void quick_sort(BidirectionalIterator first, BidirectionalIterator last, Compare cmp)
@@ -61,6 +64,7 @@ namespace kerbal
 			kerbal::algorithm::directly_insertion_sort(first, last, cmp);
 		}
 
+		KERBAL_MODULE_EXPORT
 		template <typename BidirectionalIterator>
 		KERBAL_CONSTEXPR14
 		void quick_sort(BidirectionalIterator first, BidirectionalIterator last)
@@ -107,6 +111,7 @@ namespace kerbal
 
 		} // namespace detail
 
+		KERBAL_MODULE_EXPORT
 		template <typename BidirectionalIterator, typename Compare>
 		void nonrecursive_qsort(BidirectionalIterator first, BidirectionalIterator last, Compare cmp)
 		{
@@ -117,6 +122,7 @@ namespace kerbal
 			kerbal::algorithm::detail::nonrecursive_qsort_helper(first, last, cmp, st);
 		}
 
+		KERBAL_MODULE_EXPORT
 		template <typename BidirectionalIterator>
 		void nonrecursive_qsort(BidirectionalIterator first, BidirectionalIterator last)
 		{
@@ -131,6 +137,7 @@ namespace kerbal
 		namespace pmr
 		{
 
+			KERBAL_MODULE_EXPORT
 			template <typename BidirectionalIterator, typename Compare>
 			void nonrecursive_qsort(BidirectionalIterator first, BidirectionalIterator last, Compare cmp)
 			{
@@ -144,6 +151,7 @@ namespace kerbal
 				kerbal::algorithm::detail::nonrecursive_qsort_helper<BidirectionalIterator, Compare, StackBuffer>(first, last, cmp, st);
 			}
 
+			KERBAL_MODULE_EXPORT
 			template <typename BidirectionalIterator>
 			void nonrecursive_qsort(BidirectionalIterator first, BidirectionalIterator last)
 			{

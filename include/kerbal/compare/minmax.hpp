@@ -12,6 +12,8 @@
 #ifndef KERBAL_COMPARE_MINMAX_HPP
 #define KERBAL_COMPARE_MINMAX_HPP
 
+#include <kerbal/ts/modules_ts/modules_ts.hpp>
+
 #include <kerbal/compatibility/constexpr.hpp>
 
 
@@ -21,6 +23,7 @@ namespace kerbal
 	namespace compare
 	{
 
+		KERBAL_MODULE_EXPORT
 		template <typename T>
 		KERBAL_CONSTEXPR
 		const T & min(const T & lhs, const T & rhs)
@@ -28,6 +31,7 @@ namespace kerbal
 			return lhs < rhs ? lhs : rhs;
 		}
 
+		KERBAL_MODULE_EXPORT
 		template <typename T>
 		KERBAL_CONSTEXPR
 		const T & max(const T & lhs, const T & rhs)

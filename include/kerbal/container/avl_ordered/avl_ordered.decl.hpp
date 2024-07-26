@@ -12,6 +12,8 @@
 #ifndef KERBAL_CONTAINER_AVL_ORDERED_AVL_ORDERED_DECL_HPP
 #define KERBAL_CONTAINER_AVL_ORDERED_AVL_ORDERED_DECL_HPP
 
+#include <kerbal/ts/modules_ts/modules_ts.hpp>
+
 #include <kerbal/container/avl_ordered/avl_ordered.fwd.hpp>
 #include <kerbal/container/detail/avl_base/avl_base.decl.hpp>
 
@@ -66,6 +68,7 @@ namespace kerbal
 		} // namespace detail
 
 
+		KERBAL_MODULE_EXPORT
 		template <typename Entity, typename Extract, typename KeyCompare, typename Allocator>
 		class avl_ordered :
 			protected kerbal::utility::member_compress_helper<Extract>,
@@ -966,6 +969,7 @@ namespace kerbal
 
 #	if __cplusplus >= 201703L
 
+		KERBAL_MODULE_EXPORT
 		template <
 			typename InputIterator,
 			typename Extract
@@ -979,6 +983,7 @@ namespace kerbal
 			Extract
 		>;
 
+		KERBAL_MODULE_EXPORT
 		template <
 			typename InputIterator,
 			typename Extract, typename KeyCompare,
@@ -997,6 +1002,7 @@ namespace kerbal
 			KeyCompare
 		>;
 
+		KERBAL_MODULE_EXPORT
 		template <
 			typename InputIterator,
 			typename Extract, typename Allocator,
@@ -1016,6 +1022,7 @@ namespace kerbal
 			Allocator
 		>;
 
+		KERBAL_MODULE_EXPORT
 		template <
 			typename InputIterator,
 			typename Extract, typename KeyCompare, typename Allocator,
@@ -1036,6 +1043,7 @@ namespace kerbal
 		>;
 
 
+		KERBAL_MODULE_EXPORT
 		template <
 			typename InputIterator,
 			typename Extract
@@ -1050,6 +1058,7 @@ namespace kerbal
 			Extract
 		>;
 
+		KERBAL_MODULE_EXPORT
 		template <
 			typename InputIterator,
 			typename Extract, typename KeyCompare,
@@ -1069,6 +1078,7 @@ namespace kerbal
 			KeyCompare
 		>;
 
+		KERBAL_MODULE_EXPORT
 		template <
 			typename InputIterator,
 			typename Extract, typename Allocator,
@@ -1089,6 +1099,7 @@ namespace kerbal
 			Allocator
 		>;
 
+		KERBAL_MODULE_EXPORT
 		template <
 			typename InputIterator,
 			typename Extract, typename KeyCompare, typename Allocator,
@@ -1110,6 +1121,7 @@ namespace kerbal
 		>;
 
 
+		KERBAL_MODULE_EXPORT
 		template <
 			typename Entity,
 			typename Extract
@@ -1123,6 +1135,7 @@ namespace kerbal
 			Extract
 		>;
 
+		KERBAL_MODULE_EXPORT
 		template <
 			typename Entity,
 			typename Extract, typename KeyCompare,
@@ -1141,6 +1154,7 @@ namespace kerbal
 			KeyCompare
 		>;
 
+		KERBAL_MODULE_EXPORT
 		template <
 			typename Entity,
 			typename Extract, typename Allocator,
@@ -1159,6 +1173,7 @@ namespace kerbal
 			Allocator
 		>;
 
+		KERBAL_MODULE_EXPORT
 		template <
 			typename Entity,
 			typename Extract, typename KeyCompare, typename Allocator,
@@ -1181,6 +1196,7 @@ namespace kerbal
 #	endif // if __cplusplus >= 201703L
 
 
+		KERBAL_MODULE_EXPORT
 		template <typename Entity, typename Extract, typename KeyCompare, typename Allocator, typename Allocator2>
 		KERBAL_CONSTEXPR20
 		bool operator==(
@@ -1197,6 +1213,7 @@ namespace kerbal
 			);
 		}
 
+		KERBAL_MODULE_EXPORT
 		template <typename Entity, typename Extract, typename KeyCompare, typename Allocator, typename Allocator2>
 		KERBAL_CONSTEXPR20
 		bool operator!=(
@@ -1213,6 +1230,7 @@ namespace kerbal
 			);
 		}
 
+		KERBAL_MODULE_EXPORT
 		template <typename Entity, typename Extract, typename KeyCompare, typename Allocator, typename Allocator2>
 		KERBAL_CONSTEXPR20
 		bool operator<(
@@ -1226,6 +1244,7 @@ namespace kerbal
 			);
 		}
 
+		KERBAL_MODULE_EXPORT
 		template <typename Entity, typename Extract, typename KeyCompare, typename Allocator, typename Allocator2>
 		KERBAL_CONSTEXPR20
 		bool operator<=(
@@ -1239,6 +1258,7 @@ namespace kerbal
 			);
 		}
 
+		KERBAL_MODULE_EXPORT
 		template <typename Entity, typename Extract, typename KeyCompare, typename Allocator, typename Allocator2>
 		KERBAL_CONSTEXPR20
 		bool operator>(
@@ -1252,6 +1272,7 @@ namespace kerbal
 			);
 		}
 
+		KERBAL_MODULE_EXPORT
 		template <typename Entity, typename Extract, typename KeyCompare, typename Allocator, typename Allocator2>
 		KERBAL_CONSTEXPR20
 		bool operator>=(
@@ -1270,6 +1291,7 @@ namespace kerbal
 	namespace algorithm
 	{
 
+		KERBAL_MODULE_EXPORT
 		template <typename Entity, typename Extract, typename KeyCompare, typename Allocator>
 		KERBAL_CONSTEXPR20
 		void swap(
@@ -1288,6 +1310,7 @@ namespace kerbal
 
 KERBAL_NAMESPACE_STD_BEGIN
 
+	KERBAL_MODULE_EXPORT
 	template <typename Entity, typename Extract, typename KeyCompare, typename Allocator>
 	KERBAL_CONSTEXPR20
 	void swap(

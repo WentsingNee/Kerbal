@@ -12,6 +12,8 @@
 #ifndef KERBAL_MEMORY_ALLOCATOR_TRAITS_CONST_POINTER_TYPE_HPP
 #define KERBAL_MEMORY_ALLOCATOR_TRAITS_CONST_POINTER_TYPE_HPP
 
+#include <kerbal/ts/modules_ts/modules_ts.hpp>
+
 #if __cplusplus >= 201703L
 #	include <kerbal/memory/allocator/std_allocator/std_allocator.fwd.hpp>
 #endif
@@ -28,12 +30,14 @@ namespace kerbal
 	namespace memory
 	{
 
+		KERBAL_MODULE_EXPORT
 		template <typename Alloc, typename = kerbal::type_traits::void_type<>::type>
 		struct allocator_has_def_const_pointer :
 			kerbal::type_traits::false_type
 		{
 		};
 
+		KERBAL_MODULE_EXPORT
 		template <typename Alloc>
 		struct allocator_has_def_const_pointer<
 			Alloc,
@@ -43,6 +47,7 @@ namespace kerbal
 		{
 		};
 
+		KERBAL_MODULE_EXPORT
 		template <typename Alloc>
 		struct allocator_could_use_const_pointer_def :
 			kerbal::memory::allocator_has_def_const_pointer<Alloc>
@@ -51,6 +56,7 @@ namespace kerbal
 
 #	if __cplusplus >= 201703L
 
+		KERBAL_MODULE_EXPORT
 		template <typename T>
 		struct allocator_could_use_const_pointer_def<std::allocator<T> > :
 			kerbal::type_traits::false_type

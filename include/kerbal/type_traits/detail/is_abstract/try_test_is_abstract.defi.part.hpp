@@ -12,6 +12,8 @@
 #ifndef KERBAL_TYPE_TRAITS_DETAIL_IS_ABSTRACT_TRY_TEST_IS_ABSTRACT_DEFI_PART_HPP
 #define KERBAL_TYPE_TRAITS_DETAIL_IS_ABSTRACT_TRY_TEST_IS_ABSTRACT_DEFI_PART_HPP
 
+#include <kerbal/ts/modules_ts/modules_ts.hpp>
+
 #include <kerbal/type_traits/detail/is_abstract/is_abstract.part.hpp>
 
 #include <kerbal/type_traits/tribool_constant.hpp>
@@ -23,6 +25,7 @@ namespace kerbal
 	namespace type_traits
 	{
 
+		KERBAL_MODULE_EXPORT
 		template <typename T>
 		struct try_test_is_abstract :
 			kerbal::type_traits::tribool_constant<

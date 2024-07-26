@@ -12,6 +12,8 @@
 #ifndef KERBAL_ALGORITHM_BINARY_SEARCH_BINARY_SEARCH_HPP
 #define KERBAL_ALGORITHM_BINARY_SEARCH_BINARY_SEARCH_HPP
 
+#include <kerbal/ts/modules_ts/modules_ts.hpp>
+
 #include <kerbal/algorithm/binary_search/lower_bound.hpp>
 #include <kerbal/compare/binary_type_compare.hpp>
 #include <kerbal/compatibility/constexpr.hpp>
@@ -27,6 +29,7 @@ namespace kerbal
 		 *
 		 * @param comparator requires: comparator(value_type, T) && comparator(T, value_type)
 		 */
+		KERBAL_MODULE_EXPORT
 		template <typename ForwardIterator, typename T, typename Comparator>
 		KERBAL_CONSTEXPR14
 		bool binary_search(
@@ -39,6 +42,7 @@ namespace kerbal
 			return static_cast<bool>(lb != last) && !static_cast<bool>(comparator(value, *lb));
 		}
 
+		KERBAL_MODULE_EXPORT
 		template <typename ForwardIterator, typename T>
 		KERBAL_CONSTEXPR14
 		bool binary_search(ForwardIterator first, ForwardIterator last, const T & value)

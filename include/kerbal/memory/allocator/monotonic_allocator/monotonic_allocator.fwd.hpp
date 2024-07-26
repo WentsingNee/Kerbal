@@ -12,6 +12,8 @@
 #ifndef KERBAL_MEMORY_ALLOCATOR_MONOTONIC_ALLOCATOR_MONOTONIC_ALLOCATOR_FWD_HPP
 #define KERBAL_MEMORY_ALLOCATOR_MONOTONIC_ALLOCATOR_MONOTONIC_ALLOCATOR_FWD_HPP
 
+#include <kerbal/ts/modules_ts/modules_ts.hpp>
+
 #include <kerbal/compatibility/namespace_std_scope.hpp>
 #include <kerbal/compatibility/noexcept.hpp>
 #include <kerbal/memory/allocator/default_allocator/default_allocator.fwd.hpp>
@@ -24,6 +26,7 @@ namespace kerbal
 	namespace memory
 	{
 
+		KERBAL_MODULE_EXPORT
 		template <typename T, typename UpstreamAllocator = kerbal::memory::default_allocator<void> >
 		class monotonic_allocator;
 
@@ -32,6 +35,7 @@ namespace kerbal
 	namespace algorithm
 	{
 
+		KERBAL_MODULE_EXPORT
 		template <typename T, typename UpstreamAllocator>
 		void swap(
 			kerbal::memory::monotonic_allocator<T, UpstreamAllocator> & lhs,
@@ -53,6 +57,7 @@ namespace kerbal
 
 KERBAL_NAMESPACE_STD_BEGIN
 
+	KERBAL_MODULE_EXPORT
 	template <typename T, typename UpstreamAllocator>
 	void swap(
 			kerbal::memory::monotonic_allocator<T, UpstreamAllocator> & lhs,

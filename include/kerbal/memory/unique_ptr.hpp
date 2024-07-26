@@ -12,6 +12,8 @@
 #ifndef KERBAL_MEMORY_UNIQUE_PTR_HPP
 #define KERBAL_MEMORY_UNIQUE_PTR_HPP
 
+#include <kerbal/ts/modules_ts/modules_ts.hpp>
+
 #include <kerbal/algorithm/swap.hpp>
 #include <kerbal/compatibility/constexpr.hpp>
 #include <kerbal/compatibility/noexcept.hpp>
@@ -49,9 +51,11 @@ namespace kerbal
 	namespace memory
 	{
 
+		KERBAL_MODULE_EXPORT
 		template <typename T, typename Deleter = kerbal::memory::default_delete<T> >
 		class unique_ptr;
 
+		KERBAL_MODULE_EXPORT
 		template <typename T, typename Deleter>
 		class unique_ptr :
 			private kerbal::utility::noncopyable,
@@ -406,6 +410,7 @@ namespace kerbal
 		};
 
 
+		KERBAL_MODULE_EXPORT
 		template <typename T, typename Deleter>
 		class unique_ptr<T[], Deleter> :
 			private kerbal::utility::noncopyable,
@@ -726,6 +731,7 @@ namespace kerbal
 
 #	if __cplusplus >= 201103L
 
+		KERBAL_MODULE_EXPORT
 		template <typename T, typename ... Args>
 		KERBAL_CONSTEXPR20
 		kerbal::memory::unique_ptr<T>
@@ -766,6 +772,7 @@ namespace kerbal
 
 
 
+		KERBAL_MODULE_EXPORT
 		template <
 			typename T1, typename Deleter1,
 			typename T2, typename Deleter2
@@ -779,6 +786,7 @@ namespace kerbal
 			return x.get() == y.get();
 		}
 
+		KERBAL_MODULE_EXPORT
 		template <
 			typename T1, typename Deleter1,
 			typename T2, typename Deleter2
@@ -792,6 +800,7 @@ namespace kerbal
 			return x.get() != y.get();
 		}
 
+		KERBAL_MODULE_EXPORT
 		template <
 			typename T1, typename Deleter1,
 			typename T2, typename Deleter2
@@ -805,6 +814,7 @@ namespace kerbal
 			return x.get() < y.get();
 		}
 
+		KERBAL_MODULE_EXPORT
 		template <
 			typename T1, typename Deleter1,
 			typename T2, typename Deleter2
@@ -818,6 +828,7 @@ namespace kerbal
 			return x.get() > y.get();
 		}
 
+		KERBAL_MODULE_EXPORT
 		template <
 			typename T1, typename Deleter1,
 			typename T2, typename Deleter2
@@ -831,6 +842,7 @@ namespace kerbal
 			return x.get() <= y.get();
 		}
 
+		KERBAL_MODULE_EXPORT
 		template <
 			typename T1, typename Deleter1,
 			typename T2, typename Deleter2
@@ -850,6 +862,7 @@ namespace kerbal
 	namespace algorithm
 	{
 
+		KERBAL_MODULE_EXPORT
 		template <typename T, typename Deleter>
 		KERBAL_CONSTEXPR20
 		void swap(
@@ -868,6 +881,7 @@ namespace kerbal
 
 KERBAL_NAMESPACE_STD_BEGIN
 
+	KERBAL_MODULE_EXPORT
 	template <typename T, typename Deleter>
 	KERBAL_CONSTEXPR20
 	void swap(

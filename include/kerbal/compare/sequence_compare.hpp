@@ -12,6 +12,8 @@
 #ifndef KERBAL_COMPARE_SEQUENCE_COMPARE_HPP
 #define KERBAL_COMPARE_SEQUENCE_COMPARE_HPP
 
+#include <kerbal/ts/modules_ts/modules_ts.hpp>
+
 #include <kerbal/compare/sequence_compare/sequence_compare.fwd.hpp>
 
 #include <kerbal/compare/basic_compare.hpp>
@@ -113,6 +115,7 @@ namespace kerbal
 
 		} // namespace detail
 
+		KERBAL_MODULE_EXPORT
 		template <typename InputIterator1, typename InputIterator2, typename BinaryTypeEqualToPredicate>
 		KERBAL_CONSTEXPR14
 		bool sequence_equal_to(
@@ -130,6 +133,7 @@ namespace kerbal
 			);
 		}
 
+		KERBAL_MODULE_EXPORT
 		template <typename InputIterator1, typename InputIterator2>
 		KERBAL_CONSTEXPR14
 		bool sequence_equal_to(
@@ -148,6 +152,7 @@ namespace kerbal
 			);
 		}
 
+		KERBAL_MODULE_EXPORT
 		template <typename Container1, typename Container2, typename BinaryTypeEqualToPredicate>
 		KERBAL_CONSTEXPR14
 		bool sequence_equal_to(
@@ -162,6 +167,7 @@ namespace kerbal
 			);
 		}
 
+		KERBAL_MODULE_EXPORT
 		template <typename Container1, typename Container2>
 		KERBAL_CONSTEXPR14
 		bool sequence_equal_to(const Container1 & container1, const Container2 & container2)
@@ -172,6 +178,7 @@ namespace kerbal
 			);
 		}
 
+		KERBAL_MODULE_EXPORT
 		template <typename T, typename U, std::size_t N, typename BinaryTypeEqualToPredicate>
 		KERBAL_CONSTEXPR14
 		bool sequence_equal_to(
@@ -186,6 +193,7 @@ namespace kerbal
 			);
 		}
 
+		KERBAL_MODULE_EXPORT
 		template <typename T, typename U, std::size_t N>
 		KERBAL_CONSTEXPR14
 		bool sequence_equal_to(const T (& a)[N], const U (& b)[N])
@@ -196,6 +204,7 @@ namespace kerbal
 			);
 		}
 
+		KERBAL_MODULE_EXPORT
 		template <typename T, typename U, std::size_t M, std::size_t N, typename BinaryTypeEqualToPredicate>
 		KERBAL_CONSTEXPR
 		bool sequence_equal_to(const T (&)[M], const U (&)[N], BinaryTypeEqualToPredicate) KERBAL_NOEXCEPT
@@ -203,6 +212,7 @@ namespace kerbal
 			return false;
 		}
 
+		KERBAL_MODULE_EXPORT
 		template <typename T, typename U, std::size_t M, std::size_t N>
 		KERBAL_CONSTEXPR
 		bool sequence_equal_to(const T (&)[N], const U (&)[N]) KERBAL_NOEXCEPT
@@ -287,6 +297,7 @@ namespace kerbal
 
 		} // namespace detail
 
+		KERBAL_MODULE_EXPORT
 		template <typename InputIterator1, typename InputIterator2, typename BinaryTypeNotEqualToPredicate>
 		KERBAL_CONSTEXPR14
 		bool sequence_not_equal_to(
@@ -304,6 +315,7 @@ namespace kerbal
 			);
 		}
 
+		KERBAL_MODULE_EXPORT
 		template <typename InputIterator1, typename InputIterator2>
 		KERBAL_CONSTEXPR14
 		bool sequence_not_equal_to(
@@ -322,6 +334,7 @@ namespace kerbal
 			);
 		}
 
+		KERBAL_MODULE_EXPORT
 		template <typename Container1, typename Container2, typename BinaryTypeNotEqualToPredicate>
 		KERBAL_CONSTEXPR14
 		bool sequence_not_equal_to(
@@ -336,6 +349,7 @@ namespace kerbal
 			);
 		}
 
+		KERBAL_MODULE_EXPORT
 		template <typename Container1, typename Container2>
 		KERBAL_CONSTEXPR14
 		bool sequence_not_equal_to(const Container1 & container1, const Container2 & container2)
@@ -346,6 +360,7 @@ namespace kerbal
 			);
 		}
 
+		KERBAL_MODULE_EXPORT
 		template <typename T, typename U, std::size_t N, typename BinaryTypeNotEqualToPredicate>
 		KERBAL_CONSTEXPR14
 		bool sequence_not_equal_to(
@@ -360,6 +375,7 @@ namespace kerbal
 			);
 		}
 
+		KERBAL_MODULE_EXPORT
 		template <typename T, typename U, std::size_t N>
 		KERBAL_CONSTEXPR14
 		bool sequence_not_equal_to(const T (& a)[N], const U (& b)[N])
@@ -370,6 +386,7 @@ namespace kerbal
 			);
 		}
 
+		KERBAL_MODULE_EXPORT
 		template <typename T, typename U, std::size_t M, std::size_t N, typename BinaryTypeNotEqualToPredicate>
 		KERBAL_CONSTEXPR
 		bool sequence_not_equal_to(const T (&)[M], const U (&)[N], BinaryTypeNotEqualToPredicate) KERBAL_NOEXCEPT
@@ -377,6 +394,7 @@ namespace kerbal
 			return true;
 		}
 
+		KERBAL_MODULE_EXPORT
 		template <typename T, typename U, std::size_t M, std::size_t N>
 		KERBAL_CONSTEXPR
 		bool sequence_not_equal_to(const T (&)[N], const U (&)[N]) KERBAL_NOEXCEPT
@@ -386,6 +404,7 @@ namespace kerbal
 
 
 
+		KERBAL_MODULE_EXPORT
 		template <typename InputIterator1, typename InputIterator2, typename LessPredicate>
 		KERBAL_CONSTEXPR14
 		bool sequence_less(
@@ -423,6 +442,7 @@ namespace kerbal
 			return static_cast<bool>(b_first != b_last);
 		}
 
+		KERBAL_MODULE_EXPORT
 		template <typename InputIterator1, typename InputIterator2>
 		KERBAL_CONSTEXPR14
 		bool sequence_less(
@@ -437,6 +457,7 @@ namespace kerbal
 			);
 		}
 
+		KERBAL_MODULE_EXPORT
 		template <typename Container1, typename Container2, typename LessPredicate>
 		KERBAL_CONSTEXPR14
 		bool sequence_less(
@@ -451,6 +472,7 @@ namespace kerbal
 			);
 		}
 
+		KERBAL_MODULE_EXPORT
 		template <typename Container1, typename Container2>
 		KERBAL_CONSTEXPR14
 		bool sequence_less(const Container1 & container1, const Container2 & container2)
@@ -463,6 +485,7 @@ namespace kerbal
 
 
 
+		KERBAL_MODULE_EXPORT
 		template <typename InputIterator1, typename InputIterator2, typename GreaterPredicate>
 		KERBAL_CONSTEXPR14
 		bool sequence_greater(
@@ -486,6 +509,7 @@ namespace kerbal
 			// a_first != a_last =? true
 		}
 
+		KERBAL_MODULE_EXPORT
 		template <typename InputIterator1, typename InputIterator2>
 		KERBAL_CONSTEXPR14
 		bool sequence_greater(
@@ -500,6 +524,7 @@ namespace kerbal
 			);
 		}
 
+		KERBAL_MODULE_EXPORT
 		template <typename Container1, typename Container2, typename GreaterPredicate>
 		KERBAL_CONSTEXPR14
 		bool sequence_greater(
@@ -514,6 +539,7 @@ namespace kerbal
 			);
 		}
 
+		KERBAL_MODULE_EXPORT
 		template <typename Container1, typename Container2>
 		KERBAL_CONSTEXPR14
 		bool sequence_greater(const Container1 & container1, const Container2 & container2)
@@ -526,6 +552,7 @@ namespace kerbal
 
 
 
+		KERBAL_MODULE_EXPORT
 		template <typename InputIterator1, typename InputIterator2, typename LessEqualPredicate>
 		KERBAL_CONSTEXPR14
 		bool sequence_less_equal(
@@ -550,6 +577,7 @@ namespace kerbal
 			return !static_cast<bool>(a_first != a_last);
 		}
 
+		KERBAL_MODULE_EXPORT
 		template <typename InputIterator1, typename InputIterator2>
 		KERBAL_CONSTEXPR14
 		bool sequence_less_equal(
@@ -564,6 +592,7 @@ namespace kerbal
 			);
 		}
 
+		KERBAL_MODULE_EXPORT
 		template <typename Container1, typename Container2, typename LessEqualPredicate>
 		KERBAL_CONSTEXPR14
 		bool sequence_less_equal(
@@ -578,6 +607,7 @@ namespace kerbal
 			);
 		}
 
+		KERBAL_MODULE_EXPORT
 		template <typename Container1, typename Container2>
 		KERBAL_CONSTEXPR14
 		bool sequence_less_equal(const Container1 & container1, const Container2 & container2)
@@ -590,6 +620,7 @@ namespace kerbal
 
 
 
+		KERBAL_MODULE_EXPORT
 		template <typename InputIterator1, typename InputIterator2, typename GreaterEqualPredicate>
 		KERBAL_CONSTEXPR14
 		bool sequence_greater_equal(
@@ -614,6 +645,7 @@ namespace kerbal
 			return !static_cast<bool>(b_first != b_last);
 		}
 
+		KERBAL_MODULE_EXPORT
 		template <typename InputIterator1, typename InputIterator2>
 		KERBAL_CONSTEXPR14
 		bool sequence_greater_equal(
@@ -628,6 +660,7 @@ namespace kerbal
 			);
 		}
 
+		KERBAL_MODULE_EXPORT
 		template <typename Container1, typename Container2, typename GreaterEqualPredicate>
 		KERBAL_CONSTEXPR14
 		bool sequence_greater_equal(
@@ -642,6 +675,7 @@ namespace kerbal
 			);
 		}
 
+		KERBAL_MODULE_EXPORT
 		template <typename Container1, typename Container2>
 		KERBAL_CONSTEXPR14
 		bool sequence_greater_equal(const Container1 & container1, const Container2 & container2)

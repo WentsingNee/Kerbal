@@ -12,6 +12,8 @@
 #ifndef KERBAL_COMPATIBILITY_UNREACHABLE_HPP
 #define KERBAL_COMPATIBILITY_UNREACHABLE_HPP
 
+#include <kerbal/ts/modules_ts/modules_ts.hpp>
+
 #include <kerbal/config/compiler_id.hpp>
 #include <kerbal/config/compiler_private.hpp>
 
@@ -61,6 +63,7 @@ namespace kerbal
 
 #if KERBAL_HAS_BUILTIN_UNREACHABLE_SUPPORT
 
+		KERBAL_MODULE_EXPORT
 		inline
 		void unreachable() KERBAL_NOEXCEPT
 		{
@@ -71,6 +74,7 @@ namespace kerbal
 
 #	if __cpp_lib_unreachable >= 202202L
 
+		KERBAL_MODULE_EXPORT
 		inline
 		void unreachable()
 		{
@@ -79,6 +83,7 @@ namespace kerbal
 
 #	else
 
+		KERBAL_MODULE_EXPORT
 		inline
 		void unreachable() KERBAL_NOEXCEPT
 		{

@@ -12,6 +12,8 @@
 #ifndef KERBAL_ALGORITHM_SORT_SHELL_SORT_HPP
 #define KERBAL_ALGORITHM_SORT_SHELL_SORT_HPP
 
+#include <kerbal/ts/modules_ts/modules_ts.hpp>
+
 #include <kerbal/algorithm/sort/insertion_sort.hpp>
 #include <kerbal/compare/basic_compare.hpp>
 #include <kerbal/compatibility/constexpr.hpp>
@@ -26,6 +28,7 @@ namespace kerbal
 	namespace algorithm
 	{
 
+		KERBAL_MODULE_EXPORT
 		template <typename differece_type>
 		struct shell_sort_reduce_by_half_policy
 		{
@@ -46,6 +49,7 @@ namespace kerbal
 				}
 		};
 
+		KERBAL_MODULE_EXPORT
 		template <typename differece_type>
 		struct shell_sort_q_policy
 		{
@@ -66,6 +70,7 @@ namespace kerbal
 				}
 		};
 
+		KERBAL_MODULE_EXPORT
 		template <typename differece_type>
 		struct shell_sort_hibbard_policy
 		{
@@ -95,6 +100,7 @@ namespace kerbal
 				}
 		};
 
+		KERBAL_MODULE_EXPORT
 		template <typename differece_type>
 		struct shell_sort_minimun_limit_hibbard_policy
 		{
@@ -140,6 +146,7 @@ namespace kerbal
 			}
 		};
 
+		KERBAL_MODULE_EXPORT
 		template <typename BidirectionalIterator, typename Compare, typename GapReducePolicy>
 		KERBAL_CONSTEXPR14
 		void shell_sort(BidirectionalIterator first, BidirectionalIterator last, Compare cmp, GapReducePolicy gap_reduce_policy)
@@ -166,6 +173,7 @@ namespace kerbal
 			kerbal::algorithm::directly_insertion_sort(first, last, cmp);
 		}
 
+		KERBAL_MODULE_EXPORT
 		template <typename BidirectionalIterator, typename Compare>
 		KERBAL_CONSTEXPR14
 		void shell_sort(BidirectionalIterator first, BidirectionalIterator last, Compare cmp)
@@ -176,6 +184,7 @@ namespace kerbal
 			kerbal::algorithm::shell_sort(first, last, cmp, shell_sort_hibbard_policy<difference_type>());
 		}
 
+		KERBAL_MODULE_EXPORT
 		template <typename BidirectionalIterator>
 		KERBAL_CONSTEXPR14
 		void shell_sort(BidirectionalIterator first, BidirectionalIterator last)
