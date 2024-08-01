@@ -18,11 +18,12 @@
 #include <kerbal/algorithm/binary_search/upper_bound.hpp>
 #include <kerbal/algorithm/binary_search/upper_bound_hint.hpp>
 #include <kerbal/algorithm/modifier/unique.hpp>
-#include <kerbal/algorithm/sort.hpp>
+#include <kerbal/algorithm/sort/sort.hpp>
 #include <kerbal/compatibility/constexpr.hpp>
 #include <kerbal/compatibility/move.hpp>
 #include <kerbal/compatibility/noexcept.hpp>
 #include <kerbal/container/associative_container_facility/associative_unique_insert_r.hpp>
+#include <kerbal/container/nonmember_container_access.hpp>
 #include <kerbal/iterator/iterator.hpp>
 #include <kerbal/iterator/iterator_traits.hpp>
 #include <kerbal/type_traits/enable_if.hpp>
