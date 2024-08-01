@@ -33,13 +33,13 @@ namespace kerbal
 				do { \
 					result_type y = (mt[i] & UPPER_MASK::value) | (mt[(i) + 1] & LOWER_MASK::value); \
 					mt[i] = mt[(i) + M] ^ (y >> 1) ^ ((y & 0x1UL) ? A : 0); \
-				} while (0)
+				} while (false)
 
 #		define EACH2(i) \
 				do { \
 					result_type y = (mt[i] & UPPER_MASK::value) | (mt[(i) + 1] & LOWER_MASK::value); \
 					mt[i] = mt[(i) - (NPM::value)] ^ (y >> 1) ^ ((y & 0x1UL) ? A : 0); \
-				} while (0)
+				} while (false)
 
 			namespace plain
 			{
