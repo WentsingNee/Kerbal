@@ -40,7 +40,7 @@ namespace kerbal
 					y ^= y >> L;       \
 					*out = y;          \
 					++out;             \
-				} while (0)
+				} while (false)
 
 				template <
 					typename UIntType, typename OutputIterator,
