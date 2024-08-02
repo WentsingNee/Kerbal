@@ -278,5 +278,4 @@ namespace kerbal
 
 } // namespace kerbal
 
-
 #endif // KERBAL_RANDOM_DETAIL_MT_TWIST_MT_TWIST_WASM_SIMD128_PART_HPP
