@@ -156,7 +156,6 @@ namespace kerbal
 
 				}
 
-
 			} // namespace avx512f
 
 		} // namespace detail
@@ -164,6 +163,5 @@ namespace kerbal
 	} // namespace random
 
 } // namespace kerbal
-
 
 #endif // KERBAL_RANDOM_DETAIL_MT_GENERATE_COPY_N_MT_GENERATE_COPY_N_AVX512F_PART_HPP

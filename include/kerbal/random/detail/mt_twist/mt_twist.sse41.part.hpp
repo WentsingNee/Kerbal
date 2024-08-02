@@ -209,5 +209,4 @@ namespace kerbal
 
 } // namespace kerbal
 
-
 #endif // KERBAL_RANDOM_DETAIL_MT_TWIST_MT_TWIST_SSE41_PART_HPP

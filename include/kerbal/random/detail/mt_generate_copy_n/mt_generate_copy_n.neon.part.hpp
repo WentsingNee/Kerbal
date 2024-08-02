@@ -135,7 +135,6 @@ namespace kerbal
 
 				}
 
-
 			} // namespace neon
 
 		} // namespace detail
@@ -143,6 +142,5 @@ namespace kerbal
 	} // namespace random
 
 } // namespace kerbal
-
 
 #endif // KERBAL_RANDOM_DETAIL_MT_GENERATE_COPY_N_MT_GENERATE_COPY_N_NEON_PART_HPP
