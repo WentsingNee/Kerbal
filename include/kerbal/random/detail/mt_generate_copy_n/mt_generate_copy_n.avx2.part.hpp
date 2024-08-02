@@ -167,7 +167,6 @@ namespace kerbal
 
 				}
 
-
 			} // namespace avx2
 
 		} // namespace detail
@@ -175,6 +174,5 @@ namespace kerbal
 	} // namespace random
 
 } // namespace kerbal
-
 
 #endif // KERBAL_RANDOM_DETAIL_MT_GENERATE_COPY_N_MT_GENERATE_COPY_N_AVX2_PART_HPP

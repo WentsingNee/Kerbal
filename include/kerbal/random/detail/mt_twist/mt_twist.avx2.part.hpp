@@ -297,5 +297,4 @@ namespace kerbal
 
 } // namespace kerbal
 
-
 #endif // KERBAL_RANDOM_DETAIL_MT_TWIST_MT_TWIST_AVX2_PART_HPP
