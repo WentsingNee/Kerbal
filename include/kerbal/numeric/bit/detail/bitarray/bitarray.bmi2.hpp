@@ -1,7 +1,7 @@
 /**
  * @file       bitarray.bmi2.hpp
  * @brief
- * @date       2024-06-30
+ * @date       2022-11-12
  * @author     Peter
  * @copyright
  *      Peter of [ThinkSpirit Laboratory](http://thinkspirit.org/)
@@ -12,7 +12,7 @@
 #ifndef KERBAL_NUMERIC_BIT_DETAIL_BITARRY_BITARRAY_BMI2_HPP
 #define KERBAL_NUMERIC_BIT_DETAIL_BITARRY_BITARRAY_BMI2_HPP
 
-#include <kerbal/numeric/bit/detail/bitarry/bitarray.plain.hpp>
+#include <kerbal/numeric/bit/detail/bitarray/bitarray.plain.hpp>
 
 #include <kerbal/compatibility/fixed_width_integer.hpp>
 #include <kerbal/compatibility/noexcept.hpp>
@@ -35,16 +35,15 @@ namespace kerbal
 			namespace bmi2
 			{
 
-#		define EACH(i) \
-				do { \
+#		define EACH(i) do { \
 					unsigned char b = x >> (((sizeof(Unsigned) - 1) - (i)) * CHAR_BIT); \
 					kerbal::compatibility::uint64_t t = _pdep_u64(static_cast<kerbal::compatibility::uint64_t>(b), MASK); \
 					t = __bswap_64(t); \
 					*(reinterpret_cast<kerbal::compatibility::uint64_t*>(static_cast<void*>(&r[(i) * CHAR_BIT]))) = t; \
-				} while(0)
+				} while(false)
 
 				inline
-				typename bitarray_result<kerbal::compatibility::uint8_t>::type
+				bitarray_result<kerbal::compatibility::uint8_t>::type
 				bitarray(kerbal::compatibility::uint8_t x) KERBAL_NOEXCEPT
 				{
 					typedef kerbal::compatibility::uint8_t Unsigned;
@@ -58,7 +57,7 @@ namespace kerbal
 				}
 
 				inline
-				typename bitarray_result<kerbal::compatibility::uint16_t>::type
+				bitarray_result<kerbal::compatibility::uint16_t>::type
 				bitarray(kerbal::compatibility::uint16_t x) KERBAL_NOEXCEPT
 				{
 					typedef kerbal::compatibility::uint16_t Unsigned;
@@ -73,7 +72,7 @@ namespace kerbal
 				}
 
 				inline
-				typename bitarray_result<kerbal::compatibility::uint32_t>::type
+				bitarray_result<kerbal::compatibility::uint32_t>::type
 				bitarray(kerbal::compatibility::uint32_t x) KERBAL_NOEXCEPT
 				{
 					typedef kerbal::compatibility::uint32_t Unsigned;
@@ -90,7 +89,7 @@ namespace kerbal
 				}
 
 				inline
-				typename bitarray_result<kerbal::compatibility::uint64_t>::type
+				bitarray_result<kerbal::compatibility::uint64_t>::type
 				bitarray(kerbal::compatibility::uint64_t x) KERBAL_NOEXCEPT
 				{
 					typedef kerbal::compatibility::uint64_t Unsigned;
