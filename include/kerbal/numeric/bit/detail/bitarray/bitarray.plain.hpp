@@ -1,7 +1,7 @@
 /**
  * @file       bitarray.plain.hpp
  * @brief
- * @date       2024-06-30
+ * @date       2022-11-12
  * @author     Peter
  * @copyright
  *      Peter of [ThinkSpirit Laboratory](http://thinkspirit.org/)
@@ -29,7 +29,7 @@ namespace kerbal
 
 		template <typename T>
 		struct bitarray_result_len:
-				kerbal::type_traits::integral_constant<std::size_t, sizeof(T) * CHAR_BIT>
+			kerbal::type_traits::integral_constant<std::size_t, sizeof(T) * CHAR_BIT>
 		{
 		};
 
