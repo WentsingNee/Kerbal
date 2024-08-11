@@ -15,6 +15,7 @@
 #include <kerbal/algorithm/swap.hpp>
 #include <kerbal/compatibility/constexpr.hpp>
 #include <kerbal/compatibility/noexcept.hpp>
+#include <kerbal/compatibility/static_assert.hpp>
 #include <kerbal/memory/guard.hpp>
 
 #if __cplusplus >= 201103L
@@ -308,6 +309,7 @@ namespace kerbal
 					)
 				{
 					if (this->k_ptr != NULL) {
+						KERBAL_STATIC_ASSERT(sizeof(element_type) > 0, "cannot delete an incomplete type");
 						this->get_deleter()(this->k_ptr);
 					}
 				}
@@ -630,6 +632,7 @@ namespace kerbal
 					)
 				{
 					if (this->k_ptr != NULL) {
+						KERBAL_STATIC_ASSERT(sizeof(element_type) > 0, "cannot delete an incomplete type");
 						this->get_deleter()(this->k_ptr);
 					}
 				}
