@@ -256,9 +256,7 @@ namespace kerbal
 				KERBAL_CONSTEXPR20
 				~unique_ptr()
 				{
-					if (this->k_ptr != NULL) {
-						this->get_deleter()(this->k_ptr);
-					}
+					this->k_delete();
 				}
 
 #		if __cplusplus >= 201103L
@@ -300,6 +298,22 @@ namespace kerbal
 
 #		endif
 
+
+			protected:
+
+				KERBAL_CONSTEXPR20
+				void k_delete()
+					KERBAL_CONDITIONAL_NOEXCEPT(
+						is_nothrow_reset::value
+					)
+				{
+					if (this->k_ptr != NULL) {
+						this->get_deleter()(this->k_ptr);
+					}
+				}
+
+			public:
+
 				KERBAL_CONSTEXPR20
 				void reset()
 					KERBAL_CONDITIONAL_NOEXCEPT(
@@ -315,9 +329,7 @@ namespace kerbal
 						is_nothrow_reset::value
 					)
 				{
-					if (this->k_ptr != NULL) {
-						this->get_deleter()(this->k_ptr);
-					}
+					this->k_delete();
 					this->k_ptr = p;
 				}
 
@@ -566,9 +578,7 @@ namespace kerbal
 				KERBAL_CONSTEXPR20
 				~unique_ptr()
 				{
-					if (this->k_ptr != NULL) {
-						this->get_deleter()(this->k_ptr);
-					}
+					this->k_delete();
 				}
 
 #		if __cplusplus >= 201103L
@@ -610,6 +620,22 @@ namespace kerbal
 
 #		endif
 
+
+			protected:
+
+				KERBAL_CONSTEXPR20
+				void k_delete()
+					KERBAL_CONDITIONAL_NOEXCEPT(
+						is_nothrow_reset::value
+					)
+				{
+					if (this->k_ptr != NULL) {
+						this->get_deleter()(this->k_ptr);
+					}
+				}
+
+			public:
+
 				KERBAL_CONSTEXPR20
 				void reset()
 					KERBAL_CONDITIONAL_NOEXCEPT(
@@ -625,9 +651,7 @@ namespace kerbal
 						is_nothrow_reset::value
 					)
 				{
-					if (this->k_ptr != NULL) {
-						this->get_deleter()(this->k_ptr);
-					}
+					this->k_delete();
 					this->k_ptr = p;
 				}
 
