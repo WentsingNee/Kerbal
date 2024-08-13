@@ -59,7 +59,7 @@ namespace kerbal
 
 				~assign_list() KERBAL_NOEXCEPT
 				{
-					v.template k_destroy_using_allocator(this->alloc());
+					v.k_destroy_using_allocator(this->alloc());
 				}
 
 				assign_list & operator,(const_reference val)
