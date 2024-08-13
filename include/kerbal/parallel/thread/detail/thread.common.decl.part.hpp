@@ -328,7 +328,7 @@ namespace kerbal
 				{
 					kerbal::function::invoke_r<void>(
 						pack.template get<0>(),
-						kerbal::compatibility::move(pack.template get<I + 1>()...)
+						kerbal::compatibility::move(pack.template get<I + 1>())...
 					);
 				}
 
