@@ -16,6 +16,7 @@
 
 #include <kerbal/algorithm/swap.hpp>
 #include <kerbal/compatibility/constexpr.hpp>
+#include <kerbal/compatibility/move.hpp>
 #include <kerbal/compatibility/noexcept.hpp>
 #include <kerbal/function/invoke_r.hpp>
 #include <kerbal/memory/allocator_traits.hpp>
