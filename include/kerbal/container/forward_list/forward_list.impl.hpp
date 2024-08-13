@@ -60,8 +60,7 @@ namespace kerbal
 		KERBAL_CONSTEXPR20
 		forward_list<T, Allocator>::forward_list(const Allocator & alloc)
 			KERBAL_CONDITIONAL_NOEXCEPT(
-				fl_allocator_overload::template try_test_is_nothrow_constructible_from_allocator<const Allocator &>::IS_TRUE::value &&
-				fl_type_only::is_nothrow_default_constructible::value
+				is_nothrow_default_constructible_using_allocator::IS_TRUE::value
 			) :
 			fl_allocator_overload(alloc),
 			fl_type_only()
@@ -90,8 +89,7 @@ namespace kerbal
 		KERBAL_CONSTEXPR20
 		forward_list<T, Allocator>::forward_list(forward_list && src)
 			KERBAL_CONDITIONAL_NOEXCEPT(
-				fl_allocator_overload::template try_test_is_nothrow_constructible_from_allocator<Allocator &&>::IS_TRUE::value &&
-				fl_type_only::is_nothrow_move_constructible::value
+				is_nothrow_move_constructible::IS_TRUE::value
 			) :
 			fl_allocator_overload(kerbal::compatibility::move(src.alloc())),
 			fl_type_only(static_cast<fl_type_only &&>(src))
@@ -102,8 +100,7 @@ namespace kerbal
 		KERBAL_CONSTEXPR20
 		forward_list<T, Allocator>::forward_list(forward_list && src, const Allocator & alloc)
 			KERBAL_CONDITIONAL_NOEXCEPT(
-				fl_allocator_overload::template try_test_is_nothrow_constructible_from_allocator<const Allocator &>::IS_TRUE::value &&
-				fl_type_only::template is_nothrow_move_constructible_using_allocator<node_allocator_type>::value
+				is_nothrow_move_constructible_using_allocator::IS_TRUE::value
 			) :
 			fl_allocator_overload(alloc),
 			fl_type_only(

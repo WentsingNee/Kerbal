@@ -23,6 +23,7 @@
 #include <kerbal/memory/allocator_traits.hpp>
 #include <kerbal/type_traits/enable_if.hpp>
 #include <kerbal/type_traits/integral_constant.hpp>
+#include <kerbal/type_traits/tribool_constant.hpp>
 #include <kerbal/utility/declval.hpp>
 
 #if __cplusplus < 201103L
@@ -151,12 +152,25 @@ namespace kerbal
 
 #		endif
 
+
+#		if __cplusplus >= 201103L && KERBAL_HAS_EXCEPTIONS_SUPPORT
+
+				struct is_nothrow_default_constructible_using_allocator :
+					kerbal::type_traits::tribool_conjunction<
+						typename fl_allocator_overload::template
+							try_test_is_nothrow_constructible_from_allocator<const Allocator &>,
+						typename fl_type_only::is_nothrow_default_constructible
+					>
+				{
+				};
+
+#		endif
+
 				KERBAL_CONSTEXPR20
 				explicit
 				forward_list(const Allocator & alloc)
 					KERBAL_CONDITIONAL_NOEXCEPT(
-						fl_allocator_overload::template try_test_is_nothrow_constructible_from_allocator<const Allocator &>::IS_TRUE::value &&
-						fl_type_only::is_nothrow_default_constructible::value
+						is_nothrow_default_constructible_using_allocator::IS_TRUE::value
 					)
 				;
 
@@ -168,19 +182,44 @@ namespace kerbal
 
 #		if __cplusplus >= 201103L
 
+#			if KERBAL_HAS_EXCEPTIONS_SUPPORT
+
+				struct is_nothrow_move_constructible :
+					kerbal::type_traits::tribool_conjunction<
+						typename fl_allocator_overload::template
+							try_test_is_nothrow_constructible_from_allocator<Allocator &&>,
+						typename fl_type_only::is_nothrow_move_constructible
+					>
+				{
+				};
+
+#			endif
+
 				KERBAL_CONSTEXPR20
 				forward_list(forward_list && src)
 					KERBAL_CONDITIONAL_NOEXCEPT(
-						fl_allocator_overload::template try_test_is_nothrow_constructible_from_allocator<Allocator &&>::IS_TRUE::value &&
-						fl_type_only::is_nothrow_move_constructible::value
+						is_nothrow_move_constructible::IS_TRUE::value
 					)
 				;
+
+#			if KERBAL_HAS_EXCEPTIONS_SUPPORT
+
+				struct is_nothrow_move_constructible_using_allocator :
+					kerbal::type_traits::tribool_conjunction<
+						typename fl_allocator_overload::template
+							try_test_is_nothrow_constructible_from_allocator<const Allocator &>,
+						typename fl_type_only::template
+							is_nothrow_move_constructible_using_allocator<node_allocator_type>
+					>
+				{
+				};
+
+#			endif
 
 				KERBAL_CONSTEXPR20
 				forward_list(forward_list && src, const Allocator & alloc)
 					KERBAL_CONDITIONAL_NOEXCEPT(
-						fl_allocator_overload::template try_test_is_nothrow_constructible_from_allocator<const Allocator &>::IS_TRUE::value &&
-						fl_type_only::template is_nothrow_move_constructible_using_allocator<node_allocator_type>::value
+						is_nothrow_move_constructible_using_allocator::IS_TRUE::value
 					)
 				;
 
