@@ -48,10 +48,12 @@ namespace kerbal
 
 			template <typename Entity, typename Extract, typename KeyCompare, typename Sequence>
 			class flat_ordered_base :
+				private kerbal::utility::member_compress_helper<Extract>,
 				private kerbal::utility::member_compress_helper<KeyCompare>
 			{
 				private:
-					typedef kerbal::utility::member_compress_helper<KeyCompare> key_compare_compress_helper;
+					typedef kerbal::utility::member_compress_helper<Extract>	extract_compress_helper;
+					typedef kerbal::utility::member_compress_helper<KeyCompare>	key_compare_compress_helper;
 
 				public:
 					typedef Entity					value_type;
@@ -117,7 +119,7 @@ namespace kerbal
 							KERBAL_CONSTEXPR14
 							bool operator()(const_reference item, const key_type & key) const
 							{
-								return self->key_comp()(Extract()(item), key);
+								return self->key_comp()(self->extract()(item), key);
 							}
 					};
 
@@ -153,7 +155,7 @@ namespace kerbal
 							KERBAL_CONSTEXPR14
 							bool operator()(const key_type & key, const_reference item) const
 							{
-								return self->key_comp()(key, Extract()(item));
+								return self->key_comp()(key, self->extract()(item));
 							}
 					};
 
@@ -179,12 +181,12 @@ namespace kerbal
 						public:
 							bool operator()(const_reference item, const key_type & key) const
 							{
-								return self->key_comp()(Extract()(item), key);
+								return self->key_comp()(self->extract()(item), key);
 							}
 
 							bool operator()(const key_type & key, const_reference item) const
 							{
-								return self->key_comp()(key, Extract()(item));
+								return self->key_comp()(key, self->extract()(item));
 							}
 					};
 
@@ -203,7 +205,7 @@ namespace kerbal
 						public:
 							bool operator()(const_reference item, const key_type & key) const
 							{
-								return self->key_comp()(Extract()(item), key);
+								return self->key_comp()(self->extract()(item), key);
 							}
 					};
 
@@ -239,6 +241,18 @@ namespace kerbal
 
 
 				public:
+
+					KERBAL_CONSTEXPR14
+					Extract & extract() KERBAL_NOEXCEPT
+					{
+						return extract_compress_helper::member();
+					}
+
+					KERBAL_CONSTEXPR14
+					const Extract & extract() const KERBAL_NOEXCEPT
+					{
+						return extract_compress_helper::member();
+					}
 
 					KERBAL_CONSTEXPR14
 					key_compare & key_comp() KERBAL_NOEXCEPT
@@ -282,7 +296,7 @@ namespace kerbal
 						public:
 							bool operator()(const_reference lhs, const_reference rhs) const
 							{
-								return self->key_comp()(Extract()(lhs), Extract()(rhs));
+								return self->key_comp()(self->extract()(lhs), self->extract()(rhs));
 							}
 					};
 
@@ -625,7 +639,7 @@ namespace kerbal
 					const_iterator k_find_impl(const_iterator lower_bound_pos, const key_type & key) const
 					{
 						const_iterator end_it(this->cend());
-						if (lower_bound_pos != end_it && this->key_comp()(key, Extract()(*lower_bound_pos))) {
+						if (lower_bound_pos != end_it && this->key_comp()(key, this->extract()(*lower_bound_pos))) {
 							// key < *lower_bound_pos
 							/*
 							* 1 1 1 3 3 3
@@ -681,10 +695,10 @@ namespace kerbal
 					unique_insert_r
 					k_unique_insert_impl(iterator ub, const_reference src)
 					{
-						Extract extract;
+						Extract & e = this->extract();
 						bool inserted = false;
 						if (static_cast<bool>(ub == this->cbegin()) ||
-							static_cast<bool>(this->key_comp()(extract(*kerbal::iterator::prev(ub)), extract(src)))) {
+							static_cast<bool>(this->key_comp()(e(*kerbal::iterator::prev(ub)), e(src)))) {
 							// ub[-1] < src
 							ub = sequence.insert(ub, src);
 							inserted = true;
@@ -697,14 +711,14 @@ namespace kerbal
 					unique_insert_r
 					unique_insert(const_reference src)
 					{
-						return this->k_unique_insert_impl(this->upper_bound(Extract()(src)), src);
+						return this->k_unique_insert_impl(this->upper_bound(this->extract()(src)), src);
 					}
 
 					KERBAL_CONSTEXPR14
 					unique_insert_r
 					unique_insert(const_iterator hint, const_reference src)
 					{
-						return this->k_unique_insert_impl(this->upper_bound(Extract()(src), hint), src);
+						return this->k_unique_insert_impl(this->upper_bound(this->extract()(src), hint), src);
 					}
 
 #			if __cplusplus >= 201103L
@@ -714,10 +728,10 @@ namespace kerbal
 					unique_insert_r
 					k_unique_insert_impl(iterator ub, rvalue_reference src)
 					{
-						Extract extract;
+						Extract & e = this->extract();
 						bool inserted = false;
 						if (static_cast<bool>(ub == this->cbegin()) ||
-							static_cast<bool>(this->key_comp()(extract(*kerbal::iterator::prev(ub)), extract(src)))) {
+							static_cast<bool>(this->key_comp()(e(*kerbal::iterator::prev(ub)), e(src)))) {
 							// ub[-1] < src
 							ub = sequence.insert(ub, kerbal::compatibility::move(src));
 							inserted = true;
@@ -730,14 +744,14 @@ namespace kerbal
 					unique_insert_r
 					unique_insert(rvalue_reference src)
 					{
-						return this->k_unique_insert_impl(this->upper_bound(Extract()(src)), kerbal::compatibility::move(src));
+						return this->k_unique_insert_impl(this->upper_bound(this->extract()(src)), kerbal::compatibility::move(src));
 					}
 
 					KERBAL_CONSTEXPR14
 					unique_insert_r
 					unique_insert(const_iterator hint, rvalue_reference src)
 					{
-						return this->k_unique_insert_impl(this->upper_bound(Extract()(src), hint), kerbal::compatibility::move(src));
+						return this->k_unique_insert_impl(this->upper_bound(this->extract()(src), hint), kerbal::compatibility::move(src));
 					}
 
 #			endif
@@ -757,7 +771,7 @@ namespace kerbal
 							KERBAL_CONSTEXPR14
 							bool operator()(const_reference lhs, const_reference rhs) const
 							{
-								Extract e;
+								Extract const & e = self->extract();
 								return
 									!static_cast<bool>(self->key_comp()(e(lhs), e(rhs))) &&
 									!static_cast<bool>(self->key_comp()(e(rhs), e(lhs)))
@@ -795,13 +809,13 @@ namespace kerbal
 					KERBAL_CONSTEXPR14
 					iterator insert(const_reference src)
 					{
-						return sequence.insert(this->upper_bound(Extract()(src)), src);
+						return sequence.insert(this->upper_bound(this->extract()(src)), src);
 					}
 
 					KERBAL_CONSTEXPR14
 					iterator insert(const_iterator hint, const_reference src)
 					{
-						return sequence.insert(this->upper_bound(Extract()(src), hint), src);
+						return sequence.insert(this->upper_bound(this->extract()(src), hint), src);
 					}
 
 #			if __cplusplus >= 201103L
@@ -809,14 +823,14 @@ namespace kerbal
 					KERBAL_CONSTEXPR14
 					iterator insert(rvalue_reference src)
 					{
-						iterator pos(this->upper_bound(Extract()(src)));
+						iterator pos(this->upper_bound(this->extract()(src)));
 						return sequence.insert(pos, kerbal::compatibility::move(src));
 					}
 
 					KERBAL_CONSTEXPR14
 					iterator insert(const_iterator hint, rvalue_reference src)
 					{
-						iterator pos(this->upper_bound(Extract()(src), hint));
+						iterator pos(this->upper_bound(this->extract()(src), hint));
 						return sequence.insert(pos, kerbal::compatibility::move(src));
 					}
 
