@@ -63,14 +63,14 @@ namespace kerbal
 					key_compare &
 					key_comp() KERBAL_NOEXCEPT
 					{
-						return ordered.key_comp();
+						return this->ordered.key_comp();
 					}
 
 					KERBAL_CONSTEXPR14
 					const key_compare &
 					key_comp() const KERBAL_NOEXCEPT
 					{
-						return ordered.key_comp();
+						return this->ordered.key_comp();
 					}
 
 
@@ -102,70 +102,70 @@ namespace kerbal
 					const_iterator
 					begin() const
 					{
-						return ordered.begin();
+						return this->ordered.begin();
 					}
 
 					KERBAL_CONSTEXPR14
 					const_iterator
 					end() const
 					{
-						return ordered.end();
+						return this->ordered.end();
 					}
 
 					KERBAL_CONSTEXPR14
 					const_iterator
 					cbegin() const
 					{
-						return ordered.cbegin();
+						return this->ordered.cbegin();
 					}
 
 					KERBAL_CONSTEXPR14
 					const_iterator
 					cend() const
 					{
-						return ordered.cend();
+						return this->ordered.cend();
 					}
 
 					KERBAL_CONSTEXPR14
 					const_reverse_iterator
 					rbegin() const
 					{
-						return ordered.rbegin();
+						return this->ordered.rbegin();
 					}
 
 					KERBAL_CONSTEXPR14
 					const_reverse_iterator
 					rend() const
 					{
-						return ordered.rend();
+						return this->ordered.rend();
 					}
 
 					KERBAL_CONSTEXPR14
 					const_reverse_iterator
 					crbegin() const
 					{
-						return ordered.crbegin();
+						return this->ordered.crbegin();
 					}
 
 					KERBAL_CONSTEXPR14
 					const_reverse_iterator
 					crend() const
 					{
-						return ordered.crend();
+						return this->ordered.crend();
 					}
 
 					KERBAL_CONSTEXPR14
 					const_iterator
 					nth(size_type index) const
 					{
-						return ordered.nth(index);
+						return this->ordered.nth(index);
 					}
 
 					KERBAL_CONSTEXPR
 					size_type
 					index_of(const_iterator it) const
 					{
-						return ordered.index_of(it);
+						return this->ordered.index_of(it);
 					}
 
 
@@ -178,21 +178,21 @@ namespace kerbal
 					size_type
 					size() const
 					{
-						return ordered.size();
+						return this->ordered.size();
 					}
 
 					KERBAL_CONSTEXPR
 					size_type
 					max_size() const KERBAL_NOEXCEPT
 					{
-						return ordered.max_size();
+						return this->ordered.max_size();
 					}
 
 					KERBAL_CONSTEXPR
 					bool
 					empty() const
 					{
-						return ordered.empty();
+						return this->ordered.empty();
 					}
 
 
@@ -205,63 +205,63 @@ namespace kerbal
 					const_iterator
 					lower_bound(const key_type & key) const
 					{
-						return ordered.lower_bound(key);
+						return this->ordered.lower_bound(key);
 					}
 
 					KERBAL_CONSTEXPR14
 					const_iterator
 					lower_bound(const key_type & key, const_iterator hint) const
 					{
-						return ordered.lower_bound(key, hint);
+						return this->ordered.lower_bound(key, hint);
 					}
 
 					KERBAL_CONSTEXPR14
 					const_iterator
 					upper_bound(const key_type & key) const
 					{
-						return ordered.upper_bound(key);
+						return this->ordered.upper_bound(key);
 					}
 
 					KERBAL_CONSTEXPR14
 					const_iterator
 					upper_bound(const key_type & key, const_iterator hint) const
 					{
-						return ordered.upper_bound(key, hint);
+						return this->ordered.upper_bound(key, hint);
 					}
 
 					KERBAL_CONSTEXPR14
 					kerbal::utility::compressed_pair<const_iterator, const_iterator>
 					equal_range(const key_type & key) const
 					{
-						return ordered.equal_range(key);
+						return this->ordered.equal_range(key);
 					}
 
 					KERBAL_CONSTEXPR14
 					const_iterator
 					find(const key_type & key) const
 					{
-						return ordered.find(key);
+						return this->ordered.find(key);
 					}
 
 					KERBAL_CONSTEXPR14
 					const_iterator
 					find(const key_type & key, const_iterator hint) const
 					{
-						return ordered.find(key, hint);
+						return this->ordered.find(key, hint);
 					}
 
 					KERBAL_CONSTEXPR14
 					bool
 					contains(const key_type & key) const
 					{
-						return ordered.contains(key);
+						return this->ordered.contains(key);
 					}
 
 					KERBAL_CONSTEXPR14
 					bool
 					contains(const key_type & key, const_iterator hint) const
 					{
-						return ordered.contains(key, hint);
+						return this->ordered.contains(key, hint);
 					}
 
 
@@ -274,21 +274,21 @@ namespace kerbal
 					const_iterator
 					erase(const_iterator pos)
 					{
-						return ordered.erase(pos);
+						return this->ordered.erase(pos);
 					}
 
 					KERBAL_CONSTEXPR14
 					const_iterator
 					erase(const_iterator first, const_iterator last)
 					{
-						return ordered.erase(first, last);
+						return this->ordered.erase(first, last);
 					}
 
 					KERBAL_CONSTEXPR14
 					void
 					clear()
 					{
-						ordered.clear();
+						this->ordered.clear();
 					}
 
 			};
