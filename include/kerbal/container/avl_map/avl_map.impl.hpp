@@ -409,7 +409,7 @@ namespace kerbal
 		avl_map<K, M, KeyCompare, Allocator>::
 		operator[](const key_type & key)
 		{
-			return this->emplace_unique(key, kerbal::utility::compressed_pair_default_construct_tag()).position()->value();
+			return this->emplace(key, kerbal::utility::compressed_pair_default_construct_tag()).position()->value();
 		}
 
 
