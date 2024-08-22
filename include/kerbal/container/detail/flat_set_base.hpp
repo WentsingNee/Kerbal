@@ -18,7 +18,6 @@
 #include <kerbal/iterator/iterator.hpp>
 #include <kerbal/iterator/iterator_traits.hpp>
 #include <kerbal/type_traits/enable_if.hpp>
-#include <kerbal/utility/compressed_pair.hpp>
 
 #include <kerbal/container/detail/flat_set_common_base.hpp>
 

@@ -29,7 +29,6 @@
 #include <kerbal/memory/uninitialized_using_allocator.hpp>
 #include <kerbal/type_traits/enable_if.hpp>
 #include <kerbal/type_traits/integral_constant.hpp>
-#include <kerbal/utility/compressed_pair.hpp>
 #include <kerbal/utility/throw_this_exception.hpp>
 
 #if __cplusplus < 201103L
