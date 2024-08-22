@@ -90,7 +90,11 @@ namespace kerbal
 					void
 					k_sort()
 					{
-						kerbal::algorithm::sort(sequence.begin(), sequence.end(), this->value_comp());
+						kerbal::algorithm::sort(
+							this->sequence.begin(),
+							this->sequence.end(),
+							this->value_comp()
+						);
 					}
 
 				public:
@@ -261,7 +265,7 @@ namespace kerbal
 					>::type
 					assign(InputIterator first, InputIterator last)
 					{
-						sequence.assign(first, last);
+						this->sequence.assign(first, last);
 						this->k_sort();
 					}
 
@@ -333,112 +337,112 @@ namespace kerbal
 					iterator
 					begin()
 					{
-						return sequence.begin();
+						return this->sequence.begin();
 					}
 
 					KERBAL_CONSTEXPR
 					const_iterator
 					begin() const
 					{
-						return sequence.begin();
+						return this->sequence.begin();
 					}
 
 					KERBAL_CONSTEXPR14
 					iterator
 					end()
 					{
-						return sequence.end();
+						return this->sequence.end();
 					}
 
 					KERBAL_CONSTEXPR
 					const_iterator
 					end() const
 					{
-						return sequence.end();
+						return this->sequence.end();
 					}
 
 					KERBAL_CONSTEXPR
 					const_iterator
 					cbegin() const
 					{
-						return sequence.begin();
+						return this->sequence.begin();
 					}
 
 					KERBAL_CONSTEXPR
 					const_iterator
 					cend() const
 					{
-						return sequence.end();
+						return this->sequence.end();
 					}
 
 					KERBAL_CONSTEXPR14
 					reverse_iterator
 					rbegin()
 					{
-						return sequence.rbegin();
+						return this->sequence.rbegin();
 					}
 
 					KERBAL_CONSTEXPR
 					const_reverse_iterator
 					rbegin() const
 					{
-						return sequence.rbegin();
+						return this->sequence.rbegin();
 					}
 
 					KERBAL_CONSTEXPR14
 					reverse_iterator
 					rend()
 					{
-						return sequence.rend();
+						return this->sequence.rend();
 					}
 
 					KERBAL_CONSTEXPR
 					const_reverse_iterator
 					rend() const
 					{
-						return sequence.rend();
+						return this->sequence.rend();
 					}
 
 					KERBAL_CONSTEXPR
 					const_reverse_iterator
 					crbegin() const
 					{
-						return sequence.rbegin();
+						return this->sequence.rbegin();
 					}
 
 					KERBAL_CONSTEXPR
 					const_reverse_iterator
 					crend() const
 					{
-						return sequence.rend();
+						return this->sequence.rend();
 					}
 
 					KERBAL_CONSTEXPR14
 					iterator
 					nth(size_type index)
 					{
-						return sequence.nth(index);
+						return this->sequence.nth(index);
 					}
 
 					KERBAL_CONSTEXPR
 					const_iterator
 					nth(size_type index) const
 					{
-						return sequence.nth(index);
+						return this->sequence.nth(index);
 					}
 
 					KERBAL_CONSTEXPR14
 					size_type
 					index_of(iterator it)
 					{
-						return sequence.index_of(it);
+						return this->sequence.index_of(it);
 					}
 
 					KERBAL_CONSTEXPR
 					size_type
 					index_of(const_iterator it) const
 					{
-						return sequence.index_of(it);
+						return this->sequence.index_of(it);
 					}
 
 
@@ -451,21 +455,21 @@ namespace kerbal
 					size_type
 					size() const
 					{
-						return sequence.size();
+						return this->sequence.size();
 					}
 
 					KERBAL_CONSTEXPR
 					size_type
 					max_size() const KERBAL_NOEXCEPT
 					{
-						return sequence.max_size();
+						return this->sequence.max_size();
 					}
 
 					KERBAL_CONSTEXPR
 					bool
 					empty() const
 					{
-						return sequence.empty();
+						return this->sequence.empty();
 					}
 
 
@@ -818,7 +822,7 @@ namespace kerbal
 						if (static_cast<bool>(ub == this->cbegin()) ||
 							static_cast<bool>(this->key_comp()(e(*kerbal::iterator::prev(ub)), e(src)))) {
 							// ub[-1] < src
-							ub = sequence.insert(ub, src);
+							ub = this->sequence.insert(ub, src);
 							inserted = true;
 						}
 						return unique_insert_r(ub, inserted);
@@ -851,7 +855,7 @@ namespace kerbal
 						if (static_cast<bool>(ub == this->cbegin()) ||
 							static_cast<bool>(this->key_comp()(e(*kerbal::iterator::prev(ub)), e(src)))) {
 							// ub[-1] < src
-							ub = sequence.insert(ub, kerbal::compatibility::move(src));
+							ub = this->sequence.insert(ub, kerbal::compatibility::move(src));
 							inserted = true;
 						}
 						return unique_insert_r(ub, inserted);
@@ -908,16 +912,16 @@ namespace kerbal
 					unique_insert(InputIterator first, InputIterator last)
 					{
 						while (first != last && this->size() != this->max_size()) {
-							sequence.push_back(*first);
+							this->sequence.push_back(*first);
 							++first;
 						}
 						this->k_sort();
 						iterator unique_last(
 							kerbal::algorithm::unique(
-								sequence.begin(), sequence.end(), equal_adapter(this)
+								this->sequence.begin(), this->sequence.end(), equal_adapter(this)
 							)
 						);
-						sequence.erase(unique_last, sequence.end());
+						this->sequence.erase(unique_last, this->sequence.end());
 
 						while (first != last && this->size() != this->max_size()) {
 							this->unique_insert(*first);
@@ -930,14 +934,14 @@ namespace kerbal
 					iterator
 					insert(const_reference src)
 					{
-						return sequence.insert(this->upper_bound(this->extract()(src)), src);
+						return this->sequence.insert(this->upper_bound(this->extract()(src)), src);
 					}
 
 					KERBAL_CONSTEXPR14
 					iterator
 					insert(const_iterator hint, const_reference src)
 					{
-						return sequence.insert(this->upper_bound(this->extract()(src), hint), src);
+						return this->sequence.insert(this->upper_bound(this->extract()(src), hint), src);
 					}
 
 #			if __cplusplus >= 201103L
@@ -947,7 +951,7 @@ namespace kerbal
 					insert(rvalue_reference src)
 					{
 						iterator pos(this->upper_bound(this->extract()(src)));
-						return sequence.insert(pos, kerbal::compatibility::move(src));
+						return this->sequence.insert(pos, kerbal::compatibility::move(src));
 					}
 
 					KERBAL_CONSTEXPR14
@@ -955,7 +959,7 @@ namespace kerbal
 					insert(const_iterator hint, rvalue_reference src)
 					{
 						iterator pos(this->upper_bound(this->extract()(src), hint));
-						return sequence.insert(pos, kerbal::compatibility::move(src));
+						return this->sequence.insert(pos, kerbal::compatibility::move(src));
 					}
 
 #			endif
@@ -985,14 +989,14 @@ namespace kerbal
 					const_iterator
 					erase(const_iterator pos)
 					{
-						return pos == sequence.cend() ? pos : sequence.erase(pos);
+						return pos == this->sequence.cend() ? pos : this->sequence.erase(pos);
 					}
 
 					KERBAL_CONSTEXPR14
 					const_iterator
 					erase(const_iterator first, const_iterator last)
 					{
-						return sequence.erase(first, last);
+						return this->sequence.erase(first, last);
 					}
 
 					KERBAL_CONSTEXPR14
@@ -1016,7 +1020,7 @@ namespace kerbal
 					void
 					clear()
 					{
-						sequence.clear();
+						this->sequence.clear();
 					}
 
 			};
