@@ -136,11 +136,13 @@ namespace kerbal
 
 				flat_multiset & operator=(std::initializer_list<value_type> ilist)
 				{
-					this->assign(ilist);
+					this->super::assign(ilist);
 					return *this;
 				}
 
 #		endif
+
+				using super::assign;
 
 				void assign(const flat_multiset & src)
 				{
