@@ -125,6 +125,8 @@ namespace kerbal
 
 #		endif
 
+				using super::assign;
+
 				KERBAL_CONSTEXPR14
 				void assign(const static_flat_set & src)
 				{

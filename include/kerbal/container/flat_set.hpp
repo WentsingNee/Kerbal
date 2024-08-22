@@ -143,6 +143,8 @@ namespace kerbal
 
 #		endif
 
+				using super::assign;
+
 				void assign(const flat_set & src)
 				{
 					this->ordered.assign(src.ordered);
