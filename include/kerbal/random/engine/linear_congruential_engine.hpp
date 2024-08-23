@@ -77,6 +77,12 @@ namespace kerbal
 				}
 
 				KERBAL_CONSTEXPR14
+				void discard() KERBAL_NOEXCEPT
+				{
+					(*this)();
+				}
+
+				KERBAL_CONSTEXPR14
 				void discard(unsigned long long times) KERBAL_NOEXCEPT
 				{
 					if (times == 0) {
