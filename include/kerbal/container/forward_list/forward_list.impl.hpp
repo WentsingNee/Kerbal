@@ -827,7 +827,7 @@ namespace kerbal
 		template <typename T, typename Allocator>
 		KERBAL_CONSTEXPR20
 		void forward_list<T, Allocator>::splice_after(
-			const_iterator before_pos, forward_list &,
+			const_iterator before_pos, forward_list & /*other*/,
 			const_iterator opos
 		) KERBAL_NOEXCEPT
 		{
@@ -837,7 +837,7 @@ namespace kerbal
 		template <typename T, typename Allocator>
 		KERBAL_CONSTEXPR20
 		void forward_list<T, Allocator>::splice_after(
-			const_iterator before_pos, forward_list &,
+			const_iterator before_pos, forward_list & /*other*/,
 			const_iterator before_first, const_iterator last
 		) KERBAL_NOEXCEPT
 		{
