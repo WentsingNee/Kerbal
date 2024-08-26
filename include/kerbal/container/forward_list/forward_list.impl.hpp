@@ -822,7 +822,10 @@ namespace kerbal
 			const_iterator before_pos, forward_list & other
 		) KERBAL_NOEXCEPT
 		{
-			fl_type_unrelated::k_splice_after(before_pos, other);
+			fl_type_unrelated::k_splice_after(
+				before_pos,
+				static_cast<fl_type_unrelated &>(other)
+			);
 		}
 
 		template <typename T, typename Allocator>

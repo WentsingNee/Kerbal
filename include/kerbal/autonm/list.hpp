@@ -517,7 +517,10 @@ namespace kerbal
 					list & other
 				) KERBAL_NOEXCEPT
 				{
-					list_type_unrelated::k_splice(pos, other);
+					list_type_unrelated::k_splice(
+						pos,
+						static_cast<list_type_unrelated &>(other)
+					);
 				}
 
 				KERBAL_CONSTEXPR20
@@ -547,7 +550,10 @@ namespace kerbal
 					list && other
 				) KERBAL_NOEXCEPT
 				{
-					list_type_unrelated::k_splice(pos, other);
+					list_type_unrelated::k_splice(
+						pos,
+						static_cast<list_type_unrelated &&>(other)
+					);
 				}
 
 #		endif
