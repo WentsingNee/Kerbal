@@ -1237,7 +1237,7 @@ namespace kerbal
 				KERBAL_CONSTEXPR
 				static
 				tuple<typename value_type<TUPLE_SIZE::value - 1 - Index>::type...>
-				k_reverse_impl(Self && self, kerbal::utility::index_sequence<Index...>) KERBAL_NOEXCEPT
+				k_reverse_impl(Self && self, kerbal::utility::index_sequence<Index...>)
 				{
 					return tuple<typename value_type<TUPLE_SIZE::value - 1 - Index>::type...>(
 						kerbal::utility::forward<Self>(self).template get<TUPLE_SIZE::value - 1 - Index>()...
