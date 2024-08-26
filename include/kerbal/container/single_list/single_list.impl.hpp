@@ -880,7 +880,9 @@ namespace kerbal
 
 		template <typename T, typename Allocator>
 		KERBAL_CONSTEXPR20
-		single_list<T, Allocator> & single_list<T, Allocator>::operator+=(const single_list & with)
+		single_list<T, Allocator> &
+		single_list<T, Allocator>::
+		operator+=(const single_list & with)
 		{
 			this->insert(this->cend(), with.cbegin(), with.cend());
 			return *this;
@@ -890,7 +892,9 @@ namespace kerbal
 
 		template <typename T, typename Allocator>
 		KERBAL_CONSTEXPR20
-		single_list<T, Allocator> & single_list<T, Allocator>::operator+=(single_list && with)
+		single_list<T, Allocator> &
+		single_list<T, Allocator>::
+		operator+=(single_list && with)
 		{
 			this->splice(this->cend(), kerbal::compatibility::move(with));
 			return *this;
@@ -902,7 +906,9 @@ namespace kerbal
 
 		template <typename T, typename Allocator>
 		KERBAL_CONSTEXPR20
-		single_list<T, Allocator> & single_list<T, Allocator>::operator+=(std::initializer_list<value_type> with)
+		single_list<T, Allocator> &
+		single_list<T, Allocator>::
+		operator+=(std::initializer_list<value_type> with)
 		{
 			this->insert(this->cend(), with.begin(), with.end());
 			return *this;
@@ -911,14 +917,18 @@ namespace kerbal
 #	else
 
 		template <typename T, typename Allocator>
-		single_list<T, Allocator> & single_list<T, Allocator>::operator+=(const kerbal::assign::assign_list<void> & with)
+		single_list<T, Allocator> &
+		single_list<T, Allocator>::
+		operator+=(const kerbal::assign::assign_list<void> & with)
 		{
 			return *this;
 		}
 
 		template <typename T, typename Allocator>
 		template <typename U>
-		single_list<T, Allocator> & single_list<T, Allocator>::operator+=(const kerbal::assign::assign_list<U> & with)
+		single_list<T, Allocator> &
+		single_list<T, Allocator>::
+		operator+=(const kerbal::assign::assign_list<U> & with)
 		{
 			this->insert(this->cend(), with.cbegin(), with.cend());
 			return *this;
@@ -928,7 +938,8 @@ namespace kerbal
 
 		template <typename T, typename Allocator>
 		KERBAL_CONSTEXPR20
-		single_list<T, Allocator> operator+(const single_list<T, Allocator> & lhs, const single_list<T, Allocator> & rhs)
+		single_list<T, Allocator>
+		operator+(const single_list<T, Allocator> & lhs, const single_list<T, Allocator> & rhs)
 		{
 			single_list<T, Allocator> r(lhs);
 			r.insert(r.cend(), rhs.cbegin(), rhs.cend());
@@ -939,7 +950,8 @@ namespace kerbal
 
 		template <typename T, typename Allocator>
 		KERBAL_CONSTEXPR20
-		single_list<T, Allocator> operator+(const single_list<T, Allocator> & lhs, single_list<T, Allocator> && rhs)
+		single_list<T, Allocator>
+		operator+(const single_list<T, Allocator> & lhs, single_list<T, Allocator> && rhs)
 		{
 			single_list<T, Allocator> r(lhs);
 			r += kerbal::compatibility::move(rhs);
@@ -948,7 +960,8 @@ namespace kerbal
 
 		template <typename T, typename Allocator>
 		KERBAL_CONSTEXPR20
-		single_list<T, Allocator> operator+(single_list<T, Allocator> && lhs, const single_list<T, Allocator> & rhs)
+		single_list<T, Allocator>
+		operator+(single_list<T, Allocator> && lhs, const single_list<T, Allocator> & rhs)
 		{
 			single_list<T, Allocator> r(kerbal::compatibility::move(lhs));
 			r += rhs;
@@ -957,7 +970,8 @@ namespace kerbal
 
 		template <typename T, typename Allocator>
 		KERBAL_CONSTEXPR20
-		single_list<T, Allocator> operator+(single_list<T, Allocator> && lhs, single_list<T, Allocator> && rhs)
+		single_list<T, Allocator>
+		operator+(single_list<T, Allocator> && lhs, single_list<T, Allocator> && rhs)
 		{
 			single_list<T, Allocator> r(kerbal::compatibility::move(lhs));
 			r += kerbal::compatibility::move(rhs);
