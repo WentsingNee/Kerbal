@@ -800,7 +800,10 @@ namespace kerbal
 			const_iterator pos, single_list & other
 		) KERBAL_NOEXCEPT
 		{
-			this->sl_type_unrelated::k_splice(pos, other);
+			this->sl_type_unrelated::k_splice(
+				pos,
+				static_cast<sl_type_unrelated &>(other)
+			);
 		}
 
 		template <typename T, typename Allocator>
@@ -810,7 +813,11 @@ namespace kerbal
 			const_iterator opos
 		) KERBAL_NOEXCEPT
 		{
-			this->sl_type_unrelated::k_splice(pos, other, opos);
+			this->sl_type_unrelated::k_splice(
+				pos,
+				static_cast<sl_type_unrelated &>(other),
+				opos
+			);
 		}
 
 		template <typename T, typename Allocator>
@@ -820,7 +827,11 @@ namespace kerbal
 			const_iterator first, const_iterator last
 		) KERBAL_NOEXCEPT
 		{
-			this->sl_type_unrelated::k_splice(pos, other, first, last);
+			this->sl_type_unrelated::k_splice(
+				pos,
+				static_cast<sl_type_unrelated &>(other),
+				first, last
+			);
 		}
 
 #	if __cplusplus >= 201103L
@@ -831,7 +842,10 @@ namespace kerbal
 			const_iterator pos, single_list && other
 		) KERBAL_NOEXCEPT
 		{
-			this->sl_type_unrelated::k_splice(pos, kerbal::compatibility::move(other));
+			this->sl_type_unrelated::k_splice(
+				pos,
+				static_cast<sl_type_unrelated &&>(other)
+			);
 		}
 
 		template <typename T, typename Allocator>
@@ -841,7 +855,11 @@ namespace kerbal
 			const_iterator opos
 		) KERBAL_NOEXCEPT
 		{
-			this->sl_type_unrelated::k_splice(pos, kerbal::compatibility::move(other), opos);
+			this->sl_type_unrelated::k_splice(
+				pos,
+				static_cast<sl_type_unrelated &&>(other),
+				opos
+			);
 		}
 
 		template <typename T, typename Allocator>
@@ -851,7 +869,11 @@ namespace kerbal
 			const_iterator first, const_iterator last
 		) KERBAL_NOEXCEPT
 		{
-			this->sl_type_unrelated::k_splice(pos, kerbal::compatibility::move(other), first, last);
+			this->sl_type_unrelated::k_splice(
+				pos,
+				static_cast<sl_type_unrelated &&>(other),
+				first, last
+			);
 		}
 
 #	endif
