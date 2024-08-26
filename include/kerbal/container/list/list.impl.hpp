@@ -889,7 +889,10 @@ namespace kerbal
 			const_iterator pos, list & other
 		) KERBAL_NOEXCEPT
 		{
-			list_type_unrelated::k_splice(pos, other);
+			list_type_unrelated::k_splice(
+				pos,
+				static_cast<list_type_unrelated &>(other)
+			);
 		}
 
 		template <typename T, typename Allocator>
@@ -920,7 +923,10 @@ namespace kerbal
 			const_iterator pos, list && other
 		) KERBAL_NOEXCEPT
 		{
-			list_type_unrelated::k_splice(pos, kerbal::compatibility::move(other));
+			list_type_unrelated::k_splice(
+				pos,
+				static_cast<list_type_unrelated &&>(other)
+			);
 		}
 
 		template <typename T, typename Allocator>
