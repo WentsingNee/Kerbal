@@ -16,6 +16,7 @@
 #include <kerbal/container/detail/avl_base/avl_base.impl.hpp>
 
 #include <kerbal/assign/generic_assign.hpp>
+#include <kerbal/assign/ilist.hpp>
 #include <kerbal/compatibility/constexpr.hpp>
 #include <kerbal/compatibility/noexcept.hpp>
 #include <kerbal/container/associative_container_facility/unique_tag_t.hpp>
