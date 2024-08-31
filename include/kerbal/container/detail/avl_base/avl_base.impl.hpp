@@ -14,6 +14,7 @@
 
 #include <kerbal/container/detail/avl_base/avl_base.decl.hpp>
 
+#include <kerbal/assign/ilist.hpp>
 #include <kerbal/compare/minmax.hpp>
 #include <kerbal/compatibility/constexpr.hpp>
 #include <kerbal/compatibility/move.hpp>
