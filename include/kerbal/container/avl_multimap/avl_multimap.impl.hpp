@@ -15,6 +15,7 @@
 #include <kerbal/container/avl_multimap/avl_multimap.decl.hpp>
 #include <kerbal/container/avl_ordered/avl_ordered.impl.hpp>
 
+#include <kerbal/assign/ilist.hpp>
 #include <kerbal/compatibility/constexpr.hpp>
 #include <kerbal/compatibility/noexcept.hpp>
 #include <kerbal/utility/compressed_pair.hpp>
