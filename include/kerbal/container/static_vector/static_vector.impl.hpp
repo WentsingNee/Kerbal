@@ -19,6 +19,7 @@
 #include <kerbal/algorithm/modifier/move_backward.hpp>
 #include <kerbal/algorithm/swap.hpp>
 #include <kerbal/assign/generic_assign.hpp>
+#include <kerbal/assign/ilist.hpp>
 #include <kerbal/compatibility/constexpr.hpp>
 #include <kerbal/compatibility/move.hpp>
 #include <kerbal/compatibility/noexcept.hpp>

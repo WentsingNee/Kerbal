@@ -15,6 +15,7 @@
 #include <kerbal/container/avl_set/avl_set.decl.hpp>
 #include <kerbal/container/avl_ordered/avl_ordered.impl.hpp>
 
+#include <kerbal/assign/ilist.hpp>
 #include <kerbal/compatibility/constexpr.hpp>
 #include <kerbal/compatibility/noexcept.hpp>
 #include <kerbal/container/associative_container_facility/unique_tag_t.hpp>
