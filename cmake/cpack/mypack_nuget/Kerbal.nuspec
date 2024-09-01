@@ -1,0 +1,19 @@
+<?xml version="1.0"?>
+<package>
+	<metadata>
+		<id>${CPACK_PACKAGE_NAME}</id>
+		<version>${PROJECT_VERSION}</version>
+		<authors>${CPACK_PACKAGE_CONTACT}</authors>
+		<owners>${CPACK_PACKAGE_CONTACT}</owners>
+		<projectUrl>${CPACK_PROJECT_URL}</projectUrl>
+		<requireLicenseAcceptance>true</requireLicenseAcceptance>
+		<licenseUrl>${CPACK_PROJECT_URL}/blob/main/LICENSE</licenseUrl>
+		<description>${CPACK_PACKAGE_DESCRIPTION}</description>
+		<copyright>Copyright ${CPACK_PACKAGE_CONTACT}</copyright>
+	</metadata>
+	<files>
+		<file src="build\" target="build" />
+		<file src="include\" target="include" />
+		<file src="share\" target="share" />
+	</files>
+</package>
