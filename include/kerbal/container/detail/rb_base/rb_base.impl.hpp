@@ -32,7 +32,9 @@ namespace kerbal
 
 			KERBAL_CONSTEXPR14
 			inline
-			void rb_type_unrelated::rb_adjust_RRb(rb_node_base * g, rb_node_base * p) KERBAL_NOEXCEPT
+			void
+			rb_type_unrelated::
+			rb_adjust_RRb(rb_node_base * g, rb_node_base * p) KERBAL_NOEXCEPT
 			{
 				bst_head_node * a = g->parent;
 				bst_node_base::left_rotate(g, p);
@@ -48,7 +50,9 @@ namespace kerbal
 
 			KERBAL_CONSTEXPR14
 			inline
-			void rb_type_unrelated::rb_adjust_LLb(rb_node_base * g, rb_node_base * p) KERBAL_NOEXCEPT
+			void
+			rb_type_unrelated::
+			rb_adjust_LLb(rb_node_base * g, rb_node_base * p) KERBAL_NOEXCEPT
 			{
 				bst_head_node * a = g->parent;
 				bst_node_base::right_rotate(g, p);
@@ -64,7 +68,9 @@ namespace kerbal
 
 			KERBAL_CONSTEXPR14
 			inline
-			void rb_type_unrelated::rb_adjust(rb_node_base * n, rb_node_base * p) KERBAL_NOEXCEPT
+			void
+			rb_type_unrelated::
+			rb_adjust(rb_node_base * n, rb_node_base * p) KERBAL_NOEXCEPT
 			{
 				while (n != &this->k_head) {
 					if (n == this->k_head.left) {
@@ -127,8 +133,10 @@ namespace kerbal
 
 			KERBAL_CONSTEXPR14
 			inline
-			typename rb_type_unrelated::bst_head_node *
-			rb_type_unrelated::k_unhook_node_and_get_successor(rb_node_base * n) KERBAL_NOEXCEPT
+			typename
+			rb_type_unrelated::bst_head_node *
+			rb_type_unrelated::
+			k_unhook_node_and_get_successor(rb_node_base * n) KERBAL_NOEXCEPT
 			{
 //				if (n == NULL) {
 //					return;
@@ -184,96 +192,120 @@ namespace kerbal
 
 			template <typename T>
 			KERBAL_CONSTEXPR14
-			typename rb_type_only<T>::iterator
-			rb_type_only<T>::begin() KERBAL_NOEXCEPT
+			typename
+			rb_type_only<T>::iterator
+			rb_type_only<T>::
+			begin() KERBAL_NOEXCEPT
 			{
 				return iterator(this->k_head.leftest_offspring());
 			}
 
 			template <typename T>
 			KERBAL_CONSTEXPR14
-			typename rb_type_only<T>::const_iterator
-			rb_type_only<T>::begin() const KERBAL_NOEXCEPT
+			typename
+			rb_type_only<T>::const_iterator
+			rb_type_only<T>::
+			begin() const KERBAL_NOEXCEPT
 			{
 				return const_iterator(this->k_head.leftest_offspring());
 			}
 
 			template <typename T>
 			KERBAL_CONSTEXPR14
-			typename rb_type_only<T>::const_iterator
-			rb_type_only<T>::cbegin() const KERBAL_NOEXCEPT
+			typename
+			rb_type_only<T>::const_iterator
+			rb_type_only<T>::
+			cbegin() const KERBAL_NOEXCEPT
 			{
 				return this->begin();
 			}
 
 			template <typename T>
 			KERBAL_CONSTEXPR14
-			typename rb_type_only<T>::iterator
-			rb_type_only<T>::end() KERBAL_NOEXCEPT
+			typename
+			rb_type_only<T>::iterator
+			rb_type_only<T>::
+			end() KERBAL_NOEXCEPT
 			{
 				return iterator(&this->k_head);
 			}
 
 			template <typename T>
 			KERBAL_CONSTEXPR14
-			typename rb_type_only<T>::const_iterator
-			rb_type_only<T>::end() const KERBAL_NOEXCEPT
+			typename
+			rb_type_only<T>::const_iterator
+			rb_type_only<T>::
+			end() const KERBAL_NOEXCEPT
 			{
 				return const_iterator(&this->k_head);
 			}
 
 			template <typename T>
 			KERBAL_CONSTEXPR14
-			typename rb_type_only<T>::const_iterator
-			rb_type_only<T>::cend() const KERBAL_NOEXCEPT
+			typename
+			rb_type_only<T>::const_iterator
+			rb_type_only<T>::
+			cend() const KERBAL_NOEXCEPT
 			{
 				return this->end();
 			}
 
 			template <typename T>
 			KERBAL_CONSTEXPR14
-			typename rb_type_only<T>::reverse_iterator
-			rb_type_only<T>::rbegin() KERBAL_NOEXCEPT
+			typename
+			rb_type_only<T>::reverse_iterator
+			rb_type_only<T>::
+			rbegin() KERBAL_NOEXCEPT
 			{
 				return reverse_iterator(this->end());
 			}
 
 			template <typename T>
 			KERBAL_CONSTEXPR14
-			typename rb_type_only<T>::const_reverse_iterator
-			rb_type_only<T>::rbegin() const KERBAL_NOEXCEPT
+			typename
+			rb_type_only<T>::const_reverse_iterator
+			rb_type_only<T>::
+			rbegin() const KERBAL_NOEXCEPT
 			{
 				return const_reverse_iterator(this->end());
 			}
 
 			template <typename T>
 			KERBAL_CONSTEXPR14
-			typename rb_type_only<T>::const_reverse_iterator
-			rb_type_only<T>::crbegin() const KERBAL_NOEXCEPT
+			typename
+			rb_type_only<T>::const_reverse_iterator
+			rb_type_only<T>::
+			crbegin() const KERBAL_NOEXCEPT
 			{
 				return this->rbegin();
 			}
 
 			template <typename T>
 			KERBAL_CONSTEXPR14
-			typename rb_type_only<T>::reverse_iterator
-			rb_type_only<T>::rend() KERBAL_NOEXCEPT
+			typename
+			rb_type_only<T>::reverse_iterator
+			rb_type_only<T>::
+			rend() KERBAL_NOEXCEPT
 			{
 				return reverse_iterator(this->begin());
 			}
 
 			template <typename T>
 			KERBAL_CONSTEXPR14
-			typename rb_type_only<T>::const_reverse_iterator
-			rb_type_only<T>::rend() const KERBAL_NOEXCEPT
+			typename
+			rb_type_only<T>::const_reverse_iterator
+			rb_type_only<T>::
+			rend() const KERBAL_NOEXCEPT
 			{
 				return const_reverse_iterator(this->begin());
 			}
 
 			template <typename T>
 			KERBAL_CONSTEXPR14
-			typename rb_type_only<T>::const_reverse_iterator
-			rb_type_only<T>::crend() const KERBAL_NOEXCEPT
+			typename
+			rb_type_only<T>::const_reverse_iterator
+			rb_type_only<T>::
+			crend() const KERBAL_NOEXCEPT
 			{
 				return this->rend();
 			}
@@ -282,8 +314,10 @@ namespace kerbal
 			template <typename T>
 			template <typename Extract, typename KeyCompare>
 			KERBAL_CONSTEXPR14
-			typename rb_type_only<T>::unique_insert_r
-			rb_type_only<T>::k_hook_node_unique(Extract & e, KeyCompare & kc, node * n)
+			typename
+			rb_type_only<T>::iterator
+			rb_type_only<T>::
+			k_hook_node(Extract & e, KeyCompare & kc, node * n)
 			{
 				rb_node_base * p_base = rb_node_base::as(this->k_head.left);
 
@@ -292,24 +326,70 @@ namespace kerbal
 					n->parent = &this->k_head;
 					n->set_black();
 				} else {
-					const typename Extract::key_type & n_key = e(n->member());
 					node * p = node::reinterpret_as(p_base);
-					while (true) {
-						const typename Extract::key_type & p_key = e(p->member());
-						if (kc(n_key, p_key)) {
-							if (p->left == get_rb_vnull_node()) {
-								p->left = n;
-								break;
+					{
+						const typename Extract::key_type & n_key = e(n->member());
+						while (true) {
+							const typename Extract::key_type & p_key = e(p->member());
+							if (kc(n_key, p_key)) {
+								if (p->left == get_rb_vnull_node()) {
+									p->left = n;
+									break;
+								}
+								p = node::reinterpret_as(rb_node_base::as(p->left));
+							} else {
+								if (p->right == get_rb_vnull_node()) {
+									p->right = n;
+									break;
+								}
+								p = node::reinterpret_as(rb_node_base::as(p->right));
 							}
-							p = node::reinterpret_as(rb_node_base::as(p->left));
-						} else if (kc(p_key, n_key)) {
-							if (p->right == get_rb_vnull_node()) {
-								p->right = n;
-								break;
+						}
+					}
+					n->parent = p;
+					if (p->color == RED::value) {
+						rb_adjust(n, p);
+					}
+				}
+				++this->k_cnt;
+				return iterator(n);
+			}
+
+			template <typename T>
+			template <typename Extract, typename KeyCompare>
+			KERBAL_CONSTEXPR14
+			typename
+			rb_type_only<T>::unique_insert_r
+			rb_type_only<T>::
+			k_hook_node_unique(Extract & e, KeyCompare & kc, node * n)
+			{
+				rb_node_base * p_base = rb_node_base::as(this->k_head.left);
+
+				if (p_base == get_rb_vnull_node()) {
+					this->k_head.left = n;
+					n->parent = &this->k_head;
+					n->set_black();
+				} else {
+					node * p = node::reinterpret_as(p_base);
+					{
+						const typename Extract::key_type & n_key = e(n->member());
+						while (true) {
+							const typename Extract::key_type & p_key = e(p->member());
+							if (kc(n_key, p_key)) {
+								if (p->left == get_rb_vnull_node()) {
+									p->left = n;
+									break;
+								}
+								p = node::reinterpret_as(rb_node_base::as(p->left));
+							} else if (kc(p_key, n_key)) {
+								if (p->right == get_rb_vnull_node()) {
+									p->right = n;
+									break;
+								}
+								p = node::reinterpret_as(rb_node_base::as(p->right));
+							} else {
+								return unique_insert_r(iterator(p), false);
 							}
-							p = node::reinterpret_as(rb_node_base::as(p->right));
-						} else {
-							return unique_insert_r(iterator(p), false);
 						}
 					}
 					n->parent = p;
@@ -425,9 +505,12 @@ namespace kerbal
 
 
 			template <typename T>
+			template <typename Extract, typename KeyCompare>
 			KERBAL_CONSTEXPR14
-			typename rb_type_only<T>::rb_normal_result_t
-			rb_type_only<T>::rb_normal() const
+			typename
+			rb_type_only<T>::rb_normal_result_t
+			rb_type_only<T>::
+			rb_normal(Extract & e, KeyCompare & kc) const
 			{
 				const rb_node_base * root = rb_node_base::as(this->k_head.left);
 
@@ -442,9 +525,6 @@ namespace kerbal
 				const value_type * maxi = NULL;
 				std::size_t nodes_cnt = 0;
 				std::size_t black_cnt = 0;
-
-				kerbal::container::identity_extractor<T> e;
-				kerbal::compare::binary_type_less<void, void> kc;
 
 				rb_normal_result_t result = rb_normal_impl(e, kc, root, mini, maxi, nodes_cnt, black_cnt);
 				if (result != RB_NORMAL_RESULT_CORRECT) {
