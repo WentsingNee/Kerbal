@@ -17,6 +17,7 @@
 
 
 #include <kerbal/container/detail/rb_base/rb_base.fwd.hpp>
+#include <kerbal/container/rb_ordered/rb_ordered.fwd.hpp>
 
 #include <kerbal/container/detail/bst_base/bst_node.hpp>
 #include <kerbal/container/detail/rb_base/rb_node.hpp>
@@ -25,9 +26,11 @@
 #include <kerbal/compatibility/constexpr.hpp>
 #include <kerbal/compatibility/noexcept.hpp>
 #include <kerbal/container/associative_container_facility/associative_unique_insert_r.hpp>
+#include <kerbal/container/associative_container_facility/key_compare_is_transparent.hpp>
 #include <kerbal/iterator/reverse_iterator.hpp>
 #include <kerbal/memory/allocator_traits.hpp>
-#include <kerbal/memory/allocator/default_allocator.hpp>
+#include <kerbal/type_traits/enable_if.hpp>
+#include <kerbal/type_traits/is_same.hpp>
 #include <kerbal/utility/forward.hpp>
 
 
@@ -42,11 +45,14 @@ namespace kerbal
 
 			class rb_type_unrelated
 			{
+				public:
+					typedef std::size_t					size_type;
+					typedef std::ptrdiff_t				difference_type;
+
 				protected:
 					typedef kerbal::container::detail::rb_node_base		rb_node_base;
 					typedef rb_node_base::bst_head_node					bst_head_node;
 					typedef rb_node_base::bst_node_base					bst_node_base;
-					typedef std::size_t									size_type;
 
 					bst_head_node k_head;
 					size_type k_cnt;
@@ -70,6 +76,8 @@ namespace kerbal
 						return this->k_cnt;
 					}
 
+				private:
+
 					KERBAL_CONSTEXPR14
 					static
 					void rb_adjust_RRb(rb_node_base * g, rb_node_base * p) KERBAL_NOEXCEPT;
@@ -78,9 +86,12 @@ namespace kerbal
 					static
 					void rb_adjust_LLb(rb_node_base * g, rb_node_base * p) KERBAL_NOEXCEPT;
 
+				protected:
+
 					KERBAL_CONSTEXPR14
 					void rb_adjust(rb_node_base * n, rb_node_base * p) KERBAL_NOEXCEPT;
 
+					KERBAL_CONSTEXPR14
 					// replacee has two sons
 					// replacer has no left son
 					// replacer must be the left son of its parent
@@ -110,16 +121,32 @@ namespace kerbal
 
 			};
 
-			template <typename T>
+
+			template <typename Entity>
 			class rb_type_only :
 				protected kerbal::container::detail::rb_type_unrelated
 			{
 				private:
 					typedef kerbal::container::detail::rb_type_unrelated super;
-					typedef kerbal::container::detail::rb_node<T> node;
+
+					template <typename Entity2, typename Extract, typename KeyCompare, typename Allocator>
+					friend struct rb_ordered_typedef_helper;
 
 				public:
-					typedef T value_type;
+					typedef Entity						value_type;
+					typedef const value_type			const_type;
+					typedef value_type &				reference;
+					typedef const value_type &			const_reference;
+					typedef value_type *				pointer;
+					typedef const value_type *			const_pointer;
+
+#			if __cplusplus >= 201103L
+					typedef value_type &&				rvalue_reference;
+					typedef const value_type &&			const_rvalue_reference;
+#			endif
+
+					typedef super::size_type					size_type;
+					typedef super::difference_type				difference_type;
 
 					typedef kerbal::container::detail::rb_iter<value_type>				iterator;
 					typedef kerbal::container::detail::rb_kiter<value_type>				const_iterator;
@@ -129,36 +156,60 @@ namespace kerbal
 
 					typedef kerbal::container::detail::rb_normal_result_t				rb_normal_result_t;
 
+
+				protected:
+//					typedef super::head_node									head_node;
+					typedef super::rb_node_base 								avl_node_base;
+					typedef kerbal::container::detail::rb_node<value_type>		node;
+					typedef std::size_t height_t;
+
 				public:
+
+				//===================
+				// construct/copy/destroy
+
+#			if __cplusplus >= 201103L
+					rb_type_only() = default;
+#			else
 					rb_type_only() :
 						super()
 					{
 					}
+#			endif
+
+					template <typename NodeAllocator, typename Extract, typename KeyCompare>
+					rb_type_only(
+						NodeAllocator & this_alloc, Extract & this_e, KeyCompare & this_kc,
+						rb_type_only const & src
+					);
+
+					template <typename NodeAllocator, typename Extract, typename KeyCompare>
+					rb_type_only(
+						NodeAllocator & this_alloc, Extract & this_e, KeyCompare & this_kc,
+						NodeAllocator && src_alloc, rb_type_only && src
+					);
 
 					template <typename NodeAllocator>
 					static
 					void k_destroy_using_allocator_impl(NodeAllocator & alloc, rb_node_base * p)
 					{
-						if (p == get_rb_vnull_node()) {
-							return;
+						while (p != get_rb_vnull_node()) {
+							k_destroy_using_allocator_impl(alloc, static_cast<rb_node_base *>(p->left));
+							rb_node_base * right = static_cast<rb_node_base *>(p->right);
+							k_destroy_rb_node(alloc, static_cast<node *>(p));
+							p = right;
 						}
-						k_destroy_using_allocator_impl(alloc, static_cast<rb_node_base *>(p->left));
-						k_destroy_using_allocator_impl(alloc, static_cast<rb_node_base *>(p->right));
-						k_destroy_rb_node(alloc, static_cast<node *>(p));
 					}
 
 					template <typename NodeAllocator>
-					void destroy_using_allocator(NodeAllocator & alloc)
+					void k_destroy_using_allocator(NodeAllocator & alloc)
 					{
 						k_destroy_using_allocator_impl(alloc, static_cast<rb_node_base *>(this->k_head.left));
 					}
 
-
-					~rb_type_only()
-					{
-						kerbal::memory::default_allocator<node> alloc;
-						this->destroy_using_allocator(alloc);
-					}
+					template <typename Extract, typename KeyCompare>
+					KERBAL_CONSTEXPR14
+					iterator k_hook_node(Extract & e, KeyCompare & kc, node * n);
 
 					template <typename Extract, typename KeyCompare>
 					KERBAL_CONSTEXPR14
@@ -217,9 +268,33 @@ namespace kerbal
 				//===================
 				// lookup
 
+				protected:
+
+					template <
+						typename Extract, typename KeyCompare, typename Key,
+						typename Result
+					>
+					struct enable_if_transparent_lookup :
+						kerbal::type_traits::enable_if<
+							(
+								kerbal::container::key_compare_is_transparent<KeyCompare>::value &&
+								!kerbal::type_traits::is_same<const Key &, const typename Extract::key_type &>::value &&
+								!kerbal::type_traits::is_same<Key, const_iterator>::value &&
+								!kerbal::type_traits::is_same<Key, iterator>::value
+							),
+							Result
+						>
+					{
+					};
+
 				public:
 					template <typename Extract, typename KeyCompare, typename Key>
-					const_iterator find_impl(Extract & e, KeyCompare & kc, const Key & key) const
+					KERBAL_CONSTEXPR14
+					const_iterator
+					k_find(
+						Extract & e, KeyCompare & kc,
+						const Key & key
+					) const
 					{
 						node * p = static_cast<node *>(this->k_head.left);
 						while (p != get_rb_vnull_node()) {
@@ -235,20 +310,6 @@ namespace kerbal
 						return this->cend();
 					}
 
-					iterator find(const value_type & key)
-					{
-						kerbal::container::identity_extractor<T> e;
-						kerbal::compare::binary_type_less<void, void> kc;
-						return find_impl(e, kc, key).cast_to_mutable();
-					}
-
-					const_iterator find(const value_type & key) const
-					{
-						kerbal::container::identity_extractor<T> e;
-						kerbal::compare::binary_type_less<void, void> kc;
-						return find_impl(e, kc, key);
-					}
-
 				public:
 
 					template <
@@ -256,7 +317,23 @@ namespace kerbal
 						typename ... Args
 					>
 					KERBAL_CONSTEXPR14
-					unique_insert_r k_emplace_using_allocator(
+					iterator
+					k_emplace_using_allocator(
+						NodeAllocator & alloc, Extract & e, KeyCompare & kc,
+						Args && ... args
+					)
+					{
+						node * p = k_build_rb_node(alloc, kerbal::utility::forward<Args>(args)...);
+						return k_hook_node(e, kc, p);
+					}
+
+					template <
+						typename NodeAllocator, typename Extract, typename KeyCompare,
+						typename ... Args
+					>
+					KERBAL_CONSTEXPR14
+					unique_insert_r
+					k_emplace_unique_using_allocator(
 						NodeAllocator & alloc, Extract & e, KeyCompare & kc,
 						Args && ... args
 					)
@@ -269,23 +346,10 @@ namespace kerbal
 						return uir;
 					}
 
-					template <typename ... Args>
-					unique_insert_r emplace(Args && ... args)
-					{
-						kerbal::container::identity_extractor<T> e;
-						kerbal::compare::binary_type_less<void, void> kc;
-						kerbal::memory::default_allocator<node> alloc;
-						return this->k_emplace_using_allocator(alloc, e, kc, kerbal::utility::forward<Args>(args)...);
-					}
-
-					unique_insert_r insert(const value_type & src)
-					{
-						return this->emplace(src);
-					}
-
 					template <typename NodeAllocator>
 					KERBAL_CONSTEXPR14
-					iterator k_erase_not_end_using_allocator_unsafe(NodeAllocator & alloc, const_iterator pos)
+					iterator
+					k_erase_not_end_using_allocator_unsafe(NodeAllocator & alloc, const_iterator pos)
 					{
 						rb_node_base * cur_base = rb_node_base::as(pos.cast_to_mutable().current);
 						iterator ret(this->rb_type_unrelated::k_unhook_node_and_get_successor(cur_base));
@@ -295,7 +359,8 @@ namespace kerbal
 
 					template <typename NodeAllocator>
 					KERBAL_CONSTEXPR14
-					iterator erase_using_allocator(NodeAllocator & alloc, const_iterator pos)
+					iterator
+					k_erase_using_allocator(NodeAllocator & alloc, const_iterator pos)
 					{
 						if (pos == this->cend()) {
 							return this->end();
@@ -304,10 +369,12 @@ namespace kerbal
 						return this->k_erase_not_end_using_allocator_unsafe(alloc, pos);
 					}
 
-					iterator erase(const_iterator pos)
+					template <typename NodeAllocator>
+					void k_clear_using_allocator(NodeAllocator & alloc)
 					{
-						kerbal::memory::default_allocator<node> alloc;
-						return erase_using_allocator(alloc, pos);
+						this->k_destroy_using_allocator(alloc);
+						this->k_head.left = get_rb_vnull_node();
+						this->k_cnt = 0;
 					}
 
 					template <typename F>
@@ -388,10 +455,12 @@ namespace kerbal
 						std::size_t & nodes_cnt, std::size_t & black_cnt
 					);
 
+					template <typename Extract, typename KeyCompare>
 					KERBAL_CONSTEXPR14
-					rb_normal_result_t rb_normal() const;
+					rb_normal_result_t rb_normal(Extract & e, KeyCompare & kc) const;
 
 			};
+
 
 		} // namespace detail
 
