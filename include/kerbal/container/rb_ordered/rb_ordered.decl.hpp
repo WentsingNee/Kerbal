@@ -106,7 +106,7 @@ namespace kerbal
 			protected:
 				typedef typename rb_type_only::rb_node_base					rb_node_base;
 				typedef typename rb_type_only::node							node;
-				typedef typename rb_node_base::height_t						height_t;
+				typedef typename rb_type_only::height_t						height_t;
 
 			public:
 				typedef Allocator														allocator_type;
@@ -932,6 +932,9 @@ namespace kerbal
 
 				KERBAL_CONSTEXPR20
 				void swap(rb_ordered & other);
+
+				using rb_type_only::preorder;
+				using rb_type_only::inorder;
 
 				KERBAL_CONSTEXPR20
 				kerbal::container::detail::rb_normal_result_t rb_normal() const
