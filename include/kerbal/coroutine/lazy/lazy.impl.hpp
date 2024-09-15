@@ -51,7 +51,7 @@ namespace kerbal
 
 		template <typename T>
 		lazy<T>::
-		~lazy() KERBAL_NOEXCEPT
+		~lazy()
 		{
 			if (this->k_handle) {
 				this->k_handle.destroy();

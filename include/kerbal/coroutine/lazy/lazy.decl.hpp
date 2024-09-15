@@ -53,7 +53,7 @@ namespace kerbal
 
 				lazy(lazy && src) KERBAL_NOEXCEPT;
 
-				~lazy() KERBAL_NOEXCEPT;
+				~lazy();
 
 				lazy & operator=(lazy const &) = delete;
 

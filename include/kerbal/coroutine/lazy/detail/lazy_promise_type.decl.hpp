@@ -45,11 +45,13 @@ namespace kerbal
 						return {};
 					}
 
+#			if KERBAL_HAS_EXCEPTIONS_SUPPORT
 					static
 					void unhandled_exception()
 					{
 						throw;
 					}
+#			endif
 
 			};
 

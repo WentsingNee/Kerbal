@@ -16,6 +16,8 @@
 
 #if KERBAL_SUPPORT_COROUTINE
 
+#include <kerbal/memory/allocator/std_allocator/std_allocator.fwd.hpp>
+
 
 namespace kerbal
 {
@@ -23,7 +25,7 @@ namespace kerbal
 	namespace coroutine
 	{
 
-		template <typename T>
+		template <typename T, typename Allocator = std::allocator<char> >
 		class generator;
 
 		class bad_generator;

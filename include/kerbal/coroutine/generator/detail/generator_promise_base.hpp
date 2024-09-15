@@ -15,6 +15,7 @@
 #include <kerbal/coroutine/detail/exp_compat.hpp>
 
 #include <kerbal/compatibility/noexcept.hpp>
+#include <kerbal/config/exceptions.hpp>
 
 
 namespace kerbal
@@ -43,11 +44,13 @@ namespace kerbal
 						return {};
 					}
 
+#			if KERBAL_HAS_EXCEPTIONS_SUPPORT
 					static
 					void unhandled_exception()
 					{
 						throw;
 					}
+#			endif
 
 					static
 					void return_void() KERBAL_NOEXCEPT

@@ -22,6 +22,8 @@
 #include <kerbal/compatibility/noexcept.hpp>
 #include <kerbal/coroutine/done_coroutine.hpp>
 
+#include <memory>
+
 #include <cstddef>
 
 
@@ -31,33 +33,33 @@ namespace kerbal
 	namespace coroutine
 	{
 
-		template <typename T>
-		generator<T>::
+		template <typename T, typename Allocator>
+		generator<T, Allocator>::
 		generator(coroutine_handle && handle) KERBAL_NOEXCEPT :
 			k_handle(handle)
 		{
 		}
 
-		template <typename T>
-		generator<T>::
+		template <typename T, typename Allocator>
+		generator<T, Allocator>::
 		generator(generator && src) KERBAL_NOEXCEPT :
 			k_handle(src.k_handle)
 		{
 			src.k_handle = nullptr;
 		}
 
-		template <typename T>
-		generator<T>::
-		~generator() KERBAL_NOEXCEPT
+		template <typename T, typename Allocator>
+		generator<T, Allocator>::
+		~generator()
 		{
 			if (this->k_handle) {
 				this->k_handle.destroy();
 			}
 		}
 
-		template <typename T>
-		generator<T> &
-		generator<T>::
+		template <typename T, typename Allocator>
+		generator<T, Allocator> &
+		generator<T, Allocator>::
 		operator=(generator && src) KERBAL_NOEXCEPT
 		{
 			if (this->k_handle) {
@@ -68,9 +70,9 @@ namespace kerbal
 			return *this;
 		}
 
-		template <typename T>
+		template <typename T, typename Allocator>
 		void
-		generator<T>::
+		generator<T, Allocator>::
 		empty_generator_check() const
 		{
 			if (this->empty()) {
@@ -78,9 +80,9 @@ namespace kerbal
 			}
 		}
 
-		template <typename T>
+		template <typename T, typename Allocator>
 		void
-		generator<T>::
+		generator<T, Allocator>::
 		done_generator_check() const
 		{
 			if (this->done()) {
@@ -88,9 +90,9 @@ namespace kerbal
 			}
 		}
 
-		template <typename T>
+		template <typename T, typename Allocator>
 		T const &
-		generator<T>::
+		generator<T, Allocator>::
 		operator()()
 		{
 			empty_generator_check();
@@ -99,44 +101,44 @@ namespace kerbal
 			return this->k_handle.promise().k_yielded.value();
 		}
 
-		template <typename T>
+		template <typename T, typename Allocator>
 		typename
-		generator<T>::iterator
-		generator<T>::
+		generator<T, Allocator>::iterator
+		generator<T, Allocator>::
 		begin()
 		{
 			return iterator(this);
 		}
 
-		template <typename T>
+		template <typename T, typename Allocator>
 		typename
-		generator<T>::iterator
-		generator<T>::
+		generator<T, Allocator>::iterator
+		generator<T, Allocator>::
 		end() KERBAL_NOEXCEPT
 		{
 			return iterator(nullptr);
 		}
 
-		template <typename T>
+		template <typename T, typename Allocator>
 		bool
-		generator<T>::
+		generator<T, Allocator>::
 		empty() const KERBAL_NOEXCEPT
 		{
 			return !static_cast<bool>(this->k_handle);
 		}
 
-		template <typename T>
+		template <typename T, typename Allocator>
 		bool
-		generator<T>::
+		generator<T, Allocator>::
 		done() const
 		{
 			this->empty_generator_check();
 			return this->k_handle.done();
 		}
 
-		template <typename T>
+		template <typename T, typename Allocator>
 		void
-		generator<T>::
+		generator<T, Allocator>::
 		swap(generator & with) KERBAL_NOEXCEPT
 		{
 			kerbal::algorithm::swap(this->k_handle, with.k_handle);

@@ -66,11 +66,13 @@ namespace kerbal
 						return {};
 					}
 
+#			if KERBAL_HAS_EXCEPTIONS_SUPPORT
 					static
 					void unhandled_exception()
 					{
 						throw;
 					}
+#			endif
 
 			};
 
@@ -190,7 +192,7 @@ namespace kerbal
 
 				task(task && src) KERBAL_NOEXCEPT;
 
-				~task() KERBAL_NOEXCEPT;
+				~task();
 
 				task & operator=(task const &) = delete;
 
@@ -238,7 +240,7 @@ namespace kerbal
 
 				task(task && src) KERBAL_NOEXCEPT;
 
-				~task() KERBAL_NOEXCEPT;
+				~task();
 
 				task & operator=(task const &) = delete;
 

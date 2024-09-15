@@ -202,7 +202,7 @@ namespace kerbal
 
 		template <typename T>
 		task<T>::
-		~task() KERBAL_NOEXCEPT
+		~task()
 		{
 			if (k_handle) {
 				k_handle.destroy();
@@ -292,7 +292,7 @@ namespace kerbal
 
 		inline
 		task<void>::
-		~task() KERBAL_NOEXCEPT
+		~task()
 		{
 			if (this->k_handle) {
 				this->k_handle.destroy();

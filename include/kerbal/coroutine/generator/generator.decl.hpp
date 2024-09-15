@@ -22,10 +22,12 @@
 #include <kerbal/coroutine/generator/detail/generator_promise_base.hpp>
 
 #include <kerbal/compatibility/noexcept.hpp>
+#include <kerbal/memory/allocator_traits.hpp>
 #include <kerbal/optional/optional.hpp>
 #include <kerbal/utility/forward.hpp>
 
 #include <cstddef>
+#include <iostream>
 
 
 namespace kerbal
@@ -34,7 +36,7 @@ namespace kerbal
 	namespace coroutine
 	{
 
-		template <typename T>
+		template <typename T, typename Allocator>
 		class generator
 		{
 			public:
@@ -53,6 +55,8 @@ namespace kerbal
 						friend class generator;
 						friend class kerbal::coroutine::detail::generator_iterator<T>;
 
+						typedef kerbal::memory::allocator_traits<Allocator> allocator_traits;
+
 					protected:
 						kerbal::optional::optional<T> k_yielded;
 
@@ -68,6 +72,24 @@ namespace kerbal
 						{
 							return generator(coroutine_handle::from_promise(*this));
 						}
+
+						void * operator new(std::size_t size)
+						{
+							Allocator alloc;
+							return static_cast<void *>(
+								allocator_traits::allocate(alloc, size)
+							);
+						}
+
+						void operator delete(void * p, std::size_t size)
+						{
+							Allocator alloc;
+							return allocator_traits::deallocate(
+								alloc,
+								static_cast<allocator_traits::value_type *>(p),
+								size
+							);
+						}
 				};
 
 			private:
@@ -75,13 +97,13 @@ namespace kerbal
 				generator(coroutine_handle && handle) KERBAL_NOEXCEPT;
 
 			public:
-				generator() = default;
+//				generator() = default;
 
 				generator(generator const &) = delete;
 
 				generator(generator && src) KERBAL_NOEXCEPT;
 
-				~generator() KERBAL_NOEXCEPT;
+				~generator();
 
 				generator & operator=(generator const &) = delete;
 
