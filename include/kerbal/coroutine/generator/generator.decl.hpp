@@ -21,10 +21,14 @@
 #include <kerbal/coroutine/generator/detail/generator_iterator.decl.hpp>
 #include <kerbal/coroutine/generator/detail/generator_promise_base.hpp>
 
+#include <kerbal/compatibility/move.hpp>
 #include <kerbal/compatibility/noexcept.hpp>
 #include <kerbal/memory/allocator_traits.hpp>
 #include <kerbal/optional/optional.hpp>
+#include <kerbal/type_traits/remove_reference.hpp>
 #include <kerbal/utility/forward.hpp>
+#include <kerbal/utility/integer_sequence.hpp>
+#include <kerbal/utility/tuple.hpp>
 
 #include <cstddef>
 #include <iostream>
@@ -35,6 +39,26 @@ namespace kerbal
 
 	namespace coroutine
 	{
+
+		template <typename ... Args>
+		class use_args_yield_t :
+			public kerbal::utility::tuple<Args...>
+		{
+			private:
+				using super = kerbal::utility::tuple<Args...>;
+			public:
+				using super::super;
+		};
+
+		template <typename ... Args>
+		use_args_yield_t<typename kerbal::type_traits::remove_cvref<Args>::type ...>
+		use_args_yield(Args && ... args)
+		{
+			return use_args_yield_t<typename kerbal::type_traits::remove_cvref<Args>::type ...>{
+				kerbal::utility::forward<Args>(args)...
+			};
+		}
+
 
 		template <typename T, typename Allocator>
 		class generator
@@ -62,18 +86,44 @@ namespace kerbal
 
 					public:
 						template <typename U>
-						costd::suspend_always yield_value(U && arg)
+						costd::suspend_always
+						yield_value(U && arg)
 						{
 							this->k_yielded.emplace(kerbal::utility::forward<U>(arg));
 							return {};
 						}
 
-						generator get_return_object()
+					private:
+						template <typename ... Args, std::size_t ... I>
+						costd::suspend_always
+						k_yield_value_impl(
+							use_args_yield_t<Args...> && arg,
+							kerbal::utility::index_sequence<I...>
+						)
+						{
+							this->k_yielded.emplace(kerbal::compatibility::move(arg).template get<I>()...);
+							return {};
+						}
+
+					public:
+						template <typename ... Args>
+						costd::suspend_always
+						yield_value(use_args_yield_t<Args...> && arg)
+						{
+							return this->k_yield_value_impl(
+								kerbal::compatibility::move(arg),
+								kerbal::utility::make_index_sequence<sizeof...(Args)>()
+							);
+						}
+
+						generator
+						get_return_object()
 						{
 							return generator(coroutine_handle::from_promise(*this));
 						}
 
-						void * operator new(std::size_t size)
+						void *
+						operator new(std::size_t size)
 						{
 							Allocator alloc;
 							return static_cast<void *>(
@@ -81,7 +131,8 @@ namespace kerbal
 							);
 						}
 
-						void operator delete(void * p, std::size_t size)
+						void
+						operator delete(void * p, std::size_t size)
 						{
 							Allocator alloc;
 							return allocator_traits::deallocate(
