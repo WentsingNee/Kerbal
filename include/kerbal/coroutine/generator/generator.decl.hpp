@@ -115,6 +115,8 @@ namespace kerbal
 							);
 						}
 
+						void await_transform() = delete;
+
 						generator
 						get_return_object()
 						{
@@ -147,7 +149,7 @@ namespace kerbal
 				generator(coroutine_handle && handle) KERBAL_NOEXCEPT;
 
 			public:
-//				generator() = default;
+				generator() = default;
 
 				generator(generator const &) = delete;
 
