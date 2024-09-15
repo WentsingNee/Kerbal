@@ -31,7 +31,6 @@
 #include <kerbal/utility/tuple.hpp>
 
 #include <cstddef>
-#include <iostream>
 
 
 namespace kerbal
