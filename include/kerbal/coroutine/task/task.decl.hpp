@@ -31,13 +31,14 @@ namespace kerbal
 	namespace coroutine
 	{
 
-		class bad_task : public std::runtime_error
+		class bad_task :
+			public std::runtime_error
 		{
 				typedef std::runtime_error super;
 
 			public:
 				bad_task() :
-						super("bad task")
+					super("bad task")
 				{
 				}
 		};
@@ -51,17 +52,22 @@ namespace kerbal
 			{
 				public:
 
-					static costd::suspend_never initial_suspend() KERBAL_NOEXCEPT
+					static
+					costd::suspend_never
+					initial_suspend() KERBAL_NOEXCEPT
 					{
 						return {};
 					}
 
-					static costd::suspend_always final_suspend() KERBAL_NOEXCEPT
+					static
+					costd::suspend_always
+					final_suspend() KERBAL_NOEXCEPT
 					{
 						return {};
 					}
 
-					static void unhandled_exception()
+					static
+					void unhandled_exception()
 					{
 						throw;
 					}
@@ -69,7 +75,8 @@ namespace kerbal
 			};
 
 			template <typename T>
-			class task_promise : public task_promise_base
+			class task_promise :
+				public task_promise_base
 			{
 					friend class kerbal::coroutine::task<T>;
 
@@ -81,7 +88,7 @@ namespace kerbal
 					template <typename U>
 					void return_value(U && value);
 
-					const T& get() const;
+					T const & get() const;
 
 					bool ready() const;
 
@@ -92,7 +99,8 @@ namespace kerbal
 
 
 			template <>
-			class task_promise<void> : public task_promise_base
+			class task_promise<void> :
+				public task_promise_base
 			{
 				private:
 					bool k_ready;
@@ -123,16 +131,16 @@ namespace kerbal
 			private:
 				typedef kerbal::coroutine::task<T> task;
 //				typedef typename task::promise_type promise;
-				const task * k_task;
+				task const * k_task;
 
-				task_awaiter(const task * task);
+				task_awaiter(task const * task);
 
 			public:
 				bool await_ready() const KERBAL_NOEXCEPT;
 
 				void await_suspend(costd::coroutine_handle<> h) const KERBAL_NOEXCEPT;
 
-				const T & await_resume() const;
+				T const & await_resume() const;
 		};
 
 
@@ -145,12 +153,12 @@ namespace kerbal
 			private:
 				typedef kerbal::coroutine::task<void> task;
 //				typedef typename task::promise_type promise;
-				const task * k_task;
+				task const * k_task;
 
-				task_awaiter(const task * task);
+				task_awaiter(task const * task);
 
 			public:
-				bool await_ready()  const KERBAL_NOEXCEPT;
+				bool await_ready() const KERBAL_NOEXCEPT;
 
 				void await_suspend(costd::coroutine_handle<> h) const KERBAL_NOEXCEPT;
 
@@ -178,13 +186,13 @@ namespace kerbal
 			public:
 				task() = default;
 
-				task(const task &) = delete;
+				task(task const &) = delete;
 
 				task(task && src) KERBAL_NOEXCEPT;
 
 				~task() KERBAL_NOEXCEPT;
 
-				task & operator=(const task &) = delete;
+				task & operator=(task const &) = delete;
 
 				task & operator=(task && src) KERBAL_NOEXCEPT;
 
@@ -226,13 +234,13 @@ namespace kerbal
 			public:
 				task() = default;
 
-				task(const task &) = delete;
+				task(task const &) = delete;
 
 				task(task && src) KERBAL_NOEXCEPT;
 
 				~task() KERBAL_NOEXCEPT;
 
-				task & operator=(const task &) = delete;
+				task & operator=(task const &) = delete;
 
 				task & operator=(task && src) KERBAL_NOEXCEPT;
 

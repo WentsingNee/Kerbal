@@ -29,22 +29,28 @@ namespace kerbal
 			class generator_promise_base
 			{
 				public:
-					static costd::suspend_always initial_suspend() KERBAL_NOEXCEPT
+					static
+					costd::suspend_always
+					initial_suspend() KERBAL_NOEXCEPT
 					{
 						return {};
 					}
 
-					static costd::suspend_always final_suspend() KERBAL_NOEXCEPT
+					static
+					costd::suspend_always
+					final_suspend() KERBAL_NOEXCEPT
 					{
 						return {};
 					}
 
-					static void unhandled_exception()
+					static
+					void unhandled_exception()
 					{
 						throw;
 					}
 
-					static void return_void() KERBAL_NOEXCEPT
+					static
+					void return_void() KERBAL_NOEXCEPT
 					{
 					}
 

@@ -49,13 +49,13 @@ namespace kerbal
 			public:
 				lazy() = default;
 
-				lazy(const lazy &) = delete;
+				lazy(lazy const &) = delete;
 
 				lazy(lazy && src) KERBAL_NOEXCEPT;
 
 				~lazy() KERBAL_NOEXCEPT;
 
-				lazy & operator=(const lazy &) = delete;
+				lazy & operator=(lazy const &) = delete;
 
 				lazy & operator=(lazy && src) KERBAL_NOEXCEPT;
 

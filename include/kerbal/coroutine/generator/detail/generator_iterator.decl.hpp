@@ -34,10 +34,11 @@ namespace kerbal
 
 			template <typename T>
 			class generator_iterator :
-					public kerbal::operators::dereferenceable<
-						generator_iterator<T>, typename kerbal::type_traits::remove_reference<T>::type *
-					>, // it->
-					public kerbal::operators::equality_comparable<generator_iterator<T> > // it != jt
+				public kerbal::operators::dereferenceable<
+					generator_iterator<T>,
+					typename kerbal::type_traits::remove_reference<T>::type *
+				>, // it->
+				public kerbal::operators::equality_comparable<generator_iterator<T> > // it != jt
 			{
 					friend class kerbal::coroutine::generator<T>;
 
@@ -50,7 +51,7 @@ namespace kerbal
 					typedef value_type &				reference;
 
 				protected:
-					kerbal::coroutine::generator<T> * gen;
+					kerbal::coroutine::generator<T> * k_gen;
 
 				protected:
 					generator_iterator() KERBAL_NOEXCEPT;
@@ -60,11 +61,11 @@ namespace kerbal
 					bool k_is_end() const KERBAL_NOEXCEPT;
 
 				public:
-					bool operator==(const generator_iterator & with) const KERBAL_NOEXCEPT;
+					bool operator==(generator_iterator const & with) const KERBAL_NOEXCEPT;
 
 					generator_iterator & operator++();
 
-					const T & operator*() const;
+					T const & operator*() const;
 
 			};
 

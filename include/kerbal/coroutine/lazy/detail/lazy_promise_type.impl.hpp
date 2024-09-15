@@ -28,39 +28,50 @@ namespace kerbal
 
 			template <typename T>
 			template <typename U>
-			void lazy_promise_type<T>::return_value(U && value)
+			void
+			lazy_promise_type<T>::
+			return_value(U && value)
 			{
 				k_returned_value.emplace(kerbal::utility::forward<U>(value));
 			}
 
 			template <typename T>
-			typename lazy_promise_type<T>::lazy
-			lazy_promise_type<T>::get_return_object()
+			typename
+			lazy_promise_type<T>::lazy
+			lazy_promise_type<T>::
+			get_return_object()
 			{
 				return lazy(coroutine_handle::from_promise(*this));
 			}
 
 			template <typename T>
-			T & lazy_promise_type<T>::get_return_value() KERBAL_NOEXCEPT
+			T &
+			lazy_promise_type<T>::
+			get_return_value() KERBAL_NOEXCEPT
 			{
 				return this->k_returned_value.value();
 			}
 
 
 			inline
-			void lazy_promise_type<void>::return_void() KERBAL_NOEXCEPT
+			void
+			lazy_promise_type<void>::
+			return_void() KERBAL_NOEXCEPT
 			{
 			}
 
 			inline
 			lazy_promise_type<void>::lazy
-			lazy_promise_type<void>::get_return_object()
+			lazy_promise_type<void>::
+			get_return_object()
 			{
 				return lazy(coroutine_handle::from_promise(*this));
 			}
 
 			inline
-			void lazy_promise_type<void>::get_return_value() KERBAL_NOEXCEPT
+			void
+			lazy_promise_type<void>::
+			get_return_value() KERBAL_NOEXCEPT
 			{
 				return;
 			}

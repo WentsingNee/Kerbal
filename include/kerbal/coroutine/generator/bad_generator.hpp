@@ -24,19 +24,19 @@ namespace kerbal
 	{
 
 		class bad_generator :
-				public std::runtime_error
+			public std::runtime_error
 		{
 				typedef std::runtime_error super;
 
 			public:
 				bad_generator() :
-						super("bad generator")
+					super("bad generator")
 				{
 				}
 
 			protected:
-				explicit bad_generator(const char * msg) :
-						super(msg)
+				explicit bad_generator(char const * msg) :
+					super(msg)
 				{
 				}
 		};

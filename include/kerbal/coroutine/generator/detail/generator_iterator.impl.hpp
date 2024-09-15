@@ -31,65 +31,77 @@ namespace kerbal
 		{
 
 			template <typename T>
-			generator_iterator<T>::generator_iterator() KERBAL_NOEXCEPT
-					: gen(gen)
+			generator_iterator<T>::
+			generator_iterator() KERBAL_NOEXCEPT :
+				k_gen(NULL)
 			{
 			}
 
 			template <typename T>
-			generator_iterator<T>::generator_iterator(kerbal::coroutine::generator<T> * gen)
-					: gen(gen)
+			generator_iterator<T>::
+			generator_iterator(kerbal::coroutine::generator<T> * gen) :
+				k_gen(gen)
 			{
-				if (this->gen == NULL) {
+				if (this->k_gen == NULL) {
 					return;
 				}
-				if (this->gen->k_handle == NULL) {
-					this->gen = NULL;
+				if (this->k_gen->k_handle == NULL) {
+					this->k_gen = NULL;
 					return;
 				}
-				if (this->gen->k_handle.done()) {
+				if (this->k_gen->k_handle.done()) {
 					return;
 				}
-				if (!this->gen->k_handle.promise().k_yielded.has_value()) {
+				if (!this->k_gen->k_handle.promise().k_yielded.has_value()) {
 					gen->k_handle.resume();
 				}
 			}
 
 			template <typename T>
-			bool generator_iterator<T>::k_is_end() const KERBAL_NOEXCEPT
+			bool
+			generator_iterator<T>::
+			k_is_end() const KERBAL_NOEXCEPT
 			{
-				if (this->gen == NULL) {
+				if (this->k_gen == NULL) {
 					return true;
 				}
-				return this->gen->k_handle.done();
+				return this->k_gen->k_handle.done();
 			}
 
 			template <typename T>
-			bool generator_iterator<T>::operator==(const generator_iterator & with) const KERBAL_NOEXCEPT
+			bool
+			generator_iterator<T>::
+			operator==(generator_iterator const & with) const KERBAL_NOEXCEPT
 			{
-				if (with.gen == NULL) {
+				if (with.k_gen == NULL) {
 					return this->k_is_end();
 				}
 				return false;
 			}
 
 			template <typename T>
-			generator_iterator<T> & generator_iterator<T>::operator++()
+			generator_iterator<T> &
+			generator_iterator<T>::
+			operator++()
 			{
 				if (this->k_is_end()) {
 					kerbal::utility::throw_this_exception_helper<kerbal::coroutine::bad_generator>::throw_this_exception();
 				}
-				gen->k_handle.resume();
+				this->k_gen->k_handle.resume();
 				return *this;
 			}
 
 			template <typename T>
-			const T & generator_iterator<T>::operator*() const
+			T const &
+			generator_iterator<T>::
+			operator*() const
 			{
 				if (this->k_is_end()) {
-					kerbal::utility::throw_this_exception_helper<std::logic_error>::throw_this_exception("access to end iterator");
+					kerbal::utility::throw_this_exception_helper<std::logic_error>::throw_this_exception(
+						+"access to end iterator"
+					);
 				}
-				return gen->k_handle.promise().k_yielded.value();
+				return this->k_gen->k_handle.promise().k_yielded.value();
 			}
 
 		} // namespace detail

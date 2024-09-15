@@ -31,17 +31,22 @@ namespace kerbal
 			struct llazy_promise_type_base
 			{
 
-					static costd::suspend_always initial_suspend() KERBAL_NOEXCEPT
+					static
+					costd::suspend_always
+					initial_suspend() KERBAL_NOEXCEPT
 					{
 						return {};
 					}
 
-					static costd::suspend_always final_suspend() KERBAL_NOEXCEPT
+					static
+					costd::suspend_always
+					final_suspend() KERBAL_NOEXCEPT
 					{
 						return {};
 					}
 
-					static void unhandled_exception()
+					static
+					void unhandled_exception()
 					{
 						throw;
 					}
@@ -55,7 +60,8 @@ namespace kerbal
 
 
 			template <typename T>
-			class lazy_promise_type : public kerbal::coroutine::detail::llazy_promise_type_base
+			class lazy_promise_type :
+				public kerbal::coroutine::detail::llazy_promise_type_base
 			{
 					typedef kerbal::coroutine::lazy<T> lazy;
 					friend lazy;
@@ -75,14 +81,16 @@ namespace kerbal
 			};
 
 			template <>
-			class lazy_promise_type<void> : public kerbal::coroutine::detail::llazy_promise_type_base
+			class lazy_promise_type<void> :
+				public kerbal::coroutine::detail::llazy_promise_type_base
 			{
 					typedef kerbal::coroutine::lazy<void> lazy;
 					friend lazy;
 					typedef costd::coroutine_handle<lazy_promise_type> coroutine_handle;
 
 				public:
-					static void return_void() KERBAL_NOEXCEPT;
+					static
+					void return_void() KERBAL_NOEXCEPT;
 
 					lazy get_return_object();
 

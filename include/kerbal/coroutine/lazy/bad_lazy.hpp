@@ -21,13 +21,14 @@ namespace kerbal
 	namespace coroutine
 	{
 
-		class bad_lazy : public std::runtime_error
+		class bad_lazy :
+			public std::runtime_error
 		{
 				typedef std::runtime_error super;
 
 			public:
 				bad_lazy() :
-						super("bad lazy")
+					super("bad lazy")
 				{
 				}
 		};

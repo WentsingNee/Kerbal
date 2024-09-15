@@ -35,20 +35,23 @@ namespace kerbal
 	{
 
 		template <typename T>
-		lazy<T>::lazy(coroutine_handle && handle) KERBAL_NOEXCEPT
-				: k_handle(handle)
+		lazy<T>::
+		lazy(coroutine_handle && handle) KERBAL_NOEXCEPT :
+			k_handle(handle)
 		{
 		}
 
 		template <typename T>
-		lazy<T>::lazy(lazy && src) KERBAL_NOEXCEPT
-				: k_handle(src.k_handle)
+		lazy<T>::
+		lazy(lazy && src) KERBAL_NOEXCEPT :
+			k_handle(src.k_handle)
 		{
 			src.k_handle = nullptr;
 		}
 
 		template <typename T>
-		lazy<T>::~lazy() KERBAL_NOEXCEPT
+		lazy<T>::
+		~lazy() KERBAL_NOEXCEPT
 		{
 			if (this->k_handle) {
 				this->k_handle.destroy();
@@ -56,7 +59,9 @@ namespace kerbal
 		}
 
 		template <typename T>
-		lazy<T> & lazy<T>::operator=(lazy && src) KERBAL_NOEXCEPT
+		lazy<T> &
+		lazy<T>::
+		operator=(lazy && src) KERBAL_NOEXCEPT
 		{
 			if (this->k_handle) {
 				this->k_handle.destroy();
@@ -67,7 +72,9 @@ namespace kerbal
 		}
 
 		template <typename T>
-		void lazy<T>::empty_generator_check() const
+		void
+		lazy<T>::
+		empty_generator_check() const
 		{
 			if (!this->k_handle) {
 				kerbal::utility::throw_this_exception_helper<kerbal::coroutine::bad_lazy>::throw_this_exception();
@@ -75,7 +82,9 @@ namespace kerbal
 		}
 
 		template <typename T>
-		void lazy<T>::done_generator_check() const
+		void
+		lazy<T>::
+		done_generator_check() const
 		{
 			if (this->k_handle.done()) {
 				kerbal::utility::throw_this_exception_helper<kerbal::coroutine::done_coroutine>::throw_this_exception();
@@ -83,7 +92,9 @@ namespace kerbal
 		}
 
 		template <typename T>
-		T lazy<T>::operator()()
+		T
+		lazy<T>::
+		operator()()
 		{
 			this->empty_generator_check();
 			this->done_generator_check();
@@ -92,7 +103,9 @@ namespace kerbal
 		}
 
 		template <typename T>
-		void lazy<T>::swap(lazy & with) KERBAL_NOEXCEPT
+		void
+		lazy<T>::
+		swap(lazy & with) KERBAL_NOEXCEPT
 		{
 			kerbal::algorithm::swap(this->k_handle, with.k_handle);
 		}

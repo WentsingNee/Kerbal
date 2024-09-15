@@ -32,20 +32,23 @@ namespace kerbal
 	{
 
 		template <typename T>
-		generator<T>::generator(coroutine_handle && handle) KERBAL_NOEXCEPT
-				: k_handle(handle)
+		generator<T>::
+		generator(coroutine_handle && handle) KERBAL_NOEXCEPT :
+			k_handle(handle)
 		{
 		}
 
 		template <typename T>
-		generator<T>::generator(generator && src) KERBAL_NOEXCEPT
-				: k_handle(src.k_handle)
+		generator<T>::
+		generator(generator && src) KERBAL_NOEXCEPT :
+			k_handle(src.k_handle)
 		{
 			src.k_handle = nullptr;
 		}
 
 		template <typename T>
-		generator<T>::~generator() KERBAL_NOEXCEPT
+		generator<T>::
+		~generator() KERBAL_NOEXCEPT
 		{
 			if (this->k_handle) {
 				this->k_handle.destroy();
@@ -53,7 +56,9 @@ namespace kerbal
 		}
 
 		template <typename T>
-		generator<T> & generator<T>::operator=(generator && src) KERBAL_NOEXCEPT
+		generator<T> &
+		generator<T>::
+		operator=(generator && src) KERBAL_NOEXCEPT
 		{
 			if (this->k_handle) {
 				this->k_handle.destroy();
@@ -64,7 +69,9 @@ namespace kerbal
 		}
 
 		template <typename T>
-		void generator<T>::empty_generator_check() const
+		void
+		generator<T>::
+		empty_generator_check() const
 		{
 			if (this->empty()) {
 				kerbal::utility::throw_this_exception_helper<bad_generator>::throw_this_exception();
@@ -72,7 +79,9 @@ namespace kerbal
 		}
 
 		template <typename T>
-		void generator<T>::done_generator_check() const
+		void
+		generator<T>::
+		done_generator_check() const
 		{
 			if (this->done()) {
 				kerbal::utility::throw_this_exception_helper<done_coroutine>::throw_this_exception();
@@ -80,7 +89,9 @@ namespace kerbal
 		}
 
 		template <typename T>
-		const T & generator<T>::operator()()
+		T const &
+		generator<T>::
+		operator()()
 		{
 			empty_generator_check();
 			this->k_handle.resume();
@@ -89,34 +100,44 @@ namespace kerbal
 		}
 
 		template <typename T>
-		typename generator<T>::iterator
-		generator<T>::begin()
+		typename
+		generator<T>::iterator
+		generator<T>::
+		begin()
 		{
 			return iterator(this);
 		}
 
 		template <typename T>
-		typename generator<T>::iterator
-		generator<T>::end() KERBAL_NOEXCEPT
+		typename
+		generator<T>::iterator
+		generator<T>::
+		end() KERBAL_NOEXCEPT
 		{
 			return iterator(nullptr);
 		}
 
 		template <typename T>
-		bool generator<T>::empty() const KERBAL_NOEXCEPT
+		bool
+		generator<T>::
+		empty() const KERBAL_NOEXCEPT
 		{
 			return !static_cast<bool>(this->k_handle);
 		}
 
 		template <typename T>
-		bool generator<T>::done() const
+		bool
+		generator<T>::
+		done() const
 		{
 			this->empty_generator_check();
 			return this->k_handle.done();
 		}
 
 		template <typename T>
-		void generator<T>::swap(generator & with) KERBAL_NOEXCEPT
+		void
+		generator<T>::
+		swap(generator & with) KERBAL_NOEXCEPT
 		{
 			kerbal::algorithm::swap(this->k_handle, with.k_handle);
 		}

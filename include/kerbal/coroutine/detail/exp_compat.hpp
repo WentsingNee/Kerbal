@@ -26,8 +26,8 @@ namespace kerbal
 		namespace costd = std;
 
 		template <typename Promise>
-		const costd::coroutine_handle<Promise> &
-		exp_coroutine_handle_remove_const(const costd::coroutine_handle<Promise> & handle)
+		costd::coroutine_handle<Promise> const &
+		exp_coroutine_handle_remove_const(costd::coroutine_handle<Promise> const & handle)
 		{
 			return handle;
 		}
@@ -38,7 +38,7 @@ namespace kerbal
 
 		template <typename Promise>
 		costd::coroutine_handle<Promise> &
-		exp_coroutine_handle_remove_const(const costd::coroutine_handle<Promise> & handle)
+		exp_coroutine_handle_remove_const(costd::coroutine_handle<Promise> const & handle)
 		{
 			return const_cast<costd::coroutine_handle<Promise> &>(handle);
 		}

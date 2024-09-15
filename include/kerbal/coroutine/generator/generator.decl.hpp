@@ -47,7 +47,8 @@ namespace kerbal
 				coroutine_handle k_handle;
 
 			public:
-				class promise_type : public kerbal::coroutine::detail::generator_promise_base
+				class promise_type :
+					public kerbal::coroutine::detail::generator_promise_base
 				{
 						friend class generator;
 						friend class kerbal::coroutine::detail::generator_iterator<T>;
@@ -76,13 +77,13 @@ namespace kerbal
 			public:
 				generator() = default;
 
-				generator(const generator &) = delete;
+				generator(generator const &) = delete;
 
 				generator(generator && src) KERBAL_NOEXCEPT;
 
 				~generator() KERBAL_NOEXCEPT;
 
-				generator & operator=(const generator &) = delete;
+				generator & operator=(generator const &) = delete;
 
 				generator & operator=(generator && src) KERBAL_NOEXCEPT;
 
@@ -92,7 +93,7 @@ namespace kerbal
 				void done_generator_check() const;
 
 			public:
-				const T & operator()();
+				T const & operator()();
 
 				iterator begin();
 
@@ -105,7 +106,6 @@ namespace kerbal
 				void swap(generator & with) KERBAL_NOEXCEPT;
 
 		};
-
 
 	} // namespace coroutine
 

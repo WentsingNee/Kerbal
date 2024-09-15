@@ -35,25 +35,33 @@ namespace kerbal
 
 			template <typename T>
 			template <typename U>
-			void task_promise<T>::return_value(U && value)
+			void
+			task_promise<T>::
+			return_value(U && value)
 			{
 				k_value.emplace(kerbal::utility::forward<U>(value));
 			}
 
 			template <typename T>
-			const T& task_promise<T>::get() const
+			T const &
+			task_promise<T>::
+			get() const
 			{
 				return k_value.value();
 			}
 
 			template <typename T>
-			bool task_promise<T>::ready() const
+			bool
+			task_promise<T>::
+			ready() const
 			{
 				return k_value.has_value();
 			}
 
 			template <typename T>
-			task<T> task_promise<T>::get_return_object()
+			task<T>
+			task_promise<T>::
+			get_return_object()
 			{
 				return task<T>(task<T>::coroutine_handle::from_promise(*this));
 			}
@@ -64,30 +72,39 @@ namespace kerbal
 		// task_promise<void>
 
 			inline
-			task_promise<void>::task_promise() KERBAL_NOEXCEPT :
-					k_ready(false)
+			task_promise<void>::
+			task_promise() KERBAL_NOEXCEPT :
+				k_ready(false)
 			{
 			}
 
 			inline
-			void task_promise<void>::return_void()
+			void
+			task_promise<void>::
+			return_void()
 			{
 				k_ready = true;
 			}
 
 			inline
-			void task_promise<void>::get() const
+			void
+			task_promise<void>::
+			get() const
 			{
 			}
 
 			inline
-			bool task_promise<void>::ready() const
+			bool
+			task_promise<void>::
+			ready() const
 			{
 				return k_ready;
 			}
 
 			inline
-			task<void> task_promise<void>::get_return_object()
+			task<void>
+			task_promise<void>::
+			get_return_object()
 			{
 				return task<void>(task<void>::coroutine_handle::from_promise(*this));
 			}
@@ -100,24 +117,31 @@ namespace kerbal
 	// task_awaiter
 
 		template <typename T>
-		task_awaiter<T>::task_awaiter(const task * task) :
-				k_task(task)
+		task_awaiter<T>::
+		task_awaiter(const task * task) :
+			k_task(task)
 		{
 		}
 
 		template <typename T>
-		bool task_awaiter<T>::await_ready() const KERBAL_NOEXCEPT
+		bool
+		task_awaiter<T>::
+		await_ready() const KERBAL_NOEXCEPT
 		{
 			return k_task->k_handle.promise().ready();
 		}
 
 		template <typename T>
-		void task_awaiter<T>::await_suspend(costd::coroutine_handle<> h) const KERBAL_NOEXCEPT
+		void
+		task_awaiter<T>::
+		await_suspend(costd::coroutine_handle<> h) const KERBAL_NOEXCEPT
 		{
 		}
 
 		template <typename T>
-		const T & task_awaiter<T>::await_resume() const
+		T const &
+		task_awaiter<T>::
+		await_resume() const
 		{
 			return k_task->k_handle.promise().get();
 		}
@@ -128,24 +152,31 @@ namespace kerbal
 	// task_awaiter<void>
 
 		inline
-		task_awaiter<void>::task_awaiter(const task * task) :
-				k_task(task)
+		task_awaiter<void>::
+		task_awaiter(task const * task) :
+			k_task(task)
 		{
 		}
 
 		inline
-		bool task_awaiter<void>::await_ready()  const KERBAL_NOEXCEPT
+		bool
+		task_awaiter<void>::
+		await_ready() const KERBAL_NOEXCEPT
 		{
 			return k_task->k_handle.promise().ready();
 		}
 
 		inline
-		void task_awaiter<void>::await_suspend(costd::coroutine_handle<> h) const KERBAL_NOEXCEPT
+		void
+		task_awaiter<void>::
+		await_suspend(costd::coroutine_handle<> h) const KERBAL_NOEXCEPT
 		{
 		}
 
 		inline
-		void task_awaiter<void>::await_resume() const
+		void
+		task_awaiter<void>::
+		await_resume() const
 		{
 		}
 
@@ -155,20 +186,23 @@ namespace kerbal
 	// task<T>
 
 		template <typename T>
-		task<T>::task(coroutine_handle && handle) KERBAL_NOEXCEPT
-				: k_handle(handle)
+		task<T>::
+		task(coroutine_handle && handle) KERBAL_NOEXCEPT :
+			k_handle(handle)
 		{
 		}
 
 		template <typename T>
-		task<T>::task(task && src) KERBAL_NOEXCEPT
-				: k_handle(src.k_handle)
+		task<T>::
+		task(task && src) KERBAL_NOEXCEPT :
+			k_handle(src.k_handle)
 		{
 			src.k_handle = nullptr;
 		}
 
 		template <typename T>
-		task<T>::~task() KERBAL_NOEXCEPT
+		task<T>::
+		~task() KERBAL_NOEXCEPT
 		{
 			if (k_handle) {
 				k_handle.destroy();
@@ -176,7 +210,9 @@ namespace kerbal
 		}
 
 		template <typename T>
-		task<T> & task<T>::operator=(task && src) KERBAL_NOEXCEPT
+		task<T> &
+		task<T>::
+		operator=(task && src) KERBAL_NOEXCEPT
 		{
 			if (this->k_handle) {
 				this->k_handle.destroy();
@@ -187,13 +223,17 @@ namespace kerbal
 		}
 
 		template <typename T>
-		task_awaiter<T> task<T>::operator co_await() const
+		task_awaiter<T>
+		task<T>::
+		operator co_await() const
 		{
 			return task_awaiter<T>(this);
 		}
 
 		template <typename T>
-		void task<T>::operator()()
+		void
+		task<T>::
+		operator()()
 		{
 			if (!k_handle) {
 				kerbal::utility::throw_this_exception_helper<bad_task>::throw_this_exception();
@@ -205,13 +245,17 @@ namespace kerbal
 		}
 
 		template <typename T>
-		bool task<T>::ready() const
+		bool
+		task<T>::
+		ready() const
 		{
 			return k_handle.promise().ready();
 		}
 
 //		template <typename T>
-//		task<void> task<T>::wait_ready() const
+//		task<void>
+//		task<T>::
+//		wait_ready() const
 //		{
 //			while (!this->ready()) {
 //				co_await costd::suspend_always{};
@@ -219,7 +263,9 @@ namespace kerbal
 //		}
 
 		template <typename T>
-		void task<T>::swap(task & with) KERBAL_NOEXCEPT
+		void
+		task<T>::
+		swap(task & with) KERBAL_NOEXCEPT
 		{
 			kerbal::algorithm::swap(this->k_handle, with.k_handle);
 		}
@@ -230,28 +276,33 @@ namespace kerbal
 	// task<void>
 
 		inline
-		task<void>::task(coroutine_handle && handle) KERBAL_NOEXCEPT
-				: k_handle(handle)
+		task<void>::
+		task(coroutine_handle && handle) KERBAL_NOEXCEPT :
+			k_handle(handle)
 		{
 		}
 
 		inline
-		task<void>::task(task && src) KERBAL_NOEXCEPT
-				: k_handle(src.k_handle)
+		task<void>::
+		task(task && src) KERBAL_NOEXCEPT :
+			k_handle(src.k_handle)
 		{
 			src.k_handle = nullptr;
 		}
 
 		inline
-		task<void>::~task() KERBAL_NOEXCEPT
+		task<void>::
+		~task() KERBAL_NOEXCEPT
 		{
-			if (k_handle) {
-				k_handle.destroy();
+			if (this->k_handle) {
+				this->k_handle.destroy();
 			}
 		}
 
 		inline
-		task<void> & task<void>::operator=(task && src) KERBAL_NOEXCEPT
+		task<void> &
+		task<void>::
+		operator=(task && src) KERBAL_NOEXCEPT
 		{
 			if (this->k_handle) {
 				this->k_handle.destroy();
@@ -262,35 +313,42 @@ namespace kerbal
 		}
 
 		inline
-		task_awaiter<void> task<void>::operator co_await() const
+		task_awaiter<void>
+		task<void>::
+		operator co_await() const
 		{
 			return task_awaiter<void>(this);
 		}
 
 		inline
-		void task<void>::operator()()
+		void
+		task<void>::
+		operator()()
 		{
-			if (!k_handle) {
+			if (!this->k_handle) {
 				kerbal::utility::throw_this_exception_helper<bad_task>::throw_this_exception();
 			}
-			if (k_handle.done()) {
+			if (this->k_handle.done()) {
 				kerbal::utility::throw_this_exception_helper<done_coroutine>::throw_this_exception();
 			}
-			k_handle.resume();
+			this->k_handle.resume();
 		}
 
 		inline
-		bool task<void>::ready() const
+		bool
+		task<void>::
+		ready() const
 		{
-			return k_handle.promise().ready();
+			return this->k_handle.promise().ready();
 		}
 
 		inline
-		void task<void>::swap(task & with) KERBAL_NOEXCEPT
+		void
+		task<void>::
+		swap(task & with) KERBAL_NOEXCEPT
 		{
 			kerbal::algorithm::swap(this->k_handle, with.k_handle);
 		}
-
 
 	} // namespace coroutine
 

@@ -23,19 +23,21 @@ namespace kerbal
 	namespace coroutine
 	{
 
-		class done_coroutine : public std::runtime_error
+		class done_coroutine :
+			public std::runtime_error
 		{
 				typedef std::runtime_error super;
 
 			public:
 				done_coroutine() :
-						super("done coroutine")
+					super("done coroutine")
 				{
 				}
 
 			protected:
-				explicit done_coroutine(const char * msg) :
-						super(msg)
+				explicit
+				done_coroutine(const char * msg) :
+					super(msg)
 				{
 				}
 		};
