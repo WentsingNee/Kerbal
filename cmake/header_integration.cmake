@@ -9,13 +9,20 @@
 #   all rights reserved
 #
 
+include(FindOpenMP)
+include(FindThreads)
+
 foreach (
         sublib IN ITEMS
         kerbal
         kerbal-omp
         kerbal-parallel
 )
-    if (NOT TARGET ${sublib})
+    if (
+        FALSE
+        OR ((sublib STREQUAL "kerbal-omp") AND (NOT OpenMP_FOUND))
+        OR ((sublib STREQUAL "kerbal-parallel") AND (NOT Threads_FOUND))
+    )
         message(WARNING "header_integration ${sublib} ignored")
         continue()
     endif ()
