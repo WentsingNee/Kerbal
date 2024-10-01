@@ -195,7 +195,7 @@ namespace kerbal
 					k_stopped(false), k_idle_threads_num(init_size)
 				{
 					k_workers.reserve(init_size);
-					for (size_t i = 0; i < init_size; ++i) {
+					for (std::size_t i = 0; i < init_size; ++i) {
 						k_workers.emplace_back(worker(this));
 					}
 				}
