@@ -12,6 +12,8 @@
 #ifndef KERBAL_PARALLEL_THREAD_POOL_HPP
 #define KERBAL_PARALLEL_THREAD_POOL_HPP
 
+#if __cplusplus >= 201103L
+
 #include <kerbal/compatibility/move.hpp>
 #include <kerbal/compatibility/noexcept.hpp>
 #include <kerbal/container/vector.hpp>
@@ -262,5 +264,7 @@ namespace kerbal
 	} // namespace parallel
 
 } // namespace kerbal
+
+#endif // __cplusplus >= 201103L
 
 #endif // KERBAL_PARALLEL_THREAD_POOL_HPP
