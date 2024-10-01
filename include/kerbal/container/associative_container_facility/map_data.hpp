@@ -39,28 +39,30 @@ namespace kerbal
 	{
 
 		template <typename K, typename M>
-		class map_data :
-			protected kerbal::utility::compressed_pair<K, M>
+		class map_data
 		{
 			private:
-				typedef kerbal::utility::compressed_pair<K, M> super;
+				typedef kerbal::utility::compressed_pair<K, M> cpair;
+
+			protected:
+				kerbal::utility::compressed_pair<K, M> k_pair;
 
 			public:
-				typedef typename kerbal::type_traits::add_const<typename super::first_type>::type key_type;
-				typedef typename super::second_type mapped_type;
+				typedef typename kerbal::type_traits::add_const<typename cpair::first_type>::type key_type;
+				typedef typename cpair::second_type mapped_type;
 
 				template <std::size_t I>
 				struct value_type
 				{
 						typedef typename kerbal::type_traits::conditional<
 							I == 0,
-							key_type,
-							typename super::template value_type<I>::type
+							typename cpair::key_type,
+							typename cpair::template value_type<I>::type
 						>::type type;
 				};
 
 				template <std::size_t I>
-				struct const_reference : super::template const_reference<I>
+				struct const_reference : cpair::template const_reference<I>
 				{
 				};
 
@@ -70,14 +72,14 @@ namespace kerbal
 						typedef typename kerbal::type_traits::conditional<
 							I == 0,
 							typename const_reference<I>::type,
-							typename super::template reference<I>::type
+							typename cpair::template reference<I>::type
 						>::type type;
 				};
 
 #		if __cplusplus >= 201103L
 
 				template <std::size_t I>
-				struct const_rvalue_reference : super::template const_rvalue_reference<I>
+				struct const_rvalue_reference : cpair::template const_rvalue_reference<I>
 				{
 				};
 
@@ -87,7 +89,7 @@ namespace kerbal
 						typedef typename kerbal::type_traits::conditional<
 							I == 0,
 							typename const_rvalue_reference<I>::type,
-							typename super::template rvalue_reference<I>::type
+							typename cpair::template rvalue_reference<I>::type
 						>::type type;
 				};
 
@@ -99,7 +101,7 @@ namespace kerbal
 				template <typename K2>
 				KERBAL_CONSTEXPR14
 				map_data(K2 && k, kerbal::utility::compressed_pair_default_construct_tag tag) :
-					super(kerbal::utility::forward<K2>(k), tag)
+					k_pair(kerbal::utility::forward<K2>(k), tag)
 				{
 				}
 
@@ -107,7 +109,7 @@ namespace kerbal
 
 				template <typename K2>
 				map_data(const K2 & k, kerbal::utility::compressed_pair_default_construct_tag tag) :
-					super(k, tag)
+					k_pair(k, tag)
 				{
 				}
 
@@ -119,7 +121,7 @@ namespace kerbal
 				template <typename K2, typename M2>
 				KERBAL_CONSTEXPR14
 				map_data(K2 && k, M2 && m) :
-					super(
+					k_pair(
 						kerbal::utility::forward<K2>(k),
 						kerbal::utility::forward<M2>(m)
 					)
@@ -130,7 +132,7 @@ namespace kerbal
 
 				template <typename K2, typename M2>
 				map_data(const K2 & k, const M2 & m) :
-					super(k, m)
+					k_pair(k, m)
 				{
 				}
 
@@ -142,7 +144,7 @@ namespace kerbal
 				template <typename Tuple>
 				KERBAL_CONSTEXPR14
 				map_data(Tuple && tuple) :
-					super(tuple)
+					k_pair(tuple)
 				{
 				}
 
@@ -150,7 +152,7 @@ namespace kerbal
 
 				template <typename Tuple>
 				map_data(const Tuple & tuple) :
-					super(tuple)
+					k_pair(tuple)
 				{
 				}
 
@@ -162,7 +164,7 @@ namespace kerbal
 				template <typename TupleK, typename TupleV>
 				KERBAL_CONSTEXPR
 				map_data(kerbal::utility::piecewise_construct_t tag, TupleK && args_for_key, TupleV && args_for_value) :
-					super(
+					k_pair(
 						tag,
 						kerbal::utility::forward<TupleK>(args_for_key),
 						kerbal::utility::forward<TupleV>(args_for_value)
@@ -174,21 +176,27 @@ namespace kerbal
 
 
 				KERBAL_CONSTEXPR14
+				const key_type & first() const KERBAL_NOEXCEPT
+				{
+					return this->k_pair.first();
+				}
+
+				KERBAL_CONSTEXPR14
 				const key_type & key() const KERBAL_NOEXCEPT
 				{
-					return super::first();
+					return this->k_pair.first();
 				}
 
 				KERBAL_CONSTEXPR14
 				mapped_type & value() KERBAL_NOEXCEPT
 				{
-					return super::second();
+					return this->k_pair.second();
 				}
 
 				KERBAL_CONSTEXPR14
 				const mapped_type & value() const KERBAL_NOEXCEPT
 				{
-					return super::second();
+					return this->k_pair.second();
 				}
 
 
@@ -197,7 +205,7 @@ namespace kerbal
 				typename reference<I>::type
 				get() KERBAL_REFERENCE_OVERLOAD_TAG KERBAL_NOEXCEPT
 				{
-					return super::template get<I>();
+					return this->k_pair.template get<I>();
 				}
 
 				template <std::size_t I>
@@ -205,7 +213,7 @@ namespace kerbal
 				typename const_reference<I>::type
 				get() KERBAL_CONST_REFERENCE_OVERLOAD_TAG KERBAL_NOEXCEPT
 				{
-					return super::template get<I>();
+					return this->k_pair.template get<I>();
 				}
 
 #		if __cplusplus >= 201103L
@@ -215,7 +223,7 @@ namespace kerbal
 				typename rvalue_reference<I>::type
 				get() && noexcept
 				{
-					return kerbal::compatibility::move(*this).super::template get<I>();
+					return kerbal::compatibility::move(*this).k_pair.template get<I>();
 				}
 
 				template <std::size_t I>
@@ -223,7 +231,7 @@ namespace kerbal
 				typename const_rvalue_reference<I>::type
 				get() const && noexcept
 				{
-					return kerbal::compatibility::move(*this).super::template get<I>();
+					return kerbal::compatibility::move(*this).k_pair.template get<I>();
 				}
 
 #		endif
