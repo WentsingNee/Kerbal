@@ -34,6 +34,7 @@
 #include <kerbal/type_traits/is_trivially_destructible.hpp>
 #include <kerbal/utility/in_place.hpp>
 #include <kerbal/utility/throw_this_exception.hpp>
+#include <kerbal/utility/use_args.hpp>
 
 #if __cplusplus < 201103L
 #	include <kerbal/macro/macro_concat.hpp>
@@ -931,6 +932,58 @@ namespace kerbal
 #			undef TARGS_DECL
 #			undef ARGS_DECL
 #			undef ARGS_USE
+#			undef FBODY
+
+#	endif
+
+
+#	if __cplusplus >= 201103L
+
+				template <typename ... Args>
+				KERBAL_CONSTEXPR14
+				optional & emplace_use_args(kerbal::utility::use_args_t<Args...> const & args)
+				{
+					this->reset();
+					this->k_storage.construct_use_args(args);
+					this->k_has_value = true;
+					return *this;
+				}
+
+				template <typename ... Args>
+				KERBAL_CONSTEXPR14
+				optional & emplace_use_args(kerbal::utility::use_args_t<Args...> && args)
+				{
+					this->reset();
+					this->k_storage.construct_use_args(kerbal::compatibility::move(args));
+					this->k_has_value = true;
+					return *this;
+				}
+
+#	else
+
+#			define EMPTY
+#			define REMAINF(exp) exp
+#			define THEAD_NOT_EMPTY(exp) template <exp>
+#			define TARGS_DECL(i) typename KERBAL_MACRO_CONCAT(Arg, i)
+#			define ARGS_DECL(i) KERBAL_MACRO_CONCAT(Arg, i)
+#			define FBODY(i) \
+				KERBAL_OPT_PPEXPAND_WITH_COMMA_N(THEAD_NOT_EMPTY, EMPTY, TARGS_DECL, i) \
+				optional & emplace(kerbal::utility::use_args_t<KERBAL_OPT_PPEXPAND_WITH_COMMA_N(REMAINF, EMPTY, ARGS_DECL, i)> const & args) \
+				{ \
+					this->reset(); \
+					this->k_storage.construct(args); \
+					this->k_has_value = true; \
+					return *this; \
+				} \
+
+				KERBAL_PPEXPAND_N(FBODY, KERBAL_PPEXPAND_EMPTY_SEPARATOR, 0)
+				KERBAL_PPEXPAND_N(FBODY, KERBAL_PPEXPAND_EMPTY_SEPARATOR, 20)
+
+#			undef EMPTY
+#			undef REMAINF
+#			undef THEAD_NOT_EMPTY
+#			undef TARGS_DECL
+#			undef ARGS_DECL
 #			undef FBODY
 
 #	endif

@@ -20,6 +20,8 @@
 #include <kerbal/memory/uninitialized_using_allocator.hpp>
 #include <kerbal/utility/declval.hpp>
 #include <kerbal/utility/in_place.hpp>
+#include <kerbal/utility/integer_sequence.hpp>
+#include <kerbal/utility/use_args.hpp>
 
 #if __cplusplus < 201103L
 #	include <kerbal/macro/macro_concat.hpp>
@@ -158,6 +160,83 @@ namespace kerbal
 					)
 				{
 					kerbal::memory::construct_at(this->raw_pointer(), kerbal::utility::forward<Args>(args)...);
+				}
+
+#		endif
+
+
+#		if __cplusplus < 201103L
+
+#			define EMPTY
+#			define REMAINF(exp) exp
+#			define LEFT_JOIN_COMMA(exp) , exp
+#			define THEAD_NOT_EMPTY(exp) template <exp>
+#			define TARGS_DECL(i) typename KERBAL_MACRO_CONCAT(Arg, i)
+#			define ARGS_DECL(i) KERBAL_MACRO_CONCAT(Arg, i)
+#			define ARGS_USE(i) args.get<i>()
+#			define FBODY(i) \
+				KERBAL_OPT_PPEXPAND_WITH_COMMA_N(THEAD_NOT_EMPTY, EMPTY, TARGS_DECL, i) \
+				void construct_use_args(kerbal::utility::use_args_t<KERBAL_OPT_PPEXPAND_WITH_COMMA_N(REMAINF, EMPTY, ARGS_DECL, i)> const & args) \
+				{ \
+					kerbal::memory::construct_at(this->raw_pointer() KERBAL_OPT_PPEXPAND_WITH_COMMA_N(LEFT_JOIN_COMMA, EMPTY, ARGS_USE, i)); \
+				} \
+
+				KERBAL_PPEXPAND_N(FBODY, KERBAL_PPEXPAND_EMPTY_SEPARATOR, 0)
+				KERBAL_PPEXPAND_N(FBODY, KERBAL_PPEXPAND_EMPTY_SEPARATOR, 20)
+
+#			undef EMPTY
+#			undef REMAINF
+#			undef LEFT_JOIN_COMMA
+#			undef THEAD_NOT_EMPTY
+#			undef TARGS_DECL
+#			undef ARGS_DECL
+#			undef ARGS_USE
+#			undef FBODY
+
+#		else
+
+			private:
+
+				template <typename ... Args, std::size_t ... I>
+				KERBAL_CONSTEXPR14
+				void k_construct_use_args_impl(
+					kerbal::utility::use_args_t<Args...> const & args,
+					kerbal::utility::index_sequence<I...>
+				)
+				{
+					kerbal::memory::construct_at(this->raw_pointer(), args.template get<I>()...);
+				}
+
+				template <typename ... Args, std::size_t ... I>
+				KERBAL_CONSTEXPR14
+				void k_construct_use_args_impl(
+					kerbal::utility::use_args_t<Args...> && args,
+					kerbal::utility::index_sequence<I...>
+				)
+				{
+					kerbal::memory::construct_at(this->raw_pointer(), kerbal::compatibility::move(args).template get<I>()...);
+				}
+
+			public:
+
+				template <typename ... Args>
+				KERBAL_CONSTEXPR14
+				void construct_use_args(kerbal::utility::use_args_t<Args...> const & args)
+				{
+					this->k_construct_use_args_impl(
+						args,
+						kerbal::utility::make_index_sequence<sizeof...(Args)>()
+					);
+				}
+
+				template <typename ... Args>
+				KERBAL_CONSTEXPR14
+				void construct_use_args(kerbal::utility::use_args_t<Args...> && args)
+				{
+					this->k_construct_use_args_impl(
+						kerbal::compatibility::move(args),
+						kerbal::utility::make_index_sequence<sizeof...(Args)>()
+					);
 				}
 
 #		endif

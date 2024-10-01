@@ -25,8 +25,11 @@
 #include <kerbal/compatibility/noexcept.hpp>
 #include <kerbal/memory/allocator_traits.hpp>
 #include <kerbal/optional/optional.hpp>
+#include <kerbal/type_traits/enable_if.hpp>
+#include <kerbal/type_traits/remove_cvref.hpp>
 #include <kerbal/type_traits/remove_reference.hpp>
 #include <kerbal/utility/forward.hpp>
+#include <kerbal/utility/use_args.hpp>
 
 #include <cstddef>
 
@@ -63,10 +66,31 @@ namespace kerbal
 
 					public:
 						template <typename U>
-						costd::suspend_always
+						typename kerbal::type_traits::enable_if<
+							!kerbal::utility::is_use_args_t<
+								typename kerbal::type_traits::remove_cvref<U>::type
+							>::value,
+							costd::suspend_always
+						>::type
 						yield_value(U && arg)
 						{
 							this->k_yielded.emplace(kerbal::utility::forward<U>(arg));
+							return {};
+						}
+
+						template <typename ... Args>
+						costd::suspend_always
+						yield_value(kerbal::utility::use_args_t<Args...> const & args)
+						{
+							this->k_yielded.emplace_use_args(args);
+							return {};
+						}
+
+						template <typename ... Args>
+						costd::suspend_always
+						yield_value(kerbal::utility::use_args_t<Args...> && args)
+						{
+							this->k_yielded.emplace_use_args(kerbal::compatibility::move(args));
 							return {};
 						}
 
