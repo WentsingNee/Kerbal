@@ -20,7 +20,6 @@
 #include <kerbal/memory/uninitialized_using_allocator.hpp>
 #include <kerbal/utility/declval.hpp>
 #include <kerbal/utility/in_place.hpp>
-#include <kerbal/utility/integer_sequence.hpp>
 #include <kerbal/utility/use_args.hpp>
 
 #if __cplusplus < 201103L
@@ -30,6 +29,7 @@
 
 #if __cplusplus >= 201103L
 #	include <kerbal/utility/forward.hpp>
+#	include <kerbal/utility/integer_sequence.hpp>
 #endif
 
 #include <cstddef>
@@ -172,8 +172,8 @@ namespace kerbal
 #			define LEFT_JOIN_COMMA(exp) , exp
 #			define THEAD_NOT_EMPTY(exp) template <exp>
 #			define TARGS_DECL(i) typename KERBAL_MACRO_CONCAT(Arg, i)
-#			define ARGS_DECL(i) KERBAL_MACRO_CONCAT(Arg, i)
-#			define ARGS_USE(i) args.get<i>()
+#			define TARGS_USE(i) KERBAL_MACRO_CONCAT(Arg, i)
+#			define ARGS_USE(i) args.template get<i>()
 #			define FBODY(i) \
 				KERBAL_OPT_PPEXPAND_WITH_COMMA_N(THEAD_NOT_EMPTY, EMPTY, TARGS_DECL, i) \
 				void construct_use_args(kerbal::utility::use_args_t<KERBAL_OPT_PPEXPAND_WITH_COMMA_N(REMAINF, EMPTY, ARGS_DECL, i)> const & args) \
@@ -181,15 +181,15 @@ namespace kerbal
 					kerbal::memory::construct_at(this->raw_pointer() KERBAL_OPT_PPEXPAND_WITH_COMMA_N(LEFT_JOIN_COMMA, EMPTY, ARGS_USE, i)); \
 				} \
 
-				KERBAL_PPEXPAND_N(FBODY, KERBAL_PPEXPAND_EMPTY_SEPARATOR, 0)
-				KERBAL_PPEXPAND_N(FBODY, KERBAL_PPEXPAND_EMPTY_SEPARATOR, 20)
+//				KERBAL_PPEXPAND_N(FBODY, KERBAL_PPEXPAND_EMPTY_SEPARATOR, 0)
+//				KERBAL_PPEXPAND_N(FBODY, KERBAL_PPEXPAND_EMPTY_SEPARATOR, 19)
 
 #			undef EMPTY
 #			undef REMAINF
 #			undef LEFT_JOIN_COMMA
 #			undef THEAD_NOT_EMPTY
 #			undef TARGS_DECL
-#			undef ARGS_DECL
+#			undef TARGS_USE
 #			undef ARGS_USE
 #			undef FBODY
 
