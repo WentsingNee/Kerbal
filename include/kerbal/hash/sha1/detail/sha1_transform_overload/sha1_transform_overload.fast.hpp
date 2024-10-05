@@ -18,6 +18,7 @@
 
 #include <kerbal/compatibility/constexpr.hpp>
 #include <kerbal/compatibility/noexcept.hpp>
+#include <kerbal/config/endian.hpp>
 #include <kerbal/numeric/bit.hpp>
 
 
@@ -100,7 +101,7 @@ namespace kerbal
 			{
 				uint32_t w[16] = {};
 				for (int i = 0; i < 16; ++i) {
-					w[i] = char4tolong1<BYTE_ORDER>(buffer + 4 * i);
+					w[i] = char4tolong1<kerbal::config::KERBAL_BYTE_ORDER_TYPEDEF::value>(buffer + 4 * i);
 				}
 
 				/* Copy context->state[] to working vars */
