@@ -15,6 +15,8 @@
 #include <kerbal/compatibility/constexpr.hpp>
 #include <kerbal/compatibility/fixed_width_integer.hpp>
 #include <kerbal/compatibility/noexcept.hpp>
+#include <kerbal/config/endian.hpp>
+
 
 #include <cstddef>
 #include <cstdlib>
@@ -29,7 +31,7 @@ namespace kerbal
 		namespace detail
 		{
 
-			template <int byte_order>
+			template <kerbal::config::endian ByteOrder>
 			KERBAL_CONSTEXPR
 			kerbal::compatibility::uint32_t
 			char4tolong1(const kerbal::compatibility::uint8_t c[4]) KERBAL_NOEXCEPT;
@@ -38,7 +40,7 @@ namespace kerbal
 			KERBAL_CONSTEXPR
 			inline
 			kerbal::compatibility::uint32_t
-			char4tolong1<LITTLE_ENDIAN>(const kerbal::compatibility::uint8_t c[4]) KERBAL_NOEXCEPT
+			char4tolong1<kerbal::config::ENDIAN_LITTLE>(const kerbal::compatibility::uint8_t c[4]) KERBAL_NOEXCEPT
 			{
 				return (c[0] << 24u) | (c[1] << 16u) | (c[2] << 8u) | c[3];
 			}
@@ -47,7 +49,7 @@ namespace kerbal
 			KERBAL_CONSTEXPR
 			inline
 			kerbal::compatibility::uint32_t
-			char4tolong1<BIG_ENDIAN>(const kerbal::compatibility::uint8_t c[4]) KERBAL_NOEXCEPT
+			char4tolong1<kerbal::config::ENDIAN_BIG>(const kerbal::compatibility::uint8_t c[4]) KERBAL_NOEXCEPT
 			{
 				return (c[3] << 24u) | (c[2] << 16u) | (c[1] << 8u) | c[0];
 			}

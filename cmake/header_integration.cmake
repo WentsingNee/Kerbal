@@ -29,22 +29,7 @@ foreach (
         continue()
     endif ()
 
-    set(content_of_header_integration
-        "
-#ifndef LITTLE_ENDIAN
-#	define LITTLE_ENDIAN 4321
-#endif
-
-#ifndef BIG_ENDIAN
-#	define BIG_ENDIAN 1234
-#endif
-
-#ifndef BYTE_ORDER
-#	define BYTE_ORDER LITTLE_ENDIAN
-#endif
-
-"
-    )
+    set(content_of_header_integration "")
     foreach (header IN LISTS Kerbal_PUBLIC_HEADERS_RELATIVE_${sublib})
         string(APPEND content_of_header_integration "#include <${header}>\n")
     endforeach ()
