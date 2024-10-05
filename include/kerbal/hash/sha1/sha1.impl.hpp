@@ -16,6 +16,7 @@
 #include <kerbal/compatibility/constexpr.hpp>
 #include <kerbal/compatibility/noexcept.hpp>
 #include <kerbal/compatibility/static_assert.hpp>
+#include <kerbal/config/endian.hpp>
 #include <kerbal/iterator/iterator.hpp>
 #include <kerbal/numeric/bit.hpp>
 #include <kerbal/type_traits/is_same.hpp>
@@ -97,14 +98,14 @@ namespace kerbal
 
 #	endif
 
-		template <int byte_order>
+		template <kerbal::config::endian ByteOrder>
 		KERBAL_CONSTEXPR
 		uint32_t char4tolong1(const uint8_t c[4]) KERBAL_NOEXCEPT;
 
 		template <>
 		KERBAL_CONSTEXPR
 		inline
-		uint32_t char4tolong1<LITTLE_ENDIAN>(const uint8_t c[4]) KERBAL_NOEXCEPT
+		uint32_t char4tolong1<kerbal::config::ENDIAN_LITTLE>(const uint8_t c[4]) KERBAL_NOEXCEPT
 		{
 			return (c[0] << 24u) | (c[1] << 16u) | (c[2] << 8u) | c[3];
 		}
@@ -112,7 +113,7 @@ namespace kerbal
 		template <>
 		KERBAL_CONSTEXPR
 		inline
-		uint32_t char4tolong1<BIG_ENDIAN>(const uint8_t c[4]) KERBAL_NOEXCEPT
+		uint32_t char4tolong1<kerbal::config::ENDIAN_BIG>(const uint8_t c[4]) KERBAL_NOEXCEPT
 		{
 			return (c[3] << 24u) | (c[2] << 16u) | (c[1] << 8u) | c[0];
 		}
@@ -161,7 +162,7 @@ namespace kerbal
 		{
 			uint32_t w[20] = {};
 			for (int i = 0; i < 16; ++i) {
-				w[i] = char4tolong1<BYTE_ORDER>(buffer + 4 * i);
+				w[i] = char4tolong1<kerbal::config::KERBAL_BYTE_ORDER_TYPEDEF::value>(buffer + 4 * i);
 			}
 			for (int i = 16; i < 20; ++i) {
 				w[i] = kerbal::numeric::rotl(w[i - 16] ^ w[i - 14] ^ w[i - 8] ^ w[i - 3] , 1);
@@ -256,7 +257,7 @@ namespace kerbal
 		{
 			uint32_t w[16] = {};
 			for (int i = 0; i < 16; ++i) {
-				w[i] = char4tolong1<BYTE_ORDER>(buffer + 4 * i);
+				w[i] = char4tolong1<kerbal::config::KERBAL_BYTE_ORDER_TYPEDEF::value>(buffer + 4 * i);
 			}
 
 			/* Copy context->state[] to working vars */
