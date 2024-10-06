@@ -42,13 +42,19 @@ namespace kerbal
 #		endif
 
 					KERBAL_CONSTEXPR14
+					static
+					void update_w(uint32_t w[20]) KERBAL_NOEXCEPT;
+
+					KERBAL_CONSTEXPR14
 					void transform(const uint8_t buffer[64]) KERBAL_NOEXCEPT;
 
 			};
 
 			KERBAL_CONSTEXPR14
 			inline
-			void update_w_size(uint32_t w[20]) KERBAL_NOEXCEPT
+			void
+			SHA1_transform_overload<SHA1_policy::size>::
+			update_w(uint32_t w[20]) KERBAL_NOEXCEPT
 			{
 				w[0] = kerbal::numeric::rotl(w[17] ^ w[12] ^ w[6] ^ w[4], 1);
 				w[1] = kerbal::numeric::rotl(w[18] ^ w[13] ^ w[7] ^ w[5], 1);
@@ -103,7 +109,7 @@ namespace kerbal
 					ww += 5;
 				}
 
-				update_w_size(w);
+				update_w(w);
 
 				ww = w;
 				for (int i = 0; i < 4; ++i) {
@@ -115,7 +121,7 @@ namespace kerbal
 					ww += 5;
 				}
 
-				update_w_size(w);
+				update_w(w);
 
 				ww = w;
 				for (int i = 0; i < 4; ++i) {
@@ -127,7 +133,7 @@ namespace kerbal
 					ww += 5;
 				}
 
-				update_w_size(w);
+				update_w(w);
 
 				ww = w;
 				for (int i = 0; i < 4; ++i) {
