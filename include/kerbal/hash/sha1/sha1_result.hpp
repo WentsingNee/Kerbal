@@ -12,6 +12,8 @@
 #ifndef KERBAL_HASH_SHA1_SHA1_RESULT_HPP
 #define KERBAL_HASH_SHA1_SHA1_RESULT_HPP
 
+#include <kerbal/hash/sha1/sha1.fwd.hpp>
+
 #include <kerbal/compatibility/constexpr.hpp>
 #include <kerbal/compatibility/fixed_width_integer.hpp>
 #include <kerbal/compatibility/noexcept.hpp>
@@ -31,7 +33,7 @@ namespace kerbal
 		{
 			private:
 				template <typename Policy>
-				friend class SHA1_context;
+				friend class kerbal::hash::SHA1_context;
 
 			private:
 				unsigned char hash[20];
