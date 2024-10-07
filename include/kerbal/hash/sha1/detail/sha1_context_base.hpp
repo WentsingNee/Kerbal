@@ -129,6 +129,7 @@ namespace kerbal
 
 #	else
 
+			inline
 			SHA1_context_base::
 			SHA1_context_base() KERBAL_NOEXCEPT
 			{
