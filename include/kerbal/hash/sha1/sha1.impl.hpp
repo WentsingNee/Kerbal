@@ -22,6 +22,8 @@
 #include <kerbal/iterator/iterator.hpp>
 #include <kerbal/type_traits/is_same.hpp>
 
+#include <cstddef>
+
 
 namespace kerbal
 {
@@ -149,14 +151,20 @@ namespace kerbal
 			}; /* Endian independent */
 
 			{
-				uint8_t p[1] = {0200};
-				this->update(p, p + 1);
-				while ((this->count[0] & 504) != 448) {
-					// 504 = 0b111111000
-					// 448 = 0b111000000
-					p[0] = 0000;
-					this->update(p, p + 1);
+				uint8_t p[64] = {0200};
+				uint8_t const * kp = p;
+				this->update(kp, kp + 1);
+				// 504 = 0b111111000
+				// 448 = 0b111000000
+				std::size_t padding = this->count[0] & 504;
+				p[0] = 0;
+				if (padding > 448) {
+					padding = 448 + (512 - padding);
+				} else {
+					padding = 448 - padding;
 				}
+				padding /= 8;
+				this->update(kp, kp + padding);
 			}
 
 			this->update(final_count, final_count + 8); /* Should cause a SHA1Transform() */
