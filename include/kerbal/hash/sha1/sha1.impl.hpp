@@ -68,11 +68,11 @@ namespace kerbal
 			kerbal::algorithm::copy(first, last, this->buffer + j);
 
 			j = this->count[0];
-			this->count[0] += static_cast<kerbal::compatibility::uint32_t>(len << 3);
+			this->count[0] += static_cast<uint32_t>(len << 3);
 			if (this->count[0] < j) {
 				++this->count[1];
 			}
-			this->count[1] += static_cast<kerbal::compatibility::uint32_t>(len >> 29);
+			this->count[1] += static_cast<uint32_t>(len >> 29);
 
 		}
 
@@ -108,11 +108,11 @@ namespace kerbal
 			kerbal::algorithm::copy(first, last, this->buffer + j);
 
 			j = this->count[0];
-			this->count[0] += static_cast<kerbal::compatibility::uint32_t>(len << 3);
+			this->count[0] += static_cast<uint32_t>(len << 3);
 			if (this->count[0] < j) {
 				++this->count[1];
 			}
-			this->count[1] += static_cast<kerbal::compatibility::uint32_t>(len >> 29);
+			this->count[1] += static_cast<uint32_t>(len >> 29);
 
 		}
 
