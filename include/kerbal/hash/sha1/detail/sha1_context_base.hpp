@@ -67,7 +67,30 @@ namespace kerbal
 					static
 					void R4(uint32_t wi, uint32_t a, uint32_t & b, uint32_t c, uint32_t d, uint32_t & e) KERBAL_NOEXCEPT;
 
+					KERBAL_CONSTEXPR
+					static
+					uint8_t const PADDING[1 + 64]
+#		if __cplusplus >= 201103L
+						= {0200}
+#		endif
+					;
+
 			};
+
+#		if __cplusplus >= 201103L
+
+			KERBAL_CONSTEXPR
+			SHA1_context_base::uint8_t const
+			SHA1_context_base::
+			PADDING[1 + 64];
+
+#		else
+
+			SHA1_context_base::uint8_t const
+			SHA1_context_base::
+			PADDING[1 + 64] = {0200};
+
+#		endif
 
 
 #		if __cplusplus >= 201103L
