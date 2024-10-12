@@ -52,16 +52,6 @@ namespace kerbal
 #		endif
 
 				protected:
-					// /* blk0() and blk() perform the initial expand. */
-					// /* I got the idea of expanding during the round function from SSLeay */
-					// template <int byte_order>
-					// KERBAL_CONSTEXPR14
-					// static
-					// uint32_t blk0(uint32_t l[16], size_t i) KERBAL_NOEXCEPT;
-					//
-					// KERBAL_CONSTEXPR
-					// static
-					// uint32_t blk(const uint32_t l[16], size_t i) KERBAL_NOEXCEPT;
 
 					KERBAL_CONSTEXPR14
 					static
