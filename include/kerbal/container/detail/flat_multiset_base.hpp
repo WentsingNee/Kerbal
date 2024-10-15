@@ -35,11 +35,11 @@ namespace kerbal
 		namespace detail
 		{
 
-			template <typename T, typename Ordered>
-			class flat_multiset_base : public flat_set_common_base<T, Ordered>
+			template <typename Ordered>
+			class flat_multiset_base : public flat_set_common_base<Ordered>
 			{
 				private:
-					typedef flat_set_common_base<T, Ordered> super;
+					typedef flat_set_common_base<Ordered> super;
 
 				public:
 					typedef typename super::key_compare			key_compare;
