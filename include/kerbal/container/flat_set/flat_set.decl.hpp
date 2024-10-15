@@ -90,11 +90,13 @@ namespace kerbal
 
 			public:
 
+				KERBAL_CONSTEXPR20
 				flat_set() :
 					super()
 				{
 				}
 
+				KERBAL_CONSTEXPR20
 				explicit
 				flat_set(key_compare kc) :
 					super(kc)
@@ -102,6 +104,7 @@ namespace kerbal
 				}
 
 				template <typename InputIterator>
+				KERBAL_CONSTEXPR20
 				flat_set(
 					InputIterator first, InputIterator last,
 					typename kerbal::type_traits::enable_if<
@@ -114,6 +117,7 @@ namespace kerbal
 				}
 
 				template <typename InputIterator>
+				KERBAL_CONSTEXPR20
 				flat_set(
 					InputIterator first, InputIterator last, key_compare kc,
 					typename kerbal::type_traits::enable_if<
@@ -127,11 +131,13 @@ namespace kerbal
 
 #		if __cplusplus >= 201103L
 
+				KERBAL_CONSTEXPR20
 				flat_set(std::initializer_list<value_type> ilist) :
 					super(ilist)
 				{
 				}
 
+				KERBAL_CONSTEXPR20
 				flat_set(std::initializer_list<value_type> ilist, key_compare kc) :
 					super(ilist, kc)
 				{
@@ -161,12 +167,14 @@ namespace kerbal
 
 				using super::assign;
 
+				KERBAL_CONSTEXPR20
 				void
 				assign(const flat_set & src)
 				{
 					this->ordered.assign(src.ordered);
 				}
 
+				KERBAL_CONSTEXPR20
 				flat_set &
 				operator=(const flat_set & src)
 				{
@@ -176,6 +184,7 @@ namespace kerbal
 
 #		if __cplusplus >= 201103L
 
+				KERBAL_CONSTEXPR20
 				flat_set &
 				operator=(std::initializer_list<value_type> ilist)
 				{
@@ -199,6 +208,7 @@ namespace kerbal
 			//===================
 			// capacity
 
+				KERBAL_CONSTEXPR20
 				void
 				reserve(size_type new_cap)
 				{
@@ -209,6 +219,7 @@ namespace kerbal
 			//===================
 			// operation
 
+				KERBAL_CONSTEXPR20
 				void
 				swap(flat_set & ano)
 				{
@@ -217,6 +228,7 @@ namespace kerbal
 
 
 				template <typename Allocator2>
+				KERBAL_CONSTEXPR20
 				friend
 				bool
 				operator==(
@@ -228,6 +240,7 @@ namespace kerbal
 				}
 
 				template <typename Allocator2>
+				KERBAL_CONSTEXPR20
 				friend
 				bool
 				operator!=(
@@ -239,6 +252,7 @@ namespace kerbal
 				}
 
 				template <typename Allocator2>
+				KERBAL_CONSTEXPR20
 				friend
 				bool
 				operator<(
@@ -250,6 +264,7 @@ namespace kerbal
 				}
 
 				template <typename Allocator2>
+				KERBAL_CONSTEXPR20
 				friend
 				bool
 				operator<=(
@@ -261,6 +276,7 @@ namespace kerbal
 				}
 
 				template <typename Allocator2>
+				KERBAL_CONSTEXPR20
 				friend
 				bool
 				operator>(
@@ -272,6 +288,7 @@ namespace kerbal
 				}
 
 				template <typename Allocator2>
+				KERBAL_CONSTEXPR20
 				friend
 				bool
 				operator>=(
@@ -291,7 +308,7 @@ namespace kerbal
 	{
 
 		template <typename T, typename KeyCompare, typename Allocator>
-		KERBAL_CONSTEXPR14
+		KERBAL_CONSTEXPR20
 		void
 		swap(
 			kerbal::container::flat_set<T, KeyCompare, Allocator> & a,
@@ -310,7 +327,7 @@ namespace kerbal
 KERBAL_NAMESPACE_STD_BEGIN
 
 	template <typename T, typename KeyCompare, typename Allocator>
-	KERBAL_CONSTEXPR14
+	KERBAL_CONSTEXPR20
 	void
 	swap(
 		kerbal::container::flat_set<T, KeyCompare, Allocator> & a,
