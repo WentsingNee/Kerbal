@@ -181,11 +181,13 @@ namespace kerbal
 							}
 
 						public:
+							KERBAL_CONSTEXPR
 							bool operator()(const_reference item, const key_type & key) const
 							{
 								return self->key_comp()(self->extract()(item), key);
 							}
 
+							KERBAL_CONSTEXPR
 							bool operator()(const key_type & key, const_reference item) const
 							{
 								return self->key_comp()(key, self->extract()(item));
@@ -205,6 +207,7 @@ namespace kerbal
 							}
 
 						public:
+							KERBAL_CONSTEXPR
 							bool operator()(const_reference item, const key_type & key) const
 							{
 								return self->key_comp()(self->extract()(item), key);
@@ -301,6 +304,7 @@ namespace kerbal
 							}
 
 						public:
+							KERBAL_CONSTEXPR
 							bool
 							operator()(const_reference lhs, const_reference rhs) const
 							{
@@ -308,6 +312,7 @@ namespace kerbal
 							}
 					};
 
+					KERBAL_CONSTEXPR
 					value_compare
 					value_comp() const
 					{
