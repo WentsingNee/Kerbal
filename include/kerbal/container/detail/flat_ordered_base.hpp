@@ -182,11 +182,13 @@ namespace kerbal
 							}
 
 						public:
+							KERBAL_CONSTEXPR14
 							bool operator()(const_reference item, const key_type & key) const
 							{
 								return self->key_comp()(self->extract()(item), key);
 							}
 
+							KERBAL_CONSTEXPR14
 							bool operator()(const key_type & key, const_reference item) const
 							{
 								return self->key_comp()(key, self->extract()(item));
@@ -206,6 +208,7 @@ namespace kerbal
 							}
 
 						public:
+							KERBAL_CONSTEXPR14
 							bool operator()(const_reference item, const key_type & key) const
 							{
 								return self->key_comp()(self->extract()(item), key);
@@ -297,6 +300,7 @@ namespace kerbal
 							}
 
 						public:
+							KERBAL_CONSTEXPR14
 							bool operator()(const_reference lhs, const_reference rhs) const
 							{
 								return self->key_comp()(self->extract()(lhs), self->extract()(rhs));
@@ -317,6 +321,7 @@ namespace kerbal
 
 
 					template <bool stateless>
+					KERBAL_CONSTEXPR14
 					typename kerbal::type_traits::enable_if<stateless, value_compare>::type
 					value_comp_impl() const
 					{
@@ -324,12 +329,14 @@ namespace kerbal
 					}
 
 					template <bool stateless>
+					KERBAL_CONSTEXPR14
 					typename kerbal::type_traits::enable_if<!stateless, value_compare>::type
 					value_comp_impl() const
 					{
 						return value_compare(this);;
 					}
 
+					KERBAL_CONSTEXPR14
 					value_compare value_comp() const
 					{
 						return value_comp_impl<ENABLE_STATELESS_VALUE_COMPARE_OPTIMIZATION::value>();
