@@ -41,13 +41,12 @@ namespace kerbal
 		>
 		class flat_set :
 			public kerbal::container::detail::flat_set_base<
-				T,
 				kerbal::container::flat_ordered<T, kerbal::container::identity_extractor<T>, KeyCompare, Allocator>
 			>
 		{
 			private:
 				typedef kerbal::container::flat_ordered<T, kerbal::container::identity_extractor<T>, KeyCompare, Allocator> Ordered;
-				typedef kerbal::container::detail::flat_set_base<T, Ordered> super;
+				typedef kerbal::container::detail::flat_set_base<Ordered> super;
 
 			public:
 				typedef typename super::value_type			value_type;
