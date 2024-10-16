@@ -18,6 +18,7 @@
 #include <kerbal/compatibility/constexpr.hpp>
 #include <kerbal/compatibility/fixed_width_integer.hpp>
 #include <kerbal/compatibility/noexcept.hpp>
+#include <kerbal/container/array.hpp>
 #include <kerbal/operators/equality_comparable.hpp>
 #include <kerbal/operators/less_than_comparable.hpp>
 
@@ -86,6 +87,23 @@ namespace kerbal
 						tmp[i * 2 + 1] = to_ocx(static_cast<char>(hash[i] % 16u));
 					}
 					return std::string(tmp);
+				}
+
+				KERBAL_CONSTEXPR14
+				kerbal::container::array<char, 41>
+				to_array() const KERBAL_NOEXCEPT
+				{
+					kerbal::container::array<char, 41> tmp
+#		if __cplusplus >= 201402L
+						{}
+#		endif
+					;
+					for (std::size_t i = 0; i < 20; ++i) {
+						tmp[i * 2 + 0] = to_ocx(static_cast<char>(hash[i] >> 4u));
+						tmp[i * 2 + 1] = to_ocx(static_cast<char>(hash[i] % 16u));
+					}
+					tmp[40] = '\0';
+					return tmp;
 				}
 
 				KERBAL_CONSTEXPR14
