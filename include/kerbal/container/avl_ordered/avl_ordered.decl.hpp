@@ -833,7 +833,7 @@ namespace kerbal
 				iterator insert(const_reference src);
 
 				KERBAL_CONSTEXPR20
-				unique_insert_r insert_unique(const_reference src);
+				unique_insert_r unique_insert(const_reference src);
 
 #		if __cplusplus >= 201103L
 
@@ -841,7 +841,7 @@ namespace kerbal
 				iterator insert(rvalue_reference src);
 
 				KERBAL_CONSTEXPR20
-				unique_insert_r insert_unique(rvalue_reference src);
+				unique_insert_r unique_insert(rvalue_reference src);
 
 #		endif
 
@@ -851,7 +851,7 @@ namespace kerbal
 
 				template <typename InputIterator>
 				KERBAL_CONSTEXPR20
-				void insert_unique(InputIterator first, InputIterator last);
+				void unique_insert(InputIterator first, InputIterator last);
 
 #		if __cplusplus >= 201103L
 
@@ -859,7 +859,7 @@ namespace kerbal
 				void insert(std::initializer_list<value_type> ilist);
 
 				KERBAL_CONSTEXPR20
-				void insert_unique(std::initializer_list<value_type> ilist);
+				void unique_insert(std::initializer_list<value_type> ilist);
 
 #		else
 
@@ -867,7 +867,7 @@ namespace kerbal
 				void insert(const kerbal::assign::assign_list<U> & ilist);
 
 				template <typename U>
-				void insert_unique(const kerbal::assign::assign_list<U> & ilist);
+				void unique_insert(const kerbal::assign::assign_list<U> & ilist);
 
 #		endif
 

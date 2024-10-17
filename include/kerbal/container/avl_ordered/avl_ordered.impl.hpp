@@ -1349,9 +1349,9 @@ namespace kerbal
 		typename
 		avl_ordered<Entity, Extract, KeyCompare, Allocator>::unique_insert_r
 		avl_ordered<Entity, Extract, KeyCompare, Allocator>::
-		insert_unique(const_reference src)
+		unique_insert(const_reference src)
 		{
-			return this->avl_type_only::k_insert_unique_using_allocator(
+			return this->avl_type_only::k_unique_insert_using_allocator(
 				this->alloc(), this->extract(), this->key_comp(),
 				src
 			);
@@ -1377,9 +1377,9 @@ namespace kerbal
 		typename
 		avl_ordered<Entity, Extract, KeyCompare, Allocator>::unique_insert_r
 		avl_ordered<Entity, Extract, KeyCompare, Allocator>::
-		insert_unique(rvalue_reference src)
+		unique_insert(rvalue_reference src)
 		{
-			return this->avl_type_only::k_insert_unique_using_allocator(
+			return this->avl_type_only::k_unique_insert_using_allocator(
 				this->alloc(), this->extract(), this->key_comp(),
 				kerbal::compatibility::move(src)
 			);
@@ -1405,9 +1405,9 @@ namespace kerbal
 		KERBAL_CONSTEXPR20
 		void
 		avl_ordered<Entity, Extract, KeyCompare, Allocator>::
-		insert_unique(InputIterator first, InputIterator last)
+		unique_insert(InputIterator first, InputIterator last)
 		{
-			this->avl_type_only::k_insert_unique_using_allocator(
+			this->avl_type_only::k_unique_insert_using_allocator(
 				this->alloc(), this->extract(), this->key_comp(),
 				first, last
 			);
@@ -1431,9 +1431,9 @@ namespace kerbal
 		KERBAL_CONSTEXPR20
 		void
 		avl_ordered<Entity, Extract, KeyCompare, Allocator>::
-		insert_unique(std::initializer_list<value_type> ilist)
+		unique_insert(std::initializer_list<value_type> ilist)
 		{
-			this->avl_type_only::k_insert_unique_using_allocator(
+			this->avl_type_only::k_unique_insert_using_allocator(
 				this->alloc(), this->extract(), this->key_comp(),
 				ilist
 			);
@@ -1457,9 +1457,9 @@ namespace kerbal
 		template <typename U>
 		void
 		avl_ordered<Entity, Extract, KeyCompare, Allocator>::
-		insert_unique(const kerbal::assign::assign_list<U> & ilist)
+		unique_insert(const kerbal::assign::assign_list<U> & ilist)
 		{
-			this->avl_type_only::k_insert_unique_using_allocator(
+			this->avl_type_only::k_unique_insert_using_allocator(
 				this->alloc(), this->extract(), this->key_comp(),
 				ilist
 			);
