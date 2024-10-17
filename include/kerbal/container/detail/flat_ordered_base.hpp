@@ -28,7 +28,6 @@
 #include <kerbal/iterator/iterator_traits.hpp>
 #include <kerbal/type_traits/enable_if.hpp>
 #include <kerbal/type_traits/is_same.hpp>
-#include <kerbal/utility/as_const.hpp>
 #include <kerbal/utility/compressed_pair.hpp>
 #include <kerbal/utility/member_compress_helper.hpp>
 
