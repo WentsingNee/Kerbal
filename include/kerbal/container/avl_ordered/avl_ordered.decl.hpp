@@ -34,6 +34,7 @@
 #if __cplusplus >= 201703L
 #	include <kerbal/memory/allocator/is_allocator.hpp>
 #	include <kerbal/type_traits/enable_if.hpp>
+#	include <kerbal/type_traits/logical.hpp>
 #endif
 
 #if __cplusplus >= 201103L
@@ -1021,7 +1022,12 @@ namespace kerbal
 			typename Extract, typename KeyCompare, typename Allocator,
 			typename =
 				typename kerbal::type_traits::enable_if<
-					kerbal::memory::is_allocator<Allocator>::value
+					kerbal::type_traits::conjunction<
+						kerbal::type_traits::negation<
+							kerbal::memory::is_allocator<KeyCompare>
+						>,
+						kerbal::memory::is_allocator<Allocator>
+					>::value
 				>::type
 		>
 		avl_ordered(
@@ -1094,7 +1100,12 @@ namespace kerbal
 			typename Extract, typename KeyCompare, typename Allocator,
 			typename =
 				typename kerbal::type_traits::enable_if<
-					kerbal::memory::is_allocator<Allocator>::value
+					kerbal::type_traits::conjunction<
+						kerbal::type_traits::negation<
+							kerbal::memory::is_allocator<KeyCompare>
+						>,
+						kerbal::memory::is_allocator<Allocator>
+					>::value
 				>::type
 		>
 		avl_ordered(
@@ -1164,7 +1175,12 @@ namespace kerbal
 			typename Extract, typename KeyCompare, typename Allocator,
 			typename =
 				typename kerbal::type_traits::enable_if<
-					kerbal::memory::is_allocator<Allocator>::value
+					kerbal::type_traits::conjunction<
+						kerbal::type_traits::negation<
+							kerbal::memory::is_allocator<KeyCompare>
+						>,
+						kerbal::memory::is_allocator<Allocator>
+					>::value
 				>::type
 		>
 		avl_ordered(
