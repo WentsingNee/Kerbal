@@ -622,7 +622,7 @@ namespace kerbal
 		>
 		avl_multiset(
 			std::initializer_list<T>,
-			KeyCompare, const Allocator &
+			const KeyCompare &, const Allocator &
 		) ->
 		avl_multiset<T, KeyCompare, Allocator>;
 
