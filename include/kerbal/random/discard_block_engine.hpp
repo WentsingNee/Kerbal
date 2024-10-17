@@ -212,7 +212,7 @@ namespace kerbal
 				OutputIterator generate_n(OutputIterator first, typename kerbal::iterator::iterator_traits<OutputIterator>::difference_type n)
 				{
 					std::size_t this_round_remain = R - this->k_idx;
-					if (n <= this_round_remain) {
+					if (std::size_t(n) <= this_round_remain) {
 						this->k_idx += n;
 						return this->k_base_eg.generate_n(first, n);
 					}
