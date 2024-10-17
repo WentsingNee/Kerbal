@@ -625,7 +625,7 @@ namespace kerbal
 		>
 		avl_set(
 			std::initializer_list<T>,
-			KeyCompare, const Allocator &
+			const KeyCompare &, const Allocator &
 		) ->
 		avl_set<T, KeyCompare, Allocator>;
 
