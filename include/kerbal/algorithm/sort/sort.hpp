@@ -88,7 +88,7 @@ namespace kerbal
 
 					typedef kerbal::type_traits::bool_constant<
 						kerbal::iterator::is_random_access_compatible_iterator<iterator>::value
-					> IS_INTRO_SORT_DESC;
+					> IS_INTRO_SORT;
 
 					typedef
 					typename kerbal::type_traits::conditional<
@@ -104,7 +104,7 @@ namespace kerbal
 									IS_RADIX_SORT_DESC::value,
 									kerbal::type_traits::integral_constant<std::size_t, 3>,
 									typename kerbal::type_traits::conditional<
-										IS_INTRO_SORT_DESC::value,
+										IS_INTRO_SORT::value,
 										kerbal::type_traits::integral_constant<std::size_t, 4>,
 										kerbal::type_traits::integral_constant<std::size_t, 5>
 									>::type
