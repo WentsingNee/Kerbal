@@ -92,18 +92,6 @@ namespace kerbal
 						kerbal::algorithm::sort(sequence.begin(), sequence.end(), this->value_comp());
 					}
 
-//#			if __cplusplus >= 201402L
-//
-//					KERBAL_CONSTEXPR14
-//					auto lower_bound_adapter() const
-//					{
-//						return [this](const_reference item, const key_type & key) -> bool {
-//							return this->key_comp()(Extract()(item), Extract()(key));
-//						};
-//					}
-//
-//#			else
-
 					friend struct lower_bound_kc_adapter;
 
 					struct lower_bound_kc_adapter
@@ -125,21 +113,6 @@ namespace kerbal
 							}
 					};
 
-//#			endif
-
-
-//#			if __cplusplus >= 201402L
-//
-//					KERBAL_CONSTEXPR14
-//					auto upper_bound_adapter() const
-//					{
-//						return [this](const key_type & key, const_reference item) -> bool {
-//							return this->key_comp()(key, Extract()(item));
-//						};
-//					}
-//
-//#			else
-
 					friend struct upper_bound_kc_adapter;
 
 					struct upper_bound_kc_adapter
@@ -160,10 +133,6 @@ namespace kerbal
 								return self->key_comp()(key, self->extract()(item));
 							}
 					};
-
-
-//#			endif
-
 
 					friend struct equal_range_kc_adapter;
 
@@ -278,18 +247,6 @@ namespace kerbal
 						return key_compare_compress_helper::member();
 					}
 
-#			if __cplusplus >= 201402L
-
-					KERBAL_CONSTEXPR14
-					auto value_comp() const
-					{
-						return [this](const_reference lhs, const_reference rhs) -> bool {
-							return this->key_comp()(Extract()(lhs), Extract()(rhs));
-						};
-					}
-
-#			else
-
 					class value_compare
 					{
 							friend class flat_ordered_base;
@@ -318,8 +275,6 @@ namespace kerbal
 					{
 						return value_compare(this);
 					}
-
-#			endif
 
 
 				//===================
