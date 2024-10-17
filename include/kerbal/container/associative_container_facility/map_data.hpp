@@ -56,7 +56,7 @@ namespace kerbal
 				{
 						typedef typename kerbal::type_traits::conditional<
 							I == 0,
-							typename cpair::key_type,
+							key_type,
 							typename cpair::template value_type<I>::type
 						>::type type;
 				};
