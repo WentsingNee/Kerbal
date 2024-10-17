@@ -15,7 +15,6 @@
 #include <kerbal/utility/member_compress_helper/member_compress_helper.fwd.hpp>
 
 #include <kerbal/assign/generic_assign.hpp>
-#include <kerbal/assign/ilist.hpp>
 #include <kerbal/compatibility/constexpr.hpp>
 #include <kerbal/compatibility/method_overload_tag.hpp>
 #include <kerbal/compatibility/move.hpp>
