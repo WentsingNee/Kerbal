@@ -30,11 +30,9 @@
 #endif
 
 #if __cplusplus >= 201703L
+#	include <kerbal/container/associative_container_facility/map_data_iterator_traits.hpp>
 #	include <kerbal/memory/allocator/is_allocator.hpp>
 #	include <kerbal/type_traits/enable_if.hpp>
-#	include <kerbal/type_traits/remove_const.hpp>
-
-#	include <tuple>
 #endif
 
 #if __cplusplus >= 201103L
@@ -500,39 +498,13 @@ namespace kerbal
 
 #	if __cplusplus >= 201703L
 
-		template <typename Entity>
-		struct avl_multimap_entity_key :
-			kerbal::type_traits::remove_const<
-				typename std::tuple_element<0, Entity>::type
-			>
-		{
-		};
-
-		template <typename Entity>
-		struct avl_multimap_entity_map : std::tuple_element<1, Entity>
-		{
-		};
-
-		template <typename InputIterator>
-		struct avl_multimap_iter_key :
-			avl_multimap_entity_key<typename kerbal::iterator::iterator_traits<InputIterator>::value_type>
-		{
-		};
-
-		template <typename InputIterator>
-		struct avl_multimap_iter_map :
-			avl_multimap_entity_map<typename kerbal::iterator::iterator_traits<InputIterator>::value_type>
-		{
-		};
-
-
 		template <typename InputIterator>
 		avl_multimap(
 			InputIterator, InputIterator
 		) ->
 		avl_multimap<
-			typename avl_multimap_iter_key<InputIterator>::type,
-			typename avl_multimap_iter_map<InputIterator>::type
+			typename kerbal::container::map_data_iterator_traits<InputIterator>::key_type,
+			typename kerbal::container::map_data_iterator_traits<InputIterator>::mapped_type
 		>;
 
 		template <
@@ -548,8 +520,8 @@ namespace kerbal
 			const KeyCompare &
 		) ->
 		avl_multimap<
-			typename avl_multimap_iter_key<InputIterator>::type,
-			typename avl_multimap_iter_map<InputIterator>::type,
+			typename kerbal::container::map_data_iterator_traits<InputIterator>::key_type,
+			typename kerbal::container::map_data_iterator_traits<InputIterator>::mapped_type,
 			KeyCompare
 		>;
 
@@ -566,8 +538,8 @@ namespace kerbal
 			const Allocator &
 		) ->
 		avl_multimap<
-			typename avl_multimap_iter_key<InputIterator>::type,
-			typename avl_multimap_iter_map<InputIterator>::type,
+			typename kerbal::container::map_data_iterator_traits<InputIterator>::key_type,
+			typename kerbal::container::map_data_iterator_traits<InputIterator>::mapped_type,
 			kerbal::compare::binary_type_less<void, void>,
 			Allocator
 		>;
@@ -586,8 +558,8 @@ namespace kerbal
 			const KeyCompare &, const Allocator &
 		) ->
 		avl_multimap<
-			typename avl_multimap_iter_key<InputIterator>::type,
-			typename avl_multimap_iter_map<InputIterator>::type,
+			typename kerbal::container::map_data_iterator_traits<InputIterator>::key_type,
+			typename kerbal::container::map_data_iterator_traits<InputIterator>::mapped_type,
 			KeyCompare,
 			Allocator
 		>;
