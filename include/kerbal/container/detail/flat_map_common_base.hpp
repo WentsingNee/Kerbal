@@ -32,7 +32,7 @@ namespace kerbal
 				public:
 					typedef typename Ordered::key_compare				key_compare;
 					typedef typename Ordered::key_type					key_type;
-					typedef typename Ordered::value_type::second_type	mapped_type;
+					typedef typename Ordered::value_type::mapped_type	mapped_type;
 					typedef typename Ordered::value_type				value_type;
 					typedef typename Ordered::const_type				const_type;
 					typedef typename Ordered::reference					reference;
