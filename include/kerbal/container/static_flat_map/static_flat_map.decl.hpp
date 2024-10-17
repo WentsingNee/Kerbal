@@ -16,9 +16,9 @@
 
 #include <kerbal/assign/ilist.hpp>
 #include <kerbal/compatibility/constexpr.hpp>
-#include <kerbal/container/static_ordered.hpp>
 #include <kerbal/container/associative_container_facility/key_extractors/tuple_first_extractor.hpp>
 #include <kerbal/container/associative_container_facility/map_data.hpp>
+#include <kerbal/container/static_ordered.hpp>
 
 #include <cstddef>
 
