@@ -757,7 +757,7 @@ namespace kerbal
 #	if KERBAL_HAS_EXCEPTIONS_SUPPORT
 				try {
 #	endif
-					this->k_insert_unique_using_allocator(alloc, e, kc, first, last);
+					this->k_unique_insert_using_allocator(alloc, e, kc, first, last);
 #	if KERBAL_HAS_EXCEPTIONS_SUPPORT
 				} catch (...) {
 					this->k_destroy_using_allocator(alloc);
@@ -848,7 +848,7 @@ namespace kerbal
 #	if KERBAL_HAS_EXCEPTIONS_SUPPORT
 				try {
 #	endif
-					this->k_insert_unique_using_allocator(alloc, e, kc, ilist.cbegin(), ilist.cend());
+					this->k_unique_insert_using_allocator(alloc, e, kc, ilist.cbegin(), ilist.cend());
 #	if KERBAL_HAS_EXCEPTIONS_SUPPORT
 				} catch (...) {
 					this->k_destroy_using_allocator(alloc);
@@ -1186,7 +1186,7 @@ namespace kerbal
 			)
 			{
 				if (this->k_head.left == get_avl_vnull_node()) {
-					this->k_insert_unique_using_allocator(alloc, e, kc, first, last);
+					this->k_unique_insert_using_allocator(alloc, e, kc, first, last);
 					return;
 				}
 
@@ -1230,7 +1230,7 @@ namespace kerbal
 #			endif // if KERBAL_HAS_EXCEPTIONS_SUPPORT
 
 				k_assign_destroy_n(alloc, tmp_it, tmp_size - i, &tmp_head);
-				this->k_insert_unique_using_allocator(alloc, e, kc, first, last);
+				this->k_unique_insert_using_allocator(alloc, e, kc, first, last);
 			}
 
 			template <typename Entity>
@@ -2199,7 +2199,7 @@ namespace kerbal
 			typename
 			avl_type_only<Entity>::unique_insert_r
 			avl_type_only<Entity>::
-			k_insert_unique_using_allocator(
+			k_unique_insert_using_allocator(
 				NodeAllocator & alloc, Extract & e, KeyCompare & kc,
 				const_reference src
 			)
@@ -2230,7 +2230,7 @@ namespace kerbal
 			typename
 			avl_type_only<Entity>::unique_insert_r
 			avl_type_only<Entity>::
-			k_insert_unique_using_allocator(
+			k_unique_insert_using_allocator(
 				NodeAllocator & alloc, Extract & e, KeyCompare & kc,
 				rvalue_reference src
 			)
@@ -2262,13 +2262,13 @@ namespace kerbal
 			KERBAL_CONSTEXPR20
 			void
 			avl_type_only<Entity>::
-			k_insert_unique_using_allocator(
+			k_unique_insert_using_allocator(
 				NodeAllocator & alloc, Extract & e, KeyCompare & kc,
 				InputIterator first, InputIterator last
 			)
 			{
 				while (first != last) {
-					this->k_insert_unique_using_allocator(alloc, e, kc, *first);
+					this->k_unique_insert_using_allocator(alloc, e, kc, *first);
 					++first;
 				}
 			}
@@ -2294,12 +2294,12 @@ namespace kerbal
 			KERBAL_CONSTEXPR20
 			void
 			avl_type_only<Entity>::
-			k_insert_unique_using_allocator(
+			k_unique_insert_using_allocator(
 				NodeAllocator & alloc, Extract & e, KeyCompare & kc,
 				std::initializer_list<value_type> ilist
 			)
 			{
-				this->k_insert_unique_using_allocator(alloc, e, kc, ilist.begin(), ilist.end());
+				this->k_unique_insert_using_allocator(alloc, e, kc, ilist.begin(), ilist.end());
 			}
 
 #	else
@@ -2331,7 +2331,7 @@ namespace kerbal
 			template <typename NodeAllocator, typename Extract, typename KeyCompare>
 			void
 			avl_type_only<Entity>::
-			k_insert_unique_using_allocator(
+			k_unique_insert_using_allocator(
 				NodeAllocator & alloc, Extract & e, KeyCompare & kc,
 				const kerbal::assign::assign_list<void> & ilist
 			)
@@ -2342,12 +2342,12 @@ namespace kerbal
 			template <typename NodeAllocator, typename Extract, typename KeyCompare, typename U>
 			void
 			avl_type_only<Entity>::
-			k_insert_unique_using_allocator(
+			k_unique_insert_using_allocator(
 				NodeAllocator & alloc, Extract & e, KeyCompare & kc,
 				const kerbal::assign::assign_list<U> & ilist
 			)
 			{
-				this->k_insert_unique_using_allocator(alloc, e, kc, ilist.cbegin(), ilist.cend());
+				this->k_unique_insert_using_allocator(alloc, e, kc, ilist.cbegin(), ilist.cend());
 			}
 
 #	endif
