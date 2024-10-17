@@ -1095,7 +1095,7 @@ namespace kerbal
 					template <typename NodeAllocator, typename Extract, typename KeyCompare>
 					KERBAL_CONSTEXPR20
 					unique_insert_r
-					k_insert_unique_using_allocator(
+					k_unique_insert_using_allocator(
 						NodeAllocator & alloc, Extract & e, KeyCompare & kc,
 						const_reference src
 					);
@@ -1114,7 +1114,7 @@ namespace kerbal
 					template <typename NodeAllocator, typename Extract, typename KeyCompare>
 					KERBAL_CONSTEXPR20
 					unique_insert_r
-					k_insert_unique_using_allocator(
+					k_unique_insert_using_allocator(
 						NodeAllocator & alloc, Extract & e, KeyCompare & kc,
 						rvalue_reference src
 					);
@@ -1131,7 +1131,7 @@ namespace kerbal
 
 					template <typename NodeAllocator, typename Extract, typename KeyCompare, typename InputIterator>
 					KERBAL_CONSTEXPR20
-					void k_insert_unique_using_allocator(
+					void k_unique_insert_using_allocator(
 						NodeAllocator & alloc, Extract & e, KeyCompare & kc,
 						InputIterator first, InputIterator last
 					);
@@ -1148,7 +1148,7 @@ namespace kerbal
 
 					template <typename NodeAllocator, typename Extract, typename KeyCompare>
 					KERBAL_CONSTEXPR20
-					void k_insert_unique_using_allocator(
+					void k_unique_insert_using_allocator(
 						NodeAllocator & alloc, Extract & e, KeyCompare & kc,
 						std::initializer_list<value_type> ilist
 					);
@@ -1168,13 +1168,13 @@ namespace kerbal
 					);
 
 					template <typename NodeAllocator, typename Extract, typename KeyCompare>
-					void k_insert_unique_using_allocator(
+					void k_unique_insert_using_allocator(
 						NodeAllocator & alloc, Extract & e, KeyCompare & kc,
 						const kerbal::assign::assign_list<void> & ilist
 					);
 
 					template <typename NodeAllocator, typename Extract, typename KeyCompare, typename U>
-					void k_insert_unique_using_allocator(
+					void k_unique_insert_using_allocator(
 						NodeAllocator & alloc, Extract & e, KeyCompare & kc,
 						const kerbal::assign::assign_list<U> & ilist
 					);
