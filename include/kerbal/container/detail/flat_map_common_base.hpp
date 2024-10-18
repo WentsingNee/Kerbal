@@ -258,6 +258,20 @@ namespace kerbal
 					}
 
 					KERBAL_CONSTEXPR14
+					kerbal::utility::compressed_pair<iterator, iterator>
+					equal_range(const key_type & key, const_iterator hint)
+					{
+						return this->ordered.equal_range(key, hint);
+					}
+
+					KERBAL_CONSTEXPR14
+					kerbal::utility::compressed_pair<const_iterator, const_iterator>
+					equal_range(const key_type & key, const_iterator hint) const
+					{
+						return this->ordered.equal_range(key, hint);
+					}
+
+					KERBAL_CONSTEXPR14
 					iterator find(const key_type & key)
 					{
 						return this->ordered.find(key);
