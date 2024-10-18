@@ -191,7 +191,7 @@ namespace kerbal
 			}
 
 			template <typename ForwardIterator, typename Compare>
-			KERBAL_CONSTEXPR14
+			KERBAL_CONSTEXPR20
 			void sort(
 				ForwardIterator first, ForwardIterator last, Compare /*compare*/,
 				kerbal::type_traits::integral_constant<std::size_t, 3>,
@@ -248,25 +248,13 @@ namespace kerbal
 			}
 
 			template <typename ForwardIterator, typename Compare>
-			KERBAL_CONSTEXPR14
+			KERBAL_CONSTEXPR20
 			void sort(
 				ForwardIterator first, ForwardIterator last, Compare compare,
 				kerbal::type_traits::integral_constant<std::size_t, 5>
 			)
 			{
-#	if __cplusplus >= 201402L
-#		if KERBAL_HAS_IS_CONSTANT_EVALUATED_SUPPORT
-				if (KERBAL_IS_CONSTANT_EVALUATED()) {
-					kerbal::algorithm::intro_sort(first, last, compare);
-				} else {
-					kerbal::algorithm::stable_sort(first, last, compare);
-				}
-#		else
-				kerbal::algorithm::intro_sort(first, last, compare);
-#		endif
-#	else
 				kerbal::algorithm::stable_sort(first, last, compare);
-#	endif
 			}
 
 		} // namespace detail
