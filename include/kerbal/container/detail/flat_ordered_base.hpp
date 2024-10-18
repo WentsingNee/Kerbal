@@ -28,6 +28,7 @@
 #include <kerbal/container/nonmember_container_access.hpp>
 #include <kerbal/iterator/iterator.hpp>
 #include <kerbal/iterator/iterator_traits.hpp>
+#include <kerbal/iterator/transform_iterator.hpp>
 #include <kerbal/type_traits/enable_if.hpp>
 #include <kerbal/type_traits/is_same.hpp>
 #include <kerbal/utility/compressed_pair.hpp>
@@ -91,128 +92,6 @@ namespace kerbal
 					{
 						kerbal::algorithm::sort(sequence.begin(), sequence.end(), this->value_comp());
 					}
-
-					friend struct lower_bound_kc_adapter;
-
-					struct lower_bound_kc_adapter
-					{
-						private:
-							const flat_ordered_base * self;
-
-						public:
-							KERBAL_CONSTEXPR
-							explicit lower_bound_kc_adapter(const flat_ordered_base * self) KERBAL_NOEXCEPT :
-								self(self)
-							{
-							}
-
-							KERBAL_CONSTEXPR14
-							bool operator()(const_reference item, const key_type & key) const
-							{
-								return self->key_comp()(self->extract()(item), key);
-							}
-					};
-
-					friend struct upper_bound_kc_adapter;
-
-					struct upper_bound_kc_adapter
-					{
-						private:
-							const flat_ordered_base * self;
-
-						public:
-							KERBAL_CONSTEXPR
-							explicit upper_bound_kc_adapter(const flat_ordered_base * self) KERBAL_NOEXCEPT :
-								self(self)
-							{
-							}
-
-							KERBAL_CONSTEXPR14
-							bool operator()(const key_type & key, const_reference item) const
-							{
-								return self->key_comp()(key, self->extract()(item));
-							}
-					};
-
-					friend struct equal_range_kc_adapter;
-
-				private:
-					struct equal_range_kc_adapter_not_same
-					{
-						private:
-							const flat_ordered_base * self;
-
-						protected:
-							KERBAL_CONSTEXPR
-							explicit equal_range_kc_adapter_not_same(const flat_ordered_base * self) KERBAL_NOEXCEPT :
-								self(self)
-							{
-							}
-
-						public:
-							KERBAL_CONSTEXPR14
-							bool operator()(const_reference item, const key_type & key) const
-							{
-								return self->key_comp()(self->extract()(item), key);
-							}
-
-							KERBAL_CONSTEXPR14
-							bool operator()(const key_type & key, const_reference item) const
-							{
-								return self->key_comp()(key, self->extract()(item));
-							}
-					};
-
-					struct equal_range_kc_adapter_same
-					{
-						private:
-							const flat_ordered_base * self;
-
-						protected:
-							KERBAL_CONSTEXPR
-							explicit equal_range_kc_adapter_same(const flat_ordered_base * self) KERBAL_NOEXCEPT :
-								self(self)
-							{
-							}
-
-						public:
-							KERBAL_CONSTEXPR14
-							bool operator()(const_reference item, const key_type & key) const
-							{
-								return self->key_comp()(self->extract()(item), key);
-							}
-					};
-
-				protected:
-					struct equal_range_kc_adapter :
-						kerbal::type_traits::conditional<
-							kerbal::type_traits::is_same<
-								const key_type &,
-								const_reference
-							>::value,
-							equal_range_kc_adapter_same,
-							equal_range_kc_adapter_not_same
-						>::type
-					{
-						private:
-							typedef typename
-							kerbal::type_traits::conditional<
-								kerbal::type_traits::is_same<
-									const key_type &,
-									const_reference
-								>::value,
-								equal_range_kc_adapter_same,
-								equal_range_kc_adapter_not_same
-							>::type super;
-
-						public:
-							KERBAL_CONSTEXPR
-							explicit equal_range_kc_adapter(const flat_ordered_base * self) KERBAL_NOEXCEPT :
-								super(self)
-							{
-							}
-					};
-
 
 				public:
 
@@ -565,41 +444,129 @@ namespace kerbal
 						return sequence.empty();
 					}
 
+
+				protected:
+					friend struct binary_search_extractor;
+
+					struct binary_search_extractor
+					{
+						public:
+							typedef typename Extract::key_type const & result_type;
+
+						private:
+							const flat_ordered_base * self;
+
+						public:
+							KERBAL_CONSTEXPR
+							explicit binary_search_extractor(const flat_ordered_base * self) KERBAL_NOEXCEPT :
+								self(self)
+							{
+							}
+
+							KERBAL_CONSTEXPR14
+							result_type
+							operator()(const_reference item) const
+							{
+								return self->extract()(item);
+							}
+					};
+
+					typedef kerbal::iterator::transform_iterator<iterator, binary_search_extractor>			key_iterator;
+					typedef kerbal::iterator::transform_iterator<const_iterator, binary_search_extractor>	key_const_iterator;
+
+					template <typename Iterator>
+					KERBAL_CONSTEXPR14
+					kerbal::iterator::transform_iterator<Iterator, binary_search_extractor>
+					key_iterator_(Iterator iterator) const
+					{
+						return kerbal::iterator::transform_iterator<Iterator, binary_search_extractor>(
+							iterator,
+							binary_search_extractor(this)
+						);
+					}
+
+					KERBAL_CONSTEXPR14
+					key_iterator
+					key_begin()
+					{
+						return this->key_iterator_(this->begin());
+					}
+
+					KERBAL_CONSTEXPR14
+					key_const_iterator
+					key_begin() const
+					{
+						return this->key_iterator_(this->begin());
+					}
+
+					KERBAL_CONSTEXPR14
+					key_const_iterator
+					key_cbegin() const
+					{
+						return this->key_iterator_(this->begin());
+					}
+
+					KERBAL_CONSTEXPR14
+					key_iterator
+					key_end()
+					{
+						return this->key_iterator_(this->end());
+					}
+
+					KERBAL_CONSTEXPR14
+					key_const_iterator
+					key_end() const
+					{
+						return this->key_iterator_(this->end());
+					}
+
+					KERBAL_CONSTEXPR14
+					key_const_iterator
+					key_cend() const
+					{
+						return this->key_iterator_(this->end());
+					}
+
+				public:
+
 					KERBAL_CONSTEXPR14
 					iterator lower_bound(const key_type & key)
 					{
 						return kerbal::algorithm::lower_bound(
-							this->begin(), this->end(), key,
-							lower_bound_kc_adapter(this)
-						);
+							this->key_begin(), this->key_end(), key,
+							this->key_comp()
+						).base();
 					}
 
 					KERBAL_CONSTEXPR14
 					const_iterator lower_bound(const key_type & key) const
 					{
 						return kerbal::algorithm::lower_bound(
-							this->cbegin(), this->cend(), key,
-							lower_bound_kc_adapter(this)
-						);
+							this->key_cbegin(), this->key_cend(), key,
+							this->key_comp()
+						).base();
 					}
 
 					KERBAL_CONSTEXPR14
 					iterator lower_bound(const key_type & key, const_iterator hint)
 					{
 						return kerbal::algorithm::lower_bound_hint(
-							this->begin(), this->end(), key,
-							kerbal::container::nth(*this, kerbal::container::index_of(*this, hint)),
-							lower_bound_kc_adapter(this)
-						);
+							this->key_begin(), this->key_end(), key,
+							this->key_iterator_(
+								kerbal::container::nth(*this, kerbal::container::index_of(*this, hint))
+							),
+							this->key_comp()
+						).base();
 					}
 
 					KERBAL_CONSTEXPR14
 					const_iterator lower_bound(const key_type & key, const_iterator hint) const
 					{
 						return kerbal::algorithm::lower_bound_hint(
-							this->cbegin(), this->cend(), key, hint,
-							lower_bound_kc_adapter(this)
-						);
+							this->key_cbegin(), this->key_cend(), key,
+							this->key_iterator_(hint),
+							this->key_comp()
+						).base();
 					}
 
 
@@ -607,46 +574,55 @@ namespace kerbal
 					iterator upper_bound(const key_type & key)
 					{
 						return kerbal::algorithm::upper_bound(
-							this->begin(), this->end(), key,
-							upper_bound_kc_adapter(this)
-						);
+							this->key_begin(), this->key_end(), key,
+							this->key_comp()
+						).base();
 					}
 
 					KERBAL_CONSTEXPR14
 					const_iterator upper_bound(const key_type & key) const
 					{
 						return kerbal::algorithm::upper_bound(
-							this->cbegin(), this->cend(), key,
-							upper_bound_kc_adapter(this)
-						);
+							this->key_cbegin(), this->key_cend(), key,
+							this->key_comp()
+						).base();
 					}
 
 					KERBAL_CONSTEXPR14
 					iterator upper_bound(const key_type & key, const_iterator hint)
 					{
 						return kerbal::algorithm::upper_bound_hint(
-							this->begin(), this->end(), key,
-							kerbal::container::nth(*this, kerbal::container::index_of(*this, hint)),
-							upper_bound_kc_adapter(this)
-						);
+							this->key_begin(), this->key_end(), key,
+							this->key_iterator_(
+								kerbal::container::nth(*this, kerbal::container::index_of(*this, hint))
+							),
+							this->key_comp()
+						).base();
 					}
 
 					KERBAL_CONSTEXPR14
 					const_iterator upper_bound(const key_type & key, const_iterator hint) const
 					{
 						return kerbal::algorithm::upper_bound_hint(
-							this->cbegin(), this->cend(), key, hint,
-							upper_bound_kc_adapter(this)
-						);
+							this->key_cbegin(), this->key_cend(), key,
+							this->key_iterator_(hint),
+							this->key_comp()
+						).base();
 					}
 
 					KERBAL_CONSTEXPR14
 					kerbal::utility::compressed_pair<iterator, iterator>
 					equal_range(const key_type & key)
 					{
-						return kerbal::algorithm::equal_range(
-							this->begin(), this->end(), key,
-							equal_range_kc_adapter(this)
+						kerbal::utility::compressed_pair<key_iterator, key_iterator> eqr(
+							kerbal::algorithm::equal_range(
+								this->key_begin(), this->key_end(), key,
+								this->key_comp()
+							)
+						);
+						return kerbal::utility::make_compressed_pair(
+							eqr.first().base(),
+							eqr.second().base()
 						);
 					}
 
@@ -654,9 +630,15 @@ namespace kerbal
 					kerbal::utility::compressed_pair<const_iterator, const_iterator>
 					equal_range(const key_type & key) const
 					{
-						return kerbal::algorithm::equal_range(
-							this->cbegin(), this->cend(), key,
-							equal_range_kc_adapter(this)
+						kerbal::utility::compressed_pair<key_const_iterator, key_const_iterator> eqr(
+							kerbal::algorithm::equal_range(
+								this->key_cbegin(), this->key_cend(), key,
+								this->key_comp()
+							)
+						);
+						return kerbal::utility::make_compressed_pair(
+							eqr.first().base(),
+							eqr.second().base()
 						);
 					}
 
@@ -664,9 +646,15 @@ namespace kerbal
 					kerbal::utility::compressed_pair<iterator, iterator>
 					equal_range(const key_type & key, const_iterator hint)
 					{
-						return kerbal::algorithm::equal_range(
-							this->begin(), this->end(), key,
-							equal_range_kc_adapter(this)
+						kerbal::utility::compressed_pair<key_iterator, key_iterator> eqr(
+							kerbal::algorithm::equal_range(
+								this->key_begin(), this->key_end(), key,
+								this->key_comp()
+							)
+						);
+						return kerbal::utility::make_compressed_pair(
+							eqr.first().base(),
+							eqr.second().base()
 						);
 					}
 
@@ -674,9 +662,15 @@ namespace kerbal
 					kerbal::utility::compressed_pair<const_iterator, const_iterator>
 					equal_range(const key_type & key, const_iterator hint) const
 					{
-						return kerbal::algorithm::equal_range(
-							this->cbegin(), this->cend(), key,
-							equal_range_kc_adapter(this)
+						kerbal::utility::compressed_pair<key_const_iterator, key_const_iterator> eqr(
+							kerbal::algorithm::equal_range(
+								this->key_cbegin(), this->key_cend(), key,
+								this->key_comp()
+							)
+						);
+						return kerbal::utility::make_compressed_pair(
+							eqr.first().base(),
+							eqr.second().base()
 						);
 					}
 
