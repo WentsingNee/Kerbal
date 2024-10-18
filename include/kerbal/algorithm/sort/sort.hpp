@@ -144,10 +144,22 @@ namespace kerbal
 			}
 
 			template <typename ForwardIterator, typename Compare>
+			KERBAL_CONSTEXPR20
+			void sort(
+				ForwardIterator first, ForwardIterator last, Compare /*compare*/,
+				kerbal::type_traits::integral_constant<std::size_t, 2>,
+				std::forward_iterator_tag
+			)
+			{
+				kerbal::algorithm::radix_sort(first, last, kerbal::type_traits::false_type());
+			}
+
+			template <typename RandomAccessIterator, typename Compare>
 			KERBAL_CONSTEXPR14
 			void sort(
-				ForwardIterator first, ForwardIterator last, Compare compare,
-				kerbal::type_traits::integral_constant<std::size_t, 2>
+				RandomAccessIterator first, RandomAccessIterator last, Compare compare,
+				kerbal::type_traits::integral_constant<std::size_t, 2>,
+				std::random_access_iterator_tag
 			)
 			{
 #	if __cplusplus >= 201402L
@@ -169,7 +181,32 @@ namespace kerbal
 			KERBAL_CONSTEXPR14
 			void sort(
 				ForwardIterator first, ForwardIterator last, Compare compare,
-				kerbal::type_traits::integral_constant<std::size_t, 3>
+				kerbal::type_traits::integral_constant<std::size_t, 2> policy
+			)
+			{
+				kerbal::algorithm::detail::sort(
+					first, last, compare, policy,
+					kerbal::iterator::iterator_category(first)
+				);
+			}
+
+			template <typename ForwardIterator, typename Compare>
+			KERBAL_CONSTEXPR14
+			void sort(
+				ForwardIterator first, ForwardIterator last, Compare /*compare*/,
+				kerbal::type_traits::integral_constant<std::size_t, 3>,
+				std::forward_iterator_tag
+			)
+			{
+				kerbal::algorithm::radix_sort(first, last, kerbal::type_traits::true_type());
+			}
+
+			template <typename ForwardIterator, typename Compare>
+			KERBAL_CONSTEXPR14
+			void sort(
+				ForwardIterator first, ForwardIterator last, Compare compare,
+				kerbal::type_traits::integral_constant<std::size_t, 3>,
+				std::random_access_iterator_tag
 			)
 			{
 #	if __cplusplus >= 201402L
@@ -185,6 +222,19 @@ namespace kerbal
 #	else
 				kerbal::algorithm::radix_sort(first, last, kerbal::type_traits::true_type());
 #	endif
+			}
+
+			template <typename ForwardIterator, typename Compare>
+			KERBAL_CONSTEXPR14
+			void sort(
+				ForwardIterator first, ForwardIterator last, Compare compare,
+				kerbal::type_traits::integral_constant<std::size_t, 3> policy
+			)
+			{
+				kerbal::algorithm::detail::sort(
+					first, last, compare, policy,
+					kerbal::iterator::iterator_category(first)
+				);
 			}
 
 			template <typename ForwardIterator, typename Compare>
