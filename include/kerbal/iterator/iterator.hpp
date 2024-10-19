@@ -32,10 +32,10 @@ namespace kerbal
 		namespace detail
 		{
 
-			template <typename ForwardIterator>
+			template <typename ForwardIterator, typename StopIterator>
 			KERBAL_CONSTEXPR14
 			typename kerbal::iterator::iterator_traits<ForwardIterator>::difference_type
-			distance_impl(ForwardIterator first, ForwardIterator last, std::forward_iterator_tag)
+			distance_impl(ForwardIterator first, StopIterator last, std::forward_iterator_tag)
 			{
 				typedef ForwardIterator iterator;
 				typedef typename kerbal::iterator::iterator_traits<iterator>::difference_type difference_type;
@@ -47,10 +47,10 @@ namespace kerbal
 				return d;
 			}
 
-			template <typename RandomAccessIterator>
+			template <typename RandomAccessIterator, typename StopIterator>
 			KERBAL_CONSTEXPR
 			typename kerbal::iterator::iterator_traits<RandomAccessIterator>::difference_type
-			distance_impl(RandomAccessIterator first, RandomAccessIterator last, std::random_access_iterator_tag)
+			distance_impl(RandomAccessIterator first, StopIterator last, std::random_access_iterator_tag)
 				KERBAL_CONDITIONAL_NOEXCEPT(
 					noexcept(static_cast<typename kerbal::iterator::iterator_traits<RandomAccessIterator>::difference_type>(last - first))
 				)
@@ -62,10 +62,10 @@ namespace kerbal
 
 		} // namespace detail
 
-		template <typename ForwardIterator>
+		template <typename ForwardIterator, typename StopIterator>
 		KERBAL_CONSTEXPR
 		typename kerbal::iterator::iterator_traits<ForwardIterator>::difference_type
-		distance(ForwardIterator first, ForwardIterator last)
+		distance(ForwardIterator first, StopIterator last)
 			KERBAL_CONDITIONAL_NOEXCEPT(
 				noexcept(
 					kerbal::iterator::detail::distance_impl(

@@ -26,7 +26,6 @@
 #include <kerbal/container/associative_container_facility/associative_unique_insert_r.hpp>
 #include <kerbal/container/associative_container_facility/key_compare_is_transparent.hpp>
 #include <kerbal/container/associative_container_facility/key_extractors/identity_extractor.hpp>
-#include <kerbal/container/nonmember_container_access.hpp>
 #include <kerbal/iterator/iterator.hpp>
 #include <kerbal/iterator/iterator_traits.hpp>
 #include <kerbal/iterator/transform_iterator.hpp>
@@ -660,9 +659,7 @@ namespace kerbal
 					{
 						return kerbal::algorithm::lower_bound_hint(
 							this->key_view_begin(), this->key_view_end(), key,
-							this->make_key_view_iterator(
-								kerbal::container::nth(*this, kerbal::container::index_of(*this, hint))
-							),
+							this->make_key_view_iterator(hint),
 							this->key_comp()
 						).base();
 					}
@@ -765,9 +762,7 @@ namespace kerbal
 					{
 						return kerbal::algorithm::upper_bound_hint(
 							this->key_view_begin(), this->key_view_end(), key,
-							this->make_key_view_iterator(
-								kerbal::container::nth(*this, kerbal::container::index_of(*this, hint))
-							),
+							this->make_key_view_iterator(hint),
 							this->key_comp()
 						).base();
 					}

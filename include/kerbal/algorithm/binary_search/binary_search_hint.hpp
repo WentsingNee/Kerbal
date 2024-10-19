@@ -23,10 +23,10 @@ namespace kerbal
 	namespace algorithm
 	{
 
-		template <typename ForwardIterator, typename T, typename Comparator>
+		template <typename ForwardIterator, typename T, typename ForwardHintIterator, typename Comparator>
 		KERBAL_CONSTEXPR14
 		bool binary_search_hint(
-			ForwardIterator first, ForwardIterator last, const T & value, ForwardIterator hint,
+			ForwardIterator first, ForwardIterator last, const T & value, ForwardHintIterator hint,
 			Comparator comparator
 		)
 		{
@@ -35,10 +35,10 @@ namespace kerbal
 			return static_cast<bool>(lb != last) && !static_cast<bool>(comparator(value, *lb));
 		}
 
-		template <typename ForwardIterator, typename T>
+		template <typename ForwardIterator, typename ForwardHintIterator, typename T>
 		KERBAL_CONSTEXPR14
 		bool binary_search_hint(
-			ForwardIterator first, ForwardIterator last, const T & value, ForwardIterator hint
+			ForwardIterator first, ForwardIterator last, const T & value, ForwardHintIterator hint
 		)
 		{
 			return kerbal::algorithm::binary_search_hint(
