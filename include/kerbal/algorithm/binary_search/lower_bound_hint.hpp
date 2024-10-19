@@ -29,12 +29,12 @@ namespace kerbal
 		namespace detail
 		{
 
-			template <typename ForwardIterator, typename T, typename Comparator>
+			template <typename ForwardIterator, typename T, typename ForwardHintIterator, typename Comparator>
 			KERBAL_CONSTEXPR14
 			ForwardIterator
 			lower_bound_hint(
 				ForwardIterator first, ForwardIterator last, const T & value,
-				ForwardIterator hint, Comparator comparator, std::forward_iterator_tag
+				ForwardHintIterator hint, Comparator comparator, std::forward_iterator_tag
 			)
 			{
 				if (hint == last) {
@@ -49,12 +49,12 @@ namespace kerbal
 				);
 			}
 
-			template <typename BidirectionalIterator, typename T, typename Comparator>
+			template <typename BidirectionalIterator, typename T, typename BidirectionalHintIterator, typename Comparator>
 			KERBAL_CONSTEXPR14
 			BidirectionalIterator
 			lower_bound_hint(
 				BidirectionalIterator first, BidirectionalIterator last, const T & value,
-				BidirectionalIterator hint, Comparator comparator, std::bidirectional_iterator_tag
+				BidirectionalHintIterator hint, Comparator comparator, std::bidirectional_iterator_tag
 			)
 			{
 				if (hint == last) {
@@ -69,15 +69,16 @@ namespace kerbal
 				return kerbal::algorithm::lower_bound_backward(first, hint, value, comparator);
 			}
 
-			template <typename RandomAccessIterator, typename T, typename Comparator>
+			template <typename RandomAccessIterator, typename T, typename RandomAccessHintIterator, typename Comparator>
 			KERBAL_CONSTEXPR14
 			RandomAccessIterator
 			lower_bound_hint(
 				RandomAccessIterator first, RandomAccessIterator last, const T & value,
-				RandomAccessIterator hint, Comparator comparator, std::random_access_iterator_tag
+				RandomAccessHintIterator hint_, Comparator comparator, std::random_access_iterator_tag
 			)
 			{
 				typedef RandomAccessIterator iterator;
+				RandomAccessIterator hint(first + kerbal::iterator::distance(first, hint_));
 
 				if (hint == last) {
 				} else if (comparator(*hint, value)) { // *hint < value
@@ -115,11 +116,11 @@ namespace kerbal
 
 		} // namespace detail
 
-		template <typename ForwardIterator, typename T, typename Comparator>
+		template <typename ForwardIterator, typename T, typename ForwardHintIterator, typename Comparator>
 		KERBAL_CONSTEXPR14
 		ForwardIterator
 		lower_bound_hint(
-			ForwardIterator first, ForwardIterator last, const T & value, ForwardIterator hint,
+			ForwardIterator first, ForwardIterator last, const T & value, ForwardHintIterator hint,
 			Comparator comparator
 		)
 		{
@@ -129,10 +130,10 @@ namespace kerbal
 			);
 		}
 
-		template <typename ForwardIterator, typename T>
+		template <typename ForwardIterator, typename T, typename ForwardHintIterator>
 		KERBAL_CONSTEXPR14
 		ForwardIterator
-		lower_bound_hint(ForwardIterator first, ForwardIterator last, const T & value, ForwardIterator hint)
+		lower_bound_hint(ForwardIterator first, ForwardIterator last, const T & value, ForwardHintIterator hint)
 		{
 			typedef ForwardIterator iterator;
 			typedef typename kerbal::iterator::iterator_traits<iterator>::value_type type;

@@ -29,12 +29,12 @@ namespace kerbal
 		namespace detail
 		{
 
-			template <typename ForwardIterator, typename T, typename Comparator>
+			template <typename ForwardIterator, typename T, typename ForwardHintIterator, typename Comparator>
 			KERBAL_CONSTEXPR14
 			ForwardIterator
 			upper_bound_hint(
 				ForwardIterator first, ForwardIterator last, const T & value,
-				ForwardIterator hint, Comparator comparator, std::forward_iterator_tag
+				ForwardHintIterator hint, Comparator comparator, std::forward_iterator_tag
 			)
 			{
 				if (hint == last) {
@@ -49,12 +49,12 @@ namespace kerbal
 				);
 			}
 
-			template <typename BidirectionalIterator, typename T, typename Comparator>
+			template <typename BidirectionalIterator, typename T, typename BidirectionalHintIterator, typename Comparator>
 			KERBAL_CONSTEXPR14
 			BidirectionalIterator
 			upper_bound_hint(
 				BidirectionalIterator first, BidirectionalIterator last, const T & value,
-				BidirectionalIterator hint, Comparator comparator, std::bidirectional_iterator_tag
+				BidirectionalHintIterator hint, Comparator comparator, std::bidirectional_iterator_tag
 			)
 			{
 				if (hint == last) {
@@ -69,22 +69,23 @@ namespace kerbal
 				return kerbal::algorithm::upper_bound_backward(first, hint, value, comparator);
 			}
 
-			template <typename RandomAccessIterator, typename T, typename Comparator>
+			template <typename RandomAccessIterator, typename T, typename RandomAccessHintIterator, typename Comparator>
 			KERBAL_CONSTEXPR14
 			RandomAccessIterator
 			upper_bound_hint(
 				RandomAccessIterator first, RandomAccessIterator last, const T & value,
-				RandomAccessIterator hint, Comparator comparator, std::random_access_iterator_tag
+				RandomAccessHintIterator hint_, Comparator comparator, std::random_access_iterator_tag
 			)
 			{
 				typedef RandomAccessIterator iterator;
+				RandomAccessIterator hint(first + kerbal::iterator::distance(first, hint_));
 
 				if (hint == last) {
 				} else if (comparator(value, *hint)) { // *hint > value
 				} else { // *hint <= value
 					++hint;
 					if (kerbal::iterator::distance(hint, last) > 4) {
-						iterator hint_4(hint + 4);
+						RandomAccessHintIterator hint_4(hint + 4);
 						if (comparator(value, *hint_4)) { // value < hint[4]
 							last = hint_4;
 						} else {
@@ -100,7 +101,7 @@ namespace kerbal
 					);
 				}
 				if (kerbal::iterator::distance(first, hint) > 4) {
-					iterator hint_4(hint - 4);
+					RandomAccessHintIterator hint_4(hint - 4);
 					if (comparator(value, *hint_4)) { // value < hint[-4]
 						return kerbal::algorithm::detail::upper_bound_helper(
 							first, hint_4, value, comparator,
@@ -115,11 +116,11 @@ namespace kerbal
 
 		} // namespace detail
 
-		template <typename ForwardIterator, typename T, typename Comparator>
+		template <typename ForwardIterator, typename T, typename ForwardHintIterator, typename Comparator>
 		KERBAL_CONSTEXPR14
 		ForwardIterator
 		upper_bound_hint(
-			ForwardIterator first, ForwardIterator last, const T & value, ForwardIterator hint,
+			ForwardIterator first, ForwardIterator last, const T & value, ForwardHintIterator hint,
 			Comparator comparator
 		)
 		{
@@ -129,10 +130,10 @@ namespace kerbal
 			);
 		}
 
-		template <typename ForwardIterator, typename T>
+		template <typename ForwardIterator, typename T, typename ForwardHintIterator>
 		KERBAL_CONSTEXPR14
 		ForwardIterator
-		upper_bound_hint(ForwardIterator first, ForwardIterator last, const T & value, ForwardIterator hint)
+		upper_bound_hint(ForwardIterator first, ForwardIterator last, const T & value, ForwardHintIterator hint)
 		{
 			typedef ForwardIterator iterator;
 			typedef typename kerbal::iterator::iterator_traits<iterator>::value_type type;
