@@ -74,6 +74,7 @@ namespace kerbal
 #	if __cplusplus >= 201103L
 
 		constexpr
+		inline
 		SHA1_context_base::SHA1_context_base() noexcept :
 			state{0x67452301, 0xEFCDAB89, 0x98BADCFE, 0x10325476, 0xC3D2E1F0},
 			count{0, 0}, buffer{}
@@ -82,6 +83,7 @@ namespace kerbal
 
 #	else
 
+		inline
 		SHA1_context_base::SHA1_context_base() KERBAL_NOEXCEPT
 		{
 			this->state[0] = 0x67452301;
