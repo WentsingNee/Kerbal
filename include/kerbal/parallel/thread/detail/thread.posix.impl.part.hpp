@@ -68,7 +68,6 @@ namespace kerbal
 			typedef typename detail::fun_args_pack_type<Callable, Args...>::type fun_args_pack_t;
 
 			typedef typename allocator_traits::template rebind_alloc<fun_args_pack_t>::other rebind_allocator;
-			typedef typename allocator_traits::template rebind_traits<fun_args_pack_t>::other rebind_allocator_traits;
 
 			struct helper
 			{
@@ -129,7 +128,6 @@ namespace kerbal
 			> fun_args_pack_t; \
  \
 			typedef typename allocator_traits::template rebind_alloc<fun_args_pack_t>::other rebind_allocator; \
-			typedef typename allocator_traits::template rebind_traits<fun_args_pack_t>::other rebind_allocator_traits; \
  \
 			struct helper \
 			{ \
