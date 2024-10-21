@@ -1972,7 +1972,7 @@ namespace kerbal
 			typename
 			avl_type_only<Entity>::unique_insert_r
 			avl_type_only<Entity>::
-			k_emplace_unique_ua_aux(
+			k_unique_emplace_ua_aux(
 				NodeAllocator & alloc, Extract & e, KeyCompare & kc,
 				node * p
 			)
@@ -2022,13 +2022,13 @@ namespace kerbal
 			typename
 			avl_type_only<Entity>::unique_insert_r
 			avl_type_only<Entity>::
-			k_emplace_unique_using_allocator(
+			k_unique_emplace_using_allocator(
 				NodeAllocator & alloc, Extract & e, KeyCompare & kc,
 				Args && ... args
 			)
 			{
 				node * p = k_build_new_node(alloc, kerbal::utility::forward<Args>(args)...);
-				return this->k_emplace_unique_ua_aux(alloc, e, kc, p);
+				return this->k_unique_emplace_ua_aux(alloc, e, kc, p);
 			}
 
 #	else
@@ -2064,13 +2064,13 @@ namespace kerbal
 			typename \
 			avl_type_only<Entity>::unique_insert_r \
 			avl_type_only<Entity>:: \
-			k_emplace_unique_using_allocator( \
+			k_unique_emplace_using_allocator( \
 				NodeAllocator & alloc, Extract & e, KeyCompare & kc \
 				KERBAL_OPT_PPEXPAND_WITH_COMMA_N(LEFT_JOIN_COMMA, EMPTY, ARGS_DECL, i) \
 			) \
 			{ \
 				node * p = k_build_new_node(alloc KERBAL_OPT_PPEXPAND_WITH_COMMA_N(LEFT_JOIN_COMMA, EMPTY, ARGS_USE, i)); \
-				return this->k_emplace_unique_ua_aux(alloc, e, kc, p); \
+				return this->k_unique_emplace_ua_aux(alloc, e, kc, p); \
 			} \
 
 			KERBAL_PPEXPAND_N(FBODY, KERBAL_PPEXPAND_EMPTY_SEPARATOR, 0)
@@ -2093,9 +2093,9 @@ namespace kerbal
 			avl_type_only<Entity>::unique_insert_r
 			avl_type_only<Entity>::
 #	if __cplusplus >= 201103L
-			k_emplace_unique_delay_build(NodeAllocator & alloc, Extract & e, KeyCompare & kc, U && src_key)
+			k_unique_emplace_delay_build(NodeAllocator & alloc, Extract & e, KeyCompare & kc, U && src_key)
 #	else
-			k_emplace_unique_delay_build(NodeAllocator & alloc, Extract & e, KeyCompare & kc, const U & src_key)
+			k_unique_emplace_delay_build(NodeAllocator & alloc, Extract & e, KeyCompare & kc, const U & src_key)
 #	endif
 			{
 
@@ -2149,14 +2149,14 @@ namespace kerbal
 			typename
 			avl_type_only<Entity>::unique_insert_r
 			avl_type_only<Entity>::
-			k_emplace_unique_using_allocator(
+			k_unique_emplace_using_allocator(
 				NodeAllocator & alloc,
 				kerbal::container::identity_extractor<Entity> & e,
 				KeyCompare & kc,
 				const_reference src_key
 			)
 			{
-				return this->k_emplace_unique_delay_build(alloc, e, kc, src_key);
+				return this->k_unique_emplace_delay_build(alloc, e, kc, src_key);
 			}
 
 #	if __cplusplus >= 201103L
@@ -2167,14 +2167,14 @@ namespace kerbal
 			typename
 			avl_type_only<Entity>::unique_insert_r
 			avl_type_only<Entity>::
-			k_emplace_unique_using_allocator(
+			k_unique_emplace_using_allocator(
 				NodeAllocator & alloc,
 				kerbal::container::identity_extractor<Entity> & e,
 				KeyCompare & kc,
 				rvalue_reference src_key
 			)
 			{
-				return this->k_emplace_unique_delay_build(alloc, e, kc, kerbal::compatibility::move(src_key));
+				return this->k_unique_emplace_delay_build(alloc, e, kc, kerbal::compatibility::move(src_key));
 			}
 
 #	endif
@@ -2205,7 +2205,7 @@ namespace kerbal
 				const_reference src
 			)
 			{
-				return this->k_emplace_unique_using_allocator(alloc, e, kc, src);
+				return this->k_unique_emplace_using_allocator(alloc, e, kc, src);
 			}
 
 
@@ -2236,7 +2236,7 @@ namespace kerbal
 				rvalue_reference src
 			)
 			{
-				return this->k_emplace_unique_using_allocator(alloc, e, kc, kerbal::compatibility::move(src));
+				return this->k_unique_emplace_using_allocator(alloc, e, kc, kerbal::compatibility::move(src));
 			}
 
 #	endif
@@ -2528,7 +2528,7 @@ namespace kerbal
 			typename
 			avl_type_only<Entity>::unique_insert_r
 			avl_type_only<Entity>::
-			k_replace_emplace_unique_using_allocator(
+			k_replace_unique_emplace_using_allocator(
 				NodeAllocator & alloc, Extract & e, KeyCompare & kc,
 				const_iterator replace,
 				Args && ... args
@@ -2536,7 +2536,7 @@ namespace kerbal
 			{
 				node * p = this->k_replace_reuse_node(alloc, replace);
 				k_try_construct_node(alloc, p, kerbal::utility::forward<Args>(args)...);
-				return this->k_emplace_unique_ua_aux(alloc, e, kc, p);
+				return this->k_unique_emplace_ua_aux(alloc, e, kc, p);
 			}
 
 #	else
@@ -2574,7 +2574,7 @@ namespace kerbal
 			typename \
 			avl_type_only<Entity>::unique_insert_r \
 			avl_type_only<Entity>:: \
-			k_replace_emplace_unique_using_allocator( \
+			k_replace_unique_emplace_using_allocator( \
 				NodeAllocator & alloc, Extract & e, KeyCompare & kc, \
 				const_iterator replace \
 				KERBAL_OPT_PPEXPAND_WITH_COMMA_N(LEFT_JOIN_COMMA, EMPTY, ARGS_DECL, i) \
@@ -2582,7 +2582,7 @@ namespace kerbal
 			{ \
 				node * p = this->k_replace_reuse_node(alloc, replace); \
 				k_try_construct_node(alloc, p KERBAL_OPT_PPEXPAND_WITH_COMMA_N(LEFT_JOIN_COMMA, EMPTY, ARGS_USE, i)); \
-				return this->k_emplace_unique_ua_aux(alloc, e, kc, p); \
+				return this->k_unique_emplace_ua_aux(alloc, e, kc, p); \
 			} \
 
 			KERBAL_PPEXPAND_N(FBODY, KERBAL_PPEXPAND_EMPTY_SEPARATOR, 0)
