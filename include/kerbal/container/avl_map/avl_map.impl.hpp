@@ -657,7 +657,7 @@ namespace kerbal
 		avl_map<K, M, KeyCompare, Allocator>::
 		emplace(Args && ... args)
 		{
-			return this->avl_ordered::emplace_unique(kerbal::utility::forward<Args>(args)...);
+			return this->avl_ordered::unique_emplace(kerbal::utility::forward<Args>(args)...);
 		}
 
 #	else
@@ -676,7 +676,7 @@ namespace kerbal
 		avl_map<K, M, KeyCompare, Allocator>:: \
 		emplace(KERBAL_OPT_PPEXPAND_WITH_COMMA_N(REMAINF, EMPTY, ARGS_DECL, i)) \
 		{ \
-			return this->avl_ordered::emplace_unique(KERBAL_OPT_PPEXPAND_WITH_COMMA_N(REMAINF, EMPTY, ARGS_USE, i)); \
+			return this->avl_ordered::unique_emplace(KERBAL_OPT_PPEXPAND_WITH_COMMA_N(REMAINF, EMPTY, ARGS_USE, i)); \
 		} \
 
 //		KERBAL_PPEXPAND_N(FBODY, KERBAL_PPEXPAND_EMPTY_SEPARATOR, 0) = delete; // because map_data doesn't support default construct

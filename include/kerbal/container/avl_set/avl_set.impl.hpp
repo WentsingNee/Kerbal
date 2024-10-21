@@ -507,7 +507,7 @@ namespace kerbal
 		avl_set<T, KeyCompare, Allocator>::
 		emplace(Args && ... args)
 		{
-			return this->avl_ordered::emplace_unique(kerbal::utility::forward<Args>(args)...);
+			return this->avl_ordered::unique_emplace(kerbal::utility::forward<Args>(args)...);
 		}
 
 #	else
@@ -526,7 +526,7 @@ namespace kerbal
 		avl_set<T, KeyCompare, Allocator>:: \
 		emplace(KERBAL_OPT_PPEXPAND_WITH_COMMA_N(REMAINF, EMPTY, ARGS_DECL, i)) \
 		{ \
-			return this->avl_ordered::emplace_unique(KERBAL_OPT_PPEXPAND_WITH_COMMA_N(REMAINF, EMPTY, ARGS_USE, i)); \
+			return this->avl_ordered::unique_emplace(KERBAL_OPT_PPEXPAND_WITH_COMMA_N(REMAINF, EMPTY, ARGS_USE, i)); \
 		} \
 
 		KERBAL_PPEXPAND_N(FBODY, KERBAL_PPEXPAND_EMPTY_SEPARATOR, 0)
@@ -685,7 +685,7 @@ namespace kerbal
 			Args && ... args
 		)
 		{
-			return this->avl_ordered::replace_emplace_unique(
+			return this->avl_ordered::replace_unique_emplace(
 				replace,
 				kerbal::utility::forward<Args>(args)...
 			);
@@ -710,7 +710,7 @@ namespace kerbal
 			KERBAL_OPT_PPEXPAND_WITH_COMMA_N(LEFT_JOIN_COMMA, EMPTY, ARGS_DECL, i) \
 		) \
 		{ \
-			return this->avl_ordered::replace_emplace_unique( \
+			return this->avl_ordered::replace_unique_emplace( \
 				replace \
 				KERBAL_OPT_PPEXPAND_WITH_COMMA_N(LEFT_JOIN_COMMA, EMPTY, ARGS_USE, i) \
 			); \

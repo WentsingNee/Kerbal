@@ -971,7 +971,7 @@ namespace kerbal
 					>
 					KERBAL_CONSTEXPR20
 					unique_insert_r
-					k_emplace_unique_ua_aux(
+					k_unique_emplace_ua_aux(
 						NodeAllocator & alloc, Extract & e, KeyCompare & kc,
 						node * p
 					);
@@ -997,7 +997,7 @@ namespace kerbal
 					>
 					KERBAL_CONSTEXPR20
 					unique_insert_r
-					k_emplace_unique_using_allocator(
+					k_unique_emplace_using_allocator(
 						NodeAllocator & alloc, Extract & e, KeyCompare & kc,
 						Args && ... args
 					);
@@ -1024,7 +1024,7 @@ namespace kerbal
 						KERBAL_OPT_PPEXPAND_WITH_COMMA_N(LEFT_JOIN_COMMA, EMPTY, TARGS_DECL, i) \
 					> \
 					unique_insert_r \
-					k_emplace_unique_using_allocator( \
+					k_unique_emplace_using_allocator( \
 						NodeAllocator & alloc, Extract & e, KeyCompare & kc \
 						KERBAL_OPT_PPEXPAND_WITH_COMMA_N(LEFT_JOIN_COMMA, EMPTY, ARGS_DECL, i) \
 					); \
@@ -1045,15 +1045,15 @@ namespace kerbal
 					KERBAL_CONSTEXPR20
 					unique_insert_r
 #			if __cplusplus >= 201103L
-					k_emplace_unique_delay_build(NodeAllocator & alloc, Extract & e, KeyCompare & kc, U && src_key);
+					k_unique_emplace_delay_build(NodeAllocator & alloc, Extract & e, KeyCompare & kc, U && src_key);
 #			else
-					k_emplace_unique_delay_build(NodeAllocator & alloc, Extract & e, KeyCompare & kc, const U & src_key);
+					k_unique_emplace_delay_build(NodeAllocator & alloc, Extract & e, KeyCompare & kc, const U & src_key);
 #			endif
 
 					template <typename NodeAllocator, typename KeyCompare>
 					KERBAL_CONSTEXPR20
 					unique_insert_r
-					k_emplace_unique_using_allocator(
+					k_unique_emplace_using_allocator(
 						NodeAllocator & alloc,
 						kerbal::container::identity_extractor<Entity> & e,
 						KeyCompare & kc,
@@ -1065,7 +1065,7 @@ namespace kerbal
 					template <typename NodeAllocator, typename KeyCompare>
 					KERBAL_CONSTEXPR20
 					unique_insert_r
-					k_emplace_unique_using_allocator(
+					k_unique_emplace_using_allocator(
 						NodeAllocator & alloc,
 						kerbal::container::identity_extractor<Entity> & e,
 						KeyCompare & kc,
@@ -1253,7 +1253,7 @@ namespace kerbal
 					>
 					KERBAL_CONSTEXPR20
 					unique_insert_r
-					k_replace_emplace_unique_using_allocator(
+					k_replace_unique_emplace_using_allocator(
 						NodeAllocator & alloc, Extract & e, KeyCompare & kc,
 						const_iterator replace,
 						Args && ... args
@@ -1282,7 +1282,7 @@ namespace kerbal
 						KERBAL_OPT_PPEXPAND_WITH_COMMA_N(LEFT_JOIN_COMMA, EMPTY, TARGS_DECL, i) \
 					> \
 					unique_insert_r \
-					k_replace_emplace_unique_using_allocator( \
+					k_replace_unique_emplace_using_allocator( \
 						NodeAllocator & alloc, Extract & e, KeyCompare & kc, \
 						const_iterator replace \
 						KERBAL_OPT_PPEXPAND_WITH_COMMA_N(LEFT_JOIN_COMMA, EMPTY, ARGS_DECL, i) \
