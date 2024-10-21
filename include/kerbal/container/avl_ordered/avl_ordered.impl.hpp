@@ -1273,9 +1273,9 @@ namespace kerbal
 		typename
 		avl_ordered<Entity, Extract, KeyCompare, Allocator>::unique_insert_r
 		avl_ordered<Entity, Extract, KeyCompare, Allocator>::
-		emplace_unique(Args && ... args)
+		unique_emplace(Args && ... args)
 		{
-			return this->avl_type_only::k_emplace_unique_using_allocator(
+			return this->avl_type_only::k_unique_emplace_using_allocator(
 				this->alloc(), this->extract(), this->key_comp(),
 				kerbal::utility::forward<Args>(args)...
 			);
@@ -1309,9 +1309,9 @@ namespace kerbal
 		typename \
 		avl_ordered<Entity, Extract, KeyCompare, Allocator>::unique_insert_r \
 		avl_ordered<Entity, Extract, KeyCompare, Allocator>:: \
-		emplace_unique(KERBAL_OPT_PPEXPAND_WITH_COMMA_N(REMAINF, EMPTY, ARGS_DECL, i)) \
+		unique_emplace(KERBAL_OPT_PPEXPAND_WITH_COMMA_N(REMAINF, EMPTY, ARGS_DECL, i)) \
 		{ \
-			return this->avl_type_only::k_emplace_unique_using_allocator( \
+			return this->avl_type_only::k_unique_emplace_using_allocator( \
 				this->alloc(), this->extract(), this->key_comp() \
 				KERBAL_OPT_PPEXPAND_WITH_COMMA_N(LEFT_JOIN_COMMA, EMPTY, ARGS_USE, i) \
 			); \
@@ -1575,9 +1575,9 @@ namespace kerbal
 		typename
 		avl_ordered<Entity, Extract, KeyCompare, Allocator>::unique_insert_r
 		avl_ordered<Entity, Extract, KeyCompare, Allocator>::
-		replace_emplace_unique(const_iterator replace, Args && ... args)
+		replace_unique_emplace(const_iterator replace, Args && ... args)
 		{
-			return this->avl_type_only::k_replace_emplace_unique_using_allocator(
+			return this->avl_type_only::k_replace_unique_emplace_using_allocator(
 				this->alloc(), this->extract(), this->key_comp(),
 				replace,
 				kerbal::utility::forward<Args>(args)...
@@ -1615,12 +1615,12 @@ namespace kerbal
 		typename \
 		avl_ordered<Entity, Extract, KeyCompare, Allocator>::unique_insert_r \
 		avl_ordered<Entity, Extract, KeyCompare, Allocator>:: \
-		replace_emplace_unique( \
+		replace_unique_emplace( \
 			const_iterator replace \
 			KERBAL_OPT_PPEXPAND_WITH_COMMA_N(LEFT_JOIN_COMMA, EMPTY, ARGS_DECL, i) \
 		) \
 		{ \
-			return this->avl_type_only::k_replace_emplace_unique_using_allocator( \
+			return this->avl_type_only::k_replace_unique_emplace_using_allocator( \
 				this->alloc(), this->extract(), this->key_comp(), \
 				replace \
 				KERBAL_OPT_PPEXPAND_WITH_COMMA_N(LEFT_JOIN_COMMA, EMPTY, ARGS_USE, i) \
