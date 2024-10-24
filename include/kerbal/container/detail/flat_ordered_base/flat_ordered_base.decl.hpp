@@ -530,7 +530,7 @@ namespace kerbal
 							KERBAL_CONSTEXPR14
 							bool operator()(const_reference lhs, const_reference rhs) const
 							{
-								Extract e;
+								Extract const & e = self->extract();
 								return
 									!static_cast<bool>(self->key_comp()(e(lhs), e(rhs))) &&
 									!static_cast<bool>(self->key_comp()(e(rhs), e(lhs)))

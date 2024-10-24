@@ -696,10 +696,10 @@ namespace kerbal
 			flat_ordered_base<Entity, Extract, KeyCompare, Sequence>::
 			k_insert_unique_impl(iterator ub, const_reference src)
 			{
-				Extract extract;
+				Extract & e = this->extract();
 				bool inserted = false;
 				if (static_cast<bool>(ub == this->cbegin()) ||
-					static_cast<bool>(this->key_comp()(extract(*kerbal::iterator::prev(ub)), extract(src)))) {
+					static_cast<bool>(this->key_comp()(e(*kerbal::iterator::prev(ub)), e(src)))) {
 					// ub[-1] < src
 					ub = sequence.insert(ub, src);
 					inserted = true;
@@ -736,10 +736,10 @@ namespace kerbal
 			flat_ordered_base<Entity, Extract, KeyCompare, Sequence>::
 			k_insert_unique_impl(iterator ub, rvalue_reference src)
 			{
-				Extract extract;
+				Extract & e = this->extract();
 				bool inserted = false;
 				if (static_cast<bool>(ub == this->cbegin()) ||
-					static_cast<bool>(this->key_comp()(extract(*kerbal::iterator::prev(ub)), extract(src)))) {
+					static_cast<bool>(this->key_comp()(e(*kerbal::iterator::prev(ub)), e(src)))) {
 					// ub[-1] < src
 					ub = sequence.insert(ub, kerbal::compatibility::move(src));
 					inserted = true;
