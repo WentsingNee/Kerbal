@@ -14,6 +14,7 @@
 
 #include <kerbal/container/detail/flat_ordered_base/flat_ordered_base.fwd.hpp>
 
+#include <kerbal/assign/ilist.hpp>
 #include <kerbal/compatibility/constexpr.hpp>
 #include <kerbal/compatibility/noexcept.hpp>
 #include <kerbal/container/associative_container_facility/associative_unique_insert_r.hpp>
@@ -292,6 +293,36 @@ namespace kerbal
 					KERBAL_CONSTEXPR14
 					flat_ordered_base(std::initializer_list<value_type> ilist, key_compare kc);
 
+#			else
+
+					flat_ordered_base(const kerbal::assign::assign_list<void> & ilist) :
+						key_compare_compress_helper(),
+						sequence()
+					{
+					}
+
+					flat_ordered_base(const kerbal::assign::assign_list<void> & ilist, key_compare kc) :
+						key_compare_compress_helper(kerbal::utility::in_place_t(), kc),
+						sequence()
+					{
+					}
+
+					template <typename U>
+					flat_ordered_base(const kerbal::assign::assign_list<U> & ilist) :
+						key_compare_compress_helper(),
+						sequence(ilist.cbegin(), ilist.cend())
+					{
+						this->k_sort();
+					}
+
+					template <typename U>
+					flat_ordered_base(const kerbal::assign::assign_list<U> & ilist, key_compare kc) :
+						key_compare_compress_helper(kerbal::utility::in_place_t(), kc),
+						sequence(ilist.cbegin(), ilist.cend())
+					{
+						this->k_sort();
+					}
+
 #			endif
 
 				public:
@@ -316,6 +347,31 @@ namespace kerbal
 
 					KERBAL_CONSTEXPR14
 					void assign(std::initializer_list<value_type> ilist, key_compare kc);
+
+#			else
+
+					void assign(const kerbal::assign::assign_list<void> & ilist)
+					{
+						this->clear();
+					}
+
+					void assign(const kerbal::assign::assign_list<void> & ilist, key_compare kc)
+					{
+						this->clear();
+						this->key_comp() = kc;
+					}
+
+					template <typename U>
+					void assign(const kerbal::assign::assign_list<U> & ilist)
+					{
+						this->assign(ilist.cbegin(), ilist.cend());
+					}
+
+					template <typename U>
+					void assign(const kerbal::assign::assign_list<U> & ilist, key_compare kc)
+					{
+						this->assign(ilist.cbegin(), ilist.cend(), kc);
+					}
 
 #			endif
 
