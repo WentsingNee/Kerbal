@@ -16,6 +16,7 @@
 #include <kerbal/compatibility/constexpr.hpp>
 #include <kerbal/compatibility/namespace_std_scope.hpp>
 #include <kerbal/compatibility/noexcept.hpp>
+#include <kerbal/container/associative_container_facility/key_extractors/identity_extractor.hpp>
 #include <kerbal/container/static_ordered.hpp>
 
 #include <kerbal/container/detail/flat_multiset_base.hpp>
