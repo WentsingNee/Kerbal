@@ -528,11 +528,39 @@ namespace kerbal
 
 				protected:
 					KERBAL_CONSTEXPR14
+					iterator k_find_impl(iterator lower_bound_pos, const key_type & key)
+					{
+						iterator end_it(this->end());
+						if (lower_bound_pos != end_it && this->key_comp()(key, this->extract()(*lower_bound_pos))) {
+							// key < *lower_bound_pos
+							/*
+							* 1 1 1 3 3 3
+							*       ^
+							*/
+							return end_it;
+						} else {
+							return lower_bound_pos;
+						}
+					}
+
+					KERBAL_CONSTEXPR14
 					const_iterator k_find_impl(const_iterator lower_bound_pos, const key_type & key) const;
 
 				public:
 					KERBAL_CONSTEXPR14
+					iterator find(const key_type & key)
+					{
+						return this->k_find_impl(this->lower_bound(key), key);
+					}
+
+					KERBAL_CONSTEXPR14
 					const_iterator find(const key_type & key) const;
+
+					KERBAL_CONSTEXPR14
+					iterator find(const key_type & key, const_iterator hint)
+					{
+						return this->k_find_impl(this->lower_bound(key, hint), key);
+					}
 
 					KERBAL_CONSTEXPR14
 					const_iterator find(const key_type & key, const_iterator hint) const;
