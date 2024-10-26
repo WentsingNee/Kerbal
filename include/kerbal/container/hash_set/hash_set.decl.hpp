@@ -47,14 +47,17 @@ namespace kerbal
 		>
 		class hash_set :
 			protected kerbal::container::hash_table<
-				T, kerbal::container::identity_extractor<T>, Hash, KeyEqual,
+				T,
+				kerbal::container::identity_extractor<T>,
+				Hash, KeyEqual,
 				NodeAllocator, BucketAllocator
 			>
 		{
 			private:
 				typedef kerbal::container::hash_table<
 					T,
-					kerbal::container::identity_extractor<T>, Hash, KeyEqual,
+					kerbal::container::identity_extractor<T>,
+					Hash, KeyEqual,
 					NodeAllocator, BucketAllocator
 				>															hash_table;
 
@@ -91,6 +94,9 @@ namespace kerbal
 
 
 			public:
+
+			//===================
+			// construct/copy/destroy
 
 #		if __cplusplus >= 201103L
 
@@ -517,8 +523,28 @@ namespace kerbal
 
 		};
 
-	} // namespace container
 
+#	if __cplusplus >= 201703L
+
+		template <typename InputIterator>
+		hash_set(
+			InputIterator, InputIterator
+		) ->
+		hash_set<
+			typename kerbal::iterator::iterator_traits<InputIterator>::value_type
+		>;
+
+
+
+		template <typename T>
+		hash_set(
+			std::initializer_list<T>
+		) ->
+		hash_set<T>;
+
+#	endif // if __cplusplus >= 201703L
+
+	} // namespace container
 
 	namespace algorithm
 	{
