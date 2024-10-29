@@ -148,7 +148,7 @@ namespace kerbal
 						{
 						}
 
-						KERBAL_CONSTEXPR
+						KERBAL_CONSTEXPR14
 						bool operator()(iterator a, iterator b)
 						{
 							return this->cmp(*a, *b);
