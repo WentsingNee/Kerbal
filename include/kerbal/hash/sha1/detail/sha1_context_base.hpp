@@ -53,19 +53,19 @@ namespace kerbal
 
 					KERBAL_CONSTEXPR14
 					static
-					void R1(const uint32_t * w, uint32_t a, uint32_t & b, uint32_t c, uint32_t d, uint32_t & e, std::size_t i) KERBAL_NOEXCEPT;
+					void R1(uint32_t wi, uint32_t a, uint32_t & b, uint32_t c, uint32_t d, uint32_t & e) KERBAL_NOEXCEPT;
 
 					KERBAL_CONSTEXPR14
 					static
-					void R2(const uint32_t * w, uint32_t a, uint32_t & b, uint32_t c, uint32_t d, uint32_t & e, std::size_t i) KERBAL_NOEXCEPT;
+					void R2(uint32_t wi, uint32_t a, uint32_t & b, uint32_t c, uint32_t d, uint32_t & e) KERBAL_NOEXCEPT;
 
 					KERBAL_CONSTEXPR14
 					static
-					void R3(const uint32_t * w, uint32_t a, uint32_t & b, uint32_t c, uint32_t d, uint32_t & e, std::size_t i) KERBAL_NOEXCEPT;
+					void R3(uint32_t wi, uint32_t a, uint32_t & b, uint32_t c, uint32_t d, uint32_t & e) KERBAL_NOEXCEPT;
 
 					KERBAL_CONSTEXPR14
 					static
-					void R4(const uint32_t * w, uint32_t a, uint32_t & b, uint32_t c, uint32_t d, uint32_t & e, std::size_t i) KERBAL_NOEXCEPT;
+					void R4(uint32_t wi, uint32_t a, uint32_t & b, uint32_t c, uint32_t d, uint32_t & e) KERBAL_NOEXCEPT;
 
 			};
 
@@ -105,9 +105,9 @@ namespace kerbal
 			inline
 			void
 			SHA1_context_base::
-			R1(const uint32_t * w, uint32_t a, uint32_t & b, uint32_t c, uint32_t d, uint32_t & e, std::size_t i) KERBAL_NOEXCEPT
+			R1(uint32_t wi, uint32_t a, uint32_t & b, uint32_t c, uint32_t d, uint32_t & e) KERBAL_NOEXCEPT
 			{
-				e += w[i];
+				e += wi;
 				e += kerbal::numeric::rotl(a, 5);
 				e += ((b & (c ^ d)) ^ d) + 0x5A827999;
 				b = kerbal::numeric::rotl(b, 30);
@@ -117,9 +117,9 @@ namespace kerbal
 			inline
 			void
 			SHA1_context_base::
-			R2(const uint32_t * w, uint32_t a, uint32_t & b, uint32_t c, uint32_t d, uint32_t & e, std::size_t i) KERBAL_NOEXCEPT
+			R2(uint32_t wi, uint32_t a, uint32_t & b, uint32_t c, uint32_t d, uint32_t & e) KERBAL_NOEXCEPT
 			{
-				e += w[i];
+				e += wi;
 				e += kerbal::numeric::rotl(a, 5);
 				e += (b ^ c ^ d) + 0x6ED9EBA1;
 				b = kerbal::numeric::rotl(b, 30);
@@ -129,9 +129,9 @@ namespace kerbal
 			inline
 			void
 			SHA1_context_base::
-			R3(const uint32_t * w, uint32_t a, uint32_t & b, uint32_t c, uint32_t d, uint32_t & e, std::size_t i) KERBAL_NOEXCEPT
+			R3(uint32_t wi, uint32_t a, uint32_t & b, uint32_t c, uint32_t d, uint32_t & e) KERBAL_NOEXCEPT
 			{
-				e += w[i];
+				e += wi;
 				e += kerbal::numeric::rotl(a, 5);
 				e += (((b | c) & d) | (b & c)) + 0x8F1BBCDC;
 				b = kerbal::numeric::rotl(b, 30);
@@ -141,9 +141,9 @@ namespace kerbal
 			inline
 			void
 			SHA1_context_base::
-			R4(const uint32_t * w, uint32_t a, uint32_t & b, uint32_t c, uint32_t d, uint32_t & e, std::size_t i) KERBAL_NOEXCEPT
+			R4(uint32_t wi, uint32_t a, uint32_t & b, uint32_t c, uint32_t d, uint32_t & e) KERBAL_NOEXCEPT
 			{
-				e += w[i];
+				e += wi;
 				e += kerbal::numeric::rotl(a, 5);
 				e += (b ^ c ^ d) + 0xCA62C1D6;
 				b = kerbal::numeric::rotl(b, 30);
