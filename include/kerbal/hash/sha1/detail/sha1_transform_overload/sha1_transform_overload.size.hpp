@@ -102,11 +102,11 @@ namespace kerbal
 
 				uint32_t * ww = w;
 				for (int i = 0; i < 4; ++i) {
-					R1(ww, a, b, c, d, e, 0);
-					R1(ww, e, a, b, c, d, 1);
-					R1(ww, d, e, a, b, c, 2);
-					R1(ww, c, d, e, a, b, 3);
-					R1(ww, b, c, d, e, a, 4);
+					R1(ww[0], a, b, c, d, e);
+					R1(ww[1], e, a, b, c, d);
+					R1(ww[2], d, e, a, b, c);
+					R1(ww[3], c, d, e, a, b);
+					R1(ww[4], b, c, d, e, a);
 					ww += 5;
 				}
 
@@ -114,11 +114,11 @@ namespace kerbal
 
 				ww = w;
 				for (int i = 0; i < 4; ++i) {
-					R2(ww, a, b, c, d, e, 0);
-					R2(ww, e, a, b, c, d, 1);
-					R2(ww, d, e, a, b, c, 2);
-					R2(ww, c, d, e, a, b, 3);
-					R2(ww, b, c, d, e, a, 4);
+					R2(ww[0], a, b, c, d, e);
+					R2(ww[1], e, a, b, c, d);
+					R2(ww[2], d, e, a, b, c);
+					R2(ww[3], c, d, e, a, b);
+					R2(ww[4], b, c, d, e, a);
 					ww += 5;
 				}
 
@@ -126,11 +126,11 @@ namespace kerbal
 
 				ww = w;
 				for (int i = 0; i < 4; ++i) {
-					R3(ww, a, b, c, d, e, 0);
-					R3(ww, e, a, b, c, d, 1);
-					R3(ww, d, e, a, b, c, 2);
-					R3(ww, c, d, e, a, b, 3);
-					R3(ww, b, c, d, e, a, 4);
+					R3(ww[0], a, b, c, d, e);
+					R3(ww[1], e, a, b, c, d);
+					R3(ww[2], d, e, a, b, c);
+					R3(ww[3], c, d, e, a, b);
+					R3(ww[4], b, c, d, e, a);
 					ww += 5;
 				}
 
@@ -138,11 +138,11 @@ namespace kerbal
 
 				ww = w;
 				for (int i = 0; i < 4; ++i) {
-					R4(ww, a, b, c, d, e, 0);
-					R4(ww, e, a, b, c, d, 1);
-					R4(ww, d, e, a, b, c, 2);
-					R4(ww, c, d, e, a, b, 3);
-					R4(ww, b, c, d, e, a, 4);
+					R4(ww[0], a, b, c, d, e);
+					R4(ww[1], e, a, b, c, d);
+					R4(ww[2], d, e, a, b, c);
+					R4(ww[3], c, d, e, a, b);
+					R4(ww[4], b, c, d, e, a);
 					ww += 5;
 				}
 
