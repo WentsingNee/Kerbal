@@ -536,15 +536,15 @@ namespace kerbal
 
 		template <
 			typename InputIterator,
-			typename KeyCompare,
-			typename =
-				typename kerbal::type_traits::enable_if<
-					!kerbal::memory::is_allocator<KeyCompare>::value
-				>::type
+			typename KeyCompare
 		>
 		avl_map(
 			InputIterator, InputIterator,
-			const KeyCompare &
+			const KeyCompare &,
+			typename kerbal::type_traits::enable_if<
+				!kerbal::memory::is_allocator<KeyCompare>::value,
+				int
+			>::type = 0
 		) ->
 		avl_map<
 			typename kerbal::container::map_from_iter_pair_tad_traits<InputIterator>::key_type,
@@ -554,15 +554,15 @@ namespace kerbal
 
 		template <
 			typename InputIterator,
-			typename Allocator,
-			typename =
-				typename kerbal::type_traits::enable_if<
-					kerbal::memory::is_allocator<Allocator>::value
-				>::type
+			typename Allocator
 		>
 		avl_map(
 			InputIterator, InputIterator,
-			const Allocator &
+			const Allocator &,
+			typename kerbal::type_traits::enable_if<
+				kerbal::memory::is_allocator<Allocator>::value,
+				int
+			>::type = 0
 		) ->
 		avl_map<
 			typename kerbal::container::map_from_iter_pair_tad_traits<InputIterator>::key_type,
@@ -574,20 +574,20 @@ namespace kerbal
 		template <
 			typename InputIterator,
 			typename KeyCompare,
-			typename Allocator,
-			typename =
-				typename kerbal::type_traits::enable_if<
-					kerbal::type_traits::conjunction<
-						kerbal::type_traits::negation<
-							kerbal::memory::is_allocator<KeyCompare>
-						>,
-						kerbal::memory::is_allocator<Allocator>
-					>::value
-				>::type
+			typename Allocator
 		>
 		avl_map(
 			InputIterator, InputIterator,
-			const KeyCompare &, const Allocator &
+			const KeyCompare &, const Allocator &,
+			typename kerbal::type_traits::enable_if<
+				kerbal::type_traits::conjunction<
+					kerbal::type_traits::negation<
+						kerbal::memory::is_allocator<KeyCompare>
+					>,
+					kerbal::memory::is_allocator<Allocator>
+				>::value,
+				int
+			>::type = 0
 		) ->
 		avl_map<
 			typename kerbal::container::map_from_iter_pair_tad_traits<InputIterator>::key_type,
@@ -604,28 +604,28 @@ namespace kerbal
 		avl_map<K, M>;
 
 		template <
-			typename K, typename M, typename KeyCompare,
-			typename =
-				typename kerbal::type_traits::enable_if<
-					!kerbal::memory::is_allocator<KeyCompare>::value
-				>::type
+			typename K, typename M, typename KeyCompare
 		>
 		avl_map(
 			std::initializer_list<kerbal::container::map_data<K, M> >,
-			const KeyCompare &
+			const KeyCompare &,
+			typename kerbal::type_traits::enable_if<
+				!kerbal::memory::is_allocator<KeyCompare>::value,
+				int
+			>::type = 0
 		) ->
 		avl_map<K, M, KeyCompare>;
 
 		template <
-			typename K, typename M, typename Allocator,
-			typename =
-				typename kerbal::type_traits::enable_if<
-					kerbal::memory::is_allocator<Allocator>::value
-				>::type
+			typename K, typename M, typename Allocator
 		>
 		avl_map(
 			std::initializer_list<kerbal::container::map_data<K, M> >,
-			const Allocator &
+			const Allocator &,
+			typename kerbal::type_traits::enable_if<
+				kerbal::memory::is_allocator<Allocator>::value,
+				int
+			>::type = 0
 		) ->
 		avl_map<
 			K, M,
@@ -634,20 +634,20 @@ namespace kerbal
 		>;
 
 		template <
-			typename K, typename M, typename KeyCompare, typename Allocator,
-			typename =
-				typename kerbal::type_traits::enable_if<
-					kerbal::type_traits::conjunction<
-						kerbal::type_traits::negation<
-							kerbal::memory::is_allocator<KeyCompare>
-						>,
-						kerbal::memory::is_allocator<Allocator>
-					>::value
-				>::type
+			typename K, typename M, typename KeyCompare, typename Allocator
 		>
 		avl_map(
 			std::initializer_list<kerbal::container::map_data<K, M> >,
-			const KeyCompare &, const Allocator &
+			const KeyCompare &, const Allocator &,
+			typename kerbal::type_traits::enable_if<
+				kerbal::type_traits::conjunction<
+					kerbal::type_traits::negation<
+						kerbal::memory::is_allocator<KeyCompare>
+					>,
+					kerbal::memory::is_allocator<Allocator>
+				>::value,
+				int
+			>::type = 0
 		) ->
 		avl_map<K, M, KeyCompare, Allocator>;
 

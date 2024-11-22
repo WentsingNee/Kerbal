@@ -994,15 +994,15 @@ namespace kerbal
 
 		template <
 			typename InputIterator,
-			typename Extract, typename KeyCompare,
-			typename =
-				typename kerbal::type_traits::enable_if<
-					!kerbal::memory::is_allocator<KeyCompare>::value
-				>::type
+			typename Extract, typename KeyCompare
 		>
 		avl_ordered(
 			InputIterator, InputIterator,
-			const Extract &, const KeyCompare &
+			const Extract &, const KeyCompare &,
+			typename kerbal::type_traits::enable_if<
+				!kerbal::memory::is_allocator<KeyCompare>::value,
+				int
+			>::type = 0
 		) ->
 		avl_ordered<
 			typename kerbal::iterator::iterator_traits<InputIterator>::value_type,
@@ -1012,15 +1012,15 @@ namespace kerbal
 
 		template <
 			typename InputIterator,
-			typename Extract, typename Allocator,
-			typename =
-				typename kerbal::type_traits::enable_if<
-					kerbal::memory::is_allocator<Allocator>::value
-				>::type
+			typename Extract, typename Allocator
 		>
 		avl_ordered(
 			InputIterator, InputIterator,
-			const Extract &, const Allocator &
+			const Extract &, const Allocator &,
+			typename kerbal::type_traits::enable_if<
+				kerbal::memory::is_allocator<Allocator>::value,
+				int
+			>::type = 0
 		) ->
 		avl_ordered<
 			typename kerbal::iterator::iterator_traits<InputIterator>::value_type,
@@ -1031,20 +1031,20 @@ namespace kerbal
 
 		template <
 			typename InputIterator,
-			typename Extract, typename KeyCompare, typename Allocator,
-			typename =
-				typename kerbal::type_traits::enable_if<
-					kerbal::type_traits::conjunction<
-						kerbal::type_traits::negation<
-							kerbal::memory::is_allocator<KeyCompare>
-						>,
-						kerbal::memory::is_allocator<Allocator>
-					>::value
-				>::type
+			typename Extract, typename KeyCompare, typename Allocator
 		>
 		avl_ordered(
 			InputIterator, InputIterator,
-			const Extract &, const KeyCompare &, const Allocator &
+			const Extract &, const KeyCompare &, const Allocator &,
+			typename kerbal::type_traits::enable_if<
+				kerbal::type_traits::conjunction<
+					kerbal::type_traits::negation<
+						kerbal::memory::is_allocator<KeyCompare>
+					>,
+					kerbal::memory::is_allocator<Allocator>
+				>::value,
+				int
+			>::type = 0
 		) ->
 		avl_ordered<
 			typename kerbal::iterator::iterator_traits<InputIterator>::value_type,
@@ -1070,16 +1070,16 @@ namespace kerbal
 
 		template <
 			typename InputIterator,
-			typename Extract, typename KeyCompare,
-			typename =
-				typename kerbal::type_traits::enable_if<
-					!kerbal::memory::is_allocator<KeyCompare>::value
-				>::type
+			typename Extract, typename KeyCompare
 		>
 		avl_ordered(
 			kerbal::container::unique_tag_t,
 			InputIterator, InputIterator,
-			const Extract &, const KeyCompare &
+			const Extract &, const KeyCompare &,
+			typename kerbal::type_traits::enable_if<
+				!kerbal::memory::is_allocator<KeyCompare>::value,
+				int
+			>::type = 0
 		) ->
 		avl_ordered<
 			typename kerbal::iterator::iterator_traits<InputIterator>::value_type,
@@ -1089,16 +1089,16 @@ namespace kerbal
 
 		template <
 			typename InputIterator,
-			typename Extract, typename Allocator,
-			typename =
-				typename kerbal::type_traits::enable_if<
-					kerbal::memory::is_allocator<Allocator>::value
-				>::type
+			typename Extract, typename Allocator
 		>
 		avl_ordered(
 			kerbal::container::unique_tag_t,
 			InputIterator, InputIterator,
-			const Extract &, const Allocator &
+			const Extract &, const Allocator &,
+			typename kerbal::type_traits::enable_if<
+				kerbal::memory::is_allocator<Allocator>::value,
+				int
+			>::type = 0
 		) ->
 		avl_ordered<
 			typename kerbal::iterator::iterator_traits<InputIterator>::value_type,
@@ -1109,21 +1109,21 @@ namespace kerbal
 
 		template <
 			typename InputIterator,
-			typename Extract, typename KeyCompare, typename Allocator,
-			typename =
-				typename kerbal::type_traits::enable_if<
-					kerbal::type_traits::conjunction<
-						kerbal::type_traits::negation<
-							kerbal::memory::is_allocator<KeyCompare>
-						>,
-						kerbal::memory::is_allocator<Allocator>
-					>::value
-				>::type
+			typename Extract, typename KeyCompare, typename Allocator
 		>
 		avl_ordered(
 			kerbal::container::unique_tag_t,
 			InputIterator, InputIterator,
-			const Extract &, const KeyCompare &, const Allocator &
+			const Extract &, const KeyCompare &, const Allocator &,
+			typename kerbal::type_traits::enable_if<
+				kerbal::type_traits::conjunction<
+					kerbal::type_traits::negation<
+						kerbal::memory::is_allocator<KeyCompare>
+					>,
+					kerbal::memory::is_allocator<Allocator>
+				>::value,
+				int
+			>::type = 0
 		) ->
 		avl_ordered<
 			typename kerbal::iterator::iterator_traits<InputIterator>::value_type,
@@ -1148,15 +1148,15 @@ namespace kerbal
 
 		template <
 			typename Entity,
-			typename Extract, typename KeyCompare,
-			typename =
-				typename kerbal::type_traits::enable_if<
-					!kerbal::memory::is_allocator<KeyCompare>::value
-				>::type
+			typename Extract, typename KeyCompare
 		>
 		avl_ordered(
 			std::initializer_list<Entity>,
-			const Extract &, const KeyCompare &
+			const Extract &, const KeyCompare &,
+			typename kerbal::type_traits::enable_if<
+				!kerbal::memory::is_allocator<KeyCompare>::value,
+				int
+			>::type = 0
 		) ->
 		avl_ordered<
 			Entity,
@@ -1166,14 +1166,15 @@ namespace kerbal
 
 		template <
 			typename Entity,
-			typename Extract, typename Allocator,
-			typename =
-				typename kerbal::type_traits::enable_if<
-					kerbal::memory::is_allocator<Allocator>::value
-				>::type>
+			typename Extract, typename Allocator
+		>
 		avl_ordered(
 			std::initializer_list<Entity>,
-			const Extract &, const Allocator &
+			const Extract &, const Allocator &,
+			typename kerbal::type_traits::enable_if<
+				kerbal::memory::is_allocator<Allocator>::value,
+				int
+			>::type = 0
 		) ->
 		avl_ordered<
 			Entity,
@@ -1184,20 +1185,20 @@ namespace kerbal
 
 		template <
 			typename Entity,
-			typename Extract, typename KeyCompare, typename Allocator,
-			typename =
-				typename kerbal::type_traits::enable_if<
-					kerbal::type_traits::conjunction<
-						kerbal::type_traits::negation<
-							kerbal::memory::is_allocator<KeyCompare>
-						>,
-						kerbal::memory::is_allocator<Allocator>
-					>::value
-				>::type
+			typename Extract, typename KeyCompare, typename Allocator
 		>
 		avl_ordered(
 			std::initializer_list<Entity>,
-			const Extract &, const KeyCompare &, const Allocator &
+			const Extract &, const KeyCompare &, const Allocator &,
+			typename kerbal::type_traits::enable_if<
+				kerbal::type_traits::conjunction<
+					kerbal::type_traits::negation<
+						kerbal::memory::is_allocator<KeyCompare>
+					>,
+					kerbal::memory::is_allocator<Allocator>
+				>::value,
+				int
+			>::type = 0
 		) ->
 		avl_ordered<
 			Entity,
