@@ -151,22 +151,21 @@ namespace kerbal
 			}; /* Endian independent */
 
 			{
+				uint8_t const * const p = context_base::PADDING;
 				{
-					uint8_t const p[1] = {0200};
 					this->update(p, p + 1);
 				}
 				// 504 = 0b111111000
 				// 448 = 0b111000000
-				std::size_t padding = this->count[0] & 504;
+				std::size_t padding_size = this->count[0] & 504;
 				{
-					uint8_t const p[64] = {};
-					if (padding > 448) {
-						padding = 448 + (512 - padding);
+					if (padding_size > 448) {
+						padding_size = 448 + (512 - padding_size);
 					} else {
-						padding = 448 - padding;
+						padding_size = 448 - padding_size;
 					}
-					padding /= 8;
-					this->update(p, p + padding);
+					padding_size /= 8;
+					this->update(p + 1, p + 1 + padding_size);
 				}
 			}
 
