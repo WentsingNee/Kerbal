@@ -4,8 +4,10 @@ language [English](readme.md) | [汉](readme.zh.md)
 
 ![Static Badge](https://img.shields.io/badge/%E7%9F%A5%E4%B9%8E-IceBear-blue?link=https%3A%2F%2Fwww.zhihu.com%2Fpeople%2Fpeter-43-43-80)
 ![Codacy grade](https://img.shields.io/codacy/grade/d8cf41ae4db84f36bbbab26ff3e3a0bd?label=%E4%BB%A3%E7%A0%81%E8%B4%A8%E9%87%8F%E8%AF%84%E7%BA%A7&link=https%3A%2F%2Fapp.codacy.com%2Fgh%2FWentsingNee%2FKerbal%2Fdashboard)
-![Vcpkg Version](https://img.shields.io/vcpkg/v/kerbal)
 ![License](https://img.shields.io/github/license/WentsingNee/Kerbal?label=%E5%8D%8F%E8%AE%AE)
+
+![Vcpkg Version](https://img.shields.io/vcpkg/v/kerbal)
+![NuGet Version](https://img.shields.io/nuget/v/Kerbal)
 
 ![GitHub code size in bytes](https://img.shields.io/github/languages/code-size/WentsingNee/Kerbal?label=%E4%BB%A3%E7%A0%81%E5%A4%A7%E5%B0%8F)
 ![GitHub test code size in bytes](https://img.shields.io/github/languages/code-size/WentsingNee/KerbalTest?label=%E6%B5%8B%E8%AF%95%E4%BB%A3%E7%A0%81%E5%A4%A7%E5%B0%8F)
@@ -25,12 +27,22 @@ C++ 模板库, 具有:
 
 ### 安装说明 ###
 
-#### I) 通过 Vcpkg 安装
+#### I) 通过包管理安装
+
+##### 1. Vcpkg #####
 
 必须有 Vcpkg 环境, 详见: [Vcpkg](https://github.com/microsoft/vcpkg)
 
 ```shell
 vcpkg install kerbal
+```
+
+##### 2. NuGet #####
+
+详见: [本项目主页](https://www.nuget.org/packages/Kerbal)
+
+```shell
+nuget install kerbal
 ```
 
 #### II) 通过源码安装 ####

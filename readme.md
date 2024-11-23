@@ -4,8 +4,10 @@ language [English](readme.md) | [汉](readme.zh.md)
 
 ![Static Badge](https://img.shields.io/badge/zhihu-IceBear-blue?link=https%3A%2F%2Fwww.zhihu.com%2Fpeople%2Fpeter-43-43-80)
 ![Codacy grade](https://img.shields.io/codacy/grade/d8cf41ae4db84f36bbbab26ff3e3a0bd?link=https%3A%2F%2Fapp.codacy.com%2Fgh%2FWentsingNee%2FKerbal%2Fdashboard)
-![Vcpkg Version](https://img.shields.io/vcpkg/v/kerbal)
 ![License](https://img.shields.io/github/license/WentsingNee/Kerbal)
+
+![Vcpkg Version](https://img.shields.io/vcpkg/v/kerbal)
+![NuGet Version](https://img.shields.io/nuget/v/Kerbal)
 
 ![GitHub code size in bytes](https://img.shields.io/github/languages/code-size/WentsingNee/Kerbal)
 ![GitHub test code size in bytes](https://img.shields.io/github/languages/code-size/WentsingNee/KerbalTest?label=code%20size%20of%20test)
@@ -25,12 +27,22 @@ C++ template library with:
 
 ### Install ###
 
-#### I) Install via Vcpkg ####
+#### I) Install via Package Managers ####
+
+##### 1. Vcpkg #####
 
 Vcpkg environment is required, see [Vcpkg](https://github.com/microsoft/vcpkg)
 
 ```shell
 vcpkg install kerbal
+```
+
+##### 2. NuGet #####
+
+See [Home Page of this project](https://www.nuget.org/packages/Kerbal)
+
+```shell
+nuget install kerbal
 ```
 
 #### II) Install via Source ####
