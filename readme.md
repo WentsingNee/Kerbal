@@ -26,8 +26,6 @@ C++ template library with:
 2) modern standard library facilities backport to old,
 3) **and MORE constexpr**!
 
-
-
 ### Install ###
 
 #### I) Install via Package Managers ####
@@ -103,8 +101,6 @@ cd build
 cpack .
 ```
 
-
-
 ### Integrate Kerbal In Your CMake Project ###
 
 ```cmake
@@ -115,8 +111,6 @@ target_link_libraries(
         [Kerbal::kerbal-omp] # maybe required when you have used Kerbal::omp module
 )
 ```
-
-
 
 ### Sub Libraries Overview ###
 
@@ -158,13 +152,12 @@ target_link_libraries(
 
 * Doxygen generated document: click [this](https://wentsingnee.github.io/KerbalDoxygenDoc/)
 
-
 ```mermaid
 gitGraph:
 options
 {
-    "nodeSpacing": 150,
-    "nodeRadius": 10
+"nodeSpacing": 150,
+"nodeRadius": 10
 }
 end
 commit
@@ -178,7 +171,6 @@ commit
 commit
 merge A
 ```
-
 
 ### Thanks ###
 
