@@ -119,6 +119,7 @@ target_link_libraries(
 
 | Library                                        | Brief                                                                                                                      |
 |------------------------------------------------|----------------------------------------------------------------------------------------------------------------------------|
+| Kerbal::kerbal                                 |                                                                                                                            |
 | [algorithm](include/kerbal/algorithm/)         | algorithm                                                                                                                  |
 | [any](include/kerbal/any/)                     | `std::any`-like facility but backport to C++98, together with C++20 constexpr support                                      |
 | [assign](include/kerbal/assign/)               | `std::initializer_list`-like facility for C++98                                                                            |
@@ -134,17 +135,21 @@ target_link_libraries(
 | [macro](include/kerbal/macro/)                 | macro utilities                                                                                                            |
 | [memory](include/kerbal/memory/)               | memory management support like allocator, uninitialized algorithms                                                         |
 | [numeric](include/kerbal/numeric/)             | numeric algorithms                                                                                                         |
-| [ompalgo](include/kerbal/ompalgo/)             | openMP accelerated algorithms                                                                                              |
-| [openmp](include/kerbal/openmp/)               | openMP facilities and environment detection                                                                                |
 | [operators](include/kerbal/operators/)         | use CRTP to simplify operator overload                                                                                     |
 | [optional](include/kerbal/optional/)           | `std::optional`-like facility but backport to C++98                                                                        |
 | [random](include/kerbal/random/)               | random number engines and distributions                                                                                    |
+| [smath](include/kerbal/smath/)                 | static math                                                                                                                |
 | [test](include/kerbal/test/)                   | unit test                                                                                                                  |
 | [tmp](include/kerbal/tmp/)                     | template meta programming facilities                                                                                       |
 | [type_traits](include/kerbal/type_traits/)     | C++11 `<type_traits>`-like facilities but backport part to C++98                                                           |
 | [utility](include/kerbal/utility/)             | `compressed_pair`, `tuple` ...                                                                                             |
-
-
+| Kerbal::kerbal-coroutine                       |                                                                                                                            |
+| [coroutine](include/kerbal/coroutine/)         | coroutine facilities                                                                                                       |
+| Kerbal::kerbal-omp                             |                                                                                                                            |
+| [ompalgo](include/kerbal/ompalgo/)             | openMP accelerated algorithms                                                                                              |
+| [openmp](include/kerbal/openmp/)               | openMP facilities and environment detection                                                                                |
+| Kerbal::kerbal-parallel                        |                                                                                                                            |
+| [parallel](include/kerbal/parallel/)           | parallel facilities                                                                                                        |
 
 ### Document ###
 

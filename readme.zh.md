@@ -119,6 +119,7 @@ target_link_libraries(
 
 | 库                                              | 简介                                                                             |
 |------------------------------------------------|--------------------------------------------------------------------------------|
+| Kerbal::kerbal                                 |                                                                                |
 | [algorithm](include/kerbal/algorithm/)         | 算法                                                                             |
 | [any](include/kerbal/any/)                     | 与 `std::any` 相像但是支持 C++98 和 C++20 constexpr                                    |
 | [assign](include/kerbal/assign/)               | 在 C++98 中像 C++11 中的 `std::initializer_list`一样初始化容器                             |
@@ -134,15 +135,21 @@ target_link_libraries(
 | [macro](include/kerbal/macro/)                 | 宏设施                                                                            |
 | [memory](include/kerbal/memory/)               | 内存管理支持, 如 allocator, 未初始化算法                                                    |
 | [numeric](include/kerbal/numeric/)             | 数值算法                                                                           |
-| [ompalgo](include/kerbal/ompalgo/)             | openMP 加速的算法                                                                   |
-| [openmp](include/kerbal/openmp/)               | openMP 设施和环境检测                                                                 |
 | [operators](include/kerbal/operators/)         | 使用 CRTP 简化运算符重载                                                                |
 | [optional](include/kerbal/optional/)           | 与 `std::optional` 相像但是支持 C++98                                                 |
 | [random](include/kerbal/random/)               | 随机数生成器和分布                                                                      |
+| [smath](include/kerbal/smath/)                 | 静态数学运算                                                                         |
 | [test](include/kerbal/test/)                   | 单元测试                                                                           |
 | [tmp](include/kerbal/tmp/)                     | 模板元编程设施                                                                        |
 | [type_traits](include/kerbal/type_traits/)     | 与 C++11 `<type_traits>` 相像, 但是部分支持 C++98                                       |
 | [utility](include/kerbal/utility/)             | `compressed_pair`, `tuple` 等                                                   |
+| Kerbal::kerbal-coroutine                       |                                                                                |
+| [coroutine](include/kerbal/coroutine/)         | 协程设施                                                                           |
+| Kerbal::kerbal-omp                             |                                                                                |
+| [ompalgo](include/kerbal/ompalgo/)             | openMP 加速的算法                                                                   |
+| [openmp](include/kerbal/openmp/)               | openMP 设施和环境检测                                                                 |
+| Kerbal::kerbal-parallel                        |                                                                                |
+| [parallel](include/kerbal/parallel/)           | 并行设施                                                                           |
 
 
 
