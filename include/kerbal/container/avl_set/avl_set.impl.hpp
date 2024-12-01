@@ -510,6 +510,16 @@ namespace kerbal
 			return this->avl_ordered::emplace_unique(kerbal::utility::forward<Args>(args)...);
 		}
 
+		template <typename T, typename KeyCompare, typename Allocator>
+		template <typename ... Args>
+		KERBAL_CONSTEXPR14
+		bool
+		avl_set<T, KeyCompare, Allocator>::
+		emplace_is_delay_build(Args && ... args) KERBAL_NOEXCEPT
+		{
+			return this->avl_ordered::emplace_unique_is_delay_build(kerbal::utility::forward<Args>(args)...);
+		}
+
 #	else
 
 #	define EMPTY
@@ -527,6 +537,15 @@ namespace kerbal
 		emplace(KERBAL_OPT_PPEXPAND_WITH_COMMA_N(REMAINF, EMPTY, ARGS_DECL, i)) \
 		{ \
 			return this->avl_ordered::emplace_unique(KERBAL_OPT_PPEXPAND_WITH_COMMA_N(REMAINF, EMPTY, ARGS_USE, i)); \
+		} \
+ \
+		template <typename T, typename KeyCompare, typename Allocator> \
+		KERBAL_OPT_PPEXPAND_WITH_COMMA_N(THEAD_NOT_EMPTY, EMPTY, TARGS_DECL, i) \
+		bool \
+		avl_set<T, KeyCompare, Allocator>:: \
+		emplace_is_delay_build(KERBAL_OPT_PPEXPAND_WITH_COMMA_N(REMAINF, EMPTY, ARGS_DECL, i)) KERBAL_NOEXCEPT \
+		{ \
+			return this->avl_ordered::emplace_unique_is_delay_build(KERBAL_OPT_PPEXPAND_WITH_COMMA_N(REMAINF, EMPTY, ARGS_USE, i)); \
 		} \
 
 		KERBAL_PPEXPAND_N(FBODY, KERBAL_PPEXPAND_EMPTY_SEPARATOR, 0)

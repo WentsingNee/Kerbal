@@ -1002,6 +1002,20 @@ namespace kerbal
 						Args && ... args
 					);
 
+					template <
+						typename NodeAllocator, typename Extract, typename KeyCompare,
+						typename ... Args
+					>
+					KERBAL_CONSTEXPR14
+					bool
+					k_emplace_unique_ua_is_delay_build(
+						NodeAllocator & alloc, Extract & e, KeyCompare & kc,
+						Args && ... args
+					) KERBAL_NOEXCEPT
+					{
+						return false;
+					}
+
 #			else
 
 #				define EMPTY
@@ -1028,6 +1042,19 @@ namespace kerbal
 						NodeAllocator & alloc, Extract & e, KeyCompare & kc \
 						KERBAL_OPT_PPEXPAND_WITH_COMMA_N(LEFT_JOIN_COMMA, EMPTY, ARGS_DECL, i) \
 					); \
+ \
+					template < \
+						typename NodeAllocator, typename Extract, typename KeyCompare \
+						KERBAL_OPT_PPEXPAND_WITH_COMMA_N(LEFT_JOIN_COMMA, EMPTY, TARGS_DECL, i) \
+					> \
+					bool \
+					k_emplace_unique_ua_is_delay_build( \
+						NodeAllocator & alloc, Extract & e, KeyCompare & kc \
+						KERBAL_OPT_PPEXPAND_WITH_COMMA_N(LEFT_JOIN_COMMA, EMPTY, ARGS_DECL, i) \
+					) KERBAL_NOEXCEPT \
+					{ \
+						return false; \
+					} \
 
 					KERBAL_PPEXPAND_N(FBODY, KERBAL_PPEXPAND_EMPTY_SEPARATOR, 0)
 					KERBAL_PPEXPAND_N(FBODY, KERBAL_PPEXPAND_EMPTY_SEPARATOR, 20)
@@ -1061,6 +1088,19 @@ namespace kerbal
 					);
 
 					template <typename NodeAllocator, typename KeyCompare>
+					KERBAL_CONSTEXPR14
+					bool
+					k_emplace_unique_ua_is_delay_build(
+						NodeAllocator & alloc,
+						kerbal::container::identity_extractor<Entity> & e,
+						KeyCompare & kc,
+						const_reference src_key
+					) KERBAL_NOEXCEPT
+					{
+						return true;
+					}
+
+					template <typename NodeAllocator, typename KeyCompare>
 					KERBAL_CONSTEXPR20
 					unique_insert_r
 					k_emplace_unique_using_allocator(
@@ -1081,6 +1121,19 @@ namespace kerbal
 						KeyCompare & kc,
 						rvalue_reference src_key
 					);
+
+					template <typename NodeAllocator, typename KeyCompare>
+					KERBAL_CONSTEXPR14
+					bool
+					k_emplace_unique_ua_is_delay_build(
+						NodeAllocator & alloc,
+						kerbal::container::identity_extractor<Entity> & e,
+						KeyCompare & kc,
+						rvalue_reference src_key
+					) KERBAL_NOEXCEPT
+					{
+						return true;
+					}
 
 #			endif
 

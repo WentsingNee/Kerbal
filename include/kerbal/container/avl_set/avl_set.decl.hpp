@@ -385,6 +385,10 @@ namespace kerbal
 				KERBAL_CONSTEXPR20
 				unique_insert_r emplace(Args && ... args);
 
+				template <typename ... Args>
+				KERBAL_CONSTEXPR14
+				bool emplace_is_delay_build(Args && ... args) KERBAL_NOEXCEPT;
+
 #		else
 
 #			define EMPTY
@@ -395,6 +399,9 @@ namespace kerbal
 #			define FBODY(i) \
 				KERBAL_OPT_PPEXPAND_WITH_COMMA_N(THEAD_NOT_EMPTY, EMPTY, TARGS_DECL, i) \
 				unique_insert_r emplace(KERBAL_OPT_PPEXPAND_WITH_COMMA_N(REMAINF, EMPTY, ARGS_DECL, i)); \
+ \
+				KERBAL_OPT_PPEXPAND_WITH_COMMA_N(THEAD_NOT_EMPTY, EMPTY, TARGS_DECL, i) \
+				bool emplace_is_delay_build(KERBAL_OPT_PPEXPAND_WITH_COMMA_N(REMAINF, EMPTY, ARGS_DECL, i)) KERBAL_NOEXCEPT; \
 
 				KERBAL_PPEXPAND_N(FBODY, KERBAL_PPEXPAND_EMPTY_SEPARATOR, 0)
 				KERBAL_PPEXPAND_N(FBODY, KERBAL_PPEXPAND_EMPTY_SEPARATOR, 20)

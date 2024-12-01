@@ -1281,6 +1281,19 @@ namespace kerbal
 			);
 		}
 
+		template <typename Entity, typename Extract, typename KeyCompare, typename Allocator>
+		template <typename ... Args>
+		KERBAL_CONSTEXPR14
+		bool
+		avl_ordered<Entity, Extract, KeyCompare, Allocator>::
+		emplace_unique_is_delay_build(Args && ... args) KERBAL_NOEXCEPT
+		{
+			return this->avl_type_only::k_emplace_unique_ua_is_delay_build(
+				this->alloc(), this->extract(), this->key_comp(),
+				kerbal::utility::forward<Args>(args)...
+			);
+		}
+
 #	else
 
 #	define EMPTY
@@ -1312,6 +1325,18 @@ namespace kerbal
 		emplace_unique(KERBAL_OPT_PPEXPAND_WITH_COMMA_N(REMAINF, EMPTY, ARGS_DECL, i)) \
 		{ \
 			return this->avl_type_only::k_emplace_unique_using_allocator( \
+				this->alloc(), this->extract(), this->key_comp() \
+				KERBAL_OPT_PPEXPAND_WITH_COMMA_N(LEFT_JOIN_COMMA, EMPTY, ARGS_USE, i) \
+			); \
+		} \
+ \
+		template <typename Entity, typename Extract, typename KeyCompare, typename Allocator> \
+		KERBAL_OPT_PPEXPAND_WITH_COMMA_N(THEAD_NOT_EMPTY, EMPTY, TARGS_DECL, i) \
+		bool \
+		avl_ordered<Entity, Extract, KeyCompare, Allocator>:: \
+		emplace_unique_is_delay_build(KERBAL_OPT_PPEXPAND_WITH_COMMA_N(REMAINF, EMPTY, ARGS_DECL, i)) KERBAL_NOEXCEPT \
+		{ \
+			return this->avl_type_only::k_emplace_unique_ua_is_delay_build( \
 				this->alloc(), this->extract(), this->key_comp() \
 				KERBAL_OPT_PPEXPAND_WITH_COMMA_N(LEFT_JOIN_COMMA, EMPTY, ARGS_USE, i) \
 			); \
