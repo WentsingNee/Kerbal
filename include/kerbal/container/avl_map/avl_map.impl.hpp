@@ -771,6 +771,57 @@ namespace kerbal
 #	endif
 
 
+#	if __cplusplus >= 201103L
+
+		template <typename K, typename M, typename KeyCompare, typename Allocator>
+		template <typename M2>
+		KERBAL_CONSTEXPR20
+		typename
+		avl_map<K, M, KeyCompare, Allocator>::unique_insert_r
+		avl_map<K, M, KeyCompare, Allocator>::
+		insert_or_assign(key_type const & key, M2 && value)
+		{
+			return this->avl_type_only::k_map_insert_or_assign(
+				this->alloc(), this->extract(), this->key_comp(),
+				key,
+				kerbal::utility::forward<M2>(value)
+			);
+		}
+
+		template <typename K, typename M, typename KeyCompare, typename Allocator>
+		template <typename M2>
+		KERBAL_CONSTEXPR20
+		typename
+		avl_map<K, M, KeyCompare, Allocator>:: unique_insert_r
+		avl_map<K, M, KeyCompare, Allocator>::
+		insert_or_assign(key_type && key, M2 && value)
+		{
+			return this->avl_type_only::k_map_insert_or_assign(
+				this->alloc(), this->extract(), this->key_comp(),
+				kerbal::compatibility::move(key),
+				kerbal::utility::forward<M2>(value)
+			);
+		}
+
+#	else
+
+		template <typename K, typename M, typename KeyCompare, typename Allocator>
+		template <typename M2>
+		typename
+		avl_map<K, M, KeyCompare, Allocator>:: unique_insert_r
+		avl_map<K, M, KeyCompare, Allocator>::
+		insert_or_assign(key_type const & key, M2 const & value)
+		{
+			return this->avl_type_only::k_map_insert_or_assign(
+				this->alloc(), this->extract(), this->key_comp(),
+				key,
+				value
+			);
+		}
+
+#	endif
+
+
 		//===================
 		// erase
 

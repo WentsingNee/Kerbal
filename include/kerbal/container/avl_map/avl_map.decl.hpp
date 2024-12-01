@@ -474,6 +474,27 @@ namespace kerbal
 #		endif
 
 
+#		if __cplusplus >= 201103L
+
+				template <typename M2>
+				KERBAL_CONSTEXPR20
+				unique_insert_r
+				insert_or_assign(key_type const & key, M2 && value);
+
+				template <typename M2>
+				KERBAL_CONSTEXPR20
+				unique_insert_r
+				insert_or_assign(key_type && key, M2 && value);
+
+#		else
+
+				template <typename M2>
+				unique_insert_r
+				insert_or_assign(key_type const & key, M2 const & value);
+
+#		endif
+
+
 			//===================
 			// erase
 

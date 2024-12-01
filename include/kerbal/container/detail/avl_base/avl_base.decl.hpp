@@ -1248,6 +1248,60 @@ namespace kerbal
 #			endif
 
 
+					template <
+						typename NodeAllocator, typename Extract, typename KeyCompare,
+						typename K, typename M
+					>
+					KERBAL_CONSTEXPR20
+					unique_insert_r
+					k_map_insert_or_assign_impl(
+						NodeAllocator & alloc, Extract & e, KeyCompare & kc,
+#			if __cplusplus >= 201103L
+						K && src_key, M && value
+#			else
+						K const & src_key, M const & value
+#			endif
+					);
+
+#			if __cplusplus >= 201103L
+
+					template <
+						typename NodeAllocator, typename Extract, typename KeyCompare,
+						typename M
+					>
+					KERBAL_CONSTEXPR20
+					unique_insert_r
+					k_map_insert_or_assign(
+						NodeAllocator & alloc, Extract & e, KeyCompare & kc,
+						typename Extract::key_type const & key, M && value
+					);
+
+					template <
+						typename NodeAllocator, typename Extract, typename KeyCompare,
+						typename M
+					>
+					KERBAL_CONSTEXPR20
+					unique_insert_r
+					k_map_insert_or_assign(
+						NodeAllocator & alloc, Extract & e, KeyCompare & kc,
+						typename Extract::key_type && key, M && value
+					);
+
+#			else
+
+					template <
+						typename NodeAllocator, typename Extract, typename KeyCompare,
+						typename M
+					>
+					unique_insert_r
+					k_map_insert_or_assign(
+						NodeAllocator & alloc, Extract & e, KeyCompare & kc,
+						typename Extract::key_type const & key, M const & value
+					);
+
+#			endif
+
+
 				//===================
 				// erase
 

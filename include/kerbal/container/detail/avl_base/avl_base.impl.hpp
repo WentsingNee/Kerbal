@@ -2370,6 +2370,152 @@ namespace kerbal
 #	endif
 
 
+			template <typename Entity>
+			template <
+				typename NodeAllocator, typename Extract, typename KeyCompare,
+				typename K, typename M
+			>
+			KERBAL_CONSTEXPR20
+			typename
+			avl_type_only<Entity>::unique_insert_r
+			avl_type_only<Entity>::
+			k_map_insert_or_assign_impl(
+				NodeAllocator & alloc, Extract & e, KeyCompare & kc,
+#	if __cplusplus >= 201103L
+				K && src_key, M && value
+#	else
+				K const & src_key, M const & value
+#	endif
+			)
+			{
+
+#	if __cplusplus >= 201103L
+#				define FORWARD(T, arg) kerbal::utility::forward<T>(arg)
+#	else
+#				define FORWARD(T, arg) arg
+#	endif
+
+				node * p = NULL;
+				if (this->k_size == 0) {
+					p = k_build_new_node(
+						alloc,
+						FORWARD(K, src_key),
+						FORWARD(M, value)
+					);
+					this->k_head.left = p;
+					p->parent = &this->k_head;
+				} else {
+					node_base * cur_base = this->k_head.left;
+					while (true) {
+						reference cur_entity = node::reinterpret_as(cur_base)->member();
+						const typename Extract::key_type & cur_key = e(cur_entity);
+						if (kc(src_key, cur_key)) { // src_key < cur_key, ** may throw here **
+							if (cur_base->left == get_avl_vnull_node()) {
+								p = k_build_new_node(
+									alloc,
+									FORWARD(K, src_key),
+									FORWARD(M, value)
+								);
+								cur_base->left = p;
+								break;
+							}
+							cur_base = cur_base->left;
+						} else if (kc(cur_key, src_key)) { // cur_key < src_key
+							if (cur_base->right == get_avl_vnull_node()) {
+								p = k_build_new_node(
+									alloc,
+									FORWARD(K, src_key),
+									FORWARD(M, value)
+								);
+								cur_base->right = p;
+								break;
+							}
+							cur_base = cur_base->right;
+						} else {
+							cur_entity.value() = FORWARD(M, value);
+							return unique_insert_r(iterator(cur_base), false);
+						}
+					}
+
+					p->parent = cur_base;
+					cur_base->height = 2;
+					k_emplace_rebalance(cur_base->parent);
+				}
+				++this->k_size;
+				return unique_insert_r(iterator(p), true);
+#				undef FORWARD
+			}
+
+#	if __cplusplus >= 201103L
+
+			template <typename Entity>
+			template <
+				typename NodeAllocator, typename Extract, typename KeyCompare,
+				typename M
+			>
+			KERBAL_CONSTEXPR20
+			typename
+			avl_type_only<Entity>::unique_insert_r
+			avl_type_only<Entity>::
+			k_map_insert_or_assign(
+				NodeAllocator & alloc, Extract & e, KeyCompare & kc,
+				typename Extract::key_type const & key, M && value
+			)
+			{
+				return this->k_map_insert_or_assign_impl(
+					alloc, e, kc,
+					key,
+					kerbal::utility::forward<M>(value)
+				);
+			}
+
+			template <typename Entity>
+			template <
+				typename NodeAllocator, typename Extract, typename KeyCompare,
+				typename M
+			>
+			KERBAL_CONSTEXPR20
+			typename
+			avl_type_only<Entity>::unique_insert_r
+			avl_type_only<Entity>::
+			k_map_insert_or_assign(
+				NodeAllocator & alloc, Extract & e, KeyCompare & kc,
+				typename Extract::key_type && key, M && value
+			)
+			{
+				return this->k_map_insert_or_assign_impl(
+					alloc, e, kc,
+					kerbal::compatibility::move(key),
+					kerbal::utility::forward<M>(value)
+				);
+			}
+
+#	else
+
+			template <typename Entity>
+			template <
+				typename NodeAllocator, typename Extract, typename KeyCompare,
+				typename M
+			>
+			KERBAL_CONSTEXPR20
+			typename
+			avl_type_only<Entity>::unique_insert_r
+			avl_type_only<Entity>::
+			k_map_insert_or_assign(
+				NodeAllocator & alloc, Extract & e, KeyCompare & kc,
+				typename Extract::key_type const & key, M const & value
+			)
+			{
+				return this->k_map_insert_or_assign_impl(
+					alloc, e, kc,
+					key,
+					value
+				);
+			}
+
+#	endif
+
+
 		//===================
 		// erase
 
