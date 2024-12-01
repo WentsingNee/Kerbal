@@ -1110,6 +1110,19 @@ namespace kerbal
 						reference src_key
 					);
 
+					template <typename NodeAllocator, typename KeyCompare>
+					KERBAL_CONSTEXPR14
+					bool
+					k_emplace_unique_ua_is_delay_build(
+						NodeAllocator & alloc,
+						kerbal::container::identity_extractor<Entity> & e,
+						KeyCompare & kc,
+						reference src_key
+					) KERBAL_NOEXCEPT
+					{
+						return true;
+					}
+
 #			if __cplusplus >= 201103L
 
 					template <typename NodeAllocator, typename KeyCompare>
