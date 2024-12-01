@@ -2159,6 +2159,22 @@ namespace kerbal
 				return this->k_emplace_unique_delay_build(alloc, e, kc, src_key);
 			}
 
+			template <typename Entity>
+			template <typename NodeAllocator, typename KeyCompare>
+			KERBAL_CONSTEXPR20
+			typename
+			avl_type_only<Entity>::unique_insert_r
+			avl_type_only<Entity>::
+			k_emplace_unique_using_allocator(
+				NodeAllocator & alloc,
+				kerbal::container::identity_extractor<Entity> & e,
+				KeyCompare & kc,
+				reference src_key
+			)
+			{
+				return this->k_emplace_unique_delay_build(alloc, e, kc, static_cast<const_reference>(src_key));
+			}
+
 #	if __cplusplus >= 201103L
 
 			template <typename Entity>
