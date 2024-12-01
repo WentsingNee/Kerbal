@@ -2086,44 +2086,42 @@ namespace kerbal
 #	endif
 
 
+#	if __cplusplus >= 201103L
+
 			template <typename Entity>
-			template <typename NodeAllocator, typename Extract, typename KeyCompare, typename U>
+			template <
+				typename NodeAllocator, typename Extract, typename KeyCompare,
+				typename K, typename ... Args
+			>
 			KERBAL_CONSTEXPR20
 			typename
 			avl_type_only<Entity>::unique_insert_r
 			avl_type_only<Entity>::
-#	if __cplusplus >= 201103L
-			k_emplace_unique_delay_build(NodeAllocator & alloc, Extract & e, KeyCompare & kc, U && src_key)
-#	else
-			k_emplace_unique_delay_build(NodeAllocator & alloc, Extract & e, KeyCompare & kc, const U & src_key)
-#	endif
+			k_emplace_unique_delay_build(
+				NodeAllocator & alloc, Extract & e, KeyCompare & kc,
+				K const & src_key, Args && ... args
+			)
 			{
-
-#	if __cplusplus >= 201103L
-#				define FORWARD(T, arg) kerbal::utility::forward<T>(arg)
-#	else
-#				define FORWARD(T, arg) arg
-#	endif
-
 				node * p = NULL;
 				if (this->k_size == 0) {
-					p = k_build_new_node(alloc, FORWARD(U, src_key));
+					p = k_build_new_node(alloc, kerbal::utility::forward<Args>(args)...);
 					this->k_head.left = p;
 					p->parent = &this->k_head;
 				} else {
 					node_base * cur_base = this->k_head.left;
 					while (true) {
-						const_reference cur_key = node::reinterpret_as(cur_base)->member();
+						typedef typename Extract::key_type key_t;
+						key_t const & cur_key = e(node::reinterpret_as(cur_base)->member());
 						if (kc(src_key, cur_key)) { // src_key < cur_key, ** may throw here **
 							if (cur_base->left == get_avl_vnull_node()) {
-								p = k_build_new_node(alloc, FORWARD(U, src_key));
+								p = k_build_new_node(alloc, kerbal::utility::forward<Args>(args)...);
 								cur_base->left = p;
 								break;
 							}
 							cur_base = cur_base->left;
 						} else if (kc(cur_key, src_key)) { // cur_key < src_key
 							if (cur_base->right == get_avl_vnull_node()) {
-								p = k_build_new_node(alloc, FORWARD(U, src_key));
+								p = k_build_new_node(alloc, kerbal::utility::forward<Args>(args)...);
 								cur_base->right = p;
 								break;
 							}
@@ -2139,8 +2137,9 @@ namespace kerbal
 				}
 				++this->k_size;
 				return unique_insert_r(iterator(p), true);
-#				undef FORWARD
 			}
+
+#	endif
 
 
 			template <typename Entity>
@@ -2156,7 +2155,10 @@ namespace kerbal
 				const_reference src_key
 			)
 			{
-				return this->k_emplace_unique_delay_build(alloc, e, kc, src_key);
+				return this->k_emplace_unique_delay_build(
+					alloc, e, kc,
+					src_key, src_key
+				);
 			}
 
 			template <typename Entity>
@@ -2172,7 +2174,11 @@ namespace kerbal
 				reference src_key
 			)
 			{
-				return this->k_emplace_unique_delay_build(alloc, e, kc, static_cast<const_reference>(src_key));
+				return this->k_emplace_unique_delay_build(
+					alloc, e, kc,
+					static_cast<const_reference>(src_key),
+					static_cast<const_reference>(src_key)
+				);
 			}
 
 #	if __cplusplus >= 201103L
@@ -2190,7 +2196,11 @@ namespace kerbal
 				rvalue_reference src_key
 			)
 			{
-				return this->k_emplace_unique_delay_build(alloc, e, kc, kerbal::compatibility::move(src_key));
+				return this->k_emplace_unique_delay_build(
+					alloc, e, kc,
+					kerbal::compatibility::move(src_key),
+					kerbal::compatibility::move(src_key)
+				);
 			}
 
 #	endif

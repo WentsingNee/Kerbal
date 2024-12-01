@@ -26,6 +26,8 @@
 #include <kerbal/container/associative_container_facility/associative_unique_insert_r.hpp>
 #include <kerbal/container/associative_container_facility/key_compare_is_transparent.hpp>
 #include <kerbal/container/associative_container_facility/key_extractors/identity_extractor.hpp>
+#include <kerbal/container/associative_container_facility/key_extractors/tuple_first_extractor.hpp>
+#include <kerbal/container/associative_container_facility/map_data.hpp>
 #include <kerbal/container/associative_container_facility/unique_tag_t.hpp>
 #include <kerbal/iterator/reverse_iterator.hpp>
 #include <kerbal/memory/allocator_traits.hpp>
@@ -1068,13 +1070,19 @@ namespace kerbal
 #			endif
 
 
-					template <typename NodeAllocator, typename Extract, typename KeyCompare, typename U>
+#			if __cplusplus >= 201103L
+
+					template <
+						typename NodeAllocator, typename Extract, typename KeyCompare,
+						typename K, typename ... Args
+					>
 					KERBAL_CONSTEXPR20
 					unique_insert_r
-#			if __cplusplus >= 201103L
-					k_emplace_unique_delay_build(NodeAllocator & alloc, Extract & e, KeyCompare & kc, U && src_key);
-#			else
-					k_emplace_unique_delay_build(NodeAllocator & alloc, Extract & e, KeyCompare & kc, const U & src_key);
+					k_emplace_unique_delay_build(
+						NodeAllocator & alloc, Extract & e, KeyCompare & kc,
+						K const & src_key, Args && ... args
+					);
+
 #			endif
 
 					template <typename NodeAllocator, typename KeyCompare>
@@ -1149,6 +1157,47 @@ namespace kerbal
 					}
 
 #			endif
+
+					template <
+						typename NodeAllocator,
+						typename K, typename M,
+						typename KeyCompare
+					>
+					KERBAL_CONSTEXPR20
+					unique_insert_r
+					k_emplace_unique_using_allocator(
+						NodeAllocator & alloc,
+						kerbal::container::tuple_first_extractor<kerbal::container::map_data<K, M>, K> & e,
+						KeyCompare & kc,
+						K const & src_key,
+						kerbal::utility::compressed_pair_default_construct_tag tag
+					)
+					{
+						return this->k_emplace_unique_delay_build(
+							alloc, e, kc,
+							src_key,
+							src_key, tag
+						);
+					}
+
+					template <
+						typename NodeAllocator,
+						typename K, typename M,
+						typename KeyCompare
+					>
+					KERBAL_CONSTEXPR14
+					bool
+					k_emplace_unique_ua_is_delay_build(
+						NodeAllocator & alloc,
+						kerbal::container::tuple_first_extractor<kerbal::container::map_data<K, M>, K> & e,
+						KeyCompare & kc,
+						K const & src_key,
+						kerbal::utility::compressed_pair_default_construct_tag
+					) KERBAL_NOEXCEPT
+					{
+						return true;
+					}
+
 
 					template <typename NodeAllocator, typename Extract, typename KeyCompare>
 					KERBAL_CONSTEXPR20
