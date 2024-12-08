@@ -1,7 +1,7 @@
 /**
- * @file       static_ordered.hpp
+ * @file       flat_ordered.decl.hpp
  * @brief
- * @date       2019-8-24
+ * @date       2019-12-18
  * @author     Peter
  * @copyright
  *      Peter of [ThinkSpirit Laboratory](http://thinkspirit.org/)
@@ -9,19 +9,19 @@
  *   all rights reserved
  */
 
-#ifndef KERBAL_CONTAINER_STATIC_ORDERED_HPP
-#define KERBAL_CONTAINER_STATIC_ORDERED_HPP
+#ifndef KERBAL_CONTAINER_FLAT_ORDERED_FLAT_ORDERED_DECL_HPP
+#define KERBAL_CONTAINER_FLAT_ORDERED_FLAT_ORDERED_DECL_HPP
+
+#include <kerbal/container/flat_ordered/flat_ordered.fwd.hpp>
+
+#include <kerbal/container/detail/flat_ordered_base.hpp>
 
 #include <kerbal/algorithm/swap.hpp>
 #include <kerbal/assign/ilist.hpp>
-#include <kerbal/compare/basic_compare.hpp>
 #include <kerbal/compatibility/constexpr.hpp>
 #include <kerbal/compatibility/namespace_std_scope.hpp>
 #include <kerbal/compatibility/noexcept.hpp>
-#include <kerbal/container/associative_container_facility/key_extractors/identity_extractor.hpp>
-#include <kerbal/container/static_vector.hpp>
-
-#include <kerbal/container/detail/flat_ordered_base.hpp>
+#include <kerbal/container/vector.hpp>
 
 #if __cplusplus >= 201103L
 #	include <initializer_list>
@@ -38,17 +38,17 @@ namespace kerbal
 
 		template <
 			typename Entity,
-			std::size_t N,
-			typename Extract = kerbal::container::identity_extractor<Entity>,
-			typename KeyCompare = kerbal::compare::less<>
+			typename Extract,
+			typename KeyCompare,
+			typename Allocator
 		>
-		class static_ordered :
+		class flat_ordered:
 			public kerbal::container::detail::flat_ordered_base<
-				Entity, Extract, KeyCompare, kerbal::container::static_vector<Entity, N>
+				Entity, Extract, KeyCompare, kerbal::container::vector<Entity, Allocator>
 			>
 		{
 			public:
-				typedef kerbal::container::static_vector<Entity, N> Sequence;
+				typedef kerbal::container::vector<Entity, Allocator> Sequence;
 
 			private:
 				typedef kerbal::container::detail::flat_ordered_base<
@@ -56,8 +56,6 @@ namespace kerbal
 				> super;
 
 			public:
-				typedef typename super::key_compare			key_compare;
-				typedef typename super::key_type			key_type;
 				typedef typename super::value_type			value_type;
 				typedef typename super::const_type			const_type;
 				typedef typename super::reference			reference;
@@ -70,6 +68,8 @@ namespace kerbal
 				typedef typename super::const_rvalue_reference		const_rvalue_reference;
 #		endif
 
+				typedef Allocator					allocator_type;
+
 				typedef typename super::size_type					size_type;
 				typedef typename super::difference_type				difference_type;
 
@@ -78,21 +78,21 @@ namespace kerbal
 				typedef typename super::reverse_iterator			reverse_iterator;
 				typedef typename super::const_reverse_iterator		const_reverse_iterator;
 
-				KERBAL_CONSTEXPR
-				static_ordered() :
+				typedef typename super::key_type			key_type;
+				typedef typename super::key_compare			key_compare;
+
+				flat_ordered() :
 					super()
 				{
 				}
 
-				KERBAL_CONSTEXPR
-				explicit static_ordered(key_compare kc) :
+				explicit flat_ordered(key_compare kc) :
 					super(kc)
 				{
 				}
 
 				template <typename InputIterator>
-				KERBAL_CONSTEXPR14
-				static_ordered(
+				flat_ordered(
 					InputIterator first, InputIterator last,
 					typename kerbal::type_traits::enable_if<
 						kerbal::iterator::is_input_compatible_iterator<InputIterator>::value,
@@ -104,8 +104,7 @@ namespace kerbal
 				}
 
 				template <typename InputIterator>
-				KERBAL_CONSTEXPR14
-				static_ordered(
+				flat_ordered(
 					InputIterator first, InputIterator last, key_compare kc,
 					typename kerbal::type_traits::enable_if<
 						kerbal::iterator::is_input_compatible_iterator<InputIterator>::value,
@@ -118,14 +117,12 @@ namespace kerbal
 
 #		if __cplusplus >= 201103L
 
-				KERBAL_CONSTEXPR14
-				static_ordered(std::initializer_list<value_type> ilist) :
+				flat_ordered(std::initializer_list<value_type> ilist) :
 					super(ilist)
 				{
 				}
 
-				KERBAL_CONSTEXPR14
-				static_ordered(std::initializer_list<value_type> ilist, key_compare kc) :
+				flat_ordered(std::initializer_list<value_type> ilist, key_compare kc) :
 					super(ilist, kc)
 				{
 				}
@@ -133,13 +130,13 @@ namespace kerbal
 #		else
 
 				template <typename U>
-				static_ordered(const kerbal::assign::assign_list<U> & ilist) :
+				flat_ordered(const kerbal::assign::assign_list<U> & ilist) :
 					super(ilist)
 				{
 				}
 
 				template <typename U>
-				static_ordered(const kerbal::assign::assign_list<U> & ilist, key_compare kc) :
+				flat_ordered(const kerbal::assign::assign_list<U> & ilist, key_compare kc) :
 					super(ilist, kc)
 				{
 				}
@@ -148,14 +145,12 @@ namespace kerbal
 
 				using super::assign;
 
-				KERBAL_CONSTEXPR14
-				void assign(const static_ordered & src)
+				void assign(const flat_ordered & src)
 				{
 					this->assign(src.cbegin(), src.cend(), src.key_comp());
 				}
 
-				KERBAL_CONSTEXPR14
-				static_ordered & operator=(const static_ordered & src)
+				flat_ordered & operator=(const flat_ordered & src)
 				{
 					this->assign(src);
 					return *this;
@@ -163,8 +158,7 @@ namespace kerbal
 
 #		if __cplusplus >= 201103L
 
-				KERBAL_CONSTEXPR14
-				static_ordered & operator=(std::initializer_list<value_type> ilist)
+				flat_ordered & operator=(std::initializer_list<value_type> ilist)
 				{
 					this->assign(ilist);
 					return *this;
@@ -173,7 +167,7 @@ namespace kerbal
 #		else
 
 				template <typename U>
-				static_ordered & operator=(const kerbal::assign::assign_list<U> & ilist)
+				flat_ordered & operator=(const kerbal::assign::assign_list<U> & ilist)
 				{
 					this->assign(ilist);
 					return *this;
@@ -181,80 +175,72 @@ namespace kerbal
 
 #		endif
 
-				KERBAL_CONSTEXPR
-				bool full() const
+				void reserve(size_type new_cap)
 				{
-					return this->sequence.full();
+					this->sequence.reserve(new_cap);
 				}
 
-				KERBAL_CONSTEXPR14
-				void swap(static_ordered & ano)
+				void swap(flat_ordered & ano)
 				{
 					this->sequence.swap(ano.sequence);
 					kerbal::algorithm::swap(this->key_comp(), ano.key_comp());
 				}
 
-				template <std::size_t M>
-				KERBAL_CONSTEXPR14
+				template <typename Allocator2>
 				friend
 				bool operator==(
-					const static_ordered<Entity, M, Extract, KeyCompare> & lhs,
-					const static_ordered<Entity, N, Extract, KeyCompare> & rhs
+					const flat_ordered<Entity, Extract, KeyCompare, Allocator> & lhs,
+					const flat_ordered<Entity, Extract, KeyCompare, Allocator2> & rhs
 				)
 				{
 					return lhs.sequence == rhs.sequence;
 				}
 
-				template <std::size_t M>
-				KERBAL_CONSTEXPR14
+				template <typename Allocator2>
 				friend
 				bool operator!=(
-					const static_ordered<Entity, M, Extract, KeyCompare> & lhs,
-					const static_ordered<Entity, N, Extract, KeyCompare> & rhs
+					const flat_ordered<Entity, Extract, KeyCompare, Allocator> & lhs,
+					const flat_ordered<Entity, Extract, KeyCompare, Allocator2> & rhs
 				)
 				{
 					return lhs.sequence != rhs.sequence;
 				}
 
-				template <std::size_t M>
-				KERBAL_CONSTEXPR14
+				template <typename Allocator2>
 				friend
 				bool operator<(
-					const static_ordered<Entity, M, Extract, KeyCompare> & lhs,
-					const static_ordered<Entity, N, Extract, KeyCompare> & rhs
+					const flat_ordered<Entity, Extract, KeyCompare, Allocator> & lhs,
+					const flat_ordered<Entity, Extract, KeyCompare, Allocator2> & rhs
 				)
 				{
 					return lhs.sequence < rhs.sequence;
 				}
 
-				template <std::size_t M>
-				KERBAL_CONSTEXPR14
+				template <typename Allocator2>
 				friend
 				bool operator<=(
-					const static_ordered<Entity, M, Extract, KeyCompare> & lhs,
-					const static_ordered<Entity, N, Extract, KeyCompare> & rhs
+					const flat_ordered<Entity, Extract, KeyCompare, Allocator> & lhs,
+					const flat_ordered<Entity, Extract, KeyCompare, Allocator2> & rhs
 				)
 				{
 					return lhs.sequence <= rhs.sequence;
 				}
 
-				template <std::size_t M>
-				KERBAL_CONSTEXPR14
+				template <typename Allocator2>
 				friend
 				bool operator>(
-					const static_ordered<Entity, M, Extract, KeyCompare> & lhs,
-					const static_ordered<Entity, N, Extract, KeyCompare> & rhs
+					const flat_ordered<Entity, Extract, KeyCompare, Allocator> & lhs,
+					const flat_ordered<Entity, Extract, KeyCompare, Allocator2> & rhs
 				)
 				{
 					return lhs.sequence > rhs.sequence;
 				}
 
-				template <std::size_t M>
-				KERBAL_CONSTEXPR14
+				template <typename Allocator2>
 				friend
 				bool operator>=(
-					const static_ordered<Entity, M, Extract, KeyCompare> & lhs,
-					const static_ordered<Entity, N, Extract, KeyCompare> & rhs
+					const flat_ordered<Entity, Extract, KeyCompare, Allocator> & lhs,
+					const flat_ordered<Entity, Extract, KeyCompare, Allocator2> & rhs
 				)
 				{
 					return lhs.sequence >= rhs.sequence;
@@ -268,11 +254,11 @@ namespace kerbal
 	namespace algorithm
 	{
 
-		template <typename Entity, std::size_t N, typename Extract, typename KeyCompare>
+		template <typename Entity, typename Extract, typename KeyCompare, typename Allocator>
 		KERBAL_CONSTEXPR14
 		void swap(
-			kerbal::container::static_ordered<Entity, N, Extract, KeyCompare> & a,
-			kerbal::container::static_ordered<Entity, N, Extract, KeyCompare> & b
+			kerbal::container::flat_ordered<Entity, Extract, KeyCompare, Allocator> & a,
+			kerbal::container::flat_ordered<Entity, Extract, KeyCompare, Allocator> & b
 		)
 			KERBAL_CONDITIONAL_NOEXCEPT(noexcept(a.swap(b)))
 		{
@@ -286,13 +272,13 @@ namespace kerbal
 
 KERBAL_NAMESPACE_STD_BEGIN
 
-	template <typename Entity, std::size_t N, typename Extract, typename KeyCompare>
+	template <typename Entity, typename Extract, typename KeyCompare, typename Allocator>
 	KERBAL_CONSTEXPR14
 	void swap(
-		kerbal::container::static_ordered<Entity, N, Extract, KeyCompare> & a,
-		kerbal::container::static_ordered<Entity, N, Extract, KeyCompare> & b
+		kerbal::container::flat_ordered<Entity, Extract, KeyCompare, Allocator> & a,
+		kerbal::container::flat_ordered<Entity, Extract, KeyCompare, Allocator> & b
 	)
-	KERBAL_CONDITIONAL_NOEXCEPT(noexcept(a.swap(b)))
+		KERBAL_CONDITIONAL_NOEXCEPT(noexcept(a.swap(b)))
 	{
 		a.swap(b);
 	}
@@ -300,4 +286,4 @@ KERBAL_NAMESPACE_STD_BEGIN
 KERBAL_NAMESPACE_STD_END
 
 
-#endif // KERBAL_CONTAINER_STATIC_ORDERED_HPP
+#endif // KERBAL_CONTAINER_FLAT_ORDERED_FLAT_ORDERED_DECL_HPP

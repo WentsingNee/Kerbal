@@ -1,7 +1,7 @@
 /**
- * @file       static_flat_set.hpp
+ * @file       static_ordered.decl.hpp
  * @brief
- * @date       2019-4-22
+ * @date       2019-8-24
  * @author     Peter
  * @copyright
  *      Peter of [ThinkSpirit Laboratory](http://thinkspirit.org/)
@@ -9,18 +9,19 @@
  *   all rights reserved
  */
 
-#ifndef KERBAL_CONTAINER_STATIC_FLAT_SET_HPP
-#define KERBAL_CONTAINER_STATIC_FLAT_SET_HPP
+#ifndef KERBAL_CONTAINER_STATIC_ORDERED_STATIC_ORDERED_DECL_HPP
+#define KERBAL_CONTAINER_STATIC_ORDERED_STATIC_ORDERED_DECL_HPP
 
+#include <kerbal/container/static_ordered/static_ordered.fwd.hpp>
+
+#include <kerbal/algorithm/swap.hpp>
 #include <kerbal/assign/ilist.hpp>
-#include <kerbal/compare/basic_compare.hpp>
 #include <kerbal/compatibility/constexpr.hpp>
 #include <kerbal/compatibility/namespace_std_scope.hpp>
 #include <kerbal/compatibility/noexcept.hpp>
-#include <kerbal/container/associative_container_facility/key_extractors/identity_extractor.hpp>
-#include <kerbal/container/static_ordered.hpp>
+#include <kerbal/container/static_vector.hpp>
 
-#include <kerbal/container/detail/flat_set_base.hpp>
+#include <kerbal/container/detail/flat_ordered_base.hpp>
 
 #if __cplusplus >= 201103L
 #	include <initializer_list>
@@ -36,18 +37,23 @@ namespace kerbal
 	{
 
 		template <
-			typename T,
+			typename Entity,
 			std::size_t N,
-			typename KeyCompare = kerbal::compare::less<T>
+			typename Extract,
+			typename KeyCompare
 		>
-		class static_flat_set :
-			public kerbal::container::detail::flat_set_base<
-				kerbal::container::static_ordered<T, N, kerbal::container::identity_extractor<T>, KeyCompare>
+		class static_ordered :
+			public kerbal::container::detail::flat_ordered_base<
+				Entity, Extract, KeyCompare, kerbal::container::static_vector<Entity, N>
 			>
 		{
+			public:
+				typedef kerbal::container::static_vector<Entity, N> Sequence;
+
 			private:
-				typedef kerbal::container::static_ordered<T, N, kerbal::container::identity_extractor<T>, KeyCompare> Ordered;
-				typedef kerbal::container::detail::flat_set_base<Ordered> super;
+				typedef kerbal::container::detail::flat_ordered_base<
+					Entity, Extract, KeyCompare, Sequence
+				> super;
 
 			public:
 				typedef typename super::key_compare			key_compare;
@@ -67,26 +73,26 @@ namespace kerbal
 				typedef typename super::size_type					size_type;
 				typedef typename super::difference_type				difference_type;
 
+				typedef typename super::iterator					iterator;
 				typedef typename super::const_iterator				const_iterator;
+				typedef typename super::reverse_iterator			reverse_iterator;
 				typedef typename super::const_reverse_iterator		const_reverse_iterator;
 
-			public:
-
 				KERBAL_CONSTEXPR
-				static_flat_set() :
+				static_ordered() :
 					super()
 				{
 				}
 
 				KERBAL_CONSTEXPR
-				explicit static_flat_set(key_compare kc) :
+				explicit static_ordered(key_compare kc) :
 					super(kc)
 				{
 				}
 
 				template <typename InputIterator>
 				KERBAL_CONSTEXPR14
-				static_flat_set(
+				static_ordered(
 					InputIterator first, InputIterator last,
 					typename kerbal::type_traits::enable_if<
 						kerbal::iterator::is_input_compatible_iterator<InputIterator>::value,
@@ -99,7 +105,7 @@ namespace kerbal
 
 				template <typename InputIterator>
 				KERBAL_CONSTEXPR14
-				static_flat_set(
+				static_ordered(
 					InputIterator first, InputIterator last, key_compare kc,
 					typename kerbal::type_traits::enable_if<
 						kerbal::iterator::is_input_compatible_iterator<InputIterator>::value,
@@ -113,13 +119,13 @@ namespace kerbal
 #		if __cplusplus >= 201103L
 
 				KERBAL_CONSTEXPR14
-				static_flat_set(std::initializer_list<value_type> ilist) :
+				static_ordered(std::initializer_list<value_type> ilist) :
 					super(ilist)
 				{
 				}
 
 				KERBAL_CONSTEXPR14
-				static_flat_set(std::initializer_list<value_type> ilist, key_compare kc) :
+				static_ordered(std::initializer_list<value_type> ilist, key_compare kc) :
 					super(ilist, kc)
 				{
 				}
@@ -127,13 +133,13 @@ namespace kerbal
 #		else
 
 				template <typename U>
-				static_flat_set(const kerbal::assign::assign_list<U> & ilist) :
+				static_ordered(const kerbal::assign::assign_list<U> & ilist) :
 					super(ilist)
 				{
 				}
 
 				template <typename U>
-				static_flat_set(const kerbal::assign::assign_list<U> & ilist, key_compare kc) :
+				static_ordered(const kerbal::assign::assign_list<U> & ilist, key_compare kc) :
 					super(ilist, kc)
 				{
 				}
@@ -143,13 +149,13 @@ namespace kerbal
 				using super::assign;
 
 				KERBAL_CONSTEXPR14
-				void assign(const static_flat_set & src)
+				void assign(const static_ordered & src)
 				{
-					this->ordered.assign(src.ordered);
+					this->assign(src.cbegin(), src.cend(), src.key_comp());
 				}
 
 				KERBAL_CONSTEXPR14
-				static_flat_set & operator=(const static_flat_set & src)
+				static_ordered & operator=(const static_ordered & src)
 				{
 					this->assign(src);
 					return *this;
@@ -158,18 +164,18 @@ namespace kerbal
 #		if __cplusplus >= 201103L
 
 				KERBAL_CONSTEXPR14
-				static_flat_set & operator=(std::initializer_list<value_type> ilist)
+				static_ordered & operator=(std::initializer_list<value_type> ilist)
 				{
-					this->super::assign(ilist);
+					this->assign(ilist);
 					return *this;
 				}
 
 #		else
 
 				template <typename U>
-				static_flat_set & operator=(const kerbal::assign::assign_list<U> & ilist)
+				static_ordered & operator=(const kerbal::assign::assign_list<U> & ilist)
 				{
-					this->super::assign(ilist);
+					this->assign(ilist);
 					return *this;
 				}
 
@@ -178,79 +184,80 @@ namespace kerbal
 				KERBAL_CONSTEXPR
 				bool full() const
 				{
-					return this->ordered.full();
+					return this->sequence.full();
 				}
 
 				KERBAL_CONSTEXPR14
-				void swap(static_flat_set & ano)
+				void swap(static_ordered & ano)
 				{
-					this->ordered.swap(ano.ordered);
+					this->sequence.swap(ano.sequence);
+					kerbal::algorithm::swap(this->key_comp(), ano.key_comp());
 				}
 
 				template <std::size_t M>
 				KERBAL_CONSTEXPR14
 				friend
 				bool operator==(
-					const static_flat_set<T, M, KeyCompare> & lhs,
-					const static_flat_set<T, N, KeyCompare> & rhs
+					const static_ordered<Entity, M, Extract, KeyCompare> & lhs,
+					const static_ordered<Entity, N, Extract, KeyCompare> & rhs
 				)
 				{
-					return lhs.ordered == rhs.ordered;
+					return lhs.sequence == rhs.sequence;
 				}
 
 				template <std::size_t M>
 				KERBAL_CONSTEXPR14
 				friend
 				bool operator!=(
-					const static_flat_set<T, M, KeyCompare> & lhs,
-					const static_flat_set<T, N, KeyCompare> & rhs
+					const static_ordered<Entity, M, Extract, KeyCompare> & lhs,
+					const static_ordered<Entity, N, Extract, KeyCompare> & rhs
 				)
 				{
-					return lhs.ordered != rhs.ordered;
+					return lhs.sequence != rhs.sequence;
 				}
 
 				template <std::size_t M>
 				KERBAL_CONSTEXPR14
 				friend
 				bool operator<(
-					const static_flat_set<T, M, KeyCompare> & lhs,
-					const static_flat_set<T, N, KeyCompare> & rhs
+					const static_ordered<Entity, M, Extract, KeyCompare> & lhs,
+					const static_ordered<Entity, N, Extract, KeyCompare> & rhs
 				)
 				{
-					return lhs.ordered < rhs.ordered;
+					return lhs.sequence < rhs.sequence;
 				}
 
 				template <std::size_t M>
 				KERBAL_CONSTEXPR14
 				friend
 				bool operator<=(
-					const static_flat_set<T, M, KeyCompare> & lhs,
-					const static_flat_set<T, N, KeyCompare> & rhs
+					const static_ordered<Entity, M, Extract, KeyCompare> & lhs,
+					const static_ordered<Entity, N, Extract, KeyCompare> & rhs
 				)
 				{
-					return lhs.ordered <= rhs.ordered;
+					return lhs.sequence <= rhs.sequence;
 				}
 
 				template <std::size_t M>
 				KERBAL_CONSTEXPR14
 				friend
 				bool operator>(
-					const static_flat_set<T, M, KeyCompare> & lhs,
-					const static_flat_set<T, N, KeyCompare> & rhs
+					const static_ordered<Entity, M, Extract, KeyCompare> & lhs,
+					const static_ordered<Entity, N, Extract, KeyCompare> & rhs
 				)
 				{
-					return lhs.ordered > rhs.ordered;
+					return lhs.sequence > rhs.sequence;
 				}
 
 				template <std::size_t M>
 				KERBAL_CONSTEXPR14
 				friend
 				bool operator>=(
-					const static_flat_set<T, M, KeyCompare> & lhs,
-					const static_flat_set<T, N, KeyCompare> & rhs
+					const static_ordered<Entity, M, Extract, KeyCompare> & lhs,
+					const static_ordered<Entity, N, Extract, KeyCompare> & rhs
 				)
 				{
-					return lhs.ordered >= rhs.ordered;
+					return lhs.sequence >= rhs.sequence;
 				}
 
 		};
@@ -261,11 +268,11 @@ namespace kerbal
 	namespace algorithm
 	{
 
-		template <typename T, std::size_t N, typename KeyCompare>
+		template <typename Entity, std::size_t N, typename Extract, typename KeyCompare>
 		KERBAL_CONSTEXPR14
 		void swap(
-			kerbal::container::static_flat_set<T, N, KeyCompare> & a,
-			kerbal::container::static_flat_set<T, N, KeyCompare> & b
+			kerbal::container::static_ordered<Entity, N, Extract, KeyCompare> & a,
+			kerbal::container::static_ordered<Entity, N, Extract, KeyCompare> & b
 		)
 			KERBAL_CONDITIONAL_NOEXCEPT(noexcept(a.swap(b)))
 		{
@@ -279,13 +286,13 @@ namespace kerbal
 
 KERBAL_NAMESPACE_STD_BEGIN
 
-	template <typename T, std::size_t N, typename KeyCompare>
+	template <typename Entity, std::size_t N, typename Extract, typename KeyCompare>
 	KERBAL_CONSTEXPR14
 	void swap(
-		kerbal::container::static_flat_set<T, N, KeyCompare> & a,
-		kerbal::container::static_flat_set<T, N, KeyCompare> & b
+		kerbal::container::static_ordered<Entity, N, Extract, KeyCompare> & a,
+		kerbal::container::static_ordered<Entity, N, Extract, KeyCompare> & b
 	)
-		KERBAL_CONDITIONAL_NOEXCEPT(noexcept(a.swap(b)))
+	KERBAL_CONDITIONAL_NOEXCEPT(noexcept(a.swap(b)))
 	{
 		a.swap(b);
 	}
@@ -293,4 +300,4 @@ KERBAL_NAMESPACE_STD_BEGIN
 KERBAL_NAMESPACE_STD_END
 
 
-#endif // KERBAL_CONTAINER_STATIC_FLAT_SET_HPP
+#endif // KERBAL_CONTAINER_STATIC_ORDERED_STATIC_ORDERED_DECL_HPP
