@@ -2,7 +2,7 @@
  * @file       raw_storage.hpp
  * @brief
  * @date       2019-4-19
- * @author     peter
+ * @author     Peter
  * @copyright
  *      peter of [ThinkSpirit Laboratory](http://thinkspirit.org/)
  *   of [Nanjing University of Information Science & Technology](http://www.nuist.edu.cn/)
