@@ -24,7 +24,7 @@
 #include <cstddef>
 #include <atomic>
 
-#include <kerbal/random/detail/mt_twist_helper.hpp>
+#include <kerbal/random/engine/detail/mt_twist_helper.hpp>
 
 
 namespace kerbal
