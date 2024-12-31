@@ -1167,7 +1167,7 @@ namespace kerbal
 					unique_insert_r
 					k_emplace_unique_using_allocator(
 						NodeAllocator & alloc,
-						kerbal::container::tuple_first_extractor<kerbal::container::map_data<K, M>, K> & e,
+						kerbal::container::tuple_first_extractor<kerbal::container::map_data<K, M>, K const> & e,
 						KeyCompare & kc,
 						K const & src_key,
 						kerbal::utility::compressed_pair_default_construct_tag tag
@@ -1189,7 +1189,7 @@ namespace kerbal
 					bool
 					k_emplace_unique_ua_is_delay_build(
 						NodeAllocator & alloc,
-						kerbal::container::tuple_first_extractor<kerbal::container::map_data<K, M>, K> & e,
+						kerbal::container::tuple_first_extractor<kerbal::container::map_data<K, M>, K const> & e,
 						KeyCompare & kc,
 						K const & src_key,
 						kerbal::utility::compressed_pair_default_construct_tag
