@@ -14,9 +14,12 @@
 
 #include <kerbal/hash/sha1/sha1.fwd.hpp>
 
+#include <kerbal/compare/sequence_compare.hpp>
 #include <kerbal/compatibility/constexpr.hpp>
 #include <kerbal/compatibility/fixed_width_integer.hpp>
 #include <kerbal/compatibility/noexcept.hpp>
+#include <kerbal/operators/equality_comparable.hpp>
+#include <kerbal/operators/less_than_comparable.hpp>
 
 #include <cstddef>
 #include <ostream>
@@ -29,7 +32,9 @@ namespace kerbal
 	namespace hash
 	{
 
-		class SHA1_result
+		class SHA1_result :
+			private kerbal::operators::equality_comparable<SHA1_result>,
+			private kerbal::operators::less_than_comparable<SHA1_result>
 		{
 			private:
 				template <typename Policy>
@@ -87,6 +92,32 @@ namespace kerbal
 				const unsigned char * data() const KERBAL_NOEXCEPT
 				{
 					return this->hash;
+				}
+
+				KERBAL_CONSTEXPR14
+				friend
+				bool operator==(
+					kerbal::hash::SHA1_result const & lhs,
+					kerbal::hash::SHA1_result const & rhs
+				) KERBAL_NOEXCEPT
+				{
+					return kerbal::compare::sequence_equal_to(
+						lhs.hash, lhs.hash + 20,
+						rhs.hash, rhs.hash + 20
+					);
+				}
+
+				KERBAL_CONSTEXPR14
+				friend
+				bool operator<(
+					kerbal::hash::SHA1_result const & lhs,
+					kerbal::hash::SHA1_result const & rhs
+				) KERBAL_NOEXCEPT
+				{
+					return kerbal::compare::sequence_less(
+						lhs.hash, lhs.hash + 20,
+						rhs.hash, rhs.hash + 20
+					);
 				}
 
 		};
