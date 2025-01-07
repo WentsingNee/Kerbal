@@ -17,7 +17,6 @@
 #include <kerbal/assign/ilist.hpp>
 #include <kerbal/compatibility/constexpr.hpp>
 #include <kerbal/compatibility/move.hpp>
-#include <kerbal/container/associative_container_facility/associative_unique_insert_r.hpp>
 #include <kerbal/iterator/iterator_traits.hpp>
 #include <kerbal/type_traits/enable_if.hpp>
 
@@ -59,8 +58,7 @@ namespace kerbal
 
 					typedef typename super::const_iterator				const_iterator;
 					typedef typename super::const_reverse_iterator		const_reverse_iterator;
-					typedef kerbal::container::associative_unique_insert_r<const_iterator>
-																		unique_insert_r;
+					typedef typename Ordered::unique_insert_r			unique_insert_r;
 
 					typedef typename super::key_type			key_type;
 					typedef typename super::key_compare			key_compare;
