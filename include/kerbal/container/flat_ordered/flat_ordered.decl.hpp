@@ -29,8 +29,6 @@
 #	include <initializer_list>
 #endif
 
-#include <cstddef>
-
 
 namespace kerbal
 {
