@@ -13,13 +13,13 @@
 #ifndef KERBAL_CONTAINER_DETAIL_FLAT_MULTISET_BASE_HPP
 #define KERBAL_CONTAINER_DETAIL_FLAT_MULTISET_BASE_HPP
 
+#include <kerbal/container/detail/flat_set_common_base.hpp>
+
 #include <kerbal/assign/ilist.hpp>
 #include <kerbal/compatibility/constexpr.hpp>
 #include <kerbal/compatibility/move.hpp>
 #include <kerbal/iterator/iterator_traits.hpp>
 #include <kerbal/type_traits/enable_if.hpp>
-
-#include <kerbal/container/detail/flat_set_common_base.hpp>
 
 #if __cplusplus >= 201103L
 #	include <initializer_list>

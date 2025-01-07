@@ -14,6 +14,8 @@
 
 #include <kerbal/container/static_flat_multiset/static_flat_multiset.fwd.hpp>
 
+#include <kerbal/container/detail/flat_multiset_base.hpp>
+
 #include <kerbal/assign/ilist.hpp>
 #include <kerbal/compatibility/constexpr.hpp>
 #include <kerbal/compatibility/namespace_std_scope.hpp>
@@ -22,8 +24,6 @@
 #include <kerbal/container/static_ordered.hpp>
 #include <kerbal/iterator/iterator_traits.hpp>
 #include <kerbal/type_traits/enable_if.hpp>
-
-#include <kerbal/container/detail/flat_multiset_base.hpp>
 
 #if __cplusplus >= 201103L
 #	include <initializer_list>
