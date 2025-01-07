@@ -257,6 +257,8 @@ namespace kerbal
 						this->ordered.insert(first, last);
 					}
 
+					using super::erase;
+
 					KERBAL_CONSTEXPR14
 					size_type erase(const key_type & key)
 					{
