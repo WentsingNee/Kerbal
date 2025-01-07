@@ -316,6 +316,10 @@ namespace kerbal
 
 #			endif
 
+
+				//===================
+				// construct/copy/destroy
+
 				protected:
 
 					KERBAL_CONSTEXPR
@@ -406,6 +410,10 @@ namespace kerbal
 
 #			endif
 
+
+				//===================
+				// assign
+
 				public:
 					template <typename InputIterator>
 					KERBAL_CONSTEXPR14
@@ -475,6 +483,12 @@ namespace kerbal
 					}
 
 #			endif
+
+
+				//===================
+				// iterator
+
+				public:
 
 					KERBAL_CONSTEXPR14
 					iterator
@@ -588,6 +602,12 @@ namespace kerbal
 						return sequence.index_of(it);
 					}
 
+
+				//===================
+				// capacity
+
+				public:
+
 					KERBAL_CONSTEXPR
 					size_type
 					size() const
@@ -608,6 +628,12 @@ namespace kerbal
 					{
 						return sequence.empty();
 					}
+
+
+				//===================
+				// lookup
+
+				public:
 
 					KERBAL_CONSTEXPR14
 					iterator
@@ -795,6 +821,10 @@ namespace kerbal
 						return this->find(key, hint) != this->cend();
 					}
 
+
+				//===================
+				// insert
+
 				protected:
 					KERBAL_CONSTEXPR14
 					unique_insert_r
@@ -961,6 +991,12 @@ namespace kerbal
 						}
 						return first;
 					}
+
+
+				//===================
+				// erase
+
+				public:
 
 					KERBAL_CONSTEXPR14
 					const_iterator

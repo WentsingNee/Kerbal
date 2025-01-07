@@ -71,7 +71,12 @@ namespace kerbal
 						return ordered.key_comp();
 					}
 
+
+				//===================
+				// construct/copy/destroy
+
 				protected:
+
 					KERBAL_CONSTEXPR
 					flat_set_common_base() :
 						ordered()
@@ -84,6 +89,10 @@ namespace kerbal
 						ordered(kc)
 					{
 					}
+
+
+				//===================
+				// iterator
 
 				public:
 
@@ -157,6 +166,12 @@ namespace kerbal
 						return ordered.index_of(it);
 					}
 
+
+				//===================
+				// capacity
+
+				public:
+
 					KERBAL_CONSTEXPR
 					size_type
 					size() const
@@ -177,6 +192,12 @@ namespace kerbal
 					{
 						return ordered.empty();
 					}
+
+
+				//===================
+				// lookup
+
+				public:
 
 					KERBAL_CONSTEXPR14
 					const_iterator
@@ -240,6 +261,12 @@ namespace kerbal
 					{
 						return ordered.contains(key, hint);
 					}
+
+
+				//===================
+				// erase
+
+				public:
 
 					KERBAL_CONSTEXPR14
 					const_iterator

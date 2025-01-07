@@ -65,7 +65,12 @@ namespace kerbal
 					typedef kerbal::container::associative_unique_insert_r<const_iterator>
 																		unique_insert_r;
 
+
+				//===================
+				// construct/copy/destroy
+
 				protected:
+
 					KERBAL_CONSTEXPR
 					flat_set_base() :
 						super()
@@ -166,6 +171,12 @@ namespace kerbal
 						return this->contains(key, hint) ? 1 : 0;
 					}
 
+
+				//===================
+				// assign
+
+				public:
+
 					template <typename InputIterator>
 					KERBAL_CONSTEXPR14
 					typename kerbal::type_traits::enable_if<
@@ -236,6 +247,12 @@ namespace kerbal
 
 #			endif
 
+
+				//===================
+				// insert
+
+				public:
+
 					KERBAL_CONSTEXPR14
 					unique_insert_r
 					insert(const_reference src)
@@ -275,6 +292,12 @@ namespace kerbal
 					{
 						this->ordered.unique_insert(first, last);
 					}
+
+
+				//===================
+				// erase
+
+				public:
 
 					using super::erase;
 

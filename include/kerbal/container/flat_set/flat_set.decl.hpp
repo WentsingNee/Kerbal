@@ -82,6 +82,10 @@ namespace kerbal
 				typedef typename super::key_type			key_type;
 				typedef typename super::key_compare			key_compare;
 
+
+			//===================
+			// construct/copy/destroy
+
 			public:
 
 				flat_set() :
@@ -151,6 +155,8 @@ namespace kerbal
 			//===================
 			// assign
 
+			public:
+
 				flat_set &
 				operator=(const flat_set & src)
 				{
@@ -187,11 +193,19 @@ namespace kerbal
 					this->ordered.assign(src.ordered);
 				}
 
+
+			//===================
+			// capacity
+
 				void
 				reserve(size_type new_cap)
 				{
 					this->ordered.reserve(new_cap);
 				}
+
+
+			//===================
+			// operation
 
 				void
 				swap(flat_set & ano)

@@ -78,6 +78,12 @@ namespace kerbal
 				typedef typename super::reverse_iterator			reverse_iterator;
 				typedef typename super::const_reverse_iterator		const_reverse_iterator;
 
+
+			//===================
+			// construct/copy/destroy
+
+			public:
+
 				KERBAL_CONSTEXPR
 				static_ordered() :
 					super()
@@ -147,6 +153,12 @@ namespace kerbal
 
 #		endif
 
+
+			//===================
+			// assign
+
+			public:
+
 				using super::assign;
 
 				KERBAL_CONSTEXPR14
@@ -186,12 +198,20 @@ namespace kerbal
 
 #		endif
 
+
+			//===================
+			// capacity
+
 				KERBAL_CONSTEXPR
 				bool
 				full() const
 				{
 					return this->sequence.full();
 				}
+
+
+			//===================
+			// operation
 
 				KERBAL_CONSTEXPR14
 				void

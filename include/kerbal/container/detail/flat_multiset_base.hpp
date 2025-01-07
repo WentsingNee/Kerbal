@@ -63,7 +63,12 @@ namespace kerbal
 					typedef typename super::const_iterator				const_iterator;
 					typedef typename super::const_reverse_iterator		const_reverse_iterator;
 
+
+				//===================
+				// construct/copy/destroy
+
 				protected:
+
 					KERBAL_CONSTEXPR
 					flat_multiset_base() :
 						super()
@@ -164,6 +169,12 @@ namespace kerbal
 						return this->ordered.count(key, hint);
 					}
 
+
+				//===================
+				// assign
+
+				public:
+
 					template <typename InputIterator>
 					KERBAL_CONSTEXPR14
 					typename kerbal::type_traits::enable_if<
@@ -231,6 +242,12 @@ namespace kerbal
 
 #			endif
 
+
+				//===================
+				// insert
+
+				public:
+
 					KERBAL_CONSTEXPR14
 					const_iterator
 					insert(const_reference src)
@@ -270,6 +287,12 @@ namespace kerbal
 					{
 						this->ordered.insert(first, last);
 					}
+
+
+				//===================
+				// erase
+
+				public:
 
 					using super::erase;
 
