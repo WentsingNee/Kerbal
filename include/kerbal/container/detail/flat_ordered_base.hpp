@@ -24,6 +24,7 @@
 #include <kerbal/compatibility/move.hpp>
 #include <kerbal/compatibility/noexcept.hpp>
 #include <kerbal/container/associative_container_facility/associative_unique_insert_r.hpp>
+#include <kerbal/container/associative_container_facility/key_compare_is_transparent.hpp>
 #include <kerbal/container/nonmember_container_access.hpp>
 #include <kerbal/iterator/iterator.hpp>
 #include <kerbal/iterator/iterator_traits.hpp>
@@ -557,6 +558,25 @@ namespace kerbal
 
 				public:
 
+					template <
+						typename Key, typename Result
+					>
+					struct enable_if_transparent_lookup :
+						kerbal::type_traits::enable_if<
+							(
+								kerbal::container::key_compare_is_transparent<KeyCompare>::value &&
+								!kerbal::type_traits::is_same<const Key &, const typename Extract::key_type &>::value &&
+								!kerbal::type_traits::is_same<Key, const_iterator>::value &&
+								!kerbal::type_traits::is_same<Key, iterator>::value
+							),
+							Result
+						>
+					{
+					};
+
+
+				public:
+
 					KERBAL_CONSTEXPR14
 					iterator
 					lower_bound(const key_type & key)
@@ -570,6 +590,34 @@ namespace kerbal
 					KERBAL_CONSTEXPR14
 					const_iterator
 					lower_bound(const key_type & key) const
+					{
+						return kerbal::algorithm::lower_bound(
+							this->key_view_cbegin(), this->key_view_cend(), key,
+							this->key_comp()
+						).base();
+					}
+
+					template <typename Key>
+					KERBAL_CONSTEXPR14
+					typename enable_if_transparent_lookup<
+						Key,
+						iterator
+					>::type
+					lower_bound(const Key & key)
+					{
+						return kerbal::algorithm::lower_bound(
+							this->key_view_begin(), this->key_view_end(), key,
+							this->key_comp()
+						).base();
+					}
+
+					template <typename Key>
+					KERBAL_CONSTEXPR14
+					typename enable_if_transparent_lookup<
+						Key,
+						const_iterator
+					>::type
+					lower_bound(const Key & key) const
 					{
 						return kerbal::algorithm::lower_bound(
 							this->key_view_cbegin(), this->key_view_cend(), key,
@@ -601,6 +649,38 @@ namespace kerbal
 						).base();
 					}
 
+					template <typename Key>
+					KERBAL_CONSTEXPR14
+					typename enable_if_transparent_lookup<
+						Key,
+						iterator
+					>::type
+					lower_bound(const_iterator hint, const Key & key)
+					{
+						return kerbal::algorithm::lower_bound_hint(
+							this->key_view_begin(), this->key_view_end(), key,
+							this->make_key_view_iterator(
+								kerbal::container::nth(*this, kerbal::container::index_of(*this, hint))
+							),
+							this->key_comp()
+						).base();
+					}
+
+					template <typename Key>
+					KERBAL_CONSTEXPR14
+					typename enable_if_transparent_lookup<
+						Key,
+						const_iterator
+					>::type
+					lower_bound(const_iterator hint, const Key & key) const
+					{
+						return kerbal::algorithm::lower_bound_hint(
+							this->key_view_cbegin(), this->key_view_cend(), key,
+							this->make_key_view_iterator(hint),
+							this->key_comp()
+						).base();
+					}
+
 
 					KERBAL_CONSTEXPR14
 					iterator
@@ -615,6 +695,34 @@ namespace kerbal
 					KERBAL_CONSTEXPR14
 					const_iterator
 					upper_bound(const key_type & key) const
+					{
+						return kerbal::algorithm::upper_bound(
+							this->key_view_cbegin(), this->key_view_cend(), key,
+							this->key_comp()
+						).base();
+					}
+
+					template <typename Key>
+					KERBAL_CONSTEXPR14
+					typename enable_if_transparent_lookup<
+						Key,
+						iterator
+					>::type
+					upper_bound(const Key & key)
+					{
+						return kerbal::algorithm::upper_bound(
+							this->key_view_begin(), this->key_view_end(), key,
+							this->key_comp()
+						).base();
+					}
+
+					template <typename Key>
+					KERBAL_CONSTEXPR14
+					typename enable_if_transparent_lookup<
+						Key,
+						const_iterator
+					>::type
+					upper_bound(const Key & key) const
 					{
 						return kerbal::algorithm::upper_bound(
 							this->key_view_cbegin(), this->key_view_cend(), key,
@@ -646,6 +754,38 @@ namespace kerbal
 						).base();
 					}
 
+					template <typename Key>
+					KERBAL_CONSTEXPR14
+					typename enable_if_transparent_lookup<
+						Key,
+						iterator
+					>::type
+					upper_bound(const_iterator hint, const Key & key)
+					{
+						return kerbal::algorithm::upper_bound_hint(
+							this->key_view_begin(), this->key_view_end(), key,
+							this->make_key_view_iterator(
+								kerbal::container::nth(*this, kerbal::container::index_of(*this, hint))
+							),
+							this->key_comp()
+						).base();
+					}
+
+					template <typename Key>
+					KERBAL_CONSTEXPR14
+					typename enable_if_transparent_lookup<
+						Key,
+						const_iterator
+					>::type
+					upper_bound(const_iterator hint, const Key & key) const
+					{
+						return kerbal::algorithm::upper_bound_hint(
+							this->key_view_cbegin(), this->key_view_cend(), key,
+							this->make_key_view_iterator(hint),
+							this->key_comp()
+						).base();
+					}
+
 					KERBAL_CONSTEXPR14
 					kerbal::utility::compressed_pair<iterator, iterator>
 					equal_range(const key_type & key)
@@ -665,6 +805,46 @@ namespace kerbal
 					KERBAL_CONSTEXPR14
 					kerbal::utility::compressed_pair<const_iterator, const_iterator>
 					equal_range(const key_type & key) const
+					{
+						kerbal::utility::compressed_pair<key_view_const_iterator, key_view_const_iterator> eqr(
+							kerbal::algorithm::equal_range(
+								this->key_view_cbegin(), this->key_view_cend(), key,
+								this->key_comp()
+							)
+						);
+						return kerbal::utility::compressed_pair<const_iterator, const_iterator>(
+							eqr.first().base(),
+							eqr.second().base()
+						);
+					}
+
+					template <typename Key>
+					KERBAL_CONSTEXPR14
+					typename enable_if_transparent_lookup<
+						Key,
+						kerbal::utility::compressed_pair<iterator, iterator>
+					>::type
+					equal_range(const Key & key)
+					{
+						kerbal::utility::compressed_pair<key_view_iterator, key_view_iterator> eqr(
+							kerbal::algorithm::equal_range(
+								this->key_view_begin(), this->key_view_end(), key,
+								this->key_comp()
+							)
+						);
+						return kerbal::utility::compressed_pair<iterator, iterator>(
+							eqr.first().base(),
+							eqr.second().base()
+						);
+					}
+
+					template <typename Key>
+					KERBAL_CONSTEXPR14
+					typename enable_if_transparent_lookup<
+						Key,
+						kerbal::utility::compressed_pair<const_iterator, const_iterator>
+					>::type
+					equal_range(const Key & key) const
 					{
 						kerbal::utility::compressed_pair<key_view_const_iterator, key_view_const_iterator> eqr(
 							kerbal::algorithm::equal_range(
@@ -710,10 +890,51 @@ namespace kerbal
 						);
 					}
 
+					template <typename Key>
+					KERBAL_CONSTEXPR14
+					typename enable_if_transparent_lookup<
+						Key,
+						kerbal::utility::compressed_pair<iterator, iterator>
+					>::type
+					equal_range(const_iterator hint, const Key & key)
+					{
+						kerbal::utility::compressed_pair<key_view_iterator, key_view_iterator> eqr(
+							kerbal::algorithm::equal_range(
+								this->key_view_begin(), this->key_view_end(), key,
+								this->key_comp()
+							)
+						);
+						return kerbal::utility::compressed_pair<iterator, iterator>(
+							eqr.first().base(),
+							eqr.second().base()
+						);
+					}
+
+					template <typename Key>
+					KERBAL_CONSTEXPR14
+					typename enable_if_transparent_lookup<
+						Key,
+						kerbal::utility::compressed_pair<const_iterator, const_iterator>
+					>::type
+					equal_range(const_iterator hint, const Key & key) const
+					{
+						kerbal::utility::compressed_pair<key_view_const_iterator, key_view_const_iterator> eqr(
+							kerbal::algorithm::equal_range(
+								this->key_view_cbegin(), this->key_view_cend(), key,
+								this->key_comp()
+							)
+						);
+						return kerbal::utility::compressed_pair<const_iterator, const_iterator>(
+							eqr.first().base(),
+							eqr.second().base()
+						);
+					}
+
 				protected:
+					template <typename Key>
 					KERBAL_CONSTEXPR14
 					iterator
-					k_find_impl(iterator lower_bound_pos, const key_type & key)
+					k_find_impl(iterator lower_bound_pos, const Key & key)
 					{
 						iterator end_it(this->end());
 						if (lower_bound_pos != end_it && this->key_comp()(key, this->extract()(*lower_bound_pos))) {
@@ -728,9 +949,10 @@ namespace kerbal
 						}
 					}
 
+					template <typename Key>
 					KERBAL_CONSTEXPR14
 					const_iterator
-					k_find_impl(const_iterator lower_bound_pos, const key_type & key) const
+					k_find_impl(const_iterator lower_bound_pos, const Key & key) const
 					{
 						const_iterator end_it(this->cend());
 						if (lower_bound_pos != end_it && this->key_comp()(key, this->extract()(*lower_bound_pos))) {
@@ -760,6 +982,28 @@ namespace kerbal
 						return this->k_find_impl(this->lower_bound(key), key);
 					}
 
+					template <typename Key>
+					KERBAL_CONSTEXPR14
+					typename enable_if_transparent_lookup<
+						Key,
+						iterator
+					>::type
+					find(const Key & key)
+					{
+						return this->k_find_impl(this->lower_bound(key), key);
+					}
+
+					template <typename Key>
+					KERBAL_CONSTEXPR14
+					typename enable_if_transparent_lookup<
+						Key,
+						const_iterator
+					>::type
+					find(const Key & key) const
+					{
+						return this->k_find_impl(this->lower_bound(key), key);
+					}
+
 					KERBAL_CONSTEXPR14
 					iterator
 					find(const_iterator hint, const key_type & key)
@@ -774,9 +1018,43 @@ namespace kerbal
 						return this->k_find_impl(this->lower_bound(hint, key), key);
 					}
 
+					template <typename Key>
+					KERBAL_CONSTEXPR14
+					typename enable_if_transparent_lookup<
+						Key,
+						iterator
+					>::type
+					find(const_iterator hint, const Key & key)
+					{
+						return this->k_find_impl(this->lower_bound(hint, key), key);
+					}
+
+					template <typename Key>
+					KERBAL_CONSTEXPR14
+					typename enable_if_transparent_lookup<
+						Key,
+						const_iterator
+					>::type
+					find(const_iterator hint, const Key & key) const
+					{
+						return this->k_find_impl(this->lower_bound(hint, key), key);
+					}
+
 					KERBAL_CONSTEXPR14
 					size_type
 					count(const key_type & key) const
+					{
+						kerbal::utility::compressed_pair<const_iterator, const_iterator> p(this->equal_range(key));
+						return kerbal::iterator::distance(p.first(), p.second());
+					}
+
+					template <typename Key>
+					KERBAL_CONSTEXPR14
+					typename enable_if_transparent_lookup<
+						Key,
+						size_type
+					>::type
+					count(const Key & key) const
 					{
 						kerbal::utility::compressed_pair<const_iterator, const_iterator> p(this->equal_range(key));
 						return kerbal::iterator::distance(p.first(), p.second());
@@ -790,6 +1068,18 @@ namespace kerbal
 						return kerbal::iterator::distance(p.first(), p.second());
 					}
 
+					template <typename Key>
+					KERBAL_CONSTEXPR14
+					typename enable_if_transparent_lookup<
+						Key,
+						size_type
+					>::type
+					count(const_iterator hint, const Key & key) const
+					{
+						kerbal::utility::compressed_pair<const_iterator, const_iterator> p(this->equal_range(hint, key));
+						return kerbal::iterator::distance(p.first(), p.second());
+					}
+
 					KERBAL_CONSTEXPR14
 					bool
 					contains(const key_type & key) const
@@ -797,9 +1087,31 @@ namespace kerbal
 						return this->find(key) != this->cend();
 					}
 
+					template <typename Key>
+					KERBAL_CONSTEXPR14
+					typename enable_if_transparent_lookup<
+						Key,
+						bool
+					>::type
+					contains(const Key & key) const
+					{
+						return this->find(key) != this->cend();
+					}
+
 					KERBAL_CONSTEXPR14
 					bool
 					contains(const_iterator hint, const key_type & key) const
+					{
+						return this->find(hint, key) != this->cend();
+					}
+
+					template <typename Key>
+					KERBAL_CONSTEXPR14
+					typename enable_if_transparent_lookup<
+						Key,
+						bool
+					>::type
+					contains(const_iterator hint, const Key & key) const
 					{
 						return this->find(hint, key) != this->cend();
 					}
@@ -1005,9 +1317,37 @@ namespace kerbal
 						return dis;
 					}
 
+					template <typename Key>
+					KERBAL_CONSTEXPR14
+					typename enable_if_transparent_lookup<
+						Key,
+						size_type
+					>::type
+					erase(const Key & key)
+					{
+						kerbal::utility::compressed_pair<iterator, iterator> p(this->equal_range(key));
+						size_type dis(kerbal::iterator::distance(p.first(), p.second()));
+						this->erase(p.first(), p.second());
+						return dis;
+					}
+
 					KERBAL_CONSTEXPR14
 					size_type
 					erase(const_iterator hint, const key_type & key)
+					{
+						kerbal::utility::compressed_pair<iterator, iterator> p(this->equal_range(hint, key));
+						size_type dis(kerbal::iterator::distance(p.first(), p.second()));
+						this->erase(p.first(), p.second());
+						return dis;
+					}
+
+					template <typename Key>
+					KERBAL_CONSTEXPR14
+					typename enable_if_transparent_lookup<
+						Key,
+						size_type
+					>::type
+					erase(const_iterator hint, const Key & key)
 					{
 						kerbal::utility::compressed_pair<iterator, iterator> p(this->equal_range(hint, key));
 						size_type dis(kerbal::iterator::distance(p.first(), p.second()));
@@ -1022,9 +1362,31 @@ namespace kerbal
 						return this->erase(this->find(key));
 					}
 
+					template <typename Key>
+					KERBAL_CONSTEXPR14
+					typename enable_if_transparent_lookup<
+						Key,
+						const_iterator
+					>::type
+					erase_one(const Key & key)
+					{
+						return this->erase(this->find(key));
+					}
+
 					KERBAL_CONSTEXPR14
 					const_iterator
 					erase_one(const_iterator hint, const key_type & key)
+					{
+						return this->erase(this->find(hint, key));
+					}
+
+					template <typename Key>
+					KERBAL_CONSTEXPR14
+					typename enable_if_transparent_lookup<
+						Key,
+						const_iterator
+					>::type
+					erase_one(const_iterator hint, const Key & key)
 					{
 						return this->erase(this->find(hint, key));
 					}
