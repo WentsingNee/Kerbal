@@ -227,79 +227,121 @@ namespace kerbal
 				}
 
 
-				template <typename Allocator2>
+				template <typename K2, typename KeyCompare2, typename Allocator1, typename Allocator2>
 				KERBAL_CONSTEXPR20
 				friend
-				bool
-				operator==(
-					const flat_set<T, KeyCompare, Allocator> & lhs,
-					const flat_set<T, KeyCompare, Allocator2> & rhs
-				)
-				{
-					return lhs.ordered == rhs.ordered;
-				}
+				bool operator==(
+					const flat_set<K2, KeyCompare2, Allocator1> & lhs,
+					const flat_set<K2, KeyCompare2, Allocator2> & rhs
+				);
 
-				template <typename Allocator2>
+				template <typename K2, typename KeyCompare2, typename Allocator1, typename Allocator2>
 				KERBAL_CONSTEXPR20
 				friend
-				bool
-				operator!=(
-					const flat_set<T, KeyCompare, Allocator> & lhs,
-					const flat_set<T, KeyCompare, Allocator2> & rhs
-				)
-				{
-					return lhs.ordered != rhs.ordered;
-				}
+				bool operator!=(
+					const flat_set<K2, KeyCompare2, Allocator1> & lhs,
+					const flat_set<K2, KeyCompare2, Allocator2> & rhs
+				);
 
-				template <typename Allocator2>
+				template <typename K2, typename KeyCompare2, typename Allocator1, typename Allocator2>
 				KERBAL_CONSTEXPR20
 				friend
-				bool
-				operator<(
-					const flat_set<T, KeyCompare, Allocator> & lhs,
-					const flat_set<T, KeyCompare, Allocator2> & rhs
-				)
-				{
-					return lhs.ordered < rhs.ordered;
-				}
+				bool operator<(
+					const flat_set<K2, KeyCompare2, Allocator1> & lhs,
+					const flat_set<K2, KeyCompare2, Allocator2> & rhs
+				);
 
-				template <typename Allocator2>
+				template <typename K2, typename KeyCompare2, typename Allocator1, typename Allocator2>
 				KERBAL_CONSTEXPR20
 				friend
-				bool
-				operator<=(
-					const flat_set<T, KeyCompare, Allocator> & lhs,
-					const flat_set<T, KeyCompare, Allocator2> & rhs
-				)
-				{
-					return lhs.ordered <= rhs.ordered;
-				}
+				bool operator<=(
+					const flat_set<K2, KeyCompare2, Allocator1> & lhs,
+					const flat_set<K2, KeyCompare2, Allocator2> & rhs
+				);
 
-				template <typename Allocator2>
+				template <typename K2, typename KeyCompare2, typename Allocator1, typename Allocator2>
 				KERBAL_CONSTEXPR20
 				friend
-				bool
-				operator>(
-					const flat_set<T, KeyCompare, Allocator> & lhs,
-					const flat_set<T, KeyCompare, Allocator2> & rhs
-				)
-				{
-					return lhs.ordered > rhs.ordered;
-				}
+				bool operator>(
+					const flat_set<K2, KeyCompare2, Allocator1> & lhs,
+					const flat_set<K2, KeyCompare2, Allocator2> & rhs
+				);
 
-				template <typename Allocator2>
+				template <typename K2, typename KeyCompare2, typename Allocator1, typename Allocator2>
 				KERBAL_CONSTEXPR20
 				friend
-				bool
-				operator>=(
-					const flat_set<T, KeyCompare, Allocator> & lhs,
-					const flat_set<T, KeyCompare, Allocator2> & rhs
-				)
-				{
-					return lhs.ordered >= rhs.ordered;
-				}
+				bool operator>=(
+					const flat_set<K2, KeyCompare2, Allocator1> & lhs,
+					const flat_set<K2, KeyCompare2, Allocator2> & rhs
+				);
 
 		};
+
+		template <typename T, typename KeyCompare, typename Allocator1, typename Allocator2>
+		KERBAL_CONSTEXPR20
+		bool
+				operator==(
+			const flat_set<T, KeyCompare, Allocator1> & lhs,
+			const flat_set<T, KeyCompare, Allocator2> & rhs
+		)
+		{
+			return lhs.ordered == rhs.ordered;
+		}
+
+		template <typename T, typename KeyCompare, typename Allocator1, typename Allocator2>
+		KERBAL_CONSTEXPR20
+		bool
+				operator!=(
+			const flat_set<T, KeyCompare, Allocator1> & lhs,
+			const flat_set<T, KeyCompare, Allocator2> & rhs
+		)
+		{
+			return lhs.ordered != rhs.ordered;
+		}
+
+		template <typename T, typename KeyCompare, typename Allocator1, typename Allocator2>
+		KERBAL_CONSTEXPR20
+		bool
+				operator<(
+			const flat_set<T, KeyCompare, Allocator1> & lhs,
+			const flat_set<T, KeyCompare, Allocator2> & rhs
+		)
+		{
+			return lhs.ordered < rhs.ordered;
+		}
+
+		template <typename T, typename KeyCompare, typename Allocator1, typename Allocator2>
+		KERBAL_CONSTEXPR20
+		bool
+				operator<=(
+			const flat_set<T, KeyCompare, Allocator1> & lhs,
+			const flat_set<T, KeyCompare, Allocator2> & rhs
+		)
+		{
+			return lhs.ordered <= rhs.ordered;
+		}
+
+		template <typename T, typename KeyCompare, typename Allocator1, typename Allocator2>
+		KERBAL_CONSTEXPR20
+		bool
+				operator>(
+			const flat_set<T, KeyCompare, Allocator1> & lhs,
+			const flat_set<T, KeyCompare, Allocator2> & rhs
+		)
+		{
+			return lhs.ordered > rhs.ordered;
+		}
+
+		template <typename T, typename KeyCompare, typename Allocator1, typename Allocator2>
+		KERBAL_CONSTEXPR20
+		bool
+				operator>=(
+			const flat_set<T, KeyCompare, Allocator1> & lhs,
+			const flat_set<T, KeyCompare, Allocator2> & rhs
+		)
+		{
+			return lhs.ordered >= rhs.ordered;
+		}
 
 	} // namespace container
 
