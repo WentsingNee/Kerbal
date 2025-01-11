@@ -199,11 +199,31 @@ namespace kerbal
 				//===================
 				// lookup
 
+				protected:
+					template <
+						typename Key, typename Result
+					>
+					struct enable_if_transparent_lookup :
+						Ordered::template enable_if_transparent_lookup<Key, Result>
+					{
+					};
+
 				public:
 
 					KERBAL_CONSTEXPR14
 					const_iterator
 					lower_bound(const key_type & key) const
+					{
+						return this->ordered.lower_bound(key);
+					}
+
+					template <typename Key>
+					KERBAL_CONSTEXPR14
+					typename enable_if_transparent_lookup<
+						Key,
+						const_iterator
+					>::type
+					lower_bound(const Key & key) const
 					{
 						return this->ordered.lower_bound(key);
 					}
@@ -215,9 +235,31 @@ namespace kerbal
 						return this->ordered.lower_bound(hint, key);
 					}
 
+					template <typename Key>
+					KERBAL_CONSTEXPR14
+					typename enable_if_transparent_lookup<
+						Key,
+						const_iterator
+					>::type
+					lower_bound(const_iterator hint, const Key & key) const
+					{
+						return this->ordered.lower_bound(hint, key);
+					}
+
 					KERBAL_CONSTEXPR14
 					const_iterator
 					upper_bound(const key_type & key) const
+					{
+						return this->ordered.upper_bound(key);
+					}
+
+					template <typename Key>
+					KERBAL_CONSTEXPR14
+					typename enable_if_transparent_lookup<
+						Key,
+						const_iterator
+					>::type
+					upper_bound(const Key & key) const
 					{
 						return this->ordered.upper_bound(key);
 					}
@@ -229,9 +271,31 @@ namespace kerbal
 						return this->ordered.upper_bound(hint, key);
 					}
 
+					template <typename Key>
+					KERBAL_CONSTEXPR14
+					typename enable_if_transparent_lookup<
+						Key,
+						const_iterator
+					>::type
+					upper_bound(const_iterator hint, const Key & key) const
+					{
+						return this->ordered.upper_bound(hint, key);
+					}
+
 					KERBAL_CONSTEXPR14
 					kerbal::utility::compressed_pair<const_iterator, const_iterator>
 					equal_range(const key_type & key) const
+					{
+						return this->ordered.equal_range(key);
+					}
+
+					template <typename Key>
+					KERBAL_CONSTEXPR14
+					typename enable_if_transparent_lookup<
+						Key,
+						kerbal::utility::compressed_pair<const_iterator, const_iterator>
+					>::type
+					equal_range(const Key & key) const
 					{
 						return this->ordered.equal_range(key);
 					}
@@ -243,9 +307,31 @@ namespace kerbal
 						return this->ordered.equal_range(hint, key);
 					}
 
+					template <typename Key>
+					KERBAL_CONSTEXPR14
+					typename enable_if_transparent_lookup<
+						Key,
+						kerbal::utility::compressed_pair<const_iterator, const_iterator>
+					>::type
+					equal_range(const_iterator hint, const Key & key) const
+					{
+						return this->ordered.equal_range(hint, key);
+					}
+
 					KERBAL_CONSTEXPR14
 					const_iterator
 					find(const key_type & key) const
+					{
+						return this->ordered.find(key);
+					}
+
+					template <typename Key>
+					KERBAL_CONSTEXPR14
+					typename enable_if_transparent_lookup<
+						Key,
+						const_iterator
+					>::type
+					find(const Key & key) const
 					{
 						return this->ordered.find(key);
 					}
@@ -257,6 +343,17 @@ namespace kerbal
 						return this->ordered.find(hint, key);
 					}
 
+					template <typename Key>
+					KERBAL_CONSTEXPR14
+					typename enable_if_transparent_lookup<
+						Key,
+						const_iterator
+					>::type
+					find(const_iterator hint, const Key & key) const
+					{
+						return this->ordered.find(hint, key);
+					}
+
 					KERBAL_CONSTEXPR14
 					bool
 					contains(const key_type & key) const
@@ -264,9 +361,31 @@ namespace kerbal
 						return this->ordered.contains(key);
 					}
 
+					template <typename Key>
+					KERBAL_CONSTEXPR14
+					typename enable_if_transparent_lookup<
+						Key,
+						bool
+					>::type
+					contains(const Key & key) const
+					{
+						return this->ordered.contains(key);
+					}
+
 					KERBAL_CONSTEXPR14
 					bool
 					contains(const_iterator hint, const key_type & key) const
+					{
+						return this->ordered.contains(hint, key);
+					}
+
+					template <typename Key>
+					KERBAL_CONSTEXPR14
+					typename enable_if_transparent_lookup<
+						Key,
+						bool
+					>::type
+					contains(const_iterator hint, const Key & key) const
 					{
 						return this->ordered.contains(hint, key);
 					}

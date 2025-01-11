@@ -64,6 +64,15 @@ namespace kerbal
 					typedef typename super::key_compare			key_compare;
 
 
+					template <
+						typename Key, typename Result
+					>
+					struct enable_if_transparent_lookup :
+						super::template enable_if_transparent_lookup<Key, Result>
+					{
+					};
+
+
 				//===================
 				// construct/copy/destroy
 
@@ -242,9 +251,31 @@ namespace kerbal
 						return this->contains(key) ? 1 : 0;
 					}
 
+					template <typename Key>
+					KERBAL_CONSTEXPR14
+					typename enable_if_transparent_lookup<
+						Key,
+						size_type
+					>::type
+					count(const Key & key) const
+					{
+						return this->contains(key) ? 1 : 0;
+					}
+
 					KERBAL_CONSTEXPR14
 					size_type
 					count(const_iterator hint, const key_type & key) const
+					{
+						return this->contains(hint, key) ? 1 : 0;
+					}
+
+					template <typename Key>
+					KERBAL_CONSTEXPR14
+					typename enable_if_transparent_lookup<
+						Key,
+						size_type
+					>::type
+					count(const_iterator hint, const Key & key) const
 					{
 						return this->contains(hint, key) ? 1 : 0;
 					}
@@ -310,9 +341,31 @@ namespace kerbal
 						return this->ordered.erase_one(key);
 					}
 
+					template <typename Key>
+					KERBAL_CONSTEXPR14
+					typename enable_if_transparent_lookup<
+						Key,
+						const_iterator
+					>::type
+					erase(const Key & key)
+					{
+						return this->ordered.erase_one(key);
+					}
+
 					KERBAL_CONSTEXPR14
 					const_iterator
 					erase(const_iterator hint, const key_type & key)
+					{
+						return this->ordered.erase_one(hint, key);
+					}
+
+					template <typename Key>
+					KERBAL_CONSTEXPR14
+					typename enable_if_transparent_lookup<
+						Key,
+						const_iterator
+					>::type
+					erase(const_iterator hint, const Key & key)
 					{
 						return this->ordered.erase_one(hint, key);
 					}
