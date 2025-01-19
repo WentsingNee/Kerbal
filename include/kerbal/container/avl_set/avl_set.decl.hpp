@@ -30,6 +30,7 @@
 #endif
 
 #if __cplusplus >= 201703L
+#	include <kerbal/iterator/iterator_traits.hpp>
 #	include <kerbal/memory/allocator/is_allocator.hpp>
 #	include <kerbal/type_traits/enable_if.hpp>
 #	include <kerbal/type_traits/logical.hpp>
