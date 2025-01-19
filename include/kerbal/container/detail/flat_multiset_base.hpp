@@ -307,6 +307,13 @@ namespace kerbal
 						return this->ordered.erase(key);
 					}
 
+					KERBAL_CONSTEXPR14
+					size_type
+					erase(const_iterator hint, const key_type & key)
+					{
+						return this->ordered.erase(hint, key);
+					}
+
 			};
 
 		} // namespace detail
