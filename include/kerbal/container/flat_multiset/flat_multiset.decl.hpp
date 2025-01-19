@@ -21,6 +21,8 @@
 #include <kerbal/compatibility/noexcept.hpp>
 #include <kerbal/container/associative_container_facility/key_extractors/identity_extractor.hpp>
 #include <kerbal/container/flat_ordered.hpp>
+#include <kerbal/iterator/iterator_traits.hpp>
+#include <kerbal/type_traits/enable_if.hpp>
 
 #include <kerbal/container/detail/flat_multiset_base.hpp>
 

@@ -20,6 +20,8 @@
 #include <kerbal/compatibility/namespace_std_scope.hpp>
 #include <kerbal/compatibility/noexcept.hpp>
 #include <kerbal/container/static_vector.hpp>
+#include <kerbal/iterator/iterator_traits.hpp>
+#include <kerbal/type_traits/enable_if.hpp>
 
 #include <kerbal/container/detail/flat_ordered_base.hpp>
 

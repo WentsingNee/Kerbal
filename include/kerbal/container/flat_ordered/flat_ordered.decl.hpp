@@ -22,6 +22,8 @@
 #include <kerbal/compatibility/namespace_std_scope.hpp>
 #include <kerbal/compatibility/noexcept.hpp>
 #include <kerbal/container/vector.hpp>
+#include <kerbal/iterator/iterator_traits.hpp>
+#include <kerbal/type_traits/enable_if.hpp>
 
 #if __cplusplus >= 201103L
 #	include <initializer_list>
