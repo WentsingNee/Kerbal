@@ -42,8 +42,6 @@ namespace kerbal
 					typedef flat_set_common_base<Ordered> super;
 
 				public:
-					typedef typename super::key_compare			key_compare;
-					typedef typename super::key_type			key_type;
 					typedef typename super::value_type			value_type;
 					typedef typename super::const_type			const_type;
 					typedef typename super::reference			reference;
@@ -63,6 +61,9 @@ namespace kerbal
 					typedef typename super::const_reverse_iterator		const_reverse_iterator;
 					typedef kerbal::container::associative_unique_insert_r<const_iterator>
 																		unique_insert_r;
+
+					typedef typename super::key_type			key_type;
+					typedef typename super::key_compare			key_compare;
 
 
 				//===================
