@@ -31,8 +31,6 @@ namespace kerbal
 			class flat_set_common_base
 			{
 				public:
-					typedef typename Ordered::key_compare				key_compare;
-					typedef typename Ordered::key_type					key_type;
 					typedef typename Ordered::value_type				value_type;
 					typedef typename Ordered::const_type				const_type;
 					typedef typename Ordered::reference					reference;
@@ -50,6 +48,10 @@ namespace kerbal
 
 					typedef typename Ordered::const_iterator			const_iterator;
 					typedef typename Ordered::const_reverse_iterator	const_reverse_iterator;
+
+					typedef typename Ordered::key_type					key_type;
+					typedef typename Ordered::key_compare				key_compare;
+
 
 				protected:
 
