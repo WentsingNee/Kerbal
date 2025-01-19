@@ -314,7 +314,7 @@ namespace kerbal
 					const_iterator
 					erase(const_iterator hint, const key_type & key)
 					{
-						return this->erase(this->find(hint, key));
+						return this->ordered.erase_one(hint, key);
 					}
 
 			};
