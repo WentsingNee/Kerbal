@@ -74,6 +74,8 @@ namespace kerbal
 				typedef typename super::const_rvalue_reference		const_rvalue_reference;
 #		endif
 
+				typedef Allocator									allocator_type;
+
 				typedef typename super::size_type					size_type;
 				typedef typename super::difference_type				difference_type;
 
