@@ -73,7 +73,8 @@ namespace kerbal
 					}
 
 					KERBAL_CONSTEXPR
-					explicit flat_set_base(key_compare kc) :
+					explicit
+					flat_set_base(key_compare kc) :
 						super(kc)
 					{
 					}
@@ -152,13 +153,15 @@ namespace kerbal
 				public:
 
 					KERBAL_CONSTEXPR14
-					size_type count(const key_type & key) const
+					size_type
+					count(const key_type & key) const
 					{
 						return this->contains(key) ? 1 : 0;
 					}
 
 					KERBAL_CONSTEXPR14
-					size_type count(const key_type & key, const_iterator hint) const
+					size_type
+					count(const key_type & key, const_iterator hint) const
 					{
 						return this->contains(key, hint) ? 1 : 0;
 					}
@@ -189,38 +192,44 @@ namespace kerbal
 #			if __cplusplus >= 201103L
 
 					KERBAL_CONSTEXPR14
-					void assign(std::initializer_list<value_type> ilist)
+					void
+					assign(std::initializer_list<value_type> ilist)
 					{
 						this->assign(ilist.begin(), ilist.end());
 					}
 
 					KERBAL_CONSTEXPR14
-					void assign(std::initializer_list<value_type> ilist, key_compare kc)
+					void
+					assign(std::initializer_list<value_type> ilist, key_compare kc)
 					{
 						this->assign(ilist.begin(), ilist.end(), kc);
 					}
 
 #			else
 
-					void assign(const kerbal::assign::assign_list<void> & ilist)
+					void
+					assign(const kerbal::assign::assign_list<void> & ilist)
 					{
 						this->clear();
 					}
 
-					void assign(const kerbal::assign::assign_list<void> & ilist, key_compare kc)
+					void
+					assign(const kerbal::assign::assign_list<void> & ilist, key_compare kc)
 					{
 						this->clear();
 						this->key_comp() = kc;
 					}
 
 					template <typename U>
-					void assign(const kerbal::assign::assign_list<U> & ilist)
+					void
+					assign(const kerbal::assign::assign_list<U> & ilist)
 					{
 						this->assign(ilist.cbegin(), ilist.cend());
 					}
 
 					template <typename U>
-					void assign(const kerbal::assign::assign_list<U> & ilist, key_compare kc)
+					void
+					assign(const kerbal::assign::assign_list<U> & ilist, key_compare kc)
 					{
 						this->assign(ilist.cbegin(), ilist.cend(), kc);
 					}
@@ -228,13 +237,15 @@ namespace kerbal
 #			endif
 
 					KERBAL_CONSTEXPR14
-					unique_insert_r insert(const_reference src)
+					unique_insert_r
+					insert(const_reference src)
 					{
 						return this->ordered.unique_insert(src);
 					}
 
 					KERBAL_CONSTEXPR14
-					unique_insert_r insert(const_iterator hint, const_reference src)
+					unique_insert_r
+					insert(const_iterator hint, const_reference src)
 					{
 						return this->ordered.unique_insert(hint, src);
 					}
@@ -242,13 +253,15 @@ namespace kerbal
 #			if __cplusplus >= 201103L
 
 					KERBAL_CONSTEXPR14
-					unique_insert_r insert(rvalue_reference src)
+					unique_insert_r
+					insert(rvalue_reference src)
 					{
 						return this->ordered.unique_insert(kerbal::compatibility::move(src));
 					}
 
 					KERBAL_CONSTEXPR14
-					unique_insert_r insert(const_iterator hint, rvalue_reference src)
+					unique_insert_r
+					insert(const_iterator hint, rvalue_reference src)
 					{
 						return this->ordered.unique_insert(hint, kerbal::compatibility::move(src));
 					}
@@ -257,7 +270,8 @@ namespace kerbal
 
 					template <typename InputIterator>
 					KERBAL_CONSTEXPR14
-					void insert(InputIterator first, InputIterator last)
+					void
+					insert(InputIterator first, InputIterator last)
 					{
 						this->ordered.unique_insert(first, last);
 					}
@@ -265,13 +279,15 @@ namespace kerbal
 					using super::erase;
 
 					KERBAL_CONSTEXPR14
-					const_iterator erase(const key_type & key)
+					const_iterator
+					erase(const key_type & key)
 					{
 						return this->ordered.erase_one(key);
 					}
 
 					KERBAL_CONSTEXPR14
-					const_iterator erase(const_iterator hint, const key_type & key)
+					const_iterator
+					erase(const_iterator hint, const key_type & key)
 					{
 						return this->erase(this->find(key, hint));
 					}
@@ -283,6 +299,5 @@ namespace kerbal
 	} // namespace container
 
 } // namespace kerbal
-
 
 #endif // KERBAL_CONTAINER_DETAIL_FLAT_SET_BASE_HPP

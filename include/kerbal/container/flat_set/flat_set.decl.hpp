@@ -41,11 +41,21 @@ namespace kerbal
 		>
 		class flat_set :
 			public kerbal::container::detail::flat_set_base<
-				kerbal::container::flat_ordered<T, kerbal::container::identity_extractor<T>, KeyCompare, Allocator>
+				kerbal::container::flat_ordered<
+					T,
+					kerbal::container::identity_extractor<T>,
+					KeyCompare,
+					Allocator
+				>
 			>
 		{
 			private:
-				typedef kerbal::container::flat_ordered<T, kerbal::container::identity_extractor<T>, KeyCompare, Allocator> Ordered;
+				typedef kerbal::container::flat_ordered<
+					T,
+					kerbal::container::identity_extractor<T>,
+					KeyCompare,
+					Allocator
+				> Ordered;
 				typedef kerbal::container::detail::flat_set_base<Ordered> super;
 
 			public:
@@ -61,7 +71,7 @@ namespace kerbal
 				typedef typename super::const_rvalue_reference		const_rvalue_reference;
 #		endif
 
-				typedef Allocator					allocator_type;
+				typedef Allocator									allocator_type;
 
 				typedef typename super::size_type					size_type;
 				typedef typename super::difference_type				difference_type;
@@ -79,7 +89,8 @@ namespace kerbal
 				{
 				}
 
-				explicit flat_set(key_compare kc) :
+				explicit
+				flat_set(key_compare kc) :
 					super(kc)
 				{
 				}
@@ -140,7 +151,8 @@ namespace kerbal
 			//===================
 			// assign
 
-				flat_set & operator=(const flat_set & src)
+				flat_set &
+				operator=(const flat_set & src)
 				{
 					this->assign(src);
 					return *this;
@@ -148,7 +160,8 @@ namespace kerbal
 
 #		if __cplusplus >= 201103L
 
-				flat_set & operator=(std::initializer_list<value_type> ilist)
+				flat_set &
+				operator=(std::initializer_list<value_type> ilist)
 				{
 					this->super::assign(ilist);
 					return *this;
@@ -157,7 +170,8 @@ namespace kerbal
 #		else
 
 				template <typename U>
-				flat_set & operator=(const kerbal::assign::assign_list<U> & ilist)
+				flat_set &
+				operator=(const kerbal::assign::assign_list<U> & ilist)
 				{
 					this->super::assign(ilist);
 					return *this;
@@ -167,24 +181,29 @@ namespace kerbal
 
 				using super::assign;
 
-				void assign(const flat_set & src)
+				void
+				assign(const flat_set & src)
 				{
 					this->ordered.assign(src.ordered);
 				}
 
-				void reserve(size_type new_cap)
+				void
+				reserve(size_type new_cap)
 				{
 					this->ordered.reserve(new_cap);
 				}
 
-				void swap(flat_set & ano)
+				void
+				swap(flat_set & ano)
 				{
 					this->ordered.swap(ano.ordered);
 				}
 
+
 				template <typename Allocator2>
 				friend
-				bool operator==(
+				bool
+				operator==(
 					const flat_set<T, KeyCompare, Allocator> & lhs,
 					const flat_set<T, KeyCompare, Allocator2> & rhs
 				)
@@ -194,7 +213,8 @@ namespace kerbal
 
 				template <typename Allocator2>
 				friend
-				bool operator!=(
+				bool
+				operator!=(
 					const flat_set<T, KeyCompare, Allocator> & lhs,
 					const flat_set<T, KeyCompare, Allocator2> & rhs
 				)
@@ -204,7 +224,8 @@ namespace kerbal
 
 				template <typename Allocator2>
 				friend
-				bool operator<(
+				bool
+				operator<(
 					const flat_set<T, KeyCompare, Allocator> & lhs,
 					const flat_set<T, KeyCompare, Allocator2> & rhs
 				)
@@ -214,7 +235,8 @@ namespace kerbal
 
 				template <typename Allocator2>
 				friend
-				bool operator<=(
+				bool
+				operator<=(
 					const flat_set<T, KeyCompare, Allocator> & lhs,
 					const flat_set<T, KeyCompare, Allocator2> & rhs
 				)
@@ -224,7 +246,8 @@ namespace kerbal
 
 				template <typename Allocator2>
 				friend
-				bool operator>(
+				bool
+				operator>(
 					const flat_set<T, KeyCompare, Allocator> & lhs,
 					const flat_set<T, KeyCompare, Allocator2> & rhs
 				)
@@ -234,7 +257,8 @@ namespace kerbal
 
 				template <typename Allocator2>
 				friend
-				bool operator>=(
+				bool
+				operator>=(
 					const flat_set<T, KeyCompare, Allocator> & lhs,
 					const flat_set<T, KeyCompare, Allocator2> & rhs
 				)
@@ -252,7 +276,8 @@ namespace kerbal
 
 		template <typename T, typename KeyCompare, typename Allocator>
 		KERBAL_CONSTEXPR14
-		void swap(
+		void
+		swap(
 			kerbal::container::flat_set<T, KeyCompare, Allocator> & a,
 			kerbal::container::flat_set<T, KeyCompare, Allocator> & b
 		)
@@ -270,7 +295,8 @@ KERBAL_NAMESPACE_STD_BEGIN
 
 	template <typename T, typename KeyCompare, typename Allocator>
 	KERBAL_CONSTEXPR14
-	void swap(
+	void
+	swap(
 		kerbal::container::flat_set<T, KeyCompare, Allocator> & a,
 		kerbal::container::flat_set<T, KeyCompare, Allocator> & b
 	)
@@ -280,6 +306,5 @@ KERBAL_NAMESPACE_STD_BEGIN
 	}
 
 KERBAL_NAMESPACE_STD_END
-
 
 #endif // KERBAL_CONTAINER_FLAT_SET_FLAT_SET_DECL_HPP

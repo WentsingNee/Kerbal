@@ -71,7 +71,8 @@ namespace kerbal
 					}
 
 					KERBAL_CONSTEXPR
-					explicit flat_multiset_base(key_compare kc) :
+					explicit
+					flat_multiset_base(key_compare kc) :
 						super(kc)
 					{
 					}
@@ -150,13 +151,15 @@ namespace kerbal
 				public:
 
 					KERBAL_CONSTEXPR14
-					size_type count(const key_type & key) const
+					size_type
+					count(const key_type & key) const
 					{
 						return this->ordered.count(key);
 					}
 
 					KERBAL_CONSTEXPR14
-					size_type count(const key_type & key, const_iterator hint) const
+					size_type
+					count(const key_type & key, const_iterator hint) const
 					{
 						return this->ordered.count(key, hint);
 					}
@@ -184,38 +187,44 @@ namespace kerbal
 #			if __cplusplus >= 201103L
 
 					KERBAL_CONSTEXPR14
-					void assign(std::initializer_list<value_type> ilist)
+					void
+					assign(std::initializer_list<value_type> ilist)
 					{
 						this->assign(ilist.begin(), ilist.end());
 					}
 
 					KERBAL_CONSTEXPR14
-					void assign(std::initializer_list<value_type> ilist, key_compare kc)
+					void
+					assign(std::initializer_list<value_type> ilist, key_compare kc)
 					{
 						this->assign(ilist.begin(), ilist.end(), kc);
 					}
 
 #			else
 
-					void assign(const kerbal::assign::assign_list<void> & ilist)
+					void
+					assign(const kerbal::assign::assign_list<void> & ilist)
 					{
 						this->clear();
 					}
 
-					void assign(const kerbal::assign::assign_list<void> & ilist, key_compare kc)
+					void
+					assign(const kerbal::assign::assign_list<void> & ilist, key_compare kc)
 					{
 						this->clear();
 						this->key_comp() = kc;
 					}
 
 					template <typename U>
-					void assign(const kerbal::assign::assign_list<U> & ilist)
+					void
+					assign(const kerbal::assign::assign_list<U> & ilist)
 					{
 						this->assign(ilist.cbegin(), ilist.cend());
 					}
 
 					template <typename U>
-					void assign(const kerbal::assign::assign_list<U> & ilist, key_compare kc)
+					void
+					assign(const kerbal::assign::assign_list<U> & ilist, key_compare kc)
 					{
 						this->assign(ilist.cbegin(), ilist.cend(), kc);
 					}
@@ -223,13 +232,15 @@ namespace kerbal
 #			endif
 
 					KERBAL_CONSTEXPR14
-					const_iterator insert(const_reference src)
+					const_iterator
+					insert(const_reference src)
 					{
 						return this->ordered.insert(src);
 					}
 
 					KERBAL_CONSTEXPR14
-					const_iterator insert(const_iterator hint, const_reference src)
+					const_iterator
+					insert(const_iterator hint, const_reference src)
 					{
 						return this->ordered.insert(hint, src);
 					}
@@ -237,13 +248,15 @@ namespace kerbal
 #			if __cplusplus >= 201103L
 
 					KERBAL_CONSTEXPR14
-					const_iterator insert(rvalue_reference src)
+					const_iterator
+					insert(rvalue_reference src)
 					{
 						return this->ordered.insert(kerbal::compatibility::move(src));
 					}
 
 					KERBAL_CONSTEXPR14
-					const_iterator insert(const_iterator hint, rvalue_reference src)
+					const_iterator
+					insert(const_iterator hint, rvalue_reference src)
 					{
 						return this->ordered.insert(hint, kerbal::compatibility::move(src));
 					}
@@ -252,7 +265,8 @@ namespace kerbal
 
 					template <typename InputIterator>
 					KERBAL_CONSTEXPR14
-					void insert(InputIterator first, InputIterator last)
+					void
+					insert(InputIterator first, InputIterator last)
 					{
 						this->ordered.insert(first, last);
 					}
@@ -260,7 +274,8 @@ namespace kerbal
 					using super::erase;
 
 					KERBAL_CONSTEXPR14
-					size_type erase(const key_type & key)
+					size_type
+					erase(const key_type & key)
 					{
 						return this->ordered.erase(key);
 					}
@@ -272,6 +287,5 @@ namespace kerbal
 	} // namespace container
 
 } // namespace kerbal
-
 
 #endif // KERBAL_CONTAINER_DETAIL_FLAT_MULTISET_BASE_HPP

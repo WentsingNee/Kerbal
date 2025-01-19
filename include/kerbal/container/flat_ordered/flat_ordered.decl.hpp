@@ -68,7 +68,7 @@ namespace kerbal
 				typedef typename super::const_rvalue_reference		const_rvalue_reference;
 #		endif
 
-				typedef Allocator					allocator_type;
+				typedef Allocator									allocator_type;
 
 				typedef typename super::size_type					size_type;
 				typedef typename super::difference_type				difference_type;
@@ -86,7 +86,8 @@ namespace kerbal
 				{
 				}
 
-				explicit flat_ordered(key_compare kc) :
+				explicit
+				flat_ordered(key_compare kc) :
 					super(kc)
 				{
 				}
@@ -145,12 +146,14 @@ namespace kerbal
 
 				using super::assign;
 
-				void assign(const flat_ordered & src)
+				void
+				assign(const flat_ordered & src)
 				{
 					this->assign(src.cbegin(), src.cend(), src.key_comp());
 				}
 
-				flat_ordered & operator=(const flat_ordered & src)
+				flat_ordered &
+				operator=(const flat_ordered & src)
 				{
 					this->assign(src);
 					return *this;
@@ -158,7 +161,8 @@ namespace kerbal
 
 #		if __cplusplus >= 201103L
 
-				flat_ordered & operator=(std::initializer_list<value_type> ilist)
+				flat_ordered &
+				operator=(std::initializer_list<value_type> ilist)
 				{
 					this->assign(ilist);
 					return *this;
@@ -167,7 +171,8 @@ namespace kerbal
 #		else
 
 				template <typename U>
-				flat_ordered & operator=(const kerbal::assign::assign_list<U> & ilist)
+				flat_ordered &
+				operator=(const kerbal::assign::assign_list<U> & ilist)
 				{
 					this->assign(ilist);
 					return *this;
@@ -175,12 +180,14 @@ namespace kerbal
 
 #		endif
 
-				void reserve(size_type new_cap)
+				void
+				reserve(size_type new_cap)
 				{
 					this->sequence.reserve(new_cap);
 				}
 
-				void swap(flat_ordered & ano)
+				void
+				swap(flat_ordered & ano)
 				{
 					this->sequence.swap(ano.sequence);
 					kerbal::algorithm::swap(this->key_comp(), ano.key_comp());
@@ -188,7 +195,8 @@ namespace kerbal
 
 				template <typename Allocator2>
 				friend
-				bool operator==(
+				bool
+				operator==(
 					const flat_ordered<Entity, Extract, KeyCompare, Allocator> & lhs,
 					const flat_ordered<Entity, Extract, KeyCompare, Allocator2> & rhs
 				)
@@ -198,7 +206,8 @@ namespace kerbal
 
 				template <typename Allocator2>
 				friend
-				bool operator!=(
+				bool
+				operator!=(
 					const flat_ordered<Entity, Extract, KeyCompare, Allocator> & lhs,
 					const flat_ordered<Entity, Extract, KeyCompare, Allocator2> & rhs
 				)
@@ -208,7 +217,8 @@ namespace kerbal
 
 				template <typename Allocator2>
 				friend
-				bool operator<(
+				bool
+				operator<(
 					const flat_ordered<Entity, Extract, KeyCompare, Allocator> & lhs,
 					const flat_ordered<Entity, Extract, KeyCompare, Allocator2> & rhs
 				)
@@ -218,7 +228,8 @@ namespace kerbal
 
 				template <typename Allocator2>
 				friend
-				bool operator<=(
+				bool
+				operator<=(
 					const flat_ordered<Entity, Extract, KeyCompare, Allocator> & lhs,
 					const flat_ordered<Entity, Extract, KeyCompare, Allocator2> & rhs
 				)
@@ -228,7 +239,8 @@ namespace kerbal
 
 				template <typename Allocator2>
 				friend
-				bool operator>(
+				bool
+				operator>(
 					const flat_ordered<Entity, Extract, KeyCompare, Allocator> & lhs,
 					const flat_ordered<Entity, Extract, KeyCompare, Allocator2> & rhs
 				)
@@ -238,7 +250,8 @@ namespace kerbal
 
 				template <typename Allocator2>
 				friend
-				bool operator>=(
+				bool
+				operator>=(
 					const flat_ordered<Entity, Extract, KeyCompare, Allocator> & lhs,
 					const flat_ordered<Entity, Extract, KeyCompare, Allocator2> & rhs
 				)
@@ -256,7 +269,8 @@ namespace kerbal
 
 		template <typename Entity, typename Extract, typename KeyCompare, typename Allocator>
 		KERBAL_CONSTEXPR14
-		void swap(
+		void
+		swap(
 			kerbal::container::flat_ordered<Entity, Extract, KeyCompare, Allocator> & a,
 			kerbal::container::flat_ordered<Entity, Extract, KeyCompare, Allocator> & b
 		)
@@ -274,7 +288,8 @@ KERBAL_NAMESPACE_STD_BEGIN
 
 	template <typename Entity, typename Extract, typename KeyCompare, typename Allocator>
 	KERBAL_CONSTEXPR14
-	void swap(
+	void
+	swap(
 		kerbal::container::flat_ordered<Entity, Extract, KeyCompare, Allocator> & a,
 		kerbal::container::flat_ordered<Entity, Extract, KeyCompare, Allocator> & b
 	)
@@ -284,6 +299,5 @@ KERBAL_NAMESPACE_STD_BEGIN
 	}
 
 KERBAL_NAMESPACE_STD_END
-
 
 #endif // KERBAL_CONTAINER_FLAT_ORDERED_FLAT_ORDERED_DECL_HPP

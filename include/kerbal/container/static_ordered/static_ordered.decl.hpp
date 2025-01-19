@@ -85,7 +85,8 @@ namespace kerbal
 				}
 
 				KERBAL_CONSTEXPR
-				explicit static_ordered(key_compare kc) :
+				explicit
+				static_ordered(key_compare kc) :
 					super(kc)
 				{
 				}
@@ -149,13 +150,15 @@ namespace kerbal
 				using super::assign;
 
 				KERBAL_CONSTEXPR14
-				void assign(const static_ordered & src)
+				void
+				assign(const static_ordered & src)
 				{
 					this->assign(src.cbegin(), src.cend(), src.key_comp());
 				}
 
 				KERBAL_CONSTEXPR14
-				static_ordered & operator=(const static_ordered & src)
+				static_ordered &
+				operator=(const static_ordered & src)
 				{
 					this->assign(src);
 					return *this;
@@ -164,7 +167,8 @@ namespace kerbal
 #		if __cplusplus >= 201103L
 
 				KERBAL_CONSTEXPR14
-				static_ordered & operator=(std::initializer_list<value_type> ilist)
+				static_ordered &
+				operator=(std::initializer_list<value_type> ilist)
 				{
 					this->assign(ilist);
 					return *this;
@@ -173,7 +177,8 @@ namespace kerbal
 #		else
 
 				template <typename U>
-				static_ordered & operator=(const kerbal::assign::assign_list<U> & ilist)
+				static_ordered &
+				operator=(const kerbal::assign::assign_list<U> & ilist)
 				{
 					this->assign(ilist);
 					return *this;
@@ -182,13 +187,15 @@ namespace kerbal
 #		endif
 
 				KERBAL_CONSTEXPR
-				bool full() const
+				bool
+				full() const
 				{
 					return this->sequence.full();
 				}
 
 				KERBAL_CONSTEXPR14
-				void swap(static_ordered & ano)
+				void
+				swap(static_ordered & ano)
 				{
 					this->sequence.swap(ano.sequence);
 					kerbal::algorithm::swap(this->key_comp(), ano.key_comp());
@@ -197,7 +204,8 @@ namespace kerbal
 				template <std::size_t M>
 				KERBAL_CONSTEXPR14
 				friend
-				bool operator==(
+				bool
+				operator==(
 					const static_ordered<Entity, M, Extract, KeyCompare> & lhs,
 					const static_ordered<Entity, N, Extract, KeyCompare> & rhs
 				)
@@ -208,7 +216,8 @@ namespace kerbal
 				template <std::size_t M>
 				KERBAL_CONSTEXPR14
 				friend
-				bool operator!=(
+				bool
+				operator!=(
 					const static_ordered<Entity, M, Extract, KeyCompare> & lhs,
 					const static_ordered<Entity, N, Extract, KeyCompare> & rhs
 				)
@@ -219,7 +228,8 @@ namespace kerbal
 				template <std::size_t M>
 				KERBAL_CONSTEXPR14
 				friend
-				bool operator<(
+				bool
+				operator<(
 					const static_ordered<Entity, M, Extract, KeyCompare> & lhs,
 					const static_ordered<Entity, N, Extract, KeyCompare> & rhs
 				)
@@ -230,7 +240,8 @@ namespace kerbal
 				template <std::size_t M>
 				KERBAL_CONSTEXPR14
 				friend
-				bool operator<=(
+				bool
+				operator<=(
 					const static_ordered<Entity, M, Extract, KeyCompare> & lhs,
 					const static_ordered<Entity, N, Extract, KeyCompare> & rhs
 				)
@@ -241,7 +252,8 @@ namespace kerbal
 				template <std::size_t M>
 				KERBAL_CONSTEXPR14
 				friend
-				bool operator>(
+				bool
+				operator>(
 					const static_ordered<Entity, M, Extract, KeyCompare> & lhs,
 					const static_ordered<Entity, N, Extract, KeyCompare> & rhs
 				)
@@ -252,7 +264,8 @@ namespace kerbal
 				template <std::size_t M>
 				KERBAL_CONSTEXPR14
 				friend
-				bool operator>=(
+				bool
+				operator>=(
 					const static_ordered<Entity, M, Extract, KeyCompare> & lhs,
 					const static_ordered<Entity, N, Extract, KeyCompare> & rhs
 				)
@@ -270,7 +283,8 @@ namespace kerbal
 
 		template <typename Entity, std::size_t N, typename Extract, typename KeyCompare>
 		KERBAL_CONSTEXPR14
-		void swap(
+		void
+		swap(
 			kerbal::container::static_ordered<Entity, N, Extract, KeyCompare> & a,
 			kerbal::container::static_ordered<Entity, N, Extract, KeyCompare> & b
 		)
@@ -288,16 +302,16 @@ KERBAL_NAMESPACE_STD_BEGIN
 
 	template <typename Entity, std::size_t N, typename Extract, typename KeyCompare>
 	KERBAL_CONSTEXPR14
-	void swap(
+	void
+	swap(
 		kerbal::container::static_ordered<Entity, N, Extract, KeyCompare> & a,
 		kerbal::container::static_ordered<Entity, N, Extract, KeyCompare> & b
 	)
-	KERBAL_CONDITIONAL_NOEXCEPT(noexcept(a.swap(b)))
+		KERBAL_CONDITIONAL_NOEXCEPT(noexcept(a.swap(b)))
 	{
 		a.swap(b);
 	}
 
 KERBAL_NAMESPACE_STD_END
-
 
 #endif // KERBAL_CONTAINER_STATIC_ORDERED_STATIC_ORDERED_DECL_HPP

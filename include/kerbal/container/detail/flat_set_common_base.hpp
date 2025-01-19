@@ -58,13 +58,15 @@ namespace kerbal
 				public:
 
 					KERBAL_CONSTEXPR14
-					key_compare & key_comp() KERBAL_NOEXCEPT
+					key_compare &
+					key_comp() KERBAL_NOEXCEPT
 					{
 						return ordered.key_comp();
 					}
 
 					KERBAL_CONSTEXPR14
-					const key_compare & key_comp() const KERBAL_NOEXCEPT
+					const key_compare &
+					key_comp() const KERBAL_NOEXCEPT
 					{
 						return ordered.key_comp();
 					}
@@ -77,7 +79,8 @@ namespace kerbal
 					}
 
 					KERBAL_CONSTEXPR
-					explicit flat_set_common_base(key_compare kc) :
+					explicit
+					flat_set_common_base(key_compare kc) :
 						ordered(kc)
 					{
 					}
@@ -85,103 +88,120 @@ namespace kerbal
 				public:
 
 					KERBAL_CONSTEXPR14
-					const_iterator begin() const
+					const_iterator
+					begin() const
 					{
 						return ordered.begin();
 					}
 
 					KERBAL_CONSTEXPR14
-					const_iterator end() const
+					const_iterator
+					end() const
 					{
 						return ordered.end();
 					}
 
 					KERBAL_CONSTEXPR14
-					const_iterator cbegin() const
+					const_iterator
+					cbegin() const
 					{
 						return ordered.cbegin();
 					}
 
 					KERBAL_CONSTEXPR14
-					const_iterator cend() const
+					const_iterator
+					cend() const
 					{
 						return ordered.cend();
 					}
 
 					KERBAL_CONSTEXPR14
-					const_reverse_iterator rbegin() const
+					const_reverse_iterator
+					rbegin() const
 					{
 						return ordered.rbegin();
 					}
 
 					KERBAL_CONSTEXPR14
-					const_reverse_iterator rend() const
+					const_reverse_iterator
+					rend() const
 					{
 						return ordered.rend();
 					}
 
 					KERBAL_CONSTEXPR14
-					const_reverse_iterator crbegin() const
+					const_reverse_iterator
+					crbegin() const
 					{
 						return ordered.crbegin();
 					}
 
 					KERBAL_CONSTEXPR14
-					const_reverse_iterator crend() const
+					const_reverse_iterator
+					crend() const
 					{
 						return ordered.crend();
 					}
 
 					KERBAL_CONSTEXPR14
-					const_iterator nth(size_type index) const
+					const_iterator
+					nth(size_type index) const
 					{
 						return ordered.nth(index);
 					}
 
 					KERBAL_CONSTEXPR
-					size_type index_of(const_iterator it) const
+					size_type
+					index_of(const_iterator it) const
 					{
 						return ordered.index_of(it);
 					}
 
 					KERBAL_CONSTEXPR
-					size_type size() const
+					size_type
+					size() const
 					{
 						return ordered.size();
 					}
 
 					KERBAL_CONSTEXPR
-					size_type max_size() const KERBAL_NOEXCEPT
+					size_type
+					max_size() const KERBAL_NOEXCEPT
 					{
 						return ordered.max_size();
 					}
 
 					KERBAL_CONSTEXPR
-					bool empty() const
+					bool
+					empty() const
 					{
 						return ordered.empty();
 					}
 
 					KERBAL_CONSTEXPR14
-					const_iterator lower_bound(const key_type & key) const
+					const_iterator
+					lower_bound(const key_type & key) const
 					{
 						return ordered.lower_bound(key);
 					}
 
 					KERBAL_CONSTEXPR14
-					const_iterator lower_bound(const key_type & key, const_iterator hint) const
+					const_iterator
+					lower_bound(const key_type & key, const_iterator hint) const
 					{
 						return ordered.lower_bound(key, hint);
 					}
 
 					KERBAL_CONSTEXPR14
-					const_iterator upper_bound(const key_type & key) const
+					const_iterator
+					upper_bound(const key_type & key) const
 					{
 						return ordered.upper_bound(key);
 					}
 
 					KERBAL_CONSTEXPR14
-					const_iterator upper_bound(const key_type & key, const_iterator hint) const
+					const_iterator
+					upper_bound(const key_type & key, const_iterator hint) const
 					{
 						return ordered.upper_bound(key, hint);
 					}
@@ -194,43 +214,50 @@ namespace kerbal
 					}
 
 					KERBAL_CONSTEXPR14
-					const_iterator find(const key_type & key) const
+					const_iterator
+					find(const key_type & key) const
 					{
 						return ordered.find(key);
 					}
 
 					KERBAL_CONSTEXPR14
-					const_iterator find(const key_type & key, const_iterator hint) const
+					const_iterator
+					find(const key_type & key, const_iterator hint) const
 					{
 						return ordered.find(key, hint);
 					}
 
 					KERBAL_CONSTEXPR14
-					bool contains(const key_type & key) const
+					bool
+					contains(const key_type & key) const
 					{
 						return ordered.contains(key);
 					}
 
 					KERBAL_CONSTEXPR14
-					bool contains(const key_type & key, const_iterator hint) const
+					bool
+					contains(const key_type & key, const_iterator hint) const
 					{
 						return ordered.contains(key, hint);
 					}
 
 					KERBAL_CONSTEXPR14
-					const_iterator erase(const_iterator pos)
+					const_iterator
+					erase(const_iterator pos)
 					{
 						return ordered.erase(pos);
 					}
 
 					KERBAL_CONSTEXPR14
-					const_iterator erase(const_iterator first, const_iterator last)
+					const_iterator
+					erase(const_iterator first, const_iterator last)
 					{
 						return ordered.erase(first, last);
 					}
 
 					KERBAL_CONSTEXPR14
-					void clear()
+					void
+					clear()
 					{
 						ordered.clear();
 					}
@@ -242,6 +269,5 @@ namespace kerbal
 	} // namespace container
 
 } // namespace kerbal
-
 
 #endif // KERBAL_CONTAINER_DETAIL_FLAT_SET_COMMON_BASE_HPP

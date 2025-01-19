@@ -12,7 +12,6 @@
 #ifndef KERBAL_CONTAINER_STATIC_FLAT_MULTISET_STATIC_FLAT_MULTISET_DECL_HPP
 #define KERBAL_CONTAINER_STATIC_FLAT_MULTISET_STATIC_FLAT_MULTISET_DECL_HPP
 
-
 #include <kerbal/container/static_flat_multiset/static_flat_multiset.fwd.hpp>
 
 #include <kerbal/assign/ilist.hpp>
@@ -44,11 +43,19 @@ namespace kerbal
 		>
 		class static_flat_multiset :
 			public kerbal::container::detail::flat_multiset_base<
-				kerbal::container::static_ordered<T, N, kerbal::container::identity_extractor<T>, KeyCompare>
+				kerbal::container::static_ordered<
+					T, N,
+					kerbal::container::identity_extractor<T>,
+					KeyCompare
+				>
 			>
 		{
 			private:
-				typedef kerbal::container::static_ordered<T, N, kerbal::container::identity_extractor<T>, KeyCompare> Ordered;
+				typedef kerbal::container::static_ordered<
+					T, N,
+					kerbal::container::identity_extractor<T>,
+					KeyCompare
+				> Ordered;
 				typedef kerbal::container::detail::flat_multiset_base<Ordered> super;
 
 			public:
@@ -81,7 +88,8 @@ namespace kerbal
 				}
 
 				KERBAL_CONSTEXPR
-				explicit static_flat_multiset(key_compare kc) :
+				explicit
+				static_flat_multiset(key_compare kc) :
 					super(kc)
 				{
 				}
@@ -145,13 +153,15 @@ namespace kerbal
 				using super::assign;
 
 				KERBAL_CONSTEXPR14
-				void assign(const static_flat_multiset & src)
+				void
+				assign(const static_flat_multiset & src)
 				{
 					this->ordered.assign(src.ordered);
 				}
 
 				KERBAL_CONSTEXPR14
-				static_flat_multiset & operator=(const static_flat_multiset & src)
+				static_flat_multiset &
+				operator=(const static_flat_multiset & src)
 				{
 					this->assign(src);
 					return *this;
@@ -160,7 +170,8 @@ namespace kerbal
 #		if __cplusplus >= 201103L
 
 				KERBAL_CONSTEXPR14
-				static_flat_multiset & operator=(std::initializer_list<value_type> ilist)
+				static_flat_multiset &
+				operator=(std::initializer_list<value_type> ilist)
 				{
 					this->super::assign(ilist);
 					return *this;
@@ -169,7 +180,8 @@ namespace kerbal
 #		else
 
 				template <typename U>
-				static_flat_multiset & operator=(const kerbal::assign::assign_list<U> & ilist)
+				static_flat_multiset &
+				operator=(const kerbal::assign::assign_list<U> & ilist)
 				{
 					this->super::assign(ilist);
 					return *this;
@@ -178,21 +190,25 @@ namespace kerbal
 #		endif
 
 				KERBAL_CONSTEXPR
-				bool full() const
+				bool
+				full() const
 				{
 					return this->ordered.full();
 				}
 
 				KERBAL_CONSTEXPR14
-				void swap(static_flat_multiset & ano)
+				void
+				swap(static_flat_multiset & ano)
 				{
 					this->ordered.swap(ano.ordered);
 				}
 
+
 				template <std::size_t M>
 				KERBAL_CONSTEXPR14
 				friend
-				bool operator==(
+				bool
+				operator==(
 					const static_flat_multiset<T, M, KeyCompare> & lhs,
 					const static_flat_multiset<T, N, KeyCompare> & rhs
 				)
@@ -203,7 +219,8 @@ namespace kerbal
 				template <std::size_t M>
 				KERBAL_CONSTEXPR14
 				friend
-				bool operator!=(
+				bool
+				operator!=(
 					const static_flat_multiset<T, M, KeyCompare> & lhs,
 					const static_flat_multiset<T, N, KeyCompare> & rhs
 				)
@@ -214,7 +231,8 @@ namespace kerbal
 				template <std::size_t M>
 				KERBAL_CONSTEXPR14
 				friend
-				bool operator<(
+				bool
+				operator<(
 					const static_flat_multiset<T, M, KeyCompare> & lhs,
 					const static_flat_multiset<T, N, KeyCompare> & rhs
 				)
@@ -225,7 +243,8 @@ namespace kerbal
 				template <std::size_t M>
 				KERBAL_CONSTEXPR14
 				friend
-				bool operator<=(
+				bool
+				operator<=(
 					const static_flat_multiset<T, M, KeyCompare> & lhs,
 					const static_flat_multiset<T, N, KeyCompare> & rhs
 				)
@@ -236,7 +255,8 @@ namespace kerbal
 				template <std::size_t M>
 				KERBAL_CONSTEXPR14
 				friend
-				bool operator>(
+				bool
+				operator>(
 					const static_flat_multiset<T, M, KeyCompare> & lhs,
 					const static_flat_multiset<T, N, KeyCompare> & rhs
 				)
@@ -247,7 +267,8 @@ namespace kerbal
 				template <std::size_t M>
 				KERBAL_CONSTEXPR14
 				friend
-				bool operator>=(
+				bool
+				operator>=(
 					const static_flat_multiset<T, M, KeyCompare> & lhs,
 					const static_flat_multiset<T, N, KeyCompare> & rhs
 				)
@@ -265,7 +286,8 @@ namespace kerbal
 
 		template <typename T, std::size_t N, typename KeyCompare>
 		KERBAL_CONSTEXPR14
-		void swap(
+		void
+		swap(
 			kerbal::container::static_flat_multiset<T, N, KeyCompare> & a,
 			kerbal::container::static_flat_multiset<T, N, KeyCompare> & b
 		)
@@ -283,7 +305,8 @@ KERBAL_NAMESPACE_STD_BEGIN
 
 	template <typename T, std::size_t N, typename KeyCompare>
 	KERBAL_CONSTEXPR14
-	void swap(
+	void
+	swap(
 		kerbal::container::static_flat_multiset<T, N, KeyCompare> & a,
 		kerbal::container::static_flat_multiset<T, N, KeyCompare> & b
 	)
@@ -293,6 +316,5 @@ KERBAL_NAMESPACE_STD_BEGIN
 	}
 
 KERBAL_NAMESPACE_STD_END
-
 
 #endif // KERBAL_CONTAINER_STATIC_FLAT_MULTISET_STATIC_FLAT_MULTISET_DECL_HPP
