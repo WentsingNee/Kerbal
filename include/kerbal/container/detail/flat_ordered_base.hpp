@@ -1006,10 +1006,27 @@ namespace kerbal
 					}
 
 					KERBAL_CONSTEXPR14
+					size_type
+					erase(const key_type & key, const_iterator hint)
+					{
+						kerbal::utility::compressed_pair<iterator, iterator> p(this->equal_range(key, hint));
+						size_type dis(kerbal::iterator::distance(p.first(), p.second()));
+						this->erase(p.first(), p.second());
+						return dis;
+					}
+
+					KERBAL_CONSTEXPR14
 					const_iterator
 					erase_one(const key_type & key)
 					{
 						return this->erase(this->find(key));
+					}
+
+					KERBAL_CONSTEXPR14
+					const_iterator
+					erase_one(const key_type & key, const_iterator hint)
+					{
+						return this->erase(this->find(key, hint));
 					}
 
 					KERBAL_CONSTEXPR14
