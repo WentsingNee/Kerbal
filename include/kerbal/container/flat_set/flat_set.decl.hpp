@@ -159,6 +159,14 @@ namespace kerbal
 
 			public:
 
+				using super::assign;
+
+				void
+				assign(const flat_set & src)
+				{
+					this->ordered.assign(src.ordered);
+				}
+
 				flat_set &
 				operator=(const flat_set & src)
 				{
@@ -186,14 +194,6 @@ namespace kerbal
 				}
 
 #		endif
-
-				using super::assign;
-
-				void
-				assign(const flat_set & src)
-				{
-					this->ordered.assign(src.ordered);
-				}
 
 
 			//===================

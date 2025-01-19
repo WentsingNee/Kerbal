@@ -152,22 +152,6 @@ namespace kerbal
 
 #			endif
 
-				public:
-
-					KERBAL_CONSTEXPR14
-					size_type
-					count(const key_type & key) const
-					{
-						return this->ordered.count(key);
-					}
-
-					KERBAL_CONSTEXPR14
-					size_type
-					count(const key_type & key, const_iterator hint) const
-					{
-						return this->ordered.count(key, hint);
-					}
-
 
 				//===================
 				// assign
@@ -240,6 +224,26 @@ namespace kerbal
 					}
 
 #			endif
+
+
+				//===================
+				// lookup
+
+				public:
+
+					KERBAL_CONSTEXPR14
+					size_type
+					count(const key_type & key) const
+					{
+						return this->ordered.count(key);
+					}
+
+					KERBAL_CONSTEXPR14
+					size_type
+					count(const key_type & key, const_iterator hint) const
+					{
+						return this->ordered.count(key, hint);
+					}
 
 
 				//===================

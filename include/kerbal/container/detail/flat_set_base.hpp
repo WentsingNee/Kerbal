@@ -154,22 +154,6 @@ namespace kerbal
 
 #			endif
 
-				public:
-
-					KERBAL_CONSTEXPR14
-					size_type
-					count(const key_type & key) const
-					{
-						return this->contains(key) ? 1 : 0;
-					}
-
-					KERBAL_CONSTEXPR14
-					size_type
-					count(const key_type & key, const_iterator hint) const
-					{
-						return this->contains(key, hint) ? 1 : 0;
-					}
-
 
 				//===================
 				// assign
@@ -245,6 +229,26 @@ namespace kerbal
 					}
 
 #			endif
+
+
+				//===================
+				// lookup
+
+				public:
+
+					KERBAL_CONSTEXPR14
+					size_type
+					count(const key_type & key) const
+					{
+						return this->contains(key) ? 1 : 0;
+					}
+
+					KERBAL_CONSTEXPR14
+					size_type
+					count(const key_type & key, const_iterator hint) const
+					{
+						return this->contains(key, hint) ? 1 : 0;
+					}
 
 
 				//===================
