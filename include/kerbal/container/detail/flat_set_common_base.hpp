@@ -210,9 +210,9 @@ namespace kerbal
 
 					KERBAL_CONSTEXPR14
 					const_iterator
-					lower_bound(const key_type & key, const_iterator hint) const
+					lower_bound(const_iterator hint, const key_type & key) const
 					{
-						return this->ordered.lower_bound(key, hint);
+						return this->ordered.lower_bound(hint, key);
 					}
 
 					KERBAL_CONSTEXPR14
@@ -224,9 +224,9 @@ namespace kerbal
 
 					KERBAL_CONSTEXPR14
 					const_iterator
-					upper_bound(const key_type & key, const_iterator hint) const
+					upper_bound(const_iterator hint, const key_type & key) const
 					{
-						return this->ordered.upper_bound(key, hint);
+						return this->ordered.upper_bound(hint, key);
 					}
 
 					KERBAL_CONSTEXPR14
@@ -245,9 +245,9 @@ namespace kerbal
 
 					KERBAL_CONSTEXPR14
 					const_iterator
-					find(const key_type & key, const_iterator hint) const
+					find(const_iterator hint, const key_type & key) const
 					{
-						return this->ordered.find(key, hint);
+						return this->ordered.find(hint, key);
 					}
 
 					KERBAL_CONSTEXPR14
@@ -259,9 +259,9 @@ namespace kerbal
 
 					KERBAL_CONSTEXPR14
 					bool
-					contains(const key_type & key, const_iterator hint) const
+					contains(const_iterator hint, const key_type & key) const
 					{
-						return this->ordered.contains(key, hint);
+						return this->ordered.contains(hint, key);
 					}
 
 

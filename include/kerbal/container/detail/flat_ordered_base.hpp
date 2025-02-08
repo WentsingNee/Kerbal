@@ -583,7 +583,7 @@ namespace kerbal
 
 					KERBAL_CONSTEXPR14
 					iterator
-					lower_bound(const key_type & key, const_iterator hint)
+					lower_bound(const_iterator hint, const key_type & key)
 					{
 						return kerbal::algorithm::lower_bound_hint(
 							this->key_view_begin(), this->key_view_end(), key,
@@ -596,7 +596,7 @@ namespace kerbal
 
 					KERBAL_CONSTEXPR14
 					const_iterator
-					lower_bound(const key_type & key, const_iterator hint) const
+					lower_bound(const_iterator hint, const key_type & key) const
 					{
 						return kerbal::algorithm::lower_bound_hint(
 							this->key_view_cbegin(), this->key_view_cend(), key,
@@ -628,7 +628,7 @@ namespace kerbal
 
 					KERBAL_CONSTEXPR14
 					iterator
-					upper_bound(const key_type & key, const_iterator hint)
+					upper_bound(const_iterator hint, const key_type & key)
 					{
 						return kerbal::algorithm::upper_bound_hint(
 							this->key_view_begin(), this->key_view_end(), key,
@@ -641,7 +641,7 @@ namespace kerbal
 
 					KERBAL_CONSTEXPR14
 					const_iterator
-					upper_bound(const key_type & key, const_iterator hint) const
+					upper_bound(const_iterator hint, const key_type & key) const
 					{
 						return kerbal::algorithm::upper_bound_hint(
 							this->key_view_cbegin(), this->key_view_cend(), key,
@@ -684,7 +684,7 @@ namespace kerbal
 
 					KERBAL_CONSTEXPR14
 					kerbal::utility::compressed_pair<iterator, iterator>
-					equal_range(const key_type & key, const_iterator hint)
+					equal_range(const_iterator hint, const key_type & key)
 					{
 						kerbal::utility::compressed_pair<key_view_iterator, key_view_iterator> eqr(
 							kerbal::algorithm::equal_range(
@@ -700,7 +700,7 @@ namespace kerbal
 
 					KERBAL_CONSTEXPR14
 					kerbal::utility::compressed_pair<const_iterator, const_iterator>
-					equal_range(const key_type & key, const_iterator hint) const
+					equal_range(const_iterator hint, const key_type & key) const
 					{
 						kerbal::utility::compressed_pair<key_view_const_iterator, key_view_const_iterator> eqr(
 							kerbal::algorithm::equal_range(
@@ -766,16 +766,16 @@ namespace kerbal
 
 					KERBAL_CONSTEXPR14
 					iterator
-					find(const key_type & key, const_iterator hint)
+					find(const_iterator hint, const key_type & key)
 					{
-						return this->k_find_impl(this->lower_bound(key, hint), key);
+						return this->k_find_impl(this->lower_bound(hint, key), key);
 					}
 
 					KERBAL_CONSTEXPR14
 					const_iterator
-					find(const key_type & key, const_iterator hint) const
+					find(const_iterator hint, const key_type & key) const
 					{
-						return this->k_find_impl(this->lower_bound(key, hint), key);
+						return this->k_find_impl(this->lower_bound(hint, key), key);
 					}
 
 					KERBAL_CONSTEXPR14
@@ -788,9 +788,9 @@ namespace kerbal
 
 					KERBAL_CONSTEXPR14
 					size_type
-					count(const key_type & key, const_iterator hint) const
+					count(const_iterator hint, const key_type & key) const
 					{
-						kerbal::utility::compressed_pair<const_iterator, const_iterator> p(this->equal_range(key, hint));
+						kerbal::utility::compressed_pair<const_iterator, const_iterator> p(this->equal_range(hint, key));
 						return kerbal::iterator::distance(p.first(), p.second());
 					}
 
@@ -803,9 +803,9 @@ namespace kerbal
 
 					KERBAL_CONSTEXPR14
 					bool
-					contains(const key_type & key, const_iterator hint) const
+					contains(const_iterator hint, const key_type & key) const
 					{
-						return this->find(key, hint) != this->cend();
+						return this->find(hint, key) != this->cend();
 					}
 
 
@@ -840,7 +840,7 @@ namespace kerbal
 					unique_insert_r
 					unique_insert(const_iterator hint, const_reference src)
 					{
-						return this->k_unique_insert_impl(this->upper_bound(this->extract()(src), hint), src);
+						return this->k_unique_insert_impl(this->upper_bound(hint, this->extract()(src)), src);
 					}
 
 #			if __cplusplus >= 201103L
@@ -873,7 +873,7 @@ namespace kerbal
 					unique_insert_r
 					unique_insert(const_iterator hint, rvalue_reference src)
 					{
-						return this->k_unique_insert_impl(this->upper_bound(this->extract()(src), hint), kerbal::compatibility::move(src));
+						return this->k_unique_insert_impl(this->upper_bound(hint, this->extract()(src)), kerbal::compatibility::move(src));
 					}
 
 #			endif
@@ -941,7 +941,7 @@ namespace kerbal
 					iterator
 					insert(const_iterator hint, const_reference src)
 					{
-						return this->sequence.insert(this->upper_bound(this->extract()(src), hint), src);
+						return this->sequence.insert(this->upper_bound(hint, this->extract()(src)), src);
 					}
 
 #			if __cplusplus >= 201103L
@@ -958,7 +958,7 @@ namespace kerbal
 					iterator
 					insert(const_iterator hint, rvalue_reference src)
 					{
-						iterator pos(this->upper_bound(this->extract()(src), hint));
+						iterator pos(this->upper_bound(hint, this->extract()(src)));
 						return this->sequence.insert(pos, kerbal::compatibility::move(src));
 					}
 

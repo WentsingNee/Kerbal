@@ -244,9 +244,9 @@ namespace kerbal
 
 					KERBAL_CONSTEXPR14
 					size_type
-					count(const key_type & key, const_iterator hint) const
+					count(const_iterator hint, const key_type & key) const
 					{
-						return this->contains(key, hint) ? 1 : 0;
+						return this->contains(hint, key) ? 1 : 0;
 					}
 
 
@@ -314,7 +314,7 @@ namespace kerbal
 					const_iterator
 					erase(const_iterator hint, const key_type & key)
 					{
-						return this->erase(this->find(key, hint));
+						return this->erase(this->find(hint, key));
 					}
 
 			};
