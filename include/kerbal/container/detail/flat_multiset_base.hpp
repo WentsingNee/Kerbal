@@ -241,9 +241,9 @@ namespace kerbal
 
 					KERBAL_CONSTEXPR14
 					size_type
-					count(const key_type & key, const_iterator hint) const
+					count(const_iterator hint, const key_type & key) const
 					{
-						return this->ordered.count(key, hint);
+						return this->ordered.count(hint, key);
 					}
 
 
