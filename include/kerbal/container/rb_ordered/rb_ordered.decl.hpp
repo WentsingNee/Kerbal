@@ -26,9 +26,15 @@
 #include <kerbal/utility/compressed_pair.hpp>
 #include <kerbal/utility/member_compress_helper.hpp>
 
+#if __cplusplus < 201103L
+#	include <kerbal/macro/macro_concat.hpp>
+#	include <kerbal/macro/ppexpand.hpp>
+#endif
+
 #if __cplusplus >= 201703L
 #	include <kerbal/memory/allocator/is_allocator.hpp>
 #	include <kerbal/type_traits/enable_if.hpp>
+#	include <kerbal/type_traits/logical.hpp>
 #endif
 
 #if __cplusplus >= 201103L
@@ -195,6 +201,49 @@ namespace kerbal
 
 				KERBAL_CONSTEXPR20
 				rb_ordered(const Extract & e, const KeyCompare & key_comp, const Allocator & alloc);
+
+
+			//===================
+			// copy constructor
+
+				KERBAL_CONSTEXPR20
+				rb_ordered(const rb_ordered & src);
+
+				KERBAL_CONSTEXPR20
+				rb_ordered(const rb_ordered & src, const Allocator & alloc);
+
+#		if __cplusplus >= 201103L
+
+			//===================
+			// move constructor
+
+				KERBAL_CONSTEXPR20
+				rb_ordered(rb_ordered && src);
+
+				KERBAL_CONSTEXPR20
+				rb_ordered(rb_ordered && src, const Allocator & alloc);
+
+/*
+				KERBAL_CONSTEXPR20
+				rb_ordered(rb_ordered && src, const KeyCompare & key_comp);
+
+				KERBAL_CONSTEXPR20
+				rb_ordered(rb_ordered && src, const KeyCompare & key_comp, const Allocator & alloc);
+
+				KERBAL_CONSTEXPR20
+				rb_ordered(rb_ordered && src, const Extract & e);
+
+				KERBAL_CONSTEXPR20
+				rb_ordered(rb_ordered && src, const Extract & e, const Allocator & alloc);
+
+				KERBAL_CONSTEXPR20
+				rb_ordered(rb_ordered && src, const Extract & e, const KeyCompare & key_comp);
+
+				KERBAL_CONSTEXPR20
+				rb_ordered(rb_ordered && src, const Extract & e, const KeyCompare & key_comp, const Allocator & alloc);
+*/
+
+#		endif
 
 
 			//===================
@@ -545,50 +594,9 @@ namespace kerbal
 
 #		endif
 
-			//===================
-			// copy constructor
-
-				KERBAL_CONSTEXPR20
-				rb_ordered(const rb_ordered & src);
-
-				KERBAL_CONSTEXPR20
-				rb_ordered(const rb_ordered & src, const Allocator & alloc);
-
-#		if __cplusplus >= 201103L
-
-			//===================
-			// move constructor
-
-				KERBAL_CONSTEXPR20
-				rb_ordered(rb_ordered && src);
-
-				KERBAL_CONSTEXPR20
-				rb_ordered(rb_ordered && src, const Allocator & alloc);
-
-/*
-				KERBAL_CONSTEXPR20
-				rb_ordered(rb_ordered && src, const KeyCompare & key_comp);
-
-				KERBAL_CONSTEXPR20
-				rb_ordered(rb_ordered && src, const KeyCompare & key_comp, const Allocator & alloc);
-
-				KERBAL_CONSTEXPR20
-				rb_ordered(rb_ordered && src, const Extract & e);
-
-				KERBAL_CONSTEXPR20
-				rb_ordered(rb_ordered && src, const Extract & e, const Allocator & alloc);
-
-				KERBAL_CONSTEXPR20
-				rb_ordered(rb_ordered && src, const Extract & e, const KeyCompare & key_comp);
-
-				KERBAL_CONSTEXPR20
-				rb_ordered(rb_ordered && src, const Extract & e, const KeyCompare & key_comp, const Allocator & alloc);
-*/
-
-#		endif
-
 				KERBAL_CONSTEXPR20
 				~rb_ordered();
+
 
 			//===================
 			// assign
@@ -596,13 +604,30 @@ namespace kerbal
 				KERBAL_CONSTEXPR20
 				rb_ordered & operator=(const rb_ordered & src);
 
-				KERBAL_CONSTEXPR20
-				void assign(const rb_ordered & src);
-
 #		if __cplusplus >= 201103L
 
 				KERBAL_CONSTEXPR20
 				rb_ordered & operator=(rb_ordered && src);
+
+#		endif
+
+#		if __cplusplus >= 201103L
+
+				KERBAL_CONSTEXPR20
+				rb_ordered & operator=(std::initializer_list<value_type> ilist);
+
+#		else
+
+				template <typename U>
+				rb_ordered & operator=(const kerbal::assign::assign_list<U> & ilist);
+
+#		endif
+
+
+				KERBAL_CONSTEXPR20
+				void assign(const rb_ordered & src);
+
+#		if __cplusplus >= 201103L
 
 				KERBAL_CONSTEXPR20
 				void assign(rb_ordered && src);
@@ -620,18 +645,12 @@ namespace kerbal
 #		if __cplusplus >= 201103L
 
 				KERBAL_CONSTEXPR20
-				rb_ordered & operator=(std::initializer_list<value_type> ilist);
-
-				KERBAL_CONSTEXPR20
 				void assign(std::initializer_list<value_type> ilist);
 
 				KERBAL_CONSTEXPR20
 				void assign_unique(std::initializer_list<value_type> ilist);
 
 #		else
-
-				template <typename U>
-				rb_ordered & operator=(const kerbal::assign::assign_list<U> & ilist);
 
 				template <typename U>
 				void assign(const kerbal::assign::assign_list<U> & ilist);
@@ -930,6 +949,18 @@ namespace kerbal
 				KERBAL_CONSTEXPR20
 				void merge_unique(rb_ordered<Entity, OtherExtract, OtherKeyCompare, Allocator> & other);
 
+#		if __cplusplus >= 201103L
+
+				template <typename OtherExtract, typename OtherKeyCompare>
+				KERBAL_CONSTEXPR20
+				void merge(rb_ordered<Entity, OtherExtract, OtherKeyCompare, Allocator> && other);
+
+				template <typename OtherExtract, typename OtherKeyCompare>
+				KERBAL_CONSTEXPR20
+				void merge_unique(rb_ordered<Entity, OtherExtract, OtherKeyCompare, Allocator> && other);
+
+#		endif
+
 				KERBAL_CONSTEXPR20
 				void swap(rb_ordered & other);
 
@@ -940,12 +971,6 @@ namespace kerbal
 				kerbal::container::detail::rb_normal_result_t rb_normal() const
 				{
 					return rb_type_only::rb_normal(this->extract(), this->key_comp());
-				}
-
-				KERBAL_CONSTEXPR20
-				height_t height() const KERBAL_NOEXCEPT
-				{
-					return rb_type_only::height();
 				}
 
 		};
@@ -1007,7 +1032,12 @@ namespace kerbal
 			typename Extract, typename KeyCompare, typename Allocator,
 			typename =
 				typename kerbal::type_traits::enable_if<
-					kerbal::memory::is_allocator<Allocator>::value
+					kerbal::type_traits::conjunction<
+						kerbal::type_traits::negation<
+							kerbal::memory::is_allocator<KeyCompare>
+						>,
+						kerbal::memory::is_allocator<Allocator>
+					>::value
 				>::type
 		>
 		rb_ordered(
@@ -1080,7 +1110,12 @@ namespace kerbal
 			typename Extract, typename KeyCompare, typename Allocator,
 			typename =
 				typename kerbal::type_traits::enable_if<
-					kerbal::memory::is_allocator<Allocator>::value
+					kerbal::type_traits::conjunction<
+						kerbal::type_traits::negation<
+							kerbal::memory::is_allocator<KeyCompare>
+						>,
+						kerbal::memory::is_allocator<Allocator>
+					>::value
 				>::type
 		>
 		rb_ordered(
@@ -1150,7 +1185,12 @@ namespace kerbal
 			typename Extract, typename KeyCompare, typename Allocator,
 			typename =
 				typename kerbal::type_traits::enable_if<
-					kerbal::memory::is_allocator<Allocator>::value
+					kerbal::type_traits::conjunction<
+						kerbal::type_traits::negation<
+							kerbal::memory::is_allocator<KeyCompare>
+						>,
+						kerbal::memory::is_allocator<Allocator>
+					>::value
 				>::type
 		>
 		rb_ordered(

@@ -145,6 +145,7 @@ namespace kerbal
 				if (n->left != get_rb_vnull_node() && n->right != get_rb_vnull_node()) { // two sons
 					rb_node_base * replacee = rb_node_base::as(n->right->leftest_offspring());
 					k_unhook_node_replace(n, replacee);
+					n = replacee;
 				}
 				if (n->left != get_rb_vnull_node() && n->right == get_rb_vnull_node()) { // only left son
 					bst_head_node * n_parent = n->parent;
@@ -170,17 +171,38 @@ namespace kerbal
 				}
 				// leaf
 				bst_head_node * n_parent = n->parent;
-				if (n->color == RED::value) { // n is red
+				if (n->get_color() == RED::value) { // n is red
 					// not use !rb_node_base::is_black(n) because n is always not null
+					// if (n == n_parent->left) {
+					// 	n_parent->left = n->right;
+					// 	set_parent_ignore_null(n->right, n_parent);
+					// } else {
+					// 	throw 0;
+					// }
 					if (n == n_parent->left) {
-						n_parent->left = n->right;
-						set_parent_ignore_null(n->right, n_parent);
+						n_parent->left = get_rb_vnull_node();
 					} else {
-						throw 0;
+						n_parent->as_node_base()->right = get_rb_vnull_node();
 					}
 				} else {
-					printf("b\n");
-					throw 0;
+					if (n == n_parent->left) {
+						rb_node_base * brother = rb_node_base::as(n_parent->as_node_base()->right);
+					} else {
+						rb_node_base * brother = rb_node_base::as(n_parent->as_node_base()->left);
+						if (
+							rb_node_base::is_black(rb_node_base::as(brother->left)) &&
+							rb_node_base::is_black(rb_node_base::as(brother->right))
+						) {
+							bst_node_base::right_rotate(n_parent->as_node_base(), brother);
+						} else { // at least one red child
+							if (brother->left != get_rb_vnull_node()) { // brother has left red child
+								bst_node_base::right_rotate(n_parent->as_node_base(), brother);
+								brother->set_color(rb_node_base::as(n_parent->as_node_base())->get_color()); // b->color = p->color
+								rb_node_base::as(n_parent->as_node_base())->set_black(); // p->color = BLACK;
+								brother->get_left()->set_black();
+							}
+						}
+					}
 				}
 				--this->k_cnt;
 				return next;
@@ -190,133 +212,603 @@ namespace kerbal
 		//===================
 		// iterator
 
-			template <typename T>
+			template <typename Entity>
 			KERBAL_CONSTEXPR14
 			typename
-			rb_type_only<T>::iterator
-			rb_type_only<T>::
+			rb_type_only<Entity>::iterator
+			rb_type_only<Entity>::
 			begin() KERBAL_NOEXCEPT
 			{
 				return iterator(this->k_head.leftest_offspring());
 			}
 
-			template <typename T>
+			template <typename Entity>
 			KERBAL_CONSTEXPR14
 			typename
-			rb_type_only<T>::const_iterator
-			rb_type_only<T>::
+			rb_type_only<Entity>::const_iterator
+			rb_type_only<Entity>::
 			begin() const KERBAL_NOEXCEPT
 			{
 				return const_iterator(this->k_head.leftest_offspring());
 			}
 
-			template <typename T>
+			template <typename Entity>
 			KERBAL_CONSTEXPR14
 			typename
-			rb_type_only<T>::const_iterator
-			rb_type_only<T>::
+			rb_type_only<Entity>::const_iterator
+			rb_type_only<Entity>::
 			cbegin() const KERBAL_NOEXCEPT
 			{
 				return this->begin();
 			}
 
-			template <typename T>
+			template <typename Entity>
 			KERBAL_CONSTEXPR14
 			typename
-			rb_type_only<T>::iterator
-			rb_type_only<T>::
+			rb_type_only<Entity>::iterator
+			rb_type_only<Entity>::
 			end() KERBAL_NOEXCEPT
 			{
 				return iterator(&this->k_head);
 			}
 
-			template <typename T>
+			template <typename Entity>
 			KERBAL_CONSTEXPR14
 			typename
-			rb_type_only<T>::const_iterator
-			rb_type_only<T>::
+			rb_type_only<Entity>::const_iterator
+			rb_type_only<Entity>::
 			end() const KERBAL_NOEXCEPT
 			{
 				return const_iterator(&this->k_head);
 			}
 
-			template <typename T>
+			template <typename Entity>
 			KERBAL_CONSTEXPR14
 			typename
-			rb_type_only<T>::const_iterator
-			rb_type_only<T>::
+			rb_type_only<Entity>::const_iterator
+			rb_type_only<Entity>::
 			cend() const KERBAL_NOEXCEPT
 			{
 				return this->end();
 			}
 
-			template <typename T>
+			template <typename Entity>
 			KERBAL_CONSTEXPR14
 			typename
-			rb_type_only<T>::reverse_iterator
-			rb_type_only<T>::
+			rb_type_only<Entity>::reverse_iterator
+			rb_type_only<Entity>::
 			rbegin() KERBAL_NOEXCEPT
 			{
 				return reverse_iterator(this->end());
 			}
 
-			template <typename T>
+			template <typename Entity>
 			KERBAL_CONSTEXPR14
 			typename
-			rb_type_only<T>::const_reverse_iterator
-			rb_type_only<T>::
+			rb_type_only<Entity>::const_reverse_iterator
+			rb_type_only<Entity>::
 			rbegin() const KERBAL_NOEXCEPT
 			{
 				return const_reverse_iterator(this->end());
 			}
 
-			template <typename T>
+			template <typename Entity>
 			KERBAL_CONSTEXPR14
 			typename
-			rb_type_only<T>::const_reverse_iterator
-			rb_type_only<T>::
+			rb_type_only<Entity>::const_reverse_iterator
+			rb_type_only<Entity>::
 			crbegin() const KERBAL_NOEXCEPT
 			{
 				return this->rbegin();
 			}
 
-			template <typename T>
+			template <typename Entity>
 			KERBAL_CONSTEXPR14
 			typename
-			rb_type_only<T>::reverse_iterator
-			rb_type_only<T>::
+			rb_type_only<Entity>::reverse_iterator
+			rb_type_only<Entity>::
 			rend() KERBAL_NOEXCEPT
 			{
 				return reverse_iterator(this->begin());
 			}
 
-			template <typename T>
+			template <typename Entity>
 			KERBAL_CONSTEXPR14
 			typename
-			rb_type_only<T>::const_reverse_iterator
-			rb_type_only<T>::
+			rb_type_only<Entity>::const_reverse_iterator
+			rb_type_only<Entity>::
 			rend() const KERBAL_NOEXCEPT
 			{
 				return const_reverse_iterator(this->begin());
 			}
 
-			template <typename T>
+			template <typename Entity>
 			KERBAL_CONSTEXPR14
 			typename
-			rb_type_only<T>::const_reverse_iterator
-			rb_type_only<T>::
+			rb_type_only<Entity>::const_reverse_iterator
+			rb_type_only<Entity>::
 			crend() const KERBAL_NOEXCEPT
 			{
 				return this->rend();
 			}
 
 
-			template <typename T>
+		//===================
+		// lookup
+
+			template <typename Entity>
+			template <typename Extract, typename KeyCompare, typename Key>
+			KERBAL_CONSTEXPR14
+			typename
+			rb_type_only<Entity>::const_iterator
+			rb_type_only<Entity>::
+			k_find_impl(
+				Extract & e, KeyCompare & kc,
+				const Key & key
+			) const
+			{
+				const rb_node_base * cur_base = rb_node_base::as(this->k_head.left);
+				while (cur_base != get_rb_vnull_node()) {
+					const typename Extract::key_type & cur_key = e(node::reinterpret_as(cur_base)->member());
+					if (kc(key, cur_key)) { // key < cur_key
+						cur_base = cur_base->get_left();
+					} else if (kc(cur_key, key)) { // cur_key < key
+						cur_base = cur_base->get_right();
+					} else {
+						return const_iterator(cur_base);
+					}
+				}
+				return this->cend();
+			}
+
+			template <typename Entity>
 			template <typename Extract, typename KeyCompare>
 			KERBAL_CONSTEXPR14
 			typename
-			rb_type_only<T>::iterator
-			rb_type_only<T>::
+			rb_type_only<Entity>::const_iterator
+			rb_type_only<Entity>::
+			k_find(
+				Extract & e, KeyCompare & kc,
+				const typename Extract::key_type & key
+			) const
+			{
+				return this->k_find_impl(e, kc, key);
+			}
+
+			template <typename Entity>
+			template <typename Extract, typename KeyCompare>
+			KERBAL_CONSTEXPR14
+			typename
+			rb_type_only<Entity>::iterator
+			rb_type_only<Entity>::
+			k_find(
+				Extract & e, KeyCompare & kc,
+				const typename Extract::key_type & key
+			)
+			{
+				return this->k_find_impl(e, kc, key).cast_to_mutable();
+			}
+
+			template <typename Entity>
+			template <typename Extract, typename KeyCompare, typename Key>
+			KERBAL_CONSTEXPR14
+			typename
+			rb_type_only<Entity>::template enable_if_transparent_lookup<
+				Extract, KeyCompare, Key,
+				typename rb_type_only<Entity>::const_iterator
+			>::type
+			rb_type_only<Entity>::
+			k_find(
+				Extract & e, KeyCompare & kc,
+				const Key & key
+			) const
+			{
+				return this->k_find_impl(e, kc, key);
+			}
+
+			template <typename Entity>
+			template <typename Extract, typename KeyCompare, typename Key>
+			KERBAL_CONSTEXPR14
+			typename
+			rb_type_only<Entity>::template enable_if_transparent_lookup<
+				Extract, KeyCompare, Key,
+				typename rb_type_only<Entity>::iterator
+			>::type
+			rb_type_only<Entity>::
+			k_find(
+				Extract & e, KeyCompare & kc,
+				const Key & key
+			)
+			{
+				return this->k_find_impl(e, kc, key).cast_to_mutable();
+			}
+
+			template <typename Entity>
+			template <typename Extract, typename KeyCompare, typename Key>
+			KERBAL_CONSTEXPR14
+			typename
+			rb_type_only<Entity>::rb_node_base const *
+			rb_type_only<Entity>::
+			k_lower_bound_helper(
+				Extract & e, KeyCompare & kc,
+				const Key & key,
+				const rb_node_base * cur_base, const rb_node_base * lbound
+			)
+			{
+				while (cur_base != get_rb_vnull_node()) {
+					if (kc(e(node::reinterpret_as(cur_base)->member()), key)) { // cur_key < key
+						cur_base = cur_base->get_right();
+					} else { // cur_key >= key
+						lbound = cur_base;
+						cur_base = cur_base->get_left();
+					}
+				}
+				return lbound;
+			}
+
+			template <typename Entity>
+			template <typename Extract, typename KeyCompare, typename Key>
+			KERBAL_CONSTEXPR14
+			typename
+			rb_type_only<Entity>::rb_node_base const *
+			rb_type_only<Entity>::
+			k_upper_bound_helper(
+				Extract & e, KeyCompare & kc,
+				const Key & key,
+				const rb_node_base * cur_base, const rb_node_base * ubound
+			)
+			{
+				while (cur_base != get_rb_vnull_node()) {
+					if (kc(key, e(node::reinterpret_as(cur_base)->member()))) { // key < cur_key
+						ubound = cur_base;
+						cur_base = cur_base->get_left();
+					} else { // key >= cur_key
+						cur_base = cur_base->get_right();
+					}
+				}
+				return ubound;
+			}
+
+			template <typename Entity>
+			template <typename Extract, typename KeyCompare, typename Key>
+			KERBAL_CONSTEXPR14
+			typename
+			rb_type_only<Entity>::const_iterator
+			rb_type_only<Entity>::
+			k_lower_bound_impl(
+				Extract & e, KeyCompare & kc,
+				const Key & key
+			) const
+			{
+				const rb_node_base * lbound = rb_node_base::as(&this->k_head);
+				lbound = k_lower_bound_helper(e, kc, key, rb_node_base::as(this->k_head.left), lbound);
+				return const_iterator(lbound);
+			}
+
+			template <typename Entity>
+			template <typename Extract, typename KeyCompare>
+			KERBAL_CONSTEXPR14
+			typename
+			rb_type_only<Entity>::const_iterator
+			rb_type_only<Entity>::
+			k_lower_bound(
+				Extract & e, KeyCompare & kc,
+				const typename Extract::key_type & key
+			) const
+			{
+				return this->k_lower_bound_impl(e, kc, key);
+			}
+
+			template <typename Entity>
+			template <typename Extract, typename KeyCompare>
+			KERBAL_CONSTEXPR14
+			typename
+			rb_type_only<Entity>::iterator
+			rb_type_only<Entity>::
+			k_lower_bound(
+				Extract & e, KeyCompare & kc,
+				const typename Extract::key_type & key
+			)
+			{
+				return this->k_lower_bound_impl(e, kc, key).cast_to_mutable();
+			}
+
+			template <typename Entity>
+			template <typename Extract, typename KeyCompare, typename Key>
+			KERBAL_CONSTEXPR14
+			typename
+			rb_type_only<Entity>::template enable_if_transparent_lookup<
+				Extract, KeyCompare, Key,
+				typename rb_type_only<Entity>::const_iterator
+			>::type
+			rb_type_only<Entity>::
+			k_lower_bound(
+				Extract & e, KeyCompare & kc,
+				const Key & key
+			) const
+			{
+				return this->k_lower_bound_impl(e, kc, key);
+			}
+
+			template <typename Entity>
+			template <typename Extract, typename KeyCompare, typename Key>
+			KERBAL_CONSTEXPR14
+			typename
+			rb_type_only<Entity>::template enable_if_transparent_lookup<
+				Extract, KeyCompare, Key,
+				typename rb_type_only<Entity>::iterator
+			>::type
+			rb_type_only<Entity>::
+			k_lower_bound(
+				Extract & e, KeyCompare & kc,
+				const Key & key
+			)
+			{
+				return this->k_lower_bound_impl(e, kc, key).cast_to_mutable();
+			}
+
+			template <typename Entity>
+			template <typename Extract, typename KeyCompare, typename Key>
+			KERBAL_CONSTEXPR14
+			typename
+			rb_type_only<Entity>::const_iterator
+			rb_type_only<Entity>::
+			k_upper_bound_impl(
+				Extract & e, KeyCompare & kc,
+				const Key & key
+			) const
+			{
+				const rb_node_base * ubound = rb_node_base::as(&this->k_head);
+				ubound = k_upper_bound_helper(e, kc, key, rb_node_base::as(this->k_head.left), ubound);
+				return const_iterator(ubound);
+			}
+
+			template <typename Entity>
+			template <typename Extract, typename KeyCompare>
+			KERBAL_CONSTEXPR14
+			typename
+			rb_type_only<Entity>::const_iterator
+			rb_type_only<Entity>::
+			k_upper_bound(
+				Extract & e, KeyCompare & kc,
+				const typename Extract::key_type & key
+			) const
+			{
+				return this->k_upper_bound_impl(e, kc, key);
+			}
+
+			template <typename Entity>
+			template <typename Extract, typename KeyCompare>
+			KERBAL_CONSTEXPR14
+			typename
+			rb_type_only<Entity>::iterator
+			rb_type_only<Entity>::
+			k_upper_bound(
+				Extract & e, KeyCompare & kc,
+				const typename Extract::key_type & key
+			)
+			{
+				return this->k_upper_bound_impl(e, kc, key).cast_to_mutable();
+			}
+
+			template <typename Entity>
+			template <typename Extract, typename KeyCompare, typename Key>
+			KERBAL_CONSTEXPR14
+			typename
+			rb_type_only<Entity>::template enable_if_transparent_lookup<
+				Extract, KeyCompare, Key,
+				typename rb_type_only<Entity>::const_iterator
+			>::type
+			rb_type_only<Entity>::
+			k_upper_bound(
+				Extract & e, KeyCompare & kc,
+				const Key & key
+			) const
+			{
+				return this->k_upper_bound_impl(e, kc, key);
+			}
+
+			template <typename Entity>
+			template <typename Extract, typename KeyCompare, typename Key>
+			KERBAL_CONSTEXPR14
+			typename
+			rb_type_only<Entity>::template enable_if_transparent_lookup<
+				Extract, KeyCompare, Key,
+				typename rb_type_only<Entity>::iterator
+			>::type
+			rb_type_only<Entity>::
+			k_upper_bound(
+				Extract & e, KeyCompare & kc,
+				const Key & key
+			)
+			{
+				return this->k_upper_bound_impl(e, kc, key).cast_to_mutable();
+			}
+
+			template <typename Entity>
+			template <typename Extract, typename KeyCompare, typename Key>
+			KERBAL_CONSTEXPR14
+			kerbal::utility::compressed_pair<
+				typename rb_type_only<Entity>::const_iterator,
+				typename rb_type_only<Entity>::const_iterator
+			>
+			rb_type_only<Entity>::
+			k_equal_range_impl(
+				Extract & e, KeyCompare & kc,
+				const Key & key
+			) const
+			{
+				const rb_node_base * lbound = rb_node_base::as(&this->k_head);
+				const rb_node_base * ubound = lbound;
+				const rb_node_base * cur_base = rb_node_base::as(this->k_head.left);
+				while (cur_base != get_rb_vnull_node()) {
+					const typename Extract::key_type & cur_key = e(node::reinterpret_as(cur_base)->member());
+					if (kc(key, cur_key)) { // key < cur_key
+						lbound = cur_base;
+						ubound = cur_base;
+						cur_base = cur_base->get_left();
+					} else if (kc(cur_key, key)) { // cur_key < key
+						cur_base = cur_base->get_right();
+					} else { // key == cur_key
+						lbound = cur_base;
+						lbound = k_lower_bound_helper(e, kc, key, cur_base->get_left(), lbound);
+						ubound = k_upper_bound_helper(e, kc, key, cur_base->get_right(), ubound);
+						break;
+					}
+				}
+				return kerbal::utility::make_compressed_pair(
+					const_iterator(lbound), const_iterator(ubound)
+				);
+			}
+
+			template <typename Entity>
+			template <typename Extract, typename KeyCompare>
+			KERBAL_CONSTEXPR14
+			kerbal::utility::compressed_pair<
+				typename rb_type_only<Entity>::const_iterator,
+				typename rb_type_only<Entity>::const_iterator
+			>
+			rb_type_only<Entity>::
+			k_equal_range(
+				Extract & e, KeyCompare & kc,
+				const typename Extract::key_type & key
+			) const
+			{
+				return this->k_equal_range_impl(e, kc, key);
+			}
+
+			template <typename Entity>
+			template <typename Extract, typename KeyCompare>
+			KERBAL_CONSTEXPR14
+			kerbal::utility::compressed_pair<
+				typename rb_type_only<Entity>::iterator,
+				typename rb_type_only<Entity>::iterator
+			>
+			rb_type_only<Entity>::
+			k_equal_range(
+				Extract & e, KeyCompare & kc,
+				const typename Extract::key_type & key
+			)
+			{
+				kerbal::utility::compressed_pair<const_iterator, const_iterator> range(
+					this->k_equal_range_impl(e, kc, key)
+				);
+				return kerbal::utility::make_compressed_pair(
+					range.first().cast_to_mutable(),
+					range.second().cast_to_mutable()
+				);
+			}
+
+			template <typename Entity>
+			template <typename Extract, typename KeyCompare, typename Key>
+			KERBAL_CONSTEXPR14
+			typename
+			rb_type_only<Entity>::template enable_if_transparent_lookup<
+				Extract, KeyCompare, Key,
+				kerbal::utility::compressed_pair<
+					typename rb_type_only<Entity>::const_iterator,
+					typename rb_type_only<Entity>::const_iterator
+				>
+			>::type
+			rb_type_only<Entity>::
+			k_equal_range(
+				Extract & e, KeyCompare & kc,
+				const Key & key
+			) const
+			{
+				return this->k_equal_range_impl(e, kc, key);
+			}
+
+			template <typename Entity>
+			template <typename Extract, typename KeyCompare, typename Key>
+			KERBAL_CONSTEXPR14
+			typename
+			rb_type_only<Entity>::template enable_if_transparent_lookup<
+				Extract, KeyCompare, Key,
+				kerbal::utility::compressed_pair<
+					typename rb_type_only<Entity>::iterator,
+					typename rb_type_only<Entity>::iterator
+				>
+			>::type
+			rb_type_only<Entity>::
+			k_equal_range(
+				Extract & e, KeyCompare & kc,
+				const Key & key
+			)
+			{
+				kerbal::utility::compressed_pair<const_iterator, const_iterator> range(
+					this->k_equal_range_impl(e, kc, key)
+				);
+				return kerbal::utility::make_compressed_pair(
+					range.first().cast_to_mutable(),
+					range.second().cast_to_mutable()
+				);
+			}
+
+			template <typename Entity>
+			template <typename Extract, typename KeyCompare, typename Key>
+			KERBAL_CONSTEXPR14
+			bool
+			rb_type_only<Entity>::
+			k_contains_impl(
+				Extract & e, KeyCompare & kc,
+				const Key & key
+			) const
+			{
+				const rb_node_base * cur_base = rb_node_base::as(this->k_head.left);
+				while (cur_base != get_rb_vnull_node()) {
+					const typename Extract::key_type & cur_key = e(node::reinterpret_as(cur_base)->member());
+					if (kc(key, cur_key)) { // key < cur_key
+						cur_base = cur_base->get_left();
+					} else if (kc(cur_key, key)) { // cur_key < key
+						cur_base = cur_base->get_right();
+					} else { // key == cur_key
+						return true;
+					}
+				}
+				return false;
+			}
+
+			template <typename Entity>
+			template <typename Extract, typename KeyCompare>
+			KERBAL_CONSTEXPR14
+			bool
+			rb_type_only<Entity>::
+			k_contains(
+				Extract & e, KeyCompare & kc,
+				const typename Extract::key_type & key
+			) const
+			{
+				return this->k_contains_impl(e, kc, key);
+			}
+
+			template <typename Entity>
+			template <typename Extract, typename KeyCompare, typename Key>
+			KERBAL_CONSTEXPR14
+			typename
+			rb_type_only<Entity>::template enable_if_transparent_lookup<
+				Extract, KeyCompare, Key,
+				bool
+			>::type
+			rb_type_only<Entity>::
+			k_contains(
+				Extract & e, KeyCompare & kc,
+				const Key & key
+			) const
+			{
+				return this->k_contains_impl(e, kc, key);
+			}
+
+
+		//===================
+		// insert
+
+			template <typename Entity>
+			template <typename Extract, typename KeyCompare>
+			KERBAL_CONSTEXPR14
+			typename
+			rb_type_only<Entity>::iterator
+			rb_type_only<Entity>::
 			k_hook_node(Extract & e, KeyCompare & kc, node * n)
 			{
 				rb_node_base * p_base = rb_node_base::as(this->k_head.left);
@@ -347,7 +839,7 @@ namespace kerbal
 						}
 					}
 					n->parent = p;
-					if (p->color == RED::value) {
+					if (p->get_color() == RED::value) {
 						rb_adjust(n, p);
 					}
 				}
@@ -355,12 +847,12 @@ namespace kerbal
 				return iterator(n);
 			}
 
-			template <typename T>
+			template <typename Entity>
 			template <typename Extract, typename KeyCompare>
 			KERBAL_CONSTEXPR14
 			typename
-			rb_type_only<T>::unique_insert_r
-			rb_type_only<T>::
+			rb_type_only<Entity>::unique_insert_r
+			rb_type_only<Entity>::
 			k_hook_node_unique(Extract & e, KeyCompare & kc, node * n)
 			{
 				rb_node_base * p_base = rb_node_base::as(this->k_head.left);
@@ -393,7 +885,7 @@ namespace kerbal
 						}
 					}
 					n->parent = p;
-					if (p->color == RED::value) {
+					if (p->get_color() == RED::value) {
 						rb_adjust(n, p);
 					}
 				}
@@ -401,12 +893,12 @@ namespace kerbal
 				return unique_insert_r(iterator(n), true);
 			}
 
-			template <typename T>
+			template <typename Entity>
 			template <typename Extract, typename KeyCompare>
 			KERBAL_CONSTEXPR14
 			typename
-			rb_type_only<T>::rb_normal_result_t
-			rb_type_only<T>::
+			rb_type_only<Entity>::rb_normal_result_t
+			rb_type_only<Entity>::
 			rb_normal_impl(
 				Extract & e, KeyCompare & kc,
 				const rb_node_base * pbase,
@@ -504,12 +996,12 @@ namespace kerbal
 			}
 
 
-			template <typename T>
+			template <typename Entity>
 			template <typename Extract, typename KeyCompare>
 			KERBAL_CONSTEXPR14
 			typename
-			rb_type_only<T>::rb_normal_result_t
-			rb_type_only<T>::
+			rb_type_only<Entity>::rb_normal_result_t
+			rb_type_only<Entity>::
 			rb_normal(Extract & e, KeyCompare & kc) const
 			{
 				const rb_node_base * root = rb_node_base::as(this->k_head.left);
@@ -518,7 +1010,7 @@ namespace kerbal
 					return RB_NORMAL_RESULT_CORRECT;
 				}
 
-				if (root->color == RED::value) {
+				if (root->get_color() == RED::value) {
 					return RB_NORMAL_RESULT_ROOT_NOT_BLACK;
 				}
 				const value_type * mini = NULL;

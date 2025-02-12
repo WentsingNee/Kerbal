@@ -92,6 +92,20 @@ namespace kerbal
 					{
 					}
 
+					KERBAL_CONSTEXPR
+					rb_node_base *
+					get_left() const KERBAL_NOEXCEPT
+					{
+						return rb_node_base::as(this->left);
+					}
+
+					KERBAL_CONSTEXPR
+					rb_node_base *
+					get_right() const KERBAL_NOEXCEPT
+					{
+						return rb_node_base::as(this->left);
+					}
+
 
 					KERBAL_CONSTEXPR14
 					static
@@ -118,16 +132,28 @@ namespace kerbal
 #	endif
 					}
 
+					KERBAL_CONSTEXPR
+					rb_color_t get_color() const KERBAL_NOEXCEPT
+					{
+						return this->color;
+					}
+
+					KERBAL_CONSTEXPR14
+					void set_color(rb_color_t color) KERBAL_NOEXCEPT
+					{
+						this->color = color;
+					}
+
 					KERBAL_CONSTEXPR14
 					void set_red() KERBAL_NOEXCEPT
 					{
-						this->color = RED::value;
+						this->set_color(RED::value);
 					}
 
 					KERBAL_CONSTEXPR14
 					void set_black() KERBAL_NOEXCEPT
 					{
-						this->color = BLACK::value;
+						this->set_color(BLACK::value);
 					}
 
 			};
