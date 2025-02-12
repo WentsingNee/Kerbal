@@ -107,11 +107,18 @@ namespace kerbal
 					}
 
 
-					KERBAL_CONSTEXPR14
-					static
-					height_t height_of(const bst_head_node * p) KERBAL_NOEXCEPT
+					KERBAL_CONSTEXPR
+					avl_node_base *
+					get_left() const KERBAL_NOEXCEPT
 					{
-						return height_of(avl_node_base ::as(p));
+						return avl_node_base::as(this->left);
+					}
+
+					KERBAL_CONSTEXPR
+					avl_node_base *
+					get_right() const KERBAL_NOEXCEPT
+					{
+						return avl_node_base::as(this->right);
 					}
 
 					KERBAL_CONSTEXPR14
@@ -149,8 +156,8 @@ namespace kerbal
 					KERBAL_CONSTEXPR14
 					void update_height() KERBAL_NOEXCEPT
 					{
-						height_t hl = height_of(this->left);
-						height_t hr = height_of(this->right);
+						height_t hl = height_of(this->get_left());
+						height_t hr = height_of(this->get_right());
 						this->update_height(hl, hr);
 					}
 
