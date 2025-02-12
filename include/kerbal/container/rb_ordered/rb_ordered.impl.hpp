@@ -16,10 +16,16 @@
 #include <kerbal/container/detail/rb_base/rb_base.impl.hpp>
 
 #include <kerbal/assign/generic_assign.hpp>
+#include <kerbal/assign/ilist.hpp>
 #include <kerbal/compatibility/constexpr.hpp>
 #include <kerbal/compatibility/noexcept.hpp>
 #include <kerbal/container/associative_container_facility/unique_tag_t.hpp>
 #include <kerbal/utility/compressed_pair.hpp>
+
+#if __cplusplus < 201103L
+#	include <kerbal/macro/macro_concat.hpp>
+#	include <kerbal/macro/ppexpand.hpp>
+#endif
 
 #if __cplusplus >= 201103L
 #	include <kerbal/compatibility/move.hpp>
@@ -110,6 +116,70 @@ namespace kerbal
 			rb_allocator_overload(alloc)
 		{
 		}
+
+
+		//===================
+		// copy constructor
+
+		template <typename Entity, typename Extract, typename KeyCompare, typename Allocator>
+		KERBAL_CONSTEXPR20
+		rb_ordered<Entity, Extract, KeyCompare, Allocator>::
+		rb_ordered(const rb_ordered & src) :
+			extract_compress_helper(static_cast<const extract_compress_helper &>(src)),
+			key_compare_compress_helper(static_cast<const key_compare_compress_helper &>(src)),
+			rb_allocator_overload(src.alloc()),
+			rb_type_only(
+				this->alloc(), this->extract(), this->key_comp(),
+				static_cast<const rb_type_only &>(src)
+			)
+		{
+		}
+
+		template <typename Entity, typename Extract, typename KeyCompare, typename Allocator>
+		KERBAL_CONSTEXPR20
+		rb_ordered<Entity, Extract, KeyCompare, Allocator>::
+		rb_ordered(const rb_ordered & src, const Allocator & alloc) :
+			extract_compress_helper(static_cast<const extract_compress_helper &>(src)),
+			key_compare_compress_helper(static_cast<const key_compare_compress_helper &>(src)),
+			rb_allocator_overload(alloc),
+			rb_type_only(
+				this->alloc(), this->extract(), this->key_comp(),
+				static_cast<const rb_type_only &>(src)
+			)
+		{
+		}
+
+#	if __cplusplus >= 201103L
+
+		//===================
+		// move constructor
+
+		template <typename Entity, typename Extract, typename KeyCompare, typename Allocator>
+		KERBAL_CONSTEXPR20
+		rb_ordered<Entity, Extract, KeyCompare, Allocator>::
+		rb_ordered(rb_ordered && src) :
+			extract_compress_helper(static_cast<const extract_compress_helper &>(src)),
+			key_compare_compress_helper(static_cast<const key_compare_compress_helper &>(src)),
+			rb_allocator_overload(kerbal::compatibility::move(src.alloc())),
+			rb_type_only(static_cast<rb_type_only &&>(src))
+		{
+		}
+
+		template <typename Entity, typename Extract, typename KeyCompare, typename Allocator>
+		KERBAL_CONSTEXPR20
+		rb_ordered<Entity, Extract, KeyCompare, Allocator>::
+		rb_ordered(rb_ordered && src, const Allocator & alloc) :
+			extract_compress_helper(static_cast<const extract_compress_helper &>(src)),
+			key_compare_compress_helper(static_cast<const key_compare_compress_helper &>(src)),
+			rb_allocator_overload(alloc),
+			rb_type_only(
+				this->alloc(), this->extract(), this->key_comp(),
+				kerbal::compatibility::move(src.alloc()), static_cast<rb_type_only &&>(src)
+			)
+		{
+		}
+
+#	endif
 
 
 		//===================
@@ -450,6 +520,7 @@ namespace kerbal
 		//===================
 		// construct with initializer_list (unique)
 
+		/*
 		template <typename Entity, typename Extract, typename KeyCompare, typename Allocator>
 		KERBAL_CONSTEXPR20
 		rb_ordered<Entity, Extract, KeyCompare, Allocator>::
@@ -556,6 +627,7 @@ namespace kerbal
 			rb_type_only(unique_tag, this->alloc(), this->extract(), this->key_comp(), ilist)
 		{
 		}
+		*/
 
 #	else
 
@@ -748,7 +820,8 @@ namespace kerbal
 		rb_ordered<Entity, Extract, KeyCompare, Allocator>::
 		rb_ordered(
 			kerbal::container::unique_tag_t unique_tag,
-			const kerbal::assign::assign_list<U> & ilist, const Extract & e, const KeyCompare & key_comp
+			const kerbal::assign::assign_list<U> & ilist,
+			const Extract & e, const KeyCompare & key_comp
 		) :
 			extract_compress_helper(kerbal::utility::in_place_t(), e),
 			key_compare_compress_helper(kerbal::utility::in_place_t(), key_comp),
@@ -774,69 +847,6 @@ namespace kerbal
 #	endif
 
 
-		//===================
-		// copy constructor
-
-		template <typename Entity, typename Extract, typename KeyCompare, typename Allocator>
-		KERBAL_CONSTEXPR20
-		rb_ordered<Entity, Extract, KeyCompare, Allocator>::
-		rb_ordered(const rb_ordered & src) :
-			extract_compress_helper(static_cast<const extract_compress_helper &>(src)),
-			key_compare_compress_helper(static_cast<const key_compare_compress_helper &>(src)),
-			rb_allocator_overload(src.alloc()),
-			rb_type_only(
-				this->alloc(), this->extract(), this->key_comp(),
-				static_cast<const rb_type_only &>(src)
-			)
-		{
-		}
-
-		template <typename Entity, typename Extract, typename KeyCompare, typename Allocator>
-		KERBAL_CONSTEXPR20
-		rb_ordered<Entity, Extract, KeyCompare, Allocator>::
-		rb_ordered(const rb_ordered & src, const Allocator & alloc) :
-			extract_compress_helper(static_cast<const extract_compress_helper &>(src)),
-			key_compare_compress_helper(static_cast<const key_compare_compress_helper &>(src)),
-			rb_allocator_overload(alloc),
-			rb_type_only(
-				this->alloc(), this->extract(), this->key_comp(),
-				static_cast<const rb_type_only &>(src)
-			)
-		{
-		}
-
-#	if __cplusplus >= 201103L
-
-		//===================
-		// move constructor
-
-		template <typename Entity, typename Extract, typename KeyCompare, typename Allocator>
-		KERBAL_CONSTEXPR20
-		rb_ordered<Entity, Extract, KeyCompare, Allocator>::
-		rb_ordered(rb_ordered && src) :
-			extract_compress_helper(static_cast<const extract_compress_helper &>(src)),
-			key_compare_compress_helper(static_cast<const key_compare_compress_helper &>(src)),
-			rb_allocator_overload(kerbal::compatibility::move(src.alloc())),
-			rb_type_only(static_cast<rb_type_only &&>(src))
-		{
-		}
-
-		template <typename Entity, typename Extract, typename KeyCompare, typename Allocator>
-		KERBAL_CONSTEXPR20
-		rb_ordered<Entity, Extract, KeyCompare, Allocator>::
-		rb_ordered(rb_ordered && src, const Allocator & alloc) :
-			extract_compress_helper(static_cast<const extract_compress_helper &>(src)),
-			key_compare_compress_helper(static_cast<const key_compare_compress_helper &>(src)),
-			rb_allocator_overload(alloc),
-			rb_type_only(
-				this->alloc(), this->extract(), this->key_comp(),
-				kerbal::compatibility::move(src.alloc()), static_cast<rb_type_only &&>(src)
-			)
-		{
-		}
-
-#	endif
-
 		template <typename Entity, typename Extract, typename KeyCompare, typename Allocator>
 		KERBAL_CONSTEXPR20
 		rb_ordered<Entity, Extract, KeyCompare, Allocator>::
@@ -844,6 +854,7 @@ namespace kerbal
 		{
 			this->rb_type_only::k_destroy_using_allocator(this->alloc());
 		}
+
 
 		//===================
 		// assign
@@ -858,6 +869,47 @@ namespace kerbal
 			return *this;
 		}
 
+#	if __cplusplus >= 201103L
+
+		template <typename Entity, typename Extract, typename KeyCompare, typename Allocator>
+		KERBAL_CONSTEXPR20
+		rb_ordered<Entity, Extract, KeyCompare, Allocator> &
+		rb_ordered<Entity, Extract, KeyCompare, Allocator>::
+		operator=(rb_ordered && src)
+		{
+			this->assign(kerbal::compatibility::move(src));
+			return *this;
+		}
+
+#	endif
+
+#	if __cplusplus >= 201103L
+
+		template <typename Entity, typename Extract, typename KeyCompare, typename Allocator>
+		KERBAL_CONSTEXPR20
+		rb_ordered<Entity, Extract, KeyCompare, Allocator> &
+		rb_ordered<Entity, Extract, KeyCompare, Allocator>::
+		operator=(std::initializer_list<value_type> ilist)
+		{
+			this->assign(ilist);
+			return *this;
+		}
+
+#	else
+
+		template <typename Entity, typename Extract, typename KeyCompare, typename Allocator>
+		template <typename U>
+		rb_ordered<Entity, Extract, KeyCompare, Allocator> &
+		rb_ordered<Entity, Extract, KeyCompare, Allocator>::
+		operator=(const kerbal::assign::assign_list<U> & ilist)
+		{
+			this->assign(ilist);
+			return *this;
+		}
+
+#	endif
+
+		/*
 		template <typename Entity, typename Extract, typename KeyCompare, typename Allocator>
 		KERBAL_CONSTEXPR20
 		void
@@ -871,19 +923,11 @@ namespace kerbal
 				src.alloc(), static_cast<const rb_type_only &>(src)
 			);
 		}
+		*/
 
 #	if __cplusplus >= 201103L
 
-		template <typename Entity, typename Extract, typename KeyCompare, typename Allocator>
-		KERBAL_CONSTEXPR20
-		rb_ordered<Entity, Extract, KeyCompare, Allocator> &
-		rb_ordered<Entity, Extract, KeyCompare, Allocator>::
-		operator=(rb_ordered && src)
-		{
-			this->assign(kerbal::compatibility::move(src));
-			return *this;
-		}
-
+		/*
 		template <typename Entity, typename Extract, typename KeyCompare, typename Allocator>
 		KERBAL_CONSTEXPR20
 		void
@@ -897,6 +941,7 @@ namespace kerbal
 				kerbal::compatibility::move(src.alloc()), static_cast<rb_type_only &&>(src)
 			);
 		}
+		*/
 
 #	endif
 
@@ -928,16 +973,7 @@ namespace kerbal
 
 #	if __cplusplus >= 201103L
 
-		template <typename Entity, typename Extract, typename KeyCompare, typename Allocator>
-		KERBAL_CONSTEXPR20
-		rb_ordered<Entity, Extract, KeyCompare, Allocator> &
-		rb_ordered<Entity, Extract, KeyCompare, Allocator>::
-		operator=(std::initializer_list<value_type> ilist)
-		{
-			this->assign(ilist);
-			return *this;
-		}
-
+		/*
 		template <typename Entity, typename Extract, typename KeyCompare, typename Allocator>
 		KERBAL_CONSTEXPR20
 		void
@@ -961,18 +997,9 @@ namespace kerbal
 				ilist
 			);
 		}
+		*/
 
 #	else
-
-		template <typename Entity, typename Extract, typename KeyCompare, typename Allocator>
-		template <typename U>
-		rb_ordered<Entity, Extract, KeyCompare, Allocator> &
-		rb_ordered<Entity, Extract, KeyCompare, Allocator>::
-		operator=(const kerbal::assign::assign_list<U> & ilist)
-		{
-			this->assign(ilist);
-			return *this;
-		}
 
 		template <typename Entity, typename Extract, typename KeyCompare, typename Allocator>
 		template <typename U>
@@ -999,6 +1026,7 @@ namespace kerbal
 		}
 
 #	endif
+
 
 		//===================
 		// lookup
@@ -1324,6 +1352,7 @@ namespace kerbal
 			);
 		}
 
+		/*
 		template <typename Entity, typename Extract, typename KeyCompare, typename Allocator>
 		KERBAL_CONSTEXPR20
 		typename
@@ -1336,6 +1365,7 @@ namespace kerbal
 				src
 			);
 		}
+		*/
 
 #	if __cplusplus >= 201103L
 
@@ -1352,6 +1382,7 @@ namespace kerbal
 			);
 		}
 
+		/*
 		template <typename Entity, typename Extract, typename KeyCompare, typename Allocator>
 		KERBAL_CONSTEXPR20
 		typename
@@ -1364,6 +1395,7 @@ namespace kerbal
 				kerbal::compatibility::move(src)
 			);
 		}
+		*/
 
 #	endif
 
@@ -1407,6 +1439,7 @@ namespace kerbal
 			);
 		}
 
+		/*
 		template <typename Entity, typename Extract, typename KeyCompare, typename Allocator>
 		KERBAL_CONSTEXPR20
 		void
@@ -1418,6 +1451,7 @@ namespace kerbal
 				ilist
 			);
 		}
+		*/
 
 #	else
 
@@ -1476,6 +1510,7 @@ namespace kerbal
 			);
 		}
 
+		/*
 		template <typename Entity, typename Extract, typename KeyCompare, typename Allocator>
 		KERBAL_CONSTEXPR20
 		typename
@@ -1488,6 +1523,7 @@ namespace kerbal
 				first, last
 			);
 		}
+		*/
 
 		template <typename Entity, typename Extract, typename KeyCompare, typename Allocator>
 		KERBAL_CONSTEXPR20
@@ -1650,6 +1686,37 @@ namespace kerbal
 			);
 		}
 
+#	if __cplusplus >= 201103L
+
+		template <typename Entity, typename Extract, typename KeyCompare, typename Allocator>
+		template <typename OtherExtract, typename OtherKeyCompare>
+		KERBAL_CONSTEXPR20
+		void
+		rb_ordered<Entity, Extract, KeyCompare, Allocator>::
+		merge(rb_ordered<Entity, OtherExtract, OtherKeyCompare, Allocator> && other)
+		{
+			this->rb_type_only::k_merge(
+				this->extract(), this->key_comp(),
+				static_cast<rb_type_only &&>(other)
+			);
+		}
+
+		template <typename Entity, typename Extract, typename KeyCompare, typename Allocator>
+		template <typename OtherExtract, typename OtherKeyCompare>
+		KERBAL_CONSTEXPR20
+		void
+		rb_ordered<Entity, Extract, KeyCompare, Allocator>::
+		merge_unique(rb_ordered<Entity, OtherExtract, OtherKeyCompare, Allocator> && other)
+		{
+			this->rb_type_only::k_merge_unique(
+				this->extract(), this->key_comp(),
+				static_cast<rb_type_only &&>(other)
+			);
+		}
+
+#	endif
+
+		/*
 		template <typename Entity, typename Extract, typename KeyCompare, typename Allocator>
 		KERBAL_CONSTEXPR20
 		void
@@ -1667,6 +1734,7 @@ namespace kerbal
 				static_cast<rb_type_unrelated &>(other)
 			);
 		}
+		*/
 
 
 	} // namespace container
