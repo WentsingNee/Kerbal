@@ -32,6 +32,7 @@
 #if __cplusplus >= 201703L
 #	include <kerbal/memory/allocator/is_allocator.hpp>
 #	include <kerbal/type_traits/enable_if.hpp>
+#	include <kerbal/type_traits/logical.hpp>
 #endif
 
 #if __cplusplus >= 201103L
@@ -497,6 +498,14 @@ namespace kerbal
 				KERBAL_CONSTEXPR20
 				void merge(rb_set<T, OtherKeyCompare, Allocator> & other);
 
+#		if __cplusplus >= 201103L
+
+				template <typename OtherKeyCompare>
+				KERBAL_CONSTEXPR20
+				void merge(rb_set<T, OtherKeyCompare, Allocator> && other);
+
+#		endif
+
 				KERBAL_CONSTEXPR20
 				void swap(rb_set & other);
 
@@ -507,12 +516,6 @@ namespace kerbal
 				kerbal::container::detail::rb_normal_result_t rb_normal() const
 				{
 					return rb_ordered::rb_normal();
-				}
-
-				KERBAL_CONSTEXPR20
-				height_t height() const KERBAL_NOEXCEPT
-				{
-					return rb_ordered::height();
 				}
 
 		};
@@ -569,7 +572,12 @@ namespace kerbal
 			typename Allocator,
 			typename =
 				typename kerbal::type_traits::enable_if<
-					kerbal::memory::is_allocator<Allocator>::value
+					kerbal::type_traits::conjunction<
+						kerbal::type_traits::negation<
+							kerbal::memory::is_allocator<KeyCompare>
+						>,
+						kerbal::memory::is_allocator<Allocator>
+					>::value
 				>::type
 		>
 		rb_set(
@@ -623,12 +631,17 @@ namespace kerbal
 			typename T, typename KeyCompare, typename Allocator,
 			typename =
 				typename kerbal::type_traits::enable_if<
-					!kerbal::memory::is_allocator<KeyCompare>::value
+					kerbal::type_traits::conjunction<
+						kerbal::type_traits::negation<
+							kerbal::memory::is_allocator<KeyCompare>
+						>,
+						kerbal::memory::is_allocator<Allocator>
+					>::value
 				>::type
 		>
 		rb_set(
 			std::initializer_list<T>,
-			KeyCompare, const Allocator &
+			const KeyCompare &, const Allocator &
 		) ->
 		rb_set<T, KeyCompare, Allocator>;
 
