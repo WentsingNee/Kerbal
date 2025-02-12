@@ -15,6 +15,7 @@
 #include <kerbal/container/rb_set/rb_set.decl.hpp>
 #include <kerbal/container/rb_ordered/rb_ordered.impl.hpp>
 
+#include <kerbal/assign/ilist.hpp>
 #include <kerbal/compatibility/constexpr.hpp>
 #include <kerbal/compatibility/noexcept.hpp>
 #include <kerbal/container/associative_container_facility/unique_tag_t.hpp>
@@ -741,6 +742,20 @@ namespace kerbal
 		{
 			this->rb_ordered::merge_unique(static_cast<rb_ordered &>(other));
 		}
+
+#	if __cplusplus >= 201103L
+
+		template <typename T, typename KeyCompare, typename Allocator>
+		template <typename OtherKeyCompare>
+		KERBAL_CONSTEXPR20
+		void
+		rb_set<T, KeyCompare, Allocator>::
+		merge(rb_set<T, OtherKeyCompare, Allocator> && other)
+		{
+			this->rb_ordered::merge_unique(static_cast<rb_ordered &&>(other));
+		}
+
+#	endif
 
 		template <typename T, typename KeyCompare, typename Allocator>
 		KERBAL_CONSTEXPR20
