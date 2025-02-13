@@ -84,7 +84,7 @@ namespace kerbal
 					rb_node_base * g = rb_node_base::as(p->parent);
 					rb_node_base * u = NULL;
 					if (p == g->left) {
-						u = rb_node_base::as(g->right);
+						u = g->get_right();
 						if (n == p->left) { // LL
 							if (rb_node_base::is_black(u)) { // LLb
 								rb_adjust_LLb(g, p);
@@ -103,7 +103,7 @@ namespace kerbal
 							// LRr
 						}
 					} else {
-						u = rb_node_base::as(g->left);
+						u = g->get_left();
 						if (n == p->left) { // RL
 							if (rb_node_base::is_black(u)) { // RLb
 								bst_node_base::right_rotate(p, n);
@@ -143,63 +143,115 @@ namespace kerbal
 //				}
 				bst_head_node * next = n->inorder_next();
 				if (n->left != get_rb_vnull_node() && n->right != get_rb_vnull_node()) { // two sons
-					rb_node_base * replacee = rb_node_base::as(n->right->leftest_offspring());
-					k_unhook_node_replace(n, replacee);
-					n = replacee;
+					rb_node_base * replacer = rb_node_base::as(n->right->leftest_offspring());
+					k_unhook_node_replace(n, replacer);
 				}
-				if (n->left != get_rb_vnull_node() && n->right == get_rb_vnull_node()) { // only left son
-					bst_head_node * n_parent = n->parent;
-					if (n == n_parent->left) {
-						n_parent->left = n->left;
-					} else {
-						n_parent->as_node_base()->right = n->left;
+
+				if (n->left != get_rb_vnull_node() || n->right != get_rb_vnull_node()) {
+					rb_node_base * son = NULL;
+					if (n->left != get_rb_vnull_node()) { // only left son
+						// n must be black and son must be red
+						son = n->get_left();
+					} else { // only right son
+						// n must be black and son must be red
+						son = n->get_right();
 					}
-					rb_node_base::as(n->left)->set_black();
-					--this->k_cnt;
-					return next;
-				}
-				if (n->left == get_rb_vnull_node() && n->right != get_rb_vnull_node()) { // only right son
-					bst_head_node * n_parent = n->parent;
-					if (n == n_parent->left) {
-						n_parent->left = n->right;
+					bst_head_node * p = n->parent;
+					if (n == p->left) {
+						p->left = son;
 					} else {
-						n_parent->as_node_base()->right = n->right;
+						p->as_node_base()->right = son;
 					}
-					rb_node_base::as(n->right)->set_black();
-					--this->k_cnt;
-					return next;
-				}
-				// leaf
-				bst_head_node * n_parent = n->parent;
-				if (n->get_color() == RED::value) { // n is red
-					// not use !rb_node_base::is_black(n) because n is always not null
-					// if (n == n_parent->left) {
-					// 	n_parent->left = n->right;
-					// 	set_parent_ignore_null(n->right, n_parent);
-					// } else {
-					// 	throw 0;
-					// }
-					if (n == n_parent->left) {
-						n_parent->left = get_rb_vnull_node();
+					son->parent = n->parent;
+					son->set_black();
+					// unchanged black height
+				} else { // leaf
+					bst_head_node * p = n->parent;
+					if (!rb_node_base::is_black_never_null(n)) { // n is red
+						if (n == p->left) {
+							p->left = get_rb_vnull_node();
+						} else {
+							p->as_node_base()->right = get_rb_vnull_node();
+						}
 					} else {
-						n_parent->as_node_base()->right = get_rb_vnull_node();
-					}
-				} else {
-					if (n == n_parent->left) {
-						rb_node_base * brother = rb_node_base::as(n_parent->as_node_base()->right);
-					} else {
-						rb_node_base * brother = rb_node_base::as(n_parent->as_node_base()->left);
-						if (
-							rb_node_base::is_black(rb_node_base::as(brother->left)) &&
-							rb_node_base::is_black(rb_node_base::as(brother->right))
-						) {
-							bst_node_base::right_rotate(n_parent->as_node_base(), brother);
-						} else { // at least one red child
-							if (brother->left != get_rb_vnull_node()) { // brother has left red child
-								bst_node_base::right_rotate(n_parent->as_node_base(), brother);
-								brother->set_color(rb_node_base::as(n_parent->as_node_base())->get_color()); // b->color = p->color
-								rb_node_base::as(n_parent->as_node_base())->set_black(); // p->color = BLACK;
-								brother->get_left()->set_black();
+						rb_node_base * p_rb = rb_node_base::as(p);
+						if (n == p->left) {
+							p_rb->left = get_rb_vnull_node();
+							rb_node_base * b = p_rb->get_right();
+							if (
+								rb_node_base::is_black(b->get_left()) &&
+								rb_node_base::is_black(b->get_right())
+							) {
+								b->set_red();
+								// unimplement
+							} else { // at least one red child
+								bst_head_node * a = p_rb->parent;
+								if (b->right != get_rb_vnull_node()) { // b has right red child
+									b->get_right()->set_black();
+
+									b->set_color(p_rb->get_color()); // b->color = p->color
+									bst_node_base::left_rotate(p_rb, b);
+									if (p == a->left) {
+										a->left = b;
+									} else {
+										a->as_node_base()->right = b;
+									}
+									b->parent = a;
+								} else {
+									rb_node_base * ni = b->get_left();
+									bst_node_base::right_rotate(b, ni);
+									p_rb->right = ni;
+
+									ni->set_color(p_rb->get_color()); // b->left->color = n->color
+									bst_node_base::left_rotate(p_rb, ni);
+									if (p_rb == a->left) {
+										a->left = ni;
+									} else {
+										a->as_node_base()->right = ni;
+									}
+									ni->parent = a;
+								}
+								p_rb->set_black(); // p->color = BLACK
+								// unchanged black height
+							}
+						} else {
+							p_rb->right = get_rb_vnull_node();
+							rb_node_base * b = p_rb->get_left();
+							if (
+								rb_node_base::is_black(b->get_left()) &&
+								rb_node_base::is_black(b->get_right())
+							) {
+								b->set_red();
+								// unimplement
+							} else { // at least one red child
+								bst_head_node * a = p_rb->parent;
+								if (b->left != get_rb_vnull_node()) { // b has left red child
+									b->get_left()->set_black();
+
+									b->set_color(p_rb->get_color()); // b->color = p->color
+									bst_node_base::right_rotate(p_rb, b);
+									if (p == a->left) {
+										a->left = b;
+									} else {
+										a->as_node_base()->right = b;
+									}
+									b->parent = a;
+								} else {
+									rb_node_base * ni = b->get_right();
+									bst_node_base::left_rotate(b, ni);
+									p_rb->left = ni;
+
+									ni->set_color(p_rb->get_color()); // b->right->color = n->color
+									bst_node_base::right_rotate(p_rb, ni);
+									if (p_rb == a->left) {
+										a->left = ni;
+									} else {
+										a->as_node_base()->right = ni;
+									}
+									ni->parent = a;
+								}
+								p_rb->set_black(); // p->color = BLACK
+								// unchanged black height
 							}
 						}
 					}
@@ -828,18 +880,18 @@ namespace kerbal
 									p->left = n;
 									break;
 								}
-								p = node::reinterpret_as(rb_node_base::as(p->left));
+								p = node::reinterpret_as(p->get_left());
 							} else {
 								if (p->right == get_rb_vnull_node()) {
 									p->right = n;
 									break;
 								}
-								p = node::reinterpret_as(rb_node_base::as(p->right));
+								p = node::reinterpret_as(p->get_right());
 							}
 						}
 					}
 					n->parent = p;
-					if (p->get_color() == RED::value) {
+					if (!rb_node_base::is_black_never_null(p)) { // p is red
 						rb_adjust(n, p);
 					}
 				}
@@ -872,20 +924,20 @@ namespace kerbal
 									p->left = n;
 									break;
 								}
-								p = node::reinterpret_as(rb_node_base::as(p->left));
+								p = node::reinterpret_as(p->get_left());
 							} else if (kc(p_key, n_key)) {
 								if (p->right == get_rb_vnull_node()) {
 									p->right = n;
 									break;
 								}
-								p = node::reinterpret_as(rb_node_base::as(p->right));
+								p = node::reinterpret_as(p->get_right());
 							} else {
 								return unique_insert_r(iterator(p), false);
 							}
 						}
 					}
 					n->parent = p;
-					if (p->get_color() == RED::value) {
+					if (!rb_node_base::is_black_never_null(p)) { // p is red
 						rb_adjust(n, p);
 					}
 				}
@@ -935,7 +987,7 @@ namespace kerbal
 				const value_type * lmini = NULL;
 				const value_type * lmaxi = NULL;
 				std::size_t lblack_cnt = -1;
-				rb_normal_result_t lresult = rb_normal_impl(e, kc, rb_node_base::as(pnode->left), lmini, lmaxi, nodes_cnt, lblack_cnt);
+				rb_normal_result_t lresult = rb_normal_impl(e, kc, pnode->get_left(), lmini, lmaxi, nodes_cnt, lblack_cnt);
 				if (lresult != RB_NORMAL_RESULT_CORRECT) {
 					return lresult;
 				}
@@ -944,7 +996,7 @@ namespace kerbal
 				const value_type * rmini = NULL;
 				const value_type * rmaxi = NULL;
 				std::size_t rblack_cnt = -1;
-				rb_normal_result_t rresult = rb_normal_impl(e, kc, rb_node_base::as(pnode->right), rmini, rmaxi, nodes_cnt, rblack_cnt);
+				rb_normal_result_t rresult = rb_normal_impl(e, kc, pnode->get_right(), rmini, rmaxi, nodes_cnt, rblack_cnt);
 				if (rresult != RB_NORMAL_RESULT_CORRECT) {
 					return rresult;
 				}
@@ -984,10 +1036,10 @@ namespace kerbal
 					black_cnt = 1 + lblack_cnt;
 				} else { // p is red
 					black_cnt = lblack_cnt;
-					if (!rb_node_base::is_black(rb_node_base::as(pnode->left))) { // p->left is red
+					if (!rb_node_base::is_black(pnode->get_left())) { // p->left is red
 						return RB_NORMAL_RESULT_NEIBOUR_RED;
 					}
-					if (!rb_node_base::is_black(rb_node_base::as(pnode->right))) { // p->right is red
+					if (!rb_node_base::is_black(pnode->get_right())) { // p->right is red
 						return RB_NORMAL_RESULT_NEIBOUR_RED;
 					}
 				}
@@ -1010,7 +1062,7 @@ namespace kerbal
 					return RB_NORMAL_RESULT_CORRECT;
 				}
 
-				if (root->get_color() == RED::value) {
+				if (!rb_node_base::is_black_never_null(root)) { // root is not black
 					return RB_NORMAL_RESULT_ROOT_NOT_BLACK;
 				}
 				const value_type * mini = NULL;
