@@ -98,20 +98,24 @@ namespace kerbal
 					static
 					void k_unhook_node_replace(rb_node_base * replacee, rb_node_base * replacer) KERBAL_NOEXCEPT
 					{
-						bst_head_node * replacer_parent = replacee->parent;
-						bst_head_node * replacee_parent = replacer->parent;
+						bst_head_node * replacee_parent = replacee->parent;
+						bst_head_node * replacer_parent = replacer->parent;
 
 						if (replacee == replacee_parent->left) {
-							replacer_parent->left = replacer;
+							replacee_parent->left = replacer;
 						} else {
-							replacer_parent->as_node_base()->right = replacer;
+							replacee_parent->as_node_base()->right = replacer;
 						}
 
-						replacee_parent->left = replacee;
-
 						replacee->left->parent = replacer;
-						// replacer->left is always null
 						replacee->right->parent = replacer;
+
+						if (replacer == replacer_parent->left) {
+							replacer_parent->left = replacee;
+						} else {
+							replacer_parent->as_node_base()->right = replacee;
+						}
+						// replacer->left is always null
 						set_parent_ignore_null(replacer->right, replacee); // replacer->right may null
 						kerbal::algorithm::swap(*replacee, *replacer);
 					}

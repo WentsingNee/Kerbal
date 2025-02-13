@@ -103,7 +103,7 @@ namespace kerbal
 					rb_node_base *
 					get_right() const KERBAL_NOEXCEPT
 					{
-						return rb_node_base::as(this->left);
+						return rb_node_base::as(this->right);
 					}
 
 
@@ -130,6 +130,13 @@ namespace kerbal
 						return p->color == BLACK::value;
 
 #	endif
+					}
+
+					KERBAL_CONSTEXPR14
+					static
+					bool is_black_never_null(const rb_node_base * p) KERBAL_NOEXCEPT
+					{
+						return p->color == BLACK::value;
 					}
 
 					KERBAL_CONSTEXPR
