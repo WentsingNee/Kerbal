@@ -111,7 +111,7 @@ namespace kerbal
 					static
 					bool is_black(const rb_node_base * p) KERBAL_NOEXCEPT
 					{
-#	if KERBAL_AVL_ENABLE_VNULL
+#	if KERBAL_RB_ENABLE_VNULL
 
 #		if KERBAL_HAS_IS_CONSTANT_EVALUATED_SUPPORT
 						if (KERBAL_IS_CONSTANT_EVALUATED()) {

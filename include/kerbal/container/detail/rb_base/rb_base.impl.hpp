@@ -178,80 +178,126 @@ namespace kerbal
 						if (n == p->left) {
 							p_rb->left = get_rb_vnull_node();
 							rb_node_base * b = p_rb->get_right();
-							if (
-								rb_node_base::is_black(b->get_left()) &&
-								rb_node_base::is_black(b->get_right())
-							) {
-								b->set_red();
-								// unimplement
-							} else { // at least one red child
+							if (!rb_node_base::is_black_never_null(b)) { // b is red
+								rb_node_base * ni = b->get_left();
+								ni->set_red();
+								p_rb->set_black();
 								bst_head_node * a = p_rb->parent;
-								if (b->right != get_rb_vnull_node()) { // b has right red child
-									b->get_right()->set_black();
 
-									b->set_color(p_rb->get_color()); // b->color = p->color
-									bst_node_base::left_rotate(p_rb, b);
-									if (p == a->left) {
-										a->left = b;
-									} else {
-										a->as_node_base()->right = b;
-									}
-									b->parent = a;
+								b->set_color(p_rb->get_color()); // b->color = p->color
+								rb_node_base::left_rotate(p_rb, b);
+								if (p == a->left) {
+									a->left = b;
 								} else {
-									rb_node_base * ni = b->get_left();
-									bst_node_base::right_rotate(b, ni);
-									p_rb->right = ni;
-
-									ni->set_color(p_rb->get_color()); // b->left->color = n->color
-									bst_node_base::left_rotate(p_rb, ni);
-									if (p_rb == a->left) {
-										a->left = ni;
-									} else {
-										a->as_node_base()->right = ni;
-									}
-									ni->parent = a;
+									a->as_node_base()->right = b;
 								}
-								p_rb->set_black(); // p->color = BLACK
+								b->parent = a;
 								// unchanged black height
+							} else { // b is black
+								if (
+									rb_node_base::is_black(b->get_left()) &&
+									rb_node_base::is_black(b->get_right())
+								) {
+									b->set_red();
+									if (rb_node_base::is_black_never_null(p_rb)) { // p is black
+
+										// unimplemented
+									} else { // p is red
+										p_rb->set_black();
+										// unchanged black height
+									}
+								} else { // at least one red child
+									bst_head_node * a = p_rb->parent;
+									if (b->right != get_rb_vnull_node()) { // b has right red child
+										b->get_right()->set_black();
+
+										b->set_color(p_rb->get_color()); // b->color = p->color
+										bst_node_base::left_rotate(p_rb, b);
+										if (p == a->left) {
+											a->left = b;
+										} else {
+											a->as_node_base()->right = b;
+										}
+										b->parent = a;
+									} else {
+										rb_node_base * ni = b->get_left();
+										bst_node_base::right_rotate(b, ni);
+										p_rb->right = ni;
+
+										ni->set_color(p_rb->get_color()); // b->left->color = n->color
+										bst_node_base::left_rotate(p_rb, ni);
+										if (p_rb == a->left) {
+											a->left = ni;
+										} else {
+											a->as_node_base()->right = ni;
+										}
+										ni->parent = a;
+									}
+									p_rb->set_black(); // p->color = BLACK
+									// unchanged black height
+								}
 							}
 						} else {
 							p_rb->right = get_rb_vnull_node();
 							rb_node_base * b = p_rb->get_left();
-							if (
-								rb_node_base::is_black(b->get_left()) &&
-								rb_node_base::is_black(b->get_right())
-							) {
-								b->set_red();
-								// unimplement
-							} else { // at least one red child
+							if (!rb_node_base::is_black_never_null(b)) { // b is red
+								rb_node_base * ni = b->get_right();
+								ni->set_red();
+								p_rb->set_black();
 								bst_head_node * a = p_rb->parent;
-								if (b->left != get_rb_vnull_node()) { // b has left red child
-									b->get_left()->set_black();
 
-									b->set_color(p_rb->get_color()); // b->color = p->color
-									bst_node_base::right_rotate(p_rb, b);
-									if (p == a->left) {
-										a->left = b;
-									} else {
-										a->as_node_base()->right = b;
-									}
-									b->parent = a;
+								b->set_color(p_rb->get_color()); // b->color = p->color
+								rb_node_base::right_rotate(p_rb, b);
+								if (p == a->left) {
+									a->left = b;
 								} else {
-									rb_node_base * ni = b->get_right();
-									bst_node_base::left_rotate(b, ni);
-									p_rb->left = ni;
-
-									ni->set_color(p_rb->get_color()); // b->right->color = n->color
-									bst_node_base::right_rotate(p_rb, ni);
-									if (p_rb == a->left) {
-										a->left = ni;
-									} else {
-										a->as_node_base()->right = ni;
-									}
-									ni->parent = a;
+									a->as_node_base()->right = b;
 								}
-								p_rb->set_black(); // p->color = BLACK
+								b->parent = a;
 								// unchanged black height
+							} else { // b is black
+								if (
+									rb_node_base::is_black(b->get_left()) &&
+									rb_node_base::is_black(b->get_right())
+								) {
+									b->set_red();
+									if (rb_node_base::is_black_never_null(p_rb)) { // p is black
+
+										// unimplemented
+									} else { // p is red
+										p_rb->set_black();
+										// unchanged black height
+									}
+								} else { // at least one red child
+									bst_head_node * a = p_rb->parent;
+									if (b->left != get_rb_vnull_node()) { // b has left red child
+										b->get_left()->set_black();
+
+										b->set_color(p_rb->get_color()); // b->color = p->color
+										bst_node_base::right_rotate(p_rb, b);
+										if (p == a->left) {
+											a->left = b;
+										} else {
+											a->as_node_base()->right = b;
+										}
+										b->parent = a;
+									} else {
+										rb_node_base * ni = b->get_right();
+										bst_node_base::left_rotate(b, ni);
+										p_rb->left = ni;
+
+										ni->set_color(p_rb->get_color()); // b->right->color = n->color
+										bst_node_base::right_rotate(p_rb, ni);
+										if (p_rb == a->left) {
+											a->left = ni;
+										} else {
+											a->as_node_base()->right = ni;
+										}
+										ni->parent = a;
+									}
+									p_rb->set_black(); // p->color = BLACK
+									// unchanged black height
+								}
 							}
 						}
 					}
