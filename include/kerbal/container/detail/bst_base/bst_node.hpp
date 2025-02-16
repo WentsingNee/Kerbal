@@ -66,7 +66,8 @@ namespace kerbal
 
 				protected:
 					KERBAL_CONSTEXPR
-					explicit bst_head_node(bst_node_base * vnull) KERBAL_NOEXCEPT :
+					explicit
+					bst_head_node(bst_node_base * vnull) KERBAL_NOEXCEPT :
 						left(vnull)
 					{
 					}
@@ -157,7 +158,8 @@ namespace kerbal
 
 				protected:
 					KERBAL_CONSTEXPR
-					explicit bst_node_base(bst_node_base * vnull) KERBAL_NOEXCEPT :
+					explicit
+					bst_node_base(bst_node_base * vnull) KERBAL_NOEXCEPT :
 						bst_head_node(vnull), parent(NULL), right(vnull)
 					{
 					}
@@ -282,7 +284,8 @@ namespace kerbal
 			KERBAL_CONSTEXPR14
 			inline
 			bst_head_node<VNULL_HELPER> const *
-			bst_head_node<VNULL_HELPER>::leftest_offspring() const KERBAL_NOEXCEPT
+			bst_head_node<VNULL_HELPER>::
+			leftest_offspring() const KERBAL_NOEXCEPT
 			{
 				bst_head_node const * current = this;
 				bst_head_node const * offspring = current->left;
@@ -297,7 +300,8 @@ namespace kerbal
 			KERBAL_CONSTEXPR14
 			inline
 			bst_node_base<VNULL_HELPER> const *
-			bst_node_base<VNULL_HELPER>::rightest_offspring() const KERBAL_NOEXCEPT
+			bst_node_base<VNULL_HELPER>::
+			rightest_offspring() const KERBAL_NOEXCEPT
 			{
 				bst_node_base const * current = this;
 				bst_node_base const * offspring = current->right;
@@ -312,7 +316,8 @@ namespace kerbal
 			KERBAL_CONSTEXPR14
 			inline
 			bst_head_node<VNULL_HELPER> const *
-			bst_head_node<VNULL_HELPER>::inorder_prev() const KERBAL_NOEXCEPT
+			bst_head_node<VNULL_HELPER>::
+			inorder_prev() const KERBAL_NOEXCEPT
 			{
 				bst_head_node const * current = this;
 				if (current->left == VNULL_HELPER::get_vnull()) {
@@ -335,7 +340,8 @@ namespace kerbal
 			inline
 			typename
 			bst_node_base<VNULL_HELPER>::bst_head_node const *
-			bst_node_base<VNULL_HELPER>::inorder_next() const KERBAL_NOEXCEPT
+			bst_node_base<VNULL_HELPER>::
+			inorder_next() const KERBAL_NOEXCEPT
 			{
 				bst_head_node const * current = this;
 				if (current->as_node_base()->right == VNULL_HELPER::get_vnull()) {
@@ -358,7 +364,8 @@ namespace kerbal
 			inline
 			typename
 			bst_node_base<VNULL_HELPER>::bst_head_node const *
-			bst_node_base<VNULL_HELPER>::postorder_next(bst_head_node const * head) const KERBAL_NOEXCEPT
+			bst_node_base<VNULL_HELPER>::
+			postorder_next(bst_head_node const * head) const KERBAL_NOEXCEPT
 			{
 				bst_node_base const * current = this;
 				if (current == parent->left) {
