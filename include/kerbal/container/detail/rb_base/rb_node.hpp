@@ -272,12 +272,13 @@ namespace kerbal
 			};
 
 
-#	if KERBAL_RB_ENABLE_VNULL
-
 			template <int>
 			class rb_vnull_node_helper
 			{
+
+#	if KERBAL_RB_ENABLE_VNULL
 					static rb_node_base vnull_node;
+#	endif
 
 					friend inline
 					KERBAL_CONSTEXPR
@@ -294,11 +295,13 @@ namespace kerbal
 
 			};
 
+
+#	if KERBAL_RB_ENABLE_VNULL
+
 			template <int I>
 			rb_node_base rb_vnull_node_helper<I>::vnull_node(0);
 
 #	endif
-
 
 
 			inline
