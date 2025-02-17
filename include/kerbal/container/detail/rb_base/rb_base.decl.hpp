@@ -101,20 +101,13 @@ namespace kerbal
 						bst_head_node * replacee_parent = replacee->parent;
 						bst_head_node * replacer_parent = replacer->parent;
 
-						if (replacee == replacee_parent->left) {
-							replacee_parent->left = replacer;
-						} else {
-							replacee_parent->as_node_base()->right = replacer;
-						}
+						replacee_parent->replace_son(replacee, replacer);
 
 						replacee->left->parent = replacer;
 						replacee->right->parent = replacer;
 
-						if (replacer == replacer_parent->left) {
-							replacer_parent->left = replacee;
-						} else {
-							replacer_parent->as_node_base()->right = replacee;
-						}
+						replacer_parent->replace_son(replacer, replacee);
+
 						// replacer->left is always null
 						set_parent_ignore_null(replacer->right, replacee); // replacer->right may null
 						kerbal::algorithm::swap(*replacee, *replacer);

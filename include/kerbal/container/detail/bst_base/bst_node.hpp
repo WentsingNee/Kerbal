@@ -90,6 +90,24 @@ namespace kerbal
 
 					KERBAL_CONSTEXPR14
 					inline
+					void
+					replace_son(const bst_node_base * old_son, bst_node_base * new_son) KERBAL_NOEXCEPT
+					{
+						// if (old_son == this->left) {
+						// 	this->left = new_son;
+						// } else {
+						// 	this->as_node_base()->right = new_son;
+						// }
+						bst_node_base * & son = (
+							old_son == this->left ?
+							this->left :
+							this->as_node_base()->right
+						);
+						son = new_son;
+					}
+
+					KERBAL_CONSTEXPR14
+					inline
 					bst_head_node const *
 					leftest_offspring() const KERBAL_NOEXCEPT;
 
