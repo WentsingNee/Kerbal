@@ -63,14 +63,16 @@ namespace kerbal
 
 					KERBAL_CONSTEXPR14
 					static
-					rb_node_base * as(bst_head_node * self) KERBAL_NOEXCEPT
+					rb_node_base *
+					as(bst_head_node * self) KERBAL_NOEXCEPT
 					{
 						return static_cast<rb_node_base *>(self);
 					}
 
 					KERBAL_CONSTEXPR
 					static
-					const rb_node_base * as(const bst_head_node * self) KERBAL_NOEXCEPT
+					const rb_node_base *
+					as(const bst_head_node * self) KERBAL_NOEXCEPT
 					{
 						return static_cast<const rb_node_base *>(self);
 					}
