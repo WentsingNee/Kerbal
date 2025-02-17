@@ -75,14 +75,16 @@ namespace kerbal
 
 					KERBAL_CONSTEXPR14
 					static
-					avl_node_base * as(bst_head_node * self) KERBAL_NOEXCEPT
+					avl_node_base *
+					as(bst_head_node * self) KERBAL_NOEXCEPT
 					{
 						return static_cast<avl_node_base *>(self);
 					}
 
 					KERBAL_CONSTEXPR
 					static
-					const avl_node_base * as(const bst_head_node * self) KERBAL_NOEXCEPT
+					const avl_node_base *
+					as(const bst_head_node * self) KERBAL_NOEXCEPT
 					{
 						return static_cast<const avl_node_base *>(self);
 					}
