@@ -38,14 +38,10 @@ namespace kerbal
 			{
 				bst_head_node * a = g->parent;
 				bst_node_base::left_rotate(g, p);
-				if (g == a->left) {
-					a->left = p;
-				} else { // g == a->right
-					a->as_node_base()->right = p;
-				}
 				p->parent = a;
 				p->set_black();
 				g->set_red();
+				a->replace_son(g, p);
 			}
 
 			KERBAL_CONSTEXPR14
@@ -56,14 +52,10 @@ namespace kerbal
 			{
 				bst_head_node * a = g->parent;
 				bst_node_base::right_rotate(g, p);
-				if (g == a->left) {
-					a->left = p;
-				} else { // g == a->right
-					a->as_node_base()->right = p;
-				}
 				p->parent = a;
 				p->set_black();
 				g->set_red();
+				a->replace_son(g, p);
 			}
 
 			KERBAL_CONSTEXPR14
@@ -156,23 +148,14 @@ namespace kerbal
 						// n must be black and son must be red
 						son = n->get_right();
 					}
-					bst_head_node * p = n->parent;
-					if (n == p->left) {
-						p->left = son;
-					} else {
-						p->as_node_base()->right = son;
-					}
+					n->parent->replace_son(n, son);
 					son->parent = n->parent;
 					son->set_black();
 					// unchanged black height
 				} else { // leaf
 					bst_head_node * p = n->parent;
 					if (!rb_node_base::is_black_never_null(n)) { // n is red
-						if (n == p->left) {
-							p->left = get_rb_vnull_node();
-						} else {
-							p->as_node_base()->right = get_rb_vnull_node();
-						}
+						p->replace_son(n, get_rb_vnull_node());
 					} else {
 						rb_node_base * p_rb = rb_node_base::as(p);
 						if (n == p->left) {
@@ -186,11 +169,7 @@ namespace kerbal
 
 								b->set_color(p_rb->get_color()); // b->color = p->color
 								rb_node_base::left_rotate(p_rb, b);
-								if (p == a->left) {
-									a->left = b;
-								} else {
-									a->as_node_base()->right = b;
-								}
+								a->replace_son(p_rb, b);
 								b->parent = a;
 								// unchanged black height
 							} else { // b is black
@@ -213,11 +192,7 @@ namespace kerbal
 
 										b->set_color(p_rb->get_color()); // b->color = p->color
 										bst_node_base::left_rotate(p_rb, b);
-										if (p == a->left) {
-											a->left = b;
-										} else {
-											a->as_node_base()->right = b;
-										}
+										a->replace_son(p_rb, b);
 										b->parent = a;
 									} else {
 										rb_node_base * ni = b->get_left();
@@ -226,11 +201,7 @@ namespace kerbal
 
 										ni->set_color(p_rb->get_color()); // b->left->color = n->color
 										bst_node_base::left_rotate(p_rb, ni);
-										if (p_rb == a->left) {
-											a->left = ni;
-										} else {
-											a->as_node_base()->right = ni;
-										}
+										a->replace_son(p_rb, ni);
 										ni->parent = a;
 									}
 									p_rb->set_black(); // p->color = BLACK
@@ -248,11 +219,7 @@ namespace kerbal
 
 								b->set_color(p_rb->get_color()); // b->color = p->color
 								rb_node_base::right_rotate(p_rb, b);
-								if (p == a->left) {
-									a->left = b;
-								} else {
-									a->as_node_base()->right = b;
-								}
+								a->replace_son(p_rb, b);
 								b->parent = a;
 								// unchanged black height
 							} else { // b is black
@@ -275,11 +242,7 @@ namespace kerbal
 
 										b->set_color(p_rb->get_color()); // b->color = p->color
 										bst_node_base::right_rotate(p_rb, b);
-										if (p == a->left) {
-											a->left = b;
-										} else {
-											a->as_node_base()->right = b;
-										}
+										a->replace_son(p_rb, b);
 										b->parent = a;
 									} else {
 										rb_node_base * ni = b->get_right();
@@ -288,11 +251,7 @@ namespace kerbal
 
 										ni->set_color(p_rb->get_color()); // b->right->color = n->color
 										bst_node_base::right_rotate(p_rb, ni);
-										if (p_rb == a->left) {
-											a->left = ni;
-										} else {
-											a->as_node_base()->right = ni;
-										}
+										a->replace_son(p_rb, ni);
 										ni->parent = a;
 									}
 									p_rb->set_black(); // p->color = BLACK
