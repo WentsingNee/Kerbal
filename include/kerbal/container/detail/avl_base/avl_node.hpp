@@ -73,7 +73,7 @@ namespace kerbal
 				protected:
 					typedef kerbal::container::detail::bst_head_node<avl_vnull_node_helper<> > bst_head_node;
 
-					KERBAL_CONSTEXPR14
+					KERBAL_CONSTEXPR
 					static
 					avl_node_base *
 					as(bst_head_node * self) KERBAL_NOEXCEPT
