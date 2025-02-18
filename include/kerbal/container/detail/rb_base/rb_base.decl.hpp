@@ -671,7 +671,12 @@ namespace kerbal
 						typedef kerbal::memory::allocator_traits<NodeAllocator> node_allocator_traits;
 						node * p = node_allocator_traits::allocate_one(alloc);
 						try {
-							node_allocator_traits::construct(alloc, p, kerbal::utility::in_place_t(), RED::value, kerbal::utility::forward<Args>(args)...);
+							node_allocator_traits::construct(
+								alloc, p,
+								kerbal::utility::in_place_t(),
+								rb_node_base::RED::value,
+								kerbal::utility::forward<Args>(args)...
+							);
 						} catch (...) {
 							node_allocator_traits::deallocate_one(alloc, p);
 							throw;
