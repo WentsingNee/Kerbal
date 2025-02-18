@@ -32,11 +32,6 @@ namespace kerbal
 		namespace detail
 		{
 
-			typedef kerbal::type_traits::false_type BLACK;
-			typedef kerbal::type_traits::true_type RED;
-
-			typedef bool rb_color_t;
-
 			class rb_node_base;
 
 			template <typename T>
