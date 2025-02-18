@@ -43,7 +43,8 @@ namespace kerbal
 		namespace detail
 		{
 
-			class rb_node_base : protected kerbal::container::detail::bst_node_base<rb_vnull_node_helper<> >
+			class rb_node_base :
+				protected kerbal::container::detail::bst_node_base<rb_vnull_node_helper<> >
 			{
 				private:
 					typedef kerbal::container::detail::bst_node_base<rb_vnull_node_helper<> > super;
@@ -77,8 +78,19 @@ namespace kerbal
 						return static_cast<const rb_node_base *>(self);
 					}
 
+				public:
+
+#if 0
+					typedef bool rb_color_t;
+					typedef kerbal::type_traits::false_type BLACK;
+					typedef kerbal::type_traits::true_type RED;
+#else
+					typedef unsigned char rb_color_t;
+					typedef kerbal::type_traits::integral_constant<rb_color_t, static_cast<rb_color_t>(0)> BLACK;
+					typedef kerbal::type_traits::integral_constant<rb_color_t, static_cast<rb_color_t>(255)> RED;
+#endif
+
 				protected:
-					typedef kerbal::container::detail::rb_color_t		rb_color_t;
 					rb_color_t color;
 
 				protected:
