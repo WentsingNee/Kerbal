@@ -64,12 +64,8 @@ namespace kerbal
 			rb_type_unrelated::
 			rb_adjust(rb_node_base * n, rb_node_base * p) KERBAL_NOEXCEPT
 			{
-				while (n != &this->k_head) {
-					if (n == this->k_head.left) {
-						n->set_black();
-						return;
-					}
-					if (rb_node_base::is_black(p)) {
+				do {
+					if (rb_node_base::is_black_never_null(p)) {
 						return;
 					}
 
@@ -116,11 +112,15 @@ namespace kerbal
 					}
 
 					p->set_black();
-					g->set_red();
 					u->set_black();
+					if (g == this->k_head.left) {
+						return;
+					}
+					g->set_red();
 					n = g;
 					p = rb_node_base::as(n->parent);
-				}
+
+				} while (true);
 			}
 
 			KERBAL_CONSTEXPR14
@@ -896,9 +896,7 @@ namespace kerbal
 						}
 					}
 					n->parent = p;
-					if (!rb_node_base::is_black_never_null(p)) { // p is red
-						rb_adjust(n, p);
-					}
+					rb_adjust(n, p);
 				}
 				++this->k_cnt;
 				return iterator(n);
@@ -942,9 +940,7 @@ namespace kerbal
 						}
 					}
 					n->parent = p;
-					if (!rb_node_base::is_black_never_null(p)) { // p is red
-						rb_adjust(n, p);
-					}
+					rb_adjust(n, p);
 				}
 				++this->k_cnt;
 				return unique_insert_r(iterator(n), true);
