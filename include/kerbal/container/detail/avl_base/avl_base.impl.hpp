@@ -1904,7 +1904,7 @@ namespace kerbal
 			template <typename Extract, typename KeyCompare>
 			KERBAL_CONSTEXPR14
 			typename
-			avl_type_only<Entity>::unique_insert_r
+			avl_type_only<Entity>::insert_unique_r
 			avl_type_only<Entity>::
 			k_emplace_hook_node_unique(Extract & e, KeyCompare & kc, node * p)
 			{
@@ -1931,7 +1931,7 @@ namespace kerbal
 							}
 							cur_base = cur_base->right;
 						} else { // src_key == cur_key
-							return unique_insert_r(iterator(cur_base), false);
+							return insert_unique_r(iterator(cur_base), false);
 						}
 					}
 
@@ -1940,7 +1940,7 @@ namespace kerbal
 					cur_base->height = 2;
 					k_emplace_rebalance(cur_base->parent);
 				}
-				return unique_insert_r(iterator(p), true);
+				return insert_unique_r(iterator(p), true);
 			}
 
 			template <typename Entity>
@@ -1970,7 +1970,7 @@ namespace kerbal
 			template <typename NodeAllocator, typename Extract, typename KeyCompare>
 			KERBAL_CONSTEXPR20
 			typename
-			avl_type_only<Entity>::unique_insert_r
+			avl_type_only<Entity>::insert_unique_r
 			avl_type_only<Entity>::
 			k_emplace_unique_ua_aux(
 				NodeAllocator & alloc, Extract & e, KeyCompare & kc,
@@ -1980,7 +1980,7 @@ namespace kerbal
 #			if KERBAL_HAS_EXCEPTIONS_SUPPORT
 				try {
 #			endif
-					unique_insert_r ret(this->k_emplace_hook_node_unique(e, kc, p));
+					insert_unique_r ret(this->k_emplace_hook_node_unique(e, kc, p));
 					if (!ret.insert_happen()) {
 						k_destroy_node(alloc, p);
 					}
@@ -2020,7 +2020,7 @@ namespace kerbal
 			>
 			KERBAL_CONSTEXPR20
 			typename
-			avl_type_only<Entity>::unique_insert_r
+			avl_type_only<Entity>::insert_unique_r
 			avl_type_only<Entity>::
 			k_emplace_unique_using_allocator(
 				NodeAllocator & alloc, Extract & e, KeyCompare & kc,
@@ -2062,7 +2062,7 @@ namespace kerbal
 				KERBAL_OPT_PPEXPAND_WITH_COMMA_N(LEFT_JOIN_COMMA, EMPTY, TARGS_DECL, i) \
 			> \
 			typename \
-			avl_type_only<Entity>::unique_insert_r \
+			avl_type_only<Entity>::insert_unique_r \
 			avl_type_only<Entity>:: \
 			k_emplace_unique_using_allocator( \
 				NodeAllocator & alloc, Extract & e, KeyCompare & kc \
@@ -2090,7 +2090,7 @@ namespace kerbal
 			template <typename NodeAllocator, typename Extract, typename KeyCompare, typename U>
 			KERBAL_CONSTEXPR20
 			typename
-			avl_type_only<Entity>::unique_insert_r
+			avl_type_only<Entity>::insert_unique_r
 			avl_type_only<Entity>::
 #	if __cplusplus >= 201103L
 			k_emplace_unique_delay_build(NodeAllocator & alloc, Extract & e, KeyCompare & kc, U && src_key)
@@ -2129,7 +2129,7 @@ namespace kerbal
 							}
 							cur_base = cur_base->right;
 						} else {
-							return unique_insert_r(iterator(cur_base), false);
+							return insert_unique_r(iterator(cur_base), false);
 						}
 					}
 
@@ -2138,7 +2138,7 @@ namespace kerbal
 					k_emplace_rebalance(cur_base->parent);
 				}
 				++this->k_size;
-				return unique_insert_r(iterator(p), true);
+				return insert_unique_r(iterator(p), true);
 #				undef FORWARD
 			}
 
@@ -2147,7 +2147,7 @@ namespace kerbal
 			template <typename NodeAllocator, typename KeyCompare>
 			KERBAL_CONSTEXPR20
 			typename
-			avl_type_only<Entity>::unique_insert_r
+			avl_type_only<Entity>::insert_unique_r
 			avl_type_only<Entity>::
 			k_emplace_unique_using_allocator(
 				NodeAllocator & alloc,
@@ -2181,7 +2181,7 @@ namespace kerbal
 			template <typename NodeAllocator, typename KeyCompare>
 			KERBAL_CONSTEXPR20
 			typename
-			avl_type_only<Entity>::unique_insert_r
+			avl_type_only<Entity>::insert_unique_r
 			avl_type_only<Entity>::
 			k_emplace_unique_using_allocator(
 				NodeAllocator & alloc,
@@ -2214,7 +2214,7 @@ namespace kerbal
 			template <typename NodeAllocator, typename Extract, typename KeyCompare>
 			KERBAL_CONSTEXPR20
 			typename
-			avl_type_only<Entity>::unique_insert_r
+			avl_type_only<Entity>::insert_unique_r
 			avl_type_only<Entity>::
 			k_insert_unique_using_allocator(
 				NodeAllocator & alloc, Extract & e, KeyCompare & kc,
@@ -2245,7 +2245,7 @@ namespace kerbal
 			template <typename NodeAllocator, typename Extract, typename KeyCompare>
 			KERBAL_CONSTEXPR20
 			typename
-			avl_type_only<Entity>::unique_insert_r
+			avl_type_only<Entity>::insert_unique_r
 			avl_type_only<Entity>::
 			k_insert_unique_using_allocator(
 				NodeAllocator & alloc, Extract & e, KeyCompare & kc,
@@ -2542,7 +2542,7 @@ namespace kerbal
 			>
 			KERBAL_CONSTEXPR20
 			typename
-			avl_type_only<Entity>::unique_insert_r
+			avl_type_only<Entity>::insert_unique_r
 			avl_type_only<Entity>::
 			k_replace_emplace_unique_using_allocator(
 				NodeAllocator & alloc, Extract & e, KeyCompare & kc,
@@ -2588,7 +2588,7 @@ namespace kerbal
 				KERBAL_OPT_PPEXPAND_WITH_COMMA_N(LEFT_JOIN_COMMA, EMPTY, TARGS_DECL, i) \
 			> \
 			typename \
-			avl_type_only<Entity>::unique_insert_r \
+			avl_type_only<Entity>::insert_unique_r \
 			avl_type_only<Entity>:: \
 			k_replace_emplace_unique_using_allocator( \
 				NodeAllocator & alloc, Extract & e, KeyCompare & kc, \
@@ -2680,7 +2680,7 @@ namespace kerbal
 			template <typename ThisExtract, typename ThisKeyCompare>
 			KERBAL_CONSTEXPR20
 			typename
-			avl_type_only<Entity>::unique_insert_r
+			avl_type_only<Entity>::insert_unique_r
 			avl_type_only<Entity>::
 			k_splice_unique(
 				ThisExtract & this_e, ThisKeyCompare & this_kc,
@@ -2718,7 +2718,7 @@ namespace kerbal
 							}
 							cur_base = cur_base->right;
 						} else {
-							return unique_insert_r((++other_it).cast_to_mutable(), false);
+							return insert_unique_r((++other_it).cast_to_mutable(), false);
 						}
 					}
 
@@ -2730,7 +2730,7 @@ namespace kerbal
 					k_emplace_rebalance(cur_base->parent);
 				}
 				++this->k_size;
-				return unique_insert_r(iterator(next), true);
+				return insert_unique_r(iterator(next), true);
 			}
 
 			template <typename Entity>

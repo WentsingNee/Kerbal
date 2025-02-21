@@ -23,7 +23,7 @@
 #include <kerbal/compatibility/constexpr.hpp>
 #include <kerbal/compatibility/noexcept.hpp>
 #include <kerbal/config/exceptions.hpp>
-#include <kerbal/container/associative_container_facility/associative_unique_insert_r.hpp>
+#include <kerbal/container/associative_container_facility/associative_insert_unique_r.hpp>
 #include <kerbal/container/associative_container_facility/key_compare_is_transparent.hpp>
 #include <kerbal/container/associative_container_facility/key_extractors/identity_extractor.hpp>
 #include <kerbal/container/associative_container_facility/unique_tag_t.hpp>
@@ -184,7 +184,7 @@ namespace kerbal
 					typedef kerbal::container::detail::avl_kiter<value_type>			const_iterator;
 					typedef kerbal::iterator::reverse_iterator<iterator>				reverse_iterator;
 					typedef kerbal::iterator::reverse_iterator<const_iterator>			const_reverse_iterator;
-					typedef kerbal::container::associative_unique_insert_r<iterator>	unique_insert_r;
+					typedef kerbal::container::associative_insert_unique_r<iterator>	insert_unique_r;
 
 				protected:
 					typedef super::head_node									head_node;
@@ -953,7 +953,7 @@ namespace kerbal
 
 					template <typename Extract, typename KeyCompare>
 					KERBAL_CONSTEXPR14
-					unique_insert_r
+					insert_unique_r
 					k_emplace_hook_node_unique(Extract & e, KeyCompare & kc, node * p);
 
 					template <
@@ -970,7 +970,7 @@ namespace kerbal
 						typename NodeAllocator, typename Extract, typename KeyCompare
 					>
 					KERBAL_CONSTEXPR20
-					unique_insert_r
+					insert_unique_r
 					k_emplace_unique_ua_aux(
 						NodeAllocator & alloc, Extract & e, KeyCompare & kc,
 						node * p
@@ -996,7 +996,7 @@ namespace kerbal
 						typename ... Args
 					>
 					KERBAL_CONSTEXPR20
-					unique_insert_r
+					insert_unique_r
 					k_emplace_unique_using_allocator(
 						NodeAllocator & alloc, Extract & e, KeyCompare & kc,
 						Args && ... args
@@ -1023,7 +1023,7 @@ namespace kerbal
 						typename NodeAllocator, typename Extract, typename KeyCompare \
 						KERBAL_OPT_PPEXPAND_WITH_COMMA_N(LEFT_JOIN_COMMA, EMPTY, TARGS_DECL, i) \
 					> \
-					unique_insert_r \
+					insert_unique_r \
 					k_emplace_unique_using_allocator( \
 						NodeAllocator & alloc, Extract & e, KeyCompare & kc \
 						KERBAL_OPT_PPEXPAND_WITH_COMMA_N(LEFT_JOIN_COMMA, EMPTY, ARGS_DECL, i) \
@@ -1043,7 +1043,7 @@ namespace kerbal
 
 					template <typename NodeAllocator, typename Extract, typename KeyCompare, typename U>
 					KERBAL_CONSTEXPR20
-					unique_insert_r
+					insert_unique_r
 #			if __cplusplus >= 201103L
 					k_emplace_unique_delay_build(NodeAllocator & alloc, Extract & e, KeyCompare & kc, U && src_key);
 #			else
@@ -1052,7 +1052,7 @@ namespace kerbal
 
 					template <typename NodeAllocator, typename KeyCompare>
 					KERBAL_CONSTEXPR20
-					unique_insert_r
+					insert_unique_r
 					k_emplace_unique_using_allocator(
 						NodeAllocator & alloc,
 						kerbal::container::identity_extractor<Entity> & e,
@@ -1074,7 +1074,7 @@ namespace kerbal
 
 					template <typename NodeAllocator, typename KeyCompare>
 					KERBAL_CONSTEXPR20
-					unique_insert_r
+					insert_unique_r
 					k_emplace_unique_using_allocator(
 						NodeAllocator & alloc,
 						kerbal::container::identity_extractor<Entity> & e,
@@ -1094,7 +1094,7 @@ namespace kerbal
 
 					template <typename NodeAllocator, typename Extract, typename KeyCompare>
 					KERBAL_CONSTEXPR20
-					unique_insert_r
+					insert_unique_r
 					k_insert_unique_using_allocator(
 						NodeAllocator & alloc, Extract & e, KeyCompare & kc,
 						const_reference src
@@ -1113,7 +1113,7 @@ namespace kerbal
 
 					template <typename NodeAllocator, typename Extract, typename KeyCompare>
 					KERBAL_CONSTEXPR20
-					unique_insert_r
+					insert_unique_r
 					k_insert_unique_using_allocator(
 						NodeAllocator & alloc, Extract & e, KeyCompare & kc,
 						rvalue_reference src
@@ -1262,7 +1262,7 @@ namespace kerbal
 						typename ... Args
 					>
 					KERBAL_CONSTEXPR20
-					unique_insert_r
+					insert_unique_r
 					k_replace_emplace_unique_using_allocator(
 						NodeAllocator & alloc, Extract & e, KeyCompare & kc,
 						const_iterator replace,
@@ -1291,7 +1291,7 @@ namespace kerbal
 						typename NodeAllocator, typename Extract, typename KeyCompare \
 						KERBAL_OPT_PPEXPAND_WITH_COMMA_N(LEFT_JOIN_COMMA, EMPTY, TARGS_DECL, i) \
 					> \
-					unique_insert_r \
+					insert_unique_r \
 					k_replace_emplace_unique_using_allocator( \
 						NodeAllocator & alloc, Extract & e, KeyCompare & kc, \
 						const_iterator replace \
@@ -1323,7 +1323,7 @@ namespace kerbal
 
 					template <typename ThisExtract, typename ThisKeyCompare>
 					KERBAL_CONSTEXPR20
-					unique_insert_r
+					insert_unique_r
 					k_splice_unique(
 						ThisExtract & this_e, ThisKeyCompare & this_kc,
 						avl_type_only & other, const_iterator other_it

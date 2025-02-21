@@ -1271,7 +1271,7 @@ namespace kerbal
 		template <typename ... Args>
 		KERBAL_CONSTEXPR20
 		typename
-		avl_ordered<Entity, Extract, KeyCompare, Allocator>::unique_insert_r
+		avl_ordered<Entity, Extract, KeyCompare, Allocator>::insert_unique_r
 		avl_ordered<Entity, Extract, KeyCompare, Allocator>::
 		emplace_unique(Args && ... args)
 		{
@@ -1307,7 +1307,7 @@ namespace kerbal
 		template <typename Entity, typename Extract, typename KeyCompare, typename Allocator> \
 		KERBAL_OPT_PPEXPAND_WITH_COMMA_N(THEAD_NOT_EMPTY, EMPTY, TARGS_DECL, i) \
 		typename \
-		avl_ordered<Entity, Extract, KeyCompare, Allocator>::unique_insert_r \
+		avl_ordered<Entity, Extract, KeyCompare, Allocator>::insert_unique_r \
 		avl_ordered<Entity, Extract, KeyCompare, Allocator>:: \
 		emplace_unique(KERBAL_OPT_PPEXPAND_WITH_COMMA_N(REMAINF, EMPTY, ARGS_DECL, i)) \
 		{ \
@@ -1347,7 +1347,7 @@ namespace kerbal
 		template <typename Entity, typename Extract, typename KeyCompare, typename Allocator>
 		KERBAL_CONSTEXPR20
 		typename
-		avl_ordered<Entity, Extract, KeyCompare, Allocator>::unique_insert_r
+		avl_ordered<Entity, Extract, KeyCompare, Allocator>::insert_unique_r
 		avl_ordered<Entity, Extract, KeyCompare, Allocator>::
 		insert_unique(const_reference src)
 		{
@@ -1375,7 +1375,7 @@ namespace kerbal
 		template <typename Entity, typename Extract, typename KeyCompare, typename Allocator>
 		KERBAL_CONSTEXPR20
 		typename
-		avl_ordered<Entity, Extract, KeyCompare, Allocator>::unique_insert_r
+		avl_ordered<Entity, Extract, KeyCompare, Allocator>::insert_unique_r
 		avl_ordered<Entity, Extract, KeyCompare, Allocator>::
 		insert_unique(rvalue_reference src)
 		{
@@ -1573,7 +1573,7 @@ namespace kerbal
 		template <typename ... Args>
 		KERBAL_CONSTEXPR20
 		typename
-		avl_ordered<Entity, Extract, KeyCompare, Allocator>::unique_insert_r
+		avl_ordered<Entity, Extract, KeyCompare, Allocator>::insert_unique_r
 		avl_ordered<Entity, Extract, KeyCompare, Allocator>::
 		replace_emplace_unique(const_iterator replace, Args && ... args)
 		{
@@ -1613,7 +1613,7 @@ namespace kerbal
 		template <typename Entity, typename Extract, typename KeyCompare, typename Allocator> \
 		KERBAL_OPT_PPEXPAND_WITH_COMMA_N(THEAD_NOT_EMPTY, EMPTY, TARGS_DECL, i) \
 		typename \
-		avl_ordered<Entity, Extract, KeyCompare, Allocator>::unique_insert_r \
+		avl_ordered<Entity, Extract, KeyCompare, Allocator>::insert_unique_r \
 		avl_ordered<Entity, Extract, KeyCompare, Allocator>:: \
 		replace_emplace_unique( \
 			const_iterator replace \

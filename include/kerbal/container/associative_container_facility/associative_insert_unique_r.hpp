@@ -1,5 +1,5 @@
 /**
- * @file       associative_unique_insert_r.hpp
+ * @file       associative_insert_unique_r.hpp
  * @brief
  * @date       2022-09-09
  * @author     Peter
@@ -9,8 +9,8 @@
  *   all rights reserved
  */
 
-#ifndef KERBAL_CONTAINER_ASSOCIATIVE_CONTAINER_FACILITY_ASSOCIATIVE_UNIQUE_INSERT_R_HPP
-#define KERBAL_CONTAINER_ASSOCIATIVE_CONTAINER_FACILITY_ASSOCIATIVE_UNIQUE_INSERT_R_HPP
+#ifndef KERBAL_CONTAINER_ASSOCIATIVE_CONTAINER_FACILITY_ASSOCIATIVE_INSERT_UNIQUE_R_HPP
+#define KERBAL_CONTAINER_ASSOCIATIVE_CONTAINER_FACILITY_ASSOCIATIVE_INSERT_UNIQUE_R_HPP
 
 #include <kerbal/compatibility/constexpr.hpp>
 #include <kerbal/compatibility/noexcept.hpp>
@@ -24,7 +24,7 @@ namespace kerbal
 	{
 
 		template <typename Iterator>
-		class associative_unique_insert_r :
+		class associative_insert_unique_r :
 			public kerbal::utility::compressed_pair<Iterator, bool>
 		{
 			private:
@@ -36,14 +36,14 @@ namespace kerbal
 			public:
 				template <typename UIterator>
 				KERBAL_CONSTEXPR
-				associative_unique_insert_r(const UIterator & pos, bool result) :
+				associative_insert_unique_r(const UIterator & pos, bool result) :
 					super(pos, result)
 				{
 				}
 
 				template <typename UIterator>
 				KERBAL_CONSTEXPR
-				associative_unique_insert_r(const associative_unique_insert_r<UIterator> & src) :
+				associative_insert_unique_r(const associative_insert_unique_r<UIterator> & src) :
 					super(src.position(), src.insert_happen())
 				{
 				}
@@ -71,4 +71,4 @@ namespace kerbal
 
 } // namespace kerbal
 
-#endif // KERBAL_CONTAINER_ASSOCIATIVE_CONTAINER_FACILITY_ASSOCIATIVE_UNIQUE_INSERT_R_HPP
+#endif // KERBAL_CONTAINER_ASSOCIATIVE_CONTAINER_FACILITY_ASSOCIATIVE_INSERT_UNIQUE_R_HPP

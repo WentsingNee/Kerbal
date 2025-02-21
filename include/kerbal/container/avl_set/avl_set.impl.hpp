@@ -503,7 +503,7 @@ namespace kerbal
 		template <typename ... Args>
 		KERBAL_CONSTEXPR20
 		typename
-		avl_set<T, KeyCompare, Allocator>::unique_insert_r
+		avl_set<T, KeyCompare, Allocator>::insert_unique_r
 		avl_set<T, KeyCompare, Allocator>::
 		emplace(Args && ... args)
 		{
@@ -522,7 +522,7 @@ namespace kerbal
 		template <typename T, typename KeyCompare, typename Allocator> \
 		KERBAL_OPT_PPEXPAND_WITH_COMMA_N(THEAD_NOT_EMPTY, EMPTY, TARGS_DECL, i) \
 		typename \
-		avl_set<T, KeyCompare, Allocator>::unique_insert_r \
+		avl_set<T, KeyCompare, Allocator>::insert_unique_r \
 		avl_set<T, KeyCompare, Allocator>:: \
 		emplace(KERBAL_OPT_PPEXPAND_WITH_COMMA_N(REMAINF, EMPTY, ARGS_DECL, i)) \
 		{ \
@@ -546,7 +546,7 @@ namespace kerbal
 		template <typename T, typename KeyCompare, typename Allocator>
 		KERBAL_CONSTEXPR20
 		typename
-		avl_set<T, KeyCompare, Allocator>::unique_insert_r
+		avl_set<T, KeyCompare, Allocator>::insert_unique_r
 		avl_set<T, KeyCompare, Allocator>::
 		insert(const_reference src)
 		{
@@ -558,7 +558,7 @@ namespace kerbal
 		template <typename T, typename KeyCompare, typename Allocator>
 		KERBAL_CONSTEXPR20
 		typename
-		avl_set<T, KeyCompare, Allocator>::unique_insert_r
+		avl_set<T, KeyCompare, Allocator>::insert_unique_r
 		avl_set<T, KeyCompare, Allocator>::
 		insert(rvalue_reference src)
 		{
@@ -678,7 +678,7 @@ namespace kerbal
 		template <typename ... Args>
 		KERBAL_CONSTEXPR20
 		typename
-		avl_set<T, KeyCompare, Allocator>::unique_insert_r
+		avl_set<T, KeyCompare, Allocator>::insert_unique_r
 		avl_set<T, KeyCompare, Allocator>::
 		replace_emplace(
 			const_iterator replace,
@@ -703,7 +703,7 @@ namespace kerbal
 		template <typename T, typename KeyCompare, typename Allocator> \
 		KERBAL_OPT_PPEXPAND_WITH_COMMA_N(THEAD_NOT_EMPTY, EMPTY, TARGS_DECL, i) \
 		typename \
-		avl_set<T, KeyCompare, Allocator>::unique_insert_r \
+		avl_set<T, KeyCompare, Allocator>::insert_unique_r \
 		avl_set<T, KeyCompare, Allocator>:: \
 		replace_emplace( \
 			const_iterator replace \

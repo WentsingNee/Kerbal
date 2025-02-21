@@ -23,7 +23,7 @@
 #include <kerbal/compatibility/constexpr.hpp>
 #include <kerbal/compatibility/move.hpp>
 #include <kerbal/compatibility/noexcept.hpp>
-#include <kerbal/container/associative_container_facility/associative_unique_insert_r.hpp>
+#include <kerbal/container/associative_container_facility/associative_insert_unique_r.hpp>
 #include <kerbal/container/associative_container_facility/key_compare_is_transparent.hpp>
 #include <kerbal/container/nonmember_container_access.hpp>
 #include <kerbal/iterator/iterator.hpp>
@@ -78,8 +78,8 @@ namespace kerbal
 					typedef typename Sequence::const_iterator			const_iterator;
 					typedef typename Sequence::reverse_iterator			reverse_iterator;
 					typedef typename Sequence::const_reverse_iterator	const_reverse_iterator;
-					typedef kerbal::container::associative_unique_insert_r<iterator>
-																		unique_insert_r;
+					typedef kerbal::container::associative_insert_unique_r<iterator>
+																		insert_unique_r;
 
 					typedef typename Extract::key_type					key_type;
 					typedef KeyCompare									key_compare;
@@ -1148,7 +1148,7 @@ namespace kerbal
 
 				protected:
 					KERBAL_CONSTEXPR14
-					unique_insert_r
+					insert_unique_r
 					k_insert_unique_impl(iterator ub, const_reference src)
 					{
 						Extract & e = this->extract();
@@ -1159,19 +1159,19 @@ namespace kerbal
 							ub = this->sequence.insert(ub, src);
 							inserted = true;
 						}
-						return unique_insert_r(ub, inserted);
+						return insert_unique_r(ub, inserted);
 					}
 
 				public:
 					KERBAL_CONSTEXPR14
-					unique_insert_r
+					insert_unique_r
 					insert_unique(const_reference src)
 					{
 						return this->k_insert_unique_impl(this->upper_bound(this->extract()(src)), src);
 					}
 
 					KERBAL_CONSTEXPR14
-					unique_insert_r
+					insert_unique_r
 					insert_unique(const_iterator hint, const_reference src)
 					{
 						return this->k_insert_unique_impl(this->upper_bound(hint, this->extract()(src)), src);
@@ -1181,7 +1181,7 @@ namespace kerbal
 
 				protected:
 					KERBAL_CONSTEXPR14
-					unique_insert_r
+					insert_unique_r
 					k_insert_unique_impl(iterator ub, rvalue_reference src)
 					{
 						Extract & e = this->extract();
@@ -1192,19 +1192,19 @@ namespace kerbal
 							ub = this->sequence.insert(ub, kerbal::compatibility::move(src));
 							inserted = true;
 						}
-						return unique_insert_r(ub, inserted);
+						return insert_unique_r(ub, inserted);
 					}
 
 				public:
 					KERBAL_CONSTEXPR14
-					unique_insert_r
+					insert_unique_r
 					insert_unique(rvalue_reference src)
 					{
 						return this->k_insert_unique_impl(this->upper_bound(this->extract()(src)), kerbal::compatibility::move(src));
 					}
 
 					KERBAL_CONSTEXPR14
-					unique_insert_r
+					insert_unique_r
 					insert_unique(const_iterator hint, rvalue_reference src)
 					{
 						return this->k_insert_unique_impl(this->upper_bound(hint, this->extract()(src)), kerbal::compatibility::move(src));

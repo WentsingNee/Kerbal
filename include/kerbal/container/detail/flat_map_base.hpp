@@ -63,7 +63,7 @@ namespace kerbal
 					typedef typename super::const_iterator				const_iterator;
 					typedef typename super::reverse_iterator			reverse_iterator;
 					typedef typename super::const_reverse_iterator		const_reverse_iterator;
-					typedef typename Ordered::unique_insert_r			unique_insert_r;
+					typedef typename Ordered::insert_unique_r			insert_unique_r;
 
 					typedef typename super::key_type			key_type;
 					typedef typename super::key_compare			key_compare;
@@ -327,14 +327,14 @@ namespace kerbal
 				public:
 
 					KERBAL_CONSTEXPR14
-					unique_insert_r
+					insert_unique_r
 					insert(const_reference src)
 					{
 						return this->ordered.insert_unique(src);
 					}
 
 					KERBAL_CONSTEXPR14
-					unique_insert_r
+					insert_unique_r
 					insert(const_iterator hint, const_reference src)
 					{
 						return this->ordered.insert_unique(hint, src);
@@ -343,14 +343,14 @@ namespace kerbal
 #			if __cplusplus >= 201103L
 
 					KERBAL_CONSTEXPR14
-					unique_insert_r
+					insert_unique_r
 					insert(rvalue_reference src)
 					{
 						return this->ordered.insert_unique(kerbal::compatibility::move(src));
 					}
 
 					KERBAL_CONSTEXPR14
-					unique_insert_r
+					insert_unique_r
 					insert(const_iterator hint, rvalue_reference src)
 					{
 						return this->ordered.insert_unique(hint, kerbal::compatibility::move(src));

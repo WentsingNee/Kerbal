@@ -84,7 +84,7 @@ namespace kerbal
 				typedef typename avl_ordered::const_iterator				const_iterator;
 				typedef typename avl_ordered::reverse_iterator				reverse_iterator;
 				typedef typename avl_ordered::const_reverse_iterator		const_reverse_iterator;
-				typedef typename avl_ordered::unique_insert_r				unique_insert_r;
+				typedef typename avl_ordered::insert_unique_r				insert_unique_r;
 
 				typedef typename avl_ordered::key_type						key_type;
 				typedef M													mapped_type;
@@ -415,7 +415,7 @@ namespace kerbal
 
 				template <typename ... Args>
 				KERBAL_CONSTEXPR20
-				unique_insert_r emplace(Args && ... args);
+				insert_unique_r emplace(Args && ... args);
 
 #		else
 
@@ -426,7 +426,7 @@ namespace kerbal
 #			define ARGS_DECL(i) const KERBAL_MACRO_CONCAT(Arg, i) & KERBAL_MACRO_CONCAT(arg, i)
 #			define FBODY(i) \
 				KERBAL_OPT_PPEXPAND_WITH_COMMA_N(THEAD_NOT_EMPTY, EMPTY, TARGS_DECL, i) \
-				unique_insert_r emplace(KERBAL_OPT_PPEXPAND_WITH_COMMA_N(REMAINF, EMPTY, ARGS_DECL, i)); \
+				insert_unique_r emplace(KERBAL_OPT_PPEXPAND_WITH_COMMA_N(REMAINF, EMPTY, ARGS_DECL, i)); \
 
 				KERBAL_PPEXPAND_N(FBODY, KERBAL_PPEXPAND_EMPTY_SEPARATOR, 0)
 				KERBAL_PPEXPAND_N(FBODY, KERBAL_PPEXPAND_EMPTY_SEPARATOR, 20)
@@ -441,12 +441,12 @@ namespace kerbal
 #		endif
 
 				KERBAL_CONSTEXPR20
-				unique_insert_r insert(const_reference src);
+				insert_unique_r insert(const_reference src);
 
 #		if __cplusplus >= 201103L
 
 				KERBAL_CONSTEXPR20
-				unique_insert_r insert(rvalue_reference src);
+				insert_unique_r insert(rvalue_reference src);
 
 #		endif
 

@@ -104,7 +104,7 @@ namespace kerbal
 				typedef typename avl_type_only::const_iterator				const_iterator;
 				typedef typename avl_type_only::reverse_iterator			reverse_iterator;
 				typedef typename avl_type_only::const_reverse_iterator		const_reverse_iterator;
-				typedef typename avl_type_only::unique_insert_r				unique_insert_r;
+				typedef typename avl_type_only::insert_unique_r				insert_unique_r;
 
 				typedef typename Extract::key_type							key_type;
 				typedef KeyCompare											key_compare;
@@ -802,7 +802,7 @@ namespace kerbal
 
 				template <typename ... Args>
 				KERBAL_CONSTEXPR20
-				unique_insert_r emplace_unique(Args && ... args);
+				insert_unique_r emplace_unique(Args && ... args);
 
 #		else
 
@@ -816,7 +816,7 @@ namespace kerbal
 				iterator emplace(KERBAL_OPT_PPEXPAND_WITH_COMMA_N(REMAINF, EMPTY, ARGS_DECL, i)); \
  \
 				KERBAL_OPT_PPEXPAND_WITH_COMMA_N(THEAD_NOT_EMPTY, EMPTY, TARGS_DECL, i) \
-				unique_insert_r emplace_unique(KERBAL_OPT_PPEXPAND_WITH_COMMA_N(REMAINF, EMPTY, ARGS_DECL, i)); \
+				insert_unique_r emplace_unique(KERBAL_OPT_PPEXPAND_WITH_COMMA_N(REMAINF, EMPTY, ARGS_DECL, i)); \
 
 				KERBAL_PPEXPAND_N(FBODY, KERBAL_PPEXPAND_EMPTY_SEPARATOR, 0)
 				KERBAL_PPEXPAND_N(FBODY, KERBAL_PPEXPAND_EMPTY_SEPARATOR, 20)
@@ -834,7 +834,7 @@ namespace kerbal
 				iterator insert(const_reference src);
 
 				KERBAL_CONSTEXPR20
-				unique_insert_r insert_unique(const_reference src);
+				insert_unique_r insert_unique(const_reference src);
 
 #		if __cplusplus >= 201103L
 
@@ -842,7 +842,7 @@ namespace kerbal
 				iterator insert(rvalue_reference src);
 
 				KERBAL_CONSTEXPR20
-				unique_insert_r insert_unique(rvalue_reference src);
+				insert_unique_r insert_unique(rvalue_reference src);
 
 #		endif
 
@@ -908,7 +908,7 @@ namespace kerbal
 
 				template <typename ... Args>
 				KERBAL_CONSTEXPR20
-				unique_insert_r replace_emplace_unique(const_iterator replace, Args && ... args);
+				insert_unique_r replace_emplace_unique(const_iterator replace, Args && ... args);
 
 #		else
 
@@ -922,7 +922,7 @@ namespace kerbal
 				iterator replace_emplace(const_iterator replace KERBAL_OPT_PPEXPAND_WITH_COMMA_N(LEFT_JOIN_COMMA, EMPTY, ARGS_DECL, i)); \
  \
 				KERBAL_OPT_PPEXPAND_WITH_COMMA_N(THEAD_NOT_EMPTY, EMPTY, TARGS_DECL, i) \
-				unique_insert_r replace_emplace_unique(const_iterator replace KERBAL_OPT_PPEXPAND_WITH_COMMA_N(LEFT_JOIN_COMMA, EMPTY, ARGS_DECL, i)); \
+				insert_unique_r replace_emplace_unique(const_iterator replace KERBAL_OPT_PPEXPAND_WITH_COMMA_N(LEFT_JOIN_COMMA, EMPTY, ARGS_DECL, i)); \
 
 				KERBAL_PPEXPAND_N(FBODY, KERBAL_PPEXPAND_EMPTY_SEPARATOR, 0)
 				KERBAL_PPEXPAND_N(FBODY, KERBAL_PPEXPAND_EMPTY_SEPARATOR, 20)
