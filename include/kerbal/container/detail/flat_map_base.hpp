@@ -295,7 +295,7 @@ namespace kerbal
 					operator[](const key_type & key)
 					{
 						return this->insert(value_type(key, mapped_type())).position()->value(); // TODO use emplace to opt
-						// return this->ordered.unique_emplace(key, kerbal::utility::compressed_pair_default_construct_tag()).position()->value();
+						// return this->ordered.emplace_unique(key, kerbal::utility::compressed_pair_default_construct_tag()).position()->value();
 					}
 
 					KERBAL_CONSTEXPR20
