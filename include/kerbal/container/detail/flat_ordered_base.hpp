@@ -1149,7 +1149,7 @@ namespace kerbal
 				protected:
 					KERBAL_CONSTEXPR14
 					unique_insert_r
-					k_unique_insert_impl(iterator ub, const_reference src)
+					k_insert_unique_impl(iterator ub, const_reference src)
 					{
 						Extract & e = this->extract();
 						bool inserted = false;
@@ -1165,16 +1165,16 @@ namespace kerbal
 				public:
 					KERBAL_CONSTEXPR14
 					unique_insert_r
-					unique_insert(const_reference src)
+					insert_unique(const_reference src)
 					{
-						return this->k_unique_insert_impl(this->upper_bound(this->extract()(src)), src);
+						return this->k_insert_unique_impl(this->upper_bound(this->extract()(src)), src);
 					}
 
 					KERBAL_CONSTEXPR14
 					unique_insert_r
-					unique_insert(const_iterator hint, const_reference src)
+					insert_unique(const_iterator hint, const_reference src)
 					{
-						return this->k_unique_insert_impl(this->upper_bound(hint, this->extract()(src)), src);
+						return this->k_insert_unique_impl(this->upper_bound(hint, this->extract()(src)), src);
 					}
 
 #			if __cplusplus >= 201103L
@@ -1182,7 +1182,7 @@ namespace kerbal
 				protected:
 					KERBAL_CONSTEXPR14
 					unique_insert_r
-					k_unique_insert_impl(iterator ub, rvalue_reference src)
+					k_insert_unique_impl(iterator ub, rvalue_reference src)
 					{
 						Extract & e = this->extract();
 						bool inserted = false;
@@ -1198,16 +1198,16 @@ namespace kerbal
 				public:
 					KERBAL_CONSTEXPR14
 					unique_insert_r
-					unique_insert(rvalue_reference src)
+					insert_unique(rvalue_reference src)
 					{
-						return this->k_unique_insert_impl(this->upper_bound(this->extract()(src)), kerbal::compatibility::move(src));
+						return this->k_insert_unique_impl(this->upper_bound(this->extract()(src)), kerbal::compatibility::move(src));
 					}
 
 					KERBAL_CONSTEXPR14
 					unique_insert_r
-					unique_insert(const_iterator hint, rvalue_reference src)
+					insert_unique(const_iterator hint, rvalue_reference src)
 					{
-						return this->k_unique_insert_impl(this->upper_bound(hint, this->extract()(src)), kerbal::compatibility::move(src));
+						return this->k_insert_unique_impl(this->upper_bound(hint, this->extract()(src)), kerbal::compatibility::move(src));
 					}
 
 #			endif
@@ -1243,7 +1243,7 @@ namespace kerbal
 						kerbal::iterator::is_input_compatible_iterator<InputIterator>::value,
 						InputIterator
 					>::type
-					unique_insert(InputIterator first, InputIterator last)
+					insert_unique(InputIterator first, InputIterator last)
 					{
 						while (first != last && this->size() != this->max_size()) {
 							this->sequence.push_back(*first);
@@ -1258,7 +1258,7 @@ namespace kerbal
 						this->sequence.erase(unique_last, this->sequence.end());
 
 						while (first != last && this->size() != this->max_size()) {
-							this->unique_insert(*first);
+							this->insert_unique(*first);
 							++first;
 						}
 						return first;

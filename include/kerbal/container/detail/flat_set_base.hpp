@@ -290,14 +290,14 @@ namespace kerbal
 					unique_insert_r
 					insert(const_reference src)
 					{
-						return this->ordered.unique_insert(src);
+						return this->ordered.insert_unique(src);
 					}
 
 					KERBAL_CONSTEXPR14
 					unique_insert_r
 					insert(const_iterator hint, const_reference src)
 					{
-						return this->ordered.unique_insert(hint, src);
+						return this->ordered.insert_unique(hint, src);
 					}
 
 #			if __cplusplus >= 201103L
@@ -306,14 +306,14 @@ namespace kerbal
 					unique_insert_r
 					insert(rvalue_reference src)
 					{
-						return this->ordered.unique_insert(kerbal::compatibility::move(src));
+						return this->ordered.insert_unique(kerbal::compatibility::move(src));
 					}
 
 					KERBAL_CONSTEXPR14
 					unique_insert_r
 					insert(const_iterator hint, rvalue_reference src)
 					{
-						return this->ordered.unique_insert(hint, kerbal::compatibility::move(src));
+						return this->ordered.insert_unique(hint, kerbal::compatibility::move(src));
 					}
 
 #			endif
@@ -323,7 +323,7 @@ namespace kerbal
 					void
 					insert(InputIterator first, InputIterator last)
 					{
-						this->ordered.unique_insert(first, last);
+						this->ordered.insert_unique(first, last);
 					}
 
 
