@@ -1620,7 +1620,6 @@ namespace kerbal
 
 			template <typename T>
 			template <typename BinaryPredict>
-			inline
 			KERBAL_CONSTEXPR20
 			void
 			list_type_only<T>::
@@ -1653,7 +1652,6 @@ namespace kerbal
 
 			template <typename T>
 			template <typename BinaryPredict>
-			inline
 			KERBAL_CONSTEXPR20
 			void
 			list_type_only<T>::
@@ -1692,7 +1690,6 @@ namespace kerbal
 
 			template <typename T>
 			template <typename BinaryPredict>
-			inline
 			KERBAL_CONSTEXPR20
 			void
 			list_type_only<T>::

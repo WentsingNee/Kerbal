@@ -66,14 +66,12 @@ namespace kerbal
 		}
 
 		template <typename T>
-		inline
 		T * align_ceil(T * p, std::size_t align) KERBAL_NOEXCEPT
 		{
 			return reinterpret_cast<T *>(align_ceil(reinterpret_cast<std::size_t>(p), align));
 		}
 
 		template <typename T>
-		inline
 		T * align_floor(T * p, std::size_t align) KERBAL_NOEXCEPT
 		{
 			return reinterpret_cast<T *>(align_floor(reinterpret_cast<std::size_t>(p), align));
@@ -133,7 +131,6 @@ namespace kerbal
 
 		template <typename T>
 		KERBAL_CONSTEXPR
-		inline
 		std::size_t alignment_maximum_offset(std::size_t align) KERBAL_NOEXCEPT
 		{
 			return kerbal::memory::detail::alignment_maximum_offset_helper<T>::alignment_maximum_offset(align);

@@ -338,7 +338,6 @@ namespace kerbal
 
 		KERBAL_MODULE_EXPORT
 		template <typename T>
-		inline
 		KERBAL_CONSTEXPR
 		typename kerbal::iterator::iterator_traits<T>::iterator_category
 		iterator_category(const T &)
