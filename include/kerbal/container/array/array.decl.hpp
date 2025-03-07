@@ -150,7 +150,7 @@ namespace kerbal
 				KERBAL_CONSTEXPR14
 				iterator begin() KERBAL_NOEXCEPT;
 
-				KERBAL_CONSTEXPR14
+				KERBAL_CONSTEXPR
 				const_iterator begin() const KERBAL_NOEXCEPT;
 
 				KERBAL_CONSTEXPR
@@ -161,7 +161,7 @@ namespace kerbal
 				iterator end() KERBAL_NOEXCEPT;
 
 				/** @brief 返回指向数组末尾元素的后一个元素位置的迭代器 */
-				KERBAL_CONSTEXPR14
+				KERBAL_CONSTEXPR
 				const_iterator end() const KERBAL_NOEXCEPT;
 
 				KERBAL_CONSTEXPR
@@ -170,7 +170,7 @@ namespace kerbal
 				KERBAL_CONSTEXPR14
 				reverse_iterator rbegin() KERBAL_NOEXCEPT;
 
-				KERBAL_CONSTEXPR14
+				KERBAL_CONSTEXPR
 				const_reverse_iterator rbegin() const KERBAL_NOEXCEPT;
 
 				KERBAL_CONSTEXPR
@@ -179,7 +179,7 @@ namespace kerbal
 				KERBAL_CONSTEXPR14
 				reverse_iterator rend() KERBAL_NOEXCEPT;
 
-				KERBAL_CONSTEXPR14
+				KERBAL_CONSTEXPR
 				const_reverse_iterator rend() const KERBAL_NOEXCEPT;
 
 				KERBAL_CONSTEXPR
@@ -188,7 +188,7 @@ namespace kerbal
 				KERBAL_CONSTEXPR14
 				iterator nth(size_type index) KERBAL_NOEXCEPT;
 
-				KERBAL_CONSTEXPR14
+				KERBAL_CONSTEXPR
 				const_iterator nth(size_type index) const KERBAL_NOEXCEPT;
 
 				KERBAL_CONSTEXPR14
@@ -223,7 +223,7 @@ namespace kerbal
 				KERBAL_CONSTEXPR14
 				reference operator[](size_type index) KERBAL_NOEXCEPT;
 
-				KERBAL_CONSTEXPR14
+				KERBAL_CONSTEXPR
 				const_reference operator[](size_type index) const KERBAL_NOEXCEPT;
 
 				reference at(size_type index);
@@ -241,7 +241,7 @@ namespace kerbal
 				 * @brief Get the const_reference of the element at the beginning of the array.
 				 * @return the const_reference of the element at the beginning of the array.
 				 */
-				KERBAL_CONSTEXPR14
+				KERBAL_CONSTEXPR
 				const_reference front() const;
 
 				/**
@@ -255,7 +255,7 @@ namespace kerbal
 				 * @brief Get the const_reference of the element at the end of the array.
 				 * @return the const_reference of the element at the end of the array.
 				 */
-				KERBAL_CONSTEXPR14
+				KERBAL_CONSTEXPR
 				const_reference back() const;
 
 				/**
@@ -265,7 +265,7 @@ namespace kerbal
 				KERBAL_CONSTEXPR14
 				equal_c_array_reference c_arr() KERBAL_NOEXCEPT;
 
-				KERBAL_CONSTEXPR14
+				KERBAL_CONSTEXPR
 				const_equal_c_array_reference c_arr() const KERBAL_NOEXCEPT;
 
 				KERBAL_CONSTEXPR

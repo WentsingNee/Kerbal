@@ -136,7 +136,7 @@ namespace kerbal
 		}
 
 		template <typename T, std::size_t N>
-		KERBAL_CONSTEXPR14
+		KERBAL_CONSTEXPR
 		typename
 		array<T, N>::const_iterator
 		array<T, N>::begin() const KERBAL_NOEXCEPT
@@ -163,7 +163,7 @@ namespace kerbal
 		}
 
 		template <typename T, std::size_t N>
-		KERBAL_CONSTEXPR14
+		KERBAL_CONSTEXPR
 		typename
 		array<T, N>::const_iterator
 		array<T, N>::end() const KERBAL_NOEXCEPT
@@ -190,7 +190,7 @@ namespace kerbal
 		}
 
 		template <typename T, std::size_t N>
-		KERBAL_CONSTEXPR14
+		KERBAL_CONSTEXPR
 		typename
 		array<T, N>::const_reverse_iterator
 		array<T, N>::rbegin() const KERBAL_NOEXCEPT
@@ -217,7 +217,7 @@ namespace kerbal
 		}
 
 		template <typename T, std::size_t N>
-		KERBAL_CONSTEXPR14
+		KERBAL_CONSTEXPR
 		typename
 		array<T, N>::const_reverse_iterator
 		array<T, N>::rend() const KERBAL_NOEXCEPT
@@ -244,7 +244,7 @@ namespace kerbal
 		}
 
 		template <typename T, std::size_t N>
-		KERBAL_CONSTEXPR14
+		KERBAL_CONSTEXPR
 		typename
 		array<T, N>::const_iterator
 		array<T, N>::nth(size_type index) const KERBAL_NOEXCEPT
@@ -296,7 +296,7 @@ namespace kerbal
 		}
 
 		template <typename T, std::size_t N>
-		KERBAL_CONSTEXPR14
+		KERBAL_CONSTEXPR
 		typename
 		array<T, N>::const_reference
 		array<T, N>::operator[](size_type index) const KERBAL_NOEXCEPT
@@ -340,7 +340,7 @@ namespace kerbal
 		}
 
 		template <typename T, std::size_t N>
-		KERBAL_CONSTEXPR14
+		KERBAL_CONSTEXPR
 		typename
 		array<T, N>::const_reference
 		array<T, N>::front() const
@@ -358,7 +358,7 @@ namespace kerbal
 		}
 
 		template <typename T, std::size_t N>
-		KERBAL_CONSTEXPR14
+		KERBAL_CONSTEXPR
 		typename
 		array<T, N>::const_reference
 		array<T, N>::back() const
@@ -376,7 +376,7 @@ namespace kerbal
 		}
 
 		template <typename T, std::size_t N>
-		KERBAL_CONSTEXPR14
+		KERBAL_CONSTEXPR
 		typename
 		array<T, N>::const_equal_c_array_reference
 		array<T, N>::c_arr() const KERBAL_NOEXCEPT
