@@ -47,6 +47,11 @@ namespace kerbal
 				typedef kerbal::type_traits::integral_constant<std::size_t, 0> TUPLE_SIZE;
 
 			public:
+				KERBAL_CONSTEXPR
+				std::size_t size() const KERBAL_NOEXCEPT
+				{
+					return TUPLE_SIZE::value;
+				}
 
 				KERBAL_CONSTEXPR
 				tuple<> ref() KERBAL_NOEXCEPT
@@ -270,6 +275,12 @@ namespace kerbal
 				} \
  \
 			public: \
+ \
+				KERBAL_CONSTEXPR \
+				std::size_t size() const KERBAL_NOEXCEPT \
+				{ \
+					return TUPLE_SIZE::value; \
+				} \
  \
 				template <std::size_t I> \
 				KERBAL_CONSTEXPR14 \
