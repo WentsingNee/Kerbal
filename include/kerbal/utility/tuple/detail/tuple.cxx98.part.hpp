@@ -166,6 +166,7 @@ namespace kerbal
 
 #	define FOR_EACH_EACH_APPLY(i) (f(kerbal::type_traits::integral_constant<std::size_t, (i) - 1>(), this->template get<(i) - 1>()))
 #	define RFOR_EACH_EACH_APPLY(i) (f(kerbal::type_traits::integral_constant<std::size_t, TUPLE_SIZE::value - 1 - ((i) - 1)>(), this->template get<TUPLE_SIZE::value - 1 - ((i) - 1)>()))
+#	define VISIT_APPLY(i) (((i) == idx) ? f(kerbal::type_traits::integral_constant<std::size_t, (i) - 1>(), this->template get<(i) - 1>()), 0 : 0)
 
 #	define REVERSE_EACH_TYPE(i) typename value_type<TUPLE_SIZE::value - 1 - ((i) - 1)>::type
 #	define REVERSE_EACH_GET(i) this->template get<TUPLE_SIZE::value - 1 - ((i) - 1)>()
@@ -362,6 +363,22 @@ namespace kerbal
 				const tuple & rfor_each(F f) const \
 				{ \
 					KERBAL_PPEXPAND_WITH_COMMA_N(RFOR_EACH_EACH_APPLY, i); \
+					return *this; \
+				} \
+ \
+				template <typename F> \
+				KERBAL_CONSTEXPR14 \
+				tuple & visit(std::size_t idx, F f) \
+				{ \
+					KERBAL_PPEXPAND_WITH_COMMA_N(VISIT_APPLY, i); \
+					return *this; \
+				} \
+ \
+				template <typename F> \
+				KERBAL_CONSTEXPR14 \
+				const tuple & visit(std::size_t idx, F f) const \
+				{ \
+					KERBAL_PPEXPAND_WITH_COMMA_N(VISIT_APPLY, i); \
 					return *this; \
 				} \
  \

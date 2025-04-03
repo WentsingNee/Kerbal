@@ -897,6 +897,77 @@ namespace kerbal
 				template <typename Self, typename F, std::size_t ... Index>
 				KERBAL_CONSTEXPR
 				static
+				Self &&
+				k_visit_impl(Self && self, std::size_t idx, F f, kerbal::utility::index_sequence<Index...>)
+				{
+					return
+						kerbal::utility::ignore_unused(
+							std::initializer_list<int>{
+								(
+									(Index == idx) ?
+									f(
+										kerbal::type_traits::integral_constant<std::size_t, Index>(),
+										kerbal::utility::forward<Self>(self).template get<Index>()
+									), 0 :
+									0
+								)...
+							}
+						),
+						kerbal::utility::forward<Self>(self);
+				}
+
+			public:
+
+				template <typename F>
+				KERBAL_CONSTEXPR14
+				tuple & visit(std::size_t idx, F f) &
+				{
+					return
+						k_visit_impl(
+							*this, idx, f,
+							kerbal::utility::make_index_sequence<TUPLE_SIZE::value>()
+						);
+				}
+
+				template <typename F>
+				KERBAL_CONSTEXPR
+				const tuple & visit(std::size_t idx, F f) const &
+				{
+					return
+						k_visit_impl(
+							*this, idx, f,
+							kerbal::utility::make_index_sequence<TUPLE_SIZE::value>()
+						);
+				}
+
+				template <typename F>
+				KERBAL_CONSTEXPR14
+				tuple && visit(std::size_t idx, F f) &&
+				{
+					return
+						k_visit_impl(
+							kerbal::compatibility::move(*this), idx, f,
+							kerbal::utility::make_index_sequence<TUPLE_SIZE::value>()
+						);
+				}
+
+				template <typename F>
+				KERBAL_CONSTEXPR
+				const tuple && visit(std::size_t idx, F f) const &&
+				{
+					return
+						k_visit_impl(
+							kerbal::compatibility::move(*this), idx, f,
+							kerbal::utility::make_index_sequence<TUPLE_SIZE::value>()
+						);
+				}
+
+
+			protected:
+
+				template <typename Self, typename F, std::size_t ... Index>
+				KERBAL_CONSTEXPR
+				static
 				auto k_apply_to_impl(Self && self, F f, kerbal::utility::index_sequence<Index...>) ->
 					decltype(f(kerbal::utility::forward<Self>(self).template get<Index>()...))
 				{
