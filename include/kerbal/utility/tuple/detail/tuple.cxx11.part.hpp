@@ -25,6 +25,7 @@
 #include <kerbal/compatibility/namespace_std_scope.hpp>
 #include <kerbal/compatibility/noexcept.hpp>
 #include <kerbal/compatibility/static_assert.hpp>
+#include <kerbal/function/invoke.hpp>
 #include <kerbal/tmp/type_vector.hpp>
 #include <kerbal/type_traits/add_const_lvalue_reference.hpp>
 #include <kerbal/type_traits/add_const_rvalue_reference.hpp>
@@ -965,27 +966,59 @@ namespace kerbal
 
 			protected:
 
+				template <typename Self, typename F, typename IndexSeq>
+				struct k_apply_result_impl;
+				
+				template <typename Self, typename F, std::size_t ... Index>
+				struct k_apply_result_impl<Self, F, kerbal::utility::index_sequence<Index...> > :
+					kerbal::function::invoke_result<F, decltype(kerbal::utility::declval<Self>().template get<Index>())...>
+				{
+				};
+
+				template <typename Self, typename F>
+				struct apply_result :
+					k_apply_result_impl<Self, F, kerbal::utility::make_index_sequence<TUPLE_SIZE::value> >
+				{
+				};
+
+
+				template <typename Self, typename F, typename IndexSeq>
+				struct k_apply_is_nothrow_impl;
+				
+				template <typename Self, typename F, std::size_t ... Index>
+				struct k_apply_is_nothrow_impl<Self, F, kerbal::utility::index_sequence<Index...> > :
+					kerbal::function::invoke_is_nothrow<F, decltype(kerbal::utility::declval<Self>().template get<Index>())...>
+				{
+				};
+
+				template <typename Self, typename F>
+				struct apply_is_nothrow :
+					k_apply_is_nothrow_impl<Self, F, kerbal::utility::make_index_sequence<TUPLE_SIZE::value> >
+				{
+				};
+
+
 				template <typename Self, typename F, std::size_t ... Index>
 				KERBAL_CONSTEXPR
 				static
-				auto k_apply_to_impl(Self && self, F f, kerbal::utility::index_sequence<Index...>) ->
-					decltype(f(kerbal::utility::forward<Self>(self).template get<Index>()...))
+				typename apply_result<Self &&, F>::type
+				k_apply_to_impl(Self && self, F f, kerbal::utility::index_sequence<Index...>)
+					KERBAL_CONDITIONAL_NOEXCEPT((
+						apply_is_nothrow<Self &&, F>::value
+					))
 				{
-					return f(kerbal::utility::forward<Self>(self).template get<Index>()...);
+					return kerbal::function::invoke(f, kerbal::utility::forward<Self>(self).template get<Index>()...);
 				}
 
 			public:
 
 				template <typename F>
 				KERBAL_CONSTEXPR14
-				auto apply_to(F f) & ->
-					decltype(
-						k_apply_to_impl(
-							*this,
-							f,
-							kerbal::utility::make_index_sequence<TUPLE_SIZE::value>()
-						)
-					)
+				typename apply_result<tuple &, F>::type
+				apply_to(F f) &
+					KERBAL_CONDITIONAL_NOEXCEPT((
+						apply_is_nothrow<tuple &, F>::value
+					))
 				{
 					return
 						k_apply_to_impl(
@@ -997,14 +1030,11 @@ namespace kerbal
 
 				template <typename F>
 				KERBAL_CONSTEXPR
-				auto apply_to(F f) const & ->
-					decltype(
-						k_apply_to_impl(
-							*this,
-							f,
-							kerbal::utility::make_index_sequence<TUPLE_SIZE::value>()
-						)
-					)
+				typename apply_result<const tuple &, F>::type
+				apply_to(F f) const &
+					KERBAL_CONDITIONAL_NOEXCEPT((
+						apply_is_nothrow<const tuple &, F>::value
+					))
 				{
 					return
 						k_apply_to_impl(
@@ -1016,14 +1046,11 @@ namespace kerbal
 
 				template <typename F>
 				KERBAL_CONSTEXPR14
-				auto apply_to(F f) && ->
-					decltype(
-						k_apply_to_impl(
-							kerbal::compatibility::move(*this),
-							f,
-							kerbal::utility::make_index_sequence<TUPLE_SIZE::value>()
-						)
-					)
+				typename apply_result<tuple &&, F>::type
+				apply_to(F f) &&
+					KERBAL_CONDITIONAL_NOEXCEPT((
+						apply_is_nothrow<tuple &&, F>::value
+					))
 				{
 					return
 						k_apply_to_impl(
@@ -1035,14 +1062,11 @@ namespace kerbal
 
 				template <typename F>
 				KERBAL_CONSTEXPR
-				auto apply_to(F f) const && ->
-					decltype(
-						k_apply_to_impl(
-							kerbal::compatibility::move(*this),
-							f,
-							kerbal::utility::make_index_sequence<TUPLE_SIZE::value>()
-						)
-					)
+				typename apply_result<const tuple &&, F>::type
+				apply_to(F f) const &&
+					KERBAL_CONDITIONAL_NOEXCEPT((
+						apply_is_nothrow<const tuple &&, F>::value
+					))
 				{
 					return
 						k_apply_to_impl(
