@@ -16,6 +16,7 @@
 #include <kerbal/function/invoke/invoke_overload_ver_selector.hpp>
 #include <kerbal/function/invoke/invoke_is_nothrow.hpp>
 #include <kerbal/function/invoke/invoke_result.hpp>
+#include <kerbal/function/invoke/is_invocable.hpp>
 
 #include <kerbal/compatibility/constexpr.hpp>
 #include <kerbal/compatibility/noexcept.hpp>
