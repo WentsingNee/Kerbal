@@ -32,6 +32,9 @@ namespace kerbal
 			template <typename Ver, typename Fun, typename ... Args>
 			struct invoke_is_nothrow_helper;
 
+			/*
+			 * f()
+			 */
 			template <typename Fun, typename ... Args>
 			struct invoke_is_nothrow_helper<
 				INVOKE_OVERLOAD_VER_CALLABLE,
@@ -45,15 +48,23 @@ namespace kerbal
 					> type;
 			};
 
-			template <typename MemObjPtr, typename T, typename ... Args>
+
+			/*
+			 * obj.*mem
+			 */
+			template <typename MemObjPtr, typename T>
 			struct invoke_is_nothrow_helper<
 				INVOKE_OVERLOAD_VER_MEM_OBJ,
-				MemObjPtr, T, Args...
+				MemObjPtr, T
 			>
 			{
 					typedef kerbal::type_traits::true_type type;
 			};
 
+
+			/*
+			 * obj.*mem()
+			 */
 			template <typename MemFunPtr, typename TOri, typename T, typename ... Args>
 			struct invoke_is_nothrow_helper_of_mem_fun
 			{
@@ -65,6 +76,9 @@ namespace kerbal
 					> type;
 			};
 
+			/*
+			 * obj->*mem
+			 */
 			template <typename MemFunPtr, typename TOri, typename T, typename ... Args>
 			struct invoke_is_nothrow_helper_of_mem_fun<
 				MemFunPtr, TOri,
@@ -80,6 +94,9 @@ namespace kerbal
 					> type;
 			};
 
+			/*
+			 * obj.get().*mem
+			 */
 			template <typename MemFunPtr, typename TOri, typename T, typename ... Args>
 			struct invoke_is_nothrow_helper_of_mem_fun<
 				MemFunPtr, TOri,
