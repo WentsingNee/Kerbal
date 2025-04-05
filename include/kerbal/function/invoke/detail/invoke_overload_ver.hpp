@@ -24,9 +24,10 @@ namespace kerbal
 		namespace detail
 		{
 
-			typedef kerbal::type_traits::integral_constant<int, 0> INVOKE_OVERLOAD_VER_CALLABLE;
-			typedef kerbal::type_traits::integral_constant<int, 1> INVOKE_OVERLOAD_VER_MEM_OBJ;
-			typedef kerbal::type_traits::integral_constant<int, 2> INVOKE_OVERLOAD_VER_MEM_FUN;
+			typedef kerbal::type_traits::integral_constant<int, -1> INVOKE_OVERLOAD_VER_NOT_INVOCABLE;
+			typedef kerbal::type_traits::integral_constant<int, 0>  INVOKE_OVERLOAD_VER_CALLABLE;
+			typedef kerbal::type_traits::integral_constant<int, 1>  INVOKE_OVERLOAD_VER_MEM_OBJ;
+			typedef kerbal::type_traits::integral_constant<int, 2>  INVOKE_OVERLOAD_VER_MEM_FUN;
 
 		} // namespace detail
 

@@ -12,11 +12,12 @@
 #ifndef KERBAL_FUNCTION_INVOKE_DETAIL_INVOKE_RESULT_CXX11_PART_HPP
 #define KERBAL_FUNCTION_INVOKE_DETAIL_INVOKE_RESULT_CXX11_PART_HPP
 
+#include <kerbal/function/invoke/invoke_overload_ver_selector.hpp>
+#include <kerbal/function/invoke/is_invocable.hpp>
 #include <kerbal/type_traits/remove_cvref.hpp>
 #include <kerbal/utility/declval.hpp>
 #include <kerbal/utility/reference_wrapper.hpp>
 
-#include <kerbal/function/invoke/invoke_overload_ver_selector.hpp>
 
 
 namespace kerbal
@@ -154,17 +155,32 @@ namespace kerbal
 			{
 			};
 
+
+			template <bool IsInvocable, typename Fun, typename ... Args>
+			struct invoke_result_impl
+			{
+			};
+
+			template <typename Fun, typename ... Args>
+			struct invoke_result_impl<true, Fun, Args...> :
+				kerbal::function::detail::invoke_result_helper<
+					typename kerbal::function::detail::invoke_overload_ver_selector<Fun, Args...>::type, Fun, Args...
+				>
+			{
+			};
+	
 		} // namespace detail
 
 
 		template <typename Fun, typename ... Args>
 		struct invoke_result :
-			kerbal::function::detail::invoke_result_helper<
-				typename kerbal::function::detail::invoke_overload_ver_selector<Fun, Args...>::type, Fun, Args...
+			kerbal::function::detail::invoke_result_impl<
+				kerbal::function::is_invocable<Fun, Args...>::value,
+				Fun, Args...
 			>
 		{
 		};
-
+		
 	} // namespace function
 
 } // namespace kerbal
