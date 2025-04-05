@@ -31,15 +31,25 @@ namespace kerbal
 			template <typename Ver, typename Fun, typename ... Args>
 			struct invoke_result_helper;
 
+			/*
+			 * f()
+			 */
 			template <typename Fun, typename ... Args>
-			struct invoke_result_helper<INVOKE_OVERLOAD_VER_CALLABLE, Fun, Args...>
+			struct invoke_result_helper<
+				INVOKE_OVERLOAD_VER_CALLABLE,
+				Fun, Args...
+			>
 			{
 					typedef decltype(
 						kerbal::utility::declval<Fun>()(kerbal::utility::declval<Args>()...)
 					) type;
 			};
 
-			template <typename MemObjPtr, typename TOri, typename T, typename ... Args>
+
+			/*
+			 * obj.*mem
+			 */
+			template <typename MemObjPtr, typename TOri, typename T>
 			struct invoke_result_helper_of_mem_obj
 			{
 					typedef decltype(
@@ -47,16 +57,28 @@ namespace kerbal
 					) type;
 			};
 
-			template <typename MemObjPtr, typename TOri, typename T, typename ... Args>
-			struct invoke_result_helper_of_mem_obj<MemObjPtr, TOri, T *, Args...>
+			/*
+			 * obj->*mem
+			 */
+			template <typename MemObjPtr, typename TOri, typename T>
+			struct invoke_result_helper_of_mem_obj<
+				MemObjPtr,
+				TOri, T *
+			>
 			{
 					typedef decltype(
 						kerbal::utility::declval<TOri>()->*(kerbal::utility::declval<MemObjPtr>())
 					) type;
 			};
 
-			template <typename MemObjPtr, typename TOri, typename T, typename ... Args>
-			struct invoke_result_helper_of_mem_obj<MemObjPtr, TOri, kerbal::utility::reference_wrapper<T>, Args...>
+			/*
+			 * obj.get().*mem
+			 */
+			template <typename MemObjPtr, typename TOri, typename T>
+			struct invoke_result_helper_of_mem_obj<
+				MemObjPtr,
+				TOri, kerbal::utility::reference_wrapper<T>
+			>
 			{
 					typedef decltype(
 						kerbal::utility::declval<TOri>().get().*(kerbal::utility::declval<MemObjPtr>())
@@ -64,15 +86,22 @@ namespace kerbal
 			};
 
 			template <typename MemObjPtr, typename T, typename ... Args>
-			struct invoke_result_helper<INVOKE_OVERLOAD_VER_MEM_OBJ, MemObjPtr, T, Args...> :
-					invoke_result_helper_of_mem_obj<
-						MemObjPtr,
-						T, typename kerbal::type_traits::remove_cvref<T>::type,
-						Args...
-					>
+			struct invoke_result_helper<
+				INVOKE_OVERLOAD_VER_MEM_OBJ,
+				MemObjPtr, T, Args...
+			> :
+				invoke_result_helper_of_mem_obj<
+					MemObjPtr,
+					T, typename kerbal::type_traits::remove_cvref<T>::type,
+					Args...
+				>
 			{
 			};
 
+
+			/*
+			 * obj.*mem()
+			 */
 			template <typename MemFunPtr, typename TOri, typename T, typename ... Args>
 			struct invoke_result_helper_of_mem_fun
 			{
@@ -82,8 +111,14 @@ namespace kerbal
 					) type;
 			};
 
+			/*
+			 * obj->*mem()
+			 */
 			template <typename MemFunPtr, typename TOri, typename T, typename ... Args>
-			struct invoke_result_helper_of_mem_fun<MemFunPtr, TOri, T *, Args...>
+			struct invoke_result_helper_of_mem_fun<
+				MemFunPtr,
+				TOri, T *, Args...
+			>
 			{
 					typedef decltype(
 						(kerbal::utility::declval<TOri>()->*kerbal::utility::declval<MemFunPtr>())
@@ -91,8 +126,14 @@ namespace kerbal
 					) type;
 			};
 
+			/*
+			 * obj.get().*mem()
+			 */
 			template <typename MemFunPtr, typename TOri, typename T, typename ... Args>
-			struct invoke_result_helper_of_mem_fun<MemFunPtr, TOri, kerbal::utility::reference_wrapper<T>, Args...>
+			struct invoke_result_helper_of_mem_fun<
+				MemFunPtr,
+				TOri, kerbal::utility::reference_wrapper<T>, Args...
+			>
 			{
 					typedef decltype(
 						(kerbal::utility::declval<TOri>().get().*kerbal::utility::declval<MemFunPtr>())
@@ -101,12 +142,15 @@ namespace kerbal
 			};
 
 			template <typename MemFunPtr, typename T, typename ... Args>
-			struct invoke_result_helper<INVOKE_OVERLOAD_VER_MEM_FUN, MemFunPtr, T, Args...> :
-					invoke_result_helper_of_mem_fun<
-						MemFunPtr,
-						T, typename kerbal::type_traits::remove_cvref<T>::type,
-						Args...
-					>
+			struct invoke_result_helper<
+				INVOKE_OVERLOAD_VER_MEM_FUN,
+				MemFunPtr, T, Args...
+			> :
+				invoke_result_helper_of_mem_fun<
+					MemFunPtr,
+					T, typename kerbal::type_traits::remove_cvref<T>::type,
+					Args...
+				>
 			{
 			};
 
