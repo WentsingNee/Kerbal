@@ -13,7 +13,7 @@
 #define KERBAL_FUNCTION_INVOKE_DETAIL_INVOKE_IS_NOTHROW_CXX11_PART_HPP
 
 #include <kerbal/function/invoke/invoke_overload_ver_selector.hpp>
-
+#include <kerbal/function/invoke/is_invocable.hpp>
 #include <kerbal/type_traits/integral_constant.hpp>
 #include <kerbal/type_traits/remove_cvref.hpp>
 #include <kerbal/utility/declval.hpp>
@@ -125,13 +125,29 @@ namespace kerbal
 			{
 			};
 
+
+			template <bool IsInvocable, typename Fun, typename ... Args>
+			struct invoke_is_nothrow_impl :
+				kerbal::type_traits::false_type
+			{
+			};
+
+			template <typename Fun, typename ... Args>
+			struct invoke_is_nothrow_impl<true, Fun, Args...> :
+				kerbal::function::detail::invoke_is_nothrow_helper<
+					typename kerbal::function::detail::invoke_overload_ver_selector<Fun, Args...>::type,
+					Fun, Args...
+				>::type
+			{
+			};
+		
 		} // namespace detail
 
 
 		template <typename Fun, typename ... Args>
 		struct invoke_is_nothrow :
-			kerbal::function::detail::invoke_is_nothrow_helper<
-				typename kerbal::function::detail::invoke_overload_ver_selector<Fun, Args...>::type,
+			kerbal::function::detail::invoke_is_nothrow_impl<
+				kerbal::function::is_invocable<Fun, Args...>::value,
 				Fun, Args...
 			>::type
 		{
