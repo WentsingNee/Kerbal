@@ -18,6 +18,7 @@
 #include <kerbal/assign/ilist.hpp>
 #include <kerbal/compatibility/constexpr.hpp>
 #include <kerbal/compatibility/namespace_std_scope.hpp>
+#include <kerbal/compatibility/move.hpp>
 #include <kerbal/compatibility/noexcept.hpp>
 #include <kerbal/container/static_vector.hpp>
 #include <kerbal/iterator/iterator_traits.hpp>
@@ -100,6 +101,13 @@ namespace kerbal
 				{
 				}
 
+#		if __cplusplus >= 201103L
+
+				static_ordered(const static_ordered & src) = default;
+				static_ordered(static_ordered && src) = default;
+
+#		endif
+
 				template <typename InputIterator>
 				KERBAL_CONSTEXPR14
 				static_ordered(
@@ -168,8 +176,19 @@ namespace kerbal
 				void
 				assign(const static_ordered & src)
 				{
-					this->assign(src.cbegin(), src.cend(), src.key_comp());
+					this->super::assign(static_cast<const super &>(src));
 				}
+
+#		if __cplusplus >= 201103L
+
+				KERBAL_CONSTEXPR14
+				void
+				assign(static_ordered && src)
+				{
+					this->super::assign(static_cast<super &&>(src));
+				}
+
+#		endif
 
 				KERBAL_CONSTEXPR14
 				static_ordered &
@@ -178,6 +197,18 @@ namespace kerbal
 					this->assign(src);
 					return *this;
 				}
+
+#		if __cplusplus >= 201103L
+
+				KERBAL_CONSTEXPR14
+				static_ordered &
+				operator=(static_ordered && src)
+				{
+					this->assign(kerbal::compatibility::move(src));
+					return *this;
+				}
+
+#		endif
 
 #		if __cplusplus >= 201103L
 

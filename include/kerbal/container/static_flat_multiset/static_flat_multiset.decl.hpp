@@ -19,6 +19,7 @@
 #include <kerbal/assign/ilist.hpp>
 #include <kerbal/compatibility/constexpr.hpp>
 #include <kerbal/compatibility/namespace_std_scope.hpp>
+#include <kerbal/compatibility/move.hpp>
 #include <kerbal/compatibility/noexcept.hpp>
 #include <kerbal/container/associative_container_facility/key_extractors/identity_extractor.hpp>
 #include <kerbal/container/static_ordered.hpp>
@@ -101,6 +102,13 @@ namespace kerbal
 				{
 				}
 
+#		if __cplusplus >= 201103L
+
+				static_flat_multiset(const static_flat_multiset & src) = default;
+				static_flat_multiset(static_flat_multiset && src) = default;
+
+#		endif
+
 				template <typename InputIterator>
 				KERBAL_CONSTEXPR14
 				static_flat_multiset(
@@ -172,6 +180,17 @@ namespace kerbal
 					this->ordered.assign(src.ordered);
 				}
 
+#		if __cplusplus >= 201103L
+
+				KERBAL_CONSTEXPR14
+				void
+				assign(static_flat_multiset && src)
+				{
+					this->ordered.assign(kerbal::compatibility::move(src.ordered));
+				}
+
+#		endif
+
 				KERBAL_CONSTEXPR14
 				static_flat_multiset &
 				operator=(const static_flat_multiset & src)
@@ -179,6 +198,18 @@ namespace kerbal
 					this->assign(src);
 					return *this;
 				}
+
+#		if __cplusplus >= 201103L
+
+				KERBAL_CONSTEXPR14
+				static_flat_multiset &
+				operator=(static_flat_multiset && src)
+				{
+					this->assign(kerbal::compatibility::move(src));
+					return *this;
+				}
+
+#		endif
 
 #		if __cplusplus >= 201103L
 

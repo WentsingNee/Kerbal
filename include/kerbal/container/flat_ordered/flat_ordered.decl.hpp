@@ -20,6 +20,7 @@
 #include <kerbal/assign/ilist.hpp>
 #include <kerbal/compatibility/constexpr.hpp>
 #include <kerbal/compatibility/namespace_std_scope.hpp>
+#include <kerbal/compatibility/move.hpp>
 #include <kerbal/compatibility/noexcept.hpp>
 #include <kerbal/container/vector.hpp>
 #include <kerbal/iterator/iterator_traits.hpp>
@@ -100,6 +101,13 @@ namespace kerbal
 				{
 				}
 
+#		if __cplusplus >= 201103L
+
+				flat_ordered(const flat_ordered & src) = default;
+				flat_ordered(flat_ordered && src) = default;
+
+#		endif
+
 				template <typename InputIterator>
 				KERBAL_CONSTEXPR20
 				flat_ordered(
@@ -168,8 +176,19 @@ namespace kerbal
 				void
 				assign(const flat_ordered & src)
 				{
-					this->assign(src.cbegin(), src.cend(), src.key_comp());
+					this->super::assign(static_cast<const super &>(src));
 				}
+
+#		if __cplusplus >= 201103L
+
+				KERBAL_CONSTEXPR20
+				void
+				assign(flat_ordered && src)
+				{
+					this->super::assign(static_cast<super &&>(src));
+				}
+
+#		endif
 
 				KERBAL_CONSTEXPR20
 				flat_ordered &
@@ -178,6 +197,18 @@ namespace kerbal
 					this->assign(src);
 					return *this;
 				}
+
+#		if __cplusplus >= 201103L
+
+				KERBAL_CONSTEXPR20
+				flat_ordered &
+				operator=(flat_ordered && src)
+				{
+					this->assign(kerbal::compatibility::move(src));
+					return *this;
+				}
+
+#		endif
 
 #		if __cplusplus >= 201103L
 

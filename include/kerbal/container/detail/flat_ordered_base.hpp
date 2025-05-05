@@ -258,6 +258,28 @@ namespace kerbal
 				//===================
 				// assign
 
+				protected:
+
+					KERBAL_CONSTEXPR14
+					void
+					assign(const flat_ordered_base & src)
+					{
+						this->assign(src.cbegin(), src.cend(), src.key_comp());
+					}
+
+#			if __cplusplus >= 201103L
+
+					KERBAL_CONSTEXPR14
+					void
+					assign(flat_ordered_base && src)
+					{
+						this->key_comp() = kerbal::compatibility::move(src.key_comp());
+						this->sequence = kerbal::compatibility::move(src.sequence);
+						this->k_sort();
+					}
+
+#			endif
+
 				public:
 					template <typename InputIterator>
 					KERBAL_CONSTEXPR14
