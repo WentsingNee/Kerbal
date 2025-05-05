@@ -78,7 +78,7 @@ namespace kerbal
 #		if __cplusplus >= 201103L
 
 				template <typename K2>
-				KERBAL_CONSTEXPR14
+				KERBAL_CONSTEXPR
 				map_data(K2 && k, kerbal::utility::compressed_pair_default_construct_tag tag) :
 					super(kerbal::utility::forward<K2>(k), tag)
 				{
@@ -98,7 +98,7 @@ namespace kerbal
 #		if __cplusplus >= 201103L
 
 				template <typename K2, typename M2>
-				KERBAL_CONSTEXPR14
+				KERBAL_CONSTEXPR
 				map_data(K2 && k, M2 && m) :
 					super(
 						kerbal::utility::forward<K2>(k),
@@ -160,7 +160,7 @@ namespace kerbal
 					return super::first();
 				}
 
-				KERBAL_CONSTEXPR14
+				KERBAL_CONSTEXPR
 				const key_type & key() const KERBAL_NOEXCEPT
 				{
 					return super::first();
@@ -172,7 +172,7 @@ namespace kerbal
 					return super::second();
 				}
 
-				KERBAL_CONSTEXPR14
+				KERBAL_CONSTEXPR
 				const mapped_type & value() const KERBAL_NOEXCEPT
 				{
 					return super::second();
