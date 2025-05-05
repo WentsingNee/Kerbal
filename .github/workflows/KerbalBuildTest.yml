@@ -219,7 +219,6 @@ jobs:
           -B ${{github.workspace}}/Kerbal-pack/
           -DCMAKE_BUILD_TYPE=Release
           -DCPACK_BUNDLE_NAME="Kerbal"
-          -DKERBAL_ENABLE_MYPACK_NUGET=ON
 
           cd ${{github.workspace}}/Kerbal-pack/
 

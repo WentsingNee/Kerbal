@@ -33,12 +33,22 @@ file(COPY "${PROJECT_SOURCE_DIR}/cmake/cpack/config/wix_patch.cmake" DESTINATION
 
 
 # MyPack NuGet
-option(KERBAL_ENABLE_MYPACK_NUGET "enable mypack nuget" OFF)
+message(STATUS "Finding nuget")
+find_program(NUGET_COMMAND nuget)
+if (NUGET_COMMAND)
+    message(STATUS "Finding nuget -- Found: ${NUGET_COMMAND}")
+    set(KERBAL_ENABLE_MYPACK_NUGET_DEFAULT ON)
+else ()
+    message(STATUS "Finding nuget -- Not found")
+    set(KERBAL_ENABLE_MYPACK_NUGET_DEFAULT OFF)
+endif ()
+
+option(KERBAL_ENABLE_MYPACK_NUGET "enable mypack nuget" "${KERBAL_ENABLE_MYPACK_NUGET_DEFAULT}")
 
 if (KERBAL_ENABLE_MYPACK_NUGET)
-    message(STATUS "Finding nuget")
-    find_program(NUGET_COMMAND nuget REQUIRED)
-    message(STATUS "Finding nuget -- Found: ${NUGET_COMMAND}")
+    if (NOT NUGET_COMMAND)
+        message(FATAL_ERROR "NuGet program not found!")
+    endif ()
     set(CPACK_PROJECT_URL "https://github.com/WentsingNee/${CPACK_PACKAGE_NAME}")
     set(mypack_base_dir "${PROJECT_BINARY_DIR}/_CPack_Packages/${CMAKE_SYSTEM_NAME}/mypack-nuget/${CPACK_PACKAGE_NAME}-${CPACK_PACKAGE_VERSION}-${CMAKE_SYSTEM_NAME}")
     set(mypack_nuspec "${mypack_base_dir}/Kerbal.nuspec")
