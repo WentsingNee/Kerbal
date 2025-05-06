@@ -13,7 +13,6 @@
 #ifndef KERBAL_TYPE_TRAITS_IS_COMPOUND_HPP
 #define KERBAL_TYPE_TRAITS_IS_COMPOUND_HPP
 
-#include <kerbal/ts/modules_ts/modules_ts.hpp>
 #include <kerbal/type_traits/integral_constant.hpp>
 #include <kerbal/type_traits/is_fundamental.hpp>
 
@@ -24,7 +23,6 @@ namespace kerbal
 	namespace type_traits
 	{
 
-		KERBAL_MODULE_EXPORT
 		template <typename T>
 		struct is_compound :
 			kerbal::type_traits::bool_constant<!is_fundamental<T>::value>

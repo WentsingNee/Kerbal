@@ -12,7 +12,6 @@
 #ifndef KERBAL_TYPE_TRAITS_CAN_BE_EMPTY_BASE_HPP
 #define KERBAL_TYPE_TRAITS_CAN_BE_EMPTY_BASE_HPP
 
-#include <kerbal/ts/modules_ts/modules_ts.hpp>
 #include <kerbal/type_traits/is_empty.hpp>
 #include <kerbal/type_traits/is_final.hpp>
 #include <kerbal/type_traits/tribool_constant.hpp>
@@ -38,7 +37,6 @@ namespace kerbal
 
 #if	KERBAL_HAS_CAN_BE_EMPTY_BASE_SUPPORT
 
-		KERBAL_MODULE_EXPORT
 		template <typename T>
 		struct can_be_empty_base :
 			kerbal::type_traits::conjunction<

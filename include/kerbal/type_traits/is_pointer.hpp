@@ -13,7 +13,6 @@
 #ifndef KERBAL_TYPE_TRAITS_IS_POINTER_HPP
 #define KERBAL_TYPE_TRAITS_IS_POINTER_HPP
 
-#include <kerbal/ts/modules_ts/modules_ts.hpp>
 #include <kerbal/type_traits/integral_constant.hpp>
 #include <kerbal/type_traits/remove_cv.hpp>
 
@@ -41,7 +40,6 @@ namespace kerbal
 
 		} // namespace detail
 
-		KERBAL_MODULE_EXPORT
 		template <typename T>
 		struct is_pointer :
 			kerbal::type_traits::detail::is_pointer_helper<

@@ -13,7 +13,6 @@
 #ifndef KERBAL_TYPE_TRAITS_RANK_HPP
 #define KERBAL_TYPE_TRAITS_RANK_HPP
 
-#include <kerbal/ts/modules_ts/modules_ts.hpp>
 #include <kerbal/type_traits/integral_constant.hpp>
 
 #include <cstddef>
@@ -25,20 +24,17 @@ namespace kerbal
 	namespace type_traits
 	{
 
-		KERBAL_MODULE_EXPORT
 		template <typename >
 		struct rank : kerbal::type_traits::integral_constant<std::size_t, 0>
 		{
 		};
 
-		KERBAL_MODULE_EXPORT
 		template <typename T, std::size_t N>
 		struct rank<T[N]> :
 			kerbal::type_traits::integral_constant<std::size_t, 1 + rank<T>::value>
 		{
 		};
 
-		KERBAL_MODULE_EXPORT
 		template <typename T>
 		struct rank<T[]> :
 			kerbal::type_traits::integral_constant<std::size_t, 1 + rank<T>::value>

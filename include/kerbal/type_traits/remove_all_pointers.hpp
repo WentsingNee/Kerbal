@@ -13,7 +13,6 @@
 #ifndef KERBAL_TYPE_TRAITS_REMOVE_ALL_POINTERS_HPP
 #define KERBAL_TYPE_TRAITS_REMOVE_ALL_POINTERS_HPP
 
-#include <kerbal/ts/modules_ts/modules_ts.hpp>
 #include <kerbal/type_traits/conditional.hpp>
 #include <kerbal/type_traits/is_pointer.hpp>
 #include <kerbal/type_traits/remove_pointer.hpp>
@@ -25,7 +24,6 @@ namespace kerbal
 	namespace type_traits
 	{
 
-		KERBAL_MODULE_EXPORT
 		template <typename T>
 		struct remove_all_pointers:
 			kerbal::type_traits::conditional<

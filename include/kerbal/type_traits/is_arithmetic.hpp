@@ -13,7 +13,6 @@
 #ifndef KERBAL_TYPE_TRAITS_IS_ARITHMETIC_HPP
 #define KERBAL_TYPE_TRAITS_IS_ARITHMETIC_HPP
 
-#include <kerbal/ts/modules_ts/modules_ts.hpp>
 #include <kerbal/type_traits/is_floating_point.hpp>
 #include <kerbal/type_traits/is_integral.hpp>
 #include <kerbal/type_traits/logical.hpp>
@@ -25,7 +24,6 @@ namespace kerbal
 	namespace type_traits
 	{
 
-		KERBAL_MODULE_EXPORT
 		template <class T>
 		struct is_arithmetic :
 			kerbal::type_traits::disjunction<

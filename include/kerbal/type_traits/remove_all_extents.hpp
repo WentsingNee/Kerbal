@@ -13,7 +13,6 @@
 #ifndef KERBAL_TYPE_TRAITS_REMOVE_ALL_EXTENTS_HPP
 #define KERBAL_TYPE_TRAITS_REMOVE_ALL_EXTENTS_HPP
 
-#include <kerbal/ts/modules_ts/modules_ts.hpp>
 
 #include <cstddef>
 
@@ -24,21 +23,18 @@ namespace kerbal
 	namespace type_traits
 	{
 
-		KERBAL_MODULE_EXPORT
 		template <typename T>
 		struct remove_all_extents
 		{
 				typedef T type;
 		};
 
-		KERBAL_MODULE_EXPORT
 		template <typename T, std::size_t N>
 		struct remove_all_extents<T[N]> :
 			kerbal::type_traits::remove_all_extents<T>
 		{
 		};
 
-		KERBAL_MODULE_EXPORT
 		template <typename T>
 		struct remove_all_extents<T[]> :
 			kerbal::type_traits::remove_all_extents<T>

@@ -18,7 +18,6 @@
 #	error This file requires compiler and library support for the ISO C++ 2011 standard.
 #endif
 
-#include <kerbal/ts/modules_ts/modules_ts.hpp>
 #include <kerbal/type_traits/conditional.hpp>
 #include <kerbal/type_traits/add_rvalue_reference.hpp>
 #include <kerbal/type_traits/is_rvalue_reference.hpp>
@@ -30,7 +29,6 @@ namespace kerbal
 	namespace type_traits
 	{
 
-		KERBAL_MODULE_EXPORT
 		template <typename From, typename To>
 		struct copy_rvalue_reference :
 			kerbal::type_traits::conditional<

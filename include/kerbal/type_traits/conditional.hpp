@@ -12,7 +12,6 @@
 #ifndef KERBAL_TYPE_TRAITS_CONDITIONAL_HPP
 #define KERBAL_TYPE_TRAITS_CONDITIONAL_HPP
 
-#include <kerbal/ts/modules_ts/modules_ts.hpp>
 
 
 namespace kerbal
@@ -21,14 +20,12 @@ namespace kerbal
 	namespace type_traits
 	{
 
-		KERBAL_MODULE_EXPORT
 		template <bool Condition, typename TrueType, typename FalseType>
 		struct conditional
 		{
 				typedef TrueType type;
 		};
 
-		KERBAL_MODULE_EXPORT
 		template <typename TrueType, typename FalseType>
 		struct conditional<false, TrueType, FalseType>
 		{

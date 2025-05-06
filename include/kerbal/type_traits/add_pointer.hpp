@@ -13,7 +13,6 @@
 #ifndef KERBAL_TYPE_TRAITS_ADD_POINTER_HPP
 #define KERBAL_TYPE_TRAITS_ADD_POINTER_HPP
 
-#include <kerbal/ts/modules_ts/modules_ts.hpp>
 #include <kerbal/type_traits/is_referencable.hpp>
 #include <kerbal/type_traits/is_void.hpp>
 #include <kerbal/type_traits/logical.hpp>
@@ -58,7 +57,6 @@ namespace kerbal
 
 		} // namespace detail
 
-		KERBAL_MODULE_EXPORT
 		template <typename T>
 		struct add_pointer :
 			kerbal::type_traits::detail::add_pointer_helper<

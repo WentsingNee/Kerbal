@@ -13,7 +13,6 @@
 #ifndef KERBAL_TYPE_TRAITS_IS_REFERENCE_HPP
 #define KERBAL_TYPE_TRAITS_IS_REFERENCE_HPP
 
-#include <kerbal/ts/modules_ts/modules_ts.hpp>
 #include <kerbal/type_traits/is_lvalue_reference.hpp>
 
 #if __cplusplus >= 201103L
@@ -37,7 +36,6 @@ namespace kerbal
 
 #	else
 
-		KERBAL_MODULE_EXPORT
 		template <typename T>
 		struct is_reference :
 			kerbal::type_traits::disjunction<

@@ -12,7 +12,6 @@
 #ifndef KERBAL_TYPE_TRAITS_IS_SAME_HPP
 #define KERBAL_TYPE_TRAITS_IS_SAME_HPP
 
-#include <kerbal/ts/modules_ts/modules_ts.hpp>
 #include <kerbal/type_traits/integral_constant.hpp>
 
 #if __cplusplus < 201103L
@@ -45,7 +44,6 @@ namespace kerbal
 
 #	else
 
-		KERBAL_MODULE_EXPORT
 		template <typename T, typename U, typename ... Types>
 		struct is_same:
 			kerbal::type_traits::conjunction<
@@ -55,7 +53,6 @@ namespace kerbal
 		{
 		};
 
-		KERBAL_MODULE_EXPORT
 		template <typename T, typename U>
 		struct is_same<T, U> : kerbal::type_traits::false_type
 		{
@@ -63,7 +60,6 @@ namespace kerbal
 
 #endif
 
-		KERBAL_MODULE_EXPORT
 		template <typename T>
 		struct is_same<T, T> : kerbal::type_traits::true_type
 		{

@@ -13,7 +13,6 @@
 #ifndef KERBAL_TYPE_TRAITS_REMOVE_VOLATILE_HPP
 #define KERBAL_TYPE_TRAITS_REMOVE_VOLATILE_HPP
 
-#include <kerbal/ts/modules_ts/modules_ts.hpp>
 
 #include <kerbal/config/compiler_id.hpp>
 
@@ -28,14 +27,12 @@ namespace kerbal
 	namespace type_traits
 	{
 
-		KERBAL_MODULE_EXPORT
 		template <typename T>
 		struct remove_volatile
 		{
 				typedef T type;
 		};
 
-		KERBAL_MODULE_EXPORT
 		template <typename T>
 		struct remove_volatile<volatile T>
 		{
@@ -44,14 +41,12 @@ namespace kerbal
 
 #	if KERBAL_COMPILER_ID == KERBAL_COMPILER_ID_MSVC // VS2012 compatible
 
-		KERBAL_MODULE_EXPORT
 		template <typename T>
 		struct remove_volatile<volatile T[]>
 		{
 				typedef T type [];
 		};
 
-		KERBAL_MODULE_EXPORT
 		template <typename T, std::size_t N>
 		struct remove_volatile<volatile T[N]>
 		{

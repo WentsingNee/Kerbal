@@ -13,7 +13,6 @@
 #ifndef KERBAL_TYPE_TRAITS_IS_FUNCTION_HPP
 #define KERBAL_TYPE_TRAITS_IS_FUNCTION_HPP
 
-#include <kerbal/ts/modules_ts/modules_ts.hpp>
 
 #include <kerbal/type_traits/integral_constant.hpp>
 
@@ -30,7 +29,6 @@ namespace kerbal
 
 #	if __cplusplus >= 201103L
 
-		KERBAL_MODULE_EXPORT
 		template <typename >
 		struct is_function : kerbal::type_traits::false_type {};
 
@@ -38,7 +36,6 @@ namespace kerbal
 #	define VAR_LIST ,...
 
 #	define IS_FUNCTION_VAR_LIST_DEF(VAR_L, CV_QUALIFIER, REF_QUALIFIER, NOEXCEPT_QUALIFIER) \
-		KERBAL_MODULE_EXPORT \
 		template <typename Ret, typename ... Args> \
 		struct is_function<Ret(Args... VAR_L) CV_QUALIFIER REF_QUALIFIER NOEXCEPT_QUALIFIER> : \
 			kerbal::type_traits::true_type {}; \
@@ -73,7 +70,6 @@ namespace kerbal
 
 #	else
 
-		KERBAL_MODULE_EXPORT
 		template <typename T>
 		struct is_function :
 			kerbal::type_traits::bool_constant<
@@ -82,7 +78,6 @@ namespace kerbal
 		{
 		};
 
-		KERBAL_MODULE_EXPORT
 		template <typename T>
 		struct is_function<T &> :
 			kerbal::type_traits::false_type

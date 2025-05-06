@@ -13,7 +13,6 @@
 #ifndef KERBAL_TYPE_TRAITS_COPY_LVALUE_REFERENCE_HPP
 #define KERBAL_TYPE_TRAITS_COPY_LVALUE_REFERENCE_HPP
 
-#include <kerbal/ts/modules_ts/modules_ts.hpp>
 #include <kerbal/type_traits/conditional.hpp>
 #include <kerbal/type_traits/add_lvalue_reference.hpp>
 #include <kerbal/type_traits/is_lvalue_reference.hpp>
@@ -25,7 +24,6 @@ namespace kerbal
 	namespace type_traits
 	{
 
-		KERBAL_MODULE_EXPORT
 		template <typename From, typename To>
 		struct copy_lvalue_reference :
 			kerbal::type_traits::conditional<

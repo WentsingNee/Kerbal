@@ -12,7 +12,6 @@
 #ifndef KERBAL_TYPE_TRAITS_SIGN_DEDUCTION_HPP
 #define KERBAL_TYPE_TRAITS_SIGN_DEDUCTION_HPP
 
-#include <kerbal/ts/modules_ts/modules_ts.hpp>
 #include <kerbal/type_traits/copy_cv.hpp>
 #include <kerbal/type_traits/integral_constant.hpp>
 #include <kerbal/type_traits/is_arithmetic.hpp>
@@ -47,14 +46,12 @@ namespace kerbal
 
 		} // namespace detail
 
-		KERBAL_MODULE_EXPORT
 		template <typename T>
 		struct is_signed :
 			kerbal::type_traits::detail::is_signed_helper<T>
 		{
 		};
 
-		KERBAL_MODULE_EXPORT
 		template <typename T>
 		struct is_unsigned :
 			kerbal::type_traits::conjunction<
@@ -119,7 +116,6 @@ namespace kerbal
 
 		} // namespace detail
 
-		KERBAL_MODULE_EXPORT
 		template <typename T>
 		struct make_unsigned:
 			kerbal::type_traits::copy_cv<
@@ -180,7 +176,6 @@ namespace kerbal
 
 		} // namespace detail
 
-		KERBAL_MODULE_EXPORT
 		template <typename T>
 		struct make_signed:
 			kerbal::type_traits::copy_cv<

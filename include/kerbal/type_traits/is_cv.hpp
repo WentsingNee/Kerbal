@@ -13,7 +13,6 @@
 #ifndef KERBAL_TYPE_TRAITS_IS_CV_HPP
 #define KERBAL_TYPE_TRAITS_IS_CV_HPP
 
-#include <kerbal/ts/modules_ts/modules_ts.hpp>
 #include <kerbal/type_traits/integral_constant.hpp>
 
 
@@ -23,13 +22,11 @@ namespace kerbal
 	namespace type_traits
 	{
 
-		KERBAL_MODULE_EXPORT
 		template <typename >
 		struct is_cv : kerbal::type_traits::false_type
 		{
 		};
 
-		KERBAL_MODULE_EXPORT
 		template <typename T>
 		struct is_cv<const volatile T> : kerbal::type_traits::true_type
 		{

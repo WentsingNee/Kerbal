@@ -13,7 +13,6 @@
 #ifndef KERBAL_TYPE_TRAITS_COPY_CONST_HPP
 #define KERBAL_TYPE_TRAITS_COPY_CONST_HPP
 
-#include <kerbal/ts/modules_ts/modules_ts.hpp>
 #include <kerbal/type_traits/add_const.hpp>
 #include <kerbal/type_traits/conditional.hpp>
 #include <kerbal/type_traits/is_const.hpp>
@@ -25,7 +24,6 @@ namespace kerbal
 	namespace type_traits
 	{
 
-		KERBAL_MODULE_EXPORT
 		template <typename From, typename To>
 		struct copy_const :
 			kerbal::type_traits::conditional<

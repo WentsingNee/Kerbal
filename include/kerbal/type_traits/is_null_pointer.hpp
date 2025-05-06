@@ -13,7 +13,6 @@
 #ifndef KERBAL_TYPE_TRAITS_IS_NULL_POINTER_HPP
 #define KERBAL_TYPE_TRAITS_IS_NULL_POINTER_HPP
 
-#include <kerbal/ts/modules_ts/modules_ts.hpp>
 
 #if __cplusplus >= 201103L
 #	include <kerbal/type_traits/integral_constant.hpp>
@@ -46,7 +45,6 @@ namespace kerbal
 
 		} // namespace detail
 
-		KERBAL_MODULE_EXPORT
 		template <typename T>
 		struct is_null_pointer :
 			kerbal::type_traits::detail::is_null_pointer_helper<

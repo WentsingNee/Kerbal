@@ -12,7 +12,6 @@
 #ifndef KERBAL_TYPE_TRAITS_INTEGRAL_CONSTANT_HPP
 #define KERBAL_TYPE_TRAITS_INTEGRAL_CONSTANT_HPP
 
-#include <kerbal/ts/modules_ts/modules_ts.hpp>
 #include <kerbal/compatibility/constexpr.hpp>
 #include <kerbal/compatibility/noexcept.hpp>
 
@@ -23,7 +22,6 @@ namespace kerbal
 	namespace type_traits
 	{
 
-		KERBAL_MODULE_EXPORT
 		template <typename T, T val>
 		struct integral_constant
 		{
@@ -47,17 +45,14 @@ namespace kerbal
 		integral_constant<T, val>::value;
 
 
-		KERBAL_MODULE_EXPORT
 		struct false_type : integral_constant<bool, false>
 		{
 		};
 
-		KERBAL_MODULE_EXPORT
 		struct true_type : integral_constant<bool, true>
 		{
 		};
 
-		KERBAL_MODULE_EXPORT
 		template <bool>
 		struct bool_constant;
 

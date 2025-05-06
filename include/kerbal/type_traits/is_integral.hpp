@@ -13,7 +13,6 @@
 #ifndef KERBAL_TYPE_TRAITS_IS_INTEGRAL_HPP
 #define KERBAL_TYPE_TRAITS_IS_INTEGRAL_HPP
 
-#include <kerbal/ts/modules_ts/modules_ts.hpp>
 #include <kerbal/type_traits/integral_constant.hpp>
 #include <kerbal/type_traits/remove_cv.hpp>
 
@@ -122,7 +121,6 @@ namespace kerbal
 
 		} // namespace detail
 
-		KERBAL_MODULE_EXPORT
 		template <typename T>
 		struct is_integral :
 			kerbal::type_traits::detail::is_integral_helper<

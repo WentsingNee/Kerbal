@@ -12,7 +12,6 @@
 #ifndef KERBAL_FUNCTION_FUNCTION_TRAITS_HPP
 #define KERBAL_FUNCTION_FUNCTION_TRAITS_HPP
 
-#include <kerbal/ts/modules_ts/modules_ts.hpp>
 #include <kerbal/compatibility/cv_qualified_function.hpp>
 #include <kerbal/tmp/type_vector.hpp>
 #include <kerbal/type_traits/integral_constant.hpp>
@@ -31,7 +30,6 @@ namespace kerbal
 	namespace function
 	{
 
-		KERBAL_MODULE_EXPORT
 		template <typename >
 		struct function_traits;
 
@@ -106,7 +104,6 @@ namespace kerbal
 #endif // __cplusplus < 201703L
 
 #	define FUNCTION_TRAITS_VAR_LIST_DEF(VAR_L, HAS_VAR_L, CV_QUALIFIER, IS_CONST, IS_VOLATILE, REF_QUALIFIER, IS_LREF, IS_RREF, NOEXCEPT_QUALIFIER, IS_NOEXCEPT) \
-		KERBAL_MODULE_EXPORT \
 		template <typename Ret, typename ... Args> \
 		struct function_traits<Ret(Args... VAR_L) CV_QUALIFIER REF_QUALIFIER NOEXCEPT_QUALIFIER> \
 		{ \

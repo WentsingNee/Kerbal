@@ -12,7 +12,6 @@
 #ifndef KERBAL_TYPE_TRAITS_VOID_TYPE_HPP
 #define KERBAL_TYPE_TRAITS_VOID_TYPE_HPP
 
-#include <kerbal/ts/modules_ts/modules_ts.hpp>
 
 #if __cplusplus < 201103L
 #	include <kerbal/macro/ppexpand.hpp>
@@ -38,7 +37,6 @@ namespace kerbal
 
 #	else
 
-		KERBAL_MODULE_EXPORT
 		template <typename ... Args>
 		struct void_type
 		{

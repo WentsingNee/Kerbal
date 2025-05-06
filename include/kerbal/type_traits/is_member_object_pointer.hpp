@@ -13,7 +13,6 @@
 #ifndef KERBAL_TYPE_TRAITS_IS_MEMBER_OBJECT_POINTER_HPP
 #define KERBAL_TYPE_TRAITS_IS_MEMBER_OBJECT_POINTER_HPP
 
-#include <kerbal/ts/modules_ts/modules_ts.hpp>
 #include <kerbal/type_traits/is_member_pointer.hpp>
 #include <kerbal/type_traits/is_member_function_pointer.hpp>
 #include <kerbal/type_traits/logical.hpp>
@@ -25,7 +24,6 @@ namespace kerbal
 	namespace type_traits
 	{
 
-		KERBAL_MODULE_EXPORT
 		template <typename T>
 		struct is_member_object_pointer :
 			kerbal::type_traits::conjunction<

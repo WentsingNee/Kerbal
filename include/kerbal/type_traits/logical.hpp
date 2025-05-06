@@ -12,7 +12,6 @@
 #ifndef KERBAL_TYPE_TRAITS_LOGICAL_HPP
 #define KERBAL_TYPE_TRAITS_LOGICAL_HPP
 
-#include <kerbal/ts/modules_ts/modules_ts.hpp>
 #include <kerbal/type_traits/conditional.hpp>
 #include <kerbal/type_traits/integral_constant.hpp>
 
@@ -23,7 +22,6 @@ namespace kerbal
 	namespace type_traits
 	{
 
-		KERBAL_MODULE_EXPORT
 		template <typename T>
 		struct negation :
 			kerbal::type_traits::bool_constant<!T::value>
@@ -102,17 +100,14 @@ namespace kerbal
 
 #	else
 
-		KERBAL_MODULE_EXPORT
 		template <typename ... Args>
 		struct conjunction;
 
-		KERBAL_MODULE_EXPORT
 		template <>
 		struct conjunction<> : kerbal::type_traits::true_type
 		{
 		};
 
-		KERBAL_MODULE_EXPORT
 		template <typename T, typename ... Args>
 		struct conjunction<T, Args...> :
 			kerbal::type_traits::conditional<
@@ -123,23 +118,19 @@ namespace kerbal
 		{
 		};
 
-		KERBAL_MODULE_EXPORT
 		template <typename ... Args>
 		struct disjunction;
 
-		KERBAL_MODULE_EXPORT
 		template <>
 		struct disjunction<> : kerbal::type_traits::true_type
 		{
 		};
 
-		KERBAL_MODULE_EXPORT
 		template <typename T>
 		struct disjunction<T> : kerbal::type_traits::bool_constant<T::value>
 		{
 		};
 
-		KERBAL_MODULE_EXPORT
 		template <typename T, typename ... Args>
 		struct disjunction<T, Args...> :
 			kerbal::type_traits::conditional<

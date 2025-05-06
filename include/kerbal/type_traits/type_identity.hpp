@@ -12,7 +12,6 @@
 #ifndef KERBAL_TYPE_TRAITS_TYPE_IDENTITY_HPP
 #define KERBAL_TYPE_TRAITS_TYPE_IDENTITY_HPP
 
-#include <kerbal/ts/modules_ts/modules_ts.hpp>
 
 namespace kerbal
 {
@@ -20,7 +19,6 @@ namespace kerbal
 	namespace type_traits
 	{
 
-		KERBAL_MODULE_EXPORT
 		template <typename T>
 		struct type_identity
 		{

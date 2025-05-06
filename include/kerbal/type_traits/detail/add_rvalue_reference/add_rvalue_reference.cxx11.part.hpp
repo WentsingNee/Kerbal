@@ -18,7 +18,6 @@
 #	error This file requires compiler and library support for the ISO C++ 2011 standard.
 #endif
 
-#include <kerbal/ts/modules_ts/modules_ts.hpp>
 #include <kerbal/type_traits/is_referencable.hpp>
 
 
@@ -45,7 +44,6 @@ namespace kerbal
 
 		} // namespace detail
 
-		KERBAL_MODULE_EXPORT
 		template <typename T>
 		struct add_rvalue_reference :
 			kerbal::type_traits::detail::add_rvalue_reference_helper<T>
