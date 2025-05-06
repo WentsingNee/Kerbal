@@ -17,7 +17,9 @@
 #	define KERBAL_ILIST(...) {__VA_ARGS__}
 #else
 #	include <kerbal/assign/assign_list.hpp>
-#	define KERBAL_ILIST(args...) (kerbal::assign::make_assign_list(), ##args)
+#	include <kerbal/macro/va_arg_size.hpp>
+
+#	define KERBAL_ILIST(args...) (kerbal::assign::make_assign_list(KERBAL_VA_ARG_SIZE(args)), ##args)
 #endif
 
 

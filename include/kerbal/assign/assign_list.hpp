@@ -16,9 +16,12 @@
 
 #include <kerbal/compatibility/noexcept.hpp>
 #include <kerbal/container/detail/vector_base.hpp>
+#include <kerbal/memory/allocator_traits.hpp>
 #include <kerbal/utility/member_compress_helper.hpp>
 
 #include <memory>
+
+#include <cstddef>
 
 
 namespace kerbal
@@ -42,6 +45,8 @@ namespace kerbal
 				typedef typename c::iterator				iterator;
 				typedef typename c::const_iterator			const_iterator;
 				typedef std::allocator<T>					allocator_type;
+				typedef kerbal::memory::allocator_traits<allocator_type>	allocator_trait;
+				typedef typename allocator_trait::size_type		size_type;
 
 			private:
 				c v;
@@ -52,9 +57,9 @@ namespace kerbal
 				}
 
 			public:
-				assign_list()
+				assign_list(size_type reserved_size)
 				{
-					v.k_reserve_using_allocator(this->alloc(), 20);
+					v.k_reserve_using_allocator(this->alloc(), reserved_size);
 				}
 
 				~assign_list() KERBAL_NOEXCEPT
@@ -103,11 +108,23 @@ namespace kerbal
 		class assign_list<void>
 		{
 			public:
+				typedef std::size_t size_type;
+
+			private:
+				size_type reserved_size;
+
+			public:
+
+				explicit
+				assign_list(size_type reserved_size) :
+					reserved_size(reserved_size)
+				{
+				}
 
 				template <typename T>
 				assign_list<T> operator,(const T & val)
 				{
-					assign_list<T> list;
+					assign_list<T> list(this->reserved_size);
 					list, val;
 					return list;
 				}
@@ -116,9 +133,9 @@ namespace kerbal
 
 		inline
 		assign_list<void>
-		make_assign_list()
+		make_assign_list(assign_list<void>::size_type reserved_size = static_cast<unsigned int>(16))
 		{
-			return assign_list<void>();
+			return assign_list<void>(reserved_size);
 		}
 
 	} // namespace assign
