@@ -40,6 +40,8 @@ include(cmake/modules.cmake)
 set(${PROJECT_NAME}_INCLUDE_DIRS ${PROJECT_SOURCE_DIR}/include)
 add_subdirectory(include)
 
+add_subdirectory(cxxmodule)
+
 
 # Build Header Integration
 option(KERBAL_BUILD_HEADER_INTEGRATION "build header integration" OFF)
