@@ -480,6 +480,10 @@ namespace kerbal
 		vector(InputIterator, InputIterator, Alloc = Alloc()) ->
 		vector<typename kerbal::iterator::iterator_traits<InputIterator>::value_type, Alloc>;
 
+		template <typename T, typename Alloc = std::allocator<T> >
+		vector(std::initializer_list<T>, Alloc = Alloc()) ->
+		vector<T, Alloc>;
+
 #	endif
 
 
