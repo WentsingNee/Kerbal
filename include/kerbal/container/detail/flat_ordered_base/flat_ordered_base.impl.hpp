@@ -49,7 +49,11 @@ namespace kerbal
 			flat_ordered_base<Entity, Extract, KeyCompare, Sequence>::
 			k_sort()
 			{
-				kerbal::algorithm::sort(sequence.begin(), sequence.end(), this->value_comp());
+				kerbal::algorithm::sort(
+					this->sequence.begin(),
+					this->sequence.end(),
+					this->value_comp()
+				);
 			}
 
 #		if __cplusplus < 201103L
@@ -141,7 +145,7 @@ namespace kerbal
 				InputIterator first, InputIterator last
 			)
 			{
-				sequence.assign(first, last);
+				this->sequence.assign(first, last);
 				this->k_sort();
 			}
 
@@ -190,7 +194,7 @@ namespace kerbal
 			flat_ordered_base<Entity, Extract, KeyCompare, Sequence>::
 			begin()
 			{
-				return sequence.begin();
+				return this->sequence.begin();
 			}
 
 			template <typename Entity, typename Extract, typename KeyCompare, typename Sequence>
@@ -200,7 +204,7 @@ namespace kerbal
 			flat_ordered_base<Entity, Extract, KeyCompare, Sequence>::
 			begin() const
 			{
-				return sequence.begin();
+				return this->sequence.begin();
 			}
 
 			template <typename Entity, typename Extract, typename KeyCompare, typename Sequence>
@@ -210,7 +214,7 @@ namespace kerbal
 			flat_ordered_base<Entity, Extract, KeyCompare, Sequence>::
 			end()
 			{
-				return sequence.end();
+				return this->sequence.end();
 			}
 
 			template <typename Entity, typename Extract, typename KeyCompare, typename Sequence>
@@ -220,7 +224,7 @@ namespace kerbal
 			flat_ordered_base<Entity, Extract, KeyCompare, Sequence>::
 			end() const
 			{
-				return sequence.end();
+				return this->sequence.end();
 			}
 
 			template <typename Entity, typename Extract, typename KeyCompare, typename Sequence>
@@ -230,7 +234,7 @@ namespace kerbal
 			flat_ordered_base<Entity, Extract, KeyCompare, Sequence>::
 			cbegin() const
 			{
-				return sequence.begin();
+				return this->sequence.begin();
 			}
 
 			template <typename Entity, typename Extract, typename KeyCompare, typename Sequence>
@@ -240,7 +244,7 @@ namespace kerbal
 			flat_ordered_base<Entity, Extract, KeyCompare, Sequence>::
 			cend() const
 			{
-				return sequence.end();
+				return this->sequence.end();
 			}
 
 			template <typename Entity, typename Extract, typename KeyCompare, typename Sequence>
@@ -250,7 +254,7 @@ namespace kerbal
 			flat_ordered_base<Entity, Extract, KeyCompare, Sequence>::
 			rbegin()
 			{
-				return sequence.rbegin();
+				return this->sequence.rbegin();
 			}
 
 			template <typename Entity, typename Extract, typename KeyCompare, typename Sequence>
@@ -260,7 +264,7 @@ namespace kerbal
 			flat_ordered_base<Entity, Extract, KeyCompare, Sequence>::
 			rbegin() const
 			{
-				return sequence.rbegin();
+				return this->sequence.rbegin();
 			}
 
 			template <typename Entity, typename Extract, typename KeyCompare, typename Sequence>
@@ -270,7 +274,7 @@ namespace kerbal
 			flat_ordered_base<Entity, Extract, KeyCompare, Sequence>::
 			rend()
 			{
-				return sequence.rend();
+				return this->sequence.rend();
 			}
 
 			template <typename Entity, typename Extract, typename KeyCompare, typename Sequence>
@@ -280,7 +284,7 @@ namespace kerbal
 			flat_ordered_base<Entity, Extract, KeyCompare, Sequence>::
 			rend() const
 			{
-				return sequence.rend();
+				return this->sequence.rend();
 			}
 
 			template <typename Entity, typename Extract, typename KeyCompare, typename Sequence>
@@ -290,7 +294,7 @@ namespace kerbal
 			flat_ordered_base<Entity, Extract, KeyCompare, Sequence>::
 			crbegin() const
 			{
-				return sequence.rbegin();
+				return this->sequence.rbegin();
 			}
 
 			template <typename Entity, typename Extract, typename KeyCompare, typename Sequence>
@@ -300,7 +304,7 @@ namespace kerbal
 			flat_ordered_base<Entity, Extract, KeyCompare, Sequence>::
 			crend() const
 			{
-				return sequence.rend();
+				return this->sequence.rend();
 			}
 
 			template <typename Entity, typename Extract, typename KeyCompare, typename Sequence>
@@ -310,7 +314,7 @@ namespace kerbal
 			flat_ordered_base<Entity, Extract, KeyCompare, Sequence>::
 			nth(size_type index)
 			{
-				return sequence.nth(index);
+				return this->sequence.nth(index);
 			}
 
 			template <typename Entity, typename Extract, typename KeyCompare, typename Sequence>
@@ -320,7 +324,7 @@ namespace kerbal
 			flat_ordered_base<Entity, Extract, KeyCompare, Sequence>::
 			nth(size_type index) const
 			{
-				return sequence.nth(index);
+				return this->sequence.nth(index);
 			}
 
 			template <typename Entity, typename Extract, typename KeyCompare, typename Sequence>
@@ -330,7 +334,7 @@ namespace kerbal
 			flat_ordered_base<Entity, Extract, KeyCompare, Sequence>::
 			index_of(iterator it)
 			{
-				return sequence.index_of(it);
+				return this->sequence.index_of(it);
 			}
 
 			template <typename Entity, typename Extract, typename KeyCompare, typename Sequence>
@@ -340,7 +344,7 @@ namespace kerbal
 			flat_ordered_base<Entity, Extract, KeyCompare, Sequence>::
 			index_of(const_iterator it) const
 			{
-				return sequence.index_of(it);
+				return this->sequence.index_of(it);
 			}
 
 			template <typename Entity, typename Extract, typename KeyCompare, typename Sequence>
@@ -350,7 +354,7 @@ namespace kerbal
 			flat_ordered_base<Entity, Extract, KeyCompare, Sequence>::
 			size() const
 			{
-				return sequence.size();
+				return this->sequence.size();
 			}
 
 			template <typename Entity, typename Extract, typename KeyCompare, typename Sequence>
@@ -360,7 +364,7 @@ namespace kerbal
 			flat_ordered_base<Entity, Extract, KeyCompare, Sequence>::
 			max_size() const KERBAL_NOEXCEPT
 			{
-				return sequence.max_size();
+				return this->sequence.max_size();
 			}
 
 			template <typename Entity, typename Extract, typename KeyCompare, typename Sequence>
@@ -369,7 +373,7 @@ namespace kerbal
 			flat_ordered_base<Entity, Extract, KeyCompare, Sequence>::
 			empty() const
 			{
-				return sequence.empty();
+				return this->sequence.empty();
 			}
 
 			template <typename Entity, typename Extract, typename KeyCompare, typename Sequence>
@@ -729,7 +733,7 @@ namespace kerbal
 				if (static_cast<bool>(ub == this->cbegin()) ||
 					static_cast<bool>(this->key_comp()(e(*kerbal::iterator::prev(ub)), e(src)))) {
 					// ub[-1] < src
-					ub = sequence.insert(ub, src);
+					ub = this->sequence.insert(ub, src);
 					inserted = true;
 				}
 				return unique_insert_r(ub, inserted);
@@ -769,7 +773,7 @@ namespace kerbal
 				if (static_cast<bool>(ub == this->cbegin()) ||
 					static_cast<bool>(this->key_comp()(e(*kerbal::iterator::prev(ub)), e(src)))) {
 					// ub[-1] < src
-					ub = sequence.insert(ub, kerbal::compatibility::move(src));
+					ub = this->sequence.insert(ub, kerbal::compatibility::move(src));
 					inserted = true;
 				}
 				return unique_insert_r(ub, inserted);
@@ -808,16 +812,16 @@ namespace kerbal
 			insert_unique(InputIterator first, InputIterator last)
 			{
 				while (first != last && this->size() != this->max_size()) {
-					sequence.push_back(*first);
+					this->sequence.push_back(*first);
 					++first;
 				}
 				this->k_sort();
 				iterator unique_last(
 					kerbal::algorithm::unique(
-						sequence.begin(), sequence.end(), equal_adapter(this)
+						this->sequence.begin(), this->sequence.end(), equal_adapter(this)
 					)
 				);
-				sequence.erase(unique_last, sequence.end());
+				this->sequence.erase(unique_last, this->sequence.end());
 
 				while (first != last && this->size() != this->max_size()) {
 					this->insert_unique(*first);
@@ -833,7 +837,7 @@ namespace kerbal
 			flat_ordered_base<Entity, Extract, KeyCompare, Sequence>::
 			insert(const_reference src)
 			{
-				return sequence.insert(this->upper_bound(this->extract()(src)), src);
+				return this->sequence.insert(this->upper_bound(this->extract()(src)), src);
 			}
 
 			template <typename Entity, typename Extract, typename KeyCompare, typename Sequence>
@@ -843,7 +847,7 @@ namespace kerbal
 			flat_ordered_base<Entity, Extract, KeyCompare, Sequence>::
 			insert(const_iterator hint, const_reference src)
 			{
-				return sequence.insert(this->upper_bound(this->extract()(src), hint), src);
+				return this->sequence.insert(this->upper_bound(this->extract()(src), hint), src);
 			}
 
 #		if __cplusplus >= 201103L
@@ -856,7 +860,7 @@ namespace kerbal
 			insert(rvalue_reference src)
 			{
 				iterator pos(this->upper_bound(this->extract()(src)));
-				return sequence.insert(pos, kerbal::compatibility::move(src));
+				return this->sequence.insert(pos, kerbal::compatibility::move(src));
 			}
 
 			template <typename Entity, typename Extract, typename KeyCompare, typename Sequence>
@@ -867,7 +871,7 @@ namespace kerbal
 			insert(const_iterator hint, rvalue_reference src)
 			{
 				iterator pos(this->upper_bound(this->extract()(src), hint));
-				return sequence.insert(pos, kerbal::compatibility::move(src));
+				return this->sequence.insert(pos, kerbal::compatibility::move(src));
 			}
 
 #		endif
@@ -896,7 +900,7 @@ namespace kerbal
 			flat_ordered_base<Entity, Extract, KeyCompare, Sequence>::
 			erase(const_iterator pos)
 			{
-				return pos == sequence.cend() ? pos : sequence.erase(pos);
+				return pos == this->sequence.cend() ? pos : this->sequence.erase(pos);
 			}
 
 			template <typename Entity, typename Extract, typename KeyCompare, typename Sequence>
@@ -906,7 +910,7 @@ namespace kerbal
 			flat_ordered_base<Entity, Extract, KeyCompare, Sequence>::
 			erase(const_iterator first, const_iterator last)
 			{
-				return sequence.erase(first, last);
+				return this->sequence.erase(first, last);
 			}
 
 			template <typename Entity, typename Extract, typename KeyCompare, typename Sequence>
@@ -938,7 +942,7 @@ namespace kerbal
 			flat_ordered_base<Entity, Extract, KeyCompare, Sequence>::
 			clear()
 			{
-				sequence.clear();
+				this->sequence.clear();
 			}
 
 		} // namespace detail
