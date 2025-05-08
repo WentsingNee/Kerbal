@@ -266,6 +266,10 @@ namespace kerbal
 						return value_compare(this);
 					}
 
+
+				//===================
+				// construct/copy/destroy
+
 				protected:
 
 #			if __cplusplus >= 201103L
@@ -395,8 +399,9 @@ namespace kerbal
 
 #			endif
 
-			//===================
-			// iterator
+
+				//===================
+				// iterator
 
 				public:
 
@@ -464,8 +469,8 @@ namespace kerbal
 					size_type
 					index_of(const_iterator it) const;
 
-			//===================
-			// capacity
+				//===================
+				// capacity
 
 				public:
 
@@ -481,8 +486,8 @@ namespace kerbal
 					bool
 					empty() const;
 
-			//===================
-			// lookup
+				//===================
+				// lookup
 
 				private:
 					template <typename Key, typename Result>
@@ -642,6 +647,10 @@ namespace kerbal
 					bool
 					contains(const key_type & key, const_iterator hint) const;
 
+
+				//===================
+				// insert
+
 				protected:
 					KERBAL_CONSTEXPR14
 					unique_insert_r
@@ -734,6 +743,12 @@ namespace kerbal
 						InputIterator
 					>::type
 					insert(InputIterator first, InputIterator last);
+
+
+				//===================
+				// erase
+
+				public:
 
 					KERBAL_CONSTEXPR14
 					const_iterator
