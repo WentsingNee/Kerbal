@@ -198,7 +198,7 @@ namespace kerbal
 			}
 
 			template <typename Entity, typename Extract, typename KeyCompare, typename Sequence>
-			KERBAL_CONSTEXPR14
+			KERBAL_CONSTEXPR
 			typename
 			flat_ordered_base<Entity, Extract, KeyCompare, Sequence>::const_iterator
 			flat_ordered_base<Entity, Extract, KeyCompare, Sequence>::
@@ -218,7 +218,7 @@ namespace kerbal
 			}
 
 			template <typename Entity, typename Extract, typename KeyCompare, typename Sequence>
-			KERBAL_CONSTEXPR14
+			KERBAL_CONSTEXPR
 			typename
 			flat_ordered_base<Entity, Extract, KeyCompare, Sequence>::const_iterator
 			flat_ordered_base<Entity, Extract, KeyCompare, Sequence>::
@@ -258,7 +258,7 @@ namespace kerbal
 			}
 
 			template <typename Entity, typename Extract, typename KeyCompare, typename Sequence>
-			KERBAL_CONSTEXPR14
+			KERBAL_CONSTEXPR
 			typename
 			flat_ordered_base<Entity, Extract, KeyCompare, Sequence>::const_reverse_iterator
 			flat_ordered_base<Entity, Extract, KeyCompare, Sequence>::
@@ -278,7 +278,7 @@ namespace kerbal
 			}
 
 			template <typename Entity, typename Extract, typename KeyCompare, typename Sequence>
-			KERBAL_CONSTEXPR14
+			KERBAL_CONSTEXPR
 			typename
 			flat_ordered_base<Entity, Extract, KeyCompare, Sequence>::const_reverse_iterator
 			flat_ordered_base<Entity, Extract, KeyCompare, Sequence>::
@@ -318,7 +318,7 @@ namespace kerbal
 			}
 
 			template <typename Entity, typename Extract, typename KeyCompare, typename Sequence>
-			KERBAL_CONSTEXPR14
+			KERBAL_CONSTEXPR
 			typename
 			flat_ordered_base<Entity, Extract, KeyCompare, Sequence>::const_iterator
 			flat_ordered_base<Entity, Extract, KeyCompare, Sequence>::

@@ -291,7 +291,7 @@ namespace kerbal
 					iterator
 					begin();
 
-					KERBAL_CONSTEXPR14
+					KERBAL_CONSTEXPR
 					const_iterator
 					begin() const;
 
@@ -299,7 +299,7 @@ namespace kerbal
 					iterator
 					end();
 
-					KERBAL_CONSTEXPR14
+					KERBAL_CONSTEXPR
 					const_iterator
 					end() const;
 
@@ -315,7 +315,7 @@ namespace kerbal
 					reverse_iterator
 					rbegin();
 
-					KERBAL_CONSTEXPR14
+					KERBAL_CONSTEXPR
 					const_reverse_iterator
 					rbegin() const;
 
@@ -323,7 +323,7 @@ namespace kerbal
 					reverse_iterator
 					rend();
 
-					KERBAL_CONSTEXPR14
+					KERBAL_CONSTEXPR
 					const_reverse_iterator
 					rend() const;
 
@@ -339,7 +339,7 @@ namespace kerbal
 					iterator
 					nth(size_type index);
 
-					KERBAL_CONSTEXPR14
+					KERBAL_CONSTEXPR
 					const_iterator
 					nth(size_type index) const;
 
