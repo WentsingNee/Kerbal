@@ -407,7 +407,7 @@ namespace kerbal
 			typename
 			flat_ordered_base<Entity, Extract, KeyCompare, Sequence>::iterator
 			flat_ordered_base<Entity, Extract, KeyCompare, Sequence>::
-			lower_bound(const key_type & key, const_iterator hint)
+			lower_bound(const_iterator hint, const key_type & key)
 			{
 				return kerbal::algorithm::lower_bound_hint(
 					this->key_view_begin(), this->key_view_end(), key,
@@ -423,7 +423,7 @@ namespace kerbal
 			typename
 			flat_ordered_base<Entity, Extract, KeyCompare, Sequence>::const_iterator
 			flat_ordered_base<Entity, Extract, KeyCompare, Sequence>::
-			lower_bound(const key_type & key, const_iterator hint) const
+			lower_bound(const_iterator hint, const key_type & key) const
 			{
 				return kerbal::algorithm::lower_bound_hint(
 					this->key_view_cbegin(), this->key_view_cend(), key,
@@ -475,7 +475,7 @@ namespace kerbal
 				typename flat_ordered_base<Entity, Extract, KeyCompare, Sequence>::iterator
 			>::type
 			flat_ordered_base<Entity, Extract, KeyCompare, Sequence>::
-			lower_bound(const Key & key, const_iterator hint)
+			lower_bound(const_iterator hint, const Key & key)
 			{
 				return kerbal::algorithm::lower_bound_hint(
 					this->begin(), this->end(), key, hint,
@@ -492,7 +492,7 @@ namespace kerbal
 				typename flat_ordered_base<Entity, Extract, KeyCompare, Sequence>::const_iterator
 			>::type
 			flat_ordered_base<Entity, Extract, KeyCompare, Sequence>::
-			lower_bound(const Key & key, const_iterator hint) const
+			lower_bound(const_iterator hint, const Key & key) const
 			{
 				return kerbal::algorithm::lower_bound(
 					this->cbegin(), this->cend(), key, hint,
@@ -532,7 +532,7 @@ namespace kerbal
 			typename
 			flat_ordered_base<Entity, Extract, KeyCompare, Sequence>::iterator
 			flat_ordered_base<Entity, Extract, KeyCompare, Sequence>::
-			upper_bound(const key_type & key, const_iterator hint)
+			upper_bound(const_iterator hint, const key_type & key)
 			{
 				return kerbal::algorithm::upper_bound_hint(
 					this->key_view_begin(), this->key_view_end(), key,
@@ -548,7 +548,7 @@ namespace kerbal
 			typename
 			flat_ordered_base<Entity, Extract, KeyCompare, Sequence>::const_iterator
 			flat_ordered_base<Entity, Extract, KeyCompare, Sequence>::
-			upper_bound(const key_type & key, const_iterator hint) const
+			upper_bound(const_iterator hint, const key_type & key) const
 			{
 				return kerbal::algorithm::upper_bound_hint(
 					this->key_view_cbegin(), this->key_view_cend(), key,
@@ -606,7 +606,7 @@ namespace kerbal
 				typename flat_ordered_base<Entity, Extract, KeyCompare, Sequence>::iterator
 			>
 			flat_ordered_base<Entity, Extract, KeyCompare, Sequence>::
-			equal_range(const key_type & key, const_iterator hint)
+			equal_range(const_iterator hint, const key_type & key)
 			{
 				kerbal::utility::compressed_pair<key_view_iterator, key_view_iterator> eqr(
 					kerbal::algorithm::equal_range(
@@ -627,7 +627,7 @@ namespace kerbal
 				typename flat_ordered_base<Entity, Extract, KeyCompare, Sequence>::const_iterator
 			>
 			flat_ordered_base<Entity, Extract, KeyCompare, Sequence>::
-			equal_range(const key_type & key, const_iterator hint) const
+			equal_range(const_iterator hint, const key_type & key) const
 			{
 				kerbal::utility::compressed_pair<key_view_const_iterator, key_view_const_iterator> eqr(
 					kerbal::algorithm::equal_range(
@@ -676,9 +676,9 @@ namespace kerbal
 			typename
 			flat_ordered_base<Entity, Extract, KeyCompare, Sequence>::const_iterator
 			flat_ordered_base<Entity, Extract, KeyCompare, Sequence>::
-			find(const key_type & key, const_iterator hint) const
+			find(const_iterator hint, const key_type & key) const
 			{
-				return this->k_find_impl(this->lower_bound(key, hint), key);
+				return this->k_find_impl(this->lower_bound(hint, key), key);
 			}
 
 			template <typename Entity, typename Extract, typename KeyCompare, typename Sequence>
@@ -697,9 +697,9 @@ namespace kerbal
 			typename
 			flat_ordered_base<Entity, Extract, KeyCompare, Sequence>::size_type
 			flat_ordered_base<Entity, Extract, KeyCompare, Sequence>::
-			count(const key_type & key, const_iterator hint) const
+			count(const_iterator hint, const key_type & key) const
 			{
-				kerbal::utility::compressed_pair<const_iterator, const_iterator> p(this->equal_range(key, hint));
+				kerbal::utility::compressed_pair<const_iterator, const_iterator> p(this->equal_range(hint, key));
 				return kerbal::iterator::distance(p.first(), p.second());
 			}
 
@@ -716,9 +716,9 @@ namespace kerbal
 			KERBAL_CONSTEXPR14
 			bool
 			flat_ordered_base<Entity, Extract, KeyCompare, Sequence>::
-			contains(const key_type & key, const_iterator hint) const
+			contains(const_iterator hint, const key_type & key) const
 			{
-				return this->find(key, hint) != this->cend();
+				return this->find(hint, key) != this->cend();
 			}
 
 			template <typename Entity, typename Extract, typename KeyCompare, typename Sequence>
@@ -756,7 +756,7 @@ namespace kerbal
 			flat_ordered_base<Entity, Extract, KeyCompare, Sequence>::
 			insert_unique(const_iterator hint, const_reference src)
 			{
-				return this->k_insert_unique_impl(this->upper_bound(this->extract()(src), hint), src);
+				return this->k_insert_unique_impl(this->upper_bound(hint, this->extract()(src)), src);
 			}
 
 #		if __cplusplus >= 201103L
@@ -796,7 +796,7 @@ namespace kerbal
 			flat_ordered_base<Entity, Extract, KeyCompare, Sequence>::
 			insert_unique(const_iterator hint, rvalue_reference src)
 			{
-				return this->k_insert_unique_impl(this->upper_bound(this->extract()(src), hint), kerbal::compatibility::move(src));
+				return this->k_insert_unique_impl(this->upper_bound(hint, this->extract()(src)), kerbal::compatibility::move(src));
 			}
 
 #		endif
@@ -847,7 +847,7 @@ namespace kerbal
 			flat_ordered_base<Entity, Extract, KeyCompare, Sequence>::
 			insert(const_iterator hint, const_reference src)
 			{
-				return this->sequence.insert(this->upper_bound(this->extract()(src), hint), src);
+				return this->sequence.insert(this->upper_bound(hint, this->extract()(src)), src);
 			}
 
 #		if __cplusplus >= 201103L
@@ -870,7 +870,7 @@ namespace kerbal
 			flat_ordered_base<Entity, Extract, KeyCompare, Sequence>::
 			insert(const_iterator hint, rvalue_reference src)
 			{
-				iterator pos(this->upper_bound(this->extract()(src), hint));
+				iterator pos(this->upper_bound(hint, this->extract()(src)));
 				return this->sequence.insert(pos, kerbal::compatibility::move(src));
 			}
 

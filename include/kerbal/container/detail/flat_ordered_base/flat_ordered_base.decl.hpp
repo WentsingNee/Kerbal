@@ -480,11 +480,11 @@ namespace kerbal
 
 					KERBAL_CONSTEXPR14
 					iterator
-					lower_bound(const key_type & key, const_iterator hint);
+					lower_bound(const_iterator hint, const key_type & key);
 
 					KERBAL_CONSTEXPR14
 					const_iterator
-					lower_bound(const key_type & key, const_iterator hint) const;
+					lower_bound(const_iterator hint, const key_type & key) const;
 
 					template <typename Key>
 					KERBAL_CONSTEXPR14
@@ -508,7 +508,7 @@ namespace kerbal
 						Key,
 						iterator
 					>::type
-					lower_bound(const Key & key, const_iterator hint);
+					lower_bound(const_iterator hint, const Key & key);
 
 					template <typename Key>
 					KERBAL_CONSTEXPR14
@@ -516,7 +516,7 @@ namespace kerbal
 						Key,
 						const_iterator
 					>::type
-					lower_bound(const Key & key, const_iterator hint) const;
+					lower_bound(const_iterator hint, const Key & key) const;
 
 
 					KERBAL_CONSTEXPR14
@@ -529,11 +529,11 @@ namespace kerbal
 
 					KERBAL_CONSTEXPR14
 					iterator
-					upper_bound(const key_type & key, const_iterator hint);
+					upper_bound(const_iterator hint, const key_type & key);
 
 					KERBAL_CONSTEXPR14
 					const_iterator
-					upper_bound(const key_type & key, const_iterator hint) const;
+					upper_bound(const_iterator hint, const key_type & key) const;
 
 					KERBAL_CONSTEXPR14
 					kerbal::utility::compressed_pair<iterator, iterator>
@@ -545,11 +545,11 @@ namespace kerbal
 
 					KERBAL_CONSTEXPR14
 					kerbal::utility::compressed_pair<iterator, iterator>
-					equal_range(const key_type & key, const_iterator hint);
+					equal_range(const_iterator hint, const key_type & key);
 
 					KERBAL_CONSTEXPR14
 					kerbal::utility::compressed_pair<const_iterator, const_iterator>
-					equal_range(const key_type & key, const_iterator hint) const;
+					equal_range(const_iterator hint, const key_type & key) const;
 
 				protected:
 					KERBAL_CONSTEXPR14
@@ -587,14 +587,14 @@ namespace kerbal
 
 					KERBAL_CONSTEXPR14
 					iterator
-					find(const key_type & key, const_iterator hint)
+					find(const_iterator hint, const key_type & key)
 					{
-						return this->k_find_impl(this->lower_bound(key, hint), key);
+						return this->k_find_impl(this->lower_bound(hint, key), key);
 					}
 
 					KERBAL_CONSTEXPR14
 					const_iterator
-					find(const key_type & key, const_iterator hint) const;
+					find(const_iterator hint, const key_type & key) const;
 
 					KERBAL_CONSTEXPR14
 					size_type
@@ -602,7 +602,7 @@ namespace kerbal
 
 					KERBAL_CONSTEXPR14
 					size_type
-					count(const key_type & key, const_iterator hint) const;
+					count(const_iterator hint, const key_type & key) const;
 
 					KERBAL_CONSTEXPR14
 					bool
@@ -610,7 +610,7 @@ namespace kerbal
 
 					KERBAL_CONSTEXPR14
 					bool
-					contains(const key_type & key, const_iterator hint) const;
+					contains(const_iterator hint, const key_type & key) const;
 
 
 				//===================
