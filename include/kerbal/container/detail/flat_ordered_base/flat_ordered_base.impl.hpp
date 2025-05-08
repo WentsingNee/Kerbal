@@ -380,9 +380,9 @@ namespace kerbal
 			lower_bound(const key_type & key)
 			{
 				return kerbal::algorithm::lower_bound(
-					this->begin(), this->end(), key,
-					lower_bound_kc_adapter(this)
-				);
+					this->key_view_begin(), this->key_view_end(), key,
+					this->key_comp()
+				).base();
 			}
 
 			template <typename Entity, typename Extract, typename KeyCompare, typename Sequence>
@@ -393,9 +393,9 @@ namespace kerbal
 			lower_bound(const key_type & key) const
 			{
 				return kerbal::algorithm::lower_bound(
-					this->cbegin(), this->cend(), key,
-					lower_bound_kc_adapter(this)
-				);
+					this->key_view_cbegin(), this->key_view_cend(), key,
+					this->key_comp()
+				).base();
 			}
 
 			template <typename Entity, typename Extract, typename KeyCompare, typename Sequence>
@@ -406,10 +406,12 @@ namespace kerbal
 			lower_bound(const key_type & key, const_iterator hint)
 			{
 				return kerbal::algorithm::lower_bound_hint(
-					this->begin(), this->end(), key,
-					hint.cast_to_mutable(), // TODO
-					lower_bound_kc_adapter(this)
-				);
+					this->key_view_begin(), this->key_view_end(), key,
+					this->make_key_view_iterator(
+						kerbal::container::nth(*this, kerbal::container::index_of(*this, hint))
+					),
+					this->key_comp()
+				).base();
 			}
 
 			template <typename Entity, typename Extract, typename KeyCompare, typename Sequence>
@@ -420,10 +422,10 @@ namespace kerbal
 			lower_bound(const key_type & key, const_iterator hint) const
 			{
 				return kerbal::algorithm::lower_bound_hint(
-					this->cbegin(), this->cend(), key,
-					hint,
-					lower_bound_kc_adapter(this)
-				);
+					this->key_view_cbegin(), this->key_view_cend(), key,
+					this->make_key_view_iterator(hint),
+					this->key_comp()
+				).base();
 			}
 
 			template <typename Entity, typename Extract, typename KeyCompare, typename Sequence>
@@ -503,9 +505,9 @@ namespace kerbal
 			upper_bound(const key_type & key)
 			{
 				return kerbal::algorithm::upper_bound(
-					this->begin(), this->end(), key,
-					upper_bound_kc_adapter(this)
-				);
+					this->key_view_begin(), this->key_view_end(), key,
+					this->key_comp()
+				).base();
 			}
 
 			template <typename Entity, typename Extract, typename KeyCompare, typename Sequence>
@@ -516,9 +518,9 @@ namespace kerbal
 			upper_bound(const key_type & key) const
 			{
 				return kerbal::algorithm::upper_bound(
-					this->cbegin(), this->cend(), key,
-					upper_bound_kc_adapter(this)
-				);
+					this->key_view_cbegin(), this->key_view_cend(), key,
+					this->key_comp()
+				).base();
 			}
 
 			template <typename Entity, typename Extract, typename KeyCompare, typename Sequence>
@@ -529,10 +531,12 @@ namespace kerbal
 			upper_bound(const key_type & key, const_iterator hint)
 			{
 				return kerbal::algorithm::upper_bound_hint(
-					this->begin(), this->end(), key,
-					hint, // TODO
-					upper_bound_kc_adapter(this)
-				);
+					this->key_view_begin(), this->key_view_end(), key,
+					this->make_key_view_iterator(
+						kerbal::container::nth(*this, kerbal::container::index_of(*this, hint))
+					),
+					this->key_comp()
+				).base();
 			}
 
 			template <typename Entity, typename Extract, typename KeyCompare, typename Sequence>
@@ -543,10 +547,10 @@ namespace kerbal
 			upper_bound(const key_type & key, const_iterator hint) const
 			{
 				return kerbal::algorithm::upper_bound_hint(
-					this->cbegin(), this->cend(), key,
-					hint,
-					upper_bound_kc_adapter(this)
-				);
+					this->key_view_cbegin(), this->key_view_cend(), key,
+					this->make_key_view_iterator(hint),
+					this->key_comp()
+				).base();
 			}
 
 			template <typename Entity, typename Extract, typename KeyCompare, typename Sequence>
@@ -558,9 +562,15 @@ namespace kerbal
 			flat_ordered_base<Entity, Extract, KeyCompare, Sequence>::
 			equal_range(const key_type & key)
 			{
-				return kerbal::algorithm::equal_range(
-					this->begin(), this->end(), key,
-					equal_range_kc_adapter(this)
+				kerbal::utility::compressed_pair<key_view_iterator, key_view_iterator> eqr(
+					kerbal::algorithm::equal_range(
+						this->key_view_begin(), this->key_view_end(), key,
+						this->key_comp()
+					)
+				);
+				return kerbal::utility::compressed_pair<iterator, iterator>(
+					eqr.first().base(),
+					eqr.second().base()
 				);
 			}
 
@@ -573,9 +583,15 @@ namespace kerbal
 			flat_ordered_base<Entity, Extract, KeyCompare, Sequence>::
 			equal_range(const key_type & key) const
 			{
-				return kerbal::algorithm::equal_range(
-					this->cbegin(), this->cend(), key,
-					equal_range_kc_adapter(this)
+				kerbal::utility::compressed_pair<key_view_const_iterator, key_view_const_iterator> eqr(
+					kerbal::algorithm::equal_range(
+						this->key_view_cbegin(), this->key_view_cend(), key,
+						this->key_comp()
+					)
+				);
+				return kerbal::utility::compressed_pair<const_iterator, const_iterator>(
+					eqr.first().base(),
+					eqr.second().base()
 				);
 			}
 
@@ -588,9 +604,15 @@ namespace kerbal
 			flat_ordered_base<Entity, Extract, KeyCompare, Sequence>::
 			equal_range(const key_type & key, const_iterator hint)
 			{
-				return kerbal::algorithm::equal_range(
-					this->begin(), this->end(), key,
-					equal_range_kc_adapter(this)
+				kerbal::utility::compressed_pair<key_view_iterator, key_view_iterator> eqr(
+					kerbal::algorithm::equal_range(
+						this->key_view_begin(), this->key_view_end(), key,
+						this->key_comp()
+					)
+				);
+				return kerbal::utility::compressed_pair<iterator, iterator>(
+					eqr.first().base(),
+					eqr.second().base()
 				);
 			}
 
@@ -603,9 +625,15 @@ namespace kerbal
 			flat_ordered_base<Entity, Extract, KeyCompare, Sequence>::
 			equal_range(const key_type & key, const_iterator hint) const
 			{
-				return kerbal::algorithm::equal_range(
-					this->cbegin(), this->cend(), key,
-					equal_range_kc_adapter(this)
+				kerbal::utility::compressed_pair<key_view_const_iterator, key_view_const_iterator> eqr(
+					kerbal::algorithm::equal_range(
+						this->key_view_cbegin(), this->key_view_cend(), key,
+						this->key_comp()
+					)
+				);
+				return kerbal::utility::compressed_pair<const_iterator, const_iterator>(
+					eqr.first().base(),
+					eqr.second().base()
 				);
 			}
 
