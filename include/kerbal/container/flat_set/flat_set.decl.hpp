@@ -332,6 +332,49 @@ namespace kerbal
 
 		};
 
+
+#	if __cplusplus >= 201703L
+
+		template <typename InputIterator>
+		flat_set(
+			InputIterator, InputIterator
+		) ->
+		flat_set<
+			typename kerbal::iterator::iterator_traits<InputIterator>::value_type
+		>;
+
+		template <
+			typename InputIterator,
+			typename KeyCompare
+		>
+		flat_set(
+			InputIterator, InputIterator,
+			const KeyCompare &
+		) ->
+		flat_set<
+			typename kerbal::iterator::iterator_traits<InputIterator>::value_type,
+			KeyCompare
+		>;
+
+
+		template <typename T>
+		flat_set(
+			std::initializer_list<T>
+		) ->
+		flat_set<T>;
+
+		template <
+			typename T, typename KeyCompare
+		>
+		flat_set(
+			std::initializer_list<T>,
+			const KeyCompare &
+		) ->
+		flat_set<T, KeyCompare>;
+
+#	endif // if __cplusplus >= 201703L
+
+
 	} // namespace container
 
 
