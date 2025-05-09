@@ -12,7 +12,7 @@
 #ifndef KERBAL_CONTAINER_STATIC_ORDERED_STATIC_ORDERED_FWD_HPP
 #define KERBAL_CONTAINER_STATIC_ORDERED_STATIC_ORDERED_FWD_HPP
 
-#include <kerbal/compare/basic_compare.hpp>
+#include <kerbal/compare/binary_type_compare.hpp>
 #include <kerbal/container/associative_container_facility/key_extractors/identity_extractor.hpp>
 
 #include <cstddef>
@@ -28,7 +28,7 @@ namespace kerbal
 			typename Entity,
 			std::size_t N,
 			typename Extract = kerbal::container::identity_extractor<Entity>,
-			typename KeyCompare = kerbal::compare::less<>
+			typename KeyCompare = kerbal::compare::binary_type_less<void, void>
 		>
 		class static_ordered;
 

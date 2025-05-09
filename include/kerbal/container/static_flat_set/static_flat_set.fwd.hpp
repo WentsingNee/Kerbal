@@ -12,7 +12,7 @@
 #ifndef KERBAL_CONTAINER_STATIC_FLAT_SET_STATIC_FLAT_SET_FWD_HPP
 #define KERBAL_CONTAINER_STATIC_FLAT_SET_STATIC_FLAT_SET_FWD_HPP
 
-#include <kerbal/compare/basic_compare.hpp>
+#include <kerbal/compare/binary_type_compare.hpp>
 
 #include <cstddef>
 
@@ -26,7 +26,7 @@ namespace kerbal
 		template <
 			typename T,
 			std::size_t N,
-			typename KeyCompare = kerbal::compare::less<T>
+			typename KeyCompare = kerbal::compare::binary_type_less<void, void>
 		>
 		class static_flat_set;
 

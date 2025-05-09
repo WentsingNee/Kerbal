@@ -12,7 +12,7 @@
 #ifndef KERBAL_CONTAINER_FLAT_MULTISET_FLAT_MULTISET_FWD_HPP
 #define KERBAL_CONTAINER_FLAT_MULTISET_FLAT_MULTISET_FWD_HPP
 
-#include <kerbal/compare/basic_compare.hpp>
+#include <kerbal/compare/binary_type_compare.hpp>
 
 #include <memory>
 
@@ -25,7 +25,7 @@ namespace kerbal
 
 		template <
 			typename T,
-			typename KeyCompare = kerbal::compare::less<T>,
+			typename KeyCompare = kerbal::compare::binary_type_less<void, void>,
 			typename Allocator = std::allocator<T>
 		>
 		class flat_multiset;
