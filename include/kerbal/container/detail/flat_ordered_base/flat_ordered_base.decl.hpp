@@ -19,9 +19,9 @@
 #include <kerbal/compatibility/noexcept.hpp>
 #include <kerbal/container/associative_container_facility/associative_unique_insert_r.hpp>
 #include <kerbal/container/associative_container_facility/key_compare_is_transparent.hpp>
+#include <kerbal/container/nonmember_container_access.hpp>
 #include <kerbal/iterator/iterator_traits.hpp>
 #include <kerbal/iterator/transform_iterator.hpp>
-#include <kerbal/type_traits/conditional.hpp>
 #include <kerbal/type_traits/enable_if.hpp>
 #include <kerbal/type_traits/is_same.hpp>
 #include <kerbal/utility/compressed_pair.hpp>
@@ -194,33 +194,15 @@ namespace kerbal
 
 #			else
 
-					flat_ordered_base(const kerbal::assign::assign_list<void> & ilist) :
-						key_compare_compress_helper(),
-						sequence()
-					{
-					}
+					flat_ordered_base(const kerbal::assign::assign_list<void> & ilist);
 
-					flat_ordered_base(const kerbal::assign::assign_list<void> & ilist, key_compare kc) :
-						key_compare_compress_helper(kerbal::utility::in_place_t(), kc),
-						sequence()
-					{
-					}
+					flat_ordered_base(const kerbal::assign::assign_list<void> & ilist, key_compare kc);
 
 					template <typename U>
-					flat_ordered_base(const kerbal::assign::assign_list<U> & ilist) :
-						key_compare_compress_helper(),
-						sequence(ilist.cbegin(), ilist.cend())
-					{
-						this->k_sort();
-					}
+					flat_ordered_base(const kerbal::assign::assign_list<U> & ilist);
 
 					template <typename U>
-					flat_ordered_base(const kerbal::assign::assign_list<U> & ilist, key_compare kc) :
-						key_compare_compress_helper(kerbal::utility::in_place_t(), kc),
-						sequence(ilist.cbegin(), ilist.cend())
-					{
-						this->k_sort();
-					}
+					flat_ordered_base(const kerbal::assign::assign_list<U> & ilist, key_compare kc);
 
 #			endif
 

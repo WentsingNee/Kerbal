@@ -28,6 +28,7 @@
 #include <kerbal/iterator/iterator_traits.hpp>
 #include <kerbal/type_traits/enable_if.hpp>
 #include <kerbal/utility/compressed_pair.hpp>
+#include <kerbal/utility/in_place.hpp>
 
 #if __cplusplus >= 201103L
 #	include <initializer_list>
@@ -130,6 +131,44 @@ namespace kerbal
 			) :
 				flat_ordered_base(ilist.begin(), ilist.end(), kc)
 			{
+			}
+
+#		else
+
+			template <typename Entity, typename Extract, typename KeyCompare, typename Sequence>
+			flat_ordered_base<Entity, Extract, KeyCompare, Sequence>::
+			flat_ordered_base(const kerbal::assign::assign_list<void> & ilist) :
+				key_compare_compress_helper(),
+				sequence()
+			{
+			}
+
+			template <typename Entity, typename Extract, typename KeyCompare, typename Sequence>
+			flat_ordered_base<Entity, Extract, KeyCompare, Sequence>::
+			flat_ordered_base(const kerbal::assign::assign_list<void> & ilist, key_compare kc) :
+				key_compare_compress_helper(kerbal::utility::in_place_t(), kc),
+				sequence()
+			{
+			}
+
+			template <typename Entity, typename Extract, typename KeyCompare, typename Sequence>
+			template <typename U>
+			flat_ordered_base<Entity, Extract, KeyCompare, Sequence>::
+			flat_ordered_base(const kerbal::assign::assign_list<U> & ilist) :
+				key_compare_compress_helper(),
+				sequence(ilist.cbegin(), ilist.cend())
+			{
+				this->k_sort();
+			}
+
+			template <typename Entity, typename Extract, typename KeyCompare, typename Sequence>
+			template <typename U>
+			flat_ordered_base<Entity, Extract, KeyCompare, Sequence>::
+			flat_ordered_base(const kerbal::assign::assign_list<U> & ilist, key_compare kc) :
+				key_compare_compress_helper(kerbal::utility::in_place_t(), kc),
+				sequence(ilist.cbegin(), ilist.cend())
+			{
+				this->k_sort();
 			}
 
 #		endif
