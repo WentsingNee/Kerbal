@@ -19,7 +19,7 @@
 #include <kerbal/compatibility/constexpr.hpp>
 #include <kerbal/compatibility/is_constant_evaluated.hpp>
 #include <kerbal/compatibility/noexcept.hpp>
-#include <kerbal/numeric/bit/repeat_byte.hpp>
+#include <kerbal/smath/repeat_byte.hpp>
 #include <kerbal/type_traits/integral_constant.hpp>
 #include <kerbal/type_traits/sign_deduction.hpp>
 
@@ -168,10 +168,10 @@ namespace kerbal
 			KERBAL_CONSTEXPR14
 			int k_basic_popcount(Unsigned x) KERBAL_NOEXCEPT
 			{
-				typedef kerbal::numeric::repeat_byte<Unsigned, 0x55> _0x5555;
-				typedef kerbal::numeric::repeat_byte<Unsigned, 0x33> _0x3333;
-				typedef kerbal::numeric::repeat_byte<Unsigned, 0x0f> _0x0f0f;
-				typedef kerbal::numeric::repeat_byte<Unsigned, 0x01> _0x0101;
+				typedef kerbal::smath::repeat_byte<Unsigned, 0x55> _0x5555;
+				typedef kerbal::smath::repeat_byte<Unsigned, 0x33> _0x3333;
+				typedef kerbal::smath::repeat_byte<Unsigned, 0x0f> _0x0f0f;
+				typedef kerbal::smath::repeat_byte<Unsigned, 0x01> _0x0101;
 
 				x = x - ((x >> 1) & _0x5555::value);
 				// x = (x & _0x5555::value) + ((x >> 1) & _0x5555::value);

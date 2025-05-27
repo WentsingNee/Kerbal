@@ -9,8 +9,8 @@
  *   all rights reserved
  */
 
-#ifndef KERBAL_NUMERIC_BIT_REPEAT_BYTE_HPP
-#define KERBAL_NUMERIC_BIT_REPEAT_BYTE_HPP
+#ifndef KERBAL_SMATH_REPEAT_BYTE_HPP
+#define KERBAL_SMATH_REPEAT_BYTE_HPP
 
 #include <kerbal/type_traits/integral_constant.hpp>
 
@@ -20,7 +20,7 @@
 namespace kerbal
 {
 
-	namespace numeric
+	namespace smath
 	{
 
 		namespace detail
@@ -52,8 +52,8 @@ namespace kerbal
 		{
 		};
 
-	} // namespace numeric
+	} // namespace smath
 
 } // namespace kerbal
 
-#endif // KERBAL_NUMERIC_BIT_REPEAT_BYTE_HPP
+#endif // KERBAL_SMATH_REPEAT_BYTE_HPP
