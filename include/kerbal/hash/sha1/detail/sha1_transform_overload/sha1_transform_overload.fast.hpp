@@ -20,6 +20,9 @@
 #include <kerbal/compatibility/noexcept.hpp>
 #include <kerbal/numeric/bit.hpp>
 
+#include <arm_neon.h>
+#include <iostream>
+
 
 namespace kerbal
 {
@@ -42,7 +45,6 @@ namespace kerbal
 					SHA1_transform_overload() = default;
 #		endif
 
-					KERBAL_CONSTEXPR14
 					static
 					void update_w(uint32_t w[16]) KERBAL_NOEXCEPT;
 
@@ -51,28 +53,47 @@ namespace kerbal
 
 			};
 
-			KERBAL_CONSTEXPR14
 			inline
 			void
 			SHA1_transform_overload<SHA1_policy::fast>::
 			update_w(uint32_t w[16]) KERBAL_NOEXCEPT
 			{
-				w[0] = kerbal::numeric::rotl(w[0] ^ w[2] ^ w[8] ^ w[13], 1);
-				w[1] = kerbal::numeric::rotl(w[1] ^ w[3] ^ w[9] ^ w[14], 1);
-				w[2] = kerbal::numeric::rotl(w[2] ^ w[4] ^ w[10] ^ w[15], 1);
-				w[3] = kerbal::numeric::rotl(w[3] ^ w[5] ^ w[11] ^ w[0], 1);
-				w[4] = kerbal::numeric::rotl(w[4] ^ w[6] ^ w[12] ^ w[1], 1);
-				w[5] = kerbal::numeric::rotl(w[5] ^ w[7] ^ w[13] ^ w[2], 1);
-				w[6] = kerbal::numeric::rotl(w[6] ^ w[8] ^ w[14] ^ w[3], 1);
-				w[7] = kerbal::numeric::rotl(w[7] ^ w[9] ^ w[15] ^ w[4], 1);
-				w[8] = kerbal::numeric::rotl(w[8] ^ w[10] ^ w[0] ^ w[5], 1);
-				w[9] = kerbal::numeric::rotl(w[9] ^ w[11] ^ w[1] ^ w[6], 1);
-				w[10] = kerbal::numeric::rotl(w[10] ^ w[12] ^ w[2] ^ w[7], 1);
-				w[11] = kerbal::numeric::rotl(w[11] ^ w[13] ^ w[3] ^ w[8], 1);
-				w[12] = kerbal::numeric::rotl(w[12] ^ w[14] ^ w[4] ^ w[9], 1);
-				w[13] = kerbal::numeric::rotl(w[13] ^ w[15] ^ w[5] ^ w[10], 1);
-				w[14] = kerbal::numeric::rotl(w[14] ^ w[0] ^ w[6] ^ w[11], 1);
-				w[15] = kerbal::numeric::rotl(w[15] ^ w[1] ^ w[7] ^ w[12], 1);
+				uint32x4_t w0_3, w4_7, w8_11, w12_15;
+
+				w0_3 = vld1q_u32(w + 0);
+				w4_7 = vld1q_u32(w + 4);
+				w8_11 = vld1q_u32(w + 8);
+				w12_15 = vld1q_u32(w + 12);
+				w0_3 = vsha1su0q_u32(w0_3, w4_7, w8_11);
+				w0_3 = vsha1su1q_u32(w0_3, w12_15);
+				vst1q_u32(w + 0, w0_3);
+
+
+				w0_3 = vld1q_u32(w + 4);
+				w4_7 = vld1q_u32(w + 8);
+				w8_11 = vld1q_u32(w + 12);
+				w12_15 = vld1q_u32(w + 0);
+				w0_3 = vsha1su0q_u32(w0_3, w4_7, w8_11);
+				w0_3 = vsha1su1q_u32(w0_3, w12_15);
+				vst1q_u32(w + 4, w0_3);
+
+
+				w0_3 = vld1q_u32(w + 8);
+				w4_7 = vld1q_u32(w + 12);
+				w8_11 = vld1q_u32(w + 0);
+				w12_15 = vld1q_u32(w + 4);
+				w0_3 = vsha1su0q_u32(w0_3, w4_7, w8_11);
+				w0_3 = vsha1su1q_u32(w0_3, w12_15);
+				vst1q_u32(w + 8, w0_3);
+
+
+				w0_3 = vld1q_u32(w + 12);
+				w4_7 = vld1q_u32(w + 0);
+				w8_11 = vld1q_u32(w + 4);
+				w12_15 = vld1q_u32(w + 8);
+				w0_3 = vsha1su0q_u32(w0_3, w4_7, w8_11);
+				w0_3 = vsha1su1q_u32(w0_3, w12_15);
+				vst1q_u32(w + 12, w0_3);
 			}
 
 			KERBAL_CONSTEXPR14
@@ -87,54 +108,141 @@ namespace kerbal
 				}
 
 				/* Copy context->state[] to working vars */
-				uint32_t a = this->state[0];
-				uint32_t b = this->state[1];
-				uint32_t c = this->state[2];
-				uint32_t d = this->state[3];
-				uint32_t e = this->state[4];
+				uint32_t cpy_state[5];
+				for (int i = 0; i < 5; ++i) {
+					cpy_state[i] = this->state[i];
+				}
 
-				R1(w[ 0], a, b, c, d, e); R1(w[ 1], e, a, b, c, d); R1(w[ 2], d, e, a, b, c); R1(w[ 3], c, d, e, a, b);
-				R1(w[ 4], b, c, d, e, a); R1(w[ 5], a, b, c, d, e); R1(w[ 6], e, a, b, c, d); R1(w[ 7], d, e, a, b, c);
-				R1(w[ 8], c, d, e, a, b); R1(w[ 9], b, c, d, e, a); R1(w[10], a, b, c, d, e); R1(w[11], e, a, b, c, d);
-				R1(w[12], d, e, a, b, c); R1(w[13], c, d, e, a, b); R1(w[14], b, c, d, e, a); R1(w[15], a, b, c, d, e);
+				uint32x4_t hash_abcd, wk;
 
-				update_w(w);
+				hash_abcd = vld1q_u32(cpy_state);
 
-				R1(w[ 0], e, a, b, c, d); R1(w[ 1], d, e, a, b, c); R1(w[ 2], c, d, e, a, b); R1(w[ 3], b, c, d, e, a);
+				// R1
+				wk = vaddq_u32(vld1q_u32(w + 0), vdupq_n_u32(0x5A827999));
+				hash_abcd = vsha1cq_u32(hash_abcd, cpy_state[4], wk);
+				cpy_state[4] = vsha1h_u32(cpy_state[0]);
+				vst1q_u32(cpy_state + 0, hash_abcd);
 
-				R2(w[ 4], a, b, c, d, e); R2(w[ 5], e, a, b, c, d); R2(w[ 6], d, e, a, b, c); R2(w[ 7], c, d, e, a, b);
-				R2(w[ 8], b, c, d, e, a); R2(w[ 9], a, b, c, d, e); R2(w[10], e, a, b, c, d); R2(w[11], d, e, a, b, c);
-				R2(w[12], c, d, e, a, b); R2(w[13], b, c, d, e, a); R2(w[14], a, b, c, d, e); R2(w[15], e, a, b, c, d);
+				wk = vaddq_u32(vld1q_u32(w + 4), vdupq_n_u32(0x5A827999));
+				hash_abcd = vsha1cq_u32(hash_abcd, cpy_state[4], wk);
+				cpy_state[4] = vsha1h_u32(cpy_state[0]);
+				vst1q_u32(cpy_state + 0, hash_abcd);
 
-				update_w(w);
+				wk = vaddq_u32(vld1q_u32(w + 8), vdupq_n_u32(0x5A827999));
+				hash_abcd = vsha1cq_u32(hash_abcd, cpy_state[4], wk);
+				cpy_state[4] = vsha1h_u32(cpy_state[0]);
+				vst1q_u32(cpy_state + 0, hash_abcd);
 
-				R2(w[ 0], d, e, a, b, c); R2(w[ 1], c, d, e, a, b); R2(w[ 2], b, c, d, e, a); R2(w[ 3], a, b, c, d, e);
-				R2(w[ 4], e, a, b, c, d); R2(w[ 5], d, e, a, b, c); R2(w[ 6], c, d, e, a, b); R2(w[ 7], b, c, d, e, a);
-
-				R3(w[ 8], a, b, c, d, e); R3(w[ 9], e, a, b, c, d); R3(w[10], d, e, a, b, c); R3(w[11], c, d, e, a, b);
-				R3(w[12], b, c, d, e, a); R3(w[13], a, b, c, d, e); R3(w[14], e, a, b, c, d); R3(w[15], d, e, a, b, c);
-
-				update_w(w);
-
-				R3(w[ 0], c, d, e, a, b); R3(w[ 1], b, c, d, e, a); R3(w[ 2], a, b, c, d, e); R3(w[ 3], e, a, b, c, d);
-				R3(w[ 4], d, e, a, b, c); R3(w[ 5], c, d, e, a, b); R3(w[ 6], b, c, d, e, a); R3(w[ 7], a, b, c, d, e);
-				R3(w[ 8], e, a, b, c, d); R3(w[ 9], d, e, a, b, c); R3(w[10], c, d, e, a, b); R3(w[11], b, c, d, e, a);
-
-				R4(w[12], a, b, c, d, e); R4(w[13], e, a, b, c, d); R4(w[14], d, e, a, b, c); R4(w[15], c, d, e, a, b);
+				wk = vaddq_u32(vld1q_u32(w + 12), vdupq_n_u32(0x5A827999));
+				hash_abcd = vsha1cq_u32(hash_abcd, cpy_state[4], wk);
+				cpy_state[4] = vsha1h_u32(cpy_state[0]);
+				vst1q_u32(cpy_state + 0, hash_abcd);
 
 				update_w(w);
 
-				R4(w[ 0], b, c, d, e, a); R4(w[ 1], a, b, c, d, e); R4(w[ 2], e, a, b, c, d); R4(w[ 3], d, e, a, b, c);
-				R4(w[ 4], c, d, e, a, b); R4(w[ 5], b, c, d, e, a); R4(w[ 6], a, b, c, d, e); R4(w[ 7], e, a, b, c, d);
-				R4(w[ 8], d, e, a, b, c); R4(w[ 9], c, d, e, a, b); R4(w[10], b, c, d, e, a); R4(w[11], a, b, c, d, e);
-				R4(w[12], e, a, b, c, d); R4(w[13], d, e, a, b, c); R4(w[14], c, d, e, a, b); R4(w[15], b, c, d, e, a);
+				wk = vaddq_u32(vld1q_u32(w + 0), vdupq_n_u32(0x5A827999));
+				hash_abcd = vsha1cq_u32(hash_abcd, cpy_state[4], wk);
+				cpy_state[4] = vsha1h_u32(cpy_state[0]);
+				vst1q_u32(cpy_state + 0, hash_abcd);
+
+				// R2
+				wk = vaddq_u32(vld1q_u32(w + 4), vdupq_n_u32(0x6ED9EBA1));
+				hash_abcd = vsha1pq_u32(hash_abcd, cpy_state[4], wk);
+				cpy_state[4] = vsha1h_u32(cpy_state[0]);
+				vst1q_u32(cpy_state + 0, hash_abcd);
+
+				wk = vaddq_u32(vld1q_u32(w + 8), vdupq_n_u32(0x6ED9EBA1));
+				hash_abcd = vsha1pq_u32(hash_abcd, cpy_state[4], wk);
+				cpy_state[4] = vsha1h_u32(cpy_state[0]);
+				vst1q_u32(cpy_state + 0, hash_abcd);
+
+				wk = vaddq_u32(vld1q_u32(w + 12), vdupq_n_u32(0x6ED9EBA1));
+				hash_abcd = vsha1pq_u32(hash_abcd, cpy_state[4], wk);
+				cpy_state[4] = vsha1h_u32(cpy_state[0]);
+				vst1q_u32(cpy_state + 0, hash_abcd);
+
+				update_w(w);
+
+				wk = vaddq_u32(vld1q_u32(w + 0), vdupq_n_u32(0x6ED9EBA1));
+				hash_abcd = vsha1pq_u32(hash_abcd, cpy_state[4], wk);
+				cpy_state[4] = vsha1h_u32(cpy_state[0]);
+				vst1q_u32(cpy_state + 0, hash_abcd);
+
+				wk = vaddq_u32(vld1q_u32(w + 4), vdupq_n_u32(0x6ED9EBA1));
+				hash_abcd = vsha1pq_u32(hash_abcd, cpy_state[4], wk);
+				cpy_state[4] = vsha1h_u32(cpy_state[0]);
+				vst1q_u32(cpy_state + 0, hash_abcd);
+
+				// R3
+				wk = vaddq_u32(vld1q_u32(w + 8), vdupq_n_u32(0x8F1BBCDC));
+				hash_abcd = vsha1mq_u32(hash_abcd, cpy_state[4], wk);
+				cpy_state[4] = vsha1h_u32(cpy_state[0]);
+				vst1q_u32(cpy_state + 0, hash_abcd);
+
+				wk = vaddq_u32(vld1q_u32(w + 12), vdupq_n_u32(0x8F1BBCDC));
+				hash_abcd = vsha1mq_u32(hash_abcd, cpy_state[4], wk);
+				cpy_state[4] = vsha1h_u32(cpy_state[0]);
+				vst1q_u32(cpy_state + 0, hash_abcd);
+
+				update_w(w);
+
+				wk = vaddq_u32(vld1q_u32(w + 0), vdupq_n_u32(0x8F1BBCDC));
+				hash_abcd = vsha1mq_u32(hash_abcd, cpy_state[4], wk);
+				cpy_state[4] = vsha1h_u32(cpy_state[0]);
+				vst1q_u32(cpy_state + 0, hash_abcd);
+
+				wk = vaddq_u32(vld1q_u32(w + 4), vdupq_n_u32(0x8F1BBCDC));
+				hash_abcd = vsha1mq_u32(hash_abcd, cpy_state[4], wk);
+				cpy_state[4] = vsha1h_u32(cpy_state[0]);
+				vst1q_u32(cpy_state + 0, hash_abcd);
+
+				wk = vaddq_u32(vld1q_u32(w + 8), vdupq_n_u32(0x8F1BBCDC));
+				hash_abcd = vsha1mq_u32(hash_abcd, cpy_state[4], wk);
+				cpy_state[4] = vsha1h_u32(cpy_state[0]);
+				vst1q_u32(cpy_state + 0, hash_abcd);
+
+				// R4
+				wk = vaddq_u32(vld1q_u32(w + 12), vdupq_n_u32(0xCA62C1D6));
+				hash_abcd = vsha1pq_u32(hash_abcd, cpy_state[4], wk);
+				cpy_state[4] = vsha1h_u32(cpy_state[0]);
+				vst1q_u32(cpy_state + 0, hash_abcd);
+
+				update_w(w);
+
+				wk = vaddq_u32(vld1q_u32(w + 0), vdupq_n_u32(0xCA62C1D6));
+				hash_abcd = vsha1pq_u32(hash_abcd, cpy_state[4], wk);
+				cpy_state[4] = vsha1h_u32(cpy_state[0]);
+				vst1q_u32(cpy_state + 0, hash_abcd);
+
+				wk = vaddq_u32(vld1q_u32(w + 4), vdupq_n_u32(0xCA62C1D6));
+				hash_abcd = vsha1pq_u32(hash_abcd, cpy_state[4], wk);
+				cpy_state[4] = vsha1h_u32(cpy_state[0]);
+				vst1q_u32(cpy_state + 0, hash_abcd);
+
+				wk = vaddq_u32(vld1q_u32(w + 8), vdupq_n_u32(0xCA62C1D6));
+				hash_abcd = vsha1pq_u32(hash_abcd, cpy_state[4], wk);
+				cpy_state[4] = vsha1h_u32(cpy_state[0]);
+				vst1q_u32(cpy_state + 0, hash_abcd);
+
+				wk = vaddq_u32(vld1q_u32(w + 12), vdupq_n_u32(0xCA62C1D6));
+				hash_abcd = vsha1pq_u32(hash_abcd, cpy_state[4], wk);
+				cpy_state[4] = vsha1h_u32(cpy_state[0]);
+				vst1q_u32(cpy_state + 0, hash_abcd);
+
+				// std::cout << a << "  " << b << "  " << c << "  " << d << "  " << e << std::endl;
+				// std::cout << cpy_state[0] << "  " << cpy_state[1] << "  " << cpy_state[2] << "  " << cpy_state[3] << "  " << cpy_state[4] << std::endl;
+				// exit(EXIT_SUCCESS);
 
 				/* Add the working vars back into context.state[] */
-				this->state[0] += a;
-				this->state[1] += b;
-				this->state[2] += c;
-				this->state[3] += d;
-				this->state[4] += e;
+				// this->state[0] += a;
+				// this->state[1] += b;
+				// this->state[2] += c;
+				// this->state[3] += d;
+				// this->state[4] += e;
+
+				for (int i = 0; i < 5; ++i) {
+					this->state[i] += cpy_state[i];
+				}
 			}
 
 		} // namespace detail
