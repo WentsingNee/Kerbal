@@ -24,6 +24,7 @@
 #include <kerbal/utility/member_compress_helper.hpp>
 
 #if __cplusplus >= 201103L
+#	include <kerbal/compatibility/static_assert.hpp>
 #	include <kerbal/type_traits/is_nothrow_move_constructible.hpp>
 #	include <kerbal/type_traits/remove_all_extents.hpp>
 #	include <kerbal/utility/forward.hpp>

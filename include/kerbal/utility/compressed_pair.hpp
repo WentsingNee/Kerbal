@@ -23,6 +23,7 @@
 #include <kerbal/compatibility/move.hpp>
 #include <kerbal/compatibility/namespace_std_scope.hpp>
 #include <kerbal/compatibility/noexcept.hpp>
+#include <kerbal/compatibility/static_assert.hpp>
 #include <kerbal/tmp/type_vector.hpp>
 #include <kerbal/type_traits/is_same.hpp>
 #include <kerbal/utility/in_place.hpp>

@@ -22,6 +22,7 @@
 #include <kerbal/compatibility/move.hpp>
 #include <kerbal/compatibility/namespace_std_scope.hpp>
 #include <kerbal/compatibility/noexcept.hpp>
+#include <kerbal/type_traits/enable_if.hpp>
 #include <kerbal/utility/declval.hpp>
 #include <kerbal/utility/noncopyable.hpp>
 
