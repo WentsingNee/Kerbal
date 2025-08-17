@@ -16,16 +16,13 @@
 #include <kerbal/compatibility/fixed_width_integer.hpp>
 #include <kerbal/compatibility/static_assert.hpp>
 #include <kerbal/compatibility/noexcept.hpp>
-#include <kerbal/numeric/numeric_limits.hpp>
 #include <kerbal/iterator/iterator_traits.hpp>
 #include <kerbal/smath/add_mod_sm.hpp>
 #include <kerbal/smath/multiply_mod_sa_b_sm.hpp>
 #include <kerbal/smath/pow_mod_sa_n_sm.hpp>
 #include <kerbal/smath/sigma_pow_mod_sa_n_sm.hpp>
 #include <kerbal/smath/xmod.hpp>
-#include <kerbal/type_traits/conditional.hpp>
 #include <kerbal/type_traits/integral_constant.hpp>
-#include <kerbal/type_traits/type_identity.hpp>
 
 #include <climits>
 

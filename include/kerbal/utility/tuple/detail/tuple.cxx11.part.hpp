@@ -30,7 +30,6 @@
 #include <kerbal/type_traits/add_const_rvalue_reference.hpp>
 #include <kerbal/type_traits/add_lvalue_reference.hpp>
 #include <kerbal/type_traits/add_rvalue_reference.hpp>
-#include <kerbal/type_traits/conditional.hpp>
 #include <kerbal/type_traits/enable_if.hpp>
 #include <kerbal/type_traits/integral_constant.hpp>
 #include <kerbal/type_traits/is_nothrow_constructible.hpp>

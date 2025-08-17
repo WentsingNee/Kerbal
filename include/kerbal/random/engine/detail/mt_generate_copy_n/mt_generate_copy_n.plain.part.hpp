@@ -13,9 +13,7 @@
 #define KERBAL_RANDOM_ENGINE_DETAIL_MT_GENERATE_COPY_N_MT_GENERATE_COPY_N_PLAIN_PART_HPP
 
 #include <kerbal/compatibility/constexpr.hpp>
-#include <kerbal/compatibility/fixed_width_integer.hpp>
 #include <kerbal/compatibility/noexcept.hpp>
-#include <kerbal/compatibility/static_assert.hpp>
 
 #include <cstddef>
 

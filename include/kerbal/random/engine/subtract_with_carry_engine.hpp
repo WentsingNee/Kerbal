@@ -24,7 +24,6 @@
 #include <kerbal/random/engine/linear_congruential_engine.hpp>
 #include <kerbal/smath/add_mod_sm.hpp>
 #include <kerbal/smath/multiply_mod_sa_b_sm.hpp>
-#include <kerbal/smath/multiply_mod_sa_sb_sm.hpp>
 #include <kerbal/smath/pow_mod_sa_sn_sm.hpp>
 #include <kerbal/smath/two_pow_sn.hpp>
 #include <kerbal/smath/two_pow_sn_minus_one.hpp>

@@ -23,13 +23,6 @@
 #endif
 
 
-#include <kerbal/type_traits/conditional.hpp>
-#include <kerbal/type_traits/is_array.hpp>
-#include <kerbal/type_traits/is_fundamental.hpp>
-#include <kerbal/type_traits/is_member_pointer.hpp>
-#include <kerbal/type_traits/is_pointer.hpp>
-#include <kerbal/type_traits/is_reference.hpp>
-#include <kerbal/type_traits/logical.hpp>
 #include <kerbal/type_traits/tribool_constant.hpp>
 
 
