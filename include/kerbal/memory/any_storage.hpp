@@ -61,8 +61,8 @@ namespace kerbal
 
 			template <typename T>
 			struct any_node :
-					public any_node_base,
-					private kerbal::utility::member_compress_helper<T>
+				public any_node_base,
+				private kerbal::utility::member_compress_helper<T>
 			{
 				private:
 					typedef kerbal::utility::member_compress_helper<T> member_compress_helper;
@@ -73,8 +73,8 @@ namespace kerbal
 
 					template <typename ... Args>
 					KERBAL_CONSTEXPR
-					explicit any_node(kerbal::utility::in_place_t in_place, Args && ... args)
-							: member_compress_helper(in_place, kerbal::utility::forward<Args>(args)...)
+					explicit any_node(kerbal::utility::in_place_t in_place, Args && ... args) :
+						member_compress_helper(in_place, kerbal::utility::forward<Args>(args)...)
 					{
 					}
 
@@ -88,8 +88,8 @@ namespace kerbal
 #				define ARGS_USE(i) KERBAL_MACRO_CONCAT(arg, i)
 #				define FBODY(i) \
 					KERBAL_OPT_PPEXPAND_WITH_COMMA_N(THEAD_NOT_EMPTY, EMPTY, TARGS_DECL, i) \
-					explicit any_node(kerbal::utility::in_place_t in_place KERBAL_OPT_PPEXPAND_WITH_COMMA_N(LEFT_JOIN_COMMA, EMPTY, ARGS_DECL, i)) \
-							: member_compress_helper(in_place KERBAL_OPT_PPEXPAND_WITH_COMMA_N(LEFT_JOIN_COMMA, EMPTY, ARGS_USE, i)) \
+					explicit any_node(kerbal::utility::in_place_t in_place KERBAL_OPT_PPEXPAND_WITH_COMMA_N(LEFT_JOIN_COMMA, EMPTY, ARGS_DECL, i)) : \
+						member_compress_helper(in_place KERBAL_OPT_PPEXPAND_WITH_COMMA_N(LEFT_JOIN_COMMA, EMPTY, ARGS_USE, i)) \
 					{ \
 					} \
 
@@ -482,10 +482,10 @@ namespace kerbal
 
 #	if __cplusplus >= 201103L
 					KERBAL_STATIC_ASSERT(
-							kerbal::type_traits::try_test_is_nothrow_move_constructible<
-								typename kerbal::type_traits::remove_all_extents<T>::type
-							>::IS_TRUE::value,
-							"Static check failed!"
+						kerbal::type_traits::try_test_is_nothrow_move_constructible<
+							typename kerbal::type_traits::remove_all_extents<T>::type
+						>::IS_TRUE::value,
+						"Static check failed!"
 					);
 #	endif
 
@@ -496,7 +496,11 @@ namespace kerbal
 					any_node * stored_pos = reinterpret_cast<any_node *>(&this->k_storage.buffer);
 
 					typedef kerbal::memory::allocator_traits<SelfAnyNodeAlloctor> self_allocator_traits;
-					self_allocator_traits::construct(self_alloc, stored_pos, kerbal::utility::in_place_t(), kerbal::compatibility::to_xvalue(anop->member()));
+					self_allocator_traits::construct(
+						self_alloc, stored_pos,
+						kerbal::utility::in_place_t(),
+						kerbal::compatibility::to_xvalue(anop->member())
+					);
 
 					typedef kerbal::memory::allocator_traits<AnoAnyNodeAllocator> ano_allocator_traits;
 					ano_allocator_traits::destroy(ano_alloc, anop);
@@ -504,14 +508,22 @@ namespace kerbal
 
 				template <typename T, typename SelfAlloctor, typename AnoAllocator>
 				KERBAL_CONSTEXPR20
-				void xfer(kerbal::type_traits::false_type embedded, SelfAlloctor & /*self_alloc*/, ANY_STORAGE_XFER_TYPE ano, AnoAllocator & /*ano_alloc*/) KERBAL_NOEXCEPT
+				void xfer(
+					kerbal::type_traits::false_type embedded,
+					SelfAlloctor & /*self_alloc*/,
+					ANY_STORAGE_XFER_TYPE ano, AnoAllocator & /*ano_alloc*/
+				) KERBAL_NOEXCEPT
 				{
 					this->k_xfer_impl(embedded, kerbal::compatibility::to_xvalue(ano));
 				}
 
 				template <typename T, typename SelfAlloctor, typename AnoAllocator>
 				KERBAL_CONSTEXPR20
-				void xfer(kerbal::type_traits::true_type embedded, SelfAlloctor & self_alloc, ANY_STORAGE_XFER_TYPE ano, AnoAllocator & ano_alloc) KERBAL_NOEXCEPT
+				void xfer(
+					kerbal::type_traits::true_type embedded,
+					SelfAlloctor & self_alloc,
+					ANY_STORAGE_XFER_TYPE ano, AnoAllocator & ano_alloc
+				) KERBAL_NOEXCEPT
 				{
 
 #			if __cplusplus > 201703L
