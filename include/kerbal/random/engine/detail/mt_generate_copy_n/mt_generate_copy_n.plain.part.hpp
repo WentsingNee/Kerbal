@@ -52,7 +52,7 @@ namespace kerbal
 					const UIntType mt_now[],
 					OutputIterator out,
 					std::size_t n
-				)
+				) KERBAL_NOEXCEPT
 				{
 					typedef UIntType result_type;
 
