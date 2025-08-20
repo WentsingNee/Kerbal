@@ -86,3 +86,4 @@ endif ()
 # Installation & Packing
 include(cmake/gnuInstall.cmake)
 include(cmake/cpack.cmake)
+include(cmake/pkgconfig.cmake)
