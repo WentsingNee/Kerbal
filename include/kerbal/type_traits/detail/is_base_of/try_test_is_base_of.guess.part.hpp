@@ -23,6 +23,11 @@
 #endif
 
 
+#include <kerbal/type_traits/conditional.hpp>
+#include <kerbal/type_traits/is_class.hpp>
+#include <kerbal/type_traits/is_final.hpp>
+#include <kerbal/type_traits/is_same.hpp>
+#include <kerbal/type_traits/remove_cv.hpp>
 #include <kerbal/type_traits/tribool_constant.hpp>
 
 
@@ -32,9 +37,38 @@ namespace kerbal
 	namespace type_traits
 	{
 
+		namespace detail
+		{
+
+			template <typename Base, typename Derived>
+			struct try_test_is_base_of_impl :
+				kerbal::type_traits::conditional<
+					kerbal::type_traits::tribool_conjunction<
+						kerbal::type_traits::try_test_is_class<Base>,
+						kerbal::type_traits::try_test_is_class<Derived>
+					>::result::IS_TRUE::value,
+					typename kerbal::type_traits::conditional<
+						kerbal::type_traits::is_same<Base, Derived>::value,
+						kerbal::type_traits::tribool_true,
+						typename kerbal::type_traits::conditional<
+							kerbal::type_traits::try_test_is_final<Base>::IS_TRUE::value,
+							kerbal::type_traits::tribool_false,
+							kerbal::type_traits::tribool_unspecified
+						>::type
+					>::type,
+					kerbal::type_traits::tribool_false
+				>::type
+			{
+			};
+
+		} // namespace detail
+
 		template <typename Base, typename Derived>
 		struct try_test_is_base_of :
-			kerbal::type_traits::tribool_unspecified
+			kerbal::type_traits::detail::try_test_is_base_of_impl<
+				typename kerbal::type_traits::remove_cv<Base>::type,
+				typename kerbal::type_traits::remove_cv<Derived>::type
+			>
 		{
 		};
 
