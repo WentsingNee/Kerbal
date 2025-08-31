@@ -925,7 +925,7 @@ namespace kerbal
 		>
 		KERBAL_CONSTEXPR20
 		typename
-		hash_table<Entity, Extract, Hash, KeyEqual, NodeAllocator, BucketAllocator>::size_type
+		hash_table<Entity, Extract, Hash, KeyEqual, NodeAllocator, BucketAllocator>::iterator
 		hash_table<Entity, Extract, Hash, KeyEqual, NodeAllocator, BucketAllocator>::
 		erase(const_iterator first, const_iterator last)
 		{

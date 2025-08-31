@@ -182,25 +182,29 @@ namespace kerbal
 			protected:
 
 				KERBAL_CONSTEXPR20
-				node_allocator_type & node_alloc() KERBAL_NOEXCEPT
+				node_allocator_type &
+				node_alloc() KERBAL_NOEXCEPT
 				{
 					return node_allocator_overload::alloc();
 				}
 
 				KERBAL_CONSTEXPR20
-				node_allocator_type const & node_alloc() const KERBAL_NOEXCEPT
+				node_allocator_type const &
+				node_alloc() const KERBAL_NOEXCEPT
 				{
 					return node_allocator_overload::alloc();
 				}
 
 				KERBAL_CONSTEXPR20
-				bucket_allocator_type & bucket_alloc() KERBAL_NOEXCEPT
+				bucket_allocator_type &
+				bucket_alloc() KERBAL_NOEXCEPT
 				{
 					return bucket_allocator_overload::alloc();
 				}
 
 				KERBAL_CONSTEXPR20
-				bucket_allocator_type const & bucket_alloc() const KERBAL_NOEXCEPT
+				bucket_allocator_type const &
+				bucket_alloc() const KERBAL_NOEXCEPT
 				{
 					return bucket_allocator_overload::alloc();
 				}
@@ -214,7 +218,8 @@ namespace kerbal
 				hash_table();
 
 				KERBAL_CONSTEXPR20
-				explicit hash_table(size_type bucket_count);
+				explicit
+				hash_table(size_type bucket_count);
 
 				KERBAL_CONSTEXPR20
 				hash_table(size_type bucket_count, const Hash & hash);
@@ -737,10 +742,13 @@ namespace kerbal
 				iterator erase(const_iterator pos);
 
 				KERBAL_CONSTEXPR20
-				size_type erase(const_iterator first, const_iterator last);
+				iterator erase(const_iterator first, const_iterator last);
 
 				KERBAL_CONSTEXPR20
 				size_type erase(key_type const & key);
+
+				KERBAL_CONSTEXPR20
+				size_type erase_unique(key_type const & key);
 
 			//===================
 			// Modifiers

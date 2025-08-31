@@ -12,6 +12,8 @@
 #ifndef KERBAL_CONTAINER_HASH_SET_HASH_SET_DECL_HPP
 #define KERBAL_CONTAINER_HASH_SET_HASH_SET_DECL_HPP
 
+#include <kerbal/container/hash_table/hash_table.decl.hpp>
+
 #include <kerbal/assign/ilist.hpp>
 #include <kerbal/compatibility/constexpr.hpp>
 #include <kerbal/compatibility/noexcept.hpp>
@@ -29,9 +31,6 @@
 #if __cplusplus >= 201103L
 #	include <initializer_list>
 #endif
-
-
-#include <kerbal/container/hash_table/hash_table.decl.hpp>
 
 
 namespace kerbal
@@ -279,6 +278,7 @@ namespace kerbal
 
 #		endif
 
+
 				KERBAL_CONSTEXPR20
 				void assign(hash_set const & src);
 
@@ -291,10 +291,7 @@ namespace kerbal
 
 				template <typename InputIterator>
 				KERBAL_CONSTEXPR20
-				typename kerbal::type_traits::enable_if<
-					kerbal::iterator::is_input_compatible_iterator<InputIterator>::value
-				>::type
-				assign(InputIterator first, InputIterator last);
+				void assign(InputIterator first, InputIterator last);
 
 #		if __cplusplus >= 201103L
 
@@ -349,10 +346,8 @@ namespace kerbal
 
 			public:
 
-				using hash_table::contains;
-
 				KERBAL_CONSTEXPR20
-				const_iterator find(const_reference key) const;
+				const_iterator find(key_type const & key) const;
 
 /*
 				template <typename Key>
@@ -363,7 +358,7 @@ namespace kerbal
 
 				KERBAL_CONSTEXPR20
 				kerbal::utility::compressed_pair<const_iterator, const_iterator>
-				equal_range(const_reference key) const;
+				equal_range(key_type const & key) const;
 
 /*
 				template <typename Key>
@@ -374,6 +369,8 @@ namespace kerbal
 				>::type
 				equal_range(const Key & key) const;
 */
+
+				using hash_table::contains;
 
 				using hash_table::count;
 
@@ -421,10 +418,7 @@ namespace kerbal
 
 				template <typename InputIterator>
 				KERBAL_CONSTEXPR20
-				typename kerbal::type_traits::enable_if<
-					kerbal::iterator::is_input_compatible_iterator<InputIterator>::value
-				>::type
-				insert(InputIterator first, InputIterator last);
+				void insert(InputIterator first, InputIterator last);
 
 #		if __cplusplus >= 201103L
 
@@ -505,8 +499,19 @@ namespace kerbal
 			//===================
 			// operation
 
+				template <typename OtherKeyEqual>
 				KERBAL_CONSTEXPR20
-				void merge(hash_set<T, Hash, KeyEqual, NodeAllocator, BucketAllocator> & other);
+				void merge(hash_set<T, Hash, OtherKeyEqual, NodeAllocator, BucketAllocator> & other);
+
+#		if __cplusplus >= 201103L
+
+				/*
+				template <typename OtherKeyEqual>
+				KERBAL_CONSTEXPR20
+				void merge(hash_set<T, Hash, OtherKeyEqual, NodeAllocator, BucketAllocator> && other);
+				*/
+
+#		endif
 
 				KERBAL_CONSTEXPR20
 				void swap(hash_set & other);

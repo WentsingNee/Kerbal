@@ -18,14 +18,12 @@
 #include <kerbal/compatibility/constexpr.hpp>
 #include <kerbal/compatibility/move.hpp>
 #include <kerbal/compatibility/noexcept.hpp>
-#include <kerbal/compatibility/static_assert.hpp>
 #include <kerbal/config/exceptions.hpp>
 #include <kerbal/container/associative_container_facility/unique_tag_t.hpp>
 #include <kerbal/iterator/iterator_traits.hpp>
 #include <kerbal/memory/allocator_traits.hpp>
 #include <kerbal/memory/uninitialized/construct.hpp>
 #include <kerbal/type_traits/enable_if.hpp>
-#include <kerbal/type_traits/is_same.hpp>
 #include <kerbal/utility/as_const.hpp>
 #include <kerbal/utility/forward.hpp>
 
@@ -488,7 +486,7 @@ namespace kerbal
 					}
 					cur = node::reinterpret_as(cur->k_next);
 				}
-				return this->end();
+				return this->cend();
 			}
 
 			template <typename Entity, typename HashCachePolicy>
@@ -638,7 +636,7 @@ namespace kerbal
 							break;
 						} // else: same hash but different key => other elements in the same bucket
 					} else {
-						size_type bucket_id_cur= this->k_hash_result_to_bucket_id(hash_code_cur);
+						size_type bucket_id_cur = this->k_hash_result_to_bucket_id(hash_code_cur);
 						if (bucket_id_cur != bucket_id_in) {
 							bucket_type & bucket_cur = this->k_buckets[bucket_id_cur];
 							bucket_cur = p;
@@ -687,7 +685,7 @@ namespace kerbal
 							return unique_insert_r(iterator(cur), false);
 						} // else: same hash but different key => other elements in the same bucket
 					} else {
-						size_type bucket_id_cur= this->k_hash_result_to_bucket_id(hash_code_cur);
+						size_type bucket_id_cur = this->k_hash_result_to_bucket_id(hash_code_cur);
 						if (bucket_id_cur != bucket_id_in) {
 							bucket_type & bucket_cur = this->k_buckets[bucket_id_cur];
 							bucket_cur = p;
@@ -1353,7 +1351,7 @@ namespace kerbal
 			template <typename Extract, typename Hash, typename NodeAlloc>
 			KERBAL_CONSTEXPR20
 			typename
-			hash_table_base<Entity, HashCachePolicy>::size_type
+			hash_table_base<Entity, HashCachePolicy>::iterator
 			hash_table_base<Entity, HashCachePolicy>::
 			erase_using_allocator(
 				Extract & extract, Hash & hash, NodeAlloc & node_alloc,
@@ -1361,14 +1359,12 @@ namespace kerbal
 			) KERBAL_NOEXCEPT
 			{
 				k_hash_check(hash);
-				size_type cnt = 0;
 				while (first != last) {
 					node * p = node::reinterpret_as(first.cast_to_mutable().k_current);
 					first = const_iterator(this->k_unhook_node(extract, hash, p));
 					k_destroy_node(node_alloc, p);
-					++cnt;
 				}
-				return cnt;
+				return last.cast_to_mutable();
 			}
 
 			template <typename Entity, typename HashCachePolicy>
@@ -1389,11 +1385,16 @@ namespace kerbal
 						key
 					)
 				);
-				return this->erase_using_allocator(
-					extract, hash,
-					node_alloc,
-					er.first(), er.second()
-				);
+				const_iterator first = er.first();
+				const_iterator last = er.second();
+				size_type cnt = 0;
+				while (first != last) {
+					node * p = node::reinterpret_as(first.cast_to_mutable().k_current);
+					first = const_iterator(this->k_unhook_node(extract, hash, p));
+					k_destroy_node(node_alloc, p);
+					++cnt;
+				}
+				return cnt;
 			}
 
 

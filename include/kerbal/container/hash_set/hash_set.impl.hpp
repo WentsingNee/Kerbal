@@ -12,6 +12,9 @@
 #ifndef KERBAL_CONTAINER_HASH_SET_HASH_SET_IMPL_HPP
 #define KERBAL_CONTAINER_HASH_SET_HASH_SET_IMPL_HPP
 
+#include <kerbal/container/hash_set/hash_set.decl.hpp>
+#include <kerbal/container/hash_table/hash_table.impl.hpp>
+
 #include <kerbal/assign/assign_list.hpp>
 #include <kerbal/compatibility/constexpr.hpp>
 #include <kerbal/compatibility/move.hpp>
@@ -25,9 +28,6 @@
 #	include <kerbal/macro/macro_concat.hpp>
 #	include <kerbal/macro/ppexpand.hpp>
 #endif
-
-#include <kerbal/container/hash_set/hash_set.decl.hpp>
-#include <kerbal/container/hash_table/hash_table.impl.hpp>
 
 #if __cplusplus >= 201103L
 #	include <initializer_list>
@@ -270,9 +270,7 @@ namespace kerbal
 		>
 		template <typename InputIterator>
 		KERBAL_CONSTEXPR20
-		typename kerbal::type_traits::enable_if<
-			kerbal::iterator::is_input_compatible_iterator<InputIterator>::value
-		>::type
+		void
 		hash_set<T, Hash, KeyEqual, NodeAllocator, BucketAllocator>::
 		assign(InputIterator first, InputIterator last)
 		{
@@ -323,7 +321,7 @@ namespace kerbal
 		typename
 		hash_set<T, Hash, KeyEqual, NodeAllocator, BucketAllocator>::const_iterator
 		hash_set<T, Hash, KeyEqual, NodeAllocator, BucketAllocator>::
-		find(const_reference key) const
+		find(key_type const & key) const
 		{
 			return this->hash_table::find(key);
 		}
@@ -340,7 +338,7 @@ namespace kerbal
 			typename hash_set<T, Hash, KeyEqual, NodeAllocator, BucketAllocator>::const_iterator
 		>
 		hash_set<T, Hash, KeyEqual, NodeAllocator, BucketAllocator>::
-		equal_range(const_reference key) const
+		equal_range(key_type const & key) const
 		{
 			return this->hash_table::equal_range(key);
 		}
@@ -440,9 +438,7 @@ namespace kerbal
 		>
 		template <typename InputIterator>
 		KERBAL_CONSTEXPR20
-		typename kerbal::type_traits::enable_if<
-			kerbal::iterator::is_input_compatible_iterator<InputIterator>::value
-		>::type
+		void
 		hash_set<T, Hash, KeyEqual, NodeAllocator, BucketAllocator>::
 		insert(InputIterator first, InputIterator last)
 		{

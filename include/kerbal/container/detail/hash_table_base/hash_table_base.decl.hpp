@@ -780,7 +780,7 @@ namespace kerbal
 
 					template <typename Extract, typename KeyEqual, typename NodeAlloc>
 					KERBAL_CONSTEXPR20
-					size_type
+					iterator
 					erase_using_allocator(
 						Extract & extract, KeyEqual & hash,
 						NodeAlloc & node_alloc,
