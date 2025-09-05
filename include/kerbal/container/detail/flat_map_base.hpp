@@ -394,9 +394,9 @@ namespace kerbal
 
 					KERBAL_CONSTEXPR14
 					const_iterator
-					erase(const_iterator hint, const key_type & key)
+					erase_hint(const_iterator hint, const key_type & key)
 					{
-						return this->ordered.erase_one(hint, key);
+						return this->ordered.erase_one_hint(hint, key);
 					}
 
 					template <typename Key>
@@ -405,9 +405,9 @@ namespace kerbal
 						Key,
 						const_iterator
 					>::type
-					erase(const_iterator hint, const Key & key)
+					erase_hint(const_iterator hint, const Key & key)
 					{
-						return this->ordered.erase_one(hint, key);
+						return this->ordered.erase_one_hint(hint, key);
 					}
 
 			};

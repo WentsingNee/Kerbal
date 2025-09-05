@@ -351,9 +351,9 @@ namespace kerbal
 
 					KERBAL_CONSTEXPR14
 					size_type
-					erase(const_iterator hint, const key_type & key)
+					erase_hint(const_iterator hint, const key_type & key)
 					{
-						return this->ordered.erase(hint, key);
+						return this->ordered.erase_hint(hint, key);
 					}
 
 					template <typename Key>
@@ -362,9 +362,9 @@ namespace kerbal
 						Key,
 						size_type
 					>::type
-					erase(const_iterator hint, const Key & key)
+					erase_hint(const_iterator hint, const Key & key)
 					{
-						return this->ordered.erase(hint, key);
+						return this->ordered.erase_hint(hint, key);
 					}
 
 			};

@@ -1366,7 +1366,7 @@ namespace kerbal
 
 					KERBAL_CONSTEXPR14
 					size_type
-					erase(const_iterator hint, const key_type & key)
+					erase_hint(const_iterator hint, const key_type & key)
 					{
 						kerbal::utility::compressed_pair<iterator, iterator> p(this->equal_range(hint, key));
 						size_type dis(kerbal::iterator::distance(p.first(), p.second()));
@@ -1380,7 +1380,7 @@ namespace kerbal
 						Key,
 						size_type
 					>::type
-					erase(const_iterator hint, const Key & key)
+					erase_hint(const_iterator hint, const Key & key)
 					{
 						kerbal::utility::compressed_pair<iterator, iterator> p(this->equal_range(hint, key));
 						size_type dis(kerbal::iterator::distance(p.first(), p.second()));
@@ -1408,7 +1408,7 @@ namespace kerbal
 
 					KERBAL_CONSTEXPR14
 					const_iterator
-					erase_one(const_iterator hint, const key_type & key)
+					erase_one_hint(const_iterator hint, const key_type & key)
 					{
 						return this->erase(this->find(hint, key));
 					}
@@ -1419,7 +1419,7 @@ namespace kerbal
 						Key,
 						const_iterator
 					>::type
-					erase_one(const_iterator hint, const Key & key)
+					erase_one_hint(const_iterator hint, const Key & key)
 					{
 						return this->erase(this->find(hint, key));
 					}
