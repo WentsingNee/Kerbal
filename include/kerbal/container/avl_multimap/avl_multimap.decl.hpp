@@ -460,6 +460,9 @@ namespace kerbal
 				iterator erase_not_end_unsafe(const_iterator pos) KERBAL_NOEXCEPT;
 
 				KERBAL_CONSTEXPR20
+				iterator erase(iterator pos) KERBAL_NOEXCEPT;
+
+				KERBAL_CONSTEXPR20
 				iterator erase(const_iterator pos) KERBAL_NOEXCEPT;
 
 				KERBAL_CONSTEXPR20

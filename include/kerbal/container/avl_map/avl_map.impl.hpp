@@ -770,6 +770,16 @@ namespace kerbal
 		typename
 		avl_map<K, M, KeyCompare, Allocator>::iterator
 		avl_map<K, M, KeyCompare, Allocator>::
+		erase(iterator pos) KERBAL_NOEXCEPT
+		{
+			return this->avl_ordered::erase(pos);
+		}
+
+		template <typename K, typename M, typename KeyCompare, typename Allocator>
+		KERBAL_CONSTEXPR20
+		typename
+		avl_map<K, M, KeyCompare, Allocator>::iterator
+		avl_map<K, M, KeyCompare, Allocator>::
 		erase(const_iterator pos) KERBAL_NOEXCEPT
 		{
 			return this->avl_ordered::erase(pos);

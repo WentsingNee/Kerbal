@@ -1321,6 +1321,13 @@ namespace kerbal
 
 					KERBAL_CONSTEXPR14
 					const_iterator
+					erase(iterator pos)
+					{
+						return this->erase(const_iterator(pos));
+					}
+
+					KERBAL_CONSTEXPR14
+					const_iterator
 					erase(const_iterator pos)
 					{
 						return pos == this->sequence.cend() ? pos : this->sequence.erase(pos);

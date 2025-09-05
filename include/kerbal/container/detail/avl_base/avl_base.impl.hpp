@@ -2395,6 +2395,20 @@ namespace kerbal
 			avl_type_only<Entity>::
 			k_erase_using_allocator(
 				NodeAllocator & alloc,
+				iterator pos
+			) KERBAL_NOEXCEPT
+			{
+				return this->k_erase_using_allocator(alloc, const_iterator(pos));
+			}
+
+			template <typename Entity>
+			template <typename NodeAllocator>
+			KERBAL_CONSTEXPR20
+			typename
+			avl_type_only<Entity>::iterator
+			avl_type_only<Entity>::
+			k_erase_using_allocator(
+				NodeAllocator & alloc,
 				const_iterator pos
 			) KERBAL_NOEXCEPT
 			{

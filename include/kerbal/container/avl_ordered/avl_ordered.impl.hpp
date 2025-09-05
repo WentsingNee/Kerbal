@@ -1488,6 +1488,19 @@ namespace kerbal
 		typename
 		avl_ordered<Entity, Extract, KeyCompare, Allocator>::iterator
 		avl_ordered<Entity, Extract, KeyCompare, Allocator>::
+		erase(iterator pos) KERBAL_NOEXCEPT
+		{
+			return this->avl_type_only::k_erase_using_allocator(
+				this->alloc(),
+				pos
+			);
+		}
+
+		template <typename Entity, typename Extract, typename KeyCompare, typename Allocator>
+		KERBAL_CONSTEXPR20
+		typename
+		avl_ordered<Entity, Extract, KeyCompare, Allocator>::iterator
+		avl_ordered<Entity, Extract, KeyCompare, Allocator>::
 		erase(const_iterator pos) KERBAL_NOEXCEPT
 		{
 			return this->avl_type_only::k_erase_using_allocator(

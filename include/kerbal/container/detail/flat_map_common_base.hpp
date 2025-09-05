@@ -579,6 +579,13 @@ namespace kerbal
 
 					KERBAL_CONSTEXPR14
 					const_iterator
+					erase(iterator pos)
+					{
+						return this->ordered.erase(pos);
+					}
+
+					KERBAL_CONSTEXPR14
+					const_iterator
 					erase(const_iterator pos)
 					{
 						return this->ordered.erase(pos);

@@ -1199,6 +1199,14 @@ namespace kerbal
 					iterator
 					k_erase_using_allocator(
 						NodeAllocator & alloc,
+						iterator pos
+					) KERBAL_NOEXCEPT;
+
+					template <typename NodeAllocator>
+					KERBAL_CONSTEXPR20
+					iterator
+					k_erase_using_allocator(
+						NodeAllocator & alloc,
 						const_iterator pos
 					) KERBAL_NOEXCEPT;
 
