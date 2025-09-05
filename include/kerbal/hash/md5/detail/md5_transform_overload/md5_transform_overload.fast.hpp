@@ -12,6 +12,7 @@
 #ifndef KERBAL_HASH_MD5_DETAIL_MD5_TRANSFORM_OVERLOAD_MD5_TRANSFORM_OVERLOAD_FAST_HPP
 #define KERBAL_HASH_MD5_DETAIL_MD5_TRANSFORM_OVERLOAD_MD5_TRANSFORM_OVERLOAD_FAST_HPP
 
+#include <kerbal/hash/detail/char4tolong1.hpp>
 #include <kerbal/hash/md5/md5.fwd.hpp>
 #include <kerbal/hash/md5/detail/md5_context_base.hpp>
 
@@ -35,10 +36,10 @@ namespace kerbal
 			{
 				protected:
 
-#			if __cplusplus >= 201103L
+#		if __cplusplus >= 201103L
 					constexpr
 					MD5_transform_overload() = default;
-#			endif
+#		endif
 
 					KERBAL_CONSTEXPR14
 					void transform(const unsigned char buffer[64]) KERBAL_NOEXCEPT;
@@ -53,7 +54,7 @@ namespace kerbal
 			{
 				uint32_t l[16] = {};
 				for (int i = 0; i < 16; ++i) {
-					l[i] = char4tolong1(buffer + 4 * i);
+					l[i] = kerbal::hash::detail::char4tolong1<BIG_ENDIAN>(buffer + 4 * i);
 				}
 
 				/* Copy context->state[] to working vars */
