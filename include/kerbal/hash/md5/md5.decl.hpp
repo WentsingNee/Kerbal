@@ -39,7 +39,8 @@ namespace kerbal
 				typedef typename super::uint32_t	uint32_t;
 
 			public:
-				typedef detail::MD5_context_base::result result;
+				typedef typename super::context_base		context_base;
+				typedef detail::MD5_context_base::result	result;
 
 #		if __cplusplus >= 201103L
 				constexpr

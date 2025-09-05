@@ -69,7 +69,30 @@ namespace kerbal
 					static
 					uint32_t I(uint32_t b, uint32_t c, uint32_t d) KERBAL_NOEXCEPT;
 
+					KERBAL_CONSTEXPR
+					static
+					uint8_t const PADDING[1 + 64]
+#		if __cplusplus >= 201103L
+						= {0200}
+#		endif
+					;
+
 			};
+
+#		if __cplusplus >= 201103L
+
+			KERBAL_CONSTEXPR
+			MD5_context_base::uint8_t const
+			MD5_context_base::
+			PADDING[1 + 64];
+
+#		else
+
+			MD5_context_base::uint8_t const
+			MD5_context_base::
+			PADDING[1 + 64] = {0200};
+
+#		endif
 
 
 #		if __cplusplus >= 201103L

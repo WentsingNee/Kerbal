@@ -35,6 +35,7 @@ namespace kerbal
 				protected kerbal::hash::detail::MD5_context_base
 			{
 				protected:
+					typedef kerbal::hash::detail::MD5_context_base context_base;
 
 #		if __cplusplus >= 201103L
 					constexpr

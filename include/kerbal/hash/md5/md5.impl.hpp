@@ -137,29 +137,31 @@ namespace kerbal
 		MD5_context<Policy>::
 		digest() KERBAL_NOEXCEPT
 		{
-			const uint8_t final_count[8] = {
-				static_cast<uint8_t>(this->count[0] >> 0),
-				static_cast<uint8_t>(this->count[0] >> 8),
-				static_cast<uint8_t>(this->count[0] >> 16),
-				static_cast<uint8_t>(this->count[0] >> 24),
-				static_cast<uint8_t>(this->count[1] >> 0),
-				static_cast<uint8_t>(this->count[1] >> 8),
-				static_cast<uint8_t>(this->count[1] >> 16),
-				static_cast<uint8_t>(this->count[1] >> 24),
-			}; /* Endian independent */
+			uint32_t const count[2] = {
+				this->count[0],
+				this->count[1],
+			};
 
 			{
-				uint8_t p[1] = {0200};
-				this->update(p, p + 1);
-				p[0] = 0000;
-				while ((this->count[0] & 504) != 448) {
-					// 504 = 0b111111000
-					// 448 = 0b111000000
-					this->update(p, p + 1);
-				}
+				uint8_t const * const p = context_base::PADDING;
+
+				// 504 = 0b111111000
+				// 448 = 0b111000000
+				std::size_t padding_size = (count[0] + 8) & 504;
+				padding_size = (padding_size > 448) ? (448 + (512 - padding_size)) : (448 - padding_size);
+				padding_size /= 8;
+				this->update(p, p + 1 + padding_size);
 			}
 
-			this->update(final_count, final_count + 8); /* Should cause a SHA1Transform() */
+			this->buffer[56] = static_cast<uint8_t>(count[0] >> 0);
+			this->buffer[57] = static_cast<uint8_t>(count[0] >> 8);
+			this->buffer[58] = static_cast<uint8_t>(count[0] >> 16);
+			this->buffer[59] = static_cast<uint8_t>(count[0] >> 24);
+			this->buffer[60] = static_cast<uint8_t>(count[1] >> 0);
+			this->buffer[61] = static_cast<uint8_t>(count[1] >> 8);
+			this->buffer[62] = static_cast<uint8_t>(count[1] >> 16);
+			this->buffer[63] = static_cast<uint8_t>(count[1] >> 24);
+			this->transform(this->buffer);
 
 			return result(this->a, this->b, this->c, this->d);
 		}
