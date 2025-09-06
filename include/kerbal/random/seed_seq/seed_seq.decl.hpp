@@ -40,9 +40,11 @@ namespace kerbal
 
 		class seed_seq
 		{
+			public:
+				typedef std::uint32_t result_type;
+
 			private:
-				typedef std::uint32_t element_type;
-				typedef kerbal::container::vector<element_type> seed_vector_type;
+				typedef kerbal::container::vector<result_type> seed_vector_type;
 				seed_vector_type k_seed;
 
 			public:
@@ -63,16 +65,16 @@ namespace kerbal
 				template <typename Integer>
 				KERBAL_CONSTEXPR
 				static
-				element_type
+				result_type
 				k_mod_seed(Integer s) KERBAL_NOEXCEPT
 				{
-					typedef kerbal::smath::xmod<element_type, 0> xmod;
+					typedef kerbal::smath::xmod<result_type, 0> xmod;
 					return xmod::f(s);
 				}
 
 				template <typename InputIterator>
 				void
-				k_constrct_by_range(
+				k_construct_by_range(
 					std::input_iterator_tag,
 					InputIterator first, InputIterator last
 				)
@@ -85,7 +87,7 @@ namespace kerbal
 
 				template <typename InputIterator>
 				void
-				k_constrct_by_range(
+				k_construct_by_range(
 					std::random_access_iterator_tag,
 					InputIterator first, InputIterator last
 				)
@@ -95,7 +97,7 @@ namespace kerbal
 					);
 					seed_vector_type::size_type i = 0;
 					while (first != last) {
-						this->k_seed[i] = k_modseed(*first);
+						this->k_seed[i] = k_mod_seed(*first);
 						++first;
 						++i;
 					}
@@ -106,7 +108,7 @@ namespace kerbal
 				template <typename InputIterator>
 				seed_seq(InputIterator first, InputIterator last)
 				{
-					this->k_constrct_by_range(
+					this->k_construct_by_range(
 						kerbal::iterator::iterator_category(first),
 						first, last
 					);
@@ -125,7 +127,7 @@ namespace kerbal
 				template <typename T>
 				seed_seq(kerbal::assign::assign_list<T> const & ilist)
 				{
-					this->k_constrct_by_range(ilist.cbegin(), ilist.cend());
+					this->k_construct_by_range(ilist.cbegin(), ilist.cend());
 				}
 
 #		endif
@@ -150,7 +152,6 @@ namespace kerbal
 				)
 				{
 					typedef kerbal::iterator::iterator_traits<RandomAccessIterator> iterator_traits;
-					typedef typename iterator_traits::difference_type difference_type;
 					typedef typename iterator_traits::value_type value_type;
 
 					if (first == last) {
@@ -180,15 +181,15 @@ namespace kerbal
 						value_type & s_k = first[k % n];
 						value_type & s_kpp = first[(k + p) % n];
 						value_type s_km1 = first[(k + n - 1) % n];
-						element_type r1 =
+						result_type r1 =
 							1664525 * k_generate_T(s_k ^ s_kpp ^ s_km1)
 						;
-						element_type j =
+						result_type j =
 							(k == 0) ? z :
 							(k <= z) ? (k % n) + this->k_seed[k - 1] :
 							(k % n)
 						;
-						element_type r2 = r1 + j;
+						result_type r2 = r1 + j;
 						s_kpp = add_mod_2_pow_32::f(s_kpp, r1);
 						value_type & s_kpq = first[(k + q) % n];
 						s_kpq = add_mod_2_pow_32::f(s_kpq, r2);
@@ -200,11 +201,11 @@ namespace kerbal
 						value_type & s_kpp = first[(k + p) % n];
 						value_type s_km1 = first[(k + n - 1) % n];
 
-						element_type r3 = 1566083941 * k_generate_T(
+						result_type r3 = 1566083941 * k_generate_T(
 							s_k + s_kpp + s_km1
 						);
 
-						element_type r4 = r3 - (k % n);
+						result_type r4 = r3 - (k % n);
 						s_kpp = mod_2_pow_32::f(s_kpp ^ r3);
 						value_type & s_kpq = first[(k + q) % n];
 						s_kpq = mod_2_pow_32::f(s_kpq ^ r4);
