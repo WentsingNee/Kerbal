@@ -92,22 +92,39 @@ namespace kerbal
 				uint32_t c = this->c;
 				uint32_t d = this->d;
 
-				for (int i = 0; i < 64; ++i) {
-					uint32_t f = 0;
-					uint32_t g = 0;
-					if (i < 16) {
-						f = F(b, c, d);
-						g = i;
-					} else if (i < 32) {
-						f = G(b, c, d);
-						g = (5 * i + 1) % 16;
-					} else if (i < 48) {
-						f = H(b, c, d);
-						g = (3 * i + 5) % 16;
-					} else {
-						f = I(b, c, d);
-						g = (7 * i) % 16;
-					}
+				for (int i = 0; i < 16; ++i) {
+					uint32_t f = F(b, c, d);
+					uint32_t g = i;
+					f += a + K[i] + l[g];
+					a = d;
+					d = c;
+					c = b;
+					b = b + kerbal::numeric::rotl(f, S[i]);
+				}
+
+				for (int i = 16; i < 32; ++i) {
+					uint32_t f = G(b, c, d);
+					uint32_t g = (5 * i + 1) % 16;
+					f += a + K[i] + l[g];
+					a = d;
+					d = c;
+					c = b;
+					b = b + kerbal::numeric::rotl(f, S[i]);
+				}
+
+				for (int i = 32; i < 48; ++i) {
+					uint32_t f = H(b, c, d);
+					uint32_t g = (3 * i + 5) % 16;
+					f += a + K[i] + l[g];
+					a = d;
+					d = c;
+					c = b;
+					b = b + kerbal::numeric::rotl(f, S[i]);
+				}
+
+				for (int i = 48; i < 64; ++i) {
+					uint32_t f = I(b, c, d);
+					uint32_t g = (7 * i) % 16;
 					f += a + K[i] + l[g];
 					a = d;
 					d = c;
