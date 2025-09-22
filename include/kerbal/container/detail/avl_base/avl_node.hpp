@@ -21,6 +21,7 @@
 #include <kerbal/compatibility/noexcept.hpp>
 #include <kerbal/utility/in_place.hpp>
 #include <kerbal/utility/member_compress_helper.hpp>
+#include <kerbal/utility/noncopyable.hpp>
 
 #if __cplusplus < 201103L
 #	include <kerbal/macro/macro_concat.hpp>
@@ -43,7 +44,8 @@ namespace kerbal
 		namespace detail
 		{
 
-			class avl_head_node
+			class avl_head_node :
+				private kerbal::utility::noncopyable
 			{
 				protected:
 					friend class kerbal::container::detail::avl_node_base;
