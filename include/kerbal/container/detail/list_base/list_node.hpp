@@ -49,7 +49,8 @@ namespace kerbal
 			{
 			};
 
-			class list_node_base : private kerbal::utility::noncopyable
+			class list_node_base :
+				private kerbal::utility::noncopyable
 			{
 				private:
 					friend class kerbal::container::detail::list_type_unrelated;
@@ -73,13 +74,16 @@ namespace kerbal
 				protected:
 					KERBAL_CONSTEXPR
 					list_node_base() KERBAL_NOEXCEPT :
-						prev(NULL), next(NULL)
+						prev(NULL),
+						next(NULL)
 					{
 					}
 
 					KERBAL_CONSTEXPR
-					explicit list_node_base(init_list_node_ptr_to_self_tag) KERBAL_NOEXCEPT :
-						prev(this), next(this)
+					explicit
+					list_node_base(init_list_node_ptr_to_self_tag) KERBAL_NOEXCEPT :
+						prev(this),
+						next(this)
 					{
 					}
 
@@ -99,7 +103,8 @@ namespace kerbal
 
 					template <typename ... Args>
 					KERBAL_CONSTEXPR
-					explicit list_node(kerbal::utility::in_place_t in_place, Args && ... args)
+					explicit
+					list_node(kerbal::utility::in_place_t in_place, Args && ... args)
 						KERBAL_CONDITIONAL_NOEXCEPT((
 							kerbal::type_traits::try_test_is_nothrow_constructible<
 								member_compress_helper, kerbal::utility::in_place_t, Args && ...
@@ -119,7 +124,8 @@ namespace kerbal
 #				define ARGS_USE(i) KERBAL_MACRO_CONCAT(arg, i)
 #				define FBODY(i) \
 					KERBAL_OPT_PPEXPAND_WITH_COMMA_N(THEAD_NOT_EMPTY, EMPTY, TARGS_DECL, i) \
-					explicit list_node(kerbal::utility::in_place_t in_place KERBAL_OPT_PPEXPAND_WITH_COMMA_N(LEFT_JOIN_COMMA, EMPTY, ARGS_DECL, i)) : \
+					explicit \
+					list_node(kerbal::utility::in_place_t in_place KERBAL_OPT_PPEXPAND_WITH_COMMA_N(LEFT_JOIN_COMMA, EMPTY, ARGS_DECL, i)) : \
 						member_compress_helper(in_place KERBAL_OPT_PPEXPAND_WITH_COMMA_N(LEFT_JOIN_COMMA, EMPTY, ARGS_USE, i)) \
 					{ \
 					} \
