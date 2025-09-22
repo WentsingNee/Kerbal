@@ -47,7 +47,7 @@ namespace kerbal
 			class avl_head_node :
 				private kerbal::utility::noncopyable
 			{
-				protected:
+				private:
 					friend class kerbal::container::detail::avl_node_base;
 
 					friend class kerbal::container::detail::avl_iter_type_unrelated;
@@ -373,6 +373,8 @@ namespace kerbal
 #				undef FBODY
 
 #		endif
+
+				private:
 
 					KERBAL_CONSTEXPR14
 					static
