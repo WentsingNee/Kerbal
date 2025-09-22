@@ -91,11 +91,20 @@ namespace kerbal
 
 			template <typename T>
 			class list_node :
-				public list_node_base,
+				protected list_node_base,
 				private kerbal::utility::member_compress_helper<T>
 			{
 				private:
 					typedef kerbal::utility::member_compress_helper<T> member_compress_helper;
+
+					friend class list_iter<T>;
+
+					friend class list_kiter<T>;
+
+					friend class kerbal::container::detail::list_type_only<T>;
+
+					template <typename U, typename SemiAllocator>
+					friend class kerbal::autonm::list;
 
 				public:
 
@@ -143,6 +152,8 @@ namespace kerbal
 
 #		endif
 
+				private:
+
 					KERBAL_CONSTEXPR14
 					static
 					list_node *
@@ -158,6 +169,8 @@ namespace kerbal
 					{
 						return static_cast<const list_node *>(p);
 					}
+
+				public:
 
 					using member_compress_helper::member;
 
