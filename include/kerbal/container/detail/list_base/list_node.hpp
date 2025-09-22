@@ -53,6 +53,12 @@ namespace kerbal
 				private kerbal::utility::noncopyable
 			{
 				private:
+					template <typename T>
+					friend class list_iter;
+
+					template <typename T>
+					friend class list_kiter;
+
 					friend class kerbal::container::detail::list_type_unrelated;
 
 					template <typename T>
@@ -60,12 +66,6 @@ namespace kerbal
 
 					template <typename T, typename SemiAllocator>
 					friend class kerbal::autonm::list;
-
-					template <typename T>
-					friend class list_iter;
-
-					template <typename T>
-					friend class list_kiter;
 
 				public:
 					list_node_base * prev;
