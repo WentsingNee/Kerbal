@@ -54,12 +54,6 @@ namespace kerbal
 
 					friend class kerbal::container::detail::avl_kiter_type_unrelated;
 
-					template <typename T>
-					friend class kerbal::container::detail::avl_iter;
-
-					template <typename T>
-					friend class kerbal::container::detail::avl_kiter;
-
 					friend class kerbal::container::detail::avl_type_unrelated;
 
 					template <typename Entity>
@@ -133,12 +127,6 @@ namespace kerbal
 					friend class kerbal::container::detail::avl_iter_type_unrelated;
 
 					friend class kerbal::container::detail::avl_kiter_type_unrelated;
-
-					template <typename T>
-					friend class kerbal::container::detail::avl_iter;
-
-					template <typename T>
-					friend class kerbal::container::detail::avl_kiter;
 
 					friend class kerbal::container::detail::avl_type_unrelated;
 
@@ -322,8 +310,6 @@ namespace kerbal
 					friend class kerbal::container::detail::avl_iter<T>;
 
 					friend class kerbal::container::detail::avl_kiter<T>;
-
-					friend class kerbal::container::detail::avl_type_unrelated;
 
 					friend class kerbal::container::detail::avl_type_only<T>;
 
