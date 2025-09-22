@@ -19,8 +19,8 @@
 #include <kerbal/compatibility/is_constant_evaluated.hpp>
 #include <kerbal/compatibility/method_overload_tag.hpp>
 #include <kerbal/compatibility/noexcept.hpp>
-#include <kerbal/utility/member_compress_helper.hpp>
 #include <kerbal/utility/in_place.hpp>
+#include <kerbal/utility/member_compress_helper.hpp>
 
 #if __cplusplus < 201103L
 #	include <kerbal/macro/macro_concat.hpp>
