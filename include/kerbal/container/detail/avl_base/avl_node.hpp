@@ -76,10 +76,12 @@ namespace kerbal
 					}
 
 					KERBAL_CONSTEXPR14
-					avl_node_base * as_node_base() KERBAL_NOEXCEPT;
+					avl_node_base *
+					as_node_base() KERBAL_NOEXCEPT;
 
 					KERBAL_CONSTEXPR
-					const avl_node_base * as_node_base() const KERBAL_NOEXCEPT;
+					const avl_node_base *
+					as_node_base() const KERBAL_NOEXCEPT;
 
 
 					KERBAL_CONSTEXPR14
@@ -114,7 +116,8 @@ namespace kerbal
 
 
 
-			class avl_node_base : protected kerbal::container::detail::avl_head_node
+			class avl_node_base :
+				protected kerbal::container::detail::avl_head_node
 			{
 				private:
 					typedef kerbal::container::detail::avl_head_node super;
@@ -144,22 +147,29 @@ namespace kerbal
 				protected:
 					KERBAL_CONSTEXPR
 					avl_node_base() KERBAL_NOEXCEPT :
-						parent(NULL), right(get_avl_vnull_node()), height(1)
+						parent(NULL),
+						right(get_avl_vnull_node()),
+						height(1)
 					{
 					}
 
 					KERBAL_CONSTEXPR
 					avl_node_base(int) KERBAL_NOEXCEPT :
-						super(0), parent(NULL), right(NULL), height(0)
+						super(0),
+						parent(NULL),
+						right(NULL),
+						height(0)
 					{
 					}
 
 
 					KERBAL_CONSTEXPR14
-					avl_head_node * as_head() KERBAL_NOEXCEPT;
+					avl_head_node *
+					as_head() KERBAL_NOEXCEPT;
 
 					KERBAL_CONSTEXPR
-					const avl_head_node * as_head() const KERBAL_NOEXCEPT;
+					const avl_head_node *
+					as_head() const KERBAL_NOEXCEPT;
 
 					KERBAL_CONSTEXPR14
 					const avl_head_node *
@@ -258,13 +268,15 @@ namespace kerbal
 					}
 
 					KERBAL_CONSTEXPR14
-					void update_height(height_t hl, height_t hr) KERBAL_NOEXCEPT
+					void
+					update_height(height_t hl, height_t hr) KERBAL_NOEXCEPT
 					{
 						this->height = 1 + kerbal::compare::max(hl, hr);
 					}
 
 					KERBAL_CONSTEXPR14
-					void update_height() KERBAL_NOEXCEPT
+					void
+					update_height() KERBAL_NOEXCEPT
 					{
 						height_t hl = height_of(this->left);
 						height_t hr = height_of(this->right);
@@ -274,7 +286,8 @@ namespace kerbal
 
 					KERBAL_CONSTEXPR14
 					friend inline
-					void set_parent_ignore_null(avl_node_base * p_base, avl_head_node * p_parent)
+					void
+					set_parent_ignore_null(avl_node_base * p_base, avl_head_node * p_parent)
 					{
 #	if KERBAL_AVL_ENABLE_VNULL
 
@@ -326,7 +339,8 @@ namespace kerbal
 								member_compress_helper, kerbal::utility::in_place_t, Args && ...
 							>::IS_TRUE::value
 						)) :
-						node_base(), member_compress_helper(in_place, kerbal::utility::forward<Args>(args)...)
+						node_base(),
+						member_compress_helper(in_place, kerbal::utility::forward<Args>(args)...)
 					{
 					}
 
@@ -342,7 +356,8 @@ namespace kerbal
 					KERBAL_OPT_PPEXPAND_WITH_COMMA_N(THEAD_NOT_EMPTY, EMPTY, TARGS_DECL, i) \
 					explicit \
 					avl_node(kerbal::utility::in_place_t in_place KERBAL_OPT_PPEXPAND_WITH_COMMA_N(LEFT_JOIN_COMMA, EMPTY, ARGS_DECL, i)) : \
-						node_base(), member_compress_helper(in_place KERBAL_OPT_PPEXPAND_WITH_COMMA_N(LEFT_JOIN_COMMA, EMPTY, ARGS_USE, i)) \
+						node_base(), \
+						member_compress_helper(in_place KERBAL_OPT_PPEXPAND_WITH_COMMA_N(LEFT_JOIN_COMMA, EMPTY, ARGS_USE, i)) \
 					{ \
 					} \
 
@@ -397,14 +412,18 @@ namespace kerbal
 
 			inline
 			KERBAL_CONSTEXPR14
-			avl_node_base * avl_head_node::as_node_base() KERBAL_NOEXCEPT
+			avl_node_base *
+			avl_head_node::
+			as_node_base() KERBAL_NOEXCEPT
 			{
 				return static_cast<avl_node_base *>(this);
 			}
 
 			inline
 			KERBAL_CONSTEXPR
-			const avl_node_base * avl_head_node::as_node_base() const KERBAL_NOEXCEPT
+			const avl_node_base *
+			avl_head_node::
+			as_node_base() const KERBAL_NOEXCEPT
 			{
 				return static_cast<const avl_node_base *>(this);
 			}
@@ -412,7 +431,8 @@ namespace kerbal
 			inline
 			KERBAL_CONSTEXPR14
 			const avl_node_base *
-			avl_head_node::leftest_offspring() const KERBAL_NOEXCEPT
+			avl_head_node::
+			leftest_offspring() const KERBAL_NOEXCEPT
 			{
 				const avl_head_node * current = this;
 				avl_node_base * offspring = current->left;
@@ -425,14 +445,18 @@ namespace kerbal
 
 			inline
 			KERBAL_CONSTEXPR14
-			avl_head_node * avl_node_base::as_head() KERBAL_NOEXCEPT
+			avl_head_node *
+			avl_node_base::
+			as_head() KERBAL_NOEXCEPT
 			{
 				return static_cast<avl_head_node *>(this);
 			}
 
 			inline
 			KERBAL_CONSTEXPR
-			const avl_head_node * avl_node_base::as_head() const KERBAL_NOEXCEPT
+			const avl_head_node *
+			avl_node_base::
+			as_head() const KERBAL_NOEXCEPT
 			{
 				return static_cast<const avl_head_node *>(this);
 			}
@@ -493,7 +517,8 @@ namespace kerbal
 
 					friend inline
 					KERBAL_CONSTEXPR
-					avl_node_base * get_avl_vnull_node() KERBAL_NOEXCEPT;
+					avl_node_base *
+					get_avl_vnull_node() KERBAL_NOEXCEPT;
 
 			};
 
