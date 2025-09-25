@@ -42,18 +42,18 @@ namespace kerbal
 		struct assert_item
 		{
 				const char * file;
-				int line;
 				const char * item;
+				int line;
 				test_case_running_result::circumstance result;
 
 				assert_item(
 					const char * file,
-					int line,
-					const char * item
+					const char * item,
+					int line
 				) KERBAL_NOEXCEPT :
 					file(file),
-					line(line),
 					item(item),
+					line(line),
 					result(test_case_running_result::SUCCESS)
 				{
 				}
@@ -105,7 +105,7 @@ namespace kerbal
 				char const * statement
 			)
 			{
-				record.items.emplace_back(file, line, statement);
+				record.items.emplace_back(file, statement, line);
 				if (!result) {
 					std::printf(
 						"CHECK FAILED!\n"
@@ -128,7 +128,7 @@ namespace kerbal
 				Lhs const & lhs, Rhs const & rhs
 			)
 			{
-				record.items.emplace_back(file, line, statement);
+				record.items.emplace_back(file, statement, line);
 				bool result = static_cast<bool>(lhs == rhs);
 				if (!result) {
 					std::printf(
