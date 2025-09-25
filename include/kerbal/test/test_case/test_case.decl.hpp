@@ -17,6 +17,7 @@
 #include <kerbal/compatibility/attribute_unused.hpp>
 #include <kerbal/container/vector.hpp>
 #include <kerbal/macro/join_line.hpp>
+#include <kerbal/type_traits/void_type.hpp>
 
 #include <cstdio>
 #include <cstdlib>
@@ -91,7 +92,8 @@ namespace kerbal
 		namespace detail
 		{
 
-			int register_test_suit(
+			kerbal::type_traits::void_type<>
+			register_test_suit(
 				const char * name,
 				kerbal::test::test_case::call_ptr_t call_ptr,
 				const char * description
@@ -163,8 +165,9 @@ namespace kerbal
 
 #define KERBAL_TEST_CASE(name, description) \
 	void name(kerbal::test::assert_record &); \
-	static const int KERBAL_JOIN_LINE(kerbal_test_register_unit_tag) KERBAL_ATTRIBUTE_UNUSED = \
-		(kerbal::test::detail::register_test_suit(#name, name, description), 0); \
+	static const kerbal::type_traits::void_type<> \
+	KERBAL_JOIN_LINE(kerbal_test_register_unit_tag) KERBAL_ATTRIBUTE_UNUSED = \
+		(kerbal::test::detail::register_test_suit(#name, name, description)); \
 	void name(kerbal::test::assert_record & record)
 
 
@@ -172,8 +175,9 @@ namespace kerbal
 	void name(kerbal::test::assert_record & record)
 
 #define KERBAL_TEMPLATE_TEST_CASE_INST(name, description, ...) \
-	static const int KERBAL_JOIN_LINE(kerbal_test_register_unit_tag) KERBAL_ATTRIBUTE_UNUSED = \
-		(kerbal::test::detail::register_test_suit(#name "<" #__VA_ARGS__ ">", name<__VA_ARGS__>, description), 0);
+	static const kerbal::type_traits::void_type<> \
+	KERBAL_JOIN_LINE(kerbal_test_register_unit_tag) KERBAL_ATTRIBUTE_UNUSED = \
+		(kerbal::test::detail::register_test_suit(#name "<" #__VA_ARGS__ ">", name<__VA_ARGS__>, description));
 
 
 #define KERBAL_TEST_CHECK_EQUAL(lhs, rhs) do { \
