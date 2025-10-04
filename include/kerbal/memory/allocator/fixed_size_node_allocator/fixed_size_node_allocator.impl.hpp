@@ -45,13 +45,58 @@ namespace kerbal
 		}
 
 		template <typename T, typename UpstreamAllocator>
+		template <typename fixed_size_node_allocator<T, UpstreamAllocator>::size_type N>
 		typename
 		fixed_size_node_allocator<T, UpstreamAllocator>::pointer
 		fixed_size_node_allocator<T, UpstreamAllocator>::
-		allocate_one()
+		allocate_fixed()
+		{
+			return this->k_allocate_fixed_impl(kerbal::type_traits::integral_constant<size_type, N>());
+		}
+
+		template <typename T, typename UpstreamAllocator>
+		typename
+		fixed_size_node_allocator<T, UpstreamAllocator>::pointer
+		fixed_size_node_allocator<T, UpstreamAllocator>::
+		allocate(size_type n)
+		{
+			if (n != 1) {
+				return this->k_size_over_large_allocate(n);
+			}
+
+			return this->k_allocate_one();
+		}
+
+		template <typename T, typename UpstreamAllocator>
+		template <typename fixed_size_node_allocator<T, UpstreamAllocator>::size_type N>
+		void
+		fixed_size_node_allocator<T, UpstreamAllocator>::
+		deallocate_fixed(pointer p) KERBAL_NOEXCEPT
+		{
+			this->k_deallocate_fixed_impl(p, kerbal::type_traits::integral_constant<size_type, N>());
+		}
+
+		template <typename T, typename UpstreamAllocator>
+		void
+		fixed_size_node_allocator<T, UpstreamAllocator>::
+		deallocate(pointer p, size_type n) KERBAL_NOEXCEPT
+		{
+			if (n != 1) {
+				this->k_size_over_large_deallocate(p, n);
+				return;
+			}
+
+			this->k_deallocate_one(p);
+		}
+
+		template <typename T, typename UpstreamAllocator>
+		typename
+		fixed_size_node_allocator<T, UpstreamAllocator>::pointer
+		fixed_size_node_allocator<T, UpstreamAllocator>::
+		k_allocate_one()
 		{
 			if (this->k_free_list.empty()) {
-				memory_blocks_type * allocated_blocks_ptr = this->build_memory_block();
+				memory_blocks_type * allocated_blocks_ptr = this->k_build_memory_block();
 				this->k_allocated_blocks_ptr_list.push_front(allocated_blocks_ptr->k_allocated_blocks_ptr_node);
 				this->k_free_list.k_hook_node_after(
 					this->k_free_list.basic_before_begin(),
@@ -68,42 +113,7 @@ namespace kerbal
 		typename
 		fixed_size_node_allocator<T, UpstreamAllocator>::pointer
 		fixed_size_node_allocator<T, UpstreamAllocator>::
-		allocate(size_type n)
-		{
-			if (n != 1) {
-				return this->size_over_large_allocate(n);
-			}
-
-			return this->allocate_one();
-		}
-
-		template <typename T, typename UpstreamAllocator>
-		void
-		fixed_size_node_allocator<T, UpstreamAllocator>::
-		deallocate_one(pointer p) KERBAL_NOEXCEPT
-		{
-			free_list_node_type * p_free_list_node = reinterpret_cast<free_list_node_type *>(p);
-			k_free_list.k_hook_node_after(k_free_list.basic_before_begin(), p_free_list_node);
-		}
-
-		template <typename T, typename UpstreamAllocator>
-		void
-		fixed_size_node_allocator<T, UpstreamAllocator>::
-		deallocate(pointer p, size_type n) KERBAL_NOEXCEPT
-		{
-			if (n != 1) {
-				this->size_over_large_deallocate(p, n);
-				return;
-			}
-
-			this->deallocate_one(p);
-		}
-
-		template <typename T, typename UpstreamAllocator>
-		typename
-		fixed_size_node_allocator<T, UpstreamAllocator>::pointer
-		fixed_size_node_allocator<T, UpstreamAllocator>::
-		size_over_large_allocate(size_type n)
+		k_size_over_large_allocate(size_type n)
 		{
 			typedef kerbal::memory::allocator_traits<size_over_large_allocator> allocator_traits;
 			return allocator_traits::allocate(this->size_over_large_alloc(), n);
@@ -112,7 +122,16 @@ namespace kerbal
 		template <typename T, typename UpstreamAllocator>
 		void
 		fixed_size_node_allocator<T, UpstreamAllocator>::
-		size_over_large_deallocate(pointer p, size_type n) KERBAL_NOEXCEPT
+		k_deallocate_one(pointer p) KERBAL_NOEXCEPT
+		{
+			free_list_node_type * p_free_list_node = reinterpret_cast<free_list_node_type *>(p);
+			k_free_list.k_hook_node_after(k_free_list.basic_before_begin(), p_free_list_node);
+		}
+
+		template <typename T, typename UpstreamAllocator>
+		void
+		fixed_size_node_allocator<T, UpstreamAllocator>::
+		k_size_over_large_deallocate(pointer p, size_type n) KERBAL_NOEXCEPT
 		{
 			typedef kerbal::memory::allocator_traits<size_over_large_allocator> allocator_traits;
 			return allocator_traits::deallocate(this->size_over_large_alloc(), p, n);
@@ -134,7 +153,7 @@ namespace kerbal
 		typename
 		fixed_size_node_allocator<T, UpstreamAllocator>::memory_blocks_type *
 		fixed_size_node_allocator<T, UpstreamAllocator>::
-		build_memory_block()
+		k_build_memory_block()
 		{
 			typedef kerbal::memory::allocator_traits<memory_blocks_allocator> allocator_traits;
 			memory_blocks_type * memory_block = allocator_traits::allocate_one(this->memory_block_alloc());

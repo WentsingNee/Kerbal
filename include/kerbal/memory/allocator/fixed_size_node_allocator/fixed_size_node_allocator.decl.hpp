@@ -283,13 +283,46 @@ namespace kerbal
 
 #		endif
 
+			private:
+				template <size_type N>
+				pointer
+				k_allocate_fixed_impl(kerbal::type_traits::integral_constant<size_type, N> /*n*/)
+				{
+					return this->k_size_over_large_allocate(N);
+				}
+
+				pointer
+				k_allocate_fixed_impl(kerbal::type_traits::integral_constant<size_type, 1> /*n*/)
+				{
+					return this->k_allocate_one();
+				}
+
 			public:
-				pointer allocate_one();
+				template <size_type N>
+				pointer allocate_fixed();
+
 				pointer allocate(size_type n);
 
 				typedef kerbal::type_traits::false_type allow_deallocate_null;
 
-				void deallocate_one(pointer p) KERBAL_NOEXCEPT;
+			private:
+				template <size_type N>
+				void
+				k_deallocate_fixed_impl(pointer p, kerbal::type_traits::integral_constant<size_type, N> /*n*/) KERBAL_NOEXCEPT
+				{
+					this->k_size_over_large_deallocate(p, N);
+				}
+
+				void
+				k_deallocate_fixed_impl(pointer p, kerbal::type_traits::integral_constant<size_type, 1> /*n*/) KERBAL_NOEXCEPT
+				{
+					this->k_deallocate_one(p);
+				}
+
+			public:
+				template <size_type N>
+				void deallocate_fixed(pointer p) KERBAL_NOEXCEPT;
+
 				void deallocate(pointer p, size_type n) KERBAL_NOEXCEPT;
 
 				bool operator!=(const fixed_size_node_allocator & other) const KERBAL_NOEXCEPT
@@ -307,11 +340,15 @@ namespace kerbal
 				;
 
 			private:
-				pointer size_over_large_allocate(size_type n);
+				pointer k_allocate_one();
 
-				void size_over_large_deallocate(pointer p, size_type n) KERBAL_NOEXCEPT;
+				pointer k_size_over_large_allocate(size_type n);
 
-				memory_blocks_type * build_memory_block();
+				void k_deallocate_one(pointer p) KERBAL_NOEXCEPT;
+
+				void k_size_over_large_deallocate(pointer p, size_type n) KERBAL_NOEXCEPT;
+
+				memory_blocks_type * k_build_memory_block();
 
 		};
 
