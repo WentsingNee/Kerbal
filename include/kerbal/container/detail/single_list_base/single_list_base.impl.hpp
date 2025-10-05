@@ -1532,11 +1532,11 @@ namespace kerbal
 			)
 			{
 				typedef kerbal::memory::allocator_traits<NodeAllocator> node_allocator_traits;
-				node * p = node_allocator_traits::allocate_one(alloc);
+				node * p = node_allocator_traits::template allocate_fixed<1>(alloc);
 				try {
 					node_allocator_traits::construct(alloc, p, kerbal::utility::in_place_t(), kerbal::utility::forward<Args>(args)...);
 				} catch (...) {
-					node_allocator_traits::deallocate_one(alloc, p);
+					node_allocator_traits::template deallocate_fixed<1>(alloc, p);
 					throw;
 				}
 				return p;
@@ -1555,11 +1555,11 @@ namespace kerbal
 				Args && ... args
 			)
 				KERBAL_CONDITIONAL_NOEXCEPT(
-					noexcept(kerbal::memory::allocator_traits<NodeAllocator>::allocate_one(alloc))
+					noexcept(kerbal::memory::allocator_traits<NodeAllocator>::template allocate_fixed<1>(alloc))
 				)
 			{
 				typedef kerbal::memory::allocator_traits<NodeAllocator> node_allocator_traits;
-				node * p = node_allocator_traits::allocate_one(alloc);
+				node * p = node_allocator_traits::template allocate_fixed<1>(alloc);
 				node_allocator_traits::construct(alloc, p, kerbal::utility::in_place_t(), kerbal::utility::forward<Args>(args)...);
 				return p;
 			}
@@ -1603,7 +1603,7 @@ namespace kerbal
 			)
 			{
 				typedef kerbal::memory::allocator_traits<NodeAllocator> node_allocator_traits;
-				node * p = node_allocator_traits::allocate_one(alloc);
+				node * p = node_allocator_traits::template allocate_fixed<1>(alloc);
 				if (p == NULL) {
 					kerbal::utility::throw_this_exception_helper<kerbal::memory::bad_alloc>::throw_this_exception();
 				}
@@ -1638,11 +1638,11 @@ namespace kerbal
 			) \
 			{ \
 				typedef kerbal::memory::allocator_traits<NodeAllocator> node_allocator_traits; \
-				node * p = node_allocator_traits::allocate_one(alloc); \
+				node * p = node_allocator_traits::template allocate_fixed<1>(alloc); \
 				try { \
 					node_allocator_traits::construct(alloc, p, kerbal::utility::in_place_t() KERBAL_OPT_PPEXPAND_WITH_COMMA_N(LEFT_JOIN_COMMA, EMPTY, ARGS_USE, i)); \
 				} catch (...) { \
-					node_allocator_traits::deallocate_one(alloc, p); \
+					node_allocator_traits::template deallocate_fixed<1>(alloc, p); \
 					throw; \
 				} \
 				return p; \
@@ -1662,7 +1662,7 @@ namespace kerbal
 			) \
 			{ \
 				typedef kerbal::memory::allocator_traits<NodeAllocator> node_allocator_traits; \
-				node * p = node_allocator_traits::allocate_one(alloc); \
+				node * p = node_allocator_traits::template allocate_fixed<1>(alloc); \
 				if (p == NULL) { \
 					kerbal::utility::throw_this_exception_helper<kerbal::memory::bad_alloc>::throw_this_exception(); \
 				} \
@@ -1842,13 +1842,13 @@ namespace kerbal
 			k_destroy_node(NodeAllocator & alloc, node_base * p_node_base)
 				KERBAL_CONDITIONAL_NOEXCEPT(
 					noexcept(kerbal::memory::allocator_traits<NodeAllocator>::destroy(alloc, kerbal::utility::declval<node *>())) &&
-					noexcept(kerbal::memory::allocator_traits<NodeAllocator>::deallocate_one(alloc, kerbal::utility::declval<node *>()))
+					noexcept(kerbal::memory::allocator_traits<NodeAllocator>::template deallocate_fixed<1>(alloc, kerbal::utility::declval<node *>()))
 				)
 			{
 				typedef kerbal::memory::allocator_traits<NodeAllocator> node_allocator_traits;
 				node * p_node = node::reinterpret_as(p_node_base);
 				node_allocator_traits::destroy(alloc, p_node);
-				node_allocator_traits::deallocate_one(alloc, p_node);
+				node_allocator_traits::template deallocate_fixed<1>(alloc, p_node);
 			}
 
 			template <typename T>

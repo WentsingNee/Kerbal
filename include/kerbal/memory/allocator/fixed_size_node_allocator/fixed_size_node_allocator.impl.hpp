@@ -40,7 +40,7 @@ namespace kerbal
 				memory_blocks_type * memory_block = *cur;
 				this->k_allocated_blocks_ptr_list.erase_after(before_begin);
 				allocator_traits::destroy(memory_block_alloc(), memory_block);
-				allocator_traits::deallocate_one(memory_block_alloc(), memory_block);
+				allocator_traits::template deallocate_fixed<1>(memory_block_alloc(), memory_block);
 			}
 		}
 
@@ -156,7 +156,7 @@ namespace kerbal
 		k_build_memory_block()
 		{
 			typedef kerbal::memory::allocator_traits<memory_blocks_allocator> allocator_traits;
-			memory_blocks_type * memory_block = allocator_traits::allocate_one(this->memory_block_alloc());
+			memory_blocks_type * memory_block = allocator_traits::template allocate_fixed<1>(this->memory_block_alloc());
 			allocator_traits::construct(this->memory_block_alloc(), memory_block);
 			return memory_block;
 		}

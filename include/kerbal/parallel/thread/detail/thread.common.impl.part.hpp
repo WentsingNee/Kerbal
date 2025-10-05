@@ -46,7 +46,7 @@ namespace kerbal
 			typedef kerbal::memory::allocator_traits<PackAllocator> allocator_traits;
 			typedef typename detail::fun_args_pack_type<Callable, Args...>::type fun_args_pack_t;
 
-			fun_args_pack_t * fun_args_pack_p = allocator_traits::allocate_one(alloc);
+			fun_args_pack_t * fun_args_pack_p = allocator_traits::template allocate_fixed<1>(alloc);
 
 			try {
 				allocator_traits::construct(
@@ -55,7 +55,7 @@ namespace kerbal
 					kerbal::utility::forward<Args>(args)...
 				);
 			} catch (...) {
-				allocator_traits::deallocate_one(alloc, fun_args_pack_p);
+				allocator_traits::template deallocate_fixed<1>(alloc, fun_args_pack_p);
 				throw;
 			}
 
@@ -79,7 +79,7 @@ namespace kerbal
 			typedef kerbal::memory::allocator_traits<PackAllocator> allocator_traits; \
 			typedef typename detail::fun_args_pack_type<Callable KERBAL_OPT_PPEXPAND_WITH_COMMA_N(LEFT_JOIN_COMMA, EMPTY, TARGS_USE, i)>::type fun_args_pack_t; \
  \
-			fun_args_pack_t * fun_args_pack_p = allocator_traits::allocate_one(alloc); \
+			fun_args_pack_t * fun_args_pack_p = allocator_traits::template allocate_fixed<1>(alloc); \
  \
 			try { \
 				allocator_traits::construct( \
@@ -88,7 +88,7 @@ namespace kerbal
 					KERBAL_OPT_PPEXPAND_WITH_COMMA_N(LEFT_JOIN_COMMA, EMPTY, ARGS_USE, i) \
 				); \
 			} catch (...) { \
-				allocator_traits::deallocate_one(alloc, fun_args_pack_p); \
+				allocator_traits::template deallocate_fixed<1>(alloc, fun_args_pack_p); \
 				throw; \
 			} \
  \
@@ -125,7 +125,7 @@ namespace kerbal
 			);
 
 			allocator_traits::destroy(alloc, fun_args_pack_p);
-			allocator_traits::deallocate_one(alloc, fun_args_pack_p);
+			allocator_traits::template deallocate_fixed<1>(alloc, fun_args_pack_p);
 		}
 
 	} // namespace parallel

@@ -235,7 +235,7 @@ namespace kerbal
 
 					any_node * stored_pos = this->obj_pos<T>(embedded);
 					allocator_traits::destroy(any_node_alloc, stored_pos);
-					allocator_traits::deallocate_one(any_node_alloc, stored_pos);
+					allocator_traits::template deallocate_fixed<1>(any_node_alloc, stored_pos);
 				}
 
 				template <typename T, typename AnyNodeAllocator>
@@ -298,14 +298,14 @@ namespace kerbal
 					typedef typename kerbal::memory::detail::any_node<value_type> any_node;
 					typedef kerbal::memory::allocator_traits<AnyNodeAllocator> allocator_traits;
 
-					any_node * stored_pos = allocator_traits::allocate_one(any_node_alloc);
+					any_node * stored_pos = allocator_traits::template allocate_fixed<1>(any_node_alloc);
 #			if KERBAL_HAS_EXCEPTIONS_SUPPORT
 					try {
 #			endif
 						allocator_traits::construct(any_node_alloc, stored_pos, kerbal::utility::in_place_t(), kerbal::utility::forward<Args>(args)...);
 #			if KERBAL_HAS_EXCEPTIONS_SUPPORT
 					} catch (...) {
-						allocator_traits::deallocate_one(any_node_alloc, stored_pos);
+						allocator_traits::template deallocate_fixed<1>(any_node_alloc, stored_pos);
 						throw;
 					}
 #			endif
@@ -380,11 +380,11 @@ namespace kerbal
 					typedef kerbal::memory::detail::any_node<value_type> any_node; \
 					typedef kerbal::memory::allocator_traits<AnyNodeAllocator> allocator_traits; \
  \
-					any_node * stored_pos = allocator_traits::allocate_one(alloc); \
+					any_node * stored_pos = allocator_traits::template allocate_fixed<1>(alloc); \
 					try { \
 						allocator_traits::construct(alloc, stored_pos, kerbal::utility::in_place_t() KERBAL_OPT_PPEXPAND_WITH_COMMA_N(LEFT_JOIN_COMMA, EMPTY, ARGS_USE, i)); \
 					} catch (...) { \
-						allocator_traits::deallocate_one(alloc, stored_pos); \
+						allocator_traits::template deallocate_fixed<1>(alloc, stored_pos); \
 						throw; \
 					} \
 					this->k_storage.ptr = static_cast<kerbal::memory::detail::any_node_base *>(stored_pos); \
@@ -400,7 +400,7 @@ namespace kerbal
 					typedef kerbal::memory::detail::any_node<value_type> any_node; \
 					typedef kerbal::memory::allocator_traits<AnyNodeAllocator> allocator_traits; \
  \
-					any_node * stored_pos = allocator_traits::allocate_one(alloc); \
+					any_node * stored_pos = allocator_traits::template allocate_fixed<1>(alloc); \
 					allocator_traits::construct(alloc, stored_pos, kerbal::utility::in_place_t() KERBAL_OPT_PPEXPAND_WITH_COMMA_N(LEFT_JOIN_COMMA, EMPTY, ARGS_USE, i)); \
 					this->k_storage.ptr = static_cast<kerbal::memory::detail::any_node_base *>(stored_pos); \
 				}
