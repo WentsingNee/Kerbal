@@ -1,5 +1,5 @@
 /**
- * @file       allocate_one.hpp
+ * @file       allocate_fixed.hpp
  * @brief
  * @date       2023-06-24
  * @author     Peter
@@ -9,8 +9,8 @@
  *   all rights reserved
  */
 
-#ifndef KERBAL_MEMORY_ALLOCATOR_TRAITS_ALLOCATE_ONE_HPP
-#define KERBAL_MEMORY_ALLOCATOR_TRAITS_ALLOCATE_ONE_HPP
+#ifndef KERBAL_MEMORY_ALLOCATOR_TRAITS_ALLOCATE_FIXED_HPP
+#define KERBAL_MEMORY_ALLOCATOR_TRAITS_ALLOCATE_FIXED_HPP
 
 #include <kerbal/compatibility/constexpr.hpp>
 #include <kerbal/compatibility/noexcept.hpp>
@@ -30,25 +30,34 @@ namespace kerbal
 	namespace memory
 	{
 
-		template <typename Alloc, typename = kerbal::type_traits::void_type<>::type>
-		struct allocator_has_allocate_one :
+		template <
+			typename Alloc,
+			typename SizeType,
+			SizeType N,
+			typename = kerbal::type_traits::void_type<>::type
+		>
+		struct allocator_has_allocate_fixed :
 			kerbal::type_traits::false_type
 		{
 		};
 
-		template <typename Alloc>
-		struct allocator_has_allocate_one<
-			Alloc,
+		template <
+			typename Alloc,
+			typename SizeType,
+			SizeType N
+		>
+		struct allocator_has_allocate_fixed<
+			Alloc, SizeType, N,
 			typename kerbal::type_traits::void_type<
 #	if __cplusplus >= 201103L // compatible with msvc
 				decltype(
-					kerbal::utility::declval<Alloc &>().allocate_one()
+					kerbal::utility::declval<Alloc &>().template allocate_fixed<N>()
 				)
 #	else
 				kerbal::type_traits::integral_constant<
 					std::size_t,
 					sizeof(
-						kerbal::utility::declval<Alloc &>().allocate_one(),
+						kerbal::utility::declval<Alloc &>().template allocate_fixed<N>(),
 						0
 					)
 				>
@@ -64,12 +73,18 @@ namespace kerbal
 
 			template <
 				typename Alloc,
-				bool = kerbal::memory::allocator_has_allocate_one<Alloc>::value
+				typename SizeType,
+				SizeType N,
+				bool = kerbal::memory::allocator_has_allocate_fixed<Alloc, SizeType, N>::value
 			>
-			struct allocator_traits_allocate_one_helper;
+			struct allocator_traits_allocate_fixed_helper;
 
-			template <typename Alloc>
-			struct allocator_traits_allocate_one_helper<Alloc, false>
+			template <
+				typename Alloc,
+				typename SizeType,
+				SizeType N
+			>
+			struct allocator_traits_allocate_fixed_helper<Alloc, SizeType, N, false>
 			{
 				private:
 					typedef typename kerbal::memory::detail::allocator_pointer_traits_helper<Alloc>::type		pointer;
@@ -77,17 +92,21 @@ namespace kerbal
 				public:
 					KERBAL_CONSTEXPR14
 					static
-					pointer allocate_one(Alloc & alloc)
+					pointer allocate_fixed(Alloc & alloc)
 						KERBAL_CONDITIONAL_NOEXCEPT(
-							noexcept(alloc.allocate(1))
+							noexcept(alloc.allocate(N))
 						)
 					{
-						return alloc.allocate(1);
+						return alloc.allocate(N);
 					}
 			};
 
-			template <typename Alloc>
-			struct allocator_traits_allocate_one_helper<Alloc, true>
+			template <
+				typename Alloc,
+				typename SizeType,
+				SizeType N
+			>
+			struct allocator_traits_allocate_fixed_helper<Alloc, SizeType, N, true>
 			{
 				private:
 					typedef typename kerbal::memory::detail::allocator_pointer_traits_helper<Alloc>::type		pointer;
@@ -95,12 +114,12 @@ namespace kerbal
 				public:
 					KERBAL_CONSTEXPR14
 					static
-					pointer allocate_one(Alloc & alloc)
+					pointer allocate_fixed(Alloc & alloc)
 						KERBAL_CONDITIONAL_NOEXCEPT(
-							noexcept(alloc.allocate_one())
+							noexcept(alloc.template allocate_fixed<N>())
 						)
 					{
-						return alloc.allocate_one();
+						return alloc.template allocate_fixed<N>();
 					}
 			};
 
@@ -110,4 +129,4 @@ namespace kerbal
 
 } // namespace kerbal
 
-#endif // KERBAL_MEMORY_ALLOCATOR_TRAITS_ALLOCATE_ONE_HPP
+#endif // KERBAL_MEMORY_ALLOCATOR_TRAITS_ALLOCATE_FIXED_HPP

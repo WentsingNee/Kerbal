@@ -35,9 +35,9 @@
 #include <kerbal/memory/allocator_traits/propagate_on_container_swap.hpp>
 #include <kerbal/memory/allocator_traits/is_always_equal.hpp>
 #include <kerbal/memory/allocator_traits/rebind_alloc.hpp>
-#include <kerbal/memory/allocator_traits/allocate_one.hpp>
+#include <kerbal/memory/allocator_traits/allocate_fixed.hpp>
 #include <kerbal/memory/allocator_traits/minimum_alignment.hpp>
-#include <kerbal/memory/allocator_traits/deallocate_one.hpp>
+#include <kerbal/memory/allocator_traits/deallocate_fixed.hpp>
 #include <kerbal/memory/allocator_traits/allow_deallocate_null.hpp>
 #include <kerbal/memory/allocator_traits/reallocate.hpp>
 #include <kerbal/memory/allocator_traits/construct.hpp>
@@ -102,13 +102,14 @@ namespace kerbal
 					return alloc.allocate(n);
 				}
 
+				template <size_type N>
 				KERBAL_CONSTEXPR14
-				static pointer allocate_one(allocator_type & alloc)
+				static pointer allocate_fixed(allocator_type & alloc)
 						KERBAL_CONDITIONAL_NOEXCEPT(
-							noexcept(kerbal::memory::detail::allocator_traits_allocate_one_helper<Alloc>::allocate_one(alloc))
+							noexcept(kerbal::memory::detail::allocator_traits_allocate_fixed_helper<Alloc, size_type, N>::allocate_fixed(alloc))
 						)
 				{
-					return kerbal::memory::detail::allocator_traits_allocate_one_helper<Alloc>::allocate_one(alloc);
+					return kerbal::memory::detail::allocator_traits_allocate_fixed_helper<Alloc, size_type, N>::allocate_fixed(alloc);
 				}
 
 				KERBAL_CONSTEXPR14
@@ -129,13 +130,14 @@ namespace kerbal
 					alloc.deallocate(p, n);
 				}
 
+				template <size_type N>
 				KERBAL_CONSTEXPR14
-				static void deallocate_one(allocator_type & alloc, pointer p)
+				static void deallocate_fixed(allocator_type & alloc, pointer p)
 						KERBAL_CONDITIONAL_NOEXCEPT(
-							noexcept(kerbal::memory::detail::allocator_traits_deallocate_one_helper<Alloc, pointer>::deallocate_one(alloc, p))
+							noexcept(kerbal::memory::detail::allocator_traits_deallocate_fixed_helper<Alloc, pointer, size_type, N>::deallocate_fixed(alloc, p))
 						)
 				{
-					kerbal::memory::detail::allocator_traits_deallocate_one_helper<Alloc, pointer>::deallocate_one(alloc, p);
+					kerbal::memory::detail::allocator_traits_deallocate_fixed_helper<Alloc, pointer, size_type, N>::deallocate_fixed(alloc, p);
 				}
 
 				typedef kerbal::memory::detail::allocator_allow_deallocate_null_traits_helper<allocator_type> allow_deallocate_null;
