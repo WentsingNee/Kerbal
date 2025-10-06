@@ -35,6 +35,7 @@
 #endif
 
 #if __cplusplus > 201703L
+#	include <kerbal/type_traits/is_nothrow_constructible.hpp>
 #	include <memory>
 #endif
 
@@ -173,9 +174,10 @@ namespace kerbal
 			template <typename T, typename ... Args>
 			KERBAL_CONSTEXPR20
 			T * k_construct_at(T * p, Args && ... args)
-				KERBAL_CONDITIONAL_NOEXCEPT(
-					noexcept(std::construct_at(p, kerbal::utility::forward<Args>(args)...))
-				)
+				KERBAL_CONDITIONAL_NOEXCEPT((
+					kerbal::type_traits::try_test_is_nothrow_constructible<T, Args &&...>::IS_TRUE::value
+				))
+				// Note: std::construct_at is not conditional noexcept
 			{
 				return std::construct_at(p, kerbal::utility::forward<Args>(args)...);
 			}
