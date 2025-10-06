@@ -21,6 +21,9 @@
 #include <kerbal/function/invoke_r.hpp>
 #include <kerbal/memory/allocator_traits.hpp>
 #include <kerbal/type_traits/decay.hpp>
+#include <kerbal/type_traits/enable_if.hpp>
+#include <kerbal/type_traits/is_same.hpp>
+#include <kerbal/type_traits/remove_cvref.hpp>
 #include <kerbal/utility/noncopyable.hpp>
 #include <kerbal/utility/tuple.hpp>
 
@@ -335,7 +338,15 @@ namespace kerbal
 
 			public:
 
-				template <typename Callable, typename ... Args>
+				template <
+					typename Callable, typename ... Args,
+					typename = typename kerbal::type_traits::enable_if<
+						!kerbal::type_traits::is_same<
+							typename kerbal::type_traits::remove_cvref<Callable>::type,
+							kerbal::parallel::basic_thread<Allocator>
+						>::value
+					>::type
+				>
 				explicit
 				basic_thread(Callable && fun, Args && ... args);
 

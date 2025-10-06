@@ -61,7 +61,7 @@ namespace kerbal
 #	if __cplusplus >= 201103L
 
 		template <typename Allocator>
-		template <typename Callable, typename ... Args>
+		template <typename Callable, typename ... Args, typename /*SFINAE*/>
 		basic_thread<Allocator>::basic_thread(Callable && fun, Args && ... args) :
 			super()
 		{
