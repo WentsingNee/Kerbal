@@ -179,10 +179,10 @@ jobs:
             cpack_generators: "DEB;STGZ;TGZ;ZIP;"
             platform: "ubuntu"
           - os: windows-latest
-            cpack_generators: "NSIS;WIX;ZIP;"
+            cpack_generators: "NSIS;STGZ;WIX;ZIP;"
             platform: "windows"
           - os: macos-latest
-            cpack_generators: "DragNDrop;ZIP;"
+            cpack_generators: "DragNDrop;STGZ;ZIP;"
             platform: "macos"
 
     runs-on: ${{matrix.os}}
