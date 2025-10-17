@@ -8,7 +8,7 @@
 		<projectUrl>${CPACK_PROJECT_URL}</projectUrl>
 		<readme>docs\readme.md</readme>
 		<requireLicenseAcceptance>true</requireLicenseAcceptance>
-		<licenseUrl>${CPACK_PROJECT_URL}/blob/main/LICENSE</licenseUrl>
+		<license type="expression">LGPL-3.0-only</license>
 		<description>${CPACK_PACKAGE_DESCRIPTION}</description>
 		<copyright>Copyright ${CPACK_PACKAGE_CONTACT}</copyright>
 	</metadata>
