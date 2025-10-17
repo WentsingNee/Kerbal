@@ -32,3 +32,8 @@ install(
             "${KERBAL_CONFIGURE_ASSETS_DIR}/${PROJECT_NAME}ConfigVersion.cmake"
         DESTINATION "${CMAKE_INSTALL_DATADIR}/cmake/${PROJECT_NAME}"
 )
+
+install(
+        FILES "${PROJECT_SOURCE_DIR}/readme.md"
+        TYPE DOC
+)

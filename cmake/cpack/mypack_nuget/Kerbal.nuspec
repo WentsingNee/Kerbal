@@ -6,6 +6,7 @@
 		<authors>${CPACK_PACKAGE_CONTACT}</authors>
 		<owners>${CPACK_PACKAGE_CONTACT}</owners>
 		<projectUrl>${CPACK_PROJECT_URL}</projectUrl>
+		<readme>docs\readme.md</readme>
 		<requireLicenseAcceptance>true</requireLicenseAcceptance>
 		<licenseUrl>${CPACK_PROJECT_URL}/blob/main/LICENSE</licenseUrl>
 		<description>${CPACK_PACKAGE_DESCRIPTION}</description>
@@ -15,5 +16,6 @@
 		<file src="build\" target="build" />
 		<file src="include\" target="include" />
 		<file src="share\" target="share" />
+		<file src="${CMAKE_INSTALL_DOCDIR}\readme.md" target="docs\" />
 	</files>
 </package>
