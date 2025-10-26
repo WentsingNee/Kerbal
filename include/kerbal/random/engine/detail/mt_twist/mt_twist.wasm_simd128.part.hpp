@@ -48,6 +48,7 @@ namespace kerbal
 
 					typedef kerbal::type_traits::integral_constant<std::size_t, 128 / 32> STEP;
 					const v128_t v128_UPPER_MASK = wasm_u32x4_const_splat(UPPER_MASK::value);
+					const v128_t v128_ZERO = wasm_u32x4_const_splat(0);
 					const v128_t v128_ONE = wasm_u32x4_const_splat(1);
 					const v128_t v128_A = wasm_u32x4_const_splat(A);
 
@@ -162,38 +163,12 @@ namespace kerbal
 
 					typedef kerbal::type_traits::integral_constant<int, (M - 1) % STEP::value> SECOND_STEP_REMAIN;
 					if (SECOND_STEP_REMAIN::value == 3) {
-						v128_t v128_mti = wasm_v128_load(&mt[i]);
-						v128_t v128_mtip1; {
-							v128_mtip1 = wasm_v128_load64_lane(&mt[i + 1], v128_mtip1, 0);
-						}
-						v128_t v128_y = wasm_v128_bitselect(v128_mti, v128_mtip1, v128_UPPER_MASK);
-						v128_t v128_mag_mask = wasm_v128_and(v128_y, v128_ONE);
-						v128_mag_mask = wasm_i32x4_sub(v128_ZERO, v128_mag_mask); // <=> wasm_i32x4_eq(v128_mag_mask, v128_ONE)
-						v128_mag_mask = wasm_v128_and(v128_mag_mask, v128_A);
-						v128_y = wasm_u32x4_shr(v128_y, 1);
-						v128_y = wasm_v128_xor(v128_y, v128_mag_mask);
-						v128_t v128_mtipm = _mm_loadl_epi64(&mt[i - (NPM::value)]));
-						v128_mti = wasm_v128_xor(v128_y, v128_mtipm);
-						_mm_storel_epi64(&mt[i]), v128_mti);
+						EACH2(i);
+						EACH2(i+1);
 
-						// EACH2(i);
-						// EACH2(i+1);
-						//
 						i += 2;
 						EACH2(i);
 					} else if (SECOND_STEP_REMAIN::value == 2) {
-//						v128_t v128_mti = _mm_loadl_epi64(&mt[i]);
-//						v128_t v128_mtip1 = _mm_loadl_epi64(&mt[i + 1]);
-//						v128_t v128_y = wasm_v128_bitselect(v128_mti, v128_mtip1, v128_UPPER_MASK);
-//						v128_t v128_mag_mask = wasm_v128_and(v128_y, v128_ONE);
-//						v128_mag_mask = wasm_i32x4_sub(v128_ZERO, v128_mag_mask); // <=> wasm_i32x4_eq(v128_mag_mask, v128_ONE)
-//						v128_mag_mask = wasm_v128_and(v128_mag_mask, v128_A);
-//						v128_y = wasm_u32x4_shr(v128_y, 1);
-//						v128_y = wasm_v128_xor(v128_y, v128_mag_mask);
-//						v128_t v128_mtipm = _mm_loadl_epi64(&mt[i - (NPM::value)]));
-//						v128_mti = wasm_v128_xor(v128_y, v128_mtipm);
-//						_mm_storel_epi64(&mt[i]), v128_mti);
-
 						EACH2(i);
 						EACH2(i+1);
 					} else if (SECOND_STEP_REMAIN::value == 1) {
