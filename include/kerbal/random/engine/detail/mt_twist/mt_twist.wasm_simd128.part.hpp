@@ -173,8 +173,9 @@ namespace kerbal
 						EACH2(i+1);
 					} else if (SECOND_STEP_REMAIN::value == 1) {
 						EACH2(i);
-						++i;
 					}
+
+					// i = N - 1
 
 					result_type y = (mt[N - 1] & UPPER_MASK::value) | (mt[0] & LOWER_MASK::value);
 					mt[N - 1] = mt[M - 1] ^ (y >> 1) ^ ((y & 0x1UL) ? A : 0);
@@ -212,7 +213,7 @@ namespace kerbal
 						wasm_v128_store(&mt[i], v128_mti);
 					}
 
-					typedef kerbal::type_traits::integral_constant<long long, NPM::value % STEP::value> FIRST_STEP_REMAIN;
+					typedef kerbal::type_traits::integral_constant<int, NPM::value % STEP::value> FIRST_STEP_REMAIN;
 					if (FIRST_STEP_REMAIN::value != 0) {
 						EACH1(i);
 					}
@@ -233,7 +234,7 @@ namespace kerbal
 						wasm_v128_store(&mt[i], v128_mti);
 					}
 
-					typedef kerbal::type_traits::integral_constant<long long, (M - 1) % STEP::value> SECOND_STEP_REMAIN;
+					typedef kerbal::type_traits::integral_constant<int, (M - 1) % STEP::value> SECOND_STEP_REMAIN;
 					if (SECOND_STEP_REMAIN::value != 0) {
 						EACH2(i);
 					}
