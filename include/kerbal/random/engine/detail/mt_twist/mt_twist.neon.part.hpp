@@ -75,7 +75,7 @@ namespace kerbal
 						if (FIRST_STEP_REMAIN::value + M - 1 >= STEP::value) {
 							q_mtip1 = vld1q_u32(&mt[i + 1]);
 						} else {
-							uint32x2_t d_un;
+							uint32x2_t d_un = {};
 							q_mtip1 = vcombine_u32(
 								vld1_u32(&mt[i + 1]),
 								vld1_lane_u32(&mt[i + 3], d_un, 0)
@@ -90,7 +90,7 @@ namespace kerbal
 						q_mti = veorq_u32(q_y, q_mag_mask);
 
 						uint32x4_t q_mtipm; {
-							uint32x2_t d_un;
+							uint32x2_t d_un = {};
 							q_mtipm = vcombine_u32(
 								vld1_u32(&mt[i + 0 + M]),
 								vld1_lane_u32(&mt[i + 2 + M], d_un, 0)
