@@ -62,7 +62,7 @@ namespace kerbal
 			const char * name = item.name;
 			kerbal::test::test_case::call_ptr_t call_ptr = item.call_ptr;
 			const char * description = item.description;
-			printf("test case[%zu]: %s (%s) running\n", case_id, name, description);
+			printf("test case[%zu]: %s (%s): running\n", case_id, name, description);
 
 			kerbal::test::assert_record record;
 
@@ -120,7 +120,7 @@ namespace kerbal
 
 				printf("time usage:");
 				if (minutes != 0) {
-					printf("%lu min", minutes);
+					printf(" %lu min", minutes);
 				}
 				if (minutes != 0 || seconds != 0) {
 					printf(" %lu s", seconds);
@@ -132,10 +132,10 @@ namespace kerbal
 #	endif
 
 			printf(" ------------------------\n");
-			printf("|SUCCESS    | %10d |\n", success);
-			printf("|FAILURE    | %10d |\n", failure);
+			printf("| SUCCESS   | %10d |\n", success);
+			printf("| FAILURE   | %10d |\n", failure);
 			printf("|------------------------|\n");
-			printf("|TOTAL      | %10d |\n", success + failure);
+			printf("| TOTAL     | %10d |\n", success + failure);
 			printf(" ------------------------\n");
 
 			if (failure == 0) {
