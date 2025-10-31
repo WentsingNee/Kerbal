@@ -46,10 +46,10 @@ namespace kerbal
 
 			difference_type const len(last - first);
 
-			uint32_t j = (this->count[0] / 8) % 64;
+			difference_type j = (this->count[0] / 8) % 64;
 
-			if (len >= static_cast<uint32_t>(64 - j)) {
-				iterator next = first + static_cast<uint32_t>(64 - j);
+			if (len >= static_cast<difference_type>(64 - j)) {
+				iterator next = first + static_cast<difference_type>(64 - j);
 				kerbal::algorithm::copy(first, next, this->buffer + j);
 				first = next;
 				this->transform(this->buffer);
@@ -86,11 +86,11 @@ namespace kerbal
 
 			difference_type const len(last - first);
 
-			uint32_t j = (this->count[0] / 8) % 64;
+			difference_type j = (this->count[0] / 8) % 64;
 
-			if (len >= static_cast<uint32_t>(64 - j)) {
+			if (len >= static_cast<difference_type>(64 - j)) {
 				if (j != 0) {
-					iterator next = first + static_cast<uint32_t>(64 - j);
+					iterator next = first + static_cast<difference_type>(64 - j);
 					kerbal::algorithm::copy(first, next, this->buffer + j);
 					first = next;
 					this->transform(this->buffer);
