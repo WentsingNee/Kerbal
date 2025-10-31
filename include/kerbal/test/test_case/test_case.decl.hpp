@@ -162,17 +162,24 @@ namespace kerbal
 
 } // namespace kerbal
 
+#include <kerbal/type_traits/void_type.hpp>
+
+#if __cplusplus >= 201103L
+#	define KERBAL_TEST_CASE_THROW KERBAL_CONDITIONAL_NOEXCEPT(noexcept(kerbal::test::detail::k_check_impl(record, "", 0, true, "")))
+#else
+#	define KERBAL_TEST_CASE_THROW throw(std::exception, kerbal::type_traits::integral_constant<std::size_t, sizeof(record)>)
+#endif
 
 #define KERBAL_TEST_CASE(name, description) \
-	void name(kerbal::test::assert_record &); \
+	void name(kerbal::test::assert_record & record) KERBAL_TEST_CASE_THROW; \
 	static const kerbal::type_traits::void_type<> \
 	KERBAL_JOIN_LINE(kerbal_test_register_unit_tag) KERBAL_ATTRIBUTE_UNUSED = \
 		(kerbal::test::detail::register_test_suit(#name, name, description)); \
-	void name(kerbal::test::assert_record & record)
+	void name(kerbal::test::assert_record & record) KERBAL_TEST_CASE_THROW
 
 
 #define KERBAL_TEMPLATE_TEST_CASE(name, description) \
-	void name(kerbal::test::assert_record & record)
+	void name(kerbal::test::assert_record & record) KERBAL_TEST_CASE_THROW
 
 #define KERBAL_TEMPLATE_TEST_CASE_INST(name, description, ...) \
 	static const kerbal::type_traits::void_type<> \
