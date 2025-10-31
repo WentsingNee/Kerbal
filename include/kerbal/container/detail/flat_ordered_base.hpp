@@ -224,13 +224,13 @@ namespace kerbal
 
 #			else
 
-					flat_ordered_base(const kerbal::assign::assign_list<void> & ilist) :
+					flat_ordered_base(const kerbal::assign::assign_list<void> & /*ilist*/) :
 						key_compare_compress_helper(),
 						sequence()
 					{
 					}
 
-					flat_ordered_base(const kerbal::assign::assign_list<void> & ilist, key_compare kc) :
+					flat_ordered_base(const kerbal::assign::assign_list<void> & /*ilist*/, key_compare kc) :
 						key_compare_compress_helper(kerbal::utility::in_place_t(), kc),
 						sequence()
 					{
@@ -322,13 +322,13 @@ namespace kerbal
 #			else
 
 					void
-					assign(const kerbal::assign::assign_list<void> & ilist)
+					assign(const kerbal::assign::assign_list<void> & /*ilist*/)
 					{
 						this->clear();
 					}
 
 					void
-					assign(const kerbal::assign::assign_list<void> & ilist, key_compare kc)
+					assign(const kerbal::assign::assign_list<void> & /*ilist*/, key_compare kc)
 					{
 						this->clear();
 						this->key_comp() = kc;
@@ -886,7 +886,7 @@ namespace kerbal
 
 					KERBAL_CONSTEXPR14
 					kerbal::utility::compressed_pair<iterator, iterator>
-					equal_range(const_iterator hint, const key_type & key)
+					equal_range(const_iterator /*hint*/, const key_type & key)
 					{
 						kerbal::utility::compressed_pair<key_view_iterator, key_view_iterator> eqr(
 							kerbal::algorithm::equal_range(
@@ -902,7 +902,7 @@ namespace kerbal
 
 					KERBAL_CONSTEXPR14
 					kerbal::utility::compressed_pair<const_iterator, const_iterator>
-					equal_range(const_iterator hint, const key_type & key) const
+					equal_range(const_iterator /*hint*/, const key_type & key) const
 					{
 						kerbal::utility::compressed_pair<key_view_const_iterator, key_view_const_iterator> eqr(
 							kerbal::algorithm::equal_range(
@@ -922,7 +922,7 @@ namespace kerbal
 						Key,
 						kerbal::utility::compressed_pair<iterator, iterator>
 					>::type
-					equal_range(const_iterator hint, const Key & key)
+					equal_range(const_iterator /*hint*/, const Key & key)
 					{
 						kerbal::utility::compressed_pair<key_view_iterator, key_view_iterator> eqr(
 							kerbal::algorithm::equal_range(
@@ -942,7 +942,7 @@ namespace kerbal
 						Key,
 						kerbal::utility::compressed_pair<const_iterator, const_iterator>
 					>::type
-					equal_range(const_iterator hint, const Key & key) const
+					equal_range(const_iterator /*hint*/, const Key & key) const
 					{
 						kerbal::utility::compressed_pair<key_view_const_iterator, key_view_const_iterator> eqr(
 							kerbal::algorithm::equal_range(

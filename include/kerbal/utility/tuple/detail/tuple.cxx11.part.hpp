@@ -1322,7 +1322,7 @@ namespace kerbal
 				}
 
 				KERBAL_CONSTEXPR
-				bool k_equal_to_impl(const tuple & ano, kerbal::type_traits::integral_constant<std::size_t, TUPLE_SIZE::value>) const
+				bool k_equal_to_impl(const tuple & /*ano*/, kerbal::type_traits::integral_constant<std::size_t, TUPLE_SIZE::value>) const
 				{
 					return true;
 				}
@@ -1349,7 +1349,7 @@ namespace kerbal
 				}
 
 				KERBAL_CONSTEXPR
-				bool k_not_equal_to_impl(const tuple & ano, kerbal::type_traits::integral_constant<std::size_t, TUPLE_SIZE::value>) const
+				bool k_not_equal_to_impl(const tuple & /*ano*/, kerbal::type_traits::integral_constant<std::size_t, TUPLE_SIZE::value>) const
 				{
 					return false;
 				}
@@ -1379,7 +1379,7 @@ namespace kerbal
 				}
 
 				KERBAL_CONSTEXPR
-				bool k_less_impl(const tuple & ano, kerbal::type_traits::integral_constant<std::size_t, TUPLE_SIZE::value>) const
+				bool k_less_impl(const tuple & /*ano*/, kerbal::type_traits::integral_constant<std::size_t, TUPLE_SIZE::value>) const
 				{
 					return false;
 				}
@@ -1409,7 +1409,7 @@ namespace kerbal
 				}
 
 				KERBAL_CONSTEXPR
-				bool k_greater_impl(const tuple & ano, kerbal::type_traits::integral_constant<std::size_t, TUPLE_SIZE::value>) const
+				bool k_greater_impl(const tuple & /*ano*/, kerbal::type_traits::integral_constant<std::size_t, TUPLE_SIZE::value>) const
 				{
 					return false;
 				}
@@ -1440,7 +1440,7 @@ namespace kerbal
 				}
 
 				KERBAL_CONSTEXPR
-				bool k_less_equal_impl(const tuple & ano, kerbal::type_traits::integral_constant<std::size_t, TUPLE_SIZE::value>) const
+				bool k_less_equal_impl(const tuple & /*ano*/, kerbal::type_traits::integral_constant<std::size_t, TUPLE_SIZE::value>) const
 				{
 					return true;
 				}
@@ -1471,7 +1471,7 @@ namespace kerbal
 				}
 
 				KERBAL_CONSTEXPR
-				bool k_greater_equal_impl(const tuple & ano, kerbal::type_traits::integral_constant<std::size_t, TUPLE_SIZE::value>) const
+				bool k_greater_equal_impl(const tuple & /*ano*/, kerbal::type_traits::integral_constant<std::size_t, TUPLE_SIZE::value>) const
 				{
 					return true;
 				}

@@ -800,8 +800,8 @@ namespace kerbal
 			template <typename NodeAllocator, typename Extract, typename KeyCompare>
 			avl_type_only<Entity>::
 			avl_type_only(
-				NodeAllocator & alloc, Extract & e, KeyCompare & kc,
-				const kerbal::assign::assign_list<void> & ilist
+				NodeAllocator & /*alloc*/, Extract & /*e*/, KeyCompare & /*kc*/,
+				const kerbal::assign::assign_list<void> & /*ilist*/
 			)
 			{
 			}
@@ -831,8 +831,8 @@ namespace kerbal
 			avl_type_only<Entity>::
 			avl_type_only(
 				kerbal::container::unique_tag_t /*unique_tag*/,
-				NodeAllocator & alloc, Extract & e, KeyCompare & kc,
-				const kerbal::assign::assign_list<void> & ilist
+				NodeAllocator & /*alloc*/, Extract & /*e*/, KeyCompare & /*kc*/,
+				const kerbal::assign::assign_list<void> & /*ilist*/
 			)
 			{
 			}
@@ -994,7 +994,7 @@ namespace kerbal
 			void
 			avl_type_only<Entity>::
 			k_mov_ass_ua_ae(
-				NodeAllocator & this_alloc, Extract & this_e, KeyCompare & this_kc,
+				NodeAllocator & this_alloc, Extract & /*this_e*/, KeyCompare & /*this_kc*/,
 				avl_type_only && src
 			) KERBAL_NOEXCEPT
 			{
@@ -1046,7 +1046,7 @@ namespace kerbal
 			void
 			avl_type_only<Entity>::
 			k_mov_ass_ua_impl(
-				NodeAllocator & this_alloc, Extract & this_e, KeyCompare & this_kc,
+				NodeAllocator & this_alloc, Extract & /*this_e*/, KeyCompare & /*this_kc*/,
 				NodeAllocator && src_alloc, avl_type_only && src,
 				MOVASS_VER_PROPAGATE
 			)
@@ -2093,9 +2093,9 @@ namespace kerbal
 			avl_type_only<Entity>::unique_insert_r
 			avl_type_only<Entity>::
 #	if __cplusplus >= 201103L
-			k_emplace_unique_delay_build(NodeAllocator & alloc, Extract & e, KeyCompare & kc, U && src_key)
+			k_emplace_unique_delay_build(NodeAllocator & alloc, Extract & /*e*/, KeyCompare & kc, U && src_key)
 #	else
-			k_emplace_unique_delay_build(NodeAllocator & alloc, Extract & e, KeyCompare & kc, const U & src_key)
+			k_emplace_unique_delay_build(NodeAllocator & alloc, Extract & /*e*/, KeyCompare & kc, const U & src_key)
 #	endif
 			{
 
@@ -2326,8 +2326,8 @@ namespace kerbal
 			void
 			avl_type_only<Entity>::
 			k_insert_using_allocator(
-				NodeAllocator & alloc, Extract & e, KeyCompare & kc,
-				const kerbal::assign::assign_list<void> & ilist
+				NodeAllocator & /*alloc*/, Extract & /*e*/, KeyCompare & /*kc*/,
+				const kerbal::assign::assign_list<void> & /*ilist*/
 			)
 			{
 			}
@@ -2349,8 +2349,8 @@ namespace kerbal
 			void
 			avl_type_only<Entity>::
 			k_insert_unique_using_allocator(
-				NodeAllocator & alloc, Extract & e, KeyCompare & kc,
-				const kerbal::assign::assign_list<void> & ilist
+				NodeAllocator & /*alloc*/, Extract & /*e*/, KeyCompare & /*kc*/,
+				const kerbal::assign::assign_list<void> & /*ilist*/
 			)
 			{
 			}

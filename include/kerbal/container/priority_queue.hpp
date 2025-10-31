@@ -165,7 +165,7 @@ namespace kerbal
 
 #		else
 
-				priority_queue(const kerbal::assign::assign_list<void> & ilist) :
+				priority_queue(const kerbal::assign::assign_list<void> & /*ilist*/) :
 					kc_compress_helper(kerbal::utility::in_place_t()), c()
 				{
 				}
@@ -177,7 +177,7 @@ namespace kerbal
 					kerbal::algorithm::make_heap(c.begin(), c.end(), this->vc());
 				}
 
-				priority_queue(const kerbal::assign::assign_list<void> & ilist, const value_compare & vc) :
+				priority_queue(const kerbal::assign::assign_list<void> & /*ilist*/, const value_compare & vc) :
 					kc_compress_helper(kerbal::utility::in_place_t(), vc), c()
 				{
 				}
@@ -398,7 +398,7 @@ namespace kerbal
 
 #		else
 
-				void push(const kerbal::assign::assign_list<void> & ilist)
+				void push(const kerbal::assign::assign_list<void> & /*ilist*/)
 				{
 				}
 

@@ -23,6 +23,7 @@
 #endif
 
 #include <kerbal/compatibility/constexpr.hpp>
+#include <kerbal/utility/ignore_unused.hpp>
 
 #include <iostream>
 
@@ -126,6 +127,8 @@ namespace kerbal
 					template <class Type>
 					const costream & operator<<(const Type & src) const
 					{
+						kerbal::utility::ignore_unused(src);
+
 #if KERBAL_SYSTEM == KERBAL_SYSTEM_WINDOWS
 						HANDLE handle = bakup.handle;
 						WORD colorOld = bakup.init_color;

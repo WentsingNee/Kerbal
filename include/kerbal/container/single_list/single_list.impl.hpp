@@ -196,7 +196,7 @@ namespace kerbal
 #	else
 
 		template <typename T, typename Allocator>
-		single_list<T, Allocator>::single_list(const kerbal::assign::assign_list<void> & ilist) :
+		single_list<T, Allocator>::single_list(const kerbal::assign::assign_list<void> & /*ilist*/) :
 			sl_allocator_overload(),
 			sl_type_only()
 		{
@@ -211,7 +211,7 @@ namespace kerbal
 		}
 
 		template <typename T, typename Allocator>
-		single_list<T, Allocator>::single_list(const kerbal::assign::assign_list<void> & ilist, const Allocator & alloc) :
+		single_list<T, Allocator>::single_list(const kerbal::assign::assign_list<void> & /*ilist*/, const Allocator & alloc) :
 			sl_allocator_overload(alloc),
 			sl_type_only()
 		{
@@ -354,7 +354,7 @@ namespace kerbal
 #	else
 
 		template <typename T, typename Allocator>
-		void single_list<T, Allocator>::assign(const kerbal::assign::assign_list<void> & ilist)
+		void single_list<T, Allocator>::assign(const kerbal::assign::assign_list<void> & /*ilist*/)
 		{
 			this->clear();
 		}
@@ -501,7 +501,7 @@ namespace kerbal
 		template <typename T, typename Allocator>
 		typename
 		single_list<T, Allocator>::iterator
-		single_list<T, Allocator>::insert(const_iterator pos, const kerbal::assign::assign_list<void> & ilist)
+		single_list<T, Allocator>::insert(const_iterator pos, const kerbal::assign::assign_list<void> & /*ilist*/)
 		{
 			return pos.cast_to_mutable();
 		}
@@ -911,7 +911,7 @@ namespace kerbal
 #	else
 
 		template <typename T, typename Allocator>
-		single_list<T, Allocator> & single_list<T, Allocator>::operator+=(const kerbal::assign::assign_list<void> & with)
+		single_list<T, Allocator> & single_list<T, Allocator>::operator+=(const kerbal::assign::assign_list<void> & /*with*/)
 		{
 			return *this;
 		}

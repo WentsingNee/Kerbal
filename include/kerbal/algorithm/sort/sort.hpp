@@ -24,6 +24,7 @@
 #include <kerbal/type_traits/conditional.hpp>
 #include <kerbal/type_traits/integral_constant.hpp>
 #include <kerbal/type_traits/is_same.hpp>
+#include <kerbal/utility/ignore_unused.hpp>
 
 #include <cstddef>
 
@@ -167,12 +168,14 @@ namespace kerbal
 				if (KERBAL_IS_CONSTANT_EVALUATED()) {
 					kerbal::algorithm::intro_sort(first, last, compare);
 				} else {
+					kerbal::utility::ignore_unused(compare);
 					kerbal::algorithm::radix_sort(first, last, kerbal::type_traits::false_type());
 				}
 #		else
 				kerbal::algorithm::intro_sort(first, last, compare);
 #		endif
 #	else
+				kerbal::utility::ignore_unused(compare);
 				kerbal::algorithm::radix_sort(first, last, kerbal::type_traits::false_type());
 #	endif
 			}
@@ -214,12 +217,14 @@ namespace kerbal
 				if (KERBAL_IS_CONSTANT_EVALUATED()) {
 					kerbal::algorithm::intro_sort(first, last, compare);
 				} else {
+					kerbal::utility::ignore_unused(compare);
 					kerbal::algorithm::radix_sort(first, last, kerbal::type_traits::true_type());
 				}
 #		else
 				kerbal::algorithm::intro_sort(first, last, compare);
 #		endif
 #	else
+				kerbal::utility::ignore_unused(compare);
 				kerbal::algorithm::radix_sort(first, last, kerbal::type_traits::true_type());
 #	endif
 			}

@@ -136,12 +136,12 @@ namespace kerbal
 
 #			else
 
-					flat_set_base(const kerbal::assign::assign_list<void> & ilist) :
+					flat_set_base(const kerbal::assign::assign_list<void> & /*ilist*/) :
 						super()
 					{
 					}
 
-					flat_set_base(const kerbal::assign::assign_list<void> & ilist, key_compare kc) :
+					flat_set_base(const kerbal::assign::assign_list<void> & /*ilist*/, key_compare kc) :
 						super(kc)
 					{
 					}
@@ -210,13 +210,13 @@ namespace kerbal
 #			else
 
 					void
-					assign(const kerbal::assign::assign_list<void> & ilist)
+					assign(const kerbal::assign::assign_list<void> & /*ilist*/)
 					{
 						this->clear();
 					}
 
 					void
-					assign(const kerbal::assign::assign_list<void> & ilist, key_compare kc)
+					assign(const kerbal::assign::assign_list<void> & /*ilist*/, key_compare kc)
 					{
 						this->clear();
 						this->key_comp() = kc;
