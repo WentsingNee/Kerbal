@@ -26,7 +26,7 @@ namespace kerbal
 			public std::runtime_error
 		{
 			public:
-				bad_function_cast(const std::type_info & actual, const std::type_info & required) :
+				bad_function_cast(const std::type_info & /*actual*/, const std::type_info & /*required*/) :
 					std::runtime_error("bad function cast")
 				{
 				}

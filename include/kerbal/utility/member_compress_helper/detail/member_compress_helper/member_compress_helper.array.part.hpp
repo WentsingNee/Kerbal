@@ -232,7 +232,7 @@ namespace kerbal
 #		else
 
 				explicit
-				member_compress_helper(kerbal::utility::in_place_t, const kerbal::assign::assign_list<void> & ilist)
+				member_compress_helper(kerbal::utility::in_place_t, const kerbal::assign::assign_list<void> & /*ilist*/)
 				{
 				}
 

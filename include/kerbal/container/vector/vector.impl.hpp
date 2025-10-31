@@ -200,7 +200,7 @@ namespace kerbal
 #	else
 
 		template <typename T, typename Allocator>
-		vector<T, Allocator>::vector(const kerbal::assign::assign_list<void> & ilist) :
+		vector<T, Allocator>::vector(const kerbal::assign::assign_list<void> & /*ilist*/) :
 			vector_allocator_overload(),
 			vector_type_only()
 		{
@@ -215,7 +215,7 @@ namespace kerbal
 		}
 
 		template <typename T, typename Allocator>
-		vector<T, Allocator>::vector(const kerbal::assign::assign_list<void> & ilist, const Allocator & allocator) :
+		vector<T, Allocator>::vector(const kerbal::assign::assign_list<void> & /*ilist*/, const Allocator & allocator) :
 			vector_allocator_overload(allocator),
 			vector_type_only()
 		{
@@ -358,7 +358,7 @@ namespace kerbal
 #	else
 
 		template <typename T, typename Allocator>
-		void vector<T, Allocator>::assign(const kerbal::assign::assign_list<void> & ilist)
+		void vector<T, Allocator>::assign(const kerbal::assign::assign_list<void> & /*ilist*/)
 		{
 			this->clear();
 		}
@@ -523,7 +523,7 @@ namespace kerbal
 		template <typename T, typename Allocator>
 		typename
 		vector<T, Allocator>::iterator
-		vector<T, Allocator>::insert(const_iterator pos, const kerbal::assign::assign_list<void> & ilist)
+		vector<T, Allocator>::insert(const_iterator pos, const kerbal::assign::assign_list<void> & /*ilist*/)
 		{
 			return pos.cast_to_mutable();
 		}

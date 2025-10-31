@@ -570,8 +570,8 @@ namespace kerbal
 
 					template <typename NodeAllocator, typename Extract, typename KeyCompare>
 					void k_assign_using_allocator(
-						NodeAllocator & alloc, Extract & e, KeyCompare & kc,
-						const kerbal::assign::assign_list<void> & ilist
+						NodeAllocator & alloc, Extract & /*e*/, KeyCompare & /*kc*/,
+						const kerbal::assign::assign_list<void> & /*ilist*/
 					)
 					{
 						this->k_clear_using_allocator(alloc);
@@ -588,8 +588,8 @@ namespace kerbal
 
 					template <typename NodeAllocator, typename Extract, typename KeyCompare>
 					void k_assign_unique_using_allocator(
-						NodeAllocator & alloc, Extract & e, KeyCompare & kc,
-						const kerbal::assign::assign_list<void> & ilist
+						NodeAllocator & alloc, Extract & /*e*/, KeyCompare & /*kc*/,
+						const kerbal::assign::assign_list<void> & /*ilist*/
 					)
 					{
 						this->k_clear_using_allocator(alloc);

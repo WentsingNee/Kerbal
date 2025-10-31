@@ -35,6 +35,7 @@ namespace kerbal
 #		define TARGS_DECL(i) typename KERBAL_MACRO_CONCAT(Arg, i)
 #		define TARGS_USE(i) typename kerbal::type_traits::add_const_lvalue_reference<KERBAL_MACRO_CONCAT(Arg, i)>::type
 #		define ARGS_DECL(i) const KERBAL_MACRO_CONCAT(Arg, i) & KERBAL_MACRO_CONCAT(arg, i)
+#		define ARGS_ANONY_DECL(i) const KERBAL_MACRO_CONCAT(Arg, i) &
 #		define ARGS_USE(i) KERBAL_MACRO_CONCAT(arg, i)
 
 #		define FBODY(i) \
@@ -67,7 +68,7 @@ namespace kerbal
 			R invoke_r_helper( \
 				INVOKE_OVERLOAD_VER_MEM_OBJ, \
 				MemObjPtr mem_obj_ptr, T & o \
-				KERBAL_OPT_PPEXPAND_WITH_COMMA_N(LEFT_JOIN_COMMA, EMPTY, ARGS_DECL, i) \
+				KERBAL_OPT_PPEXPAND_WITH_COMMA_N(LEFT_JOIN_COMMA, EMPTY, ARGS_ANONY_DECL, i) \
 			) \
 			{ \
 				KERBAL_STATIC_ASSERT( \
@@ -89,7 +90,7 @@ namespace kerbal
 			R invoke_r_helper( \
 				INVOKE_OVERLOAD_VER_MEM_OBJ, \
 				MemObjPtr mem_obj_ptr, T * p \
-				KERBAL_OPT_PPEXPAND_WITH_COMMA_N(LEFT_JOIN_COMMA, EMPTY, ARGS_DECL, i) \
+				KERBAL_OPT_PPEXPAND_WITH_COMMA_N(LEFT_JOIN_COMMA, EMPTY, ARGS_ANONY_DECL, i) \
 			) \
 			{ \
 				KERBAL_STATIC_ASSERT( \
@@ -111,7 +112,7 @@ namespace kerbal
 			R invoke_r_helper( \
 				INVOKE_OVERLOAD_VER_MEM_OBJ, \
 				MemObjPtr mem_obj_ptr, kerbal::utility::reference_wrapper<T> rw \
-				KERBAL_OPT_PPEXPAND_WITH_COMMA_N(LEFT_JOIN_COMMA, EMPTY, ARGS_DECL, i) \
+				KERBAL_OPT_PPEXPAND_WITH_COMMA_N(LEFT_JOIN_COMMA, EMPTY, ARGS_ANONY_DECL, i) \
 			) \
 			{ \
 				KERBAL_STATIC_ASSERT( \

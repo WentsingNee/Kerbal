@@ -139,7 +139,7 @@ namespace kerbal
 
 		template <typename T, std::size_t N>
 		static_vector<T, N>::
-		static_vector(const kerbal::assign::assign_list<void> & ilist) :
+		static_vector(const kerbal::assign::assign_list<void> & /*ilist*/) :
 			super()
 		{
 		}
@@ -478,7 +478,7 @@ namespace kerbal
 		template <typename T, std::size_t N>
 		void
 		static_vector<T, N>::
-		assign_unsafe(const kerbal::assign::assign_list<void> & ilist)
+		assign_unsafe(const kerbal::assign::assign_list<void> & /*ilist*/)
 		{
 			this->clear();
 		}
@@ -495,7 +495,7 @@ namespace kerbal
 		template <typename T, std::size_t N>
 		void
 		static_vector<T, N>::
-		assign(const kerbal::assign::assign_list<void> & ilist)
+		assign(const kerbal::assign::assign_list<void> & /*ilist*/)
 		{
 			this->clear();
 		}
@@ -1191,7 +1191,7 @@ namespace kerbal
 		static_vector<T, N>::
 		insert(
 			const_iterator pos,
-			const kerbal::assign::assign_list<void> & ilist
+			const kerbal::assign::assign_list<void> & /*ilist*/
 		)
 		{
 			return pos.cast_to_mutable();

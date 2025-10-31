@@ -136,12 +136,12 @@ namespace kerbal
 
 #			else
 
-					flat_multiset_base(const kerbal::assign::assign_list<void> & ilist) :
+					flat_multiset_base(const kerbal::assign::assign_list<void> & /*ilist*/) :
 						super()
 					{
 					}
 
-					flat_multiset_base(const kerbal::assign::assign_list<void> & ilist, key_compare kc) :
+					flat_multiset_base(const kerbal::assign::assign_list<void> & /*ilist*/, key_compare kc) :
 						super(kc)
 					{
 					}
@@ -207,13 +207,13 @@ namespace kerbal
 #			else
 
 					void
-					assign(const kerbal::assign::assign_list<void> & ilist)
+					assign(const kerbal::assign::assign_list<void> & /*ilist*/)
 					{
 						this->clear();
 					}
 
 					void
-					assign(const kerbal::assign::assign_list<void> & ilist, key_compare kc)
+					assign(const kerbal::assign::assign_list<void> & /*ilist*/, key_compare kc)
 					{
 						this->clear();
 						this->key_comp() = kc;

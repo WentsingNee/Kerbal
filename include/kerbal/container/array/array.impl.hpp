@@ -43,7 +43,7 @@ namespace kerbal
 		}
 
 		template <typename T, std::size_t N>
-		array<T, N>::array(const kerbal::assign::assign_list<void> & ilist)
+		array<T, N>::array(const kerbal::assign::assign_list<void> & /*ilist*/)
 		{
 		}
 
@@ -113,7 +113,7 @@ namespace kerbal
 #	else
 
 		template <typename T, std::size_t N>
-		void array<T, N>::assign(const kerbal::assign::assign_list<void> & ilist)
+		void array<T, N>::assign(const kerbal::assign::assign_list<void> & /*ilist*/)
 		{
 		}
 

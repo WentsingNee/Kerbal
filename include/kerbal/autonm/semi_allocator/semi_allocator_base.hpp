@@ -33,7 +33,7 @@ namespace kerbal
 				typedef std::size_t			size_type;
 
 				KERBAL_CONSTEXPR14
-				void destroy(pointer p) KERBAL_NOEXCEPT
+				void destroy(pointer /*p*/) KERBAL_NOEXCEPT
 				{
 					// must be remained and keep empty, otherwise allocator_traits will
 					// execute default destroy policy (aka kerbal::memory::destroy_at)

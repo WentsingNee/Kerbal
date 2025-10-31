@@ -241,7 +241,7 @@ namespace kerbal
 
 		template <typename T>
 		KERBAL_CONSTEXPR
-		bool operator<=(const nullopt_t &, const optional<T> & opt)
+		bool operator<=(const nullopt_t &, const optional<T> & /*opt*/)
 		{
 //			return false < opt.has_value();
 			return true;
@@ -249,7 +249,7 @@ namespace kerbal
 
 		template <typename T>
 		KERBAL_CONSTEXPR
-		bool operator>(const nullopt_t &, const optional<T> & opt)
+		bool operator>(const nullopt_t &, const optional<T> & /*opt*/)
 		{
 //			return false > opt.has_value();
 			return false;
@@ -257,7 +257,7 @@ namespace kerbal
 
 		template <typename T>
 		KERBAL_CONSTEXPR
-		bool operator>=(const nullopt_t & nullopt, const optional<T> & opt)
+		bool operator>=(const nullopt_t &, const optional<T> & opt)
 		{
 //			return false >= opt.has_value();
 			return !opt.has_value();

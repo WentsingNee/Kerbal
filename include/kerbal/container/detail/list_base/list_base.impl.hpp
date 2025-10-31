@@ -1778,7 +1778,7 @@ namespace kerbal
 			void
 			list_type_only<T>::
 			k_radix_sort(
-				const_iterator first, const_iterator last, kerbal::type_traits::false_type asc,
+				const_iterator first, const_iterator last, kerbal::type_traits::false_type /*asc*/,
 				kerbal::type_traits::integral_constant<std::size_t, RADIX_BIT_WIDTH>
 			) KERBAL_NOEXCEPT
 			{
@@ -1830,7 +1830,7 @@ namespace kerbal
 			void
 			list_type_only<T>::
 			k_radix_sort(
-				const_iterator first, const_iterator last, kerbal::type_traits::true_type desc,
+				const_iterator first, const_iterator last, kerbal::type_traits::true_type /*desc*/,
 				kerbal::type_traits::integral_constant<std::size_t, RADIX_BIT_WIDTH>
 			) KERBAL_NOEXCEPT
 			{
