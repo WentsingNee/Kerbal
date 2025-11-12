@@ -19,12 +19,17 @@ namespace kerbal
 	namespace costream
 	{
 
-		namespace _unix
+		namespace detail
 		{
 
-			class costream;
+			namespace unix
+			{
 
-		} // namespace _unix
+				class costream;
+
+			} // namespace unix
+
+		} // namespace detail
 
 	} // namespace costream
 

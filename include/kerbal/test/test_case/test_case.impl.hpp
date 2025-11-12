@@ -64,7 +64,10 @@ namespace kerbal
 			const char * name = item.name;
 			kerbal::test::test_case::call_ptr_t call_ptr = item.call_ptr;
 			const char * description = item.description;
-			printf("test case[%zu]: %s (%s): running\n", case_id, name, description);
+			{
+				kerbal::costream::costream out(std::cout, kerbal::costream::YELLOW);
+				out << "test case[" << case_id << "]: " << name << " (" << description << "): running\n";
+			}
 
 			kerbal::test::assert_record record;
 
@@ -109,9 +112,9 @@ namespace kerbal
 			if (failure == 0) {
 				kerbal::costream::costream out(std::cout, kerbal::costream::GREEN);
 				out << "test case[" << case_id << "]: " << name << " (" << description << "): SUCCESS\n";
-//				printf("test case[%zu]: %s (%s): SUCCESS\n", case_id, name, description);
 			} else {
-				printf("test case[%zu]: %s (%s): FAILURE\n", case_id, name, description);
+				kerbal::costream::costream out(std::cout, kerbal::costream::RED);
+				out << "test case[" << case_id << "]: " << name << " (" << description << "): FAILURE\n";
 			}
 
 #	if KERBAL_HAS_RUNTIME_TIMER_SUPPORT
@@ -135,14 +138,24 @@ namespace kerbal
 			printf("time usage: --- (not supported)\n");
 #	endif
 
-			printf(
-					" ------------------------\n"
-					"| SUCCESS   | %10d |\n"
-					"| FAILURE   | %10d |\n"
-					"|------------------------|\n"
-					"| TOTAL     | %10d |\n"
-					" ------------------------\n",
-			success, failure, success + failure);
+			std::printf(" ------------------------\n");
+			{
+				std::printf("| ");
+				kerbal::costream::costream out(std::cout, kerbal::costream::GREEN);
+				out << "SUCCESS";
+				std::printf("   | %10d |\n", success);
+			}
+			{
+				std::printf("| ");
+				kerbal::costream::costream out(std::cout, kerbal::costream::RED);
+				out << "FAILURE";
+				std::printf("   | %10d |\n", failure);
+			}
+			std::printf(" ------------------------\n");
+			{
+				std::printf("| TOTAL     | %10d |\n", success + failure);
+			}
+			std::printf(" ------------------------\n");
 
 			if (failure == 0) {
 				return -1;

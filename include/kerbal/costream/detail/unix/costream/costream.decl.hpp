@@ -12,10 +12,10 @@
 #ifndef KERBAL_COSTREAM_UNIX_COSTREAM_COSTREAM_DECL_HPP
 #define KERBAL_COSTREAM_UNIX_COSTREAM_COSTREAM_DECL_HPP
 
-#include <kerbal/costream/unix/costream/costream.fwd.hpp>
+#include <kerbal/costream/detail/unix/costream/costream.fwd.hpp>
 
 #include <kerbal/compatibility/constexpr.hpp>
-#include <kerbal/costream/unix/palette.hpp>
+#include <kerbal/costream/detail/unix/palette.hpp>
 
 #include <iostream>
 
@@ -26,30 +26,35 @@ namespace kerbal
 	namespace costream
 	{
 
-		namespace _unix
+		namespace detail
 		{
 
-			class costream
+			namespace unix
 			{
-				protected:
-					std::ostream & k_bind_ostream;
-					kerbal::costream::_unix::palette k_foreground, k_background;
 
-				public:
-					KERBAL_CONSTEXPR
-					costream(
+				class costream
+				{
+					protected:
+						std::ostream & k_bind_ostream;
+						palette k_foreground, k_background;
+
+					public:
+						KERBAL_CONSTEXPR
+						costream(
 							std::ostream & bind_ostream,
-							kerbal::costream::_unix::palette foreground = kerbal::costream::_unix::INIT,
-							kerbal::costream::_unix::palette background = kerbal::costream::_unix::INIT)
-					;
+							palette foreground = INIT_PALETTE,
+							palette background = INIT_PALETTE
+						);
 
-					template <typename T>
-					costream & operator<<(const T & src);
+						template <typename T>
+						costream & operator<<(const T & src);
 
-					costream & operator<<(std::ostream & (* pf)(std::ostream &));
-			};
+						costream & operator<<(std::ostream & (* pf)(std::ostream &));
+				};
 
-		} // namespace _unix
+			} // namespace unix
+
+		} // namespace detail
 
 	} // namespace costream
 
