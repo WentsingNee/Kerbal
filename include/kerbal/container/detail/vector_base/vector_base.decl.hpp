@@ -60,16 +60,16 @@ namespace kerbal
 					typedef const value_type &&			const_rvalue_reference;
 #			endif
 
-					typedef ptr_trait::template rebind<value_type>::other		pointer;
-					typedef ptr_trait::template rebind<const_type>::other		const_pointer;
+					typedef typename ptr_trait::template rebind<value_type>::other		pointer;
+					typedef typename ptr_trait::template rebind<const_type>::other		const_pointer;
 
 					typedef std::size_t					size_type;
 					typedef std::ptrdiff_t				difference_type;
 
 					typedef typename kerbal::type_traits::remove_all_extents<value_type>::type remove_all_extents_t;
 
-					typedef kerbal::container::detail::vec_iter<value_type>		iterator;
-					typedef kerbal::container::detail::vec_kiter<value_type>	const_iterator;
+					typedef kerbal::container::detail::vec_iter<value_type, VoidPtr>		iterator;
+					typedef kerbal::container::detail::vec_kiter<value_type, VoidPtr>		const_iterator;
 					typedef kerbal::iterator::reverse_iterator<iterator>		reverse_iterator;
 					typedef kerbal::iterator::reverse_iterator<const_iterator>	const_reverse_iterator;
 

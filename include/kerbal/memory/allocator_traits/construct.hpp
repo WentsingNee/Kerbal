@@ -18,6 +18,7 @@
 
 #include <kerbal/compatibility/constexpr.hpp>
 #include <kerbal/compatibility/noexcept.hpp>
+#include <kerbal/memory/allocator_traits/pointer_type.hpp>
 #include <kerbal/memory/uninitialized.hpp>
 #include <kerbal/type_traits/integral_constant.hpp>
 #include <kerbal/utility/declval.hpp>
@@ -51,7 +52,7 @@ namespace kerbal
 		namespace detail
 		{
 
-			template <typename Alloc, typename T, typename ... Args>
+			template <typename Alloc, typename Ptr, typename ... Args>
 			struct allocator_has_construct_helper
 			{
 				private:
@@ -61,7 +62,7 @@ namespace kerbal
 					template <typename Alloc2>
 					static kerbal::type_traits::yes_type test(char (*)[sizeof(
 						kerbal::utility::declval<Alloc2 &>().construct(
-							kerbal::utility::declval<T *>(),
+							kerbal::utility::declval<Ptr>(),
 							kerbal::utility::declval<Args>()...
 						),
 						0
@@ -75,9 +76,13 @@ namespace kerbal
 
 		} // namespace detail
 
-		template <typename Alloc, typename T, typename ... Args>
+		template <typename Alloc, typename ... Args>
 		struct allocator_has_construct :
-			kerbal::memory::detail::allocator_has_construct_helper<Alloc, T, Args...>::type
+			kerbal::memory::detail::allocator_has_construct_helper<
+				Alloc,
+				typename detail::allocator_pointer_traits_helper<Alloc>::type,
+				Args...
+			>::type
 		{
 		};
 
@@ -86,7 +91,7 @@ namespace kerbal
 		namespace detail
 		{
 
-			template <typename Alloc, typename T, typename TVec, typename = kerbal::type_traits::void_type<>::type>
+			template <typename Alloc, typename Ptr, typename TVec, typename = kerbal::type_traits::void_type<>::type>
 			struct allocator_has_construct_helper
 			{
 					typedef kerbal::type_traits::false_type type;
@@ -100,16 +105,17 @@ namespace kerbal
 #		define TARGS_USE2(i) kerbal::utility::declval<TARGS_USE(i)>()
 #		define TARGS_USE3(i) typename kerbal::type_traits::enable_if<!kerbal::type_traits::is_same<TARGS_USE(i), kerbal::tmp::tppter>::value>::type
 #		define DBODY(i) \
-			template <typename Alloc, typename T KERBAL_OPT_PPEXPAND_WITH_COMMA_N(LEFT_JOIN_COMMA, EMPTY, TARGS_DECL, i)> \
+			template <typename Alloc, typename Ptr KERBAL_OPT_PPEXPAND_WITH_COMMA_N(LEFT_JOIN_COMMA, EMPTY, TARGS_DECL, i)> \
 			struct allocator_has_construct_helper< \
-				Alloc, T, \
+				Alloc, \
+				Ptr, \
 				kerbal::tmp::type_vector<KERBAL_OPT_PPEXPAND_WITH_COMMA_N(REMAINF, EMPTY, TARGS_USE, i)>, \
 				typename kerbal::type_traits::void_type< \
 					kerbal::type_traits::integral_constant< \
 						std::size_t, \
 						sizeof( \
 							kerbal::utility::declval<Alloc &>().construct( \
-								kerbal::utility::declval<T *>() \
+								kerbal::utility::declval<Ptr>() \
 								KERBAL_OPT_PPEXPAND_WITH_COMMA_N(LEFT_JOIN_COMMA, EMPTY, TARGS_USE2, i) \
 							), \
 							0 \
@@ -139,7 +145,7 @@ namespace kerbal
 
 #	define TARGS_DECL(i) typename KERBAL_MACRO_CONCAT(Arg, i) = kerbal::tmp::tppter
 
-		template <typename Alloc, typename T, KERBAL_PPEXPAND_WITH_COMMA_N(TARGS_DECL, 20)>
+		template <typename Alloc, KERBAL_PPEXPAND_WITH_COMMA_N(TARGS_DECL, 20)>
 		struct allocator_has_construct;
 
 #	undef TARGS_DECL
@@ -151,13 +157,14 @@ namespace kerbal
 #	define TARGS_DECL(i) typename KERBAL_MACRO_CONCAT(Arg, i)
 #	define TARGS_USE(i) KERBAL_MACRO_CONCAT(Arg, i)
 #	define DBODY(i) \
-		template <typename Alloc, typename T KERBAL_OPT_PPEXPAND_WITH_COMMA_N(LEFT_JOIN_COMMA, EMPTY, TARGS_DECL, i)> \
+		template <typename Alloc KERBAL_OPT_PPEXPAND_WITH_COMMA_N(LEFT_JOIN_COMMA, EMPTY, TARGS_DECL, i)> \
 		struct allocator_has_construct< \
-			Alloc, T \
+			Alloc \
 			KERBAL_OPT_PPEXPAND_WITH_COMMA_N(LEFT_JOIN_COMMA, EMPTY, TARGS_USE, i) \
 		> : \
 			kerbal::memory::detail::allocator_has_construct_helper< \
-				Alloc, T, \
+				Alloc, \
+				typename detail::allocator_pointer_traits_helper<Alloc>::type, \
 				kerbal::tmp::type_vector<KERBAL_OPT_PPEXPAND_WITH_COMMA_N(REMAINF, EMPTY, TARGS_USE, i)> \
 			>::type \
 		{ \
@@ -178,9 +185,12 @@ namespace kerbal
 
 #	if __cplusplus >= 201103L
 
-		template <typename Alloc, typename T, typename ... Args>
+		template <typename Alloc, typename ... Args>
 		struct allocator_could_use_construct :
-			kerbal::memory::allocator_has_construct<Alloc, T, Args...>
+			kerbal::memory::allocator_has_construct<
+				Alloc,
+				Args...
+			>
 		{
 		};
 
@@ -189,9 +199,12 @@ namespace kerbal
 #	define TARGS_DECL(i) typename KERBAL_MACRO_CONCAT(Arg, i) = kerbal::tmp::tppter
 #	define TARGS_USE(i) KERBAL_MACRO_CONCAT(Arg, i)
 
-		template <typename Alloc, typename T, KERBAL_PPEXPAND_WITH_COMMA_N(TARGS_DECL, 19)>
+		template <typename Alloc, KERBAL_PPEXPAND_WITH_COMMA_N(TARGS_DECL, 19)>
 		struct allocator_could_use_construct :
-			kerbal::memory::allocator_has_construct<Alloc, T, KERBAL_PPEXPAND_WITH_COMMA_N(TARGS_USE, 19)>
+			kerbal::memory::allocator_has_construct<
+				Alloc,
+				KERBAL_PPEXPAND_WITH_COMMA_N(TARGS_USE, 19)
+			>
 		{
 		};
 
@@ -203,7 +216,7 @@ namespace kerbal
 #	if __cplusplus >= 201703L
 
 		template <typename T, typename ... Args>
-		struct allocator_could_use_construct<std::allocator<T>, T, Args...> :
+		struct allocator_could_use_construct<std::allocator<T>, Args...> :
 			kerbal::type_traits::false_type
 		{
 		};
@@ -216,16 +229,18 @@ namespace kerbal
 			template <typename Alloc>
 			struct allocator_traits_construct_helper
 			{
+				private:
+					typedef typename detail::allocator_pointer_traits_helper<Alloc>::type pointer;
 
 #	if __cplusplus >= 201103L
 
 				private:
-					template <typename T, typename ... Args>
+					template <typename ... Args>
 					KERBAL_CONSTEXPR20
 					static
 					void k_construct(
 						kerbal::type_traits::false_type,
-						Alloc &, T * p, Args && ... args
+						Alloc &, pointer p, Args && ... args
 					)
 						KERBAL_CONDITIONAL_NOEXCEPT(
 							noexcept(kerbal::memory::construct_at(p, kerbal::utility::forward<Args>(args)...))
@@ -234,12 +249,12 @@ namespace kerbal
 						kerbal::memory::construct_at(p, kerbal::utility::forward<Args>(args)...);
 					}
 
-					template <typename T, typename ... Args>
+					template <typename ... Args>
 					KERBAL_CONSTEXPR14
 					static
 					void k_construct(
 						kerbal::type_traits::true_type,
-						Alloc & alloc, T * p, Args && ... args
+						Alloc & alloc, pointer p, Args && ... args
 					)
 						KERBAL_CONDITIONAL_NOEXCEPT(
 							noexcept(alloc.construct(p, kerbal::utility::forward<Args>(args)...))
@@ -249,14 +264,14 @@ namespace kerbal
 					}
 
 				public:
-					template <typename T, typename ... Args>
+					template <typename ... Args>
 					KERBAL_CONSTEXPR14
 					static
-					void construct(Alloc & alloc, T * p, Args && ... args)
+					void construct(Alloc & alloc, pointer p, Args && ... args)
 						KERBAL_CONDITIONAL_NOEXCEPT(
 							noexcept(
 								k_construct(
-									allocator_could_use_construct<Alloc, T, Args...>(),
+									allocator_could_use_construct<Alloc, Args...>(),
 									alloc, p,
 									kerbal::utility::forward<Args>(args)...
 								)
@@ -264,7 +279,7 @@ namespace kerbal
 						)
 					{
 						k_construct(
-							allocator_could_use_construct<Alloc, T, Args...>(),
+							allocator_could_use_construct<Alloc, Args...>(),
 							alloc, p,
 							kerbal::utility::forward<Args>(args)...
 						);
@@ -274,28 +289,29 @@ namespace kerbal
 
 #		define EMPTY
 #		define LEFT_JOIN_COMMA(exp) , exp
+#		define THEAD_NOT_EMPTY(exp) template <exp>
 #		define TARGS_DECL(i) typename KERBAL_MACRO_CONCAT(Arg, i)
 #		define TARGS_USE(i) KERBAL_MACRO_CONCAT(Arg, i)
 #		define ARGS_DECL(i) const KERBAL_MACRO_CONCAT(Arg, i) & KERBAL_MACRO_CONCAT(arg, i)
 #		define ARGS_USE(i) KERBAL_MACRO_CONCAT(arg, i)
 #		define DBODY(i) \
 				private: \
-					template <typename T KERBAL_OPT_PPEXPAND_WITH_COMMA_N(LEFT_JOIN_COMMA, EMPTY, TARGS_DECL, i)> \
+					KERBAL_OPT_PPEXPAND_WITH_COMMA_N(THEAD_NOT_EMPTY, EMPTY, TARGS_DECL, i) \
 					static \
 					void k_construct( \
 						kerbal::type_traits::false_type, \
-						Alloc &, T * p \
+						Alloc &, pointer p \
 						KERBAL_OPT_PPEXPAND_WITH_COMMA_N(LEFT_JOIN_COMMA, EMPTY, ARGS_DECL, i) \
 					) \
 					{ \
 						kerbal::memory::construct_at(p KERBAL_OPT_PPEXPAND_WITH_COMMA_N(LEFT_JOIN_COMMA, EMPTY, ARGS_USE, i)); \
 					} \
  \
-					template <typename T KERBAL_OPT_PPEXPAND_WITH_COMMA_N(LEFT_JOIN_COMMA, EMPTY, TARGS_DECL, i)> \
+					KERBAL_OPT_PPEXPAND_WITH_COMMA_N(THEAD_NOT_EMPTY, EMPTY, TARGS_DECL, i) \
 					static \
 					void k_construct( \
 						kerbal::type_traits::true_type, \
-						Alloc & alloc, T * p \
+						Alloc & alloc, pointer p \
 						KERBAL_OPT_PPEXPAND_WITH_COMMA_N(LEFT_JOIN_COMMA, EMPTY, ARGS_DECL, i) \
 					) \
 					{ \
@@ -303,15 +319,15 @@ namespace kerbal
 					} \
  \
 				public: \
-					template <typename T KERBAL_OPT_PPEXPAND_WITH_COMMA_N(LEFT_JOIN_COMMA, EMPTY, TARGS_DECL, i)> \
+					KERBAL_OPT_PPEXPAND_WITH_COMMA_N(THEAD_NOT_EMPTY, EMPTY, TARGS_DECL, i) \
 					static \
 					void construct( \
-						Alloc & alloc, T * p \
+						Alloc & alloc, pointer p \
 						KERBAL_OPT_PPEXPAND_WITH_COMMA_N(LEFT_JOIN_COMMA, EMPTY, ARGS_DECL, i) \
 					) \
 					{ \
 						k_construct( \
-							allocator_could_use_construct<Alloc, T KERBAL_OPT_PPEXPAND_WITH_COMMA_N(LEFT_JOIN_COMMA, EMPTY, TARGS_USE, i)>(), \
+							allocator_could_use_construct<Alloc KERBAL_OPT_PPEXPAND_WITH_COMMA_N(LEFT_JOIN_COMMA, EMPTY, TARGS_USE, i)>(), \
 							alloc, p \
 							KERBAL_OPT_PPEXPAND_WITH_COMMA_N(LEFT_JOIN_COMMA, EMPTY, ARGS_USE, i) \
 						); \
@@ -322,6 +338,7 @@ namespace kerbal
 
 #		undef EMPTY
 #		undef LEFT_JOIN_COMMA
+#		undef THEAD_NOT_EMPTY
 #		undef TARGS_DECL
 #		undef TARGS_USE
 #		undef ARGS_DECL

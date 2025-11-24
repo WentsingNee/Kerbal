@@ -22,13 +22,13 @@ namespace kerbal
 		namespace detail
 		{
 
-			template <typename T, typename VoidPtr = void *>
+			template <typename T, typename VoidPtr = void*>
 			class vector_type_only;
 
-			template <typename T>
+			template <typename T, typename VoidPtr>
 			class vec_iter;
 
-			template <typename T>
+			template <typename T, typename VoidPtr>
 			class vec_kiter;
 
 		} // namespace detail

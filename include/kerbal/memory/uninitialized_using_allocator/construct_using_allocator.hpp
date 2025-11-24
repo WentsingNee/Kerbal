@@ -71,8 +71,12 @@ namespace kerbal
 #	define ARGS_DECL(i) const KERBAL_MACRO_CONCAT(Arg, i) & KERBAL_MACRO_CONCAT(arg, i)
 #	define ARGS_USE(i) KERBAL_MACRO_CONCAT(arg, i)
 #	define FBODY(i) \
-		template <typename Allocator, typename T KERBAL_OPT_PPEXPAND_WITH_COMMA_N(LEFT_JOIN_COMMA, EMPTY, TARGS_DECL, i)> \
-		T * construct_at_using_allocator(Allocator & alloc, T * p KERBAL_OPT_PPEXPAND_WITH_COMMA_N(LEFT_JOIN_COMMA, EMPTY, ARGS_DECL, i)) \
+		template <typename Allocator KERBAL_OPT_PPEXPAND_WITH_COMMA_N(LEFT_JOIN_COMMA, EMPTY, TARGS_DECL, i)> \
+		typename kerbal::memory::allocator_traits<Allocator>::pointer \
+		construct_at_using_allocator( \
+			Allocator & alloc, \
+			typename kerbal::memory::allocator_traits<Allocator>::pointer p \
+			KERBAL_OPT_PPEXPAND_WITH_COMMA_N(LEFT_JOIN_COMMA, EMPTY, ARGS_DECL, i)) \
 		{ \
 			typedef kerbal::memory::allocator_traits<Allocator> allocator_traits; \
 			allocator_traits::construct(alloc, p KERBAL_OPT_PPEXPAND_WITH_COMMA_N(LEFT_JOIN_COMMA, EMPTY, ARGS_USE, i)); \
@@ -91,9 +95,14 @@ namespace kerbal
 
 #	else
 
-		template <typename Allocator, typename T, typename ... Args>
+		template <typename Allocator, typename ... Args>
 		KERBAL_CONSTEXPR14
-		T * construct_at_using_allocator(Allocator & alloc, T * p, Args && ... args)
+		typename kerbal::memory::allocator_traits<Allocator>::pointer
+		construct_at_using_allocator(
+			Allocator & alloc,
+			typename kerbal::memory::allocator_traits<Allocator>::pointer p,
+			Args && ... args
+		)
 			KERBAL_CONDITIONAL_NOEXCEPT(
 				noexcept(kerbal::memory::allocator_traits<Allocator>::construct(alloc, p, kerbal::utility::forward<Args>(args)...))
 			)
@@ -462,8 +471,12 @@ namespace kerbal
 				UI_CPY_UA_VER_NO_CATCH
 			)
 			{
+				typedef kerbal::memory::allocator_traits<Allocator> allocator_traits;
+				typedef typename allocator_traits::pointer pointer;
+				typedef kerbal::memory::pointer_traits<pointer> pointer_traits;
+
 				while (first != last) {
-					kerbal::memory::construct_at_using_allocator(alloc, &*to, *first); // new (&*to) T (*first);
+					kerbal::memory::construct_at_using_allocator(alloc, pointer_traits::pointer_to(*to), *first); // new (&*to) T (*first);
 					++to;
 					++first;
 				}
@@ -1315,8 +1328,8 @@ namespace kerbal
 		template <typename Allocator, typename ForwardIterator, typename OutputIterator>
 		struct ui_move_if_noexcept_ow_copy
 		{
+				typedef kerbal::memory::allocator_traits<Allocator> allocator_traits;
 				typedef typename kerbal::iterator::iterator_traits<ForwardIterator>::value_type src_value_type;
-				typedef typename kerbal::iterator::iterator_traits<OutputIterator>::value_type target_value_type;
 
 #	if __cplusplus >= 201103L
 
@@ -1331,7 +1344,7 @@ namespace kerbal
 						noexcept(
 							kerbal::memory::construct_at_using_allocator(
 								kerbal::utility::declval<Allocator &>(),
-								kerbal::utility::declval<target_value_type *>(),
+								kerbal::utility::declval<typename allocator_traits::pointer>(),
 								kerbal::utility::declval<src_value_type &&>()
 							)
 						)

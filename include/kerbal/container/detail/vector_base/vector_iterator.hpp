@@ -34,38 +34,39 @@ namespace kerbal
 		namespace detail
 		{
 
-			template <typename T>
+			template <typename T, typename VoidPtr>
 			class vec_iter:
 				// forward iterator interface
-				public kerbal::operators::dereferenceable<vec_iter<T>, T *>, // it->
-				public kerbal::operators::equality_comparable<vec_iter<T> >, // it != jt
-				public kerbal::operators::incrementable<vec_iter<T> >, // it++
+				public kerbal::operators::dereferenceable<vec_iter<T, VoidPtr>, T *>, // it->
+				public kerbal::operators::equality_comparable<vec_iter<T, VoidPtr> >, // it != jt
+				public kerbal::operators::incrementable<vec_iter<T, VoidPtr> >, // it++
 				// bidirectional iterator interface
-				public kerbal::operators::decrementable<vec_iter<T> >, // it--
+				public kerbal::operators::decrementable<vec_iter<T, VoidPtr> >, // it--
 				// random access iterator interface
 				public kerbal::operators::addable<
-					vec_iter<T>,
-					typename kerbal::iterator::iterator_traits<T *>::difference_type
+					vec_iter<T, VoidPtr>,
+					typename kerbal::iterator::iterator_traits<VoidPtr>::difference_type
 				>, // it + N
 				public kerbal::operators::addable_left<
-					vec_iter<T>,
-					typename kerbal::iterator::iterator_traits<T *>::difference_type
+					vec_iter<T, VoidPtr>,
+					typename kerbal::iterator::iterator_traits<VoidPtr>::difference_type
 				>,// N + it
-				public kerbal::operators::less_than_comparable<vec_iter<T> >, // it > jt, it <= jt, it >= jt
+				public kerbal::operators::less_than_comparable<vec_iter<T, VoidPtr> >, // it > jt, it <= jt, it >= jt
 				public kerbal::operators::subtractable<
-					vec_iter<T>,
-					typename kerbal::iterator::iterator_traits<T *>::difference_type
+					vec_iter<T, VoidPtr>,
+					typename kerbal::iterator::iterator_traits<VoidPtr>::difference_type
 				> // it - N
 			{
-					friend class kerbal::container::detail::vec_kiter<T>;
+					friend class kerbal::container::detail::vec_kiter<T, VoidPtr>;
 
-					friend class kerbal::container::detail::vector_type_only<T>;
+					friend class kerbal::container::detail::vector_type_only<T, VoidPtr>;
 
 					template <typename U, typename Allocator>
 					friend class kerbal::container::vector;
 
 				private:
-					typedef kerbal::iterator::iterator_traits<T *>			iterator_traits;
+					typedef typename kerbal::memory::pointer_traits<VoidPtr>::template rebind<T>::other Ptr;
+					typedef kerbal::iterator::iterator_traits<Ptr>			iterator_traits;
 
 				public:
 					typedef std::random_access_iterator_tag					iterator_category;
@@ -166,37 +167,38 @@ namespace kerbal
 					}
 			};
 
-			template <typename T>
+			template <typename T, typename VoidPtr>
 			class vec_kiter:
 				// forward iterator interface
-				public kerbal::operators::dereferenceable<vec_kiter<T>, const T *>, // it->
-				public kerbal::operators::equality_comparable<vec_kiter<T> >, // it != jt
-				public kerbal::operators::incrementable<vec_kiter<T> >, // it++
+				public kerbal::operators::dereferenceable<vec_kiter<T, VoidPtr>, const T *>, // it->
+				public kerbal::operators::equality_comparable<vec_kiter<T, VoidPtr> >, // it != jt
+				public kerbal::operators::incrementable<vec_kiter<T, VoidPtr> >, // it++
 				// bidirectional iterator interface
-				public kerbal::operators::decrementable<vec_kiter<T> >, // it--
+				public kerbal::operators::decrementable<vec_kiter<T, VoidPtr> >, // it--
 				// random access iterator interface
 				public kerbal::operators::addable<
-					vec_kiter<T>,
+					vec_kiter<T, VoidPtr>,
 					typename kerbal::iterator::iterator_traits<const T *>::difference_type
 				>, // it + N
 				public kerbal::operators::addable_left<
-					vec_kiter<T>,
+					vec_kiter<T, VoidPtr>,
 					typename kerbal::iterator::iterator_traits<const T *>::difference_type
 				>,// N + it
-				public kerbal::operators::less_than_comparable<vec_kiter<T> >, // it > jt, it <= jt, it >= jt
+				public kerbal::operators::less_than_comparable<vec_kiter<T, VoidPtr> >, // it > jt, it <= jt, it >= jt
 				public kerbal::operators::subtractable<
-					vec_kiter<T>,
+					vec_kiter<T, VoidPtr>,
 					typename kerbal::iterator::iterator_traits<const T *>::difference_type
 				> // it - N
 			{
-					friend class kerbal::container::detail::vector_type_only<T>;
+					friend class kerbal::container::detail::vector_type_only<T, VoidPtr>;
 
 					template <typename U, typename Allocator>
 					friend class kerbal::container::vector;
 
 				private:
-					typedef kerbal::iterator::iterator_traits<const T *>	iterator_traits;
-					typedef kerbal::container::detail::vec_iter<T> iterator;
+					typedef typename kerbal::memory::pointer_traits<VoidPtr>::template rebind<T const>::other Ptr;
+					typedef kerbal::iterator::iterator_traits<Ptr>	iterator_traits;
+					typedef kerbal::container::detail::vec_iter<T, VoidPtr> iterator;
 
 				public:
 					typedef std::random_access_iterator_tag					iterator_category;

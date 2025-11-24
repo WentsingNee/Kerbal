@@ -69,6 +69,17 @@ namespace kerbal
 
 		KERBAL_MODULE_EXPORT
 		/// Partial specialization for pointer types.
+		template <>
+		struct iterator_traits<void *>
+		{
+			typedef std::random_access_iterator_tag			iterator_category;
+			typedef void									value_type;
+			typedef std::ptrdiff_t							difference_type;
+			typedef void *									pointer;
+		};
+
+		KERBAL_MODULE_EXPORT
+		/// Partial specialization for pointer types.
 		template <typename T>
 		struct iterator_traits<T *>
 		{

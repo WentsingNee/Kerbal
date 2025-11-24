@@ -39,7 +39,7 @@ namespace kerbal
 
 		template <typename Allocator, typename T>
 		KERBAL_CONSTEXPR14
-		void destroy_at_using_allocator(Allocator & alloc, T * p);
+		void destroy_at_using_allocator(Allocator & alloc, typename kerbal::memory::allocator_traits<Allocator>::pointer p);
 
 		template <typename Allocator, typename ForwardIterator>
 		KERBAL_CONSTEXPR14
@@ -102,9 +102,12 @@ namespace kerbal
 			detail::k_destroy_on_using_allocator(alloc, plc, kerbal::memory::allocator_could_use_destroy<Allocator, T>());
 		}
 
-		template <typename Allocator, typename T>
+		template <typename Allocator>
 		KERBAL_CONSTEXPR14
-		void destroy_at_using_allocator(Allocator & alloc, T * p)
+		void destroy_at_using_allocator(
+			Allocator & alloc,
+			typename kerbal::memory::allocator_traits<Allocator>::pointer p
+		)
 		{
 			kerbal::memory::destroy_on_using_allocator(alloc, *p);
 		}

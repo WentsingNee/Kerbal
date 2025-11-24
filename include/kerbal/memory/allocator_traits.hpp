@@ -142,9 +142,9 @@ namespace kerbal
 
 #		if __cplusplus >= 201103L
 
-				template <typename T, typename ... Args>
+				template <typename ... Args>
 				KERBAL_CONSTEXPR14
-				static void construct(Alloc & alloc, T * p, Args && ... args)
+				static void construct(Alloc & alloc, pointer p, Args && ... args)
 						KERBAL_CONDITIONAL_NOEXCEPT(
 							noexcept(
 								kerbal::memory::detail::allocator_traits_construct_helper<Alloc>::construct(alloc, p, kerbal::utility::forward<Args>(args)...)
@@ -158,12 +158,13 @@ namespace kerbal
 
 #			define EMPTY
 #			define LEFT_JOIN_COMMA(exp) , exp
+#			define THEAD_NOT_EMPTY(exp) template <exp>
 #			define TARGS_DECL(i) typename KERBAL_MACRO_CONCAT(Arg, i)
 #			define ARGS_DECL(i) const KERBAL_MACRO_CONCAT(Arg, i) & KERBAL_MACRO_CONCAT(arg, i)
 #			define ARGS_USE(i) KERBAL_MACRO_CONCAT(arg, i)
 #			define FBODY(i) \
-				template <typename T KERBAL_OPT_PPEXPAND_WITH_COMMA_N(LEFT_JOIN_COMMA, EMPTY, TARGS_DECL, i)> \
-				static void construct(Alloc & alloc, T * p KERBAL_OPT_PPEXPAND_WITH_COMMA_N(LEFT_JOIN_COMMA, EMPTY, ARGS_DECL, i)) \
+				KERBAL_OPT_PPEXPAND_WITH_COMMA_N(THEAD_NOT_EMPTY, EMPTY, TARGS_DECL, i) \
+				static void construct(Alloc & alloc, pointer p KERBAL_OPT_PPEXPAND_WITH_COMMA_N(LEFT_JOIN_COMMA, EMPTY, ARGS_DECL, i)) \
 				{ \
 					kerbal::memory::detail::allocator_traits_construct_helper<Alloc>::construct(alloc, p KERBAL_OPT_PPEXPAND_WITH_COMMA_N(LEFT_JOIN_COMMA, EMPTY, ARGS_USE, i)); \
 				} \
@@ -173,6 +174,7 @@ namespace kerbal
 
 #			undef EMPTY
 #			undef LEFT_JOIN_COMMA
+#			undef THEAD_NOT_EMPTY
 #			undef TARGS_DECL
 #			undef ARGS_DECL
 #			undef ARGS_USE
@@ -180,9 +182,8 @@ namespace kerbal
 
 #		endif // __cplusplus >= 201103L
 
-				template <typename T>
 				KERBAL_CONSTEXPR14
-				static void destroy(Alloc & alloc, T * p)
+				static void destroy(Alloc & alloc, pointer p)
 						KERBAL_CONDITIONAL_NOEXCEPT(
 							noexcept(kerbal::memory::detail::allocator_traits_destroy_helper<Alloc>::destroy(alloc, p))
 						)

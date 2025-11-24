@@ -12,7 +12,10 @@
 #ifndef KERBAL_MEMORY_POINTER_TRAITS_HPP
 #define KERBAL_MEMORY_POINTER_TRAITS_HPP
 
+#include <kerbal/compatibility/constexpr.hpp>
+#include <kerbal/compatibility/noexcept.hpp>
 #include <kerbal/type_traits/void_type.hpp>
+#include <kerbal/utility/declval.hpp>
 
 #include <cstddef>
 
@@ -104,10 +107,55 @@ namespace kerbal
 					typedef U * type;
 			};
 
+
+
+			template <typename Ptr, typename = kerbal::type_traits::void_type<>::type>
+			struct pointer_pointer_to_traits_helper
+			{
+			};
+
+			template <typename Ptr>
+			struct pointer_pointer_to_traits_helper<
+				Ptr,
+				typename kerbal::type_traits::void_type<
+#	if __cplusplus >= 201103L // compatible with msvc
+					decltype(
+						Ptr::pointer_to(
+							kerbal::utility::declval<
+								typename detail::pointer_element_type_traits_helper<Ptr>::type &
+							>()
+						)
+					)
+#	else
+					kerbal::type_traits::integral_constant<
+						std::size_t,
+						sizeof(
+							Ptr::pointer_to(
+								kerbal::utility::declval<
+									typename detail::pointer_element_type_traits_helper<Ptr>::type &
+								>()
+							),
+							0
+						)
+					>
+#	endif
+				>::type
+			>
+			{
+				KERBAL_CONSTEXPR
+				static
+				Ptr
+				pointer_to(typename detail::pointer_element_type_traits_helper<Ptr>::type & element)
+				{
+					return Ptr::pointer_to(element);
+				}
+			};
+
 		} // namespace detail
 
 		template <typename Ptr>
-		struct pointer_traits
+		struct pointer_traits :
+			public detail::pointer_pointer_to_traits_helper<Ptr>
 		{
 				typedef Ptr pointer;
 
@@ -137,6 +185,29 @@ namespace kerbal
 						typedef typename kerbal::memory::detail::pointer_traits_rebind_helper<T *, U>::type other;
 				};
 
+				KERBAL_CONSTEXPR
+				static
+				pointer
+				pointer_to(element_type & element)
+				{
+					return &element;
+				}
+		};
+
+		template <>
+		struct pointer_traits<void *>
+		{
+				typedef void * pointer;
+
+				typedef void element_type;
+
+				typedef std::ptrdiff_t difference_type;
+
+				template <typename U>
+				struct rebind
+				{
+						typedef typename kerbal::memory::detail::pointer_traits_rebind_helper<void *, U>::type other;
+				};
 		};
 
 	} // namespace memory
