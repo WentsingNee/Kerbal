@@ -22,7 +22,7 @@ namespace kerbal
 		namespace detail
 		{
 
-			template <typename T>
+			template <typename T, typename VoidPtr = void *>
 			class vector_type_only;
 
 			template <typename T>

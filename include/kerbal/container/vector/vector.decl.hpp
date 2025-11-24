@@ -54,12 +54,13 @@ namespace kerbal
 		template <typename T, typename Allocator>
 		class vector :
 			protected kerbal::container::detail::container_allocator_overload<Allocator>,
-			protected kerbal::container::detail::vector_type_only<T>
+			protected kerbal::container::detail::vector_type_only<T, typename kerbal::memory::allocator_traits<Allocator>::void_pointer>
 		{
 			private:
 				typedef kerbal::container::detail::container_allocator_overload<Allocator>
 																			vector_allocator_overload;
-				typedef kerbal::container::detail::vector_type_only<T>		vector_type_only;
+				typedef kerbal::container::detail::vector_type_only<T, typename kerbal::memory::allocator_traits<Allocator>::void_pointer>
+																			vector_type_only;
 
 			public:
 				typedef typename vector_type_only::value_type				value_type;
