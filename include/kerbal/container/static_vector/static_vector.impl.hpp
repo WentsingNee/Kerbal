@@ -833,8 +833,8 @@ namespace kerbal
 
 				template <typename ... Args>
 				KERBAL_CONSTEXPR20
-				static_vector_emplace_helper(kerbal::utility::in_place_t in_place, Args && ... args) :
-					storage(in_place, kerbal::utility::forward<Args>(args)...)
+				static_vector_emplace_helper(kerbal::utility::in_place_t, Args && ... args) :
+					storage(kerbal::utility::in_place_t(), kerbal::utility::forward<Args>(args)...)
 				{
 				}
 
@@ -848,8 +848,8 @@ namespace kerbal
 #		define ARGS_USE(i) KERBAL_MACRO_CONCAT(arg, i)
 #		define FBODY(i) \
 				KERBAL_OPT_PPEXPAND_WITH_COMMA_N(THEAD_NOT_EMPTY, EMPTY, TARGS_DECL, i) \
-				static_vector_emplace_helper(kerbal::utility::in_place_t in_place KERBAL_OPT_PPEXPAND_WITH_COMMA_N(LEFT_JOIN_COMMA, EMPTY, ARGS_DECL, i)) : \
-					storage(in_place KERBAL_OPT_PPEXPAND_WITH_COMMA_N(LEFT_JOIN_COMMA, EMPTY, ARGS_USE, i)) \
+				static_vector_emplace_helper(kerbal::utility::in_place_t KERBAL_OPT_PPEXPAND_WITH_COMMA_N(LEFT_JOIN_COMMA, EMPTY, ARGS_DECL, i)) : \
+					storage(kerbal::utility::in_place_t() KERBAL_OPT_PPEXPAND_WITH_COMMA_N(LEFT_JOIN_COMMA, EMPTY, ARGS_USE, i)) \
 				{ \
 				} \
 
@@ -886,8 +886,8 @@ namespace kerbal
 
 				template <typename ... Args>
 				KERBAL_CONSTEXPR
-				static_vector_emplace_helper(kerbal::utility::in_place_t in_place, Args && ... args) :
-					storage(in_place, kerbal::utility::forward<Args>(args)...)
+				static_vector_emplace_helper(kerbal::utility::in_place_t, Args && ... args) :
+					storage(kerbal::utility::in_place_t(), kerbal::utility::forward<Args>(args)...)
 				{
 				}
 
@@ -901,8 +901,8 @@ namespace kerbal
 #		define ARGS_USE(i) KERBAL_MACRO_CONCAT(arg, i)
 #		define FBODY(i) \
 				KERBAL_OPT_PPEXPAND_WITH_COMMA_N(THEAD_NOT_EMPTY, EMPTY, TARGS_DECL, i) \
-				static_vector_emplace_helper(kerbal::utility::in_place_t in_place KERBAL_OPT_PPEXPAND_WITH_COMMA_N(LEFT_JOIN_COMMA, EMPTY, ARGS_DECL, i)) : \
-					storage(in_place KERBAL_OPT_PPEXPAND_WITH_COMMA_N(LEFT_JOIN_COMMA, EMPTY, ARGS_USE, i)) \
+				static_vector_emplace_helper(kerbal::utility::in_place_t KERBAL_OPT_PPEXPAND_WITH_COMMA_N(LEFT_JOIN_COMMA, EMPTY, ARGS_DECL, i)) : \
+					storage(kerbal::utility::in_place_t() KERBAL_OPT_PPEXPAND_WITH_COMMA_N(LEFT_JOIN_COMMA, EMPTY, ARGS_USE, i)) \
 				{ \
 				} \
 

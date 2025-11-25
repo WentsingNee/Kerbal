@@ -108,8 +108,8 @@ namespace kerbal
 
 					template <typename ... Args>
 					KERBAL_CONSTEXPR20
-					explicit k_rawst_base(kerbal::utility::in_place_t in_place, Args && ... args) :
-						k_storage(in_place, kerbal::utility::forward<Args>(args)...)
+					explicit k_rawst_base(kerbal::utility::in_place_t, Args && ... args) :
+						k_storage(kerbal::utility::in_place_t(), kerbal::utility::forward<Args>(args)...)
 					{
 					}
 
@@ -236,29 +236,29 @@ namespace kerbal
 
 					template <typename U>
 					KERBAL_CONSTEXPR20
-					explicit k_rawst_base(kerbal::utility::in_place_t in_place, std::initializer_list<U> ilist) :
-						k_storage(in_place, kerbal::utility::make_index_sequence<N>(), ilist)
+					explicit k_rawst_base(kerbal::utility::in_place_t, std::initializer_list<U> ilist) :
+						k_storage(kerbal::utility::in_place_t(), kerbal::utility::make_index_sequence<N>(), ilist)
 					{
 					}
 
 					template <typename U>
 					KERBAL_CONSTEXPR20
-					explicit k_rawst_base(kerbal::utility::in_place_t in_place, U (&src) [N]) :
-						k_storage(in_place, kerbal::utility::make_index_sequence<N>(), src)
+					explicit k_rawst_base(kerbal::utility::in_place_t, U (&src) [N]) :
+						k_storage(kerbal::utility::in_place_t(), kerbal::utility::make_index_sequence<N>(), src)
 					{
 					}
 
 					template <typename U>
 					KERBAL_CONSTEXPR20
-					explicit k_rawst_base(kerbal::utility::in_place_t in_place, U (&&src) [N]) :
-						k_storage(in_place, kerbal::utility::make_index_sequence<N>(), kerbal::compatibility::move(src))
+					explicit k_rawst_base(kerbal::utility::in_place_t, U (&&src) [N]) :
+						k_storage(kerbal::utility::in_place_t(), kerbal::utility::make_index_sequence<N>(), kerbal::compatibility::move(src))
 					{
 					}
 
 					template <typename ... Args>
 					KERBAL_CONSTEXPR20
-					explicit k_rawst_base(kerbal::utility::in_place_t in_place, Args && ... args) :
-						k_storage(in_place, kerbal::utility::forward<Args>(args)...)
+					explicit k_rawst_base(kerbal::utility::in_place_t, Args && ... args) :
+						k_storage(kerbal::utility::in_place_t(), kerbal::utility::forward<Args>(args)...)
 					{
 					}
 
@@ -360,8 +360,8 @@ namespace kerbal
 
 					template <typename ... Args>
 					KERBAL_CONSTEXPR
-					explicit k_rawst_base(kerbal::utility::in_place_t in_place, Args && ... args) :
-						k_storage(in_place, kerbal::utility::forward<Args>(args)...)
+					explicit k_rawst_base(kerbal::utility::in_place_t, Args && ... args) :
+						k_storage(kerbal::utility::in_place_t(), kerbal::utility::forward<Args>(args)...)
 					{
 					}
 
@@ -483,29 +483,29 @@ namespace kerbal
 
 					template <typename U>
 					KERBAL_CONSTEXPR
-					explicit k_rawst_base(kerbal::utility::in_place_t in_place, std::initializer_list<U> ilist) :
-						k_storage(in_place, kerbal::utility::make_index_sequence<N>(), ilist)
+					explicit k_rawst_base(kerbal::utility::in_place_t, std::initializer_list<U> ilist) :
+						k_storage(kerbal::utility::in_place_t(), kerbal::utility::make_index_sequence<N>(), ilist)
 					{
 					}
 
 					template <typename U>
 					KERBAL_CONSTEXPR
-					explicit k_rawst_base(kerbal::utility::in_place_t in_place, U (&src) [N]) :
-						k_storage(in_place, kerbal::utility::make_index_sequence<N>(), src)
+					explicit k_rawst_base(kerbal::utility::in_place_t, U (&src) [N]) :
+						k_storage(kerbal::utility::in_place_t(), kerbal::utility::make_index_sequence<N>(), src)
 					{
 					}
 
 					template <typename U>
 					KERBAL_CONSTEXPR
-					explicit k_rawst_base(kerbal::utility::in_place_t in_place, U (&&src) [N]) :
-						k_storage(in_place, kerbal::utility::make_index_sequence<N>(), kerbal::compatibility::move(src))
+					explicit k_rawst_base(kerbal::utility::in_place_t, U (&&src) [N]) :
+						k_storage(kerbal::utility::in_place_t(), kerbal::utility::make_index_sequence<N>(), kerbal::compatibility::move(src))
 					{
 					}
 
 					template <typename ... Args>
 					KERBAL_CONSTEXPR
-					explicit k_rawst_base(kerbal::utility::in_place_t in_place, Args && ... args) :
-						k_storage(in_place, kerbal::utility::forward<Args>(args)...)
+					explicit k_rawst_base(kerbal::utility::in_place_t, Args && ... args) :
+						k_storage(kerbal::utility::in_place_t(), kerbal::utility::forward<Args>(args)...)
 					{
 					}
 
@@ -609,8 +609,8 @@ namespace kerbal
 
 					template <typename ... Args>
 					KERBAL_CONSTEXPR
-					explicit k_rawst_base(kerbal::utility::in_place_t in_place, Args && ... args) :
-						k_storage(in_place, kerbal::utility::forward<Args>(args)...)
+					explicit k_rawst_base(kerbal::utility::in_place_t, Args && ... args) :
+						k_storage(kerbal::utility::in_place_t(), kerbal::utility::forward<Args>(args)...)
 					{
 					}
 
@@ -735,29 +735,29 @@ namespace kerbal
 
 					template <typename U>
 					KERBAL_CONSTEXPR
-					explicit k_rawst_base(kerbal::utility::in_place_t in_place, std::initializer_list<U> ilist) :
-						k_storage(in_place, kerbal::utility::make_index_sequence<N>(), ilist)
+					explicit k_rawst_base(kerbal::utility::in_place_t, std::initializer_list<U> ilist) :
+						k_storage(kerbal::utility::in_place_t(), kerbal::utility::make_index_sequence<N>(), ilist)
 					{
 					}
 
 					template <typename U>
 					KERBAL_CONSTEXPR
-					explicit k_rawst_base(kerbal::utility::in_place_t in_place, U (&src) [N]) :
-						k_storage(in_place, kerbal::utility::make_index_sequence<N>(), src)
+					explicit k_rawst_base(kerbal::utility::in_place_t, U (&src) [N]) :
+						k_storage(kerbal::utility::in_place_t(), kerbal::utility::make_index_sequence<N>(), src)
 					{
 					}
 
 					template <typename U>
 					KERBAL_CONSTEXPR
-					explicit k_rawst_base(kerbal::utility::in_place_t in_place, U (&&src) [N]) :
-						k_storage(in_place, kerbal::utility::make_index_sequence<N>(), kerbal::compatibility::move(src))
+					explicit k_rawst_base(kerbal::utility::in_place_t, U (&&src) [N]) :
+						k_storage(kerbal::utility::in_place_t(), kerbal::utility::make_index_sequence<N>(), kerbal::compatibility::move(src))
 					{
 					}
 
 					template <typename ... Args>
 					KERBAL_CONSTEXPR
-					explicit k_rawst_base(kerbal::utility::in_place_t in_place, Args && ... args) :
-						k_storage(in_place, kerbal::utility::forward<Args>(args)...)
+					explicit k_rawst_base(kerbal::utility::in_place_t, Args && ... args) :
+						k_storage(kerbal::utility::in_place_t(), kerbal::utility::forward<Args>(args)...)
 					{
 					}
 
