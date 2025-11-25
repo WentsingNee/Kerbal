@@ -2176,6 +2176,7 @@ namespace kerbal
  \
 				this->k_emplace_back_transfer_ele(alloc, new_buffer, new_capacity); \
 			} \
+ \
 			template <typename T, typename VoidPtr> \
 			template < \
 				typename Allocator \
