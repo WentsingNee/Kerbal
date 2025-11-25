@@ -27,7 +27,7 @@ namespace kerbal
 	namespace memory
 	{
 
-		template <typename Alloc, typename T, typename = kerbal::type_traits::void_type<>::type >
+		template <typename Alloc, typename T, typename = kerbal::type_traits::void_type<>::type>
 		struct allocator_has_reallocate :
 			kerbal::type_traits::false_type
 		{

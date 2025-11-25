@@ -34,7 +34,7 @@ namespace kerbal
 		namespace detail
 		{
 
-			template <typename, typename = kerbal::type_traits::void_type<>::type >
+			template <typename, typename = kerbal::type_traits::void_type<>::type>
 			struct iterator_traits_helper
 			{
 			};
@@ -107,7 +107,7 @@ namespace kerbal
 		namespace detail
 		{
 
-			template <typename, typename = kerbal::type_traits::void_type<>::type >
+			template <typename, typename = kerbal::type_traits::void_type<>::type>
 			struct is_iterator_helper : kerbal::type_traits::false_type
 			{
 			};
