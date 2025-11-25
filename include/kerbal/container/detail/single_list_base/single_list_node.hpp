@@ -95,13 +95,13 @@ namespace kerbal
 
 					template <typename ... Args>
 					KERBAL_CONSTEXPR
-					explicit sl_node(kerbal::utility::in_place_t in_place, Args && ... args)
+					explicit sl_node(kerbal::utility::in_place_t, Args && ... args)
 						KERBAL_CONDITIONAL_NOEXCEPT((
 							kerbal::type_traits::try_test_is_nothrow_constructible<
 								member_compress_helper, kerbal::utility::in_place_t, Args &&...
 							>::IS_TRUE::value
 						)) :
-						member_compress_helper(in_place, kerbal::utility::forward<Args>(args)...)
+						member_compress_helper(kerbal::utility::in_place_t(), kerbal::utility::forward<Args>(args)...)
 					{
 					}
 
@@ -115,8 +115,8 @@ namespace kerbal
 #				define ARGS_USE(i) KERBAL_MACRO_CONCAT(arg, i)
 #				define FBODY(i) \
 					KERBAL_OPT_PPEXPAND_WITH_COMMA_N(THEAD_NOT_EMPTY, EMPTY, TARGS_DECL, i) \
-					explicit sl_node(kerbal::utility::in_place_t in_place KERBAL_OPT_PPEXPAND_WITH_COMMA_N(LEFT_JOIN_COMMA, EMPTY, ARGS_DECL, i)) : \
-						member_compress_helper(in_place KERBAL_OPT_PPEXPAND_WITH_COMMA_N(LEFT_JOIN_COMMA, EMPTY, ARGS_USE, i)) \
+					explicit sl_node(kerbal::utility::in_place_t KERBAL_OPT_PPEXPAND_WITH_COMMA_N(LEFT_JOIN_COMMA, EMPTY, ARGS_DECL, i)) : \
+						member_compress_helper(kerbal::utility::in_place_t() KERBAL_OPT_PPEXPAND_WITH_COMMA_N(LEFT_JOIN_COMMA, EMPTY, ARGS_USE, i)) \
 					{ \
 					} \
 

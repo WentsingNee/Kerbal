@@ -73,8 +73,8 @@ namespace kerbal
 
 					template <typename ... Args>
 					KERBAL_CONSTEXPR
-					explicit any_node(kerbal::utility::in_place_t in_place, Args && ... args)
-							: member_compress_helper(in_place, kerbal::utility::forward<Args>(args)...)
+					explicit any_node(kerbal::utility::in_place_t, Args && ... args)
+							: member_compress_helper(kerbal::utility::in_place_t(), kerbal::utility::forward<Args>(args)...)
 					{
 					}
 
@@ -88,8 +88,8 @@ namespace kerbal
 #				define ARGS_USE(i) KERBAL_MACRO_CONCAT(arg, i)
 #				define FBODY(i) \
 					KERBAL_OPT_PPEXPAND_WITH_COMMA_N(THEAD_NOT_EMPTY, EMPTY, TARGS_DECL, i) \
-					explicit any_node(kerbal::utility::in_place_t in_place KERBAL_OPT_PPEXPAND_WITH_COMMA_N(LEFT_JOIN_COMMA, EMPTY, ARGS_DECL, i)) \
-							: member_compress_helper(in_place KERBAL_OPT_PPEXPAND_WITH_COMMA_N(LEFT_JOIN_COMMA, EMPTY, ARGS_USE, i)) \
+					explicit any_node(kerbal::utility::in_place_t KERBAL_OPT_PPEXPAND_WITH_COMMA_N(LEFT_JOIN_COMMA, EMPTY, ARGS_DECL, i)) \
+							: member_compress_helper(kerbal::utility::in_place_t() KERBAL_OPT_PPEXPAND_WITH_COMMA_N(LEFT_JOIN_COMMA, EMPTY, ARGS_USE, i)) \
 					{ \
 					} \
 

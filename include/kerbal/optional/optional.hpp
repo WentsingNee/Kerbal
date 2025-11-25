@@ -95,8 +95,8 @@ namespace kerbal
 
 					template <typename ... Args>
 					KERBAL_CONSTEXPR20
-					explicit optional_base(kerbal::utility::in_place_t in_place, Args && ... args) :
-						k_storage(in_place, kerbal::utility::forward<Args>(args)...), k_has_value(true)
+					explicit optional_base(kerbal::utility::in_place_t, Args && ... args) :
+						k_storage(kerbal::utility::in_place_t(), kerbal::utility::forward<Args>(args)...), k_has_value(true)
 					{
 					}
 
@@ -110,8 +110,8 @@ namespace kerbal
 #				define ARGS_USE(i) KERBAL_MACRO_CONCAT(arg, i)
 #				define FBODY(i) \
 					KERBAL_OPT_PPEXPAND_WITH_COMMA_N(THEAD_NOT_EMPTY, EMPTY, TARGS_DECL, i) \
-					explicit optional_base(kerbal::utility::in_place_t in_place KERBAL_OPT_PPEXPAND_WITH_COMMA_N(LEFT_JOIN_COMMA, EMPTY, ARGS_DECL, i)) : \
-						k_storage(in_place KERBAL_OPT_PPEXPAND_WITH_COMMA_N(LEFT_JOIN_COMMA, EMPTY, ARGS_USE, i)), k_has_value(true) \
+					explicit optional_base(kerbal::utility::in_place_t KERBAL_OPT_PPEXPAND_WITH_COMMA_N(LEFT_JOIN_COMMA, EMPTY, ARGS_DECL, i)) : \
+						k_storage(kerbal::utility::in_place_t() KERBAL_OPT_PPEXPAND_WITH_COMMA_N(LEFT_JOIN_COMMA, EMPTY, ARGS_USE, i)), k_has_value(true) \
 					{ \
 					} \
 
@@ -168,8 +168,8 @@ namespace kerbal
 
 					template <typename ... Args>
 					KERBAL_CONSTEXPR
-					explicit optional_base(kerbal::utility::in_place_t in_place, Args && ... args) :
-						k_storage(in_place, kerbal::utility::forward<Args>(args)...),
+					explicit optional_base(kerbal::utility::in_place_t, Args && ... args) :
+						k_storage(kerbal::utility::in_place_t(), kerbal::utility::forward<Args>(args)...),
 						k_has_value(true)
 					{
 					}
@@ -184,8 +184,8 @@ namespace kerbal
 #				define ARGS_USE(i) KERBAL_MACRO_CONCAT(arg, i)
 #				define FBODY(i) \
 					KERBAL_OPT_PPEXPAND_WITH_COMMA_N(THEAD_NOT_EMPTY, EMPTY, TARGS_DECL, i) \
-					explicit optional_base(kerbal::utility::in_place_t in_place KERBAL_OPT_PPEXPAND_WITH_COMMA_N(LEFT_JOIN_COMMA, EMPTY, ARGS_DECL, i)) : \
-						k_storage(in_place KERBAL_OPT_PPEXPAND_WITH_COMMA_N(LEFT_JOIN_COMMA, EMPTY, ARGS_USE, i)), \
+					explicit optional_base(kerbal::utility::in_place_t KERBAL_OPT_PPEXPAND_WITH_COMMA_N(LEFT_JOIN_COMMA, EMPTY, ARGS_DECL, i)) : \
+						k_storage(kerbal::utility::in_place_t() KERBAL_OPT_PPEXPAND_WITH_COMMA_N(LEFT_JOIN_COMMA, EMPTY, ARGS_USE, i)), \
 						k_has_value(true) \
 					{ \
 					} \
@@ -403,8 +403,8 @@ namespace kerbal
 
 				template <typename ... Args>
 				KERBAL_CONSTEXPR
-				explicit optional(kerbal::utility::in_place_t in_place, Args && ... args) :
-					super(in_place, kerbal::utility::forward<Args>(args)...)
+				explicit optional(kerbal::utility::in_place_t, Args && ... args) :
+					super(kerbal::utility::in_place_t(), kerbal::utility::forward<Args>(args)...)
 				{
 				}
 
@@ -418,8 +418,8 @@ namespace kerbal
 #			define ARGS_USE(i) KERBAL_MACRO_CONCAT(arg, i)
 #			define FBODY(i) \
 				KERBAL_OPT_PPEXPAND_WITH_COMMA_N(THEAD_NOT_EMPTY, EMPTY, TARGS_DECL, i) \
-				explicit optional(kerbal::utility::in_place_t in_place KERBAL_OPT_PPEXPAND_WITH_COMMA_N(LEFT_JOIN_COMMA, EMPTY, ARGS_DECL, i)) : \
-					super(in_place KERBAL_OPT_PPEXPAND_WITH_COMMA_N(LEFT_JOIN_COMMA, EMPTY, ARGS_USE, i)) \
+				explicit optional(kerbal::utility::in_place_t KERBAL_OPT_PPEXPAND_WITH_COMMA_N(LEFT_JOIN_COMMA, EMPTY, ARGS_DECL, i)) : \
+					super(kerbal::utility::in_place_t() KERBAL_OPT_PPEXPAND_WITH_COMMA_N(LEFT_JOIN_COMMA, EMPTY, ARGS_USE, i)) \
 				{ \
 				} \
 

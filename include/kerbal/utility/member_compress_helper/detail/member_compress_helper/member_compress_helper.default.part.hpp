@@ -87,11 +87,11 @@ namespace kerbal
 
 				template <typename ... Args>
 				KERBAL_CONSTEXPR
-				explicit member_compress_helper(kerbal::utility::in_place_t in_place, Args && ... args)
+				explicit member_compress_helper(kerbal::utility::in_place_t, Args && ... args)
 					KERBAL_CONDITIONAL_NOEXCEPT(
 						try_test_is_nothrow_in_place_constructible<Args && ...>::IS_TRUE::value
 					) :
-					super(in_place, kerbal::utility::forward<Args>(args)...)
+					super(kerbal::utility::in_place_t(), kerbal::utility::forward<Args>(args)...)
 				{
 				}
 
@@ -106,10 +106,10 @@ namespace kerbal
 #			define FBODY(i) \
 				KERBAL_OPT_PPEXPAND_WITH_COMMA_N(THEAD_NOT_EMPTY, EMPTY, TARGS_DECL, i) \
 				explicit member_compress_helper( \
-					kerbal::utility::in_place_t in_place \
+					kerbal::utility::in_place_t \
 					KERBAL_OPT_PPEXPAND_WITH_COMMA_N(LEFT_JOIN_COMMA, EMPTY, ARGS_DECL, i) \
 				): \
-					super(in_place KERBAL_OPT_PPEXPAND_WITH_COMMA_N(LEFT_JOIN_COMMA, EMPTY, ARGS_USE, i)) \
+					super(kerbal::utility::in_place_t() KERBAL_OPT_PPEXPAND_WITH_COMMA_N(LEFT_JOIN_COMMA, EMPTY, ARGS_USE, i)) \
 				{ \
 				} \
 
