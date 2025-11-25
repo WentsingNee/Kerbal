@@ -57,25 +57,25 @@ namespace kerbal
 			};
 
 
-			template <typename Ptr, typename = kerbal::type_traits::void_type<> >
+			template <typename Ptr, typename = kerbal::type_traits::void_type<>::type>
 			struct pointer_element_type_traits_helper: pointer_element_type_traits_impl<Ptr>
 			{
 			};
 
 			template <typename Ptr>
-			struct pointer_element_type_traits_helper<Ptr, kerbal::type_traits::void_type<typename Ptr::element_type> >
+			struct pointer_element_type_traits_helper<Ptr, typename kerbal::type_traits::void_type<typename Ptr::element_type>::type>
 			{
 					typedef typename Ptr::element_type type;
 			};
 
-			template <typename Ptr, typename = kerbal::type_traits::void_type<> >
+			template <typename Ptr, typename = kerbal::type_traits::void_type<>::type>
 			struct pointer_difference_type_traits_helper
 			{
 					typedef std::ptrdiff_t type;
 			};
 
 			template <typename Ptr>
-			struct pointer_difference_type_traits_helper<Ptr, kerbal::type_traits::void_type<typename Ptr::difference_type> >
+			struct pointer_difference_type_traits_helper<Ptr, typename kerbal::type_traits::void_type<typename Ptr::difference_type>::type>
 			{
 					typedef typename Ptr::difference_type type;
 			};
