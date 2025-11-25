@@ -50,8 +50,7 @@ namespace kerbal
 		KERBAL_CONSTEXPR20
 		vector<T, Allocator>::vector()
 			KERBAL_CONDITIONAL_NOEXCEPT(
-				vector_allocator_overload::is_nothrow_default_constructible::value &&
-				vector_type_only::is_nothrow_default_constructible::value
+				is_nothrow_default_constructible::value
 			) :
 			vector_allocator_overload(),
 			vector_type_only()
@@ -672,18 +671,7 @@ namespace kerbal
 		KERBAL_CONSTEXPR20
 		void vector<T, Allocator>::swap(vector & with)
 			KERBAL_CONDITIONAL_NOEXCEPT(
-				noexcept(
-					vector_allocator_overload::k_swap_allocator_if_propagate(
-						kerbal::utility::declval<vector_allocator_overload &>(),
-						kerbal::utility::declval<vector_allocator_overload &>()
-					)
-				) &&
-				noexcept(
-					vector_type_only::k_swap_type_unrelated(
-						kerbal::utility::declval<vector_type_only &>(),
-						kerbal::utility::declval<vector_type_only &>()
-					)
-				)
+				is_nothrow_swappable::value
 			)
 		{
 			vector_allocator_overload::k_swap_allocator_if_propagate(

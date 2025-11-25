@@ -68,8 +68,14 @@ namespace kerbal
 			template <typename T, typename VoidPtr>
 			KERBAL_CONSTEXPR
 			vector_type_only<T, VoidPtr>::
-			vector_type_only() KERBAL_NOEXCEPT :
-				k_buffer(NULL), k_capacity(0), k_size(0)
+			vector_type_only()
+				KERBAL_CONDITIONAL_NOEXCEPT(
+					is_nothrow_default_constructible::value
+				)
+			:
+				k_buffer(static_cast<pointer>(NULL)),
+				k_capacity(0),
+				k_size(0)
 			{
 			}
 
@@ -78,8 +84,14 @@ namespace kerbal
 			template <typename T, typename VoidPtr>
 			KERBAL_CONSTEXPR14
 			vector_type_only<T, VoidPtr>::
-			vector_type_only(vector_type_only && src) KERBAL_NOEXCEPT :
-				k_buffer(src.k_buffer), k_capacity(src.k_capacity), k_size(src.k_size)
+			vector_type_only(vector_type_only && src)
+				KERBAL_CONDITIONAL_NOEXCEPT(
+					is_nothrow_move_constructible::value
+				)
+			:
+				k_buffer(kerbal::compatibility::move(src.k_buffer)),
+				k_capacity(kerbal::compatibility::move(src.k_capacity)),
+				k_size(kerbal::compatibility::move(src.k_size))
 			{
 				src.k_buffer = NULL;
 				src.k_size = 0;

@@ -99,11 +99,22 @@ namespace kerbal
 			//===================
 			// construct/copy/destroy
 
+#			if __cplusplus >= 201103L
+
+				struct is_nothrow_default_constructible :
+					kerbal::type_traits::tribool_conjunction<
+						typename vector_allocator_overload::is_nothrow_default_constructible,
+						typename vector_type_only::is_nothrow_default_constructible
+					>::result::IS_TRUE
+				{
+				};
+
+#			endif
+
 				KERBAL_CONSTEXPR20
 				vector()
 					KERBAL_CONDITIONAL_NOEXCEPT(
-						vector_allocator_overload::is_nothrow_default_constructible::value &&
-						vector_type_only::is_nothrow_default_constructible::value
+						is_nothrow_default_constructible::value
 					)
 				;
 
@@ -451,9 +462,10 @@ namespace kerbal
 				KERBAL_CONSTEXPR20
 				void resize(size_type new_size, const_reference value);
 
-				KERBAL_CONSTEXPR20
-				void swap(vector & with)
-					KERBAL_CONDITIONAL_NOEXCEPT(
+#		if __cplusplus >= 201103L
+
+				struct is_nothrow_swappable :
+					kerbal::type_traits::bool_constant<
 						noexcept(
 							vector_allocator_overload::k_swap_allocator_if_propagate(
 								kerbal::utility::declval<vector_allocator_overload &>(),
@@ -466,6 +478,16 @@ namespace kerbal
 								kerbal::utility::declval<vector_type_only &>()
 							)
 						)
+					>
+				{
+				};
+
+#		endif
+
+				KERBAL_CONSTEXPR20
+				void swap(vector & with)
+					KERBAL_CONDITIONAL_NOEXCEPT(
+						is_nothrow_swappable::value
 					)
 				;
 

@@ -24,6 +24,8 @@
 #include <kerbal/type_traits/conditional.hpp>
 #include <kerbal/type_traits/enable_if.hpp>
 #include <kerbal/type_traits/integral_constant.hpp>
+#include <kerbal/type_traits/is_nothrow_constructible.hpp>
+#include <kerbal/type_traits/is_nothrow_move_constructible.hpp>
 #include <kerbal/type_traits/remove_all_extents.hpp>
 
 #if __cplusplus < 201103L
@@ -86,24 +88,38 @@ namespace kerbal
 #			if __cplusplus >= 201103L
 
 					struct is_nothrow_default_constructible :
-						kerbal::type_traits::true_type
+						kerbal::type_traits::tribool_conjunction<
+							kerbal::type_traits::try_test_is_nothrow_move_constructible<pointer>,
+							kerbal::type_traits::try_test_is_nothrow_constructible<size_type, int>
+						>::result::IS_TRUE
 					{
 					};
 
 #			endif
 
 					KERBAL_CONSTEXPR
-					vector_type_only() KERBAL_NOEXCEPT;
+					vector_type_only()
+						KERBAL_CONDITIONAL_NOEXCEPT(
+							is_nothrow_default_constructible::value
+						)
+					;
 
 #			if __cplusplus >= 201103L
 
 					struct is_nothrow_move_constructible :
-						kerbal::type_traits::true_type
+						kerbal::type_traits::tribool_conjunction<
+							kerbal::type_traits::try_test_is_nothrow_move_constructible<pointer>,
+							kerbal::type_traits::try_test_is_nothrow_move_constructible<size_type>
+						>::result::IS_TRUE
 					{
 					};
 
 					KERBAL_CONSTEXPR14
-					vector_type_only(vector_type_only && src) KERBAL_NOEXCEPT;
+					vector_type_only(vector_type_only && src)
+						KERBAL_CONDITIONAL_NOEXCEPT(
+							is_nothrow_move_constructible::value
+						)
+					;
 
 				private:
 
