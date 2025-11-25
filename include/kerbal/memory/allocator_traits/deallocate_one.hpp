@@ -29,7 +29,7 @@ namespace kerbal
 	namespace memory
 	{
 
-		template <typename Alloc, typename Pointer, typename = kerbal::type_traits::void_type<>::type >
+		template <typename Alloc, typename Pointer, typename = kerbal::type_traits::void_type<>::type>
 		struct allocator_has_deallocate_one :
 			kerbal::type_traits::false_type
 		{
