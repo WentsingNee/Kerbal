@@ -138,13 +138,17 @@ namespace kerbal
 				UI_VAL_CONSTRUCT_UA_VER_DEFAULT
 			)
 			{
+				typedef kerbal::memory::allocator_traits<Allocator>		allocator_traits;
+				typedef typename allocator_traits::pointer				pointer;
+				typedef kerbal::memory::pointer_traits<pointer>			pointer_traits;
+
 				typedef ForwardIterator iterator;
 				iterator current(first);
 				bool iter_move_next_exception_happen = false;
 				try {
 					while (current != last) {
 						iterator remain(current);
-						kerbal::memory::construct_at_using_allocator(alloc, &*current); // new (&*current) T();
+						kerbal::memory::construct_at_using_allocator(alloc, pointer_traits::pointer_to(*current)); // new (&*current) T();
 						try {
 							++current;
 						} catch (...) {
@@ -171,11 +175,15 @@ namespace kerbal
 				UI_VAL_CONSTRUCT_UA_VER_NOTHROW_ITER_ADVANCE
 			)
 			{
+				typedef kerbal::memory::allocator_traits<Allocator>		allocator_traits;
+				typedef typename allocator_traits::pointer				pointer;
+				typedef kerbal::memory::pointer_traits<pointer>			pointer_traits;
+
 				typedef ForwardIterator iterator;
 				iterator current(first);
 				try {
 					while (current != last) {
-						kerbal::memory::construct_at_using_allocator(alloc, &*current); // new (&*current) T();
+						kerbal::memory::construct_at_using_allocator(alloc, pointer_traits::pointer_to(*current)); // new (&*current) T();
 						++current;
 					}
 				} catch (...) {
@@ -195,9 +203,9 @@ namespace kerbal
 				UI_VAL_CONSTRUCT_UA_VER_NO_CATCH
 			)
 			{
-				typedef kerbal::memory::allocator_traits<Allocator> allocator_traits;
-				typedef typename allocator_traits::pointer pointer;
-				typedef kerbal::memory::pointer_traits<pointer> pointer_traits;
+				typedef kerbal::memory::allocator_traits<Allocator>		allocator_traits;
+				typedef typename allocator_traits::pointer				pointer;
+				typedef kerbal::memory::pointer_traits<pointer>			pointer_traits;
 
 				while (first != last) {
 					kerbal::memory::construct_at_using_allocator(alloc, pointer_traits::pointer_to(*first)); // new (&*first) T ();
@@ -275,6 +283,10 @@ namespace kerbal
 				UI_VAL_CONSTRUCT_N_UA_VER_DEFAULT
 			)
 			{
+				typedef kerbal::memory::allocator_traits<Allocator>		allocator_traits;
+				typedef typename allocator_traits::pointer				pointer;
+				typedef kerbal::memory::pointer_traits<pointer>			pointer_traits;
+
 				typedef ForwardIterator iterator;
 				iterator current(first);
 				bool iter_move_next_exception_happen = false;
@@ -282,7 +294,7 @@ namespace kerbal
 					while (n > 0) {
 						--n;
 						iterator remain(current);
-						kerbal::memory::construct_at_using_allocator(alloc, &*current); // new (&*current) T();
+						kerbal::memory::construct_at_using_allocator(alloc, pointer_traits::pointer_to(*current)); // new (&*current) T();
 						try {
 							++current;
 						} catch (...) {
@@ -310,12 +322,16 @@ namespace kerbal
 				UI_VAL_CONSTRUCT_N_UA_VER_NOTHROW_ITER_ADVANCE
 			)
 			{
+				typedef kerbal::memory::allocator_traits<Allocator>		allocator_traits;
+				typedef typename allocator_traits::pointer				pointer;
+				typedef kerbal::memory::pointer_traits<pointer>			pointer_traits;
+
 				typedef ForwardIterator iterator;
 				iterator current(first);
 				try {
 					while (n > 0) {
 						--n;
-						kerbal::memory::construct_at_using_allocator(alloc, &*current); // new (&*current) T();
+						kerbal::memory::construct_at_using_allocator(alloc, pointer_traits::pointer_to(*current)); // new (&*current) T();
 						++current;
 					}
 					return current;
@@ -414,13 +430,17 @@ namespace kerbal
 				UI_CPY_UA_VER_DEFAULT
 			)
 			{
+				typedef kerbal::memory::allocator_traits<Allocator>		allocator_traits;
+				typedef typename allocator_traits::pointer				pointer;
+				typedef kerbal::memory::pointer_traits<pointer>			pointer_traits;
+
 				typedef ForwardIterator iterator;
 				iterator current(to);
 				bool iter_move_next_exception_happen = false;
 				try {
 					while (first != last) {
 						iterator remain(current);
-						kerbal::memory::construct_at_using_allocator(alloc, &*current, *first); // new (&*current) T (*first);
+						kerbal::memory::construct_at_using_allocator(alloc, pointer_traits::pointer_to(*current), *first); // new (&*current) T (*first);
 						try {
 							++current;
 						} catch (...) {
@@ -449,11 +469,15 @@ namespace kerbal
 				UI_CPY_UA_VER_NOTHROW_ITER_ADVANCE
 			)
 			{
+				typedef kerbal::memory::allocator_traits<Allocator>		allocator_traits;
+				typedef typename allocator_traits::pointer				pointer;
+				typedef kerbal::memory::pointer_traits<pointer>			pointer_traits;
+
 				typedef ForwardIterator iterator;
 				iterator current(to);
 				try {
 					while (first != last) {
-						kerbal::memory::construct_at_using_allocator(alloc, &*current, *first); // new (&*current) T (*first);
+						kerbal::memory::construct_at_using_allocator(alloc, pointer_traits::pointer_to(*current), *first); // new (&*current) T (*first);
 						++current;
 						++first;
 					}
@@ -475,9 +499,9 @@ namespace kerbal
 				UI_CPY_UA_VER_NO_CATCH
 			)
 			{
-				typedef kerbal::memory::allocator_traits<Allocator> allocator_traits;
-				typedef typename allocator_traits::pointer pointer;
-				typedef kerbal::memory::pointer_traits<pointer> pointer_traits;
+				typedef kerbal::memory::allocator_traits<Allocator>		allocator_traits;
+				typedef typename allocator_traits::pointer				pointer;
+				typedef kerbal::memory::pointer_traits<pointer>			pointer_traits;
 
 				while (first != last) {
 					kerbal::memory::construct_at_using_allocator(alloc, pointer_traits::pointer_to(*to), *first); // new (&*to) T (*first);
@@ -560,6 +584,10 @@ namespace kerbal
 				UI_CPY_N_UA_VER_DEFAULT
 			)
 			{
+				typedef kerbal::memory::allocator_traits<Allocator>		allocator_traits;
+				typedef typename allocator_traits::pointer				pointer;
+				typedef kerbal::memory::pointer_traits<pointer>			pointer_traits;
+
 				typedef ForwardIterator iterator;
 				iterator current(to);
 				bool iter_move_next_exception_happen = false;
@@ -567,7 +595,7 @@ namespace kerbal
 					while (n > 0) {
 						--n;
 						iterator remain(current);
-						kerbal::memory::construct_at_using_allocator(alloc, &*current, *first); // new (&*current) T(*first);
+						kerbal::memory::construct_at_using_allocator(alloc, pointer_traits::pointer_to(*current), *first); // new (&*current) T(*first);
 						try {
 							++current;
 						} catch (...) {
@@ -596,12 +624,16 @@ namespace kerbal
 				UI_CPY_N_UA_VER_NOTHROW_ITER_ADVANCE
 			)
 			{
+				typedef kerbal::memory::allocator_traits<Allocator>		allocator_traits;
+				typedef typename allocator_traits::pointer				pointer;
+				typedef kerbal::memory::pointer_traits<pointer>			pointer_traits;
+
 				typedef ForwardIterator iterator;
 				iterator current(to);
 				try {
 					while (n > 0) {
 						--n;
-						kerbal::memory::construct_at_using_allocator(alloc, &*current, *first); // new (&*current) T(*first);
+						kerbal::memory::construct_at_using_allocator(alloc, pointer_traits::pointer_to(*current), *first); // new (&*current) T(*first);
 						++current;
 						++first;
 					}
@@ -705,13 +737,17 @@ namespace kerbal
 				UI_MOV_UA_VER_DEFAULT
 			)
 			{
+				typedef kerbal::memory::allocator_traits<Allocator>		allocator_traits;
+				typedef typename allocator_traits::pointer				pointer;
+				typedef kerbal::memory::pointer_traits<pointer>			pointer_traits;
+
 				typedef ForwardIterator iterator;
 				iterator current(to);
 				bool iter_move_next_exception_happen = false;
 				try {
 					while (first != last) {
 						iterator remain(current);
-						kerbal::memory::construct_at_using_allocator(alloc, &*current, kerbal::compatibility::to_xvalue(*first)); // new (&*current) T (kerbal::compatibility::to_xvalue(*first));
+						kerbal::memory::construct_at_using_allocator(alloc, pointer_traits::pointer_to(*current), kerbal::compatibility::to_xvalue(*first)); // new (&*current) T (kerbal::compatibility::to_xvalue(*first));
 						try {
 							++current;
 						} catch (...) {
@@ -740,11 +776,15 @@ namespace kerbal
 				UI_MOV_UA_VER_NOTHROW_ITER_ADVANCE
 			)
 			{
+				typedef kerbal::memory::allocator_traits<Allocator>		allocator_traits;
+				typedef typename allocator_traits::pointer				pointer;
+				typedef kerbal::memory::pointer_traits<pointer>			pointer_traits;
+
 				typedef ForwardIterator iterator;
 				iterator current(to);
 				try {
 					while (first != last) {
-						kerbal::memory::construct_at_using_allocator(alloc, &*current, kerbal::compatibility::to_xvalue(*first)); // new (&*current) T (kerbal::compatibility::to_xvalue(*first));
+						kerbal::memory::construct_at_using_allocator(alloc, pointer_traits::pointer_to(*current), kerbal::compatibility::to_xvalue(*first)); // new (&*current) T (kerbal::compatibility::to_xvalue(*first));
 						++current;
 						++first;
 					}
@@ -854,6 +894,10 @@ namespace kerbal
 				UI_MOV_N_UA_VER_DEFAULT
 			)
 			{
+				typedef kerbal::memory::allocator_traits<Allocator>		allocator_traits;
+				typedef typename allocator_traits::pointer				pointer;
+				typedef kerbal::memory::pointer_traits<pointer>			pointer_traits;
+
 				typedef ForwardIterator iterator;
 				iterator current(to);
 				bool iter_move_next_exception_happen = false;
@@ -861,7 +905,7 @@ namespace kerbal
 					while (n > 0) {
 						--n;
 						iterator remain(current);
-						kerbal::memory::construct_at_using_allocator(alloc, &*current, kerbal::compatibility::to_xvalue(*first)); // new (&*current) T(kerbal::compatibility::to_xvalue(*first));
+						kerbal::memory::construct_at_using_allocator(alloc, pointer_traits::pointer_to(*current), kerbal::compatibility::to_xvalue(*first)); // new (&*current) T(kerbal::compatibility::to_xvalue(*first));
 						try {
 							++current;
 						} catch (...) {
@@ -890,12 +934,16 @@ namespace kerbal
 				UI_MOV_N_UA_VER_NOTHROW_ITER_ADVANCE
 			)
 			{
+				typedef kerbal::memory::allocator_traits<Allocator>		allocator_traits;
+				typedef typename allocator_traits::pointer				pointer;
+				typedef kerbal::memory::pointer_traits<pointer>			pointer_traits;
+
 				typedef ForwardIterator iterator;
 				iterator current(to);
 				try {
 					while (n > 0) {
 						--n;
-						kerbal::memory::construct_at_using_allocator(alloc, &*current, kerbal::compatibility::to_xvalue(*first)); // new (&*current) T(kerbal::compatibility::to_xvalue(*first));
+						kerbal::memory::construct_at_using_allocator(alloc, pointer_traits::pointer_to(*current), kerbal::compatibility::to_xvalue(*first)); // new (&*current) T(kerbal::compatibility::to_xvalue(*first));
 						++current;
 						++first;
 					}
@@ -1006,13 +1054,17 @@ namespace kerbal
 				UI_FILL_UA_VER_DEFAULT
 			)
 			{
+				typedef kerbal::memory::allocator_traits<Allocator>		allocator_traits;
+				typedef typename allocator_traits::pointer				pointer;
+				typedef kerbal::memory::pointer_traits<pointer>			pointer_traits;
+
 				typedef ForwardIterator iterator;
 				iterator current(first);
 				bool iter_move_next_exception_happen = false;
 				try {
 					while (current != last) {
 						iterator remain(current);
-						kerbal::memory::construct_at_using_allocator(alloc, &*current, value); // new (&*current) T (value);
+						kerbal::memory::construct_at_using_allocator(alloc, pointer_traits::pointer_to(*current), value); // new (&*current) T (value);
 						try {
 							++current;
 						} catch (...) {
@@ -1039,11 +1091,15 @@ namespace kerbal
 				UI_FILL_UA_VER_NOTHROW_ITER_ADVANCE
 			)
 			{
+				typedef kerbal::memory::allocator_traits<Allocator>		allocator_traits;
+				typedef typename allocator_traits::pointer				pointer;
+				typedef kerbal::memory::pointer_traits<pointer>			pointer_traits;
+
 				typedef ForwardIterator iterator;
 				iterator current(first);
 				try {
 					while (current != last) {
-						kerbal::memory::construct_at_using_allocator(alloc, &*current, value); // new (&*current) T (value);
+						kerbal::memory::construct_at_using_allocator(alloc, pointer_traits::pointer_to(*current), value); // new (&*current) T (value);
 						++current;
 					}
 				} catch (...) {
@@ -1063,9 +1119,9 @@ namespace kerbal
 				UI_FILL_UA_VER_NO_CATCH
 			)
 			{
-				typedef kerbal::memory::allocator_traits<Allocator> allocator_traits;
-				typedef typename allocator_traits::pointer pointer;
-				typedef kerbal::memory::pointer_traits<pointer> pointer_traits;
+				typedef kerbal::memory::allocator_traits<Allocator>		allocator_traits;
+				typedef typename allocator_traits::pointer				pointer;
+				typedef kerbal::memory::pointer_traits<pointer>			pointer_traits;
 
 				while (first != last) {
 					kerbal::memory::construct_at_using_allocator(alloc, pointer_traits::pointer_to(*first), value); // new (&*first) T (value);
@@ -1143,6 +1199,10 @@ namespace kerbal
 				UI_FILL_N_UA_VER_DEFAULT
 			)
 			{
+				typedef kerbal::memory::allocator_traits<Allocator>		allocator_traits;
+				typedef typename allocator_traits::pointer				pointer;
+				typedef kerbal::memory::pointer_traits<pointer>			pointer_traits;
+
 				typedef ForwardIterator iterator;
 				iterator current(first);
 				bool iter_move_next_exception_happen = false;
@@ -1150,7 +1210,7 @@ namespace kerbal
 					while (n > 0) {
 						--n;
 						iterator remain(current);
-						kerbal::memory::construct_at_using_allocator(alloc, &*current, value); // new (&*current) T(value);
+						kerbal::memory::construct_at_using_allocator(alloc, pointer_traits::pointer_to(*current), value); // new (&*current) T(value);
 						try {
 							++current;
 						} catch (...) {
@@ -1178,12 +1238,16 @@ namespace kerbal
 				UI_FILL_N_UA_VER_NOTHROW_ITER_ADVANCE
 			)
 			{
+				typedef kerbal::memory::allocator_traits<Allocator>		allocator_traits;
+				typedef typename allocator_traits::pointer				pointer;
+				typedef kerbal::memory::pointer_traits<pointer>			pointer_traits;
+
 				typedef ForwardIterator iterator;
 				iterator current(first);
 				try {
 					while (n > 0) {
 						--n;
-						kerbal::memory::construct_at_using_allocator(alloc, &*current, value); // new (&*current) T(value);
+						kerbal::memory::construct_at_using_allocator(alloc, pointer_traits::pointer_to(*current), value); // new (&*current) T(value);
 						++current;
 					}
 					return current;
