@@ -195,8 +195,12 @@ namespace kerbal
 				UI_VAL_CONSTRUCT_UA_VER_NO_CATCH
 			)
 			{
+				typedef kerbal::memory::allocator_traits<Allocator> allocator_traits;
+				typedef typename allocator_traits::pointer pointer;
+				typedef kerbal::memory::pointer_traits<pointer> pointer_traits;
+
 				while (first != last) {
-					kerbal::memory::construct_at_using_allocator(alloc, &*first); // new (&*first) T ();
+					kerbal::memory::construct_at_using_allocator(alloc, pointer_traits::pointer_to(*first)); // new (&*first) T ();
 					++first;
 				}
 			}
@@ -1059,8 +1063,12 @@ namespace kerbal
 				UI_FILL_UA_VER_NO_CATCH
 			)
 			{
+				typedef kerbal::memory::allocator_traits<Allocator> allocator_traits;
+				typedef typename allocator_traits::pointer pointer;
+				typedef kerbal::memory::pointer_traits<pointer> pointer_traits;
+
 				while (first != last) {
-					kerbal::memory::construct_at_using_allocator(alloc, &*first, value); // new (&*first) T (value);
+					kerbal::memory::construct_at_using_allocator(alloc, pointer_traits::pointer_to(*first), value); // new (&*first) T (value);
 					++first;
 				}
 			}

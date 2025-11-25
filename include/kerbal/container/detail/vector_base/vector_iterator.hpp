@@ -196,6 +196,7 @@ namespace kerbal
 					friend class kerbal::container::vector;
 
 				private:
+					typedef typename kerbal::memory::pointer_traits<VoidPtr>::template rebind<T>::other			PtrRemoveConst;
 					typedef typename kerbal::memory::pointer_traits<VoidPtr>::template rebind<T const>::other Ptr;
 					typedef kerbal::iterator::iterator_traits<Ptr>	iterator_traits;
 					typedef kerbal::container::detail::vec_iter<T, VoidPtr> iterator;
@@ -308,7 +309,7 @@ namespace kerbal
 					KERBAL_CONSTEXPR14
 					iterator cast_to_mutable() const KERBAL_NOEXCEPT
 					{
-						return iterator(const_cast<T *>(this->current));
+						return iterator((PtrRemoveConst)(this->current));
 					}
 
 			};

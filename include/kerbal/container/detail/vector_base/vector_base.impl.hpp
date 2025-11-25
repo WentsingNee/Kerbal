@@ -24,11 +24,13 @@
 #include <kerbal/config/exceptions.hpp>
 #include <kerbal/iterator/iterator.hpp>
 #include <kerbal/iterator/iterator_traits.hpp>
+#include <kerbal/memory/allocator/default_allocator.hpp>
 #include <kerbal/memory/allocator_traits.hpp>
 #include <kerbal/memory/raw_storage.hpp>
 #include <kerbal/memory/uninitialized_using_allocator.hpp>
 #include <kerbal/type_traits/enable_if.hpp>
 #include <kerbal/type_traits/integral_constant.hpp>
+#include <kerbal/utility/in_place.hpp>
 #include <kerbal/utility/throw_this_exception.hpp>
 
 #if __cplusplus < 201103L
@@ -1275,24 +1277,25 @@ namespace kerbal
 				++this->k_size;
 			}
 
-			template <typename T, typename Allocator>
+			template <typename T>
 			struct vector_emplace_helper
 			{
 					typedef T value_type;
 					typedef T * pointer;
 
-					Allocator & alloc;
+					kerbal::memory::default_allocator<T> alloc;
 					kerbal::memory::raw_storage<value_type> storage;
 
 #		if __cplusplus >= 201103L
 
 					template <typename ... Args>
 					KERBAL_CONSTEXPR20
+					explicit
 					vector_emplace_helper(
-						Allocator & alloc,
+						kerbal::utility::in_place_t,
 						Args && ... args
 					) :
-						alloc(alloc)
+						alloc()
 					{
 						this->storage.construct_using_allocator(this->alloc, kerbal::utility::forward<Args>(args)...);
 					}
@@ -1308,10 +1311,10 @@ namespace kerbal
 #			define FBODY(i) \
 					KERBAL_OPT_PPEXPAND_WITH_COMMA_N(THEAD_NOT_EMPTY, EMPTY, TARGS_DECL, i) \
 					vector_emplace_helper( \
-						Allocator & alloc \
+						kerbal::utility::in_place_t \
 						KERBAL_OPT_PPEXPAND_WITH_COMMA_N(LEFT_JOIN_COMMA, EMPTY, ARGS_DECL, i) \
 					) : \
-						alloc(alloc) \
+						alloc() \
 					{ \
 						this->storage.construct_using_allocator( \
 							this->alloc \
@@ -1325,6 +1328,7 @@ namespace kerbal
 #			undef EMPTY
 #			undef THEAD_NOT_EMPTY
 #			undef LEFT_JOIN_COMMA
+#			undef REMAINF
 #			undef TARGS_DECL
 #			undef ARGS_DECL
 #			undef ARGS_USE
@@ -1364,7 +1368,7 @@ namespace kerbal
 						kerbal::memory::construct_at_using_allocator(alloc, this->end().current, kerbal::utility::forward<Args>(args)...);
 						this->k_size = new_size;
 					} else {
-						vector_emplace_helper<T, Allocator> helper(alloc, kerbal::utility::forward<Args>(args)...);
+						vector_emplace_helper<T> helper(kerbal::utility::in_place_t(), kerbal::utility::forward<Args>(args)...);
 
 						// construct at the end
 						kerbal::memory::construct_at_using_allocator(alloc, this->end().current, kerbal::compatibility::to_xvalue(this->back()));
@@ -1476,7 +1480,7 @@ namespace kerbal
 						kerbal::memory::construct_at_using_allocator(alloc, this->end().current KERBAL_OPT_PPEXPAND_WITH_COMMA_N(LEFT_JOIN_COMMA, EMPTY, ARGS_USE, i)); \
 						this->k_size = new_size; \
 					} else { \
-						vector_emplace_helper<T, Allocator> helper(alloc KERBAL_OPT_PPEXPAND_WITH_COMMA_N(LEFT_JOIN_COMMA, EMPTY, ARGS_USE, i)); \
+						vector_emplace_helper<T> helper((kerbal::utility::in_place_t()) KERBAL_OPT_PPEXPAND_WITH_COMMA_N(LEFT_JOIN_COMMA, EMPTY, ARGS_USE, i)); \
  \
 						kerbal::memory::construct_at_using_allocator(alloc, this->end().current, kerbal::compatibility::to_xvalue(this->back())); \
 						this->k_size = new_size; \
@@ -1494,6 +1498,7 @@ namespace kerbal
 
 #		undef EMPTY
 #		undef LEFT_JOIN_COMMA
+#		undef REMAINF
 #		undef TARGS_DECL
 #		undef ARGS_DECL
 #		undef ARGS_USE
