@@ -2053,7 +2053,7 @@ namespace kerbal
 				typedef kerbal::memory::allocator_traits<Allocator> allocator_traits;
 
 				size_type ori_size = this->k_size;
-				size_type new_size = ori_size + 1;
+				size_type new_size = ori_size + size_type(1);
 				if (new_size <= this->k_capacity) {
 					kerbal::memory::construct_at_using_allocator(alloc, this->end().current, kerbal::utility::forward<Args>(args)...);
 					++this->k_size;
