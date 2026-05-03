@@ -300,7 +300,9 @@ namespace kerbal
 				public:
 
 					KERBAL_CONSTEXPR
-					tuple_impl() KERBAL_CONDITIONAL_NOEXCEPT(is_nothrow_default_constructible::value) :
+					tuple_impl()
+						KERBAL_CONDITIONAL_NOEXCEPT(is_nothrow_default_constructible::value)
+					:
 						super<Index>::type(kerbal::utility::in_place_t())...
 					{
 					}
@@ -340,13 +342,15 @@ namespace kerbal
 
 					template <std::size_t ... HeadIndex, std::size_t ... TailIndex, typename ... UArgs>
 					KERBAL_CONSTEXPR
-					explicit tuple_impl(
+					explicit
+					tuple_impl(
 						tuple_partially_init_t,
 						kerbal::utility::index_sequence<HeadIndex...>,
 						kerbal::utility::index_sequence<TailIndex...>,
 						UArgs && ... args
 					)
-						KERBAL_CONDITIONAL_NOEXCEPT(is_nothrow_partially_init_constructible<UArgs && ...>::value) :
+						KERBAL_CONDITIONAL_NOEXCEPT(is_nothrow_partially_init_constructible<UArgs && ...>::value)
+					:
 						super<HeadIndex>::type(kerbal::utility::in_place_t(), kerbal::utility::forward<UArgs>(args))...,
 						super<TailIndex + sizeof...(HeadIndex)>::type(kerbal::utility::in_place_t())...
 					{
@@ -362,8 +366,10 @@ namespace kerbal
 							>::type
 					>
 					KERBAL_CONSTEXPR
-					explicit tuple_impl(tuple_partially_init_t tag, UArgs && ... args)
-						KERBAL_CONDITIONAL_NOEXCEPT(is_nothrow_partially_init_constructible<UArgs && ...>::value) :
+					explicit
+					tuple_impl(tuple_partially_init_t tag, UArgs && ... args)
+						KERBAL_CONDITIONAL_NOEXCEPT(is_nothrow_partially_init_constructible<UArgs && ...>::value)
+					:
 						tuple_impl(
 							tag,
 							kerbal::utility::make_index_sequence<sizeof...(UArgs)>(),
@@ -414,8 +420,10 @@ namespace kerbal
 							>::type
 					>
 					KERBAL_CONSTEXPR
-					explicit tuple_impl(UArgs && ... args)
-						KERBAL_CONDITIONAL_NOEXCEPT(is_nothrow_completely_init_constructible<UArgs && ...>::value) :
+					explicit
+					tuple_impl(UArgs && ... args)
+						KERBAL_CONDITIONAL_NOEXCEPT(is_nothrow_completely_init_constructible<UArgs && ...>::value)
+					:
 						super<Index>::type(kerbal::utility::in_place_t(), kerbal::utility::forward<UArgs>(args))...
 					{
 						KERBAL_STATIC_ASSERT(sizeof...(UArgs) == sizeof...(Args), "Wrong number of arguments");
@@ -431,7 +439,8 @@ namespace kerbal
 							>::type
 					>
 					KERBAL_CONSTEXPR
-					explicit tuple_impl(kerbal::utility::piecewise_construct_t pie, TupleArgs && ... args) :
+					explicit
+					tuple_impl(kerbal::utility::piecewise_construct_t pie, TupleArgs && ... args) :
 						super<Index>::type(pie, kerbal::utility::forward<TupleArgs>(args))...
 					{
 						KERBAL_STATIC_ASSERT(sizeof...(TupleArgs) == sizeof...(Args), "Wrong number of arguments");
@@ -661,8 +670,10 @@ namespace kerbal
 						>::type
 				>
 				KERBAL_CONSTEXPR
-				explicit tuple(tuple_partially_init_t tag, UArgs && ... args)
-					KERBAL_CONDITIONAL_NOEXCEPT(is_nothrow_partially_init_constructible<UArgs && ...>::value) :
+				explicit
+				tuple(tuple_partially_init_t tag, UArgs && ... args)
+					KERBAL_CONDITIONAL_NOEXCEPT(is_nothrow_partially_init_constructible<UArgs && ...>::value)
+				:
 					super(tag, kerbal::utility::forward<UArgs>(args)...)
 				{
 					KERBAL_STATIC_ASSERT(sizeof...(UArgs) <= sizeof...(Args), "Too many arguments");
@@ -676,8 +687,10 @@ namespace kerbal
 						>::type
 				>
 				KERBAL_CONSTEXPR
-				explicit tuple(UArgs && ... args)
-					KERBAL_CONDITIONAL_NOEXCEPT(is_nothrow_completely_init_constructible<UArgs && ...>::value) :
+				explicit
+				tuple(UArgs && ... args)
+					KERBAL_CONDITIONAL_NOEXCEPT(is_nothrow_completely_init_constructible<UArgs && ...>::value)
+				:
 					super(kerbal::utility::forward<UArgs>(args)...)
 				{
 					KERBAL_STATIC_ASSERT(sizeof...(UArgs) == sizeof...(Args), "Wrong number of arguments");
@@ -747,8 +760,10 @@ namespace kerbal
 						>::type
 				>
 				KERBAL_CONSTEXPR
-				explicit tuple(kerbal::utility::index_sequence<Index...>, const tuple<UArgs...> & t)
-					KERBAL_CONDITIONAL_NOEXCEPT(is_nothrow_covariant_copy_constructible<UArgs...>::value) :
+				explicit
+				tuple(kerbal::utility::index_sequence<Index...>, const tuple<UArgs...> & t)
+					KERBAL_CONDITIONAL_NOEXCEPT(is_nothrow_covariant_copy_constructible<UArgs...>::value)
+				:
 					super(t.template get<Index>()...)
 				{
 				}
@@ -762,8 +777,10 @@ namespace kerbal
 						>::type
 				>
 				KERBAL_CONSTEXPR
-				explicit tuple(kerbal::utility::index_sequence<Index...>, tuple<UArgs...> && t)
-					KERBAL_CONDITIONAL_NOEXCEPT(is_nothrow_covariant_move_constructible<UArgs...>::value) :
+				explicit
+				tuple(kerbal::utility::index_sequence<Index...>, tuple<UArgs...> && t)
+					KERBAL_CONDITIONAL_NOEXCEPT(is_nothrow_covariant_move_constructible<UArgs...>::value)
+				:
 					super(kerbal::compatibility::move(t).template get<Index>()...)
 				{
 				}
@@ -778,8 +795,10 @@ namespace kerbal
 						>::type
 				>
 				KERBAL_CONSTEXPR
-				explicit tuple(const tuple<UArgs...> & t)
-					KERBAL_CONDITIONAL_NOEXCEPT(is_nothrow_covariant_copy_constructible<UArgs...>::value) :
+				explicit
+				tuple(const tuple<UArgs...> & t)
+					KERBAL_CONDITIONAL_NOEXCEPT(is_nothrow_covariant_copy_constructible<UArgs...>::value)
+				:
 					tuple(kerbal::utility::make_index_sequence<sizeof...(UArgs)>(), t)
 				{
 					KERBAL_STATIC_ASSERT(sizeof...(UArgs) == sizeof...(Args), "Wrong size tuple");
@@ -793,8 +812,10 @@ namespace kerbal
 						>::type
 				>
 				KERBAL_CONSTEXPR
-				explicit tuple(tuple<UArgs...> && t)
-					KERBAL_CONDITIONAL_NOEXCEPT(is_nothrow_covariant_move_constructible<UArgs...>::value) :
+				explicit
+				tuple(tuple<UArgs...> && t)
+					KERBAL_CONDITIONAL_NOEXCEPT(is_nothrow_covariant_move_constructible<UArgs...>::value)
+				:
 					tuple(kerbal::utility::make_index_sequence<sizeof...(UArgs)>(), kerbal::compatibility::move(t))
 				{
 					KERBAL_STATIC_ASSERT(sizeof...(UArgs) == sizeof...(Args), "Wrong size tuple");
@@ -809,7 +830,8 @@ namespace kerbal
 						>::type
 				>
 				KERBAL_CONSTEXPR
-				explicit tuple(kerbal::utility::piecewise_construct_t pie, TupleArgs && ... args) :
+				explicit
+				tuple(kerbal::utility::piecewise_construct_t pie, TupleArgs && ... args) :
 					super(pie, kerbal::utility::forward<TupleArgs>(args)...)
 				{
 					KERBAL_STATIC_ASSERT(sizeof...(TupleArgs) == sizeof...(Args), "Wrong number of arguments");
@@ -819,7 +841,8 @@ namespace kerbal
 
 				template <typename ... UArgs, std::size_t ... Index>
 				KERBAL_CONSTEXPR14
-				void k_covariant_assign_impl(
+				void
+				k_covariant_assign_impl(
 					const kerbal::utility::tuple<UArgs...> & t,
 					kerbal::utility::index_sequence<Index...>
 				)
@@ -838,7 +861,8 @@ namespace kerbal
 
 				template <typename ... UArgs>
 				KERBAL_CONSTEXPR14
-				tuple & operator=(const kerbal::utility::tuple<UArgs...> & t)
+				tuple &
+				operator=(const kerbal::utility::tuple<UArgs...> & t)
 				{
 					KERBAL_STATIC_ASSERT(sizeof...(UArgs) == sizeof...(Args), "Wrong size tuple");
 					k_covariant_assign_impl(t, kerbal::utility::make_index_sequence<TUPLE_SIZE::value>());
@@ -850,7 +874,8 @@ namespace kerbal
 
 				template <typename ... UArgs, std::size_t ... Index>
 				KERBAL_CONSTEXPR14
-				void k_covariant_move_assign_impl(
+				void
+				k_covariant_move_assign_impl(
 					kerbal::utility::tuple<UArgs...> && t,
 					kerbal::utility::index_sequence<Index...>
 				)
@@ -869,7 +894,8 @@ namespace kerbal
 
 				template <typename ... UArgs>
 				KERBAL_CONSTEXPR14
-				tuple & operator=(kerbal::utility::tuple<UArgs...> && t)
+				tuple &
+				operator=(kerbal::utility::tuple<UArgs...> && t)
 				{
 					k_covariant_move_assign_impl(
 						kerbal::compatibility::move(t),
@@ -882,7 +908,8 @@ namespace kerbal
 			public:
 
 				KERBAL_CONSTEXPR
-				std::size_t size() const KERBAL_NOEXCEPT
+				std::size_t
+				size() const KERBAL_NOEXCEPT
 				{
 					return TUPLE_SIZE::value;
 				}
@@ -901,7 +928,8 @@ namespace kerbal
 			public:
 
 				KERBAL_CONSTEXPR14
-				auto ref() & KERBAL_NOEXCEPT ->
+				auto
+				ref() & KERBAL_NOEXCEPT ->
 					decltype(
 						kerbal::utility::declval<tuple &>().k_ref_impl(
 							kerbal::utility::make_index_sequence<TUPLE_SIZE::value>()
@@ -928,7 +956,8 @@ namespace kerbal
 			public:
 
 				KERBAL_CONSTEXPR14
-				auto ref() const & KERBAL_NOEXCEPT ->
+				auto
+				ref() const & KERBAL_NOEXCEPT ->
 					decltype(
 						kerbal::utility::declval<const tuple &>().k_cref_impl(
 							kerbal::utility::make_index_sequence<TUPLE_SIZE::value>()
@@ -942,7 +971,8 @@ namespace kerbal
 				}
 
 				KERBAL_CONSTEXPR14
-				auto cref() const & KERBAL_NOEXCEPT ->
+				auto
+				cref() const & KERBAL_NOEXCEPT ->
 					decltype(
 						kerbal::utility::declval<const tuple &>().k_cref_impl(
 							kerbal::utility::make_index_sequence<TUPLE_SIZE::value>()
@@ -982,7 +1012,8 @@ namespace kerbal
 
 				template <typename F>
 				KERBAL_CONSTEXPR14
-				tuple & for_each(F f) &
+				tuple &
+				for_each(F f) &
 				{
 					return k_for_each_impl(
 						*this,
@@ -993,7 +1024,8 @@ namespace kerbal
 
 				template <typename F>
 				KERBAL_CONSTEXPR
-				const tuple & for_each(F f) const &
+				const tuple &
+				for_each(F f) const &
 				{
 					return k_for_each_impl(
 						*this,
@@ -1004,7 +1036,8 @@ namespace kerbal
 
 				template <typename F>
 				KERBAL_CONSTEXPR14
-				tuple && for_each(F f) &&
+				tuple &&
+				for_each(F f) &&
 				{
 					return k_for_each_impl(
 						kerbal::compatibility::move(*this),
@@ -1015,7 +1048,8 @@ namespace kerbal
 
 				template <typename F>
 				KERBAL_CONSTEXPR
-				const tuple && for_each(F f) const &&
+				const tuple &&
+				for_each(F f) const &&
 				{
 					return k_for_each_impl(
 						kerbal::compatibility::move(*this),

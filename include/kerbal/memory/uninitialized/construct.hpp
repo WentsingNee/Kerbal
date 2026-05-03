@@ -175,7 +175,7 @@ namespace kerbal
 			KERBAL_CONSTEXPR20
 			T * k_construct_at(T * p, Args && ... args)
 				KERBAL_CONDITIONAL_NOEXCEPT((
-					kerbal::type_traits::try_test_is_nothrow_constructible<T, Args &&...>::IS_TRUE::value
+					kerbal::type_traits::try_test_is_nothrow_constructible<T, Args && ...>::IS_TRUE::value
 				))
 				// Note: std::construct_at is not conditional noexcept
 			{

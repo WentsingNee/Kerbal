@@ -27,7 +27,9 @@ namespace kerbal
 				typedef T value_type;
 
 				constexpr
-				static std::size_t size() noexcept
+				static
+				std::size_t
+				size() noexcept
 				{
 					return sizeof...(Ints);
 				}
