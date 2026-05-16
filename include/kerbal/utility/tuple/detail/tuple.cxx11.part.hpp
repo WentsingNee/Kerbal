@@ -251,8 +251,7 @@ namespace kerbal
 						typename ... UArgs,
 						typename /*msvc_compat*/ =
 							typename kerbal::type_traits::enable_if<
-								sizeof...(UArgs) <= TUPLE_SIZE::value,
-								int
+								sizeof...(UArgs) <= TUPLE_SIZE::value
 							>::type
 					>
 					KERBAL_CONSTEXPR
@@ -287,8 +286,7 @@ namespace kerbal
 						typename ... UArgs,
 						typename =
 							typename kerbal::type_traits::enable_if<
-								sizeof...(UArgs) == TUPLE_SIZE::value,
-								int
+								sizeof...(UArgs) == TUPLE_SIZE::value
 							>::type
 					>
 					KERBAL_CONSTEXPR
@@ -305,8 +303,7 @@ namespace kerbal
 						typename ... TupleArgs,
 						typename =
 							typename kerbal::type_traits::enable_if<
-								sizeof...(TupleArgs) == TUPLE_SIZE::value,
-								int
+								sizeof...(TupleArgs) == TUPLE_SIZE::value
 							>::type
 					>
 					KERBAL_CONSTEXPR
@@ -484,8 +481,7 @@ namespace kerbal
 					typename ... UArgs,
 					typename /*msvc_compat*/ =
 						typename kerbal::type_traits::enable_if<
-							sizeof...(UArgs) <= TUPLE_SIZE::value,
-							int
+							sizeof...(UArgs) <= TUPLE_SIZE::value
 						>::type
 				>
 				KERBAL_CONSTEXPR
@@ -500,8 +496,7 @@ namespace kerbal
 					typename ... UArgs,
 					typename =
 						typename kerbal::type_traits::enable_if<
-							sizeof...(UArgs) == TUPLE_SIZE::value,
-							int
+							sizeof...(UArgs) == TUPLE_SIZE::value
 						>::type
 				>
 				KERBAL_CONSTEXPR
@@ -546,8 +541,7 @@ namespace kerbal
 					typename ... UArgs,
 					typename =
 						typename kerbal::type_traits::enable_if<
-							sizeof...(UArgs) == TUPLE_SIZE::value,
-							int
+							sizeof...(UArgs) == TUPLE_SIZE::value
 						>::type
 				>
 				KERBAL_CONSTEXPR
@@ -561,7 +555,9 @@ namespace kerbal
 					std::size_t ... Index,
 					typename ... UArgs,
 					typename =
-						typename kerbal::type_traits::enable_if<sizeof...(UArgs) == TUPLE_SIZE::value, int>::type
+						typename kerbal::type_traits::enable_if<
+							sizeof...(UArgs) == TUPLE_SIZE::value
+						>::type
 				>
 				KERBAL_CONSTEXPR
 				explicit tuple(kerbal::utility::index_sequence<Index...>, tuple<UArgs...> && t)
@@ -595,8 +591,7 @@ namespace kerbal
 					typename ... TupleArgs,
 					typename =
 						typename kerbal::type_traits::enable_if<
-							sizeof...(TupleArgs) == TUPLE_SIZE::value,
-							int
+							sizeof...(TupleArgs) == TUPLE_SIZE::value
 						>::type
 				>
 				KERBAL_CONSTEXPR
