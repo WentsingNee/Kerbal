@@ -256,7 +256,7 @@ namespace kerbal
 						KERBAL_CONDITIONAL_NOEXCEPT(
 							noexcept(
 								k_construct(
-									allocator_could_use_construct<Alloc, T, Args...>(),
+									allocator_could_use_construct<Alloc, T, Args && ...>(),
 									alloc, p,
 									kerbal::utility::forward<Args>(args)...
 								)

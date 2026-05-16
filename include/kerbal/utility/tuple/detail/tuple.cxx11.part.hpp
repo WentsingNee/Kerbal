@@ -84,7 +84,7 @@ namespace kerbal
 						kerbal::type_traits::try_test_is_nothrow_constructible<
 							typename k_tuple_impl::template super<HeadIndex>::type,
 							kerbal::utility::in_place_t,
-							UArgs &&
+							UArgs
 						>...
 					>::result::IS_TRUE is_head_nothrow_constructible;
 
@@ -224,7 +224,7 @@ namespace kerbal
 							tuple_impl,
 							kerbal::utility::make_index_sequence<sizeof...(UArgs)>,
 							kerbal::utility::make_index_sequence<TUPLE_SIZE::value - sizeof...(UArgs)>,
-							UArgs && ...
+							UArgs...
 						>::type
 					{
 					};
@@ -275,7 +275,7 @@ namespace kerbal
 					struct is_nothrow_completely_init_constructible :
 						kerbal::type_traits::tribool_conjunction<
 							kerbal::type_traits::try_test_is_nothrow_constructible<
-								typename super<Index>::type, kerbal::utility::in_place_t, UArgs &&
+								typename super<Index>::type, kerbal::utility::in_place_t, UArgs
 							>...
 						>::result::IS_TRUE
 					{
@@ -466,13 +466,13 @@ namespace kerbal
 
 				template <typename ... UArgs>
 				struct is_nothrow_partially_init_constructible :
-					super::template is_nothrow_partially_init_constructible<UArgs && ...>
+					super::template is_nothrow_partially_init_constructible<UArgs...>
 				{
 				};
 
 				template <typename ... UArgs>
 				struct is_nothrow_completely_init_constructible :
-					super::template is_nothrow_completely_init_constructible<UArgs && ...>
+					super::template is_nothrow_completely_init_constructible<UArgs...>
 				{
 				};
 

@@ -95,7 +95,7 @@ namespace kerbal
 						typedef typename kerbal::type_traits::remove_reference<T>::type TRRef; \
 						typedef kerbal::type_traits::bool_constant<noexcept(static_cast<bool>( \
 							KERBAL_MACRO_CONCAT(binary_type_, NAME)<TRRef, U>()( \
-								kerbal::utility::declval<T &&>(), kerbal::utility::declval<const U &>() \
+								kerbal::utility::declval<T>(), kerbal::utility::declval<const U &>() \
 							) \
 						))> type; \
 				}; \
@@ -109,7 +109,7 @@ namespace kerbal
 				template <typename T> \
 				KERBAL_CONSTEXPR \
 				bool operator()(T && lhs, const U & rhs) const \
-					KERBAL_CONDITIONAL_NOEXCEPT(is_nothrow_invokable<T>::value) \
+					KERBAL_CONDITIONAL_NOEXCEPT(is_nothrow_invokable<T &&>::value) \
 				{ \
 					typedef typename kerbal::type_traits::remove_reference<T>::type TRRef; \
 					return static_cast<bool>(KERBAL_MACRO_CONCAT(binary_type_, NAME)<TRRef, U>()(kerbal::utility::forward<T>(lhs), rhs)); \
@@ -151,7 +151,7 @@ namespace kerbal
 						typedef typename kerbal::type_traits::remove_reference<U>::type URRef; \
 						typedef kerbal::type_traits::bool_constant<noexcept(static_cast<bool>( \
 							KERBAL_MACRO_CONCAT(binary_type_, NAME)<T, URRef>()( \
-								kerbal::utility::declval<const T &>(), kerbal::utility::declval<U &&>() \
+								kerbal::utility::declval<const T &>(), kerbal::utility::declval<U>() \
 							) \
 						))> type; \
 				}; \
@@ -165,7 +165,7 @@ namespace kerbal
 				template <typename U> \
 				KERBAL_CONSTEXPR \
 				bool operator()(const T & lhs, U && rhs) const \
-					KERBAL_CONDITIONAL_NOEXCEPT(is_nothrow_invokable<U>::value) \
+					KERBAL_CONDITIONAL_NOEXCEPT(is_nothrow_invokable<U &&>::value) \
 				{ \
 					typedef typename kerbal::type_traits::remove_reference<U>::type URRef; \
 					return static_cast<bool>( \
@@ -213,7 +213,7 @@ namespace kerbal
 						typedef typename kerbal::type_traits::remove_reference<U>::type URRef; \
 						typedef kerbal::type_traits::bool_constant<noexcept(static_cast<bool>( \
 							KERBAL_MACRO_CONCAT(binary_type_, NAME)<TRRef, URRef>()( \
-								kerbal::utility::declval<T &&>(), kerbal::utility::declval<U &&>() \
+								kerbal::utility::declval<T>(), kerbal::utility::declval<U>() \
 							) \
 						))> type; \
 				}; \
@@ -227,7 +227,7 @@ namespace kerbal
 				template <typename T, typename U> \
 				KERBAL_CONSTEXPR \
 				bool operator()(T && lhs, U && rhs) const \
-					KERBAL_CONDITIONAL_NOEXCEPT((is_nothrow_invokable<T, U>::value)) \
+					KERBAL_CONDITIONAL_NOEXCEPT((is_nothrow_invokable<T &&, U &&>::value)) \
 				{ \
 					typedef typename kerbal::type_traits::remove_reference<T>::type TRRef; \
 					typedef typename kerbal::type_traits::remove_reference<U>::type URRef; \
