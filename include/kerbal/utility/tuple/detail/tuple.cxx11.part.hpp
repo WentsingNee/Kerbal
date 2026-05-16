@@ -32,6 +32,7 @@
 #include <kerbal/type_traits/add_rvalue_reference.hpp>
 #include <kerbal/type_traits/enable_if.hpp>
 #include <kerbal/type_traits/integral_constant.hpp>
+#include <kerbal/type_traits/is_constructible.hpp>
 #include <kerbal/type_traits/is_nothrow_constructible.hpp>
 #include <kerbal/type_traits/is_nothrow_default_constructible.hpp>
 #include <kerbal/type_traits/logical.hpp>
@@ -64,6 +65,43 @@ namespace kerbal
 
 			template <typename IndexSequence, typename ... Args>
 			struct tuple_impl;
+
+
+			template <typename TupleImpl, typename HeadIndexSequence, typename TailIndexSequence, typename ... UArgs>
+			struct tuple_impl_is_partially_init_constructible_helper;
+
+			template <typename TupleImpl, std::size_t ... HeadIndex, std::size_t ... TailIndex, typename ... UArgs>
+			struct tuple_impl_is_partially_init_constructible_helper<
+				TupleImpl,
+				kerbal::utility::index_sequence<HeadIndex...>,
+				kerbal::utility::index_sequence<TailIndex...>,
+				UArgs...
+			>
+			{
+				private:
+					typedef TupleImpl k_tuple_impl;
+
+					typedef typename kerbal::type_traits::tribool_conjunction<
+						kerbal::type_traits::try_test_is_constructible<
+							typename k_tuple_impl::template super<HeadIndex>::type,
+							kerbal::utility::in_place_t,
+							UArgs
+						>...
+					>::result::IS_TRUE is_head_constructible;
+
+					typedef typename kerbal::type_traits::tribool_conjunction<
+						kerbal::type_traits::try_test_is_constructible<
+							typename k_tuple_impl::template super<TailIndex + sizeof...(HeadIndex)>::type,
+							kerbal::utility::in_place_t
+						>...
+					>::result::IS_TRUE is_tail_constructible;
+
+				public:
+					typedef kerbal::type_traits::conjunction<
+						is_head_constructible,
+						is_tail_constructible
+					> type;
+			};
 
 
 			template <typename TupleImpl, typename HeadIndexSequence, typename TailIndexSequence, typename ... UArgs>
@@ -100,6 +138,61 @@ namespace kerbal
 						is_head_nothrow_constructible,
 						is_tail_nothrow_constructible
 					> type;
+			};
+
+
+			template <typename TupleImpl, typename IndexSequence, bool EqualLength, typename ... UArgs>
+			struct tuple_impl_is_completely_init_constructible_helper
+			{
+				typedef kerbal::type_traits::false_type type;
+			};
+
+			template <typename TupleImpl, std::size_t ... Index, typename ... UArgs>
+			struct tuple_impl_is_completely_init_constructible_helper<
+				TupleImpl,
+				kerbal::utility::index_sequence<Index...>,
+				true,
+				UArgs...
+			>
+			{
+				private:
+					typedef TupleImpl k_tuple_impl;
+					typedef typename TupleImpl::TUPLE_SIZE TUPLE_SIZE;
+
+				public:
+					typedef typename kerbal::type_traits::tribool_conjunction<
+						kerbal::type_traits::bool_constant<TUPLE_SIZE::value == sizeof...(UArgs)>,
+						kerbal::type_traits::try_test_is_constructible<
+							typename k_tuple_impl::template super<Index>::type, kerbal::utility::in_place_t, UArgs
+						>...
+					>::result::IS_TRUE type;
+			};
+
+			template <typename TupleImpl, typename IndexSequence, bool EqualLength, typename ... UArgs>
+			struct tuple_impl_is_nothrow_completely_init_constructible_helper
+			{
+				typedef kerbal::type_traits::false_type type;
+			};
+
+			template <typename TupleImpl, std::size_t ... Index, typename ... UArgs>
+			struct tuple_impl_is_nothrow_completely_init_constructible_helper<
+				TupleImpl,
+				kerbal::utility::index_sequence<Index...>,
+				true,
+				UArgs...
+			>
+			{
+				private:
+					typedef TupleImpl k_tuple_impl;
+					typedef typename TupleImpl::TUPLE_SIZE TUPLE_SIZE;
+
+				public:
+					typedef typename kerbal::type_traits::tribool_conjunction<
+						kerbal::type_traits::bool_constant<TUPLE_SIZE::value == sizeof...(UArgs)>,
+						kerbal::type_traits::try_test_is_nothrow_constructible<
+							typename k_tuple_impl::template super<Index>::type, kerbal::utility::in_place_t, UArgs
+						>...
+					>::result::IS_TRUE type;
 			};
 
 
@@ -216,6 +309,20 @@ namespace kerbal
 				protected:
 
 					template <typename TupleImpl, typename HeadIndexSequence, typename TailIndexSequence, typename ... UArgs>
+					friend struct tuple_impl_is_partially_init_constructible_helper;
+
+					template <typename ... UArgs>
+					struct is_partially_init_constructible :
+						tuple_impl_is_partially_init_constructible_helper<
+							tuple_impl,
+							kerbal::utility::make_index_sequence<sizeof...(UArgs)>,
+							kerbal::utility::make_index_sequence<TUPLE_SIZE::value - sizeof...(UArgs)>,
+							UArgs ...
+						>::type
+					{
+					};
+
+					template <typename TupleImpl, typename HeadIndexSequence, typename TailIndexSequence, typename ... UArgs>
 					friend struct tuple_impl_is_nothrow_partially_init_constructible_helper;
 
 					template <typename ... UArgs>
@@ -269,14 +376,31 @@ namespace kerbal
 
 
 				protected:
+					template <typename TupleImpl, typename IndexSequence, bool EqualLength, typename ... UArgs>
+					friend struct tuple_impl_is_completely_init_constructible_helper;
+
+					template <typename ... UArgs>
+					struct is_completely_init_constructible :
+						tuple_impl_is_completely_init_constructible_helper<
+							tuple_impl,
+							kerbal::utility::make_index_sequence<sizeof...(UArgs)>,
+							TUPLE_SIZE::value == sizeof...(UArgs),
+							UArgs ...
+						>::type
+					{
+					};
+
+					template <typename TupleImpl, typename IndexSequence, bool EqualLength, typename ... UArgs>
+					friend struct tuple_impl_is_nothrow_completely_init_constructible_helper;
 
 					template <typename ... UArgs>
 					struct is_nothrow_completely_init_constructible :
-						kerbal::type_traits::tribool_conjunction<
-							kerbal::type_traits::try_test_is_nothrow_constructible<
-								typename super<Index>::type, kerbal::utility::in_place_t, UArgs
-							>...
-						>::result::IS_TRUE
+						tuple_impl_is_nothrow_completely_init_constructible_helper<
+							tuple_impl,
+							kerbal::utility::make_index_sequence<sizeof...(UArgs)>,
+							TUPLE_SIZE::value == sizeof...(UArgs),
+							UArgs ...
+						>::type
 					{
 					};
 
@@ -286,7 +410,7 @@ namespace kerbal
 						typename ... UArgs,
 						typename =
 							typename kerbal::type_traits::enable_if<
-								sizeof...(UArgs) == TUPLE_SIZE::value
+								is_completely_init_constructible<UArgs && ...>::value
 							>::type
 					>
 					KERBAL_CONSTEXPR
@@ -373,6 +497,26 @@ namespace kerbal
 
 
 			template <typename Tuple, typename IndexSequence, typename ... UArgs>
+			struct tuple_is_covariant_copy_constructible_helper;
+
+			template <typename Tuple, std::size_t ... Index, typename ... UArgs>
+			struct tuple_is_covariant_copy_constructible_helper<
+				Tuple,
+				kerbal::utility::index_sequence<Index...>,
+				UArgs...
+			>
+			{
+				private:
+					typedef kerbal::utility::tuple<UArgs...> ano_tuple;
+
+				public:
+					typedef typename Tuple::template is_completely_init_constructible<
+						decltype(kerbal::utility::declval<const ano_tuple &>().template get<Index>())...
+					> type;
+			};
+
+
+			template <typename Tuple, typename IndexSequence, typename ... UArgs>
 			struct tuple_is_nothrow_covariant_copy_constructible_helper;
 
 			template <typename Tuple, std::size_t ... Index, typename ... UArgs>
@@ -388,6 +532,26 @@ namespace kerbal
 				public:
 					typedef typename Tuple::template is_nothrow_completely_init_constructible<
 						decltype(kerbal::utility::declval<const ano_tuple &>().template get<Index>())...
+					> type;
+			};
+
+
+			template <typename Tuple, typename IndexSequence, typename ... UArgs>
+			struct tuple_is_covariant_move_constructible_helper;
+
+			template <typename Tuple, std::size_t ... Index, typename ... UArgs>
+			struct tuple_is_covariant_move_constructible_helper<
+				Tuple,
+				kerbal::utility::index_sequence<Index...>,
+				UArgs...
+			>
+			{
+				private:
+					typedef kerbal::utility::tuple<UArgs...> ano_tuple;
+
+				public:
+					typedef typename Tuple::template is_completely_init_constructible<
+						decltype(kerbal::utility::declval<ano_tuple &&>().template get<Index>())...
 					> type;
 			};
 
@@ -462,8 +626,20 @@ namespace kerbal
 				};
 
 				template <typename ... UArgs>
+				struct is_partially_init_constructible :
+					super::template is_partially_init_constructible<UArgs...>
+				{
+				};
+
+				template <typename ... UArgs>
 				struct is_nothrow_partially_init_constructible :
 					super::template is_nothrow_partially_init_constructible<UArgs...>
+				{
+				};
+
+				template <typename ... UArgs>
+				struct is_completely_init_constructible :
+					super::template is_completely_init_constructible<UArgs...>
 				{
 				};
 
@@ -481,7 +657,7 @@ namespace kerbal
 					typename ... UArgs,
 					typename /*msvc_compat*/ =
 						typename kerbal::type_traits::enable_if<
-							sizeof...(UArgs) <= TUPLE_SIZE::value
+							is_partially_init_constructible<UArgs && ...>::value
 						>::type
 				>
 				KERBAL_CONSTEXPR
@@ -496,7 +672,7 @@ namespace kerbal
 					typename ... UArgs,
 					typename =
 						typename kerbal::type_traits::enable_if<
-							sizeof...(UArgs) == TUPLE_SIZE::value
+							is_completely_init_constructible<UArgs && ...>::value
 						>::type
 				>
 				KERBAL_CONSTEXPR
@@ -511,11 +687,37 @@ namespace kerbal
 			protected:
 
 				template <typename Tuple, typename IndexSequence, typename ... UArgs>
+				friend struct detail::tuple_is_covariant_copy_constructible_helper;
+
+				template <typename ... UArgs>
+				struct is_covariant_copy_constructible :
+					detail::tuple_is_covariant_copy_constructible_helper<
+						tuple,
+						kerbal::utility::make_index_sequence<sizeof...(UArgs)>,
+						UArgs...
+					>::type
+				{
+				};
+
+				template <typename Tuple, typename IndexSequence, typename ... UArgs>
 				friend struct detail::tuple_is_nothrow_covariant_copy_constructible_helper;
 
 				template <typename ... UArgs>
 				struct is_nothrow_covariant_copy_constructible :
 					detail::tuple_is_nothrow_covariant_copy_constructible_helper<
+						tuple,
+						kerbal::utility::make_index_sequence<sizeof...(UArgs)>,
+						UArgs...
+					>::type
+				{
+				};
+
+				template <typename Tuple, typename IndexSequence, typename ... UArgs>
+				friend struct detail::tuple_is_covariant_move_constructible_helper;
+
+				template <typename ... UArgs>
+				struct is_covariant_move_constructible :
+					detail::tuple_is_covariant_move_constructible_helper<
 						tuple,
 						kerbal::utility::make_index_sequence<sizeof...(UArgs)>,
 						UArgs...
@@ -541,7 +743,7 @@ namespace kerbal
 					typename ... UArgs,
 					typename =
 						typename kerbal::type_traits::enable_if<
-							sizeof...(UArgs) == TUPLE_SIZE::value
+							is_covariant_copy_constructible<UArgs...>::value
 						>::type
 				>
 				KERBAL_CONSTEXPR
@@ -556,7 +758,7 @@ namespace kerbal
 					typename ... UArgs,
 					typename =
 						typename kerbal::type_traits::enable_if<
-							sizeof...(UArgs) == TUPLE_SIZE::value
+							is_covariant_move_constructible<UArgs...>::value
 						>::type
 				>
 				KERBAL_CONSTEXPR
@@ -568,7 +770,13 @@ namespace kerbal
 
 			public:
 
-				template <typename ... UArgs>
+				template <
+					typename ... UArgs,
+					typename =
+						typename kerbal::type_traits::enable_if<
+							is_covariant_copy_constructible<UArgs...>::value
+						>::type
+				>
 				KERBAL_CONSTEXPR
 				explicit tuple(const tuple<UArgs...> & t)
 					KERBAL_CONDITIONAL_NOEXCEPT(is_nothrow_covariant_copy_constructible<UArgs...>::value) :
@@ -577,7 +785,13 @@ namespace kerbal
 					KERBAL_STATIC_ASSERT(sizeof...(UArgs) == sizeof...(Args), "Wrong size tuple");
 				}
 
-				template <typename ... UArgs>
+				template <
+					typename ... UArgs,
+					typename =
+						typename kerbal::type_traits::enable_if<
+							is_covariant_move_constructible<UArgs...>::value
+						>::type
+				>
 				KERBAL_CONSTEXPR
 				explicit tuple(tuple<UArgs...> && t)
 					KERBAL_CONDITIONAL_NOEXCEPT(is_nothrow_covariant_move_constructible<UArgs...>::value) :
